@@ -46,6 +46,8 @@ static void Parse_Option(const char *name, const char *value) {
         widget_theme = atoi(value);
     } else if (StringCaseCmp(name, "box_theme") == 0) {
         box_theme = atoi(value);
+    } else if (StringCaseCmp(name, "button_theme") == 0) {
+        button_theme = atoi(value);
     } else if (StringCaseCmp(name, "single_pane") == 0) {
         single_pane = atoi(value) ? true : false;
     } else if (StringCaseCmp(name, "wheel_can_bump") == 0) {
@@ -182,6 +184,7 @@ bool Options_Save(const char *filename) {
     fprintf(option_fp, "font_size      = %d\n", window_size);
     fprintf(option_fp, "widget_theme      = %d\n", widget_theme);
     fprintf(option_fp, "box_theme      = %d\n", box_theme);
+    fprintf(option_fp, "button_theme      = %d\n", button_theme);
     fprintf(option_fp, "single_pane = %d\n", single_pane ? 1 : 0);
     fprintf(option_fp, "wheel_can_bump = %d\n", wheel_can_bump ? 1 : 0);
     fprintf(option_fp, "\n");
@@ -219,6 +222,7 @@ class UI_OptionsWin : public Fl_Window {
     Fl_Choice *opt_font_size;
     Fl_Choice *opt_widget_theme;
     Fl_Choice *opt_box_theme;
+    Fl_Choice *opt_button_theme;
 
     Fl_Check_Button *opt_single_pane;
     Fl_Check_Button *opt_wheel_bump;
@@ -303,6 +307,12 @@ class UI_OptionsWin : public Fl_Window {
 
         box_theme = that->opt_box_theme->value();
     }
+    
+    static void callback_ButtonTheme(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+        button_theme = that->opt_button_theme->value();
+    }
    
     static void callback_SinglePane(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
@@ -360,7 +370,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += heading->h();
 
     opt_language =
-        new Fl_Choice(136 + KF * 40, cy, kf_w(190), kf_h(24), _("Language: "));
+        new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Language: "));
     opt_language->align(FL_ALIGN_LEFT);
     opt_language->callback(callback_Language, this);
 
@@ -394,6 +404,15 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_box_theme->value(box_theme);
 
     cy += opt_box_theme->h() + y_step;
+    
+    opt_button_theme =
+        new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Button Theme: "));
+    opt_button_theme->align(FL_ALIGN_LEFT);
+    opt_button_theme->add(_("Default|Shadow|Embossed|Engraved|Inverted|Flat"));
+    opt_button_theme->callback(callback_ButtonTheme, this);
+    opt_button_theme->value(button_theme);
+
+    cy += opt_button_theme->h() + y_step;
 
     opt_single_pane = new Fl_Check_Button(cx, cy, W - cx - pad, kf_h(24),
                                        _(" Single Pane Mode"));
@@ -500,7 +519,7 @@ void DLG_OptionsEditor(void) {
 
     if (!option_window) {
         int opt_w = kf_w(350);
-        int opt_h = kf_h(410);
+        int opt_h = kf_h(500);
 
         option_window =
             new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));

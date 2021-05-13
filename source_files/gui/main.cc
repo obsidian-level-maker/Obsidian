@@ -59,6 +59,8 @@ const char *batch_output_file = NULL;
 // options
 int box_theme = 0;
 Fl_Boxtype box_style = FL_THIN_UP_BOX;
+int button_theme = 0;
+Fl_Boxtype button_style = FL_THIN_UP_BOX;
 int widget_theme = 0;
 int window_size = 0; /* AUTO */
 bool single_pane = true;
@@ -353,6 +355,7 @@ void Main_SetupFLTK() {
     Fl::background(221, 221, 221);
     Fl::background2(255, 255, 255);
     Fl::foreground(0, 0, 0);
+    
     switch(widget_theme) {
     	case 0 : Fl::scheme("gtk+");
     			 break;
@@ -366,6 +369,7 @@ void Main_SetupFLTK() {
     	default : Fl::scheme("gtk+");
     			  break;    			     			 
     }
+    
     switch(box_theme) {
     	case 0 : box_style = FL_THIN_UP_BOX;
     			 break;
@@ -383,8 +387,25 @@ void Main_SetupFLTK() {
     	default : box_style = FL_THIN_UP_BOX;
     			  break;    			     			 
     }
-
-
+    
+    switch(button_theme) {
+    	case 0 : button_style = FL_THIN_UP_BOX;
+    			 break;
+    	case 1 : button_style = FL_SHADOW_BOX;
+    			 break;
+    	case 2 : button_style = FL_EMBOSSED_BOX;
+    			 break;
+    	case 3 : button_style = FL_ENGRAVED_BOX;
+    			 break;
+    	case 4 : button_style = FL_DOWN_BOX;
+    			 break;
+    	case 5 : button_style = FL_BORDER_BOX;
+    			 break;
+    	// Shouldn't be reached, but still
+    	default : button_style = FL_THIN_UP_BOX;
+    			  break;    			     			 
+    }
+    
     screen_w = Fl::w();
     screen_h = Fl::h();
 
