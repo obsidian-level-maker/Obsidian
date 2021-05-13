@@ -348,7 +348,7 @@ void UI_RButton::draw() {
     if (Fl::is_scheme("plastic")) {
       col = active_r() ? selection_color() : fl_inactive(selection_color());
       fl_color(value() ? col : fl_color_average(col, FL_BLACK, 0.5f));
-      fl_pie(x()+xx, y()+dy+1, ww, hh, 0, 360);
+      fl_pie(x()+w()-W, y()+dy+1, ww, hh, 0, 360);
     } else {
       draw_box(FL_THIN_DOWN_BOX, x()+w()-W, y()+dy+1, hh, hh, col);
     }

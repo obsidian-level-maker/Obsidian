@@ -22,6 +22,7 @@
 #define __OBLIGE_MAIN_H__
 
 #include <cstddef>
+#include "hdr_fltk.h"
 #define OBSIDIAN_TITLE "OBSIDIAN Level Maker"
 
 #define OBSIDIAN_VERSION "Beta 19 Preview"
@@ -55,6 +56,8 @@ typedef enum {
 extern int main_action;
 
 // Misc Options
+extern Fl_Boxtype box_style;
+extern int widget_theme;
 extern int window_size;  // 0 = Auto, 1 = Tiny ... 5 = Huge
 extern bool single_pane;
 extern bool wheel_can_bump;

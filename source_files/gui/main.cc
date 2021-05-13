@@ -57,6 +57,8 @@ bool batch_mode = false;
 const char *batch_output_file = NULL;
 
 // options
+Fl_Boxtype box_style = FL_FLAT_BOX;
+int widget_theme = 0;
 int window_size = 0; /* AUTO */
 bool single_pane = true;
 bool wheel_can_bump = true;
@@ -350,7 +352,19 @@ void Main_SetupFLTK() {
     Fl::background(221, 221, 221);
     Fl::background2(255, 255, 255);
     Fl::foreground(0, 0, 0);
-    Fl::scheme("gtk+");
+    switch(widget_theme) {
+    	case 0 : Fl::scheme("gtk+");
+    			 break;
+    	case 1 : Fl::scheme("gleam");
+    			 break;
+    	case 2 : Fl::scheme("base");
+    			 break;
+    	case 3 : Fl::scheme("plastic");
+    			 break;
+    	// Shouldn't be reached, but still
+    	default : Fl::scheme("gtk+");
+    			  break;    			     			 
+    }
 
     screen_w = Fl::w();
     screen_h = Fl::h();

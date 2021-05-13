@@ -42,6 +42,8 @@ static void Parse_Option(const char *name, const char *value) {
                StringCaseCmp(name, "window_size") == 0 /* backwards compat */) {
         window_size = atoi(value);
         window_size = CLAMP(0, window_size, 5);
+    } else if (StringCaseCmp(name, "widget_theme") == 0) {
+        widget_theme = atoi(value);
     } else if (StringCaseCmp(name, "single_pane") == 0) {
         single_pane = atoi(value) ? true : false;
     } else if (StringCaseCmp(name, "wheel_can_bump") == 0) {
@@ -176,6 +178,7 @@ bool Options_Save(const char *filename) {
     fprintf(option_fp, "\n");
 
     fprintf(option_fp, "font_size      = %d\n", window_size);
+    fprintf(option_fp, "widget_theme      = %d\n", widget_theme);
     fprintf(option_fp, "single_pane = %d\n", single_pane ? 1 : 0);
     fprintf(option_fp, "wheel_can_bump = %d\n", wheel_can_bump ? 1 : 0);
     fprintf(option_fp, "\n");
@@ -211,8 +214,8 @@ class UI_OptionsWin : public Fl_Window {
    private:
     Fl_Choice *opt_language;
     Fl_Choice *opt_font_size;
+    Fl_Choice *opt_widget_theme;
 
-    Fl_Check_Button *opt_alt_look;
     Fl_Check_Button *opt_single_pane;
     Fl_Check_Button *opt_wheel_bump;
 
@@ -283,6 +286,12 @@ class UI_OptionsWin : public Fl_Window {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         window_size = that->opt_font_size->value();
+    }
+    
+    static void callback_WidgetTheme(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+        widget_theme = that->opt_widget_theme->value();
     }
    
     static void callback_SinglePane(Fl_Widget *w, void *data) {
@@ -357,6 +366,15 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_font_size->value(window_size);
 
     cy += opt_font_size->h() + y_step;
+    
+    opt_widget_theme =
+        new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Widget Theme: "));
+    opt_widget_theme->align(FL_ALIGN_LEFT);
+    opt_widget_theme->add(_("GTK+|Gleam|Base|Plastic"));
+    opt_widget_theme->callback(callback_WidgetTheme, this);
+    opt_widget_theme->value(widget_theme);
+
+    cy += opt_widget_theme->h() + y_step;
 
     opt_single_pane = new Fl_Check_Button(cx, cy, W - cx - pad, kf_h(24),
                                        _(" Single Pane Mode"));
