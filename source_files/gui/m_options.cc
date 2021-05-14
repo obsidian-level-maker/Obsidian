@@ -48,6 +48,24 @@ static void Parse_Option(const char *name, const char *value) {
         button_theme = atoi(value);
     } else if (StringCaseCmp(name, "single_pane") == 0) {
         single_pane = atoi(value) ? true : false;
+	} else if (StringCaseCmp(name, "text_red") == 0) {
+        text_red = atoi(value);
+	} else if (StringCaseCmp(name, "text_green") == 0) {
+        text_green = atoi(value);  
+	} else if (StringCaseCmp(name, "text_blue") == 0) {
+        text_blue = atoi(value);
+	} else if (StringCaseCmp(name, "bg_red") == 0) {
+        bg_red = atoi(value);
+	} else if (StringCaseCmp(name, "bg_green") == 0) {
+        bg_green = atoi(value);  
+	} else if (StringCaseCmp(name, "bg_blue") == 0) {
+        bg_blue = atoi(value);
+	} else if (StringCaseCmp(name, "bg2_red") == 0) {
+        bg2_red = atoi(value);
+	} else if (StringCaseCmp(name, "bg2_green") == 0) {
+        bg2_green = atoi(value);  
+	} else if (StringCaseCmp(name, "bg2_blue") == 0) {
+        bg2_blue = atoi(value);         
     } else if (StringCaseCmp(name, "create_backups") == 0) {
         create_backups = atoi(value) ? true : false;
     } else if (StringCaseCmp(name, "overwrite_warning") == 0) {
@@ -182,6 +200,15 @@ bool Options_Save(const char *filename) {
     fprintf(option_fp, "box_theme      = %d\n", box_theme);
     fprintf(option_fp, "button_theme      = %d\n", button_theme);
     fprintf(option_fp, "single_pane = %d\n", single_pane ? 1 : 0);
+    fprintf(option_fp, "text_red      = %d\n", text_red);
+    fprintf(option_fp, "text_green      = %d\n", text_green);
+    fprintf(option_fp, "text_blue      = %d\n", text_blue);
+    fprintf(option_fp, "bg_red      = %d\n", bg_red);
+    fprintf(option_fp, "bg_green      = %d\n", bg_green);
+    fprintf(option_fp, "bg_blue      = %d\n", bg_blue);
+    fprintf(option_fp, "bg2_red      = %d\n", bg2_red);
+    fprintf(option_fp, "bg2_green      = %d\n", bg2_green);
+    fprintf(option_fp, "bg2_blue      = %d\n", bg2_blue);
     fprintf(option_fp, "\n");
 
     fprintf(option_fp, "create_backups = %d\n", create_backups ? 1 : 0);
@@ -319,17 +346,26 @@ class UI_OptionsWin : public Fl_Window {
     
     static void callback_TextColor(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;     
-        fl_color_chooser((const char *)"Select Text Color", text_red, text_green, text_blue, 1);
+        if (fl_color_chooser((const char *)"Select Text Color", text_red, text_green, text_blue, 1)) {
+    		that->opt_text_color->color(fl_rgb_color(text_red, text_green, text_blue));
+    		that->opt_text_color->redraw();
+    	}
     }
     
     static void callback_BgColor(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;     
-        fl_color_chooser((const char *)"Select BG Color", bg_red, bg_green, bg_blue, 1);
+        if (fl_color_chooser((const char *)"Select BG Color", bg_red, bg_green, bg_blue, 1)) {
+    		that->opt_bg_color->color(fl_rgb_color(bg_red, bg_green, bg_blue));
+    		that->opt_bg_color->redraw();
+    	}
     }
     
     static void callback_Bg2Color(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;       
-        fl_color_chooser((const char *)"Select BG2 Color", bg2_red, bg2_green, bg2_blue, 1);
+        if (fl_color_chooser((const char *)"Select BG2 Color", bg2_red, bg2_green, bg2_blue, 1)) {
+    		that->opt_bg2_color->color(fl_rgb_color(bg2_red, bg2_green, bg2_blue));
+    		that->opt_bg2_color->redraw();
+    	}
     }
 
     static void callback_Backups(Fl_Widget *w, void *data) {
@@ -448,7 +484,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
                                        _("Color 1"));
     opt_text_color->visible_focus(0);
     opt_text_color->box(FL_DOWN_BOX);
-    opt_text_color->color(FONT_COLOR);
+    opt_text_color->color(fl_rgb_color(text_red, text_green, text_blue));
     opt_text_color->align(FL_ALIGN_BOTTOM);
     opt_text_color->callback(callback_TextColor, this);
     opt_text_color->labelfont(font_style);
@@ -457,7 +493,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
                                        _("Color 2"));
     opt_bg_color->visible_focus(0);
     opt_bg_color->box(FL_DOWN_BOX);
-    opt_bg_color->color(WINDOW_BG);
+    opt_bg_color->color(fl_rgb_color(bg_red, bg_green, bg_blue));
     opt_bg_color->align(FL_ALIGN_BOTTOM);
     opt_bg_color->callback(callback_BgColor, this);
     opt_bg_color->labelfont(font_style);
@@ -466,7 +502,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
                                        _("Color 3"));
     opt_bg2_color->visible_focus(0);
     opt_bg2_color->box(FL_DOWN_BOX);
-    opt_bg2_color->color(SELECTION);
+    opt_bg2_color->color(fl_rgb_color(bg2_red, bg2_green, bg2_blue));
     opt_bg2_color->align(FL_ALIGN_BOTTOM);
     opt_bg2_color->callback(callback_Bg2Color, this);
     opt_bg2_color->labelfont(font_style);
