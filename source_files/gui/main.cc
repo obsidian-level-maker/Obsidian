@@ -57,10 +57,18 @@ bool batch_mode = false;
 const char *batch_output_file = NULL;
 
 // options
-
-Fl_Color FONT_COLOR = FL_FOREGROUND_COLOR;
-Fl_Color SELECTION = FL_SELECTION_COLOR;
-Fl_Color WINDOW_BG = FL_BACKGROUND_COLOR;
+uchar text_red;
+uchar text_green;
+uchar text_blue;
+uchar bg_red;
+uchar bg_green;
+uchar bg_blue;
+uchar bg2_red;
+uchar bg2_green;
+uchar bg2_blue;
+Fl_Color FONT_COLOR;
+Fl_Color SELECTION;
+Fl_Color WINDOW_BG;
 int font_theme = 0;
 Fl_Font font_style = FL_HELVETICA;
 int box_theme = 0;
@@ -334,11 +342,17 @@ int Main_DetermineScaling() {
 
 void Main_SetupFLTK() {
     Fl::visual(FL_DOUBLE | FL_RGB);
-    Fl::get_system_colors();
     //Fl::background(221, 221, 221); // Seems to influence checkbox backgrounds, slider handles, and slider button arrows by default
     //Fl::background2(255, 255, 255); // Seems to only influence checkbox backgrounds by default...must be some kind of fallback
     //Fl::foreground(0, 0, 150); // Influences default font color
-       
+    Fl::get_system_colors();
+	FONT_COLOR = FL_FOREGROUND_COLOR;
+	SELECTION = FL_BACKGROUND_COLOR;
+	WINDOW_BG = FL_BACKGROUND2_COLOR;
+    Fl::get_color(FONT_COLOR, text_red, text_green, text_blue); 
+    Fl::get_color(WINDOW_BG, bg_red, bg_green, bg_blue);     
+    Fl::get_color(SELECTION, bg2_red, bg2_green, bg2_blue);     
+       	
     switch(widget_theme) {
     	case 0 : Fl::scheme("gtk+");
     			 break;

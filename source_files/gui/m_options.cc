@@ -220,6 +220,9 @@ class UI_OptionsWin : public Fl_Window {
     Fl_Choice *opt_button_theme;
 
     Fl_Check_Button *opt_single_pane;
+    Fl_Button *opt_text_color;
+    Fl_Button *opt_bg_color;
+    Fl_Button *opt_bg2_color;
 
     Fl_Check_Button *opt_backups;
     Fl_Check_Button *opt_overwrite;
@@ -312,6 +315,21 @@ class UI_OptionsWin : public Fl_Window {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         single_pane = that->opt_single_pane->value() ? true : false;
+    }
+    
+    static void callback_TextColor(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;     
+        fl_color_chooser((const char *)"Select Text Color", text_red, text_green, text_blue, 1);
+    }
+    
+    static void callback_BgColor(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;     
+        fl_color_chooser((const char *)"Select BG Color", bg_red, bg_green, bg_blue, 1);
+    }
+    
+    static void callback_Bg2Color(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;       
+        fl_color_chooser((const char *)"Select BG2 Color", bg2_red, bg2_green, bg2_blue, 1);
     }
 
     static void callback_Backups(Fl_Widget *w, void *data) {
@@ -425,10 +443,39 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_single_pane->labelfont(font_style);
 
     cy += opt_single_pane->h() + y_step * 2 / 3;
+    
+    opt_text_color = new Fl_Button(cx, cy, W * .25, kf_h(24),
+                                       _("Color 1"));
+    opt_text_color->visible_focus(0);
+    opt_text_color->box(FL_DOWN_BOX);
+    opt_text_color->color(FONT_COLOR);
+    opt_text_color->align(FL_ALIGN_BOTTOM);
+    opt_text_color->callback(callback_TextColor, this);
+    opt_text_color->labelfont(font_style);
+
+    opt_bg_color = new Fl_Button(cx + opt_text_color->w() +  (3 * pad), cy, W * .25, kf_h(24),
+                                       _("Color 2"));
+    opt_bg_color->visible_focus(0);
+    opt_bg_color->box(FL_DOWN_BOX);
+    opt_bg_color->color(WINDOW_BG);
+    opt_bg_color->align(FL_ALIGN_BOTTOM);
+    opt_bg_color->callback(callback_BgColor, this);
+    opt_bg_color->labelfont(font_style);
+    
+    opt_bg2_color = new Fl_Button(cx + (opt_text_color->w() + (3 * pad)) * 2, cy, W * .25, kf_h(24),
+                                       _("Color 3"));
+    opt_bg2_color->visible_focus(0);
+    opt_bg2_color->box(FL_DOWN_BOX);
+    opt_bg2_color->color(SELECTION);
+    opt_bg2_color->align(FL_ALIGN_BOTTOM);
+    opt_bg2_color->callback(callback_Bg2Color, this);
+    opt_bg2_color->labelfont(font_style);
+
+    cy += opt_text_color->h() + y_step * 2 / 3;
 
     //----------------
 
-    cy += y_step + y_step / 2;
+    cy += y_step * 2;
 
     heading = new Fl_Box(FL_NO_BOX, x() + pad, cy, W - pad * 2, kf_h(24),
                          _("File Options"));

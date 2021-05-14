@@ -56,6 +56,15 @@ typedef enum {
 extern int main_action;
 
 // Misc Options
+extern uchar text_red;
+extern uchar text_green;
+extern uchar text_blue;
+extern uchar bg_red;
+extern uchar bg_green;
+extern uchar bg_blue;
+extern uchar bg2_red;
+extern uchar bg2_green;
+extern uchar bg2_blue;
 extern Fl_Boxtype box_style;
 extern Fl_Boxtype button_style;
 extern Fl_Font font_style;
