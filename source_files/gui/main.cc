@@ -333,10 +333,10 @@ int Main_DetermineScaling() {
 
 void Main_SetupFLTK() {
     Fl::visual(FL_DOUBLE | FL_RGB);
-    //Fl::background(WINDOW_BG);
-    //Fl::background2(255, 255, 255);
-    //Fl::foreground(0, 0, 0);
     Fl::get_system_colors();
+    //Fl::background(221, 221, 221); // Seems to influence checkbox backgrounds, slider handles, and slider button arrows by default
+    //Fl::background2(255, 255, 255); // Seems to only influence checkbox backgrounds by default...must be some kind of fallback
+    //Fl::foreground(0, 0, 150); // Influences default font color
        
     switch(widget_theme) {
     	case 0 : Fl::scheme("gtk+");
