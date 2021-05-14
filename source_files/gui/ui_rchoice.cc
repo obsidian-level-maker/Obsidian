@@ -60,6 +60,107 @@ UI_RChoice::~UI_RChoice() {
     }
 }
 
+// Custom draw function to use selected button style
+void UI_RChoice::draw() {
+  Fl_Boxtype btype = button_style;
+  
+  int dx = Fl::box_dx(btype);
+  int dy = Fl::box_dy(btype);
+
+  // Arrow area
+  int H = h() - 2 * dy;
+  int W = Fl::is_scheme("gtk+")    ? 20 :			// gtk+  -- fixed size
+          Fl::is_scheme("gleam")   ? 20 :			// gleam -- fixed size
+          Fl::is_scheme("plastic") ? ((H > 20) ? 20 : H)	// plastic: shrink if H<20
+                                   : ((H > 20) ? 20 : H);	// default: shrink if H<20
+  int X = x() + w() - W - dx;
+  int Y = y() + dy;
+
+  // Arrow object
+  int w1 = (W - 4) / 3; if (w1 < 1) w1 = 1;
+  int x1 = X + (W - 2 * w1 - 1) / 2;
+  int y1 = Y + (H - w1 - 1) / 2;
+
+  if (Fl::scheme()) {
+    // NON-DEFAULT SCHEME
+
+    // Draw widget box
+    draw_box(btype, color());
+
+    // Draw arrow area
+    fl_color(active_r() ? labelcolor() : fl_inactive(labelcolor()));
+    if (Fl::is_scheme("plastic")) {
+      // Show larger up/down arrows...
+      fl_polygon(x1, y1 + 3, x1 + w1, y1 + w1 + 3, x1 + 2 * w1, y1 + 3);
+      fl_polygon(x1, y1 + 1, x1 + w1, y1 - w1 + 1, x1 + 2 * w1, y1 + 1);
+    } else {
+      // Show smaller up/down arrows with a divider...
+      x1 = x() + w() - 13 - dx;
+      y1 = y() + h() / 2;
+      fl_polygon(x1, y1 - 2, x1 + 3, y1 - 5, x1 + 6, y1 - 2);
+      fl_polygon(x1, y1 + 2, x1 + 3, y1 + 5, x1 + 6, y1 + 2);
+
+      fl_color(fl_darker(color()));
+      fl_yxline(x1 - 7, y1 - 8, y1 + 8);
+
+      fl_color(fl_lighter(color()));
+      fl_yxline(x1 - 6, y1 - 8, y1 + 8);
+    }
+  } else {
+    // DEFAULT SCHEME
+
+    // Draw widget box
+    if (fl_contrast(textcolor(), FL_BACKGROUND2_COLOR) == textcolor()) {
+      draw_box(btype, FL_BACKGROUND2_COLOR);
+    } else {
+      draw_box(btype, fl_lighter(color()));
+    }
+
+    // Draw arrow area
+    draw_box(FL_UP_BOX,X,Y,W,H,color());
+    fl_color(active_r() ? labelcolor() : fl_inactive(labelcolor()));
+    fl_polygon(x1, y1, x1 + w1, y1 + w1, x1 + 2 * w1, y1);
+  }
+
+  W += 2 * dx;
+
+  // Draw menu item's label
+  if (mvalue()) {
+    Fl_Menu_Item m = *mvalue();
+    if (active_r()) m.activate(); else m.deactivate();
+
+    // Clip
+    int xx = x() + dx, yy = y() + dy + 1, ww = w() - W, hh = H - 2;
+    fl_push_clip(xx, yy, ww, hh);
+
+    if ( Fl::scheme()) {
+      Fl_Label l;
+      l.value = m.text;
+      l.image = 0;
+      l.deimage = 0;
+      l.type = m.labeltype_;
+      l.font = m.labelsize_ || m.labelfont_ ? m.labelfont_ : textfont();
+      l.size = m.labelsize_ ? m.labelsize_ : textsize();
+      l.color= m.labelcolor_ ? m.labelcolor_ : textcolor();
+      if (!m.active()) l.color = fl_inactive((Fl_Color)l.color);
+      fl_draw_shortcut = 2; // hack value to make '&' disappear
+      l.draw(xx+3, yy, ww>6 ? ww-6 : 0, hh, FL_ALIGN_LEFT);
+      fl_draw_shortcut = 0;
+      if ( Fl::focus() == this ) draw_focus(box(), xx, yy, ww, hh);
+    }
+    else {
+      fl_draw_shortcut = 2; // hack value to make '&' disappear
+      m.draw(xx, yy, ww, hh, this, Fl::focus() == this);
+      fl_draw_shortcut = 0;
+    }
+
+    fl_pop_clip();
+  }
+
+  // Widget's label
+  draw_label();
+}
+
 void UI_RChoice::AddChoice(const char *id, const char *label) {
     choice_data_c *opt = FindID(id);
 
@@ -236,18 +337,18 @@ int UI_RChoice::handle(int event) {
 //----------------------------------------------------------------
 
 UI_RSlide::UI_RSlide(int x, int y, int w, int h, const char *label)
-    : Fl_Group(x, y, w, h, label), opt_list() {visible_focus(0); labelfont(font_style); }
+    : Fl_Group(x, y, w, h, label), opt_list() { visible_focus(0); labelfont(font_style); }
 
 UI_RSlide::~UI_RSlide() {}
 
 //----------------------------------------------------------------
 
 UI_RButton::UI_RButton(int x, int y, int w, int h, const char *label)
-    : Fl_Check_Button(x, y, w, h, label), opt_list() { visible_focus(0); box(FL_NO_BOX); labelfont(font_style); }
+    : Fl_Check_Button(x, y, w, h, label), opt_list() { visible_focus(0); box(FL_NO_BOX); labelfont(font_style); down_box(button_style); }
 
 UI_RButton::~UI_RButton() {}
 
-// Custom draw function to have checkbox to the right side of the label. Works for both single and double pane mode
+// Custom draw function to have checkbox to the right side of the label. Also uses the checkmark style regardless of box type
 void UI_RButton::draw() {
   if (box()) draw_box(this==Fl::pushed() ? fl_down(box()) : box(), color());
   Fl_Color col = value() ? (active_r() ? selection_color() :
@@ -260,15 +361,7 @@ void UI_RButton::draw() {
   int lx = 0;			// relative label position (STR #3237)
 
 	if (single_pane) {
-	  if (down_box()) {
-		// draw other down_box() styles:
-		switch (down_box()) {
-		  case FL_DOWN_BOX :
-		  case FL_UP_BOX :
-		  case _FL_PLASTIC_DOWN_BOX :
-		  case _FL_PLASTIC_UP_BOX :
-		    // Check box...
-		    draw_box(down_box(), x()+dx, y()+dy, W, W, FL_BACKGROUND2_COLOR);
+		draw_box(down_box(), x()+dx, y()+dy, W, W, FL_BACKGROUND2_COLOR);
 		if (value()) {
 		  fl_color(col);
 		  int tx = x() + dx + 3;
@@ -281,88 +374,11 @@ void UI_RButton::draw() {
 			fl_line(tx+d1, ty+d1, tx+tw-1, ty+d1-d2+1);
 		  }
 		}
-		    break;
-		  case _FL_ROUND_DOWN_BOX :
-		  case _FL_ROUND_UP_BOX :
-		    // Radio button...
-		    draw_box(down_box(), x()+dx, y()+dy, W, W, FL_BACKGROUND2_COLOR);
-		if (value()) {
-		  int tW = (W - Fl::box_dw(down_box())) / 2 + 1;
-		  if ((W - tW) & 1) tW++; // Make sure difference is even to center
-		  int tdx = dx + (W - tW) / 2;
-		  int tdy = dy + (W - tW) / 2;
-
-		  if (Fl::is_scheme("gtk+")) {
-			fl_color(FL_SELECTION_COLOR);
-			tW --;
-			fl_pie(x() + tdx - 1, y() + tdy - 1, tW + 3, tW + 3, 0.0, 360.0);
-			fl_color(fl_color_average(FL_WHITE, FL_SELECTION_COLOR, 0.2f));
-		  } else fl_color(col);
-
-		  switch (tW) {
-			// Larger circles draw fine...
-			default :
-		          fl_pie(x() + tdx, y() + tdy, tW, tW, 0.0, 360.0);
-			  break;
-
-		        // Small circles don't draw well on many systems...
-			case 6 :
-			  fl_rectf(x() + tdx + 2, y() + tdy, tW - 4, tW);
-			  fl_rectf(x() + tdx + 1, y() + tdy + 1, tW - 2, tW - 2);
-			  fl_rectf(x() + tdx, y() + tdy + 2, tW, tW - 4);
-			  break;
-
-			case 5 :
-			case 4 :
-			case 3 :
-			  fl_rectf(x() + tdx + 1, y() + tdy, tW - 2, tW);
-			  fl_rectf(x() + tdx, y() + tdy + 1, tW, tW - 2);
-			  break;
-
-			case 2 :
-			case 1 :
-			  fl_rectf(x() + tdx, y() + tdy, tW, tW);
-			  break;
-		  }
-
-		  if (Fl::is_scheme("gtk+")) {
-			fl_color(fl_color_average(FL_WHITE, FL_SELECTION_COLOR, 0.5));
-			fl_arc(x() + tdx, y() + tdy, tW + 1, tW + 1, 60.0, 180.0);
-		  }
-		}
-		    break;
-		  default :
-		    draw_box(down_box(), x()+dx, y()+dy, W, W, col);
-		    break;
-		}
 		lx = dx + W + 2;
-	  } else {
-		// if down_box() is zero, draw light button style:
-		int hh = h()-2*dy - 2;
-		int ww = W/2+1;
-		int xx = dx;
-		if (w()<ww+2*xx) xx = (w()-ww)/2;
-		if (Fl::is_scheme("plastic")) {
-		  col = active_r() ? selection_color() : fl_inactive(selection_color());
-		  fl_color(value() ? col : fl_color_average(col, FL_BLACK, 0.5f));
-		  fl_pie(x()+w()-W, y()+dy+1, ww, hh, 0, 360);
-		} else {
-		  draw_box(FL_THIN_DOWN_BOX, x()+w()-W, y()+dy+1, hh, hh, col);
-		}
-		lx = dx + ww + 2;
-	  }
-	  draw_label(x(), y(), w()-lx-bx, h());
-	  if (Fl::focus() == this) draw_focus();
+	   draw_label(x(), y(), w()-lx-bx, h());
+	   if (Fl::focus() == this) draw_focus();
 	} else {
-	  if (down_box()) {
-		// draw other down_box() styles:
-		switch (down_box()) {
-		  case FL_DOWN_BOX :
-		  case FL_UP_BOX :
-		  case _FL_PLASTIC_DOWN_BOX :
-		  case _FL_PLASTIC_UP_BOX :
-		    // Check box...
-		    draw_box(down_box(), x()+w()-W, y()+dy, W, W, FL_BACKGROUND2_COLOR);
+		draw_box(down_box(), x()+w()-W, y()+dy, W, W, FL_BACKGROUND2_COLOR);
 		if (value()) {
 		  fl_color(col);
 		  int tx = x() + w() - W + dx + 1;
@@ -375,78 +391,9 @@ void UI_RButton::draw() {
 			fl_line(tx+d1, ty+d1, tx+tw-1, ty+d1-d2+1);
 		  }
 		}
-		    break;
-		  case _FL_ROUND_DOWN_BOX :
-		  case _FL_ROUND_UP_BOX :
-		    // Radio button...
-		    draw_box(down_box(), x()+dx, y()+dy, W, W, FL_BACKGROUND2_COLOR);
-		if (value()) {
-		  int tW = (W - Fl::box_dw(down_box())) / 2 + 1;
-		  if ((W - tW) & 1) tW++; // Make sure difference is even to center
-		  int tdx = dx + (W - tW) / 2;
-		  int tdy = dy + (W - tW) / 2;
-
-		  if (Fl::is_scheme("gtk+")) {
-			fl_color(FL_SELECTION_COLOR);
-			tW --;
-			fl_pie(x() + tdx - 1, y() + tdy - 1, tW + 3, tW + 3, 0.0, 360.0);
-			fl_color(fl_color_average(FL_WHITE, FL_SELECTION_COLOR, 0.2f));
-		  } else fl_color(col);
-
-		  switch (tW) {
-			// Larger circles draw fine...
-			default :
-		          fl_pie(x() + tdx, y() + tdy, tW, tW, 0.0, 360.0);
-			  break;
-
-		        // Small circles don't draw well on many systems...
-			case 6 :
-			  fl_rectf(x() + tdx + 2, y() + tdy, tW - 4, tW);
-			  fl_rectf(x() + tdx + 1, y() + tdy + 1, tW - 2, tW - 2);
-			  fl_rectf(x() + tdx, y() + tdy + 2, tW, tW - 4);
-			  break;
-
-			case 5 :
-			case 4 :
-			case 3 :
-			  fl_rectf(x() + tdx + 1, y() + tdy, tW - 2, tW);
-			  fl_rectf(x() + tdx, y() + tdy + 1, tW, tW - 2);
-			  break;
-
-			case 2 :
-			case 1 :
-			  fl_rectf(x() + tdx, y() + tdy, tW, tW);
-			  break;
-		  }
-
-		  if (Fl::is_scheme("gtk+")) {
-			fl_color(fl_color_average(FL_WHITE, FL_SELECTION_COLOR, 0.5));
-			fl_arc(x() + tdx, y() + tdy, tW + 1, tW + 1, 60.0, 180.0);
-		  }
-		}
-		    break;
-		  default :
-		    draw_box(down_box(), x()+dx, y()+dy, W, W, col);
-		    break;
-		}
 		lx = dx + W + 2;
-	  } else {
-		// if down_box() is zero, draw light button style:
-		int hh = h()-2*dy - 2;
-		int ww = W/2+1;
-		int xx = dx;
-		if (w()<ww+2*xx) xx = (w()-ww)/2;
-		if (Fl::is_scheme("plastic")) {
-		  col = active_r() ? selection_color() : fl_inactive(selection_color());
-		  fl_color(value() ? col : fl_color_average(col, FL_BLACK, 0.5f));
-		  fl_pie(x()+w()-W, y()+dy+1, ww, hh, 0, 360);
-		} else {
-		  draw_box(FL_THIN_DOWN_BOX, x()+w()-W, y()+dy+1, hh, hh, col);
-		}
-		lx = dx + ww + 2;
-	  }
-	  draw_label(x(), y(), w()-lx-bx, h());
-	  if (Fl::focus() == this) draw_focus();	
+	   draw_label(x(), y(), w()-lx-bx, h());
+	   if (Fl::focus() == this) draw_focus();	
 	}
 }
 

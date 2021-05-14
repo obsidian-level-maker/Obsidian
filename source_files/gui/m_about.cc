@@ -148,6 +148,7 @@ UI_About::UI_About(int W, int H, const char *label)
         int by = H - (H - cy + bh) / 2;
 
         Fl_Button *button = new Fl_Button(W - bw * 2, by, bw, bh, fl_ok);
+        button->box(button_style);
         button->callback(callback_Quit, this);
         button->labelfont(font_style);
     }

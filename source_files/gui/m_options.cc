@@ -490,6 +490,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
         // finally add an "Close" button
 
         Fl_Button *button = new Fl_Button(bx, by, bw, bh, fl_close);
+        button->box(button_style);
         button->callback(callback_Quit, this);
         button->labelfont(font_style);
     }

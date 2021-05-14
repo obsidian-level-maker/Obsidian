@@ -366,7 +366,7 @@ void Main_SetupFLTK() {
     			  break;    			     			 
     }    
     switch(button_theme) {
-    	case 0 : button_style = FL_THIN_UP_BOX;
+    	case 0 : button_style = FL_UP_BOX;
     			 break;
     	case 1 : button_style = FL_SHADOW_BOX;
     			 break;
@@ -379,7 +379,7 @@ void Main_SetupFLTK() {
     	case 5 : button_style = FL_BORDER_BOX;
     			 break;
     	// Shouldn't be reached, but still
-    	default : button_style = FL_THIN_UP_BOX;
+    	default : button_style = FL_UP_BOX;
     			  break;    			     			 
     }
     switch(font_theme) {

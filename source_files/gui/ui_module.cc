@@ -35,7 +35,6 @@ UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
 
     mod_button =
         new Fl_Check_Button(X + kf_w(6), Y + kf_h(4), W - kf_w(12), kf_h(24));
-    
     mod_button->visible_focus(0);
 
     if (Is_UI()) {
@@ -173,7 +172,8 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 
     rsl->prev_button =
         new Fl_Button(rsl->x(), rsl->y(), rsl->w() * .10, kf_h(24), "@<");
-    rsl->prev_button->visible_focus(0);     
+    rsl->prev_button->visible_focus(0);
+    rsl->prev_button->box(button_style);     
     rsl->prev_button->align(FL_ALIGN_INSIDE);   
     rsl->prev_button->labelcolor(select_col);
     rsl->prev_button->labelsize(rsl->prev_button->labelsize() * .80);
@@ -181,6 +181,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     
     rsl->mod_slider =
         new Fl_Hor_Slider(rsl->x() + rsl->w() * .10, rsl->y(), rsl->w() * .80, kf_h(24), "");
+    rsl->mod_slider->box(button_style);
     rsl->mod_slider->selection_color(select_col);
     rsl->mod_slider->minimum(min);
     rsl->mod_slider->maximum(max);
@@ -189,6 +190,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     
     rsl->next_button =
         new Fl_Button(rsl->x() + rsl->w() * .90, rsl->y(), rsl->w() * .10, kf_h(24), "@>");
+    rsl->next_button->box(button_style);
     rsl->next_button->visible_focus(0);   
     rsl->next_button->align(FL_ALIGN_INSIDE);  
     rsl->next_button->labelcolor(select_col);

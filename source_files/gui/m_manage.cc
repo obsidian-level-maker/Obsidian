@@ -702,6 +702,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
 
         load_but =
             new Fl_Button(button_x, kf_h(25), button_w, button_h, _("Load"));
+        load_but->box(button_style);
         load_but->callback(callback_Load, this);
         load_but->shortcut(FL_CTRL + 'l');
         load_but->labelfont(font_style);
@@ -715,17 +716,20 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         const char *recent_title = StringPrintf("   %s @-3>", _("Recent"));
         recent_menu = new Fl_Menu_Across(button_x, kf_h(95), button_w, button_h,
                                          recent_title);
+        recent_menu->box(button_style);
         recent_menu->textfont(font_style);
         recent_menu->labelfont(font_style);
 
         save_but =
             new Fl_Button(button_x, kf_h(165), button_w, button_h, _("Save"));
+        save_but->box(button_style);
         save_but->callback(callback_Save, this);
         save_but->shortcut(FL_CTRL + 's');
         save_but->labelfont(font_style);
 
         use_but =
             new Fl_Button(button_x, kf_h(225), button_w, button_h, _("Use"));
+        use_but->box(button_style);
         use_but->callback(callback_Use, this);
         use_but->labelfont(font_style);
 
@@ -740,6 +744,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
 
     close_but =
         new Fl_Button(button_x, H - kf_h(50), button_w, button_h + 5, fl_close);
+    close_but->box(button_style);
     close_but->labelfont(font_style | FL_BOLD);
     close_but->labelsize(FL_NORMAL_SIZE + 2);
     close_but->callback(callback_Quit, this);
@@ -768,6 +773,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         button_h = kf_h(25);
 
         cut_but = new Fl_Button(cx, base_y, button_w, button_h, _("Cut"));
+        cut_but->box(button_style);
         cut_but->labelsize(small_font_size);
         cut_but->labelfont(font_style);
         cut_but->shortcut(FL_CTRL + 'x');
@@ -776,6 +782,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         cx += kf_w(115);
 
         copy_but = new Fl_Button(cx, base_y, button_w, button_h, _("Copy"));
+        copy_but->box(button_style);
         copy_but->labelsize(small_font_size);
         copy_but->labelfont(font_style);
         copy_but->shortcut(FL_CTRL + 'c');
@@ -784,6 +791,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         cx += kf_w(115);
 
         paste_but = new Fl_Button(cx, base_y, button_w, button_h, _("Paste"));
+       	paste_but->box(button_style);
         paste_but->labelsize(small_font_size);
         paste_but->labelfont(font_style);
         paste_but->shortcut(FL_CTRL + 'v');

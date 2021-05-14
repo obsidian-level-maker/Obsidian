@@ -431,6 +431,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
         {
             Fl_Button *but =
                 new Fl_Button(bx, button_y, button_w, button_h, fl_close);
+            but->box(button_style);
             but->labelfont(font_style | FL_BOLD);
             but->callback(quit_callback, this);
         }
@@ -439,6 +440,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
         {
             Fl_Button *but =
                 new Fl_Button(bx, button_y, button_w, button_h, _("Save"));
+            but->box(button_style);
             but->callback(save_callback, this);
             but->labelfont(font_style);
         }
@@ -447,6 +449,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
         {
             copy_but =
                 new Fl_Button(bx, button_y, button_w, button_h, _("Copy"));
+            copy_but->box(button_style);
             copy_but->callback(copy_callback, this);
             copy_but->shortcut(FL_CTRL + 'c');
             copy_but->deactivate();

@@ -63,6 +63,8 @@ class UI_RChoice : public Fl_Choice {
    public:
     UI_RChoice(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_RChoice();
+    
+	void draw(); 
 
     // FLTK method override
     int handle(int event);
