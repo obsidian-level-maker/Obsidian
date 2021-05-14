@@ -204,9 +204,9 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 	std::string nan_string = nan;
 	std::string::size_type oldpos = 0;
 	std::string::size_type pos = 0;
-	while (pos != -1) {
+	while (pos != std::string::npos) {
 		pos = nan_string.find(',', oldpos);
-		if (pos != -1) {
+		if (pos != std::string::npos) {
 			std::string map_string = nan_string.substr(oldpos, pos-oldpos);
 			std::string::size_type temp_pos = map_string.find(':');
 			double key = std::stod(map_string.substr(0, temp_pos));
@@ -527,7 +527,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col)
     : Fl_Group(X, Y, W, H), button_col(_button_col) {
     box(FL_FLAT_BOX);
 
-    color(WINDOW_BG, WINDOW_BG);
+    color(fl_darker(fl_darker(WINDOW_BG)));
 
     int cy = Y;
 
@@ -559,7 +559,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col)
     mod_pack->labelcolor(FL_DARK1);
 
     mod_pack->box(FL_FLAT_BOX);
-    mod_pack->color(WINDOW_BG);
+    mod_pack->color(fl_darker(fl_darker(WINDOW_BG)));
     mod_pack->resizable(mod_pack);
 
     end();

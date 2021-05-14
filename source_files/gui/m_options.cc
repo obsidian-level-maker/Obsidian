@@ -48,6 +48,8 @@ static void Parse_Option(const char *name, const char *value) {
         button_theme = atoi(value);
     } else if (StringCaseCmp(name, "single_pane") == 0) {
         single_pane = atoi(value) ? true : false;
+	} else if (StringCaseCmp(name, "color_scheme") == 0) {
+        color_scheme = atoi(value);
 	} else if (StringCaseCmp(name, "text_red") == 0) {
         text_red = atoi(value);
 	} else if (StringCaseCmp(name, "text_green") == 0) {
@@ -200,6 +202,7 @@ bool Options_Save(const char *filename) {
     fprintf(option_fp, "box_theme      = %d\n", box_theme);
     fprintf(option_fp, "button_theme      = %d\n", button_theme);
     fprintf(option_fp, "single_pane = %d\n", single_pane ? 1 : 0);
+    fprintf(option_fp, "color_scheme      = %d\n", color_scheme);
     fprintf(option_fp, "text_red      = %d\n", text_red);
     fprintf(option_fp, "text_green      = %d\n", text_green);
     fprintf(option_fp, "text_blue      = %d\n", text_blue);
@@ -247,6 +250,7 @@ class UI_OptionsWin : public Fl_Window {
     Fl_Choice *opt_button_theme;
 
     Fl_Check_Button *opt_single_pane;
+    Fl_Choice *opt_color_scheme;
     Fl_Button *opt_text_color;
     Fl_Button *opt_bg_color;
     Fl_Button *opt_bg2_color;
@@ -342,6 +346,12 @@ class UI_OptionsWin : public Fl_Window {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         single_pane = that->opt_single_pane->value() ? true : false;
+    }
+
+    static void callback_ColorScheme(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+        color_scheme = that->opt_color_scheme->value();
     }
     
     static void callback_TextColor(Fl_Widget *w, void *data) {
@@ -464,7 +474,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_button_theme =
         new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Button Theme: "));
     opt_button_theme->align(FL_ALIGN_LEFT);
-    opt_button_theme->add(_("Default|Shadow|Embossed|Engraved|Inverted|Flat"));
+    opt_button_theme->add(_("Default|Embossed|Engraved|Inverted|Flat"));
     opt_button_theme->callback(callback_ButtonTheme, this);
     opt_button_theme->value(button_theme);
     opt_button_theme->labelfont(font_style);
@@ -472,16 +482,19 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_button_theme->h() + y_step;
 
-    opt_single_pane = new Fl_Check_Button(cx, cy, W - cx - pad, kf_h(24),
-                                       _(" Single Pane Mode"));
-    opt_single_pane->value(single_pane ? 1 : 0);
-    opt_single_pane->callback(callback_SinglePane, this);
-    opt_single_pane->labelfont(font_style);
+    opt_color_scheme =
+        new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Color Scheme: "));
+    opt_color_scheme->align(FL_ALIGN_LEFT);
+    opt_color_scheme->add(_("Obsidian|System Colors|Custom"));
+    opt_color_scheme->callback(callback_ColorScheme, this);
+    opt_color_scheme->value(color_scheme);
+    opt_color_scheme->labelfont(font_style);
+    opt_color_scheme->textfont(font_style);
 
-    cy += opt_single_pane->h() + y_step * 2 / 3;
+    cy += opt_color_scheme->h() + y_step;
     
     opt_text_color = new Fl_Button(cx, cy, W * .25, kf_h(24),
-                                       _("Color 1"));
+                                       _("Font"));
     opt_text_color->visible_focus(0);
     opt_text_color->box(FL_DOWN_BOX);
     opt_text_color->color(fl_rgb_color(text_red, text_green, text_blue));
@@ -490,7 +503,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_text_color->labelfont(font_style);
 
     opt_bg_color = new Fl_Button(cx + opt_text_color->w() +  (3 * pad), cy, W * .25, kf_h(24),
-                                       _("Color 2"));
+                                       _("Panels"));
     opt_bg_color->visible_focus(0);
     opt_bg_color->box(FL_DOWN_BOX);
     opt_bg_color->color(fl_rgb_color(bg_red, bg_green, bg_blue));
@@ -499,7 +512,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_bg_color->labelfont(font_style);
     
     opt_bg2_color = new Fl_Button(cx + (opt_text_color->w() + (3 * pad)) * 2, cy, W * .25, kf_h(24),
-                                       _("Color 3"));
+                                       _("Highlights"));
     opt_bg2_color->visible_focus(0);
     opt_bg2_color->box(FL_DOWN_BOX);
     opt_bg2_color->color(fl_rgb_color(bg2_red, bg2_green, bg2_blue));
@@ -507,11 +520,17 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_bg2_color->callback(callback_Bg2Color, this);
     opt_bg2_color->labelfont(font_style);
 
-    cy += opt_text_color->h() + y_step * 2 / 3;
+    cy += opt_text_color->h() + y_step * 3;
+
+    opt_single_pane = new Fl_Check_Button(cx, cy, W - cx - pad, kf_h(24),
+                                       _(" Single Pane Mode"));
+    opt_single_pane->value(single_pane ? 1 : 0);
+    opt_single_pane->callback(callback_SinglePane, this);
+    opt_single_pane->labelfont(font_style);
 
     //----------------
 
-    cy += y_step * 2;
+    cy += y_step * 4;
 
     heading = new Fl_Box(FL_NO_BOX, x() + pad, cy, W - pad * 2, kf_h(24),
                          _("File Options"));
@@ -557,7 +576,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
     darkish->box(FL_FLAT_BOX);
-    darkish->color(fl_darker(WINDOW_BG), fl_darker(WINDOW_BG));
+    //darkish->color(fl_darker(WINDOW_BG), fl_darker(WINDOW_BG));
     {
         // finally add an "Close" button
 
@@ -569,7 +588,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     darkish->end();
 
     // restart needed warning
-    heading = new Fl_Box(FL_NO_BOX, x() + pad, H - dh - kf_h(30), W - pad * 2,
+    heading = new Fl_Box(FL_NO_BOX, x() + pad, H - dh - kf_h(15), W - pad * 2,
                          kf_h(14), _("Note: some options require a restart."));
     heading->align(FL_ALIGN_INSIDE);
     heading->labelsize(small_font_size);

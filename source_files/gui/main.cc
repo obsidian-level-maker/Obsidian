@@ -57,18 +57,19 @@ bool batch_mode = false;
 const char *batch_output_file = NULL;
 
 // options
-uchar text_red;
-uchar text_green;
-uchar text_blue;
-uchar bg_red;
-uchar bg_green;
-uchar bg_blue;
-uchar bg2_red;
-uchar bg2_green;
-uchar bg2_blue;
+uchar text_red = 0;
+uchar text_green = 0;
+uchar text_blue = 0;
+uchar bg_red = 221;
+uchar bg_green = 221;
+uchar bg_blue = 221;
+uchar bg2_red = 62;
+uchar bg2_green = 61;
+uchar bg2_blue = 57;
 Fl_Color FONT_COLOR;
 Fl_Color SELECTION;
 Fl_Color WINDOW_BG;
+int color_scheme = 0;
 int font_theme = 0;
 Fl_Font font_style = FL_HELVETICA;
 int box_theme = 0;
@@ -341,18 +342,42 @@ int Main_DetermineScaling() {
 }
 
 void Main_SetupFLTK() {
-    Fl::visual(FL_DOUBLE | FL_RGB);
-    //Fl::background(221, 221, 221); // Seems to influence checkbox backgrounds, slider handles, and slider button arrows by default
-    //Fl::background2(255, 255, 255); // Seems to only influence checkbox backgrounds by default...must be some kind of fallback
-    //Fl::foreground(0, 0, 150); // Influences default font color
-    Fl::get_system_colors();
-	FONT_COLOR = FL_FOREGROUND_COLOR;
-	SELECTION = FL_BACKGROUND_COLOR;
-	WINDOW_BG = FL_BACKGROUND2_COLOR;
+    Fl::visual(FL_DOUBLE | FL_RGB);  
+    switch(color_scheme) {
+    	case 0 : Fl::background(221, 221, 221);
+    			 Fl::background2(221, 221, 221);
+    			 Fl::foreground(0, 0, 0);
+				 FONT_COLOR = fl_rgb_color(0, 0, 0);
+				 SELECTION = fl_rgb_color(62, 61, 57);
+				 WINDOW_BG = fl_rgb_color(221, 221, 221); 
+    			 break;
+    	case 1 : Fl::get_system_colors();
+    			 //I think there's a better way to do this part - Dasho
+				 FONT_COLOR = FL_FOREGROUND_COLOR;
+				 SELECTION = FL_BACKGROUND_COLOR;
+				 WINDOW_BG = FL_BACKGROUND2_COLOR;
+    			 break;
+    	case 2 : Fl::background(bg_red, bg_green, bg_blue);
+    			 Fl::background2(bg_red, bg_green, bg_blue);
+    			 Fl::foreground(text_red, text_green, text_blue);
+				 FONT_COLOR = fl_rgb_color(text_red, text_green, text_blue);
+				 SELECTION = fl_rgb_color(bg2_red, bg2_green, bg2_blue);
+				 WINDOW_BG = fl_rgb_color(bg_red, bg_green, bg_blue); 
+    			 break;
+    	// Shouldn't be reached, but still
+    	default : Fl::background(221, 221, 221);
+    			  Fl::background2(221, 221, 221);
+    			  Fl::foreground(0, 0, 0);
+				  FONT_COLOR = fl_rgb_color(0, 0, 0);
+				  SELECTION = fl_rgb_color(62, 61, 57);
+				  WINDOW_BG = fl_rgb_color(221, 221, 221); 
+    			  break;    			     			 
+    }
+    if (color_scheme == 2) {
     Fl::get_color(FONT_COLOR, text_red, text_green, text_blue); 
     Fl::get_color(WINDOW_BG, bg_red, bg_green, bg_blue);     
-    Fl::get_color(SELECTION, bg2_red, bg2_green, bg2_blue);     
-       	
+    Fl::get_color(SELECTION, bg2_red, bg2_green, bg2_blue);
+    }          	
     switch(widget_theme) {
     	case 0 : Fl::scheme("gtk+");
     			 break;
@@ -377,7 +402,7 @@ void Main_SetupFLTK() {
     			 break;
     	case 4 : box_style = FL_DOWN_BOX;
     			 break;
-    	case 5 : box_style = FL_BORDER_BOX;
+    	case 5 : box_style = FL_FLAT_BOX;
     			 break;
     	// Shouldn't be reached, but still
     	default : box_style = FL_THIN_UP_BOX;
@@ -386,15 +411,13 @@ void Main_SetupFLTK() {
     switch(button_theme) {
     	case 0 : button_style = FL_UP_BOX;
     			 break;
-    	case 1 : button_style = FL_SHADOW_BOX;
+    	case 1 : button_style = FL_EMBOSSED_BOX;
     			 break;
-    	case 2 : button_style = FL_EMBOSSED_BOX;
+    	case 2 : button_style = FL_ENGRAVED_BOX;
     			 break;
-    	case 3 : button_style = FL_ENGRAVED_BOX;
+    	case 3 : button_style = FL_DOWN_BOX;
     			 break;
-    	case 4 : button_style = FL_DOWN_BOX;
-    			 break;
-    	case 5 : button_style = FL_BORDER_BOX;
+    	case 4 : button_style = FL_FLAT_BOX;
     			 break;
     	// Shouldn't be reached, but still
     	default : button_style = FL_UP_BOX;

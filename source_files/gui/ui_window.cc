@@ -54,7 +54,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
 
     callback((Fl_Callback *)main_win_close_CB);
 
-    color(WINDOW_BG, WINDOW_BG);
+    color(fl_darker(fl_darker(WINDOW_BG)));
 
     int LEFT_W = kf_w(232);
     int MOD_W = (W - LEFT_W) / 2 - kf_h(4);
@@ -76,9 +76,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
 
     sizing_group = new Fl_Group(0, kf_h(22), W, H - kf_h(22));
     sizing_group->box(FL_NO_BOX);
-
-    double width_multi;
-      
+    
     game_box = new UI_Game(0, kf_h(22), LEFT_W, TOP_H - kf_h(22));
 
     build_box = new UI_Build(0, TOP_H + kf_h(4), LEFT_W, BOT_H);

@@ -62,7 +62,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     game = new UI_RChoice(cx, cy, cw, ch, _("Game: "));
     game->align(FL_ALIGN_LEFT);
     game->labelfont(font_style);
-    game->selection_color(SELECTION);
+    //game->selection_color(SELECTION);
     game->callback(callback_Game, this);
 
     cy += y_step;
@@ -70,7 +70,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     engine = new UI_RChoice(cx, cy, cw, ch, _("Engine: "));
     engine->align(FL_ALIGN_LEFT);
     engine->labelfont(font_style);
-    engine->selection_color(SELECTION);
+    //engine->selection_color(SELECTION);
     engine->callback(callback_Engine, this);
 
     cy += y_step;
@@ -78,7 +78,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     length = new UI_RChoice(cx, cy, cw, ch, _("Length: "));
     length->align(FL_ALIGN_LEFT);
     length->labelfont(font_style);
-    length->selection_color(SELECTION);
+    //length->selection_color(SELECTION);
     length->callback(callback_Length, this);
 
     cy += y_step;
@@ -86,7 +86,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     theme = new UI_RChoice(cx, cy, cw, ch, _("Theme: "));
     theme->align(FL_ALIGN_LEFT);
     theme->labelfont(font_style);
-    theme->selection_color(SELECTION);
+    //theme->selection_color(SELECTION);
     theme->callback(callback_Theme, this);
 
     cy += y_step + kf_h(10);
