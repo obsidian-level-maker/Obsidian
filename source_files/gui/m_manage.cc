@@ -686,6 +686,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
     conf_disp->buffer(text_buf);
     conf_disp->textfont(FL_COURIER);
     conf_disp->textsize(small_font_size);
+    conf_disp->labelfont(font_style);
 
     /* Main Buttons */
 
@@ -703,29 +704,36 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
             new Fl_Button(button_x, kf_h(25), button_w, button_h, _("Load"));
         load_but->callback(callback_Load, this);
         load_but->shortcut(FL_CTRL + 'l');
+        load_but->labelfont(font_style);
 
         o = new Fl_Box(0, kf_h(65), kf_w(160), kf_h(40),
                        _("(can be WAD or PAK)"));
         o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
         o->labelsize(small_font_size);
+        o->labelfont(font_style);
 
         const char *recent_title = StringPrintf("   %s @-3>", _("Recent"));
         recent_menu = new Fl_Menu_Across(button_x, kf_h(95), button_w, button_h,
                                          recent_title);
+        recent_menu->textfont(font_style);
+        recent_menu->labelfont(font_style);
 
         save_but =
             new Fl_Button(button_x, kf_h(165), button_w, button_h, _("Save"));
         save_but->callback(callback_Save, this);
         save_but->shortcut(FL_CTRL + 's');
+        save_but->labelfont(font_style);
 
         use_but =
             new Fl_Button(button_x, kf_h(225), button_w, button_h, _("Use"));
         use_but->callback(callback_Use, this);
+        use_but->labelfont(font_style);
 
         o = new Fl_Box(0, kf_h(265), kf_w(170), kf_h(50),
                        _("Note: this will replace\nall current settings!"));
         o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
         o->labelsize(small_font_size);
+        o->labelfont(font_style);
 
         g->end();
     }
@@ -751,6 +759,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
                        _(" Clipboard Operations"));
         o->align(Fl_Align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE));
         o->labelsize(small_font_size);
+        o->labelfont(font_style);
 
         cx += kf_w(30);
         base_y += kf_h(30);
@@ -760,6 +769,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
 
         cut_but = new Fl_Button(cx, base_y, button_w, button_h, _("Cut"));
         cut_but->labelsize(small_font_size);
+        cut_but->labelfont(font_style);
         cut_but->shortcut(FL_CTRL + 'x');
         cut_but->callback(callback_Cut, this);
 
@@ -767,6 +777,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
 
         copy_but = new Fl_Button(cx, base_y, button_w, button_h, _("Copy"));
         copy_but->labelsize(small_font_size);
+        copy_but->labelfont(font_style);
         copy_but->shortcut(FL_CTRL + 'c');
         copy_but->callback(callback_Copy, this);
 
@@ -774,6 +785,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
 
         paste_but = new Fl_Button(cx, base_y, button_w, button_h, _("Paste"));
         paste_but->labelsize(small_font_size);
+        paste_but->labelfont(font_style);
         paste_but->shortcut(FL_CTRL + 'v');
         paste_but->callback(callback_Paste, this);
 

@@ -125,6 +125,7 @@ static void DialogShowAndRun(const char *message, const char *title,
 
     button->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     button->callback((Fl_Callback *)dialog_close_CB);
+    button->labelfont(font_style);
     //  button->labelsize(FONT_SIZE - 2);
 
     dialog->add(button);
@@ -439,6 +440,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
             Fl_Button *but =
                 new Fl_Button(bx, button_y, button_w, button_h, _("Save"));
             but->callback(save_callback, this);
+            but->labelfont(font_style);
         }
 
         bx += kf_w(140);
@@ -448,6 +450,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
             copy_but->callback(copy_callback, this);
             copy_but->shortcut(FL_CTRL + 'c');
             copy_but->deactivate();
+            copy_but->labelfont(font_style);
         }
 
         bx += button_w + 10;

@@ -52,7 +52,7 @@ choice_data_c::~choice_data_c() {
 //----------------------------------------------------------------
 
 UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label)
-    : Fl_Choice(x, y, w, h, label), opt_list() {visible_focus(0);}
+    : Fl_Choice(x, y, w, h, label), opt_list() { visible_focus(0); labelfont(font_style); textfont(font_style); }
 
 UI_RChoice::~UI_RChoice() {
     for (unsigned int i = 0; i < opt_list.size(); i++) {
@@ -236,14 +236,14 @@ int UI_RChoice::handle(int event) {
 //----------------------------------------------------------------
 
 UI_RSlide::UI_RSlide(int x, int y, int w, int h, const char *label)
-    : Fl_Group(x, y, w, h, label), opt_list() {visible_focus(0);}
+    : Fl_Group(x, y, w, h, label), opt_list() {visible_focus(0); labelfont(font_style); }
 
 UI_RSlide::~UI_RSlide() {}
 
 //----------------------------------------------------------------
 
 UI_RButton::UI_RButton(int x, int y, int w, int h, const char *label)
-    : Fl_Check_Button(x, y, w, h, label), opt_list() { visible_focus(0); box(FL_NO_BOX); }
+    : Fl_Check_Button(x, y, w, h, label), opt_list() { visible_focus(0); box(FL_NO_BOX); labelfont(font_style); }
 
 UI_RButton::~UI_RButton() {}
 

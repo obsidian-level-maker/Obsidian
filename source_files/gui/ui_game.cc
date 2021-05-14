@@ -61,6 +61,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     game = new UI_RChoice(cx, cy, cw, ch, _("Game: "));
     game->align(FL_ALIGN_LEFT);
+    game->labelfont(font_style);
     game->selection_color(WINDOW_BG);
     game->callback(callback_Game, this);
 
@@ -68,6 +69,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     engine = new UI_RChoice(cx, cy, cw, ch, _("Engine: "));
     engine->align(FL_ALIGN_LEFT);
+    engine->labelfont(font_style);
     engine->selection_color(WINDOW_BG);
     engine->callback(callback_Engine, this);
 
@@ -75,6 +77,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     length = new UI_RChoice(cx, cy, cw, ch, _("Length: "));
     length->align(FL_ALIGN_LEFT);
+    length->labelfont(font_style);
     length->selection_color(WINDOW_BG);
     length->callback(callback_Length, this);
 
@@ -82,6 +85,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     theme = new UI_RChoice(cx, cy, cw, ch, _("Theme: "));
     theme->align(FL_ALIGN_LEFT);
+    theme->labelfont(font_style);
     theme->selection_color(WINDOW_BG);
     theme->callback(callback_Theme, this);
 
@@ -97,6 +101,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     quit = new Fl_Button(W - button_x - button_w, cy, button_w, button_h,
                          _("Quit"));
     quit->visible_focus(0);
+    quit->labelfont(font_style);
     quit->callback(quit_callback, this);
     quit->shortcut(FL_COMMAND + 'q');
 

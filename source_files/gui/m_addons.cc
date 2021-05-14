@@ -324,6 +324,7 @@ class UI_Addon : public Fl_Group {
 
         button = new Fl_Check_Button(x + kf_w(6), y + kf_h(4), w - kf_w(12),
                                      kf_h(24), name2);
+        button->labelfont(font_style);
         // if (tip)
         //	button->tooltip(tip);
         end();
@@ -452,6 +453,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
     pack->align(FL_ALIGN_INSIDE);
     pack->labeltype(FL_NORMAL_LABEL);
     pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
+    pack->labelfont(font_style);
 
     pack->box(FL_FLAT_BOX);
     pack->color(bg_col);
@@ -471,6 +473,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
 
         Fl_Button *apply_but = new Fl_Button(W - bx - bw, by, bw, bh, fl_close);
         apply_but->callback(callback_Quit, this);
+        apply_but->labelfont(font_style);
 
         // show warning about needing a restart
         Fl_Box *sep = new Fl_Box(FL_NO_BOX, x(), by, W * 3 / 5, bh,
@@ -478,6 +481,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
         sep->align(FL_ALIGN_INSIDE);
         sep->labelcolor(FL_DARK1);
         sep->labelsize(small_font_size);
+        sep->labelfont(font_style);
     }
     darkish->end();
 

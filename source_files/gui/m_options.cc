@@ -371,6 +371,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
         new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Language: "));
     opt_language->align(FL_ALIGN_LEFT);
     opt_language->callback(callback_Language, this);
+    opt_language->labelfont(font_style);
+	opt_language->textfont(font_style);
 
     PopulateLanguages();
 
@@ -382,6 +384,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_font_theme->add(_("Default|Courier|Times"));
     opt_font_theme->callback(callback_FontTheme, this);
     opt_font_theme->value(font_theme);
+    opt_font_theme->labelfont(font_style);
+    opt_font_theme->textfont(font_style);
 
     cy += opt_font_theme->h() + y_step;
     
@@ -391,6 +395,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_widget_theme->add(_("Default|Gleam|Win95|Plastic"));
     opt_widget_theme->callback(callback_WidgetTheme, this);
     opt_widget_theme->value(widget_theme);
+    opt_widget_theme->labelfont(font_style);
+    opt_widget_theme->textfont(font_style);
 
     cy += opt_widget_theme->h() + y_step;
     
@@ -400,6 +406,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_box_theme->add(_("Default|Shadow|Embossed|Engraved|Inverted|Flat"));
     opt_box_theme->callback(callback_BoxTheme, this);
     opt_box_theme->value(box_theme);
+    opt_box_theme->labelfont(font_style);
+    opt_box_theme->textfont(font_style);
 
     cy += opt_box_theme->h() + y_step;
     
@@ -409,6 +417,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_button_theme->add(_("Default|Shadow|Embossed|Engraved|Inverted|Flat"));
     opt_button_theme->callback(callback_ButtonTheme, this);
     opt_button_theme->value(button_theme);
+    opt_button_theme->labelfont(font_style);
+    opt_button_theme->textfont(font_style);
 
     cy += opt_button_theme->h() + y_step;
 
@@ -416,12 +426,14 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
                                        _(" Single Pane Mode"));
     opt_single_pane->value(single_pane ? 1 : 0);
     opt_single_pane->callback(callback_SinglePane, this);
+    opt_single_pane->labelfont(font_style);
 
     cy += opt_single_pane->h() + y_step * 2 / 3;
 
     opt_wheel_bump = new Fl_Check_Button(cx, cy, W - cx - pad, kf_h(24),
                                          _(" Change Settings via Mouse Wheel"));
     opt_wheel_bump->value(wheel_can_bump ? 1 : 0);
+    opt_wheel_bump->labelfont(font_style);
 
     cy += opt_wheel_bump->h() + y_step;
 
@@ -442,6 +454,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
                                       _(" Create Backups"));
     opt_backups->value(create_backups ? 1 : 0);
     opt_backups->callback(callback_Backups, this);
+    opt_backups->labelfont(font_style);
 
     cy += opt_backups->h() + y_step * 2 / 3;
 
@@ -449,6 +462,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
                                         _(" Overwrite File Warning"));
     opt_overwrite->value(overwrite_warning ? 1 : 0);
     opt_overwrite->callback(callback_Overwrite, this);
+    opt_overwrite->labelfont(font_style);
 
     cy += opt_overwrite->h() + y_step * 2 / 3;
 
@@ -456,6 +470,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
                                     _(" Debugging Messages"));
     opt_debug->value(debug_messages ? 1 : 0);
     opt_debug->callback(callback_Debug, this);
+    opt_debug->labelfont(font_style);
 
     cy += opt_debug->h() + y_step;
 
@@ -476,6 +491,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
         Fl_Button *button = new Fl_Button(bx, by, bw, bh, fl_close);
         button->callback(callback_Quit, this);
+        button->labelfont(font_style);
     }
     darkish->end();
 
@@ -484,6 +500,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
                          kf_h(14), _("Note: some options require a restart."));
     heading->align(FL_ALIGN_INSIDE);
     heading->labelsize(small_font_size);
+    heading->labelfont(font_style);
 
     end();
 

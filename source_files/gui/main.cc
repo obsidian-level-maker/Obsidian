@@ -393,7 +393,6 @@ void Main_SetupFLTK() {
     	default : font_style = FL_HELVETICA;
     			  break;		     			 
     }
-    
     screen_w = Fl::w();
     screen_h = Fl::h();
 
@@ -409,13 +408,13 @@ void Main_SetupFLTK() {
     small_font_size = 12 + KF * 3;
     header_font_size = 16 + KF * 5;
 
-    fl_message_font(FL_HELVETICA, 16 + KF * 4);
+    fl_message_font(font_style, 16 + KF * 4);
 
     if (KF < 0) {
         FL_NORMAL_SIZE = 12;
         small_font_size = 10;
         header_font_size = 15;
-        fl_message_font(FL_HELVETICA, 12);
+        fl_message_font(font_style, 12);
     }
 
     // load icons for file chooser

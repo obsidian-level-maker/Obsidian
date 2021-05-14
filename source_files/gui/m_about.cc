@@ -108,6 +108,7 @@ UI_About::UI_About(int W, int H, const char *label)
     box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP);
     box->labelcolor(TITLE_COLOR);
     box->labelsize(FL_NORMAL_SIZE * 5 / 3);
+    box->labelfont(font_style);
 
     cy += box->h() + kf_h(6);
 
@@ -120,6 +121,7 @@ UI_About::UI_About(int W, int H, const char *label)
     box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
     box->box(FL_UP_BOX);
     box->color(INFO_COLOR);
+    box->labelfont(font_style);
 
     cy += box->h() + kf_h(10);
 
@@ -130,6 +132,7 @@ UI_About::UI_About(int W, int H, const char *label)
         new UI_HyperLink(pad, cy, W - pad * 2, kf_h(30), URL, URL);
     link->align(FL_ALIGN_CENTER);
     link->labelsize(FL_NORMAL_SIZE * 2 / 2);
+    link->labelfont(font_style);
 
     cy += link->h() + kf_h(16);
 
@@ -146,6 +149,7 @@ UI_About::UI_About(int W, int H, const char *label)
 
         Fl_Button *button = new Fl_Button(W - bw * 2, by, bw, bh, fl_ok);
         button->callback(callback_Quit, this);
+        button->labelfont(font_style);
     }
     darkish->end();
 
