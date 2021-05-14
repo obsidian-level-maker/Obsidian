@@ -59,6 +59,7 @@ extern int main_action;
 extern Fl_Boxtype box_style;
 extern Fl_Boxtype button_style;
 extern Fl_Font font_style;
+extern Fl_Color FONT_COLOR;
 extern Fl_Color WINDOW_BG;
 extern Fl_Color SELECTION;
 extern int font_theme;
@@ -67,7 +68,6 @@ extern int button_theme;
 extern int widget_theme;
 extern int window_size;  // 0 = Auto, 1 = Tiny ... 5 = Huge
 extern bool single_pane;
-extern bool wheel_can_bump;
 
 extern bool create_backups;
 extern bool overwrite_warning;

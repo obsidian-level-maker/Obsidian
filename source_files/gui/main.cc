@@ -57,6 +57,8 @@ bool batch_mode = false;
 const char *batch_output_file = NULL;
 
 // options
+
+Fl_Color FONT_COLOR = FL_FOREGROUND_COLOR;
 Fl_Color SELECTION = FL_SELECTION_COLOR;
 Fl_Color WINDOW_BG = FL_BACKGROUND_COLOR;
 int font_theme = 0;
@@ -67,7 +69,6 @@ int button_theme = 0;
 Fl_Boxtype button_style = FL_THIN_UP_BOX;
 int widget_theme = 0;
 bool single_pane = true;
-bool wheel_can_bump = true;
 
 bool create_backups = true;
 bool overwrite_warning = true;

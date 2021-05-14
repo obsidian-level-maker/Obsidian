@@ -48,8 +48,6 @@ static void Parse_Option(const char *name, const char *value) {
         button_theme = atoi(value);
     } else if (StringCaseCmp(name, "single_pane") == 0) {
         single_pane = atoi(value) ? true : false;
-    } else if (StringCaseCmp(name, "wheel_can_bump") == 0) {
-        wheel_can_bump = atoi(value) ? true : false;
     } else if (StringCaseCmp(name, "create_backups") == 0) {
         create_backups = atoi(value) ? true : false;
     } else if (StringCaseCmp(name, "overwrite_warning") == 0) {
@@ -184,7 +182,6 @@ bool Options_Save(const char *filename) {
     fprintf(option_fp, "box_theme      = %d\n", box_theme);
     fprintf(option_fp, "button_theme      = %d\n", button_theme);
     fprintf(option_fp, "single_pane = %d\n", single_pane ? 1 : 0);
-    fprintf(option_fp, "wheel_can_bump = %d\n", wheel_can_bump ? 1 : 0);
     fprintf(option_fp, "\n");
 
     fprintf(option_fp, "create_backups = %d\n", create_backups ? 1 : 0);
@@ -223,7 +220,6 @@ class UI_OptionsWin : public Fl_Window {
     Fl_Choice *opt_button_theme;
 
     Fl_Check_Button *opt_single_pane;
-    Fl_Check_Button *opt_wheel_bump;
 
     Fl_Check_Button *opt_backups;
     Fl_Check_Button *opt_overwrite;
@@ -429,13 +425,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_single_pane->labelfont(font_style);
 
     cy += opt_single_pane->h() + y_step * 2 / 3;
-
-    opt_wheel_bump = new Fl_Check_Button(cx, cy, W - cx - pad, kf_h(24),
-                                         _(" Change Settings via Mouse Wheel"));
-    opt_wheel_bump->value(wheel_can_bump ? 1 : 0);
-    opt_wheel_bump->labelfont(font_style);
-
-    cy += opt_wheel_bump->h() + y_step;
 
     //----------------
 

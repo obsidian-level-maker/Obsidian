@@ -66,9 +66,6 @@ class UI_RChoice : public Fl_Choice {
     
 	void draw(); 
 
-    // FLTK method override
-    int handle(int event);
-
    public:
     // add a new choice to the list.  If a choice with the same 'id'
     // already exists, it is just replaced instead.
