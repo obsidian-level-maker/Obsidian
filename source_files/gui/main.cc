@@ -57,6 +57,8 @@ bool batch_mode = false;
 const char *batch_output_file = NULL;
 
 // options
+Fl_Color SELECTION = FL_SELECTION_COLOR;
+Fl_Color WINDOW_BG = FL_BACKGROUND_COLOR;
 int font_theme = 0;
 Fl_Font font_style = FL_HELVETICA;
 int box_theme = 0;
@@ -331,9 +333,10 @@ int Main_DetermineScaling() {
 
 void Main_SetupFLTK() {
     Fl::visual(FL_DOUBLE | FL_RGB);
-    Fl::background(221, 221, 221);
-    Fl::background2(255, 255, 255);
-    Fl::foreground(0, 0, 0);
+    //Fl::background(WINDOW_BG);
+    //Fl::background2(255, 255, 255);
+    //Fl::foreground(0, 0, 0);
+    Fl::get_system_colors();
        
     switch(widget_theme) {
     	case 0 : Fl::scheme("gtk+");
