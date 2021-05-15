@@ -354,8 +354,8 @@ void Main_SetupFLTK() {
     	case 1 : Fl::get_system_colors();
     			 //I think there's a better way to do this part - Dasho
 				 FONT_COLOR = FL_FOREGROUND_COLOR;
-				 SELECTION = FL_BACKGROUND_COLOR;
-				 WINDOW_BG = FL_BACKGROUND2_COLOR;
+				 SELECTION = FL_BACKGROUND2_COLOR;
+				 WINDOW_BG = FL_BACKGROUND_COLOR;
     			 break;
     	case 2 : Fl::background(bg_red, bg_green, bg_blue);
     			 Fl::background2(bg_red, bg_green, bg_blue);
@@ -417,7 +417,7 @@ void Main_SetupFLTK() {
     			 break;
     	case 3 : button_style = FL_DOWN_BOX;
     			 break;
-    	case 4 : button_style = FL_FLAT_BOX;
+    	case 4 : button_style = FL_BORDER_BOX;
     			 break;
     	// Shouldn't be reached, but still
     	default : button_style = FL_UP_BOX;
@@ -864,7 +864,6 @@ int main(int argc, char **argv) {
         char *argv[2];
         argv[0] = strdup("Obsidian.exe");
         argv[1] = NULL;
-
         main_win->show(1 /* argc */, argv);
     }
 

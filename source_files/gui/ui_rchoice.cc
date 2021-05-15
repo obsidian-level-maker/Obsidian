@@ -52,7 +52,7 @@ choice_data_c::~choice_data_c() {
 //----------------------------------------------------------------
 
 UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label)
-    : Fl_Choice(x, y, w, h, label), opt_list() { visible_focus(0); labelfont(font_style); textfont(font_style); }
+    : Fl_Choice(x, y, w, h, label), opt_list() { visible_focus(0); labelfont(font_style); textfont(font_style); selection_color(SELECTION); }
 
 UI_RChoice::~UI_RChoice() {
     for (unsigned int i = 0; i < opt_list.size(); i++) {
@@ -110,15 +110,11 @@ void UI_RChoice::draw() {
     // DEFAULT SCHEME
 
     // Draw widget box
-    if (fl_contrast(textcolor(), FL_BACKGROUND2_COLOR) == textcolor()) {
-      draw_box(btype, FL_BACKGROUND2_COLOR);
-    } else {
-      draw_box(btype, fl_lighter(color()));
-    }
+    draw_box(btype, color());
 
     // Draw arrow area
     draw_box(FL_UP_BOX,X,Y,W,H,color());
-    fl_color(active_r() ? labelcolor() : fl_inactive(labelcolor()));
+    fl_color(active_r() ? SELECTION : fl_inactive(SELECTION));
     fl_polygon(x1, y1, x1 + w1, y1 + w1, x1 + 2 * w1, y1);
   }
 

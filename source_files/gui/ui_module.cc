@@ -528,7 +528,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col)
     : Fl_Group(X, Y, W, H), button_col(_button_col) {
     box(FL_FLAT_BOX);
 
-    color(fl_darker(fl_darker(WINDOW_BG)));
+    color(fl_darker(fl_darker(WINDOW_BG)), fl_darker(fl_darker(WINDOW_BG)));
 
     int cy = Y;
 
@@ -543,8 +543,8 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col)
 
     sbar = new Fl_Scrollbar(mx + mw, my, Fl::scrollbar_size(), mh);
     sbar->callback(callback_Scroll, this);
-
-    sbar->color(FL_DARK3 + 1, FL_DARK1);
+    sbar->slider(button_style);
+    sbar->color(fl_darker(fl_darker(WINDOW_BG)), WINDOW_BG);
 
     mod_pack_group = new Fl_Group(mx, my, mw, mh);
     mod_pack_group->box(FL_NO_BOX);
@@ -556,8 +556,6 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col)
     mod_pack->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM);
     mod_pack->labeltype(FL_NORMAL_LABEL);
     mod_pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
-
-    mod_pack->labelcolor(FL_DARK1);
 
     mod_pack->box(FL_FLAT_BOX);
     mod_pack->color(fl_darker(fl_darker(WINDOW_BG)));
@@ -1137,9 +1135,17 @@ UI_Module *UI_CustomMods::FindID(const char *id) const {
 
 void UI_CustomMods::Locked(bool value) {
     if (value) {
-        mod_pack->deactivate();
+		for (int j = 0; j < mod_pack->children(); j++) {
+		    UI_Module *M = (UI_Module *)mod_pack->child(j);
+		    SYS_ASSERT(M);
+		    M->deactivate();
+		}
     } else {
-        mod_pack->activate();
+		for (int j = 0; j < mod_pack->children(); j++) {
+		    UI_Module *M = (UI_Module *)mod_pack->child(j);
+		    SYS_ASSERT(M);
+		    M->activate();
+		}
     }
 }
 
