@@ -463,7 +463,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
 
     Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
     darkish->box(FL_FLAT_BOX);
-    //darkish->color(fl_darker(WINDOW_BG), fl_darker(WINDOW_BG));
+    darkish->color(fl_darker(WINDOW_BG));
     {
         // finally add the close button
         int bw = kf_w(60);
@@ -480,7 +480,6 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
         Fl_Box *sep = new Fl_Box(FL_NO_BOX, x(), by, W * 3 / 5, bh,
                                  _("Changes require a restart"));
         sep->align(FL_ALIGN_INSIDE);
-        sep->labelcolor(FL_DARK1);
         sep->labelsize(small_font_size);
         sep->labelfont(font_style);
     }

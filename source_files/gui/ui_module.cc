@@ -36,6 +36,7 @@ UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
     mod_button =
         new Fl_Check_Button(X + kf_w(6), Y + kf_h(4), W - kf_w(12), kf_h(24));
     mod_button->visible_focus(0);
+    mod_button->down_box(button_style);
 
     if (Is_UI()) {
         mod_button->value(1);

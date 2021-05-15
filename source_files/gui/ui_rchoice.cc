@@ -88,7 +88,7 @@ void UI_RChoice::draw() {
     draw_box(btype, color());
 
     // Draw arrow area
-    fl_color(active_r() ? labelcolor() : fl_inactive(labelcolor()));
+    fl_color(active_r() ? SELECTION : fl_inactive(SELECTION));
     if (Fl::is_scheme("plastic")) {
       // Show larger up/down arrows...
       fl_polygon(x1, y1 + 3, x1 + w1, y1 + w1 + 3, x1 + 2 * w1, y1 + 3);

@@ -404,7 +404,9 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
     int ey = h() - kf_h(65);
 
     browser = new Fl_Multi_Browser(0, 0, w(), ey);
-    browser->textfont(FL_COURIER);
+    browser->color(fl_lighter(WINDOW_BG));
+    browser->textcolor(fl_darker(FONT_COLOR));
+    browser->textfont(font_style);
     browser->textsize(small_font_size);
     browser->callback(select_callback, this);
 
@@ -423,8 +425,6 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
     {
         Fl_Group *o = new Fl_Group(0, ey, w(), h() - ey);
         o->box(FL_FLAT_BOX);
-
-        o->color(fl_rgb_color(221, 221, 221));
 
         int bx = w() - button_w - kf_w(25);
         int bx2 = bx;

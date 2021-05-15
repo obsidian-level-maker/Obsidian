@@ -24,10 +24,10 @@
 #include "lib_util.h"
 #include "main.h"
 
-#define PROGRESS_FG fl_color_cube(3, 3, 0)
-#define PROGRESS_BG fl_gray_ramp(10)
+#define PROGRESS_FG SELECTION
+#define PROGRESS_BG fl_darker(fl_darker(WINDOW_BG))
 
-#define NODE_PROGRESS_FG fl_color_cube(1, 4, 2)
+#define NODE_PROGRESS_FG SELECTION
 
 UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     : Fl_Group(X, Y, W, H, label) {
@@ -206,8 +206,8 @@ void UI_Build::Prog_Init(int node_perc, const char *extra_steps) {
     progress->maximum(1.0);
 
     progress->value(0.0);
-    progress->color(FL_DARK3, PROGRESS_FG);
-    progress->labelcolor(FL_WHITE);
+    progress->color(PROGRESS_BG, PROGRESS_FG);
+    progress->labelcolor(fl_contrast(FONT_COLOR, PROGRESS_BG));
 }
 
 void UI_Build::Prog_Finish() {

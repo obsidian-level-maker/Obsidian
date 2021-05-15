@@ -669,8 +669,6 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
     : Fl_Double_Window(W, H, label), want_quit(false) {
     size_range(W, H);
 
-    color(BG_COLOR, BG_COLOR);
-
     callback(callback_Quit, this);
 
     text_buf = new Fl_Text_Buffer();
@@ -683,11 +681,13 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
     conf_disp =
         new Fl_Text_Display_NoSelect(conf_x, conf_y, conf_w, conf_h, "");
     conf_disp->align(Fl_Align(FL_ALIGN_TOP));
+    conf_disp->color(fl_lighter(WINDOW_BG));
+    conf_disp->textcolor(fl_darker(FONT_COLOR));
     conf_disp->buffer(text_buf);
-    conf_disp->textfont(FL_COURIER);
     conf_disp->textsize(small_font_size);
     conf_disp->labelfont(font_style);
-
+	conf_disp->textfont(font_style);
+	
     /* Main Buttons */
 
     int button_x = kf_w(20);

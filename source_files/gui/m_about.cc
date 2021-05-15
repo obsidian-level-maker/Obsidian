@@ -24,10 +24,6 @@
 #include "lib_util.h"
 #include "main.h"
 
-#define TITLE_COLOR fl_rgb_color(0, 0, 0)
-
-#define INFO_COLOR fl_rgb_color(153, 153, 153)
-
 class UI_About : public Fl_Window {
    public:
     bool want_quit;
@@ -106,7 +102,6 @@ UI_About::UI_About(int W, int H, const char *label)
 
     Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), logo_text);
     box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP);
-    box->labelcolor(TITLE_COLOR);
     box->labelsize(FL_NORMAL_SIZE * 5 / 3);
     box->labelfont(font_style);
 
@@ -120,7 +115,7 @@ UI_About::UI_About(int W, int H, const char *label)
     box = new Fl_Box(pad, cy, W - pad - pad, text_h, _(Text));
     box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
     box->box(FL_UP_BOX);
-    box->color(INFO_COLOR);
+    box->color(fl_darker(WINDOW_BG));
     box->labelfont(font_style);
 
     cy += box->h() + kf_h(10);
@@ -141,7 +136,6 @@ UI_About::UI_About(int W, int H, const char *label)
     // finally add an "OK" button
     Fl_Group *darkish = new Fl_Group(0, cy, W, H - cy);
     darkish->box(FL_FLAT_BOX);
-    //darkish->color(fl_darker(WINDOW_BG), fl_darker(WINDOW_BG));
     {
         int bw = kf_w(60);
         int bh = kf_h(30);
