@@ -842,20 +842,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
     LogPrintf("\n");
 
     zdbsp_options options;
-    if (current_engine == "vanilla") {
-        options.build_nodes = true;
-        options.build_gl_nodes = false;
-        options.build_gl_only = false;
-        if (build_reject) {
-            options.reject_mode = ERM_Rebuild_NoGL;
-        } else {
-            options.reject_mode = ERM_CreateZeroes;
-        }
-        options.check_polyobjs = false;
-        options.compress_nodes = false;
-        options.compress_gl_nodes = false;
-        options.force_compression = false;
-    } else if (current_engine == "nolimit" || current_engine == "boom") {
+    if (current_engine == "vanilla" || current_engine == "nolimit" || current_engine == "boom") {
         options.build_nodes = true;
         options.build_gl_nodes = false;
         options.build_gl_only = false;
@@ -895,7 +882,14 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.compress_gl_nodes = false;
         options.force_compression = true;
     } else if (current_engine == "edge") {
-        options.build_nodes = true;
+    	if (!UDMF_mode) {
+    		if (!build_nodes) {
+			    LogPrintf("Skipping nodes per user selection...\n");
+		        FileRename(filename, out_name);
+		        return true;
+		     }
+        }
+        options.build_nodes = true;     	
         options.build_gl_nodes = true;
         options.build_gl_only = true;
         if (build_reject) {
@@ -905,7 +899,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         }
         options.check_polyobjs = true;
         options.compress_nodes = true;
-        options.compress_gl_nodes = true;
+        options.compress_gl_nodes = false;
         options.force_compression = false;
     } else if (current_engine == "zdoom") {
         if (!build_nodes) {
@@ -1007,18 +1001,20 @@ bool doom_game_interface_c::Start(const char *preset) {
             build_reject = main_win->left_mods->FindID("ui_udmf_map_options")
                                ->FindButtonOpt("bool_build_reject_udmf")
                                ->value();
+		    map_format = main_win->left_mods->FindID("ui_udmf_map_options")
+		                     ->FindOpt("map_format")
+		                     ->GetID();
+		    build_nodes = main_win->left_mods->FindID("ui_udmf_map_options")
+		                      ->FindButtonOpt("bool_build_nodes")
+		                      ->value();
         } else {
             build_reject = main_win->left_mods->FindID("ui_reject_options")
                                ->FindButtonOpt("bool_build_reject")
                                ->value();
+            map_format = "binary";
+            build_nodes = true;
         }
-        map_format = main_win->left_mods->FindID("ui_udmf_map_options")
-                         ->FindOpt("map_format")
-                         ->GetID();
-        build_nodes = main_win->left_mods->FindID("ui_udmf_map_options")
-                          ->FindButtonOpt("bool_build_nodes")
-                          ->value();
-        if ((current_engine == "zdoom" || current_engine == "edge") && map_format == "udmf") {
+        if (map_format == "udmf") {
             UDMF_mode = true;
         } else {
             UDMF_mode = false;

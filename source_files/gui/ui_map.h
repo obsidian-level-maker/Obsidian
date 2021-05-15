@@ -54,7 +54,6 @@ class UI_MiniMap : public Fl_Box {
     void MapClear();
 
    private:
-    void MapCorner(int x, int y, int dx, int dy);
 
     inline void RawPixel(int x, int y, byte r, byte g, byte b) {
         u8_t *pos = pixels + ((map_H - 1 - y) * map_W + x) * 3;

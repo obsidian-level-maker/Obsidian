@@ -81,13 +81,6 @@ void UI_MiniMap::MapClear() {
 void UI_MiniMap::MapFinish() {
     SYS_ASSERT(pixels);
 
-    if (!alternate_look) {
-        MapCorner(0, 0, 1, 1);
-        MapCorner(0, map_H - 1, 1, -1);
-        MapCorner(map_W - 1, 0, -1, 1);
-        MapCorner(map_W - 1, map_H - 1, -1, -1);
-    }
-
     if (cur_image) {
         image(NULL);
         delete cur_image;
@@ -97,29 +90,6 @@ void UI_MiniMap::MapFinish() {
 
     image(cur_image);
     redraw();
-}
-
-void UI_MiniMap::MapCorner(int x, int y, int dx, int dy) {
-    // we want to match the nearby background, but the "plastic" scheme
-    // changes the color in a way we cannot easily duplicate.  This is an
-    // approximation and may not work on different OSes.
-    Fl_Color nearby_bg =
-        FL_LIGHT1;  // fl_color_average(BUILD_BG, FL_WHITE, 0.5);
-
-    u8_t r, g, b;
-
-    Fl::get_color(nearby_bg, r, g, b);
-
-    RawPixel(x + dx * 0, y + dy * 0, r, g, b);
-    RawPixel(x + dx * 1, y + dy * 1, r, g, b);
-
-    RawPixel(x + dx * 1, y + dy * 0, r, g, b);
-    RawPixel(x + dx * 2, y + dy * 0, r, g, b);
-    RawPixel(x + dx * 3, y + dy * 0, r, g, b);
-
-    RawPixel(x + dx * 0, y + dy * 1, r, g, b);
-    RawPixel(x + dx * 0, y + dy * 2, r, g, b);
-    RawPixel(x + dx * 0, y + dy * 3, r, g, b);
 }
 
 void UI_MiniMap::DrawPixel(int x, int y, byte r, byte g, byte b) {

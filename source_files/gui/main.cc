@@ -57,10 +57,27 @@ bool batch_mode = false;
 const char *batch_output_file = NULL;
 
 // options
-int window_size = 0; /* AUTO */
-bool alternate_look = false;
+uchar text_red = 0;
+uchar text_green = 0;
+uchar text_blue = 0;
+uchar bg_red = 221;
+uchar bg_green = 221;
+uchar bg_blue = 221;
+uchar bg2_red = 62;
+uchar bg2_green = 61;
+uchar bg2_blue = 57;
+Fl_Color FONT_COLOR;
+Fl_Color SELECTION;
+Fl_Color WINDOW_BG;
+int color_scheme = 0;
+int font_theme = 0;
+Fl_Font font_style = FL_HELVETICA;
+int box_theme = 0;
+Fl_Boxtype box_style = FL_THIN_UP_BOX;
+int button_theme = 0;
+Fl_Boxtype button_style = FL_THIN_UP_BOX;
+int widget_theme = 0;
 bool single_pane = true;
-bool wheel_can_bump = true;
 
 bool create_backups = true;
 bool overwrite_warning = true;
@@ -310,28 +327,6 @@ bool Main_BackupFile(const char *filename, const char *ext) {
 int Main_DetermineScaling() {
     /* computation of the Kromulent factor */
 
-    // command-line overrides
-    if (ArgvFind(0, "tiny") >= 0) {
-        return -1;
-    }
-    if (ArgvFind(0, "small") >= 0) {
-        return 0;
-    }
-    if (ArgvFind(0, "medium") >= 0) {
-        return 1;
-    }
-    if (ArgvFind(0, "large") >= 0) {
-        return 2;
-    }
-    if (ArgvFind(0, "huge") >= 0) {
-        return 3;
-    }
-
-    // user option setting
-    if (window_size > 0) {
-        return window_size - 2;
-    }
-
     // automatic selection
     if (screen_w >= 1600 && screen_h >= 800) {
         return 2;
@@ -347,16 +342,98 @@ int Main_DetermineScaling() {
 }
 
 void Main_SetupFLTK() {
-    Fl::visual(FL_DOUBLE | FL_RGB);
-
-    if (!alternate_look) {
-        Fl::background(221, 221, 221);
-        Fl::background2(255, 255, 255);
-        Fl::foreground(0, 0, 0);
-
-        Fl::scheme("gtk+");
+    Fl::visual(FL_DOUBLE | FL_RGB);  
+    switch(color_scheme) {
+    	case 0 : Fl::background(221, 221, 221);
+    			 Fl::background2(221, 221, 221);
+    			 Fl::foreground(0, 0, 0);
+				 FONT_COLOR = fl_rgb_color(0, 0, 0);
+				 SELECTION = fl_rgb_color(62, 61, 57);
+				 WINDOW_BG = fl_rgb_color(221, 221, 221); 
+    			 break;
+    	case 1 : Fl::get_system_colors();
+    			 //I think there's a better way to do this part - Dasho
+				 FONT_COLOR = FL_FOREGROUND_COLOR;
+				 SELECTION = FL_BACKGROUND2_COLOR;
+				 WINDOW_BG = FL_BACKGROUND_COLOR;
+    			 break;
+    	case 2 : Fl::background(bg_red, bg_green, bg_blue);
+    			 Fl::background2(bg_red, bg_green, bg_blue);
+    			 Fl::foreground(text_red, text_green, text_blue);
+				 FONT_COLOR = fl_rgb_color(text_red, text_green, text_blue);
+				 SELECTION = fl_rgb_color(bg2_red, bg2_green, bg2_blue);
+				 WINDOW_BG = fl_rgb_color(bg_red, bg_green, bg_blue); 
+    			 break;
+    	// Shouldn't be reached, but still
+    	default : Fl::background(221, 221, 221);
+    			  Fl::background2(221, 221, 221);
+    			  Fl::foreground(0, 0, 0);
+				  FONT_COLOR = fl_rgb_color(0, 0, 0);
+				  SELECTION = fl_rgb_color(62, 61, 57);
+				  WINDOW_BG = fl_rgb_color(221, 221, 221); 
+    			  break;    			     			 
     }
-
+    if (color_scheme == 2) {
+    Fl::get_color(FONT_COLOR, text_red, text_green, text_blue); 
+    Fl::get_color(WINDOW_BG, bg_red, bg_green, bg_blue);     
+    Fl::get_color(SELECTION, bg2_red, bg2_green, bg2_blue);
+    }          	
+    switch(widget_theme) {
+    	case 0 : Fl::scheme("gtk+");
+    			 break;
+    	case 1 : Fl::scheme("gleam");
+    			 break;
+    	case 2 : Fl::scheme("base");
+    			 break;
+    	case 3 : Fl::scheme("plastic");
+    			 break;
+    	// Shouldn't be reached, but still
+    	default : Fl::scheme("gtk+");
+    			  break;    			     			 
+    }   
+    switch(box_theme) {
+    	case 0 : box_style = FL_THIN_UP_BOX;
+    			 break;
+    	case 1 : box_style = FL_SHADOW_BOX;
+    			 break;
+    	case 2 : box_style = FL_EMBOSSED_BOX;
+    			 break;
+    	case 3 : box_style = FL_ENGRAVED_BOX;
+    			 break;
+    	case 4 : box_style = FL_DOWN_BOX;
+    			 break;
+    	case 5 : box_style = FL_FLAT_BOX;
+    			 break;
+    	// Shouldn't be reached, but still
+    	default : box_style = FL_THIN_UP_BOX;
+    			  break;    			     			 
+    }    
+    switch(button_theme) {
+    	case 0 : button_style = FL_UP_BOX;
+    			 break;
+    	case 1 : button_style = FL_EMBOSSED_BOX;
+    			 break;
+    	case 2 : button_style = FL_ENGRAVED_BOX;
+    			 break;
+    	case 3 : button_style = FL_DOWN_BOX;
+    			 break;
+    	case 4 : button_style = FL_BORDER_BOX;
+    			 break;
+    	// Shouldn't be reached, but still
+    	default : button_style = FL_UP_BOX;
+    			  break;    			     			 
+    }
+    switch(font_theme) {
+    	case 0 : font_style = FL_HELVETICA;
+    			 break;
+    	case 1 : font_style = FL_COURIER;
+    			 break;
+    	case 2 : font_style = FL_TIMES;
+    			 break;
+    	// Shouldn't be reached, but still
+    	default : font_style = FL_HELVETICA;
+    			  break;		     			 
+    }
     screen_w = Fl::w();
     screen_h = Fl::h();
 
@@ -372,13 +449,13 @@ void Main_SetupFLTK() {
     small_font_size = 12 + KF * 3;
     header_font_size = 16 + KF * 5;
 
-    fl_message_font(FL_HELVETICA, 16 + KF * 4);
+    fl_message_font(font_style, 16 + KF * 4);
 
     if (KF < 0) {
         FL_NORMAL_SIZE = 12;
         small_font_size = 10;
         header_font_size = 15;
-        fl_message_font(FL_HELVETICA, 12);
+        fl_message_font(font_style, 12);
     }
 
     // load icons for file chooser
@@ -787,12 +864,11 @@ int main(int argc, char **argv) {
         char *argv[2];
         argv[0] = strdup("Obsidian.exe");
         argv[1] = NULL;
-
         main_win->show(1 /* argc */, argv);
     }
 
     // kill the stupid bright background of the "plastic" scheme
-    if (!alternate_look) {
+    if (widget_theme == 3) {
         delete Fl::scheme_bg_;
         Fl::scheme_bg_ = NULL;
 

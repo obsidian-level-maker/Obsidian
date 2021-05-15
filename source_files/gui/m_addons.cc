@@ -317,13 +317,14 @@ class UI_Addon : public Fl_Group {
    public:
     UI_Addon(int x, int y, int w, int h, addon_info_t *_info)
         : Fl_Group(x, y, w, h), info(_info) {
-        box(FL_THIN_UP_BOX);
+        box(box_style);
 
         // prefix the name with a space
         const char *name2 = StringPrintf(" %s", info->name);
 
         button = new Fl_Check_Button(x + kf_w(6), y + kf_h(4), w - kf_w(12),
                                      kf_h(24), name2);
+        button->labelfont(font_style);
         // if (tip)
         //	button->tooltip(tip);
         end();
@@ -418,7 +419,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
 
     box(FL_FLAT_BOX);
 
-    Fl_Color bg_col = alternate_look ? FL_DARK2 : fl_rgb_color(221, 221, 221);
+    Fl_Color bg_col = fl_rgb_color(221, 221, 221);
 
     color(bg_col, bg_col);
 
@@ -437,8 +438,9 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
 
     sbar = new Fl_Scrollbar(mx + mw, my, Fl::scrollbar_size(), mh);
     sbar->callback(callback_Scroll, this);
-
-    //	sbar->color(FL_DARK3+1, FL_DARK1);
+    sbar->slider(button_style);
+    sbar->color(fl_darker(fl_darker(WINDOW_BG)), WINDOW_BG);
+    sbar->labelcolor(SELECTION);
 
     const char *pack_title = StringPrintf("\n\n\n\n%s", _("No Addons Found!"));
     if (all_addons.empty()) {
@@ -452,16 +454,16 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
     pack->align(FL_ALIGN_INSIDE);
     pack->labeltype(FL_NORMAL_LABEL);
     pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
+    pack->labelfont(font_style);
 
     pack->box(FL_FLAT_BOX);
-    pack->color(bg_col);
     pack->resizable(NULL);
 
     //----------------
 
     Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
     darkish->box(FL_FLAT_BOX);
-    darkish->color(WINDOW_BG, WINDOW_BG);
+    darkish->color(fl_darker(WINDOW_BG));
     {
         // finally add the close button
         int bw = kf_w(60);
@@ -470,14 +472,17 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
         int by = H - dh / 2 - bh / 2 + 2;
 
         Fl_Button *apply_but = new Fl_Button(W - bx - bw, by, bw, bh, fl_close);
+        apply_but->box(button_style);
         apply_but->callback(callback_Quit, this);
+        apply_but->labelfont(font_style);
 
         // show warning about needing a restart
         Fl_Box *sep = new Fl_Box(FL_NO_BOX, x(), by, W * 3 / 5, bh,
                                  _("Changes require a restart"));
         sep->align(FL_ALIGN_INSIDE);
-        sep->labelcolor(FL_DARK1);
         sep->labelsize(small_font_size);
+        sep->labelfont(font_style);
+        sep->labelcolor(fl_contrast(FONT_COLOR,darkish->color()));
     }
     darkish->end();
 

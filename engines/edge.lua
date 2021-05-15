@@ -134,7 +134,7 @@ function EDGE.all_done()
 end
 
 
-UNFINISHED["edge"] =
+OB_ENGINES["edge"] =
 {
   label = _("EDGE"),
 

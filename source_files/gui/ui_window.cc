@@ -41,8 +41,6 @@ int KF = 0;
 int small_font_size;
 int header_font_size;
 
-#define SELECTION fl_rgb_color(62, 61, 57)
-
 static void main_win_close_CB(Fl_Widget *w, void *data) {
     main_action = MAIN_QUIT;
 }
@@ -56,7 +54,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
 
     callback((Fl_Callback *)main_win_close_CB);
 
-    color(WINDOW_BG, WINDOW_BG);
+    color(fl_darker(fl_darker(WINDOW_BG)), SELECTION);
 
     int LEFT_W = kf_w(232);
     int MOD_W = (W - LEFT_W) / 2 - kf_h(4);
@@ -65,7 +63,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     int BOT_H = H - TOP_H - kf_h(4);
 
     menu_bar = new Fl_Menu_Bar(0, 0, W, kf_h(20));
-    menu_bar->box(FL_FLAT_BOX);
+    menu_bar->box(box_style);
     menu_bar->textsize(menu_bar->textsize() * .90);
     menu_bar->add("File/Options", FL_F + 4, menu_do_options);
     menu_bar->add("File/Addon List", FL_F + 3, menu_do_addons);
@@ -73,13 +71,12 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     menu_bar->add("File/Config Manager", FL_F + 9, menu_do_manage_config);
     menu_bar->add("Help/About", FL_F + 1, menu_do_about);
     menu_bar->add("Help/View Logs", FL_F + 6, menu_do_view_logs);
-    menu_bar->selection_color(WINDOW_BG);
+    menu_bar->selection_color(SELECTION);
+    menu_bar->textfont(font_style);
 
     sizing_group = new Fl_Group(0, kf_h(22), W, H - kf_h(22));
     sizing_group->box(FL_NO_BOX);
-
-    double width_multi;
-      
+    
     game_box = new UI_Game(0, kf_h(22), LEFT_W, TOP_H - kf_h(22));
 
     build_box = new UI_Build(0, TOP_H + kf_h(4), LEFT_W, BOT_H);
@@ -87,13 +84,13 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
 
 	if (single_pane) {
 		left_mods = new UI_CustomMods(LEFT_W + kf_h(4), kf_h(22), MOD_W * 2,
-			                          H - kf_h(22), SELECTION);
+			                          H - kf_h(22));
 	} else {
 		right_mods =
-		    new UI_CustomMods(W - MOD_W, kf_h(22), MOD_W, H - kf_h(22), SELECTION);
+		    new UI_CustomMods(W - MOD_W, kf_h(22), MOD_W, H - kf_h(22));
 
 		left_mods = new UI_CustomMods(LEFT_W + kf_h(4), kf_h(22), MOD_W,
-		                              H - kf_h(22), SELECTION);
+		                              H - kf_h(22));
 	}
 
     end();
