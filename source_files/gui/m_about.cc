@@ -117,6 +117,7 @@ UI_About::UI_About(int W, int H, const char *label)
     box->box(FL_UP_BOX);
     box->color(fl_darker(WINDOW_BG));
     box->labelfont(font_style);
+    box->labelcolor(fl_contrast(FONT_COLOR, box->color()));
 
     cy += box->h() + kf_h(10);
 

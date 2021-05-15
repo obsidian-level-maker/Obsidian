@@ -52,7 +52,7 @@ choice_data_c::~choice_data_c() {
 //----------------------------------------------------------------
 
 UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label)
-    : Fl_Choice(x, y, w, h, label), opt_list() { visible_focus(0); labelfont(font_style); textfont(font_style); selection_color(SELECTION); }
+    : Fl_Choice(x, y, w, h, label), opt_list() { visible_focus(0); labelfont(font_style); textfont(font_style); }
 
 UI_RChoice::~UI_RChoice() {
     for (unsigned int i = 0; i < opt_list.size(); i++) {
@@ -377,6 +377,43 @@ void UI_RButton::draw() {
 	   draw_label(x(), y(), w()-lx-bx, h());
 	   if (Fl::focus() == this) draw_focus();	
 	}
+}
+
+//----------------------------------------------------------------
+
+UI_CustomCheckBox::UI_CustomCheckBox(int x, int y, int w, int h, const char *label)
+    : Fl_Check_Button(x, y, w, h, label) { visible_focus(0); }
+
+UI_CustomCheckBox::~UI_CustomCheckBox() {}
+
+// Custom draw function to use the checkmark style regardless of box type and respect custom colors
+void UI_CustomCheckBox::draw() {
+	if (box()) draw_box(this==Fl::pushed() ? fl_down(box()) : box(), color());
+	Fl_Color col = value() ? (active_r() ? selection_color() :
+		                      fl_inactive(selection_color())) : color();
+
+	int W  = labelsize();
+	int bx = Fl::box_dx(box());	// box frame width
+	int dx = bx + 2;		// relative position of check mark etc.
+	int dy = (h() - W) / 2;	// neg. offset o.k. for vertical centering
+	int lx = 0;			// relative label position (STR #3237)
+
+	draw_box(down_box(), x()+dx, y()+dy, W, W, FL_BACKGROUND2_COLOR);
+  	if (value()) {
+		fl_color(col);
+		int tx = x() + dx + 3;
+		int tw = W - 6;
+		int d1 = tw/3;
+		int d2 = tw-d1;
+		int ty = y() + dy + (W+d2)/2-d1-2;
+		for (int n = 0; n < 3; n++, ty++) {
+			fl_line(tx, ty, tx+d1, ty+d1);
+			fl_line(tx+d1, ty+d1, tx+tw-1, ty+d1-d2+1);
+		}
+	}
+	lx = dx + W + 2;
+  	draw_label(x()+lx, y(), w()-lx-bx, h());
+  	if (Fl::focus() == this) draw_focus();
 }
 
 //--- editor settings ---

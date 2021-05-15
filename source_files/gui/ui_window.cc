@@ -84,13 +84,13 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
 
 	if (single_pane) {
 		left_mods = new UI_CustomMods(LEFT_W + kf_h(4), kf_h(22), MOD_W * 2,
-			                          H - kf_h(22), SELECTION);
+			                          H - kf_h(22));
 	} else {
 		right_mods =
-		    new UI_CustomMods(W - MOD_W, kf_h(22), MOD_W, H - kf_h(22), SELECTION);
+		    new UI_CustomMods(W - MOD_W, kf_h(22), MOD_W, H - kf_h(22));
 
 		left_mods = new UI_CustomMods(LEFT_W + kf_h(4), kf_h(22), MOD_W,
-		                              H - kf_h(22), SELECTION);
+		                              H - kf_h(22));
 	}
 
     end();

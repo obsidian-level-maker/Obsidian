@@ -26,7 +26,6 @@
 #include "FL/Fl_Check_Button.H"
 #include "FL/Fl_Choice.H"
 #include "FL/Fl_Hor_Slider.H"
-#include "FL/Fl_Check_Button.H"
 
 //
 // DESCRIPTION:
@@ -133,6 +132,18 @@ class UI_RButton : public Fl_Check_Button {
    public:
     UI_RButton(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_RButton();
+    
+   private:
+   void draw();
+};
+
+class UI_CustomCheckBox : public Fl_Check_Button {
+  
+   private:
+
+   public:
+    UI_CustomCheckBox(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_CustomCheckBox();
     
    private:
    void draw();

@@ -249,15 +249,15 @@ class UI_OptionsWin : public Fl_Window {
     Fl_Choice *opt_box_theme;
     Fl_Choice *opt_button_theme;
 
-    Fl_Check_Button *opt_single_pane;
+    UI_CustomCheckBox *opt_single_pane;
     Fl_Choice *opt_color_scheme;
     Fl_Button *opt_text_color;
     Fl_Button *opt_bg_color;
     Fl_Button *opt_bg2_color;
 
-    Fl_Check_Button *opt_backups;
-    Fl_Check_Button *opt_overwrite;
-    Fl_Check_Button *opt_debug;
+    UI_CustomCheckBox *opt_backups;
+    UI_CustomCheckBox *opt_overwrite;
+    UI_CustomCheckBox *opt_debug;
 
    public:
     UI_OptionsWin(int W, int H, const char *label = NULL);
@@ -522,11 +522,13 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_text_color->h() + y_step * 3;
 
-    opt_single_pane = new Fl_Check_Button(cx, cy, W - cx - pad, kf_h(24),
+    opt_single_pane = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24),
                                        _(" Single Pane Mode"));
     opt_single_pane->value(single_pane ? 1 : 0);
     opt_single_pane->callback(callback_SinglePane, this);
     opt_single_pane->labelfont(font_style);
+    opt_single_pane->selection_color(SELECTION);
+    opt_single_pane->down_box(button_style);
 
     //----------------
 
@@ -541,27 +543,33 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += heading->h() + y_step;
 
-    opt_backups = new Fl_Check_Button(cx, cy, W - cx - pad, kf_h(24),
+    opt_backups = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24),
                                       _(" Create Backups"));
     opt_backups->value(create_backups ? 1 : 0);
     opt_backups->callback(callback_Backups, this);
     opt_backups->labelfont(font_style);
+    opt_backups->selection_color(SELECTION);
+    opt_backups->down_box(button_style);
 
     cy += opt_backups->h() + y_step * 2 / 3;
 
-    opt_overwrite = new Fl_Check_Button(cx, cy, W - cx - pad, kf_h(24),
+    opt_overwrite = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24),
                                         _(" Overwrite File Warning"));
     opt_overwrite->value(overwrite_warning ? 1 : 0);
     opt_overwrite->callback(callback_Overwrite, this);
     opt_overwrite->labelfont(font_style);
+    opt_overwrite->selection_color(SELECTION);
+    opt_overwrite->down_box(button_style);
 
     cy += opt_overwrite->h() + y_step * 2 / 3;
 
-    opt_debug = new Fl_Check_Button(cx, cy, W - cx - pad, kf_h(24),
+    opt_debug = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24),
                                     _(" Debugging Messages"));
     opt_debug->value(debug_messages ? 1 : 0);
     opt_debug->callback(callback_Debug, this);
     opt_debug->labelfont(font_style);
+    opt_debug->selection_color(SELECTION);
+    opt_debug->down_box(button_style);
 
     cy += opt_debug->h() + y_step;
 
@@ -588,7 +596,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     darkish->end();
 
     // restart needed warning
-    heading = new Fl_Box(FL_NO_BOX, x() + pad, H - dh - kf_h(15), W - pad * 2,
+    heading = new Fl_Box(FL_NO_BOX, x() + pad, H - dh - kf_h(10), W - pad * 2,
                          kf_h(14), _("Note: some options require a restart."));
     heading->align(FL_ALIGN_INSIDE);
     heading->labelsize(small_font_size);

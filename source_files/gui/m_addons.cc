@@ -438,8 +438,9 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
 
     sbar = new Fl_Scrollbar(mx + mw, my, Fl::scrollbar_size(), mh);
     sbar->callback(callback_Scroll, this);
-
-    //	sbar->color(FL_DARK3+1, FL_DARK1);
+    sbar->slider(button_style);
+    sbar->color(fl_darker(fl_darker(WINDOW_BG)), WINDOW_BG);
+    sbar->labelcolor(SELECTION);
 
     const char *pack_title = StringPrintf("\n\n\n\n%s", _("No Addons Found!"));
     if (all_addons.empty()) {
@@ -456,14 +457,13 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
     pack->labelfont(font_style);
 
     pack->box(FL_FLAT_BOX);
-    pack->color(bg_col);
     pack->resizable(NULL);
 
     //----------------
 
     Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
     darkish->box(FL_FLAT_BOX);
-    darkish->color(fl_darker(WINDOW_BG));
+    darkish->color(fl_darker(fl_darker(WINDOW_BG)));
     {
         // finally add the close button
         int bw = kf_w(60);
@@ -482,6 +482,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
         sep->align(FL_ALIGN_INSIDE);
         sep->labelsize(small_font_size);
         sep->labelfont(font_style);
+        sep->labelcolor(fl_contrast(FONT_COLOR,darkish->color()));
     }
     darkish->end();
 

@@ -34,9 +34,10 @@ UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
     box(box_style);
 
     mod_button =
-        new Fl_Check_Button(X + kf_w(6), Y + kf_h(4), W - kf_w(12), kf_h(24));
+        new UI_CustomCheckBox(X + kf_w(6), Y + kf_h(4), W - kf_w(12), kf_h(24));
     mod_button->visible_focus(0);
     mod_button->down_box(button_style);
+    mod_button->selection_color(SELECTION);
 
     if (Is_UI()) {
         mod_button->value(1);
@@ -80,7 +81,7 @@ typedef struct {
 } opt_change_callback_data_t;
 
 void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
-                          int gap, Fl_Color select_col) {
+                          int gap) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
@@ -111,7 +112,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 	UI_RChoice *rch =
 		    new UI_RChoice(nx + (nw * x_multi), ny + kf_h(15), nw * width_multi, kf_h(24), new_label);
 	rch->align(alignment);
-	rch->selection_color(select_col);
+	rch->selection_color(SELECTION);
 
     if (!tip) {
         tip = "";
@@ -140,7 +141,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
 void UI_Module::AddSliderOption(const char *opt, const char *label, const char *tip,
                           int gap, double min, double max, double inc,
-                          const char *units, const char *nan, Fl_Color select_col) {
+                          const char *units, const char *nan) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
@@ -176,14 +177,14 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->prev_button->visible_focus(0);
     rsl->prev_button->box(button_style);     
     rsl->prev_button->align(FL_ALIGN_INSIDE);   
-    rsl->prev_button->labelcolor(select_col);
+    rsl->prev_button->labelcolor(SELECTION);
     rsl->prev_button->labelsize(rsl->prev_button->labelsize() * .80);
     rsl->prev_button->callback(callback_SliderPrevious, NULL);
     
     rsl->mod_slider =
         new Fl_Hor_Slider(rsl->x() + rsl->w() * .10, rsl->y(), rsl->w() * .80, kf_h(24), "");
     rsl->mod_slider->box(button_style);
-    rsl->mod_slider->selection_color(select_col);
+    rsl->mod_slider->selection_color(SELECTION);
     rsl->mod_slider->minimum(min);
     rsl->mod_slider->maximum(max);
     rsl->mod_slider->step(inc);
@@ -194,7 +195,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->next_button->box(button_style);
     rsl->next_button->visible_focus(0);   
     rsl->next_button->align(FL_ALIGN_INSIDE);  
-    rsl->next_button->labelcolor(select_col);
+    rsl->next_button->labelcolor(SELECTION);
     rsl->next_button->labelsize(rsl->next_button->labelsize() * .80);
     rsl->next_button->callback(callback_SliderNext, NULL);
 
@@ -236,7 +237,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 }
 
 void UI_Module::AddButtonOption(const char *opt, const char *label, const char *tip,
-                          int gap, Fl_Color select_col) {
+                          int gap) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
@@ -265,7 +266,7 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
 	UI_RButton *rbt =
 		    new UI_RButton(nx + (nw * x_multi), ny + kf_h(15), nw * width_multi, kf_h(24), new_label);
 	rbt->align(alignment);
-	rbt->selection_color(select_col);
+	rbt->selection_color(SELECTION);
 
     
     if (!tip) {
@@ -524,8 +525,8 @@ void UI_Module::callback_SliderNext(Fl_Widget *w, void *data) {
 
 //----------------------------------------------------------------
 
-UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col)
-    : Fl_Group(X, Y, W, H), button_col(_button_col) {
+UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H)
+    : Fl_Group(X, Y, W, H) {
     box(FL_FLAT_BOX);
 
     color(fl_darker(fl_darker(WINDOW_BG)), fl_darker(fl_darker(WINDOW_BG)));
@@ -545,6 +546,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col)
     sbar->callback(callback_Scroll, this);
     sbar->slider(button_style);
     sbar->color(fl_darker(fl_darker(WINDOW_BG)), WINDOW_BG);
+    sbar->labelcolor(SELECTION);
 
     mod_pack_group = new Fl_Group(mx, my, mw, mh);
     mod_pack_group->box(FL_NO_BOX);
@@ -600,7 +602,7 @@ bool UI_CustomMods::AddOption(const char *module, const char *option,
         return false;
     }
 
-    M->AddOption(option, label, tip, gap, button_col);
+    M->AddOption(option, label, tip, gap);
 
     PositionAll();
 
@@ -616,7 +618,7 @@ bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
         return false;
     }
 
-    M->AddSliderOption(option, label, tip, gap, min, max, inc, units, nan, button_col);
+    M->AddSliderOption(option, label, tip, gap, min, max, inc, units, nan);
 
     PositionAll();
 
@@ -631,7 +633,7 @@ bool UI_CustomMods::AddButtonOption(const char *module, const char *option,
         return false;
     }
 
-    M->AddButtonOption(option, label, tip, gap, button_col);
+    M->AddButtonOption(option, label, tip, gap);
 
     PositionAll();
 
