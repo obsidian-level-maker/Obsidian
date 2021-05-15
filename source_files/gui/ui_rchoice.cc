@@ -52,109 +52,12 @@ choice_data_c::~choice_data_c() {
 //----------------------------------------------------------------
 
 UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label)
-    : Fl_Choice(x, y, w, h, label), opt_list() { visible_focus(0); labelfont(font_style); textfont(font_style); }
+    : UI_CustomMenu(x, y, w, h, label), opt_list() { visible_focus(0); labelfont(font_style); textfont(font_style); }
 
 UI_RChoice::~UI_RChoice() {
     for (unsigned int i = 0; i < opt_list.size(); i++) {
         delete opt_list[i];
     }
-}
-
-// Custom draw function to use selected button style
-void UI_RChoice::draw() {
-  Fl_Boxtype btype = button_style;
-  
-  int dx = Fl::box_dx(btype);
-  int dy = Fl::box_dy(btype);
-
-  // Arrow area
-  int H = h() - 2 * dy;
-  int W = Fl::is_scheme("gtk+")    ? 20 :			// gtk+  -- fixed size
-          Fl::is_scheme("gleam")   ? 20 :			// gleam -- fixed size
-          Fl::is_scheme("plastic") ? ((H > 20) ? 20 : H)	// plastic: shrink if H<20
-                                   : ((H > 20) ? 20 : H);	// default: shrink if H<20
-  int X = x() + w() - W - dx;
-  int Y = y() + dy;
-
-  // Arrow object
-  int w1 = (W - 4) / 3; if (w1 < 1) w1 = 1;
-  int x1 = X + (W - 2 * w1 - 1) / 2;
-  int y1 = Y + (H - w1 - 1) / 2;
-
-  if (Fl::scheme()) {
-    // NON-DEFAULT SCHEME
-
-    // Draw widget box
-    draw_box(btype, color());
-
-    // Draw arrow area
-    fl_color(active_r() ? SELECTION : fl_inactive(SELECTION));
-    if (Fl::is_scheme("plastic")) {
-      // Show larger up/down arrows...
-      fl_polygon(x1, y1 + 3, x1 + w1, y1 + w1 + 3, x1 + 2 * w1, y1 + 3);
-      fl_polygon(x1, y1 + 1, x1 + w1, y1 - w1 + 1, x1 + 2 * w1, y1 + 1);
-    } else {
-      // Show smaller up/down arrows with a divider...
-      x1 = x() + w() - 13 - dx;
-      y1 = y() + h() / 2;
-      fl_polygon(x1, y1 - 2, x1 + 3, y1 - 5, x1 + 6, y1 - 2);
-      fl_polygon(x1, y1 + 2, x1 + 3, y1 + 5, x1 + 6, y1 + 2);
-
-      fl_color(fl_darker(color()));
-      fl_yxline(x1 - 7, y1 - 8, y1 + 8);
-
-      fl_color(fl_lighter(color()));
-      fl_yxline(x1 - 6, y1 - 8, y1 + 8);
-    }
-  } else {
-    // DEFAULT SCHEME
-
-    // Draw widget box
-    draw_box(btype, color());
-
-    // Draw arrow area
-    draw_box(FL_UP_BOX,X,Y,W,H,color());
-    fl_color(active_r() ? SELECTION : fl_inactive(SELECTION));
-    fl_polygon(x1, y1, x1 + w1, y1 + w1, x1 + 2 * w1, y1);
-  }
-
-  W += 2 * dx;
-
-  // Draw menu item's label
-  if (mvalue()) {
-    Fl_Menu_Item m = *mvalue();
-    if (active_r()) m.activate(); else m.deactivate();
-
-    // Clip
-    int xx = x() + dx, yy = y() + dy + 1, ww = w() - W, hh = H - 2;
-    fl_push_clip(xx, yy, ww, hh);
-
-    if ( Fl::scheme()) {
-      Fl_Label l;
-      l.value = m.text;
-      l.image = 0;
-      l.deimage = 0;
-      l.type = m.labeltype_;
-      l.font = m.labelsize_ || m.labelfont_ ? m.labelfont_ : textfont();
-      l.size = m.labelsize_ ? m.labelsize_ : textsize();
-      l.color= m.labelcolor_ ? m.labelcolor_ : textcolor();
-      if (!m.active()) l.color = fl_inactive((Fl_Color)l.color);
-      fl_draw_shortcut = 2; // hack value to make '&' disappear
-      l.draw(xx+3, yy, ww>6 ? ww-6 : 0, hh, FL_ALIGN_LEFT);
-      fl_draw_shortcut = 0;
-      if ( Fl::focus() == this ) draw_focus(box(), xx, yy, ww, hh);
-    }
-    else {
-      fl_draw_shortcut = 2; // hack value to make '&' disappear
-      m.draw(xx, yy, ww, hh, this, Fl::focus() == this);
-      fl_draw_shortcut = 0;
-    }
-
-    fl_pop_clip();
-  }
-
-  // Widget's label
-  draw_label();
 }
 
 void UI_RChoice::AddChoice(const char *id, const char *label) {
@@ -416,5 +319,124 @@ void UI_CustomCheckBox::draw() {
   	if (Fl::focus() == this) draw_focus();
 }
 
+//----------------------------------------------------------------
+
+UI_CustomArrowButton::UI_CustomArrowButton(int x, int y, int w, int h, const char *label)
+    : Fl_Button(x, y, w, h, label) { visible_focus(0); }
+
+UI_CustomArrowButton::~UI_CustomArrowButton() {}
+
+void UI_CustomArrowButton::draw() {
+  if (type() == FL_HIDDEN_BUTTON) return;
+  Fl_Color col = value() ? selection_color() : color();
+  draw_box(value() ? (down_box()?down_box():fl_down(box())) : box(), col);
+  draw_backdrop();
+  draw_label();
+  if (Fl::focus() == this) draw_focus();
+}
+
+//----------------------------------------------------------------
+
+UI_CustomMenu::UI_CustomMenu(int x, int y, int w, int h, const char *label)
+    : Fl_Choice(x, y, w, h, label) { visible_focus(0); }
+
+UI_CustomMenu::~UI_CustomMenu() {}
+
+// Custom draw function to use selected button style
+void UI_CustomMenu::draw() {
+  Fl_Boxtype btype = button_style;
+  
+  int dx = Fl::box_dx(btype);
+  int dy = Fl::box_dy(btype);
+
+  // Arrow area
+  int H = h() - 2 * dy;
+  int W = Fl::is_scheme("gtk+")    ? 20 :			// gtk+  -- fixed size
+          Fl::is_scheme("gleam")   ? 20 :			// gleam -- fixed size
+          Fl::is_scheme("plastic") ? ((H > 20) ? 20 : H)	// plastic: shrink if H<20
+                                   : ((H > 20) ? 20 : H);	// default: shrink if H<20
+  int X = x() + w() - W - dx;
+  int Y = y() + dy;
+
+  // Arrow object
+  int w1 = (W - 4) / 3; if (w1 < 1) w1 = 1;
+  int x1 = X + (W - 2 * w1 - 1) / 2;
+  int y1 = Y + (H - w1 - 1) / 2;
+
+  if (Fl::scheme()) {
+    // NON-DEFAULT SCHEME
+
+    // Draw widget box
+    draw_box(btype, color());
+
+    // Draw arrow area
+    fl_color(active_r() ? SELECTION : fl_inactive(SELECTION));
+    if (Fl::is_scheme("plastic")) {
+      // Show larger up/down arrows...
+      fl_polygon(x1, y1 + 3, x1 + w1, y1 + w1 + 3, x1 + 2 * w1, y1 + 3);
+      fl_polygon(x1, y1 + 1, x1 + w1, y1 - w1 + 1, x1 + 2 * w1, y1 + 1);
+    } else {
+      // Show smaller up/down arrows with a divider...
+      x1 = x() + w() - 13 - dx;
+      y1 = y() + h() / 2;
+      fl_polygon(x1, y1 - 2, x1 + 3, y1 - 5, x1 + 6, y1 - 2);
+      fl_polygon(x1, y1 + 2, x1 + 3, y1 + 5, x1 + 6, y1 + 2);
+
+      fl_color(fl_darker(color()));
+      fl_yxline(x1 - 7, y1 - 8, y1 + 8);
+
+      fl_color(fl_lighter(color()));
+      fl_yxline(x1 - 6, y1 - 8, y1 + 8);
+    }
+  } else {
+    // DEFAULT SCHEME
+
+    // Draw widget box
+    draw_box(btype, color());
+
+    // Draw arrow area
+    draw_box(FL_UP_BOX,X,Y,W,H,color());
+    fl_color(active_r() ? SELECTION : fl_inactive(SELECTION));
+    fl_polygon(x1, y1, x1 + w1, y1 + w1, x1 + 2 * w1, y1);
+  }
+
+  W += 2 * dx;
+
+  // Draw menu item's label
+  if (mvalue()) {
+    Fl_Menu_Item m = *mvalue();
+    if (active_r()) m.activate(); else m.deactivate();
+
+    // Clip
+    int xx = x() + dx, yy = y() + dy + 1, ww = w() - W, hh = H - 2;
+    fl_push_clip(xx, yy, ww, hh);
+
+    if ( Fl::scheme()) {
+      Fl_Label l;
+      l.value = m.text;
+      l.image = 0;
+      l.deimage = 0;
+      l.type = m.labeltype_;
+      l.font = m.labelsize_ || m.labelfont_ ? m.labelfont_ : textfont();
+      l.size = m.labelsize_ ? m.labelsize_ : textsize();
+      l.color= m.labelcolor_ ? m.labelcolor_ : textcolor();
+      if (!m.active()) l.color = fl_inactive((Fl_Color)l.color);
+      fl_draw_shortcut = 2; // hack value to make '&' disappear
+      l.draw(xx+3, yy, ww>6 ? ww-6 : 0, hh, FL_ALIGN_LEFT);
+      fl_draw_shortcut = 0;
+      if ( Fl::focus() == this ) draw_focus(box(), xx, yy, ww, hh);
+    }
+    else {
+      fl_draw_shortcut = 2; // hack value to make '&' disappear
+      m.draw(xx, yy, ww, hh, this, Fl::focus() == this);
+      fl_draw_shortcut = 0;
+    }
+
+    fl_pop_clip();
+  }
+
+  // Widget's label
+  draw_label();
+}
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

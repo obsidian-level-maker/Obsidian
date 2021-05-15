@@ -173,7 +173,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 	rsl->align(alignment);
 
     rsl->prev_button =
-        new Fl_Button(rsl->x(), rsl->y(), rsl->w() * .10, kf_h(24), "@<");
+        new UI_CustomArrowButton(rsl->x(), rsl->y(), rsl->w() * .10, kf_h(24), "@<");
     rsl->prev_button->visible_focus(0);
     rsl->prev_button->box(button_style);     
     rsl->prev_button->align(FL_ALIGN_INSIDE);   
@@ -191,7 +191,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->mod_slider->callback(callback_MixItCheck, NULL);
     
     rsl->next_button =
-        new Fl_Button(rsl->x() + rsl->w() * .90, rsl->y(), rsl->w() * .10, kf_h(24), "@>");
+        new UI_CustomArrowButton(rsl->x() + rsl->w() * .90, rsl->y(), rsl->w() * .10, kf_h(24), "@>");
     rsl->next_button->box(button_style);
     rsl->next_button->visible_focus(0);   
     rsl->next_button->align(FL_ALIGN_INSIDE);  

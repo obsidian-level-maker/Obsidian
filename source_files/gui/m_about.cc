@@ -115,9 +115,9 @@ UI_About::UI_About(int W, int H, const char *label)
     box = new Fl_Box(pad, cy, W - pad - pad, text_h, _(Text));
     box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
     box->box(FL_UP_BOX);
-    box->color(fl_darker(WINDOW_BG));
+    box->color(fl_lighter(WINDOW_BG));
     box->labelfont(font_style);
-    box->labelcolor(fl_contrast(FONT_COLOR, box->color()));
+    box->labelcolor(fl_darker(FONT_COLOR));
 
     cy += box->h() + kf_h(10);
 
@@ -137,6 +137,7 @@ UI_About::UI_About(int W, int H, const char *label)
     // finally add an "OK" button
     Fl_Group *darkish = new Fl_Group(0, cy, W, H - cy);
     darkish->box(FL_FLAT_BOX);
+    darkish->color(fl_darker(WINDOW_BG));
     {
         int bw = kf_w(60);
         int bh = kf_h(30);

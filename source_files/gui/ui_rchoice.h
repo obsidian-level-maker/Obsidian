@@ -55,15 +55,25 @@ class choice_data_c {
     ~choice_data_c();
 };
 
-class UI_RChoice : public Fl_Choice {
+class UI_CustomMenu : public Fl_Choice {
+
+   private:
+
+   public:
+    UI_CustomMenu(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_CustomMenu();
+    
+   private:
+	void draw();
+};
+
+class UI_RChoice : public UI_CustomMenu {
    private:
     std::vector<choice_data_c *> opt_list;
 
    public:
     UI_RChoice(int x, int y, int w, int h, const char *label = NULL);
-    virtual ~UI_RChoice();
-    
-	void draw(); 
+    virtual ~UI_RChoice(); 
 
    public:
     // add a new choice to the list.  If a choice with the same 'id'
@@ -104,6 +114,18 @@ class UI_RChoice : public Fl_Choice {
     void GotoNext();
 };
 
+class UI_CustomArrowButton : public Fl_Button {
+
+   private:
+
+   public:
+    UI_CustomArrowButton(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_CustomArrowButton();
+    
+   private:
+	void draw();
+};
+
 class UI_RSlide : public Fl_Group {
    private:
     std::vector<choice_data_c *> opt_list;
@@ -114,9 +136,9 @@ class UI_RSlide : public Fl_Group {
     
     Fl_Hor_Slider *mod_slider;
     
-    Fl_Button *prev_button;
+    UI_CustomArrowButton *prev_button;
     
-    Fl_Button *next_button;
+    UI_CustomArrowButton *next_button;
     
     std::string original_label;
     

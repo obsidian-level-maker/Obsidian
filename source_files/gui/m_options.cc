@@ -243,14 +243,14 @@ class UI_OptionsWin : public Fl_Window {
     bool want_quit;
 
    private:
-    Fl_Choice *opt_language;
-    Fl_Choice *opt_font_theme;
-    Fl_Choice *opt_widget_theme;
-    Fl_Choice *opt_box_theme;
-    Fl_Choice *opt_button_theme;
+    UI_CustomMenu *opt_language;
+    UI_CustomMenu *opt_font_theme;
+    UI_CustomMenu *opt_widget_theme;
+    UI_CustomMenu *opt_box_theme;
+    UI_CustomMenu *opt_button_theme;
 
     UI_CustomCheckBox *opt_single_pane;
-    Fl_Choice *opt_color_scheme;
+    UI_CustomMenu *opt_color_scheme;
     Fl_Button *opt_text_color;
     Fl_Button *opt_bg_color;
     Fl_Button *opt_bg2_color;
@@ -428,7 +428,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += heading->h();
 
     opt_language =
-        new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Language: "));
+        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Language: "));
     opt_language->align(FL_ALIGN_LEFT);
     opt_language->callback(callback_Language, this);
     opt_language->labelfont(font_style);
@@ -439,7 +439,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_language->h() + y_step;
 
     opt_font_theme =
-        new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Font: "));
+        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Font: "));
     opt_font_theme->align(FL_ALIGN_LEFT);
     opt_font_theme->add(_("Default|Courier|Times"));
     opt_font_theme->callback(callback_FontTheme, this);
@@ -450,7 +450,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_font_theme->h() + y_step;
     
     opt_widget_theme =
-        new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Widget Theme: "));
+        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Widget Theme: "));
     opt_widget_theme->align(FL_ALIGN_LEFT);
     opt_widget_theme->add(_("Default|Gleam|Win95|Plastic"));
     opt_widget_theme->callback(callback_WidgetTheme, this);
@@ -461,7 +461,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_widget_theme->h() + y_step;
     
     opt_box_theme =
-        new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Box Theme: "));
+        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Box Theme: "));
     opt_box_theme->align(FL_ALIGN_LEFT);
     opt_box_theme->add(_("Default|Shadow|Embossed|Engraved|Inverted|Flat"));
     opt_box_theme->callback(callback_BoxTheme, this);
@@ -472,7 +472,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_box_theme->h() + y_step;
     
     opt_button_theme =
-        new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Button Theme: "));
+        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Button Theme: "));
     opt_button_theme->align(FL_ALIGN_LEFT);
     opt_button_theme->add(_("Default|Embossed|Engraved|Inverted|Flat"));
     opt_button_theme->callback(callback_ButtonTheme, this);
@@ -483,9 +483,9 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_button_theme->h() + y_step;
 
     opt_color_scheme =
-        new Fl_Choice(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Color Scheme: "));
+        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Color Scheme: "));
     opt_color_scheme->align(FL_ALIGN_LEFT);
-    opt_color_scheme->add(_("Obsidian|System Colors|Custom"));
+    opt_color_scheme->add(_("Default|System Colors|Custom"));
     opt_color_scheme->callback(callback_ColorScheme, this);
     opt_color_scheme->value(color_scheme);
     opt_color_scheme->labelfont(font_style);
