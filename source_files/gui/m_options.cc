@@ -41,6 +41,8 @@ static void Parse_Option(const char *name, const char *value) {
     } else if (StringCaseCmp(name, "window_scaling") == 0) {
         window_scaling = atoi(value);
         window_scaling = CLAMP(0, window_scaling, 5);
+    } else if (StringCaseCmp(name, "font_scaling") == 0) {
+        font_scaling = atoi(value);
     } else if (StringCaseCmp(name, "font_theme") == 0) {
         font_theme = atoi(value);
     } else if (StringCaseCmp(name, "widget_theme") == 0) {
@@ -201,6 +203,7 @@ bool Options_Save(const char *filename) {
     fprintf(option_fp, "\n");
 
     fprintf(option_fp, "window_scaling      = %d\n", window_scaling);
+    fprintf(option_fp, "font_scaling      = %d\n", font_scaling);
     fprintf(option_fp, "font_theme      = %d\n", font_theme);
     fprintf(option_fp, "widget_theme      = %d\n", widget_theme);
     fprintf(option_fp, "box_theme      = %d\n", box_theme);
@@ -249,6 +252,7 @@ class UI_OptionsWin : public Fl_Window {
    private:
     UI_CustomMenu *opt_language;
     UI_CustomMenu *opt_window_scaling;
+    UI_CustomMenu *opt_font_scaling;
     UI_CustomMenu *opt_font_theme;
     UI_CustomMenu *opt_widget_theme;
     UI_CustomMenu *opt_box_theme;
@@ -339,6 +343,12 @@ class UI_OptionsWin : public Fl_Window {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         window_scaling = that->opt_window_scaling->value();
+    }
+    
+    static void callback_FontScaling(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+        font_scaling = that->opt_font_scaling->value();
     }
 
     static void callback_FontTheme(Fl_Widget *w, void *data) {
@@ -471,6 +481,17 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_window_scaling->textfont(font_style);
 
     cy += opt_window_scaling->h() + y_step;
+    
+    opt_font_scaling =
+        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Font Scaling: "));
+    opt_font_scaling->align(FL_ALIGN_LEFT);
+    opt_font_scaling->add(_("Default|Tiny|Small|Large|Huge"));
+    opt_font_scaling->callback(callback_FontScaling, this);
+    opt_font_scaling->value(font_scaling);
+    opt_font_scaling->labelfont(font_style);
+    opt_font_scaling->textfont(font_style);
+
+    cy += opt_font_scaling->h() + y_step;
 
     opt_font_theme =
         new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Font: "));

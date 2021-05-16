@@ -79,6 +79,7 @@ Fl_Boxtype button_style = FL_THIN_UP_BOX;
 int widget_theme = 0;
 bool single_pane = true;
 int window_scaling = 0;
+int font_scaling = 0;
 int num_fonts = 16; // FLTK built-in amount
 
 bool create_backups = true;
@@ -365,11 +366,36 @@ int Main_DetermineScaling() {
     return 0;
 }
 
+void Main_DetermineFontScaling() {
+
+    switch(font_scaling) {
+    	case 0 : FL_NORMAL_SIZE = 18;
+    			 break;
+    	case 1 : FL_NORMAL_SIZE = 14;
+    			 break;
+    	case 2 : FL_NORMAL_SIZE = 16;
+    			 break;
+    	case 3 : FL_NORMAL_SIZE = 20;
+    			 break;
+    	case 4 : FL_NORMAL_SIZE = 22;
+    			 break;
+    	default : FL_NORMAL_SIZE = 18;
+    			  break;
+   }
+
+   FL_NORMAL_SIZE = FL_NORMAL_SIZE + KF * 4;
+   small_font_size = FL_NORMAL_SIZE - 2 + KF * 3;
+   header_font_size = FL_NORMAL_SIZE + 2 + KF * 5;
+
+   fl_message_font(font_style, FL_NORMAL_SIZE + 2 + KF * 4);
+   
+}
+
 void Main_SetupFLTK() {
 
 	// Add system fonts to FLTK font table
 	num_fonts = Fl::set_fonts(NULL);
-
+	
     Fl::visual(FL_DOUBLE | FL_RGB);  
     switch(color_scheme) {
     	case 0 : Fl::background(221, 221, 221);
@@ -459,6 +485,8 @@ void Main_SetupFLTK() {
     	// Fallback
     	font_style = FL_HELVETICA;
     }
+    
+    Main_DetermineFontScaling();
     screen_w = Fl::w();
     screen_h = Fl::h();
 
@@ -467,21 +495,6 @@ void Main_SetupFLTK() {
 #endif
 
     KF = Main_DetermineScaling();
-
-    // default font size for widgets
-    FL_NORMAL_SIZE = 14 + KF * 4;
-
-    small_font_size = 12 + KF * 3;
-    header_font_size = 16 + KF * 5;
-
-    fl_message_font(font_style, 16 + KF * 4);
-
-    if (KF < 0) {
-        FL_NORMAL_SIZE = 12;
-        small_font_size = 10;
-        header_font_size = 15;
-        fl_message_font(font_style, 12);
-    }
 
     // load icons for file chooser
 #ifndef WIN32

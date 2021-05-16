@@ -77,6 +77,7 @@ extern int box_theme;
 extern int button_theme;
 extern int widget_theme;
 extern int window_scaling;  // 0 = Auto, 1 = Tiny ... 5 = Huge
+extern int font_scaling;
 extern int num_fonts;
 extern bool single_pane;
 
