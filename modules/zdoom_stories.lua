@@ -496,7 +496,7 @@ ZDOOM_STORIES.STORIES =
       hellspawn you have just felled. Suddenly, a bright opening
       in the skies appear.
       _SPACE
-      It is _RAND_CONTRIBUTOR, one of the Contributors of ObAddon!
+      It is _RAND_CONTRIBUTOR, one of the Contributors of Obsidian!
       A rain of plasma bolts fall from the sky, searing every beast
       around you down to ashes. _RAND_CONTRIBUTOR waves at you
       and disappears again above the clouds...]],
@@ -507,7 +507,7 @@ ZDOOM_STORIES.STORIES =
       an immense orb of light! The orb shoots beams into the belly of
       each creature turning them into nothing but clouds of dust.
       _SPACE
-      It's _RAND_CONTRIBUTOR, one of the Contributors of ObAddon!
+      It's _RAND_CONTRIBUTOR, one of the Contributors of Obsidian!
       "You'll need all the help you can get." _RAND_CONTRIBUTOR
       turns back and leaves, while gesturing at you to keep up
       the good fight.]]
@@ -2483,7 +2483,7 @@ ZDOOM_STORIES.INSTALLATIONS =
 ZDOOM_STORIES.QUIT_MESSAGES =
 {
   [[Let's be serious, are you really exiting already?]],
-  [[There's always more where this comes from! ObAddon never forgets!]],
+  [[There's always more where this comes from! Obsidian never forgets!]],
   [[You may be leaving but Hell's legions will never rest. You'll be back.]],
   [[Maybe you should hit Escape before I put this shotgun barrel where the sun don't shine.]],
   [[Just leave. This is just more monsters and levels here. What a heap of shit.]], --Loosely based off "Extra" quit message
@@ -2498,7 +2498,7 @@ ZDOOM_STORIES.QUIT_MESSAGES =
   [[A bat? Nah, I'd think a chainsaw would fare better nowadays.]], -- Doom's quit message mentioned a bat
   [[In a perfect world.. Oh wait, no there is no perfect world with sunshine and unicorn farts.]],
   [[Subscribe to... no, I am not going to do that here too.]],
-  [[Oblige is love, Oblige is life.]],
+  [[Obsidian is love, Obsidian is life.]],
   [[Are you sure you want to exit out of the game?]],
   [[Press Y to burn bridges, press N to maintain relations.]],
   [[When you return, a gang of Imps and Barons are going to take turns on your ass.]],
@@ -2521,12 +2521,12 @@ ZDOOM_STORIES.QUIT_MESSAGES =
   [[In the end, there is only death, chaos and more death. And cookies.]],
   [[Remember, a good demon is a dead one. Make that happen!]],
   [[Heroes, press N. Wimps, press Y.]], -- Wolfenstein 3D
-  [[Go ahead, leave. Oblige will be back with even more demons...]],
+  [[Go ahead, leave. Obsidian will be back with even more demons...]],
   [[_RAND_CONTRIBUTOR is not pleased.]],
   [[There's a lot of bullshit going on these days. Don't just add to the pile and quit like this.]],
   [[Meh, is that it? Am I supposed to appease you with something?]],
   [[There just isn't anything to keep you from hitting Y, is there?]],
-  [[ObAddon demands the purging of more demons!]],
+  [[Obsidian demands the purging of more demons!]],
   [[The will to survive is as long as you do not quit out of the game.]],
   [[_RAND_DEMON needs another hobby than to torture your dumb ass from quitting.]],
   [[Hey dipshit, we're not done hunting hellspawn! Turn your attention back to the game!]],
@@ -2547,33 +2547,33 @@ ZDOOM_STORIES.QUIT_MESSAGES =
 
 
   -- hardcore philosophy
-  [[Are you quitting because you realized no matter how much hellspawn you mow down, Oblige will just give you more?]],
-  [[_RAND_CONTRIBUTOR wants to know you're quitting from an Oblige map. :( Unless you just finished it all. :D]],
-  [[The price of freedom is eternal vigilance. The price of Oblige is eternal demonic invasions. And you're giving up?]],
+  [[Are you quitting because you realized no matter how much hellspawn you mow down, Obsidian will just give you more?]],
+  [[_RAND_CONTRIBUTOR wants to know you're quitting from an Obsidian map. :( Unless you just finished it all. :D]],
+  [[The price of freedom is eternal vigilance. The price of Obsidian is eternal demonic invasions. And you're giving up?]],
   [[You wouldn't download a car, but you would quit a demonic invasion?]],
   [[Never gonna give you up, never gonna let you down, never gonna run and leave you without a fresh new megawad.]],
   [[At least when the demons slaughter anyone, it's regardless of gender, race, or creed.]],
-  [[You can win Oblige, you just have to defeat a 64-bit permutation of maps and each variation per seed by changed setting to do so.]],
+  [[You can win Obsidian, you just have to defeat a 64-bit permutation of maps and each variation per seed by changed setting to do so.]],
   [[You want demons? We can give you more demons than there are stars in the observable universe.]],
   [[Don't worry about infinite hellspawn. Do what you love, and you'll never work a day in your life.]], -- I'm actually crediting this to HexaDoken
-  [[A dimensional shambler is, indeed, waiting in your operating system. It was ObAddon all along.]],
+  [[A dimensional shambler is, indeed, waiting in your operating system. It was Obsidian all along.]],
   [[My map generator brings all the linedefs to the yard.]],
   [["You shouldn't stop playing Doom." definitely said by Voltaire.]],
   [[Are you taking the blue pill?]],
-  [[The prophet Nostradamus predicted the dead would rise when there is no more room in hell. He didn't predict Oblige would be generating new rooms.]],
+  [[The prophet Nostradamus predicted the dead would rise when there is no more room in hell. He didn't predict Obsidian would be generating new rooms.]],
   [[You probably noticed by now that every time quit messages show up, you're forced to agree with the statement when you quit by choosing 'yes'.]],
-  [[Thanos needs two fingers to erase half the universe. Oblige builds a whole with only one.]],
-  [[Oblige is the machine. ObAddon is the ghost in the machine.]], -- credits to FrozSoul!
-  [[Oblige can generate more maps than you will ever speak words in your whole life.]],
-  [[Poor you. Demons don't have a housing crisis. Oblige provides free real estate for all of them.]],
+  [[Thanos needs two fingers to erase half the universe. Obsidian builds a whole with only one.]],
+  [[Oblige is the machine. Obsidian is the ghost in the machine.]], -- credits to FrozSoul!
+  [[Obsidian can generate more maps than you will ever speak words in your whole life.]],
+  [[Poor you. Demons don't have a housing crisis. Obsidian provides free real estate for all of them.]],
 
   -- helpful // technical
-  [[ObAddon is always improving. Stop by our Discord server, talk to the denizens and report bugs to us there!]],
-  [[Visit https://caligari87.github.io/ObAddon/ for updates!]],
+  [[Obsidian is always improving. Stop by our Discord server, talk to the denizens and report bugs to us there!]],
+  [[Visit https://github.com/GTD-Carthage/Obsidian-Content for updates!]],
   [[If you're quitting because something might be broken, please supply screenshots and preferably your LOG file when reporting.]],
-  [[ObAddon is for the adventurous. Are you? Join us and contribute ideas and works! ObAddon is a community project!]],
+  [[Obsidian is for the adventurous. Are you? Join us and contribute ideas and works! Obsidian is a community project!]],
   [[Was this not big enough? Try jacking up the Max Level Size or Upper Bound in settings to Colossal, Gargantuan or Transcendent.]],
-  [[If you are reporting an error and already closed OBLIGE, do NOT reopen the program as it will wipe the LOGS.TXT file clean! Open it via a text editor.]],
+  [[If you are reporting an error and already closed Obsidian, do NOT reopen the program as it will wipe the LOGS.TXT file clean! Open it via a text editor.]],
   [[Map sizes too big? Reduce the Map Size or Upper Bound size if using Mix It Up.]],
   [[Gargantuan or Transcendent maps looking like Minecraft Far Lands? Please keep Auto Detail on, not much else can be done about that, stupid Doom Engine limits.]],
   [[Too hard? Turn down Quantity and/or Strength. Same applies to too easy: Turn Quantity up.]],
@@ -2582,7 +2582,7 @@ ZDOOM_STORIES.QUIT_MESSAGES =
   [[By exiting, you are agreeing to subscribe to Cat Facts.]],
   [[Sewerage is important but HVAC systems is importanter.]],
   [[In 1998, the Undertaker threw Mankind off Hell in a Cell and plummeted 16ft. through an announcer's table.]],
-  [[ObAddon enhances your problem-solving skills! Contribute now!]],
+  [[Obsidian enhances your problem-solving skills! Contribute now!]],
   [[Set the Y offset, again of both front and back side, to the negative of the subtraction of the ceiling height of the sector the pit and the floor height of the planes, or y-offset = -(pitceilingheight-planefloorheight). So, the ceiling height is 256 in both platforms and the pit and the platform's floor height is 0, so the sidedefs' Y-offsets must be -(256-0) = -256.]],
   [[Cacos are red, their insides are blue. They wish to make a meal out of you.]],
   [[Having a boyfriend or girlfriend is important, but killings demons is importanter.]], -- Monika
