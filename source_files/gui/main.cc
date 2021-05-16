@@ -486,7 +486,6 @@ void Main_SetupFLTK() {
     	font_style = FL_HELVETICA;
     }
     
-    Main_DetermineFontScaling();
     screen_w = Fl::w();
     screen_h = Fl::h();
 
@@ -495,7 +494,7 @@ void Main_SetupFLTK() {
 #endif
 
     KF = Main_DetermineScaling();
-
+    Main_DetermineFontScaling();
     // load icons for file chooser
 #ifndef WIN32
     Fl_File_Icon::load_system_icons();
