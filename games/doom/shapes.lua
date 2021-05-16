@@ -1262,7 +1262,9 @@ SPROUT_DIRECT_1 =
   {
     conn = { x=2, y=1, w=2, dir=8 },
 
-    symmetry = { x=2, y=3, w=2, dir=8 }
+    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 },
+    symmetry2 = { kind="mirror", x=2, y=3, w=2, dir=8 },
+    symmetry3 = { kind="rotate", x=2, y=2, x2=4, y2=4 }
   }
 },
 
@@ -1288,7 +1290,7 @@ SPROUT_DIRECT_1_SYMM =
 
     symmetry = { kind="mirror", x=2, y=4, dir=8 },
     symmetry2 = { kind="mirror", x=2, y=4, dir=8 },
-    symmetry3 = { kind="rotate", x=1, y=3, x1=3, y2=5 }
+    symmetry3 = { kind="rotate", x=2, y=2, x1=3, y2=5 }
   }
 },
 
@@ -1312,7 +1314,9 @@ SPROUT_DIRECT_2 =
   {
     conn = { x=2, y=2, w=2, dir=8 },
 
-    symmetry = { x=2, y=3, w=2, dir=8 }
+    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 },
+    symmetry2 = { kind="mirror", x=2, y=3, w=2, dir=4 },
+    symmetry3 = { kind="rotate", x=2, y=3, x2=3, y2=4 }
   }
 },
 
@@ -1339,7 +1343,7 @@ SPROUT_DIRECT_2_SYMM =
 
     symmetry = { kind="mirror", x=2, y=5, dir=8 },
     symmetry2 = { kind="mirror", x=2, y=5, dir=4 },
-    symmetry3 = { kind="rotate", x=1, y=4, x2=3, y2=6 }
+    symmetry3 = { kind="rotate", x=2, y=4, x2=3, y2=6 }
   }
 },
 
@@ -1362,7 +1366,9 @@ SPROUT_DIRECT_2_EMERGENCY =
   {
     conn = { x=1, y=1, w=2, dir=8 },
 
-    symmetry = { x=1, y=2, w=2, dir=8 }
+    symmetry = { kind="mirror", x=1, y=2, w=2, dir=8 },
+    symmetry2 = { kind="mirror", x=1, y=2, w=2, dir=4 },
+    symmetry3 = { kind="rotate", x=1, y=2, x2=2, y2=3 }
   }
 },
 
@@ -1396,7 +1402,7 @@ SPROUT_DIRECT_THROUGH_2X_LIQUID =
 {
   emergency = true,
 
-  prob = 400,
+  prob = 250,
 
   structure =
   {
@@ -1411,7 +1417,9 @@ SPROUT_DIRECT_THROUGH_2X_LIQUID =
   {
     conn = { x=1, y=3, w=2, dir=8 },
 
-    symmetry = { x=1, y=5, w=2, dir=8 }
+    symmetry = { kind="mirror", x=1, y=5, w=2, dir=8 },
+    symmetry2 = { kind="mirror", x=1, y=5, w=2, dir=4 },
+    symmetry3 = { kind="rotate", x=1, y=3, x2=2, y2=5 }
   }
 },
 
@@ -1434,7 +1442,9 @@ SPROUT_DIRECT_THROUGH_1X_LIQUID =
   {
     conn = { x=1, y=2, w=2, dir=8 },
 
-    symmetry = { x=1, y=3, w=2, dir=8 }
+    symmetry = { kind="mirror", x=1, y=3, w=2, dir=8 },
+    symmetry2 = { kind="mirror", x=1, y=3, w=2, dir=4 },
+    symmetry3 = { kind ="rotate", x=1, y=2, x2=2, y2=4},
   }
 },
 
@@ -1463,7 +1473,11 @@ SPROUT_DIRECT_FROM_DIAGONAL =
 
   new_room =
   {
-    conn = { x=3, y=4, w=2, dir=8 }
+    conn = { x=3, y=4, w=2, dir=8 },
+
+    symmetry = { kind="mirror", x=3, y=5, dir=8 },
+    symmetry2 = { kind="mirror", x=3, y=5, dir=4 },
+    symmetry3 = { kind="rotate", x=3, y=5, x2=4, y2=6 }
   }
 },
 
@@ -1486,7 +1500,9 @@ SPROUT_DIRECT_3 =
   {
     conn = { x=2, y=1, w=3, dir=8 },
 
-    symmetry = { x=3, y=2, dir=8 }
+    symmetry = { kind="mirror", x=3, y=2, dir=8 },
+    symmetry2 = { kind="mirror", x=3, y=2, dir=4 },
+    symmetry3 = { kind="rotate", x=2, y=2, x2=3, y2=4 }
   }
 },
 
@@ -1514,7 +1530,7 @@ SPROUT_DIRECT_3_SYMM =
 
     symmetry = { kind="mirror", x=3, y=6, dir=6 },
     symmetry2 = { kind="mirror", x=2, y=6, dir=4 },
-    symmetry3 = { kind="rotate", x=1, y=4, x2=4, y2=7 }
+    symmetry3 = { kind="rotate", x=2, y=4, x2=4, y2=7 }
   }
 },
 
@@ -1537,7 +1553,9 @@ SPROUT_DIRECT_4 =
   {
     conn = { x=1, y=1, w=4, dir=8 },
 
-    symmetry = { x=2, y=3, w=2, dir=8 }
+    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 },
+    symmetry2 = { kind="mirror", x=2, y=3, w=2, dir=4 },
+    symmetry3 = { kind="rotate", x=1, y=2, x2=4, y2=3 }
   }
 },
 
@@ -1565,7 +1583,7 @@ SPROUT_DIRECT_4_SYMM =
 
     symmetry = { kind="mirror", x=2, y=5, dir=6 },
     symmetry2 = { kind="mirror", x=2, y=5, dir=4 },
-    symmetry3 = { kind="rotate", x=0, y=3, x2=4, y2=7 }
+    symmetry3 = { kind="rotate", x=1, y=4, x2=4, y2=7 }
   }
 },
 
@@ -1591,7 +1609,9 @@ SPROUT_CASTLE_2 =
   {
     env = "building",
 
-    conn = { x=4, y=2, w=2, dir=8 }
+    conn = { x=4, y=2, w=2, dir=8 },
+
+    symmetry = { kind="mirror", x=2, y=4, w=4, dir=8}
   }
 },
 
@@ -1638,7 +1658,9 @@ SPROUT_SYMMETRY_3 =
   {
     conn = { x=2, y=1, w=3, dir=8 },
 
-    symmetry = { x=3, y=2, dir=8 }
+    symmetry = { kind="mirror", x=3, y=2, dir=8 },
+    symmetry2 = { kind="mirror", x=3, y=2, dir=4 },
+    symmetry3 = { kind="rotate", x=2, y=2, x2=4, y2=3 }
   }
 },
 
@@ -1660,7 +1682,9 @@ SPROUT_JOINER_2x1 =
 
   new_room =
   {
-    symmetry = { x=2, y=3, w=2, dir=8 }
+    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 },
+    symmetry2 = { kind="mirror", x=2, y=3, w=2, dir=4 },
+    symmetry3 = { kind="rotate", x=2, y=3, x2=3, y2=4 }
   },
 
   joiner =
@@ -1690,7 +1714,7 @@ SPROUT_JOINER_2x1_SYMM =
   {
     symmetry = { kind="mirror", x=2, y=5, dir=6},
     symmetry2 = { kind="mirror", x=2, y=5, dir=4},
-    symmetry3 = { kind="rotate", x=1, y=4, x2=3, y2=6}
+    symmetry3 = { kind="rotate", x=2, y=5, x2=3, y2=6}
   },
 
   joiner =
@@ -1749,7 +1773,7 @@ SPROUT_JOINER_3x1_SYMM =
   {
     symmetry = { kind="mirror", x=3, y=7, dir=6},
     symmetry2 = { kind="mirror", x=3, y=7, dir=4},
-    symmetry3 = { kind="rotate", x=1, y=5, x2=4, y2=7}
+    symmetry3 = { kind="rotate", x=2, y=5, x2=4, y2=8}
   },
 
   joiner =
@@ -1808,7 +1832,7 @@ SPROUT_JOINER_4x1_SYMM =
   {
     symmetry = { kind="mirror", x=2, y=7, dir=6},
     symmetry2 = { kind="mirror", x=2, y=7, dir=4},
-    symmetry3 = { kind="rotate", x=0, y=6, x2=4, y2=8}
+    symmetry3 = { kind="rotate", x=1, y=5, x2=4, y2=8}
   },
 
   joiner =
@@ -1836,7 +1860,9 @@ SPROUT_JOINER_2x2 =
 
   new_room =
   {
-    symmetry = { x=2, y=4, dir=8 }
+    symmetry = { kind="mirror", x=2, y=4, dir=8 },
+    symmetry = { kind="mirror", x=2, y=4, dir=4 },
+    symmetry = { kind="rotate", x=2, y=4, x2=3, y2=5 }
   },
 
   joiner =
@@ -1867,7 +1893,7 @@ SPROUT_JOINER_2x2_SYMM =
   {
     symmetry = { kind="mirror", x=2, y=6, dir=6},
     symmetry2 = { kind="mirror", x=2, y=6, dir=4},
-    symmetry3 = { kind="rotate", x=1, y=5, x2=3, y2=7}
+    symmetry3 = { kind="rotate", x=2, y=5, x2=3, y2=7}
   },
 
   joiner =
@@ -1895,7 +1921,9 @@ SPROUT_JOINER_3x2 =
 
   new_room =
   {
-    symmetry = { x=3, y=4, dir=8 },
+    symmetry = { kind="mirror", x=3, y=4, dir=8 },
+    symmetry2 = { kind="mirror", x=3, y=4, dir=4 },
+    symmetry3 = { kind="rotate", x=2, y=4, x2=4, y2=5 }
   },
 
   joiner =
@@ -1928,7 +1956,7 @@ SPROUT_JOINER_3x2_SYMM =
   {
     symmetry = { kind="mirror", x=3, y=8, dir=6},
     symmetry2 = { kind="mirror", x=2, y=8, dir=4},
-    symmetry3 = { kind="rotate", x=2, y=7, x2=4, y2=9}
+    symmetry3 = { kind="rotate", x=2, y=6, x2=4, y2=9}
   },
 
   joiner =
@@ -1989,7 +2017,7 @@ SPROUT_JOINER_4x2_SYMM =
   {
     symmetry = { kind="mirror", x=3, y=8, dir=6},
     symmetry2 = { kind="mirror", x=2, y=8, dir=4},
-    symmetry3 = { kind="rotate", x=1, y=5, x2=5, y2=9}
+    symmetry3 = { kind="rotate", x=2, y=6, x2=5, y2=9}
   },
 
   joiner =
@@ -2018,7 +2046,9 @@ SPROUT_JOINER_2x3 =
 
   new_room =
   {
-    symmetry = { x=2, y=4, dir=8 },
+    symmetry = { kind="mirror", x=2, y=4, dir=8 },
+    symmetry2 = { kind="mirror", x=2, y=4, dir=4 },
+    symmetry3 = { kind="rotate", x=2, y=5, x2=3, y2=6 }
   },
 
   joiner =
@@ -2050,7 +2080,7 @@ SPROUT_JOINER_2x3_SYMM =
   {
     symmetry = { kind="mirror", x=2, y=7, dir=6},
     symmetry2 = { kind="mirror", x=2, y=7, dir=4},
-    symmetry3 = { kind="rotate", x=2, y=6, x2=4, y2=8}
+    symmetry3 = { kind="rotate", x=2, y=5, x2=3, y2=8}
   },
 
   joiner =
