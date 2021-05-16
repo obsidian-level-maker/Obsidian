@@ -84,7 +84,7 @@ function UI_MONS.setup(self)
       if opt.valuator == "button" then
         PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
       elseif opt.valuator == "slider" then
-        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)
       end
     else
       PARAM[name] = self.options[name].value
@@ -99,7 +99,7 @@ OB_MODULES["ui_mons"] =
 
   label = _("Monsters"),
 
-  hooks = 
+  hooks =
   {
     setup = UI_MONS.setup,
   },
@@ -246,7 +246,7 @@ OB_MODULES["ui_mons"] =
       max = 3,
       increment = .05,
       default = 1,
-      nan = "0.45:Episodic,0.5:0.5 (Very Slow),0.75:0.75 (Slow),1:1 (Medium),1.5:1.5 (Fast),2:2 (Very Fast),3:3 (Extra Fast),",
+      nan = "0.45:Episodic,0.5:0.5 (Very Slow),0.75:0.75 (Slow),1:1 (Average),1.5:1.5 (Fast),2:2 (Very Fast),3:3 (Extra Fast),",
       tooltip = "Rate at which monster strength increases as you progress through levels.",
       gap = 1,
     },
@@ -298,9 +298,9 @@ OB_MODULES["ui_mons"] =
       tooltip="Changes the quantity of ambushing monsters from traps.",
       gap = 1,
     },
-    
-    { name="cages",     label=_("Cages"),     choices=STYLE_CHOICES },    
-    
+
+    { name="cages",     label=_("Cages"),     choices=STYLE_CHOICES },
+
     {
       name="cage_qty",
       label=_("Cage Monsters"),
