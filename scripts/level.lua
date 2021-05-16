@@ -154,6 +154,12 @@ function Level_determine_map_size(LEV)
 
   local W, H
 
+  if LEV.custom_size then
+    ob_size = custom_size
+    W = ob_size
+    goto continue
+  end
+
   -- there is no real "progression" when making a single level.
   -- hence use the average size instead.
   if OB_CONFIG.length == "single" then
@@ -213,6 +219,8 @@ function Level_determine_map_size(LEV)
 
     W = ob_size
   end
+
+  ::continue::
 
   if not W then
     error("Invalid value for size : " .. tostring(ob_size))
