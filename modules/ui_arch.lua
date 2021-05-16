@@ -303,12 +303,12 @@ OB_MODULES["ui_arch"] =
       priority = 80
     },
 
-    outdoors = { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 87 },
-    caves = { name="caves",        label=_("Caves"),      choices=STYLE_CHOICES, priority = 86 },
-    liquids = { name="liquids",      label=_("Liquids"),    choices=STYLE_CHOICES, priority = 85 },
-    hallways = { name="hallways",     label=_("Hallways"),   choices=STYLE_CHOICES, priority = 84 },
-    teleporters = { name="teleporters",  label=_("Teleports"),  choices=STYLE_CHOICES, priority = 83 },
-    steepness = { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1, priority = 82 },
+    outdoors = { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 78 },
+    caves = { name="caves",        label=_("Caves"),      choices=STYLE_CHOICES, priority = 77 },
+    liquids = { name="liquids",      label=_("Liquids"),    choices=STYLE_CHOICES, priority = 76 },
+    hallways = { name="hallways",     label=_("Hallways"),   choices=STYLE_CHOICES, priority = 75 },
+    teleporters = { name="teleporters",  label=_("Teleports"),  choices=STYLE_CHOICES, priority = 74 },
+    steepness = { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1, priority = 73 },
 
     zdoom_vista=
     {
