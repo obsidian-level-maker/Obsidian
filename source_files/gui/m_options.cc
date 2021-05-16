@@ -38,6 +38,9 @@ static void Parse_Option(const char *name, const char *value) {
         VFS_OptParse(value);
     } else if (StringCaseCmp(name, "language") == 0) {
         t_language = StringDup(value);
+    } else if (StringCaseCmp(name, "window_scaling") == 0) {
+        window_scaling = atoi(value);
+        window_scaling = CLAMP(0, window_scaling, 5);
     } else if (StringCaseCmp(name, "font_theme") == 0) {
         font_theme = atoi(value);
     } else if (StringCaseCmp(name, "widget_theme") == 0) {
@@ -197,6 +200,7 @@ bool Options_Save(const char *filename) {
     fprintf(option_fp, "language = %s\n", t_language);
     fprintf(option_fp, "\n");
 
+    fprintf(option_fp, "window_scaling      = %d\n", window_scaling);
     fprintf(option_fp, "font_theme      = %d\n", font_theme);
     fprintf(option_fp, "widget_theme      = %d\n", widget_theme);
     fprintf(option_fp, "box_theme      = %d\n", box_theme);
@@ -244,6 +248,7 @@ class UI_OptionsWin : public Fl_Window {
 
    private:
     UI_CustomMenu *opt_language;
+    UI_CustomMenu *opt_window_scaling;
     UI_CustomMenu *opt_font_theme;
     UI_CustomMenu *opt_widget_theme;
     UI_CustomMenu *opt_box_theme;
@@ -293,6 +298,18 @@ class UI_OptionsWin : public Fl_Window {
             }
         }
     }
+    
+    void PopulateFonts() {
+
+		for (int x = 0; x < num_fonts; x++) {
+			opt_font_theme->add(_(Fl::get_font_name(x)));
+		}
+		
+		opt_font_theme->replace(0, (_("Default")));
+		
+        opt_font_theme->value(font_theme);
+		
+    }
 
    private:
     static void callback_Quit(Fl_Widget *w, void *data) {
@@ -316,6 +333,12 @@ class UI_OptionsWin : public Fl_Window {
                 t_language = "AUTO";
             }
         }
+    }
+
+    static void callback_WindowScaling(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+        window_scaling = that->opt_window_scaling->value();
     }
 
     static void callback_FontTheme(Fl_Widget *w, void *data) {
@@ -438,14 +461,26 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_language->h() + y_step;
 
+    opt_window_scaling =
+        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Window Scaling: "));
+    opt_window_scaling->align(FL_ALIGN_LEFT);
+    opt_window_scaling->add(_("AUTO|Tiny|Small|Medium|Large|Huge"));
+    opt_window_scaling->callback(callback_WindowScaling, this);
+    opt_window_scaling->value(window_scaling);
+    opt_window_scaling->labelfont(font_style);
+    opt_window_scaling->textfont(font_style);
+
+    cy += opt_window_scaling->h() + y_step;
+
     opt_font_theme =
         new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Font: "));
     opt_font_theme->align(FL_ALIGN_LEFT);
-    opt_font_theme->add(_("Default|Courier|Times"));
     opt_font_theme->callback(callback_FontTheme, this);
     opt_font_theme->value(font_theme);
     opt_font_theme->labelfont(font_style);
     opt_font_theme->textfont(font_style);
+    
+    PopulateFonts();
 
     cy += opt_font_theme->h() + y_step;
     
@@ -634,7 +669,7 @@ void DLG_OptionsEditor(void) {
 
     if (!option_window) {
         int opt_w = kf_w(350);
-        int opt_h = kf_h(500);
+        int opt_h = kf_h(550);
 
         option_window =
             new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));

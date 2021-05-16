@@ -78,6 +78,8 @@ int button_theme = 0;
 Fl_Boxtype button_style = FL_THIN_UP_BOX;
 int widget_theme = 0;
 bool single_pane = true;
+int window_scaling = 0;
+int num_fonts = 16; // FLTK built-in amount
 
 bool create_backups = true;
 bool overwrite_warning = true;
@@ -327,6 +329,28 @@ bool Main_BackupFile(const char *filename, const char *ext) {
 int Main_DetermineScaling() {
     /* computation of the Kromulent factor */
 
+    // command-line overrides
+    if (ArgvFind(0, "tiny") >= 0) {
+        return -1;
+    }
+    if (ArgvFind(0, "small") >= 0) {
+        return 0;
+    }
+    if (ArgvFind(0, "medium") >= 0) {
+        return 1;
+    }
+    if (ArgvFind(0, "large") >= 0) {
+        return 2;
+    }
+    if (ArgvFind(0, "huge") >= 0) {
+        return 3;
+    }
+
+    // user option setting
+    if (window_scaling > 0) {
+        return window_scaling - 2;
+    }
+
     // automatic selection
     if (screen_w >= 1600 && screen_h >= 800) {
         return 2;
@@ -342,6 +366,10 @@ int Main_DetermineScaling() {
 }
 
 void Main_SetupFLTK() {
+
+	// Add system fonts to FLTK font table
+	num_fonts = Fl::set_fonts(NULL);
+
     Fl::visual(FL_DOUBLE | FL_RGB);  
     switch(color_scheme) {
     	case 0 : Fl::background(221, 221, 221);
@@ -423,16 +451,13 @@ void Main_SetupFLTK() {
     	default : button_style = FL_UP_BOX;
     			  break;    			     			 
     }
-    switch(font_theme) {
-    	case 0 : font_style = FL_HELVETICA;
-    			 break;
-    	case 1 : font_style = FL_COURIER;
-    			 break;
-    	case 2 : font_style = FL_TIMES;
-    			 break;
-    	// Shouldn't be reached, but still
-    	default : font_style = FL_HELVETICA;
-    			  break;		     			 
+    if (font_theme == 0) {
+   		font_style = FL_HELVETICA;	     			 
+    } else if (font_theme < num_fonts) { // In case the number of installed fonts is reduced between launches
+    	font_style = font_theme;
+    } else {
+    	// Fallback
+    	font_style = FL_HELVETICA;
     }
     screen_w = Fl::w();
     screen_h = Fl::h();
