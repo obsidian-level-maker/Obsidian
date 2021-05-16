@@ -155,7 +155,7 @@ function Level_determine_map_size(LEV)
   local W, H
 
   if LEV.custom_size then
-    ob_size = custom_size
+    ob_size = LEV.custom_size
     W = ob_size
     goto continue
   end
@@ -2398,7 +2398,9 @@ end
 
 
 function Level_do_styles()
-  local style_tab = table.copy(GLOBAL_STYLE_LIST)
+  local style_tab
+
+  style_tab = table.copy(GLOBAL_STYLE_LIST)
 
   -- game, level and theme specific style_lists
   if GAME.STYLE_LIST then
@@ -2409,6 +2411,16 @@ function Level_do_styles()
   end
   if THEME.style_list then
     table.merge(style_tab, THEME.style_list)
+  end
+
+  if OB_MODULES["iwad_mode"].enabled then
+    for tablename, tablebody in pairs(IWAD_MODE) do
+      if OB_CONFIG.game == string.match(tablename, "%w*") then
+        if LEVEL.name == string.match(tablename, "MAP%d%d") or LEVEL.name == string.match(tablename, "E%dM%d") then
+          table.merge(style_tab, tablebody)
+        end
+      end
+    end
   end
 
   -- decide the values
