@@ -47,8 +47,8 @@ OB_MODULES["ui_udmf_map_options"] =
       label = _("Build Nodes"),
       valuator = "button",
       default = 0,
-      tooltip = "For ZDoom Only: Choose to either build nodes or allow the engine itself to do so " ..
-      "upon loading the map. Other UDMF supporting engines require node building to be enabled.",
+      tooltip = "Choose to either build nodes or allow the engine itself to do so " ..
+      "upon loading the map. EDGE will always build nodes unless using binary map format.",
     },
     {
       name = "map_format",

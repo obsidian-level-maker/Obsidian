@@ -27,8 +27,6 @@
 #include "ui_game.h"
 #include "ui_module.h"
 
-#define WINDOW_BG fl_rgb_color(62, 61, 57)
-
 // support for scaling up the GUI
 extern int KF;  // Kromulent Factor : -1 .. 3
 

@@ -24,10 +24,6 @@
 #include "lib_util.h"
 #include "main.h"
 
-#define TITLE_COLOR fl_rgb_color(0, 0, 0)
-
-#define INFO_COLOR fl_rgb_color(153, 153, 153)
-
 class UI_About : public Fl_Window {
    public:
     bool want_quit;
@@ -96,10 +92,6 @@ UI_About::UI_About(int W, int H, const char *label)
     // non-resizable
     size_range(W, H, W, H);
 
-    if (alternate_look) {
-        color(FL_LIGHT3, FL_LIGHT3);
-    }
-
     callback(callback_Quit, this);
 
     int cy = kf_h(6);
@@ -110,8 +102,8 @@ UI_About::UI_About(int W, int H, const char *label)
 
     Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), logo_text);
     box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP);
-    box->labelcolor(TITLE_COLOR);
     box->labelsize(FL_NORMAL_SIZE * 5 / 3);
+    box->labelfont(font_style);
 
     cy += box->h() + kf_h(6);
 
@@ -123,7 +115,9 @@ UI_About::UI_About(int W, int H, const char *label)
     box = new Fl_Box(pad, cy, W - pad - pad, text_h, _(Text));
     box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
     box->box(FL_UP_BOX);
-    box->color(INFO_COLOR);
+    box->color(fl_lighter(WINDOW_BG));
+    box->labelfont(font_style);
+    box->labelcolor(fl_darker(FONT_COLOR));
 
     cy += box->h() + kf_h(10);
 
@@ -134,10 +128,7 @@ UI_About::UI_About(int W, int H, const char *label)
         new UI_HyperLink(pad, cy, W - pad * 2, kf_h(30), URL, URL);
     link->align(FL_ALIGN_CENTER);
     link->labelsize(FL_NORMAL_SIZE * 2 / 2);
-
-    if (alternate_look) {
-        link->color(FL_LIGHT3, FL_LIGHT3);
-    }
+    link->labelfont(font_style);
 
     cy += link->h() + kf_h(16);
 
@@ -146,14 +137,16 @@ UI_About::UI_About(int W, int H, const char *label)
     // finally add an "OK" button
     Fl_Group *darkish = new Fl_Group(0, cy, W, H - cy);
     darkish->box(FL_FLAT_BOX);
-    darkish->color(WINDOW_BG, WINDOW_BG);
+    darkish->color(fl_darker(WINDOW_BG));
     {
         int bw = kf_w(60);
         int bh = kf_h(30);
         int by = H - (H - cy + bh) / 2;
 
         Fl_Button *button = new Fl_Button(W - bw * 2, by, bw, bh, fl_ok);
+        button->box(button_style);
         button->callback(callback_Quit, this);
+        button->labelfont(font_style);
     }
     darkish->end();
 
