@@ -89,7 +89,7 @@ IWAD_MODE.doom2_MAP02 =
                     beams = { none=100 } 
                 }
               
-function IWAD_MODE.id_style_levels(self)
+function IWAD_MODE.iwad_style_levels(self)
 
     for _,LEV in pairs(GAME.levels) do    
         if LEV.name == "MAP01" then
@@ -100,6 +100,19 @@ function IWAD_MODE.id_style_levels(self)
             LEV.custom_size = 24
         end    
     end
+    
+end
+
+function IWAD_MODE.iwad_style_styles(self, local_table, qualifier)
+
+    for tablename, tablebody in pairs(IWAD_MODE) do
+      if OB_CONFIG.game == string.match(tablename, "%w*") then
+        if qualifier == string.match(tablename, "MAP%d%d") or LEVEL.name == string.match(tablename, "E%dM%d") then
+          table.merge(local_table, tablebody)
+        end
+      end
+    end
+  
 end
 
 OB_MODULES["iwad_mode"] =
@@ -118,6 +131,7 @@ tables =
 
 hooks =
 {
-    get_levels = IWAD_MODE.id_style_levels
+    get_levels = IWAD_MODE.iwad_style_levels,
+    override_level_style = IWAD_MODE.iwad_style_styles
 }
 }

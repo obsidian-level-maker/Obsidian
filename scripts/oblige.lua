@@ -1405,6 +1405,24 @@ function ob_invoke_hook(name, ...)
   end
 end
 
+function ob_invoke_hook_with_table(name, local_table, qualifier)
+  -- experiment - Dasho
+    for _,mod in pairs(GAME.modules) do
+      local func = mod.hooks and mod.hooks[name]
+      if func then
+        func(mod, local_table, qualifier)
+      end
+    end
+    
+    for _,mod in pairs(OB_MODULES) do
+      if ob_check_ui_module(mod) then
+       local func = mod.hooks and mod.hooks[name]
+        if func then
+          func(mod, local_table, qualifier)
+        end
+      end
+    end
+end
 
 
 function ob_transfer_ui_options()
