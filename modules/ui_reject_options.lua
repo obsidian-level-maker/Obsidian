@@ -67,7 +67,7 @@ OB_MODULES["ui_udmf_map_options"] =
       tooltip = "Choose to build a proper REJECT lump (Binary map format only). WARNING: This can be very time consuming!",
     },
     {
-      name = "bool_build_nodes",
+      name = "bool_build_nodes_udmf",
       label = _("Build Nodes"),
       valuator = "button",
       default = 0,
