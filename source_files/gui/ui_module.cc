@@ -112,23 +112,18 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 	UI_RChoice *rch =
 		    new UI_RChoice(nx + (nw * x_multi), ny + kf_h(15), nw * width_multi, kf_h(24), new_label);
 	rch->align(alignment);
+	rch->selection_color(SELECTION);
 
     if (!tip) {
         tip = "";
     }
-    rch->tooltip(tip);    
-    
-    rch->mod_menu =
-        new UI_CustomMenu(nx + (nw * x_multi), ny + kf_h(15), nw * width_multi, kf_h(24), ""); 
-	rch->mod_menu->selection_color(SELECTION);
-	rch->mod_menu->textfont(font_style);
-
+    rch->tooltip(tip);
 
     opt_change_callback_data_t *cb_data = new opt_change_callback_data_t;
     cb_data->mod = this;
     cb_data->opt_name = StringDup(opt);
 
-    rch->mod_menu->callback(callback_OptChange, cb_data);
+    rch->callback(callback_OptChange, cb_data);
 
     if (!mod_button->value()) {
         rch->hide();
@@ -270,18 +265,15 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
 
 	UI_RButton *rbt =
 		    new UI_RButton(nx + (nw * x_multi), ny + kf_h(15), nw * width_multi, kf_h(24), new_label);
-	rbt->align(alignment);	    
+	rbt->align(alignment);
+	rbt->selection_color(SELECTION);
 
+    
     if (!tip) {
         tip = "";
     }
     rbt->tooltip(tip);
-		    
-	rbt->mod_button =
-        new UI_CustomCheckBox(nx + (nw * x_multi), ny + kf_h(15), nw * width_multi, kf_h(24), "");
-	rbt->mod_button->selection_color(SELECTION);
 
-   
     if (!mod_button->value()) {
         rbt->hide();
     }
@@ -384,7 +376,7 @@ bool UI_Module::SetButtonOption(const char *option, int value) {
         return false;
     }
 
-    rbt->mod_button->value(value);
+    rbt->value(value);
 	return true;
 }
 
