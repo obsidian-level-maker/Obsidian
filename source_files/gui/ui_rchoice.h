@@ -67,13 +67,41 @@ class UI_CustomMenu : public Fl_Choice {
 	void draw();
 };
 
-class UI_RChoice : public UI_CustomMenu {
+class UI_CustomArrowButton : public Fl_Button {
+
+   private:
+
+   public:
+    UI_CustomArrowButton(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_CustomArrowButton();
+    
+   private:
+	void draw();
+};
+
+class UI_CustomCheckBox : public Fl_Check_Button {
+  
+   private:
+
+   public:
+    UI_CustomCheckBox(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_CustomCheckBox();
+    
+   private:
+   void draw();
+};
+
+class UI_RChoice : public Fl_Group {
    private:
     std::vector<choice_data_c *> opt_list;
 
    public:
     UI_RChoice(int x, int y, int w, int h, const char *label = NULL);
-    virtual ~UI_RChoice(); 
+    virtual ~UI_RChoice();
+    
+    UI_CustomMenu *mod_menu;
+    
+    Fl_Box *choice_label;
 
    public:
     // add a new choice to the list.  If a choice with the same 'id'
@@ -114,18 +142,6 @@ class UI_RChoice : public UI_CustomMenu {
     void GotoNext();
 };
 
-class UI_CustomArrowButton : public Fl_Button {
-
-   private:
-
-   public:
-    UI_CustomArrowButton(int x, int y, int w, int h, const char *label = NULL);
-    virtual ~UI_CustomArrowButton();
-    
-   private:
-	void draw();
-};
-
 class UI_RSlide : public Fl_Group {
    private:
     std::vector<choice_data_c *> opt_list;
@@ -135,6 +151,8 @@ class UI_RSlide : public Fl_Group {
     virtual ~UI_RSlide();
     
     Fl_Hor_Slider *mod_slider;
+    
+    Fl_Box *slider_label;
     
     UI_CustomArrowButton *prev_button;
     
@@ -147,7 +165,7 @@ class UI_RSlide : public Fl_Group {
     std::map<double, std::string> nan_choices;
 };
 
-class UI_RButton : public Fl_Check_Button {
+class UI_RButton : public Fl_Group {
    private:
     std::vector<choice_data_c *> opt_list;
 
@@ -155,17 +173,9 @@ class UI_RButton : public Fl_Check_Button {
     UI_RButton(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_RButton();
     
-   private:
-   void draw();
-};
-
-class UI_CustomCheckBox : public Fl_Check_Button {
-  
-   private:
-
-   public:
-    UI_CustomCheckBox(int x, int y, int w, int h, const char *label = NULL);
-    virtual ~UI_CustomCheckBox();
+    UI_CustomCheckBox *mod_button;
+    
+    Fl_Box *button_label;
     
    private:
    void draw();
