@@ -35,6 +35,10 @@ IWAD_MODE = { }
 -- streets mode, brightness offset, sink style, switch goals/remote switch choices,
 -- cliffs and more.
 
+------------
+-- Doom 2 --
+------------
+
 -- Approximate map dimensions: 3,500 x 3,600 map units
 IWAD_MODE.doom2_MAP01 =
                 {
@@ -55,7 +59,8 @@ IWAD_MODE.doom2_MAP01 =
                     switches = { none=100 }, -- secret switch doesn't count
                     keys = { none=100 },
                     trikeys= { none=100 },
-                    scenics = { some=100 }, -- shotgun secret
+                    scenics = { few=100 },
+                    secrets = { few=100}, -- shotgun secret
                     parks = { none=100 }, -- nope!
                     park_detail = { none=100 },
                     symmetry = { none=100 },
@@ -95,19 +100,254 @@ IWAD_MODE.doom2_MAP02 =
                 }
 
 -- MAP03 Approximate map dimensions: 3,000 x 2,000 map units
--- MAP04 Approximate map dimensions: 2,000 x 1,650 map units
--- MAP05 Approximate map dimensions: 3,150 x 2,150 map units
--- MAP06 Approximate map dimensions: 4,000 x 2,500 map units
--- MAP07 Approximate map dimensions: 2,300 x 2,000 map units
--- MAP08 Approximate map dimensions: 4,000 x 4,000 map units
--- MAP09 Approximate map dimensions: 4,200 x 4,000 map units
--- MAP10 Approximate map dimensions: 4,200 x 4,200 map units
--- MAP11 Approximate map dimensions: 3,600 x 29000 map units
--- MAP12 Approximate map dimensions: 4,000 x 4,400 map units
--- MAP13 Approximate map dimensions: 3,200 x 4,100 map units
+IWAD_MODE.doom2_MAP03 =
+{
 
--- TODO: MAP03 - MAP32 and E1M1 through E4M9
-              
+}
+
+-- MAP04 Approximate map dimensions: 2,000 x 1,650 map units
+IWAD_MODE.doom2_MAP04 =
+{
+
+}
+
+-- MAP05 Approximate map dimensions: 3,150 x 2,150 map units
+IWAD_MODE.doom2_MAP05 =
+{
+
+}
+
+-- MAP06 Approximate map dimensions: 4,000 x 2,500 map units
+IWAD_MODE.doom2_MAP06 =
+{
+
+}
+-- MAP07 Approximate map dimensions: 2,300 x 2,000 map units
+IWAD_MODE.doom2_MAP07 =
+{
+
+}
+
+-- MAP08 Approximate map dimensions: 4,000 x 4,000 map units
+IWAD_MODE.doom2_MAP08 =
+{
+
+}
+
+-- MAP09 Approximate map dimensions: 4,200 x 4,000 map units
+IWAD_MODE.doom2_MAP09 =
+{
+
+}
+
+-- MAP10 Approximate map dimensions: 4,200 x 4,200 map units
+IWAD_MODE.doom2_MAP10 =
+{
+
+}
+
+-- MAP11 Approximate map dimensions: 3,600 x 29000 map units
+IWAD_MODE.doom2_MAP11 =
+{
+
+}
+
+-- MAP12 Approximate map dimensions: 4,000 x 4,400 map units
+IWAD_MODE.doom2_MAP12 =
+{
+
+}
+
+-- MAP13 Approximate map dimensions: 3,200 x 4,100 map units
+IWAD_MODE.doom2_MAP13 =
+{
+
+}
+
+-- MAP14 Approximate map dimensions: 3,900 x 3,600 map units
+IWAD_MODE.doom2_MAP14 =
+{
+
+}
+
+-- MAP15 Approximate map dimensions: 4,300 x 7,200 map units
+IWAD_MODE.doom2_MAP15 =
+{
+
+}
+
+-- MAP16 Approximate map dimensions: 4,900 x 4,800 map units
+IWAD_MODE.doom2_MAP16 =
+{
+
+}
+
+-- MAP17 Approximate map dimensions: 3,300 x 3,300 map units
+IWAD_MODE.doom2_MAP17 =
+{
+
+}
+
+-- MAP18 Approximate map dimensions: 4,900 x 4,500 map units
+IWAD_MODE.doom2_MAP18 =
+{
+
+}
+
+-- MAP19 Approximate map dimensions: 5,550 x 6,000 map units
+IWAD_MODE.doom2_MAP19 =
+{
+
+}
+
+-- MAP20 Approximate map dimensions: 5,200 x 6,300 map units
+IWAD_MODE.doom2_MAP20 =
+{
+
+}
+
+-- MAP21 Approximate map dimensions: 3,500 x 3,000 map units
+IWAD_MODE.doom2_MAP21 =
+{
+
+}
+
+-- MAP22 Approximate map dimensions: 2,300 x 1,850 map units
+IWAD_MODE.doom2_MAP22 =
+{
+
+}
+
+-- MAP23 Approximate map dimensions: 4,300 x 5,050 map units
+IWAD_MODE.doom2_MAP23 =
+{
+
+}
+
+-- MAP24 Approximate map dimensions: 6,000 x 5,300 map units
+IWAD_MODE.doom2_MAP24 =
+{
+
+}
+
+-- MAP25 Approximate map dimensions: 3,600 x 7,200 map units
+IWAD_MODE.doom2_MAP25 =
+{
+
+}
+
+-- MAP26 Approximate map dimensions: 4,600 x 3,200 map units
+IWAD_MODE.doom2_MAP26 =
+{
+
+}
+
+-- MAP27 Approximate map dimensions: 3,900 x 4,500 map units
+IWAD_MODE.doom2_MAP27 =
+{
+
+}
+
+-- MAP28 Approximate map dimensions: 4,400 x 5,000 map units
+IWAD_MODE.doom2_MAP28 =
+{
+
+}
+
+-- MAP29 Approximate map dimensions: 4,800 x 4,600 map units
+IWAD_MODE.doom2_MAP29 =
+{
+
+}
+
+-- MAP30 Approximate map dimensions: 2,750 x 2,800 map units
+IWAD_MODE.doom2_MAP30 =
+{
+
+}
+
+-- MAP31 Approximate map dimensions: 8,750 x 7,200 map units
+IWAD_MODE.doom2_MAP31 =
+{
+
+}
+
+-- MAP32 Approximate map dimensions: 4,000 x 7,200 map units
+IWAD_MODE.doom2_MAP31 =
+{
+
+}
+
+------------------------
+-- Doom/Ultimate Doom --
+------------------------
+
+-- E1M1 Approximate map dimensions: 4,600 x 2,800 nap units
+IWAD_MODE.doom_E1M1 =
+{
+
+}
+
+-- E1M2 Approximate map dimensions: 5,300 x 3,900 nap units
+IWAD_MODE.doom_E1M2 =
+{
+
+}
+
+-- E1M3 Approximate map dimensions: 4,100 x 3,050 map units
+IWAD_MODE.doom_E1M3 =
+{
+
+}
+
+-- E1M4 Approximate map dimensions: 3,700 x 2,800 map units
+IWAD_MODE.doom_E1M4 =
+{
+
+}
+
+-- E1M5 Approximate map dimensions: 4,000 x 3,200 map units
+IWAD_MODE.doom_E1M5 =
+{
+
+}
+
+-- E1M6 Approximate map dimensions: 5,800 x 4,900 map units
+IWAD_MODE.doom_E1M6 =
+{
+
+}
+
+-- E1M7 Approximate map dimensions: 4,000 x 3,400 map units
+IWAD_MODE.doom_E1M7 =
+{
+
+}
+
+-- E1M8 Approximate map dimensions: 6,600 x 7,100 map units
+IWAD_MODE.doom_E1M8 =
+{
+
+}
+
+-- E1M9 Approximate map dimensions: 3,400 x 3,200 map units
+IWAD_MODE.doom_E1M9 =
+{
+
+}
+
+-- TODO: E2, E3 and E4
+
+-- Something Shooter posted, might need second look at and where to place it in the code..
+[[
+function IWAD_MODE.begin_level()
+  gui.printf("heck: " .. table.tostr(LEVEL, 2) .. "\n")
+  gui.printf("heck: " .. table.tostr(LEVEL.theme.style_list, 2) .. "\n")
+end
+]]
+
+-- TODO: E1M1 through E4M9
+
 function IWAD_MODE.iwad_style_levels(self)
 
     for _,LEV in pairs(GAME.levels) do
@@ -136,7 +376,7 @@ function IWAD_MODE.iwad_style_levels(self)
         end
 
         if LEV.name == "MAP07" then
-            LEV.custom_size = 20 -- This needs to be a Procedural Gotcha..
+            LEV.custom_size = 20
             LEV.is_procedural_gotcha = true
         end
 
@@ -162,7 +402,7 @@ function IWAD_MODE.iwad_style_levels(self)
 
         if LEV.name == "MAP13" then
             LEV.custom_size = 36
-            LEV.has_streets = true -- Must be Streets mode
+            LEV.has_streets = true
         end
 
         if LEV.name == "MAP14" then
@@ -174,7 +414,8 @@ function IWAD_MODE.iwad_style_levels(self)
         end
 
         if LEV.name == "MAP16" then
-            LEV.custom_size = 30 -- Must be Streets mode
+            LEV.custom_size = 30
+            LEV.has_streets = true
         end
     end
 end
@@ -188,10 +429,10 @@ function IWAD_MODE.iwad_style_styles(self, local_table, qualifier)
         end
       end
     end
-  
+
 end
 
-OB_MODULES["iwad_mode"] =
+UNFINISHED["iwad_mode"] =
 {
 label = _("(Exp) IWAD Style Mode"),
 engine = "!vanilla",
