@@ -737,7 +737,11 @@ ARMAETUS_ROOM_THEMES =
       CEM04 = 15,
       CEM06 = 120,
       CEM07 = 120,
-      CEM09 = 120
+      CEM09 = 120,
+
+      OBTBCEM1 = 120,
+      OBTBCEM2 = 120,
+      OBTBCEM3 = 120
     },
 
     floors =
@@ -1000,6 +1004,9 @@ ARMAETUS_ROOM_THEMES =
       OBTSVBZ2 = 15,
       OBTSVBZ3 = 15,
 
+      OBTBCEM1 = 30,
+      OBTBCEM2 = 30,
+      OBTBCEM3 = 30
     },
 
     floors =
@@ -1118,6 +1125,87 @@ ARMAETUS_ROOM_THEMES =
       G8_BRNF2 = 10,
       G8_BRNF3 = 10
     },
+  },
+
+  tech_darkBronze =
+  {
+    env = "building",
+    prob = 40,
+
+    walls =
+    {
+      BRONZEG1 = 10,
+      BRONZEG2 = 10,
+      BRONZEG3 = 10,
+
+      BROWN2 = 8,
+      BROWN3 = 8,
+      
+      COMPBLAK = 1,
+      COMPTIL3 = 1,
+
+      DARKMET1 = 5,
+      GOTH17 = 5,
+      GOTH24 = 5,
+      GOTH31 = 5,
+      GOTH37 = 5,
+      GOTH38 = 5,
+
+      METAL8 = 7,
+      METAL9 = 7,
+      METAL10 = 7,
+
+      RUSTWALL = 2,
+      RUSTWAL2 = 2
+    },
+
+    floors =
+    {
+      FLAT1 = 5,
+      FLOOR4_8 = 5,
+
+      SLIME14 = 5,
+      SLIME15 = 5,
+
+      DARKF03 = 8,
+      DARKM01 = 8,
+      G06 = 5,
+      G10 = 5,
+      G15 = 8,
+      GMET03 = 5,
+      GMET05 = 5,
+      GRATE2 = 5,
+      GRATE3 = 5,
+      GRATE4 = 5,
+      GRATE7 = 5,
+      GRATE8 = 5,
+      QFLAT09 = 5,
+      MEM01 = 5
+    },
+
+    ceilings =
+    {
+      MFLR8_1 = 5,
+      FLOOR4_8 = 5,
+      
+      DARKF03 = 8,
+      DARKM01 = 8,
+      G06 = 5,
+      G10 = 5,
+      G15 = 8,
+      GMET03 = 5,
+      GMET05 = 5,
+      GRATE2 = 5,
+      GRATE3 = 5,
+      GRATE4 = 5,
+      GRATE7 = 5,
+      GRATE8 = 5,
+      QFLAT09 = 5,
+      MEM01 = 5,
+
+      SLIME14 = 5,
+      SLIME15 = 5
+    }
   },
 
   tech_Outdoors_generic =
@@ -1493,6 +1581,12 @@ ARMAETUS_ROOM_THEMES =
       HELLCMT6 = 20,
       HELLCMT7 = 15,
       HELLCMT8 = 15,
+
+      OBTBCEM1 = 30,
+      OBTBCEM3 = 30,
+
+      OBTBCMR1 = 30,
+      OBTBCMR3 = 30,
     },
 
     floors =
@@ -1560,6 +1654,14 @@ ARMAETUS_ROOM_THEMES =
       OBTSVBZ1 = 15,
       OBTSVBZ2 = 15,
       OBTSVBZ3 = 15,
+
+      OBTBCEM1 = 30,
+      OBTBCEM2 = 30,
+      OBTBCEM3 = 30,
+
+      OBTBCMR1 = 30,
+      OBTBCMR2 = 30,
+      OBTBCMR3 = 30,
     },
 
     floors =
@@ -1719,6 +1821,10 @@ ARMAETUS_ROOM_THEMES =
       REDMARB1 = 20,
       REDMARB2 = 60,
       REDMARB3 = 60,
+
+      OBTBCMR1 = 30,
+      OBTBCMR2 = 30,
+      OBTBCMR3 = 30,
     },
 
     floors =
@@ -2646,6 +2752,83 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
+  urban_Wood = -- this is an override of the urban wood theem with
+               -- a theme override
+  {
+    env  = "building",
+    prob = 20,
+
+    theme_override = "flesh",
+
+    walls =
+    {
+      WOOD1 = 30,
+      WOOD3 = 20,
+      WOOD5 = 20,
+      WOOD12 = 20,
+      WOODVERT = 8,
+
+      WODCRAT3 = 50,
+      WODCRAT4 = 50,
+      WODCRAT5 = 50,
+      WD03   = 50,
+      WD04   = 50,
+      WOOD13 = 50,
+      WOOD14 = 50,
+      WOOD15 = 50,
+      WOOD16 = 50,
+      WOOD17 = 50,
+      WOOD18 = 30
+    },
+
+    floors =
+    {
+      FLAT5_1 = 30,
+      FLAT5_2 = 30,
+      FLOOR7_1 = 20,
+      FLAT5_4 = 8,
+      FLAT5_5 = 20,
+      FLOOR4_6 = 10,
+      FLAT5_5  = 15,
+      DEM1_5   = 10,
+      DEM1_6   = 15,
+
+      GSTN03 = 15,
+      GSTN04 = 15,
+      GSTN05 = 15,
+      GWOD01 = 30,
+      GWOD02 = 30,
+      GWOD03 = 30,
+      GWOD04 = 30,
+
+      CARPET1 = 7,
+      CARPET2 = 7,
+      CARPET3 = 7,
+      CARPET4 = 7,
+      CARPET5 = 7,
+      CARPET6 = 7,
+      CARPET7 = 7,
+      CARPET8 = 7,
+
+      WOODTIL = 30,
+      WOODTI2 = 30,
+      FFLAT01 = 30
+    },
+
+    ceilings =
+    {
+      FLOOR7_2 = 50,
+      RROCK14 = 40,
+      CEIL1_1 = 30,
+      FLAT5_2 = 10,
+      FLAT5_7 = 10,
+      RROCK10 = 10,
+      RROCK11 = 10,
+      RROCK12 = 10,
+      FLOOR7_1 = 5
+    }
+  },
+
   urban_MoreWood =
   {
     env = "building",
@@ -2736,7 +2919,11 @@ ARMAETUS_ROOM_THEMES =
       OBTBSLV1 = 5,
       OBTBSLV2 = 5,
 
-      OBTBSTX1 = 5
+      OBTBSTX1 = 5,
+
+      OBTBCEM1 = 12,
+      OBTBCEM2 = 12,
+      OBTBCEM3 = 12
     },
 
     floors =
@@ -2833,7 +3020,11 @@ ARMAETUS_ROOM_THEMES =
 
       OBTSVBZ1 = 10,
       OBTSVBZ2 = 10,
-      OBTSVBZ3 = 10
+      OBTSVBZ3 = 10,
+
+      OBTBCEM1 = 30,
+      OBTBCEM2 = 30,
+      OBTBCEM3 = 30
     },
 
     floors =
@@ -4384,6 +4575,10 @@ ARMAETUS_THEMES =
       OBTSVBZ1 = 15,
       OBTSVBZ2 = 15,
       OBTSVBZ3 = 15,
+
+      OBTBCEM1 = 25,
+      OBTBCEM2 = 25,
+      OBTBCEM3 = 25
     },
 
     fences = 
@@ -4472,6 +4667,10 @@ ARMAETUS_THEMES =
     {
       gtd_wall_server_room2 = 50,
       --
+      gtd_storage_shawn = 50,
+      --
+      gtd_wall_cafeteria_set = 50,
+      --
       gtd_collite_set_green = 13,
       gtd_collite_set_orange = 13,
       gtd_collite_set_blue = 13,
@@ -4499,6 +4698,12 @@ ARMAETUS_THEMES =
       gtd_wall_teklitecomp_blue = 16,
       --
       gtd_wall_grated_machines_epic = 50,
+      --
+      gtd_wall_tech_oven = 35,
+      gtd_wall_tech_freezer = 35,
+      gtd_wall_air_vents = 35,
+      --
+      gtd_wall_of_guns = 50
     },
 
     window_groups =
@@ -4713,9 +4918,6 @@ ARMAETUS_THEMES =
       BRICEGRY = 15,
 
       --
-      OBTBSLV1 = 15,
-      OBTBSLV2 = 15,
-
       OBTBSTX1 = 15,
       OBTBSTX3 = 15,
 
@@ -4731,6 +4933,10 @@ ARMAETUS_THEMES =
       OBTSVBZ1 = 15,
       OBTSVBZ2 = 15,
       OBTSVBZ3 = 15,
+
+      OBTBCEM1 = 25,
+      OBTBCEM2 = 25,
+      OBTBCEM3 = 25
     },
 
     fences =
@@ -4887,7 +5093,12 @@ ARMAETUS_THEMES =
     wall_groups =
     {
       dem_wall_commercial = 50,
-      gtd_grocery = 50,
+      gtd_grocery = 25,
+      gtd_grocery_2 = 25,
+      --
+      gtd_wall_cafeteria_set = 50,
+      --
+      gtd_storage_shawn = 50,
       --
       gtd_tall_glass_epic_yellow = 8,
       gtd_tall_glass_epic_orange = 8,
@@ -4915,10 +5126,10 @@ ARMAETUS_THEMES =
       --
       gtd_epic_craneo_paintings = 40,
       --
-      gtd_computers_shawn = 25,
-      gtd_computers_compsta = 25,
+      gtd_computers_shawn = 35,
+      gtd_computers_compsta = 35,
       --
-      gtd_wall_hell_bottom_glass = 15,
+      gtd_wall_gothic_bottom_glass = 25,
       --
       gtd_wall_arcade = 50,
       --
@@ -4929,6 +5140,10 @@ ARMAETUS_THEMES =
       gtd_wall_grated_machines_epic = 25,
       --
       gtd_library_tall = 35,
+      --
+      gtd_wall_air_vents = 50,
+      --
+      gtd_wall_of_guns = 50
     },
 
     window_groups =
@@ -5354,7 +5569,7 @@ ARMAETUS_THEMES =
       gtd_wall_vertical_light_2 = 16,
       gtd_wall_vertical_light_3 = 16,
       --
-      gtd_wall_hell_bottom_glass = 25,
+      gtd_wall_gothic_bottom_glass = 45,
       --
       gtd_library_tall = 35,
     },

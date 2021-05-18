@@ -20,12 +20,6 @@
 
 MISC_STUFF_HERETIC = { }
 
-MISC_STUFF_HERETIC.YES_NO =
-{
-  "no",  _("No"),
-  "yes", _("Yes"),
-}
-
 MISC_STUFF_HERETIC.LIGHTINGS =
 {
   "flat",    _("FLAT"),
@@ -101,8 +95,64 @@ MISC_STUFF_HERETIC.LINEAR_START_CHOICES =
   "default", _("DEFAULT"),
 }
 
+MISC_STUFF_HERETIC.ROOM_SIZE_MULTIPLIER_CHOICES =
+{
+  "0.25", _("x0.25"),
+  "0.5", _("x0.5"),
+  "0.75", _("x0.75"),
+  "1", _("x1"),
+  "1.25", _("x1.25"),
+  "1.5", _("x1.5"),
+  "2", _("x2"),
+  "4", _("x4"),
+  "6", _("x6"),
+  "8", _("x8"),
+  "vanilla", _("Vanilla"),
+  "mixed", _("Mix It Up")
+}
+
+MISC_STUFF_HERETIC.AREA_COUNT_MULTIPLIER_CHOICES =
+{
+  "0.15", _("x0.15"),
+  "0.5", _("x0.5"),
+  "0.75", _("x0.75"),
+  "1", _("x1"),
+  "1.5", _("x1.5"),
+  "2", _("x2"),
+  "4", _("x4"),
+  "vanilla", _("Vanilla"),
+  "mixed", _("Mix It Up")
+}
+
+MISC_STUFF_HERETIC.ROOM_SIZE_CONSISTENCY_CHOICES =
+{
+  "normal", _("Vanilla"),
+  "strict", _("Strict"),
+  "mixed", _("Mix It Up")
+}
+
+function MISC_STUFF_HERETIC.setup(self)
+  -- these parameters have to be instantiated in this hook
+  -- because begin_level happens *after* level size decisions
+  for _,opt in pairs(self.options) do
+    if opt.name == "room_size_multiplier" or
+    opt.name == "room_area_multiplier" or
+    opt.name == "room_size_consistency" then
+      PARAM[opt.name] = opt.value
+    elseif opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    end
+  end
+end
+
 function MISC_STUFF_HERETIC.begin_level(self)
   for _,opt in pairs(self.options) do
+    if opt.valuator then goto continue end
+
     local name  = assert(opt.name)
     local value = opt.value
 
@@ -120,12 +170,17 @@ function MISC_STUFF_HERETIC.begin_level(self)
         PARAM[name] = value
       end
     end
+
+    ::continue::
   end
 end
 
 
 OB_MODULES["misc_heretic"] =
 {
+
+  name = "misc_heretic",
+
   label = _("Miscellaneous"),
 
   game = "heretic",
@@ -135,32 +190,65 @@ OB_MODULES["misc_heretic"] =
 
   hooks =
   {
+    setup = MISC_STUFF_HERETIC.setup,
     begin_level = MISC_STUFF_HERETIC.begin_level
   },
 
   options =
   {
     {
-      name="pistol_starts",
+      name="bool_pistol_starts",
       label=_("Wand Starts"),
-      choices=MISC_STUFF_HERETIC.YES_NO,
+      valuator = "button",
+      default = 1,
       tooltip=_("Ensure every map can be completed from a wand start (ignore weapons obtained from earlier maps)")
     },
     {
-      name="alt_starts",
+      name="bool_alt_starts",
       label=_("Alt-start Rooms"),
-      choices=MISC_STUFF_HERETIC.YES_NO,
+      valuator = "button",
+      default = 0,
       tooltip=_("For Co-operative games, sometimes have players start in different rooms")
     },
---[[    {
-      name = "foreshadowing_exit",
-      label = _("Foreshadowing Exit")
-      choices = MISC_STUFF_HERETIC.YES_NO
+    
+    {
+      name = "bool_foreshadowing_exit",
+      label = _("Foreshadowing Exit"),
+      valuator = "button",
+      default = 1,
       tooltip = "Gets exit room theme to follow the theme of the next level, if different.",
-      default = "yes",
       gap=1,
     },
-]]
+
+    {
+      name="room_size_multiplier", label=_("Room Size Multiplier"),
+      choices = MISC_STUFF_HERETIC.ROOM_SIZE_MULTIPLIER_CHOICES,
+      default = "mixed",
+      tooltip = "Alters the general size and ground coverage of rooms.\n\n" ..
+        "Vanilla: No room size multipliers.\n\n" ..
+        "Mix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest.",
+    },
+    {
+      name="room_area_multiplier", label=_("Area Count Multiplier"),
+      choices = MISC_STUFF_HERETIC.AREA_COUNT_MULTIPLIER_CHOICES,
+      default = "mixed",
+      tooltip = "Alters the amount of areas in a room. Influences the amount rooms are divided into different elevations or "..
+        "simply different ceilings if a level has no steepness.\n\n" ..
+        "Vanilla: No area quantity multipliers.\n\n" ..
+        "Mix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest.",
+    },
+    {
+      name="room_size_consistency", label=_("Size Consistency"),
+      choices = MISC_STUFF_HERETIC.ROOM_SIZE_CONSISTENCY_CHOICES,
+      default = "mixed",
+      tooltip = "Changes whether rooms follow a strict single size or not. " ..
+        "Can be paired with above choices for more enforced results.\n\n" ..
+        "Vanilla: Original behavior. Rooms in a level have vary in size from each other. Big Rooms options are respected.\n\n" ..
+        "Strict: All rooms in the level have a single set size/coverage.\n\n" ..
+        "Mix It Up: A mixture of 75% Vanilla, 25% Strict.",
+      gap = 1,
+    },
+
     { name="big_rooms",   label=_("Big Rooms"),      choices=STYLE_CHOICES },
     { name="big_outdoor_rooms", label=_("Big Outdoors"), choices=STYLE_CHOICES },
     {
@@ -262,12 +350,16 @@ OB_MODULES["misc_heretic"] =
     },
 ]]
     { name="switches",    label=_("Switched Doors"), choices=STYLE_CHOICES, gap=1 },
-
+    
+    { name="local_switches",    label=_("Switch Rooms"), choices=STYLE_CHOICES, 
+      tooltip = "Controls the chance same-room switches and locks.",
+      gap=1 
+    },
 --[[    {
-      name="road_markings",
+      name="bool_road_markings",
       label=_("Road Markings"),
-      choices=MISC_STUFF_HERETIC.YES_NO,
-      default = "yes",
+      valuator = "button",
+      default = 1,
       tooltip = _("Adds street markings to roads."),
     },
     {
@@ -280,11 +372,11 @@ OB_MODULES["misc_heretic"] =
     },
 
     {
-      name="exit_signs",
+      name="bool_exit_signs",
       label=_("Exit Signs")
-      choices=MISC_STUFF_HERETIC.YES_NO
+      valuator = "button",
+      default = 1,
       tooltip=_("Places exit signs by exiting room")
-      default = "yes",
       gap=1,
     },
 --]]

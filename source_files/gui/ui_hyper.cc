@@ -30,8 +30,6 @@
 #include "lib_util.h"
 #include "main.h"
 
-#define LINK_BLUE FL_BLUE  // fl_rgb_color(0,0,192)
-
 UI_HyperLink::UI_HyperLink(int x, int y, int w, int h, const char *label,
                            const char *_url)
     : Fl_Button(x, y, w, h, label),
@@ -43,9 +41,7 @@ UI_HyperLink::UI_HyperLink(int x, int y, int w, int h, const char *label,
     // copy the URL string
     url = StringDup(_url);
 
-    box(FL_FLAT_BOX);
-    color(FL_GRAY);
-    labelcolor(LINK_BLUE);
+    box(FL_NO_BOX);
 
     // setup the callback
     callback(callback_Link, NULL);

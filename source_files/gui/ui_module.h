@@ -39,7 +39,7 @@ class UI_Module : public Fl_Group {
    private:
     std::string id_name;
 
-    Fl_Check_Button *mod_button;
+    UI_CustomCheckBox *mod_button;
 
     std::map<std::string, UI_RChoice *> choice_map;
     
@@ -56,14 +56,14 @@ class UI_Module : public Fl_Group {
     virtual ~UI_Module();
 
     void AddOption(const char *option, const char *label, const char *tip,
-                   int gap, Fl_Color select_col);
+                   int gap);
 
 	void AddSliderOption(const char *option, const char *label, const char *tip,
                           int gap, double min, double max, double inc,
-                          const char *units, const char *nan, Fl_Color select_col);
+                          const char *units, const char *nan);
                          
     void AddButtonOption(const char *opt, const char *label, const char *tip,
-                          int gap, Fl_Color select_col);
+                          int gap);
 
     void AddOptionChoice(const char *option, const char *id, const char *label);
     
@@ -95,6 +95,9 @@ class UI_Module : public Fl_Group {
 
     static void callback_OptChange(Fl_Widget *w, void *data);
     static void callback_MixItCheck(Fl_Widget *w, void *data);
+    static void callback_SliderPrevious(Fl_Widget *w, void *data);
+    static void callback_SliderNext(Fl_Widget *w, void *data);
+    static void callback_ShowHelp(Fl_Widget *w, void *data);
 };
 
 class UI_CustomMods : public Fl_Group {
@@ -114,11 +117,8 @@ class UI_CustomMods : public Fl_Group {
     // total height of all shown modules
     int total_h;
 
-    // highlight color for option buttons
-    Fl_Color button_col;
-
    public:
-    UI_CustomMods(int X, int Y, int W, int H, Fl_Color _button_col);
+    UI_CustomMods(int X, int Y, int W, int H);
     virtual ~UI_CustomMods();
 
    public:

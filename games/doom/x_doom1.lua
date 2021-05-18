@@ -3291,7 +3291,7 @@ function ULTDOOM.get_levels()
       end
 
       -- prebuilt levels
-      if gui.get_module_button_value("ui_arch", "bool_prebuilt_levels") == 1 then
+      if PARAM.bool_prebuilt_levels == 1 then
         LEV.prebuilt = GAME.PREBUILT_LEVELS[LEV.name]
       end
 
@@ -3307,7 +3307,7 @@ function ULTDOOM.get_levels()
       if not LEV.prebuilt then
 
         --handling for the Final Only option
-        if OB_CONFIG.procedural_gotchas == "final" then
+        if PARAM.gotcha_frequency == "final" then
           if OB_CONFIG.length == "single" then
             if map == 1 then LEV.is_procedural_gotcha = true end
           elseif OB_CONFIG.length == "few" then
@@ -3320,69 +3320,53 @@ function ULTDOOM.get_levels()
         end
 
         --every 10 maps
-        if OB_CONFIG.procedural_gotchas == "epi" then
+        if PARAM.gotcha_frequency == "epi" then
           if map == 11 or map == 21 or map == 30 then
             LEV.is_procedural_gotcha = true
           end
         end
 
         --5% of maps after map 4,
-        if OB_CONFIG.procedural_gotchas == "5p" then
+        if PARAM.gotcha_frequency == "5p" then
           if map > 4 then
             if rand.odds(5) then LEV.is_procedural_gotcha = true end
           end
         end
 
         -- 10% of maps after map 4,
-        if OB_CONFIG.procedural_gotchas == "10p" then
+        if PARAM.gotcha_frequency == "10p" then
           if map > 4 then
             if rand.odds(10) then LEV.is_procedural_gotcha = true end
           end
         end
 
         -- for masochists... or debug testing
-        if OB_CONFIG.procedural_gotchas == "all" then
+        if PARAM.gotcha_frequency == "all" then
           LEV.is_procedural_gotcha = true
         end
       end
 
-      -- handling for street mode
-      if not LEV.is_procedural_gotcha or not LEV.prebuilt then
-        if OB_CONFIG.streets_mode == "75" and rand.odds(75) then
-          LEV.has_streets = true
-        elseif OB_CONFIG.streets_mode == "50" and rand.odds(50) then
-          LEV.has_streets = true
-        elseif OB_CONFIG.streets_mode == "25" and rand.odds(25) then
-          LEV.has_streets = true
-        elseif OB_CONFIG.streets_mode == "13" and rand.odds(13) then
-          LEV.has_streets = true
-        elseif OB_CONFIG.streets_mode == "all" then
-          LEV.has_streets = true
+    -- handling for street mode
+    -- actual handling for urban percentages are done
+    if not LEV.is_procedural_gotcha or not LEV.prebuilt then
+      if rand.odds(PARAM.float_streets_mode) then
+        LEV.has_streets = true
+      end
+    end
+
+    if not LEV.prebuilt then
+      if rand.odds(PARAM.float_linear_mode) then
+        LEV.is_linear = true
+      end
+
+      -- nature mode
+      if PARAM.float_nature_mode and not LEV.has_streets then
+        if rand.odds(PARAM.float_nature_mode) then
+          LEV.is_nature = true
         end
       end
 
-      -- handling for linear mode chance choices
-      if not LEV.prebuilt then
-        if OB_CONFIG.linear_mode == "all" then
-          LEV.is_linear = true
-        elseif OB_CONFIG.linear_mode ~= "none" then
-          if rand.odds(int(OB_CONFIG.linear_mode)) then
-            LEV.is_linear = true
-          end
-        end
-
-        -- nature mode
-        if OB_CONFIG.nature_mode and not LEV.has_streets then
-          if OB_CONFIG.nature_mode == "all" then
-            LEV.is_nature = true
-          elseif OB_CONFIG.nature_mode ~= "none" then
-            if rand.odds(int(OB_CONFIG.nature_mode)) then
-              LEV.is_nature = true
-            end
-          end
-        end
-
-      end
+    end
 
       if MAP_NUM == 1 or map == 3 then
         LEV.demo_lump = string.format("DEMO%d", ep_index)

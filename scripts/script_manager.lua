@@ -49,22 +49,22 @@ function ScriptMan_assemble_mapinfo_lump()
   }
 
   local eventhandler_lines = "addeventhandlers = "
-  if PARAM.boss_gen and PARAM.boss_count ~= -1 then
+  if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 then
     eventhandler_lines = eventhandler_lines .. '"BossGenerator_Handler"'
   end
-  if PARAM.boss_gen and PARAM.boss_count ~= -1 and SCRIPTS.actor_name_script then
+  if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 and SCRIPTS.actor_name_script then
     eventhandler_lines = eventhandler_lines .. ", "
   end
   if SCRIPTS.actor_name_script then
     eventhandler_lines = eventhandler_lines .. '"bossNameHandler"'
   end
-  if (PARAM.boss_gen and PARAM.boss_count ~= -1) or SCRIPTS.actor_name_script then
+  if (PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1) or SCRIPTS.actor_name_script then
     eventhandler_lines = eventhandler_lines .. "\n"
     table.insert(mapinfo_lines, eventhandler_lines)
   end
 
   -- MAPINFO extras
-  if PARAM.custom_quit_messages == "yes" then
+  if PARAM.bool_custom_quit_messages == 1 then
     for _,line in pairs(PARAM.gameinfolump) do
       table.insert(mapinfo_lines,line)
     end
@@ -120,7 +120,7 @@ end
 function ScriptMan_assemble_zscript_lump()
   local zscript_lines = ""
 
-  if PARAM.boss_gen and PARAM.boss_count ~= -1 then
+  if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 then
     zscript_lines = zscript_lines .. PARAM.BOSSSCRIPT .. "\n"
   end
   if PARAM.marine_gen then
@@ -152,7 +152,7 @@ function ScriptMan_assemble_decorate_lump()
     decorate_script_lines = decorate_script_lines ..
     ARMAETUS_EPIC_TEXTURES.TEMPLATES.DEC_TREES .. "\n"
   end
-  if PARAM.dynamic_lights == "yes" then
+  if PARAM.bool_dynamic_lights == 1 then
     if OB_CONFIG.game == "heretic" then
         decorate_script_lines = decorate_script_lines ..
         ZDOOM_SPECIALS_HERETIC.DYNAMIC_LIGHT_DECORATE .. "\n"
@@ -205,27 +205,27 @@ end
 function ScriptMan_assemble_gldefs_lump()
   local gldefs_lines = ""
 
-  if PARAM.dynamic_lights == "yes" then
+  if PARAM.bool_dynamic_lights == 1 then
     if OB_CONFIG.game == "heretic" then
-        gldefs_lines = gldefs_lines ..
-        ZDOOM_SPECIALS_HERETIC.DYNAMIC_LIGHT_GLDEFS
+      gldefs_lines = gldefs_lines ..
+      ZDOOM_SPECIALS_HERETIC.DYNAMIC_LIGHT_GLDEFS
     else
-        gldefs_lines = gldefs_lines ..
-        ZDOOM_SPECIALS.DYNAMIC_LIGHT_GLDEFS
+      gldefs_lines = gldefs_lines ..
+      ZDOOM_SPECIALS.DYNAMIC_LIGHT_GLDEFS
     end
   end
 
-  if PARAM.glowing_flats == "yes" then
+  if PARAM.bool_glowing_flats == 1 then
     if OB_CONFIG.game == "heretic" then
-        gldefs_lines = gldefs_lines ..
-        ZDOOM_SPECIALS_HERETIC.GLOWING_FLATS_GLDEFS
+      gldefs_lines = gldefs_lines ..
+      ZDOOM_SPECIALS_HERETIC.GLOWING_FLATS_GLDEFS
     else
-        gldefs_lines = gldefs_lines ..
-        ZDOOM_SPECIALS.GLOWING_FLATS_GLDEFS
+      gldefs_lines = gldefs_lines ..
+      ZDOOM_SPECIALS.GLOWING_FLATS_GLDEFS
     end
   end
 
-  if PARAM.include_brightmaps == "yes" then
+  if PARAM.bool_include_brightmaps == 1 then
     gldefs_lines = gldefs_lines ..
     EPIC_BRIGHTMAPS
   end
@@ -240,7 +240,7 @@ function ScriptMan_assemble_language_lump()
       "[enu default]\n",
   }
 
-  if PARAM.boss_gen and PARAM.boss_count ~= -1 then
+  if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 then
     for _,line in pairs(PARAM.BOSSLANG) do
       table.insert(language_lines,line)
     end
@@ -250,7 +250,7 @@ function ScriptMan_assemble_language_lump()
       table.insert(language_lines,line)
     end
   end
-  if PARAM.quit_messages == "yes" then
+  if PARAM.bool_quit_messages == 1 then
     for _,line in pairs(PARAM.quit_messagelump) do
       table.insert(language_lines,line)
     end

@@ -566,8 +566,7 @@ ARMAETUS_MATERIALS = {
   SILVER2Y = { t="SILVER2Y", f="FLAT23" },
   SILVER2W = { t="SILVER2W", f="FLAT23" },
 
-  UACCRT1 = { t="UACCRT2", f="FLAT23" },
-  UACCRT2 = { t="UACCRT2", f="FLAT23" },
+  UACCRT1 = { t="UACCRT1", f="FLAT23" },
 
   -- Skin and Hell
   BODIES1 = { t="BODIES1", f="BODIESFL" }, -- Copy of AASHITTY
@@ -1234,6 +1233,11 @@ ARMAETUS_MATERIALS = {
   CPSATRN = { t="CPSATRN", f="CEIL4_3"},
   CPVLAD = { t="CPVLAD", f="CEIL4_3"},
 
+  -- Craneo's wall of guns
+  CRGNRCK1 = { t="CRGNRCK1", f="FLAT19"}, -- wall of vanilla weapons
+  CRGNRCK2 = { t="CRGNRCK2", f="FLAT19"}, -- wall of non-canonical weapons
+  CRGNRCK3 = { t="CRGNRCK3", f="FLAT19"}, -- empty wall
+
   ------------------------
   -- Composite textures --
   ------------------------
@@ -1366,6 +1370,15 @@ ARMAETUS_MATERIALS = {
 
   OBTSBGRE = { t="OBTSBGRE", f="DARKF02"}, -- bloodied version of the hex bricks
 
+  -- custom cement walls (128px)
+  OBTBCEM1 = { t="OBTBCEM1", f="FLOOR3_3"},
+  OBTBCEM2 = { t="OBTBCEM2", f="SLIME16"},
+  OBTBCEM3 = { t="OBTBCEM3", f="DEM1_6"},
+
+  OBTBCMR1 = { t="OBTBCMR1", f="RMARB2"},
+  OBTBCMR2 = { t="OBTBCMR2", f="FLAT15"},
+  OBTBCMR3 = { t="OBTBCMR3", f="GMET02"},
+
   -- silver flats (128px)
   OBTBSFL1 = { t="OBTBSLV1", f="OBTBSFL1"}, --< metal grates
   OBTBSFL2 = { t="OBTBSLV2", f="OBTBSFL2"},
@@ -1379,9 +1392,9 @@ ARMAETUS_MATERIALS = {
   G8_BRNF2 = { t="G8_BRNW3", f="G8_BRNF2"},
   G8_BRNF3 = { t="G8_BRNW2", f="G8_BRNF3"},
 
-  OBTSBF1B = { t="OBTBSLB2", f="OBTSBF1B"}, -- brown color composite
-  OBTSBF2B = { t="OBTBSLB3", f="OBTSBF2B"},
-  OBTSBF3B = { t="OBTBSLB4", f="OBTSBF3B"},
+  OBTSBF1B = { t="OBTBSB3B", f="OBTSBF1B"}, -- brown color composite
+  OBTSBF2B = { t="OBTBSB4B", f="OBTSBF2B"},
+  OBTSBF3B = { t="OBTBSB5B", f="OBTSBF3B"},
 
   OBTSBF1R = { t="HELLCMT1", f="OBTSBF1R"}, -- red
   OBTSBF2R = { t="HELLCMT2", f="OBTSBF2R"},
@@ -1735,6 +1748,34 @@ brightmap texture SW2CHN
   map OBRS2CN
 }
 
+// colorful churchy glass
+brightmap texture GLASS7
+{
+  map OBRGLAS7
+}
+
+brightmap texture GLASS8
+{
+  map OBRGLAS8
+}
+
+brightmap texture GLASS9
+{
+  map OBRGLAS9
+}
+
+// bookshelves
+
+brightmap texture PANBOOK2
+{
+  map OBRPNBK2
+}
+
+brightmap texture PANBOOK3
+{
+  map OBRPNBK3
+}
+
 // liquids
 
 // Oblige lava patch
@@ -1751,5 +1792,96 @@ brightmap texture FIREMAG2
 brightmap texture FIREMAG3
 {
   map OBRLFAL3
+}
+
+//urban
+brightmap texture CITY01
+{
+  map OBRCITY1
+}
+
+brightmap texture CITY02
+{
+  map OBRCITY1
+}
+
+brightmap texture CITY03
+{
+  map OBRCITY1
+}
+
+brightmap texture CITY04
+{
+  map OBRCITY4
+}
+
+brightmap texture CITY05
+{
+  map OBRCITY5
+}
+
+brightmap texture CITY06
+{
+  map OBRCITY4
+}
+
+brightmap texture CITY07
+{
+  map OBRCITY7
+}
+
+brightmap texture CITY12
+{
+  map OBRCTY12
+}
+
+brightmap texture CITY14
+{
+  map OBRCTY14
+}
+
+brightmap texture GRAYMET6
+{
+  map OBRGRYMT
+}
+
+brightmap texture GRAYMET7
+{
+  map OBRGRYMT
+}
+
+brightmap texture GRAYMET8
+{
+  map OBRGRYMT
+}
+
+brightmap texture GRAYMET9
+{
+  map OBRGRYMT
+}
+
+brightmap texture GRAYMETA
+{
+  map OBRGRYMT
+}
+
+brightmap texture GRAYMETB
+{
+  map OBRGRYMT
+}
+
+brightmap texture GRAYMETC
+{
+  map OBRGRYMT
+}
+
+brightmap texture RDLITE01
+{
+  map OBRRDLT1
+}
+
+brightmap texture LITEBLU3
+{
+  map OBRLTBL3
 }
 ]]

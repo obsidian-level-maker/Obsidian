@@ -21,6 +21,8 @@
 
 
 function Render_add_exit_sign(E, z)
+  if PARAM.bool_exit_signs and PARAM.bool_exit_signs ~= 1 then return end
+
   local def = PREFABS["Decor_exit_sign"]
   if not def then return end
 
@@ -263,6 +265,7 @@ function Render_edge(E)
 
       if A.room and A.room.is_exit and LEVEL.alt_outdoor_wall_group then
         reqs.group = LEVEL.alt_outdoor_wall_group
+        if reqs.group == "none" then reqs.group = nil end
       end
 
       if reqs.group == "PLAIN" or rand.odds(10) then
@@ -373,7 +376,7 @@ function Render_edge(E)
     end
 
     -- when a wall group is not selected, use the ungrouped walls
-    if not def then
+    if not def or (def and def.stop_group) then
       reqs.group = nil
       def = Fab_pick(reqs)
     end
@@ -1006,9 +1009,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
          E = E.peer
       end
 
-      if PARAM.exit_signs then
-          Render_add_exit_sign(E, z)
-      end
+      Render_add_exit_sign(E, z)
     end
   end
 
@@ -2065,7 +2066,7 @@ function Render_chunk(chunk)
 
   local function content_exit(chunk, secret_exit)
 
-    if LEVEL.is_procedural_gotcha and PARAM.boss_gen then return -1 end
+    if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then return -1 end
 
     local dir = player_face_dir(chunk)
 
@@ -2284,7 +2285,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     local T = Trans.spot_transform(chunk.mx, chunk.my, ceil_h, chunk.prefab_dir or 2)
 
     -- dynamic light fabrication for ZDoom dynamic lights module
-    if PARAM.dynamic_lights == "yes" then
+    if PARAM.bool_dynamic_lights == 1 then
       if def.kind == "light" and def.light_color ~= "none" then
         local light_ent = {
           x = chunk.mx,
@@ -2411,9 +2412,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
       end
 
       if E and not E.area.room.is_hallway then
-        if PARAM.exit_signs then
-          Render_add_exit_sign(E, z1)
-        end
+        Render_add_exit_sign(E, z1)
       end
     end
   end
@@ -2732,7 +2731,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
   Ambient_push(A.lighting)
 
-  if PARAM.peered_exits and PARAM.peered_exits == "on" then
+  if PARAM.bool_peered_exits and PARAM.bool_peered_exits == 1 then
     local start_fab_override = check_peered_exits(def, chunk)
     if start_fab_override then
       def = start_fab_override
@@ -2937,7 +2936,7 @@ function Render_all_areas()
 
   Render_skybox()
 
-  if LEVEL.has_streets and PARAM.road_markings == "yes" then
+  if LEVEL.has_streets and PARAM.bool_road_markings == 1 then
     Render_find_street_markings()
     Render_all_street_markings()
     Render_establish_street_lanes()
@@ -3058,8 +3057,7 @@ function Render_all_street_traffic()
   end
 
 
-  gui.printf("Found " .. #LEVEL.road_street_traffic_spots .. " places to park the car.\n")
-
+  gui.debugf("Found " .. #LEVEL.road_street_traffic_spots .. " places to park the car.\n")
 
   rand.shuffle(LEVEL.road_street_traffic_spots)
 
@@ -3112,10 +3110,9 @@ function Render_all_street_traffic()
       def = Fab_pick(reqs, "is_ok_man")
     end
 
-    -- capture the material of the road sink, damn it!
     local skin =
     {
-      floor = "CEIL5_1",
+      floor = SPOT.floor_mat
     }
 
     if def then
@@ -3441,6 +3438,9 @@ function Render_establish_street_lanes()
       height = S.area.ceil_h - 2,
       dir = cur_dir
     }
+
+    local A = S.area
+    spot.floor_mat = A.floor_group.sink.mat
 
     return spot
   end

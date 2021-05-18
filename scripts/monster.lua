@@ -147,7 +147,7 @@ function Monster_pacing()
 
   local function handle_known_room(R)
     if R == LEVEL.exit_room 
-    or (LEVEL.is_procedural_gotcha and PARAM.boss_gen) then
+    or (LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1) then
       set_room(R, "high")
       return
     end
@@ -314,7 +314,7 @@ function Monster_assign_bosses()
     -- already has one?
     if R.boss_fight then return -1 end
 
-    if LEVEL.is_procedural_gotcha and PARAM.boss_gen then return 1 end
+    if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then return 1 end
 
     -- require a goal (e.g. a KEY)
     if #R.goals == 0 then return -1 end
@@ -834,7 +834,7 @@ function Monster_fill_room(R)
     local l_factor = MONSTER_KIND_TAB.few
     local u_factor = MONSTER_KIND_TAB.heaps
 
-    factor = gui.get_module_slider_value("ui_mons", "float_mons")
+    factor = PARAM.float_mons
     assert(factor)
 
     if factor == -0.10 then
@@ -885,29 +885,32 @@ function Monster_fill_room(R)
         end
     end
 
-    local qty
-    local u_range = math.max(min_range, max_range)
-    local l_range = math.min(min_range, max_range)
-
-    qty = gui.get_module_slider_value("ui_mons", "float_mons")
-    assert(qty)
-
+    local qty = PARAM.float_mons
+    local u_range = PARAM.float_mix_it_up_upper_range
+    local l_range = PARAM.float_mix_it_up_lower_range
+    
+    --Mix It Up
     if qty == -0.10 then
       if l_range == u_range then
         qty = l_range
       end
       qty = rand.range(l_range, u_range)
+    --Progressive
     elseif qty == -0.05 then
-      qty = l_range + (u_range * LEVEL.game_along)
+      if l_range > u_range then
+        qty = u_range + (l_range * LEVEL.game_along)
+      else    
+        qty = l_range + (u_range * LEVEL.game_along)
+      end
     end
 
     -- oh the pain
     if LEVEL.is_procedural_gotcha then
 
-      local gotcha_qty = 1.25
+      local gotcha_qty = 1.2
 
-      if PARAM.gotcha_qty then
-        gotcha_qty = PROC_GOTCHA_QUANTITY_MULTIPLIER[PARAM.gotcha_qty]
+      if PARAM.float_gotcha_qty then
+        gotcha_qty = PARAM.float_gotcha_qty
       end
 
       qty = qty * gotcha_qty
@@ -1204,12 +1207,13 @@ function Monster_fill_room(R)
       end
     end
 
-    if OB_CONFIG.strength == "weak"   then return 1 / (1.7 ^ factor) end
-    if OB_CONFIG.strength == "easier" then return 1 / (1.3 ^ factor) end
+    local mon_strength = PARAM.float_strength
 
-    if OB_CONFIG.strength == "harder" then return 1.3 ^ factor end
-    if OB_CONFIG.strength == "tough"  then return 1.7 ^ factor end
-    if OB_CONFIG.strength == "fierce"  then return 2.5 ^ factor end
+    if mon_strength < 1.0 then 
+      return 1 / ((1 + mon_strength) ^ factor)
+    elseif mon_strength > 1.0 then
+      return mon_strength ^ factor
+    end
 
     return 1.0
   end
@@ -1264,7 +1268,7 @@ function Monster_fill_room(R)
     -- level check (harder monsters occur in later rooms)
     assert(info.level)
 
-    if PARAM.boss_gen and LEVEL.is_procedural_gotcha then
+    if PARAM.bool_boss_gen == 1 and LEVEL.is_procedural_gotcha then
       local max_level = LEVEL.monster_level
       if info.level > max_level then
         prob = prob / 40
@@ -1293,7 +1297,7 @@ function Monster_fill_room(R)
     local d = info.density or 1
 
     -- level check
-    if OB_CONFIG.strength ~= "crazy" or LEVEL.is_procedural_gotcha == false then
+    if PARAM.float_strength < 12 or LEVEL.is_procedural_gotcha == false then
       local max_level = LEVEL.monster_level * R.lev_along
       if max_level < 2 then max_level = 2 end
 
@@ -1469,7 +1473,7 @@ function Monster_fill_room(R)
       if away then
         ang = geom.angle_add(ang, 180)
       end
-      if LEVEL.is_procedural_gotcha and PARAM.boss_gen and spot.bossgen then
+      if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 and spot.bossgen then
         return ang+LEVEL.id
       else
         return ang
@@ -1477,7 +1481,7 @@ function Monster_fill_room(R)
     end
 
     -- fallback : purely random angle
-    if LEVEL.is_procedural_gotcha and PARAM.boss_gen and spot.bossgen then
+    if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 and spot.bossgen then
       return (rand.irange(0,7) * 45)+LEVEL.id
     else
       return rand.irange(0,7) * 45
@@ -2179,7 +2183,7 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
       local mon = bf.mon
       local spot
 
-      if LEVEL.is_procedural_gotcha and PARAM.boss_gen then
+      if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
         reqs.fatness = 4
         while reqs.fatness > 0
         do
@@ -2220,7 +2224,7 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
       end
 
       if not spot then
-        if LEVEL.is_procedural_gotcha and PARAM.boss_gen then
+        if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
           error("Cannot place generated boss based on " .. bf.mon .. "\n")
         else
           gui.printf("WARNING!! Cannot place boss monster: \n" ..
@@ -2229,7 +2233,7 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
         break;
       end
 
-      if LEVEL.is_procedural_gotcha and PARAM.boss_gen then
+      if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
         local info = GAME.MONSTERS[mon]
         spot.bossgen = true
 
@@ -2255,15 +2259,17 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
 
   local function add_monsters()
 
+    local mon_strength = PARAM.float_strength
+
     -- sometimes prevent monster replacements
-    if rand.odds(40) or OB_CONFIG.strength == "crazy" then
+    if rand.odds(40) or mon_strength == 12 then
       R.no_replacement = true
     end
 
 
     local palette
 
-    if OB_CONFIG.strength == "crazy" then
+    if mon_strength == 12 then
       palette = crazy_palette()
     else
       palette = room_palette()
@@ -2354,15 +2360,15 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
 
 
   local function should_add_monsters()
-    if gui.get_module_slider_value("ui_mons", "float_mons") == 0 then
+    if PARAM.float_mons == 0 then
       return false
     end
 
     --if R.no_monsters then return false end
     if R.is_secret and OB_CONFIG.secret_monsters == "no" then return false end
 
-    if R.is_start and OB_CONFIG.quiet_start == "yes" then
-      if LEVEL.is_procedural_gotcha and PARAM.boss_gen then
+    if R.is_start and PARAM.bool_quiet_start == 1 then
+      if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
         -- your face is a tree
       else
         return false

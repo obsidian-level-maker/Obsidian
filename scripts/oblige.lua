@@ -251,6 +251,48 @@ function ob_match_engine(T)
   return not result
 end
 
+function ob_match_engine2(T)
+  if not T.engine2 then return true end
+  if T.engine2 == "any" then return true end
+
+  local engine = T.engine2
+  local result = true
+
+  -- Compatibility stub for old "gzdoom" selection
+  if engine == "gzdoom" then engine = "zdoom" end
+
+  -- negated check?
+  if type(engine) == "string" and string.sub(engine, 1, 1) == '!' then
+    engine = string.sub(engine, 2)
+    result = not result
+  end
+
+  -- normal check
+  if ob_match_word_or_table(engine, OB_CONFIG.engine) then
+    return result
+  end
+  
+  
+
+  -- handle extended engines
+
+  local engine_def = OB_ENGINES[OB_CONFIG.engine]
+
+  while engine_def do
+    if not engine_def.extends then
+      break;
+    end
+
+    if ob_match_word_or_table(engine, engine_def.extends) then
+      return result
+    end
+
+    engine_def = OB_ENGINES[engine_def.extends]
+  end
+
+  return not result
+end
+
 
 function ob_match_playmode(T)
   -- TODO : remove this function
@@ -264,7 +306,7 @@ function ob_match_level_theme(T, override)
   if T.theme == "any" then return true end
 
   -- if match theme toggle is disabled, everything qualifies
-  if PARAM.fab_match_theme == "off" then return true end
+  if PARAM.bool_fab_match_theme == 0 then return true end
 
   local level_theme_name = LEVEL.theme_name
   if override then
@@ -373,6 +415,7 @@ function ob_match_conf(T)
 
   if not ob_match_game(T)     then return false end
   if not ob_match_engine(T)   then return false end
+  if not ob_match_engine2(T)  then return false end
   if not ob_match_module(T)   then return false end
 
   return true --OK--
@@ -1348,11 +1391,38 @@ function ob_invoke_hook(name, ...)
         func(mod, ...)
       end
     end
+    
+    for _,mod in pairs(OB_MODULES) do
+      if ob_check_ui_module(mod) then
+       local func = mod.hooks and mod.hooks[name]
 
+        if func then
+          func(mod, ...)
+        end
+      end
+    end
     name = name .. "2"
   end
 end
 
+function ob_invoke_hook_with_table(name, local_table, qualifier)
+  -- experiment - Dasho
+    for _,mod in pairs(GAME.modules) do
+      local func = mod.hooks and mod.hooks[name]
+      if func then
+        func(mod, local_table, qualifier)
+      end
+    end
+    
+    for _,mod in pairs(OB_MODULES) do
+      if ob_check_ui_module(mod) then
+       local func = mod.hooks and mod.hooks[name]
+        if func then
+          func(mod, local_table, qualifier)
+        end
+      end
+    end
+end
 
 
 function ob_transfer_ui_options()

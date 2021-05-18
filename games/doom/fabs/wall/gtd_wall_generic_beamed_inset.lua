@@ -21,7 +21,7 @@ PREFABS.Wall_generic_beamed_inset =
 
 PREFABS.Wall_generic_beamed_inset_diag =
 {
-  template   = "Wall_generic_beamed_inset",
+  template = "Wall_generic_beamed_inset",
   map = "MAP02",
 
   where = "diagonal",
@@ -48,4 +48,50 @@ PREFABS.Wall_generic_beamed_inset_diag_hell =
   where = "diagonal",
 
   tex_METAL7 = "METAL2",
+}
+
+--
+
+PREFABS.Wall_generic_beamed_green_inset =
+{
+  template = "Wall_generic_beamed_inset",
+  map = "MAP03",
+
+  group = "gtd_generic_beamed_green_inset"
+}
+
+PREFABS.Wall_generic_beamed_green_inset_diag =
+{
+  template = "Wall_generic_beamed_inset",
+  map = "MAP04",
+
+  where = "diagonal",
+
+  group = "gtd_generic_beamed_green_inset"
+}
+
+--
+
+PREFABS.Wall_generic_beamed_brown_inset =
+{
+  template = "Wall_generic_beamed_inset",
+  map = "MAP03",
+
+  group = "gtd_generic_beamed_brown_inset",
+
+  tex_TEKGREN5 = "BRONZE4",
+  tex_DOORSTOP = "METAL"
+}
+
+PREFABS.Wall_generic_beamed_brown_inset_diag =
+{
+  template = "Wall_generic_beamed_inset",
+  map = "MAP04",
+
+  where = "diagonal",
+
+  group = "gtd_generic_beamed_brown_inset",
+
+  tex_TEKGREN5 = "BRONZE4",
+  tex_DOORSTOP = "METAL"
 }

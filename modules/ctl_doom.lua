@@ -19,48 +19,16 @@
 
 CTL_DOOM = {}
 
-CTL_DOOM.MON_CHOICES =
-{
-  "default", _("DEFAULT"),
-  "none",    _("None at all"),
-  "scarce",  _("Scarce"),
-  "less",    _("Less"),
-  "plenty",  _("Plenty"),
-  "more",    _("More"),
-  "heaps",   _("Heaps"),
-  "insane",  _("INSANE"),
-}
-
-CTL_DOOM.MON_PROBS =
-{
-  none   = 0,
-  scarce = 2,
-  less   = 15,
-  plenty = 50,
-  more   = 120,
-  heaps  = 300,
-  insane = 2000,
-}
-
-CTL_DOOM.DENSITIES =
-{
-  none   = 0.1,
-  scarce = 0.2,
-  less   = 0.4,
-  plenty = 0.7,
-  more   = 1.2,
-  heaps  = 3.3,
-  insane = 9.9,
-}
-
-
 function CTL_DOOM.monster_setup(self)
-  for name,opt in pairs(self.options) do
-    local M = GAME.MONSTERS[name]
 
-    if M and opt.value ~= "default" then
-      M.prob    = CTL_DOOM.MON_PROBS[opt.value]
-      M.density = CTL_DOOM.DENSITIES[opt.value]
+  for _,opt in pairs(self.options) do
+    PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)
+
+    local M = GAME.MONSTERS[string.sub(opt.name, 7)]
+
+    if M and PARAM[opt.name] ~= -0.02 then
+      M.prob    = PARAM[opt.name] * 100
+      M.density = M.prob * .006 + .1
 
       -- allow Spectres to be controlled individually
       M.replaces = nil
@@ -84,6 +52,9 @@ end
 
 OB_MODULES["doom_mon_control"] =
 {
+
+  name = "doom_mon_control",
+
   label = _("Doom Monster Control"),
 
   game = "doomish",
@@ -96,67 +67,352 @@ OB_MODULES["doom_mon_control"] =
 
   options =
   {
-    zombie   = { label=_("Zombieman"),      choices=CTL_DOOM.MON_CHOICES },
-    shooter  = { label=_("Shotgun Guy"),    choices=CTL_DOOM.MON_CHOICES },
-    gunner   = { label=_("Chaingunner"),    choices=CTL_DOOM.MON_CHOICES },
-    ss_nazi  = { label=_("SS Nazi"),        choices=CTL_DOOM.MON_CHOICES },
-    imp      = { label=_("Imp"),            choices=CTL_DOOM.MON_CHOICES },
+     float_zombie=
+     {
+      label = _("Zombieman"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
 
-    skull    = { label=_("Lost Soul"),      choices=CTL_DOOM.MON_CHOICES },
-    demon    = { label=_("Demon"),          choices=CTL_DOOM.MON_CHOICES },
-    spectre  = { label=_("Spectre"),        choices=CTL_DOOM.MON_CHOICES },
-    pain     = { label=_("Pain Elemental"), choices=CTL_DOOM.MON_CHOICES },
-    caco     = { label=_("Cacodemon"),      choices=CTL_DOOM.MON_CHOICES },
-    knight   = { label=_("Hell Knight"),    choices=CTL_DOOM.MON_CHOICES },
+     float_shooter=
+     {
+      label = _("Shotgun Guy"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
 
-    revenant = { label=_("Revenant"),       choices=CTL_DOOM.MON_CHOICES },
-    mancubus = { label=_("Mancubus"),       choices=CTL_DOOM.MON_CHOICES },
-    arach    = { label=_("Arachnotron"),    choices=CTL_DOOM.MON_CHOICES },
-    vile     = { label=_("Arch-vile"),      choices=CTL_DOOM.MON_CHOICES },
-    baron    = { label=_("Baron of Hell"),  choices=CTL_DOOM.MON_CHOICES },
+     float_gunner=
+     {
+      label = _("Chaingunner"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
 
-    Cyberdemon  = { label=_("Cyberdemon"),   choices=CTL_DOOM.MON_CHOICES },
-    Spiderdemon = { label=_("Spiderdemon"),  choices=CTL_DOOM.MON_CHOICES },
+     float_ss_nazi=
+     {
+      label = _("SS Nazi"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_imp=
+     {
+      label = _("Imp"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_skull=
+     {
+      label = _("Lost Soul"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_demon=
+     {
+      label = _("Demon"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_spectre=
+     {
+      label = _("Spectre"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_pain=
+     {
+      label = _("Pain Elemental"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_caco=
+     {
+      label = _("Cacodemon"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_knight=
+     {
+      label = _("Hell Knight"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_revenant=
+     {
+      label = _("Revenant"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_mancubus=
+     {
+      label = _("Mancubus"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_arach=
+     {
+      label = _("Arachnotron"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_vile=
+     {
+      label = _("Arch-vile"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_baron=
+     {
+      label = _("Baron of Hell"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_Cyberdemon=
+     {
+      label = _("Cyberdemon"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_Spiderdemon=
+     {
+      label = _("Spiderdemon"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 20,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     }
   },
 }
 
 
 ----------------------------------------------------------------
-
-
-CTL_DOOM.WEAPON_CHOICES =
-{
-  "default", _("DEFAULT"),
-  "none",    _("None at all"),
-  "scarce",  _("Scarce"),
-  "less",    _("Less"),
-  "plenty",  _("Plenty"),
-  "more",    _("More"),
-  "heaps",   _("Heaps"),
-  "loveit",  _("I LOVE IT"),
-}
-
-CTL_DOOM.WEAPON_PROBS =
-{
-  none   = 0,
-  scarce = 2,
-  less   = 15,
-  plenty = 50,
-  more   = 120,
-  heaps  = 300,
-  loveit = 1000,
-}
-
-CTL_DOOM.WEAPON_PREFS =
-{
-  none   = 1,
-  scarce = 10,
-  less   = 25,
-  plenty = 40,
-  more   = 70,
-  heaps  = 100,
-  loveit = 170,
-}
 
 CTL_DOOM.WEAPON_PREF_CHOICES =
 {
@@ -167,12 +423,17 @@ CTL_DOOM.WEAPON_PREF_CHOICES =
 
 
 function CTL_DOOM.weapon_setup(self)
-  for name,opt in pairs(self.options) do
-    local W = GAME.WEAPONS[name]
 
-    if W and opt.value ~= "default" then
-      W.add_prob = CTL_DOOM.WEAPON_PROBS[opt.value]
-      W.pref     = CTL_DOOM.WEAPON_PREFS[opt.value]
+  for _,opt in pairs(self.options) do
+    if opt.valuator and opt.valuator == "slider" then
+      PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name) 
+    end
+
+    local W = GAME.WEAPONS[string.sub(opt.name, 7)] -- Strip the float_ prefix from the weapon name for table lookup
+
+    if W and PARAM[opt.name] ~= -0.02 then
+      W.add_prob = PARAM[opt.name] * 100
+      W.pref     = W.add_prob * 0.28 + 1 -- Complete guesswork right now - Dasho
 
       -- loosen some of the normal restrictions
       W.level = 1
@@ -206,6 +467,9 @@ end
 
 OB_MODULES["doom_weapon_control"] =
 {
+
+  name = "doom_weapon_control",
+
   label = _("Doom Weapon Control"),
 
   game = "doomish",
@@ -218,12 +482,119 @@ OB_MODULES["doom_weapon_control"] =
 
   options =
   {
-    shotty   = { label=_("Shotgun"),         choices=CTL_DOOM.WEAPON_CHOICES },
-    super    = { label=_("Super Shotgun"),   choices=CTL_DOOM.WEAPON_CHOICES, gap = 1 },
-    chain    = { label=_("Chaingun"),        choices=CTL_DOOM.WEAPON_CHOICES },
-    launch   = { label=_("Rocket Launcher"), choices=CTL_DOOM.WEAPON_CHOICES },
-    plasma   = { label=_("Plasma Rifle"),    choices=CTL_DOOM.WEAPON_CHOICES },
-    bfg      = { label=_("BFG"),             choices=CTL_DOOM.WEAPON_CHOICES },
+     float_shotty=
+     {
+      label = _("Shotgun"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_super=
+     {
+      label = _("Super Shotgun"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },  
+
+     float_chain=
+     {
+      label = _("Chaingun"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_launch=
+     {
+      label = _("Rocket Launcher"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_plasma=
+     {
+      label = _("Plasma Rifle"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_bfg=
+     {
+      label = _("Health Bonus"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
 
     weapon_prefs =
     {
@@ -245,9 +616,14 @@ OB_MODULES["doom_weapon_control"] =
 
 function CTL_DOOM.item_setup(self)
 
+  for _,opt in pairs(self.options) do
+    local param_name = string.gsub(opt.name, "float_", "") 
+    PARAM[param_name] = gui.get_module_slider_value(self.name, opt.name) -- They are all sliders in this case
+  end
+
   local function change_probz(name, info)
-    if self.options[name] and self.options[name].value ~= "default" then
-      local mult = (CTL_DOOM.WEAPON_PROBS[self.options[name].value] * 0.01)
+    if PARAM[name] ~= -0.02 then
+      local mult = PARAM[name] or 0
 
       if info.add_prob then info.add_prob = info.add_prob * mult end
       if info.start_prob then info.start_prob = info.start_prob * mult end
@@ -269,6 +645,9 @@ end
 
 OB_MODULES["doom_item_control"] =
 {
+
+  name = "doom_item_control",
+
   label = _("Doom Item Control"),
 
   game = "doomish",
@@ -281,31 +660,446 @@ OB_MODULES["doom_item_control"] =
 
   options =
   {
-    potion = { label=_("Health Bonus"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 100 },
-    stimpack = { label=_("Stimpack"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 99 },
-    medikit = { label=_("Medikit"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 98 },
-    helmet = { label=_("Armor Bonus"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 97, gap = 1 },
+     float_potion=
+     {
+      label = _("Health Bonus"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+     
+     float_stimpack=
+     {
+      label = _("Stimpack"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+     
+     float_medikit=
+     {
+      label = _("Medikit"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+     
+     float_helmet=
+     {
+      label = _("Armor Bonus"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },     
+
     -- nice items
-    green_armor = { label=_("Green Armor"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 96 },
-    blue_armor = { label=_("Blue Armor"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 95 },
-    soul = { label=_("Soulsphere"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 94 },
-    backpack = { label=_("Backpack"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 93 },
-    berserk = { label=_("Berserk Pack"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 92 },
-    invis = { label=_("Invisibility"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 91 },
-    invul = { label=_("Invulnerability"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 90 },
-    allmap = { label=_("Map Computer"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 89 },
-    goggles = { label=_("Light Goggles"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 88 },
-    radsuit = { label=_("Radiation Suit"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 87 },
-    mega = { label=_("Megasphere"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 86, gap = 1 },
+    
+     float_green_armor=
+     {
+      label = _("Green Armor"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_blue_armor=
+     {
+      label = _("Blue Armor"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_soul=
+     {
+      label = _("Soulsphere"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_backpack=
+     {
+      label = _("Backpack"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_berserk=
+     {
+      label = _("Berserk Pack"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_invis=
+     {
+      label = _("Invisibility"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+     
+     float_invul=
+     {
+      label = _("Invulnerability"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_allmap=
+     {
+      label = _("Map Computer"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_goggles=
+     {
+      label = _("Light Goggles"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_radsuit=
+     {
+      label = _("Radiation Suit"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_mega=
+     {
+      label = _("Megasphere"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
     -- ammo
-    bullets = { label=_("Clips"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 85,
-      tooltip = "Yes, it's supposed to be called 'Magazine', get over it." },
-    bullet_box = { label=_("Bullet Box"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 84 },
-    shells = { label=_("Shells"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 83 },
-    shell_box = { label=_("Shell Box"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 82 },
-    rocket = { label=_("Rocket"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 81 },
-    rocket_box = { label=_("Rocket Box"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 80 },
-    cells = { label=_("Cell"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 79 },
-    cell_pack = { label=_("Cell Pack"), choices=CTL_DOOM.WEAPON_CHOICES, priority = 78 },
+    
+     float_bullets=
+     {
+      label = _("Clips"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+      tooltip = "Yes, it's supposed to be called 'Magazine', get over it."
+     },
+
+     float_bullet_box=
+     {
+      label = _("Bullet Box"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_shells=
+     {
+      label = _("Shells"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_shell_box=
+     {
+      label = _("Shell Box"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_rocket=
+     {
+      label = _("Rocket"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_rocket_box=
+     {
+      label = _("Rocket Box"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_cells=
+     {
+      label = _("Cell"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+
+     float_cell_pack=
+     {
+      label = _("Cell Pack"),
+      valuator = "slider",
+      units = "",
+      min = -.02,
+      max = 10,
+      increment = .02,
+      default = -.02, 
+      nan = "-.02:Default," ..
+      "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     }
   },
 }

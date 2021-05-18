@@ -463,6 +463,63 @@ Texture "COMPYELL", 64, 128
   }
 }
 
+// Composites based on Vol. 3
+WallTexture "DECO1RED", 64, 128
+{
+	Patch "DECO1GRY", 0, 0
+	{
+		Blend "#FF0000"
+	}
+}
+
+WallTexture "DECO1GRN", 64, 128
+{
+	Patch "DECO1GRY", 0, 0
+	{
+		Blend "#20FF18"
+	}
+}
+
+WallTexture "DECO1TAN", 64, 128
+{
+	Patch "DECO1GRY", 0, 0
+	{
+		Blend "#FFAC04"
+	}
+}
+
+WallTexture "DECO1BRN", 64, 128
+{
+	Patch "DECO1GRY", 0, 0
+	{
+		Blend "#675333"
+	}
+}
+
+WallTexture "BRIC9GRN", 128, 128
+{
+	Patch "BRIC9GRY", 0, 0
+	{
+		Blend "#439337"
+	}
+}
+
+WallTexture "BRIC9TAN", 128, 128
+{
+	Patch "BRIC9GRY", 0, 0
+	{
+		Blend "#AF7B1F"
+	}
+}
+
+WallTexture "BRICEGRN", 128, 128
+{
+	Patch "BRICEGRY", 0, 0
+	{
+		Blend "#77FF6F"
+	}
+}
+
 // MSSP texture composites
 Texture "OBTSTX1B", 128, 128
 {
@@ -512,7 +569,7 @@ Texture "OBTBSB5B", 256, 128
 	}
 }
 
-Texture "OBTSBF1B", 128, 128
+Texture "OBTSBF1B", 64, 64
 {
 	Patch "OBTSVBF1", 0, 0
 	{
@@ -520,7 +577,7 @@ Texture "OBTSBF1B", 128, 128
 	}
 }
 
-Texture "OBTSBF2B", 128, 128
+Texture "OBTSBF2B", 64, 64
 {
 	Patch "OBTSVBF2", 0, 0
 	{
@@ -528,7 +585,7 @@ Texture "OBTSBF2B", 128, 128
 	}
 }
 
-Texture "OBTSBF3B", 128, 128
+Texture "OBTSBF3B", 64, 64
 {
 	Patch "OBTSVBF3", 0, 0
 	{
@@ -536,7 +593,7 @@ Texture "OBTSBF3B", 128, 128
 	}
 }
 
-Texture "OBTSBF1R", 128, 128
+Texture "OBTSBF1R", 64, 64
 {
 	Patch "OBTSVBF1", 0, 0
 	{
@@ -544,7 +601,7 @@ Texture "OBTSBF1R", 128, 128
 	}
 }
 
-Texture "OBTSBF2R", 128, 128
+Texture "OBTSBF2R", 64, 64
 {
 	Patch "OBTSVBF2", 0, 0
 	{
@@ -552,7 +609,7 @@ Texture "OBTSBF2R", 128, 128
 	}
 }
 
-Texture "OBTSBF3R", 128, 128
+Texture "OBTSBF3R", 64, 64
 {
 	Patch "OBTSVBF3", 0, 0
 	{
@@ -560,27 +617,27 @@ Texture "OBTSBF3R", 128, 128
 	}
 }
 
-Texture "G8_BR1GY", 128, 128
+Texture "OBTBCMR1", 128, 128
 {
-	Patch "G8_BRNW1", 0, 0
+	Patch "OBTBCEM1", 0, 0
 	{
-		Translation "0:255=#[128,128,128]"
+		Blend "#B52020"
 	}
 }
 
-Texture "G8_BR2GY", 128, 128
+Texture "OBTBCMR2", 128, 128
 {
-	Patch "G8_BRNW2", 0, 0
+	Patch "OBTBCEM2", 0, 0
 	{
-		Translation "0:255=#[128,128,128]"
+		Blend "#B52020"
 	}
 }
 
-Texture "G8_BR3GY", 128, 128
+Texture "OBTBCMR3", 128, 128
 {
-	Patch "G8_BRNW3", 0, 0
+	Patch "OBTBCEM3", 0, 0
 	{
-		Translation "0:255=#[128,128,128]"
+		Blend "#B52020"
 	}
 }
 ]]

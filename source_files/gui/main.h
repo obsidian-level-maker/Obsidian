@@ -22,10 +22,11 @@
 #define __OBLIGE_MAIN_H__
 
 #include <cstddef>
+#include "hdr_fltk.h"
 #define OBSIDIAN_TITLE "OBSIDIAN Level Maker"
 
-#define OBSIDIAN_VERSION "Beta 17"
-#define OBSIDIAN_HEX_VER 0x011
+#define OBSIDIAN_VERSION "Beta 19 Preview"
+#define OBSIDIAN_HEX_VER 0x013
 #define OBSIDIAN_WEBSITE "https://github.com/GTD-Carthage/Oblige"
 
 #define CONFIG_FILENAME "CONFIG.txt"
@@ -55,9 +56,30 @@ typedef enum {
 extern int main_action;
 
 // Misc Options
-extern int window_size;  // 0 = Auto, 1 = Tiny ... 5 = Huge
-extern bool alternate_look;
-extern bool wheel_can_bump;
+extern uchar text_red;
+extern uchar text_green;
+extern uchar text_blue;
+extern uchar bg_red;
+extern uchar bg_green;
+extern uchar bg_blue;
+extern uchar bg2_red;
+extern uchar bg2_green;
+extern uchar bg2_blue;
+extern Fl_Boxtype box_style;
+extern Fl_Boxtype button_style;
+extern Fl_Font font_style;
+extern Fl_Color FONT_COLOR;
+extern Fl_Color WINDOW_BG;
+extern Fl_Color SELECTION;
+extern int color_scheme;
+extern int font_theme;
+extern int box_theme;
+extern int button_theme;
+extern int widget_theme;
+extern int window_scaling;  // 0 = Auto, 1 = Tiny ... 5 = Huge
+extern int font_scaling;
+extern int num_fonts;
+extern bool single_pane;
 
 extern bool create_backups;
 extern bool overwrite_warning;

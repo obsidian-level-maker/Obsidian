@@ -1397,7 +1397,7 @@ function Room_make_windows(A1, A2)
   end]]
 
   -- remove windows into quiet start rooms... but not on procedural gotchas
-  if OB_CONFIG.quiet_start == "yes" and not LEVEL.is_procedural_gotcha then
+  if PARAM.bool_quiet_start == 1 and not LEVEL.is_procedural_gotcha then
     if A1.room and A1.room.is_start then
       if A2.room then return end
     end
@@ -1557,12 +1557,11 @@ function Room_border_up()
 
 
   local function can_porch_wall(A1, A2)
-    if (A1.mode == "floor"
-    and A2.mode ~= "floor")
-    or (A1.mode ~= "floor"
-    and A2.mode == "floor") then
+    if (A1.mode == "floor" and A2.mode ~= "floor")
+    or (A1.mode ~= "floor" and A2.mode == "floor") then
       return false
     end
+
     return true
   end
 
@@ -1720,7 +1719,7 @@ function Room_border_up()
     end
 
 
-    -- the same room --
+    -- the same room / room to room --
 
     if A1.room == A2.room then
 
@@ -2124,8 +2123,8 @@ function Room_choose_size(R, not_big)
   -- some extra size experiments - should be revised for
   -- more direct control. In fact, maybe this whole size
   -- decision code could use a clean-up
-  if (R.is_start and PARAM.start_room_size
-  and PARAM.start_room_size == "on")
+  if (R.is_start and PARAM.bool_start_room_size
+  and PARAM.bool_start_room_size == 1)
   or not R.is_secret then
     if LEVEL.size_multiplier then
       sum = sum * LEVEL.size_multiplier
@@ -2224,8 +2223,8 @@ function Room_choose_size(R, not_big)
 
   end
 
-  if (R.is_start and PARAM.start_room_size
-  and PARAM.start_room_size == "on")
+  if (R.is_start and PARAM.bool_start_room_size
+  and PARAM.bool_start_room_size == 1)
   or not R.is_secret then
     if LEVEL.area_multiplier then
       R.floor_limit = int(R.floor_limit * LEVEL.area_multiplier)
@@ -2251,7 +2250,7 @@ function Room_choose_size(R, not_big)
       R.is_big = true
 
       -- extra code for single-room gotchas
-      if PARAM.boss_gen then
+      if PARAM.bool_boss_gen == 1 then
         R.size_limit = LEVEL.map_W * 20
       end
     end

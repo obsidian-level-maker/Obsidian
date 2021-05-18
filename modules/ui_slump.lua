@@ -43,11 +43,11 @@ OB_MODULES["ui_slump_arch"] =
       label=_("Level Size"),
       valuator = "slider",
       units = " Rooms",
-      min = 2,
+      min = 1,
       max = 37,
       increment = 1,
       default = 15,
-      nan = "",
+      nan = "1:Mix It Up,",
       tooltip = "Minimum number of rooms per level."
     },
 
@@ -110,7 +110,7 @@ OB_MODULES["ui_slump_mons"] =
 {
   label = _("SLUMP Monsters"),
 
-  side = "right",
+  side = "left",
   priority = 104,
   engine = "vanilla",
 

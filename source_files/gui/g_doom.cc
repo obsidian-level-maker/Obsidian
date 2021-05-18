@@ -37,6 +37,7 @@
 #include "m_lua.h"
 #include "main.h"
 #include "q_common.h"  // qLump_c
+#include "twister.h"
 
 // SLUMP for Vanilla Doom
 #include "slump_main.h"
@@ -72,6 +73,7 @@ int build_nodes;
 int build_reject;
 std::string levelcount;
 std::string monvariety;
+std::string current_game;
 
 static bool UDMF_mode;
 
@@ -110,7 +112,7 @@ static const char *section_markers[NUM_SECTIONS][2] = {
 int Slump_MakeWAD(const char* filename) {
 	s_config slump_config;
 	slump_config.outfile = (char *)filename;
-	levelcount = main_win->game_box->length->GetID();
+	levelcount = main_win->game_box->length->mod_menu->GetID();
 	if (levelcount == "single") {
 		slump_config.levelcount = 1;	
 	} else if (levelcount == "few") {
@@ -120,32 +122,49 @@ int Slump_MakeWAD(const char* filename) {
 	} else {
 		slump_config.levelcount = 32; // "Full Game"
 	}
-	slump_config.minrooms = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_minrooms")->value();
+	current_game = main_win->game_box->game->mod_menu->GetID();
+	if (current_game == "doom1" || current_game == "ultdoom") {
+		slump_config.gamemask = DOOM1_BIT;
+		slump_config.map = 0;
+		slump_config.episode = 1;
+		slump_config.mission = 1;
+	} else {
+		slump_config.gamemask = DOOM2_BIT;
+		slump_config.map = 1;
+		slump_config.episode = 0;
+		slump_config.mission = 0;
+	}	
+	int minrooms = (int)main_win->left_mods->FindID("ui_slump_arch")
+							->FindSliderOpt("float_minrooms")->mod_slider->value();
+	if (minrooms == 1) {
+		slump_config.minrooms = twister_Between(2, 37);
+	} else {
+		slump_config.minrooms = minrooms;
+	}
 	slump_config.p_bigify = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_bigify")->value();
+							->FindSliderOpt("float_bigify")->mod_slider->value();
 	slump_config.forkiness = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_forkiness")->value();
+							->FindSliderOpt("float_forkiness")->mod_slider->value();
 	if (main_win->left_mods->FindID("ui_slump_arch")
-							->FindButtonOpt("bool_dm_starts")->value()) {
+							->FindButtonOpt("bool_dm_starts")->mod_check->value()) {
 		slump_config.do_dm = 1;
 	} else {
 		slump_config.do_dm = 0;
 	}
 	if (main_win->left_mods->FindID("ui_slump_arch")
-							->FindButtonOpt("bool_major_nukage")->value()) {
+							->FindButtonOpt("bool_major_nukage")->mod_check->value()) {
 		slump_config.major_nukage = SLUMP_TRUE;
 	} else {
 		slump_config.major_nukage = SLUMP_FALSE;
 	}
 	if (main_win->left_mods->FindID("ui_slump_arch")
-							->FindButtonOpt("bool_immediate_monsters")->value()) {
+							->FindButtonOpt("bool_immediate_monsters")->mod_check->value()) {
 		slump_config.immediate_monsters = SLUMP_FALSE;
 	} else {
 		slump_config.immediate_monsters = rollpercent(20);
 	}
-	monvariety = main_win->right_mods->FindID("ui_slump_mons")
-							->FindOpt("slump_mons")->GetID();
+	monvariety = main_win->left_mods->FindID("ui_slump_mons")
+							->FindOpt("slump_mons")->mod_menu->GetID();
 	if (monvariety == "normal") {
 		slump_config.required_monster_bits = 0;
 		slump_config.forbidden_monster_bits = SPECIAL;
@@ -823,20 +842,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
     LogPrintf("\n");
 
     zdbsp_options options;
-    if (current_engine == "vanilla") {
-        options.build_nodes = true;
-        options.build_gl_nodes = false;
-        options.build_gl_only = false;
-        if (build_reject) {
-            options.reject_mode = ERM_Rebuild_NoGL;
-        } else {
-            options.reject_mode = ERM_CreateZeroes;
-        }
-        options.check_polyobjs = false;
-        options.compress_nodes = false;
-        options.compress_gl_nodes = false;
-        options.force_compression = false;
-    } else if (current_engine == "nolimit" || current_engine == "boom") {
+    if (current_engine == "vanilla" || current_engine == "nolimit" || current_engine == "boom") {
         options.build_nodes = true;
         options.build_gl_nodes = false;
         options.build_gl_only = false;
@@ -875,6 +881,44 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.compress_nodes = true;
         options.compress_gl_nodes = false;
         options.force_compression = true;
+    } else if (current_engine == "doomsday") {
+    	if (!build_nodes) {
+		    LogPrintf("Skipping nodes per user selection...\n");
+		    FileRename(filename, out_name);
+		    return true;
+		}
+        options.build_nodes = true;     	
+        options.build_gl_nodes = true;
+        options.build_gl_only = true;
+        if (build_reject) {
+            options.reject_mode = ERM_Rebuild;
+        } else {
+            options.reject_mode = ERM_DontTouch;
+        }
+        options.check_polyobjs = true;
+        options.compress_nodes = true;
+        options.compress_gl_nodes = false;
+        options.force_compression = false;
+    } else if (current_engine == "edge") {
+    	if (!UDMF_mode) {
+    		if (!build_nodes) {
+			    LogPrintf("Skipping nodes per user selection...\n");
+		        FileRename(filename, out_name);
+		        return true;
+		     }
+        }
+        options.build_nodes = true;     	
+        options.build_gl_nodes = true;
+        options.build_gl_only = true;
+        if (build_reject) {
+            options.reject_mode = ERM_Rebuild;
+        } else {
+            options.reject_mode = ERM_DontTouch;
+        }
+        options.check_polyobjs = true;
+        options.compress_nodes = true;
+        options.compress_gl_nodes = false;
+        options.force_compression = false;
     } else if (current_engine == "zdoom") {
         if (!build_nodes) {
             LogPrintf("Skipping nodes per user selection...\n");
@@ -951,11 +995,11 @@ bool doom_game_interface_c::Start(const char *preset) {
 
     // Need to preempt the rest of this process if we are using Vanilla Doom
     if (main_win) {
-        current_engine = main_win->game_box->engine->GetID();
+        current_engine = main_win->game_box->engine->mod_menu->GetID();
         if (current_engine == "vanilla") {
             build_reject = main_win->left_mods->FindID("ui_reject_options")
                            ->FindButtonOpt("bool_build_reject")
-                           ->value();
+                           ->mod_check->value();
             if (Slump_MakeWAD(filename) == 0) {
                 return true;
             } else {
@@ -970,25 +1014,33 @@ bool doom_game_interface_c::Start(const char *preset) {
     }
 
     if (main_win) {
-        main_win->build_box->name_disp->copy_label(FindBaseName(filename));
-        main_win->build_box->name_disp->redraw();
         main_win->build_box->Prog_Init(20, N_("CSG"));
-        if (current_engine == "zdoom") {
-            build_reject = main_win->left_mods->FindID("ui_zdoom_map_options")
-                               ->FindButtonOpt("bool_build_reject_zdoom")
-                               ->value();
+        if (current_engine == "zdoom" || current_engine == "edge") {
+            build_reject = main_win->left_mods->FindID("ui_udmf_map_options")
+                               ->FindButtonOpt("bool_build_reject_udmf")
+                               ->mod_check->value();
+		    map_format = main_win->left_mods->FindID("ui_udmf_map_options")
+		                     ->FindOpt("map_format")
+		                     ->mod_menu->GetID();
+		    build_nodes = main_win->left_mods->FindID("ui_udmf_map_options")
+		                      ->FindButtonOpt("bool_build_nodes_udmf")
+		                      ->mod_check->value();
+        } else if (current_engine == "doomsday") {
+            build_reject = main_win->left_mods->FindID("ui_doomsday_map_options")
+                               ->FindButtonOpt("bool_build_reject_doomsday")
+                               ->mod_check->value();
+		    map_format = "binary";
+		    build_nodes = main_win->left_mods->FindID("ui_doomsday_map_options")
+		                      ->FindButtonOpt("bool_build_nodes_doomsday")
+		                      ->mod_check->value();
         } else {
             build_reject = main_win->left_mods->FindID("ui_reject_options")
                                ->FindButtonOpt("bool_build_reject")
-                               ->value();
+                               ->mod_check->value();
+            map_format = "binary";
+            build_nodes = true;
         }
-        map_format = main_win->left_mods->FindID("ui_zdoom_map_options")
-                         ->FindOpt("map_format")
-                         ->GetID();
-        build_nodes = main_win->left_mods->FindID("ui_zdoom_map_options")
-                          ->FindButtonOpt("bool_build_nodes")
-                          ->value();
-        if (current_engine == "zdoom" && map_format == "udmf") {
+        if (map_format == "udmf") {
             UDMF_mode = true;
         } else {
             UDMF_mode = false;
@@ -1053,8 +1105,8 @@ void doom_game_interface_c::Property(const char *key, const char *value) {
     if (StringCaseCmp(key, "level_name") == 0) {
         level_name = StringDup(value);
     } else if (StringCaseCmp(key, "description") == 0) {
-        // ignored (for now)
-        // [another mechanism sets the description via BEX/DDF]
+        main_win->build_box->name_disp->copy_label(value);
+        main_win->build_box->name_disp->redraw();
     } else if (StringCaseCmp(key, "sub_format") == 0) {
         if (StringCaseCmp(value, "doom") == 0) {
             dm_sub_format = 0;

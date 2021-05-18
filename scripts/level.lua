@@ -150,9 +150,15 @@ function Level_determine_map_size(LEV)
   -- Since we have other sizes and Auto-Detail, we can have these bigger sizes
   -- now. -Armaetus, July 9th, 2019,
 
-  local ob_size = gui.get_module_slider_value("ui_arch", "float_size")
+  local ob_size = PARAM.float_size
 
   local W, H
+
+  if LEV.custom_size then
+    ob_size = LEV.custom_size
+    W = ob_size
+    goto continue
+  end
 
   -- there is no real "progression" when making a single level.
   -- hence use the average size instead.
@@ -169,27 +175,18 @@ function Level_determine_map_size(LEV)
   if ob_size == 7 then
 
     local result_skew = 1.0
-    local low = 10
-    local high = 75
+    local low = PARAM.float_level_lower_bound or 10
+    local high = PARAM.float_level_upper_bound or 75
 
-    if PARAM.level_size_bias then
-      if PARAM.level_size_bias == "small" then
+    if OB_CONFIG.level_size_bias then
+      if OB_CONFIG.level_size_bias == "small" then
         result_skew = .80
-      elseif PARAM.level_size_bias == "large" then
+      elseif OB_CONFIG.level_size_bias == "large" then
         result_skew = 1.20
       end
     end
-
-    -- Level Control fine tune for Mix It Up
-    if PARAM.level_upper_bound then
-      high = gui.get_module_slider_value("level_control", "level_upper_bound")
-    end
-
-    if PARAM.level_lower_bound then
-      low = gui.get_module_slider_value("level_control", "level_lower_bound")
-    end
     
-    ob_size = math.clamp(10, int(gui.random_between(low, high) * result_skew), 75)
+    ob_size = math.clamp(10, int(rand.irange(low, high) * result_skew), 75)
   end
 
   if ob_size == 8 or ob_size == 9 then
@@ -198,8 +195,8 @@ function Level_determine_map_size(LEV)
 
     local ramp_factor = 0.66
 
-    if PARAM.level_size_ramp_factor then
-      ramp_factor = tonumber(PARAM.level_size_ramp_factor)
+    if OB_CONFIG.level_size_ramp_factor then
+      ramp_factor = tonumber(OB_CONFIG.level_size_ramp_factor)
     end
 
     local along = LEV.game_along ^ ramp_factor
@@ -211,13 +208,8 @@ function Level_determine_map_size(LEV)
     -- Level Control fine tune for Prog/Epi
 
     -- default when Level Control is off: ramp from "small" --> "large",
-    local def_small = 22
-    local def_large = 24
-
-    if PARAM.level_upper_bound then
-      def_small = gui.get_module_slider_value("level_control", "level_lower_bound")
-      def_large = gui.get_module_slider_value("level_control", "level_upper_bound") - def_small
-    end
+    local def_small = PARAM.float_level_lower_bound or 30
+    local def_large = PARAM.float_level_upper_bound - def_small or 42
 
     -- this basically ramps up
     W = int(def_small + along * def_large)
@@ -227,6 +219,8 @@ function Level_determine_map_size(LEV)
 
     W = ob_size
   end
+
+  ::continue::
 
   if not W then
     error("Invalid value for size : " .. tostring(ob_size))
@@ -250,7 +244,7 @@ function Episode_determine_map_sizes()
       if PARAM.gotcha_map_size then
         W = PROC_GOTCHA_MAP_SIZES[PARAM.gotcha_map_size]
       end
-      if PARAM.boss_gen then W = 16 end
+      if PARAM.bool_boss_gen == 1 then W = 16 end
       H = W
     end
 
@@ -439,15 +433,19 @@ function Episode_plan_monsters()
 
 
   local function calc_monster_level(LEV)
-    if OB_CONFIG.strength == "crazy" then
-      LEV.monster_level = 12
+  
+    local mon_strength = PARAM.float_strength
+  
+    if mon_strength == 12 then
+      LEV.monster_level = mon_strength
       return
     end
 
     local mon_along = LEV.game_along
+    local ramp_up = PARAM.float_ramp_up
 
     -- this is for Doom 1 / Ultimate Doom / Heretic
-    if PARAM.episodic_monsters or OB_CONFIG.ramp_up == "epi" then
+    if PARAM.episodic_monsters or ramp_up == 0.45 then
       mon_along = (LEV.ep_along + LEV.game_along) / 2
     end
 
@@ -469,12 +467,18 @@ function Episode_plan_monsters()
     -- apply the user Ramp-up setting
     -- [ and some tweaks for the Strength setting ]
 
-    local factor = RAMP_UP_FACTORS[OB_CONFIG.ramp_up] or 1.0
+    local factor
+
+    if ramp_up > 0.45 then
+      factor = ramp_up
+    else
+      factor = 1.0
+    end
 
     mon_along = mon_along * factor
 
-    if OB_CONFIG.strength == "harder" then mon_along = mon_along + 0.1 end
-    if OB_CONFIG.strength == "tough"  then mon_along = mon_along + 0.2 end
+    -- New adjustments for Monster Strength slider...may need to tune
+    mon_along = mon_along + (mon_strength / 10)
 
     mon_along = 1.0 + (PARAM.mon_along_factor or 8.0) * mon_along
 
@@ -484,7 +488,7 @@ function Episode_plan_monsters()
     if LEV.is_procedural_gotcha then
       local gotcha_strength = 2
 
-      if PARAM.boss_gen then
+      if PARAM.bool_boss_gen == 1 then
         if PARAM.boss_gen_reinforce == "weaker" then
           gotcha_strength = math.max(8, mon_along * 0.9) * -1
         elseif PARAM.boss_gen_reinforce == "default" then
@@ -496,8 +500,8 @@ function Episode_plan_monsters()
         elseif PARAM.boss_gen_reinforce == "nightmare" then
           gotcha_strength = 16
         end
-      elseif PARAM.gotcha_strength then
-        gotcha_strength = PROC_GOTCHA_STRENGTH_LEVEL[PARAM.gotcha_strength]
+      elseif PARAM.float_gotcha_strength then
+        gotcha_strength = PARAM.float_gotcha_strength
       end
 
       LEV.monster_level = mon_along + gotcha_strength
@@ -519,7 +523,7 @@ function Episode_plan_monsters()
     if not info.theme then return true end
 
     -- anything goes in CRAZY mode
-    if OB_CONFIG.strength == "crazy" then return true end
+    if PARAM.float_strength == 12 then return true end
 
     return info.theme == LEV.theme_name
   end
@@ -610,7 +614,7 @@ function Episode_plan_monsters()
 
     for name,_ in pairs(LEV.seen_monsters) do
       local info = GAME.MONSTERS[name]
-      if not info.boss_type or OB_CONFIG.strength == "crazy" or LEV.is_procedural_gotcha then
+      if not info.boss_type or PARAM.float_strength == 12 or LEV.is_procedural_gotcha then
         LEV.global_pal[name] = 1
       elseif info.boss_type and OB_CONFIG.bossesnormal ~= "no" then
         if info.boss_type == "minor" then
@@ -663,7 +667,7 @@ function Episode_plan_monsters()
     local tab = {}
 
     for name,info in pairs(GAME.MONSTERS) do
-      if LEV.is_procedural_gotcha and PARAM.boss_gen then
+      if LEV.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
         local bprob = 80
         if PARAM.boss_gen_typelimit ~= "nolimit" then
           local boss_diff = PARAM.boss_gen_diff
@@ -719,7 +723,7 @@ function Episode_plan_monsters()
             bprob = 0
           end
         end
-        if gui.get_module_button_value("gzdoom_boss_gen", "bool_boss_gen_types") == 1 and info.prob == 0 then
+        if PARAM.bool_boss_gen_types == 1 and info.prob == 0 then
           bprob = 0
         end
         tab[name] = bprob
@@ -945,7 +949,7 @@ function Episode_plan_monsters()
     -- ensure first encounter with a boss only uses a single one
     count = math.min(count, 1 + (used_bosses[mon] or 0))
 
-    if LEV.is_procedural_gotcha and PARAM.boss_gen then
+    if LEV.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
       count = 1
     end
 
@@ -1025,7 +1029,7 @@ function Episode_plan_monsters()
 
       LEV.boss_quotas = { minor=0, nasty=0, tough=0 }
 
-      if LEV.is_procedural_gotcha and PARAM.boss_gen then
+      if LEV.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
         create_fight(LEV, "tough", 1)
         goto continue
       end
@@ -1033,13 +1037,13 @@ function Episode_plan_monsters()
       if LEV.prebuilt  then goto continue end
       if LEV.is_secret then goto continue end
 
-      if OB_CONFIG.strength == "crazy" then goto continue end
+      if PARAM.float_strength == 12 then goto continue end
       if OB_CONFIG.bosses   == "none"  then goto continue end
 
       pick_boss_quotas(LEV)
 
       -- hax for procedural gotchas
-      if LEV.is_procedural_gotcha and PARAM.gotcha_boss_fight == "yes" then
+      if LEV.is_procedural_gotcha and PARAM.bool_gotcha_boss_fight == 1 then
         if LEV.game_along <= 0.33 then
           if LEV.boss_quotas.minor < 1 then LEV.boss_quotas.minor = 1 end
         elseif LEV.game_along > 0.33 and LEV.game_along <= 0.66 then
@@ -1173,7 +1177,7 @@ function Episode_plan_weapons()
     end
 
     -- more as game progresses
-    if PARAM.pistol_starts then
+    if PARAM.bool_pistol_starts == 1 then
       quota = quota + math.clamp(0, LEV.game_along, 0.5) * 3.1
     else
       quota = quota + math.clamp(0, LEV.game_along, 0.5) * 6.1
@@ -1678,7 +1682,7 @@ function Episode_plan_weapons()
 
     -- prefer simpler weapons for start rooms
     -- [ except in crazy monsters mode, player may need a bigger weapon! ]
-    if is_start and OB_CONFIG.strength ~= "crazy" or LEV.is_procedural_gotcha ~= "true" then
+    if is_start and PARAM.float_strength < 12 or LEV.is_procedural_gotcha ~= "true" then
       if level <= 2 then prob = prob * 4 end
       if level == 3 then prob = prob * 2 end
 
@@ -2356,9 +2360,9 @@ function Level_choose_themes()
     theme = mostly_theme
   end
 
-  if PARAM.mixin_type == "mostly" then
+  if OB_CONFIG.mixin_type == "mostly" then
     do_mostly = true
-  elseif PARAM.mixin_type == "less" then
+  elseif OB_CONFIG.mixin_type == "less" then
     do_less = true
   end
 
@@ -2394,7 +2398,9 @@ end
 
 
 function Level_do_styles()
-  local style_tab = table.copy(GLOBAL_STYLE_LIST)
+  local style_tab
+
+  style_tab = table.copy(GLOBAL_STYLE_LIST)
 
   -- game, level and theme specific style_lists
   if GAME.STYLE_LIST then
@@ -2406,6 +2412,8 @@ function Level_do_styles()
   if THEME.style_list then
     table.merge(style_tab, THEME.style_list)
   end
+
+  ob_invoke_hook_with_table("override_level_style", style_tab, LEVEL.name)
 
   -- decide the values
   STYLE = {}
@@ -2443,7 +2451,7 @@ function Level_do_styles()
     STYLE.symmetry = "more"
     STYLE.teleporters = "none"
 
-    if PARAM.boss_gen then
+    if PARAM.bool_boss_gen == 1 then
       if PARAM.boss_gen_steepness then
 
         if PARAM.boss_gen_steepness == "mixed" then
@@ -2530,7 +2538,7 @@ function Level_choose_darkness()
 
   -- NOTE: this style is only set via the Level Control module
   -- MSSP: This can now be overriden (ignored) by the Sky Generator option.
-  if STYLE.darkness and PARAM.influence_map_darkness == "no" then
+  if STYLE.darkness and PARAM.bool_influence_map_darkness == 0 then
     prob = style_sel("darkness", 0, 15, 35, 100) -- 0, 15, 35, 97,
     --prob = style_sel("darkness", 0, 10, 30, 90) --Original
   end
@@ -2687,9 +2695,9 @@ function Level_build_it()
 
   Seed_init()
 
-  if PARAM.build_levels then
-    if PARAM.build_levels ~= "all" then
-      if LEVEL.id ~= tonumber(PARAM.build_levels) then return "nope" end
+  if PARAM.float_build_levels then
+    if PARAM.float_build_levels ~= 0 then
+      if LEVEL.id ~= PARAM.float_build_levels then return "nope" end
     end
   end
 
@@ -2864,7 +2872,7 @@ function Level_make_all()
 
   -- semi-supported games warning
   if OB_CONFIG.game ~= "doom2" then
-    if not PARAM.extra_games or gui.get_module_button_value("debugger", "bool_extra_games") == 0 then
+    if not PARAM.bool_extra_games or PARAM.bool_extra_games == 0 then
       error("Warning: ObAddon development is mostly focused " ..
     "on creating content for the Doom 2 game setting.\n\n" ..
     "As a consequence, other games available on the list are " ..

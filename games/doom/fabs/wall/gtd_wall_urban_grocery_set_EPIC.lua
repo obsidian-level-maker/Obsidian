@@ -26,7 +26,6 @@ PREFABS.Wall_urban_grocery_1 =
     DNSTOR04 = 5,
     DNSTOR05 = 5,
     DNSTOR06 = 12,
-    DNSTOR13 = 12
   }
 }
 
@@ -36,6 +35,8 @@ PREFABS.Wall_urban_grocery_2 =
   map = "MAP02",
 
   height = 129,
+
+  group = "gtd_grocery_2",
 
   bound_z2 = 129,
 
@@ -49,10 +50,22 @@ PREFABS.Wall_urban_grocery_2 =
   }
 }
 
-PREFABS.Wall_urban_grocery_plain =
+PREFABS.Wall_urban_grocery_anti_group =
 {
   template = "Wall_urban_grocery_1",
-  file = "wall/wall_16.wad",
+
+  stop_group = "yes",
+
+  prob = 25
+}
+
+PREFABS.Wall_urban_grocery_anti_group_2 =
+{
+  template = "Wall_urban_grocery_1",
+
+  group = "gtd_grocery_2",
+
+  stop_group = "yes",
 
   prob = 25
 }

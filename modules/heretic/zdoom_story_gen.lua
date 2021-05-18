@@ -32,7 +32,7 @@ function ZStoryGen_heretic_format_story_chunk(story_strings, info, store)
       info.demon_name = info.contributor_name
     end
 
-    if store and PARAM.boss_gen then
+    if store and PARAM.bool_boss_gen == 1 then
       local mcevil
       if string.find(story_strings, "_RAND_DEMON") then
         mcevil = info.demon_name
@@ -62,7 +62,7 @@ function ZStoryGen_heretic_format_story_chunk(story_strings, info, store)
 
   -- remove the spaces left behind by Lua's square bracket stuff.
   story_strings = string.gsub(story_strings, "  ", "")
-  if gui.get_module_button_value("debugger", "bool_print_story_strings") == 1 then
+  if PARAM.bool_print_story_strings == 1 then
     gui.printf(story_strings .. "\n\n")
   end
   story_strings = string.gsub(story_strings, "\n", " ")

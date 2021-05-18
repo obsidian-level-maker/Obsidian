@@ -1580,7 +1580,7 @@ function Quest_start_room()
 
   add_normal_start()
 
-  if PARAM.alt_starts then
+  if PARAM.bool_alt_starts == 1 then
     find_alternate_start()
   end
 end
@@ -2277,7 +2277,7 @@ function Quest_nice_items()
       if LEVEL.secret_weapon == name then return true end
 
       -- the weapon was given in an earlier map?
-      if not PARAM.pistol_starts and EPISODE.seen_weapons[name] then return true end
+      if PARAM.bool_pistol_starts == 0 and EPISODE.seen_weapons[name] then return true end
       ::continue::
     end
 
@@ -2604,7 +2604,7 @@ function Quest_nice_items()
   -- collect all the items we might use
   start_items = start_palette()
 
-  if OB_CONFIG.strength == "crazy" then
+  if PARAM.float_strength == 12 then
     normal_items = crazy_palette()
   else
     normal_items = normal_palette()
@@ -2928,8 +2928,8 @@ function Quest_room_themes()
   local function choose_building_themes()
     local building_tab = collect_usable_themes("building")
 
-    local single_room_theme_prob = int(PARAM.single_room_theme or 50)
-    local limit_wall_group_prob = int(PARAM.limit_wall_groups or 50)
+    local single_room_theme_prob = int(PARAM.float_single_room_theme or 50)
+    local limit_wall_group_prob = int(PARAM.float_limit_wall_groups or 50)
 
     if not rand.odds(single_room_theme_prob) then
       -- distribute room themes (vanilla Oblige behavior)
@@ -3052,7 +3052,7 @@ function Quest_room_themes()
       }
     )
 
-    if PARAM.dynamic_lights == "yes" then
+    if PARAM.bool_dynamic_lights == 1 then
       LEVEL.light_group = {}
 
       if light_grouping == "plain" then
@@ -3284,7 +3284,9 @@ function Quest_room_themes()
     local wg_tab = GAME.THEMES[next_theme].outdoor_wall_groups
 
     if wg_tab then
-      LEVEL.alt_outdoor_wall_group = rand.key_by_probs(wg_tab) or "PLAIN"
+      LEVEL.alt_outdoor_wall_group = rand.key_by_probs(wg_tab)
+    else
+      LEVEL.alt_outdoor_wall_group = "none"
     end
 
     if exit_room.is_outdoor and not exit_room.is_park then
@@ -3324,7 +3326,7 @@ function Quest_room_themes()
   choose_hallway_themes()
   choose_other_themes()
 
-  if PARAM.foreshadowing_exit and PARAM.foreshadowing_exit == "yes" then
+  if PARAM.bool_foreshadowing_exit and PARAM.bool_foreshadowing_exit == 1 then
     choose_exit_theme()
   end
 

@@ -35,6 +35,7 @@
 #include "m_lua.h"
 #include "m_trans.h"
 #include "twister.h"
+#include "tx_forge.h"
 
 #define TICKER_TIME 50 /* ms */
 
@@ -56,9 +57,30 @@ bool batch_mode = false;
 const char *batch_output_file = NULL;
 
 // options
-int window_size = 0; /* AUTO */
-bool alternate_look = false;
-bool wheel_can_bump = true;
+uchar text_red = 0;
+uchar text_green = 0;
+uchar text_blue = 0;
+uchar bg_red = 221;
+uchar bg_green = 221;
+uchar bg_blue = 221;
+uchar bg2_red = 62;
+uchar bg2_green = 61;
+uchar bg2_blue = 57;
+Fl_Color FONT_COLOR;
+Fl_Color SELECTION;
+Fl_Color WINDOW_BG;
+int color_scheme = 0;
+int font_theme = 0;
+Fl_Font font_style = FL_HELVETICA;
+int box_theme = 0;
+Fl_Boxtype box_style = FL_THIN_UP_BOX;
+int button_theme = 0;
+Fl_Boxtype button_style = FL_THIN_UP_BOX;
+int widget_theme = 0;
+bool single_pane = true;
+int window_scaling = 0;
+int font_scaling = 0;
+int num_fonts = 16; // FLTK built-in amount
 
 bool create_backups = true;
 bool overwrite_warning = true;
@@ -326,8 +348,8 @@ int Main_DetermineScaling() {
     }
 
     // user option setting
-    if (window_size > 0) {
-        return window_size - 2;
+    if (window_scaling > 0) {
+        return window_scaling - 2;
     }
 
     // automatic selection
@@ -344,17 +366,125 @@ int Main_DetermineScaling() {
     return 0;
 }
 
+void Main_DetermineFontScaling() {
+
+    switch(font_scaling) {
+    	case 0 : FL_NORMAL_SIZE = 18;
+    			 break;
+    	case 1 : FL_NORMAL_SIZE = 14;
+    			 break;
+    	case 2 : FL_NORMAL_SIZE = 16;
+    			 break;
+    	case 3 : FL_NORMAL_SIZE = 20;
+    			 break;
+    	case 4 : FL_NORMAL_SIZE = 22;
+    			 break;
+    	default : FL_NORMAL_SIZE = 18;
+    			  break;
+   }
+
+   small_font_size = FL_NORMAL_SIZE - 2;
+   header_font_size = FL_NORMAL_SIZE + 2;
+
+   fl_message_font(font_style, FL_NORMAL_SIZE + 2);
+   
+}
+
 void Main_SetupFLTK() {
-    Fl::visual(FL_DOUBLE | FL_RGB);
 
-    if (!alternate_look) {
-        Fl::background(221, 221, 221);
-        Fl::background2(255, 255, 255);
-        Fl::foreground(0, 0, 0);
-
-        Fl::scheme("gtk+");
+	// Add system fonts to FLTK font table
+	num_fonts = Fl::set_fonts(NULL);
+	
+    Fl::visual(FL_DOUBLE | FL_RGB);  
+    switch(color_scheme) {
+    	case 0 : Fl::background(221, 221, 221);
+    			 Fl::background2(221, 221, 221);
+    			 Fl::foreground(0, 0, 0);
+				 FONT_COLOR = fl_rgb_color(0, 0, 0);
+				 SELECTION = fl_rgb_color(62, 61, 57);
+				 WINDOW_BG = fl_rgb_color(221, 221, 221); 
+    			 break;
+    	case 1 : Fl::get_system_colors();
+    			 //I think there's a better way to do this part - Dasho
+				 FONT_COLOR = FL_FOREGROUND_COLOR;
+				 SELECTION = FL_BACKGROUND2_COLOR;
+				 WINDOW_BG = FL_BACKGROUND_COLOR;
+    			 break;
+    	case 2 : Fl::background(bg_red, bg_green, bg_blue);
+    			 Fl::background2(bg_red, bg_green, bg_blue);
+    			 Fl::foreground(text_red, text_green, text_blue);
+				 FONT_COLOR = fl_rgb_color(text_red, text_green, text_blue);
+				 SELECTION = fl_rgb_color(bg2_red, bg2_green, bg2_blue);
+				 WINDOW_BG = fl_rgb_color(bg_red, bg_green, bg_blue); 
+    			 break;
+    	// Shouldn't be reached, but still
+    	default : Fl::background(221, 221, 221);
+    			  Fl::background2(221, 221, 221);
+    			  Fl::foreground(0, 0, 0);
+				  FONT_COLOR = fl_rgb_color(0, 0, 0);
+				  SELECTION = fl_rgb_color(62, 61, 57);
+				  WINDOW_BG = fl_rgb_color(221, 221, 221); 
+    			  break;    			     			 
     }
-
+    if (color_scheme == 2) {
+    Fl::get_color(FONT_COLOR, text_red, text_green, text_blue); 
+    Fl::get_color(WINDOW_BG, bg_red, bg_green, bg_blue);     
+    Fl::get_color(SELECTION, bg2_red, bg2_green, bg2_blue);
+    }          	
+    switch(widget_theme) {
+    	case 0 : Fl::scheme("gtk+");
+    			 break;
+    	case 1 : Fl::scheme("gleam");
+    			 break;
+    	case 2 : Fl::scheme("base");
+    			 break;
+    	case 3 : Fl::scheme("plastic");
+    			 break;
+    	// Shouldn't be reached, but still
+    	default : Fl::scheme("gtk+");
+    			  break;    			     			 
+    }   
+    switch(box_theme) {
+    	case 0 : box_style = FL_THIN_UP_BOX;
+    			 break;
+    	case 1 : box_style = FL_SHADOW_BOX;
+    			 break;
+    	case 2 : box_style = FL_EMBOSSED_BOX;
+    			 break;
+    	case 3 : box_style = FL_ENGRAVED_BOX;
+    			 break;
+    	case 4 : box_style = FL_DOWN_BOX;
+    			 break;
+    	case 5 : box_style = FL_FLAT_BOX;
+    			 break;
+    	// Shouldn't be reached, but still
+    	default : box_style = FL_THIN_UP_BOX;
+    			  break;    			     			 
+    }    
+    switch(button_theme) {
+    	case 0 : button_style = FL_UP_BOX;
+    			 break;
+    	case 1 : button_style = FL_EMBOSSED_BOX;
+    			 break;
+    	case 2 : button_style = FL_ENGRAVED_BOX;
+    			 break;
+    	case 3 : button_style = FL_DOWN_BOX;
+    			 break;
+    	case 4 : button_style = FL_BORDER_BOX;
+    			 break;
+    	// Shouldn't be reached, but still
+    	default : button_style = FL_UP_BOX;
+    			  break;    			     			 
+    }
+    if (font_theme == 0) {
+   		font_style = FL_HELVETICA;	     			 
+    } else if (font_theme < num_fonts) { // In case the number of installed fonts is reduced between launches
+    	font_style = font_theme;
+    } else {
+    	// Fallback
+    	font_style = FL_HELVETICA;
+    }
+    
     screen_w = Fl::w();
     screen_h = Fl::h();
 
@@ -363,22 +493,7 @@ void Main_SetupFLTK() {
 #endif
 
     KF = Main_DetermineScaling();
-
-    // default font size for widgets
-    FL_NORMAL_SIZE = 14 + KF * 4;
-
-    small_font_size = 12 + KF * 3;
-    header_font_size = 16 + KF * 5;
-
-    fl_message_font(FL_HELVETICA, 16 + KF * 4);
-
-    if (KF < 0) {
-        FL_NORMAL_SIZE = 12;
-        small_font_size = 10;
-        header_font_size = 15;
-        fl_message_font(FL_HELVETICA, 12);
-    }
-
+    Main_DetermineFontScaling();
     // load icons for file chooser
 #ifndef WIN32
     Fl_File_Icon::load_system_icons();
@@ -502,7 +617,7 @@ void Main_SetSeed() {
 }
 
 static void Module_Defaults() {
-    ob_set_mod_option("small_spiderdemon", "self", "1");
+    //ob_set_mod_option("small_spiderdemon", "self", "1");
     ob_set_mod_option("sky_generator", "self", "1");
     ob_set_mod_option("music_swapper", "self", "1");
 }
@@ -552,8 +667,13 @@ bool Build_Cool_Shit() {
     if (main_win) {
         std::string label = "Seed: ";
         std::string seed = std::to_string(next_rand_seed);
-        main_win->build_box->seed_disp->copy_label(label.append(seed).c_str());
-        main_win->build_box->seed_disp->redraw();
+        if (main_win->build_box->string_seed != "") {
+		    main_win->build_box->seed_disp->copy_label(label.append(main_win->build_box->string_seed).c_str());
+		    main_win->build_box->seed_disp->redraw();      
+        } else {
+		    main_win->build_box->seed_disp->copy_label(label.append(seed).c_str());
+		    main_win->build_box->seed_disp->redraw();
+        }
         main_win->game_box->SetAbortButton(true);
         main_win->build_box->SetStatus(_("Preparing..."));
         main_win->Locked(true);
@@ -583,12 +703,17 @@ bool Build_Cool_Shit() {
         u32_t total_time = end_time - start_time;
 
         LogPrintf("\nTOTAL TIME: %1.2f seconds\n\n", total_time / 1000.0);
+        
+        if (main_win) {
+        	main_win->build_box->string_seed = "";
+        }
     } else {
         if (main_win) {
             main_win->build_box->seed_disp->copy_label("Seed: -");
             main_win->build_box->seed_disp->redraw();
             main_win->build_box->name_disp->copy_label("");
             main_win->build_box->name_disp->redraw();
+        	main_win->build_box->string_seed = "";
         }
     }
 
@@ -683,6 +808,8 @@ int main(int argc, char **argv) {
     twister_Init();
 
     Main_CalcNewSeed();
+    
+//	TX_TestSynth(next_rand_seed); - Fractal testing stuff
 
     VFS_InitAddons(argv[0]);
 
@@ -773,12 +900,11 @@ int main(int argc, char **argv) {
         char *argv[2];
         argv[0] = strdup("Obsidian.exe");
         argv[1] = NULL;
-
         main_win->show(1 /* argc */, argv);
     }
 
     // kill the stupid bright background of the "plastic" scheme
-    if (!alternate_look) {
+    if (widget_theme == 3) {
         delete Fl::scheme_bg_;
         Fl::scheme_bg_ = NULL;
 

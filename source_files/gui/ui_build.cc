@@ -24,14 +24,14 @@
 #include "lib_util.h"
 #include "main.h"
 
-#define PROGRESS_FG fl_color_cube(3, 3, 0)
-#define PROGRESS_BG fl_gray_ramp(10)
+#define PROGRESS_FG SELECTION
+#define PROGRESS_BG fl_darker(fl_darker(WINDOW_BG))
 
-#define NODE_PROGRESS_FG fl_color_cube(1, 4, 2)
+#define NODE_PROGRESS_FG SELECTION
 
 UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     : Fl_Group(X, Y, W, H, label) {
-    box(FL_THIN_UP_BOX);
+    box(box_style);
     tooltip(
         "Progress and minimap display.\nMinimap Legend:\nWhite - Regular "
         "rooms\nBrown - Caves\nBlue - Outdoors\nGreen - Parks");
@@ -53,20 +53,23 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     seed_disp->box(FL_NO_BOX);
     seed_disp->align(FL_ALIGN_INSIDE | FL_ALIGN_TOP_LEFT);
     seed_disp->labelcolor(FL_WHITE);
-    seed_disp->labelsize(seed_disp->labelsize() * .60);
+    seed_disp->labelsize(seed_disp->labelsize() * .80);
+    seed_disp->labelfont(font_style);
     seed_disp->copy_label("Seed: -");
 
     name_disp = new Fl_Box(X + (W * .10), cy, mini_w, mini_h);
     name_disp->box(FL_NO_BOX);
-    name_disp->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
+    name_disp->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT | FL_ALIGN_CLIP);
     name_disp->labelcolor(FL_WHITE);
-    name_disp->labelsize(name_disp->labelsize() * .60);
+    name_disp->labelfont(font_style);
+    name_disp->labelsize(name_disp->labelsize() * .80);
 
     cy += mini_map->h() + kf_h(6);
 
     status = new Fl_Box(FL_FLAT_BOX, X + pad, cy, W - pad * 2, kf_h(26),
                         _("Ready to go!"));
     status->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
+    status->labelfont(font_style);
 
     cy += status->h() + kf_h(6);
 
@@ -76,6 +79,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     progress->color(PROGRESS_BG, PROGRESS_BG);
     progress->value(0.0);
     progress->labelsize(FL_NORMAL_SIZE + 2);
+    progress->labelfont(font_style);
 
     cy = cy + progress->h() + kf_h(4);
 
@@ -202,8 +206,8 @@ void UI_Build::Prog_Init(int node_perc, const char *extra_steps) {
     progress->maximum(1.0);
 
     progress->value(0.0);
-    progress->color(FL_DARK3, PROGRESS_FG);
-    progress->labelcolor(FL_WHITE);
+    progress->color(PROGRESS_BG, PROGRESS_FG);
+    progress->labelcolor(fl_contrast(FONT_COLOR, PROGRESS_BG));
 }
 
 void UI_Build::Prog_Finish() {

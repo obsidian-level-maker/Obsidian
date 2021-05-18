@@ -51,16 +51,16 @@ choice_data_c::~choice_data_c() {
 
 //----------------------------------------------------------------
 
-UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label)
-    : Fl_Choice(x, y, w, h, label), opt_list() {}
+UI_RChoiceMenu::UI_RChoiceMenu(int x, int y, int w, int h, const char *label)
+    : UI_CustomMenu(x, y, w, h, label), opt_list() { visible_focus(0); labelfont(font_style); textfont(font_style); }
 
-UI_RChoice::~UI_RChoice() {
+UI_RChoiceMenu::~UI_RChoiceMenu() {
     for (unsigned int i = 0; i < opt_list.size(); i++) {
         delete opt_list[i];
     }
 }
 
-void UI_RChoice::AddChoice(const char *id, const char *label) {
+void UI_RChoiceMenu::AddChoice(const char *id, const char *label) {
     choice_data_c *opt = FindID(id);
 
     if (opt) {
@@ -80,7 +80,7 @@ void UI_RChoice::AddChoice(const char *id, const char *label) {
     }
 }
 
-bool UI_RChoice::EnableChoice(const char *id, bool enable_it) {
+bool UI_RChoiceMenu::EnableChoice(const char *id, bool enable_it) {
     SYS_ASSERT(id);
 
     choice_data_c *P = FindID(id);
@@ -97,19 +97,19 @@ bool UI_RChoice::EnableChoice(const char *id, bool enable_it) {
     return true;
 }
 
-const char *UI_RChoice::GetID() const {
+const char *UI_RChoiceMenu::GetID() const {
     choice_data_c *P = FindMapped();
 
     return P ? P->id : "";
 }
 
-const char *UI_RChoice::GetLabel() const {
+const char *UI_RChoiceMenu::GetLabel() const {
     choice_data_c *P = FindMapped();
 
     return P ? P->label : "";
 }
 
-bool UI_RChoice::ChangeTo(const char *id) {
+bool UI_RChoiceMenu::ChangeTo(const char *id) {
     SYS_ASSERT(id);
 
     choice_data_c *P = FindID(id);
@@ -125,7 +125,7 @@ bool UI_RChoice::ChangeTo(const char *id) {
 
 //----------------------------------------------------------------
 
-void UI_RChoice::Recreate() {
+void UI_RChoiceMenu::Recreate() {
     // recreate the choice list
 
     choice_data_c *LAST = FindMapped();
@@ -160,7 +160,7 @@ void UI_RChoice::Recreate() {
     value(0);
 }
 
-choice_data_c *UI_RChoice::FindID(const char *id) const {
+choice_data_c *UI_RChoiceMenu::FindID(const char *id) const {
     for (unsigned int j = 0; j < opt_list.size(); j++) {
         choice_data_c *P = opt_list[j];
 
@@ -172,7 +172,7 @@ choice_data_c *UI_RChoice::FindID(const char *id) const {
     return NULL;
 }
 
-choice_data_c *UI_RChoice::FindMapped() const {
+choice_data_c *UI_RChoiceMenu::FindMapped() const {
     for (unsigned int j = 0; j < opt_list.size(); j++) {
         choice_data_c *P = opt_list[j];
 
@@ -184,7 +184,7 @@ choice_data_c *UI_RChoice::FindMapped() const {
     return NULL;
 }
 
-void UI_RChoice::GotoPrevious() {
+void UI_RChoiceMenu::GotoPrevious() {
     int v = value();
 
     if (v > 0) {
@@ -201,7 +201,7 @@ void UI_RChoice::GotoPrevious() {
     }
 }
 
-void UI_RChoice::GotoNext() {
+void UI_RChoiceMenu::GotoNext() {
     int v = value();
     int last = size() - 2;
 
@@ -219,144 +219,290 @@ void UI_RChoice::GotoNext() {
     }
 }
 
-int UI_RChoice::handle(int event) {
-    if (wheel_can_bump && event == FL_MOUSEWHEEL && Fl::belowmouse() == this) {
-        if (Fl::event_dy() < 0) {
-            GotoPrevious();
-        } else if (Fl::event_dy() > 0) {
-            GotoNext();
-        }
+//----------------------------------------------------------------
 
-        return 1;  // eat it
-    }
+UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label)
+    : Fl_Group(x, y, w, h, label) { visible_focus(0); labelfont(font_style); }
 
-    return Fl_Choice::handle(event);
-}
+UI_RChoice::~UI_RChoice() {}
 
 //----------------------------------------------------------------
 
 UI_RSlide::UI_RSlide(int x, int y, int w, int h, const char *label)
-    : Fl_Hor_Slider(x, y, w, h, label), opt_list() { }
+    : Fl_Group(x, y, w, h, label) { visible_focus(0); labelfont(font_style); }
 
 UI_RSlide::~UI_RSlide() {}
 
 //----------------------------------------------------------------
 
 UI_RButton::UI_RButton(int x, int y, int w, int h, const char *label)
-    : Fl_Light_Button(x, y, w, h, label), opt_list() { visible_focus(0); box(FL_NO_BOX); }
+    : Fl_Group(x, y, w, h, label) { visible_focus(0); box(FL_NO_BOX); }
 
 UI_RButton::~UI_RButton() {}
 
-// Custom draw function to have right-aligned 'checkbox'
-void UI_RButton::draw() {
-  if (box()) draw_box(this==Fl::pushed() ? fl_down(box()) : box(), color());
-  Fl_Color col = value() ? (active_r() ? selection_color() :
-                            fl_inactive(selection_color())) : color();
+//----------------------------------------------------------------
 
-  int W  = labelsize();
-  int bx = Fl::box_dx(box());	// box frame width
-  int dx = bx + 2;		// relative position of check mark etc.
-  int dy = (h() - W) / 2;	// neg. offset o.k. for vertical centering
-  int lx = 0;			// relative label position (STR #3237)
+UI_CustomCheckBox::UI_CustomCheckBox(int x, int y, int w, int h, const char *label)
+    : Fl_Check_Button(x, y, w, h, label) { visible_focus(0); box(FL_NO_BOX); down_box(button_style); }
 
-  if (down_box()) {
-    // draw other down_box() styles:
-    switch (down_box()) {
-      case FL_DOWN_BOX :
-      case FL_UP_BOX :
-      case _FL_PLASTIC_DOWN_BOX :
-      case _FL_PLASTIC_UP_BOX :
-        // Check box...
-        draw_box(down_box(), x()+dx, y()+dy, W, W, FL_BACKGROUND2_COLOR);
-	if (value()) {
-	  if (Fl::is_scheme("gtk+")) {
-	    fl_color(FL_SELECTION_COLOR);
-	  } else {
-	    fl_color(col);
-	  }
-	  int tx = x() + dx + 3;
-	  int tw = W - 6;
-	  int d1 = tw/3;
-	  int d2 = tw-d1;
-	  int ty = y() + dy + (W+d2)/2-d1-2;
-	  for (int n = 0; n < 3; n++, ty++) {
-	    fl_line(tx, ty, tx+d1, ty+d1);
-	    fl_line(tx+d1, ty+d1, tx+tw-1, ty+d1-d2+1);
-	  }
+UI_CustomCheckBox::~UI_CustomCheckBox() {}
+
+// Custom draw function to use the checkmark style regardless of box type and respect custom colors
+void UI_CustomCheckBox::draw() {
+	if (box()) draw_box(this==Fl::pushed() ? fl_down(box()) : box(), color());
+	Fl_Color col = value() ? (active_r() ? selection_color() :
+		                      fl_inactive(selection_color())) : color();
+
+	int W  = labelsize();
+	int bx = Fl::box_dx(box());	// box frame width
+	int dx = bx + 2;		// relative position of check mark etc.
+	int dy = (h() - W) / 2;	// neg. offset o.k. for vertical centering
+	int lx = 0;			// relative label position (STR #3237)
+
+	draw_box(down_box(), x()+dx, y()+dy, W, W, FL_BACKGROUND2_COLOR);
+  	if (value()) {
+		fl_color(col);
+		int tx = x() + dx + 3;
+		int tw = W - 6;
+		int d1 = tw/3;
+		int d2 = tw-d1;
+		int ty = y() + dy + (W+d2)/2-d1-2;
+		for (int n = 0; n < 3; n++, ty++) {
+			fl_line(tx, ty, tx+d1, ty+d1);
+			fl_line(tx+d1, ty+d1, tx+tw-1, ty+d1-d2+1);
+		}
 	}
-        break;
-      case _FL_ROUND_DOWN_BOX :
-      case _FL_ROUND_UP_BOX :
-        // Radio button...
-        draw_box(down_box(), x()+dx, y()+dy, W, W, FL_BACKGROUND2_COLOR);
-	if (value()) {
-	  int tW = (W - Fl::box_dw(down_box())) / 2 + 1;
-	  if ((W - tW) & 1) tW++; // Make sure difference is even to center
-	  int tdx = dx + (W - tW) / 2;
-	  int tdy = dy + (W - tW) / 2;
+	lx = dx + W + 2;
+  	draw_label(x()+lx, y(), w()-lx-bx, h());
+  	if (Fl::focus() == this) draw_focus();
+}
 
-	  if (Fl::is_scheme("gtk+")) {
-	    fl_color(FL_SELECTION_COLOR);
-	    tW --;
-	    fl_pie(x() + tdx - 1, y() + tdy - 1, tW + 3, tW + 3, 0.0, 360.0);
-	    fl_color(fl_color_average(FL_WHITE, FL_SELECTION_COLOR, 0.2f));
-	  } else fl_color(col);
+//----------------------------------------------------------------
 
-	  switch (tW) {
-	    // Larger circles draw fine...
-	    default :
-              fl_pie(x() + tdx, y() + tdy, tW, tW, 0.0, 360.0);
-	      break;
+UI_CustomArrowButton::UI_CustomArrowButton(int x, int y, int w, int h, const char *label)
+    : Fl_Repeat_Button(x, y, w, h, label) { visible_focus(0); }
 
-            // Small circles don't draw well on many systems...
-	    case 6 :
-	      fl_rectf(x() + tdx + 2, y() + tdy, tW - 4, tW);
-	      fl_rectf(x() + tdx + 1, y() + tdy + 1, tW - 2, tW - 2);
-	      fl_rectf(x() + tdx, y() + tdy + 2, tW, tW - 4);
-	      break;
+UI_CustomArrowButton::~UI_CustomArrowButton() {}
 
-	    case 5 :
-	    case 4 :
-	    case 3 :
-	      fl_rectf(x() + tdx + 1, y() + tdy, tW - 2, tW);
-	      fl_rectf(x() + tdx, y() + tdy + 1, tW, tW - 2);
-	      break;
-
-	    case 2 :
-	    case 1 :
-	      fl_rectf(x() + tdx, y() + tdy, tW, tW);
-	      break;
-	  }
-
-	  if (Fl::is_scheme("gtk+")) {
-	    fl_color(fl_color_average(FL_WHITE, FL_SELECTION_COLOR, 0.5));
-	    fl_arc(x() + tdx, y() + tdy, tW + 1, tW + 1, 60.0, 180.0);
-	  }
-	}
-        break;
-      default :
-        draw_box(down_box(), x()+dx, y()+dy, W, W, col);
-        break;
-    }
-    lx = dx + W + 2;
-  } else {
-    // if down_box() is zero, draw light button style:
-    int hh = h()-2*dy - 2;
-    int ww = W/2+1;
-    int xx = dx;
-    if (w()<ww+2*xx) xx = (w()-ww)/2;
-    if (Fl::is_scheme("plastic")) {
-      col = active_r() ? selection_color() : fl_inactive(selection_color());
-      fl_color(value() ? col : fl_color_average(col, FL_BLACK, 0.5f));
-      fl_pie(x()+xx, y()+dy+1, ww, hh, 0, 360);
-    } else {
-      draw_box(FL_THIN_DOWN_BOX, x()+w()-W, y()+dy+1, hh, hh, col);
-    }
-    lx = dx + ww + 2;
-  }
-  draw_label(x(), y(), w()-lx-bx, h());
+void UI_CustomArrowButton::draw() {
+  if (type() == FL_HIDDEN_BUTTON) return;
+  Fl_Color col = value() ? selection_color() : color();
+  draw_box(value() ? (down_box()?down_box():fl_down(box())) : box(), col);
+  draw_backdrop();
+  draw_label();
   if (Fl::focus() == this) draw_focus();
 }
 
+//----------------------------------------------------------------
+
+UI_HelpLink::UI_HelpLink(int x, int y, int w, int h, const char *label)
+    : Fl_Button(x, y, w, h, label),
+      hover(false),
+      label_X(0),
+      label_Y(0),
+      label_W(0),
+      label_H(0) {
+    box(FL_NO_BOX);
+}
+
+UI_HelpLink::~UI_HelpLink() { }
+
+void UI_HelpLink::checkLink() {
+    // change the cursor if the mouse is over the link.
+    // the 'hover' variable reduces the number of times fl_cursor()
+    // needs to be called (since it can be expensive).
+
+    if (Fl::event_inside(x() + label_X, y() + label_Y, label_W, label_H)) {
+        if (!hover) {
+            fl_cursor(FL_CURSOR_HAND);
+        }
+
+        hover = true;
+    } else {
+        if (hover) {
+            fl_cursor(FL_CURSOR_DEFAULT);
+        }
+
+        hover = false;
+    }
+}
+
+int UI_HelpLink::handle(int event) {
+    if (!active_r()) {
+        return Fl_Button::handle(event);
+    }
+
+    switch (event) {
+        case FL_MOVE: {
+            checkLink();
+            return 1;
+        }
+
+        case FL_ENTER: {
+            checkLink();
+            return 1;
+        }
+
+        case FL_LEAVE: {
+            checkLink();
+            return 1;
+        }
+
+        default:
+            break;
+    }
+
+    return Fl_Button::handle(event);
+}
+
+void UI_HelpLink::draw() {
+    if (type() == FL_HIDDEN_BUTTON) {
+        return;
+    }
+
+    // determine where to draw the label
+
+    label_X = label_Y = label_W = label_H = 0;
+
+    fl_font(labelfont(), labelsize());
+    fl_measure(label(), label_W, label_H, 1);
+
+    if (align() & FL_ALIGN_LEFT) {
+        label_X = 2;
+    } else if (align() & FL_ALIGN_RIGHT) {
+        label_X = w() - label_W - 2;
+    } else {
+        label_X = (w() - label_W) / 2;
+    }
+
+    label_Y += h() / 2 - labelsize() / 2 - 2;
+
+    // draw the link text
+
+    fl_draw_box(box(), x(), y(), w(), h(), color());
+
+    fl_color(labelcolor());
+    fl_draw(label(), x() + label_X, y() + label_Y, label_W, label_H,
+            FL_ALIGN_LEFT);
+
+    // draw the underline
+
+    if (!value()) {
+        int yy = y() + label_Y + label_H - 2;
+
+        fl_line_style(FL_SOLID);
+        fl_line(x() + label_X, yy, x() + label_X + label_W, yy);
+        fl_line_style(0);
+    }
+
+    /*
+       if (Fl::focus() == this)
+       draw_focus();
+     */
+}
+
+//----------------------------------------------------------------
+
+UI_CustomMenu::UI_CustomMenu(int x, int y, int w, int h, const char *label)
+    : Fl_Choice(x, y, w, h, label) { visible_focus(0); }
+
+UI_CustomMenu::~UI_CustomMenu() {}
+
+// Custom draw function to use selected button style
+void UI_CustomMenu::draw() {
+  Fl_Boxtype btype = button_style;
+  
+  int dx = Fl::box_dx(btype);
+  int dy = Fl::box_dy(btype);
+
+  // Arrow area
+  int H = h() - 2 * dy;
+  int W = Fl::is_scheme("gtk+")    ? 20 :			// gtk+  -- fixed size
+          Fl::is_scheme("gleam")   ? 20 :			// gleam -- fixed size
+          Fl::is_scheme("plastic") ? ((H > 20) ? 20 : H)	// plastic: shrink if H<20
+                                   : ((H > 20) ? 20 : H);	// default: shrink if H<20
+  int X = x() + w() - W - dx;
+  int Y = y() + dy;
+
+  // Arrow object
+  int w1 = (W - 4) / 3; if (w1 < 1) w1 = 1;
+  int x1 = X + (W - 2 * w1 - 1) / 2;
+  int y1 = Y + (H - w1 - 1) / 2;
+
+  if (Fl::scheme()) {
+    // NON-DEFAULT SCHEME
+
+    // Draw widget box
+    draw_box(btype, color());
+
+    // Draw arrow area
+    fl_color(active_r() ? SELECTION : fl_inactive(SELECTION));
+    if (Fl::is_scheme("plastic")) {
+      // Show larger up/down arrows...
+      fl_polygon(x1, y1 + 3, x1 + w1, y1 + w1 + 3, x1 + 2 * w1, y1 + 3);
+      fl_polygon(x1, y1 + 1, x1 + w1, y1 - w1 + 1, x1 + 2 * w1, y1 + 1);
+    } else {
+      // Show smaller up/down arrows with a divider...
+      x1 = x() + w() - 13 - dx;
+      y1 = y() + h() / 2;
+      fl_polygon(x1, y1 - 2, x1 + 3, y1 - 5, x1 + 6, y1 - 2);
+      fl_polygon(x1, y1 + 2, x1 + 3, y1 + 5, x1 + 6, y1 + 2);
+
+      fl_color(fl_darker(color()));
+      fl_yxline(x1 - 7, y1 - 8, y1 + 8);
+
+      fl_color(fl_lighter(color()));
+      fl_yxline(x1 - 6, y1 - 8, y1 + 8);
+    }
+  } else {
+    // DEFAULT SCHEME
+
+    // Draw widget box
+    draw_box(btype, color());
+
+    // Draw arrow area
+    draw_box(FL_UP_BOX,X,Y,W,H,color());
+    fl_color(active_r() ? SELECTION : fl_inactive(SELECTION));
+    fl_polygon(x1, y1, x1 + w1, y1 + w1, x1 + 2 * w1, y1);
+  }
+
+  W += 2 * dx;
+
+  // Draw menu item's label
+  if (mvalue()) {
+    Fl_Menu_Item m = *mvalue();
+    if (active_r()) m.activate(); else m.deactivate();
+
+    // Clip
+    int xx = x() + dx, yy = y() + dy + 1, ww = w() - W, hh = H - 2;
+    fl_push_clip(xx, yy, ww, hh);
+
+    if ( Fl::scheme()) {
+      Fl_Label l;
+      l.value = m.text;
+      l.image = 0;
+      l.deimage = 0;
+      l.type = m.labeltype_;
+      l.font = m.labelsize_ || m.labelfont_ ? m.labelfont_ : textfont();
+      l.size = m.labelsize_ ? m.labelsize_ : textsize();
+      l.color= m.labelcolor_ ? m.labelcolor_ : textcolor();
+      if (!m.active()) l.color = fl_inactive((Fl_Color)l.color);
+      fl_draw_shortcut = 2; // hack value to make '&' disappear
+      l.draw(xx+3, yy, ww>6 ? ww-6 : 0, hh, FL_ALIGN_LEFT);
+      fl_draw_shortcut = 0;
+      if ( Fl::focus() == this ) draw_focus(box(), xx, yy, ww, hh);
+    }
+    else {
+      fl_draw_shortcut = 2; // hack value to make '&' disappear
+      m.draw(xx, yy, ww, hh, this, Fl::focus() == this);
+      fl_draw_shortcut = 0;
+    }
+
+    fl_pop_clip();
+  }
+
+  // Widget's label
+  draw_label();
+}
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

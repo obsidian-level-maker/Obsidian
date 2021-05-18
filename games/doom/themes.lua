@@ -1250,7 +1250,11 @@ DOOM.THEMES =
       gtd_wall_tech_top_corner_light_set = 50,
       gtd_wall_server_room = 50,
       gtd_wall_sewer = 50,
-      gtd_generic_beamed_inset = 50,
+      --
+      gtd_generic_beamed_inset = 25,
+      gtd_generic_beamed_green_inset = 25,
+      gtd_generic_beamed_brown_inset = 25,
+      --
       gtd_computers = 50,
       gtd_writhing_mass = 10,
       gtd_wall_octagon_insets = 50,
@@ -1259,8 +1263,9 @@ DOOM.THEMES =
       gtd_wall_quakish_insets = 25,
       gtd_wall_quakish_insets_2 = 25,
       --
-      gtd_ribbed_lights = 25,
-      gtd_ribbed_lights_no3d = 25,
+      gtd_ribbed_lights = 20,
+      gtd_ribbed_lights_no3d = 20,
+      gtd_ribbed_lights_slump = 20,
       --
       gtd_wall_high_gap_set = 25,
       gtd_wall_high_gap_alt_set = 25,
@@ -1359,11 +1364,13 @@ DOOM.THEMES =
       gtd_window_bay = 20,
       gtd_window_absurdly_open = 25,
       gtd_window_quakeish = 30,
-      gtd_window_low = 20,
+      gtd_window_low = 15,
+      gtd_window_bunker_mid_space = 20,
       gtd_window_weabdows = 15,
       gtd_window_metal_frames = 30,
       gtd_window_construction_frames = 5,
-      gtd_window_hexagon = 30
+      gtd_window_hexagon = 30,
+      gtd_window_slump_tall = 30
     },
 
     fence_groups =
@@ -1643,7 +1650,11 @@ DOOM.THEMES =
       gtd_wall_urban_storage = 50,
       gtd_wall_tech_top_corner_light_set = 50,
       gtd_wall_sewer = 40,
-      gtd_generic_beamed_inset = 50,
+      --
+      gtd_generic_beamed_inset = 25,
+      gtd_generic_beamed_green_inset = 25,
+      gtd_generic_beamed_brown_inset = 25,
+      --
       gtd_computers = 20,
       gtd_drywall = 50,
       gtd_writhing_mass = 20,
@@ -1653,8 +1664,9 @@ DOOM.THEMES =
       gtd_wall_quakish_insets = 25,
       gtd_wall_quakish_insets_2 = 25,
       --
-      gtd_ribbed_lights = 20,
-      gtd_ribbed_lights_no3d = 20,
+      gtd_ribbed_lights = 17,
+      gtd_ribbed_lights_no3d = 17,
+      gtd_ribbed_lights_slump = 17,
       --
       gtd_wall_high_gap_set = 25,
       gtd_wall_high_gap_alt_set = 25,
@@ -1726,13 +1738,15 @@ DOOM.THEMES =
       gtd_window_bay = 30,
       gtd_window_absurdly_open = 45,
       gtd_window_quakeish = 20,
-      gtd_window_low = 35,
+      gtd_window_low = 25,
+      gtd_window_bunker_mid_space = 25,
       gtd_window_arrowslit = 10,
       gtd_window_weabdows = 70,
       gtd_window_metal_frames = 70,
       gtd_window_pencil_holes = 35,
       gtd_window_construction_frames = 65,
-      gtd_window_hexagon = 25
+      gtd_window_hexagon = 25,
+      gtd_window_slump_tall = 65
     },
 
     fence_groups =
@@ -2096,7 +2110,10 @@ DOOM.THEMES =
       --
       gtd_wall_hell_bloodgutters = 25,
       gtd_wall_tech_top_corner_light_set = 50,
-      gtd_generic_beamed_inset = 50,
+      --
+      gtd_generic_beamed_inset = 35,
+      gtd_generic_beamed_brown_inset = 35,
+      --
       gtd_writhing_mass = 50,
       gtd_library = 50,
       --
@@ -2216,11 +2233,13 @@ DOOM.THEMES =
       gtd_window_full_open_tall = 40,
       gtd_window_absurdly_open = 60,
       gtd_window_quakeish = 30,
-      gtd_window_low = 75,
+      gtd_window_low = 45,
+      gtd_window_bunker_mid_space = 50,
       gtd_window_arrowslit = 60,
       gtd_window_metal_frames = 60,
       gtd_window_pencil_holes = 60,
-      gtd_window_construction_frames = 60
+      gtd_window_construction_frames = 60,
+      gtd_window_slump_tall = 40
     },
 
     fence_groups =
@@ -4006,22 +4025,44 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
-      RROCK14  = 40,
-      MFLR8_2  = 40,
-      FLAT1_1  = 40,
+      MFLR8_2 = 40,
+    
+      FLAT1_1 = 40,
+      FLAT8 = 30,
+      FLOOR0_1 = 10,
+      FLOOR0_2 = 10,
+      FLOOR0_3 = 10,
+      FLOOR0_5 = 30,
+
       FLOOR3_3 = 20,
+      FLOOR4_6 = 20,
+      FLOOR5_3 = 10,
       FLOOR5_4 = 20,
-      FLOOR6_2 = 10
+      FLOOR6_1 = 10,
+      FLOOR6_2 = 10,
+
+      RROCK10 = 40,
+      RROCK14 = 40
     },
 
     ceilings =
     {
+      FLOOR5_3 = 10,
+      FLOOR5_4 = 20,
       FLOOR6_1 = 30,
-      FLAT5_1  = 20,
-      CEIL3_5  = 20,
-      FLAT8    = 10,
-      FLAT5_2  = 10,
-      FLAT5_4  = 5
+      FLAT5_1 = 20,
+      FLAT8 = 20,
+
+      CEIL3_3 = 20,
+      CEIL3_5 = 20,
+
+      FLAT8 = 10,
+      FLAT5_2 = 10,
+      FLAT5_4 = 5,
+
+      MFLR8_1 = 5,
+
+      SLIME16 = 20
     }
   },
 

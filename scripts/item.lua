@@ -468,13 +468,13 @@ function Item_simulate_battle(R)
     heal_mul = heal_mul * (PARAM.health_factor or 1)
     ammo_mul = ammo_mul * (PARAM.ammo_factor or 1)
 
-    if LEVEL.is_procedural_gotcha and PARAM.boss_gen then
-      ammo_mul = ammo_mul * (tonumber(PARAM.boss_gen_ammo) * PARAM.boss_gen_mult)
-      heal_mul = heal_mul * tonumber(PARAM.boss_gen_heal)
+    if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
+      ammo_mul = ammo_mul * (PARAM.float_boss_gen_ammo * PARAM.boss_gen_mult)
+      heal_mul = heal_mul * PARAM.float_boss_gen_heal
     end
 
     -- give less ammo in later maps (to counter the build-up over an episode)
-    if not PARAM.pistol_starts then
+    if PARAM.bool_pistol_starts == 0 then
       local along = math.clamp(0, LEVEL.ep_along - 0.2, 0.8)
       local factor = 1.1 - along * 0.25
 
@@ -542,7 +542,7 @@ function Item_simulate_battle(R)
       end
     end
 
-    if not PARAM.pistol_starts then
+    if PARAM.bool_pistol_starts == 0 then
       -- allow weapons from previous levels
       for name,_ in pairs(EPISODE.seen_weapons) do
         if not seen[name] then
@@ -939,7 +939,7 @@ function Item_pickups_for_class(CL)
       end
     end
 
-    if OB_CONFIG.strength == "crazy" then
+    if PARAM.float_strength == 12 then
       bonus = bonus * 2
     end
 

@@ -28,6 +28,7 @@
 #include <FL/Fl_Browser.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Check_Button.H>
+#include <FL/Fl_Color_Chooser.H>
 #include <FL/Fl_Choice.H>
 #include <FL/Fl_Counter.H>
 #include <FL/Fl_Double_Window.H>

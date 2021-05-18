@@ -1083,7 +1083,13 @@ function Edge_new(kind, S, dir, long)
       -- check shape rules for misbehaved shapes
       EDGE.S.error = true
       Seed_dump_rooms()
-      error("OH GOD I CAN'T COMPUTER PLS TO HELP")
+      error("Room connection check failed. \n\n" ..
+          "Junction edge run has encountered to a missing seed. \n\n" ..
+          "This is not a fun error message. Fun is not allowed. \n\n" ..
+          "But you know what's less fun? If you report this message but " ..
+          "don't provide your LOG info to describe its circumstances, which " ..
+          "is more frustrating. \n\n" ..
+          "ALSO OH GOD I CANT INTO COMPUTER PLS HELP")
     end
 
     assert(S)

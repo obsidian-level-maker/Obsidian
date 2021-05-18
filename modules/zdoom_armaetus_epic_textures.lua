@@ -29,12 +29,6 @@ gui.import("zdoom_armaetus_epic_texturex_lump.lua")
 -- texture pack together, includes MSSP and Craneo as well.
 ARMAETUS_EPIC_TEXTURES = { }
 
-ARMAETUS_EPIC_TEXTURES.YES_NO =
-{
-  "yes", _("Yes"),
-  "no",  _("No"),
-}
-
 ARMAETUS_EPIC_TEXTURES.SOUCEPORT_CHOICES =
 {
   "zs",       _("ZScript"),
@@ -659,13 +653,19 @@ actor AssIsHell : Inventory
 }
 
 function ARMAETUS_EPIC_TEXTURES.setup(self)
-  for name,opt in pairs(self.options) do
-    local value = self.options[name].value
-    PARAM[name] = value
-  end
-
   ARMAETUS_EPIC_TEXTURES.put_new_materials()
   PARAM.epic_textures_activated = true
+  for name,opt in pairs(self.options) do
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    else
+      PARAM[name] = self.options[name].value
+    end
+  end
 end
 
 function ARMAETUS_EPIC_TEXTURES.decide_environment_themes()
@@ -925,7 +925,7 @@ function ARMAETUS_EPIC_TEXTURES.put_new_materials()
 
     -- put the custom theme definitions in the themes table!!!
     -- LIQUIDZ
-    if PARAM.custom_liquids ~= "no" then
+    if PARAM.bool_custom_liquids == 1 then
       GAME.THEMES = table.deep_merge(GAME.THEMES, ARMAETUS_LIQUIDS, 2)
     end
 
@@ -946,7 +946,7 @@ function ARMAETUS_EPIC_TEXTURES.put_new_materials()
 
     -- put the custom theme definitions in the themes table!!!
     -- LIQUIDZ
-    if PARAM.custom_liquids ~= "no" then
+    if PARAM.bool_custom_liquids == 1 then
       GAME.THEMES = table.deep_merge(GAME.THEMES, ARMAETUS_DOOM1_LIQUIDS, 2)
     end
 
@@ -983,7 +983,7 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
   local wad_file_2 = "games/doom/data/ObAddon_Textures_2.wad"
   local wad_file_3 = "games/doom/data/ObAddon_Textures_3.wad"
 
-  if PARAM.include_package ~= "no" then
+  if PARAM.bool_include_package == 1 then
     gui.wad_transfer_lump(wad_file, "ANIMDEFS", "ANIMDEFS")
     gui.wad_transfer_lump(wad_file, "CREDITS", "CREDITS")
     gui.wad_merge_sections(wad_file)
@@ -1009,10 +1009,6 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
     gui.wad_insert_file(dir .. "OBVNMCH3.png", "OBVNMCH3")
     gui.wad_insert_file(dir .. "OBVNMCH4.png", "OBVNMCH4")
     gui.wad_insert_file(dir .. "OBVNMCH5.png", "OBVNMCH5")
-    gui.wad_insert_file(dir .. "ROAD1.png", "ROAD1")
-    gui.wad_insert_file(dir .. "ROAD2.png", "ROAD2")
-    gui.wad_insert_file(dir .. "ROAD3.png", "ROAD3")
-    gui.wad_insert_file(dir .. "ROAD4.png", "ROAD4")
     gui.wad_insert_file(dir .. "CRATJOKE.png", "CRATJOKE") -- Do we need this here anymore?
     gui.wad_add_binary_lump("HI_END",{})
   end
@@ -1022,7 +1018,7 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
     gui.wad_merge_sections(wad_file)
   end
 
-  if PARAM.include_brightmaps == "yes" then
+  if PARAM.bool_include_brightmaps == 1 then
     wad_file = "games/doom/data/ObAddon_Textures_Brightmaps.wad"
     gui.wad_merge_sections(wad_file)
   end
@@ -1031,6 +1027,9 @@ end
 
 OB_MODULES["armaetus_epic_textures"] =
 {
+
+  name = "armaetus_epic_textures",
+
   label = _("ZDoom: Obsidian Textures"),
 
   side = "left",
@@ -1053,12 +1052,12 @@ OB_MODULES["armaetus_epic_textures"] =
 
   options =
   {
-    custom_liquids =
+    bool_custom_liquids =
     {
-      name = "custom_liquids",
+      name = "bool_custom_liquids",
       label = _("Custom Liquids"),
-      choices = ARMAETUS_EPIC_TEXTURES.YES_NO,
-      default = "yes",
+      valuator = "button",
+      default = 1,
       tooltip = "Utilize custom liquid flats or not.",
       priority=4
     },
@@ -1077,7 +1076,6 @@ OB_MODULES["armaetus_epic_textures"] =
       priority=3
     },
 
-    -- Is this still under construction?
     environment_themes =
     {
       name = "environment_themes",
@@ -1085,19 +1083,17 @@ OB_MODULES["armaetus_epic_textures"] =
       choices = ARMAETUS_EPIC_TEXTURES.ENVIRONMENT_THEME_CHOICES,
       default = "random",
       tooltip =
-        "// THIS FEATURE IS CURRENTLY UNDER CONSTRUCTION \\\\\n" ..
         "Influences outdoor environments with different textures such as " ..
         "desert sand or icey snow.",
       priority=2,
-      gap=1
     },
 
-    include_package =
+    bool_include_package =
     {
-      name = "include_package",
+      name = "bool_include_package",
       label = _("Merge Textures WAD"),
-      choices = ARMAETUS_EPIC_TEXTURES.YES_NO,
-      default = "yes",
+      valuator = "button",
+      default = 1,
       tooltip =
         "Allows the trimming down of resulting WAD by not merging the custom texture WAD.\n\n" ..
         "This will require you to extract and load up the WAD manually in your preferred sourceport installation.\n\n" ..
@@ -1105,12 +1101,12 @@ OB_MODULES["armaetus_epic_textures"] =
       priority=1
     },
 
-    include_brightmaps =
+    bool_include_brightmaps =
     {
-      name = "include_brightmaps",
+      name = "bool_include_brightmaps",
       label = _("Include Brightmaps"),
-      choices = ARMAETUS_EPIC_TEXTURES.YES_NO,
-      default = "yes",
+      valuator = "button",
+      default = 1,
       tooltip = "Allows merging Obsidian Textures brightmaps into the WAD. Does not include brightmaps for" ..
         " base resources from any of the games.",
       priority = 0

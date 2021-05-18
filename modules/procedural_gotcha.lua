@@ -18,29 +18,6 @@
 
 PROCEDURAL_GOTCHA_FINE_TUNE = {}
 
-PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_STRENGTH_CHOICES =
-{
-  "none",    _("NONE"),
-  "stronger", _("[+2] Stronger"),
-  "harder", _("[+4] Harder"),
-  "tougher", _("[+6] Tougher"),
-  "crazier", _("[+8] CRAZIER"),
-  "nightmarish", _("[+16] NIGHTMARISH")
-}
-
-PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_QUANTITY_CHOICES =
-{
-  "-50", _("-50% Monsters"),
-  "-25", _("-25% Monsters"),
-  "none",  _("NONE"),
-  "25",  _("+25% Monsters"),
-  "50",  _("+50% Monsters"),
-  "100", _("+100% Monsters"),
-  "150", _("+150% Monsters"),
-  "200",  _("+200% Monsters"),
-  "400", _("+400% Monsters")
-}
-
 PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_MAP_SIZES =
 {
   "large", _("Large"),
@@ -49,26 +26,42 @@ PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_MAP_SIZES =
   "tiny", _("Tiny")
 }
 
-PROCEDURAL_GOTCHA_FINE_TUNE.FORCE_BOSS_FIGHT_CHOICES =
+PROCEDURAL_GOTCHA_FINE_TUNE.PROC_GOTCHA_CHOICES =
 {
-  "yes", _("Yes"),
-  "no",  _("No")
+  "final", _("Final Map Only"),
+  "epi",   _("Episodic (MAP11, MAP20, MAP30)"),
+  "2epi",   _("2 per ep (5,11,16,20,25,30)"),
+  "3epi",   _("3 per ep (3,7,11,14,17,20,23,27,30)"),
+  "4epi",   _("4 per ep (3,6,9,11,14,16,18,20,23,26,28,30)"),
+  "_",     _("_"),
+  "5p",    _("5% Chance, Any Map After MAP04"),
+  "10p",   _("10% Chance, Any Map After MAP04"),
+  "all",   _("Everything")
 }
-
-
 
 function PROCEDURAL_GOTCHA_FINE_TUNE.setup(self)
   for name,opt in pairs(self.options) do
-    local value = self.options[name].value
-    PARAM[name] = value
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+      end
+    else
+      PARAM[name] = self.options[name].value
+    end
   end
 end
 
 OB_MODULES["procedural_gotcha"] =
 {
-  label = _("Procedural Gotcha Options"),
+
+  name = "procedural_gotcha",
+
+  label = _("Procedural Gotchas"),
 
   engine = "!vanilla",
+  engine2 = "!zdoom",
   side = "right",
   priority = 92,
 
@@ -82,21 +75,49 @@ OB_MODULES["procedural_gotcha"] =
 
   options =
   {
-    gotcha_qty =
+    gotcha_frequency=   
     {
-      name="gotcha_qty",
+      name="gotcha_frequency",
+      label=_("Gotcha Frequency"),
+      choices=PROCEDURAL_GOTCHA_FINE_TUNE.PROC_GOTCHA_CHOICES,
+      default="final",
+      tooltip = "Procedural Gotchas are two room maps, where the second is an immediate " ..
+      "but immensely-sized exit room with gratitiously intensified monster strength. " ..
+      "Essentially an arena - prepare for a tough, tough fight!\n\nNotes:\n\n" ..
+      "5% of levels may create at least 1 or 2 gotcha maps in a standard full game.",
+      priority = 100
+    },
+    
+    float_gotcha_qty =
+    {
+      name="float_gotcha_qty",
       label=_("Extra Quantity"),
-      choices=PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_QUANTITY_CHOICES,
-      default="25",
+      valuator = "slider",
+      units = "x Monsters",
+      min = 0.2,
+      max = 10,
+      increment = 0.1,
+      default = 1.2,
+      nan = "1:No Change,",
       tooltip = "Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting).",
     },
 
-    gotcha_strength =
+    float_gotcha_strength =
     {
-      name="gotcha_strength",
+      name="float_gotcha_strength",
       label=_("Extra Strength"),
-      choices=PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_STRENGTH_CHOICES,
-      default = "harder",
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 16,
+      increment = 1,
+      default = 4,
+      nan = "0:NONE," ..
+      "2:2 (Stronger)," ..
+      "4:4 (Harder)," ..
+      "6:6 (Tougher)," ..
+      "8:8 (CRAZIER)," ..
+      "16:16 (NIGHTMARISH),",
       tooltip = "Offset monster quantity from your default strength of choice plus the increasing level ramp.",
     },
 
@@ -107,15 +128,6 @@ OB_MODULES["procedural_gotcha"] =
       choices=PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_MAP_SIZES,
       default = "small",
       tooltip = "Size of the procedural gotcha. Start and arena room sizes are relative to map size as well.",
-    },
-
-    gotcha_boss_fight =
-    {
-      name = "gotcha_boss_fight",
-      label=_("Force Boss Fight"),
-      choices=PROCEDURAL_GOTCHA_FINE_TUNE.FORCE_BOSS_FIGHT_CHOICES,
-      default = "yes",
-      tooltip = "EXPERIMENTAL: Forces procedural gotchas to have guaranteed boss fights.",
     },
   },
 }

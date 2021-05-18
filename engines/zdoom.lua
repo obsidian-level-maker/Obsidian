@@ -60,9 +60,9 @@ end
 OB_ENGINES["zdoom"] =
 {
   label = _("ZDoom-ish"),
-  priority = 95,
+  priority = 101,
 
-  extends = "boom",
+  extends = "advanced",
 
   game =
   {

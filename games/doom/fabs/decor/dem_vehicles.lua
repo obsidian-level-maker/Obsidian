@@ -10,7 +10,7 @@ PREFABS.Decor_apc =
   engine = "zdoom",
 
   prob   = 4500,
-  theme  = "urban",
+  theme  = "!hell",
 
   texture_pack = "armaetus",
 
@@ -168,7 +168,7 @@ PREFABS.Decor_forklift1U =
 
   engine = "zdoom",
 
-  prob   = 2000,
+  prob   = 500,
   theme  = "urban",
 
   texture_pack = "armaetus",
@@ -190,7 +190,7 @@ PREFABS.Decor_forklift2U =
 
   engine = "zdoom",
 
-  prob   = 2000,
+  prob   = 500,
   theme  = "urban",
 
   texture_pack = "armaetus",
@@ -214,7 +214,7 @@ PREFABS.Decor_forklift3U =
 
   engine = "zdoom",
 
-  prob   = 2000,
+  prob   = 500,
   theme  = "urban",
 
   texture_pack = "armaetus",
@@ -238,7 +238,7 @@ PREFABS.Decor_forklift4U =
 
   engine = "zdoom",
 
-  prob   = 2000,
+  prob   = 500,
   theme  = "urban",
 
   texture_pack = "armaetus",
@@ -262,7 +262,7 @@ PREFABS.Decor_forklift5U =
 
   engine = "zdoom",
 
-  prob   = 2000,
+  prob   = 500,
   theme  = "urban",
 
   texture_pack = "armaetus",
