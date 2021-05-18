@@ -466,6 +466,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_language->callback(callback_Language, this);
     opt_language->labelfont(font_style);
 	opt_language->textfont(font_style);
+	opt_language->selection_color(SELECTION);
 
     PopulateLanguages();
 
@@ -479,6 +480,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_window_scaling->value(window_scaling);
     opt_window_scaling->labelfont(font_style);
     opt_window_scaling->textfont(font_style);
+    opt_window_scaling->selection_color(SELECTION);
 
     cy += opt_window_scaling->h() + y_step;
     
@@ -490,6 +492,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_font_scaling->value(font_scaling);
     opt_font_scaling->labelfont(font_style);
     opt_font_scaling->textfont(font_style);
+    opt_font_scaling->selection_color(SELECTION);
 
     cy += opt_font_scaling->h() + y_step;
 
@@ -500,6 +503,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_font_theme->value(font_theme);
     opt_font_theme->labelfont(font_style);
     opt_font_theme->textfont(font_style);
+    opt_font_theme->selection_color(SELECTION);
     
     PopulateFonts();
 
@@ -513,6 +517,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_widget_theme->value(widget_theme);
     opt_widget_theme->labelfont(font_style);
     opt_widget_theme->textfont(font_style);
+    opt_widget_theme->selection_color(SELECTION);
 
     cy += opt_widget_theme->h() + y_step;
     
@@ -524,6 +529,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_box_theme->value(box_theme);
     opt_box_theme->labelfont(font_style);
     opt_box_theme->textfont(font_style);
+    opt_box_theme->selection_color(SELECTION);
 
     cy += opt_box_theme->h() + y_step;
     
@@ -535,6 +541,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_button_theme->value(button_theme);
     opt_button_theme->labelfont(font_style);
     opt_button_theme->textfont(font_style);
+    opt_button_theme->selection_color(SELECTION);
 
     cy += opt_button_theme->h() + y_step;
 
@@ -546,6 +553,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_color_scheme->value(color_scheme);
     opt_color_scheme->labelfont(font_style);
     opt_color_scheme->textfont(font_style);
+	opt_color_scheme->selection_color(SELECTION);
 
     cy += opt_color_scheme->h() + y_step;
     
@@ -652,7 +660,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     darkish->end();
 
     // restart needed warning
-    heading = new Fl_Box(FL_NO_BOX, x() + pad, H - dh - kf_h(10), W - pad * 2,
+    heading = new Fl_Box(FL_NO_BOX, x() + pad, H - dh - kf_h(3), W - pad * 2,
                          kf_h(14), _("Note: some options require a restart."));
     heading->align(FL_ALIGN_INSIDE);
     heading->labelsize(small_font_size);

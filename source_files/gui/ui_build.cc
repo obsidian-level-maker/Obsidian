@@ -53,7 +53,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     seed_disp->box(FL_NO_BOX);
     seed_disp->align(FL_ALIGN_INSIDE | FL_ALIGN_TOP_LEFT);
     seed_disp->labelcolor(FL_WHITE);
-    seed_disp->labelsize(seed_disp->labelsize() * .60);
+    seed_disp->labelsize(seed_disp->labelsize() * .80);
     seed_disp->labelfont(font_style);
     seed_disp->copy_label("Seed: -");
 
@@ -62,7 +62,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     name_disp->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT | FL_ALIGN_CLIP);
     name_disp->labelcolor(FL_WHITE);
     name_disp->labelfont(font_style);
-    name_disp->labelsize(name_disp->labelsize() * .60);
+    name_disp->labelsize(name_disp->labelsize() * .80);
 
     cy += mini_map->h() + kf_h(6);
 
