@@ -161,6 +161,10 @@ class UI_RSlide : public Fl_Group {
     UI_RSlide(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_RSlide();
     
+    Fl_Box *mod_label;
+    
+    UI_HelpLink *mod_help;
+    
     Fl_Hor_Slider *mod_slider;
     
     UI_CustomArrowButton *prev_button;

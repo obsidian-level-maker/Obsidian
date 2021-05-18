@@ -154,26 +154,20 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     strcpy(new_label, label);
     strcat(new_label, ": ");
 
-	double width_multi;
-	Fl_Align alignment;
-	double x_multi;
-
-	if (!single_pane) {
-		width_multi = .95;
-		alignment = FL_ALIGN_TOP_LEFT;
-		x_multi = 0;
-	} else {
-		width_multi = .55;
-		alignment = (FL_ALIGN_LEFT | FL_ALIGN_WRAP);
-		x_multi = .40;
-	}
+    if (!tip) {
+        tip = "Help file not yet written for this setting :(";
+    }
 
 	UI_RSlide *rsl =
-		    new UI_RSlide(nx + (nw * x_multi), ny + kf_h(15), nw * width_multi, kf_h(24), new_label);
-	rsl->align(alignment);
+		    new UI_RSlide(nx, ny + kf_h(15), nw * .95, kf_h(48), NULL);
+
+
+	rsl->mod_label = 
+			new Fl_Box(rsl->x(), rsl->y(), (!single_pane ? rsl->w() * .95 : rsl->w() * .40), kf_h(24), new_label);
+	rsl->mod_label->align((!single_pane ? (FL_ALIGN_LEFT | FL_ALIGN_INSIDE) : (FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP)));
 
     rsl->prev_button =
-        new UI_CustomArrowButton(rsl->x(), rsl->y(), rsl->w() * .10, kf_h(24), "@<");
+        new UI_CustomArrowButton((!single_pane ? rsl->x() : rsl->x() + (rsl->w() * .45)), (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@<");
     rsl->prev_button->visible_focus(0);
     rsl->prev_button->box(button_style);     
     rsl->prev_button->align(FL_ALIGN_INSIDE);   
@@ -182,7 +176,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->prev_button->callback(callback_SliderPrevious, NULL);
     
     rsl->mod_slider =
-        new Fl_Hor_Slider(rsl->x() + rsl->w() * .10, rsl->y(), rsl->w() * .80, kf_h(24), "");
+        new Fl_Hor_Slider((!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .50),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (!single_pane ? rsl->w() * .80 : rsl->w() * .40), kf_h(24), NULL);
     rsl->mod_slider->box(button_style);
     rsl->mod_slider->selection_color(SELECTION);
     rsl->mod_slider->minimum(min);
@@ -191,7 +185,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->mod_slider->callback(callback_MixItCheck, NULL);
     
     rsl->next_button =
-        new UI_CustomArrowButton(rsl->x() + rsl->w() * .90, rsl->y(), rsl->w() * .10, kf_h(24), "@>");
+        new UI_CustomArrowButton(rsl->x() + rsl->w() * .90,  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@>");
     rsl->next_button->box(button_style);
     rsl->next_button->visible_focus(0);   
     rsl->next_button->align(FL_ALIGN_INSIDE);  
@@ -199,8 +193,17 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->next_button->labelsize(rsl->next_button->labelsize() * .80);
     rsl->next_button->callback(callback_SliderNext, NULL);
 
+	rsl->mod_help =
+			new UI_HelpLink(rsl->x() + (!single_pane ? (rsl->w() * .9) : (rsl->w() * .95)), rsl->y(), rsl->w() * .075, kf_h(24), "?");
+	rsl->mod_help->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
+	rsl->mod_help->labelfont(font_style);
+	rsl->mod_help->labelcolor(FONT_COLOR);
+	rsl->mod_help->help_text = tip;
+	rsl->mod_help->callback(callback_ShowHelp, NULL);
+	
     rsl->original_label = new_label;
     rsl->units = units;
+
    
     // Populate the nan_choices map
 	std::string nan_string = nan;
@@ -218,10 +221,6 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 		}
 	}
 	
-    if (!tip) {
-        tip = "";
-    }
-    rsl->tooltip(tip);
     if (!mod_button->value()) {
         rsl->hide();
     }
@@ -430,18 +429,18 @@ void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
 
 	std::string new_label = current_slider->original_label;
 	
-	current_slider->copy_label(new_label.append(50, ' ').append("\n").append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
+	current_slider->mod_label->copy_label(new_label.append(50, ' ').append("\n").append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
 
 	new_label = current_slider->original_label;
 
 	// Check against the nan_choices map
 
 	if (current_slider->nan_choices.count(value) == 1) {
-		current_slider->copy_label(new_label.append(current_slider->nan_choices[value].c_str()).c_str());
+		current_slider->mod_label->copy_label(new_label.append(current_slider->nan_choices[value].c_str()).c_str());
 	} else {
 		char value_string[20];
 		sprintf(value_string, "%g", value);
-		current_slider->copy_label(new_label.append((const char*)value_string).append(current_slider->units).c_str());
+		current_slider->mod_label->copy_label(new_label.append((const char*)value_string).append(current_slider->units).c_str());
 	}
 }
 
