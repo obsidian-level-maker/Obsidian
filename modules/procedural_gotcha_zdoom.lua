@@ -21,7 +21,7 @@ PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM = {}
 
 PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DIFF_CHOICES =
 {
-  "easier",    _("Easier"),
+  "easier", _("Easier"),
   "default", _("Moderate"),
   "harder", _("Harder"),
   "nightmare", _("Nightmare"),
@@ -31,16 +31,16 @@ PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_HEALTH_CHOICES =
 {
   "muchless", _("Reduced by 50%"),
   "less", _("Reduced by 25%"),
-  "default",  _("Default"),
-  "more",  _("Increased by 50%"),
-  "muchmore",  _("Increased by 100%"),
-  "demiosmode",  _("Increased by 200%"),
+  "default", _("Default"),
+  "more", _("Increased by 50%"),
+  "muchmore", _("Increased by 100%"),
+  "demiosmode", _("Increased by 200%"),
 }
 
 PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_LESS_HITSCAN =
 {
-  "default",  _("Default"),
-  "less",     _("50% less"),
+  "default", _("Default"),
+  "less", _("50% less"),
   "muchless", _("80% less"),
   "none", _("100% less"),
 }
@@ -1379,7 +1379,7 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.syntaxize(str, str2)
 end
 
 function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.check_monsters_enabled()
-  if PARAM.float_mons == 0 then
+  if PARAM.float_mons == 0 and PARAM.bool_boss_gen == 1 then
     error("Monsters must be enabled for boss generator!")
   end
 end
