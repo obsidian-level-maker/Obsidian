@@ -149,9 +149,9 @@ class UI_RChoice : public Fl_Group {
 
    public:
    
-    //Fl_Box *mod_label;
+    Fl_Box *mod_label;
     
-    //UI_HelpLink *mod_help;    
+    UI_HelpLink *mod_help;    
     
     UI_RChoiceMenu *mod_menu;    
 
