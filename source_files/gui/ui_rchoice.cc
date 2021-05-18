@@ -222,70 +222,21 @@ void UI_RChoice::GotoNext() {
 //----------------------------------------------------------------
 
 UI_RSlide::UI_RSlide(int x, int y, int w, int h, const char *label)
-    : Fl_Group(x, y, w, h, label), opt_list() { visible_focus(0); labelfont(font_style); }
+    : Fl_Group(x, y, w, h, label) { visible_focus(0); labelfont(font_style); }
 
 UI_RSlide::~UI_RSlide() {}
 
 //----------------------------------------------------------------
 
 UI_RButton::UI_RButton(int x, int y, int w, int h, const char *label)
-    : Fl_Check_Button(x, y, w, h, label), opt_list() { visible_focus(0); box(FL_NO_BOX); labelfont(font_style); down_box(button_style); }
+    : Fl_Group(x, y, w, h, label) { visible_focus(0); box(FL_NO_BOX); }
 
 UI_RButton::~UI_RButton() {}
-
-// Custom draw function to have checkbox to the right side of the label. Also uses the checkmark style regardless of box type
-void UI_RButton::draw() {
-  if (box()) draw_box(this==Fl::pushed() ? fl_down(box()) : box(), color());
-  Fl_Color col = value() ? (active_r() ? selection_color() :
-                            fl_inactive(selection_color())) : color();
-
-  int W  = labelsize();
-  int bx = Fl::box_dx(box());	// box frame width
-  int dx = bx + 2;		// relative position of check mark etc.
-  int dy = (h() - W) / 2;	// neg. offset o.k. for vertical centering
-  int lx = 0;			// relative label position (STR #3237)
-
-	if (single_pane) {
-		draw_box(down_box(), x()+dx, y()+dy, W, W, FL_BACKGROUND2_COLOR);
-		if (value()) {
-		  fl_color(col);
-		  int tx = x() + dx + 3;
-		  int tw = W - 6;
-		  int d1 = tw/3;
-		  int d2 = tw-d1;
-		  int ty = y() + dy + (W+d2)/2-d1-2;
-		  for (int n = 0; n < 3; n++, ty++) {
-			fl_line(tx, ty, tx+d1, ty+d1);
-			fl_line(tx+d1, ty+d1, tx+tw-1, ty+d1-d2+1);
-		  }
-		}
-		lx = dx + W + 2;
-	   draw_label(x(), y(), w()-lx-bx, h());
-	   if (Fl::focus() == this) draw_focus();
-	} else {
-		draw_box(down_box(), x()+w()-W, y()+dy, W, W, FL_BACKGROUND2_COLOR);
-		if (value()) {
-		  fl_color(col);
-		  int tx = x() + w() - W + dx + 1;
-		  int tw = W - 6;
-		  int d1 = tw/3;
-		  int d2 = tw-d1;
-		  int ty = y() + dy + (W+d2)/2-d1-2;
-		  for (int n = 0; n < 3; n++, ty++) {
-			fl_line(tx, ty, tx+d1, ty+d1);
-			fl_line(tx+d1, ty+d1, tx+tw-1, ty+d1-d2+1);
-		  }
-		}
-		lx = dx + W + 2;
-	   draw_label(x(), y(), w()-lx-bx, h());
-	   if (Fl::focus() == this) draw_focus();	
-	}
-}
 
 //----------------------------------------------------------------
 
 UI_CustomCheckBox::UI_CustomCheckBox(int x, int y, int w, int h, const char *label)
-    : Fl_Check_Button(x, y, w, h, label) { visible_focus(0); }
+    : Fl_Check_Button(x, y, w, h, label) { visible_focus(0); box(FL_NO_BOX); down_box(button_style); }
 
 UI_CustomCheckBox::~UI_CustomCheckBox() {}
 
@@ -322,7 +273,7 @@ void UI_CustomCheckBox::draw() {
 //----------------------------------------------------------------
 
 UI_CustomArrowButton::UI_CustomArrowButton(int x, int y, int w, int h, const char *label)
-    : Fl_Button(x, y, w, h, label) { visible_focus(0); }
+    : Fl_Repeat_Button(x, y, w, h, label) { visible_focus(0); }
 
 UI_CustomArrowButton::~UI_CustomArrowButton() {}
 
@@ -333,6 +284,114 @@ void UI_CustomArrowButton::draw() {
   draw_backdrop();
   draw_label();
   if (Fl::focus() == this) draw_focus();
+}
+
+//----------------------------------------------------------------
+
+UI_HelpLink::UI_HelpLink(int x, int y, int w, int h, const char *label)
+    : Fl_Button(x, y, w, h, label),
+      hover(false),
+      label_X(0),
+      label_Y(0),
+      label_W(0),
+      label_H(0) {
+    box(FL_NO_BOX);
+}
+
+UI_HelpLink::~UI_HelpLink() { }
+
+void UI_HelpLink::checkLink() {
+    // change the cursor if the mouse is over the link.
+    // the 'hover' variable reduces the number of times fl_cursor()
+    // needs to be called (since it can be expensive).
+
+    if (Fl::event_inside(x() + label_X, y() + label_Y, label_W, label_H)) {
+        if (!hover) {
+            fl_cursor(FL_CURSOR_HAND);
+        }
+
+        hover = true;
+    } else {
+        if (hover) {
+            fl_cursor(FL_CURSOR_DEFAULT);
+        }
+
+        hover = false;
+    }
+}
+
+int UI_HelpLink::handle(int event) {
+    if (!active_r()) {
+        return Fl_Button::handle(event);
+    }
+
+    switch (event) {
+        case FL_MOVE: {
+            checkLink();
+            return 1;
+        }
+
+        case FL_ENTER: {
+            checkLink();
+            return 1;
+        }
+
+        case FL_LEAVE: {
+            checkLink();
+            return 1;
+        }
+
+        default:
+            break;
+    }
+
+    return Fl_Button::handle(event);
+}
+
+void UI_HelpLink::draw() {
+    if (type() == FL_HIDDEN_BUTTON) {
+        return;
+    }
+
+    // determine where to draw the label
+
+    label_X = label_Y = label_W = label_H = 0;
+
+    fl_font(labelfont(), labelsize());
+    fl_measure(label(), label_W, label_H, 1);
+
+    if (align() & FL_ALIGN_LEFT) {
+        label_X = 2;
+    } else if (align() & FL_ALIGN_RIGHT) {
+        label_X = w() - label_W - 2;
+    } else {
+        label_X = (w() - label_W) / 2;
+    }
+
+    label_Y += h() / 2 - labelsize() / 2 - 2;
+
+    // draw the link text
+
+    fl_draw_box(box(), x(), y(), w(), h(), color());
+
+    fl_color(labelcolor());
+    fl_draw(label(), x() + label_X, y() + label_Y, label_W, label_H,
+            FL_ALIGN_LEFT);
+
+    // draw the underline
+
+    if (!value()) {
+        int yy = y() + label_Y + label_H - 2;
+
+        fl_line_style(FL_SOLID);
+        fl_line(x() + label_X, yy, x() + label_X + label_W, yy);
+        fl_line_style(0);
+    }
+
+    /*
+       if (Fl::focus() == this)
+       draw_focus();
+     */
 }
 
 //----------------------------------------------------------------

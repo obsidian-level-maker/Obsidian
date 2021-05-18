@@ -247,32 +247,30 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
     char *new_label = StringNew(len + 4);
     strcpy(new_label, label);
     strcat(new_label, ": ");
-
-	double width_multi;
-	Fl_Align alignment;
-	double x_multi;
 	
-	
-	if (!single_pane) {
-		width_multi = .95;
-		alignment = (FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-		x_multi = 0;
-	} else {
-		width_multi = .55;
-		alignment = FL_ALIGN_LEFT;
-		x_multi = .40;
-	}
+    if (!tip) {
+        tip = "Help file not yet written for this setting :(";
+    }
 
 	UI_RButton *rbt =
-		    new UI_RButton(nx + (nw * x_multi), ny + kf_h(15), nw * width_multi, kf_h(24), new_label);
-	rbt->align(alignment);
-	rbt->selection_color(SELECTION);
-
-    
-    if (!tip) {
-        tip = "";
-    }
-    rbt->tooltip(tip);
+		    new UI_RButton(nx, ny + kf_h(15), nw * .95, kf_h(24), NULL);
+	
+	
+	rbt->mod_label = 
+			new Fl_Box(rbt->x(), rbt->y(), rbt->w() * .30, kf_h(24), new_label);
+	rbt->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+	
+	rbt->mod_check = 
+			new UI_CustomCheckBox(rbt->x() + (!single_pane ? (rbt->w() * .8) : (rbt->w() * .85)), rbt->y(), rbt->w() * .10, kf_h(24), NULL);
+	rbt->mod_check->selection_color(SELECTION);
+	
+	rbt->mod_help =
+			new UI_HelpLink(rbt->x() + (!single_pane ? (rbt->w() * .9) : (rbt->w() * .95)), rbt->y(), rbt->w() * .075, kf_h(24), "?");
+	rbt->mod_help->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
+	rbt->mod_help->labelfont(font_style);
+	rbt->mod_help->labelcolor(FONT_COLOR);
+	rbt->mod_help->help_text = tip;
+	rbt->mod_help->callback(callback_ShowHelp, NULL);
 
     if (!mod_button->value()) {
         rbt->hide();
@@ -376,7 +374,7 @@ bool UI_Module::SetButtonOption(const char *option, int value) {
         return false;
     }
 
-    rbt->value(value);
+    rbt->mod_check->value(value);
 	return true;
 }
 
@@ -521,6 +519,23 @@ void UI_Module::callback_SliderNext(Fl_Widget *w, void *data) {
 			current_slider->mod_slider->do_callback();
 		}
 	}
+}
+
+void UI_Module::callback_ShowHelp(Fl_Widget *w, void *data) {
+    UI_HelpLink *mod_help = (UI_HelpLink *)w;
+
+    SYS_ASSERT(mod_help);
+    
+    Fl_Window *win = new Fl_Window(640, 480, "Help");
+     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+     Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640-40, 480-40, NULL);
+     disp->buffer(buff);
+     disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+     win->resizable(*disp);
+     win->hotspot(0, 0, 0);
+     win->show();
+     buff->text(mod_help->help_text); 
+	
 }
 
 //----------------------------------------------------------------
@@ -930,7 +945,7 @@ void UI_Module::resize(int X, int Y, int W, int H) {
 	} else {
 		for (int i = 0; i < this->children(); i++) {
 		    this->child(i)->resize(this->child(i)->x(), this->child(i)->y(),
-		                           w() * .55, this->child(i)->h());
+		                           w() * .95, this->child(i)->h());
 		    this->child(i)->redraw();
 		}	
 	}
