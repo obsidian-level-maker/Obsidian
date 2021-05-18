@@ -99,11 +99,11 @@ IWAD_MODE.styles = {
     scenics = "none",
     pictures = "some",
     symmetry = "none",
-    beams = "none "
+    beams = "none",
+    caves = "none"
   }
-}
 
---[[ MAP03 Approximate map dimensions: 3,000 x 2,000 map units
+-- MAP03 Approximate map dimensions: 3,000 x 2,000 map units
 MAP03 =
 {
 outdoors = "some",
@@ -124,51 +124,134 @@ fences = "none",
 symmetry = "none",
 porches = "few",
 teleporters = "few",
-steepness = "some"
+steepness = "some",
+doors = "few",
+caves = "none",
+pictures = "few"
 }
 
 -- MAP04 Approximate map dimensions: 2,000 x 1,650 map units
 MAP04 =
 {
 outdoors ="none", -- totally indoors!
-big_outdoor_rooms = "none",
+big_outdoor_rooms = "none", -- again, inside
 big_rooms = "none", -- small, cramped rooms
 barrels = "some",
-keys = "some",
+keys = "heaps", -- three keys in map
 trikeys = "none",
 cages = "none",
 teleporters = "few",
-switches = "some",
+switches = "few",
 windows = "few",
 parks = "none",
 park_detail = "none",
 liquids = "few", -- just that slime pool leading to SSG secret
+traps = "some",
+symmetry = "none",
+steepness = "few",
+secrets = "few",
+porches = "none",
+caves = "none",
+pictures = "heaps"
 }
 
 -- MAP05 Approximate map dimensions: 3,150 x 2,150 map units
 MAP05 =
 {
-
+outdoors = "some", -- courtyard
+big_outdoor_areas = "few",
+parks = "few",
+steepness = "heaps",
+doors = "some",
+keys = "some",
+trikeys = "none",
+teleporters = "few",
+ambushes = "heaps", -- lots of them near start
+traps = "some",
+liquids = "some",
+barrels = "none",
+secrets = "few",
+hallways = "some",
+porches = "heaps",
+switches = "few",
+caves = "few",
+pictures = "few"
 }
 
 -- MAP06 Approximate map dimensions: 4,000 x 2,500 map units
 MAP06 =
 {
-
+outdoors = "few", -- outdoor lava courtyard
+liquids = "some",
+big_rooms = "some", - Mastermind crusher room
+big_outdoor_rooms = "none",
+barrels = "few", -- megasphere room only
+keys = "some",
+trikeys ="few", -- sure, why not?
+ambushes = "some",
+traps = "heaps",
+steepness = "heaps",
+windows = "none",
+hallways = "few",
+symmetry = "none",
+teleporters = "few",
+cages = "some",
+porches = "few",
+switches = "some",
+caves = "none",
+pictures = "some"
 }
+
 -- MAP07 Approximate map dimensions: 2,300 x 2,000 map units
 MAP07 =
 {
-
+symmetry = "heaps", -- map is completely symmetrical
+outdoors = "heaps", -- lots of outdoors
+big_outdoor_rooms = "some",
+parks = "none",
+park_detail = "none",
+ambushes = "some",
+beams = "heaps",
+traps = "heaps",
+teleporters ="none",
+porches = "few",
+liquids = "none",
+cages = "none",
+steepness = "few", -- one of the few Doom 2 maps with very little height variation
+hallways = "none",
+barrels = "none,"
+windows = "few",
+doors = "few",
+keys = "few",
+trikeys = "none",
+switches = "some",
+caves = "none",
+pictures = "few"
 }
 
 -- MAP08 Approximate map dimensions: 4,000 x 4,000 map units
 MAP08 =
 {
-
+outdoors = "none", -- another totally indoor map..
+big_outdoor_rooms = "none",
+traps = "heaps", -- not called "Tricks and Traps" for nothing!
+ambushes = "heaps",
+steepness = "some",
+barrels = "none",
+keys = "some",
+trikeys = "few",
+switches = "some",
+teleporters = "some",
+symmetry = "none",
+doors = "some",
+porches = "none",
+beams = "some",
+caves = "none",
+pictures = "heaps"
+  }
 }
 
--- MAP09 Approximate map dimensions: 4,200 x 4,000 map units
+--[[ MAP09 Approximate map dimensions: 4,200 x 4,000 map units
 MAP09 =
 {
 
@@ -380,6 +463,20 @@ function IWAD_MODE.begin_level()
     LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.b) .. " Entryway"
   elseif LEVEL.name == "MAP02" then
     LEVEL.map_W = 22
+  elseif LEVEL.name == "MAP03" then
+    LEVEL.map_W = 25
+  elseif LEVEL.name == "MAP04" then
+    LEVEL.map_W = 20
+  elseif LEVEL.name == "MAP05" then
+    LEVEL.map_W = 28
+  elseif LEVEL.name == "MAP06" then
+    LEVEL.map_W = 30
+  elseif LEVEL.name == "MAP07" then
+    LEVEL.map_W = 20
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.b) .. " Simple"
+  elseif LEVEL.name == "MAP08" then
+    LEVEL.map_W = 28
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.b) .. " and Traps"
   end
 
   -- combine explicit tables from above
