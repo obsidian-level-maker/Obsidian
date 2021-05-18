@@ -183,7 +183,7 @@ MAP06 =
 {
 outdoors = "few", -- outdoor lava courtyard
 liquids = "some",
-big_rooms = "some", - Mastermind crusher room
+big_rooms = "some", -- Mastermind crusher room
 big_outdoor_rooms = "none",
 barrels = "few", -- megasphere room only
 keys = "some",
