@@ -112,7 +112,7 @@ static const char *section_markers[NUM_SECTIONS][2] = {
 int Slump_MakeWAD(const char* filename) {
 	s_config slump_config;
 	slump_config.outfile = (char *)filename;
-	levelcount = main_win->game_box->length->mod_menu->GetID();
+	levelcount = main_win->game_box->length->GetID();
 	if (levelcount == "single") {
 		slump_config.levelcount = 1;	
 	} else if (levelcount == "few") {
@@ -122,7 +122,7 @@ int Slump_MakeWAD(const char* filename) {
 	} else {
 		slump_config.levelcount = 32; // "Full Game"
 	}
-	current_game = main_win->game_box->game->mod_menu->GetID();
+	current_game = main_win->game_box->game->GetID();
 	if (current_game == "doom1" || current_game == "ultdoom") {
 		slump_config.gamemask = DOOM1_BIT;
 		slump_config.map = 0;
@@ -995,7 +995,7 @@ bool doom_game_interface_c::Start(const char *preset) {
 
     // Need to preempt the rest of this process if we are using Vanilla Doom
     if (main_win) {
-        current_engine = main_win->game_box->engine->mod_menu->GetID();
+        current_engine = main_win->game_box->engine->GetID();
         if (current_engine == "vanilla") {
             build_reject = main_win->left_mods->FindID("ui_reject_options")
                            ->FindButtonOpt("bool_build_reject")

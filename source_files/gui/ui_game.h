@@ -29,10 +29,10 @@
 
 class UI_Game : public Fl_Group {
    public:
-    UI_RChoice *game;
-    UI_RChoice *engine;
-    UI_RChoice *theme;
-    UI_RChoice *length;
+    UI_RChoiceMenu *game;
+    UI_RChoiceMenu *engine;
+    UI_RChoiceMenu *theme;
+    UI_RChoiceMenu *length;
 
    private:
     Fl_Button *build;

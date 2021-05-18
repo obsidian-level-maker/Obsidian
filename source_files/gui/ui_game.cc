@@ -59,7 +59,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     int cw = W * 0.60;
     int ch = kf_h(22);
 
-    game = new UI_RChoice(cx, cy, cw, ch, _("Game: "));
+    game = new UI_RChoiceMenu(cx, cy, cw, ch, _("Game: "));
     game->align(FL_ALIGN_LEFT);
     game->labelfont(font_style);
     game->selection_color(SELECTION);
@@ -67,7 +67,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     cy += y_step;
 
-    engine = new UI_RChoice(cx, cy, cw, ch, _("Engine: "));
+    engine = new UI_RChoiceMenu(cx, cy, cw, ch, _("Engine: "));
     engine->align(FL_ALIGN_LEFT);
     engine->labelfont(font_style);
     engine->selection_color(SELECTION);
@@ -75,7 +75,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     cy += y_step;
 
-    length = new UI_RChoice(cx, cy, cw, ch, _("Length: "));
+    length = new UI_RChoiceMenu(cx, cy, cw, ch, _("Length: "));
     length->align(FL_ALIGN_LEFT);
     length->labelfont(font_style);
     length->selection_color(SELECTION);
@@ -83,7 +83,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     cy += y_step;
 
-    theme = new UI_RChoice(cx, cy, cw, ch, _("Theme: "));
+    theme = new UI_RChoiceMenu(cx, cy, cw, ch, _("Theme: "));
     theme->align(FL_ALIGN_LEFT);
     theme->labelfont(font_style);
     theme->selection_color(SELECTION);
@@ -118,25 +118,25 @@ UI_Game::~UI_Game() {}
 void UI_Game::callback_Game(Fl_Widget *w, void *data) {
     UI_Game *that = (UI_Game *)data;
 
-    ob_set_config("game", that->game->mod_menu->GetID());
+    ob_set_config("game", that->game->GetID());
 }
 
 void UI_Game::callback_Engine(Fl_Widget *w, void *data) {
     UI_Game *that = (UI_Game *)data;
 
-    ob_set_config("engine", that->engine->mod_menu->GetID());
+    ob_set_config("engine", that->engine->GetID());
 }
 
 void UI_Game::callback_Length(Fl_Widget *w, void *data) {
     UI_Game *that = (UI_Game *)data;
 
-    ob_set_config("length", that->length->mod_menu->GetID());
+    ob_set_config("length", that->length->GetID());
 }
 
 void UI_Game::callback_Theme(Fl_Widget *w, void *data) {
     UI_Game *that = (UI_Game *)data;
 
-    ob_set_config("theme", that->theme->mod_menu->GetID());
+    ob_set_config("theme", that->theme->GetID());
 }
 
 void UI_Game::Locked(bool value) {
@@ -157,21 +157,21 @@ void UI_Game::Locked(bool value) {
 
 bool UI_Game::AddChoice(const char *button, const char *id, const char *label) {
     if (StringCaseCmp(button, "game") == 0) {
-        game->mod_menu->AddChoice(id, label);
+        game->AddChoice(id, label);
         return true;
     }
     if (StringCaseCmp(button, "engine") == 0) {
     	if (StringCaseCmp(id, "advanced") != 0) {
-        	engine->mod_menu->AddChoice(id, label);
+        	engine->AddChoice(id, label);
         }
         return true;
     }
     if (StringCaseCmp(button, "length") == 0) {
-        length->mod_menu->AddChoice(id, label);
+        length->AddChoice(id, label);
         return true;
     }
     if (StringCaseCmp(button, "theme") == 0) {
-        theme->mod_menu->AddChoice(id, label);
+        theme->AddChoice(id, label);
         return true;
     }
 
@@ -180,19 +180,19 @@ bool UI_Game::AddChoice(const char *button, const char *id, const char *label) {
 
 bool UI_Game::EnableChoice(const char *button, const char *id, bool enable_it) {
     if (StringCaseCmp(button, "game") == 0) {
-        game->mod_menu->EnableChoice(id, enable_it);
+        game->EnableChoice(id, enable_it);
         return true;
     }
     if (StringCaseCmp(button, "engine") == 0) {
-        engine->mod_menu->EnableChoice(id, enable_it);
+        engine->EnableChoice(id, enable_it);
         return true;
     }
     if (StringCaseCmp(button, "length") == 0) {
-        length->mod_menu->EnableChoice(id, enable_it);
+        length->EnableChoice(id, enable_it);
         return true;
     }
     if (StringCaseCmp(button, "theme") == 0) {
-        theme->mod_menu->EnableChoice(id, enable_it);
+        theme->EnableChoice(id, enable_it);
         return true;
     }
 
@@ -201,19 +201,19 @@ bool UI_Game::EnableChoice(const char *button, const char *id, bool enable_it) {
 
 bool UI_Game::SetButton(const char *button, const char *id) {
     if (StringCaseCmp(button, "game") == 0) {
-        game->mod_menu->ChangeTo(id);
+        game->ChangeTo(id);
         return true;
     }
     if (StringCaseCmp(button, "engine") == 0) {
-        engine->mod_menu->ChangeTo(id);
+        engine->ChangeTo(id);
         return true;
     }
     if (StringCaseCmp(button, "length") == 0) {
-        length->mod_menu->ChangeTo(id);
+        length->ChangeTo(id);
         return true;
     }
     if (StringCaseCmp(button, "theme") == 0) {
-        theme->mod_menu->ChangeTo(id);
+        theme->ChangeTo(id);
         return true;
     }
 
