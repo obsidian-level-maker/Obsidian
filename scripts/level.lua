@@ -2413,15 +2413,7 @@ function Level_do_styles()
     table.merge(style_tab, THEME.style_list)
   end
 
-  if OB_MODULES["iwad_mode"].enabled then
-    for tablename, tablebody in pairs(IWAD_MODE) do
-      if OB_CONFIG.game == string.match(tablename, "%w*") then
-        if LEVEL.name == string.match(tablename, "MAP%d%d") or LEVEL.name == string.match(tablename, "E%dM%d") then
-          table.merge(style_tab, tablebody)
-        end
-      end
-    end
-  end
+  ob_invoke_hook_with_table("override_level_style", style_tab, LEVEL.name)
 
   -- decide the values
   STYLE = {}

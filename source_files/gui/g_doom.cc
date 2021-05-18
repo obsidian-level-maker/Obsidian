@@ -881,6 +881,24 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.compress_nodes = true;
         options.compress_gl_nodes = false;
         options.force_compression = true;
+    } else if (current_engine == "doomsday") {
+    	if (!build_nodes) {
+		    LogPrintf("Skipping nodes per user selection...\n");
+		    FileRename(filename, out_name);
+		    return true;
+		}
+        options.build_nodes = true;     	
+        options.build_gl_nodes = true;
+        options.build_gl_only = true;
+        if (build_reject) {
+            options.reject_mode = ERM_Rebuild;
+        } else {
+            options.reject_mode = ERM_DontTouch;
+        }
+        options.check_polyobjs = true;
+        options.compress_nodes = true;
+        options.compress_gl_nodes = false;
+        options.force_compression = false;
     } else if (current_engine == "edge") {
     	if (!UDMF_mode) {
     		if (!build_nodes) {
@@ -1005,7 +1023,15 @@ bool doom_game_interface_c::Start(const char *preset) {
 		                     ->FindOpt("map_format")
 		                     ->GetID();
 		    build_nodes = main_win->left_mods->FindID("ui_udmf_map_options")
-		                      ->FindButtonOpt("bool_build_nodes")
+		                      ->FindButtonOpt("bool_build_nodes_udmf")
+		                      ->value();
+        } else if (current_engine == "doomsday") {
+            build_reject = main_win->left_mods->FindID("ui_doomsday_map_options")
+                               ->FindButtonOpt("bool_build_reject_doomsday")
+                               ->value();
+		    map_format = "binary";
+		    build_nodes = main_win->left_mods->FindID("ui_doomsday_map_options")
+		                      ->FindButtonOpt("bool_build_nodes_doomsday")
 		                      ->value();
         } else {
             build_reject = main_win->left_mods->FindID("ui_reject_options")

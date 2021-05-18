@@ -383,11 +383,10 @@ void Main_DetermineFontScaling() {
     			  break;
    }
 
-   FL_NORMAL_SIZE = FL_NORMAL_SIZE + KF * 4;
-   small_font_size = FL_NORMAL_SIZE - 2 + KF * 3;
-   header_font_size = FL_NORMAL_SIZE + 2 + KF * 5;
+   small_font_size = FL_NORMAL_SIZE - 2;
+   header_font_size = FL_NORMAL_SIZE + 2;
 
-   fl_message_font(font_style, FL_NORMAL_SIZE + 2 + KF * 4);
+   fl_message_font(font_style, FL_NORMAL_SIZE + 2);
    
 }
 
