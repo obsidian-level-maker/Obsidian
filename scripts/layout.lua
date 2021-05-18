@@ -406,7 +406,8 @@ function Layout_place_importants(R, imp_pass)
     local chunk = Layout_spot_for_wotsit(R, goal.kind, "required")
 
     if not chunk then
-      error("No spot in room for " .. goal.kind)
+      error("No spot in room for " .. goal.kind .. " in "
+      .. "ROOM_" .. R.id)
     end
 
 -- stderrf("Layout_place_importants: goal '%s' @ %s\n", goal.kind, R.name)
