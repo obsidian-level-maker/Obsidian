@@ -28,6 +28,11 @@
 -- nearby and distant/remote switches, fences, porches, big rooms/outdoors, ambushes,
 -- scenics, symmetry, parks/park detail, caves, hallways, etc.
 
+-- LEVEL.size_multiplier
+-- LEVEL.area_multiplier
+-- LEVEL.size_consistency = strict/normal
+-- PARAM.brightness_offset
+
 IWAD_MODE = { }
 
 -- Needs the following:
@@ -45,7 +50,7 @@ IWAD_MODE.styles = {
     outdoors = "few", -- just outdoor secret and overlook
     caves = "none",
     parks = "none",
-    liquids = "none",
+    liquids = "few", -- outdoor secret
     hallways = "few",
     big_rooms = "none",
     big_outdoor_rooms = "none",
@@ -82,7 +87,7 @@ IWAD_MODE.styles = {
     big_outdoor_rooms = "none",
     steepness = "few",
     traps = "some",
-    windows = "none", -- map is indoors
+    windows = "few", -- map is indoors
     teleporters = "few", -- just that one by red key..
     keys = "few", -- single red door
     trikeys = "none",
@@ -99,180 +104,210 @@ IWAD_MODE.styles = {
 }
 
 --[[ MAP03 Approximate map dimensions: 3,000 x 2,000 map units
-IWAD_MODE.doom2_MAP03 =
+MAP03 =
 {
-
+outdoors = "some",
+liquids = "some", -- pools around main room outside
+parks = "none",
+park_detail = "none",
+big_rooms = "some",
+big_outdoor_rooms = "few",
+traps = "few",
+keys = "few",
+trikeys = "none",
+cages = "few",
+barrels = "none",
+switches = "few",
+scenics = "few",
+windows = "some",
+fences = "none",
+symmetry = "none",
+porches = "few",
+teleporters = "few",
+steepness = "some"
 }
 
 -- MAP04 Approximate map dimensions: 2,000 x 1,650 map units
-IWAD_MODE.doom2_MAP04 =
+MAP04 =
 {
-
+outdoors ="none", -- totally indoors!
+big_outdoor_rooms = "none",
+big_rooms = "none", -- small, cramped rooms
+barrels = "some",
+keys = "some",
+trikeys = "none",
+cages = "none",
+teleporters = "few",
+switches = "some",
+windows = "few",
+parks = "none",
+park_detail = "none",
+liquids = "few", -- just that slime pool leading to SSG secret
 }
 
 -- MAP05 Approximate map dimensions: 3,150 x 2,150 map units
-IWAD_MODE.doom2_MAP05 =
+MAP05 =
 {
 
 }
 
 -- MAP06 Approximate map dimensions: 4,000 x 2,500 map units
-IWAD_MODE.doom2_MAP06 =
+MAP06 =
 {
 
 }
 -- MAP07 Approximate map dimensions: 2,300 x 2,000 map units
-IWAD_MODE.doom2_MAP07 =
+MAP07 =
 {
 
 }
 
 -- MAP08 Approximate map dimensions: 4,000 x 4,000 map units
-IWAD_MODE.doom2_MAP08 =
+MAP08 =
 {
 
 }
 
 -- MAP09 Approximate map dimensions: 4,200 x 4,000 map units
-IWAD_MODE.doom2_MAP09 =
+MAP09 =
 {
 
 }
 
 -- MAP10 Approximate map dimensions: 4,200 x 4,200 map units
-IWAD_MODE.doom2_MAP10 =
+MAP10 =
 {
 
 }
 
 -- MAP11 Approximate map dimensions: 3,600 x 29000 map units
-IWAD_MODE.doom2_MAP11 =
+MAP11 =
 {
 
 }
 
 -- MAP12 Approximate map dimensions: 4,000 x 4,400 map units
-IWAD_MODE.doom2_MAP12 =
+MAP12 =
 {
 
 }
 
 -- MAP13 Approximate map dimensions: 3,200 x 4,100 map units
-IWAD_MODE.doom2_MAP13 =
+MAP13 =
 {
 
 }
 
 -- MAP14 Approximate map dimensions: 3,900 x 3,600 map units
-IWAD_MODE.doom2_MAP14 =
+MAP14 =
 {
 
 }
 
 -- MAP15 Approximate map dimensions: 4,300 x 7,200 map units
-IWAD_MODE.doom2_MAP15 =
+MAP15 =
 {
 
 }
 
 -- MAP16 Approximate map dimensions: 4,900 x 4,800 map units
-IWAD_MODE.doom2_MAP16 =
+MAP16 =
 {
 
 }
 
 -- MAP17 Approximate map dimensions: 3,300 x 3,300 map units
-IWAD_MODE.doom2_MAP17 =
+MAP17 =
 {
 
 }
 
 -- MAP18 Approximate map dimensions: 4,900 x 4,500 map units
-IWAD_MODE.doom2_MAP18 =
+MAP18 =
 {
 
 }
 
 -- MAP19 Approximate map dimensions: 5,550 x 6,000 map units
-IWAD_MODE.doom2_MAP19 =
+MAP19 =
 {
 
 }
 
 -- MAP20 Approximate map dimensions: 5,200 x 6,300 map units
-IWAD_MODE.doom2_MAP20 =
+MAP20 =
 {
 
 }
 
 -- MAP21 Approximate map dimensions: 3,500 x 3,000 map units
-IWAD_MODE.doom2_MAP21 =
+MAP21 =
 {
 
 }
 
 -- MAP22 Approximate map dimensions: 2,300 x 1,850 map units
-IWAD_MODE.doom2_MAP22 =
+MAP22 =
 {
 
 }
 
 -- MAP23 Approximate map dimensions: 4,300 x 5,050 map units
-IWAD_MODE.doom2_MAP23 =
+MAP23 =
 {
 
 }
 
 -- MAP24 Approximate map dimensions: 6,000 x 5,300 map units
-IWAD_MODE.doom2_MAP24 =
+MAP24 =
 {
 
 }
 
 -- MAP25 Approximate map dimensions: 3,600 x 7,200 map units
-IWAD_MODE.doom2_MAP25 =
+MAP25 =
 {
 
 }
 
 -- MAP26 Approximate map dimensions: 4,600 x 3,200 map units
-IWAD_MODE.doom2_MAP26 =
+MAP26 =
 {
 
 }
 
 -- MAP27 Approximate map dimensions: 3,900 x 4,500 map units
-IWAD_MODE.doom2_MAP27 =
+MAP27 =
 {
 
 }
 
 -- MAP28 Approximate map dimensions: 4,400 x 5,000 map units
-IWAD_MODE.doom2_MAP28 =
+MAP28 =
 {
 
 }
 
 -- MAP29 Approximate map dimensions: 4,800 x 4,600 map units
-IWAD_MODE.doom2_MAP29 =
+MAP29 =
 {
 
 }
 
 -- MAP30 Approximate map dimensions: 2,750 x 2,800 map units
-IWAD_MODE.doom2_MAP30 =
+MAP30 =
 {
 
 }
 
 -- MAP31 Approximate map dimensions: 8,750 x 7,200 map units
-IWAD_MODE.doom2_MAP31 =
+MAP31 =
 {
 
 }
 
 -- MAP32 Approximate map dimensions: 4,000 x 7,200 map units
-IWAD_MODE.doom2_MAP31 =
+MAP32 =
 {
 
 }
@@ -282,55 +317,55 @@ IWAD_MODE.doom2_MAP31 =
 ------------------------
 
 -- E1M1 Approximate map dimensions: 4,600 x 2,800 nap units
-IWAD_MODE.doom_E1M1 =
+E1M1 =
 {
 
 }
 
 -- E1M2 Approximate map dimensions: 5,300 x 3,900 nap units
-IWAD_MODE.doom_E1M2 =
+E1M2 =
 {
 
 }
 
 -- E1M3 Approximate map dimensions: 4,100 x 3,050 map units
-IWAD_MODE.doom_E1M3 =
+E1M3 =
 {
 
 }
 
 -- E1M4 Approximate map dimensions: 3,700 x 2,800 map units
-IWAD_MODE.doom_E1M4 =
+E1M4 =
 {
 
 }
 
 -- E1M5 Approximate map dimensions: 4,000 x 3,200 map units
-IWAD_MODE.doom_E1M5 =
+E1M5 =
 {
 
 }
 
 -- E1M6 Approximate map dimensions: 5,800 x 4,900 map units
-IWAD_MODE.doom_E1M6 =
+E1M6 =
 {
 
 }
 
 -- E1M7 Approximate map dimensions: 4,000 x 3,400 map units
-IWAD_MODE.doom_E1M7 =
+E1M7 =
 {
 
 }
 
 -- E1M8 Approximate map dimensions: 6,600 x 7,100 map units
-IWAD_MODE.doom_E1M8 =
+E1M8 =
 {
 
 }
 
 -- E1M9 Approximate map dimensions: 3,400 x 3,200 map units
-IWAD_MODE.doom_E1M9 =
+E1M9 =
 {
 
 }]]
