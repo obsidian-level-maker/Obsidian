@@ -317,7 +317,7 @@ DOOM.MATERIALS =
 
   FLOOR4_1 = { f="FLOOR4_1", t="STARTAN2" },
   FLOOR4_5 = { f="FLOOR4_5", t="BRONZE1" },
-  FLOOR4_6 = { f="FLOOR4_6", t="BRONZE3" },
+  FLOOR4_6 = { f="FLOOR4_6", t="BROWN96" },
   FLOOR4_8 = { f="FLOOR4_8", t="METAL1" },
   FLOOR5_1 = { f="FLOOR5_1", t="METAL1" },
   FLOOR5_2 = { f="FLOOR5_2", t="BROWNHUG" },
