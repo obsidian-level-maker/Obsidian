@@ -39,67 +39,66 @@ IWAD_MODE = { }
 -- Doom 2 --
 ------------
 
--- Approximate map dimensions: 3,500 x 3,600 map units
-IWAD_MODE.doom2_MAP01 =
-                {
-                    outdoors = { few=100 }, -- just outdoor secret and overlook
-                    caves = { none=100 },
-                    parks = { none=100 },
-                    liquids = { none=100 },
-                    hallways = { few=100 },
-                    big_rooms = { none=100 },
-                    big_outdoor_rooms = { none=100 },
-                    teleporters = { none=100 },
-                    steepness = { few=100 },
-                    traps = { none=100 },
-                    cages = { few=100 },
-                    ambushes = { few=100 },
-                    doors = { few=100 }, -- side room and exit doors
-                    windows = { few=100 }, -- one window
-                    switches = { none=100 }, -- secret switch doesn't count
-                    keys = { none=100 },
-                    trikeys= { none=100 },
-                    scenics = { few=100 },
-                    secrets = { few=100}, -- shotgun secret
-                    parks = { none=100 }, -- nope!
-                    park_detail = { none=100 },
-                    symmetry = { none=100 },
-                    pictures = { some=100 },
-                    barrels = { none=100 },
-                    beams = { few=100 },
-                    porches = { some=100 }, -- chainsaw porch!
-                    fences = { none=100 }
-                }
+IWAD_MODE.styles = {
+  -- Approximate map dimensions: 3,500 x 3,600 map units
+  MAP01 = {
+    outdoors = "few", -- just outdoor secret and overlook
+    caves = "none",
+    parks = "none",
+    liquids = "none",
+    hallways = "few",
+    big_rooms = "none",
+    big_outdoor_rooms = "none",
+    teleporters = "none",
+    steepness = "few",
+    traps = "none",
+    cages = "few",
+    ambushes = "few",
+    doors = "few", -- side room and exit doors
+    windows = "few", -- one window
+    switches = "none", -- secret switch doesn't count
+    keys = "none",
+    trikeys= "none",
+    scenics = "few",
+    secrets = "few", -- shotgun secret
+    parks = "none", -- nope!
+    park_detail = "none",
+    symmetry = "none",
+    pictures = "some",
+    barrels = "none",
+    beams = "few",
+    porches = "some",
+    fences = "none"
+  },
 
+  MAP02 =
+  {
+    liquids = "heaps", -- everywhere!
+    outdoors = "none", -- indoor map
+    parks = "none",
+    park_detail = "none",
+    hallways = "few",
+    big_rooms = "none",
+    big_outdoor_rooms = "none",
+    steepness = "few",
+    traps = "some",
+    windows = "none", -- map is indoors
+    teleporters = "few", -- just that one by red key..
+    keys = "few", -- single red door
+    trikeys = "none",
+    switches = "few",
+    barrels = "some", -- lower rooms have them
+    porches = "none",
+    cages = "none",
+    fences = "none",
+    scenics = "none",
+    pictures = "some",
+    symmetry = "none",
+    beams = "none "
+  }
+}
 
--- Approximate map dimensions: 2,000 x 1,900 map units
-IWAD_MODE.doom2_MAP02 =
-                {
-                    liquids = { heaps=100 }, -- everywhere!
-                    outdoors = { none=100 }, -- indoor map
-                    parks = { none=100 },
-                    park_detail = { none=100 },
-                    hallways = { few=100 },
-                    big_rooms = { none=100 },
-                    big_outdoor_rooms = { none=100 },
-                    steepness = { few=100 },
-                    traps = { some=100 },
-                    windows = { none=100 }, -- map is indoors
-                    teleporters = { few=100 }, -- just that one by red key..
-                    keys = { few=100 }, -- single red door
-                    trikeys = { none=100 },
-                    switches = { few=100 },
-                    barrels = { some=100 }, -- lower rooms have them
-                    porches = { none=100 },
-                    cages = { none=100 },
-                    fences = { none=100 },
-                    scenics = { none=100 },
-                    pictures = { some=100 },
-                    symmetry = { none=100 },
-                    beams = { none=100 }
-                }
-
--- MAP03 Approximate map dimensions: 3,000 x 2,000 map units
+--[[ MAP03 Approximate map dimensions: 3,000 x 2,000 map units
 IWAD_MODE.doom2_MAP03 =
 {
 
@@ -334,121 +333,130 @@ IWAD_MODE.doom_E1M8 =
 IWAD_MODE.doom_E1M9 =
 {
 
-}
+}]]
 
--- TODO: E2, E3 and E4
-
--- Something Shooter posted, might need second look at and where to place it in the code..
-[[
+-- translate changes to here instead
 function IWAD_MODE.begin_level()
-  gui.printf("heck: " .. table.tostr(LEVEL, 2) .. "\n")
-  gui.printf("heck: " .. table.tostr(LEVEL.theme.style_list, 2) .. "\n")
+
+  local nt = assert(namelib.NAMES)
+
+  if LEVEL.name == "MAP01" then
+    LEVEL.map_W = 18
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.b) .. " Entryway"
+  elseif LEVEL.name == "MAP02" then
+    LEVEL.map_W = 22
+  end
+
+  -- combine explicit tables from above
+  if IWAD_MODE.styles[LEVEL.name] then
+    table.merge(STYLE, IWAD_MODE.styles[LEVEL.name])
+  end
+
+  LEVEL.map_H = LEVEL.map_W
+
+  -- reporting changes
+  gui.printf(table.tostr(LEVEL,2))
 end
-]]
 
 -- TODO: E1M1 through E4M9
 
-function IWAD_MODE.iwad_style_levels(self)
+--[[function IWAD_MODE.iwad_style_levels(self)
 
-    for _,LEV in pairs(GAME.levels) do
-        if LEV.name == "MAP01" then
-            LEV.custom_size = 18
-        end
-
-        if LEV.name == "MAP02" then
-            LEV.custom_size = 22
-        end
-
-        if LEV.name == "MAP03" then
-            LEV.custom_size = 25
-        end
-
-        if LEV.name == "MAP04" then
-            LEV.custom_size = 20
-        end
-
-        if LEV.name == "MAP05" then
-            LEV.custom_size = 24
-        end
-
-        if LEV.name == "MAP06" then
-            LEV.custom_size = 28
-        end
-
-        if LEV.name == "MAP07" then
-            LEV.custom_size = 20
-            LEV.is_procedural_gotcha = true
-        end
-
-        if LEV.name == "MAP08" then
-            LEV.custom_size = 24
-        end
-
-        if LEV.name == "MAP09" then
-            LEV.custom_size = 28
-        end
-
-        if LEV.name == "MAP10" then
-            LEV.custom_size = 34
-        end
-
-        if LEV.name == "MAP11" then
-            LEV.custom_size = 24
-        end
-
-        if LEV.name == "MAP12" then
-            LEV.custom_size = 24
-        end
-
-        if LEV.name == "MAP13" then
-            LEV.custom_size = 36
-            LEV.has_streets = true
-        end
-
-        if LEV.name == "MAP14" then
-            LEV.custom_size = 26
-        end
-
-        if LEV.name == "MAP15" then
-            LEV.custom_size = 34
-        end
-
-        if LEV.name == "MAP16" then
-            LEV.custom_size = 30
-            LEV.has_streets = true
-        end
+  for _,LEV in pairs(GAME.levels) do
+    if LEV.name == "MAP01" then
+      LEV.custom_size = 18
     end
+
+    if LEV.name == "MAP02" then
+      LEV.custom_size = 22
+    end
+
+    if LEV.name == "MAP03" then
+      LEV.custom_size = 25
+    end
+
+    if LEV.name == "MAP04" then
+      LEV.custom_size = 20
+    end
+
+    if LEV.name == "MAP05" then
+        LEV.custom_size = 24
+    end
+
+    if LEV.name == "MAP06" then
+      LEV.custom_size = 28
+    end
+
+    if LEV.name == "MAP07" then
+      LEV.custom_size = 20
+      LEV.is_procedural_gotcha = true
+    end
+
+    if LEV.name == "MAP08" then
+      LEV.custom_size = 24
+    end
+
+    if LEV.name == "MAP09" then
+      LEV.custom_size = 28
+    end
+
+    if LEV.name == "MAP10" then
+      LEV.custom_size = 34
+    end
+
+    if LEV.name == "MAP11" then
+      LEV.custom_size = 24
+    end
+
+    if LEV.name == "MAP12" then
+      LEV.custom_size = 24
+    end
+
+    if LEV.name == "MAP13" then
+      LEV.custom_size = 36
+      LEV.has_streets = true
+    end
+
+    if LEV.name == "MAP14" then
+      LEV.custom_size = 26
+    end
+
+    if LEV.name == "MAP15" then
+      LEV.custom_size = 34
+    end
+
+    if LEV.name == "MAP16" then
+      LEV.custom_size = 30
+      LEV.has_streets = true
+    end
+  end
 end
 
 function IWAD_MODE.iwad_style_styles(self, local_table, qualifier)
 
-    for tablename, tablebody in pairs(IWAD_MODE) do
-      if OB_CONFIG.game == string.match(tablename, "%w*") then
-        if qualifier == string.match(tablename, "MAP%d%d") or LEVEL.name == string.match(tablename, "E%dM%d") then
-          table.merge(local_table, tablebody)
-        end
+  for tablename, tablebody in pairs(IWAD_MODE) do
+    if OB_CONFIG.game == string.match(tablename, "%w*") then
+      if qualifier == string.match(tablename, "MAP%d%d") or LEVEL.name == string.match(tablename, "E%dM%d") then
+        table.merge(local_table, tablebody)
       end
     end
+  end
 
-end
+end]]
 
-UNFINISHED["iwad_mode"] =
+
+OB_MODULES["iwad_mode"] =
 {
-label = _("(Exp) IWAD Style Mode"),
-engine = "!vanilla",
-game = "doom2", -- Only one supported for now
-side = "left",
-priority = 60,
-tooltip ="Attempts to mimic various architectural features seen in the Doom IWAD maps.",
+  label = _("(Exp) IWAD Style Mode"),
+  engine = "!vanilla",
+  game = "doom2", -- Only one supported for now
+  side = "left",
+  priority = 60,
+  tooltip ="Attempts to mimic various architectural features seen in the Doom IWAD maps.",
 
-tables =
-{
-    IWAD_MODE
-},
-
-hooks =
-{
-    get_levels = IWAD_MODE.iwad_style_levels,
-    override_level_style = IWAD_MODE.iwad_style_styles
-}
+  hooks =
+  {
+    --get_levels = IWAD_MODE.iwad_style_levels,
+    begin_level = IWAD_MODE.begin_level
+  }
 }
