@@ -147,7 +147,7 @@ void UI_Game::callback_Theme(Fl_Widget *w, void *data) {
 
 void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
     fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window *win = new Fl_Window(640, 480, "Help");
+    Fl_Window *win = new Fl_Window(640, 480, "Engine");
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640-40, 480-40, NULL);
     disp->buffer(buff);
@@ -161,7 +161,7 @@ void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
 
 void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
     fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window *win = new Fl_Window(640, 480, "Help");
+    Fl_Window *win = new Fl_Window(640, 480, "Length");
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640-40, 480-40, NULL);
     disp->buffer(buff);
@@ -175,7 +175,7 @@ void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
 
 void UI_Game::callback_ThemeHelp(Fl_Widget *w, void *data) {
     fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window *win = new Fl_Window(640, 480, "Help");
+    Fl_Window *win = new Fl_Window(640, 480, "Theme");
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640-40, 480-40, NULL);
     disp->buffer(buff);

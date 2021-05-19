@@ -115,6 +115,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 	rch->mod_help->labelfont(font_style);
 	rch->mod_help->labelcolor(FONT_COLOR);
 	rch->mod_help->help_text = tip;
+	rch->mod_help->help_title = label;
 	rch->mod_help->callback(callback_ShowHelp, NULL);
 
     opt_change_callback_data_t *cb_data = new opt_change_callback_data_t;
@@ -197,6 +198,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 	rsl->mod_help->labelfont(font_style);
 	rsl->mod_help->labelcolor(FONT_COLOR);
 	rsl->mod_help->help_text = tip;
+	rsl->mod_help->help_title = label;
 	rsl->mod_help->callback(callback_ShowHelp, NULL);
 	
     rsl->original_label = new_label;
@@ -267,6 +269,7 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
 	rbt->mod_help->labelfont(font_style);
 	rbt->mod_help->labelcolor(FONT_COLOR);
 	rbt->mod_help->help_text = tip;
+	rbt->mod_help->help_title = label;
 	rbt->mod_help->callback(callback_ShowHelp, NULL);
 
     if (!mod_button->value()) {
@@ -525,7 +528,7 @@ void UI_Module::callback_ShowHelp(Fl_Widget *w, void *data) {
 
     SYS_ASSERT(mod_help);
     fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window *win = new Fl_Window(640, 480, "Help");
+    Fl_Window *win = new Fl_Window(640, 480, mod_help->help_title);
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640-40, 480-40, NULL);
     disp->buffer(buff);

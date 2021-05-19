@@ -67,7 +67,8 @@ class UI_HelpLink : public Fl_Button {
     UI_HelpLink(int x, int y, int w, int h, const char *label);
     virtual ~UI_HelpLink();
     
-    const char* help_text;
+    const char* help_text = "";
+    const char* help_title = "";
 
    public:
     // FLTK overrides
