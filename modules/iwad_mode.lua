@@ -739,7 +739,7 @@ function IWAD_MODE.iwad_style_styles(self, local_table, qualifier)
 end]]
 
 
-OB_MODULES["iwad_mode"] =
+UNFINISHED["iwad_mode"] =
 {
   label = _("(Exp) IWAD Style Mode"),
   engine = "!vanilla",
