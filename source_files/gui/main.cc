@@ -82,7 +82,6 @@ int window_scaling = 0;
 int font_scaling = 0;
 int num_fonts = 16; // FLTK built-in amount
 std::vector<std::string> font_menu_items;
-std::vector<int> font_map;
 
 bool create_backups = true;
 bool overwrite_warning = true;
@@ -405,10 +404,6 @@ void Main_PopulateFontMap() {
 
 	num_fonts = font_menu_items.size();	
 	std::sort(font_menu_items.begin(), font_menu_items.end());
-	
-  	for (int x = 0; x < num_fonts; x++) {
-    	font_map.push_back(x);
-  	}	
 		
 }
 
@@ -501,7 +496,7 @@ void Main_SetupFLTK() {
     	if (font_theme == 0) {
     		font_style = 0;
     	} else {
-    		font_style = font_map[font_theme - 1];
+    		font_style = font_theme - 1;
     	}
     } else {
     	// Fallback

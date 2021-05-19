@@ -84,7 +84,6 @@ extern int font_scaling;
 extern int num_fonts;
 extern bool single_pane;
 extern std::vector<std::string> font_menu_items; // Used to correlate drop-down values to fonts
-extern std::vector<int> font_map;
 
 extern bool create_backups;
 extern bool overwrite_warning;
