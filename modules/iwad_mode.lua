@@ -233,11 +233,13 @@ pictures = "few"
 MAP08 =
 {
 outdoors = "none", -- another totally indoor map..
+windows = "none",
 big_outdoor_rooms = "none",
 traps = "heaps", -- not called "Tricks and Traps" for nothing!
 ambushes = "heaps",
 steepness = "some",
 barrels = "none",
+hallways = "some",
 keys = "some",
 trikeys = "few",
 switches = "some",
@@ -248,58 +250,218 @@ porches = "none",
 beams = "some",
 caves = "none",
 pictures = "heaps"
-  }
 }
 
---[[ MAP09 Approximate map dimensions: 4,200 x 4,000 map units
+-- MAP09 Approximate map dimensions: 4,200 x 4,000 map units
 MAP09 =
 {
-
+steepness = "heaps",
+outdoors = "few",
+big_outdoor_rooms = "some",
+symmetry = "none",
+doors = "some",
+keys ="heaps",
+trikeys = "some",
+porches = "few",
+teleporters ="few",
+traps = "some",
+switches = "some",
+beams = "few",
+ambushes = "heaps",
+traps = "few",
+pictures = "some",
+barrels = "none",
+liquids = "few",
+parks = "none",
+cages = "heaps",
+secrets = "few",
+hallways = "some",
+windows = "few",
+scenics = "none"
 }
 
 -- MAP10 Approximate map dimensions: 4,200 x 4,200 map units
 MAP10 =
 {
-
+big_rooms = "heaps",
+big_outdoor_rooms = "few",
+caves = "few",
+doors = "some",
+keys = "heaps",
+trikeys = "few",
+switches = "few",
+barrels = "some",
+outdoors = "none",
+steepness = "few",
+fences = "none",
+liquids = "none",
+ambushes = "some",
+traps = "some",
+hallways = "few",
+windows = "few",
+beams = "some",
+scenics = "few"
 }
 
 -- MAP11 Approximate map dimensions: 3,600 x 29000 map units
 MAP11 =
 {
-
+outdoors = "heaps", -- It *is* outside mostly..
+big_outdoor_rooms = "heaps",
+big_rooms = "some",
+steepness = "heaps",
+windows = "some",
+doors = "few",
+keys = "some",
+trikeys = "few",
+caves = "some",
+ambushes = "some",
+traps = "some",
+beams = "heaps",
+switches = "few",
+teleporters = "some",
+secrets = "some",
+liquids = "heaps",
+cages = "some",
+scenics = "some",
+parks = "few",
+symmetry = "none"
 }
 
 -- MAP12 Approximate map dimensions: 4,000 x 4,400 map units
 MAP12 =
 {
-
+outdoors = "heaps",
+big_outdoor_rooms = "heaps",
+big_rooms = "few",
+windows = "few",
+scenics = "heaps",
+steepness = "some",
+parks = "some",
+park_detail = "few",
+ambushes = "few",
+traps = "some",
+keys = "some",
+trikeys = "few",
+switches = "some",
+liquids = "none",
+teleporters = "few",
+secrets = "few",
+doors = "some",
+beams = "none",
+symmetry = "some",
+cages = "few",
+pictures = "some",
+barrels = "none"
 }
 
 -- MAP13 Approximate map dimensions: 3,200 x 4,100 map units
 MAP13 =
 {
-
+outdoors = "heaps",
+big_outdoor_rooms = "some",
+doors = "heaps",
+big_rooms = "some",
+windows = "heaps",
+ambushes = "some",
+traps = "some",
+keys = "heaps",
+trikeys = "some",
+switches = "some",
+steepness = "heaps",
+barrels = "few",
+teleporters = "some",
+secrets = "some",
+symmetry = "heaps",
+cages = "heaps",
+pictures = "some",
+liquids = "none",
+caves = "none",
+scenics = "some",
+fences = "few",
+porches = "some",
+hallways = "few"
 }
 
 -- MAP14 Approximate map dimensions: 3,900 x 3,600 map units
 MAP14 =
 {
-
+outdoors = "some",
+big_outdoor_rooms = "few",
+big_rooms = "some",
+steepness = "some"
+windows = "heaps",
+ambushes = "some",
+traps = "some",
+barrels = "none",
+teleporters = "few",
+scenics = "some",
+fences = "heaps",
+porches = "heaps",
+liquids = "some",
+keys = "heaps",
+trikeys = "none",
+symmetry = "heaps",
+secrets = "few",
+hallways = "none",
+parks = "few",
+park_detail = "some"
 }
 
 -- MAP15 Approximate map dimensions: 4,300 x 7,200 map units
 MAP15 =
 {
-
+outdoors = "heaps",
+big_outdoor_rooms = "heaps",
+windows = "some",
+steepness = "heaps",
+barrels = "some",
+ambushes = "some",
+traps = "few",
+secrets = "heaps",
+porches = "heaps",
+teleporters = "some",
+liquids = "some",
+keys = "some",
+trikeys = "none",
+hallways = "none",
+scenics = "some",
+symmetry = "heaps",
+fences = "heaps",
+parks = "none",
+hallways = "few",
+switches = "some",
+pictures = "heaps",
+cages = "some"
 }
 
 -- MAP16 Approximate map dimensions: 4,900 x 4,800 map units
 MAP16 =
 {
-
+outdoors = "heaps",
+big_outdoor_rooms = "heaps",
+windows = "heaps",
+big_rooms = "none",
+steepness = "some",
+switches = "few",
+keys = "some",
+trikeys = "some",
+liquids = "few",
+pictures = "heaps",
+hallways = "few",
+fences = "some",
+scenics = "heaps",
+symmetry = "some",
+ambushes = "some",
+traps = "heaps",
+secrets = "few",
+barrels = "none",
+beams = "some",
+cages = "few"
+  }
 }
 
--- MAP17 Approximate map dimensions: 3,300 x 3,300 map units
+--[[ MAP17 Approximate map dimensions: 3,300 x 3,300 map units
 MAP17 =
 {
 
