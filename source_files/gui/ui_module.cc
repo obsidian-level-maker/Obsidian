@@ -104,6 +104,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 	rch->mod_label = 
 			new Fl_Box(rch->x(), rch->y(), (!single_pane ? rch->w() * .95 : rch->w() * .40), kf_h(24), new_label);
 	rch->mod_label->align((!single_pane ? (FL_ALIGN_LEFT | FL_ALIGN_INSIDE) : (FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP)));
+	rch->mod_label->labelfont(font_style);
 
 	rch->mod_menu = 
 		new UI_RChoiceMenu((!single_pane ? rch->x() : rch->x() + (rch->w() * .45)), (!single_pane ? rch->y() + rch->mod_label->h() : rch->y()), (single_pane ? rch->w() * .50 : rch->w()), kf_h(24), NULL);
@@ -164,6 +165,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 	rsl->mod_label = 
 			new Fl_Box(rsl->x(), rsl->y(), (!single_pane ? rsl->w() * .95 : rsl->w() * .40), kf_h(24), new_label);
 	rsl->mod_label->align((!single_pane ? (FL_ALIGN_LEFT | FL_ALIGN_INSIDE) : (FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP)));
+	rsl->mod_label->labelfont(font_style);
 
     rsl->prev_button =
         new UI_CustomArrowButton((!single_pane ? rsl->x() : rsl->x() + (rsl->w() * .45)), (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@<");
@@ -258,6 +260,7 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
 	rbt->mod_label = 
 			new Fl_Box(rbt->x(), rbt->y(), rbt->w() * .30, kf_h(24), new_label);
 	rbt->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+	rbt->mod_label->labelfont(font_style);
 	
 	rbt->mod_check = 
 			new UI_CustomCheckBox(rbt->x() + (!single_pane ? (rbt->w() * .5) : (rbt->w() * .45)), rbt->y(), rbt->w() * .10, kf_h(24), NULL);
