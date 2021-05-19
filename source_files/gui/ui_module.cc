@@ -86,7 +86,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
     //	int nh = kf_h(30);
 
     int nx = x() + kf_w(6);
-    int ny = y() + cur_opt_y;
+    int ny = y() + cur_opt_y - kf_h(15);
 
     // make label with ': ' suffixed
     int len = strlen(label);
@@ -129,7 +129,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
     add(rch);
 
-    cur_opt_y += gap ? kf_h(59) : kf_h(45);
+    cur_opt_y += (!single_pane ? (gap ? kf_h(64) : kf_h(50)) : (gap ? kf_h(59) : kf_h(45)));
 
     resize(x(), y(), w(), CalcHeight());
     redraw();
@@ -144,7 +144,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     //	int nh = kf_h(30);
 
     int nx = x() + kf_w(6);
-    int ny = y() + cur_opt_y;
+    int ny = y() + cur_opt_y - kf_h(15);
 
     // make label with ': ' suffixed
     int len = strlen(label);
@@ -225,7 +225,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 
     add(rsl);
 
-    cur_opt_y += gap ? kf_h(59) : kf_h(45);
+    cur_opt_y += (!single_pane ? (gap ? kf_h(64) : kf_h(50)) : (gap ? kf_h(59) : kf_h(45)));
 
     resize(x(), y(), w(), CalcHeight());
     redraw();

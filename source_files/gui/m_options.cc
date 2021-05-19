@@ -560,7 +560,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_text_color = new Fl_Button(cx, cy, W * .25, kf_h(24),
                                        _("Font"));
     opt_text_color->visible_focus(0);
-    opt_text_color->box(FL_DOWN_BOX);
+    opt_text_color->box(button_style);
     opt_text_color->color(fl_rgb_color(text_red, text_green, text_blue));
     opt_text_color->align(FL_ALIGN_BOTTOM);
     opt_text_color->callback(callback_TextColor, this);
@@ -569,7 +569,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_bg_color = new Fl_Button(cx + opt_text_color->w() +  (3 * pad), cy, W * .25, kf_h(24),
                                        _("Panels"));
     opt_bg_color->visible_focus(0);
-    opt_bg_color->box(FL_DOWN_BOX);
+    opt_bg_color->box(button_style);
     opt_bg_color->color(fl_rgb_color(bg_red, bg_green, bg_blue));
     opt_bg_color->align(FL_ALIGN_BOTTOM);
     opt_bg_color->callback(callback_BgColor, this);
@@ -578,7 +578,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_bg2_color = new Fl_Button(cx + (opt_text_color->w() + (3 * pad)) * 2, cy, W * .25, kf_h(24),
                                        _("Highlights"));
     opt_bg2_color->visible_focus(0);
-    opt_bg2_color->box(FL_DOWN_BOX);
+    opt_bg2_color->box(button_style);
     opt_bg2_color->color(fl_rgb_color(bg2_red, bg2_green, bg2_blue));
     opt_bg2_color->align(FL_ALIGN_BOTTOM);
     opt_bg2_color->callback(callback_Bg2Color, this);
