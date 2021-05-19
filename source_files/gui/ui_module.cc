@@ -247,7 +247,9 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
     int len = strlen(label);
     char *new_label = StringNew(len + 4);
     strcpy(new_label, label);
-    strcat(new_label, ": ");
+    if (single_pane) {
+    	strcat(new_label, ": ");
+    }
 	
     if (!tip) {
         tip = "Help file not yet written for this setting :(";
@@ -258,12 +260,12 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
 	
 	
 	rbt->mod_label = 
-			new Fl_Box(rbt->x(), rbt->y(), rbt->w() * .30, kf_h(24), new_label);
+			new Fl_Box(rbt->x() + (single_pane ? 0 : (rbt->w() * .075)), rbt->y(), rbt->w() * .30, kf_h(24), new_label);
 	rbt->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	rbt->mod_label->labelfont(font_style);
 	
 	rbt->mod_check = 
-			new UI_CustomCheckBox(rbt->x() + (!single_pane ? (rbt->w() * .5) : (rbt->w() * .45)), rbt->y(), rbt->w() * .10, kf_h(24), NULL);
+			new UI_CustomCheckBox(rbt->x() + (!single_pane ? 0 : (rbt->w() * .45)), rbt->y(), rbt->w() * .10, kf_h(24), NULL);
 	rbt->mod_check->selection_color(SELECTION);
 	
 	rbt->mod_help =
