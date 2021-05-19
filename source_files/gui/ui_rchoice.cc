@@ -173,6 +173,7 @@ choice_data_c *UI_RChoiceMenu::FindID(const char *id) const {
 }
 
 choice_data_c *UI_RChoiceMenu::FindMapped() const {
+
     for (unsigned int j = 0; j < opt_list.size(); j++) {
         choice_data_c *P = opt_list[j];
 

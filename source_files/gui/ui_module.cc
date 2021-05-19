@@ -107,7 +107,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
 	rch->mod_menu = 
 		new UI_RChoiceMenu((!single_pane ? rch->x() : rch->x() + (rch->w() * .45)), (!single_pane ? rch->y() + rch->mod_label->h() : rch->y()), (single_pane ? rch->w() * .50 : rch->w()), kf_h(24), NULL);
-	rch->mod_menu->selection_color(SELECTION);			
+	rch->mod_menu->selection_color(SELECTION);		
 
 	rch->mod_help =
 			new UI_HelpLink(rch->x() + (!single_pane ? (rch->w() * .9) : (rch->w() * .95)), rch->y(), rch->w() * .075, kf_h(24), "?");
@@ -403,7 +403,7 @@ UI_RButton *UI_Module::FindButtonOpt(const char *option) {
 }
 
 void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
-    UI_RChoice *rch = (UI_RChoice *)w;
+    UI_RChoiceMenu *rch = (UI_RChoiceMenu *)w;
 
     opt_change_callback_data_t *cb_data = (opt_change_callback_data_t *)data;
 
@@ -414,7 +414,7 @@ void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
     
     UI_Module *parent = (UI_Module*)M->parent();
 
-    ob_set_mod_option(parent->id_name.c_str(), cb_data->opt_name, rch->mod_menu->GetID());
+    ob_set_mod_option(parent->id_name.c_str(), cb_data->opt_name, rch->GetID());
 }
 
 void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
