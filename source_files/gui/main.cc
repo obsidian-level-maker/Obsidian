@@ -77,10 +77,12 @@ Fl_Boxtype box_style = FL_THIN_UP_BOX;
 int button_theme = 0;
 Fl_Boxtype button_style = FL_THIN_UP_BOX;
 int widget_theme = 0;
-bool single_pane = true;
+bool single_pane = false;
 int window_scaling = 0;
 int font_scaling = 0;
 int num_fonts = 16; // FLTK built-in amount
+std::vector<std::string> font_menu_items;
+std::vector<int> font_map;
 
 bool create_backups = true;
 bool overwrite_warning = true;
@@ -390,10 +392,29 @@ void Main_DetermineFontScaling() {
    
 }
 
-void Main_SetupFLTK() {
+void Main_PopulateFontMap() {
+	
+	num_fonts = Fl::set_fonts(NULL) - 16; // Total fonts - FLTK enumerations
+	
+	for (int x = 16; x < num_fonts; x++) { // Starting at 16 skips the FLTK default enumerations
+		std::string fontname = Fl::get_font_name(x);
+		if (std::isalpha(fontname.at(0))) {
+			font_menu_items.push_back(fontname);
+		}
+	}
 
-	// Add system fonts to FLTK font table
-	num_fonts = Fl::set_fonts(NULL);
+	num_fonts = font_menu_items.size();	
+	std::sort(font_menu_items.begin(), font_menu_items.end());
+	
+  	for (int x = 0; x < num_fonts; x++) {
+    	font_map.push_back(x);
+  	}	
+		
+}
+
+void Main_SetupFLTK() {
+	
+	Main_PopulateFontMap();
 	
     Fl::visual(FL_DOUBLE | FL_RGB);  
     switch(color_scheme) {
@@ -475,14 +496,16 @@ void Main_SetupFLTK() {
     	// Shouldn't be reached, but still
     	default : button_style = FL_UP_BOX;
     			  break;    			     			 
-    }
-    if (font_theme == 0) {
-   		font_style = FL_HELVETICA;	     			 
-    } else if (font_theme < num_fonts) { // In case the number of installed fonts is reduced between launches
-    	font_style = font_theme;
+    } 			 
+    if (font_theme < num_fonts) { // In case the number of installed fonts is reduced between launches
+    	if (font_theme == 0) {
+    		font_style = 0;
+    	} else {
+    		font_style = font_map[font_theme - 1];
+    	}
     } else {
     	// Fallback
-    	font_style = FL_HELVETICA;
+    	font_style = 0;
     }
     
     screen_w = Fl::w();

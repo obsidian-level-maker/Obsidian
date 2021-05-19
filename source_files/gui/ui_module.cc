@@ -76,7 +76,7 @@ bool UI_Module::Is_UI() const {
 }
 
 typedef struct {
-    UI_Module *mod;
+    UI_RChoice *mod;
     const char *opt_name;
 } opt_change_callback_data_t;
 
@@ -86,7 +86,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
     //	int nh = kf_h(30);
 
     int nx = x() + kf_w(6);
-    int ny = y() + cur_opt_y;
+    int ny = y() + cur_opt_y - kf_h(15);
 
     // make label with ': ' suffixed
     int len = strlen(label);
@@ -94,36 +94,34 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
     strcpy(new_label, label);
     strcat(new_label, ": ");
 
-	double width_multi;
-	double x_multi;
-	Fl_Align alignment;
-	
-	
-	if (!single_pane) {
-		width_multi = .95;
-		alignment = FL_ALIGN_TOP_LEFT;
-		x_multi = 0;
-	} else {
-		width_multi = .55;
-		alignment = (FL_ALIGN_LEFT | FL_ALIGN_WRAP);
-		x_multi = .40;
-	}
-	
-	UI_RChoice *rch =
-		    new UI_RChoice(nx + (nw * x_multi), ny + kf_h(15), nw * width_multi, kf_h(24), new_label);
-	rch->align(alignment);
-	rch->selection_color(SELECTION);
-
     if (!tip) {
-        tip = "";
+        tip = "Help file not yet written for this setting :(";
     }
-    rch->tooltip(tip);
+
+	UI_RChoice *rch =
+		    new UI_RChoice(nx, ny + kf_h(15), nw * .95, (!single_pane ? kf_h(48) : kf_h(24)), NULL);
+
+	rch->mod_label = 
+			new Fl_Box(rch->x(), rch->y(), (!single_pane ? rch->w() * .95 : rch->w() * .40), kf_h(24), new_label);
+	rch->mod_label->align((!single_pane ? (FL_ALIGN_LEFT | FL_ALIGN_INSIDE) : (FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP)));
+
+	rch->mod_menu = 
+		new UI_RChoiceMenu((!single_pane ? rch->x() : rch->x() + (rch->w() * .45)), (!single_pane ? rch->y() + rch->mod_label->h() : rch->y()), (single_pane ? rch->w() * .50 : rch->w()), kf_h(24), NULL);
+	rch->mod_menu->selection_color(SELECTION);			
+
+	rch->mod_help =
+			new UI_HelpLink(rch->x() + (!single_pane ? (rch->w() * .9) : (rch->w() * .95)), rch->y(), rch->w() * .075, kf_h(24), "?");
+	rch->mod_help->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
+	rch->mod_help->labelfont(font_style);
+	rch->mod_help->labelcolor(FONT_COLOR);
+	rch->mod_help->help_text = tip;
+	rch->mod_help->callback(callback_ShowHelp, NULL);
 
     opt_change_callback_data_t *cb_data = new opt_change_callback_data_t;
-    cb_data->mod = this;
+    cb_data->mod = rch;
     cb_data->opt_name = StringDup(opt);
 
-    rch->callback(callback_OptChange, cb_data);
+    rch->mod_menu->callback(callback_OptChange, cb_data);
 
     if (!mod_button->value()) {
         rch->hide();
@@ -131,7 +129,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
     add(rch);
 
-    cur_opt_y += gap ? kf_h(59) : kf_h(45);
+    cur_opt_y += (!single_pane ? (gap ? kf_h(64) : kf_h(50)) : (gap ? kf_h(59) : kf_h(45)));
 
     resize(x(), y(), w(), CalcHeight());
     redraw();
@@ -146,7 +144,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     //	int nh = kf_h(30);
 
     int nx = x() + kf_w(6);
-    int ny = y() + cur_opt_y;
+    int ny = y() + cur_opt_y - kf_h(15);
 
     // make label with ': ' suffixed
     int len = strlen(label);
@@ -159,7 +157,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     }
 
 	UI_RSlide *rsl =
-		    new UI_RSlide(nx, ny + kf_h(15), nw * .95, kf_h(48), NULL);
+		    new UI_RSlide(nx, ny + kf_h(15), nw * .95, (!single_pane ? kf_h(48) : kf_h(24)), NULL);
 
 
 	rsl->mod_label = 
@@ -227,7 +225,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 
     add(rsl);
 
-    cur_opt_y += gap ? kf_h(59) : kf_h(45);
+    cur_opt_y += (!single_pane ? (gap ? kf_h(64) : kf_h(50)) : (gap ? kf_h(59) : kf_h(45)));
 
     resize(x(), y(), w(), CalcHeight());
     redraw();
@@ -260,7 +258,7 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
 	rbt->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
 	
 	rbt->mod_check = 
-			new UI_CustomCheckBox(rbt->x() + (!single_pane ? (rbt->w() * .8) : (rbt->w() * .85)), rbt->y(), rbt->w() * .10, kf_h(24), NULL);
+			new UI_CustomCheckBox(rbt->x() + (!single_pane ? (rbt->w() * .5) : (rbt->w() * .45)), rbt->y(), rbt->w() * .10, kf_h(24), NULL);
 	rbt->mod_check->selection_color(SELECTION);
 	
 	rbt->mod_help =
@@ -338,8 +336,8 @@ void UI_Module::AddOptionChoice(const char *option, const char *id,
         return;
     }
 
-    rch->AddChoice(id, label);
-    rch->EnableChoice(id, 1);
+    rch->mod_menu->AddChoice(id, label);
+    rch->mod_menu->EnableChoice(id, 1);
 }
 
 bool UI_Module::SetOption(const char *option, const char *value) {
@@ -349,7 +347,7 @@ bool UI_Module::SetOption(const char *option, const char *value) {
         return false;
     }
 
-    rch->ChangeTo(value);
+    rch->mod_menu->ChangeTo(value);
 
     return true;
 }
@@ -409,9 +407,11 @@ void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
     SYS_ASSERT(rch);
     SYS_ASSERT(cb_data);
 
-    UI_Module *M = cb_data->mod;
+    UI_RChoice *M = cb_data->mod;
+    
+    UI_Module *parent = (UI_Module*)M->parent();
 
-    ob_set_mod_option(M->id_name.c_str(), cb_data->opt_name, rch->GetID());
+    ob_set_mod_option(parent->id_name.c_str(), cb_data->opt_name, rch->mod_menu->GetID());
 }
 
 void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
@@ -524,16 +524,17 @@ void UI_Module::callback_ShowHelp(Fl_Widget *w, void *data) {
     UI_HelpLink *mod_help = (UI_HelpLink *)w;
 
     SYS_ASSERT(mod_help);
-    
+    fl_cursor(FL_CURSOR_DEFAULT);
     Fl_Window *win = new Fl_Window(640, 480, "Help");
-     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
-     Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640-40, 480-40, NULL);
-     disp->buffer(buff);
-     disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
-     win->resizable(*disp);
-     win->hotspot(0, 0, 0);
-     win->show();
-     buff->text(mod_help->help_text); 
+    Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640-40, 480-40, NULL);
+    disp->buffer(buff);
+    disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+    win->resizable(*disp);
+    win->hotspot(0, 0, 0);
+    win->set_modal();
+    win->show();
+    buff->text(mod_help->help_text); 
 	
 }
 

@@ -51,16 +51,16 @@ choice_data_c::~choice_data_c() {
 
 //----------------------------------------------------------------
 
-UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label)
+UI_RChoiceMenu::UI_RChoiceMenu(int x, int y, int w, int h, const char *label)
     : UI_CustomMenu(x, y, w, h, label), opt_list() { visible_focus(0); labelfont(font_style); textfont(font_style); }
 
-UI_RChoice::~UI_RChoice() {
+UI_RChoiceMenu::~UI_RChoiceMenu() {
     for (unsigned int i = 0; i < opt_list.size(); i++) {
         delete opt_list[i];
     }
 }
 
-void UI_RChoice::AddChoice(const char *id, const char *label) {
+void UI_RChoiceMenu::AddChoice(const char *id, const char *label) {
     choice_data_c *opt = FindID(id);
 
     if (opt) {
@@ -80,7 +80,7 @@ void UI_RChoice::AddChoice(const char *id, const char *label) {
     }
 }
 
-bool UI_RChoice::EnableChoice(const char *id, bool enable_it) {
+bool UI_RChoiceMenu::EnableChoice(const char *id, bool enable_it) {
     SYS_ASSERT(id);
 
     choice_data_c *P = FindID(id);
@@ -97,19 +97,19 @@ bool UI_RChoice::EnableChoice(const char *id, bool enable_it) {
     return true;
 }
 
-const char *UI_RChoice::GetID() const {
+const char *UI_RChoiceMenu::GetID() const {
     choice_data_c *P = FindMapped();
 
     return P ? P->id : "";
 }
 
-const char *UI_RChoice::GetLabel() const {
+const char *UI_RChoiceMenu::GetLabel() const {
     choice_data_c *P = FindMapped();
 
     return P ? P->label : "";
 }
 
-bool UI_RChoice::ChangeTo(const char *id) {
+bool UI_RChoiceMenu::ChangeTo(const char *id) {
     SYS_ASSERT(id);
 
     choice_data_c *P = FindID(id);
@@ -125,7 +125,7 @@ bool UI_RChoice::ChangeTo(const char *id) {
 
 //----------------------------------------------------------------
 
-void UI_RChoice::Recreate() {
+void UI_RChoiceMenu::Recreate() {
     // recreate the choice list
 
     choice_data_c *LAST = FindMapped();
@@ -160,7 +160,7 @@ void UI_RChoice::Recreate() {
     value(0);
 }
 
-choice_data_c *UI_RChoice::FindID(const char *id) const {
+choice_data_c *UI_RChoiceMenu::FindID(const char *id) const {
     for (unsigned int j = 0; j < opt_list.size(); j++) {
         choice_data_c *P = opt_list[j];
 
@@ -172,7 +172,7 @@ choice_data_c *UI_RChoice::FindID(const char *id) const {
     return NULL;
 }
 
-choice_data_c *UI_RChoice::FindMapped() const {
+choice_data_c *UI_RChoiceMenu::FindMapped() const {
     for (unsigned int j = 0; j < opt_list.size(); j++) {
         choice_data_c *P = opt_list[j];
 
@@ -184,7 +184,7 @@ choice_data_c *UI_RChoice::FindMapped() const {
     return NULL;
 }
 
-void UI_RChoice::GotoPrevious() {
+void UI_RChoiceMenu::GotoPrevious() {
     int v = value();
 
     if (v > 0) {
@@ -201,7 +201,7 @@ void UI_RChoice::GotoPrevious() {
     }
 }
 
-void UI_RChoice::GotoNext() {
+void UI_RChoiceMenu::GotoNext() {
     int v = value();
     int last = size() - 2;
 
@@ -218,6 +218,13 @@ void UI_RChoice::GotoNext() {
         do_callback();
     }
 }
+
+//----------------------------------------------------------------
+
+UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label)
+    : Fl_Group(x, y, w, h, label) { visible_focus(0); labelfont(font_style); }
+
+UI_RChoice::~UI_RChoice() {}
 
 //----------------------------------------------------------------
 

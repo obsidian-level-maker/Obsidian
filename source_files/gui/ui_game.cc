@@ -59,7 +59,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     int cw = W * 0.60;
     int ch = kf_h(22);
 
-    game = new UI_RChoice(cx, cy, cw, ch, _("Game: "));
+    game = new UI_RChoiceMenu(cx, cy, cw, ch, _("Game: "));
     game->align(FL_ALIGN_LEFT);
     game->labelfont(font_style);
     game->selection_color(SELECTION);
@@ -67,7 +67,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     cy += y_step;
 
-    engine = new UI_RChoice(cx, cy, cw, ch, _("Engine: "));
+    engine = new UI_RChoiceMenu(cx, cy, cw, ch, _("Engine: "));
     engine->align(FL_ALIGN_LEFT);
     engine->labelfont(font_style);
     engine->selection_color(SELECTION);
@@ -75,7 +75,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     cy += y_step;
 
-    length = new UI_RChoice(cx, cy, cw, ch, _("Length: "));
+    length = new UI_RChoiceMenu(cx, cy, cw, ch, _("Length: "));
     length->align(FL_ALIGN_LEFT);
     length->labelfont(font_style);
     length->selection_color(SELECTION);
@@ -83,7 +83,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     cy += y_step;
 
-    theme = new UI_RChoice(cx, cy, cw, ch, _("Theme: "));
+    theme = new UI_RChoiceMenu(cx, cy, cw, ch, _("Theme: "));
     theme->align(FL_ALIGN_LEFT);
     theme->labelfont(font_style);
     theme->selection_color(SELECTION);

@@ -22,6 +22,9 @@
 #define __OBLIGE_MAIN_H__
 
 #include <cstddef>
+#include <vector>
+#include <string>
+#include <algorithm>
 #include "hdr_fltk.h"
 #define OBSIDIAN_TITLE "OBSIDIAN Level Maker"
 
@@ -76,10 +79,12 @@ extern int font_theme;
 extern int box_theme;
 extern int button_theme;
 extern int widget_theme;
-extern int window_scaling;  // 0 = Auto, 1 = Tiny ... 5 = Huge
+extern int window_scaling;
 extern int font_scaling;
 extern int num_fonts;
 extern bool single_pane;
+extern std::vector<std::string> font_menu_items; // Used to correlate drop-down values to fonts
+extern std::vector<int> font_map;
 
 extern bool create_backups;
 extern bool overwrite_warning;
@@ -95,6 +100,7 @@ void Main_FatalError(const char *msg, ...);
 void Main_ProgStatus(const char *msg, ...);
 bool Main_BackupFile(const char *filename, const char *ext);
 void Main_Ticker();
+void Main_PopulateFontMap();
 
 // Dialog Windows
 void DLG_ShowError(const char *msg, ...);

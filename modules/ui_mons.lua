@@ -117,7 +117,7 @@ OB_MODULES["ui_mons"] =
       min = -0.10,
       max = 10.00,
       increment = .05,
-      default = -0.10,
+      default = 1.0,
       nan = "-0.10:Mix It Up," ..
       "-0.05:Progressive," ..
       "0:None," ..

@@ -36,9 +36,8 @@
 //
 
 class choice_data_c {
-    friend class UI_RChoice;
-    friend class UI_RSlide; 
-    friend class UI_RButton;
+    friend class UI_RChoice; // Don't know if the 'group' for the menu needs to be a friend as well
+    friend class UI_RChoiceMenu;
 
    public:
     const char *id;     // terse identifier
@@ -94,13 +93,13 @@ class UI_CustomMenu : public Fl_Choice {
 	void draw();
 };
 
-class UI_RChoice : public UI_CustomMenu {
+class UI_RChoiceMenu : public UI_CustomMenu {
    private:
     std::vector<choice_data_c *> opt_list;
 
    public:
-    UI_RChoice(int x, int y, int w, int h, const char *label = NULL);
-    virtual ~UI_RChoice(); 
+    UI_RChoiceMenu(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_RChoiceMenu(); 
 
    public:
     // add a new choice to the list.  If a choice with the same 'id'
@@ -139,6 +138,25 @@ class UI_RChoice : public UI_CustomMenu {
 
     void GotoPrevious();
     void GotoNext();
+};
+
+class UI_RChoice : public Fl_Group {
+   private:
+
+   public:
+    UI_RChoice(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_RChoice(); 
+
+   public:
+   
+    Fl_Box *mod_label;
+    
+    UI_HelpLink *mod_help;    
+    
+    UI_RChoiceMenu *mod_menu;    
+
+   private:
+   
 };
 
 class UI_CustomArrowButton : public Fl_Repeat_Button {

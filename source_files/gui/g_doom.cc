@@ -164,7 +164,7 @@ int Slump_MakeWAD(const char* filename) {
 		slump_config.immediate_monsters = rollpercent(20);
 	}
 	monvariety = main_win->left_mods->FindID("ui_slump_mons")
-							->FindOpt("slump_mons")->GetID();
+							->FindOpt("slump_mons")->mod_menu->GetID();
 	if (monvariety == "normal") {
 		slump_config.required_monster_bits = 0;
 		slump_config.forbidden_monster_bits = SPECIAL;
@@ -1021,7 +1021,7 @@ bool doom_game_interface_c::Start(const char *preset) {
                                ->mod_check->value();
 		    map_format = main_win->left_mods->FindID("ui_udmf_map_options")
 		                     ->FindOpt("map_format")
-		                     ->GetID();
+		                     ->mod_menu->GetID();
 		    build_nodes = main_win->left_mods->FindID("ui_udmf_map_options")
 		                      ->FindButtonOpt("bool_build_nodes_udmf")
 		                      ->mod_check->value();
