@@ -22,8 +22,9 @@
 #define __OBLIGE_MAIN_H__
 
 #include <cstddef>
-#include <map>
 #include <vector>
+#include <string>
+#include <algorithm>
 #include "hdr_fltk.h"
 #define OBSIDIAN_TITLE "OBSIDIAN Level Maker"
 

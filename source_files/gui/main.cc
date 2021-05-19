@@ -400,11 +400,15 @@ void Main_PopulateFontMap() {
 		std::string fontname = Fl::get_font_name(x);
 		if (std::isalpha(fontname.at(0))) {
 			font_menu_items.push_back(fontname);
-			font_map.push_back(x);
 		}
 	}
+
+	num_fonts = font_menu_items.size();	
+	std::sort(font_menu_items.begin(), font_menu_items.end());
 	
-	num_fonts = font_menu_items.size();
+  	for (int x = 0; x < num_fonts; x++) {
+    	font_map.push_back(x);
+  	}	
 		
 }
 
