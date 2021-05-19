@@ -305,12 +305,12 @@ class UI_OptionsWin : public Fl_Window {
     
     void PopulateFonts() {
 
-		for (int x = 0; x < num_fonts; x++) {
-			opt_font_theme->add(_(Fl::get_font_name(x)));
-		}
-		
-		opt_font_theme->replace(0, (_("Default")));
-		
+		opt_font_theme->add(_("Default"));
+
+  		for (int x = 0; x < num_fonts; x++) {
+    		opt_font_theme->add(font_menu_items[x].c_str());
+  		}
+				
         opt_font_theme->value(font_theme);
 		
     }
