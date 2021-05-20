@@ -26,6 +26,7 @@
 #include "m_lua.h"
 #include "main.h"
 #include <string>
+#include <iostream>
 
 UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
                      const char *label, const char *tip)
@@ -177,7 +178,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->prev_button->callback(callback_SliderPrevious, NULL);
     
     rsl->mod_slider =
-        new Fl_Hor_Slider((!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .45),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (!single_pane ? rsl->w() * .80 : rsl->w() * .40), kf_h(24), NULL);
+        new Fl_Hor_Slider((!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .45),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (!single_pane ? rsl->w() * .85 : rsl->w() * .40), kf_h(24), NULL);
     rsl->mod_slider->box(button_style);
     rsl->mod_slider->selection_color(SELECTION);
     rsl->mod_slider->minimum(min);
@@ -186,7 +187,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->mod_slider->callback(callback_MixItCheck, NULL);
     
     rsl->next_button =
-        new UI_CustomArrowButton(rsl->x() + rsl->w() * .85,  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@>");
+        new UI_CustomArrowButton((!single_pane ? rsl->x() + rsl->w() * .90 : rsl->x() + rsl->w() * .85),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@>");
     rsl->next_button->box(button_style);
     rsl->next_button->visible_focus(0);   
     rsl->next_button->align(FL_ALIGN_INSIDE);  
@@ -199,6 +200,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 	rsl->mod_entry->box(FL_NO_BOX);
 	rsl->mod_entry->labelcolor(FONT_COLOR);
 	rsl->mod_entry->visible_focus(0);
+	rsl->mod_entry->callback(callback_ManualEntry, NULL);
 
 	rsl->mod_help =
 			new UI_HelpLink(rsl->x() + (!single_pane ? (rsl->w() * .9) : (rsl->w() * .95)), rsl->y(), rsl->w() * .075, kf_h(24), "?");
@@ -549,6 +551,47 @@ void UI_Module::callback_ShowHelp(Fl_Widget *w, void *data) {
     win->set_modal();
     win->show();
     buff->text(mod_help->help_text); 
+	
+}
+
+void UI_Module::callback_ManualEntry(Fl_Widget *w, void *data) {
+    UI_ManualEntry *mod_entry = (UI_ManualEntry *)w;
+
+	UI_RSlide *current_slider = (UI_RSlide*)mod_entry->parent();
+
+	char float_buf[1000];
+	double new_value = 0;
+    std::string string_value;
+	
+	sprintf(float_buf, "%g", current_slider->mod_slider->value());
+	
+	tryagain:
+
+    const char *value_buf = fl_input(_("Enter Value:"), float_buf);
+
+    // cancelled?
+    if (!value_buf) {
+        goto end;
+    }
+    
+    string_value = value_buf;
+
+    try {
+        new_value = std::stod(string_value);
+    } catch (std::invalid_argument &e) {
+        fl_message("Invalid argument! Try again!");
+        goto tryagain;
+    } catch (std::out_of_range &e) {
+        fl_message("Number out of range! Try again!");
+        goto tryagain;
+    } catch (std::exception &e) {
+        std::cout << e.what();
+    }
+    
+    current_slider->mod_slider->value(current_slider->mod_slider->clamp(current_slider->mod_slider->round(new_value)));
+    current_slider->mod_slider->do_callback();
+    
+    end: ;
 	
 }
 

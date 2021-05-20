@@ -221,6 +221,9 @@ class UI_RSlide : public Fl_Group {
     std::string units;
     
     std::map<double, std::string> nan_choices;
+    
+    public:
+    
 };
 
 class UI_CustomCheckBox : public Fl_Check_Button {

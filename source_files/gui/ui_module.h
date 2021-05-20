@@ -98,6 +98,7 @@ class UI_Module : public Fl_Group {
     static void callback_SliderPrevious(Fl_Widget *w, void *data);
     static void callback_SliderNext(Fl_Widget *w, void *data);
     static void callback_ShowHelp(Fl_Widget *w, void *data);
+    static void callback_ManualEntry(Fl_Widget *w, void *data);
 };
 
 class UI_CustomMods : public Fl_Group {
