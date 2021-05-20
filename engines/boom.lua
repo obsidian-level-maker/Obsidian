@@ -197,43 +197,6 @@ OB_ENGINES["prboom"] =
 
 ----------------------------------------------------------------
 
-WOOF = {}
-
-
-WOOF.ENTITIES =
-{
-
-}
-
-
-WOOF.PARAMETERS =
-{
-
-}
-
-OB_ENGINES["woof"] =
-{
-  label = _("WOOF"),
-  priority = 96,
-
-  extends = "boom",
-
-  game = "doomish",
-
-  tables =
-  {
-    WOOF
-  },
-
-  hooks =
-  {
-
-  }
-
-}
-
-----------------------------------------------------------------
-
 -- This should not be visible in the Engine selection list; it's a shim to separate UDMF/advanced engines
 
 ADVANCED = {}

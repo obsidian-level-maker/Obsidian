@@ -146,25 +146,25 @@ int Slump_MakeWAD(const char* filename) {
 	slump_config.forkiness = (int)main_win->left_mods->FindID("ui_slump_arch")
 							->FindSliderOpt("float_forkiness")->mod_slider->value();
 	if (main_win->left_mods->FindID("ui_slump_arch")
-							->FindButtonOpt("bool_dm_starts")->value()) {
+							->FindButtonOpt("bool_dm_starts")->mod_check->value()) {
 		slump_config.do_dm = 1;
 	} else {
 		slump_config.do_dm = 0;
 	}
 	if (main_win->left_mods->FindID("ui_slump_arch")
-							->FindButtonOpt("bool_major_nukage")->value()) {
+							->FindButtonOpt("bool_major_nukage")->mod_check->value()) {
 		slump_config.major_nukage = SLUMP_TRUE;
 	} else {
 		slump_config.major_nukage = SLUMP_FALSE;
 	}
 	if (main_win->left_mods->FindID("ui_slump_arch")
-							->FindButtonOpt("bool_immediate_monsters")->value()) {
+							->FindButtonOpt("bool_immediate_monsters")->mod_check->value()) {
 		slump_config.immediate_monsters = SLUMP_FALSE;
 	} else {
 		slump_config.immediate_monsters = rollpercent(20);
 	}
 	monvariety = main_win->left_mods->FindID("ui_slump_mons")
-							->FindOpt("slump_mons")->GetID();
+							->FindOpt("slump_mons")->mod_menu->GetID();
 	if (monvariety == "normal") {
 		slump_config.required_monster_bits = 0;
 		slump_config.forbidden_monster_bits = SPECIAL;
@@ -857,19 +857,6 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.force_compression = false;
     } else if (current_engine == "prboom") {
         options.build_nodes = true;
-        options.build_gl_nodes = true;
-        options.build_gl_only = true;
-        if (build_reject) {
-            options.reject_mode = ERM_Rebuild;
-        } else {
-            options.reject_mode = ERM_CreateZeroes;
-        }
-        options.check_polyobjs = false;
-        options.compress_nodes = true;
-        options.compress_gl_nodes = false;
-        options.force_compression = false;
-    } else if (current_engine == "woof") {
-        options.build_nodes = true;
         options.build_gl_nodes = false;
         options.build_gl_only = false;
         if (build_reject) {
@@ -889,7 +876,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
 		}
         options.build_nodes = true;     	
         options.build_gl_nodes = true;
-        options.build_gl_only = true;
+        options.build_gl_only = false;
         if (build_reject) {
             options.reject_mode = ERM_Rebuild;
         } else {
@@ -999,7 +986,7 @@ bool doom_game_interface_c::Start(const char *preset) {
         if (current_engine == "vanilla") {
             build_reject = main_win->left_mods->FindID("ui_reject_options")
                            ->FindButtonOpt("bool_build_reject")
-                           ->value();
+                           ->mod_check->value();
             if (Slump_MakeWAD(filename) == 0) {
                 return true;
             } else {
@@ -1018,25 +1005,25 @@ bool doom_game_interface_c::Start(const char *preset) {
         if (current_engine == "zdoom" || current_engine == "edge") {
             build_reject = main_win->left_mods->FindID("ui_udmf_map_options")
                                ->FindButtonOpt("bool_build_reject_udmf")
-                               ->value();
+                               ->mod_check->value();
 		    map_format = main_win->left_mods->FindID("ui_udmf_map_options")
 		                     ->FindOpt("map_format")
-		                     ->GetID();
+		                     ->mod_menu->GetID();
 		    build_nodes = main_win->left_mods->FindID("ui_udmf_map_options")
 		                      ->FindButtonOpt("bool_build_nodes_udmf")
-		                      ->value();
+		                      ->mod_check->value();
         } else if (current_engine == "doomsday") {
             build_reject = main_win->left_mods->FindID("ui_doomsday_map_options")
                                ->FindButtonOpt("bool_build_reject_doomsday")
-                               ->value();
+                               ->mod_check->value();
 		    map_format = "binary";
 		    build_nodes = main_win->left_mods->FindID("ui_doomsday_map_options")
 		                      ->FindButtonOpt("bool_build_nodes_doomsday")
-		                      ->value();
+		                      ->mod_check->value();
         } else {
             build_reject = main_win->left_mods->FindID("ui_reject_options")
                                ->FindButtonOpt("bool_build_reject")
-                               ->value();
+                               ->mod_check->value();
             map_format = "binary";
             build_nodes = true;
         }

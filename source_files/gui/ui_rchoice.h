@@ -26,6 +26,7 @@
 #include "FL/Fl_Check_Button.H"
 #include "FL/Fl_Choice.H"
 #include "FL/Fl_Hor_Slider.H"
+#include "FL/Fl_Repeat_Button.H"
 
 //
 // DESCRIPTION:
@@ -35,9 +36,8 @@
 //
 
 class choice_data_c {
-    friend class UI_RChoice;
-    friend class UI_RSlide; 
-    friend class UI_RButton;
+    friend class UI_RChoice; // Don't know if the 'group' for the menu needs to be a friend as well
+    friend class UI_RChoiceMenu;
 
    public:
     const char *id;     // terse identifier
@@ -55,6 +55,33 @@ class choice_data_c {
     ~choice_data_c();
 };
 
+class UI_HelpLink : public Fl_Button {
+   private:
+    // true when mouse is over this widget
+    bool hover;
+
+    // area containing the label
+    int label_X, label_Y, label_W, label_H;
+
+   public:
+    UI_HelpLink(int x, int y, int w, int h, const char *label);
+    virtual ~UI_HelpLink();
+    
+    const char* help_text = "";
+    const char* help_title = "";
+
+   public:
+    // FLTK overrides
+
+    int handle(int event);
+
+    void draw();
+
+   private:
+    void checkLink();
+
+};
+
 class UI_CustomMenu : public Fl_Choice {
 
    private:
@@ -67,13 +94,13 @@ class UI_CustomMenu : public Fl_Choice {
 	void draw();
 };
 
-class UI_RChoice : public UI_CustomMenu {
+class UI_RChoiceMenu : public UI_CustomMenu {
    private:
     std::vector<choice_data_c *> opt_list;
 
    public:
-    UI_RChoice(int x, int y, int w, int h, const char *label = NULL);
-    virtual ~UI_RChoice(); 
+    UI_RChoiceMenu(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_RChoiceMenu(); 
 
    public:
     // add a new choice to the list.  If a choice with the same 'id'
@@ -114,7 +141,26 @@ class UI_RChoice : public UI_CustomMenu {
     void GotoNext();
 };
 
-class UI_CustomArrowButton : public Fl_Button {
+class UI_RChoice : public Fl_Group {
+   private:
+
+   public:
+    UI_RChoice(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_RChoice(); 
+
+   public:
+   
+    Fl_Box *mod_label;
+    
+    UI_HelpLink *mod_help;    
+    
+    UI_RChoiceMenu *mod_menu;    
+
+   private:
+   
+};
+
+class UI_CustomArrowButton : public Fl_Repeat_Button {
 
    private:
 
@@ -128,11 +174,15 @@ class UI_CustomArrowButton : public Fl_Button {
 
 class UI_RSlide : public Fl_Group {
    private:
-    std::vector<choice_data_c *> opt_list;
+
        
    public:
     UI_RSlide(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_RSlide();
+    
+    Fl_Box *mod_label;
+    
+    UI_HelpLink *mod_help;
     
     Fl_Hor_Slider *mod_slider;
     
@@ -147,18 +197,6 @@ class UI_RSlide : public Fl_Group {
     std::map<double, std::string> nan_choices;
 };
 
-class UI_RButton : public Fl_Check_Button {
-   private:
-    std::vector<choice_data_c *> opt_list;
-
-   public:
-    UI_RButton(int x, int y, int w, int h, const char *label = NULL);
-    virtual ~UI_RButton();
-    
-   private:
-   void draw();
-};
-
 class UI_CustomCheckBox : public Fl_Check_Button {
   
    private:
@@ -169,6 +207,24 @@ class UI_CustomCheckBox : public Fl_Check_Button {
     
    private:
    void draw();
+};
+
+class UI_RButton : public Fl_Group {
+   private:
+
+
+   public:
+    UI_RButton(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_RButton();
+    
+    UI_CustomCheckBox *mod_check;
+    
+    Fl_Box *mod_label;
+    
+    UI_HelpLink *mod_help;
+    
+   private:
+
 };
 
 #endif /* __UI_RCHOICE_H__ */

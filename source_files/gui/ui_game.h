@@ -29,10 +29,13 @@
 
 class UI_Game : public Fl_Group {
    public:
-    UI_RChoice *game;
-    UI_RChoice *engine;
-    UI_RChoice *theme;
-    UI_RChoice *length;
+    UI_RChoiceMenu *game;
+    UI_RChoiceMenu *engine;
+    UI_HelpLink *engine_help;
+    UI_RChoiceMenu *theme;
+    UI_HelpLink *theme_help;
+    UI_RChoiceMenu *length;
+    UI_HelpLink *length_help;
 
    private:
     Fl_Button *build;
@@ -57,6 +60,9 @@ class UI_Game : public Fl_Group {
     static void callback_Engine(Fl_Widget *, void *);
     static void callback_Length(Fl_Widget *, void *);
     static void callback_Theme(Fl_Widget *, void *);
+    static void callback_EngineHelp(Fl_Widget *, void *);
+    static void callback_LengthHelp(Fl_Widget *, void *);
+    static void callback_ThemeHelp(Fl_Widget *, void *);
     static void build_callback(Fl_Widget *, void *);
     static void stop_callback(Fl_Widget *, void *);
     static void quit_callback(Fl_Widget *, void *);

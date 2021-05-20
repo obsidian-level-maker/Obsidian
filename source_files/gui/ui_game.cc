@@ -56,10 +56,10 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     cy = Y + kf_h(32);
 
-    int cw = W * 0.60;
+    int cw = W * 0.50;
     int ch = kf_h(22);
 
-    game = new UI_RChoice(cx, cy, cw, ch, _("Game: "));
+    game = new UI_RChoiceMenu(cx, cy, cw, ch, _("Game: "));
     game->align(FL_ALIGN_LEFT);
     game->labelfont(font_style);
     game->selection_color(SELECTION);
@@ -67,27 +67,33 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     cy += y_step;
 
-    engine = new UI_RChoice(cx, cy, cw, ch, _("Engine: "));
+    engine = new UI_RChoiceMenu(cx, cy, cw, ch, _("Engine: "));
     engine->align(FL_ALIGN_LEFT);
     engine->labelfont(font_style);
     engine->selection_color(SELECTION);
     engine->callback(callback_Engine, this);
+    engine_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch, "?");
+    engine_help->callback(callback_EngineHelp, this);
 
     cy += y_step;
 
-    length = new UI_RChoice(cx, cy, cw, ch, _("Length: "));
+    length = new UI_RChoiceMenu(cx, cy, cw, ch, _("Length: "));
     length->align(FL_ALIGN_LEFT);
     length->labelfont(font_style);
     length->selection_color(SELECTION);
     length->callback(callback_Length, this);
+    length_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch, "?");
+    length_help->callback(callback_LengthHelp, this);
 
     cy += y_step;
 
-    theme = new UI_RChoice(cx, cy, cw, ch, _("Theme: "));
+    theme = new UI_RChoiceMenu(cx, cy, cw, ch, _("Theme: "));
     theme->align(FL_ALIGN_LEFT);
     theme->labelfont(font_style);
     theme->selection_color(SELECTION);
     theme->callback(callback_Theme, this);
+    theme_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch, "?");
+    theme_help->callback(callback_ThemeHelp, this);
 
     cy += y_step + kf_h(10);
 
@@ -137,6 +143,48 @@ void UI_Game::callback_Theme(Fl_Widget *w, void *data) {
     UI_Game *that = (UI_Game *)data;
 
     ob_set_config("theme", that->theme->GetID());
+}
+
+void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
+    fl_cursor(FL_CURSOR_DEFAULT);
+    Fl_Window *win = new Fl_Window(640, 480, "Engine");
+    Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640-40, 480-40, NULL);
+    disp->buffer(buff);
+    disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+    win->resizable(*disp);
+    win->hotspot(0, 0, 0);
+    win->set_modal();
+    win->show();
+    buff->text("ENGINE"); 
+}
+
+void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
+    fl_cursor(FL_CURSOR_DEFAULT);
+    Fl_Window *win = new Fl_Window(640, 480, "Length");
+    Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640-40, 480-40, NULL);
+    disp->buffer(buff);
+    disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+    win->resizable(*disp);
+    win->hotspot(0, 0, 0);
+    win->set_modal();
+    win->show();
+    buff->text("LENGTH"); 
+}
+
+void UI_Game::callback_ThemeHelp(Fl_Widget *w, void *data) {
+    fl_cursor(FL_CURSOR_DEFAULT);
+    Fl_Window *win = new Fl_Window(640, 480, "Theme");
+    Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640-40, 480-40, NULL);
+    disp->buffer(buff);
+    disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+    win->resizable(*disp);
+    win->hotspot(0, 0, 0);
+    win->set_modal();
+    win->show();
+    buff->text("THEME"); 
 }
 
 void UI_Game::Locked(bool value) {

@@ -769,13 +769,13 @@ int gui_get_module_button_value(lua_State *L) {
 	
 	if (main_win->left_mods->FindID(module)) {
 		if (main_win->left_mods->FindID(module)->FindButtonOpt(option)) {
-			value = main_win->left_mods->FindID(module)->FindButtonOpt(option)->value();
+			value = main_win->left_mods->FindID(module)->FindButtonOpt(option)->mod_check->value();
 			lua_pushnumber(L, value);	
 		}	
 	} else if (main_win->right_mods) {
 		if (main_win->right_mods->FindID(module)) {
 			if (main_win->right_mods->FindID(module)->FindButtonOpt(option)) {
-				value = main_win->right_mods->FindID(module)->FindButtonOpt(option)->value();
+				value = main_win->right_mods->FindID(module)->FindButtonOpt(option)->mod_check->value();
 				lua_pushnumber(L, value);	
 			}	
 		}
