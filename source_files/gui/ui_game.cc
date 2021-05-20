@@ -73,6 +73,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     engine->selection_color(SELECTION);
     engine->callback(callback_Engine, this);
     engine_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch, "?");
+    engine_help->labelfont(font_style);
     engine_help->callback(callback_EngineHelp, this);
 
     cy += y_step;
@@ -83,6 +84,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     length->selection_color(SELECTION);
     length->callback(callback_Length, this);
     length_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch, "?");
+    length_help->labelfont(font_style);
     length_help->callback(callback_LengthHelp, this);
 
     cy += y_step;
@@ -93,6 +95,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     theme->selection_color(SELECTION);
     theme->callback(callback_Theme, this);
     theme_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch, "?");
+    theme_help->labelfont(font_style);
     theme_help->callback(callback_ThemeHelp, this);
 
     cy += y_step + kf_h(10);

@@ -107,7 +107,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 	rch->mod_label->labelfont(font_style);
 
 	rch->mod_menu = 
-		new UI_RChoiceMenu((!single_pane ? rch->x() : rch->x() + (rch->w() * .45)), (!single_pane ? rch->y() + rch->mod_label->h() : rch->y()), (single_pane ? rch->w() * .50 : rch->w()), kf_h(24), NULL);
+		new UI_RChoiceMenu((!single_pane ? rch->x() : rch->x() + (rch->w() * .40)), (!single_pane ? rch->y() + rch->mod_label->h() : rch->y()), (single_pane ? rch->w() * .55 : rch->w()), kf_h(24), NULL);
 	rch->mod_menu->selection_color(SELECTION);		
 
 	rch->mod_help =
@@ -168,7 +168,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 	rsl->mod_label->labelfont(font_style);
 
     rsl->prev_button =
-        new UI_CustomArrowButton((!single_pane ? rsl->x() : rsl->x() + (rsl->w() * .45)), (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@<");
+        new UI_CustomArrowButton((!single_pane ? rsl->x() : rsl->x() + (rsl->w() * .40)), (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@<");
     rsl->prev_button->visible_focus(0);
     rsl->prev_button->box(button_style);     
     rsl->prev_button->align(FL_ALIGN_INSIDE);   
@@ -177,7 +177,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->prev_button->callback(callback_SliderPrevious, NULL);
     
     rsl->mod_slider =
-        new Fl_Hor_Slider((!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .50),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (!single_pane ? rsl->w() * .80 : rsl->w() * .40), kf_h(24), NULL);
+        new Fl_Hor_Slider((!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .45),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (!single_pane ? rsl->w() * .80 : rsl->w() * .40), kf_h(24), NULL);
     rsl->mod_slider->box(button_style);
     rsl->mod_slider->selection_color(SELECTION);
     rsl->mod_slider->minimum(min);
@@ -186,13 +186,19 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->mod_slider->callback(callback_MixItCheck, NULL);
     
     rsl->next_button =
-        new UI_CustomArrowButton(rsl->x() + rsl->w() * .90,  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@>");
+        new UI_CustomArrowButton(rsl->x() + rsl->w() * .85,  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@>");
     rsl->next_button->box(button_style);
     rsl->next_button->visible_focus(0);   
     rsl->next_button->align(FL_ALIGN_INSIDE);  
     rsl->next_button->labelcolor(SELECTION);
     rsl->next_button->labelsize(rsl->next_button->labelsize() * .80);
     rsl->next_button->callback(callback_SliderNext, NULL);
+
+	rsl->mod_entry =
+			new UI_ManualEntry(rsl->x() + (!single_pane ? (rsl->w() * .8) : (rsl->w() * .90)), rsl->y(), rsl->w() * .075, kf_h(24), "\u21B5");
+	rsl->mod_entry->box(FL_NO_BOX);
+	rsl->mod_entry->labelcolor(FONT_COLOR);
+	rsl->mod_entry->visible_focus(0);
 
 	rsl->mod_help =
 			new UI_HelpLink(rsl->x() + (!single_pane ? (rsl->w() * .9) : (rsl->w() * .95)), rsl->y(), rsl->w() * .075, kf_h(24), "?");
@@ -265,7 +271,7 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
 	rbt->mod_label->labelfont(font_style);
 	
 	rbt->mod_check = 
-			new UI_CustomCheckBox(rbt->x() + (!single_pane ? 0 : (rbt->w() * .45)), rbt->y(), rbt->w() * .10, kf_h(24), NULL);
+			new UI_CustomCheckBox(rbt->x() + (!single_pane ? 0 : (rbt->w() * .40)), rbt->y(), rbt->w() * .10, kf_h(24), NULL);
 	rbt->mod_check->selection_color(SELECTION);
 	
 	rbt->mod_help =

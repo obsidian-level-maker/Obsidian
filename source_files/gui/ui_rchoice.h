@@ -82,6 +82,30 @@ class UI_HelpLink : public Fl_Button {
 
 };
 
+class UI_ManualEntry : public Fl_Button {
+   private:
+    // true when mouse is over this widget
+    bool hover;
+
+    // area containing the label
+    int label_X, label_Y, label_W, label_H;
+
+   public:
+    UI_ManualEntry(int x, int y, int w, int h, const char *label);
+    virtual ~UI_ManualEntry();
+
+   public:
+    // FLTK overrides
+
+    int handle(int event);
+
+    void draw();
+
+   private:
+    void checkLink();
+
+};
+
 class UI_CustomMenu : public Fl_Choice {
 
    private:
@@ -183,6 +207,8 @@ class UI_RSlide : public Fl_Group {
     Fl_Box *mod_label;
     
     UI_HelpLink *mod_help;
+    
+    UI_ManualEntry *mod_entry;
     
     Fl_Hor_Slider *mod_slider;
     
