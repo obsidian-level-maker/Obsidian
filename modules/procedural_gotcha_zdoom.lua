@@ -3,6 +3,7 @@
 ------------------------------------------------------------------------
 --
 --  Copyright (C) 2019-2021 MsrSgtShooterPerson
+--  Copyright (C) 2021 Armaetus
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -20,7 +21,7 @@ PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM = {}
 
 PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DIFF_CHOICES =
 {
-  "easier",    _("Easier"),
+  "easier", _("Easier"),
   "default", _("Moderate"),
   "harder", _("Harder"),
   "nightmare", _("Nightmare"),
@@ -30,16 +31,16 @@ PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_HEALTH_CHOICES =
 {
   "muchless", _("Reduced by 50%"),
   "less", _("Reduced by 25%"),
-  "default",  _("Default"),
-  "more",  _("Increased by 50%"),
-  "muchmore",  _("Increased by 100%"),
-  "demiosmode",  _("Increased by 200%"),
+  "default", _("Default"),
+  "more", _("Increased by 50%"),
+  "muchmore", _("Increased by 100%"),
+  "demiosmode", _("Increased by 200%"),
 }
 
 PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_LESS_HITSCAN =
 {
-  "default",  _("Default"),
-  "less",     _("50% less"),
+  "default", _("Default"),
+  "less", _("50% less"),
   "muchless", _("80% less"),
   "none", _("100% less"),
 }
@@ -1378,7 +1379,7 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.syntaxize(str, str2)
 end
 
 function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.check_monsters_enabled()
-  if PARAM.float_mons == 0 then
+  if PARAM.float_mons == 0 and PARAM.bool_boss_gen == 1 then
     error("Monsters must be enabled for boss generator!")
   end
 end
@@ -1410,9 +1411,9 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.end_lvl()
 
     PARAM.boss_count = PARAM.boss_count + 1
   end
-  
+
   end
-  
+
 end
 
 function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.all_done()
@@ -1580,9 +1581,9 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.all_done()
     table.insert(PARAM.BOSSLANG, line)
 
   end
-  
+
   end
-  
+
 end
 
 PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.GOTCHA_MAP_SIZES =
@@ -1613,22 +1614,22 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.setup(self)
       if opt.valuator == "button" then
         PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
       elseif opt.valuator == "slider" then
-        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)
       end
     else
       PARAM[name] = self.options[name].value
     end
   end
-  
+
   if PARAM.bool_boss_gen == 1 then
-  
+
     PARAM.boss_types = {}
     PARAM.lvlstr = ""
     PARAM.BOSSSCRIPT = ""
     PARAM.boss_count = 1
     PARAM.epi_bosses = {}
     PARAM.epi_names = {}
-  
+
     if PARAM.boss_gen_health == "muchless" then
       PARAM.boss_gen_mult = 0.5
     elseif PARAM.boss_gen_health == "less" then
@@ -1668,9 +1669,9 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.setup(self)
     elseif PARAM.boss_gen_reinforcerate == "serious" then
       PARAM.boss_gen_rmult = 0.25
     end
-    
+
   end
-  
+
 end
 
 OB_MODULES["procedural_gotcha_zdoom"] =
@@ -1697,8 +1698,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
 
   options =
   {
-     
-     gotcha_frequency=   
+
+     gotcha_frequency=
      {
       name="gotcha_frequency",
       label=_("Gotcha Frequency"),
@@ -1710,21 +1711,19 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       "5% of levels may create at least 1 or 2 gotcha maps in a standard full game.",
       priority = 105
     },
-  
+
     float_gotcha_qty =
     {
       name="float_gotcha_qty",
       label=_("Extra Quantity"),
       valuator = "slider",
-      units = "x Monsters",
-      min = 0.2,
-      max = 10,
-      increment = 0.1,
-      default = 1.2,
-      nan = "1:No Change,",
-      tooltip = "Offset monster strength from your default quantity of choice plus the increasing level ramp." ..
-      "If your quantity choice is to reduce the monsters, the monster quantity will cap at a " ..
-      "minimum of 0.1 (Scarce quantity setting).",
+      units = "% of Monsters",
+      min = -50,
+      max = 400,
+      increment = 5,
+      default = 25,
+      nan = "0:No Change,",
+      tooltip = "Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Trivial quantity setting).",
       priority = 104
     },
 
@@ -1758,7 +1757,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priority = 102,
       gap = 1
     },
-    
+
     bool_boss_gen =
     {
       name = "bool_boss_gen",
@@ -1778,7 +1777,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       tooltip = "EXPERIMENTAL: Forces procedural gotchas to have guaranteed boss fights.",
       priority = 100
     },
-    
+
     boss_gen_diff =
     {
       name = "boss_gen_diff",
@@ -1877,9 +1876,9 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_LIMITS,
       default = "softlimit",
       tooltip = "Influences how boss difficulty and megawad progression affects the monster type of boss.\n\n" ..
-      "hard limit: doesnt allow monster types outside of range to ever spawn.\n\n" ..
-      "soft limit: reduces the probability of spawning of monster types outside of range.\n\n" ..
-      "no limit: difficulty doesnt have effect on monster type selection.",
+      "Hard Limit: Doesn't allow monster types outside of range to ever spawn.\n\n" ..
+      "Soft Limit: Reduces the probability of spawning of monster types outside of range.\n\n" ..
+      "No Limit: Difficulty doesn't have effect on monster type selection.",
     },
 
     boss_gen_weap =

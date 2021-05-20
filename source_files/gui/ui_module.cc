@@ -26,6 +26,7 @@
 #include "m_lua.h"
 #include "main.h"
 #include <string>
+#include <iostream>
 
 UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
                      const char *label, const char *tip)
@@ -81,7 +82,7 @@ typedef struct {
 } opt_change_callback_data_t;
 
 void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
-                          int gap) {
+                          const char *longtip, int gap) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
@@ -95,7 +96,11 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
     strcat(new_label, ": ");
 
     if (!tip) {
-        tip = "Help file not yet written for this setting :(";
+        tip = "";
+    }
+    
+    if (!longtip) {
+    	longtip = "Help file not yet written for this setting!";
     }
 
 	UI_RChoice *rch =
@@ -104,17 +109,20 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 	rch->mod_label = 
 			new Fl_Box(rch->x(), rch->y(), (!single_pane ? rch->w() * .95 : rch->w() * .40), kf_h(24), new_label);
 	rch->mod_label->align((!single_pane ? (FL_ALIGN_LEFT | FL_ALIGN_INSIDE) : (FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP)));
+	rch->mod_label->labelfont(font_style);
+	rch->mod_label->tooltip(tip);
 
 	rch->mod_menu = 
-		new UI_RChoiceMenu((!single_pane ? rch->x() : rch->x() + (rch->w() * .45)), (!single_pane ? rch->y() + rch->mod_label->h() : rch->y()), (single_pane ? rch->w() * .50 : rch->w()), kf_h(24), NULL);
-	rch->mod_menu->selection_color(SELECTION);			
+		new UI_RChoiceMenu((!single_pane ? rch->x() : rch->x() + (rch->w() * .40)), (!single_pane ? rch->y() + rch->mod_label->h() : rch->y()), (single_pane ? rch->w() * .55 : rch->w()), kf_h(24), NULL);
+	rch->mod_menu->selection_color(SELECTION);		
 
 	rch->mod_help =
 			new UI_HelpLink(rch->x() + (!single_pane ? (rch->w() * .9) : (rch->w() * .95)), rch->y(), rch->w() * .075, kf_h(24), "?");
 	rch->mod_help->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
 	rch->mod_help->labelfont(font_style);
 	rch->mod_help->labelcolor(FONT_COLOR);
-	rch->mod_help->help_text = tip;
+	rch->mod_help->help_text = longtip;
+	rch->mod_help->help_title = label;
 	rch->mod_help->callback(callback_ShowHelp, NULL);
 
     opt_change_callback_data_t *cb_data = new opt_change_callback_data_t;
@@ -138,7 +146,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 }
 
 void UI_Module::AddSliderOption(const char *opt, const char *label, const char *tip,
-                          int gap, double min, double max, double inc,
+                          const char *longtip, int gap, double min, double max, double inc,
                           const char *units, const char *nan) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
@@ -153,9 +161,12 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     strcat(new_label, ": ");
 
     if (!tip) {
-        tip = "Help file not yet written for this setting :(";
+        tip = "";
     }
-
+    
+    if (!longtip) {
+    	longtip = "Help file not yet written for this setting!";
+    }
 	UI_RSlide *rsl =
 		    new UI_RSlide(nx, ny + kf_h(15), nw * .95, (!single_pane ? kf_h(48) : kf_h(24)), NULL);
 
@@ -163,9 +174,11 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 	rsl->mod_label = 
 			new Fl_Box(rsl->x(), rsl->y(), (!single_pane ? rsl->w() * .95 : rsl->w() * .40), kf_h(24), new_label);
 	rsl->mod_label->align((!single_pane ? (FL_ALIGN_LEFT | FL_ALIGN_INSIDE) : (FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP)));
+	rsl->mod_label->labelfont(font_style);
+	rsl->mod_label->tooltip(tip);
 
     rsl->prev_button =
-        new UI_CustomArrowButton((!single_pane ? rsl->x() : rsl->x() + (rsl->w() * .45)), (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@<");
+        new UI_CustomArrowButton((!single_pane ? rsl->x() : rsl->x() + (rsl->w() * .40)), (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@<");
     rsl->prev_button->visible_focus(0);
     rsl->prev_button->box(button_style);     
     rsl->prev_button->align(FL_ALIGN_INSIDE);   
@@ -174,7 +187,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->prev_button->callback(callback_SliderPrevious, NULL);
     
     rsl->mod_slider =
-        new Fl_Hor_Slider((!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .50),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (!single_pane ? rsl->w() * .80 : rsl->w() * .40), kf_h(24), NULL);
+        new Fl_Hor_Slider((!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .45),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (!single_pane ? rsl->w() * .85 : rsl->w() * .40), kf_h(24), NULL);
     rsl->mod_slider->box(button_style);
     rsl->mod_slider->selection_color(SELECTION);
     rsl->mod_slider->minimum(min);
@@ -183,7 +196,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->mod_slider->callback(callback_MixItCheck, NULL);
     
     rsl->next_button =
-        new UI_CustomArrowButton(rsl->x() + rsl->w() * .90,  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@>");
+        new UI_CustomArrowButton((!single_pane ? rsl->x() + rsl->w() * .90 : rsl->x() + rsl->w() * .85),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@>");
     rsl->next_button->box(button_style);
     rsl->next_button->visible_focus(0);   
     rsl->next_button->align(FL_ALIGN_INSIDE);  
@@ -191,12 +204,20 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->next_button->labelsize(rsl->next_button->labelsize() * .80);
     rsl->next_button->callback(callback_SliderNext, NULL);
 
+	rsl->mod_entry =
+			new UI_ManualEntry(rsl->x() + (!single_pane ? (rsl->w() * .8) : (rsl->w() * .90)), rsl->y(), rsl->w() * .075, kf_h(24), "\u21B5");
+	rsl->mod_entry->box(FL_NO_BOX);
+	rsl->mod_entry->labelcolor(FONT_COLOR);
+	rsl->mod_entry->visible_focus(0);
+	rsl->mod_entry->callback(callback_ManualEntry, NULL);
+
 	rsl->mod_help =
 			new UI_HelpLink(rsl->x() + (!single_pane ? (rsl->w() * .9) : (rsl->w() * .95)), rsl->y(), rsl->w() * .075, kf_h(24), "?");
 	rsl->mod_help->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
 	rsl->mod_help->labelfont(font_style);
 	rsl->mod_help->labelcolor(FONT_COLOR);
-	rsl->mod_help->help_text = tip;
+	rsl->mod_help->help_text = longtip;
+	rsl->mod_help->help_title = label;
 	rsl->mod_help->callback(callback_ShowHelp, NULL);
 	
     rsl->original_label = new_label;
@@ -234,7 +255,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 }
 
 void UI_Module::AddButtonOption(const char *opt, const char *label, const char *tip,
-                          int gap) {
+                          const char* longtip, int gap) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
@@ -243,10 +264,16 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
     int len = strlen(label);
     char *new_label = StringNew(len + 4);
     strcpy(new_label, label);
-    strcat(new_label, ": ");
+    if (single_pane) {
+    	strcat(new_label, ": ");
+    }
 	
     if (!tip) {
-        tip = "Help file not yet written for this setting :(";
+        tip = "";
+    }
+    
+    if (!longtip) {
+    	longtip = "Help file not yet written for this setting!";
     }
 
 	UI_RButton *rbt =
@@ -254,11 +281,13 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
 	
 	
 	rbt->mod_label = 
-			new Fl_Box(rbt->x(), rbt->y(), rbt->w() * .30, kf_h(24), new_label);
+			new Fl_Box(rbt->x() + (single_pane ? 0 : (rbt->w() * .075)), rbt->y(), rbt->w() * .30, kf_h(24), new_label);
 	rbt->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+	rbt->mod_label->labelfont(font_style);
+	rbt->mod_label->tooltip(tip);
 	
 	rbt->mod_check = 
-			new UI_CustomCheckBox(rbt->x() + (!single_pane ? (rbt->w() * .5) : (rbt->w() * .45)), rbt->y(), rbt->w() * .10, kf_h(24), NULL);
+			new UI_CustomCheckBox(rbt->x() + (!single_pane ? 0 : (rbt->w() * .40)), rbt->y(), rbt->w() * .10, kf_h(24), NULL);
 	rbt->mod_check->selection_color(SELECTION);
 	
 	rbt->mod_help =
@@ -266,7 +295,8 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
 	rbt->mod_help->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
 	rbt->mod_help->labelfont(font_style);
 	rbt->mod_help->labelcolor(FONT_COLOR);
-	rbt->mod_help->help_text = tip;
+	rbt->mod_help->help_text = longtip;
+	rbt->mod_help->help_title = label;
 	rbt->mod_help->callback(callback_ShowHelp, NULL);
 
     if (!mod_button->value()) {
@@ -400,7 +430,7 @@ UI_RButton *UI_Module::FindButtonOpt(const char *option) {
 }
 
 void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
-    UI_RChoice *rch = (UI_RChoice *)w;
+    UI_RChoiceMenu *rch = (UI_RChoiceMenu *)w;
 
     opt_change_callback_data_t *cb_data = (opt_change_callback_data_t *)data;
 
@@ -411,7 +441,7 @@ void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
     
     UI_Module *parent = (UI_Module*)M->parent();
 
-    ob_set_mod_option(parent->id_name.c_str(), cb_data->opt_name, rch->mod_menu->GetID());
+    ob_set_mod_option(parent->id_name.c_str(), cb_data->opt_name, rch->GetID());
 }
 
 void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
@@ -525,7 +555,7 @@ void UI_Module::callback_ShowHelp(Fl_Widget *w, void *data) {
 
     SYS_ASSERT(mod_help);
     fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window *win = new Fl_Window(640, 480, "Help");
+    Fl_Window *win = new Fl_Window(640, 480, mod_help->help_title);
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640-40, 480-40, NULL);
     disp->buffer(buff);
@@ -535,6 +565,47 @@ void UI_Module::callback_ShowHelp(Fl_Widget *w, void *data) {
     win->set_modal();
     win->show();
     buff->text(mod_help->help_text); 
+	
+}
+
+void UI_Module::callback_ManualEntry(Fl_Widget *w, void *data) {
+    UI_ManualEntry *mod_entry = (UI_ManualEntry *)w;
+
+	UI_RSlide *current_slider = (UI_RSlide*)mod_entry->parent();
+
+	char float_buf[1000];
+	double new_value = 0;
+    std::string string_value;
+	
+	sprintf(float_buf, "%g", current_slider->mod_slider->value());
+	
+	tryagain:
+
+    const char *value_buf = fl_input(_("Enter Value:"), float_buf);
+
+    // cancelled?
+    if (!value_buf) {
+        goto end;
+    }
+    
+    string_value = value_buf;
+
+    try {
+        new_value = std::stod(string_value);
+    } catch (std::invalid_argument &e) {
+        fl_message("Invalid argument! Try again!");
+        goto tryagain;
+    } catch (std::out_of_range &e) {
+        fl_message("Number out of range! Try again!");
+        goto tryagain;
+    } catch (std::exception &e) {
+        std::cout << e.what();
+    }
+    
+    current_slider->mod_slider->value(current_slider->mod_slider->clamp(current_slider->mod_slider->round(new_value)));
+    current_slider->mod_slider->do_callback();
+    
+    end: ;
 	
 }
 
@@ -610,14 +681,14 @@ void UI_CustomMods::AddModule(const char *id, const char *label,
 }
 
 bool UI_CustomMods::AddOption(const char *module, const char *option,
-                              const char *label, const char *tip, int gap) {
+                              const char *label, const char *tip, const char* longtip, int gap) {
     UI_Module *M = FindID(module);
 
     if (!M) {
         return false;
     }
 
-    M->AddOption(option, label, tip, gap);
+    M->AddOption(option, label, tip, longtip, gap);
 
     PositionAll();
 
@@ -625,7 +696,7 @@ bool UI_CustomMods::AddOption(const char *module, const char *option,
 }
 
 bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
-                              const char *label, const char *tip, int gap, double min, 
+                              const char *label, const char *tip, const char* longtip, int gap, double min, 
                               double max, double inc, const char *units, const char *nan) {
     UI_Module *M = FindID(module);
 
@@ -633,7 +704,7 @@ bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
         return false;
     }
 
-    M->AddSliderOption(option, label, tip, gap, min, max, inc, units, nan);
+    M->AddSliderOption(option, label, tip, longtip, gap, min, max, inc, units, nan);
 
     PositionAll();
 
@@ -641,14 +712,14 @@ bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
 }
 
 bool UI_CustomMods::AddButtonOption(const char *module, const char *option,
-                              const char *label, const char *tip, int gap) {
+                              const char *label, const char *tip, const char* longtip, int gap) {
     UI_Module *M = FindID(module);
 
     if (!M) {
         return false;
     }
 
-    M->AddButtonOption(option, label, tip, gap);
+    M->AddButtonOption(option, label, tip, longtip, gap);
 
     PositionAll();
 

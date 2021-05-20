@@ -67,7 +67,32 @@ class UI_HelpLink : public Fl_Button {
     UI_HelpLink(int x, int y, int w, int h, const char *label);
     virtual ~UI_HelpLink();
     
-    const char* help_text;
+    const char* help_text = "";
+    const char* help_title = "";
+
+   public:
+    // FLTK overrides
+
+    int handle(int event);
+
+    void draw();
+
+   private:
+    void checkLink();
+
+};
+
+class UI_ManualEntry : public Fl_Button {
+   private:
+    // true when mouse is over this widget
+    bool hover;
+
+    // area containing the label
+    int label_X, label_Y, label_W, label_H;
+
+   public:
+    UI_ManualEntry(int x, int y, int w, int h, const char *label);
+    virtual ~UI_ManualEntry();
 
    public:
     // FLTK overrides
@@ -183,6 +208,8 @@ class UI_RSlide : public Fl_Group {
     
     UI_HelpLink *mod_help;
     
+    UI_ManualEntry *mod_entry;
+    
     Fl_Hor_Slider *mod_slider;
     
     UI_CustomArrowButton *prev_button;
@@ -194,6 +221,9 @@ class UI_RSlide : public Fl_Group {
     std::string units;
     
     std::map<double, std::string> nan_choices;
+    
+    public:
+    
 };
 
 class UI_CustomCheckBox : public Fl_Check_Button {

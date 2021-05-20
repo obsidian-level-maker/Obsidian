@@ -305,10 +305,18 @@ class UI_OptionsWin : public Fl_Window {
     
     void PopulateFonts() {
 
-		opt_font_theme->add(_("Default"));
+		std::string default_name = Fl::get_font_name(0);
+
+		default_name.at(0) = std::toupper(default_name.at(0));
+
+		default_name = default_name.append(" <Default>");
+
+		opt_font_theme->add(_(default_name.c_str()));
 
   		for (int x = 0; x < num_fonts; x++) {
-    		opt_font_theme->add(font_menu_items[x].c_str());
+  		  	for (auto font = font_menu_items[x].begin(); font != font_menu_items[x].end(); ++font) {
+    			opt_font_theme->add(font->first.c_str());
+  			}
   		}
 				
         opt_font_theme->value(font_theme);

@@ -2413,7 +2413,7 @@ function Level_do_styles()
     table.merge(style_tab, THEME.style_list)
   end
 
-  ob_invoke_hook_with_table("override_level_style", style_tab, LEVEL.name)
+  --ob_invoke_hook_with_table("override_level_style", style_tab, LEVEL.name)
 
   -- decide the values
   STYLE = {}
