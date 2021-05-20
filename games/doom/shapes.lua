@@ -1418,7 +1418,7 @@ SPROUT_DIRECT_THROUGH_2X_LIQUID =
     conn = { x=1, y=3, w=2, dir=8 },
 
     symmetry = { kind="mirror", x=1, y=5, w=2, dir=8 },
-    symmetry2 = { kind="mirror", x=1, y=5, w=2, dir=4 },
+    symmetry2 = { kind="mirror", x=1, y=5, dir=4 },
     symmetry3 = { kind="rotate", x=1, y=3, x2=2, y2=5 }
   }
 },
@@ -1443,7 +1443,7 @@ SPROUT_DIRECT_THROUGH_1X_LIQUID =
     conn = { x=1, y=2, w=2, dir=8 },
 
     symmetry = { kind="mirror", x=1, y=3, w=2, dir=8 },
-    symmetry2 = { kind="mirror", x=1, y=3, w=2, dir=4 },
+    symmetry2 = { kind="mirror", x=1, y=3, dir=4 },
     symmetry3 = { kind ="rotate", x=1, y=2, x2=2, y2=4},
   }
 },
@@ -1528,7 +1528,7 @@ SPROUT_DIRECT_3_SYMM =
   {
     conn = { x=2, y=1, w=3, dir=8 },
 
-    symmetry = { kind="mirror", x=3, y=6, dir=6 },
+    symmetry = { kind="mirror", x=3, y=6, dir=8 },
     symmetry2 = { kind="mirror", x=2, y=6, dir=4 },
     symmetry3 = { kind="rotate", x=2, y=4, x2=4, y2=7 }
   }
@@ -1554,7 +1554,7 @@ SPROUT_DIRECT_4 =
     conn = { x=1, y=1, w=4, dir=8 },
 
     symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 },
-    symmetry2 = { kind="mirror", x=2, y=3, w=2, dir=4 },
+    symmetry2 = { kind="mirror", x=2, y=3, dir=4 },
     symmetry3 = { kind="rotate", x=1, y=2, x2=4, y2=3 }
   }
 },

@@ -3,6 +3,7 @@
 ----------------------------------------------------------------
 --  Copyright (C) 2021 Armaetus
 --  Copyright (C) 2021 dasho
+--  Copyrighr (C) 2021 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -623,22 +624,123 @@ function IWAD_MODE.begin_level()
   if LEVEL.name == "MAP01" then
     LEVEL.map_W = 18
     LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.b) .. " Entryway"
+    LEVEL.size_multiplier = 0.6
+    LEVEL.size_consistency = strict
   elseif LEVEL.name == "MAP02" then
     LEVEL.map_W = 22
+    LEVEL.size_multiplier = 0.5
+    LEVEL.size_consistency = strict
   elseif LEVEL.name == "MAP03" then
     LEVEL.map_W = 25
+    LEVEL.size_multiplier = 0.75
   elseif LEVEL.name == "MAP04" then
     LEVEL.map_W = 20
+    LEVEL.size_multiplier = 0.6
+    LEVEL.size_consistency = strict
   elseif LEVEL.name == "MAP05" then
     LEVEL.map_W = 28
+    LEVEL.size_multiplier = 0.8
   elseif LEVEL.name == "MAP06" then
     LEVEL.map_W = 30
-  elseif LEVEL.name == "MAP07" then
+    LEVEL.size_multiplier = 0.7
+  elseif LEVEL.name == "MAP07" then -- Procedural Gotcha
     LEVEL.map_W = 20
+    LEVEL.size_consistency = strict
     LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.b) .. " Simple"
+    LEVEL.size_multiplier = 1.2
   elseif LEVEL.name == "MAP08" then
     LEVEL.map_W = 28
+    LEVEL.size_multiplier = 0.8
     LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.b) .. " and Traps"
+  elseif LEVEL.name == "MAP09" then
+    LEVEL.map_W = 26
+    LEVEL.size_multiplier = 0.7
+  elseif LEVEL.name == "MAP10" then
+    LEVEL.map_W = 32
+    LEVEL.size_multiplier = 1.2
+  elseif LEVEL.name == "MAP11" then
+    LEVEL.map_W = 26
+    LEVEL.size_multiplier = 0.8
+  elseif LEVEL.name == "MAP12" then
+    LEVEL.map_W = 28
+    LEVEL.size_consistency = strict
+    LEVEL.size_multiplier = 0.75
+  elseif LEVEL.name == "MAP13" then -- Streets mode
+    LEVEL.map_W = 34
+    LEVEL.size_multiplier = 0.7
+    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.b) .. " Downtown"
+  elseif LEVEL.name == "MAP14" then
+    LEVEL.map_W = 24
+    LEVEL.size_multiplier = 0.5
+    LEVEL.size_consistency = strict
+  elseif LEVEL.name == "MAP15" then
+    LEVEL.map_W = 36
+    LEVEL.size_multiplier = 0.8
+    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.b) .. " Industrial"
+  elseif LEVEL.name == "MAP16" then -- Streets mode
+    LEVEL.map_W = 30
+    LEVEL.size_multiplier = 1.2
+  elseif LEVEL.name == "MAP17" then
+    LEVEL.map_W = 26
+    LEVEL.size_multiplier = 0.65
+  elseif LEVEL.name == "MAP18" then
+    LEVEL.map_W = 24
+    LEVEL.size_multiplier = 0.7
+    LEVEL.size_consistency = strict
+  elseif LEVEL.name == "MAP19" then
+    LEVEL.map_W = 34
+    LEVEL.size_multiplier = 0.7
+    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.b) .. " Citadel"
+  elseif LEVEL.name == "MAP20" then
+    LEVEL.map_W = 36
+    LEVEL.size_multiplier = 0.9
+  elseif LEVEL.name == "MAP21" then
+    LEVEL.map_W = 20
+    LEVEL.size_multiplier = 0.5
+    LEVEL.size_consistency = strict
+    LEVEL.description = rand.key_by_probs(nt.HELL.lexicon.b) .. " Nirvana"
+  elseif LEVEL.name == "MAP22" then
+    LEVEL.map_W = 22
+    LEVEL.size_multiplier = 0.5
+    LEVEL.size_consistency = strict
+  elseif LEVEL.name == "MAP23" then
+    LEVEL.map_W = 26
+    LEVEL.size_multiplier = 0.7
+    LEVEL.description = rand.key_by_probs(nt.HELL.lexicon.b) .. " Barrels"
+  elseif LEVEL.name == "MAP24" then
+    LEVEL.map_W = 30
+    LEVEL.size_multiplier = 0.8
+    LEVEL.description = rand.key_by_probs(nt.HELL.lexicon.b) .. " Chasm"
+  elseif LEVEL.name == "MAP25" then
+    LEVEL.map_W = 26
+    LEVEL.size_multiplier = 0.6
+  elseif LEVEL.name == "MAP26" then
+    LEVEL.map_W = 30
+    LEVEL.size_multiplier = 0.8
+  elseif LEVEL.name == "MAP27" then
+    LEVEL.map_W = 24
+    LEVEL.size_multiplier = 0.6
+    LEVEL.size_consistency = strict
+  elseif LEVEL.name == "MAP28" then
+    LEVEL.map_W = 28
+    LEVEL.size_multiplier = 0.9
+  elseif LEVEL.name == "MAP29" then
+    LEVEL.map_W = 32
+    LEVEL.size_multiplier = 0.8
+    LEVEL.description = rand.key_by_probs(nt.HELL.lexicon.b) .. " End"
+  elseif LEVEL.name == "MAP30" then -- Procedural Gotcha
+    LEVEL.map_W = 36
+    LEVEL.size_multiplier = 2.0
+    LEVEL.size_consistency = strict
+    LEVEL.description = rand.key_by_probs(nt.HELL.lexicon.b) .. " Icon"
+  elseif LEVEL.name == "MAP31" then
+    LEVEL.map_W = 28
+    LEVEL.size_multiplier = 0.7
+    LEVEL.size_consistency = strict
+  elseif LEVEL.name == "MAP32" then
+    LEVEL.map_W = 24
+    LEVEL.size_multiplier = 0.6
+    LEVEL.size_consistency = strict
   end
 
   -- combine explicit tables from above
@@ -739,7 +841,7 @@ function IWAD_MODE.iwad_style_styles(self, local_table, qualifier)
 end]]
 
 
-UNFINISHED["iwad_mode"] =
+OB_MODULES["iwad_mode"] =
 {
   label = _("(Exp) IWAD Style Mode"),
   engine = "!vanilla",
