@@ -24,6 +24,7 @@
 #include <cstddef>
 #include <vector>
 #include <string>
+#include <map>
 #include <algorithm>
 #include "hdr_fltk.h"
 #define OBSIDIAN_TITLE "OBSIDIAN Level Maker"
@@ -83,7 +84,7 @@ extern int window_scaling;
 extern int font_scaling;
 extern int num_fonts;
 extern bool single_pane;
-extern std::vector<std::string> font_menu_items; // Used to correlate drop-down values to fonts
+extern std::vector<std::map<std::string, int>> font_menu_items;
 
 extern bool create_backups;
 extern bool overwrite_warning;

@@ -308,7 +308,9 @@ class UI_OptionsWin : public Fl_Window {
 		opt_font_theme->add(_("Default"));
 
   		for (int x = 0; x < num_fonts; x++) {
-    		opt_font_theme->add(font_menu_items[x].c_str());
+  		  	for (auto font = font_menu_items[x].begin(); font != font_menu_items[x].end(); ++font) {
+    			opt_font_theme->add(font->first.c_str());
+  			}
   		}
 				
         opt_font_theme->value(font_theme);
