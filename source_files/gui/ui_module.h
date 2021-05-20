@@ -56,14 +56,14 @@ class UI_Module : public Fl_Group {
     virtual ~UI_Module();
 
     void AddOption(const char *option, const char *label, const char *tip,
-                   int gap);
+                   const char* longtip, int gap);
 
 	void AddSliderOption(const char *option, const char *label, const char *tip,
-                          int gap, double min, double max, double inc,
+                          const char* longtip, int gap, double min, double max, double inc,
                           const char *units, const char *nan);
                          
     void AddButtonOption(const char *opt, const char *label, const char *tip,
-                          int gap);
+                          const char *longtip, int gap);
 
     void AddOptionChoice(const char *option, const char *id, const char *label);
     
@@ -130,14 +130,14 @@ class UI_CustomMods : public Fl_Group {
     bool EnableMod(const char *id, bool enable);
 
     bool AddOption(const char *module, const char *option, const char *label,
-                   const char *tip, int gap);
+                   const char *tip, const char* longtip, int gap);
                    
 	bool AddSliderOption(const char *module, const char *option, const char *label,
-                   const char *tip, int gap, double min, double max, 
+                   const char *tip, const char* longtip, int gap, double min, double max, 
                    double inc, const char *units, const char *nan);
                    
     bool AddButtonOption(const char *module, const char *option,
-                         const char *label, const char *tip, int gap);
+                         const char *label, const char *tip, const char* longtip, int gap);
 
     void AddOptionChoice(const char *module, const char *option, const char *id,
                          const char *label);

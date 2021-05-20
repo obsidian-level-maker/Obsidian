@@ -1118,14 +1118,14 @@ function ob_init()
                   
           if opt.valuator then
             if opt.valuator == "slider" then
-              gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.gap, opt.min, opt.max, opt.increment, opt.units, opt.nan)
+              gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.min, opt.max, opt.increment, opt.units, opt.nan)
               if not opt.default then
                 opt.default = (opt.min + opt.max) / 2
               end
               opt.value = opt.default
               gui.set_module_slider_option(mod.name, opt.name, opt.value)
             elseif opt.valuator == "button" then
-              gui.add_module_button_option(mod.name, opt.name, opt.label, opt.tooltip, opt.gap)
+              gui.add_module_button_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap)
               if not opt.default then
                 opt.default = 0
               end
@@ -1133,7 +1133,7 @@ function ob_init()
               gui.set_module_button_option(mod.name, opt.name, opt.value)
             end
           else
-            gui.add_module_option(mod.name, opt.name, opt.label, opt.tooltip, opt.gap)
+            gui.add_module_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap)
             opt.avail_choices = {}
 
             for i = 1,#opt.choices,2 do

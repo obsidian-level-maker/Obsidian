@@ -477,8 +477,9 @@ int gui_add_module_option(lua_State *L) {
 
     const char *label = luaL_checkstring(L, 3);
     const char *tip = luaL_optstring(L, 4, NULL);
+    const char *longtip = luaL_optstring(L, 5, NULL);
 
-    int gap = luaL_optinteger(L, 5, 0);
+    int gap = luaL_optinteger(L, 6, 0);
 
     SYS_ASSERT(module && option);
 
@@ -495,9 +496,9 @@ int gui_add_module_option(lua_State *L) {
 
     // FIXME : error if module is unknown
 
-    main_win->left_mods->AddOption(module, option, label, tip, gap);
+    main_win->left_mods->AddOption(module, option, label, tip, longtip, gap);
     if (!single_pane) {
-    	main_win->right_mods->AddOption(module, option, label, tip, gap);
+    	main_win->right_mods->AddOption(module, option, label, tip, longtip, gap);
     }
 
     return 0;
@@ -511,15 +512,16 @@ int gui_add_module_slider_option(lua_State *L) {
 
     const char *label = luaL_checkstring(L, 3);
     const char *tip = luaL_optstring(L, 4, NULL);
+    const char *longtip = luaL_optstring(L, 5, NULL);
 
-    int gap = luaL_optinteger(L, 5, 0);
+    int gap = luaL_optinteger(L, 6, 0);
     
-    double min = luaL_checknumber(L, 6);
-    double max = luaL_checknumber(L, 7);
-    double inc = luaL_checknumber(L, 8);
+    double min = luaL_checknumber(L, 7);
+    double max = luaL_checknumber(L, 8);
+    double inc = luaL_checknumber(L, 9);
 
-	const char *units = luaL_checkstring(L, 9);
-	const char *nan = luaL_checkstring(L, 10);
+	const char *units = luaL_checkstring(L, 10);
+	const char *nan = luaL_checkstring(L, 11);
 
     SYS_ASSERT(module && option);
 
@@ -536,9 +538,9 @@ int gui_add_module_slider_option(lua_State *L) {
 
     // FIXME : error if module is unknown
 
-    main_win->left_mods->AddSliderOption(module, option, label, tip, gap, min, max, inc, units, nan);
+    main_win->left_mods->AddSliderOption(module, option, label, tip, longtip, gap, min, max, inc, units, nan);
     if (!single_pane) {
-    	main_win->right_mods->AddSliderOption(module, option, label, tip, gap, min, max, inc, units, nan);
+    	main_win->right_mods->AddSliderOption(module, option, label, tip, longtip, gap, min, max, inc, units, nan);
     }
 
     return 0;
@@ -552,8 +554,9 @@ int gui_add_module_button_option(lua_State *L) {
 
     const char *label = luaL_checkstring(L, 3);
     const char *tip = luaL_optstring(L, 4, NULL);
+    const char *longtip = luaL_optstring(L, 5, NULL);
 
-    int gap = luaL_optinteger(L, 5, 0);
+    int gap = luaL_optinteger(L, 6, 0);
     
     SYS_ASSERT(module && option);
 
@@ -570,9 +573,9 @@ int gui_add_module_button_option(lua_State *L) {
 
     // FIXME : error if module is unknown
 
-    main_win->left_mods->AddButtonOption(module, option, label, tip, gap);
+    main_win->left_mods->AddButtonOption(module, option, label, tip, longtip, gap);
     if (!single_pane) {
-    	main_win->right_mods->AddButtonOption(module, option, label, tip, gap);
+    	main_win->right_mods->AddButtonOption(module, option, label, tip, longtip, gap);
     }
 
     return 0;
