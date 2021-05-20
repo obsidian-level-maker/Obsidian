@@ -9973,7 +9973,7 @@ GROW_CLIFF_STRAIGHT_X4 =
 GROW_CLIFF_DOUBLE_HOOK_X2_1 =
 {
   prob = 25,
-  skip_prob = 50,
+  skip_prob = 75,
 
   structure =
   {
@@ -9989,10 +9989,71 @@ GROW_CLIFF_DOUBLE_HOOK_X2_1 =
   }
 },
 
+GROW_CLIFF_DOUBLE_HOOK_X2_1_LIQUID =
+{
+  prob = 12,
+  skip_prob = 75,
+
+  structure =
+  {
+    ".....","AAAAA",
+    ".....","AAAAA",
+    ".....","^^~AA",
+    ".....","^^~AA",
+    ".....","11~^^",
+    ".....","11~^^",
+    ".....","11111",
+    ".....","11111",
+    "xxx11","xxx11",
+  }
+},
+
+GROW_CLIFF_DOUBLE_TRIDENT =
+{
+  prob = 20,
+  skip_prob = 50,
+
+  structure =
+  {
+    "......","AAAAAA",
+    "......","AAAAAA",
+    "......","^^AA^^",
+    "......","^^AA^^",
+    "......","11^^11",
+    "......","11^^11",
+    "......","111111",
+    "......","111111",
+    "xx11xx","xx11xx",
+  }
+},
+
 GROW_CLIFF_DOUBLE_HOOK_X2_2 =
 {
-  prob = 25,
-  skip_prob = 50,
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    ".....","AAAAA",
+    ".....","AAAAA",
+    ".....","^^~AA",
+    ".....","^^~AA",
+    ".....","11#AA",
+    ".....","11~AA",
+    ".....","11~AA",
+    ".....","11#AA",
+    ".....","11~^^",
+    ".....","11~^^",
+    ".....","11111",
+    ".....","11111",
+    "xxx11","xxx11",
+  }
+},
+
+GROW_CLIFF_DOUBLE_HOOK_X2_2_LIQUID =
+{
+  prob = 35,
+  skip_prob = 75,
 
   structure =
   {
@@ -10009,6 +10070,29 @@ GROW_CLIFF_DOUBLE_HOOK_X2_2 =
     "....","1111",
     "....","1111",
     "xx11","xx11",
+  }
+},
+
+GROW_CLIFF_DOUBLE_TRIDENT_X2 =
+{
+  prob = 35,
+  skip_prob = 75,
+
+  structure =
+  {
+    "......","AAAAAA",
+    "......","AAAAAA",
+    "......","^^AA^^",
+    "......","^^AA^^",
+    "......","11AA11",
+    "......","11AA11",
+    "......","11AA11",
+    "......","11AA11",
+    "......","11^^11",
+    "......","11^^11",
+    "......","111111",
+    "......","111111",
+    "xx11xx","xx11xx",
   }
 },
 
