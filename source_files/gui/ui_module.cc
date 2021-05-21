@@ -100,7 +100,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
     }
     
     if (!longtip) {
-    	longtip = "Help file not yet written for this setting!";
+    	longtip = "Detailed help not yet written for this setting. For quick help, hover over the option name to display a toolip.";
     }
 
 	UI_RChoice *rch =
@@ -165,7 +165,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     }
     
     if (!longtip) {
-    	longtip = "Help file not yet written for this setting!";
+    	longtip = "Detailed help not yet written for this setting. For quick help, hover over the option name to display a toolip.";
     }
 	UI_RSlide *rsl =
 		    new UI_RSlide(nx, ny + kf_h(15), nw * .95, (!single_pane ? kf_h(48) : kf_h(24)), NULL);
@@ -273,7 +273,7 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
     }
     
     if (!longtip) {
-    	longtip = "Help file not yet written for this setting!";
+    	longtip = "Detailed help not yet written for this setting. For quick help, hover over the option name to display a toolip.";
     }
 
 	UI_RButton *rbt =
