@@ -2969,36 +2969,53 @@ HALL_2_SPROUT_B =
 GROW_COLONNADE_1 =
 {
   prob = 10,
-  prob_skew = 5,
   skip_prob = 80,
 
   structure =
   {
-    ".....", "11111",
-    ".....", "1#1#1",
-    ".....", "11111",
-    ".....", "1#1#1",
-    ".....", "11111",
-    "x111x", "x111x",
+    ".....","11111",
+    ".....","11111",
+    ".....","1#1#1",
+    ".....","11111",
+    ".....","1#1#1",
+    "11...","11111",
+    "11...","11111",
+  }
+},
+
+GROW_COLONNADE_1_LIQUID =
+{
+  prob = 7,
+  skip_prob = 80,
+
+  structure =
+  {
+    ".....","11111",
+    ".....","11111",
+    ".....","1#~#1",
+    ".....","1~1~1",
+    ".....","1#~#1",
+    "11...","11111",
+    "11...","11111",
   }
 },
 
 GROW_COLONNADE_2 =
 {
   prob = 10,
-  prob_skew = 5,
   skip_prob = 60,
 
   structure =
   {
-    "......", "111111",
-    "......", "1#11.1",
-    "......", "111111",
-    "......", "1#11.1",
-    "......", "111111",
-    "......", "1#11.1",
-    "......", "111111",
-    "xx11xx", "xx11xx",
+    "......","111111",
+    "......","111111",
+    "......","1#11.1",
+    "......","111111",
+    "......","1#11.1",
+    "......","111111",
+    "......","1#11.1",
+    "11....","111111",
+    "11....","111111",
   }
 },
 
@@ -3020,7 +3037,6 @@ GROW_COLONNADE_TINY =
 GROW_COLONNADE_PARTHENON =
 {
   prob = 10,
-  prob_skew = 3,
   skip_prob = 50,
 
   structure =
@@ -3037,7 +3053,6 @@ GROW_COLONNADE_PARTHENON =
 GROW_COLONNADE_PARTHENON_3P =
 {
   prob = 10,
-  prob_skew = 3,
   skip_prob = 50,
 
   structure =
@@ -3381,7 +3396,7 @@ GROW_COLLONADE_STRAIGHT_VAULT_LARGE_FROM_SIDE =
 
 GROW_COLLONADE_STRAIGHT_VAULT_ORION_BELT =
 {
-  prob = 40,
+  prob = 50,
   skip_prob = 75,
 
   structure =
@@ -5929,6 +5944,29 @@ GROW_MAZE_U =
   }
 },
 
+GROW_MAZE_ =
+{
+  prob = 5,
+  skip_prob = 50,
+
+  structure =
+  {
+    "xxx.xxx","xxx1xxx",
+    "xxx.xxx","xxx1xxx",
+    "xx...xx","xx/1%xx",
+    ".......","1111111",
+    "xx...xx","xx%1/xx",
+    "xxx1xxx","xxx1xxx",
+    "xxx1xxx","xxx1xxx",
+  },
+
+  diagonals =
+  {
+    ".1","1.",
+    ".1","1."
+  }
+},
+
 GROW_MAZE_SQUARE =
 {
   prob = 5,
@@ -6109,8 +6147,8 @@ GROW_LAKE_BIG_O_WIDE_NEW_AREA =
 
 GROW_LAKE_BIG_L_NEW_AREA =
 {
-  prob = 45,
-  skip_prob = 75,
+  prob = 60,
+  skip_prob = 65,
 
   structure =
   {
@@ -6329,7 +6367,7 @@ GROW_LAKE_BIG_X_NEW_AREA =
 
 GROW_BIG_REACTOR_ARENA =
 {
-  prob = 35,
+  prob = 45,
   skip_prob = 75,
 
   structure =
@@ -10096,6 +10134,29 @@ GROW_CLIFF_DOUBLE_TRIDENT_X2 =
   }
 },
 
+GROW_CLIFF_DOUBLE_TRIDENT_X2_LIQUID =
+{
+  prob = 25,
+  skip_prob = 75,
+
+  structure =
+  {
+    "........","AAAAAAAA",
+    "........","AAAAAAAA",
+    "........","^^~AA~^^",
+    "........","^^~AA~^^",
+    "........","11~AA~11",
+    "........","11~AA~11",
+    "........","11~AA~11",
+    "........","11~AA~11",
+    "........","11~^^~11",
+    "........","11~^^~11",
+    "........","11111111",
+    "........","11111111",
+    "xxx11xxx","xxx11xxx",
+  }
+},
+
 --[[GROW_CLIFF_ENTRY_X4_LONG =
 {
   prob = 50,
@@ -10177,7 +10238,6 @@ DECORATE_CLIFF_CAGE =
 
   structure =
   {
-    "x1x","x1x",
     "111","111",
     "111","1C1",
     "222","222",
@@ -10192,7 +10252,6 @@ DECORATE_CLIFF_CAGE_3X_ROW =
 
   structure =
   {
-    "x111x","x111x",
     "11111","11111",
     "11111","1CCC1",
     "22222","22222",
@@ -10207,7 +10266,6 @@ DECORATE_CLIFF_CAGE_3X_STAGGERED =
 
   structure =
   {
-    "x11111x","x11111x",
     "1111111","1111111",
     "1111111","1C1C1C1",
     "2222222","2222222",
