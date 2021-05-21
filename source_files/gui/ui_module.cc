@@ -205,7 +205,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->next_button->callback(callback_SliderNext, NULL);
 
 	rsl->mod_entry =
-			new UI_ManualEntry(rsl->x() + (!single_pane ? (rsl->w() * .8) : (rsl->w() * .90)), rsl->y(), rsl->w() * .075, kf_h(24), "\u21B5");
+			new UI_ManualEntry(rsl->x() + (!single_pane ? (rsl->w() * .8) : (rsl->w() * .90)), rsl->y(), rsl->w() * .075, kf_h(24), "[ ]");
 	rsl->mod_entry->box(FL_NO_BOX);
 	rsl->mod_entry->labelcolor(FONT_COLOR);
 	rsl->mod_entry->visible_focus(0);
