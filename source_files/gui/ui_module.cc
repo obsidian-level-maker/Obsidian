@@ -100,7 +100,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
     }
     
     if (!longtip) {
-    	longtip = "Detailed help not yet written for this setting. For quick help, hover over the option name to display a toolip.";
+    	longtip = "Detailed help not yet written for this setting. For quick help, hover over the option name to display a tooltip.";
     }
 
 	UI_RChoice *rch =
@@ -165,7 +165,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     }
     
     if (!longtip) {
-    	longtip = "Detailed help not yet written for this setting. For quick help, hover over the option name to display a toolip.";
+    	longtip = "Detailed help not yet written for this setting. For quick help, hover over the option name to display a tooltip.";
     }
 	UI_RSlide *rsl =
 		    new UI_RSlide(nx, ny + kf_h(15), nw * .95, (!single_pane ? kf_h(48) : kf_h(24)), NULL);
@@ -187,7 +187,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->prev_button->callback(callback_SliderPrevious, NULL);
     
     rsl->mod_slider =
-        new Fl_Hor_Slider((!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .45),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (!single_pane ? rsl->w() * .85 : rsl->w() * .40), kf_h(24), NULL);
+        new Fl_Hor_Slider((!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .45),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (!single_pane ? rsl->w() * .80 : rsl->w() * .40), kf_h(24), NULL);
     rsl->mod_slider->box(button_style);
     rsl->mod_slider->selection_color(SELECTION);
     rsl->mod_slider->minimum(min);
@@ -273,7 +273,7 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
     }
     
     if (!longtip) {
-    	longtip = "Detailed help not yet written for this setting. For quick help, hover over the option name to display a toolip.";
+    	longtip = "Detailed help not yet written for this setting. For quick help, hover over the option name to display a tooltip.";
     }
 
 	UI_RButton *rbt =
@@ -484,7 +484,7 @@ void UI_Module::callback_SliderPrevious(Fl_Widget *w, void *data) {
 	double value = current_slider->mod_slider->value();
 	
 	if (current_slider->nan_choices.empty()) {
-		int steps = (int)(current_slider->mod_slider->maximum() - current_slider->mod_slider->minimum()) / current_slider->mod_slider->step();
+		int steps = (int)(current_slider->mod_slider->maximum() / current_slider->mod_slider->step());
 		double temp_value = current_slider->mod_slider->increment(value, (int)-steps * .10);
 		if (temp_value < current_slider->mod_slider->minimum()) {
 			current_slider->mod_slider->value(current_slider->mod_slider->minimum());
@@ -522,7 +522,7 @@ void UI_Module::callback_SliderNext(Fl_Widget *w, void *data) {
 	double value = current_slider->mod_slider->value();
 	
 	if (current_slider->nan_choices.empty()) {
-		int steps = (int)(current_slider->mod_slider->maximum() - current_slider->mod_slider->minimum()) / current_slider->mod_slider->step();
+		int steps = (int)(current_slider->mod_slider->maximum() / current_slider->mod_slider->step());
 		double temp_value = current_slider->mod_slider->increment(value, (int)steps * .10);
 		if (temp_value > current_slider->mod_slider->maximum()) {
 			current_slider->mod_slider->value(current_slider->mod_slider->maximum());
