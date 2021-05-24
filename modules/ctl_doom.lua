@@ -579,7 +579,7 @@ OB_MODULES["doom_weapon_control"] =
 
      float_bfg=
      {
-      label = _("Health Bonus"),
+      label = _("BFG 9000"),
       valuator = "slider",
       units = "",
       min = -.02,
