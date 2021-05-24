@@ -172,8 +172,8 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 
 
 	rsl->mod_label = 
-			new Fl_Box(rsl->x(), rsl->y(), (!single_pane ? rsl->w() * .95 : rsl->w() * .40), kf_h(24), new_label);
-	rsl->mod_label->align((!single_pane ? (FL_ALIGN_LEFT | FL_ALIGN_INSIDE) : (FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP)));
+			new Fl_Box(rsl->x(), rsl->y(), (!single_pane ? rsl->w() * .8 : rsl->w() * .40), kf_h(24), new_label);
+	rsl->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
 	rsl->mod_label->labelfont(font_style);
 	rsl->mod_label->tooltip(tip);
 
@@ -615,7 +615,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H)
     : Fl_Group(X, Y, W, H) {
     box(FL_FLAT_BOX);
 
-    color(fl_darker(fl_darker(WINDOW_BG)), fl_darker(fl_darker(WINDOW_BG)));
+    color(CONTRAST_COLOR, CONTRAST_COLOR);
 
     int cy = Y;
 
@@ -631,7 +631,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H)
     sbar = new Fl_Scrollbar(mx + mw, my, Fl::scrollbar_size(), mh);
     sbar->callback(callback_Scroll, this);
     sbar->slider(button_style);
-    sbar->color(fl_darker(fl_darker(WINDOW_BG)), WINDOW_BG);
+    sbar->color(CONTRAST_COLOR, WINDOW_BG);
     sbar->labelcolor(SELECTION);
 
     mod_pack_group = new Fl_Group(mx, my, mw, mh);
@@ -646,7 +646,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H)
     mod_pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
 
     mod_pack->box(FL_FLAT_BOX);
-    mod_pack->color(fl_darker(fl_darker(WINDOW_BG)));
+    mod_pack->color(CONTRAST_COLOR);
     mod_pack->resizable(mod_pack);
 
     end();

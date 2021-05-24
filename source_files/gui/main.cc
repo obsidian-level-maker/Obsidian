@@ -69,6 +69,7 @@ uchar bg2_blue = 57;
 Fl_Color FONT_COLOR;
 Fl_Color SELECTION;
 Fl_Color WINDOW_BG;
+Fl_Color CONTRAST_COLOR;
 int color_scheme = 0;
 int font_theme = 0;
 Fl_Font font_style = FL_HELVETICA;
@@ -446,7 +447,12 @@ void Main_SetupFLTK() {
     Fl::get_color(FONT_COLOR, text_red, text_green, text_blue); 
     Fl::get_color(WINDOW_BG, bg_red, bg_green, bg_blue);     
     Fl::get_color(SELECTION, bg2_red, bg2_green, bg2_blue);
-    }          	
+    }
+    if (fl_contrast(fl_color_average(fl_darker(WINDOW_BG), WINDOW_BG, 0.5), WINDOW_BG) == FL_WHITE) {
+    	CONTRAST_COLOR = fl_color_average(fl_lighter(WINDOW_BG), WINDOW_BG, 0.5);
+    } else {
+    	CONTRAST_COLOR = fl_color_average(fl_darker(WINDOW_BG), WINDOW_BG, 0.5);
+    }
     switch(widget_theme) {
     	case 0 : Fl::scheme("gtk+");
     			 break;

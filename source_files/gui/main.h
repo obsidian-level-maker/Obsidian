@@ -75,6 +75,7 @@ extern Fl_Font font_style;
 extern Fl_Color FONT_COLOR;
 extern Fl_Color WINDOW_BG;
 extern Fl_Color SELECTION;
+extern Fl_Color CONTRAST_COLOR;
 extern int color_scheme;
 extern int font_theme;
 extern int box_theme;

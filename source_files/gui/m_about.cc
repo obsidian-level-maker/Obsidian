@@ -115,7 +115,7 @@ UI_About::UI_About(int W, int H, const char *label)
     box = new Fl_Box(pad, cy, W - pad - pad, text_h, _(Text));
     box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
     box->box(FL_UP_BOX);
-    box->color(fl_darker(WINDOW_BG));
+    box->color(CONTRAST_COLOR);
     box->labelfont(font_style);
     box->labelcolor(fl_contrast(FONT_COLOR, box->color()));
 
