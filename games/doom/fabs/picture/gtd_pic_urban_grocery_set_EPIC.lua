@@ -18,7 +18,7 @@ PREFABS.Pic_grocery_shelf_EPIC =
 
   deep = 16,
 
-  x_fit = { 32,224 },
+  x_fit = { 120,136 },
   y_fit = "top",
 
   tex_DNSTOR01 =

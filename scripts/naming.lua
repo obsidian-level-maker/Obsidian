@@ -227,7 +227,24 @@ namelib.NAMES =
         ["In the Grip of Madness"]=10,
         ["Creeping Brutality"]=10,
         ["Hopeless Despair"]=10,
-        ["Bells of Agony"]=10
+        ["Bells of Agony"]=10,
+
+        -- OwO what's this? More from Armaetus?!
+        -- Just straight up weird or funny, rarely chosen though. Some memey stuff present!
+        ["I Accidentally Hotel Doom"]=2, -- YouTube "I Accidentally Hotel Mario"
+        ["It's Been One of Those Days"]=2, -- See above
+        ["Hetfield's Inflated Ego"]=2,
+        ["lol"]=2,
+        ["Marty's Loveable Funhouse"]=2, -- Refers to MArty Stratton, one of id's executive producers
+        ["OH NOES"]=2,
+        ["Phobos and Deimos Kissfest"]=2,
+        ["Reverse Cowgirl with a PC"]=2, -- YouTube "Reverse Cowgirl with a CD-I"
+        ["Romero's Oversized Mindset"]=2,
+        ["Take It Like a Man"]=2,
+        ["The Trail to the Toilet"]=2, -- In-joke with Obsidian team, I blame Shooter for this lol
+        ["Tom Hall's Halls"]=2,
+        ["We are not COMPET-N friendly"]=2
+
       },
 
       v =
