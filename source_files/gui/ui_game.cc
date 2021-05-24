@@ -160,7 +160,7 @@ void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
     win->set_modal();
     win->show();
     buff->text("Available Engines:\n\n\
-ZDoom-ish: L/G/Zdoom, Zandronum, and similar engines that use ZDoom as a base.\n\n\
+ZDoom Family: L/G/Zdoom, Zandronum, and similar engines that use ZDoom as a base.\n\n\
 Vanilla DOOM: Doom with its original engine limits. This option will use SLUMP as the map builder.\n\n\
 Limit Removing: Any engine that raises the limits of the original Doom to prevent crashes.\n\n\
 BOOM Compatible: Engines compatible with Boom that are able to use the entire suite of Boom types and features.\n\n\
