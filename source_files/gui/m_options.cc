@@ -521,7 +521,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     callback(callback_Quit, this);
 
-    box(FL_FLAT_BOX);
+    box(FL_BORDER_BOX);
 
     int y_step = kf_h(9);
     int pad = kf_w(6);
@@ -640,7 +640,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_text_color = new Fl_Button(cx + W * .15, cy, W * .15, kf_h(24),
                                        _("Font"));
     opt_text_color->visible_focus(0);
-    opt_text_color->box(FL_FLAT_BOX);
+    opt_text_color->box(FL_BORDER_BOX);
     opt_text_color->color(fl_rgb_color(text_red, text_green, text_blue));
     opt_text_color->align(FL_ALIGN_BOTTOM);
     opt_text_color->callback(callback_TextColor, this);
@@ -649,7 +649,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_bg_color = new Fl_Button(cx + W * .15 + opt_text_color->w() +  (3 * pad), cy, W * .15, kf_h(24),
                                        _("Panels"));
     opt_bg_color->visible_focus(0);
-    opt_bg_color->box(FL_FLAT_BOX);
+    opt_bg_color->box(FL_BORDER_BOX);
     opt_bg_color->color(fl_rgb_color(bg_red, bg_green, bg_blue));
     opt_bg_color->align(FL_ALIGN_BOTTOM);
     opt_bg_color->callback(callback_BgColor, this);
@@ -658,7 +658,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_bg2_color = new Fl_Button(cx + W * .15 + (opt_text_color->w() + (3 * pad)) * 2, cy, W * .15, kf_h(24),
                                        _("Highlights"));
     opt_bg2_color->visible_focus(0);
-    opt_bg2_color->box(FL_FLAT_BOX);
+    opt_bg2_color->box(FL_BORDER_BOX);
     opt_bg2_color->color(fl_rgb_color(bg2_red, bg2_green, bg2_blue));
     opt_bg2_color->align(FL_ALIGN_BOTTOM);
     opt_bg2_color->callback(callback_Bg2Color, this);
@@ -669,7 +669,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_button_color = new Fl_Button(cx + W * .05, cy, W * .15, kf_h(24),
                                        _("Buttons"));
     opt_button_color->visible_focus(0);
-    opt_button_color->box(FL_FLAT_BOX);
+    opt_button_color->box(FL_BORDER_BOX);
     opt_button_color->color(fl_rgb_color(button_red, button_green, button_blue));
     opt_button_color->align(FL_ALIGN_BOTTOM);
     opt_button_color->callback(callback_ButtonColor, this);
@@ -678,7 +678,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_gradient_color = new Fl_Button(cx + W * .05 + opt_text_color->w() +  (3 * pad), cy, W * .15, kf_h(24),
                                        _("Gradient"));
     opt_gradient_color->visible_focus(0);
-    opt_gradient_color->box(FL_FLAT_BOX);
+    opt_gradient_color->box(FL_BORDER_BOX);
     opt_gradient_color->color(fl_rgb_color(gradient_red, gradient_green, gradient_blue));
     opt_gradient_color->align(FL_ALIGN_BOTTOM);
     opt_gradient_color->callback(callback_GradientColor, this);
@@ -687,7 +687,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_border_color = new Fl_Button(cx + W * .05 + (opt_text_color->w() + (3 * pad)) * 2, cy, W * .15, kf_h(24),
                                        _("Borders"));
     opt_border_color->visible_focus(0);
-    opt_border_color->box(FL_FLAT_BOX);
+    opt_border_color->box(FL_BORDER_BOX);
     opt_border_color->color(fl_rgb_color(border_red, border_green, border_blue));
     opt_border_color->align(FL_ALIGN_BOTTOM);
     opt_border_color->callback(callback_BorderColor, this);
@@ -696,7 +696,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_gap_color = new Fl_Button(cx + W * .05 + (opt_text_color->w() + (3 * pad)) * 3, cy, W * .15, kf_h(24),
                                        _("Gaps"));
     opt_gap_color->visible_focus(0);
-    opt_gap_color->box(FL_FLAT_BOX);
+    opt_gap_color->box(FL_BORDER_BOX);
     opt_gap_color->color(fl_rgb_color(gap_red, gap_green, gap_blue));
     opt_gap_color->align(FL_ALIGN_BOTTOM);
     opt_gap_color->callback(callback_GapColor, this);
@@ -765,7 +765,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     int by = H - dh / 2 - bh / 2;
 
     Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
-    darkish->box(FL_FLAT_BOX);
+    darkish->box(FL_BORDER_BOX);
     {
         // finally add an "Close" button
 
