@@ -460,40 +460,132 @@ IWAD_MODE.styles = {
     barrels = "none",
     beams = "some",
     cages = "few"
-  }
-}
+  },
 
---[[ MAP17 Approximate map dimensions: 3,300 x 3,300 map units
+-- MAP17 Approximate map dimensions: 3,300 x 3,300 map units
 MAP17 =
 {
-
-}
+  outdoors ="few",
+  big_rooms = "none",
+  big_outdoor_rooms = "none",
+  barrels = "few",
+  cages = "some",
+  doors = "some",
+  hallways = "few",
+  liquids = "few",
+  steepness = "heaps",
+  symmetry = "none",
+  traps = "heaps",
+  beams = "few",
+  secrets = "few",
+  fences = "none",
+  scenics = "none",
+  switches = "some",
+  keys = "some",
+  trikeys = "few",
+  parks = "none",
+  porches = "some"
+},
 
 -- MAP18 Approximate map dimensions: 4,900 x 4,500 map units
 MAP18 =
 {
-
-}
+  big_rooms = "none",
+  big_outdoor_rooms = "some",
+  parks = "heaps",
+  doors = "few",
+  steepness = "few",
+  switches = "some",
+  keys = "some",
+  trikeys = "some",
+  hallways = "none",
+  beams = "some",
+  symmetry = "none",
+  scenics = "some",
+  barrels = "few",
+  windows = "few",
+  cages = "none",
+  traps = "some",
+  liquids = "few",
+  porches = "few",
+  secrets = "few"
+},
 
 -- MAP19 Approximate map dimensions: 5,550 x 6,000 map units
 MAP19 =
 {
-
-}
+  outdoors = "heaps",
+  big_outdoor_rooms = "heaps",
+  doors = "heaps",
+  keys = "heaps",
+  trikeys = "some",
+  windows = "heaps",
+  steepness = "some",
+  switches = "some",
+  traps = "few",
+  secrets = "some",
+  porches = "few",
+  cages = "heaps",
+  scenics = "heaps",
+  liquids = "few",
+  beams = "few",
+  symmetry = "some",
+  hallways = "few",
+  teleporters = "some"
+},
 
 -- MAP20 Approximate map dimensions: 5,200 x 6,300 map units
 MAP20 =
 {
-
-}
+  steepness = "heaps",
+  outdoors = "some",
+  big_outdoor_rooms = "heaps",
+  big_rooms = "some",
+  hallways = "none",
+  secrets = "some",
+  scenics = "heaps",
+  beams = "none",
+  liquids = "heaps",
+  porches = "some",
+  fences = "none",
+  windows = "Few",
+  switches = "few",
+  doors = "few",
+  traps = "some",
+  symmetry = "none",
+  keys = "few",
+  trikeys = "none",
+  teleporters = "few",
+  parks = "none"
+},
 
 -- MAP21 Approximate map dimensions: 3,500 x 3,000 map units
 MAP21 =
 {
-
+  outdoors = "few",
+  parks = "none",
+  big_outdoor_rooms = "none",
+  barrels = "none",
+  steepness = "few",
+  keys = "few",
+  trikeys = "some",
+  traps = "some",
+  doors = "few",
+  teleporters = "some",
+  beams = "none",
+  scenics = "none",
+  liquids = "few",
+  porches = "few",
+  fences = "none",
+  switches = "few",
+  cages = "none",
+  windows = "none",
+  secrets = "Few",
+  hallways = "none"
+}
 }
 
--- MAP22 Approximate map dimensions: 2,300 x 1,850 map units
+--[[ MAP22 Approximate map dimensions: 2,300 x 1,850 map units
 MAP22 =
 {
 
@@ -664,19 +756,23 @@ function IWAD_MODE.begin_level()
   elseif LEVEL.name == "MAP08" then
     LEVEL.map_W = 28
     LEVEL.size_multiplier = 0.8
+    LEVEL.size_consistency = normal
     LEVEL.sky_light = 192
     LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.b) .. " and Traps"
   elseif LEVEL.name == "MAP09" then
     LEVEL.map_W = 26
     LEVEL.size_multiplier = 0.7
+    LEVEL.size_consistency = normal
     LEVEL.sky_light = 144
   elseif LEVEL.name == "MAP10" then
     LEVEL.map_W = 32
     LEVEL.size_multiplier = 1.2
+    LEVEL.size_consistency = normal
     LEVEL.sky_light = 144
   elseif LEVEL.name == "MAP11" then
     LEVEL.map_W = 26
     LEVEL.size_multiplier = 0.8
+    LEVEL.size_consistency = normal
     LEVEL.sky_light = 169
   elseif LEVEL.name == "MAP12" then
     LEVEL.map_W = 28
@@ -686,6 +782,7 @@ function IWAD_MODE.begin_level()
   elseif LEVEL.name == "MAP13" then -- Streets mode
     LEVEL.map_W = 34
     LEVEL.size_multiplier = 0.7
+    LEVEL.size_consistency = normal
     LEVEL.sky_light = 128
     LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.b) .. " Downtown"
   elseif LEVEL.name == "MAP14" then
@@ -698,16 +795,20 @@ function IWAD_MODE.begin_level()
     LEVEL.map_W = 38
     LEVEL.size_multiplier = 0.8
     LEVEL.area_multiplier = 1.33
+    LEVEL.size_consistency = normal
     LEVEL.sky_light = 160
     LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.b) .. " Industrial"
   elseif LEVEL.name == "MAP16" then -- Streets mode
     LEVEL.map_W = 30
     LEVEL.size_multiplier = 1.2
+    LEVEL.area_multiplier = 0.8
+    LEVEL.size_consistency = normal
     LEVEL.sky_light = 144
   elseif LEVEL.name == "MAP17" then
     LEVEL.map_W = 26
     LEVEL.size_multiplier = 0.65
     LEVEL.area_multiplier = 1.33
+    LEVEL.size_consistency = strict
     LEVEL.sky_light = 192
   elseif LEVEL.name == "MAP18" then
     LEVEL.map_W = 24
@@ -719,12 +820,14 @@ function IWAD_MODE.begin_level()
     LEVEL.map_W = 34
     LEVEL.size_multiplier = 0.7
     LEVEL.area_multiplier = 1.3
+    LEVEL.size_consistency = normal
     LEVEL.sky_light = 176
     LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.b) .. " Citadel"
   elseif LEVEL.name == "MAP20" then
     LEVEL.map_W = 36
     LEVEL.size_multiplier = 0.9
     LEVEL.area_multiplier = 2.0
+    LEVEL.size_consistency = normal
     LEVEL.sky_light = 255 -- dunno why id put 255
   elseif LEVEL.name == "MAP21" then
     LEVEL.map_W = 20
@@ -744,11 +847,13 @@ function IWAD_MODE.begin_level()
     LEVEL.size_multiplier = 0.7
     LEVEL.area_multiplier = 1.3
     LEVEL.sky_light = 160
+    LEVEL.size_consistency = normal
     LEVEL.description = rand.key_by_probs(nt.HELL.lexicon.b) .. " Barrels"
   elseif LEVEL.name == "MAP24" then
     LEVEL.map_W = 30
     LEVEL.size_multiplier = 0.8
     LEVEL.area_multiplier = 1.5
+    LEVEL.size_consistency = normal
     LEVEL.sky_light = 144 -- guess, can't find indoors
     LEVEL.description = rand.key_by_probs(nt.HELL.lexicon.b) .. " Chasm"
   elseif LEVEL.name == "MAP25" then
@@ -761,6 +866,7 @@ function IWAD_MODE.begin_level()
     LEVEL.map_W = 30
     LEVEL.size_multiplier = 0.8
     LEVEL.area_multiplier = 1.5
+    LEVEL.size_consistency = normal
     LEVEL.sky_light = 144
   elseif LEVEL.name == "MAP27" then
     LEVEL.map_W = 24
@@ -772,11 +878,13 @@ function IWAD_MODE.begin_level()
     LEVEL.map_W = 28
     LEVEL.size_multiplier = 0.9
     LEVEL.area_multiplier = 1.5
+    LEVEL.size_consistency = normal
     LEVEL.sky_light = 144
   elseif LEVEL.name == "MAP29" then
     LEVEL.map_W = 32
     LEVEL.size_multiplier = 0.8
     LEVEL.area_multiplier = 1.4
+    LEVEL.size_consistency = normal
     LEVEL.sky_light = 144
     LEVEL.description = rand.key_by_probs(nt.HELL.lexicon.b) .. " End"
   elseif LEVEL.name == "MAP30" then -- Procedural Gotcha
@@ -812,93 +920,6 @@ function IWAD_MODE.begin_level()
   gui.printf(table.tostr(LEVEL,2))
 end
 
--- TODO: E1M1 through E4M9
-
---[[function IWAD_MODE.iwad_style_levels(self)
-
-  for _,LEV in pairs(GAME.levels) do
-    if LEV.name == "MAP01" then
-      LEV.custom_size = 18
-    end
-
-    if LEV.name == "MAP02" then
-      LEV.custom_size = 22
-    end
-
-    if LEV.name == "MAP03" then
-      LEV.custom_size = 25
-    end
-
-    if LEV.name == "MAP04" then
-      LEV.custom_size = 20
-    end
-
-    if LEV.name == "MAP05" then
-        LEV.custom_size = 24
-    end
-
-    if LEV.name == "MAP06" then
-      LEV.custom_size = 28
-    end
-
-    if LEV.name == "MAP07" then
-      LEV.custom_size = 20
-      LEV.is_procedural_gotcha = true
-    end
-
-    if LEV.name == "MAP08" then
-      LEV.custom_size = 24
-    end
-
-    if LEV.name == "MAP09" then
-      LEV.custom_size = 28
-    end
-
-    if LEV.name == "MAP10" then
-      LEV.custom_size = 34
-    end
-
-    if LEV.name == "MAP11" then
-      LEV.custom_size = 24
-    end
-
-    if LEV.name == "MAP12" then
-      LEV.custom_size = 24
-    end
-
-    if LEV.name == "MAP13" then
-      LEV.custom_size = 36
-      LEV.has_streets = true
-    end
-
-    if LEV.name == "MAP14" then
-      LEV.custom_size = 26
-    end
-
-    if LEV.name == "MAP15" then
-      LEV.custom_size = 34
-    end
-
-    if LEV.name == "MAP16" then
-      LEV.custom_size = 30
-      LEV.has_streets = true
-    end
-  end
-end
-
-function IWAD_MODE.iwad_style_styles(self, local_table, qualifier)
-
-  for tablename, tablebody in pairs(IWAD_MODE) do
-    if OB_CONFIG.game == string.match(tablename, "%w*") then
-      if qualifier == string.match(tablename, "MAP%d%d") or LEVEL.name == string.match(tablename, "E%dM%d") then
-        table.merge(local_table, tablebody)
-      end
-    end
-  end
-
-end]]
-
-
 OB_MODULES["iwad_mode"] =
 {
   label = _("(Exp) IWAD Style Mode"),
@@ -906,11 +927,10 @@ OB_MODULES["iwad_mode"] =
   game = "doom2", -- Only one supported for now
   side = "left",
   priority = 60,
-  tooltip ="Attempts to mimic various architectural features seen in the Doom IWAD maps. Up to MAP16 is supported for the time being.",
+  tooltip ="Attempts to mimic various architectural features seen in the Doom IWAD maps. Up to MAP21 is supported for the time being.",
 
   hooks =
   {
-    --get_levels = IWAD_MODE.iwad_style_levels,
     begin_level = IWAD_MODE.begin_level
   }
 }
