@@ -115,9 +115,9 @@ UI_About::UI_About(int W, int H, const char *label)
     box = new Fl_Box(pad, cy, W - pad - pad, text_h, _(Text));
     box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
     box->box(FL_UP_BOX);
-    box->color(GAP_COLOR);
+    box->color(BUTTON_COLOR);
     box->labelfont(font_style);
-    box->labelcolor(fl_contrast(FONT_COLOR, box->color()));
+    box->labelcolor(FONT_COLOR);
 
     cy += box->h() + kf_h(10);
 
@@ -144,6 +144,7 @@ UI_About::UI_About(int W, int H, const char *label)
 
         Fl_Button *button = new Fl_Button(W - bw * 2, by, bw, bh, fl_ok);
         button->box(button_style);
+        button->color(BUTTON_COLOR);
         button->callback(callback_Quit, this);
         button->labelfont(font_style);
     }

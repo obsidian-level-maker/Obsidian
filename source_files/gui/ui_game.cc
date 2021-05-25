@@ -103,6 +103,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     build = new Fl_Button(button_x, cy, button_w, button_h, _("Build"));
     build->visible_focus(0);
     build->box(button_style);
+    build->color(BUTTON_COLOR);
     build->labelfont(font_style | FL_BOLD);
     build->labelsize(FL_NORMAL_SIZE + 2);
     build->callback(build_callback, this);
@@ -112,6 +113,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
                          _("Quit"));
     quit->visible_focus(0);
     quit->box(button_style);
+    quit->color(BUTTON_COLOR);
     quit->labelfont(font_style);
     quit->callback(quit_callback, this);
     quit->shortcut(FL_COMMAND + 'q');
