@@ -33,13 +33,13 @@
 -- LEVEL.area_multiplier
 -- LEVEL.size_consistency = strict/normal
 -- LEVEL.sky_light = # here
+-- LEVEL.has_streets = true/false
 -- PARAM.brightness_offset
 
 IWAD_MODE = { }
 
 -- Needs the following:
--- Checks for monster quantity, room height bias, procedural gotcha,
--- streets mode, brightness offset, sink style, switch goals/remote switch choices,
+-- Brightness offset, sink style, switch goals/remote switch choices,
 -- cliffs and more.
 
 ------------
@@ -251,7 +251,8 @@ IWAD_MODE.styles = {
     porches = "none",
     beams = "some",
     caves = "none",
-    pictures = "heaps"
+    pictures = "heaps",
+    caves = "none"
   },
 
   -- MAP09 Approximate map dimensions: 4,200 x 4,000 map units
@@ -279,7 +280,8 @@ IWAD_MODE.styles = {
     secrets = "few",
     hallways = "some",
     windows = "few",
-    scenics = "none"
+    scenics = "none",
+    caves = "none"
   },
 
   -- MAP10 Approximate map dimensions: 4,200 x 4,200 map units
@@ -354,7 +356,8 @@ IWAD_MODE.styles = {
     symmetry = "some",
     cages = "few",
     pictures = "some",
-    barrels = "none"
+    barrels = "none",
+    caves = "none"
   },
 
   -- MAP13 Approximate map dimensions: 3,200 x 4,100 map units
@@ -407,7 +410,8 @@ IWAD_MODE.styles = {
     secrets = "few",
     hallways = "none",
     parks = "few",
-    park_detail = "some"
+    park_detail = "some",
+    caves = "none"
   },
 
   -- MAP15 Approximate map dimensions: 4,300 x 7,200 map units
@@ -434,7 +438,8 @@ IWAD_MODE.styles = {
     hallways = "few",
     switches = "some",
     pictures = "heaps",
-    cages = "some"
+    cages = "some",
+    caves = "few"
   },
 
   -- MAP16 Approximate map dimensions: 4,900 x 4,800 map units
@@ -459,7 +464,8 @@ IWAD_MODE.styles = {
     secrets = "few",
     barrels = "none",
     beams = "some",
-    cages = "few"
+    cages = "few",
+    caves = "none"
   },
 
 -- MAP17 Approximate map dimensions: 3,300 x 3,300 map units
@@ -484,7 +490,8 @@ MAP17 =
   keys = "some",
   trikeys = "few",
   parks = "none",
-  porches = "some"
+  porches = "some",
+  caves = "none"
 },
 
 -- MAP18 Approximate map dimensions: 4,900 x 4,500 map units
@@ -508,7 +515,8 @@ MAP18 =
   traps = "some",
   liquids = "few",
   porches = "few",
-  secrets = "few"
+  secrets = "few",
+  caves = "none"
 },
 
 -- MAP19 Approximate map dimensions: 5,550 x 6,000 map units
@@ -531,7 +539,8 @@ MAP19 =
   beams = "few",
   symmetry = "some",
   hallways = "few",
-  teleporters = "some"
+  teleporters = "some",
+  caves = "none"
 },
 
 -- MAP20 Approximate map dimensions: 5,200 x 6,300 map units
@@ -556,7 +565,8 @@ MAP20 =
   keys = "few",
   trikeys = "none",
   teleporters = "few",
-  parks = "none"
+  parks = "none",
+  caves = "few"
 },
 
 -- MAP21 Approximate map dimensions: 3,500 x 3,000 map units
@@ -581,81 +591,293 @@ MAP21 =
   cages = "none",
   windows = "none",
   secrets = "Few",
-  hallways = "none"
-}
-}
+  hallways = "none",
+  caves = "none"
+},
 
---[[ MAP22 Approximate map dimensions: 2,300 x 1,850 map units
+-- MAP22 Approximate map dimensions: 2,300 x 1,850 map units
 MAP22 =
 {
-
-}
+  outdoors ="few",
+  big_outdoor_rooms = "none",
+  big_rooms ="none",
+  doors = "few",
+  steepness = "heaps",
+  teleporters = "few",
+  secrets = "few",
+  traps = "some",
+  scenics = "none",
+  liquids = "few",
+  beams = "few",
+  porches = "few",
+  fences = "none",
+  windows = "some",
+  cages = "few",
+  keys = "few",
+  trikeys = "none",
+  parks = "none",
+  hallways = "none",
+  caves = "none",
+  barrels = "few",
+  switches = "few",
+  pictures = "some"
+},
 
 -- MAP23 Approximate map dimensions: 4,300 x 5,050 map units
 MAP23 =
 {
-
-}
+  barrels = "heaps", -- Any way to have more than this?
+  big_rooms = "heaps",
+  big_outdoor_rooms = "none",
+  doors = "few",
+  traps = "some",
+  windows = "few",
+  liquids = "few",
+  cages = "some",
+  steepness = "heaps",
+  beams = "none",
+  keys = "few",
+  trikeys = "none",
+  switches = "few",
+  teleporters = "few",
+  caves = "few",
+  parks = "none",
+  scenics = "few",
+  fences = "few",
+  secrets = "some",
+  symmetry = "none",
+  hallways = "few",
+  pictures = "few"
+},
 
 -- MAP24 Approximate map dimensions: 6,000 x 5,300 map units
 MAP24 =
 {
-
-}
+  steepness = "heaps",
+  liquids = "heaps",
+  cages = "some",
+  doors = "some",
+  keys = "heaps",
+  trikeys = "some",
+  teleporters = "some",
+  outdoors = "none",
+  big_outdoor_rooms = "none",
+  big_rooms = "heaps",
+  parks = "none",
+  traps = "some",
+  switches = "some",
+  scenics = "none",
+  fences = "few",
+  beams = "few",
+  caves = "none",
+  windows = "few",
+  symmetry = "none",
+  pictures = "few"
+},
 
 -- MAP25 Approximate map dimensions: 3,600 x 7,200 map units
 MAP25 =
 {
-
-}
+  outdoors = "few",
+  big_outdoor_rooms = "none",
+  steepness = "heaps",
+  switches = "some",
+  keys = "few",
+  trikeys = "few",
+  windows = "none",
+  cages = "some",
+  caves = "some",
+  hallways = "few",
+  doors = "some",
+  teleporters = "few",
+  traps = "some",
+  switches = "few",
+  barrels = "few",
+  porches = "some",
+  fences = "some",
+  scenics = "few",
+  parks = "few",
+  symmmetry = "none",
+  pictures = "some"
+},
 
 -- MAP26 Approximate map dimensions: 4,600 x 3,200 map units
 MAP26 =
 {
-
-}
+  outdoors = "few",
+  big_outdoor_rooms = "none",
+  barrels = "some",
+  cages = "heaps",
+  hallways = "some",
+  caves = "some",
+  liquids = "heaps",
+  steepness = "heaps",
+  traps = "heaps",
+  switches = "some",
+  keys = "heaps",
+  trikeys = "some",
+  windows = "some",
+  parks = "none",
+  scenics = "some",
+  porches = "some",
+  teleporters = "some",
+  secrets = "few",
+  doors = "few",
+  pictures = "some"
+},
 
 -- MAP27 Approximate map dimensions: 3,900 x 4,500 map units
 MAP27 =
 {
-
-}
+  outdoors = "few",
+  big_outdoor_rooms = "few",
+  big_rooms = "heaps",
+  traps = "some",
+  windows = "none",
+  steepness = "some",
+  doors = "few",
+  keys = "some",
+  trikeys = "few",
+  secrets = "heaps",
+  porches = "some",
+  beams = "some",
+  barrels = "none",
+  parks = "none",
+  symmetry = "heaps",
+  liquids = "few",
+  caves = "none",
+  switches = "few",
+  teleporters = "few",
+  scenics = "none",
+  pictures = "few",
+  fences = "none"
+},
 
 -- MAP28 Approximate map dimensions: 4,400 x 5,000 map units
 MAP28 =
 {
-
-}
+  outdoors = "none",
+  big_rooms = "heaps",
+  big_outdoor_rooms = "none",
+  symmetry = "none",
+  caves = "some",
+  cages = "some",
+  traps = "some",
+  doors = "few",
+  keys = "heaps",
+  trikeys = "heaps",
+  secrets = "some",
+  switches = "few",
+  liquids = "few",
+  pictures = "few",
+  hallways = "few",
+  parks = "few",
+  park_detail = "heaps",
+  teleporters = "some",
+  fences = "few",
+  porches = "few",
+  windows = "none"
+},
 
 -- MAP29 Approximate map dimensions: 4,800 x 4,600 map units
 MAP29 =
 {
-
-}
+  outdoors = "none",
+  big_rooms = "some",
+  big_outdoor_rooms = "none",
+  traps = "some",
+  steepness = "heaps",
+  symmetry = "none",
+  teleporters = "some",
+  windows = "few",
+  switches = "heaps",
+  scenics = "some",
+  porches = "few",
+  cages = "heaps",
+  caves = "some",
+  pictures = "some",
+  doors = "few",
+  keys = "few",
+  trikeys = "none",
+  barrels = "none",
+  liquids = "heaps"
+},
 
 -- MAP30 Approximate map dimensions: 2,750 x 2,800 map units
 MAP30 =
 {
-
-}
+  outdoors = "none",
+  windows = "none",
+  steepness = "heaps",
+  liquids = "some",
+  barrels = "none",
+  fences = "some",
+  scenics = "heaps",
+  keys = "none",
+  trikeys = "none",
+  switches = "few",
+  porches = "some",
+  secrets = "few",
+  cages = "some",
+  hallways = "none",
+  caves = "none",
+  traps = "some"
+},
 
 -- MAP31 Approximate map dimensions: 8,750 x 7,200 map units
 MAP31 =
 {
-
-}
+  outdoors = "none",
+  big_outdoor_rooms = "none",
+  windows = "none",
+  big_rooms = "heaps",
+  steepness = "few",
+  barrels = "few",
+  switches = "none",
+  scenics = "none",
+  keys = "none",
+  trikeys = "none",
+  teleporters = "none",
+  liquids = "none",
+  traps = "some",
+  doors = "heaps",
+  pictures = "some",
+  caves = "none",
+  cages = "some",
+  fences = "few",
+  symmetry = "heaps"
+},
 
 -- MAP32 Approximate map dimensions: 4,000 x 7,200 map units
 MAP32 =
 {
-
+  outdoors = "few",
+  big_outdoor_rooms = "none",
+  windows = "none",
+  big_rooms = "heaps",
+  steepness = "few",
+  barrels = "none",
+  switches = "none",
+  scenics = "none",
+  keys = "none",
+  trikeys = "none",
+  teleporters = "none",
+  liquids = "none",
+  traps = "heaps",
+  doors = "few",
+  pictures = "some",
+  caves = "none",
+  cages = "some",
+  fences = "few",
+  symmetry = "heaps"
+}
 }
 
 ------------------------
 -- Doom/Ultimate Doom --
 ------------------------
 
--- E1M1 Approximate map dimensions: 4,600 x 2,800 nap units
+--[[ E1M1 Approximate map dimensions: 4,600 x 2,800 nap units
 E1M1 =
 {
 
@@ -716,7 +938,7 @@ function IWAD_MODE.begin_level()
 
   if LEVEL.name == "MAP01" then
     LEVEL.map_W = 18
-    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.b) .. " Entryway"
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.a) .. " Entryway" -- was b lexicon
     LEVEL.size_multiplier = 0.6
     LEVEL.size_consistency = strict
     LEVEL.sky_light = 192
@@ -740,6 +962,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_multiplier = 0.8
     LEVEL.sky_light = 144
     LEVEL.size_consistency = normal
+    -- LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.n) .. "The " -- Does "WordThe" and not "The Word"..
   elseif LEVEL.name == "MAP06" then
     LEVEL.map_W = 30
     LEVEL.size_multiplier = 0.7
@@ -750,7 +973,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = strict
     LEVEL.is_procedural_gotcha = true
     LEVEL.sky_light = 192
-    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.b) .. " Simple"
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.c) .. " Simple" -- was b
     LEVEL.size_multiplier = 1.2
     LEVEL.area_multiplier = 0.75
   elseif LEVEL.name == "MAP08" then
@@ -758,7 +981,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_multiplier = 0.8
     LEVEL.size_consistency = normal
     LEVEL.sky_light = 192
-    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.b) .. " and Traps"
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.d) .. " and Traps" -- was b
   elseif LEVEL.name == "MAP09" then
     LEVEL.map_W = 26
     LEVEL.size_multiplier = 0.7
@@ -773,18 +996,21 @@ function IWAD_MODE.begin_level()
     LEVEL.map_W = 26
     LEVEL.size_multiplier = 0.8
     LEVEL.size_consistency = normal
-    LEVEL.sky_light = 169
+    LEVEL.sky_light = 160
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.n) .. " of Destruction"
   elseif LEVEL.name == "MAP12" then
     LEVEL.map_W = 28
     LEVEL.size_consistency = strict
     LEVEL.size_multiplier = 0.75
+    LEVEL.has_streets = true -- Its shape implies this
     LEVEL.sky_light = 144
   elseif LEVEL.name == "MAP13" then -- Streets mode
     LEVEL.map_W = 34
     LEVEL.size_multiplier = 0.7
     LEVEL.size_consistency = normal
     LEVEL.sky_light = 128
-    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.b) .. " Downtown"
+    LEVEL.has_streets = true
+    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.o) .. " Downtown" -- was b
   elseif LEVEL.name == "MAP14" then
     LEVEL.map_W = 24
     LEVEL.size_multiplier = 0.5
@@ -797,12 +1023,14 @@ function IWAD_MODE.begin_level()
     LEVEL.area_multiplier = 1.33
     LEVEL.size_consistency = normal
     LEVEL.sky_light = 160
-    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.b) .. " Industrial"
+    LEVEL.has_streets = true -- Shaped enough for this
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.a) .. " Industrial Zone" -- was b
   elseif LEVEL.name == "MAP16" then -- Streets mode
     LEVEL.map_W = 30
     LEVEL.size_multiplier = 1.2
     LEVEL.area_multiplier = 0.8
     LEVEL.size_consistency = normal
+    LEVEL.has_streets = true
     LEVEL.sky_light = 144
   elseif LEVEL.name == "MAP17" then
     LEVEL.map_W = 26
@@ -816,13 +1044,14 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = strict
     LEVEL.area_multiplier = 0.75
     LEVEL.sky_light = 160
+    -- LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.n) .. "The " -- Does "WordThe" and not "The Word"..
   elseif LEVEL.name == "MAP19" then
     LEVEL.map_W = 34
     LEVEL.size_multiplier = 0.7
     LEVEL.area_multiplier = 1.3
     LEVEL.size_consistency = normal
     LEVEL.sky_light = 176
-    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.b) .. " Citadel"
+    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.a) .. " Citadel" -- was b
   elseif LEVEL.name == "MAP20" then
     LEVEL.map_W = 36
     LEVEL.size_multiplier = 0.9
@@ -835,27 +1064,26 @@ function IWAD_MODE.begin_level()
     LEVEL.area_multiplier = 1.3
     LEVEL.sky_light = 160
     LEVEL.size_consistency = strict
-    LEVEL.description = rand.key_by_probs(nt.HELL.lexicon.b) .. " Nirvana"
   elseif LEVEL.name == "MAP22" then
     LEVEL.map_W = 22
     LEVEL.size_multiplier = 0.5
     LEVEL.area_multiplier = 1.2
     LEVEL.sky_light = 192
     LEVEL.size_consistency = strict
+    -- LEVEL.description = rand.key_by_probs(nt.GOTHIC.lexicon.a) .. "The " -- Does "WordThe" and not "The Word"..
   elseif LEVEL.name == "MAP23" then
     LEVEL.map_W = 26
     LEVEL.size_multiplier = 0.7
     LEVEL.area_multiplier = 1.3
     LEVEL.sky_light = 160
     LEVEL.size_consistency = normal
-    LEVEL.description = rand.key_by_probs(nt.HELL.lexicon.b) .. " Barrels"
+    -- LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.h) .. "Barrels o' " -- Does "WordThe" and not "The Word"..
   elseif LEVEL.name == "MAP24" then
     LEVEL.map_W = 30
     LEVEL.size_multiplier = 0.8
     LEVEL.area_multiplier = 1.5
     LEVEL.size_consistency = normal
     LEVEL.sky_light = 144 -- guess, can't find indoors
-    LEVEL.description = rand.key_by_probs(nt.HELL.lexicon.b) .. " Chasm"
   elseif LEVEL.name == "MAP25" then
     LEVEL.map_W = 26
     LEVEL.size_multiplier = 0.6
@@ -874,6 +1102,7 @@ function IWAD_MODE.begin_level()
     LEVEL.area_multiplier = 1.25
     LEVEL.size_consistency = strict
     LEVEL.sky_light = 144
+    -- LEVEL.description = rand.key_by_probs(nt.GOTHIC.lexicon.n) .. "Monster " -- Does "WordThe" and not "The Word"..
   elseif LEVEL.name == "MAP28" then
     LEVEL.map_W = 28
     LEVEL.size_multiplier = 0.9
@@ -886,7 +1115,7 @@ function IWAD_MODE.begin_level()
     LEVEL.area_multiplier = 1.4
     LEVEL.size_consistency = normal
     LEVEL.sky_light = 144
-    LEVEL.description = rand.key_by_probs(nt.HELL.lexicon.b) .. " End"
+    -- LEVEL.description = rand.key_by_probs(nt.GOTHIC.lexicon.h) .. "The Living " -- Does "WordThe" and not "The Word"..
   elseif LEVEL.name == "MAP30" then -- Procedural Gotcha
     LEVEL.map_W = 36
     LEVEL.size_multiplier = 1.5
@@ -894,7 +1123,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = strict
     LEVEL.is_procedural_gotcha = true
     LEVEL.sky_light = 144
-    LEVEL.description = rand.key_by_probs(nt.HELL.lexicon.b) .. " Icon"
+    -- LEVEL.description = rand.key_by_probs(nt.GOTHIC.lexicon.h) .. "Icon of " -- Does "WordThe" and not "The Word"..
   elseif LEVEL.name == "MAP31" then
     LEVEL.map_W = 28
     LEVEL.size_multiplier = 0.5
@@ -907,6 +1136,13 @@ function IWAD_MODE.begin_level()
     LEVEL.area_multiplier = 0.6
     LEVEL.size_consistency = strict
     LEVEL.sky_light = 192
+
+    -- TODO Doom/Ult. Doom
+    --elseif LEVEL.name == "E1M1" then
+    --LEVEL.map_W = 22
+    --LEVEL.size_multiplier = 0.5
+    --LEVEL.size_consistency = strict
+    --LEVEL.sky_light = 192
   end
 
   -- combine explicit tables from above
@@ -922,12 +1158,12 @@ end
 
 OB_MODULES["iwad_mode"] =
 {
-  label = _("(Exp) IWAD Style Mode"),
+  label = _("IWAD Style Mode"),
   engine = "!vanilla",
   game = "doom2", -- Only one supported for now
   side = "left",
   priority = 60,
-  tooltip ="Attempts to mimic various architectural features seen in the Doom IWAD maps. Up to MAP21 is supported for the time being.",
+  tooltip ="Attempts to mimic various architectural features seen in the Doom IWAD maps. Only Doom 2 is supported for the time being.",
 
   hooks =
   {
