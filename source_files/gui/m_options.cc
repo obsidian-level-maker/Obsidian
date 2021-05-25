@@ -72,7 +72,31 @@ static void Parse_Option(const char *name, const char *value) {
 	} else if (StringCaseCmp(name, "bg2_green") == 0) {
         bg2_green = atoi(value);  
 	} else if (StringCaseCmp(name, "bg2_blue") == 0) {
-        bg2_blue = atoi(value);         
+        bg2_blue = atoi(value);
+	} else if (StringCaseCmp(name, "button_red") == 0) {
+        button_red = atoi(value);
+	} else if (StringCaseCmp(name, "button_green") == 0) {
+        button_green = atoi(value);  
+	} else if (StringCaseCmp(name, "button_blue") == 0) {
+        button_blue = atoi(value);
+	} else if (StringCaseCmp(name, "gradient_red") == 0) {
+        gradient_red = atoi(value);
+	} else if (StringCaseCmp(name, "gradient_green") == 0) {
+        gradient_green = atoi(value);  
+	} else if (StringCaseCmp(name, "gradient_blue") == 0) {
+        gradient_blue = atoi(value);
+	} else if (StringCaseCmp(name, "border_red") == 0) {
+        border_red = atoi(value);
+	} else if (StringCaseCmp(name, "border_green") == 0) {
+        border_green = atoi(value);  
+	} else if (StringCaseCmp(name, "border_blue") == 0) {
+        border_blue = atoi(value);
+	} else if (StringCaseCmp(name, "gap_red") == 0) {
+        gap_red = atoi(value);
+	} else if (StringCaseCmp(name, "gap_green") == 0) {
+        gap_green = atoi(value);  
+	} else if (StringCaseCmp(name, "gap_blue") == 0) {
+        gap_blue = atoi(value);         
     } else if (StringCaseCmp(name, "create_backups") == 0) {
         create_backups = atoi(value) ? true : false;
     } else if (StringCaseCmp(name, "overwrite_warning") == 0) {
@@ -219,6 +243,18 @@ bool Options_Save(const char *filename) {
     fprintf(option_fp, "bg2_red      = %d\n", bg2_red);
     fprintf(option_fp, "bg2_green      = %d\n", bg2_green);
     fprintf(option_fp, "bg2_blue      = %d\n", bg2_blue);
+    fprintf(option_fp, "button_red      = %d\n", button_red);
+    fprintf(option_fp, "button_green      = %d\n", button_green);
+    fprintf(option_fp, "button_blue      = %d\n", button_blue);
+    fprintf(option_fp, "gradient_red      = %d\n", gradient_red);
+    fprintf(option_fp, "gradient_green      = %d\n", gradient_green);
+    fprintf(option_fp, "gradient_blue      = %d\n", gradient_blue);
+    fprintf(option_fp, "border_red      = %d\n", border_red);
+    fprintf(option_fp, "border_green      = %d\n", border_green);
+    fprintf(option_fp, "border_blue      = %d\n", border_blue);
+    fprintf(option_fp, "gap_red      = %d\n", gap_red);
+    fprintf(option_fp, "gap_green      = %d\n", gap_green);
+    fprintf(option_fp, "gap_blue      = %d\n", gap_blue);
     fprintf(option_fp, "\n");
 
     fprintf(option_fp, "create_backups = %d\n", create_backups ? 1 : 0);
@@ -263,6 +299,10 @@ class UI_OptionsWin : public Fl_Window {
     Fl_Button *opt_text_color;
     Fl_Button *opt_bg_color;
     Fl_Button *opt_bg2_color;
+    Fl_Button *opt_button_color;
+    Fl_Button *opt_gradient_color;
+    Fl_Button *opt_border_color;
+    Fl_Button *opt_gap_color;
 
     UI_CustomCheckBox *opt_backups;
     UI_CustomCheckBox *opt_overwrite;
@@ -418,6 +458,38 @@ class UI_OptionsWin : public Fl_Window {
     		that->opt_bg2_color->redraw();
     	}
     }
+    
+    static void callback_ButtonColor(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;     
+        if (fl_color_chooser((const char *)"Select Text Color", button_red, button_green, button_blue, 1)) {
+    		that->opt_button_color->color(fl_rgb_color(button_red, button_green, button_blue));
+    		that->opt_button_color->redraw();
+    	}
+    }
+    
+    static void callback_GradientColor(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;     
+        if (fl_color_chooser((const char *)"Select BG Color", gradient_red, gradient_green, gradient_blue, 1)) {
+    		that->opt_gradient_color->color(fl_rgb_color(gradient_red, gradient_green, gradient_blue));
+    		that->opt_gradient_color->redraw();
+    	}
+    }
+    
+    static void callback_BorderColor(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;       
+        if (fl_color_chooser((const char *)"Select BG2 Color", border_red, border_green, border_blue, 1)) {
+    		that->opt_border_color->color(fl_rgb_color(border_red, border_green, border_blue));
+    		that->opt_border_color->redraw();
+    	}
+    }
+    
+    static void callback_GapColor(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;       
+        if (fl_color_chooser((const char *)"Select BG2 Color", gap_red, gap_green, gap_blue, 1)) {
+    		that->opt_gap_color->color(fl_rgb_color(gap_red, gap_green, gap_blue));
+    		that->opt_gap_color->redraw();
+    	}
+    }
 
     static void callback_Backups(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
@@ -565,7 +637,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_color_scheme->h() + y_step;
     
-    opt_text_color = new Fl_Button(cx, cy, W * .25, kf_h(24),
+    opt_text_color = new Fl_Button(cx + W * .15, cy, W * .15, kf_h(24),
                                        _("Font"));
     opt_text_color->visible_focus(0);
     opt_text_color->box(button_style);
@@ -574,7 +646,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_text_color->callback(callback_TextColor, this);
     opt_text_color->labelfont(font_style);
 
-    opt_bg_color = new Fl_Button(cx + opt_text_color->w() +  (3 * pad), cy, W * .25, kf_h(24),
+    opt_bg_color = new Fl_Button(cx + W * .15 + opt_text_color->w() +  (3 * pad), cy, W * .15, kf_h(24),
                                        _("Panels"));
     opt_bg_color->visible_focus(0);
     opt_bg_color->box(button_style);
@@ -583,7 +655,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_bg_color->callback(callback_BgColor, this);
     opt_bg_color->labelfont(font_style);
     
-    opt_bg2_color = new Fl_Button(cx + (opt_text_color->w() + (3 * pad)) * 2, cy, W * .25, kf_h(24),
+    opt_bg2_color = new Fl_Button(cx + W * .15 + (opt_text_color->w() + (3 * pad)) * 2, cy, W * .15, kf_h(24),
                                        _("Highlights"));
     opt_bg2_color->visible_focus(0);
     opt_bg2_color->box(button_style);
@@ -591,6 +663,44 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_bg2_color->align(FL_ALIGN_BOTTOM);
     opt_bg2_color->callback(callback_Bg2Color, this);
     opt_bg2_color->labelfont(font_style);
+
+    cy += opt_text_color->h() + y_step * 3;
+    
+    opt_button_color = new Fl_Button(cx + W * .05, cy, W * .15, kf_h(24),
+                                       _("Buttons"));
+    opt_button_color->visible_focus(0);
+    opt_button_color->box(button_style);
+    opt_button_color->color(fl_rgb_color(button_red, button_green, button_blue));
+    opt_button_color->align(FL_ALIGN_BOTTOM);
+    opt_button_color->callback(callback_ButtonColor, this);
+    opt_button_color->labelfont(font_style);
+
+    opt_gradient_color = new Fl_Button(cx + W * .05 + opt_text_color->w() +  (3 * pad), cy, W * .15, kf_h(24),
+                                       _("Gradient"));
+    opt_gradient_color->visible_focus(0);
+    opt_gradient_color->box(button_style);
+    opt_gradient_color->color(fl_rgb_color(gradient_red, gradient_green, gradient_blue));
+    opt_gradient_color->align(FL_ALIGN_BOTTOM);
+    opt_gradient_color->callback(callback_GradientColor, this);
+    opt_gradient_color->labelfont(font_style);
+    
+    opt_border_color = new Fl_Button(cx + W * .05 + (opt_text_color->w() + (3 * pad)) * 2, cy, W * .15, kf_h(24),
+                                       _("Borders"));
+    opt_border_color->visible_focus(0);
+    opt_border_color->box(button_style);
+    opt_border_color->color(fl_rgb_color(border_red, border_green, border_blue));
+    opt_border_color->align(FL_ALIGN_BOTTOM);
+    opt_border_color->callback(callback_BorderColor, this);
+    opt_border_color->labelfont(font_style);
+    
+    opt_gap_color = new Fl_Button(cx + W * .05 + (opt_text_color->w() + (3 * pad)) * 3, cy, W * .15, kf_h(24),
+                                       _("Gaps"));
+    opt_gap_color->visible_focus(0);
+    opt_gap_color->box(button_style);
+    opt_gap_color->color(fl_rgb_color(gap_red, gap_green, gap_blue));
+    opt_gap_color->align(FL_ALIGN_BOTTOM);
+    opt_gap_color->callback(callback_GapColor, this);
+    opt_gap_color->labelfont(font_style);
 
     cy += opt_text_color->h() + y_step * 3;
 

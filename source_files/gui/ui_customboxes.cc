@@ -40,7 +40,7 @@ void cgleam_shade_rect_top_bottom(int x, int y, int w, int h, Fl_Color fg1, Fl_C
 
 // See shade_rect_top_bottom()
 void cgleam_shade_rect_top_bottom_up(int x, int y, int w, int h, Fl_Color bc, float th) {
-  cgleam_shade_rect_top_bottom(x, y, w, h, bc, CONTRAST_COLOR, th);
+  cgleam_shade_rect_top_bottom(x, y, w, h, bc, GRADIENT_COLOR, th);
 }
 
 // See shade_rect_top_bottom()
@@ -86,12 +86,12 @@ void cgleam_frame_rect_down(int x, int y, int w, int h, Fl_Color bc, Fl_Color lc
 
 void cgleam_up_box(int x, int y, int w, int h, Fl_Color c) {
   cgleam_shade_rect_top_bottom_up(x, y, w, h, c, .15f);
-  cgleam_frame_rect_up(x, y, w, h, CONTRAST_COLOR, fl_lighter(CONTRAST_COLOR), .15f, .05f);
+  cgleam_frame_rect_up(x, y, w, h, BORDER_COLOR, BORDER_COLOR, .15f, .05f);
 }
 
 void cgleam_thin_up_box(int x, int y, int w, int h, Fl_Color c) {
   cgleam_shade_rect_top_bottom_up(x, y, w, h, c, .25f);
-  cgleam_frame_rect_up(x, y, w, h, CONTRAST_COLOR, fl_lighter(CONTRAST_COLOR), .25f, .15f);
+  cgleam_frame_rect_up(x, y, w, h, BORDER_COLOR, BORDER_COLOR, .25f, .15f);
 }
 
 void cgleam_down_box(int x, int y, int w, int h, Fl_Color c) {

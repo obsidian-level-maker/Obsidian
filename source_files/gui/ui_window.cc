@@ -54,7 +54,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
 
     callback((Fl_Callback *)main_win_close_CB);
 
-    color(CONTRAST_COLOR, SELECTION);
+    color(GAP_COLOR, SELECTION);
 
     int LEFT_W = kf_w(232);
     int MOD_W = (W - LEFT_W) / 2 - kf_h(4);

@@ -114,7 +114,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
 	rch->mod_menu = 
 		new UI_RChoiceMenu((!single_pane ? rch->x() : rch->x() + (rch->w() * .40)), (!single_pane ? rch->y() + rch->mod_label->h() : rch->y()), (single_pane ? rch->w() * .55 : rch->w()), kf_h(24), NULL);
-	rch->mod_menu->selection_color(SELECTION);		
+	rch->mod_menu->selection_color(SELECTION);	
 
 	rch->mod_help =
 			new UI_HelpLink(rch->x() + (!single_pane ? (rch->w() * .9) : (rch->w() * .95)), rch->y(), rch->w() * .075, kf_h(24), "?");
@@ -180,7 +180,8 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->prev_button =
         new UI_CustomArrowButton((!single_pane ? rsl->x() : rsl->x() + (rsl->w() * .40)), (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@<");
     rsl->prev_button->visible_focus(0);
-    rsl->prev_button->box(button_style);     
+    rsl->prev_button->box(button_style);
+    rsl->prev_button->color(BUTTON_COLOR);     
     rsl->prev_button->align(FL_ALIGN_INSIDE);   
     rsl->prev_button->labelcolor(SELECTION);
     rsl->prev_button->labelsize(rsl->prev_button->labelsize() * .80);
@@ -189,6 +190,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->mod_slider =
         new Fl_Hor_Slider((!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .45),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (!single_pane ? rsl->w() * .80 : rsl->w() * .40), kf_h(24), NULL);
     rsl->mod_slider->box(button_style);
+    rsl->mod_slider->color(BUTTON_COLOR);
     rsl->mod_slider->selection_color(SELECTION);
     rsl->mod_slider->minimum(min);
     rsl->mod_slider->maximum(max);
@@ -198,6 +200,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->next_button =
         new UI_CustomArrowButton((!single_pane ? rsl->x() + rsl->w() * .90 : rsl->x() + rsl->w() * .85),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@>");
     rsl->next_button->box(button_style);
+    rsl->next_button->color(BUTTON_COLOR);
     rsl->next_button->visible_focus(0);   
     rsl->next_button->align(FL_ALIGN_INSIDE);  
     rsl->next_button->labelcolor(SELECTION);
@@ -615,7 +618,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H)
     : Fl_Group(X, Y, W, H) {
     box(FL_FLAT_BOX);
 
-    color(CONTRAST_COLOR, CONTRAST_COLOR);
+    color(GAP_COLOR, GAP_COLOR);
 
     int cy = Y;
 
@@ -631,7 +634,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H)
     sbar = new Fl_Scrollbar(mx + mw, my, Fl::scrollbar_size(), mh);
     sbar->callback(callback_Scroll, this);
     sbar->slider(button_style);
-    sbar->color(CONTRAST_COLOR, WINDOW_BG);
+    sbar->color(GAP_COLOR, WINDOW_BG);
     sbar->labelcolor(SELECTION);
 
     mod_pack_group = new Fl_Group(mx, my, mw, mh);
@@ -646,7 +649,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H)
     mod_pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
 
     mod_pack->box(FL_FLAT_BOX);
-    mod_pack->color(CONTRAST_COLOR);
+    mod_pack->color(GAP_COLOR);
     mod_pack->resizable(mod_pack);
 
     end();

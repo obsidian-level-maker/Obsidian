@@ -66,10 +66,25 @@ uchar bg_blue = 221;
 uchar bg2_red = 62;
 uchar bg2_green = 61;
 uchar bg2_blue = 57;
+uchar button_red = 0;
+uchar button_green = 0;
+uchar button_blue = 0;
+uchar gradient_red = 221;
+uchar gradient_green = 221;
+uchar gradient_blue = 221;
+uchar border_red = 62;
+uchar border_green = 61;
+uchar border_blue = 57;
+uchar gap_red = 62;
+uchar gap_green = 61;
+uchar gap_blue = 57;
 Fl_Color FONT_COLOR;
 Fl_Color SELECTION;
 Fl_Color WINDOW_BG;
-Fl_Color CONTRAST_COLOR;
+Fl_Color GAP_COLOR;
+Fl_Color GRADIENT_COLOR;
+Fl_Color BUTTON_COLOR;
+Fl_Color BORDER_COLOR;
 int color_scheme = 0;
 int font_theme = 0;
 Fl_Font font_style = FL_HELVETICA;
@@ -419,20 +434,32 @@ void Main_SetupFLTK() {
     			 Fl::foreground(0, 0, 0);
 				 FONT_COLOR = fl_rgb_color(0, 0, 0);
 				 SELECTION = fl_rgb_color(62, 61, 57);
-				 WINDOW_BG = fl_rgb_color(221, 221, 221); 
+				 WINDOW_BG = fl_rgb_color(221, 221, 221);
+				 GAP_COLOR = fl_rgb_color(0, 0, 0);
+				 BORDER_COLOR = fl_rgb_color(62, 61, 57);
+				 GRADIENT_COLOR = fl_rgb_color(221, 221, 221);
+				 BUTTON_COLOR = fl_rgb_color(221, 221, 221);    
     			 break;
     	case 1 : Fl::get_system_colors();
-    			 //I think there's a better way to do this part - Dasho
+    			 // Test with a Windows VM - Dasho
 				 FONT_COLOR = FL_FOREGROUND_COLOR;
 				 SELECTION = FL_BACKGROUND2_COLOR;
 				 WINDOW_BG = FL_BACKGROUND_COLOR;
+				 BUTTON_COLOR = FL_BACKGROUND_COLOR;
+				 GAP_COLOR = FL_BACKGROUND2_COLOR;
+				 BORDER_COLOR = FL_BACKGROUND2_COLOR;
+				 GRADIENT_COLOR = FL_BACKGROUND2_COLOR;
     			 break;
     	case 2 : Fl::background(bg_red, bg_green, bg_blue);
     			 Fl::background2(bg_red, bg_green, bg_blue);
     			 Fl::foreground(text_red, text_green, text_blue);
 				 FONT_COLOR = fl_rgb_color(text_red, text_green, text_blue);
 				 SELECTION = fl_rgb_color(bg2_red, bg2_green, bg2_blue);
-				 WINDOW_BG = fl_rgb_color(bg_red, bg_green, bg_blue); 
+				 WINDOW_BG = fl_rgb_color(bg_red, bg_green, bg_blue);
+    			 GAP_COLOR = fl_rgb_color(gap_red, gap_green, gap_blue); 
+    			 BORDER_COLOR = fl_rgb_color(border_red, border_green, border_blue);     
+    			 GRADIENT_COLOR = fl_rgb_color(gradient_red, gradient_green, gradient_blue);
+    			 BUTTON_COLOR = fl_rgb_color(button_red, button_green, button_blue); 
     			 break;
     	// Shouldn't be reached, but still
     	default : Fl::background(221, 221, 221);
@@ -440,18 +467,21 @@ void Main_SetupFLTK() {
     			  Fl::foreground(0, 0, 0);
 				  FONT_COLOR = fl_rgb_color(0, 0, 0);
 				  SELECTION = fl_rgb_color(62, 61, 57);
-				  WINDOW_BG = fl_rgb_color(221, 221, 221); 
+				  WINDOW_BG = fl_rgb_color(221, 221, 221);
+				  GAP_COLOR = fl_rgb_color(0, 0, 0);
+				  BORDER_COLOR = fl_rgb_color(62, 61, 57);
+				  GRADIENT_COLOR = fl_rgb_color(221, 221, 221);
+				  BUTTON_COLOR = fl_rgb_color(221, 221, 221);  
     			  break;    			     			 
     }
     if (color_scheme == 2) {
     Fl::get_color(FONT_COLOR, text_red, text_green, text_blue); 
     Fl::get_color(WINDOW_BG, bg_red, bg_green, bg_blue);     
     Fl::get_color(SELECTION, bg2_red, bg2_green, bg2_blue);
-    }
-    if (fl_contrast(fl_color_average(fl_darker(WINDOW_BG), WINDOW_BG, 0.5), WINDOW_BG) == FL_WHITE) {
-    	CONTRAST_COLOR = fl_color_average(fl_lighter(WINDOW_BG), WINDOW_BG, 0.5);
-    } else {
-    	CONTRAST_COLOR = fl_color_average(fl_darker(WINDOW_BG), WINDOW_BG, 0.5);
+    Fl::get_color(GAP_COLOR, gap_red, gap_green, gap_blue); 
+    Fl::get_color(BORDER_COLOR, border_red, border_green, border_blue);     
+    Fl::get_color(GRADIENT_COLOR, gradient_red, gradient_green, gradient_blue);
+    Fl::get_color(BUTTON_COLOR, button_red, button_green, button_blue);
     }
     Fl::set_boxtype(FL_GLEAM_UP_BOX, cgleam_up_box, 2, 2, 4, 4);
     Fl::set_boxtype(FL_GLEAM_THIN_UP_BOX, cgleam_thin_up_box, 2, 2, 4, 4);

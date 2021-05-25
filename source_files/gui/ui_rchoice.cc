@@ -250,9 +250,9 @@ UI_CustomCheckBox::~UI_CustomCheckBox() {}
 
 // Custom draw function to use the checkmark style regardless of box type and respect custom colors
 void UI_CustomCheckBox::draw() {
-	if (box()) draw_box(this==Fl::pushed() ? fl_down(box()) : box(), color());
+	if (box()) draw_box(this==Fl::pushed() ? fl_down(box()) : box(), BUTTON_COLOR);
 	Fl_Color col = value() ? (active_r() ? selection_color() :
-		                      fl_inactive(selection_color())) : color();
+		                      fl_inactive(selection_color())) : BUTTON_COLOR;
 
 	int W  = labelsize();
 	int bx = Fl::box_dx(box());	// box frame width
@@ -260,7 +260,7 @@ void UI_CustomCheckBox::draw() {
 	int dy = (h() - W) / 2;	// neg. offset o.k. for vertical centering
 	int lx = 0;			// relative label position (STR #3237)
 
-	draw_box(down_box(), x()+dx, y()+dy, W, W, FL_BACKGROUND2_COLOR);
+	draw_box(down_box(), x()+dx, y()+dy, W, W, BUTTON_COLOR);
   	if (value()) {
 		fl_color(col);
 		int tx = x() + dx + 3;
@@ -522,7 +522,7 @@ void UI_CustomMenu::draw() {
     // NON-DEFAULT SCHEME
 
     // Draw widget box
-    draw_box(btype, color());
+    draw_box(btype, BUTTON_COLOR);
 
     // Draw arrow area
     fl_color(active_r() ? SELECTION : fl_inactive(SELECTION));
@@ -550,7 +550,7 @@ void UI_CustomMenu::draw() {
     draw_box(btype, color());
 
     // Draw arrow area
-    draw_box(FL_UP_BOX,X,Y,W,H,color());
+    draw_box(FL_UP_BOX,X,Y,W,H,BUTTON_COLOR);
     fl_color(active_r() ? SELECTION : fl_inactive(SELECTION));
     fl_polygon(x1, y1, x1 + w1, y1 + w1, x1 + 2 * w1, y1);
   }
