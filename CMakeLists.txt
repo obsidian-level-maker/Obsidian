@@ -103,6 +103,7 @@ add_executable(
   source_files/gui/m_lua.h
   source_files/gui/m_manage.cc
   source_files/gui/m_options.cc
+  source_files/gui/m_theme.cc
   source_files/gui/m_trans.cc
   source_files/gui/m_trans.h
   source_files/gui/main.cc

@@ -37,66 +37,7 @@ static void Parse_Option(const char *name, const char *value) {
     if (StringCaseCmp(name, "addon") == 0) {
         VFS_OptParse(value);
     } else if (StringCaseCmp(name, "language") == 0) {
-        t_language = StringDup(value);
-    } else if (StringCaseCmp(name, "window_scaling") == 0) {
-        window_scaling = atoi(value);
-        window_scaling = CLAMP(0, window_scaling, 5);
-    } else if (StringCaseCmp(name, "font_scaling") == 0) {
-        font_scaling = atoi(value);
-    } else if (StringCaseCmp(name, "font_theme") == 0) {
-        font_theme = atoi(value);
-    } else if (StringCaseCmp(name, "widget_theme") == 0) {
-        widget_theme = atoi(value);
-    } else if (StringCaseCmp(name, "box_theme") == 0) {
-        box_theme = atoi(value);
-    } else if (StringCaseCmp(name, "button_theme") == 0) {
-        button_theme = atoi(value);
-    } else if (StringCaseCmp(name, "single_pane") == 0) {
-        single_pane = atoi(value) ? true : false;
-	} else if (StringCaseCmp(name, "color_scheme") == 0) {
-        color_scheme = atoi(value);
-	} else if (StringCaseCmp(name, "text_red") == 0) {
-        text_red = atoi(value);
-	} else if (StringCaseCmp(name, "text_green") == 0) {
-        text_green = atoi(value);  
-	} else if (StringCaseCmp(name, "text_blue") == 0) {
-        text_blue = atoi(value);
-	} else if (StringCaseCmp(name, "bg_red") == 0) {
-        bg_red = atoi(value);
-	} else if (StringCaseCmp(name, "bg_green") == 0) {
-        bg_green = atoi(value);  
-	} else if (StringCaseCmp(name, "bg_blue") == 0) {
-        bg_blue = atoi(value);
-	} else if (StringCaseCmp(name, "bg2_red") == 0) {
-        bg2_red = atoi(value);
-	} else if (StringCaseCmp(name, "bg2_green") == 0) {
-        bg2_green = atoi(value);  
-	} else if (StringCaseCmp(name, "bg2_blue") == 0) {
-        bg2_blue = atoi(value);
-	} else if (StringCaseCmp(name, "button_red") == 0) {
-        button_red = atoi(value);
-	} else if (StringCaseCmp(name, "button_green") == 0) {
-        button_green = atoi(value);  
-	} else if (StringCaseCmp(name, "button_blue") == 0) {
-        button_blue = atoi(value);
-	} else if (StringCaseCmp(name, "gradient_red") == 0) {
-        gradient_red = atoi(value);
-	} else if (StringCaseCmp(name, "gradient_green") == 0) {
-        gradient_green = atoi(value);  
-	} else if (StringCaseCmp(name, "gradient_blue") == 0) {
-        gradient_blue = atoi(value);
-	} else if (StringCaseCmp(name, "border_red") == 0) {
-        border_red = atoi(value);
-	} else if (StringCaseCmp(name, "border_green") == 0) {
-        border_green = atoi(value);  
-	} else if (StringCaseCmp(name, "border_blue") == 0) {
-        border_blue = atoi(value);
-	} else if (StringCaseCmp(name, "gap_red") == 0) {
-        gap_red = atoi(value);
-	} else if (StringCaseCmp(name, "gap_green") == 0) {
-        gap_green = atoi(value);  
-	} else if (StringCaseCmp(name, "gap_blue") == 0) {
-        gap_blue = atoi(value);         
+        t_language = StringDup(value);       
     } else if (StringCaseCmp(name, "create_backups") == 0) {
         create_backups = atoi(value) ? true : false;
     } else if (StringCaseCmp(name, "overwrite_warning") == 0) {
@@ -226,37 +167,6 @@ bool Options_Save(const char *filename) {
     fprintf(option_fp, "language = %s\n", t_language);
     fprintf(option_fp, "\n");
 
-    fprintf(option_fp, "window_scaling      = %d\n", window_scaling);
-    fprintf(option_fp, "font_scaling      = %d\n", font_scaling);
-    fprintf(option_fp, "font_theme      = %d\n", font_theme);
-    fprintf(option_fp, "widget_theme      = %d\n", widget_theme);
-    fprintf(option_fp, "box_theme      = %d\n", box_theme);
-    fprintf(option_fp, "button_theme      = %d\n", button_theme);
-    fprintf(option_fp, "single_pane = %d\n", single_pane ? 1 : 0);
-    fprintf(option_fp, "color_scheme      = %d\n", color_scheme);
-    fprintf(option_fp, "text_red      = %d\n", text_red);
-    fprintf(option_fp, "text_green      = %d\n", text_green);
-    fprintf(option_fp, "text_blue      = %d\n", text_blue);
-    fprintf(option_fp, "bg_red      = %d\n", bg_red);
-    fprintf(option_fp, "bg_green      = %d\n", bg_green);
-    fprintf(option_fp, "bg_blue      = %d\n", bg_blue);
-    fprintf(option_fp, "bg2_red      = %d\n", bg2_red);
-    fprintf(option_fp, "bg2_green      = %d\n", bg2_green);
-    fprintf(option_fp, "bg2_blue      = %d\n", bg2_blue);
-    fprintf(option_fp, "button_red      = %d\n", button_red);
-    fprintf(option_fp, "button_green      = %d\n", button_green);
-    fprintf(option_fp, "button_blue      = %d\n", button_blue);
-    fprintf(option_fp, "gradient_red      = %d\n", gradient_red);
-    fprintf(option_fp, "gradient_green      = %d\n", gradient_green);
-    fprintf(option_fp, "gradient_blue      = %d\n", gradient_blue);
-    fprintf(option_fp, "border_red      = %d\n", border_red);
-    fprintf(option_fp, "border_green      = %d\n", border_green);
-    fprintf(option_fp, "border_blue      = %d\n", border_blue);
-    fprintf(option_fp, "gap_red      = %d\n", gap_red);
-    fprintf(option_fp, "gap_green      = %d\n", gap_green);
-    fprintf(option_fp, "gap_blue      = %d\n", gap_blue);
-    fprintf(option_fp, "\n");
-
     fprintf(option_fp, "create_backups = %d\n", create_backups ? 1 : 0);
     fprintf(option_fp, "overwrite_warning = %d\n", overwrite_warning ? 1 : 0);
     fprintf(option_fp, "debug_messages = %d\n", debug_messages ? 1 : 0);
@@ -287,22 +197,6 @@ class UI_OptionsWin : public Fl_Window {
 
    private:
     UI_CustomMenu *opt_language;
-    UI_CustomMenu *opt_window_scaling;
-    UI_CustomMenu *opt_font_scaling;
-    UI_CustomMenu *opt_font_theme;
-    UI_CustomMenu *opt_widget_theme;
-    UI_CustomMenu *opt_box_theme;
-    UI_CustomMenu *opt_button_theme;
-
-    UI_CustomCheckBox *opt_single_pane;
-    UI_CustomMenu *opt_color_scheme;
-    Fl_Button *opt_text_color;
-    Fl_Button *opt_bg_color;
-    Fl_Button *opt_bg2_color;
-    Fl_Button *opt_button_color;
-    Fl_Button *opt_gradient_color;
-    Fl_Button *opt_border_color;
-    Fl_Button *opt_gap_color;
 
     UI_CustomCheckBox *opt_backups;
     UI_CustomCheckBox *opt_overwrite;
@@ -343,26 +237,6 @@ class UI_OptionsWin : public Fl_Window {
         }
     }
     
-    void PopulateFonts() {
-
-		std::string default_name = Fl::get_font_name(0);
-
-		default_name.at(0) = std::toupper(default_name.at(0));
-
-		default_name = default_name.append(" <Default>");
-
-		opt_font_theme->add(_(default_name.c_str()));
-
-  		for (int x = 0; x < num_fonts; x++) {
-  		  	for (auto font = font_menu_items[x].begin(); font != font_menu_items[x].end(); ++font) {
-    			opt_font_theme->add(font->first.c_str());
-  			}
-  		}
-				
-        opt_font_theme->value(font_theme);
-		
-    }
-
    private:
     static void callback_Quit(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
@@ -385,110 +259,6 @@ class UI_OptionsWin : public Fl_Window {
                 t_language = "AUTO";
             }
         }
-    }
-
-    static void callback_WindowScaling(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        window_scaling = that->opt_window_scaling->value();
-    }
-    
-    static void callback_FontScaling(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        font_scaling = that->opt_font_scaling->value();
-    }
-
-    static void callback_FontTheme(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        font_theme = that->opt_font_theme->value();
-    }
-    
-    static void callback_WidgetTheme(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        widget_theme = that->opt_widget_theme->value();
-    }
-    
-    static void callback_BoxTheme(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        box_theme = that->opt_box_theme->value();
-    }
-    
-    static void callback_ButtonTheme(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        button_theme = that->opt_button_theme->value();
-    }
-   
-    static void callback_SinglePane(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        single_pane = that->opt_single_pane->value() ? true : false;
-    }
-
-    static void callback_ColorScheme(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        color_scheme = that->opt_color_scheme->value();
-    }
-    
-    static void callback_TextColor(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;     
-        if (fl_color_chooser((const char *)"Select Text Color", text_red, text_green, text_blue, 1)) {
-    		that->opt_text_color->color(fl_rgb_color(text_red, text_green, text_blue));
-    		that->opt_text_color->redraw();
-    	}
-    }
-    
-    static void callback_BgColor(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;     
-        if (fl_color_chooser((const char *)"Select Panel Color", bg_red, bg_green, bg_blue, 1)) {
-    		that->opt_bg_color->color(fl_rgb_color(bg_red, bg_green, bg_blue));
-    		that->opt_bg_color->redraw();
-    	}
-    }
-    
-    static void callback_Bg2Color(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;       
-        if (fl_color_chooser((const char *)"Select Highlight Color", bg2_red, bg2_green, bg2_blue, 1)) {
-    		that->opt_bg2_color->color(fl_rgb_color(bg2_red, bg2_green, bg2_blue));
-    		that->opt_bg2_color->redraw();
-    	}
-    }
-    
-    static void callback_ButtonColor(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;     
-        if (fl_color_chooser((const char *)"Select Button Color", button_red, button_green, button_blue, 1)) {
-    		that->opt_button_color->color(fl_rgb_color(button_red, button_green, button_blue));
-    		that->opt_button_color->redraw();
-    	}
-    }
-    
-    static void callback_GradientColor(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;     
-        if (fl_color_chooser((const char *)"Select Gradient Color", gradient_red, gradient_green, gradient_blue, 1)) {
-    		that->opt_gradient_color->color(fl_rgb_color(gradient_red, gradient_green, gradient_blue));
-    		that->opt_gradient_color->redraw();
-    	}
-    }
-    
-    static void callback_BorderColor(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;       
-        if (fl_color_chooser((const char *)"Select Border Color", border_red, border_green, border_blue, 1)) {
-    		that->opt_border_color->color(fl_rgb_color(border_red, border_green, border_blue));
-    		that->opt_border_color->redraw();
-    	}
-    }
-    
-    static void callback_GapColor(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;       
-        if (fl_color_chooser((const char *)"Select Gap Color", gap_red, gap_green, gap_blue, 1)) {
-    		that->opt_gap_color->color(fl_rgb_color(gap_red, gap_green, gap_blue));
-    		that->opt_gap_color->redraw();
-    	}
     }
 
     static void callback_Backups(Fl_Widget *w, void *data) {
@@ -527,18 +297,9 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     int pad = kf_w(6);
 
     int cx = x() + kf_w(24);
-    int cy = y() + y_step;
+    int cy = y() + (y_step * 3);
 
     Fl_Box *heading;
-
-    heading = new Fl_Box(FL_NO_BOX, x() + pad, cy, W - pad * 2, kf_h(24),
-                         _("Appearance"));
-    heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-    heading->labeltype(FL_NORMAL_LABEL);
-    heading->labelfont(font_style | FL_BOLD);
-    heading->labelsize(header_font_size);
-
-    cy += heading->h();
 
     opt_language =
         new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Language: "));
@@ -551,179 +312,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     PopulateLanguages();
 
     cy += opt_language->h() + y_step;
-
-    opt_window_scaling =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Window Scaling: "));
-    opt_window_scaling->align(FL_ALIGN_LEFT);
-    opt_window_scaling->add(_("AUTO|Tiny|Small|Medium|Large|Huge"));
-    opt_window_scaling->callback(callback_WindowScaling, this);
-    opt_window_scaling->value(window_scaling);
-    opt_window_scaling->labelfont(font_style);
-    opt_window_scaling->textfont(font_style);
-    opt_window_scaling->selection_color(SELECTION);
-
-    cy += opt_window_scaling->h() + y_step;
-    
-    opt_font_scaling =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Font Scaling: "));
-    opt_font_scaling->align(FL_ALIGN_LEFT);
-    opt_font_scaling->add(_("Default|Tiny|Small|Large|Huge"));
-    opt_font_scaling->callback(callback_FontScaling, this);
-    opt_font_scaling->value(font_scaling);
-    opt_font_scaling->labelfont(font_style);
-    opt_font_scaling->textfont(font_style);
-    opt_font_scaling->selection_color(SELECTION);
-
-    cy += opt_font_scaling->h() + y_step;
-
-    opt_font_theme =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Font: "));
-    opt_font_theme->align(FL_ALIGN_LEFT);
-    opt_font_theme->callback(callback_FontTheme, this);
-    opt_font_theme->value(font_theme);
-    opt_font_theme->labelfont(font_style);
-    opt_font_theme->textfont(0); // Safe fallback in case bad font is selected
-    opt_font_theme->selection_color(SELECTION);
-    
-    PopulateFonts();
-
-    cy += opt_font_theme->h() + y_step;
-    
-    opt_widget_theme =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Widget Theme: "));
-    opt_widget_theme->align(FL_ALIGN_LEFT);
-    opt_widget_theme->add(_("Default|Gleam|Win95|Plastic"));
-    opt_widget_theme->callback(callback_WidgetTheme, this);
-    opt_widget_theme->value(widget_theme);
-    opt_widget_theme->labelfont(font_style);
-    opt_widget_theme->textfont(font_style);
-    opt_widget_theme->selection_color(SELECTION);
-
-    cy += opt_widget_theme->h() + y_step;
-    
-    opt_box_theme =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Box Theme: "));
-    opt_box_theme->align(FL_ALIGN_LEFT);
-    opt_box_theme->add(_("Default|Shadow|Embossed|Engraved|Inverted|Flat"));
-    opt_box_theme->callback(callback_BoxTheme, this);
-    opt_box_theme->value(box_theme);
-    opt_box_theme->labelfont(font_style);
-    opt_box_theme->textfont(font_style);
-    opt_box_theme->selection_color(SELECTION);
-
-    cy += opt_box_theme->h() + y_step;
-    
-    opt_button_theme =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Button Theme: "));
-    opt_button_theme->align(FL_ALIGN_LEFT);
-    opt_button_theme->add(_("Default|Embossed|Engraved|Inverted|Flat"));
-    opt_button_theme->callback(callback_ButtonTheme, this);
-    opt_button_theme->value(button_theme);
-    opt_button_theme->labelfont(font_style);
-    opt_button_theme->textfont(font_style);
-    opt_button_theme->selection_color(SELECTION);
-
-    cy += opt_button_theme->h() + y_step;
-
-    opt_color_scheme =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Color Scheme: "));
-    opt_color_scheme->align(FL_ALIGN_LEFT);
-    opt_color_scheme->add(_("Default|System Colors|Custom"));
-    opt_color_scheme->callback(callback_ColorScheme, this);
-    opt_color_scheme->value(color_scheme);
-    opt_color_scheme->labelfont(font_style);
-    opt_color_scheme->textfont(font_style);
-	opt_color_scheme->selection_color(SELECTION);
-
-    cy += opt_color_scheme->h() + y_step;
-    
-    opt_text_color = new Fl_Button(cx + W * .15, cy, W * .15, kf_h(24),
-                                       _("Font"));
-    opt_text_color->visible_focus(0);
-    opt_text_color->box(FL_BORDER_BOX);
-    opt_text_color->color(fl_rgb_color(text_red, text_green, text_blue));
-    opt_text_color->align(FL_ALIGN_BOTTOM);
-    opt_text_color->callback(callback_TextColor, this);
-    opt_text_color->labelfont(font_style);
-
-    opt_bg_color = new Fl_Button(cx + W * .15 + opt_text_color->w() +  (3 * pad), cy, W * .15, kf_h(24),
-                                       _("Panels"));
-    opt_bg_color->visible_focus(0);
-    opt_bg_color->box(FL_BORDER_BOX);
-    opt_bg_color->color(fl_rgb_color(bg_red, bg_green, bg_blue));
-    opt_bg_color->align(FL_ALIGN_BOTTOM);
-    opt_bg_color->callback(callback_BgColor, this);
-    opt_bg_color->labelfont(font_style);
-    
-    opt_bg2_color = new Fl_Button(cx + W * .15 + (opt_text_color->w() + (3 * pad)) * 2, cy, W * .15, kf_h(24),
-                                       _("Highlights"));
-    opt_bg2_color->visible_focus(0);
-    opt_bg2_color->box(FL_BORDER_BOX);
-    opt_bg2_color->color(fl_rgb_color(bg2_red, bg2_green, bg2_blue));
-    opt_bg2_color->align(FL_ALIGN_BOTTOM);
-    opt_bg2_color->callback(callback_Bg2Color, this);
-    opt_bg2_color->labelfont(font_style);
-
-    cy += opt_text_color->h() + y_step * 3;
-    
-    opt_button_color = new Fl_Button(cx + W * .05, cy, W * .15, kf_h(24),
-                                       _("Buttons"));
-    opt_button_color->visible_focus(0);
-    opt_button_color->box(FL_BORDER_BOX);
-    opt_button_color->color(fl_rgb_color(button_red, button_green, button_blue));
-    opt_button_color->align(FL_ALIGN_BOTTOM);
-    opt_button_color->callback(callback_ButtonColor, this);
-    opt_button_color->labelfont(font_style);
-
-    opt_gradient_color = new Fl_Button(cx + W * .05 + opt_text_color->w() +  (3 * pad), cy, W * .15, kf_h(24),
-                                       _("Gradient"));
-    opt_gradient_color->visible_focus(0);
-    opt_gradient_color->box(FL_BORDER_BOX);
-    opt_gradient_color->color(fl_rgb_color(gradient_red, gradient_green, gradient_blue));
-    opt_gradient_color->align(FL_ALIGN_BOTTOM);
-    opt_gradient_color->callback(callback_GradientColor, this);
-    opt_gradient_color->labelfont(font_style);
-    
-    opt_border_color = new Fl_Button(cx + W * .05 + (opt_text_color->w() + (3 * pad)) * 2, cy, W * .15, kf_h(24),
-                                       _("Borders"));
-    opt_border_color->visible_focus(0);
-    opt_border_color->box(FL_BORDER_BOX);
-    opt_border_color->color(fl_rgb_color(border_red, border_green, border_blue));
-    opt_border_color->align(FL_ALIGN_BOTTOM);
-    opt_border_color->callback(callback_BorderColor, this);
-    opt_border_color->labelfont(font_style);
-    
-    opt_gap_color = new Fl_Button(cx + W * .05 + (opt_text_color->w() + (3 * pad)) * 3, cy, W * .15, kf_h(24),
-                                       _("Gaps"));
-    opt_gap_color->visible_focus(0);
-    opt_gap_color->box(FL_BORDER_BOX);
-    opt_gap_color->color(fl_rgb_color(gap_red, gap_green, gap_blue));
-    opt_gap_color->align(FL_ALIGN_BOTTOM);
-    opt_gap_color->callback(callback_GapColor, this);
-    opt_gap_color->labelfont(font_style);
-
-    cy += opt_text_color->h() + y_step * 3;
-
-    opt_single_pane = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24),
-                                       _(" Single Pane Mode"));
-    opt_single_pane->value(single_pane ? 1 : 0);
-    opt_single_pane->callback(callback_SinglePane, this);
-    opt_single_pane->labelfont(font_style);
-    opt_single_pane->selection_color(SELECTION);
-    opt_single_pane->down_box(button_style);
-
-    //----------------
-
-    cy += y_step * 4;
-
-    heading = new Fl_Box(FL_NO_BOX, x() + pad, cy, W - pad * 2, kf_h(24),
-                         _("File Options"));
-    heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-    heading->labeltype(FL_NORMAL_LABEL);
-    heading->labelfont(font_style | FL_BOLD);
-    heading->labelsize(header_font_size);
-
-    cy += heading->h() + y_step;
 
     opt_backups = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24),
                                       _(" Create Backups"));
@@ -815,7 +403,7 @@ void DLG_OptionsEditor(void) {
 
     if (!option_window) {
         int opt_w = kf_w(350);
-        int opt_h = kf_h(550);
+        int opt_h = kf_h(250);
 
         option_window =
             new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));

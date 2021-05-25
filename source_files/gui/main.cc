@@ -44,6 +44,7 @@ const char *install_dir = NULL;
 
 const char *config_file = NULL;
 const char *options_file = NULL;
+const char *theme_file = NULL;
 const char *logging_file = NULL;
 
 int screen_w;
@@ -295,6 +296,21 @@ void Determine_OptionsFile() {
         options_file = StringDup(arg_list[optf_arg + 1]);
     } else {
         options_file = StringPrintf("%s/%s", home_dir, OPTIONS_FILENAME);
+    }
+}
+
+void Determine_ThemeFile() {
+    int themef_arg = ArgvFind(0, "theme");
+
+    if (themef_arg >= 0) {
+        if (themef_arg + 1 >= arg_count || ArgvIsOption(themef_arg + 1)) {
+            fprintf(stderr, "OBSIDIAN ERROR: missing path for --theme\n");
+            exit(9);
+        }
+
+        theme_file = StringDup(arg_list[themef_arg + 1]);
+    } else {
+        theme_file = StringPrintf("%s/%s", home_dir, THEME_FILENAME);
     }
 }
 
@@ -838,6 +854,7 @@ int main(int argc, char **argv) {
 
     Determine_ConfigFile();
     Determine_OptionsFile();
+    Determine_ThemeFile();
     Determine_LoggingFile();
 
     LogInit(logging_file);
@@ -868,6 +885,7 @@ int main(int argc, char **argv) {
 
     if (!batch_mode) {
         Options_Load(options_file);
+        Theme_Options_Load(theme_file);
         Trans_SetLanguage();
     }
 
@@ -1021,6 +1039,7 @@ int main(int argc, char **argv) {
 
     LogPrintf("\nQuit......\n\n");
 
+	Theme_Options_Save(theme_file);
     Options_Save(options_file);
 
     Main_Shutdown(false);
