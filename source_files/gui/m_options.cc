@@ -445,7 +445,7 @@ class UI_OptionsWin : public Fl_Window {
     
     static void callback_BgColor(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;     
-        if (fl_color_chooser((const char *)"Select BG Color", bg_red, bg_green, bg_blue, 1)) {
+        if (fl_color_chooser((const char *)"Select Panel Color", bg_red, bg_green, bg_blue, 1)) {
     		that->opt_bg_color->color(fl_rgb_color(bg_red, bg_green, bg_blue));
     		that->opt_bg_color->redraw();
     	}
@@ -453,7 +453,7 @@ class UI_OptionsWin : public Fl_Window {
     
     static void callback_Bg2Color(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;       
-        if (fl_color_chooser((const char *)"Select BG2 Color", bg2_red, bg2_green, bg2_blue, 1)) {
+        if (fl_color_chooser((const char *)"Select Highlight Color", bg2_red, bg2_green, bg2_blue, 1)) {
     		that->opt_bg2_color->color(fl_rgb_color(bg2_red, bg2_green, bg2_blue));
     		that->opt_bg2_color->redraw();
     	}
@@ -461,7 +461,7 @@ class UI_OptionsWin : public Fl_Window {
     
     static void callback_ButtonColor(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;     
-        if (fl_color_chooser((const char *)"Select Text Color", button_red, button_green, button_blue, 1)) {
+        if (fl_color_chooser((const char *)"Select Button Color", button_red, button_green, button_blue, 1)) {
     		that->opt_button_color->color(fl_rgb_color(button_red, button_green, button_blue));
     		that->opt_button_color->redraw();
     	}
@@ -469,7 +469,7 @@ class UI_OptionsWin : public Fl_Window {
     
     static void callback_GradientColor(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;     
-        if (fl_color_chooser((const char *)"Select BG Color", gradient_red, gradient_green, gradient_blue, 1)) {
+        if (fl_color_chooser((const char *)"Select Gradient Color", gradient_red, gradient_green, gradient_blue, 1)) {
     		that->opt_gradient_color->color(fl_rgb_color(gradient_red, gradient_green, gradient_blue));
     		that->opt_gradient_color->redraw();
     	}
@@ -477,7 +477,7 @@ class UI_OptionsWin : public Fl_Window {
     
     static void callback_BorderColor(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;       
-        if (fl_color_chooser((const char *)"Select BG2 Color", border_red, border_green, border_blue, 1)) {
+        if (fl_color_chooser((const char *)"Select Border Color", border_red, border_green, border_blue, 1)) {
     		that->opt_border_color->color(fl_rgb_color(border_red, border_green, border_blue));
     		that->opt_border_color->redraw();
     	}
@@ -485,7 +485,7 @@ class UI_OptionsWin : public Fl_Window {
     
     static void callback_GapColor(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;       
-        if (fl_color_chooser((const char *)"Select BG2 Color", gap_red, gap_green, gap_blue, 1)) {
+        if (fl_color_chooser((const char *)"Select Gap Color", gap_red, gap_green, gap_blue, 1)) {
     		that->opt_gap_color->color(fl_rgb_color(gap_red, gap_green, gap_blue));
     		that->opt_gap_color->redraw();
     	}
@@ -521,7 +521,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     callback(callback_Quit, this);
 
-    box(FL_BORDER_BOX);
+    box(FL_FLAT_BOX);
 
     int y_step = kf_h(9);
     int pad = kf_w(6);
@@ -765,7 +765,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     int by = H - dh / 2 - bh / 2;
 
     Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
-    darkish->box(FL_BORDER_BOX);
+    darkish->box(FL_FLAT_BOX);
     {
         // finally add an "Close" button
 
