@@ -1,0 +1,10 @@
+void cgleam_gleam_color(Fl_Color c);
+void cgleam_shade_rect_top_bottom(int x, int y, int w, int h, Fl_Color fg1, Fl_Color fg2, float th);
+void cgleam_shade_rect_top_bottom_up(int x, int y, int w, int h, Fl_Color bc, float th);
+void cgleam_shade_rect_top_bottom_down(int x, int y, int w, int h, Fl_Color bc, float th);
+void cgleam_frame_rect(int x, int y, int w, int h, Fl_Color fg1, Fl_Color fg2, Fl_Color lc);
+void cgleam_frame_rect_up(int x, int y, int w, int h, Fl_Color bc, Fl_Color lc, float th1, float th2);
+void cgleam_frame_rect_down(int x, int y, int w, int h, Fl_Color bc, Fl_Color lc, float th1, float th2);
+void cgleam_up_box(int x, int y, int w, int h, Fl_Color c);
+void cgleam_thin_up_box(int x, int y, int w, int h, Fl_Color c);
+void cgleam_down_box(int x, int y, int w, int h, Fl_Color c);

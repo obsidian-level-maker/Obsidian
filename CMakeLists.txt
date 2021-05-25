@@ -132,6 +132,8 @@ add_executable(
   source_files/gui/tx_skies.h
   source_files/gui/ui_build.cc
   source_files/gui/ui_build.h
+  source_files/gui/ui_customboxes.cc
+  source_files/gui/ui_customboxes.h
   source_files/gui/ui_game.cc
   source_files/gui/ui_game.h
   source_files/gui/ui_hyper.cc

@@ -453,6 +453,8 @@ void Main_SetupFLTK() {
     } else {
     	CONTRAST_COLOR = fl_color_average(fl_darker(WINDOW_BG), WINDOW_BG, 0.5);
     }
+    Fl::set_boxtype(FL_GLEAM_UP_BOX, cgleam_up_box, 2, 2, 4, 4);
+    Fl::set_boxtype(FL_GLEAM_THIN_UP_BOX, cgleam_thin_up_box, 2, 2, 4, 4);
     switch(widget_theme) {
     	case 0 : Fl::scheme("gtk+");
     			 break;
