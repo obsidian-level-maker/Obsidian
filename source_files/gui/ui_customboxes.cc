@@ -357,3 +357,152 @@ void cplastic_down_box(int x, int y, int w, int h, Fl_Color c) {
     cplastic_narrow_thin_box(x, y, w, h, c);
   }
 }
+
+// CUSTOM SHADOW BOX ---------------------------------------------------------------------------------------
+
+#define BW 3
+
+void cshadow_frame(int x, int y, int w, int h, Fl_Color c) {
+  fl_color(fl_darker(GRADIENT_COLOR));
+  fl_rectf(x+BW, y+h-BW,  w - BW, BW);
+  fl_rectf(x+w-BW,  y+BW, BW,  h - BW);
+  Fl::set_box_color(c);
+  fl_rect(x,y,w-BW,h-BW);
+}
+
+void cshadow_box(int x, int y, int w, int h, Fl_Color c) {
+  Fl::set_box_color(c);
+  fl_rectf(x+1,y+1,w-2-BW,h-2-BW);
+  cshadow_frame(x,y,w,h,GRADIENT_COLOR);
+}
+
+// CUSTOM BORDER BOX ---------------------------------------------------------------------------------------
+
+void crectbound(int x, int y, int w, int h, Fl_Color bgcolor) {
+  Fl::set_box_color(BORDER_COLOR);
+  fl_rect(x, y, w, h);
+  Fl::set_box_color(bgcolor);
+  fl_rectf(x+1, y+1, w-2, h-2);
+}
+
+// CUSTOM NORMAL BOXES ---------------------------------------------------------------------------------------
+
+void cframe(int x, int y, int w, int h) {
+  if (h > 0 && w > 0) {
+    // draw top line:
+    fl_color(BORDER_COLOR);
+    fl_xyline(x, y, x+w-1);
+    y++;
+    // draw left line:
+    fl_color(BORDER_COLOR);
+    fl_yxline(x, y+h-1, y);
+    x++;
+    // draw bottom line:
+    fl_color(BORDER_COLOR);
+    fl_xyline(x, y+h-1, x+w-1);
+    // draw right line:
+    fl_color(BORDER_COLOR);
+    fl_yxline(x+w-1, y+h-1, y);
+  }
+}
+
+void cframe2(int x, int y, int w, int h) {
+  if (h > 0 && w > 0) {
+    // draw bottom line:
+    fl_color(BORDER_COLOR);
+    fl_xyline(x, y+h-1, x+w-1);
+    // draw right line:
+    fl_color(BORDER_COLOR);
+    fl_yxline(x+w-1, y+h-1, y);
+    // draw top line:
+    fl_color(BORDER_COLOR);
+    fl_xyline(x, y, x+w-1);
+    y++;
+    // draw left line:
+    fl_color(BORDER_COLOR);
+    fl_yxline(x, y+h-1, y);
+    x++;
+  }
+}
+
+void cframe3(const char* s, int x, int y, int w, int h) {
+  const uchar *g = fl_gray_ramp();
+  if (h > 0 && w > 0) for (;*s;) {
+    // draw bottom line:
+    fl_color(g[(int)*s++]);
+    fl_xyline(x, y+h-1, x+w-1);
+    if (--h <= 0) break;
+    // draw right line:
+    fl_color(g[(int)*s++]);
+    fl_yxline(x+w-1, y+h-1, y);
+    if (--w <= 0) break;
+    // draw top line:
+    fl_color(g[(int)*s++]);
+    fl_xyline(x, y, x+w-1);
+    y++; if (--h <= 0) break;
+    // draw left line:
+    fl_color(g[(int)*s++]);
+    fl_yxline(x, y+h-1, y);
+    x++; if (--w <= 0) break;
+  }
+}
+
+/** Draws a frame of type FL_THIN_UP_FRAME */
+void cthin_up_frame(int x, int y, int w, int h, Fl_Color) {
+  cframe2(x,y,w,h);
+}
+
+/** Draws a box of type FL_THIN_UP_BOX */
+void cthin_up_box(int x, int y, int w, int h, Fl_Color c) {
+  cthin_up_frame(x,y,w,h,BORDER_COLOR);
+  Fl::set_box_color(c);
+  fl_rectf(x+1, y+1, w-2, h-2);
+}
+
+/** Draws a frame of type FL_UP_FRAME */
+void cup_frame(int x, int y, int w, int h, Fl_Color) {
+  cframe2(x,y,w,h);
+}
+
+/** Draws a box of type FL_UP_BOX */
+void cup_box(int x, int y, int w, int h, Fl_Color c) {
+  cup_frame(x,y,w,h,BORDER_COLOR);
+  Fl::set_box_color(c);
+  fl_rectf(x+2, y+2, w-4, h-4);
+}
+
+/** Draws a frame of type FL_DOWN_FRAME */
+void cdown_frame(int x, int y, int w, int h, Fl_Color) {
+  cframe2(x,y,w,h);
+}
+
+/** Draws a box of type FL_DOWN_BOX */
+void cdown_box(int x, int y, int w, int h, Fl_Color c) {
+  cdown_frame(x,y,w,h,BORDER_COLOR);
+  Fl::set_box_color(c);
+  fl_rectf(x+2, y+2, w-4, h-4);
+}
+
+/** Draws a frame of type FL_ENGRAVED_FRAME */
+void cengraved_frame(int x, int y, int w, int h, Fl_Color) {
+  cframe3("HHWWWWHH",x,y,w,h);
+}
+
+/** Draws a box of type FL_ENGRAVED_BOX */
+void cengraved_box(int x, int y, int w, int h, Fl_Color c) {
+  cengraved_frame(x,y,w,h,BORDER_COLOR);
+  Fl::set_box_color(c);
+  fl_rectf(x+2, y+2, w-4, h-4);
+}
+
+/** Draws a frame of type FL_EMBOSSED_FRAME */
+void cembossed_frame(int x, int y, int w, int h, Fl_Color) {
+  cframe(x,y,w,h);
+}
+
+/** Draws a box of type FL_EMBOSSED_BOX */
+void cembossed_box(int x, int y, int w, int h, Fl_Color c) {
+  cembossed_frame(x,y,w,h,BORDER_COLOR);
+  Fl::set_box_color(c);
+  fl_rectf(x+2, y+2, w-4, h-4);
+}

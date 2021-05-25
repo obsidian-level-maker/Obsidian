@@ -25,3 +25,22 @@ void cplastic_thin_up_box(int x, int y, int w, int h, Fl_Color c);
 void cplastic_up_box(int x, int y, int w, int h, Fl_Color c);
 void cplastic_down_frame(int x, int y, int w, int h, Fl_Color c);
 void cplastic_down_box(int x, int y, int w, int h, Fl_Color c);
+
+void cshadow_frame(int x, int y, int w, int h, Fl_Color c);
+void cshadow_box(int x, int y, int w, int h, Fl_Color c);
+
+void crectbound(int x, int y, int w, int h, Fl_Color bgcolor);
+
+void cframe(int x, int y, int w, int h);
+void cframe2(int x, int y, int w, int h);
+void cframe3(const char* s, int x, int y, int w, int h);
+void cthin_up_frame(int x, int y, int w, int h, Fl_Color);
+void cthin_up_box(int x, int y, int w, int h, Fl_Color c);
+void cup_frame(int x, int y, int w, int h, Fl_Color);
+void cup_box(int x, int y, int w, int h, Fl_Color c);
+void cdown_frame(int x, int y, int w, int h, Fl_Color);
+void cdown_box(int x, int y, int w, int h, Fl_Color c);
+void cengraved_frame(int x, int y, int w, int h, Fl_Color);
+void cengraved_box(int x, int y, int w, int h, Fl_Color c);
+void cembossed_frame(int x, int y, int w, int h, Fl_Color);
+void cembossed_box(int x, int y, int w, int h, Fl_Color c);
