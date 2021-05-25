@@ -581,8 +581,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_font_theme->align(FL_ALIGN_LEFT);
     opt_font_theme->callback(callback_FontTheme, this);
     opt_font_theme->value(font_theme);
-    opt_font_theme->labelfont(0); // Safe fallback in case bad font is selected
-    opt_font_theme->textfont(0); // Same as above
+    opt_font_theme->labelfont(font_style);
+    opt_font_theme->textfont(0); // Safe fallback in case bad font is selected
     opt_font_theme->selection_color(SELECTION);
     
     PopulateFonts();
