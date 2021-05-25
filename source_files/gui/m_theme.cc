@@ -29,6 +29,114 @@
 #include "m_trans.h"
 #include "main.h"
 
+//----------------------------------------------------------------------
+
+const char *Theme_OutputFilename() {
+
+    // save and restore the font height
+    // (because FLTK's own browser get totally borked)
+    int old_font_h = FL_NORMAL_SIZE;
+    FL_NORMAL_SIZE = 14 + KF;
+
+    Fl_Native_File_Chooser chooser;
+
+    chooser.title(_("Select output file"));
+    chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
+
+    if (overwrite_warning) {
+        chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
+    }
+
+    chooser.filter("Text files\t*.txt");
+
+    chooser.directory("themes");
+
+    int result = chooser.show();
+
+    FL_NORMAL_SIZE = old_font_h;
+
+    switch (result) {
+        case -1:
+            LogPrintf("Error choosing output file:\n");
+            LogPrintf("   %s\n", chooser.errmsg());
+
+            DLG_ShowError(_("Unable to create the file:\n\n%s"),
+                          chooser.errmsg());
+            return NULL;
+
+        case 1:  // cancelled
+            return NULL;
+
+        default:
+            break;  // OK
+    }
+
+    static char filename[FL_PATH_MAX + 16];
+
+    const char *src_name = chooser.filename();
+
+#ifdef WIN32
+    // workaround for accented characters in a username
+    // [ real solution is yet to be determined..... ]
+
+    fl_utf8toa(src_name, strlen(src_name), filename, sizeof(filename));
+#else
+    snprintf(filename, sizeof(filename), "%s", src_name);
+#endif
+
+    // add extension if missing
+    char *pos = (char *)fl_filename_ext(filename);
+    if (!*pos) {
+        strcat(filename, ".");
+        strcat(filename, "txt");
+
+        // check if exists, ask for confirmation
+        FILE *fp = fopen(filename, "rb");
+        if (fp) {
+            fclose(fp);
+            if (!fl_choice("%s", fl_cancel, fl_ok, NULL,
+                           Fl_Native_File_Chooser::file_exists_message)) {
+                return NULL;  // cancelled
+            }
+        }
+    }
+
+    return StringDup(filename);
+}
+
+const char *Theme_AskLoadFilename() {
+        Fl_Native_File_Chooser chooser;
+
+        chooser.title(_("Select Theme file to load"));
+        chooser.type(Fl_Native_File_Chooser::BROWSE_FILE);
+        
+    	chooser.filter("Text files\t*.txt");
+
+    	chooser.directory("themes");
+
+        switch (chooser.show()) {
+            case -1:
+                LogPrintf("Error choosing load file:\n");
+                LogPrintf("   %s\n", chooser.errmsg());
+
+                DLG_ShowError(_("Unable to load the file:\n\n%s"),
+                              chooser.errmsg());
+                return NULL;
+
+            case 1:  // cancelled
+                return NULL;
+
+            default:
+                break;  // OK
+        }
+
+        static char filename[FL_PATH_MAX + 10];
+
+        strcpy(filename, chooser.filename());
+
+        return filename;
+}
+
 static void Parse_Theme_Option(const char *name, const char *value) {
 
 	if (StringCaseCmp(name, "window_scaling") == 0) {
@@ -271,6 +379,8 @@ class UI_ThemeWin : public Fl_Window {
     Fl_Button *opt_gradient_color;
     Fl_Button *opt_border_color;
     Fl_Button *opt_gap_color;
+    Fl_Button *load_theme;
+    Fl_Button *save_theme;
 
    public:
     UI_ThemeWin(int W, int H, const char *label = NULL);
@@ -414,6 +524,34 @@ class UI_ThemeWin : public Fl_Window {
     		that->opt_gap_color->color(fl_rgb_color(gap_red, gap_green, gap_blue));
     		that->opt_gap_color->redraw();
     	}
+    }
+    
+    static void callback_LoadTheme(Fl_Widget *w, void *data) {
+        UI_ThemeWin *that = (UI_ThemeWin *)data;
+
+		const char* theme_file = Theme_AskLoadFilename();
+		if (theme_file) {
+			Theme_Options_Load(theme_file);
+		}
+		
+		Options_Save(options_file);
+
+        fl_alert("%s", _("Changes to theme require a restart.\nOBSIDIAN will "
+                         "now close."));
+
+        main_action = MAIN_QUIT;
+
+        that->want_quit = true;
+		
+    }
+
+    static void callback_SaveTheme(Fl_Widget *w, void *data) {
+        
+		const char* new_theme_file = Theme_OutputFilename();
+		if (new_theme_file) {
+			Theme_Options_Save(new_theme_file);
+		}
+				
     }
 
 };
@@ -597,6 +735,24 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     opt_single_pane->labelfont(font_style);
     opt_single_pane->selection_color(SELECTION);
     opt_single_pane->down_box(button_style);
+    
+    cy += opt_single_pane->h() + y_step * 3;
+    
+    load_theme = new Fl_Button(cx + W * .15, cy, W * .25, kf_h(24),
+                                       _("Load Theme"));
+    load_theme->visible_focus(0);
+    load_theme->box(button_style);
+    load_theme->color(BUTTON_COLOR);
+    load_theme->callback(callback_LoadTheme, this);
+    load_theme->labelfont(font_style);
+    
+    save_theme = new Fl_Button(cx + W * .15 + (load_theme->w() +  pad), cy, W * .25, kf_h(24),
+                                       _("Save Theme"));
+    save_theme->visible_focus(0);
+    save_theme->box(button_style);
+    save_theme->color(BUTTON_COLOR);
+    save_theme->callback(callback_SaveTheme, this);
+    save_theme->labelfont(font_style);
 
     //----------------
 
@@ -620,7 +776,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     darkish->end();
 
     // restart needed warning
-    heading = new Fl_Box(FL_NO_BOX, x() + pad, H - dh - kf_h(3), W - pad * 2,
+    heading = new Fl_Box(FL_NO_BOX, x() + pad - kf_w(5), H - dh - kf_h(3), W - pad * 2,
                          kf_h(14), _("Note: some options require a restart."));
     heading->align(FL_ALIGN_INSIDE);
     heading->labelsize(small_font_size);
@@ -658,7 +814,7 @@ void DLG_ThemeEditor(void) {
 
     if (!theme_window) {
         int theme_w = kf_w(350);
-        int theme_h = kf_h(435);
+        int theme_h = kf_h(500);
 
         theme_window =
             new UI_ThemeWin(theme_w, theme_h, _("OBSIDIAN Theme Options"));
