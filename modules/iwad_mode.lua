@@ -31,7 +31,7 @@
 
 -- LEVEL.size_multiplier
 -- LEVEL.area_multiplier
--- LEVEL.size_consistency = strict/normal
+-- LEVEL.size_consistency = "strict"/"normal"
 -- LEVEL.sky_light = # here
 -- LEVEL.has_streets = true/false
 -- PARAM.brightness_offset
@@ -940,37 +940,37 @@ function IWAD_MODE.begin_level()
     LEVEL.map_W = 18
     LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.a) .. " Entryway" -- was b lexicon
     LEVEL.size_multiplier = 0.6
-    LEVEL.size_consistency = strict
+    LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 192
   elseif LEVEL.name == "MAP02" then
     LEVEL.map_W = 22
     LEVEL.size_multiplier = 0.5
-    LEVEL.size_consistency = strict
+    LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 192
   elseif LEVEL.name == "MAP03" then
     LEVEL.map_W = 25
     LEVEL.size_multiplier = 0.75
     LEVEL.sky_light = 144
-    LEVEL.size_consistency = normal
+    LEVEL.size_consistency = "normal"
   elseif LEVEL.name == "MAP04" then
     LEVEL.map_W = 20
     LEVEL.size_multiplier = 0.6
-    LEVEL.size_consistency = strict
+    LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 160
   elseif LEVEL.name == "MAP05" then
     LEVEL.map_W = 28
     LEVEL.size_multiplier = 0.8
     LEVEL.sky_light = 144
-    LEVEL.size_consistency = normal
-    -- LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.n) .. "The " -- Does "WordThe" and not "The Word"..
+    LEVEL.size_consistency = "normal"
+    LEVEL.description = "The " .. rand.key_by_probs(nt.TECH.lexicon.n)
   elseif LEVEL.name == "MAP06" then
     LEVEL.map_W = 30
     LEVEL.size_multiplier = 0.7
-    LEVEL.size_consistency = normal
+    LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 192
   elseif LEVEL.name == "MAP07" then -- Procedural Gotcha
     LEVEL.map_W = 20
-    LEVEL.size_consistency = strict
+    LEVEL.size_consistency = "strict"
     LEVEL.is_procedural_gotcha = true
     LEVEL.sky_light = 192
     LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.c) .. " Simple" -- was b
@@ -979,49 +979,49 @@ function IWAD_MODE.begin_level()
   elseif LEVEL.name == "MAP08" then
     LEVEL.map_W = 28
     LEVEL.size_multiplier = 0.8
-    LEVEL.size_consistency = normal
+    LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 192
     LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.d) .. " and Traps" -- was b
   elseif LEVEL.name == "MAP09" then
     LEVEL.map_W = 26
     LEVEL.size_multiplier = 0.7
-    LEVEL.size_consistency = normal
+    LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 144
   elseif LEVEL.name == "MAP10" then
     LEVEL.map_W = 32
     LEVEL.size_multiplier = 1.2
-    LEVEL.size_consistency = normal
+    LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 144
   elseif LEVEL.name == "MAP11" then
     LEVEL.map_W = 26
     LEVEL.size_multiplier = 0.8
-    LEVEL.size_consistency = normal
+    LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 160
     LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.n) .. " of Destruction"
   elseif LEVEL.name == "MAP12" then
     LEVEL.map_W = 28
-    LEVEL.size_consistency = strict
+    LEVEL.size_consistency = "strict"
     LEVEL.size_multiplier = 0.75
     LEVEL.has_streets = true -- Its shape implies this
     LEVEL.sky_light = 144
   elseif LEVEL.name == "MAP13" then -- Streets mode
     LEVEL.map_W = 34
     LEVEL.size_multiplier = 0.7
-    LEVEL.size_consistency = normal
+    LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 128
     LEVEL.has_streets = true
     LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.o) .. " Downtown" -- was b
   elseif LEVEL.name == "MAP14" then
     LEVEL.map_W = 24
     LEVEL.size_multiplier = 0.5
-    LEVEL.size_consistency = strict
+    LEVEL.size_consistency = "strict"
     LEVEL.area_multiplier = 0.8
     LEVEL.sky_light = 144
   elseif LEVEL.name == "MAP15" then
     LEVEL.map_W = 38
     LEVEL.size_multiplier = 0.8
     LEVEL.area_multiplier = 1.33
-    LEVEL.size_consistency = normal
+    LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 160
     LEVEL.has_streets = true -- Shaped enough for this
     LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.a) .. " Industrial Zone" -- was b
@@ -1029,119 +1029,119 @@ function IWAD_MODE.begin_level()
     LEVEL.map_W = 30
     LEVEL.size_multiplier = 1.2
     LEVEL.area_multiplier = 0.8
-    LEVEL.size_consistency = normal
+    LEVEL.size_consistency = "normal"
     LEVEL.has_streets = true
     LEVEL.sky_light = 144
   elseif LEVEL.name == "MAP17" then
     LEVEL.map_W = 26
     LEVEL.size_multiplier = 0.65
     LEVEL.area_multiplier = 1.33
-    LEVEL.size_consistency = strict
+    LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 192
   elseif LEVEL.name == "MAP18" then
     LEVEL.map_W = 24
     LEVEL.size_multiplier = 0.7
-    LEVEL.size_consistency = strict
+    LEVEL.size_consistency = "strict"
     LEVEL.area_multiplier = 0.75
     LEVEL.sky_light = 160
-    -- LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.n) .. "The " -- Does "WordThe" and not "The Word"..
+    LEVEL.description = "The " .. rand.key_by_probs(nt.URBAN.lexicon.n)
   elseif LEVEL.name == "MAP19" then
     LEVEL.map_W = 34
     LEVEL.size_multiplier = 0.7
     LEVEL.area_multiplier = 1.3
-    LEVEL.size_consistency = normal
+    LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 176
     LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.a) .. " Citadel" -- was b
   elseif LEVEL.name == "MAP20" then
     LEVEL.map_W = 36
     LEVEL.size_multiplier = 0.9
     LEVEL.area_multiplier = 2.0
-    LEVEL.size_consistency = normal
+    LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 255 -- dunno why id put 255
   elseif LEVEL.name == "MAP21" then
     LEVEL.map_W = 20
     LEVEL.size_multiplier = 0.5
     LEVEL.area_multiplier = 1.3
     LEVEL.sky_light = 160
-    LEVEL.size_consistency = strict
+    LEVEL.size_consistency = "strict"
   elseif LEVEL.name == "MAP22" then
     LEVEL.map_W = 22
     LEVEL.size_multiplier = 0.5
     LEVEL.area_multiplier = 1.2
     LEVEL.sky_light = 192
-    LEVEL.size_consistency = strict
-    -- LEVEL.description = rand.key_by_probs(nt.GOTHIC.lexicon.a) .. "The " -- Does "WordThe" and not "The Word"..
+    LEVEL.size_consistency = "strict"
+    LEVEL.description =  "The " .. rand.key_by_probs(nt.GOTHIC.lexicon.a)
   elseif LEVEL.name == "MAP23" then
     LEVEL.map_W = 26
     LEVEL.size_multiplier = 0.7
     LEVEL.area_multiplier = 1.3
     LEVEL.sky_light = 160
-    LEVEL.size_consistency = normal
-    -- LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.h) .. "Barrels o' " -- Does "WordThe" and not "The Word"..
+    LEVEL.size_consistency = "normal"
+    LEVEL.description = "Barrels o' " .. rand.key_by_probs(nt.URBAN.lexicon.h) 
   elseif LEVEL.name == "MAP24" then
     LEVEL.map_W = 30
     LEVEL.size_multiplier = 0.8
     LEVEL.area_multiplier = 1.5
-    LEVEL.size_consistency = normal
+    LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 144 -- guess, can't find indoors
   elseif LEVEL.name == "MAP25" then
     LEVEL.map_W = 26
     LEVEL.size_multiplier = 0.6
     LEVEL.area_multiplier = 1.3
     LEVEL.sky_light = 128
-    LEVEL.size_consistency = strict
+    LEVEL.size_consistency = "strict"
   elseif LEVEL.name == "MAP26" then
     LEVEL.map_W = 30
     LEVEL.size_multiplier = 0.8
     LEVEL.area_multiplier = 1.5
-    LEVEL.size_consistency = normal
+    LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 144
   elseif LEVEL.name == "MAP27" then
     LEVEL.map_W = 24
     LEVEL.size_multiplier = 0.6
     LEVEL.area_multiplier = 1.25
-    LEVEL.size_consistency = strict
+    LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 144
-    -- LEVEL.description = rand.key_by_probs(nt.GOTHIC.lexicon.n) .. "Monster " -- Does "WordThe" and not "The Word"..
+    LEVEL.description =  "Monster " .. rand.key_by_probs(nt.GOTHIC.lexicon.n)
   elseif LEVEL.name == "MAP28" then
     LEVEL.map_W = 28
     LEVEL.size_multiplier = 0.9
     LEVEL.area_multiplier = 1.5
-    LEVEL.size_consistency = normal
+    LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 144
   elseif LEVEL.name == "MAP29" then
     LEVEL.map_W = 32
     LEVEL.size_multiplier = 0.8
     LEVEL.area_multiplier = 1.4
-    LEVEL.size_consistency = normal
+    LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 144
-    -- LEVEL.description = rand.key_by_probs(nt.GOTHIC.lexicon.h) .. "The Living " -- Does "WordThe" and not "The Word"..
+    LEVEL.description =  "The Living " .. rand.key_by_probs(nt.GOTHIC.lexicon.h)
   elseif LEVEL.name == "MAP30" then -- Procedural Gotcha
     LEVEL.map_W = 36
     LEVEL.size_multiplier = 1.5
     LEVEL.area_multiplier = 1.5
-    LEVEL.size_consistency = strict
+    LEVEL.size_consistency = "strict"
     LEVEL.is_procedural_gotcha = true
     LEVEL.sky_light = 144
-    -- LEVEL.description = rand.key_by_probs(nt.GOTHIC.lexicon.h) .. "Icon of " -- Does "WordThe" and not "The Word"..
+    LEVEL.description = "Icon of " .. rand.key_by_probs(nt.GOTHIC.lexicon.h)
   elseif LEVEL.name == "MAP31" then
     LEVEL.map_W = 28
     LEVEL.size_multiplier = 0.5
     LEVEL.area_multiplier = 0.75
-    LEVEL.size_consistency = strict
+    LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 192
   elseif LEVEL.name == "MAP32" then
     LEVEL.map_W = 24
     LEVEL.size_multiplier = 0.6
     LEVEL.area_multiplier = 0.6
-    LEVEL.size_consistency = strict
+    LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 192
 
     -- TODO Doom/Ult. Doom
     --elseif LEVEL.name == "E1M1" then
     --LEVEL.map_W = 22
     --LEVEL.size_multiplier = 0.5
-    --LEVEL.size_consistency = strict
+    --LEVEL.size_consistency = "strict"
     --LEVEL.sky_light = 192
   end
 
