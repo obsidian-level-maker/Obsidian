@@ -621,6 +621,26 @@ namelib.NAMES =
         ["I/O"]=5,
       },
 
+      -- Used for IWAD Mode module
+      c =
+      {
+        Dead=10, ["Not So"]=10, Not=10, ["Surely Isn't"]=10, Somewhat=10,
+        Deadly=10, ["Fuck, Not"]=10, Delightfully=10, Simply=10, ["Hard, Yet"]=10,
+        Cheerfully=10, ["Not Really"]=10, Outright=10, Utterly=10, ["This Ain't"]=10,
+        ["Totally Not"]=10, Totally=10, Absolutely=10, ["Not So"]=10, Gleefully=10,
+        ["Is It"]=10, Joyfully=10, ["Not That"]=10, ["Deadly and"]=10, Stupidly=10,
+        Painfully=10, Quite=10, Obsidian=10, ["Hell's Not"]=10, ["Dude, Dead"]=10,
+        ["Memories of Dead"]=10,
+      },
+
+      -- Used for IWAD Mode module
+      d =
+      {
+        Tricks=10, Demons=10, Monsters=10, Dudes=10, Machinations=10, Minions=10,
+        Travesties=10, Tomfoolery=10, Shenanigans=10, Deception=10, Doomguy=10,
+        ["Doom Slayer"]=10,
+      },
+
       n =
       {
         -- MSSP-TODO: sort these names into better categories!!!
@@ -1251,7 +1271,7 @@ namelib.NAMES =
         Thamuz=3, Valafar=3, Verdelet=3,
 
 
-        -- ObAddon contributor names
+        -- Obsidian contributor names
         NOUNMEMBERS = 90,
 
         NOUNGENEXOTIC = 700
