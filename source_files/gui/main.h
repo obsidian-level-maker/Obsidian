@@ -35,12 +35,14 @@
 
 #define CONFIG_FILENAME "CONFIG.txt"
 #define OPTIONS_FILENAME "OPTIONS.txt"
+#define THEME_FILENAME "THEME.txt"
 #define LOG_FILENAME "LOGS.txt"
 
 extern const char *home_dir;
 extern const char *install_dir;
 
 extern const char *options_file;
+extern const char *theme_file;
 extern const char *logging_file;
 
 extern bool batch_mode;
@@ -69,12 +71,28 @@ extern uchar bg_blue;
 extern uchar bg2_red;
 extern uchar bg2_green;
 extern uchar bg2_blue;
+extern uchar button_red;
+extern uchar button_green;
+extern uchar button_blue;
+extern uchar gradient_red;
+extern uchar gradient_green;
+extern uchar gradient_blue;
+extern uchar border_red;
+extern uchar border_green;
+extern uchar border_blue;
+extern uchar gap_red;
+extern uchar gap_green;
+extern uchar gap_blue;
 extern Fl_Boxtype box_style;
 extern Fl_Boxtype button_style;
 extern Fl_Font font_style;
 extern Fl_Color FONT_COLOR;
 extern Fl_Color WINDOW_BG;
 extern Fl_Color SELECTION;
+extern Fl_Color GAP_COLOR;
+extern Fl_Color GRADIENT_COLOR;
+extern Fl_Color BUTTON_COLOR;
+extern Fl_Color BORDER_COLOR;
 extern int color_scheme;
 extern int font_theme;
 extern int box_theme;
@@ -109,6 +127,7 @@ const char *DLG_OutputFilename(const char *ext, const char *preset = NULL);
 
 void DLG_AboutText(void);
 void DLG_OptionsEditor(void);
+void DLG_ThemeEditor(void);
 void DLG_SelectAddons(void);
 
 void DLG_EditSeed(void);

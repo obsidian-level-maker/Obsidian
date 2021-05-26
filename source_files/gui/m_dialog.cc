@@ -404,8 +404,11 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
     int ey = h() - kf_h(65);
 
     browser = new Fl_Multi_Browser(0, 0, w(), ey);
-    browser->color(fl_lighter(WINDOW_BG));
-    browser->textcolor(fl_darker(FONT_COLOR));
+    browser->color(WINDOW_BG);
+    browser->scrollbar.slider(button_style);
+    browser->scrollbar.color(GAP_COLOR, BUTTON_COLOR);
+    browser->box(button_style);
+    browser->textcolor(FONT_COLOR);
     browser->textfont(font_style);
     browser->textsize(small_font_size);
     browser->callback(select_callback, this);
@@ -432,6 +435,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
             Fl_Button *but =
                 new Fl_Button(bx, button_y, button_w, button_h, fl_close);
             but->box(button_style);
+            but->color(BUTTON_COLOR);
             but->labelfont(font_style | FL_BOLD);
             but->callback(quit_callback, this);
         }
@@ -441,6 +445,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
             Fl_Button *but =
                 new Fl_Button(bx, button_y, button_w, button_h, _("Save"));
             but->box(button_style);
+            but->color(BUTTON_COLOR);
             but->callback(save_callback, this);
             but->labelfont(font_style);
         }
@@ -450,6 +455,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
             copy_but =
                 new Fl_Button(bx, button_y, button_w, button_h, _("Copy"));
             copy_but->box(button_style);
+            copy_but->color(BUTTON_COLOR);
             copy_but->callback(copy_callback, this);
             copy_but->shortcut(FL_CTRL + 'c');
             copy_but->deactivate();

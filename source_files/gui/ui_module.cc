@@ -100,7 +100,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
     }
     
     if (!longtip) {
-    	longtip = "Help file not yet written for this setting!";
+    	longtip = "Detailed help not yet written for this setting. For quick help, hover over the option name to display a tooltip.";
     }
 
 	UI_RChoice *rch =
@@ -114,7 +114,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
 	rch->mod_menu = 
 		new UI_RChoiceMenu((!single_pane ? rch->x() : rch->x() + (rch->w() * .40)), (!single_pane ? rch->y() + rch->mod_label->h() : rch->y()), (single_pane ? rch->w() * .55 : rch->w()), kf_h(24), NULL);
-	rch->mod_menu->selection_color(SELECTION);		
+	rch->mod_menu->selection_color(SELECTION);	
 
 	rch->mod_help =
 			new UI_HelpLink(rch->x() + (!single_pane ? (rch->w() * .9) : (rch->w() * .95)), rch->y(), rch->w() * .075, kf_h(24), "?");
@@ -165,30 +165,32 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     }
     
     if (!longtip) {
-    	longtip = "Help file not yet written for this setting!";
+    	longtip = "Detailed help not yet written for this setting. For quick help, hover over the option name to display a tooltip.";
     }
 	UI_RSlide *rsl =
 		    new UI_RSlide(nx, ny + kf_h(15), nw * .95, (!single_pane ? kf_h(48) : kf_h(24)), NULL);
 
 
 	rsl->mod_label = 
-			new Fl_Box(rsl->x(), rsl->y(), (!single_pane ? rsl->w() * .95 : rsl->w() * .40), kf_h(24), new_label);
-	rsl->mod_label->align((!single_pane ? (FL_ALIGN_LEFT | FL_ALIGN_INSIDE) : (FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP)));
+			new Fl_Box(rsl->x(), rsl->y(), (!single_pane ? rsl->w() * .8 : rsl->w() * .40), kf_h(24), new_label);
+	rsl->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
 	rsl->mod_label->labelfont(font_style);
 	rsl->mod_label->tooltip(tip);
 
     rsl->prev_button =
         new UI_CustomArrowButton((!single_pane ? rsl->x() : rsl->x() + (rsl->w() * .40)), (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@<");
     rsl->prev_button->visible_focus(0);
-    rsl->prev_button->box(button_style);     
+    rsl->prev_button->box(button_style);
+    rsl->prev_button->color(BUTTON_COLOR);     
     rsl->prev_button->align(FL_ALIGN_INSIDE);   
     rsl->prev_button->labelcolor(SELECTION);
     rsl->prev_button->labelsize(rsl->prev_button->labelsize() * .80);
     rsl->prev_button->callback(callback_SliderPrevious, NULL);
     
     rsl->mod_slider =
-        new Fl_Hor_Slider((!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .45),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (!single_pane ? rsl->w() * .85 : rsl->w() * .40), kf_h(24), NULL);
+        new Fl_Hor_Slider((!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .45),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (!single_pane ? rsl->w() * .80 : rsl->w() * .40), kf_h(24), NULL);
     rsl->mod_slider->box(button_style);
+    rsl->mod_slider->color(BUTTON_COLOR);
     rsl->mod_slider->selection_color(SELECTION);
     rsl->mod_slider->minimum(min);
     rsl->mod_slider->maximum(max);
@@ -198,6 +200,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->next_button =
         new UI_CustomArrowButton((!single_pane ? rsl->x() + rsl->w() * .90 : rsl->x() + rsl->w() * .85),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@>");
     rsl->next_button->box(button_style);
+    rsl->next_button->color(BUTTON_COLOR);
     rsl->next_button->visible_focus(0);   
     rsl->next_button->align(FL_ALIGN_INSIDE);  
     rsl->next_button->labelcolor(SELECTION);
@@ -205,7 +208,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->next_button->callback(callback_SliderNext, NULL);
 
 	rsl->mod_entry =
-			new UI_ManualEntry(rsl->x() + (!single_pane ? (rsl->w() * .8) : (rsl->w() * .90)), rsl->y(), rsl->w() * .075, kf_h(24), "\u21B5");
+			new UI_ManualEntry(rsl->x() + (!single_pane ? (rsl->w() * .8) : (rsl->w() * .90)), rsl->y(), rsl->w() * .075, kf_h(24), "[ ]");
 	rsl->mod_entry->box(FL_NO_BOX);
 	rsl->mod_entry->labelcolor(FONT_COLOR);
 	rsl->mod_entry->visible_focus(0);
@@ -273,7 +276,7 @@ void UI_Module::AddButtonOption(const char *opt, const char *label, const char *
     }
     
     if (!longtip) {
-    	longtip = "Help file not yet written for this setting!";
+    	longtip = "Detailed help not yet written for this setting. For quick help, hover over the option name to display a tooltip.";
     }
 
 	UI_RButton *rbt =
@@ -484,7 +487,7 @@ void UI_Module::callback_SliderPrevious(Fl_Widget *w, void *data) {
 	double value = current_slider->mod_slider->value();
 	
 	if (current_slider->nan_choices.empty()) {
-		int steps = (int)(current_slider->mod_slider->maximum() - current_slider->mod_slider->minimum()) / current_slider->mod_slider->step();
+		int steps = (int)(current_slider->mod_slider->maximum() / current_slider->mod_slider->step());
 		double temp_value = current_slider->mod_slider->increment(value, (int)-steps * .10);
 		if (temp_value < current_slider->mod_slider->minimum()) {
 			current_slider->mod_slider->value(current_slider->mod_slider->minimum());
@@ -522,7 +525,7 @@ void UI_Module::callback_SliderNext(Fl_Widget *w, void *data) {
 	double value = current_slider->mod_slider->value();
 	
 	if (current_slider->nan_choices.empty()) {
-		int steps = (int)(current_slider->mod_slider->maximum() - current_slider->mod_slider->minimum()) / current_slider->mod_slider->step();
+		int steps = (int)(current_slider->mod_slider->maximum() / current_slider->mod_slider->step());
 		double temp_value = current_slider->mod_slider->increment(value, (int)steps * .10);
 		if (temp_value > current_slider->mod_slider->maximum()) {
 			current_slider->mod_slider->value(current_slider->mod_slider->maximum());
@@ -615,7 +618,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H)
     : Fl_Group(X, Y, W, H) {
     box(FL_FLAT_BOX);
 
-    color(fl_darker(fl_darker(WINDOW_BG)), fl_darker(fl_darker(WINDOW_BG)));
+    color(GAP_COLOR, GAP_COLOR);
 
     int cy = Y;
 
@@ -631,7 +634,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H)
     sbar = new Fl_Scrollbar(mx + mw, my, Fl::scrollbar_size(), mh);
     sbar->callback(callback_Scroll, this);
     sbar->slider(button_style);
-    sbar->color(fl_darker(fl_darker(WINDOW_BG)), WINDOW_BG);
+    sbar->color(GAP_COLOR, BUTTON_COLOR);
     sbar->labelcolor(SELECTION);
 
     mod_pack_group = new Fl_Group(mx, my, mw, mh);
@@ -646,7 +649,7 @@ UI_CustomMods::UI_CustomMods(int X, int Y, int W, int H)
     mod_pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
 
     mod_pack->box(FL_FLAT_BOX);
-    mod_pack->color(fl_darker(fl_darker(WINDOW_BG)));
+    mod_pack->color(GAP_COLOR);
     mod_pack->resizable(mod_pack);
 
     end();

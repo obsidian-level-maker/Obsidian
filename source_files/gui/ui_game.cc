@@ -103,6 +103,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     build = new Fl_Button(button_x, cy, button_w, button_h, _("Build"));
     build->visible_focus(0);
     build->box(button_style);
+    build->color(BUTTON_COLOR);
     build->labelfont(font_style | FL_BOLD);
     build->labelsize(FL_NORMAL_SIZE + 2);
     build->callback(build_callback, this);
@@ -112,6 +113,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
                          _("Quit"));
     quit->visible_focus(0);
     quit->box(button_style);
+    quit->color(BUTTON_COLOR);
     quit->labelfont(font_style);
     quit->callback(quit_callback, this);
     quit->shortcut(FL_COMMAND + 'q');
@@ -159,7 +161,14 @@ void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-    buff->text("ENGINE"); 
+    buff->text("Available Engines:\n\n\
+ZDoom Family: L/G/Zdoom, Zandronum, and similar engines that use ZDoom as a base.\n\n\
+Vanilla DOOM: Doom with its original engine limits. This option will use SLUMP as the map builder.\n\n\
+Limit Removing: Any engine that raises the limits of the original Doom to prevent crashes.\n\n\
+BOOM Compatible: Engines compatible with Boom that are able to use the entire suite of Boom types and features.\n\n\
+PrBoom Compatible: Boom-compatible, but also capable of using compressed ZDBSP or GL nodes.\n\n\
+Doomsday: Limit-removing, but not fully Boom-compatible. Supports GL nodes.\n\n\
+EDGE: Formerly known as 3DGE. Boom and UDMF compatible, with additional special features."); 
 }
 
 void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
@@ -173,7 +182,11 @@ void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-    buff->text("LENGTH"); 
+    buff->text("Available WAD Lengths:\n\n\
+Single Level: One map.\n\n\
+A Few Maps: Four maps.\n\n\
+One Episode: The length of an episode in the original IWAD. For Doom 2, which normally doesn't have episodes, this is 11 maps.\n\n\
+Full Game: The length of a full game in the original IWAD."); 
 }
 
 void UI_Game::callback_ThemeHelp(Fl_Widget *w, void *data) {
@@ -187,7 +200,13 @@ void UI_Game::callback_ThemeHelp(Fl_Widget *w, void *data) {
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-    buff->text("THEME"); 
+    buff->text("Available Themes:\n\n\
+Original: Follows the theme progression of the original IWAD.\n\n\
+Episodic: Each episode follows a single randomly chose theme.\n\n\
+Bit Mixed: Theme will change every few levels.\n\n\
+Jumbled Up: Level themes are purely random.\n\n\
+Psychedelic: Trippy.\n\n\
+Other themes listed are game-specific."); 
 }
 
 void UI_Game::Locked(bool value) {

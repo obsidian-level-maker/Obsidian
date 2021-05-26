@@ -54,7 +54,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
 
     callback((Fl_Callback *)main_win_close_CB);
 
-    color(fl_darker(fl_darker(WINDOW_BG)), SELECTION);
+    color(GAP_COLOR, SELECTION);
 
     int LEFT_W = kf_w(232);
     int MOD_W = (W - LEFT_W) / 2 - kf_h(4);
@@ -66,6 +66,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     menu_bar->box(box_style);
     menu_bar->textsize(menu_bar->textsize() * .90);
     menu_bar->add("File/Options", FL_F + 4, menu_do_options);
+    menu_bar->add("File/Theme", 0, menu_do_theme);
     menu_bar->add("File/Addon List", FL_F + 3, menu_do_addons);
     menu_bar->add("File/Set Seed", FL_F + 5, menu_do_edit_seed);
     menu_bar->add("File/Config Manager", FL_F + 9, menu_do_manage_config);
@@ -133,6 +134,10 @@ void UI_MainWin::menu_do_view_logs(Fl_Widget *w, void *data) { DLG_ViewLogs(); }
 
 void UI_MainWin::menu_do_options(Fl_Widget *w, void *data) {
     DLG_OptionsEditor();
+}
+
+void UI_MainWin::menu_do_theme(Fl_Widget *w, void *data) {
+    DLG_ThemeEditor();
 }
 
 void UI_MainWin::menu_do_addons(Fl_Widget *w, void *data) {
