@@ -905,7 +905,6 @@ E1M1 =
   parks = "none",
   fences = "none"
 },
-
 -- E1M2 Approximate map dimensions: 5,300 x 3,900 nap units
 E1M2 =
 {
@@ -933,7 +932,6 @@ E1M2 =
   big_rooms = "few",
   big_outdoor_rooms = "few"
 },
-
 -- E1M3 Approximate map dimensions: 4,100 x 3,050 map units
 E1M3 =
 {
@@ -958,7 +956,6 @@ E1M3 =
   parks = "none",
   switches = "some"
 },
-
 -- E1M4 Approximate map dimensions: 3,700 x 2,800 map units
 E1M4 =
 {
@@ -986,7 +983,6 @@ E1M4 =
   porches = "none",
   fences = "none"
 },
-
 -- E1M5 Approximate map dimensions: 4,000 x 3,200 map units
 E1M5 =
 {
@@ -1013,7 +1009,6 @@ E1M5 =
   symmetry = "some",
   pictures = "some"
 },
-
 -- E1M6 Approximate map dimensions: 5,800 x 4,900 map units
 E1M6 =
 {
@@ -1040,7 +1035,6 @@ E1M6 =
   fences = "few",
   porches = "some"
 },
-
 -- E1M7 Approximate map dimensions: 4,000 x 3,400 map units
 E1M7 =
 {
@@ -1069,7 +1063,6 @@ E1M7 =
   switches = "some",
   beams = "none"
 },
-
 -- E1M8 Approximate map dimensions: 6,600 x 7,100 map units
 E1M8 =
 {
@@ -1097,7 +1090,6 @@ E1M8 =
   hallways = "few",
   liquids = "none"
 },
-
 -- E1M9 Approximate map dimensions: 3,400 x 3,200 map units
 E1M9 =
 {
@@ -1126,7 +1118,6 @@ E1M9 =
   symmetry = "heaps",
 },
 
--- This is a template!
 -- E2M1 Approximate map dimensions: 2,600 x 2,000 map units
 E2M1 =
 {
@@ -1157,6 +1148,7 @@ E2M1 =
   fences = "none"
 },
 
+-- This is a template!
 -- EXMX Approximate map dimensions: X x Y map units
 EXMX =
 {
@@ -1195,7 +1187,7 @@ function IWAD_MODE.begin_level()
 
   if LEVEL.name == "MAP01" then
     LEVEL.map_W = 18
-    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.b) .. " Entryway"
+    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.a) .. " Entryway"
     LEVEL.size_multiplier = 0.6
     LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 192
@@ -1236,7 +1228,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = "strict"
     LEVEL.is_procedural_gotcha = true
     LEVEL.sky_light = 192
-    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.c) .. " Simple" -- was b
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.c) .. " Simple"
     LEVEL.size_multiplier = 1.2
     LEVEL.area_multiplier = 0.75
     PARAM.brightness_offset = "+1"
@@ -1245,7 +1237,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_multiplier = 0.8
     LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 192
-    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.d) .. " and Traps" -- was b
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.d) .. " and Traps"
     PARAM.brightness_offset = "0"
   elseif LEVEL.name == "MAP09" then
     LEVEL.map_W = 26
@@ -1281,7 +1273,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 128
     LEVEL.has_streets = true
-    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.o) .. " Downtown" -- was b
+    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.a) .. " Downtown"
     PARAM.brightness_offset = "-1"
     LEVEL.squareishness = 40
   elseif LEVEL.name == "MAP14" then
@@ -1299,7 +1291,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 160
     LEVEL.has_streets = true -- Shaped enough for this
-    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.a) .. " Industrial Zone" -- was b
+    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.a) .. " Industrial Zone"
     PARAM.brightness_offset = "+1"
     LEVEL.squareishness = 40
   elseif LEVEL.name == "MAP16" then -- Streets mode
@@ -1324,7 +1316,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = "strict"
     LEVEL.area_multiplier = 0.75
     LEVEL.sky_light = 160
-    LEVEL.description = "The " .. rand.key_by_probs(nt.URBAN.lexicon.n)
+    LEVEL.description = "The " .. rand.key_by_probs(nt.URBAN.lexicon.o)
     PARAM.brightness_offset = "+1"
   elseif LEVEL.name == "MAP19" then
     LEVEL.map_W = 34
@@ -1411,7 +1403,7 @@ function IWAD_MODE.begin_level()
     LEVEL.sky_light = 144
     LEVEL.description =  "The Living " .. rand.key_by_probs(nt.GOTHIC.lexicon.h)
     PARAM.brightness_offset = "-1"
-  elseif LEVEL.name == "MAP30" then -- Procedural Gotcha
+  elseif LEVEL.name == "MAP30" then
     LEVEL.map_W = 36
     LEVEL.size_multiplier = 1.5
     LEVEL.area_multiplier = 1.5
@@ -1445,7 +1437,7 @@ function IWAD_MODE.begin_level()
     LEVEL.area_multiplier = 0.75
     LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 255
-    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.b) .. " Hangar"
+    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.a) .. " Hangar"
     PARAM.brightness_offset = "0"
     elseif LEVEL.name == "E1M2" then
     LEVEL.map_w = 30
@@ -1474,7 +1466,7 @@ function IWAD_MODE.begin_level()
     LEVEL.area_multiplier = 0.8
     LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 160
-    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.a) .. " Lab"
+    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.a) .. " Lab"
     PARAM.brightness_offset = "-2"
     elseif LEVEL.name == "E1M6" then
     LEVEL.map_W = 36
@@ -1506,7 +1498,7 @@ function IWAD_MODE.begin_level()
     LEVEL.area_multiplier = 1.1
     LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 255
-    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.b) .. " Base"
+    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.a) .. " Base"
     LEVEL.squarishness = 66
     PARAM.brightness_offset = "+1"
     elseif LEVEL.name == "E2M1" then
@@ -1514,7 +1506,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_multiplier = 0.5
     LEVEL.area_multiplier = 1.2
     LEVEL.size_consistency = "strict"
-    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.b) .. " Anomaly"
+    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.a) .. " Anomaly"
     PARAM.brightness_offset = "+1"
   end]]
 
