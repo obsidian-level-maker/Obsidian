@@ -49,7 +49,7 @@ const char *Theme_OutputFilename() {
 
     chooser.filter("Text files\t*.txt");
 
-    chooser.directory("themes");
+    chooser.directory("theme");
 
     int result = chooser.show();
 
@@ -112,7 +112,7 @@ const char *Theme_AskLoadFilename() {
         
     	chooser.filter("Text files\t*.txt");
 
-    	chooser.directory("themes");
+    	chooser.directory("theme");
 
         switch (chooser.show()) {
             case -1:

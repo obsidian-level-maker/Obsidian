@@ -45,11 +45,13 @@
 #include <FL/Fl_Native_File_Chooser.H>
 #include <FL/Fl_Output.H>
 #include <FL/Fl_Pack.H>
+#include <FL/Fl_Pixmap.H>
 #include <FL/Fl_Progress.H>
 #include <FL/Fl_Return_Button.H>
 #include <FL/Fl_Round_Button.H>
 #include <FL/Fl_Scroll.H>
 #include <FL/Fl_Scrollbar.H>
+#include <FL/Fl_Shared_Image.H>
 #include <FL/Fl_Hor_Slider.H>
 #ifdef __APPLE__
 #include <FL/Fl_Sys_Menu_Bar.H>
