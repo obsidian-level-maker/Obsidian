@@ -1,5 +1,5 @@
 /* XPM Representation of Oblige icon (black background) - Dasho */
-static char *pixmap_icon[]={
+static const char *pixmap_icon[]={
 "128 128 240 2",
 "Qt c #000000",
 ".u c #040404",
