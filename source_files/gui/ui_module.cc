@@ -487,8 +487,11 @@ void UI_Module::callback_SliderPrevious(Fl_Widget *w, void *data) {
 	double value = current_slider->mod_slider->value();
 	
 	if (current_slider->nan_choices.empty()) {
-		int steps = (int)(current_slider->mod_slider->maximum() / current_slider->mod_slider->step());
-		double temp_value = current_slider->mod_slider->increment(value, (int)-steps * .10);
+		int steps = (int)((current_slider->mod_slider->maximum() / current_slider->mod_slider->step()) * .10);
+        if (steps < current_slider->mod_slider->step()) {
+            steps = current_slider->mod_slider->step();
+        }  
+		double temp_value = current_slider->mod_slider->increment(value, -steps);
 		if (temp_value < current_slider->mod_slider->minimum()) {
 			current_slider->mod_slider->value(current_slider->mod_slider->minimum());
 			current_slider->mod_slider->do_callback();
@@ -525,8 +528,11 @@ void UI_Module::callback_SliderNext(Fl_Widget *w, void *data) {
 	double value = current_slider->mod_slider->value();
 	
 	if (current_slider->nan_choices.empty()) {
-		int steps = (int)(current_slider->mod_slider->maximum() / current_slider->mod_slider->step());
-		double temp_value = current_slider->mod_slider->increment(value, (int)steps * .10);
+		int steps = (int)((current_slider->mod_slider->maximum() / current_slider->mod_slider->step()) * .10);
+        if (steps < current_slider->mod_slider->step()) {
+            steps = current_slider->mod_slider->step();
+        }        
+		double temp_value = current_slider->mod_slider->increment(value, steps);
 		if (temp_value > current_slider->mod_slider->maximum()) {
 			current_slider->mod_slider->value(current_slider->mod_slider->maximum());
 			current_slider->mod_slider->do_callback();
