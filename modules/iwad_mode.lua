@@ -1322,7 +1322,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = "strict"
     LEVEL.area_multiplier = 0.75
     LEVEL.sky_light = 160
-    LEVEL.description = "The " .. rand.key_by_probs(nt.HELL.lexicon.n)
+    LEVEL.description = "The " .. rand.key_by_probs(nt.GOTHIC.lexicon.n)
     PARAM.brightness_offset = "+1"
   elseif LEVEL.name == "MAP19" then
     LEVEL.map_W = 34
@@ -1379,7 +1379,7 @@ function IWAD_MODE.begin_level()
     LEVEL.sky_light = 128
     LEVEL.size_consistency = "strict"
     PARAM.brightness_offset = "-2"
-    LEVEL.description = rand.key_by_probs(nt.HELL.lexicon.a) .. " Bloodfalls"
+    LEVEL.description = rand.key_by_probs(nt.GOTHIC.lexicon.a) .. " Bloodfalls"
   elseif LEVEL.name == "MAP26" then
     LEVEL.map_W = 30
     LEVEL.size_multiplier = 0.8
@@ -1387,7 +1387,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 144
     PARAM.brightness_offset = "-1"
-    LEVEL.description = rand.key_by_probs(nt.HELL.lexicon.a) .. " Mines"
+    LEVEL.description = rand.key_by_probs(nt.GOTHIC.lexicon.a) .. " Mines"
   elseif LEVEL.name == "MAP27" then
     LEVEL.map_W = 24
     LEVEL.size_multiplier = 0.6
