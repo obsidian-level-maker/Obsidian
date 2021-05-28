@@ -1518,6 +1518,9 @@ function IWAD_MODE.begin_level()
     table.merge(STYLE, IWAD_MODE.styles[LEVEL.name])
   end
 
+  -- sanity check and fixing for level names
+  LEVEL.description = namelib.fixup(LEVEL.description)
+
   LEVEL.map_H = LEVEL.map_W
 
   -- reporting changes
