@@ -710,7 +710,7 @@ end
 
 
 function ob_read_all_config(need_full, log_only)
-
+   
   local function do_line(fmt, ...)
     if log_only then
       gui.printf(fmt .. "\n", ...)
@@ -778,9 +778,17 @@ function ob_read_all_config(need_full, log_only)
 
       for _,opt in pairs(def.options) do
         if string.match(opt.name, "float_") then
-          do_value(opt.name, gui.get_module_slider_value(name, opt.name))
+            if OB_CONFIG.batch == "yes" then
+              do_value(opt.name, opt.default)
+            else
+              do_value(opt.name, gui.get_module_slider_value(name, opt.name))
+            end
         elseif string.match(opt.name, "bool_") then
-          do_value(opt.name, gui.get_module_button_value(name, opt.name))
+            if OB_CONFIG.batch == "yes" then
+              do_value(opt.name, opt.default)
+            else
+              do_value(opt.name, gui.get_module_button_value(name, opt.name))
+            end
         else
           do_value(opt.name, opt.value)
         end
@@ -808,9 +816,17 @@ function ob_read_all_config(need_full, log_only)
         if def.options[1] then
           for _,opt in pairs(def.options) do
             if string.match(opt.name, "float_") then
-              do_mod_value(opt.name, gui.get_module_slider_value(name, opt.name))
+                if OB_CONFIG.batch == "yes" then
+                  do_mod_value(opt.name, opt.default)
+                else
+                  do_mod_value(opt.name, gui.get_module_slider_value(name, opt.name))
+                end
             elseif string.match(opt.name, "bool_") then
-              do_mod_value(opt.name, gui.get_module_button_value(name, opt.name))
+                if OB_CONFIG.bath == "yes" then
+                  do_mod_value(opt.name, opt.default)
+                else
+                  do_mod_value(opt.name, gui.get_module_button_value(name, opt.name))
+                end
             else
               do_mod_value(opt.name, opt.value)
             end
@@ -818,9 +834,17 @@ function ob_read_all_config(need_full, log_only)
         else
           for o_name,opt in pairs(def.options) do
             if string.match(o_name, "float_") then
-              do_mod_value(o_name, gui.get_module_slider_value(name, opt.name))
+                if OB_CONFIG.batch == "yes" then
+                  do_mod_value(o_name, opt.default)
+                else
+                  do_mod_value(o_name, gui.get_module_slider_value(name, opt.name))
+                end
             elseif string.match(o_name, "bool_") then
-              do_mod_value(o_name, gui.get_module_button_value(name, opt.name))
+                if OB_CONFIG.batch == "yes" then
+                  do_mod_value(o_name, opt.default)
+                else
+                  do_mod_value(o_name, gui.get_module_button_value(name, opt.name))
+                end
             else
               do_mod_value(o_name, opt.value)
             end

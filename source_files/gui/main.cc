@@ -769,7 +769,6 @@ bool Build_Cool_Shit() {
     }
 
     u32_t start_time = TimeGetMillies();
-
     // this will ask for output filename (among other things)
     bool was_ok = game_object->Start(def_filename);
 
@@ -784,7 +783,6 @@ bool Build_Cool_Shit() {
 
         was_ok = game_object->Finish(was_ok);
     }
-
     if (was_ok) {
         Main_ProgStatus(_("Success"));
 
@@ -937,7 +935,6 @@ int main(int argc, char **argv) {
         Cookie_ParseArguments();
 
         Main_SetSeed();
-
         if (!Build_Cool_Shit()) {
             fprintf(stderr, "FAILED!\n");
             LogPrintf("FAILED!\n");
