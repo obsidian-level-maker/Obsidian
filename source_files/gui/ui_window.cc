@@ -66,7 +66,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     menu_bar->box(box_style);
     menu_bar->textsize(menu_bar->textsize() * .90);
     menu_bar->add("File/Options", FL_F + 4, menu_do_options);
-    menu_bar->add("File/Theme", 0, menu_do_theme);
+    menu_bar->add("File/Theme", FL_F + 7, menu_do_theme);
     menu_bar->add("File/Addon List", FL_F + 3, menu_do_addons);
     menu_bar->add("File/Set Seed", FL_F + 5, menu_do_edit_seed);
     menu_bar->add("File/Config Manager", FL_F + 9, menu_do_manage_config);

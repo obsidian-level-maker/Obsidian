@@ -19,6 +19,7 @@
 //------------------------------------------------------------------------
 
 #include "main.h"
+#include "icon.h"
 
 #include "csg_main.h"
 #include "g_nukem.h"
@@ -964,6 +965,12 @@ int main(int argc, char **argv) {
     const char *main_title =
         StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION);
     main_win = new UI_MainWin(main_w, main_h, main_title);
+    
+    // Set window icon
+    fl_register_images();
+    Fl_Pixmap program_icon(pixmap_icon);
+    Fl_RGB_Image rgb_icon(&program_icon, FL_BLACK);
+    main_win->default_icon(&rgb_icon);
 
     //???	Default_Location();
 

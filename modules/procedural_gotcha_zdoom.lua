@@ -1911,7 +1911,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       max = 5,
       increment = 1,
       default = 3,
-      nan = "3:3x (Default),",
+      nan = "",
       tooltip = "Changes multiplier of ammunition items on the boss arena(This is also affected by boss health multiplier).",
       priority = 91
     },
@@ -1926,7 +1926,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       max = 5,
       increment = 1,
       default = 3,
-      nan = "3:3x (Default),",
+      nan = "",
       tooltip = "Changes multiplier of healing items on the boss arena.",
       priority = 92
     },

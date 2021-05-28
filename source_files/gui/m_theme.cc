@@ -49,7 +49,7 @@ const char *Theme_OutputFilename() {
 
     chooser.filter("Text files\t*.txt");
 
-    chooser.directory("themes");
+    chooser.directory("theme");
 
     int result = chooser.show();
 
@@ -112,7 +112,7 @@ const char *Theme_AskLoadFilename() {
         
     	chooser.filter("Text files\t*.txt");
 
-    	chooser.directory("themes");
+    	chooser.directory("theme");
 
         switch (chooser.show()) {
             case -1:
@@ -532,17 +532,16 @@ class UI_ThemeWin : public Fl_Window {
 		const char* theme_file = Theme_AskLoadFilename();
 		if (theme_file) {
 			Theme_Options_Load(theme_file);
-		}
-		
-		Options_Save(options_file);
+            Options_Save(options_file);
 
-        fl_alert("%s", _("Changes to theme require a restart.\nOBSIDIAN will "
+            fl_alert("%s", _("Changes to theme require a restart.\nOBSIDIAN will "
                          "now close."));
 
-        main_action = MAIN_QUIT;
+            main_action = MAIN_QUIT;
 
-        that->want_quit = true;
-		
+            that->want_quit = true;
+		}
+				
     }
 
     static void callback_SaveTheme(Fl_Widget *w, void *data) {
