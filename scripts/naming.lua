@@ -630,7 +630,9 @@ namelib.NAMES =
         ["Totally Not"]=10, Totally=10, Absolutely=10, ["Not So"]=10, Gleefully=10,
         ["Is It"]=10, Joyfully=10, ["Not That"]=10, ["Deadly and"]=10, Stupidly=10,
         Painfully=10, Quite=10, Obsidian=10, ["Hell's Not"]=10, ["Dude, Dead"]=10,
-        ["Memories of Dead"]=10,
+        ["Memories of Dead"]=10, ["Is This"]=10, ["Might Be"]=10, ["Not Made"]=10,
+        ["This Shit Ain't"]=10, ["Not Even"]=10, Possibly=10, ["Could Be"]=10,
+        ["Bitch, This Isn't"]=10, Unecessarily=10, ["Shouldn't Be"]=10, ["LOL not"]=5, LOL=5,
       },
 
       -- Used for IWAD Mode module
@@ -638,7 +640,10 @@ namelib.NAMES =
       {
         Tricks=10, Demons=10, Monsters=10, Dudes=10, Machinations=10, Minions=10,
         Travesties=10, Tomfoolery=10, Shenanigans=10, Deception=10, Doomguy=10,
-        ["Doom Slayer"]=10,
+        ["Doom Slayer"]=10, Dumbasses=10, ["Meaningless Tactics"]=10, ["Unwanted Bullshit"]=10,
+        Frustration=10, Anger=10, ["Obsidian Devs"]=10, ["Sandy Petersen"]=10, ["Utter Bullshit"]=10,
+        ["Meaningless Fuckery"]=10, Goats=10, Surprises=10, Rewards=10, Gifts=10, Goodies=19,
+        Traps=10, RMG=10,
       },
 
       n =
