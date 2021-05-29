@@ -60,7 +60,7 @@ class UI_Module : public Fl_Group {
 
 	void AddSliderOption(const char *option, const char *label, const char *tip,
                           const char* longtip, int gap, double min, double max, double inc,
-                          const char *units, const char *nan);
+                          const char *units, const char *presets, const char *nan);
                          
     void AddButtonOption(const char *opt, const char *label, const char *tip,
                           const char *longtip, int gap);
@@ -134,7 +134,7 @@ class UI_CustomMods : public Fl_Group {
                    
 	bool AddSliderOption(const char *module, const char *option, const char *label,
                    const char *tip, const char* longtip, int gap, double min, double max, 
-                   double inc, const char *units, const char *nan);
+                   double inc, const char *units, const char *presets, const char *nan);
                    
     bool AddButtonOption(const char *module, const char *option,
                          const char *label, const char *tip, const char* longtip, int gap);

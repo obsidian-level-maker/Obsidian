@@ -98,14 +98,12 @@ OB_MODULES["ui_arch"] =
       label=_("Level Size"),
       valuator = "slider",
       units = "",
-      min = 7,
+      min = 10,
       max = 75,
       increment = 1,
-      default = 7,
-      presets = "7:Mix It Up," ..
-      "8:Episodic," ..
-      "9:Progressive," ..
-      "10:10 (Microscopic)," ..
+      default = 10,
+      nan = "Mix It Up,Episodic,Progressive,",
+      presets = "10:10 (Microscopic)," ..
       "16:16 (Miniature)," ..
       "22:22 (Tiny)," ..
       "30:30 (Small)," ..

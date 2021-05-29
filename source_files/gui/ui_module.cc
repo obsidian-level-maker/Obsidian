@@ -147,7 +147,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
 void UI_Module::AddSliderOption(const char *opt, const char *label, const char *tip,
                           const char *longtip, int gap, double min, double max, double inc,
-                          const char *units, const char *presets) {
+                          const char *units, const char *presets, const char *nan) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
@@ -207,6 +207,23 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->next_button->labelsize(rsl->next_button->labelsize() * .80);
     rsl->next_button->callback(callback_SliderNext, NULL);
 
+    // Populate the nan_options vector
+	std::string temp_string = nan;
+	std::string::size_type oldpos = 0;
+	std::string::size_type pos = 0;
+	while (pos != std::string::npos) {
+		pos = temp_string.find(',', oldpos);
+		if (pos != std::string::npos) {		
+			rsl->nan_choices.push_back(temp_string);
+			oldpos = pos + 1;		
+		}
+	}
+    
+    if (rsl->nan_choices.size() > 0) {
+        rsl->nan_options =
+                new Fl_Menu_Button(rsl->x() + (!single_pane ? (rsl->w() * .7) : (rsl->w() * .85)), rsl->y(), rsl->w() * .075, kf_h(24), NULL);
+    }
+    
 	rsl->mod_entry =
 			new UI_ManualEntry(rsl->x() + (!single_pane ? (rsl->w() * .8) : (rsl->w() * .90)), rsl->y(), rsl->w() * .075, kf_h(24), "[ ]");
 	rsl->mod_entry->box(FL_NO_BOX);
@@ -228,13 +245,13 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 
    
     // Populate the preset_choices map
-	std::string presets_string = presets;
-	std::string::size_type oldpos = 0;
-	std::string::size_type pos = 0;
+	temp_string = presets;
+	oldpos = 0;
+	pos = 0;
 	while (pos != std::string::npos) {
-		pos = presets_string.find(',', oldpos);
+		pos = temp_string.find(',', oldpos);
 		if (pos != std::string::npos) {
-			std::string map_string = presets_string.substr(oldpos, pos-oldpos);
+			std::string map_string = temp_string.substr(oldpos, pos-oldpos);
 			std::string::size_type temp_pos = map_string.find(':');
 			double key = std::stod(map_string.substr(0, temp_pos));
 			std::string value = map_string.substr(temp_pos + 1);			
@@ -466,7 +483,7 @@ void UI_Module::callback_PresetCheck(Fl_Widget *w, void *data) {
 
 	new_label = current_slider->original_label;
 
-	// Check against the nan_choices map
+	// Check against the preset_choices map
 
 	if (current_slider->preset_choices.count(value) == 1) {
 		current_slider->mod_label->copy_label(new_label.append(current_slider->preset_choices[value].c_str()).c_str());
@@ -706,14 +723,14 @@ bool UI_CustomMods::AddOption(const char *module, const char *option,
 
 bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
                               const char *label, const char *tip, const char* longtip, int gap, double min, 
-                              double max, double inc, const char *units, const char *nan) {
+                              double max, double inc, const char *units, const char *presets, const char *nan) {
     UI_Module *M = FindID(module);
 
     if (!M) {
         return false;
     }
 
-    M->AddSliderOption(option, label, tip, longtip, gap, min, max, inc, units, nan);
+    M->AddSliderOption(option, label, tip, longtip, gap, min, max, inc, units, presets, nan);
 
     PositionAll();
 

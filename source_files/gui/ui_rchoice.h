@@ -22,11 +22,13 @@
 #define __UI_RCHOICE_H__
 
 #include <map>
+#include <vector>
 
 #include "FL/Fl_Check_Button.H"
 #include "FL/Fl_Choice.H"
 #include "FL/Fl_Hor_Slider.H"
 #include "FL/Fl_Repeat_Button.H"
+#include "FL/Fl_Menu_Button.H"
 
 //
 // DESCRIPTION:
@@ -216,11 +218,15 @@ class UI_RSlide : public Fl_Group {
     
     UI_CustomArrowButton *next_button;
     
+    Fl_Menu_Button *nan_options;
+    
     std::string original_label;
     
     std::string units;
     
     std::map<double, std::string> preset_choices;
+    
+    std::vector<std::string> nan_choices;
     
     public:
     
