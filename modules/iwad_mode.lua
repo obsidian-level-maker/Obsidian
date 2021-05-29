@@ -341,7 +341,7 @@ IWAD_MODE.styles = {
     windows = "few",
     scenics = "heaps",
     steepness = "some",
-    parks = "some",
+    parks = "few",
     park_detail = "few",
     ambushes = "few",
     traps = "some",
@@ -364,7 +364,7 @@ IWAD_MODE.styles = {
   MAP13 =
   {
     outdoors = "heaps",
-    big_outdoor_rooms = "some",
+    big_outdoor_rooms = "few",
     doors = "heaps",
     big_rooms = "some",
     windows = "heaps",
@@ -446,7 +446,7 @@ IWAD_MODE.styles = {
   MAP16 =
   {
     outdoors = "heaps",
-    big_outdoor_rooms = "heaps",
+    big_outdoor_rooms = "few",
     windows = "heaps",
     big_rooms = "none",
     steepness = "some",
@@ -1265,7 +1265,7 @@ function IWAD_MODE.begin_level()
     LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.n) .. " of Destruction"
     PARAM.brightness_offset = "0"
   elseif LEVEL.name == "MAP12" then
-    LEVEL.map_W = 28
+    LEVEL.map_W = 36
     LEVEL.size_consistency = "strict"
     LEVEL.size_multiplier = 0.75
     LEVEL.has_streets = true -- Its shape implies this
@@ -1273,7 +1273,7 @@ function IWAD_MODE.begin_level()
     PARAM.brightness_offset = "+1"
     LEVEL.description = "The " .. rand.key_by_probs(nt.URBAN.lexicon.n)
   elseif LEVEL.name == "MAP13" then
-    LEVEL.map_W = 34
+    LEVEL.map_W = 40
     LEVEL.size_multiplier = 0.7
     LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 128
@@ -1301,7 +1301,7 @@ function IWAD_MODE.begin_level()
     PARAM.brightness_offset = "+1"
     LEVEL.squareishness = 40
   elseif LEVEL.name == "MAP16" then -- Streets mode
-    LEVEL.map_W = 30
+    LEVEL.map_W = 36
     LEVEL.size_multiplier = 1.2
     LEVEL.area_multiplier = 0.8
     LEVEL.size_consistency = "normal"
@@ -1526,9 +1526,6 @@ function IWAD_MODE.begin_level()
   if IWAD_MODE.styles[LEVEL.name] then
     table.merge(STYLE, IWAD_MODE.styles[LEVEL.name])
   end
-
-  -- sanity check and fixing for level names
-  LEVEL.description = namelib.fixup(LEVEL.description)
 
   LEVEL.map_H = LEVEL.map_W
 
