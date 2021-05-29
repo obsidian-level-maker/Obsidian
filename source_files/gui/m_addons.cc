@@ -325,6 +325,7 @@ class UI_Addon : public Fl_Group {
         button = new UI_CustomCheckBox(x + kf_w(6), y + kf_h(4), w - kf_w(12),
                                      kf_h(24), name2);
         button->labelfont(font_style);
+        button->selection_color(SELECTION);
         // if (tip)
         //	button->tooltip(tip);
         end();
