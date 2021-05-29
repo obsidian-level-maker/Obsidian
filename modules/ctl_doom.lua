@@ -76,7 +76,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -95,7 +95,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -114,7 +114,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -133,7 +133,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -152,7 +152,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -171,7 +171,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -190,7 +190,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -209,7 +209,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -228,7 +228,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -247,7 +247,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -266,7 +266,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -285,7 +285,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -304,7 +304,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -323,7 +323,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -342,7 +342,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -361,7 +361,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -380,7 +380,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -399,7 +399,7 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -491,7 +491,7 @@ OB_MODULES["doom_weapon_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -510,7 +510,7 @@ OB_MODULES["doom_weapon_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -529,7 +529,7 @@ OB_MODULES["doom_weapon_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -548,7 +548,7 @@ OB_MODULES["doom_weapon_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -567,7 +567,7 @@ OB_MODULES["doom_weapon_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -586,7 +586,7 @@ OB_MODULES["doom_weapon_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -669,7 +669,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -688,7 +688,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -707,7 +707,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -726,7 +726,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -747,7 +747,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -766,7 +766,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -785,7 +785,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -804,7 +804,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -823,7 +823,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -842,7 +842,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -861,7 +861,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -880,7 +880,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -899,7 +899,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -918,7 +918,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -937,7 +937,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -958,7 +958,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -978,7 +978,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -997,7 +997,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -1016,7 +1016,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -1035,7 +1035,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -1054,7 +1054,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -1073,7 +1073,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -1092,7 +1092,7 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = -.02, 
-      nan = "-.02:Default," ..
+      presets = "-.02:Default," ..
       "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..

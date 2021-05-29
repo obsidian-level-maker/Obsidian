@@ -147,7 +147,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
 void UI_Module::AddSliderOption(const char *opt, const char *label, const char *tip,
                           const char *longtip, int gap, double min, double max, double inc,
-                          const char *units, const char *nan) {
+                          const char *units, const char *presets) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
@@ -195,7 +195,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->mod_slider->minimum(min);
     rsl->mod_slider->maximum(max);
     rsl->mod_slider->step(inc);
-    rsl->mod_slider->callback(callback_MixItCheck, NULL);
+    rsl->mod_slider->callback(callback_PresetCheck, NULL);
     
     rsl->next_button =
         new UI_CustomArrowButton((!single_pane ? rsl->x() + rsl->w() * .90 : rsl->x() + rsl->w() * .85),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@>");
@@ -227,18 +227,18 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->units = units;
 
    
-    // Populate the nan_choices map
-	std::string nan_string = nan;
+    // Populate the preset_choices map
+	std::string presets_string = presets;
 	std::string::size_type oldpos = 0;
 	std::string::size_type pos = 0;
 	while (pos != std::string::npos) {
-		pos = nan_string.find(',', oldpos);
+		pos = presets_string.find(',', oldpos);
 		if (pos != std::string::npos) {
-			std::string map_string = nan_string.substr(oldpos, pos-oldpos);
+			std::string map_string = presets_string.substr(oldpos, pos-oldpos);
 			std::string::size_type temp_pos = map_string.find(':');
 			double key = std::stod(map_string.substr(0, temp_pos));
 			std::string value = map_string.substr(temp_pos + 1);			
-			rsl->nan_choices[key] = value;
+			rsl->preset_choices[key] = value;
 			oldpos = pos + 1;		
 		}
 	}
@@ -447,7 +447,7 @@ void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
     ob_set_mod_option(parent->id_name.c_str(), cb_data->opt_name, rch->GetID());
 }
 
-void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
+void UI_Module::callback_PresetCheck(Fl_Widget *w, void *data) {
     Fl_Hor_Slider *mod_slider = (Fl_Hor_Slider *)w;
 
     SYS_ASSERT(mod_slider);
@@ -468,8 +468,8 @@ void UI_Module::callback_MixItCheck(Fl_Widget *w, void *data) {
 
 	// Check against the nan_choices map
 
-	if (current_slider->nan_choices.count(value) == 1) {
-		current_slider->mod_label->copy_label(new_label.append(current_slider->nan_choices[value].c_str()).c_str());
+	if (current_slider->preset_choices.count(value) == 1) {
+		current_slider->mod_label->copy_label(new_label.append(current_slider->preset_choices[value].c_str()).c_str());
 	} else {
 		char value_string[20];
 		sprintf(value_string, "%g", value);
@@ -486,7 +486,7 @@ void UI_Module::callback_SliderPrevious(Fl_Widget *w, void *data) {
    
 	double value = current_slider->mod_slider->value();
 	
-	if (current_slider->nan_choices.empty()) {
+	if (current_slider->preset_choices.empty()) {
 		int steps = (int)((current_slider->mod_slider->maximum() / current_slider->mod_slider->step()) * .10);
         if (steps < current_slider->mod_slider->step()) {
             steps = current_slider->mod_slider->step();
@@ -508,7 +508,7 @@ void UI_Module::callback_SliderPrevious(Fl_Widget *w, void *data) {
 			} else {
 				break;
 			}
-			match = current_slider->nan_choices.count(value);
+			match = current_slider->preset_choices.count(value);
 		} while (match == 0);
 		
 		if (match == 1) {
@@ -527,7 +527,7 @@ void UI_Module::callback_SliderNext(Fl_Widget *w, void *data) {
    
 	double value = current_slider->mod_slider->value();
 	
-	if (current_slider->nan_choices.empty()) {
+	if (current_slider->preset_choices.empty()) {
 		int steps = (int)((current_slider->mod_slider->maximum() / current_slider->mod_slider->step()) * .10);
         if (steps < current_slider->mod_slider->step()) {
             steps = current_slider->mod_slider->step();
@@ -549,7 +549,7 @@ void UI_Module::callback_SliderNext(Fl_Widget *w, void *data) {
 			} else {
 				break;
 			}
-			match = current_slider->nan_choices.count(value);
+			match = current_slider->preset_choices.count(value);
 		} while (match == 0);
 		
 		if (match == 1) {

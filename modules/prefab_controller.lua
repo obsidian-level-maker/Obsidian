@@ -218,7 +218,7 @@ OB_MODULES["prefab_control"] =
       max = 100,
       increment = 1,
       default = 50,
-      nan = "",
+      presets = "",
       tooltip = "Determines the odds at which a level would use a universal, single room theme " ..
                 "for all indoors (buildings). Default is 50%.",
       priority = 50
@@ -234,7 +234,7 @@ OB_MODULES["prefab_control"] =
       max = 100,
       increment = 1,
       default = 50,
-      nan = "",
+      presets = "",
       tooltip = "Determines the odds at which a level would use fewer wall group choices but at greater quantites " ..
                 "for more consistent visuals. Default is 50%.",
       priority = 49,

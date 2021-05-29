@@ -220,7 +220,7 @@ class UI_RSlide : public Fl_Group {
     
     std::string units;
     
-    std::map<double, std::string> nan_choices;
+    std::map<double, std::string> preset_choices;
     
     public:
     

@@ -94,7 +94,7 @@ class UI_Module : public Fl_Group {
     void resize(int X, int Y, int W, int H);
 
     static void callback_OptChange(Fl_Widget *w, void *data);
-    static void callback_MixItCheck(Fl_Widget *w, void *data);
+    static void callback_PresetCheck(Fl_Widget *w, void *data);
     static void callback_SliderPrevious(Fl_Widget *w, void *data);
     static void callback_SliderNext(Fl_Widget *w, void *data);
     static void callback_ShowHelp(Fl_Widget *w, void *data);

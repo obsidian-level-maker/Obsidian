@@ -118,7 +118,7 @@ OB_MODULES["ui_mons"] =
       max = 10.00,
       increment = .05,
       default = 1.0,
-      nan = "-0.10:Mix It Up," ..
+      presets = "-0.10:Mix It Up," ..
       "-0.05:Progressive," ..
       "0:None," ..
       "0.15:0.15 (Trivial)," ..
@@ -186,7 +186,7 @@ OB_MODULES["ui_mons"] =
       max = 10.00,
       increment = .05,
       default = 10,
-      nan = "0:None," ..
+      presets = "0:None," ..
       "0.15:0.15 (Trivial)," ..
       "0.35:0.35 (Sporadic)," ..
       "0.7:0.7 (Meager)," ..
@@ -246,7 +246,7 @@ OB_MODULES["ui_mons"] =
       max = 10.00,
       increment = .05,
       default = 0,
-      nan = "0:None," ..
+      presets = "0:None," ..
       "0.15:0.15 (Trivial)," ..
       "0.35:0.35 (Sporadic)," ..
       "0.7:0.7 (Meager)," ..
@@ -307,7 +307,7 @@ OB_MODULES["ui_mons"] =
       max = 12,
       increment = .05,
       default = 1,
-      nan = "0.55:0.55 (Weak),0.75:0.75 (Easier),1:1 (Average),1.3:1.3 (Harder),1.7:1.7 (Tough),2.5: 2.5 (Fierce),12:12 (CRAZY),",
+      presets = "0.55:0.55 (Weak),0.75:0.75 (Easier),1:1 (Average),1.3:1.3 (Harder),1.7:1.7 (Tough),2.5: 2.5 (Fierce),12:12 (CRAZY),",
     },
 
     {
@@ -319,7 +319,7 @@ OB_MODULES["ui_mons"] =
       max = 3,
       increment = .05,
       default = 1,
-      nan = "0.45:Episodic,0.5:0.5 (Very Slow),0.75:0.75 (Slow),1:1 (Average),1.5:1.5 (Fast),2:2 (Very Fast),3:3 (Extra Fast),",
+      presets = "0.45:Episodic,0.5:0.5 (Very Slow),0.75:0.75 (Slow),1:1 (Average),1.5:1.5 (Fast),2:2 (Very Fast),3:3 (Extra Fast),",
       tooltip = "Rate at which monster strength increases as you progress through levels.",
       gap = 1,
     },
