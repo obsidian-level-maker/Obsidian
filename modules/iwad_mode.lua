@@ -1528,7 +1528,7 @@ function IWAD_MODE.begin_level()
   end
 
  -- sanity check and fixing for level names
-  LEVEL.description = namelib.fixup(LEVEL.description)
+  LEVEL.description = namelib.fix_up(LEVEL.description)
   LEVEL.map_H = LEVEL.map_W
 
   -- reporting changes
