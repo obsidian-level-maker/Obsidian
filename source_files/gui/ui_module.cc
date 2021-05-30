@@ -221,7 +221,8 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     
     if (rsl->nan_choices.size() > 0) {
         rsl->nan_options =
-                new Fl_Menu_Button(rsl->x() + (!single_pane ? (rsl->w() * .7) : (rsl->w() * .85)), rsl->y(), rsl->w() * .075, kf_h(24), NULL);
+                new UI_CustomMenuButton(rsl->x() + (!single_pane ? (rsl->w() * .7) : (rsl->w() * .85)), rsl->y(), rsl->w() * .075, kf_h(24), "@2>");
+                rsl->nan_options->box(FL_FLAT_BOX);
     }
     
 	rsl->mod_entry =
