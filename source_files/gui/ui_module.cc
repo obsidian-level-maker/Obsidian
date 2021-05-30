@@ -230,6 +230,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
         for (int x = 0; x < rsl->nan_choices.size(); x++) {
         	rsl->nan_options->add(rsl->nan_choices[x].c_str());
         }
+        rsl->nan_options->callback(callback_NanOptions, NULL);
     }
     
 	rsl->mod_entry =
@@ -641,6 +642,30 @@ void UI_Module::callback_ManualEntry(Fl_Widget *w, void *data) {
     
     end: ;
 	
+}
+
+void UI_Module::callback_NanOptions(Fl_Widget *w, void *data) {
+    UI_CustomMenuButton *nan_options = (UI_CustomMenuButton *)w;
+    UI_RSlide *current_slider = (UI_RSlide*)nan_options->parent();
+    
+    int temp_value = nan_options->value();
+    
+    if (temp_value > 0) {
+    	std::string new_label = current_slider->original_label;
+		current_slider->mod_label->copy_label(new_label.append(50, ' ').append("\n").append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
+		new_label = current_slider->original_label;
+    	current_slider->mod_label->copy_label(new_label.append(nan_options->text(temp_value)).c_str());
+    	current_slider->prev_button->deactivate();
+    	current_slider->mod_slider->deactivate();
+    	current_slider->next_button->deactivate();
+    	current_slider->mod_entry->deactivate();
+    } else {
+    	current_slider->prev_button->activate();
+    	current_slider->mod_slider->activate();
+    	current_slider->next_button->activate();
+    	current_slider->mod_entry->activate();
+    	current_slider->mod_slider->do_callback();
+    }
 }
 
 //----------------------------------------------------------------
