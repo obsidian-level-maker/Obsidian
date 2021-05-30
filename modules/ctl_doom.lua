@@ -26,7 +26,7 @@ function CTL_DOOM.monster_setup(self)
 
     local M = GAME.MONSTERS[string.sub(opt.name, 7)]
 
-    if M and PARAM[opt.name] ~= -0.02 then
+    if M and PARAM[opt.name] ~= "Default" then
       M.prob    = PARAM[opt.name] * 100
       M.density = M.prob * .006 + .1
 
@@ -72,12 +72,12 @@ OB_MODULES["doom_mon_control"] =
       label = _("Zombieman"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -91,12 +91,12 @@ OB_MODULES["doom_mon_control"] =
       label = _("Shotgun Guy"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -110,12 +110,12 @@ OB_MODULES["doom_mon_control"] =
       label = _("Chaingunner"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -129,12 +129,12 @@ OB_MODULES["doom_mon_control"] =
       label = _("SS Nazi"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -148,12 +148,12 @@ OB_MODULES["doom_mon_control"] =
       label = _("Imp"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -167,12 +167,12 @@ OB_MODULES["doom_mon_control"] =
       label = _("Lost Soul"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -186,12 +186,12 @@ OB_MODULES["doom_mon_control"] =
       label = _("Demon"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -205,12 +205,12 @@ OB_MODULES["doom_mon_control"] =
       label = _("Spectre"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -224,12 +224,12 @@ OB_MODULES["doom_mon_control"] =
       label = _("Pain Elemental"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -243,12 +243,12 @@ OB_MODULES["doom_mon_control"] =
       label = _("Cacodemon"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -262,12 +262,12 @@ OB_MODULES["doom_mon_control"] =
       label = _("Hell Knight"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -281,12 +281,12 @@ OB_MODULES["doom_mon_control"] =
       label = _("Revenant"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -300,12 +300,12 @@ OB_MODULES["doom_mon_control"] =
       label = _("Mancubus"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -319,12 +319,12 @@ OB_MODULES["doom_mon_control"] =
       label = _("Arachnotron"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -332,18 +332,17 @@ OB_MODULES["doom_mon_control"] =
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
      },
-
      float_vile=
      {
       label = _("Arch-vile"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -357,12 +356,12 @@ OB_MODULES["doom_mon_control"] =
       label = _("Baron of Hell"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -376,12 +375,12 @@ OB_MODULES["doom_mon_control"] =
       label = _("Cyberdemon"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -395,12 +394,12 @@ OB_MODULES["doom_mon_control"] =
       label = _("Spiderdemon"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -431,7 +430,7 @@ function CTL_DOOM.weapon_setup(self)
 
     local W = GAME.WEAPONS[string.sub(opt.name, 7)] -- Strip the float_ prefix from the weapon name for table lookup
 
-    if W and PARAM[opt.name] ~= -0.02 then
+    if W and PARAM[opt.name] ~= "Default" then
       W.add_prob = PARAM[opt.name] * 100
       W.pref     = W.add_prob * 0.28 + 1 -- Complete guesswork right now - Dasho
 
@@ -487,12 +486,12 @@ OB_MODULES["doom_weapon_control"] =
       label = _("Shotgun"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -506,31 +505,31 @@ OB_MODULES["doom_weapon_control"] =
       label = _("Super Shotgun"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
-     },  
+     },
 
      float_chain=
      {
       label = _("Chaingun"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -544,12 +543,12 @@ OB_MODULES["doom_weapon_control"] =
       label = _("Rocket Launcher"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -563,12 +562,12 @@ OB_MODULES["doom_weapon_control"] =
       label = _("Plasma Rifle"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -582,12 +581,12 @@ OB_MODULES["doom_weapon_control"] =
       label = _("BFG 9000"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -622,7 +621,7 @@ function CTL_DOOM.item_setup(self)
   end
 
   local function change_probz(name, info)
-    if PARAM[name] ~= -0.02 then
+    if PARAM[name] ~= "Default" then
       local mult = PARAM[name] or 0
 
       if info.add_prob then info.add_prob = info.add_prob * mult end
@@ -665,12 +664,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Health Bonus"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -684,12 +683,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Stimpack"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -703,12 +702,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Medikit"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -722,19 +721,19 @@ OB_MODULES["doom_item_control"] =
       label = _("Armor Bonus"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
-     },     
+     },    
 
     -- nice items
     
@@ -743,12 +742,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Green Armor"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -762,12 +761,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Blue Armor"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -781,12 +780,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Soulsphere"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -800,12 +799,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Backpack"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -819,12 +818,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Berserk Pack"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -838,12 +837,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Invisibility"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -857,12 +856,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Invulnerability"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -876,12 +875,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Map Computer"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -895,12 +894,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Light Goggles"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -914,12 +913,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Radiation Suit"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -933,12 +932,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Megasphere"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -954,19 +953,18 @@ OB_MODULES["doom_item_control"] =
       label = _("Clips"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
-      tooltip = "Yes, it's supposed to be called 'Magazine', get over it."
      },
 
      float_bullet_box=
@@ -974,12 +972,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Bullet Box"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -993,12 +991,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Shells"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -1012,12 +1010,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Shell Box"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -1031,12 +1029,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Rocket"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -1050,12 +1048,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Rocket Box"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -1069,12 +1067,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Cell"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -1088,12 +1086,12 @@ OB_MODULES["doom_item_control"] =
       label = _("Cell Pack"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      presets = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
