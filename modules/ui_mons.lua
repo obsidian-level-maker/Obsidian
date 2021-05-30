@@ -114,13 +114,12 @@ OB_MODULES["ui_mons"] =
       label=_("Quantity"),
       valuator = "slider",
       units = "",
-      min = -0.10,
+      min = 0,
       max = 10.00,
       increment = .05,
       default = 1.0,
-      presets = "-0.10:Mix It Up," ..
-      "-0.05:Progressive," ..
-      "0:None," ..
+      nan = "Mix It Up,Progressive,",
+      presets = "0:None," ..
       "0.15:0.15 (Trivial)," ..
       "0.35:0.35 (Sporadic)," ..
       "0.7:0.7 (Meager)," ..
@@ -315,11 +314,12 @@ OB_MODULES["ui_mons"] =
       label=_("Ramp Up"),
       valuator = "slider",
       units = "",
-      min = 0.45,
+      min = 0.5,
       max = 3,
       increment = .05,
       default = 1,
-      presets = "0.45:Episodic,0.5:0.5 (Very Slow),0.75:0.75 (Slow),1:1 (Average),1.5:1.5 (Fast),2:2 (Very Fast),3:3 (Extra Fast),",
+      nan = "Episodic,",
+      presets = "0.5:0.5 (Very Slow),0.75:0.75 (Slow),1:1 (Average),1.5:1.5 (Fast),2:2 (Very Fast),3:3 (Extra Fast),",
       tooltip = "Rate at which monster strength increases as you progress through levels.",
       gap = 1,
     },

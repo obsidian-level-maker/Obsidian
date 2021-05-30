@@ -167,9 +167,22 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     if (!longtip) {
     	longtip = "Detailed help not yet written for this setting. For quick help, hover over the option name to display a tooltip.";
     }
+    
 	UI_RSlide *rsl =
 		    new UI_RSlide(nx, ny + kf_h(15), nw * .95, (!single_pane ? kf_h(48) : kf_h(24)), NULL);
 
+    // Populate the nan_options vector
+	std::string temp_string = nan;
+	std::string::size_type oldpos = 0;
+	std::string::size_type pos = 0;
+	while (pos != std::string::npos) {
+		pos = temp_string.find(',', oldpos);
+		if (pos != std::string::npos) {
+			std::string nan_string = temp_string.substr(oldpos, pos-oldpos);			
+			rsl->nan_choices.push_back(nan_string);
+			oldpos = pos + 1;		
+		}
+	}
 
 	rsl->mod_label = 
 			new Fl_Box(rsl->x(), rsl->y(), (!single_pane ? rsl->w() * .8 : rsl->w() * .40), kf_h(24), new_label);
@@ -188,7 +201,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->prev_button->callback(callback_SliderPrevious, NULL);
     
     rsl->mod_slider =
-        new Fl_Hor_Slider((!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .45),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (!single_pane ? rsl->w() * .80 : rsl->w() * .40), kf_h(24), NULL);
+        new Fl_Hor_Slider((!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .45),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (!single_pane ? rsl->w() * .80 : rsl->w() * (rsl->nan_choices.size() > 0 ? .35 : .40)), kf_h(24), NULL);
     rsl->mod_slider->box(button_style);
     rsl->mod_slider->color(BUTTON_COLOR);
     rsl->mod_slider->selection_color(SELECTION);
@@ -198,7 +211,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->mod_slider->callback(callback_PresetCheck, NULL);
     
     rsl->next_button =
-        new UI_CustomArrowButton((!single_pane ? rsl->x() + rsl->w() * .90 : rsl->x() + rsl->w() * .85),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@>");
+        new UI_CustomArrowButton((!single_pane ? rsl->x() + rsl->w() * .90 : rsl->x() + rsl->w() * (rsl->nan_choices.size() > 0 ? .80 : .85)),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@>");
     rsl->next_button->box(button_style);
     rsl->next_button->color(BUTTON_COLOR);
     rsl->next_button->visible_focus(0);   
@@ -207,22 +220,16 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->next_button->labelsize(rsl->next_button->labelsize() * .80);
     rsl->next_button->callback(callback_SliderNext, NULL);
 
-    // Populate the nan_options vector
-	std::string temp_string = nan;
-	std::string::size_type oldpos = 0;
-	std::string::size_type pos = 0;
-	while (pos != std::string::npos) {
-		pos = temp_string.find(',', oldpos);
-		if (pos != std::string::npos) {		
-			rsl->nan_choices.push_back(temp_string);
-			oldpos = pos + 1;		
-		}
-	}
-    
+   
     if (rsl->nan_choices.size() > 0) {
         rsl->nan_options =
                 new UI_CustomMenuButton(rsl->x() + (!single_pane ? (rsl->w() * .7) : (rsl->w() * .85)), rsl->y(), rsl->w() * .075, kf_h(24), "@2>");
                 rsl->nan_options->box(FL_FLAT_BOX);
+        rsl->nan_options->selection_color(SELECTION);
+        rsl->nan_options->add("Use Slider Value");
+        for (int x = 0; x < rsl->nan_choices.size(); x++) {
+        	rsl->nan_options->add(rsl->nan_choices[x].c_str());
+        }
     }
     
 	rsl->mod_entry =
