@@ -3426,7 +3426,7 @@ ARMAETUS_ROOM_THEMES =
       GWOD03 = 20,
       GWOD04 = 20,
 
-      MEME01 = 20,
+      MEM01 = 20,
 
       QFLAT02 = 20,
       QFLAT05 = 20,
