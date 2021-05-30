@@ -2870,7 +2870,9 @@ function Level_make_level(LEV)
   gui.property("error_flat", error_mat.f or error_mat.t)
 
   if LEVEL.description then
-    gui.property("description", LEVEL.description)
+    if OB_CONFIG.batch ~= "yes" then
+      gui.property("description", LEVEL.description)
+    end
   end
 
 

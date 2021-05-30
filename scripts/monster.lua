@@ -834,7 +834,12 @@ function Monster_fill_room(R)
     local l_factor = MONSTER_KIND_TAB.few
     local u_factor = MONSTER_KIND_TAB.heaps
 
-    factor = PARAM.float_mons
+    if OB_CONFIG.batch == "yes" then
+        factor = OB_CONFIG.float_mons
+    else
+        factor = PARAM.float_mons
+    end
+    
     assert(factor)
 
     if factor == -0.10 then
@@ -885,18 +890,23 @@ function Monster_fill_room(R)
         end
     end
 
-    local qty = PARAM.float_mons
+    local qty 
+    if OB_CONFIG.batch == "yes" then
+        qty = OB_CONFIG.float_mons
+    else
+        qty = PARAM.float_mons
+    end
     local u_range = PARAM.float_mix_it_up_upper_range
     local l_range = PARAM.float_mix_it_up_lower_range
     
     --Mix It Up
-    if qty == -0.10 then
+    if qty == "Mix It Up" then
       if l_range == u_range then
         qty = l_range
       end
       qty = rand.range(l_range, u_range)
     --Progressive
-    elseif qty == -0.05 then
+    elseif qty == "Progressive" then
       if l_range > u_range then
         qty = u_range + (l_range * LEVEL.game_along)
       else    
@@ -1207,7 +1217,12 @@ function Monster_fill_room(R)
       end
     end
 
-    local mon_strength = PARAM.float_strength
+    local mon_strength
+    if OB_CONFIG.batch == "yes" then
+      mon_strength = OB_CONFIG.float_strength
+    else
+      mon_strength = PARAM.float_strength
+    end
 
     if mon_strength < 1.0 then 
       return 1 / ((1 + mon_strength) ^ factor)
@@ -1295,9 +1310,14 @@ function Monster_fill_room(R)
     local info = GAME.MONSTERS[mon]
 
     local d = info.density or 1
-
+    local float_strength
+    if OB_CONFIG.batch == "yes" then
+        float_strength = OB_CONFIG.float_strength
+    else
+        float_strength = PARAM.float_strength
+    end
     -- level check
-    if PARAM.float_strength < 12 or LEVEL.is_procedural_gotcha == false then
+    if float_strength < 12 or LEVEL.is_procedural_gotcha == false then
       local max_level = LEVEL.monster_level * R.lev_along
       if max_level < 2 then max_level = 2 end
 
