@@ -169,7 +169,7 @@ function Level_determine_map_size(LEV)
   -- there is no real "progression" when making a single level.
   -- hence use the average size instead.
   if OB_CONFIG.length == "single" then
-    if ob_size == 8 or ob_size == 9 then
+    if ob_size == "Episodic" or ob_size == "Progressive" then
       ob_size = 36
     end
   end
@@ -178,7 +178,7 @@ function Level_determine_map_size(LEV)
 
   -- Readjusted probabilities once again, added "Micro" size as suggested by activity
   -- in the Discord server. -Armaetus, June 30th, 2019,
-  if ob_size == 7 then
+  if ob_size == "Mix It Up" then
 
     local result_skew = 1.0
     local low = PARAM.float_level_lower_bound or 10
@@ -195,7 +195,7 @@ function Level_determine_map_size(LEV)
     ob_size = math.clamp(10, int(rand.irange(low, high) * result_skew), 75)
   end
 
-  if ob_size == 8 or ob_size == 9 then
+  if ob_size == "Episodic" or ob_size == "Progressive" then
 
     -- Progressive --
 
@@ -207,7 +207,7 @@ function Level_determine_map_size(LEV)
 
     local along = LEV.game_along ^ ramp_factor
 
-    if ob_size == 8 then along = LEV.ep_along end
+    if ob_size == "Episodic" then along = LEV.ep_along end
 
     along = math.clamp(0, along, 1)
 

@@ -411,15 +411,30 @@ bool UI_Module::SetOption(const char *option, const char *value) {
     return true;
 }
 
-bool UI_Module::SetSliderOption(const char *option, double value) {
+bool UI_Module::SetSliderOption(const char *option, const char *value) {
     UI_RSlide *rsl = FindSliderOpt(option);
 
     if (!rsl) {
         return false;
     }
 
-    rsl->mod_slider->value(value);
-	rsl->mod_slider->do_callback();
+	std::string string_value = value;
+	double double_value;
+    try {
+        double_value = std::stod(string_value);
+        rsl->mod_slider->value(double_value);
+		rsl->mod_slider->do_callback();
+    } catch (std::invalid_argument &e) {
+    	// If it is a nan value instead
+        rsl->nan_options->value(rsl->nan_options->find_index(value));
+        rsl->nan_options->do_callback();
+    } catch (std::out_of_range &e) {
+    	// This shouldn't happen
+        std::cout << e.what();
+    } catch (std::exception &e) {
+    	// This shouldn't happen either
+        std::cout << e.what();
+    }
     return true;
 }
 
@@ -833,7 +848,7 @@ bool UI_CustomMods::SetOption(const char *module, const char *option,
     return M->SetOption(option, value);
 }
 
-bool UI_CustomMods::SetSliderOption(const char *module, const char *option, double value) {
+bool UI_CustomMods::SetSliderOption(const char *module, const char *option, const char *value) {
     UI_Module *M = FindID(module);
 
     if (!M) {

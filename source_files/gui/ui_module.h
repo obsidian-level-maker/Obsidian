@@ -72,7 +72,7 @@ class UI_Module : public Fl_Group {
 
     bool SetOption(const char *option, const char *value);
     
-    bool SetSliderOption(const char *option, double value);
+    bool SetSliderOption(const char *option, const char *value);
     
     bool SetButtonOption(const char *option, int value);
 
@@ -145,7 +145,7 @@ class UI_CustomMods : public Fl_Group {
 
     bool SetOption(const char *module, const char *option, const char *value);
     
-    bool SetSliderOption(const char *module, const char *option, double value);
+    bool SetSliderOption(const char *module, const char *option, const char *value);
     
 	bool SetButtonOption(const char *module, const char *option, int value);
 

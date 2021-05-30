@@ -630,7 +630,7 @@ function ob_set_mod_option(name, option, value)
     gui.set_module_option(name, option, value)
   else
     if opt.valuator == "slider" then
-      gui.set_module_slider_option(name, option, tonumber(value))
+      gui.set_module_slider_option(name, option, value)
     elseif opt.valuator == "button" then
       gui.set_module_button_option(name, option, tonumber(value))
     end

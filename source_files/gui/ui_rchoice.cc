@@ -308,8 +308,6 @@ UI_CustomMenuButton::UI_CustomMenuButton(int x, int y, int w, int h, const char 
 
 UI_CustomMenuButton::~UI_CustomMenuButton() {}
 
-static UI_CustomMenuButton	*pressed_menu_button_ = 0;
-
 void UI_CustomMenuButton::draw() {
     if (type() == FL_HIDDEN_BUTTON) {
         return;
