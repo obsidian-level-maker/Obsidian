@@ -29,10 +29,14 @@
 #include <iostream>
 
 UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
-                     const char *label, const char *tip)
+                     const char *label, const char *tip, int red, int green, int blue)
     : Fl_Group(X, Y, W, H), id_name(id), choice_map(), cur_opt_y(0) {       
        
     box(box_style);
+    
+    if ((red >= 0) && (green >= 0) && (blue >= 0)) {
+        color(fl_rgb_color(red, green, blue));
+    }
 
     mod_button =
         new UI_CustomCheckBox(X + kf_w(6), Y + kf_h(4), W - kf_w(12), kf_h(24));
@@ -224,7 +228,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     if (rsl->nan_choices.size() > 0) {
         rsl->nan_options =
                 new UI_CustomMenuButton(rsl->x() + (!single_pane ? (rsl->w() * .7) : (rsl->w() * .85)), rsl->y(), rsl->w() * .075, kf_h(24), "@2>");
-                rsl->nan_options->box(FL_FLAT_BOX);
+                rsl->nan_options->box(FL_NO_BOX);
         rsl->nan_options->selection_color(SELECTION);
         rsl->nan_options->add("Use Slider Value");
         for (int x = 0; x < rsl->nan_choices.size(); x++) {
@@ -738,8 +742,8 @@ typedef struct {
 } mod_enable_callback_data_t;
 
 void UI_CustomMods::AddModule(const char *id, const char *label,
-                              const char *tip) {
-    UI_Module *M = new UI_Module(mx, my, mw - 4, kf_h(34), id, label, tip);
+                              const char *tip, int red, int green, int blue) {
+    UI_Module *M = new UI_Module(mx, my, mw - 4, kf_h(34), id, label, tip, red, green, blue);
 
     mod_enable_callback_data_t *cb_data = new mod_enable_callback_data_t;
     cb_data->mod = M;

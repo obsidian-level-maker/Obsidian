@@ -387,6 +387,9 @@ int gui_add_module(lua_State *L) {
     const char *id = luaL_checkstring(L, 2);
     const char *label = luaL_checkstring(L, 3);
     const char *tip = luaL_optstring(L, 4, NULL);
+    int red = luaL_optinteger(L, 5, -1);
+    int green = luaL_optinteger(L, 6, -1);
+    int blue = luaL_optinteger(L, 7, -1);
 
     SYS_ASSERT(where && id && label);
 
@@ -402,12 +405,12 @@ int gui_add_module(lua_State *L) {
     }
 
 	if (single_pane) {
-        main_win->left_mods->AddModule(id, label, tip);		
+        main_win->left_mods->AddModule(id, label, tip, red, green, blue);		
 	} else {
 		if (StringCaseCmp(where, "left") == 0) {
-		    main_win->left_mods->AddModule(id, label, tip);
+		    main_win->left_mods->AddModule(id, label, tip, red, green, blue);
 		} else if (StringCaseCmp(where, "right") == 0) {
-		    main_win->right_mods->AddModule(id, label, tip);
+		    main_win->right_mods->AddModule(id, label, tip, red, green, blue);
 		} else {
 		    return luaL_error(L, "add_module: unknown where value '%s'\n", where);
 		}	

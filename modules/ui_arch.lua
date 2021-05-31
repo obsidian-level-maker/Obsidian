@@ -80,6 +80,8 @@ OB_MODULES["ui_arch"] =
   name = "ui_arch",
 
   label = _("Architecture"),
+    
+  -- color = { red = 125, green = 125, blue = 125 }, -- This is an example of setting a custom per-module color - Dasho
 
   side = "left",
   priority = 104,

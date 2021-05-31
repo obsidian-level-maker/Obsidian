@@ -52,7 +52,7 @@ class UI_Module : public Fl_Group {
 
    public:
     UI_Module(int X, int Y, int W, int H, const char *id, const char *label,
-              const char *tip);
+              const char *tip, int red, int green, int blue);
     virtual ~UI_Module();
 
     void AddOption(const char *option, const char *label, const char *tip,
@@ -124,7 +124,7 @@ class UI_CustomMods : public Fl_Group {
     virtual ~UI_CustomMods();
 
    public:
-    void AddModule(const char *id, const char *label, const char *tip);
+    void AddModule(const char *id, const char *label, const char *tip, int red, int green, int blue);
 
     // these return false if module is unknown
     bool ShowModule(const char *id, bool new_shown);
