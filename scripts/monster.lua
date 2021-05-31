@@ -842,9 +842,9 @@ function Monster_fill_room(R)
     
     assert(factor)
 
-    if factor == -0.10 then
+    if factor == "Mix It Up" then
       factor = rand.range(l_factor, u_factor)
-    elseif factor == -0.05 then
+    elseif factor == "Progressive" then
       factor = l_factor + (u_factor * LEVEL.game_along)
     end
     
