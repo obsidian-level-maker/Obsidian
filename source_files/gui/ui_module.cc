@@ -228,7 +228,8 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     if (rsl->nan_choices.size() > 0) {
         rsl->nan_options =
                 new UI_CustomMenuButton(rsl->x() + (!single_pane ? (rsl->w() * .7) : (rsl->w() * .85)), rsl->y(), rsl->w() * .075, kf_h(24), "@2>");
-                rsl->nan_options->box(FL_NO_BOX);
+                rsl->nan_options->box(FL_FLAT_BOX);
+        rsl->nan_options->color(this->color());
         rsl->nan_options->selection_color(SELECTION);
         rsl->nan_options->add("Use Slider Value");
         for (int x = 0; x < rsl->nan_choices.size(); x++) {
