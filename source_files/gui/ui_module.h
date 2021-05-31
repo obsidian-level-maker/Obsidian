@@ -52,7 +52,7 @@ class UI_Module : public Fl_Group {
 
    public:
     UI_Module(int X, int Y, int W, int H, const char *id, const char *label,
-              const char *tip);
+              const char *tip, int red, int green, int blue);
     virtual ~UI_Module();
 
     void AddOption(const char *option, const char *label, const char *tip,
@@ -60,7 +60,7 @@ class UI_Module : public Fl_Group {
 
 	void AddSliderOption(const char *option, const char *label, const char *tip,
                           const char* longtip, int gap, double min, double max, double inc,
-                          const char *units, const char *nan);
+                          const char *units, const char *presets, const char *nan);
                          
     void AddButtonOption(const char *opt, const char *label, const char *tip,
                           const char *longtip, int gap);
@@ -72,7 +72,7 @@ class UI_Module : public Fl_Group {
 
     bool SetOption(const char *option, const char *value);
     
-    bool SetSliderOption(const char *option, double value);
+    bool SetSliderOption(const char *option, const char *value);
     
     bool SetButtonOption(const char *option, int value);
 
@@ -94,11 +94,12 @@ class UI_Module : public Fl_Group {
     void resize(int X, int Y, int W, int H);
 
     static void callback_OptChange(Fl_Widget *w, void *data);
-    static void callback_MixItCheck(Fl_Widget *w, void *data);
+    static void callback_PresetCheck(Fl_Widget *w, void *data);
     static void callback_SliderPrevious(Fl_Widget *w, void *data);
     static void callback_SliderNext(Fl_Widget *w, void *data);
     static void callback_ShowHelp(Fl_Widget *w, void *data);
     static void callback_ManualEntry(Fl_Widget *w, void *data);
+	static void callback_NanOptions(Fl_Widget *w, void *data);
 };
 
 class UI_CustomMods : public Fl_Group {
@@ -123,7 +124,7 @@ class UI_CustomMods : public Fl_Group {
     virtual ~UI_CustomMods();
 
    public:
-    void AddModule(const char *id, const char *label, const char *tip);
+    void AddModule(const char *id, const char *label, const char *tip, int red, int green, int blue);
 
     // these return false if module is unknown
     bool ShowModule(const char *id, bool new_shown);
@@ -134,7 +135,7 @@ class UI_CustomMods : public Fl_Group {
                    
 	bool AddSliderOption(const char *module, const char *option, const char *label,
                    const char *tip, const char* longtip, int gap, double min, double max, 
-                   double inc, const char *units, const char *nan);
+                   double inc, const char *units, const char *presets, const char *nan);
                    
     bool AddButtonOption(const char *module, const char *option,
                          const char *label, const char *tip, const char* longtip, int gap);
@@ -144,7 +145,7 @@ class UI_CustomMods : public Fl_Group {
 
     bool SetOption(const char *module, const char *option, const char *value);
     
-    bool SetSliderOption(const char *module, const char *option, double value);
+    bool SetSliderOption(const char *module, const char *option, const char *value);
     
 	bool SetButtonOption(const char *module, const char *option, int value);
 

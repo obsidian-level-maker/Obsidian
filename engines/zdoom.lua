@@ -59,7 +59,7 @@ end
 
 OB_ENGINES["zdoom"] =
 {
-  label = _("ZDoom-ish"),
+  label = _("ZDoom Family"),
   priority = 101,
 
   extends = "advanced",

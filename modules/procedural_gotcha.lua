@@ -98,7 +98,7 @@ OB_MODULES["procedural_gotcha"] =
       max = 10,
       increment = 0.1,
       default = 1.2,
-      nan = "1:No Change,",
+      presets = "",
       tooltip = "Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting).",
     },
 
@@ -112,7 +112,7 @@ OB_MODULES["procedural_gotcha"] =
       max = 16,
       increment = 1,
       default = 4,
-      nan = "0:NONE," ..
+      presets = "0:NONE," ..
       "2:2 (Stronger)," ..
       "4:4 (Harder)," ..
       "6:6 (Tougher)," ..

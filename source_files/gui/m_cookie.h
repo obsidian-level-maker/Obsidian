@@ -34,6 +34,8 @@ void Cookie_ParseArguments(void);
 
 bool Options_Load(const char *filename);
 bool Options_Save(const char *filename);
+bool Theme_Options_Load(const char *filename);
+bool Theme_Options_Save(const char *filename);
 
 /* recent file stuff */
 

@@ -57,5 +57,7 @@ PREFABS.Fence_planters_diag_hell =
 
   theme = "hell",
 
+  where = "diagonal",
+
   flat_GRASS1 = "SFLR6_4"
 }

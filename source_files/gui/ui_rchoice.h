@@ -22,11 +22,13 @@
 #define __UI_RCHOICE_H__
 
 #include <map>
+#include <vector>
 
 #include "FL/Fl_Check_Button.H"
 #include "FL/Fl_Choice.H"
 #include "FL/Fl_Hor_Slider.H"
 #include "FL/Fl_Repeat_Button.H"
+#include "FL/Fl_Menu_Button.H"
 
 //
 // DESCRIPTION:
@@ -196,6 +198,31 @@ class UI_CustomArrowButton : public Fl_Repeat_Button {
 	void draw();
 };
 
+class UI_CustomMenuButton : public Fl_Menu_Button {
+
+   private:
+    // true when mouse is over this widget
+    bool hover;
+
+    // area containing the label
+    int label_X, label_Y, label_W, label_H;
+  
+   public:
+    UI_CustomMenuButton(int x, int y, int w, int h, const char *label = NULL);
+    virtual ~UI_CustomMenuButton();
+    
+   public:
+    // FLTK overrides
+
+    int handle(int event);
+
+   private:
+
+    void draw();
+
+    void checkLink();
+};
+
 class UI_RSlide : public Fl_Group {
    private:
 
@@ -216,11 +243,15 @@ class UI_RSlide : public Fl_Group {
     
     UI_CustomArrowButton *next_button;
     
+    UI_CustomMenuButton *nan_options;
+    
     std::string original_label;
     
     std::string units;
     
-    std::map<double, std::string> nan_choices;
+    std::map<double, std::string> preset_choices;
+    
+    std::vector<std::string> nan_choices;
     
     public:
     

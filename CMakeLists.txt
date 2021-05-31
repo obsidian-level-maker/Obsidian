@@ -67,6 +67,7 @@ add_executable(
   source_files/gui/hdr_lua.h
   source_files/gui/hdr_ui.h
   source_files/gui/headers.h
+  source_files/gui/icon.h
   source_files/gui/img_all.h
   source_files/gui/img_bolt.cc
   source_files/gui/img_carve.cc
@@ -103,6 +104,7 @@ add_executable(
   source_files/gui/m_lua.h
   source_files/gui/m_manage.cc
   source_files/gui/m_options.cc
+  source_files/gui/m_theme.cc
   source_files/gui/m_trans.cc
   source_files/gui/m_trans.h
   source_files/gui/main.cc
@@ -132,6 +134,8 @@ add_executable(
   source_files/gui/tx_skies.h
   source_files/gui/ui_build.cc
   source_files/gui/ui_build.h
+  source_files/gui/ui_customboxes.cc
+  source_files/gui/ui_customboxes.h
   source_files/gui/ui_game.cc
   source_files/gui/ui_game.h
   source_files/gui/ui_hyper.cc

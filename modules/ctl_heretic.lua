@@ -25,7 +25,7 @@ function CTL_HERETIC.monster_setup(self)
 
     local M = GAME.MONSTERS[string.sub(opt.name, 7)]
 
-    if M and PARAM[opt.name] ~= -0.02 then
+    if M and PARAM[opt.name] ~= "Default" then
       M.prob    = PARAM[opt.name] * 100
       M.density = M.prob * .006 + .1
 
@@ -71,12 +71,12 @@ OB_MODULES["heretic_mon_control"] =
       label = _("Gargoyle"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -90,12 +90,12 @@ OB_MODULES["heretic_mon_control"] =
       label = _("Fire Gargoyle"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -109,12 +109,12 @@ OB_MODULES["heretic_mon_control"] =
       label = _("Warrior"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -128,12 +128,12 @@ OB_MODULES["heretic_mon_control"] =
       label = _("Warrior Ghost"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -147,12 +147,12 @@ OB_MODULES["heretic_mon_control"] =
       label = _("Golem"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -166,12 +166,12 @@ OB_MODULES["heretic_mon_control"] =
       label = _("Golem Ghost"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -185,12 +185,12 @@ OB_MODULES["heretic_mon_control"] =
       label = _("Nitro"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -204,12 +204,12 @@ OB_MODULES["heretic_mon_control"] =
       label = _("Nitro Ghost"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -223,12 +223,12 @@ OB_MODULES["heretic_mon_control"] =
       label = _("Disciple"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -242,12 +242,12 @@ OB_MODULES["heretic_mon_control"] =
       label = _("Sabreclaw"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -261,12 +261,12 @@ OB_MODULES["heretic_mon_control"] =
       label = _("Weredragon"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -280,12 +280,12 @@ OB_MODULES["heretic_mon_control"] =
       label = _("Ophidian"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -299,12 +299,12 @@ OB_MODULES["heretic_mon_control"] =
       label = _("Ironlich"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -318,12 +318,12 @@ OB_MODULES["heretic_mon_control"] =
       label = _("Maulotaur"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -337,19 +337,19 @@ OB_MODULES["heretic_mon_control"] =
       label = _("D'Sparil"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 20,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None at all)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
-     },
+     }
   }
 }
 
@@ -365,7 +365,7 @@ function CTL_HERETIC.weapon_setup(self)
 
     local W = GAME.WEAPONS[string.sub(opt.name, 7)] -- Strip the float_ prefix from the weapon name for table lookup
 
-    if W and PARAM[opt.name] ~= -0.02 then
+    if W and PARAM[opt.name] ~= "Default" then
       W.add_prob = PARAM[opt.name] * 100
       W.pref     = W.add_prob * 0.28 + 1 -- Complete guesswork right now - Dasho
 
@@ -397,12 +397,12 @@ OB_MODULES["heretic_weapon_control"] =
       label = _("Gauntlets"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -416,12 +416,12 @@ OB_MODULES["heretic_weapon_control"] =
       label = _("Crossbow"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -435,12 +435,12 @@ OB_MODULES["heretic_weapon_control"] =
       label = _("Dragon Claw"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -454,12 +454,12 @@ OB_MODULES["heretic_weapon_control"] =
       label = _("Hellstaff"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -473,12 +473,12 @@ OB_MODULES["heretic_weapon_control"] =
       label = _("Phoenix Rod"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
@@ -492,19 +492,19 @@ OB_MODULES["heretic_weapon_control"] =
       label = _("Fire Mace"),
       valuator = "slider",
       units = "",
-      min = -.02,
+      min = 0,
       max = 10,
       increment = .02,
-      default = -.02, 
-      nan = "-.02:Default," ..
-      "0:0 (None)," ..
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
-     },
+     }
   }
 }
 

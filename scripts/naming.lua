@@ -227,7 +227,24 @@ namelib.NAMES =
         ["In the Grip of Madness"]=10,
         ["Creeping Brutality"]=10,
         ["Hopeless Despair"]=10,
-        ["Bells of Agony"]=10
+        ["Bells of Agony"]=10,
+
+        -- OwO what's this? More from Armaetus?!
+        -- Just straight up weird or funny, rarely chosen though. Some memey stuff present!
+        ["I Accidentally Hotel Doom"]=2, -- YouTube "I Accidentally Hotel Mario"
+        ["It's Been One of Those Days"]=2, -- See above
+        ["Hetfield's Inflated Ego"]=2,
+        ["lol"]=2,
+        ["Marty's Loveable Funhouse"]=2, -- Refers to MArty Stratton, one of id's executive producers
+        ["OH NOES"]=2,
+        ["Phobos and Deimos Kissfest"]=2,
+        ["Reverse Cowgirl with a PC"]=2, -- YouTube "Reverse Cowgirl with a CD-I"
+        ["Romero's Oversized Mindset"]=2,
+        ["Take It Like a Man"]=2,
+        ["The Trail to the Toilet"]=2, -- In-joke with Obsidian team, I blame Shooter for this lol
+        ["Tom Hall's Halls"]=2,
+        ["We are not COMPET-N friendly"]=2
+
       },
 
       v =
@@ -602,6 +619,31 @@ namelib.NAMES =
         Baryonic=5, Mesonic=5,
 
         ["I/O"]=5,
+      },
+
+      -- Used for IWAD Mode module
+      c =
+      {
+        Dead=10, ["Not So"]=10, Not=10, ["Surely Isn't"]=10, Somewhat=10,
+        Deadly=10, ["Fuck, Not"]=10, Delightfully=10, Simply=10, ["Hard, Yet"]=10,
+        Cheerfully=10, ["Not Really"]=10, Outright=10, Utterly=10, ["This Ain't"]=10,
+        ["Totally Not"]=10, Totally=10, Absolutely=10, ["Not So"]=10, Gleefully=10,
+        ["Is It"]=10, Joyfully=10, ["Not That"]=10, ["Deadly and"]=10, Stupidly=10,
+        Painfully=10, Quite=10, Obsidian=10, ["Hell's Not"]=10, ["Dude, Dead"]=10,
+        ["Memories of Dead"]=10, ["Is This"]=10, ["Might Be"]=10, ["Not Made"]=10,
+        ["This Shit Ain't"]=10, ["Not Even"]=10, Possibly=10, ["Could Be"]=10,
+        ["Bitch, This Isn't"]=10, Unecessarily=10, ["Shouldn't Be"]=10, ["LOL not"]=5, LOL=5,
+      },
+
+      -- Used for IWAD Mode module
+      d =
+      {
+        Tricks=10, Demons=10, Monsters=10, Dudes=10, Machinations=10, Minions=10,
+        Travesties=10, Tomfoolery=10, Shenanigans=10, Deception=10, Doomguy=10,
+        ["Doom Slayer"]=10, Dumbasses=10, ["Meaningless Tactics"]=10, ["Unwanted Bullshit"]=10,
+        Frustration=10, Anger=10, ["Obsidian Devs"]=10, ["Sandy Petersen"]=10, ["Utter Bullshit"]=10,
+        ["Meaningless Fuckery"]=10, Goats=10, Surprises=10, Rewards=10, Gifts=10, Goodies=19,
+        Traps=10, RMG=10,
       },
 
       n =
@@ -1234,7 +1276,7 @@ namelib.NAMES =
         Thamuz=3, Valafar=3, Verdelet=3,
 
 
-        -- ObAddon contributor names
+        -- Obsidian contributor names
         NOUNMEMBERS = 90,
 
         NOUNGENEXOTIC = 700

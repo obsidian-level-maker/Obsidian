@@ -25,7 +25,7 @@
 #include "main.h"
 
 #define PROGRESS_FG SELECTION
-#define PROGRESS_BG fl_darker(fl_darker(WINDOW_BG))
+#define PROGRESS_BG GAP_COLOR
 
 #define NODE_PROGRESS_FG SELECTION
 

@@ -114,13 +114,12 @@ OB_MODULES["ui_mons"] =
       label=_("Quantity"),
       valuator = "slider",
       units = "",
-      min = -0.10,
+      min = 0,
       max = 10.00,
       increment = .05,
       default = 1.0,
-      nan = "-0.10:Mix It Up," ..
-      "-0.05:Progressive," ..
-      "0:None," ..
+      nan = "Mix It Up,Progressive,",
+      presets = "0:None," ..
       "0.15:0.15 (Trivial)," ..
       "0.35:0.35 (Sporadic)," ..
       "0.7:0.7 (Meager)," ..
@@ -151,6 +150,30 @@ OB_MODULES["ui_mons"] =
               "also based on the Fine Tune options below.\n\n" ..
               "It does not matter if your Upper/Lower Bound selections are reversed. " ..
               "Progressive will pick the min VS max quantities selected.",
+      longtip="For reference: Oblige 7.x's default for normal is 1.0.\n\n" ..
+              "Mix It Up: Selects quantities specified between Upper and Lower " ..
+              "Bound choices on a chosen by the user.\n\n" ..
+              "Progressive: creates a curve of increasing monster population " ..
+              "also based on the Fine Tune options below.\n\n" ..
+              "It does not matter if your Upper/Lower Bound selections are reversed. " ..
+              "Progressive will pick the min VS max quantities selected.\n\n" ..
+              "None: No monsters. Why would you choose this option? \n" ..
+              "Trivial: Very, very few monsters. Almost nothing to kill.\n " ..
+              "Sporadic: Very few monsters. Not many things to kill.\n " ..
+              "Meager: Fewer monsters. Not challenging for the average player.\n " ..
+              "Easy: Oblige default quantity. Not too bad for casual players.\n " ..
+              "Modest: Slightly above default. Still pretty easy for most. \n " ..
+              "Bearable: Above average opposition. Getting warmer! \n" ..
+              "Rough: Slightly difficult. Equivalent to late 90s megawads. \n" ..
+              "Strenuous: Baby steps into big boy difficulty. Lots to kill! \n" ..
+              "Formidable/Harsh: 'Easy' level of difficult. Considerable opposition. \n" ..
+              "Painful/Ferocious: Getting into slaughterwad territory. Difficult! \n" ..
+              "Unforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \n" ..
+              "Murderous/Grueling: Extremely high monster count. \n" ..
+              "Unrelenting/Arduous: An uphill battle. Expect to reload saves often! \n" ..
+              "Barbaric/Savage: Up into the hardest slaughterwads out there. \n" ..
+              "Brutal/Draconian: Legions of demons await you on this setting. \n" ..
+              "Merciless: Hell will throw everything at you at this setting, you masochist.",
     },
 
     {
@@ -162,7 +185,7 @@ OB_MODULES["ui_mons"] =
       max = 10.00,
       increment = .05,
       default = 10,
-      nan = "0:None," ..
+      presets = "0:None," ..
       "0.15:0.15 (Trivial)," ..
       "0.35:0.35 (Sporadic)," ..
       "0.7:0.7 (Meager)," ..
@@ -186,7 +209,31 @@ OB_MODULES["ui_mons"] =
       "9.0:9.0 (Brutal)," ..
       "9.5:9.5 (Draconian)," ..
       "10.0:10.00 (Merciless),",
-      tooltip="If you have Mix It Up or Progressive selected, you can define the upper bound here. Otherwise, this option is simply ignored.",
+            tooltip="If you have Mix It Up or Progressive selected, you can define the upper bound here. Otherwise, this option is simply ignored.",
+            longtip="For reference: Oblige 7.x's default for normal is 1.0.\n\n" ..
+              "Mix It Up: Selects quantities specified between Upper and Lower " ..
+              "Bound choices on a chosen by the user.\n\n" ..
+              "Progressive: creates a curve of increasing monster population " ..
+              "also based on the Fine Tune options below.\n\n" ..
+              "It does not matter if your Upper/Lower Bound selections are reversed. " ..
+              "Progressive will pick the min VS max quantities selected.\n\n" ..
+              "None: No monsters. Why would you choose this option? \n" ..
+              "Trivial: Very, very few monsters. Almost nothing to kill.\n " ..
+              "Sporadic: Very few monsters. Not many things to kill.\n " ..
+              "Meager: Fewer monsters. Not challenging for the average player.\n " ..
+              "Easy: Oblige default quantity. Not too bad for casual players.\n " ..
+              "Modest: Slightly above default. Still pretty easy for most. \n " ..
+              "Bearable: Above average opposition. Getting warmer! \n" ..
+              "Rough: Slightly difficult. Equivalent to late 90s megawads. \n" ..
+              "Strenuous: Baby steps into big boy difficulty. Lots to kill! \n" ..
+              "Formidable/Harsh: 'Easy' level of difficult. Considerable opposition. \n" ..
+              "Painful/Ferocious: Getting into slaughterwad territory. Difficult! \n" ..
+              "Unforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \n" ..
+              "Murderous/Grueling: Extremely high monster count. \n" ..
+              "Unrelenting/Arduous: An uphill battle. Expect to reload saves often! \n" ..
+              "Barbaric/Savage: Up into the hardest slaughterwads out there. \n" ..
+              "Brutal/Draconian: Legions of demons await you on this setting. \n" ..
+              "Merciless: Hell will throw everything at you at this setting, you masochist.",
     },
 
     {
@@ -198,7 +245,7 @@ OB_MODULES["ui_mons"] =
       max = 10.00,
       increment = .05,
       default = 0,
-      nan = "0:None," ..
+      presets = "0:None," ..
       "0.15:0.15 (Trivial)," ..
       "0.35:0.35 (Sporadic)," ..
       "0.7:0.7 (Meager)," ..
@@ -221,7 +268,32 @@ OB_MODULES["ui_mons"] =
       "8.5:8.5 (Savage)," ..
       "9.0:9.0 (Brutal)," ..
       "9.5:9.5 (Draconian)," ..
-      "10.0:10.00 (Merciless),",      tooltip="If you have Mix It Up or Progressive selected, you can define the lower bound here. Otherwise, this option is simply ignored.",
+      "10.0:10.00 (Merciless),",
+            tooltip="If you have Mix It Up or Progressive selected, you can define the lower bound here. Otherwise, this option is simply ignored.",
+            longtip="For reference: Oblige 7.x's default for normal is 1.0.\n\n" ..
+              "Mix It Up: Selects quantities specified between Upper and Lower " ..
+              "Bound choices on a chosen by the user.\n\n" ..
+              "Progressive: creates a curve of increasing monster population " ..
+              "also based on the Fine Tune options below.\n\n" ..
+              "It does not matter if your Upper/Lower Bound selections are reversed. " ..
+              "Progressive will pick the min VS max quantities selected.\n\n" ..
+              "None: No monsters. Why would you choose this option? \n" ..
+              "Trivial: Very, very few monsters. Almost nothing to kill.\n " ..
+              "Sporadic: Very few monsters. Not many things to kill.\n " ..
+              "Meager: Fewer monsters. Not challenging for the average player.\n " ..
+              "Easy: Oblige default quantity. Not too bad for casual players.\n " ..
+              "Modest: Slightly above default. Still pretty easy for most. \n " ..
+              "Bearable: Above average opposition. Getting warmer! \n" ..
+              "Rough: Slightly difficult. Equivalent to late 90s megawads. \n" ..
+              "Strenuous: Baby steps into big boy difficulty. Lots to kill! \n" ..
+              "Formidable/Harsh: 'Easy' level of difficult. Considerable opposition. \n" ..
+              "Painful/Ferocious: Getting into slaughterwad territory. Difficult! \n" ..
+              "Unforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \n" ..
+              "Murderous/Grueling: Extremely high monster count. \n" ..
+              "Unrelenting/Arduous: An uphill battle. Expect to reload saves often! \n" ..
+              "Barbaric/Savage: Up into the hardest slaughterwads out there. \n" ..
+              "Brutal/Draconian: Legions of demons await you on this setting. \n" ..
+              "Merciless: Hell will throw everything at you at this setting, you masochist.",
       gap = 1,
     },
 
@@ -234,7 +306,7 @@ OB_MODULES["ui_mons"] =
       max = 12,
       increment = .05,
       default = 1,
-      nan = "0.55:0.55 (Weak),0.75:0.75 (Easier),1:1 (Average),1.3:1.3 (Harder),1.7:1.7 (Tough),2.5: 2.5 (Fierce),12:12 (CRAZY),",
+      presets = "0.55:0.55 (Weak),0.75:0.75 (Easier),1:1 (Average),1.3:1.3 (Harder),1.7:1.7 (Tough),2.5: 2.5 (Fierce),12:12 (CRAZY),",
     },
 
     {
@@ -242,11 +314,12 @@ OB_MODULES["ui_mons"] =
       label=_("Ramp Up"),
       valuator = "slider",
       units = "",
-      min = 0.45,
+      min = 0.5,
       max = 3,
       increment = .05,
       default = 1,
-      nan = "0.45:Episodic,0.5:0.5 (Very Slow),0.75:0.75 (Slow),1:1 (Average),1.5:1.5 (Fast),2:2 (Very Fast),3:3 (Extra Fast),",
+      nan = "Episodic,",
+      presets = "0.5:0.5 (Very Slow),0.75:0.75 (Slow),1:1 (Average),1.5:1.5 (Fast),2:2 (Very Fast),3:3 (Extra Fast),",
       tooltip = "Rate at which monster strength increases as you progress through levels.",
       gap = 1,
     },

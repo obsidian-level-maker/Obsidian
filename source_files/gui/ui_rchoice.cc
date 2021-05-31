@@ -250,9 +250,9 @@ UI_CustomCheckBox::~UI_CustomCheckBox() {}
 
 // Custom draw function to use the checkmark style regardless of box type and respect custom colors
 void UI_CustomCheckBox::draw() {
-	if (box()) draw_box(this==Fl::pushed() ? fl_down(box()) : box(), color());
+	if (box()) draw_box(this==Fl::pushed() ? fl_down(box()) : box(), BUTTON_COLOR);
 	Fl_Color col = value() ? (active_r() ? selection_color() :
-		                      fl_inactive(selection_color())) : color();
+		                      fl_inactive(selection_color())) : BUTTON_COLOR;
 
 	int W  = labelsize();
 	int bx = Fl::box_dx(box());	// box frame width
@@ -260,7 +260,7 @@ void UI_CustomCheckBox::draw() {
 	int dy = (h() - W) / 2;	// neg. offset o.k. for vertical centering
 	int lx = 0;			// relative label position (STR #3237)
 
-	draw_box(down_box(), x()+dx, y()+dy, W, W, FL_BACKGROUND2_COLOR);
+	draw_box(down_box(), x()+dx, y()+dy, W, W, BUTTON_COLOR);
   	if (value()) {
 		fl_color(col);
 		int tx = x() + dx + 3;
@@ -292,6 +292,104 @@ void UI_CustomArrowButton::draw() {
   draw_backdrop();
   draw_label();
   if (Fl::focus() == this) draw_focus();
+}
+
+//----------------------------------------------------------------
+
+UI_CustomMenuButton::UI_CustomMenuButton(int x, int y, int w, int h, const char *label)
+    : Fl_Menu_Button(x, y, w, h, label),
+      hover(false),
+      label_X(0),
+      label_Y(0),
+      label_W(0),
+      label_H(0) {
+    box(FL_NO_BOX);
+}
+
+UI_CustomMenuButton::~UI_CustomMenuButton() {}
+
+void UI_CustomMenuButton::draw() {
+    if (type() == FL_HIDDEN_BUTTON) {
+        return;
+    }
+
+    // determine where to draw the label
+
+    label_X = label_Y = label_W = label_H = 0;
+
+    fl_font(labelfont(), labelsize());
+    fl_measure(label(), label_W, label_H, 1);
+
+    if (align() & FL_ALIGN_LEFT) {
+        label_X = 2;
+    } else if (align() & FL_ALIGN_RIGHT) {
+        label_X = w() - label_W - 2;
+    } else {
+        label_X = (w() - label_W) / 2;
+    }
+
+    label_Y += h() / 2 - labelsize() / 2 - 2;
+
+    // draw the link text
+
+    fl_draw_box(box(), x(), y(), w(), h(), color());
+
+    fl_color(labelcolor());
+    fl_draw(label(), x() + label_X, y() + label_Y, label_W, label_H,
+            FL_ALIGN_LEFT);
+
+    /*
+       if (Fl::focus() == this)
+       draw_focus();
+     */
+}
+
+void UI_CustomMenuButton::checkLink() {
+    // change the cursor if the mouse is over the link.
+    // the 'hover' variable reduces the number of times fl_cursor()
+    // needs to be called (since it can be expensive).
+
+    if (Fl::event_inside(x() + label_X, y() + label_Y, label_W, label_H)) {
+        if (!hover) {
+            fl_cursor(FL_CURSOR_HAND);
+        }
+
+        hover = true;
+    } else {
+        if (hover) {
+            fl_cursor(FL_CURSOR_DEFAULT);
+        }
+
+        hover = false;
+    }
+}
+
+int UI_CustomMenuButton::handle(int event) {
+    if (!active_r()) {
+        return Fl_Menu_Button::handle(event);
+    }
+
+    switch (event) {
+        case FL_MOVE: {
+            checkLink();
+            return 1;
+        }
+
+        case FL_ENTER: {
+            checkLink();
+            return 1;
+        }
+
+        case FL_LEAVE: {
+            checkLink();
+            return 1;
+        }
+
+        default:
+            break;
+    }
+
+    return Fl_Menu_Button::handle(event);
 }
 
 //----------------------------------------------------------------
@@ -522,7 +620,7 @@ void UI_CustomMenu::draw() {
     // NON-DEFAULT SCHEME
 
     // Draw widget box
-    draw_box(btype, color());
+    draw_box(btype, BUTTON_COLOR);
 
     // Draw arrow area
     fl_color(active_r() ? SELECTION : fl_inactive(SELECTION));
@@ -550,7 +648,7 @@ void UI_CustomMenu::draw() {
     draw_box(btype, color());
 
     // Draw arrow area
-    draw_box(FL_UP_BOX,X,Y,W,H,color());
+    draw_box(FL_UP_BOX,X,Y,W,H,BUTTON_COLOR);
     fl_color(active_r() ? SELECTION : fl_inactive(SELECTION));
     fl_polygon(x1, y1, x1 + w1, y1 + w1, x1 + 2 * w1, y1);
   }

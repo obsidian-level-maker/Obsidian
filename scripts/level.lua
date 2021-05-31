@@ -149,9 +149,15 @@ function Level_determine_map_size(LEV)
 
   -- Since we have other sizes and Auto-Detail, we can have these bigger sizes
   -- now. -Armaetus, July 9th, 2019,
-
-  local ob_size = PARAM.float_size
-
+  
+  local ob_size
+    
+  if OB_CONFIG.batch == "yes" then
+    ob_size = OB_CONFIG.float_size
+  else
+    ob_size = PARAM.float_size
+  end
+    
   local W, H
 
   if LEV.custom_size then
@@ -163,7 +169,7 @@ function Level_determine_map_size(LEV)
   -- there is no real "progression" when making a single level.
   -- hence use the average size instead.
   if OB_CONFIG.length == "single" then
-    if ob_size == 8 or ob_size == 9 then
+    if ob_size == "Episodic" or ob_size == "Progressive" then
       ob_size = 36
     end
   end
@@ -172,7 +178,7 @@ function Level_determine_map_size(LEV)
 
   -- Readjusted probabilities once again, added "Micro" size as suggested by activity
   -- in the Discord server. -Armaetus, June 30th, 2019,
-  if ob_size == 7 then
+  if ob_size == "Mix It Up" then
 
     local result_skew = 1.0
     local low = PARAM.float_level_lower_bound or 10
@@ -189,7 +195,7 @@ function Level_determine_map_size(LEV)
     ob_size = math.clamp(10, int(rand.irange(low, high) * result_skew), 75)
   end
 
-  if ob_size == 8 or ob_size == 9 then
+  if ob_size == "Episodic" or ob_size == "Progressive" then
 
     -- Progressive --
 
@@ -201,7 +207,7 @@ function Level_determine_map_size(LEV)
 
     local along = LEV.game_along ^ ramp_factor
 
-    if ob_size == 8 then along = LEV.ep_along end
+    if ob_size == "Episodic" then along = LEV.ep_along end
 
     along = math.clamp(0, along, 1)
 
@@ -434,15 +440,27 @@ function Episode_plan_monsters()
 
   local function calc_monster_level(LEV)
   
-    local mon_strength = PARAM.float_strength
+    local mon_strength
+    
+    if OB_CONFIG.batch == "yes" then
+      mon_strength = OB_CONFIG.float_strength
+    else
+      mon_strength = PARAM.float_strength
+    end
   
     if mon_strength == 12 then
       LEV.monster_level = mon_strength
       return
     end
 
+    local ramp_up
+    
     local mon_along = LEV.game_along
-    local ramp_up = PARAM.float_ramp_up
+    if OB_CONFIG.batch == "yes" then
+      ramp_up = OB_CONFIG.float_ramp_up
+    else
+      ramp_up = PARAM.float_ramp_up
+    end
 
     -- this is for Doom 1 / Ultimate Doom / Heretic
     if PARAM.episodic_monsters or ramp_up == 0.45 then
@@ -1682,13 +1700,25 @@ function Episode_plan_weapons()
 
     -- prefer simpler weapons for start rooms
     -- [ except in crazy monsters mode, player may need a bigger weapon! ]
-    if is_start and PARAM.float_strength < 12 or LEV.is_procedural_gotcha ~= "true" then
-      if level <= 2 then prob = prob * 4 end
-      if level == 3 then prob = prob * 2 end
+    if OB_CONFIG.batch == "yes" then
+      if is_start and OB_CONFIG.float_strength < 12 or LEV.is_procedural_gotcha ~= "true" then
+        if level <= 2 then prob = prob * 4 end
+        if level == 3 then prob = prob * 2 end
 
-      -- also want NEW weapons to appear elsewhere in the level
-      if level >= 3 and table.has_elem(LEV.new_weapons, name) then
-        prob = prob / 1000
+        -- also want NEW weapons to appear elsewhere in the level
+        if level >= 3 and table.has_elem(LEV.new_weapons, name) then
+          prob = prob / 1000
+        end
+      end        
+    else
+      if is_start and PARAM.float_strength < 12 or LEV.is_procedural_gotcha ~= "true" then
+        if level <= 2 then prob = prob * 4 end
+        if level == 3 then prob = prob * 2 end
+
+        -- also want NEW weapons to appear elsewhere in the level
+        if level >= 3 and table.has_elem(LEV.new_weapons, name) then
+          prob = prob / 1000
+        end
       end
     end
 
@@ -2840,7 +2870,9 @@ function Level_make_level(LEV)
   gui.property("error_flat", error_mat.f or error_mat.t)
 
   if LEVEL.description then
-    gui.property("description", LEVEL.description)
+    if OB_CONFIG.batch ~= "yes" then
+      gui.property("description", LEVEL.description)
+    end
   end
 
 

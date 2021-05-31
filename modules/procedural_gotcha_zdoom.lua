@@ -1717,13 +1717,13 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       name="float_gotcha_qty",
       label=_("Extra Quantity"),
       valuator = "slider",
-      units = "% of Monsters",
-      min = -50,
-      max = 400,
-      increment = 5,
-      default = 25,
-      nan = "0:No Change,",
-      tooltip = "Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Trivial quantity setting).",
+      units = "x Monsters",
+      min = 0.2,
+      max = 10,
+      increment = 0.1,
+      default = 1.2,
+      presets = "",
+      tooltip = "Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting).",
       priority = 104
     },
 
@@ -1737,7 +1737,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       max = 16,
       increment = 1,
       default = 4,
-      nan = "0:NONE," ..
+      presets = "0:NONE," ..
       "2:2 (Stronger)," ..
       "4:4 (Harder)," ..
       "6:6 (Tougher)," ..
@@ -1911,7 +1911,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       max = 5,
       increment = 1,
       default = 3,
-      nan = "3:3x (Default),",
+      presets = "",
       tooltip = "Changes multiplier of ammunition items on the boss arena(This is also affected by boss health multiplier).",
       priority = 91
     },
@@ -1926,7 +1926,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       max = 5,
       increment = 1,
       default = 3,
-      nan = "3:3x (Default),",
+      presets = "",
       tooltip = "Changes multiplier of healing items on the boss arena.",
       priority = 92
     },

@@ -630,7 +630,7 @@ function ob_set_mod_option(name, option, value)
     gui.set_module_option(name, option, value)
   else
     if opt.valuator == "slider" then
-      gui.set_module_slider_option(name, option, tonumber(value))
+      gui.set_module_slider_option(name, option, value)
     elseif opt.valuator == "button" then
       gui.set_module_button_option(name, option, tonumber(value))
     end
@@ -710,7 +710,7 @@ end
 
 
 function ob_read_all_config(need_full, log_only)
-
+   
   local function do_line(fmt, ...)
     if log_only then
       gui.printf(fmt .. "\n", ...)
@@ -778,9 +778,17 @@ function ob_read_all_config(need_full, log_only)
 
       for _,opt in pairs(def.options) do
         if string.match(opt.name, "float_") then
-          do_value(opt.name, gui.get_module_slider_value(name, opt.name))
+            if OB_CONFIG.batch == "yes" then
+              do_value(opt.name, opt.default)
+            else
+              do_value(opt.name, gui.get_module_slider_value(name, opt.name))
+            end
         elseif string.match(opt.name, "bool_") then
-          do_value(opt.name, gui.get_module_button_value(name, opt.name))
+            if OB_CONFIG.batch == "yes" then
+              do_value(opt.name, opt.default)
+            else
+              do_value(opt.name, gui.get_module_button_value(name, opt.name))
+            end
         else
           do_value(opt.name, opt.value)
         end
@@ -808,9 +816,17 @@ function ob_read_all_config(need_full, log_only)
         if def.options[1] then
           for _,opt in pairs(def.options) do
             if string.match(opt.name, "float_") then
-              do_mod_value(opt.name, gui.get_module_slider_value(name, opt.name))
+                if OB_CONFIG.batch == "yes" then
+                  do_mod_value(opt.name, opt.default)
+                else
+                  do_mod_value(opt.name, gui.get_module_slider_value(name, opt.name))
+                end
             elseif string.match(opt.name, "bool_") then
-              do_mod_value(opt.name, gui.get_module_button_value(name, opt.name))
+                if OB_CONFIG.bath == "yes" then
+                  do_mod_value(opt.name, opt.default)
+                else
+                  do_mod_value(opt.name, gui.get_module_button_value(name, opt.name))
+                end
             else
               do_mod_value(opt.name, opt.value)
             end
@@ -818,9 +834,17 @@ function ob_read_all_config(need_full, log_only)
         else
           for o_name,opt in pairs(def.options) do
             if string.match(o_name, "float_") then
-              do_mod_value(o_name, gui.get_module_slider_value(name, opt.name))
+                if OB_CONFIG.batch == "yes" then
+                  do_mod_value(o_name, opt.default)
+                else
+                  do_mod_value(o_name, gui.get_module_slider_value(name, opt.name))
+                end
             elseif string.match(o_name, "bool_") then
-              do_mod_value(o_name, gui.get_module_button_value(name, opt.name))
+                if OB_CONFIG.batch == "yes" then
+                  do_mod_value(o_name, opt.default)
+                else
+                  do_mod_value(o_name, gui.get_module_button_value(name, opt.name))
+                end
             else
               do_mod_value(o_name, opt.value)
             end
@@ -1055,8 +1079,11 @@ function ob_init()
     for _,def in pairs(list) do
       if what == "module" then
         local where = def.side or "right"
-
-        gui.add_module(where, def.name, def.label, def.tooltip)
+        if def.color then
+          gui.add_module(where, def.name, def.label, def.tooltip, def.color["red"], def.color["green"], def.color["blue"])
+        else
+          gui.add_module(where, def.name, def.label, def.tooltip, nil, nil, nil)
+        end
       else
         gui.add_choice(what, def.name, def.label)
       end
@@ -1118,7 +1145,10 @@ function ob_init()
                   
           if opt.valuator then
             if opt.valuator == "slider" then
-              gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.min, opt.max, opt.increment, opt.units, opt.nan)
+              if not opt.nan then
+                opt.nan = ""
+              end
+              gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.min, opt.max, opt.increment, opt.units, opt.presets, opt.nan)
               if not opt.default then
                 opt.default = (opt.min + opt.max) / 2
               end

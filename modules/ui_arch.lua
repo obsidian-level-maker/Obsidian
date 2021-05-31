@@ -80,6 +80,8 @@ OB_MODULES["ui_arch"] =
   name = "ui_arch",
 
   label = _("Architecture"),
+    
+  -- color = { red = 125, green = 125, blue = 125 }, -- This is an example of setting a custom per-module color - Dasho
 
   side = "left",
   priority = 104,
@@ -98,14 +100,12 @@ OB_MODULES["ui_arch"] =
       label=_("Level Size"),
       valuator = "slider",
       units = "",
-      min = 7,
+      min = 10,
       max = 75,
       increment = 1,
-      default = 7,
-      nan= "7:Mix It Up," ..
-      "8:Episodic," ..
-      "9:Progressive," ..
-      "10:10 (Microscopic)," ..
+      default = 10,
+      nan = "Mix It Up,Episodic,Progressive,",
+      presets = "10:10 (Microscopic)," ..
       "16:16 (Miniature)," ..
       "22:22 (Tiny)," ..
       "30:30 (Small)," ..
@@ -131,7 +131,7 @@ OB_MODULES["ui_arch"] =
       max = 75,
       increment = 1,
       default = 75,
-      nan = "10:10 (Microscopic)," ..
+      presets = "10:10 (Microscopic)," ..
       "16:16 (Miniature)," ..
       "22:22 (Tiny)," ..
       "30:30 (Small)," ..
@@ -155,7 +155,7 @@ OB_MODULES["ui_arch"] =
       max = 75,
       increment = 1,
       default = 10,
-      nan = "10:10 (Microscopic)," ..
+      presets = "10:10 (Microscopic)," ..
       "16:16 (Miniature)," ..
       "22:22 (Tiny)," ..
       "30:30 (Small)," ..
@@ -222,7 +222,7 @@ OB_MODULES["ui_arch"] =
       max = 100,
       increment = 1,
       default = 0,
-      nan = "",
+      presets = "",
       tooltip = "Creates linear levels, where rooms are connected along a " ..
       "linear layout from start to exit. \n\nNote: Due to the nature of linear levels, " ..
       "you may encounter teleports even if you have teleports off. This is necessary " ..
@@ -241,7 +241,7 @@ OB_MODULES["ui_arch"] =
       max = 100,
       increment = 1,
       default = 0,
-      nan = "",
+      presets = "",
       tooltip = "Forces most of the map to be composed of naturalistic areas (parks and caves). " ..
       "The ratio is decided by Outdoors style setting while competing styles are ignored.",
       priority = 84
@@ -257,7 +257,7 @@ OB_MODULES["ui_arch"] =
       max = 100,
       increment = 1,
       default = 15,
-      nan = "",
+      presets = "",
       tooltip = "Allows Oblige to create large street-like outdoor rooms.",
       priority = 83
     },
@@ -294,7 +294,7 @@ OB_MODULES["ui_arch"] =
       max = 100,
       increment = 1,
       default = 0,
-      nan = "",
+      presets = "",
       tooltip = "The layout absurdifier attempts to cause levels to overprefer specific shape " ..
       "rules from the ruleset in order to create odd and possibly broken but interesting combinations. " ..
       "Use at your own risk. These options will affect the amount of levels have the absurdity module activated on. " ..

@@ -312,7 +312,7 @@ class UI_Addon : public Fl_Group {
    public:
     addon_info_t *info;
 
-    Fl_Check_Button *button;
+    UI_CustomCheckBox *button;
 
    public:
     UI_Addon(int x, int y, int w, int h, addon_info_t *_info)
@@ -322,9 +322,10 @@ class UI_Addon : public Fl_Group {
         // prefix the name with a space
         const char *name2 = StringPrintf(" %s", info->name);
 
-        button = new Fl_Check_Button(x + kf_w(6), y + kf_h(4), w - kf_w(12),
+        button = new UI_CustomCheckBox(x + kf_w(6), y + kf_h(4), w - kf_w(12),
                                      kf_h(24), name2);
         button->labelfont(font_style);
+        button->selection_color(SELECTION);
         // if (tip)
         //	button->tooltip(tip);
         end();
@@ -419,9 +420,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
 
     box(FL_FLAT_BOX);
 
-    Fl_Color bg_col = fl_rgb_color(221, 221, 221);
-
-    color(bg_col, bg_col);
+    color(WINDOW_BG, WINDOW_BG);
 
     //	int pad = kf_w(6);
 
@@ -439,7 +438,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
     sbar = new Fl_Scrollbar(mx + mw, my, Fl::scrollbar_size(), mh);
     sbar->callback(callback_Scroll, this);
     sbar->slider(button_style);
-    sbar->color(fl_darker(fl_darker(WINDOW_BG)), WINDOW_BG);
+    sbar->color(GAP_COLOR, BUTTON_COLOR);
     sbar->labelcolor(SELECTION);
 
     const char *pack_title = StringPrintf("\n\n\n\n%s", _("No Addons Found!"));
@@ -456,14 +455,14 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
     pack->labelsize(FL_NORMAL_SIZE * 3 / 2);
     pack->labelfont(font_style);
 
-    pack->box(FL_FLAT_BOX);
+    pack->box(button_style);
     pack->resizable(NULL);
 
     //----------------
 
     Fl_Group *darkish = new Fl_Group(0, H - dh, W, dh);
     darkish->box(FL_FLAT_BOX);
-    darkish->color(fl_darker(WINDOW_BG));
+    darkish->color(WINDOW_BG);
     {
         // finally add the close button
         int bw = kf_w(60);
@@ -473,6 +472,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
 
         Fl_Button *apply_but = new Fl_Button(W - bx - bw, by, bw, bh, fl_close);
         apply_but->box(button_style);
+        apply_but->color(BUTTON_COLOR);
         apply_but->callback(callback_Quit, this);
         apply_but->labelfont(font_style);
 
@@ -482,7 +482,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
         sep->align(FL_ALIGN_INSIDE);
         sep->labelsize(small_font_size);
         sep->labelfont(font_style);
-        sep->labelcolor(fl_contrast(FONT_COLOR,darkish->color()));
+        sep->labelcolor(FONT_COLOR);
     }
     darkish->end();
 

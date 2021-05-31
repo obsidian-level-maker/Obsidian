@@ -889,8 +889,14 @@ function Grower_calc_rule_probs()
   end
 
   if not LEVEL.is_procedural_gotcha then
-    if rand.odds(PARAM.float_layout_absurdity) then
+    if OB_CONFIG.batch == "yes" then
+      if rand.odds(OB_CONFIG.float_layout_absurdity) then
+        LEVEL.is_absurd = true       
+      end
+    else 
+      if rand.odds(PARAM.float_layout_absurdity) then
         LEVEL.is_absurd = true
+      end
     end
   end
 

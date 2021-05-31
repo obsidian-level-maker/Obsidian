@@ -25,7 +25,7 @@ PREFABS.Wall_urban_grocery_1 =
     DNSTOR03 = 5,
     DNSTOR04 = 5,
     DNSTOR05 = 5,
-    DNSTOR06 = 12,
+    DNSTOR06 = 12
   }
 }
 
@@ -56,7 +56,7 @@ PREFABS.Wall_urban_grocery_anti_group =
 
   stop_group = "yes",
 
-  prob = 25
+  prob = 12
 }
 
 PREFABS.Wall_urban_grocery_anti_group_2 =
@@ -67,5 +67,5 @@ PREFABS.Wall_urban_grocery_anti_group_2 =
 
   stop_group = "yes",
 
-  prob = 25
+  prob = 12
 }

@@ -1494,7 +1494,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       max = 100,
       increment = 1,
       default = 100,
-      nan = "",
+      presets = "",
       tooltip = "Chance per map of marine closets spawning at all. E.G. at 50% theres 50% chance of each map being empty of marine closets.",
       gap = 1
     },
@@ -1510,7 +1510,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       max = 10,
       increment = 1,
       default = 1,
-      nan = "",
+      presets = "",
       tooltip = "Sets least amount of closets that can spawn per map.",
     },
 
@@ -1525,7 +1525,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       max = 10,
       increment = 1,
       default = 2,
-      nan = "",
+      presets = "",
       tooltip = "Sets most amount of closets that can spawn per map.",
     },
 
@@ -1555,7 +1555,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       max = 10,
       increment = 1,
       default = 1,
-      nan = "",
+      presets = "",
       tooltip = "Sets least amount of marines that can spawn per closet.",
     },
 
@@ -1570,7 +1570,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       max = 10,
       increment = 1,
       default = 5,
-      nan = "",
+      presets = "",
       tooltip = "Sets most amount of marines that can spawn per closet.",
     },
     
@@ -1585,7 +1585,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       max = 2000,
       increment = 25,
       default = 100,
-      nan = "",
+      presets = "",
       tooltip = "Influences how much damage marines can take before dying.",
     },
 

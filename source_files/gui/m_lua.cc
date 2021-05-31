@@ -387,6 +387,9 @@ int gui_add_module(lua_State *L) {
     const char *id = luaL_checkstring(L, 2);
     const char *label = luaL_checkstring(L, 3);
     const char *tip = luaL_optstring(L, 4, NULL);
+    int red = luaL_optinteger(L, 5, -1);
+    int green = luaL_optinteger(L, 6, -1);
+    int blue = luaL_optinteger(L, 7, -1);
 
     SYS_ASSERT(where && id && label);
 
@@ -402,12 +405,12 @@ int gui_add_module(lua_State *L) {
     }
 
 	if (single_pane) {
-        main_win->left_mods->AddModule(id, label, tip);		
+        main_win->left_mods->AddModule(id, label, tip, red, green, blue);		
 	} else {
 		if (StringCaseCmp(where, "left") == 0) {
-		    main_win->left_mods->AddModule(id, label, tip);
+		    main_win->left_mods->AddModule(id, label, tip, red, green, blue);
 		} else if (StringCaseCmp(where, "right") == 0) {
-		    main_win->right_mods->AddModule(id, label, tip);
+		    main_win->right_mods->AddModule(id, label, tip, red, green, blue);
 		} else {
 		    return luaL_error(L, "add_module: unknown where value '%s'\n", where);
 		}	
@@ -521,7 +524,8 @@ int gui_add_module_slider_option(lua_State *L) {
     double inc = luaL_checknumber(L, 9);
 
 	const char *units = luaL_checkstring(L, 10);
-	const char *nan = luaL_checkstring(L, 11);
+	const char *presets = luaL_checkstring(L, 11);
+    const char *nan = luaL_checkstring(L, 12);
 
     SYS_ASSERT(module && option);
 
@@ -538,9 +542,9 @@ int gui_add_module_slider_option(lua_State *L) {
 
     // FIXME : error if module is unknown
 
-    main_win->left_mods->AddSliderOption(module, option, label, tip, longtip, gap, min, max, inc, units, nan);
+    main_win->left_mods->AddSliderOption(module, option, label, tip, longtip, gap, min, max, inc, units, presets, nan);
     if (!single_pane) {
-    	main_win->right_mods->AddSliderOption(module, option, label, tip, longtip, gap, min, max, inc, units, nan);
+    	main_win->right_mods->AddSliderOption(module, option, label, tip, longtip, gap, min, max, inc, units, presets, nan);
     }
 
     return 0;
@@ -655,9 +659,9 @@ int gui_set_module_option(lua_State *L) {
 int gui_set_module_slider_option(lua_State *L) {
     const char *module = luaL_checkstring(L, 1);
     const char *option = luaL_checkstring(L, 2);
-    double value = luaL_checknumber(L, 3);
+    const char *value = luaL_checkstring(L, 3);
 
-    SYS_ASSERT(module && option && !isnan(value));
+    SYS_ASSERT(module && option && value);
 
     if (!main_win) {
         return 0;
@@ -733,17 +737,38 @@ int gui_get_module_slider_value(lua_State *L) {
     }
 	
 	double value;
+	std::string nan_value;
 	
 	if (main_win->left_mods->FindID(module)) {
 		if (main_win->left_mods->FindID(module)->FindSliderOpt(option)) {
-			value = main_win->left_mods->FindID(module)->FindSliderOpt(option)->mod_slider->value();
-			lua_pushnumber(L, value);	
+			if (main_win->left_mods->FindID(module)->FindSliderOpt(option)->nan_choices.size() > 0) {
+				if (main_win->left_mods->FindID(module)->FindSliderOpt(option)->nan_options->value() > 0) {
+					nan_value = main_win->left_mods->FindID(module)->FindSliderOpt(option)->nan_options->text(main_win->left_mods->FindID(module)->FindSliderOpt(option)->nan_options->value());
+					lua_pushstring(L, nan_value.c_str());
+				} else {
+					value = main_win->left_mods->FindID(module)->FindSliderOpt(option)->mod_slider->value();
+					lua_pushnumber(L, value);				
+				}
+			} else {
+				value = main_win->left_mods->FindID(module)->FindSliderOpt(option)->mod_slider->value();
+				lua_pushnumber(L, value);
+			}
 		}	
 	} else if (main_win->right_mods) {
 		if (main_win->right_mods->FindID(module)) {
 			if (main_win->right_mods->FindID(module)->FindSliderOpt(option)) {
-				value = main_win->right_mods->FindID(module)->FindSliderOpt(option)->mod_slider->value();
-				lua_pushnumber(L, value);	
+				if (main_win->right_mods->FindID(module)->FindSliderOpt(option)->nan_choices.size() > 0) {
+					if (main_win->right_mods->FindID(module)->FindSliderOpt(option)->nan_options->value() > 0) {
+						nan_value = main_win->right_mods->FindID(module)->FindSliderOpt(option)->nan_options->text(main_win->right_mods->FindID(module)->FindSliderOpt(option)->nan_options->value());
+						lua_pushstring(L, nan_value.c_str());
+					} else {
+						value = main_win->right_mods->FindID(module)->FindSliderOpt(option)->mod_slider->value();
+						lua_pushnumber(L, value);				
+					}
+				} else {
+					value = main_win->right_mods->FindID(module)->FindSliderOpt(option)->mod_slider->value();
+					lua_pushnumber(L, value);
+				}	
 			}
 		}	
 	} else {
