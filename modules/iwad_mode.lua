@@ -341,7 +341,7 @@ IWAD_MODE.styles = {
     windows = "few",
     scenics = "heaps",
     steepness = "some",
-    parks = "some",
+    parks = "few",
     park_detail = "few",
     ambushes = "few",
     traps = "some",
@@ -364,7 +364,7 @@ IWAD_MODE.styles = {
   MAP13 =
   {
     outdoors = "heaps",
-    big_outdoor_rooms = "some",
+    big_outdoor_rooms = "few",
     doors = "heaps",
     big_rooms = "some",
     windows = "heaps",
@@ -446,7 +446,7 @@ IWAD_MODE.styles = {
   MAP16 =
   {
     outdoors = "heaps",
-    big_outdoor_rooms = "heaps",
+    big_outdoor_rooms = "few",
     windows = "heaps",
     big_rooms = "none",
     steepness = "some",
@@ -1204,12 +1204,14 @@ function IWAD_MODE.begin_level()
     LEVEL.sky_light = 144
     LEVEL.size_consistency = "normal"
     PARAM.brightness_offset = "-1"
+    LEVEL.description = "The " .. rand.key_by_probs(nt.TECH.lexicon.n)
   elseif LEVEL.name == "MAP04" then
     LEVEL.map_W = 20
     LEVEL.size_multiplier = 0.6
     LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 160
     PARAM.brightness_offset = "-2"
+    LEVEL.description = "The " .. rand.key_by_probs(nt.TECH.lexicon.n)
   elseif LEVEL.name == "MAP05" then
     LEVEL.map_W = 28
     LEVEL.size_multiplier = 0.8
@@ -1223,8 +1225,9 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 192
     PARAM.brightness_offset = "-1"
+    LEVEL.description = "The " .. rand.key_by_probs(nt.TECH.lexicon.n)
   elseif LEVEL.name == "MAP07" then
-    LEVEL.map_W = 20
+    LEVEL.map_W = 26
     LEVEL.size_consistency = "strict"
     LEVEL.is_procedural_gotcha = true
     LEVEL.sky_light = 192
@@ -1235,7 +1238,7 @@ function IWAD_MODE.begin_level()
   elseif LEVEL.name == "MAP08" then
     LEVEL.map_W = 28
     LEVEL.size_multiplier = 0.8
-    LEVEL.size_consistency = "normal"
+    LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 192
     LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.d) .. " and Traps"
     PARAM.brightness_offset = "0"
@@ -1245,6 +1248,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 144
     PARAM.brightness_offset = "-1"
+    LEVEL.description = "The " .. rand.key_by_probs(nt.URBAN.lexicon.o)
   elseif LEVEL.name == "MAP10" then
     LEVEL.map_W = 32
     LEVEL.size_multiplier = 1.2
@@ -1261,14 +1265,15 @@ function IWAD_MODE.begin_level()
     LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.n) .. " of Destruction"
     PARAM.brightness_offset = "0"
   elseif LEVEL.name == "MAP12" then
-    LEVEL.map_W = 28
+    LEVEL.map_W = 36
     LEVEL.size_consistency = "strict"
     LEVEL.size_multiplier = 0.75
     LEVEL.has_streets = true -- Its shape implies this
     LEVEL.sky_light = 144
     PARAM.brightness_offset = "+1"
+    LEVEL.description = "The " .. rand.key_by_probs(nt.URBAN.lexicon.n)
   elseif LEVEL.name == "MAP13" then
-    LEVEL.map_W = 34
+    LEVEL.map_W = 40
     LEVEL.size_multiplier = 0.7
     LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 128
@@ -1277,17 +1282,18 @@ function IWAD_MODE.begin_level()
     PARAM.brightness_offset = "-1"
     LEVEL.squareishness = 40
   elseif LEVEL.name == "MAP14" then
-    LEVEL.map_W = 24
+    LEVEL.map_W = 28
     LEVEL.size_multiplier = 0.5
     LEVEL.size_consistency = "strict"
     LEVEL.area_multiplier = 0.8
     LEVEL.sky_light = 144
     PARAM.brightness_offset = "0"
     LEVEL.squareishness = 25
+    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.a) .. " Dens"
   elseif LEVEL.name == "MAP15" then
     LEVEL.map_W = 38
     LEVEL.size_multiplier = 0.8
-    LEVEL.area_multiplier = 1.33
+    LEVEL.area_multiplier = 1.1
     LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 160
     LEVEL.has_streets = true -- Shaped enough for this
@@ -1295,7 +1301,7 @@ function IWAD_MODE.begin_level()
     PARAM.brightness_offset = "+1"
     LEVEL.squareishness = 40
   elseif LEVEL.name == "MAP16" then -- Streets mode
-    LEVEL.map_W = 30
+    LEVEL.map_W = 36
     LEVEL.size_multiplier = 1.2
     LEVEL.area_multiplier = 0.8
     LEVEL.size_consistency = "normal"
@@ -1306,7 +1312,7 @@ function IWAD_MODE.begin_level()
   elseif LEVEL.name == "MAP17" then
     LEVEL.map_W = 26
     LEVEL.size_multiplier = 0.65
-    LEVEL.area_multiplier = 1.33
+    LEVEL.area_multiplier = 1.2
     LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 192
     PARAM.brightness_offset = "0"
@@ -1316,12 +1322,12 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = "strict"
     LEVEL.area_multiplier = 0.75
     LEVEL.sky_light = 160
-    LEVEL.description = "The " .. rand.key_by_probs(nt.URBAN.lexicon.o)
+    LEVEL.description = "The " .. rand.key_by_probs(nt.GOTHIC.lexicon.n)
     PARAM.brightness_offset = "+1"
   elseif LEVEL.name == "MAP19" then
     LEVEL.map_W = 34
     LEVEL.size_multiplier = 0.7
-    LEVEL.area_multiplier = 1.3
+    LEVEL.area_multiplier = 1.2
     LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 176
     LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.a) .. " Citadel"
@@ -1337,7 +1343,7 @@ function IWAD_MODE.begin_level()
   elseif LEVEL.name == "MAP21" then
     LEVEL.map_W = 20
     LEVEL.size_multiplier = 0.5
-    LEVEL.area_multiplier = 1.3
+    LEVEL.area_multiplier = 1.2
     LEVEL.sky_light = 160
     LEVEL.size_consistency = "strict"
     PARAM.brightness_offset = "-2"
@@ -1347,7 +1353,7 @@ function IWAD_MODE.begin_level()
     LEVEL.area_multiplier = 1.2
     LEVEL.sky_light = 192
     LEVEL.size_consistency = "strict"
-    LEVEL.description =  "The " .. rand.key_by_probs(nt.GOTHIC.lexicon.a)
+    LEVEL.description =  "The " .. rand.key_by_probs(nt.GOTHIC.lexicon.n)
     PARAM.brightness_offset = "-1"
     LEVEL.squareishness = 30
   elseif LEVEL.name == "MAP23" then
@@ -1365,6 +1371,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 144 -- guess, can't find indoors
     PARAM.brightness_offset = "-1"
+    LEVEL.description =  "The " .. rand.key_by_probs(nt.GOTHIC.lexicon.n)
   elseif LEVEL.name == "MAP25" then
     LEVEL.map_W = 26
     LEVEL.size_multiplier = 0.6
@@ -1372,6 +1379,7 @@ function IWAD_MODE.begin_level()
     LEVEL.sky_light = 128
     LEVEL.size_consistency = "strict"
     PARAM.brightness_offset = "-2"
+    LEVEL.description = rand.key_by_probs(nt.GOTHIC.lexicon.a) .. " Bloodfalls"
   elseif LEVEL.name == "MAP26" then
     LEVEL.map_W = 30
     LEVEL.size_multiplier = 0.8
@@ -1379,6 +1387,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 144
     PARAM.brightness_offset = "-1"
+    LEVEL.description = rand.key_by_probs(nt.GOTHIC.lexicon.a) .. " Mines"
   elseif LEVEL.name == "MAP27" then
     LEVEL.map_W = 24
     LEVEL.size_multiplier = 0.6
@@ -1392,14 +1401,14 @@ function IWAD_MODE.begin_level()
     LEVEL.map_W = 28
     LEVEL.size_multiplier = 0.9
     LEVEL.area_multiplier = 1.5
-    LEVEL.size_consistency = "normal"
+    LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 144
     PARAM.brightness_offset = "0"
   elseif LEVEL.name == "MAP29" then
     LEVEL.map_W = 32
     LEVEL.size_multiplier = 0.8
     LEVEL.area_multiplier = 1.4
-    LEVEL.size_consistency = "normal"
+    LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 144
     LEVEL.description =  "The Living " .. rand.key_by_probs(nt.GOTHIC.lexicon.h)
     PARAM.brightness_offset = "-1"
@@ -1518,6 +1527,8 @@ function IWAD_MODE.begin_level()
     table.merge(STYLE, IWAD_MODE.styles[LEVEL.name])
   end
 
+ -- sanity check and fixing for level names
+  LEVEL.description = namelib.fix_up(LEVEL.description)
   LEVEL.map_H = LEVEL.map_W
 
   -- reporting changes

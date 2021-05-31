@@ -3,7 +3,7 @@ PREFABS.Pic_indust_wall_of_guns_1 =
   file = "picture/gtd_pic_industrial_wall_of_guns_set_EPIC.wad",
   map = "MAP01",
 
-  prob = 25,
+  prob = 12,
   skip_prob = 50,
 
   theme = "!hell",
