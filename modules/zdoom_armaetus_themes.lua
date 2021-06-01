@@ -5143,7 +5143,11 @@ ARMAETUS_THEMES =
       --
       gtd_wall_air_vents = 50,
       --
-      gtd_wall_of_guns = 50
+      gtd_wall_of_guns = 50,
+      --
+      gtd_wall_hell_engraving_1 = 8,
+      gtd_wall_hell_engraving_2 = 8,
+      gtd_wall_hell_engraving_3 = 8,
     },
 
     window_groups =
@@ -5572,6 +5576,10 @@ ARMAETUS_THEMES =
       gtd_wall_gothic_bottom_glass = 45,
       --
       gtd_library_tall = 35,
+      --
+      gtd_wall_hell_engraving_1 = 20,
+      gtd_wall_hell_engraving_2 = 20,
+      gtd_wall_hell_engraving_3 = 20,
     },
 
     window_groups =
