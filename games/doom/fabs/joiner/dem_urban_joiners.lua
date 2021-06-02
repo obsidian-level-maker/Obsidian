@@ -268,6 +268,9 @@ PREFABS.Joiner_bookstore =
   where  = "seeds",
   shape  = "I",
 
+  seed_w = 2,
+  seed_h = 3,
+
   texture_pack = "armaetus",
 
   tex_BRICK9 = "BRICK9",
