@@ -46,6 +46,8 @@ static void Parse_Option(const char *name, const char *value) {
         debug_messages = atoi(value) ? true : false;
     } else if (StringCaseCmp(name, "last_directory") == 0) {
         last_directory = StringDup(value);
+    } else if (StringCaseCmp(name, "filename_prefix") == 0) {
+        filename_prefix = atoi(value);
     } else {
         LogPrintf("Unknown option: '%s'\n", name);
     }
@@ -170,6 +172,7 @@ bool Options_Save(const char *filename) {
     fprintf(option_fp, "create_backups = %d\n", create_backups ? 1 : 0);
     fprintf(option_fp, "overwrite_warning = %d\n", overwrite_warning ? 1 : 0);
     fprintf(option_fp, "debug_messages = %d\n", debug_messages ? 1 : 0);
+    fprintf(option_fp, "filename_prefix = %d\n", filename_prefix);
 
     if (last_directory) {
         fprintf(option_fp, "\n");
@@ -197,6 +200,7 @@ class UI_OptionsWin : public Fl_Window {
 
    private:
     UI_CustomMenu *opt_language;
+    UI_CustomMenu *opt_filename_prefix;
 
     UI_CustomCheckBox *opt_backups;
     UI_CustomCheckBox *opt_overwrite;
@@ -279,6 +283,12 @@ class UI_OptionsWin : public Fl_Window {
         debug_messages = that->opt_debug->value() ? true : false;
         LogEnableDebug(debug_messages);
     }
+    
+    static void callback_FilenamePrefix(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+        filename_prefix = that->opt_filename_prefix->value();
+    }
 };
 
 //
@@ -312,6 +322,18 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     PopulateLanguages();
 
     cy += opt_language->h() + y_step;
+    
+    opt_filename_prefix =
+        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Filename Prefix: "));
+    opt_filename_prefix->align(FL_ALIGN_LEFT);
+    opt_filename_prefix->callback(callback_FilenamePrefix, this);
+    opt_filename_prefix->add(_("Date and Time|Number of Levels|Nothing"));
+    opt_filename_prefix->labelfont(font_style);
+	opt_filename_prefix->textfont(font_style);
+	opt_filename_prefix->selection_color(SELECTION);
+	opt_filename_prefix->value(filename_prefix);
+
+    cy += opt_filename_prefix->h() + y_step;
 
     opt_backups = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24),
                                       _(" Create Backups"));
@@ -403,7 +425,7 @@ void DLG_OptionsEditor(void) {
 
     if (!option_window) {
         int opt_w = kf_w(350);
-        int opt_h = kf_h(250);
+        int opt_h = kf_h(300);
 
         option_window =
             new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));
