@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
---  MODULE: Obsidian Texture Resources
+--  MODULE: Obsidian Epic Resource Pack
 ------------------------------------------------------------------------
 --
 --  Copyright (C) 2019-2021 Armaetus
@@ -1030,7 +1030,7 @@ OB_MODULES["armaetus_epic_textures"] =
 
   name = "armaetus_epic_textures",
 
-  label = _("ZDoom: Obsidian Textures"),
+  label = _("ZDoom: Obsidian Epic Resource Pack"),
 
   side = "left",
   priority = 75,
@@ -1048,7 +1048,7 @@ OB_MODULES["armaetus_epic_textures"] =
     all_done = ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in
   },
 
-  tooltip = "If enabled, adds textures from the Obsidian Texture Pack, which also includes some new custom texture exclusive prefabs.",
+  tooltip = "If enabled, adds textures and content from the Obsidian Epic Resource Pack, which also includes new exclusive prefabs.",
 
   options =
   {
