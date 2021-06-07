@@ -103,12 +103,14 @@ class UI_Module : public Fl_Group {
 };
 
 class UI_CustomMods : public Fl_Group {
-   private:
-    Fl_Group *mod_pack_group;
-
+   
+   public:
     Fl_Group *mod_pack;
 
     Fl_Scrollbar *sbar;
+   
+   private:
+    Fl_Group *mod_pack_group;
 
     // area occupied by module list
     int mx, my, mw, mh;
