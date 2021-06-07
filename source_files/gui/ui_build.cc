@@ -24,11 +24,6 @@
 #include "lib_util.h"
 #include "main.h"
 
-#define PROGRESS_FG SELECTION
-#define PROGRESS_BG GAP_COLOR
-
-#define NODE_PROGRESS_FG SELECTION
-
 UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     : Fl_Group(X, Y, W, H, label) {
     box(box_style);
@@ -76,7 +71,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     progress = new Fl_Progress(X + pad, cy, W - pad * 2, kf_h(26));
     progress->align(FL_ALIGN_INSIDE);
     progress->box(FL_FLAT_BOX);
-    progress->color(PROGRESS_BG, PROGRESS_BG);
+    progress->color(GAP_COLOR, GAP_COLOR);
     progress->value(0.0);
     progress->labelsize(FL_NORMAL_SIZE + 2);
     progress->labelfont(font_style);
@@ -206,12 +201,12 @@ void UI_Build::Prog_Init(int node_perc, const char *extra_steps) {
     progress->maximum(1.0);
 
     progress->value(0.0);
-    progress->color(PROGRESS_BG, PROGRESS_FG);
-    progress->labelcolor(fl_contrast(FONT_COLOR, PROGRESS_BG));
+    progress->color(GAP_COLOR, SELECTION);
+    progress->labelcolor(fl_contrast(FONT_COLOR, GAP_COLOR));
 }
 
 void UI_Build::Prog_Finish() {
-    progress->color(PROGRESS_BG, PROGRESS_BG);
+    progress->color(GAP_COLOR, GAP_COLOR);
     progress->value(0.0);
     progress->label("");
 }
@@ -267,7 +262,7 @@ void UI_Build::Prog_Nodes(int pos, int limit) {
 
     if (!node_begun) {
         node_begun = true;
-        progress->selection_color(NODE_PROGRESS_FG);
+        progress->selection_color(SELECTION);
     }
 
     float val = pos / (float)limit;

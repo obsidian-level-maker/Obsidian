@@ -135,6 +135,8 @@ void DLG_EditSeed(void);
 void DLG_ViewLogs(void);
 void DLG_ManageConfig(void);
 
+void Restyle();
+
 class game_interface_c {
     /* this is an abstract base class */
 
