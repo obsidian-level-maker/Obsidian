@@ -583,7 +583,7 @@ GROW_BLOB_1 =
   }
 },
 
- --7.50 stuff
+--7.50 stuff
 
 GROW_DIAG_BLOB1 =
 {
@@ -1984,7 +1984,9 @@ SPROUT_JOINER_4x2 =
 
   new_room =
   {
-    symmetry = { x=4, y=4, dir=8 },
+    symmetry = { kind="mirror", x=4, y=4, dir=8 },
+    symmetry = { kind="mirror", x=4, y=4, dir=6 },
+    symmetry = { kind="rotate", x=2, y=3, x2=5, y2=5 },
   },
 
   joiner =
@@ -2046,8 +2048,8 @@ SPROUT_JOINER_2x3 =
 
   new_room =
   {
-    symmetry = { kind="mirror", x=2, y=4, dir=8 },
-    symmetry2 = { kind="mirror", x=2, y=4, dir=4 },
+    symmetry = { kind="mirror", x=2, y=5, dir=8 },
+    symmetry2 = { kind="mirror", x=2, y=5, dir=4 },
     symmetry3 = { kind="rotate", x=2, y=5, x2=3, y2=6 }
   },
 
@@ -2078,8 +2080,8 @@ SPROUT_JOINER_2x3_SYMM =
 
   new_room =
   {
-    symmetry = { kind="mirror", x=2, y=7, dir=6},
-    symmetry2 = { kind="mirror", x=2, y=7, dir=4},
+    symmetry = { kind="mirror", x=2, y=6, dir=6},
+    symmetry2 = { kind="mirror", x=2, y=6, dir=4},
     symmetry3 = { kind="rotate", x=2, y=5, x2=3, y2=8}
   },
 
@@ -6109,6 +6111,42 @@ GROW_MAZE_STRAIGHT_CAGE_ALT =
     "...","#1C",
     "x1x","x1x",
     "x1x","x1x",
+  }
+},
+
+-- [TWO-WAYS]
+
+GROW_TWO_WAY_SMALL =
+{
+  prob = 10,
+  skip_prob = 80,
+
+  structure =
+  {
+    "....","1111",
+    "....","11vv",
+    "....","AAAA",
+    "....","AAAA",
+    "....","^^11",
+    "....","1111",
+    "x11x","x11x",
+  }
+},
+
+GROW_THREE_WAY_SMALL =
+{
+  prob = 7,
+  skip_prob = 80,
+
+  structure =
+  {
+    "......","111111",
+    "......","11vv11",
+    "......","AAAAAA",
+    "......","AAAAAA",
+    "......","^^11^^",
+    "......","111111",
+    "xx11xx","xx11xx",
   }
 },
 

@@ -289,7 +289,7 @@ DOOM.MATERIALS =
 
   FLAT5    = { f="FLAT5",   t="BROWNHUG" },
   FLAT5_1  = { f="FLAT5_1", t="WOOD1" },
-  FLAT5_2  = { f="FLAT5_2", t="WOOD12" },
+  FLAT5_2  = { f="FLAT5_2", t="WOOD1" },
   FLAT5_3  = { f="FLAT5_3", t="REDWALL" },
   FLAT5_4  = { f="FLAT5_4", t="STONE" },
   FLAT5_6  = { f="FLAT5_6", t="CRACKLE4" },
