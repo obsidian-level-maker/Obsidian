@@ -830,38 +830,23 @@ void Restyle() {
     main_win->color(GAP_COLOR, SELECTION);
 	main_win->menu_bar->box(box_style);
     main_win->menu_bar->selection_color(SELECTION);
-    main_win->menu_bar->textfont(font_style);
     main_win->game_box->box(box_style);
-    main_win->game_box->heading->labelfont(font_style | FL_BOLD);
-    main_win->game_box->game->labelfont(font_style);
     main_win->game_box->game->selection_color(SELECTION);
-    main_win->game_box->engine->labelfont(font_style);
     main_win->game_box->engine->selection_color(SELECTION);
-    main_win->game_box->engine_help->labelfont(font_style);
-    main_win->game_box->length->labelfont(font_style);
     main_win->game_box->length->selection_color(SELECTION);
-    main_win->game_box->theme->labelfont(font_style);
     main_win->game_box->theme->selection_color(SELECTION);
     main_win->game_box->build->box(button_style);
     main_win->game_box->build->color(BUTTON_COLOR);
-    main_win->game_box->build->labelfont(font_style | FL_BOLD);
     main_win->game_box->quit->box(button_style);
     main_win->game_box->quit->color(BUTTON_COLOR);
-    main_win->game_box->quit->labelfont(font_style);
-    main_win->game_box->redraw();
     main_win->build_box->box(box_style);
-    main_win->build_box->seed_disp->labelfont(font_style);
-    main_win->build_box->name_disp->labelfont(font_style);
-    main_win->build_box->status->labelfont(font_style);
     main_win->build_box->progress->color(GAP_COLOR, GAP_COLOR);
-    main_win->build_box->progress->labelfont(font_style);
     main_win->build_box->redraw();
     main_win->left_mods->color(GAP_COLOR, GAP_COLOR);
     main_win->left_mods->sbar->slider(button_style);
     main_win->left_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
     main_win->left_mods->sbar->labelcolor(SELECTION);
     main_win->left_mods->mod_pack->color(GAP_COLOR);
-    main_win->left_mods->redraw();
     if (main_win->right_mods) {
     	main_win->right_mods->color(GAP_COLOR, GAP_COLOR);
     	main_win->right_mods->sbar->slider(button_style);
@@ -869,8 +854,7 @@ void Restyle() {
     	main_win->right_mods->sbar->labelcolor(SELECTION);
     	main_win->right_mods->mod_pack->color(GAP_COLOR);
     	main_win->right_mods->redraw();
-    }
-    main_win->redraw();    
+    }   
 }
 
 /* ----- main program ----------------------------- */

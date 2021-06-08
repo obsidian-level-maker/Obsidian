@@ -438,6 +438,55 @@ class UI_ThemeWin : public Fl_Window {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         font_theme = that->opt_font_theme->value();
+        if (font_theme > 0) {
+			for (auto font = font_menu_items[font_theme - 1].begin(); font != font_menu_items[font_theme - 1].end(); ++font) {
+				font_style = font->second;
+				fl_font(font_style, FL_NORMAL_SIZE);
+			}
+    	} else {
+    		font_style = 0;
+    		fl_font(0, FL_NORMAL_SIZE);
+    	}
+    	main_win->menu_bar->textfont(font_style);
+    	main_win->menu_bar->redraw();
+    	main_win->game_box->heading->labelfont(font_style);
+    	main_win->game_box->game->labelfont(font_style);
+    	main_win->game_box->game->textfont(font_style);
+    	main_win->game_box->game->copy_label("										");
+    	main_win->game_box->engine->labelfont(font_style);
+    	main_win->game_box->engine->textfont(font_style);
+    	main_win->game_box->engine->copy_label("										");
+    	main_win->game_box->engine_help->copy_label("");
+    	main_win->game_box->engine_help->labelfont(font_style);
+    	main_win->game_box->length->labelfont(font_style);
+    	main_win->game_box->length->textfont(font_style);
+    	main_win->game_box->length->copy_label("										");
+    	main_win->game_box->length_help->copy_label("");
+    	main_win->game_box->length_help->labelfont(font_style);
+    	main_win->game_box->theme->labelfont(font_style);
+    	main_win->game_box->theme->textfont(font_style);
+    	main_win->game_box->theme->copy_label("										");
+    	main_win->game_box->theme_help->labelfont(font_style);
+    	main_win->game_box->theme_help->copy_label("");
+    	main_win->game_box->build->labelfont(font_style | FL_BOLD);
+    	main_win->game_box->quit->labelfont(font_style);
+    	for (int x = 0; x < main_win->game_box->children(); x++) {
+            main_win->game_box->child(x)->redraw();
+        }
+        main_win->game_box->game->copy_label("Game: ");
+        main_win->game_box->engine->copy_label("Engine: ");
+        main_win->game_box->length->copy_label("Length: ");
+        main_win->game_box->theme->copy_label("Theme: ");
+    	main_win->game_box->engine_help->copy_label("?");
+    	main_win->game_box->length_help->copy_label("?");
+    	main_win->game_box->theme_help->copy_label("?");        
+    	main_win->build_box->seed_disp->labelfont(font_style);
+    	main_win->build_box->name_disp->labelfont(font_style);
+    	main_win->build_box->status->labelfont(font_style);
+    	main_win->build_box->progress->labelfont(font_style);
+    	for (int x = 0; x < main_win->build_box->children(); x++) {
+            main_win->build_box->child(x)->redraw();
+        }
     }
     
     static void callback_WidgetTheme(Fl_Widget *w, void *data) {
