@@ -1140,8 +1140,8 @@ ARMAETUS_MATERIALS = {
   BFALL1   = { t="BFAL1",  f="BLOOD1", sane=1 },
   BLOOD1   = { t="BFAL1",  f="BLOOD1", sane=1 },
 
-  SFALL1   = { t="SFALL1",  f="NUKAGE1", sane=1 },
-  NUKAGE1  = { t="SFALL1",  f="NUKAGE1", sane=1 },
+  SFALL1   = { t="NFALL1",  f="NUKAGE1", sane=1 },
+  NUKAGE1  = { t="NFALL1",  f="NUKAGE1", sane=1 },
 
   KFALL1   = { t="SLMFALL1", f="SLIME01", sane=1 }, -- new patches
   KFALL5   = { t="SLMFALL1", f="SLIME05", sane=1 },
