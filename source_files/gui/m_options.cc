@@ -421,16 +421,13 @@ int UI_OptionsWin::handle(int event) {
 }
 
 void DLG_OptionsEditor(void) {
-    static UI_OptionsWin *option_window = NULL;
 
-    if (!option_window) {
-        int opt_w = kf_w(350);
-        int opt_h = kf_h(300);
+    int opt_w = kf_w(350);
+    int opt_h = kf_h(300);
 
-        option_window =
+    UI_OptionsWin *option_window =
             new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));
-    }
-
+            
     option_window->want_quit = false;
     option_window->set_modal();
     option_window->show();
@@ -440,11 +437,10 @@ void DLG_OptionsEditor(void) {
         Fl::wait();
     }
 
-    option_window->set_non_modal();
-    option_window->hide();
-
     // save the options now
     Options_Save(options_file);
+    
+    delete option_window;
 }
 
 //--- editor settings ---

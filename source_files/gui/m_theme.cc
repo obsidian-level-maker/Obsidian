@@ -442,10 +442,12 @@ class UI_ThemeWin : public Fl_Window {
 			for (auto font = font_menu_items[font_theme - 1].begin(); font != font_menu_items[font_theme - 1].end(); ++font) {
 				font_style = font->second;
 				fl_font(font_style, FL_NORMAL_SIZE);
+				fl_message_font(font_style, FL_NORMAL_SIZE);
 			}
     	} else {
     		font_style = 0;
     		fl_font(0, FL_NORMAL_SIZE);
+    		fl_message_font(font_style, FL_NORMAL_SIZE);
     	}
     	main_win->menu_bar->textfont(font_style);
     	main_win->menu_bar->redraw();
@@ -885,7 +887,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
 
     // restart needed warning
     heading = new Fl_Box(FL_NO_BOX, x() + pad - kf_w(5), H - dh - kf_h(3), W - pad * 2,
-                         kf_h(14), _("Note: some options require a restart."));
+                         kf_h(14), _("Note: Some theme options will not be effective until a restart."));
     heading->align(FL_ALIGN_INSIDE);
     heading->labelsize(small_font_size);
     heading->labelfont(font_style);
@@ -918,15 +920,12 @@ int UI_ThemeWin::handle(int event) {
 }
 
 void DLG_ThemeEditor(void) {
-    static UI_ThemeWin *theme_window = NULL;
 
-    if (!theme_window) {
-        int theme_w = kf_w(350);
-        int theme_h = kf_h(500);
+    int theme_w = kf_w(350);
+    int theme_h = kf_h(500);
 
-        theme_window =
+    UI_ThemeWin *theme_window =
             new UI_ThemeWin(theme_w, theme_h, _("OBSIDIAN Theme Options"));
-    }
 
     theme_window->want_quit = false;
     theme_window->set_modal();
@@ -937,11 +936,11 @@ void DLG_ThemeEditor(void) {
         Fl::wait();
     }
 
-    theme_window->set_non_modal();
-    theme_window->hide();
-
     // save the options now
     Theme_Options_Save(theme_file);
+    
+    delete theme_window;
+    
 }
 
 //--- editor settings ---

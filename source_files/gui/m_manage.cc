@@ -818,16 +818,12 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
 UI_Manage_Config::~UI_Manage_Config() {}
 
 void DLG_ManageConfig(void) {
-    static UI_Manage_Config *config_window = NULL;
 
-    // if it already exists, simply re-show it
-    if (!config_window) {
-        int manage_w = kf_w(600);
-        int manage_h = kf_h(380);
+    int manage_w = kf_w(600);
+    int manage_h = kf_h(380);
 
-        config_window = new UI_Manage_Config(manage_w, manage_h,
+    UI_Manage_Config *config_window = new UI_Manage_Config(manage_w, manage_h,
                                              _("OBSIDIAN Config Manager"));
-    }
 
     config_window->want_quit = false;
     config_window->set_modal();
@@ -841,8 +837,7 @@ void DLG_ManageConfig(void) {
         Fl::wait();
     }
 
-    config_window->set_non_modal();
-    config_window->hide();
+    delete config_window;
 }
 
 //--- editor settings ---

@@ -920,12 +920,9 @@ int main(int argc, char **argv) {
         Options_Load(options_file);
         Theme_Options_Load(theme_file);
         Trans_SetLanguage();
-    }
-
-    if (!batch_mode) {
         Main_SetupFLTK();
     }
-
+    
     LogEnableDebug(debug_messages);
 
     twister_Init();
