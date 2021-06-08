@@ -27,6 +27,12 @@ PREFABS.Decor_EPIC_craneo_painting_point =
     CPHRSMN2 = 50,
     CPSATRN = 50,
     CPVLAD = 50,
+    CPPAINT1 = 50,
+    CPPAINT2 = 50,
+    CPPAINT3 = 50,
+    CPPAINT4 = 50,
+    CPPAINT5 = 50,
+    CPPAINT6 = 50,
   },
 
   tex_CPFLAYIN =
@@ -42,5 +48,11 @@ PREFABS.Decor_EPIC_craneo_painting_point =
     CPHRSMN2 = 50,
     CPSATRN = 50,
     CPVLAD = 50,
+    CPPAINT1 = 50,
+    CPPAINT2 = 50,
+    CPPAINT3 = 50,
+    CPPAINT4 = 50,
+    CPPAINT5 = 50,
+    CPPAINT6 = 50,
   }
 }

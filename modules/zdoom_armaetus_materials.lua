@@ -1232,6 +1232,12 @@ ARMAETUS_MATERIALS = {
   CPHRSMN2 = { t="CPHRSMN2", f="CEIL4_3"},
   CPSATRN = { t="CPSATRN", f="CEIL4_3"},
   CPVLAD = { t="CPVLAD", f="CEIL4_3"},
+  CPPAINT1 = { t="CPPAINT1", f="CEIL4_3"},
+  CPPAINT2 = { t="CPPAINT2", f="CEIL4_3"},
+  CPPAINT3 = { t="CPPAINT3", f="CEIL4_3"},
+  CPPAINT4 = { t="CPPAINT4", f="CEIL4_3"},
+  CPPAINT5 = { t="CPPAINT5", f="CEIL4_3"},
+  CPPAINT6 = { t="CPPAINT6", f="CEIL4_3"},
 
   -- Craneo's wall of guns
   CRGNRCK1 = { t="CRGNRCK1", f="FLAT19"}, -- wall of vanilla weapons
