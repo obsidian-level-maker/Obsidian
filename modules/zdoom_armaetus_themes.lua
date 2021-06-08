@@ -20,6 +20,7 @@
 -- General room themes are placed here (includes cave rooms)
 ARMAETUS_ROOM_THEMES =
 {
+-- START OF HALLWAY THEMES
   any_ducts_Hallway =
   {
     env   = "hallway",
@@ -173,7 +174,7 @@ ARMAETUS_ROOM_THEMES =
       FLAT1 = 1
     }
   },
--- END OF HALLWAY THEMES
+-- START OF TECH THEMES
 
   tech_GrayMet =
   {
@@ -1154,9 +1155,6 @@ ARMAETUS_ROOM_THEMES =
       METAL8 = 7,
       METAL9 = 7,
       METAL10 = 7,
-
-      RUSTWALL = 2,
-      RUSTWAL2 = 2
     },
 
     floors =
@@ -1403,7 +1401,7 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
--- END OF TECH THEMES
+-- START OF HELL THEMES
 
   hell_ArmaetusGothic =
   {
@@ -1914,6 +1912,74 @@ ARMAETUS_ROOM_THEMES =
       RROCK10 = 20,
       RROCK12 = 20,
       RROCK15 = 20,
+    },
+  },
+
+  hell_greenBrick =
+  {
+    env = "building",
+    prob = 20,
+
+    walls =
+    {
+      BRIKS25 = 15,
+      BRVINE = 5,
+
+      MARBLE = 8,
+      MARBLE4 = 8,
+      MARBLE5 = 8,
+      MARBLE6 = 8,
+      MARBLE7 = 8,
+      MARBLE8 = 8,
+
+      MM206 = 10,
+      MM207 = 10,
+
+      TEKGREN2 = 15,
+
+      ZIMMER1 = 5,
+      ZIMMER2 = 5,
+      ZIMMER7 = 5,
+    },
+
+    floors =
+    {
+      FLOOR7_2 = 5,
+      SLIME13 = 5,
+
+      FLOOR51C = 5,
+
+      GRASS1 = 2,
+      GRASS2 = 2,
+
+      G20 = 5,
+      GRNROCK = 5,
+
+      GROUND03 = 5,
+      GROUND04 = 5,
+
+      RROCK20 = 5,
+      STARG1F = 5,
+    },
+
+    ceilings =
+    {
+      FLOOR7_2 = 5,
+      SLIME13 = 5,
+
+      FLOOR51C = 5,
+
+      GRASS1 = 2,
+      GRASS2 = 2,
+
+      G20 = 5,
+      GRNROCK = 5,
+
+      GROUND03 = 5,
+      GROUND04 = 5,
+
+      RROCK20 = 5,
+      STARG1F = 5,
     },
   },
 
@@ -2630,7 +2696,7 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
--- END OF HELL THEMES
+-- START OF URBAN THEMES
 
   --  18 through 20 don't tile horizontally well so I removed them. 14 and 30 seems more like it works for exterior.
   urban_ArmaetusBricks =
@@ -3103,6 +3169,68 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
+  urban_blueBrick =
+  {
+    env = "building",
+    prob = 25,
+
+    walls =
+    {
+      BRIKS37 = 5,
+      BRIKS38 = 5,
+    },
+
+    floors =
+    {
+      FLAT1 = 5,
+      FLAT3 = 5,
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+      MFLR8_1 = 5,
+      FLAT19 = 5,
+      SLIME14 = 5,
+      SLIME15 = 5,
+
+      -- explicitly blue flats
+      FLAT14 = 15,
+      CEIL4_1 = 15,
+      CEIL4_2 = 15,
+      FLOOR1_1 = 15,
+
+      FFLAT01 = 5,
+      FLOOR4_7 = 5,
+      GSTN01 = 5,
+      STARGRF = 5,
+      TILES4 = 5,
+      TILES6 = 5
+    },
+
+    ceilings =
+    {
+      FLAT1 = 5,
+      FLAT3 = 5,
+      FLOOR0_3 = 5,
+      FLOOR0_5 = 5,
+      MFLR8_1 = 5,
+      FLAT19 = 5,
+      SLIME14 = 5,
+      SLIME15 = 5,
+
+      -- explicitly blue flats
+      FLAT14 = 15,
+      CEIL4_1 = 15,
+      CEIL4_2 = 15,
+      FLOOR1_1 = 15,
+
+      FFLAT01 = 5,
+      FLOOR4_7 = 5,
+      GSTN01 = 5,
+      STARGRF = 5,
+      TILES4 = 5,
+      TILES6 = 5
+    }
+  },
+
   -- MSSP: inspired by Return to Castle Wolfenstein!
   -- Emphasis on grey/dark bricks and wood floors/ceilings
   urban_returnToCastleWolf =
@@ -3447,7 +3575,7 @@ ARMAETUS_ROOM_THEMES =
     }
   }
 
--- END OF URBAN THEMES
+-- END OF THEMES TABLES
 }
 
 -- Custom liquids
@@ -5143,7 +5271,11 @@ ARMAETUS_THEMES =
       --
       gtd_wall_air_vents = 50,
       --
-      gtd_wall_of_guns = 50
+      gtd_wall_of_guns = 50,
+      --
+      gtd_wall_hell_engraving_1 = 8,
+      gtd_wall_hell_engraving_2 = 8,
+      gtd_wall_hell_engraving_3 = 8,
     },
 
     window_groups =
@@ -5572,6 +5704,10 @@ ARMAETUS_THEMES =
       gtd_wall_gothic_bottom_glass = 45,
       --
       gtd_library_tall = 35,
+      --
+      gtd_wall_hell_engraving_1 = 20,
+      gtd_wall_hell_engraving_2 = 20,
+      gtd_wall_hell_engraving_3 = 20,
     },
 
     window_groups =
