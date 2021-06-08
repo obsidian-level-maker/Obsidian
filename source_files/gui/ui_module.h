@@ -36,16 +36,21 @@ class UI_Module : public Fl_Group {
     // -  module is "enabled" when mod_button->value() == 1
     // -  module is "shown" when visible() == true
 
-   private:
-    std::string id_name;
-
-    UI_CustomCheckBox *mod_button;
-
+   public:
+   
+    Fl_Box *heading;
+    
     std::map<std::string, UI_RChoice *> choice_map;
     
     std::map<std::string, UI_RSlide *> choice_map_slider;
     
     std::map<std::string, UI_RButton *> choice_map_button;
+   
+   private:
+   
+    std::string id_name;
+
+    UI_CustomCheckBox *mod_button;
 
     // only used while positioning the options (as they are added)
     int cur_opt_y;

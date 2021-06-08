@@ -487,6 +487,66 @@ class UI_ThemeWin : public Fl_Window {
     	for (int x = 0; x < main_win->build_box->children(); x++) {
             main_win->build_box->child(x)->redraw();
         }
+        for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+        	UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
+            SYS_ASSERT(M);
+            M->heading->labelfont(font_style | FL_BOLD);
+            M->redraw();
+			std::map<std::string, UI_RChoice *>::const_iterator IT;
+			std::map<std::string, UI_RSlide *>::const_iterator IT2;
+			std::map<std::string, UI_RButton *>::const_iterator IT3;
+			for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
+				UI_RChoice *rch = IT->second;
+				rch->mod_label->labelfont(font_style);
+				rch->mod_menu->textfont(font_style);
+				rch->mod_help->labelfont(font_style);
+				rch->mod_label->redraw();
+			}			
+			for (IT2 = M->choice_map_slider.begin(); IT2 != M->choice_map_slider.end(); IT2++) {
+				UI_RSlide *rsl = IT2->second;
+				rsl->mod_label->labelfont(font_style);
+				rsl->mod_entry->labelfont(font_style);
+				rsl->mod_help->labelfont(font_style);
+				rsl->mod_label->redraw();
+			}			
+			for (IT3 = M->choice_map_button.begin(); IT3 != M->choice_map_button.end(); IT3++) {
+				UI_RButton *rbt = IT3->second;
+				rbt->mod_label->labelfont(font_style);
+				rbt->mod_help->labelfont(font_style);
+				rbt->mod_label->redraw();
+			}
+        }
+        if (main_win->right_mods) {
+		    for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
+		    	UI_Module *M = (UI_Module *)main_win->right_mods->mod_pack->child(x);
+		        SYS_ASSERT(M);
+		        M->heading->labelfont(font_style | FL_BOLD);
+		        M->redraw();
+				std::map<std::string, UI_RChoice *>::const_iterator IT;
+				std::map<std::string, UI_RSlide *>::const_iterator IT2;
+				std::map<std::string, UI_RButton *>::const_iterator IT3;
+				for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
+					UI_RChoice *rch = IT->second;
+					rch->mod_label->labelfont(font_style);
+					rch->mod_menu->textfont(font_style);
+					rch->mod_help->labelfont(font_style);
+					rch->mod_label->redraw();
+				}			
+				for (IT2 = M->choice_map_slider.begin(); IT2 != M->choice_map_slider.end(); IT2++) {
+					UI_RSlide *rsl = IT2->second;
+					rsl->mod_label->labelfont(font_style);
+					rsl->mod_entry->labelfont(font_style);
+					rsl->mod_help->labelfont(font_style);
+					rsl->mod_label->redraw();
+				}			
+				for (IT3 = M->choice_map_button.begin(); IT3 != M->choice_map_button.end(); IT3++) {
+					UI_RButton *rbt = IT3->second;
+					rbt->mod_label->labelfont(font_style);
+					rbt->mod_help->labelfont(font_style);
+					rbt->mod_label->redraw();
+				}
+		    }
+		}
     }
     
     static void callback_WidgetTheme(Fl_Widget *w, void *data) {
