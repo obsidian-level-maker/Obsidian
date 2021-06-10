@@ -635,6 +635,20 @@ class UI_ThemeWin : public Fl_Window {
     		that->opt_gap_color->color(fl_rgb_color(gap_red, gap_green, gap_blue));
     		that->opt_gap_color->redraw();
     	}
+    	GAP_COLOR = fl_rgb_color(gap_red, gap_green, gap_blue);
+    	main_win->color(GAP_COLOR, SELECTION);
+    	main_win->redraw();
+    	main_win->build_box->progress->color(GAP_COLOR, GAP_COLOR);
+    	main_win->build_box->redraw();
+    	main_win->left_mods->color(GAP_COLOR, GAP_COLOR);
+    	main_win->left_mods->mod_pack->color(GAP_COLOR);
+    	main_win->left_mods->redraw();
+    	if (main_win->right_mods) {
+			main_win->right_mods->color(GAP_COLOR, GAP_COLOR);
+			main_win->right_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
+			main_win->right_mods->mod_pack->color(GAP_COLOR);
+			main_win->right_mods->redraw();
+    	} 
     }
     
     static void callback_LoadTheme(Fl_Widget *w, void *data) {

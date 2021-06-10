@@ -840,13 +840,10 @@ void Restyle() {
     main_win->game_box->quit->box(button_style);
     main_win->game_box->quit->color(BUTTON_COLOR);
     main_win->build_box->box(box_style);
-    main_win->build_box->progress->color(GAP_COLOR, GAP_COLOR);
     main_win->build_box->redraw();
-    main_win->left_mods->color(GAP_COLOR, GAP_COLOR);
     main_win->left_mods->sbar->slider(button_style);
     main_win->left_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
     main_win->left_mods->sbar->labelcolor(SELECTION);
-    main_win->left_mods->mod_pack->color(GAP_COLOR);
     if (main_win->right_mods) {
     	main_win->right_mods->color(GAP_COLOR, GAP_COLOR);
     	main_win->right_mods->sbar->slider(button_style);
