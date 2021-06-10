@@ -830,9 +830,7 @@ void Restyle() {
 	main_win->menu_bar->box(box_style);
     main_win->game_box->box(box_style);
     main_win->game_box->build->box(button_style);
-    main_win->game_box->build->color(BUTTON_COLOR);
     main_win->game_box->quit->box(button_style);
-    main_win->game_box->quit->color(BUTTON_COLOR);
     main_win->build_box->box(box_style);
     main_win->build_box->redraw();
     main_win->left_mods->sbar->slider(button_style);

@@ -639,6 +639,36 @@ class UI_ThemeWin : public Fl_Window {
 			main_win->right_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
 			main_win->right_mods->redraw();
 		} 
+		for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+        	UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
+            SYS_ASSERT(M);
+			std::map<std::string, UI_RSlide *>::const_iterator IT;		
+			for (IT = M->choice_map_slider.begin(); IT != M->choice_map_slider.end(); IT++) {
+				UI_RSlide *rsl = IT->second;
+				rsl->prev_button->color(BUTTON_COLOR);
+				rsl->mod_slider->color(BUTTON_COLOR);
+				rsl->next_button->color(BUTTON_COLOR);
+				rsl->prev_button->redraw();
+				rsl->mod_slider->redraw();
+				rsl->prev_button->redraw();
+			}			
+        }
+        if (main_win->right_mods) {
+		    for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
+		    	UI_Module *M = (UI_Module *)main_win->right_mods->mod_pack->child(x);
+		        SYS_ASSERT(M);
+				std::map<std::string, UI_RSlide *>::const_iterator IT;			
+				for (IT = M->choice_map_slider.begin(); IT != M->choice_map_slider.end(); IT++) {
+					UI_RSlide *rsl = IT->second;
+					rsl->prev_button->color(BUTTON_COLOR);
+					rsl->mod_slider->color(BUTTON_COLOR);
+					rsl->next_button->color(BUTTON_COLOR);
+					rsl->prev_button->redraw();
+					rsl->mod_slider->redraw();
+					rsl->prev_button->redraw();
+				}			
+		    }
+		}
     }
     
     static void callback_GradientColor(Fl_Widget *w, void *data) {
