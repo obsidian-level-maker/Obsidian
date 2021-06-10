@@ -827,14 +827,8 @@ bool Build_Cool_Shit() {
 // Apply theme changes without restarting hopefully
 
 void Restyle() {
-    main_win->color(GAP_COLOR, SELECTION);
 	main_win->menu_bar->box(box_style);
-    main_win->menu_bar->selection_color(SELECTION);
     main_win->game_box->box(box_style);
-    main_win->game_box->game->selection_color(SELECTION);
-    main_win->game_box->engine->selection_color(SELECTION);
-    main_win->game_box->length->selection_color(SELECTION);
-    main_win->game_box->theme->selection_color(SELECTION);
     main_win->game_box->build->box(button_style);
     main_win->game_box->build->color(BUTTON_COLOR);
     main_win->game_box->quit->box(button_style);
@@ -845,11 +839,8 @@ void Restyle() {
     main_win->left_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
     main_win->left_mods->sbar->labelcolor(SELECTION);
     if (main_win->right_mods) {
-    	main_win->right_mods->color(GAP_COLOR, GAP_COLOR);
     	main_win->right_mods->sbar->slider(button_style);
     	main_win->right_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
-    	main_win->right_mods->sbar->labelcolor(SELECTION);
-    	main_win->right_mods->mod_pack->color(GAP_COLOR);
     	main_win->right_mods->redraw();
     }   
 }

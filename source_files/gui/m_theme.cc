@@ -603,6 +603,23 @@ class UI_ThemeWin : public Fl_Window {
     		that->opt_bg2_color->color(fl_rgb_color(bg2_red, bg2_green, bg2_blue));
     		that->opt_bg2_color->redraw();
     	}
+    	SELECTION = fl_rgb_color(bg2_red, bg2_green, bg2_blue);
+    	main_win->color(GAP_COLOR, SELECTION);
+		main_win->menu_bar->selection_color(SELECTION);
+		main_win->redraw();
+		main_win->game_box->game->selection_color(SELECTION);
+		main_win->game_box->engine->selection_color(SELECTION);
+		main_win->game_box->length->selection_color(SELECTION);
+		main_win->game_box->theme->selection_color(SELECTION);
+		for (int x = 0; x < main_win->game_box->children(); x++) {
+            main_win->game_box->child(x)->redraw();
+        }
+		main_win->left_mods->sbar->labelcolor(SELECTION);
+		main_win->left_mods->redraw();
+		if (main_win->right_mods) {
+			main_win->right_mods->sbar->labelcolor(SELECTION);
+			main_win->right_mods->redraw();
+		} 
     }
     
     static void callback_ButtonColor(Fl_Widget *w, void *data) {
@@ -611,6 +628,17 @@ class UI_ThemeWin : public Fl_Window {
     		that->opt_button_color->color(fl_rgb_color(button_red, button_green, button_blue));
     		that->opt_button_color->redraw();
     	}
+    	BUTTON_COLOR = fl_rgb_color(button_red, button_green, button_blue);
+    	main_win->game_box->build->color(BUTTON_COLOR);
+    	main_win->game_box->quit->color(BUTTON_COLOR);
+		for (int x = 0; x < main_win->game_box->children(); x++) {
+            main_win->game_box->child(x)->redraw();
+        }
+		main_win->left_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
+		if (main_win->right_mods) {
+			main_win->right_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
+			main_win->right_mods->redraw();
+		} 
     }
     
     static void callback_GradientColor(Fl_Widget *w, void *data) {
