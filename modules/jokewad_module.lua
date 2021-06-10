@@ -25,6 +25,7 @@ Actor ObE_LootValue : CustomInventory
   Height 16
   Radius 16
   Scale 0.5
+  Tag "Pandemic Supplies"
 
   Inventory.Icon "OBTTE0"
   Inventory.AltHUDIcon "OBTTE0"

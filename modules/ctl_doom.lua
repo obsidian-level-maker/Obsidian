@@ -676,6 +676,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      priority = 100,
      },
      
      float_stimpack=
@@ -695,6 +696,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      priority = 99,
      },
      
      float_medikit=
@@ -714,6 +716,8 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      priority = 98,
+      gap = 1,
      },
      
      float_helmet=
@@ -733,6 +737,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      priority = 95,
      },    
 
     -- nice items
@@ -754,6 +759,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      priority = 94,
      },
 
      float_blue_armor=
@@ -773,6 +779,8 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      priority = 93,
+      gap = 1,
      },
 
      float_soul=
@@ -965,6 +973,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      priority = 75,
      },
 
      float_bullet_box=
@@ -984,6 +993,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      priority = 74,
      },
 
      float_shells=
@@ -1003,6 +1013,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      priority = 73,
      },
 
      float_shell_box=
@@ -1022,6 +1033,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      priority = 72,
      },
 
      float_rocket=
@@ -1041,6 +1053,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      priority = 71,
      },
 
      float_rocket_box=
@@ -1060,6 +1073,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      priority = 70,
      },
 
      float_cells=
@@ -1079,6 +1093,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      priority = 69,
      },
 
      float_cell_pack=
@@ -1098,6 +1113,8 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      priority = 68,
+      gap = 1,
      }
   },
 }
