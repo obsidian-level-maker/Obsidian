@@ -824,25 +824,6 @@ bool Build_Cool_Shit() {
     return was_ok;
 }
 
-// Apply theme changes without restarting hopefully
-
-void Restyle() {
-	main_win->menu_bar->box(box_style);
-    main_win->game_box->box(box_style);
-    main_win->game_box->build->box(button_style);
-    main_win->game_box->quit->box(button_style);
-    main_win->build_box->box(box_style);
-    main_win->build_box->redraw();
-    main_win->left_mods->sbar->slider(button_style);
-    main_win->left_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
-    main_win->left_mods->sbar->labelcolor(SELECTION);
-    if (main_win->right_mods) {
-    	main_win->right_mods->sbar->slider(button_style);
-    	main_win->right_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
-    	main_win->right_mods->redraw();
-    }   
-}
-
 /* ----- main program ----------------------------- */
 
 int main(int argc, char **argv) {

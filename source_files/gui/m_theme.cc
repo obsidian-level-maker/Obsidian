@@ -555,18 +555,148 @@ class UI_ThemeWin : public Fl_Window {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         widget_theme = that->opt_widget_theme->value();
+        
+        switch(widget_theme) {
+			case 0 : Fl::scheme("gtk+");
+					 break;
+			case 1 : Fl::scheme("gleam");
+					 break;
+			case 2 : Fl::scheme("base");
+					 break;
+			case 3 : Fl::scheme("plastic");
+					 break;
+			// Shouldn't be reached, but still
+			default : Fl::scheme("gtk+");
+					  break;    			     			 
+    	}
+    	if (widget_theme == 3) {
+			Theme_Options_Save(theme_file);
+            Options_Save(options_file);
+
+            fl_alert("%s", _("Plastic widget theme requires a restart.\nOBSIDIAN will "
+                         "now close."));
+
+            main_action = MAIN_QUIT;
+
+            that->want_quit = true;
+		}
     }
     
     static void callback_BoxTheme(Fl_Widget *w, void *data) {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         box_theme = that->opt_box_theme->value();
+        
+        switch(box_theme) {
+			case 0 : box_style = FL_THIN_UP_BOX;
+					 break;
+			case 1 : box_style = FL_SHADOW_BOX;
+					 break;
+			case 2 : box_style = FL_EMBOSSED_BOX;
+					 break;
+			case 3 : box_style = FL_ENGRAVED_BOX;
+					 break;
+			case 4 : box_style = FL_DOWN_BOX;
+					 break;
+			case 5 : box_style = FL_FLAT_BOX;
+					 break;
+			// Shouldn't be reached, but still
+			default : box_style = FL_THIN_UP_BOX;
+					  break;    			     			 
+    	} 	
+        main_win->menu_bar->box(box_style);
+        main_win->redraw();
+    	main_win->game_box->box(box_style);
+    	main_win->game_box->redraw();
+    	main_win->build_box->box(box_style);
+    	main_win->build_box->redraw();
+		for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+        	UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
+            SYS_ASSERT(M);
+			M->box(box_style);
+			M->redraw();			
+        }
+        if (main_win->right_mods) {
+        	for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
+		    	UI_Module *M = (UI_Module *)main_win->right_mods->mod_pack->child(x);
+		        SYS_ASSERT(M);
+				M->box(box_style);
+				M->redraw();			
+        	}
+        }
     }
     
     static void callback_ButtonTheme(Fl_Widget *w, void *data) {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         button_theme = that->opt_button_theme->value();
+        
+        switch(button_theme) {
+			case 0 : button_style = FL_UP_BOX;
+					 break;
+			case 1 : button_style = FL_EMBOSSED_BOX;
+					 break;
+			case 2 : button_style = FL_ENGRAVED_BOX;
+					 break;
+			case 3 : button_style = FL_DOWN_BOX;
+					 break;
+			case 4 : button_style = FL_BORDER_BOX;
+					 break;
+			// Shouldn't be reached, but still
+			default : button_style = FL_UP_BOX;
+					  break;    			     			 
+    	}	
+    	main_win->game_box->build->box(button_style);
+		main_win->game_box->quit->box(button_style);
+    	for (int x = 0; x < main_win->game_box->children(); x++) {
+            main_win->game_box->child(x)->redraw();
+        }
+		main_win->left_mods->sbar->slider(button_style);
+		main_win->left_mods->redraw();
+		for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+        	UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
+            SYS_ASSERT(M);
+            M->mod_button->down_box(button_style);
+            M->redraw();
+			std::map<std::string, UI_RSlide *>::const_iterator IT;
+			std::map<std::string, UI_RButton *>::const_iterator IT2;		
+			for (IT = M->choice_map_slider.begin(); IT != M->choice_map_slider.end(); IT++) {
+				UI_RSlide *rsl = IT->second;
+				rsl->prev_button->box(button_style);
+				rsl->mod_slider->box(button_style);
+				rsl->next_button->box(button_style);
+				rsl->redraw();
+			}			
+			for (IT2 = M->choice_map_button.begin(); IT2 != M->choice_map_button.end(); IT2++) {
+				UI_RButton *rbt = IT2->second;
+				rbt->mod_check->down_box(button_style);
+				rbt->redraw();
+			}
+        }
+        if (main_win->right_mods) {
+        	main_win->right_mods->sbar->slider(button_style);
+        	main_win->right_mods->redraw();
+		    for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
+		    	UI_Module *M = (UI_Module *)main_win->right_mods->mod_pack->child(x);
+		        SYS_ASSERT(M);
+		        M->mod_button->down_box(button_style);
+		        M->redraw();
+				std::map<std::string, UI_RSlide *>::const_iterator IT;
+				std::map<std::string, UI_RButton *>::const_iterator IT2;		
+				for (IT = M->choice_map_slider.begin(); IT != M->choice_map_slider.end(); IT++) {
+					UI_RSlide *rsl = IT->second;
+					rsl->prev_button->box(button_style);
+					rsl->mod_slider->box(button_style);
+					rsl->next_button->box(button_style);
+					rsl->redraw();
+				}			
+				for (IT2 = M->choice_map_button.begin(); IT2 != M->choice_map_button.end(); IT2++) {
+					UI_RButton *rbt = IT2->second;
+					rbt->mod_check->down_box(button_style);
+					rbt->redraw();
+				}
+		    }
+		}
     }
    
     static void callback_SinglePane(Fl_Widget *w, void *data) {
