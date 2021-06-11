@@ -717,6 +717,104 @@ class UI_ThemeWin : public Fl_Window {
     		that->opt_text_color->color(fl_rgb_color(text_red, text_green, text_blue));
     		that->opt_text_color->redraw();
     	}
+		FONT_COLOR = fl_rgb_color(text_red, text_green, text_blue);    	
+    	main_win->menu_bar->textcolor(FONT_COLOR);
+    	main_win->menu_bar->redraw();
+    	main_win->game_box->heading->labelcolor(FONT_COLOR);
+    	main_win->game_box->game->labelcolor(FONT_COLOR);
+    	main_win->game_box->game->textcolor(FONT_COLOR);
+    	main_win->game_box->engine->labelcolor(FONT_COLOR);
+    	main_win->game_box->engine->textcolor(FONT_COLOR);
+    	main_win->game_box->engine_help->labelcolor(FONT_COLOR);
+    	main_win->game_box->length->labelcolor(FONT_COLOR);
+    	main_win->game_box->length->textcolor(FONT_COLOR);
+    	main_win->game_box->length_help->labelcolor(FONT_COLOR);
+    	main_win->game_box->theme->labelcolor(FONT_COLOR);
+    	main_win->game_box->theme->textcolor(FONT_COLOR);
+    	main_win->game_box->theme_help->labelcolor(FONT_COLOR);
+    	main_win->game_box->build->labelcolor(FONT_COLOR);
+    	main_win->game_box->quit->labelcolor(FONT_COLOR);
+    	for (int x = 0; x < main_win->game_box->children(); x++) {
+            main_win->game_box->child(x)->redraw();
+            main_win->game_box->child(x)->redraw_label();
+        }        
+    	main_win->build_box->seed_disp->labelcolor(FONT_COLOR);
+    	main_win->build_box->name_disp->labelcolor(FONT_COLOR);
+    	main_win->build_box->status->labelcolor(FONT_COLOR);
+    	main_win->build_box->progress->labelcolor(FONT_COLOR);
+    	for (int x = 0; x < main_win->build_box->children(); x++) {
+            main_win->build_box->child(x)->redraw();
+        }
+        for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+        	UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
+            SYS_ASSERT(M);
+            M->heading->labelcolor(FONT_COLOR);
+            M->redraw();
+			std::map<std::string, UI_RChoice *>::const_iterator IT;
+			std::map<std::string, UI_RSlide *>::const_iterator IT2;
+			std::map<std::string, UI_RButton *>::const_iterator IT3;
+			for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
+				UI_RChoice *rch = IT->second;
+				rch->mod_label->labelcolor(FONT_COLOR);
+				rch->mod_menu->textcolor(FONT_COLOR);
+				rch->mod_help->labelcolor(FONT_COLOR);
+				rch->mod_label->redraw();
+			}			
+			for (IT2 = M->choice_map_slider.begin(); IT2 != M->choice_map_slider.end(); IT2++) {
+				UI_RSlide *rsl = IT2->second;
+				rsl->mod_label->labelcolor(FONT_COLOR);
+				rsl->mod_entry->labelcolor(FONT_COLOR);
+				rsl->mod_help->labelcolor(FONT_COLOR);
+				if (rsl->nan_choices.size() > 0) {
+					rsl->nan_options->textcolor(FONT_COLOR);
+					rsl->nan_options->labelcolor(FONT_COLOR);
+					rsl->nan_options->redraw();
+				}
+				rsl->mod_label->redraw();
+			}			
+			for (IT3 = M->choice_map_button.begin(); IT3 != M->choice_map_button.end(); IT3++) {
+				UI_RButton *rbt = IT3->second;
+				rbt->mod_label->labelcolor(FONT_COLOR);
+				rbt->mod_help->labelcolor(FONT_COLOR);
+				rbt->mod_label->redraw();
+			}
+        }
+        if (main_win->right_mods) {
+		    for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
+		    	UI_Module *M = (UI_Module *)main_win->right_mods->mod_pack->child(x);
+		        SYS_ASSERT(M);
+		        M->heading->labelcolor(FONT_COLOR);
+		        M->redraw();
+				std::map<std::string, UI_RChoice *>::const_iterator IT;
+				std::map<std::string, UI_RSlide *>::const_iterator IT2;
+				std::map<std::string, UI_RButton *>::const_iterator IT3;
+				for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
+					UI_RChoice *rch = IT->second;
+					rch->mod_label->labelcolor(FONT_COLOR);
+					rch->mod_menu->textcolor(FONT_COLOR);
+					rch->mod_help->labelcolor(FONT_COLOR);
+					rch->mod_label->redraw();
+				}			
+				for (IT2 = M->choice_map_slider.begin(); IT2 != M->choice_map_slider.end(); IT2++) {
+					UI_RSlide *rsl = IT2->second;
+					rsl->mod_label->labelcolor(FONT_COLOR);
+					rsl->mod_entry->labelcolor(FONT_COLOR);
+					rsl->mod_help->labelcolor(FONT_COLOR);
+					if (rsl->nan_choices.size() > 0) {
+						rsl->nan_options->textcolor(FONT_COLOR);
+						rsl->nan_options->labelcolor(FONT_COLOR);
+						rsl->nan_options->redraw();
+					}
+					rsl->mod_label->redraw();
+				}			
+				for (IT3 = M->choice_map_button.begin(); IT3 != M->choice_map_button.end(); IT3++) {
+					UI_RButton *rbt = IT3->second;
+					rbt->mod_label->labelcolor(FONT_COLOR);
+					rbt->mod_help->labelcolor(FONT_COLOR);
+					rbt->mod_label->redraw();
+				}
+		    }
+		}
     }
     
     static void callback_BgColor(Fl_Widget *w, void *data) {
@@ -746,10 +844,56 @@ class UI_ThemeWin : public Fl_Window {
         }
 		main_win->left_mods->sbar->labelcolor(SELECTION);
 		main_win->left_mods->redraw();
-		if (main_win->right_mods) {
+		for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+        	UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
+            SYS_ASSERT(M);
+            M->mod_button->selection_color(SELECTION);
+            M->redraw();
+			std::map<std::string, UI_RSlide *>::const_iterator IT;
+			std::map<std::string, UI_RButton *>::const_iterator IT2;		
+			for (IT = M->choice_map_slider.begin(); IT != M->choice_map_slider.end(); IT++) {
+				UI_RSlide *rsl = IT->second;
+				rsl->prev_button->labelcolor(SELECTION);
+				rsl->mod_slider->selection_color(SELECTION);
+				rsl->next_button->labelcolor(SELECTION);
+				if (rsl->nan_choices.size() > 0) {
+					rsl->nan_options->selection_color(SELECTION);
+				}
+				rsl->redraw();
+			}			
+			for (IT2 = M->choice_map_button.begin(); IT2 != M->choice_map_button.end(); IT2++) {
+				UI_RButton *rbt = IT2->second;
+				rbt->mod_check->selection_color(SELECTION);
+				rbt->redraw();
+			}
+        }
+        if (main_win->right_mods) {
 			main_win->right_mods->sbar->labelcolor(SELECTION);
 			main_win->right_mods->redraw();
-		} 
+		    for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
+		    	UI_Module *M = (UI_Module *)main_win->right_mods->mod_pack->child(x);
+		        SYS_ASSERT(M);
+		        M->mod_button->selection_color(SELECTION);
+		        M->redraw();
+				std::map<std::string, UI_RSlide *>::const_iterator IT;
+				std::map<std::string, UI_RButton *>::const_iterator IT2;		
+				for (IT = M->choice_map_slider.begin(); IT != M->choice_map_slider.end(); IT++) {
+					UI_RSlide *rsl = IT->second;
+					rsl->prev_button->labelcolor(SELECTION);
+					rsl->mod_slider->selection_color(SELECTION);
+					rsl->next_button->labelcolor(SELECTION);
+					if (rsl->nan_choices.size() > 0) {
+						rsl->nan_options->selection_color(SELECTION);
+					}
+					rsl->redraw();
+				}			
+				for (IT2 = M->choice_map_button.begin(); IT2 != M->choice_map_button.end(); IT2++) {
+					UI_RButton *rbt = IT2->second;
+					rbt->mod_check->selection_color(SELECTION);
+					rbt->redraw();
+				}
+		    }
+		}
     }
     
     static void callback_ButtonColor(Fl_Widget *w, void *data) {
