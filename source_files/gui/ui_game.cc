@@ -105,7 +105,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     build->box(button_style);
     build->color(BUTTON_COLOR);
     build->labelfont(font_style | FL_BOLD);
-    build->labelsize(FL_NORMAL_SIZE + 2);
+    build->labelsize(header_font_size);
     build->callback(build_callback, this);
     build->shortcut(FL_F + 2);
 

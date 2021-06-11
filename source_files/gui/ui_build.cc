@@ -48,7 +48,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     seed_disp->box(FL_NO_BOX);
     seed_disp->align(FL_ALIGN_INSIDE | FL_ALIGN_TOP_LEFT);
     seed_disp->labelcolor(FL_WHITE);
-    seed_disp->labelsize(seed_disp->labelsize() * .80);
+    seed_disp->labelsize(small_font_size);
     seed_disp->labelfont(font_style);
     seed_disp->copy_label("Seed: -");
 
@@ -57,7 +57,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     name_disp->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT | FL_ALIGN_CLIP);
     name_disp->labelcolor(FL_WHITE);
     name_disp->labelfont(font_style);
-    name_disp->labelsize(name_disp->labelsize() * .80);
+    name_disp->labelsize(small_font_size);
 
     cy += mini_map->h() + kf_h(6);
 
@@ -73,7 +73,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     progress->box(FL_FLAT_BOX);
     progress->color(GAP_COLOR, GAP_COLOR);
     progress->value(0.0);
-    progress->labelsize(FL_NORMAL_SIZE + 2);
+    progress->labelsize(header_font_size);
     progress->labelfont(font_style);
 
     cy = cy + progress->h() + kf_h(4);
