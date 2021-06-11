@@ -4,6 +4,7 @@ PREFABS.Decor_light_pillar_helix =
   map    = "MAP01",
 
   prob   = 5000,
+  prob_skew = 2,
   theme  = "tech",
   env    = "building",
 
