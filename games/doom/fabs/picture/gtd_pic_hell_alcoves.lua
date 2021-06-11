@@ -1,9 +1,10 @@
 PREFABS.Pic_hell_alcove_tomb =
 {
-  file   = "picture/gtd_pic_hell_alcoves.wad",
-  map    = "MAP01",
+  file = "picture/gtd_pic_hell_alcoves.wad",
+  map = "MAP01",
 
-  prob   = 25,
+  prob = 25,
+  prob_skew = 2,
   theme = "hell",
 
   where  = "seeds",
@@ -25,7 +26,7 @@ PREFABS.Pic_hell_alcove_tomb =
 PREFABS.Pic_hell_alcove_furnace =
 {
   template = "Pic_hell_alcove_tomb",
-  map      = "MAP02",
+  map = "MAP02",
 
   -- FIRELAV2 is a static texture and not animated, I fixed it for you.
   -- Also, FIREBLU1 is sometimes used here to mix it up.
@@ -66,7 +67,7 @@ PREFABS.Pic_hell_alcove_furnace =
 PREFABS.Pic_hell_alcove_window =
 {
   template = "Pic_hell_alcove_tomb",
-  map      = "MAP03",
+  map = "MAP03",
 
   env = "!cave",
 }
@@ -74,19 +75,19 @@ PREFABS.Pic_hell_alcove_window =
 PREFABS.Pic_hell_alcove_tomb_2x =
 {
   template = "Pic_hell_alcove_tomb",
-  map      = "MAP04",
+  map = "MAP04",
 }
 
 PREFABS.Pic_hell_alcove_blood_canal =
 {
   template = "Pic_hell_alcove_tomb",
-  map      = "MAP05",
+  map = "MAP05",
 }
 
 PREFABS.Pic_hell_alcove_tomb_4x =
 {
   template = "Pic_hell_alcove_tomb",
-  map      = "MAP06",
+  map = "MAP06",
 
-  engine   = "zdoom",
+  engine  = "zdoom",
 }

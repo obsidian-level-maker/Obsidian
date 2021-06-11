@@ -1,9 +1,10 @@
 PREFABS.Pic_techy_vats =
 {
-  file   = "picture/gtd_pic_tech_wallmachines.wad",
-  map    = "MAP01",
+  file = "picture/gtd_pic_tech_wallmachines.wad",
+  map = "MAP01",
 
-  prob   = 25,
+  prob = 25,
+  prob_skew = 2,
   theme = "!hell",
 
   env = "!cave",
@@ -35,7 +36,7 @@ PREFABS.Pic_techy_vats =
 PREFABS.Pic_pipagery =
 {
   template = "Pic_techy_vats",
-  map    = "MAP02",
+  map = "MAP02",
 
   sound = "Machine_Air",
 

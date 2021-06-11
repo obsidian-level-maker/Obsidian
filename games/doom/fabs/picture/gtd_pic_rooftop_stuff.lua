@@ -4,6 +4,7 @@ PREFABS.Pic_HVAC_unit =
   map    = "MAP01",
 
   prob   = 25, --35,
+  prob_skew = 2,
   theme = "!hell",
 
   env   = "!cave",

@@ -4,6 +4,7 @@ PREFABS.Pic_armaetus_candles =
   map = "MAP01",
 
   prob = 20,
+  prob_skew = 2,
   env = "building",
   theme = "hell",
 
