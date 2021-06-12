@@ -463,7 +463,7 @@ function Episode_plan_monsters()
     end
 
     -- this is for Doom 1 / Ultimate Doom / Heretic
-    if PARAM.episodic_monsters or ramp_up == 0.45 then
+    if PARAM.episodic_monsters or ramp_up == "Episodic" then
       mon_along = (LEV.ep_along + LEV.game_along) / 2
     end
 
@@ -487,7 +487,7 @@ function Episode_plan_monsters()
 
     local factor
 
-    if ramp_up > 0.45 then
+    if ramp_up ~= "Episodic" then
       factor = ramp_up
     else
       factor = 1.0
