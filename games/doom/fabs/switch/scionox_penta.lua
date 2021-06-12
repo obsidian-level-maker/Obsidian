@@ -6,7 +6,7 @@ PREFABS.Switch_scionox_penta =
   theme  = "hell",
   key = "sw_metal",
 
-  prob   = 50,
+  prob   = 150,
 
   where  = "point",
   size   = 96,
