@@ -652,6 +652,11 @@ function ob_set_config(name, value)
     return
   end
   
+  if name == "filename_prefix" then
+    OB_CONFIG[name] = value
+    return
+  end
+  
   -- check all the UI modules for a matching option
   -- [ this is only needed when parsing the CONFIG.txt file ]
   for _,mod in pairs(OB_MODULES) do
@@ -822,7 +827,7 @@ function ob_read_all_config(need_full, log_only)
                   do_mod_value(opt.name, gui.get_module_slider_value(name, opt.name))
                 end
             elseif string.match(opt.name, "bool_") then
-                if OB_CONFIG.bath == "yes" then
+                if OB_CONFIG.batch == "yes" then
                   do_mod_value(opt.name, opt.default)
                 else
                   do_mod_value(opt.name, gui.get_module_button_value(name, opt.name))
@@ -1238,7 +1243,7 @@ function ob_default_filename()
 
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
-
+  
   gui.rand_seed(OB_CONFIG.seed)
 
   Naming_init()
@@ -1254,25 +1259,46 @@ function ob_default_filename()
   str = string.gsub(str, ":", "")
   str = string.gsub(str, "'", "")
   str = string.gsub(str, ",", "")
+  
+  if OB_CONFIG.filename_prefix == "datetime" then
 
-  local current_date = os.date("*t")
+    local current_date = os.date("*t")
 
-  local date_str = current_date.year .. "-" .. current_date.month .. "-" .. current_date.day .. "-"
-  local time_str
+    local date_str = current_date.year .. "-" .. current_date.month .. "-" .. current_date.day .. "-"
+    local time_str
 
-  if current_date.hour < 10 then
-    time_str = "0" .. current_date.hour
-  else
-    time_str = current_date.hour
-  end
+    if current_date.hour < 10 then
+      time_str = "0" .. current_date.hour
+    else
+      time_str = current_date.hour
+    end
 
-  if current_date.min < 10 then
-    time_str = time_str .. "0" .. current_date.min
-  else
-    time_str = time_str .. current_date.min
-  end
+    if current_date.min < 10 then
+      time_str = time_str .. "0" .. current_date.min
+    else
+      time_str = time_str .. current_date.min
+    end
 
-  return date_str .. time_str .. "_" .. str
+    return date_str .. time_str .. "_" .. str
+      
+  elseif OB_CONFIG.filename_prefix == "numlevels" then
+    if OB_CONFIG.length == "single" then
+      return "ob1_" .. str
+    elseif OB_CONFIG.length == "few" then
+      return "ob4_" .. str
+    elseif OB_CONFIG.length == "episode" then
+      if OB_CONFIG.game == "doom2" or OB_CONFIG.game == "tnt" or OB_CONFIG.game == "plutonia" then
+        return "ob11_" .. str
+      else 
+        return "ob9_" .. str
+      end
+    else
+     return "obFULL_" .. str
+    end       
+ else
+   return str
+ end
+     
 end
 
 

@@ -101,6 +101,7 @@ extern int widget_theme;
 extern int window_scaling;
 extern int font_scaling;
 extern int num_fonts;
+extern int filename_prefix;
 extern bool single_pane;
 extern std::vector<std::map<std::string, int>> font_menu_items;
 

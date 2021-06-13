@@ -864,10 +864,10 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         } else {
             options.reject_mode = ERM_CreateZeroes;
         }
-        options.check_polyobjs = false;
+        options.check_polyobjs = true;
         options.compress_nodes = true;
         options.compress_gl_nodes = false;
-        options.force_compression = true;
+        options.force_compression = false;
     } else if (current_engine == "doomsday") {
     	if (!build_nodes) {
 		    LogPrintf("Skipping nodes per user selection...\n");

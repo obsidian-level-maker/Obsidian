@@ -47,7 +47,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     const char *heading_text = _("Game Settings");
 
-    Fl_Box *heading = new Fl_Box(FL_NO_BOX, X + kf_w(8), cy, W - kf_w(12),
+    heading = new Fl_Box(FL_NO_BOX, X + kf_w(8), cy, W - kf_w(12),
                                  kf_h(24), heading_text);
     heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     heading->labeltype(FL_NORMAL_LABEL);
@@ -105,7 +105,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     build->box(button_style);
     build->color(BUTTON_COLOR);
     build->labelfont(font_style | FL_BOLD);
-    build->labelsize(FL_NORMAL_SIZE + 2);
+    build->labelsize(header_font_size);
     build->callback(build_callback, this);
     build->shortcut(FL_F + 2);
 

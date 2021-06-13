@@ -103,7 +103,7 @@ OB_MODULES["ui_arch"] =
       min = 10,
       max = 75,
       increment = 1,
-      default = 10,
+      default = 36,
       nan = "Mix It Up,Episodic,Progressive,",
       presets = "10:10 (Microscopic)," ..
       "16:16 (Miniature)," ..

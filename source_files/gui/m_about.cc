@@ -154,14 +154,11 @@ UI_About::UI_About(int W, int H, const char *label)
 }
 
 void DLG_AboutText(void) {
-    static UI_About *about_window = NULL;
 
-    if (!about_window) {
-        int about_w = kf_w(400);
-        int about_h = kf_h(400) + KF * 20;
+    int about_w = kf_w(400);
+    int about_h = kf_h(400) + KF * 20;
 
-        about_window = new UI_About(about_w, about_h, _("About OBSIDIAN"));
-    }
+    UI_About *about_window = new UI_About(about_w, about_h, _("About OBSIDIAN"));
 
     about_window->want_quit = false;
     about_window->set_modal();
@@ -172,8 +169,7 @@ void DLG_AboutText(void) {
         Fl::wait();
     }
 
-    about_window->set_non_modal();
-    about_window->hide();
+    delete about_window;
 }
 
 //--- editor settings ---

@@ -606,16 +606,13 @@ bool UI_AddonsWin::ApplyChanges() {
 }
 
 void DLG_SelectAddons(void) {
-    static UI_AddonsWin *addons_window = NULL;
 
-    if (!addons_window) {
-        int opt_w = kf_w(350);
-        int opt_h = kf_h(380);
+    int opt_w = kf_w(350);
+    int opt_h = kf_h(380);
 
-        addons_window = new UI_AddonsWin(opt_w, opt_h, _("OBSIDIAN Addons"));
+    UI_AddonsWin *addons_window = new UI_AddonsWin(opt_w, opt_h, _("OBSIDIAN Addons"));
 
-        addons_window->Populate();
-    }
+    addons_window->Populate();
 
     addons_window->want_quit = false;
     addons_window->set_modal();
@@ -636,8 +633,7 @@ void DLG_SelectAddons(void) {
         main_action = MAIN_QUIT;
     }
 
-    addons_window->set_non_modal();
-    addons_window->hide();
+    delete addons_window;
 }
 
 //--- editor settings ---
