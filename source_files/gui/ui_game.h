@@ -29,6 +29,7 @@
 
 class UI_Game : public Fl_Group {
    public:
+    Fl_Box *heading;
     UI_RChoiceMenu *game;
     UI_RChoiceMenu *engine;
     UI_HelpLink *engine_help;
@@ -36,10 +37,10 @@ class UI_Game : public Fl_Group {
     UI_HelpLink *theme_help;
     UI_RChoiceMenu *length;
     UI_HelpLink *length_help;
-
-   private:
     Fl_Button *build;
     Fl_Button *quit;
+
+   private:
 
    public:
     UI_Game(int x, int y, int w, int h, const char *label = NULL);

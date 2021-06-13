@@ -34,11 +34,11 @@ class UI_Build : public Fl_Group {
     UI_MiniMap *mini_map;
     Fl_Box *seed_disp;
     Fl_Box *name_disp;
+    Fl_Box *status;
+    Fl_Progress *progress;
     std::string string_seed = "";
 
    private:
-    Fl_Box *status;
-    Fl_Progress *progress;
 
     char status_label[200];
     char prog_label[100];

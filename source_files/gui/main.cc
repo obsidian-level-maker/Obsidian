@@ -98,6 +98,7 @@ int widget_theme = 0;
 bool single_pane = false;
 int window_scaling = 0;
 int font_scaling = 0;
+int filename_prefix = 0;
 int num_fonts = 16; // FLTK built-in amount
 std::vector<std::map<std::string, int>> font_menu_items;
 
@@ -886,12 +887,9 @@ int main(int argc, char **argv) {
         Options_Load(options_file);
         Theme_Options_Load(theme_file);
         Trans_SetLanguage();
-    }
-
-    if (!batch_mode) {
         Main_SetupFLTK();
     }
-
+    
     LogEnableDebug(debug_messages);
 
     twister_Init();
@@ -1006,6 +1004,21 @@ int main(int argc, char **argv) {
     }
 
     Fl::add_handler(Main_key_handler);
+
+	switch (filename_prefix) {
+		case 0:
+			ob_set_config("filename_prefix", "datetime");
+			break;
+		case 1:
+			ob_set_config("filename_prefix", "numlevels");
+			break;
+		case 2:
+			ob_set_config("filename_prefix", "none");
+			break;
+		default:
+			ob_set_config("filename_prefix", "datetime");
+			break;	
+	}
 
     // draw an empty map (must be done after main window is
     // shown() because that is when FLTK finalises the colors).

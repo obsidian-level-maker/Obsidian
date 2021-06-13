@@ -51,7 +51,7 @@ UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
 
     int tx = Is_UI() ? 8 : 28;
 
-    Fl_Box *heading = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4),
+    heading = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4),
                                  W - kf_w(tx + 4), kf_h(24), label);
     heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     heading->labelfont(font_style | FL_BOLD);
@@ -422,13 +422,16 @@ bool UI_Module::SetSliderOption(const char *option, const char *value) {
     if (!rsl) {
         return false;
     }
-
 	std::string string_value = value;
 	double double_value;
     try {
         double_value = std::stod(string_value);
         rsl->mod_slider->value(double_value);
 		rsl->mod_slider->do_callback();
+		if (rsl->nan_choices.size() > 0) {
+			rsl->nan_options->value(0);
+			rsl->nan_options->do_callback();
+		}
     } catch (std::invalid_argument &e) {
     	// If it is a nan value instead
         rsl->nan_options->value(rsl->nan_options->find_index(value));
