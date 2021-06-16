@@ -515,7 +515,8 @@ void Main_SetupFLTK() {
     Fl::set_boxtype((Fl_Boxtype)(FL_FREE_BOXTYPE+1), crectbound, 1, 1, 2, 2);
     Fl::set_boxtype(FL_THIN_UP_BOX, cthin_up_box, 1, 1, 2, 2);
     Fl::set_boxtype(FL_EMBOSSED_BOX, cembossed_box, 2, 2, 4, 4);
-    Fl::set_boxtype(FL_ENGRAVED_BOX, cengraved_box, 2, 2, 4, 4);
+    Fl::set_boxtype((Fl_Boxtype)(FL_FREE_BOXTYPE+2), cengraved_box, 2, 2, 4, 4);
+    Fl::set_boxtype((Fl_Boxtype)(FL_FREE_BOXTYPE+3), cengraved_box, 2, 2, 4, 4);
     Fl::set_boxtype(FL_DOWN_BOX, cdown_box, 2, 2, 4, 4);
     Fl::set_boxtype(FL_UP_BOX, cup_box, 2, 2, 4, 4);
     switch(widget_theme) {
@@ -553,7 +554,7 @@ void Main_SetupFLTK() {
     			 break;
     	case 1 : button_style = FL_EMBOSSED_BOX;
     			 break;
-    	case 2 : button_style = FL_ENGRAVED_BOX;
+    	case 2 : button_style = (Fl_Boxtype)(FL_FREE_BOXTYPE+2);
     			 break;
     	case 3 : button_style = FL_DOWN_BOX;
     			 break;
