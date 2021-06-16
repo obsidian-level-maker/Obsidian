@@ -54,7 +54,7 @@ namelib.NAMES =
         ["Reboot"]=10,
         ["Redux"]=10,
         ["Revisited"]=10,
-        ["the Way ObAddon Did"]=10,
+        ["the Way Obsidian Did"]=10,
         [": The Return"]=10,
         ["is Back"]=10,
 
@@ -131,6 +131,7 @@ namelib.NAMES =
         ["Agony"]=10,
         ["Anguish"]=10,
         ["Atonement"]=10,
+        ["Battered"]=10,
         ["Betrayal"]=10,
         ["Chaos"]=10,
         ["Contempt"]=10,
@@ -159,6 +160,7 @@ namelib.NAMES =
         ["Redemption"]=10,
         ["Resentment"]=10,
         ["Revulsion"]=10,
+        ["Ruin"]=10,
         ["Seclusion"]=10,
         ["Spite"]=10,
         ["Terror"]=10,
@@ -243,7 +245,149 @@ namelib.NAMES =
         ["Take It Like a Man"]=2,
         ["The Trail to the Toilet"]=2, -- In-joke with Obsidian team, I blame Shooter for this lol
         ["Tom Hall's Halls"]=2,
-        ["We are not COMPET-N friendly"]=2
+        ["We are not COMPET-N friendly"]=2,
+
+        -- What do we have? MORE Naming? Owo
+        -- A bunch of abstract shit is here too! - Armaetus, Jun. 13, 2021
+        ["A Madman's Crusade"]=10,
+        ["Absence of Nihility"]=10,
+        ["Abstract Transcendence"]=10,
+        ["Abstraction of Men"]=10,
+        ["Accepting Chaos"]=10,
+        ["Addiction of the Obscure"]=10,
+        ["An Idiot's Fate"]=10,
+        ["Animus Nocturnus"]=10,
+        ["Annihilative Symmetry"]=10,
+        ["Apocalyptic Inverted Star"]=10,
+        ["Apocalyptic Life"]=10,
+        ["Among The Failing Stars"]=10,
+        ["Artificial Lightning Phenomenon"]=10,
+        ["As The Mirror Shatters"]=10,
+        ["Banished Chaotic Perceptions"]=10,
+        ["Beauty in Binary Death"]=10,
+        ["Beyond the Subliminal"]=10,
+        ["Bitter Season"]=10, -- Silent Hill
+        ["Black Fairy"]=10, -- Silent Hill
+        ["Black Sky Symmetry"]=10,
+        ["Blasphemous Iconograph"]=10,
+        ["Bleed Me a River"]=10,
+        ["Blessed Be Thy Cosmos"]=10,
+        ["Bodies of Venus"]=10,
+        ["Broken Strings"]=10,
+        ["Brush Off"]=10,
+        ["Burning Creation"]=10,
+        ["Calculating The Catalyst"]=10,
+        ["Chaotic Lunar Rhythm"]=10,
+        ["Choir of Cosmic Souls"]=10,
+        ["Chthonic Possession"]=10,
+        ["Coordinates to the Nightmare"]=10,
+        ["Constructive Deconstruction"]=10,
+        ["Dance With The Night Wind"]=10, -- Silent Hill
+        ["Dark Matter Dimensions"]=10,
+        ["Darkness That Lurks in Our Minds"]=10, -- Silent Hill
+        ["Delay's Progression"]=10,
+        ["Delusions of Space-Time"]=10,
+        ["Despair Among The Zenith"]=10,
+        ["Detachment From Reality"]=10,
+        ["Dream-Prism"]=10,
+        ["Driving Off the Weak"]=10,
+        ["Emotional Enigmatic Storms"]=10,
+        ["Elusive Dark Dreams"]=10,
+        ["Eternal Timeframe"]=10,
+        ["Evil Has No Boundries"]=10,
+        ["Expendable Nightmares"]=10,
+        ["Firedancer"]=10,
+        ["Flauros"]=10,
+        ["Forgotten But Not Gone"]=10,
+        ["Fragility of Light"]=10,
+        ["Fury of Sol"]=10,
+        ["Funeral Waltz"]=10,
+        ["Hell Besides You"]=10,
+        ["Hell's Black Metal"]=10,
+        ["Holographic Suicide"]=10,
+        ["Howling Solar Storms"]=10,
+        ["Hydra"]=10,
+        ["Iconoclastic Death Tempest"]=10,
+        ["Illusive Rust Titans"]=10,
+        ["Interlude?"]=10,
+        ["Into Danger"]=10,
+        ["Into Misery"]=10,
+        ["Keepers of the Veil"]=10,
+        ["Knights of Abstraction"]=10,
+        ["Life, Death, Rebirth, Gunfire"]=10,
+        ["Lunar Fusion Catalyst"]=10,
+        ["Lunacy of the Twin Stars"]=10,
+        ["Machinations of the Illusion"]=10,
+        ["Mind Machines"]=10,
+        ["Mirage"]=10,
+        ["Mon Ame Noir"]=10, -- "My Black Soul"
+        ["My Justice For You"]=10, -- Silent Hill
+        ["Never End Never End Never End"]=10, -- Silent Hill
+        ["New Death Sensation"]=10,
+        ["Neurons of the Ghost"]=10,
+        ["Nightmarish Oscillation Machine"]=10,
+        ["No Legacy Left Behind"]=10,
+        ["Nothing Lasts Forever"]=10,
+        ["Obscure Clarity of Death"]=10,
+        ["Ocularis Infernum"]=10, -- "Ocular Hell"
+        ["Of Hell and Kinetics"]=10,
+        ["One Foot in the Grave"]=10,
+        ["Only You"]=10,
+        ["Orchestrate The Infinite"]=10,
+        ["Oscillative Revenants"]=10,
+        ["Pariah"]=10,
+        ["Passive Destruction"]=10,
+        ["Persecutive Solar Death"]=10,
+        ["Pitch Black Progress"]=10,
+        ["Power Perception"]=10,
+        ["Prelude of Dusk"]=10,
+        ["Prophetic Void Illusions"]=10,
+        ["Prey of the Catalyst"]=10,
+        ["Prismatic Mushroom Helix"]=10,
+        ["Proper Lunar Timeframe"]=10,
+        ["Prismatic Firestorm"]=10,
+        ["Purity of the Planets"]=10,
+        ["Quantum Consciousness Deviation"]=10,
+        ["Rain"]=10,
+        ["Razor Red Prismatic Death"]=10,
+        ["Ruins of the Solar Towers"]=10,
+        ["Sabbath Burning Sabbath"]=10, -- Play on Black Sabbath's "Sabbath Bloody Sabbath"
+        ["Scars"]=10,
+        ["Sculpture Void"]=10,
+        ["Shadowvoid Sun"]=10,
+        ["Sickness Unto Wicked Death"]=10,
+        ["Sins of the Solar System"]=10,
+        ["Smug Yet Destructive"]=10,
+        ["Speakers of Truth and Time"]=10,
+        ["Staircase To The Abyss"]=10, -- Silent Hill
+        ["Stars of Stone"]=10,
+        ["Storm of Illusions"]=10,
+        ["Stream of Oscillative Moons"]=10,
+        ["Summer Snow"]=10, -- Silent Hill
+        ["Sun, Moon, Earth"]=10,
+        ["Symmetric Death"]=10,
+        ["Synchronized Chaos Waves"]=10,
+        ["Tampering With The Unknown"]=10,
+        ["Tears Of..."]=10, -- Silent Hill
+        ["That Dead Day"]=10,
+        ["The Blade"]=10,
+        ["The Breaking Point of Light"]=10,
+        ["The Great Collapse"]=10,
+        ["The Manifest"]=10,
+        ["The Prism Spheres Beyond"]=10,
+        ["The Quantum Star Incident"]=10,
+        ["The Road To Ruin"]=10,
+        ["The Sphere of Desire"]=10,
+        ["This River Runs Dry"]=10,
+        ["Three-Dimensional Shadows"]=10,
+        ["Traumatic Time Scar"]=10,
+        ["Time Barons"]=10,
+        ["Through the Obscure"]=10,
+        ["Underneath the Shadow Storm"]=10,
+        ["Veils of the Cosmic Void"]=10,
+        ["What Fuels The Ghosts"]=10,
+        ["You're Not Here"]=10, -- Silent Hill
+        ["You're Not Here, Right?"]=10
 
       },
 
@@ -351,7 +495,7 @@ namelib.NAMES =
 
       t = 1,    -- article: The XX
       v = 20,   -- phrase before a noun: Curse of the XX
-      x = 20,   -- phrase AFTER a noun: XX the Way ObAddon Did
+      x = 20,   -- phrase AFTER a noun: XX the Way Obsidian Did
       r = 40,
 
       s = 1000  -- single complete names
@@ -484,7 +628,7 @@ namelib.NAMES =
         -- descriptive: techy
         Cybernetic=5, Focused=5, Plasmatic=5,
 
-        -- ObAddon contributor names
+        -- Obsidian contributor names
         NOUNMEMBERS = 50,
 
         -- special tag for the name generator
@@ -2122,7 +2266,7 @@ namelib.NAMES =
       ["NOUNGENEXOTIC %r"] = 13,
       ["NOUNNUMBER NOUNGENEXOTIC %r"] = 20,
 
-      -- ObAddon contributor names
+      -- Obsidian contributor names
       ["NOUNMEMBERS %n"] = 5,
 
       ["NOUNGENANGLICAN %n"] = 35,
@@ -2853,7 +2997,7 @@ namelib.NAMES =
       ["NOUNGENEXOTIC %r"] = 13,
       ["NOUNNUMBER NOUNGENEXOTIC %r"] = 20,
 
-      -- ObAddon contributor names
+      -- Obsidian contributor names
       ["NOUNMEMBERS %n"] = 5,
 
       ["NOUNGENANGLICAN %n"] = 35,
@@ -2912,7 +3056,7 @@ namelib.NAMES =
         Thamuz=3, Valafar=3, Verdelet=3,
 
 
-        -- ObAddon contributor names
+        -- Obsidian contributor names
         NOUNMEMBERS = 90,
 
         NOUNGENEXOTIC = 700
@@ -4201,7 +4345,7 @@ namelib.NAMES =
         ["Security Breach"] = 10,
         ["Arena From Hell"] = 10,
 
-        -- these by Chris (mostly)
+        -- these by Armaetus (mostly)
         ["Radio Silence"] = 10,
         ["Liquidation"] = 10,
         ["Return to Hell"] = 10,
@@ -5295,11 +5439,11 @@ namelib.NAMES =
 
         ["Prelude to Destruction"] = 25,
 
-        -- ObAddon specifics
-        ["ObAddon Special"] = 50,
-        ["ObAddon Exclusive"] = 50,
-        ["ObAddon Limited Ed"] = 50,
-        ["By ObAddon Contribs"] = 35,
+        -- OBsidian specifics
+        ["Obsidian Special"] = 50,
+        ["Obsidian Exclusive"] = 50,
+        ["Obsidian Limited Ed"] = 50,
+        ["By Obsidian Contribs"] = 35,
         ["Carthage Special"] = 20,
         ["Simon-v Special"] = 20,
         ["Armaetus Approved"] = 20,
@@ -5376,7 +5520,7 @@ namelib.NAMES =
         ["Always Fun!"] = 30,
         ["Amped Up!"] = 20,
         ["An Excellent Choice!"] = 25,
-        ["An ObAddon Production"] = 40,
+        ["An Obsidian Production"] = 40,
         ["Another New World!"] = 30,
         ["Are You Man Enough?"] = 20,
         ["As Above, So Below"] = 30,
@@ -5515,7 +5659,7 @@ namelib.NAMES =
         ["Trust in Thy Firearms"] = 20,
         ["Turn it to 11!"] = 30, -- Spinal Tap
         ["Turned Up to 110 Percent!"] = 20,
-        ["TY for Supporting ObAddon!"] = 30,
+        ["TY for Supporting Obsidian!"] = 30,
         ["Under Construction"] = 25,
         ["Unrelenting Numbers!"] = 20,
         ["Up and At Em!"] = 30,
@@ -5662,7 +5806,7 @@ namelib.IGNORE_WORDS =
 namelib.COMMUNITY_MEMBERS =
 {
 
-  -- Core ObAddon or regular(ish) contributors.
+  -- Core Obsidian or regular(ish) contributors.
   contributors =
   {
     "Armaetus", -- Used to be known as Glaice
@@ -5686,7 +5830,7 @@ namelib.COMMUNITY_MEMBERS =
   -- These people helped out OBLIGE and how they contributed.
   oblige_folks =
   {
-    "Andrew Apted", -- THE developer of OBLIGE. ObAddon would not exist without him!
+    "Andrew Apted", -- THE developer of OBLIGE. Obsidian would not exist without him!
     "Dittohead", -- Made some prefabs
     "Doctor Nick", -- The Makefile MacOS file
     "Enhas", -- Lots of stuff. Modules, Psychedelic names, a boss map, feedback, fixes/tweaks
@@ -5718,7 +5862,7 @@ namelib.COMMUNITY_MEMBERS =
     "Magpie", --MagPie
     "Mog Waltz",
     "Monika",
-    "Mr. Liden", --mrliden, created the R667ized ObAddon
+    "Mr. Liden", --mrliden, created the R667ized Obsidian
     "Nisteth",
     "Roundabout Lout",
     "Sharahfluff",
