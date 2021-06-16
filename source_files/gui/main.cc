@@ -511,7 +511,8 @@ void Main_SetupFLTK() {
     Fl::set_boxtype(FL_PLASTIC_THIN_UP_BOX, cplastic_thin_up_box, 2, 2, 4, 4);
     Fl::set_boxtype(FL_PLASTIC_DOWN_BOX, cplastic_down_box, 2, 2, 4, 4);
     Fl::set_boxtype(FL_SHADOW_BOX, cshadow_box, 1, 1, 5, 5);
-    Fl::set_boxtype(FL_BORDER_BOX, crectbound, 1, 1, 2, 2);
+    Fl::set_boxtype(FL_FREE_BOXTYPE, crectbound, 1, 1, 2, 2);
+    Fl::set_boxtype((Fl_Boxtype)(FL_FREE_BOXTYPE+1), crectbound, 1, 1, 2, 2);
     Fl::set_boxtype(FL_THIN_UP_BOX, cthin_up_box, 1, 1, 2, 2);
     Fl::set_boxtype(FL_EMBOSSED_BOX, cembossed_box, 2, 2, 4, 4);
     Fl::set_boxtype(FL_ENGRAVED_BOX, cengraved_box, 2, 2, 4, 4);
@@ -556,7 +557,7 @@ void Main_SetupFLTK() {
     			 break;
     	case 3 : button_style = FL_DOWN_BOX;
     			 break;
-    	case 4 : button_style = FL_BORDER_BOX;
+    	case 4 : button_style = FL_FREE_BOXTYPE;
     			 break;
     	// Shouldn't be reached, but still
     	default : button_style = FL_UP_BOX;
