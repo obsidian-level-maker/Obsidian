@@ -828,6 +828,7 @@ bool Build_Cool_Shit() {
 
 int main(int argc, char **argv) {
     // initialise argument parser (skipping program name)
+    restart: ;
     ArgvInit(argc - 1, (const char **)(argv + 1));
 
     if (ArgvFind('?', NULL) >= 0 || ArgvFind('h', "help") >= 0) {
@@ -1029,7 +1030,7 @@ int main(int argc, char **argv) {
         for (;;) {
             Fl::wait(0.2);
 
-            if (main_action == MAIN_QUIT) {
+            if (main_action == MAIN_QUIT || main_action == MAIN_RESTART) {
                 break;
             }
 
@@ -1058,6 +1059,25 @@ int main(int argc, char **argv) {
 
 	Theme_Options_Save(theme_file);
     Options_Save(options_file);
+
+	if (main_action == MAIN_RESTART) {
+	    if (main_win) {
+        // on fatal error we cannot risk calling into the Lua runtime
+        // (it's state may be compromised by a script error).
+		    if (config_file) {
+		        Cookie_Save(config_file);
+		    }
+
+        delete main_win;
+        main_win = NULL;
+    	}
+
+		Script_Close();
+		LogClose();
+		PHYSFS_deinit();
+		main_action = MAIN_NONE;
+		goto restart;
+	}
 
     Main_Shutdown(false);
 

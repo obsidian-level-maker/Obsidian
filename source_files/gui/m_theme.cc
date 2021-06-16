@@ -693,9 +693,9 @@ class UI_ThemeWin : public Fl_Window {
             Options_Save(options_file);
 
             fl_alert("%s", _("Plastic widget theme requires a restart.\nOBSIDIAN will "
-                         "now close."));
+                         "now restart."));
 
-            main_action = MAIN_QUIT;
+            main_action = MAIN_RESTART;
 
             that->want_quit = true;
 		}
@@ -1198,9 +1198,9 @@ class UI_ThemeWin : public Fl_Window {
             Options_Save(options_file);
 
             fl_alert("%s", _("Theme loading requires a restart.\nOBSIDIAN will "
-                         "now close."));
+                         "now restart."));
 
-            main_action = MAIN_QUIT;
+            main_action = MAIN_RESTART;
 
             that->want_quit = true;
 		}
