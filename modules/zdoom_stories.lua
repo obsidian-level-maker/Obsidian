@@ -130,6 +130,7 @@ ZDOOM_STORIES.LIST =
   bouncy_castle = 2,
   nothing_here = 3,
   lorem_ipsum = 3,
+  bootup_screen = 5,
 }
 
 ZDOOM_STORIES.STORIES =
