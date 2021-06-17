@@ -1536,6 +1536,10 @@ ZDOOM_STORIES.STORIES =
       [[It's _RAND_DEMON! Oh noes! ]],
 
       [[It's...._GOTHIC_LEVEL?? How the fuck is this possible? ]],
+
+      [[Nobody's here, bitch. Move along.]],
+
+      [[Just the wind, nothing's here.]]
     },
   },
 }
@@ -2544,6 +2548,7 @@ ZDOOM_STORIES.QUIT_MESSAGES =
   [[We insist you stay and play just a little bit longer.]],
   [[Quitters are not winners.]],
   [[If you don't love yourself, how the hell you gonna love somebody else?]],
+  [[Chads press N, Virgins press Y.]],
 
 
   -- hardcore philosophy
