@@ -95,7 +95,7 @@ ZDOOM_STORIES.LIST =
 {
   -- common stories
   portal_to_hell = 40,
-  fuck_argent_energy = 20,
+  fuck_argent_energy = 25,
   rescue_scientists = 40,
   reinforce_marines = 40,
   attack = 50,
@@ -112,6 +112,10 @@ ZDOOM_STORIES.LIST =
   fusion_cannon = 25,
   demolition_man = 40,
 
+  -- Uncommon stories
+  hell_is_where_i_stay = 9,
+  fearless = 9,
+
   -- rare stories
   deus_ex_machina = 6,
   weab = 2,
@@ -124,6 +128,8 @@ ZDOOM_STORIES.LIST =
   hell_to_pay = 2,
   oblige_history = 2,
   bouncy_castle = 2,
+  nothing_here = 3,
+  lorem_ipsum = 3,
 }
 
 ZDOOM_STORIES.STORIES =
@@ -1539,10 +1545,130 @@ ZDOOM_STORIES.STORIES =
 
       [[Nobody's here, bitch. Move along.]],
 
-      [[Just the wind, nothing's here.]]
+      [[Just the wind, nothing's here.]],
     },
   },
-}
+
+  -- DOS bootup screen
+  bootup_screen = {
+    hooks = {
+      [[
+      P_Init: Checking cmd-line parameters...
+      V_Init: Allocate screens.
+      M_LoadDefaults: Load system defaults.
+      Z_Init: Init zone memory allocation daemon.
+      DPMI memory: 0xdb2000, 0x800000 allocated for zone
+      W_Init: Init WADfiles.
+      adding doom2.wad
+      commercial version.
+      M_Init: Init miscellaneous info.
+      R_Init: Inid DOOM refresh daemon [........................] ]],
+    },
+
+    -- Error messages
+    conclusions = {
+      [[
+        P_AddActivePlats: no more plats!
+        Z_Malloc: failed on allocation of %i bytes
+        R_FindPlane: no more visplanes
+        R_FlatNumForName: %s not found
+        W_CacheLumpNum: %i>= numlumps
+        Savegame buffer overrun
+        R_TextureNumForName: %s not found
+        Killed by network driver
+        P_SpecialThing: Unknown gettable thing
+      ]],
+     },
+  },
+
+  nothing_here = {
+    hooks = {
+      [[There is nothing here.
+      _SPACE
+      ...or is there?]],
+    },
+
+    conclusions = {
+      [[I told you there's nothing here!
+      _SPACE
+      ...well, maybe just Andrew Apted's ghost.
+      _SPACE
+      lol]],
+    },
+
+    -- Yes, partial lyrics!
+    fearless = {
+
+      hooks = {
+        [[I'm gonna walk my way
+        You won't be holding me back
+        I'm not afraid of you
+        So just get out of my way
+        I'll destroy your life
+        Cause you're pulling me down
+        You've reached the end of the rope
+        So just get out of my way]],
+      },
+
+      conclusions =
+      {
+        [[I know your kind, I've tasted it before
+        You are spitting out all your lies
+        I push you up against the wall
+        _SPACE
+        Hypocrisy - Fearless]],
+      },
+    },
+
+    hell_is_where_i_stay =
+    {
+      hooks = {
+      [[I was born a dark night, Time stood still,
+      The sky turned red and Jesus wept.
+      _SPACE
+      Feeding my perverted pleasure, The taste of rotten flesh,
+      No entering the pearly gate, I am home.
+      _SPACE
+      Hell is where I stay, My destiny pulls me down south.
+      I'm home again, Hell is where I stay. I'm free again.]],
+      },
+
+      conclusions = {
+        [[So you think you can trick me. Hypocrite to the core.
+        I give you a lesson in violence. As my hammer crushes your bones.
+        Lay and bleed and bleed for me. Do you feel Salvation?
+        I know all your tricks.
+        _SPACE
+        Hypocrisy - Hell is Where I stay]],
+        },
+      },
+    },
+
+    -- Some information in conclusion is from https://generator.lorem-ipsum.info/_latin
+    lorem_ipsum = {
+      hooks = {
+      [[Lorem ipsum dolor sit amet, commodo feugiat mei at, mollis lobortis eu eos.
+      Eos quidam minimum constituam in, malis recusabo ad pri. Ut mei consul dolorum
+      quaerendum. Eu quo luptatum theophrastus. Duo ut animal laoreet recusabo.
+      Voluptaria vituperata ne eos, cu cum stet dicit noster, ut saepe nemore consequuntur
+      per. Te quo putant diceret vocibus, usu ex enim maluisset, quo ex aeterno sensibus
+      efficiendi. Ut postea doming molestiae nam, mutat eripuit cum ea. Soleat tractatos
+      disputationi no sed. Solum graecis nam in, soleat accusamus eu usu. Tota nostrud
+      reprehendunt ad duo.]],
+      },
+
+      conclusions = {
+        [[Lorem ipsum is a pseudo-Latin text used in web design, typography, layout, and
+        printing a place of English to emphasise design elements over content. It's also
+        called placeholder (or filler) text. It's a convenient tool for mock-ups. It
+        helps to outline the visual elements of a document, presentation and such.
+        _SPACE
+        Lorem ipsum is mostly a part of Latin text by the classical author and
+        philospher Cicero. It's words and letters have been changed by addition
+        or removal, so to deliberately render its content nonsensical.]],
+      },
+    }
+  }
 
 -- WARNING: absolute endings are supposed to be lines attached to the
 -- story end section of the final chapter. However, story strings
