@@ -1219,7 +1219,7 @@ function Monster_fill_room(R)
 
     local mon_strength
     if OB_CONFIG.batch == "yes" then
-      mon_strength = OB_CONFIG.float_strength
+      mon_strength = tonumber(OB_CONFIG.float_strength)
     else
       mon_strength = PARAM.float_strength
     end
@@ -1312,7 +1312,7 @@ function Monster_fill_room(R)
     local d = info.density or 1
     local float_strength
     if OB_CONFIG.batch == "yes" then
-        float_strength = OB_CONFIG.float_strength
+        float_strength = tonumber(OB_CONFIG.float_strength)
     else
         float_strength = PARAM.float_strength
     end
