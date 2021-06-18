@@ -4527,36 +4527,36 @@ namelib.NAMES =
     patterns =
     {
       -- <adj> <place>  e.g. dark dimension
-      ["%a %p"] = 50, -- Descriptive Place
-      ["The %a %p"] = 45, -- The Descriptive Place
+      ["%a %p"] = 100, -- Descriptive Place
+      ["The %a %p"] = 80, -- The Descriptive Place
       ["Into the %a %p"] = 10, -- Into the Descriptive Place
 
       -- <adj> <thing>  e.g. eternal gore
-      ["%a %d"] = 50, -- Descriptive Object
+      ["%a %d"] = 100, -- Descriptive Object
+
+      -- <place> of <desc>  e.g. city of souls
+      ["%p of %d"] = 100, -- Place of Object
+      ["%d in the %p"] = 80, -- Object in the Place
+      ["%d at the %p"] = 80, -- Ojbect at the Place
+
+      ["The %e of %d"] = 60, -- The Entity of Object
+      ["%e in the %p"] = 60, -- Entity in the Place
+
+      -- <place> of the <entity>  e.g. realm of the devil
+      ["%p of the %e"] = 100, -- Place of the Entity
+      ["The %p of the %e"] = 75, -- The Place of the Entity
+      ["The %d of the %e"] = 75, -- The Abstract Object of the Entity
+      ["The %a %d of the %a %e"] = 75, -- The Descriptive Object of the Descriptive Entity
+      ["The %a %p of the %a %e"] = 75, -- The Descriptive Place of the Descriptive Entity
+
+      -- miscellaneous
+      ["Beyond the %p"] = 8,
+      ["Journey to the %p"] = 6,
 
       ["%d Forever"]  = 5,
       ["%d Always"]  = 5,
       ["Not enough %d"] = 7,
       ["%d Revealed"] = 5,
-
-      -- <place> of <desc>  e.g. city of souls
-      ["%p of %d"] = 50, -- Place of Object
-      ["%d in the %p"] = 25, -- Object in the Place
-      ["%d at the %p"] = 25, -- Ojbect at the Place
-
-      ["The %e of %d"] = 30, -- The Entity of Object
-      ["%e in the %p"] = 30, -- Entity in the Place
-
-      -- <place> of the <entity>  e.g. realm of the devil
-      ["%p of the %e"] = 50, -- Place of the Entity
-      ["The %p of the %e"] = 30, -- The Place of the Entity
-      ["The %d of the %e"] = 30, -- The Abstract Object of the Entity
-      ["The %a %d of the %a %e"] = 40, -- The Descriptive Object of the Descriptive Entity
-      ["The %a %p of the %a %e"] = 40, -- The Descriptive Place of the Descriptive Entity
-
-      -- miscellaneous
-      ["Beyond the %p"] = 8,
-      ["Journey to the %p"] = 6,
 
       ["The %e Cometh"] = 5,
       ["The %e will Rise"] = 5,

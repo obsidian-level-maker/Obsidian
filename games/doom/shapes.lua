@@ -6150,6 +6150,63 @@ GROW_THREE_WAY_SMALL =
   }
 },
 
+GROW_RUNIC_S =
+{
+  prob = 10,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xx....","xx11AA",
+    "xx....","xx11AA",
+    "xx....","xx11#A",
+    "x.....","x/11AA",
+    "......","/11/AA",
+    "......","11/AA/",
+    ".....x","11AA/x",
+    "....xx","11#Axx",
+    "....xx","11AAxx",
+    "11..xx","11AAxx",
+  },
+
+  diagonals =
+  {
+    ".1",
+    ".1","1A",
+    "1A","A.",
+         "A.",
+  }
+},
+
+GROW_RUNIC_S_STAIR =
+{
+  prob = 10,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xx....","xx11AA",
+    "xx....","xx1#AA",
+    "xx....","xx1>AA",
+    "xx....","xx1>AA",
+    "x.....","x/11AA",
+    "......","/11/AA",
+    "......","11/AA/",
+    ".....x","11AA/x",
+    "....xx","11#Axx",
+    "....xx","11AAxx",
+    "11..xx","11AAxx",
+  },
+
+  diagonals =
+  {
+    ".1",
+    ".1","1A",
+    "1A","A.",
+         "A.",
+  }
+},
+
 -- MSSP's liquid slabs. [LIQUID_SLABS]
 
 GROW_LIQUID_SLAB_ENTRY =
@@ -6571,6 +6628,7 @@ GROW_PRIMITIVE_CIRCLE_2X =
 
   structure =
   {
+    "xx..xx","xx11xx",
     "x....x","x/11%x",
     "......","/1111%",
     "......","111111",
@@ -7159,7 +7217,7 @@ GROW_PILLAR_GATE =
   },
 },
 
-DECORATE_CATWALK_SUPPORT_PILLAR_OUTER =
+--[[DECORATE_CATWALK_SUPPORT_PILLAR_OUTER =
 {
   prob = 8,
   skip_prob = 50,
@@ -7203,7 +7261,7 @@ DECORATE_CATWALK_LUMP =
   {
     "12","21",
   },
-},
+},]]
 
 GROW_CHAMFER_WIDE_ROOM_CORNER =
 {
@@ -7497,8 +7555,8 @@ GROW_36_INVERSE_ATARI_LOGO_NEW_AREA =
 
 GROW_36_RIBBED_WALLS_NEW_AREA_DOUBLE =
 {
-  prob = 15,
-  skip_prob = 80,
+  prob = 25,
+  skip_prob = 75,
 
   structure =
   {
@@ -7519,7 +7577,7 @@ GROW_36_RIBBED_WALLS_NEW_AREA_DOUBLE =
 GROW_36_RIBBED_WALLS_NEW_AREA_SINGLE =
 {
   prob = 15,
-  skip_prob = 80,
+  skip_prob = 75,
 
   structure =
   {
@@ -7536,8 +7594,8 @@ GROW_36_RIBBED_WALLS_NEW_AREA_SINGLE =
 
 GROW_36_PEANUT_NEW_AREA =
 {
-  prob = 15,
-  skip_prob = 80,
+  prob = 30,
+  skip_prob = 75,
 
   structure =
   {
@@ -7562,7 +7620,7 @@ GROW_36_PEANUT_NEW_AREA =
 
 GROW_36_4PILLAR_ARCHS_NEW_AREA =
 {
-  prob = 15,
+  prob = 30,
   skip_prob = 75,
 
   structure =
@@ -7579,7 +7637,6 @@ GROW_36_4PILLAR_ARCHS_NEW_AREA =
   },
 },
 
-
 GROW_36_4PILLAR_OPEN_ROOF_GAZEBO_NEW_AREA =
 {
   prob = 20,
@@ -7587,15 +7644,15 @@ GROW_36_4PILLAR_OPEN_ROOF_GAZEBO_NEW_AREA =
 
   structure =
   {
-    "........","11111111",
-    "........","11111111",
-    "........","11#AA#11",
-    "........","11A11A11",
-    "........","11A11A11",
-    "........","11#AA#11",
-    "........","11111111",
-    "........","11111111",
-    "xxx11xxx","xxx11xxx",
+    "......","111111",
+    "......","111111",
+    "......","1#AA#1",
+    "......","1A11A1",
+    "......","1A11A1",
+    "......","1#AA#1",
+    "......","111111",
+    "......","111111",
+    "xx11xx","xx11xx",
   },
 },
 
@@ -9395,7 +9452,6 @@ GROW_DIAGONAL_STALK =
   },
 },
 
-
 GROW_DIAGONAL_STALK_LIQUID =
 {
   prob = 50,
@@ -9419,7 +9475,6 @@ GROW_DIAGONAL_STALK_LIQUID =
          "~1","~.",
   },
 },
-
 
 GROW_O =
 {
@@ -10005,7 +10060,6 @@ GROW_INTO_CLIFF =
   },
 },
 
-
 GROW_INTO_CLIFF_INVERSE =
 {
   prob = 20,
@@ -10291,79 +10345,6 @@ GROW_CLIFF_DOUBLE_TRIDENT_X2_LIQUID =
   }
 },
 
---[[GROW_CLIFF_ENTRY_X4_LONG =
-{
-  prob = 50,
-  skip_prob = 25,
-
-  structure =
-  {
-    "........","1111AAAA",
-    "........","1111AAAA",
-    "........","1111AAAA",
-    "........","1111AAAA",
-    "........","1111AAAA",
-    "........","1111AAAA",
-    "........","1111AAAA",
-    "........","1111AAAA",
-    "........","11111^^1",
-    "11......","11111111",
-    "11......","11111111",
-  },
-},
-
-GROW_CLIFF_ENTRY_X4_CURVE =
-{
-  prob = 50,
-  skip_prob = 15,
-
-  structure =
-  {
-    "..........","/111111111",
-    "..........","1111111111",
-    "..........","1111111111",
-    "..........","1111111111",
-    "..........","1111/AAAAA",
-    "..........","1111AAAAAA",
-    "..........","1111AAAAAA",
-    "..........","1111AAAAAA",
-    "........xx","1111AAAAxx",
-    "........xx","1111AAAAxx",
-    "........xx","11111^^1xx",
-    "11......xx","11111111xx",
-    "11......xx","11111111xx",
-  },
-
-  diagonals =
-  {
-    ".1","1A",
-  },
-},
-
-GROW_CLIFF_ENTRY_X4_CURVE_REVERSE =
-{
-  prob = 50,
-  skip_prob = 15,
-
-  structure =
-  {
-    "........","AAAAAAA%",
-    "........","AAAAAAAA",
-    "........","AAAAAAAA",
-    "........","AAAAAAAA",
-    "........","111%AAAA",
-    "........","1111AAAA",
-    "........","11111^^1",
-    "......11","11111111",
-    "......11","11111111",
-  },
-
-  diagonals =
-  {
-    "A.","1A",
-  },
-}]]
-
 -- cliff-side/area-to-area cages
 
 DECORATE_CLIFF_CAGE =
@@ -10410,7 +10391,6 @@ DECORATE_CLIFF_CAGE_3X_STAGGERED =
 
 -- MSSP's liquid placer [LIQUID-CLIFF]
 
-
 GROW_LIQUID_POOL_PLACE_3x3 =
 {
   prob = 15,
@@ -10452,101 +10432,6 @@ GROW_LIQUID_POOL_PLACE_3x6 =
     "1~","~1",
   },
 },
-
---[[GROW_LIQUID_POOL_PLACE =
-{
-  prob = 25,
-  skip_prob = 30,
-
-  group_pos = "entry",
-  group = "liquid_pool",
-
-  structure =
-  {
-    "....","1111",
-    "....","1~~1",
-    "....","1~~1",
-    "....","1111",
-    "x11x","x11x",
-  },
-},
-
-GROW_LIQUID_POOL_EXTEND_STRAIGHT =
-{
-  prob = 25,
-  skip_prob = 30,
-
-  group = "liquid_pool",
-
-  structure =
-  {
-    "1...","1111",
-    "~...","~~~~",
-    "~...","~~~~",
-    "1...","1111",
-  },
-},
-
-GROW_LIQUID_POOL_SWERVE =
-{
-  prob = 20,
-  skip_prob = 30,
-
-  group = "liquid_pool",
-
-  structure =
-  {
-    "x....","x1~~1",
-    ".....","/1~~1",
-    ".....","1/~/1",
-    ".....","1~~1/",
-    "1~~1x","1~~1x",
-  },
-
-  diagonals =
-  {
-    ".1","1~",
-    "~1","1.",
-  },
-},
-
-GROW_LIQUID_POOL_END =
-{
-  prob = 15,
-  skip_prob = 30,
-
-  group = "liquid_pool",
-
-  structure =
-  {
-    "....","1111",
-    "....","1111",
-    "....","1~~1",
-    "....","1~~1",
-    "1~~1","1~~1",
-  },
-},
-
-GROW_LIQUID_POOL_EXTEND_CURVED =
-{
-  prob = 15,
-  skip_prob = 30,
-
-  group = "liquid_pool",
-
-  structure =
-  {
-    "1...","1111",
-    "~...","~~%1",
-    "~...","~~~1",
-    "1...","1~~1",
-  },
-
-  diagonals =
-  {
-    "~1",
-  },
-}]]
 
 GROW_LIQUID_PILLAR =
 {
@@ -10594,78 +10479,6 @@ GROW_LIQUID_PILLAR_INWARD =
     "11xx","11xx",
   },
 },
-
---[[DECORATE_LIQUID_MOAT_ROW =
-{
-  prob = 10,
-  skip_prob = 25,
-
-  group = "moat",
-
-  structure =
-  {
-    "11111","11111",
-    "22222","2~~~2",
-    "22222","22222",
-  },
-},
-
-DECORATE_LIQUID_MOAT_CORNER =
-{
-  prob = 15,
-  skip_prob = 25,
-
-  group_pos = "entry",
-  group = "moat",
-
-  structure =
-  {
-    "x122","x122",
-    "x122","x1~2",
-    "1/22","1/~2",
-    "2222","2~/2",
-    "2222","2222",
-  },
-
-  diagonals =
-  {
-    "12","1~",
-         "~2",
-  },
-},
-
-DECORATE_LIQUID_MOAT_EXTEND =
-{
-  prob = 10,
-
-  group = "moat",
-
-  structure =
-  {
-    "111","111",
-    "~22","~~2",
-    "222","222",
-  },
-},
-
-DECORATE_LIQUID_MOAT_EXTEND_FROM_CORNER =
-{
-  prob = 15,
-
-  group = "moat",
-
-  structure =
-  {
-    "111","111",
-    "~22","~~2",
-    "/22","/22",
-  },
-
-  diagonals =
-  {
-    "~2","~2",
-  },
-}]]
 
 -- MSSP's single-seed trenches. [TRENCHES]
 
