@@ -1,9 +1,10 @@
 PREFABS.Pic_armaetus_hell_impaled_guys =
 {
-  file   = "picture/armaetus_pic_hell_impaled_guys.wad",
-  map    = "MAP01",
+  file = "picture/armaetus_pic_hell_impaled_guys.wad",
+  map = "MAP01",
 
-  prob   = 25,
+  prob = 25,
+  prob_skew = 2,
   theme = "hell",
 
   where  = "seeds",

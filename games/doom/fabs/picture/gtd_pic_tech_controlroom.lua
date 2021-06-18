@@ -1,14 +1,15 @@
 PREFABS.Pic_control_room =
 {
-  file   = "picture/gtd_pic_tech_controlroom.wad",
-  map    = "MAP01",
+  file = "picture/gtd_pic_tech_controlroom.wad",
+  map = "MAP01",
 
-  prob   = 75,
+  prob = 75,
+  prob_skew = 2,
   theme = "tech",
 
   env = "building",
 
-  where  = "seeds",
+  where = "seeds",
   height = 128,
 
   seed_w = 3,

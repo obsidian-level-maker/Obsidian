@@ -4,6 +4,7 @@ PREFABS.Pic_hell_lavafalls =
   map    = "MAP01",
 
   prob   = 15,
+  prob_skew = 2,
   theme = "hell",
 
   where  = "seeds",

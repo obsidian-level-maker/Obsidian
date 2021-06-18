@@ -6,6 +6,8 @@ PREFABS.Switch_scionox_console =
   theme  = "tech",
   key = "sw_metal",
 
+
+
   prob   = 50,
 
   where  = "point",
@@ -23,6 +25,10 @@ PREFABS.Switch_scionox_console_3 =
 {
   template = "Switch_scionox_console",
   map    = "MAP03",
+
+  size   = 96,
+  prob   = 150,
+
 }
 
 PREFABS.Switch_scionox_console_4 =

@@ -4,6 +4,7 @@ PREFABS.Pic_hell_throne =
   map    = "MAP01",
 
   prob   = 15,
+  prob_skew = 3,
   theme = "hell",
 
   where  = "seeds",
