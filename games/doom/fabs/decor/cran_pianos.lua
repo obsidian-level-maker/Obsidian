@@ -6,7 +6,7 @@ PREFABS.Cran_piano =
   map    = "MAP01",
 
   prob   = 1500,
-  theme  = "!hell",
+  theme  = "urban",
 
   where  = "point",
   env    = "!outdoor",
@@ -22,7 +22,6 @@ PREFABS.Cran_piano_haunted =
   file   = "decor/cran_pianos.wad",
   map    = "MAP02",
  
-  rank   = 1,
   prob   = 1500,
   theme  = "hell",
 
