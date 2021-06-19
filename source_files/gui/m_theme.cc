@@ -29,6 +29,8 @@
 #include "m_trans.h"
 #include "main.h"
 
+bool skip_color_picker = false;
+
 //----------------------------------------------------------------------
 
 const char *Theme_OutputFilename() {
@@ -835,14 +837,28 @@ class UI_ThemeWin : public Fl_Window {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         color_scheme = that->opt_color_scheme->value();
+        
+        if (color_scheme == 2) {
+        	skip_color_picker = true;
+        	that->opt_text_color->do_callback();
+			that->opt_bg_color->do_callback();
+			that->opt_bg2_color->do_callback();
+			that->opt_button_color->do_callback();
+			that->opt_gradient_color->do_callback();
+			that->opt_border_color->do_callback();
+			that->opt_gap_color->do_callback();
+        	skip_color_picker = false;        
+        }
                
     }
     
     static void callback_TextColor(Fl_Widget *w, void *data) {
-        UI_ThemeWin *that = (UI_ThemeWin *)data;     
-        if (fl_color_chooser((const char *)"Select Text Color", text_red, text_green, text_blue, 1)) {
-    		that->opt_text_color->color(fl_rgb_color(text_red, text_green, text_blue));
-    		that->opt_text_color->redraw();
+        UI_ThemeWin *that = (UI_ThemeWin *)data;
+        if (!skip_color_picker) {    
+		    if (fl_color_chooser((const char *)"Select Text Color", text_red, text_green, text_blue, 1)) {
+				that->opt_text_color->color(fl_rgb_color(text_red, text_green, text_blue));
+				that->opt_text_color->redraw();
+			}
     	}
     	if (color_scheme == 2) {
 			FONT_COLOR = fl_rgb_color(text_red, text_green, text_blue);
@@ -948,10 +964,12 @@ class UI_ThemeWin : public Fl_Window {
     }
     
     static void callback_BgColor(Fl_Widget *w, void *data) {
-        UI_ThemeWin *that = (UI_ThemeWin *)data;     
-        if (fl_color_chooser((const char *)"Select Panel Color", bg_red, bg_green, bg_blue, 1)) {
-    		that->opt_bg_color->color(fl_rgb_color(bg_red, bg_green, bg_blue));
-    		that->opt_bg_color->redraw();
+        UI_ThemeWin *that = (UI_ThemeWin *)data;
+        if (!skip_color_picker) {     
+		    if (fl_color_chooser((const char *)"Select Panel Color", bg_red, bg_green, bg_blue, 1)) {
+				that->opt_bg_color->color(fl_rgb_color(bg_red, bg_green, bg_blue));
+				that->opt_bg_color->redraw();
+			}
     	}
     	if (color_scheme == 2) {
 			WINDOW_BG = fl_rgb_color(bg_red, bg_green, bg_blue);
@@ -997,10 +1015,12 @@ class UI_ThemeWin : public Fl_Window {
     }
     
     static void callback_Bg2Color(Fl_Widget *w, void *data) {
-        UI_ThemeWin *that = (UI_ThemeWin *)data;       
-        if (fl_color_chooser((const char *)"Select Highlight Color", bg2_red, bg2_green, bg2_blue, 1)) {
-    		that->opt_bg2_color->color(fl_rgb_color(bg2_red, bg2_green, bg2_blue));
-    		that->opt_bg2_color->redraw();
+        UI_ThemeWin *that = (UI_ThemeWin *)data;
+        if (!skip_color_picker) {      
+		    if (fl_color_chooser((const char *)"Select Highlight Color", bg2_red, bg2_green, bg2_blue, 1)) {
+				that->opt_bg2_color->color(fl_rgb_color(bg2_red, bg2_green, bg2_blue));
+				that->opt_bg2_color->redraw();
+			}
     	}
     	if (color_scheme == 2) {
 			SELECTION = fl_rgb_color(bg2_red, bg2_green, bg2_blue);
@@ -1070,10 +1090,12 @@ class UI_ThemeWin : public Fl_Window {
     }
     
     static void callback_ButtonColor(Fl_Widget *w, void *data) {
-        UI_ThemeWin *that = (UI_ThemeWin *)data;     
-        if (fl_color_chooser((const char *)"Select Button Color", button_red, button_green, button_blue, 1)) {
-    		that->opt_button_color->color(fl_rgb_color(button_red, button_green, button_blue));
-    		that->opt_button_color->redraw();
+        UI_ThemeWin *that = (UI_ThemeWin *)data;
+        if (!skip_color_picker) {   
+		    if (fl_color_chooser((const char *)"Select Button Color", button_red, button_green, button_blue, 1)) {
+				that->opt_button_color->color(fl_rgb_color(button_red, button_green, button_blue));
+				that->opt_button_color->redraw();
+			}
     	}
     	if (color_scheme == 2) {
 			BUTTON_COLOR = fl_rgb_color(button_red, button_green, button_blue);
@@ -1121,10 +1143,12 @@ class UI_ThemeWin : public Fl_Window {
     }
     
     static void callback_GradientColor(Fl_Widget *w, void *data) {
-        UI_ThemeWin *that = (UI_ThemeWin *)data;     
-        if (fl_color_chooser((const char *)"Select Gradient Color", gradient_red, gradient_green, gradient_blue, 1)) {
-    		that->opt_gradient_color->color(fl_rgb_color(gradient_red, gradient_green, gradient_blue));
-    		that->opt_gradient_color->redraw();
+        UI_ThemeWin *that = (UI_ThemeWin *)data;
+        if (!skip_color_picker) {   
+		    if (fl_color_chooser((const char *)"Select Gradient Color", gradient_red, gradient_green, gradient_blue, 1)) {
+				that->opt_gradient_color->color(fl_rgb_color(gradient_red, gradient_green, gradient_blue));
+				that->opt_gradient_color->redraw();
+			}
     	}
     	if (color_scheme == 2) {
 			GRADIENT_COLOR = fl_rgb_color(gradient_red, gradient_green, gradient_blue);
@@ -1147,10 +1171,12 @@ class UI_ThemeWin : public Fl_Window {
     }
     
     static void callback_BorderColor(Fl_Widget *w, void *data) {
-        UI_ThemeWin *that = (UI_ThemeWin *)data;       
-        if (fl_color_chooser((const char *)"Select Border Color", border_red, border_green, border_blue, 1)) {
-    		that->opt_border_color->color(fl_rgb_color(border_red, border_green, border_blue));
-    		that->opt_border_color->redraw();
+        UI_ThemeWin *that = (UI_ThemeWin *)data;
+        if (!skip_color_picker) {     
+		    if (fl_color_chooser((const char *)"Select Border Color", border_red, border_green, border_blue, 1)) {
+				that->opt_border_color->color(fl_rgb_color(border_red, border_green, border_blue));
+				that->opt_border_color->redraw();
+			}
     	}
     	if (color_scheme == 2) {
 			BORDER_COLOR = fl_rgb_color(border_red, border_green, border_blue);
@@ -1173,10 +1199,12 @@ class UI_ThemeWin : public Fl_Window {
     }
     
     static void callback_GapColor(Fl_Widget *w, void *data) {
-        UI_ThemeWin *that = (UI_ThemeWin *)data;       
-        if (fl_color_chooser((const char *)"Select Gap Color", gap_red, gap_green, gap_blue, 1)) {
-    		that->opt_gap_color->color(fl_rgb_color(gap_red, gap_green, gap_blue));
-    		that->opt_gap_color->redraw();
+        UI_ThemeWin *that = (UI_ThemeWin *)data;
+        if (!skip_color_picker) {     
+		    if (fl_color_chooser((const char *)"Select Gap Color", gap_red, gap_green, gap_blue, 1)) {
+				that->opt_gap_color->color(fl_rgb_color(gap_red, gap_green, gap_blue));
+				that->opt_gap_color->redraw();
+			}
     	}
     	if (color_scheme == 2) {
 			GAP_COLOR = fl_rgb_color(gap_red, gap_green, gap_blue);
