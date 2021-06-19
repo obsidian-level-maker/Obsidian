@@ -890,7 +890,7 @@ function Grower_calc_rule_probs()
 
   if not LEVEL.is_procedural_gotcha then
     if OB_CONFIG.batch == "yes" then
-      if rand.odds(OB_CONFIG.float_layout_absurdity) then
+      if rand.odds(tonumber(OB_CONFIG.float_layout_absurdity)) then
         LEVEL.is_absurd = true       
       end
     else 
@@ -1014,8 +1014,8 @@ function Grower_decide_extents()
     LEVEL.has_streets = false
   end
 
-  assert(LEVEL.map_W < SEED_W)
-  assert(LEVEL.map_H < SEED_H)
+  assert(int(LEVEL.map_W) < SEED_W)
+  assert(int(LEVEL.map_H) < SEED_H)
 
   local map_x1 = 1 + int((SEED_W - LEVEL.map_W) / 2)
   local map_y1 = 1 + int((SEED_H - LEVEL.map_H) / 2)

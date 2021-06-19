@@ -511,10 +511,12 @@ void Main_SetupFLTK() {
     Fl::set_boxtype(FL_PLASTIC_THIN_UP_BOX, cplastic_thin_up_box, 2, 2, 4, 4);
     Fl::set_boxtype(FL_PLASTIC_DOWN_BOX, cplastic_down_box, 2, 2, 4, 4);
     Fl::set_boxtype(FL_SHADOW_BOX, cshadow_box, 1, 1, 5, 5);
-    Fl::set_boxtype(FL_BORDER_BOX, crectbound, 1, 1, 2, 2);
+    Fl::set_boxtype(FL_FREE_BOXTYPE, crectbound, 1, 1, 2, 2);
+    Fl::set_boxtype((Fl_Boxtype)(FL_FREE_BOXTYPE+1), crectbound, 1, 1, 2, 2);
     Fl::set_boxtype(FL_THIN_UP_BOX, cthin_up_box, 1, 1, 2, 2);
     Fl::set_boxtype(FL_EMBOSSED_BOX, cembossed_box, 2, 2, 4, 4);
-    Fl::set_boxtype(FL_ENGRAVED_BOX, cengraved_box, 2, 2, 4, 4);
+    Fl::set_boxtype((Fl_Boxtype)(FL_FREE_BOXTYPE+2), cengraved_box, 2, 2, 4, 4);
+    Fl::set_boxtype((Fl_Boxtype)(FL_FREE_BOXTYPE+3), cengraved_box, 2, 2, 4, 4);
     Fl::set_boxtype(FL_DOWN_BOX, cdown_box, 2, 2, 4, 4);
     Fl::set_boxtype(FL_UP_BOX, cup_box, 2, 2, 4, 4);
     switch(widget_theme) {
@@ -552,11 +554,11 @@ void Main_SetupFLTK() {
     			 break;
     	case 1 : button_style = FL_EMBOSSED_BOX;
     			 break;
-    	case 2 : button_style = FL_ENGRAVED_BOX;
+    	case 2 : button_style = (Fl_Boxtype)(FL_FREE_BOXTYPE+2);
     			 break;
     	case 3 : button_style = FL_DOWN_BOX;
     			 break;
-    	case 4 : button_style = FL_BORDER_BOX;
+    	case 4 : button_style = FL_FREE_BOXTYPE;
     			 break;
     	// Shouldn't be reached, but still
     	default : button_style = FL_UP_BOX;
@@ -828,6 +830,7 @@ bool Build_Cool_Shit() {
 
 int main(int argc, char **argv) {
     // initialise argument parser (skipping program name)
+    restart: ;
     ArgvInit(argc - 1, (const char **)(argv + 1));
 
     if (ArgvFind('?', NULL) >= 0 || ArgvFind('h', "help") >= 0) {
@@ -1029,7 +1032,7 @@ int main(int argc, char **argv) {
         for (;;) {
             Fl::wait(0.2);
 
-            if (main_action == MAIN_QUIT) {
+            if (main_action == MAIN_QUIT || main_action == MAIN_RESTART) {
                 break;
             }
 
@@ -1058,6 +1061,25 @@ int main(int argc, char **argv) {
 
 	Theme_Options_Save(theme_file);
     Options_Save(options_file);
+
+	if (main_action == MAIN_RESTART) {
+	    if (main_win) {
+        // on fatal error we cannot risk calling into the Lua runtime
+        // (it's state may be compromised by a script error).
+		    if (config_file) {
+		        Cookie_Save(config_file);
+		    }
+
+        delete main_win;
+        main_win = NULL;
+    	}
+
+		Script_Close();
+		LogClose();
+		PHYSFS_deinit();
+		main_action = MAIN_NONE;
+		goto restart;
+	}
 
     Main_Shutdown(false);
 

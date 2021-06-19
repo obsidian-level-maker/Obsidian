@@ -890,14 +890,20 @@ function Monster_fill_room(R)
         end
     end
 
-    local qty 
+    local qty
+    local u_range
+    local l_range
     if OB_CONFIG.batch == "yes" then
         qty = OB_CONFIG.float_mons
+        u_range = tonumber(OB_CONFIG.float_mix_it_up_upper_range)
+        l_range = tonumber(OB_CONFIG.float_mix_it_up_lower_range)
     else
         qty = PARAM.float_mons
+        u_range = PARAM.float_mix_it_up_upper_range
+        l_range = PARAM.float_mix_it_up_lower_range
     end
-    local u_range = PARAM.float_mix_it_up_upper_range
-    local l_range = PARAM.float_mix_it_up_lower_range
+    
+    if tonumber(qty) then qty = tonumber(qty) end
     
     --Mix It Up
     if qty == "Mix It Up" then
@@ -1219,7 +1225,7 @@ function Monster_fill_room(R)
 
     local mon_strength
     if OB_CONFIG.batch == "yes" then
-      mon_strength = OB_CONFIG.float_strength
+      mon_strength = tonumber(OB_CONFIG.float_strength)
     else
       mon_strength = PARAM.float_strength
     end
@@ -1312,7 +1318,7 @@ function Monster_fill_room(R)
     local d = info.density or 1
     local float_strength
     if OB_CONFIG.batch == "yes" then
-        float_strength = OB_CONFIG.float_strength
+        float_strength = tonumber(OB_CONFIG.float_strength)
     else
         float_strength = PARAM.float_strength
     end

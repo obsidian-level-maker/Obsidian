@@ -693,9 +693,9 @@ class UI_ThemeWin : public Fl_Window {
             Options_Save(options_file);
 
             fl_alert("%s", _("Plastic widget theme requires a restart.\nOBSIDIAN will "
-                         "now close."));
+                         "now restart."));
 
-            main_action = MAIN_QUIT;
+            main_action = MAIN_RESTART;
 
             that->want_quit = true;
 		}
@@ -822,12 +822,20 @@ class UI_ThemeWin : public Fl_Window {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         single_pane = that->opt_single_pane->value() ? true : false;
+        
+        fl_alert("%s", _("Switching pane modes requires a restart.\nOBSIDIAN will "
+                      "now restart."));
+
+        main_action = MAIN_RESTART;
+
+        that->want_quit = true;
     }
 
     static void callback_ColorScheme(Fl_Widget *w, void *data) {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         color_scheme = that->opt_color_scheme->value();
+               
     }
     
     static void callback_TextColor(Fl_Widget *w, void *data) {
@@ -1198,9 +1206,9 @@ class UI_ThemeWin : public Fl_Window {
             Options_Save(options_file);
 
             fl_alert("%s", _("Theme loading requires a restart.\nOBSIDIAN will "
-                         "now close."));
+                         "now restart."));
 
-            main_action = MAIN_QUIT;
+            main_action = MAIN_RESTART;
 
             that->want_quit = true;
 		}

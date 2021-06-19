@@ -46,7 +46,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
 
     seed_disp = new Fl_Box(X + (W * .10), cy, mini_w, mini_h);
     seed_disp->box(FL_NO_BOX);
-    seed_disp->align(FL_ALIGN_INSIDE | FL_ALIGN_TOP_LEFT);
+    seed_disp->align(FL_ALIGN_INSIDE | FL_ALIGN_TOP_LEFT | FL_ALIGN_CLIP);
     seed_disp->labelcolor(FL_WHITE);
     seed_disp->labelsize(small_font_size);
     seed_disp->labelfont(font_style);

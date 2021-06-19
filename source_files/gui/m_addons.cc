@@ -628,9 +628,9 @@ void DLG_SelectAddons(void) {
         Options_Save(options_file);
 
         fl_alert("%s", _("Changes to addons require a restart.\nOBSIDIAN will "
-                         "now close."));
+                         "now restart."));
 
-        main_action = MAIN_QUIT;
+        main_action = MAIN_RESTART;
     }
 
     delete addons_window;

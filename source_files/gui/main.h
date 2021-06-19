@@ -27,6 +27,7 @@
 #include <map>
 #include <algorithm>
 #include "hdr_fltk.h"
+#include "physfs.h"
 #define OBSIDIAN_TITLE "OBSIDIAN Level Maker"
 
 #define OBSIDIAN_VERSION "Beta 19 Preview"
@@ -56,7 +57,8 @@ typedef enum {
     MAIN_NONE = 0,
     MAIN_BUILD,
     MAIN_CANCEL,
-    MAIN_QUIT
+    MAIN_QUIT,
+    MAIN_RESTART
 } main_action_kind_e;
 
 extern int main_action;
