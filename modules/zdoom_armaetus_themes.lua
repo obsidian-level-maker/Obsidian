@@ -336,7 +336,7 @@ ARMAETUS_ROOM_THEMES =
 
   tech_Computers =
   {
-    prob = 25,
+    prob = 15,
     env = "building",
 
     walls =
@@ -382,7 +382,7 @@ ARMAETUS_ROOM_THEMES =
   -- Multi colors here!
   tech_ComputersMulti =
   {
-    prob = 15,
+    prob = 2,
     env = "building",
 
     walls =
@@ -431,7 +431,7 @@ ARMAETUS_ROOM_THEMES =
   -- single color comp rooms
   tech_ComputersRed =
   {
-    prob = 4,
+    prob = 3,
     env = "building",
 
     walls =
@@ -493,7 +493,7 @@ ARMAETUS_ROOM_THEMES =
 
   tech_ComputersBlue =
   {
-    prob = 4,
+    prob = 3,
     env = "building",
 
     walls =
@@ -559,7 +559,7 @@ ARMAETUS_ROOM_THEMES =
 
   tech_ComputersGreen =
   {
-    prob = 4,
+    prob = 3,
     env = "building",
 
     walls =
@@ -617,7 +617,7 @@ ARMAETUS_ROOM_THEMES =
 
   tech_ComputersYellowish =
   {
-    prob = 4,
+    prob = 3,
     env = "building",
 
     walls =
@@ -677,7 +677,7 @@ ARMAETUS_ROOM_THEMES =
 
   tech_ComputersParple =
   {
-    prob = 4,
+    prob = 3,
     env = "building",
 
     walls =
