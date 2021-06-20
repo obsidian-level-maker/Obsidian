@@ -121,6 +121,11 @@ void UI_MainWin::CalcWindowSize(int *W, int *H) {
 }
 
 void UI_MainWin::Locked(bool value) {
+	if (value) {
+		main_win->menu_bar->deactivate();
+	} else {
+		main_win->menu_bar->activate();
+	}
     game_box->Locked(value);
     left_mods->Locked(value);
     if (!single_pane) {
