@@ -1,3 +1,5 @@
+--This is my shape grammar playground file for experimenting with grammar changes - Dasho
+
 ------------------------------------------------------------------------
 --  GRAMMAR RULES
 ------------------------------------------------------------------------
@@ -19,7 +21,7 @@
 --
 ------------------------------------------------------------------------
 
-HEXEN.SHAPE_GRAMMAR =
+HERETIC.SHAPE_GRAMMAR =
 {
 
 ROOT_1 =
@@ -44,7 +46,7 @@ ROOT_1 =
 
 -----------------------------------------
 
-GROW_1 =
+--[[GROW_1 =
 {
   prob = 400, --Non-MSSP default: 100,
   prob_skew = 2,
@@ -54,7 +56,7 @@ GROW_1 =
     "...", "#1#",
     "x1x", "x1x",
   },
-},
+},]]--
 
 GROW_2 =
 {
