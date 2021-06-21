@@ -838,7 +838,7 @@ class UI_ThemeWin : public Fl_Window {
 
         color_scheme = that->opt_color_scheme->value();
         
-        if (color_scheme == 2) {
+        if (color_scheme == 1) {
         	skip_color_picker = true;
         	that->opt_text_color->do_callback();
 			that->opt_bg_color->do_callback();
@@ -860,7 +860,7 @@ class UI_ThemeWin : public Fl_Window {
 				that->opt_text_color->redraw();
 			}
     	}
-    	if (color_scheme == 2) {
+    	if (color_scheme == 1) {
 			FONT_COLOR = fl_rgb_color(text_red, text_green, text_blue);
 			Fl::foreground(text_red, text_green, text_blue);    	
 			main_win->menu_bar->textcolor(FONT_COLOR);
@@ -971,7 +971,7 @@ class UI_ThemeWin : public Fl_Window {
 				that->opt_bg_color->redraw();
 			}
     	}
-    	if (color_scheme == 2) {
+    	if (color_scheme == 1) {
 			WINDOW_BG = fl_rgb_color(bg_red, bg_green, bg_blue);
 			Fl::background(bg_red, bg_green, bg_blue);
 			Fl::background2(bg_red, bg_green, bg_blue);
@@ -1022,7 +1022,7 @@ class UI_ThemeWin : public Fl_Window {
 				that->opt_bg2_color->redraw();
 			}
     	}
-    	if (color_scheme == 2) {
+    	if (color_scheme == 1) {
 			SELECTION = fl_rgb_color(bg2_red, bg2_green, bg2_blue);
 			main_win->color(GAP_COLOR, SELECTION);
 			main_win->menu_bar->selection_color(SELECTION);
@@ -1097,7 +1097,7 @@ class UI_ThemeWin : public Fl_Window {
 				that->opt_button_color->redraw();
 			}
     	}
-    	if (color_scheme == 2) {
+    	if (color_scheme == 1) {
 			BUTTON_COLOR = fl_rgb_color(button_red, button_green, button_blue);
 			main_win->game_box->build->color(BUTTON_COLOR);
 			main_win->game_box->quit->color(BUTTON_COLOR);
@@ -1150,7 +1150,7 @@ class UI_ThemeWin : public Fl_Window {
 				that->opt_gradient_color->redraw();
 			}
     	}
-    	if (color_scheme == 2) {
+    	if (color_scheme == 1) {
 			GRADIENT_COLOR = fl_rgb_color(gradient_red, gradient_green, gradient_blue);
 		    main_win->redraw();
 			main_win->game_box->redraw();
@@ -1178,7 +1178,7 @@ class UI_ThemeWin : public Fl_Window {
 				that->opt_border_color->redraw();
 			}
     	}
-    	if (color_scheme == 2) {
+    	if (color_scheme == 1) {
 			BORDER_COLOR = fl_rgb_color(border_red, border_green, border_blue);
 		    main_win->redraw();
 			main_win->game_box->redraw();
@@ -1206,7 +1206,7 @@ class UI_ThemeWin : public Fl_Window {
 				that->opt_gap_color->redraw();
 			}
     	}
-    	if (color_scheme == 2) {
+    	if (color_scheme == 1) {
 			GAP_COLOR = fl_rgb_color(gap_red, gap_green, gap_blue);
 			main_win->color(GAP_COLOR, SELECTION);
 			main_win->redraw();
@@ -1350,7 +1350,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     opt_color_scheme =
         new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Color Scheme: "));
     opt_color_scheme->align(FL_ALIGN_LEFT);
-    opt_color_scheme->add(_("Default|System Colors|Custom"));
+    opt_color_scheme->add(_("Default|Custom"));
     opt_color_scheme->callback(callback_ColorScheme, this);
     opt_color_scheme->value(color_scheme);
     opt_color_scheme->labelfont(font_style);

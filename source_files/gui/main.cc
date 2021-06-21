@@ -458,17 +458,7 @@ void Main_SetupFLTK() {
 				 GRADIENT_COLOR = fl_rgb_color(221, 221, 221);
 				 BUTTON_COLOR = fl_rgb_color(221, 221, 221);    
     			 break;
-    	case 1 : Fl::get_system_colors();
-    			 // Test with a Windows VM - Dasho
-				 FONT_COLOR = FL_FOREGROUND_COLOR;
-				 SELECTION = FL_BACKGROUND2_COLOR;
-				 WINDOW_BG = FL_BACKGROUND_COLOR;
-				 BUTTON_COLOR = FL_BACKGROUND_COLOR;
-				 GAP_COLOR = FL_BACKGROUND2_COLOR;
-				 BORDER_COLOR = FL_BACKGROUND2_COLOR;
-				 GRADIENT_COLOR = FL_BACKGROUND2_COLOR;
-    			 break;
-    	case 2 : Fl::background(bg_red, bg_green, bg_blue);
+    	case 1 : Fl::background(bg_red, bg_green, bg_blue);
     			 Fl::background2(bg_red, bg_green, bg_blue);
     			 Fl::foreground(text_red, text_green, text_blue);
 				 FONT_COLOR = fl_rgb_color(text_red, text_green, text_blue);
@@ -492,7 +482,7 @@ void Main_SetupFLTK() {
 				  BUTTON_COLOR = fl_rgb_color(221, 221, 221);  
     			  break;    			     			 
     }
-    if (color_scheme == 2) {
+    if (color_scheme == 1) {
     Fl::get_color(FONT_COLOR, text_red, text_green, text_blue); 
     Fl::get_color(WINDOW_BG, bg_red, bg_green, bg_blue);     
     Fl::get_color(SELECTION, bg2_red, bg2_green, bg2_blue);
