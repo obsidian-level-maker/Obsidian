@@ -883,6 +883,8 @@ int main(int argc, char **argv) {
         Main_SetupFLTK();
     }
     
+    std::setlocale(LC_NUMERIC, "C"); // Test to try to fix std::stod not working in all locales
+    
     LogEnableDebug(debug_messages);
 
     twister_Init();
