@@ -57,6 +57,7 @@ unsigned long long next_rand_seed;
 
 bool batch_mode = false;
 const char *batch_output_file = NULL;
+const char *numeric_locale = NULL;
 
 // options
 uchar text_red = 0;
@@ -882,9 +883,9 @@ int main(int argc, char **argv) {
         Trans_SetLanguage();
         Main_SetupFLTK();
     }
-    
-    std::setlocale(LC_NUMERIC, "C"); // Test to try to fix std::stod not working in all locales
-    
+
+    numeric_locale = std::setlocale(LC_NUMERIC, NULL); // Grab current numeric locale
+        
     LogEnableDebug(debug_messages);
 
     twister_Init();

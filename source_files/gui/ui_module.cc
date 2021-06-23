@@ -262,17 +262,31 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 	temp_string = presets;
 	oldpos = 0;
 	pos = 0;
+	std::setlocale(LC_NUMERIC, "C");
 	while (pos != std::string::npos) {
 		pos = temp_string.find(',', oldpos);
 		if (pos != std::string::npos) {
 			std::string map_string = temp_string.substr(oldpos, pos-oldpos);
 			std::string::size_type temp_pos = map_string.find(':');
-			double key = std::stod(map_string.substr(0, temp_pos));
-			std::string value = map_string.substr(temp_pos + 1);			
-			rsl->preset_choices[key] = value;
+			double key;
+			try {
+				key = std::stod(map_string.substr(0, temp_pos));
+				std::string value = map_string.substr(temp_pos + 1);			
+				rsl->preset_choices[key] = value;
+			} catch (std::invalid_argument &e) {
+				fl_message("Invalid argument for preset slider value!");
+				goto skippreset;
+			} catch (std::out_of_range &e) {
+				fl_message("Number out of range for preset slider value!");
+				goto skippreset;
+			} catch (std::exception &e) {
+					std::cout << e.what();
+			}
+			skippreset:
 			oldpos = pos + 1;		
 		}
 	}
+	std::setlocale(LC_NUMERIC, numeric_locale);
 	
     if (!mod_button->value()) {
         rsl->hide();

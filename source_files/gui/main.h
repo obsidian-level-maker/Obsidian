@@ -112,6 +112,7 @@ extern bool overwrite_warning;
 extern bool debug_messages;
 
 extern const char *last_directory;
+extern const char *numeric_locale;
 
 #ifdef __GNUC__
 __attribute__((noreturn))
