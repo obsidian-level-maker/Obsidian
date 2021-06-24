@@ -43,8 +43,6 @@ typedef struct {
 
 static std::vector<addon_info_t> all_addons;
 
-std::vector<const char*> mounted_archives;
-
 void VFS_AddFolder(const char *name) {
     char *path = StringPrintf("%s/%s", install_dir, name);
     char *mount = StringPrintf("/%s", name);
@@ -93,8 +91,6 @@ bool VFS_AddArchive(const char *filename, bool options_file) {
 
         return false;
     }
-    
-    mounted_archives.push_back(filename);
 
     return true;  // Ok
 }
