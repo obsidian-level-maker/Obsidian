@@ -366,7 +366,7 @@ class UI_ThemeWin : public Fl_Window {
 
    private:
     UI_CustomMenu *opt_window_scaling;
-    UI_CustomMenu *opt_font_scaling;
+    Fl_Simple_Counter *opt_font_scaling;
     UI_CustomMenu *opt_font_theme;
     UI_CustomMenu *opt_widget_theme;
     UI_CustomMenu *opt_box_theme;
@@ -434,25 +434,13 @@ class UI_ThemeWin : public Fl_Window {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         font_scaling = that->opt_font_scaling->value();
-		switch(font_scaling) {
-			case 0 : FL_NORMAL_SIZE = 18;
-					 break;
-			case 1 : FL_NORMAL_SIZE = 14;
-					 break;
-			case 2 : FL_NORMAL_SIZE = 16;
-					 break;
-			case 3 : FL_NORMAL_SIZE = 20;
-					 break;
-			case 4 : FL_NORMAL_SIZE = 22;
-					 break;
-			default : FL_NORMAL_SIZE = 18;
-					  break;
-	   }
+	   
+	    FL_NORMAL_SIZE = font_scaling;
 
-	   small_font_size = FL_NORMAL_SIZE - 2;
-	   header_font_size = FL_NORMAL_SIZE + 2;
+	    small_font_size = FL_NORMAL_SIZE - 2;
+	    header_font_size = FL_NORMAL_SIZE + 2;
 
-	   fl_message_font(font_style, FL_NORMAL_SIZE + 2);       
+	    fl_message_font(font_style, FL_NORMAL_SIZE + 2);       
     	main_win->menu_bar->textsize(FL_NORMAL_SIZE);
     	main_win->menu_bar->redraw();
     	main_win->game_box->heading->labelsize(header_font_size);
@@ -1287,9 +1275,10 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     cy += opt_window_scaling->h() + y_step;
     
     opt_font_scaling =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Font Scaling: "));
+        new Fl_Simple_Counter(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Font Size: "));
     opt_font_scaling->align(FL_ALIGN_LEFT);
-    opt_font_scaling->add(_("Default|Tiny|Small|Large|Huge"));
+    opt_font_scaling->step(2);
+    opt_font_scaling->bounds(2, 100);
     opt_font_scaling->callback(callback_FontScaling, this);
     opt_font_scaling->value(font_scaling);
     opt_font_scaling->labelfont(font_style);
@@ -1475,8 +1464,8 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
 
     // restart needed warning
     heading = new Fl_Box(FL_NO_BOX, x() + pad - kf_w(5), H - dh - kf_h(3), W - pad * 2,
-                         kf_h(14), _("Note: Some theme options will not be effective until a restart."));
-    heading->align(FL_ALIGN_INSIDE);
+                         kf_h(14), _("Note: Some options require a restart."));
+    heading->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     heading->labelsize(small_font_size);
     heading->labelfont(font_style);
 

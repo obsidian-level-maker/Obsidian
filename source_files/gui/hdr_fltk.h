@@ -38,7 +38,6 @@
 #include <FL/Fl_Image.H>
 #include <FL/Fl_Input.H>
 #include <FL/Fl_Int_Input.H>
-#include <FL/Fl_Light_Button.H>
 #include <FL/Fl_Menu_Bar.H>
 #include <FL/Fl_Menu_Item.H>
 #include <FL/Fl_Multi_Browser.H>
@@ -52,6 +51,7 @@
 #include <FL/Fl_Scroll.H>
 #include <FL/Fl_Scrollbar.H>
 #include <FL/Fl_Shared_Image.H>
+#include <FL/Fl_Simple_Counter.H>
 #include <FL/Fl_Hor_Slider.H>
 #ifdef __APPLE__
 #include <FL/Fl_Sys_Menu_Bar.H>

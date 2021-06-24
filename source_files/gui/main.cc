@@ -98,7 +98,7 @@ Fl_Boxtype button_style = FL_THIN_UP_BOX;
 int widget_theme = 0;
 bool single_pane = false;
 int window_scaling = 0;
-int font_scaling = 0;
+int font_scaling = 18;
 int filename_prefix = 0;
 int num_fonts = 16; // FLTK built-in amount
 std::vector<std::map<std::string, int>> font_menu_items;
@@ -402,30 +402,6 @@ int Main_DetermineScaling() {
     return 0;
 }
 
-void Main_DetermineFontScaling() {
-
-    switch(font_scaling) {
-    	case 0 : FL_NORMAL_SIZE = 18;
-    			 break;
-    	case 1 : FL_NORMAL_SIZE = 14;
-    			 break;
-    	case 2 : FL_NORMAL_SIZE = 16;
-    			 break;
-    	case 3 : FL_NORMAL_SIZE = 20;
-    			 break;
-    	case 4 : FL_NORMAL_SIZE = 22;
-    			 break;
-    	default : FL_NORMAL_SIZE = 18;
-    			  break;
-   }
-
-   small_font_size = FL_NORMAL_SIZE - 2;
-   header_font_size = FL_NORMAL_SIZE + 2;
-
-   fl_message_font(font_style, FL_NORMAL_SIZE + 2);
-   
-}
-
 void Main_PopulateFontMap() {
 	
 	num_fonts = Fl::set_fonts(NULL) - 16; // Total fonts - FLTK enumerations
@@ -568,6 +544,11 @@ void Main_SetupFLTK() {
     	font_style = 0;
     }
     
+    FL_NORMAL_SIZE = font_scaling;
+    small_font_size = FL_NORMAL_SIZE - 2;
+    header_font_size = FL_NORMAL_SIZE + 2;
+    fl_message_font(font_style, FL_NORMAL_SIZE + 2);
+    
     screen_w = Fl::w();
     screen_h = Fl::h();
 
@@ -576,7 +557,6 @@ void Main_SetupFLTK() {
 #endif
 
     KF = Main_DetermineScaling();
-    Main_DetermineFontScaling();
     // load icons for file chooser
 #ifndef WIN32
     Fl_File_Icon::load_system_icons();
