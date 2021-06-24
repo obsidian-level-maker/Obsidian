@@ -1278,7 +1278,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
         new Fl_Simple_Counter(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Font Size: "));
     opt_font_scaling->align(FL_ALIGN_LEFT);
     opt_font_scaling->step(2);
-    opt_font_scaling->bounds(2, 100);
+    opt_font_scaling->bounds(6, 100);
     opt_font_scaling->callback(callback_FontScaling, this);
     opt_font_scaling->value(font_scaling);
     opt_font_scaling->labelfont(font_style);

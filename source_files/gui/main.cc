@@ -544,6 +544,9 @@ void Main_SetupFLTK() {
     	font_style = 0;
     }
     
+    if (font_scaling < 6) { // Values from old configs may be less
+    	font_scaling = 6;
+    }
     FL_NORMAL_SIZE = font_scaling;
     small_font_size = FL_NORMAL_SIZE - 2;
     header_font_size = FL_NORMAL_SIZE + 2;
