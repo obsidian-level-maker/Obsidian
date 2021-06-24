@@ -101,7 +101,7 @@ UI_About::UI_About(int W, int H, const char *label)
         StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION);
 
     Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), logo_text);
-    box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP);
+    box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP | FL_ALIGN_CLIP);
     box->labelsize(FL_NORMAL_SIZE * 5 / 3);
     box->labelfont(font_style);
 
@@ -113,7 +113,7 @@ UI_About::UI_About(int W, int H, const char *label)
     int text_h = H * 0.55;
 
     box = new Fl_Box(pad, cy, W - pad - pad, text_h, _(Text));
-    box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
+    box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_CLIP);
     box->box(FL_UP_BOX);
     box->color(BUTTON_COLOR);
     box->labelfont(font_style);

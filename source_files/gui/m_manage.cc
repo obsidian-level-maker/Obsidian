@@ -709,7 +709,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
 
         o = new Fl_Box(0, kf_h(65), kf_w(160), kf_h(40),
                        _("(can be WAD or PAK)"));
-        o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
+        o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
         o->labelsize(small_font_size);
         o->labelfont(font_style);
 
@@ -738,7 +738,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
 
         o = new Fl_Box(0, kf_h(265), kf_w(170), kf_h(50),
                        _("Note: this will replace\nall current settings!"));
-        o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
+        o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
         o->labelsize(small_font_size);
         o->labelfont(font_style);
 
