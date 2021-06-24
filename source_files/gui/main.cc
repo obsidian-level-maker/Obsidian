@@ -821,8 +821,9 @@ bool Build_Cool_Shit() {
 
 int main(int argc, char **argv) {
     // initialise argument parser (skipping program name)
-    restart: ;
     ArgvInit(argc - 1, (const char **)(argv + 1));
+
+    restart: ;
 
     if (ArgvFind('?', NULL) >= 0 || ArgvFind('h', "help") >= 0) {
         ShowInfo();
@@ -1062,11 +1063,9 @@ int main(int argc, char **argv) {
 		    if (config_file) {
 		        Cookie_Save(config_file);
 		    }
-
         delete main_win;
         main_win = NULL;
     	}
-
 		Script_Close();
 		LogClose();
 		PHYSFS_deinit();
