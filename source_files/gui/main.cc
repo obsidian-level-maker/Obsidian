@@ -422,7 +422,10 @@ void Main_SetupFLTK() {
 	
 	Main_PopulateFontMap();
 	
-    Fl::visual(FL_DOUBLE | FL_RGB);  
+    Fl::visual(FL_DOUBLE | FL_RGB);
+    if (color_scheme == 2) { // "Custom" color selection used to be 2 in older configs
+    	color_scheme = 1;
+    }
     switch(color_scheme) {
     	case 0 : Fl::background(221, 221, 221);
     			 Fl::background2(221, 221, 221);
@@ -532,8 +535,19 @@ void Main_SetupFLTK() {
     			  break;    			     			 
     } 			 
     if (font_theme < num_fonts) { // In case the number of installed fonts is reduced between launches
-    	if (font_theme == 0) {
-    		font_style = 0;
+    	if (font_theme < 4) {
+    		switch(font_theme) {
+    			case 0 : font_style = 0;
+    					 break;
+    			case 1 : font_style = 4;
+    					 break;
+    			case 2 : font_style = 8;
+    					 break;
+    			case 3 : font_style = 13;
+    					 break;
+    			default : font_style = 0;
+    					 break;
+    		}
     	} else {
     		for (auto font = font_menu_items[font_theme - 1].begin(); font != font_menu_items[font_theme - 1].end(); ++font) {
     			font_style = font->second;
@@ -542,10 +556,9 @@ void Main_SetupFLTK() {
     } else {
     	// Fallback
     	font_style = 0;
-    }
-    
-    if (font_scaling < 6) { // Values from old configs may be less
-    	font_scaling = 6;
+    }  
+    if (font_scaling < 6) { // Values from old configs
+    	font_scaling = 18;
     }
     FL_NORMAL_SIZE = font_scaling;
     small_font_size = FL_NORMAL_SIZE - 2;

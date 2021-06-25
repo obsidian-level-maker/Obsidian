@@ -399,20 +399,17 @@ class UI_ThemeWin : public Fl_Window {
    
     void PopulateFonts() {
 
-		std::string default_name = Fl::get_font_name(0);
-
-		default_name.at(0) = std::toupper(default_name.at(0));
-
-		default_name = default_name.append(" <Default>");
-
-		opt_font_theme->add(_(default_name.c_str()));
+		opt_font_theme->add(_("Sans <Default>"));
+		opt_font_theme->add(_("Courier <Internal>"));
+		opt_font_theme->add(_("Times <Internal>"));
+		opt_font_theme->add(_("Screen <Internal>"));
 
   		for (int x = 0; x < num_fonts; x++) {
   		  	for (auto font = font_menu_items[x].begin(); font != font_menu_items[x].end(); ++font) {
     			opt_font_theme->add(font->first.c_str());
   			}
   		}
-				
+  			
         opt_font_theme->value(font_theme);
 		
     }
@@ -547,15 +544,26 @@ class UI_ThemeWin : public Fl_Window {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         font_theme = that->opt_font_theme->value();
-        if (font_theme > 0) {
+        if (font_theme > 4) {
 			for (auto font = font_menu_items[font_theme - 1].begin(); font != font_menu_items[font_theme - 1].end(); ++font) {
 				font_style = font->second;
 				fl_font(font_style, FL_NORMAL_SIZE);
 				fl_message_font(font_style, FL_NORMAL_SIZE);
 			}
     	} else {
-    		font_style = 0;
-    		fl_font(0, FL_NORMAL_SIZE);
+    		switch(font_theme) {
+    			case 0 : font_style = 0;
+    					 break;
+    			case 1 : font_style = 4;
+    					 break;
+    			case 2 : font_style = 8;
+    					 break;
+    			case 3 : font_style = 13;
+    					 break;
+    			default : font_style = 0;
+    					 break;
+    		}
+    		fl_font(font_style, FL_NORMAL_SIZE);
     		fl_message_font(font_style, FL_NORMAL_SIZE);
     	}
     	main_win->menu_bar->textfont(font_style);
