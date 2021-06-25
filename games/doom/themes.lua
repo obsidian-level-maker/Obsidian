@@ -2563,8 +2563,6 @@ DOOM.ROOM_THEMES =
 
 -----  TECH BASES  --------------------------------
 
-  -- MSSP: revised to include more STAR textures
-  -- because why ya gotta ba so TAN?
   tech_Starbase =
   {
     env  = "building",
@@ -2877,6 +2875,47 @@ DOOM.ROOM_THEMES =
     },
   },
 
+
+  tech_HighContrast =
+  {
+    env = "building",
+    prob = 10,
+
+    walls =
+    {
+      BROWNGRN = 15,
+      BRONZE1 = 1,
+      BRONZE2 = 1,
+      BRONZE3 = 1,
+      BROWN96 = 1,
+    },
+
+    floors =
+    {
+      FLAT1 = 10,
+      FLAT3 = 20,
+      FLAT18 = 20,
+      FLAT19 = 10,
+      FLAT20 = 20,
+      FLAT23 = 10,
+      FLAT5_4 = 10,
+      FLOOR0_3 = 10,
+      FLOOR0_5 = 10,
+    },
+
+    ceilings =
+    {
+      FLAT1 = 10,
+      FLAT3 = 20,
+      FLAT18 = 20,
+      FLAT19 = 10,
+      FLAT20 = 20,
+      FLAT23 = 10,
+      FLAT5_4 = 10,
+      FLOOR0_3 = 10,
+      FLOOR0_5 = 10,
+    }
+  },
 
   -- exactly the same Deimos's hellish room -
   -- now available for Doom2 Tech, but very rarely!
