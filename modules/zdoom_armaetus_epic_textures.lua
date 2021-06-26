@@ -1030,7 +1030,7 @@ OB_MODULES["armaetus_epic_textures"] =
 
   name = "armaetus_epic_textures",
 
-  label = _("ZDoom: Obsidian Epic Resource Pack"),
+  label = _("Obsidian Epic Resource Pack"), --Shortened name to prevent some text overrun issues in Dual Pane mode (Dasho)
 
   side = "left",
   priority = 75,

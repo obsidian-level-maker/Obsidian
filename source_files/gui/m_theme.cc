@@ -568,7 +568,7 @@ class UI_ThemeWin : public Fl_Window {
     	}
     	main_win->menu_bar->textfont(font_style);
     	main_win->menu_bar->redraw();
-    	main_win->game_box->heading->labelfont(font_style);
+    	main_win->game_box->heading->labelfont(font_style | FL_BOLD);
     	main_win->game_box->game->labelfont(font_style);
     	main_win->game_box->game->textfont(font_style);
     	main_win->game_box->game->copy_label("										");
