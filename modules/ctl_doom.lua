@@ -916,25 +916,6 @@ OB_MODULES["doom_item_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_radsuit=
-     {
-      label = _("Radiation Suit"),
-      valuator = "slider",
-      units = "",
-      min = 0,
-      max = 10,
-      increment = .02,
-      default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
-     },
-
      float_mega=
      {
       label = _("Megasphere"),
