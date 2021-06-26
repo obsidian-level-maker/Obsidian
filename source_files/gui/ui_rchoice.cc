@@ -329,9 +329,7 @@ void UI_CustomMenuButton::draw() {
     label_Y += h() / 2 - labelsize() / 2 - 2;
 
     // draw the link text
-
-    fl_draw_box(box(), x(), y(), w(), h(), color());
-
+	
     fl_color(labelcolor());
     fl_draw(label(), x() + label_X, y() + label_Y, label_W, label_H,
             FL_ALIGN_LEFT);
