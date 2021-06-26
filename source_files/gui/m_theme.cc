@@ -1526,6 +1526,8 @@ void DLG_ThemeEditor(void) {
     
     delete theme_window;
     
+    main_win->redraw();
+    
 }
 
 //--- editor settings ---

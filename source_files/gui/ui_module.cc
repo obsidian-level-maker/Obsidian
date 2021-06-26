@@ -228,7 +228,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     if (rsl->nan_choices.size() > 0) {
         rsl->nan_options =
                 new UI_CustomMenuButton(rsl->x() + (!single_pane ? (rsl->w() * .7) : (rsl->w() * .85)), rsl->y(), rsl->w() * .075, kf_h(24), "@2>");
-                rsl->nan_options->box(FL_FLAT_BOX);
+        rsl->nan_options->box(FL_FLAT_BOX);
         rsl->nan_options->color(this->color());
         rsl->nan_options->selection_color(SELECTION);
         rsl->nan_options->add("Use Slider Value");
@@ -525,7 +525,7 @@ void UI_Module::callback_PresetCheck(Fl_Widget *w, void *data) {
 
 	std::string new_label = current_slider->original_label;
 	
-	current_slider->mod_label->copy_label(new_label.append(50, ' ').append("\n").append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
+	current_slider->mod_label->copy_label(new_label.append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
 
 	new_label = current_slider->original_label;
 
@@ -689,7 +689,7 @@ void UI_Module::callback_NanOptions(Fl_Widget *w, void *data) {
     
     if (temp_value > 0) {
     	std::string new_label = current_slider->original_label;
-		current_slider->mod_label->copy_label(new_label.append(50, ' ').append("\n").append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
+		current_slider->mod_label->copy_label(new_label.append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
 		new_label = current_slider->original_label;
     	current_slider->mod_label->copy_label(new_label.append(nan_options->text(temp_value)).c_str());
     	current_slider->prev_button->deactivate();
