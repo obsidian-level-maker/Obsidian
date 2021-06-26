@@ -189,7 +189,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 	}
 
 	rsl->mod_label = 
-			new Fl_Box(rsl->x(), rsl->y(), (!single_pane ? rsl->w() * .8 : rsl->w() * .40), kf_h(24), new_label);
+			new Fl_Box(rsl->x(), rsl->y(), (!single_pane ? rsl->w() * (rsl->nan_choices.size() > 0 ? .7 : .8) : rsl->w() * .40), kf_h(24), new_label);
 	rsl->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
 	rsl->mod_label->labelfont(font_style);
 	rsl->mod_label->tooltip(tip);
