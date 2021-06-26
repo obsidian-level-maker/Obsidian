@@ -386,9 +386,22 @@ ARMAETUS_MATERIALS = {
   MARBF01 = { t="MARBF01", f="FLOOR7_2" },
   MARBF02 = { t="MARBF02", f="FLOOR7_2" },
   MARBF03 = { t="MARBF03", f="FLOOR7_2" },
+  -- dark
   MARBFAB1 = { t="MARBFAB1", f="G11" },
   MARBFAB2 = { t="MARBFAB2", f="G11" },
   MARBFAB3 = { t="MARBFAB3", f="G11" },
+  MARBFAB5 = { t="MARBFAB5", f="G11" },
+  MARBFAB6 = { t="MARBFAB6", f="G11" },
+  MARBFAB7 = { t="MARBFAB7", f="G11" },
+  MARBFAB8 = { t="MARBFAB8", f="G11" },
+  MARBFAB9 = { t="MARBFAB9", f="G11" },
+  MARBFABA = { t="MARBFABA", f="G11" },
+  MARBFABB = { t="MARBFABB", f="G11" },
+  MARBFABC = { t="MARBFABC", f="G11" },
+  MARBFABD = { t="MARBFABD", f="G11" },
+  MARBFABF = { t="MARBFABF", f="G11" },
+  MARBFABG = { t="MARBFABG", f="G11" },
+  -- green marble
   MARBFAC5 = { t="MARBFAC5", f="FLOOR7_2" }, --Plutonia 2,
   MARBFAC6 = { t="MARBFAC6", f="FLOOR7_2" },
   MARBFAC7 = { t="MARBFAC7", f="FLOOR7_2" },
@@ -396,6 +409,8 @@ ARMAETUS_MATERIALS = {
   MARBFAC9 = { t="MARBFAC9", f="FLOOR7_2" }, -- Craneo's doing
   MARBFACA = { t="MARBFACA", f="FLOOR7_2" }, -- Craneo's doing
   MARBFACB = { t="MARBFACB", f="FLOOR7_2" }, -- Craneo's doing
+  MARBFACC = { t="MARBFACC", f="FLOOR7_2" },
+  MARBFACD = { t="MARBFACD", f="FLOOR7_2" },
   MARBFACF = { t="MARBFACF", f="FLOOR7_2" },
   MARBLE = { t="MARBLE", f="FLOOR7_2" },
   MARBLE4 = { t="MARBLE4", f="FLOOR7_2" },
