@@ -399,12 +399,7 @@ class UI_ThemeWin : public Fl_Window {
    
     void PopulateFonts() {
 
-		opt_font_theme->add(_("Sans <Default>"));
-		opt_font_theme->add(_("Courier <Internal>"));
-		opt_font_theme->add(_("Times <Internal>"));
-		opt_font_theme->add(_("Screen <Internal>"));
-
-  		for (int x = 0; x < num_fonts; x++) {
+ 		for (int x = 0; x < num_fonts; x++) {
   		  	for (auto font = font_menu_items[x].begin(); font != font_menu_items[x].end(); ++font) {
     			opt_font_theme->add(font->first.c_str());
   			}
@@ -544,28 +539,11 @@ class UI_ThemeWin : public Fl_Window {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         font_theme = that->opt_font_theme->value();
-        if (font_theme > 4) {
-			for (auto font = font_menu_items[font_theme - 1].begin(); font != font_menu_items[font_theme - 1].end(); ++font) {
-				font_style = font->second;
-				fl_font(font_style, FL_NORMAL_SIZE);
-				fl_message_font(font_style, FL_NORMAL_SIZE);
-			}
-    	} else {
-    		switch(font_theme) {
-    			case 0 : font_style = 0;
-    					 break;
-    			case 1 : font_style = 4;
-    					 break;
-    			case 2 : font_style = 8;
-    					 break;
-    			case 3 : font_style = 13;
-    					 break;
-    			default : font_style = 0;
-    					 break;
-    		}
-    		fl_font(font_style, FL_NORMAL_SIZE);
-    		fl_message_font(font_style, FL_NORMAL_SIZE);
-    	}
+		for (auto font = font_menu_items[font_theme].begin(); font != font_menu_items[font_theme].end(); ++font) {
+			font_style = font->second;
+			fl_font(font_style, FL_NORMAL_SIZE);
+			fl_message_font(font_style, FL_NORMAL_SIZE);
+		}
     	main_win->menu_bar->textfont(font_style);
     	main_win->menu_bar->redraw();
     	main_win->game_box->heading->labelfont(font_style | FL_BOLD);

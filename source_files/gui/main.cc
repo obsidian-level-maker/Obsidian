@@ -100,7 +100,7 @@ bool single_pane = false;
 int window_scaling = 0;
 int font_scaling = 18;
 int filename_prefix = 0;
-int num_fonts = 16; // FLTK built-in amount
+int num_fonts = 0;
 std::vector<std::map<std::string, int>> font_menu_items;
 
 bool create_backups = true;
@@ -402,19 +402,36 @@ int Main_DetermineScaling() {
     return 0;
 }
 
-void Main_PopulateFontMap() {
-	
-	num_fonts = Fl::set_fonts(NULL) - 16; // Total fonts - FLTK enumerations
-	
-	for (int x = 16; x < num_fonts; x++) { // Starting at 16 skips the FLTK default enumerations
-		std::string fontname = Fl::get_font_name(x);
-		if (std::isalpha(fontname.at(0))) {
-			std::map<std::string, int> temp_map { {fontname, x} };
-			font_menu_items.push_back(temp_map);
-		}
-	}
+bool load_internal_font(const char* fontpath, int fontnum, const char* fontname) {
+// This is derived from code posted by an individual named Ian MacArthur
+// in a Google Groups thread at the following link: https://groups.google.com/g/fltkgeneral/c/uAdg8wOLiMk
 
-	num_fonts = font_menu_items.size();	
+/* Load the font using the appropriate platform API */
+	int loaded_font = i_load_private_font(fontpath);
+
+/* set the extra font */
+	if (loaded_font) {
+		Fl::set_font(fontnum, fontname);
+		return true;
+	}
+	
+	return false;
+}
+
+void Main_PopulateFontMap() {
+		
+	font_menu_items.push_back(std::map<std::string, int>{ {"Sans <Default>", 0} });
+	font_menu_items.push_back(std::map<std::string, int>{ {"Courier <Internal>", 4} });
+	font_menu_items.push_back(std::map<std::string, int>{ {"Times <Internal>", 8} });
+	font_menu_items.push_back(std::map<std::string, int>{ {"Screen <Internal>", 13} });
+	
+	//Test function below was successful; will look for proper fonts to include now - Dasho
+	
+	/*if (load_internal_font("./theme/fonts/Righteous/Righteous-Regular.ttf", 16, "Righteous")) {
+		font_menu_items.push_back(std::map<std::string, int>{ {"Righteous", 16} });
+		Fl::set_font(17, "Righteous");
+	}*/
+	num_fonts = font_menu_items.size();
 		
 }
 
@@ -533,32 +550,17 @@ void Main_SetupFLTK() {
     	// Shouldn't be reached, but still
     	default : button_style = FL_UP_BOX;
     			  break;    			     			 
-    } 			 
+    } 
     if (font_theme < num_fonts) { // In case the number of installed fonts is reduced between launches
-    	if (font_theme < 4) {
-    		switch(font_theme) {
-    			case 0 : font_style = 0;
-    					 break;
-    			case 1 : font_style = 4;
-    					 break;
-    			case 2 : font_style = 8;
-    					 break;
-    			case 3 : font_style = 13;
-    					 break;
-    			default : font_style = 0;
-    					 break;
-    		}
-    	} else {
-    		for (auto font = font_menu_items[font_theme - 1].begin(); font != font_menu_items[font_theme - 1].end(); ++font) {
-    			font_style = font->second;
-  			}
-    	}
+    	for (auto font = font_menu_items[font_theme].begin(); font != font_menu_items[font_theme].end(); ++font) {
+    		font_style = font->second;
+  		}
     } else {
     	// Fallback
     	font_style = 0;
     }  
     if (font_scaling < 6) { // Values from old configs
-    	font_scaling = 18;
+    	font_scaling = 16;
     }
     FL_NORMAL_SIZE = font_scaling;
     small_font_size = FL_NORMAL_SIZE - 2;

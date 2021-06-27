@@ -39,6 +39,15 @@
 #define THEME_FILENAME "THEME.txt"
 #define LOG_FILENAME "LOGS.txt"
 
+// Header for loading .ttf files from code posted by an individual named Ian MacArthur
+// in a Google Groups thread at the following link: https://groups.google.com/g/fltkgeneral/c/uAdg8wOLiMk
+#ifdef _WIN32
+# define i_load_private_font(PATH) AddFontResourceEx((PATH),FR_PRIVATE,0)
+#else
+# define i_load_private_font(PATH) (int)FcConfigAppFontAddFile(NULL,(const FcChar8 *)(PATH))
+#endif
+
+
 extern const char *home_dir;
 extern const char *install_dir;
 
@@ -122,6 +131,7 @@ void Main_FatalError(const char *msg, ...);
 void Main_ProgStatus(const char *msg, ...);
 bool Main_BackupFile(const char *filename, const char *ext);
 void Main_Ticker();
+bool load_internal_font(const char* fontpath, int fontnum, const char* fontname);
 void Main_PopulateFontMap();
 
 // Dialog Windows
