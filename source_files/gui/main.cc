@@ -425,12 +425,14 @@ void Main_PopulateFontMap() {
 	font_menu_items.push_back(std::map<std::string, int>{ {"Times <Internal>", 8} });
 	font_menu_items.push_back(std::map<std::string, int>{ {"Screen <Internal>", 13} });
 	
-	//Test function below was successful; will look for proper fonts to include now - Dasho
+	//Load bundled fonts
 	
-	/*if (load_internal_font("./theme/fonts/Righteous/Righteous-Regular.ttf", 16, "Righteous")) {
-		font_menu_items.push_back(std::map<std::string, int>{ {"Righteous", 16} });
-		Fl::set_font(17, "Righteous");
-	}*/
+	if (load_internal_font("./theme/fonts/Orbitron/OrbitronRegular.ttf", 16, "Orbitron")) {
+		if (load_internal_font("./theme/fonts/Orbitron/OrbitronBold.ttf", 17, "OrbitronBold")) {
+			font_menu_items.push_back(std::map<std::string, int>{ {"PDA", 16} });
+		}
+	}
+	
 	num_fonts = font_menu_items.size();
 		
 }
