@@ -311,8 +311,10 @@ class AIMarine : Actor
         {
             MFRIENDLYFIREX
         }
+		MPLAYERDAMAGEX
         return super.TakeSpecialDamage(inflictor,source,damage,damagetype);
     }
+	MDEATHMESSAGEX
 }
 
 class AIMarineWaker : Actor
@@ -1226,7 +1228,18 @@ class BFGBallAIMarine : BFGBall
   {
     return 0;
   }
-  ]]
+  ]],
+  PLDMG = [[if(source && source is "PlayerPawn" && self.bFriendly)
+		{
+			return 0;
+		}
+		]],
+	DTHMSG = [[override void Die(Actor source, Actor inflictor, int dmgflags, Name MeansOfDeath)
+	{
+		A_Log("A marine has been killed!");
+		super.Die(source,inflictor,dmgflags,meansofdeath);
+	}
+	]]
 }
 
 MARINE_CLOSET_TUNE.MAPINFO =
@@ -1449,6 +1462,19 @@ function MARINE_CLOSET_TUNE.all_done()
     scripty = string.gsub(scripty, "MTRANSLATE", MARINE_CLOSET_TUNE.TEMPLATES.TRANSL)
     scripty = string.gsub(scripty, "MTRANSDEF", "\"" .. PARAM.m_c_color .. "\"")
   end
+  
+  if PARAM.bool_m_c_pdamage == 1 then
+    scripty = string.gsub(scripty, "MPLAYERDAMAGEX", MARINE_CLOSET_TUNE.TEMPLATES.PLDMG)
+  else
+    scripty = string.gsub(scripty, "MPLAYERDAMAGEX", "")
+  end
+  
+  if PARAM.bool_m_c_rip == 1 then
+    scripty = string.gsub(scripty, "MDEATHMESSAGEX", MARINE_CLOSET_TUNE.TEMPLATES.DTHMSG)
+  else
+    scripty = string.gsub(scripty, "MDEATHMESSAGEX", "")
+  end
+
 
   PARAM.MARINESCRIPT = PARAM.MARINESCRIPT .. scripty
   PARAM.MARINEMAPINFO = MARINE_CLOSET_TUNE.MAPINFO
@@ -1655,11 +1681,22 @@ OB_MODULES["gzdoom_marine_closets"] =
       "If this is enabled marines can damage player and original puffs and projectiles are used making them affected by mods that replace those.\n"..
       "Additionally if self damage variant is chosen marines can still get hurt by exploding barrels and such",
     },
+	
+	bool_m_c_pdamage =
+    {
+      name = "bool_m_c_pdamage",
+      label = _("Player Damage Immunity"),
+      priority = 85,
+      valuator = "button",
+      default = 0,
+      tooltip = "If enabled, marines will never take damage from player owned sources.",
+    },    
+	
     m_c_sprites =
     {
       name = "m_c_sprites",
       label = _("Weapon Sprites"),
-      priority = 85,
+      priority = 84,
       choices = MARINE_CLOSET_TUNE.SPRITES,
       default = "no",
       tooltip = "By default marines use default player sprite.\n" ..
@@ -1672,7 +1709,7 @@ OB_MODULES["gzdoom_marine_closets"] =
     {
       name = "m_c_quantity",
       label = _("Monster Quantity Multiplier"),
-      priority = 84,
+      priority = 83,
       choices = MARINE_CLOSET_TUNE.QUANTITY,
       default = "default",
       tooltip = "Influences amount of monsters in rooms with a marine closet.",
@@ -1682,7 +1719,7 @@ OB_MODULES["gzdoom_marine_closets"] =
     {
       name = "m_c_strength",
       label = _("Monster Strength Modifier"),
-      priority = 83,
+      priority = 82,
       choices = MARINE_CLOSET_TUNE.STRENGTH,
       default = "default",
       tooltip = "If set, this strength setting is used in the room with marine closet instead of normal one.",
@@ -1693,7 +1730,7 @@ OB_MODULES["gzdoom_marine_closets"] =
     {
       name = "bool_m_c_power",
       label = _("Strong Marines"),
-      priority = 82,
+      priority = 81,
       valuator = "button",
       default = 1,
       tooltip = "Influences whether marines are as accurate and rapid firing as player, or are weaker.",
@@ -1703,7 +1740,7 @@ OB_MODULES["gzdoom_marine_closets"] =
     {
       name = "bool_m_c_follow",
       label = _("Followers"),
-      priority = 81,
+      priority = 80,
       valuator = "button",
       default = 0,
       tooltip = "By default marines try to follow the player if they have nothing else to do but would otherwise prioritize chasing enemies, and are also unable to follow player through rough terrain.\n" ..
@@ -1714,10 +1751,20 @@ OB_MODULES["gzdoom_marine_closets"] =
     {
       name = "bool_m_c_boss",
       label = _("Allow in Gotchas"),
-      priority = 80,
+      priority = 79,
       valuator = "button",
       default = 0,
       tooltip = "Allows or disallows marine closets to spawn on gotchas and boss generator levels.",
+    },   
+	
+	bool_m_c_rip =
+    {
+      name = "bool_m_c_rip",
+      label = _("Death messages"),
+      priority = 78,
+      valuator = "button",
+      default = 0,
+      tooltip = "If enabled, will print a message in message log whenever a marine dies.",
     },   
 
   },

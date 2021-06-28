@@ -529,720 +529,9 @@ EXIT3_DECOR =
 
 
 ------------------------------------------
-
-
-GROW_2 =
-{
-  prob = 400, --Non-MSSP default: 100,
-  prob_skew = 2,
-
-  structure =
-  {
-    "....", ".11.",
-    "x11x", "x11x",
-  }
-},
-
-
-GROW_3 =
-{
-  prob = 250, --Non-MSSP default: 50,
-  prob_skew = 2,
-
-  structure =
-  {
-    ".....", ".111.",
-    "x111x", "x111x",
-  }
-},
-
-
-GROW_4 =
-{
-  prob = 250, --Non-MSSP default: 50,
-  prob_skew = 2,
-  skip_prob = 25, --50,
-
-  structure =
-  {
-    "....", "1111",
-    ".11.", "1111",
-  }
-},
-
-
-GROW_BLOB_1 =
-{
-  prob = 200, --Non-MSSP default: 25,
-
-  structure =
-  {
-    "....", "1111",
-    "....", "1111",
-    "x11x", "x11x",
-  }
-},
-
---7.50 stuff
-
-GROW_DIAG_BLOB1 =
-{
-  prob = 45,
-
-  structure =
-  {
-    "...", "AA%",
-    "%..", "%AA",
-    "x%.", "x%A",
-    "x1.", "x1.",
-  },
-
-  diagonals =
-  {
-          "A.",
-    "1.", "1A",
-    "1.", "1A",
-  }
-},
-
-
-GROW_DIAG_BLOB2 =
-{
-  prob = 65, --45,
-
-  structure =
-  {
-    "...", "AA%",
-    "%..", "%AA",
-    "x%.", "x%A",
-    "x1x", "x1x",
-    "x/.", "x/A",
-    "/..", "/AA",
-    "...", "AA/",
-  },
-
-  diagonals =
-  {
-          "A.",
-    "1.", "1A",
-    "1.", "1A",
-    "1.", "1A",
-    "1.", "1A",
-          "A.",
-  }
-},
-
--- End 7.50 stuff
-
-GROW_FUNNEL_2 =
-{
-  prob = 25, --5,
-  skip_prob = 15, --50,
-
-  structure =
-  {
-    "....", "#11#",
-    "....", "/11%",
-    "1111", "1111",
-  },
-
-  diagonals = { "#1", "1#" }
-},
-
-
-GROW_CURVE_1 =
-{
-  prob = 75, --50,
-  prob_skew = 3,
-  skip_prob = 5, --25,
-
-  structure =
-  {
-    "1.", "1%",
-    "1.", "11",
-    "1.", "11",
-    "1.", "1/",
-  },
-
-  diagonals = { "1.", "1." }
-},
-
-
-GROW_AREA_1 =
-{
-  prob = 200, --40,
-
-  structure =
-  {
-    "....", ".AA.",
-    "x11x", "x11x",
-  }
-},
-
-
-GROW_AREA_2 =
-{
-  prob = 50, --6,
-  skip_prob = 30, --50,
-
-  structure =
-  {
-    "...", "AAA",
-    "11.", "11A",
-    "11.", "11A",
-  }
-},
-
-
-GROW_DIAG_WING =
-{
-  prob = 70, --40,
-  prob_skew = 2,
-  skip_prob = 5, --35,
-
-  structure =
-  {
-    "x...", "x#AA",
-    "x...", "x/AA",
-    "1%..", "1%/#",
-    "11xx", "11xx",
-  },
-
-  diagonals =
-  {
-    "#A",
-    "1.", "1A", "A#",
-  }
-},
-
-
-GROW_BIG_CAGE =
-{
-  prob = 8,
-  skip_prob = 30,
-  aversion = 10,
-
-  structure =
-  {
-    "....", "1111",
-    "....", "1CC1",
-    "....", "1CC1",
-    "....", "1111",
-    "x11x", "x11x",
-  },
-
-  cage_mode = "fancy"
-},
-
-
-GROW_CAGEPAIR_1 =
-{
-  prob = 8,
-  skip_prob = 30,
-
-  structure =
-  {
-    "....", "AAAA",
-    "....", "CAAC",
-    "....", "AAAA",
-    "x11x", "x11x",
-  },
-
-  cage_mode = "fancy"
-},
-
-
-GROW_CAGEPAIR_2 =
-{
-  prob = 8,
-  skip_prob = 75, --30,
-  aversion = 5,
-
-  structure =
-  {
-    "....", "AAAA",
-    "....", "CAAC",
-    "....", "AAAA",
-    "....", "CAAC",
-    "....", "AAAA",
-    "x11x", "x11x",
-  },
-
-  cage_mode = "fancy"
-},
-
-
-GROW_LIQUID_CAGE3 =
-{
-  prob = 10,
-  skip_prob = 20, --33,
-
-  structure =
-  {
-    "....", "/C~1",
-    "....", "C/~1",
-    "....", "~~/1",
-    "....", "1111",
-    "1111", "1111",
-  },
-
-  diagonals =
-  {
-    ".C",
-    "C~",
-    "~1",
-  },
-
-  cage_mode = "fancy"
-},
-
-
-GROW_STAIR_2 =
-{
-  prob = 10, --12,
-  prob_skew = 3,
-  skip_prob = 45, --35,
-
-  structure =
-  {
-    "..", "AA",
-    "..", "^^",
-    "11", "11",
-  }
-},
-
-
-GROW_STAIR_3 =
-{
-  prob = 5, --5,
-  prob_skew = 3,
-  skip_prob = 45, --35,
-
-  structure =
-  {
-    "...", "AAA",
-    "...", "^^^",
-    "111", "111",
-  }
-},
-
-
-GROW_NARROWSTAIR_1 =
-{
-  prob = 25, --10,
-  prob_skew = 3,
-  skip_prob = 7, --25,
-
-  structure =
-  {
-    "...", "AAA",
-    "...", "1^1",
-    "111", "111",
-  }
-},
-
-
-GROW_NARROWSTAIR_2 =
-{
-  prob = 20, --10,
-  prob_skew = 3,
-  skip_prob = 15, --70,
-
-  z_dir = "up",
-
-  structure =
-  {
-    "...", "AAA",
-    "...", "1^1",
-    "...", "1^1",
-    "111", "111",
-  }
-},
-
-
-GROW_CAGESTAIR_1 =
-{
-  prob = 8,
-  skip_prob = 50,
-  aversion = 5,
-
-  structure =
-  {
-    "...", "AAA",
-    "...", "^C^",
-    "111", "111",
-  },
-
-  cage_mode = "fancy"
-},
-
-
-GROW_CAGESTAIR_2 =
-{
-  prob = 8,
-  skip_prob = 70,
-  aversion = 5,
-
-  structure =
-  {
-    "....", "AAAA",
-    "....", "^CC^",
-    "1111", "1111",
-  },
-
-  cage_mode = "fancy"
-},
-
-
-GROW_CAGESTAIR_3 =
-{
-  prob = 8,
-  skip_prob = 70,
-  aversion = 5,
-
-  structure =
-  {
-    "....", "AAAA",
-    "....", "^CC^",
-    "....", "^CC^",
-    "1111", "1111",
-  },
-
-  cage_mode = "fancy"
-},
-
-
-GROW_STAIRPAIR_4 =
-{
-  prob = 80, --200,
-  skip_prob = 40, --60,
-  aversion = 3,
-
-  structure =
-  {
-    ".......", "AAAAAAA",
-    ".......", "^^111^^",
-    ".......", "^^111^^",
-    "..111..", "1111111",
-  }
-},
-
-GROW_STAIRPAIR_4B =
-{
-  prob = 85, --120,
-  skip_prob = 40, --60,
-  aversion = 3,
-
-  structure =
-  {
-    ".......", "AAAAAAA",
-    ".......", "^^111^^",
-    ".......", "^^111^^",
-    ".11111.", "1111111",
-  }
-},
-
-
-GROW_STAIRPAIR_4C =
-{
-  prob = 40, --50,
-  skip_prob = 40, --60,
-
-  structure =
-  {
-    ".......", "AAAAAAA",
-    ".......", "^^~~~^^",
-    ".......", "^^~~~^^",
-    ".11111.", "1111111",
-  }
-},
-
-
-GROW_STAIRPAIR_5 =
-{
-  prob = 20, --20,
-  skip_prob = 45, --50,
-  aversion = 5,
-
-  z_dir = "up",
-
-  structure =
-  {
-    ".....", "AAAAA",
-    ".....", "^111A",
-    ".....", "^111A",
-    "11...", "1111A",
-    "11...", "11>>A",
-  }
-},
-
-
--- FIXME : rename, as these are really L-shape new-floor rules
-GROW_STAIRPAIR_5E =
-{
-  prob = 60, --80,
-  skip_prob = 33,
-  aversion = 4,
-
-  z_dir = "up",
-
-  structure =
-  {
-    "....", "AAAA",
-    "....", "^11A",
-    "....", "^11A",
-    "11..", "111A",
-    "11..", "111A",
-  }
-},
-
-
-GROW_STAIRPAIR_5F =
-{
-  prob = 25, --30,
-  skip_prob = 50,
-  aversion = 4,
-
-  z_dir = "up",
-
-  structure =
-  {
-    "....", "AAAA",
-    "....", "11^A",
-    "....", "11^A",
-    "11..", "111A",
-    "11..", "111A",
-  }
-},
-
-
-GROW_STAIRPAIR_5G =
-{
-  prob = 10,
-  skip_prob = 50,
-  aversion = 4,
-
-  z_dir = "up",
-
-  structure =
-  {
-    "....", "AAAA",
-    "....", "11^A",
-    "....", "11^A",
-    "11..", "11^A",
-    "11..", "111A",
-  }
-},
-
-
-GROW_STAIRPAIR_5D =
-{
-  prob = 20,
-  skip_prob = 50,
-  aversion = 4,
-
-  z_dir = "down",
-
-  structure =
-  {
-    "...xx", "AAAxx",
-    "...xx", "^AAxx",
-    ".....", "^AAAA",
-    "11...", "11AAA",
-    "11...", "11>>A",
-  }
-},
-
-
-GROW_STAIR_POOL2 =
-{
-  -- this one is higher than STAIR_POOL1,
-
-  prob = 5, --7,
-  skip_prob = 85, --75,
-  aversion = 15,
-
-  structure =
-  {
-    "x....", "xAAA%",
-    "1....", "1/~%A",
-    "1....", "1~~~A",
-    "1....", "1~~/A",
-    "1....", "1>>A/",
-  },
-
-  diagonals =
-  {
-    "A.",
-    "1~", "~A",
-    "~A",
-    "A.",
-  }
-},
-
-
-GROW_STAIR_SIDE2 =
-{
-  prob = 80,
-  prob_skew = 3,
-  skip_prob = 30, --30,
-
-  z_dir = "up",
-
-  structure =
-  {
-    "...","AAA",
-    "...","AAA",
-    ".1x","^1x",
-    ".1x","^1x",
-    ".1x","11x",
-  }
-},
-
-
-GROW_STAIR_SIDE3 =
-{
-  prob = 50,
-  prob_skew = 3,
-  skip_prob = 70, --50,
-  aversion  = 7,
-
-  structure =
-  {
-    "..","AA",
-    "..","AA",
-    ".1","^1",
-    ".1","^1",
-    ".1","^1",
-    ".1","11",
-  }
-},
-
-
-GROW_STAIR_HUGE =
-{
-  prob = 8, --8,
-  skip_prob = 65, --80,
-  aversion  = 15, --20,
-
-  structure =
-  {
-    "x....x", "xAAAAx",
-    "x....x", "xAAAAx",
-    "......", "/~^^~%",
-    "......", "~~^^~~",
-    "......", "%~^^~/",
-    "x1111x", "x1111x",
-  },
-
-  diagonals =
-  {
-    ".~", "~.",
-    ".~", "~.",
-  }
-},
-
-
-GROW_XXX_BRIDGE1 =
-{
-  prob = 0,
-
-  structure =
-  {
-    "x..x", "x~~x",
-    "x...", "x~~A",
-    "1...", "1==A",
-    "x...", "x~~A",
-    "x..x", "x~~x",
-  }
-},
-
-
---[[ test crud......
-
-GROW_LIQUID_1 =
-{
-  prob = 200,
-
-  structure =
-  {
-    "....", ".11.",
-    "....", ".~~.",
-    "x11x", "x11x",
-    "x11x", "x11x",
-  },
-
-  auxiliary =
-  {
-    pass = "liquid_grow",
-
-    count = { 4,8 },
-  },
-
-  xx_auxiliary2 =
-  {
-    pass = "liquid_newarea",
-
-    count = { 1,3 }
-  }
-},
-
-
-AUX_LIQUID_1 =
-{
-  pass = "liquid_grow",
-  prob = 30 --50,
-
-  structure =
-  {
-    "1.", "11",
-    "~.", "~~",
-    "1.", "11",
-  }
-},
-
-
-AUX_LIQUID_2 =
-{
-  pass = "liquid_grow",
-  prob = 30 --50,
-
-  structure =
-  {
-    "...", ".11",
-    "1..", "1/~",
-    "~..", "~/1",
-    "1..", "11.",
-  },
-
-  diagonals =
-  {
-    "1~", "~1",
-  }
-},
-
-
-AUX_LIQUID_3 =
-{
-  pass = "liquid_grow",
-  prob = 0,
-
-  structure =
-  {
-    "...", "...",
-    "~.~", "~~~",
-  },
-
-  diagonals =
-  {
-    ".~", "~.",
-  }
-},
---]]
-
-
-------------------------------------------
-
+------------------
+-- SPROUT RULES --
+------------------
 
 -- DIRECT_1
 
@@ -2266,6 +1555,9 @@ AUX_CAGE_GROW5 =
   }
 },
 
+--------------------
+-- DECORATE RULES --
+--------------------
 
 DECORATE_CLOSET_2x1 =
 {
@@ -2964,6 +2256,722 @@ HALL_2_SPROUT_B =
   }
 },
 
+----------------
+-- GROW RULES --
+----------------
+
+GROW_2 =
+{
+  prob = 400, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    "....", ".11.",
+    "x11x", "x11x",
+  }
+},
+
+
+GROW_3 =
+{
+  prob = 250, --Non-MSSP default: 50,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".....", ".111.",
+    "x111x", "x111x",
+  }
+},
+
+
+GROW_4 =
+{
+  prob = 250, --Non-MSSP default: 50,
+  prob_skew = 2,
+  skip_prob = 25, --50,
+
+  structure =
+  {
+    "....", "1111",
+    ".11.", "1111",
+  }
+},
+
+
+GROW_BLOB_1 =
+{
+  prob = 200, --Non-MSSP default: 25,
+
+  structure =
+  {
+    "....", "1111",
+    "....", "1111",
+    "x11x", "x11x",
+  }
+},
+
+--7.50 stuff
+
+GROW_DIAG_BLOB1 =
+{
+  prob = 45,
+
+  structure =
+  {
+    "...", "AA%",
+    "%..", "%AA",
+    "x%.", "x%A",
+    "x1.", "x1.",
+  },
+
+  diagonals =
+  {
+          "A.",
+    "1.", "1A",
+    "1.", "1A",
+  }
+},
+
+
+GROW_DIAG_BLOB2 =
+{
+  prob = 65, --45,
+
+  structure =
+  {
+    "...", "AA%",
+    "%..", "%AA",
+    "x%.", "x%A",
+    "x1x", "x1x",
+    "x/.", "x/A",
+    "/..", "/AA",
+    "...", "AA/",
+  },
+
+  diagonals =
+  {
+          "A.",
+    "1.", "1A",
+    "1.", "1A",
+    "1.", "1A",
+    "1.", "1A",
+          "A.",
+  }
+},
+
+-- End 7.50 stuff
+
+GROW_FUNNEL_2 =
+{
+  prob = 25, --5,
+  skip_prob = 15, --50,
+
+  structure =
+  {
+    "....", "#11#",
+    "....", "/11%",
+    "1111", "1111",
+  },
+
+  diagonals = { "#1", "1#" }
+},
+
+
+GROW_CURVE_1 =
+{
+  prob = 75, --50,
+  prob_skew = 3,
+  skip_prob = 5, --25,
+
+  structure =
+  {
+    "1.", "1%",
+    "1.", "11",
+    "1.", "11",
+    "1.", "1/",
+  },
+
+  diagonals = { "1.", "1." }
+},
+
+
+GROW_AREA_1 =
+{
+  prob = 200, --40,
+
+  structure =
+  {
+    "....", ".AA.",
+    "x11x", "x11x",
+  }
+},
+
+
+GROW_AREA_2 =
+{
+  prob = 50, --6,
+  skip_prob = 30, --50,
+
+  structure =
+  {
+    "...", "AAA",
+    "11.", "11A",
+    "11.", "11A",
+  }
+},
+
+
+GROW_DIAG_WING =
+{
+  prob = 70, --40,
+  prob_skew = 2,
+  skip_prob = 5, --35,
+
+  structure =
+  {
+    "x...", "x#AA",
+    "x...", "x/AA",
+    "1%..", "1%/#",
+    "11xx", "11xx",
+  },
+
+  diagonals =
+  {
+    "#A",
+    "1.", "1A", "A#",
+  }
+},
+
+
+GROW_BIG_CAGE =
+{
+  prob = 8,
+  skip_prob = 30,
+  aversion = 10,
+
+  structure =
+  {
+    "....", "1111",
+    "....", "1CC1",
+    "....", "1CC1",
+    "....", "1111",
+    "x11x", "x11x",
+  },
+
+  cage_mode = "fancy"
+},
+
+
+GROW_CAGEPAIR_1 =
+{
+  prob = 8,
+  skip_prob = 30,
+
+  structure =
+  {
+    "....", "AAAA",
+    "....", "CAAC",
+    "....", "AAAA",
+    "x11x", "x11x",
+  },
+
+  cage_mode = "fancy"
+},
+
+
+GROW_CAGEPAIR_2 =
+{
+  prob = 8,
+  skip_prob = 75, --30,
+  aversion = 5,
+
+  structure =
+  {
+    "....", "AAAA",
+    "....", "CAAC",
+    "....", "AAAA",
+    "....", "CAAC",
+    "....", "AAAA",
+    "x11x", "x11x",
+  },
+
+  cage_mode = "fancy"
+},
+
+
+GROW_LIQUID_CAGE3 =
+{
+  prob = 10,
+  skip_prob = 20, --33,
+
+  structure =
+  {
+    "....", "/C~1",
+    "....", "C/~1",
+    "....", "~~/1",
+    "....", "1111",
+    "1111", "1111",
+  },
+
+  diagonals =
+  {
+    ".C",
+    "C~",
+    "~1",
+  },
+
+  cage_mode = "fancy"
+},
+
+
+GROW_STAIR_2 =
+{
+  prob = 10, --12,
+  prob_skew = 3,
+  skip_prob = 45, --35,
+
+  structure =
+  {
+    "..", "AA",
+    "..", "^^",
+    "11", "11",
+  }
+},
+
+
+GROW_STAIR_3 =
+{
+  prob = 5, --5,
+  prob_skew = 3,
+  skip_prob = 45, --35,
+
+  structure =
+  {
+    "...", "AAA",
+    "...", "^^^",
+    "111", "111",
+  }
+},
+
+
+GROW_NARROWSTAIR_1 =
+{
+  prob = 25, --10,
+  prob_skew = 3,
+  skip_prob = 7, --25,
+
+  structure =
+  {
+    "...", "AAA",
+    "...", "1^1",
+    "111", "111",
+  }
+},
+
+
+GROW_NARROWSTAIR_2 =
+{
+  prob = 20, --10,
+  prob_skew = 3,
+  skip_prob = 15, --70,
+
+  z_dir = "up",
+
+  structure =
+  {
+    "...", "AAA",
+    "...", "1^1",
+    "...", "1^1",
+    "111", "111",
+  }
+},
+
+
+GROW_CAGESTAIR_1 =
+{
+  prob = 8,
+  skip_prob = 50,
+  aversion = 5,
+
+  structure =
+  {
+    "...", "AAA",
+    "...", "^C^",
+    "111", "111",
+  },
+
+  cage_mode = "fancy"
+},
+
+
+GROW_CAGESTAIR_2 =
+{
+  prob = 8,
+  skip_prob = 70,
+  aversion = 5,
+
+  structure =
+  {
+    "....", "AAAA",
+    "....", "^CC^",
+    "1111", "1111",
+  },
+
+  cage_mode = "fancy"
+},
+
+
+GROW_CAGESTAIR_3 =
+{
+  prob = 8,
+  skip_prob = 70,
+  aversion = 5,
+
+  structure =
+  {
+    "....", "AAAA",
+    "....", "^CC^",
+    "....", "^CC^",
+    "1111", "1111",
+  },
+
+  cage_mode = "fancy"
+},
+
+
+GROW_STAIRPAIR_4 =
+{
+  prob = 80, --200,
+  skip_prob = 40, --60,
+  aversion = 3,
+
+  structure =
+  {
+    ".......", "AAAAAAA",
+    ".......", "^^111^^",
+    ".......", "^^111^^",
+    "..111..", "1111111",
+  }
+},
+
+GROW_STAIRPAIR_4B =
+{
+  prob = 85, --120,
+  skip_prob = 40, --60,
+  aversion = 3,
+
+  structure =
+  {
+    ".......", "AAAAAAA",
+    ".......", "^^111^^",
+    ".......", "^^111^^",
+    ".11111.", "1111111",
+  }
+},
+
+
+GROW_STAIRPAIR_4C =
+{
+  prob = 40, --50,
+  skip_prob = 40, --60,
+
+  structure =
+  {
+    ".......", "AAAAAAA",
+    ".......", "^^~~~^^",
+    ".......", "^^~~~^^",
+    ".11111.", "1111111",
+  }
+},
+
+
+GROW_STAIRPAIR_5 =
+{
+  prob = 20, --20,
+  skip_prob = 45, --50,
+  aversion = 5,
+
+  z_dir = "up",
+
+  structure =
+  {
+    ".....", "AAAAA",
+    ".....", "^111A",
+    ".....", "^111A",
+    "11...", "1111A",
+    "11...", "11>>A",
+  }
+},
+
+
+-- FIXME : rename, as these are really L-shape new-floor rules
+GROW_STAIRPAIR_5E =
+{
+  prob = 60, --80,
+  skip_prob = 33,
+  aversion = 4,
+
+  z_dir = "up",
+
+  structure =
+  {
+    "....", "AAAA",
+    "....", "^11A",
+    "....", "^11A",
+    "11..", "111A",
+    "11..", "111A",
+  }
+},
+
+
+GROW_STAIRPAIR_5F =
+{
+  prob = 25, --30,
+  skip_prob = 50,
+  aversion = 4,
+
+  z_dir = "up",
+
+  structure =
+  {
+    "....", "AAAA",
+    "....", "11^A",
+    "....", "11^A",
+    "11..", "111A",
+    "11..", "111A",
+  }
+},
+
+
+GROW_STAIRPAIR_5G =
+{
+  prob = 10,
+  skip_prob = 50,
+  aversion = 4,
+
+  z_dir = "up",
+
+  structure =
+  {
+    "....", "AAAA",
+    "....", "11^A",
+    "....", "11^A",
+    "11..", "11^A",
+    "11..", "111A",
+  }
+},
+
+
+GROW_STAIRPAIR_5D =
+{
+  prob = 20,
+  skip_prob = 50,
+  aversion = 4,
+
+  z_dir = "down",
+
+  structure =
+  {
+    "...xx", "AAAxx",
+    "...xx", "^AAxx",
+    ".....", "^AAAA",
+    "11...", "11AAA",
+    "11...", "11>>A",
+  }
+},
+
+
+GROW_STAIR_POOL2 =
+{
+  -- this one is higher than STAIR_POOL1,
+
+  prob = 5, --7,
+  skip_prob = 85, --75,
+  aversion = 15,
+
+  structure =
+  {
+    "x....", "xAAA%",
+    "1....", "1/~%A",
+    "1....", "1~~~A",
+    "1....", "1~~/A",
+    "1....", "1>>A/",
+  },
+
+  diagonals =
+  {
+    "A.",
+    "1~", "~A",
+    "~A",
+    "A.",
+  }
+},
+
+
+GROW_STAIR_SIDE2 =
+{
+  prob = 80,
+  prob_skew = 3,
+  skip_prob = 30, --30,
+
+  z_dir = "up",
+
+  structure =
+  {
+    "...","AAA",
+    "...","AAA",
+    ".1x","^1x",
+    ".1x","^1x",
+    ".1x","11x",
+  }
+},
+
+
+GROW_STAIR_SIDE3 =
+{
+  prob = 50,
+  prob_skew = 3,
+  skip_prob = 70, --50,
+  aversion  = 7,
+
+  structure =
+  {
+    "..","AA",
+    "..","AA",
+    ".1","^1",
+    ".1","^1",
+    ".1","^1",
+    ".1","11",
+  }
+},
+
+
+GROW_STAIR_HUGE =
+{
+  prob = 8, --8,
+  skip_prob = 65, --80,
+  aversion  = 15, --20,
+
+  structure =
+  {
+    "x....x", "xAAAAx",
+    "x....x", "xAAAAx",
+    "......", "/~^^~%",
+    "......", "~~^^~~",
+    "......", "%~^^~/",
+    "x1111x", "x1111x",
+  },
+
+  diagonals =
+  {
+    ".~", "~.",
+    ".~", "~.",
+  }
+},
+
+
+GROW_XXX_BRIDGE1 =
+{
+  prob = 0,
+
+  structure =
+  {
+    "x..x", "x~~x",
+    "x...", "x~~A",
+    "1...", "1==A",
+    "x...", "x~~A",
+    "x..x", "x~~x",
+  }
+},
+
+
+--[[ test crud......
+
+GROW_LIQUID_1 =
+{
+  prob = 200,
+
+  structure =
+  {
+    "....", ".11.",
+    "....", ".~~.",
+    "x11x", "x11x",
+    "x11x", "x11x",
+  },
+
+  auxiliary =
+  {
+    pass = "liquid_grow",
+
+    count = { 4,8 },
+  },
+
+  xx_auxiliary2 =
+  {
+    pass = "liquid_newarea",
+
+    count = { 1,3 }
+  }
+},
+
+
+AUX_LIQUID_1 =
+{
+  pass = "liquid_grow",
+  prob = 30 --50,
+
+  structure =
+  {
+    "1.", "11",
+    "~.", "~~",
+    "1.", "11",
+  }
+},
+
+
+AUX_LIQUID_2 =
+{
+  pass = "liquid_grow",
+  prob = 30 --50,
+
+  structure =
+  {
+    "...", ".11",
+    "1..", "1/~",
+    "~..", "~/1",
+    "1..", "11.",
+  },
+
+  diagonals =
+  {
+    "1~", "~1",
+  }
+},
+
+
+AUX_LIQUID_3 =
+{
+  pass = "liquid_grow",
+  prob = 0,
+
+  structure =
+  {
+    "...", "...",
+    "~.~", "~~~",
+  },
+
+  diagonals =
+  {
+    ".~", "~.",
+  }
+},
+--]]
+
+-------------------------
+-- GROW RULES EXPANDED --
+-------------------------
 -- MsrSgtShooterPerson's kool x-perimental shapes of definite kool
 
 -- MSSP's Greek collonade sort of things. [MSSPCOLLONADE]

@@ -14,7 +14,7 @@ TEMPLATES.Pic_box_template =
   seed_w = 1,
   seed_h = 1,
 
-  height = 128,
+  height = 96,
   deep   =  16,
   over   = -16,
 

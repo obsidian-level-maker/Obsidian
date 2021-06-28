@@ -1,0 +1,35 @@
+-- THEME FILE : OBSIDIAN Beta 19 Preview
+-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted
+-- https://github.com/GTD-Carthage/Oblige
+
+window_scaling      = 0
+font_scaling      = 3
+font_theme      = 7
+widget_theme      = 3
+box_theme      = 0
+button_theme      = 0
+single_pane = 0
+color_scheme      = 2
+text_red      = 109
+text_green      = 239
+text_blue      = 129
+bg_red      = 0
+bg_green      = 0
+bg_blue      = 0
+bg2_red      = 117
+bg2_green      = 246
+bg2_blue      = 150
+button_red      = 0
+button_green      = 0
+button_blue      = 0
+gradient_red      = 255
+gradient_green      = 153
+gradient_blue      = 218
+border_red      = 255
+border_green      = 255
+border_blue      = 255
+gap_red      = 0
+gap_green      = 0
+gap_blue      = 0
+
+
