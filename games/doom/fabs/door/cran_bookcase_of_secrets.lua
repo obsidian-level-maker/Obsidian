@@ -1,6 +1,8 @@
 -- Craneo's super secret bookcase
 
-PREFABS.Door_craneo_secret_bookcase =
+-- FIX-ME: Needs to be redone - probably as a joiner?
+
+--[[PREFABS.Door_craneo_secret_bookcase =
 {
   file   = "door/cran_bookcase_of_secrets.wad",
   map    = "MAP01",
@@ -19,3 +21,4 @@ PREFABS.Door_craneo_secret_bookcase =
    
   x_fit  = "frame",
 }
+]]
