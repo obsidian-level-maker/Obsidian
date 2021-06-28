@@ -425,12 +425,18 @@ void Main_PopulateFontMap() {
 	font_menu_items.push_back(std::map<std::string, int>{ {"Times <Internal>", 8} });
 	font_menu_items.push_back(std::map<std::string, int>{ {"Screen <Internal>", 13} });
 	
-	//Load bundled fonts
+	// Load bundled fonts. Fonts without a bold variant are essentially loaded twice in a row so that calls for a bold variant
+	// don't accidentally change fonts
 	
 	if (load_internal_font("./theme/fonts/Orbitron/OrbitronRegular.ttf", 16, "Orbitron")) {
 		if (load_internal_font("./theme/fonts/Orbitron/OrbitronBold.ttf", 17, "OrbitronBold")) {
 			font_menu_items.push_back(std::map<std::string, int>{ {"PDA", 16} });
 		}
+	}
+	
+	if (load_internal_font("./theme/fonts/Avenixel/Avenixel-Regular.ttf", 18, "Avenixel")) {
+		Fl::set_font(19, "Avenixel");
+		font_menu_items.push_back(std::map<std::string, int>{ {"Avenixel", 18} });
 	}
 	
 	num_fonts = font_menu_items.size();

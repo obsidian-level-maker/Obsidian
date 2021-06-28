@@ -3,13 +3,13 @@
 -- https://github.com/GTD-Carthage/Oblige
 
 window_scaling      = 0
-font_scaling      = 2
-font_theme      = 279
+font_scaling      = 16
+font_theme      = 0
 widget_theme      = 0
 box_theme      = 0
 button_theme      = 0
 single_pane = 0
-color_scheme      = 2
+color_scheme      = 1
 text_red      = 255
 text_green      = 148
 text_blue      = 232
