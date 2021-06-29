@@ -1032,7 +1032,7 @@ static void callback_Text2Color(Fl_Widget *w, void *data) {
 					for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
 						UI_RChoice *rch = IT->second;
 						//rch->mod_label->labelcolor(FONT_COLOR);
-						rch->mod_menu->textcolor(FONT_COLOR);
+						rch->mod_menu->textcolor(FONT2_COLOR);
 						//rch->mod_help->labelcolor(FONT_COLOR);
 						rch->mod_label->redraw();
 					}			

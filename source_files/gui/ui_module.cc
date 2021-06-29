@@ -118,6 +118,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
 	rch->mod_menu = 
 		new UI_RChoiceMenu((!single_pane ? rch->x() : rch->x() + (rch->w() * .40)), (!single_pane ? rch->y() + rch->mod_label->h() : rch->y()), (single_pane ? rch->w() * .55 : rch->w()), kf_h(24), NULL);
+	rch->mod_menu->textcolor(FONT2_COLOR);
 	rch->mod_menu->selection_color(SELECTION);	
 
 	rch->mod_help =

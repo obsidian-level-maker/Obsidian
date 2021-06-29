@@ -62,6 +62,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     game = new UI_RChoiceMenu(cx, cy, cw, ch, _("Game: "));
     game->align(FL_ALIGN_LEFT);
     game->labelfont(font_style);
+    game->textcolor(FONT2_COLOR);
     game->selection_color(SELECTION);
     game->callback(callback_Game, this);
 
@@ -70,6 +71,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     engine = new UI_RChoiceMenu(cx, cy, cw, ch, _("Engine: "));
     engine->align(FL_ALIGN_LEFT);
     engine->labelfont(font_style);
+    engine->textcolor(FONT2_COLOR);
     engine->selection_color(SELECTION);
     engine->callback(callback_Engine, this);
     engine_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch, "?");
@@ -81,6 +83,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     length = new UI_RChoiceMenu(cx, cy, cw, ch, _("Length: "));
     length->align(FL_ALIGN_LEFT);
     length->labelfont(font_style);
+    length->textcolor(FONT2_COLOR);
     length->selection_color(SELECTION);
     length->callback(callback_Length, this);
     length_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch, "?");
@@ -92,6 +95,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     theme = new UI_RChoiceMenu(cx, cy, cw, ch, _("Theme: "));
     theme->align(FL_ALIGN_LEFT);
     theme->labelfont(font_style);
+    theme->textcolor(FONT2_COLOR);
     theme->selection_color(SELECTION);
     theme->callback(callback_Theme, this);
     theme_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch, "?");
@@ -104,6 +108,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     build->visible_focus(0);
     build->box(button_style);
     build->color(BUTTON_COLOR);
+    build->labelcolor(FONT2_COLOR);
     build->labelfont(font_style | FL_BOLD);
     build->labelsize(header_font_size);
     build->callback(build_callback, this);
@@ -114,6 +119,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     quit->visible_focus(0);
     quit->box(button_style);
     quit->color(BUTTON_COLOR);
+    quit->labelcolor(FONT2_COLOR);
     quit->labelfont(font_style);
     quit->callback(quit_callback, this);
     quit->shortcut(FL_COMMAND + 'q');

@@ -316,6 +316,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_language->align(FL_ALIGN_LEFT);
     opt_language->callback(callback_Language, this);
     opt_language->labelfont(font_style);
+    opt_language->textcolor(FONT2_COLOR);
 	opt_language->textfont(font_style);
 	opt_language->selection_color(SELECTION);
 
@@ -330,6 +331,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_filename_prefix->add(_("Date and Time|Number of Levels|Nothing"));
     opt_filename_prefix->labelfont(font_style);
 	opt_filename_prefix->textfont(font_style);
+	opt_filename_prefix->textcolor(FONT2_COLOR);
 	opt_filename_prefix->selection_color(SELECTION);
 	opt_filename_prefix->value(filename_prefix);
 
@@ -383,6 +385,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
         button->box(button_style);
         button->callback(callback_Quit, this);
         button->labelfont(font_style);
+        button->labelcolor(FONT2_COLOR);
     }
     darkish->end();
 

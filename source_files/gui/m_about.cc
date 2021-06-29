@@ -117,7 +117,7 @@ UI_About::UI_About(int W, int H, const char *label)
     box->box(FL_UP_BOX);
     box->color(BUTTON_COLOR);
     box->labelfont(font_style);
-    box->labelcolor(FONT_COLOR);
+    box->labelcolor(FONT2_COLOR);
 
     cy += box->h() + kf_h(10);
 
@@ -147,6 +147,7 @@ UI_About::UI_About(int W, int H, const char *label)
         button->color(BUTTON_COLOR);
         button->callback(callback_Quit, this);
         button->labelfont(font_style);
+        button->labelcolor(FONT2_COLOR);
     }
     darkish->end();
 
