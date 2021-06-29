@@ -502,7 +502,7 @@ class UI_ThemeWin : public Fl_Window {
 				rbt->mod_label->redraw();
 			}
         }
-        if (main_win->right_mods) {
+        if (!single_pane) {
 		    for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
 		    	UI_Module *M = (UI_Module *)main_win->right_mods->mod_pack->child(x);
 		        SYS_ASSERT(M);
@@ -613,7 +613,7 @@ class UI_ThemeWin : public Fl_Window {
 				rbt->mod_label->redraw();
 			}
         }
-        if (main_win->right_mods) {
+        if (!single_pane) {
 		    for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
 		    	UI_Module *M = (UI_Module *)main_win->right_mods->mod_pack->child(x);
 		        SYS_ASSERT(M);
@@ -711,7 +711,7 @@ class UI_ThemeWin : public Fl_Window {
 			M->box(box_style);
 			M->redraw();			
         }
-        if (main_win->right_mods) {
+        if (!single_pane) {
         	for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
 		    	UI_Module *M = (UI_Module *)main_win->right_mods->mod_pack->child(x);
 		        SYS_ASSERT(M);
@@ -768,7 +768,7 @@ class UI_ThemeWin : public Fl_Window {
 				rbt->redraw();
 			}
         }
-        if (main_win->right_mods) {
+        if (!single_pane) {
         	main_win->right_mods->sbar->slider(button_style);
         	main_win->right_mods->redraw();
 		    for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
@@ -898,7 +898,7 @@ class UI_ThemeWin : public Fl_Window {
 					rbt->mod_label->redraw();
 				}
 		    }
-		    if (main_win->right_mods) {
+		    if (!single_pane) {
 				for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
 					UI_Module *M = (UI_Module *)main_win->right_mods->mod_pack->child(x);
 				    SYS_ASSERT(M);
@@ -969,7 +969,7 @@ class UI_ThemeWin : public Fl_Window {
 					rsl->redraw();
 				}			
 		    }
-		    if (main_win->right_mods) {
+		    if (!single_pane) {
 		    	for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
 					UI_Module *M = (UI_Module *)main_win->right_mods->mod_pack->child(x);
 				    SYS_ASSERT(M);
@@ -1033,7 +1033,7 @@ class UI_ThemeWin : public Fl_Window {
 					rbt->redraw();
 				}
 		    }
-		    if (main_win->right_mods) {
+		    if (!single_pane) {
 				main_win->right_mods->sbar->labelcolor(SELECTION);
 				main_win->right_mods->redraw();
 				for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
@@ -1079,7 +1079,7 @@ class UI_ThemeWin : public Fl_Window {
 		        main_win->game_box->child(x)->redraw();
 		    }
 			main_win->left_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
-			if (main_win->right_mods) {
+			if (!single_pane) {
 				main_win->right_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
 				main_win->right_mods->redraw();
 			} 
@@ -1097,7 +1097,7 @@ class UI_ThemeWin : public Fl_Window {
 					rsl->prev_button->redraw();
 				}			
 		    }
-		    if (main_win->right_mods) {
+		    if (!single_pane) {
 				for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
 					UI_Module *M = (UI_Module *)main_win->right_mods->mod_pack->child(x);
 				    SYS_ASSERT(M);
@@ -1134,7 +1134,7 @@ class UI_ThemeWin : public Fl_Window {
 		        SYS_ASSERT(M);
 				M->redraw();			
 		    }
-		    if (main_win->right_mods) {
+		    if (!single_pane) {
 		    	for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
 					UI_Module *M = (UI_Module *)main_win->right_mods->mod_pack->child(x);
 				    SYS_ASSERT(M);
@@ -1162,7 +1162,7 @@ class UI_ThemeWin : public Fl_Window {
 		        SYS_ASSERT(M);
 				M->redraw();			
 		    }
-		    if (main_win->right_mods) {
+		    if (!single_pane) {
 		    	for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
 					UI_Module *M = (UI_Module *)main_win->right_mods->mod_pack->child(x);
 				    SYS_ASSERT(M);
@@ -1190,7 +1190,7 @@ class UI_ThemeWin : public Fl_Window {
 			main_win->left_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
 			main_win->left_mods->mod_pack->color(GAP_COLOR);
 			main_win->left_mods->redraw();
-			if (main_win->right_mods) {
+			if (!single_pane) {
 				main_win->right_mods->color(GAP_COLOR, GAP_COLOR);
 				main_win->right_mods->sbar->color(GAP_COLOR, BUTTON_COLOR);
 				main_win->right_mods->mod_pack->color(GAP_COLOR);
