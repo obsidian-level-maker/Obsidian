@@ -63,6 +63,9 @@ const char *numeric_locale = NULL;
 uchar text_red = 0;
 uchar text_green = 0;
 uchar text_blue = 0;
+uchar text2_red = 0;
+uchar text2_green = 0;
+uchar text2_blue = 0;
 uchar bg_red = 221;
 uchar bg_green = 221;
 uchar bg_blue = 221;
@@ -82,6 +85,7 @@ uchar gap_red = 62;
 uchar gap_green = 61;
 uchar gap_blue = 57;
 Fl_Color FONT_COLOR;
+Fl_Color FONT2_COLOR;
 Fl_Color SELECTION;
 Fl_Color WINDOW_BG;
 Fl_Color GAP_COLOR;
@@ -456,6 +460,7 @@ void Main_SetupFLTK() {
     			 Fl::background2(221, 221, 221);
     			 Fl::foreground(0, 0, 0);
 				 FONT_COLOR = fl_rgb_color(0, 0, 0);
+				 FONT2_COLOR = fl_rgb_color(0, 0, 0);
 				 SELECTION = fl_rgb_color(62, 61, 57);
 				 WINDOW_BG = fl_rgb_color(221, 221, 221);
 				 GAP_COLOR = fl_rgb_color(0, 0, 0);
@@ -467,6 +472,7 @@ void Main_SetupFLTK() {
     			 Fl::background2(bg_red, bg_green, bg_blue);
     			 Fl::foreground(text_red, text_green, text_blue);
 				 FONT_COLOR = fl_rgb_color(text_red, text_green, text_blue);
+				 FONT2_COLOR = fl_rgb_color(text2_red, text2_green, text2_blue);
 				 SELECTION = fl_rgb_color(bg2_red, bg2_green, bg2_blue);
 				 WINDOW_BG = fl_rgb_color(bg_red, bg_green, bg_blue);
     			 GAP_COLOR = fl_rgb_color(gap_red, gap_green, gap_blue); 
@@ -479,6 +485,7 @@ void Main_SetupFLTK() {
     			  Fl::background2(221, 221, 221);
     			  Fl::foreground(0, 0, 0);
 				  FONT_COLOR = fl_rgb_color(0, 0, 0);
+				  FONT2_COLOR = fl_rgb_color(0, 0, 0);
 				  SELECTION = fl_rgb_color(62, 61, 57);
 				  WINDOW_BG = fl_rgb_color(221, 221, 221);
 				  GAP_COLOR = fl_rgb_color(0, 0, 0);
@@ -488,7 +495,8 @@ void Main_SetupFLTK() {
     			  break;    			     			 
     }
     if (color_scheme == 1) {
-    Fl::get_color(FONT_COLOR, text_red, text_green, text_blue); 
+    Fl::get_color(FONT_COLOR, text_red, text_green, text_blue);
+    Fl::get_color(FONT2_COLOR, text2_red, text2_green, text2_blue); 
     Fl::get_color(WINDOW_BG, bg_red, bg_green, bg_blue);     
     Fl::get_color(SELECTION, bg2_red, bg2_green, bg2_blue);
     Fl::get_color(GAP_COLOR, gap_red, gap_green, gap_blue); 

@@ -164,6 +164,12 @@ static void Parse_Theme_Option(const char *name, const char *value) {
         text_green = atoi(value);  
 	} else if (StringCaseCmp(name, "text_blue") == 0) {
         text_blue = atoi(value);
+	} else if (StringCaseCmp(name, "text2_red") == 0) {
+        text2_red = atoi(value);
+	} else if (StringCaseCmp(name, "text2_green") == 0) {
+        text2_green = atoi(value);  
+	} else if (StringCaseCmp(name, "text2_blue") == 0) {
+        text2_blue = atoi(value);
 	} else if (StringCaseCmp(name, "bg_red") == 0) {
         bg_red = atoi(value);
 	} else if (StringCaseCmp(name, "bg_green") == 0) {
@@ -329,6 +335,9 @@ bool Theme_Options_Save(const char *filename) {
     fprintf(option_fp, "text_red      = %d\n", text_red);
     fprintf(option_fp, "text_green      = %d\n", text_green);
     fprintf(option_fp, "text_blue      = %d\n", text_blue);
+    fprintf(option_fp, "text2_red      = %d\n", text2_red);
+    fprintf(option_fp, "text2_green      = %d\n", text2_green);
+    fprintf(option_fp, "text2_blue      = %d\n", text2_blue);
     fprintf(option_fp, "bg_red      = %d\n", bg_red);
     fprintf(option_fp, "bg_green      = %d\n", bg_green);
     fprintf(option_fp, "bg_blue      = %d\n", bg_blue);
@@ -375,6 +384,7 @@ class UI_ThemeWin : public Fl_Window {
     UI_CustomCheckBox *opt_single_pane;
     UI_CustomMenu *opt_color_scheme;
     Fl_Button *opt_text_color;
+    Fl_Button *opt_text2_color;
     Fl_Button *opt_bg_color;
     Fl_Button *opt_bg2_color;
     Fl_Button *opt_button_color;
@@ -815,6 +825,7 @@ class UI_ThemeWin : public Fl_Window {
         if (color_scheme == 1) {
         	skip_color_picker = true;
         	that->opt_text_color->do_callback();
+        	that->opt_text2_color->do_callback();
 			that->opt_bg_color->do_callback();
 			that->opt_bg2_color->do_callback();
 			that->opt_button_color->do_callback();
@@ -829,7 +840,7 @@ class UI_ThemeWin : public Fl_Window {
     static void callback_TextColor(Fl_Widget *w, void *data) {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
         if (!skip_color_picker) {    
-		    if (fl_color_chooser((const char *)"Select Text Color", text_red, text_green, text_blue, 1)) {
+		    if (fl_color_chooser((const char *)"Select Panel Text Color", text_red, text_green, text_blue, 1)) {
 				that->opt_text_color->color(fl_rgb_color(text_red, text_green, text_blue));
 				that->opt_text_color->redraw();
 			}
@@ -841,18 +852,18 @@ class UI_ThemeWin : public Fl_Window {
 			main_win->menu_bar->redraw();
 			main_win->game_box->heading->labelcolor(FONT_COLOR);
 			main_win->game_box->game->labelcolor(FONT_COLOR);
-			main_win->game_box->game->textcolor(FONT_COLOR);
+			//main_win->game_box->game->textcolor(FONT_COLOR);
 			main_win->game_box->engine->labelcolor(FONT_COLOR);
-			main_win->game_box->engine->textcolor(FONT_COLOR);
+			//main_win->game_box->engine->textcolor(FONT_COLOR);
 			main_win->game_box->engine_help->labelcolor(FONT_COLOR);
 			main_win->game_box->length->labelcolor(FONT_COLOR);
-			main_win->game_box->length->textcolor(FONT_COLOR);
+			//main_win->game_box->length->textcolor(FONT_COLOR);
 			main_win->game_box->length_help->labelcolor(FONT_COLOR);
 			main_win->game_box->theme->labelcolor(FONT_COLOR);
-			main_win->game_box->theme->textcolor(FONT_COLOR);
+			//main_win->game_box->theme->textcolor(FONT_COLOR);
 			main_win->game_box->theme_help->labelcolor(FONT_COLOR);
-			main_win->game_box->build->labelcolor(FONT_COLOR);
-			main_win->game_box->quit->labelcolor(FONT_COLOR);
+			//main_win->game_box->build->labelcolor(FONT_COLOR);
+			//main_win->game_box->quit->labelcolor(FONT_COLOR);
 			for (int x = 0; x < main_win->game_box->children(); x++) {
 		        main_win->game_box->child(x)->redraw();
 		        main_win->game_box->child(x)->redraw_label();
@@ -875,7 +886,7 @@ class UI_ThemeWin : public Fl_Window {
 				for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
 					UI_RChoice *rch = IT->second;
 					rch->mod_label->labelcolor(FONT_COLOR);
-					rch->mod_menu->textcolor(FONT_COLOR);
+					//rch->mod_menu->textcolor(FONT_COLOR);
 					rch->mod_help->labelcolor(FONT_COLOR);
 					rch->mod_label->redraw();
 				}			
@@ -910,7 +921,7 @@ class UI_ThemeWin : public Fl_Window {
 					for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
 						UI_RChoice *rch = IT->second;
 						rch->mod_label->labelcolor(FONT_COLOR);
-						rch->mod_menu->textcolor(FONT_COLOR);
+						//rch->mod_menu->textcolor(FONT_COLOR);
 						rch->mod_help->labelcolor(FONT_COLOR);
 						rch->mod_label->redraw();
 					}			
@@ -930,6 +941,117 @@ class UI_ThemeWin : public Fl_Window {
 						UI_RButton *rbt = IT3->second;
 						rbt->mod_label->labelcolor(FONT_COLOR);
 						rbt->mod_help->labelcolor(FONT_COLOR);
+						rbt->mod_label->redraw();
+					}
+				}
+			}
+		}
+    }
+
+static void callback_Text2Color(Fl_Widget *w, void *data) {
+        UI_ThemeWin *that = (UI_ThemeWin *)data;
+        if (!skip_color_picker) {    
+		    if (fl_color_chooser((const char *)"Select Button Text Color", text2_red, text2_green, text2_blue, 1)) {
+				that->opt_text2_color->color(fl_rgb_color(text2_red, text2_green, text2_blue));
+				that->opt_text2_color->redraw();
+			}
+    	}
+    	if (color_scheme == 1) {
+			FONT2_COLOR = fl_rgb_color(text2_red, text2_green, text2_blue);
+			//Fl::foreground(text_red, text_green, text_blue); 	
+			//main_win->menu_bar->textcolor(FONT_COLOR);
+			//main_win->menu_bar->redraw();
+			//main_win->game_box->heading->labelcolor(FONT_COLOR);
+			//main_win->game_box->game->labelcolor(FONT_COLOR);
+			main_win->game_box->game->textcolor(FONT2_COLOR);
+			//main_win->game_box->engine->labelcolor(FONT_COLOR);
+			main_win->game_box->engine->textcolor(FONT2_COLOR);
+			//main_win->game_box->engine_help->labelcolor(FONT_COLOR);
+			//main_win->game_box->length->labelcolor(FONT_COLOR);
+			main_win->game_box->length->textcolor(FONT2_COLOR);
+			//main_win->game_box->length_help->labelcolor(FONT_COLOR);
+			//main_win->game_box->theme->labelcolor(FONT_COLOR);
+			main_win->game_box->theme->textcolor(FONT2_COLOR);
+			//main_win->game_box->theme_help->labelcolor(FONT_COLOR);
+			main_win->game_box->build->labelcolor(FONT2_COLOR);
+			main_win->game_box->quit->labelcolor(FONT2_COLOR);
+			for (int x = 0; x < main_win->game_box->children(); x++) {
+		        main_win->game_box->child(x)->redraw();
+		        main_win->game_box->child(x)->redraw_label();
+		    }        
+			main_win->build_box->seed_disp->labelcolor(FONT_COLOR);
+			main_win->build_box->name_disp->labelcolor(FONT_COLOR);
+			main_win->build_box->status->labelcolor(FONT_COLOR);
+			main_win->build_box->progress->labelcolor(FONT_COLOR);
+			for (int x = 0; x < main_win->build_box->children(); x++) {
+		        main_win->build_box->child(x)->redraw();
+		    }
+		    for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+		    	UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
+		        SYS_ASSERT(M);
+		        M->heading->labelcolor(FONT_COLOR);
+		        M->redraw();
+				std::map<std::string, UI_RChoice *>::const_iterator IT;
+				std::map<std::string, UI_RSlide *>::const_iterator IT2;
+				std::map<std::string, UI_RButton *>::const_iterator IT3;
+				for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
+					UI_RChoice *rch = IT->second;
+					//rch->mod_label->labelcolor(FONT_COLOR);
+					rch->mod_menu->textcolor(FONT2_COLOR);
+					//rch->mod_help->labelcolor(FONT_COLOR);
+					rch->mod_label->redraw();
+				}			
+				for (IT2 = M->choice_map_slider.begin(); IT2 != M->choice_map_slider.end(); IT2++) {
+					UI_RSlide *rsl = IT2->second;
+					//rsl->mod_label->labelcolor(FONT_COLOR);
+					//rsl->mod_entry->labelcolor(FONT_COLOR);
+					//rsl->mod_help->labelcolor(FONT_COLOR);
+					if (rsl->nan_choices.size() > 0) {
+						//rsl->nan_options->textcolor(FONT_COLOR);
+						//rsl->nan_options->labelcolor(FONT_COLOR);
+						rsl->nan_options->redraw();
+					}
+					rsl->mod_label->redraw();
+				}			
+				for (IT3 = M->choice_map_button.begin(); IT3 != M->choice_map_button.end(); IT3++) {
+					UI_RButton *rbt = IT3->second;
+					//rbt->mod_label->labelcolor(FONT_COLOR);
+					//rbt->mod_help->labelcolor(FONT_COLOR);
+					rbt->mod_label->redraw();
+				}
+		    }
+		    if (!single_pane) {
+				for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
+					UI_Module *M = (UI_Module *)main_win->right_mods->mod_pack->child(x);
+				    SYS_ASSERT(M);
+				    M->heading->labelcolor(FONT_COLOR);
+				    M->redraw();
+					std::map<std::string, UI_RChoice *>::const_iterator IT;
+					std::map<std::string, UI_RSlide *>::const_iterator IT2;
+					std::map<std::string, UI_RButton *>::const_iterator IT3;
+					for (IT = M->choice_map.begin(); IT != M->choice_map.end(); IT++) {
+						UI_RChoice *rch = IT->second;
+						//rch->mod_label->labelcolor(FONT_COLOR);
+						rch->mod_menu->textcolor(FONT_COLOR);
+						//rch->mod_help->labelcolor(FONT_COLOR);
+						rch->mod_label->redraw();
+					}			
+					for (IT2 = M->choice_map_slider.begin(); IT2 != M->choice_map_slider.end(); IT2++) {
+						UI_RSlide *rsl = IT2->second;
+						//rsl->mod_label->labelcolor(FONT_COLOR);
+						//rsl->mod_entry->labelcolor(FONT_COLOR);
+						//rsl->mod_help->labelcolor(FONT_COLOR);
+						if (rsl->nan_choices.size() > 0) {
+							//rsl->nan_options->textcolor(FONT_COLOR);
+							//rsl->nan_options->labelcolor(FONT_COLOR);
+							rsl->nan_options->redraw();
+						}
+						rsl->mod_label->redraw();
+					}			
+					for (IT3 = M->choice_map_button.begin(); IT3 != M->choice_map_button.end(); IT3++) {
+						UI_RButton *rbt = IT3->second;
+						//rbt->mod_label->labelcolor(FONT_COLOR);
+						//rbt->mod_help->labelcolor(FONT_COLOR);
 						rbt->mod_label->redraw();
 					}
 				}
@@ -1334,16 +1456,25 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
 
     cy += opt_color_scheme->h() + y_step;
     
-    opt_text_color = new Fl_Button(cx + W * .15, cy, W * .15, kf_h(24),
-                                       _("Font"));
+    opt_text_color = new Fl_Button(cx + W * .05, cy, W * .15, kf_h(24),
+                                       _("Panel Font"));
     opt_text_color->visible_focus(0);
     opt_text_color->box(FL_BORDER_BOX);
     opt_text_color->color(fl_rgb_color(text_red, text_green, text_blue));
     opt_text_color->align(FL_ALIGN_BOTTOM);
     opt_text_color->callback(callback_TextColor, this);
     opt_text_color->labelfont(font_style);
+    
+    opt_text2_color = new Fl_Button(cx + W * .05 + opt_text_color->w() +  (3 * pad), cy, W * .15, kf_h(24),
+                                       _("Button Font"));
+    opt_text2_color->visible_focus(0);
+    opt_text2_color->box(FL_BORDER_BOX);
+    opt_text2_color->color(fl_rgb_color(text2_red, text2_green, text2_blue));
+    opt_text2_color->align(FL_ALIGN_BOTTOM);
+    opt_text2_color->callback(callback_Text2Color, this);
+    opt_text2_color->labelfont(font_style);
 
-    opt_bg_color = new Fl_Button(cx + W * .15 + opt_text_color->w() +  (3 * pad), cy, W * .15, kf_h(24),
+    opt_bg_color = new Fl_Button(cx + W * .05 + (opt_text_color->w() + (3 * pad)) * 2, cy, W * .15, kf_h(24),
                                        _("Panels"));
     opt_bg_color->visible_focus(0);
     opt_bg_color->box(FL_BORDER_BOX);
@@ -1352,7 +1483,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     opt_bg_color->callback(callback_BgColor, this);
     opt_bg_color->labelfont(font_style);
     
-    opt_bg2_color = new Fl_Button(cx + W * .15 + (opt_text_color->w() + (3 * pad)) * 2, cy, W * .15, kf_h(24),
+    opt_bg2_color = new Fl_Button(cx + W * .05 + (opt_text_color->w() + (3 * pad)) * 3, cy, W * .15, kf_h(24),
                                        _("Highlights"));
     opt_bg2_color->visible_focus(0);
     opt_bg2_color->box(FL_BORDER_BOX);
