@@ -443,6 +443,11 @@ void Main_PopulateFontMap() {
 		font_menu_items.push_back(std::map<std::string, int>{ {"Avenixel", 18} });
 	}
 	
+	if (load_internal_font("./theme/fonts/TheNeueBlack-1.007/static/TTF/TheNeue-Black.ttf", 20, "The Neue")) {
+		Fl::set_font(21, "The Neue");
+		font_menu_items.push_back(std::map<std::string, int>{ {"The Neue Black", 20} });
+	}
+	
 	num_fonts = font_menu_items.size();
 		
 }

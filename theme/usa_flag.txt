@@ -1,3 +1,5 @@
+-- United States Flag theme by Frozsoul
+
 -- THEME FILE : OBSIDIAN Beta 19 Preview
 -- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted
 -- https://github.com/GTD-Carthage/Oblige

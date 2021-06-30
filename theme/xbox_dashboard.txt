@@ -1,0 +1,37 @@
+-- OG Xbox Dashboard theme by Cubebert
+
+-- THEME FILE : OBSIDIAN Beta 19 Preview
+-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted
+-- https://github.com/GTD-Carthage/Oblige
+
+window_scaling      = 0
+font_scaling      = 18
+font_theme      = 4
+widget_theme      = 0
+box_theme      = 0
+button_theme      = 1
+single_pane = 0
+color_scheme      = 1
+text_red      = 184
+text_green      = 255
+text_blue      = 170
+bg_red      = 37
+bg_green      = 129
+bg_blue      = 22
+bg2_red      = 145
+bg2_green      = 255
+bg2_blue      = 4
+button_red      = 0
+button_green      = 122
+button_blue      = 23
+gradient_red      = 255
+gradient_green      = 255
+gradient_blue      = 255
+border_red      = 94
+border_green      = 177
+border_blue      = 89
+gap_red      = 39
+gap_green      = 38
+gap_blue      = 36
+
+

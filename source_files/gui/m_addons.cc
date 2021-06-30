@@ -475,6 +475,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
         apply_but->color(BUTTON_COLOR);
         apply_but->callback(callback_Quit, this);
         apply_but->labelfont(font_style);
+        apply_but->labelcolor(FONT2_COLOR);
 
         // show warning about needing a restart
         Fl_Box *sep = new Fl_Box(FL_NO_BOX, x(), by, W * 3 / 5, bh,
@@ -589,7 +590,7 @@ void UI_AddonsWin::Populate() {
 
 bool UI_AddonsWin::ApplyChanges() {
     bool has_changes = false;
-
+    
     for (int j = 0; j < pack->children(); j++) {
         UI_Addon *M = (UI_Addon *)pack->child(j);
         SYS_ASSERT(M);
@@ -629,9 +630,17 @@ void DLG_SelectAddons(void) {
 
         fl_alert("%s", _("Changes to addons require a restart.\nOBSIDIAN will "
                          "now restart.")); 
-        
-        initial_enabled_addons.clear();
-        
+
+      	initial_enabled_addons.clear();
+      	
+      	for (int j = 0; j < addons_window->pack->children(); j++) {
+		    UI_Addon *M = (UI_Addon *)addons_window->pack->child(j);
+		    SYS_ASSERT(M);
+		    if (M->info->enabled) {
+		        initial_enabled_addons[M->info->name] = 1;
+		    }
+    	}
+
         main_action = MAIN_RESTART;
     }
 
