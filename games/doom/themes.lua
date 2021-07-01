@@ -1275,8 +1275,11 @@ DOOM.THEMES =
       gtd_generic_half_floor_inverted_braced = 20,
       --
       gtd_wall_urban_cement_frame = 10,
-      gtd_generic_ceilwall = 35,
-      gtd_generic_ceilwall_2 = 35,
+      --
+      gtd_generic_ceilwall = 30,
+      gtd_generic_ceilwall_2 = 30,
+      gtd_generic_ceilwall_3 = 30,
+      --
       gtd_generic_glow_wall = 50,
       gtd_generic_double_banded_ceil = 50,
       --
@@ -1682,8 +1685,11 @@ DOOM.THEMES =
       --
       gtd_round_inset = 15,
       gtd_wall_urban_cement_frame = 25,
-      gtd_generic_ceilwall = 35,
-      gtd_generic_ceilwall_2 = 35,
+      --
+      gtd_generic_ceilwall = 30,
+      gtd_generic_ceilwall_2 = 30,
+      gtd_generic_ceilwall_3 = 30,
+      --
       gtd_generic_glow_wall = 50,
       gtd_generic_double_banded_ceil = 50,
       --
@@ -2140,8 +2146,10 @@ DOOM.THEMES =
       --
       gtd_round_inset = 50,
       --
-      gtd_generic_ceilwall = 35,
-      gtd_generic_ceilwall_2 = 35,
+      gtd_generic_ceilwall = 30,
+      gtd_generic_ceilwall_2 = 30,
+      gtd_generic_ceilwall_3 = 30,
+      --
       gtd_generic_glow_wall = 30,
       gtd_generic_double_banded_ceil = 30,
       --
