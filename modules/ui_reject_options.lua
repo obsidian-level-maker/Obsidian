@@ -23,7 +23,6 @@ OB_MODULES["ui_reject_options"] =
   label = _("Map Build Options"),
   
   engine = "!advanced",
-  engine2 = "!doomsday",
 
   side = "left",
   priority = 105,
@@ -64,7 +63,8 @@ OB_MODULES["ui_udmf_map_options"] =
       label = _("Build REJECT"),
       valuator = "button",
       default = 0,
-      tooltip = "Choose to build a proper REJECT lump (Binary map format only). WARNING: This can be very time consuming!",
+      tooltip = "Choose to build a proper REJECT lump (Binary map format only). WARNING: This can be very time consuming!" ..
+		" Eternity will ignore this option.",
     },
     {
       name = "bool_build_nodes_udmf",
@@ -72,7 +72,7 @@ OB_MODULES["ui_udmf_map_options"] =
       valuator = "button",
       default = 0,
       tooltip = "Choose to either build nodes or allow the engine itself to do so " ..
-      "upon loading the map. EDGE will always build nodes unless using binary map format.",
+      "upon loading the map. EDGE will always build nodes unless using binary map format, and Eternity will always build nodes regardless of format.",
     },
     {
       name = "map_format",
@@ -80,37 +80,6 @@ OB_MODULES["ui_udmf_map_options"] =
       choices = UI_UDMF_MAP_OPTIONS.MAP_FORMAT_CHOICES,
       default = "udmf",
       tooltip = "Choose between UDMF and binary map format.",
-    }
-  }
-}
-
-UI_DOOMSDAY_MAP_OPTIONS = { }
-
-OB_MODULES["ui_doomsday_map_options"] =
-{
-  label = _("Map Build Options"),
-  
-  engine = "doomsday",
-
-  side = "left",
-  priority = 105,
-
-  options =
-  {
-    {
-      name = "bool_build_reject_doomsday",
-      label = _("Build REJECT"),
-      valuator = "button",
-      default = 0,
-      tooltip = "Choose to build a proper REJECT lump (Binary map format only). WARNING: This can be very time consuming!",
-    },
-    {
-      name = "bool_build_nodes_doomsday",
-      label = _("Build Nodes"),
-      valuator = "button",
-      default = 0,
-      tooltip = "Choose to either build nodes or allow the engine itself to do so " ..
-      "upon loading the map. EDGE will always build nodes unless using binary map format.",
     }
   }
 }
