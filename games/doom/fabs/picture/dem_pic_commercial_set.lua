@@ -4,7 +4,7 @@ PREFABS.Pic_dem_commercial_set1 =
   file   = "picture/dem_pic_commercial_set.wad",
   map    = "MAP01",
 
-rank = 1,
+  rank = 1,
 
   prob   = 250,
   theme = "urban",
@@ -13,6 +13,7 @@ rank = 1,
 
   where  = "seeds",
   height = 104,
+  deep = 16,
 
   theme  = "urban",
   env = "building",
