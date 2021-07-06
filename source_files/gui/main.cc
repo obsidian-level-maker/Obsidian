@@ -190,7 +190,7 @@ void Determine_WorkingPath(const char *argv0) {
 #else
     char *path = StringNew(FL_PATH_MAX + 4);
 
-    if (fl_filename_expand(path, "$HOME/.obsidian") == 0) {
+    if (fl_filename_expand(path, "$HOME/.config/obsidian") == 0) {
         Main_FatalError("Unable to find $HOME directory!\n");
     }
 
