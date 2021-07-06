@@ -697,7 +697,7 @@ class UI_ThemeWin : public Fl_Window {
         box_theme = that->opt_box_theme->value();
         
         switch(box_theme) {
-			case 0 : box_style = FL_THIN_UP_BOX;
+			case 0 : box_style = FL_FLAT_BOX;
 					 break;
 			case 1 : box_style = FL_SHADOW_BOX;
 					 break;
@@ -707,10 +707,10 @@ class UI_ThemeWin : public Fl_Window {
 					 break;
 			case 4 : box_style = FL_DOWN_BOX;
 					 break;
-			case 5 : box_style = FL_FLAT_BOX;
+			case 5 : box_style = FL_THIN_UP_BOX;
 					 break;
 			// Shouldn't be reached, but still
-			default : box_style = FL_THIN_UP_BOX;
+			default : box_style = FL_FLAT_BOX;
 					  break;    			     			 
     	} 	
         main_win->menu_bar->box(box_style);
@@ -741,18 +741,18 @@ class UI_ThemeWin : public Fl_Window {
         button_theme = that->opt_button_theme->value();
         
         switch(button_theme) {
-			case 0 : button_style = FL_UP_BOX;
+			case 0 : button_style = FL_DOWN_BOX;
 					 break;
-			case 1 : button_style = FL_EMBOSSED_BOX;
+			case 1 : button_style = FL_UP_BOX;
 					 break;
 			case 2 : button_style = FL_ENGRAVED_BOX;
 					 break;
-			case 3 : button_style = FL_DOWN_BOX;
+			case 3 : button_style = FL_EMBOSSED_BOX;
 					 break;
 			case 4 : button_style = FL_BORDER_BOX;
 					 break;
 			// Shouldn't be reached, but still
-			default : button_style = FL_UP_BOX;
+			default : button_style = FL_DOWN_BOX;
 					  break;    			     			 
     	}	
     	main_win->game_box->build->box(button_style);
@@ -1393,7 +1393,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     opt_box_theme =
         new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Box Theme: "));
     opt_box_theme->align(FL_ALIGN_LEFT);
-    opt_box_theme->add(_("Default|Shadow|Embossed|Engraved|Inverted|Flat"));
+    opt_box_theme->add(_("Default|Shadow|Embossed|Engraved|Inverted|Raised"));
     opt_box_theme->callback(callback_BoxTheme, this);
     opt_box_theme->value(box_theme);
     opt_box_theme->labelfont(font_style);
@@ -1406,7 +1406,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     opt_button_theme =
         new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Button Theme: "));
     opt_button_theme->align(FL_ALIGN_LEFT);
-    opt_button_theme->add(_("Default|Embossed|Engraved|Inverted|Flat"));
+    opt_button_theme->add(_("Default|Raised|Engraved|Embossed|Flat"));
     opt_button_theme->callback(callback_ButtonTheme, this);
     opt_button_theme->value(button_theme);
     opt_button_theme->labelfont(font_style);
@@ -1559,6 +1559,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
 
         Fl_Button *button = new Fl_Button(bx, by, bw, bh, fl_close);
         button->box(button_style);
+        button->color(BUTTON_COLOR);
         button->callback(callback_Quit, this);
         button->labelfont(font_style);
         button->labelcolor(FONT2_COLOR);

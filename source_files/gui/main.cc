@@ -19,7 +19,7 @@
 //------------------------------------------------------------------------
 
 #include "main.h"
-#include "icon.h"
+#include "images.h"
 
 #include "csg_main.h"
 #include "g_nukem.h"
@@ -93,11 +93,11 @@ Fl_Color GRADIENT_COLOR;
 Fl_Color BUTTON_COLOR;
 Fl_Color BORDER_COLOR;
 int color_scheme = 0;
-int font_theme = 7;
-Fl_Font font_style = FL_HELVETICA;
-int box_theme = 5;
+int font_theme = 0;
+Fl_Font font_style = 0;
+int box_theme = 0;
 Fl_Boxtype box_style = FL_FLAT_BOX;
-int button_theme = 3;
+int button_theme = 0;
 Fl_Boxtype button_style = FL_DOWN_BOX;
 int widget_theme = 0;
 bool single_pane = false;
@@ -425,12 +425,12 @@ bool load_internal_font(const char* fontpath, int fontnum, const char* fontname)
 
 void Main_PopulateFontMap() {
 		
-	font_menu_items.push_back(std::map<std::string, int>{ {"Sans <Default>", 0} });
-	font_menu_items.push_back(std::map<std::string, int>{ {"Courier <Internal>", 4} });
-	font_menu_items.push_back(std::map<std::string, int>{ {"Times <Internal>", 8} });
-	font_menu_items.push_back(std::map<std::string, int>{ {"Screen <Internal>", 13} });
-
 	if (use_system_fonts) {
+
+		font_menu_items.push_back(std::map<std::string, int>{ {"Sans <Default>", 0} });
+		font_menu_items.push_back(std::map<std::string, int>{ {"Courier <Internal>", 4} });
+		font_menu_items.push_back(std::map<std::string, int>{ {"Times <Internal>", 8} });
+		font_menu_items.push_back(std::map<std::string, int>{ {"Screen <Internal>", 13} });
 
 		num_fonts = Fl::set_fonts(NULL);
 	
@@ -451,28 +451,31 @@ void Main_PopulateFontMap() {
 		
 		// Some custom fonts will have a different display name than that of their TTF fontname. This is because these fonts have been modified
 		// in some fashion, and the OFL 1.1 license dicatates that modified versions cannot display the Reserved Name to users
-		
-		if (load_internal_font("./theme/fonts/Orbitron/OrbitronRegular.ttf", 16, "Orbitron")) {
-			if (load_internal_font("./theme/fonts/Orbitron/OrbitronBold.ttf", 17, "OrbitronBold")) {
-				font_menu_items.push_back(std::map<std::string, int>{ {"PDA", 16} });
-			}
-		}
-		
-		if (load_internal_font("./theme/fonts/Avenixel/Avenixel-Regular.ttf", 18, "Avenixel")) {
-			Fl::set_font(19, "Avenixel");
-			font_menu_items.push_back(std::map<std::string, int>{ {"Avenixel", 18} });
-		}
-		
-		if (load_internal_font("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf", 20, "The Neue")) {
-			Fl::set_font(21, "The Neue");
-			font_menu_items.push_back(std::map<std::string, int>{ {"New Black", 20} });
-		}
 
-		if (load_internal_font("./theme/fonts/SourceSansPro/SourceSansPro-Regular.ttf", 22, "Source Sans Pro")) {
-			if (load_internal_font("./theme/fonts/SourceSansPro/SourceSansPro-Bold.ttf", 23, "Source Sans Pro Bold")) {
-				font_menu_items.push_back(std::map<std::string, int>{ {"Sauce", 22} });
+		int current_free_font = 16;
+
+		if (load_internal_font("./theme/fonts/SourceSansPro/SourceSansPro-Regular.ttf", current_free_font, "Source Sans Pro")) {
+			if (load_internal_font("./theme/fonts/SourceSansPro/SourceSansPro-Bold.ttf", current_free_font + 1, "Source Sans Pro Bold")) {
+				font_menu_items.push_back(std::map<std::string, int>{ {"Sauce <Default>", current_free_font} });
 			}
-		}		
+			current_free_font += 2;
+		}			
+
+		font_menu_items.push_back(std::map<std::string, int>{ {"Sans <Internal>", 0} });
+		font_menu_items.push_back(std::map<std::string, int>{ {"Courier <Internal>", 4} });
+		font_menu_items.push_back(std::map<std::string, int>{ {"Times <Internal>", 8} });
+		font_menu_items.push_back(std::map<std::string, int>{ {"Screen <Internal>", 13} });
+
+		if (load_internal_font("./theme/fonts/Avenixel/Avenixel-Regular.ttf", current_free_font, "Avenixel")) {
+			Fl::set_font(current_free_font + 1, "Avenixel");
+			font_menu_items.push_back(std::map<std::string, int>{ {"Avenixel", current_free_font} });
+			current_free_font += 2;
+		}
+		
+		if (load_internal_font("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf", current_free_font, "The Neue")) {
+			Fl::set_font(current_free_font + 1, "The Neue");
+			font_menu_items.push_back(std::map<std::string, int>{ {"New Black", current_free_font} });
+		}
 
 	}
 	
@@ -569,7 +572,7 @@ void Main_SetupFLTK() {
     			  break;    			     			 
     }   
     switch(box_theme) {
-    	case 0 : box_style = FL_THIN_UP_BOX;
+    	case 0 : box_style = FL_FLAT_BOX;
     			 break;
     	case 1 : box_style = FL_SHADOW_BOX;
     			 break;
@@ -579,20 +582,20 @@ void Main_SetupFLTK() {
     			 break;
     	case 4 : box_style = FL_DOWN_BOX;
     			 break;
-    	case 5 : box_style = FL_FLAT_BOX;
+    	case 5 : box_style = FL_THIN_UP_BOX;
     			 break;
     	// Shouldn't be reached, but still
     	default : box_style = FL_FLAT_BOX;
     			  break;    			     			 
     }    
     switch(button_theme) {
-    	case 0 : button_style = FL_UP_BOX;
+    	case 0 : button_style = FL_DOWN_BOX;
     			 break;
-    	case 1 : button_style = FL_EMBOSSED_BOX;
+    	case 1 : button_style = FL_UP_BOX;
     			 break;
     	case 2 : button_style = (Fl_Boxtype)(FL_FREE_BOXTYPE+2);
     			 break;
-    	case 3 : button_style = FL_DOWN_BOX;
+    	case 3 : button_style = FL_EMBOSSED_BOX;
     			 break;
     	case 4 : button_style = FL_FREE_BOXTYPE;
     			 break;
