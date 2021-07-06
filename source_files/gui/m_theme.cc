@@ -156,6 +156,8 @@ static void Parse_Theme_Option(const char *name, const char *value) {
         button_theme = atoi(value);
     } else if (StringCaseCmp(name, "single_pane") == 0) {
         single_pane = atoi(value) ? true : false;
+    } else if (StringCaseCmp(name, "use_system_fonts") == 0) {
+        use_system_fonts = atoi(value) ? true : false;
 	} else if (StringCaseCmp(name, "color_scheme") == 0) {
         color_scheme = atoi(value);
 	} else if (StringCaseCmp(name, "text_red") == 0) {
@@ -331,6 +333,7 @@ bool Theme_Options_Save(const char *filename) {
     fprintf(option_fp, "box_theme      = %d\n", box_theme);
     fprintf(option_fp, "button_theme      = %d\n", button_theme);
     fprintf(option_fp, "single_pane = %d\n", single_pane ? 1 : 0);
+    fprintf(option_fp, "use_system_fonts = %d\n", use_system_fonts ? 1 : 0);
     fprintf(option_fp, "color_scheme      = %d\n", color_scheme);
     fprintf(option_fp, "text_red      = %d\n", text_red);
     fprintf(option_fp, "text_green      = %d\n", text_green);
@@ -382,6 +385,7 @@ class UI_ThemeWin : public Fl_Window {
     UI_CustomMenu *opt_button_theme;
 
     UI_CustomCheckBox *opt_single_pane;
+    UI_CustomCheckBox *opt_system_fonts;
     UI_CustomMenu *opt_color_scheme;
     Fl_Button *opt_text_color;
     Fl_Button *opt_text2_color;
@@ -556,7 +560,7 @@ class UI_ThemeWin : public Fl_Window {
 		}
     	main_win->menu_bar->textfont(font_style);
     	main_win->menu_bar->redraw();
-    	main_win->game_box->heading->labelfont(font_style | FL_BOLD);
+    	main_win->game_box->heading->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
     	main_win->game_box->game->labelfont(font_style);
     	main_win->game_box->game->textfont(font_style);
     	main_win->game_box->game->copy_label("										");
@@ -575,7 +579,7 @@ class UI_ThemeWin : public Fl_Window {
     	main_win->game_box->theme->copy_label("										");
     	main_win->game_box->theme_help->labelfont(font_style);
     	main_win->game_box->theme_help->copy_label("");
-    	main_win->game_box->build->labelfont(font_style | FL_BOLD);
+    	main_win->game_box->build->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
     	main_win->game_box->quit->labelfont(font_style);
     	for (int x = 0; x < main_win->game_box->children(); x++) {
             main_win->game_box->child(x)->redraw();
@@ -597,7 +601,7 @@ class UI_ThemeWin : public Fl_Window {
         for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
         	UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
             SYS_ASSERT(M);
-            M->heading->labelfont(font_style | FL_BOLD);
+            M->heading->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
             M->redraw();
 			std::map<std::string, UI_RChoice *>::const_iterator IT;
 			std::map<std::string, UI_RSlide *>::const_iterator IT2;
@@ -627,7 +631,7 @@ class UI_ThemeWin : public Fl_Window {
 		    for (int x = 0; x < main_win->right_mods->mod_pack->children(); x++) {
 		    	UI_Module *M = (UI_Module *)main_win->right_mods->mod_pack->child(x);
 		        SYS_ASSERT(M);
-		        M->heading->labelfont(font_style | FL_BOLD);
+		        M->heading->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
 		        M->redraw();
 				std::map<std::string, UI_RChoice *>::const_iterator IT;
 				std::map<std::string, UI_RSlide *>::const_iterator IT2;
@@ -812,6 +816,29 @@ class UI_ThemeWin : public Fl_Window {
         fl_alert("%s", _("Switching pane modes requires a restart.\nOBSIDIAN will "
                       "now restart."));
 
+        main_action = MAIN_RESTART;
+
+        that->want_quit = true;
+    }
+    
+    static void callback_SystemFonts(Fl_Widget *w, void *data) {
+        UI_ThemeWin *that = (UI_ThemeWin *)data;
+
+        use_system_fonts = that->opt_system_fonts->value() ? true : false;
+        
+        fl_alert("%s", _("Switching font selection requires a restart.\nOBSIDIAN will "
+                      "now restart."));
+
+		font_menu_items.clear();
+		
+		if (use_system_fonts) {
+			// If we get enough of these, probably store a vector of font paths on program start and iterate through it instead
+			v_unload_private_font("./theme/fonts/Orbitron/OrbitronRegular.ttf");
+			v_unload_private_font("./theme/fonts/Orbitron/OrbitronBold.ttf");
+			v_unload_private_font("./theme/fonts/Avenixel/Avenixel-Regular.ttf");
+			v_unload_private_font("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf");
+		}
+		
         main_action = MAIN_RESTART;
 
         that->want_quit = true;
@@ -1476,6 +1503,16 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
 
     cy += opt_text_color->h() + y_step * 3;
 
+    opt_system_fonts = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24),
+                                       _(" Use System Fonts (disables bundled fonts)"));
+    opt_system_fonts->value(use_system_fonts ? 1 : 0);
+    opt_system_fonts->callback(callback_SystemFonts, this);
+    opt_system_fonts->labelfont(font_style);
+    opt_system_fonts->selection_color(SELECTION);
+    opt_system_fonts->down_box(button_style);
+    
+    cy += opt_system_fonts->h() + y_step;
+
     opt_single_pane = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24),
                                        _(" Single Pane Mode"));
     opt_single_pane->value(single_pane ? 1 : 0);
@@ -1484,7 +1521,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     opt_single_pane->selection_color(SELECTION);
     opt_single_pane->down_box(button_style);
     
-    cy += opt_single_pane->h() + y_step * 3;
+    cy += opt_single_pane->h() + y_step;
     
     load_theme = new Fl_Button(cx + W * .15, cy, W * .25, kf_h(24),
                                        _("Load Theme"));

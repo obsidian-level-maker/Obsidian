@@ -101,8 +101,9 @@ int button_theme = 0;
 Fl_Boxtype button_style = FL_THIN_UP_BOX;
 int widget_theme = 0;
 bool single_pane = false;
+bool use_system_fonts = false;
 int window_scaling = 0;
-int font_scaling = 18;
+int font_scaling = 16;
 int filename_prefix = 0;
 int num_fonts = 0;
 std::vector<std::map<std::string, int>> font_menu_items;
@@ -428,24 +429,44 @@ void Main_PopulateFontMap() {
 	font_menu_items.push_back(std::map<std::string, int>{ {"Courier <Internal>", 4} });
 	font_menu_items.push_back(std::map<std::string, int>{ {"Times <Internal>", 8} });
 	font_menu_items.push_back(std::map<std::string, int>{ {"Screen <Internal>", 13} });
+
+	if (use_system_fonts) {
+
+		num_fonts = Fl::set_fonts(NULL);
 	
-	// Load bundled fonts. Fonts without a bold variant are essentially loaded twice in a row so that calls for a bold variant
-	// don't accidentally change fonts
-	
-	if (load_internal_font("./theme/fonts/Orbitron/OrbitronRegular.ttf", 16, "Orbitron")) {
-		if (load_internal_font("./theme/fonts/Orbitron/OrbitronBold.ttf", 17, "OrbitronBold")) {
-			font_menu_items.push_back(std::map<std::string, int>{ {"PDA", 16} });
+		for (int x = 16; x < num_fonts; x++) { // Starting at 16 skips the FLTK default enumerations
+			std::string fontname = Fl::get_font_name(x);
+			if (std::isalpha(fontname.at(0))) {
+				std::map<std::string, int> temp_map { {fontname, x} };
+				font_menu_items.push_back(temp_map);
+			}
 		}
-	}
-	
-	if (load_internal_font("./theme/fonts/Avenixel/Avenixel-Regular.ttf", 18, "Avenixel")) {
-		Fl::set_font(19, "Avenixel");
-		font_menu_items.push_back(std::map<std::string, int>{ {"Avenixel", 18} });
-	}
-	
-	if (load_internal_font("./theme/fonts/TheNeueBlack-1.007/static/TTF/TheNeue-Black.ttf", 20, "The Neue")) {
-		Fl::set_font(21, "The Neue");
-		font_menu_items.push_back(std::map<std::string, int>{ {"The Neue Black", 20} });
+		
+	} else {
+
+		// TODO - If feasible, find a better way to automate this/crawl for *.ttf files
+
+		// Load bundled fonts. Fonts without a bold variant are essentially loaded twice in a row so that calls for a bold variant
+		// don't accidentally change fonts
+		
+		// Some custom fonts will have a different display name than that of their TTF fontname. This is because these fonts have been modified
+		// in some fashion, and the OFL 1.1 license dicatates that modified versions cannot display the Reserved Name to users
+		
+		if (load_internal_font("./theme/fonts/Orbitron/OrbitronRegular.ttf", 16, "Orbitron")) {
+			if (load_internal_font("./theme/fonts/Orbitron/OrbitronBold.ttf", 17, "OrbitronBold")) {
+				font_menu_items.push_back(std::map<std::string, int>{ {"PDA", 16} });
+			}
+		}
+		
+		if (load_internal_font("./theme/fonts/Avenixel/Avenixel-Regular.ttf", 18, "Avenixel")) {
+			Fl::set_font(19, "Avenixel");
+			font_menu_items.push_back(std::map<std::string, int>{ {"Avenixel", 18} });
+		}
+		
+		if (load_internal_font("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf", 20, "The Neue")) {
+			Fl::set_font(21, "The Neue");
+			font_menu_items.push_back(std::map<std::string, int>{ {"New Black", 20} });
+		}
 	}
 	
 	num_fonts = font_menu_items.size();

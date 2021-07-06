@@ -54,7 +54,7 @@ UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
     heading = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4),
                                  W - kf_w(tx + 4), kf_h(24), label);
     heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-    heading->labelfont(font_style | FL_BOLD);
+    heading->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
 
     if (Is_UI()) {
         heading->labelsize(header_font_size);

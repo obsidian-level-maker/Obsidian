@@ -51,7 +51,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
                                  kf_h(24), heading_text);
     heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     heading->labeltype(FL_NORMAL_LABEL);
-    heading->labelfont(font_style | FL_BOLD);
+    heading->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
     heading->labelsize(header_font_size);
 
     cy = Y + kf_h(32);
@@ -109,7 +109,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     build->box(button_style);
     build->color(BUTTON_COLOR);
     build->labelcolor(FONT2_COLOR);
-    build->labelfont(font_style | FL_BOLD);
+    build->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
     build->labelsize(header_font_size);
     build->callback(build_callback, this);
     build->shortcut(FL_F + 2);
@@ -300,7 +300,7 @@ void UI_Game::SetAbortButton(bool abort) {
     if (abort) {
         quit->label(_("Cancel"));
         quit->labelcolor(ABORT_COLOR);
-        quit->labelfont(font_style | FL_BOLD);
+        quit->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
 
         quit->callback(stop_callback, this);
 
@@ -312,7 +312,7 @@ void UI_Game::SetAbortButton(bool abort) {
 
         quit->callback(quit_callback, this);
 
-        build->labelfont(font_style | FL_BOLD);
+        build->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
     }
 }
 
