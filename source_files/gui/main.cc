@@ -60,30 +60,30 @@ const char *batch_output_file = NULL;
 const char *numeric_locale = NULL;
 
 // options
-uchar text_red = 0;
-uchar text_green = 0;
-uchar text_blue = 0;
-uchar text2_red = 0;
-uchar text2_green = 0;
-uchar text2_blue = 0;
-uchar bg_red = 221;
-uchar bg_green = 221;
-uchar bg_blue = 221;
-uchar bg2_red = 62;
-uchar bg2_green = 61;
-uchar bg2_blue = 57;
-uchar button_red = 0;
-uchar button_green = 0;
-uchar button_blue = 0;
+uchar text_red = 225;
+uchar text_green = 225;
+uchar text_blue = 225;
+uchar text2_red = 225;
+uchar text2_green = 225;
+uchar text2_blue = 225;
+uchar bg_red = 56;
+uchar bg_green = 56;
+uchar bg_blue = 56;
+uchar bg2_red = 83;
+uchar bg2_green = 121;
+uchar bg2_blue = 180;
+uchar button_red = 89;
+uchar button_green = 89;
+uchar button_blue = 89;
 uchar gradient_red = 221;
 uchar gradient_green = 221;
 uchar gradient_blue = 221;
 uchar border_red = 62;
 uchar border_green = 61;
 uchar border_blue = 57;
-uchar gap_red = 62;
-uchar gap_green = 61;
-uchar gap_blue = 57;
+uchar gap_red = 35;
+uchar gap_green = 35;
+uchar gap_blue = 35;
 Fl_Color FONT_COLOR;
 Fl_Color FONT2_COLOR;
 Fl_Color SELECTION;
@@ -93,17 +93,17 @@ Fl_Color GRADIENT_COLOR;
 Fl_Color BUTTON_COLOR;
 Fl_Color BORDER_COLOR;
 int color_scheme = 0;
-int font_theme = 0;
+int font_theme = 7;
 Fl_Font font_style = FL_HELVETICA;
-int box_theme = 0;
-Fl_Boxtype box_style = FL_THIN_UP_BOX;
-int button_theme = 0;
-Fl_Boxtype button_style = FL_THIN_UP_BOX;
+int box_theme = 5;
+Fl_Boxtype box_style = FL_FLAT_BOX;
+int button_theme = 3;
+Fl_Boxtype button_style = FL_DOWN_BOX;
 int widget_theme = 0;
 bool single_pane = false;
 bool use_system_fonts = false;
 int window_scaling = 0;
-int font_scaling = 16;
+int font_scaling = 18;
 int filename_prefix = 0;
 int num_fonts = 0;
 std::vector<std::map<std::string, int>> font_menu_items;
@@ -467,6 +467,13 @@ void Main_PopulateFontMap() {
 			Fl::set_font(21, "The Neue");
 			font_menu_items.push_back(std::map<std::string, int>{ {"New Black", 20} });
 		}
+
+		if (load_internal_font("./theme/fonts/SourceSansPro/SourceSansPro-Regular.ttf", 22, "Source Sans Pro")) {
+			if (load_internal_font("./theme/fonts/SourceSansPro/SourceSansPro-Bold.ttf", 23, "Source Sans Pro Bold")) {
+				font_menu_items.push_back(std::map<std::string, int>{ {"Sauce", 22} });
+			}
+		}		
+
 	}
 	
 	num_fonts = font_menu_items.size();
@@ -482,17 +489,17 @@ void Main_SetupFLTK() {
     	color_scheme = 1;
     }
     switch(color_scheme) {
-    	case 0 : Fl::background(221, 221, 221);
-    			 Fl::background2(221, 221, 221);
-    			 Fl::foreground(0, 0, 0);
-				 FONT_COLOR = fl_rgb_color(0, 0, 0);
-				 FONT2_COLOR = fl_rgb_color(0, 0, 0);
-				 SELECTION = fl_rgb_color(62, 61, 57);
-				 WINDOW_BG = fl_rgb_color(221, 221, 221);
-				 GAP_COLOR = fl_rgb_color(0, 0, 0);
+    	case 0 : Fl::background(56, 56, 56);
+    			 Fl::background2(56, 56, 56);
+    			 Fl::foreground(225, 225, 225);
+				 FONT_COLOR = fl_rgb_color(225, 225, 225);
+				 FONT2_COLOR = fl_rgb_color(225, 225, 225);
+				 SELECTION = fl_rgb_color(83, 121, 180);
+				 WINDOW_BG = fl_rgb_color(56, 56, 56);
+				 GAP_COLOR = fl_rgb_color(35, 35, 35);
 				 BORDER_COLOR = fl_rgb_color(62, 61, 57);
 				 GRADIENT_COLOR = fl_rgb_color(221, 221, 221);
-				 BUTTON_COLOR = fl_rgb_color(221, 221, 221);    
+				 BUTTON_COLOR = fl_rgb_color(89, 89, 89);    
     			 break;
     	case 1 : Fl::background(bg_red, bg_green, bg_blue);
     			 Fl::background2(bg_red, bg_green, bg_blue);
@@ -507,17 +514,17 @@ void Main_SetupFLTK() {
     			 BUTTON_COLOR = fl_rgb_color(button_red, button_green, button_blue); 
     			 break;
     	// Shouldn't be reached, but still
-    	default : Fl::background(221, 221, 221);
-    			  Fl::background2(221, 221, 221);
-    			  Fl::foreground(0, 0, 0);
-				  FONT_COLOR = fl_rgb_color(0, 0, 0);
-				  FONT2_COLOR = fl_rgb_color(0, 0, 0);
-				  SELECTION = fl_rgb_color(62, 61, 57);
-				  WINDOW_BG = fl_rgb_color(221, 221, 221);
-				  GAP_COLOR = fl_rgb_color(0, 0, 0);
+    	default : Fl::background(56, 56, 56);
+    			  Fl::background2(56, 56, 56);
+    			  Fl::foreground(225, 225, 225);
+				  FONT_COLOR = fl_rgb_color(225, 225, 225);
+				  FONT2_COLOR = fl_rgb_color(225, 225, 225);
+				  SELECTION = fl_rgb_color(83, 121, 180);
+				  WINDOW_BG = fl_rgb_color(56, 56, 56);
+				  GAP_COLOR = fl_rgb_color(35, 35, 35);
 				  BORDER_COLOR = fl_rgb_color(62, 61, 57);
 				  GRADIENT_COLOR = fl_rgb_color(221, 221, 221);
-				  BUTTON_COLOR = fl_rgb_color(221, 221, 221);  
+				  BUTTON_COLOR = fl_rgb_color(89, 89, 89);     
     			  break;    			     			 
     }
     if (color_scheme == 1) {
@@ -575,7 +582,7 @@ void Main_SetupFLTK() {
     	case 5 : box_style = FL_FLAT_BOX;
     			 break;
     	// Shouldn't be reached, but still
-    	default : box_style = FL_THIN_UP_BOX;
+    	default : box_style = FL_FLAT_BOX;
     			  break;    			     			 
     }    
     switch(button_theme) {
@@ -590,7 +597,7 @@ void Main_SetupFLTK() {
     	case 4 : button_style = FL_FREE_BOXTYPE;
     			 break;
     	// Shouldn't be reached, but still
-    	default : button_style = FL_UP_BOX;
+    	default : button_style = FL_DOWN_BOX;
     			  break;    			     			 
     } 
     if (font_theme < num_fonts) { // In case the number of installed fonts is reduced between launches
@@ -602,7 +609,7 @@ void Main_SetupFLTK() {
     	font_style = 0;
     }  
     if (font_scaling < 6) { // Values from old configs
-    	font_scaling = 16;
+    	font_scaling = 18;
     }
     FL_NORMAL_SIZE = font_scaling;
     small_font_size = FL_NORMAL_SIZE - 2;

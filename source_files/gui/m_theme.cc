@@ -837,6 +837,8 @@ class UI_ThemeWin : public Fl_Window {
 			v_unload_private_font("./theme/fonts/Orbitron/OrbitronBold.ttf");
 			v_unload_private_font("./theme/fonts/Avenixel/Avenixel-Regular.ttf");
 			v_unload_private_font("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf");
+			v_unload_private_font("./theme/fonts/SourceSansPro/SourceSansPro-Regular.ttf");
+			v_unload_private_font("./theme/fonts/SourceSansPro/SourceSansPro-Bold.ttf");
 		}
 		
         main_action = MAIN_RESTART;

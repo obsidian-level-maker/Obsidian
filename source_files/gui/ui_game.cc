@@ -172,9 +172,9 @@ ZDoom Family: L/G/Zdoom, Zandronum, and similar engines that use ZDoom as a base
 Vanilla DOOM: Doom with its original engine limits. This option will use SLUMP as the map builder.\n\n\
 Limit Removing: Any engine that raises the limits of the original Doom to prevent crashes.\n\n\
 BOOM Compatible: Engines compatible with Boom that are able to use the entire suite of Boom types and features.\n\n\
-PrBoom Compatible: Boom-compatible, but also capable of using compressed ZDBSP or GL nodes.\n\n\
-Doomsday: Limit-removing, but not fully Boom-compatible. Supports GL nodes.\n\n\
-EDGE: Formerly known as 3DGE. Boom and UDMF compatible, with additional special features."); 
+PrBoom Compatible: Boom-compatible, but also capable of using compressed ZDBSP nodes.\n\n\
+EDGE: Formerly known as 3DGE. Boom and UDMF compatible, with additional special features.\n\n\
+Eternity: Software renderer only, but with advanced features such as UDMF."); 
 }
 
 void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
