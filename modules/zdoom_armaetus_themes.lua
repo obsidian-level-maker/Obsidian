@@ -912,7 +912,6 @@ ARMAETUS_ROOM_THEMES =
       CEIL4_1 = 5,
       CEIL4_2 = 5,
       QFLAT09 = 10,
-      QFLAT10 = 5,
       MEM01   = 10,
       DARKF01 = 15,
       DARKF02 = 15,

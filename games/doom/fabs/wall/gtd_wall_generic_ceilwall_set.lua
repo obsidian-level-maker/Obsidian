@@ -159,3 +159,81 @@ PREFABS.Wall_generic_ceilwall_2_gothic_diag =
   tex_TEKGREN1 = {GSTGARG=1, GSTLION=1, GSTSATYR=1},
   tex_TEKGREN2 = {GSTGARG=1, GSTLION=1, GSTSATYR=1},
 }
+
+-----------------
+-- variation 3 --
+-----------------
+
+PREFABS.Wall_generic_ceilwall_3 =
+{
+  template = "Wall_generic_ceilwall",
+  map = "MAP05",
+
+  rank = 1,
+
+  height = 88,
+  where = "edge",
+  theme = "!hell",
+
+  group = "gtd_generic_ceilwall_3",
+
+  bound_z2 = 88,
+
+  z_fit = "bottom"
+}
+
+PREFABS.Wall_generic_ceilwall_3_diag =
+{
+  template = "Wall_generic_ceilwall",
+  map = "MAP06",
+
+  rank = 1,
+
+  height = 88,
+  where = "diagonal",
+  theme = "!hell",
+
+  group = "gtd_generic_ceilwall_3",
+
+  bound_z2 = 88,
+
+  z_fit = "bottom"
+}
+
+-- hell
+
+PREFABS.Wall_generic_ceilwall_hell_3 =
+{
+  template = "Wall_generic_ceilwall",
+  map = "MAP05",
+
+  height = 88,
+  where = "edge",
+  theme = "hell",
+
+  group = "gtd_generic_ceilwall_3",
+
+  bound_z2 = 88,
+  z_fit = "bottom",
+
+  tex_TEKWALL6 = "SP_FACE2",
+  tex_METAL7 = "BFALL1"
+}
+
+PREFABS.Wall_generic_ceilwall_hell_3_diag =
+{
+  template = "Wall_generic_ceilwall",
+  map = "MAP06",
+
+  height = 88,
+  where = "diagonal",
+  theme = "hell",
+
+  group = "gtd_generic_ceilwall_3",
+
+  bound_z2 = 88,
+  z_fit = "bottom",
+
+  tex_TEKWALL6 = "SP_FACE2",
+  tex_METAL7 = "BFALL1"
+}
