@@ -702,6 +702,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         load_but =
             new Fl_Button(button_x, kf_h(25), button_w, button_h, _("Load"));
         load_but->box(button_style);
+        load_but->visible_focus(0);
         load_but->color(BUTTON_COLOR);
         load_but->callback(callback_Load, this);
         load_but->shortcut(FL_CTRL + 'l');
@@ -718,6 +719,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         recent_menu = new Fl_Menu_Across(button_x, kf_h(95), button_w, button_h,
                                          recent_title);
         recent_menu->box(button_style);
+        recent_menu->visible_focus(0);
         recent_menu->color(BUTTON_COLOR);
         recent_menu->textfont(font_style);
         recent_menu->labelfont(font_style);
@@ -726,6 +728,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         save_but =
             new Fl_Button(button_x, kf_h(165), button_w, button_h, _("Save"));
         save_but->box(button_style);
+        save_but->visible_focus(0);
         save_but->color(BUTTON_COLOR);
         save_but->callback(callback_Save, this);
         save_but->shortcut(FL_CTRL + 's');
@@ -735,6 +738,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         use_but =
             new Fl_Button(button_x, kf_h(225), button_w, button_h, _("Use"));
         use_but->box(button_style);
+        use_but->visible_focus(0);
         use_but->color(BUTTON_COLOR);
         use_but->callback(callback_Use, this);
         use_but->labelfont(font_style);
@@ -752,6 +756,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
     close_but =
         new Fl_Button(button_x, H - kf_h(50), button_w, button_h + 5, fl_close);
     close_but->box(button_style);
+    close_but->visible_focus(0);
     close_but->color(BUTTON_COLOR);
     close_but->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
     close_but->labelcolor(FONT2_COLOR);
@@ -783,6 +788,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
 
         cut_but = new Fl_Button(cx, base_y, button_w, button_h, _("Cut"));
         cut_but->box(button_style);
+        cut_but->visible_focus(0);
         cut_but->color(BUTTON_COLOR);
         cut_but->labelsize(small_font_size);
         cut_but->labelfont(font_style);
@@ -794,6 +800,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
 
         copy_but = new Fl_Button(cx, base_y, button_w, button_h, _("Copy"));
         copy_but->box(button_style);
+        copy_but->visible_focus(0);
         copy_but->color(BUTTON_COLOR);
         copy_but->labelsize(small_font_size);
         copy_but->labelfont(font_style);
@@ -805,6 +812,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
 
         paste_but = new Fl_Button(cx, base_y, button_w, button_h, _("Paste"));
        	paste_but->box(button_style);
+       	paste_but->visible_focus(0);
        	paste_but->color(BUTTON_COLOR);
         paste_but->labelsize(small_font_size);
         paste_but->labelfont(font_style);

@@ -435,6 +435,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
             Fl_Button *but =
                 new Fl_Button(bx, button_y, button_w, button_h, fl_close);
             but->box(button_style);
+            but->visible_focus(0);
             but->color(BUTTON_COLOR);
             but->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
             but->labelcolor(FONT2_COLOR);
@@ -446,6 +447,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
             Fl_Button *but =
                 new Fl_Button(bx, button_y, button_w, button_h, _("Save"));
             but->box(button_style);
+            but->visible_focus(0);
             but->color(BUTTON_COLOR);
             but->labelcolor(FONT2_COLOR);
             but->callback(save_callback, this);
@@ -457,6 +459,7 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
             copy_but =
                 new Fl_Button(bx, button_y, button_w, button_h, _("Copy"));
             copy_but->box(button_style);
+            copy_but->visible_focus(0);
             copy_but->color(BUTTON_COLOR);
             copy_but->labelcolor(FONT2_COLOR);
             copy_but->callback(copy_callback, this);

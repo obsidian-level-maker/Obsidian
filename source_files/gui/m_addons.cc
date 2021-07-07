@@ -472,6 +472,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
 
         Fl_Button *apply_but = new Fl_Button(W - bx - bw, by, bw, bh, fl_close);
         apply_but->box(button_style);
+        apply_but->visible_focus(0);
         apply_but->color(BUTTON_COLOR);
         apply_but->callback(callback_Quit, this);
         apply_but->labelfont(font_style);

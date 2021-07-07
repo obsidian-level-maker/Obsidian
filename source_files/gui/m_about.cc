@@ -142,6 +142,7 @@ UI_About::UI_About(int W, int H, const char *label)
 
         Fl_Button *button = new Fl_Button(W - bw * 2, by, bw, bh, fl_ok);
         button->box(button_style);
+        button->visible_focus(0);
         button->color(BUTTON_COLOR);
         button->callback(callback_Quit, this);
         button->labelfont(font_style);

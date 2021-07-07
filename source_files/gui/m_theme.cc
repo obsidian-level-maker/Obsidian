@@ -1649,6 +1649,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
 
         Fl_Button *button = new Fl_Button(bx, by, bw, bh, fl_close);
         button->box(button_style);
+        button->visible_focus(0);
         button->color(BUTTON_COLOR);
         button->callback(callback_Quit, this);
         button->labelfont(font_style);
