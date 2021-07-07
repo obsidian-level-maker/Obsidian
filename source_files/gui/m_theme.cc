@@ -435,6 +435,13 @@ class UI_ThemeWin : public Fl_Window {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         window_scaling = that->opt_window_scaling->value();
+        
+        fl_alert("%s", _("Windows scaling changes require a restart.\nOBSIDIAN will "
+             "now restart."));
+
+        main_action = MAIN_RESTART;
+
+        that->want_quit = true;
     }
     
     static void callback_FontScaling(Fl_Widget *w, void *data) {
@@ -831,8 +838,8 @@ class UI_ThemeWin : public Fl_Window {
 		
 		if (use_system_fonts) {
 			// If we get enough of these, probably store a vector of font paths on program start and iterate through it instead
-			v_unload_private_font("./theme/fonts/Orbitron/OrbitronRegular.ttf");
-			v_unload_private_font("./theme/fonts/Orbitron/OrbitronBold.ttf");
+			v_unload_private_font("./theme/fonts/Teko/Teko-Regular.ttf");
+			v_unload_private_font("./theme/fonts/Teko/Teko-Bold.ttf");
 			v_unload_private_font("./theme/fonts/Avenixel/Avenixel-Regular.ttf");
 			v_unload_private_font("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf");
 			v_unload_private_font("./theme/fonts/SourceSansPro/SourceSansPro-Regular.ttf");
