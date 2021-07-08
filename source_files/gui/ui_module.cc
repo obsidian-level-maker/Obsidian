@@ -54,7 +54,7 @@ UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
     heading = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4),
                                  W - kf_w(tx + 4), kf_h(24), label);
     heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-    heading->labelfont(font_style | FL_BOLD);
+    heading->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
 
     if (Is_UI()) {
         heading->labelsize(header_font_size);
@@ -208,6 +208,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->mod_slider =
         new Fl_Hor_Slider((!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .45),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (!single_pane ? rsl->w() * .80 : rsl->w() * (rsl->nan_choices.size() > 0 ? .35 : .40)), kf_h(24), NULL);
     rsl->mod_slider->box(button_style);
+    rsl->mod_slider->visible_focus(0);
     rsl->mod_slider->color(BUTTON_COLOR);
     rsl->mod_slider->selection_color(SELECTION);
     rsl->mod_slider->minimum(min);

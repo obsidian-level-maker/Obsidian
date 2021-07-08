@@ -1,4 +1,6 @@
-/* XPM Representation of Oblige icon (black background) - Dasho */
+// Various internal XPM images used by Obsidian
+
+// Oblige icon (black background)
 static const char *pixmap_icon[]={
 "128 128 240 2",
 "Qt c #000000",

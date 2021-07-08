@@ -28,13 +28,13 @@ This is a community continuation of the OBLIGE Level Maker, originally created b
 
 A brief summary of changes:
 
-Modified SLUMP level builder included for Vanilla Doom usage.
+GUI Customization and Theming added
 
-Revised default visual style.
+Modified SLUMP level builder included for Vanilla Doom usage.
 
 ZDBSP as the internal nodebuilder, replacing GLBSP.
 
-UDMF map generation option for ZDoom/GZDoom.
+UDMF map generation option for GZDoom, EDGE, and Eternity Engine.
 
 64-bit seeds and random numbers.
 

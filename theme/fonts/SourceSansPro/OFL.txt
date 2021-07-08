@@ -1,5 +1,4 @@
-Copyright 2018 The Orbitron Project Authors (https://github.com/theleagueof/orbitron)
-with Reserved Font Name "Orbitron"
+Copyright 2010, 2012, 2014 Adobe Systems Incorporated (http://www.adobe.com/), with Reserved Font Name ‘Source’.
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:

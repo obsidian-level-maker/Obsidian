@@ -43,8 +43,10 @@
 // in a Google Groups thread at the following link: https://groups.google.com/g/fltkgeneral/c/uAdg8wOLiMk
 #ifdef _WIN32
 # define i_load_private_font(PATH) AddFontResourceEx((PATH),FR_PRIVATE,0)
+# define v_unload_private_font(PATH) RemoveFontResourceEx((PATH),FR_PRIVATE,0)
 #else
 # define i_load_private_font(PATH) (int)FcConfigAppFontAddFile(NULL,(const FcChar8 *)(PATH))
+# define v_unload_private_font(PATH) FcConfigAppFontClear(NULL)
 #endif
 
 
@@ -118,6 +120,7 @@ extern int font_scaling;
 extern int num_fonts;
 extern int filename_prefix;
 extern bool single_pane;
+extern bool use_system_fonts;
 extern std::vector<std::map<std::string, int>> font_menu_items;
 
 extern bool create_backups;

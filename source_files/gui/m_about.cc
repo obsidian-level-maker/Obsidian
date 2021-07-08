@@ -70,17 +70,14 @@ class UI_About : public Fl_Window {
 
 const char *UI_About::Text =
     N_("OBSIDIAN is a random level generator\n"
-       "for classic FPS games like DOOM\n"
-       "\n"
+       "for classic FPS games like DOOM.\n"
        "It is a continuation of the OBLIGE Level Maker\n"
-       "Copyright (C) 2006-2017 Andrew Apted, et al\n"
-       "\n"
+       "Copyright (C) 2006-2017 Andrew Apted, et al.\n"
        "This program is free software, and may be\n"
        "distributed and modified under the terms of\n"
-       "the GNU General Public License\n"
-       "\n"
-       "There is ABSOLUTELY NO WARRANTY\n"
-       "Use at your OWN RISK");
+       "the GNU General Public License.\n"
+       "There is ABSOLUTELY NO WARRANTY!\n"
+       "Use at your OWN RISK!");
 
 const char *UI_About::URL = OBSIDIAN_WEBSITE;
 
@@ -118,6 +115,7 @@ UI_About::UI_About(int W, int H, const char *label)
     box->color(BUTTON_COLOR);
     box->labelfont(font_style);
     box->labelcolor(FONT2_COLOR);
+    
 
     cy += box->h() + kf_h(10);
 
@@ -127,7 +125,7 @@ UI_About::UI_About(int W, int H, const char *label)
     UI_HyperLink *link =
         new UI_HyperLink(pad, cy, W - pad * 2, kf_h(30), URL, URL);
     link->align(FL_ALIGN_CENTER);
-    link->labelsize(FL_NORMAL_SIZE * 2 / 2);
+    link->labelsize(FL_NORMAL_SIZE);
     link->labelfont(font_style);
 
     cy += link->h() + kf_h(16);
@@ -144,6 +142,7 @@ UI_About::UI_About(int W, int H, const char *label)
 
         Fl_Button *button = new Fl_Button(W - bw * 2, by, bw, bh, fl_ok);
         button->box(button_style);
+        button->visible_focus(0);
         button->color(BUTTON_COLOR);
         button->callback(callback_Quit, this);
         button->labelfont(font_style);
