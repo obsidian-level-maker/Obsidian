@@ -41,9 +41,7 @@ extern int SplitCost;
 extern int AAPreference;
 extern bool CheckPolyobjs;
 extern bool ShowMap;
-extern bool CompressNodes, CompressGLNodes, ForceCompression, V5GLNodes;
-extern bool HaveSSE1, HaveSSE2;
-extern int SSELevel;
+extern bool CompressNodes, CompressGLNodes, ForceCompression;
 
 #define FIXED_MAX INT_MAX
 #define FIXED_MIN INT_MIN
