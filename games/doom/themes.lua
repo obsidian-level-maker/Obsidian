@@ -1275,7 +1275,11 @@ DOOM.THEMES =
       gtd_generic_half_floor_inverted_braced = 20,
       --
       gtd_wall_urban_cement_frame = 10,
-      gtd_generic_ceilwall = 50,
+      --
+      gtd_generic_ceilwall = 30,
+      gtd_generic_ceilwall_2 = 30,
+      gtd_generic_ceilwall_3 = 30,
+      --
       gtd_generic_glow_wall = 50,
       gtd_generic_double_banded_ceil = 50,
       --
@@ -1681,7 +1685,11 @@ DOOM.THEMES =
       --
       gtd_round_inset = 15,
       gtd_wall_urban_cement_frame = 25,
-      gtd_generic_ceilwall = 40,
+      --
+      gtd_generic_ceilwall = 30,
+      gtd_generic_ceilwall_2 = 30,
+      gtd_generic_ceilwall_3 = 30,
+      --
       gtd_generic_glow_wall = 50,
       gtd_generic_double_banded_ceil = 50,
       --
@@ -2138,7 +2146,10 @@ DOOM.THEMES =
       --
       gtd_round_inset = 50,
       --
-      gtd_generic_ceilwall = 50,
+      gtd_generic_ceilwall = 30,
+      gtd_generic_ceilwall_2 = 30,
+      gtd_generic_ceilwall_3 = 30,
+      --
       gtd_generic_glow_wall = 30,
       gtd_generic_double_banded_ceil = 30,
       --
@@ -2563,8 +2574,6 @@ DOOM.ROOM_THEMES =
 
 -----  TECH BASES  --------------------------------
 
-  -- MSSP: revised to include more STAR textures
-  -- because why ya gotta ba so TAN?
   tech_Starbase =
   {
     env  = "building",
@@ -2877,6 +2886,47 @@ DOOM.ROOM_THEMES =
     },
   },
 
+
+  tech_HighContrast =
+  {
+    env = "building",
+    prob = 10,
+
+    walls =
+    {
+      BROWNGRN = 15,
+      BRONZE1 = 1,
+      BRONZE2 = 1,
+      BRONZE3 = 1,
+      BROWN96 = 1,
+    },
+
+    floors =
+    {
+      FLAT1 = 10,
+      FLAT3 = 20,
+      FLAT18 = 20,
+      FLAT19 = 10,
+      FLAT20 = 20,
+      FLAT23 = 10,
+      FLAT5_4 = 10,
+      FLOOR0_3 = 10,
+      FLOOR0_5 = 10,
+    },
+
+    ceilings =
+    {
+      FLAT1 = 10,
+      FLAT3 = 20,
+      FLAT18 = 20,
+      FLAT19 = 10,
+      FLAT20 = 20,
+      FLAT23 = 10,
+      FLAT5_4 = 10,
+      FLOOR0_3 = 10,
+      FLOOR0_5 = 10,
+    }
+  },
 
   -- exactly the same Deimos's hellish room -
   -- now available for Doom2 Tech, but very rarely!

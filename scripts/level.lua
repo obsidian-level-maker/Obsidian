@@ -463,7 +463,7 @@ function Episode_plan_monsters()
     end
 
     -- this is for Doom 1 / Ultimate Doom / Heretic
-    if PARAM.episodic_monsters or ramp_up == 0.45 then
+    if PARAM.episodic_monsters or ramp_up == "Episodic" then
       mon_along = (LEV.ep_along + LEV.game_along) / 2
     end
 
@@ -487,7 +487,7 @@ function Episode_plan_monsters()
 
     local factor
 
-    if ramp_up > 0.45 then
+    if ramp_up ~= "Episodic" then
       factor = ramp_up
     else
       factor = 1.0
@@ -1701,7 +1701,7 @@ function Episode_plan_weapons()
     -- prefer simpler weapons for start rooms
     -- [ except in crazy monsters mode, player may need a bigger weapon! ]
     if OB_CONFIG.batch == "yes" then
-      if is_start and OB_CONFIG.float_strength < 12 or LEV.is_procedural_gotcha ~= "true" then
+      if is_start and tonumber(OB_CONFIG.float_strength) < 12 or LEV.is_procedural_gotcha ~= "true" then
         if level <= 2 then prob = prob * 4 end
         if level == 3 then prob = prob * 2 end
 

@@ -4,6 +4,7 @@ PREFABS.Decor_triple_bone_thing =
   map    = "MAP01",
 
   prob   = 5000,
+  prob_skew = 2,
   theme  = "!tech",
 
   where  = "point",

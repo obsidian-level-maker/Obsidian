@@ -383,12 +383,31 @@ ARMAETUS_MATERIALS = {
   LIONMRB1 = { t="LIONMRB1", f="TILES4" }, -- White marble lion
   LIONMRB2 = { t="LIONMRB2", f="FLAT1" }, -- White marble lion (grayer)
   LIONMRB3 = { t="LIONMRB3", f="TILES4" }, -- White marble lion
+  MARB5BL = { t="MARB5BL", f="RMARB2" }, -- red-banded black marble
+  -- green marble, thin tall
   MARBF01 = { t="MARBF01", f="FLOOR7_2" },
   MARBF02 = { t="MARBF02", f="FLOOR7_2" },
   MARBF03 = { t="MARBF03", f="FLOOR7_2" },
+  -- dark, thin tall
+  MARBFB1 = { t="MARBFB1", f="G11" },
+  MARBFB2 = { t="MARBFB2", f="G11" },
+  MARBFB3 = { t="MARBFB3", f="G11" },
+  -- dark
   MARBFAB1 = { t="MARBFAB1", f="G11" },
   MARBFAB2 = { t="MARBFAB2", f="G11" },
   MARBFAB3 = { t="MARBFAB3", f="G11" },
+  MARBFAB5 = { t="MARBFAB5", f="G11" },
+  MARBFAB6 = { t="MARBFAB6", f="G11" },
+  MARBFAB7 = { t="MARBFAB7", f="G11" },
+  MARBFAB8 = { t="MARBFAB8", f="G11" },
+  MARBFAB9 = { t="MARBFAB9", f="G11" },
+  MARBFABA = { t="MARBFABA", f="G11" },
+  MARBFABB = { t="MARBFABB", f="G11" },
+  MARBFABC = { t="MARBFABC", f="G11" },
+  MARBFABD = { t="MARBFABD", f="G11" },
+  MARBFABF = { t="MARBFABF", f="G11" },
+  MARBFABG = { t="MARBFABG", f="G11" },
+  -- green marble
   MARBFAC5 = { t="MARBFAC5", f="FLOOR7_2" }, --Plutonia 2,
   MARBFAC6 = { t="MARBFAC6", f="FLOOR7_2" },
   MARBFAC7 = { t="MARBFAC7", f="FLOOR7_2" },
@@ -396,6 +415,8 @@ ARMAETUS_MATERIALS = {
   MARBFAC9 = { t="MARBFAC9", f="FLOOR7_2" }, -- Craneo's doing
   MARBFACA = { t="MARBFACA", f="FLOOR7_2" }, -- Craneo's doing
   MARBFACB = { t="MARBFACB", f="FLOOR7_2" }, -- Craneo's doing
+  MARBFACC = { t="MARBFACC", f="FLOOR7_2" },
+  MARBFACD = { t="MARBFACD", f="FLOOR7_2" },
   MARBFACF = { t="MARBFACF", f="FLOOR7_2" },
   MARBLE = { t="MARBLE", f="FLOOR7_2" },
   MARBLE4 = { t="MARBLE4", f="FLOOR7_2" },
@@ -1140,8 +1161,8 @@ ARMAETUS_MATERIALS = {
   BFALL1   = { t="BFAL1",  f="BLOOD1", sane=1 },
   BLOOD1   = { t="BFAL1",  f="BLOOD1", sane=1 },
 
-  SFALL1   = { t="SFALL1",  f="NUKAGE1", sane=1 },
-  NUKAGE1  = { t="SFALL1",  f="NUKAGE1", sane=1 },
+  SFALL1   = { t="NFALL1",  f="NUKAGE1", sane=1 },
+  NUKAGE1  = { t="NFALL1",  f="NUKAGE1", sane=1 },
 
   KFALL1   = { t="SLMFALL1", f="SLIME01", sane=1 }, -- new patches
   KFALL5   = { t="SLMFALL1", f="SLIME05", sane=1 },
@@ -1232,6 +1253,12 @@ ARMAETUS_MATERIALS = {
   CPHRSMN2 = { t="CPHRSMN2", f="CEIL4_3"},
   CPSATRN = { t="CPSATRN", f="CEIL4_3"},
   CPVLAD = { t="CPVLAD", f="CEIL4_3"},
+  CPPAINT1 = { t="CPPAINT1", f="CEIL4_3"},
+  CPPAINT2 = { t="CPPAINT2", f="CEIL4_3"},
+  CPPAINT3 = { t="CPPAINT3", f="CEIL4_3"},
+  CPPAINT4 = { t="CPPAINT4", f="CEIL4_3"},
+  CPPAINT5 = { t="CPPAINT5", f="CEIL4_3"},
+  CPPAINT6 = { t="CPPAINT6", f="CEIL4_3"},
 
   -- Craneo's wall of guns
   CRGNRCK1 = { t="CRGNRCK1", f="FLAT19"}, -- wall of vanilla weapons

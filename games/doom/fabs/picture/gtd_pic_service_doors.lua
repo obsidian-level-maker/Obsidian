@@ -4,6 +4,7 @@ PREFABS.Pic_service_gate_1 =
   map = "MAP01",
 
   prob = 15,
+  prob_skew = 2,
   theme = "!hell",
 
   env = "outdoor",

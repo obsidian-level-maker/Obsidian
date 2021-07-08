@@ -1,9 +1,10 @@
 PREFABS.Pic_heatant_coolant_1 =
 {
-  file   = "picture/gtd_pic_pipemachines.wad",
-  map    = "MAP01",
+  file = "picture/gtd_pic_pipemachines.wad",
+  map = "MAP01",
 
-  prob   = 25,
+  prob = 25,
+  prob_skew = 2,
   theme = "!hell",
 
   engine = "zdoom",

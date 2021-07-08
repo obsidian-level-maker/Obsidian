@@ -302,9 +302,7 @@ UI_CustomMenuButton::UI_CustomMenuButton(int x, int y, int w, int h, const char 
       label_X(0),
       label_Y(0),
       label_W(0),
-      label_H(0) {
-    box(FL_NO_BOX);
-}
+      label_H(0) {}
 
 UI_CustomMenuButton::~UI_CustomMenuButton() {}
 
@@ -331,17 +329,11 @@ void UI_CustomMenuButton::draw() {
     label_Y += h() / 2 - labelsize() / 2 - 2;
 
     // draw the link text
-
-    fl_draw_box(box(), x(), y(), w(), h(), color());
-
+	
     fl_color(labelcolor());
     fl_draw(label(), x() + label_X, y() + label_Y, label_W, label_H,
             FL_ALIGN_LEFT);
 
-    /*
-       if (Fl::focus() == this)
-       draw_focus();
-     */
 }
 
 void UI_CustomMenuButton::checkLink() {

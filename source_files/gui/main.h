@@ -27,6 +27,7 @@
 #include <map>
 #include <algorithm>
 #include "hdr_fltk.h"
+#include "physfs.h"
 #define OBSIDIAN_TITLE "OBSIDIAN Level Maker"
 
 #define OBSIDIAN_VERSION "Beta 19 Preview"
@@ -37,6 +38,17 @@
 #define OPTIONS_FILENAME "OPTIONS.txt"
 #define THEME_FILENAME "THEME.txt"
 #define LOG_FILENAME "LOGS.txt"
+
+// Header for loading .ttf files from code posted by an individual named Ian MacArthur
+// in a Google Groups thread at the following link: https://groups.google.com/g/fltkgeneral/c/uAdg8wOLiMk
+#ifdef _WIN32
+# define i_load_private_font(PATH) AddFontResourceEx((PATH),FR_PRIVATE,0)
+# define v_unload_private_font(PATH) RemoveFontResourceEx((PATH),FR_PRIVATE,0)
+#else
+# define i_load_private_font(PATH) (int)FcConfigAppFontAddFile(NULL,(const FcChar8 *)(PATH))
+# define v_unload_private_font(PATH) FcConfigAppFontClear(NULL)
+#endif
+
 
 extern const char *home_dir;
 extern const char *install_dir;
@@ -56,7 +68,8 @@ typedef enum {
     MAIN_NONE = 0,
     MAIN_BUILD,
     MAIN_CANCEL,
-    MAIN_QUIT
+    MAIN_QUIT,
+    MAIN_RESTART
 } main_action_kind_e;
 
 extern int main_action;
@@ -65,6 +78,9 @@ extern int main_action;
 extern uchar text_red;
 extern uchar text_green;
 extern uchar text_blue;
+extern uchar text2_red;
+extern uchar text2_green;
+extern uchar text2_blue;
 extern uchar bg_red;
 extern uchar bg_green;
 extern uchar bg_blue;
@@ -87,6 +103,7 @@ extern Fl_Boxtype box_style;
 extern Fl_Boxtype button_style;
 extern Fl_Font font_style;
 extern Fl_Color FONT_COLOR;
+extern Fl_Color FONT2_COLOR;
 extern Fl_Color WINDOW_BG;
 extern Fl_Color SELECTION;
 extern Fl_Color GAP_COLOR;
@@ -101,7 +118,9 @@ extern int widget_theme;
 extern int window_scaling;
 extern int font_scaling;
 extern int num_fonts;
+extern int filename_prefix;
 extern bool single_pane;
+extern bool use_system_fonts;
 extern std::vector<std::map<std::string, int>> font_menu_items;
 
 extern bool create_backups;
@@ -109,6 +128,7 @@ extern bool overwrite_warning;
 extern bool debug_messages;
 
 extern const char *last_directory;
+extern const char *numeric_locale;
 
 #ifdef __GNUC__
 __attribute__((noreturn))
@@ -118,6 +138,7 @@ void Main_FatalError(const char *msg, ...);
 void Main_ProgStatus(const char *msg, ...);
 bool Main_BackupFile(const char *filename, const char *ext);
 void Main_Ticker();
+bool load_internal_font(const char* fontpath, int fontnum, const char* fontname);
 void Main_PopulateFontMap();
 
 // Dialog Windows

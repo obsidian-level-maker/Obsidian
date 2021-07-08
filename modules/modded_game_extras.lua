@@ -230,6 +230,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS =
     room_size = "any", --small
     disloyal = true,
     trap_factor = 0.3,
+    outdoor_factor = 0.5,
     infight_damage = 12.0 -- Due to the projectile damage done
   },
 
@@ -258,6 +259,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS =
     room_size = "any", --small
     disloyal = true,
     trap_factor = 2.0,
+    outdoor_factor = 0.6,
     infight_damage = 20.0,
   },
 
@@ -302,7 +304,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS =
     weap_needed = { shotty=true },
     room_size = "any", --small
     disloyal = true,
-    trap_factor = 0,
+    trap_factor = 0.4,
     cage_factor = 0,
     infight_damage = 6.0,
   },
@@ -434,7 +436,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS =
     id = 7,
     r = 128,
     h = 100,
-    level = 8,
+    level = 9,
     boss_type = "tough",
     boss_prob = 15,
     boss_limit = 1, -- because they infight
@@ -466,7 +468,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS =
     id = 65,
     r = 20,
     h = 56,
-    level = 1.6,
+    level = 1.8,
     prob = 60,
     health = 80,
     damage = 7.0,
@@ -482,18 +484,16 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS =
     replace_prob = 15,
     disloyal = true,
     trap_factor = 2.4,
+    outdoor_factor = 0.8,
     infight_damage = 65,
   },
 
-  -- Shows up sooner, marginal probability decrease and
-  -- increased damage. They *can* knock out up to 80,
-  -- health at maximum.
   revenant =
   {
     id = 66,
     r = 20,
     h = 64,
-    level = 4,
+    level = 5.5,
     prob = 25,
     health = 300,
     damage = 11.0, -- Some replacements do tons of damage
@@ -505,12 +505,10 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS =
     room_size = "any",
     replaces = "knight",
     replace_prob = 15,
-    trap_factor = 2.0,
+    trap_factor = 1.5,
     infight_damage = 50,
   },
 
-  -- Shows up sooner, increased chance to replace
-  -- Mancubus and can be placed in  any sized room.
   knight =
   {
     id = 69,
@@ -556,14 +554,12 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS =
     boss_replacement = "baron",
   },
 
-  -- Shows up sooner and increased chance to replace
-  -- Mancubus.
   arach =
   {
     id = 68,
     r = 64,
     h = 64,
-    level = 5,
+    level = 6,
     prob = 12,
     health = 500,
     damage = 12.0,
@@ -591,7 +587,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS =
     id = 64,
     r = 20,
     h = 56,
-    level = 8,
+    level = 9,
     boss_type = "nasty",
     boss_prob = 20,
     boss_limit = 1, -- Vile replacements are pretty nasty, hence limited to 1,
@@ -604,10 +600,12 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS =
     trap_factor = 0.01,
     room_size = "medium",
     weap_needed = { bfg=true },
-    weap_prefs = { launch=3.0, super=1.5, plasma=2.0, bfg=2.5 },
+    weap_prefs = { launch=3.0, super=1.5, plasma=2.0, bfg=4.0 },
     weap_min_damage = 120,
     nasty = true,
+    cage_factor = 1.25,
     infight_damage = 150,
+    outdoor_factor = 0.25,
     boss_replacement = "baron",
   },
 
@@ -618,7 +616,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS =
     id = 71,
     r = 31,
     h = 56,
-    level = 5,
+    level = 6,
     boss_type = "nasty",
     boss_prob = 15,
     boss_limit = 2,
@@ -635,6 +633,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS =
     room_size = "any", --large
     cage_factor = 0,  -- never put in cages
     trap_factor = 1.1,
+    outdoor_factor = 1.5,
     infight_damage = 50 -- Pain Elemental replacements have direct damage now
   },
 
@@ -720,7 +719,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_WEAPONS =
   super =
   {
     id = 82,
-    level = 2.5,
+    level = 2,
     pref = 40,
     upgrades = "shotty",
     add_prob = 70,
@@ -739,7 +738,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_WEAPONS =
   launch =
   {
     id = 2003,
-    level = 4,
+    level = 3,
     pref = 30,
     add_prob = 45,
     hide_prob = 10,
@@ -832,7 +831,7 @@ function MODDED_GAME_EXTRAS.setup(self)
       if opt.valuator == "button" then
         PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
       elseif opt.valuator == "slider" then
-        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)
       end
     else
       PARAM[name] = self.options[name].value
@@ -1630,10 +1629,11 @@ OB_MODULES["modded_game_extras"] =
     bool_complex_doom =
     {
       name = "bool_complex_doom",
-      label = _("Complex Doom Things"),
+      label = _("Complex Doom Modifications"),
       valuator = "button",
       default = 0,
-      tooltip = "Adds Complex Doom monsters, weapons, and items to table.",
+      tooltip = "Modifies general gameplay settings to balance generated maps " ..
+                "more for use with Complex Doom due to its difficulty spike.",
       priority = 0,
     }
   },

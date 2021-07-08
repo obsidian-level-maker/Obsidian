@@ -702,14 +702,16 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         load_but =
             new Fl_Button(button_x, kf_h(25), button_w, button_h, _("Load"));
         load_but->box(button_style);
+        load_but->visible_focus(0);
         load_but->color(BUTTON_COLOR);
         load_but->callback(callback_Load, this);
         load_but->shortcut(FL_CTRL + 'l');
         load_but->labelfont(font_style);
+        load_but->labelcolor(FONT2_COLOR);
 
         o = new Fl_Box(0, kf_h(65), kf_w(160), kf_h(40),
                        _("(can be WAD or PAK)"));
-        o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
+        o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
         o->labelsize(small_font_size);
         o->labelfont(font_style);
 
@@ -717,28 +719,34 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         recent_menu = new Fl_Menu_Across(button_x, kf_h(95), button_w, button_h,
                                          recent_title);
         recent_menu->box(button_style);
+        recent_menu->visible_focus(0);
         recent_menu->color(BUTTON_COLOR);
         recent_menu->textfont(font_style);
         recent_menu->labelfont(font_style);
+        recent_menu->labelcolor(FONT2_COLOR);
 
         save_but =
             new Fl_Button(button_x, kf_h(165), button_w, button_h, _("Save"));
         save_but->box(button_style);
+        save_but->visible_focus(0);
         save_but->color(BUTTON_COLOR);
         save_but->callback(callback_Save, this);
         save_but->shortcut(FL_CTRL + 's');
         save_but->labelfont(font_style);
+        save_but->labelcolor(FONT2_COLOR);
 
         use_but =
             new Fl_Button(button_x, kf_h(225), button_w, button_h, _("Use"));
         use_but->box(button_style);
+        use_but->visible_focus(0);
         use_but->color(BUTTON_COLOR);
         use_but->callback(callback_Use, this);
         use_but->labelfont(font_style);
+        use_but->labelcolor(FONT2_COLOR);
 
         o = new Fl_Box(0, kf_h(265), kf_w(170), kf_h(50),
                        _("Note: this will replace\nall current settings!"));
-        o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE));
+        o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
         o->labelsize(small_font_size);
         o->labelfont(font_style);
 
@@ -748,8 +756,10 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
     close_but =
         new Fl_Button(button_x, H - kf_h(50), button_w, button_h + 5, fl_close);
     close_but->box(button_style);
+    close_but->visible_focus(0);
     close_but->color(BUTTON_COLOR);
-    close_but->labelfont(font_style | FL_BOLD);
+    close_but->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
+    close_but->labelcolor(FONT2_COLOR);
     close_but->labelsize(FL_NORMAL_SIZE + 2);
     close_but->callback(callback_Quit, this);
     close_but->shortcut(FL_CTRL + 'w');
@@ -778,9 +788,11 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
 
         cut_but = new Fl_Button(cx, base_y, button_w, button_h, _("Cut"));
         cut_but->box(button_style);
+        cut_but->visible_focus(0);
         cut_but->color(BUTTON_COLOR);
         cut_but->labelsize(small_font_size);
         cut_but->labelfont(font_style);
+        cut_but->labelcolor(FONT2_COLOR);
         cut_but->shortcut(FL_CTRL + 'x');
         cut_but->callback(callback_Cut, this);
 
@@ -788,9 +800,11 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
 
         copy_but = new Fl_Button(cx, base_y, button_w, button_h, _("Copy"));
         copy_but->box(button_style);
+        copy_but->visible_focus(0);
         copy_but->color(BUTTON_COLOR);
         copy_but->labelsize(small_font_size);
         copy_but->labelfont(font_style);
+        copy_but->labelcolor(FONT2_COLOR);
         copy_but->shortcut(FL_CTRL + 'c');
         copy_but->callback(callback_Copy, this);
 
@@ -798,9 +812,11 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
 
         paste_but = new Fl_Button(cx, base_y, button_w, button_h, _("Paste"));
        	paste_but->box(button_style);
+       	paste_but->visible_focus(0);
        	paste_but->color(BUTTON_COLOR);
         paste_but->labelsize(small_font_size);
         paste_but->labelfont(font_style);
+        paste_but->labelcolor(FONT2_COLOR);
         paste_but->shortcut(FL_CTRL + 'v');
         paste_but->callback(callback_Paste, this);
 
@@ -818,16 +834,12 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
 UI_Manage_Config::~UI_Manage_Config() {}
 
 void DLG_ManageConfig(void) {
-    static UI_Manage_Config *config_window = NULL;
 
-    // if it already exists, simply re-show it
-    if (!config_window) {
-        int manage_w = kf_w(600);
-        int manage_h = kf_h(380);
+    int manage_w = kf_w(600);
+    int manage_h = kf_h(380);
 
-        config_window = new UI_Manage_Config(manage_w, manage_h,
+    UI_Manage_Config *config_window = new UI_Manage_Config(manage_w, manage_h,
                                              _("OBSIDIAN Config Manager"));
-    }
 
     config_window->want_quit = false;
     config_window->set_modal();
@@ -841,8 +853,7 @@ void DLG_ManageConfig(void) {
         Fl::wait();
     }
 
-    config_window->set_non_modal();
-    config_window->hide();
+    delete config_window;
 }
 
 //--- editor settings ---

@@ -51,10 +51,10 @@ UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
 
     int tx = Is_UI() ? 8 : 28;
 
-    Fl_Box *heading = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4),
+    heading = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4),
                                  W - kf_w(tx + 4), kf_h(24), label);
     heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-    heading->labelfont(font_style | FL_BOLD);
+    heading->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
 
     if (Is_UI()) {
         heading->labelsize(header_font_size);
@@ -118,6 +118,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
 	rch->mod_menu = 
 		new UI_RChoiceMenu((!single_pane ? rch->x() : rch->x() + (rch->w() * .40)), (!single_pane ? rch->y() + rch->mod_label->h() : rch->y()), (single_pane ? rch->w() * .55 : rch->w()), kf_h(24), NULL);
+	rch->mod_menu->textcolor(FONT2_COLOR);
 	rch->mod_menu->selection_color(SELECTION);	
 
 	rch->mod_help =
@@ -189,7 +190,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 	}
 
 	rsl->mod_label = 
-			new Fl_Box(rsl->x(), rsl->y(), (!single_pane ? rsl->w() * .8 : rsl->w() * .40), kf_h(24), new_label);
+			new Fl_Box(rsl->x(), rsl->y(), (!single_pane ? rsl->w() * (rsl->nan_choices.size() > 0 ? .7 : .8) : rsl->w() * .40), kf_h(24), new_label);
 	rsl->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
 	rsl->mod_label->labelfont(font_style);
 	rsl->mod_label->tooltip(tip);
@@ -207,6 +208,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     rsl->mod_slider =
         new Fl_Hor_Slider((!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .45),  (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()), (!single_pane ? rsl->w() * .80 : rsl->w() * (rsl->nan_choices.size() > 0 ? .35 : .40)), kf_h(24), NULL);
     rsl->mod_slider->box(button_style);
+    rsl->mod_slider->visible_focus(0);
     rsl->mod_slider->color(BUTTON_COLOR);
     rsl->mod_slider->selection_color(SELECTION);
     rsl->mod_slider->minimum(min);
@@ -228,7 +230,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
     if (rsl->nan_choices.size() > 0) {
         rsl->nan_options =
                 new UI_CustomMenuButton(rsl->x() + (!single_pane ? (rsl->w() * .7) : (rsl->w() * .85)), rsl->y(), rsl->w() * .075, kf_h(24), "@2>");
-                rsl->nan_options->box(FL_FLAT_BOX);
+        rsl->nan_options->box(FL_FLAT_BOX);
         rsl->nan_options->color(this->color());
         rsl->nan_options->selection_color(SELECTION);
         rsl->nan_options->add("Use Slider Value");
@@ -262,17 +264,31 @@ void UI_Module::AddSliderOption(const char *opt, const char *label, const char *
 	temp_string = presets;
 	oldpos = 0;
 	pos = 0;
+	std::setlocale(LC_NUMERIC, "C");
 	while (pos != std::string::npos) {
 		pos = temp_string.find(',', oldpos);
 		if (pos != std::string::npos) {
 			std::string map_string = temp_string.substr(oldpos, pos-oldpos);
 			std::string::size_type temp_pos = map_string.find(':');
-			double key = std::stod(map_string.substr(0, temp_pos));
-			std::string value = map_string.substr(temp_pos + 1);			
-			rsl->preset_choices[key] = value;
+			double key;
+			try {
+				key = std::stod(map_string.substr(0, temp_pos));
+				std::string value = map_string.substr(temp_pos + 1);			
+				rsl->preset_choices[key] = value;
+			} catch (std::invalid_argument &e) {
+				fl_message("Invalid argument for preset slider value!");
+				goto skippreset;
+			} catch (std::out_of_range &e) {
+				fl_message("Number out of range for preset slider value!");
+				goto skippreset;
+			} catch (std::exception &e) {
+					std::cout << e.what();
+			}
+			skippreset:
 			oldpos = pos + 1;		
 		}
 	}
+	std::setlocale(LC_NUMERIC, numeric_locale);
 	
     if (!mod_button->value()) {
         rsl->hide();
@@ -422,13 +438,16 @@ bool UI_Module::SetSliderOption(const char *option, const char *value) {
     if (!rsl) {
         return false;
     }
-
 	std::string string_value = value;
 	double double_value;
     try {
         double_value = std::stod(string_value);
         rsl->mod_slider->value(double_value);
 		rsl->mod_slider->do_callback();
+		if (rsl->nan_choices.size() > 0) {
+			rsl->nan_options->value(0);
+			rsl->nan_options->do_callback();
+		}
     } catch (std::invalid_argument &e) {
     	// If it is a nan value instead
         rsl->nan_options->value(rsl->nan_options->find_index(value));
@@ -508,7 +527,7 @@ void UI_Module::callback_PresetCheck(Fl_Widget *w, void *data) {
 
 	std::string new_label = current_slider->original_label;
 	
-	current_slider->mod_label->copy_label(new_label.append(50, ' ').append("\n").append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
+	current_slider->mod_label->copy_label(new_label.append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
 
 	new_label = current_slider->original_label;
 
@@ -672,7 +691,7 @@ void UI_Module::callback_NanOptions(Fl_Widget *w, void *data) {
     
     if (temp_value > 0) {
     	std::string new_label = current_slider->original_label;
-		current_slider->mod_label->copy_label(new_label.append(50, ' ').append("\n").append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
+		current_slider->mod_label->copy_label(new_label.append(50, ' ').c_str()); // To prevent visual errors with labels of different lengths
 		new_label = current_slider->original_label;
     	current_slider->mod_label->copy_label(new_label.append(nan_options->text(temp_value)).c_str());
     	current_slider->prev_button->deactivate();

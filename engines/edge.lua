@@ -136,7 +136,7 @@ end
 
 OB_ENGINES["edge"] =
 {
-  label = _("EDGE"),
+  label = _("EDGE (Experimental)"),
 
   extends = "advanced",
 

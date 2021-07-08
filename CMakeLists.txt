@@ -67,7 +67,7 @@ add_executable(
   source_files/gui/hdr_lua.h
   source_files/gui/hdr_ui.h
   source_files/gui/headers.h
-  source_files/gui/icon.h
+  source_files/gui/images.h
   source_files/gui/img_all.h
   source_files/gui/img_bolt.cc
   source_files/gui/img_carve.cc

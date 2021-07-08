@@ -1,9 +1,10 @@
 PREFABS.Pic_armaetus_hell_cages =
 {
-  file   = "picture/armaetus_pic_hell_cages.wad",
-  map    = "MAP01",
+  file = "picture/armaetus_pic_hell_cages.wad",
+  map = "MAP01",
 
-  prob   = 30,
+  prob = 30,
+  prob_skew = 2,
   theme = "hell",
 
   where  = "seeds",
@@ -15,8 +16,8 @@ PREFABS.Pic_armaetus_hell_cages =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  deep   =  16,
-  over   = -16,
+  deep = 16,
+  over = -16,
 
   x_fit = "frame",
   y_fit = "top",

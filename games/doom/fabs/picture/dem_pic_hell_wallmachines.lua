@@ -4,7 +4,8 @@ PREFABS.Pic_dem_hell_flesh_conveyors_quality_control =
   map = "MAP01",
   engine = "zdoom",
 
-  prob   = 15,
+  prob = 15,
+  prob_skew = 2,
   theme = "hell",
 
   texture_pack = "armaetus",

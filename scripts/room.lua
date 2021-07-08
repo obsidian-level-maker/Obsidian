@@ -1491,9 +1491,8 @@ function Room_border_up()
       end
     end
 
-    -- beams cannot be on edges between areas of the same height
-    -- and a length of only 1,
-    if junction.perimeter == 1 and (A1.floor_h == A2.floor_h) then
+    -- no beams on an edge length of only 1
+    if junction.perimeter == 1 then
       return false
     end
 

@@ -1,10 +1,10 @@
 ----------------------------------------------------------------
---  Engine: Doomsday (JDoom, JHeretic, JHexen)
+--  Engine: Eternity (DOOM)
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008,2012 Andrew Apted
+--  Copyright (C) 2008,2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -18,13 +18,19 @@
 --
 ----------------------------------------------------------------
 
-OB_ENGINES["doomsday"] =
+ETERNITY = { }
+
+OB_ENGINES["eternity"] =
 {
-  label = _("Doomsday"),
+  label = _("Eternity (Experimental)"),
 
-  -- not yet BOOM compatible
-  extends = "nolimit",
+  extends = "advanced",
 
-  game = { doom1=1, doom2=1, heretic=1, hexen=1 }
+  game = { doom1=1, doom2=1, heretic=1, hexen=1 },
+
+  tables =
+  {
+    ETERNITY
+  }
 }
 

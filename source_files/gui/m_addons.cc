@@ -472,9 +472,11 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
 
         Fl_Button *apply_but = new Fl_Button(W - bx - bw, by, bw, bh, fl_close);
         apply_but->box(button_style);
+        apply_but->visible_focus(0);
         apply_but->color(BUTTON_COLOR);
         apply_but->callback(callback_Quit, this);
         apply_but->labelfont(font_style);
+        apply_but->labelcolor(FONT2_COLOR);
 
         // show warning about needing a restart
         Fl_Box *sep = new Fl_Box(FL_NO_BOX, x(), by, W * 3 / 5, bh,
@@ -589,7 +591,7 @@ void UI_AddonsWin::Populate() {
 
 bool UI_AddonsWin::ApplyChanges() {
     bool has_changes = false;
-
+    
     for (int j = 0; j < pack->children(); j++) {
         UI_Addon *M = (UI_Addon *)pack->child(j);
         SYS_ASSERT(M);
@@ -606,16 +608,13 @@ bool UI_AddonsWin::ApplyChanges() {
 }
 
 void DLG_SelectAddons(void) {
-    static UI_AddonsWin *addons_window = NULL;
 
-    if (!addons_window) {
-        int opt_w = kf_w(350);
-        int opt_h = kf_h(380);
+    int opt_w = kf_w(350);
+    int opt_h = kf_h(380);
 
-        addons_window = new UI_AddonsWin(opt_w, opt_h, _("OBSIDIAN Addons"));
+    UI_AddonsWin *addons_window = new UI_AddonsWin(opt_w, opt_h, _("OBSIDIAN Addons"));
 
-        addons_window->Populate();
-    }
+    addons_window->Populate();
 
     addons_window->want_quit = false;
     addons_window->set_modal();
@@ -631,13 +630,22 @@ void DLG_SelectAddons(void) {
         Options_Save(options_file);
 
         fl_alert("%s", _("Changes to addons require a restart.\nOBSIDIAN will "
-                         "now close."));
+                         "now restart.")); 
 
-        main_action = MAIN_QUIT;
+      	initial_enabled_addons.clear();
+      	
+      	for (int j = 0; j < addons_window->pack->children(); j++) {
+		    UI_Addon *M = (UI_Addon *)addons_window->pack->child(j);
+		    SYS_ASSERT(M);
+		    if (M->info->enabled) {
+		        initial_enabled_addons[M->info->name] = 1;
+		    }
+    	}
+
+        main_action = MAIN_RESTART;
     }
 
-    addons_window->set_non_modal();
-    addons_window->hide();
+    delete addons_window;
 }
 
 //--- editor settings ---

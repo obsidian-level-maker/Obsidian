@@ -1475,6 +1475,8 @@ void Script_Close() {
 
     LUA_ST = NULL;
 
+	has_added_buttons = false; // Needed if doing live restart
+
     LogPrintf("\n--- CLOSED LUA VM ---\n\n");
 }
 

@@ -47,11 +47,11 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     const char *heading_text = _("Game Settings");
 
-    Fl_Box *heading = new Fl_Box(FL_NO_BOX, X + kf_w(8), cy, W - kf_w(12),
+    heading = new Fl_Box(FL_NO_BOX, X + kf_w(8), cy, W - kf_w(12),
                                  kf_h(24), heading_text);
     heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     heading->labeltype(FL_NORMAL_LABEL);
-    heading->labelfont(font_style | FL_BOLD);
+    heading->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
     heading->labelsize(header_font_size);
 
     cy = Y + kf_h(32);
@@ -62,6 +62,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     game = new UI_RChoiceMenu(cx, cy, cw, ch, _("Game: "));
     game->align(FL_ALIGN_LEFT);
     game->labelfont(font_style);
+    game->textcolor(FONT2_COLOR);
     game->selection_color(SELECTION);
     game->callback(callback_Game, this);
 
@@ -70,6 +71,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     engine = new UI_RChoiceMenu(cx, cy, cw, ch, _("Engine: "));
     engine->align(FL_ALIGN_LEFT);
     engine->labelfont(font_style);
+    engine->textcolor(FONT2_COLOR);
     engine->selection_color(SELECTION);
     engine->callback(callback_Engine, this);
     engine_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch, "?");
@@ -81,6 +83,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     length = new UI_RChoiceMenu(cx, cy, cw, ch, _("Length: "));
     length->align(FL_ALIGN_LEFT);
     length->labelfont(font_style);
+    length->textcolor(FONT2_COLOR);
     length->selection_color(SELECTION);
     length->callback(callback_Length, this);
     length_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch, "?");
@@ -92,6 +95,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     theme = new UI_RChoiceMenu(cx, cy, cw, ch, _("Theme: "));
     theme->align(FL_ALIGN_LEFT);
     theme->labelfont(font_style);
+    theme->textcolor(FONT2_COLOR);
     theme->selection_color(SELECTION);
     theme->callback(callback_Theme, this);
     theme_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch, "?");
@@ -104,8 +108,9 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     build->visible_focus(0);
     build->box(button_style);
     build->color(BUTTON_COLOR);
-    build->labelfont(font_style | FL_BOLD);
-    build->labelsize(FL_NORMAL_SIZE + 2);
+    build->labelcolor(FONT2_COLOR);
+    build->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
+    build->labelsize(header_font_size);
     build->callback(build_callback, this);
     build->shortcut(FL_F + 2);
 
@@ -114,6 +119,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     quit->visible_focus(0);
     quit->box(button_style);
     quit->color(BUTTON_COLOR);
+    quit->labelcolor(FONT2_COLOR);
     quit->labelfont(font_style);
     quit->callback(quit_callback, this);
     quit->shortcut(FL_COMMAND + 'q');
@@ -166,9 +172,9 @@ ZDoom Family: L/G/Zdoom, Zandronum, and similar engines that use ZDoom as a base
 Vanilla DOOM: Doom with its original engine limits. This option will use SLUMP as the map builder.\n\n\
 Limit Removing: Any engine that raises the limits of the original Doom to prevent crashes.\n\n\
 BOOM Compatible: Engines compatible with Boom that are able to use the entire suite of Boom types and features.\n\n\
-PrBoom Compatible: Boom-compatible, but also capable of using compressed ZDBSP or GL nodes.\n\n\
-Doomsday: Limit-removing, but not fully Boom-compatible. Supports GL nodes.\n\n\
-EDGE: Formerly known as 3DGE. Boom and UDMF compatible, with additional special features."); 
+PrBoom Compatible: Boom-compatible, but also capable of using compressed ZDBSP nodes.\n\n\
+EDGE: Formerly known as 3DGE. Boom and UDMF compatible, with additional special features.\n\n\
+Eternity: Software renderer only, but with advanced features such as UDMF."); 
 }
 
 void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
@@ -294,7 +300,7 @@ void UI_Game::SetAbortButton(bool abort) {
     if (abort) {
         quit->label(_("Cancel"));
         quit->labelcolor(ABORT_COLOR);
-        quit->labelfont(font_style | FL_BOLD);
+        quit->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
 
         quit->callback(stop_callback, this);
 
@@ -306,7 +312,7 @@ void UI_Game::SetAbortButton(bool abort) {
 
         quit->callback(quit_callback, this);
 
-        build->labelfont(font_style | FL_BOLD);
+        build->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
     }
 }
 

@@ -33,7 +33,7 @@
 ## Linux Compilation
 
 Assuming all those dependencies are met, then the following steps
-will build the Oblige binary. (The '>' is just the prompt)
+will build the Obsidian binary. (The '>' is just the prompt)
 
     > mkdir build
     > cd build

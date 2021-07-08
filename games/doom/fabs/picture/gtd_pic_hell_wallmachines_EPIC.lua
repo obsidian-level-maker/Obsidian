@@ -4,6 +4,7 @@ PREFABS.Pic_gtd_hell_skull_grinding_mill =
   map = "MAP01",
 
   prob   = 15,
+  prob_skew = 2,
   theme = "hell",
 
   texture_pack = "armaetus",

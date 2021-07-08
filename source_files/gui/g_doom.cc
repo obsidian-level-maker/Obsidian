@@ -342,6 +342,9 @@ void DM_BeginLevel() {
             textmap_lump->Printf("namespace = \"Hexen\";\n\n");
         } else {
             textmap_lump->Printf("namespace = \"ZDoomTranslated\";\n\n");
+	    if (current_engine == "eternity") {
+		textmap_lump->Printf("ee_compat = true;\n\n");
+	    }
         }
         endmap_lump = new qLump_c();
     }
@@ -867,21 +870,17 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.check_polyobjs = false;
         options.compress_nodes = true;
         options.compress_gl_nodes = false;
-        options.force_compression = true;
-    } else if (current_engine == "doomsday") {
-    	if (!build_nodes) {
-		    LogPrintf("Skipping nodes per user selection...\n");
-		    FileRename(filename, out_name);
-		    return true;
-		}
+        options.force_compression = false;
+    } else if (current_engine == "eternity") {
         options.build_nodes = true;     	
-        options.build_gl_nodes = true;
-        options.build_gl_only = false;
-        if (build_reject) {
-            options.reject_mode = ERM_Rebuild;
-        } else {
-            options.reject_mode = ERM_DontTouch;
-        }
+        if (UDMF_mode) {
+	    options.build_gl_nodes = true;
+	    options.build_gl_only = true;
+	} else {
+	    options.build_gl_nodes = false;
+	    options.build_gl_only = false;
+	}
+	options.reject_mode = ERM_DontTouch; // Eternity might not play well with ZDBSP's reject builder
         options.check_polyobjs = true;
         options.compress_nodes = true;
         options.compress_gl_nodes = false;
@@ -897,10 +896,10 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.build_nodes = true;     	
         options.build_gl_nodes = true;
         options.build_gl_only = true;
-        if (build_reject) {
-            options.reject_mode = ERM_Rebuild;
+        if (!build_reject || UDMF_mode) {
+	    options.reject_mode = ERM_DontTouch;
         } else {
-            options.reject_mode = ERM_DontTouch;
+            options.reject_mode = ERM_Rebuild;
         }
         options.check_polyobjs = true;
         options.compress_nodes = true;
@@ -915,10 +914,10 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.build_nodes = true;
         options.build_gl_nodes = true;
         options.build_gl_only = true;
-        if (build_reject) {
-            options.reject_mode = ERM_Rebuild;
+        if (!build_reject || UDMF_mode) {
+	    options.reject_mode = ERM_DontTouch;
         } else {
-            options.reject_mode = ERM_DontTouch;
+            options.reject_mode = ERM_Rebuild;
         }
         options.check_polyobjs = true;
         options.compress_nodes = true;
@@ -1002,7 +1001,7 @@ bool doom_game_interface_c::Start(const char *preset) {
 
     if (main_win) {
         main_win->build_box->Prog_Init(20, N_("CSG"));
-        if (current_engine == "zdoom" || current_engine == "edge") {
+        if (current_engine == "zdoom" || current_engine == "edge" || current_engine == "eternity") {
             build_reject = main_win->left_mods->FindID("ui_udmf_map_options")
                                ->FindButtonOpt("bool_build_reject_udmf")
                                ->mod_check->value();
@@ -1011,14 +1010,6 @@ bool doom_game_interface_c::Start(const char *preset) {
 		                     ->mod_menu->GetID();
 		    build_nodes = main_win->left_mods->FindID("ui_udmf_map_options")
 		                      ->FindButtonOpt("bool_build_nodes_udmf")
-		                      ->mod_check->value();
-        } else if (current_engine == "doomsday") {
-            build_reject = main_win->left_mods->FindID("ui_doomsday_map_options")
-                               ->FindButtonOpt("bool_build_reject_doomsday")
-                               ->mod_check->value();
-		    map_format = "binary";
-		    build_nodes = main_win->left_mods->FindID("ui_doomsday_map_options")
-		                      ->FindButtonOpt("bool_build_nodes_doomsday")
 		                      ->mod_check->value();
         } else {
             build_reject = main_win->left_mods->FindID("ui_reject_options")

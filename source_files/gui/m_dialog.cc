@@ -88,7 +88,7 @@ static void DialogShowAndRun(const char *message, const char *title,
     icon->box(FL_OVAL_BOX);
     icon->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     icon->color(FL_RED, FL_RED);
-    icon->labelfont(font_style | FL_BOLD);
+    icon->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
     icon->labelsize(24 + KF * 3);
     icon->labelcolor(FL_WHITE);
 
@@ -435,8 +435,10 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
             Fl_Button *but =
                 new Fl_Button(bx, button_y, button_w, button_h, fl_close);
             but->box(button_style);
+            but->visible_focus(0);
             but->color(BUTTON_COLOR);
-            but->labelfont(font_style | FL_BOLD);
+            but->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
+            but->labelcolor(FONT2_COLOR);
             but->callback(quit_callback, this);
         }
 
@@ -445,7 +447,9 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
             Fl_Button *but =
                 new Fl_Button(bx, button_y, button_w, button_h, _("Save"));
             but->box(button_style);
+            but->visible_focus(0);
             but->color(BUTTON_COLOR);
+            but->labelcolor(FONT2_COLOR);
             but->callback(save_callback, this);
             but->labelfont(font_style);
         }
@@ -455,7 +459,9 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
             copy_but =
                 new Fl_Button(bx, button_y, button_w, button_h, _("Copy"));
             copy_but->box(button_style);
+            copy_but->visible_focus(0);
             copy_but->color(BUTTON_COLOR);
+            copy_but->labelcolor(FONT2_COLOR);
             copy_but->callback(copy_callback, this);
             copy_but->shortcut(FL_CTRL + 'c');
             copy_but->deactivate();

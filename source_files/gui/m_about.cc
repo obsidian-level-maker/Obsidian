@@ -70,17 +70,14 @@ class UI_About : public Fl_Window {
 
 const char *UI_About::Text =
     N_("OBSIDIAN is a random level generator\n"
-       "for classic FPS games like DOOM\n"
-       "\n"
+       "for classic FPS games like DOOM.\n"
        "It is a continuation of the OBLIGE Level Maker\n"
-       "Copyright (C) 2006-2017 Andrew Apted, et al\n"
-       "\n"
+       "Copyright (C) 2006-2017 Andrew Apted, et al.\n"
        "This program is free software, and may be\n"
        "distributed and modified under the terms of\n"
-       "the GNU General Public License\n"
-       "\n"
-       "There is ABSOLUTELY NO WARRANTY\n"
-       "Use at your OWN RISK");
+       "the GNU General Public License.\n"
+       "There is ABSOLUTELY NO WARRANTY!\n"
+       "Use at your OWN RISK!");
 
 const char *UI_About::URL = OBSIDIAN_WEBSITE;
 
@@ -101,7 +98,7 @@ UI_About::UI_About(int W, int H, const char *label)
         StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION);
 
     Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), logo_text);
-    box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP);
+    box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP | FL_ALIGN_CLIP);
     box->labelsize(FL_NORMAL_SIZE * 5 / 3);
     box->labelfont(font_style);
 
@@ -113,11 +110,12 @@ UI_About::UI_About(int W, int H, const char *label)
     int text_h = H * 0.55;
 
     box = new Fl_Box(pad, cy, W - pad - pad, text_h, _(Text));
-    box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
+    box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_CLIP);
     box->box(FL_UP_BOX);
     box->color(BUTTON_COLOR);
     box->labelfont(font_style);
-    box->labelcolor(FONT_COLOR);
+    box->labelcolor(FONT2_COLOR);
+    
 
     cy += box->h() + kf_h(10);
 
@@ -127,7 +125,7 @@ UI_About::UI_About(int W, int H, const char *label)
     UI_HyperLink *link =
         new UI_HyperLink(pad, cy, W - pad * 2, kf_h(30), URL, URL);
     link->align(FL_ALIGN_CENTER);
-    link->labelsize(FL_NORMAL_SIZE * 2 / 2);
+    link->labelsize(FL_NORMAL_SIZE);
     link->labelfont(font_style);
 
     cy += link->h() + kf_h(16);
@@ -144,9 +142,11 @@ UI_About::UI_About(int W, int H, const char *label)
 
         Fl_Button *button = new Fl_Button(W - bw * 2, by, bw, bh, fl_ok);
         button->box(button_style);
+        button->visible_focus(0);
         button->color(BUTTON_COLOR);
         button->callback(callback_Quit, this);
         button->labelfont(font_style);
+        button->labelcolor(FONT2_COLOR);
     }
     darkish->end();
 
@@ -154,14 +154,11 @@ UI_About::UI_About(int W, int H, const char *label)
 }
 
 void DLG_AboutText(void) {
-    static UI_About *about_window = NULL;
 
-    if (!about_window) {
-        int about_w = kf_w(400);
-        int about_h = kf_h(400) + KF * 20;
+    int about_w = kf_w(400);
+    int about_h = kf_h(400) + KF * 20;
 
-        about_window = new UI_About(about_w, about_h, _("About OBSIDIAN"));
-    }
+    UI_About *about_window = new UI_About(about_w, about_h, _("About OBSIDIAN"));
 
     about_window->want_quit = false;
     about_window->set_modal();
@@ -172,8 +169,7 @@ void DLG_AboutText(void) {
         Fl::wait();
     }
 
-    about_window->set_non_modal();
-    about_window->hide();
+    delete about_window;
 }
 
 //--- editor settings ---

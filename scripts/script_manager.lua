@@ -177,6 +177,10 @@ function ScriptMan_assemble_decorate_lump()
     decorate_script_lines = decorate_script_lines ..
     SCRIPTS.fauna_dec .. "\n"
   end
+  if SCRIPTS.decorate_lines then
+    decorate_script_lines = decorate_script_lines ..
+    SCRIPTS.decorate_lines .. "\n"
+  end
 
   if decorate_script_lines ~= "" then
     add_script_lump("DECORATE", decorate_script_lines)
@@ -194,6 +198,10 @@ function ScriptMan_assemble_sndinfo_lump()
   if SCRIPTS.fauna_SNDINFO then
     sndinfo_lines = sndinfo_lines ..
     SCRIPTS.fauna_SNDINFO .. "\n"
+  end
+  if SCRIPTS.soundinfo then
+    sndinfo_lines = sndinfo_lines ..
+    SCRIPTS.soundinfo .. "\n"
   end
 
   if sndinfo_lines ~= "" then

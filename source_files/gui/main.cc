@@ -19,7 +19,7 @@
 //------------------------------------------------------------------------
 
 #include "main.h"
-#include "icon.h"
+#include "images.h"
 
 #include "csg_main.h"
 #include "g_nukem.h"
@@ -57,30 +57,35 @@ unsigned long long next_rand_seed;
 
 bool batch_mode = false;
 const char *batch_output_file = NULL;
+const char *numeric_locale = NULL;
 
 // options
-uchar text_red = 0;
-uchar text_green = 0;
-uchar text_blue = 0;
-uchar bg_red = 221;
-uchar bg_green = 221;
-uchar bg_blue = 221;
-uchar bg2_red = 62;
-uchar bg2_green = 61;
-uchar bg2_blue = 57;
-uchar button_red = 0;
-uchar button_green = 0;
-uchar button_blue = 0;
+uchar text_red = 225;
+uchar text_green = 225;
+uchar text_blue = 225;
+uchar text2_red = 225;
+uchar text2_green = 225;
+uchar text2_blue = 225;
+uchar bg_red = 56;
+uchar bg_green = 56;
+uchar bg_blue = 56;
+uchar bg2_red = 83;
+uchar bg2_green = 121;
+uchar bg2_blue = 180;
+uchar button_red = 89;
+uchar button_green = 89;
+uchar button_blue = 89;
 uchar gradient_red = 221;
 uchar gradient_green = 221;
 uchar gradient_blue = 221;
 uchar border_red = 62;
 uchar border_green = 61;
 uchar border_blue = 57;
-uchar gap_red = 62;
-uchar gap_green = 61;
-uchar gap_blue = 57;
+uchar gap_red = 35;
+uchar gap_green = 35;
+uchar gap_blue = 35;
 Fl_Color FONT_COLOR;
+Fl_Color FONT2_COLOR;
 Fl_Color SELECTION;
 Fl_Color WINDOW_BG;
 Fl_Color GAP_COLOR;
@@ -89,16 +94,18 @@ Fl_Color BUTTON_COLOR;
 Fl_Color BORDER_COLOR;
 int color_scheme = 0;
 int font_theme = 0;
-Fl_Font font_style = FL_HELVETICA;
+Fl_Font font_style = 0;
 int box_theme = 0;
-Fl_Boxtype box_style = FL_THIN_UP_BOX;
+Fl_Boxtype box_style = FL_FLAT_BOX;
 int button_theme = 0;
-Fl_Boxtype button_style = FL_THIN_UP_BOX;
+Fl_Boxtype button_style = FL_DOWN_BOX;
 int widget_theme = 0;
 bool single_pane = false;
+bool use_system_fonts = false;
 int window_scaling = 0;
-int font_scaling = 0;
-int num_fonts = 16; // FLTK built-in amount
+int font_scaling = 18;
+int filename_prefix = 0;
+int num_fonts = 0;
 std::vector<std::map<std::string, int>> font_menu_items;
 
 bool create_backups = true;
@@ -183,7 +190,7 @@ void Determine_WorkingPath(const char *argv0) {
 #else
     char *path = StringNew(FL_PATH_MAX + 4);
 
-    if (fl_filename_expand(path, "$HOME/.obsidian") == 0) {
+    if (fl_filename_expand(path, "$HOME/.config/obsidian") == 0) {
         Main_FatalError("Unable to find $HOME directory!\n");
     }
 
@@ -400,43 +407,90 @@ int Main_DetermineScaling() {
     return 0;
 }
 
-void Main_DetermineFontScaling() {
+bool load_internal_font(const char* fontpath, int fontnum, const char* fontname) {
+// This is derived from code posted by an individual named Ian MacArthur
+// in a Google Groups thread at the following link: https://groups.google.com/g/fltkgeneral/c/uAdg8wOLiMk
 
-    switch(font_scaling) {
-    	case 0 : FL_NORMAL_SIZE = 18;
-    			 break;
-    	case 1 : FL_NORMAL_SIZE = 14;
-    			 break;
-    	case 2 : FL_NORMAL_SIZE = 16;
-    			 break;
-    	case 3 : FL_NORMAL_SIZE = 20;
-    			 break;
-    	case 4 : FL_NORMAL_SIZE = 22;
-    			 break;
-    	default : FL_NORMAL_SIZE = 18;
-    			  break;
-   }
+/* Load the font using the appropriate platform API */
+	int loaded_font = i_load_private_font(fontpath);
 
-   small_font_size = FL_NORMAL_SIZE - 2;
-   header_font_size = FL_NORMAL_SIZE + 2;
-
-   fl_message_font(font_style, FL_NORMAL_SIZE + 2);
-   
+/* set the extra font */
+	if (loaded_font) {
+		Fl::set_font(fontnum, fontname);
+		return true;
+	}
+	
+	return false;
 }
 
 void Main_PopulateFontMap() {
-	
-	num_fonts = Fl::set_fonts(NULL) - 16; // Total fonts - FLTK enumerations
-	
-	for (int x = 16; x < num_fonts; x++) { // Starting at 16 skips the FLTK default enumerations
-		std::string fontname = Fl::get_font_name(x);
-		if (std::isalpha(fontname.at(0))) {
-			std::map<std::string, int> temp_map { {fontname, x} };
-			font_menu_items.push_back(temp_map);
-		}
-	}
+		
+	if (use_system_fonts) {
 
-	num_fonts = font_menu_items.size();	
+		font_menu_items.push_back(std::map<std::string, int>{ {"Sans <Default>", 0} });
+		font_menu_items.push_back(std::map<std::string, int>{ {"Courier <Internal>", 4} });
+		font_menu_items.push_back(std::map<std::string, int>{ {"Times <Internal>", 8} });
+		font_menu_items.push_back(std::map<std::string, int>{ {"Screen <Internal>", 13} });
+
+		num_fonts = Fl::set_fonts(NULL);
+	
+		for (int x = 16; x < num_fonts; x++) { // Starting at 16 skips the FLTK default enumerations
+			std::string fontname = Fl::get_font_name(x);
+			if (std::isalpha(fontname.at(0))) {
+				std::map<std::string, int> temp_map { {fontname, x} };
+				font_menu_items.push_back(temp_map);
+			}
+		}
+		
+	} else {
+
+		// TODO - If feasible, find a better way to automate this/crawl for *.ttf files
+
+		// Load bundled fonts. Fonts without a bold variant are essentially loaded twice in a row so that calls for a bold variant
+		// don't accidentally change fonts
+		
+		// Some custom fonts will have a different display name than that of their TTF fontname. This is because these fonts have been modified
+		// in some fashion, and the OFL 1.1 license dicatates that modified versions cannot display the Reserved Name to users
+
+		int current_free_font = 16;
+
+		if (load_internal_font("./theme/fonts/SourceSansPro/SourceSansPro-Regular.ttf", current_free_font, "Source Sans Pro")) {
+			if (load_internal_font("./theme/fonts/SourceSansPro/SourceSansPro-Bold.ttf", current_free_font + 1, "Source Sans Pro Bold")) {
+				font_menu_items.push_back(std::map<std::string, int>{ {"Sauce <Default>", current_free_font} });
+			}
+			current_free_font += 2;
+		}			
+
+		font_menu_items.push_back(std::map<std::string, int>{ {"Sans <Internal>", 0} });
+		font_menu_items.push_back(std::map<std::string, int>{ {"Courier <Internal>", 4} });
+		font_menu_items.push_back(std::map<std::string, int>{ {"Times <Internal>", 8} });
+		font_menu_items.push_back(std::map<std::string, int>{ {"Screen <Internal>", 13} });
+
+		if (load_internal_font("./theme/fonts/Avenixel/Avenixel-Regular.ttf", current_free_font, "Avenixel")) {
+			Fl::set_font(current_free_font + 1, "Avenixel");
+			font_menu_items.push_back(std::map<std::string, int>{ {"Avenixel", current_free_font} });
+			current_free_font += 2;
+		}
+		
+		if (load_internal_font("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf", current_free_font, "The Neue")) {
+			Fl::set_font(current_free_font + 1, "The Neue");
+			font_menu_items.push_back(std::map<std::string, int>{ {"New Black", current_free_font} });
+		}
+		
+		if (load_internal_font("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf", current_free_font, "The Neue")) {
+			Fl::set_font(current_free_font + 1, "The Neue");
+			font_menu_items.push_back(std::map<std::string, int>{ {"New Black", current_free_font} });
+		}
+		
+		if (load_internal_font("./theme/fonts/Teko/Teko-Regular.ttf", current_free_font, "Teko")) {
+			if (load_internal_font("./theme/fonts/Teko/Teko-Bold.ttf", current_free_font + 1, "Teko Bold")) {
+				font_menu_items.push_back(std::map<std::string, int>{ {"Teko", current_free_font} });
+			}
+		}
+
+	}
+	
+	num_fonts = font_menu_items.size();
 		
 }
 
@@ -444,33 +498,28 @@ void Main_SetupFLTK() {
 	
 	Main_PopulateFontMap();
 	
-    Fl::visual(FL_DOUBLE | FL_RGB);  
+    Fl::visual(FL_DOUBLE | FL_RGB);
+    if (color_scheme == 2) { // "Custom" color selection used to be 2 in older configs
+    	color_scheme = 1;
+    }
     switch(color_scheme) {
-    	case 0 : Fl::background(221, 221, 221);
-    			 Fl::background2(221, 221, 221);
-    			 Fl::foreground(0, 0, 0);
-				 FONT_COLOR = fl_rgb_color(0, 0, 0);
-				 SELECTION = fl_rgb_color(62, 61, 57);
-				 WINDOW_BG = fl_rgb_color(221, 221, 221);
-				 GAP_COLOR = fl_rgb_color(0, 0, 0);
+    	case 0 : Fl::background(56, 56, 56);
+    			 Fl::background2(56, 56, 56);
+    			 Fl::foreground(225, 225, 225);
+				 FONT_COLOR = fl_rgb_color(225, 225, 225);
+				 FONT2_COLOR = fl_rgb_color(225, 225, 225);
+				 SELECTION = fl_rgb_color(83, 121, 180);
+				 WINDOW_BG = fl_rgb_color(56, 56, 56);
+				 GAP_COLOR = fl_rgb_color(35, 35, 35);
 				 BORDER_COLOR = fl_rgb_color(62, 61, 57);
 				 GRADIENT_COLOR = fl_rgb_color(221, 221, 221);
-				 BUTTON_COLOR = fl_rgb_color(221, 221, 221);    
+				 BUTTON_COLOR = fl_rgb_color(89, 89, 89);    
     			 break;
-    	case 1 : Fl::get_system_colors();
-    			 // Test with a Windows VM - Dasho
-				 FONT_COLOR = FL_FOREGROUND_COLOR;
-				 SELECTION = FL_BACKGROUND2_COLOR;
-				 WINDOW_BG = FL_BACKGROUND_COLOR;
-				 BUTTON_COLOR = FL_BACKGROUND_COLOR;
-				 GAP_COLOR = FL_BACKGROUND2_COLOR;
-				 BORDER_COLOR = FL_BACKGROUND2_COLOR;
-				 GRADIENT_COLOR = FL_BACKGROUND2_COLOR;
-    			 break;
-    	case 2 : Fl::background(bg_red, bg_green, bg_blue);
+    	case 1 : Fl::background(bg_red, bg_green, bg_blue);
     			 Fl::background2(bg_red, bg_green, bg_blue);
     			 Fl::foreground(text_red, text_green, text_blue);
 				 FONT_COLOR = fl_rgb_color(text_red, text_green, text_blue);
+				 FONT2_COLOR = fl_rgb_color(text2_red, text2_green, text2_blue);
 				 SELECTION = fl_rgb_color(bg2_red, bg2_green, bg2_blue);
 				 WINDOW_BG = fl_rgb_color(bg_red, bg_green, bg_blue);
     			 GAP_COLOR = fl_rgb_color(gap_red, gap_green, gap_blue); 
@@ -479,20 +528,22 @@ void Main_SetupFLTK() {
     			 BUTTON_COLOR = fl_rgb_color(button_red, button_green, button_blue); 
     			 break;
     	// Shouldn't be reached, but still
-    	default : Fl::background(221, 221, 221);
-    			  Fl::background2(221, 221, 221);
-    			  Fl::foreground(0, 0, 0);
-				  FONT_COLOR = fl_rgb_color(0, 0, 0);
-				  SELECTION = fl_rgb_color(62, 61, 57);
-				  WINDOW_BG = fl_rgb_color(221, 221, 221);
-				  GAP_COLOR = fl_rgb_color(0, 0, 0);
+    	default : Fl::background(56, 56, 56);
+    			  Fl::background2(56, 56, 56);
+    			  Fl::foreground(225, 225, 225);
+				  FONT_COLOR = fl_rgb_color(225, 225, 225);
+				  FONT2_COLOR = fl_rgb_color(225, 225, 225);
+				  SELECTION = fl_rgb_color(83, 121, 180);
+				  WINDOW_BG = fl_rgb_color(56, 56, 56);
+				  GAP_COLOR = fl_rgb_color(35, 35, 35);
 				  BORDER_COLOR = fl_rgb_color(62, 61, 57);
 				  GRADIENT_COLOR = fl_rgb_color(221, 221, 221);
-				  BUTTON_COLOR = fl_rgb_color(221, 221, 221);  
+				  BUTTON_COLOR = fl_rgb_color(89, 89, 89);     
     			  break;    			     			 
     }
-    if (color_scheme == 2) {
-    Fl::get_color(FONT_COLOR, text_red, text_green, text_blue); 
+    if (color_scheme == 1) {
+    Fl::get_color(FONT_COLOR, text_red, text_green, text_blue);
+    Fl::get_color(FONT2_COLOR, text2_red, text2_green, text2_blue); 
     Fl::get_color(WINDOW_BG, bg_red, bg_green, bg_blue);     
     Fl::get_color(SELECTION, bg2_red, bg2_green, bg2_blue);
     Fl::get_color(GAP_COLOR, gap_red, gap_green, gap_blue); 
@@ -510,10 +561,12 @@ void Main_SetupFLTK() {
     Fl::set_boxtype(FL_PLASTIC_THIN_UP_BOX, cplastic_thin_up_box, 2, 2, 4, 4);
     Fl::set_boxtype(FL_PLASTIC_DOWN_BOX, cplastic_down_box, 2, 2, 4, 4);
     Fl::set_boxtype(FL_SHADOW_BOX, cshadow_box, 1, 1, 5, 5);
-    Fl::set_boxtype(FL_BORDER_BOX, crectbound, 1, 1, 2, 2);
+    Fl::set_boxtype(FL_FREE_BOXTYPE, crectbound, 1, 1, 2, 2);
+    Fl::set_boxtype((Fl_Boxtype)(FL_FREE_BOXTYPE+1), crectbound, 1, 1, 2, 2);
     Fl::set_boxtype(FL_THIN_UP_BOX, cthin_up_box, 1, 1, 2, 2);
     Fl::set_boxtype(FL_EMBOSSED_BOX, cembossed_box, 2, 2, 4, 4);
-    Fl::set_boxtype(FL_ENGRAVED_BOX, cengraved_box, 2, 2, 4, 4);
+    Fl::set_boxtype((Fl_Boxtype)(FL_FREE_BOXTYPE+2), cengraved_box, 2, 2, 4, 4);
+    Fl::set_boxtype((Fl_Boxtype)(FL_FREE_BOXTYPE+3), cengraved_box, 2, 2, 4, 4);
     Fl::set_boxtype(FL_DOWN_BOX, cdown_box, 2, 2, 4, 4);
     Fl::set_boxtype(FL_UP_BOX, cup_box, 2, 2, 4, 4);
     switch(widget_theme) {
@@ -530,7 +583,7 @@ void Main_SetupFLTK() {
     			  break;    			     			 
     }   
     switch(box_theme) {
-    	case 0 : box_style = FL_THIN_UP_BOX;
+    	case 0 : box_style = FL_FLAT_BOX;
     			 break;
     	case 1 : box_style = FL_SHADOW_BOX;
     			 break;
@@ -540,39 +593,42 @@ void Main_SetupFLTK() {
     			 break;
     	case 4 : box_style = FL_DOWN_BOX;
     			 break;
-    	case 5 : box_style = FL_FLAT_BOX;
+    	case 5 : box_style = FL_THIN_UP_BOX;
     			 break;
     	// Shouldn't be reached, but still
-    	default : box_style = FL_THIN_UP_BOX;
+    	default : box_style = FL_FLAT_BOX;
     			  break;    			     			 
     }    
     switch(button_theme) {
-    	case 0 : button_style = FL_UP_BOX;
+    	case 0 : button_style = FL_DOWN_BOX;
     			 break;
-    	case 1 : button_style = FL_EMBOSSED_BOX;
+    	case 1 : button_style = FL_UP_BOX;
     			 break;
-    	case 2 : button_style = FL_ENGRAVED_BOX;
+    	case 2 : button_style = (Fl_Boxtype)(FL_FREE_BOXTYPE+2);
     			 break;
-    	case 3 : button_style = FL_DOWN_BOX;
+    	case 3 : button_style = FL_EMBOSSED_BOX;
     			 break;
-    	case 4 : button_style = FL_BORDER_BOX;
+    	case 4 : button_style = FL_FREE_BOXTYPE;
     			 break;
     	// Shouldn't be reached, but still
-    	default : button_style = FL_UP_BOX;
+    	default : button_style = FL_DOWN_BOX;
     			  break;    			     			 
-    } 			 
+    } 
     if (font_theme < num_fonts) { // In case the number of installed fonts is reduced between launches
-    	if (font_theme == 0) {
-    		font_style = 0;
-    	} else {
-    		for (auto font = font_menu_items[font_theme - 1].begin(); font != font_menu_items[font_theme - 1].end(); ++font) {
-    			font_style = font->second;
-  			}
-    	}
+    	for (auto font = font_menu_items[font_theme].begin(); font != font_menu_items[font_theme].end(); ++font) {
+    		font_style = font->second;
+  		}
     } else {
     	// Fallback
     	font_style = 0;
+    }  
+    if (font_scaling < 6) { // Values from old configs
+    	font_scaling = 18;
     }
+    FL_NORMAL_SIZE = font_scaling;
+    small_font_size = FL_NORMAL_SIZE - 2;
+    header_font_size = FL_NORMAL_SIZE + 2;
+    fl_message_font(font_style, FL_NORMAL_SIZE + 2);
     
     screen_w = Fl::w();
     screen_h = Fl::h();
@@ -582,7 +638,6 @@ void Main_SetupFLTK() {
 #endif
 
     KF = Main_DetermineScaling();
-    Main_DetermineFontScaling();
     // load icons for file chooser
 #ifndef WIN32
     Fl_File_Icon::load_system_icons();
@@ -829,6 +884,8 @@ int main(int argc, char **argv) {
     // initialise argument parser (skipping program name)
     ArgvInit(argc - 1, (const char **)(argv + 1));
 
+    restart: ;
+
     if (ArgvFind('?', NULL) >= 0 || ArgvFind('h', "help") >= 0) {
         ShowInfo();
         exit(1);
@@ -886,12 +943,11 @@ int main(int argc, char **argv) {
         Options_Load(options_file);
         Theme_Options_Load(theme_file);
         Trans_SetLanguage();
-    }
-
-    if (!batch_mode) {
         Main_SetupFLTK();
     }
 
+    numeric_locale = std::setlocale(LC_NUMERIC, NULL); // Grab current numeric locale
+        
     LogEnableDebug(debug_messages);
 
     twister_Init();
@@ -1007,6 +1063,21 @@ int main(int argc, char **argv) {
 
     Fl::add_handler(Main_key_handler);
 
+	switch (filename_prefix) {
+		case 0:
+			ob_set_config("filename_prefix", "datetime");
+			break;
+		case 1:
+			ob_set_config("filename_prefix", "numlevels");
+			break;
+		case 2:
+			ob_set_config("filename_prefix", "none");
+			break;
+		default:
+			ob_set_config("filename_prefix", "datetime");
+			break;	
+	}
+
     // draw an empty map (must be done after main window is
     // shown() because that is when FLTK finalises the colors).
     main_win->build_box->mini_map->EmptyMap();
@@ -1016,7 +1087,7 @@ int main(int argc, char **argv) {
         for (;;) {
             Fl::wait(0.2);
 
-            if (main_action == MAIN_QUIT) {
+            if (main_action == MAIN_QUIT || main_action == MAIN_RESTART) {
                 break;
             }
 
@@ -1045,6 +1116,23 @@ int main(int argc, char **argv) {
 
 	Theme_Options_Save(theme_file);
     Options_Save(options_file);
+
+	if (main_action == MAIN_RESTART) {
+	    if (main_win) {
+        // on fatal error we cannot risk calling into the Lua runtime
+        // (it's state may be compromised by a script error).
+		    if (config_file) {
+		        Cookie_Save(config_file);
+		    }
+        delete main_win;
+        main_win = NULL;
+    	}
+		Script_Close();
+		LogClose();
+		PHYSFS_deinit();
+		main_action = MAIN_NONE;
+		goto restart;
+	}
 
     Main_Shutdown(false);
 

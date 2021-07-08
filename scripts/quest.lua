@@ -2533,8 +2533,8 @@ function Quest_nice_items()
 
 
   local function assign_secondary_importants()
-    if not LEVEL.secondary_importants then return end
-    if table.empty(LEVEL.secondary_importants) then return end
+    if not LEVEL.secondary_importants 
+    or table.empty(LEVEL.secondary_importants) then return end
 
     local simp_tab = LEVEL.secondary_importants
     rand.shuffle(simp_tab)
@@ -2556,20 +2556,22 @@ function Quest_nice_items()
 
     local function pick_room_for_si(info)
       for _,R in pairs(LEVEL.rooms) do
-        if R.closets and #R.closets > 2
+        if R.closets
         and not R.secondary_important
         and not R.is_hallway then
           local do_it = false
 
-          if info.min_prog and info.max_prog then
-            if R.lev_along >= info.min_prog and
-            R.lev_along <= info.max_prog then
-              do_it = true
-            end
+          if info.min_prog and (R.lev_along >= info.min_prog) then
+            do_it = true
           end
 
-          if (not_start and R.is_start) or
-          (not_exit and R.is_exit) then
+          if info.max_prog and (R.lev_along <= info.max_prog) then
+            do_it = true
+          end
+
+          if (info.not_start and R.is_start) or
+          (info.not_exit and R.is_exit) or
+          (info.not_secret and R.is_secret) then
             do_it = false
           end
 
@@ -2592,7 +2594,7 @@ function Quest_nice_items()
     end
 
     for _,SI in pairs(simp_tab) do
-      if rand.odds(SI.level_prob) then pick_room_for_si(SI) end
+      pick_room_for_si(SI)
     end
   end
 
