@@ -6122,6 +6122,104 @@ GROW_MAZE_STRAIGHT_CAGE_ALT =
   }
 },
 
+-- [LARGE MAZE]
+
+GROW_LARGE_MAZE_LONG =
+{
+  prob = 10,
+  skip_prob = 50,
+
+  structure =
+  {
+    "x..x","x11x",
+    "x..x","x11x",
+    "....","!11!",
+    "....","!11!",
+    "....","!11!",
+    "....","!11!",
+    "x11x","x11x",
+    "x11x","x11x",
+  }
+},
+
+GROW_LARGE_MAZE_LONGER =
+{
+  prob = 7,
+  skip_prob = 65,
+
+  structure =
+  {
+    "x..x","x11x",
+    "x..x","x11x",
+    "....","!11!",
+    "....","!11!",
+    "....","!11!",
+    "....","!11!",
+    "....","!11!",
+    "....","!11!",
+    "x11x","x11x",
+    "x11x","x11x",
+  }
+},
+
+GROW_LARGE_MAZE_LONG_BANDS =
+{
+  prob = 10,
+  skip_prob = 50,
+
+  structure =
+  {
+    "x..x","x11x",
+    "x..x","x11x",
+    "....","!AA!",
+    "....","!11!",
+    "....","!11!",
+    "....","!AA!",
+    "x11x","x11x",
+    "x11x","x11x",
+  }
+},
+
+GROW_LARGE_MAZE_CROSS =
+{
+  prob = 7,
+  skip_prob = 65,
+
+  structure =
+  {
+    "xxxx..xxxx","xxxx11xxxx",
+    "xxxx..xxxx","xxxx11xxxx",
+    "xxx....xxx","xxx!11!xxx",
+    "xx......xx","xx!!11!!xx",
+    "..........","1111111111",
+    "..........","1111111111",
+    "xx......xx","xx!!11!!xx",
+    "xxx....xxx","xxx!11!xxx",
+    "xxxx11xxxx","xxxx11xxxx",
+    "xxxx11xxxx","xxxx11xxxx",
+  }
+},
+
+GROW_LARGE_MAZE_CROSS_NEW_AREA =
+{
+  prob = 7,
+  skip_prob = 65,
+
+  structure =
+  {
+    "xxxx..xxxx","xxxx11xxxx",
+    "xxxx..xxxx","xxxx11xxxx",
+    "xxx....xxx","xxx!11!xxx",
+    "xx......xx","xx!!AA!!xx",
+    "..........","111A11A111",
+    "..........","111A11A111",
+    "xx......xx","xx!!AA!!xx",
+    "xxx....xxx","xxx!11!xxx",
+    "xxxx11xxxx","xxxx11xxxx",
+    "xxxx11xxxx","xxxx11xxxx",
+  }
+},
+
 -- [TWO-WAYS]
 
 GROW_TWO_WAY_SMALL =
