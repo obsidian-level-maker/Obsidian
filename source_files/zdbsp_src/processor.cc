@@ -627,7 +627,9 @@ void FProcessor::Write(FWadWriter &out) {
 
     if (!isUDMF) {
         if (Level.GLNodes != NULL) {
-            gl5 = true;
+            gl5 = V5GLNodes || (Level.NumGLVertices > 32767) ||
+                  (Level.NumGLSegs > 65534) || (Level.NumGLNodes > 32767) ||
+                  (Level.NumGLSubsectors > 32767);
             compressGL = CompressGLNodes || (Level.NumVertices > 32767);
         } else {
             compressGL = false;
