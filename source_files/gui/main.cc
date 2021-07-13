@@ -475,13 +475,9 @@ void Main_PopulateFontMap() {
 		if (load_internal_font("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf", current_free_font, "The Neue")) {
 			Fl::set_font(current_free_font + 1, "The Neue");
 			font_menu_items.push_back(std::map<std::string, int>{ {"New Black", current_free_font} });
+			current_free_font += 2;
 		}
-		
-		if (load_internal_font("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf", current_free_font, "The Neue")) {
-			Fl::set_font(current_free_font + 1, "The Neue");
-			font_menu_items.push_back(std::map<std::string, int>{ {"New Black", current_free_font} });
-		}
-		
+
 		if (load_internal_font("./theme/fonts/Teko/Teko-Regular.ttf", current_free_font, "Teko")) {
 			if (load_internal_font("./theme/fonts/Teko/Teko-Bold.ttf", current_free_font + 1, "Teko Bold")) {
 				font_menu_items.push_back(std::map<std::string, int>{ {"Teko", current_free_font} });
@@ -1071,6 +1067,9 @@ int main(int argc, char **argv) {
 			ob_set_config("filename_prefix", "numlevels");
 			break;
 		case 2:
+			ob_set_config("filename_prefix", "game");
+			break;
+		case 3:
 			ob_set_config("filename_prefix", "none");
 			break;
 		default:
