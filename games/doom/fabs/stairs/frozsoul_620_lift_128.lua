@@ -29,7 +29,7 @@ PREFABS.Lift_620_128_limit =
 {
   template = "Lift_620_128",
 
-  engine = "limit"
+  engine = "limit",
 
   line_13369 = 120,
   line_13371 = 123
