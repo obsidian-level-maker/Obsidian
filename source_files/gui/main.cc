@@ -1067,6 +1067,9 @@ int main(int argc, char **argv) {
 			ob_set_config("filename_prefix", "numlevels");
 			break;
 		case 2:
+			ob_set_config("filename_prefix", "game");
+			break;
+		case 3:
 			ob_set_config("filename_prefix", "none");
 			break;
 		default:
