@@ -1,9 +1,11 @@
-PREFABS.lift_620_128 =
+PREFABS.Lift_620_128 =
 {
   file   = "stairs/frozsoul_620_lift_128.wad",
 
   prob   = 10,
   prob_skew = 1.5,
+
+  engine = "!limit",
 
   theme  = "!hell",
   style  = "steepness",
@@ -21,4 +23,14 @@ PREFABS.lift_620_128 =
 
   delta_h = 128,
   plain_ceiling = true,
+}
+
+PREFABS.Lift_620_128_limit =
+{
+  template = "Lift_620_128",
+
+  engine = "limit"
+
+  line_13369 = 120,
+  line_13371 = 123
 }
