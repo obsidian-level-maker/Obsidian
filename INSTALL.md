@@ -22,9 +22,8 @@
    * website: http://www.zlib.net/
    * package: `zlib1g-dev`
 
-6. XDG Utils
-   * (only needed for Linux, to install the desktop and icon files)
-   * package: `xdg-utils`
+6. FLEX
+   * package: `flex`
    
 7. Code formatting tools
    * package: `clang-tidy`
@@ -41,6 +40,7 @@ will build the Obsidian binary. (The '>' is just the prompt)
     > make (-j# optional, with # being the number of cores you'd like to use)
     > cd ..
     > cp build/obsidian .
+    > cp build/source_files/ff_src/filename_formatter ./tools
     
 Then, obsidian can be launched with:
 
@@ -57,7 +57,8 @@ Similar to the above directions:
     > cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw64.cmake (use Toolchain-mingw32.cmake for a 32-bit build)
     > make (-j# optional, with # being the number of cores you'd like to use)
     > cd ..
-    > cp build/obsidian.exe .
+    > cp build/obsidian.exe
+    > cp build/source_files/ff_src/filename_formatter.exe ./tools
 
 
 # INSTALLING Obsidian
