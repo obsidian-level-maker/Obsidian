@@ -4,6 +4,7 @@ include(cmake/CPM.cmake)
 
 add_subdirectory(source_files/lua_src)
 add_subdirectory(source_files/acc_src)
+add_subdirectory(source_files/ff_src)
 add_subdirectory(source_files/ajpoly_src)
 add_subdirectory(source_files/physfs_src)
 add_subdirectory(source_files/zdbsp_src)
