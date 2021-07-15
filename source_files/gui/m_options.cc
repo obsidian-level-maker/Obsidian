@@ -206,6 +206,7 @@ class UI_OptionsWin : public Fl_Window {
     UI_CustomMenu *opt_filename_prefix;
     
     Fl_Button *opt_custom_prefix;
+    UI_HelpLink *custom_prefix_help;
 
     UI_CustomCheckBox *opt_backups;
     UI_CustomCheckBox *opt_overwrite;
@@ -303,6 +304,30 @@ class UI_OptionsWin : public Fl_Window {
         
     }
     
+    static void callback_PrefixHelp(Fl_Widget *w, void *data) {
+		fl_cursor(FL_CURSOR_DEFAULT);
+		Fl_Window *win = new Fl_Window(640, 480, "Custom Prefix");
+		Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+		Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640-40, 480-40, NULL);
+		disp->buffer(buff);
+		disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+		win->resizable(*disp);
+		win->hotspot(0, 0, 0);
+		win->set_modal();
+		win->show();
+		buff->text("Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n\
+%year or %Y: The current year.\n\n\
+%month or %M: The current month.\n\n\
+%day or %D: The current day.\n\n\
+%hour or %h: The current hour.\n\n\
+%minute or %m: The current minute.\n\n\
+%second or %s: The current second.\n\n\
+%version or %v: The current Obsidian version.\n\n\
+%game or %g: Which game the WAD is for.\n\n\
+%theme or %t: Which theme was selected from the game's choices.\n\n\
+%count or %c: The number of levels in the generated WAD."); 
+	}
+    
     static void callback_SetCustomPrefix(Fl_Widget *w, void *data) {
 
 		const char *user_buf = fl_input(_("Enter Custom Prefix Format:"), custom_prefix.c_str());
@@ -369,6 +394,10 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_custom_prefix->callback(callback_SetCustomPrefix, this);
     opt_custom_prefix->labelfont(font_style);
     opt_custom_prefix->labelcolor(FONT2_COLOR);
+
+    custom_prefix_help = new UI_HelpLink(136 + KF * 40 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24), "?");
+    custom_prefix_help->labelfont(font_style);
+    custom_prefix_help->callback(callback_PrefixHelp, this);
 
     cy += opt_custom_prefix->h() + y_step * 2;
 

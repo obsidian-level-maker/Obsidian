@@ -1441,6 +1441,8 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     opt_font_scaling->textfont(font_style);
     opt_font_scaling->textcolor(FONT2_COLOR);
     opt_font_scaling->selection_color(SELECTION);
+    opt_font_scaling->visible_focus(0);
+    opt_font_scaling->color(BUTTON_COLOR);
 
     cy += opt_font_scaling->h() + y_step;
 

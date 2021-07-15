@@ -105,7 +105,7 @@ bool use_system_fonts = false;
 int window_scaling = 0;
 int font_scaling = 18;
 int filename_prefix = 0;
-std::string custom_prefix = "%test";
+std::string custom_prefix = "CUSTOM_";
 int num_fonts = 0;
 std::vector<std::map<std::string, int>> font_menu_items;
 
