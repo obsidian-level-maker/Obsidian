@@ -352,7 +352,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
         new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Filename Prefix: "));
     opt_filename_prefix->align(FL_ALIGN_LEFT);
     opt_filename_prefix->callback(callback_FilenamePrefix, this);
-    opt_filename_prefix->add(_("Date and Time|Number of Levels|Game|Custom|Nothing"));
+    opt_filename_prefix->add(_("Date and Time|Number of Levels|Game|Theme|Version|Custom|Nothing"));
     opt_filename_prefix->labelfont(font_style);
 	opt_filename_prefix->textfont(font_style);
 	opt_filename_prefix->textcolor(FONT2_COLOR);
