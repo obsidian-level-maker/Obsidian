@@ -1307,7 +1307,9 @@ function ob_default_filename()
      return "obFULL_" .. str
     end
  elseif OB_CONFIG.filename_prefix == "game" then
-   return OB_CONFIG.game .. "_" .. str     
+   return OB_CONFIG.game .. "_" .. str
+ elseif OB_CONFIG.filename_prefix == "custom" then
+   return "CUSTOM" .. "_" .. str       
  else
    return str
  end

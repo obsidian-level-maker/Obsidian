@@ -105,6 +105,7 @@ bool use_system_fonts = false;
 int window_scaling = 0;
 int font_scaling = 18;
 int filename_prefix = 0;
+std::string custom_prefix = "%test";
 int num_fonts = 0;
 std::vector<std::map<std::string, int>> font_menu_items;
 
@@ -1070,6 +1071,9 @@ int main(int argc, char **argv) {
 			ob_set_config("filename_prefix", "game");
 			break;
 		case 3:
+			ob_set_config("filename_prefix", "custom");
+			break;
+		case 4:
 			ob_set_config("filename_prefix", "none");
 			break;
 		default:

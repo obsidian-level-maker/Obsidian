@@ -309,12 +309,9 @@ const char *DLG_OutputFilename(const char *ext, const char *preset) {
 
 //----------------------------------------------------------------------cout
 
-void DLG_EditSeed(void) {
-    char num_buf[1000];
+void DLG_EditSeed(void) {;
 
-    sprintf(num_buf, std::to_string(next_rand_seed).c_str());
-
-    const char *user_buf = fl_input(_("Enter New Seed Number:"), num_buf);
+    const char *user_buf = fl_input(_("Enter New Seed Number:"), std::to_string(next_rand_seed).c_str());
 
     // cancelled?
     if (!user_buf) {

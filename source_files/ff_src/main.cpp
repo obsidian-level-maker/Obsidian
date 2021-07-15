@@ -38,7 +38,8 @@ void count() { std::cout << countValue; }
 
 int main(int argc, char **argv) {
   int c;
-  while ((c = getopt(argc, argv, "g:v:t:c:")) != EOF) {
+  std::string input;
+  while ((c = getopt(argc, argv, "g:v:t:c:f:")) != EOF) {
     switch (c) {
     case 'g':
       gameValue = optarg;
@@ -52,14 +53,14 @@ int main(int argc, char **argv) {
     case 'c':
       countValue = optarg;
       break;
+    case 'f':
+      input = optarg;
+      break;
     case '?':
       std::cerr << "invalid arguments\n";
       exit(1);
     }
   }
-
-  std::string input;
-  std::getline(std::cin, input);
 
   auto buffer_state = yy_scan_bytes(input.c_str(), input.size());
   yy_switch_to_buffer(buffer_state);
