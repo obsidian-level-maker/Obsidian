@@ -1612,6 +1612,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
                                        _("Load Defaults"));
     load_defaults->visible_focus(0);
     load_defaults->box(button_style);
+    load_defaults->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     load_defaults->color(BUTTON_COLOR);
     load_defaults->callback(callback_LoadDefaults, this);
     load_defaults->labelfont(font_style);
@@ -1621,6 +1622,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
                                        _("Load Theme"));
     load_theme->visible_focus(0);
     load_theme->box(button_style);
+    load_theme->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     load_theme->color(BUTTON_COLOR);
     load_theme->callback(callback_LoadTheme, this);
     load_theme->labelfont(font_style);
@@ -1630,6 +1632,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
                                        _("Save Theme"));
     save_theme->visible_focus(0);
     save_theme->box(button_style);
+    save_theme->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     save_theme->color(BUTTON_COLOR);
     save_theme->callback(callback_SaveTheme, this);
     save_theme->labelfont(font_style);

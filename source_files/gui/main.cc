@@ -483,6 +483,13 @@ void Main_PopulateFontMap() {
 			if (load_internal_font("./theme/fonts/Teko/Teko-Bold.ttf", current_free_font + 1, "Teko Bold")) {
 				font_menu_items.push_back(std::map<std::string, int>{ {"Teko", current_free_font} });
 			}
+			current_free_font += 2;
+		}
+		
+		if (load_internal_font("./theme/fonts/Kalam/Kalam-Regular.ttf", current_free_font, "Kalam")) {
+			if (load_internal_font("./theme/fonts/Kalam/Kalam-Bold.ttf", current_free_font + 1, "Kalam Bold")) {
+				font_menu_items.push_back(std::map<std::string, int>{ {"Kalam", current_free_font} });
+			}
 		}
 
 	}

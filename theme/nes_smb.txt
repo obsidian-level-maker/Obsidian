@@ -1,3 +1,5 @@
+-- NES Super Mario Brothers theme by Frozsoul
+
 -- THEME FILE : OBSIDIAN Beta 19 Preview
 -- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted
 -- https://github.com/GTD-Carthage/Oblige
@@ -6,13 +8,17 @@ window_scaling      = 0
 font_scaling      = 24
 font_theme      = 5
 widget_theme      = 0
-box_theme      = 0
+box_theme      = 5
 button_theme      = 4
 single_pane = 0
+use_system_fonts = 0
 color_scheme      = 1
 text_red      = 255
 text_green      = 255
 text_blue      = 255
+text2_red      = 255
+text2_green      = 255
+text2_blue      = 255
 bg_red      = 92
 bg_green      = 148
 bg_blue      = 252
