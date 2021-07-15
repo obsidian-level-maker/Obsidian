@@ -3737,7 +3737,7 @@ GROW_LIQUID_FIGURE_CORRIDOR =
   },
 },
 
-GROW_LIQUID_BRIDGE_CORRIDOR =
+GROW_LIQUID_SQUEEZE_CORRIDOR =
 {
   prob = 5,
   skip_prob = 65,
@@ -3759,7 +3759,7 @@ GROW_LIQUID_BRIDGE_CORRIDOR =
   },
 },
 
-GROW_LIQUID_BRIDGE_CORRIDOR_CROSSING =
+GROW_LIQUID_SQUEEZE_GAP_CROSSING =
 {
   prob = 5,
   skip_prob = 65,
@@ -3771,6 +3771,31 @@ GROW_LIQUID_BRIDGE_CORRIDOR_CROSSING =
     "...","%1/",
     "...","~~~",
     "...","/1%",
+    "...","111",
+    "x1x","x1x",
+  },
+
+  diagonals =
+  {
+    "~1","1~",
+    "~1","1~",
+  },
+},
+
+GROW_LIQUID_SQUEEZE_GAP_CROSSING_STAIR =
+{
+  prob = 4,
+  skip_prob = 75,
+
+  structure =
+  {
+    "...","111",
+    "...","111",
+    "...","1v1",
+    "...","%A/",
+    "...","~A~",
+    "...","/A%",
+    "...","1^1",
     "...","111",
     "x1x","x1x",
   },
