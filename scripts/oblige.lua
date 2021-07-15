@@ -1290,11 +1290,12 @@ function ob_default_filename()
         formatstring = "%M"
       end
       if current_date.day < 10 then
-        formatstring =  formatstring .. "-0%D"
+        formatstring = formatstring .. "-0%D"
       else
         formatstring = formatstring .. "-%D"
       end
-      local formatstring = "%Y-" .. formatstring .. "-"
+      
+      formatstring = "%Y-" .. formatstring .. "-"
     
       if current_date.hour < 10 then
         formatstring = formatstring .. "0%h"
