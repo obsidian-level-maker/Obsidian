@@ -30,6 +30,7 @@
 #include "lib_signal.h"
 #include "lib_util.h"
 #include "main.h"
+#include "subprocess.h"
 #include "physfs.h"
 #include "twister.h"
 
@@ -68,34 +69,40 @@ int gui_format_prefix(lua_State *L) {
 
     SYS_ASSERT(levelcount && game && theme && format);
 
-	std::string ff_args = "tools/filename_formatter"; // Filename Formatter argv[] basically
-	std::string temp_format = format;
-	
-	ff_args.append(" -c ").append(levelcount);
-	ff_args.append(" -g ").append(game);
-	ff_args.append(" -t ").append(theme);
-	if (temp_format == "version") {
-		ff_args.append(" -f ").append(OBSIDIAN_SHORT_VERSION).append("_");		
-	} else if (temp_format == "custom") {
-		ff_args.append(" -f ").append(custom_prefix);
+	const char* ff_args[10];
+
+	ff_args[0] = "tools/filename_formatter";
+	ff_args[1] = "-c";
+	ff_args[2] = levelcount;
+	ff_args[3] = "-g";
+	ff_args[4] = game;
+	ff_args[5] = "-t";
+	ff_args[6] = theme;
+	ff_args[7] = "-f";
+	if (StringCaseCmp(format, "version") == 0) {
+		std::string tempstring = OBSIDIAN_SHORT_VERSION;
+		tempstring.append("_");
+		ff_args[8] = tempstring.c_str();	
+	} else if (StringCaseCmp(format, "custom") == 0) {
+		ff_args[8] = custom_prefix.c_str();
 	} else {
-		ff_args.append(" -f ").append(format);		
+		ff_args[8] = format;		
 	}
+	ff_args[9] = NULL;
+		
+	struct subprocess_s subprocess;
+	int result = subprocess_create(ff_args, subprocess_option_no_window, &subprocess);
+	if (result != 0) {
+	  return 0;
+	}
+
+	//Read the output of filename_formatter	
+	FILE* p_stdout = subprocess_stdout(&subprocess);
+	char prefix[100];
+	fgets(prefix, 100, p_stdout);
 	
-	//Read the output of filename_formatter
-	FILE *fp;
-	int status;
-	char prefix[1000];
-
-	fp = popen(ff_args.c_str(), "r");
-	if (fp == NULL)
-		// I guess if it failed to run or is missing? - Dasho
-		return 0;
-
-	fgets(prefix, 1000, fp);
-
-	status = pclose(fp);
-	if (status == -1) {
+	result = subprocess_destroy(&subprocess);
+	if (result != 0) {
 		return 0;
 	} else {
 		lua_pushstring(L, (const char *)prefix);
