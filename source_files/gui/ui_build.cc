@@ -63,6 +63,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
 
     status = new Fl_Box(FL_FLAT_BOX, X + pad, cy, W - pad * 2, kf_h(26),
                         _("Ready to go!"));
+    status->box(FL_NO_BOX);
     status->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
     status->labelfont(font_style);
 

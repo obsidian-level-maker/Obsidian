@@ -1,3 +1,5 @@
+-- Excel 365 theme by Frozsoul
+
 -- THEME FILE : OBSIDIAN Beta 19 Preview
 -- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted
 -- https://github.com/GTD-Carthage/Oblige
@@ -6,13 +8,17 @@ window_scaling      = 0
 font_scaling      = 16
 font_theme      = 0
 widget_theme      = 3
-box_theme      = 5
-button_theme      = 1
+box_theme      = 0
+button_theme      = 4
 single_pane = 0
+use_system_fonts = 0
 color_scheme      = 1
 text_red      = 0
 text_green      = 0
 text_blue      = 0
+text2_red      = 0
+text2_green      = 0
+text2_blue      = 0
 bg_red      = 242
 bg_green      = 242
 bg_blue      = 242

@@ -1,20 +1,24 @@
--- Vaporwave/Macintosh Plus cover theme by Dashodanger
+-- Vaporwave inspired theme by Dashodanger
 
 -- THEME FILE : OBSIDIAN Beta 19 Preview
 -- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted
 -- https://github.com/GTD-Carthage/Oblige
 
 window_scaling      = 0
-font_scaling      = 16
-font_theme      = 2
+font_scaling      = 18
+font_theme      = 3
 widget_theme      = 2
 box_theme      = 1
-button_theme      = 3
+button_theme      = 0
 single_pane = 0
+use_system_fonts = 0
 color_scheme      = 1
 text_red      = 255
 text_green      = 255
 text_blue      = 255
+text2_red      = 255
+text2_green      = 255
+text2_blue      = 255
 bg_red      = 51
 bg_green      = 196
 bg_blue      = 153

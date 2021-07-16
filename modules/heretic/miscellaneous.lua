@@ -186,7 +186,7 @@ OB_MODULES["misc_heretic"] =
   game = "heretic",
 
   side = "left",
-  priority = 103,
+  priority = 101,
 
   hooks =
   {

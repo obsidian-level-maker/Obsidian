@@ -57,6 +57,55 @@ bool is_dir(char *temp_name) {
 // color maps
 color_mapping_t color_mappings[MAX_COLOR_MAPS];
 
+// LUA: format_prefix(levelcount, OB_CONFIG.game, OB_CONFIG.theme, formatstring)
+//
+int gui_format_prefix(lua_State *L) {
+	
+    const char *levelcount = luaL_checkstring(L, 1);
+    const char *game = luaL_checkstring(L, 2);
+    const char *theme = luaL_checkstring(L, 3);
+    const char *format = luaL_checkstring(L, 4);
+
+    SYS_ASSERT(levelcount && game && theme && format);
+
+	std::string ff_args = "tools/filename_formatter"; // Filename Formatter argv[] basically
+	std::string temp_format = format;
+	
+	ff_args.append(" -c ").append(levelcount);
+	ff_args.append(" -g ").append(game);
+	ff_args.append(" -t ").append(theme);
+	if (temp_format == "version") {
+		ff_args.append(" -f ").append(OBSIDIAN_SHORT_VERSION).append("_");		
+	} else if (temp_format == "custom") {
+		ff_args.append(" -f ").append(custom_prefix);
+	} else {
+		ff_args.append(" -f ").append(format);		
+	}
+	
+	//Read the output of filename_formatter
+	FILE *fp;
+	int status;
+	char prefix[1000];
+
+	fp = popen(ff_args.c_str(), "r");
+	if (fp == NULL)
+		// I guess if it failed to run or is missing? - Dasho
+		return 0;
+
+	fgets(prefix, 1000, fp);
+
+	status = pclose(fp);
+	if (status == -1) {
+		return 0;
+	} else {
+		lua_pushstring(L, (const char *)prefix);
+		return 1;
+	}
+	
+	//Hopefully we don't get here
+    return 0;
+}
+
 // LUA: raw_log_print(str)
 //
 int gui_raw_log_print(lua_State *L) {
@@ -1081,6 +1130,9 @@ extern int Q1_add_mapmodel(lua_State *L);
 extern int Q1_add_tex_wad(lua_State *L);
 
 static const luaL_Reg gui_script_funcs[] = {
+	
+	{"format_prefix", gui_format_prefix},
+	
     {"raw_log_print", gui_raw_log_print},
     {"raw_debug_print", gui_raw_debug_print},
 
