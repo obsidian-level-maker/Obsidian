@@ -30,7 +30,11 @@
 #include "lib_signal.h"
 #include "lib_util.h"
 #include "main.h"
+#if defined(__MINGW32__)
+#include "subprocess-mingw.h"
+#else
 #include "subprocess.h"
+#endif
 #include "physfs.h"
 #include "twister.h"
 
