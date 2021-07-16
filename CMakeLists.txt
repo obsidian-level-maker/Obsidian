@@ -18,7 +18,7 @@ project(
   VERSION 0.1.0
 )
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-O2 -Wall")
 if(clang)
