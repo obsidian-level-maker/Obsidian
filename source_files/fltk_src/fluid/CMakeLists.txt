@@ -5,15 +5,15 @@
 #
 # Copyright 1998-2016 by Bill Spitzak and others.
 #
-# This library is free software. Distribution and use rights are outlined in
-# the file "COPYING" which should have been included with this file.  If this
-# file is missing or damaged, see the license at:
+# This library is free software. Distribution and use rights are outlined in the
+# file "COPYING" which should have been included with this file.  If this file
+# is missing or damaged, see the license at:
 #
-#     http://www.fltk.org/COPYING.php
+# http://www.fltk.org/COPYING.php
 #
 # Please report all bugs and problems on the following page:
 #
-#     http://www.fltk.org/str.php
+# http://www.fltk.org/str.php
 #
 
 set(CPPFILES
@@ -41,38 +41,38 @@ set(CPPFILES
 )
 
 if(APPLE AND NOT OPTION_APPLE_X11)
-    set(FLUID_ICON "${CMAKE_CURRENT_SOURCE_DIR}/fluid.app/Contents/Resources/fluid.icns")
-    add_executable(fluid MACOSX_BUNDLE ${CPPFILES} "${FLUID_ICON}")
-    FLTK_SET_BUNDLE_ICON(fluid "${FLUID_ICON}")
+  set(FLUID_ICON
+      "${CMAKE_CURRENT_SOURCE_DIR}/fluid.app/Contents/Resources/fluid.icns"
+  )
+  add_executable(fluid MACOSX_BUNDLE ${CPPFILES} "${FLUID_ICON}")
+  fltk_set_bundle_icon(fluid "${FLUID_ICON}")
 else()
-    add_executable(fluid WIN32 ${CPPFILES})
+  add_executable(fluid WIN32 ${CPPFILES})
 endif(APPLE AND NOT OPTION_APPLE_X11)
 
 target_link_libraries(fluid fltk fltk_images fltk_forms)
 
 # install fluid
 
-install(TARGETS fluid
-    EXPORT FLTK-Targets
-    DESTINATION ${FLTK_BINDIR}
+install(
+  TARGETS fluid
+  EXPORT FLTK-Targets
+  DESTINATION ${FLTK_BINDIR}
 )
 
 # install desktop files
 
 if(UNIX)
-    install(FILES fluid.desktop
-        DESTINATION ${FLTK_DATADIR}/applications
-        )
-    # Install mime-type file. x-fluid.desktop method is deprecated.
-    install(FILES fluid.xml
-        DESTINATION ${FLTK_DATADIR}/mime/packages
-        )
+  install(FILES fluid.desktop DESTINATION ${FLTK_DATADIR}/applications)
+  # Install mime-type file. x-fluid.desktop method is deprecated.
+  install(FILES fluid.xml DESTINATION ${FLTK_DATADIR}/mime/packages)
 
-    # Install desktop icons.
-    foreach(icon 32 48 64 128)
-        install(FILES icons/fluid-${icon}.png
-            DESTINATION ${FLTK_DATADIR}/icons/hicolor/${icon}x${icon}/apps
-            RENAME fluid.png
-        )
-    endforeach()
+  # Install desktop icons.
+  foreach(icon 32 48 64 128)
+    install(
+      FILES icons/fluid-${icon}.png
+      DESTINATION ${FLTK_DATADIR}/icons/hicolor/${icon}x${icon}/apps
+      RENAME fluid.png
+    )
+  endforeach()
 endif(UNIX)

@@ -5,8 +5,11 @@ set(CMAKE_SYSTEM_NAME Windows)
 set(CMAKE_C_COMPILER /usr/bin/x86_64-w64-mingw32-gcc)
 set(CMAKE_CXX_COMPILER /usr/bin/x86_64-w64-mingw32-g++)
 set(CMAKE_RC_COMPILER /usr/bin/x86_64-w64-mingw32-windres)
-#set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -lm -Isource_files/zlib_src/libzlibstatic.a -mwindows -lcomdlg32 -lole32 -luuid -lgdi32 -lcomctl32 -lwsock32 -lsupc++")
-# Above line works on Ubuntu; below line works on OpenSUSE (my personal build platform), so switch between them as needed - Dasho
+# set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -lm
+# -Isource_files/zlib_src/libzlibstatic.a -mwindows -lcomdlg32 -lole32 -luuid
+# -lgdi32 -lcomctl32 -lwsock32 -lsupc++") Above line works on Ubuntu; below line
+# works on OpenSUSE (my personal build platform), so switch between them as
+# needed - Dasho
 set(CMAKE_EXE_LINKER_FLAGS "-static -mwindows")
 
 # here is where the target environment located
