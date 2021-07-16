@@ -111,7 +111,7 @@ OB_MODULES["ui_slump_mons"] =
   label = _("SLUMP Monsters"),
 
   side = "left",
-  priority = 104,
+  priority = 103,
   engine = "vanilla",
 
   options =

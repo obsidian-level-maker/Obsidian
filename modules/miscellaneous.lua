@@ -193,7 +193,7 @@ OB_MODULES["misc"] =
   engine = "!vanilla",
 
   side = "left",
-  priority = 103,
+  priority = 101,
 
   hooks =
   {

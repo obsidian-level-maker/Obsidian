@@ -150,7 +150,7 @@ OB_MODULES["misc_hacx"] =
   game = "hacx",
 
   side = "left",
-  priority = 103,
+  priority = 101,
 
   hooks =
   {
