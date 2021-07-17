@@ -30,7 +30,7 @@
 #include "physfs.h"
 #define OBSIDIAN_TITLE "OBSIDIAN Level Maker"
 
-#define OBSIDIAN_VERSION "Beta 19 Preview"
+#define OBSIDIAN_VERSION "Beta 19"
 #define OBSIDIAN_SHORT_VERSION "Beta19"
 #define OBSIDIAN_HEX_VER 0x013
 #define OBSIDIAN_WEBSITE "https://github.com/GTD-Carthage/Oblige"
