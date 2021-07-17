@@ -799,56 +799,68 @@ namelib.NAMES =
 
         -- Proper full name choices for techy levels..
         ["Administrative Center"]=10,
+        ["Air Control Tower"]=10,
         ["Air Defense Systems"]=10,
         ["Alpha Labs"]=10,
         ["Ammunition Dump"]=10,
         Archives=5,
         ["Beta Labs"]=10, -- Fun fact: A third party map is named after this
         Barracks = 10,
+        ["Biological Research Station"]=5,
+        ["Biolabs"]=10,
         ["Celestial Observatory"]=7,
         ["Central Processing"]=5,
         ["Command H.Q."]=10,
         ["Command Control"]=5,
         ["Communications Complex"]=10,
+        ["Correctional Facility"]=5,
         ["Delta Labs"]=10,
         ["Energy Production Plant"]=10,
+        ["Energy Substation Hub"]=10,
+        Engineering=10,
         ["Experimental Fusion Generators"]=7,
         ["Fire Base"]=5,
         Foundry=7,
+        ["Fuel Storage"]=7,
         ["Gamma Labs"]=10,
         Garrison=10,
         Hangar=5, -- Yeah, because techy!
         ["Living Quarters"]=10,
+        Logistics=7,
         ["Manufacturing and Shipping"]=10,
+        ["Materials Storage"]=10,
         ["Maintenance and Repair Center"]=10,
+        ["Marine Training Annex"]=7,
+        ["Medical Bay"]=7,
         ["Military Outpost"]=10,
         ["Mining Quarry"]=10,
+        ["Network Hub"]=10,
         ["Nuclear Power Plant"]=10,
         ["Off-Site Emergency Generators"]=10,
         ["Off-Site Mars Comms Hub"]=7,
+        ["Off-world Gateway Site"]=5,
         ["Operations Center"]=10,
         ["Primary Core"]=7,
         Refinery=7,
         ["Research and Development"]=10,
+        ["Robotics Workshop"]=10,
         ["Satellite Relay"]=10,
         ["Secondary Core"]=7,
-        ["Spacecraft Refueling Dock"]=10,
+        ["Spacecraft Refueling Docks"]=10,
+        ["Storage Silos"]=5,
         ["Teleporter Research Complex"]=5,
+        Terraformer=5,
+        ["Thermodynamics Research"]=10,
         ["Transport Hub"]=7,
         Warehouse=10,
         ["Waste Recycling Facility"]=10,
+        ["Water Treatment Plant"]=5,
         ["Weapons Production Factory"]=7,
         ["Weapons Testing Grounds"]=10,
 
         -- Armaetus TODO: All of the below might just be removed and replaced by a heap
         -- of full level names! Again, please contribute to the listing above, this means
         -- anyone who can think of reasonable and sensible locations. -Jul 16th, 2021
-
-
-        -- military places
-        Outpost=10, Beacon=1,
-        Bunker=7, Facility=10,
-        Silos=7,
 
         -- utility places
         Grid=5, Substation=10, Core=5,
@@ -859,32 +871,24 @@ namelib.NAMES =
         Storehouse=5, Gateway=5, Depositry=3,
 
         -- industrial places
-        Factory=10,
-        Workshop=7, Works=2, Forge=8,
+        Works=2, Forge=8,
 
         -- general places
         Compound=15, Bay=5,
         Area=15, Site=10, Zone=10,
-        Chamber=5, Quarters=5, Section=3,
-        Post=3, Annex=5,
 
         -- storage-ish words -MSSP
         Armory=10, Yard=5, Depository=5,
-        Terminus=10, Pool=3, Arsenal=8,
-        Repository=8, Reserve=7,
-
-        -- military stuff -MSSP
-        Casern=5, ["F.O.B."]=7,
-        Logistics=10,
+        Terminus=10, Repository=8, Reserve=7,
       },
 
       n =
       {
         -- MSSP-TODO: sort these names into better categories!!!
         -- military places
-        Hangar=5, Outpost=10, Beacon=3,
-        Bunker=7, Facility=10, Pillbox=1,
-        Headquarters=2, Silos=7, Base=30,
+        Outpost=10,
+        Bunker=7, Facility=10,
+        Silos=7, Base=30,
         Command=10,
 
         -- utility places
