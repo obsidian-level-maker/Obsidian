@@ -11,6 +11,7 @@ add_subdirectory(source_files/zdbsp_src)
 add_subdirectory(source_files/slump_src)
 add_subdirectory(source_files/fltk_src)
 add_subdirectory(source_files/zlib_src)
+add_subdirectory(source_files/fmt_src)
 
 project(
   obsidian
@@ -182,4 +183,5 @@ target_link_libraries(
           obsidian_ajpoly
           obsidian_zdbsp
           obsidian_slump
+          fmt::fmt
 )
