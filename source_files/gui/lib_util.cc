@@ -19,6 +19,8 @@
 //------------------------------------------------------------------------
 
 #include "lib_util.h"
+#include <algorithm>
+#include <cctype>
 
 #include "headers.h"
 
@@ -28,30 +30,27 @@
 #include <unistd.h>  // usleep()
 #endif
 
-int StringCaseCmp(const char *A, const char *B) {
-    for (; *A || *B; A++, B++) {
-        // this test also catches end-of-string conditions
-        if (toupper(*A) != toupper(*B)) {
-            return (toupper(*A) - toupper(*B));
-        }
-    }
-
-    return 0;
+int StringCaseCmp(const std::string &a, const std::string &b) {
+    return !StringCaseEquals(a, b);
 }
 
-int StringCaseCmpPartial(const char *A, const char *B) {
-    // Checks that the string B occurs at the front of string A.
-    // NOTE: This function is not symmetric, A can be longer than B and
-    // still match, but the match always fails if A is shorter than B.
+int StringCaseCmpPartial(const std::string &a, const std::string &b) {
+    return !StringCaseEqualsPartial(a, b);
+}
 
-    for (; *B; A++, B++) {
-        // this test also catches end-of-string conditions
-        if (toupper(*A) != toupper(*B)) {
-            return (toupper(*A) - toupper(*B));
-        }
-    }
+bool StringCaseEquals(const std::string &a, const std::string &b) {
+    return a.size() == b.size() &&
+           std::equal(a.begin(), a.end(), b.begin(), [](char a, char b) {
+               return std::tolower(a) == std::tolower(b);
+           });
+}
 
-    return 0;
+bool StringCaseEqualsPartial(const std::string &a, const std::string &b) {
+    return a.size() >= b.size() &&
+           std::equal(a.begin(), a.begin() + b.size(), b.begin(),
+                      [](char a, char b) {
+                          return std::tolower(a) == std::tolower(b);
+                      });
 }
 
 void StringMaxCopy(char *dest, const char *src, int max) {
