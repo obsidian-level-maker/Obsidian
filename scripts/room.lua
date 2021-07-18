@@ -3380,11 +3380,12 @@ function Room_floor_ceil_heights()
           if string.gmatch(R.height_style, "short") then
             if add_h > 128 then add_h = 128 end
           elseif string.gmatch(R.height_style, "tall") then
-            if rand.odds(90) then
-              add_h = add_h * 2
-            else
-              add_h = add_h * 4
-            end
+            add_h = add_h * rand.pick({
+              [2] = 8,
+              [4] = 4,
+              [6] = 2,
+              [10] = 1 -- experimental supertall, might drop this
+            })
           end
         end
       end

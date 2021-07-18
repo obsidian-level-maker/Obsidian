@@ -905,6 +905,7 @@ E1M1 =
   parks = "none",
   fences = "none"
 },
+
 -- E1M2 Approximate map dimensions: 5,300 x 3,900 nap units
 E1M2 =
 {
@@ -932,6 +933,7 @@ E1M2 =
   big_rooms = "few",
   big_outdoor_rooms = "few"
 },
+
 -- E1M3 Approximate map dimensions: 4,100 x 3,050 map units
 E1M3 =
 {
@@ -956,6 +958,7 @@ E1M3 =
   parks = "none",
   switches = "some"
 },
+
 -- E1M4 Approximate map dimensions: 3,700 x 2,800 map units
 E1M4 =
 {
@@ -983,6 +986,7 @@ E1M4 =
   porches = "none",
   fences = "none"
 },
+
 -- E1M5 Approximate map dimensions: 4,000 x 3,200 map units
 E1M5 =
 {
@@ -1009,6 +1013,7 @@ E1M5 =
   symmetry = "some",
   pictures = "some"
 },
+
 -- E1M6 Approximate map dimensions: 5,800 x 4,900 map units
 E1M6 =
 {
@@ -1035,6 +1040,7 @@ E1M6 =
   fences = "few",
   porches = "some"
 },
+
 -- E1M7 Approximate map dimensions: 4,000 x 3,400 map units
 E1M7 =
 {
@@ -1063,6 +1069,7 @@ E1M7 =
   switches = "some",
   beams = "none"
 },
+
 -- E1M8 Approximate map dimensions: 6,600 x 7,100 map units
 E1M8 =
 {
@@ -1090,6 +1097,7 @@ E1M8 =
   hallways = "few",
   liquids = "none"
 },
+
 -- E1M9 Approximate map dimensions: 3,400 x 3,200 map units
 E1M9 =
 {
@@ -1115,7 +1123,7 @@ E1M9 =
   keys = "heaps",
   trikeys = "some",
   switches = "some",
-  symmetry = "heaps",
+  symmetry = "heaps"
 },
 
 -- E2M1 Approximate map dimensions: 2,600 x 2,000 map units
@@ -1144,6 +1152,156 @@ E2M1 =
   pictures = "few",
   barrels = "few",
   beams = "none",
+  porches = "none",
+  fences = "none"
+},
+
+-- E2M2 Approximate map dimensions: 3,100 x 5,200 map units
+E2M2 =
+{
+  outdoors = "none",
+  caves = "none",
+  parks = "none",
+  liquids = "few",
+  hallways = "some",
+  big_rooms = "few",
+  big_outdoor_rooms = "none",
+  teleporters = "none",
+  steepness = "some",
+  traps = "some",
+  cages = "none",
+  secrets = "some",
+  doors = "some",
+  windows = "none",
+  switches = "few",
+  keys = "some",
+  trikeys = "none",
+  scenics = "none",
+  park_detail = "none",
+  symmetry = "heaps",
+  pictures = "some",
+  barrels = "some",
+  beams = "few",
+  porches = "none",
+  fences = "none"
+},
+
+-- E2M3 Approximate map dimensions: 3,500 x 2,400 map units
+E2M3 =
+{
+  outdoors = "few",
+  caves = "none",
+  parks = "none",
+  liquids = "some",
+  hallways = "some",
+  big_rooms = "none",
+  big_outdoor_rooms = "none",
+  teleporters = "none",
+  steepness = "few",
+  traps = "some",
+  cages = "few",
+  secrets = "few",
+  doors = "some",
+  windows = "few",
+  switches = "few",
+  keys = "some",
+  trikeys = "none",
+  scenics = "none",
+  park_detail = "none",
+  symmetry = "heaps",
+  pictures = "some",
+  barrels = "few",
+  beams = "some",
+  porches = "few",
+  fences = "few"
+},
+
+-- E2M4 Approximate map dimensions: 3,800 x 3,800 map units
+E2M4 =
+{
+  outdoors = "none",
+  caves = "none",
+  parks = "none",
+  liquids = "some",
+  hallways = "some",
+  big_rooms = "some",
+  big_outdoor_rooms = "none",
+  teleporters = "few",
+  steepness = "some",
+  traps = "some",
+  cages = "none",
+  secrets = "some",
+  doors = "some",
+  windows = "none",
+  switches = "few",
+  keys = "heaps",
+  trikeys = "few",
+  scenics = "none",
+  park_detail = "none",
+  symmetry = "some",
+  pictures = "heaps",
+  barrels = "few",
+  beams = "few",
+  porches = "few",
+  fences = "few"
+},
+
+-- E2M5 Approximate map dimensions: 4,200 x 3,700 map units
+E2M5 =
+{
+  outdoors = "few",
+  caves = "none",
+  parks = "none",
+  liquids = "some",
+  hallways = "heaps",
+  big_rooms = "few",
+  big_outdoor_rooms = "few",
+  teleporters = "some",
+  steepness = "heaps",
+  traps = "some",
+  cages = "few",
+  secrets = "some",
+  doors = "heaps",
+  windows = "few",
+  switches = "some",
+  keys = "none",
+  trikeys = "none",
+  scenics = "few",
+  park_detail = "none",
+  symmetry = "heaps",
+  pictures = "heaps",
+  barrels = "few",
+  beams = "some",
+  porches = "few",
+  fences = "few"
+},
+
+-- E2M6 Approximate map dimensions: 3,200 x 5,000 map units
+E2M6 =
+{
+  outdoors = "few",
+  caves = "none",
+  parks = "none",
+  liquids = "few",
+  hallways = "heaps",
+  big_rooms = "none",
+  big_outdoor_rooms = "none",
+  teleporters = "few",
+  steepness = "few",
+  traps = "some",
+  cages = "none",
+  secrets = "some",
+  doors = "heaps",
+  windows = "none",
+  switches = "some",
+  keys = "heaps",
+  trikeys = "heaps",
+  scenics = "few",
+  park_detail = "none",
+  symmetry = "none",
+  pictures = "some",
+  barrels = "few",
+  beams = "some",
   porches = "none",
   fences = "none"
 },
@@ -1178,6 +1336,8 @@ EXMX =
   porches =
   fences =
 },
+
+
 ]]
 
 -- translate changes to here instead
@@ -1187,7 +1347,7 @@ function IWAD_MODE.begin_level()
 
   if LEVEL.name == "MAP01" then
     LEVEL.map_W = 18
-    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.a) .. " Entryway"
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.e)
     LEVEL.size_multiplier = 0.6
     LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 192
@@ -1197,6 +1357,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_multiplier = 0.5
     LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 192
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.e)
     PARAM.brightness_offset = "-1"
   elseif LEVEL.name == "MAP03" then
     LEVEL.map_W = 25
@@ -1211,13 +1372,13 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 160
     PARAM.brightness_offset = "-2"
-    LEVEL.description = "The " .. rand.key_by_probs(nt.TECH.lexicon.n)
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.e)
   elseif LEVEL.name == "MAP05" then
     LEVEL.map_W = 28
     LEVEL.size_multiplier = 0.8
     LEVEL.sky_light = 144
     LEVEL.size_consistency = "normal"
-    LEVEL.description = "The " .. rand.key_by_probs(nt.TECH.lexicon.n)
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.e)
     PARAM.brightness_offset = "-2"
   elseif LEVEL.name == "MAP06" then
     LEVEL.map_W = 30
@@ -1256,6 +1417,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 144
     PARAM.brightness_offset = "+2"
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.e)
     LEVEL.squareishness = 30
   elseif LEVEL.name == "MAP11" then
     LEVEL.map_W = 26
@@ -1271,6 +1433,7 @@ function IWAD_MODE.begin_level()
     LEVEL.has_streets = true -- Its shape implies this
     LEVEL.sky_light = 144
     PARAM.brightness_offset = "+1"
+    LEVEL.squareishness = 55
     LEVEL.description = "The " .. rand.key_by_probs(nt.URBAN.lexicon.n)
   elseif LEVEL.name == "MAP13" then
     LEVEL.map_W = 40
@@ -1517,7 +1680,23 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = "strict"
     LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.a) .. " Anomaly"
     PARAM.brightness_offset = "+1"
-  end]]
+    elseif LEVEL.name == "E2M2" then
+    LEVEL.map_W = 30
+    LEVEL.size_multiplier = 0.8
+    LEVEL.area_multiplier = 1.33
+    LEVEL.size_consistency = "strict"
+    LEVEL.description = "Containment " .. rand.key_by_probs(nt.TECH.lexicon.a)
+    LEVEL.squarishness = 70
+    PARAM.brightnesS_offset = "+2"
+    elseif LEVEL.name == "E2M3" then
+    LEVEL.map_w = 26
+    LEVEL.size_multiplier = 0.6
+    LEVEL.area_multiplier = 0.4
+    LEVEL.size_consistency = "strict"
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.e) -- Will this work, MSSP?
+    LEVEL.squarishness = 33
+  end
+  ]]
 
   -- LEVEL.description = "Icon of " .. rand.key_by_probs(nt.GOTHIC.lexicon.h) - For reference
   -- LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.a) .. " Citadel" - For reference

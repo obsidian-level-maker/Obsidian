@@ -3737,7 +3737,7 @@ GROW_LIQUID_FIGURE_CORRIDOR =
   },
 },
 
-GROW_LIQUID_BRIDGE_CORRIDOR =
+GROW_LIQUID_SQUEEZE_CORRIDOR =
 {
   prob = 5,
   skip_prob = 65,
@@ -3759,7 +3759,7 @@ GROW_LIQUID_BRIDGE_CORRIDOR =
   },
 },
 
-GROW_LIQUID_BRIDGE_CORRIDOR_CROSSING =
+GROW_LIQUID_SQUEEZE_GAP_CROSSING =
 {
   prob = 5,
   skip_prob = 65,
@@ -3771,6 +3771,31 @@ GROW_LIQUID_BRIDGE_CORRIDOR_CROSSING =
     "...","%1/",
     "...","~~~",
     "...","/1%",
+    "...","111",
+    "x1x","x1x",
+  },
+
+  diagonals =
+  {
+    "~1","1~",
+    "~1","1~",
+  },
+},
+
+GROW_LIQUID_SQUEEZE_GAP_CROSSING_STAIR =
+{
+  prob = 4,
+  skip_prob = 75,
+
+  structure =
+  {
+    "...","111",
+    "...","111",
+    "...","1v1",
+    "...","%A/",
+    "...","~A~",
+    "...","/A%",
+    "...","1^1",
     "...","111",
     "x1x","x1x",
   },
@@ -6119,6 +6144,104 @@ GROW_MAZE_STRAIGHT_CAGE_ALT =
     "...","#1C",
     "x1x","x1x",
     "x1x","x1x",
+  }
+},
+
+-- [LARGE MAZE]
+
+GROW_LARGE_MAZE_LONG =
+{
+  prob = 10,
+  skip_prob = 50,
+
+  structure =
+  {
+    "x..x","x11x",
+    "x..x","x11x",
+    "....","!11!",
+    "....","!11!",
+    "....","!11!",
+    "....","!11!",
+    "x11x","x11x",
+    "x11x","x11x",
+  }
+},
+
+GROW_LARGE_MAZE_LONGER =
+{
+  prob = 7,
+  skip_prob = 65,
+
+  structure =
+  {
+    "x..x","x11x",
+    "x..x","x11x",
+    "....","!11!",
+    "....","!11!",
+    "....","!11!",
+    "....","!11!",
+    "....","!11!",
+    "....","!11!",
+    "x11x","x11x",
+    "x11x","x11x",
+  }
+},
+
+GROW_LARGE_MAZE_LONG_BANDS =
+{
+  prob = 10,
+  skip_prob = 50,
+
+  structure =
+  {
+    "x..x","x11x",
+    "x..x","x11x",
+    "....","!AA!",
+    "....","!11!",
+    "....","!11!",
+    "....","!AA!",
+    "x11x","x11x",
+    "x11x","x11x",
+  }
+},
+
+GROW_LARGE_MAZE_CROSS =
+{
+  prob = 7,
+  skip_prob = 65,
+
+  structure =
+  {
+    "xxxx..xxxx","xxxx11xxxx",
+    "xxxx..xxxx","xxxx11xxxx",
+    "xxx....xxx","xxx!11!xxx",
+    "xx......xx","xx!!11!!xx",
+    "..........","1111111111",
+    "..........","1111111111",
+    "xx......xx","xx!!11!!xx",
+    "xxx....xxx","xxx!11!xxx",
+    "xxxx11xxxx","xxxx11xxxx",
+    "xxxx11xxxx","xxxx11xxxx",
+  }
+},
+
+GROW_LARGE_MAZE_CROSS_NEW_AREA =
+{
+  prob = 7,
+  skip_prob = 65,
+
+  structure =
+  {
+    "xxxx..xxxx","xxxx11xxxx",
+    "xxxx..xxxx","xxxx11xxxx",
+    "xxx....xxx","xxx!11!xxx",
+    "xx......xx","xx!!AA!!xx",
+    "..........","111A11A111",
+    "..........","111A11A111",
+    "xx......xx","xx!!AA!!xx",
+    "xxx....xxx","xxx!11!xxx",
+    "xxxx11xxxx","xxxx11xxxx",
+    "xxxx11xxxx","xxxx11xxxx",
   }
 },
 
