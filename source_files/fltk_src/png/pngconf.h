@@ -378,9 +378,10 @@
 #if !defined(PNG_PRIVATE)
 #ifdef __has_extension
 #if __has_extension(attribute_unavailable_with_message)
-#define PNG_PRIVATE                                                    \
-    __attribute__((__unavailable__("This function is not exported by " \
-                                   "libpng.")))
+#define PNG_PRIVATE                                         \
+    __attribute__((                                         \
+        __unavailable__("This function is not exported by " \
+                        "libpng.")))
 #endif
 #endif
 #endif

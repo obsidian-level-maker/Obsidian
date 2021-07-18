@@ -71,7 +71,8 @@ init_destination(j_compress_ptr cinfo) {
 }
 
 METHODDEF(void)
-init_mem_destination(j_compress_ptr cinfo) { /* no work necessary here */ }
+init_mem_destination(j_compress_ptr cinfo) { /* no work necessary here */
+}
 
 /*
  * Empty the output buffer --- called whenever buffer fills up.

@@ -72,7 +72,7 @@ class FL_EXPORT Fl_Check_Browser : public Fl_Browser_ {
     int add(char *s);         // add an (unchecked) item
     int add(char *s, int b);  // add an item and set checked
                               // both return the new nitems()
-    int remove(int item);  // delete an item. Returns nitems()
+    int remove(int item);     // delete an item. Returns nitems()
 
     // inline const char * methods to avoid breaking binary compatibility...
     /** See int Fl_Check_Browser::add(char *s) */

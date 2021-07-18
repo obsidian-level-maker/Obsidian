@@ -169,138 +169,136 @@ int Fl_PostScript_Graphics_Driver::clocale_printf(const char *format, ...) {
 
 //  Prolog string
 
-static const char
-    *
-        prolog =
-            "%%BeginProlog\n"
-            "/L { /y2 exch def\n"
-            "/x2 exch def\n"
-            "/y1 exch def\n"
-            "/x1 exch def\n"
-            "newpath   x1 y1 moveto x2 y2 lineto\n"
-            "stroke}\n"
-            "bind def\n"
+static const char *prolog =
+    "%%BeginProlog\n"
+    "/L { /y2 exch def\n"
+    "/x2 exch def\n"
+    "/y1 exch def\n"
+    "/x1 exch def\n"
+    "newpath   x1 y1 moveto x2 y2 lineto\n"
+    "stroke}\n"
+    "bind def\n"
 
-            "/R { /dy exch def\n"
-            "/dx exch def\n"
-            "/y exch def\n"
-            "/x exch def\n"
-            "newpath\n"
-            "x y moveto\n"
-            "dx 0 rlineto\n"
-            "0 dy rlineto\n"
-            "dx neg 0 rlineto\n"
-            "closepath stroke\n"
-            "} bind def\n"
+    "/R { /dy exch def\n"
+    "/dx exch def\n"
+    "/y exch def\n"
+    "/x exch def\n"
+    "newpath\n"
+    "x y moveto\n"
+    "dx 0 rlineto\n"
+    "0 dy rlineto\n"
+    "dx neg 0 rlineto\n"
+    "closepath stroke\n"
+    "} bind def\n"
 
-            "/CL {\n"
-            "/dy exch def\n"
-            "/dx exch def\n"
-            "/y exch def\n"
-            "/x exch def\n"
-            "newpath\n"
-            "x y moveto\n"
-            "dx 0 rlineto\n"
-            "0 dy rlineto\n"
-            "dx neg 0 rlineto\n"
-            "closepath\n"
-            "clip\n"
-            "} bind def\n"
+    "/CL {\n"
+    "/dy exch def\n"
+    "/dx exch def\n"
+    "/y exch def\n"
+    "/x exch def\n"
+    "newpath\n"
+    "x y moveto\n"
+    "dx 0 rlineto\n"
+    "0 dy rlineto\n"
+    "dx neg 0 rlineto\n"
+    "closepath\n"
+    "clip\n"
+    "} bind def\n"
 
-            "/FR { /dy exch def\n"
-            "/dx exch def\n"
-            "/y exch def\n"
-            "/x exch def\n"
-            "currentlinewidth 0 setlinewidth newpath\n"
-            "x y moveto\n"
-            "dx 0 rlineto\n"
-            "0 dy rlineto\n"
-            "dx neg 0 rlineto\n"
-            "closepath fill setlinewidth\n"
-            "} bind def\n"
+    "/FR { /dy exch def\n"
+    "/dx exch def\n"
+    "/y exch def\n"
+    "/x exch def\n"
+    "currentlinewidth 0 setlinewidth newpath\n"
+    "x y moveto\n"
+    "dx 0 rlineto\n"
+    "0 dy rlineto\n"
+    "dx neg 0 rlineto\n"
+    "closepath fill setlinewidth\n"
+    "} bind def\n"
 
-            "/GS { gsave } bind  def\n"
-            "/GR { grestore } bind def\n"
+    "/GS { gsave } bind  def\n"
+    "/GR { grestore } bind def\n"
 
-            "/SP { showpage } bind def\n"
-            "/LW { setlinewidth } bind def\n"
-            "/CF /Courier def\n"
-            "/SF { /CF exch def } bind def\n"
-            "/fsize 12 def\n"
-            "/FS { /fsize exch def fsize CF findfont exch scalefont setfont "
-            "}def \n"
+    "/SP { showpage } bind def\n"
+    "/LW { setlinewidth } bind def\n"
+    "/CF /Courier def\n"
+    "/SF { /CF exch def } bind def\n"
+    "/fsize 12 def\n"
+    "/FS { /fsize exch def fsize CF findfont exch scalefont setfont "
+    "}def \n"
 
-            "/GL { setgray } bind def\n"
-            "/SRGB { setrgbcolor } bind def\n"
+    "/GL { setgray } bind def\n"
+    "/SRGB { setrgbcolor } bind def\n"
 
-            "/A85RLE { /ASCII85Decode filter /RunLengthDecode filter } bind "
-            "def\n"  // ASCII85Decode followed by RunLengthDecode filters
+    "/A85RLE { /ASCII85Decode filter /RunLengthDecode filter } bind "
+    "def\n"  // ASCII85Decode followed by RunLengthDecode filters
 
-            //  color images
+    //  color images
 
-            "/CI { GS /py exch def /px exch def /sy exch def /sx exch def\n"
-            "translate \n"
-            "sx sy scale px py 8 \n"
-            "[ px 0 0 py neg 0 py ]\n"
-            "currentfile A85RLE\n false 3"
-            " colorimage GR\n"
-            "} bind def\n"
+    "/CI { GS /py exch def /px exch def /sy exch def /sx exch def\n"
+    "translate \n"
+    "sx sy scale px py 8 \n"
+    "[ px 0 0 py neg 0 py ]\n"
+    "currentfile A85RLE\n false 3"
+    " colorimage GR\n"
+    "} bind def\n"
 
-            //  gray images
+    //  gray images
 
-            "/GI { GS /py exch def /px exch def /sy exch def /sx exch def \n"
-            "translate \n"
-            "sx sy scale px py 8 \n"
+    "/GI { GS /py exch def /px exch def /sy exch def /sx exch def \n"
+    "translate \n"
+    "sx sy scale px py 8 \n"
 
-            "[ px 0 0 py neg 0 py ]\n"
-            "currentfile A85RLE\n"
-            "image GR\n"
-            "} bind def\n"
+    "[ px 0 0 py neg 0 py ]\n"
+    "currentfile A85RLE\n"
+    "image GR\n"
+    "} bind def\n"
 
-            // single-color bitmask
+    // single-color bitmask
 
-            "/MI { GS /py exch def /px exch def /sy exch def /sx exch def \n"
-            "translate \n"
-            "sx sy scale px py true \n"
-            "[ px 0 0 py neg 0 py ]\n"
-            "currentfile A85RLE\n"
-            "imagemask GR\n"
-            "} bind def\n"
+    "/MI { GS /py exch def /px exch def /sy exch def /sx exch def \n"
+    "translate \n"
+    "sx sy scale px py true \n"
+    "[ px 0 0 py neg 0 py ]\n"
+    "currentfile A85RLE\n"
+    "imagemask GR\n"
+    "} bind def\n"
 
-            //  path
+    //  path
 
-            "/BFP { newpath moveto }  def\n"
-            "/BP { newpath } bind def \n"
-            "/PL { lineto } bind def \n"
-            "/PM { moveto } bind def \n"
-            "/MT { moveto } bind def \n"
-            "/LT { lineto } bind def \n"
-            "/EFP { closepath fill } bind def\n"  // was:stroke
-            "/ELP { stroke } bind def\n"
-            "/ECP { closepath stroke } bind def\n"  // Closed (loop)
-            "/LW { setlinewidth } bind def\n"
+    "/BFP { newpath moveto }  def\n"
+    "/BP { newpath } bind def \n"
+    "/PL { lineto } bind def \n"
+    "/PM { moveto } bind def \n"
+    "/MT { moveto } bind def \n"
+    "/LT { lineto } bind def \n"
+    "/EFP { closepath fill } bind def\n"  // was:stroke
+    "/ELP { stroke } bind def\n"
+    "/ECP { closepath stroke } bind def\n"  // Closed (loop)
+    "/LW { setlinewidth } bind def\n"
 
-            // ////////////////////////// misc ////////////////
-            "/TR { translate } bind def\n"
-            "/CT { concat } bind def\n"
-            "/RCT { matrix invertmatrix concat} bind def\n"
-            "/SC { scale } bind def\n"
-            //"/GPD { currentpagedevice /PageSize get} def\n"
+    // ////////////////////////// misc ////////////////
+    "/TR { translate } bind def\n"
+    "/CT { concat } bind def\n"
+    "/RCT { matrix invertmatrix concat} bind def\n"
+    "/SC { scale } bind def\n"
+    //"/GPD { currentpagedevice /PageSize get} def\n"
 
-            // show at position with desired width
-            // usage:
-            // width (string) x y show_pos_width
-            "/show_pos_width {GS moveto dup dup stringwidth pop exch length 2 "
-            "div dup 2 le {pop 9999} if "
-            "1 sub exch 3 index exch sub exch "
-            "div 0 2 index 1 -1 scale ashow pop pop GR} bind def\n"  // spacing
-                                                                     // altered
-                                                                     // to match
-                                                                     // desired
-                                                                     // width
+    // show at position with desired width
+    // usage:
+    // width (string) x y show_pos_width
+    "/show_pos_width {GS moveto dup dup stringwidth pop exch length 2 "
+    "div dup 2 le {pop 9999} if "
+    "1 sub exch 3 index exch sub exch "
+    "div 0 2 index 1 -1 scale ashow pop pop GR} bind def\n"  // spacing
+                                                             // altered
+                                                             // to match
+                                                             // desired
+                                                             // width
     //"/show_pos_width {GS moveto dup stringwidth pop 3 2 roll exch div -1
-    //matrix scale concat " "show GR } bind def\n" // horizontally scaled text
-    //to match desired width
+    // matrix scale concat " "show GR } bind def\n" // horizontally scaled text
+    // to match desired width
 
     ;
 

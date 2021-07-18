@@ -1360,8 +1360,9 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam,
                 //	if (!fl_is_nt4() && lParam & GCS_RESULTCLAUSE) {
                 //		HIMC himc = ImmGetContext(hWnd);
                 //		wlen = ImmGetCompositionStringW(himc,
-                //GCS_RESULTSTR, 			wbuf, sizeof(wbuf)) / sizeof(short); 		if (wlen <
-                //0) wlen = 0; 		wbuf[wlen] = 0; 		ImmReleaseContext(hWnd, himc);
+                // GCS_RESULTSTR, 			wbuf, sizeof(wbuf)) /
+                // sizeof(short); 		if (wlen < 0) wlen = 0;
+                // wbuf[wlen] = 0; 		ImmReleaseContext(hWnd, himc);
                 //	}
                 break;
             case WM_KEYDOWN:

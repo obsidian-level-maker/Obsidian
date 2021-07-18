@@ -2005,7 +2005,8 @@ png_handle_pCAL(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length) {
     buffer[length] = 0; /* Null terminate the last string */
 
     png_debug(3, "Finding end of pCAL purpose string");
-    for (buf = buffer; *buf; buf++) /* Empty loop */;
+    for (buf = buffer; *buf; buf++) /* Empty loop */
+        ;
 
     endptr = buffer + length;
 
@@ -2258,7 +2259,8 @@ png_handle_tEXt(png_structrp png_ptr, png_inforp info_ptr, png_uint_32 length) {
     key = (png_charp)buffer;
     key[length] = 0;
 
-    for (text = key; *text; text++) /* Empty loop to find end of key */;
+    for (text = key; *text; text++) /* Empty loop to find end of key */
+        ;
 
     if (text != key + length) text++;
 

@@ -740,7 +740,8 @@ start_pass(j_decompress_ptr cinfo) {
  */
 
 METHODDEF(void)
-finish_pass(j_decompress_ptr cinfo) { /* no work necessary here */ }
+finish_pass(j_decompress_ptr cinfo) { /* no work necessary here */
+}
 
 /*
  * Module initialization routine for arithmetic entropy decoding.

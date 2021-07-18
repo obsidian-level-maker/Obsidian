@@ -3317,10 +3317,11 @@ PNG_EXPORT(243, int, png_get_palette_max,
 #ifdef PNG_ARM_NEON_API_SUPPORTED
 #define PNG_ARM_NEON 0 /* HARDWARE: ARM Neon SIMD instructions supported */
 #endif
-#define PNG_MAXIMUM_INFLATE_WINDOW 2  /* SOFTWARE: force maximum window */
-#define PNG_SKIP_sRGB_CHECK_PROFILE 4 /* SOFTWARE: Check ICC profile for sRGB \
-                                       */
-#define PNG_OPTION_NEXT 6             /* Next option - numbers must be even */
+#define PNG_MAXIMUM_INFLATE_WINDOW 2 /* SOFTWARE: force maximum window */
+#define PNG_SKIP_sRGB_CHECK_PROFILE                               \
+    4                     /* SOFTWARE: Check ICC profile for sRGB \
+                           */
+#define PNG_OPTION_NEXT 6 /* Next option - numbers must be even */
 
 /* Return values: NOTE: there are four values and 'off' is *not* zero */
 #define PNG_OPTION_UNSET 0   /* Unset - defaults to off */

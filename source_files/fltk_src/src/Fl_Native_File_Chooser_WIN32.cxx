@@ -809,8 +809,8 @@ void Fl_Native_File_Chooser::parse_filter(const char *in) {
     for (; 1; in++) {
         //// DEBUG
         //// printf("WORKING ON '%c': mode=<%c> name=<%s> wildprefix=<%s>
-        ///nwildcards=%d wildcards[n]=<%s>\n", /        *in, mode, name,
-        ///wildprefix, nwildcards, wildcards[nwildcards]);
+        /// nwildcards=%d wildcards[n]=<%s>\n", /        *in, mode, name,
+        /// wildprefix, nwildcards, wildcards[nwildcards]);
 
         switch (*in) {
             case ',':

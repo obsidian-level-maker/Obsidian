@@ -1705,8 +1705,9 @@ int fl_handle(const XEvent &thisevent) {
                         // printf("fl_dnd_source_types[%d]=%ld(%s)\n",i,t,XGetAtomName(fl_display,t));
                         if (t ==
                                 fl_Xatextplainutf ||  // "text/plain;charset=UTF-8"
-                            t == fl_Xatextplainutf2 ||  // "text/plain;charset=utf-8"
-                                                        // -- See STR#2930
+                            t ==
+                                fl_Xatextplainutf2 ||  // "text/plain;charset=utf-8"
+                                                       // -- See STR#2930
                             t == fl_Xatextplain ||   // "text/plain"
                             t == fl_XaUtf8String) {  // "UTF8_STRING"
                             type = t;

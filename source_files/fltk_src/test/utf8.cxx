@@ -204,7 +204,7 @@ static void choose_cb(Fl_Widget *, long) {
 
         Fl::set_font(extra_font, (Fl_Font)font_idx);
         //		Fl::set_font(extra_font,
-        //Fl::get_font((Fl_Font)font_idx));
+        // Fl::get_font((Fl_Font)font_idx));
     }
 
     int size_idx = sizeobj->value();

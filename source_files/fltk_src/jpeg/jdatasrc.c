@@ -51,7 +51,8 @@ init_source(j_decompress_ptr cinfo) {
 }
 
 METHODDEF(void)
-init_mem_source(j_decompress_ptr cinfo) { /* no work necessary here */ }
+init_mem_source(j_decompress_ptr cinfo) { /* no work necessary here */
+}
 
 /*
  * Fill the input buffer --- called whenever buffer is emptied.
@@ -179,7 +180,8 @@ skip_input_data(j_decompress_ptr cinfo, long num_bytes) {
  */
 
 METHODDEF(void)
-term_source(j_decompress_ptr cinfo) { /* no work necessary here */ }
+term_source(j_decompress_ptr cinfo) { /* no work necessary here */
+}
 
 /*
  * Prepare for input from a stdio stream.

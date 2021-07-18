@@ -70,8 +70,9 @@
 #define ODITHER_SIZE 16 /* dimension of dither matrix */
 /* NB: if ODITHER_SIZE is not a power of 2, ODITHER_MASK uses will break */
 #define ODITHER_CELLS (ODITHER_SIZE * ODITHER_SIZE) /* # cells in matrix */
-#define ODITHER_MASK (ODITHER_SIZE - 1) /* mask for wrapping around counters \
-                                         */
+#define ODITHER_MASK                                        \
+    (ODITHER_SIZE - 1) /* mask for wrapping around counters \
+                        */
 
 typedef int ODITHER_MATRIX[ODITHER_SIZE][ODITHER_SIZE];
 typedef int (*ODITHER_MATRIX_PTR)[ODITHER_SIZE];
@@ -161,7 +162,7 @@ typedef struct {
     /* Variables for ordered dithering */
     int row_index; /* cur row's vertical index in dither matrix */
     ODITHER_MATRIX_PTR
-        odither[MAX_Q_COMPS]; /* one dither array per component */
+    odither[MAX_Q_COMPS]; /* one dither array per component */
 
     /* Variables for Floyd-Steinberg dithering */
     FSERRPTR fserrors[MAX_Q_COMPS]; /* accumulated errors */
@@ -779,7 +780,8 @@ start_pass_1_quant(j_decompress_ptr cinfo, boolean is_pre_scan) {
  */
 
 METHODDEF(void)
-finish_pass_1_quant(j_decompress_ptr cinfo) { /* no work in 1-pass case */ }
+finish_pass_1_quant(j_decompress_ptr cinfo) { /* no work in 1-pass case */
+}
 
 /*
  * Switch to a new external colormap between output passes.

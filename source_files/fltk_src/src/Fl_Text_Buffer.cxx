@@ -1341,7 +1341,7 @@ int Fl_Text_Buffer::findchar_backward(int startPos, unsigned int searchChar,
 }
 
 //#define EXAMPLE_ENCODING // shows how to process any encoding for which a
-//decoding function exists
+// decoding function exists
 #ifdef EXAMPLE_ENCODING
 
 // returns the UCS equivalent of *p in CP1252 and advances p by 1

@@ -137,7 +137,7 @@
 ///     defaults for fonts and colors from:
 /// \par
 ///	- Fl_Tree::item_labelfont() -- The default item label font (default:
-///FL_HELVETICA)
+/// FL_HELVETICA)
 ///     - Fl_Tree::item_labelsize() -- The default item label size (default:
 ///     FL_NORMAL_SIZE)
 ///     - Fl_Tree::item_labelfgcolor() -- The default item label foreground
@@ -151,7 +151,7 @@
 ///	using methods of the same name:
 /// \par
 ///	- Fl_Tree_Item::labelfont() -- The item's label font (default:
-///FL_HELVETICA)
+/// FL_HELVETICA)
 ///     - Fl_Tree_Item::labelsize() -- The item's label size (default:
 ///     FL_NORMAL_SIZE)
 ///     - Fl_Tree_Item::labelfgcolor() -- The item's label foreground color

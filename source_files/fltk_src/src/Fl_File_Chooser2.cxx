@@ -341,7 +341,7 @@
 //                                          destructor! To prevent memory
 //                                          leakage don't forget
 //					    delete unused extra widgets by
-//yourself.
+// yourself.
 //
 
 //
@@ -1559,8 +1559,8 @@ void Fl_File_Chooser::value(const char *filename)
         if (strcasecmp(fileList->text(i), slash) == 0) {
 #else
         if (strcmp(fileList->text(i), slash) == 0) {
-#endif      // WIN32 || __EMX__
-            //      printf("Selecting line %d...\n", i);
+#endif  // WIN32 || __EMX__
+        //      printf("Selecting line %d...\n", i);
             fileList->topline(i);
             fileList->select(i);
             break;

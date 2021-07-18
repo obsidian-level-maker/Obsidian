@@ -1164,7 +1164,8 @@ finish_pass1(j_decompress_ptr cinfo) {
 }
 
 METHODDEF(void)
-finish_pass2(j_decompress_ptr cinfo) { /* no work */ }
+finish_pass2(j_decompress_ptr cinfo) { /* no work */
+}
 
 /*
  * Initialize for each processing pass.

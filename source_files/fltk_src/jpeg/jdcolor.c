@@ -534,7 +534,8 @@ ycck_cmyk_convert(j_decompress_ptr cinfo, JSAMPIMAGE input_buf,
  */
 
 METHODDEF(void)
-start_pass_dcolor(j_decompress_ptr cinfo) { /* no work needed */ }
+start_pass_dcolor(j_decompress_ptr cinfo) { /* no work needed */
+}
 
 /*
  * Module initialization routine for output colorspace conversion.

@@ -555,7 +555,7 @@ Fl_File_Browser::load(const char *directory,  // I - Directory to load
         // Lock mutex for thread safety
         if (!pthread_mutex_lock(&getvfsstat_mutex)) {
 #endif  // HAVE_PTHREAD
-            // Get list of statvfs structures
+        // Get list of statvfs structures
             res = getmntinfo(&list, ST_WAIT);
             if (0 < res) {
                 for (i = 0; i < res; ++i) {

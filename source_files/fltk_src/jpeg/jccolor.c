@@ -397,7 +397,8 @@ null_convert(j_compress_ptr cinfo, JSAMPARRAY input_buf, JSAMPIMAGE output_buf,
  */
 
 METHODDEF(void)
-null_method(j_compress_ptr cinfo) { /* no work needed */ }
+null_method(j_compress_ptr cinfo) { /* no work needed */
+}
 
 /*
  * Module initialization routine for input colorspace conversion.
