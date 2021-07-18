@@ -1347,7 +1347,7 @@ function IWAD_MODE.begin_level()
 
   if LEVEL.name == "MAP01" then
     LEVEL.map_W = 18
-    LEVEL.description = rand.key_by_probs(nt.URBAN.lexicon.a) .. " Entryway"
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.e)
     LEVEL.size_multiplier = 0.6
     LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 192
@@ -1357,6 +1357,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_multiplier = 0.5
     LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 192
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.e)
     PARAM.brightness_offset = "-1"
   elseif LEVEL.name == "MAP03" then
     LEVEL.map_W = 25
@@ -1371,13 +1372,13 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 160
     PARAM.brightness_offset = "-2"
-    LEVEL.description = "The " .. rand.key_by_probs(nt.TECH.lexicon.n)
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.e)
   elseif LEVEL.name == "MAP05" then
     LEVEL.map_W = 28
     LEVEL.size_multiplier = 0.8
     LEVEL.sky_light = 144
     LEVEL.size_consistency = "normal"
-    LEVEL.description = "The " .. rand.key_by_probs(nt.TECH.lexicon.n)
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.e)
     PARAM.brightness_offset = "-2"
   elseif LEVEL.name == "MAP06" then
     LEVEL.map_W = 30
@@ -1416,6 +1417,7 @@ function IWAD_MODE.begin_level()
     LEVEL.size_consistency = "normal"
     LEVEL.sky_light = 144
     PARAM.brightness_offset = "+2"
+    LEVEL.description = rand.key_by_probs(nt.TECH.lexicon.e)
     LEVEL.squareishness = 30
   elseif LEVEL.name == "MAP11" then
     LEVEL.map_W = 26
@@ -1431,6 +1433,7 @@ function IWAD_MODE.begin_level()
     LEVEL.has_streets = true -- Its shape implies this
     LEVEL.sky_light = 144
     PARAM.brightness_offset = "+1"
+    LEVEL.squareishness = 55
     LEVEL.description = "The " .. rand.key_by_probs(nt.URBAN.lexicon.n)
   elseif LEVEL.name == "MAP13" then
     LEVEL.map_W = 40
