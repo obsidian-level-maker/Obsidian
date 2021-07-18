@@ -182,5 +182,5 @@ target_link_libraries(
           obsidian_ajpoly
           obsidian_zdbsp
           obsidian_slump
-	  fontconfig
+          fontconfig
 )
