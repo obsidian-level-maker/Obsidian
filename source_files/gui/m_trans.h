@@ -21,16 +21,18 @@
 #ifndef __OBLIGE_I18N_H__
 #define __OBLIGE_I18N_H__
 
+#include <string>
+
 // current selected language, default is "AUTO"
-extern const char *t_language;
+extern std::string t_language;
 
 void Trans_Init();
 
 void Trans_SetLanguage();
 
 // these are for the UI:
-const char *Trans_GetAvailCode(int idx);
-const char *Trans_GetAvailLanguage(int idx);
+std::string Trans_GetAvailCode(int idx);
+std::string Trans_GetAvailLanguage(int idx);
 
 #endif /* __OBLIGE_I18N_H__ */
 

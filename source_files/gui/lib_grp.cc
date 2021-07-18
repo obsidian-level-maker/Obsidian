@@ -18,8 +18,10 @@
 //
 //------------------------------------------------------------------------
 
+#include <algorithm>
 #include <list>
 
+#include "fmt/core.h"
 #include "headers.h"
 #include "main.h"
 
@@ -170,7 +172,7 @@ int GRP_FindEntry(const char *name) {
     for (unsigned int i = 0; i < grp_R_header.num_lumps; i++) {
         char buffer[GRP_NAME_LEN + 4];
 
-        strncpy(buffer, grp_R_dir[i].name, GRP_NAME_LEN);
+        strncpy(buffer, grp_R_dir[i].name.data(), GRP_NAME_LEN);
         buffer[GRP_NAME_LEN] = 0;
 
         if (StringCaseCmp(name, buffer) == 0) {
@@ -193,7 +195,7 @@ const char *GRP_EntryName(int entry) {
     SYS_ASSERT(entry >= 0 && entry < (int)grp_R_header.num_lumps);
 
     // entries are often not NUL terminated, hence return a static copy
-    strncpy(name_buf, grp_R_dir[entry].name, GRP_NAME_LEN);
+    strncpy(name_buf, grp_R_dir[entry].name.data(), GRP_NAME_LEN);
     name_buf[GRP_NAME_LEN] = 0;
 
     return name_buf;
@@ -227,22 +229,23 @@ bool GRP_ReadData(int entry, int offset, int length, void *buffer) {
 }
 
 void GRP_ListEntries(void) {
-    printf("--------------------------------------------------\n");
+    fmt::print("--------------------------------------------------\n");
 
     if (grp_R_header.num_lumps == 0) {
-        printf("GRP file is empty\n");
+        fmt::print("GRP file is empty\n");
     } else {
         for (int i = 0; i < (int)grp_R_header.num_lumps; i++) {
             raw_grp_lump_t *L = &grp_R_dir[i];
 
             int L_start = grp_R_starts[i];
 
-            printf("%4d: +%08x %08x : %s\n", i + 1, L_start, L->length,
-                   GRP_EntryName(i));
+            fmt::print("{:4}: +{:08x} {:08x} : {}\n", i + 1,
+                       static_cast<unsigned int>(L_start),
+                       static_cast<unsigned int>(L->length), GRP_EntryName(i));
         }
     }
 
-    printf("--------------------------------------------------\n");
+    fmt::print("--------------------------------------------------\n");
 }
 
 //------------------------------------------------------------------------
@@ -281,7 +284,8 @@ bool GRP_OpenWrite(const char *filename) {
         raw_grp_lump_t entry;
         memset(&entry, 0, sizeof(entry));
 
-        sprintf(entry.name, "__%03d.ZZZ", i + 1);
+        std::string name = fmt::format("__{:03}.ZZZ", i + 1);
+        std::copy(name.begin(), name.end(), entry.name.begin());
 
         entry.length = LE_U32(1);
 
@@ -337,18 +341,19 @@ void GRP_CloseWrite(void) {
     grp_W_directory.clear();
 }
 
-void GRP_NewLump(const char *name) {
+void GRP_NewLump(const std::string &name) {
     if (grp_W_directory.size() >= GRP_MAX_LUMPS) {
         Main_FatalError("GRP_NewLump: too many lumps (> %d)\n", GRP_MAX_LUMPS);
     }
 
-    if (strlen(name) > GRP_NAME_LEN) {
-        Main_FatalError("GRP_NewLump: name too long: '%s'\n", name);
+    if (name.size() > GRP_NAME_LEN) {
+        Main_FatalError(
+            fmt::format("GRP_NewLump: name too long: '{}'\n", name).c_str());
     }
 
     memset(&grp_W_lump, 0, sizeof(grp_W_lump));
 
-    strncpy(grp_W_lump.name, name, GRP_NAME_LEN);
+    std::copy(name.begin(), name.end(), grp_W_lump.name.begin());
 }
 
 bool GRP_AppendData(const void *data, int length) {

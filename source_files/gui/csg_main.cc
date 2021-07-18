@@ -24,6 +24,7 @@
 
 #include "csg_local.h"
 #include "csg_quake.h"  // for quake_plane_c
+#include "fmt/core.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "headers.h"
@@ -68,14 +69,14 @@ void csg_property_set_c::Remove(const char *key) { dict.erase(key); }
 void csg_property_set_c::DebugDump() {
     std::map<std::string, std::string>::iterator PI;
 
-    fprintf(stderr, "{\n");
+    fmt::print(stderr, "{\n");
 
     for (PI = dict.begin(); PI != dict.end(); PI++) {
-        fprintf(stderr, "  %s = \"%s\"\n", PI->first.c_str(),
-                PI->second.c_str());
+        fmt::print(stderr, "  %s = \"%s\"\n", PI->first.c_str(),
+                   PI->second.c_str());
     }
 
-    fprintf(stderr, "}\n");
+    fmt::print(stderr, "}\n");
 }
 
 const char *csg_property_set_c::getStr(const char *key,

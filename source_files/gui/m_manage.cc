@@ -18,13 +18,15 @@
 //
 //------------------------------------------------------------------------
 
+#include "fmt/format.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
-#include "headers.h"
 #include "lib_util.h"
 #include "m_cookie.h"
 #include "m_lua.h"
 #include "main.h"
+
+#include "headers.h"
 
 // forward decls
 class UI_Manage_Config;
@@ -208,7 +210,7 @@ typedef struct {
     int group;
     int index;
 
-    char short_name[100];
+    std::string short_name;
 
     UI_Manage_Config *widget;
 
@@ -244,30 +246,28 @@ class UI_Manage_Config : public Fl_Double_Window {
     bool WantQuit() const { return want_quit; }
 
     void MarkSource(const char *where) {
-        char *full = StringPrintf("[ %s ]", where);
+        std::string full = fmt::format("[ {} ]", where);
 
-        conf_disp->copy_label(full);
+        conf_disp->copy_label(full.c_str());
 
-        StringFree(full);
         redraw();
     }
 
     void MarkSource_FILE(const char *filename) {
-        char *full;
+        std::string full;
 
         // abbreviate the filename if too long
         int len = strlen(filename);
 
         if (len < 42) {
-            full = StringPrintf("[ %s ]", filename);
+            full = fmt::format("[ {} ]", filename);
         } else {
-            full = StringPrintf("[ %.10s....%s ]", filename,
-                                filename + (len - 30));
+            full =
+                fmt::format("[ {:10}....{} ]", filename, filename + (len - 30));
         }
 
-        conf_disp->copy_label(full);
+        conf_disp->copy_label(full.c_str());
 
-        StringFree(full);
         redraw();
     }
 
@@ -403,7 +403,7 @@ class UI_Manage_Config : public Fl_Double_Window {
         int i;
 
         for (i = 0; i < max_num; i++, ptr++) {
-            if (!Recent_GetName(group, i, ptr->short_name,
+            if (!Recent_GetName(group, i, &ptr->short_name,
                                 true /* for_menu */)) {
                 break;
             }
@@ -412,7 +412,7 @@ class UI_Manage_Config : public Fl_Double_Window {
             ptr->index = i;
             ptr->widget = this;
 
-            menu->add(ptr->short_name, 0, callback_Recent, ptr);
+            menu->add(ptr->short_name.c_str(), 0, callback_Recent, ptr);
         }
 
         return i;  // total number
@@ -552,10 +552,10 @@ class UI_Manage_Config : public Fl_Double_Window {
             return;
         }
 
-        static char filename[FL_PATH_MAX];
+        static std::string filename;
 
         // this also should not happen...
-        if (!Recent_GetName(priv->group, priv->index, filename)) {
+        if (!Recent_GetName(priv->group, priv->index, &filename)) {
             LogPrintf("WARNING: callback_Recent with bad index\n");
             return;
         }
@@ -563,10 +563,10 @@ class UI_Manage_Config : public Fl_Double_Window {
         UI_Manage_Config *that = priv->widget;
         SYS_ASSERT(that);
 
-        if (!that->LoadFromFile(filename)) {
+        if (!that->LoadFromFile(filename.c_str())) {
             // unable to load that file, it has probably been deleted
             // so remove it from the recent list
-            Recent_RemoveFile(priv->group, filename);
+            Recent_RemoveFile(priv->group, filename.c_str());
             that->SetupRecent();
         }
     }
@@ -685,8 +685,8 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
     conf_disp->buffer(text_buf);
     conf_disp->textsize(small_font_size);
     conf_disp->labelfont(font_style);
-	conf_disp->textfont(font_style);
-	
+    conf_disp->textfont(font_style);
+
     /* Main Buttons */
 
     int button_x = kf_w(20);
@@ -715,9 +715,9 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         o->labelsize(small_font_size);
         o->labelfont(font_style);
 
-        const char *recent_title = StringPrintf("   %s @-3>", _("Recent"));
+        std::string recent_title = fmt::format("   {} @-3>", _("Recent"));
         recent_menu = new Fl_Menu_Across(button_x, kf_h(95), button_w, button_h,
-                                         recent_title);
+                                         recent_title.c_str());
         recent_menu->box(button_style);
         recent_menu->visible_focus(0);
         recent_menu->color(BUTTON_COLOR);
@@ -811,9 +811,9 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         cx += kf_w(115);
 
         paste_but = new Fl_Button(cx, base_y, button_w, button_h, _("Paste"));
-       	paste_but->box(button_style);
-       	paste_but->visible_focus(0);
-       	paste_but->color(BUTTON_COLOR);
+        paste_but->box(button_style);
+        paste_but->visible_focus(0);
+        paste_but->color(BUTTON_COLOR);
         paste_but->labelsize(small_font_size);
         paste_but->labelfont(font_style);
         paste_but->labelcolor(FONT2_COLOR);
@@ -834,12 +834,11 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
 UI_Manage_Config::~UI_Manage_Config() {}
 
 void DLG_ManageConfig(void) {
-
     int manage_w = kf_w(600);
     int manage_h = kf_h(380);
 
-    UI_Manage_Config *config_window = new UI_Manage_Config(manage_w, manage_h,
-                                             _("OBSIDIAN Config Manager"));
+    UI_Manage_Config *config_window =
+        new UI_Manage_Config(manage_w, manage_h, _("OBSIDIAN Config Manager"));
 
     config_window->want_quit = false;
     config_window->set_modal();

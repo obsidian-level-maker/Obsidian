@@ -20,8 +20,10 @@
 
 #include "m_cookie.h"
 
+#include <array>
 #include <iostream>
 
+#include "fmt/core.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"
@@ -221,10 +223,10 @@ bool Cookie_Save(const char *filename) {
     LogPrintf("Saving config file...\n");
 
     // header...
-    fprintf(cookie_fp, "-- CONFIG FILE : OBSIDIAN %s\n", OBSIDIAN_VERSION);
-    fprintf(cookie_fp,
-            "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
-    fprintf(cookie_fp, "-- " OBSIDIAN_WEBSITE "\n\n");
+    fmt::print(cookie_fp, "-- CONFIG FILE : OBSIDIAN {}\n", OBSIDIAN_VERSION);
+    fmt::print(cookie_fp,
+               "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
+    fmt::print(cookie_fp, "-- " OBSIDIAN_WEBSITE "\n\n");
 
     // settings...
     std::vector<std::string> lines;
@@ -232,7 +234,7 @@ bool Cookie_Save(const char *filename) {
     ob_read_all_config(&lines, true /* need_full */);
 
     for (unsigned int i = 0; i < lines.size(); i++) {
-        fprintf(cookie_fp, "%s\n", lines[i].c_str());
+        fmt::print(cookie_fp, "{}\n", lines[i].c_str());
     }
 
     LogPrintf("DONE.\n\n");
@@ -283,8 +285,8 @@ void Cookie_ParseArguments(void) {
         // split argument into name/value pair
         int eq_offset = (eq_pos - arg);
 
-        char *name = StringDup(arg);
-        char *value = name + eq_offset + 1;
+        std::string name = arg;
+        const char *value = name.c_str() + eq_offset + 1;
 
         name[eq_offset] = 0;
 
@@ -292,9 +294,7 @@ void Cookie_ParseArguments(void) {
             Main_FatalError("Bad setting on command line: '%s'\n", arg);
         }
 
-        Cookie_SetValue(name, value);
-
-        StringFree(name);
+        Cookie_SetValue(name.c_str(), value);
     }
 }
 
@@ -309,12 +309,12 @@ class RecentFiles_c {
     int size;
 
     // newest is at index [0]
-    const char *filenames[MAX_RECENT];
+    std::array<std::string, MAX_RECENT> filenames;
 
    public:
     RecentFiles_c() : size(0) {
         for (int k = 0; k < MAX_RECENT; k++) {
-            filenames[k] = NULL;
+            filenames[k].clear();
         }
     }
 
@@ -322,8 +322,7 @@ class RecentFiles_c {
 
     void clear() {
         for (int k = 0; k < size; k++) {
-            StringFree(filenames[k]);
-            filenames[k] = NULL;
+            filenames[k].clear();
         }
 
         size = 0;
@@ -334,7 +333,7 @@ class RecentFiles_c {
         const char *A = fl_filename_name(file);
 
         for (int k = 0; k < size; k++) {
-            const char *B = fl_filename_name(filenames[k]);
+            const char *B = fl_filename_name(filenames[k].c_str());
 
             if (fl_utf_strcasecmp(A, B) == 0) {
                 return k;
@@ -347,8 +346,6 @@ class RecentFiles_c {
     void erase(int index) {
         SYS_ASSERT(index < size);
 
-        StringFree(filenames[index]);
-
         size--;
 
         SYS_ASSERT(size < MAX_RECENT);
@@ -357,7 +354,7 @@ class RecentFiles_c {
             filenames[index] = filenames[index + 1];
         }
 
-        filenames[index] = NULL;
+        filenames[index].clear();
     }
 
     void push_front(const char *file) {
@@ -370,7 +367,7 @@ class RecentFiles_c {
             filenames[k + 1] = filenames[k];
         }
 
-        filenames[0] = StringDup(file);
+        filenames[0] = file;
 
         size++;
     }
@@ -400,26 +397,26 @@ class RecentFiles_c {
         // order they are read.
 
         for (int k = size - 1; k >= 0; k--) {
-            fprintf(fp, "%s = %s\n", keyword, filenames[k]);
+            fmt::print(fp, "{} = {}\n", keyword, filenames[k]);
         }
 
         if (size > 0) {
-            fprintf(fp, "\n");
+            fmt::print(fp, "\n");
         }
     }
 
-    bool get_name(int index, char *buffer, bool for_menu) const {
+    bool get_name(int index, std::string *buffer, bool for_menu) const {
         if (index >= size) {
             return false;
         }
 
-        const char *name = filenames[index];
+        const std::string &name = filenames[index];
 
         if (for_menu) {
-            sprintf(buffer, "%-.32s", fl_filename_name(name));
+            *buffer = fmt::format("{:<.32}", fl_filename_name(name.c_str()));
         } else {
-            strncpy(buffer, name, FL_PATH_MAX);
-            buffer[FL_PATH_MAX - 1] = 0;
+            *buffer = name;
+            buffer[FL_PATH_MAX - 1] = '\0';
         }
 
         return true;
@@ -439,7 +436,7 @@ void Recent_Parse(const char *name, const char *value) {
 }
 
 void Recent_Write(FILE *fp) {
-    fprintf(fp, "---- Recent Files ----\n\n");
+    fmt::print(fp, "---- Recent Files ----\n\n");
 
     recent_wads.write_all(fp, "recent_wad");
     recent_configs.write_all(fp, "recent_config");
@@ -460,7 +457,7 @@ void Recent_AddFile(int group, const char *filename) {
 
     // push to disk now -- why wait?
     if (!batch_mode) {
-        Options_Save(options_file);
+        Options_Save(options_file.c_str());
     }
 }
 
@@ -479,11 +476,12 @@ void Recent_RemoveFile(int group, const char *filename) {
 
     // push to disk now -- why wait?
     if (!batch_mode) {
-        Options_Save(options_file);
+        Options_Save(options_file.c_str());
     }
 }
 
-bool Recent_GetName(int group, int index, char *name_buf, bool for_menu) {
+bool Recent_GetName(int group, int index, std::string *name_buf,
+                    bool for_menu) {
     SYS_ASSERT(0 <= group && group < RECG_NUM_GROUPS);
     SYS_ASSERT(index >= 0);
 

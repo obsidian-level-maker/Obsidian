@@ -23,6 +23,7 @@
 #define __UI_HYPER_H__
 
 #include <FL/Fl_Button.H>
+#include <string>
 
 class UI_HyperLink : public Fl_Button {
    private:
@@ -33,12 +34,12 @@ class UI_HyperLink : public Fl_Button {
     int label_X, label_Y, label_W, label_H;
 
     // the URL to visit when clicked
-    const char *url;
+    std::string url;
 
    public:
     UI_HyperLink(int x, int y, int w, int h, const char *label,
                  const char *_url);
-    virtual ~UI_HyperLink();
+    virtual ~UI_HyperLink() = default;
 
    public:
     // FLTK overrides

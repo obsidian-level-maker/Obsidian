@@ -40,27 +40,28 @@
 #define THEME_FILENAME "THEME.txt"
 #define LOG_FILENAME "LOGS.txt"
 
-// Header for loading .ttf files from code posted by an individual named Ian MacArthur
-// in a Google Groups thread at the following link: https://groups.google.com/g/fltkgeneral/c/uAdg8wOLiMk
+// Header for loading .ttf files from code posted by an individual named Ian
+// MacArthur in a Google Groups thread at the following link:
+// https://groups.google.com/g/fltkgeneral/c/uAdg8wOLiMk
 #ifdef _WIN32
-# define i_load_private_font(PATH) AddFontResourceEx((PATH),FR_PRIVATE,0)
-# define v_unload_private_font(PATH) RemoveFontResourceEx((PATH),FR_PRIVATE,0)
+#define i_load_private_font(PATH) AddFontResourceEx((PATH), FR_PRIVATE, 0)
+#define v_unload_private_font(PATH) RemoveFontResourceEx((PATH), FR_PRIVATE, 0)
 #else
-# define i_load_private_font(PATH) (int)FcConfigAppFontAddFile(NULL,(const FcChar8 *)(PATH))
-# define v_unload_private_font(PATH) FcConfigAppFontClear(NULL)
+#define i_load_private_font(PATH) \
+    (int)FcConfigAppFontAddFile(NULL, (const FcChar8 *)(PATH))
+#define v_unload_private_font(PATH) FcConfigAppFontClear(NULL)
 #endif
 
+extern std::string home_dir;
+extern std::string install_dir;
 
-extern const char *home_dir;
-extern const char *install_dir;
-
-extern const char *options_file;
-extern const char *theme_file;
-extern const char *logging_file;
+extern std::string options_file;
+extern std::string theme_file;
+extern std::string logging_file;
 
 extern bool batch_mode;
 
-extern const char *batch_output_file;
+extern std::string batch_output_file;
 
 extern unsigned long long next_rand_seed;
 
@@ -129,8 +130,8 @@ extern bool create_backups;
 extern bool overwrite_warning;
 extern bool debug_messages;
 
-extern const char *last_directory;
-extern const char *numeric_locale;
+extern std::string last_directory;
+extern std::string numeric_locale;
 
 #ifdef __GNUC__
 __attribute__((noreturn))
@@ -140,13 +141,14 @@ void Main_FatalError(const char *msg, ...);
 void Main_ProgStatus(const char *msg, ...);
 bool Main_BackupFile(const char *filename, const char *ext);
 void Main_Ticker();
-bool load_internal_font(const char* fontpath, int fontnum, const char* fontname);
+bool load_internal_font(const char *fontpath, int fontnum,
+                        const char *fontname);
 void Main_PopulateFontMap();
 
 // Dialog Windows
 void DLG_ShowError(const char *msg, ...);
 
-const char *DLG_OutputFilename(const char *ext, const char *preset = NULL);
+std::string DLG_OutputFilename(const char *ext, const char *preset = NULL);
 
 void DLG_AboutText(void);
 void DLG_OptionsEditor(void);

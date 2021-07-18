@@ -37,6 +37,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 ==============================================================================
 */
 
+#include <array>
+
 // little-endian "IBSP"
 #include "sys_macro.h"
 #include "sys_type.h"
@@ -110,7 +112,7 @@ typedef struct {
 } PACKEDATTR dmodel3_t;
 
 typedef struct {
-    char shader[64];
+    std::array<char, 64> shader;
 
     u32_t surfaceFlags;
     u32_t contentFlags;

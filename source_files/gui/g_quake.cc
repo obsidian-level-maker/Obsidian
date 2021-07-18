@@ -21,6 +21,7 @@
 #include "csg_local.h"
 #include "csg_main.h"
 #include "csg_quake.h"
+#include "fmt/format.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"
@@ -60,9 +61,9 @@
 
 extern void Q1_ClippingHull(int hull);
 
-static char *level_name;
-static char *description;
-static char *qk_texture_wad;
+static std::string level_name;
+static std::string description;
+static std::string qk_texture_wad;
 
 quake_mapmodel_c *qk_world_model;
 
@@ -278,14 +279,15 @@ static void Q1_WriteMipTex() {
         return;
     }
 
-    if (!qk_texture_wad) {
+    if (qk_texture_wad.empty()) {
         Main_FatalError("Lua code failed to set the texture wad\n");
         return; /* NOT REACHED */
     }
 
-    if (!WAD2_OpenRead(qk_texture_wad)) {
+    if (!WAD2_OpenRead(qk_texture_wad.c_str())) {
         // should not happen, Lua code has checked that the file exists
-        Main_FatalError("Missing wad file: %s\n", qk_texture_wad);
+        Main_FatalError(
+            fmt::format("Missing wad file: {}\n", qk_texture_wad).c_str());
         return; /* NOT REACHED */
     }
 
@@ -1227,7 +1229,7 @@ static void Q1_CreateBSPFile(const char *name) {
     Q1_WriteMipTex();
     Q1_WriteTexInfo();
 
-    BSP_WriteEntities(LUMP_ENTITIES, description);
+    BSP_WriteEntities(LUMP_ENTITIES, description.c_str());
 
     // this will free lots of stuff (lightmaps etc)
     BSP_CloseLevel();
@@ -1248,11 +1250,7 @@ int Q1_add_tex_wad(lua_State *L) {
 
     // TODO: support more than one
 
-    if (qk_texture_wad) {
-        StringFree(qk_texture_wad);
-    }
-
-    qk_texture_wad = StringDup(name);
+    qk_texture_wad = name;
 
     return 1;
 }
@@ -1268,12 +1266,10 @@ int Q1_add_tex_wad(lua_State *L) {
 
 class quake1_game_interface_c : public game_interface_c {
    private:
-    const char *filename;
+    std::string filename;
 
    public:
-    quake1_game_interface_c() : filename(NULL) {}
-
-    ~quake1_game_interface_c() {}
+    quake1_game_interface_c() = default;
 
     bool Start(const char *preset);
     bool Finish(bool build_ok);
@@ -1306,21 +1302,21 @@ bool quake1_game_interface_c::Start(const char *preset) {
     QLIT_InitProperties();
 
     if (batch_mode) {
-        filename = StringDup(batch_output_file);
+        filename = batch_output_file;
     } else {
         filename = DLG_OutputFilename("pak");
     }
 
-    if (!filename) {
+    if (filename.empty()) {
         Main_ProgStatus(_("Cancelled"));
         return false;
     }
 
     if (create_backups) {
-        Main_BackupFile(filename, "old");
+        Main_BackupFile(filename.c_str(), "old");
     }
 
-    if (!PAK_OpenWrite(filename)) {
+    if (!PAK_OpenWrite(filename.c_str())) {
         Main_ProgStatus(_("Error (create file)"));
         return false;
     }
@@ -1339,18 +1335,18 @@ bool quake1_game_interface_c::Finish(bool build_ok) {
 
     // remove the file if an error occurred
     if (!build_ok) {
-        FileDelete(filename);
+        FileDelete(filename.c_str());
     } else {
-        Recent_AddFile(RECG_Output, filename);
+        Recent_AddFile(RECG_Output, filename.c_str());
     }
 
     return build_ok;
 }
 
 void quake1_game_interface_c::BeginLevel() {
-    level_name = NULL;
-    description = NULL;
-    qk_texture_wad = NULL;
+    level_name.clear();
+    description.clear();
+    qk_texture_wad.clear();
 
     Q1_FreeStuff();
 
@@ -1359,9 +1355,9 @@ void quake1_game_interface_c::BeginLevel() {
 
 void quake1_game_interface_c::Property(const char *key, const char *value) {
     if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = StringDup(value);
+        level_name = value;
     } else if (StringCaseCmp(key, "description") == 0) {
-        description = StringDup(value);
+        description = value;
     } else if (StringCaseCmp(key, "sub_format") == 0) {
         if (StringCaseCmp(value, "quake") == 0) {
             qk_sub_format = 0;
@@ -1385,29 +1381,19 @@ void quake1_game_interface_c::Property(const char *key, const char *value) {
 }
 
 void quake1_game_interface_c::EndLevel() {
-    if (!level_name) {
+    if (level_name.empty()) {
         Main_FatalError("Script problem: did not set level name!\n");
     }
 
-    if (strlen(level_name) >= 32) {
-        Main_FatalError("Script problem: level name too long: %s\n",
-                        level_name);
+    if (level_name.size() >= 32) {
+        Main_FatalError(
+            fmt::format("Script problem: level name too long: {}\n", level_name)
+                .c_str());
     }
 
-    char entry_in_pak[64];
-    sprintf(entry_in_pak, "maps/%s.bsp", level_name);
+    std::string entry_in_pak = fmt::format("maps/{}.bsp", level_name);
 
-    Q1_CreateBSPFile(entry_in_pak);
-
-    StringFree(level_name);
-
-    if (description) {
-        StringFree(description);
-    }
-
-    if (qk_texture_wad) {
-        StringFree(qk_texture_wad);
-    }
+    Q1_CreateBSPFile(entry_in_pak.c_str());
 }
 
 game_interface_c *Quake1_GameObject(void) {

@@ -18,8 +18,10 @@
 //
 //------------------------------------------------------------------------
 
+#include <algorithm>
 #include "csg_main.h"
 #include "csg_quake.h"
+#include "fmt/format.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"
@@ -55,12 +57,12 @@
 #define SHADER_COMMON_SLIME 5
 #define SHADER_COMMON_LAVA 6
 
-static char *level_name;
-static char *description;
+static std::string level_name;
+static std::string description;
 
-static char *water_shader;
-static char *slime_shader;
-static char *lava_shader;
+static std::string water_shader;
+static std::string slime_shader;
+static std::string lava_shader;
 
 extern double q3_default_tex_scale;
 
@@ -340,7 +342,8 @@ s32_t Q3_AddShader(const char *texture, u32_t flags, u32_t contents) {
     memset(&raw_tex, 0, sizeof(raw_tex));
 
     // add texture/ prefix to every texture
-    snprintf(raw_tex.shader, sizeof(raw_tex.shader), "textures/%s", texture);
+    std::string shader = fmt::format("textures/{}", texture);
+    std::copy(shader.begin(), shader.end(), raw_tex.shader.begin());
 
     raw_tex.surfaceFlags = LE_U32(flags);
     raw_tex.contentFlags = LE_U32(contents);
@@ -1015,11 +1018,9 @@ static void Q3_CreateSubModel(quake_leaf_c *L) {
     SYS_ASSERT(E);
 
     // create the important "model" keyword
-    char model_name[64];
+    std::string model_name = fmt::format("*{}", q3_total_models);
 
-    snprintf(model_name, sizeof(model_name), "*%d", q3_total_models);
-
-    E->props.Add("model", model_name);
+    E->props.Add("model", model_name.c_str());
 
     Q3_WriteModel(&raw_model);
 }
@@ -1107,13 +1108,13 @@ static void AddCommonShaders() {
                        SURF_NODLIGHT | SURF_NOSTEPS;
 
     // SHADER_COMMON_WATER
-    Q3_AddShader(water_shader, liquid_flags, CONTENTS_WATER);
+    Q3_AddShader(water_shader.c_str(), liquid_flags, CONTENTS_WATER);
 
     // SHADER_COMMON_SLIME
-    Q3_AddShader(slime_shader, liquid_flags, CONTENTS_SLIME);
+    Q3_AddShader(slime_shader.c_str(), liquid_flags, CONTENTS_SLIME);
 
     // SHADER_COMMON_LAVA
-    Q3_AddShader(lava_shader, liquid_flags, CONTENTS_LAVA);
+    Q3_AddShader(lava_shader.c_str(), liquid_flags, CONTENTS_LAVA);
 }
 
 static void Q3_CreateBSPFile(const char *name) {
@@ -1143,7 +1144,7 @@ static void Q3_CreateBSPFile(const char *name) {
     Q3_WriteShaders();
     Q3_WriteFogs();
 
-    BSP_WriteEntities(LUMP_ENTITIES, description);
+    BSP_WriteEntities(LUMP_ENTITIES, description.c_str());
 
     // this will free lots of stuff (lightmaps etc)
     BSP_CloseLevel();
@@ -1157,7 +1158,7 @@ static void DP_CreateRTLights(const char *entry_in_pak) {
     // we don't create the file when there are no RT lights
     bool has_file = false;
 
-    static char buffer[1024];
+    static std::string buffer;
 
     for (unsigned int i = 0; i < all_entities.size(); i++) {
         csg_entity_c *E = all_entities[i];
@@ -1181,12 +1182,12 @@ static void DP_CreateRTLights(const char *entry_in_pak) {
         double g = E->props.getDouble("g", RGB_GREEN(color) / 255.0);
         double b = E->props.getDouble("b", RGB_BLUE(color) / 255.0);
 
-        snprintf(buffer, sizeof(buffer),
-                 "%1.3f %1.3f %1.3f %1.3f %1.5f %1.5f %1.5f %d\n", E->x, E->y,
-                 E->z, E->props.getDouble("radius", RT_DEFAULT_RADIUS), r, g, b,
-                 E->props.getInt("style", 0));
+        buffer = fmt::format(
+            "{:1.3} {:1.3} {:1.3} {:1.3} {:1.5} {:1.5} {:1.5} {}\n", E->x, E->y,
+            E->z, E->props.getDouble("radius", RT_DEFAULT_RADIUS), r, g, b,
+            E->props.getInt("style", 0));
 
-        ZIPF_AppendData(buffer, (int)strlen(buffer));
+        ZIPF_AppendData(buffer.c_str(), buffer.size());
     }
 
     if (has_file) {
@@ -1198,7 +1199,7 @@ static void DP_CreateRTLights(const char *entry_in_pak) {
 
 class quake3_game_interface_c : public game_interface_c {
    private:
-    const char *filename;
+    std::string filename;
 
    public:
     quake3_game_interface_c() : filename(NULL) {}
@@ -1226,32 +1227,32 @@ bool quake3_game_interface_c::Start(const char *preset) {
     // this is not used here
     qk_world_model = NULL;
 
-    if (!water_shader) {
-        water_shader = StringDup("liquids/water");
+    if (water_shader.empty()) {
+        water_shader = "liquids/water";
     }
-    if (!slime_shader) {
-        slime_shader = StringDup("liquids/slime");
+    if (slime_shader.empty()) {
+        slime_shader = "liquids/slime";
     }
-    if (!lava_shader) {
-        lava_shader = StringDup("liquids/lava");
+    if (lava_shader.empty()) {
+        lava_shader = "liquids/lava";
     }
 
     if (batch_mode) {
-        filename = StringDup(batch_output_file);
+        filename = batch_output_file;
     } else {
         filename = DLG_OutputFilename("pk3");
     }
 
-    if (!filename) {
+    if (filename.empty()) {
         Main_ProgStatus(_("Cancelled"));
         return false;
     }
 
     if (create_backups) {
-        Main_BackupFile(filename, "old");
+        Main_BackupFile(filename.c_str(), "old");
     }
 
-    if (!ZIPF_OpenWrite(filename)) {
+    if (!ZIPF_OpenWrite(filename.c_str())) {
         Main_ProgStatus(_("Error (create file)"));
         return false;
     }
@@ -1270,17 +1271,17 @@ bool quake3_game_interface_c::Finish(bool build_ok) {
 
     // remove the file if an error occurred
     if (!build_ok) {
-        FileDelete(filename);
+        FileDelete(filename.c_str());
     } else {
-        Recent_AddFile(RECG_Output, filename);
+        Recent_AddFile(RECG_Output, filename.c_str());
     }
 
     return build_ok;
 }
 
 void quake3_game_interface_c::BeginLevel() {
-    level_name = NULL;
-    description = NULL;
+    level_name.clear();
+    description.clear();
 
     Q3_FreeStuff();
 
@@ -1289,46 +1290,40 @@ void quake3_game_interface_c::BeginLevel() {
 
 void quake3_game_interface_c::Property(const char *key, const char *value) {
     if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = StringDup(value);
+        level_name = value;
     } else if (StringCaseCmp(key, "description") == 0) {
-        description = StringDup(value);
+        description = value;
     } else if (StringCaseCmp(key, "default_tex_scale") == 0) {
         q3_default_tex_scale = atof(value);
     } else if (StringCaseCmp(key, "water_shader") == 0) {
-        water_shader = StringDup(value);
+        water_shader = value;
     } else if (StringCaseCmp(key, "slime_shader") == 0) {
-        slime_shader = StringDup(value);
+        slime_shader = value;
     } else if (StringCaseCmp(key, "lava_shader") == 0) {
-        lava_shader = StringDup(value);
+        lava_shader = value;
     } else {
         LogPrintf("WARNING: unknown QUAKE3 property: %s=%s\n", key, value);
     }
 }
 
 void quake3_game_interface_c::EndLevel() {
-    if (!level_name) {
+    if (level_name.empty()) {
         Main_FatalError("Script problem: did not set level name!\n");
     }
 
-    if (strlen(level_name) >= 32) {
-        Main_FatalError("Script problem: level name too long: %s\n",
-                        level_name);
+    if (level_name.size() >= 32) {
+        Main_FatalError(
+            fmt::format("Script problem: level name too long: {}\n", level_name)
+                .c_str());
     }
 
-    char entry_in_pak[64];
-    sprintf(entry_in_pak, "maps/%s.bsp", level_name);
+    std::string entry_in_pak = fmt::format("maps/{}.bsp", level_name);
 
-    Q3_CreateBSPFile(entry_in_pak);
+    Q3_CreateBSPFile(entry_in_pak.c_str());
 
-    sprintf(entry_in_pak, "maps/%s.rtlights", level_name);
+    entry_in_pak = fmt::format("maps/{}.rtlights", level_name);
 
-    DP_CreateRTLights(entry_in_pak);
-
-    StringFree(level_name);
-
-    if (description) {
-        StringFree(description);
-    }
+    DP_CreateRTLights(entry_in_pak.c_str());
 }
 
 game_interface_c *Quake3_GameObject(void) {

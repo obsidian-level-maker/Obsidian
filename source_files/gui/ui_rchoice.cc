@@ -25,23 +25,16 @@
 #include "main.h"
 
 choice_data_c::choice_data_c(const char *_id, const char *_label)
-    : id(NULL), label(NULL), enabled(false), mapped(-1), widget(NULL) {
+    : enabled(false), mapped(-1), widget(NULL) {
     if (_id) {
-        id = StringDup(_id);
+        id = _id;
     }
     if (_label) {
-        label = StringDup(_label);
+        label = _label;
     }
 }
 
 choice_data_c::~choice_data_c() {
-    if (id) {
-        StringFree(id);
-    }
-    if (label) {
-        StringFree(label);
-    }
-
     // ignore 'widget' field when enabled, we assume it exists in
     // an Fl_Group and hence FLTK will take care to delete it.
     if (!enabled) {
@@ -52,7 +45,11 @@ choice_data_c::~choice_data_c() {
 //----------------------------------------------------------------
 
 UI_RChoiceMenu::UI_RChoiceMenu(int x, int y, int w, int h, const char *label)
-    : UI_CustomMenu(x, y, w, h, label), opt_list() { visible_focus(0); labelfont(font_style); textfont(font_style); }
+    : UI_CustomMenu(x, y, w, h, label), opt_list() {
+    visible_focus(0);
+    labelfont(font_style);
+    textfont(font_style);
+}
 
 UI_RChoiceMenu::~UI_RChoiceMenu() {
     for (unsigned int i = 0; i < opt_list.size(); i++) {
@@ -64,8 +61,7 @@ void UI_RChoiceMenu::AddChoice(const char *id, const char *label) {
     choice_data_c *opt = FindID(id);
 
     if (opt) {
-        StringFree(opt->label);
-        opt->label = StringDup(label);
+        opt->label = label;
 
         if (opt->enabled) {
             Recreate();
@@ -97,13 +93,13 @@ bool UI_RChoiceMenu::EnableChoice(const char *id, bool enable_it) {
     return true;
 }
 
-const char *UI_RChoiceMenu::GetID() const {
+std::string UI_RChoiceMenu::GetID() const {
     choice_data_c *P = FindMapped();
 
     return P ? P->id : "";
 }
 
-const char *UI_RChoiceMenu::GetLabel() const {
+std::string UI_RChoiceMenu::GetLabel() const {
     choice_data_c *P = FindMapped();
 
     return P ? P->label : "";
@@ -136,7 +132,7 @@ void UI_RChoiceMenu::Recreate() {
         choice_data_c *P = opt_list[j];
 
         // is it just a separator?
-        if (strcmp(P->label, "_") == 0) {
+        if (P->label == "_") {
             P->mapped = -1;
             add("", 0, 0, 0, FL_MENU_DIVIDER | FL_MENU_INACTIVE);
             continue;
@@ -147,7 +143,7 @@ void UI_RChoiceMenu::Recreate() {
             continue;
         }
 
-        P->mapped = add(P->label, 0, 0, 0, 0);
+        P->mapped = add(P->label.c_str(), 0, 0, 0, 0);
     }
 
     // update the currently selected choice
@@ -164,7 +160,7 @@ choice_data_c *UI_RChoiceMenu::FindID(const char *id) const {
     for (unsigned int j = 0; j < opt_list.size(); j++) {
         choice_data_c *P = opt_list[j];
 
-        if (strcmp(P->id, id) == 0) {
+        if (P->id == id) {
             return P;
         }
     }
@@ -173,7 +169,6 @@ choice_data_c *UI_RChoiceMenu::FindID(const char *id) const {
 }
 
 choice_data_c *UI_RChoiceMenu::FindMapped() const {
-
     for (unsigned int j = 0; j < opt_list.size(); j++) {
         choice_data_c *P = opt_list[j];
 
@@ -223,80 +218,108 @@ void UI_RChoiceMenu::GotoNext() {
 //----------------------------------------------------------------
 
 UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label)
-    : Fl_Group(x, y, w, h, label) { visible_focus(0); labelfont(font_style); }
+    : Fl_Group(x, y, w, h, label) {
+    visible_focus(0);
+    labelfont(font_style);
+}
 
 UI_RChoice::~UI_RChoice() {}
 
 //----------------------------------------------------------------
 
 UI_RSlide::UI_RSlide(int x, int y, int w, int h, const char *label)
-    : Fl_Group(x, y, w, h, label) { visible_focus(0); labelfont(font_style); }
+    : Fl_Group(x, y, w, h, label) {
+    visible_focus(0);
+    labelfont(font_style);
+}
 
 UI_RSlide::~UI_RSlide() {}
 
 //----------------------------------------------------------------
 
 UI_RButton::UI_RButton(int x, int y, int w, int h, const char *label)
-    : Fl_Group(x, y, w, h, label) { visible_focus(0); box(FL_NO_BOX); }
+    : Fl_Group(x, y, w, h, label) {
+    visible_focus(0);
+    box(FL_NO_BOX);
+}
 
 UI_RButton::~UI_RButton() {}
 
 //----------------------------------------------------------------
 
-UI_CustomCheckBox::UI_CustomCheckBox(int x, int y, int w, int h, const char *label)
-    : Fl_Check_Button(x, y, w, h, label) { visible_focus(0); box(FL_NO_BOX); down_box(button_style); }
+UI_CustomCheckBox::UI_CustomCheckBox(int x, int y, int w, int h,
+                                     const char *label)
+    : Fl_Check_Button(x, y, w, h, label) {
+    visible_focus(0);
+    box(FL_NO_BOX);
+    down_box(button_style);
+}
 
 UI_CustomCheckBox::~UI_CustomCheckBox() {}
 
-// Custom draw function to use the checkmark style regardless of box type and respect custom colors
+// Custom draw function to use the checkmark style regardless of box type and
+// respect custom colors
 void UI_CustomCheckBox::draw() {
-	if (box()) draw_box(this==Fl::pushed() ? fl_down(box()) : box(), BUTTON_COLOR);
-	Fl_Color col = value() ? (active_r() ? selection_color() :
-		                      fl_inactive(selection_color())) : BUTTON_COLOR;
+    if (box()) {
+        draw_box(this == Fl::pushed() ? fl_down(box()) : box(), BUTTON_COLOR);
+    }
+    Fl_Color col = value() ? (active_r() ? selection_color()
+                                         : fl_inactive(selection_color()))
+                           : BUTTON_COLOR;
 
-	int W  = labelsize();
-	int bx = Fl::box_dx(box());	// box frame width
-	int dx = bx + 2;		// relative position of check mark etc.
-	int dy = (h() - W) / 2;	// neg. offset o.k. for vertical centering
-	int lx = 0;			// relative label position (STR #3237)
+    int W = labelsize();
+    int bx = Fl::box_dx(box());  // box frame width
+    int dx = bx + 2;             // relative position of check mark etc.
+    int dy = (h() - W) / 2;      // neg. offset o.k. for vertical centering
+    int lx = 0;                  // relative label position (STR #3237)
 
-	draw_box(down_box(), x()+dx, y()+dy, W, W, BUTTON_COLOR);
-  	if (value()) {
-		fl_color(col);
-		int tx = x() + dx + 3;
-		int tw = W - 6;
-		int d1 = tw/3;
-		int d2 = tw-d1;
-		int ty = y() + dy + (W+d2)/2-d1-2;
-		for (int n = 0; n < 3; n++, ty++) {
-			fl_line(tx, ty, tx+d1, ty+d1);
-			fl_line(tx+d1, ty+d1, tx+tw-1, ty+d1-d2+1);
-		}
-	}
-	lx = dx + W + 2;
-  	draw_label(x()+lx, y(), w()-lx-bx, h());
-  	if (Fl::focus() == this) draw_focus();
+    draw_box(down_box(), x() + dx, y() + dy, W, W, BUTTON_COLOR);
+    if (value()) {
+        fl_color(col);
+        int tx = x() + dx + 3;
+        int tw = W - 6;
+        int d1 = tw / 3;
+        int d2 = tw - d1;
+        int ty = y() + dy + (W + d2) / 2 - d1 - 2;
+        for (int n = 0; n < 3; n++, ty++) {
+            fl_line(tx, ty, tx + d1, ty + d1);
+            fl_line(tx + d1, ty + d1, tx + tw - 1, ty + d1 - d2 + 1);
+        }
+    }
+    lx = dx + W + 2;
+    draw_label(x() + lx, y(), w() - lx - bx, h());
+    if (Fl::focus() == this) {
+        draw_focus();
+    }
 }
 
 //----------------------------------------------------------------
 
-UI_CustomArrowButton::UI_CustomArrowButton(int x, int y, int w, int h, const char *label)
-    : Fl_Repeat_Button(x, y, w, h, label) { visible_focus(0); }
+UI_CustomArrowButton::UI_CustomArrowButton(int x, int y, int w, int h,
+                                           const char *label)
+    : Fl_Repeat_Button(x, y, w, h, label) {
+    visible_focus(0);
+}
 
 UI_CustomArrowButton::~UI_CustomArrowButton() {}
 
 void UI_CustomArrowButton::draw() {
-  if (type() == FL_HIDDEN_BUTTON) return;
-  Fl_Color col = value() ? selection_color() : color();
-  draw_box(value() ? (down_box()?down_box():fl_down(box())) : box(), col);
-  draw_backdrop();
-  draw_label();
-  if (Fl::focus() == this) draw_focus();
+    if (type() == FL_HIDDEN_BUTTON) {
+        return;
+    }
+    Fl_Color col = value() ? selection_color() : color();
+    draw_box(value() ? (down_box() ? down_box() : fl_down(box())) : box(), col);
+    draw_backdrop();
+    draw_label();
+    if (Fl::focus() == this) {
+        draw_focus();
+    }
 }
 
 //----------------------------------------------------------------
 
-UI_CustomMenuButton::UI_CustomMenuButton(int x, int y, int w, int h, const char *label)
+UI_CustomMenuButton::UI_CustomMenuButton(int x, int y, int w, int h,
+                                         const char *label)
     : Fl_Menu_Button(x, y, w, h, label),
       hover(false),
       label_X(0),
@@ -329,11 +352,10 @@ void UI_CustomMenuButton::draw() {
     label_Y += h() / 2 - labelsize() / 2 - 2;
 
     // draw the link text
-	
+
     fl_color(labelcolor());
     fl_draw(label(), x() + label_X, y() + label_Y, label_W, label_H,
             FL_ALIGN_LEFT);
-
 }
 
 void UI_CustomMenuButton::checkLink() {
@@ -396,7 +418,7 @@ UI_HelpLink::UI_HelpLink(int x, int y, int w, int h, const char *label)
     box(FL_NO_BOX);
 }
 
-UI_HelpLink::~UI_HelpLink() { }
+UI_HelpLink::~UI_HelpLink() {}
 
 void UI_HelpLink::checkLink() {
     // change the cursor if the mouse is over the link.
@@ -494,7 +516,7 @@ UI_ManualEntry::UI_ManualEntry(int x, int y, int w, int h, const char *label)
     box(FL_NO_BOX);
 }
 
-UI_ManualEntry::~UI_ManualEntry() { }
+UI_ManualEntry::~UI_ManualEntry() {}
 
 void UI_ManualEntry::checkLink() {
     // change the cursor if the mouse is over the link.
@@ -583,105 +605,119 @@ void UI_ManualEntry::draw() {
 //----------------------------------------------------------------
 
 UI_CustomMenu::UI_CustomMenu(int x, int y, int w, int h, const char *label)
-    : Fl_Choice(x, y, w, h, label) { visible_focus(0); }
+    : Fl_Choice(x, y, w, h, label) {
+    visible_focus(0);
+}
 
 UI_CustomMenu::~UI_CustomMenu() {}
 
 // Custom draw function to use selected button style
 void UI_CustomMenu::draw() {
-  Fl_Boxtype btype = button_style;
-  
-  int dx = Fl::box_dx(btype);
-  int dy = Fl::box_dy(btype);
+    Fl_Boxtype btype = button_style;
 
-  // Arrow area
-  int H = h() - 2 * dy;
-  int W = Fl::is_scheme("gtk+")    ? 20 :			// gtk+  -- fixed size
-          Fl::is_scheme("gleam")   ? 20 :			// gleam -- fixed size
-          Fl::is_scheme("plastic") ? ((H > 20) ? 20 : H)	// plastic: shrink if H<20
-                                   : ((H > 20) ? 20 : H);	// default: shrink if H<20
-  int X = x() + w() - W - dx;
-  int Y = y() + dy;
+    int dx = Fl::box_dx(btype);
+    int dy = Fl::box_dy(btype);
 
-  // Arrow object
-  int w1 = (W - 4) / 3; if (w1 < 1) w1 = 1;
-  int x1 = X + (W - 2 * w1 - 1) / 2;
-  int y1 = Y + (H - w1 - 1) / 2;
+    // Arrow area
+    int H = h() - 2 * dy;
+    int W = Fl::is_scheme("gtk+") ? 20 :  // gtk+  -- fixed size
+                Fl::is_scheme("gleam") ? 20
+                                       :  // gleam -- fixed size
+                Fl::is_scheme("plastic")
+                ? ((H > 20) ? 20 : H)   // plastic: shrink if H<20
+                : ((H > 20) ? 20 : H);  // default: shrink if H<20
+    int X = x() + w() - W - dx;
+    int Y = y() + dy;
 
-  if (Fl::scheme()) {
-    // NON-DEFAULT SCHEME
+    // Arrow object
+    int w1 = (W - 4) / 3;
+    if (w1 < 1) {
+        w1 = 1;
+    }
+    int x1 = X + (W - 2 * w1 - 1) / 2;
+    int y1 = Y + (H - w1 - 1) / 2;
 
-    // Draw widget box
-    draw_box(btype, BUTTON_COLOR);
+    if (Fl::scheme()) {
+        // NON-DEFAULT SCHEME
 
-    // Draw arrow area
-    fl_color(active_r() ? SELECTION : fl_inactive(SELECTION));
-    if (Fl::is_scheme("plastic")) {
-      // Show larger up/down arrows...
-      fl_polygon(x1, y1 + 3, x1 + w1, y1 + w1 + 3, x1 + 2 * w1, y1 + 3);
-      fl_polygon(x1, y1 + 1, x1 + w1, y1 - w1 + 1, x1 + 2 * w1, y1 + 1);
+        // Draw widget box
+        draw_box(btype, BUTTON_COLOR);
+
+        // Draw arrow area
+        fl_color(active_r() ? SELECTION : fl_inactive(SELECTION));
+        if (Fl::is_scheme("plastic")) {
+            // Show larger up/down arrows...
+            fl_polygon(x1, y1 + 3, x1 + w1, y1 + w1 + 3, x1 + 2 * w1, y1 + 3);
+            fl_polygon(x1, y1 + 1, x1 + w1, y1 - w1 + 1, x1 + 2 * w1, y1 + 1);
+        } else {
+            // Show smaller up/down arrows with a divider...
+            x1 = x() + w() - 13 - dx;
+            y1 = y() + h() / 2;
+            fl_polygon(x1, y1 - 2, x1 + 3, y1 - 5, x1 + 6, y1 - 2);
+            fl_polygon(x1, y1 + 2, x1 + 3, y1 + 5, x1 + 6, y1 + 2);
+
+            fl_color(fl_darker(color()));
+            fl_yxline(x1 - 7, y1 - 8, y1 + 8);
+
+            fl_color(fl_lighter(color()));
+            fl_yxline(x1 - 6, y1 - 8, y1 + 8);
+        }
     } else {
-      // Show smaller up/down arrows with a divider...
-      x1 = x() + w() - 13 - dx;
-      y1 = y() + h() / 2;
-      fl_polygon(x1, y1 - 2, x1 + 3, y1 - 5, x1 + 6, y1 - 2);
-      fl_polygon(x1, y1 + 2, x1 + 3, y1 + 5, x1 + 6, y1 + 2);
+        // DEFAULT SCHEME
 
-      fl_color(fl_darker(color()));
-      fl_yxline(x1 - 7, y1 - 8, y1 + 8);
+        // Draw widget box
+        draw_box(btype, color());
 
-      fl_color(fl_lighter(color()));
-      fl_yxline(x1 - 6, y1 - 8, y1 + 8);
-    }
-  } else {
-    // DEFAULT SCHEME
-
-    // Draw widget box
-    draw_box(btype, color());
-
-    // Draw arrow area
-    draw_box(FL_UP_BOX,X,Y,W,H,BUTTON_COLOR);
-    fl_color(active_r() ? SELECTION : fl_inactive(SELECTION));
-    fl_polygon(x1, y1, x1 + w1, y1 + w1, x1 + 2 * w1, y1);
-  }
-
-  W += 2 * dx;
-
-  // Draw menu item's label
-  if (mvalue()) {
-    Fl_Menu_Item m = *mvalue();
-    if (active_r()) m.activate(); else m.deactivate();
-
-    // Clip
-    int xx = x() + dx, yy = y() + dy + 1, ww = w() - W, hh = H - 2;
-    fl_push_clip(xx, yy, ww, hh);
-
-    if ( Fl::scheme()) {
-      Fl_Label l;
-      l.value = m.text;
-      l.image = 0;
-      l.deimage = 0;
-      l.type = m.labeltype_;
-      l.font = m.labelsize_ || m.labelfont_ ? m.labelfont_ : textfont();
-      l.size = m.labelsize_ ? m.labelsize_ : textsize();
-      l.color= m.labelcolor_ ? m.labelcolor_ : textcolor();
-      if (!m.active()) l.color = fl_inactive((Fl_Color)l.color);
-      fl_draw_shortcut = 2; // hack value to make '&' disappear
-      l.draw(xx+3, yy, ww>6 ? ww-6 : 0, hh, FL_ALIGN_LEFT);
-      fl_draw_shortcut = 0;
-      if ( Fl::focus() == this ) draw_focus(box(), xx, yy, ww, hh);
-    }
-    else {
-      fl_draw_shortcut = 2; // hack value to make '&' disappear
-      m.draw(xx, yy, ww, hh, this, Fl::focus() == this);
-      fl_draw_shortcut = 0;
+        // Draw arrow area
+        draw_box(FL_UP_BOX, X, Y, W, H, BUTTON_COLOR);
+        fl_color(active_r() ? SELECTION : fl_inactive(SELECTION));
+        fl_polygon(x1, y1, x1 + w1, y1 + w1, x1 + 2 * w1, y1);
     }
 
-    fl_pop_clip();
-  }
+    W += 2 * dx;
 
-  // Widget's label
-  draw_label();
+    // Draw menu item's label
+    if (mvalue()) {
+        Fl_Menu_Item m = *mvalue();
+        if (active_r()) {
+            m.activate();
+        } else {
+            m.deactivate();
+        }
+
+        // Clip
+        int xx = x() + dx, yy = y() + dy + 1, ww = w() - W, hh = H - 2;
+        fl_push_clip(xx, yy, ww, hh);
+
+        if (Fl::scheme()) {
+            Fl_Label l;
+            l.value = m.text;
+            l.image = 0;
+            l.deimage = 0;
+            l.type = m.labeltype_;
+            l.font = m.labelsize_ || m.labelfont_ ? m.labelfont_ : textfont();
+            l.size = m.labelsize_ ? m.labelsize_ : textsize();
+            l.color = m.labelcolor_ ? m.labelcolor_ : textcolor();
+            if (!m.active()) {
+                l.color = fl_inactive((Fl_Color)l.color);
+            }
+            fl_draw_shortcut = 2;  // hack value to make '&' disappear
+            l.draw(xx + 3, yy, ww > 6 ? ww - 6 : 0, hh, FL_ALIGN_LEFT);
+            fl_draw_shortcut = 0;
+            if (Fl::focus() == this) {
+                draw_focus(box(), xx, yy, ww, hh);
+            }
+        } else {
+            fl_draw_shortcut = 2;  // hack value to make '&' disappear
+            m.draw(xx, yy, ww, hh, this, Fl::focus() == this);
+            fl_draw_shortcut = 0;
+        }
+
+        fl_pop_clip();
+    }
+
+    // Widget's label
+    draw_label();
 }
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

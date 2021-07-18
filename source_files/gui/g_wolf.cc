@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 
+#include "fmt/format.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"
@@ -48,7 +49,7 @@ static int current_offset;
 static u16_t *solid_plane;
 static u16_t *thing_plane;
 
-static char *level_name;
+static std::string level_name;
 
 #define PL_START 2
 
@@ -178,7 +179,8 @@ static void WF_WriteMap(void) {
     WF_PutU16(64, map_fp);
     WF_PutU16(64, map_fp);
 
-    WF_PutNString(level_name ? level_name : "Custom Map", 16, map_fp);
+    WF_PutNString(level_name.empty() ? "Custom Map" : level_name.c_str(), 16,
+                  map_fp);
 
     WF_PutNString("!ID!", 4, map_fp);
 }
@@ -410,17 +412,14 @@ bool wolf_game_interface_c::Finish(bool build_ok) {
 }
 
 bool wolf_game_interface_c::Rename() {
-    char gamemaps[40];
-    char maphead[40];
+    std::string gamemaps = fmt::format("GAMEMAPS.{}", file_ext);
+    std::string maphead = fmt::format("MAPHEAD.{}", file_ext);
 
-    sprintf(gamemaps, "GAMEMAPS.%s", file_ext.c_str());
-    sprintf(maphead, "MAPHEAD.%s", file_ext.c_str());
+    FileDelete(gamemaps.c_str());
+    FileDelete(maphead.c_str());
 
-    FileDelete(gamemaps);
-    FileDelete(maphead);
-
-    return FileRename(TEMP_GAMEFILE, gamemaps) &&
-           FileRename(TEMP_HEADFILE, maphead);
+    return FileRename(TEMP_GAMEFILE, gamemaps.c_str()) &&
+           FileRename(TEMP_HEADFILE, maphead.c_str());
 }
 
 void wolf_game_interface_c::Tidy() {
@@ -446,17 +445,14 @@ void wolf_game_interface_c::EndLevel() {
     WF_WriteMap();
     WF_WriteHead();
 
-    if (level_name) {
-        StringFree(level_name);
-        level_name = NULL;
-    }
+    level_name.clear();
 }
 
 void wolf_game_interface_c::Property(const char *key, const char *value) {
     if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = StringDup(value);
+        level_name = value;
     } else if (StringCaseCmp(key, "file_ext") == 0) {
-        file_ext = std::string(value);
+        file_ext = value;
     } else {
         LogPrintf("WARNING: unknown WOLF3D property: %s=%s\n", key, value);
     }

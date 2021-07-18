@@ -22,6 +22,7 @@
 #define __OBLIGE_COOKIE_H__
 
 #include <cstdio>
+#include <string>
 
 bool Cookie_Load(const char *filename);
 bool Cookie_Save(const char *filename);
@@ -52,7 +53,7 @@ typedef enum {
 
 void Recent_AddFile(int group, const char *filename);
 void Recent_RemoveFile(int group, const char *filename);
-bool Recent_GetName(int group, int index, char *name_buf,
+bool Recent_GetName(int group, int index, std::string *name_buf,
                     bool for_menu = false);
 
 #endif /* __OBLIGE_COOKIE_H__ */

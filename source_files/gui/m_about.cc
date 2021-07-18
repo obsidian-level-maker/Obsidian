@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 
+#include "fmt/format.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #include "headers.h"
@@ -94,11 +95,12 @@ UI_About::UI_About(int W, int H, const char *label)
     int cy = kf_h(6);
 
     // nice big logo text
-    const char *logo_text =
-        StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION);
+    std::string logo_text =
+        fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION);
 
-    Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), logo_text);
-    box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP | FL_ALIGN_CLIP);
+    Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), logo_text.c_str());
+    box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP |
+               FL_ALIGN_CLIP);
     box->labelsize(FL_NORMAL_SIZE * 5 / 3);
     box->labelfont(font_style);
 
@@ -115,7 +117,6 @@ UI_About::UI_About(int W, int H, const char *label)
     box->color(BUTTON_COLOR);
     box->labelfont(font_style);
     box->labelcolor(FONT2_COLOR);
-    
 
     cy += box->h() + kf_h(10);
 
@@ -154,11 +155,11 @@ UI_About::UI_About(int W, int H, const char *label)
 }
 
 void DLG_AboutText(void) {
-
     int about_w = kf_w(400);
     int about_h = kf_h(400) + KF * 20;
 
-    UI_About *about_window = new UI_About(about_w, about_h, _("About OBSIDIAN"));
+    UI_About *about_window =
+        new UI_About(about_w, about_h, _("About OBSIDIAN"));
 
     about_window->want_quit = false;
     about_window->set_modal();

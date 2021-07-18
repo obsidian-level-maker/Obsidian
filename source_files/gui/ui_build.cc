@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 
+#include "fmt/core.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #include "headers.h"
@@ -241,14 +242,14 @@ void UI_Build::Prog_Step(const char *step_name) {
         val = 1;
     }
 
-    sprintf(prog_label, "%d%%", int(val * 100));
+    prog_label = fmt::format("{}%", val * 100);
 
     progress->value(val);
-    progress->label(prog_label);
+    progress->label(prog_label.c_str());
     std::string newtitle = "[ ";
     newtitle.append(prog_label);
     newtitle.append(" ] ");
-    newtitle.append(StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
+    newtitle.append(fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
     newtitle.append(" - ");
     newtitle.append(status_label);
     main_win->label(newtitle.c_str());
@@ -277,10 +278,10 @@ void UI_Build::Prog_Nodes(int pos, int limit) {
         val = 1;
     }
 
-    sprintf(prog_label, "%d%%", int(val * 100));
+    prog_label = fmt::format("{}%", val * 100);
 
     progress->value(val);
-    progress->label(prog_label);
+    progress->label(prog_label.c_str());
 
     Main_Ticker();
 }
@@ -294,7 +295,7 @@ void UI_Build::SetStatus(const char *msg) {
 
     if (StringCaseCmp(status_label, "Success") == 0) {
         main_win->label(
-            StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
+            fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION).c_str());
     }
 
     status->label(status_label);

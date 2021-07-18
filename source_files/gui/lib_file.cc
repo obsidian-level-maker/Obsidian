@@ -22,6 +22,7 @@
 
 #include <algorithm>
 
+#include "fmt/format.h"
 #include "headers.h"
 #include "lib_util.h"
 
@@ -113,18 +114,16 @@ bool MatchExtension(const char *filename, const char *ext) {
 //
 // Returned string is a COPY.
 //
-char *ReplaceExtension(const char *filename, const char *ext) {
+std::string ReplaceExtension(const char *filename, const char *ext) {
     SYS_ASSERT(filename[0] != 0);
 
     size_t total_len = strlen(filename) + (ext ? strlen(ext) : 0);
 
-    char *buffer = StringNew((int)total_len + 10);
+    std::string buffer{filename};
 
-    strcpy(buffer, filename);
+    auto dot_pos = buffer.rbegin();
 
-    char *dot_pos = buffer + strlen(buffer) - 1;
-
-    for (; dot_pos >= buffer && *dot_pos != '.'; dot_pos--) {
+    for (; dot_pos != buffer.rend() && *dot_pos != '.'; ++dot_pos) {
         if (*dot_pos == '/') {
             break;
         }
@@ -134,25 +133,25 @@ char *ReplaceExtension(const char *filename, const char *ext) {
 #endif
     }
 
-    if (dot_pos < buffer || *dot_pos != '.') {
-        dot_pos = NULL;
+    if (dot_pos != buffer.rend() && *dot_pos != '.') {
+        dot_pos = buffer.rend();
     }
 
     if (!(ext && ext[0])) {
-        if (dot_pos) {
-            dot_pos[0] = 0;
+        if (dot_pos != buffer.rend()) {
+            buffer.resize(buffer.rend() - dot_pos);
         }
 
         return buffer;
     }
 
-    if (dot_pos) {
+    if (dot_pos != buffer.rend()) {
         dot_pos[1] = 0;
     } else {
-        strcat(buffer, ".");
+        buffer.push_back('.');
     }
 
-    strcat(buffer, ext);
+    buffer.append(ext);
 
     return buffer;
 }
@@ -388,7 +387,7 @@ bool PathIsDirectory(const char *path) {
 #endif
 }
 
-const char *FileFindInPath(const char *paths, const char *base_name) {
+std::string FileFindInPath(const char *paths, const char *base_name) {
     // search through the path list (separated by ';') to find the file.
     // If found, the complete filename is returned (which must be freed
     // using StringFree).  If not found, NULL is returned.
@@ -399,18 +398,16 @@ const char *FileFindInPath(const char *paths, const char *base_name) {
 
         SYS_ASSERT(len > 0);
 
-        const char *filename = StringPrintf("%.*s/%s", len, paths, base_name);
+        std::string filename = fmt::format("{:{}}/{}", paths, len, base_name);
 
         //  fprintf(stderr, "Trying data file: [%s]\n", filename);
 
-        if (FileExists(filename)) {
+        if (FileExists(filename.c_str())) {
             return filename;
         }
 
-        StringFree(filename);
-
         if (!sep) {
-            return NULL;  // not found
+            return "";  // not found
         }
 
         paths = sep + 1;
@@ -498,17 +495,14 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat) {
             continue;
         }
 
-        const char *full_name = StringPrintf("%s/%s", path, fdata->d_name);
+        std::string full_name = fmt::format("{}/{}", path, fdata->d_name);
 
         struct stat finfo;
 
-        if (stat(full_name, &finfo) != 0) {
+        if (stat(full_name.c_str(), &finfo) != 0) {
             DebugPrintf(".... stat failed: %s\n", strerror(errno));
-            StringFree(full_name);
             continue;
         }
-
-        StringFree(full_name);
 
         int flags = 0;
 
@@ -607,13 +601,13 @@ int ScanDir_MatchingFiles(const char *path, const char *ext,
 
 //------------------------------------------------------------------------
 
-const char *GetExecutablePath(const char *argv0) {
-    char *path;
+std::string GetExecutablePath(const char *argv0) {
+    std::string path;
 
 #ifdef WIN32
-    path = StringNew(PATH_MAX + 2);
+    path.resize(PATH_MAX + 2);
 
-    int length = GetModuleFileName(GetModuleHandle(NULL), path, PATH_MAX);
+    int length = GetModuleFileName(GetModuleHandle(NULL), &path[0], PATH_MAX);
 
     if (length > 0 && length < PATH_MAX) {
         if (access(path, 0) == 0)  // sanity check
@@ -622,28 +616,22 @@ const char *GetExecutablePath(const char *argv0) {
             return path;
         }
     }
-
-    // didn't work, free the memory
-    StringFree(path);
 #endif
 
 #ifdef UNIX
-    path = StringNew(PATH_MAX + 2);
+    path.resize(PATH_MAX + 2);
 
-    int length = readlink("/proc/self/exe", path, PATH_MAX);
+    int length = readlink("/proc/self/exe", &path[0], PATH_MAX);
 
     if (length > 0) {
         path[length] = 0;  // add the missing NUL
 
-        if (access(path, 0) == 0)  // sanity check
+        if (access(path.c_str(), 0) == 0)  // sanity check
         {
-            FilenameStripBase(path);
+            FilenameStripBase(&path[0]);
             return path;
         }
     }
-
-    // didn't work, free the memory
-    StringFree(path);
 #endif
 
 #ifdef __APPLE__
@@ -660,26 +648,23 @@ const char *GetExecutablePath(const char *argv0) {
      */
     uint32_t pathlen = PATH_MAX * 2;
 
-    path = StringNew(pathlen + 2);
+    path.resize(pathlen + 2);
 
-    if (0 == _NSGetExecutablePath(path, &pathlen)) {
+    if (0 == _NSGetExecutablePath(&path[0], &pathlen)) {
         // FIXME: will this be _inside_ the .app folder???
-        FilenameStripBase(path);
+        FilenameStripBase(&path[0]);
         return path;
     }
-
-    // didn't work, free the memory
-    StringFree(path);
 #endif
 
     // fallback method: use argv[0]
-    path = StringDup(argv0);
+    path = argv0;
 
 #ifdef __APPLE__
     // FIXME: check if _inside_ the .app folder
 #endif
 
-    FilenameStripBase(path);
+    FilenameStripBase(&path[0]);
     return path;
 }
 

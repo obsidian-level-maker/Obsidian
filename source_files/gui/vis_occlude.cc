@@ -18,6 +18,7 @@
 
 #include "vis_occlude.h"
 
+#include "fmt/core.h"
 #include "headers.h"
 #include "main.h"
 
@@ -78,16 +79,16 @@ static void ValidateBuffer(void) {
 #endif  // DEBUG_OCCLUDE
 
 void Occlusion_Dump(void) {
-    fprintf(stderr, "Occludes {");
+    fmt::print(stderr, "Occludes {");
 
     for (angle_range_t *AR = occbuf_head; AR; AR = AR->next) {
         float low = AR->low * (360.0 / 65536.0);
         float high = AR->high * (360.0 / 65536.0);
 
-        fprintf(stderr, " %1.2f-%1.2f ", low, high);
+        fmt::print(stderr, " %1.2f-%1.2f ", low, high);
     }
 
-    fprintf(stderr, "}\n");
+    fmt::print(stderr, "}\n");
 }
 
 void Occlusion_Clear(void) {

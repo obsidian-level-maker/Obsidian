@@ -34,6 +34,7 @@
 
 #include "tx_forge.h"
 
+#include "fmt/core.h"
 #include "headers.h"
 #include "lib_util.h"
 #include "main.h"
@@ -325,7 +326,7 @@ void TX_TestSynth(unsigned long long seed) {
 
     TX_SpectralSynth(seed, buf, 128);
 
-   printf("P6\n128 128 255\n");
+    fmt::print("P6\n128 128 255\n");
 
     for (int y = 0; y < 128; y++) {
         for (int x = 0; x < 128; x++) {
@@ -333,10 +334,10 @@ void TX_TestSynth(unsigned long long seed) {
 
             int ity = (int)(1 + f * 253);
 
-            printf("ITY: %d\n", ity);
+            fmt::print("ITY: {}\n", ity);
         }
     }
-    
+
     delete[] buf;
 }
 

@@ -18,6 +18,7 @@
 //
 //----------------------------------------------------------------------
 
+#include "fmt/core.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #include "headers.h"
@@ -37,7 +38,7 @@ static void Parse_Option(const char *name, const char *value) {
     if (StringCaseCmp(name, "addon") == 0) {
         VFS_OptParse(value);
     } else if (StringCaseCmp(name, "language") == 0) {
-        t_language = StringDup(value);       
+        t_language = value;
     } else if (StringCaseCmp(name, "create_backups") == 0) {
         create_backups = atoi(value) ? true : false;
     } else if (StringCaseCmp(name, "overwrite_warning") == 0) {
@@ -45,7 +46,7 @@ static void Parse_Option(const char *name, const char *value) {
     } else if (StringCaseCmp(name, "debug_messages") == 0) {
         debug_messages = atoi(value) ? true : false;
     } else if (StringCaseCmp(name, "last_directory") == 0) {
-        last_directory = StringDup(value);
+        last_directory = value;
     } else if (StringCaseCmp(name, "filename_prefix") == 0) {
         filename_prefix = atoi(value);
     } else if (StringCaseCmp(name, "custom_prefix") == 0) {
@@ -163,26 +164,27 @@ bool Options_Save(const char *filename) {
 
     LogPrintf("Saving options file...\n");
 
-    fprintf(option_fp, "-- OPTIONS FILE : OBSIDIAN %s\n", OBSIDIAN_VERSION);
-    fprintf(option_fp,
-            "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
-    fprintf(option_fp, "-- " OBSIDIAN_WEBSITE "\n\n");
+    fmt::print(option_fp, "-- OPTIONS FILE : OBSIDIAN {}\n", OBSIDIAN_VERSION);
+    fmt::print(option_fp,
+               "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
+    fmt::print(option_fp, "-- " OBSIDIAN_WEBSITE "\n\n");
 
-    fprintf(option_fp, "language = %s\n", t_language);
-    fprintf(option_fp, "\n");
+    fmt::print(option_fp, "language = {}\n", t_language);
+    fmt::print(option_fp, "\n");
 
-    fprintf(option_fp, "create_backups = %d\n", create_backups ? 1 : 0);
-    fprintf(option_fp, "overwrite_warning = %d\n", overwrite_warning ? 1 : 0);
-    fprintf(option_fp, "debug_messages = %d\n", debug_messages ? 1 : 0);
-    fprintf(option_fp, "filename_prefix = %d\n", filename_prefix);
-    fprintf(option_fp, "custom_prefix = %s\n", custom_prefix.c_str());
+    fmt::print(option_fp, "create_backups = {}\n", create_backups ? 1 : 0);
+    fmt::print(option_fp, "overwrite_warning = {}\n",
+               overwrite_warning ? 1 : 0);
+    fmt::print(option_fp, "debug_messages = {}\n", debug_messages ? 1 : 0);
+    fmt::print(option_fp, "filename_prefix = {}\n", filename_prefix);
+    fmt::print(option_fp, "custom_prefix = {}\n", custom_prefix);
 
-    if (last_directory) {
-        fprintf(option_fp, "\n");
-        fprintf(option_fp, "last_directory = %s\n", last_directory);
+    if (!last_directory.empty()) {
+        fmt::print(option_fp, "\n");
+        fmt::print(option_fp, "last_directory = {}\n", last_directory);
     }
 
-    fprintf(option_fp, "\n");
+    fmt::print(option_fp, "\n");
 
     VFS_OptWrite(option_fp);
 
@@ -204,7 +206,7 @@ class UI_OptionsWin : public Fl_Window {
    private:
     UI_CustomMenu *opt_language;
     UI_CustomMenu *opt_filename_prefix;
-    
+
     Fl_Button *opt_custom_prefix;
     UI_HelpLink *custom_prefix_help;
 
@@ -230,23 +232,23 @@ class UI_OptionsWin : public Fl_Window {
         opt_language->value(0);
 
         for (int i = 0;; i++) {
-            const char *fullname = Trans_GetAvailLanguage(i);
+            std::string fullname = Trans_GetAvailLanguage(i);
 
-            if (!fullname) {
+            if (fullname.empty()) {
                 break;
             }
 
-            opt_language->add(fullname);
+            opt_language->add(fullname.c_str());
 
             // check for match against current language
-            const char *lc = Trans_GetAvailCode(i);
+            std::string lc = Trans_GetAvailCode(i);
 
-            if (strcmp(lc, t_language) == 0) {
+            if (lc == t_language) {
                 opt_language->value(i + 1);
             }
         }
     }
-    
+
    private:
     static void callback_Quit(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
@@ -265,7 +267,7 @@ class UI_OptionsWin : public Fl_Window {
             t_language = Trans_GetAvailCode(val - 1);
 
             // this should not happen
-            if (!t_language) {
+            if (t_language.empty()) {
                 t_language = "AUTO";
             }
         }
@@ -289,33 +291,35 @@ class UI_OptionsWin : public Fl_Window {
         debug_messages = that->opt_debug->value() ? true : false;
         LogEnableDebug(debug_messages);
     }
-    
+
     static void callback_FilenamePrefix(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         filename_prefix = that->opt_filename_prefix->value();
-              
-        fl_alert("%s", _("File prefix changes require a restart.\nOBSIDIAN will "
-             "now restart."));
+
+        fl_alert("%s",
+                 _("File prefix changes require a restart.\nOBSIDIAN will "
+                   "now restart."));
 
         main_action = MAIN_RESTART;
 
         that->want_quit = true;
-        
     }
-    
+
     static void callback_PrefixHelp(Fl_Widget *w, void *data) {
-		fl_cursor(FL_CURSOR_DEFAULT);
-		Fl_Window *win = new Fl_Window(640, 480, "Custom Prefix");
-		Fl_Text_Buffer *buff = new Fl_Text_Buffer();
-		Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640-40, 480-40, NULL);
-		disp->buffer(buff);
-		disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
-		win->resizable(*disp);
-		win->hotspot(0, 0, 0);
-		win->set_modal();
-		win->show();
-		buff->text("Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n\
+        fl_cursor(FL_CURSOR_DEFAULT);
+        Fl_Window *win = new Fl_Window(640, 480, "Custom Prefix");
+        Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+        Fl_Text_Display *disp =
+            new Fl_Text_Display(20, 20, 640 - 40, 480 - 40, NULL);
+        disp->buffer(buff);
+        disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+        win->resizable(*disp);
+        win->hotspot(0, 0, 0);
+        win->set_modal();
+        win->show();
+        buff->text(
+            "Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n\
 %year or %Y: The current year.\n\n\
 %month or %M: The current month.\n\n\
 %day or %D: The current day.\n\n\
@@ -325,19 +329,17 @@ class UI_OptionsWin : public Fl_Window {
 %version or %v: The current Obsidian version.\n\n\
 %game or %g: Which game the WAD is for.\n\n\
 %theme or %t: Which theme was selected from the game's choices.\n\n\
-%count or %c: The number of levels in the generated WAD."); 
-	}
-    
-    static void callback_SetCustomPrefix(Fl_Widget *w, void *data) {
-
-		const char *user_buf = fl_input(_("Enter Custom Prefix Format:"), custom_prefix.c_str());
-
-		if (user_buf) {
-			custom_prefix = user_buf;
-		}
-        
+%count or %c: The number of levels in the generated WAD.");
     }
-    
+
+    static void callback_SetCustomPrefix(Fl_Widget *w, void *data) {
+        const char *user_buf = fl_input("%s", _("Enter Custom Prefix Format:"),
+                                        custom_prefix.c_str());
+
+        if (user_buf) {
+            custom_prefix = user_buf;
+        }
+    }
 };
 
 //
@@ -360,34 +362,35 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     Fl_Box *heading;
 
-    opt_language =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Language: "));
+    opt_language = new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24),
+                                     _("Language: "));
     opt_language->align(FL_ALIGN_LEFT);
     opt_language->callback(callback_Language, this);
     opt_language->labelfont(font_style);
     opt_language->textcolor(FONT2_COLOR);
-	opt_language->textfont(font_style);
-	opt_language->selection_color(SELECTION);
+    opt_language->textfont(font_style);
+    opt_language->selection_color(SELECTION);
 
     PopulateLanguages();
 
     cy += opt_language->h() + y_step;
-    
-    opt_filename_prefix =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Filename Prefix: "));
+
+    opt_filename_prefix = new UI_CustomMenu(136 + KF * 40, cy, kf_w(130),
+                                            kf_h(24), _("Filename Prefix: "));
     opt_filename_prefix->align(FL_ALIGN_LEFT);
     opt_filename_prefix->callback(callback_FilenamePrefix, this);
-    opt_filename_prefix->add(_("Date and Time|Number of Levels|Game|Theme|Version|Custom|Nothing"));
+    opt_filename_prefix->add(
+        _("Date and Time|Number of Levels|Game|Theme|Version|Custom|Nothing"));
     opt_filename_prefix->labelfont(font_style);
-	opt_filename_prefix->textfont(font_style);
-	opt_filename_prefix->textcolor(FONT2_COLOR);
-	opt_filename_prefix->selection_color(SELECTION);
-	opt_filename_prefix->value(filename_prefix);
+    opt_filename_prefix->textfont(font_style);
+    opt_filename_prefix->textcolor(FONT2_COLOR);
+    opt_filename_prefix->selection_color(SELECTION);
+    opt_filename_prefix->value(filename_prefix);
 
     cy += opt_filename_prefix->h() + y_step;
-	
-    opt_custom_prefix =
-        new Fl_Button(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Set Custom Prefix..."));
+
+    opt_custom_prefix = new Fl_Button(136 + KF * 40, cy, kf_w(130), kf_h(24),
+                                      _("Set Custom Prefix..."));
     opt_custom_prefix->box(button_style);
     opt_custom_prefix->visible_focus(0);
     opt_custom_prefix->color(BUTTON_COLOR);
@@ -395,14 +398,16 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_custom_prefix->labelfont(font_style);
     opt_custom_prefix->labelcolor(FONT2_COLOR);
 
-    custom_prefix_help = new UI_HelpLink(136 + KF * 40 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24), "?");
+    custom_prefix_help =
+        new UI_HelpLink(136 + KF * 40 + this->opt_custom_prefix->w(), cy,
+                        W * 0.10, kf_h(24), "?");
     custom_prefix_help->labelfont(font_style);
     custom_prefix_help->callback(callback_PrefixHelp, this);
 
     cy += opt_custom_prefix->h() + y_step * 2;
 
     opt_backups = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24),
-                                      _(" Create Backups"));
+                                        _(" Create Backups"));
     opt_backups->value(create_backups ? 1 : 0);
     opt_backups->callback(callback_Backups, this);
     opt_backups->labelfont(font_style);
@@ -412,7 +417,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_backups->h() + y_step * 2 / 3;
 
     opt_overwrite = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24),
-                                        _(" Overwrite File Warning"));
+                                          _(" Overwrite File Warning"));
     opt_overwrite->value(overwrite_warning ? 1 : 0);
     opt_overwrite->callback(callback_Overwrite, this);
     opt_overwrite->labelfont(font_style);
@@ -422,7 +427,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_overwrite->h() + y_step * 2 / 3;
 
     opt_debug = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24),
-                                    _(" Debugging Messages"));
+                                      _(" Debugging Messages"));
     opt_debug->value(debug_messages ? 1 : 0);
     opt_debug->callback(callback_Debug, this);
     opt_debug->labelfont(font_style);
@@ -490,13 +495,12 @@ int UI_OptionsWin::handle(int event) {
 }
 
 void DLG_OptionsEditor(void) {
-
     int opt_w = kf_w(350);
     int opt_h = kf_h(300);
 
     UI_OptionsWin *option_window =
-            new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));
-            
+        new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));
+
     option_window->want_quit = false;
     option_window->set_modal();
     option_window->show();
@@ -507,8 +511,8 @@ void DLG_OptionsEditor(void) {
     }
 
     // save the options now
-    Options_Save(options_file);
-    
+    Options_Save(options_file.c_str());
+
     delete option_window;
 }
 

@@ -20,6 +20,7 @@
 
 #include <list>
 
+#include "fmt/core.h"
 #include "headers.h"
 #include "main.h"
 
@@ -228,20 +229,21 @@ bool WAD_ReadData(int entry, int offset, int length, void *buffer) {
 }
 
 void WAD_ListEntries(void) {
-    printf("--------------------------------------------------\n");
+    fmt::print("--------------------------------------------------\n");
 
     if (wad_R_header.num_lumps == 0) {
-        printf("WAD file is empty\n");
+        fmt::print("WAD file is empty\n");
     } else {
         for (int i = 0; i < (int)wad_R_header.num_lumps; i++) {
             raw_wad_lump_t *L = &wad_R_dir[i];
 
-            printf("%4d: +%08x %08x : %s\n", i + 1, L->start, L->length,
-                   WAD_EntryName(i));
+            fmt::print("{:4}: +{:08x} {:08x} : {}\n", i + 1,
+                       static_cast<unsigned int>(L->start),
+                       static_cast<unsigned int>(L->length), WAD_EntryName(i));
         }
     }
 
-    printf("--------------------------------------------------\n");
+    fmt::print("--------------------------------------------------\n");
 }
 
 //------------------------------------------------------------------------
@@ -581,20 +583,22 @@ static char LetterForType(u8_t type) {
 }
 
 void WAD2_ListEntries(void) {
-    printf("--------------------------------------------------\n");
+    fmt::print("--------------------------------------------------\n");
 
     if (wad2_R_header.num_lumps == 0) {
-        printf("WAD2 file is empty\n");
+        fmt::print("WAD2 file is empty\n");
     } else {
         for (int i = 0; i < (int)wad2_R_header.num_lumps; i++) {
             raw_wad2_lump_t *L = &wad2_R_dir[i];
 
-            printf("%4d: +%08x %08x %c : %s\n", i + 1, L->start, L->length,
-                   LetterForType(L->type), L->name);
+            fmt::print("{:4}: +{:08x} {:08x} {} : {}\n", i + 1,
+                       static_cast<unsigned int>(L->start),
+                       static_cast<unsigned int>(L->length),
+                       LetterForType(L->type), L->name);
         }
     }
 
-    printf("--------------------------------------------------\n");
+    fmt::print("--------------------------------------------------\n");
 }
 
 //------------------------------------------------------------------------
