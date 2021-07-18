@@ -858,28 +858,7 @@ namelib.NAMES =
         ["Weapons Production Factory"]=7,
         ["Weapons Testing Grounds"]=10,
 
-        -- Armaetus TODO: All of the below might just be removed and replaced by a heap
-        -- of full level names! Again, please contribute to the listing above, this means
-        -- anyone who can think of reasonable and sensible locations. -Jul 16th, 2021
 
-        -- utility places
-        Grid=5, Substation=10, Core=5,
-        Reactor=10,
-
-        -- storage-y places
-        Depot=10, Storage=5,
-        Storehouse=5, Gateway=5, Depositry=3,
-
-        -- industrial places
-        Works=2, Forge=8,
-
-        -- general places
-        Compound=15, Bay=5,
-        Area=15, Site=10, Zone=10,
-
-        -- storage-ish words -MSSP
-        Armory=10, Yard=5, Depository=5,
-        Terminus=10, Repository=8, Reserve=7,
       },
 
       n =
