@@ -790,13 +790,105 @@ namelib.NAMES =
         Traps=10, RMG=10,
       },
 
+      -- TODO: Please help add more to this section!! -A, Jul 16th, 2021
+
+      -- Used for IWAD Mode module. Altered version of the 'a' lexicon so some level names
+      -- make more sense.
+      e =
+      {
+
+        -- Proper full name choices for techy levels..
+        ["Administrative Center"]=10,
+        ["Air Control Tower"]=10,
+        ["Air Defense Systems"]=10,
+        ["Alpha Labs"]=10,
+        ["Ammunition Dump"]=10,
+        Archives=5,
+        ["Beta Labs"]=10, -- Fun fact: A third party map is named after this
+        Barracks = 10,
+        ["Biological Research Station"]=5,
+        ["Biolabs"]=10,
+        ["Celestial Observatory"]=7,
+        ["Central Processing"]=5,
+        ["Command H.Q."]=10,
+        ["Command Control"]=5,
+        ["Communications Complex"]=10,
+        ["Correctional Facility"]=5,
+        ["Delta Labs"]=10,
+        ["Energy Production Plant"]=10,
+        ["Energy Substation Hub"]=10,
+        Engineering=10,
+        ["Experimental Fusion Generators"]=7,
+        ["Fire Base"]=5,
+        Foundry=7,
+        ["Fuel Storage"]=7,
+        ["Gamma Labs"]=10,
+        Garrison=10,
+        Hangar=5, -- Yeah, because techy!
+        ["Living Quarters"]=10,
+        Logistics=7,
+        ["Manufacturing and Shipping"]=10,
+        ["Materials Storage"]=10,
+        ["Maintenance and Repair Center"]=10,
+        ["Marine Training Annex"]=7,
+        ["Medical Bay"]=7,
+        ["Military Outpost"]=10,
+        ["Mining Quarry"]=10,
+        ["Network Hub"]=10,
+        ["Nuclear Power Plant"]=10,
+        ["Off-Site Emergency Generators"]=10,
+        ["Off-Site Mars Comms Hub"]=7,
+        ["Off-world Gateway Site"]=5,
+        ["Operations Center"]=10,
+        ["Primary Core"]=7,
+        Refinery=7,
+        ["Research and Development"]=10,
+        ["Robotics Workshop"]=10,
+        ["Satellite Relay"]=10,
+        ["Secondary Core"]=7,
+        ["Spacecraft Refueling Docks"]=10,
+        ["Storage Silos"]=5,
+        ["Teleporter Research Complex"]=5,
+        Terraformer=5,
+        ["Thermodynamics Research"]=10,
+        ["Transport Hub"]=7,
+        Warehouse=10,
+        ["Waste Recycling Facility"]=10,
+        ["Water Treatment Plant"]=5,
+        ["Weapons Production Factory"]=7,
+        ["Weapons Testing Grounds"]=10,
+
+        -- Armaetus TODO: All of the below might just be removed and replaced by a heap
+        -- of full level names! Again, please contribute to the listing above, this means
+        -- anyone who can think of reasonable and sensible locations. -Jul 16th, 2021
+
+        -- utility places
+        Grid=5, Substation=10, Core=5,
+        Reactor=10,
+
+        -- storage-y places
+        Depot=10, Storage=5,
+        Storehouse=5, Gateway=5, Depositry=3,
+
+        -- industrial places
+        Works=2, Forge=8,
+
+        -- general places
+        Compound=15, Bay=5,
+        Area=15, Site=10, Zone=10,
+
+        -- storage-ish words -MSSP
+        Armory=10, Yard=5, Depository=5,
+        Terminus=10, Repository=8, Reserve=7,
+      },
+
       n =
       {
         -- MSSP-TODO: sort these names into better categories!!!
         -- military places
-        Hangar=5, Outpost=10, Beacon=3,
-        Bunker=7, Facility=10, Pillbox=1,
-        Headquarters=2, Silos=7, Base=30,
+        Outpost=10,
+        Bunker=7, Facility=10,
+        Silos=7, Base=30,
         Command=10,
 
         -- utility places
@@ -810,15 +902,13 @@ namelib.NAMES =
         Depositry=3,
 
         -- science-y places
-        Lab=15, Laboratory=5, Observatory=3,
         Station=15, Tower=5, Relay=5,
         Satellite=10, Colony=15, Project=5,
         Experiment=3, Network=5, System=15,
 
         -- industrial places
-        Refinery=15, Factory=10, Foundry=3,
+        Refinery=15, Factory=10,
         Workshop=7, Works=2, Forge=8,
-        ["Flaring Towers"]=5,
 
         -- infrastructural places
         Platform=5, Port=3, Hub=10,
@@ -830,17 +920,9 @@ namelib.NAMES =
         Compound=15, Dock=3, Bay=5,
         Complex=15, Center=15, Installation=5,
         Area=15, Site=10, Zone=10,
-        Chamber=5, Quarters=5, Section=3,
+        Chamber=5, Section=3,
         Post=3, Annex=5, Terminal=10,
         Quadrant=5, Sector=5, Adjunct=3,
-
-        -- weird ones
-        Dilemma=3,
-        Situation=2, Crisis=2, Emergency=2,
-        Anomaly=10, Portal=7, Apparatus=10,
-        Dimension=3, Paradox=3, Vortex=5,
-        Enigma=5, Artifact=1, Quagmire=1,
-        Catalyst=2,
 
         -- MSSP adds
         -- shapes
@@ -858,40 +940,9 @@ namelib.NAMES =
         Reserve=7,
 
         -- military stuff -MSSP
-        Casern=5, ["F.O.B."]=7, ["Fire Base"]=10,
-        Garrison=10, Logistics=10, Containment=7,
-        Berths=5, Housing=5,
-
-        -- machine/electronic parts -MSSP
-        -- and weird science-y buzzwords
-        -- and also car parts
-        Device=5, Machine=5, Couplings=5,
-
-        Oscillator=5, Magnetron=5, Emulsifier=5,
-        Alternator=5, Induction=5, Stabilizer=5,
-        Processor=10, Suspension=5, Conduit=5,
-        Synthesizer=3, Mainframe=10, Modulator=5,
-        Converter=4, Inverter=4, Array=5,
-        Manifold=5, Regulator=5, Inhibitor=7,
-        Pulser=3, Nacelles=3, Filament=3,
-        Scrambler=3, Emitter=5, Capacitor=10,
-        Compressor=7, Condenser=7, Matrix=10,
-        Feed=8, Refractory=6, Deflector=5,
-        Junction=7, Analyser=7, Reciprocator=5,
-        Collector=3, Centrifuge=7, Splitter=5,
-        Scrubber=5, Injector=7, Accelerator=10,
-        Infuser=5, Collider=10, Energizer=5,
-        Transducer=5, Bearing=3, Incubation=5,
-        Coil=10, Gearbox=5, Radiator=5,
-        Caliper=3, Rotor=5, Shield=10,
-        Synchronizer=5, Conditioner=3, Distillery=5,
-        Transistor=3, Diode=3, Boiler=3,
-        Compositor=5, Sorter=5, Cultivator=3,
-        Engine=7, Solderer=3, Primer=5,
-        Conductor=5, Integrator=5,
-        Salvager=5, Recycler=5, Culler=4,
-
-        Framework=5, Compartment=5,
+        Casern=5, ["F.O.B."]=7,
+        Logistics=10, Containment=7,
+        Berths=5,
 
         -- IT security objects
         Firewall=5, Servers=5, Encoder=5,
