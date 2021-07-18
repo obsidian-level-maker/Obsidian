@@ -2555,17 +2555,28 @@ function Quest_nice_items()
     --   SI fab stop spawning
 
     local function pick_room_for_si(info)
+      -- check min and max along rooms in the level
+      local max_along_room = 0
+      local min_along_room = 1
+
+      for _,R in pairs(LEVEL.rooms) do
+        max_along_room = math.max(max_along_room, R.lev_along)
+        min_along_room = math.min(min_along_room, R.lev_along)
+      end
+
       for _,R in pairs(LEVEL.rooms) do
         if R.closets
         and not R.secondary_important
         and not R.is_hallway then
           local do_it = false
 
-          if info.min_prog and (R.lev_along >= info.min_prog) then
+          if info.min_prog and (R.lev_along >= info.min_prog) 
+          and info.min_prog > min_along_room then
             do_it = true
           end
 
-          if info.max_prog and (R.lev_along <= info.max_prog) then
+          if info.max_prog and (R.lev_along <= info.max_prog) 
+          and info.max_prog < max_along_room then
             do_it = true
           end
 

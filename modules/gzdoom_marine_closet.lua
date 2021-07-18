@@ -1376,9 +1376,9 @@ function MARINE_CLOSET_TUNE.calc_closets()
     kind = "marine_closet",
     min_count = 1,
     max_count = PARAM.marine_closets,
-    not_start = true,
-    min_prog = 0,
-    max_prog = 1,
+    min_prog = PARAM.float_m_c_level_min_pos,
+    max_prog = PARAM.float_m_c_level_max_pos,
+    not_secret = PARAM.bool_m_c_in_secrets,
     level_prob = 100,
   }
 
@@ -1505,7 +1505,7 @@ OB_MODULES["gzdoom_marine_closets"] =
   },
 
   tooltip=_(
-    "[WIP/Experimental]This module adds customizable closets to the map filled with friendly ai marines."),
+    "[WIP/Experimental]This module adds customizable closets to the map filled with friendly AI marines."),
 
   options =
   {
@@ -1513,7 +1513,7 @@ OB_MODULES["gzdoom_marine_closets"] =
     {
       name = "float_m_c_chance",
       label = _("Chance per map"),
-      priority = 99,
+      priority = 157,
       valuator = "slider",
       units = "%",
       min = 0,
@@ -1529,7 +1529,7 @@ OB_MODULES["gzdoom_marine_closets"] =
     {
       name = "float_m_c_min",
       label = _("Minimum closets"),
-      priority = 98,
+      priority = 156,
       valuator = "slider",
       units = "",
       min = 1,
@@ -1544,7 +1544,7 @@ OB_MODULES["gzdoom_marine_closets"] =
     {
       name = "float_m_c_max",
       label = _("Maximum closets"),
-      priority = 97,
+      priority = 155,
       valuator = "slider",
       units = "",
       min = 1,
@@ -1559,7 +1559,7 @@ OB_MODULES["gzdoom_marine_closets"] =
     {
       name = "m_c_type",
       label = _("Closet scaling type"),
-      priority = 96,
+      priority = 154,
       choices = MARINE_CLOSET_TUNE.SCALING,
       default = "default",
       tooltip = "Affects how min and max work for closet count:\n\n" ..
@@ -1574,7 +1574,7 @@ OB_MODULES["gzdoom_marine_closets"] =
     {
       name = "float_m_c_m_min",
       label = _("Minimum marines"),
-      priority = 95,
+      priority = 153,
       valuator = "slider",
       units = "",
       min = 1,
@@ -1589,7 +1589,7 @@ OB_MODULES["gzdoom_marine_closets"] =
     {
       name = "float_m_c_m_max",
       label = _("Maximum marines"),
-      priority = 94,
+      priority = 152,
       valuator = "slider",
       units = "",
       min = 1,
@@ -1604,7 +1604,7 @@ OB_MODULES["gzdoom_marine_closets"] =
     {
       name = "float_m_c_health",
       label = _("Marine Health"),
-      priority = 93,
+      priority = 151,
       valuator = "slider",
       units = "",
       min = 25,
@@ -1619,7 +1619,7 @@ OB_MODULES["gzdoom_marine_closets"] =
     {
       name = "m_c_m_type",
       label = _("Marine scaling type"),
-      priority = 92,
+      priority = 150,
       choices = MARINE_CLOSET_TUNE.SCALING,
       default = "default",
       tooltip = "Affects how min and max work for marine count:\n\n" ..
@@ -1627,6 +1627,36 @@ OB_MODULES["gzdoom_marine_closets"] =
       "Progressive: Goes from min to max through entire game\n" ..
       "Episodic: Goes from min to max through episode\n" ..
       "Regressive/Regressive episodic: Goes from max to min through game or episode" ,
+    },
+
+    float_m_c_level_min_pos =
+    {
+      name = "float_m_c_level_min_pos",
+      label = _("Level Min Position"),
+      priority = 93,
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 1,
+      increment = 0.05,
+      default = 0.5,
+      presets = "0:0 (Start Room), " ..
+                "1:1 (Exit Room), "
+    },
+
+    float_m_c_level_max_pos =
+    {
+      name = "float_m_c_level_max_pos",
+      label = _("Level Max Position"),
+      priority = 92,
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 1,
+      increment = 0.05,
+      default = 0.5,
+      presets = "0:0 (Start Room), " ..
+                "1:1 (Exit Room), "
     },
 
     m_c_tech =
@@ -1658,6 +1688,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       "Range: Closet activates when player is close enough, even if behind wall.\n" ..
       "Close Range: same as range except requires player to be really really close.\n" ..
       "Map Start: Closets are active on map start.",
+      gap = 1
     },
     
     m_c_color =
@@ -1682,7 +1713,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       "Additionally if self damage variant is chosen marines can still get hurt by exploding barrels and such",
     },
 	
-	bool_m_c_pdamage =
+  	bool_m_c_pdamage =
     {
       name = "bool_m_c_pdamage",
       label = _("Player Damage Immunity"),
@@ -1757,15 +1788,24 @@ OB_MODULES["gzdoom_marine_closets"] =
       tooltip = "Allows or disallows marine closets to spawn on gotchas and boss generator levels.",
     },   
 	
-	bool_m_c_rip =
+  	bool_m_c_rip =
     {
       name = "bool_m_c_rip",
-      label = _("Death messages"),
+      label = _("Death Messages"),
       priority = 78,
       valuator = "button",
       default = 0,
       tooltip = "If enabled, will print a message in message log whenever a marine dies.",
     },   
 
+    bool_m_c_in_secret =
+    {
+      name = "bool_mc_in_secret",
+      label = _("In Secret Rooms"),
+      priority = 77,
+      valuator = "button",
+      default = 0,
+      tooltip = "If enabled, allowed marine closets to be built in secret rooms."
+    }
   },
 }

@@ -85,6 +85,8 @@ PREFABS.Cage_wall_building_terrace_tall =
   template = "Cage_wall_building_terrace",
   map = "MAP02",
 
+  height = 264,
+
   tex_CITY02 =
   {
     CITY01 = 50,
