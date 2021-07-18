@@ -18,6 +18,12 @@
 #include "lua.h"
 #include "lualib.h"
 
+// <Phytolizer> I have to modify the code here because it's not a header file.
+// The purpose is to avoid the dangerous `tmpnam` function.
+#define LUA_TMPNAMBUFSIZE L_tmpnam
+#define lua_tmpnam(b, e) \
+    { e = (mkstemp(b) == -1); }
+
 /*
 ** {==================================================================
 ** List of valid conversion specifiers for the 'strftime' function;
