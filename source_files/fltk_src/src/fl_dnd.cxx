@@ -17,11 +17,11 @@
 //
 
 #ifdef WIN32
-#  include "fl_dnd_win32.cxx"
+#include "fl_dnd_win32.cxx"
 #elif defined(__APPLE__)
 //#  include "fl_dnd_mac.cxx"
 #else
-#  include "fl_dnd_x.cxx"
+#include "fl_dnd_x.cxx"
 #endif
 
 //

@@ -39,18 +39,18 @@ int Fl_Browser::load(const char *filename) {
     int i;
     clear();
     if (!filename || !(filename[0])) return 1;
-    FILE *fl = fl_fopen(filename,"r");
+    FILE *fl = fl_fopen(filename, "r");
     if (!fl) return 0;
     i = 0;
     do {
-	c = getc(fl);
-	if (c == '\n' || c <= 0 || i>=(MAXFL_BLINE-1)) {
-	    newtext[i] = 0;
-	    add(newtext);
-	    i = 0;
-	} else {
-	    newtext[i++] = c;
-	}
+        c = getc(fl);
+        if (c == '\n' || c <= 0 || i >= (MAXFL_BLINE - 1)) {
+            newtext[i] = 0;
+            add(newtext);
+            i = 0;
+        } else {
+            newtext[i++] = c;
+        }
     } while (c >= 0);
     fclose(fl);
     return 1;

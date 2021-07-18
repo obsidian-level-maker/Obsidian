@@ -30,9 +30,7 @@
 Fl_Button *b;
 Fl_Double_Window *w;
 
-void button_cb(Fl_Widget *,void *) {
-  w->hide();
-}
+void button_cb(Fl_Widget *, void *) { w->hide(); }
 
 #include <FL/x.H>
 #if !defined(WIN32) && !defined(__APPLE__)
@@ -41,54 +39,59 @@ void button_cb(Fl_Widget *,void *) {
 
 int visid = -1;
 int arg(int argc, char **argv, int &i) {
-  if (argv[i][1] == 'v') {
-    if (i+1 >= argc) return 0;
-    visid = atoi(argv[i+1]);
-    i += 2;
-    return 2;
-  }
-  return 0;
+    if (argv[i][1] == 'v') {
+        if (i + 1 >= argc) return 0;
+        visid = atoi(argv[i + 1]);
+        i += 2;
+        return 2;
+    }
+    return 0;
 }
 
 int main(int argc, char **argv) {
 #if !defined(WIN32) && !defined(__APPLE__)
-  int i = 1;
+    int i = 1;
 
-  Fl::args(argc,argv,i,arg);
+    Fl::args(argc, argv, i, arg);
 
-  if (visid >= 0) {
-    fl_open_display();
-    XVisualInfo templt; int num;
-    templt.visualid = visid;
-    fl_visual = XGetVisualInfo(fl_display, VisualIDMask, &templt, &num);
-    if (!fl_visual) {
-      fprintf(stderr, "No visual with id %d, use one of:\n",visid);
-      list_visuals();
-      exit(1);
+    if (visid >= 0) {
+        fl_open_display();
+        XVisualInfo templt;
+        int num;
+        templt.visualid = visid;
+        fl_visual = XGetVisualInfo(fl_display, VisualIDMask, &templt, &num);
+        if (!fl_visual) {
+            fprintf(stderr, "No visual with id %d, use one of:\n", visid);
+            list_visuals();
+            exit(1);
+        }
+        fl_colormap =
+            XCreateColormap(fl_display, RootWindow(fl_display, fl_screen),
+                            fl_visual->visual, AllocNone);
+        fl_xpixel(FL_BLACK);  // make sure black is allocated in overlay visuals
+    } else {
+        Fl::visual(FL_RGB);
     }
-    fl_colormap = XCreateColormap(fl_display, RootWindow(fl_display,fl_screen),
-				fl_visual->visual, AllocNone);
-    fl_xpixel(FL_BLACK); // make sure black is allocated in overlay visuals
-  } else {
-    Fl::visual(FL_RGB);
-  }
 #endif
 
-  Fl_Double_Window window(400,400); ::w = &window;
-  Fl_Group group(0,0,400,400);
-  group.image(new Fl_Tiled_Image(new Fl_Pixmap((const char * const *)tile_xpm)));
-  group.align(FL_ALIGN_INSIDE);
+    Fl_Double_Window window(400, 400);
+    ::w = &window;
+    Fl_Group group(0, 0, 400, 400);
+    group.image(
+        new Fl_Tiled_Image(new Fl_Pixmap((const char *const *)tile_xpm)));
+    group.align(FL_ALIGN_INSIDE);
 
-  Fl_Button b(340,365,50,25,"Close"); ::b = &b;
-  b.callback(button_cb);
+    Fl_Button b(340, 365, 50, 25, "Close");
+    ::b = &b;
+    b.callback(button_cb);
 
-  group.end();
+    group.end();
 
-  window.resizable(group);
-  window.end();
-  window.show(argc, argv);
+    window.resizable(group);
+    window.end();
+    window.show(argc, argv);
 
-  return Fl::run();
+    return Fl::run();
 }
 
 //

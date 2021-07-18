@@ -25,22 +25,23 @@
 #include "Fl_Button.H"
 
 /**
-  This subclass displays the "on" state by turning on a light, 
-  rather than drawing pushed in.  The shape of the  "light" 
+  This subclass displays the "on" state by turning on a light,
+  rather than drawing pushed in.  The shape of the  "light"
   is initially set to FL_DOWN_BOX.  The color of the light when
   on is controlled with selection_color(), which defaults to FL_YELLOW.
 
   Buttons generate callbacks when they are clicked by the user.  You
   control exactly when and how by changing the values for type() and when().
-  <P ALIGN=CENTER>\image html Fl_Light_Button.png</P> 
+  <P ALIGN=CENTER>\image html Fl_Light_Button.png</P>
   \image latex Fl_Light_Button.png "Fl_Light_Button" width=4cm
 */
 class FL_EXPORT Fl_Light_Button : public Fl_Button {
-protected:
+   protected:
     virtual void draw();
-public:
+
+   public:
     virtual int handle(int);
-    Fl_Light_Button(int x,int y,int w,int h,const char *l = 0);
+    Fl_Light_Button(int x, int y, int w, int h, const char *l = 0);
 };
 
 #endif

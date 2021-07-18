@@ -30,43 +30,39 @@
 // 'main()' - Display the help GUI...
 //
 
-int				// O - Exit status
-main(int  argc,			// I - Number of command-line arguments
-     char *argv[])		// I - Command-line arguments
+int                 // O - Exit status
+main(int argc,      // I - Number of command-line arguments
+     char *argv[])  // I - Command-line arguments
 {
-  Fl_Help_Dialog	*help;		// Help dialog
+    Fl_Help_Dialog *help;  // Help dialog
 
+    help = new Fl_Help_Dialog;
 
-  help = new Fl_Help_Dialog;
-
-  
 #ifdef __APPLE__
 
     char buf[2048];
     strcpy(buf, argv[0]);
     char *slash = strrchr(buf, '/');
-    if (slash)
-      strcpy(slash, "/../Resources/help-test.html");
+    if (slash) strcpy(slash, "/../Resources/help-test.html");
     help->load(buf);
-  
+
 #else
-  
-  if (argc <= 1)
-    help->load("help-test.html");
-  else
-    help->load(argv[1]);
-  
+
+    if (argc <= 1)
+        help->load("help-test.html");
+    else
+        help->load(argv[1]);
+
 #endif
-  
-  help->show(1, argv);
 
-  Fl::run();
+    help->show(1, argv);
 
-  delete help;
+    Fl::run();
 
-  return (0);
+    delete help;
+
+    return (0);
 }
-
 
 //
 // End of "$Id$".

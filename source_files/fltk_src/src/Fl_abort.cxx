@@ -27,66 +27,66 @@
 #include "flstring.h"
 
 #ifdef WIN32
-#  include <windows.h>
+#include <windows.h>
 
 static void warning(const char *, ...) {
-  // Show nothing for warnings under WIN32...
+    // Show nothing for warnings under WIN32...
 }
 
 static void error(const char *format, ...) {
-  va_list args;
-  char buf[1024];
-  va_start(args, format);
-  vsnprintf(buf, 1024, format, args);
-  va_end(args);
-  MessageBox(0,buf,"Error",MB_ICONEXCLAMATION|MB_SYSTEMMODAL);
+    va_list args;
+    char buf[1024];
+    va_start(args, format);
+    vsnprintf(buf, 1024, format, args);
+    va_end(args);
+    MessageBox(0, buf, "Error", MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
 }
 
 static void fatal(const char *format, ...) {
-  va_list args;
-  char buf[1024];
-  va_start(args, format);
-  vsnprintf(buf, 1024, format, args);
-  va_end(args);
-  MessageBox(0,buf,"Error",MB_ICONSTOP|MB_SYSTEMMODAL);
-  ::exit(1);
+    va_list args;
+    char buf[1024];
+    va_start(args, format);
+    vsnprintf(buf, 1024, format, args);
+    va_end(args);
+    MessageBox(0, buf, "Error", MB_ICONSTOP | MB_SYSTEMMODAL);
+    ::exit(1);
 }
 
 #else
 
 static void warning(const char *format, ...) {
-  va_list args;
-  va_start(args, format);
-  vfprintf(stderr, format, args);
-  va_end(args);
-  fputc('\n', stderr);
-  fflush(stderr);
+    va_list args;
+    va_start(args, format);
+    vfprintf(stderr, format, args);
+    va_end(args);
+    fputc('\n', stderr);
+    fflush(stderr);
 }
 
 static void error(const char *format, ...) {
-  va_list args;
-  va_start(args, format);
-  vfprintf(stderr, format, args);
-  va_end(args);
-  fputc('\n', stderr);
-  fflush(stderr);
+    va_list args;
+    va_start(args, format);
+    vfprintf(stderr, format, args);
+    va_end(args);
+    fputc('\n', stderr);
+    fflush(stderr);
 }
 
 static void fatal(const char *format, ...) {
-  va_list args;
-  va_start(args, format);
-  vfprintf(stderr, format, args);
-  va_end(args);
-  fputc('\n', stderr);
-  fflush(stderr);
-  ::exit(1);
+    va_list args;
+    va_start(args, format);
+    vfprintf(stderr, format, args);
+    va_end(args);
+    fputc('\n', stderr);
+    fflush(stderr);
+    ::exit(1);
 }
 
 #endif
 
-void (*Fl::warning)(const char* format, ...) = ::warning;
-void (*Fl::error)(const char* format, ...) = ::error;
-void (*Fl::fatal)(const char* format, ...) = ::fatal;
+void (*Fl::warning)(const char *format, ...) = ::warning;
+void (*Fl::error)(const char *format, ...) = ::error;
+void (*Fl::fatal)(const char *format, ...) = ::fatal;
 
 //
 // End of "$Id$".

@@ -29,10 +29,11 @@
 #include <FL/x.H>
 
 /** \fn Fl::own_colormap()
-    Makes FLTK use its <a href="fltk-colormap.png">own colormap</a>. This may make FLTK display better
-    and will reduce conflicts with other programs that want lots of colors.
-    However the colors may flash as you move the cursor between windows.
-    
+    Makes FLTK use its <a href="fltk-colormap.png">own colormap</a>. This may
+   make FLTK display better and will reduce conflicts with other programs that
+   want lots of colors. However the colors may flash as you move the cursor
+   between windows.
+
     <P>This does nothing if the current visual is not colormapped.
 */
 #ifdef WIN32
@@ -49,28 +50,26 @@ void Fl::own_colormap() {}
 // X version
 
 void Fl::own_colormap() {
-  fl_open_display();
+    fl_open_display();
 #if USE_COLORMAP
-  switch (fl_visual->c_class) {
-  case GrayScale :
-  case PseudoColor :
-  case DirectColor :
-    break;
-  default:
-    return; // don't do anything for non-colormapped visuals
-  }
-  int i;
-  XColor colors[16];
-  // Get the first 16 colors from the default colormap...
-  for (i = 0; i < 16; i ++) colors[i].pixel = i;
-  XQueryColors(fl_display, fl_colormap, colors, 16);
-  // Create a new colormap...
-  fl_colormap = XCreateColormap(fl_display,
-				RootWindow(fl_display,fl_screen),
-				fl_visual->visual, AllocNone);
-  // Copy those first 16 colors to our own colormap:
-  for (i = 0; i < 16; i ++)
-    XAllocColor(fl_display, fl_colormap, colors + i);
+    switch (fl_visual->c_class) {
+        case GrayScale:
+        case PseudoColor:
+        case DirectColor:
+            break;
+        default:
+            return;  // don't do anything for non-colormapped visuals
+    }
+    int i;
+    XColor colors[16];
+    // Get the first 16 colors from the default colormap...
+    for (i = 0; i < 16; i++) colors[i].pixel = i;
+    XQueryColors(fl_display, fl_colormap, colors, 16);
+    // Create a new colormap...
+    fl_colormap = XCreateColormap(fl_display, RootWindow(fl_display, fl_screen),
+                                  fl_visual->visual, AllocNone);
+    // Copy those first 16 colors to our own colormap:
+    for (i = 0; i < 16; i++) XAllocColor(fl_display, fl_colormap, colors + i);
 #endif
 }
 

@@ -17,7 +17,7 @@
 //
 
 // The Fl_Window is a window in the fltk library.
-// This is the system-independent portions.  The huge amount of 
+// This is the system-independent portions.  The huge amount of
 // crap you need to do to communicate with X is in Fl_x.cxx, the
 // equivalent (but totally different) crap for MSWindows is in Fl_win32.cxx
 #include <config.h>
@@ -35,102 +35,103 @@
 char *Fl_Window::default_xclass_ = 0L;
 
 void Fl_Window::_Fl_Window() {
-  type(FL_WINDOW);
-  box(FL_FLAT_BOX);
-  if (Fl::scheme_bg_) {
-    labeltype(FL_NORMAL_LABEL);
-    align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
-    image(Fl::scheme_bg_);
-  } else {
-    labeltype(FL_NO_LABEL);
-  }
-  i = 0;
-  xclass_ = 0;
-  icon_ = new icon_data;
-  memset(icon_, 0, sizeof(*icon_));
-  iconlabel_ = 0;
-  resizable(0);
-  size_range_set = 0;
-  minw = maxw = minh = maxh = 0;
-  shape_data_ = NULL;
+    type(FL_WINDOW);
+    box(FL_FLAT_BOX);
+    if (Fl::scheme_bg_) {
+        labeltype(FL_NORMAL_LABEL);
+        align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+        image(Fl::scheme_bg_);
+    } else {
+        labeltype(FL_NO_LABEL);
+    }
+    i = 0;
+    xclass_ = 0;
+    icon_ = new icon_data;
+    memset(icon_, 0, sizeof(*icon_));
+    iconlabel_ = 0;
+    resizable(0);
+    size_range_set = 0;
+    minw = maxw = minh = maxh = 0;
+    shape_data_ = NULL;
 
 #if FLTK_ABI_VERSION >= 10301
-  no_fullscreen_x = 0;
-  no_fullscreen_y = 0;
-  no_fullscreen_w = w();
-  no_fullscreen_h = h();
+    no_fullscreen_x = 0;
+    no_fullscreen_y = 0;
+    no_fullscreen_w = w();
+    no_fullscreen_h = h();
 #endif
 
 #if FLTK_ABI_VERSION >= 10303
-  fullscreen_screen_top = -1;
-  fullscreen_screen_bottom = -1;
-  fullscreen_screen_left = -1;
-  fullscreen_screen_right = -1;
+    fullscreen_screen_top = -1;
+    fullscreen_screen_bottom = -1;
+    fullscreen_screen_left = -1;
+    fullscreen_screen_right = -1;
 #endif
 
-  callback((Fl_Callback*)default_callback);
+    callback((Fl_Callback *)default_callback);
 }
 
-Fl_Window::Fl_Window(int X,int Y,int W, int H, const char *l)
-: Fl_Group(X, Y, W, H, l) {
-  cursor_default = FL_CURSOR_DEFAULT;
+Fl_Window::Fl_Window(int X, int Y, int W, int H, const char *l)
+    : Fl_Group(X, Y, W, H, l) {
+    cursor_default = FL_CURSOR_DEFAULT;
 
-  _Fl_Window();
-  set_flag(FORCE_POSITION);
+    _Fl_Window();
+    set_flag(FORCE_POSITION);
 }
 
 Fl_Window::Fl_Window(int W, int H, const char *l)
-// fix common user error of a missing end() with current(0):
-  : Fl_Group((Fl_Group::current(0),0), 0, W, H, l) {
-  cursor_default = FL_CURSOR_DEFAULT;
+    // fix common user error of a missing end() with current(0):
+    : Fl_Group((Fl_Group::current(0), 0), 0, W, H, l) {
+    cursor_default = FL_CURSOR_DEFAULT;
 
-  _Fl_Window();
-  clear_visible();
+    _Fl_Window();
+    clear_visible();
 }
 
 Fl_Window::~Fl_Window() {
-  hide();
-  if (xclass_) {
-    free(xclass_);
-  }
-  free_icons();
-  delete icon_;
-  if (shape_data_) {
-    if (shape_data_->todelete_) delete shape_data_->todelete_;
-#if defined(__APPLE__)
-    if (shape_data_->mask) {
-      CGImageRelease(shape_data_->mask);
+    hide();
+    if (xclass_) {
+        free(xclass_);
     }
+    free_icons();
+    delete icon_;
+    if (shape_data_) {
+        if (shape_data_->todelete_) delete shape_data_->todelete_;
+#if defined(__APPLE__)
+        if (shape_data_->mask) {
+            CGImageRelease(shape_data_->mask);
+        }
 #endif
-    delete shape_data_;
-  }
+        delete shape_data_;
+    }
 }
 
-
 /** Returns a pointer to the nearest parent window up the widget hierarchy.
-    This will return sub-windows if there are any, or the parent window if there's no sub-windows.
-    If this widget IS the top-level window, NULL is returned.
-    \retval  NULL if no window is associated with this widget.
-    \note for an Fl_Window widget, this returns its <I>parent</I> window 
-          (if any), not <I>this</I> window.
-    \see top_window()
+    This will return sub-windows if there are any, or the parent window if
+   there's no sub-windows. If this widget IS the top-level window, NULL is
+   returned. \retval  NULL if no window is associated with this widget. \note
+   for an Fl_Window widget, this returns its <I>parent</I> window (if any), not
+   <I>this</I> window. \see top_window()
 */
 Fl_Window *Fl_Widget::window() const {
-  for (Fl_Widget *o = parent(); o; o = o->parent())
-    if (o->type() >= FL_WINDOW) return (Fl_Window*)o;
-  return 0;
+    for (Fl_Widget *o = parent(); o; o = o->parent())
+        if (o->type() >= FL_WINDOW) return (Fl_Window *)o;
+    return 0;
 }
 
 /** Returns a pointer to the top-level window for the widget.
     In other words, the 'window manager window' that contains this widget.
-    This method differs from window() in that it won't return sub-windows (if there are any).
-    \returns the top-level window, or NULL if no top-level window is associated with this widget.
-    \see window()
+    This method differs from window() in that it won't return sub-windows (if
+   there are any). \returns the top-level window, or NULL if no top-level window
+   is associated with this widget. \see window()
 */
 Fl_Window *Fl_Widget::top_window() const {
-  const Fl_Widget *w = this;
-  while (w->parent()) { w = w->parent(); }		// walk up the widget hierarchy to top-level item
-  return const_cast<Fl_Widget*>(w)->as_window();	// return if window, or NULL if not
+    const Fl_Widget *w = this;
+    while (w->parent()) {
+        w = w->parent();
+    }  // walk up the widget hierarchy to top-level item
+    return const_cast<Fl_Widget *>(w)
+        ->as_window();  // return if window, or NULL if not
 }
 
 /**
@@ -138,76 +139,77 @@ Fl_Window *Fl_Widget::top_window() const {
   \param[out] xoff,yoff Returns the x/y offset
   \returns the top-level window (or NULL for a widget that's not in any window)
 */
-Fl_Window* Fl_Widget::top_window_offset(int& xoff, int& yoff) const {
-  xoff = yoff = 0;
-  const Fl_Widget *w = this;
-  while (w && w->window()) {
-    xoff += w->x();			// accumulate offsets
-    yoff += w->y();
-    w = w->window();			// walk up window hierarchy
-  }
-  return const_cast<Fl_Widget*>(w)->as_window();
+Fl_Window *Fl_Widget::top_window_offset(int &xoff, int &yoff) const {
+    xoff = yoff = 0;
+    const Fl_Widget *w = this;
+    while (w && w->window()) {
+        xoff += w->x();  // accumulate offsets
+        yoff += w->y();
+        w = w->window();  // walk up window hierarchy
+    }
+    return const_cast<Fl_Widget *>(w)->as_window();
 }
 
 /** Gets the x position of the window on the screen */
 int Fl_Window::x_root() const {
-  Fl_Window *p = window();
-  if (p) return p->x_root() + x();
-  return x();
+    Fl_Window *p = window();
+    if (p) return p->x_root() + x();
+    return x();
 }
 /** Gets the y position of the window on the screen */
 int Fl_Window::y_root() const {
-  Fl_Window *p = window();
-  if (p) return p->y_root() + y();
-  return y();
+    Fl_Window *p = window();
+    if (p) return p->y_root() + y();
+    return y();
 }
 
 void Fl_Window::label(const char *name) {
-  label(name, iconlabel());	// platform dependent
+    label(name, iconlabel());  // platform dependent
 }
 
 /** Sets the window titlebar label to a copy of a character string */
 void Fl_Window::copy_label(const char *a) {
-  Fl_Widget::copy_label(a);
-  label(label(), iconlabel());	// platform dependent
+    Fl_Widget::copy_label(a);
+    label(label(), iconlabel());  // platform dependent
 }
 
 void Fl_Window::iconlabel(const char *iname) {
-  label(label(), iname);	// platform dependent
+    label(label(), iname);  // platform dependent
 }
 
 // the Fl::atclose pointer is provided for back compatibility.  You
 // can now just change the callback for the window instead.
 
-/** Default callback for window widgets. It hides the window and then calls the default widget callback. */
-void Fl::default_atclose(Fl_Window* window, void* v) {
-  window->hide();
-  Fl_Widget::default_callback(window, v); // put on Fl::read_queue()
+/** Default callback for window widgets. It hides the window and then calls the
+ * default widget callback. */
+void Fl::default_atclose(Fl_Window *window, void *v) {
+    window->hide();
+    Fl_Widget::default_callback(window, v);  // put on Fl::read_queue()
 }
-/** Back compatibility: default window callback handler \see Fl::set_atclose() */
-void (*Fl::atclose)(Fl_Window*, void*) = default_atclose;
-/** Back compatibility: Sets the default callback v for win to call on close event */
-void Fl_Window::default_callback(Fl_Window* win, void* v) {
-  Fl::atclose(win, v);
+/** Back compatibility: default window callback handler \see Fl::set_atclose()
+ */
+void (*Fl::atclose)(Fl_Window *, void *) = default_atclose;
+/** Back compatibility: Sets the default callback v for win to call on close
+ * event */
+void Fl_Window::default_callback(Fl_Window *win, void *v) {
+    Fl::atclose(win, v);
 }
 
-/**  Returns the last window that was made current. \see Fl_Window::make_current() */
-Fl_Window *Fl_Window::current() {
-  return current_;
-}
+/**  Returns the last window that was made current. \see
+ * Fl_Window::make_current() */
+Fl_Window *Fl_Window::current() { return current_; }
 
 /** Returns the default xclass.
 
   \see Fl_Window::default_xclass(const char *)
 
  */
-const char *Fl_Window::default_xclass()
-{
-  if (default_xclass_) {
-    return default_xclass_;
-  } else {
-    return "FLTK";
-  }
+const char *Fl_Window::default_xclass() {
+    if (default_xclass_) {
+        return default_xclass_;
+    } else {
+        return "FLTK";
+    }
 }
 
 /** Sets the default window xclass.
@@ -230,15 +232,14 @@ const char *Fl_Window::default_xclass()
 
   \see Fl_Window::xclass(const char *)
 */
-void Fl_Window::default_xclass(const char *xc)
-{
-  if (default_xclass_) {
-    free(default_xclass_);
-    default_xclass_ = 0L;
-  }
-  if (xc) {
-    default_xclass_ = strdup(xc);
-  }
+void Fl_Window::default_xclass(const char *xc) {
+    if (default_xclass_) {
+        free(default_xclass_);
+        default_xclass_ = 0L;
+    }
+    if (xc) {
+        default_xclass_ = strdup(xc);
+    }
 }
 
 /** Sets the xclass for this window.
@@ -265,18 +266,17 @@ void Fl_Window::default_xclass(const char *xc)
 
   \see Fl_Window::default_xclass(const char *)
 */
-void Fl_Window::xclass(const char *xc) 
-{
-  if (xclass_) {
-    free(xclass_);
-    xclass_ = 0L;
-  }
-  if (xc) {
-    xclass_ = strdup(xc);
-    if (!default_xclass_) {
-      default_xclass(xc);
+void Fl_Window::xclass(const char *xc) {
+    if (xclass_) {
+        free(xclass_);
+        xclass_ = 0L;
     }
-  }
+    if (xc) {
+        xclass_ = strdup(xc);
+        if (!default_xclass_) {
+            default_xclass(xc);
+        }
+    }
 }
 
 /** Returns the xclass for this window, or a default.
@@ -284,13 +284,12 @@ void Fl_Window::xclass(const char *xc)
   \see Fl_Window::default_xclass(const char *)
   \see Fl_Window::xclass(const char *)
 */
-const char *Fl_Window::xclass() const
-{
-  if (xclass_) {
-    return xclass_;
-  } else {
-    return default_xclass();
-  }
+const char *Fl_Window::xclass() const {
+    if (xclass_) {
+        return xclass_;
+    } else {
+        return default_xclass();
+    }
 }
 
 /** Sets a single default window icon.
@@ -304,10 +303,10 @@ const char *Fl_Window::xclass() const
   \see Fl_Window::icons(const Fl_RGB_Image *[], int)
  */
 void Fl_Window::default_icon(const Fl_RGB_Image *icon) {
-  if (icon)
-    default_icons(&icon, 1);
-  else
-    default_icons(&icon, 0);
+    if (icon)
+        default_icons(&icon, 1);
+    else
+        default_icons(&icon, 0);
 }
 
 /** Sets the default window icons.
@@ -329,7 +328,7 @@ void Fl_Window::default_icon(const Fl_RGB_Image *icon) {
   \see Fl_Window::icons(const Fl_RGB_Image *[], int)
  */
 void Fl_Window::default_icons(const Fl_RGB_Image *icons[], int count) {
-  Fl_X::set_default_icons(icons, count);
+    Fl_X::set_default_icons(icons, count);
 }
 
 /** Sets or resets a single window icon.
@@ -350,10 +349,10 @@ void Fl_Window::default_icons(const Fl_RGB_Image *icons[], int count) {
   \see Fl_Window::icons(const Fl_RGB_Image *[], int)
  */
 void Fl_Window::icon(const Fl_RGB_Image *icon) {
-  if (icon)
-    icons(&icon, 1);
-  else
-    icons(&icon, 0);
+    if (icon)
+        icons(&icon, 1);
+    else
+        icons(&icon, 0);
 }
 
 /** Sets the window icons.
@@ -378,63 +377,57 @@ void Fl_Window::icon(const Fl_RGB_Image *icon) {
   \see Fl_Window::icon(const Fl_RGB_Image *)
  */
 void Fl_Window::icons(const Fl_RGB_Image *icons[], int count) {
-  free_icons();
+    free_icons();
 
-  if (count > 0) {
-    icon_->icons = new Fl_RGB_Image*[count];
-    icon_->count = count;
-    // FIXME: Fl_RGB_Image lacks const modifiers on methods
-    for (int i = 0;i < count;i++)
-      icon_->icons[i] = (Fl_RGB_Image*)((Fl_RGB_Image*)icons[i])->copy();
-  }
+    if (count > 0) {
+        icon_->icons = new Fl_RGB_Image *[count];
+        icon_->count = count;
+        // FIXME: Fl_RGB_Image lacks const modifiers on methods
+        for (int i = 0; i < count; i++)
+            icon_->icons[i] =
+                (Fl_RGB_Image *)((Fl_RGB_Image *)icons[i])->copy();
+    }
 
-  if (i)
-    i->set_icons();
+    if (i) i->set_icons();
 }
 
 /** Gets the current icon window target dependent data.
   \deprecated in 1.3.3
  */
-const void *Fl_Window::icon() const {
-  return icon_->legacy_icon;
-}
+const void *Fl_Window::icon() const { return icon_->legacy_icon; }
 
 /** Sets the current icon window target dependent data.
   \deprecated in 1.3.3
  */
-void Fl_Window::icon(const void * ic) {
-  free_icons();
-  icon_->legacy_icon = ic;
+void Fl_Window::icon(const void *ic) {
+    free_icons();
+    icon_->legacy_icon = ic;
 }
 
 /** Deletes all icons previously attached to the window.
  \see Fl_Window::icons(const Fl_RGB_Image *icons[], int count)
  */
 void Fl_Window::free_icons() {
-  int i;
+    int i;
 
-  icon_->legacy_icon = 0L;
+    icon_->legacy_icon = 0L;
 
-  if (icon_->icons) {
-    for (i = 0;i < icon_->count;i++)
-      delete icon_->icons[i];
-    delete [] icon_->icons;
-    icon_->icons = 0L;
-  }
+    if (icon_->icons) {
+        for (i = 0; i < icon_->count; i++) delete icon_->icons[i];
+        delete[] icon_->icons;
+        icon_->icons = 0L;
+    }
 
-  icon_->count = 0;
+    icon_->count = 0;
 
 #ifdef WIN32
-  if (icon_->big_icon)
-    DestroyIcon(icon_->big_icon);
-  if (icon_->small_icon)
-    DestroyIcon(icon_->small_icon);
+    if (icon_->big_icon) DestroyIcon(icon_->big_icon);
+    if (icon_->small_icon) DestroyIcon(icon_->small_icon);
 
-  icon_->big_icon = NULL;
-  icon_->small_icon = NULL;
+    icon_->big_icon = NULL;
+    icon_->small_icon = NULL;
 #endif
 }
-
 
 #ifndef __APPLE__
 /**
@@ -499,10 +492,10 @@ void Fl_Window::free_icons() {
 */
 
 void Fl_Window::wait_for_expose() {
-  if (!shown()) return;
-  while (!i || i->wait_for_expose) {
-    Fl::wait();
-  }
+    if (!shown()) return;
+    while (!i || i->wait_for_expose) {
+        Fl::wait();
+    }
 }
 #endif  // ! __APPLE__
 
