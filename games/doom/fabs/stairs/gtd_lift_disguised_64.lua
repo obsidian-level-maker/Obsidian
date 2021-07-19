@@ -3,6 +3,8 @@ PREFABS.Lift_gtd_disguised_64 =
   file = "stairs/gtd_lift_disguised_64.wad",
   map = "MAP01",
 
+  engine = "!limit",
+
   prob = 10,
   prob_skew = 2,
 
@@ -16,6 +18,7 @@ PREFABS.Lift_gtd_disguised_64 =
   seed_w = 1,
 
   x_fit = "frame",
+  y_fit = "top",
 
   bound_z1 = 0,
 
@@ -23,7 +26,16 @@ PREFABS.Lift_gtd_disguised_64 =
   plain_ceiling = true,
 }
 
-PREFABS.Lift_gtd_disguised_64_2h =
+PREFABS.Lift_gtd_disguised_64_limit =
+{
+  template = "Lift_gtd_disguised_64",
+
+  engine = "limit",
+
+  line_13364 = 123
+}
+
+--[[PREFABS.Lift_gtd_disguised_64_2h =
 {
   template = "Lift_gtd_disguised_64",
   map = "MAP02",
@@ -37,4 +49,4 @@ PREFABS.Lift_gtd_disguised_64_3h =
   map = "MAP03",
 
   seed_h = 3,
-}
+}]]

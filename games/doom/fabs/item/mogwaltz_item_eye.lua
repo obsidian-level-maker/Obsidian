@@ -1,4 +1,6 @@
-PREFABS.Item_secret_item_shootable_eye =
+-- TO-DO: Redesign switches to be more reliable and resolve monsters being stuck to spawn positions.
+
+--[[PREFABS.Item_secret_item_shootable_eye =
 {
   file   = "item/mogwaltz_item_eye.wad",
   map    = "MAP01",
@@ -26,4 +28,4 @@ PREFABS.Item_secret_item_shootable_eye_pair =
   map = "MAP02",
 
   prob = 37,
-}
+}]]

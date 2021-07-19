@@ -75,7 +75,11 @@ int gui_format_prefix(lua_State *L) {
 
 	const char* ff_args[10];
 
+#ifdef WIN32
+	ff_args[0] = "tools/filename_formatter.exe";
+#else
 	ff_args[0] = "tools/filename_formatter";
+#endif
 	ff_args[1] = "-c";
 	ff_args[2] = levelcount;
 	ff_args[3] = "-g";
