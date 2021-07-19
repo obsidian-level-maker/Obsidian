@@ -39,9 +39,8 @@ class UI_Build : public Fl_Group {
     std::string string_seed = "";
 
    private:
-
     char status_label[200];
-    char prog_label[100];
+    std::string prog_label;
 
     int level_index;  // starts at 1
     int level_total;

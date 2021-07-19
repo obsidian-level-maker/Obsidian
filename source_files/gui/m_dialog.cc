@@ -24,6 +24,8 @@
 #include <limits>
 #include <string>
 
+#include "fmt/core.h"
+#include "fmt/format.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #include "headers.h"
@@ -31,7 +33,7 @@
 #include "lib_util.h"
 #include "main.h"
 
-const char *last_directory = NULL;
+std::string last_directory;
 
 static int dialog_result;
 
@@ -211,13 +213,11 @@ void DLG_ShowError(const char *msg, ...) {
 
 //----------------------------------------------------------------------
 
-const char *DLG_OutputFilename(const char *ext, const char *preset) {
-    char kind_buf[200];
-
-    sprintf(kind_buf, "%s files\t*.%s", ext, ext);
+std::string DLG_OutputFilename(const char *ext, const char *preset) {
+    std::string kind_buf = fmt::format("{} files\t*.{}", ext, ext);
 
     // uppercase the first word
-    for (char *p = kind_buf; *p && *p != ' '; p++) {
+    for (char *p = &kind_buf[0]; *p && *p != ' '; p++) {
         *p = toupper(*p);
     }
 
@@ -235,10 +235,10 @@ const char *DLG_OutputFilename(const char *ext, const char *preset) {
         chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
     }
 
-    chooser.filter(kind_buf);
+    chooser.filter(kind_buf.c_str());
 
-    if (last_directory) {
-        chooser.directory(last_directory);
+    if (!last_directory.empty()) {
+        chooser.directory(last_directory.c_str());
     }
 
     if (preset) {
@@ -265,7 +265,7 @@ const char *DLG_OutputFilename(const char *ext, const char *preset) {
             break;  // OK
     }
 
-    static char filename[FL_PATH_MAX + 16];
+    static std::string filename;
 
     const char *src_name = chooser.filename();
 
@@ -275,7 +275,7 @@ const char *DLG_OutputFilename(const char *ext, const char *preset) {
 
     fl_utf8toa(src_name, strlen(src_name), filename, sizeof(filename));
 #else
-    snprintf(filename, sizeof(filename), "%s", src_name);
+    filename = fmt::format("{}", src_name);
 #endif
 
     // remember the directory for next time
@@ -284,17 +284,17 @@ const char *DLG_OutputFilename(const char *ext, const char *preset) {
     FilenameGetPath(dir_name, sizeof(dir_name), src_name);
 
     if (strlen(dir_name) > 0) {
-        last_directory = StringDup(dir_name);
+        last_directory = dir_name;
     }
 
     // add extension if missing
-    char *pos = (char *)fl_filename_ext(filename);
+    char *pos = (char *)fl_filename_ext(filename.c_str());
     if (!*pos) {
-        strcat(filename, ".");
-        strcat(filename, ext);
+        filename += ".";
+        filename += ext;
 
         // check if exists, ask for confirmation
-        FILE *fp = fopen(filename, "rb");
+        FILE *fp = fopen(filename.c_str(), "rb");
         if (fp) {
             fclose(fp);
             if (!fl_choice("%s", fl_cancel, fl_ok, NULL,
@@ -304,14 +304,16 @@ const char *DLG_OutputFilename(const char *ext, const char *preset) {
         }
     }
 
-    return StringDup(filename);
+    return filename;
 }
 
 //----------------------------------------------------------------------cout
 
-void DLG_EditSeed(void) {;
+void DLG_EditSeed(void) {
+    ;
 
-    const char *user_buf = fl_input(_("Enter New Seed Number:"), std::to_string(next_rand_seed).c_str());
+    const char *user_buf = fl_input(_("Enter New Seed Number:"),
+                                    std::to_string(next_rand_seed).c_str());
 
     // cancelled?
     if (!user_buf) {
@@ -382,7 +384,7 @@ class UI_LogViewer : public Fl_Double_Window {
    private:
     int CountSelectedLines() const;
 
-    char *GetSelectedText() const;
+    std::string GetSelectedText() const;
 
     static void quit_callback(Fl_Widget *, void *);
     static void save_callback(Fl_Widget *, void *);
@@ -434,7 +436,8 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
             but->box(button_style);
             but->visible_focus(0);
             but->color(BUTTON_COLOR);
-            but->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
+            but->labelfont(use_system_fonts ? font_style
+                                            : font_style | FL_BOLD);
             but->labelcolor(FONT2_COLOR);
             but->callback(quit_callback, this);
         }
@@ -499,8 +502,8 @@ int UI_LogViewer::CountSelectedLines() const {
     return count;
 }
 
-char *UI_LogViewer::GetSelectedText() const {
-    char *buf = StringDup("");
+std::string UI_LogViewer::GetSelectedText() const {
+    std::string buf;
 
     for (int i = 1; i <= browser->size(); i++) {
         if (!browser->selected(i)) {
@@ -514,19 +517,16 @@ char *UI_LogViewer::GetSelectedText() const {
 
         // append current line onto previous ones
 
-        int new_len = (int)strlen(buf) + (int)strlen(line_text);
+        int new_len = buf.size() + (int)strlen(line_text);
 
-        char *new_buf = StringNew(new_len + 1 /* newline */);
+        std::string new_buf = buf;
 
-        strcpy(new_buf, buf);
-        strcat(new_buf, line_text);
+        new_buf += line_text;
 
         if (new_len > 0 && new_buf[new_len - 1] != '\n') {
             new_buf[new_len++] = '\n';
             new_buf[new_len] = 0;
         }
-
-        StringFree(buf);
 
         buf = new_buf;
     }
@@ -551,7 +551,7 @@ void UI_LogViewer::WriteLogs(FILE *fp) {
         const char *str = browser->text(n);
 
         if (str) {
-            fprintf(fp, "%s\n", str);
+            fmt::print(fp, "%s\n", str);
         }
     }
 }
@@ -576,13 +576,11 @@ void UI_LogViewer::select_callback(Fl_Widget *w, void *data) {
 void UI_LogViewer::copy_callback(Fl_Widget *w, void *data) {
     UI_LogViewer *that = (UI_LogViewer *)data;
 
-    const char *text = that->GetSelectedText();
+    std::string text = that->GetSelectedText();
 
     if (text[0]) {
-        Fl::copy(text, (int)strlen(text), 1);
+        Fl::copy(text.c_str(), text.size(), 1);
     }
-
-    StringFree(text);
 }
 
 void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
@@ -594,8 +592,8 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
     chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
     chooser.filter("Text files\t*.txt");
 
-    if (last_directory) {
-        chooser.directory(last_directory);
+    if (!last_directory.empty()) {
+        chooser.directory(last_directory.c_str());
     }
 
     switch (chooser.show()) {
@@ -613,20 +611,20 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
     }
 
     // add an extension if missing
-    static char filename[FL_PATH_MAX];
+    static std::string filename;
 
-    strcpy(filename, chooser.filename());
+    filename = chooser.filename();
 
-    if (!HasExtension(filename)) {
-        strcat(filename, ".txt");
+    if (!HasExtension(filename.c_str())) {
+        filename += ".txt";
     }
 
-    FILE *fp = fopen(filename, "w");
+    FILE *fp = fopen(filename.c_str(), "w");
 
     if (!fp) {
-        sprintf(filename, "%s", strerror(errno));
+        filename = strerror(errno);
 
-        DLG_ShowError(_("Unable to save the file:\n\n%s"), filename);
+        DLG_ShowError(_("Unable to save the file:\n\n%s"), filename.c_str());
         return;
     }
 

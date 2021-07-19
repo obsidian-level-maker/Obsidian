@@ -20,6 +20,7 @@
 
 #include "m_addons.h"
 
+#include "fmt/core.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #include "headers.h"
@@ -35,7 +36,7 @@
 static std::map<std::string, int> initial_enabled_addons;
 
 typedef struct {
-    const char *name;  // base filename, includes ".pk3" extension
+    std::string name;  // base filename, includes ".pk3" extension
 
     bool enabled;
 
@@ -44,10 +45,10 @@ typedef struct {
 static std::vector<addon_info_t> all_addons;
 
 void VFS_AddFolder(const char *name) {
-    char *path = StringPrintf("%s/%s", install_dir, name);
-    char *mount = StringPrintf("/%s", name);
+    std::string path = fmt::format("{}/{}", install_dir, name);
+    std::string mount = fmt::format("/{}", name);
 
-    if (!PHYSFS_mount(path, mount, 0)) {
+    if (!PHYSFS_mount(path.c_str(), mount.c_str(), 0)) {
         Main_FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name,
                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return; /* NOT REACHED */
@@ -56,37 +57,38 @@ void VFS_AddFolder(const char *name) {
     DebugPrintf("mounted folder '%s'\n", name);
 }
 
-bool VFS_AddArchive(const char *filename, bool options_file) {
-    LogPrintf("  using: %s\n", filename);
+bool VFS_AddArchive(std::string filename, bool options_file) {
+    LogPrintf(fmt::format("  using: {}\n", filename).c_str());
 
-    if (!HasExtension(filename)) {
-        filename = ReplaceExtension(filename, "pk3");
-    } else {
-        filename = StringDup(filename);
+    if (!HasExtension(filename.c_str())) {
+        filename = ReplaceExtension(filename.c_str(), "pk3");
     }
 
     // when handling "bare" filenames from the command line (i.e. ones
     // containing no paths or drive spec) and the file does not exist in
     // the current dir, look for it in the standard addons/ folder.
-    if (options_file ||
-        (!FileExists(filename) && filename == fl_filename_name(filename))) {
-        char *new_name = StringPrintf("%s/addons/%s", home_dir, filename);
-        if (!FileExists(new_name)) {
-            StringFree(new_name);
-            new_name = StringPrintf("%s/addons/%s", install_dir, filename);
+    if (options_file || (!FileExists(filename.c_str()) &&
+                         filename == fl_filename_name(filename.c_str()))) {
+        std::string new_name = fmt::format("{}/addons/{}", home_dir, filename);
+        if (!FileExists(new_name.c_str())) {
+            new_name = fmt::format("{}/addons/{}", install_dir, filename);
         }
-        StringFree(filename);
         filename = new_name;
     }
 
-    if (!PHYSFS_mount(filename, "/", 0)) {
+    if (!PHYSFS_mount(filename.c_str(), "/", 0)) {
         if (options_file) {
-            LogPrintf("Failed to mount '%s' archive in PhysFS:\n%s\n", filename,
-                      PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
-        } else {
-            Main_FatalError("Failed to mount '%s' archive in PhysFS:\n%s\n",
+            LogPrintf(
+                fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
                             filename,
-                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
+                    .c_str());
+        } else {
+            Main_FatalError(
+                fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
+                            filename,
+                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
+                    .c_str());
         }
 
         return false;
@@ -144,17 +146,17 @@ void VFS_OptParse(const char *name) {
 }
 
 void VFS_OptWrite(FILE *fp) {
-    fprintf(fp, "---- Enabled Addons ----\n\n");
+    fmt::print(fp, "---- Enabled Addons ----\n\n");
 
     for (unsigned int i = 0; i < all_addons.size(); i++) {
         const addon_info_t *info = &all_addons[i];
 
         if (info->enabled) {
-            fprintf(fp, "addon = %s\n", info->name);
+            fmt::print(fp, "addon = %s\n", info->name);
         }
     }
 
-    fprintf(fp, "\n");
+    fmt::print(fp, "\n");
 }
 
 void VFS_ScanForAddons() {
@@ -162,20 +164,18 @@ void VFS_ScanForAddons() {
 
     all_addons.clear();
 
-    char *dir_name = StringPrintf("%s/addons", home_dir);
+    std::string dir_name = fmt::format("{}/addons", home_dir);
 
     std::vector<std::string> list;
-    int result1 = ScanDir_MatchingFiles(dir_name, "pk3", list);
+    int result1 = ScanDir_MatchingFiles(dir_name.c_str(), "pk3", list);
     int result2 = 0;
 
-    if (std::string(home_dir).compare(std::string(install_dir)) != 0) {
-        StringFree(dir_name);
-
-        dir_name = StringPrintf("%s/addons", install_dir);
+    if (std::string{home_dir}.compare(std::string{install_dir}) != 0) {
+        dir_name = fmt::format("{}/addons", install_dir);
 
         std::vector<std::string> list2;
 
-        result2 = ScanDir_MatchingFiles(dir_name, "pk3", list2);
+        result2 = ScanDir_MatchingFiles(dir_name.c_str(), "pk3", list2);
 
         list.insert(list.end(), list2.begin(), list2.end());
 
@@ -190,7 +190,7 @@ void VFS_ScanForAddons() {
     for (unsigned int i = 0; i < list.size(); i++) {
         addon_info_t info;
 
-        info.name = StringDup(list[i].c_str());
+        info.name = list[i].c_str();
 
         info.enabled = false;
 
@@ -202,8 +202,9 @@ void VFS_ScanForAddons() {
         // DEBUG
         // info.enabled = true;
 
-        LogPrintf("  found: %s%s\n", info.name,
-                  info.enabled ? " (Enabled)" : " (Disabled)");
+        LogPrintf(fmt::format("  found: {}{}\n", info.name,
+                              info.enabled ? " (Enabled)" : " (Disabled)")
+                      .c_str());
 
         all_addons.push_back(info);
 
@@ -320,10 +321,10 @@ class UI_Addon : public Fl_Group {
         box(box_style);
 
         // prefix the name with a space
-        const char *name2 = StringPrintf(" %s", info->name);
+        std::string name2 = fmt::format(" {}", info->name);
 
         button = new UI_CustomCheckBox(x + kf_w(6), y + kf_h(4), w - kf_w(12),
-                                     kf_h(24), name2);
+                                       kf_h(24), name2.c_str());
         button->labelfont(font_style);
         button->selection_color(SELECTION);
         // if (tip)
@@ -441,9 +442,9 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
     sbar->color(GAP_COLOR, BUTTON_COLOR);
     sbar->labelcolor(SELECTION);
 
-    const char *pack_title = StringPrintf("\n\n\n\n%s", _("No Addons Found!"));
+    std::string pack_title = fmt::format("\n\n\n\n{}", _("No Addons Found!"));
     if (all_addons.empty()) {
-        pack = new Fl_Group(mx, my, mw, mh, pack_title);
+        pack = new Fl_Group(mx, my, mw, mh, pack_title.c_str());
     } else {
         pack = new Fl_Group(mx, my, mw, mh, 0);
     }
@@ -591,7 +592,7 @@ void UI_AddonsWin::Populate() {
 
 bool UI_AddonsWin::ApplyChanges() {
     bool has_changes = false;
-    
+
     for (int j = 0; j < pack->children(); j++) {
         UI_Addon *M = (UI_Addon *)pack->child(j);
         SYS_ASSERT(M);
@@ -608,11 +609,11 @@ bool UI_AddonsWin::ApplyChanges() {
 }
 
 void DLG_SelectAddons(void) {
-
     int opt_w = kf_w(350);
     int opt_h = kf_h(380);
 
-    UI_AddonsWin *addons_window = new UI_AddonsWin(opt_w, opt_h, _("OBSIDIAN Addons"));
+    UI_AddonsWin *addons_window =
+        new UI_AddonsWin(opt_w, opt_h, _("OBSIDIAN Addons"));
 
     addons_window->Populate();
 
@@ -627,20 +628,20 @@ void DLG_SelectAddons(void) {
 
     if (addons_window->ApplyChanges()) {
         // persist the changed addon list into OPTIONS.txt
-        Options_Save(options_file);
+        Options_Save(options_file.c_str());
 
         fl_alert("%s", _("Changes to addons require a restart.\nOBSIDIAN will "
-                         "now restart.")); 
+                         "now restart."));
 
-      	initial_enabled_addons.clear();
-      	
-      	for (int j = 0; j < addons_window->pack->children(); j++) {
-		    UI_Addon *M = (UI_Addon *)addons_window->pack->child(j);
-		    SYS_ASSERT(M);
-		    if (M->info->enabled) {
-		        initial_enabled_addons[M->info->name] = 1;
-		    }
-    	}
+        initial_enabled_addons.clear();
+
+        for (int j = 0; j < addons_window->pack->children(); j++) {
+            UI_Addon *M = (UI_Addon *)addons_window->pack->child(j);
+            SYS_ASSERT(M);
+            if (M->info->enabled) {
+                initial_enabled_addons[M->info->name] = 1;
+            }
+        }
 
         main_action = MAIN_RESTART;
     }

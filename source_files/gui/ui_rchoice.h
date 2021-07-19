@@ -22,10 +22,13 @@
 #define __UI_RCHOICE_H__
 
 #include <map>
+#include <string>
 #include <vector>
 
+#include "FL/Fl_Box.H"
 #include "FL/Fl_Check_Button.H"
 #include "FL/Fl_Choice.H"
+#include "FL/Fl_Group.H"
 #include "FL/Fl_Hor_Slider.H"
 #include "FL/Fl_Repeat_Button.H"
 #include "FL/Fl_Menu_Button.H"
@@ -38,12 +41,13 @@
 //
 
 class choice_data_c {
-    friend class UI_RChoice; // Don't know if the 'group' for the menu needs to be a friend as well
+    friend class UI_RChoice;  // Don't know if the 'group' for the menu needs to
+                              // be a friend as well
     friend class UI_RChoiceMenu;
 
    public:
-    const char *id;     // terse identifier
-    const char *label;  // description (for the UI)
+    std::string id;     // terse identifier
+    std::string label;  // description (for the UI)
 
     bool enabled;  // shown to the user
 
@@ -68,9 +72,9 @@ class UI_HelpLink : public Fl_Button {
    public:
     UI_HelpLink(int x, int y, int w, int h, const char *label);
     virtual ~UI_HelpLink();
-    
-    const char* help_text = "";
-    const char* help_title = "";
+
+    const char *help_text = "";
+    const char *help_title = "";
 
    public:
     // FLTK overrides
@@ -81,7 +85,6 @@ class UI_HelpLink : public Fl_Button {
 
    private:
     void checkLink();
-
 };
 
 class UI_ManualEntry : public Fl_Button {
@@ -105,19 +108,16 @@ class UI_ManualEntry : public Fl_Button {
 
    private:
     void checkLink();
-
 };
 
 class UI_CustomMenu : public Fl_Choice {
-
    private:
-
    public:
     UI_CustomMenu(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_CustomMenu();
-    
+
    private:
-	void draw();
+    void draw();
 };
 
 class UI_RChoiceMenu : public UI_CustomMenu {
@@ -126,7 +126,7 @@ class UI_RChoiceMenu : public UI_CustomMenu {
 
    public:
     UI_RChoiceMenu(int x, int y, int w, int h, const char *label = NULL);
-    virtual ~UI_RChoiceMenu(); 
+    virtual ~UI_RChoiceMenu();
 
    public:
     // add a new choice to the list.  If a choice with the same 'id'
@@ -141,13 +141,13 @@ class UI_RChoiceMenu : public UI_CustomMenu {
 
     // get the id string for the currently shown value.
     // Returns the string "none" if there are no choices.
-    const char *GetID() const;
+    std::string GetID() const;
 
     // change the currently shown value via the new 'id'.
     // If does not exist, returns false and nothing was changed.
     bool ChangeTo(const char *id);
 
-    const char *GetLabel() const;
+    std::string GetLabel() const;
 
     choice_data_c *FindID(const char *id) const;
 
@@ -169,55 +169,48 @@ class UI_RChoiceMenu : public UI_CustomMenu {
 
 class UI_RChoice : public Fl_Group {
    private:
-
    public:
     UI_RChoice(int x, int y, int w, int h, const char *label = NULL);
-    virtual ~UI_RChoice(); 
+    virtual ~UI_RChoice();
 
    public:
-   
     Fl_Box *mod_label;
-    
-    UI_HelpLink *mod_help;    
-    
-    UI_RChoiceMenu *mod_menu;    
+
+    UI_HelpLink *mod_help;
+
+    UI_RChoiceMenu *mod_menu;
 
    private:
-   
 };
 
 class UI_CustomArrowButton : public Fl_Repeat_Button {
-
    private:
-
    public:
     UI_CustomArrowButton(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_CustomArrowButton();
-    
+
    private:
-	void draw();
+    void draw();
 };
 
 class UI_CustomMenuButton : public Fl_Menu_Button {
-
    private:
     // true when mouse is over this widget
     bool hover;
 
     // area containing the label
     int label_X, label_Y, label_W, label_H;
-  
+
    public:
     UI_CustomMenuButton(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_CustomMenuButton();
-    
+
    public:
     // FLTK overrides
 
     int handle(int event);
 
    private:
-
     void draw();
 
     void checkLink();
@@ -225,66 +218,58 @@ class UI_CustomMenuButton : public Fl_Menu_Button {
 
 class UI_RSlide : public Fl_Group {
    private:
-
-       
    public:
     UI_RSlide(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_RSlide();
-    
+
     Fl_Box *mod_label;
-    
+
     UI_HelpLink *mod_help;
-    
+
     UI_ManualEntry *mod_entry;
-    
+
     Fl_Hor_Slider *mod_slider;
-    
+
     UI_CustomArrowButton *prev_button;
-    
+
     UI_CustomArrowButton *next_button;
-    
+
     UI_CustomMenuButton *nan_options;
-    
+
     std::string original_label;
-    
+
     std::string units;
-    
+
     std::map<double, std::string> preset_choices;
-    
+
     std::vector<std::string> nan_choices;
-    
-    public:
-    
+
+   public:
 };
 
 class UI_CustomCheckBox : public Fl_Check_Button {
-  
    private:
-
    public:
     UI_CustomCheckBox(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_CustomCheckBox();
-    
+
    private:
-   void draw();
+    void draw();
 };
 
 class UI_RButton : public Fl_Group {
    private:
-
-
    public:
     UI_RButton(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_RButton();
-    
-    UI_CustomCheckBox *mod_check;
-    
-    Fl_Box *mod_label;
-    
-    UI_HelpLink *mod_help;
-    
-   private:
 
+    UI_CustomCheckBox *mod_check;
+
+    Fl_Box *mod_label;
+
+    UI_HelpLink *mod_help;
+
+   private:
 };
 
 #endif /* __UI_RCHOICE_H__ */

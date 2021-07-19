@@ -24,6 +24,7 @@
 
 #include "csg_main.h"
 #include "csg_quake.h"
+#include "fmt/format.h"
 #include "hdr_lua.h"
 #include "headers.h"
 #include "lib_file.h"
@@ -668,10 +669,9 @@ void BSP_WriteEntities(int lump_num, const char *description) {
 
     // TODO : do this via oblige_worldspawn entity
     if (qk_game == 1) {
-        char buffer[80];
-        sprintf(buffer, "%d", qk_worldtype);
+        std::string buffer = fmt::format("{}", qk_worldtype);
 
-        lump->KeyPair("worldtype", buffer);
+        lump->KeyPair("worldtype", buffer.c_str());
     }
 
 #if 0  // REMOVE THIS, let Lua code supply these values

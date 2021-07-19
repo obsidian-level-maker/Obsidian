@@ -37,19 +37,17 @@ class UI_Module : public Fl_Group {
     // -  module is "shown" when visible() == true
 
    public:
-   
     Fl_Box *heading;
-    
+
     std::map<std::string, UI_RChoice *> choice_map;
-    
+
     std::map<std::string, UI_RSlide *> choice_map_slider;
-    
+
     std::map<std::string, UI_RButton *> choice_map_button;
-    
+
     UI_CustomCheckBox *mod_button;
-   
+
    private:
-   
     std::string id_name;
 
     // only used while positioning the options (as they are added)
@@ -61,24 +59,25 @@ class UI_Module : public Fl_Group {
     virtual ~UI_Module();
 
     void AddOption(const char *option, const char *label, const char *tip,
-                   const char* longtip, int gap);
+                   const char *longtip, int gap);
 
-	void AddSliderOption(const char *option, const char *label, const char *tip,
-                          const char* longtip, int gap, double min, double max, double inc,
-                          const char *units, const char *presets, const char *nan);
-                         
+    void AddSliderOption(const char *option, const char *label, const char *tip,
+                         const char *longtip, int gap, double min, double max,
+                         double inc, const char *units, const char *presets,
+                         const char *nan);
+
     void AddButtonOption(const char *opt, const char *label, const char *tip,
-                          const char *longtip, int gap);
+                         const char *longtip, int gap);
 
     void AddOptionChoice(const char *option, const char *id, const char *label);
-    
-	void AddOptionSliderChoice(const char *option, double minimum, double maximum,
-                                double increment);
+
+    void AddOptionSliderChoice(const char *option, double minimum,
+                               double maximum, double increment);
 
     bool SetOption(const char *option, const char *value);
-    
+
     bool SetSliderOption(const char *option, const char *value);
-    
+
     bool SetButtonOption(const char *option, int value);
 
     bool Is_UI() const;
@@ -89,9 +88,9 @@ class UI_Module : public Fl_Group {
     void update_Enable();
 
     UI_RChoice *FindOpt(const char *opt);  // const;
-    
+
     UI_RSlide *FindSliderOpt(const char *opt);  // const;
-    
+
     UI_RButton *FindButtonOpt(const char *opt);  // const;
 
    protected:
@@ -104,16 +103,15 @@ class UI_Module : public Fl_Group {
     static void callback_SliderNext(Fl_Widget *w, void *data);
     static void callback_ShowHelp(Fl_Widget *w, void *data);
     static void callback_ManualEntry(Fl_Widget *w, void *data);
-	static void callback_NanOptions(Fl_Widget *w, void *data);
+    static void callback_NanOptions(Fl_Widget *w, void *data);
 };
 
 class UI_CustomMods : public Fl_Group {
-   
    public:
     Fl_Group *mod_pack;
 
     Fl_Scrollbar *sbar;
-   
+
    private:
     Fl_Group *mod_pack_group;
 
@@ -131,30 +129,35 @@ class UI_CustomMods : public Fl_Group {
     virtual ~UI_CustomMods();
 
    public:
-    void AddModule(const char *id, const char *label, const char *tip, int red, int green, int blue);
+    void AddModule(const char *id, const char *label, const char *tip, int red,
+                   int green, int blue);
 
     // these return false if module is unknown
     bool ShowModule(const char *id, bool new_shown);
     bool EnableMod(const char *id, bool enable);
 
     bool AddOption(const char *module, const char *option, const char *label,
-                   const char *tip, const char* longtip, int gap);
-                   
-	bool AddSliderOption(const char *module, const char *option, const char *label,
-                   const char *tip, const char* longtip, int gap, double min, double max, 
-                   double inc, const char *units, const char *presets, const char *nan);
-                   
+                   const char *tip, const char *longtip, int gap);
+
+    bool AddSliderOption(const char *module, const char *option,
+                         const char *label, const char *tip,
+                         const char *longtip, int gap, double min, double max,
+                         double inc, const char *units, const char *presets,
+                         const char *nan);
+
     bool AddButtonOption(const char *module, const char *option,
-                         const char *label, const char *tip, const char* longtip, int gap);
+                         const char *label, const char *tip,
+                         const char *longtip, int gap);
 
     void AddOptionChoice(const char *module, const char *option, const char *id,
                          const char *label);
 
     bool SetOption(const char *module, const char *option, const char *value);
-    
-    bool SetSliderOption(const char *module, const char *option, const char *value);
-    
-	bool SetButtonOption(const char *module, const char *option, int value);
+
+    bool SetSliderOption(const char *module, const char *option,
+                         const char *value);
+
+    bool SetButtonOption(const char *module, const char *option, int value);
 
     void Locked(bool value);
 

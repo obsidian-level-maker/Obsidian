@@ -21,22 +21,20 @@
 #ifndef __LIB_UTIL_H__
 #define __LIB_UTIL_H__
 
+#include <string>
 #include "sys_type.h"
 
 /* string utilities */
 
-int StringCaseCmp(const char *A, const char *B);
-int StringCaseCmpPartial(const char *A, const char *B);
-void StringMaxCopy(char *dest, const char *src, int max);
+int StringCaseCmp(const std::string &a, const std::string &b);
+int StringCaseCmpPartial(const std::string &a, const std::string &b);
+bool StringCaseEquals(const std::string &a, const std::string &b);
+bool StringCaseEqualsPartial(const std::string &a, const std::string &b);
 
-char *StringUpper(const char *name);
-char *StringNew(int length);
-char *StringDup(const char *orig, int limit = -1);
-char *StringPrintf(const char *str, ...);  // GCCATTR((format (printf, 1, 2)));
-void StringFree(const char *str);
+std::string StringUpper(const std::string &name);
 
-void StringRemoveCRLF(char *str);
-void StringReplaceChar(char *str, char old_ch, char new_ch);
+void StringRemoveCRLF(std::string *str);
+void StringReplaceChar(std::string *str, char old_ch, char new_ch);
 
 char *mem_gets(char *buf, int size, const char **str_ptr);
 

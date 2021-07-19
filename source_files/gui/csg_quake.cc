@@ -24,6 +24,7 @@
 
 #include "csg_local.h"
 #include "csg_main.h"
+#include "fmt/format.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"
@@ -2684,10 +2685,9 @@ int Q1_add_mapmodel(lua_State *L) {
     lua_pop(L, 3);
 
     // create model reference (for entity)
-    char ref_name[32];
-    sprintf(ref_name, "*%lu", (long unsigned int)qk_all_mapmodels.size());
+    std::string ref_name = fmt::format("*{}", qk_all_mapmodels.size());
 
-    lua_pushstring(L, ref_name);
+    lua_pushstring(L, ref_name.c_str());
     return 1;
 }
 

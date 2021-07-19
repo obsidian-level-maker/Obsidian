@@ -24,6 +24,7 @@
 
 #include <list>
 
+#include "fmt/core.h"
 #include "headers.h"
 #include "lib_util.h"
 #include "main.h"
@@ -422,20 +423,21 @@ const char *ZIPF_EntryName(int entry) {
 }
 
 void ZIPF_ListEntries(void) {
-    printf("--------------------------------------------------\n");
+    fmt::print("--------------------------------------------------\n");
 
     if (r_end_part.total_entries == 0) {
-        printf("ZIP file is empty\n");
+        fmt::print("ZIP file is empty\n");
     } else {
         for (int i = 0; i < (int)r_end_part.total_entries; i++) {
             zip_central_entry_t *E = &r_directory[i];
 
-            printf("%4d: +%08x %08x : %s\n", i + 1, E->hdr.local_offset,
-                   E->hdr.full_size, E->name);
+            fmt::print("{:4}: +{:08x} {:08x} : {}\n", i + 1,
+                       static_cast<unsigned int>(E->hdr.local_offset),
+                       static_cast<unsigned int>(E->hdr.full_size), E->name);
         }
     }
 
-    printf("--------------------------------------------------\n");
+    fmt::print("--------------------------------------------------\n");
 }
 
 ///////// READING STUFF ///////////////////////////////////////

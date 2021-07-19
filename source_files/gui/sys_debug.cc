@@ -25,16 +25,16 @@
 #define DEBUG_BUF_LEN 20000
 
 static FILE *log_file = NULL;
-static char *log_filename = NULL;
+static std::string log_filename;
 
 static bool debugging = false;
 static bool terminal = false;
 
 bool LogInit(const char *filename) {
     if (filename) {
-        log_filename = StringDup(filename);
+        log_filename = filename;
 
-        log_file = fopen(log_filename, "w");
+        log_file = fopen(log_filename.c_str(), "w");
 
         if (!log_file) {
             return false;
@@ -69,8 +69,7 @@ void LogClose(void) {
         fclose(log_file);
         log_file = NULL;
 
-        StringFree(log_filename);
-        log_filename = NULL;
+        log_filename.clear();
     }
 }
 
@@ -138,28 +137,29 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
 
     fclose(log_file);
 
-    log_file = fopen(log_filename, "r");
+    log_file = fopen(log_filename.c_str(), "r");
 
     // this is very unlikely to happen, but check anyway
     if (!log_file) {
         return;
     }
 
-    char buffer[MSG_BUF_LEN];
+    std::string buffer;
+    buffer.resize(MSG_BUF_LEN);
 
-    while (fgets(buffer, MSG_BUF_LEN - 2, log_file)) {
+    while (fgets(&buffer[0], MSG_BUF_LEN - 2, log_file)) {
         // remove any newline at the end (LF or CR/LF)
-        StringRemoveCRLF(buffer);
+        StringRemoveCRLF(&buffer);
 
         // remove any DEL characters (mainly to workaround an FLTK bug)
-        StringReplaceChar(buffer, 0x7f, 0);
+        StringReplaceChar(&buffer, 0x7f, 0);
 
-        display_func(buffer, priv_data);
+        display_func(buffer.c_str(), priv_data);
     }
 
     // open the log file for writing again
     // [ it is unlikely to fail, but if it does then no biggie ]
-    log_file = fopen(log_filename, "a");
+    log_file = fopen(log_filename.c_str(), "a");
 }
 
 //--- editor settings ---

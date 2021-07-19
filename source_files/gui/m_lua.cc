@@ -21,7 +21,9 @@
 #include "m_lua.h"
 
 #include <algorithm>
+#include <array>
 
+#include "fmt/format.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"
@@ -45,11 +47,11 @@ static bool has_added_buttons = false;
 
 static std::vector<std::string> *conf_line_buffer;
 
-static const char *import_dir;
+static std::string import_dir;
 
-void Script_Load(const char *name);
+void Script_Load(std::string script_name);
 
-bool is_dir(char *temp_name) {
+static bool is_dir(const char *temp_name) {
     PHYSFS_Stat stat;
     PHYSFS_stat(temp_name, &stat);
     if (stat.filetype == PHYSFS_FILETYPE_DIRECTORY) {
@@ -65,13 +67,13 @@ color_mapping_t color_mappings[MAX_COLOR_MAPS];
 // LUA: format_prefix(levelcount, OB_CONFIG.game, OB_CONFIG.theme, formatstring)
 //
 int gui_format_prefix(lua_State *L) {
-	
     const char *levelcount = luaL_checkstring(L, 1);
     const char *game = luaL_checkstring(L, 2);
     const char *theme = luaL_checkstring(L, 3);
     const char *format = luaL_checkstring(L, 4);
 
     SYS_ASSERT(levelcount && game && theme && format);
+
 
 	const char* ff_args[10];
 
@@ -226,7 +228,7 @@ int gui_set_colormap(lua_State *L) {
 // LUA: import(script_name)
 //
 int gui_import(lua_State *L) {
-    if (!import_dir or !import_dir[0]) {
+    if (import_dir.empty()) {
         return luaL_error(L, "gui.import: no directory set!");
     }
 
@@ -242,11 +244,7 @@ int gui_import(lua_State *L) {
 int gui_set_import_dir(lua_State *L) {
     const char *dir_name = luaL_checkstring(L, 1);
 
-    if (import_dir) {
-        StringFree(import_dir);
-    }
-
-    import_dir = StringDup(dir_name);
+    import_dir = dir_name;
 
     return 0;
 }
@@ -254,7 +252,7 @@ int gui_set_import_dir(lua_State *L) {
 // LUA: get_install_dir() --> string
 //
 int gui_get_install_dir(lua_State *L) {
-    lua_pushstring(L, install_dir);
+    lua_pushstring(L, install_dir.c_str());
     return 1;
 }
 
@@ -269,16 +267,14 @@ static bool scan_dir_process_name(const char *name, const char *parent,
     // check if it is a directory
     // [ generally skip directories, unless match is "DIRS" ]
 
-    char *temp_name = StringPrintf("%s/%s", parent, name);
-    bool is_it_dir = is_dir(temp_name);
+    std::string temp_name = fmt::format("{}/{}", parent, name);
+    bool is_it_dir = is_dir(temp_name.c_str());
 
     if (strcmp(match, "DIRS") == 0) {
-        StringFree(temp_name);
         return is_it_dir;
     }
 
     if (is_it_dir) {
-        StringFree(temp_name);
         return false;
     }
 
@@ -287,9 +283,7 @@ static bool scan_dir_process_name(const char *name, const char *parent,
 
     byte buffer[1];
 
-    PHYSFS_File *fp = PHYSFS_openRead(temp_name);
-
-    StringFree(temp_name);
+    PHYSFS_File *fp = PHYSFS_openRead(temp_name.c_str());
 
     if (!fp) {
         return false;
@@ -468,18 +462,18 @@ int gui_add_module(lua_State *L) {
         Main_FatalError("Script problem: gui.add_module called late.\n");
     }
 
-	if (single_pane) {
-        main_win->left_mods->AddModule(id, label, tip, red, green, blue);		
-	} else {
-		if (StringCaseCmp(where, "left") == 0) {
-		    main_win->left_mods->AddModule(id, label, tip, red, green, blue);
-		} else if (StringCaseCmp(where, "right") == 0) {
-		    main_win->right_mods->AddModule(id, label, tip, red, green, blue);
-		} else {
-		    return luaL_error(L, "add_module: unknown where value '%s'\n", where);
-		}	
-	}
-
+    if (single_pane) {
+        main_win->left_mods->AddModule(id, label, tip, red, green, blue);
+    } else {
+        if (StringCaseCmp(where, "left") == 0) {
+            main_win->left_mods->AddModule(id, label, tip, red, green, blue);
+        } else if (StringCaseCmp(where, "right") == 0) {
+            main_win->right_mods->AddModule(id, label, tip, red, green, blue);
+        } else {
+            return luaL_error(L, "add_module: unknown where value '%s'\n",
+                              where);
+        }
+    }
 
     return 0;
 }
@@ -504,7 +498,7 @@ int gui_set_module(lua_State *L) {
     // try both columns
     main_win->left_mods->EnableMod(module, opt_val);
     if (!single_pane) {
-    	main_win->right_mods->EnableMod(module, opt_val);
+        main_win->right_mods->EnableMod(module, opt_val);
     }
 
     return 0;
@@ -530,7 +524,7 @@ int gui_show_module(lua_State *L) {
 
     main_win->left_mods->ShowModule(module, shown);
     if (!single_pane) {
-    	main_win->right_mods->ShowModule(module, shown);
+        main_win->right_mods->ShowModule(module, shown);
     }
 
     return 0;
@@ -565,7 +559,8 @@ int gui_add_module_option(lua_State *L) {
 
     main_win->left_mods->AddOption(module, option, label, tip, longtip, gap);
     if (!single_pane) {
-    	main_win->right_mods->AddOption(module, option, label, tip, longtip, gap);
+        main_win->right_mods->AddOption(module, option, label, tip, longtip,
+                                        gap);
     }
 
     return 0;
@@ -582,13 +577,13 @@ int gui_add_module_slider_option(lua_State *L) {
     const char *longtip = luaL_optstring(L, 5, NULL);
 
     int gap = luaL_optinteger(L, 6, 0);
-    
+
     double min = luaL_checknumber(L, 7);
     double max = luaL_checknumber(L, 8);
     double inc = luaL_checknumber(L, 9);
 
-	const char *units = luaL_checkstring(L, 10);
-	const char *presets = luaL_checkstring(L, 11);
+    const char *units = luaL_checkstring(L, 10);
+    const char *presets = luaL_checkstring(L, 11);
     const char *nan = luaL_checkstring(L, 12);
 
     SYS_ASSERT(module && option);
@@ -606,9 +601,13 @@ int gui_add_module_slider_option(lua_State *L) {
 
     // FIXME : error if module is unknown
 
-    main_win->left_mods->AddSliderOption(module, option, label, tip, longtip, gap, min, max, inc, units, presets, nan);
+    main_win->left_mods->AddSliderOption(module, option, label, tip, longtip,
+                                         gap, min, max, inc, units, presets,
+                                         nan);
     if (!single_pane) {
-    	main_win->right_mods->AddSliderOption(module, option, label, tip, longtip, gap, min, max, inc, units, presets, nan);
+        main_win->right_mods->AddSliderOption(module, option, label, tip,
+                                              longtip, gap, min, max, inc,
+                                              units, presets, nan);
     }
 
     return 0;
@@ -625,7 +624,7 @@ int gui_add_module_button_option(lua_State *L) {
     const char *longtip = luaL_optstring(L, 5, NULL);
 
     int gap = luaL_optinteger(L, 6, 0);
-    
+
     SYS_ASSERT(module && option);
 
     //	DebugPrintf("  add_module_option: %s.%s\n", module, option);
@@ -641,9 +640,11 @@ int gui_add_module_button_option(lua_State *L) {
 
     // FIXME : error if module is unknown
 
-    main_win->left_mods->AddButtonOption(module, option, label, tip, longtip, gap);
+    main_win->left_mods->AddButtonOption(module, option, label, tip, longtip,
+                                         gap);
     if (!single_pane) {
-    	main_win->right_mods->AddButtonOption(module, option, label, tip, longtip, gap);
+        main_win->right_mods->AddButtonOption(module, option, label, tip,
+                                              longtip, gap);
     }
 
     return 0;
@@ -675,7 +676,7 @@ int gui_add_option_choice(lua_State *L) {
 
     main_win->left_mods->AddOptionChoice(module, option, id, label);
     if (!single_pane) {
-    	main_win->right_mods->AddOptionChoice(module, option, id, label);
+        main_win->right_mods->AddOptionChoice(module, option, id, label);
     }
 
     return 0;
@@ -702,17 +703,17 @@ int gui_set_module_option(lua_State *L) {
                           option);
     }
 
-	if (!single_pane) {
-		if (!(main_win->left_mods->SetOption(module, option, value) ||
-		      main_win->right_mods->SetOption(module, option, value))) {
-		    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-		                      module, option);
-		}
+    if (!single_pane) {
+        if (!(main_win->left_mods->SetOption(module, option, value) ||
+              main_win->right_mods->SetOption(module, option, value))) {
+            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                              module, option);
+        }
     } else {
-		if (!main_win->left_mods->SetOption(module, option, value)) {
-		    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-		                      module, option);
-		}    
+        if (!main_win->left_mods->SetOption(module, option, value)) {
+            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                              module, option);
+        }
     }
 
     return 0;
@@ -736,18 +737,18 @@ int gui_set_module_slider_option(lua_State *L) {
                           option);
     }
 
-	if (!single_pane) {
-		if (!(main_win->left_mods->SetSliderOption(module, option, value) ||
-		      main_win->right_mods->SetSliderOption(module, option, value))) {
-		    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-		                      module, option);
-		}
-	} else {
-		if (!main_win->left_mods->SetSliderOption(module, option, value)) {
-		    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-		                      module, option);
-		}
-	}
+    if (!single_pane) {
+        if (!(main_win->left_mods->SetSliderOption(module, option, value) ||
+              main_win->right_mods->SetSliderOption(module, option, value))) {
+            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                              module, option);
+        }
+    } else {
+        if (!main_win->left_mods->SetSliderOption(module, option, value)) {
+            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                              module, option);
+        }
+    }
 
     return 0;
 }
@@ -770,18 +771,18 @@ int gui_set_module_button_option(lua_State *L) {
                           option);
     }
 
-	if (!single_pane) {
-		if (!(main_win->left_mods->SetButtonOption(module, option, value) ||
-		      main_win->right_mods->SetButtonOption(module, option, value))) {
-		    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-		                      module, option);
-		}
-	} else {
-		if (!main_win->left_mods->SetButtonOption(module, option, value)) {
-		    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-		                      module, option);
-		}	
-	}
+    if (!single_pane) {
+        if (!(main_win->left_mods->SetButtonOption(module, option, value) ||
+              main_win->right_mods->SetButtonOption(module, option, value))) {
+            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                              module, option);
+        }
+    } else {
+        if (!main_win->left_mods->SetButtonOption(module, option, value)) {
+            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                              module, option);
+        }
+    }
 
     return 0;
 }
@@ -799,47 +800,74 @@ int gui_get_module_slider_value(lua_State *L) {
     if (!main_win) {
         return 0;
     }
-	
-	double value;
-	std::string nan_value;
-	
-	if (main_win->left_mods->FindID(module)) {
-		if (main_win->left_mods->FindID(module)->FindSliderOpt(option)) {
-			if (main_win->left_mods->FindID(module)->FindSliderOpt(option)->nan_choices.size() > 0) {
-				if (main_win->left_mods->FindID(module)->FindSliderOpt(option)->nan_options->value() > 0) {
-					nan_value = main_win->left_mods->FindID(module)->FindSliderOpt(option)->nan_options->text(main_win->left_mods->FindID(module)->FindSliderOpt(option)->nan_options->value());
-					lua_pushstring(L, nan_value.c_str());
-				} else {
-					value = main_win->left_mods->FindID(module)->FindSliderOpt(option)->mod_slider->value();
-					lua_pushnumber(L, value);				
-				}
-			} else {
-				value = main_win->left_mods->FindID(module)->FindSliderOpt(option)->mod_slider->value();
-				lua_pushnumber(L, value);
-			}
-		}	
-	} else if (main_win->right_mods) {
-		if (main_win->right_mods->FindID(module)) {
-			if (main_win->right_mods->FindID(module)->FindSliderOpt(option)) {
-				if (main_win->right_mods->FindID(module)->FindSliderOpt(option)->nan_choices.size() > 0) {
-					if (main_win->right_mods->FindID(module)->FindSliderOpt(option)->nan_options->value() > 0) {
-						nan_value = main_win->right_mods->FindID(module)->FindSliderOpt(option)->nan_options->text(main_win->right_mods->FindID(module)->FindSliderOpt(option)->nan_options->value());
-						lua_pushstring(L, nan_value.c_str());
-					} else {
-						value = main_win->right_mods->FindID(module)->FindSliderOpt(option)->mod_slider->value();
-						lua_pushnumber(L, value);				
-					}
-				} else {
-					value = main_win->right_mods->FindID(module)->FindSliderOpt(option)->mod_slider->value();
-					lua_pushnumber(L, value);
-				}	
-			}
-		}	
-	} else {
-		return luaL_error(L, "get_module_slider_value: unknown option '%s.%s'\n",
+
+    double value;
+    std::string nan_value;
+
+    if (main_win->left_mods->FindID(module)) {
+        if (main_win->left_mods->FindID(module)->FindSliderOpt(option)) {
+            if (main_win->left_mods->FindID(module)
+                    ->FindSliderOpt(option)
+                    ->nan_choices.size() > 0) {
+                if (main_win->left_mods->FindID(module)
+                        ->FindSliderOpt(option)
+                        ->nan_options->value() > 0) {
+                    nan_value = main_win->left_mods->FindID(module)
+                                    ->FindSliderOpt(option)
+                                    ->nan_options->text(
+                                        main_win->left_mods->FindID(module)
+                                            ->FindSliderOpt(option)
+                                            ->nan_options->value());
+                    lua_pushstring(L, nan_value.c_str());
+                } else {
+                    value = main_win->left_mods->FindID(module)
+                                ->FindSliderOpt(option)
+                                ->mod_slider->value();
+                    lua_pushnumber(L, value);
+                }
+            } else {
+                value = main_win->left_mods->FindID(module)
+                            ->FindSliderOpt(option)
+                            ->mod_slider->value();
+                lua_pushnumber(L, value);
+            }
+        }
+    } else if (main_win->right_mods) {
+        if (main_win->right_mods->FindID(module)) {
+            if (main_win->right_mods->FindID(module)->FindSliderOpt(option)) {
+                if (main_win->right_mods->FindID(module)
+                        ->FindSliderOpt(option)
+                        ->nan_choices.size() > 0) {
+                    if (main_win->right_mods->FindID(module)
+                            ->FindSliderOpt(option)
+                            ->nan_options->value() > 0) {
+                        nan_value = main_win->right_mods->FindID(module)
+                                        ->FindSliderOpt(option)
+                                        ->nan_options->text(
+                                            main_win->right_mods->FindID(module)
+                                                ->FindSliderOpt(option)
+                                                ->nan_options->value());
+                        lua_pushstring(L, nan_value.c_str());
+                    } else {
+                        value = main_win->right_mods->FindID(module)
+                                    ->FindSliderOpt(option)
+                                    ->mod_slider->value();
+                        lua_pushnumber(L, value);
+                    }
+                } else {
+                    value = main_win->right_mods->FindID(module)
+                                ->FindSliderOpt(option)
+                                ->mod_slider->value();
+                    lua_pushnumber(L, value);
+                }
+            }
+        }
+    } else {
+        return luaL_error(L,
+                          "get_module_slider_value: unknown option '%s.%s'\n",
                           module, option);
     }
-    
+
     return 1;
 }
 
@@ -856,26 +884,31 @@ int gui_get_module_button_value(lua_State *L) {
     if (!main_win) {
         return 0;
     }
-	
-	int value;
-	
-	if (main_win->left_mods->FindID(module)) {
-		if (main_win->left_mods->FindID(module)->FindButtonOpt(option)) {
-			value = main_win->left_mods->FindID(module)->FindButtonOpt(option)->mod_check->value();
-			lua_pushnumber(L, value);	
-		}	
-	} else if (main_win->right_mods) {
-		if (main_win->right_mods->FindID(module)) {
-			if (main_win->right_mods->FindID(module)->FindButtonOpt(option)) {
-				value = main_win->right_mods->FindID(module)->FindButtonOpt(option)->mod_check->value();
-				lua_pushnumber(L, value);	
-			}	
-		}
-	} else {
-		return luaL_error(L, "get_module_slider_value: unknown option '%s.%s'\n",
+
+    int value;
+
+    if (main_win->left_mods->FindID(module)) {
+        if (main_win->left_mods->FindID(module)->FindButtonOpt(option)) {
+            value = main_win->left_mods->FindID(module)
+                        ->FindButtonOpt(option)
+                        ->mod_check->value();
+            lua_pushnumber(L, value);
+        }
+    } else if (main_win->right_mods) {
+        if (main_win->right_mods->FindID(module)) {
+            if (main_win->right_mods->FindID(module)->FindButtonOpt(option)) {
+                value = main_win->right_mods->FindID(module)
+                            ->FindButtonOpt(option)
+                            ->mod_check->value();
+                lua_pushnumber(L, value);
+            }
+        }
+    } else {
+        return luaL_error(L,
+                          "get_module_slider_value: unknown option '%s.%s'\n",
                           module, option);
     }
-    
+
     return 1;
 }
 
@@ -1145,9 +1178,9 @@ extern int Q1_add_mapmodel(lua_State *L);
 extern int Q1_add_tex_wad(lua_State *L);
 
 static const luaL_Reg gui_script_funcs[] = {
-	
-	{"format_prefix", gui_format_prefix},
-	
+
+    {"format_prefix", gui_format_prefix},
+
     {"raw_log_print", gui_raw_log_print},
     {"raw_debug_print", gui_raw_debug_print},
 
@@ -1290,7 +1323,7 @@ static int p_init_lua(lua_State *L) {
 }
 
 static bool Script_CallFunc(const char *func_name, int nresult = 0,
-                            const char **params = NULL) {
+                            std::string *params = NULL) {
     // Note: the results of the function will be on the Lua stack
 
     lua_getglobal(LUA_ST, "ob_traceback");
@@ -1308,8 +1341,8 @@ static bool Script_CallFunc(const char *func_name, int nresult = 0,
 
     int nargs = 0;
     if (params) {
-        for (; *params; params++, nargs++) {
-            lua_pushstring(LUA_ST, *params);
+        for (; !params->empty(); params++, nargs++) {
+            lua_pushstring(LUA_ST, params->c_str());
         }
     }
 
@@ -1326,11 +1359,12 @@ static bool Script_CallFunc(const char *func_name, int nresult = 0,
         }
 
         // this will appear in the log file too
-        main_win->label(StringPrintf("[ ERROR ] %s %s", _(OBSIDIAN_TITLE),
-                                     OBSIDIAN_VERSION));
+        main_win->label(
+            fmt::format("[ ERROR ] {} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION)
+                .c_str());
         DLG_ShowError(_("Script Error: %s"), err_msg);
         main_win->label(
-            StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
+            fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION).c_str());
 
         lua_pop(LUA_ST, 2);  // ob_traceback, message
         return false;
@@ -1400,7 +1434,7 @@ bool Script_RunString(const char *str, ...)
 
 typedef struct load_info_t {
     PHYSFS_File *fp;
-    char *error_msg;
+    std::string error_msg;
     char buffer[2048];
 
 } load_info_t;
@@ -1419,8 +1453,7 @@ static const char *my_reader(lua_State *L, void *ud, size_t *size) {
 
     // negative result indicates a "complete failure"
     if (len < 0) {
-        info->error_msg =
-            StringDup(PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+        info->error_msg = PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode());
         len = 0;
     }
 
@@ -1442,7 +1475,7 @@ static int my_loadfile(lua_State *L, const char *filename) {
     load_info_t info;
 
     info.fp = PHYSFS_openRead(filename);
-    info.error_msg = NULL;
+    info.error_msg.clear();
 
     if (!info.fp) {
         lua_pushfstring(L, "file open error: %s",
@@ -1457,12 +1490,13 @@ static int my_loadfile(lua_State *L, const char *filename) {
     /* close file (even in case of errors) */
     PHYSFS_close(info.fp);
 
-    if (info.error_msg) {
+    if (!info.error_msg.empty()) {
         /* ignore results from 'lua_load' */
         lua_settop(L, fnameindex);
         status = LUA_ERRFILE;
 
-        lua_pushfstring(L, "file read error: %s", info.error_msg);
+        lua_pushstring(
+            L, fmt::format("file read error: {}", info.error_msg).c_str());
     }
 
     lua_remove(L, fnameindex);
@@ -1470,20 +1504,19 @@ static int my_loadfile(lua_State *L, const char *filename) {
     return status;
 }
 
-void Script_Load(const char *script_name) {
-    SYS_ASSERT(import_dir);
-    SYS_ASSERT(import_dir[0]);
+void Script_Load(std::string script_name) {
+    SYS_ASSERT(!import_dir.empty());
 
     // add extension if missing
-    if (!HasExtension(script_name)) {
-        script_name = ReplaceExtension(script_name, "lua");
+    if (!HasExtension(script_name.c_str())) {
+        script_name = ReplaceExtension(script_name.c_str(), "lua");
     }
 
-    char *filename = StringPrintf("%s/%s", import_dir, script_name);
+    std::string filename = fmt::format("{}/{}", import_dir, script_name);
 
-    DebugPrintf("  loading script: '%s'\n", filename);
+    DebugPrintf(fmt::format("  loading script: '{}'\n", filename).c_str());
 
-    int status = my_loadfile(LUA_ST, filename);
+    int status = my_loadfile(LUA_ST, filename.c_str());
 
     if (status == 0) {
         status = lua_pcall(LUA_ST, 0, 0, 0);
@@ -1492,10 +1525,10 @@ void Script_Load(const char *script_name) {
     if (status != 0) {
         const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-        Main_FatalError("Unable to load script '%s'\n%s", filename, msg);
+        Main_FatalError(
+            fmt::format("Unable to load script '{}'\n{}", filename, msg)
+                .c_str());
     }
-
-    StringFree(filename);
 }
 
 void Script_Open() {
@@ -1518,7 +1551,7 @@ void Script_Open() {
 
     LogPrintf("Loading main script: oblige.lua\n");
 
-    import_dir = StringDup("scripts");
+    import_dir = "scripts";
 
     Script_Load("oblige.lua");
 
@@ -1542,7 +1575,7 @@ void Script_Close() {
 
     LUA_ST = NULL;
 
-	has_added_buttons = false; // Needed if doing live restart
+    has_added_buttons = false;  // Needed if doing live restart
 
     LogPrintf("\n--- CLOSED LUA VM ---\n\n");
 }
@@ -1551,26 +1584,23 @@ void Script_Close() {
 // WRAPPERS TO LUA FUNCTIONS
 //------------------------------------------------------------------------
 
-bool ob_set_config(const char *key, const char *value) {
+bool ob_set_config(const std::string &key, const std::string &value) {
     // See the document 'doc/Config_Flow.txt' for a good
     // description of the flow of configuration values
     // between the C++ GUI and the Lua scripts.
 
-    SYS_NULL_CHECK(key);
-    SYS_NULL_CHECK(value);
-
     if (!has_loaded) {
-        DebugPrintf("ob_set_config(%s) called before loaded!\n", key);
+        DebugPrintf("ob_set_config(%s) called before loaded!\n", key.c_str());
         return false;
     }
 
-    const char *params[3];
+    std::array<std::string, 3> params;
 
     params[0] = key;
     params[1] = value;
-    params[2] = NULL;  // end of list
+    params[2] = "";  // end of list
 
-    return Script_CallFunc("ob_set_config", 0, params);
+    return Script_CallFunc("ob_set_config", 0, params.data());
 }
 
 bool ob_set_mod_option(const char *module, const char *option,
@@ -1580,14 +1610,14 @@ bool ob_set_mod_option(const char *module, const char *option,
         return false;
     }
 
-    const char *params[4];
+    std::array<std::string, 4> params;
 
     params[0] = module;
     params[1] = option;
     params[2] = value;
-    params[3] = NULL;
+    params[3] = "";
 
-    return Script_CallFunc("ob_set_mod_option", 0, params);
+    return Script_CallFunc("ob_set_mod_option", 0, params.data());
 }
 
 bool ob_read_all_config(std::vector<std::string> *lines, bool need_full) {
@@ -1598,28 +1628,24 @@ bool ob_read_all_config(std::vector<std::string> *lines, bool need_full) {
 
     conf_line_buffer = lines;
 
-    const char *params[2];
+    std::array<std::string, 2> params;
 
     params[0] = need_full ? "need_full" : "";
-    params[1] = NULL;  // end of list
+    params[1] = "";  // end of list
 
-    bool result = Script_CallFunc("ob_read_all_config", 0, params);
+    bool result = Script_CallFunc("ob_read_all_config", 0, params.data());
 
     conf_line_buffer = NULL;
 
     return result;
 }
 
-const char *ob_game_format() {
+std::string ob_game_format() {
     if (!Script_CallFunc("ob_game_format", 1)) {
         return NULL;
     }
 
-    const char *res = lua_tolstring(LUA_ST, -1, NULL);
-
-    if (res) {
-        res = StringDup(res);
-    }
+    std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
 
     // remove result from lua stack
     lua_pop(LUA_ST, 1);
@@ -1627,16 +1653,12 @@ const char *ob_game_format() {
     return res;
 }
 
-const char *ob_default_filename() {
+std::string ob_default_filename() {
     if (!Script_CallFunc("ob_default_filename", 1)) {
         return NULL;
     }
 
-    const char *res = lua_tolstring(LUA_ST, -1, NULL);
-
-    if (res) {
-        res = StringDup(res);
-    }
+    std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
 
     // remove result from lua stack
     lua_pop(LUA_ST, 1);
@@ -1646,11 +1668,12 @@ const char *ob_default_filename() {
 
 bool ob_build_cool_shit() {
     if (!Script_CallFunc("ob_build_cool_shit", 1)) {
-        main_win->label(StringPrintf("[ ERROR ] %s %s", _(OBSIDIAN_TITLE),
-                                     OBSIDIAN_VERSION));
+        main_win->label(
+            fmt::format("[ ERROR ] {} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION)
+                .c_str());
         Main_ProgStatus(_("Script Error"));
         main_win->label(
-            StringPrintf("%s %s", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
+            fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION).c_str());
         return false;
     }
 

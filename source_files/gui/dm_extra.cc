@@ -1093,20 +1093,16 @@ void G_PushCleanString(lua_State *L, const char *buf, int len) {
     const char *src = buf;
     const char *s_end = src + len;
 
-    char *new_str = StringNew(len);
-    char *dest = new_str;
+    std::string dest;
+    dest.reserve(len);
 
     for (; src < s_end; src++) {
         if (!DIRTY_CHAR(*src)) {
-            *dest++ = *src;
+            dest.push_back(*src);
         }
     }
 
-    *dest = 0;
-
-    lua_pushstring(L, new_str);
-
-    StringFree(new_str);
+    lua_pushstring(L, dest.c_str());
 }
 
 int DM_wad_read_text_lump(lua_State *L) {
@@ -1329,7 +1325,7 @@ static struct {
 
 // simple cache for image loading
 static tga_image_c *title_last_tga;
-static const char *title_last_filename;
+static std::string title_last_filename;
 
 int DM_title_create(lua_State *L) {
     // LUA: title_create(width, height, bg)
@@ -1380,8 +1376,7 @@ int DM_title_free(lua_State *L) {
         delete title_last_tga;
         title_last_tga = NULL;
 
-        StringFree(title_last_filename);
-        title_last_filename = NULL;
+        title_last_filename.clear();
     }
 
     return 0;
@@ -1389,11 +1384,10 @@ int DM_title_free(lua_State *L) {
 
 static bool TitleCacheImage(const char *filename) {
     // keep the last image cached in memory
-    if (!(title_last_filename && strcmp(title_last_filename, filename) == 0)) {
+    if (title_last_filename != filename) {
         if (title_last_tga) {
             delete title_last_tga;
-            StringFree(title_last_filename);
-            title_last_filename = NULL;
+            title_last_filename.clear();
         }
 
         title_last_tga = TGA_LoadImage(filename);
@@ -1402,7 +1396,7 @@ static bool TitleCacheImage(const char *filename) {
             return false;
         }
 
-        title_last_filename = StringDup(filename);
+        title_last_filename = filename;
     }
 
     return true;

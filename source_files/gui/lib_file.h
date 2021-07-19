@@ -38,7 +38,7 @@
 // filename functions
 bool HasExtension(const char *filename);
 bool MatchExtension(const char *filename, const char *ext);
-char *ReplaceExtension(const char *filename, const char *ext);
+std::string ReplaceExtension(const char *filename, const char *ext);
 const char *FindBaseName(const char *filename);
 
 bool FilenameIsBare(const char *filename);
@@ -55,10 +55,10 @@ bool FileMakeDir(const char *dir_name);
 byte *FileLoad(const char *filename, int *length);
 void FileFree(const byte *mem);
 
-const char *FileFindInPath(const char *paths, const char *base_name);
+std::string FileFindInPath(const char *paths, const char *base_name);
 
 // miscellanous
-const char *GetExecutablePath(const char *argv0);
+std::string GetExecutablePath(const char *argv0);
 
 //------------------------------------------------------------------------
 

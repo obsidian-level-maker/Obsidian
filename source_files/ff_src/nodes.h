@@ -44,4 +44,4 @@ extern void count(void);
 }
 #endif
 
-#endif // DPARSE_NONSENSE_NODES_H
+#endif  // DPARSE_NONSENSE_NODES_H

@@ -10,25 +10,19 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
+namespace DotZLib {
 
-namespace DotZLib
-{
-
-    #region Internal types
+#region Internal types
 
     /// <summary>
     /// Defines constants for the various flush types used with zlib
     /// </summary>
-    internal enum FlushTypes
-    {
-        None,  Partial,  Sync,  Full,  Finish,  Block
-    }
+    internal enum FlushTypes { None, Partial, Sync, Full, Finish, Block }
 
-    #region ZStream structure
+#region ZStream structure
     // internal mapping of the zlib zstream structure for marshalling
-    [StructLayoutAttribute(LayoutKind.Sequential, Pack=4, Size=0, CharSet=CharSet.Ansi)]
-    internal struct ZStream
-    {
+    [StructLayoutAttribute(LayoutKind.Sequential, Pack = 4, Size = 0, CharSet = CharSet.Ansi)]
+    internal struct ZStream {
         public IntPtr next_in;
         public uint avail_in;
         public uint total_in;
@@ -50,16 +44,15 @@ namespace DotZLib
         uint reserved;
     }
 
-    #endregion
+#endregion
 
-    #endregion
+#endregion
 
-    #region Public enums
+#region Public enums
     /// <summary>
     /// Defines constants for the available compression levels in zlib
     /// </summary>
-    public enum CompressLevel : int
-    {
+    public enum CompressLevel : int {
         /// <summary>
         /// The default compression level with a reasonable compromise between compression and speed
         /// </summary>
@@ -77,42 +70,37 @@ namespace DotZLib
         /// </summary>
         Fastest = 1
     }
-    #endregion
+#endregion
 
-    #region Exception classes
+#region Exception classes
     /// <summary>
     /// The exception that is thrown when an error occurs on the zlib dll
     /// </summary>
-    public class ZLibException : ApplicationException
-    {
+    public class ZLibException : ApplicationException {
         /// <summary>
         /// Initializes a new instance of the <see cref="ZLibException"/> class with a specified
         /// error message and error code
         /// </summary>
         /// <param name="errorCode">The zlib error code that caused the exception</param>
         /// <param name="msg">A message that (hopefully) describes the error</param>
-        public ZLibException(int errorCode, string msg) : base(String.Format("ZLib error {0} {1}", errorCode, msg))
-        {
-        }
+        public ZLibException(int errorCode, string msg)
+            : base(String.Format("ZLib error {0} {1}", errorCode, msg)) {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ZLibException"/> class with a specified
         /// error code
         /// </summary>
         /// <param name="errorCode">The zlib error code that caused the exception</param>
-        public ZLibException(int errorCode) : base(String.Format("ZLib error {0}", errorCode))
-        {
-        }
+        public ZLibException(int errorCode) : base(String.Format("ZLib error {0}", errorCode)) {}
     }
-    #endregion
+#endregion
 
-    #region Interfaces
+#region Interfaces
 
     /// <summary>
     /// Declares methods and properties that enables a running checksum to be calculated
     /// </summary>
-    public interface ChecksumGenerator
-    {
+    public interface ChecksumGenerator {
         /// <summary>
         /// Gets the current value of the checksum
         /// </summary>
@@ -135,9 +123,10 @@ namespace DotZLib
         /// <param name="data">The data to update the checksum with</param>
         /// <param name="offset">Where in <c>data</c> to start updating</param>
         /// <param name="count">The number of bytes from <c>data</c> to use</param>
-        /// <exception cref="ArgumentException">The sum of offset and count is larger than the length of <c>data</c></exception>
-        /// <exception cref="ArgumentNullException"><c>data</c> is a null reference</exception>
-        /// <exception cref="ArgumentOutOfRangeException">Offset or count is negative.</exception>
+        /// <exception cref="ArgumentException">The sum of offset and count is larger than the
+        /// length of <c>data</c></exception> <exception cref="ArgumentNullException"><c>data</c> is
+        /// a null reference</exception> <exception cref="ArgumentOutOfRangeException">Offset or
+        /// count is negative.</exception>
         void Update(byte[] data, int offset, int count);
 
         /// <summary>
@@ -155,7 +144,6 @@ namespace DotZLib
         void Update(string data, Encoding encoding);
     }
 
-
     /// <summary>
     /// Represents the method that will be called from a codec when new data
     /// are available.
@@ -171,8 +159,7 @@ namespace DotZLib
     /// <summary>
     /// Declares methods and events for implementing compressors/decompressors
     /// </summary>
-    public interface Codec
-    {
+    public interface Codec {
         /// <summary>
         /// Occurs when more processed data are available.
         /// </summary>
@@ -203,86 +190,97 @@ namespace DotZLib
         /// Gets the checksum of the data that has been added so far
         /// </summary>
         uint Checksum { get; }
-
-
     }
 
-    #endregion
+#endregion
 
-    #region Classes
+#region Classes
     /// <summary>
     /// Encapsulates general information about the ZLib library
     /// </summary>
-    public class Info
-    {
-        #region DLL imports
-        [DllImport("ZLIB1.dll", CallingConvention=CallingConvention.Cdecl)]
+    public class Info {
+#region DLL imports
+        [DllImport("ZLIB1.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern uint zlibCompileFlags();
 
-        [DllImport("ZLIB1.dll", CallingConvention=CallingConvention.Cdecl)]
+        [DllImport("ZLIB1.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern string zlibVersion();
-        #endregion
+#endregion
 
-        #region Private stuff
+#region Private stuff
         private uint _flags;
 
         // helper function that unpacks a bitsize mask
-        private static int bitSize(uint bits)
-        {
-            switch (bits)
-            {
-                case 0: return 16;
-                case 1: return 32;
-                case 2: return 64;
+        private static int bitSize(uint bits) {
+            switch (bits) {
+                case 0:
+                    return 16;
+                case 1:
+                    return 32;
+                case 2:
+                    return 64;
             }
             return -1;
         }
-        #endregion
+#endregion
 
         /// <summary>
         /// Constructs an instance of the <c>Info</c> class.
         /// </summary>
-        public Info()
-        {
+        public Info() {
             _flags = zlibCompileFlags();
         }
 
         /// <summary>
         /// True if the library is compiled with debug info
         /// </summary>
-        public bool HasDebugInfo { get { return 0 != (_flags & 0x100); } }
+        public bool HasDebugInfo {
+            get { return 0 != (_flags & 0x100); }
+        }
 
         /// <summary>
         /// True if the library is compiled with assembly optimizations
         /// </summary>
-        public bool UsesAssemblyCode { get { return 0 != (_flags & 0x200); } }
+        public bool UsesAssemblyCode {
+            get { return 0 != (_flags & 0x200); }
+        }
 
         /// <summary>
         /// Gets the size of the unsigned int that was compiled into Zlib
         /// </summary>
-        public int SizeOfUInt { get { return bitSize(_flags & 3); } }
+        public int SizeOfUInt {
+            get { return bitSize(_flags & 3); }
+        }
 
         /// <summary>
         /// Gets the size of the unsigned long that was compiled into Zlib
         /// </summary>
-        public int SizeOfULong { get { return bitSize((_flags >> 2) & 3); } }
+        public int SizeOfULong {
+            get { return bitSize((_flags >> 2) & 3); }
+        }
 
         /// <summary>
         /// Gets the size of the pointers that were compiled into Zlib
         /// </summary>
-        public int SizeOfPointer { get { return bitSize((_flags >> 4) & 3); } }
+        public int SizeOfPointer {
+            get { return bitSize((_flags >> 4) & 3); }
+        }
 
         /// <summary>
         /// Gets the size of the z_off_t type that was compiled into Zlib
         /// </summary>
-        public int SizeOfOffset { get { return bitSize((_flags >> 6) & 3); } }
+        public int SizeOfOffset {
+            get { return bitSize((_flags >> 6) & 3); }
+        }
 
         /// <summary>
         /// Gets the version of ZLib as a string, e.g. "1.2.1"
         /// </summary>
-        public static string Version { get { return zlibVersion(); } }
+        public static string Version {
+            get { return zlibVersion(); }
+        }
     }
 
-    #endregion
+#endregion
 
 }

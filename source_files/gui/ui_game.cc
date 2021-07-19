@@ -47,8 +47,8 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     const char *heading_text = _("Game Settings");
 
-    heading = new Fl_Box(FL_NO_BOX, X + kf_w(8), cy, W - kf_w(12),
-                                 kf_h(24), heading_text);
+    heading = new Fl_Box(FL_NO_BOX, X + kf_w(8), cy, W - kf_w(12), kf_h(24),
+                         heading_text);
     heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     heading->labeltype(FL_NORMAL_LABEL);
     heading->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
@@ -160,59 +160,65 @@ void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
     fl_cursor(FL_CURSOR_DEFAULT);
     Fl_Window *win = new Fl_Window(640, 480, "Engine");
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
-    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640-40, 480-40, NULL);
+    Fl_Text_Display *disp =
+        new Fl_Text_Display(20, 20, 640 - 40, 480 - 40, NULL);
     disp->buffer(buff);
     disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
     win->resizable(*disp);
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-    buff->text("Available Engines:\n\n\
+    buff->text(
+        "Available Engines:\n\n\
 ZDoom Family: L/G/Zdoom, Zandronum, and similar engines that use ZDoom as a base.\n\n\
 Vanilla DOOM: Doom with its original engine limits. This option will use SLUMP as the map builder.\n\n\
 Limit Removing: Any engine that raises the limits of the original Doom to prevent crashes.\n\n\
 BOOM Compatible: Engines compatible with Boom that are able to use the entire suite of Boom types and features.\n\n\
 PrBoom Compatible: Boom-compatible, but also capable of using extended nodes.\n\n\
 EDGE: Formerly known as 3DGE. Boom and UDMF compatible, with additional special features. Support is currently experimental.\n\n\
-Eternity: Software renderer only, but with advanced features such as UDMF. Support is currently experimental."); 
+Eternity: Software renderer only, but with advanced features such as UDMF. Support is currently experimental.");
 }
 
 void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
     fl_cursor(FL_CURSOR_DEFAULT);
     Fl_Window *win = new Fl_Window(640, 480, "Length");
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
-    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640-40, 480-40, NULL);
+    Fl_Text_Display *disp =
+        new Fl_Text_Display(20, 20, 640 - 40, 480 - 40, NULL);
     disp->buffer(buff);
     disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
     win->resizable(*disp);
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-    buff->text("Available WAD Lengths:\n\n\
+    buff->text(
+        "Available WAD Lengths:\n\n\
 Single Level: One map.\n\n\
 A Few Maps: Four maps.\n\n\
 One Episode: The length of an episode in the original IWAD. For Doom 2, which normally doesn't have episodes, this is 11 maps.\n\n\
-Full Game: The length of a full game in the original IWAD."); 
+Full Game: The length of a full game in the original IWAD.");
 }
 
 void UI_Game::callback_ThemeHelp(Fl_Widget *w, void *data) {
     fl_cursor(FL_CURSOR_DEFAULT);
     Fl_Window *win = new Fl_Window(640, 480, "Theme");
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
-    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640-40, 480-40, NULL);
+    Fl_Text_Display *disp =
+        new Fl_Text_Display(20, 20, 640 - 40, 480 - 40, NULL);
     disp->buffer(buff);
     disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
     win->resizable(*disp);
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-    buff->text("Available Themes:\n\n\
+    buff->text(
+        "Available Themes:\n\n\
 Original: Follows the theme progression of the original IWAD.\n\n\
 Episodic: Each episode follows a single randomly chose theme.\n\n\
 Bit Mixed: Theme will change every few levels.\n\n\
 Jumbled Up: Level themes are purely random.\n\n\
 Psychedelic: Trippy.\n\n\
-Other themes listed are game-specific."); 
+Other themes listed are game-specific.");
 }
 
 void UI_Game::Locked(bool value) {
@@ -237,8 +243,8 @@ bool UI_Game::AddChoice(const char *button, const char *id, const char *label) {
         return true;
     }
     if (StringCaseCmp(button, "engine") == 0) {
-    	if (StringCaseCmp(id, "advanced") != 0) {
-        	engine->AddChoice(id, label);
+        if (StringCaseCmp(id, "advanced") != 0) {
+            engine->AddChoice(id, label);
         }
         return true;
     }

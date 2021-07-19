@@ -23,6 +23,7 @@
 #include <algorithm>
 
 #include "csg_main.h"
+#include "fmt/format.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"  // ui_build.h
@@ -39,7 +40,7 @@
 extern void CSG_NUKEM_Write();
 
 // Properties
-static char *level_name;
+static std::string level_name;
 
 static qLump_c *nk_sectors;
 static qLump_c *nk_walls;
@@ -87,12 +88,10 @@ bool NK_StartGRP(const char *filename) {
 void NK_EndGRP(void) { GRP_CloseWrite(); }
 
 void NK_BeginLevel(const char *level_name) {
-    char lump_name[40];
+    std::string lump_name = fmt::format("{}.MAP", level_name);
+    lump_name = StringUpper(lump_name.c_str());
 
-    sprintf(lump_name, "%s.MAP", level_name);
-    StringUpper(lump_name);
-
-    GRP_NewLump(lump_name);
+    GRP_NewLump(lump_name.c_str());
 
     // initialise the header
     memset(&nk_header, 0, sizeof(nk_header));
@@ -405,12 +404,10 @@ void NK_WriteLogos() {
 
 class nukem_game_interface_c : public game_interface_c {
    private:
-    const char *filename;
+    std::string filename;
 
    public:
     nukem_game_interface_c() : filename(NULL) {}
-
-    ~nukem_game_interface_c() { StringFree(filename); }
 
     bool Start(const char *preset);
     bool Finish(bool build_ok);
@@ -424,21 +421,21 @@ class nukem_game_interface_c : public game_interface_c {
 
 bool nukem_game_interface_c::Start(const char *preset) {
     if (batch_mode) {
-        filename = StringDup(batch_output_file);
+        filename = batch_output_file;
     } else {
         filename = DLG_OutputFilename("grp");
     }
 
-    if (!filename) {
+    if (filename.empty()) {
         Main_ProgStatus(_("Cancelled"));
         return false;
     }
 
     if (create_backups) {
-        Main_BackupFile(filename, "old");
+        Main_BackupFile(filename.c_str(), "old");
     }
 
-    if (!NK_StartGRP(filename)) {
+    if (!NK_StartGRP(filename.c_str())) {
         Main_ProgStatus(_("Error (create file)"));
         return false;
     }
@@ -455,9 +452,9 @@ bool nukem_game_interface_c::Finish(bool build_ok) {
 
     // remove the file if an error occurred
     if (!build_ok) {
-        FileDelete(filename);
+        FileDelete(filename.c_str());
     } else {
-        Recent_AddFile(RECG_Output, filename);
+        Recent_AddFile(RECG_Output, filename.c_str());
     }
 
     return build_ok;
@@ -467,7 +464,7 @@ void nukem_game_interface_c::BeginLevel() {}
 
 void nukem_game_interface_c::Property(const char *key, const char *value) {
     if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = StringDup(value);
+        level_name = value;
     } else if (StringCaseCmp(key, "description") == 0) {
         // ignored (for now)
         // [another mechanism sets the description via BEX/DDF]
@@ -477,11 +474,11 @@ void nukem_game_interface_c::Property(const char *key, const char *value) {
 }
 
 void nukem_game_interface_c::EndLevel() {
-    if (!level_name) {
+    if (level_name.empty()) {
         Main_FatalError("Script problem: did not set level name!\n");
     }
 
-    NK_BeginLevel(level_name);
+    NK_BeginLevel(level_name.c_str());
 
     if (main_win) {
         main_win->build_box->Prog_Step("CSG");
@@ -491,8 +488,7 @@ void nukem_game_interface_c::EndLevel() {
 
     NK_EndLevel();
 
-    StringFree(level_name);
-    level_name = NULL;
+    level_name.clear();
 }
 
 game_interface_c *Nukem_GameObject() { return new nukem_game_interface_c(); }

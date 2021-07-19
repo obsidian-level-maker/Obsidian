@@ -20,6 +20,7 @@
 
 #include "csg_main.h"
 #include "csg_quake.h"
+#include "fmt/format.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"
@@ -40,8 +41,8 @@
 
 #define MODEL_LIGHT 64
 
-static char *level_name;
-static char *description;
+static std::string level_name;
+static std::string description;
 
 // IMPORTANT!! Quake II assumes axis-aligned node planes are positive
 
@@ -970,7 +971,7 @@ static void Q2_CreateBSPFile(const char *name) {
     Q2_WriteBrushes();
     Q2_WriteTexInfo();
 
-    BSP_WriteEntities(LUMP_ENTITIES, description);
+    BSP_WriteEntities(LUMP_ENTITIES, description.c_str());
 
     // this will free lots of stuff (lightmaps etc)
     BSP_CloseLevel();
@@ -984,7 +985,7 @@ static void Q2_CreateBSPFile(const char *name) {
 
 class quake2_game_interface_c : public game_interface_c {
    private:
-    const char *filename;
+    std::string filename;
 
    public:
     quake2_game_interface_c() : filename(NULL) {}
@@ -1008,21 +1009,21 @@ bool quake2_game_interface_c::Start(const char *preset) {
     QLIT_InitProperties();
 
     if (batch_mode) {
-        filename = StringDup(batch_output_file);
+        filename = batch_output_file;
     } else {
         filename = DLG_OutputFilename("pak");
     }
 
-    if (!filename) {
+    if (filename.empty()) {
         Main_ProgStatus(_("Cancelled"));
         return false;
     }
 
     if (create_backups) {
-        Main_BackupFile(filename, "old");
+        Main_BackupFile(filename.c_str(), "old");
     }
 
-    if (!PAK_OpenWrite(filename)) {
+    if (!PAK_OpenWrite(filename.c_str())) {
         Main_ProgStatus(_("Error (create file)"));
         return false;
     }
@@ -1041,18 +1042,17 @@ bool quake2_game_interface_c::Finish(bool build_ok) {
 
     // remove the file if an error occurred
     if (!build_ok) {
-        FileDelete(filename);
+        FileDelete(filename.c_str());
     } else {
-        Recent_AddFile(RECG_Output, filename);
+        Recent_AddFile(RECG_Output, filename.c_str());
     }
 
     return build_ok;
 }
 
 void quake2_game_interface_c::BeginLevel() {
-    level_name = NULL;
-    description = NULL;
-
+    level_name.clear();
+    description.clear();
     Q2_FreeStuff();
 
     CSG_QUAKE_Free();
@@ -1060,34 +1060,28 @@ void quake2_game_interface_c::BeginLevel() {
 
 void quake2_game_interface_c::Property(const char *key, const char *value) {
     if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = StringDup(value);
+        level_name = value ? value : "";
     } else if (StringCaseCmp(key, "description") == 0) {
-        description = StringDup(value);
+        description = value ? value : "";
     } else {
         LogPrintf("WARNING: unknown QUAKE2 property: %s=%s\n", key, value);
     }
 }
 
 void quake2_game_interface_c::EndLevel() {
-    if (!level_name) {
+    if (level_name.empty()) {
         Main_FatalError("Script problem: did not set level name!\n");
     }
 
-    if (strlen(level_name) >= 32) {
-        Main_FatalError("Script problem: level name too long: %s\n",
-                        level_name);
+    if (level_name.size() >= 32) {
+        Main_FatalError(
+            fmt::format("Script problem: level name too long: {}\n", level_name)
+                .c_str());
     }
 
-    char entry_in_pak[64];
-    sprintf(entry_in_pak, "maps/%s.bsp", level_name);
+    std::string entry_in_pak = fmt::format("maps/{}.bsp", level_name);
 
-    Q2_CreateBSPFile(entry_in_pak);
-
-    StringFree(level_name);
-
-    if (description) {
-        StringFree(description);
-    }
+    Q2_CreateBSPFile(entry_in_pak.c_str());
 }
 
 game_interface_c *Quake2_GameObject(void) {

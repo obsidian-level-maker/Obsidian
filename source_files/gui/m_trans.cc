@@ -26,6 +26,7 @@
 
 #include "m_trans.h"
 
+#include "fmt/format.h"
 #include "hdr_lua.h"
 #include "headers.h"
 #include "lib_file.h"
@@ -47,7 +48,7 @@
 static std::map<std::string, std::string> trans_store;
 
 // current Options setting
-const char *t_language = N_("AUTO");
+std::string t_language = N_("AUTO");
 
 //----------------------------------------------------------------------
 
@@ -391,37 +392,19 @@ const char *t_language = N_("AUTO");
 #endif
 #endif
 
-static const char *remove_codeset(const char *langcode) {
-    char buf[256];
-
-    if (strchr(langcode, '.')) {
-        strncpy(buf, langcode, sizeof(buf));
-        buf[sizeof(buf) - 1] = 0;
-
-        char *p = strchr(buf, '.');
-        if (p) {
-            *p = 0;
-        }
-
-        langcode = StringDup(buf);
+static std::string remove_codeset(std::string langcode) {
+    if (langcode.find('.') != std::string::npos) {
+        auto p = std::find(langcode.begin(), langcode.end(), '.');
+        langcode.resize(p - langcode.begin());
     }
 
     return langcode;
 }
 
-static const char *remove_territory(const char *langcode) {
-    char buf[256];
-
-    if (strchr(langcode, '_')) {
-        strncpy(buf, langcode, sizeof(buf));
-        buf[sizeof(buf) - 1] = 0;
-
-        char *p = strchr(buf, '_');
-        if (p) {
-            *p = 0;
-        }
-
-        langcode = StringDup(buf);
+static std::string remove_territory(std::string langcode) {
+    if (langcode.find('_') != std::string::npos) {
+        langcode.resize(std::find(langcode.begin(), langcode.end(), '_') -
+                        langcode.begin());
     }
 
     return langcode;
@@ -429,7 +412,7 @@ static const char *remove_territory(const char *langcode) {
 
 /* DETERMINE CURRENT LANGUAGE */
 
-static const char *Trans_GetUserLanguage() {
+static std::string Trans_GetUserLanguage() {
 #ifdef WIN32
     /* Use native Windows API locale ID. */
     LCID lcid = GetThreadLocale();
@@ -761,8 +744,8 @@ static const char *Trans_GetUserLanguage() {
 //----------------------------------------------------------------------
 
 typedef struct {
-    const char *langcode;
-    const char *fullname;
+    std::string langcode;
+    std::string fullname;
 
 } available_language_t;
 
@@ -810,8 +793,8 @@ void Trans_ParseLangLine(char *line) {
 
     available_language_t lang;
 
-    lang.langcode = StringDup(line);
-    lang.fullname = StringDup(pos);
+    lang.langcode = line;
+    lang.fullname = pos;
 
     // DEBUG
     //  LogPrintf("  '%s' --> '%s'\n", lang.langcode, lang.fullname);
@@ -1043,16 +1026,16 @@ void Trans_Init() {
 
     /* read the list of languages */
 
-    char *path = StringPrintf("%s/language/LANGS.txt", install_dir);
+    std::string path = fmt::format("%s/language/LANGS.txt", install_dir);
 
-    FILE *fp = fopen(path, "rb");
+    FILE *fp = fopen(path.c_str(), "rb");
 
     if (!fp) {
         LogPrintf("WARNING: missing language/LANGS.txt file\n");
         return;
     }
 
-    LogPrintf("Loading language list: %s\n", path);
+    LogPrintf(fmt::format("Loading language list: {}\n", path).c_str());
 
     // simple line-by-line parser
     static char buffer[MSG_BUF_LEN];
@@ -1069,41 +1052,44 @@ void Trans_Init() {
 void Trans_SetLanguage() {
     // this is called *once*, after user options are read
 
-    const char *langcode = t_language;
+    std::string langcode = t_language;
 
-    if (strlen(langcode) == 0 || strcmp(langcode, "AUTO") == 0) {
+    if (langcode.empty() || langcode == "AUTO") {
         langcode = Trans_GetUserLanguage();
 
-        LogPrintf("Detected user language: '%s'\n", langcode);
+        LogPrintf(
+            fmt::format("Detected user language: '{}'\n", langcode).c_str());
     }
 
-    const char *lang_plain = remove_territory(langcode);
+    std::string lang_plain = remove_territory(langcode);
 
     // English is the default language, nothing else needed
 
-    if (strcmp(lang_plain, "UNKNOWN") == 0 || strcmp(lang_plain, "en") == 0) {
+    if (lang_plain == "UNKNOWN" || lang_plain == "en") {
         LogPrintf("Using the default language (English)\n\n");
         return;
     }
 
     // see if the translation file exists
-    char *path = StringPrintf("%s/language/%s.po", install_dir, langcode);
+    std::string path = fmt::format("{}/language/{}.po", install_dir, langcode);
 
-    if (!FileExists(path)) {
+    if (!FileExists(path.c_str())) {
         // if language has a territory field (like zh_TW or en_AU) then
         // try again with the plain language code.
 
-        path = StringPrintf("%s/language/%s.po", install_dir, lang_plain);
+        path = fmt::format("{}/language/{}.po", install_dir, lang_plain);
     }
 
-    FILE *fp = fopen(path, "rb");
+    FILE *fp = fopen(path.c_str(), "rb");
     if (!fp) {
-        LogPrintf("No translation file: language/%s.po\n", lang_plain);
+        LogPrintf(
+            fmt::format("No translation file: language/{}.po\n", lang_plain)
+                .c_str());
         LogPrintf("Using the default language (English)\n\n");
         return;
     }
 
-    LogPrintf("Loading translation: %s\n", path);
+    LogPrintf(fmt::format("Loading translation: {}\n", path).c_str());
 
     Trans_Read_PO_File(fp);
 
@@ -1112,23 +1098,23 @@ void Trans_SetLanguage() {
     LogPrintf("DONE.\n\n");
 }
 
-const char *Trans_GetAvailCode(int idx) {
+std::string Trans_GetAvailCode(int idx) {
     SYS_ASSERT(idx >= 0);
 
     // end of list?
     if (idx >= (int)available_langs.size()) {
-        return NULL;
+        return "";
     }
 
     return available_langs[idx].langcode;
 }
 
-const char *Trans_GetAvailLanguage(int idx) {
+std::string Trans_GetAvailLanguage(int idx) {
     SYS_ASSERT(idx >= 0);
 
     // end of list?
     if (idx >= (int)available_langs.size()) {
-        return NULL;
+        return "";
     }
 
     return available_langs[idx].fullname;
@@ -1137,10 +1123,11 @@ const char *Trans_GetAvailLanguage(int idx) {
 //----------------------------------------------------------------------
 
 // debugging crud
-const char *mucked_up_string(const char *s) {
-    char buffer[256];
+std::string mucked_up_string(const std::string &s) {
+    std::string buffer;
+    buffer.resize(s.size());
     int p, q;
-    for (p = strlen(s) - 1, q = 0; p >= 0 && q < 250; p--, q++) {
+    for (p = s.size() - 1, q = 0; p >= 0 && q < 250; p--, q++) {
         int ch = s[p];
         if (ch == '%') {
             ch = '#';
@@ -1149,7 +1136,7 @@ const char *mucked_up_string(const char *s) {
         buffer[q] = ch;
     }
     buffer[q] = 0;
-    return StringDup(buffer);
+    return buffer;
 }
 
 const char *ob_gettext(const char *s) {

@@ -44,14 +44,14 @@ extern color_mapping_t color_mappings[MAX_COLOR_MAPS];
 
 // Wrappers which call Lua functions:
 
-bool ob_set_config(const char *key, const char *value);
+bool ob_set_config(const std::string &key, const std::string &value);
 bool ob_set_mod_option(const char *module, const char *option,
                        const char *value);
 
 bool ob_read_all_config(std::vector<std::string> *lines, bool need_full);
 
-const char *ob_game_format();
-const char *ob_default_filename();
+std::string ob_game_format();
+std::string ob_default_filename();
 
 bool ob_build_cool_shit();
 

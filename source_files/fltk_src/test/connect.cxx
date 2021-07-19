@@ -30,37 +30,39 @@
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Toggle_Button.H>
 
-int running;	// actually the pid
+int running;  // actually the pid
 Fl_Toggle_Button *Button;
 
 void sigchld(int) {
-  waitpid(running, 0, 0);
-  running = 0;
-  Button->value(0);
+    waitpid(running, 0, 0);
+    running = 0;
+    Button->value(0);
 }
 
 void cb(Fl_Widget *o, void *) {
-  if (((Fl_Toggle_Button*)o)->value()) {
-    if (running) return;
-    running = fork();
-    if (!running) execl("/usr/sbin/pppd","pppd","-detach",0);
-    else signal(SIGCHLD, sigchld);
-  } else {
-    if (!running) return;
-    kill(running, SIGINT);
-    waitpid(running, 0, 0);
-    running = 0;
-  }
+    if (((Fl_Toggle_Button *)o)->value()) {
+        if (running) return;
+        running = fork();
+        if (!running)
+            execl("/usr/sbin/pppd", "pppd", "-detach", 0);
+        else
+            signal(SIGCHLD, sigchld);
+    } else {
+        if (!running) return;
+        kill(running, SIGINT);
+        waitpid(running, 0, 0);
+        running = 0;
+    }
 }
 
-int main(int argc, char ** argv) {
-   Fl_Window window(100,50);
-   Fl_Toggle_Button button(0,0,100,50,"Connect");
-   Button = &button;
-   button.color(1,2);
-   button.callback(cb,0);
-   window.show(argc,argv);
-   return Fl::run();
+int main(int argc, char **argv) {
+    Fl_Window window(100, 50);
+    Fl_Toggle_Button button(0, 0, 100, 50, "Connect");
+    Button = &button;
+    button.color(1, 2);
+    button.callback(cb, 0);
+    window.show(argc, argv);
+    return Fl::run();
 }
 
 //

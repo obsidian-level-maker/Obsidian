@@ -24,6 +24,7 @@
 //
 //------------------------------------------------------------------------
 
+#include "fmt/format.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #include "headers.h"
@@ -39,15 +40,13 @@ UI_HyperLink::UI_HyperLink(int x, int y, int w, int h, const char *label,
       label_W(0),
       label_H(0) {
     // copy the URL string
-    url = StringDup(_url);
+    url = _url;
 
     box(FL_NO_BOX);
 
     // setup the callback
     callback(callback_Link, NULL);
 }
-
-UI_HyperLink::~UI_HyperLink() { StringFree(url); }
 
 void UI_HyperLink::checkLink() {
     // change the cursor if the mouse is over the link.
@@ -148,8 +147,9 @@ void UI_HyperLink::draw() {
 void UI_HyperLink::callback_Link(Fl_Widget *w, void *data) {
     UI_HyperLink *link = (UI_HyperLink *)w;
 
-    if (!fl_open_uri(link->url)) {
-        LogPrintf("\nOpen URL failed: %s\n\n", link->url);
+    if (!fl_open_uri(link->url.c_str())) {
+        LogPrintf(fmt::format("\nOpen URL failed: {}\n\n", link->url.c_str())
+                      .c_str());
     }
 }
 

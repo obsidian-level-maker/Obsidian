@@ -27,6 +27,7 @@
 
 #include "csg_main.h"
 #include "csg_quake.h"
+#include "fmt/core.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
 #include "headers.h"
@@ -424,9 +425,9 @@ class q3_lightmap_block_c {
     }
 
     void SavePPM(FILE *fp) {
-        fprintf(fp, "P6\n");
-        fprintf(fp, "128 128\n");
-        fprintf(fp, "255\n");
+        fmt::print(fp, "P6\n");
+        fmt::print(fp, "128 128\n");
+        fmt::print(fp, "255\n");
 
         for (int y = 0; y < LIGHTMAP_HEIGHT; y++) {
             for (int x = 0; x < LIGHTMAP_WIDTH; x++) {
@@ -839,10 +840,10 @@ static void Q3_CalcFaceStuff(quake_face_c *F) {
     // once here: N, T and S are three unit vectors which are
     // orthogonal to each other.
 
-    fprintf(stderr, "Face %p\n", F);
-    fprintf(stderr, "  n = (%+5.4f %+5.4f %+5.4f)\n", nx, ny, nz);
-    fprintf(stderr, "  t = (%+5.4f %+5.4f %+5.4f)\n", tx, ty, tz);
-    fprintf(stderr, "  s = (%+5.4f %+5.4f %+5.4f)\n", sx, sy, sz);
+    fmt::print(stderr, "Face {}\n", static_cast<const void *>(F));
+    fmt::print(stderr, "  n = ({:+5.4} {:+5.4} {:+5.4})\n", nx, ny, nz);
+    fmt::print(stderr, "  t = ({:+5.4} {:+5.4} {:+5.4})\n", tx, ty, tz);
+    fmt::print(stderr, "  s = ({:+5.4} {:+5.4} {:+5.4})\n", sx, sy, sz);
 
     // compute extents in the ST space...
 
@@ -874,8 +875,8 @@ static void Q3_CalcFaceStuff(quake_face_c *F) {
     avg_s /= (double)(F->verts.size());
     avg_t /= (double)(F->verts.size());
 
-    fprintf(stderr, "  t range: %+8.2f .. %+8.2f\n", min_t, max_t);
-    fprintf(stderr, "  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
+    fmt::print(stderr, "  t range: %+8.2f .. %+8.2f\n", min_t, max_t);
+    fmt::print(stderr, "  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
 
 #if 0  // DEBUG
 	for (unsigned int k = 0 ; k < F->verts.size() ; k++)
@@ -904,7 +905,7 @@ static void Q3_CalcFaceStuff(quake_face_c *F) {
     lt_W = (int)ceil((max_s - min_s + q3_luxel_size * 0.6) / q3_luxel_size);
     lt_H = (int)ceil((max_t - min_t + q3_luxel_size * 0.6) / q3_luxel_size);
 
-    fprintf(stderr, "LM SIZE: %d x %d\n", lt_W, lt_H);
+    fmt::print(stderr, "LM SIZE: %d x %d\n", lt_W, lt_H);
 
     lt_W = CLAMP(1, lt_W, MAX_LM_SIZE);
     lt_H = CLAMP(1, lt_H, MAX_LM_SIZE);
@@ -1048,7 +1049,7 @@ void qLightmap_c::Store() {
     }
 
     if (qk_game >= 3 && isDark()) {
-        fprintf(stderr, "DARK LIGHTMAP !\n");
+        fmt::print(stderr, "DARK LIGHTMAP !\n");
         offset = 0;
     } else if (qk_game >= 3) {
         // this is lousy for memory usage...
@@ -1057,7 +1058,8 @@ void qLightmap_c::Store() {
         offset = Q3_AllocLightBlock(width, height, &lx, &ly);
         SYS_ASSERT(offset >= 0);
 
-        fprintf(stderr, "LM POSITION: block #%d (%3d %3d)\n", offset, lx, ly);
+        fmt::print(stderr, "LM POSITION: block #%d (%3d %3d)\n", offset, lx,
+                   ly);
 
         double s1 = (lx + 0.5) / (double)LIGHTMAP_WIDTH;
         double t1 = (ly + 0.5) / (double)LIGHTMAP_HEIGHT;

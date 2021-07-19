@@ -8,15 +8,12 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace DotZLib
-{
-	/// <summary>
-	/// Implements the common functionality needed for all <see cref="Codec"/>s
-	/// </summary>
-	public abstract class CodecBase : Codec, IDisposable
-	{
-
-        #region Data members
+namespace DotZLib {
+    /// <summary>
+    /// Implements the common functionality needed for all <see cref="Codec"/>s
+    /// </summary>
+    public abstract class CodecBase : Codec, IDisposable {
+#region Data members
 
         /// <summary>
         /// Instance of the internal zlib buffer structure that is
@@ -42,27 +39,22 @@ namespace DotZLib
 
         private uint _checksum = 0;
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Initializes a new instance of the <c>CodeBase</c> class.
         /// </summary>
-		public CodecBase()
-		{
-            try
-            {
+        public CodecBase() {
+            try {
                 _hInput = GCHandle.Alloc(_inBuffer, GCHandleType.Pinned);
                 _hOutput = GCHandle.Alloc(_outBuffer, GCHandleType.Pinned);
-            }
-            catch (Exception)
-            {
+            } catch (Exception) {
                 CleanUp(false);
                 throw;
             }
         }
 
-
-        #region Codec Members
+#region Codec Members
 
         /// <summary>
         /// Occurs when more processed data are available.
@@ -72,12 +64,10 @@ namespace DotZLib
         /// <summary>
         /// Fires the <see cref="DataAvailable"/> event
         /// </summary>
-        protected void OnDataAvailable()
-        {
-            if (_ztream.total_out > 0)
-            {
+        protected void OnDataAvailable() {
+            if (_ztream.total_out > 0) {
                 if (DataAvailable != null)
-                    DataAvailable( _outBuffer, 0, (int)_ztream.total_out);
+                    DataAvailable(_outBuffer, 0, (int)_ztream.total_out);
                 resetOutput();
             }
         }
@@ -87,9 +77,8 @@ namespace DotZLib
         /// </summary>
         /// <param name="data">Byte array containing the data to be added to the codec</param>
         /// <remarks>Adding data may, or may not, raise the <c>DataAvailable</c> event</remarks>
-        public void Add(byte[] data)
-        {
-            Add(data,0,data.Length);
+        public void Add(byte[] data) {
+            Add(data, 0, data.Length);
         }
 
         /// <summary>
@@ -111,25 +100,26 @@ namespace DotZLib
         /// <summary>
         /// Gets the checksum of the data that has been added so far
         /// </summary>
-        public uint Checksum { get { return _checksum; } }
+        public uint Checksum {
+            get { return _checksum; }
+        }
 
-        #endregion
+#endregion
 
-        #region Destructor & IDisposable stuff
+#region Destructor &IDisposable stuff
 
         /// <summary>
         /// Destroys this instance
         /// </summary>
-        ~CodecBase()
-        {
+        ~CodecBase() {
             CleanUp(false);
         }
 
         /// <summary>
-        /// Releases any unmanaged resources and calls the <see cref="CleanUp()"/> method of the derived class
+        /// Releases any unmanaged resources and calls the <see cref="CleanUp()"/> method of the
+        /// derived class
         /// </summary>
-        public void Dispose()
-        {
+        public void Dispose() {
             CleanUp(true);
         }
 
@@ -140,10 +130,8 @@ namespace DotZLib
         protected abstract void CleanUp();
 
         // performs the release of the handles and calls the dereived CleanUp()
-        private void CleanUp(bool isDisposing)
-        {
-            if (!_isDisposed)
-            {
+        private void CleanUp(bool isDisposing) {
+            if (!_isDisposed) {
                 CleanUp();
                 if (_hInput.IsAllocated)
                     _hInput.Free();
@@ -154,10 +142,9 @@ namespace DotZLib
             }
         }
 
+#endregion
 
-        #endregion
-
-        #region Helper methods
+#region Helper methods
 
         /// <summary>
         /// Copies a number of bytes to the internal codec buffer - ready for proccesing
@@ -165,20 +152,17 @@ namespace DotZLib
         /// <param name="data">The byte array that contains the data to copy</param>
         /// <param name="startIndex">The index of the first byte to copy</param>
         /// <param name="count">The number of bytes to copy from <c>data</c></param>
-        protected void copyInput(byte[] data, int startIndex, int count)
-        {
-            Array.Copy(data, startIndex, _inBuffer,0, count);
+        protected void copyInput(byte[] data, int startIndex, int count) {
+            Array.Copy(data, startIndex, _inBuffer, 0, count);
             _ztream.next_in = _hInput.AddrOfPinnedObject();
             _ztream.total_in = 0;
             _ztream.avail_in = (uint)count;
-
         }
 
         /// <summary>
         /// Resets the internal output buffers to a known state - ready for processing
         /// </summary>
-        protected void resetOutput()
-        {
+        protected void resetOutput() {
             _ztream.total_out = 0;
             _ztream.avail_out = kBufferSize;
             _ztream.next_out = _hOutput.AddrOfPinnedObject();
@@ -188,11 +172,9 @@ namespace DotZLib
         /// Updates the running checksum property
         /// </summary>
         /// <param name="newSum">The new checksum value</param>
-        protected void setChecksum(uint newSum)
-        {
+        protected void setChecksum(uint newSum) {
             _checksum = newSum;
         }
-        #endregion
-
+#endregion
     }
 }

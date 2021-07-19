@@ -41,7 +41,6 @@ class UI_Game : public Fl_Group {
     Fl_Button *quit;
 
    private:
-
    public:
     UI_Game(int x, int y, int w, int h, const char *label = NULL);
     virtual ~UI_Game();

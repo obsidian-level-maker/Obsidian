@@ -19,6 +19,8 @@
 //------------------------------------------------------------------------
 
 #include "lib_util.h"
+#include <algorithm>
+#include <cctype>
 
 #include "headers.h"
 
@@ -28,154 +30,63 @@
 #include <unistd.h>  // usleep()
 #endif
 
-int StringCaseCmp(const char *A, const char *B) {
-    for (; *A || *B; A++, B++) {
-        // this test also catches end-of-string conditions
-        if (toupper(*A) != toupper(*B)) {
-            return (toupper(*A) - toupper(*B));
-        }
-    }
-
-    return 0;
+int StringCaseCmp(const std::string &a, const std::string &b) {
+    return !StringCaseEquals(a, b);
 }
 
-int StringCaseCmpPartial(const char *A, const char *B) {
-    // Checks that the string B occurs at the front of string A.
-    // NOTE: This function is not symmetric, A can be longer than B and
-    // still match, but the match always fails if A is shorter than B.
-
-    for (; *B; A++, B++) {
-        // this test also catches end-of-string conditions
-        if (toupper(*A) != toupper(*B)) {
-            return (toupper(*A) - toupper(*B));
-        }
-    }
-
-    return 0;
+int StringCaseCmpPartial(const std::string &a, const std::string &b) {
+    return !StringCaseEqualsPartial(a, b);
 }
 
-void StringMaxCopy(char *dest, const char *src, int max) {
-    for (; *src && max > 0; max--) {
-        *dest++ = *src++;
-    }
-
-    *dest = 0;
+bool StringCaseEquals(const std::string &a, const std::string &b) {
+    return a.size() == b.size() &&
+           std::equal(a.begin(), a.end(), b.begin(), [](char a, char b) {
+               return std::tolower(a) == std::tolower(b);
+           });
 }
 
-char *StringUpper(const char *name) {
-    char *copy = StringDup(name);
+bool StringCaseEqualsPartial(const std::string &a, const std::string &b) {
+    return a.size() >= b.size() &&
+           std::equal(a.begin(), a.begin() + b.size(), b.begin(),
+                      [](char a, char b) {
+                          return std::tolower(a) == std::tolower(b);
+                      });
+}
 
-    for (char *p = copy; *p; p++) {
-        *p = toupper(*p);
-    }
-
+std::string StringUpper(const std::string &name) {
+    std::string copy;
+    copy.reserve(name.size());
+    std::transform(name.begin(), name.end(), std::back_inserter(copy),
+                   [](char c) { return std::toupper(c); });
     return copy;
 }
 
-char *StringNew(int length) {
-    // length does not include the trailing NUL.
-
-    char *s = (char *)calloc(length + 1, 1);
-
-    if (!s) {
-        AssertFail("Out of memory (%d bytes for string)\n", length);
+void StringRemoveCRLF(std::string *str) {
+    if (str->back() == '\n') {
+        str->pop_back();
     }
-
-    return s;
-}
-
-char *StringDup(const char *orig, int limit) {
-    if (!orig) {
-        orig = "(null)";
-    }
-
-    if (limit < 0) {
-        char *s = strdup(orig);
-
-        if (!s) {
-            AssertFail("Out of memory (copy string)\n");
-        }
-
-        return s;
-    }
-
-    char *s = StringNew(limit + 1);
-    strncpy(s, orig, limit);
-    s[limit] = 0;
-
-    return s;
-}
-
-char *StringPrintf(const char *str, ...) {
-    /* Algorithm: keep doubling the allocated buffer size
-     * until the output fits. Based on code by Darren Salt.
-     */
-    char *buf = NULL;
-    int buf_size = 128;
-
-    for (;;) {
-        va_list args;
-        int out_len;
-
-        buf_size *= 2;
-
-        buf = (char *)realloc(buf, buf_size);
-        if (!buf) {
-            AssertFail("Out of memory (formatting string)");
-        }
-
-        va_start(args, str);
-        out_len = vsnprintf(buf, buf_size, str, args);
-        va_end(args);
-
-        // old versions of vsnprintf() simply return -1 when
-        // the output doesn't fit.
-        if (out_len < 0 || out_len >= buf_size) {
-            continue;
-        }
-
-        return buf;
+    if (str->back() == '\r') {
+        str->pop_back();
     }
 }
 
-void StringFree(const char *str) {
-    if (str) {
-        free((void *)str);
-    }
-}
-
-void StringRemoveCRLF(char *str) {
-    size_t len = strlen(str);
-
-    if (len > 0 && str[len - 1] == '\n') {
-        str[--len] = 0;
-    }
-
-    if (len > 0 && str[len - 1] == '\r') {
-        str[--len] = 0;
-    }
-}
-
-void StringReplaceChar(char *str, char old_ch, char new_ch) {
+void StringReplaceChar(std::string *str, char old_ch, char new_ch) {
     // when 'new_ch' is zero, the character is simply removed
 
-    SYS_ASSERT(old_ch != 0);
+    SYS_ASSERT(old_ch != '\0');
 
-    char *dest = str;
-
-    while (*str) {
-        if (*str == old_ch) {
-            str++;
-
-            if (new_ch) {
-                *dest++ = new_ch;
-            }
+    while (true) {
+        auto it = std::find(str->begin(), str->end(), old_ch);
+        if (it == str->end()) {
+            // found them all
+            break;
+        }
+        if (new_ch == '\0') {
+            str->erase(it);
         } else {
-            *dest++ = *str++;
+            *it = new_ch;
         }
     }
-
-    *dest = 0;
 }
 
 char *mem_gets(char *buf, int size, const char **str_ptr) {

@@ -20,6 +20,7 @@
 
 #include <list>
 
+#include "fmt/core.h"
 #include "headers.h"
 #include "main.h"
 
@@ -257,20 +258,21 @@ bool PAK_ReadData(int entry, int offset, int length, void *buffer) {
 }
 
 void PAK_ListEntries(void) {
-    printf("--------------------------------------------------\n");
+    fmt::print("--------------------------------------------------\n");
 
     if (r_header.entry_num == 0) {
-        printf("PAK file is empty\n");
+        fmt::print("PAK file is empty\n");
     } else {
         for (int i = 0; i < (int)r_header.entry_num; i++) {
             raw_pak_entry_t *E = &r_directory[i];
 
-            printf("%4d: +%08x %08x : %s\n", i + 1, E->offset, E->length,
-                   E->name);
+            fmt::print("{:4}: +{:08x} {:08x} : {}\n", i + 1,
+                       static_cast<unsigned int>(E->offset),
+                       static_cast<unsigned int>(E->length), E->name);
         }
     }
 
-    printf("--------------------------------------------------\n");
+    fmt::print("--------------------------------------------------\n");
 }
 
 //------------------------------------------------------------------------

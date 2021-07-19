@@ -34,7 +34,8 @@
  */
 
 /**
-  Creates a new Fl_Check_Button widget using the given position, size, and label string.
+  Creates a new Fl_Check_Button widget using the given position, size, and label
+  string.
 
   The default box type is FL_NO_BOX, which draws the label w/o a box
   right of the checkmark.
@@ -49,7 +50,7 @@
   \param[in] L widget label, default is no label
  */
 Fl_Check_Button::Fl_Check_Button(int X, int Y, int W, int H, const char *L)
-: Fl_Light_Button(X, Y, W, H, L) {
-  box(FL_NO_BOX);
-  down_box(FL_DOWN_BOX);
+    : Fl_Light_Button(X, Y, W, H, L) {
+    box(FL_NO_BOX);
+    down_box(FL_DOWN_BOX);
 }

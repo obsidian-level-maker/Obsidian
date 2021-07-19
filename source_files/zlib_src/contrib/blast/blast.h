@@ -21,7 +21,6 @@
   Mark Adler    madler@alumni.caltech.edu
  */
 
-
 /*
  * blast() decompresses the PKWare Data Compression Library (DCL) compressed
  * format.  It provides the same functionality as the explode() function in
@@ -34,13 +33,11 @@
  * fopen(..., "rb") and fopen(..., "wb").
  */
 
-
 typedef unsigned (*blast_in)(void *how, unsigned char **buf);
 typedef int (*blast_out)(void *how, unsigned char *buf, unsigned len);
 /* Definitions for input/output functions passed to blast().  See below for
  * what the provided functions need to do.
  */
-
 
 int blast(blast_in infun, void *inhow, blast_out outfun, void *outhow,
           unsigned *left, unsigned char **in);

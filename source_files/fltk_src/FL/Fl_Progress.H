@@ -20,14 +20,13 @@
    Fl_Progress widget . */
 
 #ifndef _Fl_Progress_H_
-#  define _Fl_Progress_H_
+#define _Fl_Progress_H_
 
 //
 // Include necessary headers.
 //
 
 #include "Fl_Widget.H"
-
 
 //
 // Progress class...
@@ -36,36 +35,40 @@
     Displays a progress bar for the user.
 */
 class FL_EXPORT Fl_Progress : public Fl_Widget {
-  
-  float	value_,
-	minimum_,
-	maximum_;
+    float value_, minimum_, maximum_;
 
-  protected:
+   protected:
+    virtual void draw();
 
-  virtual void draw();
+   public:
+    Fl_Progress(int x, int y, int w, int h, const char *l = 0);
 
-  public:
+    /** Sets the maximum value in the progress widget.  */
+    void maximum(float v) {
+        maximum_ = v;
+        redraw();
+    }
+    /** Gets the maximum value in the progress widget.  */
+    float maximum() const { return (maximum_); }
 
-  Fl_Progress(int x, int y, int w, int h, const char *l = 0);
+    /** Sets the minimum value in the progress widget.  */
+    void minimum(float v) {
+        minimum_ = v;
+        redraw();
+    }
+    /** Gets the minimum value in the progress widget.  */
+    float minimum() const { return (minimum_); }
 
-  /** Sets the maximum value in the progress widget.  */
-  void	maximum(float v) { maximum_ = v; redraw(); }
-  /** Gets the maximum value in the progress widget.  */
-  float	maximum() const { return (maximum_); }
-
-  /** Sets the minimum value in the progress widget.  */
-  void	minimum(float v) { minimum_ = v; redraw(); }
-  /** Gets the minimum value in the progress widget.  */
-  float	minimum() const { return (minimum_); }
-
-  /** Sets the current value in the progress widget.  */
-  void	value(float v) { value_ = v; redraw(); }
-  /** Gets the current value in the progress widget.  */
-  float	value() const { return (value_); }
+    /** Sets the current value in the progress widget.  */
+    void value(float v) {
+        value_ = v;
+        redraw();
+    }
+    /** Gets the current value in the progress widget.  */
+    float value() const { return (value_); }
 };
 
-#endif // !_Fl_Progress_H_
+#endif  // !_Fl_Progress_H_
 
 //
 // End of "$Id$".

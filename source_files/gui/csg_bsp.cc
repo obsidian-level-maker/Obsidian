@@ -23,6 +23,7 @@
 #include "csg_local.h"
 #include "csg_main.h"
 #include "g_doom.h"  // for MLF_DontDraw
+#include "fmt/core.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "headers.h"
@@ -1483,22 +1484,23 @@ static void PruneBSPTree(bsp_node_c * node)
 void DumpCSGTree(const bsp_node_c *node, const region_c *leaf = NULL,
                  int level = 0) {
     for (int i = 0; i < level; i++) {
-        fprintf(stderr, "  ");
+        fmt::print(stderr, "  ");
     }
 
     if (node) {
-        fprintf(stderr,
-                "node %p (%1.1f %1.1f) --> (%1.1f %1.1f)  BBOX: (%1.0f %1.0f) "
-                ".. (%1.0f %1.0f)\n",
-                node, node->x1, node->y1, node->x2, node->y2, node->bb_x1,
-                node->bb_y1, node->bb_x2, node->bb_y2);
+        fmt::print(stderr,
+                   "node {} ({:1.1} {:1.1}) --> ({:1.1} {:1.1})  BBOX: ({:1.0} "
+                   "{:1.0}) .. ({:1.0} {:1.0})\n",
+                   static_cast<const void *>(node), node->x1, node->y1,
+                   node->x2, node->y2, node->bb_x1, node->bb_y1, node->bb_x2,
+                   node->bb_y2);
 
         DumpCSGTree(node->front_node, node->front_leaf, level + 1);
         DumpCSGTree(node->back_node, node->back_leaf, level + 1);
     } else if (leaf) {
-        fprintf(stderr, "region %p\n", leaf);
+        fmt::print(stderr, "region {}\n", static_cast<const void *>(leaf));
     } else {
-        fprintf(stderr, "NULL!!");
+        fmt::print(stderr, "NULL!!");
     }
 }
 
