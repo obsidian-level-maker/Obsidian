@@ -2494,6 +2494,7 @@ function Monster_make_battles()
 
   gui.printf("\n--==| Make Battles |==--\n\n")
 
+  gui.at_level(LEVEL.name, LEVEL.id, #GAME.levels)
   gui.prog_step("Mons")
 
   Player_init()

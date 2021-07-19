@@ -4191,6 +4191,7 @@ function Room_build_all()
 
   ob_invoke_hook("level_layout_finished") --MSSP
 
+  gui.at_level(LEVEL.name .. " (Fabs)", LEVEL.id, #GAME.levels)
   Render_set_all_properties()
 
   Render_all_chunks()

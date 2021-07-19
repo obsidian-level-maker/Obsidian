@@ -2828,8 +2828,10 @@ function Area_create_rooms()
 
   gui.printf("Map size target: %dx%d seeds\n", LEVEL.map_W, LEVEL.map_H)
 
+  gui.at_level(LEVEL.name .. " (Shapes)", LEVEL.id, #GAME.levels)
   Grower_create_rooms()
 
+  gui.at_level(LEVEL.name .. " (Rooms)", LEVEL.id, #GAME.levels)
   Area_divvy_up_borders()
 
   Area_analyse_areas()

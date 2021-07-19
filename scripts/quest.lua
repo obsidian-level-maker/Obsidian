@@ -3358,6 +3358,8 @@ function Quest_make_quests()
 
   gui.printf("\n--==| Make Quests |==--\n\n")
 
+  gui.at_level(LEVEL.name .. " (Quests)", LEVEL.id, #GAME.levels)
+
   Monster_prepare()
 
   LEVEL.quests = {}
