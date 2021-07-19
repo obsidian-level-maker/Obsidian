@@ -572,7 +572,7 @@ int gui_add_module_slider_option(lua_State *L) {
     const char *module = luaL_checkstring(L, 1);
     const char *option = luaL_checkstring(L, 2);
 
-    const char *label = luaL_checkstring(L, 3);
+    std::string label = luaL_optstring(L, 3, "");
     std::string tip = luaL_optstring(L, 4, "");
     std::string longtip = luaL_optstring(L, 5, "");
 
@@ -582,9 +582,9 @@ int gui_add_module_slider_option(lua_State *L) {
     double max = luaL_checknumber(L, 8);
     double inc = luaL_checknumber(L, 9);
 
-    const char *units = luaL_checkstring(L, 10);
-    const char *presets = luaL_checkstring(L, 11);
-    const char *nan = luaL_checkstring(L, 12);
+    std::string units = luaL_optstring(L, 10, "");
+    std::string presets = luaL_optstring(L, 11, "");
+    std::string nan = luaL_optstring(L, 12, "");
 
     SYS_ASSERT(module && option);
 

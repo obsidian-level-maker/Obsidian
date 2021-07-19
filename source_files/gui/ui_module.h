@@ -61,10 +61,10 @@ class UI_Module : public Fl_Group {
     void AddOption(const char *option, const char *label, std::string tip,
                    std::string longtip, int gap);
 
-    void AddSliderOption(const char *option, const char *label, std::string tip,
+    void AddSliderOption(const char *option, std::string label, std::string tip,
                          std::string longtip, int gap, double min, double max,
-                         double inc, const char *units, const char *presets,
-                         const char *nan);
+                         double inc, std::string units, std::string presets,
+                         std::string nan);
 
     void AddButtonOption(const char *opt, const char *label, std::string tip,
                          std::string longtip, int gap);
@@ -140,10 +140,10 @@ class UI_CustomMods : public Fl_Group {
                    std::string tip, std::string longtip, int gap);
 
     bool AddSliderOption(const char *module, const char *option,
-                         const char *label, std::string tip,
+                         std::string label, std::string tip,
                          std::string longtip, int gap, double min, double max,
-                         double inc, const char *units, const char *presets,
-                         const char *nan);
+                         double inc, std::string units, std::string presets,
+                         std::string nan);
 
     bool AddButtonOption(const char *module, const char *option,
                          const char *label, std::string tip,

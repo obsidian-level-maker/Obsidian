@@ -155,20 +155,16 @@ void UI_Module::AddOption(const char *opt, const char *label, std::string tip,
     choice_map[opt] = rch;
 }
 
-void UI_Module::AddSliderOption(const char *opt, const char *label,
+void UI_Module::AddSliderOption(const char *opt, std::string label,
                                 std::string tip, std::string longtip, int gap,
                                 double min, double max, double inc,
-                                const char *units, const char *presets,
-                                const char *nan) {
+                                std::string units, std::string presets,
+                                std::string nan) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
     int nx = x() + kf_w(6);
     int ny = y() + cur_opt_y - kf_h(15);
-
-    // make label with ': ' suffixed
-    int len = strlen(label);
-    std::string new_label = fmt::format("{}: ", label);
 
     if (longtip.empty()) {
         longtip =
@@ -180,13 +176,13 @@ void UI_Module::AddSliderOption(const char *opt, const char *label,
                                    (!single_pane ? kf_h(48) : kf_h(24)), NULL);
 
     // Populate the nan_options vector
-    std::string temp_string = nan;
+    //std::string temp_string = nan;
     std::string::size_type oldpos = 0;
     std::string::size_type pos = 0;
     while (pos != std::string::npos) {
-        pos = temp_string.find(',', oldpos);
+        pos = nan.find(',', oldpos);
         if (pos != std::string::npos) {
-            std::string nan_string = temp_string.substr(oldpos, pos - oldpos);
+            std::string nan_string = nan.substr(oldpos, pos - oldpos);
             rsl->nan_choices.push_back(nan_string);
             oldpos = pos + 1;
         }
@@ -196,7 +192,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label,
         rsl->x(), rsl->y(),
         (!single_pane ? rsl->w() * (rsl->nan_choices.size() > 0 ? .7 : .8)
                       : rsl->w() * .40),
-        kf_h(24), new_label.c_str());
+        kf_h(24), label.append(": ").c_str());
     rsl->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     rsl->mod_label->labelfont(font_style);
     rsl->mod_label->tooltip(tip.c_str());
@@ -274,18 +270,17 @@ void UI_Module::AddSliderOption(const char *opt, const char *label,
     rsl->mod_help->help_title = label;
     rsl->mod_help->callback(callback_ShowHelp, NULL);
 
-    rsl->original_label = new_label;
+    rsl->original_label = label;
     rsl->units = units;
 
     // Populate the preset_choices map
-    temp_string = presets;
     oldpos = 0;
     pos = 0;
     std::setlocale(LC_NUMERIC, "C");
     while (pos != std::string::npos) {
-        pos = temp_string.find(',', oldpos);
+        pos = presets.find(',', oldpos);
         if (pos != std::string::npos) {
-            std::string map_string = temp_string.substr(oldpos, pos - oldpos);
+            std::string map_string = presets.substr(oldpos, pos - oldpos);
             std::string::size_type temp_pos = map_string.find(':');
             double key;
             try {
@@ -834,10 +829,10 @@ bool UI_CustomMods::AddOption(const char *module, const char *option,
 }
 
 bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
-                                    const char *label, std::string tip,
+                                    std::string label, std::string tip,
                                     std::string longtip, int gap, double min,
-                                    double max, double inc, const char *units,
-                                    const char *presets, const char *nan) {
+                                    double max, double inc, std::string units,
+                                    std::string presets, std::string nan) {
     UI_Module *M = FindID(module);
 
     if (!M) {
