@@ -9,9 +9,7 @@ add_subdirectory(source_files/ajpoly_src)
 add_subdirectory(source_files/physfs_src)
 add_subdirectory(source_files/zdbsp_src)
 add_subdirectory(source_files/slump_src)
-add_subdirectory(source_files/fltk_src)
 add_subdirectory(source_files/zlib_src)
-add_subdirectory(source_files/fmt_src)
 
 project(
   obsidian
@@ -163,25 +161,46 @@ target_include_directories(obsidian PRIVATE source_files/ajpoly_src)
 target_include_directories(obsidian PRIVATE source_files/zdbsp_src)
 target_include_directories(obsidian PRIVATE source_files/lua_src)
 target_include_directories(obsidian PRIVATE source_files/slump_src)
-target_include_directories(obsidian PRIVATE source_files/fltk_src)
 target_include_directories(obsidian PRIVATE source_files/zlib_src)
 
-if(MINGW)
+if(MINGW OR WIN32)
   target_compile_definitions(obsidian PRIVATE WIN32)
 else()
   target_compile_definitions(obsidian PRIVATE UNIX)
 endif()
 
+find_package(FLTK 1.3)
+
+if(FLTK_FOUND)
+  target_link_libraries(obsidian PRIVATE ${FLTK_LIBRARIES})
+else()
+  # use vendored version
+  add_subdirectory(source_files/fltk_src)
+  target_link_libraries(obsidian PRIVATE fltk fltk_images)
+  target_include_directories(obsidian PRIVATE source_files/fltk_src)
+endif()
+
+if(UNIX)
+  find_package(X11 REQUIRED)
+  target_link_libraries(obsidian PRIVATE X11::Xft)
+endif()
+
+# Copies executables to local install directory after build
+if(UNIX)
+  add_custom_command(TARGET obsidian POST_BUILD
+    COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_BINARY_DIR}/obsidian" "${CMAKE_CURRENT_LIST_DIR}"
+    COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_BINARY_DIR}/source_files/ff_src/filename_formatter" "${CMAKE_CURRENT_LIST_DIR}/tools"
+  )
+endif()
+
 target_link_libraries(
   obsidian
-  PRIVATE fltk
-          fltk_images
-          zlibstatic
+  PRIVATE zlibstatic
           obsidian_lua
           obsidian_physfs
           obsidian_acc
           obsidian_ajpoly
           obsidian_zdbsp
           obsidian_slump
-          fmt::fmt
+          fontconfig
 )
