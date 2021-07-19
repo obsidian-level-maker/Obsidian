@@ -2,7 +2,7 @@
 -- Disgusting eww pls
 --
 
---[[PREFABS.Joiner_infestation_caveout =
+PREFABS.Joiner_infestation_caveout =
 {
   file   = "joiner/gtd_infestation_simple.wad",
   map    = "MAP01",
@@ -56,4 +56,4 @@ PREFABS.Joiner_natural_caveout =
     MIDVINE2 = 1,
     ZZWOLF10 = 10 -- invisibility tex
   },
-}]]
+}
