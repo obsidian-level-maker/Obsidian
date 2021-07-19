@@ -185,16 +185,11 @@ if(UNIX)
   target_link_libraries(obsidian PRIVATE X11::Xft)
 endif()
 
-# symlinks the obsidian and filename_formatter binaries
+# Copies executables to local install directory after build
 if(UNIX)
-  add_custom_target(
-    symlink ALL
-    COMMAND
-      ${CMAKE_COMMAND} -E create_symlink "${CMAKE_BINARY_DIR}/obsidian"
-      "${CMAKE_CURRENT_LIST_DIR}/obsidian" && ${CMAKE_COMMAND} -E
-      create_symlink
-      "${CMAKE_BINARY_DIR}/source_files/ff_src/filename_formatter"
-      "${CMAKE_CURRENT_LIST_DIR}/tools/filename_formatter"
+  add_custom_command(TARGET obsidian POST_BUILD
+    COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_BINARY_DIR}/obsidian" "${CMAKE_CURRENT_LIST_DIR}"
+    COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_BINARY_DIR}/source_files/ff_src/filename_formatter" "${CMAKE_CURRENT_LIST_DIR}/tools"
   )
 endif()
 
