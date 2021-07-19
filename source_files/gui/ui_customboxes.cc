@@ -5,30 +5,47 @@
 #include <FL/fl_draw.H>
 #include "main.h"
 
-void c_color(Fl_Color c) { Fl::set_box_color(c); }
+void c_color(Fl_Color c) {
+  Fl::set_box_color(c);
+}
 
-// CUSTOM GLEAM BOXES
-// ---------------------------------------------------------------------------------------
+static const uchar c_active_ramp[24] = {
+  FL_GRAY_RAMP+0, FL_GRAY_RAMP+1, FL_GRAY_RAMP+2, FL_GRAY_RAMP+3,
+  FL_GRAY_RAMP+4, FL_GRAY_RAMP+5, FL_GRAY_RAMP+6, FL_GRAY_RAMP+7,
+  FL_GRAY_RAMP+8, FL_GRAY_RAMP+9, FL_GRAY_RAMP+10,FL_GRAY_RAMP+11,
+  FL_GRAY_RAMP+12,FL_GRAY_RAMP+13,FL_GRAY_RAMP+14,FL_GRAY_RAMP+15,
+  FL_GRAY_RAMP+16,FL_GRAY_RAMP+17,FL_GRAY_RAMP+18,FL_GRAY_RAMP+19,
+  FL_GRAY_RAMP+20,FL_GRAY_RAMP+21,FL_GRAY_RAMP+22,FL_GRAY_RAMP+23};
+static const uchar c_inactive_ramp[24] = {
+  43, 43, 44, 44,
+  44, 45, 45, 46,
+  46, 46, 47, 47,
+  48, 48, 48, 49,
+  49, 49, 50, 50,
+  51, 51, 52, 52};
+static int c_draw_it_active = 1;
 
-void cgleam_shade_rect_top_bottom(int x, int y, int w, int h, Fl_Color fg1,
-                                  Fl_Color fg2, float th) {
-    // calculate background size w/o borders
-    x += 2;
-    y += 2;
-    w -= 4;
-    h -= 4;
-    // draw the shiny background using maximum limits
-    int h_top = ((h / 2) < (20) ? (h / 2) : (20));     // min(h/2, 20);
-    int h_bottom = ((h / 6) < (15) ? (h / 6) : (15));  // min(h/6, 15);
-    int h_flat = h - h_top - h_bottom;
-    float step_size_top = h_top > 1 ? (0.999f / float(h_top)) : 1;
-    float step_size_bottom = h_bottom > 1 ? (0.999f / float(h_bottom)) : 1;
-    // draw the gradient at the top of the widget
-    float k = 1;
-    for (int i = 0; i < h_top; i++, k -= step_size_top) {
-        c_color(fl_color_average(fl_color_average(fg1, fg2, th), fg1, k));
-        fl_xyline(x, y + i, x + w - 1);
-    }
+
+const uchar *c_fl_gray_ramp() {return (c_draw_it_active?c_active_ramp:c_inactive_ramp)-'A';}
+
+// CUSTOM GLEAM BOXES ---------------------------------------------------------------------------------------
+
+void cgleam_shade_rect_top_bottom(int x, int y, int w, int h, Fl_Color fg1, Fl_Color fg2, float th) {
+  // calculate background size w/o borders
+  x += 2; y += 2; w -= 4; h -= 4;
+  // draw the shiny background using maximum limits
+  int h_top    = ((h/2) < (20) ? (h/2) : (20)); // min(h/2, 20);
+  int h_bottom = ((h/6) < (15) ? (h/6) : (15)); // min(h/6, 15);
+  int h_flat = h - h_top - h_bottom;
+  float step_size_top = h_top > 1 ? (0.999f/float(h_top)) : 1;
+  float step_size_bottom = h_bottom > 1 ? (0.999f/float(h_bottom)) : 1;
+  // draw the gradient at the top of the widget
+  float k = 1;
+  for (int i = 0; i < h_top; i++, k -= step_size_top) {
+    c_color(fl_color_average(fl_color_average(fg1, fg2, th), fg1, k));
+    fl_xyline(x, y+i, x+w-1);
+  }
+
 
     // draw a "flat" rectangle in the middle area of the box
     c_color(fg1);
@@ -211,28 +228,59 @@ void cgtk_thin_up_box(int x, int y, int w, int h, Fl_Color c) {
 // CUSTOM PLASTIC BOXES
 // ---------------------------------------------------------------------------------------
 
-extern const uchar *fl_gray_ramp();
+extern const uchar *c_fl_gray_ramp();
 
 Fl_Color cplastic_shade_color(uchar gc, Fl_Color bc) {
-    return fl_color_average((Fl_Color)gc, bc, 0.50f);
+  return fl_color_average((Fl_Color)gc, bc, 0.50f);
 }
 
-void cplastic_frame_rect(int x, int y, int w, int h, const char *c,
-                         Fl_Color bc) {
-    const uchar *g = fl_gray_ramp();
-    int b = ((int)strlen(c)) / 4 + 1;
 
-    for (x += b, y += b, w -= 2 * b, h -= 2 * b; b > 1; b--) {
-        // Draw lines around the perimeter of the button, 4 colors per
-        // circuit.
-        fl_color(cplastic_shade_color(g[(int)*c++], bc));
-        fl_line(x, y + h + b, x + w - 1, y + h + b, x + w + b - 1, y + h);
-        fl_color(cplastic_shade_color(g[(int)*c++], bc));
-        fl_line(x + w + b - 1, y + h, x + w + b - 1, y, x + w - 1, y - b);
-        fl_color(cplastic_shade_color(g[(int)*c++], bc));
-        fl_line(x + w - 1, y - b, x, y - b, x - b, y);
-        fl_color(cplastic_shade_color(g[(int)*c++], bc));
-        fl_line(x - b, y, x - b, y + h, x, y + h + b);
+void cplastic_frame_rect(int x, int y, int w, int h, const char *c, Fl_Color bc) {
+  const uchar *g = c_fl_gray_ramp();
+  int b = ((int) strlen(c)) / 4 + 1;
+
+  for (x += b, y += b, w -= 2 * b, h -= 2 * b; b > 1; b --)
+  {
+    // Draw lines around the perimeter of the button, 4 colors per
+    // circuit.
+    fl_color(cplastic_shade_color(g[(int)*c++], bc));
+    fl_line(x, y + h + b, x + w - 1, y + h + b, x + w + b - 1, y + h);
+    fl_color(cplastic_shade_color(g[(int)*c++], bc));
+    fl_line(x + w + b - 1, y + h, x + w + b - 1, y, x + w - 1, y - b);
+    fl_color(cplastic_shade_color(g[(int)*c++], bc));
+    fl_line(x + w - 1, y - b, x, y - b, x - b, y);
+    fl_color(cplastic_shade_color(g[(int)*c++], bc));
+    fl_line(x - b, y, x - b, y + h, x, y + h + b);
+  }
+}
+
+void cplastic_shade_rect(int x, int y, int w, int h, const char *c, Fl_Color bc) {
+  const uchar *g = c_fl_gray_ramp();
+  int	i, j;
+  int	clen = (int) strlen(c) - 1;
+  int	chalf = clen / 2;
+  int	cstep = 1;
+
+  if (h < (w * 2)) {
+    // Horizontal shading...
+    if (clen >= h) cstep = 2;
+
+    for (i = 0, j = 0; j < chalf; i ++, j += cstep) {
+      // Draw the top line and points...
+      fl_color(cplastic_shade_color(g[(int)c[i]], bc));
+      fl_xyline(x + 1, y + i, x + w - 2);
+
+      fl_color(cplastic_shade_color(g[c[i] - 2], bc));
+      fl_point(x, y + i + 1);
+      fl_point(x + w - 1, y + i + 1);
+
+      // Draw the bottom line and points...
+      fl_color(cplastic_shade_color(g[(int)c[clen - i]], bc));
+      fl_xyline(x + 1, y + h - i, x + w - 2);
+
+      fl_color(cplastic_shade_color(g[c[clen - i] - 2], bc));
+      fl_point(x, y + h - i);
+      fl_point(x + w - 1, y + h - i);
     }
 }
 
@@ -318,21 +366,19 @@ void cplastic_up_frame(int x, int y, int w, int h, Fl_Color c) {
 }
 
 void cplastic_narrow_thin_box(int x, int y, int w, int h, Fl_Color c) {
-    if (h <= 0 || w <= 0) {
-        return;
-    }
-    const uchar *g = fl_gray_ramp();
-    fl_color(cplastic_shade_color(g[(int)'R'], c));
-    fl_rectf(x + 1, y + 1, w - 2, h - 2);
-    fl_color(cplastic_shade_color(g[(int)'I'], c));
-    if (w > 1) {
-        fl_xyline(x + 1, y, x + w - 2);
-        fl_xyline(x + 1, y + h - 1, x + w - 2);
-    }
-    if (h > 1) {
-        fl_yxline(x, y + 1, y + h - 2);
-        fl_yxline(x + w - 1, y + 1, y + h - 2);
-    }
+  if (h<=0 || w<=0) return;
+  const uchar *g = c_fl_gray_ramp();
+  fl_color(cplastic_shade_color(g[(int)'R'], c));
+  fl_rectf(x+1, y+1, w-2, h-2);
+  fl_color(cplastic_shade_color(g[(int)'I'], c));
+  if (w > 1) {
+    fl_xyline(x+1, y, x+w-2);
+    fl_xyline(x+1, y+h-1, x+w-2);
+  }
+  if (h > 1) {
+    fl_yxline(x, y+1, y+h-2);
+    fl_yxline(x+w-1, y+1, y+h-2);
+  }
 }
 
 void cplastic_thin_up_box(int x, int y, int w, int h, Fl_Color c) {
@@ -418,56 +464,44 @@ void cframe(int x, int y, int w, int h) {
 }
 
 void cframe2(int x, int y, int w, int h) {
-    if (h > 0 && w > 0) {
-        // draw bottom line:
-        fl_color(BORDER_COLOR);
-        fl_xyline(x, y + h - 1, x + w - 1);
-        // draw right line:
-        fl_color(BORDER_COLOR);
-        fl_yxline(x + w - 1, y + h - 1, y);
-        // draw top line:
-        fl_color(BORDER_COLOR);
-        fl_xyline(x, y, x + w - 1);
-        y++;
-        // draw left line:
-        fl_color(BORDER_COLOR);
-        fl_yxline(x, y + h - 1, y);
-        x++;
-    }
+  if (h > 0 && w > 0) {
+    // draw bottom line:
+    fl_color(BORDER_COLOR);
+    fl_xyline(x, y+h-1, x+w-1);
+    // draw right line:
+    fl_color(BORDER_COLOR);
+    fl_yxline(x+w-1, y+h-1, y);
+    // draw top line:
+    fl_color(BORDER_COLOR);
+    fl_xyline(x, y, x+w-1);
+    y++;
+    // draw left line:
+    fl_color(BORDER_COLOR);
+    fl_yxline(x, y+h-1, y);
+    x++;
+  }
 }
 
-void cframe3(const char *s, int x, int y, int w, int h) {
-    const uchar *g = fl_gray_ramp();
-    if (h > 0 && w > 0) {
-        for (; *s;) {
-            // draw bottom line:
-            fl_color(g[(int)*s++]);
-            fl_xyline(x, y + h - 1, x + w - 1);
-            if (--h <= 0) {
-                break;
-            }
-            // draw right line:
-            fl_color(g[(int)*s++]);
-            fl_yxline(x + w - 1, y + h - 1, y);
-            if (--w <= 0) {
-                break;
-            }
-            // draw top line:
-            fl_color(g[(int)*s++]);
-            fl_xyline(x, y, x + w - 1);
-            y++;
-            if (--h <= 0) {
-                break;
-            }
-            // draw left line:
-            fl_color(g[(int)*s++]);
-            fl_yxline(x, y + h - 1, y);
-            x++;
-            if (--w <= 0) {
-                break;
-            }
-        }
-    }
+void cframe3(const char* s, int x, int y, int w, int h) {
+  const uchar *g = c_fl_gray_ramp();
+  if (h > 0 && w > 0) for (;*s;) {
+    // draw bottom line:
+    fl_color(g[(int)*s++]);
+    fl_xyline(x, y+h-1, x+w-1);
+    if (--h <= 0) break;
+    // draw right line:
+    fl_color(g[(int)*s++]);
+    fl_yxline(x+w-1, y+h-1, y);
+    if (--w <= 0) break;
+    // draw top line:
+    fl_color(g[(int)*s++]);
+    fl_xyline(x, y, x+w-1);
+    y++; if (--h <= 0) break;
+    // draw left line:
+    fl_color(g[(int)*s++]);
+    fl_yxline(x, y+h-1, y);
+    x++; if (--w <= 0) break;
+  }
 }
 
 /** Draws a frame of type FL_THIN_UP_FRAME */

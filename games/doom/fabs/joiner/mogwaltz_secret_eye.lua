@@ -1,4 +1,6 @@
-PREFABS.Joiner_secret_secret_shootable_eye =
+-- TO-DO: Switches need to be redesigned such that it's impossible to fail triggering all lines.
+
+--[[PREFABS.Joiner_secret_secret_shootable_eye =
 {
   file   = "joiner/mogwaltz_secret_eye.wad",
   map    = "MAP01",
@@ -23,7 +25,7 @@ PREFABS.Joiner_secret_secret_shootable_eye =
   solid_ents = true,
 }
 
---[[PREFABS.Joiner_secret_secret_shootable_eye_pick_one =
+PREFABS.Joiner_secret_secret_shootable_eye_pick_one =
 {
   template = "Joiner_secret_secret_shootable_eye",
   map = "MAP02",
@@ -37,7 +39,7 @@ PREFABS.Joiner_secret_secret_shootable_eye_pick_one_b =
   map = "MAP03",
 
   prob = 18,
-}]]
+}
 
 PREFABS.Joiner_secret_secret_shootable_eye_nodickmove =
 {
@@ -57,4 +59,4 @@ PREFABS.Joiner_secret_secret_shootable_eye_nodickmove_b =
   prob = 18,
 
   y_fit = { 128,140 },
-}
+}]]

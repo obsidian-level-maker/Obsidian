@@ -74,48 +74,52 @@ int gui_format_prefix(lua_State *L) {
 
     SYS_ASSERT(levelcount && game && theme && format);
 
-    const char *ff_args[10];
 
-    ff_args[0] = "tools/filename_formatter";
-    ff_args[1] = "-c";
-    ff_args[2] = levelcount;
-    ff_args[3] = "-g";
-    ff_args[4] = game;
-    ff_args[5] = "-t";
-    ff_args[6] = theme;
-    ff_args[7] = "-f";
-    if (StringCaseCmp(format, "version") == 0) {
-        std::string tempstring = OBSIDIAN_SHORT_VERSION;
-        tempstring.append("_");
-        ff_args[8] = tempstring.c_str();
-    } else if (StringCaseCmp(format, "custom") == 0) {
-        ff_args[8] = custom_prefix.c_str();
-    } else {
-        ff_args[8] = format;
-    }
-    ff_args[9] = NULL;
+	const char* ff_args[10];
 
-    struct subprocess_s subprocess;
-    int result =
-        subprocess_create(ff_args, subprocess_option_no_window, &subprocess);
-    if (result != 0) {
-        return 0;
-    }
+#ifdef WIN32
+	ff_args[0] = "tools/filename_formatter.exe";
+#else
+	ff_args[0] = "tools/filename_formatter";
+#endif
+	ff_args[1] = "-c";
+	ff_args[2] = levelcount;
+	ff_args[3] = "-g";
+	ff_args[4] = game;
+	ff_args[5] = "-t";
+	ff_args[6] = theme;
+	ff_args[7] = "-f";
+	if (StringCaseCmp(format, "version") == 0) {
+		std::string tempstring = OBSIDIAN_SHORT_VERSION;
+		tempstring.append("_");
+		ff_args[8] = tempstring.c_str();	
+	} else if (StringCaseCmp(format, "custom") == 0) {
+		ff_args[8] = custom_prefix.c_str();
+	} else {
+		ff_args[8] = format;		
+	}
+	ff_args[9] = NULL;
+		
+	struct subprocess_s subprocess;
+	int result = subprocess_create(ff_args, subprocess_option_no_window, &subprocess);
+	if (result != 0) {
+	  return 0;
+	}
 
-    // Read the output of filename_formatter
-    FILE *p_stdout = subprocess_stdout(&subprocess);
-    char prefix[100];
-    fgets(prefix, 100, p_stdout);
-
-    result = subprocess_destroy(&subprocess);
-    if (result != 0) {
-        return 0;
-    } else {
-        lua_pushstring(L, (const char *)prefix);
-        return 1;
-    }
-
-    // Hopefully we don't get here
+	//Read the output of filename_formatter	
+	FILE* p_stdout = subprocess_stdout(&subprocess);
+	char prefix[100];
+	fgets(prefix, 100, p_stdout);
+	
+	result = subprocess_destroy(&subprocess);
+	if (result != 0) {
+		return 0;
+	} else {
+		lua_pushstring(L, (const char *)prefix);
+		return 1;
+	}
+	
+	//Hopefully we don't get here
     return 0;
 }
 

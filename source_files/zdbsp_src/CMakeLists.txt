@@ -39,3 +39,4 @@ add_library(
 )
 
 target_include_directories(obsidian_zdbsp PRIVATE ../zlib_src)
+target_link_libraries(obsidian_zdbsp PUBLIC z)
