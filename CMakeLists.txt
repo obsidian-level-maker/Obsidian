@@ -10,6 +10,7 @@ add_subdirectory(source_files/physfs_src)
 add_subdirectory(source_files/zdbsp_src)
 add_subdirectory(source_files/slump_src)
 add_subdirectory(source_files/zlib_src)
+add_subdirectory(source_files/fmt_src)
 
 project(
   obsidian
@@ -162,7 +163,6 @@ target_include_directories(obsidian PRIVATE source_files/zdbsp_src)
 target_include_directories(obsidian PRIVATE source_files/lua_src)
 target_include_directories(obsidian PRIVATE source_files/slump_src)
 target_include_directories(obsidian PRIVATE source_files/zlib_src)
-target_include_directories(obsidian PRIVATE source_files/fmt_src/include)
 
 if(MINGW OR WIN32)
   target_compile_definitions(obsidian PRIVATE WIN32)
@@ -185,6 +185,8 @@ if(UNIX)
   find_package(X11 REQUIRED)
   target_link_libraries(obsidian PRIVATE X11::Xft)
 endif()
+
+target_link_libraries(obsidian PRIVATE fmt::fmt-header-only)
 
 # Copies executables to local install directory after build
 if(UNIX)

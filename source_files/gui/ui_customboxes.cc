@@ -254,39 +254,9 @@ void cplastic_frame_rect(int x, int y, int w, int h, const char *c, Fl_Color bc)
   }
 }
 
-void cplastic_shade_rect(int x, int y, int w, int h, const char *c, Fl_Color bc) {
-  const uchar *g = c_fl_gray_ramp();
-  int	i, j;
-  int	clen = (int) strlen(c) - 1;
-  int	chalf = clen / 2;
-  int	cstep = 1;
-
-  if (h < (w * 2)) {
-    // Horizontal shading...
-    if (clen >= h) cstep = 2;
-
-    for (i = 0, j = 0; j < chalf; i ++, j += cstep) {
-      // Draw the top line and points...
-      fl_color(cplastic_shade_color(g[(int)c[i]], bc));
-      fl_xyline(x + 1, y + i, x + w - 2);
-
-      fl_color(cplastic_shade_color(g[c[i] - 2], bc));
-      fl_point(x, y + i + 1);
-      fl_point(x + w - 1, y + i + 1);
-
-      // Draw the bottom line and points...
-      fl_color(cplastic_shade_color(g[(int)c[clen - i]], bc));
-      fl_xyline(x + 1, y + h - i, x + w - 2);
-
-      fl_color(cplastic_shade_color(g[c[clen - i] - 2], bc));
-      fl_point(x, y + h - i);
-      fl_point(x + w - 1, y + h - i);
-    }
-}
-
 void cplastic_shade_rect(int x, int y, int w, int h, const char *c,
                          Fl_Color bc) {
-    const uchar *g = fl_gray_ramp();
+    const uchar *g = c_fl_gray_ramp();
     int i, j;
     int clen = (int)strlen(c) - 1;
     int chalf = clen / 2;
