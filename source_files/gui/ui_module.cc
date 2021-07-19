@@ -29,11 +29,13 @@
 #include <string>
 #include <iostream>
 
-UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
+UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
                      const char *label, std::string tip, int red, int green,
                      int blue)
-    : Fl_Group(X, Y, W, H), id_name(id), choice_map(), cur_opt_y(0) {
+    : Fl_Group(X, Y, W, H), choice_map(), cur_opt_y(0) {
     box(box_style);
+
+	id_name = id;
 
     if ((red >= 0) && (green >= 0) && (blue >= 0)) {
         color(fl_rgb_color(red, green, blue));
@@ -78,7 +80,7 @@ UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
 UI_Module::~UI_Module() {}
 
 bool UI_Module::Is_UI() const {
-    return (id_name[0] == 'u' && id_name[1] == 'i' && id_name[2] == '_');
+    return (!StringCaseCmp(id_name.substr(0, 3), "ui_"));
 }
 
 typedef struct {
@@ -167,6 +169,8 @@ void UI_Module::AddSliderOption(const char *opt, std::string label,
             "Detailed help not yet written for this setting. For quick help, "
             "hover over the option name to display a tooltip.";
     }
+    
+    label = fmt::format("{}: ", label);
 
     UI_RSlide *rsl = new UI_RSlide(nx, ny + kf_h(15), nw * .95,
                                    (!single_pane ? kf_h(48) : kf_h(24)), NULL);
@@ -187,7 +191,7 @@ void UI_Module::AddSliderOption(const char *opt, std::string label,
         rsl->x(), rsl->y(),
         (!single_pane ? rsl->w() * (rsl->nan_choices.size() > 0 ? .7 : .8)
                       : rsl->w() * .40),
-        kf_h(24), label.append(": ").c_str());
+        kf_h(24), label.c_str());
     rsl->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     rsl->mod_label->labelfont(font_style);
     rsl->mod_label->tooltip(tip.c_str());
@@ -241,7 +245,7 @@ void UI_Module::AddSliderOption(const char *opt, std::string label,
         rsl->nan_options->color(this->color());
         rsl->nan_options->selection_color(SELECTION);
         rsl->nan_options->add("Use Slider Value");
-        for (int x = 0; x < rsl->nan_choices.size(); x++) {
+        for (std::string::size_type x = 0; x < rsl->nan_choices.size(); x++) {
             rsl->nan_options->add(rsl->nan_choices[x].c_str());
         }
         rsl->nan_options->callback(callback_NanOptions, NULL);
@@ -331,7 +335,7 @@ void UI_Module::AddButtonOption(const char *opt, std::string label,
 
     rbt->mod_label =
         new Fl_Box(rbt->x() + (single_pane ? 0 : (rbt->w() * .075)), rbt->y(),
-                   rbt->w() * .30, kf_h(24), single_pane ? label.append(": ").c_str() : label.c_str());
+                   rbt->w() * .30, kf_h(24), single_pane ? fmt::format("{}: ", label).c_str() : label.c_str());
     rbt->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     rbt->mod_label->labelfont(font_style);
     rbt->mod_label->tooltip(tip.c_str());
