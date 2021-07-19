@@ -408,8 +408,8 @@ int UI_CustomMenuButton::handle(int event) {
 
 //----------------------------------------------------------------
 
-UI_HelpLink::UI_HelpLink(int x, int y, int w, int h, const char *label)
-    : Fl_Button(x, y, w, h, label),
+UI_HelpLink::UI_HelpLink(int x, int y, int w, int h)
+    : Fl_Button(x, y, w, h, "?"),
       hover(false),
       label_X(0),
       label_Y(0),

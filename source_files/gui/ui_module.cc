@@ -30,7 +30,7 @@
 #include <iostream>
 
 UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
-                     const char *label, const char *tip, int red, int green,
+                     const char *label, std::string tip, int red, int green,
                      int blue)
     : Fl_Group(X, Y, W, H), id_name(id), choice_map(), cur_opt_y(0) {
     box(box_style);
@@ -61,9 +61,9 @@ UI_Module::UI_Module(int X, int Y, int W, int H, const char *id,
         heading->labelsize(header_font_size);
     }
 
-    if (tip) {
-        mod_button->tooltip(tip);
-        heading->tooltip(tip);
+    if (!tip.empty()) {
+        mod_button->tooltip(tip.c_str());
+        heading->tooltip(tip.c_str());
     }
 
     cur_opt_y += kf_h(32);
@@ -86,8 +86,8 @@ typedef struct {
     std::string opt_name;
 } opt_change_callback_data_t;
 
-void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
-                          const char *longtip, int gap) {
+void UI_Module::AddOption(const char *opt, const char *label, std::string tip,
+                          std::string longtip, int gap) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
@@ -98,11 +98,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
     int len = strlen(label);
     std::string new_label = fmt::format("{}: ", label);
 
-    if (!tip) {
-        tip = "";
-    }
-
-    if (!longtip) {
+    if (longtip.empty()) {
         longtip =
             "Detailed help not yet written for this setting. For quick help, "
             "hover over the option name to display a tooltip.";
@@ -119,7 +115,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
         (!single_pane ? (FL_ALIGN_LEFT | FL_ALIGN_INSIDE)
                       : (FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP)));
     rch->mod_label->labelfont(font_style);
-    rch->mod_label->tooltip(tip);
+    rch->mod_label->tooltip(tip.c_str());
 
     rch->mod_menu = new UI_RChoiceMenu(
         (!single_pane ? rch->x() : rch->x() + (rch->w() * .40)),
@@ -130,7 +126,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 
     rch->mod_help = new UI_HelpLink(
         rch->x() + (!single_pane ? (rch->w() * .9) : (rch->w() * .95)),
-        rch->y(), rch->w() * .075, kf_h(24), "?");
+        rch->y(), rch->w() * .075, kf_h(24));
     rch->mod_help->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
     rch->mod_help->labelfont(font_style);
     rch->mod_help->labelcolor(FONT_COLOR);
@@ -160,7 +156,7 @@ void UI_Module::AddOption(const char *opt, const char *label, const char *tip,
 }
 
 void UI_Module::AddSliderOption(const char *opt, const char *label,
-                                const char *tip, const char *longtip, int gap,
+                                std::string tip, std::string longtip, int gap,
                                 double min, double max, double inc,
                                 const char *units, const char *presets,
                                 const char *nan) {
@@ -174,11 +170,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label,
     int len = strlen(label);
     std::string new_label = fmt::format("{}: ", label);
 
-    if (!tip) {
-        tip = "";
-    }
-
-    if (!longtip) {
+    if (longtip.empty()) {
         longtip =
             "Detailed help not yet written for this setting. For quick help, "
             "hover over the option name to display a tooltip.";
@@ -207,7 +199,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label,
         kf_h(24), new_label.c_str());
     rsl->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     rsl->mod_label->labelfont(font_style);
-    rsl->mod_label->tooltip(tip);
+    rsl->mod_label->tooltip(tip.c_str());
 
     rsl->prev_button = new UI_CustomArrowButton(
         (!single_pane ? rsl->x() : rsl->x() + (rsl->w() * .40)),
@@ -274,7 +266,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label,
 
     rsl->mod_help = new UI_HelpLink(
         rsl->x() + (!single_pane ? (rsl->w() * .9) : (rsl->w() * .95)),
-        rsl->y(), rsl->w() * .075, kf_h(24), "?");
+        rsl->y(), rsl->w() * .075, kf_h(24));
     rsl->mod_help->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
     rsl->mod_help->labelfont(font_style);
     rsl->mod_help->labelcolor(FONT_COLOR);
@@ -331,7 +323,7 @@ void UI_Module::AddSliderOption(const char *opt, const char *label,
 }
 
 void UI_Module::AddButtonOption(const char *opt, const char *label,
-                                const char *tip, const char *longtip, int gap) {
+                                std::string tip, std::string longtip, int gap) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
@@ -343,11 +335,7 @@ void UI_Module::AddButtonOption(const char *opt, const char *label,
         new_label += ": ";
     }
 
-    if (!tip) {
-        tip = "";
-    }
-
-    if (!longtip) {
+    if (longtip.empty()) {
         longtip =
             "Detailed help not yet written for this setting. For quick help, "
             "hover over the option name to display a tooltip.";
@@ -361,7 +349,7 @@ void UI_Module::AddButtonOption(const char *opt, const char *label,
                    rbt->w() * .30, kf_h(24), new_label.c_str());
     rbt->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     rbt->mod_label->labelfont(font_style);
-    rbt->mod_label->tooltip(tip);
+    rbt->mod_label->tooltip(tip.c_str());
 
     rbt->mod_check =
         new UI_CustomCheckBox(rbt->x() + (!single_pane ? 0 : (rbt->w() * .40)),
@@ -370,7 +358,7 @@ void UI_Module::AddButtonOption(const char *opt, const char *label,
 
     rbt->mod_help = new UI_HelpLink(
         rbt->x() + (!single_pane ? (rbt->w() * .9) : (rbt->w() * .95)),
-        rbt->y(), rbt->w() * .075, kf_h(24), "?");
+        rbt->y(), rbt->w() * .075, kf_h(24));
     rbt->mod_help->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
     rbt->mod_help->labelfont(font_style);
     rbt->mod_help->labelcolor(FONT_COLOR);
@@ -675,7 +663,7 @@ void UI_Module::callback_ShowHelp(Fl_Widget *w, void *data) {
 
     SYS_ASSERT(mod_help);
     fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window *win = new Fl_Window(640, 480, mod_help->help_title);
+    Fl_Window *win = new Fl_Window(640, 480, mod_help->help_title.c_str());
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp =
         new Fl_Text_Display(20, 20, 640 - 40, 480 - 40, NULL);
@@ -685,7 +673,7 @@ void UI_Module::callback_ShowHelp(Fl_Widget *w, void *data) {
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-    buff->text(mod_help->help_text);
+    buff->text(mod_help->help_text.c_str());
 }
 
 void UI_Module::callback_ManualEntry(Fl_Widget *w, void *data) {
@@ -812,7 +800,7 @@ typedef struct {
 } mod_enable_callback_data_t;
 
 void UI_CustomMods::AddModule(const char *id, const char *label,
-                              const char *tip, int red, int green, int blue) {
+                              std::string tip, int red, int green, int blue) {
     UI_Module *M = new UI_Module(mx, my, mw - 4, kf_h(34), id, label, tip, red,
                                  green, blue);
 
@@ -830,8 +818,8 @@ void UI_CustomMods::AddModule(const char *id, const char *label,
 }
 
 bool UI_CustomMods::AddOption(const char *module, const char *option,
-                              const char *label, const char *tip,
-                              const char *longtip, int gap) {
+                              const char *label, std::string tip,
+                              std::string longtip, int gap) {
     UI_Module *M = FindID(module);
 
     if (!M) {
@@ -846,8 +834,8 @@ bool UI_CustomMods::AddOption(const char *module, const char *option,
 }
 
 bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
-                                    const char *label, const char *tip,
-                                    const char *longtip, int gap, double min,
+                                    const char *label, std::string tip,
+                                    std::string longtip, int gap, double min,
                                     double max, double inc, const char *units,
                                     const char *presets, const char *nan) {
     UI_Module *M = FindID(module);
@@ -865,8 +853,8 @@ bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
 }
 
 bool UI_CustomMods::AddButtonOption(const char *module, const char *option,
-                                    const char *label, const char *tip,
-                                    const char *longtip, int gap) {
+                                    const char *label, std::string tip,
+                                    std::string longtip, int gap) {
     UI_Module *M = FindID(module);
 
     if (!M) {

@@ -400,7 +400,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     custom_prefix_help =
         new UI_HelpLink(136 + KF * 40 + this->opt_custom_prefix->w(), cy,
-                        W * 0.10, kf_h(24), "?");
+                        W * 0.10, kf_h(24));
     custom_prefix_help->labelfont(font_style);
     custom_prefix_help->callback(callback_PrefixHelp, this);
 

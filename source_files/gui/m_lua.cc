@@ -444,7 +444,7 @@ int gui_add_module(lua_State *L) {
     const char *where = luaL_checkstring(L, 1);
     const char *id = luaL_checkstring(L, 2);
     const char *label = luaL_checkstring(L, 3);
-    const char *tip = luaL_optstring(L, 4, NULL);
+    std::string tip = luaL_optstring(L, 4, "");
     int red = luaL_optinteger(L, 5, -1);
     int green = luaL_optinteger(L, 6, -1);
     int blue = luaL_optinteger(L, 7, -1);
@@ -537,8 +537,8 @@ int gui_add_module_option(lua_State *L) {
     const char *option = luaL_checkstring(L, 2);
 
     const char *label = luaL_checkstring(L, 3);
-    const char *tip = luaL_optstring(L, 4, NULL);
-    const char *longtip = luaL_optstring(L, 5, NULL);
+    std::string tip = luaL_optstring(L, 4, "");
+    std::string longtip = luaL_optstring(L, 5, "");
 
     int gap = luaL_optinteger(L, 6, 0);
 
@@ -573,8 +573,8 @@ int gui_add_module_slider_option(lua_State *L) {
     const char *option = luaL_checkstring(L, 2);
 
     const char *label = luaL_checkstring(L, 3);
-    const char *tip = luaL_optstring(L, 4, NULL);
-    const char *longtip = luaL_optstring(L, 5, NULL);
+    std::string tip = luaL_optstring(L, 4, "");
+    std::string longtip = luaL_optstring(L, 5, "");
 
     int gap = luaL_optinteger(L, 6, 0);
 
@@ -620,8 +620,8 @@ int gui_add_module_button_option(lua_State *L) {
     const char *option = luaL_checkstring(L, 2);
 
     const char *label = luaL_checkstring(L, 3);
-    const char *tip = luaL_optstring(L, 4, NULL);
-    const char *longtip = luaL_optstring(L, 5, NULL);
+    std::string tip = luaL_optstring(L, 4, "");
+    std::string longtip = luaL_optstring(L, 5, "");
 
     int gap = luaL_optinteger(L, 6, 0);
 

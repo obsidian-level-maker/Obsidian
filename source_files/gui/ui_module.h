@@ -55,19 +55,19 @@ class UI_Module : public Fl_Group {
 
    public:
     UI_Module(int X, int Y, int W, int H, const char *id, const char *label,
-              const char *tip, int red, int green, int blue);
+              std::string tip, int red, int green, int blue);
     virtual ~UI_Module();
 
-    void AddOption(const char *option, const char *label, const char *tip,
-                   const char *longtip, int gap);
+    void AddOption(const char *option, const char *label, std::string tip,
+                   std::string longtip, int gap);
 
-    void AddSliderOption(const char *option, const char *label, const char *tip,
-                         const char *longtip, int gap, double min, double max,
+    void AddSliderOption(const char *option, const char *label, std::string tip,
+                         std::string longtip, int gap, double min, double max,
                          double inc, const char *units, const char *presets,
                          const char *nan);
 
-    void AddButtonOption(const char *opt, const char *label, const char *tip,
-                         const char *longtip, int gap);
+    void AddButtonOption(const char *opt, const char *label, std::string tip,
+                         std::string longtip, int gap);
 
     void AddOptionChoice(const char *option, const char *id, const char *label);
 
@@ -129,7 +129,7 @@ class UI_CustomMods : public Fl_Group {
     virtual ~UI_CustomMods();
 
    public:
-    void AddModule(const char *id, const char *label, const char *tip, int red,
+    void AddModule(const char *id, const char *label, std::string tip, int red,
                    int green, int blue);
 
     // these return false if module is unknown
@@ -137,17 +137,17 @@ class UI_CustomMods : public Fl_Group {
     bool EnableMod(const char *id, bool enable);
 
     bool AddOption(const char *module, const char *option, const char *label,
-                   const char *tip, const char *longtip, int gap);
+                   std::string tip, std::string longtip, int gap);
 
     bool AddSliderOption(const char *module, const char *option,
-                         const char *label, const char *tip,
-                         const char *longtip, int gap, double min, double max,
+                         const char *label, std::string tip,
+                         std::string longtip, int gap, double min, double max,
                          double inc, const char *units, const char *presets,
                          const char *nan);
 
     bool AddButtonOption(const char *module, const char *option,
-                         const char *label, const char *tip,
-                         const char *longtip, int gap);
+                         const char *label, std::string tip,
+                         std::string longtip, int gap);
 
     void AddOptionChoice(const char *module, const char *option, const char *id,
                          const char *label);

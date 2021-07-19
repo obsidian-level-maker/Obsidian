@@ -70,11 +70,11 @@ class UI_HelpLink : public Fl_Button {
     int label_X, label_Y, label_W, label_H;
 
    public:
-    UI_HelpLink(int x, int y, int w, int h, const char *label);
+    UI_HelpLink(int x, int y, int w, int h);
     virtual ~UI_HelpLink();
 
-    const char *help_text = "";
-    const char *help_title = "";
+    std::string help_text;
+    std::string help_title;
 
    public:
     // FLTK overrides
