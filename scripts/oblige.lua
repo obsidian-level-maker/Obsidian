@@ -1243,6 +1243,8 @@ end
 function ob_default_filename()
   -- create a default filename [ WITHOUT any extension ]
 
+  if OB_CONFIG.batch == "yes" then goto continue end
+
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
   
@@ -1328,6 +1330,9 @@ function ob_default_filename()
    return gui.format_prefix(levelcount, OB_CONFIG.game, OB_CONFIG.theme, formatstring) .. str
    
  end
+ 
+ ::continue::
+ 
 end
 
 
