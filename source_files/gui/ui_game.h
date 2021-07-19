@@ -49,7 +49,7 @@ class UI_Game : public Fl_Group {
     void Locked(bool value);
 
     // these return false if 'button' is not valid
-    bool AddChoice(const char *button, const char *id, const char *label);
+    bool AddChoice(const char *button, const char *id, std::string label);
     bool EnableChoice(const char *button, const char *id, bool enable_it);
     bool SetButton(const char *button, const char *id);
 

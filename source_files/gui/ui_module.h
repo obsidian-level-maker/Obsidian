@@ -58,7 +58,7 @@ class UI_Module : public Fl_Group {
               std::string tip, int red, int green, int blue);
     virtual ~UI_Module();
 
-    void AddOption(const char *option, const char *label, std::string tip,
+    void AddOption(const char *option, std::string label, std::string tip,
                    std::string longtip, int gap);
 
     void AddSliderOption(const char *option, std::string label, std::string tip,
@@ -66,7 +66,7 @@ class UI_Module : public Fl_Group {
                          double inc, std::string units, std::string presets,
                          std::string nan);
 
-    void AddButtonOption(const char *opt, const char *label, std::string tip,
+    void AddButtonOption(const char *opt, std::string label, std::string tip,
                          std::string longtip, int gap);
 
     void AddOptionChoice(const char *option, const char *id, const char *label);
@@ -136,7 +136,7 @@ class UI_CustomMods : public Fl_Group {
     bool ShowModule(const char *id, bool new_shown);
     bool EnableMod(const char *id, bool enable);
 
-    bool AddOption(const char *module, const char *option, const char *label,
+    bool AddOption(const char *module, const char *option, std::string label,
                    std::string tip, std::string longtip, int gap);
 
     bool AddSliderOption(const char *module, const char *option,
@@ -146,7 +146,7 @@ class UI_CustomMods : public Fl_Group {
                          std::string nan);
 
     bool AddButtonOption(const char *module, const char *option,
-                         const char *label, std::string tip,
+                         std::string label, std::string tip,
                          std::string longtip, int gap);
 
     void AddOptionChoice(const char *module, const char *option, const char *id,

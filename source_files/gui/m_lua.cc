@@ -371,9 +371,9 @@ int gui_scan_directory(lua_State *L) {
 int gui_add_choice(lua_State *L) {
     const char *button = luaL_checkstring(L, 1);
     const char *id = luaL_checkstring(L, 2);
-    const char *label = luaL_checkstring(L, 3);
+    std::string label = luaL_optstring(L, 3, "");
 
-    SYS_ASSERT(button && id && label);
+    SYS_ASSERT(button && id && !label.empty());
 
     //	DebugPrintf("  add_choice: %s id:%s\n", button, id);
 
@@ -619,7 +619,7 @@ int gui_add_module_button_option(lua_State *L) {
     const char *module = luaL_checkstring(L, 1);
     const char *option = luaL_checkstring(L, 2);
 
-    const char *label = luaL_checkstring(L, 3);
+    std::string label = luaL_optstring(L, 3, "");
     std::string tip = luaL_optstring(L, 4, "");
     std::string longtip = luaL_optstring(L, 5, "");
 

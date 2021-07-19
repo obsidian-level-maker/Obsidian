@@ -57,7 +57,7 @@ class choice_data_c {
     Fl_Check_Button *widget;
 
    public:
-    choice_data_c(const char *_id = NULL, const char *_label = NULL);
+    choice_data_c(std::string _id, std::string _label);
     ~choice_data_c();
 };
 
@@ -132,7 +132,7 @@ class UI_RChoiceMenu : public UI_CustomMenu {
     // add a new choice to the list.  If a choice with the same 'id'
     // already exists, it is just replaced instead.
     // The choice will begin disabled (shown == false).
-    void AddChoice(const char *id, const char *label);
+    void AddChoice(const char *id, std::string label);
 
     // finds the option with the given ID, and update its 'enabled'
     // value.  Returns true if successful, or false if no such

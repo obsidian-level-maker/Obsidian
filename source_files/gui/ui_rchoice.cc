@@ -24,12 +24,12 @@
 #include "lib_util.h"
 #include "main.h"
 
-choice_data_c::choice_data_c(const char *_id, const char *_label)
+choice_data_c::choice_data_c(std::string _id, std::string _label)
     : enabled(false), mapped(-1), widget(NULL) {
-    if (_id) {
+    if (!_id.empty()) {
         id = _id;
     }
-    if (_label) {
+    if (!_label.empty()) {
         label = _label;
     }
 }
@@ -57,11 +57,11 @@ UI_RChoiceMenu::~UI_RChoiceMenu() {
     }
 }
 
-void UI_RChoiceMenu::AddChoice(const char *id, const char *label) {
+void UI_RChoiceMenu::AddChoice(const char *id, std::string label) {
     choice_data_c *opt = FindID(id);
 
     if (opt) {
-        opt->label = label;
+        opt->label = label.c_str();
 
         if (opt->enabled) {
             Recreate();

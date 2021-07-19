@@ -86,17 +86,13 @@ typedef struct {
     std::string opt_name;
 } opt_change_callback_data_t;
 
-void UI_Module::AddOption(const char *opt, const char *label, std::string tip,
+void UI_Module::AddOption(const char *opt, std::string label, std::string tip,
                           std::string longtip, int gap) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
     int nx = x() + kf_w(6);
     int ny = y() + cur_opt_y - kf_h(15);
-
-    // make label with ': ' suffixed
-    int len = strlen(label);
-    std::string new_label = fmt::format("{}: ", label);
 
     if (longtip.empty()) {
         longtip =
@@ -110,7 +106,7 @@ void UI_Module::AddOption(const char *opt, const char *label, std::string tip,
 
     rch->mod_label = new Fl_Box(
         rch->x(), rch->y(), (!single_pane ? rch->w() * .95 : rch->w() * .40),
-        kf_h(24), new_label.c_str());
+        kf_h(24), fmt::format("{}: ", label).c_str());
     rch->mod_label->align(
         (!single_pane ? (FL_ALIGN_LEFT | FL_ALIGN_INSIDE)
                       : (FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP)));
@@ -176,7 +172,6 @@ void UI_Module::AddSliderOption(const char *opt, std::string label,
                                    (!single_pane ? kf_h(48) : kf_h(24)), NULL);
 
     // Populate the nan_options vector
-    //std::string temp_string = nan;
     std::string::size_type oldpos = 0;
     std::string::size_type pos = 0;
     while (pos != std::string::npos) {
@@ -317,18 +312,13 @@ void UI_Module::AddSliderOption(const char *opt, std::string label,
     choice_map_slider[opt] = rsl;
 }
 
-void UI_Module::AddButtonOption(const char *opt, const char *label,
+void UI_Module::AddButtonOption(const char *opt, std::string label,
                                 std::string tip, std::string longtip, int gap) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
     int nx = x() + kf_w(6);
     int ny = y() + cur_opt_y - kf_h(15);
-    int len = strlen(label);
-    std::string new_label = label;
-    if (single_pane) {
-        new_label += ": ";
-    }
 
     if (longtip.empty()) {
         longtip =
@@ -341,7 +331,7 @@ void UI_Module::AddButtonOption(const char *opt, const char *label,
 
     rbt->mod_label =
         new Fl_Box(rbt->x() + (single_pane ? 0 : (rbt->w() * .075)), rbt->y(),
-                   rbt->w() * .30, kf_h(24), new_label.c_str());
+                   rbt->w() * .30, kf_h(24), single_pane ? label.append(": ").c_str() : label.c_str());
     rbt->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     rbt->mod_label->labelfont(font_style);
     rbt->mod_label->tooltip(tip.c_str());
@@ -813,7 +803,7 @@ void UI_CustomMods::AddModule(const char *id, const char *label,
 }
 
 bool UI_CustomMods::AddOption(const char *module, const char *option,
-                              const char *label, std::string tip,
+                              std::string label, std::string tip,
                               std::string longtip, int gap) {
     UI_Module *M = FindID(module);
 
@@ -848,7 +838,7 @@ bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
 }
 
 bool UI_CustomMods::AddButtonOption(const char *module, const char *option,
-                                    const char *label, std::string tip,
+                                    std::string label, std::string tip,
                                     std::string longtip, int gap) {
     UI_Module *M = FindID(module);
 

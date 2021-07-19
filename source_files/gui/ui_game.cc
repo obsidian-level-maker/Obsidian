@@ -237,7 +237,7 @@ void UI_Game::Locked(bool value) {
     }
 }
 
-bool UI_Game::AddChoice(const char *button, const char *id, const char *label) {
+bool UI_Game::AddChoice(const char *button, const char *id, std::string label) {
     if (StringCaseCmp(button, "game") == 0) {
         game->AddChoice(id, label);
         return true;
