@@ -4,6 +4,7 @@
 #include <FL/Fl.H>
 #include <FL/fl_draw.H>
 #include "main.h"
+#include <iostream>
 
 void c_color(Fl_Color c) {
   Fl::set_box_color(c);
@@ -26,7 +27,7 @@ static const uchar c_inactive_ramp[24] = {
 static int c_draw_it_active = 1;
 
 
-const uchar *c_fl_gray_ramp() {return (c_draw_it_active?c_active_ramp:c_inactive_ramp)-'A';}
+const uchar *c_fl_gray_ramp() {	return (c_draw_it_active?c_active_ramp:c_inactive_ramp)-'A'; }
 
 // CUSTOM GLEAM BOXES ---------------------------------------------------------------------------------------
 
@@ -227,8 +228,6 @@ void cgtk_thin_up_box(int x, int y, int w, int h, Fl_Color c) {
 
 // CUSTOM PLASTIC BOXES
 // ---------------------------------------------------------------------------------------
-
-extern const uchar *c_fl_gray_ramp();
 
 Fl_Color cplastic_shade_color(uchar gc, Fl_Color bc) {
   return fl_color_average((Fl_Color)gc, bc, 0.50f);

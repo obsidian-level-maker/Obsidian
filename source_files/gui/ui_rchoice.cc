@@ -44,7 +44,7 @@ choice_data_c::~choice_data_c() {
 
 //----------------------------------------------------------------
 
-UI_RChoiceMenu::UI_RChoiceMenu(int x, int y, int w, int h, const char *label)
+UI_RChoiceMenu::UI_RChoiceMenu(int x, int y, int w, int h, std::string label)
     : UI_CustomMenu(x, y, w, h, label), opt_list() {
     visible_focus(0);
     labelfont(font_style);
@@ -217,8 +217,8 @@ void UI_RChoiceMenu::GotoNext() {
 
 //----------------------------------------------------------------
 
-UI_RChoice::UI_RChoice(int x, int y, int w, int h, const char *label)
-    : Fl_Group(x, y, w, h, label) {
+UI_RChoice::UI_RChoice(int x, int y, int w, int h)
+    : Fl_Group(x, y, w, h) {
     visible_focus(0);
     labelfont(font_style);
 }
@@ -227,8 +227,8 @@ UI_RChoice::~UI_RChoice() {}
 
 //----------------------------------------------------------------
 
-UI_RSlide::UI_RSlide(int x, int y, int w, int h, const char *label)
-    : Fl_Group(x, y, w, h, label) {
+UI_RSlide::UI_RSlide(int x, int y, int w, int h)
+    : Fl_Group(x, y, w, h) {
     visible_focus(0);
     labelfont(font_style);
 }
@@ -237,8 +237,8 @@ UI_RSlide::~UI_RSlide() {}
 
 //----------------------------------------------------------------
 
-UI_RButton::UI_RButton(int x, int y, int w, int h, const char *label)
-    : Fl_Group(x, y, w, h, label) {
+UI_RButton::UI_RButton(int x, int y, int w, int h)
+    : Fl_Group(x, y, w, h) {
     visible_focus(0);
     box(FL_NO_BOX);
 }
@@ -248,8 +248,8 @@ UI_RButton::~UI_RButton() {}
 //----------------------------------------------------------------
 
 UI_CustomCheckBox::UI_CustomCheckBox(int x, int y, int w, int h,
-                                     const char *label)
-    : Fl_Check_Button(x, y, w, h, label) {
+                                     std::string label)
+    : Fl_Check_Button(x, y, w, h, label.empty() ? "" : label.c_str()) {
     visible_focus(0);
     box(FL_NO_BOX);
     down_box(button_style);
@@ -318,9 +318,8 @@ void UI_CustomArrowButton::draw() {
 
 //----------------------------------------------------------------
 
-UI_CustomMenuButton::UI_CustomMenuButton(int x, int y, int w, int h,
-                                         const char *label)
-    : Fl_Menu_Button(x, y, w, h, label),
+UI_CustomMenuButton::UI_CustomMenuButton(int x, int y, int w, int h)
+    : Fl_Menu_Button(x, y, w, h, "@2>"),
       hover(false),
       label_X(0),
       label_Y(0),
@@ -506,8 +505,8 @@ void UI_HelpLink::draw() {
 
 //----------------------------------------------------------------
 
-UI_ManualEntry::UI_ManualEntry(int x, int y, int w, int h, const char *label)
-    : Fl_Button(x, y, w, h, label),
+UI_ManualEntry::UI_ManualEntry(int x, int y, int w, int h)
+    : Fl_Button(x, y, w, h, "[ ]"),
       hover(false),
       label_X(0),
       label_Y(0),
@@ -604,8 +603,8 @@ void UI_ManualEntry::draw() {
 
 //----------------------------------------------------------------
 
-UI_CustomMenu::UI_CustomMenu(int x, int y, int w, int h, const char *label)
-    : Fl_Choice(x, y, w, h, label) {
+UI_CustomMenu::UI_CustomMenu(int x, int y, int w, int h, std::string label)
+    : Fl_Choice(x, y, w, h, label.empty() ? "" : label.c_str()) {
     visible_focus(0);
 }
 

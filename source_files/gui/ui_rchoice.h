@@ -96,7 +96,7 @@ class UI_ManualEntry : public Fl_Button {
     int label_X, label_Y, label_W, label_H;
 
    public:
-    UI_ManualEntry(int x, int y, int w, int h, const char *label);
+    UI_ManualEntry(int x, int y, int w, int h);
     virtual ~UI_ManualEntry();
 
    public:
@@ -113,7 +113,7 @@ class UI_ManualEntry : public Fl_Button {
 class UI_CustomMenu : public Fl_Choice {
    private:
    public:
-    UI_CustomMenu(int x, int y, int w, int h, const char *label = NULL);
+    UI_CustomMenu(int x, int y, int w, int h, std::string label = "");
     virtual ~UI_CustomMenu();
 
    private:
@@ -125,7 +125,7 @@ class UI_RChoiceMenu : public UI_CustomMenu {
     std::vector<choice_data_c *> opt_list;
 
    public:
-    UI_RChoiceMenu(int x, int y, int w, int h, const char *label = NULL);
+    UI_RChoiceMenu(int x, int y, int w, int h, std::string label = "");
     virtual ~UI_RChoiceMenu();
 
    public:
@@ -170,7 +170,7 @@ class UI_RChoiceMenu : public UI_CustomMenu {
 class UI_RChoice : public Fl_Group {
    private:
    public:
-    UI_RChoice(int x, int y, int w, int h, const char *label = NULL);
+    UI_RChoice(int x, int y, int w, int h);
     virtual ~UI_RChoice();
 
    public:
@@ -202,7 +202,7 @@ class UI_CustomMenuButton : public Fl_Menu_Button {
     int label_X, label_Y, label_W, label_H;
 
    public:
-    UI_CustomMenuButton(int x, int y, int w, int h, const char *label = NULL);
+    UI_CustomMenuButton(int x, int y, int w, int h);
     virtual ~UI_CustomMenuButton();
 
    public:
@@ -219,7 +219,7 @@ class UI_CustomMenuButton : public Fl_Menu_Button {
 class UI_RSlide : public Fl_Group {
    private:
    public:
-    UI_RSlide(int x, int y, int w, int h, const char *label = NULL);
+    UI_RSlide(int x, int y, int w, int h);
     virtual ~UI_RSlide();
 
     Fl_Box *mod_label;
@@ -250,7 +250,7 @@ class UI_RSlide : public Fl_Group {
 class UI_CustomCheckBox : public Fl_Check_Button {
    private:
    public:
-    UI_CustomCheckBox(int x, int y, int w, int h, const char *label = NULL);
+    UI_CustomCheckBox(int x, int y, int w, int h, std::string label = "");
     virtual ~UI_CustomCheckBox();
 
    private:
@@ -260,7 +260,7 @@ class UI_CustomCheckBox : public Fl_Check_Button {
 class UI_RButton : public Fl_Group {
    private:
    public:
-    UI_RButton(int x, int y, int w, int h, const char *label = NULL);
+    UI_RButton(int x, int y, int w, int h);
     virtual ~UI_RButton();
 
     UI_CustomCheckBox *mod_check;

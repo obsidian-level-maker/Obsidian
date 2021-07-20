@@ -104,7 +104,7 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
 
     UI_RChoice *rch =
         new UI_RChoice(nx, ny + kf_h(15), nw * .95,
-                       (!single_pane ? kf_h(48) : kf_h(24)), NULL);
+                       (!single_pane ? kf_h(48) : kf_h(24)));
 
     rch->mod_label = new Fl_Box(
         rch->x(), rch->y(), (!single_pane ? rch->w() * .95 : rch->w() * .40),
@@ -118,7 +118,7 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
     rch->mod_menu = new UI_RChoiceMenu(
         (!single_pane ? rch->x() : rch->x() + (rch->w() * .40)),
         (!single_pane ? rch->y() + rch->mod_label->h() : rch->y()),
-        (single_pane ? rch->w() * .55 : rch->w()), kf_h(24), NULL);
+        (single_pane ? rch->w() * .55 : rch->w()), kf_h(24));
     rch->mod_menu->textcolor(FONT2_COLOR);
     rch->mod_menu->selection_color(SELECTION);
 
@@ -173,7 +173,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     label = fmt::format("{}: ", label);
 
     UI_RSlide *rsl = new UI_RSlide(nx, ny + kf_h(15), nw * .95,
-                                   (!single_pane ? kf_h(48) : kf_h(24)), NULL);
+                                   (!single_pane ? kf_h(48) : kf_h(24)));
 
     // Populate the nan_options vector
     std::string::size_type oldpos = 0;
@@ -240,7 +240,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     if (rsl->nan_choices.size() > 0) {
         rsl->nan_options = new UI_CustomMenuButton(
             rsl->x() + (!single_pane ? (rsl->w() * .7) : (rsl->w() * .85)),
-            rsl->y(), rsl->w() * .075, kf_h(24), "@2>");
+            rsl->y(), rsl->w() * .075, kf_h(24));
         rsl->nan_options->box(FL_FLAT_BOX);
         rsl->nan_options->color(this->color());
         rsl->nan_options->selection_color(SELECTION);
@@ -253,7 +253,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
 
     rsl->mod_entry = new UI_ManualEntry(
         rsl->x() + (!single_pane ? (rsl->w() * .8) : (rsl->w() * .90)),
-        rsl->y(), rsl->w() * .075, kf_h(24), "[ ]");
+        rsl->y(), rsl->w() * .075, kf_h(24));
     rsl->mod_entry->box(FL_NO_BOX);
     rsl->mod_entry->labelcolor(FONT_COLOR);
     rsl->mod_entry->visible_focus(0);
@@ -331,7 +331,7 @@ void UI_Module::AddButtonOption(std::string opt, std::string label,
     }
 
     UI_RButton *rbt =
-        new UI_RButton(nx, ny + kf_h(15), nw * .95, kf_h(24), NULL);
+        new UI_RButton(nx, ny + kf_h(15), nw * .95, kf_h(24));
 
     rbt->mod_label =
         new Fl_Box(rbt->x() + (single_pane ? 0 : (rbt->w() * .075)), rbt->y(),
@@ -342,7 +342,7 @@ void UI_Module::AddButtonOption(std::string opt, std::string label,
 
     rbt->mod_check =
         new UI_CustomCheckBox(rbt->x() + (!single_pane ? 0 : (rbt->w() * .40)),
-                              rbt->y(), rbt->w() * .10, kf_h(24), NULL);
+                              rbt->y(), rbt->w() * .10, kf_h(24), "");
     rbt->mod_check->selection_color(SELECTION);
 
     rbt->mod_help = new UI_HelpLink(
