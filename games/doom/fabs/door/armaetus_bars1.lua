@@ -54,7 +54,7 @@ PREFABS.Decor_Armaetus_bars_EPIC_wide =
 PREFABS.Decor_Armaetus_bars_EPIC_wide_tech =
 {
   template = "Decor_Armaetus_bars_EPIC",
-  map = "MAP03",
+  map = "MAP04",
   theme = "tech",
 
   prob = 75,
@@ -62,14 +62,11 @@ PREFABS.Decor_Armaetus_bars_EPIC_wide_tech =
   seed_w = 2,
 
   x_fit  = "frame",
-
-  tex_GOTH50 = "DOORHI",
-  tex_GOTH41 = "SHAWN2"
 }
 
 --
 
-PREFABS.Decor_gtd_Armaetus_bars_EPIC_ultrawide =
+PREFABS.Decor_gtd_Armaetus_bars_EPIC_stretchy =
 {
   template = "Decor_Armaetus_bars_EPIC",
   map = "MAP03",
@@ -82,19 +79,17 @@ PREFABS.Decor_gtd_Armaetus_bars_EPIC_ultrawide =
   x_fit = { 72,120 , 138,184 }
 }
 
-PREFABS.Decor_gtd_Armaetus_bars_EPIC_ultrawide_tech =
+PREFABS.Decor_gtd_Armaetus_bars_EPIC_stretchy_tech =
 {
   template = "Decor_Armaetus_bars_EPIC",
-  map = "MAP03",
+  map = "MAP04",
   theme = "!tech",
 
   prob = 75,
 
   seed_w = 2,
 
-  x_fit = { 72,120 , 138,184 },
-
-  tex_GOTH50 = "DOORHI"
+  x_fit = { 72,120 , 138,184 }
 }
 
 --[[
