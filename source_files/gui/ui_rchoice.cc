@@ -57,11 +57,11 @@ UI_RChoiceMenu::~UI_RChoiceMenu() {
     }
 }
 
-void UI_RChoiceMenu::AddChoice(const char *id, std::string label) {
+void UI_RChoiceMenu::AddChoice(std::string id, std::string label) {
     choice_data_c *opt = FindID(id);
 
     if (opt) {
-        opt->label = label.c_str();
+        opt->label = label;
 
         if (opt->enabled) {
             Recreate();
@@ -76,8 +76,8 @@ void UI_RChoiceMenu::AddChoice(const char *id, std::string label) {
     }
 }
 
-bool UI_RChoiceMenu::EnableChoice(const char *id, bool enable_it) {
-    SYS_ASSERT(id);
+bool UI_RChoiceMenu::EnableChoice(std::string id, bool enable_it) {
+    SYS_ASSERT(!id.empty());
 
     choice_data_c *P = FindID(id);
 
@@ -105,8 +105,8 @@ std::string UI_RChoiceMenu::GetLabel() const {
     return P ? P->label : "";
 }
 
-bool UI_RChoiceMenu::ChangeTo(const char *id) {
-    SYS_ASSERT(id);
+bool UI_RChoiceMenu::ChangeTo(std::string id) {
+    SYS_ASSERT(!id.empty());
 
     choice_data_c *P = FindID(id);
 
@@ -156,7 +156,7 @@ void UI_RChoiceMenu::Recreate() {
     value(0);
 }
 
-choice_data_c *UI_RChoiceMenu::FindID(const char *id) const {
+choice_data_c *UI_RChoiceMenu::FindID(std::string id) const {
     for (unsigned int j = 0; j < opt_list.size(); j++) {
         choice_data_c *P = opt_list[j];
 

@@ -30,7 +30,7 @@
 #include <iostream>
 
 UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
-                     const char *label, std::string tip, int red, int green,
+                     std::string label, std::string tip, int red, int green,
                      int blue)
     : Fl_Group(X, Y, W, H), choice_map(), cur_opt_y(0) {
     box(box_style);
@@ -55,7 +55,7 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
     int tx = Is_UI() ? 8 : 28;
 
     heading = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4), W - kf_w(tx + 4),
-                         kf_h(24), label);
+                         kf_h(24), label.c_str());
     heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     heading->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
 
@@ -88,7 +88,7 @@ typedef struct {
     std::string opt_name;
 } opt_change_callback_data_t;
 
-void UI_Module::AddOption(const char *opt, std::string label, std::string tip,
+void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
                           std::string longtip, int gap) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
@@ -153,7 +153,7 @@ void UI_Module::AddOption(const char *opt, std::string label, std::string tip,
     choice_map[opt] = rch;
 }
 
-void UI_Module::AddSliderOption(const char *opt, std::string label,
+void UI_Module::AddSliderOption(std::string opt, std::string label,
                                 std::string tip, std::string longtip, int gap,
                                 double min, double max, double inc,
                                 std::string units, std::string presets,
@@ -316,7 +316,7 @@ void UI_Module::AddSliderOption(const char *opt, std::string label,
     choice_map_slider[opt] = rsl;
 }
 
-void UI_Module::AddButtonOption(const char *opt, std::string label,
+void UI_Module::AddButtonOption(std::string opt, std::string label,
                                 std::string tip, std::string longtip, int gap) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
@@ -414,8 +414,8 @@ void UI_Module::update_Enable() {
     }
 }
 
-void UI_Module::AddOptionChoice(const char *option, const char *id,
-                                const char *label) {
+void UI_Module::AddOptionChoice(std::string option, std::string id,
+                                std::string label) {
     UI_RChoice *rch = FindOpt(option);
 
     if (!rch) {
@@ -428,7 +428,7 @@ void UI_Module::AddOptionChoice(const char *option, const char *id,
     rch->mod_menu->EnableChoice(id, 1);
 }
 
-bool UI_Module::SetOption(const char *option, const char *value) {
+bool UI_Module::SetOption(std::string option, std::string value) {
     UI_RChoice *rch = FindOpt(option);
 
     if (!rch) {
@@ -440,16 +440,15 @@ bool UI_Module::SetOption(const char *option, const char *value) {
     return true;
 }
 
-bool UI_Module::SetSliderOption(const char *option, const char *value) {
+bool UI_Module::SetSliderOption(std::string option, std::string value) {
     UI_RSlide *rsl = FindSliderOpt(option);
 
     if (!rsl) {
         return false;
     }
-    std::string string_value = value;
     double double_value;
     try {
-        double_value = std::stod(string_value);
+        double_value = std::stod(value);
         rsl->mod_slider->value(double_value);
         rsl->mod_slider->do_callback();
         if (rsl->nan_choices.size() > 0) {
@@ -458,7 +457,7 @@ bool UI_Module::SetSliderOption(const char *option, const char *value) {
         }
     } catch (std::invalid_argument &e) {
         // If it is a nan value instead
-        rsl->nan_options->value(rsl->nan_options->find_index(value));
+        rsl->nan_options->value(rsl->nan_options->find_index(value.c_str()));
         rsl->nan_options->do_callback();
     } catch (std::out_of_range &e) {
         // This shouldn't happen
@@ -470,7 +469,7 @@ bool UI_Module::SetSliderOption(const char *option, const char *value) {
     return true;
 }
 
-bool UI_Module::SetButtonOption(const char *option, int value) {
+bool UI_Module::SetButtonOption(std::string option, int value) {
     UI_RButton *rbt = FindButtonOpt(option);
 
     if (!rbt) {
@@ -481,7 +480,7 @@ bool UI_Module::SetButtonOption(const char *option, int value) {
     return true;
 }
 
-UI_RChoice *UI_Module::FindOpt(const char *option) {
+UI_RChoice *UI_Module::FindOpt(std::string option) {
     if (choice_map.find(option) == choice_map.end()) {
         return NULL;
     }
@@ -489,7 +488,7 @@ UI_RChoice *UI_Module::FindOpt(const char *option) {
     return choice_map[option];
 }
 
-UI_RSlide *UI_Module::FindSliderOpt(const char *option) {
+UI_RSlide *UI_Module::FindSliderOpt(std::string option) {
     if (choice_map_slider.find(option) == choice_map_slider.end()) {
         return NULL;
     }
@@ -497,7 +496,7 @@ UI_RSlide *UI_Module::FindSliderOpt(const char *option) {
     return choice_map_slider[option];
 }
 
-UI_RButton *UI_Module::FindButtonOpt(const char *option) {
+UI_RButton *UI_Module::FindButtonOpt(std::string option) {
     if (choice_map_button.find(option) == choice_map_button.end()) {
         return NULL;
     }
@@ -517,8 +516,8 @@ void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
 
     UI_Module *parent = (UI_Module *)M->parent();
 
-    ob_set_mod_option(parent->id_name.c_str(), cb_data->opt_name.c_str(),
-                      rch->GetID().c_str());
+    ob_set_mod_option(parent->id_name, cb_data->opt_name,
+                      rch->GetID());
 }
 
 void UI_Module::callback_PresetCheck(Fl_Widget *w, void *data) {
@@ -788,7 +787,7 @@ typedef struct {
     UI_CustomMods *parent;
 } mod_enable_callback_data_t;
 
-void UI_CustomMods::AddModule(const char *id, const char *label,
+void UI_CustomMods::AddModule(std::string id, std::string label,
                               std::string tip, int red, int green, int blue) {
     UI_Module *M = new UI_Module(mx, my, mw - 4, kf_h(34), id, label, tip, red,
                                  green, blue);
@@ -806,7 +805,7 @@ void UI_CustomMods::AddModule(const char *id, const char *label,
     PositionAll();
 }
 
-bool UI_CustomMods::AddOption(const char *module, const char *option,
+bool UI_CustomMods::AddOption(std::string module, std::string option,
                               std::string label, std::string tip,
                               std::string longtip, int gap) {
     UI_Module *M = FindID(module);
@@ -822,7 +821,7 @@ bool UI_CustomMods::AddOption(const char *module, const char *option,
     return true;
 }
 
-bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
+bool UI_CustomMods::AddSliderOption(std::string module, std::string option,
                                     std::string label, std::string tip,
                                     std::string longtip, int gap, double min,
                                     double max, double inc, std::string units,
@@ -841,7 +840,7 @@ bool UI_CustomMods::AddSliderOption(const char *module, const char *option,
     return true;
 }
 
-bool UI_CustomMods::AddButtonOption(const char *module, const char *option,
+bool UI_CustomMods::AddButtonOption(std::string module, std::string option,
                                     std::string label, std::string tip,
                                     std::string longtip, int gap) {
     UI_Module *M = FindID(module);
@@ -857,8 +856,8 @@ bool UI_CustomMods::AddButtonOption(const char *module, const char *option,
     return true;
 }
 
-void UI_CustomMods::AddOptionChoice(const char *module, const char *option,
-                                    const char *id, const char *label) {
+void UI_CustomMods::AddOptionChoice(std::string module, std::string option,
+                                    std::string id, std::string label) {
     UI_Module *M = FindID(module);
 
     if (!M) {
@@ -868,8 +867,8 @@ void UI_CustomMods::AddOptionChoice(const char *module, const char *option,
     M->AddOptionChoice(option, id, label);
 }
 
-bool UI_CustomMods::ShowModule(const char *id, bool new_shown) {
-    SYS_ASSERT(id);
+bool UI_CustomMods::ShowModule(std::string id, bool new_shown) {
+    SYS_ASSERT(!id.empty());
 
     UI_Module *M = FindID(id);
 
@@ -894,8 +893,8 @@ bool UI_CustomMods::ShowModule(const char *id, bool new_shown) {
     return true;
 }
 
-bool UI_CustomMods::SetOption(const char *module, const char *option,
-                              const char *value) {
+bool UI_CustomMods::SetOption(std::string module, std::string option,
+                              std::string value) {
     UI_Module *M = FindID(module);
 
     if (!M) {
@@ -905,8 +904,8 @@ bool UI_CustomMods::SetOption(const char *module, const char *option,
     return M->SetOption(option, value);
 }
 
-bool UI_CustomMods::SetSliderOption(const char *module, const char *option,
-                                    const char *value) {
+bool UI_CustomMods::SetSliderOption(std::string module, std::string option,
+                                    std::string value) {
     UI_Module *M = FindID(module);
 
     if (!M) {
@@ -916,7 +915,7 @@ bool UI_CustomMods::SetSliderOption(const char *module, const char *option,
     return M->SetSliderOption(option, value);
 }
 
-bool UI_CustomMods::SetButtonOption(const char *module, const char *option,
+bool UI_CustomMods::SetButtonOption(std::string module, std::string option,
                                     int value) {
     UI_Module *M = FindID(module);
 
@@ -927,8 +926,8 @@ bool UI_CustomMods::SetButtonOption(const char *module, const char *option,
     return M->SetButtonOption(option, value);
 }
 
-bool UI_CustomMods::EnableMod(const char *id, bool enable) {
-    SYS_ASSERT(id);
+bool UI_CustomMods::EnableMod(std::string id, bool enable) {
+    SYS_ASSERT(!id.empty());
 
     UI_Module *M = FindID(id);
 
@@ -1339,16 +1338,16 @@ void UI_CustomMods::callback_ModEnable(Fl_Widget *w, void *data) {
         cb_data->parent->PositionAll(M);
     }
 
-    ob_set_mod_option(M->id_name.c_str(), "self",
+    ob_set_mod_option(M->id_name, "self",
                       M->mod_button->value() ? "true" : "false");
 }
 
-UI_Module *UI_CustomMods::FindID(const char *id) const {
+UI_Module *UI_CustomMods::FindID(std::string id) const {
     for (int j = 0; j < mod_pack->children(); j++) {
         UI_Module *M = (UI_Module *)mod_pack->child(j);
         SYS_ASSERT(M);
 
-        if (strcmp(M->id_name.c_str(), id) == 0) {
+        if (!StringCaseCmp(M->id_name, id)) {
             return M;
         }
     }

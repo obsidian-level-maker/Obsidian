@@ -55,31 +55,31 @@ class UI_Module : public Fl_Group {
     int cur_opt_y;
 
    public:
-    UI_Module(int X, int Y, int W, int H, std::string id, const char *label,
+    UI_Module(int X, int Y, int W, int H, std::string id, std::string label,
               std::string tip, int red, int green, int blue);
     virtual ~UI_Module();
 
-    void AddOption(const char *option, std::string label, std::string tip,
+    void AddOption(std::string option, std::string label, std::string tip,
                    std::string longtip, int gap);
 
-    void AddSliderOption(const char *option, std::string label, std::string tip,
+    void AddSliderOption(std::string option, std::string label, std::string tip,
                          std::string longtip, int gap, double min, double max,
                          double inc, std::string units, std::string presets,
                          std::string nan);
 
-    void AddButtonOption(const char *opt, std::string label, std::string tip,
+    void AddButtonOption(std::string opt, std::string label, std::string tip,
                          std::string longtip, int gap);
 
-    void AddOptionChoice(const char *option, const char *id, const char *label);
+    void AddOptionChoice(std::string option, std::string id, std::string label);
 
-    void AddOptionSliderChoice(const char *option, double minimum,
+    void AddOptionSliderChoice(std::string option, double minimum,
                                double maximum, double increment);
 
-    bool SetOption(const char *option, const char *value);
+    bool SetOption(std::string option, std::string value);
 
-    bool SetSliderOption(const char *option, const char *value);
+    bool SetSliderOption(std::string option, std::string value);
 
-    bool SetButtonOption(const char *option, int value);
+    bool SetButtonOption(std::string option, int value);
 
     bool Is_UI() const;
 
@@ -88,11 +88,11 @@ class UI_Module : public Fl_Group {
 
     void update_Enable();
 
-    UI_RChoice *FindOpt(const char *opt);  // const;
+    UI_RChoice *FindOpt(std::string opt);  // const;
 
-    UI_RSlide *FindSliderOpt(const char *opt);  // const;
+    UI_RSlide *FindSliderOpt(std::string opt);  // const;
 
-    UI_RButton *FindButtonOpt(const char *opt);  // const;
+    UI_RButton *FindButtonOpt(std::string opt);  // const;
 
    protected:
    private:
@@ -130,39 +130,39 @@ class UI_CustomMods : public Fl_Group {
     virtual ~UI_CustomMods();
 
    public:
-    void AddModule(const char *id, const char *label, std::string tip, int red,
+    void AddModule(std::string id, std::string label, std::string tip, int red,
                    int green, int blue);
 
     // these return false if module is unknown
-    bool ShowModule(const char *id, bool new_shown);
-    bool EnableMod(const char *id, bool enable);
+    bool ShowModule(std::string id, bool new_shown);
+    bool EnableMod(std::string id, bool enable);
 
-    bool AddOption(const char *module, const char *option, std::string label,
+    bool AddOption(std::string module, std::string option, std::string label,
                    std::string tip, std::string longtip, int gap);
 
-    bool AddSliderOption(const char *module, const char *option,
+    bool AddSliderOption(std::string module, std::string option,
                          std::string label, std::string tip,
                          std::string longtip, int gap, double min, double max,
                          double inc, std::string units, std::string presets,
                          std::string nan);
 
-    bool AddButtonOption(const char *module, const char *option,
+    bool AddButtonOption(std::string module, std::string option,
                          std::string label, std::string tip,
                          std::string longtip, int gap);
 
-    void AddOptionChoice(const char *module, const char *option, const char *id,
-                         const char *label);
+    void AddOptionChoice(std::string module, std::string option, std::string id,
+                         std::string label);
 
-    bool SetOption(const char *module, const char *option, const char *value);
+    bool SetOption(std::string module, std::string option, std::string value);
 
-    bool SetSliderOption(const char *module, const char *option,
-                         const char *value);
+    bool SetSliderOption(std::string module, std::string option,
+                         std::string value);
 
-    bool SetButtonOption(const char *module, const char *option, int value);
+    bool SetButtonOption(std::string module, std::string option, int value);
 
     void Locked(bool value);
 
-    UI_Module *FindID(const char *id) const;
+    UI_Module *FindID(std::string id) const;
 
    private:
     void PositionAll(UI_Module *focus = NULL);

@@ -132,12 +132,12 @@ class UI_RChoiceMenu : public UI_CustomMenu {
     // add a new choice to the list.  If a choice with the same 'id'
     // already exists, it is just replaced instead.
     // The choice will begin disabled (shown == false).
-    void AddChoice(const char *id, std::string label);
+    void AddChoice(std::string id, std::string label);
 
     // finds the option with the given ID, and update its 'enabled'
     // value.  Returns true if successful, or false if no such
     // option exists.  Any change will call Recreate().
-    bool EnableChoice(const char *id, bool enable_it);
+    bool EnableChoice(std::string id, bool enable_it);
 
     // get the id string for the currently shown value.
     // Returns the string "none" if there are no choices.
@@ -145,11 +145,11 @@ class UI_RChoiceMenu : public UI_CustomMenu {
 
     // change the currently shown value via the new 'id'.
     // If does not exist, returns false and nothing was changed.
-    bool ChangeTo(const char *id);
+    bool ChangeTo(std::string id);
 
     std::string GetLabel() const;
 
-    choice_data_c *FindID(const char *id) const;
+    choice_data_c *FindID(std::string id) const;
 
    private:
     choice_data_c *FindMapped() const;

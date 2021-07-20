@@ -442,14 +442,14 @@ int gui_set_button(lua_State *L) {
 //
 int gui_add_module(lua_State *L) {
     const char *where = luaL_checkstring(L, 1);
-    const char *id = luaL_checkstring(L, 2);
-    const char *label = luaL_checkstring(L, 3);
+    std::string id = luaL_optstring(L, 2, "");
+    std::string label = luaL_optstring(L, 3, "");
     std::string tip = luaL_optstring(L, 4, "");
     int red = luaL_optinteger(L, 5, -1);
     int green = luaL_optinteger(L, 6, -1);
     int blue = luaL_optinteger(L, 7, -1);
 
-    SYS_ASSERT(where && id && label);
+    SYS_ASSERT(where && !id.empty() && !label.empty());
 
     //	DebugPrintf("  add_module: %s id:%s\n", where, id);
 
@@ -1603,8 +1603,8 @@ bool ob_set_config(const std::string &key, const std::string &value) {
     return Script_CallFunc("ob_set_config", 0, params.data());
 }
 
-bool ob_set_mod_option(const char *module, const char *option,
-                       const char *value) {
+bool ob_set_mod_option(std::string module, std::string option,
+                       std::string value) {
     if (!has_loaded) {
         DebugPrintf("ob_set_mod_option() called before loaded!\n");
         return false;
