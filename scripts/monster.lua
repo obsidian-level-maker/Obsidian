@@ -494,15 +494,23 @@ function Monster_zone_palettes()
 
     local quants = gen_quantity_set(total)
 
+    ::tryagain::
+
     for mon,_ in pairs(base_pal) do
       local qty = pick_quant(quants)
 
-      if qty > 0 then
-        pal[mon] = qty
+	  if qty > 0 then
+        if GAME.MONSTERS[mon].skip_prob then
+      	  if rand.odds(GAME.MONSTERS[mon].skip_prob) then 
+      	    pal[mon] = 0
+      	  end
+      	else
+          pal[mon] = qty
+        end
       end
     end
 
-    assert(not table.empty(pal))
+    if table.empty(pal) then goto tryagain end
 
     return pal
   end
@@ -1438,7 +1446,7 @@ function Monster_fill_room(R)
         mon = rand.key_by_probs(LEVEL.mon_replacement[mon])
       end
 
-      palette[mon] = prob
+	  palette[mon] = prob
 
       gui.debugf("  #%d %s\n", i, mon)
       LEVEL.mon_stats[mon] = (LEVEL.mon_stats[mon] or 0) + 1
@@ -2028,6 +2036,12 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
       -- prefer monsters not in the room palette
       if room_pal[mon] then prob = prob / 10 end
+
+      if GAME.MONSTERS[mon].skip_prob then
+      	  if rand.odds(GAME.MONSTERS[mon].skip_prob) then
+      	    prob = 0
+      	  end
+      end
 
       if prob > 0 then
         list[mon] = prob
