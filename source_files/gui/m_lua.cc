@@ -369,11 +369,11 @@ int gui_scan_directory(lua_State *L) {
 // LUA: add_choice(button, id, label)
 //
 int gui_add_choice(lua_State *L) {
-    const char *button = luaL_checkstring(L, 1);
-    const char *id = luaL_checkstring(L, 2);
+    std::string button = luaL_optstring(L, 1, "");
+    std::string id = luaL_optstring(L, 2, "");
     std::string label = luaL_optstring(L, 3, "");
 
-    SYS_ASSERT(button && id && !label.empty());
+    SYS_ASSERT(!button.empty() && !id.empty() && !label.empty());
 
     //	DebugPrintf("  add_choice: %s id:%s\n", button, id);
 
@@ -396,12 +396,12 @@ int gui_add_choice(lua_State *L) {
 // LUA: enable_choice(what, id, shown)
 //
 int gui_enable_choice(lua_State *L) {
-    const char *button = luaL_checkstring(L, 1);
-    const char *id = luaL_checkstring(L, 2);
+    std::string button = luaL_optstring(L, 1, "");
+    std::string id = luaL_optstring(L, 2, "");
 
     int enable = lua_toboolean(L, 3) ? 1 : 0;
 
-    SYS_ASSERT(button && id);
+    SYS_ASSERT(!button.empty() && !id.empty());
 
     //	DebugPrintf("  enable_choice: %s id:%s %s\n", button, id, enable ?
     //"enable" : "DISABLE");
@@ -420,10 +420,10 @@ int gui_enable_choice(lua_State *L) {
 // LUA: set_button(button, id)
 //
 int gui_set_button(lua_State *L) {
-    const char *button = luaL_checkstring(L, 1);
-    const char *id = luaL_checkstring(L, 2);
+    std::string button = luaL_optstring(L, 1, "");
+    std::string id = luaL_optstring(L, 2, "");
 
-    SYS_ASSERT(button && id);
+    SYS_ASSERT(!button.empty() && !id.empty());
 
     //	DebugPrintf("  change_button: %s --> %s\n", button, id);
 
@@ -441,7 +441,7 @@ int gui_set_button(lua_State *L) {
 // LUA: add_module(where, id, label, tooltip)
 //
 int gui_add_module(lua_State *L) {
-    const char *where = luaL_checkstring(L, 1);
+    std::string where = luaL_optstring(L, 1, "");
     std::string id = luaL_optstring(L, 2, "");
     std::string label = luaL_optstring(L, 3, "");
     std::string tip = luaL_optstring(L, 4, "");
@@ -449,7 +449,7 @@ int gui_add_module(lua_State *L) {
     int green = luaL_optinteger(L, 6, -1);
     int blue = luaL_optinteger(L, 7, -1);
 
-    SYS_ASSERT(where && !id.empty() && !label.empty());
+    SYS_ASSERT(!where.empty() && !id.empty() && !label.empty());
 
     //	DebugPrintf("  add_module: %s id:%s\n", where, id);
 
@@ -465,9 +465,9 @@ int gui_add_module(lua_State *L) {
     if (single_pane) {
         main_win->left_mods->AddModule(id, label, tip, red, green, blue);
     } else {
-        if (StringCaseCmp(where, "left") == 0) {
+        if (!StringCaseCmp(where, "left")) {
             main_win->left_mods->AddModule(id, label, tip, red, green, blue);
-        } else if (StringCaseCmp(where, "right") == 0) {
+        } else if (!StringCaseCmp(where, "right")) {
             main_win->right_mods->AddModule(id, label, tip, red, green, blue);
         } else {
             return luaL_error(L, "add_module: unknown where value '%s'\n",
@@ -481,11 +481,11 @@ int gui_add_module(lua_State *L) {
 // LUA: set_module(id, bool)
 //
 int gui_set_module(lua_State *L) {
-    const char *module = luaL_checkstring(L, 1);
+    std::string module = luaL_optstring(L, 1, "");
 
     int opt_val = lua_toboolean(L, 2) ? 1 : 0;
 
-    SYS_ASSERT(module);
+    SYS_ASSERT(!module.empty());
 
     //	DebugPrintf("  set_module: %s --> %s\n", module, opt_val);
 
@@ -507,11 +507,11 @@ int gui_set_module(lua_State *L) {
 // LUA: show_module(module, shown)
 //
 int gui_show_module(lua_State *L) {
-    const char *module = luaL_checkstring(L, 1);
+    std::string module = luaL_optstring(L, 1, "");
 
     int shown = lua_toboolean(L, 2) ? 1 : 0;
 
-    SYS_ASSERT(module);
+    SYS_ASSERT(!module.empty());
 
     //	DebugPrintf("  show_module: %s --> %s\n", what, module, shown ? "show" :
     //"HIDE");
@@ -533,16 +533,16 @@ int gui_show_module(lua_State *L) {
 // LUA: add_module_option(module, option, label, tooltip, gap)
 //
 int gui_add_module_option(lua_State *L) {
-    const char *module = luaL_checkstring(L, 1);
-    const char *option = luaL_checkstring(L, 2);
+    std::string module = luaL_optstring(L, 1, "");
+    std::string option = luaL_optstring(L, 2, "");
 
-    const char *label = luaL_checkstring(L, 3);
+    std::string label = luaL_optstring(L, 3, "");
     std::string tip = luaL_optstring(L, 4, "");
     std::string longtip = luaL_optstring(L, 5, "");
 
     int gap = luaL_optinteger(L, 6, 0);
 
-    SYS_ASSERT(module && option);
+    SYS_ASSERT(!module.empty() && !option.empty());
 
     //	DebugPrintf("  add_module_option: %s.%s\n", module, option);
 
@@ -569,8 +569,8 @@ int gui_add_module_option(lua_State *L) {
 // LUA: add_module_option(module, option, label, tooltip, gap)
 //
 int gui_add_module_slider_option(lua_State *L) {
-    const char *module = luaL_checkstring(L, 1);
-    const char *option = luaL_checkstring(L, 2);
+    std::string module = luaL_optstring(L, 1, "");
+    std::string option = luaL_optstring(L, 2, "");
 
     std::string label = luaL_optstring(L, 3, "");
     std::string tip = luaL_optstring(L, 4, "");
@@ -586,7 +586,7 @@ int gui_add_module_slider_option(lua_State *L) {
     std::string presets = luaL_optstring(L, 11, "");
     std::string nan = luaL_optstring(L, 12, "");
 
-    SYS_ASSERT(module && option);
+    SYS_ASSERT(!module.empty() && !option.empty());
 
     //	DebugPrintf("  add_module_option: %s.%s\n", module, option);
 
@@ -616,8 +616,8 @@ int gui_add_module_slider_option(lua_State *L) {
 // LUA: add_module_button_option(module, option, label, tooltip, gap)
 //
 int gui_add_module_button_option(lua_State *L) {
-    const char *module = luaL_checkstring(L, 1);
-    const char *option = luaL_checkstring(L, 2);
+    std::string module = luaL_optstring(L, 1, "");
+    std::string option = luaL_optstring(L, 2, "");
 
     std::string label = luaL_optstring(L, 3, "");
     std::string tip = luaL_optstring(L, 4, "");
@@ -625,7 +625,7 @@ int gui_add_module_button_option(lua_State *L) {
 
     int gap = luaL_optinteger(L, 6, 0);
 
-    SYS_ASSERT(module && option);
+    SYS_ASSERT(!module.empty() && !option.empty());
 
     //	DebugPrintf("  add_module_option: %s.%s\n", module, option);
 
@@ -653,13 +653,13 @@ int gui_add_module_button_option(lua_State *L) {
 // LUA: add_option_choice(module, option, id, label)
 //
 int gui_add_option_choice(lua_State *L) {
-    const char *module = luaL_checkstring(L, 1);
-    const char *option = luaL_checkstring(L, 2);
+    std::string module = luaL_optstring(L, 1, "");
+    std::string option = luaL_optstring(L, 2, "");
 
-    const char *id = luaL_checkstring(L, 3);
-    const char *label = luaL_checkstring(L, 4);
+    std::string id = luaL_optstring(L, 3, "");
+    std::string label = luaL_optstring(L, 4, "");
 
-    SYS_ASSERT(module && option);
+    SYS_ASSERT(!module.empty() && !option.empty());
 
     //	DebugPrintf("  add_option_choice: %s.%s\n", module, option);
 
@@ -685,11 +685,11 @@ int gui_add_option_choice(lua_State *L) {
 // LUA: set_module_option(module, option, value)
 //
 int gui_set_module_option(lua_State *L) {
-    const char *module = luaL_checkstring(L, 1);
-    const char *option = luaL_checkstring(L, 2);
-    const char *value = luaL_checkstring(L, 3);
+    std::string module = luaL_optstring(L, 1, "");
+    std::string option = luaL_optstring(L, 2, "");
+    std::string value = luaL_optstring(L, 3, "");
 
-    SYS_ASSERT(module && option && value);
+    SYS_ASSERT(!module.empty() && !option.empty() && !value.empty());
 
     //	DebugPrintf("  set_module_option: %s.%s --> %s\n", module, option,
     // value);
@@ -698,7 +698,7 @@ int gui_set_module_option(lua_State *L) {
         return 0;
     }
 
-    if (StringCaseCmp(option, "self") == 0) {
+    if (!StringCaseCmp(option, "self")) {
         return luaL_error(L, "set_module_option: cannot use 'self' here\n",
                           option);
     }
@@ -722,17 +722,17 @@ int gui_set_module_option(lua_State *L) {
 // LUA: set_module_option(module, option, value)
 //
 int gui_set_module_slider_option(lua_State *L) {
-    const char *module = luaL_checkstring(L, 1);
-    const char *option = luaL_checkstring(L, 2);
-    const char *value = luaL_checkstring(L, 3);
+    std::string module = luaL_optstring(L, 1, "");
+    std::string option = luaL_optstring(L, 2, "");
+    std::string value = luaL_optstring(L, 3, "");
 
-    SYS_ASSERT(module && option && value);
+    SYS_ASSERT(!module.empty() && !option.empty() && !value.empty());
 
     if (!main_win) {
         return 0;
     }
 
-    if (StringCaseCmp(option, "self") == 0) {
+    if (!StringCaseCmp(option, "self")) {
         return luaL_error(L, "set_module_option: cannot use 'self' here\n",
                           option);
     }
@@ -756,17 +756,17 @@ int gui_set_module_slider_option(lua_State *L) {
 // LUA: set_module_option(module, option, value)
 //
 int gui_set_module_button_option(lua_State *L) {
-    const char *module = luaL_checkstring(L, 1);
-    const char *option = luaL_checkstring(L, 2);
+    std::string module = luaL_optstring(L, 1, "");
+    std::string option = luaL_optstring(L, 2, "");
     int value = luaL_checkinteger(L, 3);
 
-    SYS_ASSERT(module && option && !isnan(value));
+    SYS_ASSERT(!module.empty() && !option.empty() && !isnan(value));
 
     if (!main_win) {
         return 0;
     }
 
-    if (StringCaseCmp(option, "self") == 0) {
+    if (!StringCaseCmp(option, "self")) {
         return luaL_error(L, "set_module_option: cannot use 'self' here\n",
                           option);
     }
@@ -789,10 +789,10 @@ int gui_set_module_button_option(lua_State *L) {
 
 // LUA: get_module_slider_value(module, option)
 int gui_get_module_slider_value(lua_State *L) {
-    const char *module = luaL_checkstring(L, 1);
-    const char *option = luaL_checkstring(L, 2);
+    std::string module = luaL_optstring(L, 1, "");
+    std::string option = luaL_optstring(L, 2, "");
 
-    SYS_ASSERT(module && option);
+    SYS_ASSERT(!module.empty() && !option.empty());
 
     //	DebugPrintf("  set_module_option: %s.%s --> %s\n", module, option,
     // value);
@@ -873,10 +873,10 @@ int gui_get_module_slider_value(lua_State *L) {
 
 // LUA: get_module_button_value(module, option)
 int gui_get_module_button_value(lua_State *L) {
-    const char *module = luaL_checkstring(L, 1);
-    const char *option = luaL_checkstring(L, 2);
+    std::string module = luaL_optstring(L, 1, "");
+    std::string option = luaL_optstring(L, 2, "");
 
-    SYS_ASSERT(module && option);
+    SYS_ASSERT(!module.empty() && !option.empty());
 
     //	DebugPrintf("  set_module_option: %s.%s --> %s\n", module, option,
     // value);
@@ -1610,12 +1610,7 @@ bool ob_set_mod_option(std::string module, std::string option,
         return false;
     }
 
-    std::array<std::string, 4> params;
-
-    params[0] = module;
-    params[1] = option;
-    params[2] = value;
-    params[3] = "";
+    std::array<std::string, 4> params = { module, option, value, "" };
 
     return Script_CallFunc("ob_set_mod_option", 0, params.data());
 }

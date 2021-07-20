@@ -237,22 +237,22 @@ void UI_Game::Locked(bool value) {
     }
 }
 
-bool UI_Game::AddChoice(const char *button, const char *id, std::string label) {
-    if (StringCaseCmp(button, "game") == 0) {
+bool UI_Game::AddChoice(std::string button, std::string id, std::string label) {
+    if (!StringCaseCmp(button, "game")) {
         game->AddChoice(id, label);
         return true;
     }
-    if (StringCaseCmp(button, "engine") == 0) {
-        if (StringCaseCmp(id, "advanced") != 0) {
+    if (!StringCaseCmp(button, "engine")) {
+        if (StringCaseCmp(id, "advanced")) {
             engine->AddChoice(id, label);
         }
         return true;
     }
-    if (StringCaseCmp(button, "length") == 0) {
+    if (!StringCaseCmp(button, "length")) {
         length->AddChoice(id, label);
         return true;
     }
-    if (StringCaseCmp(button, "theme") == 0) {
+    if (!StringCaseCmp(button, "theme")) {
         theme->AddChoice(id, label);
         return true;
     }
@@ -260,20 +260,20 @@ bool UI_Game::AddChoice(const char *button, const char *id, std::string label) {
     return false;  // unknown button
 }
 
-bool UI_Game::EnableChoice(const char *button, const char *id, bool enable_it) {
-    if (StringCaseCmp(button, "game") == 0) {
+bool UI_Game::EnableChoice(std::string button, std::string id, bool enable_it) {
+    if (!StringCaseCmp(button, "game")) {
         game->EnableChoice(id, enable_it);
         return true;
     }
-    if (StringCaseCmp(button, "engine") == 0) {
+    if (!StringCaseCmp(button, "engine")) {
         engine->EnableChoice(id, enable_it);
         return true;
     }
-    if (StringCaseCmp(button, "length") == 0) {
+    if (!StringCaseCmp(button, "length")) {
         length->EnableChoice(id, enable_it);
         return true;
     }
-    if (StringCaseCmp(button, "theme") == 0) {
+    if (!StringCaseCmp(button, "theme")) {
         theme->EnableChoice(id, enable_it);
         return true;
     }
@@ -281,20 +281,20 @@ bool UI_Game::EnableChoice(const char *button, const char *id, bool enable_it) {
     return false;  // unknown button
 }
 
-bool UI_Game::SetButton(const char *button, const char *id) {
-    if (StringCaseCmp(button, "game") == 0) {
+bool UI_Game::SetButton(std::string button, std::string id) {
+    if (!StringCaseCmp(button, "game")) {
         game->ChangeTo(id);
         return true;
     }
-    if (StringCaseCmp(button, "engine") == 0) {
+    if (!StringCaseCmp(button, "engine")) {
         engine->ChangeTo(id);
         return true;
     }
-    if (StringCaseCmp(button, "length") == 0) {
+    if (!StringCaseCmp(button, "length")) {
         length->ChangeTo(id);
         return true;
     }
-    if (StringCaseCmp(button, "theme") == 0) {
+    if (!StringCaseCmp(button, "theme")) {
         theme->ChangeTo(id);
         return true;
     }
