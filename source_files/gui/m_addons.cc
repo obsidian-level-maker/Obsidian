@@ -320,11 +320,9 @@ class UI_Addon : public Fl_Group {
         : Fl_Group(x, y, w, h), info(_info) {
         box(box_style);
 
-        // prefix the name with a space
-        std::string name2 = fmt::format(" {}", info->name);
-
         button = new UI_CustomCheckBox(x + kf_w(6), y + kf_h(4), w - kf_w(12),
-                                       kf_h(24), name2.c_str());
+                                       kf_h(24), "");
+        button->copy_label(fmt::format(" {}", info->name).c_str());
         button->labelfont(font_style);
         button->selection_color(SELECTION);
         // if (tip)
@@ -442,9 +440,9 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
     sbar->color(GAP_COLOR, BUTTON_COLOR);
     sbar->labelcolor(SELECTION);
 
-    std::string pack_title = fmt::format("\n\n\n\n{}", _("No Addons Found!"));
     if (all_addons.empty()) {
-        pack = new Fl_Group(mx, my, mw, mh, pack_title.c_str());
+        pack = new Fl_Group(mx, my, mw, mh, "");
+        pack->copy_label(fmt::format("\n\n\n\n{}", _("No Addons Found!")).c_str());
     } else {
         pack = new Fl_Group(mx, my, mw, mh, 0);
     }

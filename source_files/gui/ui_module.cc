@@ -55,7 +55,8 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
     int tx = Is_UI() ? 8 : 28;
 
     heading = new Fl_Box(FL_NO_BOX, X + kf_w(tx), Y + kf_h(4), W - kf_w(tx + 4),
-                         kf_h(24), label.c_str());
+                         kf_h(24), "");
+    heading->copy_label(label.c_str());
     heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     heading->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
 
@@ -64,8 +65,8 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
     }
 
     if (!tip.empty()) {
-        mod_button->tooltip(tip.c_str());
-        heading->tooltip(tip.c_str());
+        mod_button->copy_tooltip(tip.c_str());
+        heading->copy_tooltip(tip.c_str());
     }
 
     cur_opt_y += kf_h(32);
@@ -108,12 +109,13 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
 
     rch->mod_label = new Fl_Box(
         rch->x(), rch->y(), (!single_pane ? rch->w() * .95 : rch->w() * .40),
-        kf_h(24), fmt::format("{}: ", label).c_str());
+        kf_h(24), "");
+    rch->mod_label->copy_label(fmt::format("{}: ", label).c_str());
     rch->mod_label->align(
         (!single_pane ? (FL_ALIGN_LEFT | FL_ALIGN_INSIDE)
                       : (FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP)));
     rch->mod_label->labelfont(font_style);
-    rch->mod_label->tooltip(tip.c_str());
+    rch->mod_label->copy_tooltip(tip.c_str());
 
     rch->mod_menu = new UI_RChoiceMenu(
         (!single_pane ? rch->x() : rch->x() + (rch->w() * .40)),
@@ -191,10 +193,11 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
         rsl->x(), rsl->y(),
         (!single_pane ? rsl->w() * (rsl->nan_choices.size() > 0 ? .7 : .8)
                       : rsl->w() * .40),
-        kf_h(24), label.c_str());
+        kf_h(24), "");
+    rsl->mod_label->copy_label(label.c_str());
     rsl->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     rsl->mod_label->labelfont(font_style);
-    rsl->mod_label->tooltip(tip.c_str());
+    rsl->mod_label->copy_tooltip(tip.c_str());
 
     rsl->prev_button = new UI_CustomArrowButton(
         (!single_pane ? rsl->x() : rsl->x() + (rsl->w() * .40)),
@@ -335,10 +338,11 @@ void UI_Module::AddButtonOption(std::string opt, std::string label,
 
     rbt->mod_label =
         new Fl_Box(rbt->x() + (single_pane ? 0 : (rbt->w() * .075)), rbt->y(),
-                   rbt->w() * .30, kf_h(24), single_pane ? fmt::format("{}: ", label).c_str() : label.c_str());
+                   rbt->w() * .30, kf_h(24), "");
+    rbt->mod_label->copy_label(single_pane ? fmt::format("{}: ", label).c_str() : label.c_str());
     rbt->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     rbt->mod_label->labelfont(font_style);
-    rbt->mod_label->tooltip(tip.c_str());
+    rbt->mod_label->copy_tooltip(tip.c_str());
 
     rbt->mod_check =
         new UI_CustomCheckBox(rbt->x() + (!single_pane ? 0 : (rbt->w() * .40)),

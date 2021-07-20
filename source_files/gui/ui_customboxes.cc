@@ -4,7 +4,6 @@
 #include <FL/Fl.H>
 #include <FL/fl_draw.H>
 #include "main.h"
-#include <iostream>
 
 void c_color(Fl_Color c) {
   Fl::set_box_color(c);

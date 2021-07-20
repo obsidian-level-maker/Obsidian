@@ -26,14 +26,15 @@
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"
+#include <iostream>
 
 #define ABORT_COLOR fl_color_cube(3, 1, 1)
 
 //
 // Constructor
 //
-UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
-    : Fl_Group(X, Y, W, H, label) {
+UI_Game::UI_Game(int X, int Y, int W, int H)
+    : Fl_Group(X, Y, W, H) {
     box(box_style);
 
     int button_w = W * 0.35;
@@ -45,10 +46,8 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     int cx = X + W * 0.29;
     int cy = Y + kf_h(4);
 
-    const char *heading_text = _("Game Settings");
-
     heading = new Fl_Box(FL_NO_BOX, X + kf_w(8), cy, W - kf_w(12), kf_h(24),
-                         heading_text);
+                         _("Game Settings"));
     heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     heading->labeltype(FL_NORMAL_LABEL);
     heading->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
@@ -59,7 +58,8 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
     int cw = W * 0.50;
     int ch = kf_h(22);
 
-    game = new UI_RChoiceMenu(cx, cy, cw, ch, _("Game: "));
+    game = new UI_RChoiceMenu(cx, cy, cw, ch, "");
+    game->copy_label(_("Game: "));
     game->align(FL_ALIGN_LEFT);
     game->labelfont(font_style);
     game->textcolor(FONT2_COLOR);
@@ -68,7 +68,8 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     cy += y_step;
 
-    engine = new UI_RChoiceMenu(cx, cy, cw, ch, _("Engine: "));
+    engine = new UI_RChoiceMenu(cx, cy, cw, ch, "");
+    engine->copy_label(_("Engine: "));
     engine->align(FL_ALIGN_LEFT);
     engine->labelfont(font_style);
     engine->textcolor(FONT2_COLOR);
@@ -80,7 +81,8 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     cy += y_step;
 
-    length = new UI_RChoiceMenu(cx, cy, cw, ch, _("Length: "));
+    length = new UI_RChoiceMenu(cx, cy, cw, ch, "");
+    length->copy_label(_("Length: "));
     length->align(FL_ALIGN_LEFT);
     length->labelfont(font_style);
     length->textcolor(FONT2_COLOR);
@@ -92,7 +94,8 @@ UI_Game::UI_Game(int X, int Y, int W, int H, const char *label)
 
     cy += y_step;
 
-    theme = new UI_RChoiceMenu(cx, cy, cw, ch, _("Theme: "));
+    theme = new UI_RChoiceMenu(cx, cy, cw, ch, "");
+    theme->copy_label(_("Theme: "));
     theme->align(FL_ALIGN_LEFT);
     theme->labelfont(font_style);
     theme->textcolor(FONT2_COLOR);
@@ -161,7 +164,7 @@ void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
     Fl_Window *win = new Fl_Window(640, 480, "Engine");
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp =
-        new Fl_Text_Display(20, 20, 640 - 40, 480 - 40, NULL);
+        new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
     disp->buffer(buff);
     disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
     win->resizable(*disp);
@@ -184,7 +187,7 @@ void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
     Fl_Window *win = new Fl_Window(640, 480, "Length");
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp =
-        new Fl_Text_Display(20, 20, 640 - 40, 480 - 40, NULL);
+        new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
     disp->buffer(buff);
     disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
     win->resizable(*disp);
@@ -204,7 +207,7 @@ void UI_Game::callback_ThemeHelp(Fl_Widget *w, void *data) {
     Fl_Window *win = new Fl_Window(640, 480, "Theme");
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp =
-        new Fl_Text_Display(20, 20, 640 - 40, 480 - 40, NULL);
+        new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
     disp->buffer(buff);
     disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
     win->resizable(*disp);

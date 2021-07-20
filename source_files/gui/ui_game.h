@@ -42,7 +42,7 @@ class UI_Game : public Fl_Group {
 
    private:
    public:
-    UI_Game(int x, int y, int w, int h, const char *label = NULL);
+    UI_Game(int x, int y, int w, int h);
     virtual ~UI_Game();
 
    public:

@@ -311,7 +311,7 @@ class UI_OptionsWin : public Fl_Window {
         Fl_Window *win = new Fl_Window(640, 480, "Custom Prefix");
         Fl_Text_Buffer *buff = new Fl_Text_Buffer();
         Fl_Text_Display *disp =
-            new Fl_Text_Display(20, 20, 640 - 40, 480 - 40, NULL);
+            new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
         disp->buffer(buff);
         disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
         win->resizable(*disp);
@@ -362,8 +362,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     Fl_Box *heading;
 
-    opt_language = new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24),
-                                     _("Language: "));
+    opt_language = new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+    opt_language->copy_label(_("Language: "));
     opt_language->align(FL_ALIGN_LEFT);
     opt_language->callback(callback_Language, this);
     opt_language->labelfont(font_style);
@@ -376,7 +376,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_language->h() + y_step;
 
     opt_filename_prefix = new UI_CustomMenu(136 + KF * 40, cy, kf_w(130),
-                                            kf_h(24), _("Filename Prefix: "));
+                                            kf_h(24), "");
+    opt_filename_prefix->copy_label(_("Filename Prefix: "));
     opt_filename_prefix->align(FL_ALIGN_LEFT);
     opt_filename_prefix->callback(callback_FilenamePrefix, this);
     opt_filename_prefix->add(
@@ -406,8 +407,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_custom_prefix->h() + y_step * 2;
 
-    opt_backups = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24),
-                                        _(" Create Backups"));
+    opt_backups = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_backups->copy_label(_(" Create Backups"));                          
     opt_backups->value(create_backups ? 1 : 0);
     opt_backups->callback(callback_Backups, this);
     opt_backups->labelfont(font_style);
@@ -416,8 +417,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_backups->h() + y_step * 2 / 3;
 
-    opt_overwrite = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24),
-                                          _(" Overwrite File Warning"));
+    opt_overwrite = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_overwrite->copy_label(_(" Overwrite File Warning"));
     opt_overwrite->value(overwrite_warning ? 1 : 0);
     opt_overwrite->callback(callback_Overwrite, this);
     opt_overwrite->labelfont(font_style);
@@ -426,8 +427,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_overwrite->h() + y_step * 2 / 3;
 
-    opt_debug = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24),
-                                      _(" Debugging Messages"));
+    opt_debug = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_debug->copy_label(_(" Debugging Messages"));
     opt_debug->value(debug_messages ? 1 : 0);
     opt_debug->callback(callback_Debug, this);
     opt_debug->labelfont(font_style);
