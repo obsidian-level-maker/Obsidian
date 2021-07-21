@@ -35,7 +35,7 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
     : Fl_Group(X, Y, W, H), choice_map(), cur_opt_y(0) {
     box(box_style);
 
-	id_name = id;
+    id_name = id;
 
     if ((red >= 0) && (green >= 0) && (blue >= 0)) {
         color(fl_rgb_color(red, green, blue));
@@ -103,9 +103,8 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
             "hover over the option name to display a tooltip.";
     }
 
-    UI_RChoice *rch =
-        new UI_RChoice(nx, ny + kf_h(15), nw * .95,
-                       (!single_pane ? kf_h(48) : kf_h(24)));
+    UI_RChoice *rch = new UI_RChoice(nx, ny + kf_h(15), nw * .95,
+                                     (!single_pane ? kf_h(48) : kf_h(24)));
 
     rch->mod_label = new Fl_Box(
         rch->x(), rch->y(), (!single_pane ? rch->w() * .95 : rch->w() * .40),
@@ -171,7 +170,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
             "Detailed help not yet written for this setting. For quick help, "
             "hover over the option name to display a tooltip.";
     }
-    
+
     label = fmt::format("{}: ", label);
 
     UI_RSlide *rsl = new UI_RSlide(nx, ny + kf_h(15), nw * .95,
@@ -333,13 +332,13 @@ void UI_Module::AddButtonOption(std::string opt, std::string label,
             "hover over the option name to display a tooltip.";
     }
 
-    UI_RButton *rbt =
-        new UI_RButton(nx, ny + kf_h(15), nw * .95, kf_h(24));
+    UI_RButton *rbt = new UI_RButton(nx, ny + kf_h(15), nw * .95, kf_h(24));
 
     rbt->mod_label =
         new Fl_Box(rbt->x() + (single_pane ? 0 : (rbt->w() * .075)), rbt->y(),
                    rbt->w() * .30, kf_h(24), "");
-    rbt->mod_label->copy_label(single_pane ? fmt::format("{}: ", label).c_str() : label.c_str());
+    rbt->mod_label->copy_label(single_pane ? fmt::format("{}: ", label).c_str()
+                                           : label.c_str());
     rbt->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     rbt->mod_label->labelfont(font_style);
     rbt->mod_label->copy_tooltip(tip.c_str());
@@ -520,8 +519,7 @@ void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
 
     UI_Module *parent = (UI_Module *)M->parent();
 
-    ob_set_mod_option(parent->id_name, cb_data->opt_name,
-                      rch->GetID());
+    ob_set_mod_option(parent->id_name, cb_data->opt_name, rch->GetID());
 }
 
 void UI_Module::callback_PresetCheck(Fl_Widget *w, void *data) {

@@ -310,8 +310,7 @@ class UI_OptionsWin : public Fl_Window {
         fl_cursor(FL_CURSOR_DEFAULT);
         Fl_Window *win = new Fl_Window(640, 480, "Custom Prefix");
         Fl_Text_Buffer *buff = new Fl_Text_Buffer();
-        Fl_Text_Display *disp =
-            new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
+        Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
         disp->buffer(buff);
         disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
         win->resizable(*disp);
@@ -362,7 +361,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     Fl_Box *heading;
 
-    opt_language = new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+    opt_language =
+        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
     opt_language->copy_label(_("Language: "));
     opt_language->align(FL_ALIGN_LEFT);
     opt_language->callback(callback_Language, this);
@@ -375,8 +375,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_language->h() + y_step;
 
-    opt_filename_prefix = new UI_CustomMenu(136 + KF * 40, cy, kf_w(130),
-                                            kf_h(24), "");
+    opt_filename_prefix =
+        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
     opt_filename_prefix->copy_label(_("Filename Prefix: "));
     opt_filename_prefix->align(FL_ALIGN_LEFT);
     opt_filename_prefix->callback(callback_FilenamePrefix, this);
@@ -399,16 +399,15 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_custom_prefix->labelfont(font_style);
     opt_custom_prefix->labelcolor(FONT2_COLOR);
 
-    custom_prefix_help =
-        new UI_HelpLink(136 + KF * 40 + this->opt_custom_prefix->w(), cy,
-                        W * 0.10, kf_h(24));
+    custom_prefix_help = new UI_HelpLink(
+        136 + KF * 40 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
     custom_prefix_help->labelfont(font_style);
     custom_prefix_help->callback(callback_PrefixHelp, this);
 
     cy += opt_custom_prefix->h() + y_step * 2;
 
     opt_backups = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
-    opt_backups->copy_label(_(" Create Backups"));                          
+    opt_backups->copy_label(_(" Create Backups"));
     opt_backups->value(create_backups ? 1 : 0);
     opt_backups->callback(callback_Backups, this);
     opt_backups->labelfont(font_style);

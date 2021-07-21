@@ -74,52 +74,52 @@ int gui_format_prefix(lua_State *L) {
 
     SYS_ASSERT(levelcount && game && theme && format);
 
-
-	const char* ff_args[10];
+    const char *ff_args[10];
 
 #ifdef WIN32
-	ff_args[0] = "tools/filename_formatter.exe";
+    ff_args[0] = "tools/filename_formatter.exe";
 #else
-	ff_args[0] = "tools/filename_formatter";
+    ff_args[0] = "tools/filename_formatter";
 #endif
-	ff_args[1] = "-c";
-	ff_args[2] = levelcount;
-	ff_args[3] = "-g";
-	ff_args[4] = game;
-	ff_args[5] = "-t";
-	ff_args[6] = theme;
-	ff_args[7] = "-f";
-	if (StringCaseCmp(format, "version") == 0) {
-		std::string tempstring = OBSIDIAN_SHORT_VERSION;
-		tempstring.append("_");
-		ff_args[8] = tempstring.c_str();	
-	} else if (StringCaseCmp(format, "custom") == 0) {
-		ff_args[8] = custom_prefix.c_str();
-	} else {
-		ff_args[8] = format;		
-	}
-	ff_args[9] = NULL;
-		
-	struct subprocess_s subprocess;
-	int result = subprocess_create(ff_args, subprocess_option_no_window, &subprocess);
-	if (result != 0) {
-	  return 0;
-	}
+    ff_args[1] = "-c";
+    ff_args[2] = levelcount;
+    ff_args[3] = "-g";
+    ff_args[4] = game;
+    ff_args[5] = "-t";
+    ff_args[6] = theme;
+    ff_args[7] = "-f";
+    if (StringCaseCmp(format, "version") == 0) {
+        std::string tempstring = OBSIDIAN_SHORT_VERSION;
+        tempstring.append("_");
+        ff_args[8] = tempstring.c_str();
+    } else if (StringCaseCmp(format, "custom") == 0) {
+        ff_args[8] = custom_prefix.c_str();
+    } else {
+        ff_args[8] = format;
+    }
+    ff_args[9] = NULL;
 
-	//Read the output of filename_formatter	
-	FILE* p_stdout = subprocess_stdout(&subprocess);
-	char prefix[100];
-	fgets(prefix, 100, p_stdout);
-	
-	result = subprocess_destroy(&subprocess);
-	if (result != 0) {
-		return 0;
-	} else {
-		lua_pushstring(L, (const char *)prefix);
-		return 1;
-	}
-	
-	//Hopefully we don't get here
+    struct subprocess_s subprocess;
+    int result =
+        subprocess_create(ff_args, subprocess_option_no_window, &subprocess);
+    if (result != 0) {
+        return 0;
+    }
+
+    // Read the output of filename_formatter
+    FILE *p_stdout = subprocess_stdout(&subprocess);
+    char prefix[100];
+    fgets(prefix, 100, p_stdout);
+
+    result = subprocess_destroy(&subprocess);
+    if (result != 0) {
+        return 0;
+    } else {
+        lua_pushstring(L, (const char *)prefix);
+        return 1;
+    }
+
+    // Hopefully we don't get here
     return 0;
 }
 
@@ -387,7 +387,7 @@ int gui_add_choice(lua_State *L) {
     }
 
     if (!main_win->game_box->AddChoice(button, id, label)) {
-        return luaL_error(L, "add_choice: unknown button '%s'\n", button);
+        return luaL_error(L, "add_choice: unknown button '%s'\n", button.c_str());
     }
 
     return 0;
@@ -411,7 +411,7 @@ int gui_enable_choice(lua_State *L) {
     }
 
     if (!main_win->game_box->EnableChoice(button, id, enable)) {
-        return luaL_error(L, "enable_choice: unknown button '%s'\n", button);
+        return luaL_error(L, "enable_choice: unknown button '%s'\n", button.c_str());
     }
 
     return 0;
@@ -432,7 +432,7 @@ int gui_set_button(lua_State *L) {
     }
 
     if (!main_win->game_box->SetButton(button, id)) {
-        return luaL_error(L, "set_button: unknown button '%s'\n", button);
+        return luaL_error(L, "set_button: unknown button '%s'\n", button.c_str());
     }
 
     return 0;
@@ -471,7 +471,7 @@ int gui_add_module(lua_State *L) {
             main_win->right_mods->AddModule(id, label, tip, red, green, blue);
         } else {
             return luaL_error(L, "add_module: unknown where value '%s'\n",
-                              where);
+                              where.c_str());
         }
     }
 
@@ -700,19 +700,19 @@ int gui_set_module_option(lua_State *L) {
 
     if (!StringCaseCmp(option, "self")) {
         return luaL_error(L, "set_module_option: cannot use 'self' here\n",
-                          option);
+                          option.c_str());
     }
 
     if (!single_pane) {
         if (!(main_win->left_mods->SetOption(module, option, value) ||
               main_win->right_mods->SetOption(module, option, value))) {
             return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                              module, option);
+                              module.c_str(), option.c_str());
         }
     } else {
         if (!main_win->left_mods->SetOption(module, option, value)) {
             return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                              module, option);
+                              module.c_str(), option.c_str());
         }
     }
 
@@ -734,19 +734,19 @@ int gui_set_module_slider_option(lua_State *L) {
 
     if (!StringCaseCmp(option, "self")) {
         return luaL_error(L, "set_module_option: cannot use 'self' here\n",
-                          option);
+                          option.c_str());
     }
 
     if (!single_pane) {
         if (!(main_win->left_mods->SetSliderOption(module, option, value) ||
               main_win->right_mods->SetSliderOption(module, option, value))) {
             return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                              module, option);
+                              module.c_str(), option.c_str());
         }
     } else {
         if (!main_win->left_mods->SetSliderOption(module, option, value)) {
             return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                              module, option);
+                              module.c_str(), option.c_str());
         }
     }
 
@@ -768,19 +768,19 @@ int gui_set_module_button_option(lua_State *L) {
 
     if (!StringCaseCmp(option, "self")) {
         return luaL_error(L, "set_module_option: cannot use 'self' here\n",
-                          option);
+                          option.c_str());
     }
 
     if (!single_pane) {
         if (!(main_win->left_mods->SetButtonOption(module, option, value) ||
               main_win->right_mods->SetButtonOption(module, option, value))) {
             return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                              module, option);
+                              module.c_str(), option.c_str());
         }
     } else {
         if (!main_win->left_mods->SetButtonOption(module, option, value)) {
             return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-                              module, option);
+                              module.c_str(), option.c_str());
         }
     }
 
@@ -865,7 +865,7 @@ int gui_get_module_slider_value(lua_State *L) {
     } else {
         return luaL_error(L,
                           "get_module_slider_value: unknown option '%s.%s'\n",
-                          module, option);
+                          module.c_str(), option.c_str());
     }
 
     return 1;
@@ -906,7 +906,7 @@ int gui_get_module_button_value(lua_State *L) {
     } else {
         return luaL_error(L,
                           "get_module_slider_value: unknown option '%s.%s'\n",
-                          module, option);
+                          module.c_str(), option.c_str());
     }
 
     return 1;
@@ -1610,7 +1610,7 @@ bool ob_set_mod_option(std::string module, std::string option,
         return false;
     }
 
-    std::array<std::string, 4> params = { module, option, value, "" };
+    std::array<std::string, 4> params = {module, option, value, ""};
 
     return Script_CallFunc("ob_set_mod_option", 0, params.data());
 }

@@ -716,8 +716,9 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         o->labelfont(font_style);
 
         std::string recent_title = fmt::format("   {} @-3>", _("Recent"));
-        recent_menu = new Fl_Menu_Across(button_x, kf_h(95), button_w, button_h,
-                                         recent_title.c_str());
+        recent_menu =
+            new Fl_Menu_Across(button_x, kf_h(95), button_w, button_h);
+        recent_menu->copy_label(recent_title.c_str());
         recent_menu->box(button_style);
         recent_menu->visible_focus(0);
         recent_menu->color(BUTTON_COLOR);

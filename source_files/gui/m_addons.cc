@@ -442,7 +442,8 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
 
     if (all_addons.empty()) {
         pack = new Fl_Group(mx, my, mw, mh, "");
-        pack->copy_label(fmt::format("\n\n\n\n{}", _("No Addons Found!")).c_str());
+        pack->copy_label(
+            fmt::format("\n\n\n\n{}", _("No Addons Found!")).c_str());
     } else {
         pack = new Fl_Group(mx, my, mw, mh, 0);
     }

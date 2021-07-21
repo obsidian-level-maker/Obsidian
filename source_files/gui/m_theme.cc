@@ -64,10 +64,10 @@ std::string Theme_OutputFilename() {
 
             DLG_ShowError(_("Unable to create the file:\n\n%s"),
                           chooser.errmsg());
-            return NULL;
+            return "";
 
         case 1:  // cancelled
-            return NULL;
+            return "";
 
         default:
             break;  // OK
@@ -1526,8 +1526,8 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
 
     Fl_Box *heading;
 
-    opt_window_scaling = new UI_CustomMenu(136 + KF * 40, cy, kf_w(130),
-                                           kf_h(24), "");
+    opt_window_scaling =
+        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
     opt_window_scaling->copy_label(_("Window Scaling: "));
     opt_window_scaling->align(FL_ALIGN_LEFT);
     opt_window_scaling->add(_("AUTO|Tiny|Small|Medium|Large|Huge"));
@@ -1540,8 +1540,8 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
 
     cy += opt_window_scaling->h() + y_step;
 
-    opt_font_scaling = new Fl_Simple_Counter(136 + KF * 40, cy, kf_w(130),
-                                             kf_h(24), "");
+    opt_font_scaling =
+        new Fl_Simple_Counter(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
     opt_font_scaling->copy_label(_("Font Size: "));
     opt_font_scaling->align(FL_ALIGN_LEFT);
     opt_font_scaling->step(2);
@@ -1573,7 +1573,8 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
 
     cy += opt_font_theme->h() + y_step;
 
-    opt_widget_theme = new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+    opt_widget_theme =
+        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
     opt_widget_theme->copy_label(_("Widget Theme: "));
     opt_widget_theme->align(FL_ALIGN_LEFT);
     opt_widget_theme->add(_("Default|Gleam|Win95|Plastic"));
@@ -1586,7 +1587,8 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
 
     cy += opt_widget_theme->h() + y_step;
 
-    opt_box_theme = new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+    opt_box_theme =
+        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
     opt_box_theme->copy_label(_("Box Theme: "));
     opt_box_theme->align(FL_ALIGN_LEFT);
     opt_box_theme->add(_("Default|Shadow|Embossed|Engraved|Inverted|Raised"));
@@ -1599,7 +1601,8 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
 
     cy += opt_box_theme->h() + y_step;
 
-    opt_button_theme = new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+    opt_button_theme =
+        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
     opt_button_theme->copy_label(_("Button Theme: "));
     opt_button_theme->align(FL_ALIGN_LEFT);
     opt_button_theme->add(_("Default|Raised|Engraved|Embossed|Flat"));
@@ -1612,7 +1615,8 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
 
     cy += opt_button_theme->h() + y_step;
 
-    opt_color_scheme = new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+    opt_color_scheme =
+        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
     opt_color_scheme->copy_label(_("Color Scheme: "));
     opt_color_scheme->align(FL_ALIGN_LEFT);
     opt_color_scheme->add(_("Default|Custom"));
@@ -1712,7 +1716,8 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
 
     opt_system_fonts =
         new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
-    opt_system_fonts->copy_label(_(" Use System Fonts (disables bundled fonts)"));
+    opt_system_fonts->copy_label(
+        _(" Use System Fonts (disables bundled fonts)"));
     opt_system_fonts->value(use_system_fonts ? 1 : 0);
     opt_system_fonts->callback(callback_SystemFonts, this);
     opt_system_fonts->labelfont(font_style);
