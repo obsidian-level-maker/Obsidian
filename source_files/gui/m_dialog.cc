@@ -256,10 +256,10 @@ std::string DLG_OutputFilename(const char *ext, const char *preset) {
 
             DLG_ShowError(_("Unable to create the file:\n\n%s"),
                           chooser.errmsg());
-            return NULL;
+            return "";
 
         case 1:  // cancelled
-            return NULL;
+            return "";
 
         default:
             break;  // OK
