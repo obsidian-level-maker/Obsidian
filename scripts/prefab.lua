@@ -2288,7 +2288,7 @@ function Fabricate(room, def, T, skins)
     .. def)
   end
 
-  gui.debugf("=========  FABRICATE %s\n", def.file)
+  gui.debugf("=========  FABRICATE %s\n", def.name)
   gui.debugf(table.tostr(T).."\n")
 
   local fab = Fab_load_wad(def)
@@ -2320,12 +2320,6 @@ function Fabricate(room, def, T, skins)
 
   fab.state = "skinned"
 
-  if PARAM.bool_print_prefab_use == 1 then
-    if fab.where == "point" or fab.where == "seeds" then
-      gui.printf(LEVEL.name .. ": Adding " .. fab.name .. " ")
-    end
-  end
-
   Fab_transform_XY(fab, T)
   Fab_transform_Z (fab, T)
 
@@ -2335,12 +2329,6 @@ function Fabricate(room, def, T, skins)
   Fab_solid_entities(fab, room)
   Fab_process_spots(fab, room)
 
-  if PARAM.bool_print_prefab_use == 1 then
-    if fab.where == "point" or fab.where == "seeds" then
-      gui.printf("{" .. T.add_x .. "," .. T.add_y .. "}")
-      gui.printf("\n")
-    end
-  end
 end
 
 
