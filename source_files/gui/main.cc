@@ -272,8 +272,7 @@ void Determine_InstallDir(const char *argv0) {
     }
 #endif
 
-    if (install_dir.empty() && !(install_dir = "/home/kyle2/git/Oblige",
-                                 Verify_InstallDir("/home/kyle2/git/Oblige"))) {
+    if (install_dir.empty()) {
         Main_FatalError("Unable to find Obsidian's install directory!\n");
     }
 }
