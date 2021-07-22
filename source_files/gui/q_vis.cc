@@ -832,11 +832,12 @@ static void ShowVisStats() {
                   phs_stats.CalcRatio(), phs_stats.uncompressed,
                   phs_stats.compressed);
 
-        LogPrintf("average hearability: {:1.0}%%  best:{}.0f%%  worst:{}.0f%%\n",
-                  phs_stats.average, phs_stats.best, phs_stats.worst);
+        LogPrintf(
+            "average hearability: {:1.0}%%  best:{:1.0}%%  worst:{:1.0}%%\n",
+            phs_stats.average, phs_stats.best, phs_stats.worst);
     }
 
-    LogPrintf("average visibility: {:1.0}%%  best:{}.0f%%  worst:{}.0f%%\n",
+    LogPrintf("average visibility: {:1.0}%%  best:{:1.0}%%  worst:{:1.0}%%\n",
               pvs_stats.average, pvs_stats.best, pvs_stats.worst);
 }
 

@@ -387,7 +387,8 @@ int gui_add_choice(lua_State *L) {
     }
 
     if (!main_win->game_box->AddChoice(button, id, label)) {
-        return luaL_error(L, "add_choice: unknown button '%s'\n", button.c_str());
+        return luaL_error(L, "add_choice: unknown button '%s'\n",
+                          button.c_str());
     }
 
     return 0;
@@ -411,7 +412,8 @@ int gui_enable_choice(lua_State *L) {
     }
 
     if (!main_win->game_box->EnableChoice(button, id, enable)) {
-        return luaL_error(L, "enable_choice: unknown button '%s'\n", button.c_str());
+        return luaL_error(L, "enable_choice: unknown button '%s'\n",
+                          button.c_str());
     }
 
     return 0;
@@ -432,7 +434,8 @@ int gui_set_button(lua_State *L) {
     }
 
     if (!main_win->game_box->SetButton(button, id)) {
-        return luaL_error(L, "set_button: unknown button '%s'\n", button.c_str());
+        return luaL_error(L, "set_button: unknown button '%s'\n",
+                          button.c_str());
     }
 
     return 0;

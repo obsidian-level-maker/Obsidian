@@ -1058,7 +1058,7 @@ void qLightmap_c::Store() {
         offset = Q3_AllocLightBlock(width, height, &lx, &ly);
         SYS_ASSERT(offset >= 0);
 
-        fmt::print(stderr, "LM POSITION: block #%d (%3d {})\n", offset, lx,
+        fmt::print(stderr, "LM POSITION: block #{} ({:3} {})\n", offset, lx,
                    ly);
 
         double s1 = (lx + 0.5) / (double)LIGHTMAP_WIDTH;

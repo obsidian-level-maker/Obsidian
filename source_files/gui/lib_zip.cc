@@ -565,7 +565,8 @@ bool ZIPF_ReadData(int entry, int offset, int length, void *buffer) {
 
     if (E->hdr.comp_method != ZIPF_COMP_STORE &&
         E->hdr.comp_method != ZIPF_COMP_DEFLATE) {
-        LogPrintf("ZIP: unknown compression method: {}\n", static_cast<u16_t>(E->hdr.comp_method));
+        LogPrintf("ZIP: unknown compression method: {}\n",
+                  static_cast<u16_t>(E->hdr.comp_method));
         LogPrintf("ZIP: used in entry: {}\n", E->name);
 
         return false;
