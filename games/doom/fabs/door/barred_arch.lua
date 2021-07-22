@@ -43,6 +43,33 @@ PREFABS.Arch_barred_wide =
 }
 
 
+PREFABS.Arch_barred_3_wide =
+{
+  template = "Arch_barred",
+  map      = "MAP04",
+
+  prob = 75,
+
+  seed_w = 3,
+
+  x_fit  = "frame",
+}
+
+
+PREFABS.Arch_barred_4_wide =
+{
+  template = "Arch_barred",
+  map      = "MAP05",
+
+  prob = 100,
+
+  seed_w = 4,
+
+  x_fit  = "frame",
+}
+
+
+--[[
 PREFABS.Arch_barred_diag =
 {
   file   = "door/barred_arch.wad",
@@ -59,3 +86,4 @@ PREFABS.Arch_barred_diag =
   tag_1  = "?door_tag",
   door_action = "S1_OpenDoor",
 }
+]]
