@@ -83,7 +83,7 @@ PREFABS.Decor_gtd_Armaetus_bars_EPIC_stretchy_tech =
 {
   template = "Decor_Armaetus_bars_EPIC",
   map = "MAP04",
-  theme = "!tech",
+  theme = "tech",
 
   prob = 75,
 
