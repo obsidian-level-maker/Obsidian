@@ -702,7 +702,7 @@ void SPOT_DebuggingTest() {
 
     SPOT_ItemSpots(items);
 
-    LogPrintf("\nTotal item spots = %u\n\n", items.size());
+    LogPrintf("\nTotal item spots = {}\n\n", items.size());
 
     items.clear();
 
@@ -710,7 +710,7 @@ void SPOT_DebuggingTest() {
 
     SPOT_MonsterSpots(items, 0);
 
-    LogPrintf("\nTotal monster spots = %u\n\n", items.size() / 2);
+    LogPrintf("\nTotal monster spots = {}\n\n", items.size() / 2);
 
     SPOT_FreeGrid();
 }

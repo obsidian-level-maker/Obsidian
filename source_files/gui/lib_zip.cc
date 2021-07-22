@@ -300,7 +300,7 @@ static bool read_directory_entry(zip_central_entry_t *E) {
     int name_length = E->hdr.name_length;
 
     if (name_length > ZIPF_MAX_PATH - 2) {
-        LogPrintf("ZIP: truncating long filename (%d chars)\n", name_length);
+        LogPrintf("ZIP: truncating long filename ({} chars)\n", name_length);
         name_length = ZIPF_MAX_PATH - 2;
     }
 
@@ -328,11 +328,11 @@ bool ZIPF_OpenRead(const char *filename) {
     r_zip_fp = fopen(filename, "rb");
 
     if (!r_zip_fp) {
-        LogPrintf("ZIPF_OpenRead: no such file: %s\n", filename);
+        LogPrintf("ZIPF_OpenRead: no such file: {}\n", filename);
         return false;
     }
 
-    LogPrintf("Opened ZIP file: %s\n", filename);
+    LogPrintf("Opened ZIP file: {}\n", filename);
 
     if (!load_end_part()) {
         fclose(r_zip_fp);
@@ -346,15 +346,15 @@ bool ZIPF_OpenRead(const char *filename) {
 
     if (r_end_part.total_entries >= 5000)  // sanity check
     {
-        LogPrintf("ZIPF_OpenRead: bad ZIP file? (%d entries!)\n",
-                  r_end_part.total_entries);
+        LogPrintf("ZIPF_OpenRead: bad ZIP file? ({} entries!)\n",
+                  static_cast<u16_t>(r_end_part.total_entries));
         fclose(r_zip_fp);
         return false;
     }
 
     if (fseek(r_zip_fp, r_end_part.dir_offset, SEEK_SET) != 0) {
-        LogPrintf("ZIPF_OpenRead: cannot seek to directory (at 0x%08x)\n",
-                  r_end_part.dir_offset);
+        LogPrintf("ZIPF_OpenRead: cannot seek to directory (at 0x{:08x})\n",
+                  static_cast<u32_t>(r_end_part.dir_offset));
         fclose(r_zip_fp);
         return false;
     }
@@ -365,7 +365,7 @@ bool ZIPF_OpenRead(const char *filename) {
         zip_central_entry_t *E = &r_directory[i];
 
         if (!read_directory_entry(E)) {
-            LogPrintf("ZIPF_OpenRead: bad central directory (entry %d)\n",
+            LogPrintf("ZIPF_OpenRead: bad central directory (entry {})\n",
                       i + 1);
 
             delete[] r_directory;
@@ -506,7 +506,7 @@ static bool decompressing_read(int length, byte *buffer) {
         }
 
         if (res != Z_OK) {
-            LogPrintf("ZIP: error occurred during decompression (%d)\n", res);
+            LogPrintf("ZIP: error occurred during decompression ({})\n", res);
             return false;
         }
     }
@@ -565,8 +565,8 @@ bool ZIPF_ReadData(int entry, int offset, int length, void *buffer) {
 
     if (E->hdr.comp_method != ZIPF_COMP_STORE &&
         E->hdr.comp_method != ZIPF_COMP_DEFLATE) {
-        LogPrintf("ZIP: unknown compression method: %d\n", E->hdr.comp_method);
-        LogPrintf("ZIP: used in entry: %s\n", E->name);
+        LogPrintf("ZIP: unknown compression method: {}\n", static_cast<u16_t>(E->hdr.comp_method));
+        LogPrintf("ZIP: used in entry: {}\n", E->name);
 
         return false;
     }
@@ -620,11 +620,11 @@ bool ZIPF_OpenWrite(const char *filename) {
     w_zip_fp = fopen(filename, "wb");
 
     if (!w_zip_fp) {
-        LogPrintf("ZIPF_OpenWrite: cannot create file: %s\n", filename);
+        LogPrintf("ZIPF_OpenWrite: cannot create file: {}\n", filename);
         return false;
     }
 
-    LogPrintf("Created ZIP file: %s\n", filename);
+    LogPrintf("Created ZIP file: {}\n", filename);
 
     // grab the current date and time
     time_t cur_time = time(NULL);

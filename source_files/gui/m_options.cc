@@ -52,7 +52,7 @@ static void Parse_Option(const char *name, const char *value) {
     } else if (StringCaseCmp(name, "custom_prefix") == 0) {
         custom_prefix = value;
     } else {
-        LogPrintf("Unknown option: '%s'\n", name);
+        LogPrintf("Unknown option: '{}'\n", name);
     }
 }
 
@@ -78,7 +78,7 @@ static bool Options_ParseLine(char *buf) {
     }
 
     if (!isalpha(*buf)) {
-        LogPrintf("Weird option line: [%s]\n", buf);
+        LogPrintf("Weird option line: [{}]\n", buf);
         return false;
     }
 
@@ -97,7 +97,7 @@ static bool Options_ParseLine(char *buf) {
     }
 
     if (*buf != '=') {
-        LogPrintf("Option line missing '=': [%s]\n", buf);
+        LogPrintf("Option line missing '=': [{}]\n", buf);
         return false;
     }
 
@@ -129,7 +129,7 @@ bool Options_Load(const char *filename) {
         return false;
     }
 
-    LogPrintf("Loading options file: %s\n", filename);
+    LogPrintf("Loading options file: {}\n", filename);
 
     // simple line-by-line parser
     char buffer[MSG_BUF_LEN];
@@ -143,7 +143,7 @@ bool Options_Load(const char *filename) {
     }
 
     if (error_count > 0) {
-        LogPrintf("DONE (found %d parse errors)\n\n", error_count);
+        LogPrintf("DONE (found {} parse errors)\n\n", error_count);
     } else {
         LogPrintf("DONE.\n\n");
     }
@@ -157,7 +157,7 @@ bool Options_Save(const char *filename) {
     FILE *option_fp = fopen(filename, "w");
 
     if (!option_fp) {
-        LogPrintf("Error: unable to create file: %s\n(%s)\n\n", filename,
+        LogPrintf("Error: unable to create file: {}\n({})\n\n", filename,
                   strerror(errno));
         return false;
     }

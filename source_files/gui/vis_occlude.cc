@@ -85,7 +85,7 @@ void Occlusion_Dump(void) {
         float low = AR->low * (360.0 / 65536.0);
         float high = AR->high * (360.0 / 65536.0);
 
-        fmt::print(stderr, " %1.2f-%1.2f ", low, high);
+        fmt::print(stderr, " %1.2f-{}.2f ", low, high);
     }
 
     fmt::print(stderr, "}\n");

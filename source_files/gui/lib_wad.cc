@@ -54,11 +54,11 @@ bool WAD_OpenRead(const char *filename) {
 #endif
 
     if (!wad_R_fp) {
-        LogPrintf("WAD_OpenRead: no such file: %s\n", filename);
+        LogPrintf("WAD_OpenRead: no such file: {}\n", filename);
         return false;
     }
 
-    LogPrintf("Opened WAD file: %s\n", filename);
+    LogPrintf("Opened WAD file: {}\n", filename);
 
 #ifdef HAVE_PHYSFS
     if ((PHYSFS_readBytes(wad_R_fp, &wad_R_header, sizeof(wad_R_header)) /
@@ -93,8 +93,8 @@ bool WAD_OpenRead(const char *filename) {
 
     if (wad_R_header.num_lumps >= 5000)  // sanity check
     {
-        LogPrintf("WAD_OpenRead: bad header (%d entries?)\n",
-                  wad_R_header.num_lumps);
+        LogPrintf("WAD_OpenRead: bad header ({} entries?)\n",
+                  static_cast<unsigned int>(wad_R_header.num_lumps));
 #ifdef HAVE_PHYSFS
         PHYSFS_close(wad_R_fp);
 #else
@@ -109,8 +109,8 @@ bool WAD_OpenRead(const char *filename) {
     if (fseek(wad_R_fp, wad_R_header.dir_start, SEEK_SET) != 0)
 #endif
     {
-        LogPrintf("WAD_OpenRead: cannot seek to directory (at 0x%08x)\n",
-                  wad_R_header.dir_start);
+        LogPrintf("WAD_OpenRead: cannot seek to directory (at 0x{})\n",
+                  static_cast<unsigned int>(wad_R_header.dir_start));
 #ifdef HAVE_PHYSFS
         PHYSFS_close(wad_R_fp);
 #else
@@ -139,7 +139,7 @@ bool WAD_OpenRead(const char *filename) {
                 return false;
             }
 
-            LogPrintf("WAD_OpenRead: hit EOF reading dir-entry %d\n", i);
+            LogPrintf("WAD_OpenRead: hit EOF reading dir-entry {}\n", i);
 
             // truncate directory
             wad_R_header.num_lumps = i;
@@ -260,11 +260,11 @@ bool WAD_OpenWrite(const char *filename) {
     wad_W_fp = fopen(filename, "wb");
 
     if (!wad_W_fp) {
-        LogPrintf("WAD_OpenWrite: cannot create file: %s\n", filename);
+        LogPrintf("WAD_OpenWrite: cannot create file: {}\n", filename);
         return false;
     }
 
-    LogPrintf("Created WAD file: %s\n", filename);
+    LogPrintf("Created WAD file: {}\n", filename);
 
     // write out a dummy header
     raw_wad_header_t header;
@@ -381,11 +381,11 @@ bool WAD2_OpenRead(const char *filename) {
 #endif
 
     if (!wad2_R_fp) {
-        LogPrintf("WAD2_OpenRead: no such file: %s\n", filename);
+        LogPrintf("WAD2_OpenRead: no such file: {}\n", filename);
         return false;
     }
 
-    LogPrintf("Opened WAD2 file: %s\n", filename);
+    LogPrintf("Opened WAD2 file: {}\n", filename);
 
 #ifdef HAVE_PHYSFS
     if ((PHYSFS_readBytes(wad2_R_fp, &wad2_R_header, sizeof(wad2_R_header)) /
@@ -420,8 +420,8 @@ bool WAD2_OpenRead(const char *filename) {
 
     if (wad2_R_header.num_lumps >= 5000)  // sanity check
     {
-        LogPrintf("WAD2_OpenRead: bad header (%d entries?)\n",
-                  wad2_R_header.num_lumps);
+        LogPrintf("WAD2_OpenRead: bad header ({} entries?)\n",
+                  static_cast<unsigned int>(wad2_R_header.num_lumps));
 #ifdef HAVE_PHYSFS
         PHYSFS_close(wad2_R_fp);
 #else
@@ -436,8 +436,8 @@ bool WAD2_OpenRead(const char *filename) {
     if (fseek(wad2_R_fp, wad2_R_header.dir_start, SEEK_SET) != 0)
 #endif
     {
-        LogPrintf("WAD2_OpenRead: cannot seek to directory (at 0x%08x)\n",
-                  wad2_R_header.dir_start);
+        LogPrintf("WAD2_OpenRead: cannot seek to directory (at 0x{})\n",
+                  static_cast<unsigned int>(wad2_R_header.dir_start));
 #ifdef HAVE_PHYSFS
         PHYSFS_close(wad2_R_fp);
 #else
@@ -466,7 +466,7 @@ bool WAD2_OpenRead(const char *filename) {
                 return false;
             }
 
-            LogPrintf("WAD2_OpenRead: hit EOF reading dir-entry %d\n", i);
+            LogPrintf("WAD2_OpenRead: hit EOF reading dir-entry {}\n", i);
 
             // truncate directory
             wad2_R_header.num_lumps = i;
@@ -615,11 +615,11 @@ bool WAD2_OpenWrite(const char *filename) {
     wad2_W_fp = fopen(filename, "wb");
 
     if (!wad2_W_fp) {
-        LogPrintf("WAD2_OpenWrite: cannot create file: %s\n", filename);
+        LogPrintf("WAD2_OpenWrite: cannot create file: {}\n", filename);
         return false;
     }
 
-    LogPrintf("Created WAD2 file: %s\n", filename);
+    LogPrintf("Created WAD2 file: {}\n", filename);
 
     // write out a dummy header
     raw_wad2_header_t header;

@@ -339,7 +339,7 @@ class UI_Manage_Config : public Fl_Double_Window {
         switch (chooser.show()) {
             case -1:
                 LogPrintf("Error choosing save file:\n");
-                LogPrintf("   %s\n", chooser.errmsg());
+                LogPrintf("   {}\n", chooser.errmsg());
 
                 DLG_ShowError(_("Unable to save the file:\n\n%s"),
                               chooser.errmsg());
@@ -456,7 +456,7 @@ class UI_Manage_Config : public Fl_Double_Window {
         switch (chooser.show()) {
             case -1:
                 LogPrintf("Error choosing load file:\n");
-                LogPrintf("   %s\n", chooser.errmsg());
+                LogPrintf("   {}\n", chooser.errmsg());
 
                 DLG_ShowError(_("Unable to load the file:\n\n%s"),
                               chooser.errmsg());

@@ -105,7 +105,7 @@ static void SHADE_CollectLights()
 		}
 	}
 
-	LogPrintf("Found %d cave light entities\n", (int)cave_lights.size());
+	LogPrintf("Found {} cave light entities\n", (int)cave_lights.size());
 }
 #endif
 

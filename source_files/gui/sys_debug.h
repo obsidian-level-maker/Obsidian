@@ -21,16 +21,30 @@
 #ifndef __SYS_DEBUG_H__
 #define __SYS_DEBUG_H__
 
+#include <fstream>
+#include <string>
+#include <fmt/core.h>
+#include <fmt/ostream.h>
+extern bool terminal;
+extern std::fstream log_file;
 bool LogInit(const char *filename);  // NULL for none
 void LogClose(void);
 
 void LogEnableDebug(bool enable);
 void LogEnableTerminal(bool enable);
 
-void LogPrintf(const char *str, ...);
+template <typename... Args>
+void LogPrintf(const std::string &str, Args &&...args) {
+    fmt::print(log_file, str, args...);
+
+    // show on the Linux terminal too
+    if (terminal) {
+        fmt::print(str, args...);
+    }
+}
 void DebugPrintf(const char *str, ...);
 
-typedef void (*log_display_func_t)(const char *line, void *priv_data);
+using log_display_func_t = void (*)(const std::string &line, void *priv_data);
 
 void LogReadLines(log_display_func_t display_func, void *priv_data);
 

@@ -152,7 +152,7 @@ void VFS_OptWrite(FILE *fp) {
         const addon_info_t *info = &all_addons[i];
 
         if (info->enabled) {
-            fmt::print(fp, "addon = %s\n", info->name);
+            fmt::print(fp, "addon = {}\n", info->name);
         }
     }
 

@@ -1302,7 +1302,7 @@ void quake3_game_interface_c::Property(const char *key, const char *value) {
     } else if (StringCaseCmp(key, "lava_shader") == 0) {
         lava_shader = value;
     } else {
-        LogPrintf("WARNING: unknown QUAKE3 property: %s=%s\n", key, value);
+        LogPrintf("WARNING: unknown QUAKE3 property: {}={}\n", key, value);
     }
 }
 

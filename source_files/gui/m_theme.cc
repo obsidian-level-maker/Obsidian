@@ -60,7 +60,7 @@ std::string Theme_OutputFilename() {
     switch (result) {
         case -1:
             LogPrintf("Error choosing output file:\n");
-            LogPrintf("   %s\n", chooser.errmsg());
+            LogPrintf("   {}\n", chooser.errmsg());
 
             DLG_ShowError(_("Unable to create the file:\n\n%s"),
                           chooser.errmsg());
@@ -118,7 +118,7 @@ const char *Theme_AskLoadFilename() {
     switch (chooser.show()) {
         case -1:
             LogPrintf("Error choosing load file:\n");
-            LogPrintf("   %s\n", chooser.errmsg());
+            LogPrintf("   {}\n", chooser.errmsg());
 
             DLG_ShowError(_("Unable to load the file:\n\n%s"),
                           chooser.errmsg());
@@ -207,7 +207,7 @@ static void Parse_Theme_Option(const char *name, const char *value) {
     } else if (StringCaseCmp(name, "gap_blue") == 0) {
         gap_blue = atoi(value);
     } else {
-        LogPrintf("Unknown option: '%s'\n", name);
+        LogPrintf("Unknown option: '{}'\n", name);
     }
 }
 
@@ -233,7 +233,7 @@ static bool Theme_Options_ParseLine(char *buf) {
     }
 
     if (!isalpha(*buf)) {
-        LogPrintf("Weird option line: [%s]\n", buf);
+        LogPrintf("Weird option line: [{}]\n", buf);
         return false;
     }
 
@@ -252,7 +252,7 @@ static bool Theme_Options_ParseLine(char *buf) {
     }
 
     if (*buf != '=') {
-        LogPrintf("Option line missing '=': [%s]\n", buf);
+        LogPrintf("Option line missing '=': [{}]\n", buf);
         return false;
     }
 
@@ -284,7 +284,7 @@ bool Theme_Options_Load(const char *filename) {
         return false;
     }
 
-    LogPrintf("Loading theme file: %s\n", filename);
+    LogPrintf("Loading theme file: {}\n", filename);
 
     // simple line-by-line parser
     char buffer[MSG_BUF_LEN];
@@ -298,7 +298,7 @@ bool Theme_Options_Load(const char *filename) {
     }
 
     if (error_count > 0) {
-        LogPrintf("DONE (found %d parse errors)\n\n", error_count);
+        LogPrintf("DONE (found {} parse errors)\n\n", error_count);
     } else {
         LogPrintf("DONE.\n\n");
     }
@@ -312,7 +312,7 @@ bool Theme_Options_Save(const char *filename) {
     FILE *option_fp = fopen(filename, "w");
 
     if (!option_fp) {
-        LogPrintf("Error: unable to create file: %s\n(%s)\n\n", filename,
+        LogPrintf("Error: unable to create file: {}\n({})\n\n", filename,
                   strerror(errno));
         return false;
     }

@@ -137,7 +137,7 @@ int gui_raw_log_print(lua_State *L) {
             res += 2;
         }
 
-        LogPrintf("%s", res);
+        LogPrintf("{}", res);
     }
 
     return 0;
@@ -1421,7 +1421,7 @@ bool Script_RunString(const char *str, ...)
                 else
                         err_msg = msg;
 
-                LogPrintf("\nScript Error: %s\n", err_msg);
+                LogPrintf("\nScript Error: {}\n", err_msg);
 
                 lua_pop(LUA_ST, 2);  // ob_traceback, message
                 return false;

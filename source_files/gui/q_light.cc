@@ -115,7 +115,7 @@ rgb_color_t QLIT_ParseColorString(const char *name) {
     }
 
     if (name[0] != '#') {
-        LogPrintf("WARNING: bad color string for light: '%s'\n", name);
+        LogPrintf("WARNING: bad color string for light: '{}'\n", name);
         return WHITE;
     }
 
@@ -131,7 +131,7 @@ rgb_color_t QLIT_ParseColorString(const char *name) {
         g = (raw_hex >> 8) & 0xff;
         b = (raw_hex)&0xff;
     } else {
-        LogPrintf("WARNING: bad color string for light: '%s'\n", name);
+        LogPrintf("WARNING: bad color string for light: '{}'\n", name);
         return WHITE;
     }
 
@@ -555,7 +555,7 @@ void QLIT_BuildQ3Lighting(int lump, int max_size) {
 #endif
     }
 
-    LogPrintf("created %d LM blocks\n", (int)all_q3_light_blocks.size());
+    LogPrintf("created {} LM blocks\n", (int)all_q3_light_blocks.size());
 }
 
 //------------------------------------------------------------------------
@@ -905,7 +905,7 @@ static void Q3_CalcFaceStuff(quake_face_c *F) {
     lt_W = (int)ceil((max_s - min_s + q3_luxel_size * 0.6) / q3_luxel_size);
     lt_H = (int)ceil((max_t - min_t + q3_luxel_size * 0.6) / q3_luxel_size);
 
-    fmt::print(stderr, "LM SIZE: %d x %d\n", lt_W, lt_H);
+    fmt::print(stderr, "LM SIZE: %d x {}\n", lt_W, lt_H);
 
     lt_W = CLAMP(1, lt_W, MAX_LM_SIZE);
     lt_H = CLAMP(1, lt_H, MAX_LM_SIZE);
@@ -1058,7 +1058,7 @@ void qLightmap_c::Store() {
         offset = Q3_AllocLightBlock(width, height, &lx, &ly);
         SYS_ASSERT(offset >= 0);
 
-        fmt::print(stderr, "LM POSITION: block #%d (%3d %3d)\n", offset, lx,
+        fmt::print(stderr, "LM POSITION: block #%d (%3d {})\n", offset, lx,
                    ly);
 
         double s1 = (lx + 0.5) / (double)LIGHTMAP_WIDTH;
@@ -1691,7 +1691,7 @@ static void Q3_GridLighting() {
         g_count[b] = (g_maxs[b] - g_mins[b]) / block_size + 1;
     }
 
-    LogPrintf("grid counts: %d x %d x %d\n", g_count[0], g_count[1],
+    LogPrintf("grid counts: {} x {} x {}\n", g_count[0], g_count[1],
               g_count[2]);
 
     qLump_c *lump = BSP_NewLump(LUMP_Q3_LIGHTGRID);
@@ -1728,7 +1728,7 @@ void QLIT_LightAllFaces() {
         Q3_InitSharedBlock();
     }
 
-    LogPrintf("found %u lights\n", qk_all_lights.size());
+    LogPrintf("found {} lights\n", qk_all_lights.size());
 
     QVIS_MakeTraceNodes();
 
@@ -1761,7 +1761,7 @@ void QLIT_LightAllFaces() {
         }
     }
 
-    LogPrintf("lit %d faces (of %u) using %d luxels\n", lit_faces,
+    LogPrintf("lit {} faces (of {}) using {} luxels\n", lit_faces,
               qk_all_faces.size(), lit_luxels);
 
     // for Q3, determine grid lighting

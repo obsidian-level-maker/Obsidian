@@ -72,7 +72,7 @@ void csg_property_set_c::DebugDump() {
     fmt::print(stderr, "{\n");
 
     for (PI = dict.begin(); PI != dict.end(); PI++) {
-        fmt::print(stderr, "  %s = \"%s\"\n", PI->first.c_str(),
+        fmt::print(stderr, "  {} = \"{}\"\n", PI->first.c_str(),
                    PI->second.c_str());
     }
 
@@ -1334,7 +1334,7 @@ void CSG_LinkBrushToEntity(csg_brush_c *B, const char *link_key) {
     }
 
     // not found
-    LogPrintf("WARNING: brush has unknown link entity '%s'\n", link_key);
+    LogPrintf("WARNING: brush has unknown link entity '{}'\n", link_key);
 
     // ensure we ignore this brush
     B->bkind = BKIND_Light;

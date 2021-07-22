@@ -114,7 +114,7 @@ static bool Cookie_ParseLine(char *buf) {
     }
 
     if (!(isalpha(*buf) || *buf == '@')) {
-        LogPrintf("Weird config line: [%s]\n", buf);
+        LogPrintf("Weird config line: [{}]\n", buf);
         return false;
     }
 
@@ -133,7 +133,7 @@ static bool Cookie_ParseLine(char *buf) {
     }
 
     if (*buf != '=') {
-        LogPrintf("Config line missing '=': [%s]\n", buf);
+        LogPrintf("Config line missing '=': [{}]\n", buf);
         return false;
     }
 
@@ -167,7 +167,7 @@ bool Cookie_Load(const char *filename) {
         return false;
     }
 
-    LogPrintf("Loading config file: %s\n", filename);
+    LogPrintf("Loading config file: {}\n", filename);
 
     // simple line-by-line parser
     char buffer[MSG_BUF_LEN];
@@ -181,7 +181,7 @@ bool Cookie_Load(const char *filename) {
     }
 
     if (error_count > 0) {
-        LogPrintf("DONE (found %d parse errors)\n\n", error_count);
+        LogPrintf("DONE (found {} parse errors)\n\n", error_count);
     } else {
         LogPrintf("DONE.\n\n");
     }
@@ -215,7 +215,7 @@ bool Cookie_Save(const char *filename) {
     cookie_fp = fopen(filename, "w");
 
     if (!cookie_fp) {
-        LogPrintf("Error: unable to create file: %s\n(%s)\n\n", filename,
+        LogPrintf("Error: unable to create file: {}\n({})\n\n", filename,
                   strerror(errno));
         return false;
     }

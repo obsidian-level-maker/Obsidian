@@ -469,7 +469,7 @@ void nukem_game_interface_c::Property(const char *key, const char *value) {
         // ignored (for now)
         // [another mechanism sets the description via BEX/DDF]
     } else {
-        LogPrintf("WARNING: unknown NUKEM property: %s=%s\n", key, value);
+        LogPrintf("WARNING: unknown NUKEM property: {}={}\n", key, value);
     }
 }
 

@@ -1511,8 +1511,8 @@ static void DM_MakeLine(region_c *R, snag_c *S) {
     int y2 = I_ROUND(S->y2);
 
     if (x1 == x2 && y1 == y2) {
-        //		LogPrintf("WARNING: degenerate linedef @ (%1.0f
-        //%1.0f)\n", S->x1, S->y1);
+        //		LogPrintf("WARNING: degenerate linedef @ ({:1.0f}
+        //{:1.0})\n", S->x1, S->y1);
         return;
     }
 
@@ -1683,7 +1683,7 @@ static void DM_MergeColinearLines(bool show_count = true) {
     }
 
     if (show_count) {
-        LogPrintf("Merged %d colinear lines\n", count);
+        LogPrintf("Merged {} colinear lines\n", count);
     }
 }
 
@@ -1804,7 +1804,7 @@ static void DM_AlignTextures() {
         //              pass, naturals, prev_count, next_count);
     }
 
-    LogPrintf("Aligned %d textures\n", count);
+    LogPrintf("Aligned {} textures\n", count);
 }
 
 static bool RoundWouldClobber(int cx, int cy, int ox, int oy,
@@ -2084,7 +2084,7 @@ static void DM_RoundCorners() {
         }
     }
 
-    LogPrintf("Rounded %d square corners\n", count);
+    LogPrintf("Rounded {} square corners\n", count);
 
     // need this again, since we often create co-linear diagonals
     DM_MergeColinearLines(false /* show_count */);
@@ -2732,7 +2732,7 @@ static void DM_AddThing_FraggleScript(int x, int y, int z, csg_entity_c *E,
     const char *fs_name = E->props.getStr("fs_name", NULL);
 
     if (!fs_name) {
-        LogPrintf("WARNING: entity lost (no fragglescript name for type #%d)\n",
+        LogPrintf("WARNING: entity lost (no fragglescript name for type #{})\n",
                   type);
         return;
     }
@@ -2760,7 +2760,7 @@ static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E) {
     int type = atoi(E->id.c_str());
 
     if (type <= 0) {
-        LogPrintf("WARNING: bad doom entity number: '%s'\n", E->id.c_str());
+        LogPrintf("WARNING: bad doom entity number: '{}'\n", E->id.c_str());
         return;
     }
 

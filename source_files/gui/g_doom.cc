@@ -1097,7 +1097,7 @@ void doom_game_interface_c::Property(const char *key, const char *value) {
         } else if (StringCaseCmp(value, "strife") == 0) {
             dm_sub_format = SUBFMT_Strife;
         } else {
-            LogPrintf("WARNING: unknown DOOM sub_format '%s'\n", value);
+            LogPrintf("WARNING: unknown DOOM sub_format '{}'\n", value);
         }
     } else if (StringCaseCmp(key, "offset_map") == 0) {
         dm_offset_map = atoi(value);
@@ -1108,7 +1108,7 @@ void doom_game_interface_c::Property(const char *key, const char *value) {
     } else if (StringCaseCmp(key, "ef_thing_mode") == 0) {
         ef_thing_mode = atoi(value);
     } else {
-        LogPrintf("WARNING: unknown DOOM property: %s=%s\n", key, value);
+        LogPrintf("WARNING: unknown DOOM property: {}={}\n", key, value);
     }
 }
 

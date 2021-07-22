@@ -655,12 +655,12 @@ static void MergeIntersections(std::vector<intersect_t> &cuts,
             last++;
         }
 
-        /// LogPrintf("DIST %1.0f [%d..%d]\n", cuts[first].along, first, last);
+        /// LogPrintf("DIST {:1.0} [{}..{}]\n", cuts[first].along, first, last);
 
         bool backward = TestIntersectionOpen(cuts, (int)first, (int)last, -1);
         bool forward = TestIntersectionOpen(cuts, (int)first, (int)last, +1);
 
-        /// LogPrintf("--> backward:%s forward:%s\n",
+        /// LogPrintf("--> backward:{} forward:{}\n",
         ///          backward ? "OPEN" : "closed",
         ///           forward ? "OPEN" : "closed");
 
@@ -1774,7 +1774,7 @@ static int ParseLiquidMedium(csg_property_set_c *props) {
             return MEDIUM_LAVA;
         }
 
-        LogPrintf("WARNING: unknown liquid medium '%s'\n", str);
+        LogPrintf("WARNING: unknown liquid medium '{}'\n", str);
     }
 
     return MEDIUM_WATER;  // the default
@@ -2038,8 +2038,9 @@ static quake_node_c *Partition_Group(quake_group_c &group,
         SYS_ASSERT(!front.sides.empty());
 
 #if (NODE_DEBUG == 1)
-        LogPrintf("partition %p (%1.2f %1.2f) (%1.2f %1.2f)\n", new_node,
-                  part.x1, part.y1, part.x2, part.y2);
+        LogPrintf("partition {} ({:1.2} {:1.2}) ({:1.2} {:1.2})\n",
+                  static_cast<const void *>(new_node), part.x1, part.y1,
+                  part.x2, part.y2);
 #endif
 
         new_node->front_N =
@@ -2053,7 +2054,8 @@ static quake_node_c *Partition_Group(quake_group_c &group,
         }
 
 #if (NODE_DEBUG == 1)
-        LogPrintf("part_info %p = %s / %s\n", new_node,
+        LogPrintf("part_info {} = {} / {}\n",
+                  static_cast<const void *>(new_node),
                   leaf_to_string(new_node->front_L, new_node->front_N),
                   leaf_to_string(new_node->back_L, new_node->back_N));
 #endif
@@ -2066,14 +2068,16 @@ static quake_node_c *Partition_Group(quake_group_c &group,
 
 #if (NODE_DEBUG == 1)
         SYS_ASSERT(parent);
-        LogPrintf("side_group @ %p : %d = %u\n", parent, parent_side,
+        LogPrintf("side_group @ {} : {} = {}\n",
+                  static_cast<const void *>(parent), parent_side,
                   group.sides.size());
 
         for (unsigned int i = 0; i < group.sides.size(); i++) {
             const quake_side_c *S = group.sides[i];
-            LogPrintf("  side %p : (%1.2f %1.2f) (%1.2f %1.2f) in %p\n", S,
-                      S->x1, S->y1, S->x2, S->y2,
-                      S->snag ? S->snag->region : NULL);
+            LogPrintf(
+                "  side {} : ({:1.2} {:1.2}) ({:1.2} {:1.2}) in {}\n",
+                static_cast<const void *>(S), S->x1, S->y1, S->x2, S->y2,
+                S->snag ? static_cast<const void *>(S->snag->region) : NULL);
         }
 #endif
 
@@ -2531,7 +2535,7 @@ static void Model_ProcessEntity(csg_entity_c *E) {
 
     // sanity check
     if (leaf->faces.empty() && leaf->brushes.empty()) {
-        LogPrintf("WARNING: mapmodel for '%s' was empty.\n", E->id.c_str());
+        LogPrintf("WARNING: mapmodel for '{}' was empty.\n", E->id.c_str());
 
         delete leaf;
 
@@ -2585,7 +2589,7 @@ void CSG_QUAKE_Build() {
     qk_bsp_root = Partition_Group(GROUP, NULL, NULL, 0);
 
 #if (NODE_DEBUG == 1)
-    LogPrintf("root = %p\n", qk_bsp_root);
+    LogPrintf("root = {}\n", static_cast<const void *>(qk_bsp_root));
 #endif
 
     if (qk_game == 1) {
