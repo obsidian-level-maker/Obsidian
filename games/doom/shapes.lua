@@ -2974,7 +2974,22 @@ AUX_LIQUID_3 =
 -------------------------
 -- MsrSgtShooterPerson's kool x-perimental shapes of definite kool
 
--- MSSP's Greek collonade sort of things. [MSSPCOLLONADE]
+GROW_STAIR_TRI =
+{
+  prob = 40,
+  skip_prob = 50,
+
+  structure =
+  {
+    ".....","AAAAA",
+    ".....","AAAAA",
+    ".....","^A^A^",
+    ".....","11111",
+    "x111x","x111x",
+  }
+},
+
+-- MSSP's Greek COLONNADE sort of things. [MSSPCOLONNADE]
 
 GROW_COLONNADE_1 =
 {
@@ -3133,7 +3148,7 @@ GROW_COLONNADE_MOAT_2X =
   }
 },
 
-GROW_COLLONADE_CORNER =
+GROW_COLONNADE_CORNER =
 {
   prob = 30,
   skip_prob = 75,
@@ -3157,7 +3172,7 @@ GROW_COLLONADE_CORNER =
   }
 },
 
-GROW_COLLONADE_CORNER_LIQUID =
+GROW_COLONNADE_CORNER_LIQUID =
 {
   prob = 30,
   skip_prob = 75,
@@ -3182,7 +3197,7 @@ GROW_COLLONADE_CORNER_LIQUID =
   }
 },
 
-GROW_COLLONADE_CORNER_SOLID =
+GROW_COLONNADE_CORNER_SOLID =
 {
   prob = 15,
   skip_prob = 75,
@@ -3207,7 +3222,7 @@ GROW_COLLONADE_CORNER_SOLID =
   }
 },
 
-GROW_COLLONADE_510_STAIRS_STRAIGHT =
+GROW_COLONNADE_510_STAIRS_STRAIGHT =
 {
   prob = 25,
   skip_prob = 75,
@@ -3223,7 +3238,7 @@ GROW_COLLONADE_510_STAIRS_STRAIGHT =
   }
 },
 
-GROW_COLLONADE_510_STAIRS_STRAIGHT =
+GROW_COLONNADE_510_STAIRS_STRAIGHT =
 {
   prob = 40,
   skip_prob = 75,
@@ -3241,7 +3256,7 @@ GROW_COLLONADE_510_STAIRS_STRAIGHT =
   }
 },
 
-GROW_COLLONADE_510_STAIRS_TRI =
+GROW_COLONNADE_510_STAIRS_TRI =
 {
   prob = 20,
   skip_prob = 75,
@@ -3259,7 +3274,7 @@ GROW_COLLONADE_510_STAIRS_TRI =
   }
 },
 
-GROW_COLLONADE_VAULT =
+GROW_COLONNADE_VAULT =
 {
   prob = 20,
   skip_prob = 75,
@@ -3279,7 +3294,7 @@ GROW_COLLONADE_VAULT =
   }
 },
 
-GROW_COLLONADE_VAULT_NEW_AREA =
+GROW_COLONNADE_VAULT_NEW_AREA =
 {
   prob = 20,
   skip_prob = 75,
@@ -3299,7 +3314,7 @@ GROW_COLLONADE_VAULT_NEW_AREA =
   }
 },
 
-GROW_COLLONADE_VAULT_NEW_AREA_CROSS =
+GROW_COLONNADE_VAULT_NEW_AREA_CROSS =
 {
   prob = 30,
   skip_prob = 80,
@@ -3319,7 +3334,7 @@ GROW_COLLONADE_VAULT_NEW_AREA_CROSS =
   }
 },
 
-GROW_COLLONADE_VAULT_THICK_PILLARS_NEW_AREA =
+GROW_COLONNADE_VAULT_THICK_PILLARS_NEW_AREA =
 {
   prob = 25,
   skip_prob = 75,
@@ -3338,7 +3353,7 @@ GROW_COLLONADE_VAULT_THICK_PILLARS_NEW_AREA =
   }
 },
 
-GROW_COLLONADE_STRAIGHT_VAULT =
+GROW_COLONNADE_STRAIGHT_VAULT =
 {
   prob = 30,
   skip_prob = 35,
@@ -3355,7 +3370,7 @@ GROW_COLLONADE_STRAIGHT_VAULT =
   }
 },
 
-GROW_COLLONADE_STRAIGHT_VAULT_FROM_SIDE =
+GROW_COLONNADE_STRAIGHT_VAULT_FROM_SIDE =
 {
   prob = 30,
   skip_prob = 35,
@@ -3370,7 +3385,7 @@ GROW_COLLONADE_STRAIGHT_VAULT_FROM_SIDE =
   }
 },
 
-GROW_COLLONADE_STRAIGHT_VAULT_LARGE =
+GROW_COLONNADE_STRAIGHT_VAULT_LARGE =
 {
   prob = 40,
   skip_prob = 35,
@@ -3387,7 +3402,7 @@ GROW_COLLONADE_STRAIGHT_VAULT_LARGE =
   }
 },
 
-GROW_COLLONADE_STRAIGHT_VAULT_LARGE_FROM_SIDE =
+GROW_COLONNADE_STRAIGHT_VAULT_LARGE_FROM_SIDE =
 {
   prob = 40,
   skip_prob = 35,
@@ -3404,7 +3419,7 @@ GROW_COLLONADE_STRAIGHT_VAULT_LARGE_FROM_SIDE =
   }
 },
 
-GROW_COLLONADE_STRAIGHT_VAULT_ORION_BELT =
+GROW_COLONNADE_STRAIGHT_VAULT_BELT =
 {
   prob = 50,
   skip_prob = 75,
@@ -3429,6 +3444,30 @@ GROW_COLLONADE_STRAIGHT_VAULT_ORION_BELT =
          ".A","A.",
   }
 },
+
+GROW_COLONNADE_CLOISTER =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xxxx111xxxx","xxxx111xxxx",
+    "...........","11111111111",
+    "...........","11111111111",
+    "...........","11#1#1#1#11",
+    "...........","111AAAAA111",
+    "...........","11#AAAAA#11",
+    "...........","111AAAAA111",
+    "...........","11#AAAAA#11",
+    "...........","111AAAAA111",
+    "...........","11#AAAAA#11",
+    "...........","11111111111",
+    "...........","11111111111",
+  }
+},
+
+-- 3.57-style rules
 
 GROW_357_OPEN_ROOF_NEW_AREA =
 {
@@ -7205,7 +7244,7 @@ GROW_WIDE_LOW_CEILING_CORNER =
   },
 },
 
-GROW_COLLONADE_3_PILLARS =
+GROW_COLONNADE_3_PILLARS =
 {
   prob = 20,
   skip_prob = 75,
