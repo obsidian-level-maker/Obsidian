@@ -45,9 +45,9 @@ static bool keep_seed;
 
 static void Cookie_SetValue(const char *name, const char *value) {
     if (context == CCTX_Load) {
-        DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name, value);
+        DebugPrintf("CONFIG: Name: [{:}] Value: [{:}]\n", name, value);
     } else if (context == CCTX_Arguments) {
-        DebugPrintf("ARGUMENT: Name: [%s] Value: [%s]\n", name, value);
+        DebugPrintf("ARGUMENT: Name: [{:}] Value: [{:}]\n", name, value);
     }
 
     // the new style module syntax

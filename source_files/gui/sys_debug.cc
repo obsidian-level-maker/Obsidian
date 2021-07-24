@@ -29,7 +29,7 @@
 std::fstream log_file;
 static std::string log_filename;
 
-static bool debugging = false;
+bool debugging = false;
 bool terminal = false;
 
 bool LogInit(const char *filename) {
@@ -69,37 +69,6 @@ void LogClose(void) {
 
     log_file.close();
     log_filename.clear();
-}
-
-void DebugPrintf(const char *str, ...) {
-    if (debugging) {
-        static char buffer[DEBUG_BUF_LEN];
-
-        va_list args;
-
-        va_start(args, str);
-        vsnprintf(buffer, DEBUG_BUF_LEN - 1, str, args);
-        va_end(args);
-
-        buffer[DEBUG_BUF_LEN - 2] = 0;
-
-        // prefix each debugging line with a special symbol
-
-        char *pos = buffer;
-        char *next;
-
-        while (pos && *pos) {
-            next = strchr(pos, '\n');
-
-            if (next) {
-                *next++ = 0;
-            }
-
-            LogPrintf("# {}\n", pos);
-
-            pos = next;
-        }
-    }
 }
 
 void LogReadLines(log_display_func_t display_func, void *priv_data) {

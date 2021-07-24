@@ -143,7 +143,7 @@ bool GRP_OpenRead(const char *filename) {
         grp_R_starts[i] = L_start;
         L_start += L->length;
 
-        //  DebugPrintf(" %4d: %08x %08x : %s\n", i, L->start, L->length,
+        //  DebugPrintf(" {:4}: {:08x} {:08x} : {:}\n", i, L->start, L->length,
         //  L->name);
     }
 

@@ -223,7 +223,7 @@ class quake_group_c {
     }
 
     void Dump() const {
-        DebugPrintf("Group %p : %u sides, %u brushes\n", this, sides.size(),
+        DebugPrintf("Group {:} : {:} sides, {:} brushes\n", this, sides.size(),
                     brushes.size());
 
         for (unsigned int i = 0; i < sides.size(); i++) {
@@ -509,10 +509,10 @@ struct intersect_qdist_Cmp {
 };
 
 void DumpIntersections(std::vector<intersect_t> &cuts, const char *title) {
-    DebugPrintf("%s:\n", title);
+    DebugPrintf("{:}:\n", title);
 
     for (unsigned int i = 0; i < cuts.size(); i++) {
-        DebugPrintf("  %03d : along:%1.3f dir:%+d %s angle:%1.2f\n", i,
+        DebugPrintf("  {:03} : along:{:1.3} dir:{:+} {:} angle:{:1.2}\n", i,
                     cuts[i].along, cuts[i].dir,
                     (cuts[i].kind == K1_NORMAL)           ? "NORM"
                     : (cuts[i].kind == K1_SITTING)        ? "SITT"
@@ -565,9 +565,9 @@ static void AddIntersection(std::vector<intersect_t> &cut_list,
 
         p_angle = CalcAngle(part->x1, part->y1, part->x2, part->y2);
 
-        // DebugPrintf("\nPART = (%1.0f %1.0f) .. (%1.0f %1.0f) along:%1.0f
+        // DebugPrintf("\nPART = ({:1.0} {:1.0}) .. ({:1.0} {:1.0}) along:{:1.0}
         // raw_angle: %1.1f\n", part->x1, part->y1, part->x2, part->y2, along,
-        // p_angle); DebugPrintf("SEG = (%1.0f %1.0f) .. (%1.0f %1.0f) vert:%d
+        // p_angle); DebugPrintf("SEG = ({:1.0} {:1.0}) .. ({:1.0} {:1.0}) vert:{:}
         // dir:%+d raw_angle: %1.1f\n", S->x1, S->y1, S->x2, S->y2, vert, dir,
         // s_angle);
 
@@ -579,7 +579,7 @@ static void AddIntersection(std::vector<intersect_t> &cut_list,
             s_angle += 360.0;
         }
 
-        // DebugPrintf("angle_diff ---> %1.2f\n", s_angle);
+        // DebugPrintf("angle_diff ---> {:1.2}\n", s_angle);
     }
 
     AddIntersection(cut_list, along, dir, kind, s_angle);
@@ -952,7 +952,7 @@ static bool FindPartition_XY(quake_group_c &group, quake_side_c *part,
 
             CheckClusterEdges(group, cx, cy);
 
-            ///   DebugPrintf("Reached cluster (%d %d) @ (%1.1f %1.1f) .. (%1.1f
+            ///   DebugPrintf("Reached cluster ({:} {:}) @ ({:1.1} {:1.1}) .. ({:1.1}
             ///   %1.1f)\n",
             ///               cx, cy, gx1, gy1, gx2, gy2);
             ///   group.Dump();

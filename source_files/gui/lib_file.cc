@@ -500,7 +500,7 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat) {
         struct stat finfo;
 
         if (stat(full_name.c_str(), &finfo) != 0) {
-            DebugPrintf(".... stat failed: %s\n", strerror(errno));
+            DebugPrintf(".... stat failed: {:}\n", strerror(errno));
             continue;
         }
 

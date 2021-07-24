@@ -156,7 +156,7 @@ bool PAK_OpenRead(const char *filename) {
         E->offset = LE_U32(E->offset);
         E->length = LE_U32(E->length);
 
-        //  DebugPrintf(" %4d: %08x %08x : %s\n", i, E->offset, E->length,
+        //  DebugPrintf(" {:4}: {:08x} {:08x} : {:}\n", i, E->offset, E->length,
         //  E->name);
     }
 
@@ -226,7 +226,7 @@ void PAK_FindMaps(std::vector<int> &entries) {
         if (strcmp(name, ".bsp") == 0) {
             entries.push_back(i);
 
-            //    DebugPrintf("Found map [%d] : '%s'\n", i, E->name);
+            //    DebugPrintf("Found map [{:}] : '{:}'\n", i, E->name);
         }
     }
 }
