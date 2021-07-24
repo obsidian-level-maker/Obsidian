@@ -55,11 +55,11 @@ bool PAK_OpenRead(const char *filename) {
 #endif
 
     if (!r_pak_fp) {
-        LogPrintf("PAK_OpenRead: no such file: %s\n", filename);
+        LogPrintf("PAK_OpenRead: no such file: {}\n", filename);
         return false;
     }
 
-    LogPrintf("Opened PAK file: %s\n", filename);
+    LogPrintf("Opened PAK file: {}\n", filename);
 
 #ifdef HAVE_PHYSFS
     if ((PHYSFS_readBytes(r_pak_fp, &r_header, sizeof(r_header)) /
@@ -97,8 +97,8 @@ bool PAK_OpenRead(const char *filename) {
 
     if (r_header.entry_num >= 5000)  // sanity check
     {
-        LogPrintf("PAK_OpenRead: bad header (%d entries?)\n",
-                  r_header.entry_num);
+        LogPrintf("PAK_OpenRead: bad header ({} entries?)\n",
+                  static_cast<unsigned int>(r_header.entry_num));
 #ifdef HAVE_PHYSFS
         PHYSFS_close(r_pak_fp);
 #else
@@ -113,8 +113,8 @@ bool PAK_OpenRead(const char *filename) {
     if (fseek(r_pak_fp, r_header.dir_start, SEEK_SET) != 0)
 #endif
     {
-        LogPrintf("PAK_OpenRead: cannot seek to directory (at 0x%08x)\n",
-                  r_header.dir_start);
+        LogPrintf("PAK_OpenRead: cannot seek to directory (at 0x{})\n",
+                  static_cast<unsigned int>(r_header.dir_start));
 #ifdef HAVE_PHYSFS
         PHYSFS_close(r_pak_fp);
 #else
@@ -143,7 +143,7 @@ bool PAK_OpenRead(const char *filename) {
                 return false;
             }
 
-            LogPrintf("PAK_OpenRead: hit EOF reading dir-entry %d\n", i);
+            LogPrintf("PAK_OpenRead: hit EOF reading dir-entry {}\n", i);
 
             // truncate directory
             r_header.entry_num = i;
@@ -156,7 +156,7 @@ bool PAK_OpenRead(const char *filename) {
         E->offset = LE_U32(E->offset);
         E->length = LE_U32(E->length);
 
-        //  DebugPrintf(" %4d: %08x %08x : %s\n", i, E->offset, E->length,
+        //  DebugPrintf(" {:4}: {:08x} {:08x} : {}\n", i, E->offset, E->length,
         //  E->name);
     }
 
@@ -226,7 +226,7 @@ void PAK_FindMaps(std::vector<int> &entries) {
         if (strcmp(name, ".bsp") == 0) {
             entries.push_back(i);
 
-            //    DebugPrintf("Found map [%d] : '%s'\n", i, E->name);
+            //    DebugPrintf("Found map [{}] : '{}'\n", i, E->name);
         }
     }
 }
@@ -289,11 +289,11 @@ bool PAK_OpenWrite(const char *filename) {
     w_pak_fp = fopen(filename, "wb");
 
     if (!w_pak_fp) {
-        LogPrintf("PAK_OpenWrite: cannot create file: %s\n", filename);
+        LogPrintf("PAK_OpenWrite: cannot create file: {}\n", filename);
         return false;
     }
 
-    LogPrintf("Created PAK file: %s\n", filename);
+    LogPrintf("Created PAK file: {}\n", filename);
 
     // write out a dummy header
     raw_pak_header_t header;

@@ -18,23 +18,25 @@
 //
 //------------------------------------------------------------------------
 
+#include <fstream>
+#include <iostream>
 #include "headers.h"
 #include "lib_util.h"
 #include "main.h"
 
 #define DEBUG_BUF_LEN 20000
 
-static FILE *log_file = NULL;
+std::fstream log_file;
 static std::string log_filename;
 
-static bool debugging = false;
-static bool terminal = false;
+bool debugging = false;
+bool terminal = false;
 
 bool LogInit(const char *filename) {
     if (filename) {
         log_filename = filename;
 
-        log_file = fopen(log_filename.c_str(), "w");
+        log_file.open(log_filename, std::ios::out);
 
         if (!log_file) {
             return false;
@@ -65,64 +67,8 @@ void LogEnableTerminal(bool enable) { terminal = enable; }
 void LogClose(void) {
     LogPrintf("\n====== END OF OBSIDIAN LOGS ======\n\n");
 
-    if (log_file) {
-        fclose(log_file);
-        log_file = NULL;
-
-        log_filename.clear();
-    }
-}
-
-void LogPrintf(const char *str, ...) {
-    if (log_file) {
-        va_list args;
-
-        va_start(args, str);
-        vfprintf(log_file, str, args);
-        va_end(args);
-
-        fflush(log_file);
-    }
-
-    // show on the Linux terminal too
-    if (terminal) {
-        va_list args;
-
-        va_start(args, str);
-        vfprintf(stdout, str, args);
-        va_end(args);
-    }
-}
-
-void DebugPrintf(const char *str, ...) {
-    if (debugging) {
-        static char buffer[DEBUG_BUF_LEN];
-
-        va_list args;
-
-        va_start(args, str);
-        vsnprintf(buffer, DEBUG_BUF_LEN - 1, str, args);
-        va_end(args);
-
-        buffer[DEBUG_BUF_LEN - 2] = 0;
-
-        // prefix each debugging line with a special symbol
-
-        char *pos = buffer;
-        char *next;
-
-        while (pos && *pos) {
-            next = strchr(pos, '\n');
-
-            if (next) {
-                *next++ = 0;
-            }
-
-            LogPrintf("# %s\n", pos);
-
-            pos = next;
-        }
-    }
+    log_file.close();
+    log_filename.clear();
 }
 
 void LogReadLines(log_display_func_t display_func, void *priv_data) {
@@ -135,9 +81,9 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
     // fussy about opening already open files (in Linux it would
     // not be an issue).
 
-    fclose(log_file);
+    log_file.close();
 
-    log_file = fopen(log_filename.c_str(), "r");
+    log_file.open(log_filename, std::ios::in);
 
     // this is very unlikely to happen, but check anyway
     if (!log_file) {
@@ -145,21 +91,21 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
     }
 
     std::string buffer;
-    buffer.resize(MSG_BUF_LEN);
-
-    while (fgets(&buffer[0], MSG_BUF_LEN - 2, log_file)) {
+    while (std::getline(log_file, buffer)) {
         // remove any newline at the end (LF or CR/LF)
         StringRemoveCRLF(&buffer);
 
         // remove any DEL characters (mainly to workaround an FLTK bug)
         StringReplaceChar(&buffer, 0x7f, 0);
 
-        display_func(buffer.c_str(), priv_data);
+        std::cout << buffer << std::endl;
+
+        display_func(buffer, priv_data);
     }
 
     // open the log file for writing again
     // [ it is unlikely to fail, but if it does then no biggie ]
-    log_file = fopen(log_filename.c_str(), "a");
+    log_file.open(log_filename, std::ios::app);
 }
 
 //--- editor settings ---

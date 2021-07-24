@@ -296,13 +296,14 @@ bool region_c::RemoveSnag(snag_c *S) {
 }
 
 void region_c::DebugDump() {
-    DebugPrintf("Region %p: has %u snags\n", this, snags.size());
+    DebugPrintf("Region {}: has {} snags\n", static_cast<const void *>(this),
+                snags.size());
 
     for (unsigned int i = 0; i < snags.size(); i++) {
         snag_c *S = snags[i];
 
-        DebugPrintf("  %d: Snag %p (%1.4f %1.4f) -> (%1.4f %1.4f)\n", i, S,
-                    S->x1, S->y1, S->x2, S->y2);
+        DebugPrintf("  {}: Snag {} ({:1.4} {:1.4}) -> (%1.4f %1.4f)\n", i,
+                    static_cast<const void *>(S), S->x1, S->y1, S->x2, S->y2);
     }
 }
 
@@ -977,14 +978,14 @@ static void DivideOneRegion(region_c *R, partition_c *part, group_c &front,
 
     if (R->snags.size() < 3) {
         R->degenerate = true;
-        LogPrintf("WARNING: region degenerated (%u snags)\n", R->snags.size());
+        LogPrintf("WARNING: region degenerated ({} snags)\n", R->snags.size());
     } else {
         front.AddRegion(R);
     }
 
     if (N->snags.size() < 3) {
         N->degenerate = true;
-        LogPrintf("WARNING: region degenerated (%u snags)\n", N->snags.size());
+        LogPrintf("WARNING: region degenerated ({} snags)\n", N->snags.size());
     } else {
         back.AddRegion(N);
     }
@@ -1047,10 +1048,6 @@ static partition_c *ChoosePartition(group_c &group, bool *reached_chunk) {
 
         int sw = sx2 - sx1;
         int sh = sy2 - sy1;
-
-        // fprintf(stderr, "bounds (%1.5f %1.5f) .. (%1.5f %1.5f)\n", gx1, gy1,
-        // gx2, gy2); fprintf(stderr, " sx/sy (%d,%d) .. (%d,%d) = %dx%d\n",
-        // sx1, sy1, sx2, sy2, sw, sh);
 
         if (sw >= 2 || sh >= 2) {
             if (sw >= sh) {
@@ -1120,7 +1117,7 @@ static void SplitGroup(group_c &group, bool reached_chunk, region_c **leaf_out,
 
     if (group.regs.empty()) {
         if (!group.ents.empty()) {
-            DebugPrintf("SplitGroup: lost %u entities\n", group.ents.size());
+            DebugPrintf("SplitGroup: lost {} entities\n", group.ents.size());
         }
 
         return;
@@ -1536,10 +1533,10 @@ static void RemoveDeadRegions() {
     int after = (int)all_regions.size();
     int count = before - after;
 
-    LogPrintf("Removed %d dead regions (of %d)\n", count, before);
+    LogPrintf("Removed {} dead regions (of {})\n", count, before);
 
     if (lost_ents > 0) {
-        LogPrintf("WARNING: %d entities in dead region\n", lost_ents);
+        LogPrintf("WARNING: {} entities in dead region\n", lost_ents);
     }
 
     ///  PruneBSPTree(bsp_root);
@@ -1589,7 +1586,7 @@ void CSG_SwallowBrushes() {
         }
     }
 
-    LogPrintf("Swallowed %d brushes (of %d)\n", count, total);
+    LogPrintf("Swallowed {} brushes (of {})\n", count, total);
 }
 
 static gap_c *GapForEntity(const region_c *R, csg_entity_c *E) {
@@ -1635,8 +1632,8 @@ static void MarkGapsWithEntities() {
             if (!gap) {
                 if (!csg_is_clip_hull) {
                     LogPrintf(
-                        "WARNING: entity '%s' is inside solid @ "
-                        "(%1.0f,%1.0f,%1.0f)\n",
+                        "WARNING: entity '{}' is inside solid @ "
+                        "({:1.0},{:1.0},{:1.0})\n",
                         E->id.c_str(), E->x, E->y, E->z);
                 }
                 continue;
@@ -1793,7 +1790,7 @@ static void RemoveUnusedGaps() {
         Main_FatalError("CSG: all gaps were unreachable (no entities?)\n");
     }
 
-    LogPrintf("Filled %d gaps (of %d total)\n", filled, total);
+    LogPrintf("Filled {} gaps (of {} total)\n", filled, total);
 }
 
 struct csg_brush_bz_Compare {

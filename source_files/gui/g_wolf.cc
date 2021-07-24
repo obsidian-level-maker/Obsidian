@@ -133,7 +133,7 @@ static void WF_WritePlane(u16_t *plane, int *offset, int *length) {
     if (1 != fwrite(plane, *length, 1, map_fp)) {
         if (write_errors_seen < 10) {
             write_errors_seen += 1;
-            LogPrintf("Failure writing to map file! (%d bytes)\n", *length);
+            LogPrintf("Failure writing to map file! ({} bytes)\n", *length);
         }
     }
 }
@@ -306,7 +306,7 @@ static void WF_DumpMap(void) {
 
         line_buf[64] = 0;
 
-        DebugPrintf("%s\n", line_buf);
+        DebugPrintf("{}\n", line_buf);
     }
 }
 
@@ -350,7 +350,7 @@ bool wolf_game_interface_c::Start(const char *preset) {
     map_fp = fopen(TEMP_GAMEFILE, "wb");
 
     if (!map_fp) {
-        LogPrintf("Unable to create %s:\n%s", TEMP_GAMEFILE, strerror(errno));
+        LogPrintf("Unable to create {}:\n{}", TEMP_GAMEFILE, strerror(errno));
 
         Main_ProgStatus(_("Error (create file)"));
         return false;
@@ -361,7 +361,7 @@ bool wolf_game_interface_c::Start(const char *preset) {
     if (!head_fp) {
         fclose(map_fp);
 
-        LogPrintf("Unable to create %s:\n%s", TEMP_HEADFILE, strerror(errno));
+        LogPrintf("Unable to create {}:\n{}", TEMP_HEADFILE, strerror(errno));
 
         Main_ProgStatus(_("Error (create file)"));
         return false;
@@ -454,7 +454,7 @@ void wolf_game_interface_c::Property(const char *key, const char *value) {
     } else if (StringCaseCmp(key, "file_ext") == 0) {
         file_ext = value;
     } else {
-        LogPrintf("WARNING: unknown WOLF3D property: %s=%s\n", key, value);
+        LogPrintf("WARNING: unknown WOLF3D property: {}={}\n", key, value);
     }
 }
 

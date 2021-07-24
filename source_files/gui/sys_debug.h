@@ -21,16 +21,43 @@
 #ifndef __SYS_DEBUG_H__
 #define __SYS_DEBUG_H__
 
+#include <algorithm>
+#include <fstream>
+#include <string>
+#include <fmt/core.h>
+#include <fmt/ostream.h>
+extern bool terminal;
+extern bool debugging;
+extern std::fstream log_file;
 bool LogInit(const char *filename);  // NULL for none
 void LogClose(void);
 
 void LogEnableDebug(bool enable);
 void LogEnableTerminal(bool enable);
 
-void LogPrintf(const char *str, ...);
-void DebugPrintf(const char *str, ...);
+template <typename... Args>
+void LogPrintf(const std::string &str, Args &&...args) {
+    fmt::print(log_file, str, args...);
 
-typedef void (*log_display_func_t)(const char *line, void *priv_data);
+    // show on the Linux terminal too
+    if (terminal) {
+        fmt::print(str, args...);
+    }
+}
+template <typename... Args>
+void DebugPrintf(const std::string &format, Args &&...args) {
+    if (debugging) {
+        std::string buffer = fmt::format(format, args...);
+        auto next = std::find(buffer.begin(), buffer.end(), '\n');
+        for (auto pos = buffer.begin(); pos != buffer.end();) {
+            fmt::print("# {}\n", std::string{pos, next});
+            pos = next;
+            next = std::find(pos + 1, buffer.end(), '\n');
+        }
+    }
+}
+
+using log_display_func_t = void (*)(const std::string &line, void *priv_data);
 
 void LogReadLines(log_display_func_t display_func, void *priv_data);
 

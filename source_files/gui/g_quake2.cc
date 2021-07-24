@@ -1064,7 +1064,7 @@ void quake2_game_interface_c::Property(const char *key, const char *value) {
     } else if (StringCaseCmp(key, "description") == 0) {
         description = value ? value : "";
     } else {
-        LogPrintf("WARNING: unknown QUAKE2 property: %s=%s\n", key, value);
+        LogPrintf("WARNING: unknown QUAKE2 property: {}={}\n", key, value);
     }
 }
 

@@ -48,8 +48,7 @@ class UI_Module : public Fl_Group {
     UI_CustomCheckBox *mod_button;
 
    private:
-
-	std::string id_name;
+    std::string id_name;
 
     // only used while positioning the options (as they are added)
     int cur_opt_y;

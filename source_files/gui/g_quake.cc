@@ -234,7 +234,7 @@ static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name) {
     }
 
     // not found!
-    LogPrintf("WARNING: texture '%s' not found in texture wad!\n", name);
+    LogPrintf("WARNING: texture '{}' not found in texture wad!\n", name);
 
     CreateDummyMip(lump, name, 4, 12);
 }
@@ -1366,7 +1366,7 @@ void quake1_game_interface_c::Property(const char *key, const char *value) {
         } else if (StringCaseCmp(value, "halflife") == 0) {
             qk_sub_format = SUBFMT_HalfLife;
         } else {
-            LogPrintf("WARNING: unknown QUAKE1 sub_format '%s'\n", value);
+            LogPrintf("WARNING: unknown QUAKE1 sub_format '{}'\n", value);
         }
 
         // this assumes the sub_format is only set once at the start
@@ -1376,7 +1376,7 @@ void quake1_game_interface_c::Property(const char *key, const char *value) {
     } else if (StringCaseCmp(key, "worldtype") == 0) {
         qk_worldtype = atoi(value);
     } else {
-        LogPrintf("WARNING: unknown QUAKE1 property: %s=%s\n", key, value);
+        LogPrintf("WARNING: unknown QUAKE1 property: {}={}\n", key, value);
     }
 }
 

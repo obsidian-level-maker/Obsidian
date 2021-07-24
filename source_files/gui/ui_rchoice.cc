@@ -217,8 +217,7 @@ void UI_RChoiceMenu::GotoNext() {
 
 //----------------------------------------------------------------
 
-UI_RChoice::UI_RChoice(int x, int y, int w, int h)
-    : Fl_Group(x, y, w, h) {
+UI_RChoice::UI_RChoice(int x, int y, int w, int h) : Fl_Group(x, y, w, h) {
     visible_focus(0);
     labelfont(font_style);
 }
@@ -227,8 +226,7 @@ UI_RChoice::~UI_RChoice() {}
 
 //----------------------------------------------------------------
 
-UI_RSlide::UI_RSlide(int x, int y, int w, int h)
-    : Fl_Group(x, y, w, h) {
+UI_RSlide::UI_RSlide(int x, int y, int w, int h) : Fl_Group(x, y, w, h) {
     visible_focus(0);
     labelfont(font_style);
 }
@@ -237,8 +235,7 @@ UI_RSlide::~UI_RSlide() {}
 
 //----------------------------------------------------------------
 
-UI_RButton::UI_RButton(int x, int y, int w, int h)
-    : Fl_Group(x, y, w, h) {
+UI_RButton::UI_RButton(int x, int y, int w, int h) : Fl_Group(x, y, w, h) {
     visible_focus(0);
     box(FL_NO_BOX);
 }

@@ -140,8 +140,10 @@ class quake_side_c {
 
     void Dump(unsigned int index) const {
         DebugPrintf(
-            "Side %u : (%1.1f %1.1f) -> (%1.1f %1.1f) snag:%p  on_node:%p/%d\n",
-            index, x1, y1, x2, y2, snag, on_node, node_side);
+            "Side {} : ({:1.1} {:1.1}) -> ({:1.1} {:1.1}) snag:{}  "
+            "on_node:{}/{}\n",
+            index, x1, y1, x2, y2, static_cast<const void *>(snag),
+            static_cast<const void *>(on_node), node_side);
     }
 };
 
@@ -223,7 +225,8 @@ class quake_group_c {
     }
 
     void Dump() const {
-        DebugPrintf("Group %p : %u sides, %u brushes\n", this, sides.size(),
+        DebugPrintf("Group {} : {} sides, {} brushes\n",
+                    static_cast<const void *>(this), sides.size(),
                     brushes.size());
 
         for (unsigned int i = 0; i < sides.size(); i++) {
@@ -509,10 +512,10 @@ struct intersect_qdist_Cmp {
 };
 
 void DumpIntersections(std::vector<intersect_t> &cuts, const char *title) {
-    DebugPrintf("%s:\n", title);
+    DebugPrintf("{}:\n", title);
 
     for (unsigned int i = 0; i < cuts.size(); i++) {
-        DebugPrintf("  %03d : along:%1.3f dir:%+d %s angle:%1.2f\n", i,
+        DebugPrintf("  {:03} : along:{:1.3} dir:{:+} {} angle:{:1.2}\n", i,
                     cuts[i].along, cuts[i].dir,
                     (cuts[i].kind == K1_NORMAL)           ? "NORM"
                     : (cuts[i].kind == K1_SITTING)        ? "SITT"
@@ -565,11 +568,11 @@ static void AddIntersection(std::vector<intersect_t> &cut_list,
 
         p_angle = CalcAngle(part->x1, part->y1, part->x2, part->y2);
 
-        // DebugPrintf("\nPART = (%1.0f %1.0f) .. (%1.0f %1.0f) along:%1.0f
+        // DebugPrintf("\nPART = ({:1.0} {:1.0}) .. ({:1.0} {:1.0}) along:{:1.0}
         // raw_angle: %1.1f\n", part->x1, part->y1, part->x2, part->y2, along,
-        // p_angle); DebugPrintf("SEG = (%1.0f %1.0f) .. (%1.0f %1.0f) vert:%d
-        // dir:%+d raw_angle: %1.1f\n", S->x1, S->y1, S->x2, S->y2, vert, dir,
-        // s_angle);
+        // p_angle); DebugPrintf("SEG = ({:1.0} {:1.0}) .. ({:1.0} {:1.0})
+        // vert:{} dir:%+d raw_angle: %1.1f\n", S->x1, S->y1, S->x2, S->y2,
+        // vert, dir, s_angle);
 
         s_angle = s_angle - p_angle;
 
@@ -579,7 +582,7 @@ static void AddIntersection(std::vector<intersect_t> &cut_list,
             s_angle += 360.0;
         }
 
-        // DebugPrintf("angle_diff ---> %1.2f\n", s_angle);
+        // DebugPrintf("angle_diff ---> {:1.2}\n", s_angle);
     }
 
     AddIntersection(cut_list, along, dir, kind, s_angle);
@@ -655,12 +658,12 @@ static void MergeIntersections(std::vector<intersect_t> &cuts,
             last++;
         }
 
-        /// LogPrintf("DIST %1.0f [%d..%d]\n", cuts[first].along, first, last);
+        /// LogPrintf("DIST {:1.0} [{}..{}]\n", cuts[first].along, first, last);
 
         bool backward = TestIntersectionOpen(cuts, (int)first, (int)last, -1);
         bool forward = TestIntersectionOpen(cuts, (int)first, (int)last, +1);
 
-        /// LogPrintf("--> backward:%s forward:%s\n",
+        /// LogPrintf("--> backward:{} forward:{}\n",
         ///          backward ? "OPEN" : "closed",
         ///           forward ? "OPEN" : "closed");
 
@@ -952,8 +955,8 @@ static bool FindPartition_XY(quake_group_c &group, quake_side_c *part,
 
             CheckClusterEdges(group, cx, cy);
 
-            ///   DebugPrintf("Reached cluster (%d %d) @ (%1.1f %1.1f) .. (%1.1f
-            ///   %1.1f)\n",
+            ///   DebugPrintf("Reached cluster ({} {}) @ ({:1.1} {:1.1}) ..
+            ///   ({:1.1} %1.1f)\n",
             ///               cx, cy, gx1, gy1, gx2, gy2);
             ///   group.Dump();
         }
@@ -1774,7 +1777,7 @@ static int ParseLiquidMedium(csg_property_set_c *props) {
             return MEDIUM_LAVA;
         }
 
-        LogPrintf("WARNING: unknown liquid medium '%s'\n", str);
+        LogPrintf("WARNING: unknown liquid medium '{}'\n", str);
     }
 
     return MEDIUM_WATER;  // the default
@@ -2038,8 +2041,9 @@ static quake_node_c *Partition_Group(quake_group_c &group,
         SYS_ASSERT(!front.sides.empty());
 
 #if (NODE_DEBUG == 1)
-        LogPrintf("partition %p (%1.2f %1.2f) (%1.2f %1.2f)\n", new_node,
-                  part.x1, part.y1, part.x2, part.y2);
+        LogPrintf("partition {} ({:1.2} {:1.2}) ({:1.2} {:1.2})\n",
+                  static_cast<const void *>(new_node), part.x1, part.y1,
+                  part.x2, part.y2);
 #endif
 
         new_node->front_N =
@@ -2053,7 +2057,8 @@ static quake_node_c *Partition_Group(quake_group_c &group,
         }
 
 #if (NODE_DEBUG == 1)
-        LogPrintf("part_info %p = %s / %s\n", new_node,
+        LogPrintf("part_info {} = {} / {}\n",
+                  static_cast<const void *>(new_node),
                   leaf_to_string(new_node->front_L, new_node->front_N),
                   leaf_to_string(new_node->back_L, new_node->back_N));
 #endif
@@ -2066,14 +2071,16 @@ static quake_node_c *Partition_Group(quake_group_c &group,
 
 #if (NODE_DEBUG == 1)
         SYS_ASSERT(parent);
-        LogPrintf("side_group @ %p : %d = %u\n", parent, parent_side,
+        LogPrintf("side_group @ {} : {} = {}\n",
+                  static_cast<const void *>(parent), parent_side,
                   group.sides.size());
 
         for (unsigned int i = 0; i < group.sides.size(); i++) {
             const quake_side_c *S = group.sides[i];
-            LogPrintf("  side %p : (%1.2f %1.2f) (%1.2f %1.2f) in %p\n", S,
-                      S->x1, S->y1, S->x2, S->y2,
-                      S->snag ? S->snag->region : NULL);
+            LogPrintf(
+                "  side {} : ({:1.2} {:1.2}) ({:1.2} {:1.2}) in {}\n",
+                static_cast<const void *>(S), S->x1, S->y1, S->x2, S->y2,
+                S->snag ? static_cast<const void *>(S->snag->region) : NULL);
         }
 #endif
 
@@ -2531,7 +2538,7 @@ static void Model_ProcessEntity(csg_entity_c *E) {
 
     // sanity check
     if (leaf->faces.empty() && leaf->brushes.empty()) {
-        LogPrintf("WARNING: mapmodel for '%s' was empty.\n", E->id.c_str());
+        LogPrintf("WARNING: mapmodel for '{}' was empty.\n", E->id.c_str());
 
         delete leaf;
 
@@ -2585,7 +2592,7 @@ void CSG_QUAKE_Build() {
     qk_bsp_root = Partition_Group(GROUP, NULL, NULL, 0);
 
 #if (NODE_DEBUG == 1)
-    LogPrintf("root = %p\n", qk_bsp_root);
+    LogPrintf("root = {}\n", static_cast<const void *>(qk_bsp_root));
 #endif
 
     if (qk_game == 1) {

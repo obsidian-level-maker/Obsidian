@@ -89,7 +89,7 @@ void Signal_Raise(std::string name) {
 #if 0
 		if (strcmp(signal_in_progress, name) == 0)
 		{
-			DebugPrintf("Signal '%s' raised when already in progress\n", name);
+			DebugPrintf("Signal '{}' raised when already in progress\n", name);
 			return;
 		}
 #endif

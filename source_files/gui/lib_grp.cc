@@ -59,11 +59,11 @@ bool GRP_OpenRead(const char *filename) {
 #endif
 
     if (!grp_R_fp) {
-        LogPrintf("GRP_OpenRead: no such file: %s\n", filename);
+        LogPrintf("GRP_OpenRead: no such file: {}\n", filename);
         return false;
     }
 
-    LogPrintf("Opened GRP file: %s\n", filename);
+    LogPrintf("Opened GRP file: {}\n", filename);
 
 #ifdef HAVE_PHYSFS
     if ((PHYSFS_readBytes(grp_R_fp, &grp_R_header, sizeof(grp_R_header)) /
@@ -97,8 +97,8 @@ bool GRP_OpenRead(const char *filename) {
 
     if (grp_R_header.num_lumps >= 5000)  // sanity check
     {
-        LogPrintf("GRP_OpenRead: bad header (%d entries?)\n",
-                  grp_R_header.num_lumps);
+        LogPrintf("GRP_OpenRead: bad header ({} entries?)\n",
+                  static_cast<unsigned int>(grp_R_header.num_lumps));
 #ifdef HAVE_PHYSFS
         PHYSFS_close(grp_R_fp);
 #else
@@ -131,7 +131,7 @@ bool GRP_OpenRead(const char *filename) {
                 return false;
             }
 
-            LogPrintf("GRP_OpenRead: hit EOF reading dir-entry %d\n", i);
+            LogPrintf("GRP_OpenRead: hit EOF reading dir-entry {}\n", i);
 
             // truncate directory
             grp_R_header.num_lumps = i;
@@ -143,7 +143,7 @@ bool GRP_OpenRead(const char *filename) {
         grp_R_starts[i] = L_start;
         L_start += L->length;
 
-        //  DebugPrintf(" %4d: %08x %08x : %s\n", i, L->start, L->length,
+        //  DebugPrintf(" {:4}: {:08x} {:08x} : {}\n", i, L->start, L->length,
         //  L->name);
     }
 
@@ -266,11 +266,11 @@ bool GRP_OpenWrite(const char *filename) {
     grp_W_fp = fopen(filename, "wb");
 
     if (!grp_W_fp) {
-        LogPrintf("GRP_OpenWrite: cannot create file: %s\n", filename);
+        LogPrintf("GRP_OpenWrite: cannot create file: {}\n", filename);
         return false;
     }
 
-    LogPrintf("Created GRP file: %s\n", filename);
+    LogPrintf("Created GRP file: {}\n", filename);
 
     // write out a dummy header
     raw_grp_header_t header;

@@ -353,7 +353,7 @@ bool Main_BackupFile(const char *filename, const char *ext) {
     if (FileExists(filename)) {
         std::string backup_name = ReplaceExtension(filename, ext);
 
-        LogPrintf("Backing up existing file to: %s\n", backup_name.c_str());
+        LogPrintf("Backing up existing file to: {}\n", backup_name.c_str());
 
         FileDelete(backup_name.c_str());
 
@@ -773,7 +773,7 @@ void Main_ProgStatus(const char *msg, ...) {
     if (main_win) {
         main_win->build_box->SetStatus(buffer);
     } else if (batch_mode) {
-        fmt::print(stderr, "%s\n", buffer);
+        fmt::print(stderr, "{}\n", buffer);
     }
 }
 
@@ -899,7 +899,7 @@ bool Build_Cool_Shit() {
         u32_t end_time = TimeGetMillies();
         u32_t total_time = end_time - start_time;
 
-        LogPrintf("\nTOTAL TIME: %1.2f seconds\n\n", total_time / 1000.0);
+        LogPrintf("\nTOTAL TIME: {}.2f seconds\n\n", total_time / 1000.0);
 
         if (main_win) {
             main_win->build_box->string_seed = "";
@@ -986,12 +986,12 @@ restart:;
     LogPrintf("********************************************************\n");
     LogPrintf("\n");
 
-    LogPrintf("Library versions: FLTK %d.%d.%d\n\n", FL_MAJOR_VERSION,
+    LogPrintf("Library versions: FLTK {}.{}.{}\n\n", FL_MAJOR_VERSION,
               FL_MINOR_VERSION, FL_PATCH_VERSION);
 
-    LogPrintf("   home_dir: %s\n", home_dir.c_str());
-    LogPrintf("install_dir: %s\n", install_dir.c_str());
-    LogPrintf("config_file: %s\n\n", config_file.c_str());
+    LogPrintf("   home_dir: {}\n", home_dir.c_str());
+    LogPrintf("install_dir: {}\n", install_dir.c_str());
+    LogPrintf("config_file: {}\n\n", config_file.c_str());
 
     Trans_Init();
 

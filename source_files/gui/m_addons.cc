@@ -54,7 +54,7 @@ void VFS_AddFolder(const char *name) {
         return; /* NOT REACHED */
     }
 
-    DebugPrintf("mounted folder '%s'\n", name);
+    DebugPrintf("mounted folder '{}'\n", name);
 }
 
 bool VFS_AddArchive(std::string filename, bool options_file) {
@@ -152,7 +152,7 @@ void VFS_OptWrite(FILE *fp) {
         const addon_info_t *info = &all_addons[i];
 
         if (info->enabled) {
-            fmt::print(fp, "addon = %s\n", info->name);
+            fmt::print(fp, "addon = {}\n", info->name);
         }
     }
 
@@ -442,7 +442,8 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
 
     if (all_addons.empty()) {
         pack = new Fl_Group(mx, my, mw, mh, "");
-        pack->copy_label(fmt::format("\n\n\n\n{}", _("No Addons Found!")).c_str());
+        pack->copy_label(
+            fmt::format("\n\n\n\n{}", _("No Addons Found!")).c_str());
     } else {
         pack = new Fl_Group(mx, my, mw, mh, 0);
     }

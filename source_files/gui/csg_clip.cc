@@ -1165,7 +1165,7 @@ void Q1_ClippingHull(int hull) {
         return;
     }
 
-    LogPrintf("\nClipping Hull %d...\n", hull);
+    LogPrintf("\nClipping Hull {}...\n", hull);
 
     if (main_win) {
         main_win->build_box->Prog_Step("Hull");

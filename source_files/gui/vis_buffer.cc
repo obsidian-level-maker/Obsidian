@@ -136,10 +136,10 @@ void Vis_Buffer::WriteMap(const char *filename) {
     for (int y = 0; y < H; y++) {
         for (int x = 0; x < W; x++) {
             if (at(x, y) & V_BOTTOM) {
-                fmt::print(fp, "%d %d %d\n", x, y, 2);
+                fmt::print(fp, "%d %d {}\n", x, y, 2);
             }
             if (at(x, y) & V_LEFT) {
-                fmt::print(fp, "%d %d %d\n", x, y, 4);
+                fmt::print(fp, "%d %d {}\n", x, y, 4);
             }
         }
     }

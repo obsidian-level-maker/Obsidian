@@ -197,7 +197,7 @@ void DLG_ShowError(const char *msg, ...) {
 
     buffer[MSG_BUF_LEN - 2] = 0;
 
-    LogPrintf("\n%s\n\n", buffer);
+    LogPrintf("\n{}\n\n", buffer);
 
     const char *link_title = NULL;
     const char *link_url = NULL;
@@ -252,7 +252,7 @@ std::string DLG_OutputFilename(const char *ext, const char *preset) {
     switch (result) {
         case -1:
             LogPrintf("Error choosing output file:\n");
-            LogPrintf("   %s\n", chooser.errmsg());
+            LogPrintf("   {}\n", chooser.errmsg());
 
             DLG_ShowError(_("Unable to create the file:\n\n%s"),
                           chooser.errmsg());
@@ -372,7 +372,7 @@ class UI_LogViewer : public Fl_Double_Window {
 
     bool WantQuit() const { return want_quit; }
 
-    void Add(const char *line);
+    void Add(const std::string &line);
 
     // ensure the very last line is visible
     void JumpEnd();
@@ -534,9 +534,9 @@ std::string UI_LogViewer::GetSelectedText() const {
     return buf;
 }
 
-void UI_LogViewer::Add(const char *line) { browser->add(line); }
+void UI_LogViewer::Add(const std::string &line) { browser->add(line.c_str()); }
 
-static void logviewer_display_func(const char *line, void *priv_data) {
+static void logviewer_display_func(const std::string &line, void *priv_data) {
     UI_LogViewer *log_viewer = (UI_LogViewer *)priv_data;
 
     log_viewer->Add(line);
@@ -551,7 +551,7 @@ void UI_LogViewer::WriteLogs(FILE *fp) {
         const char *str = browser->text(n);
 
         if (str) {
-            fmt::print(fp, "%s\n", str);
+            fmt::print(fp, "{}\n", str);
         }
     }
 }

@@ -33,8 +33,7 @@
 //
 // Constructor
 //
-UI_Game::UI_Game(int X, int Y, int W, int H)
-    : Fl_Group(X, Y, W, H) {
+UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
     box(box_style);
 
     int button_w = W * 0.35;
@@ -163,8 +162,7 @@ void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
     fl_cursor(FL_CURSOR_DEFAULT);
     Fl_Window *win = new Fl_Window(640, 480, "Engine");
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
-    Fl_Text_Display *disp =
-        new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
+    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
     disp->buffer(buff);
     disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
     win->resizable(*disp);
@@ -186,8 +184,7 @@ void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
     fl_cursor(FL_CURSOR_DEFAULT);
     Fl_Window *win = new Fl_Window(640, 480, "Length");
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
-    Fl_Text_Display *disp =
-        new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
+    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
     disp->buffer(buff);
     disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
     win->resizable(*disp);
@@ -206,8 +203,7 @@ void UI_Game::callback_ThemeHelp(Fl_Widget *w, void *data) {
     fl_cursor(FL_CURSOR_DEFAULT);
     Fl_Window *win = new Fl_Window(640, 480, "Theme");
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
-    Fl_Text_Display *disp =
-        new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
+    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
     disp->buffer(buff);
     disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
     win->resizable(*disp);

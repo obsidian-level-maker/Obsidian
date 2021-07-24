@@ -797,7 +797,7 @@ void Trans_ParseLangLine(char *line) {
     lang.fullname = pos;
 
     // DEBUG
-    //  LogPrintf("  '%s' --> '%s'\n", lang.langcode, lang.fullname);
+    //  LogPrintf("  '{}' --> '{}'\n", lang.langcode, lang.fullname);
 
     available_langs.push_back(lang);
 }
@@ -860,19 +860,19 @@ typedef struct {
         }
 
         if (*p++ != '"') {
-            LogPrintf("WARNING: missing string on line %d\n", line_number);
+            LogPrintf("WARNING: missing string on line {}\n", line_number);
             return;
         }
 
         while (*p != '"') {
             if (*p == 0) {
-                LogPrintf("WARNING: unterminated string on line %d\n",
+                LogPrintf("WARNING: unterminated string on line {}\n",
                           line_number);
                 break;
             }
 
             if (dest >= dest_end) {
-                LogPrintf("WARNING: string too long on line %d\n", line_number);
+                LogPrintf("WARNING: string too long on line {}\n", line_number);
                 break;
             }
 
@@ -885,7 +885,7 @@ typedef struct {
             p++;
 
             if (*p == 0) {
-                LogPrintf("WARNING: unterminated string on line %d\n",
+                LogPrintf("WARNING: unterminated string on line {}\n",
                           line_number);
                 break;
             }
@@ -922,7 +922,7 @@ typedef struct {
                     break;
 
                 default:
-                    LogPrintf("WARNING: strange escape sequence on line %d\n",
+                    LogPrintf("WARNING: strange escape sequence on line {}\n",
                               line_number);
                     break;
             }
@@ -938,7 +938,7 @@ typedef struct {
         } else if (has_id) {
             ParseString(p, id, sizeof(id));
         } else {
-            LogPrintf("WARNING: unexpected string on line %d\n", line_number);
+            LogPrintf("WARNING: unexpected string on line {}\n", line_number);
         }
     }
 
@@ -1007,7 +1007,7 @@ void Trans_Read_PO_File(FILE *fp) {
         } else if (strncmp(p, "msgstr ", 7) == 0) {
             po_state.SetString(p + 7);
         } else {
-            LogPrintf("WARNING: unsupported keyword on line %d\n",
+            LogPrintf("WARNING: unsupported keyword on line {}\n",
                       po_state.line_number);
         }
     }
@@ -1026,7 +1026,7 @@ void Trans_Init() {
 
     /* read the list of languages */
 
-    std::string path = fmt::format("%s/language/LANGS.txt", install_dir);
+    std::string path = fmt::format("{}/language/LANGS.txt", install_dir);
 
     FILE *fp = fopen(path.c_str(), "rb");
 
