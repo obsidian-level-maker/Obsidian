@@ -403,7 +403,7 @@ class UI_Manage_Config : public Fl_Double_Window {
         int i;
 
         for (i = 0; i < max_num; i++, ptr++) {
-            if (!Recent_GetName(group, i, &ptr->short_name,
+            if (!Recent_GetName(group, i, ptr->short_name,
                                 true /* for_menu */)) {
                 break;
             }
@@ -555,7 +555,7 @@ class UI_Manage_Config : public Fl_Double_Window {
         static std::string filename;
 
         // this also should not happen...
-        if (!Recent_GetName(priv->group, priv->index, &filename)) {
+        if (!Recent_GetName(priv->group, priv->index, filename)) {
             LogPrintf("WARNING: callback_Recent with bad index\n");
             return;
         }

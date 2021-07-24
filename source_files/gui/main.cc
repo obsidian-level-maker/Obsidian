@@ -41,13 +41,13 @@
 
 #define TICKER_TIME 50 /* ms */
 
-std::string home_dir;
-std::string install_dir;
+std::filesystem::path home_dir;
+std::filesystem::path install_dir;
 
-std::string config_file;
-std::string options_file;
-std::string theme_file;
-std::string logging_file;
+std::filesystem::path config_file;
+std::filesystem::path options_file;
+std::filesystem::path theme_file;
+std::filesystem::path logging_file;
 
 int screen_w;
 int screen_h;
@@ -57,7 +57,7 @@ int main_action;
 unsigned long long next_rand_seed;
 
 bool batch_mode = false;
-std::string batch_output_file;
+std::filesystem::path batch_output_file;
 std::string numeric_locale;
 
 // options
@@ -190,21 +190,18 @@ void Determine_WorkingPath(const char *argv0) {
     home_dir = GetExecutablePath(argv0);
 
 #else
-    std::string path;
-    path.resize(FL_PATH_MAX + 4);
+	home_dir = std::getenv("HOME");
+	home_dir /= ".config/obsidian";
 
-    if (fl_filename_expand(&path[0], "$HOME/.config/obsidian") == 0) {
+    if (!home_dir.is_absolute()) {
         Main_FatalError("Unable to find $HOME directory!\n");
     }
 
-    home_dir = path;
-
     // try to create it (doesn't matter if it already exists)
-    if (!home_dir.empty()) {
-        FileMakeDir(home_dir.c_str());
+    if (!std::filesystem::exists(home_dir)) {
+        std::filesystem::create_directory(home_dir);
     }
 #endif
-
     if (home_dir.empty()) {
         home_dir = ".";
     }
@@ -290,6 +287,7 @@ void Determine_ConfigFile() {
     } else {
         config_file = fmt::format("{}/{}", home_dir, CONFIG_FILENAME);
     }
+    
 }
 
 void Determine_OptionsFile() {
@@ -455,8 +453,8 @@ void Main_PopulateFontMap() {
 
         // Some custom fonts will have a different display name than that of
         // their TTF fontname. This is because these fonts have been modified in
-        // some fashion, and the OFL 1.1 license dicatates that modified
-        // versions cannot display the Reserved Name to users
+        // some fashion, and the OFL 1.1 license dictates that modified
+        // versions cannot display their Reserved Name to users
 
         int current_free_font = 16;
 
@@ -687,7 +685,7 @@ void Main_SetupFLTK() {
     screen_h = Fl::h();
 
 #if 0  // debug
-	fprintf(stderr, "Screen dimensions = %dx%d\n", screen_w, screen_h);
+	fmt::print(stderr, "Screen dimensions = {}x{}\n", screen_w, screen_h);
 #endif
 
     KF = Main_DetermineScaling();
@@ -725,7 +723,7 @@ void Main_Shutdown(bool error) {
         // on fatal error we cannot risk calling into the Lua runtime
         // (it's state may be compromised by a script error).
         if (!config_file.empty() && !error) {
-            Cookie_Save(config_file.c_str());
+            Cookie_Save(config_file);
         }
 
         delete main_win;
@@ -814,7 +812,6 @@ void Main_SetSeed() {
 }
 
 static void Module_Defaults() {
-    // ob_set_mod_option("small_spiderdemon", "self", "1");
     ob_set_mod_option("sky_generator", "self", "1");
     ob_set_mod_option("music_swapper", "self", "1");
 }
@@ -1015,7 +1012,7 @@ restart:;
 
     VFS_InitAddons(argv[0]);
 
-    const char *load_file = NULL;
+    std::string load_file;
 
     int load_arg = ArgvFind('l', "load");
     if (load_arg >= 0) {
@@ -1039,7 +1036,7 @@ restart:;
 
         // batch mode never reads/writes the normal config file.
         // but we can load settings from a explicitly specified file...
-        if (load_file) {
+        if (!load_file.empty()) {
             if (!Cookie_Load(load_file)) {
                 Main_FatalError(_("No such config file: %s\n"), load_file);
             }
@@ -1090,11 +1087,11 @@ restart:;
     Module_Defaults();
 
     // load config after creating window (will set widget values)
-    if (!Cookie_Load(config_file.c_str())) {
+    if (!Cookie_Load(config_file)) {
         LogPrintf("Missing config file -- using defaults.\n\n");
     }
 
-    if (load_file) {
+    if (!load_file.empty()) {
         if (!Cookie_Load(load_file)) {
             Main_FatalError(_("No such config file: %s\n"), load_file);
         }
@@ -1166,7 +1163,7 @@ restart:;
                 Main_SetSeed();
 
                 // save config in case everything blows up
-                Cookie_Save(config_file.c_str());
+                Cookie_Save(config_file);
 
                 Build_Cool_Shit();
 
@@ -1183,15 +1180,15 @@ restart:;
 
     LogPrintf("\nQuit......\n\n");
 
-    Theme_Options_Save(theme_file.c_str());
-    Options_Save(options_file.c_str());
+    Theme_Options_Save(theme_file);
+    Options_Save(options_file);
 
     if (main_action == MAIN_RESTART) {
         if (main_win) {
             // on fatal error we cannot risk calling into the Lua runtime
             // (it's state may be compromised by a script error).
             if (!config_file.empty()) {
-                Cookie_Save(config_file.c_str());
+                Cookie_Save(config_file);
             }
             delete main_win;
             main_win = NULL;
