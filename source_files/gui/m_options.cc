@@ -29,7 +29,7 @@
 #include "m_trans.h"
 #include "main.h"
 
-static void Parse_Option(const char *name, const char *value) {
+static void Parse_Option(std::string name, std::string value) {
     if (StringCaseCmpPartial(name, "recent") == 0) {
         Recent_Parse(name, value);
         return;
@@ -40,15 +40,15 @@ static void Parse_Option(const char *name, const char *value) {
     } else if (StringCaseCmp(name, "language") == 0) {
         t_language = value;
     } else if (StringCaseCmp(name, "create_backups") == 0) {
-        create_backups = atoi(value) ? true : false;
+        create_backups = std::atoi(value.c_str()) ? true : false;
     } else if (StringCaseCmp(name, "overwrite_warning") == 0) {
-        overwrite_warning = atoi(value) ? true : false;
+        overwrite_warning = std::atoi(value.c_str()) ? true : false;
     } else if (StringCaseCmp(name, "debug_messages") == 0) {
-        debug_messages = atoi(value) ? true : false;
+        debug_messages = std::atoi(value.c_str()) ? true : false;
     } else if (StringCaseCmp(name, "last_directory") == 0) {
         last_directory = value;
     } else if (StringCaseCmp(name, "filename_prefix") == 0) {
-        filename_prefix = atoi(value);
+        filename_prefix = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "custom_prefix") == 0) {
         custom_prefix = value;
     } else {
@@ -56,91 +56,53 @@ static void Parse_Option(const char *name, const char *value) {
     }
 }
 
-static bool Options_ParseLine(char *buf) {
-    // remove whitespace
-    while (isspace(*buf)) {
-        buf++;
-    }
+static bool Options_ParseLine(std::string buf) {
 
-    int len = strlen(buf);
+    std::string::size_type pos = 0;
 
-    while (len > 0 && isspace(buf[len - 1])) {
-        buf[--len] = 0;
-    }
-
-    // ignore blank lines and comments
-    if (*buf == 0) {
+    pos = buf.find('=', 0);
+    if (pos == std::string::npos) {
+		// Skip blank lines, comments, etc
         return true;
-    }
-
-    if (buf[0] == '-' && buf[1] == '-') {
-        return true;
-    }
-
-    if (!isalpha(*buf)) {
+	}
+	
+    if (!isalpha(buf.front())) {
         LogPrintf("Weird option line: [{}]\n", buf);
         return false;
     }
 
-    // Righteo, line starts with an identifier.  It should be of the
-    // form "name = value".  We terminate the identifier and pass
-    // the name/value strings to the matcher function.
+    std::string name = buf.substr(0, pos);
+    std::string value = buf.substr(pos + 1);
 
-    const char *name = buf;
+    name = name.erase(name.find(' '));
+    value = value.erase(value.find(' '));
 
-    for (buf++; isalnum(*buf) || *buf == '_' || *buf == '.';
-         buf++) { /* nothing here */
-    }
-
-    while (isspace(*buf)) {
-        *buf++ = 0;
-    }
-
-    if (*buf != '=') {
-        LogPrintf("Option line missing '=': [{}]\n", buf);
+    if (name.empty() || value.empty()) {
+        LogPrintf("Name or value missing!\n");
         return false;
     }
 
-    *buf++ = 0;
-
-    if (isspace(*buf)) {
-        *buf++ = 0;
-    }
-
-    // everything after the " = " (note: single space) is the value,
-    // and it does not need escaping since our values never contain
-    // newlines or embedded spaces (nor control characters, but may
-    // contain UTF-8 encoded filenames).
-
-    if (*buf == 0) {
-        LogPrintf("Option line missing value!\n");
-        return false;
-    }
-
-    Parse_Option(name, buf);
+    Parse_Option(name, value);
     return true;
 }
 
-bool Options_Load(const char *filename) {
-    FILE *option_fp = fopen(filename, "r");
+bool Options_Load(std::string filename) {
+    std::ifstream option_fp(filename, std::ios::in);
 
-    if (!option_fp) {
+    if (!option_fp.is_open()) {
         LogPrintf("Missing Options file -- using defaults.\n\n");
         return false;
     }
 
     LogPrintf("Loading options file: {}\n", filename);
 
-    // simple line-by-line parser
-    char buffer[MSG_BUF_LEN];
-
     int error_count = 0;
 
-    while (fgets(buffer, MSG_BUF_LEN - 2, option_fp)) {
-        if (!Options_ParseLine(buffer)) {
+    for (std::string line; std::getline(option_fp, line); ) {
+        if (!Options_ParseLine(line)) {
             error_count += 1;
         }
-    }
+    }	
 
     if (error_count > 0) {
         LogPrintf("DONE (found {} parse errors)\n\n", error_count);
@@ -148,15 +110,15 @@ bool Options_Load(const char *filename) {
         LogPrintf("DONE.\n\n");
     }
 
-    fclose(option_fp);
+    option_fp.close();
 
     return true;
 }
 
-bool Options_Save(const char *filename) {
-    FILE *option_fp = fopen(filename, "w");
+bool Options_Save(std::string filename) {
+    std::ofstream option_fp(filename, std::ios::out);
 
-    if (!option_fp) {
+    if (!option_fp.is_open()) {
         LogPrintf("Error: unable to create file: {}\n({})\n\n", filename,
                   strerror(errno));
         return false;
@@ -164,33 +126,31 @@ bool Options_Save(const char *filename) {
 
     LogPrintf("Saving options file...\n");
 
-    fmt::print(option_fp, "-- OPTIONS FILE : OBSIDIAN {}\n", OBSIDIAN_VERSION);
-    fmt::print(option_fp,
-               "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
-    fmt::print(option_fp, "-- " OBSIDIAN_WEBSITE "\n\n");
+    option_fp << "-- OPTIONS FILE : OBSIDIAN " << OBSIDIAN_VERSION << "\n";
+    option_fp << "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n";
+    option_fp << "-- " << OBSIDIAN_WEBSITE << "\n\n";
 
-    fmt::print(option_fp, "language = {}\n", t_language);
-    fmt::print(option_fp, "\n");
+    option_fp << "language = " << t_language << "\n";
+    option_fp << "\n";
 
-    fmt::print(option_fp, "create_backups = {}\n", create_backups ? 1 : 0);
-    fmt::print(option_fp, "overwrite_warning = {}\n",
-               overwrite_warning ? 1 : 0);
-    fmt::print(option_fp, "debug_messages = {}\n", debug_messages ? 1 : 0);
-    fmt::print(option_fp, "filename_prefix = {}\n", filename_prefix);
-    fmt::print(option_fp, "custom_prefix = {}\n", custom_prefix);
+    option_fp << "create_backups = " << (create_backups ? 1 : 0) << "\n";
+    option_fp << "overwrite_warning = " << (overwrite_warning ? 1 : 0) << "\n";
+    option_fp << "debug_messages = " << (debug_messages ? 1 : 0) << "\n";
+    option_fp << "filename_prefix = " << filename_prefix << "\n";
+    option_fp << "custom_prefix = " << custom_prefix << "\n";
 
     if (!last_directory.empty()) {
-        fmt::print(option_fp, "\n");
-        fmt::print(option_fp, "last_directory = {}\n", last_directory);
+        option_fp << "\n"; 
+        option_fp << "last_directory = " << last_directory << "\n";
     }
 
-    fmt::print(option_fp, "\n");
+    option_fp << "\n";
 
     VFS_OptWrite(option_fp);
 
     Recent_Write(option_fp);
 
-    fclose(option_fp);
+    option_fp.close();
 
     LogPrintf("DONE.\n\n");
 

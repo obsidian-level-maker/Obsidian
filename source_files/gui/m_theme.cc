@@ -138,164 +138,126 @@ const char *Theme_AskLoadFilename() {
     return filename;
 }
 
-static void Parse_Theme_Option(const char *name, const char *value) {
+static void Parse_Theme_Option(std::string name, std::string value) {
     if (StringCaseCmp(name, "window_scaling") == 0) {
-        window_scaling = atoi(value);
+        window_scaling = std::atoi(value.c_str());
         window_scaling = CLAMP(0, window_scaling, 5);
     } else if (StringCaseCmp(name, "font_scaling") == 0) {
-        font_scaling = atoi(value);
+        font_scaling = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "font_theme") == 0) {
-        font_theme = atoi(value);
+        font_theme = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "widget_theme") == 0) {
-        widget_theme = atoi(value);
+        widget_theme = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "box_theme") == 0) {
-        box_theme = atoi(value);
+        box_theme = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "button_theme") == 0) {
-        button_theme = atoi(value);
+        button_theme = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "single_pane") == 0) {
-        single_pane = atoi(value) ? true : false;
+        single_pane = std::atoi(value.c_str()) ? true : false;
     } else if (StringCaseCmp(name, "use_system_fonts") == 0) {
-        use_system_fonts = atoi(value) ? true : false;
+        use_system_fonts = std::atoi(value.c_str()) ? true : false;
     } else if (StringCaseCmp(name, "color_scheme") == 0) {
-        color_scheme = atoi(value);
+        color_scheme = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "text_red") == 0) {
-        text_red = atoi(value);
+        text_red = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "text_green") == 0) {
-        text_green = atoi(value);
+        text_green = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "text_blue") == 0) {
-        text_blue = atoi(value);
+        text_blue = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "text2_red") == 0) {
-        text2_red = atoi(value);
+        text2_red = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "text2_green") == 0) {
-        text2_green = atoi(value);
+        text2_green = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "text2_blue") == 0) {
-        text2_blue = atoi(value);
+        text2_blue = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "bg_red") == 0) {
-        bg_red = atoi(value);
+        bg_red = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "bg_green") == 0) {
-        bg_green = atoi(value);
+        bg_green = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "bg_blue") == 0) {
-        bg_blue = atoi(value);
+        bg_blue = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "bg2_red") == 0) {
-        bg2_red = atoi(value);
+        bg2_red = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "bg2_green") == 0) {
-        bg2_green = atoi(value);
+        bg2_green = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "bg2_blue") == 0) {
-        bg2_blue = atoi(value);
+        bg2_blue = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "button_red") == 0) {
-        button_red = atoi(value);
+        button_red = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "button_green") == 0) {
-        button_green = atoi(value);
+        button_green = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "button_blue") == 0) {
-        button_blue = atoi(value);
+        button_blue = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "gradient_red") == 0) {
-        gradient_red = atoi(value);
+        gradient_red = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "gradient_green") == 0) {
-        gradient_green = atoi(value);
+        gradient_green = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "gradient_blue") == 0) {
-        gradient_blue = atoi(value);
+        gradient_blue = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "border_red") == 0) {
-        border_red = atoi(value);
+        border_red = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "border_green") == 0) {
-        border_green = atoi(value);
+        border_green = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "border_blue") == 0) {
-        border_blue = atoi(value);
+        border_blue = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "gap_red") == 0) {
-        gap_red = atoi(value);
+        gap_red = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "gap_green") == 0) {
-        gap_green = atoi(value);
+        gap_green = std::atoi(value.c_str());
     } else if (StringCaseCmp(name, "gap_blue") == 0) {
-        gap_blue = atoi(value);
+        gap_blue = std::atoi(value.c_str());
     } else {
         LogPrintf("Unknown option: '{}'\n", name);
     }
 }
 
-static bool Theme_Options_ParseLine(char *buf) {
-    // remove whitespace
-    while (isspace(*buf)) {
-        buf++;
-    }
+static bool Theme_Options_ParseLine(std::string buf) {
 
-    int len = strlen(buf);
+    std::string::size_type pos = 0;
 
-    while (len > 0 && isspace(buf[len - 1])) {
-        buf[--len] = 0;
-    }
-
-    // ignore blank lines and comments
-    if (*buf == 0) {
+    pos = buf.find('=', 0);
+    if (pos == std::string::npos) {
+		// Skip blank lines, comments, etc
         return true;
-    }
-
-    if (buf[0] == '-' && buf[1] == '-') {
-        return true;
-    }
-
-    if (!isalpha(*buf)) {
+	}
+	
+    if (!isalpha(buf.front())) {
         LogPrintf("Weird option line: [{}]\n", buf);
         return false;
     }
 
-    // Righteo, line starts with an identifier.  It should be of the
-    // form "name = value".  We terminate the identifier and pass
-    // the name/value strings to the matcher function.
+    std::string name = buf.substr(0, pos);
+    std::string value = buf.substr(pos + 1);
 
-    const char *name = buf;
+    name = name.erase(name.find(' '));
+    value = value.erase(value.find(' '));
 
-    for (buf++; isalnum(*buf) || *buf == '_' || *buf == '.';
-         buf++) { /* nothing here */
-    }
-
-    while (isspace(*buf)) {
-        *buf++ = 0;
-    }
-
-    if (*buf != '=') {
-        LogPrintf("Option line missing '=': [{}]\n", buf);
+    if (name.empty() || value.empty()) {
+        LogPrintf("Name or value missing!\n");
         return false;
     }
 
-    *buf++ = 0;
-
-    if (isspace(*buf)) {
-        *buf++ = 0;
-    }
-
-    // everything after the " = " (note: single space) is the value,
-    // and it does not need escaping since our values never contain
-    // newlines or embedded spaces (nor control characters, but may
-    // contain UTF-8 encoded filenames).
-
-    if (*buf == 0) {
-        LogPrintf("Option line missing value!\n");
-        return false;
-    }
-
-    Parse_Theme_Option(name, buf);
+    Parse_Theme_Option(name, value);
     return true;
 }
 
-bool Theme_Options_Load(const char *filename) {
-    FILE *option_fp = fopen(filename, "r");
+bool Theme_Options_Load(std::string filename) {
+    std::ifstream option_fp(filename, std::ios::in);
 
-    if (!option_fp) {
+    if (!option_fp.is_open()) {
         LogPrintf("Missing Theme file -- using defaults.\n\n");
         return false;
     }
 
     LogPrintf("Loading theme file: {}\n", filename);
 
-    // simple line-by-line parser
-    char buffer[MSG_BUF_LEN];
-
     int error_count = 0;
 
-    while (fgets(buffer, MSG_BUF_LEN - 2, option_fp)) {
-        if (!Theme_Options_ParseLine(buffer)) {
+    for (std::string line; std::getline(option_fp, line); ) {
+        if (!Theme_Options_ParseLine(line)) {
             error_count += 1;
         }
-    }
+    }	
 
     if (error_count > 0) {
         LogPrintf("DONE (found {} parse errors)\n\n", error_count);
@@ -303,15 +265,15 @@ bool Theme_Options_Load(const char *filename) {
         LogPrintf("DONE.\n\n");
     }
 
-    fclose(option_fp);
+    option_fp.close();
 
     return true;
 }
 
-bool Theme_Options_Save(const char *filename) {
-    FILE *option_fp = fopen(filename, "w");
+bool Theme_Options_Save(std::string filename) {
+    std::ofstream option_fp(filename, std::ios::out);
 
-    if (!option_fp) {
+    if (!option_fp.is_open()) {
         LogPrintf("Error: unable to create file: {}\n({})\n\n", filename,
                   strerror(errno));
         return false;
@@ -319,49 +281,46 @@ bool Theme_Options_Save(const char *filename) {
 
     LogPrintf("Saving theme file...\n");
 
-    fmt::print(option_fp, "-- THEME FILE : OBSIDIAN {}\n", OBSIDIAN_VERSION);
-    fmt::print(option_fp,
-               "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
-    fmt::print(option_fp, "-- " OBSIDIAN_WEBSITE "\n\n");
+    option_fp << "-- THEME FILE : OBSIDIAN " << OBSIDIAN_VERSION << "\n";
+    option_fp << "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n";
+    option_fp << "-- " << OBSIDIAN_WEBSITE << "\n\n";
 
-    fmt::print(option_fp, "window_scaling      = {}\n", window_scaling);
-    fmt::print(option_fp, "font_scaling      = {}\n", font_scaling);
-    fmt::print(option_fp, "font_theme      = {}\n", font_theme);
-    fmt::print(option_fp, "widget_theme      = {}\n", widget_theme);
-    fmt::print(option_fp, "box_theme      = {}\n", box_theme);
-    fmt::print(option_fp, "button_theme      = {}\n", button_theme);
-    fmt::print(option_fp, "single_pane = {}\n", single_pane ? 1 : 0);
-    fmt::print(option_fp, "use_system_fonts = {}\n", use_system_fonts ? 1 : 0);
-    fmt::print(option_fp, "color_scheme      = {}\n", color_scheme);
-    fmt::print(option_fp, "text_red      = {}\n", text_red);
-    fmt::print(option_fp, "text_green      = {}\n", text_green);
-    fmt::print(option_fp, "text_blue      = {}\n", text_blue);
-    fmt::print(option_fp, "text2_red      = {}\n", text2_red);
-    fmt::print(option_fp, "text2_green      = {}\n", text2_green);
-    fmt::print(option_fp, "text2_blue      = {}\n", text2_blue);
-    fmt::print(option_fp, "bg_red      = {}\n", bg_red);
-    fmt::print(option_fp, "bg_green      = {}\n", bg_green);
-    fmt::print(option_fp, "bg_blue      = {}\n", bg_blue);
-    fmt::print(option_fp, "bg2_red      = {}\n", bg2_red);
-    fmt::print(option_fp, "bg2_green      = {}\n", bg2_green);
-    fmt::print(option_fp, "bg2_blue      = {}\n", bg2_blue);
-    fmt::print(option_fp, "button_red      = {}\n", button_red);
-    fmt::print(option_fp, "button_green      = {}\n", button_green);
-    fmt::print(option_fp, "button_blue      = {}\n", button_blue);
-    fmt::print(option_fp, "gradient_red      = {}\n", gradient_red);
-    fmt::print(option_fp, "gradient_green      = {}\n", gradient_green);
-    fmt::print(option_fp, "gradient_blue      = {}\n", gradient_blue);
-    fmt::print(option_fp, "border_red      = {}\n", border_red);
-    fmt::print(option_fp, "border_green      = {}\n", border_green);
-    fmt::print(option_fp, "border_blue      = {}\n", border_blue);
-    fmt::print(option_fp, "gap_red      = {}\n", gap_red);
-    fmt::print(option_fp, "gap_green      = {}\n", gap_green);
-    fmt::print(option_fp, "gap_blue      = {}\n", gap_blue);
-    fmt::print(option_fp, "\n");
+    option_fp << "window_scaling      = " << window_scaling << "\n";
+    option_fp << "font_scaling      = " << font_scaling << "\n";
+    option_fp << "font_theme      = " << font_theme << "\n";
+    option_fp << "widget_theme      = " << widget_theme << "\n";
+    option_fp << "box_theme      = " << box_theme << "\n";
+    option_fp << "button_theme      = " << button_theme << "\n";
+    option_fp << "single_pane = " << (single_pane ? 1 : 0) << "\n";
+    option_fp << "use_system_fonts = " << (use_system_fonts ? 1 : 0) << "\n";
+    option_fp << "color_scheme      = " << color_scheme << "\n";
+    option_fp << "text_red      = " << text_red << "\n";
+    option_fp << "text_green      = " << text_green << "\n";
+    option_fp << "text_blue      = " << text_blue << "\n";
+    option_fp << "text2_red      = " << text2_red << "\n";
+    option_fp << "text2_green      = " << text2_green << "\n";
+    option_fp << "text2_blue      = " << text2_blue << "\n";
+    option_fp << "bg_red      = " << bg_red << "\n";
+    option_fp << "bg_green      = " << bg_green << "\n";
+    option_fp << "bg_blue      = " << bg_blue << "\n";
+    option_fp << "bg2_red      = " << bg2_red << "\n";
+    option_fp << "bg2_green      = " << bg2_green << "\n";
+    option_fp << "bg2_blue      = " << bg2_blue << "\n";
+    option_fp << "button_red      = " << button_red << "\n";
+    option_fp << "button_green      = " << button_green << "\n";
+    option_fp << "button_blue      = " << button_blue << "\n";
+    option_fp << "gradient_red      = " << gradient_red << "\n";
+    option_fp << "gradient_green      = " << gradient_green << "\n";
+    option_fp << "gradient_blue      = " << gradient_blue << "\n";
+    option_fp << "border_red      = " << border_red << "\n";
+    option_fp << "border_green      = " << border_green << "\n";
+    option_fp << "border_blue      = " << border_blue << "\n";
+    option_fp << "gap_red      = " << gap_red << "\n";
+    option_fp << "gap_green      = " << gap_green << "\n";
+    option_fp << "gap_blue      = " << gap_blue << "\n";
+    option_fp << "\n\n";
 
-    fmt::print(option_fp, "\n");
-
-    fclose(option_fp);
+    option_fp.close();
 
     LogPrintf("DONE.\n\n");
 

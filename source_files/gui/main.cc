@@ -290,6 +290,7 @@ void Determine_ConfigFile() {
     } else {
         config_file = fmt::format("{}/{}", home_dir, CONFIG_FILENAME);
     }
+    
 }
 
 void Determine_OptionsFile() {
@@ -455,8 +456,8 @@ void Main_PopulateFontMap() {
 
         // Some custom fonts will have a different display name than that of
         // their TTF fontname. This is because these fonts have been modified in
-        // some fashion, and the OFL 1.1 license dicatates that modified
-        // versions cannot display the Reserved Name to users
+        // some fashion, and the OFL 1.1 license dictates that modified
+        // versions cannot display their Reserved Name to users
 
         int current_free_font = 16;
 
@@ -687,7 +688,7 @@ void Main_SetupFLTK() {
     screen_h = Fl::h();
 
 #if 0  // debug
-	fprintf(stderr, "Screen dimensions = %dx%d\n", screen_w, screen_h);
+	fmt::print(stderr, "Screen dimensions = {}x{}\n", screen_w, screen_h);
 #endif
 
     KF = Main_DetermineScaling();
@@ -725,7 +726,7 @@ void Main_Shutdown(bool error) {
         // on fatal error we cannot risk calling into the Lua runtime
         // (it's state may be compromised by a script error).
         if (!config_file.empty() && !error) {
-            Cookie_Save(config_file.c_str());
+            Cookie_Save(config_file);
         }
 
         delete main_win;
@@ -814,7 +815,6 @@ void Main_SetSeed() {
 }
 
 static void Module_Defaults() {
-    // ob_set_mod_option("small_spiderdemon", "self", "1");
     ob_set_mod_option("sky_generator", "self", "1");
     ob_set_mod_option("music_swapper", "self", "1");
 }
@@ -1015,7 +1015,7 @@ restart:;
 
     VFS_InitAddons(argv[0]);
 
-    const char *load_file = NULL;
+    std::string load_file;
 
     int load_arg = ArgvFind('l', "load");
     if (load_arg >= 0) {
@@ -1039,7 +1039,7 @@ restart:;
 
         // batch mode never reads/writes the normal config file.
         // but we can load settings from a explicitly specified file...
-        if (load_file) {
+        if (!load_file.empty()) {
             if (!Cookie_Load(load_file)) {
                 Main_FatalError(_("No such config file: %s\n"), load_file);
             }
@@ -1090,11 +1090,11 @@ restart:;
     Module_Defaults();
 
     // load config after creating window (will set widget values)
-    if (!Cookie_Load(config_file.c_str())) {
+    if (!Cookie_Load(config_file)) {
         LogPrintf("Missing config file -- using defaults.\n\n");
     }
 
-    if (load_file) {
+    if (!load_file.empty()) {
         if (!Cookie_Load(load_file)) {
             Main_FatalError(_("No such config file: %s\n"), load_file);
         }
@@ -1166,7 +1166,7 @@ restart:;
                 Main_SetSeed();
 
                 // save config in case everything blows up
-                Cookie_Save(config_file.c_str());
+                Cookie_Save(config_file);
 
                 Build_Cool_Shit();
 
@@ -1183,15 +1183,15 @@ restart:;
 
     LogPrintf("\nQuit......\n\n");
 
-    Theme_Options_Save(theme_file.c_str());
-    Options_Save(options_file.c_str());
+    Theme_Options_Save(theme_file);
+    Options_Save(options_file);
 
     if (main_action == MAIN_RESTART) {
         if (main_win) {
             // on fatal error we cannot risk calling into the Lua runtime
             // (it's state may be compromised by a script error).
             if (!config_file.empty()) {
-                Cookie_Save(config_file.c_str());
+                Cookie_Save(config_file);
             }
             delete main_win;
             main_win = NULL;

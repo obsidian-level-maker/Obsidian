@@ -24,24 +24,24 @@
 #include <cstdio>
 #include <string>
 
-bool Cookie_Load(const char *filename);
-bool Cookie_Save(const char *filename);
+bool Cookie_Load(std::string filename);
+bool Cookie_Save(std::string filename);
 
-bool Cookie_LoadString(const char *str, bool _keep_seed);
+bool Cookie_LoadString(std::string str, bool _keep_seed);
 
 void Cookie_ParseArguments(void);
 
 /* option stuff */
 
-bool Options_Load(const char *filename);
-bool Options_Save(const char *filename);
-bool Theme_Options_Load(const char *filename);
-bool Theme_Options_Save(const char *filename);
+bool Options_Load(std::string filename);
+bool Options_Save(std::string filename);
+bool Theme_Options_Load(std::string filename);
+bool Theme_Options_Save(std::string filename);
 
 /* recent file stuff */
 
-void Recent_Parse(const char *name, const char *value);
-void Recent_Write(FILE *fp);
+void Recent_Parse(std::string name, std::string value);
+void Recent_Write(std::ofstream &fp);
 
 typedef enum {
     RECG_Output = 0,  // generated WAD or PAK file
@@ -51,9 +51,9 @@ typedef enum {
 
 } recent_group_e;
 
-void Recent_AddFile(int group, const char *filename);
-void Recent_RemoveFile(int group, const char *filename);
-bool Recent_GetName(int group, int index, std::string *name_buf,
+void Recent_AddFile(int group, std::string filename);
+void Recent_RemoveFile(int group, std::string filename);
+bool Recent_GetName(int group, int index, std::string name_buf,
                     bool for_menu = false);
 
 #endif /* __OBLIGE_COOKIE_H__ */

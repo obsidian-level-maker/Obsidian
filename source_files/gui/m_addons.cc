@@ -138,25 +138,25 @@ void VFS_ParseCommandLine() {
     LogPrintf("DONE\n\n");
 }
 
-void VFS_OptParse(const char *name) {
+void VFS_OptParse(std::string name) {
     // just remember it now
     if (initial_enabled_addons.find(name) == initial_enabled_addons.end()) {
         initial_enabled_addons[name] = 1;
     }
 }
 
-void VFS_OptWrite(FILE *fp) {
-    fmt::print(fp, "---- Enabled Addons ----\n\n");
+void VFS_OptWrite(std::ofstream &fp) {
+    fp << "---- Enabled Addons ----\n\n";
 
     for (unsigned int i = 0; i < all_addons.size(); i++) {
         const addon_info_t *info = &all_addons[i];
 
         if (info->enabled) {
-            fmt::print(fp, "addon = {}\n", info->name);
+            fp << "addon = " << info->name << "\n";
         }
     }
 
-    fmt::print(fp, "\n");
+    fp << "\n";
 }
 
 void VFS_ScanForAddons() {
@@ -627,7 +627,7 @@ void DLG_SelectAddons(void) {
 
     if (addons_window->ApplyChanges()) {
         // persist the changed addon list into OPTIONS.txt
-        Options_Save(options_file.c_str());
+        Options_Save(options_file);
 
         fl_alert("%s", _("Changes to addons require a restart.\nOBSIDIAN will "
                          "now restart."));
