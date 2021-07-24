@@ -186,172 +186,172 @@ typedef enum {
                                     " "
                                     "%"
                                     "d") JMESSAGE(JERR_DQT_INDEX,
-                                                  "Bogus DQT index %d") JMESSAGE(JERR_EMPTY_IMAGE,
-                                                                                 "Empty JPEG image (DNL not "
-                                                                                 "supported)")
+                                                  "Bogus DQT index %d")
                                     JMESSAGE(
-                                        JERR_EMS_READ,
-                                        "Read "
-                                        "from "
-                                        "EMS "
-                                        "failed") JMESSAGE(JERR_EMS_WRITE,
-                                                           "Write to EMS "
-                                                           "failed") JMESSAGE(JERR_EOI_EXPECTED,
-                                                                              "Didn't expect more than "
-                                                                              "one scan")
+                                        JERR_EMPTY_IMAGE,
+                                        "Empty JPEG image (DNL not "
+                                        "supported)") JMESSAGE(JERR_EMS_READ,
+                                                               "Read "
+                                                               "from "
+                                                               "EMS "
+                                                               "failed") JMESSAGE(JERR_EMS_WRITE,
+                                                                                  "Write to EMS "
+                                                                                  "failed")
                                         JMESSAGE(
-                                            JERR_FILE_READ,
-                                            "Input"
-                                            " file"
-                                            " read"
-                                            " erro"
-                                            "r") JMESSAGE(JERR_FILE_WRITE,
-                                                          "Output file write "
-                                                          "error --- out of "
-                                                          "disk "
-                                                          "space?") JMESSAGE(JERR_FRACT_SAMPLE_NOTIMPL,
-                                                                             "F"
-                                                                             "r"
-                                                                             "a"
-                                                                             "c"
-                                                                             "t"
-                                                                             "i"
-                                                                             "o"
-                                                                             "n"
-                                                                             "a"
-                                                                             "l"
-                                                                             " "
-                                                                             "s"
-                                                                             "a"
-                                                                             "m"
-                                                                             "p"
-                                                                             "l"
-                                                                             "i"
-                                                                             "n"
-                                                                             "g"
-                                                                             " "
-                                                                             "n"
-                                                                             "o"
-                                                                             "t"
-                                                                             " "
-                                                                             "i"
-                                                                             "m"
-                                                                             "p"
-                                                                             "l"
-                                                                             "e"
-                                                                             "m"
-                                                                             "e"
-                                                                             "n"
-                                                                             "t"
-                                                                             "e"
-                                                                             "d"
-                                                                             " "
-                                                                             "y"
-                                                                             "e"
-                                                                             "t")
+                                            JERR_EOI_EXPECTED,
+                                            "Didn't expect more than "
+                                            "one scan") JMESSAGE(JERR_FILE_READ,
+                                                                 "Input"
+                                                                 " file"
+                                                                 " read"
+                                                                 " erro"
+                                                                 "r") JMESSAGE(JERR_FILE_WRITE,
+                                                                               "Output file write "
+                                                                               "error --- out of "
+                                                                               "disk "
+                                                                               "space?")
                                             JMESSAGE(
-                                                JERR_HUFF_CLEN_OVERFLOW,
-                                                "Huffman code "
-                                                "size "
-                                                "table overflow") JMESSAGE(JERR_HUFF_MISSING_CODE,
-                                                                           "Mis"
-                                                                           "sin"
-                                                                           "g "
-                                                                           "Huf"
-                                                                           "fma"
-                                                                           "n "
-                                                                           "cod"
-                                                                           "e "
-                                                                           "tab"
-                                                                           "le "
-                                                                           "ent"
-                                                                           "ry")
+                                                JERR_FRACT_SAMPLE_NOTIMPL,
+                                                "F"
+                                                "r"
+                                                "a"
+                                                "c"
+                                                "t"
+                                                "i"
+                                                "o"
+                                                "n"
+                                                "a"
+                                                "l"
+                                                " "
+                                                "s"
+                                                "a"
+                                                "m"
+                                                "p"
+                                                "l"
+                                                "i"
+                                                "n"
+                                                "g"
+                                                " "
+                                                "n"
+                                                "o"
+                                                "t"
+                                                " "
+                                                "i"
+                                                "m"
+                                                "p"
+                                                "l"
+                                                "e"
+                                                "m"
+                                                "e"
+                                                "n"
+                                                "t"
+                                                "e"
+                                                "d"
+                                                " "
+                                                "y"
+                                                "e"
+                                                "t") JMESSAGE(JERR_HUFF_CLEN_OVERFLOW,
+                                                              "Huffman code "
+                                                              "size "
+                                                              "table overflow")
                                                 JMESSAGE(
-                                                    JERR_IMAGE_TOO_BIG,
-                                                    "Maximum "
-                                                    "supported "
-                                                    "image "
-                                                    "dimension "
-                                                    "is "
-                                                    "%u pixels") JMESSAGE(JERR_INPUT_EMPTY,
-                                                                          "Empt"
-                                                                          "y "
-                                                                          "inpu"
-                                                                          "t "
-                                                                          "fil"
-                                                                          "e")
+                                                    JERR_HUFF_MISSING_CODE,
+                                                    "Mis"
+                                                    "sin"
+                                                    "g "
+                                                    "Huf"
+                                                    "fma"
+                                                    "n "
+                                                    "cod"
+                                                    "e "
+                                                    "tab"
+                                                    "le "
+                                                    "ent"
+                                                    "ry") JMESSAGE(JERR_IMAGE_TOO_BIG,
+                                                                   "Maximum "
+                                                                   "supported "
+                                                                   "image "
+                                                                   "dimension "
+                                                                   "is "
+                                                                   "%u pixels")
                                                     JMESSAGE(
-                                                        JERR_INPUT_EOF,
-                                                        "Prematur"
-                                                        "e "
-                                                        "end of "
-                                                        "input "
-                                                        "file") JMESSAGE(JERR_MISMATCHED_QUANT_TABLE,
-                                                                         "Canno"
-                                                                         "t"
-                                                                         " tran"
-                                                                         "s"
-                                                                         "code "
-                                                                         "due "
-                                                                         "to "
-                                                                         "multi"
-                                                                         "p"
-                                                                         "le "
-                                                                         "use "
-                                                                         "of "
-                                                                         "quant"
-                                                                         "i"
-                                                                         "zatio"
-                                                                         "n"
-                                                                         " tabl"
-                                                                         "e"
-                                                                         " %d")
+                                                        JERR_INPUT_EMPTY,
+                                                        "Empt"
+                                                        "y "
+                                                        "inpu"
+                                                        "t "
+                                                        "fil"
+                                                        "e") JMESSAGE(JERR_INPUT_EOF,
+                                                                      "Prematur"
+                                                                      "e "
+                                                                      "end of "
+                                                                      "input "
+                                                                      "file")
                                                         JMESSAGE(
-                                                            JERR_MISSING_DATA,
-                                                            "Sc"
-                                                            "an"
-                                                            " s"
-                                                            "cr"
-                                                            "ip"
-                                                            "t "
-                                                            "do"
-                                                            "es"
-                                                            " n"
-                                                            "ot"
-                                                            " t"
-                                                            "ra"
-                                                            "ns"
-                                                            "mi"
-                                                            "t "
-                                                            "al"
-                                                            "l "
-                                                            "da"
+                                                            JERR_MISMATCHED_QUANT_TABLE,
+                                                            "Canno"
                                                             "t"
-                                                            "a") JMESSAGE(JERR_MODE_CHANGE,
-                                                                          "Inva"
-                                                                          "lid "
-                                                                          "colo"
-                                                                          "r "
-                                                                          "quan"
-                                                                          "tiza"
-                                                                          "tion"
-                                                                          " "
-                                                                          "mode"
-                                                                          " "
-                                                                          "chan"
-                                                                          "ge")
+                                                            " tran"
+                                                            "s"
+                                                            "code "
+                                                            "due "
+                                                            "to "
+                                                            "multi"
+                                                            "p"
+                                                            "le "
+                                                            "use "
+                                                            "of "
+                                                            "quant"
+                                                            "i"
+                                                            "zatio"
+                                                            "n"
+                                                            " tabl"
+                                                            "e"
+                                                            " %d") JMESSAGE(JERR_MISSING_DATA,
+                                                                            "Sc"
+                                                                            "an"
+                                                                            " s"
+                                                                            "cr"
+                                                                            "ip"
+                                                                            "t "
+                                                                            "do"
+                                                                            "es"
+                                                                            " n"
+                                                                            "ot"
+                                                                            " t"
+                                                                            "ra"
+                                                                            "ns"
+                                                                            "mi"
+                                                                            "t "
+                                                                            "al"
+                                                                            "l "
+                                                                            "da"
+                                                                            "t"
+                                                                            "a")
                                                             JMESSAGE(
-                                                                JERR_NOTIMPL,
-                                                                "Not "
-                                                                "implemented "
-                                                                "yet") JMESSAGE(JERR_NOT_COMPILED,
-                                                                                "Requested"
-                                                                                " feature "
-                                                                                "was "
-                                                                                "omitted "
-                                                                                "at "
-                                                                                "compile "
-                                                                                "time")
+                                                                JERR_MODE_CHANGE,
+                                                                "Inva"
+                                                                "lid "
+                                                                "colo"
+                                                                "r "
+                                                                "quan"
+                                                                "tiza"
+                                                                "tion"
+                                                                " "
+                                                                "mode"
+                                                                " "
+                                                                "chan"
+                                                                "ge") JMESSAGE(JERR_NOTIMPL,
+                                                                               "Not "
+                                                                               "implemented "
+                                                                               "yet") JMESSAGE(JERR_NOT_COMPILED,
+                                                                                               "Requested"
+                                                                                               " feature "
+                                                                                               "was "
+                                                                                               "omitted "
+                                                                                               "at "
+                                                                                               "compile "
+                                                                                               "time")
                                                                 JMESSAGE(
                                                                     JERR_NO_ARITH_TABLE,
                                                                     "Arithm"
@@ -422,164 +422,173 @@ typedef enum {
                                                                             "m"
                                                                             "a"
                                                                             "g"
-                                                                            "e")
-                                                                            JMESSAGE(
-                                                                                JERR_NO_QUANT_TABLE,
-                                                                                "Q"
-                                                                                "u"
-                                                                                "a"
-                                                                                "n"
-                                                                                "t"
-                                                                                "i"
-                                                                                "z"
-                                                                                "a"
-                                                                                "t"
-                                                                                "i"
-                                                                                "o"
-                                                                                "n"
-                                                                                " "
-                                                                                "t"
-                                                                                "a"
-                                                                                "b"
-                                                                                "l"
-                                                                                "e"
-                                                                                " "
-                                                                                "0"
-                                                                                "x"
-                                                                                "%"
-                                                                                "0"
-                                                                                "2"
-                                                                                "x"
-                                                                                " "
-                                                                                "w"
-                                                                                "a"
-                                                                                "s"
-                                                                                " "
-                                                                                "n"
-                                                                                "o"
-                                                                                "t"
-                                                                                " "
-                                                                                "d"
-                                                                                "e"
-                                                                                "f"
-                                                                                "i"
-                                                                                "n"
-                                                                                "e"
-                                                                                "d")
+                                                                            "e") JMESSAGE(JERR_NO_QUANT_TABLE,
+                                                                                          "Q"
+                                                                                          "u"
+                                                                                          "a"
+                                                                                          "n"
+                                                                                          "t"
+                                                                                          "i"
+                                                                                          "z"
+                                                                                          "a"
+                                                                                          "t"
+                                                                                          "i"
+                                                                                          "o"
+                                                                                          "n"
+                                                                                          " "
+                                                                                          "t"
+                                                                                          "a"
+                                                                                          "b"
+                                                                                          "l"
+                                                                                          "e"
+                                                                                          " "
+                                                                                          "0"
+                                                                                          "x"
+                                                                                          "%"
+                                                                                          "0"
+                                                                                          "2"
+                                                                                          "x"
+                                                                                          " "
+                                                                                          "w"
+                                                                                          "a"
+                                                                                          "s"
+                                                                                          " "
+                                                                                          "n"
+                                                                                          "o"
+                                                                                          "t"
+                                                                                          " "
+                                                                                          "d"
+                                                                                          "e"
+                                                                                          "f"
+                                                                                          "i"
+                                                                                          "n"
+                                                                                          "e"
+                                                                                          "d") JMESSAGE(JERR_NO_SOI,
+                                                                                                        "Not a JPEG file: starts with 0x%02x 0x%02x") JMESSAGE(JERR_OUT_OF_MEMORY,
+                                                                                                                                                               "Insufficient memory (case %d)") JMESSAGE(JERR_QUANT_COMPONENTS,
+                                                                                                                                                                                                         "Cannot quantize more than %d color components") JMESSAGE(JERR_QUANT_FEW_COLORS,
+                                                                                                                                                                                                                                                                   "Cannot quantize to fewer than %d colors") JMESSAGE(JERR_QUANT_MANY_COLORS,
+                                                                                                                                                                                                                                                                                                                       "Cannot quantize to more than %d colors") JMESSAGE(JERR_SOF_BEFORE,
+                                                                                                                                                                                                                                                                                                                                                                          "Invalid JPEG file structure: %s before SOF") JMESSAGE(JERR_SOF_DUPLICATE,
+                                                                                                                                                                                                                                                                                                                                                                                                                                 "Invalid JPEG file structure: two SOF markers") JMESSAGE(JERR_SOF_NO_SOS,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          "Invalid JPEG file structure: missing SOS marker") JMESSAGE(JERR_SOF_UNSUPPORTED,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      "Unsupported JPEG process: SOF type 0x%02x") JMESSAGE(JERR_SOI_DUPLICATE,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            "Invalid JPEG file structure: two SOI markers") JMESSAGE(JERR_TFILE_CREATE,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     "Failed to create temporary file %s")
+                                                                            JMESSAGE(JERR_TFILE_READ,
+                                                                                     "Read failed on temporary file") JMESSAGE(JERR_TFILE_SEEK,
+                                                                                                                               "Seek failed on temporary file") JMESSAGE(JERR_TFILE_WRITE,
+                                                                                                                                                                         "Write failed on temporary file --- out of disk space?") JMESSAGE(JERR_TOO_LITTLE_DATA,
+                                                                                                                                                                                                                                           "Application transferred too few scanlines") JMESSAGE(JERR_UNKNOWN_MARKER,
+                                                                                                                                                                                                                                                                                                 "Unsupported marker type 0x%02x")
                                                                                 JMESSAGE(
-                                                                                    JERR_NO_SOI,
-                                                                                    "Not a JPEG file: starts with 0x%02x 0x%02x") JMESSAGE(JERR_OUT_OF_MEMORY,
-                                                                                                                                           "Insufficient memory (case %d)") JMESSAGE(JERR_QUANT_COMPONENTS,
-                                                                                                                                                                                     "Cannot quantize more than %d color components") JMESSAGE(JERR_QUANT_FEW_COLORS,
-                                                                                                                                                                                                                                               "Cannot quantize to fewer than %d colors") JMESSAGE(JERR_QUANT_MANY_COLORS,
-                                                                                                                                                                                                                                                                                                   "Cannot quantize to more than %d colors") JMESSAGE(JERR_SOF_BEFORE,
-                                                                                                                                                                                                                                                                                                                                                      "Invalid JPEG file structure: %s before SOF") JMESSAGE(JERR_SOF_DUPLICATE,
-                                                                                                                                                                                                                                                                                                                                                                                                             "Invalid JPEG file structure: two SOF markers") JMESSAGE(JERR_SOF_NO_SOS,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                      "Invalid JPEG file structure: missing SOS marker") JMESSAGE(JERR_SOF_UNSUPPORTED,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  "Unsupported JPEG process: SOF type 0x%02x")
+                                                                                    JERR_VIRTUAL_BUG,
+                                                                                    "Vi"
+                                                                                    "rt"
+                                                                                    "ua"
+                                                                                    "l "
+                                                                                    "ar"
+                                                                                    "ra"
+                                                                                    "y "
+                                                                                    "co"
+                                                                                    "nt"
+                                                                                    "ro"
+                                                                                    "ll"
+                                                                                    "er"
+                                                                                    " m"
+                                                                                    "es"
+                                                                                    "se"
+                                                                                    "d "
+                                                                                    "u"
+                                                                                    "p") JMESSAGE(JERR_WIDTH_OVERFLOW,
+                                                                                                  "Image too wide for this implementation")
                                                                                     JMESSAGE(
-                                                                                        JERR_SOI_DUPLICATE,
-                                                                                        "Invalid JPEG file structure: two SOI markers") JMESSAGE(JERR_TFILE_CREATE,
-                                                                                                                                                 "Failed to create temporary file %s")
+                                                                                        JERR_XMS_READ,
+                                                                                        "Read from XMS failed") JMESSAGE(JERR_XMS_WRITE,
+                                                                                                                         "Write to XMS failed")
                                                                                         JMESSAGE(
-                                                                                            JERR_TFILE_READ,
-                                                                                            "Read failed on temporary file") JMESSAGE(JERR_TFILE_SEEK,
-                                                                                                                                      "Seek failed on temporary file") JMESSAGE(JERR_TFILE_WRITE,
-                                                                                                                                                                                "Write failed on temporary file --- out of disk space?") JMESSAGE(JERR_TOO_LITTLE_DATA,
-                                                                                                                                                                                                                                                  "Application transferred too few scanlines") JMESSAGE(JERR_UNKNOWN_MARKER,
-                                                                                                                                                                                                                                                                                                        "Unsupported marker type 0x%02x") JMESSAGE(JERR_VIRTUAL_BUG,
-                                                                                                                                                                                                                                                                                                                                                   "Vi"
-                                                                                                                                                                                                                                                                                                                                                   "rt"
-                                                                                                                                                                                                                                                                                                                                                   "ua"
-                                                                                                                                                                                                                                                                                                                                                   "l "
-                                                                                                                                                                                                                                                                                                                                                   "ar"
-                                                                                                                                                                                                                                                                                                                                                   "ra"
-                                                                                                                                                                                                                                                                                                                                                   "y "
-                                                                                                                                                                                                                                                                                                                                                   "co"
-                                                                                                                                                                                                                                                                                                                                                   "nt"
-                                                                                                                                                                                                                                                                                                                                                   "ro"
-                                                                                                                                                                                                                                                                                                                                                   "ll"
-                                                                                                                                                                                                                                                                                                                                                   "er"
-                                                                                                                                                                                                                                                                                                                                                   " m"
-                                                                                                                                                                                                                                                                                                                                                   "es"
-                                                                                                                                                                                                                                                                                                                                                   "se"
-                                                                                                                                                                                                                                                                                                                                                   "d "
-                                                                                                                                                                                                                                                                                                                                                   "u"
-                                                                                                                                                                                                                                                                                                                                                   "p") JMESSAGE(JERR_WIDTH_OVERFLOW,
-                                                                                                                                                                                                                                                                                                                                                                 "Image too wide for this implementation") JMESSAGE(JERR_XMS_READ,
-                                                                                                                                                                                                                                                                                                                                                                                                                    "Read from XMS failed") JMESSAGE(JERR_XMS_WRITE,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                     "Write to XMS failed")
-                                                                                            JMESSAGE(JMSG_COPYRIGHT, JCOPYRIGHT) JMESSAGE(JMSG_VERSION, JVERSION) JMESSAGE(
-                                                                                                JTRC_16BIT_TABLES,
-                                                                                                "Caution: quantization tables are too coarse for baseline JPEG") JMESSAGE(JTRC_ADOBE,
-                                                                                                                                                                          "Adobe APP14 marker: version %d, flags 0x%04x 0x%04x, transform %d") JMESSAGE(JTRC_APP0,
-                                                                                                                                                                                                                                                        "Unknown APP0 marker (not JFIF), length %u") JMESSAGE(JTRC_APP14,
-                                                                                                                                                                                                                                                                                                              "Unknown APP14 marker (not Adobe), length %u") JMESSAGE(JTRC_DAC,
-                                                                                                                                                                                                                                                                                                                                                                      "Define Arithmetic Table 0x%02x: 0x%02x") JMESSAGE(JTRC_DHT,
-                                                                                                                                                                                                                                                                                                                                                                                                                         "Define Huffman Table 0x%02x")
+                                                                                            JMSG_COPYRIGHT,
+                                                                                            JCOPYRIGHT) JMESSAGE(JMSG_VERSION,
+                                                                                                                 JVERSION)
+                                                                                            JMESSAGE(JTRC_16BIT_TABLES,
+                                                                                                     "Caution: quantization tables are too coarse for baseline JPEG") JMESSAGE(JTRC_ADOBE,
+                                                                                                                                                                               "Adobe APP14 marker: version %d, flags 0x%04x 0x%04x, transform %d") JMESSAGE(JTRC_APP0,
+                                                                                                                                                                                                                                                             "Unknown APP0 marker (not JFIF), length %u") JMESSAGE(JTRC_APP14,
+                                                                                                                                                                                                                                                                                                                   "Unknown APP14 marker (not Adobe), length %u") JMESSAGE(JTRC_DAC,
+                                                                                                                                                                                                                                                                                                                                                                           "Define Arithmetic Table 0x%02x: 0x%02x") JMESSAGE(JTRC_DHT,
+                                                                                                                                                                                                                                                                                                                                                                                                                              "Define Huffman Table 0x%02x") JMESSAGE(JTRC_DQT,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                      "Define Quantization Table %d  precision %d") JMESSAGE(JTRC_DRI,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             "Define Restart Interval %u") JMESSAGE(JTRC_EMS_CLOSE,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    "Freed EMS handle %u") JMESSAGE(JTRC_EMS_OPEN,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    "Obtained EMS handle %u") JMESSAGE(JTRC_EOI,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       "End Of Image") JMESSAGE(JTRC_HUFFBITS,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                "        %3d %3d %3d %3d %3d %3d %3d %3d") JMESSAGE(JTRC_JFIF,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    "JFIF APP0 marker: version %d.%02d, density %dx%d  %d") JMESSAGE(JTRC_JFIF_BADTHUMBNAILSIZE,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     "Warning: thumbnail image size does not match data length %u")
                                                                                                 JMESSAGE(
-                                                                                                    JTRC_DQT,
-                                                                                                    "Define Quantization Table %d  precision %d") JMESSAGE(JTRC_DRI,
-                                                                                                                                                           "Define Restart Interval %u") JMESSAGE(JTRC_EMS_CLOSE,
-                                                                                                                                                                                                  "Freed EMS handle %u") JMESSAGE(JTRC_EMS_OPEN,
-                                                                                                                                                                                                                                  "Obtained EMS handle %u") JMESSAGE(JTRC_EOI,
-                                                                                                                                                                                                                                                                     "End Of Image") JMESSAGE(JTRC_HUFFBITS,
-                                                                                                                                                                                                                                                                                              "        %3d %3d %3d %3d %3d %3d %3d %3d")
-                                                                                                    JMESSAGE(JTRC_JFIF,
-                                                                                                             "JFIF APP0 marker: version %d.%02d, density %dx%d  %d") JMESSAGE(JTRC_JFIF_BADTHUMBNAILSIZE,
-                                                                                                                                                                              "Warning: thumbnail image size does not match data length %u") JMESSAGE(JTRC_JFIF_EXTENSION,
-                                                                                                                                                                                                                                                      "JFIF extension marker: type 0x%02x, length %u") JMESSAGE(JTRC_JFIF_THUMBNAIL,
-                                                                                                                                                                                                                                                                                                                "    with %d x %d thumbnail image")
-                                                                                                        JMESSAGE(JTRC_MISC_MARKER,
-                                                                                                                 "Miscellaneous marker 0x%02x, length %u") JMESSAGE(JTRC_PARMLESS_MARKER,
-                                                                                                                                                                    "Unexpected marker 0x%02x") JMESSAGE(JTRC_QUANTVALS,
-                                                                                                                                                                                                         "        %4u %4u %4u %4u %4u %4u %4u %4u") JMESSAGE(JTRC_QUANT_3_NCOLORS,
-                                                                                                                                                                                                                                                             "Quantizing to %d = %d*%d*%d colors") JMESSAGE(JTRC_QUANT_NCOLORS,
-                                                                                                                                                                                                                                                                                                            "Quantizing to %d colors") JMESSAGE(JTRC_QUANT_SELECTED,
-                                                                                                                                                                                                                                                                                                                                                "Selected %d colors for quantization") JMESSAGE(JTRC_RECOVERY_ACTION,
-                                                                                                                                                                                                                                                                                                                                                                                                "At marker 0x%02x, recovery action %d") JMESSAGE(JTRC_RST,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                 "RST%d") JMESSAGE(JTRC_SMOOTH_NOTIMPL,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                   "Smoothing not supported with nonstandard sampling ratios") JMESSAGE(JTRC_SOF,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        "Start Of Frame 0x%02x: width=%u, height=%u, components=%d") JMESSAGE(JTRC_SOF_COMPONENT,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              "    Component %d: %dhx%dv q=%d") JMESSAGE(JTRC_SOI,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         "Start of Image")
-                                                                                                            JMESSAGE(JTRC_SOS,
-                                                                                                                     "Start Of Scan: %d components") JMESSAGE(JTRC_SOS_COMPONENT,
-                                                                                                                                                              "    Component %d: dc=%d ac=%d") JMESSAGE(JTRC_SOS_PARAMS,
-                                                                                                                                                                                                        "  Ss=%d, Se=%d, Ah=%d, Al=%d") JMESSAGE(JTRC_TFILE_CLOSE,
-                                                                                                                                                                                                                                                 "Closed temporary file %s") JMESSAGE(JTRC_TFILE_OPEN,
-                                                                                                                                                                                                                                                                                      "Opened temporary file %s") JMESSAGE(JTRC_THUMB_JPEG,
-                                                                                                                                                                                                                                                                                                                           "JFIF extension marker: JPEG-compressed thumbnail image, length %u") JMESSAGE(JTRC_THUMB_PALETTE,
-                                                                                                                                                                                                                                                                                                                                                                                                         "JFIF extension marker: palette thumbnail image, length %u") JMESSAGE(JTRC_THUMB_RGB,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                               "JFIF extension marker: RGB thumbnail image, length %u") JMESSAGE(JTRC_UNKNOWN_IDS,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 "Unrecognized component IDs %d %d %d, assuming YCbCr")
-                                                                                                                JMESSAGE(
-                                                                                                                    JTRC_XMS_CLOSE,
-                                                                                                                    "Freed XMS handle %u") JMESSAGE(JTRC_XMS_OPEN,
-                                                                                                                                                    "Obtained XMS handle %u") JMESSAGE(JWRN_ADOBE_XFORM,
-                                                                                                                                                                                       "Unknown Adobe color transform code %d")
-                                                                                                                    JMESSAGE(
-                                                                                                                        JWRN_ARITH_BAD_CODE,
-                                                                                                                        "Corrupt JPEG data: bad arithmetic code") JMESSAGE(JWRN_BOGUS_PROGRESSION,
-                                                                                                                                                                           "Inconsistent progression sequence for component %d coefficient %d") JMESSAGE(JWRN_EXTRANEOUS_DATA,
-                                                                                                                                                                                                                                                         "Corrupt JPEG data: %u extraneous bytes before marker 0x%02x") JMESSAGE(JWRN_HIT_MARKER,
-                                                                                                                                                                                                                                                                                                                                 "Corrupt JPEG data: premature end of data segment") JMESSAGE(JWRN_HUFF_BAD_CODE,
-                                                                                                                                                                                                                                                                                                                                                                                              "Corrupt JPEG data: bad Huffman code") JMESSAGE(JWRN_JFIF_MAJOR,
-                                                                                                                                                                                                                                                                                                                                                                                                                                              "Warning: unknown JFIF revision number %d.%02d")
+                                                                                                    JTRC_JFIF_EXTENSION,
+                                                                                                    "JFIF extension marker: type 0x%02x, length %u") JMESSAGE(JTRC_JFIF_THUMBNAIL,
+                                                                                                                                                              "    with %d x %d thumbnail image") JMESSAGE(JTRC_MISC_MARKER,
+                                                                                                                                                                                                           "Miscellaneous marker 0x%02x, length %u") JMESSAGE(JTRC_PARMLESS_MARKER,
+                                                                                                                                                                                                                                                              "Unexpected marker 0x%02x") JMESSAGE(JTRC_QUANTVALS,
+                                                                                                                                                                                                                                                                                                   "        %4u %4u %4u %4u %4u %4u %4u %4u")
+                                                                                                    JMESSAGE(
+                                                                                                        JTRC_QUANT_3_NCOLORS,
+                                                                                                        "Quantizing to %d = %d*%d*%d colors") JMESSAGE(JTRC_QUANT_NCOLORS,
+                                                                                                                                                       "Quantizing to %d colors")
+                                                                                                        JMESSAGE(
+                                                                                                            JTRC_QUANT_SELECTED,
+                                                                                                            "Selected %d colors for quantization") JMESSAGE(JTRC_RECOVERY_ACTION,
+                                                                                                                                                            "At marker 0x%02x, recovery action %d")
+                                                                                                            JMESSAGE(
+                                                                                                                JTRC_RST,
+                                                                                                                "RST%d")
+                                                                                                                JMESSAGE(JTRC_SMOOTH_NOTIMPL,
+                                                                                                                         "Smoothing not supported with nonstandard sampling ratios") JMESSAGE(JTRC_SOF,
+                                                                                                                                                                                              "Start Of Frame 0x%02x: width=%u, height=%u, components=%d") JMESSAGE(JTRC_SOF_COMPONENT,
+                                                                                                                                                                                                                                                                    "    Component %d: %dhx%dv q=%d") JMESSAGE(JTRC_SOI,
+                                                                                                                                                                                                                                                                                                               "Start of Image") JMESSAGE(JTRC_SOS,
+                                                                                                                                                                                                                                                                                                                                          "Start Of Scan: %d components") JMESSAGE(JTRC_SOS_COMPONENT,
+                                                                                                                                                                                                                                                                                                                                                                                   "    Component %d: dc=%d ac=%d") JMESSAGE(JTRC_SOS_PARAMS,
+                                                                                                                                                                                                                                                                                                                                                                                                                             "  Ss=%d, Se=%d, Ah=%d, Al=%d") JMESSAGE(JTRC_TFILE_CLOSE,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                      "Closed temporary file %s") JMESSAGE(JTRC_TFILE_OPEN,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           "Opened temporary file %s") JMESSAGE(JTRC_THUMB_JPEG,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                "JFIF extension marker: JPEG-compressed thumbnail image, length %u") JMESSAGE(JTRC_THUMB_PALETTE,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              "JFIF extension marker: palette thumbnail image, length %u") JMESSAGE(JTRC_THUMB_RGB,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    "JFIF extension marker: RGB thumbnail image, length %u")
+                                                                                                                    JMESSAGE(JTRC_UNKNOWN_IDS,
+                                                                                                                             "Unrecognized component IDs %d %d %d, assuming YCbCr") JMESSAGE(JTRC_XMS_CLOSE,
+                                                                                                                                                                                             "Freed XMS handle %u") JMESSAGE(JTRC_XMS_OPEN,
+                                                                                                                                                                                                                             "Obtained XMS handle %u") JMESSAGE(JWRN_ADOBE_XFORM,
+                                                                                                                                                                                                                                                                "Unknown Adobe color transform code %d") JMESSAGE(JWRN_ARITH_BAD_CODE,
+                                                                                                                                                                                                                                                                                                                  "Corrupt JPEG data: bad arithmetic code") JMESSAGE(JWRN_BOGUS_PROGRESSION,
+                                                                                                                                                                                                                                                                                                                                                                     "Inconsistent progression sequence for component %d coefficient %d") JMESSAGE(JWRN_EXTRANEOUS_DATA,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                   "Corrupt JPEG data: %u extraneous bytes before marker 0x%02x")
                                                                                                                         JMESSAGE(
-                                                                                                                            JWRN_JPEG_EOF,
-                                                                                                                            "Premature end of JPEG file") JMESSAGE(JWRN_MUST_RESYNC,
-                                                                                                                                                                   "Corrupt JPEG data: found marker 0x%02x instead of RST%d")
+                                                                                                                            JWRN_HIT_MARKER,
+                                                                                                                            "Corrupt JPEG data: premature end of data segment")
                                                                                                                             JMESSAGE(
-                                                                                                                                JWRN_NOT_SEQUENTIAL,
-                                                                                                                                "Invalid SOS parameters for sequential JPEG")
+                                                                                                                                JWRN_HUFF_BAD_CODE,
+                                                                                                                                "Corrupt JPEG data: bad Huffman code")
                                                                                                                                 JMESSAGE(
-                                                                                                                                    JWRN_TOO_MUCH_DATA,
-                                                                                                                                    "Application transferred too many scanlines")
+                                                                                                                                    JWRN_JFIF_MAJOR,
+                                                                                                                                    "Warning: unknown JFIF revision number %d.%02d")
+                                                                                                                                    JMESSAGE(
+                                                                                                                                        JWRN_JPEG_EOF,
+                                                                                                                                        "Premature end of JPEG file")
+                                                                                                                                        JMESSAGE(
+                                                                                                                                            JWRN_MUST_RESYNC,
+                                                                                                                                            "Corrupt JPEG data: found marker 0x%02x instead of RST%d")
+                                                                                                                                            JMESSAGE(
+                                                                                                                                                JWRN_NOT_SEQUENTIAL,
+                                                                                                                                                "Invalid SOS parameters for sequential JPEG")
+                                                                                                                                                JMESSAGE(
+                                                                                                                                                    JWRN_TOO_MUCH_DATA,
+                                                                                                                                                    "Application transferred too many scanlines")
 
 #ifdef JMAKE_ENUM_LIST
 
-                                                                                                                                    JMSG_LASTMSGCODE
+                                                                                                                                                    JMSG_LASTMSGCODE
 } J_MESSAGE_CODE;
 
 #undef JMAKE_ENUM_LIST
