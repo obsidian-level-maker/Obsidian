@@ -26,6 +26,7 @@
 #include <string>
 #include <map>
 #include <algorithm>
+#include <filesystem>
 #include "hdr_fltk.h"
 #include "physfs.h"
 #define OBSIDIAN_TITLE "OBSIDIAN Level Maker"
@@ -52,16 +53,16 @@
 #define v_unload_private_font(PATH) FcConfigAppFontClear(NULL)
 #endif
 
-extern std::string home_dir;
-extern std::string install_dir;
+extern std::filesystem::path home_dir;
+extern std::filesystem::path install_dir;
 
-extern std::string options_file;
-extern std::string theme_file;
-extern std::string logging_file;
+extern std::filesystem::path options_file;
+extern std::filesystem::path theme_file;
+extern std::filesystem::path logging_file;
 
 extern bool batch_mode;
 
-extern std::string batch_output_file;
+extern std::filesystem::path batch_output_file;
 
 extern unsigned long long next_rand_seed;
 

@@ -41,13 +41,13 @@
 
 #define TICKER_TIME 50 /* ms */
 
-std::string home_dir;
-std::string install_dir;
+std::filesystem::path home_dir;
+std::filesystem::path install_dir;
 
-std::string config_file;
-std::string options_file;
-std::string theme_file;
-std::string logging_file;
+std::filesystem::path config_file;
+std::filesystem::path options_file;
+std::filesystem::path theme_file;
+std::filesystem::path logging_file;
 
 int screen_w;
 int screen_h;
@@ -57,7 +57,7 @@ int main_action;
 unsigned long long next_rand_seed;
 
 bool batch_mode = false;
-std::string batch_output_file;
+std::filesystem::path batch_output_file;
 std::string numeric_locale;
 
 // options
@@ -190,21 +190,18 @@ void Determine_WorkingPath(const char *argv0) {
     home_dir = GetExecutablePath(argv0);
 
 #else
-    std::string path;
-    path.resize(FL_PATH_MAX + 4);
+	home_dir = std::getenv("HOME");
+	home_dir /= ".config/obsidian";
 
-    if (fl_filename_expand(&path[0], "$HOME/.config/obsidian") == 0) {
+    if (!home_dir.is_absolute()) {
         Main_FatalError("Unable to find $HOME directory!\n");
     }
 
-    home_dir = path;
-
     // try to create it (doesn't matter if it already exists)
-    if (!home_dir.empty()) {
-        FileMakeDir(home_dir.c_str());
+    if (!std::filesystem::exists(home_dir)) {
+        std::filesystem::create_directory(home_dir);
     }
 #endif
-
     if (home_dir.empty()) {
         home_dir = ".";
     }
