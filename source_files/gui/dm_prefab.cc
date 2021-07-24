@@ -100,7 +100,7 @@ void Appl_Printf(const char *str, ...) {
 
         appl_message[MSG_BUF_LEN - 1] = 0;
 
-        DebugPrintf("AJPOLY: {:}", appl_message);
+        DebugPrintf("AJPOLY: {}", appl_message);
     }
 }
 

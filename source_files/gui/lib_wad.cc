@@ -149,7 +149,7 @@ bool WAD_OpenRead(const char *filename) {
         L->start = LE_U32(L->start);
         L->length = LE_U32(L->length);
 
-        //  DebugPrintf(" {:4}: {:08x} {:08x} : {:}\n", i, L->start, L->length,
+        //  DebugPrintf(" {:4}: {:08x} {:08x} : {}\n", i, L->start, L->length,
         //  L->name);
     }
 
@@ -480,7 +480,7 @@ bool WAD2_OpenRead(const char *filename) {
         L->length = LE_U32(L->length);
         L->u_len = LE_U32(L->u_len);
 
-        //  DebugPrintf(" {:4}: {:08x} {:08x} : {:}\n", i, L->start, L->length,
+        //  DebugPrintf(" {:4}: {:08x} {:08x} : {}\n", i, L->start, L->length,
         //  L->name);
     }
 

@@ -54,7 +54,7 @@ void VFS_AddFolder(const char *name) {
         return; /* NOT REACHED */
     }
 
-    DebugPrintf("mounted folder '{:}'\n", name);
+    DebugPrintf("mounted folder '{}'\n", name);
 }
 
 bool VFS_AddArchive(std::string filename, bool options_file) {

@@ -235,7 +235,7 @@ static bool load_end_part() {
         return false;
     }
 
-    DebugPrintf("ZIP end-of-directory found at: 0x%08x\n", position);
+    DebugPrintf("ZIP end-of-directory found at: 0x{:08x}\n", position);
 
     fseek(r_zip_fp, position, SEEK_SET);
 
@@ -341,8 +341,8 @@ bool ZIPF_OpenRead(const char *filename) {
 
     /* read directory */
 
-    DebugPrintf("ZIP central directory at offset: 0x%08x\n",
-                r_end_part.dir_offset);
+    DebugPrintf("ZIP central directory at offset: 0x{:08x}\n",
+                static_cast<u32_t>(r_end_part.dir_offset));
 
     if (r_end_part.total_entries >= 5000)  // sanity check
     {
@@ -378,8 +378,8 @@ bool ZIPF_OpenRead(const char *filename) {
         // the real start of data is determined at read time
         E->data_offset = -1;
 
-        //  DebugPrintf(" %4d: +%08x %08x : %s\n", i+1, E->hdr.local_offset,
-        //  E->hdr.full_size, E->name);
+        //  DebugPrintf(" {:4}: +{:08x} {:08x} : {}\n", i+1,
+        //  E->hdr.local_offset, E->hdr.full_size, E->name);
     }
 
     return true;  // OK
@@ -463,7 +463,7 @@ static void destroy_read_state() {
 }
 
 static bool decompressing_read(int length, byte *buffer) {
-    // DebugPrintf("decompressing_read: %d\n", length);
+    // DebugPrintf("decompressing_read: {}\n", length);
 
     r_read_state->Z.next_out = buffer;
     r_read_state->Z.avail_out = length;
@@ -477,7 +477,7 @@ static bool decompressing_read(int length, byte *buffer) {
             }
         }
 
-        //  DebugPrintf("  in_position: 0x%08x  in_length: %d\n",
+        //  DebugPrintf("  in_position: 0x{:08x}  in_length: {}\n",
         //  r_read_state->in_position, r_read_state->in_length); DebugPrintf("
         //  avail_in: %u   next_in: +%u\n", r_read_state->Z.avail_in,
         //  r_read_state->Z.next_in - r_read_state->in_buffer); DebugPrintf("
@@ -486,10 +486,10 @@ static bool decompressing_read(int length, byte *buffer) {
 
         int res = inflate(&r_read_state->Z, Z_NO_FLUSH);
 
-        //  DebugPrintf("  --> res: %d\n", res);
-        //  DebugPrintf("  --> avail_in: %u   next_in: +%u\n",
+        //  DebugPrintf("  --> res: {}\n", res);
+        //  DebugPrintf("  --> avail_in: {}   next_in: +{}\n",
         //  r_read_state->Z.avail_in, r_read_state->Z.next_in -
-        //  r_read_state->in_buffer); DebugPrintf("  --> avail_out: %u next_out:
+        //  r_read_state->in_buffer); DebugPrintf("  --> avail_out: {} next_out:
         //  +%u\n", r_read_state->Z.avail_out, r_read_state->Z.next_out -
         //  buffer);
 

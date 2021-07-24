@@ -306,7 +306,7 @@ static void WF_DumpMap(void) {
 
         line_buf[64] = 0;
 
-        DebugPrintf("{:}\n", line_buf);
+        DebugPrintf("{}\n", line_buf);
     }
 }
 

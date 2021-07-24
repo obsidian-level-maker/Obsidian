@@ -140,8 +140,10 @@ class quake_side_c {
 
     void Dump(unsigned int index) const {
         DebugPrintf(
-            "Side %u : (%1.1f %1.1f) -> (%1.1f %1.1f) snag:%p  on_node:%p/%d\n",
-            index, x1, y1, x2, y2, snag, on_node, node_side);
+            "Side {} : ({:1.1} {:1.1}) -> ({:1.1} {:1.1}) snag:{}  "
+            "on_node:{}/{}\n",
+            index, x1, y1, x2, y2, static_cast<const void *>(snag),
+            static_cast<const void *>(on_node), node_side);
     }
 };
 
@@ -223,7 +225,8 @@ class quake_group_c {
     }
 
     void Dump() const {
-        DebugPrintf("Group {:} : {:} sides, {:} brushes\n", this, sides.size(),
+        DebugPrintf("Group {} : {} sides, {} brushes\n",
+                    static_cast<const void *>(this), sides.size(),
                     brushes.size());
 
         for (unsigned int i = 0; i < sides.size(); i++) {
@@ -509,10 +512,10 @@ struct intersect_qdist_Cmp {
 };
 
 void DumpIntersections(std::vector<intersect_t> &cuts, const char *title) {
-    DebugPrintf("{:}:\n", title);
+    DebugPrintf("{}:\n", title);
 
     for (unsigned int i = 0; i < cuts.size(); i++) {
-        DebugPrintf("  {:03} : along:{:1.3} dir:{:+} {:} angle:{:1.2}\n", i,
+        DebugPrintf("  {:03} : along:{:1.3} dir:{:+} {} angle:{:1.2}\n", i,
                     cuts[i].along, cuts[i].dir,
                     (cuts[i].kind == K1_NORMAL)           ? "NORM"
                     : (cuts[i].kind == K1_SITTING)        ? "SITT"
@@ -567,9 +570,9 @@ static void AddIntersection(std::vector<intersect_t> &cut_list,
 
         // DebugPrintf("\nPART = ({:1.0} {:1.0}) .. ({:1.0} {:1.0}) along:{:1.0}
         // raw_angle: %1.1f\n", part->x1, part->y1, part->x2, part->y2, along,
-        // p_angle); DebugPrintf("SEG = ({:1.0} {:1.0}) .. ({:1.0} {:1.0}) vert:{:}
-        // dir:%+d raw_angle: %1.1f\n", S->x1, S->y1, S->x2, S->y2, vert, dir,
-        // s_angle);
+        // p_angle); DebugPrintf("SEG = ({:1.0} {:1.0}) .. ({:1.0} {:1.0})
+        // vert:{} dir:%+d raw_angle: %1.1f\n", S->x1, S->y1, S->x2, S->y2,
+        // vert, dir, s_angle);
 
         s_angle = s_angle - p_angle;
 
@@ -952,8 +955,8 @@ static bool FindPartition_XY(quake_group_c &group, quake_side_c *part,
 
             CheckClusterEdges(group, cx, cy);
 
-            ///   DebugPrintf("Reached cluster ({:} {:}) @ ({:1.1} {:1.1}) .. ({:1.1}
-            ///   %1.1f)\n",
+            ///   DebugPrintf("Reached cluster ({} {}) @ ({:1.1} {:1.1}) ..
+            ///   ({:1.1} %1.1f)\n",
             ///               cx, cy, gx1, gy1, gx2, gy2);
             ///   group.Dump();
         }

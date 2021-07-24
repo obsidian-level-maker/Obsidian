@@ -1799,7 +1799,7 @@ static void DM_AlignTextures() {
 
         count += prev_count + next_count;
 
-        //  DebugPrintf("AlignTextures pass %d : naturals:%d prevs:%d
+        //  DebugPrintf("AlignTextures pass {} : naturals:{} prevs:{}
         //  nexts:%d\n",
         //              pass, naturals, prev_count, next_count);
     }

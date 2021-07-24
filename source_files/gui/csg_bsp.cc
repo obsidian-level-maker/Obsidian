@@ -296,13 +296,14 @@ bool region_c::RemoveSnag(snag_c *S) {
 }
 
 void region_c::DebugDump() {
-    DebugPrintf("Region %p: has %u snags\n", this, snags.size());
+    DebugPrintf("Region {}: has {} snags\n", static_cast<const void *>(this),
+                snags.size());
 
     for (unsigned int i = 0; i < snags.size(); i++) {
         snag_c *S = snags[i];
 
-        DebugPrintf("  %d: Snag %p (%1.4f %1.4f) -> (%1.4f %1.4f)\n", i, S,
-                    S->x1, S->y1, S->x2, S->y2);
+        DebugPrintf("  {}: Snag {} ({:1.4} {:1.4}) -> (%1.4f %1.4f)\n", i,
+                    static_cast<const void *>(S), S->x1, S->y1, S->x2, S->y2);
     }
 }
 
@@ -1116,7 +1117,7 @@ static void SplitGroup(group_c &group, bool reached_chunk, region_c **leaf_out,
 
     if (group.regs.empty()) {
         if (!group.ents.empty()) {
-            DebugPrintf("SplitGroup: lost %u entities\n", group.ents.size());
+            DebugPrintf("SplitGroup: lost {} entities\n", group.ents.size());
         }
 
         return;

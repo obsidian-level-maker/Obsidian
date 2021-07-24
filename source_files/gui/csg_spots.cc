@@ -100,7 +100,7 @@ void SPOT_FreeGrid() {
 }
 
 void SPOT_DumpGrid(const char *info) {
-    DebugPrintf("{:}: ({:} {:}) .. ({:} {:})\n", info, grid_min_x, grid_min_y,
+    DebugPrintf("{}: ({} {}) .. ({} {})\n", info, grid_min_x, grid_min_y,
                 grid_max_x, grid_max_y);
 
     const int MAX_WIDTH = 256;
@@ -132,7 +132,7 @@ void SPOT_DumpGrid(const char *info) {
 
         buffer[grid_W] = 0;
 
-        DebugPrintf(" {: 3} {:}\n", y, buffer);
+        DebugPrintf(" {: 3} {}\n", y, buffer);
     }
 
     DebugPrintf("\n");
@@ -179,7 +179,7 @@ static void test_item_spot(int x, int y, std::vector<grid_point_c> &spots) {
     int real_x = grid_min_x + (x + 0) * GRID_SIZE;
     int real_y = grid_min_y + (y + 0) * GRID_SIZE;
 
-    DebugPrintf("Item spot ---> [{:} {:}] real: ({:} {:})\n", x, y, real_x, real_y);
+    DebugPrintf("Item spot ---> [{} {}] real: ({} {})\n", x, y, real_x, real_y);
 
     spots.push_back(grid_point_c(real_x, real_y));
 
@@ -459,7 +459,7 @@ void SPOT_MonsterSpots(std::vector<grid_point_c> &spots, int want) {
             spots.push_back(grid_point_c(real_x1, real_y1));
             spots.push_back(grid_point_c(real_x2, real_y2));
 
-            DebugPrintf("Monster spot ---> [{:} {:}] size [{:} {:}]\n", x1, y1,
+            DebugPrintf("Monster spot ---> [{} {}] size [{} {}]\n", x1, y1,
                         x2 - x1 + 1, y2 - y1 + 1);
         } else {
             // mark the cells as useless
@@ -499,7 +499,7 @@ static void raw_pixel(int gx, int gy) {
 }
 
 static void draw_line(int x1, int y1, int x2, int y2) {
-    /// DebugPrintf("draw_line: ({:} {:}) --> ({:} {:})\n", x1,y1, x2,y2);
+    /// DebugPrintf("draw_line: ({} {}) --> ({} {})\n", x1,y1, x2,y2);
 
     // basic cull, Y only
     // (doing X messes up polygons which overlap the sides)
@@ -527,7 +527,7 @@ static void draw_line(int x1, int y1, int x2, int y2) {
     int py1 = y1 / GRID_SIZE;
     int py2 = y2 / GRID_SIZE;
 
-    /// DebugPrintf("  pixel coords: ({:} {:}) --> ({:} {:})\n", px1,py1, px2,py2);
+    /// DebugPrintf("  pixel coords: ({} {}) --> ({} {})\n", px1,py1, px2,py2);
 
     int h2 = grid_H - 1;
 
