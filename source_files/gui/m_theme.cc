@@ -139,75 +139,81 @@ const char *Theme_AskLoadFilename() {
 }
 
 static void Parse_Theme_Option(std::string name, std::string value) {
-    if (StringCaseCmp(name, "window_scaling") == 0) {
-        window_scaling = std::atoi(value.c_str());
-        window_scaling = CLAMP(0, window_scaling, 5);
-    } else if (StringCaseCmp(name, "font_scaling") == 0) {
-        font_scaling = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "font_theme") == 0) {
-        font_theme = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "widget_theme") == 0) {
-        widget_theme = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "box_theme") == 0) {
-        box_theme = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "button_theme") == 0) {
-        button_theme = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "single_pane") == 0) {
-        single_pane = std::atoi(value.c_str()) ? true : false;
-    } else if (StringCaseCmp(name, "use_system_fonts") == 0) {
-        use_system_fonts = std::atoi(value.c_str()) ? true : false;
-    } else if (StringCaseCmp(name, "color_scheme") == 0) {
-        color_scheme = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "text_red") == 0) {
-        text_red = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "text_green") == 0) {
-        text_green = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "text_blue") == 0) {
-        text_blue = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "text2_red") == 0) {
-        text2_red = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "text2_green") == 0) {
-        text2_green = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "text2_blue") == 0) {
-        text2_blue = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "bg_red") == 0) {
-        bg_red = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "bg_green") == 0) {
-        bg_green = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "bg_blue") == 0) {
-        bg_blue = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "bg2_red") == 0) {
-        bg2_red = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "bg2_green") == 0) {
-        bg2_green = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "bg2_blue") == 0) {
-        bg2_blue = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "button_red") == 0) {
-        button_red = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "button_green") == 0) {
-        button_green = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "button_blue") == 0) {
-        button_blue = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "gradient_red") == 0) {
-        gradient_red = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "gradient_green") == 0) {
-        gradient_green = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "gradient_blue") == 0) {
-        gradient_blue = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "border_red") == 0) {
-        border_red = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "border_green") == 0) {
-        border_green = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "border_blue") == 0) {
-        border_blue = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "gap_red") == 0) {
-        gap_red = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "gap_green") == 0) {
-        gap_green = std::atoi(value.c_str());
-    } else if (StringCaseCmp(name, "gap_blue") == 0) {
-        gap_blue = std::atoi(value.c_str());
-    } else {
-        LogPrintf("Unknown option: '{}'\n", name);
+	try {
+		if (StringCaseCmp(name, "window_scaling") == 0) {
+			window_scaling = std::stoul(value);
+			window_scaling = CLAMP(0, window_scaling, 5);
+		} else if (StringCaseCmp(name, "font_scaling") == 0) {
+			font_scaling = std::stoul(value);
+		} else if (StringCaseCmp(name, "font_theme") == 0) {
+			font_theme = std::stoul(value);
+		} else if (StringCaseCmp(name, "widget_theme") == 0) {
+			widget_theme = std::stoul(value);
+		} else if (StringCaseCmp(name, "box_theme") == 0) {
+			box_theme = std::stoul(value);
+		} else if (StringCaseCmp(name, "button_theme") == 0) {
+			button_theme = std::stoul(value);
+		} else if (StringCaseCmp(name, "single_pane") == 0) {
+			single_pane = std::stoul(value) ? true : false;
+		} else if (StringCaseCmp(name, "use_system_fonts") == 0) {
+			use_system_fonts = std::stoul(value) ? true : false;
+		} else if (StringCaseCmp(name, "color_scheme") == 0) {
+			color_scheme = std::stoul(value);
+		} else if (StringCaseCmp(name, "text_red") == 0) {
+			text_red = std::stoul(value);
+		} else if (StringCaseCmp(name, "text_green") == 0) {
+			text_green = std::stoul(value);
+		} else if (StringCaseCmp(name, "text_blue") == 0) {
+			text_blue = std::stoul(value);
+		} else if (StringCaseCmp(name, "text2_red") == 0) {
+			text2_red = std::stoul(value);
+		} else if (StringCaseCmp(name, "text2_green") == 0) {
+			text2_green = std::stoul(value);
+		} else if (StringCaseCmp(name, "text2_blue") == 0) {
+			text2_blue = std::stoul(value);
+		} else if (StringCaseCmp(name, "bg_red") == 0) {
+			bg_red = std::stoul(value);
+		} else if (StringCaseCmp(name, "bg_green") == 0) {
+			bg_green = std::stoul(value);
+		} else if (StringCaseCmp(name, "bg_blue") == 0) {
+			bg_blue = std::stoul(value);
+		} else if (StringCaseCmp(name, "bg2_red") == 0) {
+			bg2_red = std::stoul(value);
+		} else if (StringCaseCmp(name, "bg2_green") == 0) {
+			bg2_green = std::stoul(value);
+		} else if (StringCaseCmp(name, "bg2_blue") == 0) {
+			bg2_blue = std::stoul(value);
+		} else if (StringCaseCmp(name, "button_red") == 0) {
+			button_red = std::stoul(value);
+		} else if (StringCaseCmp(name, "button_green") == 0) {
+			button_green = std::stoul(value);
+		} else if (StringCaseCmp(name, "button_blue") == 0) {
+			button_blue = std::stoul(value);
+		} else if (StringCaseCmp(name, "gradient_red") == 0) {
+			gradient_red = std::stoul(value);
+		} else if (StringCaseCmp(name, "gradient_green") == 0) {
+			gradient_green = std::stoul(value);
+		} else if (StringCaseCmp(name, "gradient_blue") == 0) {
+			gradient_blue = std::stoul(value);
+		} else if (StringCaseCmp(name, "border_red") == 0) {
+			border_red = std::stoul(value);
+		} else if (StringCaseCmp(name, "border_green") == 0) {
+			border_green = std::stoul(value);
+		} else if (StringCaseCmp(name, "border_blue") == 0) {
+			border_blue = std::stoul(value);
+		} else if (StringCaseCmp(name, "gap_red") == 0) {
+			gap_red = std::stoul(value);
+		} else if (StringCaseCmp(name, "gap_green") == 0) {
+			gap_green = std::stoul(value);
+		} else if (StringCaseCmp(name, "gap_blue") == 0) {
+			gap_blue = std::stoul(value);
+		} else {
+			LogPrintf("Unknown option: '{}'\n", name);
+		}
+    } catch (std::invalid_argument &e) {
+        LogPrintf("Theme option parsing error!\n");
+    } catch (std::out_of_range &e) {
+        LogPrintf("Theme option parsing error!\n");
     }
 }
 
@@ -272,7 +278,7 @@ bool Theme_Options_Load(std::string filename) {
 }
 
 bool Theme_Options_Save(std::string filename) {
-    std::ofstream option_fp(filename, std::ios::out);
+    std::ofstream option_fp(filename);
 
     if (!option_fp.is_open()) {
         LogPrintf("Error: unable to create file: {}\n({})\n\n", filename,
