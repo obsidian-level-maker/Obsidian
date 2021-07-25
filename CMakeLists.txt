@@ -163,7 +163,7 @@ target_include_directories(obsidian PRIVATE source_files/ajpoly_src)
 target_include_directories(obsidian PRIVATE source_files/zdbsp_src)
 target_include_directories(obsidian PRIVATE source_files/lua_src)
 target_include_directories(obsidian PRIVATE source_files/slump_src)
-target_include_directories(obsidian PRIVATE source_files/whereami_src/src)
+target_include_directories(obsidian PRIVATE source_files/whereami_src)
 target_include_directories(obsidian PRIVATE source_files/zlib_src)
 
 if(MINGW OR WIN32)
