@@ -40,15 +40,15 @@ static void Parse_Option(std::string name, std::string value) {
     } else if (StringCaseCmp(name, "language") == 0) {
         t_language = value;
     } else if (StringCaseCmp(name, "create_backups") == 0) {
-        create_backups = std::atoi(value.c_str()) ? true : false;
+        create_backups = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "overwrite_warning") == 0) {
-        overwrite_warning = std::atoi(value.c_str()) ? true : false;
+        overwrite_warning = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "debug_messages") == 0) {
-        debug_messages = std::atoi(value.c_str()) ? true : false;
+        debug_messages = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "last_directory") == 0) {
         last_directory = value;
     } else if (StringCaseCmp(name, "filename_prefix") == 0) {
-        filename_prefix = std::atoi(value.c_str());
+        filename_prefix = StringToInt(value);
     } else if (StringCaseCmp(name, "custom_prefix") == 0) {
         custom_prefix = value;
     } else {
