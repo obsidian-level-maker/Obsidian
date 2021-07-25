@@ -19,6 +19,7 @@
 //----------------------------------------------------------------------
 
 #include "m_addons.h"
+#include <filesystem>
 
 #include "fmt/core.h"
 #include "hdr_fltk.h"
@@ -44,8 +45,9 @@ typedef struct {
 
 static std::vector<addon_info_t> all_addons;
 
-void VFS_AddFolder(const char *name) {
-    std::string path = fmt::format("{}/{}", install_dir, name);
+void VFS_AddFolder(std::string name) {
+    std::filesystem::path path = install_dir;
+    path /= name;
     std::string mount = fmt::format("/{}", name);
 
     if (!PHYSFS_mount(path.c_str(), mount.c_str(), 0)) {
@@ -57,20 +59,20 @@ void VFS_AddFolder(const char *name) {
     DebugPrintf("mounted folder '{}'\n", name);
 }
 
-bool VFS_AddArchive(std::string filename, bool options_file) {
-    LogPrintf(fmt::format("  using: {}\n", filename).c_str());
+bool VFS_AddArchive(std::filesystem::path filename, bool options_file) {
+    LogPrintf("  using: {}\n", filename);
 
-    if (!HasExtension(filename.c_str())) {
-        filename = ReplaceExtension(filename.c_str(), "pk3");
+    if (!filename.has_extension()) {
+        filename.replace_extension("pk3");
     }
 
     // when handling "bare" filenames from the command line (i.e. ones
     // containing no paths or drive spec) and the file does not exist in
     // the current dir, look for it in the standard addons/ folder.
-    if (options_file || (!FileExists(filename.c_str()) &&
-                         filename == fl_filename_name(filename.c_str()))) {
-        std::string new_name = fmt::format("{}/addons/{}", home_dir, filename);
-        if (!FileExists(new_name.c_str())) {
+    if (options_file || (!std::filesystem::exists(filename) &&
+                         filename.has_filename())) {
+        std::filesystem::path new_name = fmt::format("{}/addons/{}", home_dir, filename);
+        if (!std::filesystem::exists(new_name)) {
             new_name = fmt::format("{}/addons/{}", install_dir, filename);
         }
         filename = new_name;
@@ -81,14 +83,12 @@ bool VFS_AddArchive(std::string filename, bool options_file) {
             LogPrintf(
                 fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
                             filename,
-                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
-                    .c_str());
+                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())).c_str());
         } else {
             Main_FatalError(
                 fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
                             filename,
-                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
-                    .c_str());
+                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())).c_str());
         }
 
         return false;
@@ -164,23 +164,40 @@ void VFS_ScanForAddons() {
 
     all_addons.clear();
 
-    std::string dir_name = fmt::format("{}/addons", home_dir);
+    std::filesystem::path dir_name = install_dir;
+    dir_name /= "addons";
 
-    std::vector<std::string> list;
-    int result1 = ScanDir_MatchingFiles(dir_name.c_str(), "pk3", list);
+    std::vector<std::filesystem::path> list;
+    int result1 = 0;
     int result2 = 0;
 
-    if (std::string{home_dir}.compare(std::string{install_dir}) != 0) {
-        dir_name = fmt::format("{}/addons", install_dir);
+    for(auto& file: std::filesystem::directory_iterator(dir_name)) {
+        if (file.path().has_extension() && StringCaseCmp(file.path().extension(), "pk3")) {
+			result1 += 1;
+			list.push_back(file.path());
+		}
+	}
 
-        std::vector<std::string> list2;
+    if (!StringCaseCmp(home_dir, install_dir)) {
+        dir_name = home_dir;
+        dir_name /= "addons";
 
-        result2 = ScanDir_MatchingFiles(dir_name.c_str(), "pk3", list2);
+		if (!std::filesystem::exists(dir_name)) {
+			goto no_home_addon_dir;
+		}
 
-        list.insert(list.end(), list2.begin(), list2.end());
+        std::vector<std::filesystem::path> list2;
 
-        std::vector<std::string>().swap(list2);
+		for(auto& file: std::filesystem::directory_iterator(dir_name)) {
+			if (file.path().has_extension() && StringCaseCmp(file.path().extension(), "pk3")) {
+				result2 += 1;
+				list2.push_back(file.path());
+			}
+		}
+        std::vector<std::filesystem::path>().swap(list2);
     }
+
+	no_home_addon_dir:
 
     if ((result1 < 0) && (result2 < 0)) {
         LogPrintf("FAILED -- no addon directory found.\n\n");
@@ -190,7 +207,7 @@ void VFS_ScanForAddons() {
     for (unsigned int i = 0; i < list.size(); i++) {
         addon_info_t info;
 
-        info.name = list[i].c_str();
+        info.name = list[i];
 
         info.enabled = false;
 
@@ -202,9 +219,7 @@ void VFS_ScanForAddons() {
         // DEBUG
         // info.enabled = true;
 
-        LogPrintf(fmt::format("  found: {}{}\n", info.name,
-                              info.enabled ? " (Enabled)" : " (Disabled)")
-                      .c_str());
+        LogPrintf("  found: {}{}\n", info.name, info.enabled ? " (Enabled)" : " (Disabled)");
 
         all_addons.push_back(info);
 

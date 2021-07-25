@@ -1,10 +1,10 @@
-# C++14 feature support detection
+# C++17 feature support detection
 
 include(CheckCXXSourceCompiles)
 include(CheckCXXCompilerFlag)
 
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 11)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 message(STATUS "CXX_STANDARD: ${CMAKE_CXX_STANDARD}")
 

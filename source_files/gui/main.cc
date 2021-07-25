@@ -285,7 +285,8 @@ void Determine_ConfigFile() {
 
         config_file = arg_list[conf_arg + 1];
     } else {
-        config_file = fmt::format("{}/{}", home_dir, CONFIG_FILENAME);
+        config_file /= home_dir;
+        config_file /= CONFIG_FILENAME;
     }
     
 }
@@ -301,7 +302,8 @@ void Determine_OptionsFile() {
 
         options_file = arg_list[optf_arg + 1];
     } else {
-        options_file = fmt::format("{}/{}", home_dir, OPTIONS_FILENAME);
+        options_file /= home_dir;
+        options_file /= OPTIONS_FILENAME;
     }
 }
 
@@ -316,7 +318,8 @@ void Determine_ThemeFile() {
 
         theme_file = arg_list[themef_arg + 1];
     } else {
-        theme_file = fmt::format("{}/{}", home_dir, THEME_FILENAME);
+        theme_file /= home_dir;
+        theme_file /= THEME_FILENAME;
     }
 }
 

@@ -25,6 +25,7 @@
 //----------------------------------------------------------------------
 
 #include "m_trans.h"
+#include <filesystem>
 
 #include "fmt/format.h"
 #include "hdr_lua.h"
@@ -1026,27 +1027,28 @@ void Trans_Init() {
 
     /* read the list of languages */
 
-    std::string path = fmt::format("{}/language/LANGS.txt", install_dir);
+    std::filesystem::path path = install_dir;
+    path /= "language/LANGS.txt";
 
-    FILE *fp = fopen(path.c_str(), "rb");
-
-    if (!fp) {
+    if (!std::filesystem::exists(path)) {
         LogPrintf("WARNING: missing language/LANGS.txt file\n");
         return;
     }
 
-    LogPrintf(fmt::format("Loading language list: {}\n", path).c_str());
+	std::ifstream trans_fp(path);
+	
+	if (!trans_fp.is_open()) {
+		LogPrintf("WARNING: Error opening LANGS.txt!\n");
+		return;
+	}
 
-    // simple line-by-line parser
-    static char buffer[MSG_BUF_LEN];
+    LogPrintf("Loading language list: {}\n", path);
 
-    while (fgets(buffer, sizeof(buffer), fp) != NULL) {
-        Trans_ParseLangLine(buffer);
-    }
+    for (std::string line; std::getline(trans_fp, line); ) {
+        Trans_ParseLangLine((char *)line.c_str());
+    }	
 
     LogPrintf("DONE.\n\n");
-
-    fclose(fp);
 }
 
 void Trans_SetLanguage() {

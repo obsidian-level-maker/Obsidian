@@ -91,16 +91,18 @@ static bool Cookie_ParseLine(std::string buf) {
         return true;
 	}
 
+	while (std::find(buf.begin(), buf.end(), ' ') != buf.end()) {
+		buf.erase(std::find(buf.begin(), buf.end(), ' '));
+	}
+
     if (!(isalpha(buf.front()) || buf.front() == '@')) {
         LogPrintf("Weird config line: [{}]\n", buf);
         return false;
     }
-
+    
+    pos = buf.find('=', 0); // Fix pos after whitespace deletion
     std::string name = buf.substr(0, pos);
     std::string value = buf.substr(pos + 1);
-
-    name = name.erase(name.find(' '));
-    value = value.erase(value.find(' '));
 
     if (name.empty() || value.empty()) {
         LogPrintf("Name or value missing!\n");
