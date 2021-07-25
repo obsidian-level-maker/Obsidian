@@ -1,4 +1,4 @@
-PREFABS.Cage_secret_trap_shootable_eye =
+--[[PREFABS.Cage_secret_trap_shootable_eye =
 {
   file   = "cage/mogwaltz_trap_eye.wad",
   map    = "MAP01",
@@ -28,4 +28,4 @@ PREFABS.Cage_secret_trap_shootable_eye_pair =
   map = "MAP02",
 
   prob = 18,
-}
+}]]
