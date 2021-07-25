@@ -21,6 +21,7 @@
 #include "lib_util.h"
 #include <algorithm>
 #include <cctype>
+#include <charconv>
 
 #include "headers.h"
 
@@ -87,6 +88,20 @@ void StringReplaceChar(std::string *str, char old_ch, char new_ch) {
             *it = new_ch;
         }
     }
+}
+
+std::string NumToString(int value) {
+	std::string num_string;
+	num_string.resize(50, ' ');
+	static_cast<void>(std::to_chars(num_string.data(), num_string.data() + num_string.size(), value));
+	return num_string;
+}
+
+std::string NumToString(double value) {
+	std::string num_string;
+	num_string.resize(50, ' ');
+	static_cast<void>(std::to_chars(num_string.data(), num_string.data() + num_string.size(), value));
+	return num_string;
 }
 
 char *mem_gets(char *buf, int size, const char **str_ptr) {

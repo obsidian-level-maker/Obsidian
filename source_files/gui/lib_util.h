@@ -35,6 +35,8 @@ std::string StringUpper(std::string_view name);
 
 void StringRemoveCRLF(std::string *str);
 void StringReplaceChar(std::string *str, char old_ch, char new_ch);
+std::string NumToString(int value);
+std::string NumToString(double value);
 
 char *mem_gets(char *buf, int size, const char **str_ptr);
 
