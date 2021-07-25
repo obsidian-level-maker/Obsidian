@@ -104,6 +104,18 @@ std::string NumToString(double value) {
 	return num_string;
 }
 
+int StringToInt(std::string value) {
+	int actual_number;
+	static_cast<void>(std::from_chars(value.data(), value.data() + value.size(), actual_number));
+	return actual_number;
+}
+
+double StringToDouble(std::string value) {
+	double actual_number;
+	static_cast<void>(std::from_chars(value.data(), value.data() + value.size(), actual_number));
+	return actual_number;	
+}
+
 char *mem_gets(char *buf, int size, const char **str_ptr) {
     // This is like fgets() but reads lines from a string.
     // The pointer at 'str_ptr' will point to the next line
