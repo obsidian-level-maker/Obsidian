@@ -897,7 +897,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         if (!UDMF_mode) {
             if (!build_nodes) {
                 LogPrintf("Skipping nodes per user selection...\n");
-                FileRename(filename, out_name);
+                std::filesystem::rename(filename, out_name);
                 return true;
             }
         }
@@ -916,7 +916,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
     } else if (current_engine == "zdoom") {
         if (!build_nodes) {
             LogPrintf("Skipping nodes per user selection...\n");
-            FileRename(filename, out_name);
+            std::filesystem::rename(filename, out_name);
             return true;
         }
         options.build_nodes = true;
@@ -938,7 +938,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         return false;
     }
 
-    FileRename(filename, out_name);
+    std::filesystem::rename(filename, out_name);
 
     return true;
 }
@@ -947,7 +947,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
 
 class doom_game_interface_c : public game_interface_c {
    private:
-    std::string filename;
+    std::filesystem::path filename;
 
    public:
     doom_game_interface_c() = default;
@@ -1035,18 +1035,16 @@ bool doom_game_interface_c::Start(const char *preset) {
 }
 
 bool doom_game_interface_c::BuildNodes() {
-    std::string temp_name = ReplaceExtension(filename.c_str(), "tmp");
+    std::filesystem::path temp_name{filename};
+    temp_name.replace_extension("tmp");
 
-    FileDelete(temp_name.c_str());
-
-    if (!FileRename(filename.c_str(), temp_name.c_str())) {
-        LogPrintf("WARNING: could not rename file to .TMP!\n");
-        return false;
-    }
+    std::filesystem::remove(temp_name);
+    std::filesystem::copy_file(filename, temp_name);
+    std::filesystem::remove(filename);
 
     bool result = DM_BuildNodes(temp_name.c_str(), filename.c_str());
 
-    FileDelete(temp_name.c_str());
+    std::filesystem::remove(temp_name);
 
     return result;
 }
@@ -1064,7 +1062,7 @@ bool doom_game_interface_c::Finish(bool build_ok) {
 
     if (!build_ok) {
         // remove the WAD if an error occurred
-        FileDelete(filename.c_str());
+        std::filesystem::remove(filename);
     } else {
         Recent_AddFile(RECG_Output, filename.c_str());
     }

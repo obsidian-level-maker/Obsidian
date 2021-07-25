@@ -71,7 +71,9 @@ static void Cookie_SetValue(std::string name, std::string value) {
             } catch (std::invalid_argument &e) {
                 LogPrintf("Invalid argument. Will generate new seed.\n");
             } catch (std::out_of_range &e) {
-                LogPrintf("Resulting number would be out of range. Will generate new seed.\n");
+                LogPrintf(
+                    "Resulting number would be out of range. Will generate new "
+                    "seed.\n");
             }
         }
 
@@ -82,25 +84,24 @@ static void Cookie_SetValue(std::string name, std::string value) {
 }
 
 static bool Cookie_ParseLine(std::string buf) {
-    
     std::string::size_type pos = 0;
 
     pos = buf.find('=', 0);
     if (pos == std::string::npos) {
-		// Skip blank lines, comments, etc
+        // Skip blank lines, comments, etc
         return true;
-	}
+    }
 
-	while (std::find(buf.begin(), buf.end(), ' ') != buf.end()) {
-		buf.erase(std::find(buf.begin(), buf.end(), ' '));
-	}
+    while (std::find(buf.begin(), buf.end(), ' ') != buf.end()) {
+        buf.erase(std::find(buf.begin(), buf.end(), ' '));
+    }
 
     if (!(isalpha(buf.front()) || buf.front() == '@')) {
         LogPrintf("Weird config line: [{}]\n", buf);
         return false;
     }
-    
-    pos = buf.find('=', 0); // Fix pos after whitespace deletion
+
+    pos = buf.find('=', 0);  // Fix pos after whitespace deletion
     std::string name = buf.substr(0, pos);
     std::string value = buf.substr(pos + 1);
 
@@ -132,11 +133,11 @@ bool Cookie_Load(std::string filename) {
 
     int error_count = 0;
 
-    for (std::string line; std::getline(cookie_fp, line); ) {
+    for (std::string line; std::getline(cookie_fp, line);) {
         if (!Cookie_ParseLine(line)) {
             error_count += 1;
         }
-    }	
+    }
 
     if (error_count > 0) {
         LogPrintf("DONE (found {} parse errors)\n\n", error_count);
@@ -370,10 +371,10 @@ class RecentFiles_c {
             return false;
         }
 
-        const std::string &name = filenames[index];
+        std::string_view name = filenames[index];
 
         if (for_menu) {
-            buffer = fmt::format("{:<.32}", fl_filename_name(name.c_str()));
+            buffer = fmt::format("{:<.32}", fl_filename_name(name.data()));
         } else {
             buffer = name;
             buffer[FL_PATH_MAX - 1] = '\0';
@@ -440,8 +441,7 @@ void Recent_RemoveFile(int group, std::string filename) {
     }
 }
 
-bool Recent_GetName(int group, int index, std::string name_buf,
-                    bool for_menu) {
+bool Recent_GetName(int group, int index, std::string name_buf, bool for_menu) {
     SYS_ASSERT(0 <= group && group < RECG_NUM_GROUPS);
     SYS_ASSERT(index >= 0);
 

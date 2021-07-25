@@ -5484,6 +5484,7 @@ namelib.NAMES =
         ["Craneo Edition"] = 20,
         ["Tapwave Exclusive"] = 20,
         ["EpicTyphlosion A OK"] = 20,
+        ["Phytolizer Tweaked"] = 20,
 
         -- describe the place
         ["A God-forsaken Place"] = 20,

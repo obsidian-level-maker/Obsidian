@@ -338,7 +338,7 @@ class wolf_game_interface_c : public game_interface_c {
     void Property(const char *key, const char *value);
 
    private:
-    bool Rename();
+    void Rename();
     void Tidy();
 };
 
@@ -402,29 +402,31 @@ bool wolf_game_interface_c::Finish(bool build_ok) {
         return false;
     }
 
-    if (write_errors_seen > 0 || !Rename()) {
+    if (write_errors_seen > 0) {
         Main_ProgStatus(_("Error (write file)"));
         Tidy();
         return false;
     }
 
+    Rename();
+
     return true;  // OK!
 }
 
-bool wolf_game_interface_c::Rename() {
-    std::string gamemaps = fmt::format("GAMEMAPS.{}", file_ext);
-    std::string maphead = fmt::format("MAPHEAD.{}", file_ext);
+void wolf_game_interface_c::Rename() {
+    std::filesystem::path gamemaps = fmt::format("GAMEMAPS.{}", file_ext);
+    std::filesystem::path maphead = fmt::format("MAPHEAD.{}", file_ext);
 
-    FileDelete(gamemaps.c_str());
-    FileDelete(maphead.c_str());
+    std::filesystem::remove(gamemaps);
+    std::filesystem::remove(maphead);
 
-    return FileRename(TEMP_GAMEFILE, gamemaps.c_str()) &&
-           FileRename(TEMP_HEADFILE, maphead.c_str());
+    std::filesystem::rename(TEMP_GAMEFILE, gamemaps);
+    std::filesystem::rename(TEMP_HEADFILE, maphead);
 }
 
 void wolf_game_interface_c::Tidy() {
-    FileDelete(TEMP_GAMEFILE);
-    FileDelete(TEMP_HEADFILE);
+    std::filesystem::remove(TEMP_GAMEFILE);
+    std::filesystem::remove(TEMP_HEADFILE);
 }
 
 void wolf_game_interface_c::BeginLevel() {

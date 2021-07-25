@@ -1266,7 +1266,7 @@ int Q1_add_tex_wad(lua_State *L) {
 
 class quake1_game_interface_c : public game_interface_c {
    private:
-    std::string filename;
+    std::filesystem::path filename;
 
    public:
     quake1_game_interface_c() = default;
@@ -1335,7 +1335,7 @@ bool quake1_game_interface_c::Finish(bool build_ok) {
 
     // remove the file if an error occurred
     if (!build_ok) {
-        FileDelete(filename.c_str());
+        std::filesystem::remove(filename);
     } else {
         Recent_AddFile(RECG_Output, filename.c_str());
     }

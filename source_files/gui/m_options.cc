@@ -57,25 +57,24 @@ static void Parse_Option(std::string name, std::string value) {
 }
 
 static bool Options_ParseLine(std::string buf) {
-
     std::string::size_type pos = 0;
 
     pos = buf.find('=', 0);
     if (pos == std::string::npos) {
-		// Skip blank lines, comments, etc
+        // Skip blank lines, comments, etc
         return true;
-	}
+    }
 
-	while (std::find(buf.begin(), buf.end(), ' ') != buf.end()) {
-		buf.erase(std::find(buf.begin(), buf.end(), ' '));
-	}
-	
+    while (std::find(buf.begin(), buf.end(), ' ') != buf.end()) {
+        buf.erase(std::find(buf.begin(), buf.end(), ' '));
+    }
+
     if (!isalpha(buf.front())) {
         LogPrintf("Weird option line: [{}]\n", buf);
         return false;
     }
 
-    pos = buf.find('=', 0); // Fix pos after whitespace deletion
+    pos = buf.find('=', 0);  // Fix pos after whitespace deletion
     std::string name = buf.substr(0, pos);
     std::string value = buf.substr(pos + 1);
 
@@ -100,11 +99,11 @@ bool Options_Load(std::string filename) {
 
     int error_count = 0;
 
-    for (std::string line; std::getline(option_fp, line); ) {
+    for (std::string line; std::getline(option_fp, line);) {
         if (!Options_ParseLine(line)) {
             error_count += 1;
         }
-    }	
+    }
 
     if (error_count > 0) {
         LogPrintf("DONE (found {} parse errors)\n\n", error_count);
@@ -142,7 +141,7 @@ bool Options_Save(std::string filename) {
     option_fp << "custom_prefix = " << custom_prefix << "\n";
 
     if (!last_directory.empty()) {
-        option_fp << "\n"; 
+        option_fp << "\n";
         option_fp << "last_directory = " << last_directory << "\n";
     }
 

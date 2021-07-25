@@ -1035,18 +1035,18 @@ void Trans_Init() {
         return;
     }
 
-	std::ifstream trans_fp(path);
-	
-	if (!trans_fp.is_open()) {
-		LogPrintf("WARNING: Error opening LANGS.txt!\n");
-		return;
-	}
+    std::ifstream trans_fp(path);
+
+    if (!trans_fp.is_open()) {
+        LogPrintf("WARNING: Error opening LANGS.txt!\n");
+        return;
+    }
 
     LogPrintf("Loading language list: {}\n", path);
 
-    for (std::string line; std::getline(trans_fp, line); ) {
+    for (std::string line; std::getline(trans_fp, line);) {
         Trans_ParseLangLine((char *)line.c_str());
-    }	
+    }
 
     LogPrintf("DONE.\n\n");
 }
@@ -1075,7 +1075,7 @@ void Trans_SetLanguage() {
     // see if the translation file exists
     std::string path = fmt::format("{}/language/{}.po", install_dir, langcode);
 
-    if (!FileExists(path.c_str())) {
+    if (!std::filesystem::exists(path)) {
         // if language has a territory field (like zh_TW or en_AU) then
         // try again with the plain language code.
 
@@ -1125,7 +1125,7 @@ std::string Trans_GetAvailLanguage(int idx) {
 //----------------------------------------------------------------------
 
 // debugging crud
-std::string mucked_up_string(const std::string &s) {
+std::string mucked_up_string(std::string_view s) {
     std::string buffer;
     buffer.resize(s.size());
     int p, q;

@@ -190,8 +190,8 @@ void Determine_WorkingPath(const char *argv0) {
     home_dir = GetExecutablePath(argv0);
 
 #else
-	home_dir = std::getenv("HOME");
-	home_dir /= ".config/obsidian";
+    home_dir = std::getenv("HOME");
+    home_dir /= ".config/obsidian";
 
     if (!home_dir.is_absolute()) {
         Main_FatalError("Unable to find $HOME directory!\n");
@@ -207,7 +207,7 @@ void Determine_WorkingPath(const char *argv0) {
     }
 }
 
-static bool Verify_InstallDir(const char *path) {
+static bool Verify_InstallDir(std::string_view path) {
     std::string filename = fmt::format("{}/scripts/oblige.lua", path);
 
 #if 0  // DEBUG
@@ -215,9 +215,7 @@ static bool Verify_InstallDir(const char *path) {
 	fprintf(stderr, "  using file: [%s]\n\n", filename);
 #endif
 
-    bool exists = FileExists(filename.c_str());
-
-    return exists;
+    return std::filesystem::exists(filename);
 }
 
 void Determine_InstallDir(const char *argv0) {
@@ -288,7 +286,6 @@ void Determine_ConfigFile() {
         config_file /= home_dir;
         config_file /= CONFIG_FILENAME;
     }
-    
 }
 
 void Determine_OptionsFile() {
@@ -350,18 +347,16 @@ void Determine_LoggingFile() {
     }
 }
 
-bool Main_BackupFile(const char *filename, const char *ext) {
-    if (FileExists(filename)) {
-        std::string backup_name = ReplaceExtension(filename, ext);
+bool Main_BackupFile(const std::filesystem::path &filename,
+                     const std::filesystem::path &ext) {
+    if (std::filesystem::exists(filename)) {
+        std::filesystem::path backup_name = filename;
+        backup_name.replace_extension(ext);
 
         LogPrintf("Backing up existing file to: {}\n", backup_name.c_str());
 
-        FileDelete(backup_name.c_str());
-
-        if (!FileRename(filename, backup_name.c_str())) {
-            LogPrintf("WARNING: unable to rename file!\n");
-            return false;
-        }
+        std::filesystem::remove(backup_name);
+        std::filesystem::rename(filename, backup_name);
     }
 
     return true;
@@ -1041,7 +1036,8 @@ restart:;
         // but we can load settings from a explicitly specified file...
         if (!load_file.empty()) {
             if (!Cookie_Load(load_file)) {
-                Main_FatalError(_("No such config file: %s\n"), load_file);
+                Main_FatalError(_("No such config file: %s\n"),
+                                load_file.c_str());
             }
         }
 
@@ -1096,7 +1092,7 @@ restart:;
 
     if (!load_file.empty()) {
         if (!Cookie_Load(load_file)) {
-            Main_FatalError(_("No such config file: %s\n"), load_file);
+            Main_FatalError(_("No such config file: %s\n"), load_file.c_str());
         }
     }
 

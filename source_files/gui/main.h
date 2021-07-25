@@ -140,7 +140,8 @@ __attribute__((noreturn))
 void Main_FatalError(const char *msg, ...);
 
 void Main_ProgStatus(const char *msg, ...);
-bool Main_BackupFile(const char *filename, const char *ext);
+bool Main_BackupFile(const std::filesystem::path &filename,
+                     const std::filesystem::path &ext);
 void Main_Ticker();
 bool load_internal_font(const char *fontpath, int fontnum,
                         const char *fontname);

@@ -1199,7 +1199,7 @@ static void DP_CreateRTLights(const char *entry_in_pak) {
 
 class quake3_game_interface_c : public game_interface_c {
    private:
-    std::string filename;
+    std::filesystem::path filename;
 
    public:
     quake3_game_interface_c() : filename(NULL) {}
@@ -1271,7 +1271,7 @@ bool quake3_game_interface_c::Finish(bool build_ok) {
 
     // remove the file if an error occurred
     if (!build_ok) {
-        FileDelete(filename.c_str());
+        std::filesystem::remove(filename);
     } else {
         Recent_AddFile(RECG_Output, filename.c_str());
     }

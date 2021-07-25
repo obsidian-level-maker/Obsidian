@@ -30,22 +30,22 @@
 #include <unistd.h>  // usleep()
 #endif
 
-int StringCaseCmp(const std::string &a, const std::string &b) {
-    return !StringCaseEquals(a, b);
+int StringCaseCmp(std::string_view a, std::string_view b) {
+    return StringCaseEquals(a, b) ? 0 : a < b ? -1 : 1;
 }
 
-int StringCaseCmpPartial(const std::string &a, const std::string &b) {
+int StringCaseCmpPartial(std::string_view a, std::string_view b) {
     return !StringCaseEqualsPartial(a, b);
 }
 
-bool StringCaseEquals(const std::string &a, const std::string &b) {
+bool StringCaseEquals(std::string_view a, std::string_view b) {
     return a.size() == b.size() &&
            std::equal(a.begin(), a.end(), b.begin(), [](char a, char b) {
                return std::tolower(a) == std::tolower(b);
            });
 }
 
-bool StringCaseEqualsPartial(const std::string &a, const std::string &b) {
+bool StringCaseEqualsPartial(std::string_view a, std::string_view b) {
     return a.size() >= b.size() &&
            std::equal(a.begin(), a.begin() + b.size(), b.begin(),
                       [](char a, char b) {
@@ -53,7 +53,7 @@ bool StringCaseEqualsPartial(const std::string &a, const std::string &b) {
                       });
 }
 
-std::string StringUpper(const std::string &name) {
+std::string StringUpper(std::string_view name) {
     std::string copy;
     copy.reserve(name.size());
     std::transform(name.begin(), name.end(), std::back_inserter(copy),
