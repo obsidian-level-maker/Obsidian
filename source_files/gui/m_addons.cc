@@ -19,6 +19,7 @@
 //----------------------------------------------------------------------
 
 #include "m_addons.h"
+#include <filesystem>
 
 #include "fmt/core.h"
 #include "hdr_fltk.h"
@@ -44,8 +45,9 @@ typedef struct {
 
 static std::vector<addon_info_t> all_addons;
 
-void VFS_AddFolder(const char *name) {
-    std::string path = fmt::format("{}/{}", install_dir, name);
+void VFS_AddFolder(std::string name) {
+    std::filesystem::path path = install_dir;
+    path /= name;
     std::string mount = fmt::format("/{}", name);
 
     if (!PHYSFS_mount(path.c_str(), mount.c_str(), 0)) {
@@ -57,20 +59,20 @@ void VFS_AddFolder(const char *name) {
     DebugPrintf("mounted folder '{}'\n", name);
 }
 
-bool VFS_AddArchive(std::string filename, bool options_file) {
-    LogPrintf(fmt::format("  using: {}\n", filename).c_str());
+bool VFS_AddArchive(std::filesystem::path filename, bool options_file) {
+    LogPrintf("  using: {}\n", filename);
 
-    if (!HasExtension(filename.c_str())) {
-        filename = ReplaceExtension(filename.c_str(), "pk3");
+    if (!filename.has_extension()) {
+        filename.replace_extension("pk3");
     }
 
     // when handling "bare" filenames from the command line (i.e. ones
     // containing no paths or drive spec) and the file does not exist in
     // the current dir, look for it in the standard addons/ folder.
-    if (options_file || (!FileExists(filename.c_str()) &&
-                         filename == fl_filename_name(filename.c_str()))) {
-        std::string new_name = fmt::format("{}/addons/{}", home_dir, filename);
-        if (!FileExists(new_name.c_str())) {
+    if (options_file || (!std::filesystem::exists(filename) &&
+                         filename.has_filename())) {
+        std::filesystem::path new_name = fmt::format("{}/addons/{}", home_dir, filename);
+        if (!std::filesystem::exists(new_name)) {
             new_name = fmt::format("{}/addons/{}", install_dir, filename);
         }
         filename = new_name;
@@ -81,14 +83,12 @@ bool VFS_AddArchive(std::string filename, bool options_file) {
             LogPrintf(
                 fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
                             filename,
-                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
-                    .c_str());
+                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())).c_str());
         } else {
             Main_FatalError(
                 fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
                             filename,
-                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
-                    .c_str());
+                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode())).c_str());
         }
 
         return false;
