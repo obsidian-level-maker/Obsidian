@@ -46,9 +46,9 @@ static FILE *wad_R_fp;
 static raw_wad_header_t wad_R_header;
 static raw_wad_lump_t *wad_R_dir;
 
-bool WAD_OpenRead(const char *filename) {
+bool WAD_OpenRead(std::filesystem::path filename) {
 #ifdef HAVE_PHYSFS
-    wad_R_fp = PHYSFS_openRead(filename);
+    wad_R_fp = PHYSFS_openRead(filename.c_str());
 #else
     wad_R_fp = fopen(filename, "rb");
 #endif

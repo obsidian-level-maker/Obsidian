@@ -49,7 +49,7 @@ static std::vector<std::string> *conf_line_buffer;
 
 static std::string import_dir;
 
-void Script_Load(std::string script_name);
+void Script_Load(std::filesystem::path script_name);
 
 static bool is_dir(const char *temp_name) {
     PHYSFS_Stat stat;
@@ -184,7 +184,7 @@ int gui_config_line(lua_State *L) {
 int gui_mkdir(lua_State *L) {
     const char *name = luaL_checkstring(L, 1);
 
-    bool result = FileMakeDir(name);
+    bool result = std::filesystem::create_directory(name);
 
     lua_pushboolean(L, result ? 1 : 0);
     return 1;
@@ -256,9 +256,10 @@ int gui_get_install_dir(lua_State *L) {
     return 1;
 }
 
-static bool scan_dir_process_name(const char *name, const char *parent,
-                                  const char *match) {
-    if (name[0] == '.') {
+static bool scan_dir_process_name(const std::filesystem::path &name,
+                                  const std::filesystem::path &parent,
+                                  std::string_view match) {
+    if (name.native()[0] == '.') {
         return false;
     }
 
@@ -267,10 +268,10 @@ static bool scan_dir_process_name(const char *name, const char *parent,
     // check if it is a directory
     // [ generally skip directories, unless match is "DIRS" ]
 
-    std::string temp_name = fmt::format("{}/{}", parent, name);
-    bool is_it_dir = is_dir(temp_name.c_str());
+    std::filesystem::path temp_name = parent / name;
+    bool is_it_dir = std::filesystem::is_directory(temp_name);
 
-    if (strcmp(match, "DIRS") == 0) {
+    if (match == "DIRS") {
         return is_it_dir;
     }
 
@@ -297,10 +298,11 @@ static bool scan_dir_process_name(const char *name, const char *parent,
     PHYSFS_close(fp);
 
     // lastly, check match
-    if (strcmp(match, "*") == 0) {
+    if (match == "*") {
         return true;
     } else if (match[0] == '*' && match[1] == '.' && isalnum(match[2])) {
-        return MatchExtension(name, match + 2);
+        return name.extension().native() ==
+               "." + std::string{match.begin() + 2, match.end()};
     }
 
     Main_FatalError("gui.scan_directory: unsupported match expression: %s\n",
@@ -1507,15 +1509,15 @@ static int my_loadfile(lua_State *L, const char *filename) {
     return status;
 }
 
-void Script_Load(std::string script_name) {
+void Script_Load(std::filesystem::path script_name) {
     SYS_ASSERT(!import_dir.empty());
 
     // add extension if missing
-    if (!HasExtension(script_name.c_str())) {
-        script_name = ReplaceExtension(script_name.c_str(), "lua");
+    if (script_name.extension().empty()) {
+        script_name.replace_extension("lua");
     }
 
-    std::string filename = fmt::format("{}/{}", import_dir, script_name);
+    std::string filename = std::filesystem::path{import_dir} / script_name;
 
     DebugPrintf(fmt::format("  loading script: '{}'\n", filename).c_str());
 

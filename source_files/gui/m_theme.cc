@@ -212,25 +212,24 @@ static void Parse_Theme_Option(std::string name, std::string value) {
 }
 
 static bool Theme_Options_ParseLine(std::string buf) {
-
     std::string::size_type pos = 0;
 
     pos = buf.find('=', 0);
     if (pos == std::string::npos) {
-		// Skip blank lines, comments, etc
+        // Skip blank lines, comments, etc
         return true;
-	}
+    }
 
-	while (std::find(buf.begin(), buf.end(), ' ') != buf.end()) {
-		buf.erase(std::find(buf.begin(), buf.end(), ' '));
-	}
+    while (std::find(buf.begin(), buf.end(), ' ') != buf.end()) {
+        buf.erase(std::find(buf.begin(), buf.end(), ' '));
+    }
 
     if (!(isalpha(buf.front()) || buf.front() == '@')) {
         LogPrintf("Weird theme option line: [{}]\n", buf);
         return false;
     }
-    
-    pos = buf.find('=', 0); // Fix pos after whitespace deletion
+
+    pos = buf.find('=', 0);  // Fix pos after whitespace deletion
     std::string name = buf.substr(0, pos);
     std::string value = buf.substr(pos + 1);
 
@@ -255,11 +254,11 @@ bool Theme_Options_Load(std::string filename) {
 
     int error_count = 0;
 
-    for (std::string line; std::getline(option_fp, line); ) {
+    for (std::string line; std::getline(option_fp, line);) {
         if (!Theme_Options_ParseLine(line)) {
             error_count += 1;
         }
-    }	
+    }
 
     if (error_count > 0) {
         LogPrintf("DONE (found {} parse errors)\n\n", error_count);

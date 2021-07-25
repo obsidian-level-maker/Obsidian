@@ -267,29 +267,16 @@ std::string DLG_OutputFilename(const char *ext, const char *preset) {
 
     static std::string filename;
 
-    const char *src_name = chooser.filename();
+    std::filesystem::path src_name = chooser.filename();
 
-#ifdef WIN32
-    // workaround for accented characters in a username
-    // [ real solution is yet to be determined..... ]
+    std::filesystem::path dir_name = src_name.parent_path();
 
-    fl_utf8toa(src_name, strlen(src_name), filename, sizeof(filename));
-#else
-    filename = fmt::format("{}", src_name);
-#endif
-
-    // remember the directory for next time
-    static char dir_name[FL_PATH_MAX];
-
-    FilenameGetPath(dir_name, sizeof(dir_name), src_name);
-
-    if (strlen(dir_name) > 0) {
+    if (!dir_name.empty()) {
         last_directory = dir_name;
     }
 
     // add extension if missing
-    char *pos = (char *)fl_filename_ext(filename.c_str());
-    if (!*pos) {
+    if (std::filesystem::path{filename}.extension().empty()) {
         filename += ".";
         filename += ext;
 
@@ -299,7 +286,7 @@ std::string DLG_OutputFilename(const char *ext, const char *preset) {
             fclose(fp);
             if (!fl_choice("%s", fl_cancel, fl_ok, NULL,
                            Fl_Native_File_Chooser::file_exists_message)) {
-                return NULL;  // cancelled
+                return "";  // cancelled
             }
         }
     }
@@ -611,11 +598,9 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
     }
 
     // add an extension if missing
-    static std::string filename;
+    std::filesystem::path filename = chooser.filename();
 
-    filename = chooser.filename();
-
-    if (!HasExtension(filename.c_str())) {
+    if (filename.extension().empty()) {
         filename += ".txt";
     }
 

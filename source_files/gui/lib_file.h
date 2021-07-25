@@ -29,61 +29,10 @@
 #include "headers.h"
 #include "sys_type.h"
 
-// filename functions
-bool HasExtension(const std::filesystem::path &filename);
-bool MatchExtension(const char *filename, const char *ext);
-std::string ReplaceExtension(const char *filename, const char *ext);
-const char *FindBaseName(const char *filename);
+std::string FileLoad(const std::filesystem::path &filename);
 
-bool FilenameIsBare(const char *filename);
-void FilenameGetPath(char *dest, size_t maxsize, const char *filename);
-
-// file utilities
-bool FileCopy(const char *src_name, const char *dest_name);
-bool FileRename(const char *old_name, const char *new_name);
-bool FileDelete(const char *filename);
-bool FileChangeDir(const char *dir_name);
-bool FileMakeDir(const char *dir_name);
-
-byte *FileLoad(const char *filename, int *length);
-void FileFree(const byte *mem);
-
-std::string FileFindInPath(const char *paths, const char *base_name);
-
-// miscellanous
+// miscellaneous
 std::filesystem::path GetExecutablePath();
-
-//------------------------------------------------------------------------
-
-// directory functions
-bool PathIsDirectory(const char *path);
-
-typedef enum {
-    SCAN_F_IsDir = (1 << 0),
-    SCAN_F_Hidden = (1 << 1),
-    SCAN_F_ReadOnly = (1 << 2),
-} scan_flags_e;
-
-typedef enum {
-    SCAN_ERROR = -1,  // general catch-all
-
-    SCAN_ERR_NoExist = -2,  // could not find given path
-    SCAN_ERR_NotDir = -3,   // path was not a directory
-} scan_error_e;
-
-using directory_iter_f = void (*)(std::string_view name, int flags, void *priv_dat);
-
-// scan the directory with the given path and call the given
-// function (passing the private data pointer to it) for each
-// entry in the directory.  Returns the total number of entries,
-// or a negative value on error (SCAN_ERR_xx value).
-int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat);
-
-// scan directory and populate the list with all non-hidden files which
-// have the given extension.  the list is sorted (case-insensitively).
-// result is same as ScanDirectory().
-int ScanDir_MatchingFiles(const char *path, const char *ext,
-                          std::vector<std::string> &list);
 
 #endif /* __LIB_FILE_H__ */
 

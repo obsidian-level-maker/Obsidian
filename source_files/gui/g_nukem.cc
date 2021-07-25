@@ -404,7 +404,7 @@ void NK_WriteLogos() {
 
 class nukem_game_interface_c : public game_interface_c {
    private:
-    std::string filename;
+    std::filesystem::path filename;
 
    public:
     nukem_game_interface_c() : filename(NULL) {}
@@ -452,7 +452,7 @@ bool nukem_game_interface_c::Finish(bool build_ok) {
 
     // remove the file if an error occurred
     if (!build_ok) {
-        FileDelete(filename.c_str());
+        std::filesystem::remove(filename);
     } else {
         Recent_AddFile(RECG_Output, filename.c_str());
     }
