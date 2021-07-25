@@ -368,10 +368,10 @@ class RecentFiles_c {
             return false;
         }
 
-        const std::string &name = filenames[index];
+        std::string_view name = filenames[index];
 
         if (for_menu) {
-            buffer = fmt::format("{:<.32}", fl_filename_name(name.c_str()));
+            buffer = fmt::format("{:<.32}", fl_filename_name(name.data()));
         } else {
             buffer = name;
             buffer[FL_PATH_MAX - 1] = '\0';

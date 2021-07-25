@@ -36,7 +36,7 @@ void LogEnableDebug(bool enable);
 void LogEnableTerminal(bool enable);
 
 template <typename... Args>
-void LogPrintf(const std::string &str, Args &&...args) {
+void LogPrintf(std::string_view str, Args &&...args) {
     fmt::print(log_file, str, args...);
 
     // show on the Linux terminal too
@@ -45,7 +45,7 @@ void LogPrintf(const std::string &str, Args &&...args) {
     }
 }
 template <typename... Args>
-void DebugPrintf(const std::string &format, Args &&...args) {
+void DebugPrintf(std::string_view format, Args &&...args) {
     if (debugging) {
         std::string buffer = fmt::format(format, args...);
         auto next = std::find(buffer.begin(), buffer.end(), '\n');
@@ -57,7 +57,7 @@ void DebugPrintf(const std::string &format, Args &&...args) {
     }
 }
 
-using log_display_func_t = void (*)(const std::string &line, void *priv_data);
+using log_display_func_t = void (*)(std::string_view line, void *priv_data);
 
 void LogReadLines(log_display_func_t display_func, void *priv_data);
 

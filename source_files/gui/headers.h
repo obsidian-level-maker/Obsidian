@@ -47,6 +47,7 @@
 #include <list>
 #include <map>
 #include <string>
+#include <string_view>
 #include <vector>
 
 /* Our own system defs */

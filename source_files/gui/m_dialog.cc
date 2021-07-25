@@ -372,7 +372,7 @@ class UI_LogViewer : public Fl_Double_Window {
 
     bool WantQuit() const { return want_quit; }
 
-    void Add(const std::string &line);
+    void Add(std::string_view line);
 
     // ensure the very last line is visible
     void JumpEnd();
@@ -534,9 +534,9 @@ std::string UI_LogViewer::GetSelectedText() const {
     return buf;
 }
 
-void UI_LogViewer::Add(const std::string &line) { browser->add(line.c_str()); }
+void UI_LogViewer::Add(std::string_view line) { browser->add(line.data()); }
 
-static void logviewer_display_func(const std::string &line, void *priv_data) {
+static void logviewer_display_func(std::string_view line, void *priv_data) {
     UI_LogViewer *log_viewer = (UI_LogViewer *)priv_data;
 
     log_viewer->Add(line);

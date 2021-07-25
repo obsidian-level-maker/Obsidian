@@ -1123,7 +1123,7 @@ std::string Trans_GetAvailLanguage(int idx) {
 //----------------------------------------------------------------------
 
 // debugging crud
-std::string mucked_up_string(const std::string &s) {
+std::string mucked_up_string(std::string_view s) {
     std::string buffer;
     buffer.resize(s.size());
     int p, q;

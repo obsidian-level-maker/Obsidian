@@ -45,7 +45,7 @@ void GRP_ListEntries(void);
 bool GRP_OpenWrite(const char *filename);
 void GRP_CloseWrite(void);
 
-void GRP_NewLump(const std::string &name);
+void GRP_NewLump(std::string_view name);
 bool GRP_AppendData(const void *data, int length);
 void GRP_FinishLump(void);
 

@@ -341,7 +341,7 @@ void GRP_CloseWrite(void) {
     grp_W_directory.clear();
 }
 
-void GRP_NewLump(const std::string &name) {
+void GRP_NewLump(std::string_view name) {
     if (grp_W_directory.size() >= GRP_MAX_LUMPS) {
         Main_FatalError("GRP_NewLump: too many lumps (> %d)\n", GRP_MAX_LUMPS);
     }

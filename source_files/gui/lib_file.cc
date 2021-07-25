@@ -21,6 +21,7 @@
 #include "lib_file.h"
 
 #include <algorithm>
+#include <whereami.h>
 
 #include "fmt/format.h"
 #include "headers.h"
@@ -41,21 +42,6 @@
 #include <mach-o/dyld.h>  // _NSGetExecutablePath
 #include <sys/param.h>
 #endif
-
-#ifndef PATH_MAX
-#define PATH_MAX 2048
-#endif
-
-bool FileExists(const char *filename) {
-    FILE *fp = fopen(filename, "rb");
-
-    if (fp) {
-        fclose(fp);
-        return true;
-    }
-
-    return false;
-}
 
 bool HasExtension(const char *filename) {
     int A = (int)strlen(filename) - 1;
@@ -86,13 +72,13 @@ bool HasExtension(const char *filename) {
 //
 // When ext is NULL or "", checks if the file has no extension.
 //
-bool MatchExtension(const char *filename, const char *ext) {
-    if (!(ext && ext[0])) {
+bool MatchExtension(std::string_view filename, std::string_view ext) {
+    if (ext.empty()) {
         return !HasExtension(filename);
     }
 
-    int A = (int)strlen(filename) - 1;
-    int B = (int)strlen(ext) - 1;
+    int A = filename.size() - 1;
+    int B = ext.size() - 1;
 
     for (; B >= 0; B--, A--) {
         if (A < 0) {
@@ -416,157 +402,52 @@ std::string FileFindInPath(const char *paths, const char *base_name) {
 
 //------------------------------------------------------------------------
 
-int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat) {
+int ScanDirectory(std::string_view path, directory_iter_f func,
+                  void *priv_dat) {
     int count = 0;
-
-#ifdef WIN32
-
-    // this is a bit clunky.  We set the current directory to the
-    // target and use FindFirstFile with "*.*" as the pattern.
-    // Afterwards we restore the current directory.
-
-    char old_dir[MAX_PATH + 1];
-
-    if (GetCurrentDirectory(MAX_PATH, (LPSTR)old_dir) == FALSE)
-        return SCAN_ERROR;
-
-    if (SetCurrentDirectory(path) == FALSE) return SCAN_ERR_NoExist;
-
-    WIN32_FIND_DATA fdata;
-
-    HANDLE handle = FindFirstFile("*.*", &fdata);
-    if (handle == INVALID_HANDLE_VALUE) {
-        SetCurrentDirectory(old_dir);
-
-        return 0;  //??? (GetLastError() == ERROR_FILE_NOT_FOUND) ? 0 :
-                   // SCAN_ERROR;
-    }
-
-    do {
+    for (auto p : std::filesystem::directory_iterator{path}) {
         int flags = 0;
 
-        if (fdata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-            flags |= SCAN_F_IsDir;
-
-        if (fdata.dwFileAttributes & FILE_ATTRIBUTE_READONLY)
-            flags |= SCAN_F_ReadOnly;
-
-        if (fdata.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN)
-            flags |= SCAN_F_Hidden;
-
-        // minor kludge for consistency with Unix
-        if (fdata.cFileName[0] == '.' && isalpha(fdata.cFileName[1]))
-            flags |= SCAN_F_Hidden;
-
-        if (strcmp(fdata.cFileName, ".") == 0 ||
-            strcmp(fdata.cFileName, "..") == 0) {
-            // skip the funky "." and ".." dirs
-        } else {
-            (*func)(fdata.cFileName, flags, priv_dat);
-
-            count++;
-        }
-    } while (FindNextFile(handle, &fdata) != FALSE);
-
-    FindClose(handle);
-
-    SetCurrentDirectory(old_dir);
-
-#else  // ---- UNIX ------------------------------------------------
-
-    DIR *handle = opendir(path);
-    if (handle == NULL) {
-        return SCAN_ERR_NoExist;
-    }
-
-    for (;;) {
-        const struct dirent *fdata = readdir(handle);
-        if (fdata == NULL) {
-            break;
-        }
-
-        if (strlen(fdata->d_name) == 0) {
-            continue;
-        }
-
-        // skip the funky "." and ".." dirs
-        if (strcmp(fdata->d_name, ".") == 0 ||
-            strcmp(fdata->d_name, "..") == 0) {
-            continue;
-        }
-
-        std::string full_name = fmt::format("{}/{}", path, fdata->d_name);
-
-        struct stat finfo;
-
-        if (stat(full_name.c_str(), &finfo) != 0) {
-            DebugPrintf(".... stat failed: {}\n", strerror(errno));
-            continue;
-        }
-
-        int flags = 0;
-
-        if (S_ISDIR(finfo.st_mode)) {
+        if (p.is_directory()) {
             flags |= SCAN_F_IsDir;
         }
 
-        if ((finfo.st_mode & (S_IWUSR | S_IWGRP | S_IWOTH)) == 0) {
+        if ((std::filesystem::status(p.path()).permissions() &
+             (std::filesystem::perms::owner_write |
+              std::filesystem::perms::group_write |
+              std::filesystem::perms::others_write)) ==
+            std::filesystem::perms::none) {
             flags |= SCAN_F_ReadOnly;
         }
 
-        if (fdata->d_name[0] == '.' && isalpha(fdata->d_name[1])) {
+        if (p.path().stem().native()[0] == '.') {
             flags |= SCAN_F_Hidden;
         }
 
-        (*func)(fdata->d_name, flags, priv_dat);
+        func(p.path().native(), flags, priv_dat);
 
         count++;
     }
-
-    closedir(handle);
-#endif
 
     return count;
 }
 
 struct filename_nocase_CMP {
-    inline bool operator()(const std::string &A, const std::string &B) const {
-        return StringCaseCmp(A.c_str(), B.c_str()) < 0;
+    inline bool operator()(std::string_view A, std::string_view B) const {
+        return StringCaseCmp(A, B) < 0;
     }
 };
-
-static void add_subdir_name(const char *name, int flags, void *priv_dat) {
-    std::vector<std::string> *list = (std::vector<std::string> *)priv_dat;
-
-    if ((flags & SCAN_F_Hidden) || name[0] == '.') {
-        return;
-    }
-
-    if (flags & SCAN_F_IsDir) {
-        list->push_back(name);
-    }
-}
-
-int ScanDir_GetSubDirs(const char *path, std::vector<std::string> &list) {
-    int count = ScanDirectory(path, add_subdir_name, &list);
-
-    if (count > 0) {
-        std::sort(list.begin(), list.end(), filename_nocase_CMP());
-    }
-
-    return count;
-}
 
 struct scan_match_data_t {
-    std::vector<std::string> *list;
-
-    const char *ext;
+    std::vector<std::string> &list;
+    std::string_view ext;
 };
 
-static void add_matching_name(const char *name, int flags, void *priv_dat) {
+static void add_matching_name(std::string_view name, int flags,
+                              void *priv_dat) {
     scan_match_data_t *match_data = (scan_match_data_t *)priv_dat;
 
-    std::vector<std::string> *list = match_data->list;
+    auto &list = match_data->list;
 
     if ((flags & SCAN_F_Hidden) || name[0] == '.') {
         return;
@@ -580,15 +461,12 @@ static void add_matching_name(const char *name, int flags, void *priv_dat) {
         return;
     }
 
-    list->push_back(name);
+    list.emplace_back(name);
 }
 
-int ScanDir_MatchingFiles(const char *path, const char *ext,
+int ScanDir_MatchingFiles(std::string_view path, std::string_view ext,
                           std::vector<std::string> &list) {
-    scan_match_data_t data;
-
-    data.list = &list;
-    data.ext = ext;
+    scan_match_data_t data{list, ext};
 
     int count = ScanDirectory(path, add_matching_name, &data);
 
@@ -601,70 +479,12 @@ int ScanDir_MatchingFiles(const char *path, const char *ext,
 
 //------------------------------------------------------------------------
 
-std::string GetExecutablePath(const char *argv0) {
+std::filesystem::path GetExecutablePath() {
+    size_t length = wai_getExecutablePath(nullptr, 0, nullptr);
     std::string path;
-
-#ifdef WIN32
-    path.resize(PATH_MAX + 2);
-
-    int length = GetModuleFileName(GetModuleHandle(NULL), &path[0], PATH_MAX);
-
-    if (length > 0 && length < PATH_MAX) {
-        if (access(path, 0) == 0)  // sanity check
-        {
-            FilenameStripBase(path);
-            return path;
-        }
-    }
-#endif
-
-#ifdef UNIX
-    path.resize(PATH_MAX + 2);
-
-    int length = readlink("/proc/self/exe", &path[0], PATH_MAX);
-
-    if (length > 0) {
-        path[length] = 0;  // add the missing NUL
-
-        if (access(path.c_str(), 0) == 0)  // sanity check
-        {
-            FilenameStripBase(&path[0]);
-            return path;
-        }
-    }
-#endif
-
-#ifdef __APPLE__
-    /*
-       from http://www.hmug.org/man/3/NSModule.html
-
-       extern int _NSGetExecutablePath(char *buf, unsigned long *bufsize);
-
-       _NSGetExecutablePath copies the path of the executable
-       into the buffer and returns 0 if the path was successfully
-       copied in the provided buffer. If the buffer is not large
-       enough, -1 is returned and the expected buffer size is
-       copied in *bufsize.
-     */
-    uint32_t pathlen = PATH_MAX * 2;
-
-    path.resize(pathlen + 2);
-
-    if (0 == _NSGetExecutablePath(&path[0], &pathlen)) {
-        // FIXME: will this be _inside_ the .app folder???
-        FilenameStripBase(&path[0]);
-        return path;
-    }
-#endif
-
-    // fallback method: use argv[0]
-    path = argv0;
-
-#ifdef __APPLE__
-    // FIXME: check if _inside_ the .app folder
-#endif
-
-    FilenameStripBase(&path[0]);
+    path.resize(length + 1);
+    wai_getExecutablePath(path.data(), length, nullptr);
+    path[length] = '\0';
     return path;
 }
 

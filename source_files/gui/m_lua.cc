@@ -309,8 +309,8 @@ static bool scan_dir_process_name(const char *name, const char *parent,
 }
 
 struct scan_dir_nocase_CMP {
-    inline bool operator()(const std::string &A, const std::string &B) const {
-        return StringCaseCmp(A.c_str(), B.c_str()) < 0;
+    inline bool operator()(std::string_view A, std::string_view B) const {
+        return StringCaseCmp(A, B) < 0;
     }
 };
 
@@ -1587,21 +1587,21 @@ void Script_Close() {
 // WRAPPERS TO LUA FUNCTIONS
 //------------------------------------------------------------------------
 
-bool ob_set_config(const std::string &key, const std::string &value) {
+bool ob_set_config(std::string_view key, std::string_view value) {
     // See the document 'doc/Config_Flow.txt' for a good
     // description of the flow of configuration values
     // between the C++ GUI and the Lua scripts.
 
     if (!has_loaded) {
-        DebugPrintf("ob_set_config({}) called before loaded!\n", key.c_str());
+        DebugPrintf("ob_set_config({}) called before loaded!\n", key);
         return false;
     }
 
-    std::array<std::string, 3> params;
-
-    params[0] = key;
-    params[1] = value;
-    params[2] = "";  // end of list
+    std::array<std::string, 3> params{
+        std::string{key},
+        std::string{value},
+        "",
+    };
 
     return Script_CallFunc("ob_set_config", 0, params.data());
 }

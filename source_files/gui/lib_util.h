@@ -26,12 +26,12 @@
 
 /* string utilities */
 
-int StringCaseCmp(const std::string &a, const std::string &b);
-int StringCaseCmpPartial(const std::string &a, const std::string &b);
-bool StringCaseEquals(const std::string &a, const std::string &b);
-bool StringCaseEqualsPartial(const std::string &a, const std::string &b);
+int StringCaseCmp(std::string_view a, std::string_view b);
+int StringCaseCmpPartial(std::string_view a, std::string_view b);
+bool StringCaseEquals(std::string_view a, std::string_view b);
+bool StringCaseEqualsPartial(std::string_view a, std::string_view b);
 
-std::string StringUpper(const std::string &name);
+std::string StringUpper(std::string_view name);
 
 void StringRemoveCRLF(std::string *str);
 void StringReplaceChar(std::string *str, char old_ch, char new_ch);
