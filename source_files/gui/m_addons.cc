@@ -164,23 +164,40 @@ void VFS_ScanForAddons() {
 
     all_addons.clear();
 
-    std::string dir_name = fmt::format("{}/addons", home_dir);
+    std::filesystem::path dir_name = install_dir;
+    dir_name /= "addons";
 
-    std::vector<std::string> list;
-    int result1 = ScanDir_MatchingFiles(dir_name.c_str(), "pk3", list);
+    std::vector<std::filesystem::path> list;
+    int result1 = 0;
     int result2 = 0;
 
-    if (std::string{home_dir}.compare(std::string{install_dir}) != 0) {
-        dir_name = fmt::format("{}/addons", install_dir);
+    for(auto& file: std::filesystem::directory_iterator(dir_name)) {
+        if (file.path().has_extension() && StringCaseCmp(file.path().extension(), "pk3")) {
+			result1 += 1;
+			list.push_back(file.path());
+		}
+	}
 
-        std::vector<std::string> list2;
+    if (!StringCaseCmp(home_dir, install_dir)) {
+        dir_name = home_dir;
+        dir_name /= "addons";
 
-        result2 = ScanDir_MatchingFiles(dir_name.c_str(), "pk3", list2);
+		if (!std::filesystem::exists(dir_name)) {
+			goto no_home_addon_dir;
+		}
 
-        list.insert(list.end(), list2.begin(), list2.end());
+        std::vector<std::filesystem::path> list2;
 
-        std::vector<std::string>().swap(list2);
+		for(auto& file: std::filesystem::directory_iterator(dir_name)) {
+			if (file.path().has_extension() && StringCaseCmp(file.path().extension(), "pk3")) {
+				result2 += 1;
+				list2.push_back(file.path());
+			}
+		}
+        std::vector<std::filesystem::path>().swap(list2);
     }
+
+	no_home_addon_dir:
 
     if ((result1 < 0) && (result2 < 0)) {
         LogPrintf("FAILED -- no addon directory found.\n\n");
@@ -190,7 +207,7 @@ void VFS_ScanForAddons() {
     for (unsigned int i = 0; i < list.size(); i++) {
         addon_info_t info;
 
-        info.name = list[i].c_str();
+        info.name = list[i];
 
         info.enabled = false;
 
@@ -202,9 +219,7 @@ void VFS_ScanForAddons() {
         // DEBUG
         // info.enabled = true;
 
-        LogPrintf(fmt::format("  found: {}{}\n", info.name,
-                              info.enabled ? " (Enabled)" : " (Disabled)")
-                      .c_str());
+        LogPrintf("  found: {}{}\n", info.name, info.enabled ? " (Enabled)" : " (Disabled)");
 
         all_addons.push_back(info);
 
