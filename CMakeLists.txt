@@ -193,6 +193,8 @@ if(UNIX)
   )
 endif()
 
+add_dependencies(obsidian filename_formatter)
+
 target_link_libraries(
   obsidian
   PRIVATE zlibstatic
