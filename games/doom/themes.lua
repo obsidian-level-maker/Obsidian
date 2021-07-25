@@ -1302,14 +1302,15 @@ DOOM.THEMES =
       gtd_generic_artsy_center_braced_ind = 20,
       gtd_generic_artsy_step1_banded = 20,
       gtd_generic_artsy_slope_y_inset = 20,
+      gtd_generic_artsy_bace_braced = 20,
       --
-      gtd_modquake_set = 14,
-      gtd_modquake_jawlike = 14,
-      gtd_modquake_top_heavy_brace = 14,
-      gtd_modquake_tek_slope_brace = 14,
-      gtd_modquake_ex_light_slope_brace = 14,
-      gtd_modquake_round_braced_lit_pillar = 14,
-      gtd_modquake_hexagon_inset_braced = 14,
+      gtd_modquake_set = 18,
+      gtd_modquake_jawlike = 18,
+      gtd_modquake_top_heavy_brace = 18,
+      gtd_modquake_tek_slope_brace = 18,
+      gtd_modquake_ex_light_slope_brace = 18,
+      gtd_modquake_round_braced_lit_pillar = 18,
+      gtd_modquake_hexagon_inset_braced = 18,
       --
       gtd_wall_lamp_stubby = 16,
       gtd_wall_lamp_thin = 16,
@@ -1712,6 +1713,7 @@ DOOM.THEMES =
       gtd_generic_artsy_center_braced_ind = 20,
       gtd_generic_artsy_step1_banded = 20,
       gtd_generic_artsy_slope_y_inset = 20,
+      gtd_generic_artsy_bace_braced = 20,
       --
       gtd_modquake_set = 11,
       gtd_modquake_jawlike = 11,
@@ -2175,6 +2177,7 @@ DOOM.THEMES =
       gtd_generic_artsy_center_braced_hell = 20,
       gtd_generic_artsy_step1_banded = 20,
       gtd_generic_artsy_slope_y_inset = 20,
+      gtd_generic_artsy_bace_braced = 20,
       --
       gtd_modquake_set = 11,
       gtd_modquake_jawlike = 11,
