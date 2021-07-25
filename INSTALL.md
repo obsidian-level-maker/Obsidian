@@ -6,6 +6,7 @@
 1. C++ compiler (GNU's G++) and associated tools
    * packages: `g++` `binutils`
    * if compiling with clang: `clang`
+   * compiler and toolchain need C++17 capabilities
 
 2. GNU make
    * package: `make`
