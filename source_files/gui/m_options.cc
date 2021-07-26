@@ -275,7 +275,7 @@ class UI_OptionsWin : public Fl_Window {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 		if (that->opt_limit_break->value()) {
 			if (fl_choice("WARNING! This option will allow you to manually enter values in excess of the \n(usually) stable \
-slider limit for Obsidian.\nAny bugs, crashes, or errors as a result of this will not be addressed by the developers.\
+slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this will not be addressed by the developers.\
 \nYou must select Yes for this option to be applied.", "Cancel", "Yes, break Obsidian", 0)) {
 				 limit_break = true;
 			} else {
