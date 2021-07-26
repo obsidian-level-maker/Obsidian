@@ -45,7 +45,7 @@ class UI_Module : public Fl_Group {
 
     std::map<std::string, UI_RButton *> choice_map_button;
 
-    UI_CustomCheckBox *mod_button;
+    UI_ModuleDropDown *mod_button;
 
    private:
     std::string id_name;

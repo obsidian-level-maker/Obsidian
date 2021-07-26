@@ -42,10 +42,11 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
     }
 
     mod_button =
-        new UI_CustomCheckBox(X + kf_w(6), Y + kf_h(4), W - kf_w(12), kf_h(24));
-    mod_button->visible_focus(0);
-    mod_button->down_box(button_style);
-    mod_button->selection_color(SELECTION);
+        new UI_ModuleDropDown(X - kf_w(6), Y + kf_h(5), W - kf_w(12), kf_h(24));
+    mod_button->box(FL_FLAT_BOX);
+    mod_button->color(WINDOW_BG);
+    mod_button->labelsize(18); // Scales very goofily with font size -- Dasho
+    mod_button->copy_label("@-2+");
 
     if (Is_UI()) {
         mod_button->value(1);
@@ -201,7 +202,8 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     rsl->prev_button = new UI_CustomArrowButton(
         (!single_pane ? rsl->x() : rsl->x() + (rsl->w() * .40)),
         (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()),
-        (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@<");
+        (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24));
+    rsl->prev_button->copy_label("@<");
     rsl->prev_button->visible_focus(0);
     rsl->prev_button->box(button_style);
     rsl->prev_button->color(BUTTON_COLOR);
@@ -230,7 +232,8 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
              ? rsl->x() + rsl->w() * .90
              : rsl->x() + rsl->w() * (rsl->nan_choices.size() > 0 ? .80 : .85)),
         (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()),
-        (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24), "@>");
+        (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24));
+    rsl->next_button->copy_label("@>");
     rsl->next_button->box(button_style);
     rsl->next_button->color(BUTTON_COLOR);
     rsl->next_button->visible_focus(0);

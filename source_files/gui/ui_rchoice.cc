@@ -292,9 +292,8 @@ void UI_CustomCheckBox::draw() {
 
 //----------------------------------------------------------------
 
-UI_CustomArrowButton::UI_CustomArrowButton(int x, int y, int w, int h,
-                                           const char *label)
-    : Fl_Repeat_Button(x, y, w, h, label) {
+UI_CustomArrowButton::UI_CustomArrowButton(int x, int y, int w, int h)
+    : Fl_Repeat_Button(x, y, w, h) {
     visible_focus(0);
 }
 
@@ -596,6 +595,38 @@ void UI_ManualEntry::draw() {
        if (Fl::focus() == this)
        draw_focus();
      */
+}
+
+//----------------------------------------------------------------
+
+UI_ModuleDropDown::UI_ModuleDropDown(int x, int y, int w, int h)
+    : Fl_Check_Button(x, y, w, h) {
+    visible_focus(0);
+}
+
+UI_ModuleDropDown::~UI_ModuleDropDown() {}
+
+// Custom draw function to use the checkmark style regardless of box type and
+// respect custom colors
+void UI_ModuleDropDown::draw() {
+    
+    int W = labelsize();
+    int bx = Fl::box_dx(box());  // box frame width
+    int dx = bx + 2;             // relative position of check mark etc.
+    int dy = (h() - W) / 2;      // neg. offset o.k. for vertical centering
+    int lx = 0;                  // relative label position (STR #3237)
+
+    draw_box(FL_FLAT_BOX, x() + dx, y() + dy, W, W, WINDOW_BG);
+	lx = dx + W + 2;
+	copy_label("  ");
+	redraw();
+	if (value()) {
+		copy_label("@-2line");
+	} else {
+		copy_label("@-2+");
+	}
+	draw_label(x() + lx, y(), w() - lx - bx, h());
+
 }
 
 //----------------------------------------------------------------
