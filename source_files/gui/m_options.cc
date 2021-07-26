@@ -45,6 +45,8 @@ static void Parse_Option(std::string name, std::string value) {
         overwrite_warning = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "debug_messages") == 0) {
         debug_messages = StringToInt(value) ? true : false;
+    } else if (StringCaseCmp(name, "limit_break") == 0) {
+        limit_break = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "last_directory") == 0) {
         last_directory = value;
     } else if (StringCaseCmp(name, "filename_prefix") == 0) {
@@ -137,6 +139,7 @@ bool Options_Save(std::string filename) {
     option_fp << "create_backups = " << (create_backups ? 1 : 0) << "\n";
     option_fp << "overwrite_warning = " << (overwrite_warning ? 1 : 0) << "\n";
     option_fp << "debug_messages = " << (debug_messages ? 1 : 0) << "\n";
+    option_fp << "limit_break = " << (limit_break ? 1 : 0) << "\n";
     option_fp << "filename_prefix = " << filename_prefix << "\n";
     option_fp << "custom_prefix = " << custom_prefix << "\n";
 
@@ -174,6 +177,7 @@ class UI_OptionsWin : public Fl_Window {
     UI_CustomCheckBox *opt_backups;
     UI_CustomCheckBox *opt_overwrite;
     UI_CustomCheckBox *opt_debug;
+    UI_CustomCheckBox *opt_limit_break;
 
    public:
     UI_OptionsWin(int W, int H, const char *label = NULL);
@@ -265,6 +269,29 @@ class UI_OptionsWin : public Fl_Window {
         main_action = MAIN_RESTART;
 
         that->want_quit = true;
+    }
+
+    static void callback_LimitBreak(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+		if (that->opt_limit_break->value()) {
+			if (fl_choice("WARNING! This option will allow you to manually enter values in excess of the \n(usually) stable \
+slider limit for Obsidian.\nAny bugs, crashes, or errors as a result of this will not be addressed by the developers.\
+\nYou must select Yes for this option to be applied.", "Cancel", "Yes, break Obsidian", 0)) {
+				 limit_break = true;
+			} else {
+				limit_break = false;
+				that->opt_limit_break->value(0);
+			}
+		} else {
+			limit_break = false;
+			fl_alert("%s",
+                 _("Restoring slider limits requires a restart.\nObsidian will "
+                   "now restart."));
+
+			main_action = MAIN_RESTART;
+
+			that->want_quit = true;
+		}
     }
 
     static void callback_PrefixHelp(Fl_Widget *w, void *data) {
@@ -375,7 +402,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_backups->selection_color(SELECTION);
     opt_backups->down_box(button_style);
 
-    cy += opt_backups->h() + y_step * 2 / 3;
+    cy += opt_backups->h() + y_step * .5;
 
     opt_overwrite = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
     opt_overwrite->copy_label(_(" Overwrite File Warning"));
@@ -385,7 +412,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_overwrite->selection_color(SELECTION);
     opt_overwrite->down_box(button_style);
 
-    cy += opt_overwrite->h() + y_step * 2 / 3;
+    cy += opt_overwrite->h() + y_step * .5;
 
     opt_debug = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
     opt_debug->copy_label(_(" Debugging Messages"));
@@ -395,7 +422,15 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_debug->selection_color(SELECTION);
     opt_debug->down_box(button_style);
 
-    cy += opt_debug->h() + y_step;
+    cy += opt_debug->h() + y_step * .5;
+    
+    opt_limit_break = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_limit_break->copy_label(_(" Ignore Slider Limits"));
+    opt_limit_break->value(limit_break ? 1 : 0);
+    opt_limit_break->callback(callback_LimitBreak, this);
+    opt_limit_break->labelfont(font_style);
+    opt_limit_break->selection_color(SELECTION);
+    opt_limit_break->down_box(button_style);
 
     //----------------
 

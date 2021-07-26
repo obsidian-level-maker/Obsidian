@@ -130,6 +130,7 @@ extern std::vector<std::map<std::string, int>> font_menu_items;
 extern bool create_backups;
 extern bool overwrite_warning;
 extern bool debug_messages;
+extern bool limit_break;
 
 extern std::string last_directory;
 extern std::string numeric_locale;

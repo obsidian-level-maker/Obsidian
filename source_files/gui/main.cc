@@ -113,6 +113,7 @@ std::vector<std::map<std::string, int>> font_menu_items;
 bool create_backups = true;
 bool overwrite_warning = true;
 bool debug_messages = false;
+bool limit_break = false;
 
 game_interface_c *game_object = NULL;
 

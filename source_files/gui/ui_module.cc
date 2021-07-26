@@ -455,7 +455,11 @@ bool UI_Module::SetSliderOption(std::string option, std::string value) {
     double double_value;
     try {
         double_value = std::stod(value);
-        rsl->mod_slider->value(double_value);
+        if (limit_break) {
+			rsl->mod_slider->value(double_value);
+		} else {
+			rsl->mod_slider->value(rsl->mod_slider->clamp(double_value));
+		}
         rsl->mod_slider->do_callback();
         if (rsl->nan_choices.size() > 0) {
             rsl->nan_options->value(0);
@@ -703,8 +707,12 @@ tryagain:
         std::cout << e.what();
     }
 
-    current_slider->mod_slider->value(current_slider->mod_slider->clamp(
-        current_slider->mod_slider->round(new_value)));
+    if (limit_break) {
+		current_slider->mod_slider->value(current_slider->mod_slider->round(new_value));
+	} else {
+		current_slider->mod_slider->value(current_slider->mod_slider->clamp(
+			current_slider->mod_slider->round(new_value)));
+	}
     current_slider->mod_slider->do_callback();
 
 end:;
