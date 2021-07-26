@@ -801,11 +801,10 @@ int Main_key_handler(int event) {
 void Main_CalcNewSeed() { next_rand_seed = twister_UInt(); }
 
 void Main_SetSeed() {
-    std::string label = "Seed: ";
-    std::string seed = std::to_string(next_rand_seed);
+    std::string seed = NumToString(next_rand_seed);
     ob_set_config("seed", seed.c_str());
     if (!batch_mode) {
-        main_win->build_box->seed_disp->copy_label(label.append(seed).c_str());
+        main_win->build_box->seed_disp->copy_label(fmt::format("Seed: {}", seed).c_str());
         main_win->build_box->seed_disp->redraw();
     }
 }
@@ -858,15 +857,12 @@ bool Build_Cool_Shit() {
 
     // lock most widgets of user interface
     if (main_win) {
-        std::string label = "Seed: ";
-        std::string seed = std::to_string(next_rand_seed);
+        std::string seed = NumToString(next_rand_seed);
         if (main_win->build_box->string_seed != "") {
-            main_win->build_box->seed_disp->copy_label(
-                label.append(main_win->build_box->string_seed).c_str());
+            main_win->build_box->seed_disp->copy_label(fmt::format("Seed: {}", main_win->build_box->string_seed).c_str());
             main_win->build_box->seed_disp->redraw();
         } else {
-            main_win->build_box->seed_disp->copy_label(
-                label.append(seed).c_str());
+            main_win->build_box->seed_disp->copy_label(fmt::format("Seed: {}", seed).c_str());
             main_win->build_box->seed_disp->redraw();
         }
         main_win->game_box->SetAbortButton(true);

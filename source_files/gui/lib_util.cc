@@ -90,6 +90,13 @@ void StringReplaceChar(std::string *str, char old_ch, char new_ch) {
     }
 }
 
+std::string NumToString(long long unsigned int value) {
+	std::string num_string;
+	num_string.resize(50, ' ');
+	static_cast<void>(std::to_chars(num_string.data(), num_string.data() + num_string.size(), value));
+	return num_string;
+}
+
 std::string NumToString(int value) {
 	std::string num_string;
 	num_string.resize(50, ' ');
