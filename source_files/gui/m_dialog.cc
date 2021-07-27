@@ -265,8 +265,6 @@ std::string DLG_OutputFilename(const char *ext, const char *preset) {
             break;  // OK
     }
 
-    static std::string filename;
-
     std::filesystem::path src_name = chooser.filename();
 
     std::filesystem::path dir_name = src_name.parent_path();
@@ -276,12 +274,11 @@ std::string DLG_OutputFilename(const char *ext, const char *preset) {
     }
 
     // add extension if missing
-    if (std::filesystem::path{filename}.extension().empty()) {
-        filename += ".";
-        filename += ext;
+    if (src_name.extension().empty()) {
+        src_name.replace_extension(ext);
 
         // check if exists, ask for confirmation
-        FILE *fp = fopen(filename.c_str(), "rb");
+        FILE *fp = fopen(src_name.c_str(), "rb");
         if (fp) {
             fclose(fp);
             if (!fl_choice("%s", fl_cancel, fl_ok, NULL,
@@ -291,7 +288,7 @@ std::string DLG_OutputFilename(const char *ext, const char *preset) {
         }
     }
 
-    return filename;
+    return src_name;
 }
 
 //----------------------------------------------------------------------cout
