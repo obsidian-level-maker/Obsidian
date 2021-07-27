@@ -23,8 +23,7 @@
 #include "headers.h"
 #include "lib_util.h"
 
-const char **arg_list = NULL;
-int arg_count = 0;
+std::vector<std::string> arg_list;
 
 //
 // ArgvInit
@@ -36,19 +35,12 @@ int arg_count = 0;
 //       using ArgvFind() will only return the first usage.
 //
 void ArgvInit(int argc, const char **argv) {
-    arg_count = argc;
-    SYS_ASSERT(arg_count >= 0);
-
-    if (arg_count == 0) {
-        arg_list = NULL;
-        return;
-    }
-
-    arg_list = new const char *[arg_count];
+    arg_list.resize(argc);
+    SYS_ASSERT(arg_list.size() >= 0);
 
     int dest = 0;
 
-    for (int i = 0; i < arg_count; i++) {
+    for (int i = 0; i < arg_list.size(); i++) {
         const char *cur = argv[i];
         SYS_NULL_CHECK(cur);
 
@@ -66,24 +58,14 @@ void ArgvInit(int argc, const char **argv) {
 
         // support DOS-style short options
         if (cur[0] == '/' && (isalnum(cur[1]) || cur[1] == '?') &&
-            cur[2] == 0) {
-            *(char *)(arg_list[dest]) = '-';
+            cur[2] == '\0') {
+            arg_list[dest] = "-";
         }
 
         dest++;
     }
 
-    arg_count = dest;
-}
-
-void ArgvClose(void) {
-    while (arg_count-- > 0) {
-        free((void *)arg_list[arg_count]);
-    }
-
-    if (arg_list) {
-        delete[] arg_list;
-    }
+    arg_list.resize(dest);
 }
 
 int ArgvFind(char short_name, const char *long_name, int *num_params) {
@@ -95,30 +77,35 @@ int ArgvFind(char short_name, const char *long_name, int *num_params) {
 
     int p = 0;
 
-    for (; p < arg_count; p++) {
+    for (; p < arg_list.size(); p++) {
         if (!ArgvIsOption(p)) {
             continue;
         }
 
-        const char *str = arg_list[p];
+        const std::string &str = arg_list[p];
 
         if (short_name && (short_name == tolower(str[1])) && str[2] == 0) {
             break;
         }
 
-        if (long_name && (StringCaseCmp(long_name, str + 1) == 0)) {
+        if (long_name &&
+            (StringCaseCmp(
+                 long_name,
+                 std::string_view{str.data() + 1,
+                                  static_cast<std::string_view::size_type>(
+                                      str.end() - str.begin() - 1)}) == 0)) {
             break;
         }
     }
 
-    if (p >= arg_count) {  // NOT FOUND
+    if (p >= arg_list.size()) {  // NOT FOUND
         return -1;
     }
 
     if (num_params) {
         int q = p + 1;
 
-        while ((q < arg_count) && !ArgvIsOption(q)) {
+        while ((q < arg_list.size()) && !ArgvIsOption(q)) {
             q++;
         }
 
@@ -130,12 +117,11 @@ int ArgvFind(char short_name, const char *long_name, int *num_params) {
 
 bool ArgvIsOption(int index) {
     SYS_ASSERT(index >= 0);
-    SYS_ASSERT(index < arg_count);
+    SYS_ASSERT(index < arg_list.size());
 
-    const char *str = arg_list[index];
-    SYS_NULL_CHECK(str);
+    const std::string &str = arg_list[index];
 
-    return (str[0] == '-');
+    return str[0] == '-';
 }
 
 //--- editor settings ---
