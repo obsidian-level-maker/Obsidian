@@ -431,9 +431,11 @@ char *yytext;
 #define INITIAL 0
 
 /*windows compatibility case*/
+#if WIN32
 #include <io.h>
 #define isatty _isatty
 #define fileno _fileno
+#endif
 
 #ifndef YY_EXTRA_TYPE
 #define YY_EXTRA_TYPE void *

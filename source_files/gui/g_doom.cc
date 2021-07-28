@@ -846,7 +846,7 @@ int DM_NumThings() {
 
 #include "zdmain.h"
 
-static bool DM_BuildNodes(const char *filename, const char *out_name) {
+static bool DM_BuildNodes(const char *filename) {
     LogPrintf("\n");
 
     zdbsp_options options;
@@ -894,7 +894,6 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
     	if (!UDMF_mode) {
     		if (!build_nodes) {
 			    LogPrintf("Skipping nodes per user selection...\n");
-		        FileRename(filename, out_name);
 		        return true;
 		     }
         }
@@ -913,7 +912,6 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
     } else if (current_engine == "zdoom") {
         if (!build_nodes) {
             LogPrintf("Skipping nodes per user selection...\n");
-            FileRename(filename, out_name);
             return true;
         }
         options.build_nodes = true;
@@ -934,8 +932,6 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         Main_ProgStatus(_("ZDBSP Error!"));
         return false;
     }
-
-    FileRename(filename, out_name);
 
     return true;
 }
@@ -1033,21 +1029,8 @@ bool doom_game_interface_c::Start(const char *preset) {
 }
 
 bool doom_game_interface_c::BuildNodes() {
-    char *temp_name = ReplaceExtension(filename, "tmp");
 
-    FileDelete(temp_name);
-
-    if (!FileRename(filename, temp_name)) {
-        LogPrintf("WARNING: could not rename file to .TMP!\n");
-        StringFree(temp_name);
-        return false;
-    }
-
-    bool result = DM_BuildNodes(temp_name, filename);
-
-    FileDelete(temp_name);
-
-    StringFree(temp_name);
+    bool result = DM_BuildNodes(filename);
 
     return result;
 }
