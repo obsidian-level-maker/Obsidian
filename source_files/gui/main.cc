@@ -950,7 +950,9 @@ int main(int argc, char **argv) {
         Main_SetupFLTK();
     }
 
+#ifndef WIN32
     numeric_locale = std::setlocale(LC_NUMERIC, NULL); // Grab current numeric locale
+#endif
         
     LogEnableDebug(debug_messages);
 

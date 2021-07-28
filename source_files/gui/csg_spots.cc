@@ -24,6 +24,10 @@
 #include "lib_util.h"
 #include "main.h"
 
+#ifdef WIN32
+#include <iso646.h>
+#endif
+
 #define GRID_SIZE 20
 
 #define MAX_MON_CELLS 14 /* i.e. 280 units */

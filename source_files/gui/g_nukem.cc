@@ -20,13 +20,13 @@
 
 #include "g_nukem.h"
 
+#include "headers.h"
 #include <algorithm>
 
 #include "csg_main.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"  // ui_build.h
-#include "headers.h"
 #include "img_all.h"
 #include "lib_file.h"
 #include "lib_grp.h"
@@ -49,11 +49,11 @@ static raw_nukem_map_t nk_header;
 
 static void NK_FreeLumps() {
     delete nk_sectors;
-    nk_sectors = NULL;
+    nk_sectors = nullptr;
     delete nk_walls;
-    nk_walls = NULL;
+    nk_walls = nullptr;
     delete nk_sprites;
-    nk_sprites = NULL;
+    nk_sprites = nullptr;
 }
 
 static void NK_WriteLump(const char *name, qLump_c *lump) {
@@ -276,7 +276,7 @@ void NK_InitArt() {
     for (int i = 0; i < MAX_LOGOS; i++) {
         if (nk_logos[i]) {
             delete nk_logos[i];
-            nk_logos[i] = NULL;
+            nk_logos[i] = nullptr;
         }
     }
 }
@@ -309,7 +309,7 @@ int NK_grp_logo_gfx(lua_State *L) {
     }
 
     // find the requested image (TODO: look in a table)
-    const logo_image_t *logo = NULL;
+    const logo_image_t *logo = nullptr;
 
     if (StringCaseCmp(image, logo_BOLT.name) == 0) {
         logo = &logo_BOLT;
@@ -408,7 +408,7 @@ class nukem_game_interface_c : public game_interface_c {
     const char *filename;
 
    public:
-    nukem_game_interface_c() : filename(NULL) {}
+    nukem_game_interface_c() : filename(nullptr) {}
 
     ~nukem_game_interface_c() { StringFree(filename); }
 
@@ -492,7 +492,7 @@ void nukem_game_interface_c::EndLevel() {
     NK_EndLevel();
 
     StringFree(level_name);
-    level_name = NULL;
+    level_name = nullptr;
 }
 
 game_interface_c *Nukem_GameObject() { return new nukem_game_interface_c(); }

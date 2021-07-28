@@ -19,7 +19,7 @@ project(
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "-O2 -Wall")
+set(CMAKE_CXX_FLAGS "-Od -w /showIncludes")
 if(clang)
   set(CMAKE_CXX_CLANG_TIDY clang-tidy)
 endif()
@@ -180,6 +180,10 @@ else()
   add_subdirectory(source_files/fltk_src)
   target_link_libraries(obsidian PRIVATE fltk fltk_images)
   target_include_directories(obsidian PRIVATE source_files/fltk_src)
+endif()
+
+if (WIN32)
+  add_subdirectory(source_files/wingetopt_src)
 endif()
 
 if(UNIX)
