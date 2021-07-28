@@ -104,4 +104,8 @@ class FWadWriter {
     void SafeWrite(const void *buffer, size_t size);
 };
 
+#ifdef WIN32
+#define strncasecmp strnicmp
+#endif
+
 #endif  //__WAD_H__

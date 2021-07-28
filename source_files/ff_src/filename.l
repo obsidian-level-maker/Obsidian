@@ -1,4 +1,4 @@
-%option noyywrap noinput nounput
+%option noyywrap noinput nounput nounistd
 
 %{
 #include <stdio.h>

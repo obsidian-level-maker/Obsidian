@@ -60,6 +60,9 @@ typedef unsigned char byte;
 #ifndef USE_STRICMP
 #define slump_stricmp(x,y) strcasecmp(x,y)
 #define slump_strnicmp(x,y,n) strncasecmp(x,y,n)
+#else
+#define slump_stricmp(x,y) stricmp(x,y)
+#define slump_strnicmp(x,y,n) strnicmp(x,y,n)
 #endif
 
 #ifdef OK_TO_USE_REAL_MONSTER_WIDTH

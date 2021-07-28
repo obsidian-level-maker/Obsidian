@@ -182,6 +182,10 @@ else()
   target_include_directories(obsidian PRIVATE source_files/fltk_src)
 endif()
 
+if (WIN32)
+  add_subdirectory(source_files/wingetopt_src)
+endif()
+
 if(UNIX)
   find_package(X11 REQUIRED)
   target_link_libraries(obsidian PRIVATE X11::Xft)
