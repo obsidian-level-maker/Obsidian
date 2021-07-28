@@ -14,3 +14,8 @@ if(!MINGW)
   find_package(FLEX REQUIRED)
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE ${FLEX_LIBRARIES})
+
+if (WIN32)
+  target_link_libraries(filename_formatter PRIVATE wingetopt)
+  target_include_directories(filename_formatter PRIVATE ../wingetopt_src/src)
+endif()

@@ -213,12 +213,11 @@ extern char *yytext;
 
 #endif
 
-#ifndef YY_NO_UNISTD_H
-/* Special case for "unistd.h", since it is non-ANSI. We include it way
- * down here because we want the user's section 1 to have been scanned first.
- * The user has a chance to override it with an option.
- */
-#include <unistd.h>
+/*windows compatibility case*/
+#ifdef WIN32
+#include <io.h>
+#define isatty _isatty
+#define fileno _fileno
 #endif
 
 #ifndef YY_EXTRA_TYPE
@@ -463,8 +462,8 @@ extern int yylex(void);
 #undef yyTABLES_NAME
 #endif
 
-#line 32 "test.l"
+#line 32 "filename.l"
 
-#line 470 "lex.yy.h"
+#line 467 "lex.yy.h"
 #undef yyIN_HEADER
 #endif /* yyHEADER_H */

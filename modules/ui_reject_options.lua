@@ -34,7 +34,9 @@ OB_MODULES["ui_reject_options"] =
       label = _("Build REJECT"),
       valuator = "button",
       default = 0,
-      tooltip = "Choose to build a proper REJECT lump. WARNING: This can be very time consuming!",
+      tooltip = "Choose to build a proper REJECT lump.",
+      longtip = "If this option is not selected, a blank REJECT lump with the proper size will be inserted into the map instead." ..
+      "\n\nThis is to prevent errors with some engines that are expecting a \"full\" REJECT lump to be present."
     }
   }
 }
@@ -63,8 +65,12 @@ OB_MODULES["ui_udmf_map_options"] =
       label = _("Build REJECT"),
       valuator = "button",
       default = 0,
-      tooltip = "Choose to build a proper REJECT lump (Binary map format only). WARNING: This can be very time consuming!" ..
-		" Eternity will ignore this option.",
+      tooltip = "Choose to build a proper REJECT lump (Binary map format only). WARNING: This can be very time consuming!",
+	  longtip = "Maps with regular nodes will build the REJECT lump quickly, but maps with GL nodes use the Quake 'vis' method to calculate" ..
+	    " the REJECT table. This method scales horribly with map size, and with larger maps it will take much longer to build the REJECT lump than" ..
+	    " the map itself." ..
+	    "\n\nEDGE and ZDoom Family will use the vis method if this option is selected, so be forewarned." ..
+	    "\n\nEternity Engine will ignore this option and an empty REJECT lump will be inserted instead."
     },
     {
       name = "bool_build_nodes_udmf",
@@ -72,7 +78,11 @@ OB_MODULES["ui_udmf_map_options"] =
       valuator = "button",
       default = 0,
       tooltip = "Choose to either build nodes or allow the engine itself to do so " ..
-      "upon loading the map. EDGE will always build nodes unless using binary map format, and Eternity will always build nodes regardless of format.",
+      "upon loading the map.",
+      longtip = "Some of the advanced engines supported by Obsidian are capable of building their own nodes when none are detected.\n\n" ..
+        "If EDGE is selected, nodes will will only be skipped if Binary map format is selected.\n\n" ..
+        "ZDoom is capable of building its own nodes in either Binary or UDMF.\n\n" ..
+        "If Eternity is selected, nodes will always be built."
     },
     {
       name = "map_format",

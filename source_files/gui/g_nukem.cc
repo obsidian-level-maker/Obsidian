@@ -20,6 +20,7 @@
 
 #include "g_nukem.h"
 
+#include "headers.h"
 #include <algorithm>
 
 #include "csg_main.h"
@@ -27,7 +28,6 @@
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"  // ui_build.h
-#include "headers.h"
 #include "img_all.h"
 #include "lib_file.h"
 #include "lib_grp.h"
@@ -50,11 +50,11 @@ static raw_nukem_map_t nk_header;
 
 static void NK_FreeLumps() {
     delete nk_sectors;
-    nk_sectors = NULL;
+    nk_sectors = nullptr;
     delete nk_walls;
-    nk_walls = NULL;
+    nk_walls = nullptr;
     delete nk_sprites;
-    nk_sprites = NULL;
+    nk_sprites = nullptr;
 }
 
 static void NK_WriteLump(const char *name, qLump_c *lump) {
@@ -73,7 +73,7 @@ static void NK_WriteLump(const char *name, qLump_c *lump) {
     GRP_FinishLump();
 }
 
-bool NK_StartGRP(const char *filename) {
+bool NK_StartGRP(const std::filesystem::path &filename) {
     if (!GRP_OpenWrite(filename)) {
         return false;
     }
@@ -275,7 +275,7 @@ void NK_InitArt() {
     for (int i = 0; i < MAX_LOGOS; i++) {
         if (nk_logos[i]) {
             delete nk_logos[i];
-            nk_logos[i] = NULL;
+            nk_logos[i] = nullptr;
         }
     }
 }
@@ -308,7 +308,7 @@ int NK_grp_logo_gfx(lua_State *L) {
     }
 
     // find the requested image (TODO: look in a table)
-    const logo_image_t *logo = NULL;
+    const logo_image_t *logo = nullptr;
 
     if (StringCaseCmp(image, logo_BOLT.name) == 0) {
         logo = &logo_BOLT;
@@ -407,7 +407,7 @@ class nukem_game_interface_c : public game_interface_c {
     std::filesystem::path filename;
 
    public:
-    nukem_game_interface_c() : filename(NULL) {}
+    nukem_game_interface_c() : filename(nullptr) {}
 
     bool Start(const char *preset);
     bool Finish(bool build_ok);
@@ -454,7 +454,7 @@ bool nukem_game_interface_c::Finish(bool build_ok) {
     if (!build_ok) {
         std::filesystem::remove(filename);
     } else {
-        Recent_AddFile(RECG_Output, filename.c_str());
+        Recent_AddFile(RECG_Output, filename);
     }
 
     return build_ok;

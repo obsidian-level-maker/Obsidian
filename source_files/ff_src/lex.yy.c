@@ -419,22 +419,22 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "test.l"
+#line 1 "filename.l"
 #define YY_NO_INPUT 1
-#line 4 "test.l"
+#define YY_NO_UNISTD_H 1
+#line 4 "filename.l"
 #include <stdio.h>
 #include "nodes.h"
-#line 478 "lex.yy.c"
 #line 479 "lex.yy.c"
+#line 480 "lex.yy.c"
 
 #define INITIAL 0
 
-#ifndef YY_NO_UNISTD_H
-/* Special case for "unistd.h", since it is non-ANSI. We include it way
- * down here because we want the user's section 1 to have been scanned first.
- * The user has a chance to override it with an option.
- */
-#include <unistd.h>
+/*windows compatibility case*/
+#if WIN32
+#include <io.h>
+#define isatty _isatty
+#define fileno _fileno
 #endif
 
 #ifndef YY_EXTRA_TYPE
@@ -631,9 +631,9 @@ YY_DECL {
     }
 
     {
-#line 8 "test.l"
+#line 8 "filename.l"
 
-#line 697 "lex.yy.c"
+#line 695 "lex.yy.c"
 
         while (/*CONSTCOND*/ 1) /* loops until end-of-file is reached */
         {
@@ -686,161 +686,161 @@ YY_DECL {
 
                 case 1:
                     YY_RULE_SETUP
-#line 10 "test.l"
+#line 10 "filename.l"
                     {
                         year();
                     }
                     YY_BREAK
                 case 2:
                     YY_RULE_SETUP
-#line 11 "test.l"
+#line 11 "filename.l"
                     {
                         month();
                     }
                     YY_BREAK
                 case 3:
                     YY_RULE_SETUP
-#line 12 "test.l"
+#line 12 "filename.l"
                     {
                         day();
                     }
                     YY_BREAK
                 case 4:
                     YY_RULE_SETUP
-#line 13 "test.l"
+#line 13 "filename.l"
                     {
                         hour();
                     }
                     YY_BREAK
                 case 5:
                     YY_RULE_SETUP
-#line 14 "test.l"
+#line 14 "filename.l"
                     {
                         minute();
                     }
                     YY_BREAK
                 case 6:
                     YY_RULE_SETUP
-#line 15 "test.l"
+#line 15 "filename.l"
                     {
                         second();
                     }
                     YY_BREAK
                 case 7:
                     YY_RULE_SETUP
-#line 16 "test.l"
+#line 16 "filename.l"
                     {
                         version();
                     }
                     YY_BREAK
                 case 8:
                     YY_RULE_SETUP
-#line 17 "test.l"
+#line 17 "filename.l"
                     {
                         game();
                     }
                     YY_BREAK
                 case 9:
                     YY_RULE_SETUP
-#line 18 "test.l"
+#line 18 "filename.l"
                     {
                         theme();
                     }
                     YY_BREAK
                 case 10:
                     YY_RULE_SETUP
-#line 19 "test.l"
+#line 19 "filename.l"
                     {
                         count();
                     }
                     YY_BREAK
                 case 11:
                     YY_RULE_SETUP
-#line 20 "test.l"
+#line 20 "filename.l"
                     {
                         year();
                     }
                     YY_BREAK
                 case 12:
                     YY_RULE_SETUP
-#line 21 "test.l"
+#line 21 "filename.l"
                     {
                         month();
                     }
                     YY_BREAK
                 case 13:
                     YY_RULE_SETUP
-#line 22 "test.l"
+#line 22 "filename.l"
                     {
                         day();
                     }
                     YY_BREAK
                 case 14:
                     YY_RULE_SETUP
-#line 23 "test.l"
+#line 23 "filename.l"
                     {
                         hour();
                     }
                     YY_BREAK
                 case 15:
                     YY_RULE_SETUP
-#line 24 "test.l"
+#line 24 "filename.l"
                     {
                         minute();
                     }
                     YY_BREAK
                 case 16:
                     YY_RULE_SETUP
-#line 25 "test.l"
+#line 25 "filename.l"
                     {
                         second();
                     }
                     YY_BREAK
                 case 17:
                     YY_RULE_SETUP
-#line 26 "test.l"
+#line 26 "filename.l"
                     {
                         version();
                     }
                     YY_BREAK
                 case 18:
                     YY_RULE_SETUP
-#line 27 "test.l"
+#line 27 "filename.l"
                     {
                         game();
                     }
                     YY_BREAK
                 case 19:
                     YY_RULE_SETUP
-#line 28 "test.l"
+#line 28 "filename.l"
                     {
                         theme();
                     }
                     YY_BREAK
                 case 20:
                     YY_RULE_SETUP
-#line 29 "test.l"
+#line 29 "filename.l"
                     {
                         count();
                     }
                     YY_BREAK
                 case 21:
                     YY_RULE_SETUP
-#line 30 "test.l"
+#line 30 "filename.l"
                     {
                         printf("%s", yytext);
                     }
                     YY_BREAK
                 case YY_STATE_EOF(INITIAL):
-#line 31 "test.l"
+#line 31 "filename.l"
                     return tokEof;
                     YY_BREAK
                 case 22:
                     YY_RULE_SETUP
-#line 32 "test.l"
+#line 32 "filename.l"
                     ECHO;
                     YY_BREAK
-#line 868 "lex.yy.c"
+#line 866 "lex.yy.c"
 
                 case YY_END_OF_BUFFER: {
                     /* Amount of text matched not including the EOB char. */
@@ -1693,4 +1693,4 @@ void yyfree(void *ptr) {
 
 #define YYTABLES_NAME "yytables"
 
-#line 32 "test.l"
+#line 32 "filename.l"

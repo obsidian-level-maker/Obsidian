@@ -188,7 +188,7 @@ void Determine_WorkingPath(const char *argv0) {
     }
 
 #ifdef WIN32
-    home_dir = GetExecutablePath(argv0);
+    home_dir = GetExecutablePath();
 
 #else
     home_dir = std::getenv("HOME");
@@ -208,7 +208,7 @@ void Determine_WorkingPath(const char *argv0) {
     }
 }
 
-static bool Verify_InstallDir(std::string_view path) {
+static bool Verify_InstallDir(const std::filesystem::path &path) {
     std::string filename = fmt::format("{}/scripts/oblige.lua", path);
 
 #if 0  // DEBUG
@@ -234,7 +234,7 @@ void Determine_InstallDir(const char *argv0) {
 
         install_dir = arg_list[inst_arg + 1];
 
-        if (Verify_InstallDir(install_dir.c_str())) {
+        if (Verify_InstallDir(install_dir)) {
             return;
         }
 
@@ -248,7 +248,7 @@ void Determine_InstallDir(const char *argv0) {
     }
 
 #ifdef WIN32
-    install_dir = StringDup(home_dir);
+    install_dir = home_dir;
 
 #else
     static const char *prefixes[] = {
@@ -333,14 +333,14 @@ void Determine_LoggingFile() {
         logging_file = arg_list[logf_arg + 1];
 
         // test that it can be created
-        FILE *fp = fopen(logging_file.c_str(), "w");
+        std::ofstream fp{logging_file};
 
         if (!fp) {
             Main_FatalError("Cannot create log file: %s\n",
                             logging_file.c_str());
         }
 
-        fclose(fp);
+        fp.close();
     } else if (!batch_mode) {
         logging_file = fmt::format("{}/{}", home_dir, LOG_FILENAME);
     } else {
@@ -354,7 +354,7 @@ bool Main_BackupFile(const std::filesystem::path &filename,
         std::filesystem::path backup_name = filename;
         backup_name.replace_extension(ext);
 
-        LogPrintf("Backing up existing file to: {}\n", backup_name.c_str());
+        LogPrintf("Backing up existing file to: {}\n", backup_name);
 
         std::filesystem::remove(backup_name);
         std::filesystem::rename(filename, backup_name);
@@ -964,7 +964,7 @@ restart:;
     Determine_ThemeFile();
     Determine_LoggingFile();
 
-    LogInit(logging_file.c_str());
+    LogInit(logging_file);
 
     if (ArgvFind('d', "debug") >= 0) {
         debug_messages = true;
@@ -984,22 +984,23 @@ restart:;
     LogPrintf("Library versions: FLTK {}.{}.{}\n\n", FL_MAJOR_VERSION,
               FL_MINOR_VERSION, FL_PATCH_VERSION);
 
-    LogPrintf("   home_dir: {}\n", home_dir.c_str());
-    LogPrintf("install_dir: {}\n", install_dir.c_str());
-    LogPrintf("config_file: {}\n\n", config_file.c_str());
+    LogPrintf("   home_dir: {}\n", home_dir);
+    LogPrintf("install_dir: {}\n", install_dir);
+    LogPrintf("config_file: {}\n\n", config_file);
 
     Trans_Init();
 
     if (!batch_mode) {
-        Options_Load(options_file.c_str());
-        Theme_Options_Load(theme_file.c_str());
+        Options_Load(options_file);
+        Theme_Options_Load(theme_file);
         Trans_SetLanguage();
         Main_SetupFLTK();
     }
 
-    numeric_locale =
-        std::setlocale(LC_NUMERIC, NULL);  // Grab current numeric locale
-
+#ifndef WIN32
+    numeric_locale = std::setlocale(LC_NUMERIC, NULL); // Grab current numeric locale
+#endif
+        
     LogEnableDebug(debug_messages);
 
     twister_Init();

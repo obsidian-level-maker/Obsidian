@@ -22,6 +22,10 @@ project(
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-O2 -Wall")
+if (WIN32)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
+  set(CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
+endif()
 if(clang)
   set(CMAKE_CXX_CLANG_TIDY clang-tidy)
 endif()
@@ -172,7 +176,9 @@ else()
   target_compile_definitions(obsidian PRIVATE UNIX)
 endif()
 
-find_package(FLTK 1.3)
+if(UNIX)
+  find_package(FLTK 1.3)
+endif()
 
 if(FLTK_FOUND)
   target_link_libraries(obsidian PRIVATE ${FLTK_LIBRARIES})
@@ -181,6 +187,10 @@ else()
   add_subdirectory(source_files/fltk_src)
   target_link_libraries(obsidian PRIVATE fltk fltk_images)
   target_include_directories(obsidian PRIVATE source_files/fltk_src)
+endif()
+
+if (WIN32)
+  add_subdirectory(source_files/wingetopt_src)
 endif()
 
 if(UNIX)
@@ -206,6 +216,7 @@ endif()
 
 add_dependencies(obsidian filename_formatter)
 
+if(UNIX)
 target_link_libraries(
   obsidian
   PRIVATE zlibstatic
@@ -218,3 +229,16 @@ target_link_libraries(
           obsidian_whereami
           fontconfig
 )
+else()
+target_link_libraries(
+  obsidian
+  PRIVATE zlibstatic
+          obsidian_lua
+          obsidian_physfs
+          obsidian_acc
+          obsidian_ajpoly
+          obsidian_zdbsp
+          obsidian_slump
+          obsidian_whereami
+)
+endif()

@@ -128,7 +128,7 @@ int zdmain(const char *filename, zdbsp_options options) {
         // a temporary file. After everything is done, the input file is
         // deleted and the output file is renamed to match the input file.
 
-        char *out = new char[strlen(OutName) + 3], *dot;
+		char *out = new char[strlen(OutName) + 3], *dot;
 
 		if (out == NULL) {
             throw std::runtime_error(
@@ -182,17 +182,20 @@ int zdmain(const char *filename, zdbsp_options options) {
             }
         }
 
-            outwad.Close();
-
-        if (fixSame) {
-            remove(InName);
-            if (0 != rename(OutName, InName)) {
-                printf(
-                    "The output file could not be renamed to %s.\nYou can find "
-                    "it as %s.\n",
-                    InName, OutName);
-            }
-        }
+        outwad.Close();
+        inwad.Close();
+		
+		if (fixSame) {
+			remove(InName);		
+			
+			if (0 != rename(OutName, InName)) {
+				printf(
+					"The output file could not be renamed to %s.\nYou can find "
+					"it as %s.\n",
+					InName, OutName);
+					return 20;
+			}
+		}
 
         END_COUNTER(t1a, t1b, t1c, "\nTotal time: %.3f seconds.\n")
     } catch (std::runtime_error &msg) {

@@ -39,4 +39,8 @@ add_library(
 )
 
 target_include_directories(obsidian_zdbsp PRIVATE ../zlib_src)
+if(UNIX)
 target_link_libraries(obsidian_zdbsp PUBLIC z)
+else()
+target_link_libraries(obsidian_zdbsp PUBLIC zlibstatic)
+endif()

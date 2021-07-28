@@ -44,7 +44,7 @@ void PAK_ListEntries(void);
 
 /* PAK writing */
 
-bool PAK_OpenWrite(const char *filename);
+bool PAK_OpenWrite(const std::filesystem::path &filename);
 void PAK_CloseWrite(void);
 
 void PAK_NewLump(const char *name);

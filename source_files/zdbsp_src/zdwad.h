@@ -41,6 +41,7 @@ class FWadReader {
     int NextMap(int startindex) const;
     int LumpAfterMap(int map) const;
     int NumLumps() const;
+    void Close();
 
     void SafeRead(void *buffer, size_t size);
 
@@ -102,5 +103,9 @@ class FWadWriter {
 
     void SafeWrite(const void *buffer, size_t size);
 };
+
+#ifdef WIN32
+#define strncasecmp strnicmp
+#endif
 
 #endif  //__WAD_H__

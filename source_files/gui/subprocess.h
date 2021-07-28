@@ -37,7 +37,7 @@
 #pragma warning(push, 1)
 #endif
 
-#include <stdio.h>
+#include <cstdio>
 
 #if defined(_MSC_VER)
 #pragma warning(pop)
@@ -392,18 +392,18 @@ int subprocess_create_named_pipe_helper(void **rd, void **wr) {
 #pragma warning(pop)
 #endif
 
-    *rd = CreateNamedPipeA(name, pipeAccessInbound | fileFlagOverlapped,
-                           pipeTypeByte | pipeWait, 1, 4096, 4096,
-                           SUBPROCESS_NULL,
-                           SUBPROCESS_PTR_CAST(LPSECURITY_ATTRIBUTES, &saAttr));
+  *rd =
+      CreateNamedPipeA(name, pipeAccessInbound | fileFlagOverlapped,
+                       pipeTypeByte | pipeWait, 1, 4096, 4096, (DWORD)SUBPROCESS_NULL,
+                       SUBPROCESS_PTR_CAST(LPSECURITY_ATTRIBUTES, &saAttr));
 
     if (invalidHandleValue == rd) {
         return -1;
     }
 
-    *wr = CreateFileA(name, genericWrite, SUBPROCESS_NULL,
-                      SUBPROCESS_PTR_CAST(LPSECURITY_ATTRIBUTES, &saAttr),
-                      openExisting, fileAttributeNormal, SUBPROCESS_NULL);
+  *wr = CreateFileA(name, genericWrite, (DWORD)SUBPROCESS_NULL,
+                    SUBPROCESS_PTR_CAST(LPSECURITY_ATTRIBUTES, &saAttr),
+                    openExisting, fileAttributeNormal, SUBPROCESS_NULL);
 
     if (invalidHandleValue == wr) {
         return -1;

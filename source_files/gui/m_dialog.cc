@@ -24,6 +24,10 @@
 #include <limits>
 #include <string>
 
+#ifdef WIN32
+#include <iso646.h>
+#endif
+
 #include "fmt/core.h"
 #include "fmt/format.h"
 #include "hdr_fltk.h"
@@ -33,7 +37,7 @@
 #include "lib_util.h"
 #include "main.h"
 
-std::string last_directory;
+std::filesystem::path last_directory;
 
 static int dialog_result;
 
@@ -213,7 +217,7 @@ void DLG_ShowError(const char *msg, ...) {
 
 //----------------------------------------------------------------------
 
-std::string DLG_OutputFilename(const char *ext, const char *preset) {
+std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
     std::string kind_buf = fmt::format("{} files\t*.{}", ext, ext);
 
     // uppercase the first word
@@ -238,7 +242,7 @@ std::string DLG_OutputFilename(const char *ext, const char *preset) {
     chooser.filter(kind_buf.c_str());
 
     if (!last_directory.empty()) {
-        chooser.directory(last_directory.c_str());
+        chooser.directory(last_directory.generic_string().c_str());
     }
 
     if (preset) {
@@ -278,9 +282,9 @@ std::string DLG_OutputFilename(const char *ext, const char *preset) {
         src_name.replace_extension(ext);
 
         // check if exists, ask for confirmation
-        FILE *fp = fopen(src_name.c_str(), "rb");
+        std::ifstream fp{src_name};
         if (fp) {
-            fclose(fp);
+            fp.close();
             if (!fl_choice("%s", fl_cancel, fl_ok, NULL,
                            Fl_Native_File_Chooser::file_exists_message)) {
                 return "";  // cancelled
@@ -324,6 +328,9 @@ void DLG_EditSeed(void) {
         std::cout << e.what();
     }
     main_win->build_box->string_seed = word;
+#ifdef max
+#undef max
+#endif
     unsigned long long split_limit =
         (std::numeric_limits<unsigned long long>::max() / 127);
     next_rand_seed = split_limit;
@@ -363,7 +370,7 @@ class UI_LogViewer : public Fl_Double_Window {
 
     void ReadLogs();
 
-    void WriteLogs(FILE *fp);
+    void WriteLogs(std::ofstream &fp);
 
    private:
     int CountSelectedLines() const;
@@ -530,7 +537,7 @@ void UI_LogViewer::ReadLogs() {
     LogReadLines(logviewer_display_func, (void *)this);
 }
 
-void UI_LogViewer::WriteLogs(FILE *fp) {
+void UI_LogViewer::WriteLogs(std::ofstream &fp) {
     for (int n = 1; n <= browser->size(); n++) {
         const char *str = browser->text(n);
 
@@ -577,7 +584,7 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
     chooser.filter("Text files\t*.txt");
 
     if (!last_directory.empty()) {
-        chooser.directory(last_directory.c_str());
+        chooser.directory(last_directory.generic_string().c_str());
     }
 
     switch (chooser.show()) {
@@ -601,7 +608,7 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
         filename += ".txt";
     }
 
-    FILE *fp = fopen(filename.c_str(), "w");
+    std::ofstream fp{filename};
 
     if (!fp) {
         filename = strerror(errno);
@@ -612,7 +619,7 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
 
     that->WriteLogs(fp);
 
-    fclose(fp);
+    fp.close();
 }
 
 void DLG_ViewLogs(void) {

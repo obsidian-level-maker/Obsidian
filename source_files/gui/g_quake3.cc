@@ -1249,10 +1249,10 @@ bool quake3_game_interface_c::Start(const char *preset) {
     }
 
     if (create_backups) {
-        Main_BackupFile(filename.c_str(), "old");
+        Main_BackupFile(filename, "old");
     }
 
-    if (!ZIPF_OpenWrite(filename.c_str())) {
+    if (!ZIPF_OpenWrite(filename)) {
         Main_ProgStatus(_("Error (create file)"));
         return false;
     }

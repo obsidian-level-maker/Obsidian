@@ -89,7 +89,7 @@ static bool Options_ParseLine(std::string buf) {
     return true;
 }
 
-bool Options_Load(std::string filename) {
+bool Options_Load(std::filesystem::path filename) {
     std::ifstream option_fp(filename, std::ios::in);
 
     if (!option_fp.is_open()) {
@@ -118,7 +118,7 @@ bool Options_Load(std::string filename) {
     return true;
 }
 
-bool Options_Save(std::string filename) {
+bool Options_Save(std::filesystem::path filename) {
     std::ofstream option_fp(filename, std::ios::out);
 
     if (!option_fp.is_open()) {
