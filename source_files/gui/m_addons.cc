@@ -21,10 +21,11 @@
 #include "m_addons.h"
 #include <filesystem>
 
+#include "headers.h"
+
 #include "fmt/core.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
-#include "headers.h"
 #include "lib_argv.h"
 #include "lib_file.h"
 #include "lib_util.h"

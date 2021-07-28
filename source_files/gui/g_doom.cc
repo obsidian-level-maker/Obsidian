@@ -20,6 +20,8 @@
 
 #include "g_doom.h"
 
+#include "headers.h"
+
 #include <bitset>
 #include <iostream>
 #include <string>
@@ -29,7 +31,6 @@
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"
-#include "headers.h"
 #include "lib_file.h"
 #include "lib_util.h"
 #include "lib_wad.h"
@@ -38,6 +39,10 @@
 #include "main.h"
 #include "q_common.h"  // qLump_c
 #include "twister.h"
+
+#ifdef WIN32
+#include <iso646.h>
+#endif
 
 // SLUMP for Vanilla Doom
 #include "slump_main.h"
@@ -230,7 +235,7 @@ static void DM_ClearSections() {
 
         for (unsigned int n = 0; n < sections[k]->size(); n++) {
             delete sections[k]->at(n);
-            sections[k]->at(n) = NULL;
+            sections[k]->at(n) = nullptr;
         }
 
         sections[k]->clear();
@@ -312,23 +317,23 @@ bool DM_EndWAD() {
 
 static void DM_FreeLumps() {
     delete header_lump;
-    header_lump = NULL;
+    header_lump = nullptr;
     if (not UDMF_mode) {
         delete thing_lump;
-        thing_lump = NULL;
+        thing_lump = nullptr;
         delete sector_lump;
-        sector_lump = NULL;
+        sector_lump = nullptr;
         delete vertex_lump;
-        vertex_lump = NULL;
+        vertex_lump = nullptr;
         delete sidedef_lump;
-        sidedef_lump = NULL;
+        sidedef_lump = nullptr;
         delete linedef_lump;
-        linedef_lump = NULL;
+        linedef_lump = nullptr;
     } else {
         delete textmap_lump;
-        textmap_lump = NULL;
+        textmap_lump = nullptr;
         delete endmap_lump;
-        endmap_lump = NULL;
+        endmap_lump = nullptr;
     }
 }
 

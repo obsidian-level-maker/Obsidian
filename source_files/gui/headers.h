@@ -21,6 +21,9 @@
 #ifndef __OBLIGE_INCLUDES_H__
 #define __OBLIGE_INCLUDES_H__
 
+// we C++
+#define NULL nullptr
+
 /* OS specifics */
 #ifdef WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -32,12 +35,13 @@
 
 /* C library */
 
+#include <cstdio>
+
 #include <ctype.h>
 #include <errno.h>
 #include <limits.h>
 #include <math.h>
 #include <stdarg.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>

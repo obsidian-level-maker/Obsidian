@@ -994,9 +994,10 @@ restart:;
         Main_SetupFLTK();
     }
 
-    numeric_locale =
-        std::setlocale(LC_NUMERIC, NULL);  // Grab current numeric locale
-
+#ifndef WIN32
+    numeric_locale = std::setlocale(LC_NUMERIC, NULL); // Grab current numeric locale
+#endif
+        
     LogEnableDebug(debug_messages);
 
     twister_Init();

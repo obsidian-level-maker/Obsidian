@@ -9,8 +9,8 @@ extern "C" {
 #include <getopt.h>
 }
 
-static auto now_ = std::chrono::high_resolution_clock::to_time_t(
-    std::chrono::high_resolution_clock::now());
+static auto now_ =
+    std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 static auto now = *std::localtime(&now_);
 static std::string gameValue;
 static std::string versionValue;

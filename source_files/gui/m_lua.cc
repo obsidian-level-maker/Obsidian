@@ -21,6 +21,9 @@
 #include "m_lua.h"
 
 #include <algorithm>
+#ifdef WIN32
+#include <iso646.h>
+#endif
 #include <array>
 
 #include "fmt/format.h"
@@ -765,7 +768,7 @@ int gui_set_module_button_option(lua_State *L) {
     std::string option = luaL_optstring(L, 2, "");
     int value = luaL_checkinteger(L, 3);
 
-    SYS_ASSERT(!module.empty() && !option.empty() && !isnan(value));
+    SYS_ASSERT(!module.empty() && !option.empty());
 
     if (!main_win) {
         return 0;
