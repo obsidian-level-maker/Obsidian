@@ -44,7 +44,7 @@ std::filesystem::path GetExecutablePath() {
     path.resize(length + 1);
     wai_getExecutablePath(path.data(), length, nullptr);
     path[length] = '\0';
-    return path;
+    return std::filesystem::path{path}.parent_path();
 }
 
 //--- editor settings ---
