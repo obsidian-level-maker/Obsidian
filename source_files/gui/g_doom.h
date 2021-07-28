@@ -21,6 +21,8 @@
 #ifndef __OBLIGE_DOOM_OUT_H__
 #define __OBLIGE_DOOM_OUT_H__
 
+#include <filesystem>
+#include <array>
 #include "sys_macro.h"
 #include "sys_type.h"
 
@@ -37,13 +39,13 @@ extern int dm_sub_format;
 
 /***** FUNCTIONS ****************/
 
-bool DM_StartWAD(const char *filename);
+bool DM_StartWAD(const std::filesystem::path &filename);
 bool DM_EndWAD();
 
 void DM_BeginLevel();
-void DM_EndLevel(const char *level_name);
+void DM_EndLevel(std::string_view level_name);
 
-void DM_WriteLump(const char *name, qLump_c *lump);
+void DM_WriteLump(std::string_view name, qLump_c *lump);
 
 // the section parameter can be:
 //   'P' : patches   //   'F' : flats
@@ -103,13 +105,13 @@ typedef enum {
 } doom_lineflag_e;
 
 typedef struct {
-    u16_t start;     // from this vertex...
-    u16_t end;       // ... to this vertex
-    u16_t flags;     // linedef flags (impassible, etc)
-    u8_t special;    // special type
-    u8_t args[5];    // special arguments
-    u16_t sidedef1;  // right sidedef
-    u16_t sidedef2;  // left sidedef
+    u16_t start;               // from this vertex...
+    u16_t end;                 // ... to this vertex
+    u16_t flags;               // linedef flags (impassible, etc)
+    u8_t special;              // special type
+    std::array<u8_t, 5> args;  // special arguments
+    u16_t sidedef1;            // right sidedef
+    u16_t sidedef2;            // left sidedef
 
 } PACKEDATTR raw_hexen_linedef_t;
 
@@ -117,9 +119,9 @@ typedef struct {
     s16_t x_offset;  // X offset for texture
     s16_t y_offset;  // Y offset for texture
 
-    char upper_tex[8];  // texture name for the part above
-    char lower_tex[8];  // texture name for the part below
-    char mid_tex[8];    // texture name for the regular part
+    std::array<char, 8> upper_tex;  // texture name for the part above
+    std::array<char, 8> lower_tex;  // texture name for the part below
+    std::array<char, 8> mid_tex;    // texture name for the regular part
 
     u16_t sector;  // adjacent sector
 
@@ -129,8 +131,8 @@ typedef struct {
     s16_t floor_h;  // floor height
     s16_t ceil_h;   // ceiling height
 
-    char floor_tex[8];  // floor texture
-    char ceil_tex[8];   // ceiling texture
+    std::array<char, 8> floor_tex;  // floor texture
+    std::array<char, 8> ceil_tex;   // ceiling texture
 
     u16_t light;    // light level (0-255)
     u16_t special;  // special behaviour (0 = normal, 9 = secret, ...)
@@ -172,13 +174,13 @@ typedef struct {
     u16_t type;     // type of thing
     u16_t options;  // when appears, deaf, dormant, etc..
 
-    u8_t special;  // special type
-    u8_t args[5];  // special arguments
+    u8_t special;              // special type
+    std::array<u8_t, 5> args;  // special arguments
 
 } PACKEDATTR raw_hexen_thing_t;
 
 typedef struct {
-    char marker[4];  // 'ACS' 0
+    std::array<char, 4> marker;  // 'ACS' 0
 
     u32_t offset;
 

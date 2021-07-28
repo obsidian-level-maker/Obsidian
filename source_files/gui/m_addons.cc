@@ -52,7 +52,8 @@ void VFS_AddFolder(std::string name) {
     std::string mount = fmt::format("/{}", name);
 
     if (!PHYSFS_mount(path.generic_string().c_str(), mount.c_str(), 0)) {
-        Main_FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name,
+        Main_FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n",
+                        name.c_str(),
                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return; /* NOT REACHED */
     }
