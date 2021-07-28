@@ -41,6 +41,7 @@ class FWadReader {
     int NextMap(int startindex) const;
     int LumpAfterMap(int map) const;
     int NumLumps() const;
+    void Close();
 
     void SafeRead(void *buffer, size_t size);
 
