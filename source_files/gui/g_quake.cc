@@ -1316,7 +1316,7 @@ bool quake1_game_interface_c::Start(const char *preset) {
         Main_BackupFile(filename.c_str(), "old");
     }
 
-    if (!PAK_OpenWrite(filename.c_str())) {
+    if (!PAK_OpenWrite(filename)) {
         Main_ProgStatus(_("Error (create file)"));
         return false;
     }

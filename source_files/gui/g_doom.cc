@@ -114,9 +114,9 @@ static const char *section_markers[NUM_SECTIONS][2] = {
 //------------------------------------------------------------------------
 //  SLUMP WAD Creation for Vanilla Doom
 //------------------------------------------------------------------------
-int Slump_MakeWAD(const char *filename) {
+int Slump_MakeWAD(const std::filesystem::path &filename) {
     s_config slump_config;
-    slump_config.outfile = (char *)filename;
+    slump_config.outfile = filename;
     levelcount = main_win->game_box->length->GetID();
     if (levelcount == "single") {
         slump_config.levelcount = 1;
@@ -289,7 +289,7 @@ void DM_AddSectionLump(char ch, const char *name, qLump_c *lump) {
     sections[k]->push_back(lump);
 }
 
-bool DM_StartWAD(const char *filename) {
+bool DM_StartWAD(const std::filesystem::path &filename) {
     if (!WAD_OpenWrite(filename)) {
         DLG_ShowError(_("Unable to create wad file:\n\n%s"), strerror(errno));
         return false;
@@ -852,7 +852,7 @@ int DM_NumThings() {
 
 #include "zdmain.h"
 
-static bool DM_BuildNodes(const char *filename, const char *out_name) {
+static bool DM_BuildNodes(const std::filesystem::path &filename, const std::filesystem::path &out_name) {
     LogPrintf("\n");
 
     zdbsp_options options;
@@ -938,7 +938,7 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         options.force_compression = true;
     }
 
-    if (zdmain(filename, options) != 0) {
+    if (zdmain(filename.generic_string().c_str(), options) != 0) {
         Main_ProgStatus(_("ZDBSP Error!"));
         return false;
     }
@@ -1005,7 +1005,7 @@ bool doom_game_interface_c::Start(const char *preset) {
         }
     }
 
-    if (!DM_StartWAD(filename.c_str())) {
+    if (!DM_StartWAD(filename)) {
         Main_ProgStatus(_("Error (create file)"));
         return false;
     }

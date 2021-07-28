@@ -27,13 +27,13 @@
 #define DEBUG_BUF_LEN 20000
 
 std::fstream log_file;
-static std::string log_filename;
+static std::filesystem::path log_filename;
 
 bool debugging = false;
 bool terminal = false;
 
-bool LogInit(const char *filename) {
-    if (filename) {
+bool LogInit(const std::filesystem::path &filename) {
+    if (!filename.empty()) {
         log_filename = filename;
 
         log_file.open(log_filename, std::ios::out);

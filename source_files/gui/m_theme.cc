@@ -77,14 +77,7 @@ std::string Theme_OutputFilename() {
 
     const char *src_name = chooser.filename();
 
-#ifdef WIN32
-    // workaround for accented characters in a username
-    // [ real solution is yet to be determined..... ]
-
-    fl_utf8toa(src_name, strlen(src_name), filename, sizeof(filename));
-#else
     filename = src_name;
-#endif
 
     // add extension if missing
     char *pos = (char *)fl_filename_ext(filename.c_str());
@@ -244,7 +237,7 @@ static bool Theme_Options_ParseLine(std::string buf) {
     return true;
 }
 
-bool Theme_Options_Load(std::string filename) {
+bool Theme_Options_Load(std::filesystem::path filename) {
     std::ifstream option_fp(filename, std::ios::in);
 
     if (!option_fp.is_open()) {
@@ -273,7 +266,7 @@ bool Theme_Options_Load(std::string filename) {
     return true;
 }
 
-bool Theme_Options_Save(std::string filename) {
+bool Theme_Options_Save(std::filesystem::path filename) {
     std::ofstream option_fp(filename);
 
     if (!option_fp.is_open()) {
@@ -1463,7 +1456,7 @@ class UI_ThemeWin : public Fl_Window {
     static void callback_SaveTheme(Fl_Widget *w, void *data) {
         std::string new_theme_file = Theme_OutputFilename();
         if (!new_theme_file.empty()) {
-            Theme_Options_Save(new_theme_file.c_str());
+            Theme_Options_Save(new_theme_file);
         }
     }
 };
@@ -1805,7 +1798,7 @@ void DLG_ThemeEditor(void) {
     }
 
     // save the options now
-    Theme_Options_Save(theme_file.c_str());
+    Theme_Options_Save(theme_file);
 
     delete theme_window;
 

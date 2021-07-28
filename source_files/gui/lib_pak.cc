@@ -279,14 +279,14 @@ void PAK_ListEntries(void) {
 //  PAK WRITING
 //------------------------------------------------------------------------
 
-static FILE *w_pak_fp;
+static std::ofstream w_pak_fp;
 
 static std::list<raw_pak_entry_t> w_pak_dir;
 
 static raw_pak_entry_t w_pak_entry;
 
-bool PAK_OpenWrite(const char *filename) {
-    w_pak_fp = fopen(filename, "wb");
+bool PAK_OpenWrite(const std::filesystem::path &filename) {
+    w_pak_fp.open(filename, std::ios::out | std::ios::binary);
 
     if (!w_pak_fp) {
         LogPrintf("PAK_OpenWrite: cannot create file: {}\n", filename);
@@ -299,14 +299,15 @@ bool PAK_OpenWrite(const char *filename) {
     raw_pak_header_t header;
     memset(&header, 0, sizeof(header));
 
-    fwrite(&header, sizeof(raw_pak_header_t), 1, w_pak_fp);
-    fflush(w_pak_fp);
+    w_pak_fp.write(reinterpret_cast<const char *>(&header),
+                   sizeof(raw_pak_header_t));
+    w_pak_fp << std::flush;
 
     return true;
 }
 
 void PAK_CloseWrite(void) {
-    fflush(w_pak_fp);
+    w_pak_fp << std::flush;
 
     // write the directory
 
@@ -316,7 +317,7 @@ void PAK_CloseWrite(void) {
 
     memcpy(header.magic, PAK_MAGIC, 4);
 
-    header.dir_start = (int)ftell(w_pak_fp);
+    header.dir_start = w_pak_fp.tellp();
     header.entry_num = 0;
 
     std::list<raw_pak_entry_t>::iterator PDI;
@@ -324,12 +325,13 @@ void PAK_CloseWrite(void) {
     for (PDI = w_pak_dir.begin(); PDI != w_pak_dir.end(); PDI++) {
         raw_pak_entry_t *E = &(*PDI);
 
-        fwrite(E, sizeof(raw_pak_entry_t), 1, w_pak_fp);
+        w_pak_fp.write(reinterpret_cast<const char *>(E),
+                       sizeof(raw_pak_entry_t));
 
         header.entry_num++;
     }
 
-    fflush(w_pak_fp);
+    w_pak_fp << std::flush;
 
     // finally write the _real_ PAK header
     header.entry_num *= sizeof(raw_pak_entry_t);
@@ -337,12 +339,12 @@ void PAK_CloseWrite(void) {
     header.dir_start = LE_U32(header.dir_start);
     header.entry_num = LE_U32(header.entry_num);
 
-    fseek(w_pak_fp, 0, SEEK_SET);
+    w_pak_fp.seekp(0, std::ios::beg);
 
-    fwrite(&header, sizeof(header), 1, w_pak_fp);
+    w_pak_fp.write(reinterpret_cast<const char *>(&header), sizeof(header));
 
-    fflush(w_pak_fp);
-    fclose(w_pak_fp);
+    w_pak_fp << std::flush;
+    w_pak_fp.close();
 
     LogPrintf("Closed PAK file\n");
 
@@ -356,7 +358,7 @@ void PAK_NewLump(const char *name) {
 
     strcpy(w_pak_entry.name, name);
 
-    w_pak_entry.offset = (u32_t)ftell(w_pak_fp);
+    w_pak_entry.offset = w_pak_fp.tellp();
 }
 
 bool PAK_AppendData(const void *data, int length) {
@@ -366,11 +368,13 @@ bool PAK_AppendData(const void *data, int length) {
 
     SYS_ASSERT(length > 0);
 
-    return (fwrite(data, length, 1, w_pak_fp) == 1);
+    return static_cast<bool>(
+        w_pak_fp.write(static_cast<const char *>(data), length));
 }
 
 void PAK_FinishLump(void) {
-    int len = (int)ftell(w_pak_fp) - (int)w_pak_entry.offset;
+    const int len = static_cast<int>(w_pak_fp.tellp()) -
+                    static_cast<int>(w_pak_entry.offset);
 
     // pad lumps to a multiple of four bytes
     int padding = ALIGN_LEN(len) - len;
@@ -378,7 +382,7 @@ void PAK_FinishLump(void) {
     if (padding > 0) {
         static u8_t zeros[4] = {0, 0, 0, 0};
 
-        fwrite(zeros, padding, 1, w_pak_fp);
+        w_pak_fp.write(reinterpret_cast<const char *>(zeros), padding);
     }
 
     // fix endianness

@@ -116,7 +116,7 @@ static bool Cookie_ParseLine(std::string buf) {
 
 //----------------------------------------------------------------------
 
-bool Cookie_Load(std::string filename) {
+bool Cookie_Load(std::filesystem::path filename) {
     context = CCTX_Load;
 
     keep_seed = (ArgvFind('k', "keep") >= 0);
@@ -171,7 +171,7 @@ bool Cookie_LoadString(std::string str, bool _keep_seed) {
     return true;
 }
 
-bool Cookie_Save(std::string filename) {
+bool Cookie_Save(std::filesystem::path filename) {
     context = CCTX_Save;
 
     std::ofstream cookie_fp(filename, std::ios::out);
@@ -270,7 +270,7 @@ class RecentFiles_c {
     int size;
 
     // newest is at index [0]
-    std::array<std::string, MAX_RECENT> filenames;
+    std::array<std::filesystem::path, MAX_RECENT> filenames;
 
    public:
     RecentFiles_c() : size(0) {
@@ -289,14 +289,13 @@ class RecentFiles_c {
         size = 0;
     }
 
-    int find(const char *file) {
+    int find(const std::filesystem::path &file) {
         // ignore the path when matching filenames
-        const char *A = fl_filename_name(file);
+        const std::filesystem::path a = file.filename();
 
         for (int k = 0; k < size; k++) {
-            const char *B = fl_filename_name(filenames[k].c_str());
-
-            if (fl_utf_strcasecmp(A, B) == 0) {
+            if (a.lexically_normal() ==
+                filenames[k].filename().lexically_normal()) {
                 return k;
             }
         }
@@ -318,7 +317,7 @@ class RecentFiles_c {
         filenames[index].clear();
     }
 
-    void push_front(const char *file) {
+    void push_front(const std::filesystem::path &file) {
         if (size >= MAX_RECENT) {
             erase(MAX_RECENT - 1);
         }
@@ -333,7 +332,7 @@ class RecentFiles_c {
         size++;
     }
 
-    void insert(const char *file) {
+    void insert(const std::filesystem::path &file) {
         // ensure filename (without any path) is unique
         int f = find(file);
 
@@ -366,18 +365,17 @@ class RecentFiles_c {
         }
     }
 
-    bool get_name(int index, std::string buffer, bool for_menu) const {
+    bool get_name(int index, std::filesystem::path buffer, bool for_menu) const {
         if (index >= size) {
             return false;
         }
 
-        std::string_view name = filenames[index];
+        const std::filesystem::path &name = filenames[index];
 
         if (for_menu) {
-            buffer = fmt::format("{:<.32}", fl_filename_name(name.data()));
+            buffer = fmt::format("{:<.32}", name.filename());
         } else {
             buffer = name;
-            buffer[FL_PATH_MAX - 1] = '\0';
         }
 
         return true;
@@ -403,7 +401,7 @@ void Recent_Write(std::ofstream &fp) {
     recent_configs.write_all(fp, "recent_config");
 }
 
-void Recent_AddFile(int group, std::string filename) {
+void Recent_AddFile(int group, std::filesystem::path filename) {
     SYS_ASSERT(0 <= group && group < RECG_NUM_GROUPS);
 
     switch (group) {

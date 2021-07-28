@@ -40,7 +40,7 @@ void WAD_ListEntries(void);
 
 /* WAD writing */
 
-bool WAD_OpenWrite(const char *filename);
+bool WAD_OpenWrite(const std::filesystem::path &filename);
 void WAD_CloseWrite(void);
 
 void WAD_NewLump(const char *name);

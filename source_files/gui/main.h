@@ -132,7 +132,7 @@ extern bool overwrite_warning;
 extern bool debug_messages;
 extern bool limit_break;
 
-extern std::string last_directory;
+extern std::filesystem::path last_directory;
 extern std::string numeric_locale;
 
 #ifdef __GNUC__
@@ -151,7 +151,7 @@ void Main_PopulateFontMap();
 // Dialog Windows
 void DLG_ShowError(const char *msg, ...);
 
-std::string DLG_OutputFilename(const char *ext, const char *preset = NULL);
+std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset = NULL);
 
 void DLG_AboutText(void);
 void DLG_OptionsEditor(void);

@@ -73,7 +73,7 @@ static void NK_WriteLump(const char *name, qLump_c *lump) {
     GRP_FinishLump();
 }
 
-bool NK_StartGRP(const char *filename) {
+bool NK_StartGRP(const std::filesystem::path &filename) {
     if (!GRP_OpenWrite(filename)) {
         return false;
     }
@@ -454,7 +454,7 @@ bool nukem_game_interface_c::Finish(bool build_ok) {
     if (!build_ok) {
         std::filesystem::remove(filename);
     } else {
-        Recent_AddFile(RECG_Output, filename.c_str());
+        Recent_AddFile(RECG_Output, filename);
     }
 
     return build_ok;
