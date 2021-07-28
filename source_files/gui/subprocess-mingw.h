@@ -36,9 +36,9 @@
 #ifndef SHEREDOM_SUBPROCESS_H_INCLUDED
 #define SHEREDOM_SUBPROCESS_H_INCLUDED
 
-#include <stdio.h>
+#include <cstdio>
 
-#if defined(__MINGW32__)
+#if defined(__MINGW32__) || defined(_MSC_VER)
 #define subprocess_pure
 #define subprocess_weak __inline
 #elif defined(__clang__) || defined(__GNUC__)

@@ -23,6 +23,9 @@
 #include <iostream>
 #include <limits>
 #include <string>
+#ifdef WIN32
+#include <iso646.h>
+#endif
 
 #include "fmt/core.h"
 #include "fmt/format.h"
@@ -324,6 +327,9 @@ void DLG_EditSeed(void) {
         std::cout << e.what();
     }
     main_win->build_box->string_seed = word;
+#ifdef max
+#undef max
+#endif
     unsigned long long split_limit =
         (std::numeric_limits<unsigned long long>::max() / 127);
     next_rand_seed = split_limit;
