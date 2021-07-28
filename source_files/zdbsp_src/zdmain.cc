@@ -128,6 +128,28 @@ int zdmain(const char *filename, zdbsp_options options) {
         // a temporary file. After everything is done, the input file is
         // deleted and the output file is renamed to match the input file.
 
+		char *out = new char[strlen(OutName) + 3], *dot;
+
+		if (out == NULL) {
+            throw std::runtime_error(
+                "Could not create temporary file name.");
+        }
+
+        strcpy(out, OutName);
+        dot = strrchr(out, '.');
+        if (dot && (dot[1] == 'w' || dot[1] == 'W') &&
+            (dot[2] == 'a' || dot[2] == 'A') &&
+            (dot[3] == 'd' || dot[3] == 'D') && dot[4] == 0) {
+            // *.wad becomes *.daw
+            dot[1] = 'd';
+            dot[3] = 'w';
+        } else {
+            // * becomes *.x
+            strcat(out, ".x");
+        }
+        OutName = out;
+        fixSame = true;
+
         FWadReader inwad(InName);
         FWadWriter outwad(OutName, inwad.IsIWAD());
 
@@ -162,15 +184,18 @@ int zdmain(const char *filename, zdbsp_options options) {
 
         outwad.Close();
         inwad.Close();
-		remove(InName);		
-        
-        if (0 != rename(OutName, InName)) {
-            printf(
-                "The output file could not be renamed to %s.\nYou can find "
-                "it as %s.\n",
-                InName, OutName);
-                return 20;
-        }
+		
+		if (fixSame) {
+			remove(InName);		
+			
+			if (0 != rename(OutName, InName)) {
+				printf(
+					"The output file could not be renamed to %s.\nYou can find "
+					"it as %s.\n",
+					InName, OutName);
+					return 20;
+			}
+		}
 
         END_COUNTER(t1a, t1b, t1c, "\nTotal time: %.3f seconds.\n")
     } catch (std::runtime_error &msg) {
