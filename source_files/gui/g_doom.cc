@@ -114,77 +114,84 @@ static const char *section_markers[NUM_SECTIONS][2] = {
 //------------------------------------------------------------------------
 //  SLUMP WAD Creation for Vanilla Doom
 //------------------------------------------------------------------------
-int Slump_MakeWAD(const char* filename) {
-	s_config slump_config;
-	slump_config.outfile = (char *)filename;
-	levelcount = main_win->game_box->length->GetID();
-	if (levelcount == "single") {
-		slump_config.levelcount = 1;	
-	} else if (levelcount == "few") {
-		slump_config.levelcount = 4;
-	} else if (levelcount == "episode") {
-		slump_config.levelcount = 11;
-	} else {
-		slump_config.levelcount = 32; // "Full Game"
-	}
-	current_game = main_win->game_box->game->GetID();
-	if (current_game == "doom1" || current_game == "ultdoom") {
-		slump_config.gamemask = DOOM1_BIT;
-		slump_config.map = 0;
-		slump_config.episode = 1;
-		slump_config.mission = 1;
-	} else {
-		slump_config.gamemask = DOOM2_BIT;
-		slump_config.map = 1;
-		slump_config.episode = 0;
-		slump_config.mission = 0;
-	}	
-	int minrooms = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_minrooms")->mod_slider->value();
-	if (minrooms == 1) {
-		slump_config.minrooms = twister_Between(2, 37);
-	} else {
-		slump_config.minrooms = minrooms;
-	}
-	slump_config.p_bigify = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_bigify")->mod_slider->value();
-	slump_config.forkiness = (int)main_win->left_mods->FindID("ui_slump_arch")
-							->FindSliderOpt("float_forkiness")->mod_slider->value();
-	if (main_win->left_mods->FindID("ui_slump_arch")
-							->FindButtonOpt("bool_dm_starts")->mod_check->value()) {
-		slump_config.do_dm = 1;
-	} else {
-		slump_config.do_dm = 0;
-	}
-	if (main_win->left_mods->FindID("ui_slump_arch")
-							->FindButtonOpt("bool_major_nukage")->mod_check->value()) {
-		slump_config.major_nukage = SLUMP_TRUE;
-	} else {
-		slump_config.major_nukage = SLUMP_FALSE;
-	}
-	if (main_win->left_mods->FindID("ui_slump_arch")
-							->FindButtonOpt("bool_immediate_monsters")->mod_check->value()) {
-		slump_config.immediate_monsters = SLUMP_FALSE;
-	} else {
-		slump_config.immediate_monsters = rollpercent(20);
-	}
-	monvariety = main_win->left_mods->FindID("ui_slump_mons")
-							->FindOpt("slump_mons")->mod_menu->GetID();
-	if (monvariety == "normal") {
-		slump_config.required_monster_bits = 0;
-		slump_config.forbidden_monster_bits = SPECIAL;
-	} else if (monvariety == "shooters") {
-		slump_config.required_monster_bits = SHOOTS;
-		slump_config.forbidden_monster_bits = SPECIAL;
-	} else if (monvariety == "noflyzone") {
-		slump_config.required_monster_bits = 0;
-		slump_config.forbidden_monster_bits = FLIES + SPECIAL;
-	} else {
-		slump_config.required_monster_bits = SPECIAL; // All Nazis
-		slump_config.forbidden_monster_bits = 0;
-	}					
-	return slump_main(slump_config);    
-}	
+int Slump_MakeWAD(const std::filesystem::path &filename) {
+    s_config slump_config;
+    slump_config.outfile = filename;
+    levelcount = main_win->game_box->length->GetID();
+    if (levelcount == "single") {
+        slump_config.levelcount = 1;
+    } else if (levelcount == "few") {
+        slump_config.levelcount = 4;
+    } else if (levelcount == "episode") {
+        slump_config.levelcount = 11;
+    } else {
+        slump_config.levelcount = 32;  // "Full Game"
+    }
+    current_game = main_win->game_box->game->GetID();
+    if (current_game == "doom1" || current_game == "ultdoom") {
+        slump_config.gamemask = DOOM1_BIT;
+        slump_config.map = 0;
+        slump_config.episode = 1;
+        slump_config.mission = 1;
+    } else {
+        slump_config.gamemask = DOOM2_BIT;
+        slump_config.map = 1;
+        slump_config.episode = 0;
+        slump_config.mission = 0;
+    }
+    int minrooms = (int)main_win->left_mods->FindID("ui_slump_arch")
+                       ->FindSliderOpt("float_minrooms")
+                       ->mod_slider->value();
+    if (minrooms == 1) {
+        slump_config.minrooms = twister_Between(2, 37);
+    } else {
+        slump_config.minrooms = minrooms;
+    }
+    slump_config.p_bigify = (int)main_win->left_mods->FindID("ui_slump_arch")
+                                ->FindSliderOpt("float_bigify")
+                                ->mod_slider->value();
+    slump_config.forkiness = (int)main_win->left_mods->FindID("ui_slump_arch")
+                                 ->FindSliderOpt("float_forkiness")
+                                 ->mod_slider->value();
+    if (main_win->left_mods->FindID("ui_slump_arch")
+            ->FindButtonOpt("bool_dm_starts")
+            ->mod_check->value()) {
+        slump_config.do_dm = 1;
+    } else {
+        slump_config.do_dm = 0;
+    }
+    if (main_win->left_mods->FindID("ui_slump_arch")
+            ->FindButtonOpt("bool_major_nukage")
+            ->mod_check->value()) {
+        slump_config.major_nukage = SLUMP_TRUE;
+    } else {
+        slump_config.major_nukage = SLUMP_FALSE;
+    }
+    if (main_win->left_mods->FindID("ui_slump_arch")
+            ->FindButtonOpt("bool_immediate_monsters")
+            ->mod_check->value()) {
+        slump_config.immediate_monsters = SLUMP_FALSE;
+    } else {
+        slump_config.immediate_monsters = rollpercent(20);
+    }
+    monvariety = main_win->left_mods->FindID("ui_slump_mons")
+                     ->FindOpt("slump_mons")
+                     ->mod_menu->GetID();
+    if (monvariety == "normal") {
+        slump_config.required_monster_bits = 0;
+        slump_config.forbidden_monster_bits = SPECIAL;
+    } else if (monvariety == "shooters") {
+        slump_config.required_monster_bits = SHOOTS;
+        slump_config.forbidden_monster_bits = SPECIAL;
+    } else if (monvariety == "noflyzone") {
+        slump_config.required_monster_bits = 0;
+        slump_config.forbidden_monster_bits = FLIES + SPECIAL;
+    } else {
+        slump_config.required_monster_bits = SPECIAL;  // All Nazis
+        slump_config.forbidden_monster_bits = 0;
+    }
+    return slump_main(slump_config);
+}
 
 
 //------------------------------------------------------------------------
@@ -283,7 +290,7 @@ void DM_AddSectionLump(char ch, const char *name, qLump_c *lump) {
     sections[k]->push_back(lump);
 }
 
-bool DM_StartWAD(const char *filename) {
+bool DM_StartWAD(const std::filesystem::path &filename) {
     if (!WAD_OpenWrite(filename)) {
         DLG_ShowError(_("Unable to create wad file:\n\n%s"), strerror(errno));
         return false;
@@ -846,7 +853,7 @@ int DM_NumThings() {
 
 #include "zdmain.h"
 
-static bool DM_BuildNodes(const char *filename) {
+static bool DM_BuildNodes(const std::filesystem::path &filename) {
     LogPrintf("\n");
 
     zdbsp_options options;
@@ -928,7 +935,7 @@ static bool DM_BuildNodes(const char *filename) {
         options.force_compression = true;
     }
 
-    if (zdmain(filename, options) != 0) {
+    if (zdmain(filename.generic_string().c_str(), options) != 0) {
         Main_ProgStatus(_("ZDBSP Error!"));
         return false;
     }

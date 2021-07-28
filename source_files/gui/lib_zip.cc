@@ -38,7 +38,7 @@
 #define ZIPF_BUFFER 4096
 
 static FILE *r_zip_fp;
-static FILE *w_zip_fp;
+static std::ofstream w_zip_fp;
 
 typedef struct {
     raw_zip_central_header_t hdr;
@@ -618,8 +618,8 @@ static int w_local_length;
 static int zipf_date;
 static int zipf_time;
 
-bool ZIPF_OpenWrite(const char *filename) {
-    w_zip_fp = fopen(filename, "wb");
+bool ZIPF_OpenWrite(const std::filesystem::path &filename) {
+    w_zip_fp.open(filename, std::ios::out | std::ios::binary);
 
     if (!w_zip_fp) {
         LogPrintf("ZIPF_OpenWrite: cannot create file: {}\n", filename);
@@ -649,13 +649,13 @@ bool ZIPF_OpenWrite(const char *filename) {
 }
 
 void ZIPF_CloseWrite(void) {
-    fflush(w_zip_fp);
+    w_zip_fp << std::flush;
 
     // write the directory
 
     LogPrintf("Writing ZIP directory\n");
 
-    int dir_offset = (int)ftell(w_zip_fp);
+    int dir_offset = w_zip_fp.tellp();
     int dir_size = 0;
 
     int total_entries = 0;
@@ -665,8 +665,9 @@ void ZIPF_CloseWrite(void) {
     for (ZDI = w_directory.begin(); ZDI != w_directory.end(); ZDI++) {
         zip_central_entry_t *L = &(*ZDI);
 
-        fwrite(&L->hdr, sizeof(raw_zip_central_header_t), 1, w_zip_fp);
-        fwrite(&L->name, strlen(L->name), 1, w_zip_fp);
+        w_zip_fp.write(reinterpret_cast<const char *>(&L->hdr),
+                       sizeof(raw_zip_central_header_t));
+        w_zip_fp.write(L->name, strlen(L->name));
 
         dir_size += (int)sizeof(raw_zip_central_header_t);
         dir_size += strlen(L->name);
@@ -690,14 +691,13 @@ void ZIPF_CloseWrite(void) {
     end_part.dir_offset = LE_U32(dir_offset);
     end_part.dir_size = LE_U32(dir_size);
 
-    fwrite(&end_part, sizeof(end_part), 1, w_zip_fp);
+    w_zip_fp.write(reinterpret_cast<const char *>(&end_part), sizeof(end_part));
 
-    fflush(w_zip_fp);
-    fclose(w_zip_fp);
+    w_zip_fp << std::flush;
+    w_zip_fp.close();
 
     LogPrintf("Closed ZIP file\n");
 
-    w_zip_fp = NULL;
     w_directory.clear();
 }
 
@@ -707,7 +707,7 @@ void ZIPF_NewLump(const char *name) {
     }
 
     // remember position
-    w_local_start = (int)ftell(w_zip_fp);
+    w_local_start = w_zip_fp.tellp();
     w_local_length = 0;
 
     // setup the zip_local_entry_t fields
@@ -734,8 +734,9 @@ void ZIPF_NewLump(const char *name) {
 
     strcpy(w_local.name, name);
 
-    fwrite(&w_local.hdr, sizeof(w_local.hdr), 1, w_zip_fp);
-    fwrite(&w_local.name, name_length, 1, w_zip_fp);
+    w_zip_fp.write(reinterpret_cast<const char *>(&w_local.hdr),
+                   sizeof(w_local.hdr));
+    w_zip_fp.write(w_local.name, name_length);
 }
 
 bool ZIPF_AppendData(const void *data, int length) {
@@ -745,7 +746,7 @@ bool ZIPF_AppendData(const void *data, int length) {
 
     SYS_ASSERT(length > 0);
 
-    if (fwrite(data, length, 1, w_zip_fp) != 1) {
+    if (!w_zip_fp.write(static_cast<const char *>(data), length)) {
         return false;
     }
 
@@ -758,22 +759,23 @@ bool ZIPF_AppendData(const void *data, int length) {
 }
 
 void ZIPF_FinishLump(void) {
-    fflush(w_zip_fp);
+    w_zip_fp << std::flush;
 
     w_local.hdr.full_size = LE_U32(w_local_length);
     w_local.hdr.compress_size = LE_U32(w_local_length);
 
     // seek back and fix up the CRC and size fields
-    fseek(w_zip_fp, w_local_start + LOCAL_CRC_OFFSET, SEEK_SET);
+    w_zip_fp.seekp(w_local_start + LOCAL_CRC_OFFSET, std::ios::beg);
 
-    fwrite(&w_local.hdr.crc, 4, 1, w_zip_fp);
-    fwrite(&w_local.hdr.compress_size, 4, 1, w_zip_fp);
-    fwrite(&w_local.hdr.full_size, 4, 1, w_zip_fp);
+    w_zip_fp.write(reinterpret_cast<const char *>(w_local.hdr.crc), 4);
+    w_zip_fp.write(reinterpret_cast<const char *>(w_local.hdr.compress_size),
+                   4);
+    w_zip_fp.write(reinterpret_cast<const char *>(w_local.hdr.full_size), 4);
 
-    fflush(w_zip_fp);
+    w_zip_fp << std::flush;
 
     // seek back to end of file
-    fseek(w_zip_fp, 0, SEEK_END);
+    w_zip_fp.seekp(0, std::ios::end);
 
     // create the central entry from the local entry
     zip_central_entry_t central;

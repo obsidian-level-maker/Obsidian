@@ -21,6 +21,8 @@
 #ifndef __OBLIGE_LIB_ZIP_H__
 #define __OBLIGE_LIB_ZIP_H__
 
+#include <filesystem>
+
 #include "sys_macro.h"
 #include "sys_type.h"
 
@@ -40,7 +42,7 @@ void ZIPF_ListEntries(void);
 
 /* ZIP writing */
 
-bool ZIPF_OpenWrite(const char *filename);
+bool ZIPF_OpenWrite(const std::filesystem::path &filename);
 void ZIPF_CloseWrite(void);
 
 void ZIPF_NewLump(const char *name);

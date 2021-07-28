@@ -23,6 +23,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-O2 -Wall")
 if (WIN32)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
   set(CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
 endif()
 if(clang)
@@ -238,5 +239,6 @@ target_link_libraries(
           obsidian_ajpoly
           obsidian_zdbsp
           obsidian_slump
+          obsidian_whereami
 )
 endif()

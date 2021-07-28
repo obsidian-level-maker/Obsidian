@@ -35,10 +35,10 @@
 
 // need this because the OPTIONS file is loaded *before* the addons
 // folder is scanned for PK3 packages, so remember enabled ones here.
-static std::map<std::string, int> initial_enabled_addons;
+static std::map<std::filesystem::path, int> initial_enabled_addons;
 
 typedef struct {
-    std::string name;  // base filename, includes ".pk3" extension
+    std::filesystem::path name;  // base filename, includes ".pk3" extension
 
     bool enabled;
 
@@ -51,7 +51,7 @@ void VFS_AddFolder(std::string name) {
     path /= name;
     std::string mount = fmt::format("/{}", name);
 
-    if (!PHYSFS_mount(path.c_str(), mount.c_str(), 0)) {
+    if (!PHYSFS_mount(path.generic_string().c_str(), mount.c_str(), 0)) {
         Main_FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name,
                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return; /* NOT REACHED */
@@ -80,7 +80,7 @@ bool VFS_AddArchive(std::filesystem::path filename, bool options_file) {
         filename = new_name;
     }
 
-    if (!PHYSFS_mount(filename.c_str(), "/", 0)) {
+    if (!PHYSFS_mount(filename.generic_string().c_str(), "/", 0)) {
         if (options_file) {
             LogPrintf(
                 fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
@@ -177,13 +177,14 @@ void VFS_ScanForAddons() {
 
     for (auto &file : std::filesystem::directory_iterator(dir_name)) {
         if (file.path().has_extension() &&
-            StringCaseCmp(file.path().extension().native(), "pk3")) {
+            StringCaseCmp(file.path().extension().generic_string(), "pk3")) {
             result1 += 1;
             list.push_back(file.path());
         }
     }
 
-    if (!StringCaseCmp(home_dir.native(), install_dir.native())) {
+    if (!StringCaseCmp(home_dir.generic_string(),
+                       install_dir.generic_string())) {
         dir_name = home_dir;
         dir_name /= "addons";
 
@@ -195,7 +196,8 @@ void VFS_ScanForAddons() {
 
         for (auto &file : std::filesystem::directory_iterator(dir_name)) {
             if (file.path().has_extension() &&
-                StringCaseCmp(file.path().extension().native(), "pk3")) {
+                StringCaseCmp(file.path().extension().generic_string(),
+                              "pk3")) {
                 result2 += 1;
                 list2.push_back(file.path());
             }

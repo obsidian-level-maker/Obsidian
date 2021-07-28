@@ -255,7 +255,7 @@ int gui_set_import_dir(lua_State *L) {
 // LUA: get_install_dir() --> string
 //
 int gui_get_install_dir(lua_State *L) {
-    lua_pushstring(L, install_dir.c_str());
+    lua_pushstring(L, install_dir.generic_string().c_str());
     return 1;
 }
 
@@ -287,7 +287,7 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
 
     byte buffer[1];
 
-    PHYSFS_File *fp = PHYSFS_openRead(temp_name.c_str());
+    PHYSFS_File *fp = PHYSFS_openRead(temp_name.generic_string().c_str());
 
     if (!fp) {
         return false;
@@ -304,7 +304,7 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
     if (match == "*") {
         return true;
     } else if (match[0] == '*' && match[1] == '.' && isalnum(match[2])) {
-        return name.extension().native() ==
+        return name.extension().generic_string() ==
                "." + std::string{match.begin() + 2, match.end()};
     }
 
@@ -1474,15 +1474,15 @@ static const char *my_reader(lua_State *L, void *ud, size_t *size) {
     return info->buffer;  // OK
 }
 
-static int my_loadfile(lua_State *L, const char *filename) {
+static int my_loadfile(lua_State *L, const std::filesystem::path &filename) {
     /* index of filename on the stack */
     int fnameindex = lua_gettop(L) + 1;
 
-    lua_pushfstring(L, "@%s", filename);
+    lua_pushfstring(L, "@%s", filename.generic_string().c_str());
 
     load_info_t info;
 
-    info.fp = PHYSFS_openRead(filename);
+    info.fp = PHYSFS_openRead(filename.generic_string().c_str());
     info.error_msg.clear();
 
     if (!info.fp) {
@@ -1520,11 +1520,11 @@ void Script_Load(std::filesystem::path script_name) {
         script_name.replace_extension("lua");
     }
 
-    std::string filename = std::filesystem::path{import_dir} / script_name;
+    std::filesystem::path filename = std::filesystem::path{import_dir} / script_name;
 
     DebugPrintf(fmt::format("  loading script: '{}'\n", filename).c_str());
 
-    int status = my_loadfile(LUA_ST, filename.c_str());
+    int status = my_loadfile(LUA_ST, filename);
 
     if (status == 0) {
         status = lua_pcall(LUA_ST, 0, 0, 0);

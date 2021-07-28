@@ -22,10 +22,11 @@
 #define __OBLIGE_COOKIE_H__
 
 #include <cstdio>
+#include <filesystem>
 #include <string>
 
-bool Cookie_Load(std::string filename);
-bool Cookie_Save(std::string filename);
+bool Cookie_Load(std::filesystem::path filename);
+bool Cookie_Save(std::filesystem::path filename);
 
 bool Cookie_LoadString(std::string str, bool _keep_seed);
 
@@ -33,10 +34,10 @@ void Cookie_ParseArguments(void);
 
 /* option stuff */
 
-bool Options_Load(std::string filename);
-bool Options_Save(std::string filename);
-bool Theme_Options_Load(std::string filename);
-bool Theme_Options_Save(std::string filename);
+bool Options_Load(std::filesystem::path filename);
+bool Options_Save(std::filesystem::path filename);
+bool Theme_Options_Load(std::filesystem::path filename);
+bool Theme_Options_Save(std::filesystem::path filename);
 
 /* recent file stuff */
 
@@ -51,7 +52,7 @@ typedef enum {
 
 } recent_group_e;
 
-void Recent_AddFile(int group, std::string filename);
+void Recent_AddFile(int group, std::filesystem::path filename);
 void Recent_RemoveFile(int group, std::string filename);
 bool Recent_GetName(int group, int index, std::string name_buf,
                     bool for_menu = false);

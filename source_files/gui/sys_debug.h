@@ -29,7 +29,7 @@
 extern bool terminal;
 extern bool debugging;
 extern std::fstream log_file;
-bool LogInit(const char *filename);  // NULL for none
+bool LogInit(const std::filesystem::path &filename);  // NULL for none
 void LogClose(void);
 
 void LogEnableDebug(bool enable);
