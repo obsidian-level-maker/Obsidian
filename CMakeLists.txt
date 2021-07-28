@@ -19,7 +19,7 @@ project(
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_FLAGS "-Od -w /showIncludes")
+set(CMAKE_CXX_FLAGS "-O2 -Wall")
 if(clang)
   set(CMAKE_CXX_CLANG_TIDY clang-tidy)
 endif()
