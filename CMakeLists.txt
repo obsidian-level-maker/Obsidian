@@ -172,7 +172,9 @@ else()
   target_compile_definitions(obsidian PRIVATE UNIX)
 endif()
 
-find_package(FLTK 1.3)
+if(UNIX)
+  find_package(FLTK 1.3)
+endif()
 
 if(FLTK_FOUND)
   target_link_libraries(obsidian PRIVATE ${FLTK_LIBRARIES})
@@ -206,6 +208,7 @@ endif()
 
 add_dependencies(obsidian filename_formatter)
 
+if(UNIX)
 target_link_libraries(
   obsidian
   PRIVATE zlibstatic
@@ -218,3 +221,15 @@ target_link_libraries(
           obsidian_whereami
           fontconfig
 )
+else()
+target_link_libraries(
+  obsidian
+  PRIVATE zlibstatic
+          obsidian_lua
+          obsidian_physfs
+          obsidian_acc
+          obsidian_ajpoly
+          obsidian_zdbsp
+          obsidian_slump
+)
+endif()
