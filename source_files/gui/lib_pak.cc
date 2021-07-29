@@ -77,7 +77,7 @@ bool PAK_OpenRead(const char *filename) {
         return false;
     }
 
-    if (memcmp(r_header.magic, PAK_MAGIC, 4) != 0) {
+    if (memcmp(r_header.magic.data(), PAK_MAGIC, 4) != 0) {
         LogPrintf("PAK_OpenRead: not a PAK file!\n");
 #ifdef HAVE_PHYSFS
         PHYSFS_close(r_pak_fp);
@@ -180,7 +180,7 @@ int PAK_NumEntries(void) { return (int)r_header.entry_num; }
 
 int PAK_FindEntry(const char *name) {
     for (unsigned int i = 0; i < r_header.entry_num; i++) {
-        if (StringCaseCmp(name, r_directory[i].name) == 0) {
+        if (StringCaseCmp(name, r_directory[i].name.data()) == 0) {
             return i;
         }
     }
@@ -197,7 +197,7 @@ int PAK_EntryLen(int entry) {
 const char *PAK_EntryName(int entry) {
     SYS_ASSERT(entry >= 0 && entry < (int)r_header.entry_num);
 
-    return r_directory[entry].name;
+    return r_directory[entry].name.data();
 }
 
 void PAK_FindMaps(std::vector<int> &entries) {
@@ -206,7 +206,7 @@ void PAK_FindMaps(std::vector<int> &entries) {
     for (int i = 0; i < (int)r_header.entry_num; i++) {
         raw_pak_entry_t *E = &r_directory[i];
 
-        const char *name = E->name;
+        const char *name = E->name.data();
 
         if (strncmp(name, "maps/", 5) != 0) {
             continue;
@@ -268,7 +268,7 @@ void PAK_ListEntries(void) {
 
             fmt::print("{:4}: +{:08x} {:08x} : {}\n", i + 1,
                        static_cast<unsigned int>(E->offset),
-                       static_cast<unsigned int>(E->length), E->name);
+                       static_cast<unsigned int>(E->length), E->name.data());
         }
     }
 
@@ -315,7 +315,7 @@ void PAK_CloseWrite(void) {
 
     raw_pak_header_t header;
 
-    memcpy(header.magic, PAK_MAGIC, 4);
+    memcpy(header.magic.data(), PAK_MAGIC, 4);
 
     header.dir_start = w_pak_fp.tellp();
     header.entry_num = 0;
@@ -356,7 +356,7 @@ void PAK_NewLump(const char *name) {
 
     memset(&w_pak_entry, 0, sizeof(w_pak_entry));
 
-    strcpy(w_pak_entry.name, name);
+    strcpy(w_pak_entry.name.data(), name);
 
     w_pak_entry.offset = w_pak_fp.tellp();
 }
@@ -380,9 +380,9 @@ void PAK_FinishLump(void) {
     int padding = ALIGN_LEN(len) - len;
 
     if (padding > 0) {
-        static u8_t zeros[4] = {0, 0, 0, 0};
+        constexpr std::array<char, 4> zeros = {0, 0, 0, 0};
 
-        w_pak_fp.write(reinterpret_cast<const char *>(zeros), padding);
+        w_pak_fp.write(zeros.data(), padding);
     }
 
     // fix endianness

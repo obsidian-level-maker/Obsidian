@@ -191,7 +191,7 @@ static s32_t Q3_AddBrush(const csg_brush_c *A) {
     // planes of the brush, in a particular order too (X before Y
     // before Z, negative normals before positive ones).
 
-    int planes[MAX_BRUSH_PLANES];
+    std::array<int, MAX_BRUSH_PLANES> planes;
     int i;
 
     // find existing brush
@@ -234,10 +234,10 @@ static s32_t Q3_AddBrush(const csg_brush_c *A) {
     // add all the brush planes
 
     // top
-    DoAddBrushPlane(planes, A->t, +1);
+    DoAddBrushPlane(planes.data(), A->t, +1);
 
     // bottom
-    DoAddBrushPlane(planes, A->b, -1);
+    DoAddBrushPlane(planes.data(), A->b, -1);
 
     // sides
     for (unsigned int k = 0; k < A->verts.size(); k++) {
@@ -247,39 +247,39 @@ static s32_t Q3_AddBrush(const csg_brush_c *A) {
         float nx = (v2->y - v1->y);
         float ny = (v1->x - v2->x);
 
-        DoAddBrushPlane(planes, v1->x, v1->y, 0, nx, ny, 0);
+        DoAddBrushPlane(planes.data(), v1->x, v1->y, 0, nx, ny, 0);
     }
 
     // if some of our planes were not axial, we need to fill in
     // the missing axial planes.
 
     if (planes[0] < 0) {
-        DoAddBrushPlane(planes, A->min_x, 0, 0, -1, 0, 0);
+        DoAddBrushPlane(planes.data(), A->min_x, 0, 0, -1, 0, 0);
     }
     SYS_ASSERT(planes[0] >= 0);
 
     if (planes[1] < 0) {
-        DoAddBrushPlane(planes, A->max_x, 0, 0, +1, 0, 0);
+        DoAddBrushPlane(planes.data(), A->max_x, 0, 0, +1, 0, 0);
     }
     SYS_ASSERT(planes[1] >= 0);
 
     if (planes[2] < 0) {
-        DoAddBrushPlane(planes, 0, A->min_y, 0, 0, -1, 0);
+        DoAddBrushPlane(planes.data(), 0, A->min_y, 0, 0, -1, 0);
     }
     SYS_ASSERT(planes[2] >= 0);
 
     if (planes[3] < 0) {
-        DoAddBrushPlane(planes, 0, A->max_y, 0, 0, +1, 0);
+        DoAddBrushPlane(planes.data(), 0, A->max_y, 0, 0, +1, 0);
     }
     SYS_ASSERT(planes[3] >= 0);
 
     if (planes[4] < 0) {
-        DoAddBrushPlane(planes, 0, 0, A->b.z, 0, 0, -1);
+        DoAddBrushPlane(planes.data(), 0, 0, A->b.z, 0, 0, -1);
     }
     SYS_ASSERT(planes[4] >= 0);
 
     if (planes[5] < 0) {
-        DoAddBrushPlane(planes, 0, 0, A->t.z, 0, 0, +1);
+        DoAddBrushPlane(planes.data(), 0, 0, A->t.z, 0, 0, +1);
     }
     SYS_ASSERT(planes[5] >= 0);
 
@@ -320,7 +320,7 @@ static void Q3_WriteBrushes() {
 static std::vector<dshader3_t> q3_shaders;
 
 #define NUM_SHADER_HASH 128
-static std::vector<int> *shader_hashtab[NUM_SHADER_HASH];
+static std::array<std::vector<int> *, NUM_SHADER_HASH> shader_hashtab;
 
 static void Q3_ClearShaders(void) {
     q3_shaders.clear();
@@ -449,9 +449,9 @@ static inline bool IsTriangleDegenerate(quake_face_c *face, int a, int b,
                                         int c) {
     // this logic is duplicated from q3map.c
 
-    float d[3];
-    float e[3];
-    float f[3];
+    std::array<float, 3> d;
+    std::array<float, 3> e;
+    std::array<float, 3> f;
 
     d[0] = face->verts[b].x - face->verts[a].x;
     d[1] = face->verts[b].y - face->verts[a].y;
@@ -615,7 +615,7 @@ static void Q3_TriangulateSurface(quake_face_c *face, dsurface3_t *raw_surf) {
 
     bool has_degen = FaceHasDegenTriangle(face);
 
-    ddrawvert3_t raw_verts[MAX_FACE_VERTS];
+    std::array<ddrawvert3_t, MAX_FACE_VERTS> raw_verts;
 
     raw_surf->firstVert = q3_total_drawverts;
     raw_surf->numVerts = (int)face->verts.size();
@@ -633,7 +633,7 @@ static void Q3_TriangulateSurface(quake_face_c *face, dsurface3_t *raw_surf) {
 
     if (has_degen) {
         // create a middle point
-        Q3_AverageDrawVert(raw_verts, raw_surf->numVerts,
+        Q3_AverageDrawVert(raw_verts.data(), raw_surf->numVerts,
                            &raw_verts[raw_surf->numVerts]);
 
         raw_surf->firstIndex = q3_total_indexes;

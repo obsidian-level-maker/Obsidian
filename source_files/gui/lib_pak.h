@@ -21,6 +21,8 @@
 #ifndef __OBLIGE_PAK_FILES_H__
 #define __OBLIGE_PAK_FILES_H__
 
+#include <array>
+#include <filesystem>
 #include <vector>
 
 #include "sys_macro.h"
@@ -54,7 +56,7 @@ void PAK_FinishLump(void);
 /* ----- PAK structures ---------------------- */
 
 typedef struct {
-    char magic[4];
+    std::array<char, 4> magic;
 
     u32_t dir_start;
     u32_t entry_num;
@@ -64,7 +66,7 @@ typedef struct {
 #define PAK_MAGIC "PACK"
 
 typedef struct {
-    char name[56];
+    std::array<char, 56> name;
 
     u32_t offset;
     u32_t length;

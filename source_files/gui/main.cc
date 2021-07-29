@@ -209,7 +209,7 @@ void Determine_WorkingPath(const char *argv0) {
 }
 
 static bool Verify_InstallDir(const std::filesystem::path &path) {
-    std::string filename = fmt::format("{}/scripts/oblige.lua", path);
+    std::filesystem::path filename = path / "scripts" / "oblige.lua";
 
 #if 0  // DEBUG
 	fprintf(stderr, "Trying install dir: [%s]\n", path);
@@ -251,20 +251,24 @@ void Determine_InstallDir(const char *argv0) {
     install_dir = home_dir;
 
 #else
-    static const char *prefixes[] = {
-        "/usr/local", "/usr", "/opt",
-
-        NULL  // end of list
+    constexpr std::array prefixes = {
+        "/usr/local",
+        "/usr",
+        "/opt",
     };
 
-    for (int i = 0; prefixes[i]; i++) {
-        install_dir = fmt::format("{}/share/obsidian", prefixes[i]);
+    for (const char *prefix : prefixes) {
+        install_dir = fmt::format("{}/share/obsidian", prefix);
 
         if (Verify_InstallDir(install_dir.c_str())) {
             return;
         }
 
         install_dir.clear();
+    }
+
+    if (Verify_InstallDir(GetExecutablePath())) {
+        install_dir = GetExecutablePath();
     }
 #endif
 
@@ -998,9 +1002,10 @@ restart:;
     }
 
 #ifndef WIN32
-    numeric_locale = std::setlocale(LC_NUMERIC, NULL); // Grab current numeric locale
+    numeric_locale =
+        std::setlocale(LC_NUMERIC, NULL);  // Grab current numeric locale
 #endif
-        
+
     LogEnableDebug(debug_messages);
 
     twister_Init();

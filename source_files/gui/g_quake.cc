@@ -126,14 +126,14 @@ static void CreateDummyMip(qLump_c *lump, const char *name, int pix1,
 
     lump->Append(&mm_tex, sizeof(mm_tex));
 
-    u8_t pixels[2] = {(u8_t)pix1, (u8_t)pix2};
+    std::array pixels = {(u8_t)pix1, (u8_t)pix2};
 
     size = 64;
 
     for (int i = 0; i < MIP_LEVELS; i++) {
         for (int y = 0; y < size; y++) {
             for (int x = 0; x < size; x++) {
-                lump->Append(pixels + (((x ^ y) & (size / 4)) ? 1 : 0), 1);
+                lump->Append(&pixels[(((x ^ y) & (size / 4)) ? 1 : 0)], 1);
             }
         }
 
@@ -183,10 +183,10 @@ static void CreateLogoMip(qLump_c *lump, const char *name, const byte *data,
 }
 
 static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name) {
-    static byte relief_colors[8] =  // yellow range
+    static std::array<byte, 8> relief_colors =  // yellow range
         {207, 205, 203, 201, 199, 197, 195, 193};
 
-    static byte bolt_colors[8] =  // blue range
+    static std::array<byte, 8> bolt_colors =  // blue range
         {0, 223, 222, 221, 219, 217, 214, 211};
 
     if (strcmp(name, "error") == 0) {
@@ -199,12 +199,12 @@ static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name) {
     }
     if (strcmp(name, "o_carve") == 0)  // TEMP STUFF !!!!
     {
-        CreateLogoMip(lump, name, logo_RELIEF.data, relief_colors);
+        CreateLogoMip(lump, name, logo_RELIEF.data, relief_colors.data());
         return;
     }
     if (strcmp(name, "o_bolt") == 0)  // TEMP STUFF !!!!
     {
-        CreateLogoMip(lump, name, logo_BOLT.data, bolt_colors);
+        CreateLogoMip(lump, name, logo_BOLT.data, bolt_colors.data());
         return;
     }
 
@@ -214,16 +214,16 @@ static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name) {
         int pos = 0;
         int length = WAD2_EntryLen(entry);
 
-        byte buffer[1024];
+        std::array<byte, 1024> buffer;
 
         while (length > 0) {
             int actual = MIN(1024, length);
 
-            if (!WAD2_ReadData(entry, pos, actual, buffer)) {
+            if (!WAD2_ReadData(entry, pos, actual, buffer.data())) {
                 Main_FatalError("Error reading texture data in wad!");
             }
 
-            lump->Append(buffer, actual);
+            lump->Append(buffer.data(), actual);
 
             pos += actual;
             length -= actual;
@@ -387,7 +387,7 @@ static void DummyMipTex(void)
 
 static std::vector<texinfo_t> q1_texinfos;
 
-static std::vector<int> *texinfo_hashtab[TEXINFO_HASH_SIZE];
+static std::array<std::vector<int> *, TEXINFO_HASH_SIZE> texinfo_hashtab;
 
 static void Q1_ClearTexInfo(void) {
     q1_texinfos.clear();
@@ -532,14 +532,15 @@ qLump_c *q1_clip;
 
 int q1_total_clip;
 
-static int q1_medium_table[5] = {CONTENTS_EMPTY, CONTENTS_WATER, CONTENTS_SLIME,
-                                 CONTENTS_LAVA, CONTENTS_SOLID};
+static std::array<int, 5> q1_medium_table = {CONTENTS_EMPTY, CONTENTS_WATER,
+                                             CONTENTS_SLIME, CONTENTS_LAVA,
+                                             CONTENTS_SOLID};
 
-static byte q1_ambient_levels[4][8] = {
-    {255, 208, 176, 144, 112, 80, 48, 16},  // Water
-    {255, 160, 128, 96, 64, 32, 0, 0},      // Sky
-    {255, 208, 176, 144, 112, 80, 48, 16},  // Slime (unused)
-    {255, 208, 176, 144, 112, 80, 48, 16},  // Lava
+static std::array<std::array<byte, 8>, 4> q1_ambient_levels = {
+    std::array<byte, 8>{255, 208, 176, 144, 112, 80, 48, 16},  // Water
+    std::array<byte, 8>{255, 160, 128, 96, 64, 32, 0, 0},      // Sky
+    std::array<byte, 8>{255, 208, 176, 144, 112, 80, 48, 16},  // Slime (unused)
+    std::array<byte, 8>{255, 208, 176, 144, 112, 80, 48, 16},  // Lava
 };
 
 static void Q1_FreeStuff() {
@@ -851,10 +852,10 @@ static void Q1_WriteBSP() {
 #define H2_MAX_HULLS 8
 
 typedef struct {
-    float mins[3], maxs[3];
-    float origin[3];
+    std::array<float, 3> mins, maxs;
+    std::array<float, 3> origin;
 
-    s32_t headnode[H2_MAX_HULLS];
+    std::array<s32_t, H2_MAX_HULLS> headnode;
 
     s32_t numleafs;
     s32_t firstface, numfaces;
@@ -959,8 +960,8 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane,
 
     const char *texture = "error";
 
-    float s[4] = {0.0, 0.0, 0.0, 0.0};
-    float t[4] = {0.0, 0.0, 0.0, 0.0};
+    std::array<float, 4> s = {0.0, 0.0, 0.0, 0.0};
+    std::array<float, 4> t = {0.0, 0.0, 0.0, 0.0};
 
     // add the edges
 
@@ -981,9 +982,9 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane,
         MapModel_Edge(x, y2, model->z2, x, y2, model->z1);
         MapModel_Edge(x, y2, model->z1, x, y1, model->z1);
 
-        MapModel_TexCoord(s + 1, s + 3, model->y1, model->y2, model->x_face,
+        MapModel_TexCoord(&s[1], &s[3], model->y1, model->y2, model->x_face,
                           "u1", "u2", false);
-        MapModel_TexCoord(t + 2, t + 3, model->z1, model->z2, model->x_face,
+        MapModel_TexCoord(&t[2], &t[3], model->z1, model->z2, model->x_face,
                           "v1", "v2", true);
     } else if (face < 4)  // PLANE_Y
     {
@@ -998,9 +999,9 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane,
         MapModel_Edge(x2, y, model->z2, x2, y, model->z1);
         MapModel_Edge(x2, y, model->z1, x1, y, model->z1);
 
-        MapModel_TexCoord(s + 0, s + 3, model->x1, model->x2, model->y_face,
+        MapModel_TexCoord(&s[0], &s[3], model->x1, model->x2, model->y_face,
                           "u1", "u2", false);
-        MapModel_TexCoord(t + 2, t + 3, model->z1, model->z2, model->y_face,
+        MapModel_TexCoord(&t[2], &t[3], model->z1, model->z2, model->y_face,
                           "v1", "v2", true);
     } else  // PLANE_Z
     {
@@ -1015,9 +1016,9 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane,
         MapModel_Edge(x2, model->y2, z, x2, model->y1, z);
         MapModel_Edge(x2, model->y1, z, x1, model->y1, z);
 
-        MapModel_TexCoord(s + 0, s + 3, model->x1, model->x2, model->z_face,
+        MapModel_TexCoord(&s[0], &s[3], model->x1, model->x2, model->z_face,
                           "u1", "u2", false);
-        MapModel_TexCoord(t + 1, t + 3, model->y1, model->y2, model->z_face,
+        MapModel_TexCoord(&t[1], &t[3], model->y1, model->y2, model->z_face,
                           "v1", "v2", false);
     }
 
@@ -1029,7 +1030,7 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane,
         flags |= TEX_SPECIAL;
     }
 
-    raw_face.texinfo = Q1_AddTexInfo(texture, flags, s, t);
+    raw_face.texinfo = Q1_AddTexInfo(texture, flags, s.data(), t.data());
 
     raw_face.styles[0] = 0;
     raw_face.styles[1] = 0xFF;
@@ -1146,7 +1147,7 @@ static void Q1_WriteModels() {
         model->numfaces = 6;
         model->numleafs = 6;
 
-        float mins[3], maxs[3];
+        std::array<float, 3> mins, maxs;
 
         mins[0] = model->x1;
         mins[1] = model->y1;
@@ -1156,7 +1157,7 @@ static void Q1_WriteModels() {
         maxs[1] = model->y2;
         maxs[2] = model->z2;
 
-        MapModel_Nodes(model, mins, maxs);
+        MapModel_Nodes(model, mins.data(), maxs.data());
 
         Q1_WriteModel(model);
     }
