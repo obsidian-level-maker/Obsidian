@@ -55,7 +55,7 @@ extern int ef_solid_type;
 extern int ef_liquid_type;
 extern int ef_thing_mode;
 
-static char *level_name;
+static std::string level_name;
 
 int dm_sub_format;
 
@@ -193,12 +193,11 @@ int Slump_MakeWAD(const std::filesystem::path &filename) {
     return slump_main(slump_config);
 }
 
-
 //------------------------------------------------------------------------
 //  WAD OUTPUT
 //------------------------------------------------------------------------
 
-void DM_WriteLump(const char *name, const void *data, u32_t len) {
+void DM_WriteLump(std::string_view name, const void *data, u32_t len) {
     SYS_ASSERT(strlen(name) <= 8);
 
     WAD_NewLump(name);
@@ -212,14 +211,15 @@ void DM_WriteLump(const char *name, const void *data, u32_t len) {
     WAD_FinishLump();
 }
 
-void DM_WriteLump(const char *name, qLump_c *lump) {
+void DM_WriteLump(std::string_view name, qLump_c *lump) {
     DM_WriteLump(name, lump->GetBuffer(), lump->GetSize());
 }
 
 static void DM_WriteBehavior() {
     raw_behavior_header_t behavior;
 
-    strncpy(behavior.marker, "ACS", 4);
+    std::string_view acs{"ACS"};
+    std::copy(acs.begin(), acs.end(), behavior.marker.begin());
 
     behavior.offset = LE_U32(8);
     behavior.func_num = 0;
@@ -354,15 +354,15 @@ void DM_BeginLevel() {
             textmap_lump->Printf("namespace = \"Hexen\";\n\n");
         } else {
             textmap_lump->Printf("namespace = \"ZDoomTranslated\";\n\n");
-	    if (current_engine == "eternity") {
-		textmap_lump->Printf("ee_compat = true;\n\n");
-	    }
+            if (current_engine == "eternity") {
+                textmap_lump->Printf("ee_compat = true;\n\n");
+            }
         }
         endmap_lump = new qLump_c();
     }
 }
 
-void DM_EndLevel(const char *level_name) {
+void DM_EndLevel(std::string_view level_name) {
     // terminate header lump with trailing NUL
     if (header_lump->GetSize() > 0) {
         const byte nuls[4] = {0, 0, 0, 0};
@@ -443,8 +443,8 @@ void DM_AddSector(int f_h, const char *f_tex, int c_h, const char *c_tex,
         sec.floor_h = LE_S16(f_h);
         sec.ceil_h = LE_S16(c_h);
 
-        strncpy(sec.floor_tex, f_tex, 8);
-        strncpy(sec.ceil_tex, c_tex, 8);
+        std::copy(f_tex, f_tex + 8, sec.floor_tex.begin());
+        std::copy(c_tex, c_tex + 8, sec.ceil_tex.begin());
 
         sec.light = LE_U16(light);
         sec.special = LE_U16(special);
@@ -471,9 +471,9 @@ void DM_AddSidedef(int sector, const char *l_tex, const char *m_tex,
 
         side.sector = LE_S16(sector);
 
-        strncpy(side.lower_tex, l_tex, 8);
-        strncpy(side.mid_tex, m_tex, 8);
-        strncpy(side.upper_tex, u_tex, 8);
+        std::copy(l_tex, l_tex + 8, side.lower_tex.begin());
+        std::copy(m_tex, m_tex + 8, side.mid_tex.begin());
+        std::copy(u_tex, u_tex + 8, side.upper_tex.begin());
 
         side.x_offset = LE_S16(x_offset);
         side.y_offset = LE_S16(y_offset);
@@ -570,7 +570,7 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2, int type,
             // tag value is UNUSED
 
             if (args) {
-                memcpy(line.args, args, 5);
+                std::copy(args, args + 5, line.args.begin());
             }
 
             linedef_lump->Append(&line, sizeof(line));
@@ -737,7 +737,7 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options, int tid,
             thing.special = special;
 
             if (args) {
-                memcpy(thing.args, args, 5);
+                std::copy(args, args + 5, thing.args.begin());
             }
 
             thing_lump->Append(&thing, sizeof(thing));
@@ -857,7 +857,8 @@ static bool DM_BuildNodes(const std::filesystem::path &filename) {
     LogPrintf("\n");
 
     zdbsp_options options;
-    if (current_engine == "vanilla" || current_engine == "nolimit" || current_engine == "boom") {
+    if (current_engine == "vanilla" || current_engine == "nolimit" ||
+        current_engine == "boom") {
         options.build_nodes = true;
         options.build_gl_nodes = false;
         options.build_gl_only = false;
@@ -884,31 +885,32 @@ static bool DM_BuildNodes(const std::filesystem::path &filename) {
         options.compress_gl_nodes = false;
         options.force_compression = false;
     } else if (current_engine == "eternity") {
-        options.build_nodes = true;     	
+        options.build_nodes = true;
         if (UDMF_mode) {
-	    options.build_gl_nodes = true;
-	    options.build_gl_only = true;
-	} else {
-	    options.build_gl_nodes = false;
-	    options.build_gl_only = false;
-	}
-	options.reject_mode = ERM_DontTouch; // Eternity might not play well with ZDBSP's reject builder
+            options.build_gl_nodes = true;
+            options.build_gl_only = true;
+        } else {
+            options.build_gl_nodes = false;
+            options.build_gl_only = false;
+        }
+        options.reject_mode = ERM_DontTouch;  // Eternity might not play well
+                                              // with ZDBSP's reject builder
         options.check_polyobjs = true;
         options.compress_nodes = true;
         options.compress_gl_nodes = false;
         options.force_compression = false;
     } else if (current_engine == "edge") {
-    	if (!UDMF_mode) {
-    		if (!build_nodes) {
-			    LogPrintf("Skipping nodes per user selection...\n");
-		        return true;
-		     }
+        if (!UDMF_mode) {
+            if (!build_nodes) {
+                LogPrintf("Skipping nodes per user selection...\n");
+                return true;
+            }
         }
-        options.build_nodes = true;     	
+        options.build_nodes = true;
         options.build_gl_nodes = true;
         options.build_gl_only = true;
         if (!build_reject || UDMF_mode) {
-	    options.reject_mode = ERM_DontTouch;
+            options.reject_mode = ERM_DontTouch;
         } else {
             options.reject_mode = ERM_Rebuild;
         }
@@ -925,7 +927,7 @@ static bool DM_BuildNodes(const std::filesystem::path &filename) {
         options.build_gl_nodes = true;
         options.build_gl_only = true;
         if (!build_reject || UDMF_mode) {
-	    options.reject_mode = ERM_DontTouch;
+            options.reject_mode = ERM_DontTouch;
         } else {
             options.reject_mode = ERM_Rebuild;
         }
@@ -947,12 +949,12 @@ static bool DM_BuildNodes(const std::filesystem::path &filename) {
 
 class doom_game_interface_c : public game_interface_c {
    private:
-    const char *filename;
+    std::filesystem::path filename;
 
    public:
     doom_game_interface_c() : filename(nullptr) {}
 
-    ~doom_game_interface_c() { StringFree(filename); }
+    ~doom_game_interface_c() {}
 
     bool Start(const char *preset);
     bool Finish(bool build_ok);
@@ -973,12 +975,12 @@ bool doom_game_interface_c::Start(const char *preset) {
     ef_thing_mode = 0;
 
     if (batch_mode) {
-        filename = StringDup(batch_output_file);
+        filename = batch_output_file;
     } else {
         filename = DLG_OutputFilename("wad", preset);
     }
 
-    if (!filename) {
+    if (filename.empty()) {
         Main_ProgStatus(_("Cancelled"));
         return false;
     }
@@ -992,8 +994,8 @@ bool doom_game_interface_c::Start(const char *preset) {
         current_engine = main_win->game_box->engine->GetID();
         if (current_engine == "vanilla") {
             build_reject = main_win->left_mods->FindID("ui_reject_options")
-                           ->FindButtonOpt("bool_build_reject")
-                           ->mod_check->value();
+                               ->FindButtonOpt("bool_build_reject")
+                               ->mod_check->value();
             if (Slump_MakeWAD(filename) == 0) {
                 return true;
             } else {
@@ -1009,16 +1011,17 @@ bool doom_game_interface_c::Start(const char *preset) {
 
     if (main_win) {
         main_win->build_box->Prog_Init(20, N_("CSG"));
-        if (current_engine == "zdoom" || current_engine == "edge" || current_engine == "eternity") {
+        if (current_engine == "zdoom" || current_engine == "edge" ||
+            current_engine == "eternity") {
             build_reject = main_win->left_mods->FindID("ui_udmf_map_options")
                                ->FindButtonOpt("bool_build_reject_udmf")
                                ->mod_check->value();
-		    map_format = main_win->left_mods->FindID("ui_udmf_map_options")
-		                     ->FindOpt("map_format")
-		                     ->mod_menu->GetID();
-		    build_nodes = main_win->left_mods->FindID("ui_udmf_map_options")
-		                      ->FindButtonOpt("bool_build_nodes_udmf")
-		                      ->mod_check->value();
+            map_format = main_win->left_mods->FindID("ui_udmf_map_options")
+                             ->FindOpt("map_format")
+                             ->mod_menu->GetID();
+            build_nodes = main_win->left_mods->FindID("ui_udmf_map_options")
+                              ->FindButtonOpt("bool_build_nodes_udmf")
+                              ->mod_check->value();
         } else {
             build_reject = main_win->left_mods->FindID("ui_reject_options")
                                ->FindButtonOpt("bool_build_reject")
@@ -1036,7 +1039,6 @@ bool doom_game_interface_c::Start(const char *preset) {
 }
 
 bool doom_game_interface_c::BuildNodes() {
-
     bool result = DM_BuildNodes(filename);
 
     return result;
@@ -1055,7 +1057,7 @@ bool doom_game_interface_c::Finish(bool build_ok) {
 
     if (!build_ok) {
         // remove the WAD if an error occurred
-        FileDelete(filename);
+        std::filesystem::remove(filename);
     } else {
         Recent_AddFile(RECG_Output, filename);
     }
@@ -1076,7 +1078,7 @@ void doom_game_interface_c::BeginLevel() {
 
 void doom_game_interface_c::Property(const char *key, const char *value) {
     if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = StringDup(value);
+        level_name = value;
     } else if (StringCaseCmp(key, "description") == 0) {
         main_win->build_box->name_disp->copy_label(value);
         main_win->build_box->name_disp->redraw();
@@ -1104,7 +1106,7 @@ void doom_game_interface_c::Property(const char *key, const char *value) {
 }
 
 void doom_game_interface_c::EndLevel() {
-    if (!level_name) {
+    if (level_name.empty()) {
         Main_FatalError("Script problem: did not set level name!\n");
     }
 
@@ -1119,7 +1121,6 @@ void doom_game_interface_c::EndLevel() {
 
     DM_EndLevel(level_name);
 
-    StringFree(level_name);
     level_name = nullptr;
 }
 

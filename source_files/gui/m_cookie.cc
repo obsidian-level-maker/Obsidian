@@ -209,8 +209,8 @@ void Cookie_ParseArguments(void) {
 
     active_module.clear();
 
-    for (int i = 0; i < arg_count; i++) {
-        const char *arg = arg_list[i];
+    for (int i = 0; i < arg_list.size(); i++) {
+        const std::string &arg = arg_list[i];
 
         if (arg[0] == '-') {
             continue;
@@ -220,20 +220,21 @@ void Cookie_ParseArguments(void) {
             continue;
         }
 
-        if (strcmp(arg, "@@") == 0) {
+        if (strcmp(arg.c_str(), "@@") == 0) {
             active_module.clear();
             continue;
         }
 
         // support an isolated "=", like in: FOO = 3
-        if (i + 2 < arg_count && strcmp(arg_list[i + 1], "=") == 0 &&
+        if (i + 2 < arg_list.size() &&
+            strcmp(arg_list[i + 1].c_str(), "=") == 0 &&
             arg_list[i + 2][0] != '-') {
             Cookie_SetValue(arg, arg_list[i + 2]);
             i += 2;
             continue;
         }
 
-        const char *eq_pos = strchr(arg, '=');
+        const char *eq_pos = strchr(arg.c_str(), '=');
         if (!eq_pos) {
             // allow module names to omit the (rather useless) value
             if (arg[0] == '@') {
@@ -244,7 +245,7 @@ void Cookie_ParseArguments(void) {
         }
 
         // split argument into name/value pair
-        int eq_offset = (eq_pos - arg);
+        int eq_offset = (eq_pos - arg.c_str());
 
         std::string name = arg;
         const char *value = name.c_str() + eq_offset + 1;
@@ -252,7 +253,7 @@ void Cookie_ParseArguments(void) {
         name[eq_offset] = 0;
 
         if (name[0] == 0 || value[0] == 0) {
-            Main_FatalError("Bad setting on command line: '%s'\n", arg);
+            Main_FatalError("Bad setting on command line: '%s'\n", arg.c_str());
         }
 
         Cookie_SetValue(name.c_str(), value);

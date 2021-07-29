@@ -22,13 +22,6 @@ enum token {
     tokEof,
 };
 
-typedef struct {
-    enum token t;
-    bool isLeaf;
-} My_ParseNode;
-
-#define D_ParseNode_User My_ParseNode
-
 extern void year(void);
 extern void month(void);
 extern void day(void);

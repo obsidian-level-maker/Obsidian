@@ -22,9 +22,10 @@
 #define __OBLIGE_INCLUDES_H__
 
 // we C++
-#ifndef NULL
-#define NULL nullptr
+#ifdef NULL
+#undef NULL
 #endif
+#define NULL nullptr
 
 /* OS specifics */
 #ifdef WIN32

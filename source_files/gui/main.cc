@@ -178,7 +178,7 @@ void Determine_WorkingPath(const char *argv0) {
     int home_arg = ArgvFind(0, "home");
 
     if (home_arg >= 0) {
-        if (home_arg + 1 >= arg_count || ArgvIsOption(home_arg + 1)) {
+        if (home_arg + 1 >= arg_list.size() || ArgvIsOption(home_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --home\n");
             exit(9);
         }
@@ -209,7 +209,7 @@ void Determine_WorkingPath(const char *argv0) {
 }
 
 static bool Verify_InstallDir(const std::filesystem::path &path) {
-    std::string filename = fmt::format("{}/scripts/oblige.lua", path);
+    std::filesystem::path filename = path / "scripts" / "oblige.lua";
 
 #if 0  // DEBUG
 	fprintf(stderr, "Trying install dir: [%s]\n", path);
@@ -227,7 +227,7 @@ void Determine_InstallDir(const char *argv0) {
     int inst_arg = ArgvFind(0, "install");
 
     if (inst_arg >= 0) {
-        if (inst_arg + 1 >= arg_count || ArgvIsOption(inst_arg + 1)) {
+        if (inst_arg + 1 >= arg_list.size() || ArgvIsOption(inst_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --install\n");
             exit(9);
         }
@@ -251,20 +251,24 @@ void Determine_InstallDir(const char *argv0) {
     install_dir = home_dir;
 
 #else
-    static const char *prefixes[] = {
-        "/usr/local", "/usr", "/opt",
-
-        NULL  // end of list
+    constexpr std::array prefixes = {
+        "/usr/local",
+        "/usr",
+        "/opt",
     };
 
-    for (int i = 0; prefixes[i]; i++) {
-        install_dir = fmt::format("{}/share/obsidian", prefixes[i]);
+    for (const char *prefix : prefixes) {
+        install_dir = fmt::format("{}/share/obsidian", prefix);
 
         if (Verify_InstallDir(install_dir.c_str())) {
             return;
         }
 
         install_dir.clear();
+    }
+
+    if (Verify_InstallDir(GetExecutablePath())) {
+        install_dir = GetExecutablePath();
     }
 #endif
 
@@ -277,7 +281,7 @@ void Determine_ConfigFile() {
     int conf_arg = ArgvFind(0, "config");
 
     if (conf_arg >= 0) {
-        if (conf_arg + 1 >= arg_count || ArgvIsOption(conf_arg + 1)) {
+        if (conf_arg + 1 >= arg_list.size() || ArgvIsOption(conf_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --config\n");
             exit(9);
         }
@@ -293,7 +297,7 @@ void Determine_OptionsFile() {
     int optf_arg = ArgvFind(0, "options");
 
     if (optf_arg >= 0) {
-        if (optf_arg + 1 >= arg_count || ArgvIsOption(optf_arg + 1)) {
+        if (optf_arg + 1 >= arg_list.size() || ArgvIsOption(optf_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --options\n");
             exit(9);
         }
@@ -309,7 +313,7 @@ void Determine_ThemeFile() {
     int themef_arg = ArgvFind(0, "theme");
 
     if (themef_arg >= 0) {
-        if (themef_arg + 1 >= arg_count || ArgvIsOption(themef_arg + 1)) {
+        if (themef_arg + 1 >= arg_list.size() || ArgvIsOption(themef_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --theme\n");
             exit(9);
         }
@@ -325,7 +329,7 @@ void Determine_LoggingFile() {
     int logf_arg = ArgvFind(0, "log");
 
     if (logf_arg >= 0) {
-        if (logf_arg + 1 >= arg_count || ArgvIsOption(logf_arg + 1)) {
+        if (logf_arg + 1 >= arg_list.size() || ArgvIsOption(logf_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --log\n");
             exit(9);
         }
@@ -731,7 +735,6 @@ void Main_Shutdown(bool error) {
 
     Script_Close();
     LogClose();
-    ArgvClose();
 }
 
 void Main_FatalError(const char *msg, ...) {
@@ -804,7 +807,8 @@ void Main_SetSeed() {
     std::string seed = NumToString(next_rand_seed);
     ob_set_config("seed", seed.c_str());
     if (!batch_mode) {
-        main_win->build_box->seed_disp->copy_label(fmt::format("Seed: {}", seed).c_str());
+        main_win->build_box->seed_disp->copy_label(
+            fmt::format("Seed: {}", seed).c_str());
         main_win->build_box->seed_disp->redraw();
     }
 }
@@ -859,10 +863,13 @@ bool Build_Cool_Shit() {
     if (main_win) {
         std::string seed = NumToString(next_rand_seed);
         if (main_win->build_box->string_seed != "") {
-            main_win->build_box->seed_disp->copy_label(fmt::format("Seed: {}", main_win->build_box->string_seed).c_str());
+            main_win->build_box->seed_disp->copy_label(
+                fmt::format("Seed: {}", main_win->build_box->string_seed)
+                    .c_str());
             main_win->build_box->seed_disp->redraw();
         } else {
-            main_win->build_box->seed_disp->copy_label(fmt::format("Seed: {}", seed).c_str());
+            main_win->build_box->seed_disp->copy_label(
+                fmt::format("Seed: {}", seed).c_str());
             main_win->build_box->seed_disp->redraw();
         }
         main_win->game_box->SetAbortButton(true);
@@ -943,7 +950,7 @@ restart:;
 
     int batch_arg = ArgvFind('b', "batch");
     if (batch_arg >= 0) {
-        if (batch_arg + 1 >= arg_count || ArgvIsOption(batch_arg + 1)) {
+        if (batch_arg + 1 >= arg_list.size() || ArgvIsOption(batch_arg + 1)) {
             fmt::print(stderr,
                        "OBSIDIAN ERROR: missing filename for --batch\n");
             exit(9);
@@ -995,9 +1002,10 @@ restart:;
     }
 
 #ifndef WIN32
-    numeric_locale = std::setlocale(LC_NUMERIC, NULL); // Grab current numeric locale
+    numeric_locale =
+        std::setlocale(LC_NUMERIC, NULL);  // Grab current numeric locale
 #endif
-        
+
     LogEnableDebug(debug_messages);
 
     twister_Init();
@@ -1012,7 +1020,7 @@ restart:;
 
     int load_arg = ArgvFind('l', "load");
     if (load_arg >= 0) {
-        if (load_arg + 1 >= arg_count || ArgvIsOption(load_arg + 1)) {
+        if (load_arg + 1 >= arg_list.size() || ArgvIsOption(load_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing filename for --load\n");
             exit(9);
         }

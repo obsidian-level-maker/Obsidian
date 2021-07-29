@@ -22,6 +22,7 @@
 #define __SYS_DEBUG_H__
 
 #include <algorithm>
+#include <filesystem>
 #include <fstream>
 #include <string>
 #include <fmt/core.h>

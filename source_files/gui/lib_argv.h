@@ -22,12 +22,12 @@
 #define __LIB_ARGV_H__
 
 #include <cstddef>
+#include <string>
+#include <vector>
 
-extern const char **arg_list;
-extern int arg_count;
+extern std::vector<std::string> arg_list;
 
 void ArgvInit(int argc, const char **argv);
-void ArgvClose(void);
 
 int ArgvFind(char short_name, const char *long_name, int *num_params = NULL);
 bool ArgvIsOption(int index);

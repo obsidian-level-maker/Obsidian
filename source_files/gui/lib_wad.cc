@@ -321,14 +321,14 @@ void WAD_CloseWrite(void) {
     wad_W_directory.clear();
 }
 
-void WAD_NewLump(const char *name) {
-    if (strlen(name) > 8) {
+void WAD_NewLump(std::string_view name) {
+    if (name.size() > 8) {
         Main_FatalError("WAD_NewLump: name too long: '%s'\n", name);
     }
 
     memset(&wad_W_lump, 0, sizeof(wad_W_lump));
 
-    strncpy(wad_W_lump.name, name, 8);
+    strncpy(wad_W_lump.name, name.data(), 8);
 
     wad_W_lump.start = wad_W_fp.tellp();
 }
