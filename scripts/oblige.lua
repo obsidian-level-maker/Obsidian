@@ -1238,6 +1238,27 @@ function ob_game_format()
   return assert(game.format)
 end
 
+function ob_get_param(parameter)
+
+  assert(parameter and type(parameter) == "string")
+
+  local param
+
+  if OB_CONFIG.batch_mode == "yes" then
+    assert(OB_CONFIG[parameter])
+    param = OB_CONFIG[parameter]
+  else
+    assert(PARAM[parameter] or OB_CONFIG[parameter])
+    if (PARAM[parameter]) then
+      param = PARAM[parameter]
+    else
+      param = OB_CONFIG[parameter]
+    end
+  end
+  
+  return param
+  
+end
 
 
 function ob_default_filename()

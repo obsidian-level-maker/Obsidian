@@ -76,9 +76,6 @@ std::string current_engine;
 std::string map_format;
 int build_nodes;
 int build_reject;
-std::string levelcount;
-std::string monvariety;
-std::string current_game;
 
 static bool UDMF_mode;
 
@@ -117,7 +114,7 @@ static const char *section_markers[NUM_SECTIONS][2] = {
 int Slump_MakeWAD(const std::filesystem::path &filename) {
     s_config slump_config;
     slump_config.outfile = filename;
-    levelcount = main_win->game_box->length->GetID();
+    std::string levelcount = ob_get_param("length");
     if (levelcount == "single") {
         slump_config.levelcount = 1;
     } else if (levelcount == "few") {
@@ -127,7 +124,7 @@ int Slump_MakeWAD(const std::filesystem::path &filename) {
     } else {
         slump_config.levelcount = 32;  // "Full Game"
     }
-    current_game = main_win->game_box->game->GetID();
+    std::string current_game = ob_get_param("game");
     if (current_game == "doom1" || current_game == "ultdoom") {
         slump_config.gamemask = DOOM1_BIT;
         slump_config.map = 0;
@@ -139,44 +136,18 @@ int Slump_MakeWAD(const std::filesystem::path &filename) {
         slump_config.episode = 0;
         slump_config.mission = 0;
     }
-    int minrooms = (int)main_win->left_mods->FindID("ui_slump_arch")
-                       ->FindSliderOpt("float_minrooms")
-                       ->mod_slider->value();
-    if (minrooms == 1) {
+    std::string minrooms = ob_get_param("float_minrooms_slump");
+    if (minrooms == "Mix It Up") {
         slump_config.minrooms = twister_Between(2, 37);
     } else {
-        slump_config.minrooms = minrooms;
+        slump_config.minrooms = StringToInt(minrooms);
     }
-    slump_config.p_bigify = (int)main_win->left_mods->FindID("ui_slump_arch")
-                                ->FindSliderOpt("float_bigify")
-                                ->mod_slider->value();
-    slump_config.forkiness = (int)main_win->left_mods->FindID("ui_slump_arch")
-                                 ->FindSliderOpt("float_forkiness")
-                                 ->mod_slider->value();
-    if (main_win->left_mods->FindID("ui_slump_arch")
-            ->FindButtonOpt("bool_dm_starts")
-            ->mod_check->value()) {
-        slump_config.do_dm = 1;
-    } else {
-        slump_config.do_dm = 0;
-    }
-    if (main_win->left_mods->FindID("ui_slump_arch")
-            ->FindButtonOpt("bool_major_nukage")
-            ->mod_check->value()) {
-        slump_config.major_nukage = SLUMP_TRUE;
-    } else {
-        slump_config.major_nukage = SLUMP_FALSE;
-    }
-    if (main_win->left_mods->FindID("ui_slump_arch")
-            ->FindButtonOpt("bool_immediate_monsters")
-            ->mod_check->value()) {
-        slump_config.immediate_monsters = SLUMP_FALSE;
-    } else {
-        slump_config.immediate_monsters = rollpercent(20);
-    }
-    monvariety = main_win->left_mods->FindID("ui_slump_mons")
-                     ->FindOpt("slump_mons")
-                     ->mod_menu->GetID();
+    slump_config.p_bigify = StringToInt(ob_get_param("float_bigify_slump"));
+    slump_config.forkiness = StringToInt(ob_get_param("float_forkiness_slump"));
+    slump_config.do_dm = StringToInt(ob_get_param("bool_dm_starts_slump"));
+    slump_config.major_nukage = StringToInt(ob_get_param("bool_major_nukage_slump")) ? SLUMP_TRUE : SLUMP_FALSE;
+    slump_config.immediate_monsters = StringToInt(ob_get_param("bool_immediate_monsters_slump")) ? rollpercent(20) : SLUMP_FALSE;
+    std::string monvariety = ob_get_param("slump_mons");
     if (monvariety == "normal") {
         slump_config.required_monster_bits = 0;
         slump_config.forbidden_monster_bits = SPECIAL;
