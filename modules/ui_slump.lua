@@ -47,8 +47,7 @@ OB_MODULES["ui_slump_arch"] =
       max = 37,
       increment = 1,
       default = 15,
-      nan = "Mix It Up,",
-      presets = "",
+      presets = "1: Mix It Up,",
       tooltip = "Minimum number of rooms per level."
     },
 
