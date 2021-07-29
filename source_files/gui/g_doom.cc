@@ -198,9 +198,9 @@ int Slump_MakeWAD(const std::filesystem::path &filename) {
 //------------------------------------------------------------------------
 
 void DM_WriteLump(std::string_view name, const void *data, u32_t len) {
-    SYS_ASSERT(strlen(name) <= 8);
+    SYS_ASSERT(name.size() <= 8);
 
-    WAD_NewLump(name);
+    WAD_NewLump(name.data());
 
     if (len > 0) {
         if (!WAD_AppendData(data, len)) {
@@ -952,7 +952,7 @@ class doom_game_interface_c : public game_interface_c {
     std::filesystem::path filename;
 
    public:
-    doom_game_interface_c() : filename(nullptr) {}
+    doom_game_interface_c() : filename("") {}
 
     ~doom_game_interface_c() {}
 
@@ -1120,8 +1120,8 @@ void doom_game_interface_c::EndLevel() {
 #endif
 
     DM_EndLevel(level_name);
-
-    level_name = nullptr;
+    
+    level_name = "";
 }
 
 game_interface_c *Doom_GameObject() { return new doom_game_interface_c(); }

@@ -2944,7 +2944,6 @@ void CSG_DOOM_Write() {
     DM_ProcessExtraFloors();
     DM_ProcessLightFX();
     DM_ProcessDepots();
-
     DM_CreateDummies();
     // this writes vertices, sidedefs and sectors too
     DM_WriteLinedefs();
