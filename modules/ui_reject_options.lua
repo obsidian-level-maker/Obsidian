@@ -18,14 +18,38 @@
 
 UI_REJECT_OPTIONS = { }
 
+function UI_REJECT_OPTIONS.setup(self)
+  -- these parameters have to be instantiated in this hook
+  -- because begin_level happens *after* level size decisions
+  for name,opt in pairs(self.options) do
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)
+      end
+    else
+      PARAM[opt.name] = self.options[name].value
+    end
+  end
+end
+
 OB_MODULES["ui_reject_options"] =
 {
+
+  name = "ui_reject_options",
+
   label = _("Map Build Options"),
   
   engine = "!advanced",
 
   side = "left",
   priority = 105,
+
+  hooks = 
+  {
+    pre_setup = UI_REJECT_OPTIONS.setup,
+  },
 
   options =
   {
@@ -43,6 +67,22 @@ OB_MODULES["ui_reject_options"] =
 
 UI_UDMF_MAP_OPTIONS = { }
 
+function UI_UDMF_MAP_OPTIONS.setup(self)
+  -- these parameters have to be instantiated in this hook
+  -- because begin_level happens *after* level size decisions
+  for name,opt in pairs(self.options) do
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)
+      end
+    else
+      PARAM[opt.name] = self.options[name].value
+    end
+  end
+end
+
 UI_UDMF_MAP_OPTIONS.MAP_FORMAT_CHOICES = 
 {
   "binary",  _("Binary"),
@@ -51,12 +91,20 @@ UI_UDMF_MAP_OPTIONS.MAP_FORMAT_CHOICES =
 
 OB_MODULES["ui_udmf_map_options"] =
 {
+
+  name = "ui_udmf_map_options",
+
   label = _("Map Build Options"),
   
   engine = "advanced",
 
   side = "left",
   priority = 105,
+
+  hooks = 
+  {
+    pre_setup = UI_UDMF_MAP_OPTIONS.setup,
+  },
 
   options =
   {

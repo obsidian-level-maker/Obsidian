@@ -945,6 +945,8 @@ bool doom_game_interface_c::Start(const char *preset) {
     ef_liquid_type = 0;
     ef_thing_mode = 0;
 
+    ob_invoke_hook("pre_setup");
+
     if (batch_mode) {
         filename = batch_output_file;
     } else {
@@ -962,11 +964,9 @@ bool doom_game_interface_c::Start(const char *preset) {
 
     // Need to preempt the rest of this process if we are using Vanilla Doom
     if (main_win) {
-        current_engine = main_win->game_box->engine->GetID();
+        current_engine = ob_get_param("engine");
         if (current_engine == "vanilla") {
-            build_reject = main_win->left_mods->FindID("ui_reject_options")
-                               ->FindButtonOpt("bool_build_reject")
-                               ->mod_check->value();
+            build_reject = StringToInt(ob_get_param("bool_build_reject"));
             return true;
         }
     }
@@ -980,19 +980,11 @@ bool doom_game_interface_c::Start(const char *preset) {
         main_win->build_box->Prog_Init(20, N_("CSG"));
         if (current_engine == "zdoom" || current_engine == "edge" ||
             current_engine == "eternity") {
-            build_reject = main_win->left_mods->FindID("ui_udmf_map_options")
-                               ->FindButtonOpt("bool_build_reject_udmf")
-                               ->mod_check->value();
-            map_format = main_win->left_mods->FindID("ui_udmf_map_options")
-                             ->FindOpt("map_format")
-                             ->mod_menu->GetID();
-            build_nodes = main_win->left_mods->FindID("ui_udmf_map_options")
-                              ->FindButtonOpt("bool_build_nodes_udmf")
-                              ->mod_check->value();
+            build_reject = StringToInt(ob_get_param("bool_build_reject_udmf"));
+            map_format = ob_get_param("map_format");
+            build_nodes = StringToInt(ob_get_param("bool_build_nodes_udmf"));
         } else {
-            build_reject = main_win->left_mods->FindID("ui_reject_options")
-                               ->FindButtonOpt("bool_build_reject")
-                               ->mod_check->value();
+            build_reject = StringToInt(ob_get_param("bool_build_reject"));
             map_format = "binary";
             build_nodes = true;
         }
@@ -1005,11 +997,7 @@ bool doom_game_interface_c::Start(const char *preset) {
     return true;
 }
 
-bool doom_game_interface_c::BuildNodes() {
-    bool result = DM_BuildNodes(filename);
-
-    return result;
-}
+bool doom_game_interface_c::BuildNodes() { return DM_BuildNodes(filename); }
 
 bool doom_game_interface_c::Finish(bool build_ok) {
     // Skip DM_EndWAD if using Vanilla Doom

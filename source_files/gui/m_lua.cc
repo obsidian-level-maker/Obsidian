@@ -1685,6 +1685,14 @@ std::string ob_default_filename() {
     return res;
 }
 
+void ob_invoke_hook(std::string hookname) {
+	
+    std::array<std::string, 2> params = {hookname, ""};
+    
+    if (!Script_CallFunc("ob_invoke_hook", 0, params.data())) { Main_ProgStatus(_("Script Error")); }		
+
+}
+
 bool ob_build_cool_shit() {
     if (!Script_CallFunc("ob_build_cool_shit", 1)) {
         main_win->label(

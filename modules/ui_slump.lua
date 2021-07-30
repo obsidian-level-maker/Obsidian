@@ -57,7 +57,7 @@ OB_MODULES["ui_slump_arch"] =
 
   hooks = 
   {
-    slump = UI_SLUMP.setup,
+    setup = UI_SLUMP.setup,
   },
 
   options =
@@ -144,7 +144,7 @@ OB_MODULES["ui_slump_mons"] =
 
   hooks = 
   {
-    slump = UI_SLUMP.setup,
+    setup = UI_SLUMP.setup,
   },
 
   options =

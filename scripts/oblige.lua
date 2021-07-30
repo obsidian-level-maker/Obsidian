@@ -1505,7 +1505,7 @@ end
 function ob_invoke_hook(name, ...)
   -- two passes, for example: setup and setup2,
   for pass = 1,2 do
-    if OB_CONFIG.engine == "vanilla" then goto skip end
+    if OB_CONFIG.engine == "vanilla" or string.match(name, "^pre_setup") then goto skip end
     for _,mod in pairs(GAME.modules) do
       local func = mod.hooks and mod.hooks[name]
 
@@ -1648,7 +1648,7 @@ function ob_build_cool_shit()
   assert(OB_CONFIG.game)
 
   if OB_CONFIG.engine == "vanilla" then
-    ob_invoke_hook("slump")
+    ob_invoke_hook("setup")
     return "ok" 
   end -- Skip the rest if using Vanilla Doom/SLUMP
 
