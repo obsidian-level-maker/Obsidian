@@ -39,7 +39,7 @@ function UI_SLUMP.setup(self)
         PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)
       end
     else
-      PARAM[name] = self.options[name].value
+      PARAM[opt.name] = self.options[name].value
     end
   end
 end
@@ -57,7 +57,7 @@ OB_MODULES["ui_slump_arch"] =
 
   hooks = 
   {
-    setup = UI_SLUMP.setup,
+    slump = UI_SLUMP.setup,
   },
 
   options =
@@ -144,7 +144,7 @@ OB_MODULES["ui_slump_mons"] =
 
   hooks = 
   {
-    setup = UI_SLUMP.setup,
+    slump = UI_SLUMP.setup,
   },
 
   options =

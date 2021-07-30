@@ -396,7 +396,7 @@ void machioize(config *c,float amount) {
 	}
 }
 
-int slump_main(s_config slump_config) {
+bool slump_main(s_config slump_config) {
 
   /* A stubby but functional main() */
 
@@ -415,20 +415,20 @@ int slump_main(s_config slump_config) {
   ThisConfig = get_config(slump_config);
   if (ThisConfig==NULL) {
     Usage();
-    return 100;
+    return false;
   }
   if (ThisConfig->cwadonly) {
     dh = OpenDump(ThisConfig);
-    if (dh==NULL) return 28;
+    if (dh==NULL) return false;
     record_custom_textures(dh,ThisConfig);
     record_custom_flats(dh,ThisConfig,SLUMP_TRUE);   /* record all flats */
     record_custom_patches(dh,ThisConfig,SLUMP_TRUE);   /* and patches */
     CloseDump(dh);
     printf("\nDone: wrote customization WAD %s.\n",ThisConfig->outfile);
-    return 0;
+    return true;
   }
   dh = OpenDump(ThisConfig);
-  if (dh==NULL) return 28;
+  if (dh==NULL) return false;
   if (ThisConfig->do_slinfo) make_slinfo(dh,ThisConfig);
   if (ThisConfig->do_music) make_music(dh,ThisConfig);
 
@@ -471,6 +471,6 @@ int slump_main(s_config slump_config) {
   }
   CloseDump(dh);
   printf("\nDone: wrote %s.\n",ThisConfig->outfile);
-  return 0;
+  return true;
 
 }

@@ -111,7 +111,7 @@ static const char *section_markers[NUM_SECTIONS][2] = {
 //------------------------------------------------------------------------
 //  SLUMP WAD Creation for Vanilla Doom
 //------------------------------------------------------------------------
-int Slump_MakeWAD(const std::filesystem::path &filename) {
+bool Slump_MakeWAD(const std::filesystem::path &filename) {
     s_config slump_config;
     slump_config.outfile = filename;
     std::string levelcount = ob_get_param("length");
@@ -967,11 +967,7 @@ bool doom_game_interface_c::Start(const char *preset) {
             build_reject = main_win->left_mods->FindID("ui_reject_options")
                                ->FindButtonOpt("bool_build_reject")
                                ->mod_check->value();
-            if (Slump_MakeWAD(filename) == 0) {
-                return true;
-            } else {
-                return false;
-            }
+            return true;
         }
     }
 
@@ -1020,7 +1016,9 @@ bool doom_game_interface_c::Finish(bool build_ok) {
     if (current_engine != "vanilla") {
         // TODO: handle write errors
         DM_EndWAD();
-    }
+    } else {
+		build_ok = Slump_MakeWAD(filename);
+	}
 
     if (build_ok) {
         build_ok = BuildNodes();

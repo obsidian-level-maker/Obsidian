@@ -1240,7 +1240,7 @@ end
 
 function ob_get_param(parameter)
 
-  assert(parameter and type(parameter) == "string")
+  assert(parameter)
 
   local param
 
@@ -1248,6 +1248,7 @@ function ob_get_param(parameter)
     assert(OB_CONFIG[parameter])
     param = OB_CONFIG[parameter]
   else
+	print("PARAMETER: " .. parameter)
     assert(PARAM[parameter] or OB_CONFIG[parameter])
     if (PARAM[parameter]) then
       param = PARAM[parameter]
@@ -1256,7 +1257,11 @@ function ob_get_param(parameter)
     end
   end
   
-  return param
+  if type(parameter) == "string" then
+    return param
+  else
+    return tostring(param)
+  end
   
 end
 
@@ -1495,6 +1500,7 @@ end
 function ob_invoke_hook(name, ...)
   -- two passes, for example: setup and setup2,
   for pass = 1,2 do
+    if OB_CONFIG.engine == "vanilla" then goto skip end
     for _,mod in pairs(GAME.modules) do
       local func = mod.hooks and mod.hooks[name]
 
@@ -1502,7 +1508,7 @@ function ob_invoke_hook(name, ...)
         func(mod, ...)
       end
     end
-    
+    ::skip::
     for _,mod in pairs(OB_MODULES) do
       if ob_check_ui_module(mod) then
        local func = mod.hooks and mod.hooks[name]
@@ -1636,7 +1642,10 @@ function ob_build_cool_shit()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
 
-  if OB_CONFIG.engine == "vanilla" then return "ok" end -- Skip if using Vanilla Doom/SLUMP
+  if OB_CONFIG.engine == "vanilla" then
+    ob_invoke_hook("slump")
+    return "ok" 
+  end -- Skip the rest if using Vanilla Doom/SLUMP
 
   gui.printf("\n\n")
   gui.printf("~~~~~~~ Making Levels ~~~~~~~\n\n")
