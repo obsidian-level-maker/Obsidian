@@ -23,6 +23,8 @@
 
 /* WAD reading */
 
+#include <filesystem>
+#include <string_view>
 #include "sys_macro.h"
 #include "sys_type.h"
 
@@ -43,7 +45,7 @@ void WAD_ListEntries(void);
 bool WAD_OpenWrite(const std::filesystem::path &filename);
 void WAD_CloseWrite(void);
 
-void WAD_NewLump(const char *name);
+void WAD_NewLump(std::string_view name);
 bool WAD_AppendData(const void *data, int length);
 void WAD_FinishLump(void);
 

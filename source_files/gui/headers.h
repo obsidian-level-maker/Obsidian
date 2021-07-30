@@ -22,6 +22,9 @@
 #define __OBLIGE_INCLUDES_H__
 
 // we C++
+#ifdef NULL
+#undef NULL
+#endif
 #define NULL nullptr
 
 /* OS specifics */
@@ -51,7 +54,6 @@
 #include <list>
 #include <map>
 #include <string>
-#include <string_view>
 #include <vector>
 
 /* Our own system defs */
@@ -72,9 +74,6 @@
 #define N_(s) (s)
 
 const char *ob_gettext(const char *s);
-
-// replace these with fmt::print or fmt::format
-#pragma GCC poison fprintf printf sprintf snprintf
 
 #endif /* __OBLIGE_INCLUDES_H__ */
 

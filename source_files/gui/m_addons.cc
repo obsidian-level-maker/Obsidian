@@ -52,7 +52,8 @@ void VFS_AddFolder(std::string name) {
     std::string mount = fmt::format("/{}", name);
 
     if (!PHYSFS_mount(path.generic_string().c_str(), mount.c_str(), 0)) {
-        Main_FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n", name.c_str(),
+        Main_FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n",
+                        name.c_str(),
                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return; /* NOT REACHED */
     }
@@ -131,7 +132,7 @@ void VFS_ParseCommandLine() {
 
     LogPrintf("Command-line addons....\n");
 
-    for (; arg < arg_count && !ArgvIsOption(arg); arg++, count++) {
+    for (; arg < arg_list.size() && !ArgvIsOption(arg); arg++, count++) {
         VFS_AddArchive(arg_list[arg], false /* options_file */);
     }
 

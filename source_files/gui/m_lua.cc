@@ -1330,7 +1330,7 @@ static int p_init_lua(lua_State *L) {
     return 0;
 }
 
-static bool Script_CallFunc(const char *func_name, int nresult = 0,
+static bool Script_CallFunc(std::string func_name, int nresult = 0,
                             std::string *params = NULL) {
     // Note: the results of the function will be on the Lua stack
 
@@ -1341,10 +1341,10 @@ static bool Script_CallFunc(const char *func_name, int nresult = 0,
                         "ob_traceback");
     }
 
-    lua_getglobal(LUA_ST, func_name);
+    lua_getglobal(LUA_ST, func_name.c_str());
 
     if (lua_type(LUA_ST, -1) == LUA_TNIL) {
-        Main_FatalError("Script problem: missing function '%s'", func_name);
+        Main_FatalError(fmt::format("Script problem: missing function '{}'", func_name).c_str());
     }
 
     int nargs = 0;
@@ -1645,7 +1645,7 @@ bool ob_read_all_config(std::vector<std::string> *lines, bool need_full) {
 
 std::string ob_game_format() {
     if (!Script_CallFunc("ob_game_format", 1)) {
-        return NULL;
+        return "";
     }
 
     std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
@@ -1654,6 +1654,22 @@ std::string ob_game_format() {
     lua_pop(LUA_ST, 1);
 
     return res;
+}
+
+std::string ob_get_param(std::string parameter) {
+    
+    std::array<std::string, 2> params = {parameter, ""};
+    
+    if (!Script_CallFunc("ob_get_param", 1, params.data())) {
+        return "";
+    }
+    
+	std::string param = luaL_optlstring(LUA_ST, -1, "", NULL);
+
+    // remove result from lua stack
+    lua_pop(LUA_ST, 1);
+
+    return param;
 }
 
 std::string ob_default_filename() {
@@ -1667,6 +1683,14 @@ std::string ob_default_filename() {
     lua_pop(LUA_ST, 1);
 
     return res;
+}
+
+void ob_invoke_hook(std::string hookname) {
+	
+    std::array<std::string, 2> params = {hookname, ""};
+    
+    if (!Script_CallFunc("ob_invoke_hook", 0, params.data())) { Main_ProgStatus(_("Script Error")); }		
+
 }
 
 bool ob_build_cool_shit() {

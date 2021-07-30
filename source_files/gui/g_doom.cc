@@ -76,9 +76,6 @@ std::string current_engine;
 std::string map_format;
 int build_nodes;
 int build_reject;
-std::string levelcount;
-std::string monvariety;
-std::string current_game;
 
 static bool UDMF_mode;
 
@@ -114,10 +111,10 @@ static const char *section_markers[NUM_SECTIONS][2] = {
 //------------------------------------------------------------------------
 //  SLUMP WAD Creation for Vanilla Doom
 //------------------------------------------------------------------------
-int Slump_MakeWAD(const std::filesystem::path &filename) {
+bool Slump_MakeWAD(const std::filesystem::path &filename) {
     s_config slump_config;
     slump_config.outfile = filename;
-    levelcount = main_win->game_box->length->GetID();
+    std::string levelcount = ob_get_param("length");
     if (levelcount == "single") {
         slump_config.levelcount = 1;
     } else if (levelcount == "few") {
@@ -127,7 +124,7 @@ int Slump_MakeWAD(const std::filesystem::path &filename) {
     } else {
         slump_config.levelcount = 32;  // "Full Game"
     }
-    current_game = main_win->game_box->game->GetID();
+    std::string current_game = ob_get_param("game");
     if (current_game == "doom1" || current_game == "ultdoom") {
         slump_config.gamemask = DOOM1_BIT;
         slump_config.map = 0;
@@ -139,44 +136,18 @@ int Slump_MakeWAD(const std::filesystem::path &filename) {
         slump_config.episode = 0;
         slump_config.mission = 0;
     }
-    int minrooms = (int)main_win->left_mods->FindID("ui_slump_arch")
-                       ->FindSliderOpt("float_minrooms")
-                       ->mod_slider->value();
-    if (minrooms == 1) {
+    std::string minrooms = ob_get_param("float_minrooms_slump");
+    if (minrooms == "Mix It Up") {
         slump_config.minrooms = twister_Between(2, 37);
     } else {
-        slump_config.minrooms = minrooms;
+        slump_config.minrooms = StringToInt(minrooms);
     }
-    slump_config.p_bigify = (int)main_win->left_mods->FindID("ui_slump_arch")
-                                ->FindSliderOpt("float_bigify")
-                                ->mod_slider->value();
-    slump_config.forkiness = (int)main_win->left_mods->FindID("ui_slump_arch")
-                                 ->FindSliderOpt("float_forkiness")
-                                 ->mod_slider->value();
-    if (main_win->left_mods->FindID("ui_slump_arch")
-            ->FindButtonOpt("bool_dm_starts")
-            ->mod_check->value()) {
-        slump_config.do_dm = 1;
-    } else {
-        slump_config.do_dm = 0;
-    }
-    if (main_win->left_mods->FindID("ui_slump_arch")
-            ->FindButtonOpt("bool_major_nukage")
-            ->mod_check->value()) {
-        slump_config.major_nukage = SLUMP_TRUE;
-    } else {
-        slump_config.major_nukage = SLUMP_FALSE;
-    }
-    if (main_win->left_mods->FindID("ui_slump_arch")
-            ->FindButtonOpt("bool_immediate_monsters")
-            ->mod_check->value()) {
-        slump_config.immediate_monsters = SLUMP_FALSE;
-    } else {
-        slump_config.immediate_monsters = rollpercent(20);
-    }
-    monvariety = main_win->left_mods->FindID("ui_slump_mons")
-                     ->FindOpt("slump_mons")
-                     ->mod_menu->GetID();
+    slump_config.p_bigify = StringToInt(ob_get_param("float_bigify_slump"));
+    slump_config.forkiness = StringToInt(ob_get_param("float_forkiness_slump"));
+    slump_config.do_dm = StringToInt(ob_get_param("bool_dm_starts_slump"));
+    slump_config.major_nukage = StringToInt(ob_get_param("bool_major_nukage_slump")) ? SLUMP_TRUE : SLUMP_FALSE;
+    slump_config.immediate_monsters = StringToInt(ob_get_param("bool_immediate_monsters_slump")) ? rollpercent(20) : SLUMP_FALSE;
+    std::string monvariety = ob_get_param("slump_mons");
     if (monvariety == "normal") {
         slump_config.required_monster_bits = 0;
         slump_config.forbidden_monster_bits = SPECIAL;
@@ -197,10 +168,10 @@ int Slump_MakeWAD(const std::filesystem::path &filename) {
 //  WAD OUTPUT
 //------------------------------------------------------------------------
 
-void DM_WriteLump(const char *name, const void *data, u32_t len) {
-    SYS_ASSERT(strlen(name) <= 8);
+void DM_WriteLump(std::string_view name, const void *data, u32_t len) {
+    SYS_ASSERT(name.size() <= 8);
 
-    WAD_NewLump(name);
+    WAD_NewLump(name.data());
 
     if (len > 0) {
         if (!WAD_AppendData(data, len)) {
@@ -211,14 +182,15 @@ void DM_WriteLump(const char *name, const void *data, u32_t len) {
     WAD_FinishLump();
 }
 
-void DM_WriteLump(const char *name, qLump_c *lump) {
+void DM_WriteLump(std::string_view name, qLump_c *lump) {
     DM_WriteLump(name, lump->GetBuffer(), lump->GetSize());
 }
 
 static void DM_WriteBehavior() {
     raw_behavior_header_t behavior;
 
-    strncpy(behavior.marker, "ACS", 4);
+    std::string_view acs{"ACS"};
+    std::copy(acs.begin(), acs.end(), behavior.marker.begin());
 
     behavior.offset = LE_U32(8);
     behavior.func_num = 0;
@@ -361,7 +333,7 @@ void DM_BeginLevel() {
     }
 }
 
-void DM_EndLevel(const char *level_name) {
+void DM_EndLevel(std::string_view level_name) {
     // terminate header lump with trailing NUL
     if (header_lump->GetSize() > 0) {
         const byte nuls[4] = {0, 0, 0, 0};
@@ -442,8 +414,8 @@ void DM_AddSector(int f_h, const char *f_tex, int c_h, const char *c_tex,
         sec.floor_h = LE_S16(f_h);
         sec.ceil_h = LE_S16(c_h);
 
-        strncpy(sec.floor_tex, f_tex, 8);
-        strncpy(sec.ceil_tex, c_tex, 8);
+        std::copy(f_tex, f_tex + 8, sec.floor_tex.begin());
+        std::copy(c_tex, c_tex + 8, sec.ceil_tex.begin());
 
         sec.light = LE_U16(light);
         sec.special = LE_U16(special);
@@ -470,9 +442,9 @@ void DM_AddSidedef(int sector, const char *l_tex, const char *m_tex,
 
         side.sector = LE_S16(sector);
 
-        strncpy(side.lower_tex, l_tex, 8);
-        strncpy(side.mid_tex, m_tex, 8);
-        strncpy(side.upper_tex, u_tex, 8);
+        std::copy(l_tex, l_tex + 8, side.lower_tex.begin());
+        std::copy(m_tex, m_tex + 8, side.mid_tex.begin());
+        std::copy(u_tex, u_tex + 8, side.upper_tex.begin());
 
         side.x_offset = LE_S16(x_offset);
         side.y_offset = LE_S16(y_offset);
@@ -569,7 +541,7 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2, int type,
             // tag value is UNUSED
 
             if (args) {
-                memcpy(line.args, args, 5);
+                std::copy(args, args + 5, line.args.begin());
             }
 
             linedef_lump->Append(&line, sizeof(line));
@@ -736,7 +708,7 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options, int tid,
             thing.special = special;
 
             if (args) {
-                memcpy(thing.args, args, 5);
+                std::copy(args, args + 5, thing.args.begin());
             }
 
             thing_lump->Append(&thing, sizeof(thing));
@@ -852,7 +824,7 @@ int DM_NumThings() {
 
 #include "zdmain.h"
 
-static bool DM_BuildNodes(const std::filesystem::path &filename, const std::filesystem::path &out_name) {
+static bool DM_BuildNodes(const std::filesystem::path &filename) {
     LogPrintf("\n");
 
     zdbsp_options options;
@@ -902,7 +874,6 @@ static bool DM_BuildNodes(const std::filesystem::path &filename, const std::file
         if (!UDMF_mode) {
             if (!build_nodes) {
                 LogPrintf("Skipping nodes per user selection...\n");
-                std::filesystem::rename(filename, out_name);
                 return true;
             }
         }
@@ -921,7 +892,6 @@ static bool DM_BuildNodes(const std::filesystem::path &filename, const std::file
     } else if (current_engine == "zdoom") {
         if (!build_nodes) {
             LogPrintf("Skipping nodes per user selection...\n");
-            std::filesystem::rename(filename, out_name);
             return true;
         }
         options.build_nodes = true;
@@ -943,8 +913,6 @@ static bool DM_BuildNodes(const std::filesystem::path &filename, const std::file
         return false;
     }
 
-    std::filesystem::rename(filename, out_name);
-
     return true;
 }
 
@@ -955,7 +923,9 @@ class doom_game_interface_c : public game_interface_c {
     std::filesystem::path filename;
 
    public:
-    doom_game_interface_c() = default;
+    doom_game_interface_c() : filename("") {}
+
+    ~doom_game_interface_c() {}
 
     bool Start(const char *preset);
     bool Finish(bool build_ok);
@@ -975,6 +945,8 @@ bool doom_game_interface_c::Start(const char *preset) {
     ef_liquid_type = 0;
     ef_thing_mode = 0;
 
+    ob_invoke_hook("pre_setup");
+
     if (batch_mode) {
         filename = batch_output_file;
     } else {
@@ -987,21 +959,15 @@ bool doom_game_interface_c::Start(const char *preset) {
     }
 
     if (create_backups) {
-        Main_BackupFile(filename.c_str(), "old");
+        Main_BackupFile(filename, "old");
     }
 
     // Need to preempt the rest of this process if we are using Vanilla Doom
     if (main_win) {
-        current_engine = main_win->game_box->engine->GetID();
+        current_engine = ob_get_param("engine");
         if (current_engine == "vanilla") {
-            build_reject = main_win->left_mods->FindID("ui_reject_options")
-                               ->FindButtonOpt("bool_build_reject")
-                               ->mod_check->value();
-            if (Slump_MakeWAD(filename.c_str()) == 0) {
-                return true;
-            } else {
-                return false;
-            }
+            build_reject = StringToInt(ob_get_param("bool_build_reject"));
+            return true;
         }
     }
 
@@ -1014,19 +980,11 @@ bool doom_game_interface_c::Start(const char *preset) {
         main_win->build_box->Prog_Init(20, N_("CSG"));
         if (current_engine == "zdoom" || current_engine == "edge" ||
             current_engine == "eternity") {
-            build_reject = main_win->left_mods->FindID("ui_udmf_map_options")
-                               ->FindButtonOpt("bool_build_reject_udmf")
-                               ->mod_check->value();
-            map_format = main_win->left_mods->FindID("ui_udmf_map_options")
-                             ->FindOpt("map_format")
-                             ->mod_menu->GetID();
-            build_nodes = main_win->left_mods->FindID("ui_udmf_map_options")
-                              ->FindButtonOpt("bool_build_nodes_udmf")
-                              ->mod_check->value();
+            build_reject = StringToInt(ob_get_param("bool_build_reject_udmf"));
+            map_format = ob_get_param("map_format");
+            build_nodes = StringToInt(ob_get_param("bool_build_nodes_udmf"));
         } else {
-            build_reject = main_win->left_mods->FindID("ui_reject_options")
-                               ->FindButtonOpt("bool_build_reject")
-                               ->mod_check->value();
+            build_reject = StringToInt(ob_get_param("bool_build_reject"));
             map_format = "binary";
             build_nodes = true;
         }
@@ -1039,27 +997,16 @@ bool doom_game_interface_c::Start(const char *preset) {
     return true;
 }
 
-bool doom_game_interface_c::BuildNodes() {
-    std::filesystem::path temp_name{filename};
-    temp_name.replace_extension("tmp");
-
-    std::filesystem::remove(temp_name);
-    std::filesystem::copy_file(filename, temp_name);
-    std::filesystem::remove(filename);
-
-    bool result = DM_BuildNodes(temp_name.c_str(), filename.c_str());
-
-    std::filesystem::remove(temp_name);
-
-    return result;
-}
+bool doom_game_interface_c::BuildNodes() { return DM_BuildNodes(filename); }
 
 bool doom_game_interface_c::Finish(bool build_ok) {
     // Skip DM_EndWAD if using Vanilla Doom
     if (current_engine != "vanilla") {
         // TODO: handle write errors
         DM_EndWAD();
-    }
+    } else {
+		build_ok = Slump_MakeWAD(filename);
+	}
 
     if (build_ok) {
         build_ok = BuildNodes();
@@ -1069,7 +1016,7 @@ bool doom_game_interface_c::Finish(bool build_ok) {
         // remove the WAD if an error occurred
         std::filesystem::remove(filename);
     } else {
-        Recent_AddFile(RECG_Output, filename.c_str());
+        Recent_AddFile(RECG_Output, filename);
     }
 
     return build_ok;
@@ -1100,7 +1047,7 @@ void doom_game_interface_c::Property(const char *key, const char *value) {
         } else if (StringCaseCmp(value, "strife") == 0) {
             dm_sub_format = SUBFMT_Strife;
         } else {
-            LogPrintf("WARNING: unknown DOOM sub_format '{}'\n", value);
+            LogPrintf("WARNING: unknown DOOM sub_format '%s'\n", value);
         }
     } else if (StringCaseCmp(key, "offset_map") == 0) {
         dm_offset_map = atoi(value);
@@ -1111,7 +1058,7 @@ void doom_game_interface_c::Property(const char *key, const char *value) {
     } else if (StringCaseCmp(key, "ef_thing_mode") == 0) {
         ef_thing_mode = atoi(value);
     } else {
-        LogPrintf("WARNING: unknown DOOM property: {}={}\n", key, value);
+        LogPrintf("WARNING: unknown DOOM property: %s=%s\n", key, value);
     }
 }
 
@@ -1129,9 +1076,9 @@ void doom_game_interface_c::EndLevel() {
 	CSG_TestRegions_Doom();
 #endif
 
-    DM_EndLevel(level_name.c_str());
-
-    level_name.clear();
+    DM_EndLevel(level_name);
+    
+    level_name = "";
 }
 
 game_interface_c *Doom_GameObject() { return new doom_game_interface_c(); }

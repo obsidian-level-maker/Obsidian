@@ -78,8 +78,6 @@ void FWadReader::Close() {
 }
 
 FWadReader::~FWadReader() {
-    if (File) fclose(File);
-    if (Lumps) delete[] Lumps;
 }
 
 bool FWadReader::IsIWAD() const { return Header.Magic[0] == 'I'; }
