@@ -1245,19 +1245,24 @@ function ob_get_param(parameter)
   local param
 
   if OB_CONFIG.batch_mode == "yes" then
-    assert(OB_CONFIG[parameter])
-    param = OB_CONFIG[parameter]
-  else
-	print("PARAMETER: " .. parameter)
-    assert(PARAM[parameter] or OB_CONFIG[parameter])
-    if (PARAM[parameter]) then
-      param = PARAM[parameter]
-    else
+    if OB_CONFIG[parameter] then
       param = OB_CONFIG[parameter]
+    else
+      error("ERROR! " .. parameter .. " not found in config!")
+    end
+  else
+    if PARAM[parameter] or OB_CONFIG[parameter] then
+      if (PARAM[parameter]) then
+        param = PARAM[parameter]
+      else
+        param = OB_CONFIG[parameter]
+      end
+    else
+      error("ERROR! " .. parameter .. " not found in config!")
     end
   end
   
-  if type(parameter) == "string" then
+  if type(param) == "string" then
     return param
   else
     return tostring(param)
