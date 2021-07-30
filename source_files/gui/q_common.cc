@@ -48,7 +48,9 @@ qLump_c::~qLump_c() {}
 
 int qLump_c::GetSize() const { return (int)buffer.size(); }
 
-const u8_t *qLump_c::GetBuffer() const { return &buffer[0]; }
+const u8_t *qLump_c::GetBuffer() const {
+    return buffer.empty() ? nullptr : &buffer[0];
+}
 
 void qLump_c::Append(const void *data, u32_t len) {
     if (len == 0) {
