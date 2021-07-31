@@ -73,8 +73,8 @@ void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
                       double px1, double py1, double px2, double py2, double *x,
                       double *y);
 
-void AlongCoord(double along, double px1, double py1, double px2, double py2,
-                double *x, double *y);
+std::pair<double, double> AlongCoord(double along, double px1, double py1,
+                                     double px2, double py2);
 
 bool VectorSameDir(double dx1, double dy1, double dx2, double dy2);
 

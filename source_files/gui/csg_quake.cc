@@ -90,14 +90,14 @@ class quake_side_c {
           y2(other->y2) {}
 
     // make a "mini side"
-    quake_side_c(quake_node_c *node, int _node_side, const quake_side_c *part,
-                 double along1, double along2)
-        : snag(NULL), on_node(node), node_side(_node_side) {
-        double sx, sy;
-        double ex, ey;
-
-        AlongCoord(along1, part->x1, part->y1, part->x2, part->y2, &sx, &sy);
-        AlongCoord(along2, part->x1, part->y1, part->x2, part->y2, &ex, &ey);
+    quake_side_c(quake_node_c *node, const int node_side,
+                 const quake_side_c *part, const double along1,
+                 const double along2)
+        : snag(nullptr), on_node(node), node_side(node_side) {
+        const auto [sx, sy] =
+            AlongCoord(along1, part->x1, part->y1, part->x2, part->y2);
+        const auto [ex, ey] =
+            AlongCoord(along2, part->x1, part->y1, part->x2, part->y2);
 
         x1 = sx;
         y1 = sy;

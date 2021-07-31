@@ -121,7 +121,7 @@ void VFS_InitAddons(const char *argv0) {
 }
 
 void VFS_ParseCommandLine() {
-    int arg = ArgvFind('a', "addon");
+    int arg = argv::Find('a', "addon");
     int count = 0;
 
     if (arg < 0) {
@@ -132,8 +132,8 @@ void VFS_ParseCommandLine() {
 
     LogPrintf("Command-line addons....\n");
 
-    for (; arg < arg_list.size() && !ArgvIsOption(arg); arg++, count++) {
-        VFS_AddArchive(arg_list[arg], false /* options_file */);
+    for (; arg < argv::list.size() && !argv::IsOption(arg); arg++, count++) {
+        VFS_AddArchive(argv::list[arg], false /* options_file */);
     }
 
     if (!count) {

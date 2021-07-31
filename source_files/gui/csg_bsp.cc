@@ -964,11 +964,10 @@ static void DivideOneRegion(region_c *R, partition_c *part, group_c &front,
     // FIXME: SYS_ASSERT(along_max > along_min + SNAG_EPSILON);
 
     if (along_max > along_min + SNAG_EPSILON) {
-        double x1, y1;
-        double x2, y2;
-
-        AlongCoord(along_min, part->x1, part->y1, part->x2, part->y2, &x1, &y1);
-        AlongCoord(along_max, part->x1, part->y1, part->x2, part->y2, &x2, &y2);
+        const auto [x1, y1] =
+            AlongCoord(along_min, part->x1, part->y1, part->x2, part->y2);
+        const auto [x2, y2] =
+            AlongCoord(along_max, part->x1, part->y1, part->x2, part->y2);
 
         R->AddSnag(new snag_c(x1, y1, x2, y2, part));
         N->AddSnag(new snag_c(x2, y2, x1, y1, part));

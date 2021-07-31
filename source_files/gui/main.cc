@@ -25,21 +25,21 @@
 #include "csg_main.h"
 #include "g_nukem.h"
 #include "hdr_fltk.h"
-#include "hdr_lua.h"
 #include "hdr_ui.h"
 #include "headers.h"
 #include "lib_argv.h"
 #include "lib_file.h"
-#include "lib_signal.h"
 #include "lib_util.h"
 #include "m_addons.h"
 #include "m_cookie.h"
 #include "m_lua.h"
 #include "m_trans.h"
 #include "twister.h"
-#include "tx_forge.h"
 
-#define TICKER_TIME 50 /* ms */
+/**
+ * \brief Ticker time in milliseconds
+ */
+constexpr size_t TICKER_TIME = 50;
 
 std::filesystem::path home_dir;
 std::filesystem::path install_dir;
@@ -175,15 +175,13 @@ void Determine_WorkingPath(const char *argv0) {
     // firstly find the "Working directory" : that's the place where
     // the CONFIG.txt and LOGS.txt files are, as well the temp files.
 
-    int home_arg = ArgvFind(0, "home");
-
-    if (home_arg >= 0) {
-        if (home_arg + 1 >= arg_list.size() || ArgvIsOption(home_arg + 1)) {
+    if (const int home_arg = argv::Find(0, "home"); home_arg >= 0) {
+        if (home_arg + 1 >= argv::list.size() || argv::IsOption(home_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --home\n");
             exit(9);
         }
 
-        home_dir = arg_list[home_arg + 1];
+        home_dir = argv::list[home_arg + 1];
         return;
     }
 
@@ -209,14 +207,14 @@ void Determine_WorkingPath(const char *argv0) {
 }
 
 static bool Verify_InstallDir(const std::filesystem::path &path) {
-    std::filesystem::path filename = path / "scripts" / "oblige.lua";
+    const std::filesystem::path filename = path / "scripts" / "oblige.lua";
 
 #if 0  // DEBUG
 	fprintf(stderr, "Trying install dir: [%s]\n", path);
 	fprintf(stderr, "  using file: [%s]\n\n", filename);
 #endif
 
-    return std::filesystem::exists(filename);
+    return exists(filename);
 }
 
 void Determine_InstallDir(const char *argv0) {
@@ -224,15 +222,13 @@ void Determine_InstallDir(const char *argv0) {
     // result in the global variable 'install_dir'.  This is
     // where all the LUA scripts and other data files are.
 
-    int inst_arg = ArgvFind(0, "install");
-
-    if (inst_arg >= 0) {
-        if (inst_arg + 1 >= arg_list.size() || ArgvIsOption(inst_arg + 1)) {
+    if (const int inst_arg = argv::Find(0, "install"); inst_arg >= 0) {
+        if (inst_arg + 1 >= argv::list.size() || argv::IsOption(inst_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --install\n");
             exit(9);
         }
 
-        install_dir = arg_list[inst_arg + 1];
+        install_dir = argv::list[inst_arg + 1];
 
         if (Verify_InstallDir(install_dir)) {
             return;
@@ -278,15 +274,13 @@ void Determine_InstallDir(const char *argv0) {
 }
 
 void Determine_ConfigFile() {
-    int conf_arg = ArgvFind(0, "config");
-
-    if (conf_arg >= 0) {
-        if (conf_arg + 1 >= arg_list.size() || ArgvIsOption(conf_arg + 1)) {
+    if (const int conf_arg = argv::Find(0, "config"); conf_arg >= 0) {
+        if (conf_arg + 1 >= argv::list.size() || argv::IsOption(conf_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --config\n");
             exit(9);
         }
 
-        config_file = arg_list[conf_arg + 1];
+        config_file = argv::list[conf_arg + 1];
     } else {
         config_file /= home_dir;
         config_file /= CONFIG_FILENAME;
@@ -294,15 +288,13 @@ void Determine_ConfigFile() {
 }
 
 void Determine_OptionsFile() {
-    int optf_arg = ArgvFind(0, "options");
-
-    if (optf_arg >= 0) {
-        if (optf_arg + 1 >= arg_list.size() || ArgvIsOption(optf_arg + 1)) {
+    if (const int optf_arg = argv::Find(0, "options"); optf_arg >= 0) {
+        if (optf_arg + 1 >= argv::list.size() || argv::IsOption(optf_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --options\n");
             exit(9);
         }
 
-        options_file = arg_list[optf_arg + 1];
+        options_file = argv::list[optf_arg + 1];
     } else {
         options_file /= home_dir;
         options_file /= OPTIONS_FILENAME;
@@ -310,15 +302,14 @@ void Determine_OptionsFile() {
 }
 
 void Determine_ThemeFile() {
-    int themef_arg = ArgvFind(0, "theme");
-
-    if (themef_arg >= 0) {
-        if (themef_arg + 1 >= arg_list.size() || ArgvIsOption(themef_arg + 1)) {
+    if (const int themef_arg = argv::Find(0, "theme"); themef_arg >= 0) {
+        if (themef_arg + 1 >= argv::list.size() ||
+            argv::IsOption(themef_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --theme\n");
             exit(9);
         }
 
-        theme_file = arg_list[themef_arg + 1];
+        theme_file = argv::list[themef_arg + 1];
     } else {
         theme_file /= home_dir;
         theme_file /= THEME_FILENAME;
@@ -326,15 +317,13 @@ void Determine_ThemeFile() {
 }
 
 void Determine_LoggingFile() {
-    int logf_arg = ArgvFind(0, "log");
-
-    if (logf_arg >= 0) {
-        if (logf_arg + 1 >= arg_list.size() || ArgvIsOption(logf_arg + 1)) {
+    if (const int logf_arg = argv::Find(0, "log"); logf_arg >= 0) {
+        if (logf_arg + 1 >= argv::list.size() || argv::IsOption(logf_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --log\n");
             exit(9);
         }
 
-        logging_file = arg_list[logf_arg + 1];
+        logging_file = argv::list[logf_arg + 1];
 
         // test that it can be created
         std::ofstream fp{logging_file};
@@ -371,19 +360,19 @@ int Main_DetermineScaling() {
     /* computation of the Kromulent factor */
 
     // command-line overrides
-    if (ArgvFind(0, "tiny") >= 0) {
+    if (argv::Find(0, "tiny") >= 0) {
         return -1;
     }
-    if (ArgvFind(0, "small") >= 0) {
+    if (argv::Find(0, "small") >= 0) {
         return 0;
     }
-    if (ArgvFind(0, "medium") >= 0) {
+    if (argv::Find(0, "medium") >= 0) {
         return 1;
     }
-    if (ArgvFind(0, "large") >= 0) {
+    if (argv::Find(0, "large") >= 0) {
         return 2;
     }
-    if (ArgvFind(0, "huge") >= 0) {
+    if (argv::Find(0, "huge") >= 0) {
         return 3;
     }
 
@@ -406,17 +395,14 @@ int Main_DetermineScaling() {
     return 0;
 }
 
-bool load_internal_font(const char *fontpath, int fontnum,
+bool LoadInternalFont(const char *fontpath, const int fontnum,
                         const char *fontname) {
     // This is derived from code posted by an individual named Ian MacArthur
     // in a Google Groups thread at the following link:
     // https://groups.google.com/g/fltkgeneral/c/uAdg8wOLiMk
 
-    /* Load the font using the appropriate platform API */
-    int loaded_font = i_load_private_font(fontpath);
-
     /* set the extra font */
-    if (loaded_font) {
+    if (i_load_private_font(fontpath)) {
         Fl::set_font(fontnum, fontname);
         return true;
     }
@@ -439,8 +425,8 @@ void Main_PopulateFontMap() {
 
         for (int x = 16; x < num_fonts;
              x++) {  // Starting at 16 skips the FLTK default enumerations
-            std::string fontname = Fl::get_font_name(x);
-            if (std::isalpha(fontname.at(0))) {
+            if (std::string fontname = Fl::get_font_name(x);
+                std::isalpha(fontname.at(0))) {
                 std::map<std::string, int> temp_map{{fontname, x}};
                 font_menu_items.push_back(temp_map);
             }
@@ -461,10 +447,10 @@ void Main_PopulateFontMap() {
 
         int current_free_font = 16;
 
-        if (load_internal_font(
+        if (LoadInternalFont(
                 "./theme/fonts/SourceSansPro/SourceSansPro-Regular.ttf",
                 current_free_font, "Source Sans Pro")) {
-            if (load_internal_font(
+            if (LoadInternalFont(
                     "./theme/fonts/SourceSansPro/SourceSansPro-Bold.ttf",
                     current_free_font + 1, "Source Sans Pro Bold")) {
                 font_menu_items.push_back(std::map<std::string, int>{
@@ -482,7 +468,7 @@ void Main_PopulateFontMap() {
         font_menu_items.push_back(
             std::map<std::string, int>{{"Screen <Internal>", 13}});
 
-        if (load_internal_font("./theme/fonts/Avenixel/Avenixel-Regular.ttf",
+        if (LoadInternalFont("./theme/fonts/Avenixel/Avenixel-Regular.ttf",
                                current_free_font, "Avenixel")) {
             Fl::set_font(current_free_font + 1, "Avenixel");
             font_menu_items.push_back(
@@ -490,7 +476,7 @@ void Main_PopulateFontMap() {
             current_free_font += 2;
         }
 
-        if (load_internal_font("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf",
+        if (LoadInternalFont("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf",
                                current_free_font, "The Neue")) {
             Fl::set_font(current_free_font + 1, "The Neue");
             font_menu_items.push_back(
@@ -498,9 +484,9 @@ void Main_PopulateFontMap() {
             current_free_font += 2;
         }
 
-        if (load_internal_font("./theme/fonts/Teko/Teko-Regular.ttf",
+        if (LoadInternalFont("./theme/fonts/Teko/Teko-Regular.ttf",
                                current_free_font, "Teko")) {
-            if (load_internal_font("./theme/fonts/Teko/Teko-Bold.ttf",
+            if (LoadInternalFont("./theme/fonts/Teko/Teko-Bold.ttf",
                                    current_free_font + 1, "Teko Bold")) {
                 font_menu_items.push_back(
                     std::map<std::string, int>{{"Teko", current_free_font}});
@@ -508,9 +494,9 @@ void Main_PopulateFontMap() {
             current_free_font += 2;
         }
 
-        if (load_internal_font("./theme/fonts/Kalam/Kalam-Regular.ttf",
+        if (LoadInternalFont("./theme/fonts/Kalam/Kalam-Regular.ttf",
                                current_free_font, "Kalam")) {
-            if (load_internal_font("./theme/fonts/Kalam/Kalam-Bold.ttf",
+            if (LoadInternalFont("./theme/fonts/Kalam/Kalam-Bold.ttf",
                                    current_free_font + 1, "Kalam Bold")) {
                 font_menu_items.push_back(
                     std::map<std::string, int>{{"Kalam", current_free_font}});
@@ -518,7 +504,8 @@ void Main_PopulateFontMap() {
         }
     }
 
-    num_fonts = font_menu_items.size();
+    // lossy conversion, size_t?
+    num_fonts = static_cast<int>(font_menu_items.size());
 }
 
 void Main_SetupFLTK() {
@@ -594,13 +581,14 @@ void Main_SetupFLTK() {
     Fl::set_boxtype(FL_PLASTIC_DOWN_BOX, cplastic_down_box, 2, 2, 4, 4);
     Fl::set_boxtype(FL_SHADOW_BOX, cshadow_box, 1, 1, 5, 5);
     Fl::set_boxtype(FL_FREE_BOXTYPE, crectbound, 1, 1, 2, 2);
-    Fl::set_boxtype((Fl_Boxtype)(FL_FREE_BOXTYPE + 1), crectbound, 1, 1, 2, 2);
+    Fl::set_boxtype(static_cast<Fl_Boxtype>(FL_FREE_BOXTYPE + 1), crectbound, 1,
+                    1, 2, 2);
     Fl::set_boxtype(FL_THIN_UP_BOX, cthin_up_box, 1, 1, 2, 2);
     Fl::set_boxtype(FL_EMBOSSED_BOX, cembossed_box, 2, 2, 4, 4);
-    Fl::set_boxtype((Fl_Boxtype)(FL_FREE_BOXTYPE + 2), cengraved_box, 2, 2, 4,
-                    4);
-    Fl::set_boxtype((Fl_Boxtype)(FL_FREE_BOXTYPE + 3), cengraved_box, 2, 2, 4,
-                    4);
+    Fl::set_boxtype(static_cast<Fl_Boxtype>(FL_FREE_BOXTYPE + 2), cengraved_box,
+                    2, 2, 4, 4);
+    Fl::set_boxtype(static_cast<Fl_Boxtype>(FL_FREE_BOXTYPE + 3), cengraved_box,
+                    2, 2, 4, 4);
     Fl::set_boxtype(FL_DOWN_BOX, cdown_box, 2, 2, 4, 4);
     Fl::set_boxtype(FL_UP_BOX, cup_box, 2, 2, 4, 4);
     switch (widget_theme) {
@@ -653,7 +641,7 @@ void Main_SetupFLTK() {
             button_style = FL_UP_BOX;
             break;
         case 2:
-            button_style = (Fl_Boxtype)(FL_FREE_BOXTYPE + 2);
+            button_style = static_cast<Fl_Boxtype>(FL_FREE_BOXTYPE + 2);
             break;
         case 3:
             button_style = FL_EMBOSSED_BOX;
@@ -668,9 +656,8 @@ void Main_SetupFLTK() {
     }
     if (font_theme < num_fonts) {  // In case the number of installed fonts is
                                    // reduced between launches
-        for (auto font = font_menu_items[font_theme].begin();
-             font != font_menu_items[font_theme].end(); ++font) {
-            font_style = font->second;
+        for (const auto &[_fst, snd] : font_menu_items[font_theme]) {
+            font_style = snd;
         }
     } else {
         // Fallback
@@ -712,9 +699,8 @@ void Main_Ticker() {
 
     static u32_t last_millis = 0;
 
-    u32_t cur_millis = TimeGetMillies();
-
-    if ((cur_millis - last_millis) >= TICKER_TIME) {
+    if (const u32_t cur_millis = TimeGetMillies();
+        (cur_millis - last_millis) >= TICKER_TIME) {
         Fl::check();
 
         last_millis = cur_millis;
@@ -826,7 +812,7 @@ bool Build_Cool_Shit() {
         main_win->build_box->mini_map->EmptyMap();
     }
 
-    std::string format = ob_game_format();
+    const std::string format = ob_game_format();
 
     if (format.empty()) {
         Main_FatalError("ERROR: missing 'format' for game?!?\n");
@@ -857,12 +843,12 @@ bool Build_Cool_Shit() {
         }
     }
 
-    std::string def_filename = ob_default_filename();
+    const std::string def_filename = ob_default_filename();
 
     // lock most widgets of user interface
     if (main_win) {
         std::string seed = NumToString(next_rand_seed);
-        if (main_win->build_box->string_seed != "") {
+        if (!main_win->build_box->string_seed.empty()) {
             main_win->build_box->seed_disp->copy_label(
                 fmt::format("Seed: {}", main_win->build_box->string_seed)
                     .c_str());
@@ -877,7 +863,7 @@ bool Build_Cool_Shit() {
         main_win->Locked(true);
     }
 
-    u32_t start_time = TimeGetMillies();
+    const u32_t start_time = TimeGetMillies();
     // this will ask for output filename (among other things)
     bool was_ok = game_object->Start(def_filename.c_str());
 
@@ -936,28 +922,29 @@ bool Build_Cool_Shit() {
 
 int main(int argc, char **argv) {
     // initialise argument parser (skipping program name)
-    ArgvInit(argc - 1, (const char **)(argv + 1));
+    argv::Init(argc - 1, argv + 1);
 
 restart:;
 
-    if (ArgvFind('?', NULL) >= 0 || ArgvFind('h', "help") >= 0) {
+    if (argv::Find('?', NULL) >= 0 || argv::Find('h', "help") >= 0) {
         ShowInfo();
         exit(1);
-    } else if (ArgvFind(0, "version") >= 0) {
+    } else if (argv::Find(0, "version") >= 0) {
         ShowVersion();
         exit(1);
     }
 
-    int batch_arg = ArgvFind('b', "batch");
+    int batch_arg = argv::Find('b', "batch");
     if (batch_arg >= 0) {
-        if (batch_arg + 1 >= arg_list.size() || ArgvIsOption(batch_arg + 1)) {
+        if (batch_arg + 1 >= argv::list.size() ||
+            argv::IsOption(batch_arg + 1)) {
             fmt::print(stderr,
                        "OBSIDIAN ERROR: missing filename for --batch\n");
             exit(9);
         }
 
         batch_mode = true;
-        batch_output_file = arg_list[batch_arg + 1];
+        batch_output_file = argv::list[batch_arg + 1];
     }
 
     Determine_WorkingPath(argv[0]);
@@ -970,12 +957,12 @@ restart:;
 
     LogInit(logging_file);
 
-    if (ArgvFind('d', "debug") >= 0) {
+    if (argv::Find('d', "debug") >= 0) {
         debug_messages = true;
     }
 
     // accept -t and --terminal for backwards compatibility
-    if (ArgvFind('v', "verbose") >= 0 || ArgvFind('t', "terminal") >= 0) {
+    if (argv::Find('v', "verbose") >= 0 || argv::Find('t', "terminal") >= 0) {
         LogEnableTerminal(true);
     }
 
@@ -1018,14 +1005,13 @@ restart:;
 
     std::string load_file;
 
-    int load_arg = ArgvFind('l', "load");
-    if (load_arg >= 0) {
-        if (load_arg + 1 >= arg_list.size() || ArgvIsOption(load_arg + 1)) {
+    if (const int load_arg = argv::Find('l', "load"); load_arg >= 0) {
+        if (load_arg + 1 >= argv::list.size() || argv::IsOption(load_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing filename for --load\n");
             exit(9);
         }
 
-        load_file = arg_list[load_arg + 1];
+        load_file = argv::list[load_arg + 1];
     }
 
     if (batch_mode) {
@@ -1082,7 +1068,7 @@ restart:;
     fl_register_images();
     Fl_Pixmap program_icon(pixmap_icon);
     Fl_RGB_Image rgb_icon(&program_icon, FL_BLACK);
-    main_win->default_icon(&rgb_icon);
+    UI_MainWin::default_icon(&rgb_icon);
 
     //???	Default_Location();
 
@@ -1106,10 +1092,10 @@ restart:;
 
     // show window (pass some dummy arguments)
     {
-        char *argv[2];
-        argv[0] = strdup("Obsidian.exe");
-        argv[1] = NULL;
-        main_win->show(1 /* argc */, argv);
+        char *fake_argv[2];
+        fake_argv[0] = strdup("Obsidian.exe");
+        fake_argv[1] = NULL;
+        main_win->show(1 /* argc */, fake_argv);
     }
 
     // kill the stupid bright background of the "plastic" scheme
@@ -1176,7 +1162,7 @@ restart:;
                 Main_CalcNewSeed();
             }
         }
-    } catch (assert_fail_c err) {
+    } catch (const assert_fail_c &err) {
         Main_FatalError(_("Sorry, an internal error occurred:\n%s"),
                         err.GetMessage());
     } catch (...) {

@@ -135,16 +135,13 @@ extern bool limit_break;
 extern std::filesystem::path last_directory;
 extern std::string numeric_locale;
 
-#ifdef __GNUC__
-__attribute__((noreturn))
-#endif
-void Main_FatalError(const char *msg, ...);
+[[noreturn]] void Main_FatalError(const char *msg, ...);
 
 void Main_ProgStatus(const char *msg, ...);
 bool Main_BackupFile(const std::filesystem::path &filename,
                      const std::filesystem::path &ext);
 void Main_Ticker();
-bool load_internal_font(const char *fontpath, int fontnum,
+bool LoadInternalFont(const char *fontpath, int fontnum,
                         const char *fontname);
 void Main_PopulateFontMap();
 
