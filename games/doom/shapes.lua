@@ -3641,7 +3641,7 @@ GROW_LIQUID_POOL_1X1 =
 GROW_LIQUID_POOL_2X2 =
 {
   prob = 15,
-  prob_skew = 5,
+  prob_skew = 2,
   skip_prob = 35,
 
   structure =
@@ -3658,7 +3658,7 @@ GROW_LIQUID_POOL_2X2 =
 GROW_LIQUID_POOL_3X1 =
 {
   prob = 15,
-  prob_skew = 5,
+  prob_skew = 2,
   skip_prob = 35,
 
   structure =
@@ -3671,6 +3671,109 @@ GROW_LIQUID_POOL_3X1 =
     "...","111",
     "x1x","x1x",
   },
+},
+
+GROW_LIQUID_POOL_3X1_NEW_AREA =
+{
+  prob = 5,
+  skip_prob = 75,
+
+  structure =
+  {
+    "...","111",
+    "...","111",
+    "...","v1v",
+    "...","A~A",
+    "...","A~A",
+    "...","A~A",
+    "...","^1^",
+    "...","111",
+    "x1x","x1x",
+  },
+},
+
+GROW_LIQUID_POOL_3X1_TRIPLE =
+{
+  prob = 15,
+  prob_skew = 2,
+  skip_prob = 50,
+
+  structure =
+  {
+    ".......","1111111",
+    ".......","1111111",
+    ".......","1~1~1~1",
+    ".......","1~1~1~1",
+    ".......","1~1~1~1",
+    ".......","1111111",
+    "xx111xx","xx111xx",
+  },
+},
+
+GROW_LIQUID_POOL_3X1_TRIPLE_NEW_AREA =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    ".......","1111111",
+    ".......","1111111",
+    ".......","v1v1v1v",
+    ".......","A~A~A~A",
+    ".......","A~A~A~A",
+    ".......","A~A~A~A",
+    ".......","^1^1^1^",
+    ".......","1111111",
+    "xx111xx","xx111xx",
+  }
+},
+
+GROW_LIQUID_POOL_DEPRESSED =
+{
+  prob = 20,
+  skip_prob = 60,
+
+  structure =
+  {
+    "........","11111111",
+    "........","11111111",
+    "........","vv~~~~vv",
+    "........","AA~~~~AA",
+    "........","AA~~~~AA",
+    "........","^^~~~~^^",
+    "........","11111111",
+    "........","11111111",
+    "xxx11xxx","xxx11xxx",
+  }
+},
+
+GROW_LIQUID_POOL_DEPRESSED_DIAG =
+{
+  prob = 15,
+  skip_prob = 65,
+
+  structure =
+  {
+    "........","11111111",
+    "........","11111111",
+    "........","vv~~~~vv",
+    "........","AA~~~~AA",
+    "........","A/~~~~%A",
+    "........","A~~~~~~A",
+    "........","A%~~~~/A",
+    "........","AA~~~~AA",
+    "........","^^~~~~^^",
+    "........","11111111",
+    "........","11111111",
+    "xxx11xxx","xxx11xxx",
+  },
+
+  diagonals =
+  {
+    "A~","~A",
+    "A~","~A",
+  }
 },
 
 GROW_LIQUID_PILLAR_CENTER =
