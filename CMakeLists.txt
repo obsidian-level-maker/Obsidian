@@ -22,6 +22,7 @@ project(
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-O2 -Wall")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if (WIN32)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
   set(CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
@@ -160,7 +161,7 @@ add_executable(
   source_files/gui/vis_occlude.h
   source_files/gui/zf_menu.cc
   source_files/gui/zf_menu.h
-)
+ "source_files/gui/defines.h")
 
 target_include_directories(obsidian PRIVATE source_files/physfs_src)
 target_include_directories(obsidian PRIVATE source_files/ajpoly_src)

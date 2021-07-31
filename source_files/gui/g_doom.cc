@@ -252,8 +252,7 @@ void DM_AddSectionLump(char ch, const char *name, qLump_c *lump) {
             break;
 
         default:
-            Main_FatalError("DM_AddSectionLump: bad section '%c'\n", ch);
-            return; /* NOT REACHED */
+            Main::FatalError("DM_AddSectionLump: bad section '{}'\n", ch);
     }
 
     lump->SetName(name);
@@ -909,7 +908,7 @@ static bool DM_BuildNodes(const std::filesystem::path &filename) {
     }
 
     if (zdmain(filename.generic_string().c_str(), options) != 0) {
-        Main_ProgStatus(_("ZDBSP Error!"));
+        Main::ProgStatus(_("ZDBSP Error!"));
         return false;
     }
 
@@ -924,8 +923,6 @@ class doom_game_interface_c : public game_interface_c {
 
    public:
     doom_game_interface_c() : filename("") {}
-
-    ~doom_game_interface_c() {}
 
     bool Start(const char *preset);
     bool Finish(bool build_ok);
@@ -954,12 +951,12 @@ bool doom_game_interface_c::Start(const char *preset) {
     }
 
     if (filename.empty()) {
-        Main_ProgStatus(_("Cancelled"));
+        Main::ProgStatus(_("Cancelled"));
         return false;
     }
 
     if (create_backups) {
-        Main_BackupFile(filename, "old");
+        Main::BackupFile(filename, "old");
     }
 
     // Need to preempt the rest of this process if we are using Vanilla Doom
@@ -972,7 +969,7 @@ bool doom_game_interface_c::Start(const char *preset) {
     }
 
     if (!DM_StartWAD(filename)) {
-        Main_ProgStatus(_("Error (create file)"));
+        Main::ProgStatus(_("Error (create file)"));
         return false;
     }
 
@@ -1005,8 +1002,8 @@ bool doom_game_interface_c::Finish(bool build_ok) {
         // TODO: handle write errors
         DM_EndWAD();
     } else {
-		build_ok = Slump_MakeWAD(filename);
-	}
+                build_ok = Slump_MakeWAD(filename);
+        }
 
     if (build_ok) {
         build_ok = BuildNodes();
@@ -1064,7 +1061,7 @@ void doom_game_interface_c::Property(const char *key, const char *value) {
 
 void doom_game_interface_c::EndLevel() {
     if (level_name.empty()) {
-        Main_FatalError("Script problem: did not set level name!\n");
+        Main::FatalError("Script problem: did not set level name!\n");
     }
 
     if (main_win) {
@@ -1073,7 +1070,7 @@ void doom_game_interface_c::EndLevel() {
 
     CSG_DOOM_Write();
 #if 0
-	CSG_TestRegions_Doom();
+        CSG_TestRegions_Doom();
 #endif
 
     DM_EndLevel(level_name);

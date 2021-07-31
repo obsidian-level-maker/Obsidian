@@ -18,19 +18,22 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __LIB_ARGV_H__
-#define __LIB_ARGV_H__
+#ifndef LIB_ARGV_H_
+#define LIB_ARGV_H_
 
-#include <cstddef>
 #include <string>
 #include <vector>
 
-extern std::vector<std::string> arg_list;
+namespace argv {
 
-void ArgvInit(int argc, const char **argv);
+extern std::vector<std::string> list;
 
-int ArgvFind(char short_name, const char *long_name, int *num_params = NULL);
-bool ArgvIsOption(int index);
+void Init(int argc, const char *const *argv);
+
+int Find(char shortName, const char *longName, int *numParams = nullptr);
+bool IsOption(int index);
+
+}  // namespace argv
 
 #endif /* __LIB_ARGV_H__ */
 

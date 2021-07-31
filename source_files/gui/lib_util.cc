@@ -91,36 +91,41 @@ void StringReplaceChar(std::string *str, char old_ch, char new_ch) {
 }
 
 std::string NumToString(long long unsigned int value) {
-	std::string num_string;
-	num_string.resize(50, ' ');
-	static_cast<void>(std::to_chars(num_string.data(), num_string.data() + num_string.size(), value));
-	return num_string;
+    std::string num_string;
+    num_string.resize(50, ' ');
+    static_cast<void>(std::to_chars(
+        num_string.data(), num_string.data() + num_string.size(), value));
+    return num_string;
 }
 
 std::string NumToString(int value) {
-	std::string num_string;
-	num_string.resize(50, ' ');
-	static_cast<void>(std::to_chars(num_string.data(), num_string.data() + num_string.size(), value));
-	return num_string;
+    std::string num_string;
+    num_string.resize(50, ' ');
+    static_cast<void>(std::to_chars(
+        num_string.data(), num_string.data() + num_string.size(), value));
+    return num_string;
 }
 
 std::string NumToString(double value) {
-	std::string num_string;
-	num_string.resize(50, ' ');
-	static_cast<void>(std::to_chars(num_string.data(), num_string.data() + num_string.size(), value));
-	return num_string;
+    std::string num_string;
+    num_string.resize(50, ' ');
+    static_cast<void>(std::to_chars(
+        num_string.data(), num_string.data() + num_string.size(), value));
+    return num_string;
 }
 
 int StringToInt(std::string value) {
-	int actual_number;
-	static_cast<void>(std::from_chars(value.data(), value.data() + value.size(), actual_number));
-	return actual_number;
+    int actual_number;
+    static_cast<void>(std::from_chars(value.data(), value.data() + value.size(),
+                                      actual_number));
+    return actual_number;
 }
 
 double StringToDouble(std::string value) {
-	double actual_number;
-	static_cast<void>(std::from_chars(value.data(), value.data() + value.size(), actual_number));
-	return actual_number;	
+    double actual_number;
+    static_cast<void>(std::from_chars(value.data(), value.data() + value.size(),
+                                      actual_number));
+    return actual_number;
 }
 
 char *mem_gets(char *buf, int size, const char **str_ptr) {
@@ -312,16 +317,20 @@ void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
     *y = ny1 + along * (ny2 - ny1);
 }
 
-void AlongCoord(double along, double px1, double py1, double px2, double py2,
-                double *x, double *y) {
-    double len = ComputeDist(px1, py1, px2, py2);
+std::pair<double, double> AlongCoord(const double along, const double px1,
+                                     const double py1, const double px2,
+                                     const double py2) {
+    const double len = ComputeDist(px1, py1, px2, py2);
 
-    *x = px1 + along * (px2 - px1) / len;
-    *y = py1 + along * (py2 - py1) / len;
+    return {
+        px1 + along * (px2 - px1) / len,
+        py1 + along * (py2 - py1) / len,
+    };
 }
 
-bool VectorSameDir(double dx1, double dy1, double dx2, double dy2) {
-    return (dx1 * dx2 + dy1 * dy2) >= 0;
+bool VectorSameDir(const double dx1, const double dy1, const double dx2,
+                   const double dy2) {
+    return dx1 * dx2 + dy1 * dy2 >= 0;
 }
 
 //------------------------------------------------------------------------
@@ -330,20 +339,19 @@ u32_t TimeGetMillies() {
     // Note: you *MUST* handle overflow (it *WILL* happen)
 
 #ifdef WIN32
-    unsigned long ticks = GetTickCount();
 
-    return (u32_t)ticks;
+    return static_cast<u32_t>(GetTickCount64());
 
 #else  // UNIX or MacOSX
     struct timeval tm;
 
-    gettimeofday(&tm, NULL);
+    gettimeofday(&tm, nullptr);
 
-    return (u32_t)((tm.tv_sec * 1000) + (tm.tv_usec / 1000));
+    return static_cast<u32_t>((tm.tv_sec * 1000) + (tm.tv_usec / 1000));
 #endif
 }
 
-void TimeDelay(u32_t millies) {
+void TimeDelay(const u32_t millies) {
 #ifdef WIN32
     ::Sleep(millies);
 

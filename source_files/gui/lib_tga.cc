@@ -120,15 +120,15 @@ tga_image_c *TGA_LoadImage(const char *path) {
         targa_header.image_type != TGA_INDEXED_RLE &&
         targa_header.image_type != TGA_RGB &&
         targa_header.image_type != TGA_RGB_RLE) {
-        Main_FatalError("Bad tga file: type %d is not supported\n",
-                        targa_header.image_type);
+        Main::FatalError("Bad tga file: type {} is not supported\n",
+                         targa_header.image_type);
     }
 
     int width = targa_header.width;
     int height = targa_header.height;
 
     if (width == 0 || height == 0) {
-        Main_FatalError("Bad tga file: width or height is zero\n");
+        Main::FatalError("Bad tga file: width or height is zero\n");
     }
 
     tga_image_c *img = new tga_image_c(width, height);
@@ -146,15 +146,15 @@ tga_image_c *TGA_LoadImage(const char *path) {
     if (targa_header.image_type == TGA_INDEXED ||
         targa_header.image_type == TGA_INDEXED_RLE) {
         if (targa_header.colormap_type != 1) {
-            Main_FatalError("Bad tga file: colormap type != 1\n");
+            Main::FatalError("Bad tga file: colormap type != 1\n");
         }
 
         if (targa_header.colormap_length > 256) {
-            Main_FatalError("Bad tga file: too many colors (over 256)\n");
+            Main::FatalError("Bad tga file: too many colors (over 256)\n");
         }
 
         if (targa_header.pixel_bits != 8 || targa_header.colormap_bits < 24) {
-            Main_FatalError("Bad tga file: unsupported colormap size\n");
+            Main::FatalError("Bad tga file: unsupported colormap size\n");
         }
 
         memset(palette, 255, sizeof(palette));
@@ -184,7 +184,7 @@ tga_image_c *TGA_LoadImage(const char *path) {
     if (targa_header.image_type == TGA_RGB)  // Uncompressed, RGB images
     {
         if (targa_header.pixel_bits != 24 && targa_header.pixel_bits != 32) {
-            Main_FatalError(
+            Main::FatalError(
                 "Bad tga file: only 24 or 32 bit images supported\n");
         }
 
@@ -214,7 +214,7 @@ tga_image_c *TGA_LoadImage(const char *path) {
                TGA_RGB_RLE)  // Runlength encoded RGB images
     {
         if (targa_header.pixel_bits != 24 && targa_header.pixel_bits != 32) {
-            Main_FatalError(
+            Main::FatalError(
                 "Bad tga file: only 24 or 32 bit images supported\n");
         }
 

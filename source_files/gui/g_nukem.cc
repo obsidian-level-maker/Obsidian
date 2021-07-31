@@ -427,16 +427,16 @@ bool nukem_game_interface_c::Start(const char *preset) {
     }
 
     if (filename.empty()) {
-        Main_ProgStatus(_("Cancelled"));
+        Main::ProgStatus(_("Cancelled"));
         return false;
     }
 
     if (create_backups) {
-        Main_BackupFile(filename.c_str(), "old");
+        Main::BackupFile(filename, "old");
     }
 
     if (!NK_StartGRP(filename.c_str())) {
-        Main_ProgStatus(_("Error (create file)"));
+        Main::ProgStatus(_("Error (create file)"));
         return false;
     }
 
@@ -475,7 +475,7 @@ void nukem_game_interface_c::Property(const char *key, const char *value) {
 
 void nukem_game_interface_c::EndLevel() {
     if (level_name.empty()) {
-        Main_FatalError("Script problem: did not set level name!\n");
+        Main::FatalError("Script problem: did not set level name!\n");
     }
 
     NK_BeginLevel(level_name.c_str());

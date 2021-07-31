@@ -117,9 +117,7 @@ void Signal_Raise(std::string name) {
     for (;;) {
         loop_count++;
         if (loop_count >= EXCESSIVE_LOOPS) {
-            Main_FatalError(
-                fmt::format("Signal_Raise({}) : excessive looping!\n", name)
-                    .c_str());
+            Main::FatalError("Signal_Raise({}) : excessive looping!\n", name);
         }
 
         signal_in_progress = name.c_str();

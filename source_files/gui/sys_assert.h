@@ -21,6 +21,10 @@
 #ifndef __SYS_ASSERT__
 #define __SYS_ASSERT__
 
+#ifdef WIN32
+#undef GetMessage
+#endif
+
 class assert_fail_c {
    public:
     assert_fail_c(const char *_msg);

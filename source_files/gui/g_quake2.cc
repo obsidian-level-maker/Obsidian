@@ -175,7 +175,7 @@ u16_t Q2_AddTexInfo(const char *texture, int flags, int value, float *s4,
     memset(&raw_tex, 0, sizeof(raw_tex));
 
     if (strlen(texture) + 1 >= sizeof(raw_tex.texture)) {
-        Main_FatalError("Quake2 texture name too long: '%s'\n", texture);
+        Main::FatalError("Quake2 texture name too long: '{}'\n", texture);
     }
 
     strcpy(raw_tex.texture, texture);
@@ -223,8 +223,9 @@ u16_t Q2_AddTexInfo(const char *texture, int flags, int value, float *s4,
 
 static void Q2_WriteTexInfo() {
     if (q2_texinfos.size() >= MAX_MAP_TEXINFO) {
-        Main_FatalError("Quake2 build failure: exceeded limit of %d TEXINFOS\n",
-                        MAX_MAP_TEXINFO);
+        Main::FatalError(
+            "Quake2 build failure: exceeded limit of {} TEXINFOS\n",
+            MAX_MAP_TEXINFO);
     }
 
     qLump_c *lump = BSP_NewLump(LUMP_TEXINFO);
@@ -351,7 +352,7 @@ static void Q2_WriteEdge(const quake_vertex_c &A, const quake_vertex_c &B) {
     u16_t v2 = BSP_AddVertex(B.x, B.y, B.z);
 
     if (v1 == v2) {
-        Main_FatalError("INTERNAL ERROR: Q2 WriteEdge is zero length!\n");
+        Main::FatalError("INTERNAL ERROR: Q2 WriteEdge is zero length!\n");
     }
 
     s32_t index = BSP_AddEdge(v1, v2);
@@ -633,18 +634,18 @@ static void Q2_WriteBSP() {
     Q2_WriteNode(qk_bsp_root);
 
     if (q2_total_faces >= MAX_MAP_FACES) {
-        Main_FatalError("Quake2 build failure: exceeded limit of %d FACES\n",
-                        MAX_MAP_FACES);
+        Main::FatalError("Quake2 build failure: exceeded limit of {} FACES\n",
+                         MAX_MAP_FACES);
     }
 
     if (q2_total_leafs >= MAX_MAP_LEAFS) {
-        Main_FatalError("Quake2 build failure: exceeded limit of %d LEAFS\n",
-                        MAX_MAP_LEAFS);
+        Main::FatalError("Quake2 build failure: exceeded limit of {} LEAFS\n",
+                         MAX_MAP_LEAFS);
     }
 
     if (q2_total_nodes >= MAX_MAP_NODES) {
-        Main_FatalError("Quake2 build failure: exceeded limit of %d NODES\n",
-                        MAX_MAP_NODES);
+        Main::FatalError("Quake2 build failure: exceeded limit of {} NODES\n",
+                         MAX_MAP_NODES);
     }
 }
 
@@ -1016,16 +1017,16 @@ bool quake2_game_interface_c::Start(const char *preset) {
     }
 
     if (filename.empty()) {
-        Main_ProgStatus(_("Cancelled"));
+        Main::ProgStatus(_("Cancelled"));
         return false;
     }
 
     if (create_backups) {
-        Main_BackupFile(filename.c_str(), "old");
+        Main::BackupFile(filename, "old");
     }
 
-    if (!PAK_OpenWrite(filename.c_str())) {
-        Main_ProgStatus(_("Error (create file)"));
+    if (!PAK_OpenWrite(filename)) {
+        Main::ProgStatus(_("Error (create file)"));
         return false;
     }
 
@@ -1071,13 +1072,12 @@ void quake2_game_interface_c::Property(const char *key, const char *value) {
 
 void quake2_game_interface_c::EndLevel() {
     if (level_name.empty()) {
-        Main_FatalError("Script problem: did not set level name!\n");
+        Main::FatalError("Script problem: did not set level name!\n");
     }
 
     if (level_name.size() >= 32) {
-        Main_FatalError(
-            fmt::format("Script problem: level name too long: {}\n", level_name)
-                .c_str());
+        Main::FatalError("Script problem: level name too long: {}\n",
+                         level_name);
     }
 
     std::string entry_in_pak = fmt::format("maps/{}.bsp", level_name);

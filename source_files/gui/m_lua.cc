@@ -308,8 +308,8 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
                "." + std::string{match.begin() + 2, match.end()};
     }
 
-    Main_FatalError("gui.scan_directory: unsupported match expression: %s\n",
-                    match);
+    Main::FatalError("gui.scan_directory: unsupported match expression: {}\n",
+                     match);
     return false; /* NOT REACHED */
 }
 
@@ -388,7 +388,7 @@ int gui_add_choice(lua_State *L) {
 
     // only allowed during startup
     if (has_added_buttons) {
-        Main_FatalError("Script problem: gui.add_choice called late.\n");
+        Main::FatalError("Script problem: gui.add_choice called late.\n");
     }
 
     if (!main_win->game_box->AddChoice(button, id, label)) {
@@ -467,7 +467,7 @@ int gui_add_module(lua_State *L) {
 
     // only allowed during startup
     if (has_added_buttons) {
-        Main_FatalError("Script problem: gui.add_module called late.\n");
+        Main::FatalError("Script problem: gui.add_module called late.\n");
     }
 
     if (single_pane) {
@@ -560,7 +560,8 @@ int gui_add_module_option(lua_State *L) {
 
     // only allowed during startup
     if (has_added_buttons) {
-        Main_FatalError("Script problem: gui.add_module_option called late.\n");
+        Main::FatalError(
+            "Script problem: gui.add_module_option called late.\n");
     }
 
     // FIXME : error if module is unknown
@@ -604,7 +605,8 @@ int gui_add_module_slider_option(lua_State *L) {
 
     // only allowed during startup
     if (has_added_buttons) {
-        Main_FatalError("Script problem: gui.add_module_option called late.\n");
+        Main::FatalError(
+            "Script problem: gui.add_module_option called late.\n");
     }
 
     // FIXME : error if module is unknown
@@ -643,7 +645,8 @@ int gui_add_module_button_option(lua_State *L) {
 
     // only allowed during startup
     if (has_added_buttons) {
-        Main_FatalError("Script problem: gui.add_module_option called late.\n");
+        Main::FatalError(
+            "Script problem: gui.add_module_option called late.\n");
     }
 
     // FIXME : error if module is unknown
@@ -677,7 +680,8 @@ int gui_add_option_choice(lua_State *L) {
 
     // only allowed during startup
     if (has_added_buttons) {
-        Main_FatalError("Script problem: gui.add_option_choice called late.\n");
+        Main::FatalError(
+            "Script problem: gui.add_option_choice called late.\n");
     }
 
     // FIXME : error if module or option is unknown
@@ -928,7 +932,7 @@ int gui_at_level(lua_State *L) {
     int index = luaL_checkinteger(L, 2);
     int total = luaL_checkinteger(L, 3);
 
-    Main_ProgStatus(_("Making %s"), name);
+    Main::ProgStatus(_("Making %s"), name);
 
     if (main_win) {
         main_win->build_box->Prog_AtLevel(index, total);
@@ -951,8 +955,8 @@ int gui_prog_step(lua_State *L) {
 
 // LUA: ticker()
 //
-int gui_ticker(lua_State *L) {
-    Main_Ticker();
+int gui_ticker(lua_State * /*L*/) {
+    Main::Ticker();
 
     return 0;
 }
@@ -962,7 +966,7 @@ int gui_ticker(lua_State *L) {
 int gui_abort(lua_State *L) {
     int value = (main_action >= MAIN_CANCEL) ? 1 : 0;
 
-    Main_Ticker();
+    Main::Ticker();
 
     lua_pushboolean(L, value);
     return 1;
@@ -972,10 +976,6 @@ int gui_abort(lua_State *L) {
 //
 int gui_rand_seed(lua_State *L) {
     unsigned long long the_seed = luaL_checkinteger(L, 1);
-
-    if (the_seed < 0) {
-        the_seed = -the_seed;
-    }
 
     twister_Reseed(the_seed);
 
@@ -1337,14 +1337,13 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
     lua_getglobal(LUA_ST, "ob_traceback");
 
     if (lua_type(LUA_ST, -1) == LUA_TNIL) {
-        Main_FatalError("Script problem: missing function '%s'",
-                        "ob_traceback");
+        Main::FatalError("Script problem: missing function 'ob_traceback'");
     }
 
     lua_getglobal(LUA_ST, func_name.c_str());
 
     if (lua_type(LUA_ST, -1) == LUA_TNIL) {
-        Main_FatalError(fmt::format("Script problem: missing function '{}'", func_name).c_str());
+        Main::FatalError("Script problem: missing function '{}'", func_name);
     }
 
     int nargs = 0;
@@ -1520,7 +1519,8 @@ void Script_Load(std::filesystem::path script_name) {
         script_name.replace_extension("lua");
     }
 
-    std::filesystem::path filename = std::filesystem::path{import_dir} / script_name;
+    std::filesystem::path filename =
+        std::filesystem::path{import_dir} / script_name;
 
     DebugPrintf(fmt::format("  loading script: '{}'\n", filename).c_str());
 
@@ -1533,9 +1533,7 @@ void Script_Load(std::filesystem::path script_name) {
     if (status != 0) {
         const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-        Main_FatalError(
-            fmt::format("Unable to load script '{}'\n{}", filename, msg)
-                .c_str());
+        Main::FatalError("Unable to load script '{}'\n{}", filename, msg);
     }
 }
 
@@ -1546,13 +1544,13 @@ void Script_Open() {
 
     LUA_ST = luaL_newstate();
     if (!LUA_ST) {
-        Main_FatalError("LUA Init failed: cannot create new state");
+        Main::FatalError("LUA Init failed: cannot create new state");
     }
 
     int status = p_init_lua(LUA_ST);
     if (status != 0) {
-        Main_FatalError("LUA Init failed: cannot load standard libs (%d)",
-                        status);
+        Main::FatalError("LUA Init failed: cannot load standard libs ({})",
+                         status);
     }
 
     // load main scripts
@@ -1570,7 +1568,7 @@ void Script_Open() {
     // module scripts.
 
     if (!Script_CallFunc("ob_init")) {
-        Main_FatalError("The ob_init script failed.\n");
+        Main::FatalError("The ob_init script failed.\n");
     }
 
     has_added_buttons = true;
@@ -1657,14 +1655,13 @@ std::string ob_game_format() {
 }
 
 std::string ob_get_param(std::string parameter) {
-    
     std::array<std::string, 2> params = {parameter, ""};
-    
+
     if (!Script_CallFunc("ob_get_param", 1, params.data())) {
         return "";
     }
-    
-	std::string param = luaL_optlstring(LUA_ST, -1, "", NULL);
+
+    std::string param = luaL_optlstring(LUA_ST, -1, "", NULL);
 
     // remove result from lua stack
     lua_pop(LUA_ST, 1);
@@ -1686,11 +1683,11 @@ std::string ob_default_filename() {
 }
 
 void ob_invoke_hook(std::string hookname) {
-	
     std::array<std::string, 2> params = {hookname, ""};
-    
-    if (!Script_CallFunc("ob_invoke_hook", 0, params.data())) { Main_ProgStatus(_("Script Error")); }		
 
+    if (!Script_CallFunc("ob_invoke_hook", 0, params.data())) {
+        Main::ProgStatus(_("Script Error"));
+    }
 }
 
 bool ob_build_cool_shit() {
@@ -1698,7 +1695,7 @@ bool ob_build_cool_shit() {
         main_win->label(
             fmt::format("[ ERROR ] {} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION)
                 .c_str());
-        Main_ProgStatus(_("Script Error"));
+        Main::ProgStatus(_("Script Error"));
         main_win->label(
             fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION).c_str());
         return false;
@@ -1713,7 +1710,7 @@ bool ob_build_cool_shit() {
         return true;
     }
 
-    Main_ProgStatus(_("Cancelled"));
+    Main::ProgStatus(_("Cancelled"));
     return false;
 }
 

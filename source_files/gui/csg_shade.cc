@@ -337,7 +337,7 @@ static void SHADE_VisitRegion(region_c *R) {
 }
 
 static void SHADE_LightWorld() {
-    bool no_light = (ArgvFind(0, "nolight") >= 0);
+    bool no_light = (argv::Find(0, "nolight") >= 0);
 
     if (no_light) {
         LogPrintf("LIGHTING DISABLED (-nolight specified)\n");

@@ -52,9 +52,8 @@ void VFS_AddFolder(std::string name) {
     std::string mount = fmt::format("/{}", name);
 
     if (!PHYSFS_mount(path.generic_string().c_str(), mount.c_str(), 0)) {
-        Main_FatalError("Failed to mount '%s' folder in PhysFS:\n%s\n",
-                        name.c_str(),
-                        PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
+        Main::FatalError("Failed to mount '{}' folder in PhysFS:\n{}\n", name,
+                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return; /* NOT REACHED */
     }
 
@@ -89,11 +88,9 @@ bool VFS_AddArchive(std::filesystem::path filename, bool options_file) {
                             PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
                     .c_str());
         } else {
-            Main_FatalError(
-                fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
-                            filename,
-                            PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
-                    .c_str());
+            Main::FatalError("Failed to mount '{}' archive in PhysFS:\n{}\n",
+                             filename,
+                             PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         }
 
         return false;
@@ -106,9 +103,8 @@ void VFS_InitAddons(const char *argv0) {
     LogPrintf("Initializing VFS...\n");
 
     if (!PHYSFS_init(argv0)) {
-        Main_FatalError("Failed to init PhysFS:\n%s\n",
-                        PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
-        return; /* NOT REACHED */
+        Main::FatalError("Failed to init PhysFS:\n{}\n",
+                         PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
     }
 
     VFS_AddFolder("scripts");
@@ -121,7 +117,7 @@ void VFS_InitAddons(const char *argv0) {
 }
 
 void VFS_ParseCommandLine() {
-    int arg = ArgvFind('a', "addon");
+    int arg = argv::Find('a', "addon");
     int count = 0;
 
     if (arg < 0) {
@@ -132,12 +128,12 @@ void VFS_ParseCommandLine() {
 
     LogPrintf("Command-line addons....\n");
 
-    for (; arg < arg_list.size() && !ArgvIsOption(arg); arg++, count++) {
-        VFS_AddArchive(arg_list[arg], false /* options_file */);
+    for (; arg < argv::list.size() && !argv::IsOption(arg); arg++, count++) {
+        VFS_AddArchive(argv::list[arg], false /* options_file */);
     }
 
     if (!count) {
-        Main_FatalError("Missing filename for --addon option\n");
+        Main::FatalError("Missing filename for --addon option\n");
     }
 
     LogPrintf("DONE\n\n");

@@ -153,9 +153,9 @@ static void WF_WriteBlankPlane(int *offset, int *length) {
 }
 
 static void WF_WriteMap(void) {
-    const char *message = OBSIDIAN_TITLE " " OBSIDIAN_VERSION;
+    const auto message = fmt::format("{} {}", OBSIDIAN_TITLE, OBSIDIAN_VERSION);
 
-    WF_PutNString(message, 64, map_fp);
+    WF_PutNString(message.c_str(), 64, map_fp);
 
     int plane_offsets[3];
     int plane_lengths[3];
@@ -352,7 +352,7 @@ bool wolf_game_interface_c::Start(const char *preset) {
     if (!map_fp) {
         LogPrintf("Unable to create {}:\n{}", TEMP_GAMEFILE, strerror(errno));
 
-        Main_ProgStatus(_("Error (create file)"));
+        Main::ProgStatus(_("Error (create file)"));
         return false;
     }
 
@@ -363,7 +363,7 @@ bool wolf_game_interface_c::Start(const char *preset) {
 
         LogPrintf("Unable to create {}:\n{}", TEMP_HEADFILE, strerror(errno));
 
-        Main_ProgStatus(_("Error (create file)"));
+        Main::ProgStatus(_("Error (create file)"));
         return false;
     }
 
@@ -403,7 +403,7 @@ bool wolf_game_interface_c::Finish(bool build_ok) {
     }
 
     if (write_errors_seen > 0) {
-        Main_ProgStatus(_("Error (write file)"));
+        Main::ProgStatus(_("Error (write file)"));
         Tidy();
         return false;
     }

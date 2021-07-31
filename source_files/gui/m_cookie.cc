@@ -119,7 +119,7 @@ static bool Cookie_ParseLine(std::string buf) {
 bool Cookie_Load(std::filesystem::path filename) {
     context = CCTX_Load;
 
-    keep_seed = (ArgvFind('k', "keep") >= 0);
+    keep_seed = (argv::Find('k', "keep") >= 0);
 
     active_module.clear();
 
@@ -209,8 +209,8 @@ void Cookie_ParseArguments(void) {
 
     active_module.clear();
 
-    for (int i = 0; i < arg_list.size(); i++) {
-        const std::string &arg = arg_list[i];
+    for (int i = 0; i < argv::list.size(); i++) {
+        const std::string &arg = argv::list[i];
 
         if (arg[0] == '-') {
             continue;
@@ -226,10 +226,10 @@ void Cookie_ParseArguments(void) {
         }
 
         // support an isolated "=", like in: FOO = 3
-        if (i + 2 < arg_list.size() &&
-            strcmp(arg_list[i + 1].c_str(), "=") == 0 &&
-            arg_list[i + 2][0] != '-') {
-            Cookie_SetValue(arg, arg_list[i + 2]);
+        if (i + 2 < argv::list.size() &&
+            strcmp(argv::list[i + 1].c_str(), "=") == 0 &&
+            argv::list[i + 2][0] != '-') {
+            Cookie_SetValue(arg, argv::list[i + 2]);
             i += 2;
             continue;
         }
@@ -253,7 +253,7 @@ void Cookie_ParseArguments(void) {
         name[eq_offset] = 0;
 
         if (name[0] == 0 || value[0] == 0) {
-            Main_FatalError("Bad setting on command line: '%s'\n", arg.c_str());
+            Main::FatalError("Bad setting on command line: '{}'\n", arg);
         }
 
         Cookie_SetValue(name.c_str(), value);
@@ -366,7 +366,8 @@ class RecentFiles_c {
         }
     }
 
-    bool get_name(int index, std::filesystem::path buffer, bool for_menu) const {
+    bool get_name(int index, std::filesystem::path buffer,
+                  bool for_menu) const {
         if (index >= size) {
             return false;
         }

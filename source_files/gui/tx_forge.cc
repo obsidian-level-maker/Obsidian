@@ -299,8 +299,8 @@ void TX_SpectralSynth(unsigned long long seed, float *buf, int width,
     // NOTE : width *must* be a power of two
     for (int test = width; test > 1; test >>= 1) {
         if (test & 1) {
-            Main_FatalError(
-                "TX_SpectralSynth: width '%d' is not a power of two\n", width);
+            Main::FatalError(
+                "TX_SpectralSynth: width '{}' is not a power of two\n", width);
         }
     }
 
