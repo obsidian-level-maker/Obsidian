@@ -62,7 +62,7 @@ class UI_Build : public Fl_Group {
     void Prog_Nodes(int pos, int limit);
     void Prog_Finish();
 
-    void SetStatus(const char *msg);
+    void SetStatus(std::string_view msg);
 
    private:
     void resize(int X, int Y, int W, int H);

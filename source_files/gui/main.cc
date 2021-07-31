@@ -34,7 +34,9 @@
 #include "m_cookie.h"
 #include "m_lua.h"
 #include "m_trans.h"
+#include "physfs.h"
 #include "twister.h"
+#include "ui_window.h"
 
 /**
  * \brief Ticker time in milliseconds
@@ -122,10 +124,11 @@ game_interface_c *game_object = NULL;
 static void ShowInfo() {
     fmt::print(
         "\n"
-        "** " OBSIDIAN_TITLE " " OBSIDIAN_VERSION
+        "** {} {}"
         " **\n"
         "** Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted **\n"
-        "\n");
+        "\n",
+        OBSIDIAN_TITLE, OBSIDIAN_VERSION);
 
     fmt::print(
         "Usage: Obsidian [options...] [key=value...]\n"
@@ -150,9 +153,9 @@ static void ShowInfo() {
 
     fmt::print(
         "Please visit the web site for complete information:\n"
-        "  " OBSIDIAN_WEBSITE
-        " \n"
-        "\n");
+        "  {} \n"
+        "\n",
+        OBSIDIAN_WEBSITE);
 
     fmt::print(
         "This program is free software, under the terms of the GNU General "
@@ -166,7 +169,7 @@ static void ShowInfo() {
 }
 
 static void ShowVersion() {
-    fmt::print("Obsidian version " OBSIDIAN_VERSION " (" __DATE__ ")\n");
+    fmt::print("Obsidian version {} (" __DATE__ ")\n", OBSIDIAN_VERSION);
 
     fflush(stdout);
 }
@@ -193,7 +196,7 @@ void Determine_WorkingPath(const char *argv0) {
     home_dir /= ".config/obsidian";
 
     if (!home_dir.is_absolute()) {
-        Main_FatalError("Unable to find $HOME directory!\n");
+        Main::FatalError("Unable to find $HOME directory!\n");
     }
 
     // try to create it (doesn't matter if it already exists)
@@ -234,7 +237,7 @@ void Determine_InstallDir(const char *argv0) {
             return;
         }
 
-        Main_FatalError("Bad install directory specified!\n");
+        Main::FatalError("Bad install directory specified!\n");
     }
 
     // if run from current directory, look there
@@ -269,7 +272,7 @@ void Determine_InstallDir(const char *argv0) {
 #endif
 
     if (install_dir.empty()) {
-        Main_FatalError("Unable to find Obsidian's install directory!\n");
+        Main::FatalError("Unable to find Obsidian's install directory!\n");
     }
 }
 
@@ -329,8 +332,7 @@ void Determine_LoggingFile() {
         std::ofstream fp{logging_file};
 
         if (!fp) {
-            Main_FatalError("Cannot create log file: %s\n",
-                            logging_file.c_str());
+            Main::FatalError("Cannot create log file: {}\n", logging_file);
         }
 
         fp.close();
@@ -341,8 +343,8 @@ void Determine_LoggingFile() {
     }
 }
 
-bool Main_BackupFile(const std::filesystem::path &filename,
-                     const std::filesystem::path &ext) {
+bool Main::BackupFile(const std::filesystem::path &filename,
+                      const std::filesystem::path &ext) {
     if (std::filesystem::exists(filename)) {
         std::filesystem::path backup_name = filename;
         backup_name.replace_extension(ext);
@@ -356,7 +358,8 @@ bool Main_BackupFile(const std::filesystem::path &filename,
     return true;
 }
 
-int Main_DetermineScaling() {
+namespace Main {
+static int DetermineScaling() {
     /* computation of the Kromulent factor */
 
     // command-line overrides
@@ -394,9 +397,10 @@ int Main_DetermineScaling() {
 
     return 0;
 }
+}  // namespace Main
 
-bool LoadInternalFont(const char *fontpath, const int fontnum,
-                        const char *fontname) {
+bool Main::LoadInternalFont(const char *fontpath, const int fontnum,
+                            const char *fontname) {
     // This is derived from code posted by an individual named Ian MacArthur
     // in a Google Groups thread at the following link:
     // https://groups.google.com/g/fltkgeneral/c/uAdg8wOLiMk
@@ -410,7 +414,7 @@ bool LoadInternalFont(const char *fontpath, const int fontnum,
     return false;
 }
 
-void Main_PopulateFontMap() {
+void Main::PopulateFontMap() {
     if (use_system_fonts) {
         font_menu_items.push_back(
             std::map<std::string, int>{{"Sans <Default>", 0}});
@@ -469,7 +473,7 @@ void Main_PopulateFontMap() {
             std::map<std::string, int>{{"Screen <Internal>", 13}});
 
         if (LoadInternalFont("./theme/fonts/Avenixel/Avenixel-Regular.ttf",
-                               current_free_font, "Avenixel")) {
+                             current_free_font, "Avenixel")) {
             Fl::set_font(current_free_font + 1, "Avenixel");
             font_menu_items.push_back(
                 std::map<std::string, int>{{"Avenixel", current_free_font}});
@@ -477,7 +481,7 @@ void Main_PopulateFontMap() {
         }
 
         if (LoadInternalFont("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf",
-                               current_free_font, "The Neue")) {
+                             current_free_font, "The Neue")) {
             Fl::set_font(current_free_font + 1, "The Neue");
             font_menu_items.push_back(
                 std::map<std::string, int>{{"New Black", current_free_font}});
@@ -485,9 +489,9 @@ void Main_PopulateFontMap() {
         }
 
         if (LoadInternalFont("./theme/fonts/Teko/Teko-Regular.ttf",
-                               current_free_font, "Teko")) {
+                             current_free_font, "Teko")) {
             if (LoadInternalFont("./theme/fonts/Teko/Teko-Bold.ttf",
-                                   current_free_font + 1, "Teko Bold")) {
+                                 current_free_font + 1, "Teko Bold")) {
                 font_menu_items.push_back(
                     std::map<std::string, int>{{"Teko", current_free_font}});
             }
@@ -495,9 +499,9 @@ void Main_PopulateFontMap() {
         }
 
         if (LoadInternalFont("./theme/fonts/Kalam/Kalam-Regular.ttf",
-                               current_free_font, "Kalam")) {
+                             current_free_font, "Kalam")) {
             if (LoadInternalFont("./theme/fonts/Kalam/Kalam-Bold.ttf",
-                                   current_free_font + 1, "Kalam Bold")) {
+                                 current_free_font + 1, "Kalam Bold")) {
                 font_menu_items.push_back(
                     std::map<std::string, int>{{"Kalam", current_free_font}});
             }
@@ -508,8 +512,9 @@ void Main_PopulateFontMap() {
     num_fonts = static_cast<int>(font_menu_items.size());
 }
 
-void Main_SetupFLTK() {
-    Main_PopulateFontMap();
+namespace Main {
+void SetupFltk() {
+    PopulateFontMap();
 
     Fl::visual(FL_DOUBLE | FL_RGB);
     if (color_scheme ==
@@ -678,7 +683,7 @@ void Main_SetupFLTK() {
 	fmt::print(stderr, "Screen dimensions = {}x{}\n", screen_w, screen_h);
 #endif
 
-    KF = Main_DetermineScaling();
+    KF = DetermineScaling();
     // load icons for file chooser
 #ifndef WIN32
     Fl_File_Icon::load_system_icons();
@@ -691,8 +696,9 @@ void Main_SetupFLTK() {
     fl_cancel = _("Cancel");
     fl_close = _("Close");
 }
+}  // namespace Main
 
-void Main_Ticker() {
+void Main::Ticker() {
     // This function is called very frequently.
     // To prevent a slow-down, we only call Fl::check()
     // after a certain time has elapsed.
@@ -707,7 +713,7 @@ void Main_Ticker() {
     }
 }
 
-void Main_Shutdown(bool error) {
+void Main::Detail::Shutdown(const bool error) {
     if (main_win) {
         // on fatal error we cannot risk calling into the Lua runtime
         // (it's state may be compromised by a script error).
@@ -716,51 +722,11 @@ void Main_Shutdown(bool error) {
         }
 
         delete main_win;
-        main_win = NULL;
+        main_win = nullptr;
     }
 
     Script_Close();
     LogClose();
-}
-
-void Main_FatalError(const char *msg, ...) {
-    static char buffer[MSG_BUF_LEN];
-
-    va_list arg_pt;
-
-    va_start(arg_pt, msg);
-    vsnprintf(buffer, MSG_BUF_LEN - 1, msg, arg_pt);
-    va_end(arg_pt);
-
-    buffer[MSG_BUF_LEN - 2] = 0;
-
-    DLG_ShowError("%s", buffer);
-
-    Main_Shutdown(true);
-
-    if (batch_mode) {
-        fmt::print(stderr, "ERROR!\n");
-    }
-
-    exit(9);
-}
-
-void Main_ProgStatus(const char *msg, ...) {
-    static char buffer[MSG_BUF_LEN];
-
-    va_list arg_pt;
-
-    va_start(arg_pt, msg);
-    vsnprintf(buffer, MSG_BUF_LEN - 1, msg, arg_pt);
-    va_end(arg_pt);
-
-    buffer[MSG_BUF_LEN - 2] = 0;
-
-    if (main_win) {
-        main_win->build_box->SetStatus(buffer);
-    } else if (batch_mode) {
-        fmt::print(stderr, "{}\n", buffer);
-    }
 }
 
 int Main_key_handler(int event) {
@@ -815,7 +781,7 @@ bool Build_Cool_Shit() {
     const std::string format = ob_game_format();
 
     if (format.empty()) {
-        Main_FatalError("ERROR: missing 'format' for game?!?\n");
+        Main::FatalError("ERROR: missing 'format' for game?!?\n");
     }
 
     // create game object
@@ -839,7 +805,7 @@ bool Build_Cool_Shit() {
             game_object = Quake3_GameObject();
 
         } else {
-            Main_FatalError("ERROR: unknown format: '%s'\n", format.c_str());
+            Main::FatalError("ERROR: unknown format: '{}'\n", format);
         }
     }
 
@@ -879,10 +845,10 @@ bool Build_Cool_Shit() {
         was_ok = game_object->Finish(was_ok);
     }
     if (was_ok) {
-        Main_ProgStatus(_("Success"));
+        Main::ProgStatus(_("Success"));
 
-        u32_t end_time = TimeGetMillies();
-        u32_t total_time = end_time - start_time;
+        const u32_t end_time = TimeGetMillies();
+        const u32_t total_time = end_time - start_time;
 
         LogPrintf("\nTOTAL TIME: {}.2f seconds\n\n", total_time / 1000.0);
 
@@ -908,7 +874,7 @@ bool Build_Cool_Shit() {
     if (main_action == MAIN_CANCEL) {
         main_action = 0;
 
-        Main_ProgStatus(_("Cancelled"));
+        Main::ProgStatus(_("Cancelled"));
     }
 
     // don't need game object anymore
@@ -968,7 +934,7 @@ restart:;
 
     LogPrintf("\n");
     LogPrintf("********************************************************\n");
-    LogPrintf("** " OBSIDIAN_TITLE " " OBSIDIAN_VERSION " **\n");
+    LogPrintf("** {} {} **\n", OBSIDIAN_TITLE, OBSIDIAN_VERSION);
     LogPrintf("********************************************************\n");
     LogPrintf("\n");
 
@@ -985,7 +951,7 @@ restart:;
         Options_Load(options_file);
         Theme_Options_Load(theme_file);
         Trans_SetLanguage();
-        Main_SetupFLTK();
+        Main::SetupFltk();
     }
 
 #ifndef WIN32
@@ -1028,8 +994,7 @@ restart:;
         // but we can load settings from a explicitly specified file...
         if (!load_file.empty()) {
             if (!Cookie_Load(load_file)) {
-                Main_FatalError(_("No such config file: %s\n"),
-                                load_file.c_str());
+                Main::FatalError(_("No such config file: {}\n"), load_file);
             }
         }
 
@@ -1040,11 +1005,11 @@ restart:;
             fmt::print(stderr, "FAILED!\n");
             LogPrintf("FAILED!\n");
 
-            Main_Shutdown(false);
+            Main::Detail::Shutdown(false);
             return 3;
         }
 
-        Main_Shutdown(false);
+        Main::Detail::Shutdown(false);
         return 0;
     }
 
@@ -1084,7 +1049,7 @@ restart:;
 
     if (!load_file.empty()) {
         if (!Cookie_Load(load_file)) {
-            Main_FatalError(_("No such config file: %s\n"), load_file.c_str());
+            Main::FatalError(_("No such config file: {}\n"), load_file);
         }
     }
 
@@ -1163,10 +1128,10 @@ restart:;
             }
         }
     } catch (const assert_fail_c &err) {
-        Main_FatalError(_("Sorry, an internal error occurred:\n%s"),
-                        err.GetMessage());
+        Main::FatalError(_("Sorry, an internal error occurred:\n{}"),
+                         err.GetMessage());
     } catch (...) {
-        Main_FatalError(_("An unknown problem occurred (UI code)"));
+        Main::FatalError(_("An unknown problem occurred (UI code)"));
     }
 
     LogPrintf("\nQuit......\n\n");
@@ -1182,7 +1147,7 @@ restart:;
                 Cookie_Save(config_file);
             }
             delete main_win;
-            main_win = NULL;
+            main_win = nullptr;
         }
         Script_Close();
         LogClose();
@@ -1191,7 +1156,7 @@ restart:;
         goto restart;
     }
 
-    Main_Shutdown(false);
+    Main::Detail::Shutdown(false);
 
     return 0;
 }

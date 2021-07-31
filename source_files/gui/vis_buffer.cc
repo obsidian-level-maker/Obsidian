@@ -111,7 +111,7 @@ void Vis_Buffer::AddDiagonal(int x, int y, int dir) {
 void Vis_Buffer::ReadMap(const char *filename) {
     FILE *fp = fopen(filename, "r");
     if (!fp) {
-        Main_FatalError("No such file: %s\n", filename);
+        Main::FatalError("Cannot access file: {}\n", filename);
     }
 
     int x, y, side;
@@ -130,7 +130,7 @@ void Vis_Buffer::ReadMap(const char *filename) {
 void Vis_Buffer::WriteMap(const char *filename) {
     FILE *fp = fopen(filename, "w");
     if (!fp) {
-        Main_FatalError("Cannot create file: %s\n", filename);
+        Main::FatalError("Cannot create file: {}\n", filename);
     }
 
     for (int y = 0; y < H; y++) {

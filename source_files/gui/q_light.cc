@@ -464,7 +464,7 @@ static int Q3_AllocLightBlock(int bw, int bh, int *bx, int *by) {
     all_q3_light_blocks.push_back(BL);
 
     if (!BL->Alloc(bw, bh, bx, by)) {
-        Main_FatalError("INTERNAL ERROR: failed to alloc LM in fresh block\n");
+        Main::FatalError("INTERNAL ERROR: failed to alloc LM in fresh block\n");
     }
 
     return bnum;
@@ -1750,7 +1750,7 @@ void QLIT_LightAllFaces() {
         lit_luxels += F->lmap->width * F->lmap->height;
 
         if (lit_faces % 400 == 0) {
-            Main_Ticker();
+            Main::Ticker();
 
             if (main_action >= MAIN_CANCEL) {
                 break;

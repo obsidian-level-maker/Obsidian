@@ -299,10 +299,14 @@ class UI_Manage_Config : public Fl_Double_Window {
     void ReadCurrentSettings() {
         Clear();
 
-        text_buf->append("-- CONFIG FILE : OBSIDIAN " OBSIDIAN_VERSION "\n");
+        text_buf->append("-- CONFIG FILE : OBSIDIAN ");
+        text_buf->append(OBSIDIAN_VERSION);
+        text_buf->append("\n");
         text_buf->append(
             "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
-        text_buf->append("-- " OBSIDIAN_WEBSITE "\n\n");
+        text_buf->append("-- ");
+        text_buf->append(OBSIDIAN_WEBSITE);
+        text_buf->append("\n\n");
 
         std::vector<std::string> lines;
 

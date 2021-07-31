@@ -345,12 +345,11 @@ void GRP_CloseWrite(void) {
 
 void GRP_NewLump(std::string_view name) {
     if (grp_W_directory.size() >= GRP_MAX_LUMPS) {
-        Main_FatalError("GRP_NewLump: too many lumps (> %d)\n", GRP_MAX_LUMPS);
+        Main::FatalError("GRP_NewLump: too many lumps (> {})\n", GRP_MAX_LUMPS);
     }
 
     if (name.size() > GRP_NAME_LEN) {
-        Main_FatalError(
-            fmt::format("GRP_NewLump: name too long: '{}'\n", name).c_str());
+        Main::FatalError("GRP_NewLump: name too long: '{}'\n", name);
     }
 
     memset(&grp_W_lump, 0, sizeof(grp_W_lump));

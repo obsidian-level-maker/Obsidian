@@ -703,7 +703,8 @@ void ZIPF_CloseWrite(void) {
 
 void ZIPF_NewLump(const char *name) {
     if (strlen(name) + 1 >= ZIPF_MAX_PATH) {
-        Main_FatalError("ZIPF_NewLump: name too long (>= %d)\n", ZIPF_MAX_PATH);
+        Main::FatalError("ZIPF_NewLump: name too long (>= {})\n",
+                         ZIPF_MAX_PATH);
     }
 
     // remember position

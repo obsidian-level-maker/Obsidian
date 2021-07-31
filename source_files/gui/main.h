@@ -22,35 +22,51 @@
 #define __OBLIGE_MAIN_H__
 
 #include <cstddef>
+#include <fmt/format.h>
+#include <fmt/ostream.h>
+#include <iostream>
 #include <vector>
 #include <string>
 #include <map>
-#include <algorithm>
 #include <filesystem>
 #include "hdr_fltk.h"
-#include "physfs.h"
-#define OBSIDIAN_TITLE "OBSIDIAN Level Maker"
+#include "ui_window.h"
+#include "defines.h"
+constexpr const char *OBSIDIAN_TITLE = "OBSIDIAN Level Maker";
 
-#define OBSIDIAN_VERSION "Beta 19"
-#define OBSIDIAN_SHORT_VERSION "Beta19"
-#define OBSIDIAN_HEX_VER 0x013
-#define OBSIDIAN_WEBSITE "https://github.com/GTD-Carthage/Oblige"
+constexpr const char *OBSIDIAN_VERSION = "Beta 19";
+constexpr const char *OBSIDIAN_SHORT_VERSION = "Beta19";
+constexpr unsigned int OBSIDIAN_HEX_VER = 0x013;
+constexpr const char *OBSIDIAN_WEBSITE =
+    "https://github.com/GTD-Carthage/Oblige";
 
-#define CONFIG_FILENAME "CONFIG.txt"
-#define OPTIONS_FILENAME "OPTIONS.txt"
-#define THEME_FILENAME "THEME.txt"
-#define LOG_FILENAME "LOGS.txt"
+constexpr const char *CONFIG_FILENAME = "CONFIG.txt";
+constexpr const char *OPTIONS_FILENAME = "OPTIONS.txt";
+constexpr const char *THEME_FILENAME = "THEME.txt";
+constexpr const char *LOG_FILENAME = "LOGS.txt";
 
 // Header for loading .ttf files from code posted by an individual named Ian
 // MacArthur in a Google Groups thread at the following link:
 // https://groups.google.com/g/fltkgeneral/c/uAdg8wOLiMk
 #ifdef _WIN32
-#define i_load_private_font(PATH) AddFontResourceEx((PATH), FR_PRIVATE, 0)
-#define v_unload_private_font(PATH) RemoveFontResourceEx((PATH), FR_PRIVATE, 0)
+ALWAYS_INLINE
+inline int i_load_private_font(const char *path) {
+    return AddFontResourceEx(path, FR_PRIVATE, nullptr);
+}
+ALWAYS_INLINE
+inline int v_unload_private_font(const char *path) {
+    return RemoveFontResourceEx(path, FR_PRIVATE, nullptr);
+}
 #else
-#define i_load_private_font(PATH) \
-    (int)FcConfigAppFontAddFile(NULL, (const FcChar8 *)(PATH))
-#define v_unload_private_font(PATH) FcConfigAppFontClear(NULL)
+ALWAYS_INLINE
+inline int i_load_private_font(const char *path) {
+    return static_cast<int>(FcConfigAppFontAddFile(
+        nullptr, reinterpret_cast<const FcChar8 *>(path)));
+}
+ALWAYS_INLINE
+inline int i_load_private_font(const char *path) {
+    return FcConfigAppFontClear(nullptr);
+}
 #endif
 
 extern std::filesystem::path home_dir;
@@ -67,13 +83,13 @@ extern std::filesystem::path batch_output_file;
 extern unsigned long long next_rand_seed;
 
 // this records the user action, e.g. Cancel or Quit buttons
-typedef enum {
+enum main_action_kind_e {
     MAIN_NONE = 0,
     MAIN_BUILD,
     MAIN_CANCEL,
     MAIN_QUIT,
     MAIN_RESTART
-} main_action_kind_e;
+};
 
 extern int main_action;
 
@@ -135,37 +151,69 @@ extern bool limit_break;
 extern std::filesystem::path last_directory;
 extern std::string numeric_locale;
 
-[[noreturn]] void Main_FatalError(const char *msg, ...);
-
-void Main_ProgStatus(const char *msg, ...);
-bool Main_BackupFile(const std::filesystem::path &filename,
-                     const std::filesystem::path &ext);
-void Main_Ticker();
-bool LoadInternalFont(const char *fontpath, int fontnum,
-                        const char *fontname);
-void Main_PopulateFontMap();
-
 // Dialog Windows
 void DLG_ShowError(const char *msg, ...);
 
-std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset = NULL);
+std::filesystem::path DLG_OutputFilename(const char *ext,
+                                         const char *preset = nullptr);
 
-void DLG_AboutText(void);
-void DLG_OptionsEditor(void);
-void DLG_ThemeEditor(void);
-void DLG_SelectAddons(void);
+void DLG_AboutText();
+void DLG_OptionsEditor();
+void DLG_ThemeEditor();
+void DLG_SelectAddons();
 
-void DLG_EditSeed(void);
-void DLG_ViewLogs(void);
-void DLG_ManageConfig(void);
+void DLG_EditSeed();
+void DLG_ViewLogs();
+void DLG_ManageConfig();
+
+namespace Main {
+
+namespace Detail {
+void Shutdown(bool error);
+}
+
+template <typename... Args>
+[[noreturn]] void FatalError(std::string_view msg, Args &&...args) {
+    auto buffer = fmt::format(msg, std::forward<Args>(args)...);
+    DLG_ShowError("%s", buffer.c_str());
+    Detail::Shutdown(true);
+
+    if (batch_mode) {
+        fmt::print(std::cerr, "ERROR!\n");
+    }
+
+    std::exit(9);
+}
+
+template <typename... Args>
+void ProgStatus(std::string_view msg, Args &&...args) {
+    const auto buffer = fmt::format(msg, std::forward<Args>(args)...);
+
+    if (main_win) {
+        main_win->build_box->SetStatus(buffer);
+    } else if (batch_mode) {
+        fmt::print(std::cerr, "{}\n", buffer);
+    }
+}
+bool BackupFile(const std::filesystem::path &filename,
+                const std::filesystem::path &ext);
+void Ticker();
+bool LoadInternalFont(const char *fontpath, int fontnum, const char *fontname);
+void PopulateFontMap();
+
+}  // namespace Main
 
 class game_interface_c {
     /* this is an abstract base class */
 
    public:
-    game_interface_c() {}
+    game_interface_c() = default;
 
-    virtual ~game_interface_c() {}
+    virtual ~game_interface_c() = default;
+    game_interface_c(const game_interface_c &) = default;
+    game_interface_c &operator=(const game_interface_c &) = default;
+    game_interface_c(game_interface_c &&) = default;
+    game_interface_c &operator=(game_interface_c &&) = default;
 
     /*** MAIN ***/
 

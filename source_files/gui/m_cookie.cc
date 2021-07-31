@@ -253,7 +253,7 @@ void Cookie_ParseArguments(void) {
         name[eq_offset] = 0;
 
         if (name[0] == 0 || value[0] == 0) {
-            Main_FatalError("Bad setting on command line: '%s'\n", arg.c_str());
+            Main::FatalError("Bad setting on command line: '{}'\n", arg);
         }
 
         Cookie_SetValue(name.c_str(), value);
@@ -366,7 +366,8 @@ class RecentFiles_c {
         }
     }
 
-    bool get_name(int index, std::filesystem::path buffer, bool for_menu) const {
+    bool get_name(int index, std::filesystem::path buffer,
+                  bool for_menu) const {
         if (index >= size) {
             return false;
         }

@@ -161,7 +161,7 @@ add_executable(
   source_files/gui/vis_occlude.h
   source_files/gui/zf_menu.cc
   source_files/gui/zf_menu.h
-)
+ "source_files/gui/defines.h")
 
 target_include_directories(obsidian PRIVATE source_files/physfs_src)
 target_include_directories(obsidian PRIVATE source_files/ajpoly_src)

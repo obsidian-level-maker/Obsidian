@@ -346,8 +346,8 @@ void BSP_WritePlanes(int lump_num, int max_planes) {
     }
 
     if (lump->GetSize() >= max_planes) {
-        Main_FatalError("Quake build failure: exceeded limit of %d PLANES\n",
-                        max_planes);
+        Main::FatalError("Quake build failure: exceeded limit of {} PLANES\n",
+                         max_planes);
     }
 
     BSP_ClearPlanes();
@@ -426,8 +426,8 @@ u16_t BSP_AddVertex(const quake_vertex_c *V) {
 
 void BSP_WriteVertices(int lump_num, int max_verts) {
     if ((int)bsp_vertices.size() >= max_verts) {
-        Main_FatalError("Quake build failure: exceeded limit of %d VERTEXES\n",
-                        max_verts);
+        Main::FatalError("Quake build failure: exceeded limit of {} VERTEXES\n",
+                         max_verts);
     }
 
     qLump_c *lump = BSP_NewLump(lump_num);
@@ -491,8 +491,8 @@ s32_t BSP_AddEdge(u16_t start, u16_t end) {
 
 void BSP_WriteEdges(int lump_num, int max_edges) {
     if ((int)bsp_edges.size() >= max_edges) {
-        Main_FatalError("Quake build failure: exceeded limit of %d EDGES\n",
-                        max_edges);
+        Main::FatalError("Quake build failure: exceeded limit of {} EDGES\n",
+                         max_edges);
     }
 
     qLump_c *lump = BSP_NewLump(lump_num);
@@ -581,8 +581,7 @@ bool BSP_OpenLevel(const char *entry_in_pak) {
             break;
 
         default:
-            Main_FatalError("INTERNAL ERROR: invalid qk_game %d\n", qk_game);
-            return false;  // NOT REACHED
+            Main::FatalError("INTERNAL ERROR: invalid qk_game {}\n", qk_game);
     }
 
     BSP_ClearLumps();
@@ -664,7 +663,9 @@ void BSP_WriteEntities(int lump_num, const char *description) {
     lump->Printf("{\n");
 
     if (qk_game >= 3) {
-        lump->KeyPair("_generated_by", "OBSIDIAN " OBSIDIAN_VERSION);
+        std::string obsidian_version_string =
+            fmt::format("OBSIDIAN {}", OBSIDIAN_VERSION);
+        lump->KeyPair("_generated_by", obsidian_version_string.c_str());
     } else if (description) {
         lump->KeyPair("message", description);
     }
@@ -772,8 +773,8 @@ qLump_c *BSP_NewLump(int entry) {
     SYS_ASSERT(0 <= entry && entry < bsp_numlumps);
 
     if (bsp_directory[entry] != NULL) {
-        Main_FatalError(
-            "INTERNAL ERROR: BSP_NewLump: already created entry [%d]\n", entry);
+        Main::FatalError(
+            "INTERNAL ERROR: BSP_NewLump: already created entry [{}]\n", entry);
     }
 
     bsp_directory[entry] = new qLump_c;
@@ -790,7 +791,7 @@ qLump_c *BSP_CreateInfoLump() {
     L->Printf("-- Levels created by OBSIDIAN %s\n", OBSIDIAN_VERSION);
     L->Printf(
         "-- Based on the OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
-    L->Printf("-- " OBSIDIAN_WEBSITE "\n");
+    L->Printf("-- %s\n", OBSIDIAN_WEBSITE);
     L->Printf("\n");
 
     std::vector<std::string> lines;

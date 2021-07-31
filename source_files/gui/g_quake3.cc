@@ -154,8 +154,8 @@ static void DoAddBrushPlane(int *planes, float px, float py, float pz, float nx,
         }
     }
 
-    Main_FatalError("Quake3 build failure: brush with more than %d planes\n",
-                    MAX_BRUSH_PLANES);
+    Main::FatalError("Quake3 build failure: brush with more than {} planes\n",
+                     MAX_BRUSH_PLANES);
 }
 
 static void DoAddBrushPlane(int *planes, const brush_plane_c &BP, float nz) {
@@ -383,8 +383,8 @@ s32_t Q3_AddShader(const char *texture, u32_t flags, u32_t contents) {
 
 static void Q3_WriteShaders() {
     if (q3_shaders.size() >= MAX_MAP_SHADERS) {
-        Main_FatalError("Quake3 build failure: exceeded limit of %d SHADERS\n",
-                        MAX_MAP_SHADERS);
+        Main::FatalError("Quake3 build failure: exceeded limit of {} SHADERS\n",
+                         MAX_MAP_SHADERS);
     }
 
     qLump_c *lump = BSP_NewLump(LUMP_SHADERS);
@@ -621,8 +621,8 @@ static void Q3_TriangulateSurface(quake_face_c *face, dsurface3_t *raw_surf) {
     raw_surf->numVerts = (int)face->verts.size();
 
     if (raw_surf->numVerts + 2 > MAX_FACE_VERTS) {
-        Main_FatalError("Quake3 build failure: face with more than %d verts\n",
-                        MAX_FACE_VERTS);
+        Main::FatalError("Quake3 build failure: face with more than {} verts\n",
+                         MAX_FACE_VERTS);
     }
 
     // create the usual drawverts
@@ -948,19 +948,19 @@ static void Q3_WriteBSP() {
     Q3_WriteNode(qk_bsp_root);
 
     if (q3_total_surfaces >= MAX_MAP_DRAW_SURFS) {
-        Main_FatalError(
-            "Quake3 build failure: exceeded limit of %d DRAW_SURFS\n",
+        Main::FatalError(
+            "Quake3 build failure: exceeded limit of {} DRAW_SURFS\n",
             MAX_MAP_DRAW_SURFS);
     }
 
     if (q3_total_leafs >= MAX_MAP_LEAFS) {
-        Main_FatalError("Quake3 build failure: exceeded limit of %d LEAFS\n",
-                        MAX_MAP_LEAFS);
+        Main::FatalError("Quake3 build failure: exceeded limit of {} LEAFS\n",
+                         MAX_MAP_LEAFS);
     }
 
     if (q3_total_nodes >= MAX_MAP_NODES) {
-        Main_FatalError("Quake3 build failure: exceeded limit of %d NODES\n",
-                        MAX_MAP_NODES);
+        Main::FatalError("Quake3 build failure: exceeded limit of {} NODES\n",
+                         MAX_MAP_NODES);
     }
 }
 
@@ -1244,16 +1244,16 @@ bool quake3_game_interface_c::Start(const char *preset) {
     }
 
     if (filename.empty()) {
-        Main_ProgStatus(_("Cancelled"));
+        Main::ProgStatus(_("Cancelled"));
         return false;
     }
 
     if (create_backups) {
-        Main_BackupFile(filename, "old");
+        Main::BackupFile(filename, "old");
     }
 
     if (!ZIPF_OpenWrite(filename)) {
-        Main_ProgStatus(_("Error (create file)"));
+        Main::ProgStatus(_("Error (create file)"));
         return false;
     }
 
@@ -1308,13 +1308,12 @@ void quake3_game_interface_c::Property(const char *key, const char *value) {
 
 void quake3_game_interface_c::EndLevel() {
     if (level_name.empty()) {
-        Main_FatalError("Script problem: did not set level name!\n");
+        Main::FatalError("Script problem: did not set level name!\n");
     }
 
     if (level_name.size() >= 32) {
-        Main_FatalError(
-            fmt::format("Script problem: level name too long: {}\n", level_name)
-                .c_str());
+        Main::FatalError("Script problem: level name too long: {}\n",
+                         level_name);
     }
 
     std::string entry_in_pak = fmt::format("maps/{}.bsp", level_name);

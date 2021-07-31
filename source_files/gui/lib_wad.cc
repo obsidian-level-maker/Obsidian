@@ -323,7 +323,7 @@ void WAD_CloseWrite(void) {
 
 void WAD_NewLump(std::string_view name) {
     if (name.size() > 8) {
-        Main_FatalError("WAD_NewLump: name too long: '%s'\n", name);
+        Main::FatalError("WAD_NewLump: name too long: '{}'\n", name);
     }
 
     memset(&wad_W_lump, 0, sizeof(wad_W_lump));

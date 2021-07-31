@@ -256,7 +256,7 @@ void UI_Build::Prog_Step(const char *step_name) {
 
     AddStatusStep(_(step_name));
 
-    Main_Ticker();
+    Main::Ticker();
 }
 
 void UI_Build::Prog_Nodes(int pos, int limit) {
@@ -283,13 +283,16 @@ void UI_Build::Prog_Nodes(int pos, int limit) {
     progress->value(val);
     progress->label(prog_label.c_str());
 
-    Main_Ticker();
+    Main::Ticker();
 }
 
-void UI_Build::SetStatus(const char *msg) {
+void UI_Build::SetStatus(std::string_view msg) {
     int limit = (int)sizeof(status_label);
 
-    strncpy(status_label, msg, limit);
+#ifdef WIN32
+#undef min
+#endif
+    strncpy(status_label, msg.data(), std::min<int>(limit, msg.size()));
 
     status_label[limit - 1] = 0;
 

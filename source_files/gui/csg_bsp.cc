@@ -97,11 +97,10 @@ snag_c::snag_c(brush_vert_c *side, double _x1, double _y1, double _x2,
       on_node(NULL),
       region(NULL),
       partner(NULL),
-      sides(),
       seen(false) {
     if (Length() < SNAG_EPSILON) {
-        Main_FatalError("Line loop contains zero-length line! (%1.2f %1.2f)\n",
-                        x1, y1);
+        Main::FatalError(
+            "Line loop contains zero-length line! ({:1.2} {:1.2})\n", x1, y1);
     }
 
     sides.push_back(side);
@@ -117,7 +116,6 @@ snag_c::snag_c(double _x1, double _y1, double _x2, double _y2,
       on_node(part),
       region(NULL),
       partner(NULL),
-      sides(),
       seen(false) {}
 
 snag_c::snag_c(const snag_c &other)
@@ -129,11 +127,10 @@ snag_c::snag_c(const snag_c &other)
       on_node(other.on_node),
       region(other.region),
       partner(NULL),
-      sides(),
       seen(false) {
     // copy sides
-    for (unsigned int i = 0; i < other.sides.size(); i++) {
-        sides.push_back(other.sides[i]);
+    for (auto *side : other.sides) {
+        sides.push_back(side);
     }
 }
 
@@ -1786,7 +1783,7 @@ static void RemoveUnusedGaps() {
     }
 
     if (filled == total) {
-        Main_FatalError("CSG: all gaps were unreachable (no entities?)\n");
+        Main::FatalError("CSG: all gaps were unreachable (no entities?)\n");
     }
 
     LogPrintf("Filled {} gaps (of {} total)\n", filled, total);

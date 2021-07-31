@@ -86,7 +86,7 @@ void Appl_FatalError(const char *str, ...) {
 
     appl_message[MSG_BUF_LEN - 1] = 0;
 
-    Main_FatalError("AJ-Polygonator Failure:\n%s", appl_message);
+    Main::FatalError("AJ-Polygonator Failure:\n{}", appl_message);
     /* NOT REACHED */
 }
 

@@ -65,7 +65,7 @@ class infinite_line_c {
         double len = sqrt(nx * nx + ny * ny + nz * nz);
 
         if (len < 0.0001) {
-            Main_FatalError("Fix TJunc: face has zero length edge!\n");
+            Main::FatalError("Fix TJunc: face has zero length edge!\n");
         }
 
         nx /= len;
