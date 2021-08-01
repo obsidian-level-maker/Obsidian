@@ -897,7 +897,8 @@ void QVIS_Visibility(int lump, int max_size, int numleafs) {
         //       clusters into pairs or 2x2 contiguous pieces.
 
         if (q_visibility->GetSize() >= max_size) {
-            Main::FatalError("Quake build failure: exceeded VISIBILITY limit\n");
+            Main::FatalError(
+                "Quake build failure: exceeded VISIBILITY limit\n");
         }
     }
 

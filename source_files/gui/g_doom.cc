@@ -145,8 +145,13 @@ bool Slump_MakeWAD(const std::filesystem::path &filename) {
     slump_config.p_bigify = StringToInt(ob_get_param("float_bigify_slump"));
     slump_config.forkiness = StringToInt(ob_get_param("float_forkiness_slump"));
     slump_config.do_dm = StringToInt(ob_get_param("bool_dm_starts_slump"));
-    slump_config.major_nukage = StringToInt(ob_get_param("bool_major_nukage_slump")) ? SLUMP_TRUE : SLUMP_FALSE;
-    slump_config.immediate_monsters = StringToInt(ob_get_param("bool_immediate_monsters_slump")) ? rollpercent(20) : SLUMP_FALSE;
+    slump_config.major_nukage =
+        StringToInt(ob_get_param("bool_major_nukage_slump")) ? SLUMP_TRUE
+                                                             : SLUMP_FALSE;
+    slump_config.immediate_monsters =
+        StringToInt(ob_get_param("bool_immediate_monsters_slump"))
+            ? rollpercent(20)
+            : SLUMP_FALSE;
     std::string monvariety = ob_get_param("slump_mons");
     if (monvariety == "normal") {
         slump_config.required_monster_bits = 0;
@@ -1002,8 +1007,8 @@ bool doom_game_interface_c::Finish(bool build_ok) {
         // TODO: handle write errors
         DM_EndWAD();
     } else {
-                build_ok = Slump_MakeWAD(filename);
-        }
+        build_ok = Slump_MakeWAD(filename);
+    }
 
     if (build_ok) {
         build_ok = BuildNodes();
@@ -1074,7 +1079,7 @@ void doom_game_interface_c::EndLevel() {
 #endif
 
     DM_EndLevel(level_name);
-    
+
     level_name = "";
 }
 

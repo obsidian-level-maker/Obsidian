@@ -45,7 +45,7 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
         new UI_ModuleDropDown(X - kf_w(6), Y + kf_h(5), W - kf_w(12), kf_h(24));
     mod_button->box(FL_FLAT_BOX);
     mod_button->color(WINDOW_BG);
-    mod_button->labelsize(18); // Scales very goofily with font size -- Dasho
+    mod_button->labelsize(18);  // Scales very goofily with font size -- Dasho
     mod_button->copy_label("@-2+");
 
     if (Is_UI()) {
@@ -456,10 +456,10 @@ bool UI_Module::SetSliderOption(std::string option, std::string value) {
     try {
         double_value = std::stod(value);
         if (limit_break) {
-			rsl->mod_slider->value(double_value);
-		} else {
-			rsl->mod_slider->value(rsl->mod_slider->clamp(double_value));
-		}
+            rsl->mod_slider->value(double_value);
+        } else {
+            rsl->mod_slider->value(rsl->mod_slider->clamp(double_value));
+        }
         rsl->mod_slider->do_callback();
         if (rsl->nan_choices.size() > 0) {
             rsl->nan_options->value(0);
@@ -708,11 +708,12 @@ tryagain:
     }
 
     if (limit_break) {
-		current_slider->mod_slider->value(current_slider->mod_slider->round(new_value));
-	} else {
-		current_slider->mod_slider->value(current_slider->mod_slider->clamp(
-			current_slider->mod_slider->round(new_value)));
-	}
+        current_slider->mod_slider->value(
+            current_slider->mod_slider->round(new_value));
+    } else {
+        current_slider->mod_slider->value(current_slider->mod_slider->clamp(
+            current_slider->mod_slider->round(new_value)));
+    }
     current_slider->mod_slider->do_callback();
 
 end:;

@@ -273,25 +273,28 @@ class UI_OptionsWin : public Fl_Window {
 
     static void callback_LimitBreak(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
-		if (that->opt_limit_break->value()) {
-			if (fl_choice("WARNING! This option will allow you to manually enter values in excess of the \n(usually) stable \
+        if (that->opt_limit_break->value()) {
+            if (fl_choice(
+                    "WARNING! This option will allow you to manually enter values in excess of the \n(usually) stable \
 slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this will not be addressed by the developers.\
-\nYou must select Yes for this option to be applied.", "Cancel", "Yes, break Obsidian", 0)) {
-				 limit_break = true;
-			} else {
-				limit_break = false;
-				that->opt_limit_break->value(0);
-			}
-		} else {
-			limit_break = false;
-			fl_alert("%s",
-                 _("Restoring slider limits requires a restart.\nObsidian will "
-                   "now restart."));
+\nYou must select Yes for this option to be applied.",
+                    "Cancel", "Yes, break Obsidian", 0)) {
+                limit_break = true;
+            } else {
+                limit_break = false;
+                that->opt_limit_break->value(0);
+            }
+        } else {
+            limit_break = false;
+            fl_alert(
+                "%s",
+                _("Restoring slider limits requires a restart.\nObsidian will "
+                  "now restart."));
 
-			main_action = MAIN_RESTART;
+            main_action = MAIN_RESTART;
 
-			that->want_quit = true;
-		}
+            that->want_quit = true;
+        }
     }
 
     static void callback_PrefixHelp(Fl_Widget *w, void *data) {
@@ -423,7 +426,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_debug->down_box(button_style);
 
     cy += opt_debug->h() + y_step * .5;
-    
+
     opt_limit_break = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
     opt_limit_break->copy_label(_(" Ignore Slider Limits"));
     opt_limit_break->value(limit_break ? 1 : 0);

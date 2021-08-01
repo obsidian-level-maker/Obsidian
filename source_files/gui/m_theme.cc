@@ -132,78 +132,76 @@ const char *Theme_AskLoadFilename() {
 }
 
 static void Parse_Theme_Option(std::string name, std::string value) {
-	
-		if (StringCaseCmp(name, "window_scaling") == 0) {
-			window_scaling = StringToInt(value);
-			window_scaling = CLAMP(0, window_scaling, 5);
-		} else if (StringCaseCmp(name, "font_scaling") == 0) {
-			font_scaling = StringToInt(value);
-		} else if (StringCaseCmp(name, "font_theme") == 0) {
-			font_theme = StringToInt(value);
-		} else if (StringCaseCmp(name, "widget_theme") == 0) {
-			widget_theme = StringToInt(value);
-		} else if (StringCaseCmp(name, "box_theme") == 0) {
-			box_theme = StringToInt(value);
-		} else if (StringCaseCmp(name, "button_theme") == 0) {
-			button_theme = StringToInt(value);
-		} else if (StringCaseCmp(name, "single_pane") == 0) {
-			single_pane = StringToInt(value) ? true : false;
-		} else if (StringCaseCmp(name, "use_system_fonts") == 0) {
-			use_system_fonts = StringToInt(value) ? true : false;
-		} else if (StringCaseCmp(name, "color_scheme") == 0) {
-			color_scheme = StringToInt(value);
-		} else if (StringCaseCmp(name, "text_red") == 0) {
-			text_red = StringToInt(value);
-		} else if (StringCaseCmp(name, "text_green") == 0) {
-			text_green = StringToInt(value);
-		} else if (StringCaseCmp(name, "text_blue") == 0) {
-			text_blue = StringToInt(value);
-		} else if (StringCaseCmp(name, "text2_red") == 0) {
-			text2_red = StringToInt(value);
-		} else if (StringCaseCmp(name, "text2_green") == 0) {
-			text2_green = StringToInt(value);
-		} else if (StringCaseCmp(name, "text2_blue") == 0) {
-			text2_blue = StringToInt(value);
-		} else if (StringCaseCmp(name, "bg_red") == 0) {
-			bg_red = StringToInt(value);
-		} else if (StringCaseCmp(name, "bg_green") == 0) {
-			bg_green = StringToInt(value);
-		} else if (StringCaseCmp(name, "bg_blue") == 0) {
-			bg_blue = StringToInt(value);
-		} else if (StringCaseCmp(name, "bg2_red") == 0) {
-			bg2_red = StringToInt(value);
-		} else if (StringCaseCmp(name, "bg2_green") == 0) {
-			bg2_green = StringToInt(value);
-		} else if (StringCaseCmp(name, "bg2_blue") == 0) {
-			bg2_blue = StringToInt(value);
-		} else if (StringCaseCmp(name, "button_red") == 0) {
-			button_red = StringToInt(value);
-		} else if (StringCaseCmp(name, "button_green") == 0) {
-			button_green = StringToInt(value);
-		} else if (StringCaseCmp(name, "button_blue") == 0) {
-			button_blue = StringToInt(value);
-		} else if (StringCaseCmp(name, "gradient_red") == 0) {
-			gradient_red = StringToInt(value);
-		} else if (StringCaseCmp(name, "gradient_green") == 0) {
-			gradient_green = StringToInt(value);
-		} else if (StringCaseCmp(name, "gradient_blue") == 0) {
-			gradient_blue = StringToInt(value);
-		} else if (StringCaseCmp(name, "border_red") == 0) {
-			border_red = StringToInt(value);
-		} else if (StringCaseCmp(name, "border_green") == 0) {
-			border_green = StringToInt(value);
-		} else if (StringCaseCmp(name, "border_blue") == 0) {
-			border_blue = StringToInt(value);
-		} else if (StringCaseCmp(name, "gap_red") == 0) {
-			gap_red = StringToInt(value);
-		} else if (StringCaseCmp(name, "gap_green") == 0) {
-			gap_green = StringToInt(value);
-		} else if (StringCaseCmp(name, "gap_blue") == 0) {
-			gap_blue = StringToInt(value);
-		} else {
-			LogPrintf("Unknown option: '{}'\n", name);
-		}
-		
+    if (StringCaseCmp(name, "window_scaling") == 0) {
+        window_scaling = StringToInt(value);
+        window_scaling = CLAMP(0, window_scaling, 5);
+    } else if (StringCaseCmp(name, "font_scaling") == 0) {
+        font_scaling = StringToInt(value);
+    } else if (StringCaseCmp(name, "font_theme") == 0) {
+        font_theme = StringToInt(value);
+    } else if (StringCaseCmp(name, "widget_theme") == 0) {
+        widget_theme = StringToInt(value);
+    } else if (StringCaseCmp(name, "box_theme") == 0) {
+        box_theme = StringToInt(value);
+    } else if (StringCaseCmp(name, "button_theme") == 0) {
+        button_theme = StringToInt(value);
+    } else if (StringCaseCmp(name, "single_pane") == 0) {
+        single_pane = StringToInt(value) ? true : false;
+    } else if (StringCaseCmp(name, "use_system_fonts") == 0) {
+        use_system_fonts = StringToInt(value) ? true : false;
+    } else if (StringCaseCmp(name, "color_scheme") == 0) {
+        color_scheme = StringToInt(value);
+    } else if (StringCaseCmp(name, "text_red") == 0) {
+        text_red = StringToInt(value);
+    } else if (StringCaseCmp(name, "text_green") == 0) {
+        text_green = StringToInt(value);
+    } else if (StringCaseCmp(name, "text_blue") == 0) {
+        text_blue = StringToInt(value);
+    } else if (StringCaseCmp(name, "text2_red") == 0) {
+        text2_red = StringToInt(value);
+    } else if (StringCaseCmp(name, "text2_green") == 0) {
+        text2_green = StringToInt(value);
+    } else if (StringCaseCmp(name, "text2_blue") == 0) {
+        text2_blue = StringToInt(value);
+    } else if (StringCaseCmp(name, "bg_red") == 0) {
+        bg_red = StringToInt(value);
+    } else if (StringCaseCmp(name, "bg_green") == 0) {
+        bg_green = StringToInt(value);
+    } else if (StringCaseCmp(name, "bg_blue") == 0) {
+        bg_blue = StringToInt(value);
+    } else if (StringCaseCmp(name, "bg2_red") == 0) {
+        bg2_red = StringToInt(value);
+    } else if (StringCaseCmp(name, "bg2_green") == 0) {
+        bg2_green = StringToInt(value);
+    } else if (StringCaseCmp(name, "bg2_blue") == 0) {
+        bg2_blue = StringToInt(value);
+    } else if (StringCaseCmp(name, "button_red") == 0) {
+        button_red = StringToInt(value);
+    } else if (StringCaseCmp(name, "button_green") == 0) {
+        button_green = StringToInt(value);
+    } else if (StringCaseCmp(name, "button_blue") == 0) {
+        button_blue = StringToInt(value);
+    } else if (StringCaseCmp(name, "gradient_red") == 0) {
+        gradient_red = StringToInt(value);
+    } else if (StringCaseCmp(name, "gradient_green") == 0) {
+        gradient_green = StringToInt(value);
+    } else if (StringCaseCmp(name, "gradient_blue") == 0) {
+        gradient_blue = StringToInt(value);
+    } else if (StringCaseCmp(name, "border_red") == 0) {
+        border_red = StringToInt(value);
+    } else if (StringCaseCmp(name, "border_green") == 0) {
+        border_green = StringToInt(value);
+    } else if (StringCaseCmp(name, "border_blue") == 0) {
+        border_blue = StringToInt(value);
+    } else if (StringCaseCmp(name, "gap_red") == 0) {
+        gap_red = StringToInt(value);
+    } else if (StringCaseCmp(name, "gap_green") == 0) {
+        gap_green = StringToInt(value);
+    } else if (StringCaseCmp(name, "gap_blue") == 0) {
+        gap_blue = StringToInt(value);
+    } else {
+        LogPrintf("Unknown option: '{}'\n", name);
+    }
 }
 
 static bool Theme_Options_ParseLine(std::string buf) {
@@ -281,14 +279,16 @@ bool Theme_Options_Save(std::filesystem::path filename) {
     option_fp << "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n";
     option_fp << "-- " << OBSIDIAN_WEBSITE << "\n\n";
 
-    option_fp << "window_scaling      = " << NumToString(window_scaling) << "\n";
+    option_fp << "window_scaling      = " << NumToString(window_scaling)
+              << "\n";
     option_fp << "font_scaling      = " << NumToString(font_scaling) << "\n";
     option_fp << "font_theme      = " << NumToString(font_theme) << "\n";
     option_fp << "widget_theme      = " << NumToString(widget_theme) << "\n";
     option_fp << "box_theme      = " << NumToString(box_theme) << "\n";
     option_fp << "button_theme      = " << NumToString(button_theme) << "\n";
     option_fp << "single_pane = " << NumToString((single_pane ? 1 : 0)) << "\n";
-    option_fp << "use_system_fonts = " << NumToString((use_system_fonts ? 1 : 0)) << "\n";
+    option_fp << "use_system_fonts = "
+              << NumToString((use_system_fonts ? 1 : 0)) << "\n";
     option_fp << "color_scheme      = " << NumToString(color_scheme) << "\n";
     option_fp << "text_red      = " << NumToString(text_red) << "\n";
     option_fp << "text_green      = " << NumToString(text_green) << "\n";
@@ -306,7 +306,8 @@ bool Theme_Options_Save(std::filesystem::path filename) {
     option_fp << "button_green      = " << NumToString(button_green) << "\n";
     option_fp << "button_blue      = " << NumToString(button_blue) << "\n";
     option_fp << "gradient_red      = " << NumToString(gradient_red) << "\n";
-    option_fp << "gradient_green      = " << NumToString(gradient_green) << "\n";
+    option_fp << "gradient_green      = " << NumToString(gradient_green)
+              << "\n";
     option_fp << "gradient_blue      = " << NumToString(gradient_blue) << "\n";
     option_fp << "border_red      = " << NumToString(border_red) << "\n";
     option_fp << "border_green      = " << NumToString(border_green) << "\n";
