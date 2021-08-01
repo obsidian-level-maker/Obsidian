@@ -1355,7 +1355,7 @@ void secretize_config(config *c) {
 /* 3. Parse the arglist to get overrides to switches,         */
 /* 4. Read the config for non-switches (flats, themes, etc).  */
 /* 5. Do postproduction defaults and calculations and such.   */
-config *get_config(s_config slump_config) {
+config *get_config(std::filesystem::path filename) {
     config *answer;
     int i;
     genus *m;
@@ -1364,7 +1364,7 @@ config *get_config(s_config slump_config) {
 
     /* Set various defaults and stuff */
     answer->configfile = strdup("SLUMP.CFG"); /* So's we kin free() it */
-    answer->outfile = slump_config.outfile;
+    answer->outfile = filename;
     answer->cwadonly = SLUMP_FALSE;
 
     ok_to_roll = SLUMP_TRUE;
@@ -1383,30 +1383,62 @@ config *get_config(s_config slump_config) {
     answer->sthemecount = 0;
     answer->secret_themes = SLUMP_FALSE;
     answer->lock_themes = SLUMP_FALSE;
-    answer->major_nukage = slump_config.major_nukage;
-    answer->required_monster_bits = slump_config.required_monster_bits;
-    answer->forbidden_monster_bits = slump_config.forbidden_monster_bits;
-    answer->minrooms = slump_config.minrooms; /* Medium size */
-    /* answer->gamemask = DOOM1_BIT; */ /* All/Only things supported by DOOM 1.9
-                                         */
-    answer->gamemask = slump_config.gamemask;
-    answer->episode = slump_config.episode;
-    answer->mission = slump_config.mission;
+    answer->major_nukage = StringToInt(ob_get_param("bool_major_nukage_slump")) ? SLUMP_TRUE : SLUMP_FALSE;
+    std::string monvariety = ob_get_param("slump_mons");
+    if (StringCaseCmp(monvariety, "normal")) {
+        answer->required_monster_bits = 0;
+        answer->forbidden_monster_bits = SPECIAL;
+    } else if (StringCaseCmp(monvariety, "shooters")) {
+        answer->required_monster_bits = SHOOTS;
+        answer->forbidden_monster_bits = SPECIAL;
+    } else if (StringCaseCmp(monvariety, "noflyzone")) {
+        answer->required_monster_bits = 0;
+        answer->forbidden_monster_bits = FLIES + SPECIAL;
+    } else {
+        answer->required_monster_bits = SPECIAL;  // All Nazis
+        answer->forbidden_monster_bits = 0;
+    }
+    std::string levelsize = ob_get_param("float_minrooms_slump");
+    if (StringCaseCmp(levelsize, "Mix It Up")) {
+        answer->minrooms = twister_Between(2, 37);
+    } else {
+        answer->minrooms = StringToInt(levelsize);
+    }
+    std::string current_game = ob_get_param("game");
+    if (StringCaseCmp(current_game, "doom1") || StringCaseCmp(current_game, "ultdoom")) {
+        answer->gamemask = DOOM1_BIT;
+        answer->map = 0;
+        answer->episode = 1;
+        answer->mission = 1;
+    } else {
+        answer->gamemask = DOOM2_BIT;
+        answer->map = 1;
+        answer->episode = 0;
+        answer->mission = 0;
+    }                                   
     answer->last_mission = SLUMP_FALSE;
-    answer->levelcount = slump_config.levelcount; /* Default: Do a megawad */
+    std::string wadlength = ob_get_param("length");
+    if (StringCaseCmp(wadlength, "single")) {
+        answer->levelcount = 1;
+    } else if (StringCaseCmp(wadlength, "few")) {
+        answer->levelcount = 4;
+    } else if (StringCaseCmp(wadlength, "episode")) {
+        answer->levelcount = 11;
+    } else {
+        answer->levelcount = 32;  // "Full Game"
+    }
     answer->force_arena = SLUMP_TRUE;
     answer->force_biggest = SLUMP_FALSE;
     answer->do_music = 0;
     answer->secret_monsters = SLUMP_FALSE;
-    answer->do_dm = slump_config.do_dm;
+    answer->do_dm = StringToInt(ob_get_param("bool_dm_starts_slump"));
     answer->do_slinfo = SLUMP_TRUE;
     answer->produce_null_lmps = SLUMP_FALSE;
     answer->do_seclevels = SLUMP_TRUE;
     answer->force_secret = SLUMP_FALSE;
-    answer->map = slump_config.map;
     answer->minlight = 115;
     /* Is this the right place for all these? */
-    answer->immediate_monsters = slump_config.immediate_monsters;
+    answer->immediate_monsters = StringToInt(ob_get_param("bool_immediate_monsters_slump")) ? rollpercent(20) : SLUMP_FALSE;
     answer->p_hole_ends_level = 0;
     if (rollpercent(8)) answer->p_hole_ends_level = 100;
     if (rollpercent(3)) answer->p_hole_ends_level = roll(100);
@@ -1464,7 +1496,7 @@ config *get_config(s_config slump_config) {
     answer->clights = rollpercent(50);
     answer->machoh = (float)1;
     answer->machou = (float)1;
-    answer->p_bigify = slump_config.p_bigify; /* Less uniform? */
+    answer->p_bigify = StringToInt(ob_get_param("float_bigify_slump"));
 
     /* Initial defaults; at each level, some chance of turning on */
     answer->big_weapons = rollpercent(50);
@@ -1511,7 +1543,7 @@ config *get_config(s_config slump_config) {
 
     if (answer->force_secret) secretize_config(answer);
 
-    answer->forkiness = slump_config.forkiness;
+    answer->forkiness = StringToInt(ob_get_param("float_forkiness_slump"));
 
     /* And finally compact out any unneeded/dangerous stuff */
     compact_config(answer);

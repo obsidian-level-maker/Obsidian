@@ -109,62 +109,6 @@ static const char *section_markers[NUM_SECTIONS][2] = {
     {"FF_START", "F_END"}};
 
 //------------------------------------------------------------------------
-//  SLUMP WAD Creation for Vanilla Doom
-//------------------------------------------------------------------------
-bool Slump_MakeWAD(const std::filesystem::path &filename) {
-    s_config slump_config;
-    slump_config.outfile = filename;
-    std::string levelcount = ob_get_param("length");
-    if (levelcount == "single") {
-        slump_config.levelcount = 1;
-    } else if (levelcount == "few") {
-        slump_config.levelcount = 4;
-    } else if (levelcount == "episode") {
-        slump_config.levelcount = 11;
-    } else {
-        slump_config.levelcount = 32;  // "Full Game"
-    }
-    std::string current_game = ob_get_param("game");
-    if (current_game == "doom1" || current_game == "ultdoom") {
-        slump_config.gamemask = DOOM1_BIT;
-        slump_config.map = 0;
-        slump_config.episode = 1;
-        slump_config.mission = 1;
-    } else {
-        slump_config.gamemask = DOOM2_BIT;
-        slump_config.map = 1;
-        slump_config.episode = 0;
-        slump_config.mission = 0;
-    }
-    std::string minrooms = ob_get_param("float_minrooms_slump");
-    if (minrooms == "Mix It Up") {
-        slump_config.minrooms = twister_Between(2, 37);
-    } else {
-        slump_config.minrooms = StringToInt(minrooms);
-    }
-    slump_config.p_bigify = StringToInt(ob_get_param("float_bigify_slump"));
-    slump_config.forkiness = StringToInt(ob_get_param("float_forkiness_slump"));
-    slump_config.do_dm = StringToInt(ob_get_param("bool_dm_starts_slump"));
-    slump_config.major_nukage = StringToInt(ob_get_param("bool_major_nukage_slump")) ? SLUMP_TRUE : SLUMP_FALSE;
-    slump_config.immediate_monsters = StringToInt(ob_get_param("bool_immediate_monsters_slump")) ? rollpercent(20) : SLUMP_FALSE;
-    std::string monvariety = ob_get_param("slump_mons");
-    if (monvariety == "normal") {
-        slump_config.required_monster_bits = 0;
-        slump_config.forbidden_monster_bits = SPECIAL;
-    } else if (monvariety == "shooters") {
-        slump_config.required_monster_bits = SHOOTS;
-        slump_config.forbidden_monster_bits = SPECIAL;
-    } else if (monvariety == "noflyzone") {
-        slump_config.required_monster_bits = 0;
-        slump_config.forbidden_monster_bits = FLIES + SPECIAL;
-    } else {
-        slump_config.required_monster_bits = SPECIAL;  // All Nazis
-        slump_config.forbidden_monster_bits = 0;
-    }
-    return slump_main(slump_config);
-}
-
-//------------------------------------------------------------------------
 //  WAD OUTPUT
 //------------------------------------------------------------------------
 
@@ -1002,8 +946,8 @@ bool doom_game_interface_c::Finish(bool build_ok) {
         // TODO: handle write errors
         DM_EndWAD();
     } else {
-                build_ok = Slump_MakeWAD(filename);
-        }
+        build_ok = slump_main(filename);
+    }
 
     if (build_ok) {
         build_ok = BuildNodes();
