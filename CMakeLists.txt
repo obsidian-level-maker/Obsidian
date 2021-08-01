@@ -208,18 +208,14 @@ endif()
 target_link_libraries(obsidian PRIVATE fmt::fmt-header-only)
 
 # Copies executables to local install directory after build
-if(UNIX)
-  add_custom_command(
-    TARGET obsidian
-    POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_BINARY_DIR}/obsidian"
-            "${CMAKE_CURRENT_LIST_DIR}"
-    COMMAND
-      "${CMAKE_COMMAND}" -E copy
-      "${CMAKE_BINARY_DIR}/source_files/ff_src/filename_formatter"
-      "${CMAKE_CURRENT_LIST_DIR}/tools"
-  )
-endif()
+add_custom_command(
+  TARGET obsidian
+  POST_BUILD
+  COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:obsidian>"
+          "${CMAKE_CURRENT_LIST_DIR}"
+  COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:filename_formatter>"
+          "${CMAKE_CURRENT_LIST_DIR}/tools"
+)
 
 add_dependencies(obsidian filename_formatter)
 
