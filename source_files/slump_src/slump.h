@@ -32,6 +32,8 @@
 #include <cstdio>
 #include <filesystem>
 #include <fstream>
+#include "m_lua.h"
+#include "lib_util.h"
 
 /* Slump 0.003.02 */
 #define SOURCE_VERSION (0)
@@ -810,7 +812,7 @@ typedef struct s_config {
 /* Lots and lots and lots of functions */
 /* And this isn't even all of 'em! */
 
-config *get_config(config slump_config);
+config *get_config(std::filesystem::path filename);
 void NewLevel(level *l, haa *init_haa, config *c);
 void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission,
                int map);

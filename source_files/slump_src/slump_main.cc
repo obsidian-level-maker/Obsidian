@@ -396,7 +396,7 @@ void machioize(config *c,float amount) {
 	}
 }
 
-bool slump_main(s_config slump_config) {
+bool slump_main(std::filesystem::path filename) {
 
   /* A stubby but functional main() */
 
@@ -412,7 +412,7 @@ bool slump_main(s_config slump_config) {
 		  "based on SLIGE by Dave Chess, dmchess@aol.com\n\n",
            SOURCE_VERSION,SOURCE_SERIAL,SOURCE_PATCHLEVEL);
 
-  ThisConfig = get_config(slump_config);
+  ThisConfig = get_config(filename);
   if (ThisConfig==NULL) {
     Usage();
     return false;
