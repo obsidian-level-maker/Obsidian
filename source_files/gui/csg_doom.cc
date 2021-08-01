@@ -392,7 +392,7 @@ class doom_linedef_c {
     int special;
     int tag;
 
-    u8_t args[5];
+    std::array<u8_t, 5> args;
 
     double length;
 
@@ -1600,9 +1600,9 @@ static void DM_MakeLine(region_c *R, snag_c *S) {
     L->tag = L_tag;
 
     if (use_trig) {
-        trig->getHexenArgs(L->args);
+        trig->getHexenArgs(L->args.data());
     } else if (spec) {
-        spec->getHexenArgs(L->args);
+        spec->getHexenArgs(L->args.data());
     }
 
     // flags...
@@ -2712,16 +2712,16 @@ void doom_linedef_c::Write() {
 
     int f = front ? front->Write() : -1;
     int b = back ? back->Write() : -1;
-    DM_AddLinedef(v1, v2, f, b, special, flags, tag, args);
+    DM_AddLinedef(v1, v2, f, b, special, flags, tag, args.data());
 }
 
 static void DM_WriteLinedefs() {
     // this triggers everything else (Sidedefs, Sectors, Vertices) to be
     // written as well.
 
-    for (int i = 0; i < (int)dm_linedefs.size(); i++) {
-        if (dm_linedefs[i]->isValid()) {
-            dm_linedefs[i]->Write();
+    for (auto *linedef : dm_linedefs) {
+        if (linedef->isValid()) {
+            linedef->Write();
         }
     }
 }
@@ -2852,9 +2852,7 @@ static void DM_WriteFraggleScript() {
     for (int i = 1; i <= 3; i++) {
         DM_HeaderPrintf("script %d\n{\n", i);
 
-        for (unsigned int k = 0; k < dm_fs_things.size(); k++) {
-            fs_thing_t &thing = dm_fs_things[k];
-
+        for (const auto &thing : dm_fs_things) {
             int which;  // which script to use
 
             if (thing.options & MTF_Easy) {

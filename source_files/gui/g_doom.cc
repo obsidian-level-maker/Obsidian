@@ -23,14 +23,9 @@
 #include "headers.h"
 
 #include <bitset>
-#include <iostream>
 #include <string>
 
-#include "csg_main.h"
-#include "dm_extra.h"
 #include "hdr_fltk.h"
-#include "hdr_lua.h"
-#include "hdr_ui.h"
 #include "lib_file.h"
 #include "lib_util.h"
 #include "lib_wad.h"
@@ -57,7 +52,7 @@ extern int ef_thing_mode;
 
 static std::string level_name;
 
-int dm_sub_format;
+int sub_format;
 
 int dm_offset_map;
 
@@ -85,7 +80,7 @@ int udmf_linedefs;
 int udmf_things;
 int udmf_sidedefs;
 
-typedef enum {
+enum wad_section_e {
     SECTION_Patches = 0,
     SECTION_Sprites,
     SECTION_Colormaps,
@@ -93,7 +88,7 @@ typedef enum {
     SECTION_Flats,
 
     NUM_SECTIONS
-} wad_section_e;
+};
 
 typedef std::vector<qLump_c *> lump_bag_t;
 
@@ -112,7 +107,8 @@ static const char *section_markers[NUM_SECTIONS][2] = {
 //  WAD OUTPUT
 //------------------------------------------------------------------------
 
-void DM_WriteLump(std::string_view name, const void *data, u32_t len) {
+namespace Doom {
+void WriteLump(std::string_view name, const void *data, u32_t len) {
     SYS_ASSERT(name.size() <= 8);
 
     WAD_NewLump(name.data());
@@ -125,12 +121,14 @@ void DM_WriteLump(std::string_view name, const void *data, u32_t len) {
 
     WAD_FinishLump();
 }
+}  // namespace Doom
 
-void DM_WriteLump(std::string_view name, qLump_c *lump) {
-    DM_WriteLump(name, lump->GetBuffer(), lump->GetSize());
+void Doom::WriteLump(std::string_view name, qLump_c *lump) {
+    WriteLump(name, lump->GetBuffer(), lump->GetSize());
 }
 
-static void DM_WriteBehavior() {
+namespace Doom {
+static void WriteBehavior() {
     raw_behavior_header_t behavior;
 
     std::string_view acs{"ACS"};
@@ -140,10 +138,10 @@ static void DM_WriteBehavior() {
     behavior.func_num = 0;
     behavior.str_num = 0;
 
-    DM_WriteLump("BEHAVIOR", &behavior, sizeof(behavior));
+    WriteLump("BEHAVIOR", &behavior, sizeof(behavior));
 }
 
-static void DM_ClearSections() {
+static void ClearSections() {
     for (int k = 0; k < NUM_SECTIONS; k++) {
         if (!sections[k]) {
             sections[k] = new lump_bag_t;
@@ -158,25 +156,25 @@ static void DM_ClearSections() {
     }
 }
 
-static void DM_WriteSections() {
+static void WriteSections() {
     for (int k = 0; k < NUM_SECTIONS; k++) {
-        if (sections[k]->size() == 0) {
+        if (sections[k]->empty()) {
             continue;
         }
 
-        DM_WriteLump(section_markers[k][0], NULL, 0);
+        WriteLump(section_markers[k][0], nullptr, 0);
 
-        for (unsigned int n = 0; n < sections[k]->size(); n++) {
-            qLump_c *lump = sections[k]->at(n);
-
-            DM_WriteLump(lump->GetName(), lump);
+        for (auto *lump : *sections[k]) {
+            WriteLump(lump->GetName(), lump);
         }
 
-        DM_WriteLump(section_markers[k][1], NULL, 0);
+        WriteLump(section_markers[k][1], nullptr, 0);
     }
 }
 
-void DM_AddSectionLump(char ch, const char *name, qLump_c *lump) {
+}  // namespace Doom
+
+void Doom::AddSectionLump(char ch, const char *name, qLump_c *lump) {
     int k;
     switch (ch) {
         case 'P':
@@ -204,7 +202,7 @@ void DM_AddSectionLump(char ch, const char *name, qLump_c *lump) {
     sections[k]->push_back(lump);
 }
 
-bool DM_StartWAD(const std::filesystem::path &filename) {
+bool Doom::StartWAD(const std::filesystem::path &filename) {
     if (!WAD_OpenWrite(filename)) {
         DLG_ShowError(_("Unable to create wad file:\n\n%s"), strerror(errno));
         return false;
@@ -212,25 +210,26 @@ bool DM_StartWAD(const std::filesystem::path &filename) {
 
     errors_seen = 0;
 
-    DM_ClearSections();
+    ClearSections();
 
     qLump_c *info = BSP_CreateInfoLump();
-    DM_WriteLump("OBLIGDAT", info);
+    WriteLump("OBLIGDAT", info);
     delete info;
 
     return true;  // OK
 }
 
-bool DM_EndWAD() {
-    DM_WriteSections();
-    DM_ClearSections();
+bool Doom::EndWAD() {
+    WriteSections();
+    ClearSections();
 
     WAD_CloseWrite();
 
-    return (errors_seen == 0);
+    return errors_seen == 0;
 }
 
-static void DM_FreeLumps() {
+namespace Doom {
+static void FreeLumps() {
     delete header_lump;
     header_lump = nullptr;
     if (not UDMF_mode) {
@@ -251,9 +250,10 @@ static void DM_FreeLumps() {
         endmap_lump = nullptr;
     }
 }
+}  // namespace Doom
 
-void DM_BeginLevel() {
-    DM_FreeLumps();
+void Doom::BeginLevel() {
+    FreeLumps();
 
     header_lump = new qLump_c();
     if (not UDMF_mode) {
@@ -264,7 +264,7 @@ void DM_BeginLevel() {
         sidedef_lump = new qLump_c();
     } else {
         textmap_lump = new qLump_c();
-        if (dm_sub_format == SUBFMT_Hexen) {
+        if (sub_format == SUBFMT_Hexen) {
             textmap_lump->Printf("namespace = \"Hexen\";\n\n");
         } else {
             textmap_lump->Printf("namespace = \"ZDoomTranslated\";\n\n");
@@ -276,45 +276,45 @@ void DM_BeginLevel() {
     }
 }
 
-void DM_EndLevel(std::string_view level_name) {
+void Doom::EndLevel(std::string_view level_name) {
     // terminate header lump with trailing NUL
     if (header_lump->GetSize() > 0) {
         const byte nuls[4] = {0, 0, 0, 0};
         header_lump->Append(nuls, 1);
     }
 
-    DM_WriteLump(level_name, header_lump);
+    WriteLump(level_name, header_lump);
 
     if (UDMF_mode) {
-        DM_WriteLump("TEXTMAP", textmap_lump);
+        WriteLump("TEXTMAP", textmap_lump);
     }
 
     if (not UDMF_mode) {
-        DM_WriteLump("THINGS", thing_lump);
-        DM_WriteLump("LINEDEFS", linedef_lump);
-        DM_WriteLump("SIDEDEFS", sidedef_lump);
-        DM_WriteLump("VERTEXES", vertex_lump);
+        WriteLump("THINGS", thing_lump);
+        WriteLump("LINEDEFS", linedef_lump);
+        WriteLump("SIDEDEFS", sidedef_lump);
+        WriteLump("VERTEXES", vertex_lump);
 
-        DM_WriteLump("SEGS", NULL, 0);
-        DM_WriteLump("SSECTORS", NULL, 0);
-        DM_WriteLump("NODES", NULL, 0);
-        DM_WriteLump("SECTORS", sector_lump);
-        if (dm_sub_format == SUBFMT_Hexen) {
-            DM_WriteBehavior();
+        WriteLump("SEGS", NULL, 0);
+        WriteLump("SSECTORS", NULL, 0);
+        WriteLump("NODES", NULL, 0);
+        WriteLump("SECTORS", sector_lump);
+        if (sub_format == SUBFMT_Hexen) {
+            WriteBehavior();
         }
     } else {
-        if (dm_sub_format == SUBFMT_Hexen) {
-            DM_WriteBehavior();
+        if (sub_format == SUBFMT_Hexen) {
+            WriteBehavior();
         }
-        DM_WriteLump("ENDMAP", NULL, 0);
+        WriteLump("ENDMAP", NULL, 0);
     }
 
-    DM_FreeLumps();
+    FreeLumps();
 }
 
 //------------------------------------------------------------------------
 
-void DM_HeaderPrintf(const char *str, ...) {
+void Doom::HeaderPrintf(const char *str, ...) {
     static char message_buf[MSG_BUF_LEN];
 
     va_list args;
@@ -328,7 +328,7 @@ void DM_HeaderPrintf(const char *str, ...) {
     header_lump->Append(message_buf, strlen(message_buf));
 }
 
-void DM_AddVertex(int x, int y) {
+void Doom::AddVertex(int x, int y) {
     if (dm_offset_map) {
         x += 32;
         y += 32;
@@ -349,8 +349,8 @@ void DM_AddVertex(int x, int y) {
     }
 }
 
-void DM_AddSector(int f_h, const char *f_tex, int c_h, const char *c_tex,
-                  int light, int special, int tag) {
+void Doom::AddSector(int f_h, const char *f_tex, int c_h, const char *c_tex,
+                     int light, int special, int tag) {
     if (not UDMF_mode) {
         raw_sector_t sec;
 
@@ -378,8 +378,8 @@ void DM_AddSector(int f_h, const char *f_tex, int c_h, const char *c_tex,
     }
 }
 
-void DM_AddSidedef(int sector, const char *l_tex, const char *m_tex,
-                   const char *u_tex, int x_offset, int y_offset) {
+void Doom::AddSidedef(int sector, const char *l_tex, const char *m_tex,
+                      const char *u_tex, int x_offset, int y_offset) {
     if (not UDMF_mode) {
         raw_sidedef_t side;
 
@@ -405,9 +405,9 @@ void DM_AddSidedef(int sector, const char *l_tex, const char *m_tex,
     }
 }
 
-void DM_AddLinedef(int vert1, int vert2, int side1, int side2, int type,
-                   int flags, int tag, const byte *args) {
-    if (dm_sub_format != SUBFMT_Hexen) {
+void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
+                      int flags, int tag, const byte *args) {
+    if (sub_format != SUBFMT_Hexen) {
         if (not UDMF_mode) {
             raw_linedef_t line;
 
@@ -566,14 +566,14 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2, int type,
     }
 }
 
-void DM_AddThing(int x, int y, int h, int type, int angle, int options, int tid,
-                 byte special, const byte *args) {
+void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
+                    int tid, byte special, const byte *args) {
     if (dm_offset_map) {
         x += 32;
         y += 32;
     }
 
-    if (dm_sub_format != SUBFMT_Hexen) {
+    if (sub_format != SUBFMT_Hexen) {
         if (not UDMF_mode) {
             raw_thing_t thing;
 
@@ -713,52 +713,47 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options, int tid,
     }
 }
 
-int DM_NumVertexes() {
+int Doom::NumVertexes() {
     if (not UDMF_mode) {
         return vertex_lump->GetSize() / sizeof(raw_vertex_t);
-    } else {
-        return udmf_vertexes;
     }
+    return udmf_vertexes;
 }
 
-int DM_NumSectors() {
+int Doom::NumSectors() {
     if (not UDMF_mode) {
         return sector_lump->GetSize() / sizeof(raw_sector_t);
-    } else {
-        return udmf_sectors;
     }
+    return udmf_sectors;
 }
 
-int DM_NumSidedefs() {
+int Doom::NumSidedefs() {
     if (not UDMF_mode) {
         return sidedef_lump->GetSize() / sizeof(raw_sidedef_t);
-    } else {
-        return udmf_sidedefs;
     }
+    return udmf_sidedefs;
 }
 
-int DM_NumLinedefs() {
+int Doom::NumLinedefs() {
     if (not UDMF_mode) {
-        if (dm_sub_format == SUBFMT_Hexen) {
+        if (sub_format == SUBFMT_Hexen) {
             return linedef_lump->GetSize() / sizeof(raw_hexen_linedef_t);
         }
 
         return linedef_lump->GetSize() / sizeof(raw_linedef_t);
-    } else {
-        return udmf_linedefs;
     }
+    return udmf_linedefs;
 }
 
-int DM_NumThings() {
+int Doom::NumThings() {
     if (not UDMF_mode) {
-        if (dm_sub_format == SUBFMT_Hexen) {
+        if (sub_format == SUBFMT_Hexen) {
             return thing_lump->GetSize() / sizeof(raw_hexen_thing_t);
         }
 
         return thing_lump->GetSize() / sizeof(raw_thing_t);
-    } else {
-        return udmf_things;
     }
+    return udmf_things;
 }
 
 //----------------------------------------------------------------------------
@@ -767,7 +762,8 @@ int DM_NumThings() {
 
 #include "zdmain.h"
 
-static bool DM_BuildNodes(const std::filesystem::path &filename) {
+namespace Doom {
+static bool BuildNodes(const std::filesystem::path &filename) {
     LogPrintf("\n");
 
     zdbsp_options options;
@@ -858,15 +854,17 @@ static bool DM_BuildNodes(const std::filesystem::path &filename) {
 
     return true;
 }
+}  // namespace Doom
 
 //------------------------------------------------------------------------
 
-class doom_game_interface_c : public game_interface_c {
+namespace Doom {
+class game_interface_c : public ::game_interface_c {
    private:
     std::filesystem::path filename;
 
    public:
-    doom_game_interface_c() : filename("") {}
+    game_interface_c() : filename("") {}
 
     bool Start(const char *preset);
     bool Finish(bool build_ok);
@@ -876,11 +874,12 @@ class doom_game_interface_c : public game_interface_c {
     void Property(const char *key, const char *value);
 
    private:
-    bool BuildNodes();
+    bool BuildNodes() const;
 };
+}  // namespace Doom
 
-bool doom_game_interface_c::Start(const char *preset) {
-    dm_sub_format = 0;
+bool Doom::game_interface_c::Start(const char *preset) {
+    sub_format = 0;
 
     ef_solid_type = 0;
     ef_liquid_type = 0;
@@ -912,7 +911,7 @@ bool doom_game_interface_c::Start(const char *preset) {
         }
     }
 
-    if (!DM_StartWAD(filename)) {
+    if (!StartWAD(filename)) {
         Main::ProgStatus(_("Error (create file)"));
         return false;
     }
@@ -938,13 +937,15 @@ bool doom_game_interface_c::Start(const char *preset) {
     return true;
 }
 
-bool doom_game_interface_c::BuildNodes() { return DM_BuildNodes(filename); }
+bool Doom::game_interface_c::BuildNodes() const {
+    return Doom::BuildNodes(filename);
+}
 
-bool doom_game_interface_c::Finish(bool build_ok) {
+bool Doom::game_interface_c::Finish(bool build_ok) {
     // Skip DM_EndWAD if using Vanilla Doom
     if (current_engine != "vanilla") {
         // TODO: handle write errors
-        DM_EndWAD();
+        EndWAD();
     } else {
         build_ok = slump_main(filename);
     }
@@ -963,7 +964,7 @@ bool doom_game_interface_c::Finish(bool build_ok) {
     return build_ok;
 }
 
-void doom_game_interface_c::BeginLevel() {
+void Doom::game_interface_c::BeginLevel() {
     if (UDMF_mode) {
         udmf_vertexes = 0;
         udmf_sectors = 0;
@@ -971,10 +972,10 @@ void doom_game_interface_c::BeginLevel() {
         udmf_things = 0;
         udmf_sidedefs = 0;
     }
-    DM_BeginLevel();
+    Doom::BeginLevel();
 }
 
-void doom_game_interface_c::Property(const char *key, const char *value) {
+void Doom::game_interface_c::Property(const char *key, const char *value) {
     if (StringCaseCmp(key, "level_name") == 0) {
         level_name = value;
     } else if (StringCaseCmp(key, "description") == 0) {
@@ -982,11 +983,11 @@ void doom_game_interface_c::Property(const char *key, const char *value) {
         main_win->build_box->name_disp->redraw();
     } else if (StringCaseCmp(key, "sub_format") == 0) {
         if (StringCaseCmp(value, "doom") == 0) {
-            dm_sub_format = 0;
+            sub_format = 0;
         } else if (StringCaseCmp(value, "hexen") == 0) {
-            dm_sub_format = SUBFMT_Hexen;
+            sub_format = SUBFMT_Hexen;
         } else if (StringCaseCmp(value, "strife") == 0) {
-            dm_sub_format = SUBFMT_Strife;
+            sub_format = SUBFMT_Strife;
         } else {
             LogPrintf("WARNING: unknown DOOM sub_format '%s'\n", value);
         }
@@ -1003,7 +1004,7 @@ void doom_game_interface_c::Property(const char *key, const char *value) {
     }
 }
 
-void doom_game_interface_c::EndLevel() {
+void Doom::game_interface_c::EndLevel() {
     if (level_name.empty()) {
         Main::FatalError("Script problem: did not set level name!\n");
     }
@@ -1017,12 +1018,12 @@ void doom_game_interface_c::EndLevel() {
         CSG_TestRegions_Doom();
 #endif
 
-    DM_EndLevel(level_name);
+    Doom::EndLevel(level_name);
 
     level_name = "";
 }
 
-game_interface_c *Doom_GameObject() { return new doom_game_interface_c(); }
+game_interface_c *Doom_GameObject() { return new Doom::game_interface_c(); }
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab
