@@ -22,113 +22,122 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // Modified by Andrew Apted for OBLIGE Level Maker,
 //
 
-#ifndef __QUAKE1_BSPFILE_H__
-#define __QUAKE1_BSPFILE_H__
+#ifndef Q1_STRUCTS_H_
+#define Q1_STRUCTS_H_
 
 // upper design bounds
 
-#include "sys_macro.h"
 #include "sys_type.h"
 
-#define MAX_MAP_HULLS 4
+constexpr int MAX_MAP_HULLS = 4;
 
-#define MAX_MAP_MODELS 256
-#define MAX_MAP_BRUSHES 4096
-#define MAX_MAP_ENTITIES 1024
-#define MAX_MAP_ENTSTRING 65535
+constexpr int MAX_MAP_MODELS = 256;
+constexpr int MAX_MAP_BRUSHED = 4096;
+constexpr int MAX_MAP_ENTITIES = 1024;
+constexpr int MAX_MAP_ENTSTRING = 65535;
 
-#define MAX_MAP_PLANES 32767
-#define MAX_MAP_NODES 32767     /* negative shorts are contents */
-#define MAX_MAP_CLIPNODES 32767 /* negative shorts are contents */
-#define MAX_MAP_LEAFS 8192
+constexpr int MAX_MAP_PLANES = 32767;
+/* negative shorts are contents */
+constexpr int MAX_MAP_NODES = 32767;
+/* negative shorts are contents */
+constexpr int MAX_MAP_CLIPNODES = 32767;
+constexpr int MAX_MAP_LEAFS = 8192;
 
-#define MAX_MAP_VERTS 65535
-#define MAX_MAP_FACES 65535
-#define MAX_MAP_MARKSURFACES 65535
-#define MAX_MAP_TEXINFO 4096
-#define MAX_MAP_TEXTURES 512
+constexpr int MAX_MAP_VERTS = 65535;
+constexpr int MAX_MAP_FACES = 65535;
+constexpr int MAX_MAP_MARKSURFACES = 65535;
+constexpr int MAX_MAP_TEXINFO = 4096;
+constexpr int MAX_MAP_TEXTURES = 512;
 
-#define MAX_MAP_EDGES 256000
-#define MAX_MAP_SURFEDGES 512000
-#define MAX_MAP_MIPTEX 0x200000
-#define MAX_MAP_LIGHTING 0x100000
-#define MAX_MAP_VISIBILITY 0x100000
+constexpr int MAX_MAP_EDGES = 256000;
+constexpr int MAX_MAP_SURFEDGES = 512000;
+constexpr int MAX_MAP_MIPTEX = 0x200000;
+constexpr int MAX_MAP_LIGHTING = 0x100000;
+constexpr int MAX_MAP_VISIBILITY = 0x100000;
 
-#define MAX_MAP_PORTALS 65535
+constexpr int MAX_MAP_PORTALS = 65535;
 
 // key / value pair sizes
 
-#define MAX_KEY 32
-#define MAX_VALUE 1024
+constexpr int MAX_KEY = 32;
+constexpr int MAX_VALUE = 1024;
 
 //=============================================================================
 
-#define BSPVERSION 29
+constexpr int BSPVERSION = 29;
 
-#define LUMP_ENTITIES 0
-#define LUMP_PLANES 1
-#define LUMP_TEXTURES 2
-#define LUMP_VERTEXES 3
-#define LUMP_VISIBILITY 4
-#define LUMP_NODES 5
-#define LUMP_TEXINFO 6
-#define LUMP_FACES 7
-
-#define LUMP_LIGHTING 8
-#define LUMP_CLIPNODES 9
-#define LUMP_LEAFS 10
-#define LUMP_MARKSURFACES 11
-#define LUMP_EDGES 12
-#define LUMP_SURFEDGES 13
-#define LUMP_MODELS 14
-
-#define HEADER_LUMPS 15
+enum {
+    LUMP_ENTITIES,
+    LUMP_PLANES,
+    LUMP_TEXTURES,
+    LUMP_VERTEXES,
+    LUMP_VISIBILITY,
+    LUMP_NODES,
+    LUMP_TEXINFO,
+    LUMP_FACES,
+    LUMP_LIGHTING,
+    LUMP_CLIPNODES,
+    LUMP_LEAFS,
+    LUMP_MARKSURFACES,
+    LUMP_EDGES,
+    LUMP_SURFEDGES,
+    LUMP_MODELS,
+    HEADER_LUMPS,
+};
 
 // AJA: moved lump_t and dheader_t to q_common.h
 
-typedef struct {
+#pragma pack(push, 1)
+struct dmodel_t {
     float mins[3], maxs[3];
     float origin[3];
 
     s32_t headnode[MAX_MAP_HULLS];
     s32_t numleafs;  // not including the solid leaf 0
     s32_t firstface, numfaces;
+};
+#pragma pack(pop)
 
-} PACKEDATTR dmodel_t;
-
-typedef struct {
+#pragma pack(push, 1)
+struct dmiptexlump_t {
     s32_t num_miptex;
     s32_t data_ofs[2];  // [nummiptex]
+};
+#pragma pack(pop)
 
-} PACKEDATTR dmiptexlump_t;
-
-#define MIP_LEVELS 4
-typedef struct miptex_s {
+constexpr int MIP_LEVELS = 4;
+#pragma pack(push, 1)
+struct miptex_t {
     char name[16];
     u32_t width, height;
     u32_t offsets[MIP_LEVELS];  // four mip maps stored
-
-} PACKEDATTR miptex_t;
+};
+#pragma pack(pop)
 
 // AJA: moved dplane_t to q_common.h
 
-#define CONTENTS_EMPTY -1
-#define CONTENTS_SOLID -2
-#define CONTENTS_WATER -3
-#define CONTENTS_SLIME -4
-#define CONTENTS_LAVA -5
-#define CONTENTS_SKY -6
-#define CONTENTS_ORIGIN -7 /* removed at csg time       */
-#define CONTENTS_CLIP -8   /* changed to contents_solid */
+enum {
 
-#define CONTENTS_CURRENT_0 -9
-#define CONTENTS_CURRENT_90 -10
-#define CONTENTS_CURRENT_180 -11
-#define CONTENTS_CURRENT_270 -12
-#define CONTENTS_CURRENT_UP -13
-#define CONTENTS_CURRENT_DOWN -14
+    CONTENTS_CURRENT_DOWN = -14,
+    CONTENTS_CURRENT_UP,
+    CONTENTS_CURRENT_270,
+    CONTENTS_CURRENT_180,
+    CONTENTS_CURRENT_90,
+    CONTENTS_CURRENT_0,
+    /* changed to contents_solid */
+    CONTENTS_CLIP,
+    /* removed at csg time       */
+    CONTENTS_ORIGIN,
+    CONTENTS_SKY,
+    CONTENTS_LAVA,
+    CONTENTS_SLIME,
+    CONTENTS_WATER,
+    CONTENTS_SOLID,
+    CONTENTS_EMPTY,
+};
 
-typedef struct {
+#pragma pack(push, 1)
+struct dnode_t {
     s32_t planenum;
     s16_t children[2];  // negative numbers are -(leafs+1), not nodes
 
@@ -137,8 +146,8 @@ typedef struct {
 
     u16_t firstface;
     u16_t numfaces;  // counting both sides
-
-} PACKEDATTR dnode_t;
+};
+#pragma pack(pop)
 
 /*
  * Note that children are interpreted as unsigned values now, so that we can
@@ -146,36 +155,38 @@ typedef struct {
  * values and can be read as the signed value to be compatible with the above
  * (i.e. simply subtract 65536).
  */
-typedef struct dclipnode_s {
+struct dclipnode_t {
     s32_t planenum;
     u16_t children[2];
+};
 
-} PACKEDATTR dclipnode_t;
+constexpr unsigned int CLIP_SPECIAL = 0xFFF0;
 
-#define CLIP_SPECIAL 0xFFF0
-
-typedef struct {
+#pragma pack(push, 1)
+struct texinfo_t {
     float s[4];  // x/y/z/offset
     float t[4];
 
     s32_t miptex;
     s32_t flags;
-
-} PACKEDATTR texinfo_t;
+};
+#pragma pack(pop)
 
 // sky or slime: no lightmap, no 256 subdivision
 // -AJA- only disables a check on extents, otherwise not used by quake engine
-#define TEX_SPECIAL 1
+constexpr int TEX_SPECIAL = 1;
 
 // AJA: dvertex_t and dedge_t moved into q_common.h
 
 // AJA: dface_t also moved into q_common.h
 
-#define NUM_AMBIENTS 4  // automatic ambient sounds
+// automatic ambient sounds
+constexpr int NUM_AMBIENTS = 4;
 
 // leaf 0 is the generic CONTENTS_SOLID leaf, used for all solid areas
 // all other leafs need visibility info
-typedef struct {
+#pragma pack(push, 1)
+struct dleaf_t {
     s32_t contents;
     s32_t visofs;  // -1 = no visibility info
 
@@ -186,10 +197,10 @@ typedef struct {
     u16_t num_marksurf;
 
     u8_t ambient_level[NUM_AMBIENTS];
+};
+#pragma pack(pop)
 
-} PACKEDATTR dleaf_t;
-
-#endif /* __QUAKE1_BSPFILE_H__ */
+#endif
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

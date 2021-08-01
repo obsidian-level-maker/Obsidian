@@ -18,18 +18,17 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_LIB_ZIP_H__
-#define __OBLIGE_LIB_ZIP_H__
+#ifndef LIB_ZIP_H_
+#define LIB_ZIP_H_
 
 #include <filesystem>
 
-#include "sys_macro.h"
 #include "sys_type.h"
 
 /* ZIP reading */
 
 bool ZIPF_OpenRead(const char *filename);
-void ZIPF_CloseRead(void);
+void ZIPF_CloseRead();
 
 int ZIPF_NumEntries(void);
 int ZIPF_FindEntry(const char *name);
@@ -38,20 +37,21 @@ const char *ZIPF_EntryName(int entry);
 
 bool ZIPF_ReadData(int entry, int offset, int length, void *buffer);
 
-void ZIPF_ListEntries(void);
+void ZIPF_ListEntries();
 
 /* ZIP writing */
 
 bool ZIPF_OpenWrite(const std::filesystem::path &filename);
-void ZIPF_CloseWrite(void);
+void ZIPF_CloseWrite();
 
 void ZIPF_NewLump(const char *name);
 bool ZIPF_AppendData(const void *data, int length);
-void ZIPF_FinishLump(void);
+void ZIPF_FinishLump();
 
 /* ----- ZIP file structures ---------------------- */
 
-typedef struct {
+#pragma pack(push, 1)
+struct raw_zip_local_header_t {
     char magic[4];
 
     u16_t req_version;
@@ -69,19 +69,21 @@ typedef struct {
     u16_t extra_length;
 
     /* byte filename[]; */
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_zip_local_header_t;
-
-typedef struct {
+#pragma pack(push, 1)
+struct raw_zip_local_trailer_t {
     char magic[4];
 
     u32_t crc;
     u32_t compress_size;
     u32_t full_size;
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_zip_local_trailer_t;
-
-typedef struct {
+#pragma pack(push, 1)
+struct raw_zip_central_header_t {
     char magic[4];
 
     u16_t made_version;
@@ -109,10 +111,11 @@ typedef struct {
     u32_t local_offset;
 
     /* byte filename[]; */
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_zip_central_header_t;
-
-typedef struct {
+#pragma pack(push, 1)
+struct raw_zip_end_of_directory_t {
     char magic[4];
 
     u16_t this_disk;
@@ -125,31 +128,31 @@ typedef struct {
     u32_t dir_offset;
 
     u16_t comment_length;
-
-} PACKEDATTR raw_zip_end_of_directory_t;
+};
+#pragma pack(pop)
 
 // magic signatures:
-#define ZIPF_LOCAL_MAGIC "PK\003\004"
-#define ZIPF_CENTRAL_MAGIC "PK\001\002"
-#define ZIPF_APPEND_MAGIC "PK\007\010"
-#define ZIPF_END_MAGIC "PK\005\006"
+constexpr const char *ZIPF_CENTRAL_MAGIC = "PK\x01\x02";
+constexpr const char *ZIPF_LOCAL_MAGIC = "PK\x03\x04";
+constexpr const char *ZIPF_END_MAGIC = "PK\x05\x06";
+constexpr const char *ZIPF_APPEND_MAGIC = "PK\x07\x08";
 
 // bit flags:
-#define ZIPF_FLAG_ENCRYPTED (1 << 0)
-#define ZIPF_FLAG_HAS_TRAILER (1 << 3)
+constexpr unsigned int ZIPF_FLAG_ENCRYPTED = 1 << 0;
+constexpr unsigned int ZIPF_FLAG_HAS_TRAILER = 1 << 3;
 
 // compression methods:
-#define ZIPF_COMP_STORE 0
-#define ZIPF_COMP_DEFLATE 8
+constexpr int ZIPF_COMP_STORE = 0;
+constexpr int ZIPF_COMP_DEFLATE = 8;
 
 // version numbers:
-#define ZIPF_REQ_VERSION 0x00a
-#define ZIPF_MADE_VERSION 0x314
+constexpr unsigned int ZIPF_REQ_VERSION = 0x00A;
+constexpr unsigned int ZIPF_MADE_VERSION = 0x314;
 
 // external attributes:
-#define ZIPF_ATTRIB_NORMAL (0x81A4 << 16)  // mode "644"
+constexpr unsigned int ZIPF_ATTRIB_NORMAL = 0x81A4 << 16;
 
-#endif /* __OBLIGE_LIB_ZIP_H__ */
+#endif
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

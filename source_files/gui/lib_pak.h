@@ -18,14 +18,13 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_PAK_FILES_H__
-#define __OBLIGE_PAK_FILES_H__
+#ifndef PAK_FILES_H_
+#define PAK_FILES_H_
 
 #include <array>
 #include <filesystem>
 #include <vector>
 
-#include "sys_macro.h"
 #include "sys_type.h"
 
 /* PAK reading */
@@ -55,25 +54,27 @@ void PAK_FinishLump(void);
 
 /* ----- PAK structures ---------------------- */
 
-typedef struct {
+#pragma pack(push, 1)
+struct raw_pak_header_t {
     std::array<char, 4> magic;
 
     u32_t dir_start;
     u32_t entry_num;
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_pak_header_t;
+constexpr const char *PAK_MAGIC = "PACK";
 
-#define PAK_MAGIC "PACK"
-
-typedef struct {
+#pragma pack(push, 1)
+struct raw_pak_entry_t {
     std::array<char, 56> name;
 
     u32_t offset;
     u32_t length;
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_pak_entry_t;
-
-#endif /* __OBLIGE_PAK_FILES_H__ */
+#endif
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

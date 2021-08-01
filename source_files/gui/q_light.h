@@ -18,21 +18,20 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __QUAKE_LIGHTING_H__
-#define __QUAKE_LIGHTING_H__
+#ifndef Q_LIGHT_H_
+#define Q_LIGHT_H_
 
 #include <vector>
 
 #include "lib_tga.h"  // for rgb_color_t
 #include "q_common.h"
-#include "sys_macro.h"
 #include "sys_type.h"
 
 class quake_face_c;
 class uv_matrix_c;
 
 // the maximum size of a face's lightmap in Quake I/II
-#define FLAT_LIGHTMAP_SIZE (17 * 17)
+constexpr int FLAT_LIGHTMAP_SIZE = 17 * 17;
 
 class qLightmap_c {
    public:
@@ -80,12 +79,12 @@ class qLightmap_c {
     void Write(qLump_c *lump);
 };
 
-typedef enum {
+enum quake_light_kind_e {
     LTK_Normal = 0,
     LTK_Sun,
-} quake_light_kind_e;
+};
 
-typedef struct {
+struct quake_light_t {
     int kind;
 
     float x, y, z;
@@ -94,15 +93,16 @@ typedef struct {
 
     rgb_color_t color;
     int style;
-} quake_light_t;
+};
 
 // on-disk structure for Q3 light grid
-typedef struct {
+#pragma pack(push, 1)
+struct dlightgrid3_t {
     byte ambientLight[3];
     byte directedLight[3];
     byte lat, lng;  // direction to light (angles)
-
-} PACKEDATTR dlightgrid3_t;
+};
+#pragma pack(pop)
 
 /***** VARIABLES **********/
 
@@ -124,7 +124,7 @@ void QLIT_BuildQ3Lighting(int lump, int max_size);
 
 void QLIT_LightAllFaces();
 
-#endif /* __QUAKE_LIGHTING_H__ */
+#endif
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

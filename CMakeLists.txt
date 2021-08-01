@@ -47,6 +47,7 @@ cpmaddpackage(
 
 add_executable(
   obsidian
+  cpp.hint
   source_files/gui/csg_bsp.cc
   source_files/gui/csg_clip.cc
   source_files/gui/csg_doom.cc
