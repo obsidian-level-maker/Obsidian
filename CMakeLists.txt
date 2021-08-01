@@ -24,16 +24,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-O2 -Wall")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if(WIN32)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHa")
   set(CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
 endif()
 
-set(CMAKE_CXX_CLANG_TIDY clang-tidy)
-file(GLOB ALL_SOURCES "source_files/gui/*.cc" "source_files/gui/*.hh")
-add_custom_target(
-  clang-tidy COMMAND "${CMAKE_CXX_CLANG_TIDY}" -p "${CMAKE_BINARY_DIR}"
-                     ${ALL_SOURCES}
-)
+if(false)
+  set(CMAKE_CXX_CLANG_TIDY clang-tidy)
+  file(GLOB ALL_SOURCES "source_files/gui/*.cc" "source_files/gui/*.hh")
+  add_custom_target(
+    clang-tidy COMMAND "${CMAKE_CXX_CLANG_TIDY}" -p "${CMAKE_BINARY_DIR}"
+                       ${ALL_SOURCES}
+  )
+endif()
 
 cpmaddpackage(
   NAME

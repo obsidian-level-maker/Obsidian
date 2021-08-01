@@ -52,7 +52,7 @@ extern int ef_thing_mode;
 
 static std::string level_name;
 
-int sub_format;
+int Doom::sub_format;
 
 int dm_offset_map;
 

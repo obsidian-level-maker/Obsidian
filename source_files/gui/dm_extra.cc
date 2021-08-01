@@ -76,8 +76,9 @@ static void EndOfPost(qLump_c *lump) {
     lump->Append(&datum, 1);
 }
 
-qLump_c *DM_CreatePatch(int new_W, int new_H, int ofs_X, int ofs_Y,
-                        const byte *pixels, int W, int H, int trans_p = -1) {
+namespace Doom {
+qLump_c *CreatePatch(int new_W, int new_H, int ofs_X, int ofs_Y,
+                     const byte *pixels, int W, int H, int trans_p = -1) {
     qLump_c *lump = new qLump_c();
 
     int x, y;
@@ -133,7 +134,7 @@ qLump_c *DM_CreatePatch(int new_W, int new_H, int ofs_X, int ofs_Y,
 
 #undef CUR_PIXEL
 
-qLump_c *DM_CreateFlat(int new_W, int new_H, const byte *pixels, int W, int H) {
+qLump_c *CreateFlat(int new_W, int new_H, const byte *pixels, int W, int H) {
     qLump_c *lump = new qLump_c();
 
     // create a skewed but working flat when original is 128x32
@@ -161,6 +162,7 @@ qLump_c *DM_CreateFlat(int new_W, int new_H, const byte *pixels, int W, int H) {
 
     return lump;
 }
+}  // namespace Doom
 
 static byte *Flat_Realign(const byte *pixels, int W, int H, int dx = 32,
                           int dy = 32) {
@@ -178,7 +180,8 @@ static byte *Flat_Realign(const byte *pixels, int W, int H, int dx = 32,
     return new_pix;
 }
 
-int DM_wad_logo_gfx(lua_State *L) {
+namespace Doom {
+int wad_logo_gfx(lua_State *L) {
     // LUA: wad_logo_gfx(lump, kind, image, W, H, colmap)
 
     const char *patch = luaL_checkstring(L, 1);
@@ -258,14 +261,14 @@ int DM_wad_logo_gfx(lua_State *L) {
     // splosh it into the wad
     if (is_flat) {
         qLump_c *lump =
-            DM_CreateFlat(new_W, new_H, pixels, logo->width, logo->height);
+            CreateFlat(new_W, new_H, pixels, logo->width, logo->height);
 
-        DM_AddSectionLump('F', patch, lump);
+        AddSectionLump('F', patch, lump);
     } else {
-        qLump_c *lump = DM_CreatePatch(new_W, new_H, 0, 0, pixels, logo->width,
-                                       logo->height);
+        qLump_c *lump =
+            CreatePatch(new_W, new_H, 0, 0, pixels, logo->width, logo->height);
 
-        DM_AddSectionLump('P', patch, lump);
+        AddSectionLump('P', patch, lump);
     }
 
     delete[] pixels;
@@ -275,7 +278,7 @@ int DM_wad_logo_gfx(lua_State *L) {
 
 //------------------------------------------------------------------------
 
-int DM_fsky_create(lua_State *L) {
+int fsky_create(lua_State *L) {
     // LUA: fsky_create(width, height, bg_col)
 
     int W = luaL_checkinteger(L, 1);
@@ -308,7 +311,7 @@ int DM_fsky_create(lua_State *L) {
     return 0;
 }
 
-int DM_fsky_write(lua_State *L) {
+int fsky_write(lua_State *L) {
     // LUA: fsky_write(patch)
 
     const char *patch = luaL_checkstring(L, 1);
@@ -316,14 +319,14 @@ int DM_fsky_write(lua_State *L) {
     SYS_ASSERT(sky_pixels);
 
     qLump_c *lump =
-        DM_CreatePatch(sky_final_W, sky_H, 0, 0, sky_pixels, sky_W, sky_H);
+        CreatePatch(sky_final_W, sky_H, 0, 0, sky_pixels, sky_W, sky_H);
 
-    DM_AddSectionLump('P', patch, lump);
+    AddSectionLump('P', patch, lump);
 
     return 0;
 }
 
-int DM_fsky_solid_box(lua_State *L) {
+int fsky_solid_box(lua_State *L) {
     // LUA: fsky_solid_box(x, y, w, h, col)
 
     int x1 = luaL_checkinteger(L, 1);
@@ -351,7 +354,7 @@ int DM_fsky_solid_box(lua_State *L) {
     return 0;
 }
 
-int DM_fsky_add_stars(lua_State *L) {
+int fsky_add_stars(lua_State *L) {
     // LUA: fsky_add_stars { seed=X, colmap=X, power=X, thresh=X }
 
     if (lua_type(L, 1) != LUA_TTABLE) {
@@ -405,7 +408,7 @@ int DM_fsky_add_stars(lua_State *L) {
     return 0;
 }
 
-int DM_fsky_add_clouds(lua_State *L) {
+int fsky_add_clouds(lua_State *L) {
     // LUA: fsky_add_clouds { seed=X, colmap=X, power=X, thresh=X,
     //                        fracdim=X, squish=X }
 
@@ -482,7 +485,7 @@ int DM_fsky_add_clouds(lua_State *L) {
     return 0;
 }
 
-int DM_fsky_add_hills(lua_State *L) {
+int fsky_add_hills(lua_State *L) {
     // LUA: fsky_add_hills { seed=X, colmap=X, power=X, fracdim=X,
     //                       min_h=X, max_h=X }
 
@@ -555,6 +558,7 @@ int DM_fsky_add_hills(lua_State *L) {
 
     return 0;
 }
+}  // namespace Doom
 
 //------------------------------------------------------------------------
 
@@ -683,15 +687,16 @@ static void CreateNamePatch(const char *patch, const char *text,
                       font_h, map, thresh);
     }
 
-    qLump_c *lump = DM_CreatePatch(W, H, 0, 0, pixels, W, H, 255);
+    qLump_c *lump = Doom::CreatePatch(W, H, 0, 0, pixels, W, H, 255);
 
-    DM_WriteLump(patch, lump);
+    Doom::WriteLump(patch, lump);
 
     delete lump;
     delete[] pixels;
 }
 
-int DM_wad_name_gfx(lua_State *L) {
+namespace Doom {
+int wad_name_gfx(lua_State *L) {
     // LUA: wad_name_gfx(patch, text, colmap)
 
     const char *patch = luaL_checkstring(L, 1);
@@ -708,7 +713,7 @@ int DM_wad_name_gfx(lua_State *L) {
     return 0;
 }
 
-int DM_wad_add_text_lump(lua_State *L) {
+int wad_add_text_lump(lua_State *L) {
     // LUA: wad_add_text_lump(lump, strings)
     //
     // The 'strings' parameter is a table.
@@ -746,13 +751,13 @@ int DM_wad_add_text_lump(lua_State *L) {
         lua_pop(L, 1);
     }
 
-    DM_WriteLump(name, lump);
+    WriteLump(name, lump);
     delete lump;
 
     return 0;
 }
 
-int DM_wad_add_binary_lump(lua_State *L) {
+int wad_add_binary_lump(lua_State *L) {
     // LUA: wad_add_binary_lump(lump, bytes)
     //
     // The 'bytes' parameter is a table, which can contain numbers, strings,
@@ -806,11 +811,12 @@ int DM_wad_add_binary_lump(lua_State *L) {
         lua_pop(L, 1);
     }
 
-    DM_WriteLump(name, lump);
+    WriteLump(name, lump);
     delete lump;
 
     return 0;
 }
+}  // namespace Doom
 
 static void TransferFILEtoWAD(PHYSFS_File *fp, const char *dest_lump) {
     WAD_NewLump(dest_lump);
@@ -904,7 +910,8 @@ static bool IsLevelLump(const char *name) {
     return false;
 }
 
-int DM_wad_insert_file(lua_State *L) {
+namespace Doom {
+int wad_insert_file(lua_State *L) {
     // LUA: wad_insert_file(filename, lumpname)
 
     const char *filename = luaL_checkstring(L, 1);
@@ -923,7 +930,7 @@ int DM_wad_insert_file(lua_State *L) {
     return 0;
 }
 
-int DM_wad_transfer_lump(lua_State *L) {
+int wad_transfer_lump(lua_State *L) {
     // LUA: wad_transfer_lump(wad_file, src_lump, dest_lump)
     //
     // Open an existing wad file and copy the lump into our wad.
@@ -957,7 +964,7 @@ int DM_wad_transfer_lump(lua_State *L) {
     return 0;
 }
 
-int DM_wad_transfer_map(lua_State *L) {
+int wad_transfer_map(lua_State *L) {
     // LUA: wad_transfer_map(wad_file, src_map, dest_map)
     //
     // Open an existing wad file and copy the map into our wad.
@@ -1006,6 +1013,7 @@ int DM_wad_transfer_map(lua_State *L) {
 
     return 0;
 }
+}  // namespace Doom
 
 static void DoMergeSection(char ch, const char *start1, const char *start2,
                            const char *end1, const char *end2) {
@@ -1039,11 +1047,12 @@ static void DoMergeSection(char ch, const char *start1, const char *start2,
             continue;
         }
 
-        DM_AddSectionLump(ch, WAD_EntryName(i), DoLoadLump(i));
+        Doom::AddSectionLump(ch, WAD_EntryName(i), DoLoadLump(i));
     }
 }
 
-int DM_wad_merge_sections(lua_State *L) {
+namespace Doom {
+int wad_merge_sections(lua_State *L) {
     // LUA: wad_merge_sections(file_name)
     //
     // Open an existing wad file and merge the patches, sprites, flats
@@ -1075,20 +1084,12 @@ int DM_wad_merge_sections(lua_State *L) {
 
     return 0;
 }
+}  // namespace Doom
 
-#define DIRTY_CHAR(ch) ((ch) == 0)
+constexpr bool DIRTY_CHAR(char c) { return c == '\0'; }
 
 void G_PushCleanString(lua_State *L, const char *buf, int len) {
-    bool dirty = false;
-
-    for (int i = 0; i < len; i++) {
-        if (DIRTY_CHAR(buf[i])) {
-            dirty = true;
-            break;
-        }
-    }
-
-    if (!dirty) {
+    if (!std::any_of(buf, buf + len, DIRTY_CHAR)) {
         lua_pushlstring(L, buf, len);
         return;
     }
@@ -1096,22 +1097,17 @@ void G_PushCleanString(lua_State *L, const char *buf, int len) {
     // this is quite sub-optimal, since we assume dirty strings are rare
     // (i.e. the usual case is plain text files).
 
-    const char *src = buf;
-    const char *s_end = src + len;
-
     std::string dest;
     dest.reserve(len);
 
-    for (; src < s_end; src++) {
-        if (!DIRTY_CHAR(*src)) {
-            dest.push_back(*src);
-        }
-    }
+    std::copy_if(buf, buf + len, std::back_inserter(dest),
+                 [](const char c) { return !DIRTY_CHAR(c); });
 
     lua_pushstring(L, dest.c_str());
 }
 
-int DM_wad_read_text_lump(lua_State *L) {
+namespace Doom {
+int wad_read_text_lump(lua_State *L) {
     // LUA: wad_read_text_lump(file_name, lump_name) --> table
     //
     // Open the wad file and find the given lump.  If it exists, it is assumed
@@ -1178,6 +1174,7 @@ int DM_wad_read_text_lump(lua_State *L) {
 
     return 1;
 }
+}  // namespace Doom
 
 //------------------------------------------------------------------------
 
@@ -1335,7 +1332,8 @@ static struct {
 static tga_image_c *title_last_tga;
 static std::string title_last_filename;
 
-int DM_title_create(lua_State *L) {
+namespace Doom {
+int title_create(lua_State *L) {
     // LUA: title_create(width, height, bg)
 
     int W = luaL_checkinteger(L, 1);
@@ -1372,7 +1370,7 @@ int DM_title_create(lua_State *L) {
     return 0;
 }
 
-int DM_title_free(lua_State *L) {
+int title_free(lua_State *L) {
     // LUA: title_free()
 
     if (title_pix) {
@@ -1389,6 +1387,7 @@ int DM_title_free(lua_State *L) {
 
     return 0;
 }
+}  // namespace Doom
 
 static bool TitleCacheImage(const char *filename) {
     // keep the last image cached in memory
@@ -1489,8 +1488,8 @@ static qLump_c *TitleCreatePatch() {
         }
     }
 
-    qLump_c *lump =
-        DM_CreatePatch(title_W, title_H, 0, 0, conv_pixels, title_W, title_H);
+    qLump_c *lump = Doom::CreatePatch(title_W, title_H, 0, 0, conv_pixels,
+                                      title_W, title_H);
 
     delete[] conv_pixels;
 
@@ -1519,7 +1518,8 @@ static qLump_c *TitleCreateRaw() {
     return lump;
 }
 
-int DM_title_write(lua_State *L) {
+namespace Doom {
+int title_write(lua_State *L) {
     // LUA: title_write(lumpname [, format])
 
     const char *lumpname = luaL_checkstring(L, 1);
@@ -1537,14 +1537,14 @@ int DM_title_write(lua_State *L) {
         lump = TitleCreatePatch();
     }
 
-    DM_WriteLump(lumpname, lump);
+    WriteLump(lumpname, lump);
 
     delete lump;
 
     return 0;
 }
 
-int DM_title_set_palette(lua_State *L) {
+int title_set_palette(lua_State *L) {
     // LUA: title_set_palette(pal_table)
 
     int stack_idx = 1;
@@ -1579,6 +1579,7 @@ int DM_title_set_palette(lua_State *L) {
 
     return 0;
 }
+}  // namespace Doom
 
 static void TitleParsePen(const char *what) {
     if (strcmp(what, "circle") == 0) {
@@ -1620,7 +1621,8 @@ static void TitleParseTexture(lua_State *L, const char *filename) {
     title_drawctx.render_mode = REND_Textured;
 }
 
-int DM_title_property(lua_State *L) {
+namespace Doom {
+int title_property(lua_State *L) {
     // LUA: title_property(name, value)
 
     const char *propname = luaL_checkstring(L, 1);
@@ -1659,6 +1661,7 @@ int DM_title_property(lua_State *L) {
 
     return 0;
 }
+}  // namespace Doom
 
 static inline rgb_color_t CalcAlphaBlend(rgb_color_t C1, rgb_color_t C2,
                                          int alpha) {
@@ -2098,7 +2101,8 @@ static void TDraw_Image(int x, int y, tga_image_c *img) {
     }
 }
 
-int DM_title_draw_rect(lua_State *L) {
+namespace Doom {
+int title_draw_rect(lua_State *L) {
     // LUA: title_draw_rect(x, y, w, h)
 
     int x = luaL_checkinteger(L, 1);
@@ -2112,7 +2116,7 @@ int DM_title_draw_rect(lua_State *L) {
     return 0;
 }
 
-int DM_title_draw_disc(lua_State *L) {
+int title_draw_disc(lua_State *L) {
     // LUA: title_draw_disc(x, y, w, h)
 
     int x = luaL_checkinteger(L, 1);
@@ -2126,7 +2130,7 @@ int DM_title_draw_disc(lua_State *L) {
     return 0;
 }
 
-int DM_title_draw_line(lua_State *L) {
+int title_draw_line(lua_State *L) {
     // LUA: title_draw_line(x1, y1, x2, y2)
 
     int x1 = luaL_checkinteger(L, 1);
@@ -2137,7 +2141,7 @@ int DM_title_draw_line(lua_State *L) {
     return 0;
 }
 
-int DM_title_load_image(lua_State *L) {
+int title_load_image(lua_State *L) {
     // LUA: title_load_image(x, y, filename)
 
     int x = luaL_checkinteger(L, 1);
@@ -2154,7 +2158,7 @@ int DM_title_load_image(lua_State *L) {
     return 0;
 }
 
-int DM_title_draw_clouds(lua_State *L) {
+int title_draw_clouds(lua_State *L) {
     // LUA: title_draw_clouds(seed, hue1,hue2,hue3, thresh, power, fracdim)
 
     unsigned long long seed = luaL_checkinteger(L, 1);
@@ -2238,7 +2242,7 @@ int DM_title_draw_clouds(lua_State *L) {
     return 0;
 }
 
-int DM_title_draw_planet(lua_State *L) {
+int title_draw_planet(lua_State *L) {
     // LUA: title_draw_planet(x,y,r, seed, flags, hue1,hue2,hue3)
 
 #if 0
@@ -2362,6 +2366,7 @@ for (int kx = 0   ; kx < W ; kx++)
 
     return 0;
 }
+}  // namespace Doom
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab
