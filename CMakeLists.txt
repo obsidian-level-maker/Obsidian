@@ -23,13 +23,17 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-O2 -Wall")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-if (WIN32)
+if(WIN32)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
   set(CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
 endif()
-if(clang)
-  set(CMAKE_CXX_CLANG_TIDY clang-tidy)
-endif()
+
+set(CMAKE_CXX_CLANG_TIDY clang-tidy)
+file(GLOB ALL_SOURCES "source_files/gui/*.cc" "source_files/gui/*.hh")
+add_custom_target(
+  clang-tidy COMMAND "${CMAKE_CXX_CLANG_TIDY}" -p "${CMAKE_BINARY_DIR}"
+                     ${ALL_SOURCES}
+)
 
 cpmaddpackage(
   NAME
@@ -47,6 +51,7 @@ cpmaddpackage(
 
 add_executable(
   obsidian
+  cpp.hint
   source_files/gui/csg_bsp.cc
   source_files/gui/csg_clip.cc
   source_files/gui/csg_doom.cc
@@ -161,7 +166,8 @@ add_executable(
   source_files/gui/vis_occlude.h
   source_files/gui/zf_menu.cc
   source_files/gui/zf_menu.h
- "source_files/gui/defines.h")
+  "source_files/gui/defines.h"
+)
 
 target_include_directories(obsidian PRIVATE source_files/physfs_src)
 target_include_directories(obsidian PRIVATE source_files/ajpoly_src)
@@ -190,7 +196,7 @@ else()
   target_include_directories(obsidian PRIVATE source_files/fltk_src)
 endif()
 
-if (WIN32)
+if(WIN32)
   add_subdirectory(source_files/wingetopt_src)
 endif()
 
@@ -218,28 +224,28 @@ endif()
 add_dependencies(obsidian filename_formatter)
 
 if(UNIX)
-target_link_libraries(
-  obsidian
-  PRIVATE zlibstatic
-          obsidian_lua
-          obsidian_physfs
-          obsidian_acc
-          obsidian_ajpoly
-          obsidian_zdbsp
-          obsidian_slump
-          obsidian_whereami
-          fontconfig
-)
+  target_link_libraries(
+    obsidian
+    PRIVATE zlibstatic
+            obsidian_lua
+            obsidian_physfs
+            obsidian_acc
+            obsidian_ajpoly
+            obsidian_zdbsp
+            obsidian_slump
+            obsidian_whereami
+            fontconfig
+  )
 else()
-target_link_libraries(
-  obsidian
-  PRIVATE zlibstatic
-          obsidian_lua
-          obsidian_physfs
-          obsidian_acc
-          obsidian_ajpoly
-          obsidian_zdbsp
-          obsidian_slump
-          obsidian_whereami
-)
+  target_link_libraries(
+    obsidian
+    PRIVATE zlibstatic
+            obsidian_lua
+            obsidian_physfs
+            obsidian_acc
+            obsidian_ajpoly
+            obsidian_zdbsp
+            obsidian_slump
+            obsidian_whereami
+  )
 endif()

@@ -239,7 +239,7 @@ class doom_vertex_c {
     // keep track of a few (but not all) linedefs touching this vertex.
     // this is used to detect colinear lines which can be merged. and
     // also for horizontal texture alignment.
-    doom_linedef_c *lines[4];
+    std::array<doom_linedef_c *, 4> lines;
 
     // was the vertex created by corner rounding code, and it split an
     // existing linedef in half?

@@ -1018,7 +1018,7 @@ void doom_game_interface_c::EndLevel() {
 #endif
 
     DM_EndLevel(level_name);
-    
+
     level_name = "";
 }
 

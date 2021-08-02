@@ -4,8 +4,4 @@ project(
   VERSION 0.1.0
 )
 
-add_library(
-  obsidian_whereami
-  whereami.h
-  whereami.c
-)
+add_library(obsidian_whereami whereami.h whereami.c)

@@ -609,7 +609,6 @@ UI_ModuleDropDown::~UI_ModuleDropDown() {}
 // Custom draw function to use the checkmark style regardless of box type and
 // respect custom colors
 void UI_ModuleDropDown::draw() {
-    
     int W = labelsize();
     int bx = Fl::box_dx(box());  // box frame width
     int dx = bx + 2;             // relative position of check mark etc.
@@ -617,16 +616,15 @@ void UI_ModuleDropDown::draw() {
     int lx = 0;                  // relative label position (STR #3237)
 
     draw_box(FL_FLAT_BOX, x() + dx, y() + dy, W, W, WINDOW_BG);
-	lx = dx + W + 2;
-	copy_label("  ");
-	redraw();
-	if (value()) {
-		copy_label("@-2line");
-	} else {
-		copy_label("@-2+");
-	}
-	draw_label(x() + lx, y(), w() - lx - bx, h());
-
+    lx = dx + W + 2;
+    copy_label("  ");
+    redraw();
+    if (value()) {
+        copy_label("@-2line");
+    } else {
+        copy_label("@-2+");
+    }
+    draw_label(x() + lx, y(), w() - lx - bx, h());
 }
 
 //----------------------------------------------------------------

@@ -18,14 +18,13 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_LIB_GRP_H__
-#define __OBLIGE_LIB_GRP_H__
+#ifndef LIB_GRP_H_
+#define LIB_GRP_H_
 
 /* GRP reading */
 
 #include <array>
 #include <string>
-#include "sys_macro.h"
 #include "sys_type.h"
 
 bool GRP_OpenRead(const char *filename);
@@ -51,22 +50,24 @@ void GRP_FinishLump(void);
 
 /* ----- GRP structure ---------------------- */
 
-#define GRP_MAGIC_LEN 12
-#define GRP_NAME_LEN 12
+constexpr unsigned int GRP_MAGIC_LEN = 12;
+constexpr unsigned int GRP_NAME_LEN = 12;
 
-typedef struct {
+#pragma pack(push, 1)
+struct raw_grp_header_t {
     char magic[GRP_MAGIC_LEN];
     u32_t num_lumps;
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_grp_header_t;
-
-typedef struct {
+#pragma pack(push, 1)
+struct raw_grp_lump_t {
     std::array<char, GRP_NAME_LEN> name;
     u32_t length;
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_grp_lump_t;
-
-#endif /* __OBLIGE_LIB_GRP_H__ */
+#endif
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

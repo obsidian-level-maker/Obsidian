@@ -18,43 +18,42 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_LIB_WAD_H__
-#define __OBLIGE_LIB_WAD_H__
+#ifndef LIB_WAD_H_
+#define LIB_WAD_H_
 
 /* WAD reading */
 
 #include <filesystem>
 #include <string_view>
-#include "sys_macro.h"
 #include "sys_type.h"
 
 bool WAD_OpenRead(std::filesystem::path filename);
-void WAD_CloseRead(void);
+void WAD_CloseRead();
 
-int WAD_NumEntries(void);
+int WAD_NumEntries();
 int WAD_FindEntry(const char *name);
 int WAD_EntryLen(int entry);
 const char *WAD_EntryName(int entry);
 
 bool WAD_ReadData(int entry, int offset, int length, void *buffer);
 
-void WAD_ListEntries(void);
+void WAD_ListEntries();
 
 /* WAD writing */
 
 bool WAD_OpenWrite(const std::filesystem::path &filename);
-void WAD_CloseWrite(void);
+void WAD_CloseWrite();
 
 void WAD_NewLump(std::string_view name);
 bool WAD_AppendData(const void *data, int length);
-void WAD_FinishLump(void);
+void WAD_FinishLump();
 
 /* WAD2 reading */
 
 bool WAD2_OpenRead(const char *filename);
-void WAD2_CloseRead(void);
+void WAD2_CloseRead();
 
-int WAD2_NumEntries(void);
+int WAD2_NumEntries();
 int WAD2_FindEntry(const char *name);
 int WAD2_EntryLen(int entry);
 int WAD2_EntryType(int entry);
@@ -62,48 +61,52 @@ const char *WAD2_EntryName(int entry);
 
 bool WAD2_ReadData(int entry, int offset, int length, void *buffer);
 
-void WAD2_ListEntries(void);
+void WAD2_ListEntries();
 
 /* WAD2 writing */
 
 bool WAD2_OpenWrite(const char *filename);
-void WAD2_CloseWrite(void);
+void WAD2_CloseWrite();
 
 void WAD2_NewLump(const char *name, int type = 0);
 bool WAD2_AppendData(const void *data, int length);
-void WAD2_FinishLump(void);
+void WAD2_FinishLump();
 
 /* ----- WAD structure (Doom) ---------------------- */
 
-typedef struct {
+#pragma pack(push, 1)
+struct raw_wad_header_t {
     char magic[4];
 
     u32_t num_lumps;
     u32_t dir_start;
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_wad_header_t;
-
-typedef struct {
+#pragma pack(push, 1)
+struct raw_wad_lump_t {
     u32_t start;
     u32_t length;
 
     char name[8];
-
-} PACKEDATTR raw_wad_lump_t;
+};
+#pragma pack(pop)
 
 /* ----- WAD2 structures (Quake) ---------------------- */
 
-typedef struct {
+#pragma pack(push, 1)
+struct raw_wad2_header_t {
     char magic[4];
 
     u32_t num_lumps;
     u32_t dir_start;
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_wad2_header_t;
+constexpr const char *WAD2_MAGIC = "WAD2";
 
-#define WAD2_MAGIC "WAD2"
-
-typedef struct {
+#pragma pack(push, 1)
+struct raw_wad2_lump_t {
     u32_t start;
     u32_t length;  // compressed
     u32_t u_len;   // uncompressed
@@ -113,26 +116,29 @@ typedef struct {
     u8_t _pad[2];
 
     char name[16];  // must be null terminated
-
-} PACKEDATTR raw_wad2_lump_t;
+};
+#pragma pack(pop)
 
 // compression method (from Quake1 source)
-#define CMP_NONE 0
-#define CMP_LZSS 1
+enum {
+    CMP_NONE,
+    CMP_LZSS,
+};
 
 // lump types (from Quake1 source)
-#define TYP_NONE 0
-#define TYP_LABEL 1
-#define TYP_PALETTE 64
-#define TYP_QTEX 65
-#define TYP_QPIC 66
-#define TYP_SOUND 67
-#define TYP_MIPTEX 68
+enum {
+    TYP_NONE,
+    TYP_LABEL,
+    TYP_PALETTE = 64,
+    TYP_QTEX,
+    TYP_QPIC,
+    TYP_SOUND,
+    TYP_MIPTEX,
+    // this value is only returned from WAD2_EntryType()
+    TYP_COMPRESSED = 256,
+};
 
-// this value is only returned from WAD2_EntryType()
-#define TYP_COMPRESSED 256
-
-#endif /* __OBLIGE_LIB_WAD_H__ */
+#endif
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

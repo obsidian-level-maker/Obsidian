@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 
+#include <array>
 #include "csg_local.h"
 #include "csg_main.h"
 #include "csg_quake.h"
@@ -39,23 +40,23 @@ extern qLump_c *q1_clip;
 
 extern int q1_total_clip;
 
-static double Q1_hull_sizes[2][3] = {
-    {16, 24, 32},  // player
-    {32, 24, 64},  // big monsters
+static std::array Q1_hull_sizes{
+    std::array<double, 3>{16, 24, 32},  // player
+    std::array<double, 3>{32, 24, 64},  // big monsters
 };
 
-static double H2_hull_sizes[5][3] = {
-    {16, 24, 32},  // player
-    {24, 20, 20},  // scorpion
-    {16, 12, 16},  // crouch
-    {8, 8, 8},     // pentacles
-    {28, 40, 40},  // yak
+static std::array H2_hull_sizes{
+    std::array<double, 3>{16, 24, 32},  // player
+    std::array<double, 3>{24, 20, 20},  // scorpion
+    std::array<double, 3>{16, 12, 16},  // crouch
+    std::array<double, 3>{8, 8, 8},     // pentacles
+    std::array<double, 3>{28, 40, 40},  // yak
 };
 
-static double HL_hull_sizes[3][3] = {
-    {16, 36, 36},  // player
-    {32, 32, 32},  // fat monsters
-    {16, 18, 18},  // crouching
+static std::array HL_hull_sizes{
+    std::array<double, 3>{16, 36, 36},  // player
+    std::array<double, 3>{32, 32, 32},  // fat monsters
+    std::array<double, 3>{16, 18, 18},  // crouching
 };
 
 class clip_side_c {
@@ -1079,7 +1080,7 @@ void CLIP_END()
 }
 #endif
 
-static void Q1_ClipWorld(int hull, double *pads) {
+static void Q1_ClipWorld(int hull, const double *pads) {
     qk_world_model->nodes[hull] = q1_total_clip;
 
     SaveBrushes();
@@ -1173,22 +1174,22 @@ void Q1_ClippingHull(int hull) {
 
     ///???  FreeAll();
 
-    double *pads;
+    const double *pads;
 
     if (qk_sub_format == SUBFMT_Hexen2) {
-        pads = H2_hull_sizes[hull - 1];
+        pads = H2_hull_sizes[hull - 1].data();
     } else if (qk_sub_format == SUBFMT_HalfLife) {
-        pads = HL_hull_sizes[hull - 1];
+        pads = HL_hull_sizes[hull - 1].data();
     } else {
-        pads = Q1_hull_sizes[hull - 1];
+        pads = Q1_hull_sizes[hull - 1].data();
     }
 
     // first clip the world, then the map-models
 
     Q1_ClipWorld(hull, pads);
 
-    for (unsigned int m = 0; m < qk_all_mapmodels.size(); m++) {
-        Q1_ClipMapModel(qk_all_mapmodels[m], hull, pads[0], pads[1], pads[2]);
+    for (auto *qk_all_mapmodel : qk_all_mapmodels) {
+        Q1_ClipMapModel(qk_all_mapmodel, hull, pads[0], pads[1], pads[2]);
     }
 
     if (q1_total_clip >= MAX_MAP_CLIPNODES) {

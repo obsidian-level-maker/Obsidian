@@ -18,8 +18,8 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_DOOM_OUT_H__
-#define __OBLIGE_DOOM_OUT_H__
+#ifndef G_DOOM_H_
+#define G_DOOM_H_
 
 #include <filesystem>
 #include <array>
@@ -77,12 +77,14 @@ int DM_NumThings();
 
 /* ----- Level structures ---------------------- */
 
-typedef struct {
+#pragma pack(push, 1)
+struct raw_vertex_t {
     s16_t x, y;
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_vertex_t;
-
-typedef struct {
+#pragma pack(push, 1)
+struct raw_linedef_t {
     u16_t start;     // from this vertex...
     u16_t end;       // ... to this vertex
     u16_t flags;     // linedef flags (impassible, etc)
@@ -90,19 +92,20 @@ typedef struct {
     u16_t tag;       // this linedef activates the sector with same tag
     u16_t sidedef1;  // right sidedef
     u16_t sidedef2;  // left sidedef (only if this line adjoins 2 sectors)
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_linedef_t;
-
-typedef enum {
+enum doom_lineflag_e {
     MLF_BlockAll = 0x0001,
     MLF_TwoSided = 0x0004,
     MLF_UpperUnpeg = 0x0008,
     MLF_LowerUnpeg = 0x0010,
     MLF_SoundBlock = 0x0040,
     MLF_DontDraw = 0x0080,
-} doom_lineflag_e;
+};
 
-typedef struct {
+#pragma pack(push, 1)
+struct raw_hexen_linedef_t {
     u16_t start;               // from this vertex...
     u16_t end;                 // ... to this vertex
     u16_t flags;               // linedef flags (impassible, etc)
@@ -110,10 +113,11 @@ typedef struct {
     std::array<u8_t, 5> args;  // special arguments
     u16_t sidedef1;            // right sidedef
     u16_t sidedef2;            // left sidedef
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_hexen_linedef_t;
-
-typedef struct {
+#pragma pack(push, 1)
+struct raw_sidedef_t {
     s16_t x_offset;  // X offset for texture
     s16_t y_offset;  // Y offset for texture
 
@@ -122,10 +126,11 @@ typedef struct {
     std::array<char, 8> mid_tex;    // texture name for the regular part
 
     u16_t sector;  // adjacent sector
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_sidedef_t;
-
-typedef struct {
+#pragma pack(push, 1)
+struct raw_sector_t {
     s16_t floor_h;  // floor height
     s16_t ceil_h;   // ceiling height
 
@@ -135,18 +140,19 @@ typedef struct {
     u16_t light;    // light level (0-255)
     u16_t special;  // special behaviour (0 = normal, 9 = secret, ...)
     s16_t tag;      // sector activated by a linedef with same tag
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_sector_t;
-
-typedef struct {
+#pragma pack(push, 1)
+struct raw_thing_t {
     s16_t x, y;     // position of thing
     s16_t angle;    // angle thing faces (degrees)
     u16_t type;     // type of thing
     u16_t options;  // when appears, deaf, etc..
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_thing_t;
-
-typedef enum {
+enum doom_thingflag_e {
     MTF_Easy = 1,
     MTF_Medium = 2,
     MTF_Hard = 4,
@@ -159,12 +165,13 @@ typedef enum {
     MTF_Friend = 128,    // MBF
     MTF_Reserved = 256,  // BOOM
     MTF_Dormant = 512,   // Eternity
-} doom_thingflag_e;
+};
 
-#define MTF_EDGE_EXFLOOR_MASK 0x3C00
-#define MTF_EDGE_EXFLOOR_SHIFT 10
+constexpr unsigned int MTF_EDGE_EXFLOOR_MASK = 0x3C00;
+constexpr unsigned int MTF_EDGE_EXFLOOR_SHIFT = 10;
 
-typedef struct {
+#pragma pack(push, 1)
+struct raw_hexen_thing_t {
     s16_t tid;      // thing tag id (for scripts/specials)
     s16_t x, y;     // position
     s16_t height;   // start height above floor
@@ -174,53 +181,58 @@ typedef struct {
 
     u8_t special;              // special type
     std::array<u8_t, 5> args;  // special arguments
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_hexen_thing_t;
-
-typedef struct {
+#pragma pack(push, 1)
+struct raw_behavior_header_t {
     std::array<char, 4> marker;  // 'ACS' 0
 
     u32_t offset;
 
     u32_t func_num;
     u32_t str_num;
-
-} PACKEDATTR raw_behavior_header_t;
+};
+#pragma pack(pop)
 
 /* ----- Other structures ---------------------- */
 
-typedef struct {
+#pragma pack(push, 1)
+struct raw_patch_header_t {
     u16_t width;
     u16_t height;
 
     s16_t x_offset;
     s16_t y_offset;
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_patch_header_t;
-
-typedef struct raw_gl_vertex_s {
+#pragma pack(push, 1)
+struct raw_gl_vertex_t {
     s32_t x, y;
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_gl_vertex_t;
-
-typedef struct raw_gl_seg_s {
+#pragma pack(push, 1)
+struct raw_gl_seg_t {
     u16_t start;    // from this vertex...
     u16_t end;      // ... to this vertex
     u16_t linedef;  // linedef that this seg goes along, or -1
     u16_t side;     // 0 if on right of linedef, 1 if on left
     u16_t partner;  // partner seg number, or -1
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_gl_seg_t;
+constexpr unsigned int IS_GL_VERT = 0x8000;
 
-#define IS_GL_VERT 0x8000
-
-typedef struct raw_subsec_s {
+#pragma pack(push, 1)
+struct raw_subsec_t {
     u16_t num;    // number of Segs in this Sub-Sector
     u16_t first;  // first Seg
+};
+#pragma pack(pop)
 
-} PACKEDATTR raw_subsec_t;
-
-#endif /* __OBLIGE_DOOM_OUT_H__ */
+#endif  // G_DOOM_H_
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

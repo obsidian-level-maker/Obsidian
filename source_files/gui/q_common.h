@@ -18,25 +18,24 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_BSPOUT_H__
-#define __OBLIGE_BSPOUT_H__
+#ifndef Q_COMMON_H_
+#define Q_COMMON_H_
 
 #include <string>
 #include <vector>
 
-#include "sys_macro.h"
 #include "sys_type.h"
 
 // perhaps this should be elsewhere
-#define Q_EPSILON 0.02
+constexpr double Q_EPSILON = 0.02;
 
 class quake_plane_c;
 class quake_vertex_c;
 
-typedef enum {
+enum quake_subformat_e {
     SUBFMT_Hexen2 = 1,
     SUBFMT_HalfLife = 2,
-} quake_subformat_e;
+};
 
 /***** CLASSES ****************/
 
@@ -113,84 +112,95 @@ void QCOM_Fix_T_Junctions();
 
 /* ----- BSP lump directory ------------------------- */
 
-#define Q1_HEADER_LUMPS 15
-#define Q1_BSP_VERSION 29
+constexpr int Q1_HEADER_LUMPS = 15;
+constexpr int Q1_BSP_VERSION = 29;
 
-#define Q2_HEADER_LUMPS 19
-#define Q2_BSP_VERSION 38
-#define Q2_IDENT_MAGIC "IBSP"
+constexpr int Q2_HEADER_LUMPS = 19;
+constexpr int Q2_BSP_VERSION = 38;
+constexpr const char *Q2_IDENT_MAGIC = "IBSP";
 
-#define Q3_HEADER_LUMPS 17
-#define Q3_BSP_VERSION 46
-#define Q3_IDENT_MAGIC "IBSP"
+constexpr int Q3_HEADER_LUMPS = 17;
+constexpr int Q3_BSP_VERSION = 46;
+constexpr const char *Q3_IDENT_MAGIC = "IBSP";
 
-typedef struct {
+#pragma pack(push, 1)
+struct lump_t {
     u32_t start;
     u32_t length;
+};
+#pragma pack(pop)
 
-} PACKEDATTR lump_t;
-
-typedef struct {
+#pragma pack(push, 1)
+struct dheader_t {
     s32_t version;
     lump_t lumps[Q1_HEADER_LUMPS];
+};
+#pragma pack(pop)
 
-} PACKEDATTR dheader_t;
-
-typedef struct {
+#pragma pack(push, 1)
+struct dheader2_t {
     char ident[4];
     s32_t version;
 
     lump_t lumps[Q2_HEADER_LUMPS];
+};
+#pragma pack(pop)
 
-} PACKEDATTR dheader2_t;
-
-typedef struct {
+#pragma pack(push, 1)
+struct dheader3_t {
     char ident[4];
     s32_t version;
 
     lump_t lumps[Q3_HEADER_LUMPS];
+};
+#pragma pack(pop)
 
-} PACKEDATTR dheader3_t;
-
-typedef struct {
+#pragma pack(push, 1)
+struct dvertex_t {
     float x, y, z;
-
-} PACKEDATTR dvertex_t;
+};
+#pragma pack(pop)
 
 // note that edge 0 is never used, because negative edge nums are used for
 // counterclockwise use of the edge in a face
-typedef struct {
+#pragma pack(push, 1)
+struct dedge_t {
     u16_t v[2];  // vertex numbers
+};
+#pragma pack(pop)
 
-} PACKEDATTR dedge_t;
-
-typedef struct {
+#pragma pack(push, 1)
+struct dplane_t {
     float normal[3];
     float dist;
     s32_t type;  // PLANE_X - PLANE_ANYZ
-
-} PACKEDATTR dplane_t;
+};
+#pragma pack(pop)
 
 // Quake 3 format
-typedef struct {
+#pragma pack(push, 1)
+struct dplane3_t {
     float normal[3];
     float dist;
+};
+#pragma pack(pop)
 
-} PACKEDATTR dplane3_t;
+enum {
+    // 0-2 are axial planes
+    PLANE_X,
+    PLANE_Y,
+    PLANE_Z,
 
-// 0-2 are axial planes
-#define PLANE_X 0
-#define PLANE_Y 1
-#define PLANE_Z 2
+    // 3-5 are non-axial planes snapped to the nearest
+    PLANE_ANYX,
+    PLANE_ANYY,
+    PLANE_ANYZ,
+};
 
-// 3-5 are non-axial planes snapped to the nearest
-#define PLANE_ANYX 3
-#define PLANE_ANYY 4
-#define PLANE_ANYZ 5
+constexpr int NUM_STYLES = 4;
 
-#define NUM_STYLES 4
-
-typedef struct {
+#pragma pack(push, 1)
+struct dface_t {
     s16_t planenum;
     s16_t side;
 
@@ -202,8 +212,8 @@ typedef struct {
     u8_t styles[NUM_STYLES];
 
     s32_t lightofs;  // start of [numstyles*surfsize] samples
-
-} PACKEDATTR dface_t;
+};
+#pragma pack(pop)
 
 #endif /* __OBLIGE_BSPOUT_H__ */
 

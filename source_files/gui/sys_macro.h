@@ -18,46 +18,86 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __SYS_MACRO_H__
-#define __SYS_MACRO_H__
+#ifndef SYS_MACRO_H_
+#define SYS_MACRO_H_
 
 // basic macros
 
 #ifndef M_PI
-#define M_PI 3.14159265358979323846
+constexpr double M_PI = 3.14159265358979323846;
 #endif
 
 #ifndef MAX
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
+template <typename A, typename B,
+          typename = std::enable_if_t<std::is_convertible_v<B, A>>>
+constexpr auto MAX(A a, B b) {
+    if (a > b) {
+        return a;
+    }
+    return static_cast<A>(b);
+}
 #endif
 
 #ifndef MIN
-#define MIN(a, b) ((a) < (b) ? (a) : (b))
+template <typename A, typename B,
+          typename = std::enable_if_t<std::is_convertible_v<B, A>>>
+constexpr auto MIN(A a, B b) {
+    if (a < b) {
+        return a;
+    }
+    return static_cast<A>(b);
+}
 #endif
 
 #ifndef ABS
-#define ABS(a) ((a) < 0 ? -(a) : (a))
+template <typename T>
+constexpr T ABS(T a) {
+    if (a < 0) {
+        return -a;
+    }
+    return a;
+}
 #endif
 
 #ifndef SGN
-#define SGN(a) ((a) < 0 ? -1 : (a) > 0 ? +1 : 0)
+template <typename T>
+constexpr auto SGN(T x) {
+    if (x < 0) {
+        return -1;
+    }
+    if (x > 0) {
+        return 1;
+    }
+    return 0;
+}
 #endif
 
 #ifndef I_ROUND
-#define I_ROUND(x) ((int)(((x) < 0.0f) ? ((x)-0.5f) : ((x) + 0.5f)))
+template <typename T>
+constexpr int I_ROUND(T x) {
+    if (x < 0) {
+        return x - 0.5;
+    }
+    return x + 0.5;
+}
 #endif
 
 #ifndef CLAMP
-#define CLAMP(low, x, high) ((x) < (low) ? (low) : (x) > (high) ? (high) : (x))
+template <typename T, typename L, typename U,
+          typename = std::enable_if_t<std::conjunction_v<
+              std::is_convertible<L, T>, std::is_convertible<U, T>>>>
+constexpr T CLAMP(L low, T x, U high) {
+    if (x < low) {
+        return static_cast<T>(low);
+    }
+    if (x > high) {
+        return static_cast<T>(high);
+    }
+    return x;
+}
 #endif
 
-#ifdef __GNUC__
-#define PACKEDATTR __attribute__((packed))
-#else
-#define PACKEDATTR
-#endif
-
-#endif /* __SYS_MACRO_H__ */
+#endif  // SYS_MACRO_H_
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

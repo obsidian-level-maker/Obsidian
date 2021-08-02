@@ -10,7 +10,9 @@ set(CMAKE_RC_COMPILER /usr/bin/i686-w64-mingw32-windres)
 # -lgdi32 -lcomctl32 -lwsock32 -lsupc++") Above line works on Ubuntu; below line
 # works on OpenSUSE (my personal build platform), so switch between them as
 # needed - Dasho
-set(CMAKE_EXE_LINKER_FLAGS "-static -mwindows -Isource_files/zlib_src/libzlibstatic.a")
+set(CMAKE_EXE_LINKER_FLAGS
+    "-static -mwindows -Isource_files/zlib_src/libzlibstatic.a"
+)
 
 # here is where the target environment located
 set(CMAKE_FIND_ROOT_PATH /usr/i686-w64-mingw32)
