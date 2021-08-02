@@ -23,15 +23,18 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-O2 -Wall")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-if(WIN32)
+if(WIN32 AND NOT MSYS)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
   set(CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
+endif()
+if(MSYS)
+set(CMAKE_EXE_LINKER_FLAGS "-static -mwindows -Isource_files/zlib_src/libzlibstatic.a")
 endif()
 
 set(CMAKE_CXX_CLANG_TIDY clang-tidy)
 file(GLOB ALL_SOURCES "source_files/gui/*.cc" "source_files/gui/*.hh")
 add_custom_target(
-  clang-tidy COMMAND "${CMAKE_CXX_CLANG_TIDY}" -p "${CMAKE_BINARY_DIR}"
+  clang-tidy COMMAND "${CMAKE_CXX_CLANG_TIDY}" -p "${CMAKE_BINARY_DIR}  -fno-warnings-as-errors"
                      ${ALL_SOURCES}
 )
 
@@ -177,7 +180,7 @@ target_include_directories(obsidian PRIVATE source_files/slump_src)
 target_include_directories(obsidian PRIVATE source_files/whereami_src)
 target_include_directories(obsidian PRIVATE source_files/zlib_src)
 
-if(MINGW OR WIN32)
+if(MINGW OR WIN32 OR MSYS)
   target_compile_definitions(obsidian PRIVATE WIN32)
 else()
   target_compile_definitions(obsidian PRIVATE UNIX)
@@ -187,7 +190,7 @@ if(UNIX)
   find_package(FLTK 1.3)
 endif()
 
-if(FLTK_FOUND)
+if(FLTK_FOUND AND NOT MSYS)
   target_link_libraries(obsidian PRIVATE ${FLTK_LIBRARIES})
 else()
   # use vendored version
@@ -196,7 +199,7 @@ else()
   target_include_directories(obsidian PRIVATE source_files/fltk_src)
 endif()
 
-if(WIN32)
+if(WIN32 OR MSYS)
   add_subdirectory(source_files/wingetopt_src)
 endif()
 
