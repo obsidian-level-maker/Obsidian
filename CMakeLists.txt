@@ -34,7 +34,7 @@ endif()
 set(CMAKE_CXX_CLANG_TIDY clang-tidy)
 file(GLOB ALL_SOURCES "source_files/gui/*.cc" "source_files/gui/*.hh")
 add_custom_target(
-  clang-tidy COMMAND "${CMAKE_CXX_CLANG_TIDY}" -p "${CMAKE_BINARY_DIR}  -fno-warnings-as-errors"
+  clang-tidy COMMAND "${CMAKE_CXX_CLANG_TIDY}" -p "${CMAKE_BINARY_DIR}"
                      ${ALL_SOURCES}
 )
 
