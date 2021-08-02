@@ -113,9 +113,10 @@ class extrafloor_c {
     }
 };
 
-class doom_linedef_c;
+namespace Doom {
+class linedef_c;
 
-class doom_sector_c {
+class sector_c {
    public:
     int f_h;
     int c_h;
@@ -144,10 +145,10 @@ class doom_sector_c {
 
     std::vector<extrafloor_c *> exfloors;
 
-    std::vector<doom_sector_c *> ef_neighbors;
+    std::vector<sector_c *> ef_neighbors;
 
    public:
-    doom_sector_c()
+    sector_c()
         : f_h(0),
           c_h(0),
           f_tex(),
@@ -166,15 +167,13 @@ class doom_sector_c {
           exfloors(),
           ef_neighbors() {}
 
-    ~doom_sector_c() {}
-
     void MarkUnused() { unused = true; }
 
     bool isUnused() const { return unused; }
 
     void AddExtrafloor(extrafloor_c *EF) { exfloors.push_back(EF); }
 
-    bool SameExtraFloors(const doom_sector_c *other) const {
+    bool SameExtraFloors(const sector_c *other) const {
         if (exfloors.size() != other->exfloors.size()) {
             return false;
         }
@@ -193,7 +192,7 @@ class doom_sector_c {
         return true;
     }
 
-    bool MatchMost(const doom_sector_c *other) const {
+    bool MatchMost(const sector_c *other) const {
         return (f_h == other->f_h) && (c_h == other->c_h) &&
                (light == other->light) && (special == other->special) &&
                (tag == other->tag) && (sound_area == other->sound_area) &&
@@ -202,7 +201,7 @@ class doom_sector_c {
                (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0);
     }
 
-    bool MatchNoLight(const doom_sector_c *other) const {
+    bool MatchNoLight(const sector_c *other) const {
         return (mark == other->mark) && (f_h == other->f_h) &&
                (c_h == other->c_h) && (special == other->special) &&
                (tag == other->tag) &&
@@ -211,14 +210,14 @@ class doom_sector_c {
                (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0);
     }
 
-    bool Match(const doom_sector_c *other) const {
+    bool Match(const sector_c *other) const {
         // deliberately absent: misc_flags
 
         return (mark == other->mark) && MatchMost(other) &&
                SameExtraFloors(other);
     }
 
-    bool ShouldMerge(const doom_sector_c *other) const {
+    bool ShouldMerge(const sector_c *other) const {
         // special logic for secrets
         if (special == 9 && other->special == 9) {
             return (mark == other->mark) && (f_h == other->f_h);
@@ -230,7 +229,7 @@ class doom_sector_c {
     int Write();
 };
 
-class doom_vertex_c {
+class vertex_c {
    public:
     int x, y;
 
@@ -239,23 +238,20 @@ class doom_vertex_c {
     // keep track of a few (but not all) linedefs touching this vertex.
     // this is used to detect colinear lines which can be merged. and
     // also for horizontal texture alignment.
-    std::array<doom_linedef_c *, 4> lines;
+    std::array<linedef_c *, 4> lines;
 
     // was the vertex created by corner rounding code, and it split an
     // existing linedef in half?
     bool rounded_half;
 
    public:
-    doom_vertex_c() : x(0), y(0), index(-1), rounded_half(false) {
+    vertex_c() : x(0), y(0), index(-1), rounded_half(false) {
         lines[0] = lines[1] = lines[2] = lines[3] = NULL;
     }
 
-    doom_vertex_c(int _x, int _y)
-        : x(_x), y(_y), index(-1), rounded_half(false) {
+    vertex_c(int _x, int _y) : x(_x), y(_y), index(-1), rounded_half(false) {
         lines[0] = lines[1] = lines[2] = lines[3] = NULL;
     }
-
-    ~doom_vertex_c() {}
 
     int getNumLines() const {
         for (int i = 0; i < 4; i++) {
@@ -275,7 +271,7 @@ class doom_vertex_c {
         }
     }
 
-    int FindLine(const doom_linedef_c *L) const {
+    int FindLine(const linedef_c *L) const {
         for (int i = 0; i < 4; i++) {
             if (lines[i] == L) {
                 return i;
@@ -285,7 +281,7 @@ class doom_vertex_c {
         return -1;
     }
 
-    void AddLine(doom_linedef_c *L) {
+    void AddLine(linedef_c *L) {
         for (int i = 0; i < 4; i++) {
             if (!lines[i]) {
                 lines[i] = L;
@@ -294,7 +290,7 @@ class doom_vertex_c {
         }
     }
 
-    void RemoveLine(doom_linedef_c *L) {
+    void RemoveLine(linedef_c *L) {
         int i = FindLine(L);
 
         if (i < 0) {
@@ -308,7 +304,7 @@ class doom_vertex_c {
         lines[i] = NULL;
     }
 
-    void ReplaceLine(doom_linedef_c *old_L, doom_linedef_c *new_L) {
+    void ReplaceLine(linedef_c *old_L, linedef_c *new_L) {
         for (int i = 0; i < 4; i++) {
             if (lines[i] == old_L) {
                 lines[i] = new_L;
@@ -317,7 +313,7 @@ class doom_vertex_c {
         }
     }
 
-    doom_linedef_c *SecondLine(const doom_linedef_c *L) const {
+    linedef_c *SecondLine(const linedef_c *L) const {
         if (lines[2]) {  // three or more lines?
             return NULL;
         }
@@ -337,7 +333,7 @@ class doom_vertex_c {
     int Write();
 };
 
-class doom_sidedef_c {
+class sidedef_c {
    public:
     std::string lower;
     std::string mid;
@@ -346,12 +342,12 @@ class doom_sidedef_c {
     int x_offset;
     int y_offset;
 
-    doom_sector_c *sector;
+    sector_c *sector;
 
     int index;
 
    public:
-    doom_sidedef_c()
+    sidedef_c()
         : lower("-"),
           mid("-"),
           upper("-"),
@@ -360,9 +356,7 @@ class doom_sidedef_c {
           sector(NULL),
           index(-1) {}
 
-    ~doom_sidedef_c() {}
-
-    doom_sidedef_c(const doom_sidedef_c &other)
+    sidedef_c(const sidedef_c &other)
         : lower(other.lower),
           mid(other.mid),
           upper(other.upper),
@@ -373,37 +367,37 @@ class doom_sidedef_c {
 
     int Write();
 
-    inline bool SameTex(const doom_sidedef_c *T) const {
+    inline bool SameTex(const sidedef_c *T) const {
         return (strcmp(mid.c_str(), T->mid.c_str()) == 0) &&
                (strcmp(lower.c_str(), T->lower.c_str()) == 0) &&
                (strcmp(upper.c_str(), T->upper.c_str()) == 0);
     }
 };
 
-class doom_linedef_c {
+class linedef_c {
    public:
-    doom_vertex_c *start;  // NULL means "unused linedef"
-    doom_vertex_c *end;
+    vertex_c *start;  // NULL means "unused linedef"
+    vertex_c *end;
 
-    doom_sidedef_c *front;
-    doom_sidedef_c *back;
+    sidedef_c *front;
+    sidedef_c *back;
 
     int flags;
     int special;
     int tag;
 
-    u8_t args[5];
+    std::array<u8_t, 5> args;
 
     double length;
 
     // similar linedef touching our start (end) vertex, or NULL if none.
     // only takes front sidedefs into account.
     // used for texture aligning.
-    doom_linedef_c *sim_prev;
-    doom_linedef_c *sim_next;
+    linedef_c *sim_prev;
+    linedef_c *sim_next;
 
    public:
-    doom_linedef_c()
+    linedef_c()
         : start(NULL),
           end(NULL),
           front(NULL),
@@ -417,9 +411,7 @@ class doom_linedef_c {
         args[0] = args[1] = args[2] = args[3] = args[4] = 0;
     }
 
-    ~doom_linedef_c() {}
-
-    doom_linedef_c(const doom_linedef_c &other)
+    linedef_c(const linedef_c &other)
         : start(NULL),
           end(NULL),
           front(NULL),
@@ -432,11 +424,11 @@ class doom_linedef_c {
           sim_next(NULL) {
         // NOTE: be sure to add these sidedefs into dm_sidedefs!
         if (other.front) {
-            front = new doom_sidedef_c(*other.front);
+            front = new sidedef_c(*other.front);
         }
 
         if (other.back) {
-            back = new doom_sidedef_c(*other.back);
+            back = new sidedef_c(*other.back);
         }
     }
 
@@ -444,7 +436,7 @@ class doom_linedef_c {
         length = ComputeDist(start->x, start->y, end->x, end->y);
     }
 
-    inline doom_vertex_c *OtherVert(const doom_vertex_c *V) const {
+    inline vertex_c *OtherVert(const vertex_c *V) const {
         if (start == V) {
             return end;
         }
@@ -491,8 +483,8 @@ class doom_linedef_c {
             return false;
         }
 
-        doom_sector_c *F = front->sector;
-        doom_sector_c *B = back->sector;
+        sector_c *F = front->sector;
+        sector_c *B = back->sector;
 
         // TODO: a way to ensure a certain orientation (from Lua)
 
@@ -517,8 +509,7 @@ class doom_linedef_c {
         return false;
     }
 
-    inline bool CanMergeSides(const doom_sidedef_c *A,
-                              const doom_sidedef_c *B) const {
+    inline bool CanMergeSides(const sidedef_c *A, const sidedef_c *B) const {
         if (!A || !B) {
             return (!A && !B);
         }
@@ -537,7 +528,7 @@ class doom_linedef_c {
         return A->SameTex(B);
     }
 
-    bool ColinearWith(const doom_linedef_c *B) const {
+    bool ColinearWith(const linedef_c *B) const {
         // never merge a pure horizontal/vertical with a diagonal
         if (start->x == end->x) {
             return B->start->x == B->end->x;
@@ -577,15 +568,15 @@ class doom_linedef_c {
     }
 
    private:
-    bool TryMerge3(doom_linedef_c *B) {
+    bool TryMerge3(linedef_c *B) {
         // meh, this should not be possible (but it CAN happen)
         if (start == B->end) {
             return false;
         }
 
         // test sidedefs
-        doom_sidedef_c *B_front = B->front;
-        doom_sidedef_c *B_back = B->back;
+        sidedef_c *B_front = B->front;
+        sidedef_c *B_back = B->back;
 
         int A_len = I_ROUND(length);
         int B_len = I_ROUND(B->length);
@@ -651,7 +642,7 @@ class doom_linedef_c {
         return true;
     }
 
-    bool TryMerge2(doom_linedef_c *B) {
+    bool TryMerge2(linedef_c *B) {
         if (end != B->end) {
             return TryMerge3(B);
         }
@@ -668,7 +659,7 @@ class doom_linedef_c {
     }
 
    public:
-    bool TryMerge(doom_linedef_c *B) {
+    bool TryMerge(linedef_c *B) {
         if (!ColinearWith(B)) {
             return false;
         }
@@ -704,7 +695,7 @@ class doom_linedef_c {
 
     bool isHoriz() const { return start->y == end->y; }
 
-    bool isFrontSimilar(const doom_linedef_c *P) const {
+    bool isFrontSimilar(const linedef_c *P) const {
         if (!back && !P->back) {
             return (strcmp(front->mid.c_str(), P->front->mid.c_str()) == 0);
         }
@@ -713,7 +704,7 @@ class doom_linedef_c {
             return front->SameTex(P->front);
         }
 
-        const doom_linedef_c *L = this;
+        const linedef_c *L = this;
 
         if (back) {
             std::swap(L, P);
@@ -728,6 +719,7 @@ class doom_linedef_c {
 
     void Write();
 };
+}  // namespace Doom
 
 struct fs_thing_t {
     int x, y, z;
@@ -743,140 +735,28 @@ struct fs_thing_t {
 
 /********* TABLES *********/
 
-static std::vector<doom_vertex_c *> dm_vertices;
-static std::vector<doom_linedef_c *> dm_linedefs;
-static std::vector<doom_sidedef_c *> dm_sidedefs;
-static std::vector<doom_sector_c *> dm_sectors;
-
 class dummy_sector_c;
 
-static std::vector<dummy_sector_c *> dm_dummies;
-static std::vector<extrafloor_c *> dm_exfloors;
-static std::vector<fs_thing_t> dm_fs_things;
+namespace Doom {
+static std::vector<vertex_c *> vertices;
+static std::vector<linedef_c *> linedefs;
+static std::vector<sidedef_c *> sidedefs;
+static std::vector<sector_c *> sectors;
 
-static std::map<int, unsigned int> dm_vertex_map;
+static std::vector<dummy_sector_c *> dummies;
+static std::vector<extrafloor_c *> exfloors;
+static std::vector<fs_thing_t> fs_things;
 
-//------------------------------------------------------------------------
-
-#if 0
-
-void DM_WriteDoom(void);  // forward
-
-
-void Doom_TestBrushes(void)
-{
-	// for debugging only: each csg_brush_c becomes a single
-	// sector on the map.
-
-	DM_StartWAD("brush_test.wad");
-	DM_BeginLevel();
-
-	for (unsigned int k = 0; k < all_brushes.size(); k++)
-	{
-		csg_brush_c *P = all_brushes[k];
-
-		int sec_idx = DM_NumSectors();
-
-		const char *b_tex = P->b.face.getStr("tex", "LAVA1");
-		const char *t_tex = P->t.face.getStr("tex", "LAVA1");
-
-		DM_AddSector(I_ROUND(P->b.z), b_tex, I_ROUND(P->t.z), t_tex, 192, 0, 0);
-
-		int side_base = DM_NumSidedefs();
-		int vert_base = DM_NumVertexes();
-
-		for (int j1 = 0; j1 < (int)P->verts.size(); j1++)
-		{
-			int j2 = (j1 + 1) % (int)P->verts.size();
-
-			brush_vert_c *v1 = P->verts[j1];
-
-			const char *w_tex = v1->face.getStr("tex", "CRACKLE4");
-
-			DM_AddVertex(I_ROUND(v1->x), I_ROUND(v1->y));
-
-			DM_AddSidedef(sec_idx, "-", w_tex, "-", 0, 0);
-
-			DM_AddLinedef(vert_base+j2, vert_base+j1, side_base+j1, -1,
-					0, 1 /*impassible*/, 0, NULL /* args */);
-		}
-	}
-
-	DM_EndLevel("MAP01");
-	DM_EndWAD();
-}
-
-
-void Doom_TestClip(void)
-{
-	// for Quake debugging only....
-
-	DM_StartWAD("clip_test.wad");
-	DM_BeginLevel();
-
-	DM_WriteDoom();
-
-	DM_EndLevel("MAP01");
-	DM_EndWAD();
-}
-
-
-void DM_TestRegions(void)
-{
-	// for debugging only: each merge_region becomes a single
-	// sector on the map.
-
-	unsigned int i;
-
-	for (i = 0; i < mug_vertices.size(); i++)
-	{
-		merge_vertex_c *V = mug_vertices[i];
-
-		V->index = (int)i;
-
-		DM_AddVertex(I_ROUND(V->x), I_ROUND(V->y));
-	}
-
-
-	for (i = 0; i < mug_regions.size(); i++)
-	{
-		merge_region_c *R = mug_regions[i];
-
-		R->index = (int)i;
-
-		const char *flat = "FLAT1";
-
-		DM_AddSector(0,flat, 144,flat, 255,(int)R->brushes.size(),(int)R->gaps.size());
-
-		const char *tex = R->faces_out ? "COMPBLUE" : "STARTAN3";
-
-		DM_AddSidedef(R->index, tex, "-", tex, 0, 0);
-	}
-
-
-	for (i = 0; i < mug_segments.size(); i++)
-	{
-		merge_segment_c *S = mug_segments[i];
-
-		SYS_ASSERT(S);
-		SYS_ASSERT(S->start);
-
-		DM_AddLinedef(S->start->index, S->end->index,
-				S->front ? S->front->index : -1,
-				S->back  ? S->back->index  : -1,
-				0, 1 /*impassible*/, 0,
-				NULL /* args */);
-	}
-}
-#endif
+static std::map<int, unsigned int> vertex_map;
+}  // namespace Doom
 
 //------------------------------------------------------------------------
 
-static void DM_ExtraFloors(doom_sector_c *S, region_c *R);
+namespace Doom {
+static void ExtraFloors(sector_c *S, region_c *R);
 
-static void DM_LightInSector(doom_sector_c *S, region_c *R,
-                             csg_property_set_c *f_face,
-                             csg_property_set_c *c_face) {
+static void LightInSector(sector_c *S, region_c *R, csg_property_set_c *f_face,
+                          csg_property_set_c *c_face) {
     // use the shade computed in CSG_Shade()
     S->light = R->shade;
 
@@ -903,19 +783,19 @@ static void DM_LightInSector(doom_sector_c *S, region_c *R,
     }
 }
 
-static void DM_MakeSector(region_c *R) {
+static void MakeSector(region_c *R) {
     // completely solid (no gaps) ?
-    if (R->gaps.size() == 0) {
+    if (R->gaps.empty()) {
         R->index = -1;
         return;
     }
 
-    doom_sector_c *S = new doom_sector_c;
+    sector_c *S = new sector_c;
 
     S->region = R;
-    R->index = (int)dm_sectors.size();
+    R->index = (int)sectors.size();
 
-    dm_sectors.push_back(S);
+    sectors.push_back(S);
 
     csg_brush_c *B = R->gaps.front()->bottom;
     csg_brush_c *T = R->gaps.back()->top;
@@ -971,20 +851,20 @@ static void DM_MakeSector(region_c *R) {
         S->misc_flags |= SEC_CEIL_SPECIAL;
     }
 
-    DM_LightInSector(S, R, f_face, c_face);
+    LightInSector(S, R, f_face, c_face);
 
     // find brushes floating in-between --> make extrafloors
 
-    DM_ExtraFloors(S, R);
+    ExtraFloors(S, R);
 }
 
-static void DM_CreateSectors() {
-    for (unsigned int i = 0; i < all_regions.size(); i++) {
-        DM_MakeSector(all_regions[i]);
+static void CreateSectors() {
+    for (auto &region : all_regions) {
+        MakeSector(region);
     }
 }
 
-static void DM_TryGrabFloor(doom_sector_c *D1, int sec_idx) {
+static void TryGrabFloor(sector_c *D1, int sec_idx) {
     // clear the fake special now
     D1->special = 0;
 
@@ -997,9 +877,7 @@ static void DM_TryGrabFloor(doom_sector_c *D1, int sec_idx) {
     int got_special = 0;
     int got_light = 0;
 
-    for (unsigned int i = 0; i < all_regions.size(); i++) {
-        region_c *R = all_regions[i];
-
+    for (auto *R : all_regions) {
         if (R->index != sec_idx) {
             continue;
         }
@@ -1015,7 +893,7 @@ static void DM_TryGrabFloor(doom_sector_c *D1, int sec_idx) {
 
             // require partner in a different sector
 
-            doom_sector_c *D2 = dm_sectors[N->index];
+            sector_c *D2 = sectors[N->index];
 
             SYS_ASSERT(!D2->isUnused());
 
@@ -1050,35 +928,31 @@ static void DM_TryGrabFloor(doom_sector_c *D1, int sec_idx) {
     D1->light = got_light;
 }
 
-static void DM_GrabNeighborFloors() {
-    for (unsigned int i = 0; i < all_regions.size(); i++) {
-        region_c *R = all_regions[i];
-
+static void GrabNeighborFloors() {
+    for (auto *R : all_regions) {
         if (R->index < 0) {
             continue;
         }
 
-        doom_sector_c *D1 = dm_sectors[R->index];
+        sector_c *D1 = sectors[R->index];
 
         SYS_ASSERT(!D1->isUnused());
 
         if (D1->special == SEC_GRAB_NB_FLOOR) {
-            DM_TryGrabFloor(D1, R->index);
+            TryGrabFloor(D1, R->index);
         }
     }
 }
 
-static int DM_CoalescePass() {
+static int CoalescePass() {
     int changes = 0;
 
-    for (unsigned int i = 0; i < all_regions.size(); i++) {
-        region_c *R = all_regions[i];
-
+    for (auto *R : all_regions) {
         if (R->index < 0) {
             continue;
         }
 
-        doom_sector_c *D1 = dm_sectors[R->index];
+        sector_c *D1 = sectors[R->index];
 
         for (unsigned int k = 0; k < R->snags.size(); k++) {
             snag_c *S = R->snags[k];
@@ -1094,7 +968,7 @@ static int DM_CoalescePass() {
                 continue;
             }
 
-            doom_sector_c *D2 = dm_sectors[N->index];
+            sector_c *D2 = sectors[N->index];
 
             if (D2->ShouldMerge(D1)) {
                 D2->MarkUnused();
@@ -1113,11 +987,11 @@ static int DM_CoalescePass() {
     return changes;
 }
 
-static void DM_CoalesceSectors() {
-    while (DM_CoalescePass() > 0) {
+static void CoalesceSectors() {
+    while (CoalescePass() > 0) {
     }
 
-    DM_GrabNeighborFloors();
+    GrabNeighborFloors();
 
     // Note: we cannot remove & delete the unused sectors since the
     // region_c::index fields would need to be updated as well.
@@ -1125,25 +999,26 @@ static void DM_CoalesceSectors() {
 
 //------------------------------------------------------------------------
 
-static doom_vertex_c *DM_MakeVertex(int x, int y) {
+static vertex_c *MakeVertex(int x, int y) {
     // look for existing vertex
     int combo = (x << 16) + y;
 
-    if (dm_vertex_map.find(combo) != dm_vertex_map.end()) {
-        return dm_vertices[dm_vertex_map[combo]];
+    if (vertex_map.find(combo) != vertex_map.end()) {
+        return vertices[vertex_map[combo]];
     }
 
     // create new one
-    doom_vertex_c *V = new doom_vertex_c(x, y);
+    vertex_c *V = new vertex_c(x, y);
 
-    dm_vertex_map[combo] = dm_vertices.size();
+    vertex_map[combo] = vertices.size();
 
-    dm_vertices.push_back(V);
+    vertices.push_back(V);
 
     return V;
 }
+}  // namespace Doom
 
-static int NaturalXOffset(doom_linedef_c *L, int side) {
+static int NaturalXOffset(Doom::linedef_c *L, int side) {
     double along;
 
     if (side == 0) {
@@ -1175,17 +1050,17 @@ static int NormalizeYOffset(int oy) {
     return oy;
 }
 
-static doom_sidedef_c *DM_MakeSidedef(doom_linedef_c *L, doom_sector_c *sec,
-                                      doom_sector_c *back, snag_c *snag,
-                                      snag_c *other, brush_vert_c *rail,
-                                      bool unpeg_L, bool unpeg_U) {
+namespace Doom {
+static sidedef_c *MakeSidedef(linedef_c *L, sector_c *sec, sector_c *back,
+                              snag_c *snag, snag_c *other, brush_vert_c *rail,
+                              bool unpeg_L, bool unpeg_U) {
     if (!sec) {
         return NULL;
     }
 
-    doom_sidedef_c *SD = new doom_sidedef_c;
+    auto *SD = new sidedef_c;
 
-    dm_sidedefs.push_back(SD);
+    sidedefs.push_back(SD);
 
     SD->sector = sec;
 
@@ -1310,8 +1185,8 @@ static doom_sidedef_c *DM_MakeSidedef(doom_linedef_c *L, doom_sector_c *sec,
     return SD;
 }
 
-static csg_property_set_c *DM_FindTrigger(snag_c *S, doom_sector_c *front,
-                                          doom_sector_c *back) {
+static csg_property_set_c *FindTrigger(snag_c *S, sector_c *front,
+                                       sector_c *back) {
     // triggers require a two-sided line
     if (!front || !back) {
         return NULL;
@@ -1331,9 +1206,7 @@ static csg_property_set_c *DM_FindTrigger(snag_c *S, doom_sector_c *front,
             continue;
         }
 
-        for (unsigned int k = 0; k < test_S->sides.size(); k++) {
-            brush_vert_c *V = test_S->sides[k];
-
+        for (auto *V : test_S->sides) {
             if (V->parent->bkind != BKIND_Trigger) {
                 continue;
             }
@@ -1354,8 +1227,7 @@ static csg_property_set_c *DM_FindTrigger(snag_c *S, doom_sector_c *front,
     return NULL;
 }
 
-static csg_property_set_c *DM_FindSpecial(snag_c *S, region_c *R1,
-                                          region_c *R2) {
+static csg_property_set_c *FindSpecial(snag_c *S, region_c *R1, region_c *R2) {
     brush_vert_c *V;
 
     // we want the brushes for the floor or ceiling next to a linedef
@@ -1396,9 +1268,7 @@ static csg_property_set_c *DM_FindSpecial(snag_c *S, region_c *R1,
             }
         } else {
             // check every brush_vert in the snag
-            for (unsigned int i = 0; i < test_S->sides.size(); i++) {
-                V = test_S->sides[i];
-
+            for (auto *V : test_S->sides) {
                 if (V && V->face.getStr("special") &&
                     V->parent->bkind != BKIND_Trigger) {
                     return &V->face;
@@ -1410,8 +1280,8 @@ static csg_property_set_c *DM_FindSpecial(snag_c *S, region_c *R1,
     return NULL;
 }
 
-static brush_vert_c *DM_FindRail(const snag_c *S, const region_c *R,
-                                 const region_c *N) {
+static brush_vert_c *FindRail(const snag_c *S, const region_c *R,
+                              const region_c *N) {
     if (!S) {
         return NULL;
     }
@@ -1421,13 +1291,11 @@ static brush_vert_c *DM_FindRail(const snag_c *S, const region_c *R,
         return NULL;
     }
 
-    if (R->gaps.size() == 0 || N->gaps.size() == 0) {
+    if (R->gaps.empty() || N->gaps.empty()) {
         return NULL;
     }
 
-    for (unsigned int k = 0; k < S->sides.size(); k++) {
-        brush_vert_c *V = S->sides[k];
-
+    for (auto *V : S->sides) {
         if (V->parent->bkind != BKIND_Rail) {
             continue;
         }
@@ -1440,8 +1308,8 @@ static brush_vert_c *DM_FindRail(const snag_c *S, const region_c *R,
     return NULL;
 }
 
-static void DM_DeterminePegging(doom_linedef_c *L, region_c *front,
-                                region_c *back, bool has_rail) {
+static void DeterminePegging(linedef_c *L, region_c *front, region_c *back,
+                             bool has_rail) {
     // sanity check
     if (front->gaps.empty()) {
         return;
@@ -1489,7 +1357,7 @@ static void DM_DeterminePegging(doom_linedef_c *L, region_c *front,
     }
 }
 
-static void DM_MakeLine(region_c *R, snag_c *S) {
+static void MakeLine(region_c *R, snag_c *S) {
     region_c *N = S->partner ? S->partner->region : NULL;
 
     // for two-sided snags, only make one linedef from the pair
@@ -1516,18 +1384,18 @@ static void DM_MakeLine(region_c *R, snag_c *S) {
         return;
     }
 
-    doom_sector_c *front = dm_sectors[R->index];
-    doom_sector_c *back = NULL;
+    sector_c *front = sectors[R->index];
+    sector_c *back = NULL;
 
     if (N && N->index >= 0) {
-        back = dm_sectors[N->index];
+        back = sectors[N->index];
     }
 
-    brush_vert_c *f_rail = DM_FindRail(S->partner, R, N);
-    brush_vert_c *b_rail = DM_FindRail(S, N, R);
+    brush_vert_c *f_rail = FindRail(S->partner, R, N);
+    brush_vert_c *b_rail = FindRail(S, N, R);
 
-    csg_property_set_c *trig = DM_FindTrigger(S, front, back);
-    csg_property_set_c *spec = DM_FindSpecial(S, R, N);
+    csg_property_set_c *trig = FindTrigger(S, front, back);
+    csg_property_set_c *spec = FindSpecial(S, R, N);
 
     bool use_trig = false;
 
@@ -1562,12 +1430,12 @@ static void DM_MakeLine(region_c *R, snag_c *S) {
 
     // create the line...
 
-    doom_linedef_c *L = new doom_linedef_c;
+    linedef_c *L = new linedef_c;
 
-    dm_linedefs.push_back(L);
+    linedefs.push_back(L);
 
-    L->start = DM_MakeVertex(x1, y1);
-    L->end = DM_MakeVertex(x2, y2);
+    L->start = MakeVertex(x1, y1);
+    L->end = MakeVertex(x2, y2);
 
     SYS_ASSERT(L->start != L->end);
 
@@ -1578,15 +1446,15 @@ static void DM_MakeLine(region_c *R, snag_c *S) {
 
     // set pegging _before_ making sidedefs
 
-    DM_DeterminePegging(L, R, N, (f_rail || b_rail) ? true : false);
+    DeterminePegging(L, R, N, (f_rail || b_rail) ? true : false);
 
     bool unpeg_L = (L->flags & MLF_LowerUnpeg) != 0;
     bool unpeg_U = (L->flags & MLF_UpperUnpeg) != 0;
 
     L->front =
-        DM_MakeSidedef(L, front, back, S->partner, S, f_rail, unpeg_L, unpeg_U);
+        MakeSidedef(L, front, back, S->partner, S, f_rail, unpeg_L, unpeg_U);
     L->back =
-        DM_MakeSidedef(L, back, front, S, S->partner, b_rail, unpeg_L, unpeg_U);
+        MakeSidedef(L, back, front, S, S->partner, b_rail, unpeg_L, unpeg_U);
 
     SYS_ASSERT(L->front || L->back);
 
@@ -1600,9 +1468,9 @@ static void DM_MakeLine(region_c *R, snag_c *S) {
     L->tag = L_tag;
 
     if (use_trig) {
-        trig->getHexenArgs(L->args);
+        trig->getHexenArgs(L->args.data());
     } else if (spec) {
-        spec->getHexenArgs(L->args);
+        spec->getHexenArgs(L->args.data());
     }
 
     // flags...
@@ -1634,21 +1502,19 @@ static void DM_MakeLine(region_c *R, snag_c *S) {
     }
 }
 
-static void DM_CreateLinedefs() {
+static void CreateLinedefs() {
     map_bound_x1 = +99999;
     map_bound_y1 = +99999;
     map_bound_x2 = -99999;
     map_bound_y2 = -99999;
 
-    for (unsigned int i = 0; i < all_regions.size(); i++) {
-        region_c *R = all_regions[i];
-
+    for (auto *R : all_regions) {
         if (R->index < 0) {
             continue;
         }
 
         for (unsigned int k = 0; k < R->snags.size(); k++) {
-            DM_MakeLine(R, R->snags[k]);
+            MakeLine(R, R->snags[k]);
         }
     }
 
@@ -1659,9 +1525,9 @@ static void DM_CreateLinedefs() {
 
 //------------------------------------------------------------------------
 
-static bool DM_TryMergeLine(doom_vertex_c *V) {
-    doom_linedef_c *A = V->lines[0];
-    doom_linedef_c *B = V->lines[1];
+static bool TryMergeLine(vertex_c *V) {
+    linedef_c *A = V->lines[0];
+    linedef_c *B = V->lines[1];
 
     SYS_ASSERT(A->isValid());
     SYS_ASSERT(B->isValid());
@@ -1669,13 +1535,13 @@ static bool DM_TryMergeLine(doom_vertex_c *V) {
     return A->TryMerge(B);
 }
 
-static void DM_MergeColinearLines(bool show_count = true) {
+static void MergeColinearLines(bool show_count = true) {
     int count = 0;
 
     for (int pass = 0; pass < 3; pass++) {
-        for (int i = 0; i < (int)dm_vertices.size(); i++) {
-            if (dm_vertices[i]->getNumLines() == 2) {
-                if (DM_TryMergeLine(dm_vertices[i])) {
+        for (int i = 0; i < (int)vertices.size(); i++) {
+            if (vertices[i]->getNumLines() == 2) {
+                if (TryMergeLine(vertices[i])) {
                     count++;
                 }
             }
@@ -1687,13 +1553,11 @@ static void DM_MergeColinearLines(bool show_count = true) {
     }
 }
 
-static doom_linedef_c *DM_FindSimilarLine(doom_linedef_c *L, doom_vertex_c *V) {
-    doom_linedef_c *best = NULL;
+static linedef_c *FindSimilarLine(linedef_c *L, vertex_c *V) {
+    linedef_c *best = NULL;
     int best_score = -1;
 
-    for (int i = 0; i < 4; i++) {
-        doom_linedef_c *M = V->lines[i];
-
+    for (auto *M : V->lines) {
         if (!M) {
             break;
         }
@@ -1726,19 +1590,17 @@ static doom_linedef_c *DM_FindSimilarLine(doom_linedef_c *L, doom_vertex_c *V) {
     return best;
 }
 
-static void DM_AlignTextures() {
+static void AlignTextures() {
     int i;
     int count = 0;
 
-    for (i = 0; i < (int)dm_linedefs.size(); i++) {
-        doom_linedef_c *L = dm_linedefs[i];
-
+    for (auto *L : linedefs) {
         if (!L->isValid()) {
             continue;
         }
 
-        L->sim_prev = DM_FindSimilarLine(L, L->start);
-        L->sim_next = DM_FindSimilarLine(L, L->end);
+        L->sim_prev = FindSimilarLine(L, L->start);
+        L->sim_next = FindSimilarLine(L, L->end);
 
         if (L->front->x_offset == IVAL_NONE && !L->sim_prev && !L->sim_next) {
             L->front->x_offset = NaturalXOffset(L, 0);
@@ -1759,9 +1621,7 @@ static void DM_AlignTextures() {
         int prev_count = 0;
         int next_count = 0;
 
-        for (i = 0; i < (int)dm_linedefs.size(); i++) {
-            doom_linedef_c *L = dm_linedefs[i];
-
+        for (auto *L : linedefs) {
             if (!L->isValid()) {
                 continue;
             }
@@ -1779,8 +1639,8 @@ static void DM_AlignTextures() {
                 }
             }
 
-            doom_linedef_c *P = L;
-            doom_linedef_c *N = L;
+            linedef_c *P = L;
+            linedef_c *N = L;
 
             while (P->sim_prev && P->sim_prev->front->x_offset == IVAL_NONE) {
                 P->sim_prev->front->x_offset =
@@ -1806,20 +1666,19 @@ static void DM_AlignTextures() {
 
     LogPrintf("Aligned {} textures\n", count);
 }
+}  // namespace Doom
 
 static bool RoundWouldClobber(int cx, int cy, int ox, int oy,
-                              const doom_vertex_c *ignore1,
-                              const doom_vertex_c *ignore2,
-                              const doom_vertex_c *ignore3) {
+                              const Doom::vertex_c *ignore1,
+                              const Doom::vertex_c *ignore2,
+                              const Doom::vertex_c *ignore3) {
     int x1 = MIN(cx, ox);
     int y1 = MIN(cy, oy);
 
     int x2 = MAX(cx, ox);
     int y2 = MAX(cy, oy);
 
-    for (unsigned int i = 0; i < dm_vertices.size(); i++) {
-        const doom_vertex_c *V = dm_vertices[i];
-
+    for (const auto *V : Doom::vertices) {
         if (V == ignore1 || V == ignore2 || V == ignore3) {
             continue;
         }
@@ -1843,13 +1702,13 @@ static bool RoundWouldClobber(int cx, int cy, int ox, int oy,
     return false;  // OK
 }
 
-static int TryRoundAtVertex(doom_vertex_c *V) {
+static int TryRoundAtVertex(Doom::vertex_c *V) {
     if (V->getNumLines() != 2) {
         return 0;
     }
 
-    doom_linedef_c *LX = V->lines[0];
-    doom_linedef_c *LY = V->lines[1];
+    Doom::linedef_c *LX = V->lines[0];
+    Doom::linedef_c *LY = V->lines[1];
 
     // this probably cannot happen, but just in case...
     if (!LX->isValid() || !LY->isValid()) {
@@ -1949,7 +1808,7 @@ static int TryRoundAtVertex(doom_vertex_c *V) {
      */
 
     if (x_len == LX->length && y_len == LY->length) {
-        doom_vertex_c *V2 = LY->OtherVert(V);
+        Doom::vertex_c *V2 = LY->OtherVert(V);
 
         V2->ReplaceLine(LY, LX);
 
@@ -1969,14 +1828,14 @@ static int TryRoundAtVertex(doom_vertex_c *V) {
         return 1;
     }
 
-    doom_vertex_c *VX;
-    doom_vertex_c *VY;
-    doom_linedef_c *L;
+    Doom::vertex_c *VX;
+    Doom::vertex_c *VY;
+    Doom::linedef_c *L;
 
     /* case 2 */
 
     if (y_len == LY->length) {
-        VX = DM_MakeVertex(V->x + x_dir * x_len, V->y);
+        VX = Doom::MakeVertex(V->x + x_dir * x_len, V->y);
         VY = VX;
 
         VX->rounded_half = x_rounded_half;
@@ -1992,7 +1851,7 @@ static int TryRoundAtVertex(doom_vertex_c *V) {
     if (x_len == LX->length) {
         // essentially replacing V with a new split vertex
 
-        VY = DM_MakeVertex(V->x, y_dir * y_len + V->y);
+        VY = Doom::MakeVertex(V->x, y_dir * y_len + V->y);
         VX = VY;
 
         VY->rounded_half = y_rounded_half;
@@ -2005,24 +1864,24 @@ static int TryRoundAtVertex(doom_vertex_c *V) {
 
     /* case 4 */
 
-    VX = DM_MakeVertex(V->x + x_dir * x_len, V->y);
-    VY = DM_MakeVertex(V->x, y_dir * y_len + V->y);
+    VX = Doom::MakeVertex(V->x + x_dir * x_len, V->y);
+    VY = Doom::MakeVertex(V->x, y_dir * y_len + V->y);
 
     SYS_ASSERT(VX != VY);
 
     VX->rounded_half = x_rounded_half;
     VY->rounded_half = y_rounded_half;
 
-    L = new doom_linedef_c(*LX);
+    L = new Doom::linedef_c(*LX);
 
     if (L->front) {
-        dm_sidedefs.push_back(L->front);
+        Doom::sidedefs.push_back(L->front);
     }
     if (L->back) {
-        dm_sidedefs.push_back(L->back);
+        Doom::sidedefs.push_back(L->back);
     }
 
-    dm_linedefs.push_back(L);
+    Doom::linedefs.push_back(L);
 
     // orientation of L must match LX, since we copied sidedefs from LX
     L->start = VX;
@@ -2064,7 +1923,8 @@ finished:
     return 1;
 }
 
-static void DM_RoundCorners() {
+namespace Doom {
+static void RoundCorners() {
     /*
      * Looks for corners where two (and only two) linedefs meet and
      * the linedefs are axis-aligned, and tries to add a diagonal at
@@ -2077,9 +1937,9 @@ static void DM_RoundCorners() {
     int count = 0;
 
     for (int pass = 0; pass < 2; pass++) {
-        for (int i = 0; i < (int)dm_vertices.size(); i++) {
-            if (dm_vertices[i]->getNumLines() == 2) {
-                count += TryRoundAtVertex(dm_vertices[i]);
+        for (auto *vertex : vertices) {
+            if (vertex->getNumLines() == 2) {
+                count += TryRoundAtVertex(vertex);
             }
         }
     }
@@ -2087,8 +1947,9 @@ static void DM_RoundCorners() {
     LogPrintf("Rounded {} square corners\n", count);
 
     // need this again, since we often create co-linear diagonals
-    DM_MergeColinearLines(false /* show_count */);
+    MergeColinearLines(false /* show_count */);
 }
+}  // namespace Doom
 
 //------------------------------------------------------------------------
 //  DUMMY SECTORS
@@ -2114,24 +1975,24 @@ class dummy_line_info_c {
 
 class dummy_sector_c {
    public:
-    doom_sector_c *sector;
-    doom_sector_c *pair;
+    Doom::sector_c *sector;
+    Doom::sector_c *pair;
 
     int share_count;
 
     dummy_line_info_c *info[DUMMY_MAX_SHARE];
 
    public:
-    dummy_sector_c(doom_sector_c *_sec = NULL, doom_sector_c *_pair = NULL)
+    dummy_sector_c(Doom::sector_c *_sec = NULL, Doom::sector_c *_pair = NULL)
         : sector(_sec), pair(_pair), share_count(0) {
-        for (int i = 0; i < DUMMY_MAX_SHARE; i++) {
-            info[i] = NULL;
+        for (auto *i : info) {
+            i = NULL;
         }
     }
 
     ~dummy_sector_c() {
-        for (int i = 0; i < DUMMY_MAX_SHARE; i++) {
-            delete info[i];
+        for (auto *i : info) {
+            delete i;
         }
     }
 
@@ -2145,18 +2006,18 @@ class dummy_sector_c {
 
     /// construction ///
 
-    doom_sidedef_c *MakeSidedef(int what, int other_what, int index) {
+    Doom::sidedef_c *MakeSidedef(int what, int other_what, int index) {
         if (what == 0) {
             return NULL;
         }
 
-        doom_sector_c *cur_sec = (what == 2) ? pair : sector;
+        Doom::sector_c *cur_sec = (what == 2) ? pair : sector;
 
         SYS_ASSERT(cur_sec);
 
-        doom_sidedef_c *SD = new doom_sidedef_c;
+        Doom::sidedef_c *SD = new Doom::sidedef_c;
 
-        dm_sidedefs.push_back(SD);
+        Doom::sidedefs.push_back(SD);
 
         SD->sector = cur_sec;
 
@@ -2210,12 +2071,12 @@ class dummy_sector_c {
             return;
         }
 
-        doom_linedef_c *L = new doom_linedef_c;
+        Doom::linedef_c *L = new Doom::linedef_c;
 
-        dm_linedefs.push_back(L);
+        Doom::linedefs.push_back(L);
 
-        L->start = DM_MakeVertex(x1, y1);
-        L->end = DM_MakeVertex(x2, y2);
+        L->start = Doom::MakeVertex(x1, y1);
+        L->end = Doom::MakeVertex(x2, y2);
 
         L->CalcLength();
 
@@ -2227,10 +2088,10 @@ class dummy_sector_c {
             L->flags = info[index]->flags;
         }
 
-        L->flags |= MLF_BlockAll | MLF_DontDraw;
+        L->flags |= Doom::MLF_BlockAll | Doom::MLF_DontDraw;
 
         if (front > 0 && back > 0) {
-            L->flags |= MLF_TwoSided;
+            L->flags |= Doom::MLF_TwoSided;
         }
 
         L->front = MakeSidedef(front, back, index);
@@ -2263,24 +2124,26 @@ class dummy_sector_c {
     }
 };
 
-static void DM_CreateDummies() {
-    for (unsigned int i = 0; i < dm_dummies.size(); i++) {
-        dm_dummies[i]->Construct((int)i);
+namespace Doom {
+static void CreateDummies() {
+    for (unsigned int i = 0; i < dummies.size(); i++) {
+        dummies[i]->Construct((int)i);
     }
 }
+}  // namespace Doom
 
-static dummy_sector_c *Dummy_New(doom_sector_c *sec,
-                                 doom_sector_c *pair = NULL) {
+static dummy_sector_c *Dummy_New(Doom::sector_c *sec,
+                                 Doom::sector_c *pair = NULL) {
     dummy_sector_c *dum = new dummy_sector_c(sec, pair);
 
-    dm_dummies.push_back(dum);
+    Doom::dummies.push_back(dum);
 
     return dum;
 }
 
-static dummy_sector_c *Dummy_FindMatch(doom_sector_c *new_sec) {
-    for (unsigned int i = 0; i < dm_dummies.size(); i++) {
-        dummy_sector_c *dum = dm_dummies[i];
+static dummy_sector_c *Dummy_FindMatch(Doom::sector_c *new_sec) {
+    for (unsigned int i = 0; i < Doom::dummies.size(); i++) {
+        dummy_sector_c *dum = Doom::dummies[i];
 
         if (dum->isFull()) {
             continue;
@@ -2302,10 +2165,11 @@ static dummy_sector_c *Dummy_FindMatch(doom_sector_c *new_sec) {
 //  EXTRAFLOOR STUFF
 //------------------------------------------------------------------------
 
-static void DM_SolidExtraFloor(doom_sector_c *sec, gap_c *gap1, gap_c *gap2) {
+namespace Doom {
+static void SolidExtraFloor(sector_c *sec, gap_c *gap1, gap_c *gap2) {
     extrafloor_c *EF = new extrafloor_c;
 
-    dm_exfloors.push_back(EF);
+    exfloors.push_back(EF);
 
     sec->AddExtrafloor(EF);
 
@@ -2341,13 +2205,13 @@ static void DM_SolidExtraFloor(doom_sector_c *sec, gap_c *gap1, gap_c *gap2) {
     EF->wall = V->face.getStr("tex", dummy_wall_tex.c_str());
 }
 
-static void DM_LiquidExtraFloor(doom_sector_c *sec, csg_brush_c *liquid) {
+static void LiquidExtraFloor(sector_c *sec, csg_brush_c *liquid) {
     // Note: we don't care if the liquid is inside the floor or ceiling,
     //       perhaps that is intentional.  The engine should not mind.
 
     extrafloor_c *EF = new extrafloor_c;
 
-    dm_exfloors.push_back(EF);
+    exfloors.push_back(EF);
 
     sec->AddExtrafloor(EF);
 
@@ -2375,11 +2239,11 @@ static void DM_LiquidExtraFloor(doom_sector_c *sec, csg_brush_c *liquid) {
     EF->wall = V->face.getStr("tex", dummy_wall_tex.c_str());
 }
 
-static void DM_ExtraFloors(doom_sector_c *S, region_c *R) {
+static void ExtraFloors(sector_c *S, region_c *R) {
     if (ef_liquid_type) {
         for (unsigned int g = R->gaps.size() - 1; g > 0; g--) {
             if (R->gaps[g]->liquid) {
-                DM_LiquidExtraFloor(S, R->gaps[g]->liquid);
+                LiquidExtraFloor(S, R->gaps[g]->liquid);
                 break;
             }
         }
@@ -2392,19 +2256,17 @@ static void DM_ExtraFloors(doom_sector_c *S, region_c *R) {
         // (lighting/special) from the extrafloor.
 
         for (unsigned int g = R->gaps.size() - 1; g > 0; g--) {
-            DM_SolidExtraFloor(S, R->gaps[g - 1], R->gaps[g]);
+            SolidExtraFloor(S, R->gaps[g - 1], R->gaps[g]);
         }
     }
 }
 
-static void DM_ExtraFloorNeighbors() {
+static void ExtraFloorNeighbors() {
     // Collect sector neighbors which have the same extrafloors.
     // These can use the same tag in the dummy sector (and most
     // importantly, require less dummy sectors).
 
-    for (unsigned int i = 0; i < dm_linedefs.size(); i++) {
-        doom_linedef_c *L = dm_linedefs[i];
-
+    for (auto *L : linedefs) {
         if (!L->isValid()) {
             continue;
         }
@@ -2413,8 +2275,8 @@ static void DM_ExtraFloorNeighbors() {
             continue;
         }
 
-        doom_sector_c *front_S = L->front->sector;
-        doom_sector_c *back_S = L->back->sector;
+        sector_c *front_S = L->front->sector;
+        sector_c *back_S = L->back->sector;
 
         if (front_S == back_S) {
             continue;
@@ -2429,11 +2291,12 @@ static void DM_ExtraFloorNeighbors() {
         }
     }
 }
+}  // namespace Doom
 
 static void EXFL_MakeDummy(extrafloor_c *EF, int tag) {
-    doom_sector_c *new_sec = new doom_sector_c;
+    Doom::sector_c *new_sec = new Doom::sector_c;
 
-    dm_sectors.push_back(new_sec);
+    Doom::sectors.push_back(new_sec);
 
     new_sec->f_h = EF->bottom_h;
     new_sec->c_h = EF->top_h;
@@ -2450,8 +2313,8 @@ static void EXFL_MakeDummy(extrafloor_c *EF, int tag) {
     dum->AddInfo(EF->wall, EF->line_special, tag, 0);
 }
 
-static void EXFL_SpreadTag(doom_sector_c *S, int tag) {
-    std::vector<doom_sector_c *> visits;
+static void EXFL_SpreadTag(Doom::sector_c *S, int tag) {
+    std::vector<Doom::sector_c *> visits;
 
     visits.push_back(S);
 
@@ -2461,9 +2324,7 @@ static void EXFL_SpreadTag(doom_sector_c *S, int tag) {
 
         S->tag = tag;
 
-        for (unsigned int k = 0; k < S->ef_neighbors.size(); k++) {
-            doom_sector_c *N = S->ef_neighbors[k];
-
+        for (auto *N : S->ef_neighbors) {
             if (N->tag == 0) {
                 visits.push_back(N);
             }
@@ -2471,13 +2332,14 @@ static void EXFL_SpreadTag(doom_sector_c *S, int tag) {
     }
 }
 
-static void DM_ProcessExtraFloors() {
-    DM_ExtraFloorNeighbors();
+namespace Doom {
+static void ProcessExtraFloors() {
+    ExtraFloorNeighbors();
 
     int tag = 10001;
 
-    for (unsigned int i = 0; i < dm_sectors.size(); i++) {
-        doom_sector_c *S = dm_sectors[i];
+    for (unsigned int i = 0; i < sectors.size(); i++) {
+        sector_c *S = sectors[i];
 
         if (S->unused || S->exfloors.empty()) {
             continue;
@@ -2499,13 +2361,11 @@ static void DM_ProcessExtraFloors() {
     }
 }
 
-static int DM_CalcDoorLight(const doom_sector_c *S) {
+static int CalcDoorLight(const sector_c *S) {
     int l_min = 192;
     int l_max = S->light;
 
-    for (unsigned int i = 0; i < dm_linedefs.size(); i++) {
-        const doom_linedef_c *L = dm_linedefs[i];
-
+    for (auto *L : linedefs) {
         if (!L->isValid()) {
             continue;
         }
@@ -2514,8 +2374,8 @@ static int DM_CalcDoorLight(const doom_sector_c *S) {
             continue;
         }
 
-        doom_sector_c *front = L->front->sector;
-        doom_sector_c *back = L->back->sector;
+        sector_c *front = L->front->sector;
+        sector_c *back = L->back->sector;
 
         if (front == back) {
             continue;
@@ -2548,23 +2408,21 @@ static int DM_CalcDoorLight(const doom_sector_c *S) {
     return l_max;
 }
 
-static void DM_ProcessLightFX() {
-    for (unsigned int i = 0; i < dm_sectors.size(); i++) {
-        doom_sector_c *S = dm_sectors[i];
-
+static void ProcessLightFX() {
+    for (auto *S : sectors) {
         if (S->unused) {
             continue;
         }
 
         // handle lighting for closed doors -- get level from a neighbor
         if (S->f_h == S->c_h) {
-            S->light = DM_CalcDoorLight(S);
+            S->light = CalcDoorLight(S);
         }
 
         if (S->special > 0 && S->light2 > 0) {
-            doom_sector_c *new_sec = new doom_sector_c;
+            sector_c *new_sec = new sector_c;
 
-            dm_sectors.push_back(new_sec);
+            sectors.push_back(new_sec);
 
             new_sec->f_h = 0;
             new_sec->c_h = 1;
@@ -2578,21 +2436,17 @@ static void DM_ProcessLightFX() {
     }
 }
 
-static doom_sector_c *DM_FindDepotPeer() {
+static sector_c *FindDepotPeer() {
     // find the sector containing the "oblige_depot" entity
 
-    for (unsigned int i = 0; i < all_regions.size(); i++) {
-        region_c *R = all_regions[i];
-
+    for (auto *R : all_regions) {
         if (R->index < 0) {
             continue;
         }
 
-        doom_sector_c *S = dm_sectors[R->index];
+        sector_c *S = sectors[R->index];
 
-        for (unsigned int k = 0; k < R->entities.size(); k++) {
-            csg_entity_c *E = R->entities[k];
-
+        for (auto *E : R->entities) {
             if (strcmp(E->id.c_str(), "oblige_depot") == 0) {
                 return S;
             }
@@ -2603,22 +2457,18 @@ static doom_sector_c *DM_FindDepotPeer() {
     return NULL;
 }
 
-void DM_ProcessSecrets() {
+void ProcessSecrets() {
     // find the "oblige_secret" entities and mark the sector containing
     // it as SECRET (overriding any existing special).
 
-    for (unsigned int i = 0; i < all_regions.size(); i++) {
-        region_c *R = all_regions[i];
-
+    for (auto *R : all_regions) {
         if (R->index < 0) {
             continue;
         }
 
-        doom_sector_c *S = dm_sectors[R->index];
+        sector_c *S = sectors[R->index];
 
-        for (unsigned int k = 0; k < R->entities.size(); k++) {
-            csg_entity_c *E = R->entities[k];
-
+        for (auto *E : R->entities) {
             if (strcmp(E->id.c_str(), "oblige_secret") == 0) {
                 S->special = 9;
             }
@@ -2626,24 +2476,20 @@ void DM_ProcessSecrets() {
     }
 }
 
-static void DM_ConvertSectorToOther(doom_sector_c *src, doom_sector_c *dest) {
-    for (unsigned int i = 0; i < dm_sidedefs.size(); i++) {
-        doom_sidedef_c *SD = dm_sidedefs[i];
-
+static void ConvertSectorToOther(sector_c *src, sector_c *dest) {
+    for (auto *SD : sidedefs) {
         if (SD->sector == src) {
             SD->sector = dest;
         }
     }
 }
 
-static void DM_ProcessDepots() {
+static void ProcessDepots() {
     // Monster depots need to peer with a real sector so that sound
     // can travel into them and wake up the monsters.  We achieve that
     // by converting a small sector in the depot to BE the peer sector.
 
-    for (unsigned int i = 0; i < dm_sectors.size(); i++) {
-        doom_sector_c *S = dm_sectors[i];
-
+    for (auto *S : sectors) {
         if (S->unused) {
             continue;
         }
@@ -2651,83 +2497,84 @@ static void DM_ProcessDepots() {
         if (S->special == SEC_DEPOT_PEER) {
             S->special = 0;
 
-            doom_sector_c *peer = DM_FindDepotPeer();
+            sector_c *peer = FindDepotPeer();
 
             if (peer) {
-                DM_ConvertSectorToOther(S, peer);
+                ConvertSectorToOther(S, peer);
             }
         }
     }
 }
+}  // namespace Doom
 
 //------------------------------------------------------------------------
 
-int doom_vertex_c::Write() {
+int Doom::vertex_c::Write() {
     if (index < 0)  // not written yet?
     {
-        index = DM_NumVertexes();
+        index = NumVertexes();
 
-        DM_AddVertex(x, y);
+        AddVertex(x, y);
     }
 
     return index;
 }
 
-int doom_sector_c::Write() {
+int Doom::sector_c::Write() {
     if (special == SEC_GRAB_NB_FLOOR) {
         special = 0;
     }
 
     if (index < 0)  // not written yet?
     {
-        index = DM_NumSectors();
+        index = NumSectors();
 
-        DM_AddSector(f_h, f_tex.c_str(), c_h, c_tex.c_str(), light, special,
-                     tag);
+        AddSector(f_h, f_tex.c_str(), c_h, c_tex.c_str(), light, special, tag);
     }
 
     return index;
 }
 
-int doom_sidedef_c::Write() {
+int Doom::sidedef_c::Write() {
     if (index < 0)  // not written yet?
     {
-        index = DM_NumSidedefs();
+        index = NumSidedefs();
 
         SYS_ASSERT(sector);
 
         int sec_index = sector->Write();
 
-        DM_AddSidedef(sec_index, lower.c_str(), mid.c_str(), upper.c_str(),
-                      x_offset & 1023, y_offset);
+        AddSidedef(sec_index, lower.c_str(), mid.c_str(), upper.c_str(),
+                   x_offset & 1023, y_offset);
     }
 
     return index;
 }
 
-void doom_linedef_c::Write() {
+void Doom::linedef_c::Write() {
     SYS_ASSERT(start && end);
     int v1 = start->Write();
     int v2 = end->Write();
 
     int f = front ? front->Write() : -1;
     int b = back ? back->Write() : -1;
-    DM_AddLinedef(v1, v2, f, b, special, flags, tag, args);
+    AddLinedef(v1, v2, f, b, special, flags, tag, args.data());
 }
 
-static void DM_WriteLinedefs() {
+namespace Doom {
+static void WriteLinedefs() {
     // this triggers everything else (Sidedefs, Sectors, Vertices) to be
     // written as well.
 
-    for (int i = 0; i < (int)dm_linedefs.size(); i++) {
-        if (dm_linedefs[i]->isValid()) {
-            dm_linedefs[i]->Write();
+    for (auto *linedef : linedefs) {
+        if (linedef->isValid()) {
+            linedef->Write();
         }
     }
 }
 
-static void DM_AddThing_FraggleScript(int x, int y, int z, csg_entity_c *E,
-                                      int type, int angle, int options) {
+static void AddThing_FraggleScript(int x, int y, int z, csg_entity_c *E,
+                                   int type, int angle, int options) {
     // this is set in the Lua code (raw_add_entity)
     const char *fs_name = E->props.getStr("fs_name", NULL);
 
@@ -2747,10 +2594,10 @@ static void DM_AddThing_FraggleScript(int x, int y, int z, csg_entity_c *E,
     thing.angle = angle;
     thing.options = options;
 
-    dm_fs_things.push_back(thing);
+    fs_things.push_back(thing);
 }
 
-static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E) {
+static void WriteThing(sector_c *S, csg_entity_c *E) {
     // ignore light entities and boxes
     if (strcmp(E->id.c_str(), "light") == 0 ||
         strncmp(E->id.c_str(), "oblige_", 7) == 0) {
@@ -2780,7 +2627,7 @@ static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E) {
     int special = E->props.getInt("special");
     int options = E->props.getInt("flags", MTF_ALL_SKILLS);
 
-    if (dm_sub_format == SUBFMT_Hexen) {
+    if (sub_format == SUBFMT_Hexen) {
         if ((options & MTF_HEXEN_CLASSES) == 0) {
             options |= MTF_HEXEN_CLASSES;
         }
@@ -2797,7 +2644,7 @@ static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E) {
     if (E->ex_floor > 0) {
         if (ef_thing_mode == 1) {
             // Use FraggleScript to place the thing on a 3D floor
-            DM_AddThing_FraggleScript(x, y, z, E, type, angle, options);
+            AddThing_FraggleScript(x, y, z, E, type, angle, options);
             return;
         } else if (ef_thing_mode == 2) {
             // EDGE extrafloor flags
@@ -2805,29 +2652,27 @@ static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E) {
         }
     }
 
-    DM_AddThing(x, y, h, type, angle, options, tid, special, args);
+    AddThing(x, y, h, type, angle, options, tid, special, args);
 }
 
-static void DM_WriteThings() {
+static void WriteThings() {
     // iterate through regions so that we know which sector each thing
     // is in, which in turn lets us determine height above the floor.
 
-    for (unsigned int i = 0; i < all_regions.size(); i++) {
-        region_c *R = all_regions[i];
-
+    for (auto *R : all_regions) {
         if (R->index < 0) {
             continue;
         }
 
-        doom_sector_c *S = dm_sectors[R->index];
+        sector_c *S = sectors[R->index];
 
         for (unsigned int k = 0; k < R->entities.size(); k++) {
-            DM_WriteThing(S, R->entities[k]);
+            WriteThing(S, R->entities[k]);
         }
     }
 }
 
-static void DM_WriteFraggleScript() {
+static void WriteFraggleScript() {
     // TODO: support [level info] stuff
 
     // WISHLIST: support adding script text from Lua
@@ -2845,16 +2690,14 @@ static void DM_WriteFraggleScript() {
     // (this precludes several combos, like "only on EASY skill")
     //
 
-    DM_HeaderPrintf("[scripts]\n\n");
+    HeaderPrintf("[scripts]\n\n");
 
-    DM_HeaderPrintf("include(\"things.h\");\n\n");
+    HeaderPrintf("include(\"things.h\");\n\n");
 
     for (int i = 1; i <= 3; i++) {
-        DM_HeaderPrintf("script %d\n{\n", i);
+        HeaderPrintf("script %d\n{\n", i);
 
-        for (unsigned int k = 0; k < dm_fs_things.size(); k++) {
-            fs_thing_t &thing = dm_fs_things[k];
-
+        for (const auto &thing : fs_things) {
             int which;  // which script to use
 
             if (thing.options & MTF_Easy) {
@@ -2869,55 +2712,41 @@ static void DM_WriteFraggleScript() {
                 continue;
             }
 
-            DM_HeaderPrintf("  spawn(%s, %d, %d, %d, %d);\n", thing.fs_name,
-                            thing.x, thing.y, thing.angle, thing.z);
+            HeaderPrintf("  spawn(%s, %d, %d, %d, %d);\n", thing.fs_name,
+                         thing.x, thing.y, thing.angle, thing.z);
         }
 
-        DM_HeaderPrintf("}\n\n");
+        HeaderPrintf("}\n\n");
     }
 
-    DM_HeaderPrintf("startscript(1);\n");
-    DM_HeaderPrintf("if (gameskill() >= 3) startscript(2);\n");
-    DM_HeaderPrintf("if (gameskill() >= 4) startscript(3);\n");
+    HeaderPrintf("startscript(1);\n");
+    HeaderPrintf("if (gameskill() >= 3) startscript(2);\n");
+    HeaderPrintf("if (gameskill() >= 4) startscript(3);\n");
 }
 
 //------------------------------------------------------------------------
 
-void DM_FreeStuff() {
-    unsigned int i;
+void FreeStuff() {
+    std::for_each(vertices.begin(), vertices.end(), [](auto *i) { delete i; });
+    std::for_each(linedefs.begin(), linedefs.end(), [](auto *i) { delete i; });
+    std::for_each(sidedefs.begin(), sidedefs.end(), [](auto *i) { delete i; });
+    std::for_each(sectors.begin(), sectors.end(), [](auto *i) { delete i; });
+    std::for_each(exfloors.begin(), exfloors.end(), [](auto *i) { delete i; });
+    std::for_each(dummies.begin(), dummies.end(), [](auto *i) { delete i; });
 
-    for (i = 0; i < dm_vertices.size(); i++) {
-        delete dm_vertices[i];
-    }
-    for (i = 0; i < dm_linedefs.size(); i++) {
-        delete dm_linedefs[i];
-    }
-    for (i = 0; i < dm_sidedefs.size(); i++) {
-        delete dm_sidedefs[i];
-    }
-    for (i = 0; i < dm_sectors.size(); i++) {
-        delete dm_sectors[i];
-    }
+    vertices.clear();
+    linedefs.clear();
+    sidedefs.clear();
+    sectors.clear();
 
-    for (i = 0; i < dm_exfloors.size(); i++) {
-        delete dm_exfloors[i];
-    }
-    for (i = 0; i < dm_dummies.size(); i++) {
-        delete dm_dummies[i];
-    }
+    exfloors.clear();
+    dummies.clear();
 
-    dm_vertices.clear();
-    dm_linedefs.clear();
-    dm_sidedefs.clear();
-    dm_sectors.clear();
+    fs_things.clear();
 
-    dm_exfloors.clear();
-    dm_dummies.clear();
-
-    dm_fs_things.clear();
-
-    dm_vertex_map.clear();
+    vertex_map.clear();
 }
+}  // namespace Doom
 
 void CSG_DOOM_Write() {
     /// Doom_TestRegions();
@@ -2925,31 +2754,31 @@ void CSG_DOOM_Write() {
 
     LogPrintf("DOOM CSG...\n");
 
-    DM_FreeStuff();
+    Doom::FreeStuff();
 
     CSG_BSP(4.0);
 
     CSG_Shade();
 
-    DM_CreateSectors();
-    DM_CoalesceSectors();
+    Doom::CreateSectors();
+    Doom::CoalesceSectors();
 
-    DM_CreateLinedefs();
-    DM_MergeColinearLines();
+    Doom::CreateLinedefs();
+    Doom::MergeColinearLines();
 
-    DM_RoundCorners();
-    DM_AlignTextures();
+    Doom::RoundCorners();
+    Doom::AlignTextures();
 
-    DM_ProcessSecrets();
-    DM_ProcessExtraFloors();
-    DM_ProcessLightFX();
-    DM_ProcessDepots();
-    DM_CreateDummies();
+    Doom::ProcessSecrets();
+    Doom::ProcessExtraFloors();
+    Doom::ProcessLightFX();
+    Doom::ProcessDepots();
+    Doom::CreateDummies();
     // this writes vertices, sidedefs and sectors too
-    DM_WriteLinedefs();
-    DM_WriteThings();
-    DM_WriteFraggleScript();
-    DM_FreeStuff();
+    Doom::WriteLinedefs();
+    Doom::WriteThings();
+    Doom::WriteFraggleScript();
+    Doom::FreeStuff();
 }
 
 //--- editor settings ---

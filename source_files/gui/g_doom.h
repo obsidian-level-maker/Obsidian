@@ -23,57 +23,58 @@
 
 #include <filesystem>
 #include <array>
-#include "sys_macro.h"
 #include "sys_type.h"
 
 class qLump_c;
 
 /***** VARIABLES ****************/
 
-typedef enum {
+namespace Doom {
+
+enum subformat_e {
     SUBFMT_Hexen = 1,
     SUBFMT_Strife = 2,
-} doom_subformat_e;
+};
 
-extern int dm_sub_format;
+extern int sub_format;
 
 /***** FUNCTIONS ****************/
 
-bool DM_StartWAD(const std::filesystem::path &filename);
-bool DM_EndWAD();
+bool StartWAD(const std::filesystem::path &filename);
+bool EndWAD();
 
-void DM_BeginLevel();
-void DM_EndLevel(std::string_view level_name);
+void BeginLevel();
+void EndLevel(std::string_view level_name);
 
-void DM_WriteLump(std::string_view name, qLump_c *lump);
+void WriteLump(std::string_view name, qLump_c *lump);
 
 // the section parameter can be:
 //   'P' : patches   //   'F' : flats
 //   'S' : sprites   //   'C' : colormaps (Boom)
 //   'T' : textures (Zdoom)
-void DM_AddSectionLump(char section, const char *name, qLump_c *lump);
+void AddSectionLump(char section, const char *name, qLump_c *lump);
 
-void DM_HeaderPrintf(const char *str, ...);
+void HeaderPrintf(const char *str, ...);
 
-void DM_AddVertex(int x, int y);
+void AddVertex(int x, int y);
 
-void DM_AddSector(int f_h, const char *f_tex, int c_h, const char *c_tex,
-                  int light, int special, int tag);
+void AddSector(int f_h, const char *f_tex, int c_h, const char *c_tex,
+               int light, int special, int tag);
 
-void DM_AddSidedef(int sector, const char *l_tex, const char *m_tex,
-                   const char *u_tex, int x_offset, int y_offset);
+void AddSidedef(int sector, const char *l_tex, const char *m_tex,
+                const char *u_tex, int x_offset, int y_offset);
 
-void DM_AddLinedef(int vert1, int vert2, int side1, int side2, int type,
-                   int flags, int tag, const byte *args);
+void AddLinedef(int vert1, int vert2, int side1, int side2, int type, int flags,
+                int tag, const byte *args);
 
-void DM_AddThing(int x, int y, int h, int type, int angle, int options, int tid,
-                 byte special, const byte *args);
+void AddThing(int x, int y, int h, int type, int angle, int options, int tid,
+              byte special, const byte *args);
 
-int DM_NumVertexes();
-int DM_NumSectors();
-int DM_NumSidedefs();
-int DM_NumLinedefs();
-int DM_NumThings();
+int NumVertexes();
+int NumSectors();
+int NumSidedefs();
+int NumLinedefs();
+int NumThings();
 
 /* ----- Level structures ---------------------- */
 
@@ -95,7 +96,7 @@ struct raw_linedef_t {
 };
 #pragma pack(pop)
 
-enum doom_lineflag_e {
+enum lineflag_e {
     MLF_BlockAll = 0x0001,
     MLF_TwoSided = 0x0004,
     MLF_UpperUnpeg = 0x0008,
@@ -152,7 +153,7 @@ struct raw_thing_t {
 };
 #pragma pack(pop)
 
-enum doom_thingflag_e {
+enum thingflag_e {
     MTF_Easy = 1,
     MTF_Medium = 2,
     MTF_Hard = 4,
@@ -231,6 +232,8 @@ struct raw_subsec_t {
     u16_t first;  // first Seg
 };
 #pragma pack(pop)
+
+}  // namespace Doom
 
 #endif  // G_DOOM_H_
 

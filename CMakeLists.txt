@@ -24,19 +24,21 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-O2 -Wall")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if(WIN32 AND NOT MSYS)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHa")
   set(CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
 endif()
 if(MSYS)
 set(CMAKE_EXE_LINKER_FLAGS "-static -mwindows -Isource_files/zlib_src/libzlibstatic.a")
 endif()
 
-set(CMAKE_CXX_CLANG_TIDY clang-tidy)
-file(GLOB ALL_SOURCES "source_files/gui/*.cc" "source_files/gui/*.hh")
-add_custom_target(
-  clang-tidy COMMAND "${CMAKE_CXX_CLANG_TIDY}" -p "${CMAKE_BINARY_DIR}"
-                     ${ALL_SOURCES}
-)
+if(false)
+  set(CMAKE_CXX_CLANG_TIDY clang-tidy)
+  file(GLOB ALL_SOURCES "source_files/gui/*.cc" "source_files/gui/*.hh")
+  add_custom_target(
+    clang-tidy COMMAND "${CMAKE_CXX_CLANG_TIDY}" -p "${CMAKE_BINARY_DIR}"
+                       ${ALL_SOURCES}
+  )
+endif()
 
 cpmaddpackage(
   NAME
@@ -211,18 +213,14 @@ endif()
 target_link_libraries(obsidian PRIVATE fmt::fmt-header-only)
 
 # Copies executables to local install directory after build
-if(UNIX)
-  add_custom_command(
-    TARGET obsidian
-    POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy "${CMAKE_BINARY_DIR}/obsidian"
-            "${CMAKE_CURRENT_LIST_DIR}"
-    COMMAND
-      "${CMAKE_COMMAND}" -E copy
-      "${CMAKE_BINARY_DIR}/source_files/ff_src/filename_formatter"
-      "${CMAKE_CURRENT_LIST_DIR}/tools"
-  )
-endif()
+add_custom_command(
+  TARGET obsidian
+  POST_BUILD
+  COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:obsidian>"
+          "${CMAKE_CURRENT_LIST_DIR}"
+  COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:filename_formatter>"
+          "${CMAKE_CURRENT_LIST_DIR}/tools"
+)
 
 add_dependencies(obsidian filename_formatter)
 

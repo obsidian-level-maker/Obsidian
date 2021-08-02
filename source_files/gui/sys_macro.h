@@ -30,7 +30,7 @@ constexpr double M_PI = 3.14159265358979323846;
 #ifndef MAX
 template <typename A, typename B,
           typename = std::enable_if_t<std::is_convertible_v<B, A>>>
-constexpr auto MAX(A a, B b) {
+constexpr A MAX(A a, B b) {
     if (a > b) {
         return a;
     }
@@ -41,7 +41,7 @@ constexpr auto MAX(A a, B b) {
 #ifndef MIN
 template <typename A, typename B,
           typename = std::enable_if_t<std::is_convertible_v<B, A>>>
-constexpr auto MIN(A a, B b) {
+constexpr A MIN(A a, B b) {
     if (a < b) {
         return a;
     }

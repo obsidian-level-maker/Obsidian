@@ -1141,35 +1141,37 @@ extern int CSG_trace_ray(lua_State *L);
 extern int WF_wolf_block(lua_State *L);
 extern int WF_wolf_read(lua_State *L);
 
-extern int DM_wad_name_gfx(lua_State *L);
-extern int DM_wad_logo_gfx(lua_State *L);
+namespace Doom {
+extern int wad_name_gfx(lua_State *L);
+extern int wad_logo_gfx(lua_State *L);
 
-extern int DM_wad_add_text_lump(lua_State *L);
-extern int DM_wad_add_binary_lump(lua_State *L);
-extern int DM_wad_insert_file(lua_State *L);
-extern int DM_wad_transfer_lump(lua_State *L);
-extern int DM_wad_transfer_map(lua_State *L);
-extern int DM_wad_merge_sections(lua_State *L);
-extern int DM_wad_read_text_lump(lua_State *L);
+extern int wad_add_text_lump(lua_State *L);
+extern int wad_add_binary_lump(lua_State *L);
+extern int wad_insert_file(lua_State *L);
+extern int wad_transfer_lump(lua_State *L);
+extern int wad_transfer_map(lua_State *L);
+extern int wad_merge_sections(lua_State *L);
+extern int wad_read_text_lump(lua_State *L);
 
-extern int DM_fsky_create(lua_State *L);
-extern int DM_fsky_write(lua_State *L);
-extern int DM_fsky_solid_box(lua_State *L);
-extern int DM_fsky_add_stars(lua_State *L);
-extern int DM_fsky_add_clouds(lua_State *L);
-extern int DM_fsky_add_hills(lua_State *L);
+extern int fsky_create(lua_State *L);
+extern int fsky_write(lua_State *L);
+extern int fsky_solid_box(lua_State *L);
+extern int fsky_add_stars(lua_State *L);
+extern int fsky_add_clouds(lua_State *L);
+extern int fsky_add_hills(lua_State *L);
 
-extern int DM_title_create(lua_State *L);
-extern int DM_title_free(lua_State *L);
-extern int DM_title_write(lua_State *L);
-extern int DM_title_set_palette(lua_State *L);
-extern int DM_title_property(lua_State *L);
-extern int DM_title_draw_line(lua_State *L);
-extern int DM_title_draw_rect(lua_State *L);
-extern int DM_title_draw_disc(lua_State *L);
-extern int DM_title_draw_clouds(lua_State *L);
-extern int DM_title_draw_planet(lua_State *L);
-extern int DM_title_load_image(lua_State *L);
+extern int title_create(lua_State *L);
+extern int title_free(lua_State *L);
+extern int title_write(lua_State *L);
+extern int title_set_palette(lua_State *L);
+extern int title_property(lua_State *L);
+extern int title_draw_line(lua_State *L);
+extern int title_draw_rect(lua_State *L);
+extern int title_draw_disc(lua_State *L);
+extern int title_draw_clouds(lua_State *L);
+extern int title_draw_planet(lua_State *L);
+extern int title_load_image(lua_State *L);
+}  // namespace Doom
 
 extern int wadfab_load(lua_State *L);
 extern int wadfab_free(lua_State *L);
@@ -1249,35 +1251,35 @@ static const luaL_Reg gui_script_funcs[] = {
     {"wolf_read", WF_wolf_read},
 
     // Doom/Heretic/Hexen functions
-    {"wad_name_gfx", DM_wad_name_gfx},
-    {"wad_logo_gfx", DM_wad_logo_gfx},
-    {"wad_add_text_lump", DM_wad_add_text_lump},
-    {"wad_add_binary_lump", DM_wad_add_binary_lump},
+    {"wad_name_gfx", Doom::wad_name_gfx},
+    {"wad_logo_gfx", Doom::wad_logo_gfx},
+    {"wad_add_text_lump", Doom::wad_add_text_lump},
+    {"wad_add_binary_lump", Doom::wad_add_binary_lump},
 
-    {"wad_insert_file", DM_wad_insert_file},
-    {"wad_transfer_lump", DM_wad_transfer_lump},
-    {"wad_transfer_map", DM_wad_transfer_map},
-    {"wad_merge_sections", DM_wad_merge_sections},
-    {"wad_read_text_lump", DM_wad_read_text_lump},
+    {"wad_insert_file", Doom::wad_insert_file},
+    {"wad_transfer_lump", Doom::wad_transfer_lump},
+    {"wad_transfer_map", Doom::wad_transfer_map},
+    {"wad_merge_sections", Doom::wad_merge_sections},
+    {"wad_read_text_lump", Doom::wad_read_text_lump},
 
-    {"fsky_create", DM_fsky_create},
-    {"fsky_write", DM_fsky_write},
-    {"fsky_solid_box", DM_fsky_solid_box},
-    {"fsky_add_stars", DM_fsky_add_stars},
-    {"fsky_add_clouds", DM_fsky_add_clouds},
-    {"fsky_add_hills", DM_fsky_add_hills},
+    {"fsky_create", Doom::fsky_create},
+    {"fsky_write", Doom::fsky_write},
+    {"fsky_solid_box", Doom::fsky_solid_box},
+    {"fsky_add_stars", Doom::fsky_add_stars},
+    {"fsky_add_clouds", Doom::fsky_add_clouds},
+    {"fsky_add_hills", Doom::fsky_add_hills},
 
-    {"title_create", DM_title_create},
-    {"title_free", DM_title_free},
-    {"title_write", DM_title_write},
-    {"title_set_palette", DM_title_set_palette},
-    {"title_prop", DM_title_property},
-    {"title_draw_line", DM_title_draw_line},
-    {"title_draw_rect", DM_title_draw_rect},
-    {"title_draw_disc", DM_title_draw_disc},
-    {"title_draw_clouds", DM_title_draw_clouds},
-    {"title_draw_planet", DM_title_draw_planet},
-    {"title_load_image", DM_title_load_image},
+    {"title_create", Doom::title_create},
+    {"title_free", Doom::title_free},
+    {"title_write", Doom::title_write},
+    {"title_set_palette", Doom::title_set_palette},
+    {"title_prop", Doom::title_property},
+    {"title_draw_line", Doom::title_draw_line},
+    {"title_draw_rect", Doom::title_draw_rect},
+    {"title_draw_disc", Doom::title_draw_disc},
+    {"title_draw_clouds", Doom::title_draw_clouds},
+    {"title_draw_planet", Doom::title_draw_planet},
+    {"title_load_image", Doom::title_load_image},
 
     {"wadfab_load", wadfab_load},
     {"wadfab_free", wadfab_free},
