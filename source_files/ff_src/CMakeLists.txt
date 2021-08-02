@@ -15,7 +15,11 @@ if(!MINGW)
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE ${FLEX_LIBRARIES})
 
-if(WIN32)
+if(WIN32 OR MSYS)
   target_link_libraries(filename_formatter PRIVATE wingetopt)
   target_include_directories(filename_formatter PRIVATE ../wingetopt_src/src)
+endif()
+
+if(MSYS)
+set(CMAKE_EXE_LINKER_FLAGS "-static -mwindows -Isource_files/zlib_src/libzlibstatic.a")
 endif()
