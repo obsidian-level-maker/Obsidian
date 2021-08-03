@@ -58,14 +58,16 @@ inline int v_unload_private_font(const char *path) {
     return RemoveFontResourceEx(path, FR_PRIVATE, nullptr);
 }
 #else
+#include <fontconfig/fontconfig.h>
 ALWAYS_INLINE
 inline int i_load_private_font(const char *path) {
     return static_cast<int>(FcConfigAppFontAddFile(
         nullptr, reinterpret_cast<const FcChar8 *>(path)));
 }
 ALWAYS_INLINE
-inline int i_load_private_font(const char *path) {
-    return FcConfigAppFontClear(nullptr);
+inline int v_unload_private_font(const char *path) {
+    FcConfigAppFontClear(nullptr);
+    return 0;
 }
 #endif
 
