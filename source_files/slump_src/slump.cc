@@ -368,10 +368,13 @@
 */
 
 #include "slump.h"
-#include "twister.h"
 #include <assert.h>
 #include <cstdlib>
 #include <string.h>
+
+#include "twister.h"
+#include "m_lua.h"
+#include "lib_util.h"
 
 // Shim functions to replace old SLUMP RNG
 int roll(int n) {
@@ -1385,13 +1388,13 @@ config *get_config(std::filesystem::path filename) {
     answer->lock_themes = SLUMP_FALSE;
     answer->major_nukage = StringToInt(ob_get_param("bool_major_nukage_slump")) ? SLUMP_TRUE : SLUMP_FALSE;
     std::string monvariety = ob_get_param("slump_mons");
-    if (StringCaseCmp(monvariety, "normal")) {
+    if (StringCaseCmp(monvariety, "normal") == 0) {
         answer->required_monster_bits = 0;
         answer->forbidden_monster_bits = SPECIAL;
-    } else if (StringCaseCmp(monvariety, "shooters")) {
+    } else if (StringCaseCmp(monvariety, "shooters") == 0) {
         answer->required_monster_bits = SHOOTS;
         answer->forbidden_monster_bits = SPECIAL;
-    } else if (StringCaseCmp(monvariety, "noflyzone")) {
+    } else if (StringCaseCmp(monvariety, "noflyzone") == 0) {
         answer->required_monster_bits = 0;
         answer->forbidden_monster_bits = FLIES + SPECIAL;
     } else {
@@ -1399,13 +1402,13 @@ config *get_config(std::filesystem::path filename) {
         answer->forbidden_monster_bits = 0;
     }
     std::string levelsize = ob_get_param("float_minrooms_slump");
-    if (StringCaseCmp(levelsize, "Mix It Up")) {
+    if (StringCaseCmp(levelsize, "Mix It Up") == 0) {
         answer->minrooms = twister_Between(2, 37);
     } else {
         answer->minrooms = StringToInt(levelsize);
     }
     std::string current_game = ob_get_param("game");
-    if (StringCaseCmp(current_game, "doom1") || StringCaseCmp(current_game, "ultdoom")) {
+    if (StringCaseCmp(current_game, "doom1") == 0 || StringCaseCmp(current_game, "ultdoom") == 0) {
         answer->gamemask = DOOM1_BIT;
         answer->map = 0;
         answer->episode = 1;
@@ -1418,11 +1421,11 @@ config *get_config(std::filesystem::path filename) {
     }                                   
     answer->last_mission = SLUMP_FALSE;
     std::string wadlength = ob_get_param("length");
-    if (StringCaseCmp(wadlength, "single")) {
+    if (StringCaseCmp(wadlength, "single") == 0) {
         answer->levelcount = 1;
-    } else if (StringCaseCmp(wadlength, "few")) {
+    } else if (StringCaseCmp(wadlength, "few") == 0) {
         answer->levelcount = 4;
-    } else if (StringCaseCmp(wadlength, "episode")) {
+    } else if (StringCaseCmp(wadlength, "episode") == 0) {
         answer->levelcount = 11;
     } else {
         answer->levelcount = 32;  // "Full Game"

@@ -927,12 +927,12 @@ int gui_get_module_button_value(lua_State *L) {
 // LUA: at_level(name, idx, total)
 //
 int gui_at_level(lua_State *L) {
-    const char *name = luaL_checkstring(L, 1);
+    std::string name = luaL_optstring(L, 1, "");
 
     int index = luaL_checkinteger(L, 2);
     int total = luaL_checkinteger(L, 3);
 
-    Main::ProgStatus(_("Making %s"), name);
+    Main::ProgStatus(_(fmt::format("Making {}", name).c_str()));
 
     if (main_win) {
         main_win->build_box->Prog_AtLevel(index, total);

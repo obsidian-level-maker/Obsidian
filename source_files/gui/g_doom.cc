@@ -763,97 +763,32 @@ int Doom::NumThings() {
 #include "zdmain.h"
 
 namespace Doom {
+
 static bool BuildNodes(const std::filesystem::path &filename) {
     LogPrintf("\n");
 
-    zdbsp_options options;
-    if (current_engine == "vanilla" || current_engine == "nolimit" ||
-        current_engine == "boom") {
-        options.build_nodes = true;
-        options.build_gl_nodes = false;
-        options.build_gl_only = false;
-        if (build_reject) {
-            options.reject_mode = ERM_Rebuild_NoGL;
-        } else {
-            options.reject_mode = ERM_CreateZeroes;
-        }
-        options.check_polyobjs = false;
-        options.compress_nodes = false;
-        options.compress_gl_nodes = false;
-        options.force_compression = false;
-    } else if (current_engine == "prboom") {
-        options.build_nodes = true;
-        options.build_gl_nodes = false;
-        options.build_gl_only = false;
-        if (build_reject) {
-            options.reject_mode = ERM_Rebuild_NoGL;
-        } else {
-            options.reject_mode = ERM_CreateZeroes;
-        }
-        options.check_polyobjs = false;
-        options.compress_nodes = true;
-        options.compress_gl_nodes = false;
-        options.force_compression = false;
-    } else if (current_engine == "eternity") {
-        options.build_nodes = true;
-        if (UDMF_mode) {
-            options.build_gl_nodes = true;
-            options.build_gl_only = true;
-        } else {
-            options.build_gl_nodes = false;
-            options.build_gl_only = false;
-        }
-        options.reject_mode = ERM_DontTouch;  // Eternity might not play well
-                                              // with ZDBSP's reject builder
-        options.check_polyobjs = true;
-        options.compress_nodes = true;
-        options.compress_gl_nodes = false;
-        options.force_compression = false;
-    } else if (current_engine == "edge") {
+    if (StringCaseCmp(current_engine, "edge") == 0) {
         if (!UDMF_mode) {
             if (!build_nodes) {
                 LogPrintf("Skipping nodes per user selection...\n");
                 return true;
             }
         }
-        options.build_nodes = true;
-        options.build_gl_nodes = true;
-        options.build_gl_only = true;
-        if (!build_reject || UDMF_mode) {
-            options.reject_mode = ERM_DontTouch;
-        } else {
-            options.reject_mode = ERM_Rebuild;
-        }
-        options.check_polyobjs = true;
-        options.compress_nodes = true;
-        options.compress_gl_nodes = false;
-        options.force_compression = false;
-    } else if (current_engine == "zdoom") {
+    } else if (StringCaseCmp(current_engine, "zdoom") == 0) {
         if (!build_nodes) {
             LogPrintf("Skipping nodes per user selection...\n");
             return true;
         }
-        options.build_nodes = true;
-        options.build_gl_nodes = true;
-        options.build_gl_only = true;
-        if (!build_reject || UDMF_mode) {
-            options.reject_mode = ERM_DontTouch;
-        } else {
-            options.reject_mode = ERM_Rebuild;
+    } else {
+        if (zdmain(filename, current_engine, UDMF_mode, build_reject) != 0) {
+            Main::ProgStatus(_("ZDBSP Error!"));
+            return false;
         }
-        options.check_polyobjs = true;
-        options.compress_nodes = true;
-        options.compress_gl_nodes = true;
-        options.force_compression = true;
     }
-
-    if (zdmain(filename.generic_string().c_str(), options) != 0) {
-        Main::ProgStatus(_("ZDBSP Error!"));
-        return false;
-    }
-
     return true;
+
 }
+
 }  // namespace Doom
 
 //------------------------------------------------------------------------
@@ -902,10 +837,10 @@ bool Doom::game_interface_c::Start(const char *preset) {
         Main::BackupFile(filename, "old");
     }
 
-    // Need to preempt the rest of this process if we are using Vanilla Doom
+    // Need to preempt the rest of this process for now if we are using Vanilla Doom
     if (main_win) {
         current_engine = ob_get_param("engine");
-        if (current_engine == "vanilla") {
+        if (StringCaseCmp(current_engine, "vanilla") == 0) {
             build_reject = StringToInt(ob_get_param("bool_build_reject"));
             return true;
         }
@@ -918,8 +853,8 @@ bool Doom::game_interface_c::Start(const char *preset) {
 
     if (main_win) {
         main_win->build_box->Prog_Init(20, N_("CSG"));
-        if (current_engine == "zdoom" || current_engine == "edge" ||
-            current_engine == "eternity") {
+        if (StringCaseCmp(current_engine, "zdoom") == 0 || StringCaseCmp(current_engine, "edge") == 0 ||
+            StringCaseCmp(current_engine, "eternity") == 0) {
             build_reject = StringToInt(ob_get_param("bool_build_reject_udmf"));
             map_format = ob_get_param("map_format");
             build_nodes = StringToInt(ob_get_param("bool_build_nodes_udmf"));
@@ -943,7 +878,7 @@ bool Doom::game_interface_c::BuildNodes() const {
 
 bool Doom::game_interface_c::Finish(bool build_ok) {
     // Skip DM_EndWAD if using Vanilla Doom
-    if (current_engine != "vanilla") {
+    if (StringCaseCmp(current_engine, "vanilla") != 0) {
         // TODO: handle write errors
         EndWAD();
     } else {

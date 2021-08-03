@@ -1,5 +1,5 @@
 project(wingetopt)
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.13)
 
 option(BUILD_SHARED_LIBS "Build the shared library" OFF)
 

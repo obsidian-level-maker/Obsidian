@@ -32,8 +32,6 @@
 #include <cstdio>
 #include <filesystem>
 #include <fstream>
-#include "m_lua.h"
-#include "lib_util.h"
 
 /* Slump 0.003.02 */
 #define SOURCE_VERSION (0)

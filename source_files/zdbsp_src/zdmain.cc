@@ -57,10 +57,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <filesystem>
 
 #include "processor.h"
 #include "zdmain.h"
 #include "zdwad.h"
+
+#include "m_lua.h"
+#include "lib_util.h"
 
 // MACROS ------------------------------------------------------------------
 
@@ -105,21 +109,78 @@ bool V5GLNodes = false;
 
 // CODE --------------------------------------------------------------------
 
-int zdmain(const char *filename, zdbsp_options options) {
-    BuildNodes = options.build_nodes;
-    BuildGLNodes = options.build_gl_nodes;
-    RejectMode = options.reject_mode;
-    CheckPolyobjs = options.check_polyobjs;
-    CompressNodes = options.compress_nodes;
-    CompressGLNodes = options.compress_gl_nodes;
-    ForceCompression = options.force_compression;
-    GLOnly = options.build_gl_only;
+int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF_mode, bool build_reject) {
+
+    if (StringCaseCmp(current_engine, "vanilla") == 0 || StringCaseCmp(current_engine, "nolimit") == 0 ||
+            StringCaseCmp(current_engine, "boom") == 0) {
+            BuildGLNodes = false;
+            GLOnly = false;
+            if (build_reject) {
+                RejectMode = ERM_Rebuild_NoGL;
+            } else {
+                RejectMode = ERM_CreateZeroes;
+            }
+            CheckPolyobjs = false;
+            CompressNodes = false;
+            CompressGLNodes = false;
+            ForceCompression = false;
+        } else if (StringCaseCmp(current_engine, "prboom") == 0) {
+            BuildGLNodes = false;
+            GLOnly = false;
+            if (build_reject) {
+                RejectMode = ERM_Rebuild_NoGL;
+            } else {
+                RejectMode = ERM_CreateZeroes;
+            }
+            CheckPolyobjs = false;
+            CompressNodes = true;
+            CompressGLNodes = false;
+            ForceCompression = false;
+        } else if (StringCaseCmp(current_engine, "eternity") == 0) {
+            if (UDMF_mode) {
+                BuildGLNodes = true;
+                GLOnly = true;
+            } else {
+                BuildGLNodes = false;
+                GLOnly = false;
+            }
+            RejectMode = ERM_DontTouch;  // Eternity might not play well
+                                                // with ZDBSP's reject builder
+            CheckPolyobjs = true;
+            CompressNodes = true;
+            CompressGLNodes = false;
+            ForceCompression = false;
+        } else if (StringCaseCmp(current_engine, "edge") == 0) {
+            BuildGLNodes = true;
+            GLOnly = true;
+            if (!build_reject || UDMF_mode) {
+                RejectMode = ERM_DontTouch;
+            } else {
+                RejectMode = ERM_Rebuild;
+            }
+            CheckPolyobjs = true;
+            CompressNodes = true;
+            CompressGLNodes = false;
+            ForceCompression = false;
+        } else if (StringCaseCmp(current_engine, "zdoom") == 0) {
+            BuildGLNodes = true;
+            GLOnly = true;
+            if (!build_reject || UDMF_mode) {
+                RejectMode = ERM_DontTouch;
+            } else {
+                RejectMode = ERM_Rebuild;
+            }
+            CheckPolyobjs = true;
+            CompressNodes = true;
+            CompressGLNodes = true;
+            ForceCompression = true;
+        }
 
     ShowVersion();
 
-    bool fixSame = false;
+    bool fixSame = true; // We are always building nodes "in-place"
 
-    InName = filename;
+    InName = filename.generic_string().c_str();
 
     try {
         START_COUNTER(t1a, t1b, t1c)
@@ -148,7 +209,6 @@ int zdmain(const char *filename, zdbsp_options options) {
             strcat(out, ".x");
         }
         OutName = out;
-        fixSame = true;
 
         FWadReader inwad(InName);
         FWadWriter outwad(OutName, inwad.IsIWAD());

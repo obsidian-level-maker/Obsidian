@@ -38,7 +38,9 @@ add_library(
   zdwad.h
 )
 
+target_compile_features(obsidian_zdbsp PRIVATE cxx_std_17)
 target_include_directories(obsidian_zdbsp PRIVATE ../zlib_src)
+target_include_directories(obsidian_zdbsp PRIVATE ../gui)
 if(UNIX)
   target_link_libraries(obsidian_zdbsp PUBLIC z)
 else()
