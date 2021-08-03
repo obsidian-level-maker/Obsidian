@@ -22,6 +22,7 @@
 #define __LIB_UTIL_H__
 
 #include <string>
+#include <string_view>
 #include "sys_type.h"
 
 /* string utilities */

@@ -178,6 +178,7 @@ target_include_directories(obsidian PRIVATE source_files/lua_src)
 target_include_directories(obsidian PRIVATE source_files/slump_src)
 target_include_directories(obsidian PRIVATE source_files/whereami_src)
 target_include_directories(obsidian PRIVATE source_files/zlib_src)
+target_include_directories(obsidian PRIVATE source_files/gui)
 
 if(MINGW OR WIN32)
   target_compile_definitions(obsidian PRIVATE WIN32)
