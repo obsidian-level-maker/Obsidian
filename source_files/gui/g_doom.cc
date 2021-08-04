@@ -808,8 +808,6 @@ class game_interface_c : public ::game_interface_c {
     void EndLevel();
     void Property(const char *key, const char *value);
 
-   private:
-    bool BuildNodes() const;
 };
 }  // namespace Doom
 
@@ -872,10 +870,6 @@ bool Doom::game_interface_c::Start(const char *preset) {
     return true;
 }
 
-bool Doom::game_interface_c::BuildNodes() const {
-    return Doom::BuildNodes(filename);
-}
-
 bool Doom::game_interface_c::Finish(bool build_ok) {
     // Skip DM_EndWAD if using Vanilla Doom
     if (StringCaseCmp(current_engine, "vanilla") != 0) {
@@ -886,7 +880,7 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
     }
 
     if (build_ok) {
-        build_ok = BuildNodes();
+        build_ok = Doom::BuildNodes(filename);
     }
 
     if (!build_ok) {

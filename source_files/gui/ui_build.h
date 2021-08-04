@@ -39,7 +39,7 @@ class UI_Build : public Fl_Group {
     std::string string_seed = "";
 
    private:
-    char status_label[200];
+    std::string status_label;
     std::string prog_label;
 
     int level_index;  // starts at 1
@@ -68,9 +68,9 @@ class UI_Build : public Fl_Group {
     void resize(int X, int Y, int W, int H);
 
     void ParseSteps(const char *list);
-    int FindStep(const char *name);  // -1 if not found
+    int FindStep(std::string name);  // -1 if not found
 
-    void AddStatusStep(const char *name);
+    void AddStatusStep(std::string name);
 };
 
 #endif /* __UI_BUILD_H__ */

@@ -32,7 +32,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
         "Progress and minimap display.\nMinimap Legend:\nWhite - Regular "
         "rooms\nBrown - Caves\nBlue - Outdoors\nGreen - Parks");
 
-    status_label[0] = 0;
+    status_label = "0";
 
     int pad = kf_w(12);
 
@@ -251,8 +251,8 @@ void UI_Build::Prog_Step(const char *step_name) {
     newtitle.append(" ] ");
     newtitle.append(fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
     newtitle.append(" - ");
-    newtitle.append(status_label);
-    main_win->label(newtitle.c_str());
+    newtitle.append(status_label.c_str());
+    main_win->copy_label(newtitle.c_str());
 
     AddStatusStep(_(step_name));
 
@@ -287,21 +287,20 @@ void UI_Build::Prog_Nodes(int pos, int limit) {
 }
 
 void UI_Build::SetStatus(std::string_view msg) {
-    int limit = (int)sizeof(status_label);
+    //int limit = (int)sizeof(status_label);
 
 #ifdef WIN32
 #undef min
 #endif
-    strncpy(status_label, msg.data(), std::min<int>(limit, msg.size()));
-
-    status_label[limit - 1] = 0;
+    //strncpy(status_label, msg.data(), std::min<int>(limit, msg.size()));
+    status_label = msg;
 
     if (StringCaseCmp(status_label, "Success") == 0) {
         main_win->label(
             fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION).c_str());
     }
 
-    status->label(status_label);
+    status->copy_label(status_label.c_str());
     status->redraw();
 }
 
@@ -329,9 +328,9 @@ void UI_Build::ParseSteps(const char *names) {
     }
 }
 
-int UI_Build::FindStep(const char *name) {
+int UI_Build::FindStep(std::string name) {
     for (int i = 0; i < (int)step_names.size(); i++) {
-        if (StringCaseCmp(step_names[i].c_str(), name) == 0) {
+        if (StringCaseCmp(step_names[i], name) == 0) {
             return i;
         }
     }
@@ -339,21 +338,9 @@ int UI_Build::FindStep(const char *name) {
     return -1;  // not found
 }
 
-void UI_Build::AddStatusStep(const char *name) {
+void UI_Build::AddStatusStep(std::string name) {
     // modifies the current status string to show the current step
-
-    char *pos = strchr(status_label, ':');
-
-    if (pos) {
-        pos[1] = 0;
-    } else {
-        strcat(status_label, " :");
-    }
-
-    strcat(status_label, " ");
-    strcat(status_label, name);
-
-    status->label(status_label);
+    status->copy_label(fmt::format("{} : {}", status_label, name).c_str());
     status->redraw();
 }
 
