@@ -69,8 +69,8 @@ static int errors_seen;
 
 std::string current_engine;
 std::string map_format;
-int build_nodes;
-int build_reject;
+bool build_nodes;
+bool build_reject;
 
 static bool UDMF_mode;
 
@@ -774,17 +774,20 @@ static bool BuildNodes(const std::filesystem::path &filename) {
                 return true;
             }
         }
-    } else if (StringCaseCmp(current_engine, "zdoom") == 0) {
+    }
+    
+    if (StringCaseCmp(current_engine, "zdoom") == 0) {
         if (!build_nodes) {
             LogPrintf("Skipping nodes per user selection...\n");
             return true;
         }
-    } else {
-        if (zdmain(filename, current_engine, UDMF_mode, build_reject) != 0) {
-            Main::ProgStatus(_("ZDBSP Error!"));
-            return false;
-        }
     }
+        
+    if (zdmain(filename, current_engine, UDMF_mode, build_reject) != 0) {
+        Main::ProgStatus(_("ZDBSP Error!"));
+        return false;
+    }
+
     return true;
 
 }
@@ -861,7 +864,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
             map_format = "binary";
             build_nodes = true;
         }
-        if (map_format == "udmf") {
+        if (StringCaseCmp(map_format, "udmf") == 0) {
             UDMF_mode = true;
         } else {
             UDMF_mode = false;
