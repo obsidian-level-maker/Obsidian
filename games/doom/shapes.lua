@@ -6161,6 +6161,32 @@ GROW_MAZE_T =
   }
 },
 
+GROW_MAZE_X =
+{
+  prob = 2,
+  skip_prob = 50,
+
+  structure =
+  {
+    "11...xx...","1111%xx/11",
+    "xxx......x","xxx%1%/1/x",
+    "xxxx....xx","xxxx%11/xx",
+    "xxxx....xx","xxxx/11%xx",
+    "xxx......x","xxx/1/%1%x",
+    "xx...xx...","xx11/xx%11",
+  },
+
+  diagonals =
+  {
+         "1.",".1",
+    ".1","1.",".1","1.",
+         ".1","1.",
+         ".1","1.",
+    ".1","1.",".1","1.",
+         "1.",".1",
+  }
+},
+
 GROW_MAZE_T_DIAG =
 {
   prob = 2,
