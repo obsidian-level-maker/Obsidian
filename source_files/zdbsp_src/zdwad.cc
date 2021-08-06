@@ -41,29 +41,39 @@ static const bool MapLumpRequired[12] = {
 static const char GLLumpNames[5][9] = {"GL_VERT", "GL_SEGS", "GL_SSECT",
                                        "GL_NODES", "GL_PVS"};
 
-FWadReader::FWadReader(std::filesystem::path filename) : Lumps(NULL), File(NULL) {
-    if (fopen_s(&File, filename.generic_string().c_str(), "rb")) {
+FWadReader::FWadReader(std::filesystem::path filename) : Lumps(NULL) {
+    File.open(filename.generic_string().c_str(), std::ios::binary);
+    
+    if (!File.is_open()) {
         throw std::runtime_error("Could not open input file");
     }
 
-    SafeRead(&Header, sizeof(Header));
+    File.read(reinterpret_cast<char *>(&Header), sizeof(Header));
+    if (File.gcount() != sizeof(Header)) {
+        throw std::runtime_error("Error reading WAD header");
+    }
+
     if (Header.Magic[0] != 'P' && Header.Magic[0] != 'I' &&
         Header.Magic[1] != 'W' && Header.Magic[2] != 'A' &&
         Header.Magic[3] != 'D') {
-        fclose(File);
-        File = NULL;
+        File.close();
         throw std::runtime_error("Input file is not a wad");
     }
 
     Header.NumLumps = LittleLong(Header.NumLumps);
     Header.Directory = LittleLong(Header.Directory);
 
-    if (fseek(File, Header.Directory, SEEK_SET)) {
+    File.seekg(Header.Directory);
+    if (File.tellg() != Header.Directory) {
         throw std::runtime_error("Could not read wad directory");
     }
 
     Lumps = new WadLump[Header.NumLumps];
-    SafeRead(Lumps, Header.NumLumps * sizeof(*Lumps));
+
+    File.read(reinterpret_cast<char *>(Lumps), Header.NumLumps * sizeof(*Lumps));
+    if (File.gcount() != sizeof(Header.NumLumps * sizeof(*Lumps))) {
+        throw std::runtime_error("Problem reading lumps");
+    }
 
     for (int i = 0; i < Header.NumLumps; ++i) {
         Lumps[i].FilePos = LittleLong(Lumps[i].FilePos);
@@ -72,7 +82,7 @@ FWadReader::FWadReader(std::filesystem::path filename) : Lumps(NULL), File(NULL)
 }
 
 void FWadReader::Close() {
-	if (File) fclose(File);
+	if (File.is_open()) File.close();
 	if (Lumps) delete[] Lumps;
 }
 
@@ -241,12 +251,6 @@ int FWadReader::LumpAfterMap(int i) const {
         }
     }
     return i + k;
-}
-
-void FWadReader::SafeRead(void *buffer, size_t size) {
-    if (fread(buffer, 1, size, File) != size) {
-        throw std::runtime_error("Failed to read");
-    }
 }
 
 const char *FWadReader::LumpName(int lump) {

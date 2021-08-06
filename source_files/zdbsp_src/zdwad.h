@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <filesystem>
+#include <fstream>
 
 #include "tarray.h"
 #include "zdbsp.h"
@@ -45,8 +46,6 @@ class FWadReader {
     int NumLumps() const;
     void Close();
 
-    void SafeRead(void *buffer, size_t size);
-
     // VC++ 6 does not support template member functions in non-template
     // classes!
     template <class T>
@@ -55,7 +54,7 @@ class FWadReader {
    private:
     WadHeader Header;
     WadLump *Lumps;
-    FILE *File;
+    std::ifstream File;
 };
 
 template <class T>
@@ -65,12 +64,16 @@ void ReadLump(FWadReader &wad, int index, T *&data, int &size) {
         size = 0;
         return;
     }
-    if (fseek(wad.File, wad.Lumps[index].FilePos, SEEK_SET)) {
-        throw std::runtime_error("Failed to seek");
+    wad.File.seekg(wad.Lumps[index].FilePos);
+    if (wad.File.tellg() != wad.Lumps[index].FilePos) {
+        throw std::runtime_error("Failed to seek");        
     }
     size = wad.Lumps[index].Size / sizeof(T);
     data = new T[size];
-    wad.SafeRead(data, size * sizeof(T));
+    wad.File.read(reinterpret_cast<char *>(data), size * sizeof(T));
+    if (wad.File.gcount() != size * sizeof(T)) {
+        throw std::runtime_error("Failed to read lump");
+    }
 }
 
 template <class T>

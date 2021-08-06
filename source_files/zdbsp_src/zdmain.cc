@@ -64,7 +64,6 @@
 #include "zdmain.h"
 #include "zdwad.h"
 
-#include "m_lua.h"
 #include "lib_util.h"
 
 // MACROS ------------------------------------------------------------------
