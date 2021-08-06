@@ -162,7 +162,7 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
             CompressNodes = true;
             CompressGLNodes = false;
             ForceCompression = false;
-        } else if (StringCaseCmp(current_engine, "zdoom") == 0) {
+        } else { // ZDoom is the only choice left, so customize for it
             BuildGLNodes = true;
             GLOnly = true;
             if (!build_reject || UDMF_mode) {
