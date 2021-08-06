@@ -9,6 +9,7 @@
 
 #include <exception>
 #include <stdexcept>
+#include <filesystem>
 
 #ifdef _MSC_VER
 typedef unsigned __int32 uint32_t;
@@ -30,8 +31,7 @@ enum ERejectMode {
 };
 
 extern const char *Map;
-extern const char *InName;
-extern const char *OutName;
+extern std::filesystem::path OutName;
 extern bool BuildNodes, BuildGLNodes, ConformNodes, GLOnly, WriteComments;
 extern bool NoPrune;
 extern EBlockmapMode BlockmapMode;

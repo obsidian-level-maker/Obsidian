@@ -41,9 +41,8 @@ static const bool MapLumpRequired[12] = {
 static const char GLLumpNames[5][9] = {"GL_VERT", "GL_SEGS", "GL_SSECT",
                                        "GL_NODES", "GL_PVS"};
 
-FWadReader::FWadReader(const char *filename) : Lumps(NULL), File(NULL) {
-    File = fopen(filename, "rb");
-    if (File == NULL) {
+FWadReader::FWadReader(std::filesystem::path filename) : Lumps(NULL), File(NULL) {
+    if (fopen_s(&File, filename.generic_string().c_str(), "rb")) {
         throw std::runtime_error("Could not open input file");
     }
 
@@ -257,9 +256,8 @@ const char *FWadReader::LumpName(int lump) {
     return name;
 }
 
-FWadWriter::FWadWriter(const char *filename, bool iwad) : File(NULL) {
-    File = fopen(filename, "wb");
-    if (File == NULL) {
+FWadWriter::FWadWriter(std::filesystem::path filename, bool iwad) : File(NULL) {
+    if (fopen_s(&File, filename.generic_string().c_str(), "wb")) {
         throw std::runtime_error("Could not open output file");
     }
 

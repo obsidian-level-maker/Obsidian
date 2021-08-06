@@ -7,9 +7,11 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <filesystem>
 
 #include "tarray.h"
 #include "zdbsp.h"
+#include "lib_util.h"
 
 struct WadHeader {
     char Magic[4];
@@ -25,7 +27,7 @@ struct WadLump {
 
 class FWadReader {
    public:
-    FWadReader(const char *filename);
+    FWadReader(std::filesystem::path filename);
     ~FWadReader();
 
     bool IsIWAD() const;
@@ -79,7 +81,7 @@ void ReadMapLump(FWadReader &wad, const char *name, int index, T *&data,
 
 class FWadWriter {
    public:
-    FWadWriter(const char *filename, bool iwad);
+    FWadWriter(std::filesystem::path filename, bool iwad);
     ~FWadWriter();
 
     void CreateLabel(const char *name);

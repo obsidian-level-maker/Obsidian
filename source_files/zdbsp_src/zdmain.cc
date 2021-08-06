@@ -55,6 +55,7 @@
 
 #include <stdarg.h>
 #include <stdio.h>
+#define __STDC_WANT_LIB_EXT1__ 1
 #include <stdlib.h>
 #include <string.h>
 #include <filesystem>
@@ -85,8 +86,7 @@ static void ShowVersion();
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
 const char *Map = NULL;
-const char *InName;
-const char *OutName = "tmp.wad";
+std::filesystem::path OutName = "tmp.wad";
 bool BuildNodes = true;
 bool BuildGLNodes = false;
 bool ConformNodes = false;
@@ -178,39 +178,11 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
 
     ShowVersion();
 
-    bool fixSame = true; // We are always building nodes "in-place"
-
-    InName = filename.generic_string().c_str();
-
     try {
         START_COUNTER(t1a, t1b, t1c)
 
-        // When the input and output files are the same, output will go to
-        // a temporary file. After everything is done, the input file is
-        // deleted and the output file is renamed to match the input file.
-
-		char *out = new char[strlen(OutName) + 3], *dot;
-
-		if (out == NULL) {
-            throw std::runtime_error(
-                "Could not create temporary file name.");
-        }
-
-        strcpy(out, OutName);
-        dot = strrchr(out, '.');
-        if (dot && (dot[1] == 'w' || dot[1] == 'W') &&
-            (dot[2] == 'a' || dot[2] == 'A') &&
-            (dot[3] == 'd' || dot[3] == 'D') && dot[4] == 0) {
-            // *.wad becomes *.daw
-            dot[1] = 'd';
-            dot[3] = 'w';
-        } else {
-            // * becomes *.x
-            strcat(out, ".x");
-        }
-        OutName = out;
-
-        FWadReader inwad(InName);
+        if (std::filesystem::exists(OutName)) { std::filesystem::remove(OutName); }
+        FWadReader inwad(filename);
         FWadWriter outwad(OutName, inwad.IsIWAD());
 
         int lump = 0;
@@ -244,20 +216,11 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
 
         outwad.Close();
         inwad.Close();
-		
-		if (fixSame) {
-			remove(InName);		
-			
-			if (0 != rename(OutName, InName)) {
-				printf(
-					"The output file could not be renamed to %s.\nYou can find "
-					"it as %s.\n",
-					InName, OutName);
-					return 20;
-			}
-		}
+		std::filesystem::remove(filename);			
+        std::filesystem::rename(OutName, filename);
 
-        END_COUNTER(t1a, t1b, t1c, "\nTotal time: %.3f seconds.\n")
+        END_COUNTER(t1a, t1b, t1c, "\nTotal time: %.3f seconds.\n");
+
     } catch (std::runtime_error &msg) {
         printf("%s\n", msg.what());
         return 20;
