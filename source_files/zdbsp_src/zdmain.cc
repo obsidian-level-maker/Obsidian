@@ -190,7 +190,7 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
 
         while (lump < max) {
             if (inwad.IsMap(lump) &&
-                (!Map || strcasecmp(inwad.LumpName(lump), Map) == 0)) {
+                (!Map || _stricmp(inwad.LumpName(lump), Map) == 0)) {
                 START_COUNTER(t2a, t2b, t2c)
                 FProcessor builder(inwad, lump);
                 builder.Write(outwad);
@@ -201,7 +201,7 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
                 // Ignore GL nodes from the input for any maps we process.
                 if (BuildNodes &&
                     (Map == NULL ||
-                     strcasecmp(inwad.LumpName(lump) + 3, Map) == 0)) {
+                     _stricmp(inwad.LumpName(lump) + 3, Map) == 0)) {
                     lump = inwad.SkipGLNodes(lump);
                 } else {
                     outwad.CopyLump(inwad, lump);
@@ -225,7 +225,7 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
         printf("%s\n", msg.what());
         return 20;
     } catch (std::bad_alloc &msg) {
-        printf("Out of memory\n");
+        printf("%s\n", msg.what());
         return 20;
     } catch (std::exception &msg) {
         printf("%s\n", msg.what());
