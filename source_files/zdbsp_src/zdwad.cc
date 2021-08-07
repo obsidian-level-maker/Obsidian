@@ -71,7 +71,7 @@ FWadReader::FWadReader(std::filesystem::path filename) : Lumps(NULL) {
     Lumps = new WadLump[Header.NumLumps];
 
     File.read(reinterpret_cast<char *>(Lumps), Header.NumLumps * sizeof(*Lumps));
-    if (File.gcount() != sizeof(Header.NumLumps * sizeof(*Lumps))) {
+    if (File.gcount() != Header.NumLumps * sizeof(*Lumps)) {
         throw std::runtime_error("Problem reading lumps");
     }
 
