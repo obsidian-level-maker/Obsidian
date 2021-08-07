@@ -2529,7 +2529,7 @@ int Doom::sector_c::Write() {
     {
         index = NumSectors();
 
-        AddSector(f_h, f_tex.c_str(), c_h, c_tex.c_str(), light, special, tag);
+        AddSector(f_h, f_tex, c_h, c_tex, light, special, tag);
     }
 
     return index;
@@ -2544,7 +2544,7 @@ int Doom::sidedef_c::Write() {
 
         int sec_index = sector->Write();
 
-        AddSidedef(sec_index, lower.c_str(), mid.c_str(), upper.c_str(),
+        AddSidedef(sec_index, lower, mid, upper,
                    x_offset & 1023, y_offset);
     }
 

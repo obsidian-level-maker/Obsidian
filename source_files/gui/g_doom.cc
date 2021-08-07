@@ -132,7 +132,7 @@ static void WriteBehavior() {
     raw_behavior_header_t behavior;
 
     std::string_view acs{"ACS"};
-    std::copy(acs.begin(), acs.end(), behavior.marker.begin());
+    std::copy(acs.data(), acs.data() + 4, behavior.marker.data());
 
     behavior.offset = LE_U32(8);
     behavior.func_num = 0;
@@ -349,7 +349,7 @@ void Doom::AddVertex(int x, int y) {
     }
 }
 
-void Doom::AddSector(int f_h, const char *f_tex, int c_h, const char *c_tex,
+void Doom::AddSector(int f_h, std::string f_tex, int c_h, std::string c_tex,
                      int light, int special, int tag) {
     if (not UDMF_mode) {
         raw_sector_t sec;
@@ -357,8 +357,8 @@ void Doom::AddSector(int f_h, const char *f_tex, int c_h, const char *c_tex,
         sec.floor_h = LE_S16(f_h);
         sec.ceil_h = LE_S16(c_h);
 
-        std::copy(f_tex, f_tex + 8, sec.floor_tex.begin());
-        std::copy(c_tex, c_tex + 8, sec.ceil_tex.begin());
+        std::copy(f_tex.data(), f_tex.data() + 8, sec.floor_tex.data());
+        std::copy(c_tex.data(), c_tex.data() + 8, sec.ceil_tex.data());
 
         sec.light = LE_U16(light);
         sec.special = LE_U16(special);
@@ -368,8 +368,8 @@ void Doom::AddSector(int f_h, const char *f_tex, int c_h, const char *c_tex,
         textmap_lump->Printf("\nsector\n{\n");
         textmap_lump->Printf("\theightfloor = %d;\n", f_h);
         textmap_lump->Printf("\theightceiling = %d;\n", c_h);
-        textmap_lump->Printf("\ttexturefloor = \"%s\";\n", f_tex);
-        textmap_lump->Printf("\ttextureceiling = \"%s\";\n", c_tex);
+        textmap_lump->Printf("\ttexturefloor = \"%s\";\n", f_tex.c_str());
+        textmap_lump->Printf("\ttextureceiling = \"%s\";\n", c_tex.c_str());
         textmap_lump->Printf("\tlightlevel = %d;\n", light);
         textmap_lump->Printf("\tspecial = %d;\n", special);
         textmap_lump->Printf("\tid = %d;\n", tag);
@@ -378,16 +378,16 @@ void Doom::AddSector(int f_h, const char *f_tex, int c_h, const char *c_tex,
     }
 }
 
-void Doom::AddSidedef(int sector, const char *l_tex, const char *m_tex,
-                      const char *u_tex, int x_offset, int y_offset) {
+void Doom::AddSidedef(int sector, std::string l_tex, std::string m_tex,
+                      std::string u_tex, int x_offset, int y_offset) {
     if (not UDMF_mode) {
         raw_sidedef_t side;
 
         side.sector = LE_S16(sector);
 
-        std::copy(l_tex, l_tex + 8, side.lower_tex.begin());
-        std::copy(m_tex, m_tex + 8, side.mid_tex.begin());
-        std::copy(u_tex, u_tex + 8, side.upper_tex.begin());
+        std::copy(l_tex.data(), l_tex.data() + 8, side.lower_tex.data());
+        std::copy(m_tex.data(), m_tex.data() + 8, side.mid_tex.data());
+        std::copy(u_tex.data(), u_tex.data() + 8, side.upper_tex.data());
 
         side.x_offset = LE_S16(x_offset);
         side.y_offset = LE_S16(y_offset);
@@ -396,9 +396,9 @@ void Doom::AddSidedef(int sector, const char *l_tex, const char *m_tex,
         textmap_lump->Printf("\nsidedef\n{\n");
         textmap_lump->Printf("\toffsetx = %d;\n", x_offset);
         textmap_lump->Printf("\toffsety = %d;\n", y_offset);
-        textmap_lump->Printf("\ttexturetop = \"%s\";\n", u_tex);
-        textmap_lump->Printf("\ttexturemiddle = \"%s\";\n", m_tex);
-        textmap_lump->Printf("\ttexturebottom = \"%s\";\n", l_tex);
+        textmap_lump->Printf("\ttexturetop = \"%s\";\n", u_tex.c_str());
+        textmap_lump->Printf("\ttexturemiddle = \"%s\";\n", m_tex.c_str());
+        textmap_lump->Printf("\ttexturebottom = \"%s\";\n", l_tex.c_str());
         textmap_lump->Printf("\tsector = %d;\n", sector);
         textmap_lump->Printf("}\n");
         udmf_sidedefs += 1;
@@ -484,7 +484,7 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
             // tag value is UNUSED
 
             if (args) {
-                std::copy(args, args + 5, line.args.begin());
+                std::copy(args, args + 5, line.args.data());
             }
 
             linedef_lump->Append(&line, sizeof(line));
@@ -651,7 +651,7 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
             thing.special = special;
 
             if (args) {
-                std::copy(args, args + 5, thing.args.begin());
+                std::copy(args, args + 5, thing.args.data());
             }
 
             thing_lump->Append(&thing, sizeof(thing));
