@@ -260,8 +260,10 @@ const char *FWadReader::LumpName(int lump) {
     return name;
 }
 
-FWadWriter::FWadWriter(std::filesystem::path filename, bool iwad) : File(NULL) {
-    if (fopen_s(&File, filename.generic_string().c_str(), "wb")) {
+FWadWriter::FWadWriter(std::filesystem::path filename, bool iwad) {
+
+    File.open(filename, std::ios::binary);
+    if (!File.is_open()) {
         throw std::runtime_error("Could not open output file");
     }
 
@@ -276,27 +278,27 @@ FWadWriter::FWadWriter(std::filesystem::path filename, bool iwad) : File(NULL) {
     head.Magic[2] = 'A';
     head.Magic[3] = 'D';
 
-    SafeWrite(&head, sizeof(head));
+    File.write(reinterpret_cast<char *>(&head), sizeof(head));
+
 }
 
 FWadWriter::~FWadWriter() {
-    if (File) {
+    if (File.is_open()) {
         Close();
     }
 }
 
 void FWadWriter::Close() {
-    if (File) {
+    if (File.is_open()) {
         int32_t head[2];
 
         head[0] = LittleLong(Lumps.Size());
-        head[1] = LittleLong(ftell(File));
+        head[1] = LittleLong(File.tellp());
 
-        SafeWrite(&Lumps[0], sizeof(WadLump) * Lumps.Size());
-        fseek(File, 4, SEEK_SET);
-        SafeWrite(head, 8);
-        fclose(File);
-        File = NULL;
+        File.write(reinterpret_cast<char *>(&Lumps[0]), sizeof(WadLump) * Lumps.Size());
+        File.seekp(4);
+        File.write(reinterpret_cast<char *>(head), 8);
+        File.close();
     }
 }
 
@@ -304,7 +306,7 @@ void FWadWriter::CreateLabel(const char *name) {
     WadLump lump;
 
     strncpy(lump.Name, name, 8);
-    lump.FilePos = LittleLong(ftell(File));
+    lump.FilePos = LittleLong(File.tellp());
     lump.Size = 0;
     Lumps.Push(lump);
 }
@@ -313,11 +315,11 @@ void FWadWriter::WriteLump(const char *name, const void *data, int len) {
     WadLump lump;
 
     strncpy(lump.Name, name, 8);
-    lump.FilePos = LittleLong(ftell(File));
+    lump.FilePos = LittleLong(File.tellp());
     lump.Size = LittleLong(len);
     Lumps.Push(lump);
 
-    SafeWrite(data, len);
+    File.write(reinterpret_cast<const char *>(data), len);
 }
 
 void FWadWriter::CopyLump(FWadReader &wad, int lump) {
@@ -334,18 +336,8 @@ void FWadWriter::CopyLump(FWadReader &wad, int lump) {
 void FWadWriter::StartWritingLump(const char *name) { CreateLabel(name); }
 
 void FWadWriter::AddToLump(const void *data, int len) {
-    SafeWrite(data, len);
+    File.write(reinterpret_cast<const char *>(data), len);
     Lumps[Lumps.Size() - 1].Size += len;
-}
-
-void FWadWriter::SafeWrite(const void *buffer, size_t size) {
-    if (fwrite(buffer, 1, size, File) != size) {
-        fclose(File);
-        File = NULL;
-        throw std::runtime_error(
-            "Failed to write. Check that this directory is writable and\n"
-            "that you have enough free disk space.");
-    }
 }
 
 FWadWriter &FWadWriter::operator<<(BYTE val) {

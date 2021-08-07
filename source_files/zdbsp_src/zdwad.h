@@ -104,9 +104,7 @@ class FWadWriter {
 
    private:
     TArray<WadLump> Lumps;
-    FILE *File;
-
-    void SafeWrite(const void *buffer, size_t size);
+    std::ofstream File;
 };
 
 #endif  //__WAD_H__
