@@ -2727,6 +2727,14 @@ static void WriteFraggleScript() {
 //------------------------------------------------------------------------
 
 void FreeStuff() {
+
+    std::for_each(vertices.begin(), vertices.end(), [](auto *i) { delete i; });
+    std::for_each(linedefs.begin(), linedefs.end(), [](auto *i) { delete i; });
+    std::for_each(sidedefs.begin(), sidedefs.end(), [](auto *i) { delete i; });
+    std::for_each(sectors.begin(), sectors.end(), [](auto *i) { delete i; });
+    std::for_each(exfloors.begin(), exfloors.end(), [](auto *i) { delete i; });
+    std::for_each(dummies.begin(), dummies.end(), [](auto *i) { delete i; });
+
     vertices.clear();
     linedefs.clear();
     sidedefs.clear();
