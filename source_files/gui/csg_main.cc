@@ -58,13 +58,13 @@ extern int q_low_light;
 
 extern void SPOT_FillPolygon(byte content, const int *shape, int count);
 
-extern bool QLIT_ParseProperty(const char *key, const char *value);
+extern bool QLIT_ParseProperty(std::string key, std::string value);
 
-void csg_property_set_c::Add(const char *key, const char *value) {
+void csg_property_set_c::Add(std::string key, std::string value) {
     dict[key] = std::string(value);
 }
 
-void csg_property_set_c::Remove(const char *key) { dict.erase(key); }
+void csg_property_set_c::Remove(std::string key) { dict.erase(key); }
 
 void csg_property_set_c::DebugDump() {
     std::map<std::string, std::string>::iterator PI;
@@ -79,8 +79,8 @@ void csg_property_set_c::DebugDump() {
     fmt::print(stderr, "}\n");
 }
 
-const char *csg_property_set_c::getStr(const char *key,
-                                       const char *def_val) const {
+std::string csg_property_set_c::getStr(std::string key,
+                                       std::string def_val) const {
     std::map<std::string, std::string>::const_iterator PI = dict.find(key);
 
     if (PI == dict.end()) {
@@ -90,16 +90,16 @@ const char *csg_property_set_c::getStr(const char *key,
     return PI->second.c_str();
 }
 
-double csg_property_set_c::getDouble(const char *key, double def_val) const {
-    const char *str = getStr(key);
+double csg_property_set_c::getDouble(std::string key, double def_val) const {
+    std::string str = getStr(key);
 
-    return str ? atof(str) : def_val;
+    return !str.empty() ? StringToDouble(str) : def_val;
 }
 
-int csg_property_set_c::getInt(const char *key, int def_val) const {
-    const char *str = getStr(key);
+int csg_property_set_c::getInt(std::string key, int def_val) const {
+    std::string str = getStr(key);
 
-    return str ? I_ROUND(atof(str)) : def_val;
+    return !str.empty() ? I_ROUND(StringToDouble(str)) : def_val;
 }
 
 void csg_property_set_c::getHexenArgs(u8_t *arg5) const {
@@ -345,7 +345,7 @@ int csg_brush_c::CalcMedium() const {
             return MEDIUM_SOLID;
 
         case BKIND_Liquid: {
-            const char *str = props.getStr("medium", "");
+            std::string str = props.getStr("medium", "");
 
             if (StringCaseCmp(str, "slime") == 0) {
                 return MEDIUM_SLIME;
@@ -445,8 +445,8 @@ csg_entity_c::csg_entity_c() : id(), x(0), y(0), z(0), props(), ex_floor(-1) {}
 
 csg_entity_c::~csg_entity_c() {}
 
-bool csg_entity_c::Match(const char *want_name) const {
-    return (strcmp(id.c_str(), want_name) == 0);
+bool csg_entity_c::Match(std::string want_name) const {
+    return (StringCaseCmp(id, want_name) == 0);
 }
 
 //------------------------------------------------------------------------
@@ -548,7 +548,7 @@ class brush_quad_node_c {
 
    private:
     bool IntersectBrush(const csg_brush_c *B, double x1, double y1, double z1,
-                        double x2, double y2, double z2, const char *mode) {
+                        double x2, double y2, double z2, std::string mode) {
         if (mode[0] == 'v') {
             if ((B->bflags & BFLAG_NoDraw) || B->bkind == BKIND_Light ||
                 B->bkind == BKIND_Rail || B->bkind == BKIND_Trigger) {
@@ -592,7 +592,7 @@ class brush_quad_node_c {
 
    public:
     bool TraceRay(double x1, double y1, double z1, double x2, double y2,
-                  double z2, const char *mode) {
+                  double z2, std::string mode) {
         for (unsigned int k = 0; k < brushes.size(); k++) {
             if (IntersectBrush(brushes[k], x1, y1, z1, x2, y2, z2, mode)) {
                 return true;
@@ -1083,28 +1083,28 @@ int CSG_end_level(lua_State *L) {
 // LUA: property(key, value)
 //
 int CSG_property(lua_State *L) {
-    const char *key = luaL_checkstring(L, 1);
-    const char *value = luaL_checkstring(L, 2);
+    std::string key = luaL_optstring(L, 1, "");
+    std::string value = luaL_optstring(L, 2, "");
 
     // eat propertities intended for CSG2
 
-    if (strcmp(key, "error_tex") == 0) {
-        dummy_wall_tex = std::string(value);
+    if (StringCaseCmp(key, "error_tex") == 0) {
+        dummy_wall_tex = value;
         return 0;
-    } else if (strcmp(key, "error_flat") == 0) {
-        dummy_plane_tex = std::string(value);
+    } else if (StringCaseCmp(key, "error_flat") == 0) {
+        dummy_plane_tex = value;
         return 0;
-    } else if (strcmp(key, "spot_low_h") == 0) {
-        spot_low_h = atoi(value);
+    } else if (StringCaseCmp(key, "spot_low_h") == 0) {
+        spot_low_h = StringToInt(value);
         return 0;
-    } else if (strcmp(key, "spot_high_h") == 0) {
-        spot_high_h = atoi(value);
+    } else if (StringCaseCmp(key, "spot_high_h") == 0) {
+        spot_high_h = StringToInt(value);
         return 0;
     } else if (StringCaseCmp(key, "chunk_size") == 0) {
-        CHUNK_SIZE = atof(value);
+        CHUNK_SIZE = StringToDouble(value);
         return 0;
     } else if (StringCaseCmp(key, "cluster_size") == 0) {
-        CLUSTER_SIZE = atof(value);
+        CLUSTER_SIZE = StringToDouble(value);
         return 0;
     }
 
@@ -1122,20 +1122,20 @@ int CSG_property(lua_State *L) {
 // LUA: tex_property(texture, key, value)
 //
 int CSG_tex_property(lua_State *L) {
-    const char *texture = luaL_checkstring(L, 1);
-    const char *key = luaL_checkstring(L, 2);
-    const char *value = luaL_checkstring(L, 3);
+    std::string texture = luaL_optstring(L, 1, "");
+    std::string key = luaL_optstring(L, 2, "");
+    std::string value = luaL_optstring(L, 3, "");
 
     csg_property_set_c *props = NULL;
 
     std::map<std::string, csg_property_set_c *>::iterator TPI;
 
-    TPI = all_tex_props.find(std::string(texture));
+    TPI = all_tex_props.find(texture);
 
     if (TPI == all_tex_props.end()) {
         props = new csg_property_set_c;
 
-        all_tex_props[std::string(texture)] = props;
+        all_tex_props[texture] = props;
     } else {
         props = TPI->second;
     }
@@ -1263,7 +1263,7 @@ int CSG_trace_ray(lua_State *L) {
 }
 
 bool CSG_TraceRay(double x1, double y1, double z1, double x2, double y2,
-                  double z2, const char *mode) {
+                  double z2, std::string mode) {
     SYS_ASSERT(brush_quad_tree);
 
     return brush_quad_tree->TraceRay(x1, y1, z1, x2, y2, z2, mode);
@@ -1293,10 +1293,10 @@ void CSG_spot_processing(int x1, int y1, int x2, int y2, int floor_h) {
 
 //------------------------------------------------------------------------
 
-csg_property_set_c *CSG_LookupTexProps(const char *name) {
+csg_property_set_c *CSG_LookupTexProps(std::string name) {
     std::map<std::string, csg_property_set_c *>::iterator TPI;
 
-    TPI = all_tex_props.find(std::string(name));
+    TPI = all_tex_props.find(name);
 
     if (TPI == all_tex_props.end()) {
         return NULL;
@@ -1317,13 +1317,13 @@ static void CSG_FreeTexProps() {
     all_tex_props.clear();
 }
 
-void CSG_LinkBrushToEntity(csg_brush_c *B, const char *link_key) {
+void CSG_LinkBrushToEntity(csg_brush_c *B, std::string link_key) {
     for (unsigned int k = 0; k < all_entities.size(); k++) {
         csg_entity_c *E = all_entities[k];
 
-        const char *E_key = E->props.getStr("link_id");
+        std::string E_key = E->props.getStr("link_id");
 
-        if (!E_key) {
+        if (E_key.empty()) {
             continue;
         }
 

@@ -213,9 +213,9 @@ static s32_t Q3_AddBrush(const csg_brush_c *A) {
     // use the "common/solid" shader
     raw_brush.shaderNum = SHADER_COMMON_SOLID;
 
-    const char *medium = A->props.getStr("medium", NULL);
+    std::string medium = A->props.getStr("medium", "");
 
-    if (medium) {
+    if (!medium.empty()) {
         if (StringCaseCmp(medium, "slime") == 0) {
             raw_brush.shaderNum = SHADER_COMMON_SLIME;
         } else if (StringCaseCmp(medium, "lava") == 0) {
@@ -227,7 +227,7 @@ static s32_t Q3_AddBrush(const csg_brush_c *A) {
         }
     } else if (A->bflags & BFLAG_NoDraw) {
         raw_brush.shaderNum = SHADER_COMMON_CLIP;
-    } else if (strstr(A->t.face.getStr("tex", ""), "skies/") != NULL) {
+    } else if ((A->t.face.getStr("tex", "")).find("skies/") != std::string::npos) {
         raw_brush.shaderNum = SHADER_COMMON_SKY;
     }
 
@@ -1211,7 +1211,7 @@ class quake3_game_interface_c : public game_interface_c {
 
     void BeginLevel();
     void EndLevel();
-    void Property(const char *key, const char *value);
+    void Property(std::string key, std::string value);
 };
 
 bool quake3_game_interface_c::Start(const char *preset) {
@@ -1288,19 +1288,19 @@ void quake3_game_interface_c::BeginLevel() {
     CSG_QUAKE_Free();
 }
 
-void quake3_game_interface_c::Property(const char *key, const char *value) {
+void quake3_game_interface_c::Property(std::string key, std::string value) {
     if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = value;
+        level_name = value.c_str();
     } else if (StringCaseCmp(key, "description") == 0) {
-        description = value;
+        description = value.c_str();
     } else if (StringCaseCmp(key, "default_tex_scale") == 0) {
-        q3_default_tex_scale = atof(value);
+        q3_default_tex_scale = StringToDouble(value);
     } else if (StringCaseCmp(key, "water_shader") == 0) {
-        water_shader = value;
+        water_shader = value.c_str();
     } else if (StringCaseCmp(key, "slime_shader") == 0) {
-        slime_shader = value;
+        slime_shader = value.c_str();
     } else if (StringCaseCmp(key, "lava_shader") == 0) {
-        lava_shader = value;
+        lava_shader = value.c_str();
     } else {
         LogPrintf("WARNING: unknown QUAKE3 property: {}={}\n", key, value);
     }

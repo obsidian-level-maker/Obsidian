@@ -74,7 +74,7 @@ static std::map<std::string, int> q1_miptex_map;
 
 static int num_custom_tex = 0;
 
-s32_t Q1_AddMipTex(const char *name);
+s32_t Q1_AddMipTex(std::string name);
 
 static void Q1_ClearMipTex(void) {
     q1_miptexs.clear();
@@ -89,7 +89,7 @@ static void Q1_ClearMipTex(void) {
     num_custom_tex = 4;
 }
 
-s32_t Q1_AddMipTex(const char *name) {
+s32_t Q1_AddMipTex(std::string name) {
     if (q1_miptex_map.find(name) != q1_miptex_map.end()) {
         return q1_miptex_map[name];
     }
@@ -395,8 +395,8 @@ static void Q1_ClearTexInfo(void) {
     }
 }
 
-u16_t Q1_AddTexInfo(const char *texture, int flags, float *s4, float *t4) {
-    if (!texture[0]) {
+u16_t Q1_AddTexInfo(std::string texture, int flags, float *s4, float *t4) {
+    if (texture.empty()) {
         texture = "error";
     }
 
@@ -930,10 +930,10 @@ static void MapModel_TexCoord(float *scale, float *offset, double low,
     *scale = 1;
     *offset = 0;
 
-    if (face.getStr(l_field)) {
+    if (!(face.getStr(l_field)).empty()) {
         double u1 = face.getDouble(l_field);
 
-        if (face.getStr(h_field)) {
+        if (!(face.getStr(h_field)).empty()) {
             double u2 = face.getDouble(h_field);
 
             *scale = (u2 - u1) / (high - low);
@@ -955,7 +955,7 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane,
     raw_face.planenum = plane;
     raw_face.side = flipped ? 1 : 0;
 
-    const char *texture = "error";
+    std::string texture = "error";
 
     std::array<float, 4> s = {0.0, 0.0, 0.0, 0.0};
     std::array<float, 4> t = {0.0, 0.0, 0.0, 0.0};
@@ -1023,7 +1023,7 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane,
 
     int flags = 0;
 
-    if (strstr(texture, "trigger") != NULL) {
+    if (texture.find("trigger") != std::string::npos) {
         flags |= TEX_SPECIAL;
     }
 
@@ -1274,7 +1274,7 @@ class quake1_game_interface_c : public game_interface_c {
 
     void BeginLevel();
     void EndLevel();
-    void Property(const char *key, const char *value);
+    void Property(std::string key, std::string value);
 
    private:
     const char *StepsForGame(int sub) {
@@ -1351,11 +1351,11 @@ void quake1_game_interface_c::BeginLevel() {
     CSG_QUAKE_Free();
 }
 
-void quake1_game_interface_c::Property(const char *key, const char *value) {
+void quake1_game_interface_c::Property(std::string key, std::string value) {
     if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = value;
+        level_name = value.c_str();
     } else if (StringCaseCmp(key, "description") == 0) {
-        description = value;
+        description = value.c_str();
     } else if (StringCaseCmp(key, "sub_format") == 0) {
         if (StringCaseCmp(value, "quake") == 0) {
             qk_sub_format = 0;
@@ -1372,7 +1372,7 @@ void quake1_game_interface_c::Property(const char *key, const char *value) {
             main_win->build_box->Prog_Init(0, StepsForGame(qk_sub_format));
         }
     } else if (StringCaseCmp(key, "worldtype") == 0) {
-        qk_worldtype = atoi(value);
+        qk_worldtype = StringToInt(value);
     } else {
         LogPrintf("WARNING: unknown QUAKE1 property: {}={}\n", key, value);
     }

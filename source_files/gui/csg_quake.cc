@@ -1762,9 +1762,9 @@ void quake_leaf_c::FilterBrush(csg_brush_c *B, leaf_map_t *touched) {
 }
 
 static int ParseLiquidMedium(csg_property_set_c *props) {
-    const char *str = props->getStr("medium");
+    std::string str = props->getStr("medium");
 
-    if (str) {
+    if (!str.empty()) {
         if (StringCaseCmp(str, "water") == 0) {
             return MEDIUM_WATER;
         }
@@ -2509,9 +2509,9 @@ static void Model_ProcessBrush(quake_leaf_c *mod, csg_brush_c *B) {
 }
 
 static void Model_ProcessEntity(csg_entity_c *E) {
-    const char *link_id = E->props.getStr("link_id");
+    std::string link_id = E->props.getStr("link_id");
 
-    if (!link_id) {
+    if (link_id.empty()) {
         return;  // not a model
     }
 

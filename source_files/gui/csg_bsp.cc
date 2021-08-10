@@ -724,8 +724,8 @@ static void CreateRegion(group_c &root, csg_brush_c *P) {
     SYS_ASSERT(P);
 
     // handle map-models
-    const char *link_key = P->props.getStr("link_entity");
-    if (link_key) {
+    std::string link_key = P->props.getStr("link_entity");
+    if (!link_key.empty()) {
         CSG_LinkBrushToEntity(P, link_key);
         return;
     }
@@ -1619,7 +1619,7 @@ static void MarkGapsWithEntities() {
             }
 
             // ignore map models
-            if (E->props.getStr("model")) {
+            if (!(E->props.getStr("model")).empty()) {
                 continue;
             }
 
@@ -1723,8 +1723,8 @@ static void SpreadReachability(void) {
         for (unsigned int k = 0; k < R->gaps.size(); k++) {
             gap_c *G = R->gaps[k];
 
-            if (G->bottom->t.face.getStr("reachable") ||
-                G->top->b.face.getStr("reachable")) {
+            if (!(G->bottom->t.face.getStr("reachable")).empty() ||
+                !(G->top->b.face.getStr("reachable")).empty()) {
                 G->reachable = true;
             }
         }

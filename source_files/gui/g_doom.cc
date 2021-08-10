@@ -809,7 +809,7 @@ class game_interface_c : public ::game_interface_c {
 
     void BeginLevel();
     void EndLevel();
-    void Property(const char *key, const char *value);
+    void Property(std::string key, std::string value);
 
 };
 }  // namespace Doom
@@ -907,11 +907,11 @@ void Doom::game_interface_c::BeginLevel() {
     Doom::BeginLevel();
 }
 
-void Doom::game_interface_c::Property(const char *key, const char *value) {
+void Doom::game_interface_c::Property(std::string key, std::string value) {
     if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = value;
+        level_name = value.c_str();
     } else if (StringCaseCmp(key, "description") == 0) {
-        main_win->build_box->name_disp->copy_label(value);
+        main_win->build_box->name_disp->copy_label(value.c_str());
         main_win->build_box->name_disp->redraw();
     } else if (StringCaseCmp(key, "sub_format") == 0) {
         if (StringCaseCmp(value, "doom") == 0) {
@@ -924,15 +924,15 @@ void Doom::game_interface_c::Property(const char *key, const char *value) {
             LogPrintf("WARNING: unknown DOOM sub_format '%s'\n", value);
         }
     } else if (StringCaseCmp(key, "offset_map") == 0) {
-        dm_offset_map = atoi(value);
+        dm_offset_map = StringToInt(value);
     } else if (StringCaseCmp(key, "ef_solid_type") == 0) {
-        ef_solid_type = atoi(value);
+        ef_solid_type = StringToInt(value);
     } else if (StringCaseCmp(key, "ef_liquid_type") == 0) {
-        ef_liquid_type = atoi(value);
+        ef_liquid_type = StringToInt(value);
     } else if (StringCaseCmp(key, "ef_thing_mode") == 0) {
-        ef_thing_mode = atoi(value);
+        ef_thing_mode = StringToInt(value);
     } else {
-        LogPrintf("WARNING: unknown DOOM property: %s=%s\n", key, value);
+        LogPrintf("WARNING: unknown DOOM property: {}={}\n", key, value);
     }
 }
 

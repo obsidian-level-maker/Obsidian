@@ -69,15 +69,15 @@ typedef struct {
         dropoff = 4.0;
     }
 
-    bool ParseProp(const char *key, const char *value) {
+    bool ParseProp(std::string key, std::string value) {
         if (StringCaseCmp(key, "color") == 0) {
             color = QLIT_ParseColorString(value);
             return true;
         } else if (StringCaseCmp(key, "intensity") == 0) {
-            intensity = atof(value);
+            intensity = StringToDouble(value);
             return true;
         } else if (StringCaseCmp(key, "dropoff") == 0) {
-            dropoff = atof(value);
+            dropoff = StringToDouble(value);
             return true;
         }
 
@@ -109,24 +109,24 @@ void QLIT_InitProperties() {
     q_lava.Init(255, 77, 33);
 }
 
-rgb_color_t QLIT_ParseColorString(const char *name) {
-    if (!name || name[0] == 0) {
+rgb_color_t QLIT_ParseColorString(std::string name) {
+    if (name.empty() || name.at(0) == 0) {
         return WHITE;
     }
 
-    if (name[0] != '#') {
+    if (name.at(0) != '#') {
         LogPrintf("WARNING: bad color string for light: '{}'\n", name);
         return WHITE;
     }
 
-    int raw_hex = strtol(name + 1, NULL, 16);
+    int raw_hex = StringToHex(name.substr(1));
     int r = 0, g = 0, b = 0;
 
-    if (strlen(name) == 4) {
+    if (name.size() == 4) {
         r = ((raw_hex >> 8) & 0x0f) * 17;
         g = ((raw_hex >> 4) & 0x0f) * 17;
         b = ((raw_hex)&0x0f) * 17;
-    } else if (strlen(name) == 7) {
+    } else if (name.size() == 7) {
         r = (raw_hex >> 16) & 0xff;
         g = (raw_hex >> 8) & 0xff;
         b = (raw_hex)&0xff;
@@ -138,7 +138,7 @@ rgb_color_t QLIT_ParseColorString(const char *name) {
     return MAKE_RGBA(r, g, b, 0);
 }
 
-bool QLIT_ParseProperty(const char *key, const char *value) {
+bool QLIT_ParseProperty(std::string key, std::string value) {
     if (StringCaseCmp(key, "q_light_quality") == 0) {
         if (StringCaseCmp(value, "low") == 0) {
             q_light_quality = -1;
@@ -150,33 +150,33 @@ bool QLIT_ParseProperty(const char *key, const char *value) {
 
         return true;
     } else if (StringCaseCmp(key, "q_light_scale") == 0) {
-        q_light_scale = atof(value);
+        q_light_scale = StringToDouble(value);
         return true;
     } else if (StringCaseCmp(key, "q_low_light") == 0) {
-        q_low_light = atoi(value);
+        q_low_light = StringToInt(value);
         return true;
     } else if (StringCaseCmp(key, "q3_luxel_size") == 0)  // Q3 only
     {
-        q3_luxel_size = atof(value);
+        q3_luxel_size = StringToDouble(value);
         return true;
     } else if (StringCaseCmp(key, "q3_overbrighting") == 0)  // Q3 only
     {
-        q3_overbrighting = (atoi(value) > 0);
+        q3_overbrighting = (StringToInt(value) > 0);
         return true;
     } else if (StringCaseCmp(key, "grid_ambient_scale") == 0)  // Q3 only
     {
-        grid_ambient_scale = atof(value);
+        grid_ambient_scale = StringToDouble(value);
         return true;
     } else if (StringCaseCmp(key, "grid_directed_scale") == 0)  // Q3 only
     {
-        grid_directed_scale = atof(value);
+        grid_directed_scale = StringToDouble(value);
         return true;
-    } else if (strncmp(key, "water_", 6) == 0) {
-        return q_water.ParseProp(key + 6, value);
-    } else if (strncmp(key, "slime_", 6) == 0) {
-        return q_slime.ParseProp(key + 6, value);
-    } else if (strncmp(key, "lava_", 5) == 0) {
-        return q_lava.ParseProp(key + 5, value);
+    } else if (StringCaseCmp(key.substr(0, 6), "water_") == 0) {
+        return q_water.ParseProp(key.substr(6), value);
+    } else if (StringCaseCmp(key.substr(0, 6), "slime_") == 0) {
+        return q_slime.ParseProp(key.substr(6), value);
+    } else if (StringCaseCmp(key.substr(0, 5), "lava_") == 0) {
+        return q_lava.ParseProp(key.substr(5), value);
     }
 
     // not known

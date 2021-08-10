@@ -112,10 +112,10 @@ extern bool q_mono_lighting;
 
 /***** FUNCTIONS **********/
 
-rgb_color_t QLIT_ParseColorString(const char *name);
+rgb_color_t QLIT_ParseColorString(std::string name);
 
 void QLIT_InitProperties();
-bool QLIT_ParseProperty(const char *key, const char *value);
+bool QLIT_ParseProperty(std::string key, std::string value);
 
 void QLIT_FreeLightmaps();
 

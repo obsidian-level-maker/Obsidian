@@ -414,7 +414,7 @@ class nukem_game_interface_c : public game_interface_c {
 
     void BeginLevel();
     void EndLevel();
-    void Property(const char *key, const char *value);
+    void Property(std::string key, std::string value);
 
    private:
 };
@@ -462,9 +462,9 @@ bool nukem_game_interface_c::Finish(bool build_ok) {
 
 void nukem_game_interface_c::BeginLevel() {}
 
-void nukem_game_interface_c::Property(const char *key, const char *value) {
+void nukem_game_interface_c::Property(std::string key, std::string value) {
     if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = value;
+        level_name = value.c_str();
     } else if (StringCaseCmp(key, "description") == 0) {
         // ignored (for now)
         // [another mechanism sets the description via BEX/DDF]

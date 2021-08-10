@@ -255,7 +255,7 @@ class game_interface_c {
     // sets a certain property, especially "level_name" which is
     // required by most games (like DOOM and QUAKE).  Unknown
     // properties are ignored.  May be called during startup too.
-    virtual void Property(const char *key, const char *value) = 0;
+    virtual void Property(std::string key, std::string value) = 0;
 };
 
 extern game_interface_c *game_object;

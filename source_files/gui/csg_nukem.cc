@@ -236,7 +236,7 @@ static void NK_MakeBasicWall(nukem_sector_c *S, snag_c *snag) {
 }
 
 static void NK_GetPlaneInfo(nukem_plane_c *P, csg_property_set_c *face) {
-    P->pic = atoi(face->getStr("tex", dummy_plane_tex.c_str()));
+    P->pic = StringToInt(face->getStr("tex", dummy_plane_tex));
 
     // FIXME: other floor / ceiling stuff
 }
@@ -462,7 +462,7 @@ static void LightingFloodFill(void)
 //------------------------------------------------------------------------
 
 static void NK_GetFaceProps(nukem_wall_c *W, csg_property_set_c *face) {
-    const char *tex_name = dummy_wall_tex.c_str();
+    std::string tex_name = dummy_wall_tex;
 
     if (face) {
         tex_name = face->getStr("tex", tex_name);
@@ -470,7 +470,7 @@ static void NK_GetFaceProps(nukem_wall_c *W, csg_property_set_c *face) {
         // FIXME  offsets, shade  etc...
     }
 
-    W->pic = atoi(tex_name);
+    W->pic = StringToInt(tex_name);
 }
 
 static void NK_TextureSolidWall(nukem_wall_c *W) {

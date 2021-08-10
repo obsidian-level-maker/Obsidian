@@ -22,6 +22,7 @@
 #include <algorithm>
 #include <cctype>
 #include <charconv>
+#include <functional>
 
 #include "headers.h"
 
@@ -121,6 +122,13 @@ int StringToInt(std::string value) {
     return actual_number;
 }
 
+int StringToHex(std::string value) {
+    int actual_number;
+    static_cast<void>(std::from_chars(value.data(), value.data() + value.size(),
+                                      actual_number, 16));
+    return actual_number;
+}
+
 double StringToDouble(std::string value) {
     double actual_number;
     static_cast<void>(std::from_chars(value.data(), value.data() + value.size(),
@@ -178,16 +186,19 @@ u32_t IntHash(u32_t key) {
     return key;
 }
 
-u32_t StringHash(const char *str) {
-    u32_t hash = 0;
+u32_t StringHash(std::string str) {
+    /*u32_t hash = 0;
 
-    if (str) {
-        while (*str) {
+    if (!str.empty()) {
+        while (str) {
             hash = (hash << 5) - hash + *str++;
         }
     }
 
-    return hash;
+    return hash;*/
+
+    return std::hash<std::string>{}(str);
+
 }
 
 double PerpDist(double x, double y, double x1, double y1, double x2,

@@ -335,7 +335,7 @@ class wolf_game_interface_c : public game_interface_c {
 
     void BeginLevel();
     void EndLevel();
-    void Property(const char *key, const char *value);
+    void Property(std::string key, std::string value);
 
    private:
     void Rename();
@@ -450,11 +450,11 @@ void wolf_game_interface_c::EndLevel() {
     level_name.clear();
 }
 
-void wolf_game_interface_c::Property(const char *key, const char *value) {
+void wolf_game_interface_c::Property(std::string key, std::string value) {
     if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = value;
+        level_name = value.c_str();
     } else if (StringCaseCmp(key, "file_ext") == 0) {
-        file_ext = value;
+        file_ext = value.c_str();
     } else {
         LogPrintf("WARNING: unknown WOLF3D property: {}={}\n", key, value);
     }

@@ -197,8 +197,8 @@ class sector_c {
                (light == other->light) && (special == other->special) &&
                (tag == other->tag) && (sound_area == other->sound_area) &&
 
-               (strcmp(f_tex.c_str(), other->f_tex.c_str()) == 0) &&
-               (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0);
+               (StringCaseCmp(f_tex, other->f_tex) == 0) &&
+               (StringCaseCmp(c_tex, other->c_tex) == 0);
     }
 
     bool MatchNoLight(const sector_c *other) const {
@@ -206,8 +206,8 @@ class sector_c {
                (c_h == other->c_h) && (special == other->special) &&
                (tag == other->tag) &&
 
-               (strcmp(f_tex.c_str(), other->f_tex.c_str()) == 0) &&
-               (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0);
+               (StringCaseCmp(f_tex, other->f_tex) == 0) &&
+               (StringCaseCmp(c_tex, other->c_tex) == 0);
     }
 
     bool Match(const sector_c *other) const {
@@ -727,7 +727,7 @@ struct fs_thing_t {
     // this will point into a std::string in a csg_entity_c in the
     // all_entities list -- guaranteed to stay around until map is
     // fully written.
-    const char *fs_name;
+    std::string fs_name;
 
     int angle;
     int options;
@@ -820,8 +820,8 @@ static void MakeSector(region_c *R) {
         S->c_h = S->f_h;
     }
 
-    S->f_tex = f_face->getStr("tex", dummy_plane_tex.c_str());
-    S->c_tex = c_face->getStr("tex", dummy_plane_tex.c_str());
+    S->f_tex = f_face->getStr("tex", dummy_plane_tex);
+    S->c_tex = c_face->getStr("tex", dummy_plane_tex);
 
     int f_mark = f_face->getInt("mark");
     int c_mark = c_face->getInt("mark");
@@ -1119,9 +1119,9 @@ static sidedef_c *MakeSidedef(linedef_c *L, sector_c *sec, sector_c *back,
         int u_oy = IVAL_NONE;
 
         if (rail) {
-            const char *rail_tex = rail->face.getStr("tex", NULL);
+            std::string rail_tex = rail->face.getStr("tex", "");
 
-            if (rail_tex) {
+            if (!rail_tex.empty()) {
                 SD->mid = rail_tex;
 
                 r_ox = rail->face.getInt("u1", IVAL_NONE);
@@ -1216,7 +1216,7 @@ static csg_property_set_c *FindTrigger(snag_c *S, sector_c *front,
                 continue;
             }
 
-            if (!V->face.getStr("special")) {
+            if ((V->face.getStr("special")).empty()) {
                 continue;
             }
 
@@ -1255,21 +1255,21 @@ static csg_property_set_c *FindSpecial(snag_c *S, region_c *R1, region_c *R2) {
 
             V = test_S->FindBrushVert(test_R->gaps.front()->bottom);
 
-            if (V && V->face.getStr("special") &&
+            if (V && !(V->face.getStr("special")).empty() &&
                 V->parent->bkind != BKIND_Trigger) {
                 return &V->face;
             }
 
             V = test_S->FindBrushVert(test_R->gaps.back()->top);
 
-            if (V && V->face.getStr("special") &&
+            if (V && !(V->face.getStr("special")).empty() &&
                 V->parent->bkind != BKIND_Trigger) {
                 return &V->face;
             }
         } else {
             // check every brush_vert in the snag
             for (auto *V : test_S->sides) {
-                if (V && V->face.getStr("special") &&
+                if (V && !(V->face.getStr("special")).empty() &&
                     V->parent->bkind != BKIND_Trigger) {
                     return &V->face;
                 }
@@ -1300,7 +1300,7 @@ static brush_vert_c *FindRail(const snag_c *S, const region_c *R,
             continue;
         }
 
-        if (V->face.getStr("tex", NULL)) {
+        if (!(V->face.getStr("tex", "")).empty()) {
             return V;  // found it!
         }
     }
@@ -1966,7 +1966,7 @@ class dummy_line_info_c {
     int flags;
 
    public:
-    dummy_line_info_c(std::string &_tex, int _special = 0, int _tag = 0,
+    dummy_line_info_c(std::string _tex, int _special = 0, int _tag = 0,
                       int _flags = 0)
         : tex(_tex), special(_special), tag(_tag), flags(_flags) {}
 
@@ -2197,12 +2197,12 @@ static void SolidExtraFloor(sector_c *sec, gap_c *gap1, gap_c *gap2) {
     EF->top_h = I_ROUND(gap2->bottom->t.z);
     EF->bottom_h = I_ROUND(gap1->top->b.z);
 
-    EF->top = gap2->bottom->t.face.getStr("tex", dummy_plane_tex.c_str());
-    EF->bottom = gap1->top->b.face.getStr("tex", dummy_plane_tex.c_str());
+    EF->top = gap2->bottom->t.face.getStr("tex", dummy_plane_tex);
+    EF->bottom = gap1->top->b.face.getStr("tex", dummy_plane_tex);
 
     brush_vert_c *V = gap2->bottom->verts[0];
 
-    EF->wall = V->face.getStr("tex", dummy_wall_tex.c_str());
+    EF->wall = V->face.getStr("tex", dummy_wall_tex);
 }
 
 static void LiquidExtraFloor(sector_c *sec, csg_brush_c *liquid) {
@@ -2231,12 +2231,12 @@ static void LiquidExtraFloor(sector_c *sec, csg_brush_c *liquid) {
         EF->top_h = EF->bottom_h + 128;  // not significant
     }
 
-    EF->top = liquid->t.face.getStr("tex", dummy_plane_tex.c_str());
+    EF->top = liquid->t.face.getStr("tex", dummy_plane_tex);
     EF->bottom = EF->top;
 
     brush_vert_c *V = liquid->verts[0];
 
-    EF->wall = V->face.getStr("tex", dummy_wall_tex.c_str());
+    EF->wall = V->face.getStr("tex", dummy_wall_tex);
 }
 
 static void ExtraFloors(sector_c *S, region_c *R) {
@@ -2576,9 +2576,9 @@ static void WriteLinedefs() {
 static void AddThing_FraggleScript(int x, int y, int z, csg_entity_c *E,
                                    int type, int angle, int options) {
     // this is set in the Lua code (raw_add_entity)
-    const char *fs_name = E->props.getStr("fs_name", NULL);
+    std::string fs_name = E->props.getStr("fs_name", "");
 
-    if (!fs_name) {
+    if (fs_name.empty()) {
         LogPrintf("WARNING: entity lost (no fragglescript name for type #{})\n",
                   type);
         return;
@@ -2604,7 +2604,7 @@ static void WriteThing(sector_c *S, csg_entity_c *E) {
         return;
     }
 
-    int type = atoi(E->id.c_str());
+    int type = StringToInt(E->id);
 
     if (type <= 0) {
         LogPrintf("WARNING: bad doom entity number: '{}'\n", E->id.c_str());
@@ -2728,12 +2728,14 @@ static void WriteFraggleScript() {
 
 void FreeStuff() {
 
-    std::for_each(vertices.begin(), vertices.end(), [](auto *i) { delete i; });
+
+    // This is erroring out right now
+    /*std::for_each(vertices.begin(), vertices.end(), [](auto *i) { delete i; });
     std::for_each(linedefs.begin(), linedefs.end(), [](auto *i) { delete i; });
     std::for_each(sidedefs.begin(), sidedefs.end(), [](auto *i) { delete i; });
     std::for_each(sectors.begin(), sectors.end(), [](auto *i) { delete i; });
     std::for_each(exfloors.begin(), exfloors.end(), [](auto *i) { delete i; });
-    std::for_each(dummies.begin(), dummies.end(), [](auto *i) { delete i; });
+    std::for_each(dummies.begin(), dummies.end(), [](auto *i) { delete i; });*/
 
     vertices.clear();
     linedefs.clear();

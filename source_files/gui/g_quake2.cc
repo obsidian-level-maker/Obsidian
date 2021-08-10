@@ -163,7 +163,7 @@ static void Q2_ClearTexInfo(void) {
     }
 }
 
-u16_t Q2_AddTexInfo(const char *texture, int flags, int value, float *s4,
+u16_t Q2_AddTexInfo(std::string texture, int flags, int value, float *s4,
                     float *t4) {
     if (!texture[0]) {
         texture = "error";
@@ -174,11 +174,12 @@ u16_t Q2_AddTexInfo(const char *texture, int flags, int value, float *s4,
 
     memset(&raw_tex, 0, sizeof(raw_tex));
 
-    if (strlen(texture) + 1 >= sizeof(raw_tex.texture)) {
+    if (texture.size() + 1 >= sizeof(raw_tex.texture)) {
         Main::FatalError("Quake2 texture name too long: '{}'\n", texture);
     }
 
-    strcpy(raw_tex.texture, texture);
+    //strcpy(raw_tex.texture, texture);
+    std::copy(texture.data(), texture.data() + texture.size(), raw_tex.texture);
 
     for (int k = 0; k < 4; k++) {
         raw_tex.s[k] = LE_Float32(s4[k]);
@@ -668,7 +669,7 @@ static void Q2_Model_Face(quake_mapmodel_c *model, int face, s16_t plane,
     raw_face.planenum = plane;
     raw_face.side = flipped ? 1 : 0;
 
-    const char *texture = "error";
+    std::string texture = "error";
 
     std::array<float, 4> s = {0.0, 0.0, 0.0, 0.0};
     std::array<float, 4> t = {0.0, 0.0, 0.0, 0.0};
@@ -731,7 +732,7 @@ static void Q2_Model_Face(quake_mapmodel_c *model, int face, s16_t plane,
     // using SURF_WARP to disable the check on extents
     // (trigger models are never rendered anyway)
 
-    if (strstr(texture, "trigger") != NULL) {
+    if (texture.find("trigger") != std::string::npos) {
         flags |= SURF_NODRAW | SURF_WARP;
     }
 
@@ -999,7 +1000,7 @@ class quake2_game_interface_c : public game_interface_c {
 
     void BeginLevel();
     void EndLevel();
-    void Property(const char *key, const char *value);
+    void Property(std::string key, std::string value);
 };
 
 bool quake2_game_interface_c::Start(const char *preset) {
@@ -1060,11 +1061,11 @@ void quake2_game_interface_c::BeginLevel() {
     CSG_QUAKE_Free();
 }
 
-void quake2_game_interface_c::Property(const char *key, const char *value) {
+void quake2_game_interface_c::Property(std::string key, std::string value) {
     if (StringCaseCmp(key, "level_name") == 0) {
-        level_name = value ? value : "";
+        level_name = !value.empty() ? value.c_str() : "";
     } else if (StringCaseCmp(key, "description") == 0) {
-        description = value ? value : "";
+        description = !value.empty() ? value.c_str() : "";
     } else {
         LogPrintf("WARNING: unknown QUAKE2 property: {}={}\n", key, value);
     }

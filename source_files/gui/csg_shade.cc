@@ -125,14 +125,14 @@ static int SHADE_CalcRegionGroup(region_c *R) {
     // differentiate floor heights
     int base = ((int)B->t.z & 0x1FFF) << 16;
 
-    const char *tag = f_face->getStr("tag");
-    if (tag) {
-        return base + atoi(tag);
+    std::string tag = f_face->getStr("tag");
+    if (!tag.empty()) {
+        return base + StringToInt(tag);
     }
 
     tag = c_face->getStr("tag");
-    if (tag) {
-        return base + atoi(tag);
+    if (!tag.empty()) {
+        return base + StringToInt(tag);
     }
 
     // closed sectors are usually doors

@@ -40,6 +40,7 @@ std::string NumToString(int value);
 std::string NumToString(unsigned long long int value);
 std::string NumToString(double value);
 int StringToInt(std::string value);
+int StringToHex(std::string value);
 double StringToDouble(std::string value);
 
 char *mem_gets(char *buf, int size, const char **str_ptr);
@@ -52,7 +53,7 @@ void TimeDelay(u32_t millies);
 /* math utilities */
 
 u32_t IntHash(u32_t key);
-u32_t StringHash(const char *str);
+u32_t StringHash(std::string str);
 
 #define ALIGN_LEN(x) (((x) + 3) & ~3)
 

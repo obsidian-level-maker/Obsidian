@@ -62,13 +62,13 @@ class csg_property_set_c {
     // copy constructor
     csg_property_set_c(const csg_property_set_c &other) : dict(other.dict) {}
 
-    void Add(const char *key, const char *value);
-    void Remove(const char *key);
+    void Add(std::string key, std::string value);
+    void Remove(std::string key);
 
-    const char *getStr(const char *key, const char *def_val = NULL) const;
+    std::string getStr(std::string key, std::string def_val = "") const;
 
-    double getDouble(const char *key, double def_val = 0) const;
-    int getInt(const char *key, int def_val = 0) const;
+    double getDouble(std::string key, double def_val = 0) const;
+    int getInt(std::string key, int def_val = 0) const;
 
     void getHexenArgs(u8_t *arg5) const;
 
@@ -224,7 +224,7 @@ class csg_entity_c {
     csg_entity_c();
     ~csg_entity_c();
 
-    bool Match(const char *want_name) const;
+    bool Match(std::string want_name) const;
 };
 
 /***** VARIABLES ****************/
@@ -241,14 +241,14 @@ extern std::string dummy_plane_tex;
 void CSG_Main_Free();
 
 bool CSG_TraceRay(double x1, double y1, double z1, double x2, double y2,
-                  double z2, const char *mode);
+                  double z2, std::string mode);
 
 int CSG_BrushContents(double x, double y, double z,
                       double *liquid_depth = NULL);
 
-csg_property_set_c *CSG_LookupTexProps(const char *name);
+csg_property_set_c *CSG_LookupTexProps(std::string name);
 
-void CSG_LinkBrushToEntity(csg_brush_c *B, const char *link_key);
+void CSG_LinkBrushToEntity(csg_brush_c *B, std::string link_key);
 
 #endif /* __OBLIGE_CSG_MAIN_H__ */
 
