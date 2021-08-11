@@ -132,7 +132,7 @@ static void WriteBehavior() {
     raw_behavior_header_t behavior;
 
     std::string_view acs{"ACS"};
-    std::copy(acs.data(), acs.data() + 4, behavior.marker.data());
+    std::copy(acs.data(), acs.data() + acs.size(), behavior.marker.data());
 
     behavior.offset = LE_U32(8);
     behavior.func_num = 0;
@@ -165,7 +165,7 @@ static void WriteSections() {
         WriteLump(section_markers[k][0], nullptr, 0);
 
         for (auto *lump : *sections[k]) {
-            WriteLump(lump->GetName(), lump);
+            WriteLump(lump->name.c_str(), lump);
         }
 
         WriteLump(section_markers[k][1], nullptr, 0);
@@ -174,7 +174,7 @@ static void WriteSections() {
 
 }  // namespace Doom
 
-void Doom::AddSectionLump(char ch, const char *name, qLump_c *lump) {
+void Doom::AddSectionLump(char ch, std::string name, qLump_c *lump) {
     int k;
     switch (ch) {
         case 'P':
@@ -197,7 +197,7 @@ void Doom::AddSectionLump(char ch, const char *name, qLump_c *lump) {
             Main::FatalError("DM_AddSectionLump: bad section '{}'\n", ch);
     }
 
-    lump->SetName(name);
+    lump->name = name;
 
     sections[k]->push_back(lump);
 }

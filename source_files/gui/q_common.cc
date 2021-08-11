@@ -145,10 +145,6 @@ void qLump_c::KeyPair(const char *key, const char *val, ...) {
 
 void qLump_c::SetCRLF(bool enable) { crlf = enable; }
 
-void qLump_c::SetName(const char *_name) { name = std::string(_name); }
-
-const char *qLump_c::GetName() const { return name.c_str(); }
-
 //------------------------------------------------------------------------
 
 #define PLANE_HASH_SIZE 128

@@ -324,7 +324,7 @@ bool LoadThingsHexen() {
         thing->options = LE_U16(raw->options);
         thing->angle = LE_S16(raw->angle);
 
-        // FIXME: hexen stuff (args)
+        thing->args = raw->arg;
     }
 
     return true;  // OK

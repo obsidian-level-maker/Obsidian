@@ -52,7 +52,7 @@ void WriteLump(std::string_view name, qLump_c *lump);
 //   'P' : patches   //   'F' : flats
 //   'S' : sprites   //   'C' : colormaps (Boom)
 //   'T' : textures (Zdoom)
-void AddSectionLump(char section, const char *name, qLump_c *lump);
+void AddSectionLump(char section, std::string name, qLump_c *lump);
 
 void HeaderPrintf(const char *str, ...);
 

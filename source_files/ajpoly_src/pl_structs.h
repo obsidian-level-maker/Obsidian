@@ -60,7 +60,7 @@ typedef struct {
     u16_t end;         // ... to this vertex
     u16_t flags;       // linedef flags (impassible, etc)
     u8_t type;         // linedef type
-    u8_t specials[5];  // hexen specials
+    std::array<u8_t, 5> specials;  // hexen specials
     u16_t sidedef1;    // right sidedef
     u16_t sidedef2;    // left sidedef
 
@@ -108,7 +108,7 @@ typedef struct {
     u16_t options;  // when appears, deaf, dormant, etc..
 
     u8_t special;  // special type
-    u8_t arg[5];   // special arguments
+    std::array<u8_t, 5> arg;   // special arguments
 
 } PACKEDATTR raw_hexen_thing_t;
 

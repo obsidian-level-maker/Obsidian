@@ -20,8 +20,11 @@
 // functions provided by the application
 
 #include <cstring>
+#include <array>
 void Appl_FatalError(const char *str, ...);
 void Appl_Printf(const char *str, ...);
+
+typedef unsigned char u8_t;
 
 namespace ajpoly {
 
@@ -142,7 +145,7 @@ class linedef_c {
     int tag;
 
     // Hexen support
-    short args[5];
+    std::array<u8_t, 5> args;
 
    public:
     linedef_c()
@@ -154,9 +157,8 @@ class linedef_c {
           is_border(),
           flags(),
           special(),
-          tag() {
-        memset(args, 0, sizeof(args));
-    }
+          tag(),
+          args() { }
 };
 
 class thing_c {
@@ -170,12 +172,10 @@ class thing_c {
 
     // Hexen support
     int special;
-    short args[5];
+    std::array<u8_t, 5> args;
 
    public:
-    thing_c() : index(-1), x(), y(), type(), options(), angle() {
-        memset(args, 0, sizeof(args));
-    }
+    thing_c() : index(-1), x(), y(), type(), options(), angle(), args() {}
 };
 
 class edge_c {

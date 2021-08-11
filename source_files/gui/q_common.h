@@ -40,10 +40,12 @@ enum quake_subformat_e {
 /***** CLASSES ****************/
 
 class qLump_c {
+
+   public:
+    std::string name;
+
    private:
     std::vector<u8_t> buffer;
-
-    std::string name;
 
     // when true Printf() converts '\n' to CR/LF pair
     bool crlf;
@@ -65,9 +67,6 @@ class qLump_c {
 
     int GetSize() const;
     const u8_t *GetBuffer() const;
-
-    void SetName(const char *_name);
-    const char *GetName() const;
 
    private:
     void RawPrintf(const char *str);
