@@ -23,6 +23,8 @@
 #define PACKEDATTR
 #endif
 
+#include "sys_type.h"
+
 typedef struct {
     char type[4];
 
@@ -35,7 +37,7 @@ typedef struct {
     u32_t start;
     u32_t length;
 
-    char name[8];
+    std::array<char, 8> name;
 
 } PACKEDATTR raw_wad_entry_t;
 
@@ -70,9 +72,9 @@ typedef struct {
     s16_t x_offset;  // X offset for texture
     s16_t y_offset;  // Y offset for texture
 
-    char upper_tex[8];  // texture name for the part above
-    char lower_tex[8];  // texture name for the part below
-    char mid_tex[8];    // texture name for the regular part
+    std::array<char, 8> upper_tex;  // texture name for the part above
+    std::array<char, 8> lower_tex;  // texture name for the part below
+    std::array<char, 8> mid_tex;    // texture name for the regular part
 
     u16_t sector;  // adjacent sector
 
@@ -82,8 +84,8 @@ typedef struct {
     s16_t floor_h;  // floor height
     s16_t ceil_h;   // ceiling height
 
-    char floor_tex[8];  // floor texture
-    char ceil_tex[8];   // ceiling texture
+    std::array<char, 8> floor_tex;  // floor texture
+    std::array<char, 8> ceil_tex;   // ceiling texture
 
     u16_t light;    // light level (0-255)
     u16_t special;  // special behaviour (0 = normal, 9 = secret, ...)

@@ -19,3 +19,4 @@ add_library(
   pl_wad.h
 )
 target_include_directories(obsidian_ajpoly PRIVATE ../physfs_src)
+target_include_directories(obsidian_ajpoly PRIVATE ../gui)

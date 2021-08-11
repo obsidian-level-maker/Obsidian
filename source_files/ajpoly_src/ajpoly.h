@@ -20,11 +20,11 @@
 // functions provided by the application
 
 #include <cstring>
+#include <string>
 #include <array>
+#include "sys_type.h"
 void Appl_FatalError(const char *str, ...);
 void Appl_Printf(const char *str, ...);
-
-typedef unsigned char u8_t;
 
 namespace ajpoly {
 
@@ -67,8 +67,8 @@ class sector_c {
     int floor_h, ceil_h;
 
     // textures
-    char floor_tex[10];
-    char ceil_tex[10];
+    std::array<char, 10> floor_tex;
+    std::array<char, 10> ceil_tex;
 
     // attributes
     int light;
@@ -95,10 +95,9 @@ class sector_c {
           edge_list(),
           num_floors(),
           floor_start(),
-          is_dummy() {
-        floor_tex[0] = 0;
-        ceil_tex[0] = 0;
-    }
+          floor_tex(),
+          ceil_tex(),
+          is_dummy() {}
 
     linedef_c *getExtraFloor(int index);
 };
@@ -116,16 +115,12 @@ class sidedef_c {
     int x_offset, y_offset;
 
     // texture names
-    char upper_tex[10];
-    char lower_tex[10];
-    char mid_tex[10];
+    std::array<char, 10> upper_tex;
+    std::array<char, 10> lower_tex;
+    std::array<char, 10> mid_tex;
 
    public:
-    sidedef_c() : index(-1), sector(), x_offset(), y_offset() {
-        upper_tex[0] = 0;
-        lower_tex[0] = 0;
-        mid_tex[0] = 0;
-    }
+    sidedef_c() : index(-1), sector(), x_offset(), y_offset(), upper_tex(), lower_tex(), mid_tex() { }
 };
 
 class linedef_c {

@@ -245,11 +245,8 @@ bool LoadSectors() {
         sector->floor_h = LE_S16(raw->floor_h);
         sector->ceil_h = LE_S16(raw->ceil_h);
 
-        memset(sector->floor_tex, 0, sizeof(sector->floor_tex));
-        memset(sector->ceil_tex, 0, sizeof(sector->ceil_tex));
-
-        memcpy(sector->floor_tex, raw->floor_tex, 8);
-        memcpy(sector->ceil_tex, raw->ceil_tex, 8);
+        std::copy(raw->floor_tex.data(), raw->floor_tex.data() + raw->floor_tex.size(), sector->floor_tex.data());
+        std::copy(raw->ceil_tex.data(), raw->ceil_tex.data() + raw->ceil_tex.size(), sector->ceil_tex.data());
 
         sector->light = LE_U16(raw->light);
         sector->special = LE_U16(raw->special);
@@ -361,13 +358,9 @@ bool LoadSidedefs() {
         side->x_offset = LE_S16(raw->x_offset);
         side->y_offset = LE_S16(raw->y_offset);
 
-        memset(side->upper_tex, 0, sizeof(side->upper_tex));
-        memset(side->lower_tex, 0, sizeof(side->lower_tex));
-        memset(side->mid_tex, 0, sizeof(side->mid_tex));
-
-        memcpy(side->upper_tex, raw->upper_tex, 8);
-        memcpy(side->lower_tex, raw->lower_tex, 8);
-        memcpy(side->mid_tex, raw->mid_tex, 8);
+        std::copy(raw->upper_tex.data(), raw->upper_tex.data() + raw->upper_tex.size(), side->upper_tex.data());
+        std::copy(raw->mid_tex.data(), raw->mid_tex.data() + raw->mid_tex.size(), side->mid_tex.data());
+        std::copy(raw->lower_tex.data(), raw->lower_tex.data() + raw->lower_tex.size(), side->lower_tex.data());
     }
 
     return true;  // OK

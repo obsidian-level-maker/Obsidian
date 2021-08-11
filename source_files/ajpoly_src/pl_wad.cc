@@ -98,11 +98,9 @@ bool wad_c::ReadDirEntry() {
     int length = LE_U32(entry.length);
 
     // ensure name gets NUL terminated
-    char name_buf[10];
-    memset(name_buf, 0, sizeof(name_buf));
-    memcpy(name_buf, entry.name, 8);
+    std::string name_buf = entry.name.data();
 
-    lump_c *lump = new lump_c(name_buf, start, length);
+    lump_c *lump = new lump_c(name_buf.c_str(), start, length);
 
 #if DEBUG_WAD
     Appl_Printf("Read dir... %s\n", lump->name);
