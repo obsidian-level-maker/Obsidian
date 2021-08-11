@@ -1247,6 +1247,8 @@ DOOM.THEMES =
       torches11 = 5, --7
       --
       gtd_wall_urban_storage = 50,
+      gtd_full_storage = 50,
+      --
       gtd_wall_tech_top_corner_light_set = 50,
       gtd_wall_server_room = 50,
       gtd_wall_sewer = 50,
@@ -1654,7 +1656,10 @@ DOOM.THEMES =
       torches6 = 8,
       torches9 = 6, --burning barrel
       torches10 = 4, --skull rock
+      --
       gtd_wall_urban_storage = 50,
+      gtd_full_storage = 50,
+      --
       gtd_wall_tech_top_corner_light_set = 50,
       gtd_wall_sewer = 40,
       --
