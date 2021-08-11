@@ -984,7 +984,11 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
   local wad_file_3 = "games/doom/data/ObAddon_Textures_3.wad"
 
   if PARAM.bool_include_package == 1 then
-    gui.wad_transfer_lump(wad_file, "ANIMDEFS", "ANIMDEFS")
+    if SCRIPTS.animdefs then
+      SCRIPTS.animdefs = SCRIPTS.animdefs .. ARMAETUS_ANIMDEFS
+    else
+      SCRIPTS.animdefs = ARMAETUS_ANIMDEFS
+    end
     gui.wad_transfer_lump(wad_file, "CREDITS", "CREDITS")
     gui.wad_merge_sections(wad_file)
     gui.wad_merge_sections(wad_file_2)
