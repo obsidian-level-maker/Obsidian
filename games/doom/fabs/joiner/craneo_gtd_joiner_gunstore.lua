@@ -9,7 +9,7 @@ PREFABS.Joiner_craneo_gun_store =
   where = "seeds",
   shape  = "I",
 
-  prob = 1800,
+  prob = 1250,
 
   seed_w = 3,
   seed_h = 2,

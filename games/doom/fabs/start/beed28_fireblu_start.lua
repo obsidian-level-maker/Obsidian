@@ -1,11 +1,9 @@
-PREFABS.Exit_beed28_fireblu_exit =
+PREFABS.Start_beed28_fireblu_exit =
 {
-  file  = "exit/beed28_fireblu_exit.wad",
+  file  = "start/beed28_fireblu_start.wad",
 
   prob  = 250,
   theme = "!tech",
-
-  start_fab_peer = "Start_beed28_fireblu_exit",
 
   where  = "seeds",
   seed_w = 2,
@@ -28,14 +26,12 @@ PREFABS.Exit_beed28_fireblu_exit =
   }
 }
 
-PREFABS.Exit_beed28_fireblu_exit_tech =
+PREFABS.Start_beed28_fireblu_exit_tech =
 {
-  template = "Exit_beed28_fireblu_exit",
+  template = "Start_beed28_fireblu_exit",
 
   prob = 250,
   theme = "tech",
-
-  start_fab_peer = "Start_beed28_fireblu_exit_tech",
 
   thing_46 =
   {

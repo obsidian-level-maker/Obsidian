@@ -118,7 +118,9 @@ PREFABS.Item_wallmachines_secret_5 =
   file   = "item/scionox_secrets_tech.wad",
   map    = "MAP06",
 
-  prob   = 10,
+  prob   = 7,
+  skip_prob = 50,
+
   theme = "!hell",
   env = "!nature",
 
