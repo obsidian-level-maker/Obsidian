@@ -592,8 +592,6 @@ static bool TestIntersectionOpen(std::vector<intersect_t> &cuts, int first,
                                  int last, int dir) {
     int i;
 
-    const double ANG_EPSILON = 1e-5;
-
     // if have sitting with same dir : not open
     for (i = first; i <= last; i++) {
         if (cuts[i].kind == K1_SITTING && cuts[i].dir == dir) {

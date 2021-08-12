@@ -23,6 +23,12 @@
 
 // basic macros
 
+// smallest distance between two points before being considered equal
+#define DIST_EPSILON (1.0 / 128.0)
+
+// smallest degrees between two angles before being considered equal
+#define ANG_EPSILON (1.0 / 1024.0)
+
 #ifndef M_PI
 constexpr double M_PI = 3.14159265358979323846;
 #endif

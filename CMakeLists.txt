@@ -53,7 +53,6 @@ cpmaddpackage(
 add_executable(
   obsidian
   cpp.hint
-  source_files/gui/aj_endian.h
   source_files/gui/aj_local.h
   source_files/gui/aj_map.cc
   source_files/gui/aj_map.h

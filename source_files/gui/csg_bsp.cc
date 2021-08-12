@@ -494,8 +494,6 @@ void region_c::ClockwiseSnags() {
 
     i = 0;
 
-    const double ANG_EPSILON = 0.0001;
-
     while (i + 1 < total) {
         snag_c *A = snags[i];
         snag_c *B = snags[i + 1];
