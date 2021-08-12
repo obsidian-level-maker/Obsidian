@@ -27,18 +27,18 @@
 
 #include <vector>
 
-#include "ajpoly.h"
+#include "aj_poly.h"
 
 #define HAVE_PHYSFS 1
 #include "physfs.h"
 
 namespace ajpoly {
 
-#include "pl_endian.h"
-#include "pl_map.h"
-#include "pl_structs.h"
-#include "pl_util.h"
-#include "pl_wad.h"
+#include "aj_endian.h"
+#include "aj_map.h"
+#include "aj_structs.h"
+#include "aj_util.h"
+#include "aj_wad.h"
 
 }  // namespace ajpoly
 

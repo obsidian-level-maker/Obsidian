@@ -59,7 +59,7 @@
 
 #include "dm_prefab.h"
 
-#include "ajpoly.h"
+#include "aj_poly.h"
 #include "csg_main.h"
 #include "g_doom.h"
 #include "hdr_fltk.h"

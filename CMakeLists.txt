@@ -5,7 +5,6 @@ include(cmake/CPM.cmake)
 add_subdirectory(source_files/lua_src)
 add_subdirectory(source_files/acc_src)
 add_subdirectory(source_files/ff_src)
-add_subdirectory(source_files/ajpoly_src)
 add_subdirectory(source_files/physfs_src)
 add_subdirectory(source_files/zdbsp_src)
 add_subdirectory(source_files/slump_src)
@@ -54,6 +53,17 @@ cpmaddpackage(
 add_executable(
   obsidian
   cpp.hint
+  source_files/gui/aj_endian.h
+  source_files/gui/aj_local.h
+  source_files/gui/aj_map.cc
+  source_files/gui/aj_map.h
+  source_files/gui/aj_poly.cc
+  source_files/gui/aj_poly.h
+  source_files/gui/aj_structs.h
+  source_files/gui/aj_util.cc
+  source_files/gui/aj_util.h
+  source_files/gui/aj_wad.cc
+  source_files/gui/aj_wad.h
   source_files/gui/csg_bsp.cc
   source_files/gui/csg_clip.cc
   source_files/gui/csg_doom.cc
@@ -172,7 +182,6 @@ add_executable(
 )
 
 target_include_directories(obsidian PRIVATE source_files/physfs_src)
-target_include_directories(obsidian PRIVATE source_files/ajpoly_src)
 target_include_directories(obsidian PRIVATE source_files/zdbsp_src)
 target_include_directories(obsidian PRIVATE source_files/lua_src)
 target_include_directories(obsidian PRIVATE source_files/slump_src)
@@ -229,7 +238,6 @@ if(UNIX)
             obsidian_lua
             obsidian_physfs
             obsidian_acc
-            obsidian_ajpoly
             obsidian_zdbsp
             obsidian_slump
             obsidian_whereami
@@ -242,7 +250,6 @@ else()
             obsidian_lua
             obsidian_physfs
             obsidian_acc
-            obsidian_ajpoly
             obsidian_zdbsp
             obsidian_slump
             obsidian_whereami

@@ -22,7 +22,7 @@
 #ifndef __AJPOLY_ENDIAN_H__
 #define __AJPOLY_ENDIAN_H__
 
-#include "pl_util.h"
+#include "aj_util.h"
 
 // ---- determine byte order ----
 
