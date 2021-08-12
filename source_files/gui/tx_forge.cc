@@ -38,7 +38,7 @@
 #include "headers.h"
 #include "lib_util.h"
 #include "main.h"
-#include "twister.h"
+#include "sys_twister.h"
 
 /* Definitions used to address real and imaginary parts in a two-dimensional
    array of complex numbers as stored by fourn(). */

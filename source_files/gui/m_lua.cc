@@ -41,7 +41,7 @@
 #include "subprocess.h"
 #endif
 #include "physfs.h"
-#include "twister.h"
+#include "sys_twister.h"
 
 static lua_State *LUA_ST;
 

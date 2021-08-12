@@ -149,8 +149,8 @@ add_executable(
   source_files/gui/sys_endian.h
   source_files/gui/sys_macro.h
   source_files/gui/sys_type.h
-  source_files/gui/twister.cc
-  source_files/gui/twister.h
+  source_files/gui/sys_twister.cc
+  source_files/gui/sys_twister.h
   source_files/gui/tx_forge.cc
   source_files/gui/tx_forge.h
   source_files/gui/tx_skies.cc

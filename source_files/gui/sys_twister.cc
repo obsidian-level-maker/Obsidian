@@ -11,8 +11,7 @@ similar to AJ_Random as possible in order to minimize changes in
 other sections of code.
 */
 
-#include <ctime>
-#include <random>
+#include "sys_twister.h"
 
 std::independent_bits_engine<
     std::mersenne_twister_engine<unsigned long long, 64, 312, 156, 31,
@@ -22,7 +21,7 @@ std::independent_bits_engine<
     63, unsigned long long>
     twister;
 
-void twister_Init() { twister.seed(std::time(nullptr)); }
+void twister_Init() { twister.seed(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())); }
 
 void twister_Reseed(unsigned long long random) { twister.seed(random); }
 

@@ -35,7 +35,7 @@
 #include "m_lua.h"
 #include "m_trans.h"
 #include "physfs.h"
-#include "twister.h"
+#include "sys_twister.h"
 #include "ui_window.h"
 
 /**

@@ -33,7 +33,7 @@
 #include "m_lua.h"
 #include "main.h"
 #include "q_common.h"  // qLump_c
-#include "twister.h"
+#include "sys_twister.h"
 
 #ifdef WIN32
 #include <iso646.h>

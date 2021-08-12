@@ -11,7 +11,7 @@ similar to AJ_Random as possible in order to minimize changes to
 other sections of code
 */
 
-#include <ctime>
+#include <chrono>
 #include <random>
 
 void twister_Init();

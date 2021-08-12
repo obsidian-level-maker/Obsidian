@@ -24,7 +24,7 @@
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"
-#include "twister.h"
+#include "sys_twister.h"
 #include "tx_forge.h"
 
 byte *SKY_GenGradient(int W, int H, std::vector<byte> &colors) {

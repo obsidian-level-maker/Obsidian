@@ -372,7 +372,7 @@
 #include <cstdlib>
 #include <string.h>
 
-#include "twister.h"
+#include "sys_twister.h"
 #include "m_lua.h"
 #include "lib_util.h"
 
