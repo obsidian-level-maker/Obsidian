@@ -500,7 +500,7 @@ WallTexture "BRIC9GRN", 128, 128
 {
 	Patch "BRIC9GRY", 0, 0
 	{
-		Blend "#439337"
+		Blend "#BFFA85"
 	}
 }
 
@@ -516,7 +516,7 @@ WallTexture "BRICEGRN", 128, 128
 {
 	Patch "BRICEGRY", 0, 0
 	{
-		Blend "#77FF6F"
+		Blend "#BFFA85"
 	}
 }
 
