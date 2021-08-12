@@ -479,7 +479,11 @@ function FAUNA_MODULE.all_done()
   end
 
   if PARAM.bool_flies == 1 then
-    SCRIPTS.fauna_zsc = FAUNA_MODULE.ZSC
+    if SCRIPTS.zscript then
+      SCRIPTS.zscript = SCRIPTS.zscript .. FAUNA_MODULE.ZSC
+    else
+      SCRIPTS.zscript = FAUNA_MODULE.ZSC
+    end
     SCRIPTS.fauna_mapinfo = FAUNA_MODULE.DOOMEDNUMS
     local dir = "games/doom/data/"
     gui.wad_merge_sections(dir .. "Fly.wad")

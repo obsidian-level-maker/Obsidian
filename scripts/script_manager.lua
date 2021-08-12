@@ -55,12 +55,12 @@ function ScriptMan_assemble_mapinfo_lump()
   if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 and SCRIPTS.actor_name_script then
     eventhandler_lines = eventhandler_lines .. ", "
   end
-  if SCRIPTS.actor_name_script then
-    eventhandler_lines = eventhandler_lines .. '"bossNameHandler"'
-  end
   if (PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1) or SCRIPTS.actor_name_script then
     eventhandler_lines = eventhandler_lines .. "\n"
     table.insert(mapinfo_lines, eventhandler_lines)
+  end
+  if SCRIPTS.zs_eventhandlers then
+    eventhandler_lines = eventhandler_lines .. SCRIPTS.zs_eventhandlers
   end
 
   -- MAPINFO extras
@@ -123,19 +123,14 @@ function ScriptMan_assemble_zscript_lump()
   if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 then
     zscript_lines = zscript_lines .. PARAM.BOSSSCRIPT .. "\n"
   end
-  if PARAM.marine_gen then
-    zscript_lines = zscript_lines .. PARAM.MARINESCRIPT .. "\n"
-  end
+
   if PARAM.custom_trees == "zs" then
     zscript_lines = zscript_lines ..
     ARMAETUS_EPIC_TEXTURES.TEMPLATES.ZS_TREES .. "\n"
   end
-  if SCRIPTS.actor_name_script then
-    zscript_lines = zscript_lines .. SCRIPTS.actor_name_script .. "\n"
-  end
 
-  if SCRIPTS.fauna_zsc then
-    zscript_lines = zscript_lines .. SCRIPTS.fauna_zsc .. "\n"
+  if SCRIPTS.zscript then
+    zscript_lines = zscript_lines .. SCRIPTS.zscript .. "\n"
   end
 
   if zscript_lines ~= "" then

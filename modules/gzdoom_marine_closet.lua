@@ -1290,7 +1290,6 @@ MARINE_CLOSET_TUNE.TECHWPN =
 
 function MARINE_CLOSET_TUNE.setup(self)
   PARAM.marine_gen = true
-  PARAM.MARINESCRIPT = ""
   PARAM.marine_closets = 0
   PARAM.marine_marines = 0
   PARAM.marine_tech = 1
@@ -1475,8 +1474,12 @@ function MARINE_CLOSET_TUNE.all_done()
     scripty = string.gsub(scripty, "MDEATHMESSAGEX", "")
   end
 
-
-  PARAM.MARINESCRIPT = PARAM.MARINESCRIPT .. scripty
+  if SCRIPTS.zscript then
+    SCRIPTS.zscript = SCRIPTS.zscript .. scripty
+  else
+    SCRIPTS.zscript = scripty
+  end
+  --PARAM.MARINESCRIPT = PARAM.MARINESCRIPT .. scripty
   PARAM.MARINEMAPINFO = MARINE_CLOSET_TUNE.MAPINFO
 
   if PARAM.m_c_color ~= "MarAI1" then
