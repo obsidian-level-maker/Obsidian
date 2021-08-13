@@ -3,30 +3,62 @@
 ## LUA/PREFABS/ADDON DEVELOPERS
 
 Caligari87
+  - Maintainer of Oblige 7.70 and ObAddon repositories
+  - Discord moderator
 
 MsrSgtShooterPerson
+  - Upstream content repository maintainer
+  - Prefabs
+  - Shape rules
+  - Modules
+  - Textures
+  - Documentation
 
 Armaetus
+  - Original base tweaks to Oblige v7.59
+  - Prefabs
+  - Modules
+  - Textures
+  - Extensive name generator additions
+  - IWAD Mode
 
 Beed28
+  - Prefabs
 
 Craneo
+  - Textures
+  - Prefabs
+  - Name generator contributions
+  - Sprites
 
 EpicTyphlosion
+  - Prefabs
+  - Name generator contributions
 
 Frozsoul
+  - Fauna module
+  - Psychedelic theme porting
+  - Prefabs
+  - Most of the new GUI custom themes
 
 Garrett
+  - Prefabs
 
 josh771
+  - ZScript code for flies (from fauna module)
 
 MogWaltz
+  - Prefabs
 
 Scionox
+  - Prefabs
 
 Simon-v
+  - Lua normalizer
+  - Story generator contributions
 
 Tapwave
+  - Story generator contributions
 
 
 ## GUI/MAIN PROGRAM DEVELOPERS
