@@ -12,11 +12,19 @@ Beed28
 
 Craneo
 
+EpicTyphlosion
+
+Frozsoul
+
 Garrett
 
 josh771
 
+MogWaltz
+
 Scionox
+
+Simon-v
 
 Tapwave
 
@@ -35,6 +43,10 @@ Phytolizer
   - Conversion from Makefiles to CMake build system
   - MSVC support for compiling source on Windows
   - Many, many optimizations and updates of the codebase
+
+Simon-v
+  - Patch for scanning both install and home directories for addons
+  - Fixing Date/Time filename prefixes to be ISO-conformant
 
 ## THANKS TO:
 
