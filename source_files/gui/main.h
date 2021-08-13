@@ -45,9 +45,6 @@ constexpr const char *OPTIONS_FILENAME = "OPTIONS.txt";
 constexpr const char *THEME_FILENAME = "THEME.txt";
 constexpr const char *LOG_FILENAME = "LOGS.txt";
 
-// Header for loading .ttf files from code posted by an individual named Ian
-// MacArthur in a Google Groups thread at the following link:
-// https://groups.google.com/g/fltkgeneral/c/uAdg8wOLiMk
 #ifdef _WIN32
 ALWAYS_INLINE
 inline int i_load_private_font(const char *path) {

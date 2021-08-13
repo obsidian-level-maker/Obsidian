@@ -1,7 +1,7 @@
 
 # COMPILING Obsidian
 
-## Dependencies (MSYS has some differences; see MSYS Cross-Compilation section below)
+## Dependencies
 
 1. C++ compiler (GNU's G++) and associated tools
    * packages: `g++` `binutils`
@@ -38,35 +38,23 @@ will build the Obsidian binary. (The '>' is just the prompt)
     > cmake -B build
     > cmake --build build (-j# optional, with # being the number of cores you'd like to use)
     
-Then, obsidian can be launched with:
+Then, Obsidian can be launched with:
 
-    > ./build/obsidian --install .
+    > ./obsidian --install .
 
 ## Windows Cross-Compilation on Linux using MinGW
 
-You will need the `mingw-w64` package as well (or whatever name your distro uses)
+You will need the `mingw-w64` package as well (or your distro's equivalent)
 
 Similar to the above directions:
 
     > cmake -B build -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw64.cmake (use Toolchain-mingw32.cmake for a 32-bit build)
     > cmake --build build (-j# optional, with # being the number of cores you'd like to use)
-    > cp build/obsidian.exe .
-    > cp build/source_files/ff_src/filename_formatter.exe ./tools
+
+Then, Obsidian can be launched (in Windows) with:
+
+    > obsidian.exe
     
-## Windows Cross-Compilation using MSYS
-
-You will need to install the following on top of the regular MSYS Mingw64 install:
-   * package: `mingw-w64-(arch)-clang-tools-extra`
-   * package: `mingw-w64-(arch)-cmake`
-   
-Similar to the above directions:
-
-    > cmake -B build -G "MSYS Makefiles"
-    > cmake --build build (-j# optional, with # being the number of cores you'd like to use)
-    > cp build/obsidian.exe .
-    > cp build/source_files/ff_src/filename_formatter.exe ./tools
-
-
 # INSTALLING Obsidian
 
 This is a work-in-progress; needs to be revisited after the CMake conversion is finalized

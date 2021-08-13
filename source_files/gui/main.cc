@@ -401,9 +401,6 @@ static int DetermineScaling() {
 
 bool Main::LoadInternalFont(const char *fontpath, const int fontnum,
                             const char *fontname) {
-    // This is derived from code posted by an individual named Ian MacArthur
-    // in a Google Groups thread at the following link:
-    // https://groups.google.com/g/fltkgeneral/c/uAdg8wOLiMk
 
     /* set the extra font */
     if (i_load_private_font(fontpath)) {
