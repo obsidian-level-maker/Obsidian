@@ -91,12 +91,6 @@ add_executable(
   source_files/gui/hdr_ui.h
   source_files/gui/headers.h
   source_files/gui/images.h
-  source_files/gui/img_all.h
-  source_files/gui/img_bolt.cc
-  source_files/gui/img_carve.cc
-  source_files/gui/img_font1.cc
-  source_files/gui/img_pill.cc
-  source_files/gui/img_relief.cc
   source_files/gui/lib_argv.cc
   source_files/gui/lib_argv.h
   source_files/gui/lib_crc.cc

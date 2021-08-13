@@ -28,7 +28,7 @@
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"  // ui_build.h
-#include "img_all.h"
+#include "images.h"
 #include "lib_file.h"
 #include "lib_grp.h"
 #include "lib_util.h"
