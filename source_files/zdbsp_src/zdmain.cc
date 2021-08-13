@@ -61,8 +61,8 @@
 #include <filesystem>
 
 #include "processor.h"
-#include "zdmain.h"
 #include "zdwad.h"
+#include "zdbsp.h"
 
 #include "lib_util.h"
 
@@ -189,7 +189,7 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
 
         while (lump < max) {
             if (inwad.IsMap(lump) &&
-                (!Map || _stricmp(inwad.LumpName(lump), Map) == 0)) {
+                (!Map || strcasecmp(inwad.LumpName(lump), Map) == 0)) {
                 START_COUNTER(t2a, t2b, t2c)
                 FProcessor builder(inwad, lump);
                 builder.Write(outwad);
@@ -200,7 +200,7 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
                 // Ignore GL nodes from the input for any maps we process.
                 if (BuildNodes &&
                     (Map == NULL ||
-                     _stricmp(inwad.LumpName(lump) + 3, Map) == 0)) {
+                     strcasecmp(inwad.LumpName(lump) + 3, Map) == 0)) {
                     lump = inwad.SkipGLNodes(lump);
                 } else {
                     outwad.CopyLump(inwad, lump);

@@ -98,7 +98,7 @@ int FWadReader::FindLump(const char *name, int index) const {
         index = 0;
     }
     for (; index < Header.NumLumps; ++index) {
-        if (_strnicmp(Lumps[index].Name, name, 8) == 0) {
+        if (strncasecmp(Lumps[index].Name, name, 8) == 0) {
             return index;
         }
     }
@@ -110,7 +110,7 @@ int FWadReader::FindMapLump(const char *name, int map) const {
     ++map;
 
     for (i = 0; i < 12; ++i) {
-        if (_strnicmp(MapLumpNames[i], name, 8) == 0) {
+        if (strncasecmp(MapLumpNames[i], name, 8) == 0) {
             break;
         }
     }
@@ -119,7 +119,7 @@ int FWadReader::FindMapLump(const char *name, int map) const {
     }
 
     for (j = k = 0; j < 12; ++j) {
-        if (_strnicmp(Lumps[map + k].Name, MapLumpNames[j], 8) == 0) {
+        if (strncasecmp(Lumps[map + k].Name, MapLumpNames[j], 8) == 0) {
             if (i == j) {
                 return map + k;
             }
@@ -132,7 +132,7 @@ int FWadReader::FindMapLump(const char *name, int map) const {
 bool FWadReader::isUDMF(int index) const {
     index++;
 
-    if (_strnicmp(Lumps[index].Name, "TEXTMAP", 8) == 0) {
+    if (strncasecmp(Lumps[index].Name, "TEXTMAP", 8) == 0) {
         // UDMF map
         return true;
     }
@@ -147,7 +147,7 @@ bool FWadReader::IsMap(int index) const {
     index++;
 
     for (i = j = 0; i < 12; ++i) {
-        if (_strnicmp(Lumps[index + j].Name, MapLumpNames[i], 8) != 0) {
+        if (strncasecmp(Lumps[index + j].Name, MapLumpNames[i], 8) != 0) {
             if (MapLumpRequired[i]) {
                 return false;
             }
@@ -163,7 +163,7 @@ int FWadReader::FindGLLump(const char *name, int glheader) const {
     ++glheader;
 
     for (i = 0; i < 5; ++i) {
-        if (_strnicmp(Lumps[glheader + i].Name, name, 8) == 0) {
+        if (strncasecmp(Lumps[glheader + i].Name, name, 8) == 0) {
             break;
         }
     }
@@ -172,7 +172,7 @@ int FWadReader::FindGLLump(const char *name, int glheader) const {
     }
 
     for (j = k = 0; j < 5; ++j) {
-        if (_strnicmp(Lumps[glheader + k].Name, GLLumpNames[j], 8) == 0) {
+        if (strncasecmp(Lumps[glheader + k].Name, GLLumpNames[j], 8) == 0) {
             if (i == j) {
                 return glheader + k;
             }
@@ -192,7 +192,7 @@ bool FWadReader::IsGLNodes(int index) const {
     }
     index++;
     for (int i = 0; i < 4; ++i) {
-        if (_strnicmp(Lumps[i + index].Name, GLLumpNames[i], 8) != 0) {
+        if (strncasecmp(Lumps[i + index].Name, GLLumpNames[i], 8) != 0) {
             return false;
         }
     }
@@ -202,7 +202,7 @@ bool FWadReader::IsGLNodes(int index) const {
 int FWadReader::SkipGLNodes(int index) const {
     index++;
     for (int i = 0; i < 5 && index < Header.NumLumps; ++i, ++index) {
-        if (_strnicmp(Lumps[index].Name, GLLumpNames[i], 8) != 0) {
+        if (strncasecmp(Lumps[index].Name, GLLumpNames[i], 8) != 0) {
             break;
         }
     }
@@ -233,7 +233,7 @@ int FWadReader::LumpAfterMap(int i) const {
     if (isUDMF(i)) {
         // UDMF map
         i += 2;
-        while (_strnicmp(Lumps[i].Name, "ENDMAP", 8) != 0 &&
+        while (strncasecmp(Lumps[i].Name, "ENDMAP", 8) != 0 &&
                i < Header.NumLumps) {
             i++;
         }
@@ -242,7 +242,7 @@ int FWadReader::LumpAfterMap(int i) const {
 
     i++;
     for (j = k = 0; j < 12; ++j) {
-        if (_strnicmp(Lumps[i + k].Name, MapLumpNames[j], 8) != 0) {
+        if (strncasecmp(Lumps[i + k].Name, MapLumpNames[j], 8) != 0) {
             if (MapLumpRequired[j]) {
                 break;
             }

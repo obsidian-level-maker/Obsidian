@@ -219,4 +219,8 @@ inline int LittleLong(int x) {
 #endif  // __BIG_ENDIAN__
 #endif  // __APPLE__
 
+#ifdef WIN32
+#define strcasecmp _stricmp
+#endif
+
 #endif  //__ZDBSP_H__

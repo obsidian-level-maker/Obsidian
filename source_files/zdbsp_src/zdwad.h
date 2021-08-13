@@ -107,4 +107,8 @@ class FWadWriter {
     std::ofstream File;
 };
 
+#ifdef WIN32
+#define strncasecmp _strnicmp
+#endif
+
 #endif  //__WAD_H__
