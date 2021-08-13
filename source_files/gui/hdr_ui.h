@@ -22,12 +22,12 @@
 #define __OB_HDR_UI_H__
 
 #include "ui_build.h"
-#include "ui_customboxes.h"
+#include "ui_boxes.h"
 #include "ui_game.h"
 #include "ui_hyper.h"
 #include "ui_map.h"
 #include "ui_module.h"
-#include "ui_rchoice.h"
+#include "ui_widgets.h"
 #include "ui_window.h"
 #include "zf_menu.h"
 

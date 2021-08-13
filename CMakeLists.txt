@@ -157,8 +157,8 @@ add_executable(
   source_files/gui/tx_skies.h
   source_files/gui/ui_build.cc
   source_files/gui/ui_build.h
-  source_files/gui/ui_customboxes.cc
-  source_files/gui/ui_customboxes.h
+  source_files/gui/ui_boxes.cc
+  source_files/gui/ui_boxes.h
   source_files/gui/ui_game.cc
   source_files/gui/ui_game.h
   source_files/gui/ui_hyper.cc
@@ -167,8 +167,8 @@ add_executable(
   source_files/gui/ui_map.h
   source_files/gui/ui_module.cc
   source_files/gui/ui_module.h
-  source_files/gui/ui_rchoice.cc
-  source_files/gui/ui_rchoice.h
+  source_files/gui/ui_widgets.cc
+  source_files/gui/ui_widgets.h
   source_files/gui/ui_window.cc
   source_files/gui/ui_window.h
   source_files/gui/vis_buffer.cc

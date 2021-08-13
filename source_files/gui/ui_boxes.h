@@ -1,3 +1,5 @@
+// Headers for custom FLTK box drawing routines so that Theme colors are honored - Dasho
+
 void cgleam_gleam_color(Fl_Color c);
 void cgleam_shade_rect_top_bottom(int x, int y, int w, int h, Fl_Color fg1,
                                   Fl_Color fg2, float th);

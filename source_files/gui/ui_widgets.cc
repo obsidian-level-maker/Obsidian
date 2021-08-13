@@ -1,10 +1,12 @@
 //----------------------------------------------------------------
-//  Remember Choice widget
+//  Custom FLTK Widgets
 //----------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
 //  Copyright (C) 2006-2016 Andrew Apted
+//
+//  Expanded by Dashodanger 2021
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License

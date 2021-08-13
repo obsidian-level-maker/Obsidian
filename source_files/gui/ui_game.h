@@ -25,7 +25,7 @@
 
 #include "FL/Fl_Button.H"
 #include "FL/Fl_Group.H"
-#include "ui_rchoice.h"
+#include "ui_widgets.h"
 
 class UI_Game : public Fl_Group {
    public:

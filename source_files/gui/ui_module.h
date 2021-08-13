@@ -27,7 +27,7 @@
 #include "FL/Fl_Check_Button.H"
 #include "FL/Fl_Group.H"
 #include "FL/Fl_Scrollbar.H"
-#include "ui_rchoice.h"
+#include "ui_widgets.h"
 
 class UI_Module : public Fl_Group {
     friend class UI_CustomMods;

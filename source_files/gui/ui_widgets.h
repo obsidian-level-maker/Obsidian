@@ -1,10 +1,12 @@
 //------------------------------------------------------------------------
-//  Remember Choice widget
+//  Custom FLTK Widgets
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
 //  Copyright (C) 2006-2016 Andrew Apted
+//
+//  Expanded by Dashodanger 2021
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -18,8 +20,8 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __UI_RCHOICE_H__
-#define __UI_RCHOICE_H__
+#ifndef __UI_WIDGETS_H__
+#define __UI_WIDGETS_H__
 
 #include <map>
 #include <string>
@@ -282,7 +284,7 @@ class UI_ModuleDropDown : public Fl_Check_Button {
     void draw();
 };
 
-#endif /* __UI_RCHOICE_H__ */
+#endif /* __UI_WIDGETS_H__ */
 
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab
