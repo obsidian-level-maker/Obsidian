@@ -1591,7 +1591,7 @@ static linedef_c *FindSimilarLine(linedef_c *L, vertex_c *V) {
 }
 
 static void AlignTextures() {
-    int i;
+    int i = 0;
     int count = 0;
 
     for (auto *L : linedefs) {
@@ -1655,6 +1655,9 @@ static void AlignTextures() {
                 N = N->sim_next;
                 next_count++;
             }
+
+            i += 1;
+
         }
 
         count += prev_count + next_count;
