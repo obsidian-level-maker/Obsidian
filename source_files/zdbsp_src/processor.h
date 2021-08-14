@@ -140,7 +140,7 @@ class FProcessor {
 };
 
 #ifdef WIN32
-#define strcasecmp stricmp
+#define strcasecmp _stricmp
 #endif
 
 #endif  //__PROCESSOR_H__
