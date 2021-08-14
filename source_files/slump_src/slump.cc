@@ -907,56 +907,6 @@ void unmark_linedefs(level *l) {
     for (ld = l->linedef_anchor; ld; ld = ld->next) ld->marked = 0;
 }
 
-/*
-   Calculates the square root of a 32-bit number.
-   Found somewhere on the net.
-*/
-unsigned short psi_sqrt(int v) {
-    register int t = 1L << 30, r = 0, s;
-
-#define PSISTEP(k) \
-    s = t + r;     \
-    r >>= 1;       \
-    if (s <= v) {  \
-        v -= s;    \
-        r |= t;    \
-    }
-
-    PSISTEP(15);
-    t >>= 2;
-    PSISTEP(14);
-    t >>= 2;
-    PSISTEP(13);
-    t >>= 2;
-    PSISTEP(12);
-    t >>= 2;
-    PSISTEP(11);
-    t >>= 2;
-    PSISTEP(10);
-    t >>= 2;
-    PSISTEP(9);
-    t >>= 2;
-    PSISTEP(8);
-    t >>= 2;
-    PSISTEP(7);
-    t >>= 2;
-    PSISTEP(6);
-    t >>= 2;
-    PSISTEP(5);
-    t >>= 2;
-    PSISTEP(4);
-    t >>= 2;
-    PSISTEP(3);
-    t >>= 2;
-    PSISTEP(2);
-    t >>= 2;
-    PSISTEP(1);
-    t >>= 2;
-    PSISTEP(0);
-
-    return (unsigned short)r;
-}
-
 /* Find a flat with the given name, creating one if */
 /* it doesn't already exist.                        */
 flat *find_flat(config *c, const char *name) {

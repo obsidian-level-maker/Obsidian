@@ -32,6 +32,7 @@
 #include <cstdio>
 #include <filesystem>
 #include <fstream>
+#include <cmath>
 
 /* Slump 0.003.02 */
 #define SOURCE_VERSION (0)
@@ -987,8 +988,7 @@ void announce(int announcetype, const char *s);
 #define LEFT_TURN (270)
 void point_from(int x1, int y1, int x2, int y2, int angle, int len, int *x3,
                 int *y3);
-unsigned short psi_sqrt(int v);
-#define linelen(x) (unsigned short)(psi_sqrt(lengthsquared(x)))
+#define linelen(x) (unsigned short)(std::sqrt(lengthsquared(x)))
 boolean no_monsters_stuck_on(level *l, linedef *ld1);
 
 flat *random_ceiling0(config *c, style *s);
