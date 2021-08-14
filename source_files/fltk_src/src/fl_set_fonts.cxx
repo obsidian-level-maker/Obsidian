@@ -23,14 +23,14 @@
 #include <stdlib.h>
 
 #ifdef WIN32
-#include "fl_set_fonts_win32.cxx"
+#  include "fl_set_fonts_win32.cxx"
 #elif defined(__APPLE__)
-#include "fl_set_fonts_mac.cxx"
+#  include "fl_set_fonts_mac.cxx"
 #elif USE_XFT
-#include "fl_set_fonts_xft.cxx"
+#  include "fl_set_fonts_xft.cxx"
 #else
-#include "fl_set_fonts_x.cxx"
-#endif  // WIN32
+#  include "fl_set_fonts_x.cxx"
+#endif // WIN32
 
 //
 // End of "$Id$".

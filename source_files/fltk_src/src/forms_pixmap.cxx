@@ -25,31 +25,28 @@
   \param[in] X, Y, W, H position and size
   \param[in] L widget label, default is no label
 */
-Fl_FormsPixmap::Fl_FormsPixmap(Fl_Boxtype t, int X, int Y, int W, int H,
-                               const char *L)
-    : Fl_Widget(X, Y, W, H, L) {
-    box(t);
-    b = 0;
-    color(FL_BLACK);
-    align(FL_ALIGN_BOTTOM);
+Fl_FormsPixmap::Fl_FormsPixmap(
+  Fl_Boxtype t, int X, int Y, int W, int H, const char* L)
+: Fl_Widget(X, Y, W, H, L) {
+  box(t);
+  b = 0;
+  color(FL_BLACK);
+  align(FL_ALIGN_BOTTOM);
 }
 
 /**
   Set/create the internal pixmap using raw data.
   \param[in] bits raw data
 */
-void Fl_FormsPixmap::set(char *const *bits) {
-    delete b;
-    b = new Fl_Pixmap(bits);
+void Fl_FormsPixmap::set(char*const* bits) {
+  delete b;
+  b = new Fl_Pixmap(bits);
 }
 
 void Fl_FormsPixmap::draw() {
-    draw_box(box(), selection_color());
-    if (b) {
-        fl_color(color());
-        b->draw(x(), y(), w(), h());
-    }
-    draw_label();
+  draw_box(box(), selection_color());
+  if (b) {fl_color(color()); b->draw(x(), y(), w(), h());}
+  draw_label();
 }
 
 //

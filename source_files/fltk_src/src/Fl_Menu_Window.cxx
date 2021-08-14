@@ -35,82 +35,81 @@ extern XVisualInfo *fl_find_overlay_visual();
 extern XVisualInfo *fl_overlay_visual;
 extern Colormap fl_overlay_colormap;
 extern unsigned long fl_transparent_pixel;
-static GC gc;             // the GC used by all X windows
-extern uchar fl_overlay;  // changes how fl_color(x) works
+static GC gc;	// the GC used by all X windows
+extern uchar fl_overlay; // changes how fl_color(x) works
 #endif
 
 #include <stdio.h>
 
 void Fl_Menu_Window::show() {
 #if HAVE_OVERLAY
-    if (!shown() && overlay() && fl_find_overlay_visual()) {
-        XInstallColormap(fl_display, fl_overlay_colormap);
-        fl_background_pixel = int(fl_transparent_pixel);
-        Fl_X::make_xid(this, fl_overlay_visual, fl_overlay_colormap);
-        fl_background_pixel = -1;
-    } else
+  if (!shown() && overlay() && fl_find_overlay_visual()) {
+    XInstallColormap(fl_display, fl_overlay_colormap);
+    fl_background_pixel = int(fl_transparent_pixel);
+    Fl_X::make_xid(this, fl_overlay_visual, fl_overlay_colormap);
+    fl_background_pixel = -1;
+  } else
 #endif
-        Fl_Single_Window::show();
+    Fl_Single_Window::show();
 }
 
 void Fl_Menu_Window::flush() {
-    if (!shown()) return;
+  if (!shown()) return;
 #if HAVE_OVERLAY
-    if (!fl_overlay_visual || !overlay()) {
-        Fl_Single_Window::flush();
-        return;
-    }
-    Fl_X *myi = Fl_X::i(this);
-    fl_window = myi->xid;
-    if (!gc) {
-        gc = XCreateGC(fl_display, myi->xid, 0, 0);
-#if defined(FLTK_USE_CAIRO)
-        if (Fl::autolink_context())
-            Fl::cairo_make_current(gc);  // capture gc changes automatically to
-                                         // update the cairo context adequately
-#endif
-    }
-    fl_gc = gc;
-    fl_overlay = 1;
-    fl_clip_region(myi->region);
-    myi->region = 0;
-    current_ = this;
-    draw();
-    fl_overlay = 0;
+  if (!fl_overlay_visual || !overlay()) {Fl_Single_Window::flush(); return;}
+  Fl_X *myi = Fl_X::i(this);
+  fl_window = myi->xid;
+  if (!gc) {
+	  gc = XCreateGC(fl_display, myi->xid, 0, 0);
+# if defined(FLTK_USE_CAIRO)
+	  if(Fl::autolink_context()) Fl::cairo_make_current(gc); // capture gc changes automatically to update the cairo context adequately
+# endif
+  }
+  fl_gc = gc;
+  fl_overlay = 1;
+  fl_clip_region(myi->region); myi->region = 0; current_ = this;
+  draw();
+  fl_overlay = 0;
 #else
-    Fl_Single_Window::flush();
+  Fl_Single_Window::flush();
 #endif
 }
 
 /** Erases the window, does nothing if HAVE_OVERLAY is not defined config.h */
 void Fl_Menu_Window::erase() {
 #if HAVE_OVERLAY
-    if (!gc || !shown()) return;
-    // XSetForeground(fl_display, gc, 0);
-    // XFillRectangle(fl_display, fl_xid(this), gc, 0, 0, w(), h());
-    XClearWindow(fl_display, fl_xid(this));
+  if (!gc || !shown()) return;
+//XSetForeground(fl_display, gc, 0);
+//XFillRectangle(fl_display, fl_xid(this), gc, 0, 0, w(), h());
+  XClearWindow(fl_display, fl_xid(this));
 #endif
 }
 
 // Fix the colormap flashing on Maximum Impact Graphics by erasing the
 // menu before unmapping it:
 void Fl_Menu_Window::hide() {
-    erase();
-    Fl_Single_Window::hide();
+  erase();
+  Fl_Single_Window::hide();
 }
 
 /**  Destroys the window and all of its children.*/
-Fl_Menu_Window::~Fl_Menu_Window() { hide(); }
+Fl_Menu_Window::~Fl_Menu_Window() {
+  hide();
+}
+
 
 Fl_Menu_Window::Fl_Menu_Window(int W, int H, const char *l)
-    : Fl_Single_Window(W, H, l) {
-    image(0);
+: Fl_Single_Window(W,H,l) 
+{ 
+  image(0); 
 }
 
+
 Fl_Menu_Window::Fl_Menu_Window(int X, int Y, int W, int H, const char *l)
-    : Fl_Single_Window(X, Y, W, H, l) {
-    image(0);
+: Fl_Single_Window(X,Y,W,H,l) { 
+  image(0); 
 }
+
 
 //
 // End of "$Id$".

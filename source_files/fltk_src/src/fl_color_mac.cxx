@@ -30,48 +30,48 @@
 #include <FL/fl_draw.H>
 
 static unsigned fl_cmap[256] = {
-#include "fl_cmap.h"  // this is a file produced by "cmap.cxx":
+#include "fl_cmap.h" // this is a file produced by "cmap.cxx":
 };
 
 void Fl_Quartz_Graphics_Driver::color(Fl_Color i) {
-    Fl_Graphics_Driver::color(i);
-    int index;
-    uchar r, g, b;
-    if (i & 0xFFFFFF00) {
-        // translate rgb colors into color index
-        r = i >> 24;
-        g = i >> 16;
-        b = i >> 8;
-    } else {
-        // translate index into rgb:
-        index = i;
-        unsigned c = fl_cmap[i];
-        r = c >> 24;
-        g = c >> 16;
-        b = c >> 8;
-    }
-    if (!fl_gc) return;  // no context yet? We will assign the color later.
-    float fr = r / 255.0f;
-    float fg = g / 255.0f;
-    float fb = b / 255.0f;
-    CGContextSetRGBFillColor(fl_gc, fr, fg, fb, 1.0f);
-    CGContextSetRGBStrokeColor(fl_gc, fr, fg, fb, 1.0f);
+  Fl_Graphics_Driver::color(i);
+  int index;
+  uchar r, g, b;
+  if (i & 0xFFFFFF00) {
+    // translate rgb colors into color index
+    r = i>>24;
+    g = i>>16;
+    b = i>> 8;
+  } else {
+    // translate index into rgb:
+    index = i;
+    unsigned c = fl_cmap[i];
+    r = c>>24;
+    g = c>>16;
+    b = c>> 8;
+  }
+  if (!fl_gc) return; // no context yet? We will assign the color later.
+  float fr = r/255.0f;
+  float fg = g/255.0f;
+  float fb = b/255.0f;
+  CGContextSetRGBFillColor(fl_gc, fr, fg, fb, 1.0f);
+  CGContextSetRGBStrokeColor(fl_gc, fr, fg, fb, 1.0f);
 }
 
 void Fl_Quartz_Graphics_Driver::color(uchar r, uchar g, uchar b) {
-    Fl_Graphics_Driver::color(fl_rgb_color(r, g, b));
-    float fr = r / 255.0f;
-    float fg = g / 255.0f;
-    float fb = b / 255.0f;
-    if (!fl_gc) return;  // no context yet? We will assign the color later.
-    CGContextSetRGBFillColor(fl_gc, fr, fg, fb, 1.0f);
-    CGContextSetRGBStrokeColor(fl_gc, fr, fg, fb, 1.0f);
+  Fl_Graphics_Driver::color( fl_rgb_color(r, g, b) );
+  float fr = r/255.0f;
+  float fg = g/255.0f;
+  float fb = b/255.0f;
+  if (!fl_gc) return; // no context yet? We will assign the color later.
+  CGContextSetRGBFillColor(fl_gc, fr, fg, fb, 1.0f);
+  CGContextSetRGBStrokeColor(fl_gc, fr, fg, fb, 1.0f);
 }
 
 void Fl::set_color(Fl_Color i, unsigned c) {
-    if (fl_cmap[i] != c) {
-        fl_cmap[i] = c;
-    }
+  if (fl_cmap[i] != c) {
+    fl_cmap[i] = c;
+  }
 }
 
 //

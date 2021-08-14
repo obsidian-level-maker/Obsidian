@@ -36,36 +36,36 @@
 #include <stdlib.h>
 
 #ifdef WIN32
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <locale.h>
-#include <ctype.h>
-#define xchar wchar_t
-#if !defined(FL_DLL) && !defined(__CYGWIN__)
-#undef strdup
-#define strdup _strdup
-#undef putenv
-#define putenv _putenv
-#undef stricmp
-#define stricmp _stricmp
-#undef strnicmp
-#define strnicmp _strnicmp
-#undef chdir
-#define chdir _chdir
-#endif
+#  include <sys/types.h>
+#  include <sys/stat.h>
+#  include <locale.h>
+#  include <ctype.h>
+#  define xchar wchar_t
+#  if !defined(FL_DLL) && !defined(__CYGWIN__)
+#    undef strdup
+#    define strdup _strdup
+#    undef putenv
+#    define putenv _putenv
+#    undef stricmp
+#    define stricmp _stricmp
+#    undef strnicmp
+#    define strnicmp _strnicmp
+#    undef chdir
+#    define chdir _chdir
+#  endif
 #elif defined(__APPLE__)
-#include <wchar.h>
-#include <sys/stat.h>
-#define xchar wchar_t
+#  include <wchar.h>
+#  include <sys/stat.h>
+#  define xchar wchar_t
 #else /* X11 */
-#include <sys/types.h>
-#include <sys/stat.h>
-#if defined(FL_LIBRARY) /* don't expose X11 headers in user space */
-#include <X11/Xlocale.h>
-#include <X11/Xlib.h>
-#endif /* defined(FL_LIBRARY) -- don't expose X11 headers in user space */
-#include <locale.h>
-#define xchar unsigned short
+#  include <sys/types.h>
+#  include <sys/stat.h>
+#  if defined(FL_LIBRARY) /* don't expose X11 headers in user space */
+#    include <X11/Xlocale.h>
+#    include <X11/Xlib.h>
+#  endif /* defined(FL_LIBRARY) -- don't expose X11 headers in user space */
+#  include <locale.h>
+#  define xchar unsigned short
 #endif
 
 #ifdef __cplusplus
@@ -86,66 +86,51 @@ extern "C" {
  */
 FL_EXPORT int fl_utf8bytes(unsigned ucs);
 
-/* OD: returns the byte length of the first UTF-8 char sequence (returns -1 if
- * not valid) */
+/* OD: returns the byte length of the first UTF-8 char sequence (returns -1 if not valid) */
 FL_EXPORT int fl_utf8len(char c);
 
-/* OD: returns the byte length of the first UTF-8 char sequence (returns +1 if
- * not valid) */
+/* OD: returns the byte length of the first UTF-8 char sequence (returns +1 if not valid) */
 FL_EXPORT int fl_utf8len1(char c);
 
 /* OD: returns the number of Unicode chars in the UTF-8 string */
 FL_EXPORT int fl_utf_nb_char(const unsigned char *buf, int len);
 
-/* F2: Convert the next UTF-8 char-sequence into a Unicode value (and say how
- * many bytes were used) */
-FL_EXPORT unsigned fl_utf8decode(const char *p, const char *end, int *len);
+/* F2: Convert the next UTF-8 char-sequence into a Unicode value (and say how many bytes were used) */
+FL_EXPORT unsigned fl_utf8decode(const char* p, const char* end, int* len);
 
-/* F2: Encode a Unicode value into a UTF-8 sequence, return the number of bytes
- * used */
-FL_EXPORT int fl_utf8encode(unsigned ucs, char *buf);
+/* F2: Encode a Unicode value into a UTF-8 sequence, return the number of bytes used */
+FL_EXPORT int fl_utf8encode(unsigned ucs, char* buf);
 
-/* F2: Move forward to the next valid UTF-8 sequence start betwen start and end
- */
-FL_EXPORT const char *fl_utf8fwd(const char *p, const char *start,
-                                 const char *end);
+/* F2: Move forward to the next valid UTF-8 sequence start betwen start and end */
+FL_EXPORT const char* fl_utf8fwd(const char* p, const char* start, const char* end);
 
 /* F2: Move backward to the previous valid UTF-8 sequence start */
-FL_EXPORT const char *fl_utf8back(const char *p, const char *start,
-                                  const char *end);
+FL_EXPORT const char* fl_utf8back(const char* p, const char* start, const char* end);
 
 /* XX: Convert a single 32-bit Unicode value into UTF16 */
-FL_EXPORT unsigned fl_ucs_to_Utf16(const unsigned ucs, unsigned short *dst,
-                                   const unsigned dstlen);
+FL_EXPORT unsigned fl_ucs_to_Utf16(const unsigned ucs, unsigned short *dst, const unsigned dstlen);
 
 /* F2: Convert a UTF-8 string into UTF16 */
-FL_EXPORT unsigned fl_utf8toUtf16(const char *src, unsigned srclen,
-                                  unsigned short *dst, unsigned dstlen);
+FL_EXPORT unsigned fl_utf8toUtf16(const char* src, unsigned srclen, unsigned short* dst, unsigned dstlen);
 
-/* F2: Convert a UTF-8 string into a wide character string - makes UTF16 on
- * win32, "UCS4" elsewhere */
-FL_EXPORT unsigned fl_utf8towc(const char *src, unsigned srclen, wchar_t *dst,
-                               unsigned dstlen);
+/* F2: Convert a UTF-8 string into a wide character string - makes UTF16 on win32, "UCS4" elsewhere */
+FL_EXPORT unsigned fl_utf8towc(const char *src, unsigned srclen, wchar_t *dst, unsigned dstlen);
 
-/* F2: Convert a wide character string to UTF-8 - takes in UTF16 on win32,
- * "UCS4" elsewhere */
-FL_EXPORT unsigned fl_utf8fromwc(char *dst, unsigned dstlen, const wchar_t *src,
-                                 unsigned srclen);
+/* F2: Convert a wide character string to UTF-8 - takes in UTF16 on win32, "UCS4" elsewhere */
+FL_EXPORT unsigned fl_utf8fromwc(char *dst, unsigned dstlen, const wchar_t *src, unsigned srclen);
 
 /* F2: Convert a UTF-8 string into ASCII, eliding untranslatable glyphs */
-FL_EXPORT unsigned fl_utf8toa(const char *src, unsigned srclen, char *dst,
-                              unsigned dstlen);
+FL_EXPORT unsigned fl_utf8toa (const char *src, unsigned srclen, char *dst, unsigned dstlen);
 
 /* F2: Convert 8859-1 string to UTF-8 */
-FL_EXPORT unsigned fl_utf8froma(char *dst, unsigned dstlen, const char *src,
-                                unsigned srclen);
+FL_EXPORT unsigned fl_utf8froma (char *dst, unsigned dstlen, const char *src, unsigned srclen);
 
 /* F2: Returns true if the current O/S locale is UTF-8 */
 FL_EXPORT int fl_utf8locale(void);
 
-/* F2: Examine the first len characters of src, to determine if the input text
- * is UTF-8 or not NOTE: The value returned is not simply boolean - it contains
- * information about the probable type of the src text. */
+/* F2: Examine the first len characters of src, to determine if the input text is UTF-8 or not
+ * NOTE: The value returned is not simply boolean - it contains information about the probable
+ * type of the src text. */
 FL_EXPORT int fl_utf8test(const char *src, unsigned len);
 
 /* XX: return width of "raw" ucs character in columns.
@@ -161,24 +146,20 @@ FL_EXPORT int fl_wcwidth(const char *src);
 FL_EXPORT unsigned int fl_nonspacing(unsigned int ucs);
 
 /* F2: Convert UTF-8 to a local multi-byte encoding - mainly for win32? */
-FL_EXPORT unsigned fl_utf8to_mb(const char *src, unsigned srclen, char *dst,
-                                unsigned dstlen);
+FL_EXPORT unsigned fl_utf8to_mb(const char *src, unsigned srclen, char *dst, unsigned dstlen);
 /* OD: Convert UTF-8 to a local multi-byte encoding */
-FL_EXPORT char *fl_utf2mbcs(const char *src);
+FL_EXPORT char* fl_utf2mbcs(const char *src);
 
 /* F2: Convert a local multi-byte encoding to UTF-8 - mainly for win32? */
-FL_EXPORT unsigned fl_utf8from_mb(char *dst, unsigned dstlen, const char *src,
-                                  unsigned srclen);
+FL_EXPORT unsigned fl_utf8from_mb(char *dst, unsigned dstlen, const char *src, unsigned srclen);
 
 /*****************************************************************************/
 #ifdef WIN32
 /* OD: Attempt to convert the UTF-8 string to the current locale */
-FL_EXPORT char *fl_utf8_to_locale(const char *s, int len,
-                                  unsigned int codepage);
+FL_EXPORT char *fl_utf8_to_locale(const char *s, int len, unsigned int codepage);
 
 /* OD: Attempt to convert a string in the current locale to UTF-8 */
-FL_EXPORT char *fl_locale_to_utf8(const char *s, int len,
-                                  unsigned int codepage);
+FL_EXPORT char *fl_locale_to_utf8(const char *s, int len, unsigned int codepage);
 #endif
 
 /*****************************************************************************
@@ -205,28 +186,28 @@ FL_EXPORT int fl_utf_tolower(const unsigned char *str, int len, char *buf);
 FL_EXPORT int fl_utf_toupper(const unsigned char *str, int len, char *buf);
 
 /* OD: Portable UTF-8 aware chmod wrapper */
-FL_EXPORT int fl_chmod(const char *f, int mode);
+FL_EXPORT int fl_chmod(const char* f, int mode);
 
 /* OD: Portable UTF-8 aware access wrapper */
-FL_EXPORT int fl_access(const char *f, int mode);
+FL_EXPORT int fl_access(const char* f, int mode);
 
 /* OD: Portable UTF-8 aware stat wrapper */
-FL_EXPORT int fl_stat(const char *path, struct stat *buffer);
+FL_EXPORT int fl_stat( const char *path, struct stat *buffer );
 
 /* OD: Portable UTF-8 aware getcwd wrapper */
-FL_EXPORT char *fl_getcwd(char *buf, int maxlen);
+FL_EXPORT char* fl_getcwd( char *buf, int maxlen);
 
 /* OD: Portable UTF-8 aware fopen wrapper */
 FL_EXPORT FILE *fl_fopen(const char *f, const char *mode);
 
 /* OD: Portable UTF-8 aware system wrapper */
-FL_EXPORT int fl_system(const char *f);
+FL_EXPORT int fl_system(const char* f);
 
 /* OD: Portable UTF-8 aware execvp wrapper */
 FL_EXPORT int fl_execvp(const char *file, char *const *argv);
 
 /* OD: Portable UTF-8 aware open wrapper */
-FL_EXPORT int fl_open(const char *f, int o, ...);
+FL_EXPORT int fl_open(const char* f, int o, ...);
 
 /* OD: Portable UTF-8 aware unlink wrapper */
 FL_EXPORT int fl_unlink(const char *f);
@@ -235,20 +216,21 @@ FL_EXPORT int fl_unlink(const char *f);
 FL_EXPORT int fl_rmdir(const char *f);
 
 /* OD: Portable UTF-8 aware getenv wrapper */
-FL_EXPORT char *fl_getenv(const char *name);
+FL_EXPORT char* fl_getenv(const char *name);
 
 /* OD: Portable UTF-8 aware execvp wrapper */
-FL_EXPORT int fl_mkdir(const char *f, int mode);
+FL_EXPORT int fl_mkdir(const char* f, int mode);
 
 /* OD: Portable UTF-8 aware rename wrapper */
-FL_EXPORT int fl_rename(const char *f, const char *t);
+FL_EXPORT int fl_rename(const char* f, const char *t);
 
-/* OD: Given a full pathname, this will create the directory path needed to hold
- * the file named */
-FL_EXPORT void fl_make_path_for_file(const char *path);
+
+/* OD: Given a full pathname, this will create the directory path needed to hold the file named */
+FL_EXPORT void fl_make_path_for_file( const char *path );
 
 /* OD: recursively create a path in the file system */
-FL_EXPORT char fl_make_path(const char *path);
+FL_EXPORT char fl_make_path( const char *path );
+
 
 /** @} */
 
@@ -257,6 +239,7 @@ FL_EXPORT char fl_make_path(const char *path);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
 
 #endif /* _HAVE_FL_UTF8_HDR_ */
 

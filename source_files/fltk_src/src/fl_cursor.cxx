@@ -37,95 +37,104 @@
 
 /**
   Sets the cursor for the current window to the specified shape and colors.
-  The cursors are defined in the <FL/Enumerations.H> header file.
+  The cursors are defined in the <FL/Enumerations.H> header file. 
   */
 void fl_cursor(Fl_Cursor c) {
-    if (Fl::first_window()) Fl::first_window()->cursor(c);
+  if (Fl::first_window()) Fl::first_window()->cursor(c);
 }
 
 /* For back compatibility only. */
-void fl_cursor(Fl_Cursor c, Fl_Color fg, Fl_Color bg) { fl_cursor(c); }
+void fl_cursor(Fl_Cursor c, Fl_Color fg, Fl_Color bg) {
+  fl_cursor(c);
+}
 
-/**
+
+/** 
     Sets the default window cursor. This is the cursor that will be used
     after the mouse pointer leaves a widget with a custom cursor set.
 
     \see cursor(const Fl_RGB_Image*, int, int), default_cursor()
 */
 void Fl_Window::default_cursor(Fl_Cursor c) {
-    cursor_default = c;
-    cursor(c);
+  cursor_default = c;
+  cursor(c);
 }
+
 
 static void fallback_cursor(Fl_Window *w, Fl_Cursor c) {
-    const char **xpm;
-    int hotx, hoty;
+  const char **xpm;
+  int hotx, hoty;
 
-    // The standard arrow is our final fallback, so something is broken
-    // if we get called back here with that as an argument.
-    if (c == FL_CURSOR_ARROW) return;
+  // The standard arrow is our final fallback, so something is broken
+  // if we get called back here with that as an argument.
+  if (c == FL_CURSOR_ARROW)
+    return;
 
-    switch (c) {
-        case FL_CURSOR_WAIT:
-            xpm = (const char **)fl_cursor_wait_xpm;
-            hotx = 7;
-            hoty = 9;
-            break;
-        case FL_CURSOR_HELP:
-            xpm = (const char **)fl_cursor_help_xpm;
-            hotx = 1;
-            hoty = 3;
-            break;
-        case FL_CURSOR_NWSE:
-            xpm = (const char **)fl_cursor_nwse_xpm;
-            hotx = 7;
-            hoty = 7;
-            break;
-        case FL_CURSOR_NESW:
-            xpm = (const char **)fl_cursor_nesw_xpm;
-            hotx = 7;
-            hoty = 7;
-            break;
-        case FL_CURSOR_NONE:
-            xpm = (const char **)fl_cursor_none_xpm;
-            hotx = 0;
-            hoty = 0;
-            break;
-        default:
-            w->cursor(FL_CURSOR_ARROW);
-            return;
-    }
+  switch (c) {
+  case FL_CURSOR_WAIT:
+    xpm = (const char**)fl_cursor_wait_xpm;
+    hotx = 7;
+    hoty = 9;
+    break;
+  case FL_CURSOR_HELP:
+    xpm = (const char**)fl_cursor_help_xpm;
+    hotx = 1;
+    hoty = 3;
+    break;
+  case FL_CURSOR_NWSE:
+    xpm = (const char**)fl_cursor_nwse_xpm;
+    hotx = 7;
+    hoty = 7;
+    break;
+  case FL_CURSOR_NESW:
+    xpm = (const char**)fl_cursor_nesw_xpm;
+    hotx = 7;
+    hoty = 7;
+    break;
+  case FL_CURSOR_NONE:
+    xpm = (const char**)fl_cursor_none_xpm;
+    hotx = 0;
+    hoty = 0;
+    break;
+  default:
+    w->cursor(FL_CURSOR_ARROW);
+    return;
+  }
 
-    Fl_Pixmap pxm(xpm);
-    Fl_RGB_Image image(&pxm);
+  Fl_Pixmap pxm(xpm);
+  Fl_RGB_Image image(&pxm);
 
-    w->cursor(&image, hotx, hoty);
+  w->cursor(&image, hotx, hoty);
 }
 
+
 void Fl_Window::cursor(Fl_Cursor c) {
-    int ret;
+  int ret;
 
-    // the cursor must be set for the top level window, not for subwindows
-    Fl_Window *w = window(), *toplevel = this;
+  // the cursor must be set for the top level window, not for subwindows
+  Fl_Window *w = window(), *toplevel = this;
 
-    while (w) {
-        toplevel = w;
-        w = w->window();
-    }
+  while (w) {
+    toplevel = w;
+    w = w->window();
+  }
 
-    if (toplevel != this) {
-        toplevel->cursor(c);
-        return;
-    }
+  if (toplevel != this) {
+    toplevel->cursor(c);
+    return;
+  }
 
-    if (c == FL_CURSOR_DEFAULT) c = cursor_default;
+  if (c == FL_CURSOR_DEFAULT)
+    c = cursor_default;
 
-    if (!i) return;
+  if (!i)
+    return;
 
-    ret = i->set_cursor(c);
-    if (ret) return;
+  ret = i->set_cursor(c);
+  if (ret)
+    return;
 
-    fallback_cursor(this, c);
+  fallback_cursor(this, c);
 }
 
 /**
@@ -140,42 +149,47 @@ void Fl_Window::cursor(Fl_Cursor c) {
   \see cursor(Fl_Cursor), default_cursor()
 */
 void Fl_Window::cursor(const Fl_RGB_Image *image, int hotx, int hoty) {
-    int ret;
+  int ret;
 
-    // the cursor must be set for the top level window, not for subwindows
-    Fl_Window *w = window(), *toplevel = this;
+  // the cursor must be set for the top level window, not for subwindows
+  Fl_Window *w = window(), *toplevel = this;
 
-    while (w) {
-        toplevel = w;
-        w = w->window();
-    }
+  while (w) {
+    toplevel = w;
+    w = w->window();
+  }
 
-    if (toplevel != this) {
-        toplevel->cursor(image, hotx, hoty);
-        return;
-    }
+  if (toplevel != this) {
+    toplevel->cursor(image, hotx, hoty);
+    return;
+  }
 
-    if (!i) return;
+  if (!i)
+    return;
 
-    ret = i->set_cursor(image, hotx, hoty);
-    if (ret) return;
+  ret = i->set_cursor(image, hotx, hoty);
+  if (ret)
+    return;
 
-    cursor(FL_CURSOR_DEFAULT);
+  cursor(FL_CURSOR_DEFAULT);
 }
 
 /**
  For back compatibility only.
- Same as Fl_Window::cursor(Fl_Cursor)
+ Same as Fl_Window::cursor(Fl_Cursor) 
 */
-void Fl_Window::cursor(Fl_Cursor c, Fl_Color, Fl_Color) { cursor(c); };
+void Fl_Window::cursor(Fl_Cursor c, Fl_Color, Fl_Color) {
+  cursor(c);
+};
 
-/**
+/** 
  For back compatibility only.
- same as Fl_Window::default_cursor(Fl_Cursor)
+ same as Fl_Window::default_cursor(Fl_Cursor) 
 */
 void Fl_Window::default_cursor(Fl_Cursor c, Fl_Color, Fl_Color) {
-    default_cursor(c);
+  default_cursor(c);
 };
+
 
 //
 // End of "$Id$".

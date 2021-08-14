@@ -1,21 +1,19 @@
 dnl -*- sh -*-
 dnl the "configure" script is made from this by running GNU "autoconf"
 dnl
-dnl "$Id$"
-dnl
 dnl Configuration script for the Fast Light Tool Kit (FLTK).
 dnl
-dnl Copyright 1998-2017 by Bill Spitzak and others.
+dnl Copyright 1998-2021 by Bill Spitzak and others.
 dnl
 dnl This library is free software. Distribution and use rights are outlined in
 dnl the file "COPYING" which should have been included with this file.  If this
 dnl file is missing or damaged, see the license at:
 dnl
-dnl     http://www.fltk.org/COPYING.php
+dnl     https://www.fltk.org/COPYING.php
 dnl
-dnl Please report all bugs and problems on the following page:
+dnl Please see the following page on how to report bugs and issues:
 dnl
-dnl      http://www.fltk.org/str.php
+dnl      https://www.fltk.org/bugs.php
 dnl
 
 dnl We need at least autoconf 2.50...
@@ -51,19 +49,19 @@ case $host_os in
 esac
 
 dnl FLTK library versions...
-FL_MAJOR_VERSION=1
-FL_MINOR_VERSION=3
-FL_PATCH_VERSION=5
-FL_DSO_VERSION=${FL_MAJOR_VERSION}.${FL_MINOR_VERSION}
-FL_ABI_VERSION=${FL_MAJOR_VERSION}.${FL_MINOR_VERSION}.0
-FL_VERSION=${FL_MAJOR_VERSION}.${FL_MINOR_VERSION}.${FL_PATCH_VERSION}
+FLTK_VERSION_MAJOR=1
+FLTK_VERSION_MINOR=3
+FLTK_VERSION_PATCH=7
+FL_DSO_VERSION=${FLTK_VERSION_MAJOR}.${FLTK_VERSION_MINOR}
+FL_ABI_VERSION=${FLTK_VERSION_MAJOR}.${FLTK_VERSION_MINOR}.0
+FLTK_VERSION=${FLTK_VERSION_MAJOR}.${FLTK_VERSION_MINOR}.${FLTK_VERSION_PATCH}
 
-AC_SUBST(FL_MAJOR_VERSION)
-AC_SUBST(FL_MINOR_VERSION)
-AC_SUBST(FL_PATCH_VERSION)
+AC_SUBST(FLTK_VERSION_MAJOR)
+AC_SUBST(FLTK_VERSION_MINOR)
+AC_SUBST(FLTK_VERSION_PATCH)
 AC_SUBST(FL_DSO_VERSION)
 AC_SUBST(FL_ABI_VERSION)
-AC_SUBST(FL_VERSION)
+AC_SUBST(FLTK_VERSION)
 
 AC_SUBST(ARCHFLAGS)
 AC_SUBST(OPTIM)
@@ -89,7 +87,7 @@ case $host_os in
     darwin*)
 	if test x$enable_x11 = xyes; then
 		host_os_gui="X11"
-		OPTIM="-U__APPLE__ -mmacosx-version-min=10.3 $OPTIM"
+		OPTIM="-U__APPLE__ -mmacosx-version-min=10.9 -D_LIBCPP_HAS_THREAD_API_PTHREAD $OPTIM"
 	fi
 	;;
    *)
@@ -382,6 +380,16 @@ else
     LINKSHARED="$LINKFLTKCAIRO ../lib/libfltk_images.a ../lib/libfltk_forms.a ../lib/libfltk.a"
 fi
 
+dnl Define the fluid executable used when building the test programs.
+dnl In a native build we use the fluid executable created during the build,
+dnl in a cross-compilation we use `fluid' which must exist on the build system
+dnl and must be in the PATH, i.e. executable as 'fluid' (w/o $EXEEXT).
+if test "$fltk_cross_compiling" = "yes"; then
+  FLUID_BUILD="fluid"
+else
+  FLUID_BUILD="../fluid/fluid$EXEEXT"
+fi
+
 AC_SUBST(DSOCOMMAND)
 AC_SUBST(DSOFLAGS)
 AC_SUBST(DSOLINK)
@@ -393,6 +401,7 @@ AC_SUBST(CAIRODSONAME)
 AC_SUBST(SHAREDSUFFIX)
 AC_SUBST(LINKSHARED)
 AC_SUBST(FLUID)
+AC_SUBST(FLUID_BUILD)
 
 AC_ARG_ENABLE(threads, [  --enable-threads        enable multi-threading support [[default=yes]]])
 
@@ -859,10 +868,10 @@ case $host_os_gui in
 	if test x$enable_gl != xno; then
 	    AC_CHECK_HEADER(GL/gl.h,
 		AC_DEFINE(HAVE_GL)
-		GLLIB="-lopengl32")
+		GLLIBS="-lopengl32")
 	    AC_CHECK_HEADER(GL/glu.h,
 		AC_DEFINE(HAVE_GL_GLU_H)
-		GLLIB="-lglu32 $GLLIB")
+		GLLIBS="-lglu32 $GLLIBS")
 	else
 	    LINKFLTKGL=""
 	    GLLIBNAME=""
@@ -900,7 +909,7 @@ case $host_os_gui in
 	if test x$enable_gl != xno; then
 	    AC_DEFINE(HAVE_GL)
 	    AC_DEFINE(HAVE_GL_GLU_H)
-	    GLLIB="-framework OpenGL"
+	    GLLIBS="-framework OpenGL"
 	else
 	    LINKFLTKGL=""
 	    GLLIBNAME=""
@@ -951,17 +960,17 @@ case $host_os_gui in
 	fi
 
 	dnl Check for OpenGL unless disabled...
-	GLLIB=
+	GLLIBS=
 
 	if test x$enable_gl != xno; then
 	    AC_SEARCH_LIBS(dlopen, dl)
 	    AC_CHECK_HEADER(GL/gl.h,
 		AC_CHECK_LIB(GL, glXMakeCurrent,
 		    [AC_DEFINE(HAVE_GL)
-		     GLLIB="-lGL"],
+		     GLLIBS="-lGL"],
 		    AC_CHECK_LIB(MesaGL, glXMakeCurrent,
 			[AC_DEFINE(HAVE_GL)
-			 GLLIB="-lMesaGL"],,
+			 GLLIBS="-lMesaGL"],,
 			[-lm]),
 		    [-lm])
 		AC_CHECK_LIB(GL, glXGetProcAddressARB,
@@ -970,10 +979,10 @@ case $host_os_gui in
 	    AC_CHECK_HEADER(GL/glu.h,
 		AC_DEFINE(HAVE_GL_GLU_H)
 		if test x$ac_cv_lib_GL_glXMakeCurrent = xyes; then
-		    GLLIB="-lGLU $GLLIB"
+		    GLLIBS="-lGLU $GLLIBS"
 		fi
 		if test x$ac_cv_lib_MesaGL_glXMakeCurrent = xyes; then
-		    GLLIB="-lMesaGLU $GLLIB"
+		    GLLIBS="-lMesaGLU $GLLIBS"
 		fi
 	    )
 
@@ -1151,7 +1160,7 @@ case $host_os_gui in
 esac
 
 AC_SUBST(GLDEMOS)
-AC_SUBST(GLLIB)
+AC_SUBST(GLLIBS)
 AC_SUBST(HLINKS)
 AC_SUBST(OSX_ONLY)
 AC_SUBST(THREADS)

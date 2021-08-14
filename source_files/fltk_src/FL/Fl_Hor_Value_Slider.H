@@ -25,8 +25,8 @@
 #include "Fl_Value_Slider.H"
 
 class FL_EXPORT Fl_Hor_Value_Slider : public Fl_Value_Slider {
-   public:
-    Fl_Hor_Value_Slider(int X, int Y, int W, int H, const char *l = 0);
+public:
+  Fl_Hor_Value_Slider(int X,int Y,int W,int H,const char *l=0);
 };
 
 #endif

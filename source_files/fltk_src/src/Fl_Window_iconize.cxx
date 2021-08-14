@@ -18,21 +18,21 @@
 
 #include <FL/x.H>
 
-extern char fl_show_iconic;  // in Fl_x.cxx
+extern char fl_show_iconic; // in Fl_x.cxx
 
 void Fl_Window::iconize() {
-    if (!shown()) {
-        fl_show_iconic = 1;
-        show();
-    } else {
+  if (!shown()) {
+    fl_show_iconic = 1;
+    show();
+  } else {
 #ifdef WIN32
-        ShowWindow(i->xid, SW_SHOWMINNOACTIVE);
+    ShowWindow(i->xid, SW_SHOWMINNOACTIVE);
 #elif defined(__APPLE__)
-        i->collapse();
+    i->collapse();
 #else
-        XIconifyWindow(fl_display, i->xid, fl_screen);
+    XIconifyWindow(fl_display, i->xid, fl_screen);
 #endif
-    }
+  }
 }
 
 //

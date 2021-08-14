@@ -26,15 +26,15 @@
 
 /**
   This is a button that when pushed pops up a menu (or hierarchy of
-  menus) defined by an array of
+  menus) defined by an array of 
   Fl_Menu_Item objects.
   <P ALIGN=CENTER>\image html  menu_button.png</P>
   \image latex  menu_button.png " menu_button" width=5cm
   <P>Normally any mouse button will pop up a menu and it is lined up
   below the button as shown in the picture.  However an Fl_Menu_Button
   may also control a pop-up menu.  This is done by setting the type().
-  If type() is zero a normal menu button is produced.
-  If it is nonzero then this is a pop-up menu. The bits in type() indicate
+  If type() is zero a normal menu button is produced. 
+  If it is nonzero then this is a pop-up menu. The bits in type() indicate 
   what mouse buttons pop up the menu (see Fl_Menu_Button::popup_buttons). </P>
   <P>The menu will also pop up in response to shortcuts indicated by
   putting a '&' character in the label(). </P>
@@ -47,7 +47,7 @@
   and then:
 
       - The item's callback is done if one has been set; the
-        Fl_Menu_Button is passed as the Fl_Widget* argument,
+        Fl_Menu_Button is passed as the Fl_Widget* argument, 
         along with any userdata configured for the callback.
 
       - If the item does not have a callback, the Fl_Menu_Button's callback
@@ -56,28 +56,26 @@
         value(), mvalue(), item_pathname(), etc.
 */
 class FL_EXPORT Fl_Menu_Button : public Fl_Menu_ {
-   protected:
-    void draw();
-
-   public:
-    /**
-     \brief indicate what mouse buttons pop up the menu.
-
-     Values for type() used to indicate what mouse buttons pop up the menu.
-     Fl_Menu_Button::POPUP3 is usually what you want.
-     */
-    enum popup_buttons {
-        POPUP1 = 1, /**< pops up with the mouse 1st button. */
-        POPUP2,     /**< pops up with the mouse 2nd button. */
-        POPUP12,    /**< pops up with the mouse 1st or 2nd buttons. */
-        POPUP3,     /**< pops up with the mouse 3rd button. */
-        POPUP13,    /**< pops up with the mouse 1st or 3rd buttons. */
-        POPUP23,    /**< pops up with the mouse 2nd or 3rd buttons. */
-        POPUP123    /**< pops up with any mouse button. */
-    };
-    int handle(int);
-    const Fl_Menu_Item *popup();
-    Fl_Menu_Button(int, int, int, int, const char * = 0);
+protected:
+  void draw();
+public:
+  /**
+   \brief indicate what mouse buttons pop up the menu.
+   
+   Values for type() used to indicate what mouse buttons pop up the menu. 
+   Fl_Menu_Button::POPUP3 is usually what you want.
+   */  
+  enum popup_buttons {POPUP1 = 1, /**< pops up with the mouse 1st button. */
+    POPUP2,  /**< pops up with the mouse 2nd button. */
+    POPUP12, /**< pops up with the mouse 1st or 2nd buttons. */
+    POPUP3,   /**< pops up with the mouse 3rd button. */
+    POPUP13,  /**< pops up with the mouse 1st or 3rd buttons. */
+    POPUP23,  /**< pops up with the mouse 2nd or 3rd buttons. */
+    POPUP123 /**< pops up with any mouse button. */
+  };
+  int handle(int);
+  const Fl_Menu_Item* popup();
+  Fl_Menu_Button(int,int,int,int,const char * =0);
 };
 
 #endif

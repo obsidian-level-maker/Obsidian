@@ -148,6 +148,7 @@
 
 /* #undef __APPLE_QUARTZ__ */
 
+
 /*
  * USE_X11
  *
@@ -310,11 +311,11 @@
 /* #undef HAVE_LONG_LONG */
 
 #ifdef HAVE_LONG_LONG
-#define FLTK_LLFMT "%lld"
-#define FLTK_LLCAST (long long)
+#  define FLTK_LLFMT	"%lld"
+#  define FLTK_LLCAST	(long long)
 #else
-#define FLTK_LLFMT "%ld"
-#define FLTK_LLCAST (long)
+#  define FLTK_LLFMT	"%ld"
+#  define FLTK_LLCAST	(long)
 #endif /* HAVE_LONG_LONG */
 
 /*

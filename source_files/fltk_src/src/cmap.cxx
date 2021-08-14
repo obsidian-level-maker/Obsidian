@@ -32,31 +32,30 @@
 //#define III 244 // maximum intensity of the basic colors
 
 // that results in errors and unshared colormap entries, so full intensity:
-#define III 255  // maximum intensity of the basic colors
+#define III 255 // maximum intensity of the basic colors
 
 static short cmap[256][3] = {
-    // 3-bit colormap:
-    {0, 0, 0},        // black
-    {III, 0, 0},      // red
-    {0, III, 0},      // green
-    {III, III, 0},    // yellow
-    {0, 0, III},      // blue
-    {III, 0, III},    // magenta
-    {0, III, III},    // cyan
-    {III, III, III},  // white
-    // pastel versions of those colors, from SGI's standard color map:
-    {85, 85, 85},     // 1/3 gray
-    {198, 113, 113},  // salmon? pale red?
-    {113, 198, 113},  // pale green
-    {142, 142, 56},   // khaki
-    {113, 113, 198},  // pale blue
-    {142, 56, 142},   // purple, orchid, pale magenta
-    {56, 142, 142},   // cadet blue, aquamarine, pale cyan
-    // The next location is used for FL_SELECTION_COLOR. It formerly was 2/3
-    // gray
-    // but this is changed to be the Windows blue color. This allows the default
-    // behavior on both X and Windows to match:
-    {0, 0, 128},
+// 3-bit colormap:
+  {  0,  0,  0},	// black
+  {III,  0,  0},	// red
+  {  0,III,  0},	// green
+  {III,III,  0},	// yellow
+  {  0,  0,III},	// blue
+  {III,  0,III},	// magenta
+  {  0,III,III},	// cyan
+  {III,III,III},	// white
+// pastel versions of those colors, from SGI's standard color map:
+  { 85, 85, 85},	// 1/3 gray
+  {198,113,113},	// salmon? pale red?
+  {113,198,113},	// pale green
+  {142,142, 56},	// khaki
+  {113,113,198},	// pale blue
+  {142, 56,142},	// purple, orchid, pale magenta
+  { 56,142,142},	// cadet blue, aquamarine, pale cyan
+// The next location is used for FL_SELECTION_COLOR. It formerly was 2/3 gray
+// but this is changed to be the Windows blue color. This allows the default
+// behavior on both X and Windows to match:
+  {  0,  0,128},
 //{170,170,170},	// old 2/3 gray color
 // These next 16 are the FL_FREE_COLOR area. In some versions of fltk
 // these were filled with random colors that a Irix 5.3 machine placed
@@ -82,65 +81,53 @@ static short cmap[256][3] = {
   {150,150, 20},
   {160, 10, 10},
 #else
-    // The NewTek colors: (from George Yohng)
-    {168, 168, 152},
-    {232, 232, 216},
-    {104, 104, 88},
-    {152, 168, 168},
-    {216, 232, 232},
-    {88, 104, 104},
-    {156, 156, 168},
-    {220, 220, 232},
-    {92, 92, 104},
-    {156, 168, 156},
-    {220, 232, 220},
-    {92, 104, 92},
-    {144, 144, 144},
-    {192, 192, 192},
-    {80, 80, 80},
-    {160, 160, 160},
+  // The NewTek colors: (from George Yohng)
+  {168,168,152},
+  {232,232,216},
+  {104,104, 88},
+  {152,168,168},
+  {216,232,232},
+  { 88,104,104},
+  {156,156,168},
+  {220,220,232},
+  { 92, 92,104},
+  {156,168,156},
+  {220,232,220},
+  { 92,104, 92},
+  {144,144,144},
+  {192,192,192},
+  { 80, 80, 80},
+  {160,160,160},
 #endif
-    // The rest of the colormap is a gray ramp and table, filled in below:
+// The rest of the colormap is a gray ramp and table, filled in below:
 };
 
 // This is Fl::background from Fl_get_system_colors.cxx, with modifications:
 
 #define FL_GRAY_RAMP 32
-#define FL_NUM_GRAY 24
-#define FL_GRAY 49  // old value is 47
+#define FL_NUM_GRAY  24
+#define FL_GRAY 49 // old value is 47
 typedef unsigned char uchar;
 #include <math.h>
 
 void background(uchar r, uchar g, uchar b) {
-    // replace the gray ramp so that color 47 (by default 2/3) is this color
-    if (!r)
-        r = 1;
-    else if (r == 255)
-        r = 254;
-    double powr =
-        log(r / 255.0) / log((FL_GRAY - FL_GRAY_RAMP) / (FL_NUM_GRAY - 1.0));
-    if (!g)
-        g = 1;
-    else if (g == 255)
-        g = 254;
-    double powg =
-        log(g / 255.0) / log((FL_GRAY - FL_GRAY_RAMP) / (FL_NUM_GRAY - 1.0));
-    if (!b)
-        b = 1;
-    else if (b == 255)
-        b = 254;
-    double powb =
-        log(b / 255.0) / log((FL_GRAY - FL_GRAY_RAMP) / (FL_NUM_GRAY - 1.0));
-    for (int i = 0; i < FL_NUM_GRAY; i++) {
-        double gray = i / (FL_NUM_GRAY - 1.0);
-        cmap[i + FL_GRAY_RAMP][0] = uchar(pow(gray, powr) * 255 + .5);
-        cmap[i + FL_GRAY_RAMP][1] = uchar(pow(gray, powg) * 255 + .5);
-        cmap[i + FL_GRAY_RAMP][2] = uchar(pow(gray, powb) * 255 + .5);
-    }
+  // replace the gray ramp so that color 47 (by default 2/3) is this color
+  if (!r) r = 1; else if (r==255) r = 254;
+  double powr = log(r/255.0)/log((FL_GRAY-FL_GRAY_RAMP)/(FL_NUM_GRAY-1.0));
+  if (!g) g = 1; else if (g==255) g = 254;
+  double powg = log(g/255.0)/log((FL_GRAY-FL_GRAY_RAMP)/(FL_NUM_GRAY-1.0));
+  if (!b) b = 1; else if (b==255) b = 254;
+  double powb = log(b/255.0)/log((FL_GRAY-FL_GRAY_RAMP)/(FL_NUM_GRAY-1.0));
+  for (int i = 0; i < FL_NUM_GRAY; i++) {
+    double gray = i/(FL_NUM_GRAY-1.0);
+    cmap[i+FL_GRAY_RAMP][0] = uchar(pow(gray,powr)*255+.5);
+    cmap[i+FL_GRAY_RAMP][1] = uchar(pow(gray,powg)*255+.5);
+    cmap[i+FL_GRAY_RAMP][2] = uchar(pow(gray,powb)*255+.5);
+  }
 }
 
 int main() {
-    int i, r, g, b;
+  int i,r,g,b;
 #if 0
   /* Read colormap colors into internal table */
   long cmwin;
@@ -150,34 +137,34 @@ int main() {
     getmcolor(i,&cmap[i][0],&cmap[i][1],&cmap[i][2]);
   winclose(cmwin);
 #endif
-    // overwrite the X allocation area with one color so people are
-    // discouraged from using it:
-    // for (i=16; i<32; i++) {cmap[i][0]=cmap[i][1]=cmap[i][2] = 85;}
+// overwrite the X allocation area with one color so people are
+// discouraged from using it:
+  //for (i=16; i<32; i++) {cmap[i][0]=cmap[i][1]=cmap[i][2] = 85;}
 
-    // fill in the gray ramp:
-    background(0xc0, 0xc0, 0xc0);  // microsoft colors
-    // background(170, 170, 170); // old fltk colors
-    // copy the 1/3 and 2/3 gray to the closest locations in gray ramp:
-    cmap[39][0] = cmap[39][1] = cmap[39][2] = 85;
-    cmap[47][0] = cmap[47][1] = cmap[47][2] = 170;
+  // fill in the gray ramp:
+  background(0xc0, 0xc0, 0xc0); // microsoft colors
+  // background(170, 170, 170); // old fltk colors
+  // copy the 1/3 and 2/3 gray to the closest locations in gray ramp:
+  cmap[39][0] = cmap[39][1] = cmap[39][2] = 85;
+  cmap[47][0] = cmap[47][1] = cmap[47][2] = 170;
 
-    // fill in the color cube
-    i = 56;
-    for (b = 0; b < 5; b++)
-        for (r = 0; r < 5; r++)
-            for (g = 0; g < 8; g++) {
-                cmap[i][0] = r * 255 / 4;
-                cmap[i][1] = g * 255 / 7;
-                cmap[i][2] = b * 255 / 4;
-                i++;
-            }
+  // fill in the color cube
+  i = 56;
+  for (b=0; b<5; b++)
+    for (r=0; r<5; r++)
+      for (g=0; g<8; g++) {
+	cmap[i][0] = r*255/4;
+	cmap[i][1] = g*255/7;
+	cmap[i][2] = b*255/4;
+	i++;
+      }
 
-    for (i = 0; i < 256; i++) {
-        printf("\t0x%02x%02x%02x00", cmap[i][0], cmap[i][1], cmap[i][2]);
-        if (i < 255) printf(",\n");
-    }
-    printf("\n");
-    return 0;
+  for (i=0; i<256; i++) {
+    printf("\t0x%02x%02x%02x00",cmap[i][0],cmap[i][1],cmap[i][2]);
+    if (i < 255) printf(",\n");
+  }
+  printf("\n");
+  return 0;
 }
 
 //

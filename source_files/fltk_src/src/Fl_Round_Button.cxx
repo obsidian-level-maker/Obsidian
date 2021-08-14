@@ -25,8 +25,7 @@
 #include <FL/Fl_Radio_Round_Button.H>
 
 /**
-  Creates a new Fl_Round_Button widget using the given position, size, and label
-  string.
+  Creates a new Fl_Round_Button widget using the given position, size, and label string.
 
   \image html Fl_Round_Button.png
   \image latex Fl_Round_Button.png " Fl_Round_Button" width=4cm
@@ -46,16 +45,15 @@
   \param[in] X, Y, W, H position and size of the widget
   \param[in] L widget label, default is no label
 */
-Fl_Round_Button::Fl_Round_Button(int X, int Y, int W, int H, const char *L)
-    : Fl_Light_Button(X, Y, W, H, L) {
-    box(FL_NO_BOX);
-    down_box(FL_ROUND_DOWN_BOX);
-    selection_color(FL_FOREGROUND_COLOR);
+Fl_Round_Button::Fl_Round_Button(int X,int Y,int W,int H, const char *L)
+: Fl_Light_Button(X,Y,W,H,L) {
+  box(FL_NO_BOX);
+  down_box(FL_ROUND_DOWN_BOX);
+  selection_color(FL_FOREGROUND_COLOR);
 }
 
 /**
-  Creates a new Fl_Radio_Button widget using the given position, size, and label
-  string.
+  Creates a new Fl_Radio_Button widget using the given position, size, and label string.
 
   The button type() is set to FL_RADIO_BUTTON.
 
@@ -63,11 +61,12 @@ Fl_Round_Button::Fl_Round_Button(int X, int Y, int W, int H, const char *L)
   \param[in] L widget label, default is no label
 */
 
-Fl_Radio_Round_Button::Fl_Radio_Round_Button(int X, int Y, int W, int H,
-                                             const char *L)
-    : Fl_Round_Button(X, Y, W, H, L) {
-    type(FL_RADIO_BUTTON);
+Fl_Radio_Round_Button::Fl_Radio_Round_Button(int X,int Y,int W,int H,const char *L)
+: Fl_Round_Button(X,Y,W,H,L)
+{
+  type(FL_RADIO_BUTTON);
 }
+
 
 //
 // End of "$Id$".

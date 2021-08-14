@@ -26,6 +26,7 @@
     @{
 */
 
+
 #if 0
   /**
    \defgroup fl_unichar Unicode Character Functions
@@ -67,7 +68,7 @@
    everything is either ISO-8859-1 or UTF-8.
 */
 #ifndef ERRORS_TO_ISO8859_1
-#define ERRORS_TO_ISO8859_1 1
+# define ERRORS_TO_ISO8859_1 1
 #endif
 
 /*!Set to 1 to turn bad UTF-8 bytes in the 0x80-0x9f range into the
@@ -77,7 +78,7 @@
    to Unicode.
 */
 #ifndef ERRORS_TO_CP1252
-#define ERRORS_TO_CP1252 1
+# define ERRORS_TO_CP1252 1
 #endif
 
 /*!A number of Unicode code points are in fact illegal and should not
@@ -87,7 +88,7 @@
    which will probably break a lot of software.
 */
 #ifndef STRICT_RFC3629
-#define STRICT_RFC3629 0
+# define STRICT_RFC3629 0
 #endif
 
 #if ERRORS_TO_CP1252
@@ -95,10 +96,11 @@
  * to Unicode:
  */
 static unsigned short cp1252[32] = {
-    0x20ac, 0x0081, 0x201a, 0x0192, 0x201e, 0x2026, 0x2020, 0x2021,
-    0x02c6, 0x2030, 0x0160, 0x2039, 0x0152, 0x008d, 0x017d, 0x008f,
-    0x0090, 0x2018, 0x2019, 0x201c, 0x201d, 0x2022, 0x2013, 0x2014,
-    0x02dc, 0x2122, 0x0161, 0x203a, 0x0153, 0x009d, 0x017e, 0x0178};
+  0x20ac, 0x0081, 0x201a, 0x0192, 0x201e, 0x2026, 0x2020, 0x2021,
+  0x02c6, 0x2030, 0x0160, 0x2039, 0x0152, 0x008d, 0x017d, 0x008f,
+  0x0090, 0x2018, 0x2019, 0x201c, 0x201d, 0x2022, 0x2013, 0x2014,
+  0x02dc, 0x2122, 0x0161, 0x203a, 0x0153, 0x009d, 0x017e, 0x0178
+};
 #endif
 
 /*! Decode a single UTF-8 encoded character starting at \e p. The
@@ -132,73 +134,78 @@ static unsigned short cp1252[32] = {
     speed up the scanning of strings where the majority of characters
     are ASCII.
 */
-unsigned fl_utf8decode(const char *p, const char *end, int *len) {
-    unsigned char c = *(const unsigned char *)p;
-    if (c < 0x80) {
-        if (len) *len = 1;
-        return c;
+unsigned fl_utf8decode(const char* p, const char* end, int* len)
+{
+  unsigned char c = *(const unsigned char*)p;
+  if (c < 0x80) {
+    if (len) *len = 1;
+    return c;
 #if ERRORS_TO_CP1252
-    } else if (c < 0xa0) {
-        if (len) *len = 1;
-        return cp1252[c - 0x80];
+  } else if (c < 0xa0) {
+    if (len) *len = 1;
+    return cp1252[c-0x80];
 #endif
-    } else if (c < 0xc2) {
-        goto FAIL;
-    }
-    if ((end && p + 1 >= end) || (p[1] & 0xc0) != 0x80) goto FAIL;
-    if (c < 0xe0) {
-        if (len) *len = 2;
-        return ((p[0] & 0x1f) << 6) + ((p[1] & 0x3f));
-    } else if (c == 0xe0) {
-        if (((const unsigned char *)p)[1] < 0xa0) goto FAIL;
-        goto UTF8_3;
+  } else if (c < 0xc2) {
+    goto FAIL;
+  }
+  if ( (end && p+1 >= end) || (p[1]&0xc0) != 0x80) goto FAIL;
+  if (c < 0xe0) {
+    if (len) *len = 2;
+    return
+      ((p[0] & 0x1f) << 6) +
+      ((p[1] & 0x3f));
+  } else if (c == 0xe0) {
+    if (((const unsigned char*)p)[1] < 0xa0) goto FAIL;
+    goto UTF8_3;
 #if STRICT_RFC3629
-    } else if (c == 0xed) {
-        /* RFC 3629 says surrogate chars are illegal. */
-        if (((const unsigned char *)p)[1] >= 0xa0) goto FAIL;
-        goto UTF8_3;
-    } else if (c == 0xef) {
-        /* 0xfffe and 0xffff are also illegal characters */
-        if (((const unsigned char *)p)[1] == 0xbf &&
-            ((const unsigned char *)p)[2] >= 0xbe)
-            goto FAIL;
-        goto UTF8_3;
+  } else if (c == 0xed) {
+    /* RFC 3629 says surrogate chars are illegal. */
+    if (((const unsigned char*)p)[1] >= 0xa0) goto FAIL;
+    goto UTF8_3;
+  } else if (c == 0xef) {
+    /* 0xfffe and 0xffff are also illegal characters */
+    if (((const unsigned char*)p)[1]==0xbf &&
+	((const unsigned char*)p)[2]>=0xbe) goto FAIL;
+    goto UTF8_3;
 #endif
-    } else if (c < 0xf0) {
-    UTF8_3:
-        if ((end && p + 2 >= end) || (p[2] & 0xc0) != 0x80) goto FAIL;
-        if (len) *len = 3;
-        return ((p[0] & 0x0f) << 12) + ((p[1] & 0x3f) << 6) + ((p[2] & 0x3f));
-    } else if (c == 0xf0) {
-        if (((const unsigned char *)p)[1] < 0x90) goto FAIL;
-        goto UTF8_4;
-    } else if (c < 0xf4) {
-    UTF8_4:
-        if ((end && p + 3 >= end) || (p[2] & 0xc0) != 0x80 ||
-            (p[3] & 0xc0) != 0x80)
-            goto FAIL;
-        if (len) *len = 4;
+  } else if (c < 0xf0) {
+  UTF8_3:
+    if ( (end && p+2 >= end) || (p[2]&0xc0) != 0x80) goto FAIL;
+    if (len) *len = 3;
+    return
+      ((p[0] & 0x0f) << 12) +
+      ((p[1] & 0x3f) << 6) +
+      ((p[2] & 0x3f));
+  } else if (c == 0xf0) {
+    if (((const unsigned char*)p)[1] < 0x90) goto FAIL;
+    goto UTF8_4;
+  } else if (c < 0xf4) {
+  UTF8_4:
+    if ( (end && p+3 >= end) || (p[2]&0xc0) != 0x80 || (p[3]&0xc0) != 0x80) goto FAIL;
+    if (len) *len = 4;
 #if STRICT_RFC3629
-        /* RFC 3629 says all codes ending in fffe or ffff are illegal: */
-        if ((p[1] & 0xf) == 0xf && ((const unsigned char *)p)[2] == 0xbf &&
-            ((const unsigned char *)p)[3] >= 0xbe)
-            goto FAIL;
+    /* RFC 3629 says all codes ending in fffe or ffff are illegal: */
+    if ((p[1]&0xf)==0xf &&
+	((const unsigned char*)p)[2] == 0xbf &&
+	((const unsigned char*)p)[3] >= 0xbe) goto FAIL;
 #endif
-        return ((p[0] & 0x07) << 18) + ((p[1] & 0x3f) << 12) +
-               ((p[2] & 0x3f) << 6) + ((p[3] & 0x3f));
-    } else if (c == 0xf4) {
-        if (((const unsigned char *)p)[1] > 0x8f)
-            goto FAIL; /* after 0x10ffff */
-        goto UTF8_4;
-    } else {
-    FAIL:
-        if (len) *len = 1;
+    return
+      ((p[0] & 0x07) << 18) +
+      ((p[1] & 0x3f) << 12) +
+      ((p[2] & 0x3f) << 6) +
+      ((p[3] & 0x3f));
+  } else if (c == 0xf4) {
+    if (((const unsigned char*)p)[1] > 0x8f) goto FAIL; /* after 0x10ffff */
+    goto UTF8_4;
+  } else {
+  FAIL:
+    if (len) *len = 1;
 #if ERRORS_TO_ISO8859_1
-        return c;
+    return c;
 #else
-        return 0xfffd; /* Unicode REPLACEMENT CHARACTER */
+    return 0xfffd; /* Unicode REPLACEMENT CHARACTER */
 #endif
-    }
+  }
 }
 
 /*! Move \p p forward until it points to the start of a UTF-8
@@ -219,21 +226,22 @@ unsigned fl_utf8decode(const char *p, const char *end, int *len) {
   moving. Do not use this to scan strings, use fl_utf8decode()
   instead.
 */
-const char *fl_utf8fwd(const char *p, const char *start, const char *end) {
-    const char *a;
-    int len;
-    /* if we are not pointing at a continuation character, we are done: */
-    if ((*p & 0xc0) != 0x80) return p;
-    /* search backwards for a 0xc0 starting the character: */
-    for (a = p - 1;; --a) {
-        if (a < start) return p;
-        if (!(a[0] & 0x80)) return p;
-        if ((a[0] & 0x40)) break;
-    }
-    fl_utf8decode(a, end, &len);
-    a += len;
-    if (a > p) return a;
-    return p;
+const char* fl_utf8fwd(const char* p, const char* start, const char* end)
+{
+  const char* a;
+  int len;
+  /* if we are not pointing at a continuation character, we are done: */
+  if ((*p&0xc0) != 0x80) return p;
+  /* search backwards for a 0xc0 starting the character: */
+  for (a = p-1; ; --a) {
+    if (a < start) return p;
+    if (!(a[0]&0x80)) return p;
+    if ((a[0]&0x40)) break;
+  }
+  fl_utf8decode(a,end,&len);
+  a += len;
+  if (a > p) return a;
+  return p;
 }
 
 /*! Move \p p backward until it points to the start of a UTF-8
@@ -249,36 +257,37 @@ const char *fl_utf8fwd(const char *p, const char *start, const char *end) {
 
   If you wish to decrement a UTF-8 pointer, pass p-1 to this.
 */
-const char *fl_utf8back(const char *p, const char *start, const char *end) {
-    const char *a;
-    int len;
-    /* if we are not pointing at a continuation character, we are done: */
-    if ((*p & 0xc0) != 0x80) return p;
-    /* search backwards for a 0xc0 starting the character: */
-    for (a = p - 1;; --a) {
-        if (a < start) return p;
-        if (!(a[0] & 0x80)) return p;
-        if ((a[0] & 0x40)) break;
-    }
-    fl_utf8decode(a, end, &len);
-    if (a + len > p) return a;
-    return p;
+const char* fl_utf8back(const char* p, const char* start, const char* end)
+{
+  const char* a;
+  int len;
+  /* if we are not pointing at a continuation character, we are done: */
+  if ((*p&0xc0) != 0x80) return p;
+  /* search backwards for a 0xc0 starting the character: */
+  for (a = p-1; ; --a) {
+    if (a < start) return p;
+    if (!(a[0]&0x80)) return p;
+    if ((a[0]&0x40)) break;
+  }
+  fl_utf8decode(a,end,&len);
+  if (a+len > p) return a;
+  return p;
 }
 
 /*! Returns number of bytes that utf8encode() will use to encode the
   character \p ucs. */
 int fl_utf8bytes(unsigned ucs) {
-    if (ucs < 0x000080U) {
-        return 1;
-    } else if (ucs < 0x000800U) {
-        return 2;
-    } else if (ucs < 0x010000U) {
-        return 3;
-    } else if (ucs <= 0x10ffffU) {
-        return 4;
-    } else {
-        return 3; /* length of the illegal character encoding */
-    }
+  if (ucs < 0x000080U) {
+    return 1;
+  } else if (ucs < 0x000800U) {
+    return 2;
+  } else if (ucs < 0x010000U) {
+    return 3;
+  } else if (ucs <= 0x10ffffU) {
+    return 4;
+  } else {
+    return 3; /* length of the illegal character encoding */
+  }
 }
 
 /*! Write the UTF-8 encoding of \e ucs into \e buf and return the
@@ -297,32 +306,32 @@ int fl_utf8bytes(unsigned ucs) {
     utf8encode/fl_utf8decode will be the identity for all codes between 0
     and 0x10ffff.
 */
-int fl_utf8encode(unsigned ucs, char *buf) {
-    if (ucs < 0x000080U) {
-        buf[0] = ucs;
-        return 1;
-    } else if (ucs < 0x000800U) {
-        buf[0] = 0xc0 | (ucs >> 6);
-        buf[1] = 0x80 | (ucs & 0x3F);
-        return 2;
-    } else if (ucs < 0x010000U) {
-        buf[0] = 0xe0 | (ucs >> 12);
-        buf[1] = 0x80 | ((ucs >> 6) & 0x3F);
-        buf[2] = 0x80 | (ucs & 0x3F);
-        return 3;
-    } else if (ucs <= 0x0010ffffU) {
-        buf[0] = 0xf0 | (ucs >> 18);
-        buf[1] = 0x80 | ((ucs >> 12) & 0x3F);
-        buf[2] = 0x80 | ((ucs >> 6) & 0x3F);
-        buf[3] = 0x80 | (ucs & 0x3F);
-        return 4;
-    } else {
-        /* encode 0xfffd: */
-        buf[0] = (char)0xef;
-        buf[1] = (char)0xbf;
-        buf[2] = (char)0xbd;
-        return 3;
-    }
+int fl_utf8encode(unsigned ucs, char* buf) {
+  if (ucs < 0x000080U) {
+    buf[0] = ucs;
+    return 1;
+  } else if (ucs < 0x000800U) {
+    buf[0] = 0xc0 | (ucs >> 6);
+    buf[1] = 0x80 | (ucs & 0x3F);
+    return 2;
+  } else if (ucs < 0x010000U) {
+    buf[0] = 0xe0 | (ucs >> 12);
+    buf[1] = 0x80 | ((ucs >> 6) & 0x3F);
+    buf[2] = 0x80 | (ucs & 0x3F);
+    return 3;
+  } else if (ucs <= 0x0010ffffU) {
+    buf[0] = 0xf0 | (ucs >> 18);
+    buf[1] = 0x80 | ((ucs >> 12) & 0x3F);
+    buf[2] = 0x80 | ((ucs >> 6) & 0x3F);
+    buf[3] = 0x80 | (ucs & 0x3F);
+    return 4;
+  } else {
+    /* encode 0xfffd: */
+    buf[0] = (char)0xef;
+    buf[1] = (char)0xbf;
+    buf[2] = (char)0xbd;
+    return 3;
+  }
 }
 
 /*! Convert a single 32-bit Unicode codepoint into an array of 16-bit
@@ -351,47 +360,45 @@ int fl_utf8encode(unsigned ucs, char *buf) {
     value can be converted, and setting \p dstlen to 3 or more will allow
     a NULL terminated sequence to be returned.
 */
-unsigned fl_ucs_to_Utf16(const unsigned ucs, unsigned short *dst,
-                         const unsigned dstlen) {
-    /* The rule for direct conversion from UCS to UTF16 is:
-     * - if UCS >  0x0010FFFF then UCS is invalid
-     * - if UCS >= 0xD800 && UCS <= 0xDFFF UCS is invalid
-     * - if UCS <= 0x0000FFFF then U16 = UCS, len = 1
-     * - else
-     * -- U16[0] = ((UCS - 0x00010000) >> 10) & 0x3FF + 0xD800
-     * -- U16[1] = (UCS & 0x3FF) + 0xDC00
-     * -- len = 2;
-     */
-    unsigned count;        /* Count of converted UTF16 cells */
-    unsigned short u16[4]; /* Alternate buffer if dst is not set */
-    unsigned short *out;   /* points to the active buffer */
-    /* Ensure we have a valid buffer to write to */
-    if ((!dstlen) || (!dst)) {
-        out = u16;
-    } else {
-        out = dst;
-    }
-    /* Convert from UCS to UTF16 */
-    if ((ucs > 0x0010FFFF) ||                 /* UCS is too large */
-        ((ucs > 0xD7FF) && (ucs < 0xE000))) { /* UCS in invalid range */
-        out[0] = 0xFFFD;                      /* REPLACEMENT CHARACTER */
-        count = 1;
-    } else if (ucs < 0x00010000) {
-        out[0] = (unsigned short)ucs;
-        count = 1;
-    } else if (dstlen < 2) { /* dst is too small for the result */
-        out[0] = 0xFFFD;     /* REPLACEMENT CHARACTER */
-        count = 2;
-    } else {
-        out[0] = (((ucs - 0x00010000) >> 10) & 0x3FF) + 0xD800;
-        out[1] = (ucs & 0x3FF) + 0xDC00;
-        count = 2;
-    }
-    /* NULL terminate the output, if there is space */
-    if (count < dstlen) {
-        out[count] = 0;
-    }
-    return count;
+unsigned fl_ucs_to_Utf16(const unsigned ucs, unsigned short *dst, const unsigned dstlen)
+{
+  /* The rule for direct conversion from UCS to UTF16 is:
+   * - if UCS >  0x0010FFFF then UCS is invalid
+   * - if UCS >= 0xD800 && UCS <= 0xDFFF UCS is invalid
+   * - if UCS <= 0x0000FFFF then U16 = UCS, len = 1
+   * - else
+   * -- U16[0] = ((UCS - 0x00010000) >> 10) & 0x3FF + 0xD800
+   * -- U16[1] = (UCS & 0x3FF) + 0xDC00
+   * -- len = 2;
+   */
+  unsigned count;        /* Count of converted UTF16 cells */
+  unsigned short u16[4]; /* Alternate buffer if dst is not set */
+  unsigned short *out;   /* points to the active buffer */
+  /* Ensure we have a valid buffer to write to */
+  if((!dstlen) || (!dst)) {
+    out = u16;
+  } else {
+    out = dst;
+  }
+  /* Convert from UCS to UTF16 */
+  if((ucs > 0x0010FFFF) || /* UCS is too large */
+  ((ucs > 0xD7FF) && (ucs < 0xE000))) { /* UCS in invalid range */
+    out[0] = 0xFFFD; /* REPLACEMENT CHARACTER */
+    count = 1;
+  } else if(ucs < 0x00010000) {
+    out[0] = (unsigned short)ucs;
+    count = 1;
+  } else if(dstlen < 2) { /* dst is too small for the result */
+    out[0] = 0xFFFD; /* REPLACEMENT CHARACTER */
+    count = 2;
+  } else {
+    out[0] = (((ucs - 0x00010000) >> 10) & 0x3FF) + 0xD800;
+    out[1] = (ucs & 0x3FF) + 0xDC00;
+    count = 2;
+  }
+  /* NULL terminate the output, if there is space */
+  if(count < dstlen) { out[count] = 0; }
+  return count;
 } /* fl_ucs_to_Utf16 */
 
 /*! Convert a UTF-8 sequence into an array of 16-bit characters. These
@@ -422,55 +429,43 @@ unsigned fl_ucs_to_Utf16(const unsigned ucs, unsigned short *dst,
     "surrogate pairs" which take two words each (this is called UTF-16
     encoding).
 */
-unsigned fl_utf8toUtf16(const char *src, unsigned srclen, unsigned short *dst,
-                        unsigned dstlen) {
-    const char *p = src;
-    const char *e = src + srclen;
-    unsigned count = 0;
-    if (dstlen)
-        for (;;) {
-            if (p >= e) {
-                dst[count] = 0;
-                return count;
-            }
-            if (!(*p & 0x80)) { /* ascii */
-                dst[count] = *p++;
-            } else {
-                int len;
-                unsigned ucs = fl_utf8decode(p, e, &len);
-                p += len;
-                if (ucs < 0x10000) {
-                    dst[count] = ucs;
-                } else {
-                    /* make a surrogate pair: */
-                    if (count + 2 >= dstlen) {
-                        dst[count] = 0;
-                        count += 2;
-                        break;
-                    }
-                    dst[count] = (((ucs - 0x10000u) >> 10) & 0x3ff) | 0xd800;
-                    dst[++count] = (ucs & 0x3ff) | 0xdc00;
-                }
-            }
-            if (++count == dstlen) {
-                dst[count - 1] = 0;
-                break;
-            }
-        }
-    /* we filled dst, measure the rest: */
-    while (p < e) {
-        if (!(*p & 0x80))
-            p++;
-        else {
-            int len;
-            unsigned ucs = fl_utf8decode(p, e, &len);
-            p += len;
-            if (ucs >= 0x10000) ++count;
-        }
-        ++count;
+unsigned fl_utf8toUtf16(const char* src, unsigned srclen,
+		  unsigned short* dst, unsigned dstlen)
+{
+  const char* p = src;
+  const char* e = src+srclen;
+  unsigned count = 0;
+  if (dstlen) for (;;) {
+    if (p >= e) {dst[count] = 0; return count;}
+    if (!(*p & 0x80)) { /* ascii */
+      dst[count] = *p++;
+    } else {
+      int len; unsigned ucs = fl_utf8decode(p,e,&len);
+      p += len;
+      if (ucs < 0x10000) {
+	dst[count] = ucs;
+      } else {
+	/* make a surrogate pair: */
+	if (count+2 >= dstlen) {dst[count] = 0; count += 2; break;}
+	dst[count] = (((ucs-0x10000u)>>10)&0x3ff) | 0xd800;
+	dst[++count] = (ucs&0x3ff) | 0xdc00;
+      }
     }
-    return count;
+    if (++count == dstlen) {dst[count-1] = 0; break;}
+  }
+  /* we filled dst, measure the rest: */
+  while (p < e) {
+    if (!(*p & 0x80)) p++;
+    else {
+      int len; unsigned ucs = fl_utf8decode(p,e,&len);
+      p += len;
+      if (ucs >= 0x10000) ++count;
+    }
+    ++count;
+  }
+  return count;
 }
+
 
 /**
   Converts a UTF-8 string into a wide character string.
@@ -502,45 +497,39 @@ unsigned fl_utf8toUtf16(const char *src, unsigned srclen, unsigned short *dst,
   Note that Windows includes Cygwin, i.e. compiled with Cygwin's POSIX
   layer (cygwin1.dll, --enable-cygwin), either native (GDI) or X11.
   */
-unsigned fl_utf8towc(const char *src, unsigned srclen, wchar_t *dst,
-                     unsigned dstlen) {
+unsigned fl_utf8towc(const char* src, unsigned srclen,
+		  wchar_t* dst, unsigned dstlen)
+{
 #if defined(WIN32) || defined(__CYGWIN__)
-    return fl_utf8toUtf16(src, srclen, (unsigned short *)dst, dstlen);
+  return fl_utf8toUtf16(src, srclen, (unsigned short*)dst, dstlen);
 #else
-    const char *p = src;
-    const char *e = src + srclen;
-    unsigned count = 0;
-    if (dstlen)
-        for (;;) {
-            if (p >= e) {
-                dst[count] = 0;
-                return count;
-            }
-            if (!(*p & 0x80)) { /* ascii */
-                dst[count] = *p++;
-            } else {
-                int len;
-                unsigned ucs = fl_utf8decode(p, e, &len);
-                p += len;
-                dst[count] = (wchar_t)ucs;
-            }
-            if (++count == dstlen) {
-                dst[count - 1] = 0;
-                break;
-            }
-        }
-    /* we filled dst, measure the rest: */
-    while (p < e) {
-        if (!(*p & 0x80))
-            p++;
-        else {
-            int len;
-            fl_utf8decode(p, e, &len);
-            p += len;
-        }
-        ++count;
+  const char* p = src;
+  const char* e = src+srclen;
+  unsigned count = 0;
+  if (dstlen) for (;;) {
+    if (p >= e) {
+      dst[count] = 0;
+      return count;
     }
-    return count;
+    if (!(*p & 0x80)) { /* ascii */
+      dst[count] = *p++;
+    } else {
+      int len; unsigned ucs = fl_utf8decode(p,e,&len);
+      p += len;
+      dst[count] = (wchar_t)ucs;
+    }
+    if (++count == dstlen) {dst[count-1] = 0; break;}
+  }
+  /* we filled dst, measure the rest: */
+  while (p < e) {
+    if (!(*p & 0x80)) p++;
+    else {
+      int len; fl_utf8decode(p,e,&len);
+      p += len;
+    }
+    ++count;
+  }
+  return count;
 #endif
 }
 
@@ -564,48 +553,38 @@ unsigned fl_utf8towc(const char *src, unsigned srclen, wchar_t *dst,
     nothing is written and this call just measures the storage space
     needed.
 */
-unsigned fl_utf8toa(const char *src, unsigned srclen, char *dst,
-                    unsigned dstlen) {
-    const char *p = src;
-    const char *e = src + srclen;
-    unsigned count = 0;
-    if (dstlen)
-        for (;;) {
-            unsigned char c;
-            if (p >= e) {
-                dst[count] = 0;
-                return count;
-            }
-            c = *(const unsigned char *)p;
-            if (c < 0xC2) { /* ascii or bad code */
-                dst[count] = c;
-                p++;
-            } else {
-                int len;
-                unsigned ucs = fl_utf8decode(p, e, &len);
-                p += len;
-                if (ucs < 0x100)
-                    dst[count] = ucs;
-                else
-                    dst[count] = '?';
-            }
-            if (++count >= dstlen) {
-                dst[count - 1] = 0;
-                break;
-            }
-        }
-    /* we filled dst, measure the rest: */
-    while (p < e) {
-        if (!(*p & 0x80))
-            p++;
-        else {
-            int len;
-            fl_utf8decode(p, e, &len);
-            p += len;
-        }
-        ++count;
+unsigned fl_utf8toa(const char* src, unsigned srclen,
+		 char* dst, unsigned dstlen)
+{
+  const char* p = src;
+  const char* e = src+srclen;
+  unsigned count = 0;
+  if (dstlen) for (;;) {
+    unsigned char c;
+    if (p >= e) {dst[count] = 0; return count;}
+    c = *(const unsigned char*)p;
+    if (c < 0xC2) { /* ascii or bad code */
+      dst[count] = c;
+      p++;
+    } else {
+      int len; unsigned ucs = fl_utf8decode(p,e,&len);
+      p += len;
+      if (ucs < 0x100) dst[count] = ucs;
+      else dst[count] = '?';
     }
-    return count;
+    if (++count >= dstlen) {dst[count-1] = 0; break;}
+  }
+  /* we filled dst, measure the rest: */
+  while (p < e) {
+    if (!(*p & 0x80)) p++;
+    else {
+      int len;
+      fl_utf8decode(p,e,&len);
+      p += len;
+    }
+    ++count;
+  }
+  return count;
 }
 
 /*! Turn "wide characters" as returned by some system calls
@@ -635,91 +614,72 @@ unsigned fl_utf8toa(const char *src, unsigned srclen, char *dst,
     and UTF-8 encoded (as 4 bytes). Mismatched halves of surrogate
     pairs are converted as though they are individual characters.
 */
-unsigned fl_utf8fromwc(char *dst, unsigned dstlen, const wchar_t *src,
-                       unsigned srclen) {
-    unsigned i = 0;
-    unsigned count = 0;
-    if (dstlen)
-        for (;;) {
-            unsigned ucs;
-            if (i >= srclen) {
-                dst[count] = 0;
-                return count;
-            }
-            ucs = src[i++];
-            if (ucs < 0x80U) {
-                dst[count++] = ucs;
-                if (count >= dstlen) {
-                    dst[count - 1] = 0;
-                    break;
-                }
-            } else if (ucs < 0x800U) { /* 2 bytes */
-                if (count + 2 >= dstlen) {
-                    dst[count] = 0;
-                    count += 2;
-                    break;
-                }
-                dst[count++] = 0xc0 | (ucs >> 6);
-                dst[count++] = 0x80 | (ucs & 0x3F);
+unsigned fl_utf8fromwc(char* dst, unsigned dstlen,
+		    const wchar_t* src, unsigned srclen) {
+  unsigned i = 0;
+  unsigned count = 0;
+  if (dstlen) for (;;) {
+    unsigned ucs;
+    if (i >= srclen) {dst[count] = 0; return count;}
+    ucs = src[i++];
+    if (ucs < 0x80U) {
+      dst[count++] = ucs;
+      if (count >= dstlen) {dst[count-1] = 0; break;}
+    } else if (ucs < 0x800U) { /* 2 bytes */
+      if (count+2 >= dstlen) {dst[count] = 0; count += 2; break;}
+      dst[count++] = 0xc0 | (ucs >> 6);
+      dst[count++] = 0x80 | (ucs & 0x3F);
 #if defined(WIN32) || defined(__CYGWIN__)
-            } else if (ucs >= 0xd800 && ucs <= 0xdbff && i < srclen &&
-                       src[i] >= 0xdc00 && src[i] <= 0xdfff) {
-                /* surrogate pair */
-                unsigned ucs2 = src[i++];
-                ucs = 0x10000U + ((ucs & 0x3ff) << 10) + (ucs2 & 0x3ff);
-                /* all surrogate pairs turn into 4-byte UTF-8 */
+    } else if (ucs >= 0xd800 && ucs <= 0xdbff && i < srclen &&
+	       src[i] >= 0xdc00 && src[i] <= 0xdfff) {
+      /* surrogate pair */
+      unsigned ucs2 = src[i++];
+      ucs = 0x10000U + ((ucs&0x3ff)<<10) + (ucs2&0x3ff);
+      /* all surrogate pairs turn into 4-byte UTF-8 */
 #else
-            } else if (ucs >= 0x10000) {
-                if (ucs > 0x10ffff) {
-                    ucs = 0xfffd;
-                    goto J1;
-                }
+    } else if (ucs >= 0x10000) {
+      if (ucs > 0x10ffff) {
+	ucs = 0xfffd;
+	goto J1;
+      }
 #endif
-                if (count + 4 >= dstlen) {
-                    dst[count] = 0;
-                    count += 4;
-                    break;
-                }
-                dst[count++] = 0xf0 | (ucs >> 18);
-                dst[count++] = 0x80 | ((ucs >> 12) & 0x3F);
-                dst[count++] = 0x80 | ((ucs >> 6) & 0x3F);
-                dst[count++] = 0x80 | (ucs & 0x3F);
-            } else {
+      if (count+4 >= dstlen) {dst[count] = 0; count += 4; break;}
+      dst[count++] = 0xf0 | (ucs >> 18);
+      dst[count++] = 0x80 | ((ucs >> 12) & 0x3F);
+      dst[count++] = 0x80 | ((ucs >> 6) & 0x3F);
+      dst[count++] = 0x80 | (ucs & 0x3F);
+    } else {
 #if !(defined(WIN32) || defined(__CYGWIN__))
-            J1:
+    J1:
 #endif
-                /* all others are 3 bytes: */
-                if (count + 3 >= dstlen) {
-                    dst[count] = 0;
-                    count += 3;
-                    break;
-                }
-                dst[count++] = 0xe0 | (ucs >> 12);
-                dst[count++] = 0x80 | ((ucs >> 6) & 0x3F);
-                dst[count++] = 0x80 | (ucs & 0x3F);
-            }
-        }
-    /* we filled dst, measure the rest: */
-    while (i < srclen) {
-        unsigned ucs = src[i++];
-        if (ucs < 0x80U) {
-            count++;
-        } else if (ucs < 0x800U) { /* 2 bytes */
-            count += 2;
-#if defined(WIN32) || defined(__CYGWIN__)
-        } else if (ucs >= 0xd800 && ucs <= 0xdbff && i < srclen - 1 &&
-                   src[i + 1] >= 0xdc00 && src[i + 1] <= 0xdfff) {
-            /* surrogate pair */
-            ++i;
-#else
-        } else if (ucs >= 0x10000 && ucs <= 0x10ffff) {
-#endif
-            count += 4;
-        } else {
-            count += 3;
-        }
+      /* all others are 3 bytes: */
+      if (count+3 >= dstlen) {dst[count] = 0; count += 3; break;}
+      dst[count++] = 0xe0 | (ucs >> 12);
+      dst[count++] = 0x80 | ((ucs >> 6) & 0x3F);
+      dst[count++] = 0x80 | (ucs & 0x3F);
     }
-    return count;
+  }
+  /* we filled dst, measure the rest: */
+  while (i < srclen) {
+    unsigned ucs = src[i++];
+    if (ucs < 0x80U) {
+      count++;
+    } else if (ucs < 0x800U) { /* 2 bytes */
+      count += 2;
+#if defined(WIN32) || defined(__CYGWIN__)
+    } else if (ucs >= 0xd800 && ucs <= 0xdbff && i < srclen-1 &&
+	       src[i+1] >= 0xdc00 && src[i+1] <= 0xdfff) {
+      /* surrogate pair */
+      ++i;
+#else
+    } else if (ucs >= 0x10000 && ucs <= 0x10ffff) {
+#endif
+      count += 4;
+    } else {
+      count += 3;
+    }
+  }
+  return count;
 }
 
 /*! Convert an ISO-8859-1 (ie normal c-string) byte stream to UTF-8.
@@ -742,50 +702,38 @@ unsigned fl_utf8fromwc(char *dst, unsigned dstlen, const wchar_t *src,
     no conversion is necessary, as only ASCII characters are in the
     string.
 */
-unsigned fl_utf8froma(char *dst, unsigned dstlen, const char *src,
-                      unsigned srclen) {
-    const char *p = src;
-    const char *e = src + srclen;
-    unsigned count = 0;
-    if (dstlen)
-        for (;;) {
-            unsigned char ucs;
-            if (p >= e) {
-                dst[count] = 0;
-                return count;
-            }
-            ucs = *(const unsigned char *)p++;
-            if (ucs < 0x80U) {
-                dst[count++] = ucs;
-                if (count >= dstlen) {
-                    dst[count - 1] = 0;
-                    break;
-                }
-            } else { /* 2 bytes (note that CP1252 translate could make 3 bytes!)
-                      */
-                if (count + 2 >= dstlen) {
-                    dst[count] = 0;
-                    count += 2;
-                    break;
-                }
-                dst[count++] = 0xc0 | (ucs >> 6);
-                dst[count++] = 0x80 | (ucs & 0x3F);
-            }
-        }
-    /* we filled dst, measure the rest: */
-    while (p < e) {
-        unsigned char ucs = *(const unsigned char *)p++;
-        if (ucs < 0x80U) {
-            count++;
-        } else {
-            count += 2;
-        }
+unsigned fl_utf8froma(char* dst, unsigned dstlen,
+		   const char* src, unsigned srclen) {
+  const char* p = src;
+  const char* e = src+srclen;
+  unsigned count = 0;
+  if (dstlen) for (;;) {
+    unsigned char ucs;
+    if (p >= e) {dst[count] = 0; return count;}
+    ucs = *(const unsigned char*)p++;
+    if (ucs < 0x80U) {
+      dst[count++] = ucs;
+      if (count >= dstlen) {dst[count-1] = 0; break;}
+    } else { /* 2 bytes (note that CP1252 translate could make 3 bytes!) */
+      if (count+2 >= dstlen) {dst[count] = 0; count += 2; break;}
+      dst[count++] = 0xc0 | (ucs >> 6);
+      dst[count++] = 0x80 | (ucs & 0x3F);
     }
-    return count;
+  }
+  /* we filled dst, measure the rest: */
+  while (p < e) {
+    unsigned char ucs = *(const unsigned char*)p++;
+    if (ucs < 0x80U) {
+      count++;
+    } else {
+      count += 2;
+    }
+  }
+  return count;
 }
 
 #ifdef WIN32
-#include <windows.h>
+# include <windows.h>
 #endif
 
 /*! Return true if the "locale" seems to indicate that UTF-8 encoding
@@ -801,20 +749,21 @@ unsigned fl_utf8froma(char *dst, unsigned dstlen, const char *src,
     due to the compatibility of UTF-8 with ISO-8859-1.
 */
 int fl_utf8locale(void) {
-    static int ret = 2;
-    if (ret == 2) {
+  static int ret = 2;
+  if (ret == 2) {
 #ifdef WIN32
-        ret = GetACP() == CP_UTF8;
+    ret = GetACP() == CP_UTF8;
 #else
-        char *s;
-        ret = 1; /* assume UTF-8 if no locale */
-        if (((s = getenv("LC_CTYPE")) && *s) ||
-            ((s = getenv("LC_ALL")) && *s) || ((s = getenv("LANG")) && *s)) {
-            ret = (strstr(s, "utf") || strstr(s, "UTF"));
-        }
-#endif
+    char* s;
+    ret = 1; /* assume UTF-8 if no locale */
+    if (((s = getenv("LC_CTYPE")) && *s) ||
+	((s = getenv("LC_ALL"))   && *s) ||
+	((s = getenv("LANG"))     && *s)) {
+      ret = (strstr(s,"utf") || strstr(s,"UTF"));
     }
-    return ret;
+#endif
+  }
+  return ret;
 }
 
 /*! Convert the UTF-8 used by FLTK to the locale-specific encoding
@@ -832,59 +781,61 @@ int fl_utf8locale(void) {
 
     If fl_utf8locale() returns true then this does not change the data.
 */
-unsigned fl_utf8to_mb(const char *src, unsigned srclen, char *dst,
-                      unsigned dstlen) {
-    if (!fl_utf8locale()) {
+unsigned fl_utf8to_mb(const char* src, unsigned srclen,
+		  char* dst, unsigned dstlen)
+{
+  if (!fl_utf8locale()) {
 #ifdef WIN32
-        wchar_t lbuf[1024];
-        wchar_t *buf = lbuf;
-        unsigned length = fl_utf8towc(src, srclen, buf, 1024);
-        unsigned ret;
-        if (length >= 1024) {
-            buf = (wchar_t *)(malloc((length + 1) * sizeof(wchar_t)));
-            fl_utf8towc(src, srclen, buf, length + 1);
-        }
-        if (dstlen) {
-            /* apparently this does not null-terminate, even though msdn
-             * documentation claims it does:
-             */
-            ret = WideCharToMultiByte(GetACP(), 0, buf, length, dst, dstlen, 0,
-                                      0);
-            dst[ret] = 0;
-        }
-        /* if it overflows or measuring length, get the actual length: */
-        if (dstlen == 0 || ret >= dstlen - 1)
-            ret = WideCharToMultiByte(GetACP(), 0, buf, length, 0, 0, 0, 0);
-        if (buf != lbuf) free((void *)buf);
-        return ret;
+    wchar_t lbuf[1024];
+    wchar_t* buf = lbuf;
+    unsigned length = fl_utf8towc(src, srclen, buf, 1024);
+    unsigned ret;
+    if (length >= 1024) {
+      buf = (wchar_t*)(malloc((length+1)*sizeof(wchar_t)));
+      fl_utf8towc(src, srclen, buf, length+1);
+    }
+    if (dstlen) {
+      /* apparently this does not null-terminate, even though msdn
+       * documentation claims it does:
+       */
+      ret =
+        WideCharToMultiByte(GetACP(), 0, buf, length, dst, dstlen, 0, 0);
+      dst[ret] = 0;
+    }
+    /* if it overflows or measuring length, get the actual length: */
+    if (dstlen==0 || ret >= dstlen-1)
+      ret =
+	WideCharToMultiByte(GetACP(), 0, buf, length, 0, 0, 0, 0);
+    if (buf != lbuf) free((void*)buf);
+    return ret;
 #else
-        wchar_t lbuf[1024];
-        wchar_t *buf = lbuf;
-        unsigned length = fl_utf8towc(src, srclen, buf, 1024);
-        int ret; /* note: wcstombs() returns unsigned(length) or unsigned(-1) */
-        if (length >= 1024) {
-            buf = (wchar_t *)(malloc((length + 1) * sizeof(wchar_t)));
-            fl_utf8towc(src, srclen, buf, length + 1);
-        }
-        if (dstlen) {
-            ret = wcstombs(dst, buf, dstlen);
-            if (ret >= (int)dstlen - 1) ret = wcstombs(0, buf, 0);
-        } else {
-            ret = wcstombs(0, buf, 0);
-        }
-        if (buf != lbuf) free((void *)buf);
-        if (ret >= 0) return (unsigned)ret;
-            /* on any errors we return the UTF-8 as raw text...*/
-#endif
+    wchar_t lbuf[1024];
+    wchar_t* buf = lbuf;
+    unsigned length = fl_utf8towc(src, srclen, buf, 1024);
+    int ret; /* note: wcstombs() returns unsigned(length) or unsigned(-1) */
+    if (length >= 1024) {
+      buf = (wchar_t*)(malloc((length+1)*sizeof(wchar_t)));
+      fl_utf8towc(src, srclen, buf, length+1);
     }
-    /* identity transform: */
-    if (srclen < dstlen) {
-        memcpy(dst, src, srclen);
-        dst[srclen] = 0;
+    if (dstlen) {
+      ret = wcstombs(dst, buf, dstlen);
+      if (ret >= (int)dstlen-1) ret = wcstombs(0,buf,0);
     } else {
-        /* Buffer insufficent or buffer query */
+      ret = wcstombs(0,buf,0);
     }
-    return srclen;
+    if (buf != lbuf) free((void*)buf);
+    if (ret >= 0) return (unsigned)ret;
+    /* on any errors we return the UTF-8 as raw text...*/
+#endif
+  }
+  /* identity transform: */
+  if (srclen < dstlen) {
+    memcpy(dst, src, srclen);
+    dst[srclen] = 0;
+  } else {
+    /* Buffer insufficent or buffer query */
+  }
+  return srclen;
 }
 
 /*! Convert a filename from the locale-specific multibyte encoding
@@ -904,50 +855,51 @@ unsigned fl_utf8to_mb(const char *src, unsigned srclen, char *dst,
     the filesystem can store filenames in UTF-8 encoding regardless of
     the locale.
 */
-unsigned fl_utf8from_mb(char *dst, unsigned dstlen, const char *src,
-                        unsigned srclen) {
-    if (!fl_utf8locale()) {
+unsigned fl_utf8from_mb(char* dst, unsigned dstlen,
+		    const char* src, unsigned srclen)
+{
+  if (!fl_utf8locale()) {
 #ifdef WIN32
-        wchar_t lbuf[1024];
-        wchar_t *buf = lbuf;
-        unsigned length;
-        unsigned ret;
-        length = MultiByteToWideChar(GetACP(), 0, src, srclen, buf, 1024);
-        if ((length == 0) && (GetLastError() == ERROR_INSUFFICIENT_BUFFER)) {
-            length = MultiByteToWideChar(GetACP(), 0, src, srclen, 0, 0);
-            buf = (wchar_t *)(malloc(length * sizeof(wchar_t)));
-            MultiByteToWideChar(GetACP(), 0, src, srclen, buf, length);
-        }
-        ret = fl_utf8fromwc(dst, dstlen, buf, length);
-        if (buf != lbuf) free((void *)buf);
-        return ret;
+    wchar_t lbuf[1024];
+    wchar_t* buf = lbuf;
+    unsigned length;
+    unsigned ret;
+    length = MultiByteToWideChar(GetACP(), 0, src, srclen, buf, 1024);
+    if ((length == 0)&&(GetLastError()==ERROR_INSUFFICIENT_BUFFER)) {
+      length = MultiByteToWideChar(GetACP(), 0, src, srclen, 0, 0);
+      buf = (wchar_t*)(malloc(length*sizeof(wchar_t)));
+      MultiByteToWideChar(GetACP(), 0, src, srclen, buf, length);
+    }
+    ret = fl_utf8fromwc(dst, dstlen, buf, length);
+    if (buf != lbuf) free((void*)buf);
+    return ret;
 #else
-        wchar_t lbuf[1024];
-        wchar_t *buf = lbuf;
-        int length;
-        unsigned ret;
-        length = mbstowcs(buf, src, 1024);
-        if (length >= 1024) {
-            length = mbstowcs(0, src, 0) + 1;
-            buf = (wchar_t *)(malloc(length * sizeof(wchar_t)));
-            mbstowcs(buf, src, length);
-        }
-        if (length >= 0) {
-            ret = fl_utf8fromwc(dst, dstlen, buf, length);
-            if (buf != lbuf) free((void *)buf);
-            return ret;
-        }
-        /* errors in conversion return the UTF-8 unchanged */
+    wchar_t lbuf[1024];
+    wchar_t* buf = lbuf;
+    int length;
+    unsigned ret;
+    length = mbstowcs(buf, src, 1024);
+    if (length >= 1024) {
+      length = mbstowcs(0, src, 0)+1;
+      buf = (wchar_t*)(malloc(length*sizeof(wchar_t)));
+      mbstowcs(buf, src, length);
+    }
+    if (length >= 0) {
+      ret = fl_utf8fromwc(dst, dstlen, buf, length);
+      if (buf != lbuf) free((void*)buf);
+      return ret;
+    }
+    /* errors in conversion return the UTF-8 unchanged */
 #endif
-    }
-    /* identity transform: */
-    if (srclen < dstlen) {
-        memcpy(dst, src, srclen);
-        dst[srclen] = 0;
-    } else {
-        /* Buffer insufficent or buffer query */
-    }
-    return srclen;
+  }
+  /* identity transform: */
+  if (srclen < dstlen) {
+    memcpy(dst, src, srclen);
+    dst[srclen] = 0;
+  } else {
+    /* Buffer insufficent or buffer query */
+  }
+  return srclen;
 }
 
 /*! Examines the first \p srclen bytes in \p src and returns a verdict
@@ -970,30 +922,29 @@ unsigned fl_utf8from_mb(char *dst, unsigned dstlen, const char *src,
     this is done we will be able to cleanly transition to a locale-less
     encoding.
 */
-int fl_utf8test(const char *src, unsigned srclen) {
-    int ret = 1;
-    const char *p = src;
-    const char *e = src + srclen;
-    while (p < e) {
-        if (*p & 0x80) {
-            int len;
-            fl_utf8decode(p, e, &len);
-            if (len < 2) return 0;
-            if (len > ret) ret = len;
-            p += len;
-        } else {
-            p++;
-        }
+int fl_utf8test(const char* src, unsigned srclen) {
+  int ret = 1;
+  const char* p = src;
+  const char* e = src+srclen;
+  while (p < e) {
+    if (*p & 0x80) {
+      int len; fl_utf8decode(p,e,&len);
+      if (len < 2) return 0;
+      if (len > ret) ret = len;
+      p += len;
+    } else {
+      p++;
     }
-    return ret;
+  }
+  return ret;
 }
 
 /* forward declare mk_wcwidth() as static so the name is not visible.
  */
-static int mk_wcwidth(unsigned int ucs);
+ static int mk_wcwidth(unsigned int ucs);
 
-/* include the c source directly so it's contents are only visible here
- */
+ /* include the c source directly so it's contents are only visible here
+  */
 #include "xutf8/mk_wcwidth.c"
 
 /** wrapper to adapt Markus Kuhn's implementation of wcwidth() for FLTK
@@ -1009,7 +960,9 @@ static int mk_wcwidth(unsigned int ucs);
     CP1252, and C0/C1 control characters and DEL will return -1.
     You are advised to use fl_width(const char* src) instead.
  */
-int fl_wcwidth_(unsigned int ucs) { return mk_wcwidth(ucs); }
+int fl_wcwidth_(unsigned int ucs) {
+  return mk_wcwidth(ucs);
+}
 
 /** extended wrapper around  fl_wcwidth_(unsigned int ucs) function.
     \param[in] src pointer to start of UTF-8 byte sequence
@@ -1024,12 +977,12 @@ int fl_wcwidth_(unsigned int ucs) { return mk_wcwidth(ucs); }
     so if you want different behaviour, you need to test for those
     characters before calling fl_wcwidth(), and handle them separately.
  */
-int fl_wcwidth(const char *src) {
-    int len = fl_utf8len(*src);
-    int ret = 0;
-    unsigned int ucs = fl_utf8decode(src, src + len, &ret);
-    int width = fl_wcwidth_(ucs);
-    return width;
+int fl_wcwidth(const char* src) {
+  int len = fl_utf8len(*src);
+  int ret = 0;
+  unsigned int ucs = fl_utf8decode(src, src+len, &ret);
+  int width = fl_wcwidth_(ucs);
+  return width;
 }
 
 /** @} */

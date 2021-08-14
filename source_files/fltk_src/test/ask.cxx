@@ -31,40 +31,40 @@
 #include <FL/fl_ask.H>
 #include <stdlib.h>
 
-void update_input_text(Fl_Widget *o, const char *input) {
-    if (input) {
-        o->copy_label(input);
-        o->redraw();
-    }
+void update_input_text(Fl_Widget* o, const char *input) {
+  if (input) {
+    o->copy_label(input);
+    o->redraw();
+  }
 }
 
-void rename_me(Fl_Widget *o) {
-    const char *input = fl_input("Input:", o->label());
-    update_input_text(o, input);
+void rename_me(Fl_Widget*o) {
+  const char *input = fl_input("Input:", o->label());
+  update_input_text(o, input);
 }
 
-void rename_me_pwd(Fl_Widget *o) {
-    const char *input = fl_password("Input PWD:", o->label());
-    update_input_text(o, input);
+void rename_me_pwd(Fl_Widget*o) {
+  const char *input = fl_password("Input PWD:", o->label());
+  update_input_text(o, input);
 }
 
-void window_callback(Fl_Widget *, void *) {
-    int hotspot = fl_message_hotspot();
-    fl_message_hotspot(0);
-    fl_message_title("note: no hotspot set for this dialog");
-    int rep =
-        fl_choice("Are you sure you want to quit?", "Cancel", "Quit", "Dunno");
-    fl_message_hotspot(hotspot);
-    if (rep == 1)
-        exit(0);
-    else if (rep == 2)
-        fl_message("Well, maybe you should know before we quit.");
+void window_callback(Fl_Widget*, void*) {
+  int hotspot = fl_message_hotspot();
+  fl_message_hotspot(0);
+  fl_message_title("note: no hotspot set for this dialog");
+  int rep = fl_choice("Are you sure you want to quit?",
+		      "Cancel", "Quit", "Dunno");
+  fl_message_hotspot(hotspot);
+  if (rep==1)
+    exit(0);
+  else if (rep==2)
+    fl_message("Well, maybe you should know before we quit.");
 }
 
 /*
   This timer callback shows a message dialog (fl_choice) window
   every 5 seconds to test "recursive" common dialogs.
-
+  
   The timer can be stopped by clicking the button "Stop these funny popups"
   or pressing the Enter key. As it is currently implemented, clicking the
   "Close" button will reactivate the popups (only possible if "recursive"
@@ -76,59 +76,57 @@ void window_callback(Fl_Widget *, void *) {
   See STR #334 (sic !) and also STR #2751 ("Limit input field characters").
 */
 void timer_cb(void *) {
-    static int stop = 0;
-    double delta = 5.0;
 
-    Fl_Box *message_icon = (Fl_Box *)fl_message_icon();
+  static int stop = 0;
+  double delta = 5.0;
 
-    Fl::repeat_timeout(delta, timer_cb);
+  Fl_Box *message_icon = (Fl_Box *)fl_message_icon();
 
-    if (stop == 1) {
-        message_icon->color(FL_WHITE);
-        return;
-    }
+  Fl::repeat_timeout(delta, timer_cb);
 
-    // Change the icon box color:
-    Fl_Color c = message_icon->color();
-    c = (c + 1) % 32;
-    if (c == message_icon->labelcolor()) c++;
-    message_icon->color((Fl_Color)c);
+  if (stop == 1) {
+    message_icon->color(FL_WHITE);
+    return;
+  }
 
-    // pop up a message:
-    stop = fl_choice(
-        "Timeout. Click the 'Close' button.\n"
-        "Note: this message is blocked in FLTK 1.3\n"
-        "if another message window is open.\n"
-        "This message should pop up every 5 seconds.",
-        "Close", "Stop these funny popups", NULL);
+  // Change the icon box color:
+  Fl_Color c = message_icon->color();
+  c = (c+1) % 32;
+  if (c == message_icon->labelcolor()) c++;
+  message_icon->color((Fl_Color)c);
+
+  // pop up a message:
+  stop = fl_choice("Timeout. Click the 'Close' button.\n"
+	     "Note: this message is blocked in FLTK 1.3\n"
+	     "if another message window is open.\n"
+	     "This message should pop up every 5 seconds.",
+	     "Close","Stop these funny popups",NULL);
 }
 
 int main(int argc, char **argv) {
-    char buffer[128] = "Test text";
-    char buffer2[128] = "MyPassword";
+  char buffer[128] = "Test text";
+  char buffer2[128] = "MyPassword";
 
-    // this is a test to make sure automatic destructors work.  Pop up
-    // the question dialog several times and make sure it doesn't crash.
+// this is a test to make sure automatic destructors work.  Pop up
+// the question dialog several times and make sure it doesn't crash.
 
-    Fl_Double_Window window(200, 105);
-    Fl_Return_Button b(20, 10, 160, 35, buffer);
-    b.callback(rename_me);
-    Fl_Button b2(20, 50, 160, 35, buffer2);
-    b2.callback(rename_me_pwd);
-    window.end();
-    window.resizable(&b);
-    window.show(argc, argv);
+  Fl_Double_Window window(200, 105);
+  Fl_Return_Button b(20, 10, 160, 35, buffer); b.callback(rename_me);
+  Fl_Button b2(20, 50, 160, 35, buffer2); b2.callback(rename_me_pwd);
+  window.end();
+  window.resizable(&b);
+  window.show(argc, argv);
 
-    // Also we test to see if the exit callback works:
-    window.callback(window_callback);
+  // Also we test to see if the exit callback works:
+  window.callback(window_callback);
 
-    // Test: set default message window title:
-    // fl_message_title_default("Default Window Title");
+  // Test: set default message window title:
+  // fl_message_title_default("Default Window Title");
 
-    // Test: multiple (nested, aka "recursive") popups
-    Fl::add_timeout(5.0, timer_cb);
+  // Test: multiple (nested, aka "recursive") popups
+  Fl::add_timeout(5.0, timer_cb);
 
-    return Fl::run();
+  return Fl::run();
 }
 
 //

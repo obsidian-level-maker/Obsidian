@@ -29,14 +29,14 @@
   the user to type decimal digits (or hex numbers of the form 0xaef).
 */
 class FL_EXPORT Fl_Int_Input : public Fl_Input {
-   public:
-    /**
-      Creates a new Fl_Int_Input widget using the given position,
-      size, and label string. The default boxtype is FL_DOWN_BOX.
+public:
+  /**
+    Creates a new Fl_Int_Input widget using the given position,
+    size, and label string. The default boxtype is FL_DOWN_BOX.
 
-      Inherited destructor destroys the widget and any value associated with it.
-    */
-    Fl_Int_Input(int X, int Y, int W, int H, const char *l = 0);
+    Inherited destructor destroys the widget and any value associated with it.
+  */
+  Fl_Int_Input(int X,int Y,int W,int H,const char *l = 0);
 };
 
 #endif

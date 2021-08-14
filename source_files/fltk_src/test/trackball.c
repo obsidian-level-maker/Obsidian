@@ -59,38 +59,49 @@
  * simple example, though, so that is left as an Exercise for the
  * Programmer.
  */
-#define TRACKBALLSIZE (0.8)
+#define TRACKBALLSIZE  (0.8)
 
 /*
  * Local function prototypes (not defined in trackball.h)
  */
 static float tb_project_to_sphere(float, float, float);
-static void normalize_quat(float[4]);
+static void normalize_quat(float [4]);
 
-void vzero(float *v) {
+void
+vzero(float *v)
+{
     v[0] = 0.0;
     v[1] = 0.0;
     v[2] = 0.0;
 }
 
-void vset(float *v, float x, float y, float z) {
+void
+vset(float *v, float x, float y, float z)
+{
     v[0] = x;
     v[1] = y;
     v[2] = z;
 }
 
-void vsub(const float *src1, const float *src2, float *dst) {
+void
+vsub(const float *src1, const float *src2, float *dst)
+{
     dst[0] = src1[0] - src2[0];
     dst[1] = src1[1] - src2[1];
     dst[2] = src1[2] - src2[2];
 }
 
-void vcopy(const float *v1, float *v2) {
+void
+vcopy(const float *v1, float *v2)
+{
     int i;
-    for (i = 0; i < 3; i++) v2[i] = v1[i];
+    for (i = 0 ; i < 3 ; i++)
+        v2[i] = v1[i];
 }
 
-void vcross(const float *v1, const float *v2, float *cross) {
+void
+vcross(const float *v1, const float *v2, float *cross)
+{
     float temp[3];
 
     temp[0] = (v1[1] * v2[2]) - (v1[2] * v2[1]);
@@ -99,23 +110,35 @@ void vcross(const float *v1, const float *v2, float *cross) {
     vcopy(temp, cross);
 }
 
-float vlength(const float *v) {
+float
+vlength(const float *v)
+{
     return sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
 }
 
-void vscale(float *v, float div) {
+void
+vscale(float *v, float div)
+{
     v[0] *= div;
     v[1] *= div;
     v[2] *= div;
 }
 
-void vnormal(float *v) { vscale(v, 1.0 / vlength(v)); }
-
-float vdot(const float *v1, const float *v2) {
-    return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
+void
+vnormal(float *v)
+{
+    vscale(v,1.0/vlength(v));
 }
 
-void vadd(const float *src1, const float *src2, float *dst) {
+float
+vdot(const float *v1, const float *v2)
+{
+    return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2];
+}
+
+void
+vadd(const float *src1, const float *src2, float *dst)
+{
     dst[0] = src1[0] + src2[0];
     dst[1] = src1[1] + src2[1];
     dst[2] = src1[2] + src2[2];
@@ -133,7 +156,9 @@ void vadd(const float *src1, const float *src2, float *dst) {
  * It is assumed that the arguments to this routine are in the range
  * (-1.0 ... 1.0)
  */
-void trackball(float q[4], float p1x, float p1y, float p2x, float p2y) {
+void
+trackball(float q[4], float p1x, float p1y, float p2x, float p2y)
+{
     float a[3]; /* Axis of rotation */
     float phi;  /* how much to rotate about axis */
     float p1[3], p2[3], d[3];
@@ -150,19 +175,19 @@ void trackball(float q[4], float p1x, float p1y, float p2x, float p2y) {
      * First, figure out z-coordinates for projection of P1 and P2 to
      * deformed sphere
      */
-    vset(p1, p1x, p1y, tb_project_to_sphere(TRACKBALLSIZE, p1x, p1y));
-    vset(p2, p2x, p2y, tb_project_to_sphere(TRACKBALLSIZE, p2x, p2y));
+    vset(p1,p1x,p1y,tb_project_to_sphere(TRACKBALLSIZE,p1x,p1y));
+    vset(p2,p2x,p2y,tb_project_to_sphere(TRACKBALLSIZE,p2x,p2y));
 
     /*
      *  Now, we want the cross product of P1 and P2
      */
-    vcross(p2, p1, a);
+    vcross(p2,p1,a);
 
     /*
      *  Figure out how much to rotate around that axis.
      */
-    vsub(p1, p2, d);
-    t = vlength(d) / (2.0 * TRACKBALLSIZE);
+    vsub(p1,p2,d);
+    t = vlength(d) / (2.0*TRACKBALLSIZE);
 
     /*
      * Avoid problems with out-of-control values...
@@ -171,32 +196,36 @@ void trackball(float q[4], float p1x, float p1y, float p2x, float p2y) {
     if (t < -1.0) t = -1.0;
     phi = 2.0 * asin(t);
 
-    axis_to_quat(a, phi, q);
+    axis_to_quat(a,phi,q);
 }
 
 /*
  *  Given an axis and angle, compute quaternion.
  */
-void axis_to_quat(float a[3], float phi, float q[4]) {
+void
+axis_to_quat(float a[3], float phi, float q[4])
+{
     vnormal(a);
-    vcopy(a, q);
-    vscale(q, sin(phi / 2.0));
-    q[3] = cos(phi / 2.0);
+    vcopy(a,q);
+    vscale(q,sin(phi/2.0));
+    q[3] = cos(phi/2.0);
 }
 
 /*
  * Project an x,y pair onto a sphere of radius r OR a hyperbolic sheet
  * if we are away from the center of the sphere.
  */
-static float tb_project_to_sphere(float r, float x, float y) {
+static float
+tb_project_to_sphere(float r, float x, float y)
+{
     float d, t, z;
 
-    d = sqrt(x * x + y * y);
-    if (d < r * 0.70710678118654752440) { /* Inside sphere */
-        z = sqrt(r * r - d * d);
-    } else { /* On hyperbola */
+    d = sqrt(x*x + y*y);
+    if (d < r * 0.70710678118654752440) {    /* Inside sphere */
+        z = sqrt(r*r - d*d);
+    } else {           /* On hyperbola */
         t = r / 1.41421356237309504880;
-        z = t * t / d;
+        z = t*t / d;
     }
     return z;
 }
@@ -214,21 +243,23 @@ static float tb_project_to_sphere(float r, float x, float y) {
 
 #define RENORMCOUNT 97
 
-void add_quats(float q1[4], float q2[4], float dest[4]) {
-    static int count = 0;
+void
+add_quats(float q1[4], float q2[4], float dest[4])
+{
+    static int count=0;
     float t1[4], t2[4], t3[4];
     float tf[4];
 
-    vcopy(q1, t1);
-    vscale(t1, q2[3]);
+    vcopy(q1,t1);
+    vscale(t1,q2[3]);
 
-    vcopy(q2, t2);
-    vscale(t2, q1[3]);
+    vcopy(q2,t2);
+    vscale(t2,q1[3]);
 
-    vcross(q2, q1, t3);
-    vadd(t1, t2, tf);
-    vadd(t3, tf, tf);
-    tf[3] = q1[3] * q2[3] - vdot(q1, q2);
+    vcross(q2,q1,t3);
+    vadd(t1,t2,tf);
+    vadd(t3,tf,tf);
+    tf[3] = q1[3] * q2[3] - vdot(q1,q2);
 
     dest[0] = tf[0];
     dest[1] = tf[1];
@@ -253,11 +284,13 @@ void add_quats(float q1[4], float q2[4], float dest[4]) {
  * - Pletinckx, D., Quaternion calculus as a basic tool in computer
  *   graphics, The Visual Computer 5, 2-13, 1989.
  */
-static void normalize_quat(float q[4]) {
+static void
+normalize_quat(float q[4])
+{
     int i;
     float mag;
 
-    mag = (q[0] * q[0] + q[1] * q[1] + q[2] * q[2] + q[3] * q[3]);
+    mag = (q[0]*q[0] + q[1]*q[1] + q[2]*q[2] + q[3]*q[3]);
     for (i = 0; i < 4; i++) q[i] /= mag;
 }
 
@@ -265,14 +298,16 @@ static void normalize_quat(float q[4]) {
  * Build a rotation matrix, given a quaternion rotation.
  *
  */
-void build_rotmatrix(float m[4][4], float q[4]) {
+void
+build_rotmatrix(float m[4][4], float q[4])
+{
     m[0][0] = 1.0 - 2.0 * (q[1] * q[1] + q[2] * q[2]);
     m[0][1] = 2.0 * (q[0] * q[1] - q[2] * q[3]);
     m[0][2] = 2.0 * (q[2] * q[0] + q[1] * q[3]);
     m[0][3] = 0.0;
 
     m[1][0] = 2.0 * (q[0] * q[1] + q[2] * q[3]);
-    m[1][1] = 1.0 - 2.0 * (q[2] * q[2] + q[0] * q[0]);
+    m[1][1]= 1.0 - 2.0 * (q[2] * q[2] + q[0] * q[0]);
     m[1][2] = 2.0 * (q[1] * q[2] - q[0] * q[3]);
     m[1][3] = 0.0;
 
@@ -286,3 +321,4 @@ void build_rotmatrix(float m[4][4], float q[4]) {
     m[3][2] = 0.0;
     m[3][3] = 1.0;
 }
+

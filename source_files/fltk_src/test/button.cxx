@@ -24,11 +24,13 @@
 #include <FL/fl_ask.H>
 
 void beepcb(Fl_Widget *, void *) {
-    fl_beep();
-    fflush(stdout);
+  fl_beep();
+  fflush(stdout);
 }
 
-void exitcb(Fl_Widget *, void *) { exit(0); }
+void exitcb(Fl_Widget *, void *) {
+  exit(0);
+}
 
 #if 0
 // test Fl::add_fd()...
@@ -39,19 +41,19 @@ void stdin_cb(int, void*) {
 }
 #endif
 
-int main(int argc, char **argv) {
-    Fl_Window *window = new Fl_Window(320, 65);
-    Fl_Button *b1 = new Fl_Button(20, 20, 80, 25, "&Beep");
-    b1->callback(beepcb, 0);
-    /*Fl_Button *b2 =*/new Fl_Button(120, 20, 80, 25, "&no op");
-    Fl_Button *b3 = new Fl_Button(220, 20, 80, 25, "E&xit");
-    b3->callback(exitcb, 0);
-    window->end();
-    window->show(argc, argv);
+int main(int argc, char ** argv) {
+  Fl_Window *window = new Fl_Window(320,65);
+  Fl_Button *b1 = new Fl_Button(20, 20, 80, 25, "&Beep");
+  b1->callback(beepcb,0);
+  /*Fl_Button *b2 =*/ new Fl_Button(120,20, 80, 25, "&no op");
+  Fl_Button *b3 = new Fl_Button(220,20, 80, 25, "E&xit");
+  b3->callback(exitcb,0);
+  window->end();
+  window->show(argc,argv);
 #if 0
   Fl::add_fd(0, stdin_cb);
 #endif
-    return Fl::run();
+  return Fl::run();
 }
 
 //
