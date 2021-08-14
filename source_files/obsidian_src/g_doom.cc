@@ -202,7 +202,7 @@ void Doom::AddSectionLump(char ch, std::string name, qLump_c *lump) {
     sections[k]->push_back(lump);
 }
 
-bool Doom::StartWAD(const std::filesystem::path &filename) {
+bool Doom::StartWAD(std::filesystem::path filename) {
     if (!WAD_OpenWrite(filename)) {
         DLG_ShowError(_("Unable to create wad file:\n\n%s"), strerror(errno));
         return false;
@@ -764,7 +764,7 @@ int Doom::NumThings() {
 
 namespace Doom {
 
-static bool BuildNodes(const std::filesystem::path &filename) {
+static bool BuildNodes(std::filesystem::path filename) {
     LogPrintf("\n");
 
     if (StringCaseCmp(current_engine, "edge") == 0) {

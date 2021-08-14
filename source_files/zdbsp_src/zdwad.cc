@@ -279,6 +279,7 @@ FWadWriter::FWadWriter(std::filesystem::path filename, bool iwad) {
     head.Magic[3] = 'D';
 
     File.write(reinterpret_cast<char *>(&head), sizeof(head));
+    File << std::flush;
 
 }
 
@@ -292,8 +293,10 @@ void FWadWriter::Close() {
         head[1] = LittleLong(File.tellp());
 
         File.write(reinterpret_cast<char *>(&Lumps[0]), sizeof(WadLump) * Lumps.Size());
+        File << std::flush;
         File.seekp(4);
         File.write(reinterpret_cast<char *>(head), 8);
+        File << std::flush;
         File.close();
     }
 }
@@ -316,6 +319,7 @@ void FWadWriter::WriteLump(const char *name, const void *data, int len) {
     Lumps.Push(lump);
 
     File.write(reinterpret_cast<const char *>(data), len);
+    File << std::flush;
 }
 
 void FWadWriter::CopyLump(FWadReader &wad, int lump) {
@@ -333,6 +337,7 @@ void FWadWriter::StartWritingLump(const char *name) { CreateLabel(name); }
 
 void FWadWriter::AddToLump(const void *data, int len) {
     File.write(reinterpret_cast<const char *>(data), len);
+    File << std::flush;
     Lumps[Lumps.Size() - 1].Size += len;
 }
 

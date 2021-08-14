@@ -256,10 +256,10 @@ static std::list<raw_wad_lump_t> wad_W_directory;
 
 static raw_wad_lump_t wad_W_lump;
 
-bool WAD_OpenWrite(const std::filesystem::path &filename) {
+bool WAD_OpenWrite(std::filesystem::path filename) {
     wad_W_fp.open(filename, std::ios::out | std::ios::binary);
 
-    if (!wad_W_fp) {
+    if (!wad_W_fp.is_open()) {
         LogPrintf("WAD_OpenWrite: cannot create file: {}\n", filename);
         return false;
     }

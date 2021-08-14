@@ -40,7 +40,7 @@ extern int sub_format;
 
 /***** FUNCTIONS ****************/
 
-bool StartWAD(const std::filesystem::path &filename);
+bool StartWAD(std::filesystem::path filename);
 bool EndWAD();
 
 void BeginLevel();

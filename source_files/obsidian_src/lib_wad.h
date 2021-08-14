@@ -41,7 +41,7 @@ void WAD_ListEntries();
 
 /* WAD writing */
 
-bool WAD_OpenWrite(const std::filesystem::path &filename);
+bool WAD_OpenWrite(std::filesystem::path filename);
 void WAD_CloseWrite();
 
 void WAD_NewLump(std::string_view name);
