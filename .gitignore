@@ -11,6 +11,7 @@ THEME.txt
 *.o
 .f
 .DS_Store
+tmp.wad
 
 # VS Code
 build/
