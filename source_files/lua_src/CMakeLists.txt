@@ -4,6 +4,10 @@ project(
   VERSION 0.1.0
 )
 
+if (MINGW OR UNIX)
+  set(CMAKE_C_FLAGS "-DLUA_USE_POSIX")
+endif()
+
 add_library(
   obsidian_lua STATIC
   lapi.c
