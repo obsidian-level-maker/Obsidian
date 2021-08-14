@@ -1026,12 +1026,6 @@ restart:;
         fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION);
     main_win = new UI_MainWin(main_w, main_h, main_title.c_str());
 
-    // Set window icon
-    fl_register_images();
-    Fl_Pixmap program_icon(pixmap_icon);
-    Fl_RGB_Image rgb_icon(&program_icon, FL_BLACK);
-    UI_MainWin::default_icon(&rgb_icon);
-
     //???	Default_Location();
 
     Script_Open();
