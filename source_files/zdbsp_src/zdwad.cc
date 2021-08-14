@@ -282,11 +282,7 @@ FWadWriter::FWadWriter(std::filesystem::path filename, bool iwad) {
 
 }
 
-FWadWriter::~FWadWriter() {
-    if (File.is_open()) {
-        Close();
-    }
-}
+FWadWriter::~FWadWriter() { }
 
 void FWadWriter::Close() {
     if (File.is_open()) {

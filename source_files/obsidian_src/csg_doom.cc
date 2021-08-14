@@ -1988,14 +1988,14 @@ class dummy_sector_c {
    public:
     dummy_sector_c(Doom::sector_c *_sec = NULL, Doom::sector_c *_pair = NULL)
         : sector(_sec), pair(_pair), share_count(0) {
-        for (auto *i : info) {
-            i = NULL;
+        for (int i = 0; i < DUMMY_MAX_SHARE; i++) {
+            info[i] = NULL;
         }
     }
 
     ~dummy_sector_c() {
-        for (auto *i : info) {
-            delete i;
+        for (int i = 0; i < DUMMY_MAX_SHARE; i++) {
+            delete info[i];
         }
     }
 
@@ -2739,6 +2739,28 @@ void FreeStuff() {
     std::for_each(sectors.begin(), sectors.end(), [](auto *i) { delete i; });
     std::for_each(exfloors.begin(), exfloors.end(), [](auto *i) { delete i; });
     std::for_each(dummies.begin(), dummies.end(), [](auto *i) { delete i; });*/
+
+    unsigned int i;
+
+    for (i = 0; i < vertices.size(); i++) {
+        delete vertices[i];
+    }
+    for (i = 0; i < linedefs.size(); i++) {
+        delete linedefs[i];
+    }
+    for (i = 0; i < sidedefs.size(); i++) {
+        delete sidedefs[i];
+    }
+    for (i = 0; i < sectors.size(); i++) {
+        delete sectors[i];
+    }
+
+    for (i = 0; i < exfloors.size(); i++) {
+        delete exfloors[i];
+    }
+    for (i = 0; i < dummies.size(); i++) {
+        delete dummies[i];
+    }
 
     vertices.clear();
     linedefs.clear();
