@@ -49,18 +49,15 @@ function ScriptMan_assemble_mapinfo_lump()
   }
 
   local eventhandler_lines = "addeventhandlers = "
+  if SCRIPTS.zs_eventhandlers then
+    eventhandler_lines = eventhandler_lines .. SCRIPTS.zs_eventhandlers
+  end
   if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 then
     eventhandler_lines = eventhandler_lines .. '"BossGenerator_Handler"'
   end
-  if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 and SCRIPTS.actor_name_script then
-    eventhandler_lines = eventhandler_lines .. ", "
-  end
-  if (PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1) or SCRIPTS.actor_name_script then
-    eventhandler_lines = eventhandler_lines .. "\n"
-    table.insert(mapinfo_lines, eventhandler_lines)
-  end
   if SCRIPTS.zs_eventhandlers then
-    eventhandler_lines = eventhandler_lines .. SCRIPTS.zs_eventhandlers
+    eventhandler_lines = eventhandler_lines .. ",\n"
+    table.insert(mapinfo_lines, eventhandler_lines)
   end
 
   -- MAPINFO extras
