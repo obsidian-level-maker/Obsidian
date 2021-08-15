@@ -55,8 +55,9 @@ function ScriptMan_assemble_mapinfo_lump()
   if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 then
     eventhandler_lines = eventhandler_lines .. '"BossGenerator_Handler"'
   end
+  eventhandler_lines = string.gsub(eventhandler_lines, ",$", "");
   if SCRIPTS.zs_eventhandlers then
-    eventhandler_lines = eventhandler_lines .. ",\n"
+    eventhandler_lines = eventhandler_lines .. "\n"
     table.insert(mapinfo_lines, eventhandler_lines)
   end
 

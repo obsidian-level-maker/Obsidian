@@ -1510,9 +1510,9 @@ function MODDED_GAME_EXTRAS.generate_custom_actor_names()
   end
 
   if SCRIPTS.zs_eventhandlers then
-    SCRIPTS.zs_eventhandlers = SCRIPTS.zs_eventhandlers .. '"bossNameHandler"'
+    SCRIPTS.zs_eventhandlers = SCRIPTS.zs_eventhandlers .. '"bossNameHandler",'
   else
-    SCRIPTS.zs_eventhandlers = '"bossNameHandler"'
+    SCRIPTS.zs_eventhandlers = '"bossNameHandler",'
   end
 end
 
