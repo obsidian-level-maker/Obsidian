@@ -1123,6 +1123,7 @@ OB_MODULES["armaetus_epic_textures"] =
         " base resources from any of the games.",
       priority = 0
     },
+
     bool_no_env_theme_for_hell =
     {
       name = "bool_no_env_theme_for_hell",
@@ -1130,7 +1131,7 @@ OB_MODULES["armaetus_epic_textures"] =
       valuator = "button",
       default = 0,
       tooltip = "Renders hell theme maps to never use snow or desert environment themes regardless" ..
-        " theme assignment.",
+        " of theme assignment.",
       priority=-1
     }
   }
