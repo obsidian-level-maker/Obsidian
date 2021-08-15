@@ -772,6 +772,14 @@ function ARMAETUS_EPIC_TEXTURES.decide_environment_themes()
     end
   end
 
+  if PARAM.bool_no_env_theme_for_hell == 1 then
+    for _,L in pairs(GAME.levels) do
+      if L.theme_name == "hell" then
+        L.outdoor_theme = "temperate"
+      end
+    end
+  end
+
   gui.printf("\n--==| Environment Outdoor Themes |==--\n\n")
   for _,L in pairs(GAME.levels) do
     if L.outdoor_theme then
@@ -1114,6 +1122,16 @@ OB_MODULES["armaetus_epic_textures"] =
       tooltip = "Allows merging Obsidian Textures brightmaps into the WAD. Does not include brightmaps for" ..
         " base resources from any of the games.",
       priority = 0
+    },
+    bool_no_env_theme_for_hell =
+    {
+      name = "bool_no_env_theme_for_hell",
+      label = _("No Hell Environment Themes"),
+      valuator = "button",
+      default = 0,
+      tooltip = "Renders hell theme maps to never use snow or desert environment themes regardless" ..
+        " theme assignment.",
+      priority=-1
     }
   }
 }
