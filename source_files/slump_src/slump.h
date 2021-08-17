@@ -740,7 +740,7 @@ typedef struct s_level {
 typedef struct s_config {
     char *configfile;              /* Name of the configuration file */
     char *configdata;              /* Contents of the configuration file */
-    std::filesystem::path outfile; /* Name of the output file */
+    const char *outfile; /* Name of the output file */
     boolean cwadonly;          /* Do we want just the customization lumps? */
     unsigned char themecount;  /* How many (non-secret) themes there are */
     unsigned char sthemecount; /* How many secret themes there are */

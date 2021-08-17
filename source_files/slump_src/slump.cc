@@ -1317,7 +1317,7 @@ config *get_config(std::filesystem::path filename) {
 
     /* Set various defaults and stuff */
     answer->configfile = strdup("SLUMP.CFG"); /* So's we kin free() it */
-    answer->outfile = filename;
+    answer->outfile = filename.generic_string().c_str();
     answer->cwadonly = SLUMP_FALSE;
 
     ok_to_roll = SLUMP_TRUE;
@@ -1471,7 +1471,7 @@ config *get_config(std::filesystem::path filename) {
     unload_config(answer);
 
     /* Then we set some final defaulty stuff */
-    if (answer->outfile.empty()) answer->outfile = "SLUMP.OUT";
+    if (answer->outfile == NULL) answer->outfile = "SLUMP.OUT";
     if (answer->error_texture == NULL) /* Use REDWALL if none specified */
         answer->error_texture =
             find_texture(answer, "REDWALL"); /* OK default? */
