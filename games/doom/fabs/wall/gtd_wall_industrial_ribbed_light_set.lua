@@ -1,6 +1,6 @@
 PREFABS.Wall_gtd_ribbed_lights =
 {
-  file   = "wall/gtd_wall_ribbed_light_set.wad",
+  file   = "wall/gtd_wall_industrial_ribbed_light_set.wad",
   map    = "MAP01",
 
   engine = "zdoom",
@@ -89,4 +89,24 @@ PREFABS.Wall_gtd_ribbed_lights_slump_diag =
   where = "diagonal",
 
   group = "gtd_ribbed_lights_slump"
+}
+
+--
+
+PREFABS.Wall_gtd_ribbed_lights_slump_two_color =
+{
+  template = "Wall_gtd_ribbed_lights",
+  map = "MAP07",
+
+  group = "gtd_ribbed_lights_slump_two_color"
+}
+
+PREFABS.Wall_gtd_ribbed_lights_slump_two_color_diag =
+{
+  template = "Wall_gtd_ribbed_lights",
+  map = "MAP08",
+
+  where = "diagonal",
+
+  group = "gtd_ribbed_lights_slump_two_color"
 }

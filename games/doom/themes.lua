@@ -1265,9 +1265,10 @@ DOOM.THEMES =
       gtd_wall_quakish_insets = 25,
       gtd_wall_quakish_insets_2 = 25,
       --
-      gtd_ribbed_lights = 20,
-      gtd_ribbed_lights_no3d = 20,
-      gtd_ribbed_lights_slump = 20,
+      gtd_ribbed_lights = 18,
+      gtd_ribbed_lights_no3d = 18,
+      gtd_ribbed_lights_slump = 18,
+      gtd_ribbed_lights_slump_two_color = 18,
       --
       gtd_wall_high_gap_set = 25,
       gtd_wall_high_gap_alt_set = 25,
@@ -1679,6 +1680,7 @@ DOOM.THEMES =
       gtd_ribbed_lights = 17,
       gtd_ribbed_lights_no3d = 17,
       gtd_ribbed_lights_slump = 17,
+      gtd_ribbed_lights_slump_two_color = 17,
       --
       gtd_wall_high_gap_set = 25,
       gtd_wall_high_gap_alt_set = 25,
