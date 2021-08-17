@@ -67,7 +67,7 @@ dumphandle OpenDump(config *c) {
 
     answer = (dumphandle)malloc(sizeof(*answer));
     answer->f.open(c->outfile, std::ios::out | std::ios::binary);
-    if (!answer->f) {
+    if (!answer->f.is_open()) {
         fprintf(stderr, "Error opening <%s>.\n", c->outfile);
         perror("Maybe");
         return NULL;

@@ -396,7 +396,7 @@ void machioize(config *c,float amount) {
 	}
 }
 
-bool slump_main(std::filesystem::path filename) {
+bool slump_main(const char *filename) {
 
   /* A stubby but functional main() */
 
