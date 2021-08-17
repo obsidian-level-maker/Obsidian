@@ -4,7 +4,7 @@ project(
   VERSION 0.1.0
 )
 
-if (MINGW OR UNIX)
+if (UNIX)
   set(CMAKE_C_FLAGS "-DLUA_USE_POSIX")
 endif()
 

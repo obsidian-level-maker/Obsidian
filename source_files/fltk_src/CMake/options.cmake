@@ -106,7 +106,7 @@ option (OPTION_BUILD_SHARED_LIBS
 #######################################################################
 option (OPTION_FILESYSTEM_SUPPORT "allow file system support" ON)
 
-option (FLTK_BUILD_TEST     "Build test/demo programs" ON)
+option (FLTK_BUILD_TEST     "Build test/demo programs" OFF)
 option (FLTK_BUILD_EXAMPLES "Build example programs"   OFF)
 
 if (DEFINED OPTION_BUILD_EXAMPLES)
@@ -118,14 +118,14 @@ endif (DEFINED OPTION_BUILD_EXAMPLES)
 
 #######################################################################
 if (DOXYGEN_FOUND)
-  option (OPTION_BUILD_HTML_DOCUMENTATION "build html docs" ON)
+  option (OPTION_BUILD_HTML_DOCUMENTATION "build html docs" OFF)
   option (OPTION_INSTALL_HTML_DOCUMENTATION "install html docs" OFF)
 
   option (OPTION_INCLUDE_DRIVER_DOCUMENTATION "include driver (developer) docs" OFF)
   mark_as_advanced (OPTION_INCLUDE_DRIVER_DOCUMENTATION)
 
   if (LATEX_FOUND)
-    option (OPTION_BUILD_PDF_DOCUMENTATION "build pdf docs" ON)
+    option (OPTION_BUILD_PDF_DOCUMENTATION "build pdf docs" OFF)
     option (OPTION_INSTALL_PDF_DOCUMENTATION "install pdf docs" OFF)
   endif (LATEX_FOUND)
 endif (DOXYGEN_FOUND)
