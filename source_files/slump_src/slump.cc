@@ -1317,7 +1317,6 @@ config *get_config(std::filesystem::path filename) {
 
     /* Set various defaults and stuff */
     answer->configfile = strdup("SLUMP.CFG"); /* So's we kin free() it */
-    answer->outfile = filename.string().c_str();
     answer->cwadonly = SLUMP_FALSE;
 
     ok_to_roll = SLUMP_TRUE;
@@ -1471,7 +1470,6 @@ config *get_config(std::filesystem::path filename) {
     unload_config(answer);
 
     /* Then we set some final defaulty stuff */
-    if (answer->outfile == NULL) answer->outfile = "SLUMP.OUT";
     if (answer->error_texture == NULL) /* Use REDWALL if none specified */
         answer->error_texture =
             find_texture(answer, "REDWALL"); /* OK default? */
@@ -2212,15 +2210,10 @@ boolean do_switches(int argc, char *argv[], config *c, char *s, int conly) {
     } else {  /* not conly */
         for (i = 1; i < argc; i++) {
             if (argv[i][0] != '-') {
-                c->outfile = strdup(argv[i]); /* Just take last if multiple */
+                // This formerly populated the 'outfile' variable - Dasho
             } else if (!slump_stricmp(argv[i], "-?")) {
                 Usage2();
                 exit(100);
-            } else if (!slump_stricmp(argv[i], "-outfile")) {
-                if (i <
-                    (argc - 1)) { /* If this is the last arg, just ignore it */
-                    c->outfile = strdup(argv[++i]);
-                } /* end not last arg */
             } else if (!slump_stricmp(argv[i], "-doom")) {
                 c->gamemask = DOOM1_BIT;
                 if (c->episode == 0) c->episode = c->mission = 1;
@@ -2839,7 +2832,7 @@ quest *pop_quest(quest *current) {
 void Usage2(void) {
     Usage0();
     printf("Switches that do something at the moment:\n");
-    printf("  -rooms [n]   -seed [nnnnnn]  -outfile [filename.ext]\n");
+    printf("  -rooms [n]   -seed [nnnnnn]\n");
     printf("  -restrict [012C] -ExMx -MAPxx -doom1 -doom2 -levels <x> \n");
     printf("  -minlight <x>  -music  -macho <nn> -noslinfo -nocustom -cwad \n");
     printf("  -arena  -nulls -nosemo -biwe -bimo -bimo! \n");

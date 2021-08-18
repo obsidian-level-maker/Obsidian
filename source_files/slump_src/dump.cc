@@ -39,7 +39,7 @@
 extern int current_level_number;
 extern int global_verbosity; /* Oooh, a global variable! */
 extern boolean ok_to_roll;   /* Stop breaking -seed...   */
-extern std::fstream wad_stream;
+extern std::ofstream wad_stream;
 
 #ifdef ENDIAN_BIG
 unsigned int swap_32(unsigned int in) {
@@ -68,7 +68,7 @@ dumphandle OpenDump(config *c) {
 
     answer = (dumphandle)malloc(sizeof(*answer));
     if (!wad_stream.is_open()) {
-        fprintf(stderr, "Error opening <%s>.\n", c->outfile);
+        fprintf(stderr, "Error opening WAD.\n");
         perror("Maybe");
         return NULL;
     }
@@ -78,6 +78,7 @@ dumphandle OpenDump(config *c) {
     headerstuff.inxoffset = 0;
     wad_stream.write(reinterpret_cast<const char *>(&headerstuff),
                     sizeof(headerstuff));
+    wad_stream << std::flush;
     answer->offset_to_index = sizeof(headerstuff); /* Length of the header */
     answer->index_entry_anchor = 0;
     answer->lmpcount = 0;
@@ -104,8 +105,10 @@ void CloseDump(dumphandle dh) {
 #endif /* ENDIAN_BIG */
         memset(directory_entry.lumpname, 0, 8);
         memcpy(directory_entry.lumpname, ie->name, strlen(ie->name));
+        wad_stream.seekp(dh->index_entry_anchor->offset + directory_entry.offset, std::ios::beg);
         wad_stream.write(reinterpret_cast<const char *>(&directory_entry),
                     sizeof(directory_entry));
+        wad_stream << std::flush;
     }
 
     /* Go back and patch up the header */
@@ -116,8 +119,10 @@ void CloseDump(dumphandle dh) {
 #endif /* ENDIAN_BIG */
     wad_stream.write(reinterpret_cast<const char *>(&dh->lmpcount),
                 sizeof(unsigned int));
+    wad_stream << std::flush;
     wad_stream.write(reinterpret_cast<const char *>(&dh->offset_to_index),
                 sizeof(unsigned int));
+    wad_stream << std::flush;
 #ifdef ENDIAN_BIG
     /* Swap back in case we use the numbers later */
     dh->lmpcount = swap_32(dh->lmpcount);

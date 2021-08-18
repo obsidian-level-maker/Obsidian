@@ -379,7 +379,7 @@
 int current_level_number = 0;
 int global_verbosity = 0;    /* Oooh, a global variable! */
 boolean ok_to_roll = SLUMP_FALSE;  /* Stop breaking -seed...   */
-std::fstream wad_stream;
+std::ofstream wad_stream;
 
 /* Machoize: Make a given level harder
  * config c: The configuration for this setup
@@ -430,7 +430,7 @@ bool slump_main(std::filesystem::path filename) {
     record_custom_flats(dh,ThisConfig,SLUMP_TRUE);   /* record all flats */
     record_custom_patches(dh,ThisConfig,SLUMP_TRUE);   /* and patches */
     CloseDump(dh);
-    printf("\nDone: wrote customization WAD %s.\n",ThisConfig->outfile);
+    printf("\nDone: wrote customization WAD %s.\n", filename.generic_string().c_str());
     return true;
   }
   dh = OpenDump(ThisConfig);
@@ -476,7 +476,7 @@ bool slump_main(std::filesystem::path filename) {
     record_custom_patches(dh,ThisConfig,SLUMP_FALSE);
   }
   CloseDump(dh);
-  printf("\nDone: wrote %s.\n",ThisConfig->outfile);
+  printf("\nDone: wrote %s.\n",filename.generic_string().c_str());
   return true;
 
 }
