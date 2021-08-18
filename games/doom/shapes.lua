@@ -3588,6 +3588,75 @@ GROW_357_ROUND_HOLLOW_HALF =
   }
 },
 
+GROW_357_ROUND_ARCH =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  { 
+    ".......","1111111",
+    ".......","1111111",
+    ".......","1/AAA%1",
+    ".......","1#AAA#1",
+    ".......","1%AAA/1",
+    ".......","1111111",
+    "xx111xx","xx111xx",
+  },
+
+  diagonals =
+  {
+    "1A","A1",
+    "1A","A1",
+  }
+},
+
+GROW_357_ROUND_ARCH_ALT =
+{
+  prob = 17,
+  skip_prob = 80,
+
+  structure =
+  { 
+    ".......","1111111",
+    ".......","1111111",
+    ".......","1/AAA%1",
+    ".......","AA#A#AA",
+    ".......","1%AAA/1",
+    ".......","1111111",
+    "xx111xx","xx111xx",
+  },
+
+  diagonals =
+  {
+    "1A","A1",
+    "1A","A1",
+  }
+},
+
+GROW_357_ROUND_ARCH_ALT_2 =
+{
+  prob = 17,
+  skip_prob = 80,
+
+  structure =
+  { 
+    ".......","11AAA11",
+    ".......","11AAA11",
+    ".......","1/A#A%1",
+    ".......","1AAAAA1",
+    ".......","1%A#A/1",
+    ".......","11AAA11",
+    "xx111xx","xx111xx",
+  },
+
+  diagonals =
+  {
+    "1A","A1",
+    "1A","A1",
+  }
+},
+
 -- MSSP's liquid tiles. [MSSPLIQUID]
 
 GROW_LIQUID_GUTTER_SIDE =
