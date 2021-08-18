@@ -1375,7 +1375,6 @@ DOOM.THEMES =
       gtd_window_quakeish = 30,
       gtd_window_low = 15,
       gtd_window_bunker_mid_space = 20,
-      gtd_window_weabdows = 15,
       gtd_window_metal_frames = 30,
       gtd_window_construction_frames = 5,
       gtd_window_hexagon = 30,
