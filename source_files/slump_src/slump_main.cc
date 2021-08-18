@@ -396,7 +396,7 @@ void machioize(config *c,float amount) {
 	}
 }
 
-bool slump_main(const char *filename) {
+bool slump_main(std::filesystem::path filename) {
 
   /* A stubby but functional main() */
 
@@ -412,6 +412,11 @@ bool slump_main(const char *filename) {
 		  "based on SLIGE by Dave Chess, dmchess@aol.com\n\n",
            SOURCE_VERSION,SOURCE_SERIAL,SOURCE_PATCHLEVEL);
 
+  std::ofstream create_file(filename, std::ios::binary);
+  if (!create_file.is_open()) {
+    printf("WTF\n");
+    return false;
+  }
   ThisConfig = get_config(filename);
   if (ThisConfig==NULL) {
     Usage();

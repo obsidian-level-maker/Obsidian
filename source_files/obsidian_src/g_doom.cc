@@ -879,7 +879,7 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
         // TODO: handle write errors
         EndWAD();
     } else {
-        build_ok = slump_main(filename.generic_string().c_str());
+        build_ok = slump_main(filename);
     }
 
     if (build_ok) {
