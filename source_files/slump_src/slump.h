@@ -552,7 +552,6 @@ typedef struct s_index_entry {
 } index_entry, *pindex_entry;
 
 typedef struct s_dump_record {
-    std::fstream f;
     unsigned int offset_to_index;
     unsigned int lmpcount;
     index_entry *index_entry_anchor;

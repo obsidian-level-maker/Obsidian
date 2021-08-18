@@ -39,6 +39,7 @@
 extern int current_level_number;
 extern int global_verbosity; /* Oooh, a global variable! */
 extern boolean ok_to_roll;   /* Stop breaking -seed...   */
+extern std::fstream wad_stream;
 
 #ifdef ENDIAN_BIG
 unsigned int swap_32(unsigned int in) {
@@ -66,8 +67,7 @@ dumphandle OpenDump(config *c) {
     } headerstuff;
 
     answer = (dumphandle)malloc(sizeof(*answer));
-    answer->f.open(c->outfile, std::ios::out | std::ios::binary);
-    if (!answer->f.is_open()) {
+    if (!wad_stream.is_open()) {
         fprintf(stderr, "Error opening <%s>.\n", c->outfile);
         perror("Maybe");
         return NULL;
@@ -76,7 +76,7 @@ dumphandle OpenDump(config *c) {
     /* No endian issues since these values are zero */
     headerstuff.lmpcount = 0; /* To be filled in later */
     headerstuff.inxoffset = 0;
-    answer->f.write(reinterpret_cast<const char *>(&headerstuff),
+    wad_stream.write(reinterpret_cast<const char *>(&headerstuff),
                     sizeof(headerstuff));
     answer->offset_to_index = sizeof(headerstuff); /* Length of the header */
     answer->index_entry_anchor = 0;
@@ -104,19 +104,19 @@ void CloseDump(dumphandle dh) {
 #endif /* ENDIAN_BIG */
         memset(directory_entry.lumpname, 0, 8);
         memcpy(directory_entry.lumpname, ie->name, strlen(ie->name));
-        dh->f.write(reinterpret_cast<const char *>(&directory_entry),
+        wad_stream.write(reinterpret_cast<const char *>(&directory_entry),
                     sizeof(directory_entry));
     }
 
     /* Go back and patch up the header */
-    dh->f.seekp(4, std::ios::beg);
+    wad_stream.seekp(4, std::ios::beg);
 #ifdef ENDIAN_BIG
     dh->lmpcount = swap_32(dh->lmpcount);
     dh->offset_to_index = swap_32(dh->offset_to_index);
 #endif /* ENDIAN_BIG */
-    dh->f.write(reinterpret_cast<const char *>(&dh->lmpcount),
+    wad_stream.write(reinterpret_cast<const char *>(&dh->lmpcount),
                 sizeof(unsigned int));
-    dh->f.write(reinterpret_cast<const char *>(&dh->offset_to_index),
+    wad_stream.write(reinterpret_cast<const char *>(&dh->offset_to_index),
                 sizeof(unsigned int));
 #ifdef ENDIAN_BIG
     /* Swap back in case we use the numbers later */
@@ -125,7 +125,7 @@ void CloseDump(dumphandle dh) {
 #endif /* ENDIAN_BIG */
 
     /* and that's all! */
-    dh->f.close();
+    wad_stream.close();
 }
 
 /* Record the information about a new lmp of the given size */
@@ -162,8 +162,8 @@ void record_music(dumphandle dh, musheader *mh, byte *buf, const char *s,
      * have custom music on big-endian machines */
 #ifndef ENDIAN_BIG
     // Need to try to get this working - Dasho
-    dh->f.write(reinterpret_cast<const char *>(mh), sizeof(musheader));
-    dh->f.write(reinterpret_cast<const char *>(buf),
+    wad_stream.write(reinterpret_cast<const char *>(mh), sizeof(musheader));
+    wad_stream.write(reinterpret_cast<const char *>(buf),
                 mh->patches * sizeof(short) + mh->muslength);
 #endif
 }
@@ -175,7 +175,7 @@ void make_slinfo(dumphandle dh, config *c) {
     sprintf((char *)slinfo, "SLUMP (%d.%03d.%02d)", SOURCE_VERSION,
             SOURCE_SERIAL, SOURCE_PATCHLEVEL);
     RegisterLmp(dh, "SLINFO", strlen((char *)slinfo) + 1);
-    dh->f.write(reinterpret_cast<const char *>(slinfo),
+    wad_stream.write(reinterpret_cast<const char *>(slinfo),
                 strlen(reinterpret_cast<const char *>(slinfo)));
 
 } /* end make_slinfo() */
@@ -331,7 +331,7 @@ void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission,
         rawthing.type = swap_16(rawthing.type);
         rawthing.options = swap_16(rawthing.options);
 #endif
-        dh->f.write(reinterpret_cast<const char *>(&rawthing),
+        wad_stream.write(reinterpret_cast<const char *>(&rawthing),
                     sizeof(rawthing));
     }
 
@@ -366,7 +366,7 @@ void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission,
         rawlinedef.left = swap_16(rawlinedef.left);
         rawlinedef.right = swap_16(rawlinedef.right);
 #endif
-        dh->f.write(reinterpret_cast<const char *>(&rawlinedef),
+        wad_stream.write(reinterpret_cast<const char *>(&rawlinedef),
                     sizeof(rawlinedef));
     }
 
@@ -393,7 +393,7 @@ void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission,
         rawsidedef.y_offset = swap_16(rawsidedef.y_offset);
         rawsidedef.sector = swap_16(rawsidedef.sector);
 #endif
-        dh->f.write(reinterpret_cast<const char *>(&rawsidedef),
+        wad_stream.write(reinterpret_cast<const char *>(&rawsidedef),
                     sizeof(rawsidedef));
     }
 
@@ -405,7 +405,7 @@ void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission,
         rawvertex.x = swap_16(rawvertex.x);
         rawvertex.y = swap_16(rawvertex.y);
 #endif
-        dh->f.write(reinterpret_cast<const char *>(&rawvertex),
+        wad_stream.write(reinterpret_cast<const char *>(&rawvertex),
                     sizeof(rawvertex));
     }
 
@@ -436,7 +436,7 @@ void DumpLevel(dumphandle dh, config *c, level *l, int episode, int mission,
         rawsector.tag = swap_16(rawsector.tag);
 #endif
 
-        dh->f.write(reinterpret_cast<const char *>(&rawsector),
+        wad_stream.write(reinterpret_cast<const char *>(&rawsector),
                     sizeof(rawsector));
     }
 
@@ -549,7 +549,7 @@ void dump_texture_lmp(dumphandle dh, texture_lmp *tl) {
     }
 
     RegisterLmp(dh, tl->name, lmpsize);
-    dh->f.write(reinterpret_cast<const char *>(buf), lmpsize);
+    wad_stream.write(reinterpret_cast<const char *>(buf), lmpsize);
 }
 
 /* Allocate, initialize, register with the texture (but don't */
@@ -674,7 +674,7 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused) {
         }
 
         RegisterLmp(dh, "SLGRASS1", 4096);
-        dh->f.write(reinterpret_cast<const char *>(fbuf), 4096);
+        wad_stream.write(reinterpret_cast<const char *>(fbuf), 4096);
     }
 
     if (even_unused || find_flat(c, "SLSPARKS")->used) {
@@ -684,7 +684,7 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused) {
         memset(fbuf, 0, 4096);
         for (i = 512; i; i--) fbuf[roll(64) + 64 * roll(64)] = 0xb0 + roll(16);
         RegisterLmp(dh, "SLSPARKS", 4096);
-        dh->f.write(reinterpret_cast<const char *>(fbuf), 4096);
+        wad_stream.write(reinterpret_cast<const char *>(fbuf), 4096);
     }
 
     if (even_unused || find_flat(c, "SLGATE1")->used) {
@@ -708,7 +708,7 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused) {
         }
 
         RegisterLmp(dh, "SLGATE1", 4096);
-        dh->f.write(reinterpret_cast<const char *>(fbuf), 4096);
+        wad_stream.write(reinterpret_cast<const char *>(fbuf), 4096);
     }
 
     if (even_unused || find_flat(c, "SLLITE1")->used) {
@@ -738,7 +738,7 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused) {
         }
 
         RegisterLmp(dh, "SLLITE1", 4096);
-        dh->f.write(reinterpret_cast<const char *>(fbuf), 4096);
+        wad_stream.write(reinterpret_cast<const char *>(fbuf), 4096);
     }
 
     if (even_unused || find_flat(c, "SLFLAT01")->used) {
@@ -757,7 +757,7 @@ void record_custom_flats(dumphandle dh, config *c, boolean even_unused) {
         }
 
         RegisterLmp(dh, "SLFLAT01", 4096);
-        dh->f.write(reinterpret_cast<const char *>(fbuf), 4096);
+        wad_stream.write(reinterpret_cast<const char *>(fbuf), 4096);
     }
 
     if (started) {
@@ -841,7 +841,7 @@ void record_custom_patches(dumphandle dh, config *c, boolean even_unused) {
         /* Whew! */
 
         RegisterLmp(dh, "WALL51_1", lsize); /* DOOM I only */
-        dh->f.write(reinterpret_cast<const char *>(pbuf), lsize);
+        wad_stream.write(reinterpret_cast<const char *>(pbuf), lsize);
     }
 
     if (even_unused || SLUMP_FALSE) {
@@ -912,7 +912,7 @@ void record_custom_patches(dumphandle dh, config *c, boolean even_unused) {
         /* Whew! */
 
         RegisterLmp(dh, "WALL51_2", lsize);
-        dh->f.write(reinterpret_cast<const char *>(pbuf), lsize);
+        wad_stream.write(reinterpret_cast<const char *>(pbuf), lsize);
     }
 
     /* Next is the steel-rollup-door patch.  It's currently put into */
@@ -991,7 +991,7 @@ void record_custom_patches(dumphandle dh, config *c, boolean even_unused) {
         /* Whew! */
 
         RegisterLmp(dh, "WALL51_3", lsize);
-        dh->f.write(reinterpret_cast<const char *>(pbuf), lsize);
+        wad_stream.write(reinterpret_cast<const char *>(pbuf), lsize);
     }
 
     if (started) {

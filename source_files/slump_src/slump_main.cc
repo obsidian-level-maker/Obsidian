@@ -379,6 +379,7 @@
 int current_level_number = 0;
 int global_verbosity = 0;    /* Oooh, a global variable! */
 boolean ok_to_roll = SLUMP_FALSE;  /* Stop breaking -seed...   */
+std::fstream wad_stream;
 
 /* Machoize: Make a given level harder
  * config c: The configuration for this setup
@@ -412,9 +413,9 @@ bool slump_main(std::filesystem::path filename) {
 		  "based on SLIGE by Dave Chess, dmchess@aol.com\n\n",
            SOURCE_VERSION,SOURCE_SERIAL,SOURCE_PATCHLEVEL);
 
-  std::ofstream create_file(filename, std::ios::binary);
-  if (!create_file.is_open()) {
-    printf("WTF\n");
+  wad_stream.open(filename, std::ios::out | std::ios::binary);
+  if (!wad_stream.is_open()) {
+    printf("Could not create output WAD!\n");
     return false;
   }
   ThisConfig = get_config(filename);
