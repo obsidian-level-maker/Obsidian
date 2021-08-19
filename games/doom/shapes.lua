@@ -3590,7 +3590,7 @@ GROW_357_ROUND_HOLLOW_HALF =
 
 GROW_357_ROUND_ARCH =
 {
-  prob = 20,
+  prob = 40,
   skip_prob = 75,
 
   structure =
@@ -3613,7 +3613,7 @@ GROW_357_ROUND_ARCH =
 
 GROW_357_ROUND_ARCH_ALT =
 {
-  prob = 17,
+  prob = 40,
   skip_prob = 80,
 
   structure =
@@ -3636,7 +3636,7 @@ GROW_357_ROUND_ARCH_ALT =
 
 GROW_357_ROUND_ARCH_ALT_2 =
 {
-  prob = 17,
+  prob = 40,
   skip_prob = 80,
 
   structure =
