@@ -1738,7 +1738,8 @@ DOOM.THEMES =
       gtd_wall_green_torch = 7,
       gtd_wall_red_torch = 7,
       --
-      gtd_wall_gothic_ceilwall_arch = 35
+      gtd_wall_gothic_ceilwall_arch = 25,
+      gtd_wall_gothic_ceilwall_doublet_arch = 25
     },
 
     window_groups =
@@ -2205,7 +2206,8 @@ DOOM.THEMES =
       gtd_wall_hell_mindscrew = 25,
       gtd_wall_hell_mindscrew_skywall = 25,
       --
-      gtd_wall_gothic_ceilwall_arch = 45,
+      gtd_wall_gothic_ceilwall_arch = 30,
+      gtd_wall_gothic_ceilwall_doublet_arch = 30,
     },
 
     outdoor_wall_groups =

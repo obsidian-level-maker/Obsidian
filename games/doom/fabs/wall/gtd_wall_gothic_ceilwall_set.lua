@@ -25,3 +25,23 @@ PREFABS.Wall_gothic_ceilwall_arch_diag =
 
   where = "diagonal"
 }
+
+--
+
+PREFABS.Wall_gothic_ceilwall_doublet_arch =
+{
+  template = "Wall_gothic_ceilwall_arch",
+  map = "MAP03",
+
+  group = "gtd_wall_gothic_ceilwall_doublet_arch",
+}
+
+PREFABS.Wall_gothic_ceilwall_doublet_arch_diag =
+{
+  template = "Wall_gothic_ceilwall_arch",
+  map = "MAP04",
+
+  group = "gtd_wall_gothic_ceilwall_doublet_arch",
+
+  where = "diagonal"
+}
