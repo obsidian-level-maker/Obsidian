@@ -525,7 +525,7 @@ Texture "OBTSTX1B", 128, 128
 {
 	Patch "OBTBSTX1", 0, 0
 	{
-		Blend "#805656"
+		Blend "#826A55"
 	}
 }
 
@@ -533,7 +533,7 @@ Texture "OBTSTX1G", 128, 128
 {
 	Patch "OBTBSTX1", 0, 0
 	{
-		Blend "#568056"
+		Blend "#779C67"
 	}
 }
 
