@@ -407,6 +407,10 @@ ARMAETUS_MATERIALS = {
   MARBFABD = { t="MARBFABD", f="G11" },
   MARBFABF = { t="MARBFABF", f="G11" },
   MARBFABG = { t="MARBFABG", f="G11" },
+  MARBFABH = { t="MARBFABH", f="G11" },
+  MARBFABI = { t="MARBFABI", f="G11" },
+  MARBFABJ = { t="MARBFABJ", f="G11" },
+
   -- green marble
   MARBFAC5 = { t="MARBFAC5", f="FLOOR7_2" }, --Plutonia 2,
   MARBFAC6 = { t="MARBFAC6", f="FLOOR7_2" },
@@ -418,6 +422,11 @@ ARMAETUS_MATERIALS = {
   MARBFACC = { t="MARBFACC", f="FLOOR7_2" },
   MARBFACD = { t="MARBFACD", f="FLOOR7_2" },
   MARBFACF = { t="MARBFACF", f="FLOOR7_2" },
+  MARBFACG = { t="MARBFACG", f="FLOOR7_2" },
+  MARBFACH = { t="MARBFACH", f="FLOOR7_2" },
+  MARBFACI = { t="MARBFACI", f="FLOOR7_2" },
+  MARBFACJ = { t="MARBFACJ", f="FLOOR7_2" },
+
   MARBLE = { t="MARBLE", f="FLOOR7_2" },
   MARBLE4 = { t="MARBLE4", f="FLOOR7_2" },
   MARBLE5 = { t="MARBLE5", f="FLOOR7_2" },
