@@ -34,6 +34,8 @@ PREFABS.Wall_gothic_ceilwall_doublet_arch =
   map = "MAP03",
 
   group = "gtd_wall_gothic_ceilwall_doublet_arch",
+
+  z_fit = {102,104 , 127,128}
 }
 
 PREFABS.Wall_gothic_ceilwall_doublet_arch_diag =
@@ -43,5 +45,7 @@ PREFABS.Wall_gothic_ceilwall_doublet_arch_diag =
 
   group = "gtd_wall_gothic_ceilwall_doublet_arch",
 
-  where = "diagonal"
+  where = "diagonal",
+
+  z_fit = {102,104 , 127,128}
 }
