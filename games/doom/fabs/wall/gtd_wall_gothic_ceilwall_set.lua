@@ -6,7 +6,7 @@ PREFABS.Wall_gothic_ceilwall_arch =
   prob   = 50,
   env = "building",
 
-  group = "gtd_wall_gothic_ceilwall_arch",
+  group = "gtd_gothic_ceilwall_arch",
 
   where  = "edge",
   deep   = 16,
@@ -33,7 +33,7 @@ PREFABS.Wall_gothic_ceilwall_doublet_arch =
   template = "Wall_gothic_ceilwall_arch",
   map = "MAP03",
 
-  group = "gtd_wall_gothic_ceilwall_doublet_arch",
+  group = "gtd_gothic_ceilwall_doublet_arch",
 
   z_fit = {102,104 , 127,128}
 }
@@ -43,9 +43,21 @@ PREFABS.Wall_gothic_ceilwall_doublet_arch_diag =
   template = "Wall_gothic_ceilwall_arch",
   map = "MAP04",
 
-  group = "gtd_wall_gothic_ceilwall_doublet_arch",
+  group = "gtd_gothic_ceilwall_doublet_arch",
 
   where = "diagonal",
 
   z_fit = {102,104 , 127,128}
+}
+
+--
+
+PREFABS.Wall_gothic_ceilwall_braced_arch =
+{
+  template = "Wall_gothic_ceilwall_arch",
+  map = "MAP05",
+
+  group = "gtd_gothic_ceilwall_braced_arch",
+
+  z_fit = {94,96 ,  127,128}
 }
