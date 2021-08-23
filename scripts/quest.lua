@@ -3226,6 +3226,14 @@ function Quest_room_themes()
         R.main_tex = R.exit_facade
       end
 
+      R.floor_mats = {}
+      R.floor_mats_natural = {}
+      table.insert(R.floor_mats, rand.key_by_probs(R.theme.floors))
+      table.insert(R.floor_mats, rand.key_by_probs(R.theme.floors))
+      table.insert(R.floor_mats, rand.key_by_probs(R.theme.floors))
+      table.insert(R.floor_mats_natural, rand.key_by_probs(R.theme.naturals))
+      table.insert(R.floor_mats_natural, rand.key_by_probs(R.theme.naturals))
+
     else
       R.main_tex = rand.key_by_probs(R.theme.walls)
     end

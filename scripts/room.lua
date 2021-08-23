@@ -2817,7 +2817,15 @@ function Room_floor_ceil_heights()
       end
 
       if not R.floor_mats[A.floor_h] then
-        R.floor_mats[A.floor_h] = rand.key_by_probs(R.theme.floors)
+        if R.is_outdoor then
+          if rand.odds(50) then
+            R.floor_mats[A.floor_h] = rand.pick(R.floor_mats)
+          else
+            R.floor_mats[A.floor_h] = rand.pick(R.floor_mats_natural)
+          end
+        else
+          R.floor_mats[A.floor_h] = rand.key_by_probs(R.theme.floors)
+        end
       end
 
       if R.is_outdoor then
