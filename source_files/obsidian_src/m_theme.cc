@@ -243,7 +243,7 @@ bool Theme_Options_Load(std::filesystem::path filename) {
         return false;
     }
 
-    LogPrintf("Loading theme file: {}\n", filename);
+    LogPrintf("Loading theme file: {}\n", filename.string());
 
     int error_count = 0;
 
@@ -268,7 +268,7 @@ bool Theme_Options_Save(std::filesystem::path filename) {
     std::ofstream option_fp(filename);
 
     if (!option_fp.is_open()) {
-        LogPrintf("Error: unable to create file: {}\n({})\n\n", filename,
+        LogPrintf("Error: unable to create file: {}\n({})\n\n", filename.string(),
                   strerror(errno));
         return false;
     }

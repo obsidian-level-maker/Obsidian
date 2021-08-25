@@ -1042,7 +1042,7 @@ void Trans_Init() {
         return;
     }
 
-    LogPrintf("Loading language list: {}\n", path);
+    LogPrintf("Loading language list: {}\n", path.string());
 
     for (std::string line; std::getline(trans_fp, line);) {
         Trans_ParseLangLine((char *)line.c_str());

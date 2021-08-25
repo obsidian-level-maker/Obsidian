@@ -129,7 +129,7 @@ bool Cookie_Load(std::filesystem::path filename) {
         return false;
     }
 
-    LogPrintf("Loading config file: {}\n", filename);
+    LogPrintf("Loading config file: {}\n", filename.string());
 
     int error_count = 0;
 

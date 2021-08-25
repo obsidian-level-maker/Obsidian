@@ -97,7 +97,7 @@ bool Options_Load(std::filesystem::path filename) {
         return false;
     }
 
-    LogPrintf("Loading options file: {}\n", filename);
+    LogPrintf("Loading options file: {}\n", filename.string());
 
     int error_count = 0;
 
@@ -122,7 +122,7 @@ bool Options_Save(std::filesystem::path filename) {
     std::ofstream option_fp(filename, std::ios::out);
 
     if (!option_fp.is_open()) {
-        LogPrintf("Error: unable to create file: {}\n({})\n\n", filename,
+        LogPrintf("Error: unable to create file: {}\n({})\n\n", filename.string(),
                   strerror(errno));
         return false;
     }

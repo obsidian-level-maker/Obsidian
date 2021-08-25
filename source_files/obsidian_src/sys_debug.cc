@@ -38,7 +38,7 @@ bool LogInit(const std::filesystem::path &filename) {
 
         log_file.open(log_filename, std::ios::out);
 
-        if (!log_file) {
+        if (!log_file.is_open()) {
             return false;
         }
     }

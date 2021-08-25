@@ -61,7 +61,7 @@ void VFS_AddFolder(std::string name) {
 }
 
 bool VFS_AddArchive(std::filesystem::path filename, bool options_file) {
-    LogPrintf("  using: {}\n", filename);
+    LogPrintf("  using: {}\n", filename.string());
 
     if (!filename.has_extension()) {
         filename.replace_extension("pk3");
@@ -223,7 +223,7 @@ no_home_addon_dir:
         // DEBUG
         // info.enabled = true;
 
-        LogPrintf("  found: {}{}\n", info.name,
+        LogPrintf("  found: {}{}\n", info.name.string(),
                   info.enabled ? " (Enabled)" : " (Disabled)");
 
         all_addons.push_back(info);

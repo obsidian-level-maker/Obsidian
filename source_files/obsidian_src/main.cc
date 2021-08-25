@@ -331,13 +331,14 @@ void Determine_LoggingFile() {
         // test that it can be created
         std::ofstream fp{logging_file};
 
-        if (!fp) {
-            Main::FatalError("Cannot create log file: {}\n", logging_file);
+        if (!fp.is_open()) {
+            Main::FatalError("Cannot create log file: {}\n", logging_file.string());
         }
 
         fp.close();
     } else if (!batch_mode) {
-        logging_file = fmt::format("{}/{}", home_dir, LOG_FILENAME);
+        logging_file /= home_dir;
+        logging_file /= LOG_FILENAME;
     } else {
         logging_file.clear();
     }
@@ -938,9 +939,9 @@ restart:;
     LogPrintf("Library versions: FLTK {}.{}.{}\n\n", FL_MAJOR_VERSION,
               FL_MINOR_VERSION, FL_PATCH_VERSION);
 
-    LogPrintf("   home_dir: {}\n", home_dir);
-    LogPrintf("install_dir: {}\n", install_dir);
-    LogPrintf("config_file: {}\n\n", config_file);
+    LogPrintf("home_dir: {}\n", home_dir.string());
+    LogPrintf("install_dir: {}\n", install_dir.string());
+    LogPrintf("config_file: {}\n\n", config_file.string());
 
     Trans_Init();
 
