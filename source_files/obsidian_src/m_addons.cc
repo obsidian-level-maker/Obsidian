@@ -152,7 +152,7 @@ void VFS_OptWrite(std::ofstream &fp) {
         const addon_info_t *info = &all_addons[i];
 
         if (info->enabled) {
-            fp << "addon = " << info->name << "\n";
+            fp << "addon = " << info->name.string() << "\n";
         }
     }
 
