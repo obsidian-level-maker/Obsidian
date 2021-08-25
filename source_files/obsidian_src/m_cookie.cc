@@ -344,7 +344,7 @@ class RecentFiles_c {
         push_front(file);
     }
 
-    void remove(const char *file) {
+    void remove(std::string file) {
         int f = find(file);
 
         if (f >= 0) {
@@ -358,7 +358,7 @@ class RecentFiles_c {
         // order they are read.
 
         for (int k = size - 1; k >= 0; k--) {
-            fp << keyword << " = " << filenames[k] << "\n";
+            fp << keyword << " = " << filenames[k].string() << "\n";
         }
 
         if (size > 0) {
@@ -389,10 +389,10 @@ static RecentFiles_c recent_configs;
 
 void Recent_Parse(std::string name, std::string value) {
     if (StringCaseCmp(name, "recent_wad") == 0) {
-        recent_wads.insert(value.c_str());
+        recent_wads.insert(value);
 
     } else if (StringCaseCmp(name, "recent_config") == 0) {
-        recent_configs.insert(value.c_str());
+        recent_configs.insert(value);
     }
 }
 
@@ -408,11 +408,11 @@ void Recent_AddFile(int group, std::filesystem::path filename) {
 
     switch (group) {
         case RECG_Output:
-            recent_wads.insert(filename.c_str());
+            recent_wads.insert(filename);
             break;
 
         case RECG_Config:
-            recent_configs.insert(filename.c_str());
+            recent_configs.insert(filename);
             break;
     }
 
@@ -427,11 +427,11 @@ void Recent_RemoveFile(int group, std::string filename) {
 
     switch (group) {
         case RECG_Output:
-            recent_wads.remove(filename.c_str());
+            recent_wads.remove(filename);
             break;
 
         case RECG_Config:
-            recent_configs.remove(filename.c_str());
+            recent_configs.remove(filename);
             break;
     }
 

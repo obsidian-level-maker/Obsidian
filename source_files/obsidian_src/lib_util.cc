@@ -111,7 +111,8 @@ std::string NumToString(double value) {
     return std::to_string(value);
 }
 
-/*std::string NumToString(double value) {
+/* This can be used instead when Mingw's GCC can use charconv with floating point numbers - Dasho
+std::string NumToString(double value) {
     std::string num_string;
     num_string.resize(50, ' ');
     static_cast<void>(std::to_chars(
@@ -137,7 +138,8 @@ double StringToDouble(std::string value) {
     return stod(value);
 }
 
-/*double StringToDouble(std::string value) {
+/* This can be used instead when Mingw's GCC can use charconv with floating point numbers - Dasho
+double StringToDouble(std::string value) {
     double actual_number;
     static_cast<void>(std::from_chars(value.data(), value.data() + value.size(),
                                       actual_number));

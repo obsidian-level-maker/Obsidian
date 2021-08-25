@@ -145,7 +145,7 @@ bool Options_Save(std::filesystem::path filename) {
 
     if (!last_directory.empty()) {
         option_fp << "\n";
-        option_fp << "last_directory = " << last_directory << "\n";
+        option_fp << "last_directory = " << last_directory.string() << "\n";
     }
 
     option_fp << "\n";

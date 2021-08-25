@@ -42,7 +42,7 @@ static const char GLLumpNames[5][9] = {"GL_VERT", "GL_SEGS", "GL_SSECT",
                                        "GL_NODES", "GL_PVS"};
 
 FWadReader::FWadReader(std::filesystem::path filename) : Lumps(NULL) {
-    File.open(filename.generic_string().c_str(), std::ios::binary);
+    File.open(filename, std::ios::binary);
     
     if (!File.is_open()) {
         throw std::runtime_error("Could not open input file");
