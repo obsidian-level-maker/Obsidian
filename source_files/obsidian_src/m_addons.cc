@@ -343,7 +343,7 @@ class UI_Addon : public Fl_Group {
 
         button = new UI_CustomCheckBox(x + kf_w(6), y + kf_h(4), w - kf_w(12),
                                        kf_h(24), "");
-        button->copy_label(fmt::format(" {}", info->name).c_str());
+        button->copy_label(fmt::format(" {}", info->name.filename().string()).c_str());
         button->labelfont(font_style);
         button->selection_color(SELECTION);
         // if (tip)

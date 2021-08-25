@@ -2730,37 +2730,14 @@ static void WriteFraggleScript() {
 //------------------------------------------------------------------------
 
 void FreeStuff() {
-
-
+    
     // This is erroring out right now
-    /*std::for_each(vertices.begin(), vertices.end(), [](auto *i) { delete i; });
+    std::for_each(vertices.begin(), vertices.end(), [](auto *i) { delete i; });
     std::for_each(linedefs.begin(), linedefs.end(), [](auto *i) { delete i; });
     std::for_each(sidedefs.begin(), sidedefs.end(), [](auto *i) { delete i; });
     std::for_each(sectors.begin(), sectors.end(), [](auto *i) { delete i; });
     std::for_each(exfloors.begin(), exfloors.end(), [](auto *i) { delete i; });
-    std::for_each(dummies.begin(), dummies.end(), [](auto *i) { delete i; });*/
-
-    unsigned int i;
-
-    for (i = 0; i < vertices.size(); i++) {
-        delete vertices[i];
-    }
-    for (i = 0; i < linedefs.size(); i++) {
-        delete linedefs[i];
-    }
-    for (i = 0; i < sidedefs.size(); i++) {
-        delete sidedefs[i];
-    }
-    for (i = 0; i < sectors.size(); i++) {
-        delete sectors[i];
-    }
-
-    for (i = 0; i < exfloors.size(); i++) {
-        delete exfloors[i];
-    }
-    for (i = 0; i < dummies.size(); i++) {
-        delete dummies[i];
-    }
+    std::for_each(dummies.begin(), dummies.end(), [](auto *i) { delete i; });
 
     vertices.clear();
     linedefs.clear();
