@@ -1738,9 +1738,10 @@ DOOM.THEMES =
       gtd_wall_green_torch = 7,
       gtd_wall_red_torch = 7,
       --
-      gtd_gothic_ceilwall_arch = 20,
-      gtd_gothic_ceilwall_doublet_arch = 20,
-      gtd_gothic_ceilwall_braced_arch = 20,
+      gtd_gothic_ceilwall_arch = 18,
+      gtd_gothic_ceilwall_doublet_arch = 18,
+      gtd_gothic_ceilwall_braced_arch = 18,
+      gtd_gothic_ceilwall_xzibit_arch = 18,
     },
 
     window_groups =
@@ -2207,9 +2208,10 @@ DOOM.THEMES =
       gtd_wall_hell_mindscrew = 25,
       gtd_wall_hell_mindscrew_skywall = 25,
       --
-      gtd_gothic_ceilwall_arch = 25,
-      gtd_gothic_ceilwall_doublet_arch = 25,
-      gtd_gothic_ceilwall_braced_arch = 25,
+      gtd_gothic_ceilwall_arch = 18,
+      gtd_gothic_ceilwall_doublet_arch = 18,
+      gtd_gothic_ceilwall_braced_arch = 18,
+      gtd_gothic_ceilwall_xzibit_arch = 18,
     },
 
     outdoor_wall_groups =

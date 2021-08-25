@@ -71,3 +71,23 @@ PREFABS.Wall_gothic_ceilwall_braced_arch_diag =
 
   z_fit = {94,96 ,  127,128}
 }
+
+--
+
+PREFABS.Wall_gothic_ceilwall_xzibit_arch =
+{
+  template = "Wall_gothic_ceilwall_arch",
+  map = "MAP07",
+
+  group = "gtd_gothic_ceilwall_xzibit_arch"
+}
+
+PREFABS.Wall_gothic_ceilwall_xzibit_arch_diag =
+{
+  template = "Wall_gothic_ceilwall_arch",
+  map = "MAP08",
+
+  where = "diagonal",
+
+  group = "gtd_gothic_ceilwall_xzibit_arch"
+}
