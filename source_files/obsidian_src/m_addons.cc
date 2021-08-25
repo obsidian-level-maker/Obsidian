@@ -51,7 +51,7 @@ void VFS_AddFolder(std::string name) {
     path /= name;
     std::string mount = fmt::format("/{}", name);
 
-    if (!PHYSFS_mount(path.generic_string().c_str(), mount.c_str(), 0)) {
+    if (!PHYSFS_mount(path.string().c_str(), mount.c_str(), 0)) {
         Main::FatalError("Failed to mount '{}' folder in PhysFS:\n{}\n", name,
                          PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         return; /* NOT REACHED */
@@ -70,8 +70,7 @@ bool VFS_AddArchive(std::filesystem::path filename, bool options_file) {
     // when handling "bare" filenames from the command line (i.e. ones
     // containing no paths or drive spec) and the file does not exist in
     // the current dir, look for it in the standard addons/ folder.
-    if (options_file ||
-        (!std::filesystem::exists(filename) && filename.has_filename())) {
+    if ((!std::filesystem::exists(filename) && !filename.has_parent_path())) {
         std::filesystem::path new_name =
             fmt::format("{}/addons/{}", home_dir, filename);
         if (!std::filesystem::exists(new_name)) {
@@ -80,7 +79,7 @@ bool VFS_AddArchive(std::filesystem::path filename, bool options_file) {
         filename = new_name;
     }
 
-    if (!PHYSFS_mount(filename.generic_string().c_str(), "/", 0)) {
+    if (!PHYSFS_mount(filename.string().c_str(), "/", 0)) {
         if (options_file) {
             LogPrintf(
                 fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
