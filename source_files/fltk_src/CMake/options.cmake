@@ -329,7 +329,7 @@ unset (debug_threads)
 #######################################################################
 option (OPTION_USE_SYSTEM_ZLIB "use system zlib" ON)
 
-if (OPTION_USE_SYSTEM_ZLIB)
+if (OPTION_USE_SYSTEM_ZLIB AND NOT MSYS)
   include (FindZLIB)
 endif (OPTION_USE_SYSTEM_ZLIB)
 

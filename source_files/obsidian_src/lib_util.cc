@@ -108,12 +108,16 @@ std::string NumToString(int value) {
 }
 
 std::string NumToString(double value) {
+    return std::to_string(value);
+}
+
+/*std::string NumToString(double value) {
     std::string num_string;
     num_string.resize(50, ' ');
     static_cast<void>(std::to_chars(
         num_string.data(), num_string.data() + num_string.size(), value));
     return num_string;
-}
+}*/
 
 int StringToInt(std::string value) {
     int actual_number;
@@ -130,11 +134,15 @@ int StringToHex(std::string value) {
 }
 
 double StringToDouble(std::string value) {
+    return stod(value);
+}
+
+/*double StringToDouble(std::string value) {
     double actual_number;
     static_cast<void>(std::from_chars(value.data(), value.data() + value.size(),
                                       actual_number));
     return actual_number;
-}
+}*/
 
 char *mem_gets(char *buf, int size, const char **str_ptr) {
     // This is like fgets() but reads lines from a string.

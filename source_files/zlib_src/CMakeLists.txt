@@ -229,7 +229,7 @@ if(UNIX)
                  "-Wl,--version-script,\"${CMAKE_CURRENT_SOURCE_DIR}/zlib.map\""
     )
   endif()
-elseif(BUILD_SHARED_LIBS AND WIN32)
+elseif(BUILD_SHARED_LIBS AND WIN32 AND NOT)
   # Creates zlib1.dll when building shared library version
   set_target_properties(zlib PROPERTIES SUFFIX "1.dll")
 endif()
