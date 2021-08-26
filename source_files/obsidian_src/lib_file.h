@@ -32,7 +32,6 @@
 std::string FileLoad(const std::filesystem::path &filename);
 
 // miscellaneous
-std::filesystem::path GetExecutablePath();
 
 #endif /* __LIB_FILE_H__ */
 

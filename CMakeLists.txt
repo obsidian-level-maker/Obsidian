@@ -10,7 +10,6 @@ add_subdirectory(source_files/zdbsp_src)
 add_subdirectory(source_files/slump_src)
 add_subdirectory(source_files/zlib_src)
 add_subdirectory(source_files/fmt_src)
-add_subdirectory(source_files/whereami_src)
 
 project(
   obsidian
@@ -181,7 +180,6 @@ target_include_directories(obsidian PRIVATE source_files/physfs_src)
 target_include_directories(obsidian PRIVATE source_files/zdbsp_src)
 target_include_directories(obsidian PRIVATE source_files/lua_src)
 target_include_directories(obsidian PRIVATE source_files/slump_src)
-target_include_directories(obsidian PRIVATE source_files/whereami_src)
 target_include_directories(obsidian PRIVATE source_files/zlib_src)
 target_include_directories(obsidian PRIVATE source_files/gui)
 
@@ -236,7 +234,6 @@ if(UNIX)
             obsidian_acc
             obsidian_zdbsp
             obsidian_slump
-            obsidian_whereami
             fontconfig
   )
 else()
@@ -248,6 +245,5 @@ else()
             obsidian_acc
             obsidian_zdbsp
             obsidian_slump
-            obsidian_whereami
   )
 endif()

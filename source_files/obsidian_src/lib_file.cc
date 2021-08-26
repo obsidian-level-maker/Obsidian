@@ -21,7 +21,6 @@
 #include "lib_file.h"
 
 #include <algorithm>
-#include <whereami.h>
 
 #include "lib_util.h"
 
@@ -34,17 +33,6 @@ std::string FileLoad(const std::filesystem::path &filename) {
     in.read(text.data(), text.size());
     text.push_back('\0');
     return text;
-}
-
-//------------------------------------------------------------------------
-
-std::filesystem::path GetExecutablePath() {
-    size_t length = wai_getExecutablePath(nullptr, 0, nullptr);
-    std::string path;
-    path.resize(length + 1);
-    wai_getExecutablePath(path.data(), length, nullptr);
-    path[length] = '\0';
-    return std::filesystem::path{path}.parent_path();
 }
 
 //--- editor settings ---

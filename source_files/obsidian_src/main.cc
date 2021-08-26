@@ -189,7 +189,7 @@ void Determine_WorkingPath(const char *argv0) {
     }
 
 #ifdef WIN32
-    home_dir = GetExecutablePath();
+    home_dir = std::filesystem::current_path();
 
 #else
     home_dir = std::getenv("HOME");
