@@ -139,4 +139,8 @@ class FProcessor {
     int Lump;
 };
 
+#ifdef WIN32
+#define strcasecmp stricmp
+#endif
+
 #endif  //__PROCESSOR_H__

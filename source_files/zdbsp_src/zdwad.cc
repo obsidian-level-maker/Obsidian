@@ -72,9 +72,12 @@ FWadReader::FWadReader(const char *filename) : Lumps(NULL), File(NULL) {
     }
 }
 
+void FWadReader::Close() {
+	if (File) fclose(File);
+	if (Lumps) delete[] Lumps;
+}
+
 FWadReader::~FWadReader() {
-    if (File) fclose(File);
-    if (Lumps) delete[] Lumps;
 }
 
 bool FWadReader::IsIWAD() const { return Header.Magic[0] == 'I'; }

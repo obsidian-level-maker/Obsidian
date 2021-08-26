@@ -47,7 +47,7 @@ OB_MODULES["ui_slump_arch"] =
       max = 37,
       increment = 1,
       default = 15,
-      presets = "1:Mix It Up,",
+      presets = "1: Mix It Up,",
       tooltip = "Minimum number of rooms per level."
     },
 
@@ -111,7 +111,7 @@ OB_MODULES["ui_slump_mons"] =
   label = _("SLUMP Monsters"),
 
   side = "left",
-  priority = 104,
+  priority = 103,
   engine = "vanilla",
 
   options =

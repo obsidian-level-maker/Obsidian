@@ -756,6 +756,7 @@ function ob_read_all_config(need_full, log_only)
   do_line("-- Scionox")
   do_line("-- josh771")
   do_line("-- dashodanger")
+  do_line("-- Phytolizer")
   do_line("-- https://github.com/caligari87/ObAddon/\n")
 
   if OB_CONFIG.seed and OB_CONFIG.seed ~= 0 then
@@ -1000,6 +1001,7 @@ function ob_init()
   gui.printf("          Scionox\n")
   gui.printf("          josh771\n")
   gui.printf("        dashodanger\n")
+  gui.printf("        Phytolizer\n")
   gui.printf("    And All of Our Fans!\n\n")
   gui.printf("--------------------------------------------\n")
   gui.printf("-- https://github.com/caligari87/ObAddon/ --\n")
@@ -1241,6 +1243,8 @@ end
 function ob_default_filename()
   -- create a default filename [ WITHOUT any extension ]
 
+  if OB_CONFIG.batch == "yes" then goto continue end
+
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
   
@@ -1260,45 +1264,75 @@ function ob_default_filename()
   str = string.gsub(str, "'", "")
   str = string.gsub(str, ",", "")
   
-  if OB_CONFIG.filename_prefix == "datetime" then
-
-    local current_date = os.date("*t")
-
-    local date_str = current_date.year .. "-" .. current_date.month .. "-" .. current_date.day .. "-"
-    local time_str
-
-    if current_date.hour < 10 then
-      time_str = "0" .. current_date.hour
-    else
-      time_str = current_date.hour
-    end
-
-    if current_date.min < 10 then
-      time_str = time_str .. "0" .. current_date.min
-    else
-      time_str = time_str .. current_date.min
-    end
-
-    return date_str .. time_str .. "_" .. str
-      
-  elseif OB_CONFIG.filename_prefix == "numlevels" then
+  if OB_CONFIG.filename_prefix == "none" then
+    return str
+  else
+    local formatstring
+    local levelcount
+    
     if OB_CONFIG.length == "single" then
-      return "ob1_" .. str
+      levelcount = "1"
     elseif OB_CONFIG.length == "few" then
-      return "ob4_" .. str
+      levelcount = "4"
     elseif OB_CONFIG.length == "episode" then
       if OB_CONFIG.game == "doom2" or OB_CONFIG.game == "tnt" or OB_CONFIG.game == "plutonia" then
-        return "ob11_" .. str
+        levelcount = "11"
       else 
-        return "ob9_" .. str
+        levelcount = "9"
       end
     else
-     return "obFULL_" .. str
-    end       
- else
-   return str
+     levelcount = "FULL"
+    end
+        
+    if OB_CONFIG.filename_prefix == "datetime" then
+
+      local current_date = os.date("*t")
+
+      if current_date.month < 10 then
+        formatstring = "0%M"
+      else
+        formatstring = "%M"
+      end
+      if current_date.day < 10 then
+        formatstring = formatstring .. "-0%D"
+      else
+        formatstring = formatstring .. "-%D"
+      end
+      
+      formatstring = "%Y-" .. formatstring .. "-"
+    
+      if current_date.hour < 10 then
+        formatstring = formatstring .. "0%h"
+      else
+        formatstring = formatstring .. "%h"
+      end
+
+      if current_date.min < 10 then
+        formatstring = formatstring .. "0%m"
+      else
+        formatstring = formatstring .. "%m"
+      end
+
+      formatstring = formatstring .. "_"
+      
+    elseif OB_CONFIG.filename_prefix == "numlevels" then
+      formatstring = "ob" .. levelcount .. "_"
+    elseif OB_CONFIG.filename_prefix == "game" then
+      formatstring = OB_CONFIG.game .. "_"
+    elseif OB_CONFIG.filename_prefix == "theme" then
+      formatstring = OB_CONFIG.theme .. "_"   
+    elseif OB_CONFIG.filename_prefix == "version" then
+      formatstring = "version"
+    elseif OB_CONFIG.filename_prefix == "custom" then
+      formatstring = "custom"
+   end
+   
+   return gui.format_prefix(levelcount, OB_CONFIG.game, OB_CONFIG.theme, formatstring) .. str
+   
  end
-     
+ 
+ ::continue::
+ 
 end
 
 

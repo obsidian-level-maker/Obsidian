@@ -23,6 +23,9 @@
 #include <iostream>
 #include <limits>
 #include <string>
+#ifdef WIN32
+#include <iso646.h>
+#endif
 
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
@@ -310,11 +313,10 @@ const char *DLG_OutputFilename(const char *ext, const char *preset) {
 //----------------------------------------------------------------------cout
 
 void DLG_EditSeed(void) {
-    char num_buf[1000];
+    ;
 
-    sprintf(num_buf, std::to_string(next_rand_seed).c_str());
-
-    const char *user_buf = fl_input(_("Enter New Seed Number:"), num_buf);
+    const char *user_buf = fl_input(_("Enter New Seed Number:"),
+                                    std::to_string(next_rand_seed).c_str());
 
     // cancelled?
     if (!user_buf) {
@@ -341,6 +343,9 @@ void DLG_EditSeed(void) {
         std::cout << e.what();
     }
     main_win->build_box->string_seed = word;
+#ifdef max
+#undef max
+#endif
     unsigned long long split_limit =
         (std::numeric_limits<unsigned long long>::max() / 127);
     next_rand_seed = split_limit;
@@ -437,7 +442,8 @@ UI_LogViewer::UI_LogViewer(int W, int H, const char *l)
             but->box(button_style);
             but->visible_focus(0);
             but->color(BUTTON_COLOR);
-            but->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
+            but->labelfont(use_system_fonts ? font_style
+                                            : font_style | FL_BOLD);
             but->labelcolor(FONT2_COLOR);
             but->callback(quit_callback, this);
         }

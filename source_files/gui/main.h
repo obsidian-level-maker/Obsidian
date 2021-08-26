@@ -30,7 +30,8 @@
 #include "physfs.h"
 #define OBSIDIAN_TITLE "OBSIDIAN Level Maker"
 
-#define OBSIDIAN_VERSION "Beta 19 Preview"
+#define OBSIDIAN_VERSION "Beta 19"
+#define OBSIDIAN_SHORT_VERSION "Beta19"
 #define OBSIDIAN_HEX_VER 0x013
 #define OBSIDIAN_WEBSITE "https://github.com/GTD-Carthage/Oblige"
 
@@ -119,6 +120,7 @@ extern int window_scaling;
 extern int font_scaling;
 extern int num_fonts;
 extern int filename_prefix;
+extern std::string custom_prefix;
 extern bool single_pane;
 extern bool use_system_fonts;
 extern std::vector<std::map<std::string, int>> font_menu_items;

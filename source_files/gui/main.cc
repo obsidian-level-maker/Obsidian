@@ -105,6 +105,7 @@ bool use_system_fonts = false;
 int window_scaling = 0;
 int font_scaling = 18;
 int filename_prefix = 0;
+std::string custom_prefix = "CUSTOM_";
 int num_fonts = 0;
 std::vector<std::map<std::string, int>> font_menu_items;
 
@@ -475,16 +476,19 @@ void Main_PopulateFontMap() {
 		if (load_internal_font("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf", current_free_font, "The Neue")) {
 			Fl::set_font(current_free_font + 1, "The Neue");
 			font_menu_items.push_back(std::map<std::string, int>{ {"New Black", current_free_font} });
+			current_free_font += 2;
 		}
-		
-		if (load_internal_font("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf", current_free_font, "The Neue")) {
-			Fl::set_font(current_free_font + 1, "The Neue");
-			font_menu_items.push_back(std::map<std::string, int>{ {"New Black", current_free_font} });
-		}
-		
+
 		if (load_internal_font("./theme/fonts/Teko/Teko-Regular.ttf", current_free_font, "Teko")) {
 			if (load_internal_font("./theme/fonts/Teko/Teko-Bold.ttf", current_free_font + 1, "Teko Bold")) {
 				font_menu_items.push_back(std::map<std::string, int>{ {"Teko", current_free_font} });
+			}
+			current_free_font += 2;
+		}
+		
+		if (load_internal_font("./theme/fonts/Kalam/Kalam-Regular.ttf", current_free_font, "Kalam")) {
+			if (load_internal_font("./theme/fonts/Kalam/Kalam-Bold.ttf", current_free_font + 1, "Kalam Bold")) {
+				font_menu_items.push_back(std::map<std::string, int>{ {"Kalam", current_free_font} });
 			}
 		}
 
@@ -946,7 +950,9 @@ int main(int argc, char **argv) {
         Main_SetupFLTK();
     }
 
+#ifndef WIN32
     numeric_locale = std::setlocale(LC_NUMERIC, NULL); // Grab current numeric locale
+#endif
         
     LogEnableDebug(debug_messages);
 
@@ -1071,6 +1077,18 @@ int main(int argc, char **argv) {
 			ob_set_config("filename_prefix", "numlevels");
 			break;
 		case 2:
+			ob_set_config("filename_prefix", "game");
+			break;
+		case 3:
+			ob_set_config("filename_prefix", "theme");
+			break;
+		case 4:
+			ob_set_config("filename_prefix", "version");
+			break;
+		case 5:
+			ob_set_config("filename_prefix", "custom");
+			break;
+		case 6:
 			ob_set_config("filename_prefix", "none");
 			break;
 		default:

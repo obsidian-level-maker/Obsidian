@@ -66,7 +66,7 @@ OB_MODULES["ui_pickups"] =
   label = _("Pickups"),
 
   side = "right",
-  priority = 104,
+  priority = 102,
   engine = "!vanilla",
 
   options =

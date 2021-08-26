@@ -20,6 +20,8 @@
 
 #include "g_doom.h"
 
+#include "headers.h"
+
 #include <bitset>
 #include <iostream>
 #include <string>
@@ -29,7 +31,6 @@
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
 #include "hdr_ui.h"
-#include "headers.h"
 #include "lib_file.h"
 #include "lib_util.h"
 #include "lib_wad.h"
@@ -38,6 +39,10 @@
 #include "main.h"
 #include "q_common.h"  // qLump_c
 #include "twister.h"
+
+#ifdef WIN32
+#include <iso646.h>
+#endif
 
 // SLUMP for Vanilla Doom
 #include "slump_main.h"
@@ -224,7 +229,7 @@ static void DM_ClearSections() {
 
         for (unsigned int n = 0; n < sections[k]->size(); n++) {
             delete sections[k]->at(n);
-            sections[k]->at(n) = NULL;
+            sections[k]->at(n) = nullptr;
         }
 
         sections[k]->clear();
@@ -306,23 +311,23 @@ bool DM_EndWAD() {
 
 static void DM_FreeLumps() {
     delete header_lump;
-    header_lump = NULL;
+    header_lump = nullptr;
     if (not UDMF_mode) {
         delete thing_lump;
-        thing_lump = NULL;
+        thing_lump = nullptr;
         delete sector_lump;
-        sector_lump = NULL;
+        sector_lump = nullptr;
         delete vertex_lump;
-        vertex_lump = NULL;
+        vertex_lump = nullptr;
         delete sidedef_lump;
-        sidedef_lump = NULL;
+        sidedef_lump = nullptr;
         delete linedef_lump;
-        linedef_lump = NULL;
+        linedef_lump = nullptr;
     } else {
         delete textmap_lump;
-        textmap_lump = NULL;
+        textmap_lump = nullptr;
         delete endmap_lump;
-        endmap_lump = NULL;
+        endmap_lump = nullptr;
     }
 }
 
@@ -841,7 +846,7 @@ int DM_NumThings() {
 
 #include "zdmain.h"
 
-static bool DM_BuildNodes(const char *filename, const char *out_name) {
+static bool DM_BuildNodes(const char *filename) {
     LogPrintf("\n");
 
     zdbsp_options options;
@@ -889,7 +894,6 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
     	if (!UDMF_mode) {
     		if (!build_nodes) {
 			    LogPrintf("Skipping nodes per user selection...\n");
-		        FileRename(filename, out_name);
 		        return true;
 		     }
         }
@@ -908,7 +912,6 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
     } else if (current_engine == "zdoom") {
         if (!build_nodes) {
             LogPrintf("Skipping nodes per user selection...\n");
-            FileRename(filename, out_name);
             return true;
         }
         options.build_nodes = true;
@@ -930,8 +933,6 @@ static bool DM_BuildNodes(const char *filename, const char *out_name) {
         return false;
     }
 
-    FileRename(filename, out_name);
-
     return true;
 }
 
@@ -942,7 +943,7 @@ class doom_game_interface_c : public game_interface_c {
     const char *filename;
 
    public:
-    doom_game_interface_c() : filename(NULL) {}
+    doom_game_interface_c() : filename(nullptr) {}
 
     ~doom_game_interface_c() { StringFree(filename); }
 
@@ -1028,21 +1029,8 @@ bool doom_game_interface_c::Start(const char *preset) {
 }
 
 bool doom_game_interface_c::BuildNodes() {
-    char *temp_name = ReplaceExtension(filename, "tmp");
 
-    FileDelete(temp_name);
-
-    if (!FileRename(filename, temp_name)) {
-        LogPrintf("WARNING: could not rename file to .TMP!\n");
-        StringFree(temp_name);
-        return false;
-    }
-
-    bool result = DM_BuildNodes(temp_name, filename);
-
-    FileDelete(temp_name);
-
-    StringFree(temp_name);
+    bool result = DM_BuildNodes(filename);
 
     return result;
 }
@@ -1125,7 +1113,7 @@ void doom_game_interface_c::EndLevel() {
     DM_EndLevel(level_name);
 
     StringFree(level_name);
-    level_name = NULL;
+    level_name = nullptr;
 }
 
 game_interface_c *Doom_GameObject() { return new doom_game_interface_c(); }

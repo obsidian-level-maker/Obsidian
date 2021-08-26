@@ -1,4 +1,4 @@
--- Obsidian (the stone) theme by Frozsoul
+-- Obsidian (the stone) inspired theme by Frozsoul
 
 -- THEME FILE : OBSIDIAN Beta 19 Preview
 -- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted
@@ -8,13 +8,17 @@ window_scaling      = 0
 font_scaling      = 16
 font_theme      = 0
 widget_theme      = 1
-box_theme      = 5
-button_theme      = 0
+box_theme      = 0
+button_theme      = 1
 single_pane = 0
+use_system_fonts = 0
 color_scheme      = 1
 text_red      = 239
 text_green      = 239
 text_blue      = 239
+text2_red      = 255
+text2_green      = 255
+text2_blue      = 255
 bg_red      = 18
 bg_green      = 18
 bg_blue      = 16

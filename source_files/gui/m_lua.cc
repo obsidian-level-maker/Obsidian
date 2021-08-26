@@ -21,6 +21,9 @@
 #include "m_lua.h"
 
 #include <algorithm>
+#ifdef WIN32
+#include <iso646.h>
+#endif
 
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
@@ -30,6 +33,11 @@
 #include "lib_signal.h"
 #include "lib_util.h"
 #include "main.h"
+#if defined(__MINGW32__)
+#include "subprocess-mingw.h"
+#else
+#include "subprocess.h"
+#endif
 #include "physfs.h"
 #include "twister.h"
 
@@ -56,6 +64,65 @@ bool is_dir(char *temp_name) {
 
 // color maps
 color_mapping_t color_mappings[MAX_COLOR_MAPS];
+
+// LUA: format_prefix(levelcount, OB_CONFIG.game, OB_CONFIG.theme, formatstring)
+//
+int gui_format_prefix(lua_State *L) {
+    const char *levelcount = luaL_checkstring(L, 1);
+    const char *game = luaL_checkstring(L, 2);
+    const char *theme = luaL_checkstring(L, 3);
+    const char *format = luaL_checkstring(L, 4);
+
+    SYS_ASSERT(levelcount && game && theme && format);
+
+    const char *ff_args[10];
+
+#ifdef WIN32
+    ff_args[0] = "tools/filename_formatter.exe";
+#else
+    ff_args[0] = "tools/filename_formatter";
+#endif
+    ff_args[1] = "-c";
+    ff_args[2] = levelcount;
+    ff_args[3] = "-g";
+    ff_args[4] = game;
+    ff_args[5] = "-t";
+    ff_args[6] = theme;
+    ff_args[7] = "-f";
+    if (StringCaseCmp(format, "version") == 0) {
+        std::string tempstring = OBSIDIAN_SHORT_VERSION;
+        tempstring.append("_");
+        ff_args[8] = tempstring.c_str();
+    } else if (StringCaseCmp(format, "custom") == 0) {
+        ff_args[8] = custom_prefix.c_str();
+    } else {
+        ff_args[8] = format;
+    }
+    ff_args[9] = NULL;
+
+    struct subprocess_s subprocess;
+    int result =
+        subprocess_create(ff_args, subprocess_option_no_window, &subprocess);
+    if (result != 0) {
+        return 0;
+    }
+
+    // Read the output of filename_formatter
+    FILE *p_stdout = subprocess_stdout(&subprocess);
+    char prefix[100];
+    fgets(prefix, 100, p_stdout);
+
+    result = subprocess_destroy(&subprocess);
+    if (result != 0) {
+        return 0;
+    } else {
+        lua_pushstring(L, (const char *)prefix);
+        return 1;
+    }
+
+    // Hopefully we don't get here
+    return 0;
+}
 
 // LUA: raw_log_print(str)
 //
@@ -404,18 +471,18 @@ int gui_add_module(lua_State *L) {
         Main_FatalError("Script problem: gui.add_module called late.\n");
     }
 
-	if (single_pane) {
-        main_win->left_mods->AddModule(id, label, tip, red, green, blue);		
-	} else {
-		if (StringCaseCmp(where, "left") == 0) {
-		    main_win->left_mods->AddModule(id, label, tip, red, green, blue);
-		} else if (StringCaseCmp(where, "right") == 0) {
-		    main_win->right_mods->AddModule(id, label, tip, red, green, blue);
-		} else {
-		    return luaL_error(L, "add_module: unknown where value '%s'\n", where);
-		}	
-	}
-
+    if (single_pane) {
+        main_win->left_mods->AddModule(id, label, tip, red, green, blue);
+    } else {
+        if (StringCaseCmp(where, "left") == 0) {
+            main_win->left_mods->AddModule(id, label, tip, red, green, blue);
+        } else if (StringCaseCmp(where, "right") == 0) {
+            main_win->right_mods->AddModule(id, label, tip, red, green, blue);
+        } else {
+            return luaL_error(L, "add_module: unknown where value '%s'\n",
+                              where);
+        }
+    }
 
     return 0;
 }
@@ -440,7 +507,7 @@ int gui_set_module(lua_State *L) {
     // try both columns
     main_win->left_mods->EnableMod(module, opt_val);
     if (!single_pane) {
-    	main_win->right_mods->EnableMod(module, opt_val);
+        main_win->right_mods->EnableMod(module, opt_val);
     }
 
     return 0;
@@ -466,7 +533,7 @@ int gui_show_module(lua_State *L) {
 
     main_win->left_mods->ShowModule(module, shown);
     if (!single_pane) {
-    	main_win->right_mods->ShowModule(module, shown);
+        main_win->right_mods->ShowModule(module, shown);
     }
 
     return 0;
@@ -501,7 +568,8 @@ int gui_add_module_option(lua_State *L) {
 
     main_win->left_mods->AddOption(module, option, label, tip, longtip, gap);
     if (!single_pane) {
-    	main_win->right_mods->AddOption(module, option, label, tip, longtip, gap);
+        main_win->right_mods->AddOption(module, option, label, tip, longtip,
+                                        gap);
     }
 
     return 0;
@@ -518,13 +586,13 @@ int gui_add_module_slider_option(lua_State *L) {
     const char *longtip = luaL_optstring(L, 5, NULL);
 
     int gap = luaL_optinteger(L, 6, 0);
-    
+
     double min = luaL_checknumber(L, 7);
     double max = luaL_checknumber(L, 8);
     double inc = luaL_checknumber(L, 9);
 
-	const char *units = luaL_checkstring(L, 10);
-	const char *presets = luaL_checkstring(L, 11);
+    const char *units = luaL_checkstring(L, 10);
+    const char *presets = luaL_checkstring(L, 11);
     const char *nan = luaL_checkstring(L, 12);
 
     SYS_ASSERT(module && option);
@@ -542,9 +610,13 @@ int gui_add_module_slider_option(lua_State *L) {
 
     // FIXME : error if module is unknown
 
-    main_win->left_mods->AddSliderOption(module, option, label, tip, longtip, gap, min, max, inc, units, presets, nan);
+    main_win->left_mods->AddSliderOption(module, option, label, tip, longtip,
+                                         gap, min, max, inc, units, presets,
+                                         nan);
     if (!single_pane) {
-    	main_win->right_mods->AddSliderOption(module, option, label, tip, longtip, gap, min, max, inc, units, presets, nan);
+        main_win->right_mods->AddSliderOption(module, option, label, tip,
+                                              longtip, gap, min, max, inc,
+                                              units, presets, nan);
     }
 
     return 0;
@@ -561,7 +633,7 @@ int gui_add_module_button_option(lua_State *L) {
     const char *longtip = luaL_optstring(L, 5, NULL);
 
     int gap = luaL_optinteger(L, 6, 0);
-    
+
     SYS_ASSERT(module && option);
 
     //	DebugPrintf("  add_module_option: %s.%s\n", module, option);
@@ -577,9 +649,11 @@ int gui_add_module_button_option(lua_State *L) {
 
     // FIXME : error if module is unknown
 
-    main_win->left_mods->AddButtonOption(module, option, label, tip, longtip, gap);
+    main_win->left_mods->AddButtonOption(module, option, label, tip, longtip,
+                                         gap);
     if (!single_pane) {
-    	main_win->right_mods->AddButtonOption(module, option, label, tip, longtip, gap);
+        main_win->right_mods->AddButtonOption(module, option, label, tip,
+                                              longtip, gap);
     }
 
     return 0;
@@ -611,7 +685,7 @@ int gui_add_option_choice(lua_State *L) {
 
     main_win->left_mods->AddOptionChoice(module, option, id, label);
     if (!single_pane) {
-    	main_win->right_mods->AddOptionChoice(module, option, id, label);
+        main_win->right_mods->AddOptionChoice(module, option, id, label);
     }
 
     return 0;
@@ -638,17 +712,17 @@ int gui_set_module_option(lua_State *L) {
                           option);
     }
 
-	if (!single_pane) {
-		if (!(main_win->left_mods->SetOption(module, option, value) ||
-		      main_win->right_mods->SetOption(module, option, value))) {
-		    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-		                      module, option);
-		}
+    if (!single_pane) {
+        if (!(main_win->left_mods->SetOption(module, option, value) ||
+              main_win->right_mods->SetOption(module, option, value))) {
+            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                              module, option);
+        }
     } else {
-		if (!main_win->left_mods->SetOption(module, option, value)) {
-		    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-		                      module, option);
-		}    
+        if (!main_win->left_mods->SetOption(module, option, value)) {
+            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                              module, option);
+        }
     }
 
     return 0;
@@ -672,18 +746,18 @@ int gui_set_module_slider_option(lua_State *L) {
                           option);
     }
 
-	if (!single_pane) {
-		if (!(main_win->left_mods->SetSliderOption(module, option, value) ||
-		      main_win->right_mods->SetSliderOption(module, option, value))) {
-		    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-		                      module, option);
-		}
-	} else {
-		if (!main_win->left_mods->SetSliderOption(module, option, value)) {
-		    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-		                      module, option);
-		}
-	}
+    if (!single_pane) {
+        if (!(main_win->left_mods->SetSliderOption(module, option, value) ||
+              main_win->right_mods->SetSliderOption(module, option, value))) {
+            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                              module, option);
+        }
+    } else {
+        if (!main_win->left_mods->SetSliderOption(module, option, value)) {
+            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                              module, option);
+        }
+    }
 
     return 0;
 }
@@ -695,7 +769,7 @@ int gui_set_module_button_option(lua_State *L) {
     const char *option = luaL_checkstring(L, 2);
     int value = luaL_checkinteger(L, 3);
 
-    SYS_ASSERT(module && option && !isnan(value));
+    SYS_ASSERT(module && option);
 
     if (!main_win) {
         return 0;
@@ -706,18 +780,18 @@ int gui_set_module_button_option(lua_State *L) {
                           option);
     }
 
-	if (!single_pane) {
-		if (!(main_win->left_mods->SetButtonOption(module, option, value) ||
-		      main_win->right_mods->SetButtonOption(module, option, value))) {
-		    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-		                      module, option);
-		}
-	} else {
-		if (!main_win->left_mods->SetButtonOption(module, option, value)) {
-		    return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
-		                      module, option);
-		}	
-	}
+    if (!single_pane) {
+        if (!(main_win->left_mods->SetButtonOption(module, option, value) ||
+              main_win->right_mods->SetButtonOption(module, option, value))) {
+            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                              module, option);
+        }
+    } else {
+        if (!main_win->left_mods->SetButtonOption(module, option, value)) {
+            return luaL_error(L, "set_module_option: unknown option '%s.%s'\n",
+                              module, option);
+        }
+    }
 
     return 0;
 }
@@ -735,47 +809,74 @@ int gui_get_module_slider_value(lua_State *L) {
     if (!main_win) {
         return 0;
     }
-	
-	double value;
-	std::string nan_value;
-	
-	if (main_win->left_mods->FindID(module)) {
-		if (main_win->left_mods->FindID(module)->FindSliderOpt(option)) {
-			if (main_win->left_mods->FindID(module)->FindSliderOpt(option)->nan_choices.size() > 0) {
-				if (main_win->left_mods->FindID(module)->FindSliderOpt(option)->nan_options->value() > 0) {
-					nan_value = main_win->left_mods->FindID(module)->FindSliderOpt(option)->nan_options->text(main_win->left_mods->FindID(module)->FindSliderOpt(option)->nan_options->value());
-					lua_pushstring(L, nan_value.c_str());
-				} else {
-					value = main_win->left_mods->FindID(module)->FindSliderOpt(option)->mod_slider->value();
-					lua_pushnumber(L, value);				
-				}
-			} else {
-				value = main_win->left_mods->FindID(module)->FindSliderOpt(option)->mod_slider->value();
-				lua_pushnumber(L, value);
-			}
-		}	
-	} else if (main_win->right_mods) {
-		if (main_win->right_mods->FindID(module)) {
-			if (main_win->right_mods->FindID(module)->FindSliderOpt(option)) {
-				if (main_win->right_mods->FindID(module)->FindSliderOpt(option)->nan_choices.size() > 0) {
-					if (main_win->right_mods->FindID(module)->FindSliderOpt(option)->nan_options->value() > 0) {
-						nan_value = main_win->right_mods->FindID(module)->FindSliderOpt(option)->nan_options->text(main_win->right_mods->FindID(module)->FindSliderOpt(option)->nan_options->value());
-						lua_pushstring(L, nan_value.c_str());
-					} else {
-						value = main_win->right_mods->FindID(module)->FindSliderOpt(option)->mod_slider->value();
-						lua_pushnumber(L, value);				
-					}
-				} else {
-					value = main_win->right_mods->FindID(module)->FindSliderOpt(option)->mod_slider->value();
-					lua_pushnumber(L, value);
-				}	
-			}
-		}	
-	} else {
-		return luaL_error(L, "get_module_slider_value: unknown option '%s.%s'\n",
+
+    double value;
+    std::string nan_value;
+
+    if (main_win->left_mods->FindID(module)) {
+        if (main_win->left_mods->FindID(module)->FindSliderOpt(option)) {
+            if (main_win->left_mods->FindID(module)
+                    ->FindSliderOpt(option)
+                    ->nan_choices.size() > 0) {
+                if (main_win->left_mods->FindID(module)
+                        ->FindSliderOpt(option)
+                        ->nan_options->value() > 0) {
+                    nan_value = main_win->left_mods->FindID(module)
+                                    ->FindSliderOpt(option)
+                                    ->nan_options->text(
+                                        main_win->left_mods->FindID(module)
+                                            ->FindSliderOpt(option)
+                                            ->nan_options->value());
+                    lua_pushstring(L, nan_value.c_str());
+                } else {
+                    value = main_win->left_mods->FindID(module)
+                                ->FindSliderOpt(option)
+                                ->mod_slider->value();
+                    lua_pushnumber(L, value);
+                }
+            } else {
+                value = main_win->left_mods->FindID(module)
+                            ->FindSliderOpt(option)
+                            ->mod_slider->value();
+                lua_pushnumber(L, value);
+            }
+        }
+    } else if (main_win->right_mods) {
+        if (main_win->right_mods->FindID(module)) {
+            if (main_win->right_mods->FindID(module)->FindSliderOpt(option)) {
+                if (main_win->right_mods->FindID(module)
+                        ->FindSliderOpt(option)
+                        ->nan_choices.size() > 0) {
+                    if (main_win->right_mods->FindID(module)
+                            ->FindSliderOpt(option)
+                            ->nan_options->value() > 0) {
+                        nan_value = main_win->right_mods->FindID(module)
+                                        ->FindSliderOpt(option)
+                                        ->nan_options->text(
+                                            main_win->right_mods->FindID(module)
+                                                ->FindSliderOpt(option)
+                                                ->nan_options->value());
+                        lua_pushstring(L, nan_value.c_str());
+                    } else {
+                        value = main_win->right_mods->FindID(module)
+                                    ->FindSliderOpt(option)
+                                    ->mod_slider->value();
+                        lua_pushnumber(L, value);
+                    }
+                } else {
+                    value = main_win->right_mods->FindID(module)
+                                ->FindSliderOpt(option)
+                                ->mod_slider->value();
+                    lua_pushnumber(L, value);
+                }
+            }
+        }
+    } else {
+        return luaL_error(L,
+                          "get_module_slider_value: unknown option '%s.%s'\n",
                           module, option);
     }
-    
+
     return 1;
 }
 
@@ -792,26 +893,31 @@ int gui_get_module_button_value(lua_State *L) {
     if (!main_win) {
         return 0;
     }
-	
-	int value;
-	
-	if (main_win->left_mods->FindID(module)) {
-		if (main_win->left_mods->FindID(module)->FindButtonOpt(option)) {
-			value = main_win->left_mods->FindID(module)->FindButtonOpt(option)->mod_check->value();
-			lua_pushnumber(L, value);	
-		}	
-	} else if (main_win->right_mods) {
-		if (main_win->right_mods->FindID(module)) {
-			if (main_win->right_mods->FindID(module)->FindButtonOpt(option)) {
-				value = main_win->right_mods->FindID(module)->FindButtonOpt(option)->mod_check->value();
-				lua_pushnumber(L, value);	
-			}	
-		}
-	} else {
-		return luaL_error(L, "get_module_slider_value: unknown option '%s.%s'\n",
+
+    int value;
+
+    if (main_win->left_mods->FindID(module)) {
+        if (main_win->left_mods->FindID(module)->FindButtonOpt(option)) {
+            value = main_win->left_mods->FindID(module)
+                        ->FindButtonOpt(option)
+                        ->mod_check->value();
+            lua_pushnumber(L, value);
+        }
+    } else if (main_win->right_mods) {
+        if (main_win->right_mods->FindID(module)) {
+            if (main_win->right_mods->FindID(module)->FindButtonOpt(option)) {
+                value = main_win->right_mods->FindID(module)
+                            ->FindButtonOpt(option)
+                            ->mod_check->value();
+                lua_pushnumber(L, value);
+            }
+        }
+    } else {
+        return luaL_error(L,
+                          "get_module_slider_value: unknown option '%s.%s'\n",
                           module, option);
     }
-    
+
     return 1;
 }
 
@@ -1081,6 +1187,9 @@ extern int Q1_add_mapmodel(lua_State *L);
 extern int Q1_add_tex_wad(lua_State *L);
 
 static const luaL_Reg gui_script_funcs[] = {
+
+    {"format_prefix", gui_format_prefix},
+
     {"raw_log_print", gui_raw_log_print},
     {"raw_debug_print", gui_raw_debug_print},
 
@@ -1475,7 +1584,7 @@ void Script_Close() {
 
     LUA_ST = NULL;
 
-	has_added_buttons = false; // Needed if doing live restart
+    has_added_buttons = false;  // Needed if doing live restart
 
     LogPrintf("\n--- CLOSED LUA VM ---\n\n");
 }

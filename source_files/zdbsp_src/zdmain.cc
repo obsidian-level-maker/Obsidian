@@ -124,79 +124,78 @@ int zdmain(const char *filename, zdbsp_options options) {
     try {
         START_COUNTER(t1a, t1b, t1c)
 
-        if (true) {
-            // When the input and output files are the same, output will go to
-            // a temporary file. After everything is done, the input file is
-            // deleted and the output file is renamed to match the input file.
+        // When the input and output files are the same, output will go to
+        // a temporary file. After everything is done, the input file is
+        // deleted and the output file is renamed to match the input file.
 
-            char *out = new char[strlen(OutName) + 3], *dot;
+		char *out = new char[strlen(OutName) + 3], *dot;
 
-            if (out == NULL) {
-                throw std::runtime_error(
-                    "Could not create temporary file name.");
-            }
-
-            strcpy(out, OutName);
-            dot = strrchr(out, '.');
-            if (dot && (dot[1] == 'w' || dot[1] == 'W') &&
-                (dot[2] == 'a' || dot[2] == 'A') &&
-                (dot[3] == 'd' || dot[3] == 'D') && dot[4] == 0) {
-                // *.wad becomes *.daw
-                dot[1] = 'd';
-                dot[3] = 'w';
-            } else {
-                // * becomes *.x
-                strcat(out, ".x");
-            }
-            OutName = out;
-            fixSame = true;
+		if (out == NULL) {
+            throw std::runtime_error(
+                "Could not create temporary file name.");
         }
 
-        {
-            FWadReader inwad(InName);
-            FWadWriter outwad(OutName, inwad.IsIWAD());
+        strcpy(out, OutName);
+        dot = strrchr(out, '.');
+        if (dot && (dot[1] == 'w' || dot[1] == 'W') &&
+            (dot[2] == 'a' || dot[2] == 'A') &&
+            (dot[3] == 'd' || dot[3] == 'D') && dot[4] == 0) {
+            // *.wad becomes *.daw
+            dot[1] = 'd';
+            dot[3] = 'w';
+        } else {
+            // * becomes *.x
+            strcat(out, ".x");
+        }
+        OutName = out;
+        fixSame = true;
 
-            int lump = 0;
-            int max = inwad.NumLumps();
+        FWadReader inwad(InName);
+        FWadWriter outwad(OutName, inwad.IsIWAD());
 
-            while (lump < max) {
-                if (inwad.IsMap(lump) &&
-                    (!Map || strcasecmp(inwad.LumpName(lump), Map) == 0)) {
-                    START_COUNTER(t2a, t2b, t2c)
-                    FProcessor builder(inwad, lump);
-                    builder.Write(outwad);
-                    END_COUNTER(t2a, t2b, t2c, "   %.3f seconds.\n")
+        int lump = 0;
+        int max = inwad.NumLumps();
 
-                    lump = inwad.LumpAfterMap(lump);
-                } else if (inwad.IsGLNodes(lump)) {
-                    // Ignore GL nodes from the input for any maps we process.
-                    if (BuildNodes &&
-                        (Map == NULL ||
-                         strcasecmp(inwad.LumpName(lump) + 3, Map) == 0)) {
-                        lump = inwad.SkipGLNodes(lump);
-                    } else {
-                        outwad.CopyLump(inwad, lump);
-                        ++lump;
-                    }
+        while (lump < max) {
+            if (inwad.IsMap(lump) &&
+                (!Map || strcasecmp(inwad.LumpName(lump), Map) == 0)) {
+                START_COUNTER(t2a, t2b, t2c)
+                FProcessor builder(inwad, lump);
+                builder.Write(outwad);
+                END_COUNTER(t2a, t2b, t2c, "   %.3f seconds.\n")
+
+                lump = inwad.LumpAfterMap(lump);
+            } else if (inwad.IsGLNodes(lump)) {
+                // Ignore GL nodes from the input for any maps we process.
+                if (BuildNodes &&
+                    (Map == NULL ||
+                     strcasecmp(inwad.LumpName(lump) + 3, Map) == 0)) {
+                    lump = inwad.SkipGLNodes(lump);
                 } else {
-                    // printf ("copy %s\n", inwad.LumpName (lump));
                     outwad.CopyLump(inwad, lump);
                     ++lump;
                 }
-            }
-
-            outwad.Close();
-        }
-
-        if (fixSame) {
-            remove(InName);
-            if (0 != rename(OutName, InName)) {
-                printf(
-                    "The output file could not be renamed to %s.\nYou can find "
-                    "it as %s.\n",
-                    InName, OutName);
+            } else {
+                // printf ("copy %s\n", inwad.LumpName (lump));
+                outwad.CopyLump(inwad, lump);
+                ++lump;
             }
         }
+
+        outwad.Close();
+        inwad.Close();
+		
+		if (fixSame) {
+			remove(InName);		
+			
+			if (0 != rename(OutName, InName)) {
+				printf(
+					"The output file could not be renamed to %s.\nYou can find "
+					"it as %s.\n",
+					InName, OutName);
+					return 20;
+			}
+		}
 
         END_COUNTER(t1a, t1b, t1c, "\nTotal time: %.3f seconds.\n")
     } catch (std::runtime_error &msg) {

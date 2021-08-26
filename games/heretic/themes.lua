@@ -292,7 +292,7 @@ HERETIC.THEMES =
 
     skyboxes =
     {
-      Skybox_castle_skybox = 50,
+      Skybox_city_skybox = 50,
     },
 
     steps_mat = "CSTLRCK",
@@ -432,6 +432,11 @@ HERETIC.THEMES =
     {
       sharp = 1,
       curved = 0.1,
+    },
+
+    skyboxes =
+    {
+      Skybox_maw_skybox = 50,
     },
 
     steps_mat = "SQPEB1",
@@ -861,6 +866,11 @@ HERETIC.THEMES =
     {
       sharp = 1,
       curved = 0.1,
+    },
+
+    skyboxes =
+    {
+      Skybox_demense_skybox = 50,
     },
 
     steps_mat = "SQPEB1",

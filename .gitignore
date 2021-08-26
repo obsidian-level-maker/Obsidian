@@ -12,6 +12,9 @@ build/
 .cache/
 .vscode/
 
+# VS
+.vs/
+
 # CLion
 .idea/
 cmake-build-*
@@ -19,8 +22,8 @@ cmake-build-*
 # User dirs
 addons/*.pk3
 
-tools/dumpbsp/dumpbsp_q3
-tools/dumpbsp/dumpbsp_q3/obj_q3
+tools/filename_formatter
+tools/filename_formatter.exe
 
 web/out
 web/shots

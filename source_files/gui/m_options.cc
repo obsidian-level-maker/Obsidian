@@ -48,6 +48,8 @@ static void Parse_Option(const char *name, const char *value) {
         last_directory = StringDup(value);
     } else if (StringCaseCmp(name, "filename_prefix") == 0) {
         filename_prefix = atoi(value);
+    } else if (StringCaseCmp(name, "custom_prefix") == 0) {
+        custom_prefix = value;
     } else {
         LogPrintf("Unknown option: '%s'\n", name);
     }
@@ -173,6 +175,7 @@ bool Options_Save(const char *filename) {
     fprintf(option_fp, "overwrite_warning = %d\n", overwrite_warning ? 1 : 0);
     fprintf(option_fp, "debug_messages = %d\n", debug_messages ? 1 : 0);
     fprintf(option_fp, "filename_prefix = %d\n", filename_prefix);
+    fprintf(option_fp, "custom_prefix = %s\n", custom_prefix.c_str());
 
     if (last_directory) {
         fprintf(option_fp, "\n");
@@ -201,6 +204,9 @@ class UI_OptionsWin : public Fl_Window {
    private:
     UI_CustomMenu *opt_language;
     UI_CustomMenu *opt_filename_prefix;
+    
+    Fl_Button *opt_custom_prefix;
+    UI_HelpLink *custom_prefix_help;
 
     UI_CustomCheckBox *opt_backups;
     UI_CustomCheckBox *opt_overwrite;
@@ -288,7 +294,50 @@ class UI_OptionsWin : public Fl_Window {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         filename_prefix = that->opt_filename_prefix->value();
+              
+        fl_alert("%s", _("File prefix changes require a restart.\nOBSIDIAN will "
+             "now restart."));
+
+        main_action = MAIN_RESTART;
+
+        that->want_quit = true;
+        
     }
+    
+    static void callback_PrefixHelp(Fl_Widget *w, void *data) {
+		fl_cursor(FL_CURSOR_DEFAULT);
+		Fl_Window *win = new Fl_Window(640, 480, "Custom Prefix");
+		Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+		Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640-40, 480-40, NULL);
+		disp->buffer(buff);
+		disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+		win->resizable(*disp);
+		win->hotspot(0, 0, 0);
+		win->set_modal();
+		win->show();
+		buff->text("Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n\
+%year or %Y: The current year.\n\n\
+%month or %M: The current month.\n\n\
+%day or %D: The current day.\n\n\
+%hour or %h: The current hour.\n\n\
+%minute or %m: The current minute.\n\n\
+%second or %s: The current second.\n\n\
+%version or %v: The current Obsidian version.\n\n\
+%game or %g: Which game the WAD is for.\n\n\
+%theme or %t: Which theme was selected from the game's choices.\n\n\
+%count or %c: The number of levels in the generated WAD."); 
+	}
+    
+    static void callback_SetCustomPrefix(Fl_Widget *w, void *data) {
+
+		const char *user_buf = fl_input(_("Enter Custom Prefix Format:"), custom_prefix.c_str());
+
+		if (user_buf) {
+			custom_prefix = user_buf;
+		}
+        
+    }
+    
 };
 
 //
@@ -328,7 +377,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
         new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Filename Prefix: "));
     opt_filename_prefix->align(FL_ALIGN_LEFT);
     opt_filename_prefix->callback(callback_FilenamePrefix, this);
-    opt_filename_prefix->add(_("Date and Time|Number of Levels|Nothing"));
+    opt_filename_prefix->add(_("Date and Time|Number of Levels|Game|Theme|Version|Custom|Nothing"));
     opt_filename_prefix->labelfont(font_style);
 	opt_filename_prefix->textfont(font_style);
 	opt_filename_prefix->textcolor(FONT2_COLOR);
@@ -336,6 +385,21 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 	opt_filename_prefix->value(filename_prefix);
 
     cy += opt_filename_prefix->h() + y_step;
+	
+    opt_custom_prefix =
+        new Fl_Button(136 + KF * 40, cy, kf_w(130), kf_h(24), _("Set Custom Prefix..."));
+    opt_custom_prefix->box(button_style);
+    opt_custom_prefix->visible_focus(0);
+    opt_custom_prefix->color(BUTTON_COLOR);
+    opt_custom_prefix->callback(callback_SetCustomPrefix, this);
+    opt_custom_prefix->labelfont(font_style);
+    opt_custom_prefix->labelcolor(FONT2_COLOR);
+
+    custom_prefix_help = new UI_HelpLink(136 + KF * 40 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24), "?");
+    custom_prefix_help->labelfont(font_style);
+    custom_prefix_help->callback(callback_PrefixHelp, this);
+
+    cy += opt_custom_prefix->h() + y_step * 2;
 
     opt_backups = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24),
                                       _(" Create Backups"));
