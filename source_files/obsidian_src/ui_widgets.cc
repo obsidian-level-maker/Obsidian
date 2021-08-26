@@ -608,6 +608,26 @@ UI_ModuleDropDown::UI_ModuleDropDown(int x, int y, int w, int h)
 
 UI_ModuleDropDown::~UI_ModuleDropDown() {}
 
+int UI_ModuleDropDown::handle(int event) {
+  switch (event) {
+  case FL_RELEASE:
+    if (box()) {
+        if (value()) {
+            copy_label("  ");
+            redraw();
+            copy_label("@-2line");
+        } else {
+            copy_label(" ");
+            redraw();
+            copy_label("@-2+");
+        }
+        redraw();
+    }
+  default:
+    return Fl_Button::handle(event);
+  }
+}
+
 // Custom draw function to use the checkmark style regardless of box type and
 // respect custom colors
 void UI_ModuleDropDown::draw() {
@@ -619,13 +639,6 @@ void UI_ModuleDropDown::draw() {
 
     draw_box(FL_FLAT_BOX, x() + dx, y() + dy, W, W, WINDOW_BG);
     lx = dx + W + 2;
-    copy_label("  ");
-    redraw();
-    if (value()) {
-        copy_label("@-2line");
-    } else {
-        copy_label("@-2+");
-    }
     draw_label(x() + lx, y(), w() - lx - bx, h());
 }
 

@@ -282,6 +282,8 @@ class UI_ModuleDropDown : public Fl_Check_Button {
 
    private:
     void draw();
+
+    int handle(int event);
 };
 
 #endif /* __UI_WIDGETS_H__ */
