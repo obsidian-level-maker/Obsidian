@@ -110,7 +110,7 @@ class AIMarine : Actor
         Height 56;
         Mass 100;
         Speed 8;
-        Painchance 255;
+        Painchance 190;
         Tag "Friendly Marine";
         MONSTER;
         -COUNTKILL
@@ -1290,7 +1290,6 @@ MARINE_CLOSET_TUNE.TECHWPN =
 
 function MARINE_CLOSET_TUNE.setup(self)
   PARAM.marine_gen = true
-  PARAM.MARINESCRIPT = ""
   PARAM.marine_closets = 0
   PARAM.marine_marines = 0
   PARAM.marine_tech = 1
@@ -1300,7 +1299,7 @@ function MARINE_CLOSET_TUNE.setup(self)
       if opt.valuator == "button" then
         PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
       elseif opt.valuator == "slider" then
-        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)
       end
     else
       local value = self.options[name].value
@@ -1462,21 +1461,25 @@ function MARINE_CLOSET_TUNE.all_done()
     scripty = string.gsub(scripty, "MTRANSLATE", MARINE_CLOSET_TUNE.TEMPLATES.TRANSL)
     scripty = string.gsub(scripty, "MTRANSDEF", "\"" .. PARAM.m_c_color .. "\"")
   end
-  
+
   if PARAM.bool_m_c_pdamage == 1 then
     scripty = string.gsub(scripty, "MPLAYERDAMAGEX", MARINE_CLOSET_TUNE.TEMPLATES.PLDMG)
   else
     scripty = string.gsub(scripty, "MPLAYERDAMAGEX", "")
   end
-  
+
   if PARAM.bool_m_c_rip == 1 then
     scripty = string.gsub(scripty, "MDEATHMESSAGEX", MARINE_CLOSET_TUNE.TEMPLATES.DTHMSG)
   else
     scripty = string.gsub(scripty, "MDEATHMESSAGEX", "")
   end
 
-
-  PARAM.MARINESCRIPT = PARAM.MARINESCRIPT .. scripty
+  if SCRIPTS.zscript then
+    SCRIPTS.zscript = SCRIPTS.zscript .. scripty
+  else
+    SCRIPTS.zscript = scripty
+  end
+  --PARAM.MARINESCRIPT = PARAM.MARINESCRIPT .. scripty
   PARAM.MARINEMAPINFO = MARINE_CLOSET_TUNE.MAPINFO
 
   if PARAM.m_c_color ~= "MarAI1" then
@@ -1599,7 +1602,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       presets = "",
       tooltip = "Sets most amount of marines that can spawn per closet.",
     },
-    
+
     float_m_c_health =
     {
       name = "float_m_c_health",
@@ -1690,7 +1693,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       "Map Start: Closets are active on map start.",
       gap = 1
     },
-    
+
     m_c_color =
     {
       name = "m_c_color",
@@ -1700,7 +1703,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       default = "MarAI1",
       tooltip = "Lets you choose the color of marines, including option for random color per marine.",
     },
-    
+
     m_c_ff =
     {
       name = "m_c_ff",
@@ -1712,7 +1715,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       "If this is enabled marines can damage player and original puffs and projectiles are used making them affected by mods that replace those.\n"..
       "Additionally if self damage variant is chosen marines can still get hurt by exploding barrels and such",
     },
-	
+
   	bool_m_c_pdamage =
     {
       name = "bool_m_c_pdamage",
@@ -1721,8 +1724,8 @@ OB_MODULES["gzdoom_marine_closets"] =
       valuator = "button",
       default = 0,
       tooltip = "If enabled, marines will never take damage from player owned sources.",
-    },    
-	
+    },
+
     m_c_sprites =
     {
       name = "m_c_sprites",
@@ -1756,7 +1759,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       tooltip = "If set, this strength setting is used in the room with marine closet instead of normal one.",
       gap = 1
     },
-    
+
     bool_m_c_power =
     {
       name = "bool_m_c_power",
@@ -1776,8 +1779,8 @@ OB_MODULES["gzdoom_marine_closets"] =
       default = 0,
       tooltip = "By default marines try to follow the player if they have nothing else to do but would otherwise prioritize chasing enemies, and are also unable to follow player through rough terrain.\n" ..
       "If this is enabled marines will much harder prioritize following player and will teleport if they are too far away.",
-    },    
-    
+    },
+
     bool_m_c_boss =
     {
       name = "bool_m_c_boss",
@@ -1786,8 +1789,8 @@ OB_MODULES["gzdoom_marine_closets"] =
       valuator = "button",
       default = 0,
       tooltip = "Allows or disallows marine closets to spawn on gotchas and boss generator levels.",
-    },   
-	
+    },
+
   	bool_m_c_rip =
     {
       name = "bool_m_c_rip",
@@ -1796,7 +1799,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       valuator = "button",
       default = 0,
       tooltip = "If enabled, will print a message in message log whenever a marine dies.",
-    },   
+    },
 
     bool_m_c_in_secret =
     {

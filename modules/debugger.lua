@@ -100,16 +100,6 @@ OB_MODULES["debugger"] =
       priority=100,
     },
 
-    bool_print_prefab_use =
-    {
-      name = "bool_print_prefab_use",
-      label=_("Print Prefab Usage"),
-      valuator = "button",
-      default = 0,
-      tooltip="Lists prefabs spawned per map.",
-      priority=98,
-    },
-
     bool_print_story_strings =
     {
       name = "bool_print_story_strings",

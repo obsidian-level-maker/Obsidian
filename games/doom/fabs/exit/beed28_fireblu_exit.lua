@@ -5,6 +5,8 @@ PREFABS.Exit_beed28_fireblu_exit =
   prob  = 250,
   theme = "!tech",
 
+  start_fab_peer = "Start_beed28_fireblu_exit",
+
   where  = "seeds",
   seed_w = 2,
   seed_h = 2,
@@ -32,6 +34,8 @@ PREFABS.Exit_beed28_fireblu_exit_tech =
 
   prob = 250,
   theme = "tech",
+
+  start_fab_peer = "Start_beed28_fireblu_exit_tech",
 
   thing_46 =
   {

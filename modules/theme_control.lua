@@ -23,12 +23,50 @@ THEME_CONTROL.CHOICES =
 {
   "no_change", "NO CHANGE",
 
-  "tech",   "Tech",
-  "urban",  "Urban",
-  "hell",   "Hell",
+  "tech",       "Tech",
+  "urban",      "Urban",
+  "hell",       "Hell",
   --[["wolf",   "Wolfenstein"]] --Sorry, boyos, this theme doesn't even exist at the moment.
-  "egypt",  "Egypt (TNT)",
-  "psycho", "Psychedelic",
+  "egypt",      "Egypt (TNT)",
+  "psycho",     "Psychedelic",
+  "minisodic",  "Minisodic",
+}
+
+
+THEME_CONTROL.DOOM2_MINISODE_LIST =
+{
+  MAP01 = "tech", 
+  MAP02 = "tech",
+  MAP03 = "tech", 
+  MAP04 = "tech", 
+  MAP05 = "urban",
+  MAP06 = "urban",
+  MAP07 = "urban",
+  MAP08 = "urban",
+  MAP09 = "hell",
+  MAP10 = "hell",
+  MAP11 = "hell",
+
+  MAP12 = "tech",
+  MAP13 = "tech",
+  MAP14 = "tech",
+  MAP15 = "urban",
+  MAP16 = "urban",
+  MAP17 = "urban",
+  MAP18 = "hell",
+  MAP19 = "hell",
+  MAP20 = "hell",
+
+  MAP21 = "tech",
+  MAP22 = "tech",
+  MAP23 = "tech",
+  MAP24 = "urban",
+  MAP25 = "urban",
+  MAP26 = "urban",
+  MAP27 = "hell",
+  MAP28 = "hell",
+  MAP29 = "hell",
+  MAP30 = "hell"
 }
 
 
@@ -42,6 +80,10 @@ function THEME_CONTROL.set_a_theme(LEV, opt)
   end
 
   LEV.theme_name = opt.value
+
+  if opt.value == "minisodic" then
+    LEV.theme_name = THEME_CONTROL.DOOM2_MINISODE_LIST[LEV.name]
+  end
 end
 
 
@@ -70,9 +112,7 @@ function THEME_CONTROL.get_levels(self)
 
     local opt = self.options[name]
 
-    -- ignore unknown episodes
     if not opt then goto continue end
-
     THEME_CONTROL.set_a_theme(LEV, opt)
     ::continue::
   end

@@ -2817,7 +2817,20 @@ function Room_floor_ceil_heights()
       end
 
       if not R.floor_mats[A.floor_h] then
-        R.floor_mats[A.floor_h] = rand.key_by_probs(R.theme.floors)
+        if R.is_outdoor then
+          local tex
+          if rand.odds(50) then
+            tex = rand.key_by_probs(R.floor_mat_list)
+            R.floor_mat_list[tex] = R.floor_mat_list[tex] / 4
+            R.floor_mats[A.floor_h] = tex
+          else
+            tex = rand.key_by_probs(R.floor_mat_list_natural)
+            R.floor_mat_list_natural[tex] = R.floor_mat_list_natural[tex] / 4
+            R.floor_mats[A.floor_h] = tex
+          end
+        else
+          R.floor_mats[A.floor_h] = rand.key_by_probs(R.theme.floors)
+        end
       end
 
       if R.is_outdoor then
@@ -3380,7 +3393,7 @@ function Room_floor_ceil_heights()
           if string.gmatch(R.height_style, "short") then
             if add_h > 128 then add_h = 128 end
           elseif string.gmatch(R.height_style, "tall") then
-            add_h = add_h * rand.pick({
+            add_h = add_h * rand.key_by_probs({
               [2] = 8,
               [4] = 4,
               [6] = 2,
@@ -4191,6 +4204,7 @@ function Room_build_all()
 
   ob_invoke_hook("level_layout_finished") --MSSP
 
+  gui.at_level(LEVEL.name .. " (Fabs)", LEVEL.id, #GAME.levels)
   Render_set_all_properties()
 
   Render_all_chunks()

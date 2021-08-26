@@ -5710,6 +5710,8 @@ ARMAETUS_THEMES =
       gtd_wall_hell_engraving_1 = 20,
       gtd_wall_hell_engraving_2 = 20,
       gtd_wall_hell_engraving_3 = 20,
+      --
+      gtd_wall_candles = 50,
     },
 
     window_groups =

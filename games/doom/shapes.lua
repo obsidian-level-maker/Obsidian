@@ -2974,7 +2974,22 @@ AUX_LIQUID_3 =
 -------------------------
 -- MsrSgtShooterPerson's kool x-perimental shapes of definite kool
 
--- MSSP's Greek collonade sort of things. [MSSPCOLLONADE]
+GROW_STAIR_TRI =
+{
+  prob = 40,
+  skip_prob = 50,
+
+  structure =
+  {
+    ".....","AAAAA",
+    ".....","AAAAA",
+    ".....","^A^A^",
+    ".....","11111",
+    "x111x","x111x",
+  }
+},
+
+-- MSSP's Greek COLONNADE sort of things. [MSSPCOLONNADE]
 
 GROW_COLONNADE_1 =
 {
@@ -3133,7 +3148,7 @@ GROW_COLONNADE_MOAT_2X =
   }
 },
 
-GROW_COLLONADE_CORNER =
+GROW_COLONNADE_CORNER =
 {
   prob = 30,
   skip_prob = 75,
@@ -3157,7 +3172,7 @@ GROW_COLLONADE_CORNER =
   }
 },
 
-GROW_COLLONADE_CORNER_LIQUID =
+GROW_COLONNADE_CORNER_LIQUID =
 {
   prob = 30,
   skip_prob = 75,
@@ -3182,7 +3197,7 @@ GROW_COLLONADE_CORNER_LIQUID =
   }
 },
 
-GROW_COLLONADE_CORNER_SOLID =
+GROW_COLONNADE_CORNER_SOLID =
 {
   prob = 15,
   skip_prob = 75,
@@ -3207,7 +3222,7 @@ GROW_COLLONADE_CORNER_SOLID =
   }
 },
 
-GROW_COLLONADE_510_STAIRS_STRAIGHT =
+GROW_COLONNADE_510_STAIRS_STRAIGHT =
 {
   prob = 25,
   skip_prob = 75,
@@ -3223,7 +3238,7 @@ GROW_COLLONADE_510_STAIRS_STRAIGHT =
   }
 },
 
-GROW_COLLONADE_510_STAIRS_STRAIGHT =
+GROW_COLONNADE_510_STAIRS_STRAIGHT =
 {
   prob = 40,
   skip_prob = 75,
@@ -3241,7 +3256,7 @@ GROW_COLLONADE_510_STAIRS_STRAIGHT =
   }
 },
 
-GROW_COLLONADE_510_STAIRS_TRI =
+GROW_COLONNADE_510_STAIRS_TRI =
 {
   prob = 20,
   skip_prob = 75,
@@ -3259,7 +3274,7 @@ GROW_COLLONADE_510_STAIRS_TRI =
   }
 },
 
-GROW_COLLONADE_VAULT =
+GROW_COLONNADE_VAULT =
 {
   prob = 20,
   skip_prob = 75,
@@ -3279,7 +3294,7 @@ GROW_COLLONADE_VAULT =
   }
 },
 
-GROW_COLLONADE_VAULT_NEW_AREA =
+GROW_COLONNADE_VAULT_NEW_AREA =
 {
   prob = 20,
   skip_prob = 75,
@@ -3299,7 +3314,7 @@ GROW_COLLONADE_VAULT_NEW_AREA =
   }
 },
 
-GROW_COLLONADE_VAULT_NEW_AREA_CROSS =
+GROW_COLONNADE_VAULT_NEW_AREA_CROSS =
 {
   prob = 30,
   skip_prob = 80,
@@ -3319,7 +3334,7 @@ GROW_COLLONADE_VAULT_NEW_AREA_CROSS =
   }
 },
 
-GROW_COLLONADE_VAULT_THICK_PILLARS_NEW_AREA =
+GROW_COLONNADE_VAULT_THICK_PILLARS_NEW_AREA =
 {
   prob = 25,
   skip_prob = 75,
@@ -3338,7 +3353,7 @@ GROW_COLLONADE_VAULT_THICK_PILLARS_NEW_AREA =
   }
 },
 
-GROW_COLLONADE_STRAIGHT_VAULT =
+GROW_COLONNADE_STRAIGHT_VAULT =
 {
   prob = 30,
   skip_prob = 35,
@@ -3355,7 +3370,7 @@ GROW_COLLONADE_STRAIGHT_VAULT =
   }
 },
 
-GROW_COLLONADE_STRAIGHT_VAULT_FROM_SIDE =
+GROW_COLONNADE_STRAIGHT_VAULT_FROM_SIDE =
 {
   prob = 30,
   skip_prob = 35,
@@ -3370,7 +3385,7 @@ GROW_COLLONADE_STRAIGHT_VAULT_FROM_SIDE =
   }
 },
 
-GROW_COLLONADE_STRAIGHT_VAULT_LARGE =
+GROW_COLONNADE_STRAIGHT_VAULT_LARGE =
 {
   prob = 40,
   skip_prob = 35,
@@ -3387,7 +3402,7 @@ GROW_COLLONADE_STRAIGHT_VAULT_LARGE =
   }
 },
 
-GROW_COLLONADE_STRAIGHT_VAULT_LARGE_FROM_SIDE =
+GROW_COLONNADE_STRAIGHT_VAULT_LARGE_FROM_SIDE =
 {
   prob = 40,
   skip_prob = 35,
@@ -3404,7 +3419,7 @@ GROW_COLLONADE_STRAIGHT_VAULT_LARGE_FROM_SIDE =
   }
 },
 
-GROW_COLLONADE_STRAIGHT_VAULT_ORION_BELT =
+GROW_COLONNADE_STRAIGHT_VAULT_BELT =
 {
   prob = 50,
   skip_prob = 75,
@@ -3429,6 +3444,30 @@ GROW_COLLONADE_STRAIGHT_VAULT_ORION_BELT =
          ".A","A.",
   }
 },
+
+GROW_COLONNADE_CLOISTER =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xxxx111xxxx","xxxx111xxxx",
+    "...........","11111111111",
+    "...........","11111111111",
+    "...........","11#1#1#1#11",
+    "...........","111AAAAA111",
+    "...........","11#AAAAA#11",
+    "...........","111AAAAA111",
+    "...........","11#AAAAA#11",
+    "...........","111AAAAA111",
+    "...........","11#AAAAA#11",
+    "...........","11111111111",
+    "...........","11111111111",
+  }
+},
+
+-- 3.57-style rules
 
 GROW_357_OPEN_ROOF_NEW_AREA =
 {
@@ -3549,6 +3588,75 @@ GROW_357_ROUND_HOLLOW_HALF =
   }
 },
 
+GROW_357_ROUND_ARCH =
+{
+  prob = 40,
+  skip_prob = 75,
+
+  structure =
+  { 
+    ".......","1111111",
+    ".......","1111111",
+    ".......","1/AAA%1",
+    ".......","1#AAA#1",
+    ".......","1%AAA/1",
+    ".......","1111111",
+    "xx111xx","xx111xx",
+  },
+
+  diagonals =
+  {
+    "1A","A1",
+    "1A","A1",
+  }
+},
+
+GROW_357_ROUND_ARCH_ALT =
+{
+  prob = 40,
+  skip_prob = 80,
+
+  structure =
+  { 
+    ".......","1111111",
+    ".......","1111111",
+    ".......","1/AAA%1",
+    ".......","AA#A#AA",
+    ".......","1%AAA/1",
+    ".......","1111111",
+    "xx111xx","xx111xx",
+  },
+
+  diagonals =
+  {
+    "1A","A1",
+    "1A","A1",
+  }
+},
+
+GROW_357_ROUND_ARCH_ALT_2 =
+{
+  prob = 40,
+  skip_prob = 80,
+
+  structure =
+  { 
+    ".......","11AAA11",
+    ".......","11AAA11",
+    ".......","1/A#A%1",
+    ".......","1AAAAA1",
+    ".......","1%A#A/1",
+    ".......","11AAA11",
+    "xx111xx","xx111xx",
+  },
+
+  diagonals =
+  {
+    "1A","A1",
+    "1A","A1",
+  }
+},
+
 -- MSSP's liquid tiles. [MSSPLIQUID]
 
 GROW_LIQUID_GUTTER_SIDE =
@@ -3602,7 +3710,7 @@ GROW_LIQUID_POOL_1X1 =
 GROW_LIQUID_POOL_2X2 =
 {
   prob = 15,
-  prob_skew = 5,
+  prob_skew = 2,
   skip_prob = 35,
 
   structure =
@@ -3619,7 +3727,7 @@ GROW_LIQUID_POOL_2X2 =
 GROW_LIQUID_POOL_3X1 =
 {
   prob = 15,
-  prob_skew = 5,
+  prob_skew = 2,
   skip_prob = 35,
 
   structure =
@@ -3632,6 +3740,109 @@ GROW_LIQUID_POOL_3X1 =
     "...","111",
     "x1x","x1x",
   },
+},
+
+GROW_LIQUID_POOL_3X1_NEW_AREA =
+{
+  prob = 5,
+  skip_prob = 75,
+
+  structure =
+  {
+    "...","111",
+    "...","111",
+    "...","v1v",
+    "...","A~A",
+    "...","A~A",
+    "...","A~A",
+    "...","^1^",
+    "...","111",
+    "x1x","x1x",
+  },
+},
+
+GROW_LIQUID_POOL_3X1_TRIPLE =
+{
+  prob = 15,
+  prob_skew = 2,
+  skip_prob = 50,
+
+  structure =
+  {
+    ".......","1111111",
+    ".......","1111111",
+    ".......","1~1~1~1",
+    ".......","1~1~1~1",
+    ".......","1~1~1~1",
+    ".......","1111111",
+    "xx111xx","xx111xx",
+  },
+},
+
+GROW_LIQUID_POOL_3X1_TRIPLE_NEW_AREA =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    ".......","1111111",
+    ".......","1111111",
+    ".......","v1v1v1v",
+    ".......","A~A~A~A",
+    ".......","A~A~A~A",
+    ".......","A~A~A~A",
+    ".......","^1^1^1^",
+    ".......","1111111",
+    "xx111xx","xx111xx",
+  }
+},
+
+GROW_LIQUID_POOL_DEPRESSED =
+{
+  prob = 20,
+  skip_prob = 60,
+
+  structure =
+  {
+    "........","11111111",
+    "........","11111111",
+    "........","vv~~~~vv",
+    "........","AA~~~~AA",
+    "........","AA~~~~AA",
+    "........","^^~~~~^^",
+    "........","11111111",
+    "........","11111111",
+    "xxx11xxx","xxx11xxx",
+  }
+},
+
+GROW_LIQUID_POOL_DEPRESSED_DIAG =
+{
+  prob = 15,
+  skip_prob = 65,
+
+  structure =
+  {
+    "........","11111111",
+    "........","11111111",
+    "........","vv~~~~vv",
+    "........","AA~~~~AA",
+    "........","A/~~~~%A",
+    "........","A~~~~~~A",
+    "........","A%~~~~/A",
+    "........","AA~~~~AA",
+    "........","^^~~~~^^",
+    "........","11111111",
+    "........","11111111",
+    "xxx11xxx","xxx11xxx",
+  },
+
+  diagonals =
+  {
+    "A~","~A",
+    "A~","~A",
+  }
 },
 
 GROW_LIQUID_PILLAR_CENTER =
@@ -6019,6 +6230,32 @@ GROW_MAZE_T =
   }
 },
 
+GROW_MAZE_X =
+{
+  prob = 2,
+  skip_prob = 50,
+
+  structure =
+  {
+    "11...xx...","1111%xx/11",
+    "xxx......x","xxx%1%/1/x",
+    "xxxx....xx","xxxx%11/xx",
+    "xxxx....xx","xxxx/11%xx",
+    "xxx......x","xxx/1/%1%x",
+    "xx...xx...","xx11/xx%11",
+  },
+
+  diagonals =
+  {
+         "1.",".1",
+    ".1","1.",".1","1.",
+         ".1","1.",
+         ".1","1.",
+    ".1","1.",".1","1.",
+         "1.",".1",
+  }
+},
+
 GROW_MAZE_T_DIAG =
 {
   prob = 2,
@@ -7205,7 +7442,7 @@ GROW_WIDE_LOW_CEILING_CORNER =
   },
 },
 
-GROW_COLLONADE_3_PILLARS =
+GROW_COLONNADE_3_PILLARS =
 {
   prob = 20,
   skip_prob = 75,

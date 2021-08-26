@@ -3226,6 +3226,15 @@ function Quest_room_themes()
         R.main_tex = R.exit_facade
       end
 
+      R.floor_mat_list = {}
+      R.floor_mat_list_natural = {}
+
+      R.floor_mat_list[rand.key_by_probs(R.theme.floors)] = 100
+      R.floor_mat_list[rand.key_by_probs(R.theme.floors)] = 100
+      R.floor_mat_list[rand.key_by_probs(R.theme.floors)] = 100
+      R.floor_mat_list_natural[rand.key_by_probs(R.theme.naturals)] = 100
+      R.floor_mat_list_natural[rand.key_by_probs(R.theme.naturals)] = 100
+
     else
       R.main_tex = rand.key_by_probs(R.theme.walls)
     end
@@ -3357,6 +3366,8 @@ end
 function Quest_make_quests()
 
   gui.printf("\n--==| Make Quests |==--\n\n")
+
+  gui.at_level(LEVEL.name .. " (Quests)", LEVEL.id, #GAME.levels)
 
   Monster_prepare()
 

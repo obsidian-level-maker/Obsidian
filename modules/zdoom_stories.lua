@@ -2732,5 +2732,10 @@ ZDOOM_STORIES.QUIT_MESSAGES =
   [[This is an actual line of code in Oblige:\n `if not is_big(mon) then has_small = true end`]],
 
   [[Some people want to watch the world segfault. -dashodanger, 2021]],
-  [[Sometimes, you're invited to play fruit basket turnover and you're the rice ball.]]
+  [[Sometimes, you're invited to play fruit basket turnover and you're the rice ball.]],
+
+  -- Game related
+  [[I was weak. That's why I needed you, needed someone to punish me for my sins. But that's all over now, I know the truth. Now it's time to end this.]], -- Silent Hill 2
+  [[It's too soon to give up. This Craziness can't go on forever.]], -- Silent Hill 3
+  [[The fear of the blood tends to create fear for the flesh.]] -- Silent Hill
 }

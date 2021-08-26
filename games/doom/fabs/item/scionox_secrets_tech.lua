@@ -113,12 +113,20 @@ PREFABS.Item_wallmachines_secret_4 =
   seed_h = 1,
 }
 
+--------------
+-- secret 5 --
+--------------
+
 PREFABS.Item_wallmachines_secret_5 =
 {
   file   = "item/scionox_secrets_tech.wad",
   map    = "MAP06",
 
-  prob   = 10,
+  prob   = 7,
+  skip_prob = 50,
+
+  engine = "!zdoom",
+
   theme = "!hell",
   env = "!nature",
 
@@ -147,4 +155,28 @@ PREFABS.Item_wallmachines_secret_6 =
   tex_COMPBLUE = "REDWALL",
   tex_REDWALL = "COMPBLUE",
   flat_FLAT5_3 = "FLAT14",
+}
+
+--
+
+PREFABS.Item_wallmachines_secret_5_fast =
+{
+  template = "Item_wallmachines_secret_5",
+
+  engine = "zdoom",
+
+  line_23 = 24722,
+}
+
+PREFABS.Item_wallmachines_secret_6_fast =
+{
+  template = "Item_wallmachines_secret_5",
+
+  engine = "zdoom",
+
+  tex_COMPBLUE = "REDWALL",
+  tex_REDWALL = "COMPBLUE",
+  flat_FLAT5_3 = "FLAT14",
+
+  line_23 = 24722,
 }

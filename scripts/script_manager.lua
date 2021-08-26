@@ -49,16 +49,14 @@ function ScriptMan_assemble_mapinfo_lump()
   }
 
   local eventhandler_lines = "addeventhandlers = "
+  if SCRIPTS.zs_eventhandlers then
+    eventhandler_lines = eventhandler_lines .. SCRIPTS.zs_eventhandlers
+  end
   if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 then
     eventhandler_lines = eventhandler_lines .. '"BossGenerator_Handler"'
   end
-  if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 and SCRIPTS.actor_name_script then
-    eventhandler_lines = eventhandler_lines .. ", "
-  end
-  if SCRIPTS.actor_name_script then
-    eventhandler_lines = eventhandler_lines .. '"bossNameHandler"'
-  end
-  if (PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1) or SCRIPTS.actor_name_script then
+  eventhandler_lines = string.gsub(eventhandler_lines, ",$", "");
+  if SCRIPTS.zs_eventhandlers then
     eventhandler_lines = eventhandler_lines .. "\n"
     table.insert(mapinfo_lines, eventhandler_lines)
   end
@@ -123,19 +121,14 @@ function ScriptMan_assemble_zscript_lump()
   if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 then
     zscript_lines = zscript_lines .. PARAM.BOSSSCRIPT .. "\n"
   end
-  if PARAM.marine_gen then
-    zscript_lines = zscript_lines .. PARAM.MARINESCRIPT .. "\n"
-  end
+
   if PARAM.custom_trees == "zs" then
     zscript_lines = zscript_lines ..
     ARMAETUS_EPIC_TEXTURES.TEMPLATES.ZS_TREES .. "\n"
   end
-  if SCRIPTS.actor_name_script then
-    zscript_lines = zscript_lines .. SCRIPTS.actor_name_script .. "\n"
-  end
 
-  if SCRIPTS.fauna_zsc then
-    zscript_lines = zscript_lines .. SCRIPTS.fauna_zsc .. "\n"
+  if SCRIPTS.zscript then
+    zscript_lines = zscript_lines .. SCRIPTS.zscript .. "\n"
   end
 
   if zscript_lines ~= "" then
@@ -298,10 +291,16 @@ end
 
 function ScriptMan_assemble_textures_lump()
   local textures_lump_lines = {}
+  local animdefs_lump_lines = {}
 
   if PARAM.epic_textures_activated then
     table.insert(textures_lump_lines, EPIC_TEXTUREX_LUMP)
     gui.wad_add_text_lump("TEXTURES", textures_lump_lines)
+  end
+
+  if SCRIPTS.animdefs then
+    table.insert(textures_lump_lines, EPIC_TEXTUREX_LUMP)
+    gui.wad_add_text_lump("ANIMDEFS", {SCRIPTS.animdefs})
   end
 end
 

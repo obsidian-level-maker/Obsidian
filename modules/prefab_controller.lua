@@ -47,6 +47,35 @@ PREFAB_CONTROL.POINT_CHOICES =
   "fab_heaps",   _("Heaps")
 }
 
+PREFAB_CONTROL.WALL_GROUP_ODDS =
+{
+  fab_always = 100,
+  fab_heaps = 2.25,
+  fab_lots = 1.8,
+  fab_more = 1.35,
+  fab_default = 1,
+  fab_some = 0.8,
+  fab_less = 0.6,
+  fab_few = 0.4,
+  fab_rare = 0.2,
+  fab_none = 0,
+}
+
+PREFAB_CONTROL.WALL_GROUP_CHOICES =
+{
+  "fab_always",  _("Always"),
+  "fab_heaps",   _("Heaps"),
+  "fab_lots",    _("Lots"),
+  "fab_more",    _("More"),
+  "fab_default", _("DEFAULT"),
+  "fab_some",    _("Some"),
+  "fab_less",    _("Less"),
+  "fab_few",     _("Few"),
+  "fab_rare",    _("Rare"),
+  "fab_none",    _("NONE")
+}
+
+
 PREFAB_CONTROL.DAMAGING_HALLWAY_CHOICES =
 {
   "default", _("DEFAULT"),
@@ -199,7 +228,7 @@ OB_MODULES["prefab_control"] =
     {
       name = "group_wall_prob",
       label = _("Group Walls"),
-      choices = PREFAB_CONTROL.WALL_CHOICES,
+      choices = PREFAB_CONTROL.WALL_GROUP_CHOICES,
       tooltip = "Determines the percentage at which grouped walls are applied to rooms.",
       default = "fab_default",
       priority = 99,

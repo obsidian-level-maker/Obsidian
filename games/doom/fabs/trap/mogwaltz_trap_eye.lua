@@ -1,4 +1,7 @@
-PREFABS.Cage_secret_trap_shootable_eye =
+-- TO-DO: Needs redesigning such that monsters are not left stuck inside the bunker.
+-- Switches also need to be redesigned such that it's impossible to fail triggering all lines.
+
+--[[PREFABS.Cage_secret_trap_shootable_eye =
 {
   file   = "cage/mogwaltz_trap_eye.wad",
   map    = "MAP01",
@@ -28,4 +31,4 @@ PREFABS.Cage_secret_trap_shootable_eye_pair =
   map = "MAP02",
 
   prob = 18,
-}
+}]]
