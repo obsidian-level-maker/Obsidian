@@ -1503,7 +1503,17 @@ function MODDED_GAME_EXTRAS.generate_custom_actor_names()
   actor_name_script = string.gsub( actor_name_script, "SDEMONS_COMPAT_CHECKS", " ")
   actor_name_script = string.gsub( actor_name_script, "GDEMONS_COMPAT_CHECKS", " ")
 
-  SCRIPTS.actor_name_script = actor_name_script
+  if SCRIPTS.zscript then
+    SCRIPTS.zscript = SCRIPTS.zscript .. actor_name_script
+  else
+    SCRIPTS.zscript = actor_name_script
+  end
+
+  if SCRIPTS.zs_eventhandlers then
+    SCRIPTS.zs_eventhandlers = SCRIPTS.zs_eventhandlers .. '"bossNameHandler",'
+  else
+    SCRIPTS.zs_eventhandlers = '"bossNameHandler",'
+  end
 end
 
 

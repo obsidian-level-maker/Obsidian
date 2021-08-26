@@ -36,9 +36,9 @@ PREFABS.Start_beed28_tunnel_hell =
 
   thing_45 =
   {
-   blue_torch = 50,
-   green_torch = 50,
-   red_torch = 50,
-   candelabra = 50,
+    blue_torch = 50,
+    green_torch = 50,
+    red_torch = 50,
+    candelabra = 50,
   },
 }

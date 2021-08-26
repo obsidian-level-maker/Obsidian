@@ -1247,6 +1247,8 @@ DOOM.THEMES =
       torches11 = 5, --7
       --
       gtd_wall_urban_storage = 50,
+      gtd_full_storage = 50,
+      --
       gtd_wall_tech_top_corner_light_set = 50,
       gtd_wall_server_room = 50,
       gtd_wall_sewer = 50,
@@ -1263,9 +1265,10 @@ DOOM.THEMES =
       gtd_wall_quakish_insets = 25,
       gtd_wall_quakish_insets_2 = 25,
       --
-      gtd_ribbed_lights = 20,
-      gtd_ribbed_lights_no3d = 20,
-      gtd_ribbed_lights_slump = 20,
+      gtd_ribbed_lights = 18,
+      gtd_ribbed_lights_no3d = 18,
+      gtd_ribbed_lights_slump = 18,
+      gtd_ribbed_lights_slump_two_color = 18,
       --
       gtd_wall_high_gap_set = 25,
       gtd_wall_high_gap_alt_set = 25,
@@ -1302,14 +1305,15 @@ DOOM.THEMES =
       gtd_generic_artsy_center_braced_ind = 20,
       gtd_generic_artsy_step1_banded = 20,
       gtd_generic_artsy_slope_y_inset = 20,
+      gtd_generic_artsy_base_braced = 20,
       --
-      gtd_modquake_set = 14,
-      gtd_modquake_jawlike = 14,
-      gtd_modquake_top_heavy_brace = 14,
-      gtd_modquake_tek_slope_brace = 14,
-      gtd_modquake_ex_light_slope_brace = 14,
-      gtd_modquake_round_braced_lit_pillar = 14,
-      gtd_modquake_hexagon_inset_braced = 14,
+      gtd_modquake_set = 18,
+      gtd_modquake_jawlike = 18,
+      gtd_modquake_top_heavy_brace = 18,
+      gtd_modquake_tek_slope_brace = 18,
+      gtd_modquake_ex_light_slope_brace = 18,
+      gtd_modquake_round_braced_lit_pillar = 18,
+      gtd_modquake_hexagon_inset_braced = 18,
       --
       gtd_wall_lamp_stubby = 16,
       gtd_wall_lamp_thin = 16,
@@ -1359,6 +1363,7 @@ DOOM.THEMES =
       tall   = 80,
       grate  = 45,
       barred = 5,
+      barred_2 = 10,
       --round  = 5,
       supertall = 60,
       gtd_window_cage_highbars = 20,
@@ -1370,7 +1375,6 @@ DOOM.THEMES =
       gtd_window_quakeish = 30,
       gtd_window_low = 15,
       gtd_window_bunker_mid_space = 20,
-      gtd_window_weabdows = 15,
       gtd_window_metal_frames = 30,
       gtd_window_construction_frames = 5,
       gtd_window_hexagon = 30,
@@ -1652,7 +1656,10 @@ DOOM.THEMES =
       torches6 = 8,
       torches9 = 6, --burning barrel
       torches10 = 4, --skull rock
+      --
       gtd_wall_urban_storage = 50,
+      gtd_full_storage = 50,
+      --
       gtd_wall_tech_top_corner_light_set = 50,
       gtd_wall_sewer = 40,
       --
@@ -1672,6 +1679,7 @@ DOOM.THEMES =
       gtd_ribbed_lights = 17,
       gtd_ribbed_lights_no3d = 17,
       gtd_ribbed_lights_slump = 17,
+      gtd_ribbed_lights_slump_two_color = 17,
       --
       gtd_wall_high_gap_set = 25,
       gtd_wall_high_gap_alt_set = 25,
@@ -1712,6 +1720,7 @@ DOOM.THEMES =
       gtd_generic_artsy_center_braced_ind = 20,
       gtd_generic_artsy_step1_banded = 20,
       gtd_generic_artsy_slope_y_inset = 20,
+      gtd_generic_artsy_base_braced = 20,
       --
       gtd_modquake_set = 11,
       gtd_modquake_jawlike = 11,
@@ -1727,12 +1736,18 @@ DOOM.THEMES =
       gtd_wall_candalebra = 7,
       gtd_wall_blue_torch = 7,
       gtd_wall_green_torch = 7,
-      gtd_wall_red_torch = 7
+      gtd_wall_red_torch = 7,
+      --
+      gtd_gothic_ceilwall_arch = 18,
+      gtd_gothic_ceilwall_doublet_arch = 18,
+      gtd_gothic_ceilwall_braced_arch = 18,
+      gtd_gothic_ceilwall_xzibit_arch = 18,
     },
 
     window_groups =
     {
       barred = 30,
+      barred_2 = 20,
       tall   = 95,
       --round  = 30,
       square = 20,
@@ -2175,6 +2190,7 @@ DOOM.THEMES =
       gtd_generic_artsy_center_braced_hell = 20,
       gtd_generic_artsy_step1_banded = 20,
       gtd_generic_artsy_slope_y_inset = 20,
+      gtd_generic_artsy_base_braced = 20,
       --
       gtd_modquake_set = 11,
       gtd_modquake_jawlike = 11,
@@ -2190,7 +2206,12 @@ DOOM.THEMES =
       gtd_wall_red_torch = 12,
       --
       gtd_wall_hell_mindscrew = 25,
-      gtd_wall_hell_mindscrew_skywall = 25
+      gtd_wall_hell_mindscrew_skywall = 25,
+      --
+      gtd_gothic_ceilwall_arch = 18,
+      gtd_gothic_ceilwall_doublet_arch = 18,
+      gtd_gothic_ceilwall_braced_arch = 18,
+      gtd_gothic_ceilwall_xzibit_arch = 18,
     },
 
     outdoor_wall_groups =
@@ -2233,6 +2254,7 @@ DOOM.THEMES =
       round  = 80, --80,
       tall   = 65, --65,
       barred = 20, --20,
+      barred_2 = 20,
       grate  = 40, --40,
       square = 30, --30,
       supertall = 60,

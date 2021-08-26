@@ -772,6 +772,14 @@ function ARMAETUS_EPIC_TEXTURES.decide_environment_themes()
     end
   end
 
+  if PARAM.bool_no_env_theme_for_hell == 1 then
+    for _,L in pairs(GAME.levels) do
+      if L.theme_name == "hell" then
+        L.outdoor_theme = "temperate"
+      end
+    end
+  end
+
   gui.printf("\n--==| Environment Outdoor Themes |==--\n\n")
   for _,L in pairs(GAME.levels) do
     if L.outdoor_theme then
@@ -984,7 +992,11 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
   local wad_file_3 = "games/doom/data/ObAddon_Textures_3.wad"
 
   if PARAM.bool_include_package == 1 then
-    gui.wad_transfer_lump(wad_file, "ANIMDEFS", "ANIMDEFS")
+    if SCRIPTS.animdefs then
+      SCRIPTS.animdefs = SCRIPTS.animdefs .. ARMAETUS_ANIMDEFS
+    else
+      SCRIPTS.animdefs = ARMAETUS_ANIMDEFS
+    end
     gui.wad_transfer_lump(wad_file, "CREDITS", "CREDITS")
     gui.wad_merge_sections(wad_file)
     gui.wad_merge_sections(wad_file_2)
@@ -1110,6 +1122,17 @@ OB_MODULES["armaetus_epic_textures"] =
       tooltip = "Allows merging Obsidian Textures brightmaps into the WAD. Does not include brightmaps for" ..
         " base resources from any of the games.",
       priority = 0
+    },
+
+    bool_no_env_theme_for_hell =
+    {
+      name = "bool_no_env_theme_for_hell",
+      label = _("No Hell Environment Themes"),
+      valuator = "button",
+      default = 0,
+      tooltip = "Renders hell theme maps to never use snow or desert environment themes regardless" ..
+        " of theme assignment.",
+      priority=-1
     }
   }
 }

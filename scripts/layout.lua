@@ -2055,10 +2055,8 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       prob = prob - math.clamp(0, LEVEL.autodetail_group_walls_factor, 35)
     end
 
-    if R.forced_wall_groups then prob = prob + 25 end
-
     if PARAM.group_wall_prob and PARAM.group_wall_prob ~= "fab_default" then
-      prob = prob * (1 - PREFAB_CONTROL.WALL_REDUCTION_ODDS[PARAM.group_wall_prob])
+      prob = prob * PREFAB_CONTROL.WALL_GROUP_ODDS[PARAM.group_wall_prob]
     end
 
     prob = math.clamp(0, prob, 100)

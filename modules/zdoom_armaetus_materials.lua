@@ -407,6 +407,10 @@ ARMAETUS_MATERIALS = {
   MARBFABD = { t="MARBFABD", f="G11" },
   MARBFABF = { t="MARBFABF", f="G11" },
   MARBFABG = { t="MARBFABG", f="G11" },
+  MARBFABH = { t="MARBFABH", f="G11" },
+  MARBFABI = { t="MARBFABI", f="G11" },
+  MARBFABJ = { t="MARBFABJ", f="G11" },
+
   -- green marble
   MARBFAC5 = { t="MARBFAC5", f="FLOOR7_2" }, --Plutonia 2,
   MARBFAC6 = { t="MARBFAC6", f="FLOOR7_2" },
@@ -418,6 +422,11 @@ ARMAETUS_MATERIALS = {
   MARBFACC = { t="MARBFACC", f="FLOOR7_2" },
   MARBFACD = { t="MARBFACD", f="FLOOR7_2" },
   MARBFACF = { t="MARBFACF", f="FLOOR7_2" },
+  MARBFACG = { t="MARBFACG", f="FLOOR7_2" },
+  MARBFACH = { t="MARBFACH", f="FLOOR7_2" },
+  MARBFACI = { t="MARBFACI", f="FLOOR7_2" },
+  MARBFACJ = { t="MARBFACJ", f="FLOOR7_2" },
+
   MARBLE = { t="MARBLE", f="FLOOR7_2" },
   MARBLE4 = { t="MARBLE4", f="FLOOR7_2" },
   MARBLE5 = { t="MARBLE5", f="FLOOR7_2" },
@@ -1445,6 +1454,368 @@ ARMAETUS_MATERIALS = {
   FINVSBLE = { t="FINVSBLE", f="FINVSBLE"}
 
 }
+
+ARMAETUS_ANIMDEFS =
+[[
+  // All animations go here
+
+	texture CGCANI00
+    allowdecals
+    pic CGCANI00 tics 1.5
+    pic CGCANI01 tics 1.5
+    pic CGCANI02 tics 1.5
+    pic CGCANI03 tics 1.5
+    pic CGCANI04 tics 1.5
+    pic CGCANI05 tics 1.5
+    pic CGCANI06 tics 1.5
+    pic CGCANI07 tics 1.5
+	
+	texture DECMP04A
+    allowdecals
+    pic DECMP04A tics 2
+    pic DECMP04B tics 2
+    pic DECMP04C tics 2
+    pic DECMP04D tics 2
+    pic DECMP04E tics 2
+    pic DECMP04F tics 2
+    pic DECMP04G tics 2
+    pic DECMP04H tics 2
+	pic DECMP04B tics 2
+	
+	texture TVSNOW01
+    allowdecals
+    pic TVSNOW01 tics 2
+    pic TVSNOW02 tics 2
+    pic TVSNOW03 tics 2
+
+	texture COMPFUZ1
+    allowdecals
+    pic COMPFUZ1 tics 2
+    pic COMPFUZ2 tics 2
+    pic COMPFUZ3 tics 2
+	pic COMPFUZ4 tics 2
+	
+	texture COMPY1
+    allowdecals
+    pic COMPY1 tics 4
+    pic COMPY2 tics 4
+    pic COMPY3 tics 4
+    pic COMPY2 tics 4
+	
+	texture CANDLE1
+    pic CANDLE1 tics 4
+    pic CANDLE2 tics 4
+    pic CANDLE3 tics 4
+	
+	// Black FIRELAVA
+	Texture LAVBLAK1
+	allowdecals
+	pic LAVBLAK1 tics 8
+	pic LAVBLAK2 tics 8
+	
+	// Blue FIRELAVA
+	Texture LAVBLUE1
+	allowdecals
+	pic LAVBLUE1 tics 8
+	pic LAVBLUE2 tics 8
+	
+	// Green FIRELAVA
+	Texture LAVGREN1
+	allowdecals
+	pic LAVGREN1 tics 8
+	pic LAVGREN2 tics 8
+	
+	// White FIRELAVA
+	Texture LAVWHIT1
+	allowdecals
+	pic LAVWHIT1 tics 8
+	pic LAVWHIT2 tics 8
+	
+	// Black FIREBLU1
+	Texture FIREBLK1
+	allowdecals
+	pic FIREBLK1 tics 8
+	pic FIREBLK2 tics 8
+	
+	// Doom1 SLADWALL slime fall
+	texture SLADRIP1
+	allowdecals
+    pic SLADRIP1 tics 6
+    pic SLADRIP2 tics 6
+    pic SLADRIP3 tics 6
+	
+	//Red version of black GST fontfall
+	texture KSTFONT1
+    allowdecals
+    pic KSTFONT1 tics 6
+    pic KSTFONT2 tics 6
+    pic KSTFONT3 tics 6
+	
+	//Green version
+	texture KSTFNTG1
+    allowdecals
+    pic KSTFNTG1 tics 6
+    pic KSTFNTG2 tics 6
+    pic KSTFNTG3 tics 6
+	
+	// Broken animated screen
+	Texture COMPSA1
+	allowdecals
+	range COMPSA30 tics 2
+	
+	// UAC logo screen
+	Texture COMPSC1
+	allowdecals
+	range COMPSC12 tics 1.5
+	
+	// Multiple broken animated screens
+	Texture COMPSD1
+	allowdecals
+	range COMPSD8 tics 2
+	
+	Texture NMONIA1
+	allowdecals
+	pic NMONIA1 tics 3
+	pic NMONIA2 tics 3
+	pic NMONIA3 tics 3
+	pic NMONIA4 tics 3
+	pic NMONIA5 tics 3
+	pic NMONIA6 tics 3
+	pic NMONIA7 tics 3
+	pic NMONIA8 tics 3
+	
+	// Static screen
+	Texture NOISE1
+	allowdecals
+	range NOISE4 tics 1.5
+	
+	// Smaller static screen
+	Texture NOISE2A
+	allowdecals
+	pic NOISE2A tics 1.5
+	pic NOISE2B tics 1.5
+	pic NOISE2C tics 1.5
+	pic NOISE2D tics 1.5
+	
+	// Smaller static screen 2
+	Texture NOISE3A
+	allowdecals
+	pic NOISE3A tics 1.5
+	pic NOISE3B tics 1.5
+	pic NOISE3C tics 1.5
+	pic NOISE3D tics 1.5
+	
+	//Gray liquid fall
+	texture GRYFALL1
+  pic GRYFALL1 tics 8
+  pic GRYFALL2 tics 8
+  pic GRYFALL3 tics 8
+	pic GRYFALL4 tics 8
+	
+	//Dark gray slime fall
+	texture OFALL1
+  pic OFALL1 tics 8
+  pic OFALL2 tics 8
+  pic OFALL3 tics 8
+	pic OFALL4 tics 8
+	
+	//Brown liquid fall
+	texture SLMFALL1
+  pic SLMFALL1 tics 8
+  pic SLMFALL2 tics 8
+  pic SLMFALL3 tics 8
+	pic SLMFALL4 tics 8
+	
+	//Blood liquid fall
+	texture BFAL1
+  pic BFAL1 tics 8
+  pic BFAL2 tics 8
+  pic BFAL3 tics 8
+	pic BFAL4 tics 8
+	
+	//Green liquid fall
+	texture NFALL1
+  pic NFALL1 tics 8
+  pic NFALL2 tics 8
+  pic NFALL3 tics 8
+	pic NFALL4 tics 8
+	
+	//Lava liquid fall
+	texture LFALL1
+  pic LFALL1 tics 8
+  pic LFALL2 tics 8
+  pic LFALL3 tics 8
+	pic LFALL4 tics 8
+	
+	//Lava liquid fall 2
+	texture LFAL21
+  pic LFAL21 tics 8
+  pic LFAL22 tics 8
+  pic LFAL23 tics 8
+	pic LFAL24 tics 8
+	
+	//Water liquid fall
+	texture WFALL1
+  pic WFALL1 tics 8
+  pic WFALL2 tics 8
+  pic WFALL3 tics 8
+	pic WFALL4 tics 8
+	
+	//Cooler purple liquid fall
+	texture PURFAL1
+  pic PURFAL1 tics 8
+  pic PURFAL2 tics 8
+  pic PURFAL3 tics 8
+	pic PURFAL4 tics 8
+
+	//Magma
+	texture MFALL1
+  pic MFALL1 tics 8
+  pic MFALL2 tics 8
+  pic MFALL3 tics 8
+	pic MFALL4 tics 8
+	
+	//Wall copy of FAN1 flat, meant as ventilation
+	texture DFAN1
+  pic DFAN1 tics 1
+  pic DFAN2 tics 1
+  pic DFAN3 tics 1
+  pic DFAN4 tics 1
+
+	//Broken grocery fridge from Duke Nukem
+	texture DNSTOR09
+	pic DNSTOR09 tics 8
+	pic DNSTOR10 tics 8
+	pic DNSTOR11 tics 8
+
+	//These two need definitions because they're solid like normal
+	//walls, not liquid so decals can be applied to them.
+	
+	//Frozen waterfall type 1
+	texture ICEFALL
+	allowdecals
+	pic ICEFALL tics 8
+	pic ICEFALL tics 8
+	
+// Switches //
+
+  switch doom 3 SW1CHN on pic SW2CHN tics 0
+  switch doom 3 SW1GOTH on pic SW2GOTH tics 0
+  switch doom 3 SW1QUAK on pic SW2QUAK tics 0
+  switch doom 3 SW1SKUL1 on pic SW2SKUL1 tics 0
+  switch doom 3 SW1PENT on pic SW2PENT tics 0
+	
+//Crap for flats here
+	
+  warp flat LAVA1
+  warp flat LAVA2
+  warp flat LAVA3
+  warp flat LAVA4
+  warp2 flat FWATER1
+  warp2 flat FWATER2
+  warp2 flat FWATER3
+  warp2 flat FWATER4
+  warp2 flat BLOOD1
+  warp2 flat BLOOD2
+  warp2 flat BLOOD3
+  warp flat NUKAGE1
+  warp flat NUKAGE2
+  warp flat NUKAGE3
+  warp2 flat SLIME01
+  warp2 flat SLIME02
+  warp2 flat SLIME03
+  warp2 flat SLIME04
+  warp flat SLIME05
+  warp flat SLIME06
+  warp flat SLIME07
+  warp flat SLIME08
+  warp flat SLUDGE01
+  warp flat SLUDGE02
+  warp flat SLUDGE03
+  warp flat SLUDGE04
+  warp flat XWATER1
+  warp flat XWATER2
+  warp flat XWATER3
+  warp flat XWATER4
+  warp flat QLAVA1
+  warp flat QLAVA2
+  warp flat QLAVA3
+  warp flat QLAVA4
+  warp flat MAGMA1
+  warp flat MAGMA2
+  warp flat MAGMA3
+  warp flat MAGMA4
+  warp2 flat OSLIME01
+  warp2 flat OSLIME02
+  warp flat XLAV1
+  warp flat XLAV2
+  warp flat PURW1
+  warp flat PURW2
+
+  TEXTURE FWATER1
+  PIC  1	 TICS  1
+  PIC  1	 TICS  1
+
+  TEXTURE NUKAGE1
+  PIC  1	 TICS  1
+  PIC  1	 TICS  1
+
+  TEXTURE LAVA1
+  PIC  1	 TICS  1
+  PIC  1	 TICS  1
+
+  TEXTURE BLOOD1
+  PIC  1	 TICS  1
+  PIC  1	 TICS  1
+
+  TEXTURE SLIME01
+  PIC  1	 TICS  1
+  PIC  1	 TICS  1
+
+  TEXTURE SLIME05
+  PIC  1	 TICS  1
+  PIC  1	 TICS  1
+
+  //New
+  TEXTURE SLUDGE01
+  PIC  1	 TICS  1
+  PIC  1	 TICS  1
+
+  TEXTURE OSLIME01
+  PIC  1	 TICS  5
+  PIC  2	 TICS  5
+
+  TEXTURE QLAVA1
+  PIC  1	 TICS  8
+  PIC  2	 TICS  8
+  PIC  3	 TICS  8
+  PIC  4	 TICS  8
+
+  TEXTURE MAGMA1
+  PIC  1	 TICS  8
+  PIC  2	 TICS  8
+  PIC  3	 TICS  8
+  PIC  4	 TICS  8
+
+  TEXTURE FIRELAF1
+  allowdecals
+  PIC  1	 TICS  8
+  PIC  2	 TICS  8
+
+  TEXTURE XLAV1
+  PIC  1	 TICS  8
+  PIC  2	 TICS  8
+
+  TEXTURE PURW1
+  PIC  1	 TICS  8
+  PIC  2	 TICS  8
+
+  TEXTURE FAN1
+  PIC  1	 TICS  1
+  PIC  2	 TICS  1
+  PIC  3   TICS  1
+  PIC  4   TICS  1
+]]
 
 EPIC_BRIGHTMAPS =
 [[brightmap texture COMPSTA3

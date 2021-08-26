@@ -241,3 +241,65 @@ PREFABS.Wall_generic_artsy_slope_y_inset_diag_limit =
 
   line_342 = 0
 }
+
+--
+
+PREFABS.Wall_generic_artsy_base_braced =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP10",
+
+  group = "gtd_generic_artsy_base_braced",
+
+  theme = "tech",
+
+  z_fit = { 32,64 },
+
+  tex_METAL = "SHAWN2",
+  tex_CEIL5_2 = "FLAT23"
+}
+
+PREFABS.Wall_generic_artsy_base_braced_gothic =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP10",
+
+  group = "gtd_generic_artsy_base_braced",
+
+  z_fit = { 32,64 },
+
+  theme = "!tech",
+}
+
+PREFABS.Wall_generic_artsy_base_braced_diag =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP20",
+
+  group = "gtd_generic_artsy_base_braced",
+
+  theme = "tech",
+
+  where = "diagonal",
+
+  z_fit = { 32,64 },
+
+  tex_METAL = "SHAWN2",
+  tex_CEIL5_2 = "FLAT23",
+}
+
+PREFABS.Wall_generic_artsy_base_braced_gothic_diag =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP20",
+
+  group = "gtd_generic_artsy_base_braced",
+
+  theme = "!tech",
+
+  where = "diagonal",
+
+  z_fit = { 32,64 },
+}
+
+--
