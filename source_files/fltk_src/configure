@@ -632,7 +632,7 @@ INSTALL_DESKTOP
 THREADS
 OSX_ONLY
 HLINKS
-GLLIB
+GLLIBS
 XPROP
 FTCONFIG
 PKGCONFIG
@@ -665,6 +665,7 @@ NROFF
 INSTALL_DATA
 INSTALL_SCRIPT
 INSTALL_PROGRAM
+FLUID_BUILD
 FLUID
 LINKSHARED
 SHAREDSUFFIX
@@ -699,12 +700,12 @@ CAIROFLAGS
 CAIRODIR
 OPTIM
 ARCHFLAGS
-FL_VERSION
+FLTK_VERSION
 FL_ABI_VERSION
 FL_DSO_VERSION
-FL_PATCH_VERSION
-FL_MINOR_VERSION
-FL_MAJOR_VERSION
+FLTK_VERSION_PATCH
+FLTK_VERSION_MINOR
+FLTK_VERSION_MAJOR
 ac_ct_CXX
 CXXFLAGS
 CXX
@@ -3639,12 +3640,12 @@ case $host_os in
 	;;
 esac
 
-FL_MAJOR_VERSION=1
-FL_MINOR_VERSION=3
-FL_PATCH_VERSION=5
-FL_DSO_VERSION=${FL_MAJOR_VERSION}.${FL_MINOR_VERSION}
-FL_ABI_VERSION=${FL_MAJOR_VERSION}.${FL_MINOR_VERSION}.0
-FL_VERSION=${FL_MAJOR_VERSION}.${FL_MINOR_VERSION}.${FL_PATCH_VERSION}
+FLTK_VERSION_MAJOR=1
+FLTK_VERSION_MINOR=3
+FLTK_VERSION_PATCH=7
+FL_DSO_VERSION=${FLTK_VERSION_MAJOR}.${FLTK_VERSION_MINOR}
+FL_ABI_VERSION=${FLTK_VERSION_MAJOR}.${FLTK_VERSION_MINOR}.0
+FLTK_VERSION=${FLTK_VERSION_MAJOR}.${FLTK_VERSION_MINOR}.${FLTK_VERSION_PATCH}
 
 
 
@@ -3682,7 +3683,7 @@ fi
     darwin*)
 	if test x$enable_x11 = xyes; then
 		host_os_gui="X11"
-		OPTIM="-U__APPLE__ -mmacosx-version-min=10.3 $OPTIM"
+		OPTIM="-U__APPLE__ -mmacosx-version-min=10.9 -D_LIBCPP_HAS_THREAD_API_PTHREAD $OPTIM"
 	fi
 	;;
    *)
@@ -4063,6 +4064,13 @@ else
     FLUID="fluid"
     LINKSHARED="$LINKFLTKCAIRO ../lib/libfltk_images.a ../lib/libfltk_forms.a ../lib/libfltk.a"
 fi
+
+if test "$fltk_cross_compiling" = "yes"; then
+  FLUID_BUILD="fluid"
+else
+  FLUID_BUILD="../fluid/fluid$EXEEXT"
+fi
+
 
 
 
@@ -6641,7 +6649,7 @@ case $host_os_gui in
 if test "x$ac_cv_header_GL_gl_h" = xyes; then :
   $as_echo "#define HAVE_GL 1" >>confdefs.h
 
-		GLLIB="-lopengl32"
+		GLLIBS="-lopengl32"
 fi
 
 
@@ -6649,7 +6657,7 @@ fi
 if test "x$ac_cv_header_GL_glu_h" = xyes; then :
   $as_echo "#define HAVE_GL_GLU_H 1" >>confdefs.h
 
-		GLLIB="-lglu32 $GLLIB"
+		GLLIBS="-lglu32 $GLLIBS"
 fi
 
 
@@ -6695,7 +6703,7 @@ fi
 
 	    $as_echo "#define HAVE_GL_GLU_H 1" >>confdefs.h
 
-	    GLLIB="-framework OpenGL"
+	    GLLIBS="-framework OpenGL"
 	else
 	    LINKFLTKGL=""
 	    GLLIBNAME=""
@@ -7429,7 +7437,7 @@ $as_echo "$as_me: WARNING: Ignoring libraries \"$X_PRE_LIBS\" requested by confi
 	    ac_cpp="$ac_cpp -I$x_includes"
 	fi
 
-		GLLIB=
+		GLLIBS=
 
 	if test x$enable_gl != xno; then
 	    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing dlopen" >&5
@@ -7529,7 +7537,7 @@ $as_echo "$ac_cv_lib_GL_glXMakeCurrent" >&6; }
 if test "x$ac_cv_lib_GL_glXMakeCurrent" = xyes; then :
   $as_echo "#define HAVE_GL 1" >>confdefs.h
 
-		     GLLIB="-lGL"
+		     GLLIBS="-lGL"
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for glXMakeCurrent in -lMesaGL" >&5
 $as_echo_n "checking for glXMakeCurrent in -lMesaGL... " >&6; }
@@ -7570,7 +7578,7 @@ $as_echo "$ac_cv_lib_MesaGL_glXMakeCurrent" >&6; }
 if test "x$ac_cv_lib_MesaGL_glXMakeCurrent" = xyes; then :
   $as_echo "#define HAVE_GL 1" >>confdefs.h
 
-			 GLLIB="-lMesaGL"
+			 GLLIBS="-lMesaGL"
 fi
 
 fi
@@ -7625,10 +7633,10 @@ if test "x$ac_cv_header_GL_glu_h" = xyes; then :
   $as_echo "#define HAVE_GL_GLU_H 1" >>confdefs.h
 
 		if test x$ac_cv_lib_GL_glXMakeCurrent = xyes; then
-		    GLLIB="-lGLU $GLLIB"
+		    GLLIBS="-lGLU $GLLIBS"
 		fi
 		if test x$ac_cv_lib_MesaGL_glXMakeCurrent = xyes; then
-		    GLLIB="-lMesaGLU $GLLIB"
+		    GLLIBS="-lMesaGLU $GLLIBS"
 		fi
 
 fi

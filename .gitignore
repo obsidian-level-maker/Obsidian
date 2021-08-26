@@ -3,9 +3,16 @@ obsidian
 Obsidian.exe
 obsidian.exe
 
+#Logs/configs (Windows version)
+CONFIG.txt
+OPTIONS.txt
+THEME.txt
+LOGS.txt
+
 *.o
 .f
 .DS_Store
+tmp.wad
 
 # VS Code
 build/

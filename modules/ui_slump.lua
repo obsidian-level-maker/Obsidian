@@ -28,18 +28,42 @@ UI_SLUMP.MON_VARIETY =
   "nazis", _("Oops! All Nazis!")
 }
 
+function UI_SLUMP.setup(self)
+  -- these parameters have to be instantiated in this hook
+  -- because begin_level happens *after* level size decisions
+  for name,opt in pairs(self.options) do
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)
+      end
+    else
+      PARAM[opt.name] = self.options[name].value
+    end
+  end
+end
+
 OB_MODULES["ui_slump_arch"] =
 {
+
+  name = "ui_slump_arch",
+
   label = _("SLUMP Architecture"),
 
   side = "left",
   priority = 104,
   engine = "vanilla",
 
+  hooks = 
+  {
+    setup = UI_SLUMP.setup,
+  },
+
   options =
   {
     { 
-      name="float_minrooms",
+      name="float_minrooms_slump",
       label=_("Level Size"),
       valuator = "slider",
       units = " Rooms",
@@ -47,12 +71,13 @@ OB_MODULES["ui_slump_arch"] =
       max = 37,
       increment = 1,
       default = 15,
-      presets = "1: Mix It Up,",
+      nan = "Mix It Up,",
+      presets = "",
       tooltip = "Minimum number of rooms per level."
     },
 
     {
-      name = "float_bigify",
+      name = "float_bigify_slump",
       label = _("Room Bigification Chance"),
       valuator = "slider",
       units = "%",
@@ -65,7 +90,7 @@ OB_MODULES["ui_slump_arch"] =
     },
     
     {
-      name = "float_forkiness",
+      name = "float_forkiness_slump",
       label = _("Forkiness"),
       valuator = "slider",
       units = "%",
@@ -80,7 +105,7 @@ OB_MODULES["ui_slump_arch"] =
     },
 
     {
-      name = "bool_dm_starts",
+      name = "bool_dm_starts_slump",
       label = _("Deathmatch Spawns"),
       valuator = "button",
       default = 0,
@@ -88,7 +113,7 @@ OB_MODULES["ui_slump_arch"] =
     },
     
     {
-      name = "bool_major_nukage",
+      name = "bool_major_nukage_slump",
       label = _("Major Nukage Mode"),
       valuator = "button",
       default = 0,
@@ -96,7 +121,7 @@ OB_MODULES["ui_slump_arch"] =
     },
     
     {
-      name = "bool_immediate_monsters",
+      name = "bool_immediate_monsters_slump",
       label = _("Quiet Start"),
       valuator = "button",
       default = 1,
@@ -108,11 +133,19 @@ OB_MODULES["ui_slump_arch"] =
 
 OB_MODULES["ui_slump_mons"] =
 {
+
+  name = "ui_slump_mons",
+
   label = _("SLUMP Monsters"),
 
   side = "left",
   priority = 103,
   engine = "vanilla",
+
+  hooks = 
+  {
+    setup = UI_SLUMP.setup,
+  },
 
   options =
   {

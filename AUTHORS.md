@@ -1,11 +1,95 @@
+# OBSIDIAN (Section in progress)
 
-# OBLIGE AUTHORS
+## LUA/PREFABS/ADDON DEVELOPERS
+
+Caligari87
+  - Maintainer of Oblige 7.70 and ObAddon repositories
+  - Discord moderator
+
+MsrSgtShooterPerson
+  - Upstream content repository maintainer
+  - Prefabs
+  - Shape rules
+  - Modules
+  - Textures
+  - Documentation
+
+Armaetus
+  - Original base tweaks to Oblige v7.59
+  - Prefabs
+  - Modules
+  - Textures
+  - Extensive name generator additions
+  - IWAD Mode
+
+Beed28
+  - Prefabs
+
+Craneo
+  - Textures
+  - Prefabs
+  - Name generator contributions
+  - Sprites
+
+EpicTyphlosion
+  - Prefabs
+  - Name generator contributions
+
+Frozsoul
+  - Fauna module
+  - Psychedelic theme porting
+  - Prefabs
+  - Most of the new GUI custom themes
+
+Garrett
+  - Prefabs
+
+josh771
+  - ZScript code for flies (from fauna module)
+
+MogWaltz
+  - Prefabs
+
+Scionox
+  - Prefabs
+
+Simon-v
+  - Lua normalizer
+  - Story generator contributions
+
+Tapwave
+  - Story generator contributions
+
+
+## GUI/MAIN PROGRAM DEVELOPERS
+
+Dashodanger
+  - 64-bit support
+  - ZDBSP and UDMF support
+  - SLUMP integration for Vanilla Doom
+  - GUI overhaul
+  - Restoration of Hexen baseline functions
+
+Phytolizer
+  - Created Filename Formatter to parse custom prefixes
+  - Conversion from Makefiles to CMake build system
+  - MSVC support for compiling source on Windows
+  - Many, many optimizations and updates of the codebase
+
+Simon-v
+  - Patch for scanning both install and home directories for addons
+  - Fixing Date/Time filename prefixes to be ISO-conformant
+
+## THANKS TO:
+
+
+
+# OBLIGE
 
 ## DEVELOPER:
 
-Andrew Apted  <ajapted@gmail.com>
-
-I created OBLIGE and I continue to develop it.
+Andrew Apted
+  - Creator of the original OBLIGE
 
 
 ## CONTRIBUTORS:
@@ -97,15 +181,19 @@ Several textures and sprites from the FreeDoom project.
 
 OBLIGE was written from scratch. It does not contain any code
 from SLIGE (by David Chess) or from any other random level
-generator.
+generator. That being said, OBSIDIAN has since integrated the SLUMP
+level generator, a GPL2 fork of David Chess' SLIGE that was created
+by Sam Trenholme.
 
-OBLIGE uses a modified version of the Lua 5.1.5 scripting
-language, which is Copyright 1994-2012 Lua.org, PUC-Rio, and
-is under a permissive "MIT" license.
-
-Part of the cave algorithm used in OBLIGE was described by Jim
+Part of the cave algorithm used in OBSIDIAN was described by Jim
 Babcock in his article: "Cellular Automata Method for Generating
 Random Cave-Like Levels".
 
-OBLIGE uses the FLTK widget library (http://www.fltk.org)
+The internal font loading code is derived from a post by Ian MacArthur
+in a Google Groups thread at the following link:
+https://groups.google.com/g/fltkgeneral/c/uAdg8wOLiMk
+
+OBSIDIAN uses Lua 5.4.x (http://www.lua.org)
+
+OBSIDIAN uses FLTK 1.3.x (http://www.fltk.org)
 

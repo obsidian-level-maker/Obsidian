@@ -379,6 +379,7 @@
 int current_level_number = 0;
 int global_verbosity = 0;    /* Oooh, a global variable! */
 boolean ok_to_roll = SLUMP_FALSE;  /* Stop breaking -seed...   */
+std::ofstream wad_stream;
 
 /* Machoize: Make a given level harder
  * config c: The configuration for this setup
@@ -396,7 +397,7 @@ void machioize(config *c,float amount) {
 	}
 }
 
-int slump_main(s_config slump_config) {
+bool slump_main(std::filesystem::path filename) {
 
   /* A stubby but functional main() */
 
@@ -412,23 +413,28 @@ int slump_main(s_config slump_config) {
 		  "based on SLIGE by Dave Chess, dmchess@aol.com\n\n",
            SOURCE_VERSION,SOURCE_SERIAL,SOURCE_PATCHLEVEL);
 
-  ThisConfig = get_config(slump_config);
+  wad_stream.open(filename, std::ios::out | std::ios::binary);
+  if (!wad_stream.is_open()) {
+    printf("Could not create output WAD!\n");
+    return false;
+  }
+  ThisConfig = get_config(filename);
   if (ThisConfig==NULL) {
     Usage();
-    return 100;
+    return false;
   }
   if (ThisConfig->cwadonly) {
     dh = OpenDump(ThisConfig);
-    if (dh==NULL) return 28;
+    if (dh==NULL) return false;
     record_custom_textures(dh,ThisConfig);
     record_custom_flats(dh,ThisConfig,SLUMP_TRUE);   /* record all flats */
     record_custom_patches(dh,ThisConfig,SLUMP_TRUE);   /* and patches */
     CloseDump(dh);
-    printf("\nDone: wrote customization WAD %s.\n",ThisConfig->outfile);
-    return 0;
+    printf("\nDone: wrote customization WAD %s.\n", filename.generic_string().c_str());
+    return true;
   }
   dh = OpenDump(ThisConfig);
-  if (dh==NULL) return 28;
+  if (dh==NULL) return false;
   if (ThisConfig->do_slinfo) make_slinfo(dh,ThisConfig);
   if (ThisConfig->do_music) make_music(dh,ThisConfig);
 
@@ -470,7 +476,7 @@ int slump_main(s_config slump_config) {
     record_custom_patches(dh,ThisConfig,SLUMP_FALSE);
   }
   CloseDump(dh);
-  printf("\nDone: wrote %s.\n",ThisConfig->outfile);
-  return 0;
+  printf("\nDone: wrote %s.\n",filename.generic_string().c_str());
+  return true;
 
 }

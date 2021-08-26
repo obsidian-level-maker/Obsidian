@@ -37,7 +37,10 @@ PREFABS.Wall_gtd_furnace_face_1 =
 
 PREFABS.Wall_gtd_furnace_face_diag_1 =
 {
-  template = "Wall_gtd_furnace_diag_1",
+  template = "Wall_gtd_furnace_1",
+  map = "MAP02",
+
+  where = "diagonal",
 
   group = "gtd_furnace_face",
 

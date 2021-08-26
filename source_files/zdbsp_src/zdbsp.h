@@ -9,6 +9,7 @@
 
 #include <exception>
 #include <stdexcept>
+#include <filesystem>
 
 #ifdef _MSC_VER
 typedef unsigned __int32 uint32_t;
@@ -30,8 +31,7 @@ enum ERejectMode {
 };
 
 extern const char *Map;
-extern const char *InName;
-extern const char *OutName;
+extern std::filesystem::path OutName;
 extern bool BuildNodes, BuildGLNodes, ConformNodes, GLOnly, WriteComments;
 extern bool NoPrune;
 extern EBlockmapMode BlockmapMode;
@@ -218,5 +218,9 @@ inline int LittleLong(int x) {
 
 #endif  // __BIG_ENDIAN__
 #endif  // __APPLE__
+
+#ifdef WIN32
+#define strcasecmp _stricmp
+#endif
 
 #endif  //__ZDBSP_H__

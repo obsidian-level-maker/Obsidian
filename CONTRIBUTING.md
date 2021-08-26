@@ -1,6 +1,8 @@
 # Contributing Guidelines
 
-This repo is based on Oblige 7.70. No other versions will be supported. If support is desired for something from or intended to work with an older version of Oblige, it must be ported forward to the current codebase.
+Although based on Oblige 7.70, this repo is now incompatible with all versions of Oblige due to the move to Lua 5.4 and changes to the GUI widget system.
+
+No other versions will be supported. If support is desired for something from an older version of Oblige, it must be ported forward to the current codebase.
 
 ## Code standards
 * Code must remain GPL compliant through changes (see LICENSE).

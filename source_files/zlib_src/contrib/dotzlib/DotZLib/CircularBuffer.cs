@@ -8,25 +8,22 @@
 using System;
 using System.Diagnostics;
 
-namespace DotZLib
-{
+namespace DotZLib {
 
-	/// <summary>
-	/// This class implements a circular buffer
-	/// </summary>
-	internal class CircularBuffer
-	{
-        #region Private data
+    /// <summary>
+    /// This class implements a circular buffer
+    /// </summary>
+    internal class CircularBuffer {
+#region Private data
         private int _capacity;
         private int _head;
         private int _tail;
         private int _size;
         private byte[] _buffer;
-        #endregion
+#endregion
 
-        public CircularBuffer(int capacity)
-        {
-            Debug.Assert( capacity > 0 );
+        public CircularBuffer(int capacity) {
+            Debug.Assert(capacity > 0);
             _buffer = new byte[capacity];
             _capacity = capacity;
             _head = 0;
@@ -34,23 +31,23 @@ namespace DotZLib
             _size = 0;
         }
 
-        public int Size { get { return _size; } }
+        public int Size {
+            get { return _size; }
+        }
 
-        public int Put(byte[] source, int offset, int count)
-        {
-            Debug.Assert( count > 0 );
+        public int Put(byte[] source, int offset, int count) {
+            Debug.Assert(count > 0);
             int trueCount = Math.Min(count, _capacity - Size);
             for (int i = 0; i < trueCount; ++i)
-                _buffer[(_tail+i) % _capacity] = source[offset+i];
+                _buffer[(_tail + i) % _capacity] = source[offset + i];
             _tail += trueCount;
             _tail %= _capacity;
             _size += trueCount;
             return trueCount;
         }
 
-        public bool Put(byte b)
-        {
-            if (Size == _capacity) // no room
+        public bool Put(byte b) {
+            if (Size == _capacity)  // no room
                 return false;
             _buffer[_tail++] = b;
             _tail %= _capacity;
@@ -58,19 +55,17 @@ namespace DotZLib
             return true;
         }
 
-        public int Get(byte[] destination, int offset, int count)
-        {
-            int trueCount = Math.Min(count,Size);
+        public int Get(byte[] destination, int offset, int count) {
+            int trueCount = Math.Min(count, Size);
             for (int i = 0; i < trueCount; ++i)
-                destination[offset + i] = _buffer[(_head+i) % _capacity];
+                destination[offset + i] = _buffer[(_head + i) % _capacity];
             _head += trueCount;
             _head %= _capacity;
             _size -= trueCount;
             return trueCount;
         }
 
-        public int Get()
-        {
+        public int Get() {
             if (Size == 0)
                 return -1;
 
@@ -78,6 +73,5 @@ namespace DotZLib
             --_size;
             return result;
         }
-
     }
 }

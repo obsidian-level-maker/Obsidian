@@ -1,5 +1,5 @@
-PROJECT(wingetopt)
-cmake_minimum_required(VERSION 2.8)
+project(wingetopt)
+cmake_minimum_required(VERSION 2.8.13)
 
 option(BUILD_SHARED_LIBS "Build the shared library" OFF)
 
@@ -16,8 +16,9 @@ add_library(wingetopt src/getopt.c src/getopt.h)
 
 install(FILES src/getopt.h DESTINATION include)
 
-install(TARGETS wingetopt
-    RUNTIME DESTINATION bin
-	LIBRARY DESTINATION lib
-	ARCHIVE DESTINATION lib)
-
+install(
+  TARGETS wingetopt
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+)

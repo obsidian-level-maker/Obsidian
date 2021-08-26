@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.16)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 11)
 
@@ -15,7 +15,11 @@ if(!MINGW)
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE ${FLEX_LIBRARIES})
 
-if (WIN32)
+if(WIN32 OR MSYS)
   target_link_libraries(filename_formatter PRIVATE wingetopt)
   target_include_directories(filename_formatter PRIVATE ../wingetopt_src/src)
+endif()
+
+if(MSYS)
+  set(CMAKE_EXE_LINKER_FLAGS "-static -mwindows -Isource_files/zlib_src/libzlibstatic.a")
 endif()

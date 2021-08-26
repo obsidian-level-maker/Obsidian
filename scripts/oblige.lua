@@ -1238,6 +1238,37 @@ function ob_game_format()
   return assert(game.format)
 end
 
+function ob_get_param(parameter)
+
+  assert(parameter)
+
+  local param
+
+  if OB_CONFIG.batch_mode == "yes" then
+    if OB_CONFIG[parameter] then
+      param = OB_CONFIG[parameter]
+    else
+      error("ERROR! " .. parameter .. " not found in config!")
+    end
+  else
+    if PARAM[parameter] or OB_CONFIG[parameter] then
+      if (PARAM[parameter]) then
+        param = PARAM[parameter]
+      else
+        param = OB_CONFIG[parameter]
+      end
+    else
+      error("ERROR! " .. parameter .. " not found in config!")
+    end
+  end
+  
+  if type(param) == "string" then
+    return param
+  else
+    return tostring(param)
+  end
+  
+end
 
 
 function ob_default_filename()
@@ -1474,6 +1505,7 @@ end
 function ob_invoke_hook(name, ...)
   -- two passes, for example: setup and setup2,
   for pass = 1,2 do
+    if OB_CONFIG.engine == "vanilla" or string.match(name, "^pre_setup") then goto skip end
     for _,mod in pairs(GAME.modules) do
       local func = mod.hooks and mod.hooks[name]
 
@@ -1481,7 +1513,7 @@ function ob_invoke_hook(name, ...)
         func(mod, ...)
       end
     end
-    
+    ::skip::
     for _,mod in pairs(OB_MODULES) do
       if ob_check_ui_module(mod) then
        local func = mod.hooks and mod.hooks[name]
@@ -1615,7 +1647,10 @@ function ob_build_cool_shit()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
 
-  if OB_CONFIG.engine == "vanilla" then return "ok" end -- Skip if using Vanilla Doom/SLUMP
+  if OB_CONFIG.engine == "vanilla" then
+    ob_invoke_hook("setup")
+    return "ok" 
+  end -- Skip the rest if using Vanilla Doom/SLUMP
 
   gui.printf("\n\n")
   gui.printf("~~~~~~~ Making Levels ~~~~~~~\n\n")

@@ -57,10 +57,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <filesystem>
 
 #include "processor.h"
-#include "zdmain.h"
 #include "zdwad.h"
+#include "zdbsp.h"
+
+#include "lib_util.h"
 
 // MACROS ------------------------------------------------------------------
 
@@ -81,8 +84,7 @@ static void ShowVersion();
 // PUBLIC DATA DEFINITIONS -------------------------------------------------
 
 const char *Map = NULL;
-const char *InName;
-const char *OutName = "tmp.wad";
+std::filesystem::path OutName = "tmp.wad";
 bool BuildNodes = true;
 bool BuildGLNodes = false;
 bool ConformNodes = false;
@@ -105,52 +107,80 @@ bool V5GLNodes = false;
 
 // CODE --------------------------------------------------------------------
 
-int zdmain(const char *filename, zdbsp_options options) {
-    BuildNodes = options.build_nodes;
-    BuildGLNodes = options.build_gl_nodes;
-    RejectMode = options.reject_mode;
-    CheckPolyobjs = options.check_polyobjs;
-    CompressNodes = options.compress_nodes;
-    CompressGLNodes = options.compress_gl_nodes;
-    ForceCompression = options.force_compression;
-    GLOnly = options.build_gl_only;
+int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF_mode, bool build_reject) {
+
+    if (StringCaseCmp(current_engine, "vanilla") == 0 || StringCaseCmp(current_engine, "nolimit") == 0 ||
+            StringCaseCmp(current_engine, "boom") == 0) {
+            BuildGLNodes = false;
+            GLOnly = false;
+            if (build_reject) {
+                RejectMode = ERM_Rebuild_NoGL;
+            } else {
+                RejectMode = ERM_CreateZeroes;
+            }
+            CheckPolyobjs = false;
+            CompressNodes = false;
+            CompressGLNodes = false;
+            ForceCompression = false;
+        } else if (StringCaseCmp(current_engine, "prboom") == 0) {
+            BuildGLNodes = false;
+            GLOnly = false;
+            if (build_reject) {
+                RejectMode = ERM_Rebuild_NoGL;
+            } else {
+                RejectMode = ERM_CreateZeroes;
+            }
+            CheckPolyobjs = false;
+            CompressNodes = true;
+            CompressGLNodes = false;
+            ForceCompression = false;
+        } else if (StringCaseCmp(current_engine, "eternity") == 0) {
+            if (UDMF_mode) {
+                BuildGLNodes = true;
+                GLOnly = true;
+            } else {
+                BuildGLNodes = false;
+                GLOnly = false;
+            }
+            RejectMode = ERM_DontTouch;  // Eternity might not play well
+                                                // with ZDBSP's reject builder
+            CheckPolyobjs = true;
+            CompressNodes = true;
+            CompressGLNodes = false;
+            ForceCompression = false;
+        } else if (StringCaseCmp(current_engine, "edge") == 0) {
+            BuildGLNodes = true;
+            GLOnly = true;
+            if (!build_reject || UDMF_mode) {
+                RejectMode = ERM_DontTouch;
+            } else {
+                RejectMode = ERM_Rebuild;
+            }
+            CheckPolyobjs = true;
+            CompressNodes = true;
+            CompressGLNodes = false;
+            ForceCompression = false;
+        } else { // ZDoom is the only choice left, so customize for it
+            BuildGLNodes = true;
+            GLOnly = true;
+            if (!build_reject || UDMF_mode) {
+                RejectMode = ERM_DontTouch;
+            } else {
+                RejectMode = ERM_Rebuild;
+            }
+            CheckPolyobjs = true;
+            CompressNodes = true;
+            CompressGLNodes = true;
+            ForceCompression = true;
+        }
 
     ShowVersion();
-
-    bool fixSame = false;
-
-    InName = filename;
 
     try {
         START_COUNTER(t1a, t1b, t1c)
 
-        // When the input and output files are the same, output will go to
-        // a temporary file. After everything is done, the input file is
-        // deleted and the output file is renamed to match the input file.
-
-		char *out = new char[strlen(OutName) + 3], *dot;
-
-		if (out == NULL) {
-            throw std::runtime_error(
-                "Could not create temporary file name.");
-        }
-
-        strcpy(out, OutName);
-        dot = strrchr(out, '.');
-        if (dot && (dot[1] == 'w' || dot[1] == 'W') &&
-            (dot[2] == 'a' || dot[2] == 'A') &&
-            (dot[3] == 'd' || dot[3] == 'D') && dot[4] == 0) {
-            // *.wad becomes *.daw
-            dot[1] = 'd';
-            dot[3] = 'w';
-        } else {
-            // * becomes *.x
-            strcat(out, ".x");
-        }
-        OutName = out;
-        fixSame = true;
-
-        FWadReader inwad(InName);
+        if (std::filesystem::exists(OutName)) { std::filesystem::remove(OutName); }
+        FWadReader inwad(filename);
         FWadWriter outwad(OutName, inwad.IsIWAD());
 
         int lump = 0;
@@ -184,25 +214,16 @@ int zdmain(const char *filename, zdbsp_options options) {
 
         outwad.Close();
         inwad.Close();
-		
-		if (fixSame) {
-			remove(InName);		
-			
-			if (0 != rename(OutName, InName)) {
-				printf(
-					"The output file could not be renamed to %s.\nYou can find "
-					"it as %s.\n",
-					InName, OutName);
-					return 20;
-			}
-		}
+		std::filesystem::remove(filename);			
+        std::filesystem::rename(OutName, filename);
 
-        END_COUNTER(t1a, t1b, t1c, "\nTotal time: %.3f seconds.\n")
+        END_COUNTER(t1a, t1b, t1c, "\nTotal time: %.3f seconds.\n");
+
     } catch (std::runtime_error &msg) {
         printf("%s\n", msg.what());
         return 20;
     } catch (std::bad_alloc &msg) {
-        printf("Out of memory\n");
+        printf("%s\n", msg.what());
         return 20;
     } catch (std::exception &msg) {
         printf("%s\n", msg.what());
