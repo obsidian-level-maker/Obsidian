@@ -73,6 +73,13 @@ function UI_ARCH.setup(self)
       end
     end
   end
+  if type(float_size) == "string" then -- Use upper bound for Mix It Up, Progressive, and Episodic level sizes
+    SEED_W = PARAM.float_level_upper_bound
+    SEED_H = PARAM.float_level_upper_bound
+  else
+    SEED_W = PARAM.float_size
+    SEED_H = PARAM.float_size
+  end
 end
 
 OB_MODULES["ui_arch"] =
