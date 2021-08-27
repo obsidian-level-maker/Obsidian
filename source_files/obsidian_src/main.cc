@@ -266,8 +266,8 @@ void Determine_InstallDir(const char *argv0) {
         install_dir.clear();
     }
 
-    if (Verify_InstallDir(GetExecutablePath())) {
-        install_dir = GetExecutablePath();
+    if (Verify_InstallDir(std::filesystem::current_path().c_str())) {
+        install_dir = std::filesystem::current_path();
     }
 #endif
 
