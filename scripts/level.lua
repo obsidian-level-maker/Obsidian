@@ -254,8 +254,8 @@ function Episode_determine_map_sizes()
       H = W
     end
 
-    assert(W <= SEED_W)
-    assert(H <= SEED_H)
+    assert(W + 4 <= SEED_W)
+    assert(H + 4 <= SEED_H)
 
     LEV.map_W = W
     LEV.map_H = H
