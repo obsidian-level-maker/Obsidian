@@ -112,14 +112,6 @@ LENGTH_CHOICES =
 -- size of each seed square
 SEED_SIZE = 128
 
--- largest map size
-SEED_W    = 90 --112
-SEED_H    = 90 --112
--- MSSP: the absolute maximum size is tightened down to the largest
--- agreed map size for performance's sake. Current agreed maximum is 74 W.
--- any higher will cause skyboxes and teleporter rooms to start merging with
--- the main map.
-
 -- highest possible Z coord (and lowest, when negative)
 EXTREME_H = 32000
 
