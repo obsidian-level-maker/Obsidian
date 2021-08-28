@@ -1014,8 +1014,8 @@ function Grower_decide_extents()
     LEVEL.has_streets = false
   end
 
-  assert(int(LEVEL.map_W) <= SEED_W)
-  assert(int(LEVEL.map_H) <= SEED_H)
+  assert(int(LEVEL.map_W) < SEED_W)
+  assert(int(LEVEL.map_H) < SEED_H)
 
   local map_x1 = 1 + int((SEED_W - LEVEL.map_W) / 2)
   local map_y1 = 1 + int((SEED_H - LEVEL.map_H) / 2)
