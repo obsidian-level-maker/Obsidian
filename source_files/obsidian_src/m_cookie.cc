@@ -110,6 +110,10 @@ static bool Cookie_ParseLine(std::string buf) {
         return false;
     }
 
+    if (StringCaseCmp(value, "MixItUp") == 0) {
+        value = "Mix It Up";
+    }
+
     Cookie_SetValue(name, value);
     return true;
 }
