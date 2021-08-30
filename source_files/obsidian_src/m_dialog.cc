@@ -282,9 +282,7 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
         src_name.replace_extension(ext);
 
         // check if exists, ask for confirmation
-        std::ifstream fp{src_name};
-        if (fp) {
-            fp.close();
+        if (std::filesystem::exists(src_name)) {
             if (!fl_choice("%s", fl_cancel, fl_ok, NULL,
                            Fl_Native_File_Chooser::file_exists_message)) {
                 return "";  // cancelled
