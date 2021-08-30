@@ -100,8 +100,7 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
 
     if (longtip.empty()) {
         longtip =
-            "Detailed help not yet written for this setting. For quick help, "
-            "hover over the option name to display a tooltip.";
+            fmt::format("Detailed help not yet written for this setting.\nCurrent short help/tooltip:\n{}", tip);
     }
 
     UI_RChoice *rch = new UI_RChoice(nx, ny + kf_h(15), nw * .95,
@@ -168,8 +167,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
 
     if (longtip.empty()) {
         longtip =
-            "Detailed help not yet written for this setting. For quick help, "
-            "hover over the option name to display a tooltip.";
+            fmt::format("Detailed help not yet written for this setting.\nCurrent short help/tooltip:\n{}", tip);
     }
 
     label = fmt::format("{}: ", label);
@@ -331,8 +329,7 @@ void UI_Module::AddButtonOption(std::string opt, std::string label,
 
     if (longtip.empty()) {
         longtip =
-            "Detailed help not yet written for this setting. For quick help, "
-            "hover over the option name to display a tooltip.";
+            fmt::format("Detailed help not yet written for this setting.\nCurrent short help/tooltip:\n{}", tip);
     }
 
     UI_RButton *rbt = new UI_RButton(nx, ny + kf_h(15), nw * .95, kf_h(24));
