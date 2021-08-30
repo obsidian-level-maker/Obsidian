@@ -46,7 +46,7 @@ PREFABS.Wall_gtd_generic_sunderfall_barred_no_liq =
 {
   template = "Wall_gtd_generic_sunderfall",
 
-  group = "gtd_sunderfall_barred"
+  group = "gtd_sunderfall_barred",
 
   rank = 2,
 
