@@ -1319,7 +1319,8 @@ DOOM.THEMES =
       gtd_wall_lamp_thin = 16,
       gtd_wall_lamp_thicc = 16,
       --
-      gtd_sunderfall = 25,
+      gtd_sunderfall = 13,
+      gtd_sunderfall_barred = 13,
     },
 
     outdoor_wall_groups =
@@ -1745,7 +1746,8 @@ DOOM.THEMES =
       gtd_gothic_ceilwall_braced_arch = 18,
       gtd_gothic_ceilwall_xzibit_arch = 18,
       --
-      gtd_sunderfall = 50,
+      gtd_sunderfall = 25,
+      gtd_sunderfall_barred = 25,
     },
 
     window_groups =
@@ -2217,7 +2219,8 @@ DOOM.THEMES =
       gtd_gothic_ceilwall_braced_arch = 18,
       gtd_gothic_ceilwall_xzibit_arch = 18,
       --
-      gtd_sunderfall = 50,
+      gtd_sunderfall = 25,
+      gtd_sunderfall_barred = 25,
     },
 
     outdoor_wall_groups =
