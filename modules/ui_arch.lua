@@ -74,7 +74,7 @@ function UI_ARCH.setup(self)
     end
   end
   if OB_CONFIG.engine ~= "vanilla" then
-    if type(float_size) == "string" then -- Use upper bound for Mix It Up, Progressive, and Episodic level sizes - Dasho
+    if type(PARAM.float_size) == "string" then -- Use upper bound for Mix It Up, Progressive, and Episodic level sizes - Dasho
     -- MSSP: the absolute maximum size is tightened down to the largest
     -- agreed map size for performance's sake. Current agreed maximum is 74 W.
     -- any higher will cause skyboxes and teleporter rooms to start merging with
