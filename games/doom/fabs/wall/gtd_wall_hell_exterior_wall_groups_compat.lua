@@ -1,6 +1,6 @@
 PREFABS.Wall_hell_outdoor_huge_overhang_thin = --#
 {
-  file = "wall/gtd_wall_tech_exterior_wall_groups_compat.wad",
+  file = "wall/gtd_wall_hell_exterior_wall_groups_compat.wad",
   map = "MAP07",
 
   group = "hell_o_huge_overhang",
