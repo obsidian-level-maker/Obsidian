@@ -42,11 +42,9 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
     }
 
     mod_button =
-        new UI_ModuleDropDown(X - kf_w(6), Y + kf_h(5), W - kf_w(12), kf_h(24));
-    mod_button->box(FL_FLAT_BOX);
+        new UI_ModuleDropDown(X + kf_w(6), Y + kf_h(5), W - kf_w(12), kf_h(24));
+    mod_button->box(FL_NO_BOX);
     mod_button->color(WINDOW_BG);
-    mod_button->labelsize(18);  // Scales very goofily with font size -- Dasho
-    mod_button->copy_label("@-2+");
 
     if (Is_UI()) {
         mod_button->value(1);

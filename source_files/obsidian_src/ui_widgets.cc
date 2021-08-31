@@ -608,40 +608,42 @@ UI_ModuleDropDown::UI_ModuleDropDown(int x, int y, int w, int h)
 
 UI_ModuleDropDown::~UI_ModuleDropDown() {}
 
-int UI_ModuleDropDown::handle(int event) {
-  switch (event) {
-  case FL_RELEASE:
-    if (box()) {
-        if (value()) {
-            copy_label("  ");
-            redraw();
-            copy_label("@-2line");
-        } else {
-            copy_label(" ");
-            redraw();
-            copy_label("@-2+");
-        }
-        redraw();
-    }
-  default:
-    return Fl_Button::handle(event);
-  }
-}
-
 // Custom draw function to use the checkmark style regardless of box type and
 // respect custom colors
 void UI_ModuleDropDown::draw() {
+    if (box()) {
+        draw_box(this == Fl::pushed() ? fl_down(box()) : box(), BUTTON_COLOR);
+    }
+    Fl_Color col = value() ? (active_r() ? selection_color()
+                                         : fl_inactive(selection_color()))
+                           : BUTTON_COLOR;
+
     int W = labelsize();
     int bx = Fl::box_dx(box());  // box frame width
     int dx = bx + 2;             // relative position of check mark etc.
     int dy = (h() - W) / 2;      // neg. offset o.k. for vertical centering
     int lx = 0;                  // relative label position (STR #3237)
 
-    draw_box(FL_FLAT_BOX, x() + dx, y() + dy, W, W, WINDOW_BG);
+    if (value()) {
+        fl_color(col);
+        int tx = x() + dx + 3;
+        int tw = W - 6;
+        int ty = y() + dy + (W) / 2 - 2;
+        for (int n = 0; n < 3; n++) {
+            fl_xyline(tx, ty, tx + tw);
+        }
+    } else {
+        fl_color(col);
+        int tx = x() + dx + 3;
+        int tw = W - 6;
+        int ty = y() + dy + (W) / 2 - 2;
+    }
     lx = dx + W + 2;
     draw_label(x() + lx, y(), w() - lx - bx, h());
+    if (Fl::focus() == this) {
+        draw_focus();
+    }
 }
-
 //----------------------------------------------------------------
 
 UI_CustomMenu::UI_CustomMenu(int x, int y, int w, int h, std::string label)
