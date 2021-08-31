@@ -655,6 +655,14 @@ function Episode_plan_monsters()
 
     skip_num = rand.int(skip_num + LEV.game_along + 0.02)
 
+    -- MSSP: Sometimes, *don't* skip monsters later on in the map
+    -- because it's perfectly fine to have the whole kitchen sink
+    if LEV.game_along > 0.5 then
+      if rand.odds(50 * (LEV.game_along + 0.25)) then
+        skip_num = rand.irange(0, skip_num)
+      end
+    end
+
     for i = 1, skip_num do
       local mon = rand.key_by_probs(LEV.global_pal)
 
