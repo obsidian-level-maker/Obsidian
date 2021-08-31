@@ -1041,7 +1041,7 @@ config *get_config(std::filesystem::path filename) {
     /* Set various defaults and stuff */
     answer->configfile = strdup("SLUMP.CFG"); /* So's we kin free() it */
     answer->cwadonly = SLUMP_FALSE;
-    answer->outfile = strdup(filename.c_str());
+    answer->outfile = strdup(filename.string().c_str());
 
     ok_to_roll = SLUMP_TRUE;
 
