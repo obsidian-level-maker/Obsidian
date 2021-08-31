@@ -385,6 +385,7 @@ PREFABS.Wall_tech_outdoor_black_mesa_overlook = -- #
   template = "Wall_tech_outdoor_caution_strip",
   map = "MAP18",
 
+  rank = 2,
   engine = "zdoom",
 
   height = 192,
@@ -403,6 +404,7 @@ PREFABS.Wall_tech_outdoor_black_mesa_overlook_EPIC =
   template = "Wall_tech_outdoor_caution_strip",
   map = "MAP18",
 
+  rank = 2,
   engine = "zdoom",
   replaces = "Wall_tech_outdoor_black_mesa_overlook",
 

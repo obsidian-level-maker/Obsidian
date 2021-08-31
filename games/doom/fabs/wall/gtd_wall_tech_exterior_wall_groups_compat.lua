@@ -100,3 +100,20 @@ PREFABS.Wall_outdoor_shiny_silver_overhang_EPIC_thin =
 
   bound_z2 = 160
 }
+
+PREFABS.Wall_tech_outdoor_black_mesa_overlook_thin = -- #
+{
+  template = "Wall_tech_outdoor_overhanging_braced_vent_thin",
+  map = "MAP18",
+
+  rank = 1,
+  height = 192,
+
+  deep = 64,
+
+  group = "tech_o_black_mesa_overlook",
+
+  z_fit = { 120,164 },
+
+  bound_z2 = 192
+}
