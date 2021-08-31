@@ -20,7 +20,6 @@ PREFABS.Wall_tech_outdoor_caution_strip = --#
 PREFABS.Wall_tech_outdoor_orange_light_stack = --#
 {
   template = "Wall_tech_outdoor_caution_strip",
-
   map      = "MAP02",
 
   group = "tech_o_orange_light_stack",
@@ -33,7 +32,6 @@ PREFABS.Wall_tech_outdoor_orange_light_stack = --#
 PREFABS.Wall_tech_outdoor_lite_strip_white = --#
 {
   template = "Wall_tech_outdoor_caution_strip",
-
   map    = "MAP03",
 
   group = "tech_o_lite_strip_white",
@@ -44,7 +42,6 @@ PREFABS.Wall_tech_outdoor_lite_strip_white = --#
 PREFABS.Wall_tech_outdoor_lite_strip_blue = --#
 {
   template = "Wall_tech_outdoor_caution_strip",
-
   map    = "MAP03",
 
   group = "tech_o_lite_strip_blue",
@@ -59,7 +56,6 @@ PREFABS.Wall_tech_outdoor_lite_strip_blue = --#
 PREFABS.Wall_tech_outdoor_inset_teklite = --#
 {
   template = "Wall_tech_outdoor_caution_strip",
-
   map      = "MAP04",
 
   group = "tech_o_inset_teklite",
@@ -70,7 +66,6 @@ PREFABS.Wall_tech_outdoor_inset_teklite = --#
 PREFABS.Wall_tech_outdoor_inset_teklite2 = --#
 {
   template = "Wall_tech_outdoor_caution_strip",
-
   map      = "MAP04",
 
   group = "tech_o_inset_teklite2",
@@ -85,7 +80,6 @@ PREFABS.Wall_tech_outdoor_inset_teklite2 = --#
 PREFABS.Wall_tech_outdoor_halfbase_green_light = --#
 {
   template = "Wall_tech_outdoor_caution_strip",
-
   map      = "MAP05",
 
   group = "tech_o_halfbase_green_light",
@@ -96,7 +90,6 @@ PREFABS.Wall_tech_outdoor_halfbase_green_light = --#
 PREFABS.Wall_tech_outdoor_halfbase_blue_triangle = --#
 {
   template = "Wall_tech_outdoor_caution_strip",
-
   map      = "MAP05",
 
   group = "tech_o_halfbase_blue_triangle",
@@ -111,7 +104,6 @@ PREFABS.Wall_tech_outdoor_halfbase_blue_triangle = --#
 PREFABS.Wall_tech_outdoor_giant_UAC_sign = --#
 {
   template = "Wall_tech_outdoor_caution_strip",
-
   map = "MAP06",
 
   group = "tech_o_giant_UAC_sign",
@@ -132,7 +124,6 @@ PREFABS.Wall_tech_outdoor_giant_UAC_sign = --#
 PREFABS.Wall_tech_outdoor_double_hanging_vents = --#
 {
   template = "Wall_tech_outdoor_caution_strip",
-
   map = "MAP07",
 
   group = "tech_o_double_hanging_vents",
@@ -151,9 +142,9 @@ PREFABS.Wall_tech_outdoor_double_hanging_vents = --#
 PREFABS.Wall_tech_outdoor_overhanging_braced_vent = --#
 {
   template = "Wall_tech_outdoor_caution_strip",
-
   map = "MAP08",
 
+  rank = 2,
   group = "tech_o_overhanging_braced_vent",
 
   height = 192,
@@ -170,6 +161,7 @@ PREFABS.Wall_tech_outdoor_overhanging_lite_platform = --#
 
   map = "MAP09",
 
+  rank = 2,
   group = "tech_o_overhanging_lite_platform",
 
   deep = 64,
@@ -180,7 +172,6 @@ PREFABS.Wall_tech_outdoor_overhanging_lite_platform = --#
 PREFABS.Wall_tech_outdoor_pipe_junctions = --#
 {
   template = "Wall_tech_outdoor_caution_strip",
-
   map = "MAP10",
 
   group = "tech_o_pipe_junctions",
@@ -201,9 +192,9 @@ PREFABS.Wall_tech_outdoor_pipe_junctions = --#
 PREFABS.Wall_tech_hadleys_hope_sort_of_wall = --#
 {
   template = "Wall_tech_outdoor_caution_strip",
-
   map = "MAP11",
 
+  rank = 2,
   group = "tech_o_hadleys_hope",
 
   height = 192,
@@ -220,9 +211,9 @@ PREFABS.Wall_tech_hadleys_hope_sort_of_wall = --#
 PREFABS.Wall_tech_overhanging_lights = --#
 {
   template = "Wall_tech_outdoor_caution_strip",
-
   map = "MAP12",
 
+  rank = 2,
   group = "tech_o_overhanging_lights",
 
   deep = 64,
@@ -235,8 +226,9 @@ PREFABS.Wall_tech_overhanging_lights = --#
 PREFABS.Wall_outdoor_shiny_silver_overhang = --#
 {
   template = "Wall_tech_outdoor_caution_strip",
-
   map = "MAP13",
+
+  rank = 2,
 
   group = "tech_o_shiny_silver_overhang",
 
@@ -257,8 +249,9 @@ PREFABS.Wall_outdoor_shiny_silver_overhang = --#
 PREFABS.Wall_outdoor_shiny_silver_overhang_EPIC =
 {
   template = "Wall_tech_outdoor_caution_strip",
-
   map = "MAP13",
+
+  rank = 2,
 
   texture_pack = "armaetus",
   replaces = "Wall_outdoor_shiny_silver_overhang",
@@ -392,6 +385,7 @@ PREFABS.Wall_tech_outdoor_black_mesa_overlook = -- #
   template = "Wall_tech_outdoor_caution_strip",
   map = "MAP18",
 
+  rank = 2,
   engine = "zdoom",
 
   height = 192,
@@ -410,6 +404,7 @@ PREFABS.Wall_tech_outdoor_black_mesa_overlook_EPIC =
   template = "Wall_tech_outdoor_caution_strip",
   map = "MAP18",
 
+  rank = 2,
   engine = "zdoom",
   replaces = "Wall_tech_outdoor_black_mesa_overlook",
 
