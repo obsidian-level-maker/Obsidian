@@ -611,12 +611,7 @@ UI_ModuleDropDown::~UI_ModuleDropDown() {}
 // Custom draw function to use the checkmark style regardless of box type and
 // respect custom colors
 void UI_ModuleDropDown::draw() {
-    if (box()) {
-        draw_box(this == Fl::pushed() ? fl_down(box()) : box(), BUTTON_COLOR);
-    }
-    Fl_Color col = value() ? (active_r() ? selection_color()
-                                         : fl_inactive(selection_color()))
-                           : BUTTON_COLOR;
+    Fl_Color col = FONT_COLOR;
 
     int W = labelsize();
     int bx = Fl::box_dx(box());  // box frame width
@@ -628,15 +623,17 @@ void UI_ModuleDropDown::draw() {
         fl_color(col);
         int tx = x() + dx + 3;
         int tw = W - 6;
-        int ty = y() + dy + (W) / 2 - 2;
-        for (int n = 0; n < 3; n++) {
-            fl_xyline(tx, ty, tx + tw);
-        }
+        int ty = y() + dy + W / 2 - 2;
+        fl_xyline(tx, ty, tx + tw);
     } else {
         fl_color(col);
         int tx = x() + dx + 3;
         int tw = W - 6;
-        int ty = y() + dy + (W) / 2 - 2;
+        int d1 = tw/3;
+        int d2 = tw-d1;
+        int ty = y() + dy + (W+d2)/2-d1-2;
+        fl_xyline(tx, ty, tx + tw);
+        fl_yxline(tx+d1+2, ty-d1-2, ty+d1+2);
     }
     lx = dx + W + 2;
     draw_label(x() + lx, y(), w() - lx - bx, h());
