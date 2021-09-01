@@ -42,8 +42,9 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
     }
 
     mod_button =
-        new UI_ModuleDropDown(X + kf_w(6), Y + kf_h(5), W - kf_w(12), kf_h(24));
+        new UI_CustomCheckBox(X + kf_w(6), Y + kf_h(5), W - kf_w(12), kf_h(24));
     mod_button->box(FL_NO_BOX);
+    mod_button->down_box(FL_NO_BOX);
     mod_button->color(WINDOW_BG);
 
     if (Is_UI()) {
