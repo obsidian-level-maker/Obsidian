@@ -551,6 +551,7 @@ PREFABS.Item_dem_waiting_room_closets =
   y_fit = "frame",
 
   texture_pack = "armaetus",
+  replaces = "Item_dem_waiting_room_closets_vanilla",
 
   tex_STARTAN1 = {
     BRICK1=50, BRICK12=50, BRICK11=50,
@@ -565,6 +566,42 @@ PREFABS.Item_dem_waiting_room_closets =
   tex_CPAQLRRE = {
     CPAQLRRE=50, CPGARDEN=50, CPGARDN2=50,
     CPHRSEMN=50, CPHRSMN2=50,
+  }
+}
+
+PREFABS.Item_dem_waiting_room_closets_vanilla =
+{
+  file = "item/dem_item_closets.wad",
+  map = "MAP12",
+
+  engine = "zdoom",
+
+  prob = 2000,
+
+  theme = "urban",
+  env = "outdoor",
+
+  where = "seeds",
+
+  seed_w = 3,
+  seed_h = 2,
+
+  deep = 16,
+
+  x_fit = "frame",
+  y_fit = "frame",
+
+  tex_STARTAN1 = {
+    BRICK1=50, BRICK12=50, BRICK11=50,
+    BRICK2=50, BRICK4=50,
+    BRICK6=50, BRICK7=50, BRICK8=50,
+    STONE2=50, SHAWN4=50, SHAWN5=50,
+    STUCCO=50,  STUCCO1=50,  STUCCO3=50, STARGR1=50, GRAY7=50,
+    PANEL6=50, BRIKS40=50, BRIKS43=50,
+    GOTH16=50, GOTH31=50, WD03=50,
+  },
+  tex_CPAQLRRE = {
+    SKY1 = 50, SKY2 = 50, SKY3 = 50
   }
 }
 

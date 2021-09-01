@@ -241,19 +241,20 @@ PREFABS.Joiner_bar_vanilla =
 PREFABS.Joiner_waiting_room =
 {
   template = "Joiner_living_room",
-  map    = "MAP07",
+  map = "MAP07",
 
   engine = "zdoom",
 
-  prob   = 2500,
+  prob = 2500,
 
-  env      = "outdoor",
+  env = "outdoor",
   neighbor = "building",
 
   seed_w = 3,
   seed_h = 2,
 
   texture_pack = "armaetus",
+  replaces = "Joiner_waiting_room_vanilla",
 
   tex_BRICK9 = "BRICK9",
   tex_STARTAN1 = {
@@ -268,6 +269,36 @@ PREFABS.Joiner_waiting_room =
   tex_CPAQLRRE = {
     CPAQLRRE=50, CPGARDEN=50, CPGARDN2=50,
     CPHRSEMN=50, CPHRSMN2=50
+  }
+}
+
+PREFABS.Joiner_waiting_room_vanilla =
+{
+  template = "Joiner_living_room",
+  map = "MAP07",
+
+  engine = "zdoom",
+
+  prob = 2500,
+
+  env = "outdoor",
+  neighbor = "building",
+
+  seed_w = 3,
+  seed_h = 2,
+
+  tex_BRICK9 = "BRICK9",
+  tex_STARTAN1 = {
+    BRICK1=50, BRICK12=50, BRICK11=50,
+    BRICK2=50, BRICK4=50,
+    BRICK6=50, BRICK7=50, BRICK8=50,
+    STONE2=50, SHAWN4=50, SHAWN5=50,
+    STUCCO=50,  STUCCO1=50,  STUCCO3=50, STARGR1=50, GRAY7=50,
+    PANEL6=50, BRIKS40=50, BRIKS43=50,
+    GOTH16=50, GOTH31=50, WD03=50
+  },
+  tex_CPAQLRRE = {
+    SKY1 = 50, SKY2 = 50, SKY3 = 50
   }
 }
 
