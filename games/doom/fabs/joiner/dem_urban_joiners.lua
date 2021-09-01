@@ -361,11 +361,6 @@ PREFABS.Joiner_cornerstore =
     GOTH31=50, BRICK9=50,
     BRICK10=50,TANROCK2=50, TANROCK3=50
   },
-
-  tex_DNSTOR05 = "STEP4",
-  tex_DNSTOR06 = "STEP4",
-  tex_DNSTOR09 = "STEP4",
-  tex_MIDSPAC5 = "MIDSPACE"
 }
 
 PREFABS.Joiner_cornerstore_vanilla =
@@ -394,6 +389,11 @@ PREFABS.Joiner_cornerstore_vanilla =
     GOTH31=50, BRICK9=50,
     BRICK10=50,TANROCK2=50, TANROCK3=50
   }
+
+  tex_DNSTOR05 = "STEP4",
+  tex_DNSTOR06 = "STEP4",
+  tex_DNSTOR09 = "STEP4",
+  tex_MIDSPAC5 = "MIDSPACE"
 }
 
 --a fairly intact bookstore
