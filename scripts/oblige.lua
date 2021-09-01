@@ -1086,10 +1086,16 @@ function ob_init()
     for _,def in pairs(list) do
       if what == "module" then
         local where = def.side or "right"
-        if def.color then
-          gui.add_module(where, def.name, def.label, def.tooltip, def.color["red"], def.color["green"], def.color["blue"])
+        local suboptions
+        if def.options then
+          suboptions = 0
         else
-          gui.add_module(where, def.name, def.label, def.tooltip, nil, nil, nil)
+          suboptions = 1
+        end
+        if def.color then
+          gui.add_module(where, def.name, def.label, def.tooltip, def.color["red"], def.color["green"], def.color["blue"], suboptions)
+        else
+          gui.add_module(where, def.name, def.label, def.tooltip, nil, nil, nil, suboptions)
         end
       else
         gui.add_choice(what, def.name, def.label)

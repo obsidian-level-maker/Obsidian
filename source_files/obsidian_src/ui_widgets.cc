@@ -258,13 +258,9 @@ UI_CustomCheckBox::~UI_CustomCheckBox() {}
 
 // Custom draw function to use the checkmark style regardless of box type and
 // respect custom colors
+// Will also, in the absence of a down box, revert to drawing +/- instead.
+// This is for modules that expand into a series of options
 void UI_CustomCheckBox::draw() {
-    if (box()) {
-        draw_box(this == Fl::pushed() ? fl_down(box()) : box(), BUTTON_COLOR);
-    }
-    Fl_Color col = value() ? (active_r() ? selection_color()
-                                         : fl_inactive(selection_color()))
-                           : BUTTON_COLOR;
 
     int W = labelsize();
     int bx = Fl::box_dx(box());  // box frame width
@@ -272,18 +268,37 @@ void UI_CustomCheckBox::draw() {
     int dy = (h() - W) / 2;      // neg. offset o.k. for vertical centering
     int lx = 0;                  // relative label position (STR #3237)
 
-    draw_box(down_box(), x() + dx, y() + dy, W, W, BUTTON_COLOR);
-    if (value()) {
-        fl_color(col);
-        int tx = x() + dx + 3;
-        int tw = W - 6;
-        int d1 = tw / 3;
-        int d2 = tw - d1;
-        int ty = y() + dy + (W + d2) / 2 - d1 - 2;
-        for (int n = 0; n < 3; n++, ty++) {
-            fl_line(tx, ty, tx + d1, ty + d1);
-            fl_line(tx + d1, ty + d1, tx + tw - 1, ty + d1 - d2 + 1);
+    if (down_box()) {
+        draw_box(down_box(), x() + dx, y() + dy, W, W, BUTTON_COLOR);
+        if (value()) {
+            fl_color(SELECTION);
+            int tx = x() + dx + 3;
+            int tw = W - 6;
+            int d1 = tw / 3;
+            int d2 = tw - d1;
+            int ty = y() + dy + (W + d2) / 2 - d1 - 2;
+            for (int n = 0; n < 3; n++, ty++) {
+                fl_line(tx, ty, tx + d1, ty + d1);
+                fl_line(tx + d1, ty + d1, tx + tw - 1, ty + d1 - d2 + 1);
+            }
         }
+    } else {
+        if (value()) {
+            fl_color(FONT_COLOR);
+            int tx = x() + dx + 3;
+            int tw = W - 6;
+            int ty = y() + dy + W / 2 - 2;
+            fl_xyline(tx, ty, tx + tw);
+        } else {
+            fl_color(FONT_COLOR);
+            int tx = x() + dx + 3;
+            int tw = W - 6;
+            int d1 = tw/3;
+            int d2 = tw-d1;
+            int ty = y() + dy + (W+d2)/2-d1-2;
+            fl_xyline(tx, ty, tx + tw);
+            fl_yxline(tx+d1+2, ty-d1-2, ty+d1+2);
+        }       
     }
     lx = dx + W + 2;
     draw_label(x() + lx, y(), w() - lx - bx, h());
@@ -597,49 +612,6 @@ void UI_ManualEntry::draw() {
        if (Fl::focus() == this)
        draw_focus();
      */
-}
-
-//----------------------------------------------------------------
-
-UI_ModuleDropDown::UI_ModuleDropDown(int x, int y, int w, int h)
-    : Fl_Check_Button(x, y, w, h) {
-    visible_focus(0);
-}
-
-UI_ModuleDropDown::~UI_ModuleDropDown() {}
-
-int UI_ModuleDropDown::handle(int event) {
-  switch (event) {
-  case FL_RELEASE:
-    if (box()) {
-        if (value()) {
-            copy_label("  ");
-            redraw();
-            copy_label("@-2line");
-        } else {
-            copy_label(" ");
-            redraw();
-            copy_label("@-2+");
-        }
-        redraw();
-    }
-  default:
-    return Fl_Button::handle(event);
-  }
-}
-
-// Custom draw function to use the checkmark style regardless of box type and
-// respect custom colors
-void UI_ModuleDropDown::draw() {
-    int W = labelsize();
-    int bx = Fl::box_dx(box());  // box frame width
-    int dx = bx + 2;             // relative position of check mark etc.
-    int dy = (h() - W) / 2;      // neg. offset o.k. for vertical centering
-    int lx = 0;                  // relative label position (STR #3237)
-
-    draw_box(FL_FLAT_BOX, x() + dx, y() + dy, W, W, WINDOW_BG);
-    lx = dx + W + 2;
-    draw_label(x() + lx, y(), w() - lx - bx, h());
 }
 
 //----------------------------------------------------------------
