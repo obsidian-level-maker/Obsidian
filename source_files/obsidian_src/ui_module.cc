@@ -31,7 +31,7 @@
 
 UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
                      std::string label, std::string tip, int red, int green,
-                     int blue)
+                     int blue, bool suboptions)
     : Fl_Group(X, Y, W, H), choice_map(), cur_opt_y(0) {
     box(box_style);
 
@@ -44,7 +44,7 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
     mod_button =
         new UI_CustomCheckBox(X + kf_w(6), Y + kf_h(5), W - kf_w(12), kf_h(24));
     mod_button->box(FL_NO_BOX);
-    mod_button->down_box(FL_NO_BOX);
+    if (!suboptions) { mod_button->down_box(FL_NO_BOX); }
     mod_button->color(WINDOW_BG);
 
     if (Is_UI()) {
@@ -798,9 +798,9 @@ typedef struct {
 } mod_enable_callback_data_t;
 
 void UI_CustomMods::AddModule(std::string id, std::string label,
-                              std::string tip, int red, int green, int blue) {
+                              std::string tip, int red, int green, int blue, bool suboptions) {
     UI_Module *M = new UI_Module(mx, my, mw - 4, kf_h(34), id, label, tip, red,
-                                 green, blue);
+                                 green, blue, suboptions);
 
     mod_enable_callback_data_t *cb_data = new mod_enable_callback_data_t;
     cb_data->mod = M;

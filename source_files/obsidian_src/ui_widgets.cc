@@ -258,6 +258,8 @@ UI_CustomCheckBox::~UI_CustomCheckBox() {}
 
 // Custom draw function to use the checkmark style regardless of box type and
 // respect custom colors
+// Will also, in the absence of a down box, revert to drawing +/- instead.
+// This is for modules that expand into a series of options
 void UI_CustomCheckBox::draw() {
     Fl_Color col;
     if (down_box()) {

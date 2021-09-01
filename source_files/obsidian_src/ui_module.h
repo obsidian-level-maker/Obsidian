@@ -55,7 +55,7 @@ class UI_Module : public Fl_Group {
 
    public:
     UI_Module(int X, int Y, int W, int H, std::string id, std::string label,
-              std::string tip, int red, int green, int blue);
+              std::string tip, int red, int green, int blue, bool suboptions);
     virtual ~UI_Module();
 
     void AddOption(std::string option, std::string label, std::string tip,
@@ -130,7 +130,7 @@ class UI_CustomMods : public Fl_Group {
 
    public:
     void AddModule(std::string id, std::string label, std::string tip, int red,
-                   int green, int blue);
+                   int green, int blue, bool suboptions);
 
     // these return false if module is unknown
     bool ShowModule(std::string id, bool new_shown);

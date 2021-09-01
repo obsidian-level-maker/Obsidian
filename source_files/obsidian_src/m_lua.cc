@@ -456,6 +456,7 @@ int gui_add_module(lua_State *L) {
     int red = luaL_optinteger(L, 5, -1);
     int green = luaL_optinteger(L, 6, -1);
     int blue = luaL_optinteger(L, 7, -1);
+    bool suboptions = luaL_checkinteger(L, 8);
 
     SYS_ASSERT(!where.empty() && !id.empty() && !label.empty());
 
@@ -471,12 +472,12 @@ int gui_add_module(lua_State *L) {
     }
 
     if (single_pane) {
-        main_win->left_mods->AddModule(id, label, tip, red, green, blue);
+        main_win->left_mods->AddModule(id, label, tip, red, green, blue, suboptions);
     } else {
         if (!StringCaseCmp(where, "left")) {
-            main_win->left_mods->AddModule(id, label, tip, red, green, blue);
+            main_win->left_mods->AddModule(id, label, tip, red, green, blue, suboptions);
         } else if (!StringCaseCmp(where, "right")) {
-            main_win->right_mods->AddModule(id, label, tip, red, green, blue);
+            main_win->right_mods->AddModule(id, label, tip, red, green, blue, suboptions);
         } else {
             return luaL_error(L, "add_module: unknown where value '%s'\n",
                               where.c_str());
