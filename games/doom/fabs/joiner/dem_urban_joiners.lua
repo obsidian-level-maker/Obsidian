@@ -72,6 +72,25 @@ PREFABS.Joiner_bedroom =
   seed_h = 2,
 
   texture_pack = "armaetus",
+  replaces = "Joiner_bedroom_vanilla"
+}
+
+PREFABS.Joiner_bedroom_vanilla =
+{
+  template = "Joiner_living_room",
+  map = "MAP03",
+
+  prob = 3000,
+
+  env      = "outdoor",
+  neighbor = "outdoor",
+
+  seed_w = 3,
+  seed_h = 2,
+
+  tex_EVILFACA = "WOOD4",
+  tex_TVSNOW01 = "SPACEW3",
+  flat_GRENFLOR = "GRASS1"
 }
 
 --a bedroom joiner but with a secret
@@ -95,12 +114,43 @@ PREFABS.Joiner_bedroom2 =
   seed_h = 2,
 
   texture_pack = "armaetus",
+  replaces = "Joiner_bedroom2_vanilla",
 
   thing_2013 =
   {
     soul = 50,
     blue_armor = 50,
   }
+}
+
+PREFABS.Joiner_bedroom2_vanilla =
+{
+  template = "Joiner_living_room",
+  map = "MAP04",
+
+  prob = 2500,
+
+  theme = "urban",
+
+  engine = "zdoom",
+
+  env      = "outdoor",
+  neighbor = "outdoor",
+
+  style = "secrets",
+
+  seed_w = 3,
+  seed_h = 2,
+
+  thing_2013 =
+  {
+    soul = 50,
+    blue_armor = 50,
+  },
+
+  tex_EVILFACA = "WOOD4",
+  tex_TVSNOW01 = "SPACEW3",
+  flat_GRENFLOR = "GRASS1"
 }
 
 --an appartment stairwell joiner
@@ -142,6 +192,7 @@ PREFABS.Joiner_bar =
   seed_h = 2,
 
   texture_pack = "armaetus",
+  replaces = "Joiner_bar_vanilla",
 
   tex_BRICK9 = "BRICK9",
   tex_STARTAN1 = {
@@ -154,6 +205,36 @@ PREFABS.Joiner_bar =
     PANEL6=50, BRIKS40=50, BRIKS43=50,
     GOTH16=50, GOTH31=50, WD03=50,
   },
+}
+
+PREFABS.Joiner_bar_vanilla =
+{
+  template = "Joiner_living_room",
+  map    = "MAP06",
+
+  engine = "zdoom",
+
+  prob   = 3500,
+
+  env      = "outdoor",
+  neighbor = "building",
+
+  seed_w = 3,
+  seed_h = 2,
+
+  tex_BRICK9 = "BRICK9",
+  tex_STARTAN1 = {
+    BRICK1=50, BRICK12=50, BRICK11=50,
+    BRICK2=50, BRICK4=50,
+    BRICK6=50, BRICK7=50, BRICK8=50,
+    STONE2=50, SHAWN4=50, SHAWN5=50,
+    STUCCO=50, STUCCO1=50, STUCCO3=50,
+    STARGR1=50, GRAY7=50,
+    PANEL6=50, BRIKS40=50, BRIKS43=50,
+    GOTH16=50, GOTH31=50, WD03=50,
+  },
+
+  tex_TEKGRDR = "SHAWN1"
 }
 
 --a waiting room joiner

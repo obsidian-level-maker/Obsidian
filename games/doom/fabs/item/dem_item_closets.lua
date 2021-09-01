@@ -78,7 +78,6 @@ PREFABS.Item_dem_rift_closet =
     skull_rock = 50,
     big_tree = 50,
     burnt_tree = 50,
-
   },
 
   thing_25 =
@@ -92,9 +91,7 @@ PREFABS.Item_dem_rift_closet =
     skull_rock = 50,
     big_tree = 50,
     burnt_tree = 50,
-
   }
-
 }
 
 --an item forgotten in a grocery store
@@ -154,7 +151,6 @@ PREFABS.Item_dem_grocerystore_closet =
     hang_leg   = 50,
     hang_leg_gone = 50,
   }
-
 }
 
 PREFABS.Item_dem_grocerystore_closet_vanilla =
@@ -421,7 +417,9 @@ PREFABS.Item_dem_bedroom_closet_vanilla =
     STUCCO=50, STUCCO1=50, STUCCO3=50,
   },
 
-  tex_EVILFACA = "WOOD4"
+  tex_EVILFACA = "WOOD4",
+  tex_TVSNOW01 = "SPACEW3",
+  flat_GRENFLOR = "GRASS1"
 }
 
 --an appartment stairwell with a ritual and an item
@@ -679,7 +677,9 @@ PREFABS.Item_dem_cornerstore_closets_vanilla =
   },
 
   tex_DNSTOR05 = "STEP4",
-  tex_DNSTOR06 = "STEP4"
+  tex_DNSTOR06 = "STEP4",
+  tex_DNSTOR09 = "STEP4",
+  tex_MIDSPAC5 = "MIDSPACE"
 }
 
 --a fairly intact bookstore with an item inside
@@ -754,7 +754,9 @@ PREFABS.Item_dem_bookstore_closets_vanilla =
   },
 
   tex_PANBOOK1 = "PANBOOK",
+  tex_PANBOOK3 = "PANBOOK",
   tex_PANBOOK4 = "PANBOOK",
+  tex_FENCE9 = "MIDSPACE",
   flat_GATE4YL = "FLAT5_5",
   flat_GRENFLOR = "GRASS1",
 }
