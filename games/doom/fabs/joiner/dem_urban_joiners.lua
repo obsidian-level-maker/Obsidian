@@ -360,7 +360,7 @@ PREFABS.Joiner_cornerstore =
     PANEL6=50, BRIKS40=50, BRIKS43=50,
     GOTH31=50, BRICK9=50,
     BRICK10=50,TANROCK2=50, TANROCK3=50
-  },
+  }
 }
 
 PREFABS.Joiner_cornerstore_vanilla =
@@ -388,7 +388,7 @@ PREFABS.Joiner_cornerstore_vanilla =
     PANEL6=50, BRIKS40=50, BRIKS43=50,
     GOTH31=50, BRICK9=50,
     BRICK10=50,TANROCK2=50, TANROCK3=50
-  }
+  },
 
   tex_DNSTOR05 = "STEP4",
   tex_DNSTOR06 = "STEP4",
