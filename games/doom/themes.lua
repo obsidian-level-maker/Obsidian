@@ -1258,6 +1258,8 @@ DOOM.THEMES =
       gtd_generic_beamed_brown_inset = 25,
       --
       gtd_computers = 50,
+      gtd_computers_lite5 = 35,
+      --
       gtd_writhing_mass = 10,
       gtd_wall_octagon_insets = 50,
       gtd_wall_grated_machines = 50,
@@ -1671,6 +1673,8 @@ DOOM.THEMES =
       gtd_generic_beamed_brown_inset = 25,
       --
       gtd_computers = 20,
+      gtd_computers_lite5 = 20,
+      --
       gtd_drywall = 50,
       gtd_writhing_mass = 20,
       gtd_library = 50,

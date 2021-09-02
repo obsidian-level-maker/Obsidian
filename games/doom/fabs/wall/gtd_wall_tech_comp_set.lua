@@ -146,7 +146,7 @@ PREFABS.Wall_gtd_computer_lite5_1 =
   prob = 100,
 
   height = 96,
-  group = "gtd_cmoputers_lite5",
+  group = "gtd_computers_lite5",
 
   tex_COMPTALL =
   {
@@ -154,7 +154,7 @@ PREFABS.Wall_gtd_computer_lite5_1 =
     COMPWERD = 5,
   },
 
-  z_fit = 96,
+  bound_z2 = 96,
 
   sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1}
 }
@@ -165,9 +165,9 @@ PREFABS.Wall_gtd_computer_lite5_2 =
   map = "MAP07",
 
   height = 96,
-  group = "gtd_cmoputers_lite5",
+  group = "gtd_computers_lite5",
 
-  z_fit = 96,
+  bound_z2 = 96,
 
   sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1}
 }
@@ -178,9 +178,9 @@ PREFABS.Wall_gtd_computer_lite5_3 =
   map = "MAP08",
 
   height = 96,
-  group = "gtd_cmoputers_lite5",
+  group = "gtd_computers_lite5",
 
-  z_fit = 96,
+  bound_z2 = 96,
 
   sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1}
 }
@@ -193,9 +193,9 @@ PREFABS.Wall_gtd_computer_lite5_diag =
   where = "diagonal",
 
   height = 96,
-  group = "gtd_cmoputers_lite5",
+  group = "gtd_computers_lite5",
 
-  z_fit = 96,
+  bound_z2 = 96,
 
   sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1}
 }
