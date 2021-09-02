@@ -7,7 +7,7 @@ PREFABS.Wall_hell_candles_1 =
 
   group = "gtd_wall_candles",
 
-  where  = "diagonal",
+  where  = "edge",
   height = 104,
 
   bound_z1 = 0,
