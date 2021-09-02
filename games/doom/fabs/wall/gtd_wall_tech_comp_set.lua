@@ -135,3 +135,67 @@ PREFABS.Wall_gtd_computer_compsta_diag_2 =
 
   tex_COMPTALL = "SHAWCOMP",
 }
+
+--
+
+PREFABS.Wall_gtd_computer_lite5_1 =
+{
+  template = "Wall_gtd_computer_wall_1",
+  map = "MAP06",
+
+  prob = 100,
+
+  height = 96,
+  group = "gtd_cmoputers_lite5",
+
+  tex_COMPTALL =
+  {
+    COMPTALL = 5,
+    COMPWERD = 5,
+  },
+
+  z_fit = 96,
+
+  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1}
+}
+
+PREFABS.Wall_gtd_computer_lite5_2 =
+{
+  template = "Wall_gtd_computer_wall_1",
+  map = "MAP07",
+
+  height = 96,
+  group = "gtd_cmoputers_lite5",
+
+  z_fit = 96,
+
+  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1}
+}
+
+PREFABS.Wall_gtd_computer_lite5_3 =
+{
+  template = "Wall_gtd_computer_wall_1",
+  map = "MAP08",
+
+  height = 96,
+  group = "gtd_cmoputers_lite5",
+
+  z_fit = 96,
+
+  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1}
+}
+
+PREFABS.Wall_gtd_computer_lite5_diag =
+{
+  template = "Wall_gtd_computer_wall_1",
+  map = "MAP08",
+
+  where = "diagonal",
+
+  height = 96,
+  group = "gtd_cmoputers_lite5",
+
+  z_fit = 96,
+
+  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1}
+}

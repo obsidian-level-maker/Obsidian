@@ -45,6 +45,7 @@ PREFABS.Wall_gtd_generic_sunderfall_barred =
 PREFABS.Wall_gtd_generic_sunderfall_barred_no_liq =
 {
   template = "Wall_gtd_generic_sunderfall",
+  map = "MAP03",
 
   group = "gtd_sunderfall_barred",
 
