@@ -274,18 +274,6 @@ class UI_RButton : public Fl_Group {
    private:
 };
 
-class UI_ModuleDropDown : public Fl_Check_Button {
-   private:
-   public:
-    UI_ModuleDropDown(int x, int y, int w, int h);
-    virtual ~UI_ModuleDropDown();
-
-   private:
-    void draw();
-
-    int handle(int event);
-};
-
 #endif /* __UI_WIDGETS_H__ */
 
 //--- editor settings ---
