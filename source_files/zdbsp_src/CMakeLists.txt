@@ -41,6 +41,8 @@ add_library(
 target_compile_features(obsidian_zdbsp PRIVATE cxx_std_17)
 target_include_directories(obsidian_zdbsp PRIVATE ../zlib_src)
 target_include_directories(obsidian_zdbsp PRIVATE ../obsidian_src)
+# FLTK includes are only needed to hook into Obsidian's progress bar update mechanism - Dasho
+target_include_directories(obsidian_zdbsp PRIVATE ../fltk_src)
 if(UNIX)
   target_link_libraries(obsidian_zdbsp PUBLIC z)
 else()

@@ -350,7 +350,7 @@ bool Main::BackupFile(const std::filesystem::path &filename,
         std::filesystem::path backup_name = filename;
         backup_name.replace_extension(ext);
 
-        LogPrintf("Backing up existing file to: {}\n", backup_name);
+        LogPrintf("Backing up existing file to: {}\n", backup_name.string());
 
         std::filesystem::remove(backup_name);
         std::filesystem::rename(filename, backup_name);

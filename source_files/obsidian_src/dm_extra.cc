@@ -1061,7 +1061,7 @@ int wad_merge_sections(lua_State *L) {
 
     std::filesystem::path pkg_name = luaL_checkstring(L, 1);
 
-    LogPrintf("Merging WAD sections from: {}\n", pkg_name);
+    LogPrintf("Merging WAD sections from: {}\n", pkg_name.string());
 
     if (pkg_name.extension() != ".wad") {
         return luaL_error(L,
