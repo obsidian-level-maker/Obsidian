@@ -2,14 +2,15 @@
 
 PREFABS.Teleporter_scionox_dual_pad =
 {
-  file   = "teleporter/scionox_dual_pad.wad",
-  map    = "MAP01",
+  file = "teleporter/scionox_dual_pad.wad",
+  map = "MAP01",
 
   theme  = "tech",
-  prob   = 75,
+  env = "!cave",
+  prob = 75,
 
-  where  = "point",
-  size   = 104,
+  where = "point",
+  size = 104,
   height = 128,
 
   tag_1 = "?out_tag",
@@ -47,14 +48,15 @@ PREFABS.Teleporter_scionox_dual_pad_3 =
 
 PREFABS.Teleporter_scionox_dual_pad_4 =
 {
-  file   = "teleporter/scionox_dual_pad.wad",
-  map    = "MAP02",
+  file = "teleporter/scionox_dual_pad.wad",
+  map = "MAP02",
 
-  theme  = "tech",
-  prob   = 60,
+  theme = "tech",
+  env = "!cave",
+  prob = 60,
 
-  where  = "point",
-  size   = 104,
+  where = "point",
+  size = 104,
   height = 128,
 
   tag_1 = "?out_tag",
