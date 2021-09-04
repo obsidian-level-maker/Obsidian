@@ -19,16 +19,12 @@ add_library(
   processor.cc
   processor.h
   processor_udmf.cc
-  rejectbuilder.cc
-  rejectbuilder.h
   rejectbuilder_nogl.cc
   rejectbuilder_nogl.h
   sc_man.cc
   sc_man.h
   tarray.h
   templates.h
-  vis.cc
-  visflow.cc
   workdata.h
   xs_Float.h
   zdbsp.h

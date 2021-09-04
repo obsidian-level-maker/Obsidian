@@ -26,7 +26,6 @@ enum ERejectMode {
     ERM_DontTouch,
     ERM_CreateZeroes,
     ERM_Create0,
-    ERM_Rebuild,
     ERM_Rebuild_NoGL
 };
 

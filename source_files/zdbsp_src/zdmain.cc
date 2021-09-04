@@ -153,8 +153,7 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
                 BuildGLNodes = false;
                 GLOnly = false;
             }
-            RejectMode = ERM_DontTouch;  // Eternity might not play well
-                                                // with ZDBSP's reject builder
+            RejectMode = ERM_DontTouch;
             CheckPolyobjs = true;
             CompressNodes = true;
             CompressGLNodes = false;
@@ -162,11 +161,7 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
         } else if (StringCaseCmp(current_engine, "edge") == 0) {
             BuildGLNodes = true;
             GLOnly = true;
-            if (!build_reject || UDMF_mode) {
-                RejectMode = ERM_DontTouch;
-            } else {
-                RejectMode = ERM_Rebuild;
-            }
+            RejectMode = ERM_DontTouch;
             CheckPolyobjs = true;
             CompressNodes = true;
             CompressGLNodes = false;
@@ -174,11 +169,7 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
         } else { // ZDoom is the only choice left, so customize for it
             BuildGLNodes = true;
             GLOnly = true;
-            if (!build_reject || UDMF_mode) {
-                RejectMode = ERM_DontTouch;
-            } else {
-                RejectMode = ERM_Rebuild;
-            }
+            RejectMode = ERM_DontTouch;
             CheckPolyobjs = true;
             CompressNodes = true;
             CompressGLNodes = true;
