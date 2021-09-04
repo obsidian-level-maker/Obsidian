@@ -109,18 +109,6 @@ OB_MODULES["ui_udmf_map_options"] =
   options =
   {
     {
-      name = "bool_build_reject_udmf",
-      label = _("Build REJECT"),
-      valuator = "button",
-      default = 0,
-      tooltip = "Choose to build a proper REJECT lump (Binary map format only). WARNING: This can be very time consuming!",
-	  longtip = "Maps with regular nodes will build the REJECT lump quickly, but maps with GL nodes use the Quake 'vis' method to calculate" ..
-	    " the REJECT table. This method scales horribly with map size, and with larger maps it will take much longer to build the REJECT lump than" ..
-	    " the map itself." ..
-	    "\n\nEDGE and ZDoom Family will use the vis method if this option is selected, so be forewarned." ..
-	    "\n\nEternity Engine will ignore this option and an empty REJECT lump will be inserted instead."
-    },
-    {
       name = "bool_build_nodes_udmf",
       label = _("Build Nodes"),
       valuator = "button",
