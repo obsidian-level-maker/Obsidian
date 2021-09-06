@@ -69,6 +69,8 @@ PREFABS.Wall_gothic_ceilwall_braced_arch_diag =
 
   group = "gtd_gothic_ceilwall_braced_arch",
 
+  where = "diagonal",
+
   z_fit = {94,96 ,  127,128}
 }
 
