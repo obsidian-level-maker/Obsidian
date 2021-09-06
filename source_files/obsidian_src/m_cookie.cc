@@ -127,6 +127,7 @@ bool Cookie_Load(std::filesystem::path filename) {
 
     active_module.clear();
 
+    std::setlocale(LC_NUMERIC, "C");
     std::ifstream cookie_fp(filename, std::ios::in);
 
     if (!cookie_fp.is_open()) {
@@ -150,6 +151,7 @@ bool Cookie_Load(std::filesystem::path filename) {
     }
 
     cookie_fp.close();
+    std::setlocale(LC_NUMERIC, numeric_locale.c_str());
     return true;
 }
 
@@ -177,7 +179,7 @@ bool Cookie_LoadString(std::string str, bool _keep_seed) {
 
 bool Cookie_Save(std::filesystem::path filename) {
     context = CCTX_Save;
-
+    std::setlocale(LC_NUMERIC, "C");
     std::ofstream cookie_fp(filename, std::ios::out);
 
     if (!cookie_fp.is_open()) {
@@ -205,6 +207,7 @@ bool Cookie_Save(std::filesystem::path filename) {
     LogPrintf("DONE.\n\n");
 
     cookie_fp.close();
+    std::setlocale(LC_NUMERIC, numeric_locale.c_str());
     return true;
 }
 
