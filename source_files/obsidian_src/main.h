@@ -34,11 +34,11 @@
 #include "defines.h"
 constexpr const char *OBSIDIAN_TITLE = "OBSIDIAN Level Maker";
 
-constexpr const char *OBSIDIAN_VERSION = "Beta 19";
-constexpr const char *OBSIDIAN_SHORT_VERSION = "Beta19";
-constexpr unsigned int OBSIDIAN_HEX_VER = 0x013;
+constexpr const char *OBSIDIAN_VERSION = "Beta 20 Preview";
+constexpr const char *OBSIDIAN_SHORT_VERSION = "Beta20";
+constexpr unsigned int OBSIDIAN_HEX_VER = 0x014;
 constexpr const char *OBSIDIAN_WEBSITE =
-    "https://github.com/GTD-Carthage/Oblige";
+    "https://github.com/dashodanger/Obsidian/wiki";
 
 constexpr const char *CONFIG_FILENAME = "CONFIG.txt";
 constexpr const char *OPTIONS_FILENAME = "OPTIONS.txt";

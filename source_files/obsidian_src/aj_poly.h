@@ -89,14 +89,14 @@ class sector_c {
         : index(-1),
           floor_h(),
           ceil_h(),
+          floor_tex(),
+          ceil_tex(),
           light(),
           special(),
           tag(),
           edge_list(),
           num_floors(),
           floor_start(),
-          floor_tex(),
-          ceil_tex(),
           is_dummy() {}
 
     linedef_c *getExtraFloor(int index);
