@@ -51,7 +51,7 @@ void DebugPrintf(std::string_view format, Args &&...args) {
         std::string buffer = fmt::format(format, args...);
         auto next = std::find(buffer.begin(), buffer.end(), '\n');
         for (auto pos = buffer.begin(); pos != buffer.end();) {
-            fmt::print("# {}\n", std::string{pos, next});
+            LogPrintf("# {}\n", std::string{pos, next});
             pos = next;
             next = std::find(pos + 1, buffer.end(), '\n');
         }

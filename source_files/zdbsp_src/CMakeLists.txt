@@ -19,16 +19,12 @@ add_library(
   processor.cc
   processor.h
   processor_udmf.cc
-  rejectbuilder.cc
-  rejectbuilder.h
   rejectbuilder_nogl.cc
   rejectbuilder_nogl.h
   sc_man.cc
   sc_man.h
   tarray.h
   templates.h
-  vis.cc
-  visflow.cc
   workdata.h
   xs_Float.h
   zdbsp.h
@@ -41,6 +37,8 @@ add_library(
 target_compile_features(obsidian_zdbsp PRIVATE cxx_std_17)
 target_include_directories(obsidian_zdbsp PRIVATE ../zlib_src)
 target_include_directories(obsidian_zdbsp PRIVATE ../obsidian_src)
+# FLTK includes are only needed to hook into Obsidian's progress bar update mechanism - Dasho
+target_include_directories(obsidian_zdbsp PRIVATE ../fltk_src)
 if(UNIX)
   target_link_libraries(obsidian_zdbsp PUBLIC z)
 else()

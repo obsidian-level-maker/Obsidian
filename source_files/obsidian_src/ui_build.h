@@ -61,13 +61,13 @@ class UI_Build : public Fl_Group {
     void Prog_Step(const char *step_name);
     void Prog_Nodes(int pos, int limit);
     void Prog_Finish();
+    void ParseSteps(const char *list);
 
     void SetStatus(std::string_view msg);
 
    private:
     void resize(int X, int Y, int W, int H);
 
-    void ParseSteps(const char *list);
     int FindStep(std::string name);  // -1 if not found
 
     void AddStatusStep(std::string name);

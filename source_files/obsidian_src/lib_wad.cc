@@ -54,11 +54,11 @@ bool WAD_OpenRead(std::filesystem::path filename) {
 #endif
 
     if (!wad_R_fp) {
-        LogPrintf("WAD_OpenRead: no such file: {}\n", filename);
+        LogPrintf("WAD_OpenRead: no such file: {}\n", filename.string());
         return false;
     }
 
-    LogPrintf("Opened WAD file: {}\n", filename);
+    LogPrintf("Opened WAD file: {}\n", filename.string());
 
 #ifdef HAVE_PHYSFS
     if ((PHYSFS_readBytes(wad_R_fp, &wad_R_header, sizeof(wad_R_header)) /
@@ -264,7 +264,7 @@ bool WAD_OpenWrite(std::filesystem::path filename) {
         return false;
     }
 
-    LogPrintf("Created WAD file: {}\n", filename);
+    LogPrintf("Created WAD file: {}\n", filename.string());
 
     // write out a dummy header
     raw_wad_header_t header;

@@ -65,6 +65,10 @@
 
 #include "lib_util.h"
 
+// The following are only needed to hook into progress bar updating - Dasho
+#include "ui_window.h"
+#include "ui_build.h"
+
 // MACROS ------------------------------------------------------------------
 
 #ifndef M_PI
@@ -105,9 +109,16 @@ bool ForceCompression = false;
 bool GLOnly = false;
 bool V5GLNodes = false;
 
+extern UI_MainWin *main_win;
+
 // CODE --------------------------------------------------------------------
 
 int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF_mode, bool build_reject) {
+
+    if (main_win) { 
+        main_win->build_box->ParseSteps("NODES");
+        main_win->build_box->Prog_Step("NODES"); 
+    }
 
     if (StringCaseCmp(current_engine, "vanilla") == 0 || StringCaseCmp(current_engine, "nolimit") == 0 ||
             StringCaseCmp(current_engine, "boom") == 0) {
@@ -142,8 +153,7 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
                 BuildGLNodes = false;
                 GLOnly = false;
             }
-            RejectMode = ERM_DontTouch;  // Eternity might not play well
-                                                // with ZDBSP's reject builder
+            RejectMode = ERM_DontTouch;
             CheckPolyobjs = true;
             CompressNodes = true;
             CompressGLNodes = false;
@@ -151,11 +161,7 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
         } else if (StringCaseCmp(current_engine, "edge") == 0) {
             BuildGLNodes = true;
             GLOnly = true;
-            if (!build_reject || UDMF_mode) {
-                RejectMode = ERM_DontTouch;
-            } else {
-                RejectMode = ERM_Rebuild;
-            }
+            RejectMode = ERM_DontTouch;
             CheckPolyobjs = true;
             CompressNodes = true;
             CompressGLNodes = false;
@@ -163,11 +169,7 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
         } else { // ZDoom is the only choice left, so customize for it
             BuildGLNodes = true;
             GLOnly = true;
-            if (!build_reject || UDMF_mode) {
-                RejectMode = ERM_DontTouch;
-            } else {
-                RejectMode = ERM_Rebuild;
-            }
+            RejectMode = ERM_DontTouch;
             CheckPolyobjs = true;
             CompressNodes = true;
             CompressGLNodes = true;

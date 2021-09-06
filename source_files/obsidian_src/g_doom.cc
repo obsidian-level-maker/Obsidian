@@ -856,7 +856,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
         main_win->build_box->Prog_Init(20, N_("CSG"));
         if (StringCaseCmp(current_engine, "zdoom") == 0 || StringCaseCmp(current_engine, "edge") == 0 ||
             StringCaseCmp(current_engine, "eternity") == 0) {
-            build_reject = StringToInt(ob_get_param("bool_build_reject_udmf"));
+            build_reject = false;
             map_format = ob_get_param("map_format");
             build_nodes = StringToInt(ob_get_param("bool_build_nodes_udmf"));
         } else {
