@@ -1481,7 +1481,7 @@ static const int grid_xy_deltas[9 * 2] = {0,   0,   +9,  +9,  +9,  -9,
                                           -9,  +9,  -9,  -9,  +18, +18,
                                           +18, -18, -18, +18, -18, -18};
 
-static void Q3_CalcAngularDirection(const float *vec3, dlightgrid3_t *out) {
+static void Q3_CalcAngularDirection(std::array<float, 3> vec3, dlightgrid3_t *out) {
     float x = vec3[0];
     float y = vec3[1];
     float z = vec3[2];
@@ -1506,7 +1506,7 @@ static void Q3_CalcAngularDirection(const float *vec3, dlightgrid3_t *out) {
     }
 }
 
-static void Q3_ColorToBytes(int r, int g, int b, float mul, byte *out) {
+static void Q3_ColorToBytes(int r, int g, int b, float mul, std::array<byte, 3> out) {
     float r2 = r * mul;
     float g2 = g * mul;
     float b2 = b * mul;
@@ -1596,7 +1596,7 @@ static void Q3_VisitGridPoint(float gx, float gy, float gz,
                                 : (medium == MEDIUM_LAVA) ? q_lava
                                                           : q_water;
 
-        float dir[3] = {0, 0, 1};
+        std::array<float, 3> dir = {0, 0, 1};
 
         Q3_CalcAngularDirection(dir, out);
 
@@ -1621,8 +1621,8 @@ static void Q3_VisitGridPoint(float gx, float gy, float gz,
     int sum_total = 0;
 
     int best_dir_ity = -999;
-    int best_dir_color[3];
-    float best_direction[3];
+    std::array<int, 3> best_dir_color;
+    std::array<float, 3> best_direction;
 
     for (unsigned int k = 0; k < qk_all_lights.size(); k++) {
         int r, g, b, ity;

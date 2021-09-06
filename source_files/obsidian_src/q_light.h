@@ -22,6 +22,7 @@
 #define Q_LIGHT_H_
 
 #include <vector>
+#include <array>
 
 #include "lib_tga.h"  // for rgb_color_t
 #include "q_common.h"
@@ -42,7 +43,7 @@ class qLightmap_c {
     rgb_color_t *current_pos;
 
     // Q1 and Q2 only
-    byte styles[4];
+    std::array<byte, 4> styles;
 
     // final offset in lightmap lump (if not flat)
     // for Q3 this is the block number
@@ -98,8 +99,8 @@ struct quake_light_t {
 // on-disk structure for Q3 light grid
 #pragma pack(push, 1)
 struct dlightgrid3_t {
-    byte ambientLight[3];
-    byte directedLight[3];
+    std::array<byte, 3> ambientLight;
+    std::array<byte, 3> directedLight;
     byte lat, lng;  // direction to light (angles)
 };
 #pragma pack(pop)
