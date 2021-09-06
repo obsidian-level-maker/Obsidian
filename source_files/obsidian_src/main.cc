@@ -479,8 +479,8 @@ void Main::PopulateFontMap() {
         }
 
         if (LoadInternalFont("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf",
-                             current_free_font, "The Neue")) {
-            Fl::set_font(current_free_font + 1, "The Neue");
+                             current_free_font, "The Neue Black")) {
+            Fl::set_font(current_free_font + 1, "The Neue Black");
             font_menu_items.push_back(
                 std::map<std::string, int>{{"New Black", current_free_font}});
             current_free_font += 2;
