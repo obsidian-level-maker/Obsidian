@@ -5041,10 +5041,10 @@ ARMAETUS_THEMES =
       BRONZE3 = 10,
 
       --
-      BRIC9GRN = 15,
+      BRIC9GRN = 3,
       BRIC9GRY = 15,
       BRIC9TAN = 15,
-      BRICEGRN = 15,
+      BRICEGRN = 3,
       BRICEGRY = 15,
 
       --
@@ -5496,7 +5496,7 @@ ARMAETUS_THEMES =
       CRHRTWLL = 7,
 
       --
-      BRIC9GRN = 15,
+      BRIC9GRN = 5,
       BRIC9GRY = 15,
       BRIC9TAN = 15,
       BRICEGRN = 15,

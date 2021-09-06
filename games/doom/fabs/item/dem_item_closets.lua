@@ -78,7 +78,6 @@ PREFABS.Item_dem_rift_closet =
     skull_rock = 50,
     big_tree = 50,
     burnt_tree = 50,
-
   },
 
   thing_25 =
@@ -92,13 +91,69 @@ PREFABS.Item_dem_rift_closet =
     skull_rock = 50,
     big_tree = 50,
     burnt_tree = 50,
-
   }
-
 }
 
 --an item forgotten in a grocery store
 PREFABS.Item_dem_grocerystore_closet =
+{
+  file  = "item/dem_item_closets.wad",
+  map   = "MAP04",
+
+  engine = "zdoom",
+
+  theme = "urban",
+  env   = "outdoor",
+  prob  = 100,
+
+  texture_pack = "armaetus",
+  replaces = "Item_dem_grocerystore_closet_vanilla",
+
+  where  = "seeds",
+  seed_w = 3,
+  seed_h = 2,
+
+  deep = 16,
+  over = -16,
+
+  x_fit = "frame",
+  y_fit  = "frame",
+
+  tex_BRICK9 = {
+    BRICK1=50, BRICK10=50, BRICK11=50,
+    BRICK2=50, BRICK4=50,
+    BRICK6=50, BRICK7=50, BRICK8=50,
+    STONE2=50, STUCCO=50, STUCCO1=50,
+    STUCCO3=50, TANROCK2=50, TANROCK3=50,
+    SHAWN2=50,
+  },
+
+  thing_59 =
+  {
+    hang_twitching = 50,
+    hang_torso = 50,
+    hang_leg   = 50,
+    hang_leg_gone = 50,
+  },
+
+  thing_62 =
+  {
+    hang_twitching = 50,
+    hang_torso = 50,
+    hang_leg   = 50,
+    hang_leg_gone = 50,
+  },
+
+  thing_12 =
+  {
+    hang_twitching = 50,
+    hang_torso = 50,
+    hang_leg   = 50,
+    hang_leg_gone = 50,
+  }
+}
+
+PREFABS.Item_dem_grocerystore_closet_vanilla =
 {
   file  = "item/dem_item_closets.wad",
   map   = "MAP04",
@@ -150,9 +205,12 @@ PREFABS.Item_dem_grocerystore_closet =
     hang_torso = 50,
     hang_leg   = 50,
     hang_leg_gone = 50,
-  }
+  },
 
+  tex_DNSTOR05 = "STEP4",
+  tex_DNSTOR09 = "STEP4"
 }
+
 
 --an elevator shaft with an item
 PREFABS.Item_dem_elevatorshaft_closet =
@@ -302,6 +360,9 @@ PREFABS.Item_dem_bedroom_closet =
 
   theme = "urban",
 
+  texture_pack = "armeatus",
+  replaces = "Item_dem_bedroom_closet_vanilla",
+
   engine = "zdoom",
 
   env      = "outdoor",
@@ -316,8 +377,6 @@ PREFABS.Item_dem_bedroom_closet =
   x_fit = "frame",
   y_fit  = "frame",
 
-  texture_pack = "armaetus",
-
   tex_BRICK9 = {
     BRICK1=50, BRICK10=50, BRICK11=50,
     BRICK2=50, BRICK4=50,
@@ -327,6 +386,41 @@ PREFABS.Item_dem_bedroom_closet =
     }
 }
 
+PREFABS.Item_dem_bedroom_closet_vanilla =
+{
+  file = "item/dem_item_closets.wad",
+  map = "MAP09",
+
+  prob = 2000,
+
+  theme = "urban",
+
+  engine = "zdoom",
+
+  env      = "outdoor",
+
+  where = "seeds",
+
+  seed_w = 3,
+  seed_h = 2,
+
+  deep = 16,
+
+  x_fit = "frame",
+  y_fit  = "frame",
+
+  tex_BRICK9 = {
+    BRICK1=50, BRICK10=50, BRICK11=50,
+    BRICK2=50, BRICK4=50,
+    BRICK6=50, BRICK7=50, BRICK8=50,
+    BIGBRIK1=50, BIGBRIK2=50, STONE2=50,
+    STUCCO=50, STUCCO1=50, STUCCO3=50,
+  },
+
+  tex_EVILFACA = "WOOD4",
+  tex_TVSNOW01 = "SPACEW3",
+  flat_GRENFLOR = "GRASS1"
+}
 
 --an appartment stairwell with a ritual and an item
 PREFABS.Item_dem_stairwell_closet =
@@ -355,25 +449,28 @@ PREFABS.Item_dem_stairwell_closet =
   tex_BRICK9 = {
     BRICK1=50, BRICK10=50, BRICK11=50,
     BRICK2=50, BRICK4=50,
-     BRICK6=50, BRICK7=50, BRICK8=50,
-     BIGBRIK1=50, BIGBRIK2=50, STONE2=50,
-     STUCCO=50, STUCCO1=50, STUCCO3=50,
-    }
+    BRICK6=50, BRICK7=50, BRICK8=50,
+    BIGBRIK1=50, BIGBRIK2=50, STONE2=50,
+    STUCCO=50, STUCCO1=50, STUCCO3=50,
+  }
 }
 
 --a bar with an item hidden behind of it
 PREFABS.Item_dem_bar_closets =
 {
   file = "item/dem_item_closets.wad",
-  map    = "MAP11",
+  map = "MAP11",
 
   engine = "zdoom",
 
-  prob   = 2000,
+  prob = 2000,
 
-  theme  = "urban",
-  env      = "outdoor",
-  where  = "seeds",
+  theme = "urban",
+  env = "outdoor",
+  where = "seeds",
+
+  texture_pack = "armaetus",
+  replaces = "Item_dem_bar_closets_thin",
 
   seed_w = 3,
   seed_h = 2,
@@ -381,36 +478,32 @@ PREFABS.Item_dem_bar_closets =
   deep = 16,
 
   x_fit = "frame",
-  y_fit  = "frame",
-
-  texture_pack = "armaetus",
+  y_fit = "frame",
 
   tex_STARTAN1 = {
     BRICK1=50, BRICK12=50, BRICK11=50,
     BRICK2=50, BRICK4=50,
     BRICK6=50, BRICK7=50, BRICK8=50,
     STONE2=50, SHAWN4=50, SHAWN5=50,
-    STUCCO=50,  STUCCO1=50,  STUCCO3=50, STARGR1=50, GRAY7=50,
+    STUCCO=50, STUCCO1=50, STUCCO3=50, 
+    STARGR1=50, GRAY7=50,
     PANEL6=50, BRIKS40=50, BRIKS43=50,
     GOTH16=50, GOTH31=50, WD03=50,
   }
 }
 
---a waiting room with an item on the desk
-PREFABS.Item_dem_waiting_room_closets =
+PREFABS.Item_dem_bar_closets_thin =
 {
   file = "item/dem_item_closets.wad",
-  map    = "MAP12",
+  map = "MAP11",
 
   engine = "zdoom",
 
-  prob   = 2000,
+  prob = 2000,
 
-  theme  = "urban",
-
-  env      = "outdoor",
-
-  where  = "seeds",
+  theme = "urban",
+  env = "outdoor",
+  where = "seeds",
 
   seed_w = 3,
   seed_h = 2,
@@ -418,9 +511,47 @@ PREFABS.Item_dem_waiting_room_closets =
   deep = 16,
 
   x_fit = "frame",
-  y_fit  = "frame",
+  y_fit = "frame",
+
+  tex_STARTAN1 = {
+    BRICK1=50, BRICK12=50, BRICK11=50,
+    BRICK2=50, BRICK4=50,
+    BRICK6=50, BRICK7=50, BRICK8=50,
+    STONE2=50, SHAWN4=50, SHAWN5=50,
+    STUCCO=50, STUCCO1=50, STUCCO3=50, 
+    STARGR1=50, GRAY7=50,
+    PANEL6=50, BRIKS40=50, BRIKS43=50,
+    GOTH16=50, GOTH31=50, WD03=50,
+  },
+
+  tex_TEKGRDR = "SHAWN1"
+}
+
+--a waiting room with an item on the desk
+PREFABS.Item_dem_waiting_room_closets =
+{
+  file = "item/dem_item_closets.wad",
+  map = "MAP12",
+
+  engine = "zdoom",
+
+  prob = 2000,
+
+  theme = "urban",
+  env = "outdoor",
+
+  where = "seeds",
+
+  seed_w = 3,
+  seed_h = 2,
+
+  deep = 16,
+
+  x_fit = "frame",
+  y_fit = "frame",
 
   texture_pack = "armaetus",
+  replaces = "Item_dem_waiting_room_closets_vanilla",
 
   tex_STARTAN1 = {
     BRICK1=50, BRICK12=50, BRICK11=50,
@@ -435,6 +566,42 @@ PREFABS.Item_dem_waiting_room_closets =
   tex_CPAQLRRE = {
     CPAQLRRE=50, CPGARDEN=50, CPGARDN2=50,
     CPHRSEMN=50, CPHRSMN2=50,
+  }
+}
+
+PREFABS.Item_dem_waiting_room_closets_vanilla =
+{
+  file = "item/dem_item_closets.wad",
+  map = "MAP12",
+
+  engine = "zdoom",
+
+  prob = 2000,
+
+  theme = "urban",
+  env = "outdoor",
+
+  where = "seeds",
+
+  seed_w = 3,
+  seed_h = 2,
+
+  deep = 16,
+
+  x_fit = "frame",
+  y_fit = "frame",
+
+  tex_STARTAN1 = {
+    BRICK1=50, BRICK12=50, BRICK11=50,
+    BRICK2=50, BRICK4=50,
+    BRICK6=50, BRICK7=50, BRICK8=50,
+    STONE2=50, SHAWN4=50, SHAWN5=50,
+    STUCCO=50,  STUCCO1=50,  STUCCO3=50, STARGR1=50, GRAY7=50,
+    PANEL6=50, BRIKS40=50, BRIKS43=50,
+    GOTH16=50, GOTH31=50, WD03=50,
+  },
+  tex_CPAQLRRE = {
+    SKY1 = 50, SKY2 = 50, SKY3 = 50
   }
 }
 
@@ -477,17 +644,17 @@ PREFABS.Item_dem_electronic_store_closets =
 PREFABS.Item_dem_cornerstore_closets =
 {
   file = "item/dem_item_closets.wad",
-  map    = "MAP14",
+  map = "MAP14",
 
   engine = "zdoom",
 
-  prob   = 2000,
+  prob = 2000,
 
-  theme  = "urban",
+  theme = "urban",
 
-  env      = "outdoor",
+  env = "outdoor",
 
-  where  = "seeds",
+  where = "seeds",
 
   seed_w = 2,
   seed_h = 3,
@@ -495,9 +662,10 @@ PREFABS.Item_dem_cornerstore_closets =
   deep = 16,
 
   x_fit = "frame",
-  y_fit  = "frame",
+  y_fit = "frame",
 
   texture_pack = "armaetus",
+  replaces = "Item_dem_cornerstore_closets_vanilla",
 
   tex_STARTAN1 = {
     BRICK1=50, BRICK12=50, BRICK11=50,
@@ -509,24 +677,22 @@ PREFABS.Item_dem_cornerstore_closets =
     GOTH31=50, BRICK9=50,
     BRICK10=50,TANROCK2=50, TANROCK3=50,
   }
-
 }
 
---a fairly intact bookstore with an item inside
-PREFABS.Item_dem_bookstore_closets =
+PREFABS.Item_dem_cornerstore_closets_vanilla =
 {
   file = "item/dem_item_closets.wad",
-  map    = "MAP15",
+  map = "MAP14",
 
   engine = "zdoom",
 
-  prob   = 2000,
+  prob = 2000,
 
-  theme  = "urban",
+  theme = "urban",
 
-  env      = "outdoor",
+  env = "outdoor",
 
-  where  = "seeds",
+  where = "seeds",
 
   seed_w = 2,
   seed_h = 3,
@@ -534,9 +700,51 @@ PREFABS.Item_dem_bookstore_closets =
   deep = 16,
 
   x_fit = "frame",
-  y_fit  = "frame",
+  y_fit = "frame",
+
+  tex_STARTAN1 = {
+    BRICK1=50, BRICK12=50, BRICK11=50,
+    BRICK2=50, BRICK4=50,
+    BRICK6=50, BRICK7=50, BRICK8=50,
+    STONE2=50, STUCCO=50,  STUCCO1=50,
+    STUCCO3=50, STARGR1=50,
+    PANEL6=50, BRIKS40=50, BRIKS43=50,
+    GOTH31=50, BRICK9=50,
+    BRICK10=50,TANROCK2=50, TANROCK3=50,
+  },
+
+  tex_DNSTOR05 = "STEP4",
+  tex_DNSTOR06 = "STEP4",
+  tex_DNSTOR09 = "STEP4",
+  tex_MIDSPAC5 = "MIDSPACE"
+}
+
+--a fairly intact bookstore with an item inside
+PREFABS.Item_dem_bookstore_closets =
+{
+  file = "item/dem_item_closets.wad",
+  map = "MAP15",
+
+  engine = "zdoom",
+
+  prob = 2000,
+
+  theme = "urban",
+
+  env = "outdoor",
+
+  where = "seeds",
+
+  seed_w = 2,
+  seed_h = 3,
+
+  deep = 16,
+
+  x_fit = "frame",
+  y_fit = "frame",
 
   texture_pack = "armaetus",
+  replaces = "Item_dem_bookstore_closets_vanilla",
 
   tex_STARTAN1 = {
     BRICK1=50, BRICK12=50,
@@ -547,11 +755,75 @@ PREFABS.Item_dem_bookstore_closets =
     GOTH31=50,GOTH16=50,GOTH02=50,
     BRICK9=50, TANROCK2=50, TANROCK3=50,
   }
+}
 
+PREFABS.Item_dem_bookstore_closets_vanilla =
+{
+  file = "item/dem_item_closets.wad",
+  map = "MAP15",
+
+  engine = "zdoom",
+
+  prob = 2000,
+
+  theme = "urban",
+
+  env = "outdoor",
+
+  where = "seeds",
+
+  seed_w = 2,
+  seed_h = 3,
+
+  deep = 16,
+
+  x_fit = "frame",
+  y_fit = "frame",
+
+  tex_STARTAN1 = {
+    BRICK1=50, BRICK12=50,
+    BRICK2=50, BRICK4=50,
+    BRICK6=50, BRICK7=50, BRICK8=50,
+    STUCCO=50, STUCCO1=50,
+    STUCCO3=50, BRIKS43=50,
+    GOTH31=50,GOTH16=50,GOTH02=50,
+    BRICK9=50, TANROCK2=50, TANROCK3=50,
+  },
+
+  tex_PANBOOK1 = "PANBOOK",
+  tex_PANBOOK3 = "PANBOOK",
+  tex_PANBOOK4 = "PANBOOK",
+  tex_FENCE9 = "MIDSPACE",
+  flat_GATE4YL = "FLAT5_5",
+  flat_GRENFLOR = "GRASS1",
 }
 
 --a item in a scrying room in hell
 PREFABS.Item_dem_scrying1_closet =
+{
+  file  = "item/dem_item_closets.wad",
+  map   = "MAP16",
+
+  engine = "zdoom",
+
+  theme = "hell",
+  prob  = 250,
+
+  texture_pack = "armaetus",
+  replaces = "Item_dem_scrying1_closet_vanilla",
+
+  where  = "seeds",
+  seed_w = 2,
+  seed_h = 3,
+
+  deep = 16,
+  over = -16,
+
+  x_fit = "frame",
+  y_fit = "frame",
+}
+
+PREFABS.Item_dem_scrying1_closet_vanilla =
 {
   file  = "item/dem_item_closets.wad",
   map   = "MAP16",
@@ -570,10 +842,36 @@ PREFABS.Item_dem_scrying1_closet =
 
   x_fit = "frame",
   y_fit = "frame",
+
+  tex_CRACKRD2 = "CRACKLE4",
+  flat_FLOOR7_3 = "RROCK03"
 }
 
 --a item in a scrying room in hell
 PREFABS.Item_dem_scrying2_closet =
+{
+  file  = "item/dem_item_closets.wad",
+  map   = "MAP17",
+
+  engine = "zdoom",
+
+  theme = "hell",
+  prob  = 100,
+
+  texture_pack = "armaetus",
+  replaces = "Item_dem_scrying2_closet_vanilla",
+
+  where  = "seeds",
+  seed_w = 3,
+  seed_h = 2,
+
+  deep = 16,
+
+  x_fit = "frame",
+  y_fit  = "frame",
+}
+
+PREFABS.Item_dem_scrying2_closet_vanilla =
 {
   file  = "item/dem_item_closets.wad",
   map   = "MAP17",
@@ -591,6 +889,9 @@ PREFABS.Item_dem_scrying2_closet =
 
   x_fit = "frame",
   y_fit  = "frame",
+
+  tex_CRACKRD2 = "CRACKLE4",
+  flat_FLOOR7_3 = "RROCK03"
 }
 
 ---- natural shrine getting corrupted by demon with an item ----
