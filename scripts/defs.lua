@@ -451,3 +451,83 @@ GLOBAL_SKIN_DEFAULTS =
   wait = "",
   targetname = ""
 }
+
+
+-- GL only stuff
+
+LIGHT_GROUPS =
+{
+  plain = -- neutral color (white or beige)
+  {
+    prob = 30,
+    shades =
+    {
+      "neutrals"
+    }
+  },
+
+  monochrome = -- neutral color and one other color
+  {
+    prob = 50,
+    shades =
+    {
+      "neutrals",
+      "hues"
+    }
+  },
+
+  bichrome = -- neutral color and two other colors
+  {
+    prob = 25,
+    shades =
+    {
+      "neutrals",
+      "hues",
+      "hues"
+    }
+  },
+
+  single = -- completely random color
+  {
+    prob = 50,
+    shades =
+    {
+      "hues"
+    }
+  },
+
+  double = -- two completely random colors
+  {
+    prob = 25,
+    shades =
+    {
+      "hues",
+      "hues"
+    }
+  },
+
+  all = -- the kitchen sink
+  {
+    prob = 15,
+  }
+}
+
+LIGHT_COLORS =
+{
+  neutrals = -- neutral light colors
+  {
+    white = 10,
+    beige = 10
+  },
+
+  hues = -- more vibrant light colors
+  {
+    blue = 10,
+    red = 10,
+    orange = 10,
+    yellow = 10,
+    beige = 6,
+    green = 10,
+    purple = 2
+  }
+}
