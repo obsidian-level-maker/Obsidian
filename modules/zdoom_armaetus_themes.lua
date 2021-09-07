@@ -2820,7 +2820,7 @@ ARMAETUS_ROOM_THEMES =
     },
   },
 
-  urban_Wood = -- this is an override of the urban wood theem with
+  urban_Wood = -- this is an override of the urban wood theme with
                -- a theme override
   {
     env  = "building",
@@ -2945,6 +2945,90 @@ ARMAETUS_ROOM_THEMES =
       GSTN02  = 30,
       SLIME14 = 20,
       SLIME15 = 20
+    }
+  },
+
+  urban_BlackBrick =
+  {
+    env = "building",
+    prob = 30,
+
+    walls =
+    {
+      BIGSTON2 = 5,
+      BIGSTON3 = 5,
+      BRIKS09 = 5,
+      BRIKS10 = 5,
+      BRIKS11 = 5,
+      BRIKS35 = 5,
+      BRIKS36 = 5,
+      BRIKS43 = 5,
+      BRONZEG1 = 5,
+      BRONZEG2 = 5,
+      BRONZEG3 = 5,
+      GOTH06 = 5,
+    },
+
+    floors =
+    {
+      BLACK0 = 5,
+      BMARB1 = 5,
+      BMARB2 = 5,
+      BMARB3 = 5,
+
+      DARKF03 = 5,
+      GSTN02 = 5,
+      
+      FLAT1 = 2,
+      MFLR8_1 = 2,
+
+      -- brights
+      FLOOR4_7 = 5,
+      G21 = 5,
+      SHINY02 = 5,
+      STARGRF = 5,
+      TILES1 = 5,
+      TILES4 = 5,
+      TILES6 = 5,
+
+      FLAT18 = 2,
+      FLAT19 = 2,
+      FLAT3 = 2,
+      FLAT20 = 2,
+      FLAT5_4 = 2,
+      FLOOR0_3 = 2,
+      FLOOR0_5 = 2,
+    },
+
+    ceilings =
+    {
+      BLACK0 = 5,
+      BMARB1 = 5,
+      BMARB2 = 5,
+      BMARB3 = 5,
+
+      DARKF03 = 5,
+      GSTN02 = 5,
+      
+      FLAT1 = 2,
+      MFLR8_1 = 2,
+
+      -- brights
+      FLOOR4_7 = 5,
+      G21 = 5,
+      SHINY02 = 5,
+      STARGRF = 5,
+      TILES1 = 5,
+      TILES4 = 5,
+      TILES6 = 5,
+
+      FLAT18 = 2,
+      FLAT19 = 2,
+      FLAT3 = 2,
+      FLAT20 = 2,
+      FLAT5_4 = 2,
+      FLOOR0_3 = 2,
+      FLOOR0_5 = 2,
     }
   },
 
