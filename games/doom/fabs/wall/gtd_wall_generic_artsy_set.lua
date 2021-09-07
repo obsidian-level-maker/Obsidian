@@ -303,3 +303,31 @@ PREFABS.Wall_generic_artsy_base_braced_gothic_diag =
 }
 
 --
+
+PREFABS.Wall_generic_artsy_sloped_bump =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP30",
+
+  group = "gtd_generic_artsy_sloped_bump",
+}
+
+PREFABS.Wall_generic_artsy_sloped_bump_slope =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP30",
+
+  engine = "zdoom",
+
+  group = "gtd_generic_artsy_sloped_bump",
+}
+
+PREFABS.Wall_generic_artsy_sloped_bump_diag =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP30",
+
+  where = "diagonal",
+
+  group = "gtd_generic_artsy_sloped_bump",
+}
