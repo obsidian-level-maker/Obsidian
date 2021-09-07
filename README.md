@@ -46,9 +46,7 @@ Strings allowed for seed input (numbers with no other characters still processed
 
 New random number generator based on the Mersenne Twister Engine.
 
-Updated PHYSFS to version 3.02.
-
-Updated deprecated PHYSFS function calls with their replacements.
+FLTK and PHYSFS updated to latest versions.
 
 Added scrolling functionality to Addons List window.
 

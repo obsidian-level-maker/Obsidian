@@ -1,9 +1,17 @@
 
 # COMPILING Obsidian
 
-## Dependencies (MSYS has some differences; see MSYS Cross-Compilation section below)
+## Windows Dependencies (stub; in-progress)
 
-1. C++ compiler (GNU's G++) and associated tools
+1. MSVC Toolchain
+
+2. ???
+
+3. Profit
+
+## Linux Dependencies (MSYS has some differences; see MSYS Cross-Compilation section below)
+
+1. C++ compiler and associated tools
    * packages: `g++` `binutils`
    * if compiling with clang: `clang`
    * compiler and toolchain need C++17 capabilities
@@ -40,7 +48,7 @@ will build the Obsidian binary. (The '>' is just the prompt)
     
 Then, Obsidian can be launched with:
 
-    > ./obsidian --install .
+    > ./obsidian
 
 ## Windows Cross-Compilation on Linux using MinGW
 

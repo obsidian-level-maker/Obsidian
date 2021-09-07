@@ -54,16 +54,6 @@ static std::string import_dir;
 
 void Script_Load(std::filesystem::path script_name);
 
-static bool is_dir(const char *temp_name) {
-    PHYSFS_Stat stat;
-    PHYSFS_stat(temp_name, &stat);
-    if (stat.filetype == PHYSFS_FILETYPE_DIRECTORY) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
 // color maps
 color_mapping_t color_mappings[MAX_COLOR_MAPS];
 
