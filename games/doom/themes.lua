@@ -1753,6 +1753,7 @@ DOOM.THEMES =
       gtd_gothic_ceilwall_doublet_arch = 18,
       gtd_gothic_ceilwall_braced_arch = 18,
       gtd_gothic_ceilwall_xzibit_arch = 18,
+      gtd_gothic_ceilwall_inner_framed_arch = 18,
       --
       gtd_sunderfall = 25,
       gtd_sunderfall_barred = 25,
@@ -2227,6 +2228,7 @@ DOOM.THEMES =
       gtd_gothic_ceilwall_doublet_arch = 18,
       gtd_gothic_ceilwall_braced_arch = 18,
       gtd_gothic_ceilwall_xzibit_arch = 18,
+      gtd_gothic_ceilwall_inner_framed_arch = 18,
       --
       gtd_sunderfall = 25,
       gtd_sunderfall_barred = 25,
