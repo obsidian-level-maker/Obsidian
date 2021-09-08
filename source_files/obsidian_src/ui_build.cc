@@ -264,7 +264,7 @@ void UI_Build::Prog_Nodes(int pos, int limit) {
 
     if (!node_begun) {
         node_begun = true;
-        SetStatus("Building Nodes...");
+        SetStatus("Building Nodes");
         progress->selection_color(SELECTION);
         node_along = progress->value();
         node_fracs = (1 - node_along) / limit;

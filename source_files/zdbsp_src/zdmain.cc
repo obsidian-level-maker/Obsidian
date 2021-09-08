@@ -113,11 +113,11 @@ extern UI_MainWin *main_win;
 
 // CODE --------------------------------------------------------------------
 
-int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF_mode, bool build_reject) {
+int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF_mode, bool build_reject, int num_maps) {
 
-    int test_node_progress = 0;
+    int node_progress = 0;
     if (main_win) { 
-        main_win->build_box->Prog_Nodes(test_node_progress, 4);
+        main_win->build_box->Prog_Nodes(node_progress, num_maps);
     }
 
     if (StringCaseCmp(current_engine, "vanilla") == 0 || StringCaseCmp(current_engine, "nolimit") == 0 ||
@@ -191,13 +191,13 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
         while (lump < max) {
             if (inwad.IsMap(lump) &&
                 (!Map || strcasecmp(inwad.LumpName(lump), Map) == 0)) {
+                main_win->build_box->AddStatusStep(inwad.LumpName(lump));
                 START_COUNTER(t2a, t2b, t2c)
                 FProcessor builder(inwad, lump);
                 builder.Write(outwad);
                 END_COUNTER(t2a, t2b, t2c, "   %.3f seconds.\n")
-                test_node_progress += 1;
-                main_win->build_box->Prog_Nodes(test_node_progress, 4);
-
+                node_progress += 1;
+                main_win->build_box->Prog_Nodes(node_progress, num_maps);
                 lump = inwad.LumpAfterMap(lump);
             } else if (inwad.IsGLNodes(lump)) {
                 // Ignore GL nodes from the input for any maps we process.
