@@ -48,6 +48,7 @@ class UI_Build : public Fl_Group {
     bool node_begun;
     float node_ratio;
     float node_along;
+    float node_fracs;
 
     std::vector<std::string> step_names;
 

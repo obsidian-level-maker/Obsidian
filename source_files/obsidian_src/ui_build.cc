@@ -264,24 +264,27 @@ void UI_Build::Prog_Nodes(int pos, int limit) {
 
     if (!node_begun) {
         node_begun = true;
+        SetStatus("Building Nodes...");
         progress->selection_color(SELECTION);
+        node_along = progress->value();
+        node_fracs = (1 - node_along) / limit;
     }
 
-    float val = pos / (float)limit;
-
-    val = 1 + node_ratio * (val - 1);
-
-    if (val < 0) {
-        val = 0;
-    }
-    if (val > 1) {
-        val = 1;
-    }
+    float val = node_along + (node_fracs * pos);
+    if (val > 1) { val = 1; }    
 
     prog_label = fmt::format("{}%", val * 100);
 
     progress->value(val);
     progress->label(prog_label.c_str());
+
+    std::string newtitle = "[ ";
+    newtitle.append(prog_label);
+    newtitle.append(" ] ");
+    newtitle.append(fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION));
+    newtitle.append(" - ");
+    newtitle.append(status_label.c_str());
+    main_win->copy_label(newtitle.c_str());
 
     Main::Ticker();
 }
