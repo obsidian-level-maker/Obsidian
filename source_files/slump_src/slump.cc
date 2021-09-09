@@ -1099,9 +1099,24 @@ config *get_config(std::filesystem::path filename) {
     } else if (StringCaseCmp(wadlength, "few") == 0) {
         answer->levelcount = 4;
     } else if (StringCaseCmp(wadlength, "episode") == 0) {
-        answer->levelcount = 11;
+        if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0) {
+            answer->levelcount = 11;
+        } else {
+          // Hexen is included in this although I don't think it's accurate. Will fix as Hexen support evolves - Dasho
+            answer->levelcount = 9;
+        }
     } else {
-        answer->levelcount = 32;  // "Full Game"
+        if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0) {
+            answer->levelcount = 32;
+        } else if (StringCaseCmp(current_game, "doom1") == 0) {
+            answer->levelcount = 27;
+        } else if (StringCaseCmp(current_game, "ultdoom") == 0) {
+            answer->levelcount = 36;
+        } else {
+            // Heretic and Hexen have the same value for this currently, as I used Heretic as a template for Hexen. Will fix
+            // as Hexen support evolves - Dasho
+            answer->levelcount = 45;
+        }
     }
     answer->force_arena = SLUMP_TRUE;
     answer->force_biggest = SLUMP_FALSE;

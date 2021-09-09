@@ -782,8 +782,36 @@ static bool BuildNodes(std::filesystem::path filename) {
             return true;
         }
     }
-        
-    if (zdmain(filename, current_engine, UDMF_mode, build_reject) != 0) {
+    
+    // Is this really the best way to do this at the moment? - Dasho
+    int map_nums;
+    std::string wadlength = ob_get_param("length");
+    std::string current_game = ob_get_param("game");
+    if (StringCaseCmp(wadlength, "single") == 0) {
+        map_nums = 1;
+    } else if (StringCaseCmp(wadlength, "few") == 0) {
+        map_nums = 4;
+    } else if (StringCaseCmp(wadlength, "episode") == 0) {
+        if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0) {
+            map_nums = 11;
+        } else {
+            // Hexen is included in this although I don't think it's accurate. Will fix as Hexen support evolves - Dasho
+            map_nums = 9;
+        }
+    } else {
+        if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0) {
+            map_nums = 32;
+        } else if (StringCaseCmp(current_game, "doom1") == 0) {
+            map_nums = 27;
+        } else if (StringCaseCmp(current_game, "ultdoom") == 0) {
+            map_nums = 36;
+        } else {
+            // Heretic and Hexen have the same value for this currently, as I used Heretic as a template for Hexen. Will fix
+            // as Hexen support evolves - Dasho
+            map_nums = 45;
+        }
+    }
+    if (zdmain(filename, current_engine, UDMF_mode, build_reject, map_nums) != 0) {
         Main::ProgStatus(_("ZDBSP Error!"));
         return false;
     }
