@@ -207,10 +207,10 @@ PREFABS.Wall_gtd_computer_blue_shawn =
   template = "Wall_gtd_computer_wall_1",
   map = "MAP10",
 
-  height = 96,
+  height = 112,
   group = "gtd_computers_blue_shawn",
 
-  bound_z2 = 96,
+  bound_z2 = 112,
 }
 
 PREFABS.Wall_gtd_computer_blue_shawn_2 =
@@ -218,10 +218,10 @@ PREFABS.Wall_gtd_computer_blue_shawn_2 =
   template = "Wall_gtd_computer_wall_1",
   map = "MAP11",
 
-  height = 96,
+  height = 112,
   group = "gtd_computers_blue_shawn",
 
-  bound_z2 = 96,
+  bound_z2 = 112,
 }
 
 PREFABS.Wall_gtd_computer_blue_shawn_3 =
@@ -229,8 +229,8 @@ PREFABS.Wall_gtd_computer_blue_shawn_3 =
   template = "Wall_gtd_computer_wall_1",
   map = "MAP12",
 
-  height = 96,
+  height = 112,
   group = "gtd_computers_blue_shawn",
 
-  bound_z2 = 96,
+  bound_z2 = 112,
 }
