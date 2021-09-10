@@ -4917,7 +4917,9 @@ ARMAETUS_THEMES =
       gtd_wall_tech_freezer = 35,
       gtd_wall_air_vents = 35,
       --
-      gtd_wall_of_guns = 50
+      gtd_wall_of_guns = 50,
+      --
+      gtd_comp_set_yellow_EPIC = 50
     },
 
     window_groups =
