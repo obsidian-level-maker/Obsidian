@@ -341,7 +341,7 @@ OB_MODULES["misc_heretic"] =
       tooltip = "Creates an extra brightness offset for rooms. Does not change the lighting palette for rooms.",
       default = "none",
     },
-    { name="barrels",     label=_("Barrels"),        choices=STYLE_CHOICES, gap=1 },
+    { name="barrels",     label=_("Pods"),        choices=STYLE_CHOICES, gap=1 },
 
     { name="doors",       label=_("Doors"),          choices=STYLE_CHOICES },
     { name="keys",        label=_("Keyed Doors"),    choices=STYLE_CHOICES },
