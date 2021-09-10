@@ -56,7 +56,7 @@ PREFABS.Wall_epic_comp_set_green_1 =
   template = "Wall_epic_comp_set_yellow_1",
   map = "MAP04",
 
-  group = "gtd_comp_set_green_EPIC"
+  group = "gtd_comp_set_green_EPIC",
 
   height = 88,
   bound_z2 = 88
@@ -68,7 +68,7 @@ PREFABS.Wall_epic_comp_set_green_2 =
   map = "MAP05",
 
   prob = 25,
-  group = "gtd_comp_set_green_EPIC"
+  group = "gtd_comp_set_green_EPIC",
 
   height = 88,
   bound_z2 = 88,

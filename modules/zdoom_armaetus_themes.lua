@@ -557,7 +557,7 @@ ARMAETUS_ROOM_THEMES =
     keep_prob = 10
   },
 
-  tech_ComputersGreen =
+  --[[tech_ComputersGreen =
   {
     prob = 3,
     env = "building",
@@ -673,7 +673,7 @@ ARMAETUS_ROOM_THEMES =
     },
 
     keep_prob = 10
-  },
+  },]]
 
   tech_ComputersParple =
   {
