@@ -315,7 +315,7 @@ PREFABS.Wall_generic_artsy_sloped_bump =
 PREFABS.Wall_generic_artsy_sloped_bump_slope =
 {
   template = "Wall_generic_artsy_bedazzled",
-  map = "MAP30",
+  map = "MAP31",
 
   engine = "zdoom",
 
@@ -325,7 +325,7 @@ PREFABS.Wall_generic_artsy_sloped_bump_slope =
 PREFABS.Wall_generic_artsy_sloped_bump_diag =
 {
   template = "Wall_generic_artsy_bedazzled",
-  map = "MAP30",
+  map = "MAP32",
 
   where = "diagonal",
 
