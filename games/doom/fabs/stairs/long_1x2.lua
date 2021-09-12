@@ -61,7 +61,7 @@ PREFABS.Stair_long_1x2_general =
   map    = "MAP01",
 
   tex_STEP6 = "STEP4",
-  tex_BROWN1 = { STONE=50, STONE4=50 },
+  tex_BROWN1 = { STONE=50, GRAY7=50 },
   flat_FLOOR7_1 = { FLAT19=50, FLAT5_4=50 },
 }
 
@@ -88,7 +88,6 @@ PREFABS.Stair_long_1x2_hell1 =
   tex_STEP6 = "MARBGRAY",
   tex_MARBLE1 = "MARBGRAY",
   flat_FLOOR7_1 = "FLOOR7_2",
-
 }
 
 PREFABS.Stair_long_1x2_hell2 =
@@ -101,7 +100,6 @@ PREFABS.Stair_long_1x2_hell2 =
 
   tex_STEP6 = "MARBLE1",
   flat_FLOOR7_1 = "DEM1_6",
-
 }
 
 PREFABS.Stair_long_1x2_hell3 =
@@ -115,5 +113,4 @@ PREFABS.Stair_long_1x2_hell3 =
   tex_STEP6 = "METAL",
   tex_MARBLE1 = "METAL",
   flat_FLOOR7_1 = "CEIL5_2",
-
 }
