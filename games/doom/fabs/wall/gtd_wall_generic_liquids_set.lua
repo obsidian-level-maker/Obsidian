@@ -49,7 +49,7 @@ PREFABS.Wall_gtd_generic_sunderfall_barred_no_liq =
 
   group = "gtd_sunderfall_barred",
 
-  rank = 2,
+  rank = 1,
 
   liquid = false,
 

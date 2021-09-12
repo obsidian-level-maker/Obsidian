@@ -188,7 +188,7 @@ PREFABS.Wall_gtd_computer_lite5_3 =
 PREFABS.Wall_gtd_computer_lite5_diag =
 {
   template = "Wall_gtd_computer_wall_1",
-  map = "MAP08",
+  map = "MAP09",
 
   where = "diagonal",
 
@@ -198,4 +198,39 @@ PREFABS.Wall_gtd_computer_lite5_diag =
   bound_z2 = 96,
 
   sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1}
+}
+
+--
+
+PREFABS.Wall_gtd_computer_blue_shawn =
+{
+  template = "Wall_gtd_computer_wall_1",
+  map = "MAP10",
+
+  height = 112,
+  group = "gtd_computers_blue_shawn",
+
+  bound_z2 = 112,
+}
+
+PREFABS.Wall_gtd_computer_blue_shawn_2 =
+{
+  template = "Wall_gtd_computer_wall_1",
+  map = "MAP11",
+
+  height = 112,
+  group = "gtd_computers_blue_shawn",
+
+  bound_z2 = 112,
+}
+
+PREFABS.Wall_gtd_computer_blue_shawn_3 =
+{
+  template = "Wall_gtd_computer_wall_1",
+  map = "MAP12",
+
+  height = 112,
+  group = "gtd_computers_blue_shawn",
+
+  bound_z2 = 112,
 }

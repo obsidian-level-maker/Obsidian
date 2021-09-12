@@ -3035,56 +3035,27 @@ function Quest_room_themes()
       R.beam_group = rand.key_by_probs(THEME.beam_groups)
     end
 
-    -- decide light groups
-    -- white is excluded here as it's a main color
-    local hue_colors =
-    {
-      blue = 10,
-      red = 10,
-      orange = 10,
-      yellow = 10,
-      beige = 6,
-      green = 10,
-      purple = 2
-    }
-
-    local neutral_color =
-    {
-      white = 10,
-      beige = 10
-    }
-
-    local light_grouping = rand.key_by_probs(
-      {
-        plain = 30, -- neutral color (white or beige)
-        monochrome = 50, -- neutral color and one other color
-        bichrome = 25, -- neutral color and two other colors
-        single = 50, -- completely random color
-        double = 25, -- two completely random colors
-        all = 15 -- the kitchen sink
-      }
-    )
-
     if PARAM.bool_dynamic_lights == 1 then
       LEVEL.light_group = {}
 
-      if light_grouping == "plain" then
-        LEVEL.light_group[rand.key_by_probs(neutral_color)] = 1
-      elseif light_grouping == "monochrome" then
-        LEVEL.light_group[rand.key_by_probs(neutral_color)] = 1
-        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
-      elseif light_grouping == "bichrome" then
-        LEVEL.light_group[rand.key_by_probs(neutral_color)] = 1
-        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
-        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
-      elseif light_grouping == "single" then
-        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
-      elseif light_grouping == "double" then
-        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
-        LEVEL.light_group[rand.key_by_probs(hue_colors)] = 1
+      local tab = {}
+      table.name_up(LIGHT_GROUPS)
+      for _,LG in pairs(LIGHT_GROUPS) do
+        tab[LG.name] = LG.prob
       end
 
-      gui.printf("\nLevel light group: " .. light_grouping .. "\n")
+      local pick = rand.key_by_probs(tab)
+      gui.printf("\nLevel light group: " .. pick .. "\n")
+      if pick == "all" then goto continue end
+      local color_group = LIGHT_GROUPS[pick].shades
+
+      for _,color_set in pairs(color_group) do
+        local c_pick = rand.key_by_probs(LIGHT_COLORS[color_set])
+        gui.printf("+ light_color: " .. c_pick .."\n")
+        LEVEL.light_group[c_pick] = 1
+      end
+
+      ::continue::
     end
   end
 

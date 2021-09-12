@@ -63,7 +63,7 @@ PREFABS.Stair_long_1x3_general =
   map    = "MAP01",
 
   tex_STEP6 = "STEP4",
-  tex_BROWN1 = { STONE=50, STONE4=50 },
+  tex_BROWN1 = { STONE=50, GRAY7=50 },
   flat_FLOOR7_1 = { FLAT19=50, FLAT5_4=50 },
 }
 

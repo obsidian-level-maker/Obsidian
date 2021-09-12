@@ -93,3 +93,23 @@ PREFABS.Wall_gothic_ceilwall_xzibit_arch_diag =
 
   group = "gtd_gothic_ceilwall_xzibit_arch"
 }
+
+--
+
+PREFABS.Wall_gothic_ceilwall_inner_framed_arch =
+{
+  template = "Wall_gothic_ceilwall_arch",
+  map = "MAP09",
+
+  group = "gtd_gothic_ceilwall_inner_framed_arch"
+}
+
+PREFABS.Wall_gothic_ceilwall_inner_framed_arch_diag =
+{
+  template = "Wall_gothic_ceilwall_arch",
+  map = "MAP10",
+
+  where = "diagonal",
+
+  group = "gtd_gothic_ceilwall_inner_framed_arch"
+}

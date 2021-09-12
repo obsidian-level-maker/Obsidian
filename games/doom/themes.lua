@@ -1257,8 +1257,9 @@ DOOM.THEMES =
       gtd_generic_beamed_green_inset = 25,
       gtd_generic_beamed_brown_inset = 25,
       --
-      gtd_computers = 50,
-      gtd_computers_lite5 = 35,
+      gtd_computers = 32,
+      gtd_computers_lite5 = 32,
+      gtd_computers_blue_shawn = 32,
       --
       gtd_writhing_mass = 10,
       gtd_wall_octagon_insets = 50,
@@ -1308,6 +1309,7 @@ DOOM.THEMES =
       gtd_generic_artsy_step1_banded = 20,
       gtd_generic_artsy_slope_y_inset = 20,
       gtd_generic_artsy_base_braced = 20,
+      gtd_generic_artsy_sloped_bump = 20,
       --
       gtd_modquake_set = 18,
       gtd_modquake_jawlike = 18,
@@ -1674,6 +1676,7 @@ DOOM.THEMES =
       --
       gtd_computers = 20,
       gtd_computers_lite5 = 20,
+      gtd_computers_blue_shawn = 20,
       --
       gtd_drywall = 50,
       gtd_writhing_mass = 20,
@@ -1728,6 +1731,7 @@ DOOM.THEMES =
       gtd_generic_artsy_step1_banded = 20,
       gtd_generic_artsy_slope_y_inset = 20,
       gtd_generic_artsy_base_braced = 20,
+      gtd_generic_artsy_sloped_bump = 20,
       --
       gtd_modquake_set = 11,
       gtd_modquake_jawlike = 11,
@@ -1749,6 +1753,7 @@ DOOM.THEMES =
       gtd_gothic_ceilwall_doublet_arch = 18,
       gtd_gothic_ceilwall_braced_arch = 18,
       gtd_gothic_ceilwall_xzibit_arch = 18,
+      gtd_gothic_ceilwall_inner_framed_arch = 18,
       --
       gtd_sunderfall = 25,
       gtd_sunderfall_barred = 25,
@@ -2201,6 +2206,7 @@ DOOM.THEMES =
       gtd_generic_artsy_step1_banded = 20,
       gtd_generic_artsy_slope_y_inset = 20,
       gtd_generic_artsy_base_braced = 20,
+      gtd_generic_artsy_sloped_bump = 20,
       --
       gtd_modquake_set = 11,
       gtd_modquake_jawlike = 11,
@@ -2222,6 +2228,7 @@ DOOM.THEMES =
       gtd_gothic_ceilwall_doublet_arch = 18,
       gtd_gothic_ceilwall_braced_arch = 18,
       gtd_gothic_ceilwall_xzibit_arch = 18,
+      gtd_gothic_ceilwall_inner_framed_arch = 18,
       --
       gtd_sunderfall = 25,
       gtd_sunderfall_barred = 25,
