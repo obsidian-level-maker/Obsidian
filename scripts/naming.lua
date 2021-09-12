@@ -884,6 +884,7 @@ namelib.NAMES =
         Station=15, Tower=5, Relay=5,
         Satellite=10, Colony=15, Project=5,
         Experiment=3, Network=5, System=15,
+        Node=5, Router=5,
 
         -- industrial places
         Refinery=15, Factory=10,
@@ -2506,6 +2507,7 @@ namelib.NAMES =
         Drive=3, Junction=2, Course=5,
         Bypass=2, Gap=5, Concourse=8,
         Crossing=5, Exchange=5, Channels=5,
+        Row=5, Circuit=5,
 
         -- military
         Barracks=5, Depot=3, Outpost=5,
@@ -2549,7 +2551,7 @@ namelib.NAMES =
         Palace=15, Neighborhood=3, Environs=2,
         Barrio=2, House=20, Mansion=10, Manor=10,
         Estate=2, Slums=15, Refuge=5, Sanctuary=5,
-        Dwelling=3, Lofts=8,
+        Dwelling=3, Lofts=8, Stacks=5, Terrace=5,
 
         -- architectural
         Roofs=10, Piazza=5, Portico=5, Loggia=3,
