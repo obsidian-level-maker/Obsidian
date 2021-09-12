@@ -457,8 +457,8 @@ void Main::PopulateFontMap() {
                     current_free_font + 1, "Source Sans Pro Bold")) {
                 font_menu_items.push_back(std::map<std::string, int>{
                     {"Sauce <Default>", current_free_font}});
+                current_free_font += 2;
             }
-            current_free_font += 2;
         }
 
         font_menu_items.push_back(
@@ -492,8 +492,8 @@ void Main::PopulateFontMap() {
                                  current_free_font + 1, "Teko Bold")) {
                 font_menu_items.push_back(
                     std::map<std::string, int>{{"Teko", current_free_font}});
+                current_free_font += 2;
             }
-            current_free_font += 2;
         }
 
         if (LoadInternalFont("./theme/fonts/Kalam/Kalam-Regular.ttf",
@@ -502,8 +502,46 @@ void Main::PopulateFontMap() {
                                  current_free_font + 1, "Kalam Bold")) {
                 font_menu_items.push_back(
                     std::map<std::string, int>{{"Kalam", current_free_font}});
+                current_free_font += 2;
             }
         }
+
+        if (LoadInternalFont("./theme/fonts/3270/3270.ttf",
+                             current_free_font, "3270 Condensed")) {
+            Fl::set_font(current_free_font + 1, "3270 Condensed");
+            font_menu_items.push_back(
+                std::map<std::string, int>{{"3270", current_free_font}});
+            current_free_font += 2;
+        }
+
+        if (LoadInternalFont("./theme/fonts/Workbench/Workbench.ttf",
+                             current_free_font, "Workbench Light Regular")) {
+            if (LoadInternalFont("./theme/fonts/Workbench/Workbench.ttf",
+                                 current_free_font + 1, "Workbench Regular")) {
+                font_menu_items.push_back(
+                    std::map<std::string, int>{{"Workbench", current_free_font}});
+                current_free_font += 2;
+            }
+        }
+
+        if (LoadInternalFont("./theme/fonts/FPD-Pressure/FPDPressure-Light.otf",
+                             current_free_font, "FPD Pressure Light")) {
+            if (LoadInternalFont("./theme/fonts/FPD-Pressure/FPDPressure-Regular.otf",
+                                 current_free_font + 1, "FPD Pressure")) {
+                font_menu_items.push_back(
+                    std::map<std::string, int>{{"FPD Pressure", current_free_font}});
+                current_free_font += 2;
+            }
+        }
+
+        if (LoadInternalFont("./theme/fonts/DramaSans/DramaSans.ttf",
+                             current_free_font, "Drama Sans")) {
+            Fl::set_font(current_free_font + 1, "Drama Sans");
+            font_menu_items.push_back(
+                std::map<std::string, int>{{"Drama Sans", current_free_font}});
+            current_free_font += 2;
+        }
+
     }
 
     // lossy conversion, size_t?
