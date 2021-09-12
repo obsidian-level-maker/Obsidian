@@ -140,12 +140,13 @@ function HERETIC.get_levels()
       LEV.secret_exit = GAME.SECRET_EXITS[LEV.name]
 
       -- prebuilt levels
-      LEV.prebuilt = GAME.PREBUILT_LEVELS[LEV.name]
-
-      if LEV.prebuilt then
-        LEV.name_theme = LEV.prebuilt.name_theme or "BOSS"
+      if PARAM.bool_prebuilt_levels == 1 then
+        LEV.prebuilt = GAME.PREBUILT_LEVELS[LEV.name]
       end
-
+  
+      if LEV.prebuilt then
+        LEV.name_class = LEV.prebuilt.name_class or "BOSS"
+      end
           -- procedural gotcha management code
 
     -- Prebuilts are to exist over procedural gotchas
