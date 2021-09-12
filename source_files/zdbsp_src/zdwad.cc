@@ -19,11 +19,11 @@
 */
 #include "zdwad.h"
 
-static const char MapLumpNames[12][9] = {
+std::array<std::array<char, 9>, 12> MapLumpNames = {
     "THINGS", "LINEDEFS", "SIDEDEFS", "VERTEXES", "SEGS",     "SSECTORS",
     "NODES",  "SECTORS",  "REJECT",   "BLOCKMAP", "BEHAVIOR", "SCRIPTS"};
 
-static const bool MapLumpRequired[12] = {
+std::array<bool, 12> MapLumpRequired = {
     true,   // THINGS
     true,   // LINEDEFS
     true,   // SIDEDEFS
@@ -38,7 +38,7 @@ static const bool MapLumpRequired[12] = {
     false   // SCRIPTS
 };
 
-static const char GLLumpNames[5][9] = {"GL_VERT", "GL_SEGS", "GL_SSECT",
+std::array<std::array<char, 9>, 5> GLLumpNames = {"GL_VERT", "GL_SEGS", "GL_SSECT",
                                        "GL_NODES", "GL_PVS"};
 
 FWadReader::FWadReader(std::filesystem::path filename) : Lumps(NULL) {
@@ -98,7 +98,7 @@ int FWadReader::FindLump(const char *name, int index) const {
         index = 0;
     }
     for (; index < Header.NumLumps; ++index) {
-        if (strncasecmp(Lumps[index].Name, name, 8) == 0) {
+        if (StringCaseCmp(Lumps[index].Name.data(), name) == 0) {
             return index;
         }
     }
@@ -110,7 +110,7 @@ int FWadReader::FindMapLump(const char *name, int map) const {
     ++map;
 
     for (i = 0; i < 12; ++i) {
-        if (strncasecmp(MapLumpNames[i], name, 8) == 0) {
+        if (StringCaseCmp(MapLumpNames[i].data(), name) == 0) {
             break;
         }
     }
@@ -119,7 +119,7 @@ int FWadReader::FindMapLump(const char *name, int map) const {
     }
 
     for (j = k = 0; j < 12; ++j) {
-        if (strncasecmp(Lumps[map + k].Name, MapLumpNames[j], 8) == 0) {
+        if (StringCaseCmp(Lumps[map + k].Name.data(), MapLumpNames[j].data()) == 0) {
             if (i == j) {
                 return map + k;
             }
@@ -132,7 +132,7 @@ int FWadReader::FindMapLump(const char *name, int map) const {
 bool FWadReader::isUDMF(int index) const {
     index++;
 
-    if (strncasecmp(Lumps[index].Name, "TEXTMAP", 8) == 0) {
+    if (StringCaseCmp(Lumps[index].Name.data(), "TEXTMAP") == 0) {
         // UDMF map
         return true;
     }
@@ -147,7 +147,7 @@ bool FWadReader::IsMap(int index) const {
     index++;
 
     for (i = j = 0; i < 12; ++i) {
-        if (strncasecmp(Lumps[index + j].Name, MapLumpNames[i], 8) != 0) {
+        if (StringCaseCmp(Lumps[index + j].Name.data(), MapLumpNames[i].data()) != 0) {
             if (MapLumpRequired[i]) {
                 return false;
             }
@@ -163,7 +163,7 @@ int FWadReader::FindGLLump(const char *name, int glheader) const {
     ++glheader;
 
     for (i = 0; i < 5; ++i) {
-        if (strncasecmp(Lumps[glheader + i].Name, name, 8) == 0) {
+        if (StringCaseCmp(Lumps[glheader + i].Name.data(), name) == 0) {
             break;
         }
     }
@@ -172,7 +172,7 @@ int FWadReader::FindGLLump(const char *name, int glheader) const {
     }
 
     for (j = k = 0; j < 5; ++j) {
-        if (strncasecmp(Lumps[glheader + k].Name, GLLumpNames[j], 8) == 0) {
+        if (StringCaseCmp(Lumps[glheader + k].Name.data(), GLLumpNames[j].data()) == 0) {
             if (i == j) {
                 return glheader + k;
             }
@@ -192,7 +192,7 @@ bool FWadReader::IsGLNodes(int index) const {
     }
     index++;
     for (int i = 0; i < 4; ++i) {
-        if (strncasecmp(Lumps[i + index].Name, GLLumpNames[i], 8) != 0) {
+        if (StringCaseCmp(Lumps[i + index].Name.data(), GLLumpNames[i].data()) != 0) {
             return false;
         }
     }
@@ -202,7 +202,7 @@ bool FWadReader::IsGLNodes(int index) const {
 int FWadReader::SkipGLNodes(int index) const {
     index++;
     for (int i = 0; i < 5 && index < Header.NumLumps; ++i, ++index) {
-        if (strncasecmp(Lumps[index].Name, GLLumpNames[i], 8) != 0) {
+        if (StringCaseCmp(Lumps[index].Name.data(), GLLumpNames[i].data()) != 0) {
             break;
         }
     }
@@ -233,7 +233,7 @@ int FWadReader::LumpAfterMap(int i) const {
     if (isUDMF(i)) {
         // UDMF map
         i += 2;
-        while (strncasecmp(Lumps[i].Name, "ENDMAP", 8) != 0 &&
+        while (StringCaseCmp(Lumps[i].Name.data(), "ENDMAP") != 0 &&
                i < Header.NumLumps) {
             i++;
         }
@@ -242,7 +242,7 @@ int FWadReader::LumpAfterMap(int i) const {
 
     i++;
     for (j = k = 0; j < 12; ++j) {
-        if (strncasecmp(Lumps[i + k].Name, MapLumpNames[j], 8) != 0) {
+        if (StringCaseCmp(Lumps[i + k].Name.data(), MapLumpNames[j].data()) != 0) {
             if (MapLumpRequired[j]) {
                 break;
             }
@@ -254,10 +254,10 @@ int FWadReader::LumpAfterMap(int i) const {
 }
 
 const char *FWadReader::LumpName(int lump) {
-    static char name[9];
-    strncpy(name, Lumps[lump].Name, 8);
+    std::array<char, 9> name;
+    std::copy(Lumps[lump].Name.data(), Lumps[lump].Name.data() + Lumps[lump].Name.size(), name.data());
     name[8] = 0;
-    return name;
+    return name.data();
 }
 
 FWadWriter::FWadWriter(std::filesystem::path filename, bool iwad) {
@@ -303,8 +303,7 @@ void FWadWriter::Close() {
 
 void FWadWriter::CreateLabel(const char *name) {
     WadLump lump;
-
-    strncpy(lump.Name, name, 8);
+    std::copy(name, name + 8, lump.Name.data());
     lump.FilePos = LittleLong(File.tellp());
     lump.Size = 0;
     Lumps.Push(lump);
@@ -312,8 +311,7 @@ void FWadWriter::CreateLabel(const char *name) {
 
 void FWadWriter::WriteLump(const char *name, const void *data, int len) {
     WadLump lump;
-
-    strncpy(lump.Name, name, 8);
+    std::copy(name, name + 8, lump.Name.data());
     lump.FilePos = LittleLong(File.tellp());
     lump.Size = LittleLong(len);
     Lumps.Push(lump);
