@@ -15,13 +15,15 @@
 #include "lib_util.h"
 
 struct WadHeader {
-    std::array<char, 4> Magic;
-    int32_t NumLumps, Directory;
+    char Magic[4];
+    int32_t NumLumps;
+    int32_t Directory;
 };
 
 struct WadLump {
-    int32_t FilePos, Size;
-    std::array<char, 8> Name;
+    int32_t FilePos;
+    int32_t Size;
+    char Name[8];
 };
 
 class FWadReader {
