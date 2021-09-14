@@ -1,5 +1,5 @@
 //
-// OBLIGE WIN32 RESOURCES
+// OSIDIAN WIN32 RESOURCES
 //
 
 #define MAIN_MENU            100
@@ -16,11 +16,11 @@ MAIN_MENU MENU DISCARDABLE
   }
 }
 
-MAIN_ICON ICON "./oblige.ico"
+MAIN_ICON ICON "./obsidian.ico"
 
 1 VERSIONINFO
-FILEVERSION 7, 7, 7, 0
-PRODUCTVERSION 7, 7, 7, 0
+FILEVERSION 20, 0, 0, 0
+PRODUCTVERSION 20, 0, 0, 0
 FILEFLAGSMASK 0x0
 FILEOS 0x40004 // VOS_NT_WINDOWS32
 FILETYPE 1     // VFT_APP
@@ -31,7 +31,7 @@ BEGIN
     // 0409 means "US English"; 04B0 means "Unicode encoding"
     BLOCK "040904B0"
     BEGIN
-      VALUE "CompanyName",      "ObAddon Community\0"
+      VALUE "CompanyName",      "Obsidian/ObAddon Community\0"
       VALUE "FileDescription",  "OBSIDIAN Level Maker\0"
       VALUE "FileVersion",      "Beta\0"
       VALUE "InternalName",     "OBSIDIAN\0"
