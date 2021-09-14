@@ -38,6 +38,10 @@
 #include "sys_twister.h"
 #include "ui_window.h"
 
+#ifdef WIN32
+#include "winuser.h"
+#endif
+
 /**
  * \brief Ticker time in milliseconds
  */
@@ -118,6 +122,10 @@ bool debug_messages = false;
 bool limit_break = false;
 
 game_interface_c *game_object = NULL;
+
+#ifdef WIN32
+FLASHWINFO blinker;
+#endif
 
 /* ----- user information ----------------------------- */
 
@@ -734,6 +742,12 @@ void SetupFltk() {
 }
 }  // namespace Main
 
+#ifdef WIN32
+void Main::Blinker() {
+    FlashWindowEx(&blinker);
+}
+#endif
+
 void Main::Ticker() {
     // This function is called very frequently.
     // To prevent a slow-down, we only call Fl::check()
@@ -890,6 +904,9 @@ bool Build_Cool_Shit() {
 
         if (main_win) {
             main_win->build_box->string_seed = "";
+            #ifdef WIN32
+            Main::Blinker();
+            #endif
         }
     } else {
         if (main_win) {
@@ -1090,6 +1107,10 @@ restart:;
         fake_argv[1] = NULL;
         main_win->show(1 /* argc */, fake_argv);
     }
+
+    #ifdef WIN32 // Populate structure for taskbar/window flash. Must be done after main_win->show() function - Dasho
+    blinker = { sizeof(FLASHWINFO), fl_xid(main_win), FLASHW_ALL | FLASHW_TIMERNOFG, 0, 0 };
+    #endif
 
     // kill the stupid bright background of the "plastic" scheme
     if (widget_theme == 3) {
