@@ -1100,6 +1100,10 @@ restart:;
 
     Cookie_ParseArguments();
 
+    #ifdef WIN32
+    main_win->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(1)));
+    #endif
+
     // show window (pass some dummy arguments)
     {
         char *fake_argv[2];

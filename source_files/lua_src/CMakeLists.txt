@@ -6,7 +6,7 @@ project(
 
 set(CMAKE_C_FLAGS "-DLUA_ANSI")
 
-if (NOT MSVC)
+if (UNIX OR MINGW OR MSYS)
   set(CMAKE_C_FLAGS "-DLUA_USE_MKSTEMP")
 endif()
 
