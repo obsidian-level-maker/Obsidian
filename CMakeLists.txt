@@ -128,6 +128,7 @@ add_executable(
   source_files/obsidian_src/m_trans.h
   source_files/obsidian_src/main.cc
   source_files/obsidian_src/main.h
+  source_files/obsidian_src/obsidian.rc
   source_files/obsidian_src/q1_structs.h
   source_files/obsidian_src/q2_structs.h
   source_files/obsidian_src/q3_structs.h

@@ -4,6 +4,8 @@ project(
   VERSION 0.1.0
 )
 
+set(CMAKE_CXX_FLAGS "-DINLINE_G=inline")
+
 add_library(
   obsidian_zdbsp
   blockmapbuilder.cc

@@ -1691,6 +1691,9 @@ bool ob_build_cool_shit() {
         Main::ProgStatus(_("Script Error"));
         main_win->label(
             fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION).c_str());
+        #ifdef WIN32
+        Main::Blinker();
+        #endif
         return false;
     }
 
