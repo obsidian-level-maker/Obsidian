@@ -13,30 +13,30 @@ CHEX3.MATERIALS =
   _SKY   = { t="COMPSPAN", f="F_SKY1" },
 
   -- materials for generic prefab set --
-  _METAL   = { t="METL2",   f="FLOOR30" }, -- Self explanatory
+  _METAL   = { t="COMPSPAN", f="CEIL5_1" }, -- Self explanatory
   
-  _WOOD    = { t="WOODWL", f="FLOOR10"}, -- Yep, it's wood
-  _WOOD2  = { t="DRIPWALL", f="FLOOR27" },  
+  _WOOD    = { t="CJLODG01", f="CJFLOD02"}, -- Yep, it's wood
+  _WOOD2  = { t="CJLODG05", f="CJFLOD02" },  
   
-  _SBARS = { t="GATMETL3", f="FLOOR30" }, -- Short bars, i.e. railings
-  _SBARS2 = { t="GATMETL2", f="FLOOR30" },
-  _MBARS = { t="GATMETL4", f="FLOOR30" }, -- Medium bars, i.e. barred windows
-  _TBARS = { t="GATMETL5", f="FLOOR30" }, -- Tall bars, i.e. cage/jail bars
+  _SBARS = { t="STEP4", f="XX" }, -- Short bars, i.e. railings
+  _SBARS2 = { t="LITEMET", f="XX" },
+  _MBARS = { t="BARS", f="XX" }, -- Medium bars, i.e. barred windows
+  _TBARS = { t="CJVILL08", f = "XX" }, -- Tall bars, i.e. cage/jail bars
   
-  _CRATE   = { t="DOORWOOD",  f="FLAT507" }, -- Crate/box
-  _CRATE2  = { t="CTYSTCI4", f="FLOOR10" },
-
-  _GRYWALL = { t="ORNGRAY",  f="FLAT521" }, -- Gray standalone partition/cover  MAYBE DITCH THIS
+  _CRATE   = { t="CRATE1",   f="CRATOP2" }, -- Crate/box
+  _CRATE2  = { t="CRATE2",   f="CRATOP1" },
   
-  _WATER   = { t="WATRWAL1", f="FLTWAWA1" }, -- "Standing water", sorta
-  _WTRFALL = { t="WATRWAL1", f="FLTFLWW1" }, -- "Flowing water", sorta
+  _GRYWALL = { t="GRAYTALL",  f="FLAT5_6" }, -- Gray standalone partition/cover  MAYBE DITCH THIS
   
-  _STONE   = { t="SQPEB1", f="FLAT504" }, -- It rocks lOLOLol
-  _STONE2 = { t="SNDCHNKS", f="FLAT522" },
+  _WATER   = { t="GSTFONT1", f="FWATER1" }, -- "Standing water", sorta
+  _WTRFALL = { t="GSTFONT1", f="FWATER1" }, -- "Flowing water", sorta
   
-  _DOOR  = { t="DOORWOOD", f="FLAT507" }, -- Open says me
-  _DOOR2 = { t="DOORSTON", f="FLOOR08"},
-  _DORRAIL = { t="METL2", f="FLOOR28"}, -- Inner door slider thingys
+  _STONE   = { t="BROWNHUG", f="FLAT1_1" }, -- It rocks lOLOLol
+  _STONE2 = { t="CJCLIF01", f="CJFCRA03" },
+  
+  _DOOR  = { t="DOOR1", f="STEEL32" }, -- Open says me
+  _DOOR2 = { t="BIGDOOR1", f="STEEL32"},
+  _DORRAIL = { t="COMPSTA1", f="STEP1"}, -- Inner door slider thingys
   
   _NPIC    = { t="CELTIC", f="FLOOR06"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
   _NPIC2    = { t="MOSAIC5", f="FLAT502"},
