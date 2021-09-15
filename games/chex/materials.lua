@@ -25,6 +25,7 @@ CHEX3.MATERIALS =
   
   _CRATE   = { t="CRATE1",   f="CRATOP2" }, -- Crate/box
   _CRATE2  = { t="CRATE2",   f="CRATOP1" },
+  _CRATWID = { t="CRATWIDE", f="CRATOP2"}, -- Wide crate
   
   _GRYWALL = { t="GRAYTALL",  f="FLAT5_6" }, -- Gray standalone partition/cover  MAYBE DITCH THIS
   
@@ -38,36 +39,36 @@ CHEX3.MATERIALS =
   _DOOR2 = { t="BIGDOOR1", f="STEEL32"},
   _DORRAIL = { t="COMPSTA1", f="STEP1"}, -- Inner door slider thingys
   
-  _NPIC    = { t="CELTIC", f="FLOOR06"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
-  _NPIC2    = { t="MOSAIC5", f="FLAT502"},
-  _NPIC3    = { t="SAINT1", f="FLAT523"},
+  _NPIC    = { t="DCAFE01", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
+  _NPIC2    = { t="DCAFE02", f="XX"},
+  _NPIC3    = { t="DCAFE03", f="XX"},
   
-  _MPIC    = { t="CELTIC", f="FLOOR06"}, -- Medium (or tiling) pic box insert, 128 pixels wide
-  _MPIC2    = { t="DMNMSK", f="FLAT521"},
-  _MPIC3    = { t="GRSKULL3", f="FLAT521"},
-  _MPIC4    = { t="SKULLSB2", f="FLOOR30"},
-  _MPIC5    = { t="STNGLS1", f="FLOOR30"},
-  _MPIC6    = { t="STNGLS2", f="FLOOR30"},
-  _MPIC7    = { t="STNGLS3", f="FLOOR30"},
+  _MPIC    = { t="ART1", f="XX"}, -- Medium (or tiling) pic box insert, 128 pixels wide
+  _MPIC2    = { t="ART2", f="XX"},
+  _MPIC3    = { t="VINCENT", f="XX"},
+  _MPIC4    = { t="POSTER1", f="XX"},
+  _MPIC5    = { t="POSTER2", f="XX"},
+  _MPIC6    = { t="POSTER3", f="XX"},
+  _MPIC7    = { t="MUNCH", f="XX"},
   
-  _WPIC    = { t="CHAINMAN", f="FLAT520"}, -- Wide (or tiling) pic box insert, 256 pixels wide
-  _WPIC2    = { t="HORSES1", f="FLAT502"},
-  _WPIC3    = { t="CELTIC", f="FLOOR06"},
+  _WPIC    = { t="CHEXAD1", f="XX"}, -- Wide (or tiling) pic box insert, 256 pixels wide
+  _WPIC2    = { t="CHEXAD2", f="XX"},
+  _WPIC3    = { t="VENUSHS", f="XX"},
   
   _REDSTON = { t="REDWALL", f="FLOOR09"}, -- Red stone
   _BLUSTON = { t="BLUEFRAG", f="FLAT502"}, -- Blue stone
   
-  _KEYTRM1 = { t="SPINE1", f="FLOOR25" }, -- Trim for locked door, Key 1
-  _KEYTRM2 = { t="GRNBLOK1", f="FLOOR19" }, -- Trim for locked door, Key 2
-  _KEYTRM3 = { t="BLUEFRAG", f="FLOOR16" }, -- Trim for locked door, Key 3
+  _KEYTRM1 = { t="DOORRED", f="XX" }, -- Trim for locked door, Key 1
+  _KEYTRM2 = { t="DOORYEL", f="XX" }, -- Trim for locked door, Key 2
+  _KEYTRM3 = { t="DOORBLU", f="XX" }, -- Trim for locked door, Key 3
   
-  _EXITDOR = { t="DOOREXIT", f="FLAT520" }, -- Exit door
-  _EXITSW  = { t="SW2OFF", f="FLOOR28" }, -- Exit switch
+  _EXITDOR = { t="DOORBLU2", f="FLAT5_6" }, -- Exit door
+  _EXITSW  = { t="SW1STON1", f="FLAT5_6"  }, -- Exit switch
   
-  _SWITCH  = { t="SW1OFF", f="FLOOR28" }, -- Wall/general purpose swtich
-  _SWITCH2  = { t="SW2OFF", f="FLOOR28" },
+  _SWITCH  = { t="SW1COMM",  f="FLAT5_6" }, -- Wall/general purpose swtich
+  _SWITCH2  = { t="SW1COMP",  f="FLAT5_6" },
   
-  _TELE = { t="CHAINSD", f="FLTTELE1" }, -- Teleporter
+  _TELE = { f="GATE1", t="SP_DUDE4" }, -- Teleporter
 
   -- general purpose --
 
