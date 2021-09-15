@@ -2559,9 +2559,21 @@ function Quest_nice_items()
       local max_along_room = 0
       local min_along_room = 1
 
+      local final_min_prog = info.min_prog
+      local final_max_prog = info.max_prog
+
+      -- sanity check for when rooms fall out of the along range
       for _,R in pairs(LEVEL.rooms) do
         max_along_room = math.max(max_along_room, R.lev_along)
         min_along_room = math.min(min_along_room, R.lev_along)
+
+        if min_along_room > info.min_prog then
+          min_along_room = 0
+        end
+
+        if max_along_room < info.max_prog then
+          max_along_room = 1
+        end
       end
 
       for _,R in pairs(LEVEL.rooms) do
@@ -2570,20 +2582,23 @@ function Quest_nice_items()
         and not R.is_hallway then
           local do_it = false
 
-          if info.min_prog and (R.lev_along >= info.min_prog) 
-          and info.min_prog > min_along_room then
+          if final_min_prog and (R.lev_along >= final_min_prog) then
             do_it = true
           end
 
-          if info.max_prog and (R.lev_along <= info.max_prog) 
-          and info.max_prog < max_along_room then
+          if final_max_prog and (R.lev_along <= final_max_prog) then
             do_it = true
-          end
+          end            
 
           if (info.not_start and R.is_start) or
           (info.not_exit and R.is_exit) or
           (info.not_secret and R.is_secret) then
             do_it = false
+          end
+
+          if info.min_prog and info.max_prog == 0 and
+          R.is_start then
+            do_it = true
           end
 
           if do_it then
