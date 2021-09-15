@@ -36,9 +36,11 @@ gui.import("resources")
 
 UNFINISHED["chex3"] =
 {
-	label = _("Chex Quest 3"),
+	label = _("Chex Quest 3 (Experimental)"),
 	priority = 30,
 	
+	engine = "zdoom",
+
 	format = "doom",
 	sub_format = "hexen",
 	

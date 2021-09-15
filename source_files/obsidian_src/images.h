@@ -6,6 +6,7 @@
 #include "sys_type.h"
 #include "headers.h"
 
+#ifndef WIN32
 static const char *obsidian_icon[] = {
 /* columns rows colors chars-per-pixel */
 "64 61 11 1 ",
@@ -83,6 +84,7 @@ static const char *obsidian_icon[] = {
 "ooOOO@@#$$$$%%%%%%%%%%%%%%&%@&%%%%%%%%%%%%%%%%&%%$$$##@@+OOoooXX",
 "oOOOO@@##$$%%%%%%%%%%&&&%%&#&&%%%%%%%%%%%%%%%%&%%$$$##@@+OOoooXX"
 };
+#endif
 
 typedef struct {
     const char *name;
