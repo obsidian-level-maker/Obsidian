@@ -4,8 +4,10 @@ project(
   VERSION 0.1.0
 )
 
-if (UNIX)
-  set(CMAKE_C_FLAGS "-DLUA_USE_POSIX")
+set(CMAKE_C_FLAGS "-DLUA_ANSI")
+
+if (UNIX OR MINGW OR MSYS)
+  set(CMAKE_C_FLAGS "-DLUA_USE_MKSTEMP")
 endif()
 
 add_library(
