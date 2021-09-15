@@ -195,14 +195,14 @@ ARMAETUS_MATERIALS = {
   DRKCMT05  = { t="DRKCMT05",  f="RROCK03" }, --Dark version of CEMENT7,
   DRKCMT06  = { t="DRKCMT06",  f="RROCK03" }, --Dark version of CEMENT9,
 
-  HELLCMT1  = { t="HELLCMT1",  f="FLAT19" }, --Red and white
-  HELLCMT2  = { t="HELLCMT2",  f="FLAT19" }, --Red and white
-  HELLCMT3  = { t="HELLCMT3",  f="FLAT19" }, --Red and white
-  HELLCMT4  = { t="HELLCMT4",  f="FLAT19" }, --Red and white
-  HELLCMT5  = { t="HELLCMT5",  f="FLAT19" }, --Red and white
-  HELLCMT6  = { t="HELLCMT6",  f="FLAT19" }, --Red and white
-  HELLCMT7  = { t="HELLCMT7",  f="FLAT19" }, --Black and white
-  HELLCMT8  = { t="HELLCMT8",  f="FLAT19" }, --Black and white
+  HELLCMT1  = { t="HELLCMT1",  f="RMARB3" }, --Red and white
+  HELLCMT2  = { t="HELLCMT2",  f="RMARB3" }, --Red and white
+  HELLCMT3  = { t="HELLCMT3",  f="RMARB3" }, --Red and white
+  HELLCMT4  = { t="HELLCMT4",  f="RMARB3" }, --Red and white
+  HELLCMT5  = { t="HELLCMT5",  f="RMARB3" }, --Red and white
+  HELLCMT6  = { t="HELLCMT6",  f="RMARB3" }, --Red and white
+  HELLCMT7  = { t="HELLCMT7",  f="FLOOR4_7" }, --Black and white
+  HELLCMT8  = { t="HELLCMT8",  f="FLOOR4_7" }, --Black and white
 
   -- Bronze & Brown
   BRONZE5 =  { t="BRONZE5", f="MFLR8_2" },

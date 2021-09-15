@@ -6,6 +6,8 @@ PREFABS.Wall_generic_ceilwall =
   prob   = 50,
   theme  = "tech",
 
+  rank = 2,
+
   group  = "gtd_generic_ceilwall",
 
   where  = "edge",
@@ -34,6 +36,8 @@ PREFABS.Wall_generic_ceilwall_urban =
 
   theme = "urban",
 
+  rank = 1,
+
   tex_COMPBLUE = "LITE3",
   tex_BRNSMALC = "MIDBARS3",
 }
@@ -44,8 +48,9 @@ PREFABS.Wall_generic_ceilwall_diag_urban =
   map = "MAP02",
 
   where = "diagonal",
-
   theme = "urban",
+
+  rank = 1,
 
   tex_COMPBLUE = "LITE3",
   tex_BRNSMALC = "MIDBARS3",
@@ -59,6 +64,8 @@ PREFABS.Wall_generic_ceilwall_hell =
 
   theme = "hell",
 
+  rank = 3,
+
   tex_COMPBLUE = "ROCKRED1",
   tex_BRNSMALC = "MIDGRATE",
 }
@@ -71,6 +78,8 @@ PREFABS.Wall_generic_ceilwall_diag_hell =
   where = "diagonal",
 
   theme = "hell",
+
+  rank = 3,
 
   tex_COMPBLUE = "ROCKRED1",
   tex_BRNSMALC = "MIDGRATE",

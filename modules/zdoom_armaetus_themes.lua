@@ -5555,7 +5555,7 @@ ARMAETUS_THEMES =
       CATACMB6 = 10,
 
       HELLCMT1 = 15,
-      HELLCMT8 = 15,
+      HELLCMT2 = 15,
       SKTEK01 = 15,
       SKTEK02 = 15,
       KSTONE1 = 10,
