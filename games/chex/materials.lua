@@ -1,6 +1,14 @@
+CHEX3.LIQUIDS =
+{
+  water  = { mat="WATER", light_add=16, special=0 },
+  slime1 = { mat="SLIME1", light_add=16, special=16, damage=20 },
+  slime2   = { mat="SLIME2", light_add=24, special=16, damage=20 }    
+}
+
 CHEX3.MATERIALS =
 {
   -- special materials --
+  _DEFAULT = { t="COMPSPAN", f="CEIL5_1" },
   _ERROR = { t="COMPSPAN", f="CEIL5_1" },
   _SKY   = { t="COMPSPAN", f="F_SKY1" },
 

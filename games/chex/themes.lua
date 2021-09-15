@@ -85,8 +85,11 @@ CHEX3.THEMES =
 
     liquids =
     {
-
+      water = 50,
+      slime1 = 15,
+      slime2 = 10
     },
+
 
     narrow_halls =
     {
@@ -171,9 +174,7 @@ CHEX3.THEMES =
 
     scenic_fences =
     {
-      CJVILL08 = 80,
-      TI_GRATE = 40,
-      LITEMET = 40
+      VINE1 = 80
     },
 
     sink_style =
