@@ -227,6 +227,70 @@ CHEX3.ROOM_THEMES =
     }
   },
 
+  spaceport_vent_Hallway =
+  {
+    env   = "hallway",
+    group = "vent",
+    prob  = 50,
+
+    walls =
+    {
+      SP_DUDE2 = 30,
+      STONE3 = 10,
+      STONE = 20,
+      GRAY7 = 10,
+      STARG3 = 30,
+      TEKWALL5 = 10,
+      BROWN1 = 10
+    },
+
+    floors =
+    {
+      CEIL5_1 = 50,
+      FLAT14 = 50,
+      STARG3 = 50,
+      CEIL4_1 = 50
+    },
+
+    ceilings =
+    {
+      CEIL4_1 = 50
+    }
+
+  },
+
+  spaceport_deuce_Hallway =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob  = 50,
+
+    walls =
+    {
+      SP_DUDE2 = 30,
+      STONE3 = 10,
+      STONE = 20,
+      GRAY7 = 10,
+      STARG3 = 30,
+      TEKWALL5 = 10,
+      BROWN1 = 10
+    },
+
+    floors =
+    {
+      CEIL5_1 = 50,
+      FLAT14 = 50,
+      STARG3 = 50,
+      CEIL4_1 = 50
+    },
+
+    ceilings =
+    {
+      CEIL4_1 = 50
+    }
+
+  },
+
   spaceport_Outdoors =
   {
     env  = "outdoor",

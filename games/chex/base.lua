@@ -36,7 +36,7 @@ gui.import("resources")
 
 OB_GAMES["chex3"] =
 {
-	label = _("Chex Quest 3 (Experimental)"),
+	label = _("Chex Quest 3 (Exp)"),
 	priority = 30,
 	
 	engine = "zdoom",
