@@ -34,7 +34,7 @@ gui.import("levels")
 gui.import("resources")
 ----------------------------------------------------------------
 
-UNFINISHED["chex3"] =
+OB_GAMES["chex3"] =
 {
 	label = _("Chex Quest 3 (Experimental)"),
 	priority = 30,
