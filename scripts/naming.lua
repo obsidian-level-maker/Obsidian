@@ -83,6 +83,7 @@ namelib.NAMES =
         ["Backstabbed"]=10,
         ["Black Skies"]=10,
         ["Blown to Bits"]=10,
+        ["Chaos Within"]=10,
         ["Choirs of Progress"]=10,
         ["Compromised"]=10,
         ["Complete Breakdown"]=10,
@@ -187,6 +188,11 @@ namelib.NAMES =
         ["Shooter to the Rescue"]=10,
         ["Deep into the Lua"]=10,
         ["Facing the Script Error"]=10,
+
+        -- Foreign equalivents..
+        ["A La Caza"]=10, -- "On the Hunt" in Spanish
+        ["Siniestro"]=10, -- "Sinister" in Spanish
+        ["Umgang mit dem Skriptfehler"]=10, -- "Facing the Script Error" in German
 
         -- Doom 2..
         ["Entrance"]=10,
@@ -387,7 +393,11 @@ namelib.NAMES =
         ["Veils of the Cosmic Void"]=10,
         ["What Fuels The Ghosts"]=10,
         ["You're Not Here"]=10, -- Silent Hill
-        ["You're Not Here, Right?"]=10
+        ["You're Not Here, Right?"]=10,
+
+        -- Foreign shit for the luls
+        ["Chaos und Verachtung"]=10, -- "Chaos and Contempt"
+        ["No se puede inventar esta mierda"]=10 -- "You Can't Make This Shit Up" in Spanish
 
       },
 
@@ -2225,6 +2235,7 @@ namelib.NAMES =
         ["Candles and Incense"]=10,
         ["Cascade of Death"]=10,
         ["Chainsaw Bisectioning"]=10,
+        ["Circle of Carrion"]=10,
         ["Draped in Filth"]=10,
         ["Drill it and Kill it"]=10,
         ["Eternal Darkness"]=10, -- GREAT game!
@@ -2238,7 +2249,26 @@ namelib.NAMES =
         ["The Corpse Collector"]=10,
         ["Unhallowed Purity"]=10,
         ["Viviseduction"]=10,
+        ["We Shun the Light"]=10,
         ["Wretched Human Mirror"]=10, -- Bloodbath song name
+
+        -- Foreign named things!
+        -- I used DeepL for nearly all of these instead of Google Translate..
+        -- Please provide corrections if any of these are off/incorrect!
+        ["An Eine Wand Genagelt"]=10, -- "Nailed to a Wall" in German
+        ["Dreck, Pilze und Blut"]=10, -- "Filth, Fungi and Blood" in German
+        ["Donde Vagan los Muertos"]=10, -- "Where the Dead Roam/Wander" in Spanish
+        ["Facteur de Dissolution 666"]=10, -- "Dissolution Factor 666" in French
+        ["Feuerspiegel"]=10, -- "Fire Mirror" in German
+        ["Grzech I Ofiara"]=10, -- "Sin and Sacrifice" in Polish
+        ["L'Empire Des Inferna"]=10, -- "The Empire of Hell" in French
+        ["La Presa del Demone"]=10, -- "The Grasp of the Demon" in Italian
+        ["Las Ostrzy"]=10, -- "Forest of Blades" in Polish
+        ["Lasst uns Sterben!"]=10, -- "Let's Die!" / "Let us Die!" in German
+        ["Lixo Humano"]=10, -- "Human Trash/Waste/Garbage" in Brazilian Portuguese
+        ["Luurankopuutarha"]=10, -- "Skeleton Garden" in Finnish
+        ["Menschliche Reste"]=10, -- "Human Remains" in German
+        ["Puhdas Helvetti"]=10, -- "Pure Hell" in Finnish
 
         -- MSSP names:
         ["Deep Rock Satanic"]=10,
@@ -2713,12 +2743,14 @@ namelib.NAMES =
         ["Blizzard of Glass"]=10,
         ["Blood Red Shadows"]=10,
         ["Bullets and Fireballs"]=10,
+        ["Buried by Time and Ash"]=10,
         ["Burndown"]=10,
         ["Burnout"]=10,
         ["Business District"]=10,
         ["Cacophobia"]=10,
         ["Carnival Bizarre"]=10,
         ["Chaos and Confusion"]=10,
+        ["Chasing Demomns"]=10,
         ["Cisterne"]=10,
         ["Cloak of Midnight"]=10,
         ["Cold Comfort"]=10,
@@ -2804,6 +2836,7 @@ namelib.NAMES =
         ["Principle of War"]=10,
         ["Pitch Black"]=10,
         ["Primetime Killing"]=10,
+        ["Progression's Delay"]=10,
         ["Punctured"]=10,
         ["Quietus"]=10,
         ["Riddled by Gunfire"]=10,
