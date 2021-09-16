@@ -193,8 +193,6 @@ HACX.THEMES =
 HACX.ROOM_THEMES =
 {
 
-  ---- SPACEPORT THEME --------------------------------
-
   hacx_urban_Generic =
   {
     env  = "building",

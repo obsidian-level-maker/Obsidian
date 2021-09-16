@@ -34,9 +34,9 @@ gui.import("levels")
 gui.import("resources")
 ----------------------------------------------------------------
 
-UNFINISHED["hacx"] =
+OB_GAMES["hacx"] =
 {
-	label = _("HacX 1.2 (Experimental)"),
+	label = _("HacX 1.2 (Exp)"),
 	priority = 30,
 	
 	format = "doom",
@@ -53,7 +53,6 @@ UNFINISHED["hacx"] =
 	
 	hooks =
 	{
-        setup      = HACX.setup,
 		get_levels = HACX.get_levels,
 		all_done   = HACX.all_done
 	},
