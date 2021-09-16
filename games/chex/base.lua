@@ -42,7 +42,7 @@ OB_GAMES["chex3"] =
 	engine = "zdoom",
 
 	format = "doom",
-	sub_format = "hexen",
+	--sub_format = "hexen",
 	
 	game_dir = "chex",
 	iwad_name = "chex3.wad",
