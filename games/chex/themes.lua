@@ -85,8 +85,11 @@ CHEX3.THEMES =
 
     liquids =
     {
-
+      water = 50,
+      slime1 = 15,
+      slime2 = 10
     },
+
 
     narrow_halls =
     {
@@ -171,9 +174,7 @@ CHEX3.THEMES =
 
     scenic_fences =
     {
-      CJVILL08 = 80,
-      TI_GRATE = 40,
-      LITEMET = 40
+      VINE1 = 80
     },
 
     sink_style =
@@ -224,6 +225,70 @@ CHEX3.ROOM_THEMES =
     {
       CEIL4_1 = 50
     }
+  },
+
+  spaceport_vent_Hallway =
+  {
+    env   = "hallway",
+    group = "vent",
+    prob  = 50,
+
+    walls =
+    {
+      SP_DUDE2 = 30,
+      STONE3 = 10,
+      STONE = 20,
+      GRAY7 = 10,
+      STARG3 = 30,
+      TEKWALL5 = 10,
+      BROWN1 = 10
+    },
+
+    floors =
+    {
+      CEIL5_1 = 50,
+      FLAT14 = 50,
+      STARG3 = 50,
+      CEIL4_1 = 50
+    },
+
+    ceilings =
+    {
+      CEIL4_1 = 50
+    }
+
+  },
+
+  spaceport_deuce_Hallway =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob  = 50,
+
+    walls =
+    {
+      SP_DUDE2 = 30,
+      STONE3 = 10,
+      STONE = 20,
+      GRAY7 = 10,
+      STARG3 = 30,
+      TEKWALL5 = 10,
+      BROWN1 = 10
+    },
+
+    floors =
+    {
+      CEIL5_1 = 50,
+      FLAT14 = 50,
+      STARG3 = 50,
+      CEIL4_1 = 50
+    },
+
+    ceilings =
+    {
+      CEIL4_1 = 50
+    }
+
   },
 
   spaceport_Outdoors =

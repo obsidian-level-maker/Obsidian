@@ -34,13 +34,15 @@ gui.import("levels")
 gui.import("resources")
 ----------------------------------------------------------------
 
-UNFINISHED["chex3"] =
+OB_GAMES["chex3"] =
 {
-	label = _("Chex Quest 3"),
+	label = _("Chex Quest 3 (Exp)"),
 	priority = 30,
 	
+	engine = "zdoom",
+
 	format = "doom",
-	sub_format = "hexen",
+	--sub_format = "hexen",
 	
 	game_dir = "chex",
 	iwad_name = "chex3.wad",

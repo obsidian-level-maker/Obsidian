@@ -1102,6 +1102,13 @@ restart:;
 
     #ifdef WIN32
     main_win->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(1)));
+    #else
+		#ifdef UNIX
+		fl_register_images();
+		Fl_Pixmap program_icon(obsidian_icon);
+		Fl_RGB_Image rgb_icon(&program_icon, FL_BLACK);
+		UI_MainWin::default_icon(&rgb_icon);
+		#endif
     #endif
 
     // show window (pass some dummy arguments)

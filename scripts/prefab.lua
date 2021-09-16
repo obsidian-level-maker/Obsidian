@@ -1555,7 +1555,7 @@ function Fab_load_wad(def)
     local spot_info = WADFAB_ENTITIES[E.id]
     
     -- Convert things from generic things to their actual id
-    if E.id >= 7000 and E.id <= 7013 then
+    if E.id >= 11000 and E.id <= 11100 then
       for _,v in pairs(GAME.ENTITIES) do
         if E.id == v.id then
           E.id = v.rid
