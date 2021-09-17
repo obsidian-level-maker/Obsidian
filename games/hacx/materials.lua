@@ -53,9 +53,9 @@ HACX.MATERIALS =
   _WPIC2    = { t="HW337", f="RROCK03"},
   _WPIC3    = { t="HW341", f="RROCK03"},
   
-  _KEYTRM1 = { t="HW512", f="RROCK03" }, -- Trim for locked door, Key 1
+  _KEYTRM1 = { t="HW510", f="RROCK03" }, -- Trim for locked door, Key 1
   _KEYTRM2 = { t="HW511", f="RROCK03" }, -- Trim for locked door, Key 2
-  _KEYTRM3 = { t="HW510", f="RROCK03" }, -- Trim for locked door, Key 3
+  _KEYTRM3 = { t="HW512", f="RROCK03" }, -- Trim for locked door, Key 3
   
   _EXITDOR = { t="DOORRED", f="RROCK03" }, -- Exit door
   _EXITSW  = { t="HD5", f="RROCK03" }, -- Exit switch
