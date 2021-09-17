@@ -160,12 +160,12 @@ HACX.THEMES =
 
     cave_torches =
     {
-
+      wall_torch = 50
     },
 
     outdoor_torches =
     {
-
+      wall_torch = 50
     },
 
     ceil_light_prob = 70,

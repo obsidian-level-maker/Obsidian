@@ -18,11 +18,11 @@ CHEX3.MATERIALS =
   _SBARS = { t="STEP4", f="XX" }, -- Short bars, i.e. railings
   _SBARS2 = { t="LITEMET", f="XX" },
   _MBARS = { t="BARS", f="XX" }, -- Medium bars, i.e. barred windows
-  _TBARS = { t="CJVILL08", f = "XX" }, -- Tall bars, i.e. cage/jail bars
+  _TBARS = { t="LITE4", f = "XX" }, -- Tall bars, i.e. cage/jail bars
   
   _CRATE   = { t="CRATE1",   f="CRATOP2" }, -- Crate/box
   _CRATE2  = { t="CRATE2",   f="CRATOP1" },
-  _CRATWID = { t="CRATWIDE", f="CRATOP2"}, -- Wide crate
+  _CRATWID = { t="CRATWIDE", f="CRATOP1"}, -- Wide crate
     
   _WATER   = { t="GSTFONT1", f="FWATER1" }, -- "Standing water", sorta
   _WTRFALL = { t="GSTFONT1", f="FWATER1" }, -- "Flowing water", sorta

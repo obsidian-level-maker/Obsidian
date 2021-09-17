@@ -3,7 +3,7 @@ CHEX3.ENTITIES =
 
   --- entities for generic prefabs, the rid field stands for "Real ID" --
   generic_barrel = { id=11000, rid=2035, r=12, h=32 },
-  generic_ceiling_light = { id=11001, rid=60, r=31, h=60, light=255, pass=true, ceil=true, add_mode="island" },
+  generic_ceiling_light = { id=11001, rid=46, r=31, h=60, light=255, pass=true, ceil=true, add_mode="island" }, -- Doesn't seem to actually stick to the ceiling atm - Dasho
   generic_standalone_light = { id=11002, rid=35, r=12, h=54, light=255 }, -- "torches" and such, freestanding on a floor
   generic_wall_light    = { id=11003, rid=34, r=10, h=64, light=255, pass=true, add_mode="extend" }, -- "torches" and such, attached to a wall
   generic_wide_light    = { id=11004, rid=2028, r=16, h=44, light=255 }, -- wide standalone light, braziers, etc
