@@ -1,8 +1,8 @@
 ------------------------------------------------------------------------
---  HACX THEMES
+--  NUKEM THEMES
 ------------------------------------------------------------------------
 
-HACX.SINKS =
+NUKEM.SINKS =
 {
   -- sky holes --
 
@@ -24,16 +24,14 @@ HACX.SINKS =
 }
 
 
-HACX.THEMES =
+NUKEM.THEMES =
 {
   DEFAULTS =
   {
 
     keys =
     {
-      kz_red = 50,
-      kz_yellow = 50,
-      kz_blue = 50
+      k_yellow = 50,
     },
 
     skyboxes =
@@ -47,7 +45,7 @@ HACX.THEMES =
   },
 
 
-  hacx_urban =
+  nukem_city =
   {
 
    style_list =
@@ -74,12 +72,9 @@ HACX.THEMES =
 
     liquids =
     {
-      water2 = 40,
       water  = 50,
       lava   = 10,
       slime = 15,
-      goo  = 10,
-      elec = 10
     },
 
     narrow_halls =
@@ -104,32 +99,28 @@ HACX.THEMES =
 
     fences =
     {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      BLOCKY2 = 10,
+      STONES = 30,
+      BSTONES = 10,
+      WOOD3 = 20
     },
 
     cage_mats =
     {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      BLOCKY2 = 10,
+      STONES = 30,
+      BSTONES = 10,
+      WOOD3 = 20
     },
 
     facades =
     {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      BLOCKY2 = 10,
+      BRN_BRICK = 30,
+      WINDOW1 = 10,
+      WINDOW2 = 20,
+      BRICK2 = 10,
+      GRNBRICK = 30,
+      GRAYBRICK = 10,
+      REDSLATS = 30,
+      IRON = 10
     },
 
     fence_groups =
@@ -172,7 +163,9 @@ HACX.THEMES =
 
     scenic_fences =
     {
-      BRIDGE_RAIL = 80,
+      STONES = 30,
+      BSTONES = 10,
+      WOOD3 = 20
     },
 
     sink_style =
@@ -181,56 +174,53 @@ HACX.THEMES =
       curved = 0.1
     },
 
-    steps_mat = "CEIL5_1",
+    steps_mat = "IRON",
 
-    post_mat  = "HW209"
+    post_mat  = "WOOD3"
 
   }
 
 }
 
 
-HACX.ROOM_THEMES =
+NUKEM.ROOM_THEMES =
 {
 
-  hacx_urban_Generic =
+  nukem_city_Generic =
   {
     env  = "building",
     prob = 50,
 
     walls =
     {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      BLOCKY2 = 10,
+      BRN_BRICK = 30,
+      WINDOW1 = 10,
+      WINDOW2 = 20,
+      BRICK2 = 10,
+      GRNBRICK = 30,
+      GRAYBRICK = 10,
+      REDSLATS = 30,
+      IRON = 10
     },
 
     floors =
     {
-      MODWALL3 = 50,
-      STONY1 = 50,
-      TECHY1 = 50,
-      CAVEY1 = 50,
-      BLOCKY1 = 50,
-      WOODY1 = 50,
-      WOOD_TILE = 50
+      GRAYCIRCLE = 50,
+      CLANG1 = 50,
+      GRAYFLAT = 50,
+      REDCARPET = 50
     },
 
     ceilings =
     {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      WOODY1 = 10,
+      IRON = 30,
+      GRAYCIRCLE = 10,
+      ROOF1 = 20,
+      ROOF2 = 10,
     }
   },
 
- hacx_urban_Hallway_deuce =
+ nukem_city_Hallway_deuce =
   {
     env   = "hallway",
     group = "deuce",
@@ -238,37 +228,34 @@ HACX.ROOM_THEMES =
 
     walls =
     {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      BLOCKY2 = 10,
+      BRN_BRICK = 30,
+      WINDOW1 = 10,
+      WINDOW2 = 20,
+      BRICK2 = 10,
+      GRNBRICK = 30,
+      GRAYBRICK = 10,
+      REDSLATS = 30,
+      IRON = 10
     },
 
     floors =
     {
-      MODWALL3 = 50,
-      STONY1 = 50,
-      TECHY1 = 50,
-      CAVEY1 = 50,
-      BLOCKY1 = 50,
-      WOODY1 = 50,
-      WOOD_TILE = 50
+      GRAYCIRCLE = 50,
+      CLANG1 = 50,
+      GRAYFLAT = 50,
+      REDCARPET = 50
     },
 
     ceilings =
     {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      WOODY1 = 10,
+      IRON = 30,
+      GRAYCIRCLE = 10,
+      ROOF1 = 20,
+      ROOF2 = 10,
     }
   },
 
- hacx_urban_Hallway_vent =
+  nukem_city_Hallway_vent =
   {
     env   = "hallway",
     group = "vent",
@@ -276,75 +263,148 @@ HACX.ROOM_THEMES =
 
     walls =
     {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      BLOCKY2 = 10,
+      BRN_BRICK = 30,
+      WINDOW1 = 10,
+      WINDOW2 = 20,
+      BRICK2 = 10,
+      GRNBRICK = 30,
+      GRAYBRICK = 10,
+      REDSLATS = 30,
+      IRON = 10
     },
 
     floors =
     {
-      MODWALL3 = 50,
-      STONY1 = 50,
-      TECHY1 = 50,
-      CAVEY1 = 50,
-      BLOCKY1 = 50,
-      WOODY1 = 50,
-      WOOD_TILE = 50
+      GRAYCIRCLE = 50,
+      CLANG1 = 50,
+      GRAYFLAT = 50,
+      REDCARPET = 50
     },
 
     ceilings =
     {
-      MODWALL3 = 30,
-      STONY1 = 10,
-      TECHY1 = 20,
-      CAVEY1 = 10,
-      BLOCKY1 = 30,
-      WOODY1 = 10,
+      IRON = 30,
+      GRAYCIRCLE = 10,
+      ROOF1 = 20,
+      ROOF2 = 10,
     }
   },
 
-  hacx_urban_Outdoors =
+  nukem_city_Outdoors =
   {
     env  = "outdoor",
     prob = 50,
 
     floors =
     {
-      HERRING_1 = 50,
-      GRAY_BRICK = 50
+      MUD=50, 
+      GRASS=50,
+      CRETE1=20, 
+      CONC1=20, 
+      CONC2=20,
+      BLOCKS1=30, 
+      BLOCKS2=30,
+      ROCK1=15, 
+      ROCK2=15, 
+      ROCK3=15, 
+      ROCK4=15,
+      ROCK5=15, 
+      ROCK6=15, 
+      ROCK7=15,
+      SMROCK1=20, 
+      SMROCK2=20, 
+      SMROCK3=20
     },
 
     naturals =
     {
-      GRAY_ROCK = 50,
-      DIRTY1 = 50,
-      GRASS1 = 50
+      MUD=50, 
+      GRASS=50,
+      CRETE1=20, 
+      CONC1=20, 
+      CONC2=20,
+      BLOCKS1=30, 
+      BLOCKS2=30,
+      ROCK1=15, 
+      ROCK2=15, 
+      ROCK3=15, 
+      ROCK4=15,
+      ROCK5=15, 
+      ROCK6=15, 
+      ROCK7=15,
+      SMROCK1=20, 
+      SMROCK2=20, 
+      SMROCK3=20
     },
 
     porch_floors =
     {
-      HERRING_1 = 50,
-      GRAY_BRICK = 50
+      MUD=50, 
+      GRASS=50,
+      CRETE1=20, 
+      CONC1=20, 
+      CONC2=20,
+      BLOCKS1=30, 
+      BLOCKS2=30,
+      ROCK1=15, 
+      ROCK2=15, 
+      ROCK3=15, 
+      ROCK4=15,
+      ROCK5=15, 
+      ROCK6=15, 
+      ROCK7=15,
+      SMROCK1=20, 
+      SMROCK2=20, 
+      SMROCK3=20
     },
 
   },
 
-  hacx_urban_Cave =
+  nukem_city_Cave =
   {
     env  = "cave",
     prob = 50,
 
     floors =
     {
-      GRAY_ROCK = 50
+      MUD=50, 
+      GRASS=50,
+      CRETE1=20, 
+      CONC1=20, 
+      CONC2=20,
+      BLOCKS1=30, 
+      BLOCKS2=30,
+      ROCK1=15, 
+      ROCK2=15, 
+      ROCK3=15, 
+      ROCK4=15,
+      ROCK5=15, 
+      ROCK6=15, 
+      ROCK7=15,
+      SMROCK1=20, 
+      SMROCK2=20, 
+      SMROCK3=20
     },
 
     walls =
     {
-      GRAY_ROCK = 50
+      MUD=50, 
+      GRASS=50,
+      CRETE1=20, 
+      CONC1=20, 
+      CONC2=20,
+      BLOCKS1=30, 
+      BLOCKS2=30,
+      ROCK1=15, 
+      ROCK2=15, 
+      ROCK3=15, 
+      ROCK4=15,
+      ROCK5=15, 
+      ROCK6=15, 
+      ROCK7=15,
+      SMROCK1=20, 
+      SMROCK2=20, 
+      SMROCK3=20
     }
   }
 
@@ -352,7 +412,7 @@ HACX.ROOM_THEMES =
 ------------------------------------------------------------------------
 
 
-HACX.ROOMS =
+NUKEM.ROOMS =
 {
   GENERIC =
   {
@@ -371,10 +431,10 @@ HACX.ROOMS =
 ------------------------------------------------------------------------
 
 
-OB_THEMES["hacx_urban"] =
+OB_THEMES["nukem_city"] =
 {
-  label = "Urban",
-  game = "hacx",
+  label = "City",
+  game = "nukem",
   name_theme = "URBAN",
   mixed_prob = 50
 }
