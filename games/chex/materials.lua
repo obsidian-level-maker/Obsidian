@@ -12,13 +12,9 @@ CHEX3.MATERIALS =
   _ERROR = { t="COMPSPAN", f="CEIL5_1" },
   _SKY   = { t="COMPSPAN", f="F_SKY1" },
   _FLATLIT = { t="XX", f="FLAT5_8"},
+  _LIQUID = { t="GSTFONT1", f="FWATER1" },
 
   -- materials for generic prefab set --
-  _METAL   = { t="COMPSPAN", f="CEIL5_1" }, -- Self explanatory
-  
-  _WOOD    = { t="CJLODG01", f="CJFLOD02"}, -- Yep, it's wood
-  _WOOD2  = { t="CJLODG05", f="CJFLOD02" },  
-  
   _SBARS = { t="STEP4", f="XX" }, -- Short bars, i.e. railings
   _SBARS2 = { t="LITEMET", f="XX" },
   _MBARS = { t="BARS", f="XX" }, -- Medium bars, i.e. barred windows
@@ -27,14 +23,9 @@ CHEX3.MATERIALS =
   _CRATE   = { t="CRATE1",   f="CRATOP2" }, -- Crate/box
   _CRATE2  = { t="CRATE2",   f="CRATOP1" },
   _CRATWID = { t="CRATWIDE", f="CRATOP2"}, -- Wide crate
-  
-  _GRYWALL = { t="GRAYTALL",  f="FLAT5_6" }, -- Gray standalone partition/cover  MAYBE DITCH THIS
-  
+    
   _WATER   = { t="GSTFONT1", f="FWATER1" }, -- "Standing water", sorta
   _WTRFALL = { t="GSTFONT1", f="FWATER1" }, -- "Flowing water", sorta
-  
-  _STONE   = { t="BROWNHUG", f="FLAT1_1" }, -- It rocks lOLOLol
-  _STONE2 = { t="CJCLIF01", f="CJFCRA03" },
   
   _DOOR  = { t="DOOR1", f="STEEL32" }, -- Open says me
   _DOOR2 = { t="BIGDOOR1", f="STEEL32"},
@@ -55,10 +46,7 @@ CHEX3.MATERIALS =
   _WPIC    = { t="CHEXAD1", f="XX"}, -- Wide (or tiling) pic box insert, 256 pixels wide
   _WPIC2    = { t="CHEXAD2", f="XX"},
   _WPIC3    = { t="VENUSHS", f="XX"},
-  
-  _REDSTON = { t="REDWALL", f="FLOOR09"}, -- Red stone
-  _BLUSTON = { t="BLUEFRAG", f="FLAT502"}, -- Blue stone
-  
+
   _KEYTRM1 = { t="DOORRED", f="XX" }, -- Trim for locked door, Key 1
   _KEYTRM2 = { t="DOORYEL", f="XX" }, -- Trim for locked door, Key 2
   _KEYTRM3 = { t="DOORBLU", f="XX" }, -- Trim for locked door, Key 3
