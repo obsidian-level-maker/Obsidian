@@ -31,9 +31,9 @@ HACX.THEMES =
 
     keys =
     {
-      k_password = 50,
-      k_ckey = 50,
-      k_keycard = 50
+      kz_red = 50,
+      kz_yellow = 50,
+      kz_blue = 50
     },
 
     skyboxes =
