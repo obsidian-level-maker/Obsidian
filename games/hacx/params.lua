@@ -28,14 +28,14 @@ HACX.ACTIONS =
   -- triggered (by a switch or walk-over line).
   --
 
-  S1_OpenDoor = { id=29,  kind="open" },    -- opens and stays open
-  W1_OpenDoor = { id=4,    kind="open" },    --
+  S1_OpenDoor = { id=103,  kind="open" },    -- opens and stays open
+  W1_OpenDoor = { id=2,    kind="open" },    --
   GR_OpenDoor = { id=46,   kind="open" },    --
 
-  W1_OpenDoorFast = { id=108, kind="open" },   -- [ Heretic lacks this ]
+  W1_OpenDoorFast = { id=2, kind="open" },
 
-  S1_RaiseStair = { id=127,  kind="stair" },  -- 16 units
-  W1_RaiseStair = { id=100,  kind="stair" },  --
+  S1_RaiseStair = { id=106,  kind="stair" },  -- 16 units
+  W1_RaiseStair = { id=107,  kind="stair" },  --
 
   S1_FloorUp    = { id=18,  kind="floor_up" }, -- up to next highest floor
 
