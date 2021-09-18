@@ -1193,6 +1193,10 @@ function Fab_load_wad(def)
       C2.u1 = convert_offset(side.x_offset)
       C2.v1 = convert_offset(side.y_offset)
     end
+    
+    if side and side.sidedef_index then
+      C2.sidedef_index = side.sidedef_index
+    end
 
     return C2
   end
@@ -1905,7 +1909,7 @@ function Fab_collect_fields(fab)
 
     if string.match(name, "^offset_") then return true end
     if string.match(name, "^delta") then return true end
-    if string.match(name, "^force_") then return true end
+    if string.match(name, "^forced_offsets") then return true end
 
     return false
   end
@@ -2208,20 +2212,16 @@ function Fab_replacements(fab)
   end
 
   local function forced_offset_check(C)
-    for k, v in pairs(C) do
-      print("K: " .. k)
-      print("V: " .. v)
-    end
-    if C.u1 and def.force_x_offsets then
-      for k, v in pairs(force_x_offsets) do
-        print("TEST")
-      end
-    end
-    if C.v1 and def.force_y_offsets then
-      for k, v in pairs(force_y_offsets) do
-        print("TEST")
-      end
-    end
+	if C.sidedef_index and fab.fields["forced_offsets"] then 
+	  for index, offsets in pairs(fab.fields["forced_offsets"]) do
+	    if C.sidedef_index == index then
+	      C.u1 = offsets[x]
+	      C.v1 = offsets[y]
+	      goto continue
+	    end
+	  end
+	  ::continue:: 
+	end
   end
 
   ---| Fab_replacements |---
