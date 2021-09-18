@@ -27,7 +27,7 @@ CHEX3.MATERIALS =
   _WATER   = { t="GSTFONT1", f="FWATER1" }, -- "Standing water", sorta
   _WTRFALL = { t="GSTFONT1", f="FWATER1" }, -- "Flowing water", sorta
   
-  _DOOR  = { t="DOOR1", f="STEEL32" }, -- Open says me
+  _DOOR  = { t="BIGDOOR4", f="STEEL32" }, -- Open says me
   _DOOR2 = { t="BIGDOOR1", f="STEEL32"},
   _DORRAIL = { t="COMPSTA1", f="STEP1"}, -- Inner door slider thingys
   
@@ -52,7 +52,7 @@ CHEX3.MATERIALS =
   _KEYTRM3 = { t="DOORBLU", f="XX" }, -- Trim for locked door, Key 3
   
   _EXITDOR = { t="DOORBLU2", f="FLAT5_6" }, -- Exit door
-  _EXITSW  = { t="SW1STON1", f="FLAT5_6"  }, -- Exit switch
+  _EXITSW  = { t="SW1EXIT", f="FLAT5_6"  }, -- Exit switch
   
   _SWITCH  = { t="SW1COMM",  f="FLAT5_6" }, -- Wall/general purpose swtich
   _SWITCH2  = { t="SW1COMP",  f="FLAT5_6" },
