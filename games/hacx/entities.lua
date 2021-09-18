@@ -39,7 +39,8 @@ generic_teleport_spot = { id=11013, rid=14},
 
   --- scenery ---
   chair      = { id=35, r=24, h=40 },
-  wall_torch = { id=56, r=10, h=64, light=255, pass=true, add_mode="extend" }
+  wall_torch = { id=56, r=10, h=64, light=255, pass=true, add_mode="extend" },
+  barrel = { id=2035, r=12, h=32 },
 
   -- TODO: all other scenery!!
 }

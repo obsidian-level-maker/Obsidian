@@ -1905,6 +1905,7 @@ function Fab_collect_fields(fab)
 
     if string.match(name, "^offset_") then return true end
     if string.match(name, "^delta") then return true end
+    if string.match(name, "^force_") then return true end
 
     return false
   end
@@ -1958,7 +1959,7 @@ function Fab_substitutions(fab, SKIN)
     for _,name in pairs(keys) do
       local value = fab.fields[name]
 
-      if type(value) ~= "table" then goto continue end
+      if type(value) ~= "table" or string.match(name, "^force_") then goto continue end
 
       if table.size(value) == 0 then
         error("Fab_substitutions: random table is empty: " .. tostring(name))
@@ -2206,6 +2207,22 @@ function Fab_replacements(fab)
     end
   end
 
+  local function forced_offset_check(C)
+    for k, v in pairs(C) do
+      print("K: " .. k)
+      print("V: " .. v)
+    end
+    if C.u1 and def.force_x_offsets then
+      for k, v in pairs(force_x_offsets) do
+        print("TEST")
+      end
+    end
+    if C.v1 and def.force_y_offsets then
+      for k, v in pairs(force_y_offsets) do
+        print("TEST")
+      end
+    end
+  end
 
   ---| Fab_replacements |---
 
@@ -2246,6 +2263,7 @@ function Fab_replacements(fab)
       if C.tex and not C.x then C.tex  = check_flat(sanitize(C.tex), C) end
 
       fixup_x_offsets(C)
+      forced_offset_check(C)
     end
   end
 
