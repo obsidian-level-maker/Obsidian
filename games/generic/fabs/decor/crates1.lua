@@ -9,8 +9,7 @@ PREFABS.Crate_small =
 {
   file   = "decor/crates1.wad",
   map    = "MAP01",
-  rank = 1,
-  forced_offsets = { {0,{x=13,y=24}} },
+  --forced_offsets = { {0,{x=13,y=24}} }, - Example that was used for testing - Dasho
 
   prob   = 3500,
 

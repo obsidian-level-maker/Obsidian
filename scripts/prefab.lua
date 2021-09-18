@@ -2217,8 +2217,6 @@ function Fab_replacements(fab)
 	    if C.sidedef_index == index then
 	      C.u1 = offsets[x]
 	      C.v1 = offsets[y]
-        print("X OFFSET: " .. C.u1)
-        print("Y OFFSET: " .. C.v1)
 	      goto continue
 	    end
 	  end
