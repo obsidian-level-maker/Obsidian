@@ -1193,6 +1193,10 @@ function Fab_load_wad(def)
       C2.u1 = convert_offset(side.x_offset)
       C2.v1 = convert_offset(side.y_offset)
     end
+    
+    if side and side.sidedef_index then
+      C2.sidedef_index = side.sidedef_index
+    end
 
     return C2
   end
@@ -1905,6 +1909,7 @@ function Fab_collect_fields(fab)
 
     if string.match(name, "^offset_") then return true end
     if string.match(name, "^delta") then return true end
+    if string.match(name, "^forced_offsets") then return true end
 
     return false
   end
@@ -1958,7 +1963,7 @@ function Fab_substitutions(fab, SKIN)
     for _,name in pairs(keys) do
       local value = fab.fields[name]
 
-      if type(value) ~= "table" then goto continue end
+      if type(value) ~= "table" or string.match(name, "^forced_offsets") then goto continue end
 
       if table.size(value) == 0 then
         error("Fab_substitutions: random table is empty: " .. tostring(name))
@@ -2206,6 +2211,18 @@ function Fab_replacements(fab)
     end
   end
 
+  local function forced_offset_check(C)
+	if C.sidedef_index and fab.fields["forced_offsets"] then 
+	  for index, offsets in pairs(fab.fields["forced_offsets"]) do
+	    if C.sidedef_index == index then
+	      C.u1 = offsets[x]
+	      C.v1 = offsets[y]
+	      goto continue
+	    end
+	  end
+	  ::continue:: 
+	end
+  end
 
   ---| Fab_replacements |---
 
@@ -2246,6 +2263,7 @@ function Fab_replacements(fab)
       if C.tex and not C.x then C.tex  = check_flat(sanitize(C.tex), C) end
 
       fixup_x_offsets(C)
+      forced_offset_check(C)
     end
   end
 
