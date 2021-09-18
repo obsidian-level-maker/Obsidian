@@ -1963,7 +1963,7 @@ function Fab_substitutions(fab, SKIN)
     for _,name in pairs(keys) do
       local value = fab.fields[name]
 
-      if type(value) ~= "table" or string.match(name, "^force_") then goto continue end
+      if type(value) ~= "table" or string.match(name, "^forced_offsets") then goto continue end
 
       if table.size(value) == 0 then
         error("Fab_substitutions: random table is empty: " .. tostring(name))
@@ -2217,6 +2217,8 @@ function Fab_replacements(fab)
 	    if C.sidedef_index == index then
 	      C.u1 = offsets[x]
 	      C.v1 = offsets[y]
+        print("X OFFSET: " .. C.u1)
+        print("Y OFFSET: " .. C.v1)
 	      goto continue
 	    end
 	  end
