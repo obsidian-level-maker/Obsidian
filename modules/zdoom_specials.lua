@@ -472,6 +472,27 @@ Glow
 
 ZDOOM_SPECIALS.MUSIC = {}
 
+ZDOOM_SPECIALS.FOG_COLORS = 
+{
+  SKY_CLOUDS = "00 00 ff",
+  BLUE_CLOUDS = "00 00 ff",
+  WHITE_CLOUDS = "ff ff ff",
+  GREY_CLOUDS = "ff ff ff",
+  DARK_CLOUDS = "ff ff ff",
+  BROWN_CLOUDS = "ff a8 5c", 
+  BROWNISH_CLOUDS = "ff d2 a6",
+  PEACH_CLOUDS = "ff a4 63",
+  YELLOW_CLOUDS = "ff cb 3d",
+  ORANGE_CLOUDS = "ff 6b 08",
+  GREEN_CLOUDS = "7a ff 5c",
+  JADE_CLOUDS = "df ff 9e",
+  DARKRED_CLOUDS = "ff 4c 4c",
+  HELLISH_CLOUDS = "ff 00 00",
+  HELL_CLOUDS = "ff 00 00",
+  PURPLE_CLOUDS = "ff 00 ff",
+  RAINBOW_CLOUDS = "ff 00 ff"
+}
+
 function ZDOOM_SPECIALS.setup(self)
   gui.printf("\n--== ZDoom Special Addons module active ==--\n\n")
 
@@ -541,47 +562,12 @@ function ZDOOM_SPECIALS.do_special_stuff()
   local level_count = #GAME.levels
 
   local function pick_sky_color_from_skygen_map(epi_num)
-    local color
+    local color = "00 00 00"
 
     local skyname = PARAM.episode_sky_color[epi_num]
 
-    if skyname == "SKY_CLOUDS" or skyname == "BLUE_CLOUDS" then
-      color = "00 00 ff"
-    elseif skyname == "WHITE_CLOUDS" then
-      color = "ff ff ff"
-    elseif skyname == "GREY_CLOUDS" then
-      color = "bf bf bf"
-    elseif skyname == "DARK_CLOUDS" then
-      color = "8a 8a 8a"
-    elseif skyname == "BROWN_CLOUDS" then
-      color = "ff a8 5c"
-    elseif skyname == "BROWNISH_CLOUDS" then
-      color = "ff d2 a6"
-    elseif skyname == "PEACH_CLOUDS" then
-      color = "ff a4 63"
-    elseif skyname == "YELLOW_CLOUDS" then
-      color = "ff cb 3d"
-    elseif skyname == "ORANGE_CLOUDS" then
-      color = "ff 6b 08"
-    elseif skyname == "GREEN_CLOUDS" then
-      color = "7a ff 5c"
-    elseif skyname == "JADE_CLOUDS" then
-      color = "df ff 9e"
-    elseif skyname == "DARKRED_CLOUDS" then
-      color = "ff 4c 4c"
-    elseif skyname == "HELLISH_CLOUDS" or skyname == "HELL_CLOUDS" then
-      color = "ff 00 00"
-    elseif skyname == "PURPLE_CLOUDS" or skyname == "RAINBOW_CLOUDS" then
-      color = "ff 00 ff"
-    elseif skyname == "STARS" then
-      color = "00 00 00"
-    else
-      color = "00 00 00"
-    end
-
-    if not color then
-      gui.printf("\nCould not resolve skybox generator color.\n")
-      return "00 00 00"
+    if ZDOOM_SPECIALS.FOG_COLORS[skyname] then
+      color = ZDOOM_SPECIALS.FOG_COLORS[skyname] 
     end
 
     return color
