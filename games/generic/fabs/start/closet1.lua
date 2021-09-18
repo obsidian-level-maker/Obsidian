@@ -23,7 +23,6 @@ PREFABS.Start_closet1_che3 =
 {
   file  = "start/closet1.wad",
   map   = "MAP01",
-  rank = 1,
 
   game = "chex3",
 

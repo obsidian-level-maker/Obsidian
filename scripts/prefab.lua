@@ -2213,14 +2213,14 @@ function Fab_replacements(fab)
 
   local function forced_offset_check(C)
 	if C.sidedef_index and fab.fields["forced_offsets"] then 
-	  for index, offsets in pairs(fab.fields["forced_offsets"]) do
-	    if C.sidedef_index == index then
-	      C.u1 = offsets[x]
-	      C.v1 = offsets[y]
-	      goto continue
+	    if fab.fields["forced_offsets"][C.sidedef_index] then
+	      if fab.fields["forced_offsets"][C.sidedef_index].x then
+	        C.u1 = fab.fields["forced_offsets"][C.sidedef_index].x
+	      end
+	      if fab.fields["forced_offsets"][C.sidedef_index].y then
+	        C.v1 = fab.fields["forced_offsets"][C.sidedef_index].y
+	      end
 	    end
-	  end
-	  ::continue:: 
 	end
   end
 
