@@ -9,6 +9,7 @@ PREFABS.Crate_small =
 {
   file   = "decor/crates1.wad",
   map    = "MAP01",
+  --forced_offsets = { {0,{x=13,y=24}} }, - Example that was used for testing - Dasho
 
   prob   = 3500,
 
@@ -17,7 +18,7 @@ PREFABS.Crate_small =
 
   bound_z1 = 0,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 }
 
 PREFABS.Crate_small_alt =
@@ -34,7 +35,7 @@ PREFABS.Crate_small_alt =
 
   bound_z1 = 0,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 }
 
 -- a tall narrow crate
@@ -52,7 +53,7 @@ PREFABS.Crate_tall =
 
   bound_z1 = 0,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 }
 
 PREFABS.Crate_tall_alt =
@@ -70,7 +71,7 @@ PREFABS.Crate_tall_alt =
 
   bound_z1 = 0,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 }
 
 -- a medium-size crate (96x96)
@@ -88,7 +89,7 @@ PREFABS.Crate_medium =
 
   bound_z1 = 0,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 }
 
 PREFABS.Crate_medium_alt =
@@ -106,7 +107,7 @@ PREFABS.Crate_medium_alt =
 
   bound_z1 = 0,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 }
 
 
@@ -126,7 +127,7 @@ PREFABS.Crate_group_medium =
 
   bound_z1 = 0,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 }
 
 PREFABS.Crate_group_medium_alt =
@@ -145,7 +146,7 @@ PREFABS.Crate_group_medium_alt =
 
   bound_z1 = 0,
 
-  sink_mode = "never_liquids",
+  sink_mode = "never",
 }
 
 

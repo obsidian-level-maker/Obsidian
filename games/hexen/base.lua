@@ -38,11 +38,11 @@ gui.import("resources")
 
 ------------------------------------------------------------
 
-UNFINISHED["hexen"] =
+OB_GAMES["hexen"] =
 {
-  label = _("Hexen"),
+  label = _("Hexen (Exp)"),
   
-  priority = 93,
+  priority = 31,
 
   -- Hexen map format is a minor variation on the DOOM format
   format = "doom",

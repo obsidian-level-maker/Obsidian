@@ -18,11 +18,6 @@ HACX.MATERIALS =
   _LIQUID = { f="FWATER1", t="BLODRIP1" },
 
   -- materials for generic prefab set --
-  _METAL   = { t="HW209",   f="RROCK03" }, -- Self explanatory
-  
-  _WOOD    = { t="COMPTALL", f="RROCK14" }, -- Yep, it's wood
-  _WOOD2  = { t="HW505", f="RROCK14" },  
-  
   _SBARS = { t="HW211", f="RROCK03" }, -- Short bars, i.e. railings
   _SBARS2 = { t="HW211", f="RROCK03" },
   _MBARS = { t="TEKGREN2", f="RROCK03" }, -- Medium bars, i.e. barred windows
@@ -30,8 +25,7 @@ HACX.MATERIALS =
   
   _CRATE   = { t="HW200",  f="RROCK14" }, -- Crate/box
   _CRATE2  = { t="HW200", f="RROCK14" },
-
-  _GRYWALL = { t="GRAYTALL",  f="RROCK12" }, -- Gray standalone partition/cover  MAYBE DITCH THIS
+  _CRATWID = { t="HW200", f="RROCK14" },
   
   _WATER   = { f="FWATER1", t="BLODRIP1" }, -- "Standing water", sorta
   _WTRFALL = { f="SLIME05", t="WFALL1"  }, -- "Flowing water", sorta
@@ -59,12 +53,9 @@ HACX.MATERIALS =
   _WPIC2    = { t="HW337", f="RROCK03"},
   _WPIC3    = { t="HW341", f="RROCK03"},
   
-  _REDSTON = { t="STONE2", f="FLOOR5_2"}, -- Red stone
-  _BLUSTON = { t="MARBGRAY", f="TLITE6_1"}, -- Blue stone (it's green for Hacx)
-  
-  _KEYTRM1 = { t="HW512", f="RROCK03" }, -- Trim for locked door, Key 1
+  _KEYTRM1 = { t="HW510", f="RROCK03" }, -- Trim for locked door, Key 1
   _KEYTRM2 = { t="HW511", f="RROCK03" }, -- Trim for locked door, Key 2
-  _KEYTRM3 = { t="HW510", f="RROCK03" }, -- Trim for locked door, Key 3
+  _KEYTRM3 = { t="HW512", f="RROCK03" }, -- Trim for locked door, Key 3
   
   _EXITDOR = { t="DOORRED", f="RROCK03" }, -- Exit door
   _EXITSW  = { t="HD5", f="RROCK03" }, -- Exit switch

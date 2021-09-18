@@ -1,65 +1,63 @@
+CHEX3.LIQUIDS =
+{
+  water  = { mat="WATER", light_add=16, special=0 },
+  slime1 = { mat="SLIME1", light_add=16, special=16, damage=20 },
+  slime2   = { mat="SLIME2", light_add=24, special=16, damage=20 }    
+}
+
 CHEX3.MATERIALS =
 {
   -- special materials --
+  _DEFAULT = { t="COMPSPAN", f="CEIL5_1" },
   _ERROR = { t="COMPSPAN", f="CEIL5_1" },
   _SKY   = { t="COMPSPAN", f="F_SKY1" },
+  _FLATLIT = { t="XX", f="FLAT5_8"},
+  _LIQUID = { t="GSTFONT1", f="FWATER1" },
 
   -- materials for generic prefab set --
-  _METAL   = { t="METL2",   f="FLOOR30" }, -- Self explanatory
+  _SBARS = { t="STEP4", f="XX" }, -- Short bars, i.e. railings
+  _SBARS2 = { t="LITEMET", f="XX" },
+  _MBARS = { t="BARS", f="XX" }, -- Medium bars, i.e. barred windows
+  _TBARS = { t="LITE4", f = "XX" }, -- Tall bars, i.e. cage/jail bars
   
-  _WOOD    = { t="WOODWL", f="FLOOR10"}, -- Yep, it's wood
-  _WOOD2  = { t="DRIPWALL", f="FLOOR27" },  
+  _CRATE   = { t="CRATE1",   f="CRATOP2" }, -- Crate/box
+  _CRATE2  = { t="CRATE2",   f="CRATOP1" },
+  _CRATWID = { t="CRATWIDE", f="CRATOP1"}, -- Wide crate
+    
+  _WATER   = { t="GSTFONT1", f="FWATER1" }, -- "Standing water", sorta
+  _WTRFALL = { t="GSTFONT1", f="FWATER1" }, -- "Flowing water", sorta
   
-  _SBARS = { t="GATMETL3", f="FLOOR30" }, -- Short bars, i.e. railings
-  _SBARS2 = { t="GATMETL2", f="FLOOR30" },
-  _MBARS = { t="GATMETL4", f="FLOOR30" }, -- Medium bars, i.e. barred windows
-  _TBARS = { t="GATMETL5", f="FLOOR30" }, -- Tall bars, i.e. cage/jail bars
+  _DOOR  = { t="DOOR1", f="STEEL32" }, -- Open says me
+  _DOOR2 = { t="BIGDOOR1", f="STEEL32"},
+  _DORRAIL = { t="COMPSTA1", f="STEP1"}, -- Inner door slider thingys
   
-  _CRATE   = { t="DOORWOOD",  f="FLAT507" }, -- Crate/box
-  _CRATE2  = { t="CTYSTCI4", f="FLOOR10" },
+  _NPIC    = { t="DCAFE01", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
+  _NPIC2    = { t="DCAFE02", f="XX"},
+  _NPIC3    = { t="DCAFE03", f="XX"},
+  
+  _MPIC    = { t="ART1", f="XX"}, -- Medium (or tiling) pic box insert, 128 pixels wide
+  _MPIC2    = { t="ART2", f="XX"},
+  _MPIC3    = { t="VINCENT", f="XX"},
+  _MPIC4    = { t="POSTER1", f="XX"},
+  _MPIC5    = { t="POSTER2", f="XX"},
+  _MPIC6    = { t="POSTER3", f="XX"},
+  _MPIC7    = { t="MUNCH", f="XX"},
+  
+  _WPIC    = { t="CHEXAD1", f="XX"}, -- Wide (or tiling) pic box insert, 256 pixels wide
+  _WPIC2    = { t="CHEXAD2", f="XX"},
+  _WPIC3    = { t="VENUSHS", f="XX"},
 
-  _GRYWALL = { t="ORNGRAY",  f="FLAT521" }, -- Gray standalone partition/cover  MAYBE DITCH THIS
+  _KEYTRM1 = { t="DOORRED", f="XX" }, -- Trim for locked door, Key 1
+  _KEYTRM2 = { t="DOORYEL", f="XX" }, -- Trim for locked door, Key 2
+  _KEYTRM3 = { t="DOORBLU", f="XX" }, -- Trim for locked door, Key 3
   
-  _WATER   = { t="WATRWAL1", f="FLTWAWA1" }, -- "Standing water", sorta
-  _WTRFALL = { t="WATRWAL1", f="FLTFLWW1" }, -- "Flowing water", sorta
+  _EXITDOR = { t="DOORBLU2", f="FLAT5_6" }, -- Exit door
+  _EXITSW  = { t="SW1STON1", f="FLAT5_6"  }, -- Exit switch
   
-  _STONE   = { t="SQPEB1", f="FLAT504" }, -- It rocks lOLOLol
-  _STONE2 = { t="SNDCHNKS", f="FLAT522" },
+  _SWITCH  = { t="SW1COMM",  f="FLAT5_6" }, -- Wall/general purpose swtich
+  _SWITCH2  = { t="SW1COMP",  f="FLAT5_6" },
   
-  _DOOR  = { t="DOORWOOD", f="FLAT507" }, -- Open says me
-  _DOOR2 = { t="DOORSTON", f="FLOOR08"},
-  _DORRAIL = { t="METL2", f="FLOOR28"}, -- Inner door slider thingys
-  
-  _NPIC    = { t="CELTIC", f="FLOOR06"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
-  _NPIC2    = { t="MOSAIC5", f="FLAT502"},
-  _NPIC3    = { t="SAINT1", f="FLAT523"},
-  
-  _MPIC    = { t="CELTIC", f="FLOOR06"}, -- Medium (or tiling) pic box insert, 128 pixels wide
-  _MPIC2    = { t="DMNMSK", f="FLAT521"},
-  _MPIC3    = { t="GRSKULL3", f="FLAT521"},
-  _MPIC4    = { t="SKULLSB2", f="FLOOR30"},
-  _MPIC5    = { t="STNGLS1", f="FLOOR30"},
-  _MPIC6    = { t="STNGLS2", f="FLOOR30"},
-  _MPIC7    = { t="STNGLS3", f="FLOOR30"},
-  
-  _WPIC    = { t="CHAINMAN", f="FLAT520"}, -- Wide (or tiling) pic box insert, 256 pixels wide
-  _WPIC2    = { t="HORSES1", f="FLAT502"},
-  _WPIC3    = { t="CELTIC", f="FLOOR06"},
-  
-  _REDSTON = { t="REDWALL", f="FLOOR09"}, -- Red stone
-  _BLUSTON = { t="BLUEFRAG", f="FLAT502"}, -- Blue stone
-  
-  _KEYTRM1 = { t="SPINE1", f="FLOOR25" }, -- Trim for locked door, Key 1
-  _KEYTRM2 = { t="GRNBLOK1", f="FLOOR19" }, -- Trim for locked door, Key 2
-  _KEYTRM3 = { t="BLUEFRAG", f="FLOOR16" }, -- Trim for locked door, Key 3
-  
-  _EXITDOR = { t="DOOREXIT", f="FLAT520" }, -- Exit door
-  _EXITSW  = { t="SW2OFF", f="FLOOR28" }, -- Exit switch
-  
-  _SWITCH  = { t="SW1OFF", f="FLOOR28" }, -- Wall/general purpose swtich
-  _SWITCH2  = { t="SW2OFF", f="FLOOR28" },
-  
-  _TELE = { t="CHAINSD", f="FLTTELE1" }, -- Teleporter
+  _TELE = { f="GATE1", t="SP_DUDE4" }, -- Teleporter
 
   -- general purpose --
 

@@ -1,0 +1,10 @@
+NUKEM.PICKUPS =
+{
+
+}
+
+NUKEM.NICE_ITEMS =
+{
+
+}
+

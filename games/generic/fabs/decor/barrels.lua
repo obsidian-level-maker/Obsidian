@@ -1,7 +1,3 @@
---
--- Wooden Barrels
---
-
 PREFABS.Decor_barrels1 =
 {
   file   = "decor/barrels.wad",
