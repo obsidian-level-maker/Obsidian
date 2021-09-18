@@ -31,12 +31,7 @@ HERETIC.MATERIALS =
   _DEFAULT = { t="GRSTNPB", f="FLOOR03" },
   _SKY     = { t="CHAINSD", f="F_SKY1"  },
   
-  -- materials for generic prefab set --
-  _METAL   = { t="METL2",   f="FLOOR30" }, -- Self explanatory
-  
-  _WOOD    = { t="WOODWL", f="FLOOR10"}, -- Yep, it's wood
-  _WOOD2  = { t="DRIPWALL", f="FLOOR27" },  
-  
+  -- materials for generic prefab set --  
   _SBARS = { t="GATMETL3", f="FLOOR30" }, -- Short bars, i.e. railings
   _SBARS2 = { t="GATMETL2", f="FLOOR30" },
   _MBARS = { t="GATMETL4", f="FLOOR30" }, -- Medium bars, i.e. barred windows
@@ -44,15 +39,11 @@ HERETIC.MATERIALS =
   
   _CRATE   = { t="DOORWOOD",  f="FLAT507" }, -- Crate/box
   _CRATE2  = { t="CTYSTCI4", f="FLOOR10" },
-
-  _GRYWALL = { t="ORNGRAY",  f="FLAT521" }, -- Gray standalone partition/cover  MAYBE DITCH THIS
+  _CRATWID = { t="DOORWOOD",  f="FLAT507" }, -- Wide crates
   
   _WATER   = { t="WATRWAL1", f="FLTWAWA1" }, -- "Standing water", sorta
   _WTRFALL = { t="WATRWAL1", f="FLTFLWW1" }, -- "Flowing water", sorta
-  
-  _STONE   = { t="SQPEB1", f="FLAT504" }, -- It rocks lOLOLol
-  _STONE2 = { t="SNDCHNKS", f="FLAT522" },
-  
+    
   _DOOR  = { t="DOORWOOD", f="FLAT507" }, -- Open says me
   _DOOR2 = { t="DOORSTON", f="FLOOR08"},
   _DORRAIL = { t="METL2", f="FLOOR28"}, -- Inner door slider thingys
@@ -72,9 +63,6 @@ HERETIC.MATERIALS =
   _WPIC    = { t="CHAINMAN", f="FLAT520"}, -- Wide (or tiling) pic box insert, 256 pixels wide
   _WPIC2    = { t="HORSES1", f="FLAT502"},
   _WPIC3    = { t="CELTIC", f="FLOOR06"},
-  
-  _REDSTON = { t="REDWALL", f="FLOOR09"}, -- Red stone
-  _BLUSTON = { t="BLUEFRAG", f="FLAT502"}, -- Blue stone
   
   _KEYTRM1 = { t="SPINE1", f="FLOOR25" }, -- Trim for locked door, Key 1
   _KEYTRM2 = { t="GRNBLOK1", f="FLOOR19" }, -- Trim for locked door, Key 2

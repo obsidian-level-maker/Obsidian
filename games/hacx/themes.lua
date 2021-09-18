@@ -31,9 +31,9 @@ HACX.THEMES =
 
     keys =
     {
-      k_password = 50,
-      k_ckey = 50,
-      k_keycard = 50
+      kz_red = 50,
+      kz_yellow = 50,
+      kz_blue = 50
     },
 
     skyboxes =
@@ -160,12 +160,12 @@ HACX.THEMES =
 
     cave_torches =
     {
-
+      wall_torch = 50
     },
 
     outdoor_torches =
     {
-
+      wall_torch = 50
     },
 
     ceil_light_prob = 70,
@@ -192,8 +192,6 @@ HACX.THEMES =
 
 HACX.ROOM_THEMES =
 {
-
-  ---- SPACEPORT THEME --------------------------------
 
   hacx_urban_Generic =
   {

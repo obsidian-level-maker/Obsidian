@@ -10,6 +10,7 @@ CHEX3.WEAPONS =
   super_bootspork =
   {
     id = 2005,
+    level = 2,
     add_prob = 2,
     start_prob = 1,
     pref = 3,
@@ -31,6 +32,7 @@ CHEX3.WEAPONS =
   rapid_zorcher =
   {
     id = 2002,
+    level = 1,
     add_prob = 35,
     start_prob = 40,
     pref = 70,
@@ -45,6 +47,7 @@ CHEX3.WEAPONS =
   large_zorcher =
   {
     id = 2001,
+    level = 3,
     add_prob = 10,
     start_prob = 60,
     pref = 70,
@@ -60,6 +63,7 @@ CHEX3.WEAPONS =
   zorch_propulsor =
   {
     id = 2003,
+    level = 3.5,
     add_prob = 25,
     start_prob = 10,
     rarity = 2,
@@ -76,6 +80,7 @@ CHEX3.WEAPONS =
   phasing_zorcher =
   {
     id = 2004,
+    level = 4,
     add_prob = 13,
     start_prob = 5,
     rarity = 2,
@@ -91,6 +96,7 @@ CHEX3.WEAPONS =
   laz_device =
   {
     id = 2006,
+    level = 4,
     add_prob = 30,
     start_prob = 0.2,
     rarity = 5,

@@ -50,6 +50,21 @@ HEXEN.THEMES =
       k_steel = 50,
     },
 
+    hub_keys = 
+    {
+      k_axe = 50,
+      k_cave = 50,
+      k_castle = 50,
+      k_dungeon = 50,
+      k_emerald = 50,
+      k_fire = 20,
+      k_horn = 50,
+      k_rusty = 50,
+      k_silver = 50,
+      k_swamp = 50,
+      k_steel = 50,
+    },   
+
     skyboxes =
     {
 

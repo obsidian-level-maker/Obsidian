@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- GAME DEF : Chex Quest 3
+-- GAME DEF : HacX 1.2
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -34,12 +34,14 @@ gui.import("levels")
 gui.import("resources")
 ----------------------------------------------------------------
 
-UNFINISHED["hacx"] =
+OB_GAMES["hacx"] =
 {
-	label = _("HacX 1.2"),
+	label = _("HacX 1.2 (Exp)"),
 	priority = 30,
 	
 	format = "doom",
+
+	engine = "zdoom",
 	
 	game_dir = "hacx",
 	iwad_name = "hacx.wad",
@@ -51,7 +53,6 @@ UNFINISHED["hacx"] =
 	
 	hooks =
 	{
-        setup      = HACX.setup,
 		get_levels = HACX.get_levels,
 		all_done   = HACX.all_done
 	},

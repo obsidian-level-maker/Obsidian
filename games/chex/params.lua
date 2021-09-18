@@ -24,8 +24,8 @@ CHEX3.ACTIONS =
 {
   -- These are used for converting generic linedef types
   
-  Generic_Key_One = { id=700, rid=27 },
-  Generic_Key_Two = { id=701, rid=28 },
+  Generic_Key_One = { id=700, rid=28 },
+  Generic_Key_Two = { id=701, rid=27 },
   Generic_Key_Three = { id=702, rid=26 },
 
   --
@@ -37,7 +37,7 @@ CHEX3.ACTIONS =
   W1_OpenDoor = { id=2,    kind="open" },    --
   GR_OpenDoor = { id=46,   kind="open" },    --
 
-  W1_OpenDoorFast = { id=2, kind="open" },   -- [ Heretic lacks this ]
+  W1_OpenDoorFast = { id=2, kind="open" },
 
   S1_RaiseStair = { id=106,  kind="stair" },  -- 16 units
   W1_RaiseStair = { id=107,  kind="stair" },  --
