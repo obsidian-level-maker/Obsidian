@@ -10,7 +10,7 @@ PREFABS.Cran_piano =
 
   where  = "point",
   env    = "!outdoor",
-  size   = 72,
+  size   = 88,
 
   bound_z1 = 0,
 
