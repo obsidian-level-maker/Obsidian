@@ -141,7 +141,7 @@ PREFABS.Wall_gtd_computer_compsta_diag_2 =
 PREFABS.Wall_gtd_computer_lite5_1 =
 {
   template = "Wall_gtd_computer_wall_1",
-  map = "MAP06",
+  map = "MAP08",
 
   prob = 100,
 
@@ -156,20 +156,25 @@ PREFABS.Wall_gtd_computer_lite5_1 =
 
   bound_z2 = 96,
 
-  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1}
+  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1},
+
+  offset_66 = 64
 }
 
 PREFABS.Wall_gtd_computer_lite5_2 =
 {
   template = "Wall_gtd_computer_wall_1",
-  map = "MAP07",
+  map = "MAP08",
 
   height = 96,
   group = "gtd_computers_lite5",
 
   bound_z2 = 96,
 
-  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1}
+  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1},
+
+  offset_128 = 64,
+  offset_66 = 64
 }
 
 PREFABS.Wall_gtd_computer_lite5_3 =
@@ -182,7 +187,10 @@ PREFABS.Wall_gtd_computer_lite5_3 =
 
   bound_z2 = 96,
 
-  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1}
+  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1},
+
+  offset_128 = -64,
+  offset_66 = 1
 }
 
 PREFABS.Wall_gtd_computer_lite5_diag =
