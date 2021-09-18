@@ -27,7 +27,7 @@ CHEX3.MATERIALS =
   _WATER   = { t="GSTFONT1", f="FWATER1" }, -- "Standing water", sorta
   _WTRFALL = { t="GSTFONT1", f="FWATER1" }, -- "Flowing water", sorta
   
-  _DOOR  = { t="DOOR1", f="STEEL32" }, -- Open says me
+  _DOOR  = { t="BIGDOOR4", f="STEEL32" }, -- Open says me
   _DOOR2 = { t="BIGDOOR1", f="STEEL32"},
   _DORRAIL = { t="COMPSTA1", f="STEP1"}, -- Inner door slider thingys
   
