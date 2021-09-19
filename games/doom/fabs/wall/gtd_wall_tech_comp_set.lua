@@ -156,9 +156,7 @@ PREFABS.Wall_gtd_computer_lite5_1 =
 
   bound_z2 = 96,
 
-  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1},
-
-  offset_66 = 64
+  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1}
 }
 
 PREFABS.Wall_gtd_computer_lite5_2 =
@@ -173,8 +171,10 @@ PREFABS.Wall_gtd_computer_lite5_2 =
 
   sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1},
 
-  offset_128 = 64,
-  offset_66 = 64
+  forced_offsets =
+  {
+    [26] = {x=128, y=64}
+  }
 }
 
 PREFABS.Wall_gtd_computer_lite5_3 =
@@ -189,8 +189,28 @@ PREFABS.Wall_gtd_computer_lite5_3 =
 
   sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1},
 
-  offset_128 = -64,
-  offset_66 = 1
+  forced_offsets =
+  {
+    [26] = {x=192, y=1}
+  }
+}
+
+PREFABS.Wall_gtd_computer_lite5_4 =
+{
+  template = "Wall_gtd_computer_wall_1",
+  map = "MAP08",
+
+  height = 96,
+  group = "gtd_computers_lite5",
+
+  bound_z2 = 96,
+
+  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1},
+
+  forced_offsets =
+  {
+    [26] = {x=192, y=64}
+  }
 }
 
 PREFABS.Wall_gtd_computer_lite5_diag =
