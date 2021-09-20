@@ -163,7 +163,8 @@ CHEX3.THEMES =
 
     cave_torches =
     {
-      -- TODO
+      green_torch = 50,
+      green_torch_sm = 50
     },
 
     outdoor_torches =
@@ -329,13 +330,7 @@ CHEX3.ROOM_THEMES =
       CJMINE02 = 15
     },
 
-    naturals =
-    {
-      SKSNAKE2 = 50,
-      CJMINE02 = 15
-    },
-
-    porch_floors =
+    walls =
     {
       SKSNAKE2 = 50,
       CJMINE02 = 15
@@ -358,7 +353,7 @@ CHEX3.ROOMS =
   {
     env = "outdoor",
     prob = 50
-  }
+  },
 
 }
 
