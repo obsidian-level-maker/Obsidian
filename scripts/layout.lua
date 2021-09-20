@@ -1923,7 +1923,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     -- TODO : REVIEW THIS
     --        [ probably should be "decor" once have a proper picture system ]
     reqs.kind  = "picture"
-
+    reqs.game = OB_CONFIG.game
     reqs.env = R:get_env()
 
     if R.theme.theme_override then
