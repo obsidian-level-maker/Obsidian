@@ -261,7 +261,7 @@ HERETIC.THEMES =
     wall_groups =
     {
       PLAIN = 50,
-      torches1 = 50,
+      torches1 = 10,
     },
 
     cave_torches =
@@ -402,10 +402,10 @@ HERETIC.THEMES =
     wall_groups =
     {
       PLAIN = 50,
-      torches1 = 50,
+      torches1 = 10,
     },
 
-    maw_torches =
+    cave_torches =
     {
       fire_brazier  = 20,
       wall_torch   = 70,
@@ -551,10 +551,10 @@ HERETIC.THEMES =
     wall_groups =
     {
       PLAIN = 50,
-      torches1 = 50,
+      torches1 = 10,
     },
 
-    maw_torches =
+    cave_torches =
     {
       fire_brazier  = 20,
       wall_torch   = 70,
@@ -692,10 +692,10 @@ HERETIC.THEMES =
     wall_groups =
     {
       PLAIN = 50,
-      torches1 = 50,
+      torches1 = 10,
     },
 
-    maw_torches =
+    cave_torches =
     {
       fire_brazier  = 20,
       wall_torch   = 70,
@@ -839,10 +839,10 @@ HERETIC.THEMES =
     wall_groups =
     {
       PLAIN = 50,
-      torches1 = 50,
+      torches1 = 10,
     },
 
-    maw_torches =
+    cave_torches =
     {
       fire_brazier  = 20,
       wall_torch   = 70,

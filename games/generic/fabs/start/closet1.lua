@@ -19,21 +19,11 @@ PREFABS.Start_closet1 =
   y_fit = "top",
 }
 
-PREFABS.Start_closet1_che3 =
+PREFABS.Start_closet1_chex3 =
 {
-  file  = "start/closet1.wad",
-  map   = "MAP01",
+  template  = "Start_closet1",
 
   game = "chex3",
-
-  prob  = 80,
-
-  where = "seeds",
-  deep  =  16,
-  over  = -16,
-
-  x_fit = "frame",
-  y_fit = "top",
 
   forced_offsets = 
   { 

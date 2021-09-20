@@ -68,9 +68,12 @@ HERETIC.MATERIALS =
   _KEYTRM2 = { t="GRNBLOK1", f="FLOOR19" }, -- Trim for locked door, Key 2
   _KEYTRM3 = { t="BLUEFRAG", f="FLOOR16" }, -- Trim for locked door, Key 3
   
-  _EXITDOR = { t="DOOREXIT", f="FLAT520" }, -- Exit door
-  _EXITSW  = { t="SW2OFF", f="FLOOR28" }, -- Exit switch
+  _EXITDR1 = { t="DOOREXIT", f="FLAT520" }, -- Exit door
+  _EXITSW1  = { t="SW2OFF", f="FLOOR28" }, -- Exit switch
+  _EXITRM1  = { t="METL2", f="FLOOR28" }, -- Exit switch
   
+  _STRUCT = {t="METL2", f="FLOOR30"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
+
   _SWITCH  = { t="SW1OFF", f="FLOOR28" }, -- Wall/general purpose swtich
   _SWITCH2  = { t="SW2OFF", f="FLOOR28" },
   
