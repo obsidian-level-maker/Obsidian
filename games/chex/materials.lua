@@ -31,9 +31,9 @@ CHEX3.MATERIALS =
   _DOOR2 = { t="BIGDOOR1", f="STEEL32"},
   _DORRAIL = { t="COMPSTA1", f="STEP1"}, -- Inner door slider thingys
   
-  _NPIC    = { t="DCAFE01", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
-  _NPIC2    = { t="DCAFE02", f="XX"},
-  _NPIC3    = { t="DCAFE03", f="XX"},
+  _NPIC    = { t="FIREWALL", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
+  _NPIC2    = { t="FIREWALL", f="XX"},
+  _NPIC3    = { t="FIREWALL", f="XX"},
   
   _MPIC    = { t="ART1", f="XX"}, -- Medium (or tiling) pic box insert, 128 pixels wide
   _MPIC2    = { t="ART2", f="XX"},

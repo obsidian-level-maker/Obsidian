@@ -157,24 +157,25 @@ CHEX3.THEMES =
 
     wall_groups =
     {
-      PLAIN = 50
+      PLAIN = 50,
+      torches1 = 10
     },
 
     cave_torches =
     {
-
+      -- TODO
     },
 
     outdoor_torches =
     {
-
+      -- TODO
     },
 
     ceil_light_prob = 70,
 
     scenic_fences =
     {
-      VINE1 = 80
+      VINE1 = 80 -- Find a better fence
     },
 
     sink_style =

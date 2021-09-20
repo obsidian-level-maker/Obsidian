@@ -155,7 +155,8 @@ HACX.THEMES =
 
     wall_groups =
     {
-      PLAIN = 50
+      PLAIN = 50,
+      torches1 = 10
     },
 
     cave_torches =
