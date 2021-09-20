@@ -57,6 +57,8 @@ CHEX3.MATERIALS =
   
   _SWITCH  = { t="SW1COMM",  f="FLAT5_6" }, -- Wall/general purpose swtich
   _SWITCH2  = { t="SW1COMP",  f="FLAT5_6" },
+
+  _STRUCT = {t="COMPSPAN", f="CEIL5_1"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
   
   _TELE = { f="GATE1", t="SP_DUDE4" }, -- Teleporter
 

@@ -61,6 +61,7 @@ HACX.MATERIALS =
   _EXITSW1  = { t="HD5", f="RROCK02" }, -- Exit switch
   _EXITRM1  = { t="LITE5", f="RROCK02" }, -- Exit switch room
   
+  _STRUCT = {t="HW209", f="RROCK03"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
   _SWITCH  = { t="HD5", f="CEIL3_5" }, -- Wall/general purpose swtich
   _SWITCH2  = { t="HD5", f="CEIL3_5"  },
