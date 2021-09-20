@@ -405,7 +405,7 @@ HERETIC.THEMES =
       torches1 = 50,
     },
 
-    maw_torches =
+    cave_torches =
     {
       fire_brazier  = 20,
       wall_torch   = 70,

@@ -19,7 +19,7 @@ PREFABS.Start_closet1 =
   y_fit = "top",
 }
 
-PREFABS.Start_closet1_che3 =
+PREFABS.Start_closet1_chex3 =
 {
   file  = "start/closet1.wad",
   map   = "MAP01",
