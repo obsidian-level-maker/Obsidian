@@ -375,7 +375,6 @@ HERETIC.THEMES =
     facades =
     {
       LOOSERCK = 80,
-      LAVA1 = 40,
     },
 
     fence_groups =
@@ -1282,32 +1281,6 @@ HERETIC.ROOM_THEMES =
 
   },
 
-  maw_Lava1 =
-  {
-    env  = "building",
-    prob = 30,
-
-    walls =
-    {
-      LAVA1 = 50,
-    },
-
-    floors =
-    {
-      FLOOR04 = 50,
-      FLAT510 = 50,
-      FLAT521 = 50,
-    },
-
-    ceilings =
-    {
-      FLAT509 = 50,
-      FLOOR04 = 50,
-      FLAT510 = 50,
-    },
-
-  },
-
   maw_Misc =
   {
     env  = "building",
@@ -1427,53 +1400,6 @@ HERETIC.ROOM_THEMES =
 
   },
 
-  maw_deuce_Hallway_Lava1 =
-  {
-    env   = "hallway",
-    group = "deuce",
-    prob  = 50,
-
-    walls =
-    {
-      LAVA1 = 50,
-    },
-
-    floors =
-    {
-      FLAT510 = 50,
-    },
-
-    ceilings =
-    {
-      FLAT509 = 50,
-    },
-
-  },
-
-  maw_vent_Hallway_Lava1 =
-  {
-    env   = "hallway",
-    group = "vent",
-    prob  = 50,
-
-    walls =
-    {
-      LAVA1 = 50,
-    },
-
-    floors =
-    {
-      FLAT510 = 50,
-    },
-
-    ceilings =
-    {
-      FLAT509 = 50,
-    },
-
-  },
-
-
   maw_Outdoors =
   {
     env  = "outdoor",
@@ -1487,7 +1413,6 @@ HERETIC.ROOM_THEMES =
     naturals =
     {
       FLAT516 = 20,
-      FLAT517 = 20,
     },
 
     porch_floors =
@@ -2805,7 +2730,7 @@ HERETIC.ROOM_THEMES =
 
     walls =
     {
-      LOOSERCK=20, LAVA1=20, BRWNRCKS=20, ROOTWALL=20,
+      LOOSERCK=20, BRWNRCKS=20, ROOTWALL=20,
     },
 
     floors =
