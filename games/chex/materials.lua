@@ -27,13 +27,13 @@ CHEX3.MATERIALS =
   _WATER   = { t="GSTFONT1", f="FWATER1" }, -- "Standing water", sorta
   _WTRFALL = { t="GSTFONT1", f="FWATER1" }, -- "Flowing water", sorta
   
-  _DOOR  = { t="DOOR1", f="STEEL32" }, -- Open says me
+  _DOOR  = { t="BIGDOOR4", f="STEEL32" }, -- Open says me
   _DOOR2 = { t="BIGDOOR1", f="STEEL32"},
   _DORRAIL = { t="COMPSTA1", f="STEP1"}, -- Inner door slider thingys
   
-  _NPIC    = { t="DCAFE01", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
-  _NPIC2    = { t="DCAFE02", f="XX"},
-  _NPIC3    = { t="DCAFE03", f="XX"},
+  _NPIC    = { t="FIREWALL", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
+  _NPIC2    = { t="FIREWALL", f="XX"},
+  _NPIC3    = { t="FIREWALL", f="XX"},
   
   _MPIC    = { t="ART1", f="XX"}, -- Medium (or tiling) pic box insert, 128 pixels wide
   _MPIC2    = { t="ART2", f="XX"},
@@ -51,11 +51,14 @@ CHEX3.MATERIALS =
   _KEYTRM2 = { t="DOORYEL", f="XX" }, -- Trim for locked door, Key 2
   _KEYTRM3 = { t="DOORBLU", f="XX" }, -- Trim for locked door, Key 3
   
-  _EXITDOR = { t="DOORBLU2", f="FLAT5_6" }, -- Exit door
-  _EXITSW  = { t="SW1STON1", f="FLAT5_6"  }, -- Exit switch
+  _EXITDR1 = { t="BIGDOOR7", f="FLAT5_6" }, -- Exit door
+  _EXITSW1 = { t="SW1METAL", f="FLAT1"  }, -- Exit switch
+  _EXITRM1 = { t="STARG3", f="CJFLOD06"}, -- Exit room walls (to match switch)
   
   _SWITCH  = { t="SW1COMM",  f="FLAT5_6" }, -- Wall/general purpose swtich
   _SWITCH2  = { t="SW1COMP",  f="FLAT5_6" },
+
+  _STRUCT = {t="COMPSPAN", f="CEIL5_1"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
   
   _TELE = { f="GATE1", t="SP_DUDE4" }, -- Teleporter
 

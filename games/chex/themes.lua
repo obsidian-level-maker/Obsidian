@@ -157,24 +157,26 @@ CHEX3.THEMES =
 
     wall_groups =
     {
-      PLAIN = 50
+      PLAIN = 50,
+      torches1 = 10
     },
 
     cave_torches =
     {
-
+      green_torch = 50,
+      green_torch_sm = 50
     },
 
     outdoor_torches =
     {
-
+      -- TODO
     },
 
     ceil_light_prob = 70,
 
     scenic_fences =
     {
-      VINE1 = 80
+      VINE1 = 80 -- Find a better fence
     },
 
     sink_style =
@@ -328,13 +330,7 @@ CHEX3.ROOM_THEMES =
       CJMINE02 = 15
     },
 
-    naturals =
-    {
-      SKSNAKE2 = 50,
-      CJMINE02 = 15
-    },
-
-    porch_floors =
+    walls =
     {
       SKSNAKE2 = 50,
       CJMINE02 = 15
@@ -357,7 +353,7 @@ CHEX3.ROOMS =
   {
     env = "outdoor",
     prob = 50
-  }
+  },
 
 }
 
