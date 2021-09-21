@@ -474,7 +474,7 @@ function Render_edge(E)
 
     local side_props =
     {
-      tex = "ZZWOLF10", -- currently patch-replaced as an invisible wall
+      tex = "O_INVIST", -- currently patch-replaced as an invisible wall
 
       blocked = 1,
     }

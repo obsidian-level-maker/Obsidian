@@ -57,7 +57,7 @@ PREFABS.Fence_corrugated_steel_plain =
   bound_z1 = 0,
 
   tex_GRAYMET3 = "SHAWN2",
-  tex_BARBWIRE = "ZZWOLF10",
+  tex_BARBWIRE = "O_INVIST",
 }
 
 PREFABS.Fence_corrugated_steel_plain_diag =
@@ -78,5 +78,5 @@ PREFABS.Fence_corrugated_steel_plain_diag =
   bound_z1 = 0,
 
   tex_GRAYMET3 = "SHAWN2",
-  tex_BARBWIRE = "ZZWOLF10",
+  tex_BARBWIRE = "O_INVIST",
 }
