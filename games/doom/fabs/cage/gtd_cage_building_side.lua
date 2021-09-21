@@ -138,6 +138,6 @@ PREFABS.Cage_wall_building_terrace_tall =
     FENCE3 = 1,
     FENCE6 = 1,
     FENCE7 = 1,
-    ZZWOLF10 = 5
+    O_INVIST = 5
   }
 }
