@@ -4920,7 +4920,13 @@ ARMAETUS_THEMES =
       gtd_wall_of_guns = 50,
       --
       gtd_comp_set_yellow_EPIC = 35,
-      gtd_comp_set_green_EPIC = 35
+      gtd_comp_set_green_EPIC = 35,
+      --
+      gtd_comptil_plain_red = 13,
+      gtd_comptil_plain_green = 13,
+      gtd_comptil_plain_yellow = 13,
+      gtd_comptil_plain_purple = 13,
+      gtd_comptil_plain_blue = 13
     },
 
     window_groups =
