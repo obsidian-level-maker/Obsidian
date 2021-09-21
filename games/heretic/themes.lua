@@ -143,6 +143,33 @@ HERETIC.THEMES =
       k_blue   = 30,
     },
 
+    barrels =
+    {
+      barrel = 50,
+      pod = 15,
+    },
+
+    cave_torches =
+    {
+      fire_brazier  = 20,
+      wall_torch   = 70,
+      mercury_lamp  = 10,
+    },
+
+    cliff_trees =
+    {
+      fire_brazier = 10,
+      serpent_torch = 30,
+      pod = 50,
+    },
+
+    park_decor =
+    {
+      fire_brazier = 10,
+      serpent_torch = 30,
+      pod = 50,
+    },
+
     skyboxes =
     {
       -- Heretic needs a 3D skybox, bois
@@ -262,13 +289,6 @@ HERETIC.THEMES =
     {
       PLAIN = 50,
       torches1 = 10,
-    },
-
-    cave_torches =
-    {
-      fire_brazier  = 20,
-      wall_torch   = 70,
-      mercury_lamp  = 10,
     },
 
     outdoor_torches =
@@ -402,13 +422,6 @@ HERETIC.THEMES =
     {
       PLAIN = 50,
       torches1 = 10,
-    },
-
-    cave_torches =
-    {
-      fire_brazier  = 20,
-      wall_torch   = 70,
-      mercury_lamp  = 10,
     },
 
     outdoor_torches =
@@ -553,13 +566,6 @@ HERETIC.THEMES =
       torches1 = 10,
     },
 
-    cave_torches =
-    {
-      fire_brazier  = 20,
-      wall_torch   = 70,
-      mercury_lamp  = 10,
-    },
-
     outdoor_torches =
     {
       fire_brazier   = 10,
@@ -692,13 +698,6 @@ HERETIC.THEMES =
     {
       PLAIN = 50,
       torches1 = 10,
-    },
-
-    cave_torches =
-    {
-      fire_brazier  = 20,
-      wall_torch   = 70,
-      mercury_lamp  = 10,
     },
 
     outdoor_torches =
@@ -839,13 +838,6 @@ HERETIC.THEMES =
     {
       PLAIN = 50,
       torches1 = 10,
-    },
-
-    cave_torches =
-    {
-      fire_brazier  = 20,
-      wall_torch   = 70,
-      mercury_lamp  = 10,
     },
 
     outdoor_torches =
