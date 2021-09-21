@@ -148,15 +148,14 @@ PREFABS.Wall_gtd_computer_lite5_1 =
   height = 96,
   group = "gtd_computers_lite5",
 
-  tex_COMPTALL =
-  {
-    COMPTALL = 5,
-    COMPWERD = 5,
-  },
-
   bound_z2 = 96,
 
-  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1}
+  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1},
+
+  forced_offsets =
+  {
+    [26] = {x=96, y=1}
+  }
 }
 
 PREFABS.Wall_gtd_computer_lite5_2 =
@@ -191,7 +190,7 @@ PREFABS.Wall_gtd_computer_lite5_3 =
 
   forced_offsets =
   {
-    [26] = {x=192, y=1}
+    [26] = {x=192, y=64}
   }
 }
 
@@ -209,7 +208,7 @@ PREFABS.Wall_gtd_computer_lite5_4 =
 
   forced_offsets =
   {
-    [26] = {x=192, y=64}
+    [26] = {x=192, y=1}
   }
 }
 
