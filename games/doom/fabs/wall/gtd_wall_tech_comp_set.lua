@@ -141,35 +141,39 @@ PREFABS.Wall_gtd_computer_compsta_diag_2 =
 PREFABS.Wall_gtd_computer_lite5_1 =
 {
   template = "Wall_gtd_computer_wall_1",
-  map = "MAP06",
+  map = "MAP08",
 
   prob = 100,
 
   height = 96,
   group = "gtd_computers_lite5",
 
-  tex_COMPTALL =
-  {
-    COMPTALL = 5,
-    COMPWERD = 5,
-  },
-
   bound_z2 = 96,
 
-  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1}
+  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1},
+
+  forced_offsets =
+  {
+    [26] = {x=96, y=1}
+  }
 }
 
 PREFABS.Wall_gtd_computer_lite5_2 =
 {
   template = "Wall_gtd_computer_wall_1",
-  map = "MAP07",
+  map = "MAP08",
 
   height = 96,
   group = "gtd_computers_lite5",
 
   bound_z2 = 96,
 
-  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1}
+  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1},
+
+  forced_offsets =
+  {
+    [26] = {x=128, y=64}
+  }
 }
 
 PREFABS.Wall_gtd_computer_lite5_3 =
@@ -182,7 +186,30 @@ PREFABS.Wall_gtd_computer_lite5_3 =
 
   bound_z2 = 96,
 
-  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1}
+  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1},
+
+  forced_offsets =
+  {
+    [26] = {x=192, y=64}
+  }
+}
+
+PREFABS.Wall_gtd_computer_lite5_4 =
+{
+  template = "Wall_gtd_computer_wall_1",
+  map = "MAP08",
+
+  height = 96,
+  group = "gtd_computers_lite5",
+
+  bound_z2 = 96,
+
+  sector_1 = {[0] = 10, [1] = 1, [3] = 1, [21] = 1},
+
+  forced_offsets =
+  {
+    [26] = {x=192, y=1}
+  }
 }
 
 PREFABS.Wall_gtd_computer_lite5_diag =
