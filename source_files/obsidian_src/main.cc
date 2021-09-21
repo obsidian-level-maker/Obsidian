@@ -550,6 +550,14 @@ void Main::PopulateFontMap() {
             current_free_font += 2;
         }
 
+        if (LoadInternalFont("./theme/fonts/SamIAm/MiniSmallCaps.ttf",
+                             current_free_font, "MiniSmallCaps")) {
+            Fl::set_font(current_free_font + 1, "MiniSmallCaps");
+            font_menu_items.push_back(
+                std::map<std::string, int>{{"Sam I Am", current_free_font}});
+            current_free_font += 2;
+        }
+
     }
 
     // lossy conversion, size_t?
