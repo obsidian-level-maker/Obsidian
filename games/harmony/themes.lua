@@ -154,7 +154,7 @@ HARMONY.THEMES =
 
     facades =
     {
-      GRAY1 = 80,
+      STOEL4 = 50,
     },
 
     fence_groups =
