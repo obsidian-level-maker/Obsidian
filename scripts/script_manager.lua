@@ -57,7 +57,7 @@ function ScriptMan_assemble_mapinfo_lump()
   end
   eventhandler_lines = string.gsub(eventhandler_lines, ",$", "");
 
-  if eventhandler_lines then
+  if eventhandler_lines ~= "" then
     eventhandler_lines = "addeventhandlers = " .. eventhandler_lines
   end
 

@@ -3378,30 +3378,40 @@ function Room_floor_ceil_heights()
 
     -- MSSP: code for the height style control
     if not R.height_style then
+      R.height_style = rand.pick({"short","normal","tall"})
+
       if PARAM.room_heights then
-
-        if PARAM.room_heights ~= "mixed" then
+        if PARAM.room_heights == "tall-ish" then
+          R.height_style = rand.pick({"normal","tall"}) 
+        elseif PARAM.room_heights == "short-ish" then
+          R.height_style = rand.pick({"normal","shorter"}) 
+        elseif PARAM.room_heights ~= "mixed" then
           R.height_style = PARAM.room_heights
-        elseif PARAM.room_heights == "mixed" then
-          R.height_style = rand.pick({"short","normal","taller"})
-        end
-
-        -- nothing actually happens if the height_style is "normal",
-        -- whereas normal is Oblige's default behavior
-
-        if string.gmatch(R.height_style, "-ish") and rand.odds(50) then
-          if string.gmatch(R.height_style, "short") then
-            if add_h > 128 then add_h = 128 end
-          elseif string.gmatch(R.height_style, "tall") then
-            add_h = add_h * rand.key_by_probs({
-              [2] = 8,
-              [4] = 4,
-              [6] = 2,
-              [10] = 1 -- experimental supertall, might drop this
-            })
-          end
         end
       end
+    end
+
+    -- nothing actually happens if the height_style is "normal",
+    -- whereas normal is Oblige's default behavior
+
+    if R.height_style == "short" then
+      if add_h > 128 then add_h = 128 end
+    elseif R.height_style == "tall" then
+
+      local tall_offsets =
+      {
+        [2] = 8,
+        [3] = 1,
+        [4] = 1,
+      }
+
+      if group.vol > 96 then
+        tall_offsets[4] = 2
+      elseif group.vol > 64 then
+        tall_offsets[3] = 2
+      end
+
+      add_h = add_h * rand.key_by_probs(tall_offsets)
     end
 
     if add_h > 128 and group.max_floor_h >= group.min_floor_h + 64 then
