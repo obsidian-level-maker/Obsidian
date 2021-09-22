@@ -48,7 +48,7 @@ function ScriptMan_assemble_mapinfo_lump()
       "{\n",
   }
 
-  local eventhandler_lines
+  local eventhandler_lines = ""
   if SCRIPTS.zs_eventhandlers then
     eventhandler_lines = eventhandler_lines .. SCRIPTS.zs_eventhandlers
   end
@@ -61,7 +61,7 @@ function ScriptMan_assemble_mapinfo_lump()
     eventhandler_lines = "addeventhandlers = " .. eventhandler_lines
   end
 
-  if SCRIPTS.zs_eventhandlers then
+  if SCRIPTS.zs_eventhandlers ~= "" then
     eventhandler_lines = eventhandler_lines .. "\n"
     table.insert(mapinfo_lines, eventhandler_lines)
   end
