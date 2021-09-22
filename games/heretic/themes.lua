@@ -158,16 +158,18 @@ HERETIC.THEMES =
 
     cliff_trees =
     {
-      fire_brazier = 10,
-      serpent_torch = 30,
-      pod = 50,
+      stal_small_F = 50,
+      stal_big_F = 25,
+      volcano = 5,
+      pod = 25
     },
 
     park_decor =
     {
-      fire_brazier = 10,
-      serpent_torch = 30,
-      pod = 50,
+      stal_small_F = 50,
+      stal_big_F = 25,
+      fire_brazier = 5,
+      pod = 25
     },
 
     skyboxes =
@@ -1563,7 +1565,7 @@ HERETIC.ROOM_THEMES =
       FLAT504 = 50,
       FLAT502 = 50,
       FLOOR04 = 50,
-      FLTWAWA1 = 5,
+      FLAT517 = 5,
     },
 
     ceilings =
@@ -1732,7 +1734,7 @@ HERETIC.ROOM_THEMES =
 
     naturals =
     {
-      FLTWAWA1 = 20,
+      FLAT517 = 20,
     },
 
     porch_floors =

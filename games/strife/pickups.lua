@@ -15,6 +15,14 @@
 STRIFE.PICKUPS =
 {
 
+    bullets =
+    {
+      id = 2007,
+      add_prob = 10,
+      cluster = { 2,5 },
+      give = { {ammo="bullet",count=10} }
+    },
+
 }
 
 
