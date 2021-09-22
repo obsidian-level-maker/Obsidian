@@ -48,7 +48,7 @@ function ScriptMan_assemble_mapinfo_lump()
       "{\n",
   }
 
-  local eventhandler_lines = "addeventhandlers = "
+  local eventhandler_lines
   if SCRIPTS.zs_eventhandlers then
     eventhandler_lines = eventhandler_lines .. SCRIPTS.zs_eventhandlers
   end
@@ -56,6 +56,11 @@ function ScriptMan_assemble_mapinfo_lump()
     eventhandler_lines = eventhandler_lines .. '"BossGenerator_Handler"'
   end
   eventhandler_lines = string.gsub(eventhandler_lines, ",$", "");
+
+  if eventhandler_lines then
+    eventhandler_lines = "addeventhandlers = " .. eventhandler_lines
+  end
+
   if SCRIPTS.zs_eventhandlers then
     eventhandler_lines = eventhandler_lines .. "\n"
     table.insert(mapinfo_lines, eventhandler_lines)
