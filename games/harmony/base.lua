@@ -13,13 +13,14 @@ gui.import("levels")
 gui.import("resources")
 ----------------------------------------------------------------
 
-UNFINISHED["harmony"] =
+OB_GAMES["harmony"] =
 {
-	label = _("Harmony"),
+	label = _("Harmony (Exp)"),
 	priority = 29,
 	
 	format = "doom",
-	sub_format = "harmony",
+	--sub_format = "harmony",
+	engine = "zdoom",
 	
 	game_dir = "harmony",
 	iwad_name = "harm1.wad",
@@ -31,7 +32,7 @@ UNFINISHED["harmony"] =
 	
 	hooks =
 	{
-		setup = HARMONY.setup,
+		--setup = HARMONY.setup,
 		get_levels = HARMONY.get_levels,
 		all_done = HARMONY.all_done
 	},

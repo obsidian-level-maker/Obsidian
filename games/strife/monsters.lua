@@ -26,7 +26,7 @@ STRIFE.MONSTERS =
     damage = 2.0,
     attack = "hitscan",
     weap_needed = { assault=true },
---    give = { {ammo="crystal",count=1} },
+    give = { {ammo="bullet",count=50} },
   },
 }
 
