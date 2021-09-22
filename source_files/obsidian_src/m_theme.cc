@@ -869,6 +869,22 @@ class UI_ThemeWin : public Fl_Window {
                 "./theme/fonts/SourceSansPro/SourceSansPro-Regular.ttf");
             v_unload_private_font(
                 "./theme/fonts/SourceSansPro/SourceSansPro-Bold.ttf");
+            v_unload_private_font(
+                "./theme/fonts/Kalam/Kalam-Regular.ttf");
+            v_unload_private_font(
+                "./theme/fonts/Kalam/Kalam-Bold.ttf");
+            v_unload_private_font(
+                "./theme/fonts/3270/3270.ttf");
+            v_unload_private_font(
+                "./theme/fonts/Workbench/Workbench.ttf");
+            v_unload_private_font(
+                "./theme/fonts/FPD-Pressure/FPDPressure-Light.otf");
+            v_unload_private_font(
+                "./theme/fonts/FPD-Pressure/FPDPressure-Regular.otf");
+            v_unload_private_font(
+                "./theme/fonts/DramaSans/DramaSans.ttf");
+            v_unload_private_font(
+                "./theme/fonts/SamIAm/MiniSmallCaps.ttf");
         }
 
         main_action = MAIN_RESTART;

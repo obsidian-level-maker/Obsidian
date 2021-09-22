@@ -143,6 +143,35 @@ HERETIC.THEMES =
       k_blue   = 30,
     },
 
+    barrels =
+    {
+      barrel = 50,
+      pod = 15,
+    },
+
+    cave_torches =
+    {
+      fire_brazier  = 20,
+      wall_torch   = 70,
+      mercury_lamp  = 10,
+    },
+
+    cliff_trees =
+    {
+      stal_small_F = 50,
+      stal_big_F = 25,
+      volcano = 5,
+      pod = 25
+    },
+
+    park_decor =
+    {
+      stal_small_F = 50,
+      stal_big_F = 25,
+      fire_brazier = 5,
+      pod = 25
+    },
+
     skyboxes =
     {
       -- Heretic needs a 3D skybox, bois
@@ -262,13 +291,6 @@ HERETIC.THEMES =
     {
       PLAIN = 50,
       torches1 = 10,
-    },
-
-    cave_torches =
-    {
-      fire_brazier  = 20,
-      wall_torch   = 70,
-      mercury_lamp  = 10,
     },
 
     outdoor_torches =
@@ -402,13 +424,6 @@ HERETIC.THEMES =
     {
       PLAIN = 50,
       torches1 = 10,
-    },
-
-    cave_torches =
-    {
-      fire_brazier  = 20,
-      wall_torch   = 70,
-      mercury_lamp  = 10,
     },
 
     outdoor_torches =
@@ -553,13 +568,6 @@ HERETIC.THEMES =
       torches1 = 10,
     },
 
-    cave_torches =
-    {
-      fire_brazier  = 20,
-      wall_torch   = 70,
-      mercury_lamp  = 10,
-    },
-
     outdoor_torches =
     {
       fire_brazier   = 10,
@@ -692,13 +700,6 @@ HERETIC.THEMES =
     {
       PLAIN = 50,
       torches1 = 10,
-    },
-
-    cave_torches =
-    {
-      fire_brazier  = 20,
-      wall_torch   = 70,
-      mercury_lamp  = 10,
     },
 
     outdoor_torches =
@@ -839,13 +840,6 @@ HERETIC.THEMES =
     {
       PLAIN = 50,
       torches1 = 10,
-    },
-
-    cave_torches =
-    {
-      fire_brazier  = 20,
-      wall_torch   = 70,
-      mercury_lamp  = 10,
     },
 
     outdoor_torches =
@@ -1571,7 +1565,7 @@ HERETIC.ROOM_THEMES =
       FLAT504 = 50,
       FLAT502 = 50,
       FLOOR04 = 50,
-      FLTWAWA1 = 5,
+      FLAT517 = 5,
     },
 
     ceilings =
@@ -1740,7 +1734,7 @@ HERETIC.ROOM_THEMES =
 
     naturals =
     {
-      FLTWAWA1 = 20,
+      FLAT517 = 20,
     },
 
     porch_floors =

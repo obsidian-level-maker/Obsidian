@@ -39,14 +39,14 @@ HEXEN.THEMES =
     {
       k_axe = 50,
       k_cave = 50,
-      k_castle = 50,
-      k_dungeon = 50,
-      k_emerald = 50,
-      k_fire = 20,
-      k_horn = 50,
-      k_rusty = 50,
-      k_silver = 50,
-      k_swamp = 50,
+      --k_castle = 50,
+      --k_dungeon = 50,
+      --k_emerald = 50,
+      --k_fire = 20,
+      --k_horn = 50,
+      --k_rusty = 50,
+      --k_silver = 50,
+      --k_swamp = 50,
       k_steel = 50,
     },
 
@@ -54,14 +54,14 @@ HEXEN.THEMES =
     {
       k_axe = 50,
       k_cave = 50,
-      k_castle = 50,
-      k_dungeon = 50,
-      k_emerald = 50,
-      k_fire = 20,
-      k_horn = 50,
-      k_rusty = 50,
-      k_silver = 50,
-      k_swamp = 50,
+      --k_castle = 50,
+      --k_dungeon = 50,
+      --k_emerald = 50,
+      --k_fire = 20,
+      --k_horn = 50,
+      --k_rusty = 50,
+      --k_silver = 50,
+      --k_swamp = 50,
       k_steel = 50,
     },   
 
@@ -2239,7 +2239,7 @@ OB_THEMES["dungeon"] =
   mixed_prob = 50,
 }
 
-OB_THEMES["fire"] =
+UNFINISHED["fire"] =
 {
   label = _("Fire"),
   game = "hexen",
@@ -2247,7 +2247,7 @@ OB_THEMES["fire"] =
   mixed_prob = 50,
 }
 
-OB_THEMES["ice"] =
+UNFINISHED["ice"] =
 {
   label = _("Ice"),
   game = "hexen",
@@ -2255,7 +2255,7 @@ OB_THEMES["ice"] =
   mixed_prob = 50,
 }
 
-OB_THEMES["steel"] =
+UNFINISHED["steel"] =
 {
   label = _("Steel"),
   game = "hexen",
@@ -2263,7 +2263,7 @@ OB_THEMES["steel"] =
   mixed_prob = 20,
 }
 
-OB_THEMES["desert"] =
+UNFINISHED["desert"] =
 {
   label = _("Desert"),
   game = "hexen",
@@ -2271,7 +2271,7 @@ OB_THEMES["desert"] =
   mixed_prob = 10,
 }
 
-OB_THEMES["cave"] =
+UNFINISHED["cave"] =
 {
   label = _("Cave"),
   game = "hexen",
@@ -2279,7 +2279,7 @@ OB_THEMES["cave"] =
   mixed_prob = 20,
 }
 
-OB_THEMES["swamp"] =
+UNFINISHED["swamp"] =
 {
   label = _("Swamp"),
   game = "hexen",
@@ -2287,7 +2287,7 @@ OB_THEMES["swamp"] =
   mixed_prob = 20,
 }
 
-OB_THEMES["forest"] =
+UNFINISHED["forest"] =
 {
   label = _("Forest"),
   game = "hexen",
@@ -2295,7 +2295,7 @@ OB_THEMES["forest"] =
   mixed_prob = 20,
 }
 
-OB_THEMES["village"] =
+UNFINISHED["village"] =
 {
   label = _("Village"),
   game = "hexen",

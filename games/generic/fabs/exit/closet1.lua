@@ -7,7 +7,7 @@ PREFABS.Exit_closet1_heretic =
   file   = "exit/closet1.wad",
   map    = "MAP01",
 
-  game   = "heretic",
+  game   = { heretic=1,strife=1,chex3=0,hacx=0 },
 
   prob   = 100,
 
