@@ -72,9 +72,9 @@ bool VFS_AddArchive(std::filesystem::path filename, bool options_file) {
     // the current dir, look for it in the standard addons/ folder.
     if ((!std::filesystem::exists(filename) && !filename.has_parent_path())) {
         std::filesystem::path new_name =
-            fmt::format("{}/addons/{}", home_dir, filename);
+            fmt::format("{}/addons/{}", home_dir.string(), filename.string());
         if (!std::filesystem::exists(new_name)) {
-            new_name = fmt::format("{}/addons/{}", install_dir, filename);
+            new_name = fmt::format("{}/addons/{}", install_dir.string(), filename.string());
         }
         filename = new_name;
     }
@@ -83,12 +83,12 @@ bool VFS_AddArchive(std::filesystem::path filename, bool options_file) {
         if (options_file) {
             LogPrintf(
                 fmt::format("Failed to mount '{}' archive in PhysFS:\n{}\n",
-                            filename,
+                            filename.string(),
                             PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()))
                     .c_str());
         } else {
             Main::FatalError("Failed to mount '{}' archive in PhysFS:\n{}\n",
-                             filename,
+                             filename.string(),
                              PHYSFS_getErrorByCode(PHYSFS_getLastErrorCode()));
         }
 
@@ -179,11 +179,10 @@ void VFS_ScanForAddons() {
         }
     }
 
-    if (!StringCaseCmp(home_dir.generic_string(),
-                       install_dir.generic_string())) {
+    if (StringCaseCmp(home_dir.generic_string(),
+                       install_dir.generic_string()) != 0) {
         dir_name = home_dir;
         dir_name /= "addons";
-
         if (!std::filesystem::exists(dir_name)) {
             goto no_home_addon_dir;
         }
@@ -198,7 +197,8 @@ void VFS_ScanForAddons() {
                 list2.push_back(file.path());
             }
         }
-        std::vector<std::filesystem::path>().swap(list2);
+        //std::vector<std::filesystem::path>().swap(list2);
+        for (auto x : list2) { list.push_back(x); }
     }
 
 no_home_addon_dir:
