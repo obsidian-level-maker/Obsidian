@@ -173,7 +173,7 @@ void VFS_ScanForAddons() {
 
     for (auto &file : std::filesystem::directory_iterator(dir_name)) {
         if (file.path().has_extension() &&
-            StringCaseCmp(file.path().extension().generic_string(), "pk3")) {
+            StringCaseCmp(file.path().extension().generic_string(), ".pk3") == 0) {
             result1 += 1;
             list.push_back(file.path());
         }
@@ -192,7 +192,7 @@ void VFS_ScanForAddons() {
         for (auto &file : std::filesystem::directory_iterator(dir_name)) {
             if (file.path().has_extension() &&
                 StringCaseCmp(file.path().extension().generic_string(),
-                              "pk3")) {
+                              ".pk3") == 0) {
                 result2 += 1;
                 list2.push_back(file.path());
             }
