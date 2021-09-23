@@ -27,7 +27,7 @@ HARMONY.EPISODES =
 
     theme = "ndf_base",
     sky_patch = "SKY1",
-    boss = "Maximus",
+    boss = "mutant",
     sky_light = 0.75,
     dark_prob = 10
   },
@@ -38,7 +38,7 @@ HARMONY.EPISODES =
 
     theme = "ndf_base",
     sky_patch = "SKY1",
-    boss = "Flembomination",
+    boss = "phage",
     sky_light = 0.75,
     dark_prob = 10
   },
@@ -49,7 +49,7 @@ HARMONY.EPISODES =
 
     theme = "ndf_base",
     sky_patch = "SKY1",
-    boss = "Snotfolus",
+    boss = "echidna",
     sky_light = 0.75,
     dark_prob = 10
   }

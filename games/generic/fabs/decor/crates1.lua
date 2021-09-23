@@ -9,6 +9,7 @@ PREFABS.Crate_small =
 {
   file   = "decor/crates1.wad",
   map    = "MAP01",
+  env    = "!cave",
   --forced_offsets = { {0,{x=13,y=24}} }, - Example that was used for testing - Dasho
 
   prob   = 3500,
@@ -25,6 +26,7 @@ PREFABS.Crate_small_alt =
 {
   file   = "decor/crates1.wad",
   map    = "MAP01",
+  env    = "!cave",
 
   prob   = 3500,
   tex__CRATE = "_CRATE2",
@@ -44,6 +46,7 @@ PREFABS.Crate_tall =
 {
   file   = "decor/crates1.wad",
   map    = "MAP02",
+  env    = "!cave",
 
   prob   = 3500,
 
@@ -60,6 +63,7 @@ PREFABS.Crate_tall_alt =
 {
   file   = "decor/crates1.wad",
   map    = "MAP02",
+  env    = "!cave",
 
   prob   = 3500,
   tex__CRATE = "_CRATE2",
@@ -80,9 +84,9 @@ PREFABS.Crate_medium =
 {
   file   = "decor/crates1.wad",
   map    = "MAP03",
+  env    = "!cave",
 
   prob   = 3500,
-  env    = "!cave",
 
   where  = "point",
   size   = 96,
@@ -96,9 +100,9 @@ PREFABS.Crate_medium_alt =
 {
   file   = "decor/crates1.wad",
   map    = "MAP03",
+  env    = "!cave",
 
   prob   = 3500,
-  env    = "!cave",
   tex__CRATE = "_CRATE2",
   flat__CRATE = "_CRATE2",
 
@@ -117,9 +121,9 @@ PREFABS.Crate_group_medium =
 {
   file   = "decor/crates1.wad",
   map    = "MAP04",
+  env    = "!cave",
 
   prob   = 3500,
-  env    = "!cave",
 
   where  = "point",
   size   = 128,
@@ -134,9 +138,9 @@ PREFABS.Crate_group_medium_alt =
 {
   file   = "decor/crates1.wad",
   map    = "MAP04",
+  env    = "!cave",
 
   prob   = 3500,
-  env    = "!cave",
   tex__CRATE = "_CRATE2",
   flat__CRATE = "_CRATE2",
 

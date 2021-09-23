@@ -38,7 +38,7 @@ HARMONY.MONSTERS =
     health = 30,
     attack = "hitscan",
     damage = 10,
---??  give = { {weapon="shotgun"}, {ammo="shell",count=4} }
+    give = { {weapon="shotgun"}, {ammo="shell",count=4} }
   },
 
   predator =
@@ -77,8 +77,8 @@ HARMONY.MONSTERS =
     prob = 20,
     health = 70,
     attack = "hitscan",
-    damage = 50
---??  give = { {weapon="minigun"}, {ammo="bullet",count=10} }
+    damage = 50,
+    give = { {weapon="minigun"}, {ammo="bullet",count=10} }
   },
 
   phage =

@@ -56,12 +56,12 @@ HARMONY.THEMES =
 
     cave_torches =
     {
-      wall_torch   = 70,
+      fire_box = 70
     },
 
     outdoor_torches = 
     {
-
+      laser_lamp = 50
     },
 
     cliff_trees =

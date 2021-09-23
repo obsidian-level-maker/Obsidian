@@ -47,6 +47,8 @@ STRIFE.ENTITIES =
 
   --- scenery ---
   wall_torch  = { id=107, r=10, h=64, light=255, pass=true, add_mode="extend" },
+  pole_lamp  = { id=46, r=28, h=80, light=255 },
+  huge_torch  = { id=50, r=20, h=80, light=255 },
 
   barrel  = { id=94,   r=12, h=32 },
 
