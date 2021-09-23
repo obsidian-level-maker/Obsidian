@@ -36,7 +36,7 @@ STRIFE.PICKUPS =
    secret_prob = 5,
    storage_prob = 80,
    storage_qty  = 2,
-   give = { {health=25} },
+   give = { {health=50} },
  },
 
  -- ammo -- 

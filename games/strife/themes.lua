@@ -56,12 +56,12 @@ STRIFE.THEMES =
 
     cave_torches =
     {
-      wall_torch   = 70,
+      huge_torch   = 70,
     },
 
     outdoor_torches = 
     {
-
+      pole_lamp = 50
     },
 
     cliff_trees =
