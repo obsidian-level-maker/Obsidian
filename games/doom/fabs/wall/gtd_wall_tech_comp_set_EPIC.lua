@@ -111,6 +111,21 @@ PREFABS.Wall_epic_comptil_plain_red =
   z_fit = { 34,36 }
 }
 
+PREFABS.Wall_epic_comptil_plain_red_diag =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP51",
+
+  height = 96,
+  where = "diagonal",
+  bound_z2 = 96,
+
+  group = "gtd_comptil_plain_red",
+
+  z_fit = { 34,36 }
+}
+
+--
 
 PREFABS.Wall_epic_comptil_plain_green =
 {
@@ -127,6 +142,24 @@ PREFABS.Wall_epic_comptil_plain_green =
   z_fit = { 34,36 }
 }
 
+PREFABS.Wall_epic_comptil_plain_green_diag =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP51",
+
+  height = 96,
+  where = "diagonal",
+  bound_z2 = 96,
+
+  group = "gtd_comptil_plain_green",
+
+  tex_COMPTIL2 = "COMPTIL4",
+
+  z_fit = { 34,36 }
+}
+
+--
+
 PREFABS.Wall_epic_comptil_plain_yellow =
 {
   template = "Wall_epic_comp_set_yellow_1",
@@ -141,6 +174,24 @@ PREFABS.Wall_epic_comptil_plain_yellow =
 
   z_fit = { 34,36 }
 }
+
+PREFABS.Wall_epic_comptil_plain_yellow_diag =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP51",
+
+  height = 96,
+  where = "diagonal",
+  bound_z2 = 96,
+
+  group = "gtd_comptil_plain_yellow",
+
+  tex_COMPTIL2 = "COMPTIL5",
+
+  z_fit = { 34,36 }
+}
+
+--
 
 PREFABS.Wall_epic_comptil_plain_purple =
 {
@@ -157,12 +208,46 @@ PREFABS.Wall_epic_comptil_plain_purple =
   z_fit = { 34,36 }
 }
 
+PREFABS.Wall_epic_comptil_plain_purple_diag =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP51",
+
+  height = 96,
+  where = "diagonal",
+  bound_z2 = 96,
+
+  group = "gtd_comptil_plain_purple",
+
+  tex_COMPTIL2 = "COMPTIL6",
+
+  z_fit = { 34,36 }
+}
+
+--
+
 PREFABS.Wall_epic_comptil_plain_blue =
 {
   template = "Wall_epic_comp_set_yellow_1",
   map = "MAP50",
 
   height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comptil_plain_blue",
+
+  tex_COMPTIL2 = "CMPTILE",
+
+  z_fit = { 34,36 }
+}
+
+PREFABS.Wall_epic_comptil_plain_blue_diag =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP51",
+
+  height = 96,
+  where = "diagonal",
   bound_z2 = 96,
 
   group = "gtd_comptil_plain_blue",
