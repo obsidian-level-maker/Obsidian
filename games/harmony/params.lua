@@ -1,5 +1,6 @@
 HARMONY.PARAMETERS =
 {
+  teleporters = true,
   rails = true,
   switches = true,
   light_brushes = true,

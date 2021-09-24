@@ -2365,7 +2365,6 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
       chunk.prefab_def.height > h_diff then
         chunk.prefab_def = nil
         reqs.kind = "picture"
-        reqs.game = OB_CONFIG.game
         reqs.height = h_diff
       end
     end
