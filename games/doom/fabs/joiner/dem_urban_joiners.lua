@@ -306,13 +306,13 @@ PREFABS.Joiner_waiting_room_vanilla =
 PREFABS.Joiner_electronic_store =
 {
   template = "Joiner_living_room",
-  map    = "MAP08",
+  map = "MAP08",
 
   engine = "zdoom",
 
-  prob   = 2500,
+  prob = 2500,
 
-  env      = "outdoor",
+  env = "outdoor",
   neighbor = "building",
 
   seed_w = 3,
@@ -327,7 +327,7 @@ PREFABS.Joiner_electronic_store =
     BRICK2=50, BRICK4=50,
     BRICK6=50, BRICK7=50, BRICK8=50,
     STONE2=50, SHAWN4=50, SHAWN5=50,
-    STUCCO=50,  STUCCO1=50,  STUCCO3=50, STARGR1=50,
+    STUCCO=50,  STUCCO1=50, STUCCO3=50, STARGR1=50,
     PANEL6=50, BRIKS40=50, BRIKS43=50,
     GOTH16=50, GOTH31=50, WD03=50
   }
@@ -336,13 +336,13 @@ PREFABS.Joiner_electronic_store =
 PREFABS.Joiner_electronic_store_vanilla =
 {
   template = "Joiner_living_room",
-  map    = "MAP08",
+  map = "MAP08",
 
   engine = "zdoom",
 
-  prob   = 2500,
+  prob = 2500,
 
-  env      = "outdoor",
+  env = "outdoor",
   neighbor = "building",
 
   seed_w = 3,
@@ -354,12 +354,13 @@ PREFABS.Joiner_electronic_store_vanilla =
     BRICK2=50, BRICK4=50,
     BRICK6=50, BRICK7=50, BRICK8=50,
     STONE2=50, SHAWN4=50, SHAWN5=50,
-    STUCCO=50,  STUCCO1=50,  STUCCO3=50, STARGR1=50,
-    PANEL6=50, BRIKS40=50, BRIKS43=50,
-    GOTH16=50, GOTH31=50, WD03=50
+    STUCCO=50,  STUCCO1=50, STUCCO3=50, STARGR1=50
   },
+  tex_TVSNOW01 = "SPACEW3",
+  flat_TILES4 = "FLOOR0_5",
 
-  tex_TVSNOW01 = "SPACEW3"
+  flat_GROUND04 = "GRASS1",
+  tex_GREEN01 = "ZIMMER1"
 }
 
 --a raided cornerstore
