@@ -3378,17 +3378,7 @@ function Room_floor_ceil_heights()
 
     -- MSSP: code for the height style control
     if not R.height_style then
-      R.height_style = rand.pick({"short","normal","tall"})
-
-      if PARAM.room_heights then
-        if PARAM.room_heights == "tall-ish" then
-          R.height_style = rand.pick({"normal","tall"}) 
-        elseif PARAM.room_heights == "short-ish" then
-          R.height_style = rand.pick({"normal","shorter"}) 
-        elseif PARAM.room_heights ~= "mixed" then
-          R.height_style = PARAM.room_heights
-        end
-      end
+      R.height_style = rand.key_by_probs(LEVEL.room_height_style_tab)
     end
 
     -- nothing actually happens if the height_style is "normal",
@@ -3400,13 +3390,12 @@ function Room_floor_ceil_heights()
 
       local tall_offsets =
       {
-        [2] = 8,
+        [2] = 9,
         [3] = 1,
-        [4] = 1,
       }
 
       if group.vol > 96 then
-        tall_offsets[4] = 2
+        tall_offsets[3] = 3
       elseif group.vol > 64 then
         tall_offsets[3] = 2
       end

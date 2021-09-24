@@ -3129,46 +3129,91 @@ namelib.NAMES =
 
       r =
       {
-        Path=50
+        Path=50, Road=50
       },
 
       a =
       {
+        Celestial=50,
+        Divine=50,
+        Ethereal=50,
+        Holy=50,
         Magical=50,
-        Mystical=50
+        Mystical=50,
+        Mythical=50,
+        Spiritual=50
       },
 
       n =
       {
-        Castle=20, Citadel=10,
-        Keep=3, Slough=3, Temple=3,
-        Gate=10, Prison=15, Dens=5,
-        Coliseum=2, Courtyard=10, Court=10
+        Castle=20, Citadel=10, Crypt=10, Chapel=10, Sanctuary=5, Dungeon=5, Monastery=10,
+        Keep=3, Slough=3, Temple=3, Church=10, Cathedral=10, Bastille=15, Priory=5,
+        Gate=10, Prison=15, Dens=5, Abbey=10, Chancel=5, Sanctum=5, Oubliette=10,
+        Coliseum=2, Courtyard=10, Court=10, Basilica=5, Shrine=5, Cloister=10,
       },
 
       h = -- explicit descriptors (e.g. "Arena of Doom")
       {
+        Animosity=50,
         Blasphemy=50,
-        Evil=50
+        Corruption=50,
+        Darkness=50,
+        Death=50,
+        Evil=50,
+        Hate=50,
+        Horror=50,
+        Heresy=50,
+        Mortality=50,
+        Necromancy=50,
+        Pestilence=50,
+        Sacrilege=50,
+        Scorn=50,
+        Sin=50,
+        Spite=50,
+        Woe=50
       },
 
       o = -- implicit descriptors (e.g. "Arena of the Doomed")
       {
-        Eternal=50,
+        Afflicted=50,
         Baleful=50,
+        Bewitched=50,
         Consumed=50,
         Corrupted=50,
+        Cursed=50,
+        Decayed=50,
+        Desecrated=50,
+        Demonic=50,
+        Depraved=50,
         Diabolic=50,
         Eternal=50,
+        Faithless=50,
+        Hateful=50,
+        Hideous=50,
+        Impiety=50,
+        Impure=50,
+        Iniquitous=50,
+        Nefarious=50,
+        Perverse=50,
+        Ravaged=50,
+        Rotting=50,
         Ruined=50,
         Shattered=50,
-        Unhallowed=50
+        Sinful=50,
+        Tainted=50,
+        Treacherous=50,
+        Unfaithful=50,
+        Unhallowed=50,
+        Ungodly=50,
+        Wicked=50,
+        Withered=50
       },
 
       s =
       {
         -- single complete level names
-        ["Castle of Incomplete Heretic Support"]=10
+        ["Castle of Incomplete Heretic Support"]=10,
+        ["Chapel of Partial Heretic Support"]=10
       }
     }
   },

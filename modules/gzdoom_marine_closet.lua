@@ -110,7 +110,7 @@ class AIMarine : Actor
         Height 56;
         Mass 100;
         Speed 8;
-        Painchance 190;
+        Painchance 168;
         Tag "Friendly Marine";
         MONSTER;
         -COUNTKILL

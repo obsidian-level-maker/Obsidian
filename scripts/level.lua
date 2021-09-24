@@ -2604,8 +2604,29 @@ function Level_choose_darkness()
 end
 
 
-function Level_choose_squareishness()
+function Level_choose_misc()
   LEVEL.squareishness = rand.pick({ 0,25,50,75,90 })
+
+  LEVEL.room_height_style = PARAM.room_heights or "mixed"
+
+  LEVEL.room_height_style_tab = 
+  {
+    tall = rand.pick({0.8, 0.9, 1, 1.1, 1.2}),
+    normal = rand.pick({1, 1.5, 2, 3, 4, 6}),
+    short = rand.pick({0.8, 0.9, 1, 1.1, 1.2})
+  }
+
+  if PARAM.room_heights == "tall" then
+    LEVEL.room_height_style_tab["normal"] = LEVEL.room_height_style_tab["normal"] / 8
+    LEVEL.room_height_style_tab["short"] = 0
+  elseif PARAM.room_heights == "short" then
+    LEVEL.room_height_style_tab["tall"] = 0
+    LEVEL.room_height_style_tab["normal"] = LEVEL.room_height_style_tab["normal"] / 8
+  elseif PARAM.room_heights == "tall-ish" then
+    LEVEL.room_height_style_tab["short"] = 0
+  elseif PARAM.room_heights == "short-ish" then
+    LEVEL.room_height_style_tab["tall"] = 0
+  end
 end
 
 
@@ -2720,7 +2741,7 @@ function Level_init()
 
   Level_choose_liquid()
   Level_choose_darkness()
-  Level_choose_squareishness()
+  Level_choose_misc()
 
   Level_choose_skybox()
 
