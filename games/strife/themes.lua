@@ -44,12 +44,49 @@ STRIFE.THEMES =
 
     keys =
     {
-      k_yellow = 50,
+      k_id = 50,
+      k_badge = 50,
+      k_passcard = 50
+    },
+
+    barrels = 
+    {
+      barrel = 50
+    },
+
+    cave_torches =
+    {
+      huge_torch   = 70,
+    },
+
+    outdoor_torches = 
+    {
+      pole_lamp = 50
+    },
+
+    cliff_trees =
+    {
+      big_tree  = 50,
+      palm_tree  = 50,
+      tree_stub  = 15
+    },
+
+    park_decor =
+    {
+      tall_bush  = 50,
+      short_bush  = 50,
+      big_tree  = 10,
+      palm_tree  = 10,
     },
 
     skyboxes =
     {
 
+    },
+
+    scenic_fences =
+    {
+      GRATE04 = 50
     },
 
     cage_lights = { 0, 8, 12, 13 },
@@ -85,7 +122,7 @@ STRIFE.THEMES =
 
     liquids =
     {
-
+      water = 50,
     },
 
     narrow_halls =
@@ -150,22 +187,7 @@ STRIFE.THEMES =
       PLAIN = 50,
     },
 
-    cave_torches =
-    {
-
-    },
-
-    outdoor_torches =
-    {
-
-    },
-
     ceil_light_prob = 70,
-
-    scenic_fences =
-    {
-      BRKGRY01 = 80,
-    },
 
     sink_style =
     {
@@ -206,9 +228,53 @@ STRIFE.ROOM_THEMES =
     },
   },
 
-  ---- TOWN THEME --------------------------------
+  any_Hallway_Deuce =
+  {
+    env  = "hallway",
+    group = "deuce",
+    prob = 1,
 
-  town_Gray =
+    walls =
+    {
+      BRKGRY01  = 60,
+      BRKGRY17  = 20,
+    },
+
+    floors =
+    {
+      F_BRKTOP = 50,
+    },
+
+    ceilings =
+    {
+      F_BRKTOP = 50,
+    },
+  },
+
+  any_Hallway_Vent =
+  {
+    env  = "hallway",
+    group = "vent",
+    prob = 1,
+
+    walls =
+    {
+      BRKGRY01  = 60,
+      BRKGRY17  = 20,
+    },
+
+    floors =
+    {
+      F_BRKTOP = 50,
+    },
+
+    ceilings =
+    {
+      F_BRKTOP = 50,
+    },
+  },
+
+  any_Gray =
   {
     env  = "building",
     prob = 50,
@@ -230,7 +296,7 @@ STRIFE.ROOM_THEMES =
     },
   },
 
-  town_Outdoors =
+  any_Outdoors =
   {
     env  = "outdoor",
     prob = 50,
@@ -252,7 +318,7 @@ STRIFE.ROOM_THEMES =
 
   },
 
-  town_Cave =
+  any_Cave =
   {
     env  = "cave",
     prob = 50,
@@ -262,12 +328,7 @@ STRIFE.ROOM_THEMES =
       F_CAVE01 = 50,
     },
 
-    naturals =
-    {
-      F_CAVE01 = 50,
-    },
-
-    porch_floors =
+    walls =
     {
       F_CAVE01 = 50,
     },

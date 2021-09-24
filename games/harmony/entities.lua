@@ -1,5 +1,22 @@
 HARMONY.ENTITIES =
 {
+
+  --- entities for generic prefabs, the rid field stands for "Real ID" --
+  generic_barrel = { id=11000, rid=2035, r=12, h=32 },
+  generic_ceiling_light = { id=11001, rid=63, r=31, h=60, light=255, pass=true, ceil=true, add_mode="island" },
+  generic_standalone_light = { id=11002, rid=2028, r=12, h=54, light=255 }, -- "torches" and such, freestanding on a floor
+  generic_wall_light    = { id=11003, rid=44, r=10, h=64, light=255, pass=true, add_mode="extend" }, -- "torches" and such, attached to a wall
+  generic_wide_light    = { id=11004, rid=57, r=16, h=44, light=255 }, -- wide standalone light, braziers, etc
+  generic_small_pillar  = { id=11005, rid=48, r=16, h=36 },
+  k_one = { id=11006, rid=5 },
+  k_two = { id=11007, rid=6 },
+  k_three = { id=11008, rid=13 },
+  generic_p1_start = { id=11009, rid=1, r=16, h=56 },
+  generic_p2_start = { id=11010, rid=2, r=16, h=56 },
+  generic_p3_start = { id=11011, rid=3, r=16, h=56 },
+  generic_p4_start = { id=11012, rid=4, r=16, h=56 },
+  generic_teleport_spot = { id=11013, rid=14},
+
   --- special stuff ---
   player1 = { id=1, r=16, h=56 },
   player2 = { id=2, r=16, h=56 },
@@ -14,9 +31,9 @@ HARMONY.ENTITIES =
   kc_yellow  = { id=6 },
   kc_purple  = { id=13 },
 
-  kn_purple  = { id=38 },
-  kn_yellow  = { id=39 },
-  kn_green   = { id=40 },
+  --kn_purple  = { id=38 },
+  --kn_yellow  = { id=39 },
+  --kn_green   = { id=40 },
 
   --- powerup ---
   computer_map = { id=2026 },
@@ -33,6 +50,7 @@ HARMONY.ENTITIES =
   solid_shroom = { id=30, r=20, h=56 },
   truck_pipe   = { id=31, r=20, h=56 },
   sculpture    = { id=33, r=20, h=56 },
+  tree_stump    = { id=47, r=20, h=56 },
   dead_tree    = { id=54, r=20, h=56 },
   water_drip   = { id=42, r=20, h=56 },
   dope_fish    = { id=45, r=20, h=56 },
@@ -42,6 +60,7 @@ HARMONY.ENTITIES =
   candle     = { id=34, r=20, h=56 },
   fire       = { id=55, r=20, h=56 },
   fire_box   = { id=57, r=20, h=56 },
+  wall_torch = { id=44, r=10, h=64, light=255, pass=true, add_mode="extend" },
 
   flies       = { id=2007, r=20, h=56, pass=true },
   nuke_splash = { id=46, r=20, h=56 },
@@ -57,4 +76,21 @@ HARMONY.ENTITIES =
 
   dead_amazon = { id=15, r=20, h=16, pass=true },
   dead_beast  = { id=21, r=20, h=16, pass=true }
+}
+
+HARMONY.GENERIC_REQS =
+{
+  -- These are used for fulfilling fab pick requirements in prefab.lua
+  Generic_Key_One = { kind = "k_one", rkind = "kc_green" },
+  Generic_Key_Two = { kind = "k_two", rkind = "kc_yellow" },
+  Generic_Key_Three = { kind = "k_three", rkind = "kc_purple" }
+}
+
+HARMONY.PLAYER_MODEL =
+{
+  harmony =
+  {
+    stats   = { health=0 },
+    weapons = { pistol=1 },
+  },
 }

@@ -27,7 +27,7 @@ HACX.EPISODES =
 
     theme = "hacx_urban",
     sky_patch = "CJSKY3A",
-    boss = "Maximus",
+    boss = "terminatrix",
     sky_light = 0.75,
     dark_prob = 10
   },
@@ -38,7 +38,7 @@ HACX.EPISODES =
 
     theme = "hacx_urban",
     sky_patch = "CJSKY3A",
-    boss = "Flembomination",
+    boss = "thorn",
     sky_light = 0.75,
     dark_prob = 10
   },
@@ -49,7 +49,7 @@ HACX.EPISODES =
 
     theme = "hacx_urban",
     sky_patch = "CJSKY3A",
-    boss = "Snotfolus",
+    boss = "mecha",
     sky_light = 0.75,
     dark_prob = 10
   }

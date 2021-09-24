@@ -38,13 +38,13 @@ gui.import("resources")
 
 ------------------------------------------------------------
 
-UNFINISHED["strife"] =
+OB_GAMES["strife"] =
 {
-  label = _("Strife"),
+  label = _("Strife (Exp)"),
   priority = 34,
 
   format = "doom",
-  sub_format = "strife",
+  --sub_format = "strife",
 
   game_dir = "strife",
   iwad_name = "strife1.wad",

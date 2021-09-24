@@ -1,5 +1,6 @@
 HACX.PARAMETERS =
 {
+  teleporters = true,
   rails = true,
   light_brushes = true,
 

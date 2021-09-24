@@ -24,13 +24,16 @@ STRIFE.WEAPONS =
   assault =
   {
     id = 2002,
-    pref = 1,
+    level = 1,
+    pref = 20,
+    add_prob = 10,
     attack = "hitscan",
     rate = 1.8,
     accuracy = 75,
     damage = 10,
     ammo = "bullet",
-    per = 1,
+    per = 3,
+    give = { {ammo="bullet", count=20} }
   },
 
 }
