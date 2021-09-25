@@ -3081,15 +3081,34 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
-      BROWN1 = 10,
       FLAT1 = 40,
+      FLAT3 = 15,
+      FLAT5_4 = 15,
+      FLOOR0_5 = 15,
+
+      FLOOR0_1 = 5,
+      FLOOR0_2 = 5,
+      FLOOR0_3 = 15,
+
+      FLOOR3_3 = 5,
+      FLOOR4_1 = 4,
+      FLOOR4_5 = 4,
+      FLOOR4_6 = 5,
+
+      FLOOR5_1 = 10,
+
+      FLOOR5_2 = 3,
+      FLOOR7_1 = 5,
+
+      FLAT18 = 5,
+      FLAT20 = 5,
+
+      BROWN1 = 10,
       SLIME14 = 5,
       SLIME15 = 6,
+      SLIME16 = 5,
 
       BROWN144 = 85,
-      GRASS1 = 25,
-      GRASS2 = 25,
-      RROCK19 = 15,
     },
 
     naturals =
@@ -3109,6 +3128,9 @@ DOOM.ROOM_THEMES =
       ZIMMER5  = 10,
       ZIMMER7  = 10,
       ROCK5    = 20,
+
+      GRASS1 = 60,
+      GRASS2 = 60,
     },
 
     porch_floors =
@@ -3693,17 +3715,38 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
+      FLAT1_1 = 7,
+      FLAT1_2 = 7,
+ 
+      DEM1_5 = 10,
+      DEM1_6 = 10,
+
+      FLOOR0_1 = 7,
+      FLOOR0_2 = 7,
+      FLOOR0_3 = 7,
+      FLOOR4_6 = 5,
+      FLOOR5_4 = 5,
       FLOOR6_2 = 12,
+      FLOOR7_1 = 5,
+      FLOOR7_2 = 10,
+
       FLAT5_7 = 20,
       FLAT5_8 = 10,
+
       RROCK03 = 30,
       RROCK04 = 30,
       RROCK09 = 15,
+
       MFLR8_3 = 15,
       SLIME13 = 10,
+      SLIME14 = 3,
+      SLIME15 = 3,
+      SLIME16 = 5,
+
       RROCK11 = 10,
       RROCK12 = 10,
       RROCK13 = 5,
+
       RROCK01 = 5,
       RROCK02 = 3
     },
@@ -4643,15 +4686,24 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
-      STONE    = 50,
-      RROCK18  = 35,
-      RROCK19  = 35,
-      FLAT5_2  = 15,
-      FLAT1    = 25,
-      RROCK17  = 20,
+      STONE = 50,
+      FLAT1 = 25,
+      FLAT3 = 5,
+      FLAT18 = 5,
+      FLAT20 = 5,
+
+      FLOOR0_1 = 10,
+      FLOOR0_2 = 10,
+      FLOOR0_3 = 10,
+
+      FLAT5_1 = 7,
+      FLAT5_2 = 15,
+
+      FLOOR3_3 = 10,
+      FLOOR4_6 = 10,
+      FLOOR5_4 = 10,
       FLOOR7_1 = 20,
-      GRASS1   = 15,
-      GRASS2   = 15,
+
       RROCK03  = 10,
       MFLR8_3  = 10,
       FLOOR6_2 = 5
@@ -4679,7 +4731,13 @@ DOOM.ROOM_THEMES =
       ZIMMER8  = 15,
       ROCK1    = 30,
       ROCK2    = 20,
-      ROCK3    = 70
+      ROCK3    = 70,
+
+      GRASS1 = 70,
+      GRASS2 = 70,
+      RROCK18  = 85,
+      RROCK19  = 85,
+      RROCK17  = 70,
     },
 
     porch_floors =

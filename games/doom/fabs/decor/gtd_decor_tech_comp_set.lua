@@ -25,7 +25,7 @@ PREFABS.Decor_tech_comp_lite5_2 =
   height = 96,
   bound_z2 = 96,
 
-  z_fit = { 9,11 }
+  z_fit = { 18,22 }
 }
 
 PREFABS.Decor_tech_comp_lite5_big =

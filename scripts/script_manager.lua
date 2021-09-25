@@ -314,6 +314,11 @@ function ScriptMan_assemble_textures_lump()
   end
 end
 
+function ScriptMan_assemble_terrain_lump()
+  if SCRIPTS.terrain then
+    gui.wad_add_text_lump("TERRAIN", {SCRIPTS.terrain})
+  end
+end
 
 function ScriptMan_create_include_lump()
 end
@@ -330,5 +335,6 @@ function ScriptMan_init()
   ScriptMan_assemble_language_lump()
   ScriptMan_assemble_acs_loader_lump()
   ScriptMan_assemble_textures_lump()
+  ScriptMan_assemble_terrain_lump()
   ScriptMan_merge_acs_lumps()
 end
