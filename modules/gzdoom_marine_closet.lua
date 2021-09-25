@@ -1275,17 +1275,17 @@ MarAI12 = "112:127=224:231"
 MARINE_CLOSET_TUNE.TECHWPN =
 {
 [1] = { 31001 },
-[2] = { 31003, 31001, 31001, 31001, 31001, 31001, 31001, 31001 },
-[3] = { 31003, 31002, 31001, 31001, 31001, 31001, 31001, 31001 },
+[2] = { 31003, 31001, 31001, 31001, 31001, 31001, 31001, 31001, 31002, 31002, 31001 },
+[3] = { 31003, 31002, 31001, 31001, 31001, 31001, 31001, 31001, 31003, 31002, 31001 },
 [4] = { 31003, 31002, 31001, 31001 },
 [5] = { 31003, 31002, 31001, 31003, 31002, 31001, 31003, 31002, 31001, 31004 },
 [6] = { 31003, 31002, 31001, 31003, 31002, 31005, 31003, 31002, 31006, 31004 },
-[7] = { 31003, 31002, 31001, 31004, 31002, 31005, 31006, 31004 },
-[8] = { 31004, 31004, 31002, 31004, 31005, 31005, 31006 },
-[9] = { 31005, 31005, 31005, 31005, 31006, 31006, 31006, 31004, 31007 },
+[7] = { 31003, 31002, 31001, 31004, 31002, 31005, 31006, 31004, 31003, 31003 },
+[8] = { 31004, 31004, 31002, 31004, 31005, 31005, 31006, 31002, 31005, 31006 },
+[9] = { 31005, 31005, 31005, 31005, 31006, 31006, 31006, 31004, 31007, 31002 },
 [10] = { 31005, 31006, 31007 },
 [66] = { 31007 },
-[99] = { 31001, 31001, 31001, 31003, 31003, 31003 ,31002 ,31002 ,31002, 31004, 31004, 31005, 31005, 31006, 31006, 31007 },
+[99] = { 31001, 31001, 31003, 31003, 31003, 31003, 31002, 31002, 31002, 31004, 31004, 31005, 31005, 31006, 31006, 31007 },
 }
 
 function MARINE_CLOSET_TUNE.setup(self)
@@ -1673,7 +1673,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       "Very Low tech: Clearing demonic invasion with nothing but pistols and harsh language\n" ..
       "Low tech: Pistols, with some rare chainguns and shotguns\n" ..
       "Mid tech: Shotguns/Chainguns with some rare pistols, super shotguns, rocket launchers and plasma rifles\n" ..
-      "High tech: Rocket launchers/Plasma rifles with some rare BFGs and super shotguns\n" ..
+      "High tech: Rocket launchers/Plasma rifles with some rare BFGs, super shotguns and chainguns\n" ..
       "Mix it up: Any weapon goes, let the dice decide!\n" ..
       "BFG Fiesta: BFG only, cyberdemons beware!\n" ..
       "Progressive: Marines start with pistols and get more powerful weapons through episode/megawad",
