@@ -524,6 +524,7 @@ CHEX3.MATERIALS =
   VILL_BARS   = { t="CJVILL08", rail_h=128, line_flags=1 },
   TI_GRATE    = { t="TI_GRATE", rail_h=64  },
   BRIDGE_RAIL = { t="LITEMET",  rail_h=128 },
+  METAL_FENCE = { t="DOORSTOP", rail_h=64},
 
   CAVE_COLUMN = { t="SKSPINE1", rail_h=128 },
   ORANGE_HOLE = { t="STARG1",   rail_h=128 },
