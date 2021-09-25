@@ -41,12 +41,35 @@ STRIFE.PICKUPS =
 
  -- ammo -- 
 
-   bullets =
+   bullet_clip =
   {
     id = 2007,
     add_prob = 10,
     cluster = { 2,5 },
     give = { {ammo="bullet",count=10} }
+  },
+
+  bullet_box =
+  {
+    id = 2048,
+    add_prob = 10,
+    give = { {ammo="bullet",count=50} }
+  },
+
+  energy_pod =
+  {
+    id = 2047,
+    add_prob = 10,
+    cluster = { 2,5 },
+    give = { {ammo="cell",count=20} }
+  },
+
+  mini_missile =
+  {
+    id = 2010,
+    add_prob = 10,
+    cluster = { 1,2 },
+    give = { {ammo="missile",count=4} }
   },
 
 }
@@ -56,6 +79,20 @@ STRIFE.PICKUPS =
 
 STRIFE.NICE_ITEMS =
 {
+
+  energy_pack =
+  {
+    id = 17,
+    add_prob = 10,
+    give = { {ammo="cell",count=100} }
+  },
+
+  missile_crate =
+  {
+    id = 2046,
+    add_prob = 10,
+    give = { {ammo="missile",count=20} }
+  },
 
 }
 

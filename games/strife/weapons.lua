@@ -30,10 +30,40 @@ STRIFE.WEAPONS =
     attack = "hitscan",
     rate = 1.8,
     accuracy = 75,
-    damage = 10,
+    damage = 8,
     ammo = "bullet",
     per = 3,
     give = { {ammo="bullet", count=20} }
+  },
+
+  mauler =
+  {
+    id = 2004,
+    level = 1,
+    pref = 20,
+    add_prob = 10,
+    attack = "hitscan",
+    rate = 1.8,
+    accuracy = 75,
+    damage = 15,
+    ammo = "cell",
+    per = 3,
+    give = { {ammo="cell", count=40} }
+  },
+
+  flamethrower =
+  {
+    id = 2005,
+    level = 1,
+    pref = 20,
+    add_prob = 10,
+    attack = "hitscan",
+    rate = 1.8,
+    accuracy = 75,
+    damage = 20,
+    ammo = "cell",
+    per = 3,
+    give = { {ammo="cell", count=100} }
   },
 
 }

@@ -25,9 +25,9 @@ HARMONY.MATERIALS =
   _MBARS = { t="ROCKRED1", f="XX" }, -- Medium bars, i.e. barred windows
   _TBARS = { t="1LIFT1", f="XX" }, -- Tall bars, i.e. cage/jail bars
   
-  _CRATE   = { t="MARBFACE",  f="FLOOR0_1" }, -- Crate/box
-  _CRATE2  = { t="MARBFAC2", f="FLOOR0_1" },
-  _CRATWID = { t="ZZZFACE5",  f="FLOOR0_1" }, -- Wide crates
+  _CRATE   = { t="0EXPLOS",  f="FLOOR6_1" }, -- Crate/box
+  _CRATE2  = { t="SPCDOOR2", f="FLOOR4_1" },
+  _CRATWID = { t="SPCDOOR2", f="FLOOR4_1" }, -- Wide crates
   
   _WATER   = { f="FWATER1", t="SFALL1"   }, -- "Standing water", sorta
   _WTRFALL = { f="FWATER1", t="SFALL1"   }, -- "Flowing water", sorta

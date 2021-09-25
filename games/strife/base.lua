@@ -38,6 +38,13 @@ gui.import("resources")
 
 ------------------------------------------------------------
 
+function STRIFE.merge_conversation_script()
+  local convo_file = "games/strife/data/CONVERSATIONS.wad"
+
+  gui.wad_transfer_lump(convo_file, "SCRIPT00", "SCRIPT00")
+end
+
+
 OB_GAMES["strife"] =
 {
   label = _("Strife (Exp)"),
@@ -57,7 +64,7 @@ OB_GAMES["strife"] =
   hooks =
   {
     get_levels = STRIFE.get_levels,
-    all_done   = STRIFE.all_done
+    all_done   = STRIFE.merge_conversation_script
   },
 }
 

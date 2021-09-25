@@ -16,6 +16,7 @@ HARMONY.ENTITIES =
   generic_p3_start = { id=11011, rid=3, r=16, h=56 },
   generic_p4_start = { id=11012, rid=4, r=16, h=56 },
   generic_teleport_spot = { id=11013, rid=14},
+  generic_passable_ceiling_decor = { id=11014, rid=61, r=16, h=24, pass=true, ceil=true }, -- For Harmony this is effectively nothing
 
   --- special stuff ---
   player1 = { id=1, r=16, h=56 },
