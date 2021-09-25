@@ -176,7 +176,7 @@ CHEX3.THEMES =
 
     scenic_fences =
     {
-      VINE1 = 80 -- Find a better fence
+      METAL_FENCE = 80
     },
 
     sink_style =
