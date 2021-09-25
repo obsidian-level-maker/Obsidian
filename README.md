@@ -28,6 +28,8 @@ This is a community continuation of the OBLIGE Level Maker, originally created b
 
 A brief summary of changes:
 
+Preliminary support added for HacX 1.2, Chex Quest 3, Harmony, and Strife
+
 GUI Customization and Theming added
 
 Modified SLUMP level builder included for Vanilla Doom usage.

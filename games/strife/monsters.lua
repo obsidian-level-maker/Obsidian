@@ -14,6 +14,22 @@
 
 STRIFE.MONSTERS =
 {
+
+  acolyte_blue =
+  {
+    id=231,
+    r=24,
+    h=64,
+    level = 1,
+    prob = 5,
+    density = 0.2,
+    health = 70,
+    damage = 8,
+    attack = "hitscan",
+    weap_needed = { assault=true },
+    give = { {ammo="bullet",count=50} },
+  },
+
   acolyte_gray =
   {
     id=146,
@@ -23,10 +39,247 @@ STRIFE.MONSTERS =
     prob = 5,
     density = 0.2,
     health = 70,
-    damage = 2.0,
+    damage = 8,
     attack = "hitscan",
     weap_needed = { assault=true },
     give = { {ammo="bullet",count=50} },
   },
+
+  acolyte_dark_green =
+  {
+    id=147,
+    r=24,
+    h=64,
+    level = 1,
+    prob = 5,
+    density = 0.2,
+    health = 70,
+    damage = 8,
+    attack = "hitscan",
+    weap_needed = { assault=true },
+    give = { {ammo="bullet",count=50} },
+  },
+
+  acolyte_gold =
+  {
+    id=148,
+    r=24,
+    h=64,
+    level = 1,
+    prob = 5,
+    density = 0.2,
+    health = 70,
+    damage = 8,
+    attack = "hitscan",
+    weap_needed = { assault=true },
+    give = { {ammo="bullet",count=50} },
+  },
+
+  acolyte_light_green =
+  {
+    id=232,
+    r=24,
+    h=64,
+    level = 1,
+    prob = 5,
+    density = 0.2,
+    health = 70,
+    damage = 8,
+    attack = "hitscan",
+    weap_needed = { assault=true },
+    give = { {ammo="bullet",count=50} },
+  },
+
+  acolyte_red =
+  {
+    id=142,
+    r=24,
+    h=64,
+    level = 1,
+    prob = 5,
+    density = 0.2,
+    health = 70,
+    damage = 8,
+    attack = "hitscan",
+    weap_needed = { assault=true },
+    give = { {ammo="bullet",count=50} },
+  },
+
+  acolyte_rust =
+  {
+    id=143,
+    r=24,
+    h=64,
+    level = 1,
+    prob = 5,
+    density = 0.2,
+    health = 70,
+    damage = 8,
+    attack = "hitscan",
+    weap_needed = { assault=true },
+    give = { {ammo="bullet",count=50} },
+  },
+
+  acolyte_shadow =
+  {
+    id=58,
+    r=24,
+    h=64,
+    level = 1,
+    prob = 5,
+    density = 0.2,
+    health = 70,
+    damage = 8,
+    attack = "hitscan",
+    weap_needed = { assault=true },
+    give = { {ammo="bullet",count=50} },
+    invis = true
+  },
+
+  acolyte_becoming =
+  {
+    id=201,
+    r=24,
+    h=64,
+    level = 1,
+    prob = 5,
+    density = 0.2,
+    health = 70,
+    damage = 8,
+    attack = "hitscan",
+    weap_needed = { assault=true },
+    give = { {ammo="bullet",count=50} },
+  },
+
+  stalker =
+  {
+    id=186,
+    r=24,
+    h=64,
+    level = 1,
+    prob = 5,
+    density = 0.2,
+    health = 70,
+    damage = 10, -- No idea
+    attack = "melee",
+  },
+
+  sentinel =
+  {
+    id=3006,
+    r=24,
+    h=64,
+    level = 1,
+    prob = 5,
+    density = 0.2,
+    health = 100,
+    damage = 8, -- No idea
+    attack = "hitscan",
+  },
+
+  reaver =
+  {
+    id=3001,
+    r=24,
+    h=64,
+    level = 1,
+    prob = 5,
+    density = 0.2,
+    health = 150,
+    damage = 10, -- No idea
+    attack = "hitscan",
+  },
+
+  templar =
+  {
+    id=3003,
+    r=24,
+    h=64,
+    level = 1,
+    prob = 5,
+    density = 0.2,
+    health = 300,
+    damage = 20, -- No idea
+    attack = "hitscan",
+  },
+
+  crusader =
+  {
+    id=3005,
+    r=24,
+    h=64,
+    level = 1,
+    prob = 5,
+    density = 0.2,
+    health = 400,
+    damage = 20, -- No idea
+    attack = "missile",
+  },
+
+
+--- BOSSES ---
+
+  inquisitor =
+  {
+    id=16,
+    r=24,
+    h=64,
+    level = 1,
+    prob = 5,
+    boss_type = "minor",
+    boss_prob = 50,
+    density = 0.2,
+    health = 1000,
+    damage = 25, -- No idea
+    attack = "hitscan",
+    float = true
+  },
+
+  programmer =
+  {
+    id=71,
+    r=24,
+    h=64,
+    level = 1,
+    prob = 5,
+    boss_type = "tough",
+    boss_prob = 50,
+    density = 0.2,
+    health = 1100,
+    damage = 25, -- No idea
+    attack = "hitscan",
+    float = true
+  },
+
+  bishop =
+  {
+    id=187,
+    r=24,
+    h=64,
+    level = 1,
+    prob = 5,
+    boss_type = "tough",
+    boss_prob = 50,
+    density = 0.2,
+    health = 1700, -- Plus Spectre
+    damage = 30, -- No idea
+    attack = "missile",
+  },
+
+  loremaster =
+  {
+    id=12,
+    r=24,
+    h=64,
+    level = 1,
+    prob = 5,
+    boss_type = "tough",
+    boss_prob = 50,
+    density = 0.2,
+    health = 2800, -- Plus Spectre
+    damage = 30, -- No idea
+    attack = "melee",
+  },
+
 }
 
