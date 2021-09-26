@@ -4,8 +4,8 @@ PREFABS.Cran_Heretic_Chariot =
   map    = "E1M1",
 
   prob   = 10000,
-  theme  = "!maw",
-  env    = "!cave",
+  theme  = "city",
+  env    = "!building",
 
   where  = "point",
   size   = 80,
