@@ -303,7 +303,7 @@ function ScriptMan_assemble_textures_lump()
   local textures_lump_lines = {}
   local animdefs_lump_lines = {}
 
-  if PARAM.epic_textures_activated then
+  if PARAM.obsidian_resource_pack_active then
     table.insert(textures_lump_lines, EPIC_TEXTUREX_LUMP)
     gui.wad_add_text_lump("TEXTURES", textures_lump_lines)
   end
