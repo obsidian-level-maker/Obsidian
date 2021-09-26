@@ -46,20 +46,20 @@ namelib.NAMES =
       x =
       {
         -- a new table... for suffixes! -MSSP
-        ["Annihilated"]=10,
-        ["Avenged"]=10,
-        ["Breaks Loose"]=10,
-        ["Destroyed"]=10,
-        ["Gone Bad"]=10,
-        ["Reboot"]=10,
-        ["Redux"]=10,
-        ["Revisited"]=10,
-        ["the Way Obsidian Did"]=10,
-        [": The Return"]=10,
-        ["is Back"]=10,
+        --["Annihilated"]=10,
+        --["Avenged"]=10,
+        --["Breaks Loose"]=10,
+        --["Destroyed"]=10,
+        ["Gone Bad"]=5,
+        --["Reboot"]=10,
+        --["Redux"]=10,
+        ["Revisited"]=5,
+        ["the Way Obsidian Did"]=5
+        --[": The Return"]=10,
+        --["is Back"]=10,
 
         -- these from Frozsoul
-        [": The Next Generation"]=10
+        --[": The Next Generation"]=5
 
       },
 
