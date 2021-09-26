@@ -171,13 +171,13 @@ function Fab_load_all_definitions()
     -- attachment for fabs that use Armaetus's Epic textures
     if def.texture_pack then
       if def.texture_pack == "armaetus"
-      and not PARAM["epic_textures_activated"] then
+      and not PARAM.epic_textures_activated then
         def.skip_prob = 100
       end
     end
 
     -- support for the new replace field
-    if PARAM.epic_textures_activated then
+    if PARAM.epic_textures_activated == true then
       if def.replaces then
 
         -- HARD replace mode causes pre-existing fabs to be removed
