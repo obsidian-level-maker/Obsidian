@@ -487,16 +487,19 @@ PREFABS.Joiner_bookstore_vanilla =
     BRICK6=50, BRICK7=50, BRICK8=50,
     STUCCO=50, STUCCO1=50,
     STUCCO3=50, BRIKS43=50,
-    GOTH31=50,GOTH16=50,GOTH02=50,
     BRICK9=50, TANROCK2=50, TANROCK3=50
   },
 
   tex_PANBOOK1 = "PANBOOK",
+  tex_PANBOOK2 = "PANBOOK",
   tex_PANBOOK3 = "PANBOOK",
   tex_PANBOOK4 = "PANBOOK",
+  tex_TEKSHAW = "SILVER1",
   tex_FENCE9 = "MIDSPACE",
+  tex_COLLITE3 = "COMPBLUE",
+  tex_GOTH13 = "SHAWN2",
   flat_GATE4YL = "FLAT5_5",
-  flat_GRENFLOR = "GRASS1",
+  flat_GRENFLOR = "GRASS1"
 }
 
 --an elevator shaft
