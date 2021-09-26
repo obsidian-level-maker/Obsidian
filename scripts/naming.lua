@@ -413,9 +413,6 @@ namelib.NAMES =
         ["Journey to the"]=10,
         ["Assault on the"]=15,
         ["Death Awaits in the"]=5,
-        ["Oh God Not Another"]=5,
-        ["Yet Another"]=5,
-        ["Just Another"]=5,
         ["Hell in the"]=5,
 
         -- these by Armaetus
@@ -431,14 +428,18 @@ namelib.NAMES =
         ["Plague of the"]=10,
         ["Pain from the"]=10,
         ["Death in the"]=10,
-        ["Oh Dear Not Another"]=10,
         ["Chaos in the"]=10,
 
-        ["It's Totally Another"]=10,
         ["Adventure to the"]=10,
         ["A Jaunt to the"]=10,
 
+        --[[ 
         -- More annoyed types by Armaetus
+        ["Oh God Not Another"]=5,
+        ["Yet Another"]=5,
+        ["Just Another"]=5,
+        ["Oh Dear Not Another"]=10,
+        ["It's Totally Another"]=10,
         ["Just stop with the"]=5,
         ["Fuck off with the"]=5,
         ["No, not another"]=5,
@@ -456,7 +457,7 @@ namelib.NAMES =
 
         -- 2021 additions!
         ["Really, another"]=5,
-        ["Wow, another"]=5,
+        ["Wow, another"]=5,]]
 
         -- these by MSSP
         ["Battle for the"]=15,
