@@ -8,7 +8,7 @@ PREFABS.Switch_wall_box1 =
 
   prob   = 50,
 
-  game = { heretic=1,hacx=1,chex3=0,strife=1,harmony=1 },
+  game = "heretic",
 
   where  = "seeds",
   seed_w = 1,
@@ -34,8 +34,51 @@ PREFABS.Switch_wall_box1_chex3 =
   
   forced_offsets = 
   {
-    [8] = { x=0,y=72 }
+    [7] = { x=0,y=64 },
+    [8] = { x=0,y=64 },
+    [9] = { x=0,y=64 },
   }
+}
 
+PREFABS.Switch_wall_box1_hacx = 
+{
+  template = "Switch_wall_box1",
+
+  game = "hacx",
+  
+  forced_offsets = 
+  {
+    [7] = { x=64,y=33 },
+    [8] = { x=64,y=33 },
+    [9] = { x=64,y=33 },
+  }
+}
+
+PREFABS.Switch_wall_box1_harmony = 
+{
+  template = "Switch_wall_box1",
+
+  game = "harmony",
+  
+  forced_offsets = 
+  {
+    [7] = { x=0,y=66 },
+    [8] = { x=0,y=66 },
+    [9] = { x=0,y=66 },
+  }
+}
+
+PREFABS.Switch_wall_box1_strife = 
+{
+  template = "Switch_wall_box1",
+
+  game = "strife",
+  
+  forced_offsets = 
+  {
+    [7] = { x=0,y=46 },
+    [8] = { x=0,y=46 },
+    [9] = { x=0,y=46 },
+  }
 }
 
