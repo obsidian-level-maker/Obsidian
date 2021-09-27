@@ -55,8 +55,8 @@ CHEX3.MATERIALS =
   _EXITSW1 = { t="SW1METAL", f="FLAT1"  }, -- Exit switch
   _EXITRM1 = { t="STARG3", f="CJFLOD06"}, -- Exit room walls (to match switch)
   
-  _SW1  = { t="SW1COMP",  f="CJFCOMM4" }, -- General purpose swtich, full size
-  _SW1TRIM = { t="COMPSPAN",  f="CJFCOMM4" }, -- Trim for switch
+  _SW1  = { t="SW1COMP",  f="CEIL5_1" }, -- General purpose swtich, full size
+  _SW1TRIM = { t="COMPSPAN",  f="CEIL5_1" }, -- Trim for switch
   _SW2  = { t="SW1BRCOM",  f="CEIL3_1" },
   _SW2TRIM = { t="BROWN144",  f="CEIL3_1" },
 

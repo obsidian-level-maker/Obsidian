@@ -62,8 +62,8 @@ HARMONY.MATERIALS =
   
   _STRUCT = {t="METAL3",   f="DEM1_6" }, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
-  _SW1  = { t="SW1MET2",  f="DEM1_6" }, -- General purpose swtich, full size
-  _SW1TRIM = { t="METAL3",  f="DEM1_6" }, -- Trim for switch
+  _SW1  = { t="SW1BRNGN",  f="FLAT5_3" }, -- General purpose swtich, full size
+  _SW1TRIM = { t="BROWNGRN",  f="FLAT5_3" }, -- Trim for switch
   
   _TELE = { f="FLOOR5_3", t="PANEL8" }, -- Teleporter
   
