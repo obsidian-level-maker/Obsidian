@@ -501,9 +501,6 @@ HERETIC.THEMES =
     {
       water2 = 40,
       water  = 50,
-      lava   = 5,
-      sludge = 15,
-      magma  = 5,
     },
 
     narrow_halls =
@@ -784,10 +781,7 @@ HERETIC.THEMES =
 
     liquids =
     {
-      water2 = 40,
-      water  = 50,
-      lava   = 10,
-      magma  = 10,
+      sludge = 50,
     },
 
     narrow_halls =

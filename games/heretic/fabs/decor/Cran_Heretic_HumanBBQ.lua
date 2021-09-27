@@ -3,8 +3,8 @@ PREFABS.Cran_Heretic_HumanBBQ =
   file   = "decor/Cran_Heretic_HumanBBQ.wad",
   map    = "E1M1",
 
-  prob   = 10000,
-  theme  = "castle",
+  prob   = 400,
+  theme  = "maw",
   env    = "building",
 
   where  = "point",
