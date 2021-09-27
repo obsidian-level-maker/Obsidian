@@ -22,7 +22,7 @@ STRIFE.ENTITIES =
   generic_wall_light    = { id=11003, rid=107, r=10, h=64, light=255, pass=true, add_mode="extend" }, -- "torches" and such, attached to a wall
   generic_wide_light    = { id=11004, rid=105, r=16, h=44, light=255 }, -- wide standalone light, braziers, etc
   generic_small_pillar  = { id=11005, rid=69, r=16, h=36 },
-  k_one = { id=11006, rid=13 },
+  k_one = { id=11006, rid=40 },
   k_two = { id=11007, rid=184 },
   k_three = { id=11008, rid=185 },
   generic_p1_start = { id=11009, rid=1, r=16, h=56 },
@@ -42,7 +42,7 @@ STRIFE.ENTITIES =
   teleport_spot = { id=14 },
 
   --- pickups ---
-  k_id   = { id=13 },
+  k_id   = { id=40 }, -- This should be 13, experimenting - Dasho
   k_badge   = { id=184 },
   k_passcard   = { id=185 },
 

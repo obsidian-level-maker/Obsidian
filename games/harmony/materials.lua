@@ -56,14 +56,14 @@ HARMONY.MATERIALS =
   _KEYTRM2 = { t="PANBORD2", f="XX" }, -- Trim for locked door, Key 2
   _KEYTRM3 = { t="0DARKBLU", f="XX" }, -- Trim for locked door, Key 3
   
-  _EXITDR1 = { t="BIGDOOR2", f="CEIL5_1" }, -- Exit door
+  _EXITDR1 = { t="1DOORK1", f="CEIL5_1" }, -- Exit door
   _EXITSW1  = { t="SW1MET2", f="CEIL5_1" }, -- Exit switch
   _EXITRM1  = { t="0TTT", f="CEIL5_1" }, -- Exit switch
   
   _STRUCT = {t="METAL3",   f="DEM1_6" }, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
-  _SWITCH  = { t="SW2COMM", f="FLOOR4_8" }, -- Wall/general purpose swtich
-  _SWITCH2  = { t="SW2SLAD", f="FLOOR4_1" },
+  _SW1  = { t="SW1BRNGN",  f="FLAT5_3" }, -- General purpose swtich, full size
+  _SW1TRIM = { t="BROWNGRN",  f="FLAT5_3" }, -- Trim for switch
   
   _TELE = { f="FLOOR5_3", t="PANEL8" }, -- Teleporter
   
