@@ -74,8 +74,8 @@ HERETIC.MATERIALS =
   
   _STRUCT = {t="METL2", f="FLOOR30"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
-  _SW1  = { t="SW1OFF", f="FLOOR28" }, -- General purpose swtich, full size
-  _SW1TRIM = { t="METL2", f="FLOOR28" }, -- Trim for switch
+  _SW1  = { t="SW1OFF", f="FLOOR30" }, -- General purpose swtich, full size
+  _SW1TRIM = { t="METL2", f="FLOOR30" }, -- Trim for switch
   
   _TELE = { t="CHAINSD", f="FLTTELE1" }, -- Teleporter
   
