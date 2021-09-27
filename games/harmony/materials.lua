@@ -56,7 +56,7 @@ HARMONY.MATERIALS =
   _KEYTRM2 = { t="PANBORD2", f="XX" }, -- Trim for locked door, Key 2
   _KEYTRM3 = { t="0DARKBLU", f="XX" }, -- Trim for locked door, Key 3
   
-  _EXITDR1 = { t="BIGDOOR2", f="CEIL5_1" }, -- Exit door
+  _EXITDR1 = { t="1DOORK1", f="CEIL5_1" }, -- Exit door
   _EXITSW1  = { t="SW1MET2", f="CEIL5_1" }, -- Exit switch
   _EXITRM1  = { t="0TTT", f="CEIL5_1" }, -- Exit switch
   
