@@ -2669,7 +2669,7 @@ function Fab_pick(reqs, allow_none)
 
   local cur_req = reqs
 
-  table.merge(reqs, {game = OB_CONFIG.game})
+  cur_req.game = OB_CONFIG.game
 
   while cur_req do
 
