@@ -4,7 +4,7 @@
 
 PREFABS.Exit_pillar =
 {
-  file   = "exit/pillar1.wad",
+  file   = "exit/pillar.wad",
   map    = "MAP01",
   prob   = 5,
   where  = "point",
