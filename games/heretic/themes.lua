@@ -349,9 +349,7 @@ HERETIC.THEMES =
 
     liquids =
     {
-      water2 = 40,
-      water  = 50,
-      lava   = 20,
+      lava   = 30,
       magma  = 10,
     },
 
