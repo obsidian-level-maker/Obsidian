@@ -246,6 +246,8 @@ function Fab_load_all_definitions()
   if GAME.GENERIC_REQS then visit_dir("games/generic/fabs") end -- Only games that have generic definitions will have the GENERIC_REQS table
   visit_dir("games/" .. GAME.game_dir .. "/fabs") 
 
+  ob_invoke_hook("fab_load")
+
   preprocess_all()
 end
 
