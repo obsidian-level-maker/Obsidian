@@ -68,8 +68,8 @@ STRIFE.MATERIALS =
  
  _STRUCT = {t="CONCRT01", f="F_CONCRP"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
- _SWITCH  = { t="SWPALM01", f="F_CONCRP" }, -- Wall/general purpose swtich
- _SWITCH2  = { t="SWLITE01", f="F_CONCRP" },
+ _SW1  = { t="SWINDT01", f="F_NOLINE" }, -- General purpose swtich, full size
+ _SW1TRIM = { t="IRON04", f="F_NOLINE" }, -- Trim for switch
  
  _TELE = { t="CONCRT01", f="F_TELE1" }, -- Teleporter
 

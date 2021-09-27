@@ -55,8 +55,10 @@ CHEX3.MATERIALS =
   _EXITSW1 = { t="SW1METAL", f="FLAT1"  }, -- Exit switch
   _EXITRM1 = { t="STARG3", f="CJFLOD06"}, -- Exit room walls (to match switch)
   
-  _SWITCH  = { t="SW1COMM",  f="FLAT5_6" }, -- Wall/general purpose swtich
-  _SWITCH2  = { t="SW1COMP",  f="FLAT5_6" },
+  _SW1  = { t="SW1COMP",  f="CJFCOMM4" }, -- General purpose swtich, full size
+  _SW1TRIM = { t="COMPSPAN",  f="CJFCOMM4" }, -- Trim for switch
+  _SW2  = { t="SW1BRCOM",  f="CEIL3_1" },
+  _SW2TRIM = { t="BROWN144",  f="CEIL3_1" },
 
   _STRUCT = {t="COMPSPAN", f="CEIL5_1"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
   
