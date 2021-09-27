@@ -244,9 +244,8 @@ function Fab_load_all_definitions()
   assert(GAME.game_dir)
 
   if GAME.GENERIC_REQS then visit_dir("games/generic/fabs") end -- Only games that have generic definitions will have the GENERIC_REQS table
-  visit_dir("games/" .. GAME.game_dir .. "/fabs") 
-
   ob_invoke_hook("fab_load")
+  visit_dir("games/" .. GAME.game_dir .. "/fabs") 
 
   preprocess_all()
 end
@@ -1723,6 +1722,7 @@ function Fab_load_wad(def)
   local function load_it()
     create_it()
 
+    gui.printf(table.tostr(def))
     local filename = assert(def.dir_name) .. "/" .. def.file
 
     gui.debugf("Loading wad-fab %s / %s\n", def.file, def.map or "*")
