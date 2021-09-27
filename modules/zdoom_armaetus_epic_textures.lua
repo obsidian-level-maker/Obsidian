@@ -654,7 +654,7 @@ actor AssIsHell : Inventory
 
 function ARMAETUS_EPIC_TEXTURES.setup(self)
   ARMAETUS_EPIC_TEXTURES.put_new_materials()
-  PARAM.epic_textures_activated = true
+  PARAM.obsidian_resource_pack_active = true
   for name,opt in pairs(self.options) do
     if opt.valuator then
       if opt.valuator == "button" then

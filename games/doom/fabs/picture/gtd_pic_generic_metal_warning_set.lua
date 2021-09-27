@@ -1,6 +1,6 @@
 PREFABS.Pic_metal_warning_gate =
 {
-  file   = "picture/gtd_pic_metal_warning_set.wad",
+  file   = "picture/gtd_pic_generic_metal_warning_set.wad",
   map    = "MAP01",
 
   prob   = 50,
@@ -52,4 +52,44 @@ PREFABS.Pic_metal_warning_lite5_hell =
   theme = "hell",
 
   tex_LITE5 = "RDWAL01",
+}
+
+--
+
+PREFABS.Pic_metal_warning_bottom_comp =
+{
+  template = "Pic_metal_warning_gate",
+  map = "MAP04",
+
+  theme = "!hell",
+  group = "gtd_wall_metal_warning_bottom",
+
+  x_fit = "frame",
+  z_fit = "top",
+
+  tex_COMPSTA1 =
+  {
+    COMPSTA1 = 1,
+    COMPSTA2 = 1,
+    COMPSTA3 = 1,
+    COMPSTA4 = 1,
+    COMPSTA5 = 1,
+    COMPSTA6 = 1,
+    COMPSTA7 = 1,
+    COMPSTA8 = 1,
+    COMPSTA9 = 1,
+    COMPSTAA = 1,
+    COMPSTAB = 1
+  }
+}
+
+PREFABS.Pic_metal_warning_bottom_comp_hell =
+{
+  template = "Pic_metal_warning_gate",
+  map = "MAP05",
+
+  rank = 1,
+  theme = "hell",
+
+  group = "gtd_wall_metal_warning_bottom"
 }
