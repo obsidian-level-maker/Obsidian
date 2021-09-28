@@ -39,7 +39,7 @@ gui.import("levels")
 
 ------------------------------------------------------------
 
-OB_GAMES["wolf3d"] =
+UNFINISHED["wolf3d"] =
 {
   label = _("Wolfenstein 3-D (Exp)"),
   priority = 34,

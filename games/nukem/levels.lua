@@ -23,17 +23,23 @@ NUKEM.EPISODES =
 {
   episode1 =
   {
-
+    ep_index = 1,
+    theme = "nukem_city",
+    boss = "Boss1",
   },
 
   episode2 =
   {
-
+    ep_index = 2,
+    theme = "nukem_city",
+    boss = "Boss2",
   },
 
   episode3 =
   {
-
+    ep_index = 3,
+    theme = "nukem_city",
+    boss = "Boss3",
   }
 }
 
@@ -47,27 +53,47 @@ NUKEM.PREBUILT_LEVELS =
 --------------------------------------------------------------------
 
 function NUKEM.get_levels()
-  local EP_NUM  = 1
-  local MAP_NUM = 1
+  local EP_NUM  = sel(OB_CONFIG.length == "game",   3, 1)
+  local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 9)
 
-  if OB_CONFIG.length == "few"     then MAP_NUM = 4 end
-  if OB_CONFIG.length == "episode" then MAP_NUM = 9 end
-  if OB_CONFIG.length == "full"    then MAP_NUM = 9 ; EP_NUM = 3 end
+  if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 
-  for episode = 1,EP_NUM do
+  -- create episode info...
+
+  for ep_index = 1,3 do
+    local ep_info = NUKEM.EPISODES["episode" .. ep_index]
+    assert(ep_info)
+
+    local EPI = table.copy(ep_info)
+
+    EPI.levels = { }
+
+    table.insert(GAME.episodes, EPI)
+  end
+
+  -- create level info...
+
+  for ep_index = 1,EP_NUM do
+    local EPI = GAME.episodes[ep_index]
+
     for map = 1,MAP_NUM do
+      -- create level info...
+      local ep_along = map / MAP_NUM
 
       local LEV =
       {
-        name = string.format("E%dL%d", episode, map),
+        episode  = EPI,
 
-        episode  = episode,
-        ep_along = map / MAP_NUM,
-        ep_info  = { }
+        name = string.format("E%dL%d", ep_index, map),
+
+          ep_along = ep_along,
+        game_along = (ep_index - 1 + ep_along) / EP_NUM
       }
 
+      table.insert( EPI.levels, LEV)
       table.insert(GAME.levels, LEV)
 
-    end -- for map
-  end -- for episode
+      LEV.secret_exit = GAME.SECRET_EXITS[LEV.name]
+    end
+  end
 end

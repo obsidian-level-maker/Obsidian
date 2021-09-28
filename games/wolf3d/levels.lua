@@ -154,7 +154,7 @@ function WOLF.get_levels()
 
   -- create episode info...
 
-  for ep_index = 1,5 do
+  for ep_index = 1,6 do
     local ep_info = WOLF.EPISODES["episode" .. ep_index]
     assert(ep_info)
 

@@ -407,7 +407,7 @@ class nukem_game_interface_c : public game_interface_c {
     std::filesystem::path filename;
 
    public:
-    nukem_game_interface_c() : filename(nullptr) {}
+    nukem_game_interface_c() : filename("") {}
 
     bool Start(const char *preset);
     bool Finish(bool build_ok);

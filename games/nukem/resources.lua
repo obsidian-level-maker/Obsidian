@@ -4,7 +4,7 @@
 
 NUKEM.PALETTES =
 {
-  --[[normal =
+  normal =
   {
     0,  0,  0,  31, 23, 11,  23, 15,  7,  75, 75, 75, 255,255,255,
    27, 27, 27,  19, 19, 19,  11, 11, 11,   7,  7,  7,  47, 55, 31,
@@ -58,10 +58,10 @@ NUKEM.PALETTES =
     0,  0, 23,   0,  0, 11,   0, 47, 47, 255,159, 67, 255,231, 75,
   255,123,255, 255,  0,255, 207,  0,207, 159,  0,155, 111,  0,107,
   167,107,107
-  }]]--
+  }
 }
 
---[[function NUKEM.make_cool_gfx()
+function NUKEM.make_cool_gfx()
   local GREEN =
   {
     0, 7, 127, 126, 125, 124, 123,
@@ -108,7 +108,7 @@ NUKEM.PALETTES =
   gui.wad_logo_gfx("O_BOLT",   "f", "BOLT",   64,64, 2)
   gui.wad_logo_gfx("O_RELIEF", "f", "RELIEF", 64,64, 3)
   gui.wad_logo_gfx("O_CARVE",  "f", "CARVE",  64,64, 4)
-end]]--
+end
 
 function NUKEM.all_done()
   --NUKEM.make_cool_gfx()
