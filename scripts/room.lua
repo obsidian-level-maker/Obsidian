@@ -2856,7 +2856,7 @@ function Room_floor_ceil_heights()
 
     for _,A in pairs(R.areas) do
       if A.is_outdoor then goto continue end
-      if A.is_porch   then goto continue end
+      --if A.is_porch   then goto continue end
 
       if A.mode ~= "floor" then goto continue end
 
@@ -4052,11 +4052,10 @@ function Room_cleanup_stairs_to_nowhere(R)
         A.floor_h = SAS.floor_h
         A.ceil_h = SAS.ceil_h
 
-        A.floor_mat = SAS.floor_mat
+        A.floor_mat = R.floor_mats[SAS.floor_h] --or SAS.floor_mat
 
         if A.room:get_env() == "building" then
           A.is_porch = nil
-          A.ceil_mat = SAS.ceil_mat
         end
 
         SA.mode = "floor"
@@ -4075,7 +4074,6 @@ function Room_cleanup_stairs_to_nowhere(R)
           end
         elseif SA.room:get_env() == "building" then
           SA.is_porch_neighbor = nil
-          SA.ceil_mat = SAS.ceil_mat
         end
 
         SA.floor_h = SAS.floor_h
@@ -4089,16 +4087,22 @@ function Room_cleanup_stairs_to_nowhere(R)
         A.dead_end = true
         SA.dead_end = true
 
-        if A.room:get_env() == "outdoor" then
-          A.source_mat = SAS.floor_mat
-          SA.source_mat = SAS.floor_mat
-        end
-
         -- unify heights
         if A.ceil_h - A.floor_h < 96
         or SA.ceil_h - SA.floor_h < 96 then
           A.ceil_h = A.floor_h + 96
           SA.ceil_h = A.ceil_h
+        end
+
+        -- affix textures
+        if A.room:get_env() == "outdoor" then
+          A.source_mat = R.floor_mats[A.floor_h] --or SAS.floor_mat 
+          SA.source_mat = R.floor_mats[SA.floor_h] --or SAS.floor_mat
+        end
+
+        if A.room:get_env() == "building" then
+          A.ceil_mat = R.ceil_mats[A.floor_h] --or SAS.ceil_mat
+          SA.ceil_mat = R.ceil_mats[SA.ceil_h] --or SAS.ceil_mat
         end
 
         fixup_neighbors(A)

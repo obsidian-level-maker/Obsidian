@@ -2656,7 +2656,7 @@ function Level_choose_skybox()
       return PREFABS[rand.key_by_probs(THEME.skyboxes)]
 
     elseif mode == "generic" then
-      if PARAM.epic_textures_activated then
+      if PARAM.obsidian_resource_pack_active then
         return PREFABS["Skybox_hellish_city_EPIC"]
       else
         return PREFABS["Skybox_hellish_city"]

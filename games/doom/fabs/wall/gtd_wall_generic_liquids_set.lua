@@ -3,7 +3,7 @@ PREFABS.Wall_gtd_generic_sunderfall =
   file   = "wall/gtd_wall_generic_liquids_set.wad",
   map    = "MAP01",
 
-  rank = 2,
+  rank = 1,
   liquids = true,
 
   prob = 50,
@@ -26,7 +26,7 @@ PREFABS.Wall_gtd_generic_sunderfall_no_liq =
   file   = "wall/gtd_wall_generic_liquids_set.wad",
   map    = "MAP01",
 
-  rank = 1,
+  rank = 2,
 
   prob = 50,
   group = "gtd_sunderfall",
@@ -43,7 +43,7 @@ PREFABS.Wall_gtd_generic_sunderfall_no_liq =
   sound = "Water_Streaming",
 
   tex__LIQUID = "NUKAGE1",
-  floor__LIQUID = "NUKAGE1"
+  flat__LIQUID = "NUKAGE1"
 }
 
 --
@@ -64,5 +64,5 @@ PREFABS.Wall_gtd_generic_sunderfall_barred_no_liq =
   group = "gtd_sunderfall_barred",
 
   tex__LIQUID = "NUKAGE1",
-  floor__LIQUID = "NUKAGE1"
+  flat__LIQUID = "NUKAGE1"
 }

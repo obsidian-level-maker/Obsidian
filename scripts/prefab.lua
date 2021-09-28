@@ -167,54 +167,6 @@ function Fab_load_all_definitions()
 
 
   local function calc_prob(def)
-
-    -- attachment for fabs that use Armaetus's Epic textures
-    if def.texture_pack then
-      if def.texture_pack == "armaetus"
-      and not PARAM.epic_textures_activated then
-        def.skip_prob = 100
-      end
-    end
-
-    -- support for the new replace field
-    if PARAM.epic_textures_activated == true then
-      if def.replaces then
-
-        -- HARD replace mode causes pre-existing fabs to be removed
-        -- entirely, to be replaced with the replacing fab.
-        if def.replace_mode == "hard" then
-          PREFABS[def.replaces] = def
-          table.remove(PREFABS[def.name])
-
-          -- remove templates of a replaced fab as well
-          for name,odef in pairs(PREFABS) do
-            if odef.template == def.replaces then
-              table.remove(PREFABS[odef])
-            end
-          end
-        end
-
-        -- SOFT replace mode simply causes pre-existing fabs to
-        -- have a probability of 0. This is more prefered as it
-        -- is more likely to not break things.
-        if not def.replace_mode or def.replace_mode == "soft" then
-          PREFABS[def.replaces].prob = 0
-          PREFABS[def.replaces].use_prob = 0
-          PREFABS[def.replaces].skip_prob = 100
-
-          for name,odef in pairs(PREFABS) do
-            if odef.template == def.replaces then
-              PREFABS[odef].prob = 0
-              PREFABS[odef].use_prob = 0
-              PREFABS[odef].skip_prob = 100
-            end
-          end
-        end
-      end
-    end
-
-
-
     if def.skip_prob then
       if rand.odds(def.skip_prob) then return 0 end
     end
@@ -234,23 +186,54 @@ function Fab_load_all_definitions()
   end
 
 
+  local function process_resource_pack_fabs()
+    if PARAM.obsidian_resource_pack_active then
+      for _,def in pairs(PREFABS) do
+        if def.replaces then
+          PREFABS[def.replaces].delete = true
+        end
+      end
+
+      for _,def in pairs(PREFABS) do
+        if def.template and PREFABS[def.template].delete then
+          def.delete = true
+        end
+      end
+    else
+      for _,def in pairs(PREFABS) do
+        if def.texture_pack == "armaetus" then
+          def.delete = true
+        end
+      end
+    end
+
+    for _,def in pairs(PREFABS) do
+      if def.delete then PREFABS[def.name] = nil end
+    end
+  end
+
+
   local function preprocess_all()
     table.name_up(PREFABS)
     table.expand_templates(PREFABS)
 
     local count = 0
 
-    for name,def in pairs(PREFABS) do
+    process_resource_pack_fabs()
+
+    for _,def in pairs(PREFABS) do
+      if def.delete then error(table.tostr(def)) end
+
       if not def.kind then
         def.kind = kind_from_filename(def.file)
       end
-
+    
       def.use_prob = calc_prob(def)
 
       count = count + 1
     end
 
-    gui.printf(count .. " prefab definitions loaded!\n\n")
+    gui.printf(count .. " prefabs loaded and usable!\n\n")
   end
 
 
@@ -261,6 +244,7 @@ function Fab_load_all_definitions()
   assert(GAME.game_dir)
 
   if GAME.GENERIC_REQS then visit_dir("games/generic/fabs") end -- Only games that have generic definitions will have the GENERIC_REQS table
+  ob_invoke_hook("fab_load")
   visit_dir("games/" .. GAME.game_dir .. "/fabs") 
 
   preprocess_all()
@@ -276,6 +260,16 @@ function Fab_update_skip_prob()
       else
         def.use_prob = def.prob
       end
+    end
+
+    if def.prob_skew and def.use_prob ~= 0 then
+
+      local prob_skew = def.prob_skew
+      local half_skew = (1.0 + prob_skew) / 2.0
+
+      local final_skew = rand.pick({ 1 / prob_skew, 1 / half_skew, 1.0, half_skew, prob_skew })
+
+      def.use_prob = def.prob * final_skew
     end
   end
 end
@@ -1738,6 +1732,7 @@ function Fab_load_wad(def)
   local function load_it()
     create_it()
 
+    gui.printf(table.tostr(def) .. "\n")
     local filename = assert(def.dir_name) .. "/" .. def.file
 
     gui.debugf("Loading wad-fab %s / %s\n", def.file, def.map or "*")
