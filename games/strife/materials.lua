@@ -63,13 +63,13 @@ STRIFE.MATERIALS =
  _KEYTRM3 = { t="WINDW04", f="XX" }, -- Trim for locked door, Key 3
  
  _EXITDR1 = { t="DORTKS01", f="F_UNDOOR" }, -- Exit door
- _EXITSW1  = { t="SWEXIT01", f="F_CONCRP" }, -- Exit switch
- _EXITRM1  = { t="CONCRT01", f="F_CONCRP" }, -- Exit switch
+ _EXITSW1  = { t="SWWALG01", f="F_GTECHY" }, -- Exit switch
+ _EXITRM1  = { t="WALGRY09", f="F_GTECHY" }, -- Exit switch
  
  _STRUCT = {t="CONCRT01", f="F_CONCRP"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
- _SWITCH  = { t="SWPALM01", f="F_CONCRP" }, -- Wall/general purpose swtich
- _SWITCH2  = { t="SWLITE01", f="F_CONCRP" },
+ _SW1  = { t="SWINDT01", f="F_NOLINE" }, -- General purpose swtich, full size
+ _SW1TRIM = { t="IRON04", f="F_NOLINE" }, -- Trim for switch
  
  _TELE = { t="CONCRT01", f="F_TELE1" }, -- Teleporter
 

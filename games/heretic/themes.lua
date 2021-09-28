@@ -118,7 +118,7 @@ HERETIC.SINKS =
     trim_dz = -4,
   },
 
-  --[[ street sink def, do not use for anything else
+  -- street sink def, do not use for anything else
   floor_default_streets =
   {
     mat = "FLOOR30",
@@ -126,7 +126,7 @@ HERETIC.SINKS =
 
     trim_mat = "FLOOR10",
     trim_dz = 2,
-  } ]]
+  }
 }
 
 
@@ -163,6 +163,11 @@ HERETIC.THEMES =
     cage_lights = { 0, 8, 12, 13 },
 
     pool_depth = 24,
+
+    street_sinks =
+    {
+      floor_default_streets = 1
+    }
   },
 
 
@@ -349,9 +354,7 @@ HERETIC.THEMES =
 
     liquids =
     {
-      water2 = 40,
-      water  = 50,
-      lava   = 20,
+      lava   = 30,
       magma  = 10,
     },
 
@@ -503,9 +506,6 @@ HERETIC.THEMES =
     {
       water2 = 40,
       water  = 50,
-      lava   = 5,
-      sludge = 15,
-      magma  = 5,
     },
 
     narrow_halls =
@@ -786,10 +786,7 @@ HERETIC.THEMES =
 
     liquids =
     {
-      water2 = 40,
-      water  = 50,
-      lava   = 10,
-      magma  = 10,
+      sludge = 50,
     },
 
     narrow_halls =

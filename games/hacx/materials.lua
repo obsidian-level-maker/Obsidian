@@ -63,8 +63,8 @@ HACX.MATERIALS =
   
   _STRUCT = {t="HW209", f="RROCK03"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
-  _SWITCH  = { t="HD5", f="CEIL3_5" }, -- Wall/general purpose swtich
-  _SWITCH2  = { t="HD5", f="CEIL3_5"  },
+  _SW1  = { t="BLAKWAL2",  f="FLOOR0_2" }, -- General purpose swtich, full size
+  _SW1TRIM = { t="BRICK10",  f="FLOOR0_2" }, -- Trim for switch
   
   _TELE = { f="BLOOD1",  t="BRONZE1" }, -- Teleporter
 

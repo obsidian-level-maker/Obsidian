@@ -7,7 +7,7 @@ PREFABS.Exit_closet1_heretic =
   file   = "exit/closet1.wad",
   map    = "MAP01",
 
-  game   = { heretic=1,strife=1,chex3=0,hacx=0,harmony=1 },
+  game   = "heretic",
 
   prob   = 100,
 
@@ -53,7 +53,6 @@ PREFABS.Exit_closet1_chex3 =
     [16] = {x=48,y=-33},
     [21] = {x=12,y=30}
   }
-
 }
 
 PREFABS.Exit_closet1_hacx =
@@ -83,7 +82,61 @@ PREFABS.Exit_closet1_hacx =
     [7] = {x=87,y=0},
     [21] = {x=12,y=4}
   }
+}
 
+PREFABS.Exit_closet1_harmony =
+{
+  file   = "exit/closet1.wad",
+  map    = "MAP01",
+
+  game   = "harmony",
+
+  prob   = 100,
+
+  where  = "seeds",
+  seed_w = 1,
+  seed_h = 1,
+
+  deep   =  16,
+  over   = -16,
+
+  x_fit  = "frame",
+  y_fit  = "top",
+
+  forced_offsets = 
+  {
+    [13] = { x=1,y=-56 },
+    [15] = { x=0,y=-56 },
+  }
+}
+
+PREFABS.Exit_closet1_strife =
+{
+  file   = "exit/closet1.wad",
+  map    = "MAP01",
+
+  game   = "strife",
+
+  prob   = 100,
+
+  where  = "seeds",
+  seed_w = 1,
+  seed_h = 1,
+
+  deep   =  16,
+  over   = -16,
+
+  x_fit  = "frame",
+  y_fit  = "top",
+
+  forced_offsets = 
+  {
+    [4] = {x=12,y=36},
+    [5] = {x=12,y=36},
+    [6] = {x=12,y=36},
+    [7] = {x=12,y=36},
+    [21] = {x=12,y=36},
+  }
 }
 
 
@@ -107,7 +160,6 @@ PREFABS.Exit_closet1_secret_chex3 =
 
   -- replace normal exit special with "exit to secret" special
   line_11 = 51,
-  
 }
 
 PREFABS.Exit_closet1_secret_hacx =
@@ -118,5 +170,24 @@ PREFABS.Exit_closet1_secret_hacx =
 
   -- replace normal exit special with "exit to secret" special
   line_11 = 51,
-  
+}
+
+PREFABS.Exit_closet1_secret_harmony =
+{
+  template = "Exit_closet1_harmony",
+
+  kind = "secret_exit",
+
+  -- replace normal exit special with "exit to secret" special
+  line_11 = 51,
+}
+
+PREFABS.Exit_closet1_secret_strife =
+{
+  template = "Exit_closet1_strife",
+
+  kind = "secret_exit",
+
+  -- replace normal exit special with "exit to secret" special
+  line_11 = 51,
 }

@@ -34,6 +34,16 @@ STRIFE.SINKS =
     dz  = -12,
   },
 
+  -- street sink def, do not use for anything else
+  floor_default_streets =
+  {
+    mat = "F_CHMOL2",
+    dz = 2,
+  
+    trim_mat = "WOOD08",
+    trim_dz = 2,
+  }
+
 }
 
 
@@ -92,6 +102,11 @@ STRIFE.THEMES =
     cage_lights = { 0, 8, 12, 13 },
 
     pool_depth = 24,
+
+    street_sinks =
+    {
+      floor_default_streets = 1
+    }
   },
 
 

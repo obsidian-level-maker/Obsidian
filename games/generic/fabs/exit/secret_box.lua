@@ -7,6 +7,7 @@ PREFABS.Exit_secret_box1 =
   file  = "exit/secret_box.wad",
 
   prob  = 100,
+  game  = "heretic",
 
   -- the kind means "an exit to a secret level",
   -- the key  means "a closet which is hidden in the room",
@@ -22,5 +23,57 @@ PREFABS.Exit_secret_box1 =
 
   x_fit = "frame",
   y_fit = "top",
+}
+
+PREFABS.Exit_secret_box1_chex3 = 
+{
+  template = "Exit_secret_box1",
+
+  game = "chex3",
+  forced_offsets = 
+  {
+    [16] = { x=0,y=-64 },
+    [17] = { x=-4,y=-64 },
+    [18] = { x=0,y=-64 },    
+  }
+}
+
+PREFABS.Exit_secret_box1_hacx = 
+{
+  template = "Exit_secret_box1",
+
+  game = "hacx",
+  forced_offsets = 
+  {
+    [16] = { x=64,y=-63 },
+    [17] = { x=64,y=-63 },
+    [18] = { x=64,y=-63 },    
+  }
+}
+
+PREFABS.Exit_secret_box1_harmony = 
+{
+  template = "Exit_secret_box1",
+
+  game = "harmony",
+  forced_offsets = 
+  {
+    [16] = { x=0,y=-64 },
+    [17] = { x=16,y=-67 },
+    [18] = { x=0,y=-64 },    
+  }
+}
+
+PREFABS.Exit_secret_box1_strife = 
+{
+  template = "Exit_secret_box1",
+
+  game = "strife",
+  forced_offsets = 
+  {
+    [16] = { x=0,y=-86 },
+    [17] = { x=0,y=-86 },
+    [18] = { x=0,y=-86 },    
+  }
 }
 
