@@ -71,7 +71,7 @@ DOOM.MONSTERS =
     density = 1.5,
     room_size = "any", --small
     disloyal = true,
-    trap_factor = 0.01,
+    trap_factor = 0.75,
     infight_damage = 1.9,
   },
 
@@ -94,7 +94,7 @@ DOOM.MONSTERS =
     replace_prob = 20,
     room_size = "any", --small
     disloyal = true,
-    trap_factor = 2.2, --2.0,
+    trap_factor = 1.0, --2.0,
     infight_damage = 6.1,
   },
 
@@ -150,6 +150,7 @@ DOOM.MONSTERS =
     density = 0.85,
     weap_min_damage = 40,
     weap_prefs = { super=1.75, shotty=1.35, chain=1.3, plasma=1.1, launch=0.3 },
+    trap_factor = 0.4,
     room_size = "any",
     infight_damage = 3.5,
   },
@@ -218,6 +219,7 @@ DOOM.MONSTERS =
     density = 0.3,
     weap_min_damage = 88,
     room_size = "any", --medium
+    trap_factor = 0.15,
     infight_damage = 40,
   },
 
@@ -288,7 +290,7 @@ DOOM.MONSTERS =
     replaces = "shooter",
     replace_prob = 20,
     disloyal = true,
-    trap_factor = 2.4,
+    trap_factor = 0.5,
     infight_damage = 25,
   },
 
@@ -308,7 +310,7 @@ DOOM.MONSTERS =
     room_size = "any",
     replaces = "knight",
     replace_prob = 15,
-    trap_factor = 3.6,
+    trap_factor = 0.5,
     infight_damage = 20,
   },
 
@@ -329,6 +331,7 @@ DOOM.MONSTERS =
     replaces = "mancubus",
     replace_prob = 20,
     room_size = "medium",
+    trap_factor = 0.5,
     infight_damage = 36,
   },
 
@@ -349,6 +352,7 @@ DOOM.MONSTERS =
     replace_prob = 20,
     room_size = "large",
     infight_damage = 70,
+    trap_factor = 0.5,
     boss_replacement = "baron",
   },
 
@@ -369,6 +373,7 @@ DOOM.MONSTERS =
     density = 0.5,
     room_size = "medium",
     infight_damage = 62,
+    trap_factor = 0.5,
     boss_replacement = "revenant",
   },
 

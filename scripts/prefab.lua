@@ -244,9 +244,8 @@ function Fab_load_all_definitions()
   assert(GAME.game_dir)
 
   if GAME.GENERIC_REQS then visit_dir("games/generic/fabs") end -- Only games that have generic definitions will have the GENERIC_REQS table
-  visit_dir("games/" .. GAME.game_dir .. "/fabs") 
-
   ob_invoke_hook("fab_load")
+  visit_dir("games/" .. GAME.game_dir .. "/fabs") 
 
   preprocess_all()
 end
@@ -261,6 +260,16 @@ function Fab_update_skip_prob()
       else
         def.use_prob = def.prob
       end
+    end
+
+    if def.prob_skew and def.use_prob ~= 0 then
+
+      local prob_skew = def.prob_skew
+      local half_skew = (1.0 + prob_skew) / 2.0
+
+      local final_skew = rand.pick({ 1 / prob_skew, 1 / half_skew, 1.0, half_skew, prob_skew })
+
+      def.use_prob = def.prob * final_skew
     end
   end
 end
@@ -1723,6 +1732,7 @@ function Fab_load_wad(def)
   local function load_it()
     create_it()
 
+    gui.printf(table.tostr(def) .. "\n")
     local filename = assert(def.dir_name) .. "/" .. def.file
 
     gui.debugf("Loading wad-fab %s / %s\n", def.file, def.map or "*")
