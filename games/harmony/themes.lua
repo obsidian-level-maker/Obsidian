@@ -34,6 +34,16 @@ HARMONY.SINKS =
     dz  = -12,
   },
 
+  -- street sink def, do not use for anything else
+  floor_default_streets =
+  {
+    mat = "FLAT8",
+    dz = 2,
+  
+    trim_mat = "CRACKLE4",
+    trim_dz = 2,
+  }
+
 }
 
 
@@ -89,6 +99,11 @@ HARMONY.THEMES =
     cage_lights = { 0, 8, 12, 13 },
 
     pool_depth = 24,
+
+    street_sinks =
+    {
+      floor_default_streets = 1
+    }
   },
 
 

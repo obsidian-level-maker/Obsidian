@@ -118,7 +118,7 @@ HERETIC.SINKS =
     trim_dz = -4,
   },
 
-  --[[ street sink def, do not use for anything else
+  -- street sink def, do not use for anything else
   floor_default_streets =
   {
     mat = "FLOOR30",
@@ -126,7 +126,7 @@ HERETIC.SINKS =
 
     trim_mat = "FLOOR10",
     trim_dz = 2,
-  } ]]
+  }
 }
 
 
@@ -163,6 +163,11 @@ HERETIC.THEMES =
     cage_lights = { 0, 8, 12, 13 },
 
     pool_depth = 24,
+
+    street_sinks =
+    {
+      floor_default_streets = 1
+    }
   },
 
 

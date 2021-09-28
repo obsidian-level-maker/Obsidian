@@ -19,8 +19,17 @@ HACX.SINKS =
   {
     mat = water,
     dz  = -12
-  }
+  },
 
+  -- street sink def, do not use for anything else
+  floor_default_streets =
+  {
+    mat = "RROCK02",
+    dz = 2,
+  
+    trim_mat = "PLAT1",
+    trim_dz = 2,
+  }
 }
 
 
@@ -43,7 +52,12 @@ HACX.THEMES =
 
     cage_lights = { 0, 8, 12, 13 },
 
-    pool_depth = 24
+    pool_depth = 24,
+
+    street_sinks =
+    {
+      floor_default_streets = 1
+    }
   },
 
 
