@@ -42,6 +42,16 @@ CHEX3.SINKS =
   {
     mat = "SLIME2",
     dz  = -12
+  },
+
+  -- street sink def, do not use for anything else
+  floor_default_streets =
+  {
+    mat = "CEIL5_1",
+    dz = 2,
+  
+    trim_mat = "GRAYTALL",
+    trim_dz = 2,
   }
 
 }
@@ -66,7 +76,12 @@ CHEX3.THEMES =
 
     cage_lights = { 0, 8, 12, 13 },
 
-    pool_depth = 24
+    pool_depth = 24,
+
+    street_sinks =
+    {
+      floor_default_streets = 1
+    }
   },
 
 

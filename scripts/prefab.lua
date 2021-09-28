@@ -2625,6 +2625,7 @@ function Fab_find_matches(reqs, match_state)
 
     if not ob_match_level_theme(def, theme_override) then return 0 end
     if not ob_match_feature(def) then return 0 end
+    if not ob_match_game(def) then return 0 end
 
     if (def.rank or 0) < match_state.rank then return 0 end
 
