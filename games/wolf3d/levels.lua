@@ -147,20 +147,15 @@ function wolfy_decide_quests(level_list, is_spear)
 end
 
 function WOLF.get_levels()
-  local MAP_LEN_TAB = { few=4, episode=10, game=60 }
-  local MAP_NUM = MAP_LEN_TAB[OB_CONFIG.length] or 1
+  local EP_NUM  = sel(OB_CONFIG.length == "game",   6, 1)
+  local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 10)
 
-  local EP_NUM = 1
-  if MAP_NUM > 10 then EP_NUM = 2 end
-  if MAP_NUM > 20 then EP_NUM = 3 end
-  if MAP_NUM > 30 then EP_NUM = 4 end
-  if MAP_NUM > 40 then EP_NUM = 5 end
-  if MAP_NUM > 50 then EP_NUM = 6 end
+  if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 
   -- create episode info...
 
-  for ep_index = 1,6 do
-    local ep_info = GAME.EPISODES["episode" .. ep_index]
+  for ep_index = 1,5 do
+    local ep_info = WOLF.EPISODES["episode" .. ep_index]
     assert(ep_info)
 
     local EPI = table.copy(ep_info)
@@ -172,62 +167,27 @@ function WOLF.get_levels()
 
   -- create level info...
 
-  for map = 1,MAP_NUM do
-    -- determine episode from map number
-    local ep_index
-    local ep_along
-
-    local game_along = map / MAP_NUM
-
-    if map > 30 then
-      ep_index = 3 ; ep_along = 0.5 ; game_along = 0.5
-    elseif map > 20 then
-      ep_index = 3 ; ep_along = (map - 20) / 10
-    elseif map > 11 then
-      ep_index = 2 ; ep_along = (map - 11) / 9
-    else
-      ep_index = 1 ; ep_along = map / 11
-    end
-
-    if OB_CONFIG.length == "single" then
-      game_along = 0.57
-      ep_along   = 0.75
-
-    elseif OB_CONFIG.length == "few" then
-      ep_along = game_along
-    end
-
-    assert(ep_along <= 1.0)
-    assert(game_along <= 1.0)
-
+  for ep_index = 1,EP_NUM do
     local EPI = GAME.episodes[ep_index]
-    assert(EPI)
 
-    local LEV =
-    {
-      episode = EPI,
+    for map = 1,MAP_NUM do
+      -- create level info...
+      local ep_along = map / MAP_NUM
 
-      name  = string.format("MAP%02d", map),
+      local LEV =
+      {
+        episode  = EPI,
 
-      ep_along = ep_along,
-      game_along = game_along
-    }
+        name = string.format("E%dL%d", ep_index, map),
 
-    table.insert( EPI.levels, LEV)
-    table.insert(GAME.levels, LEV)
+          ep_along = ep_along,
+        game_along = (ep_index - 1 + ep_along) / EP_NUM
+      }
 
-    -- the 'dist_to_end' value is used for Boss monster decisions
-    if map >= 26 and map <= 29 then
-      LEV.dist_to_end = 30 - map
-    elseif map == 11 or map == 20 then
-      LEV.dist_to_end = 1
-    elseif map == 16 or map == 23 then
-      LEV.dist_to_end = 2
-    end
+      table.insert( EPI.levels, LEV)
+      table.insert(GAME.levels, LEV)
 
-    if OB_CONFIG.length == "episode" then
-      GAME.levels[#GAME.levels - 1].dist_to_end = 2
-      GAME.levels[#GAME.levels - 2].dist_to_end = 3
+      LEV.secret_exit = GAME.SECRET_EXITS[LEV.name]
     end
   end
 end
