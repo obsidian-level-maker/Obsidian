@@ -24,7 +24,7 @@ WOLF.EPISODES =
   episode1 =
   {
     boss = "Hans",
-    theme = "BUNKER",
+    theme = "wolf_bunker",
     sky_light = 0.75,
     secret_exits = { "E1L1" },
   },
@@ -32,7 +32,7 @@ WOLF.EPISODES =
   episode2 =
   {
     boss = "Schabbs",
-    theme = "BUNKER",
+    theme = "wolf_bunker",
     sky_light = 0.75,
     secret_exits = { "E2L1" },
   },
@@ -40,7 +40,7 @@ WOLF.EPISODES =
   episode3 =
   {
     boss = "Hitler",
-    theme = "BUNKER",
+    theme = "wolf_bunker",
     sky_light = 0.75,
     secret_exits = { "E3L7" },
   },
@@ -48,7 +48,7 @@ WOLF.EPISODES =
   episode4 =
   {
     boss = "Giftmacher",
-    theme = "BUNKER",
+    theme = "wolf_bunker",
     sky_light = 0.75,
     secret_exits = { "E4L3" },
   },
@@ -56,7 +56,7 @@ WOLF.EPISODES =
   episode5 =
   {
     boss = "Gretel",
-    theme = "BUNKER",
+    theme = "wolf_bunker",
     sky_light = 0.75,
     secret_exits = { "E5L5" },
   },
@@ -64,7 +64,7 @@ WOLF.EPISODES =
   episode6 =
   {
     boss = "Fatface",
-    theme = "BUNKER",
+    theme = "wolf_bunker",
     sky_light = 0.75,
     secret_exits = { "E6L3" },
   },
@@ -147,10 +147,92 @@ function wolfy_decide_quests(level_list, is_spear)
 end
 
 function WOLF.get_levels()
-  local EP_NUM  = sel(OB_CONFIG.length == "full", 6, 1)
-  local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 10)
+  local MAP_LEN_TAB = { few=4, episode=10, game=60 }
+  local MAP_NUM = MAP_LEN_TAB[OB_CONFIG.length] or 1
 
-  if OB_CONFIG.length == "few" then MAP_NUM = 4 end
+  local EP_NUM = 1
+  if MAP_NUM > 10 then EP_NUM = 2 end
+  if MAP_NUM > 20 then EP_NUM = 3 end
+  if MAP_NUM > 30 then EP_NUM = 4 end
+  if MAP_NUM > 40 then EP_NUM = 5 end
+  if MAP_NUM > 50 then EP_NUM = 6 end
+
+  -- create episode info...
+
+  for ep_index = 1,6 do
+    local ep_info = GAME.EPISODES["episode" .. ep_index]
+    assert(ep_info)
+
+    local EPI = table.copy(ep_info)
+
+    EPI.levels = { }
+
+    table.insert(GAME.episodes, EPI)
+  end
+
+  -- create level info...
+
+  for map = 1,MAP_NUM do
+    -- determine episode from map number
+    local ep_index
+    local ep_along
+
+    local game_along = map / MAP_NUM
+
+    if map > 30 then
+      ep_index = 3 ; ep_along = 0.5 ; game_along = 0.5
+    elseif map > 20 then
+      ep_index = 3 ; ep_along = (map - 20) / 10
+    elseif map > 11 then
+      ep_index = 2 ; ep_along = (map - 11) / 9
+    else
+      ep_index = 1 ; ep_along = map / 11
+    end
+
+    if OB_CONFIG.length == "single" then
+      game_along = 0.57
+      ep_along   = 0.75
+
+    elseif OB_CONFIG.length == "few" then
+      ep_along = game_along
+    end
+
+    assert(ep_along <= 1.0)
+    assert(game_along <= 1.0)
+
+    local EPI = GAME.episodes[ep_index]
+    assert(EPI)
+
+    local LEV =
+    {
+      episode = EPI,
+
+      name  = string.format("MAP%02d", map),
+
+      ep_along = ep_along,
+      game_along = game_along
+    }
+
+    table.insert( EPI.levels, LEV)
+    table.insert(GAME.levels, LEV)
+
+    -- the 'dist_to_end' value is used for Boss monster decisions
+    if map >= 26 and map <= 29 then
+      LEV.dist_to_end = 30 - map
+    elseif map == 11 or map == 20 then
+      LEV.dist_to_end = 1
+    elseif map == 16 or map == 23 then
+      LEV.dist_to_end = 2
+    end
+
+    if OB_CONFIG.length == "episode" then
+      GAME.levels[#GAME.levels - 1].dist_to_end = 2
+      GAME.levels[#GAME.levels - 2].dist_to_end = 3
+    end
+  end
+end
+
+--[[ Previous stuff below here --
 
   for episode = 1,EP_NUM do
     local ep_info = WOLF.EPISODES["episode" .. episode]
@@ -192,6 +274,4 @@ function WOLF.get_levels()
 
 -- FIXME  wolfy_decide_quests(list)
 
---  dump_levels()
-
-end
+--  dump_levels()]]--

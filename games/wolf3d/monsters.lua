@@ -16,41 +16,71 @@ WOLF.MONSTERS =
 {
   dog =
   {
+    id = 174,
+    r = 30,
+    h = 60,
     prob=20,
-    health=1, damage=5, attack="melee",
+    health=1, 
+    damage=5, 
+    attack="melee",
   },
 
   guard =
   {
+    id = 144,
+    r = 30,
+    h = 60,
     prob=60,
-    health=25, damage=10, attack="hitscan",
+    health=25,
+    damage=10, 
+    attack="hitscan",
     give={ {ammo="bullet",count=4} },
   },
 
   officer =
   {
+    id = 152,
+    r = 30,
+    h = 60,
     prob=30,
-    health=50,  damage=20, attack="hitscan",
+    health=50,  
+    damage=20, 
+    attack="hitscan",
     give={ {ammo="bullet",count=4} },
   },
 
   mutant =
   {
+    id = 234,
+    r = 30,
+    h = 60,
     prob=20,
-    health=55,  damage=35, attack="hitscan",
+    health=55,  
+    damage=35, 
+    attack="hitscan",
     give={ {ammo="bullet",count=4} },
   },
 
   ss_dude =
   {
+    id = 162,
+    r = 30,
+    h = 60,
     prob=5,
-    health=100, damage=30, attack="hitscan",
+    health=100, 
+    damage=30, 
+    attack="hitscan",
     give={ {weapon="machine_gun"}, {ammo="bullet",count=4} },
   },
 
   fake_hitler =
   {
-    health=350, damage=50, attack="missile",
+    id = 160,
+    r = 30,
+    h = 60,
+    health=350, 
+    damage=50, 
+    attack="missile",
   },
 
   --| WOLF BOSSES |--
@@ -61,35 +91,65 @@ WOLF.MONSTERS =
 
   Hans =
   {
-    health=1000, damage=40, attack="hitscan",
+    id = 214,
+    r = 30,
+    h = 60,
+    health=1000, 
+    damage=40, 
+    attack="hitscan",
     give={ {key="k_gold"} }
   },
 
   Gretel =
   {
-    health=1000, damage=50, attack="hitscan",
+    id = 197,
+    r = 30,
+    h = 60,
+    health=1000, 
+    damage=50, 
+    attack="hitscan",
     give={ {key="k_gold"} }
   },
 
   Fatface =
   {
-    health=1000, damage=50, attack="hitscan",
+    id = 179,
+    r = 30,
+    h = 60,
+    health=1000, 
+    damage=50, 
+    attack="hitscan",
   },
 
   Giftmacher =
   {
-    health=1000, damage=50, attack="missile",
+    id = 215,
+    r = 30,
+    h = 60,
+    health=1000, 
+    damage=50, 
+    attack="missile",
   },
 
   Schabbs =
   {
-    health=1250, damage=60, attack="missile",
+    id = 196,
+    r = 30,
+    h = 60,
+    health=1250, 
+    damage=60, 
+    attack="missile",
   },
 
   -- this includes both Hitlers (in and out of the armor suit)
   Hitler =
   {
-    health=1100, damage=60, attack="hitscan"
+    id = 178,
+    r = 30,
+    h = 60,
+    health=1100, 
+    damage=60, 
+    attack="hitscan"
   },
 
   -- NOTES:

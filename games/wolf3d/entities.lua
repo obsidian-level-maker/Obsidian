@@ -14,6 +14,7 @@
 
 WOLF.ENTITIES =
 {
+  --[[
   -- players
   player1 = { kind="other", r=30, h=60,
               id={ easy=19, medium=19, hard=19, dirs="player" },
@@ -50,7 +51,7 @@ WOLF.ENTITIES =
   blinky = { kind="monster", id=224, r=30, h=60 },
   clyde  = { kind="monster", id=225, r=30, h=60 },
   pinky  = { kind="monster", id=226, r=30, h=60 },
-  inky   = { kind="monster", id=227, r=30, h=60 },
+  inky   = { kind="monster", id=227, r=30, h=60 },]]--
 
   -- pickups
   k_silver = { kind="pickup", id=44, r=30, h=60, pass=true },
