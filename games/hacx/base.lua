@@ -45,6 +45,8 @@ OB_GAMES["hacx"] =
 	
 	game_dir = "hacx",
 	iwad_name = "hacx.wad",
+
+	use_generics = true,
 	
 	tables =
 	{

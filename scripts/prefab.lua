@@ -243,7 +243,7 @@ function Fab_load_all_definitions()
 
   assert(GAME.game_dir)
 
-  if GAME.GENERIC_REQS then visit_dir("games/generic/fabs") end -- Only games that have generic definitions will have the GENERIC_REQS table
+  if GAME.use_generics and GAME.use_generics == true then visit_dir("games/generic/fabs") end
   ob_invoke_hook("fab_load")
   visit_dir("games/" .. GAME.game_dir .. "/fabs") 
 
@@ -2240,7 +2240,6 @@ function Fab_replacements(fab)
         end
         ::continue::
       end
-
       if C.tag then 
         C.tag = check_tag(C.tag) 
         current_tag = C.tag  

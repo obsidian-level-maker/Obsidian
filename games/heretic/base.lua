@@ -48,6 +48,8 @@ OB_GAMES["heretic"] =
   game_dir = "heretic",
   iwad_name = "heretic.wad",
 
+  use_generics = true,
+
   tables =
   {
     HERETIC

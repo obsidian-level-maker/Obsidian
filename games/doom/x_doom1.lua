@@ -3410,6 +3410,8 @@ OB_GAMES["doom1"] =
   game_dir = "doom",
   iwad_name = "doom.wad",
 
+  use_generics = false,
+
   tables =
   {
     DOOM, ULTDOOM

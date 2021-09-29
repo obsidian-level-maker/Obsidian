@@ -1436,7 +1436,7 @@ function ob_add_current_game()
       child.hooks = table.merge_missing(child.hooks or {}, def.hooks)
     end
 
-    for _,keyword in pairs({ "format", "sub_format", "game_dir" }) do
+    for _,keyword in pairs({ "format", "sub_format", "game_dir", "use_generics" }) do
       if def[keyword] ~= nil then
         GAME[keyword] = def[keyword]
       end
