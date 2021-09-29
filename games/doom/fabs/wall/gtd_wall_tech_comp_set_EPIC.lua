@@ -97,6 +97,8 @@ PREFABS.Wall_epic_comp_set_green_diag =
 }
 
 --
+-- plain
+--
 
 PREFABS.Wall_epic_comptil_plain_red =
 {
