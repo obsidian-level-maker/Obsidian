@@ -10,7 +10,9 @@ NUKEM.MATERIALS =
   -- special materials --
   _ERROR = { t=1 },
   _SKY   = { t=89 },
+  _DEFAULT = { t=1 },
 
+  NUKEBUTTON = { t=142 },
 
   WATER  = { t=336 },
   SLIME  = { t=200 },
