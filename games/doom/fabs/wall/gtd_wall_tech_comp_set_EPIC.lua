@@ -131,7 +131,7 @@ PREFABS.Wall_epic_comp_set_red_2 =
     COMPSTA8 = 5,
     COMPSTA9 = 5,
     COMPSTAA = 5,
-  }
+  },
 
   height = 88,
   bound_z2 = 88,
