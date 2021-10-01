@@ -86,7 +86,7 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
     log_file.open(log_filename, std::ios::in);
 
     // this is very unlikely to happen, but check anyway
-    if (!log_file) {
+    if (!log_file.is_open()) {
         return;
     }
 
@@ -102,6 +102,9 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
 
         display_func(buffer, priv_data);
     }
+
+    // close the log file after current contents are read
+    log_file.close();
 
     // open the log file for writing again
     // [ it is unlikely to fail, but if it does then no biggie ]

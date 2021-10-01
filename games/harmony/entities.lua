@@ -58,7 +58,7 @@ HARMONY.ENTITIES =
   shotgun_rack = { id=75, r=20, h=64 },
 
   dead_amazon = { id=15, r=20, h=16, pass=true },
-  dead_beast  = { id=21, r=20, h=16, pass=true }
+  dead_beast  = { id=21, r=20, h=16, pass=true },
 
   passable_ceiling_decor = { id=61, r=16, h=24, pass=true, ceil=true }, -- For Harmony this is effectively nothing
 }
