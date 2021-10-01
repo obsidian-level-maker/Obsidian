@@ -107,7 +107,24 @@ STRIFE.PREFAB_FIELDS =
   
   line_700 = 28,
   line_701 = 26,
-  line_702 = 27
+  line_702 = 27,
+
+  -- These are used for converting generic fab things --
+  thing_11000 = 94, -- Barrel
+  thing_11001 = 28, -- Ceiling light
+  thing_11002 = 2028, -- Standalone light
+  thing_11003 = 107, -- Wall light (torch)
+  thing_11004 = 105, -- Wide standalone light
+  thing_11005 = 69, -- Small pillar
+  thing_11006 = 40, -- Key one
+  thing_11007 = 184, -- Key two
+  thing_11008 = 185, -- Key three
+  thing_11009 = 1, -- P1 Start
+  thing_11010 = 2, -- P2 Start
+  thing_11011 = 3, -- P3 Start
+  thing_11012 = 4, -- P4 Start
+  thing_11013 = 14, -- Teleport destination
+  thing_11014 = 80, -- Passable ceiling decor
 }
 
 
