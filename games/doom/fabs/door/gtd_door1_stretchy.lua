@@ -84,6 +84,8 @@ PREFABS.Door_plain_hell_stretchy_k_ALL =
 
   engine = "zdoom",
 
+  key = "k_ALL",
+
   theme = "hell",
 
   tex_BIGDOOR1 =
