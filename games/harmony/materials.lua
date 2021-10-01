@@ -185,7 +185,11 @@ HARMONY.MATERIALS =
 
 HARMONY.PREFAB_FIELDS =
 {
-  -- TODO : compatibility with DOOM prefabs
+  -- These are used for converting generic locked linedefs --
+  
+  line_700 = 26,
+  line_701 = 27,
+  line_702 = 28
 }
 
 

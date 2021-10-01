@@ -188,6 +188,10 @@ HACX.MATERIALS =
 
 HACX.PREFAB_FIELDS =
 {
+  -- Generic locked door conversion --
+  line_700 = 28,
+  line_701 = 27,
+  line_702 = 26
 }
 
 

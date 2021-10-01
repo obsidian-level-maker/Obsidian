@@ -262,6 +262,11 @@ HERETIC.MATERIALS =
 
 HERETIC.PREFAB_FIELDS =
 {
+  -- These are used for converting generic locked linedefs --
+
+  line_700 = 27,
+  line_701 = 28,
+  line_702 = 26
 }
 
 

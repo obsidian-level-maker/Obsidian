@@ -103,7 +103,11 @@ STRIFE.MATERIALS =
 
 STRIFE.PREFAB_FIELDS =
 {
-  -- TODO : compatibility with DOOM prefabs
+  -- These are used for converting generic locked linedefs --
+  
+  line_700 = 28,
+  line_701 = 26,
+  line_702 = 27
 }
 
 

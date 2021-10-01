@@ -546,3 +546,16 @@ CHEX3.MATERIALS =
   O_NEON   = { t="TEKWALL2", f="CEIL4_1",  sane=1 },
 
 }
+
+CHEX3.PREFAB_FIELDS = 
+{
+  -- These are used for converting generic locked door linedefs --
+  line_700 = 28,
+  line_701 = 27,
+  line_702 = 26
+}
+
+CHEX3.SKIN_DEFAULTS =
+{
+
+}
