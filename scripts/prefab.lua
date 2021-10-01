@@ -1549,18 +1549,7 @@ function Fab_load_wad(def)
   local function handle_entity(fab, E)
   
     local spot_info = WADFAB_ENTITIES[E.id]
-    
-    -- Convert things from generic things to their actual id
-    if E.id >= 11000 and E.id <= 11100 then
-      for _,v in pairs(GAME.ENTITIES) do
-        if E.id == v.id then
-          E.id = v.rid
-          goto continue
-        end
-      end
-      ::continue::
-    end
-    
+     
     if not spot_info then
       table.insert(fab.entities, E)
       return

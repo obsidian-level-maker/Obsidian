@@ -24,23 +24,43 @@ PREFABS.Hallway_deuce_locked_key1 =
 
 PREFABS.Hallway_deuce_locked_key2 =
 {
-  template  = "Hallway_deuce_locked_key1",
-  map    = "MAP01",
-  key = "k_two",
+  file   = "hall/deuce_k.wad",
+  map    = "MAP02",
 
-  tex__KEYTRM1 = "_KEYTRM2",
-  line_700 = 701,
+  kind   = "terminator",
+  group  = "deuce",
+  key    = "k_two",
+
+  prob   = 50,
+
+  where  = "seeds",
+  shape  = "I",
+
+  seed_w = 2,
+  seed_h = 1,
+
+  deep   = 16,
 }
 
 
 PREFABS.Hallway_deuce_locked_key3 =
 {
-  template = "Hallway_deuce_locked_key1",
-  map  = "MAP01",
-  key  = "k_three",
+  file   = "hall/deuce_k.wad",
+  map    = "MAP03",
 
-  tex__KEYTRM1 = "_KEYTRM3",
-  line_700 = 702,
+  kind   = "terminator",
+  group  = "deuce",
+  key    = "k_three",
+
+  prob   = 50,
+
+  where  = "seeds",
+  shape  = "I",
+
+  seed_w = 2,
+  seed_h = 1,
+
+  deep   = 16,
 }
 
 
@@ -49,7 +69,7 @@ PREFABS.Hallway_deuce_locked_key3 =
 PREFABS.Hallway_deuce_barred =
 {
   file   = "hall/deuce_k.wad",
-  map    = "MAP03",
+  map    = "MAP04",
 
   kind   = "terminator",
   group  = "deuce",

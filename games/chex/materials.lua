@@ -552,7 +552,24 @@ CHEX3.PREFAB_FIELDS =
   -- These are used for converting generic locked door linedefs --
   line_700 = 28,
   line_701 = 27,
-  line_702 = 26
+  line_702 = 26,
+
+  -- These are used for converting generic fab things --
+  thing_11000 = 2035, -- Barrel
+  thing_11001 = 46, -- Ceiling light
+  thing_11002 = 35, -- Standalone light
+  thing_11003 = 34, -- Wall light (torch)
+  thing_11004 = 2028, -- Wide standalone light
+  thing_11005 = 32, -- Small pillar
+  thing_11006 = 13, -- Key one
+  thing_11007 = 6, -- Key two
+  thing_11008 = 5, -- Key three
+  thing_11009 = 1, -- P1 Start
+  thing_11010 = 2, -- P2 Start
+  thing_11011 = 3, -- P3 Start
+  thing_11012 = 4, -- P4 Start
+  thing_11013 = 14, -- Teleport destination
+  thing_11014 = 60, -- Passable ceiling decor
 }
 
 CHEX3.SKIN_DEFAULTS =
