@@ -371,9 +371,10 @@ ULTDOOM.MATERIALS =
   MIDSPACE = { t="MIDGRATE", rail_h=128 },
 
   -- extra remapping due to some changes to Doom 2 materials
+  FLOOR4_5 = { t="BROWN1", f="FLOOR4_5" },
   FLOOR5_4 = { t="BROWN1", f="FLOOR5_4" },
   FLAT18 = { t="GRAY1", f="FLAT18" },
-  FLAT18 = { t="GRAY7", f="FLAT20" },
+  FLAT18 = { t="GRAY7", f="FLAT20" }
 }
 
 
