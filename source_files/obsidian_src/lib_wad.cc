@@ -329,7 +329,7 @@ void WAD_NewLump(std::string_view name) {
 
     memset(&wad_W_lump, 0, sizeof(wad_W_lump));
 
-    std::copy(name.data(), name.data() + 8, wad_W_lump.name);
+    std::copy(name.data(), name.data() + name.size(), wad_W_lump.name);
 
     wad_W_lump.start = wad_W_fp.tellp();
 }
