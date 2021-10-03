@@ -298,6 +298,7 @@ void WAD_CloseWrite(void) {
 
         wad_W_fp.write(reinterpret_cast<const char *>(L),
                        sizeof(raw_wad_lump_t));
+        wad_W_fp << std::flush;
 
         header.num_lumps++;
     }
@@ -355,6 +356,7 @@ void WAD_FinishLump(void) {
         static u8_t zeros[4] = {0, 0, 0, 0};
 
         wad_W_fp.write(reinterpret_cast<const char *>(zeros), padding);
+        wad_W_fp << std::flush;
     }
 
     // fix endianness
