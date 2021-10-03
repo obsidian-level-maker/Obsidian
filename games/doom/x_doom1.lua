@@ -371,9 +371,10 @@ ULTDOOM.MATERIALS =
   MIDSPACE = { t="MIDGRATE", rail_h=128 },
 
   -- extra remapping due to some changes to Doom 2 materials
+  FLOOR4_5 = { t="BROWN1", f="FLOOR4_5" },
   FLOOR5_4 = { t="BROWN1", f="FLOOR5_4" },
   FLAT18 = { t="GRAY1", f="FLAT18" },
-  FLAT18 = { t="GRAY7", f="FLAT20" },
+  FLAT18 = { t="GRAY7", f="FLAT20" }
 }
 
 
@@ -534,7 +535,7 @@ ULTDOOM.THEMES =
   },
 
 
-  ---- Episode 1 ----
+---- Episode 1 ----
 
   tech =
   {
@@ -602,28 +603,132 @@ ULTDOOM.THEMES =
 
     wall_groups =
     {
-      low_gap = 2,
-      mid_band = 3,
-      lite2 = 10,
-      torches6 = 8,
-      torches7 = 35,
-      torches11 = 12,
-      gtd_wall_urban_storage = 10,
-      gtd_wall_tech_top_corner_light_set = 25,
-      gtd_wall_server_room = 25,
-      gtd_wall_sewer = 10,
-      gtd_generic_beamed_inset = 7,
-      gtd_computers = 35,
-      gtd_writhing_mass = 2,
-      gtd_wall_octagon_insets = 18,
-      gtd_wall_grated_machines = 15,
-      gtd_wall_quakish_insets = 20,
-      gtd_ribbed_lights = 15,
-      gtd_wall_high_gap_set = 10,
-      gtd_wall_high_gap_alt_set = 10,
-      gtd_generic_half_floor = 15,
+      low_gap = 40,
+      mid_band = 40,
+      --
+      torches6 = 15,
+      torches7 = 40,
+      torches11 = 20,
+      --
+      lite1 = 40,
+      lite2 = 40,
+      --
+      gtd_wall_urban_storage = 50,
+      gtd_full_storage = 50,
+      --
+      gtd_wall_tech_top_corner_light_set = 50,
+      gtd_wall_server_room = 50,
+      gtd_wall_sewer = 50,
+      --
+      gtd_generic_beamed_inset = 25,
+      gtd_generic_beamed_green_inset = 25,
+      gtd_generic_beamed_brown_inset = 25,
+      --
+      gtd_computers = 32,
+      gtd_computers_lite5 = 32,
+      gtd_computers_blue_shawn = 32,
+      --
+      gtd_writhing_mass = 10,
+      gtd_wall_octagon_insets = 50,
+      gtd_wall_grated_machines = 50,
+      --
+      gtd_wall_quakish_insets = 25,
+      gtd_wall_quakish_insets_2 = 25,
+      --
+      gtd_ribbed_lights = 18,
+      gtd_ribbed_lights_no3d = 18,
+      gtd_ribbed_lights_slump = 18,
+      gtd_ribbed_lights_slump_two_color = 18,
+      --
+      gtd_wall_high_gap_set = 25,
+      gtd_wall_high_gap_alt_set = 25,
+      --
+      gtd_generic_half_floor = 20,
+      gtd_generic_half_floor_no_trim = 20,
+      gtd_generic_half_floor_inverted_braced = 20,
+      --
       gtd_wall_urban_cement_frame = 10,
-      gtd_generic_ceilwall = 25,
+      --
+      gtd_generic_ceilwall = 30,
+      gtd_generic_ceilwall_2 = 30,
+      gtd_generic_ceilwall_3 = 30,
+      --
+      gtd_generic_glow_wall = 50,
+      gtd_generic_double_banded_ceil = 50,
+      --
+      gtd_generic_frame_light_band = 50,
+      gtd_generic_frame_metal = 50,
+      --
+      gtd_generic_d64_1x = 8,
+      gtd_generic_d64_1x_yellow = 8,
+      gtd_generic_d64_1x_blue = 8,
+      gtd_generic_d64_2x = 8,
+      gtd_generic_d64_2x_yellow = 8,
+      gtd_generic_d64_2x_blue = 8,
+      --
+      gtd_generic_tek_grate = 25,
+      gtd_generic_tek_grate_bottom_slope = 25,
+      --
+      gtd_generic_artsy_bedazzled = 5,
+      gtd_generic_alt_colors = 20,
+      gtd_generic_mid_band = 20,
+      gtd_generic_artsy_center_braced_ind = 20,
+      gtd_generic_artsy_step1_banded = 20,
+      gtd_generic_artsy_slope_y_inset = 20,
+      gtd_generic_artsy_base_braced = 20,
+      gtd_generic_artsy_sloped_bump = 20,
+      --
+      gtd_modquake_set = 18,
+      gtd_modquake_jawlike = 18,
+      gtd_modquake_top_heavy_brace = 18,
+      gtd_modquake_tek_slope_brace = 18,
+      gtd_modquake_ex_light_slope_brace = 18,
+      gtd_modquake_round_braced_lit_pillar = 18,
+      gtd_modquake_hexagon_inset_braced = 18,
+      --
+      gtd_wall_lamp_stubby = 16,
+      gtd_wall_lamp_thin = 16,
+      gtd_wall_lamp_thicc = 16,
+      --
+      gtd_sunderfall = 13,
+      gtd_sunderfall_barred = 13
+    },
+
+    outdoor_wall_groups =
+    {
+      PLAIN = 2,
+      tech_o_caution_strip = 1,
+      tech_o_orange_light_stack = 1,
+      tech_o_lite_strip_white = 0.5,
+      tech_o_lite_strip_blue = 0.5,
+      tech_o_inset_teklite = 0.5,
+      tech_o_inset_teklite2 = 0.5,
+      tech_o_halfbase_green_light = 0.5,
+      tech_o_halfbase_blue_triangle = 0.5,
+      tech_o_giant_UAC_sign = 1,
+      tech_o_double_hanging_vents = 1,
+      tech_o_overhanging_braced_vent = 1,
+      tech_o_overhanging_lite_platform = 1,
+      tech_o_pipe_junctions = 1,
+      tech_o_hadleys_hope = 1,
+      tech_o_overhanging_lights = 1,
+      tech_o_shiny_silver_overhang = 1,
+      tech_o_silver_scaffolding = 1,
+      tech_o_concrete_base = 1,
+      tech_o_fence_lights_uac_thing = 1,
+      tech_o_hex_inset = 1,
+      tech_o_grated_greenwall = 1,
+      tech_o_everyone_likes_sewers = 1,
+      tech_o_red_wall = 0.5,
+      tech_o_blue_wall = 0.5,
+      tech_o_lots_of_cement = 1,
+      tech_o_tekgren_grates_thing = 1,
+      tech_o_black_mesa_overlook = 1,
+      tech_o_compblue_tall = 1,
+      tech_o_grey_metal_sloped = 1,
+      tech_o_tall_light = 0.5,
+      tech_o_tall_light_alt = 0.5,
+      tech_o_hexagon_uac_spotlights = 1
     },
 
     fence_groups =
@@ -766,14 +871,13 @@ ULTDOOM.THEMES =
       Skybox_generic = 50,
     },
 
-  ceil_light_prob = 70,
+    ceil_light_prob = 70,
 
   },
 
 
-  ---- Episode 2 ----
-
-  -- Deimos theme by Chris Pisarczyk / Armaetus
+---- Episode 2 ----
+-- Deimos theme by Chris Pisarczyk / Armaetus
 
   deimos =
   {
@@ -837,6 +941,156 @@ ULTDOOM.THEMES =
       burnt_tree = 95,
       brown_stub = 55,
       big_tree = 40,
+    },
+
+    wall_groups =
+    {
+      torches2 = 30, --red
+      torches3 = 30, --blue
+      torches1 = 30, --green
+      torches6 = 10, --candelabra
+      torches8 = 10, --evil eye
+      torches10 = 7, --skull rock
+      --
+      lowhell1 = 16,
+      lowhell2 = 16,
+      lowhell3 = 16,
+      --
+      runes1 = 10,
+      runes2 = 10,
+      runes3 = 10,
+      runes4 = 10,
+      runes5 = 10,
+      --
+      cross1 = 7, --7
+      cross2 = 15, --15
+      cross3 = 7, --7
+      cross4 = 10, --5
+      cross5 = 15, --10
+      --
+      mid_band_hell = 25,
+      --
+      gtd_wall_hell_bloodgutters = 25,
+      gtd_wall_tech_top_corner_light_set = 50,
+      --
+      gtd_generic_beamed_inset = 35,
+      gtd_generic_beamed_brown_inset = 35,
+      --
+      gtd_writhing_mass = 50,
+      gtd_library = 50,
+      --
+      gtd_furnace = 25,
+      gtd_furnace_face = 25,
+      --
+      gtd_wall_marbface = 50,
+      gtd_wall_quakish_insets = 50,
+      gtd_wall_hell_ossuary = 50,
+      --
+      gtd_wall_high_gap_set = 25,
+      gtd_wall_high_gap_alt_set = 25,
+      --
+      gtd_generic_half_floor = 20,
+      gtd_generic_half_floor_no_trim = 20,
+      gtd_generic_half_floor_inverted_braced = 20,
+      --
+      gtd_woodframe = 25,
+      gtd_woodframe_green = 25,
+      --
+      gtd_round_inset = 50,
+      --
+      gtd_generic_ceilwall = 30,
+      gtd_generic_ceilwall_2 = 30,
+      gtd_generic_ceilwall_3 = 30,
+      --
+      gtd_generic_glow_wall = 30,
+      gtd_generic_double_banded_ceil = 30,
+      --
+      gtd_wall_hell_vaults = 50,
+      gtd_wall_hell_vaults_ftex = 50,
+      --
+      gtd_generic_frame_light_band = 50,
+      gtd_generic_frame_metal = 50,
+      --
+      gtd_generic_d64_1x = 10,
+      gtd_generic_d64_1x_yellow = 10,
+      gtd_generic_d64_1x_blue = 10,
+      gtd_generic_d64_2x = 10,
+      gtd_generic_d64_2x_yellow = 10,
+      gtd_generic_d64_2x_blue = 10,
+      --
+      gtd_generic_tek_grate = 25,
+      gtd_generic_tek_grate_bottom_slope = 25,
+      --
+      gtd_generic_artsy_bedazzled = 20,
+      gtd_generic_alt_colors = 20,
+      gtd_generic_mid_band = 20,
+      gtd_generic_artsy_center_braced_hell = 20,
+      gtd_generic_artsy_step1_banded = 20,
+      gtd_generic_artsy_slope_y_inset = 20,
+      gtd_generic_artsy_base_braced = 20,
+      gtd_generic_artsy_sloped_bump = 20,
+      --
+      gtd_modquake_set = 11,
+      gtd_modquake_jawlike = 11,
+      gtd_modquake_top_heavy_brace = 11,
+      gtd_modquake_tek_slope_brace = 11,
+      gtd_modquake_ex_light_slope_brace = 11,
+      gtd_modquake_round_braced_lit_pillar = 11,
+      gtd_modquake_hexagon_inset_braced = 11,
+      --
+      gtd_wall_candalebra = 12,
+      gtd_wall_blue_torch = 12,
+      gtd_wall_green_torch = 12,
+      gtd_wall_red_torch = 12,
+      --
+      gtd_wall_hell_mindscrew = 25,
+      gtd_wall_hell_mindscrew_skywall = 25,
+      --
+      gtd_gothic_ceilwall_arch = 18,
+      gtd_gothic_ceilwall_doublet_arch = 18,
+      gtd_gothic_ceilwall_braced_arch = 18,
+      gtd_gothic_ceilwall_xzibit_arch = 18,
+      gtd_gothic_ceilwall_inner_framed_arch = 18,
+      --
+      gtd_sunderfall = 25,
+      gtd_sunderfall_barred = 25,
+    },
+
+    outdoor_wall_groups =
+    {
+      PLAIN = 2,
+      tech_o_caution_strip = 1,
+      tech_o_orange_light_stack = 1,
+      tech_o_lite_strip_white = 0.5,
+      tech_o_lite_strip_blue = 0.5,
+      tech_o_inset_teklite = 0.5,
+      tech_o_inset_teklite2 = 0.5,
+      tech_o_halfbase_green_light = 0.5,
+      tech_o_halfbase_blue_triangle = 0.5,
+      tech_o_giant_UAC_sign = 1,
+      tech_o_double_hanging_vents = 1,
+      tech_o_overhanging_braced_vent = 1,
+      tech_o_overhanging_lite_platform = 1,
+      tech_o_pipe_junctions = 1,
+      tech_o_hadleys_hope = 1,
+      tech_o_overhanging_lights = 1,
+      tech_o_shiny_silver_overhang = 1,
+      tech_o_silver_scaffolding = 1,
+      tech_o_concrete_base = 1,
+      tech_o_fence_lights_uac_thing = 1,
+      tech_o_hex_inset = 1,
+      tech_o_grated_greenwall = 1,
+      tech_o_everyone_likes_sewers = 1,
+      tech_o_red_wall = 0.5,
+      tech_o_blue_wall = 0.5,
+      tech_o_lots_of_cement = 1,
+      tech_o_tekgren_grates_thing = 1,
+      tech_o_black_mesa_overlook = 1,
+      tech_o_compblue_tall = 1,
+      tech_o_grey_metal_sloped = 1,
+      tech_o_tall_light = 0.5,
+      tech_o_tall_light_alt = 0.5,
+      tech_o_hexagon_uac_spotlights = 1
     },
 
     fences =
@@ -997,7 +1251,7 @@ ULTDOOM.THEMES =
   },
 
 
-  ---- Episode 3 ----
+---- Episode 3 ----
 
   hell =
   {
@@ -1122,36 +1376,144 @@ ULTDOOM.THEMES =
       torches6 = 10, --candelabra
       torches8 = 10, --evil eye
       torches10 = 7, --skull rock
-      lowhell1 = 4,
-      lowhell2 = 2,
-      lowhell3 = 4,
-      runes1 = 7,
-      runes2 = 7,
-      runes3 = 7,
-      runes4 = 7,
-      runes5 = 7,
-      cross1 = 7,
-      cross2 = 15,
-      cross3 = 7,
-      cross4 = 5,
-      cross5 = 10,
-      mid_band_hell = 2,
-      gtd_wall_hell_bloodgutters = 30,
-      gtd_wall_tech_top_corner_light_set = 40,
-      gtd_wall_hell_vaults = 40,
-      gtd_generic_beamed_inset = 40,
-      gtd_writhing_mass = 40,
-      gtd_library = 40,
-      gtd_furnace = 20,
-      gtd_furnace_face = 20,
-      gtd_wall_marbface = 40,
-      gtd_wall_quakish_insets = 40,
-      gtd_ribbed_lights = 5,
-      gtd_wall_high_gap_set = 20,
-      gtd_wall_high_gap_alt_set = 20,
+      --
+      lowhell1 = 16,
+      lowhell2 = 16,
+      lowhell3 = 16,
+      --
+      runes1 = 10,
+      runes2 = 10,
+      runes3 = 10,
+      runes4 = 10,
+      runes5 = 10,
+      --
+      cross1 = 7, --7
+      cross2 = 15, --15
+      cross3 = 7, --7
+      cross4 = 10, --5
+      cross5 = 15, --10
+      --
+      mid_band_hell = 25,
+      --
+      gtd_wall_hell_bloodgutters = 25,
+      gtd_wall_tech_top_corner_light_set = 50,
+      --
+      gtd_generic_beamed_inset = 35,
+      gtd_generic_beamed_brown_inset = 35,
+      --
+      gtd_writhing_mass = 50,
+      gtd_library = 50,
+      --
+      gtd_furnace = 25,
+      gtd_furnace_face = 25,
+      --
+      gtd_wall_marbface = 50,
+      gtd_wall_quakish_insets = 50,
+      gtd_wall_hell_ossuary = 50,
+      --
+      gtd_wall_high_gap_set = 25,
+      gtd_wall_high_gap_alt_set = 25,
+      --
       gtd_generic_half_floor = 20,
-      gtd_wall_urban_cement_frame = 10,
-      gtd_generic_ceilwall = 25,
+      gtd_generic_half_floor_no_trim = 20,
+      gtd_generic_half_floor_inverted_braced = 20,
+      --
+      gtd_woodframe = 25,
+      gtd_woodframe_green = 25,
+      --
+      gtd_round_inset = 50,
+      --
+      gtd_generic_ceilwall = 30,
+      gtd_generic_ceilwall_2 = 30,
+      gtd_generic_ceilwall_3 = 30,
+      --
+      gtd_generic_glow_wall = 30,
+      gtd_generic_double_banded_ceil = 30,
+      --
+      gtd_wall_hell_vaults = 50,
+      gtd_wall_hell_vaults_ftex = 50,
+      --
+      gtd_generic_frame_light_band = 50,
+      gtd_generic_frame_metal = 50,
+      --
+      gtd_generic_d64_1x = 10,
+      gtd_generic_d64_1x_yellow = 10,
+      gtd_generic_d64_1x_blue = 10,
+      gtd_generic_d64_2x = 10,
+      gtd_generic_d64_2x_yellow = 10,
+      gtd_generic_d64_2x_blue = 10,
+      --
+      gtd_generic_tek_grate = 25,
+      gtd_generic_tek_grate_bottom_slope = 25,
+      --
+      gtd_generic_artsy_bedazzled = 20,
+      gtd_generic_alt_colors = 20,
+      gtd_generic_mid_band = 20,
+      gtd_generic_artsy_center_braced_hell = 20,
+      gtd_generic_artsy_step1_banded = 20,
+      gtd_generic_artsy_slope_y_inset = 20,
+      gtd_generic_artsy_base_braced = 20,
+      gtd_generic_artsy_sloped_bump = 20,
+      --
+      gtd_modquake_set = 11,
+      gtd_modquake_jawlike = 11,
+      gtd_modquake_top_heavy_brace = 11,
+      gtd_modquake_tek_slope_brace = 11,
+      gtd_modquake_ex_light_slope_brace = 11,
+      gtd_modquake_round_braced_lit_pillar = 11,
+      gtd_modquake_hexagon_inset_braced = 11,
+      --
+      gtd_wall_candalebra = 12,
+      gtd_wall_blue_torch = 12,
+      gtd_wall_green_torch = 12,
+      gtd_wall_red_torch = 12,
+      --
+      gtd_wall_hell_mindscrew = 25,
+      gtd_wall_hell_mindscrew_skywall = 25,
+      --
+      gtd_gothic_ceilwall_arch = 18,
+      gtd_gothic_ceilwall_doublet_arch = 18,
+      gtd_gothic_ceilwall_braced_arch = 18,
+      gtd_gothic_ceilwall_xzibit_arch = 18,
+      gtd_gothic_ceilwall_inner_framed_arch = 18,
+      --
+      gtd_sunderfall = 25,
+      gtd_sunderfall_barred = 25,
+    },
+
+    outdoor_wall_groups =
+    {
+      PLAIN = 2,
+      hell_o_stone_brace = 1,
+      hell_o_wood_brace = 1,
+      hell_o_metal_framed_skin = 1,
+      hell_o_caged_up_corpses = 1,
+      hell_o_giant_stone_faces = 1,
+      hell_o_rising_spfaces = 1,
+      hell_o_lava_falls = 1,
+      hell_o_huge_overhang = 1,
+      hell_o_spiny_overhang = 1,
+      hell_o_red_glass_tall = 1,
+      hell_o_rising_energy = 1,
+      hell_o_wooden_palisades = 1,
+      hell_o_flying_alcoves = 1,
+      hell_o_torch_fenced = 1,
+      hell_o_dark_banners = 1,
+      hell_o_dark_cathedral_windows = 1,
+      hell_o_extruded_arch = 1,
+      hell_o_egyptish_triwindows = 1,
+      hell_o_destroyed_city_facade = 1,
+      hell_o_alt_cathedral_windows = 1,
+      hell_o_wood_panel_red_banners = 1,
+      hell_o_pencil_arch = 1,
+      hell_o_hereticish_arch = 1,
+      hell_o_gothic_skin_red = 1,
+      hell_o_marb_icon_bfalls = 1,
+      hell_o_egyptish = 1,
+      hell_o_blood_ocatgon = 1,
+      hell_o_catamet = 1,
+      hell_o_crematorium_windows = 1,
+      hell_o_orange_arch_window = 1
     },
 
     fence_groups =
@@ -1312,10 +1674,10 @@ ULTDOOM.THEMES =
   },
 
 
-  ---- Episode 4 ----
+---- Episode 4 ----
 
-  -- Thy Flesh Consumed by Chris Pisarczyk / Armaetus
-  -- Basically a modified version of "hell" to match id's E4 better
+-- Thy Flesh Consumed by Chris Pisarczyk / Armaetus
+-- Basically a modified version of "hell" to match id's E4 better
 
   flesh =
   {
@@ -1436,37 +1798,144 @@ ULTDOOM.THEMES =
       torches6 = 10, --candelabra
       torches8 = 10, --evil eye
       torches10 = 7, --skull rock
-      lowhell1 = 4,
-      lowhell2 = 2,
-      lowhell3 = 4,
-      runes1 = 5,
-      runes2 = 5,
-      runes3 = 5,
-      runes4 = 5,
-      runes5 = 5,
-      cross1 = 5,
-      cross2 = 12,
-      cross3 = 5,
-      cross4 = 5,
-      cross5 = 10,
-      mid_band_hell = 2,
-      gtd_wall_hell_bloodgutters = 30,
-      gtd_wall_tech_top_corner_light_set = 35,
-      gtd_wall_hell_vaults = 40,
-      gtd_generic_beamed_inset = 40,
-      gtd_writhing_mass = 30,
-      gtd_library = 40,
-      gtd_furnace = 20,
-      gtd_furnace_face = 20,
-      gtd_wall_marbface = 30,
-      gtd_wall_quakish_insets = 25,
-      gtd_ribbed_lights = 8,
-      gtd_wall_high_gap_set = 10,
-      gtd_wall_high_gap_alt_set = 10,
-      gtd_generic_half_floor = 15,
-      gtd_woodframe = 15,
-      gtd_woodframe_green = 15,
-      gtd_generic_ceilwall = 20,
+      --
+      lowhell1 = 16,
+      lowhell2 = 16,
+      lowhell3 = 16,
+      --
+      runes1 = 10,
+      runes2 = 10,
+      runes3 = 10,
+      runes4 = 10,
+      runes5 = 10,
+      --
+      cross1 = 7, --7
+      cross2 = 15, --15
+      cross3 = 7, --7
+      cross4 = 10, --5
+      cross5 = 15, --10
+      --
+      mid_band_hell = 25,
+      --
+      gtd_wall_hell_bloodgutters = 25,
+      gtd_wall_tech_top_corner_light_set = 50,
+      --
+      gtd_generic_beamed_inset = 35,
+      gtd_generic_beamed_brown_inset = 35,
+      --
+      gtd_writhing_mass = 50,
+      gtd_library = 50,
+      --
+      gtd_furnace = 25,
+      gtd_furnace_face = 25,
+      --
+      gtd_wall_marbface = 50,
+      gtd_wall_quakish_insets = 50,
+      gtd_wall_hell_ossuary = 50,
+      --
+      gtd_wall_high_gap_set = 25,
+      gtd_wall_high_gap_alt_set = 25,
+      --
+      gtd_generic_half_floor = 20,
+      gtd_generic_half_floor_no_trim = 20,
+      gtd_generic_half_floor_inverted_braced = 20,
+      --
+      gtd_woodframe = 25,
+      gtd_woodframe_green = 25,
+      --
+      gtd_round_inset = 50,
+      --
+      gtd_generic_ceilwall = 30,
+      gtd_generic_ceilwall_2 = 30,
+      gtd_generic_ceilwall_3 = 30,
+      --
+      gtd_generic_glow_wall = 30,
+      gtd_generic_double_banded_ceil = 30,
+      --
+      gtd_wall_hell_vaults = 50,
+      gtd_wall_hell_vaults_ftex = 50,
+      --
+      gtd_generic_frame_light_band = 50,
+      gtd_generic_frame_metal = 50,
+      --
+      gtd_generic_d64_1x = 10,
+      gtd_generic_d64_1x_yellow = 10,
+      gtd_generic_d64_1x_blue = 10,
+      gtd_generic_d64_2x = 10,
+      gtd_generic_d64_2x_yellow = 10,
+      gtd_generic_d64_2x_blue = 10,
+      --
+      gtd_generic_tek_grate = 25,
+      gtd_generic_tek_grate_bottom_slope = 25,
+      --
+      gtd_generic_artsy_bedazzled = 20,
+      gtd_generic_alt_colors = 20,
+      gtd_generic_mid_band = 20,
+      gtd_generic_artsy_center_braced_hell = 20,
+      gtd_generic_artsy_step1_banded = 20,
+      gtd_generic_artsy_slope_y_inset = 20,
+      gtd_generic_artsy_base_braced = 20,
+      gtd_generic_artsy_sloped_bump = 20,
+      --
+      gtd_modquake_set = 11,
+      gtd_modquake_jawlike = 11,
+      gtd_modquake_top_heavy_brace = 11,
+      gtd_modquake_tek_slope_brace = 11,
+      gtd_modquake_ex_light_slope_brace = 11,
+      gtd_modquake_round_braced_lit_pillar = 11,
+      gtd_modquake_hexagon_inset_braced = 11,
+      --
+      gtd_wall_candalebra = 12,
+      gtd_wall_blue_torch = 12,
+      gtd_wall_green_torch = 12,
+      gtd_wall_red_torch = 12,
+      --
+      gtd_wall_hell_mindscrew = 25,
+      gtd_wall_hell_mindscrew_skywall = 25,
+      --
+      gtd_gothic_ceilwall_arch = 18,
+      gtd_gothic_ceilwall_doublet_arch = 18,
+      gtd_gothic_ceilwall_braced_arch = 18,
+      gtd_gothic_ceilwall_xzibit_arch = 18,
+      gtd_gothic_ceilwall_inner_framed_arch = 18,
+      --
+      gtd_sunderfall = 25,
+      gtd_sunderfall_barred = 25,
+    },
+
+    outdoor_wall_groups =
+    {
+      PLAIN = 2,
+      hell_o_stone_brace = 1,
+      hell_o_wood_brace = 1,
+      hell_o_metal_framed_skin = 1,
+      hell_o_caged_up_corpses = 1,
+      hell_o_giant_stone_faces = 1,
+      hell_o_rising_spfaces = 1,
+      hell_o_lava_falls = 1,
+      hell_o_huge_overhang = 1,
+      hell_o_spiny_overhang = 1,
+      hell_o_red_glass_tall = 1,
+      hell_o_rising_energy = 1,
+      hell_o_wooden_palisades = 1,
+      hell_o_flying_alcoves = 1,
+      hell_o_torch_fenced = 1,
+      hell_o_dark_banners = 1,
+      hell_o_dark_cathedral_windows = 1,
+      hell_o_extruded_arch = 1,
+      hell_o_egyptish_triwindows = 1,
+      hell_o_destroyed_city_facade = 1,
+      hell_o_alt_cathedral_windows = 1,
+      hell_o_wood_panel_red_banners = 1,
+      hell_o_pencil_arch = 1,
+      hell_o_hereticish_arch = 1,
+      hell_o_gothic_skin_red = 1,
+      hell_o_marb_icon_bfalls = 1,
+      hell_o_egyptish = 1,
+      hell_o_blood_ocatgon = 1,
+      hell_o_catamet = 1,
+      hell_o_crematorium_windows = 1,
+      hell_o_orange_arch_window = 1
     },
 
     fence_groups =

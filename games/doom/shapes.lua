@@ -842,8 +842,8 @@ SPROUT_DIRECT_4 =
   {
     conn = { x=1, y=1, w=4, dir=8 },
 
-    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 },
-    symmetry2 = { kind="mirror", x=2, y=3, dir=4 },
+    symmetry = { kind="mirror", x=2, y=2, w=2, dir=8 },
+    symmetry2 = { kind="mirror", x=2, y=2, dir=4 },
     symmetry3 = { kind="rotate", x=1, y=2, x2=4, y2=3 }
   }
 },
