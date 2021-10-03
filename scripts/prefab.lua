@@ -88,13 +88,13 @@ WADFAB_DELTA_12    = 997
 WADFAB_LIGHT_BRUSH = 987
 
 
-function load_from_subdir(top_level, sub)
+function load_from_subdir(top_level, sub, extension)
   -- ignore the attic (it contains a lot of broken stuff)
   if sub == "_attic" then return end
 
   local dir = top_level .. "/" .. sub
 
-  local list, err = gui.scan_directory(dir, "*.lua")
+  local list, err = gui.scan_directory(dir, extension)
 
   if list == nil then
     gui.printf("Failed to scan prefab directory '%s'\n", sub)
@@ -113,7 +113,7 @@ function load_from_subdir(top_level, sub)
 end
 
 
-function visit_dir(top_level)
+function visit_dir(top_level, extension)
   gui.printf("Loading prefabs from: '%s'\n", top_level)
   local subdirs, err = gui.scan_directory(top_level, "DIRS")
 
@@ -123,7 +123,7 @@ function visit_dir(top_level)
   end
 
   for _,sub in pairs(subdirs) do
-    load_from_subdir(top_level, sub)
+    load_from_subdir(top_level, sub, extension)
   end
 
   -- give each loaded definition a 'dir_name' field.
@@ -242,8 +242,8 @@ function Fab_load_all_definitions()
 
   assert(GAME.game_dir)
 
-  if GAME.use_generics and GAME.use_generics == true then visit_dir("games/generic/fabs") end
-  visit_dir("games/" .. GAME.game_dir .. "/fabs") 
+  if GAME.use_generics and GAME.use_generics == true then visit_dir("games/generic/fabs", "*.lua") end
+  visit_dir("games/" .. GAME.game_dir .. "/fabs", "*.lua") 
   ob_invoke_hook("addon_fabs")
   preprocess_all()
 end
