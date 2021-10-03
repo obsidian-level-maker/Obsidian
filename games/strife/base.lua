@@ -56,6 +56,8 @@ OB_GAMES["strife"] =
   game_dir = "strife",
   iwad_name = "strife1.wad",
 
+  use_generics = true,
+
   tables =
   {
     STRIFE

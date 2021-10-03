@@ -24,6 +24,8 @@ OB_GAMES["harmony"] =
 	
 	game_dir = "harmony",
 	iwad_name = "harm1.wad",
+
+	use_generics = true,
 	
 	tables =
 	{

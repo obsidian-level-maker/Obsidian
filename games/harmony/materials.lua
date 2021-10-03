@@ -185,7 +185,28 @@ HARMONY.MATERIALS =
 
 HARMONY.PREFAB_FIELDS =
 {
-  -- TODO : compatibility with DOOM prefabs
+  -- These are used for converting generic locked linedefs --
+  
+  line_700 = 26,
+  line_701 = 27,
+  line_702 = 28,
+
+  -- These are used for converting generic fab things --
+  thing_11000 = 2035, -- Barrel
+  thing_11001 = 63, -- Ceiling light
+  thing_11002 = 2028, -- Standalone light
+  thing_11003 = 44, -- Wall light (torch)
+  thing_11004 = 57, -- Wide standalone light
+  thing_11005 = 48, -- Small pillar
+  thing_11006 = 5, -- Key one
+  thing_11007 = 6, -- Key two
+  thing_11008 = 13, -- Key three
+  thing_11009 = 1, -- P1 Start
+  thing_11010 = 2, -- P2 Start
+  thing_11011 = 3, -- P3 Start
+  thing_11012 = 4, -- P4 Start
+  thing_11013 = 14, -- Teleport destination
+  thing_11014 = 61, -- Passable ceiling decor
 }
 
 

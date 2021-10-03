@@ -88,60 +88,59 @@ WADFAB_DELTA_12    = 997
 WADFAB_LIGHT_BRUSH = 987
 
 
+function load_from_subdir(top_level, sub, extension)
+  -- ignore the attic (it contains a lot of broken stuff)
+  if sub == "_attic" then return end
+
+  local dir = top_level .. "/" .. sub
+
+  local list, err = gui.scan_directory(dir, extension)
+
+  if list == nil then
+    gui.printf("Failed to scan prefab directory '%s'\n", sub)
+    return
+  end
+
+  gui.set_import_dir(dir)
+
+  for _,filename in pairs(list) do
+    gui.debugf("Loading %s/%s\n", sub, filename)
+
+    gui.import(filename)
+  end
+
+  gui.set_import_dir("")
+end
+
+
+function visit_dir(top_level, extension)
+  gui.printf("Loading prefabs from: '%s'\n", top_level)
+  local subdirs, err = gui.scan_directory(top_level, "DIRS")
+
+  if not subdirs then
+    gui.printf("Failed to scan folder: %s\n", tostring(err))
+    return
+  end
+
+  for _,sub in pairs(subdirs) do
+    load_from_subdir(top_level, sub, extension)
+  end
+
+  -- give each loaded definition a 'dir_name' field.
+  -- [ we assume previous defs also got it, hence this will only set
+  --   the dir_name in the definitions just loaded ]
+
+  for name,def in pairs(PREFABS) do
+    if not def.dir_name then
+      def.dir_name = top_level
+    end
+  end
+
+  gui.printf("OK\n")
+end
+
 
 function Fab_load_all_definitions()
-
-  local function load_from_subdir(top_level, sub)
-    -- ignore the attic (it contains a lot of broken stuff)
-    if sub == "_attic" then return end
-
-    local dir = top_level .. "/" .. sub
-
-    local list, err = gui.scan_directory(dir, "*.lua")
-
-    if list == nil then
-      gui.printf("Failed to scan prefab directory '%s'\n", sub)
-      return
-    end
-
-    gui.set_import_dir(dir)
-
-    for _,filename in pairs(list) do
-      gui.debugf("Loading %s/%s\n", sub, filename)
-
-      gui.import(filename)
-    end
-
-    gui.set_import_dir("")
-  end
-
-
-  local function visit_dir(top_level)
-    gui.printf("Loading prefabs from: '%s'\n", top_level)
-    local subdirs, err = gui.scan_directory(top_level, "DIRS")
-
-    if not subdirs then
-      gui.printf("Failed to scan folder: %s\n", tostring(err))
-      return
-    end
-
-    for _,sub in pairs(subdirs) do
-      load_from_subdir(top_level, sub)
-    end
-
-    -- give each loaded definition a 'dir_name' field.
-    -- [ we assume previous defs also got it, hence this will only set
-    --   the dir_name in the definitions just loaded ]
-
-    for name,def in pairs(PREFABS) do
-      if not def.dir_name then
-        def.dir_name = top_level
-      end
-    end
-
-    gui.printf("OK\n")
-  end
-
 
   local function kind_from_filename(filename)
     assert(filename)
@@ -243,10 +242,9 @@ function Fab_load_all_definitions()
 
   assert(GAME.game_dir)
 
-  if GAME.GENERIC_REQS then visit_dir("games/generic/fabs") end -- Only games that have generic definitions will have the GENERIC_REQS table
-  ob_invoke_hook("fab_load")
-  visit_dir("games/" .. GAME.game_dir .. "/fabs") 
-
+  if GAME.use_generics and GAME.use_generics == true then visit_dir("games/generic/fabs", "*.lua") end
+  visit_dir("games/" .. GAME.game_dir .. "/fabs", "*.lua") 
+  ob_invoke_hook("addon_fabs")
   preprocess_all()
 end
 
@@ -1551,18 +1549,7 @@ function Fab_load_wad(def)
   local function handle_entity(fab, E)
   
     local spot_info = WADFAB_ENTITIES[E.id]
-    
-    -- Convert things from generic things to their actual id
-    if E.id >= 11000 and E.id <= 11100 then
-      for _,v in pairs(GAME.ENTITIES) do
-        if E.id == v.id then
-          E.id = v.rid
-          goto continue
-        end
-      end
-      ::continue::
-    end
-    
+     
     if not spot_info then
       table.insert(fab.entities, E)
       return
@@ -2229,17 +2216,6 @@ function Fab_replacements(fab)
     for _,C in pairs(B) do
       if C.special and C.x     then C.special = check("line",   C.special) end
       if C.special and not C.x then C.special = check("sector", C.special) end
-
-      --Convert generic linedef types to game-specific ones
-      if C.special and C.special >= 700 and C.special <= 702 then
-        for _,v in pairs (GAME.ACTIONS) do
-          if C.special == v.id then
-              C.special = v.rid
-            goto continue
-          end      
-        end
-        ::continue::
-      end
 
       if C.tag then 
         C.tag = check_tag(C.tag) 

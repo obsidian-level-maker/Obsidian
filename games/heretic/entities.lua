@@ -15,24 +15,6 @@
 
 HERETIC.ENTITIES =
 {
-
-  --- entities for generic prefabs, the rid field stands for "Real ID" --
-  generic_barrel = { id=11000, rid=2035, r=12, h=32 },
-  generic_ceiling_light = { id=11001, rid=28, r=31, h=60, light=255, pass=true, ceil=true, add_mode="island" },
-  generic_standalone_light = { id=11002, rid=27, r=12, h=54, light=255 }, -- "torches" and such, freestanding on a floor
-  generic_wall_light    = { id=11003, rid=50, r=10, h=64, light=255, pass=true, add_mode="extend" }, -- "torches" and such, attached to a wall
-  generic_wide_light    = { id=11004, rid=76, r=16, h=44, light=255 }, -- wide standalone light, braziers, etc
-  generic_small_pillar  = { id=11005, rid=29, r=16, h=36 },
-  k_one = { id=11006, rid=80 },
-  k_two = { id=11007, rid=73 },
-  k_three = { id=11008, rid=79 },
-  generic_p1_start = { id=11009, rid=1, r=16, h=56 },
-  generic_p2_start = { id=11010, rid=2, r=16, h=56 },
-  generic_p3_start = { id=11011, rid=3, r=16, h=56 },
-  generic_p4_start = { id=11012, rid=4, r=16, h=56 },
-  generic_teleport_spot = { id=11013, rid=14},
-  generic_passable_ceiling_decor = { id=11014, rid=49, r=16, h=24, pass=true, ceil=true },
-  
   --- player stuff ---
   player1 = { id=1, r=16, h=56 },
   player2 = { id=2, r=16, h=56 },

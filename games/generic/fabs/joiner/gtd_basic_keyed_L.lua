@@ -16,20 +16,32 @@ PREFABS.Joiner_gtd_basic_keyed_curve_key1 =
 
 PREFABS.Joiner_gtd_basic_keyed_curve_key2 =
 {
-  template = "Joiner_gtd_basic_keyed_curve_key1",
+  file   = "joiner/gtd_basic_keyed_L.wad",
+  map    = "MAP02",
 
-  key = "k_two",
-  tex__KEYTRM1 = "_KEYTRM2",
+  prob   = 30,
 
-  line_700 = 701,
+  key    = "k_two",
+
+  where  = "seeds",
+  shape  = "L",
+
+  seed_w = 2,
+  seed_h = 2,
 }
 
 PREFABS.Joiner_gtd_basic_keyed_curve_key3 =
 {
-  template = "Joiner_gtd_basic_keyed_curve_key1",
+  file   = "joiner/gtd_basic_keyed_L.wad",
+  map    = "MAP03",
 
-  key = "k_three",
-  tex__KEYTRM1 = "_KEYTRM3",
-  
-  line_700 = 702,
+  prob   = 30,
+
+  key    = "k_three",
+
+  where  = "seeds",
+  shape  = "L",
+
+  seed_w = 2,
+  seed_h = 2,
 }

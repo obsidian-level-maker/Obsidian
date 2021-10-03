@@ -298,6 +298,7 @@ void WAD_CloseWrite(void) {
 
         wad_W_fp.write(reinterpret_cast<const char *>(L),
                        sizeof(raw_wad_lump_t));
+        wad_W_fp << std::flush;
 
         header.num_lumps++;
     }
@@ -328,7 +329,7 @@ void WAD_NewLump(std::string_view name) {
 
     memset(&wad_W_lump, 0, sizeof(wad_W_lump));
 
-    std::copy(name.data(), name.data() + 8, wad_W_lump.name);
+    std::copy(name.data(), name.data() + name.size(), wad_W_lump.name);
 
     wad_W_lump.start = wad_W_fp.tellp();
 }
@@ -355,6 +356,7 @@ void WAD_FinishLump(void) {
         static u8_t zeros[4] = {0, 0, 0, 0};
 
         wad_W_fp.write(reinterpret_cast<const char *>(zeros), padding);
+        wad_W_fp << std::flush;
     }
 
     // fix endianness

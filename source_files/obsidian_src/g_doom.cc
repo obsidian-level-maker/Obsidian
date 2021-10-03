@@ -111,7 +111,7 @@ namespace Doom {
 void WriteLump(std::string_view name, const void *data, u32_t len) {
     SYS_ASSERT(name.size() <= 8);
 
-    WAD_NewLump(name.data());
+    WAD_NewLump(name);
 
     if (len > 0) {
         if (!WAD_AppendData(data, len)) {
@@ -132,7 +132,7 @@ static void WriteBehavior() {
     raw_behavior_header_t behavior;
 
     std::string_view acs{"ACS"};
-    std::copy(acs.data(), acs.data() + acs.size(), behavior.marker.data());
+    std::copy(acs.data(), acs.data() + 4, behavior.marker.data());
 
     behavior.offset = LE_U32(8);
     behavior.func_num = 0;
