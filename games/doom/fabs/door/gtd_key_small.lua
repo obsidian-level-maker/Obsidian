@@ -122,3 +122,38 @@ PREFABS.Locked_small_yellow_hell =
 
   line_33 = 34,
 }
+
+--
+
+PREFABS.Locked_small_all_key_tech =
+{
+  template = "Locked_small_red",
+  map = "MAP02",  
+
+  key = "k_ALL"
+}
+
+PREFABS.Locked_small_all_key_hell =
+{
+  template = "Locked_small_red",
+  map = "MAP02",
+
+  theme = "hell",
+
+  tex_DOOR3 =
+  {
+    WOODGARG = 1,
+    WOODMET1 = 1,
+    WOODMET2 = 1,
+    DOOR3 = 1,
+    SW1PANEL = 1,
+    SW1GARG = 0.3,
+    SW1LION = 0.3,
+    SW1SATYR = 0.3,
+    SW1WOOD = 0.3,
+  },
+  flat_TLITE6_6 = "TLITE6_5",
+  tex_DOORRED = "DOORYEL2",
+
+  key = "k_ALL"
+}

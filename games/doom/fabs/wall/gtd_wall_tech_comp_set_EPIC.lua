@@ -98,6 +98,66 @@ PREFABS.Wall_epic_comp_set_green_diag =
 
 --
 
+PREFABS.Wall_epic_comp_set_red_1 =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP07",
+
+  group = "gtd_comp_set_red_EPIC",
+
+  height = 88,
+  bound_z2 = 88,
+
+  z_fit = { 10,22 }
+}
+
+PREFABS.Wall_epic_comp_set_red_2 =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP08",
+
+  prob = 25,
+  group = "gtd_comp_set_red_EPIC",
+
+  tex_COMPSTA1 =
+  {
+    COMPSTA1 = 5,
+    COMPSTA2 = 5,
+    COMPSTA3 = 5,
+    COMPSTA4 = 5,
+    COMPSTA5 = 5,
+    COMPSTA6 = 5,
+    COMPSTA7 = 5,
+    COMPSTA8 = 5,
+    COMPSTA9 = 5,
+    COMPSTAA = 5,
+  },
+
+  height = 88,
+  bound_z2 = 88,
+
+  z_fit = { 10,22 }
+}
+
+PREFABS.Wall_epic_comp_set_red_diag =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP09",
+
+  where = "diagonal",
+
+  group = "gtd_comp_set_red_EPIC",
+
+  height = 88,
+  bound_z2 = 88,
+
+  z_fit = { 10,22 }
+}
+
+--
+-- plain
+--
+
 PREFABS.Wall_epic_comptil_plain_red =
 {
   template = "Wall_epic_comp_set_yellow_1",

@@ -88,3 +88,35 @@ PREFABS.Door_armaetus_door_KEYYELLOW =
 
   tex_DOORRED = "DOORYEL",
 }
+
+PREFABS.Door_armaetus_door_KEYALL =
+{
+  file   = "door/armaetus_door1.wad",
+  map    = "MAP03",
+
+  texture_pack = "armaetus",
+
+  prob   = 20,
+  engine = "zdoom",
+  theme  = "!hell",
+
+  where  = "edge",
+  key    = "k_ALL",
+
+  seed_w = 2,
+
+  deep   = 32,
+  over   = 32,
+
+  x_fit  = { 112,144 },
+
+  bound_z1 = 0,
+  bound_z2 = 128,
+
+  tex_DOORHI =
+  {
+    DOORHI = 50,
+    URBAN6 = 50,
+    URBAN8 = 50,
+  }
+}

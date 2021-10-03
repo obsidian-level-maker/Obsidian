@@ -66,3 +66,32 @@ PREFABS.Door_plain_hell_stretchy =
   },
   tex_COMPSTA1 = "BIGDOOR5",
 }
+
+PREFABS.Door_plain_tech_stretchy_k_ALL =
+{
+  template = "Door_plain_tech_stretchy_silver",
+  map = "MAP02",
+
+  engine = "zdoom",
+
+  key = "k_ALL"
+}
+
+PREFABS.Door_plain_hell_stretchy_k_ALL =
+{
+  template = "Door_plain_tech_stretchy_silver",
+  map = "MAP02",
+
+  engine = "zdoom",
+
+  key = "k_ALL",
+
+  theme = "hell",
+
+  tex_BIGDOOR1 =
+  {
+    BIGDOOR5 = 1,
+    BIGDOOR6 = 1,
+    BIGDOOR7 = 1,
+  },
+}
