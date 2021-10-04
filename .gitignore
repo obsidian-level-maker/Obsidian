@@ -31,6 +31,8 @@ addons/*.pk3
 
 tools/filename_formatter
 tools/filename_formatter.exe
+tools/qsavetex
+tools/qsavetex.exe
 
 web/out
 web/shots

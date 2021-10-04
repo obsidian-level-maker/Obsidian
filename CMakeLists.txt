@@ -5,6 +5,7 @@ include(cmake/CPM.cmake)
 add_subdirectory(source_files/lua_src)
 add_subdirectory(source_files/acc_src)
 add_subdirectory(source_files/ff_src)
+add_subdirectory(source_files/qsavetex_src)
 add_subdirectory(source_files/physfs_src)
 add_subdirectory(source_files/zdbsp_src)
 add_subdirectory(source_files/slump_src)
@@ -222,9 +223,11 @@ add_custom_command(
           "${CMAKE_CURRENT_LIST_DIR}"
   COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:filename_formatter>"
           "${CMAKE_CURRENT_LIST_DIR}/tools"
+  COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:qsavetex>"
+          "${CMAKE_CURRENT_LIST_DIR}/tools"
 )
 
-add_dependencies(obsidian filename_formatter)
+add_dependencies(obsidian filename_formatter qsavetex)
 
 if(UNIX)
   target_link_libraries(

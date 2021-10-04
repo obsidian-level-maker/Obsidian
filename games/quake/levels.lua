@@ -16,25 +16,29 @@ QUAKE.EPISODES =
 {
   episode1 =
   {
-    theme = "TECH",
+    ep_index = 1,
+    theme = "q1_tech",
     sky_light = 0.75,
   },
 
   episode2 =
   {
-    theme = "TECH",
+    ep_index = 2,
+    theme = "q1_tech",
     sky_light = 0.75,
   },
 
   episode3 =
   {
-    theme = "TECH",
+    ep_index = 3,
+    theme = "q1_castle",
     sky_light = 0.75,
   },
 
   episode4 =
   {
-    theme = "TECH",
+    ep_index = 4,
+    theme = "q1_castle",
     sky_light = 0.75,
   },
 }
@@ -65,17 +69,18 @@ function QUAKE.get_levels()
     e3m6 = 2, e4m7 = 2,
   }
 
-  for ep_index = 1,EP_NUM do
+  for ep_index = 1, 4 do
     -- create episode info...
-    local EPI =
-    {
-      levels = {},
-    }
-
-    table.insert(GAME.episodes, EPI)
-
     local ep_info = QUAKE.EPISODES["episode" .. ep_index]
     assert(ep_info)
+    local EPI = table.copy(ep_info)
+    EPI.levels = { }
+
+    table.insert(GAME.episodes, EPI)
+  end
+
+  for ep_index = 1,EP_NUM do
+    local EPI = GAME.episodes[ep_index]
 
     for map = 1,MAP_NUM do
       local name = string.format("e%dm%d", ep_index, map)
@@ -86,7 +91,7 @@ function QUAKE.get_levels()
 
       local ep_along = map / MAP_NUM
 
-      -- create level info....
+        -- create level info....
       local LEV =
       {
         episode = EPI,
@@ -94,7 +99,7 @@ function QUAKE.get_levels()
         name = name,
         next_map = string.format("e%dm%d", ep_index, map+1),
 
-          ep_along = ep_along,
+        ep_along = ep_along,
         game_along = (ep_index - 1 + ep_along) / EP_NUM
       }
 
@@ -103,12 +108,12 @@ function QUAKE.get_levels()
       ::continue::
     end -- for map
 
-    -- set "dist_to_end" value
+      -- set "dist_to_end" value
     if MAP_NUM >= 3 then
       EPI.levels[#EPI.levels    ].dist_to_end = 1
       EPI.levels[#EPI.levels - 1].dist_to_end = 2
     end
 
   end -- for episode
-end
 
+end
