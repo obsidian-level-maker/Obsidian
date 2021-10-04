@@ -2866,6 +2866,9 @@ end
 function Layout_outdoor_shadows()
 
   local function need_shadow(S, dir)
+
+    if OB_CONFIG.game == "quake" then return false end
+
     if not S.area then return false end
 
     local N = S:neighbor(dir)

@@ -20,7 +20,6 @@ QUAKE.SINKS =
   {
     mat   = "_SKY",
     dz    = 64,
-    light = 16
   },
 
   -- liquid floor --

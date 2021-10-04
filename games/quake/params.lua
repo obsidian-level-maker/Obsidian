@@ -29,6 +29,11 @@ QUAKE.PARAMETERS =
   health_factor  = 1.0,
   ammo_factor    = 1.0,
   time_factor    = 1.0,
+
+  rails = false,
+  switches = true,
+  light_brushes = false,
+
 }
 
 QUAKE.ACTIONS =
