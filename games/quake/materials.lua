@@ -600,12 +600,31 @@ QUAKE.MATERIALS =
 
 QUAKE.PREFAB_FIELDS =
 {
-  -- compatibility with DOOM prefabs
+  --[[compatibility with DOOM prefabs
 
   thing_1 = "player1",
   thing_2 = "player2",
   thing_3 = "player3",
-  thing_4 = "player4",
+  thing_4 = "player4",]]--
+
+  -- compatibility with the generic prefab set
+
+  thing_11000 = "misc_explobox", -- Barrel
+  thing_11001 = 0, -- Ceiling light - Not sure if Quake equivalent exists - Dasho
+  thing_11002 = 0, -- Standalone light
+  thing_11003 = "light_torch_small_walltorch", -- Wall light (torch)
+  thing_11004 = 0, -- Wide standalone light
+  thing_11005 = 0, -- Small pillar
+  thing_11006 = "k_silver", -- Key one
+  thing_11007 = "k_gold", -- Key two
+  thing_11008 = 0, -- Key three - Quake only has two keys per theme - Dasho
+  thing_11009 = "player1", -- P1 Start
+  thing_11010 = "player2", -- P2 Start
+  thing_11011 = "player3", -- P3 Start
+  thing_11012 = "player4", -- P4 Start
+  thing_11013 = "info_teleport_destination", -- Teleport destination
+  thing_11014 = 0, -- Passable ceiling decor
+
 }
 
 
