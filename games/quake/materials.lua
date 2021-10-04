@@ -526,6 +526,8 @@ QUAKE.MATERIALS =
   L_WATER1   = { t="*water1" },
   L_WATER2   = { t="*water2" },
 
+  CLIP_RAIL = { t="clip", rail_h=64},
+
   -- Oblige specific textures
   O_CARVE    = { t="o_carve" },
   O_BOLT     = { t="o_bolt"  },
