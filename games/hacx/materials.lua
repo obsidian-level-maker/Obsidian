@@ -30,9 +30,6 @@ HACX.MATERIALS =
   _WATER   = { f="FWATER1", t="BLODRIP1" }, -- "Standing water", sorta
   _WTRFALL = { f="SLIME05", t="WFALL1"  }, -- "Flowing water", sorta
   
-  _STONE   = { t="PLANET1",  f="GRNROCK" }, -- It rocks lOLOLol
-  _STONE2 = { t="HW185", f="FLOOR0_1" },
-  
   _DOOR  = { t="BIGDOOR1", f="RROCK03" }, -- Open says me
   _DOOR2 = { t="BIGDOOR2", f="RROCK03" },
   _DORRAIL = { t="HW209", f="RROCK03" }, -- Inner door slider thingys

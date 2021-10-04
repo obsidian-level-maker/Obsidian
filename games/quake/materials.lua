@@ -24,9 +24,58 @@ QUAKE.LIQUIDS =
 QUAKE.MATERIALS =
 {
   -- special materials --
-  _ERROR   = { t="metal1_1" },  -- METAL1_1,
-  _DEFAULT = { t="wwall1_1" },
+  _ERROR   = { t="metal1_1", f="metal1_1" },  -- METAL1_1,
+  _DEFAULT = { t="metal1_1", f="metal1_1" },
   _SKY     = { t="sky4" },
+  _LIQUID  = { t="*water0", f="*water0" },
+
+  -- materials for generic prefab set --
+  _SBARS = { t="clip", f="XX" }, -- Short bars, i.e. railings
+  _SBARS2 = { t="clip", f="XX" },
+  _MBARS = { t="clip", f="XX" }, -- Medium bars, i.e. barred windows
+  _TBARS = { t="clip", f="XX" }, -- Tall bars, i.e. cage/jail bars
+  
+  _CRATE   = { t="crate0_side",  f="crate0_top" }, -- Crate/box
+  _CRATE2  = { t="crate1_side",  f="crate1_top" },
+  _CRATWID = { t="crate0_side",  f="crate0_top" },
+  
+  _WATER   = { f="*water0", t="*water0" }, -- "Standing water", sorta
+  _WTRFALL = { f="*water0", t="*water0"  }, -- "Flowing water", sorta
+  
+  _DOOR  = { t="door01_2", f="door01_2" }, -- Open says me
+  _DOOR2 = { t="door02_1", f="door02_1" },
+  _DORRAIL = { t="metal1_1", f="metal1_1" }, -- Inner door slider thingys
+  
+  _NPIC    = { t="dopefish", f="XX" }, -- Narrow (non-tiling) pic box insert, 64 pixels wide x 128 high
+  _NPIC2    = { t="dopefish", f="XX" },
+  _NPIC3    = { t="dopefish", f="XX" },
+  
+  _MPIC    = { t="dopefish", f="XX" }, -- Medium (or tiling) pic box insert, 128 pixels wide x 128 high
+  _MPIC2    = { t="dopefish", f="XX" },
+  _MPIC3    = { t="dopefish", f="XX" },
+  _MPIC4    = { t="dopefish", f="XX" },
+  _MPIC5    = { t="dopefish", f="XX" },
+  _MPIC6    = { t="dopefish", f="XX" },
+  _MPIC7    = { t="dopefish", f="XX" },
+  
+  _WPIC    = { t="dopefish", f="XX" }, -- Wide (or tiling) pic box insert, 256 pixels wide x 128 high
+  _WPIC2    = { t="dopefish", f="XX" },
+  _WPIC3    = { t="dopefish", f="XX" },
+  
+  _KEYTRM1 = { t="HW510", f="RROCK03" }, -- Trim for locked door, Key 1
+  _KEYTRM2 = { t="HW511", f="RROCK03" }, -- Trim for locked door, Key 2
+  _KEYTRM3 = { t="HW512", f="RROCK03" }, -- Trim for locked door, Key 3
+  
+  _EXITDR1 = { t="DOORRED", f="RROCK02" }, -- Exit door
+  _EXITSW1  = { t="HD5", f="RROCK02" }, -- Exit switch
+  _EXITRM1  = { t="LITE5", f="RROCK02" }, -- Exit switch room
+  
+  _STRUCT = { t="metal1_1", f="metal1_1" }, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
+
+  _SW1  = { t="BLAKWAL2",  f="FLOOR0_2" }, -- General purpose swtich, full size
+  _SW1TRIM = { t="BRICK10",  f="FLOOR0_2" }, -- Trim for switch
+  
+  _TELE = { f="BLOOD1",  t="BRONZE1" }, -- Teleporter 
 
   ADOOR01_2  = { t="adoor01_2" },
   ADOOR02_2  = { t="adoor02_2" },
