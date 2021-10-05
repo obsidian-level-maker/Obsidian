@@ -37,7 +37,7 @@ gui.import("params")
 
 ------------------------------------------------------------
 
-OB_GAMES["quake"] =
+UNFINISHED["quake"] =
 {
   label = _("Quake"),
   priority = 27,
