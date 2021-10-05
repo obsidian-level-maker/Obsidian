@@ -67,18 +67,20 @@ static bool Options_ParseLine(std::string buf) {
         return true;
     }
 
-    while (std::find(buf.begin(), buf.end(), ' ') != buf.end()) {
+    // For options file, don't strip whitespace as it can cause issue with addon paths that have whitespace - Dasho
+
+    /*while (std::find(buf.begin(), buf.end(), ' ') != buf.end()) {
         buf.erase(std::find(buf.begin(), buf.end(), ' '));
-    }
+    }*/
 
     if (!isalpha(buf.front())) {
         LogPrintf("Weird option line: [{}]\n", buf);
         return false;
     }
 
-    pos = buf.find('=', 0);  // Fix pos after whitespace deletion
-    std::string name = buf.substr(0, pos);
-    std::string value = buf.substr(pos + 1);
+    //pos = buf.find('=', 0);  // Fix pos after whitespace deletion
+    std::string name = buf.substr(0, pos - 1);
+    std::string value = buf.substr(pos + 2);
 
     if (name.empty() || value.empty()) {
         LogPrintf("Name or value missing!\n");
