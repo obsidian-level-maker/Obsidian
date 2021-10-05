@@ -8,9 +8,58 @@ NUKEM.LIQUIDS =
 NUKEM.MATERIALS =
 {
   -- special materials --
-  _ERROR = { t=1 },
+  _ERROR = { t=437, f=437 },
   _SKY   = { t=89 },
-  _DEFAULT = { t=1 },
+  _DEFAULT = { t=437, f=437 },
+  _LIQUID = { f=336, t=336 },
+
+  -- materials for generic prefab set --
+  _SBARS = { t=437, f=437 }, -- Short bars, i.e. railings
+  _SBARS2 = { t=437, f=437 },
+  _MBARS = { t=437, f=437 }, -- Medium bars, i.e. barred windows
+  _TBARS = { t=437, f=437 }, -- Tall bars, i.e. cage/jail bars
+  
+  _CRATE   = { t=437, f=437 }, -- Crate/box
+  _CRATE2  = { t=437, f=437 },
+  _CRATWID = { t=437, f=437 },
+  
+  _WATER   = { t=437, f=437 }, -- "Standing water", sorta
+  _WTRFALL = { t=437, f=437 }, -- "Flowing water", sorta
+  
+  _DOOR  = { t=437, f=437 }, -- Open says me
+  _DOOR2 = { t=437, f=437 },
+  _DORRAIL = { t=437, f=437 }, -- Inner door slider thingys
+  
+  _NPIC    = { t=437, f=437 }, -- Narrow (non-tiling) pic box insert, 64 pixels wide x 128 high
+  _NPIC2    = { t=437, f=437 },
+  _NPIC3    = { t=437, f=437 },
+  
+  _MPIC    = { t=437, f=437 }, -- Medium (or tiling) pic box insert, 128 pixels wide x 128 high
+  _MPIC2    = { t=437, f=437 },
+  _MPIC3    = { t=437, f=437 },
+  _MPIC4    = { t=437, f=437 },
+  _MPIC5    = { t=437, f=437 },
+  _MPIC6    = { t=437, f=437 },
+  _MPIC7    = { t=437, f=437 },
+  
+  _WPIC    = { t=437, f=437 }, -- Wide (or tiling) pic box insert, 256 pixels wide x 128 high
+  _WPIC2    = { t=437, f=437 },
+  _WPIC3    = { t=437, f=437 },
+  
+  _KEYTRM1 = { t=437, f=437 }, -- Trim for locked door, Key 1
+  _KEYTRM2 = { t=437, f=437 }, -- Trim for locked door, Key 2
+  _KEYTRM3 = { t=437, f=437 }, -- Trim for locked door, Key 3
+  
+  _EXITDR1 = { t=437, f=437 }, -- Exit door
+  _EXITSW1  = { t=437, f=437 }, -- Exit switch
+  _EXITRM1  = { t=437, f=437 }, -- Exit switch room
+  
+  _STRUCT = { t=437, f=437 }, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
+
+  _SW1  = { t=437, f=437 }, -- General purpose swtich, full size
+  _SW1TRIM = { t=437, f=437 }, -- Trim for switch
+  
+  _TELE = { t=437, f=437 }, -- Teleporter
 
   NUKEBUTTON = { t=142 },
 
@@ -124,6 +173,22 @@ NUKEM.MATERIALS =
 
 NUKEM.PREFAB_FIELDS =
 {
+  -- These are used for converting generic fab things --
+  thing_11000 = 1247, -- Barrel
+  thing_11001 = 0, -- Ceiling light
+  thing_11002 = 0, -- Standalone light
+  thing_11003 = 0, -- Wall light (torch)
+  thing_11004 = 0, -- Wide standalone light
+  thing_11005 = 0, -- Small pillar
+  thing_11006 = 0, -- Key one
+  thing_11007 = 0, -- Key two
+  thing_11008 = 0, -- Key three
+  thing_11009 = 1405, -- P1 Start
+  thing_11010 = 1405, -- P2 Start
+  thing_11011 = 1405, -- P3 Start
+  thing_11012 = 1405, -- P4 Start
+  thing_11013 = 1, -- Teleport destination (for DN3D, this is a Sector Effector. Need to research - Dasho)
+  thing_11014 = 0, -- Passable ceiling decor
 }
 
 
