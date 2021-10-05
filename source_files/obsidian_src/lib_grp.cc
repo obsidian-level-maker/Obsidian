@@ -265,7 +265,7 @@ static raw_grp_lump_t grp_W_lump;
 bool GRP_OpenWrite(const std::filesystem::path &filename) {
     grp_W_fp.open(filename, std::ios::out | std::ios::binary);
 
-    if (!grp_W_fp) {
+    if (!grp_W_fp.is_open()) {
         LogPrintf("GRP_OpenWrite: cannot create file: {}\n", filename);
         return false;
     }
@@ -286,7 +286,7 @@ bool GRP_OpenWrite(const std::filesystem::path &filename) {
         memset(&entry, 0, sizeof(entry));
 
         std::string name = fmt::format("__{:03}.ZZZ", i + 1);
-        std::copy(name.begin(), name.end(), entry.name.begin());
+        std::copy(name.data(), name.data() + name.size(), entry.name.begin());
 
         entry.length = LE_U32(1);
 
@@ -354,7 +354,7 @@ void GRP_NewLump(std::string_view name) {
 
     memset(&grp_W_lump, 0, sizeof(grp_W_lump));
 
-    std::copy(name.begin(), name.end(), grp_W_lump.name.begin());
+    std::copy(name.data(), name.data() + name.size(), grp_W_lump.name.begin());
 }
 
 bool GRP_AppendData(const void *data, int length) {

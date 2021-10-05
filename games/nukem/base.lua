@@ -34,7 +34,7 @@ gui.import("levels")
 gui.import("resources")
 ----------------------------------------------------------------
 
-UNFINISHED["nukem"] =
+OB_GAMES["nukem"] =
 {
 	label = _("Duke Nukem 3D (Exp)"),
 	priority = 30,
@@ -42,6 +42,8 @@ UNFINISHED["nukem"] =
 	format = "nukem",
 	
 	game_dir = "nukem",
+
+	use_generics = true,
 	
 	tables =
 	{

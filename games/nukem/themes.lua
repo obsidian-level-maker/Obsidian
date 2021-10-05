@@ -73,8 +73,8 @@ NUKEM.THEMES =
     liquids =
     {
       water  = 50,
-      lava   = 10,
       slime = 15,
+      plasma = 10,
     },
 
     narrow_halls =

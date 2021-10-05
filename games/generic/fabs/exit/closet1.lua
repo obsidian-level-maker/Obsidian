@@ -159,6 +159,26 @@ PREFABS.Exit_closet1_quake =
   y_fit  = "top",
 }
 
+PREFABS.Exit_closet1_nukem =
+{
+  file   = "exit/closet1.wad",
+  map    = "MAP01",
+
+  game   = "nukem",
+
+  prob   = 100,
+
+  where  = "seeds",
+  seed_w = 1,
+  seed_h = 1,
+
+  deep   =  16,
+  over   = -16,
+
+  x_fit  = "frame",
+  y_fit  = "top",
+}
+
 
 ----------------------------------------------------------------------
 
@@ -215,6 +235,16 @@ PREFABS.Exit_closet1_secret_strife =
 PREFABS.Exit_closet1_secret_quake =
 {
   template = "Exit_closet1_quake",
+
+  kind = "secret_exit",
+
+  -- replace normal exit special with "exit to secret" special
+  line_11 = 51,
+}
+
+PREFABS.Exit_closet1_secret_nukem =
+{
+  template = "Exit_closet1_nukem",
 
   kind = "secret_exit",
 
