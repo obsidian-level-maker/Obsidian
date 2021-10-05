@@ -18,11 +18,6 @@
 
 #include "main.h"
 
-#ifdef UNIX
-#include <sys/time.h>
-#include <time.h>
-#endif
-
 int StringCaseCmp(const char *A, const char *B) {
     for (; *A || *B; A++, B++) {
         // this test also catches end-of-string conditions
@@ -196,30 +191,11 @@ double ComputeDist(double sx, double sy, double sz, double ex, double ey,
 //------------------------------------------------------------------------
 
 u32_t TimeGetMillies() {
-    // Note: you *MUST* handle overflow (it *WILL* happen)
-
-#ifdef WIN32
-    unsigned long ticks = GetTickCount();
-
-    return (u32_t)ticks;
-
-#else  // UNIX or MacOSX
-    struct timeval tm;
-
-    gettimeofday(&tm, NULL);
-
-    return (u32_t)((tm.tv_sec * 1000) + (tm.tv_usec / 1000));
-#endif
+    return std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 }
 
 void TimeDelay(u32_t millies) {
-#ifdef WIN32
-    ::Sleep(millies);
-
-#else  // LINUX or MacOSX
-
-    usleep(millies * 1000);
-#endif
+    std::this_thread::sleep_for(std::chrono::milliseconds(millies));
 }
 
 //--- editor settings ---

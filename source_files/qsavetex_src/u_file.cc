@@ -18,7 +18,7 @@
 
 #include "main.h"
 
-#ifdef WIN32
+/*#ifdef WIN32
 #include <io.h>
 #endif
 
@@ -36,7 +36,7 @@
 
 #ifndef PATH_MAX
 #define PATH_MAX 2048
-#endif
+#endif*/
 
 bool FileExists(std::filesystem::path filename) {
     return std::filesystem::exists(filename);

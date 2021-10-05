@@ -15,7 +15,8 @@
 //  GNU General Public License for more details.
 //
 //------------------------------------------------------------------------
-
+#include <chrono>
+#include <thread>
 #ifndef __LIB_UTIL_H__
 #define __LIB_UTIL_H__
 
