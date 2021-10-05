@@ -17,6 +17,7 @@
 //------------------------------------------------------------------------
 
 #include "main.h"
+#include <filesystem>
 
 #include "im_tex.h"
 #include "pakfile.h"
@@ -160,8 +161,8 @@ int main(int argc, char **argv) {
 
     LogInit(LOG_FILE);
 
-    const char *working_path = GetExecutablePath(argv[0]);
-    if (!working_path) working_path = ".";
+    std::filesystem::path working_path = std::filesystem::current_path();
+    if (working_path.empty()) working_path = ".";
 
     FileChangeDir(working_path);
 

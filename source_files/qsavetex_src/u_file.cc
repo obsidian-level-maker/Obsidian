@@ -38,110 +38,35 @@
 #define PATH_MAX 2048
 #endif
 
-bool FileExists(const char *filename) {
-    FILE *fp = fopen(filename, "rb");
-
-    if (fp) {
-        fclose(fp);
-        return true;
-    }
-
-    return false;
+bool FileExists(std::filesystem::path filename) {
+    return std::filesystem::exists(filename);
 }
 
-bool HasExtension(const char *filename) {
-    int A = (int)strlen(filename) - 1;
-
-    if (A > 0 && filename[A] == '.') return false;
-
-    for (; A >= 0; A--) {
-        if (filename[A] == '.') return true;
-
-        if (filename[A] == '/') break;
-
-#ifdef WIN32
-        if (filename[A] == '\\' || filename[A] == ':') break;
-#endif
-    }
-
-    return false;
+bool HasExtension(std::filesystem::path filename) {
+    return filename.has_extension();
 }
 
-//
-// When ext is NULL, checks if the file has no extension.
-//
-bool CheckExtension(const char *filename, const char *ext) {
-    if (!ext) return !HasExtension(filename);
+bool CheckExtension(std::filesystem::path filename, std::string ext) {
+    if (ext.empty()) return !HasExtension(filename);
 
-    int A = (int)strlen(filename) - 1;
-    int B = (int)strlen(ext) - 1;
+    int A = filename.string().size() - 1;
+    int B = ext.size() - 1;
 
     for (; B >= 0; B--, A--) {
         if (A < 0) return false;
 
-        if (toupper(filename[A]) != toupper(ext[B])) return false;
+        if (toupper(filename.string().at(A)) != toupper(ext.at(B))) return false;
     }
 
-    return (A >= 1) && (filename[A] == '.');
+    return (A >= 1) && (filename.string().at(A) == '.');
 }
 
-//
-// When ext is NULL, any existing extension is removed.
-//
-// Returned string is a COPY.
-//
-char *ReplaceExtension(const char *filename, const char *ext) {
-    SYS_ASSERT(filename[0] != 0);
-
-    char *buffer = StringNew(strlen(filename) + (ext ? strlen(ext) : 0) + 10);
-
-    strcpy(buffer, filename);
-
-    char *dot_pos = buffer + strlen(buffer) - 1;
-
-    for (; dot_pos >= buffer && *dot_pos != '.'; dot_pos--) {
-        if (*dot_pos == '/') break;
-
-#ifdef WIN32
-        if (*dot_pos == '\\' || *dot_pos == ':') break;
-#endif
-    }
-
-    if (dot_pos < buffer || *dot_pos != '.') dot_pos = NULL;
-
-    if (!ext) {
-        if (dot_pos) dot_pos[0] = 0;
-
-        return buffer;
-    }
-
-    if (dot_pos)
-        dot_pos[1] = 0;
-    else
-        strcat(buffer, ".");
-
-    strcat(buffer, ext);
-
-    return buffer;
+std::filesystem::path ReplaceExtension(std::filesystem::path filename, std::string ext) {
+    return filename.replace_extension(ext);
 }
 
-const char *FindBaseName(const char *filename) {
-    // Find the base name of the file (i.e. without any path).
-    // The result always points within the given string.
-    //
-    // Example:  "C:\Foo\Bar.wad"  ->  "Bar.wad"
-
-    const char *pos = filename + strlen(filename) - 1;
-
-    for (; pos >= filename; pos--) {
-        if (*pos == '/') return pos + 1;
-
-#ifdef WIN32
-        if (*pos == '\\' || *pos == ':') return pos + 1;
-#endif
-    }
-
-    return filename;
+std::filesystem::path FindBaseName(std::filesystem::path filename) {
+    return filename.filename();
 }
 
 void FilenameStripBase(char *buffer) {
@@ -166,78 +91,34 @@ void FilenameStripBase(char *buffer) {
         strcpy(buffer, ".");
 }
 
-bool FileCopy(const char *src_name, const char *dest_name) {
-    char buffer[1024];
-
-    FILE *src = fopen(src_name, "rb");
-    if (!src) return false;
-
-    FILE *dest = fopen(dest_name, "wb");
-    if (!dest) {
-        fclose(src);
-        return false;
-    }
-
-    while (true) {
-        int rlen = fread(buffer, 1, sizeof(buffer), src);
-        if (rlen <= 0) break;
-
-        int wlen = fwrite(buffer, 1, rlen, dest);
-        if (wlen != rlen) break;
-    }
-
-    bool was_OK = !ferror(src) && !ferror(dest);
-
-    fclose(dest);
-    fclose(src);
-
-    return was_OK;
+bool FileCopy(std::filesystem::path src_name, std::filesystem::path dest_name) {
+    return std::filesystem::copy_file(src_name, dest_name);
 }
 
-bool FileRename(const char *old_name, const char *new_name) {
-#ifdef WIN32
-    return (::MoveFile(old_name, new_name) != 0);
-
-#else  // UNIX or MACOSX
-
-    return (rename(old_name, new_name) == 0);
-#endif
+bool FileRename(std::filesystem::path old_name, std::filesystem::path new_name) {
+    if (std::filesystem::exists(new_name)) { return false; } // Fail if target name already exists
+    std::filesystem::rename(old_name, new_name);
+    return std::filesystem::exists(new_name); // Should return false if it didn't work for whatever reason
 }
 
-bool FileDelete(const char *filename) {
-#ifdef WIN32
-    return (::DeleteFile(filename) != 0);
-
-#else  // UNIX or MACOSX
-
-    return (remove(filename) == 0);
-#endif
+bool FileDelete(std::filesystem::path filename) {
+    std::filesystem::remove(filename);
+    return std::filesystem::exists(filename);
 }
 
-bool FileChangeDir(const char *dir_name) {
-#ifdef WIN32
-    return (::SetCurrentDirectory(dir_name) != 0);
-
-#else  // UNIX or MACOSX
-
-    return (chdir(dir_name) == 0);
-#endif
+bool FileChangeDir(std::filesystem::path dir_name) {
+    std::filesystem::current_path(dir_name);
+    return std::filesystem::equivalent(dir_name, std::filesystem::current_path());
 }
 
-bool FileMakeDir(const char *dir_name) {
-#ifdef WIN32
-    return (::CreateDirectory(dir_name, NULL) != 0);
-
-#else  // UNIX or MACOSX
-
-    return (mkdir(dir_name, 0775) == 0);
-#endif
+bool FileMakeDir(std::filesystem::path dir_name) {
+    return std::filesystem::create_directory(dir_name);
 }
 
-u8_t *FileLoad(const char *filename, int *length) {
+u8_t *FileLoad(std::filesystem::path filename, int *length) {
     *length = 0;
 
-    FILE *fp = fopen(filename, "rb");
+    FILE *fp = fopen(filename.string().c_str(), "rb");
 
     if (!fp) return NULL;
 
@@ -274,26 +155,8 @@ void FileFree(u8_t *mem) { free((void *)mem); }
 //
 // Note: returns false when the path doesn't exist.
 //
-bool PathIsDirectory(const char *path) {
-#ifdef WIN32
-    char old_dir[MAX_PATH + 1];
-
-    if (GetCurrentDirectory(MAX_PATH, (LPSTR)old_dir) == FALSE) return false;
-
-    bool result = SetCurrentDirectory(path);
-
-    SetCurrentDirectory(old_dir);
-
-    return result;
-
-#else  // UNIX or MACOSX
-
-    struct stat finfo;
-
-    if (stat(path, &finfo) != 0) return false;
-
-    return (S_ISDIR(finfo.st_mode)) ? true : false;
-#endif
+bool PathIsDirectory(std::filesystem::path path) {
+ return std::filesystem::is_directory(path);
 }
 
 //------------------------------------------------------------------------
@@ -400,84 +263,6 @@ int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat) {
 #endif
 
     return count;
-}
-
-//------------------------------------------------------------------------
-
-const char *GetExecutablePath(const char *argv0) {
-    char *path;
-
-#ifdef WIN32
-    path = StringNew(PATH_MAX + 2);
-
-    int length = GetModuleFileName(GetModuleHandle(NULL), path, PATH_MAX);
-
-    if (length > 0 && length < PATH_MAX) {
-        if (access(path, 0) == 0)  // sanity check
-        {
-            FilenameStripBase(path);
-            return path;
-        }
-    }
-
-    // didn't work, free the memory
-    StringFree(path);
-#endif
-
-#ifdef UNIX
-    path = StringNew(PATH_MAX + 2);
-
-    int length = readlink("/proc/self/exe", path, PATH_MAX);
-
-    if (length > 0) {
-        path[length] = 0;  // add the missing NUL
-
-        if (access(path, 0) == 0)  // sanity check
-        {
-            FilenameStripBase(path);
-            return path;
-        }
-    }
-
-    // didn't work, free the memory
-    StringFree(path);
-#endif
-
-#ifdef MACOSX
-    /*
-      from http://www.hmug.org/man/3/NSModule.html
-
-      extern int _NSGetExecutablePath(char *buf, unsigned long *bufsize);
-
-      _NSGetExecutablePath copies the path of the executable
-      into the buffer and returns 0 if the path was successfully
-      copied in the provided buffer. If the buffer is not large
-      enough, -1 is returned and the expected buffer size is
-      copied in *bufsize.
-    */
-    int pathlen = PATH_MAX * 2;
-
-    path = StringNew(pathlen + 2);
-
-    if (0 == _NSGetExecutablePath(path, &pathlen)) {
-        // FIXME: will this be _inside_ the .app folder???
-        FilenameStripBase(path);
-        return path;
-    }
-
-    // didn't work, free the memory
-    StringFree(path);
-#endif
-
-    // fallback method: use argv[0]
-    path = StringDup(argv0);
-
-#ifdef MACOSX
-    // FIXME: check if _inside_ the .app folder
-#endif
-
-    FilenameStripBase(path);
-    return path;
 }
 
 //--- editor settings ---

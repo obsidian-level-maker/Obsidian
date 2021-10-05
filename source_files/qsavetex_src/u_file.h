@@ -16,6 +16,8 @@
 //
 //------------------------------------------------------------------------
 #include "u_type.h"
+#include <filesystem>
+#include <string>
 #ifndef __LIB_FILE_H__
 #define __LIB_FILE_H__
 
@@ -28,27 +30,24 @@
 #endif
 
 // filename functions
-bool HasExtension(const char *filename);
-bool CheckExtension(const char *filename, const char *ext);
-char *ReplaceExtension(const char *filename, const char *ext);
-const char *FindBaseName(const char *filename);
+bool HasExtension(std::filesystem::path filename);
+bool CheckExtension(std::filesystem::path, std::string ext);
+std::filesystem::path ReplaceExtension(std::filesystem::path filename, std::string ext);
+std::filesystem::path FindBaseName(std::filesystem::path filename);
 
 // file utilities
-bool FileExists(const char *filename);
-bool FileCopy(const char *src_name, const char *dest_name);
-bool FileRename(const char *old_name, const char *new_name);
-bool FileDelete(const char *filename);
-bool FileChangeDir(const char *dir_name);
-bool FileMakeDir(const char *dir_name);
+bool FileExists(std::filesystem::path filename);
+bool FileCopy(std::filesystem::path src_name, std::filesystem::path dest_name);
+bool FileRename(std::filesystem::path old_name, std::filesystem::path new_name);
+bool FileDelete(std::filesystem::path filename);
+bool FileChangeDir(std::filesystem::path dir_name);
+bool FileMakeDir(std::filesystem::path dir_name);
 
-u8_t *FileLoad(const char *filename, int *length);
+u8_t *FileLoad(std::filesystem::path filename, int *length);
 void FileFree(u8_t *mem);
 
 // directory functions
-bool PathIsDirectory(const char *path);
-
-// miscellanous
-const char *GetExecutablePath(const char *argv0);
+bool PathIsDirectory(std::filesystem::path path);
 
 //------------------------------------------------------------------------
 
