@@ -116,7 +116,8 @@ PREFABS.Joiner_simple_arched_2_hell_limit =
   engine = "!zdoom",
   theme = "hell",
 
-  tex_GRAY = "METAL",
+  tex_SUPPORT3 = "SUPPORT3",
+  tex_GRAY7 = "BROWN144",
   tex_SILVER1 = "BRONZE3",
   flat_FLAT23 = "CEIL5_2",
 
