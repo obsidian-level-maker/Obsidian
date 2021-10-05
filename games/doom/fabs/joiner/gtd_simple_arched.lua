@@ -129,7 +129,7 @@ PREFABS.Joiner_simple_arched_2_hell_limit =
 PREFABS.Joiner_simple_arched_3 =
 {
   file   = "joiner/gtd_simple_arched.wad",
-  map    = "MAP02",
+  map    = "MAP03",
 
   prob   = 750,
   engine = "zdoom",
