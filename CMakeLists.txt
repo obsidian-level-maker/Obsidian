@@ -88,7 +88,6 @@ add_executable(
   source_files/obsidian_src/g_quake.cc
   source_files/obsidian_src/g_quake2.cc
   source_files/obsidian_src/g_quake3.cc
-  source_files/obsidian_src/g_wolf.cc
   source_files/obsidian_src/hdr_fltk.h
   source_files/obsidian_src/hdr_lua.h
   source_files/obsidian_src/hdr_ui.h
