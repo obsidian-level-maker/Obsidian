@@ -110,7 +110,7 @@ NUKEM.MONSTERS =
     attack="melee" 
   },  
 
-  rotategun   = 
+  --[[rotategun   = 
   { 
     id=2360,
     level = 2,
@@ -122,7 +122,7 @@ NUKEM.MONSTERS =
     attack="missile" 
   },
 
-  --[[green_slime   = 
+  green_slime   = 
   { 
     id=2370, 
     r=16, 

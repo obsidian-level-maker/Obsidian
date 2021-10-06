@@ -166,7 +166,10 @@ NUKEM.MATERIALS =
   COMPUTER2 = { t=294 },
   COMPUTER3 = { t=297 },
   COMPUTER4 = { t=298 },
-  COMPUTER5 = { t=299 }
+  COMPUTER5 = { t=299 },
+
+  -- rails --
+  MASKWALL5 = { t=514, rail_h=64 },
 }
 
 ------------------------------------------------------------------------

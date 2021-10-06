@@ -163,9 +163,7 @@ NUKEM.THEMES =
 
     scenic_fences =
     {
-      STONES = 30,
-      BSTONES = 10,
-      WOOD3 = 20
+      MASKWALL5 = 50,
     },
 
     sink_style =
