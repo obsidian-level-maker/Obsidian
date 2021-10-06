@@ -27,7 +27,6 @@ STRIFE.MATERIALS =
 
  -- materials for generic prefab set --  
  _SBARS = { t="RAIL01", f="XX" }, -- Short bars, i.e. railings
- _SBARS2 = { t="RAIL03", f="XX" },
  _MBARS = { t="GRATE04", f="XX" }, -- Medium bars, i.e. barred windows
  _TBARS = { t="GRATE02", f="XX" }, -- Tall bars, i.e. cage/jail bars
  
@@ -39,37 +38,26 @@ STRIFE.MATERIALS =
  _WTRFALL = { t="WATR01", f="F_VWATR2" }, -- "Flowing water", sorta
    
  _DOOR  = { t="DORWL01", f="F_UNDOOR" }, -- Open says me
- _DOOR2 = { t="DORWS02", f="F_UNDOOR"},
  _DORRAIL = { t="DORTRK02", f="F_UNDOOR"}, -- Inner door slider thingys
  
  _NPIC    = { t="BRNSCN02", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
- _NPIC2    = { t="BRNSCN01", f="XX"},
- _NPIC3    = { t="BRNSCN03", f="XX"},
  
  _MPIC    = { t="BANR02", f="XX"}, -- Medium (or tiling) pic box insert, 128 pixels wide
- _MPIC2    = { t="BANR04", f="XX"},
- _MPIC3    = { t="BANR09", f="XX"},
- _MPIC4    = { t="REBFLAG", f="XX"},
- _MPIC5    = { t="BANR05", f="XX"},
- _MPIC6    = { t="GODSCRN1", f="XX"},
- _MPIC7    = { t="GODSCRN2", f="XX"},
  
  _WPIC    = { t="GLASS03", f="XX"}, -- Wide (or tiling) pic box insert, 256 pixels wide
- _WPIC2    = { t="GLASS11", f="XX"},
- _WPIC3    = { t="GLASS17", f="XX"},
  
  _KEYTRM1 = { t="WINDW03", f="XX" }, -- Trim for locked door, Key 1
  _KEYTRM2 = { t="WINDW02", f="XX" }, -- Trim for locked door, Key 2
  _KEYTRM3 = { t="WINDW04", f="XX" }, -- Trim for locked door, Key 3
  
- _EXITDR1 = { t="DORTKS01", f="F_UNDOOR" }, -- Exit door
- _EXITSW1  = { t="SWWALG01", f="F_GTECHY" }, -- Exit switch
- _EXITRM1  = { t="WALGRY09", f="F_GTECHY" }, -- Exit switch
+ _EXITDR = { t="DORTKS01", f="F_UNDOOR" }, -- Exit door
+ _EXITSW  = { t="SWWALG01", f="F_GTECHY" }, -- Exit switch
+ _EXITRM  = { t="WALGRY09", f="F_GTECHY" }, -- Exit switch
  
  _STRUCT = {t="CONCRT01", f="F_CONCRP"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
- _SW1  = { t="SWINDT01", f="F_NOLINE" }, -- General purpose swtich, full size
- _SW1TRIM = { t="IRON04", f="F_NOLINE" }, -- Trim for switch
+ _SW  = { t="SWINDT01", f="F_NOLINE" }, -- General purpose swtich, full size
+ _SWTRIM = { t="IRON04", f="F_NOLINE" }, -- Trim for switch
  
  _TELE = { t="CONCRT01", f="F_TELE1" }, -- Teleporter
 

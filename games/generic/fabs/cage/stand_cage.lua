@@ -18,24 +18,6 @@ PREFABS.Cage_stand1 =
   bound_z2 = 120,
 }
 
-PREFABS.Cage_stand1_alt =
-{
-  file   = "cage/stand_cage.wad",
-  map    = "MAP01",
-
-  prob   = 500,
-
-  where  = "point",
-  tex__SBARS = "_SBARS2",
-
-  size   = 128,
-  height = 128,
-
-  bound_z1 = 0,
-  bound_z2 = 120,
-}
-
-
 PREFABS.Cage_stand2 =
 {
   file   = "cage/stand_cage.wad",

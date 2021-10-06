@@ -36,7 +36,6 @@ HEXEN.MATERIALS =
 
   -- materials for generic prefab set --  
   _SBARS = { t="GATE04", f="XX" }, -- Short bars, i.e. railings
-  _SBARS2 = { t="GATE53", f="XX" },
   _MBARS = { t="GATE03", f="XX" }, -- Medium bars, i.e. barred windows
   _TBARS = { t="GATE02", f="XX" }, -- Tall bars, i.e. cage/jail bars
   
@@ -48,37 +47,26 @@ HEXEN.MATERIALS =
   _WTRFALL = { t="X_WATER1", f="X_005" }, -- "Flowing water", sorta
     
   _DOOR  = { t="D_WD08", f="F_082" }, -- Open says me
-  _DOOR2 = { t="D_WD09", f="F_082"},
   _DORRAIL = { t="PILLAR02", f="F_082"}, -- Inner door slider thingys
   
   _NPIC    = { t="GLASS01", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
-  _NPIC2    = { t="GLASS03", f="XX"},
-  _NPIC3    = { t="GLASS05", f="XX"},
   
   _MPIC    = { t="TOMB03", f="XX"}, -- Medium (or tiling) pic box insert, 128 pixels wide
-  _MPIC2    = { t="TOMB06", f="XX"},
-  _MPIC3    = { t="TOMB08", f="XX"},
-  _MPIC4    = { t="TOMB09", f="XX"},
-  _MPIC5    = { t="TOMB10", f="XX"},
-  _MPIC6    = { t="MONK08", f="XX"},
-  _MPIC7    = { t="MONK17", f="XX"},
   
   _WPIC    = { t="BOOKS02", f="XX"}, -- Wide (or tiling) pic box insert, 256 pixels wide
-  _WPIC2    = { t="BOOKS03", f="XX"},
-  _WPIC3    = { t="BOOKS04", f="XX"},
   
   _KEYTRM1 = { t="D_ENDSLV", f="F_082" }, -- Trim for locked door, Key 1
   _KEYTRM2 = { t="STEEL08", f="F_082" }, -- Trim for locked door, Key 2
   _KEYTRM3 = { t="GILO1", f="F_082" }, -- Trim for locked door, Key 3
   
-  _EXITDR1 = { t="D_WD08", f="F_082" }, -- Exit door
-  _EXITSW1  = { t="FIRE15", f="F_032" }, -- Exit switch
-  _EXITRM1  = { t="FIRE01", f="F_032" }, -- Exit switch
+  _EXITDR = { t="D_WD08", f="F_082" }, -- Exit door
+  _EXITSW  = { t="FIRE15", f="F_032" }, -- Exit switch
+  _EXITRM  = { t="FIRE01", f="F_032" }, -- Exit switch
   
   _STRUCT = {t="PLAT01", f="F_082"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
-  _SWITCH  = { t="FIRE15", f="F_032" }, -- Wall/general purpose swtich
-  _SWITCH2  = { t="FIRE15", f="F_032" },
+  _SW  = { t="FIRE15", f="F_032" }, -- Wall/general purpose swtich
+  _SWTRIM = { t="FIRE01", f="F_032" },
   
   _TELE = { t="CASTLE01", f="X_012" }, -- Teleporter
 

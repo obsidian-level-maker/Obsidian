@@ -16,8 +16,10 @@ CHEX3.MATERIALS =
   _LIQUID = { t="GSTFONT1", f="FWATER1" },
 
   -- materials for generic prefab set --
+
+  -- The idea is to have one singular default material for these; variants should be specified in theme-specific PREFAB_FIELDS tables as replacements - Dasho
+
   _SBARS = { t="STEP4", f="XX" }, -- Short bars, i.e. railings
-  _SBARS2 = { t="LITEMET", f="XX" },
   _MBARS = { t="BARS", f="XX" }, -- Medium bars, i.e. barred windows
   _TBARS = { t="LITE4", f = "XX" }, -- Tall bars, i.e. cage/jail bars
   
@@ -29,37 +31,24 @@ CHEX3.MATERIALS =
   _WTRFALL = { t="GSTFONT1", f="FWATER1" }, -- "Flowing water", sorta
   
   _DOOR  = { t="BIGDOOR4", f="STEEL32" }, -- Open says me
-  _DOOR2 = { t="BIGDOOR1", f="STEEL32"},
   _DORRAIL = { t="COMPSTA1", f="STEP1"}, -- Inner door slider thingys
   
   _NPIC    = { t="FIREWALL", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
-  _NPIC2    = { t="FIREWALL", f="XX"},
-  _NPIC3    = { t="FIREWALL", f="XX"},
   
   _MPIC    = { t="ART1", f="XX"}, -- Medium (or tiling) pic box insert, 128 pixels wide
-  _MPIC2    = { t="ART2", f="XX"},
-  _MPIC3    = { t="VINCENT", f="XX"},
-  _MPIC4    = { t="POSTER1", f="XX"},
-  _MPIC5    = { t="POSTER2", f="XX"},
-  _MPIC6    = { t="POSTER3", f="XX"},
-  _MPIC7    = { t="MUNCH", f="XX"},
   
   _WPIC    = { t="CHEXAD1", f="XX"}, -- Wide (or tiling) pic box insert, 256 pixels wide
-  _WPIC2    = { t="CHEXAD2", f="XX"},
-  _WPIC3    = { t="VENUSHS", f="XX"},
 
   _KEYTRM1 = { t="DOORRED", f="XX" }, -- Trim for locked door, Key 1
   _KEYTRM2 = { t="DOORYEL", f="XX" }, -- Trim for locked door, Key 2
   _KEYTRM3 = { t="DOORBLU", f="XX" }, -- Trim for locked door, Key 3
   
-  _EXITDR1 = { t="BIGDOOR7", f="FLAT5_6" }, -- Exit door
-  _EXITSW1 = { t="SW1METAL", f="FLAT1"  }, -- Exit switch
-  _EXITRM1 = { t="STARG3", f="CJFLOD06"}, -- Exit room walls (to match switch)
+  _EXITDR = { t="BIGDOOR7", f="FLAT5_6" }, -- Exit door
+  _EXITSW = { t="SW1METAL", f="FLAT1"  }, -- Exit switch
+  _EXITRM = { t="STARG3", f="CJFLOD06"}, -- Exit room walls (to match switch)
   
-  _SW1  = { t="SW1COMP",  f="CEIL5_1" }, -- General purpose swtich, full size
-  _SW1TRIM = { t="COMPSPAN",  f="CEIL5_1" }, -- Trim for switch
-  _SW2  = { t="SW1BRCOM",  f="CEIL3_1" },
-  _SW2TRIM = { t="BROWN144",  f="CEIL3_1" },
+  _SW  = { t="SW1COMP",  f="CEIL5_1" }, -- General purpose swtich, full size
+  _SWTRIM = { t="COMPSPAN",  f="CEIL5_1" }, -- Trim for switch
 
   _STRUCT = {t="COMPSPAN", f="CEIL5_1"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
   
