@@ -2926,66 +2926,6 @@ function Level_make_level(LEV)
   return "ok"
 end
 
-function Level_make_all_wolf3d()
-  GAME.levels   = {}
-  GAME.episodes = {}
-
-  -- semi-supported games warning
-  if not PARAM.bool_extra_games or PARAM.bool_extra_games == 0 then
-    error("Warning: ObAddon development is mostly focused " ..
-  "on creating content for the Doom 2 game setting.\n\n" ..
-  "As a consequence, other games available on the list are " ..
-  "lagging behind in features. These games' " ..
-  "content and feature set are currently " ..
-  "only updated for compatibility being legacy choices " ..
-  "provided by vanilla Oblige. To ignore this warning " ..
-  "and continue generation for these games, set " ..
-  "Extra Games under Debug Control Module to 'Yes'.\n\n" ..
-  "This message will change should development scope expand.")
-  end
-
-  gui.rand_seed(gui.random_int())
-
-  ob_invoke_hook("get_levels")
-
-  if #GAME.levels == 0 then
-    error("Level list is empty!")
-  end
-
-  table.index_up(GAME.levels)
-  table.index_up(GAME.episodes)
-
-  gui.rand_seed(gui.random_int())
-
-  Level_choose_themes()
-
-  ob_invoke_hook("get_levels_after_themes")
-
-  gui.rand_seed(gui.random_int())
-
-  Episode_plan_game()
-
-  for _,EPI in pairs(GAME.episodes) do
-    EPISODE = EPI
-
-    EPISODE.seen_weapons = {}
-
-    for _,LEV in pairs(EPI.levels) do
-      LEV.allowances = {}
-
-      if Level_make_level(LEV) == "abort" then
-        return "abort"
-      end
-    end
-  end
-
-  ob_invoke_hook("all_done")
-
-  ScriptMan_init()
-
-  return "ok"
-end
-
 function Level_make_all()
   GAME.levels   = {}
   GAME.episodes = {}

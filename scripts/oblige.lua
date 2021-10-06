@@ -1572,53 +1572,6 @@ function ob_transfer_ui_options()
   end
 end
 
-function ob_build_setup_wolf3d()
-  ob_clean_up()
-
-  Naming_init()
-
-  if OB_CONFIG.title then
-    GAME.title = OB_CONFIG.title
-  end
-
-  ob_transfer_ui_options()
-
-  ob_sort_modules()
-
-  -- first entry in module list *must* be the game def, and second entry
-  -- must be the engine definition.  NOTE: neither are real modules!
-  ob_add_current_game()
-  ob_add_current_engine()
-
-  -- merge tables from each module
-  -- [ but skip GAME and ENGINE, which are already merged ]
-
-  for index,mod in pairs(GAME.modules) do
-    if index > 2 and mod.tables then
-      ob_merge_table_list(mod.tables)
-    end
-  end
-
-
-  PARAM = assert(GAME.PARAMETERS)
-
-  table.merge_missing(PARAM, GLOBAL_PARAMETERS)
-
-
-  -- load all the prefab definitions
-  ob_invoke_hook("setup")
-
-  gui.rand_seed(OB_CONFIG.seed)
-
-  table.name_up(GAME.THEMES)
-  table.name_up(GAME.ROOM_THEMES)
-  table.name_up(GAME.ROOMS)
-
-  if GAME.sub_format then
-    gui.property("sub_format", GAME.sub_format)
-  end
-end
-
 function ob_build_setup()
   ob_clean_up()
 
@@ -1713,13 +1666,9 @@ function ob_build_cool_shit()
   
   local status
 
-  if OB_CONFIG.game == "wolf3d" then
-    ob_build_setup_wolf3d()
-    status = Level_make_all_wolf3d()
-  else
-    ob_build_setup()
-    status = Level_make_all()
-  end
+  ob_build_setup()
+  
+  status = Level_make_all()
 
   ob_clean_up()
 
