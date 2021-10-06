@@ -1,0 +1,56 @@
+PREFABS.Decor_tech_epic_comptil_point_1_red =
+{
+  file = "decor/gtd_decor_tech_comp_set_EPIC.wad",
+  map = "MAP01",
+
+  where = "point",
+
+  prob = 5000,
+  group = "gtd_comptil_plain_red",
+  
+  size = 64,
+  height = 96,
+
+  bound_z1 = 0,
+  bound_z2 = 96,
+}
+
+PREFABS.Decor_tech_epic_comptil_point_1_green =
+{
+  template = "Decor_tech_epic_comptil_point_1_red",
+
+  group = "gtd_comptil_plain_green",
+
+  tex_COMPTIL2 = "COMPTIL4",
+  flat_TEK = "TEK2"
+}
+
+PREFABS.Decor_tech_epic_comptil_point_1_yellow =
+{
+  template = "Decor_tech_epic_comptil_point_1_red",
+
+  group = "gtd_comptil_plain_yellow",
+
+  tex_COMPTIL2 = "COMPTIL5",
+  flat_TEK = "TEK7"
+}
+
+PREFABS.Decor_tech_epic_comptil_point_1_purple =
+{
+  template = "Decor_tech_epic_comptil_point_1_red",
+
+  group = "gtd_comptil_plain_purple",
+
+  tex_COMPTIL2 = "COMPTIL6",
+  flat_TEK = "TEK3"
+}
+
+PREFABS.Decor_tech_epic_comptil_point_1_blue =
+{
+  template = "Decor_tech_epic_comptil_point_1_red",
+
+  group = "gtd_comptil_plain_blue",
+
+  tex_COMPTIL2 = "CMPTILE",
+  flat_TEK = "TEK4"
+}
