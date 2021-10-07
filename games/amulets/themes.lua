@@ -1,8 +1,8 @@
 ------------------------------------------------------------------------
---  NUKEM THEMES
+--  AMULETS THEMES
 ------------------------------------------------------------------------
 
-NUKEM.SINKS =
+AMULETS.SINKS =
 {
   -- sky holes --
 
@@ -10,6 +10,7 @@ NUKEM.SINKS =
   {
     mat   = "_SKY",
     dz    = 64,
+    light = 16
   },
 
   -- liquid floor --
@@ -18,19 +19,27 @@ NUKEM.SINKS =
   {
     mat = water,
     dz  = -12
-  }
+  },
 
+  -- street sink def, do not use for anything else
+  floor_default_streets =
+  {
+    mat = "RROCK02",
+    dz = 2,
+  
+    trim_mat = "PLAT1",
+    trim_dz = 2,
+  }
 }
 
-
-NUKEM.THEMES =
+AMULETS.THEMES =
 {
   DEFAULTS =
   {
 
     keys =
     {
-      k_yellow = 50,
+
     },
 
     skyboxes =
@@ -40,11 +49,16 @@ NUKEM.THEMES =
 
     cage_lights = { 0, 8, 12, 13 },
 
-    pool_depth = 24
+    pool_depth = 24,
+
+    street_sinks =
+    {
+      floor_default_streets = 1
+    }
   },
 
 
-  nukem_city =
+  amulets_city =
   {
 
    style_list =
@@ -71,9 +85,8 @@ NUKEM.THEMES =
 
     liquids =
     {
-      water  = 50,
-      slime = 15,
-      plasma = 10,
+      nukage = 20,
+      lava   = 10,
     },
 
     narrow_halls =
@@ -98,28 +111,17 @@ NUKEM.THEMES =
 
     fences =
     {
-      STONES = 30,
-      BSTONES = 10,
-      WOOD3 = 20
+      WALL1 = 50
     },
 
     cage_mats =
     {
-      STONES = 30,
-      BSTONES = 10,
-      WOOD3 = 20
+      WALL1 = 50
     },
 
     facades =
     {
-      BRN_BRICK = 30,
-      WINDOW1 = 10,
-      WINDOW2 = 20,
-      BRICK2 = 10,
-      GRNBRICK = 30,
-      GRAYBRICK = 10,
-      REDSLATS = 30,
-      IRON = 10
+      WALL1 = 50
     },
 
     fence_groups =
@@ -145,7 +147,8 @@ NUKEM.THEMES =
 
     wall_groups =
     {
-      PLAIN = 50
+      PLAIN = 50,
+      torches1 = 10
     },
 
     cave_torches =
@@ -162,7 +165,7 @@ NUKEM.THEMES =
 
     scenic_fences =
     {
-      MASKWALL5 = 50,
+
     },
 
     sink_style =
@@ -171,53 +174,40 @@ NUKEM.THEMES =
       curved = 0.1
     },
 
-    steps_mat = "IRON",
+    steps_mat = "WALL1",
 
-    post_mat  = "WOOD3"
+    post_mat  = "ROCK1"
 
   }
 
 }
 
 
-NUKEM.ROOM_THEMES =
+AMULETS.ROOM_THEMES =
 {
 
-  nukem_city_Generic =
+  amulets_city_Generic =
   {
     env  = "building",
     prob = 50,
 
     walls =
     {
-      BRN_BRICK = 30,
-      WINDOW1 = 10,
-      WINDOW2 = 20,
-      BRICK2 = 10,
-      GRNBRICK = 30,
-      GRAYBRICK = 10,
-      REDSLATS = 30,
-      IRON = 10
+      WALL1 = 50
     },
 
     floors =
     {
-      GRAYCIRCLE = 50,
-      CLANG1 = 50,
-      GRAYFLAT = 50,
-      REDCARPET = 50
+      WALL1 = 50
     },
 
     ceilings =
     {
-      IRON = 30,
-      GRAYCIRCLE = 10,
-      ROOF1 = 20,
-      ROOF2 = 10,
+      WALL1 = 50
     }
   },
 
- nukem_city_Hallway_deuce =
+  amulets_city_Hallway_deuce =
   {
     env   = "hallway",
     group = "deuce",
@@ -225,34 +215,21 @@ NUKEM.ROOM_THEMES =
 
     walls =
     {
-      BRN_BRICK = 30,
-      WINDOW1 = 10,
-      WINDOW2 = 20,
-      BRICK2 = 10,
-      GRNBRICK = 30,
-      GRAYBRICK = 10,
-      REDSLATS = 30,
-      IRON = 10
+      WALL1 = 50
     },
 
     floors =
     {
-      GRAYCIRCLE = 50,
-      CLANG1 = 50,
-      GRAYFLAT = 50,
-      REDCARPET = 50
+      WALL1 = 50
     },
 
     ceilings =
     {
-      IRON = 30,
-      GRAYCIRCLE = 10,
-      ROOF1 = 20,
-      ROOF2 = 10,
+      WALL1 = 50
     }
   },
 
-  nukem_city_Hallway_vent =
+  amulets_city_Hallway_vent =
   {
     env   = "hallway",
     group = "vent",
@@ -260,148 +237,55 @@ NUKEM.ROOM_THEMES =
 
     walls =
     {
-      BRN_BRICK = 30,
-      WINDOW1 = 10,
-      WINDOW2 = 20,
-      BRICK2 = 10,
-      GRNBRICK = 30,
-      GRAYBRICK = 10,
-      REDSLATS = 30,
-      IRON = 10
+      WALL1 = 50
     },
 
     floors =
     {
-      GRAYCIRCLE = 50,
-      CLANG1 = 50,
-      GRAYFLAT = 50,
-      REDCARPET = 50
+      WALL1 = 50
     },
 
     ceilings =
     {
-      IRON = 30,
-      GRAYCIRCLE = 10,
-      ROOF1 = 20,
-      ROOF2 = 10,
+      WALL1 = 50
     }
   },
 
-  nukem_city_Outdoors =
+  amulets_city_Outdoors =
   {
     env  = "outdoor",
     prob = 50,
 
     floors =
     {
-      MUD=50, 
-      GRASS=50,
-      CRETE1=20, 
-      CONC1=20, 
-      CONC2=20,
-      BLOCKS1=30, 
-      BLOCKS2=30,
-      ROCK1=15, 
-      ROCK2=15, 
-      ROCK3=15, 
-      ROCK4=15,
-      ROCK5=15, 
-      ROCK6=15, 
-      ROCK7=15,
-      SMROCK1=20, 
-      SMROCK2=20, 
-      SMROCK3=20
+      WALL1 = 50
     },
 
     naturals =
     {
-      MUD=50, 
-      GRASS=50,
-      CRETE1=20, 
-      CONC1=20, 
-      CONC2=20,
-      BLOCKS1=30, 
-      BLOCKS2=30,
-      ROCK1=15, 
-      ROCK2=15, 
-      ROCK3=15, 
-      ROCK4=15,
-      ROCK5=15, 
-      ROCK6=15, 
-      ROCK7=15,
-      SMROCK1=20, 
-      SMROCK2=20, 
-      SMROCK3=20
+      ROCK1 = 50
     },
 
     porch_floors =
     {
-      MUD=50, 
-      GRASS=50,
-      CRETE1=20, 
-      CONC1=20, 
-      CONC2=20,
-      BLOCKS1=30, 
-      BLOCKS2=30,
-      ROCK1=15, 
-      ROCK2=15, 
-      ROCK3=15, 
-      ROCK4=15,
-      ROCK5=15, 
-      ROCK6=15, 
-      ROCK7=15,
-      SMROCK1=20, 
-      SMROCK2=20, 
-      SMROCK3=20
+      WALL1 = 50
     },
 
   },
 
-  nukem_city_Cave =
+  amulets_city_Cave =
   {
     env  = "cave",
     prob = 50,
 
     floors =
     {
-      MUD=50, 
-      GRASS=50,
-      CRETE1=20, 
-      CONC1=20, 
-      CONC2=20,
-      BLOCKS1=30, 
-      BLOCKS2=30,
-      ROCK1=15, 
-      ROCK2=15, 
-      ROCK3=15, 
-      ROCK4=15,
-      ROCK5=15, 
-      ROCK6=15, 
-      ROCK7=15,
-      SMROCK1=20, 
-      SMROCK2=20, 
-      SMROCK3=20
+      ROCK1 = 50
     },
 
     walls =
     {
-      MUD=50, 
-      GRASS=50,
-      CRETE1=20, 
-      CONC1=20, 
-      CONC2=20,
-      BLOCKS1=30, 
-      BLOCKS2=30,
-      ROCK1=15, 
-      ROCK2=15, 
-      ROCK3=15, 
-      ROCK4=15,
-      ROCK5=15, 
-      ROCK6=15, 
-      ROCK7=15,
-      SMROCK1=20, 
-      SMROCK2=20, 
-      SMROCK3=20
+      ROCK1 = 50
     }
   }
 
@@ -409,7 +293,7 @@ NUKEM.ROOM_THEMES =
 ------------------------------------------------------------------------
 
 
-NUKEM.ROOMS =
+AMULETS.ROOMS =
 {
   GENERIC =
   {
@@ -427,12 +311,10 @@ NUKEM.ROOMS =
 
 ------------------------------------------------------------------------
 
-
-OB_THEMES["nukem_city"] =
+OB_THEMES["amulets_city"] =
 {
   label = "City",
-  game = "nukem",
+  game = "amulets",
   name_theme = "URBAN",
   mixed_prob = 50
 }
-

@@ -2867,7 +2867,7 @@ function Layout_outdoor_shadows()
 
   local function need_shadow(S, dir)
 
-    if OB_CONFIG.game == "quake" then return false end
+    if OB_CONFIG.game == "quake" or OB_CONFIG.game == "nukem" then return false end
 
     if not S.area then return false end
 
