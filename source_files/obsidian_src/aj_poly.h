@@ -160,7 +160,7 @@ class thing_c {
    public:
     int index;
 
-    int x, y;
+    int x, y, z;
     int type;
     int options;
     int angle;
@@ -170,7 +170,7 @@ class thing_c {
     std::array<u8_t, 5> args;
 
    public:
-    thing_c() : index(-1), x(), y(), type(), options(), angle(), args() {}
+    thing_c() : index(-1), x(), y(), z(), type(), options(), angle(), args() {}
 };
 
 class edge_c {

@@ -188,7 +188,7 @@ int wadfab_get_thing(lua_State *L) {
     return 1;
 }
 
-int wadfab_get_thing_hexen(lua_State *L) {
+int wadfab_get_converted_thing(lua_State *L) {
     int index = luaL_checkinteger(L, 1);
 
     if (index < 0 || index >= ajpoly::num_things) {
@@ -209,6 +209,56 @@ int wadfab_get_thing_hexen(lua_State *L) {
     lua_setfield(L, -2, "y");
 
     lua_pushinteger(L, calc_thing_z(TH->x, TH->y));
+    lua_setfield(L, -2, "z");
+
+    lua_pushinteger(L, TH->angle);
+    lua_setfield(L, -2, "angle");
+
+    lua_pushinteger(L, TH->options);
+    lua_setfield(L, -2, "flags");
+
+    lua_pushinteger(L, TH->special);
+    lua_setfield(L, -2, "special");
+
+    lua_pushinteger(L, 0);
+    lua_setfield(L, -2, "arg1");
+
+    lua_pushinteger(L, 0);
+    lua_setfield(L, -2, "arg2");
+
+    lua_pushinteger(L, 0);
+    lua_setfield(L, -2, "arg3");
+
+    lua_pushinteger(L, 0);
+    lua_setfield(L, -2, "arg4");
+
+    lua_pushinteger(L, 0);
+    lua_setfield(L, -2, "arg5");
+
+    return 1;
+}
+
+int wadfab_get_thing_hexen(lua_State *L) {
+    int index = luaL_checkinteger(L, 1);
+
+    if (index < 0 || index >= ajpoly::num_things) {
+        return 0;
+    }
+
+    const ajpoly::thing_c *TH = ajpoly::Thing(index);
+
+    lua_newtable(L);
+
+    lua_pushinteger(L, TH->type);
+    lua_setfield(L, -2, "id");
+
+    lua_pushinteger(L, TH->x);
+    lua_setfield(L, -2, "x");
+
+    lua_pushinteger(L, TH->y);
+    lua_setfield(L, -2, "y");
+
+    lua_pushinteger(L, calc_thing_z(TH->x, TH->y) + TH->z);
     lua_setfield(L, -2, "z");
 
     lua_pushinteger(L, TH->angle);
@@ -354,6 +404,114 @@ int wadfab_get_line(lua_State *L) {
 
     lua_pushinteger(L, LD->tag);
     lua_setfield(L, -2, "tag");
+
+    return 1;
+}
+
+int wadfab_get_converted_line(lua_State *L) {
+    int index = luaL_checkinteger(L, 1);
+
+    if (index < 0 || index >= ajpoly::num_linedefs) {
+        return 0;
+    }
+
+    const ajpoly::linedef_c *LD = ajpoly::Linedef(index);
+
+    lua_newtable(L);
+
+    lua_pushinteger(L, LD->start->x);
+    lua_setfield(L, -2, "x1");
+
+    lua_pushinteger(L, LD->start->y);
+    lua_setfield(L, -2, "y1");
+
+    lua_pushinteger(L, LD->end->x);
+    lua_setfield(L, -2, "x2");
+
+    lua_pushinteger(L, LD->end->y);
+    lua_setfield(L, -2, "y2");
+
+    if (LD->right) {
+        lua_pushinteger(L, LD->right->index);
+        lua_setfield(L, -2, "right");
+    }
+
+    if (LD->left) {
+        lua_pushinteger(L, LD->left->index);
+        lua_setfield(L, -2, "left");
+    }
+
+    lua_pushinteger(L, LD->special);
+    lua_setfield(L, -2, "special");
+
+    lua_pushinteger(L, LD->flags);
+    lua_setfield(L, -2, "flags");
+
+    if (xlat_doom[LD->special][0].empty()) {
+        lua_pushinteger(L, 0);
+    } else if (StringCaseCmp(xlat_doom[LD->special][0], "tag") == 0) {
+        lua_pushinteger(L, LD->tag);
+    } else if (StringCaseCmp(xlat_doom[LD->special][0], "tag2") == 0) {
+        lua_pushinteger(L, 0); // This is for Hexen teleport behavior, but I imagine Doom behavior is desired regardless
+    } else if (StringCaseCmp(xlat_doom[LD->special][0], "lineid") == 0) {
+        lua_pushinteger(L, index);
+    } else {
+        lua_pushinteger(L, StringToInt(xlat_doom[LD->special][0]));
+    }
+    lua_setfield(L, -2, "arg1");
+
+    if (xlat_doom[LD->special][1].empty()) {
+        lua_pushinteger(L, 0);
+    } else if (StringCaseCmp(xlat_doom[LD->special][1], "tag") == 0) {
+        lua_pushinteger(L, LD->tag);
+    } else if (StringCaseCmp(xlat_doom[LD->special][1], "tag2") == 0) {
+        lua_pushinteger(L, 0); // This is for Hexen teleport behavior, but I imagine Doom behavior is desired regardless
+    } else if (StringCaseCmp(xlat_doom[LD->special][1], "lineid") == 0) {
+        lua_pushinteger(L, index);
+    } else {
+        lua_pushinteger(L, StringToInt(xlat_doom[LD->special][1]));
+    }
+    lua_setfield(L, -2, "arg2");
+
+    if (xlat_doom[LD->special][2].empty()) {
+        lua_pushinteger(L, 0);
+    } else if (StringCaseCmp(xlat_doom[LD->special][2], "tag") == 0) {
+        lua_pushinteger(L, LD->tag);
+    } else if (StringCaseCmp(xlat_doom[LD->special][2], "tag2") == 0) {
+        lua_pushinteger(L, 0); // This is for Hexen teleport behavior, but I imagine Doom behavior is desired regardless
+    } else if (StringCaseCmp(xlat_doom[LD->special][2], "lineid") == 0) {
+        lua_pushinteger(L, index);
+    } else {
+        lua_pushinteger(L, StringToInt(xlat_doom[LD->special][2]));
+    }
+    lua_setfield(L, -2, "arg3");
+
+    if (xlat_doom[LD->special][3].empty()) {
+        lua_pushinteger(L, 0);
+    } else if (StringCaseCmp(xlat_doom[LD->special][3], "tag") == 0) {
+        lua_pushinteger(L, LD->tag);
+    } else if (StringCaseCmp(xlat_doom[LD->special][3], "tag2") == 0) {
+        lua_pushinteger(L, 0); // This is for Hexen teleport behavior, but I imagine Doom behavior is desired regardless
+    } else if (StringCaseCmp(xlat_doom[LD->special][3], "lineid") == 0) {
+        lua_pushinteger(L, index);
+    } else {
+        lua_pushinteger(L, StringToInt(xlat_doom[LD->special][3]));
+    }
+    lua_setfield(L, -2, "arg4");
+
+    if (xlat_doom[LD->special][4].empty()) {
+        lua_pushinteger(L, 0);
+    } else if (StringCaseCmp(xlat_doom[LD->special][4], "tag") == 0) {
+        lua_pushinteger(L, LD->tag);
+    } else if (StringCaseCmp(xlat_doom[LD->special][4], "tag2") == 0) {
+        lua_pushinteger(L, 0); // This is for Hexen teleport behavior, but I imagine Doom behavior is desired regardless
+    } else if (StringCaseCmp(xlat_doom[LD->special][4], "lineid") == 0) {
+        lua_pushinteger(L, index);
+    } else {
+        lua_pushinteger(L, StringToInt(xlat_doom[LD->special][4]));
+    }
+    lua_setfield(L, -2, "arg5");
+
 
     return 1;
 }
