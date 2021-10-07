@@ -36,7 +36,7 @@ gui.import("resources")
 
 OB_GAMES["amulets"] =
 {
-	label = _("Amulets & Armor (Exp)"),
+	label = _("Amulets and Armor (Exp)"),
 	priority = 30,
 	
 	format = "doom",

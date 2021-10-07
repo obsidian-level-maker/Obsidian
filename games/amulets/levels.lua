@@ -24,51 +24,51 @@ AMULETS.EPISODES =
 
   episode1 =
   {
-    theme = "CITY"
-    sky_light = 0.75
-    maps = { "l30", "l301", "l531", "l31", "l22" }
-  }
+    theme = "amulets_city",
+    sky_light = 0.75,
+    maps = { "l30", "l301", "l531", "l31", "l22" },
+  },
 
   episode2 =
   {
-    theme = "CITY"
-    sky_light = 0.75
-    maps = { "l25", "l20", "l60" }
-  }
+    theme = "amulets_city",
+    sky_light = 0.75,
+    maps = { "l25", "l20", "l60" },
+  },
 
   episode3 =
   {
-    theme = "CITY"
-    sky_light = 0.75
-    maps = { "l64", "l65", "l34", "l151", "l152", "l153" }
-  }
+    theme = "amulets_city",
+    sky_light = 0.75,
+    maps = { "l64", "l65", "l34", "l151", "l152", "l153" },
+  },
 
   episode4 =
   {
-    theme = "CITY"
-    sky_light = 0.75
-    maps = { "l231", "l75", "l10", "l12" }
-  }
+    theme = "amulets_city",
+    sky_light = 0.75,
+    maps = { "l231", "l75", "l10", "l12" },
+  },
 
   episode5 =
   {
-    theme = "CITY"
-    sky_light = 0.75
-    maps = { "l51", "l52", "l41", "l44" }
-  }
+    theme = "amulets_city",
+    sky_light = 0.75,
+    maps = { "l51", "l52", "l41", "l44" },
+  },
 
   episode6 =
   {
-    theme = "CITY"
-    sky_light = 0.75
-    maps = { "l74", "l73", "l72" }
-  }
+    theme = "amulets_city",
+    sky_light = 0.75,
+    maps = { "l74", "l73", "l72" },
+  },
 
   episode7 =
   {
-    theme = "CITY"
-    sky_light = 0.75
-    maps = { "l32", "l71", "l70", "l61", "l40" }
+    theme = "amulets_city",
+    sky_light = 0.75,
+    maps = { "l32", "l71", "l70", "l61", "l40" },
   }
 }
 
@@ -84,8 +84,8 @@ end
 
 
 function AMULETS.get_levels()
-  local EP_NUM  = (OB_CONFIG.length == "full"   ? 7 ; 1)
-  local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 5)
+  local EP_NUM  = sel(OB_CONFIG.length == "full", 7 , 1)
+  local MAP_NUM = sel(OB_CONFIG.length == "single", 1 , 5)
 
   for episode = 1,EP_NUM do
     local ep_info = AMULETS.EPISODES["episode" .. episode]
@@ -107,11 +107,11 @@ function AMULETS.get_levels()
 
       local LEV =
       {
-        name = string.format("E%dM%d", episode, map)
-        wad_name = ep_info.maps[map]
+        name = string.format("E%dM%d", episode, map),
+        wad_name = ep_info.maps[map],
 
-        episode  = episode
-        ep_along = ep_along
+        episode  = episode,
+        ep_along = ep_along,
         ep_info  = ep_info
       }
 

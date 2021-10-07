@@ -2,20 +2,20 @@ AMULETS.ENTITIES =
 {
   --- PLAYERS ---
 
-  player1 = { id=1, r=16, h=56 }
-  player2 = { id=2, r=16, h=56 }
-  player3 = { id=3, r=16, h=56 }
-  player4 = { id=4, r=16, h=56 }
+  player1 = { id=1, r=16, h=56 },
+  player2 = { id=2, r=16, h=56 },
+  player3 = { id=3, r=16, h=56 },
+  player4 = { id=4, r=16, h=56 },
 
-  dm_player     = { id=11 }
-  teleport_spot = { id=14 }
+  dm_player     = { id=11 },
+  teleport_spot = { id=14 },
 
   --- PICKUPS ---
 
-  potion = { id=811 }
+  potion = { id=811 },
 
   --- SCENERY ---
-  jaw = { id=59, r=20, h=16, pass=true }
+  jaw = { id=59, r=20, h=16, pass=true },
 }
 
 AMULETS.GENERIC_REQS =
@@ -30,7 +30,7 @@ AMULETS.PLAYER_MODEL =
 {
   avatar =
   {
-    stats   = { health=0 }
+    stats   = { health=0 },
     weapons = { }
   }
 }
