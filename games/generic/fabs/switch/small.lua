@@ -6,7 +6,7 @@ PREFABS.Switch_small =
 {
   file   = "switch/small.wad",
   map    = "MAP01",
-  game   = "heretic",
+  game   = {heretic=1, hexen=1},
 
   key    = "sw_metal",
   prob   = 50,

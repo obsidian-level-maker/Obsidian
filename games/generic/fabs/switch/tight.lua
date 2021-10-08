@@ -3,7 +3,7 @@ PREFABS.Switch_wall_tight =
   file   = "switch/tight.wad",
 
   map = "MAP01",
-  game = "heretic",
+  game = {heretic=1, hexen=1},
 
   prob   = 18,
 

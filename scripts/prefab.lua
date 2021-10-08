@@ -1205,7 +1205,13 @@ function Fab_load_wad(def)
     local line
 
     if C.side then side = gui.wadfab_get_side(C.side) end
-    if C.line then line = gui.wadfab_get_line_hexen(C.line) end
+    if C.line then 
+      if def.format and def.format == "hexen" then
+        line = gui.wadfab_get_line_hexen(C.line)
+      else
+        line = gui.wadfab_get_converted_line(C.line)
+      end    
+    end
 
     -- get other sector (which the polygon side faces)
     local other_sec
@@ -1732,7 +1738,11 @@ function Fab_load_wad(def)
 
     for thing_idx = 0,9999 do
       if OB_CONFIG.game == "hexen" then
-        E = gui.wadfab_get_thing_hexen(thing_idx)
+        if def.format and def.format == "hexen" then
+          E = gui.wadfab_get_thing_hexen(thing_idx)
+        else
+          E = gui.wadfab_get_converted_thing(thing_idx)
+        end
       else
         E = gui.wadfab_get_thing(thing_idx)
       end
@@ -1775,7 +1785,11 @@ function Fab_load_wad(def)
 
     for line_idx = 0,9999 do
       if OB_CONFIG.game == "hexen" then
-        L = gui.wadfab_get_line_hexen(line_idx)
+        if def.format and def.format == "hexen" then
+          L = gui.wadfab_get_line_hexen(line_idx)
+        else
+          L = gui.wadfab_get_converted_line(line_idx)
+        end
       else
         L = gui.wadfab_get_line(line_idx)
       end

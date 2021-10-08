@@ -485,7 +485,27 @@ HEXEN.MATERIALS =
 
 HEXEN.PREFAB_FIELDS =
 {
-  -- TODO : compatibility with DOOM prefabs
+  -- Generic locked door conversion --
+  line_700 = 28,
+  line_701 = 27,
+  line_702 = 26,
+
+  -- These are used for converting generic fab things --
+  thing_11000 = 8100, -- Barrel
+  thing_11001 = 17, -- Ceiling light
+  thing_11002 = 116, -- Standalone light
+  thing_11003 = 54, -- Wall light (torch)
+  thing_11004 = 8060, -- Wide standalone light
+  thing_11005 = 103, -- Small pillar
+  thing_11006 = 8030, -- Key one
+  thing_11007 = 8031, -- Key two
+  thing_11008 = 8032, -- Key three
+  thing_11009 = 1, -- P1 Start
+  thing_11010 = 2, -- P2 Start
+  thing_11011 = 3, -- P3 Start
+  thing_11012 = 4, -- P4 Start
+  thing_11013 = 14, -- Teleport destination
+  thing_11014 = 0, -- Passable ceiling decor
 }
 
 

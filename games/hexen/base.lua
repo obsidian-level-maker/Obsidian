@@ -38,7 +38,7 @@ gui.import("resources")
 
 ------------------------------------------------------------
 
-UNFINISHED["hexen"] =
+OB_GAMES["hexen"] =
 {
   label = _("Hexen (Exp)"),
   
@@ -48,6 +48,8 @@ UNFINISHED["hexen"] =
   format = "doom",
   sub_format = "hexen",
 
+  use_generics = true,
+  
   game_dir = "hexen",
   iwad_name = "hexen.wad",
 
