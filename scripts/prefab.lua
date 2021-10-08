@@ -1054,6 +1054,79 @@ DOOM_TWO_SIDED_FLAG = 0x04
 function Fab_load_wad(def)
   local fab
 
+  local function thing_doom_to_hexen_format(thing)
+    thing.special = 0
+    thing.arg1 = 0
+    thing.arg2 = 0
+    thing.arg3 = 0
+    thing.arg4 = 0
+    thing.arg5 = 0
+  end
+
+  local function line_doom_to_hexen_format(line)
+    if GAME.XLAT[line.special] then
+      local line_num = table.copy(GAME.XLAT[line.special])
+      line.special = XLAT_SPEC[line_num.name].id
+
+      if not line_num.arg1 or line_num.arg1 == "tag2" then
+        line.arg1 = 0
+      elseif line_num.arg1 == "tag" then
+        line.arg1 = line.tag
+      elseif line_num.arg1 == "lineid" then
+        line.arg1 = line.lineid
+      else
+        line.arg1 = line_num.arg1
+      end
+
+      if not line_num.arg2 or line_num.arg2 == "tag2" then
+        line.arg2 = 0
+      elseif line_num.arg1 == "tag" then
+        line.arg2 = line.tag
+      elseif line_num.arg2 == "lineid" then
+        line.arg2 = line.lineid
+      else
+        line.arg2 = line_num.arg2
+      end
+
+      if not line_num.arg3 or line_num.arg3 == "tag2" then
+        line.arg3 = 0
+      elseif line_num.arg3 == "tag" then
+        line.arg3 = line.tag
+      elseif line_num.arg3 == "lineid" then
+        line.arg3 = line.lineid
+      else
+        line.arg3 = line_num.arg3
+      end
+
+      if not line_num.arg4 or line_num.arg4 == "tag2" then
+        line.arg4 = 0
+      elseif line_num.arg4 == "tag" then
+        line.arg4 = line.tag
+      elseif line_num.arg4 == "lineid" then
+        line.arg4 = line.lineid
+      else
+        line.arg4 = line_num.arg4
+      end
+
+      if not line_num.arg5 or line_num.arg5 == "tag2" then
+        line.arg5 = 0
+      elseif line_num.arg5 == "tag" then
+        line.arg5 = line.tag
+      elseif line_num.arg5 == "lineid" then
+        line.arg5 = line.lineid
+      else
+        line.arg5 = line_num.arg5
+      end
+    else
+      line.special = 0
+      line.arg1 = 0
+      line.arg2 = 0
+      line.arg3 = 0
+      line.arg4 = 0
+      line.arg5 = 0
+    end
+    
+  end
 
   local function convert_offset(raw_val)
     if raw_val == nil then return nil end
@@ -1210,7 +1283,9 @@ function Fab_load_wad(def)
         line = gui.wadfab_get_line_hexen(C.line)
       else
         line = gui.wadfab_get_line(C.line)
-        line_doom_to_hexen(line)
+        if line then
+          line_doom_to_hexen_format(line)
+        end
       end    
     end
 
@@ -1346,7 +1421,7 @@ function Fab_load_wad(def)
 
 
     for _,C in pairs(coords) do
-      if OB_CONFIG.game == "hexen" then
+      if GAME.sub_format and GAME.sub_format == "hexen" then
         table.insert(B, decode_polygon_side_hexen(nil, C, 1))
       else
         table.insert(B, decode_polygon_side(nil, C, 1))
@@ -1391,7 +1466,7 @@ function Fab_load_wad(def)
     decode_lighting(S, B[1])
 
     for _,C in pairs(coords) do
-      if OB_CONFIG.game == "hexen" then
+      if GAME.sub_format and GAME.sub_format == "hexen" then
         table.insert(B, decode_polygon_side_hexen(S, C, 1))
       else
         table.insert(B, decode_polygon_side(S, C, 1))  
@@ -1493,7 +1568,7 @@ function Fab_load_wad(def)
     end
 
     for _,C in pairs(coords) do
-      if OB_CONFIG.game == "hexen" then
+      if GAME.sub_format and GAME.sub_format == "hexen" then
         table.insert(B, decode_polygon_side_hexen(S, C, pass))
       else
         table.insert(B, decode_polygon_side(S, C, pass))
@@ -1738,12 +1813,14 @@ function Fab_load_wad(def)
     local E
 
     for thing_idx = 0,9999 do
-      if OB_CONFIG.game == "hexen" then
+      if GAME.sub_format and GAME.sub_format == "hexen" then
         if def.format and def.format == "hexen" then
           E = gui.wadfab_get_thing_hexen(thing_idx)
         else
           E = gui.wadfab_get_thing(thing_idx)
-          thing_doom_to_hexen(E)
+          if E then
+            thing_doom_to_hexen_format(E)
+          end
         end
       else
         E = gui.wadfab_get_thing(thing_idx)
@@ -1786,12 +1863,14 @@ function Fab_load_wad(def)
     local L
 
     for line_idx = 0,9999 do
-      if OB_CONFIG.game == "hexen" then
+      if GAME.sub_format and GAME.sub_format == "hexen" then
         if def.format and def.format == "hexen" then
           L = gui.wadfab_get_line_hexen(line_idx)
         else
           L = gui.wadfab_get_line(line_idx)
-          line_doom_to_hexen(L)
+          if L then
+            line_doom_to_hexen_format(L)
+          end
         end
       else
         L = gui.wadfab_get_line(line_idx)
@@ -2239,7 +2318,7 @@ function Fab_replacements(fab)
         current_tag = C.tag  
       end
       
-      if OB_CONFIG.game == "hexen" then
+      if GAME.sub_format and GAME.sub_format == "hexen" then
         if C.x and C.special and (C.special >= 10 and C.special <= 12) then C.arg1 = current_tag end -- Flesh out which special ranges need to have arg1 match a sector tag
       end
 
