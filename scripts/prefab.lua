@@ -1209,7 +1209,8 @@ function Fab_load_wad(def)
       if def.format and def.format == "hexen" then
         line = gui.wadfab_get_line_hexen(C.line)
       else
-        line = gui.wadfab_get_converted_line(C.line)
+        line = gui.wadfab_get_line(C.line)
+        line_doom_to_hexen(line)
       end    
     end
 
@@ -1741,7 +1742,8 @@ function Fab_load_wad(def)
         if def.format and def.format == "hexen" then
           E = gui.wadfab_get_thing_hexen(thing_idx)
         else
-          E = gui.wadfab_get_converted_thing(thing_idx)
+          E = gui.wadfab_get_thing(thing_idx)
+          thing_doom_to_hexen(E)
         end
       else
         E = gui.wadfab_get_thing(thing_idx)
@@ -1788,7 +1790,8 @@ function Fab_load_wad(def)
         if def.format and def.format == "hexen" then
           L = gui.wadfab_get_line_hexen(line_idx)
         else
-          L = gui.wadfab_get_converted_line(line_idx)
+          L = gui.wadfab_get_line(line_idx)
+          line_doom_to_hexen(L)
         end
       else
         L = gui.wadfab_get_line(line_idx)
