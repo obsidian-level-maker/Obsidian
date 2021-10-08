@@ -316,3 +316,118 @@ PREFABS.Wall_epic_comptil_plain_blue_diag =
 
   z_fit = { 34,36 }
 }
+
+--
+--
+--
+
+PREFABS.Wall_epic_comptil_lite_red =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP52",
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comptil_lite_red",
+
+  tex_METAL4 =
+  {
+    METAL4 = 5,
+    METAL2 = 8
+  },
+
+  z_fit = { 72,80 }
+}
+
+PREFABS.Wall_epic_comptil_lite_green =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP52",
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comptil_lite_green",
+
+  tex_METAL4 =
+  {
+    METAL4 = 5,
+    METAL2 = 8
+  },
+
+  tex_COMPTIL2 = "COMPTIL4",
+  tex_COMPRED = "COMPGREN",
+  tex_T_VSLTER = "T_VSLTEG",
+
+  z_fit = { 72,80 }
+}
+
+PREFABS.Wall_epic_comptil_lite_yellow =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP52",
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comptil_lite_yellow",
+
+  tex_METAL4 =
+  {
+    METAL4 = 5,
+    METAL2 = 8
+  },
+
+  tex_COMPTIL2 = "COMPTIL5",
+  tex_COMPRED = "COMPYELL",
+  tex_T_VSLTER = "T_VSLTEY",
+
+  z_fit = { 72,80 }
+}
+
+PREFABS.Wall_epic_comptil_lite_purple =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP52",
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comptil_lite_purple",
+
+  tex_METAL4 =
+  {
+    METAL4 = 5,
+    METAL2 = 8
+  },
+
+  tex_COMPTIL2 = "COMPTIL6",
+  tex_COMPRED = "COMPBLAK",
+  tex_T_VSLTER = "T_VSLTEP",
+
+  z_fit = { 72,80 }
+}
+
+PREFABS.Wall_epic_comptil_lite_blue =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP52",
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comptil_lite_blue",
+
+  tex_METAL4 =
+  {
+    METAL4 = 5,
+    METAL2 = 8
+  },
+
+  tex_COMPTIL2 = "CMPTILE",
+  tex_COMPRED = "COMPBLUE",
+  tex_T_VSLTER = "LITEBLU4",
+
+  z_fit = { 72,80 }
+}

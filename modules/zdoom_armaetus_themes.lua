@@ -4927,7 +4927,13 @@ ARMAETUS_THEMES =
       gtd_comptil_plain_green = 13,
       gtd_comptil_plain_yellow = 13,
       gtd_comptil_plain_purple = 13,
-      gtd_comptil_plain_blue = 13
+      gtd_comptil_plain_blue = 13,
+      --
+      gtd_comptil_lite_red = 13,
+      gtd_comptil_lite_green = 13,
+      gtd_comptil_lite_yellow = 13,
+      gtd_comptil_lite_purple = 13,
+      gtd_comptil_lite_blue = 13
     },
 
     window_groups =
