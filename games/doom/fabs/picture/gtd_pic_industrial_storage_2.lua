@@ -22,9 +22,9 @@ PREFABS.Pic_industrial_storage_2x =
   y_fit = "top",
   z_fit = { 72,112 },
 
-  tex_CRATE1 = {CRATE1=1, CRATE2=1, CRATE3=1, CRATELIT=1},
+  --[[tex_CRATE1 = {CRATE1=1, CRATE2=1, CRATE3=1, CRATELIT=1},
   tex_CRATE2 = {CRATE1=1, CRATE2=1, CRATE3=1, CRATELIT=1},
-  tex_CRATE3 = {CRATE1=1, CRATE2=1, CRATE3=1, CRATELIT=1}
+  tex_CRATE3 = {CRATE1=1, CRATE2=1, CRATE3=1, CRATELIT=1}]]
 }
 
 PREFABS.Pic_industrial_storage_2x_2 =
