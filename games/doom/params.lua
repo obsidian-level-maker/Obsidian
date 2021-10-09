@@ -80,8 +80,6 @@ DOOM.ACTIONS =
   W1_LowerFloor = { id=38, kind="lower" },  --
 }
 
-
--- translation from DOOM specials
 DOOM.XLAT =
 {
   [  1] = { act="SRm",name="Door_Raise", arg1=0, arg2=XC.D_SLOW, arg3=XC.DOORWAIT, arg4="tag" },

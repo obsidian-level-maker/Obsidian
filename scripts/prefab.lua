@@ -1067,6 +1067,28 @@ function Fab_load_wad(def)
     if GAME.XLAT[line.special] then
       local line_num = table.copy(GAME.XLAT[line.special])
       line.special = XLAT_SPEC[line_num.name].id
+      -- translation from DOOM specials
+-- P = Pushed/manual (use S I think)
+-- S = Switched
+-- m = Monsters can do
+-- R = Repeatable
+-- W = Walk over
+-- G = Shoot?
+      if string.match(line_num.act, "S") then
+        line.flags = bit.bor(line.flags, 0x0400)
+      end
+      if string.match(line_num.act, "R") then
+        line.flags = bit.bor(line.flags, 0x0200)
+      end
+      if string.match(line_num.act, "G") then
+        line.flags = bit.bor(line.flags, 0x0C00)
+      end
+      if string.match(line_num.act, "m") then
+        line.flags = bit.bor(line.flags, 0x2000)
+      end
+      if string.match(line_num.act, "W") then
+        line.flags = bit.bor(line.flags, 0x0800)
+      end
 
       if not line_num.arg1 or line_num.arg1 == "tag2" then
         line.arg1 = 0
@@ -1126,6 +1148,8 @@ function Fab_load_wad(def)
       line.arg5 = 0
     end
     
+    line.lineid = nil
+    line.tag = nil
   end
 
   local function convert_offset(raw_val)
@@ -2306,7 +2330,7 @@ function Fab_replacements(fab)
 
   build_entity_remap_table()
 
-  current_tag = 0 -- Used to help Hexen arg1 match with appropriate sector tag when needed
+  current_tag = 0 -- Used to help Hexen format match with appropriate sector tag when needed
 
   for _,B in pairs(fab.brushes) do
     for _,C in pairs(B) do
@@ -2319,7 +2343,26 @@ function Fab_replacements(fab)
       end
       
       if GAME.sub_format and GAME.sub_format == "hexen" then
-        if C.x and C.special and (C.special >= 10 and C.special <= 12) then C.arg1 = current_tag end -- Flesh out which special ranges need to have arg1 match a sector tag
+        if C.x and C.special then
+          local line_num = table.copy(GAME.XLAT[C.special])
+          if line_num then
+            if line_num.arg1 == "tag" then
+              C.arg1 = current_tag
+            end
+            if line_num.arg2 == "tag" then
+              C.arg2 = current_tag
+            end
+            if line_num.arg3 == "tag" then
+              C.arg3 = current_tag
+            end
+            if line_num.arg4 == "tag" then
+              C.arg4 = current_tag
+            end
+            if line_num.arg5 == "tag" then
+              C.arg5 = current_tag
+            end
+          end
+        end
       end
 
       if C.u1  then C.u1  = check("offset", C.u1) end
