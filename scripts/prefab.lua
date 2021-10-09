@@ -1086,9 +1086,6 @@ function Fab_load_wad(def)
       if string.match(line_num.act, "m") then
         line.flags = bit.bor(line.flags, 0x2000)
       end
-      if string.match(line_num.act, "W") then
-        line.flags = bit.bor(line.flags, 0x0800)
-      end
 
       if not line_num.arg1 or line_num.arg1 == "tag2" then
         line.arg1 = 0
@@ -1147,9 +1144,6 @@ function Fab_load_wad(def)
       line.arg4 = 0
       line.arg5 = 0
     end
-    
-    line.lineid = nil
-    line.tag = nil
   end
 
   local function convert_offset(raw_val)
