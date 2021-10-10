@@ -1195,10 +1195,6 @@ function Room_make_windows(A1, A2)
 
 
   local function calc_vertical_space(A1, A2)
-    if A1.is_outdoor and not A2.is_outdoor then
-       A1, A2 = A2, A1
-    end
-
     local c1 = A1.ceil_h
     local c2 = A2.ceil_h
 
@@ -3390,6 +3386,7 @@ function Room_floor_ceil_heights()
 
       local tall_offsets =
       {
+        [1.5] = 3,
         [2] = 9,
         [3] = 1,
       }
@@ -3400,7 +3397,7 @@ function Room_floor_ceil_heights()
         tall_offsets[3] = 2
       end
 
-      add_h = add_h * rand.key_by_probs(tall_offsets)
+      add_h = tonumber(add_h * rand.key_by_probs(tall_offsets))
     end
 
     if add_h > 128 and group.max_floor_h >= group.min_floor_h + 64 then
