@@ -1787,7 +1787,8 @@ DOOM.THEMES =
       gtd_window_construction_frames = 65,
       gtd_window_hexagon = 25,
       gtd_window_slump_tall = 65,
-      gtd_window_industrial_lite_archs = 30
+      gtd_window_industrial_lite_archs = 30,
+      gtd_window_gothic_archs = 30
     },
 
     fence_groups =
@@ -2297,7 +2298,8 @@ DOOM.THEMES =
       gtd_window_pencil_holes = 60,
       gtd_window_construction_frames = 60,
       gtd_window_slump_tall = 40,
-      gtd_window_industrial_lite_archs = 35
+      gtd_window_industrial_lite_archs = 35,
+      gtd_window_gothic_archs = 60
     },
 
     fence_groups =
