@@ -1067,13 +1067,7 @@ function Fab_load_wad(def)
     if GAME.XLAT[line.special] then
       local line_num = table.copy(GAME.XLAT[line.special])
       line.special = XLAT_SPEC[line_num.name].id
-      -- translation from DOOM specials
--- P = Pushed/manual (use S I think)
--- S = Switched
--- m = Monsters can do
--- R = Repeatable
--- W = Walk over
--- G = Shoot?
+
       if string.match(line_num.act, "S") then
         line.flags = bit.bor(line.flags, 0x0400)
       end
@@ -1137,12 +1131,11 @@ function Fab_load_wad(def)
         line.arg5 = line_num.arg5
       end
     else
-      line.special = 0
       line.arg1 = 0
       line.arg2 = 0
       line.arg3 = 0
       line.arg4 = 0
-      line.arg5 = 0
+      line.arg5 = 999 -- To help identify types not in the XLAT table - Dasho
     end
   end
 

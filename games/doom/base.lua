@@ -45,7 +45,6 @@ OB_GAMES["doom2"] =
   priority = 99,  -- keep at top
 
   format = "doom",
-  sub_format = "hexen", -- Experiment - Dasho
   game_dir = "doom",
   iwad_name = "doom2.wad",
 
