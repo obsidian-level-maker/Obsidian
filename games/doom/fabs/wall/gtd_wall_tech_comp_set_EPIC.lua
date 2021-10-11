@@ -555,3 +555,144 @@ PREFABS.Wall_epic_comptil_lite_blue_diag =
   bound_z2 = 96,
   z_fit = { 72,80 }
 }
+
+--
+
+PREFABS.Wall_epic_graymet_blue =
+{
+  file = "wall/gtd_wall_tech_comp_set_EPIC.wad",
+  map = "MAP54",
+
+  prob = 50,
+  rank = 2,
+
+  group = "gtd_comp_graymet_blue",
+
+  where  = "edge",
+  height = 160,
+  deep = 16,
+
+  bound_z1 = 0,
+  bound_z2 = 160,
+
+  z_fit = "bottom"
+}
+
+PREFABS.Wall_epic_graymet_blue_short =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP55",
+
+  height = 96,
+  bound_z2 = 96,
+
+  rank = 1
+}
+
+--
+
+PREFABS.Wall_epic_graymet_green =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP54",
+
+  group = "gtd_comp_graymet_green",
+
+  tex_GRAYMET6 = "GRAYMET8"
+}
+
+PREFABS.Wall_epic_graymet_green_short =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP55",
+
+  rank = 1,
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comp_graymet_green",
+
+  tex_GRAYMET6 = "GRAYMET8"
+}
+
+--
+
+PREFABS.Wall_epic_graymet_red =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP54",
+
+  group = "gtd_comp_graymet_red",
+
+  tex_GRAYMET6 = "GRAYMET9"
+}
+
+PREFABS.Wall_epic_graymet_red_short =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP55",
+
+  rank = 1,
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comp_graymet_red",
+
+  tex_GRAYMET6 = "GRAYMET9"
+}
+
+--
+
+PREFABS.Wall_epic_graymet_orange =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP54",
+
+  group = "gtd_comp_graymet_orange",
+
+  tex_GRAYMET6 = "GRAYMETC"
+}
+
+PREFABS.Wall_epic_graymet_orange_short =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP55",
+
+  rank = 1,
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comp_graymet_orange",
+
+  tex_GRAYMET6 = "GRAYMETC"
+}
+
+--
+
+PREFABS.Wall_epic_graymet_purple =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP54",
+
+  group = "gtd_comp_graymet_purple",
+
+  tex_GRAYMET6 = "GRAYMET7"
+}
+
+PREFABS.Wall_epic_graymet_purple_short =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP55",
+
+  rank = 1,
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comp_graymet_purple",
+
+  tex_GRAYMET6 = "GRAYMET7"
+}
