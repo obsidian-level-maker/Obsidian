@@ -3892,11 +3892,26 @@ GROW_LIQUID_POOL_2X2 =
   },
 },
 
+GROW_LIQUID_POOL_2X2_NEW_AREA =
+{
+  prob = 10,
+  skip_prob = 35,
+
+  structure =
+  {
+    "x....x","x1111x",
+    "x....x","x1111x",
+    "......","AA~~AA",
+    "......","AA~~AA",
+    "x....x","x1111x",
+    "xx11xx","xx11xx",
+  },
+},
+
 GROW_LIQUID_POOL_3X1 =
 {
-  prob = 15,
-  prob_skew = 2,
-  skip_prob = 35,
+  prob = 3,
+  skip_prob = 85,
 
   structure =
   {
@@ -3911,6 +3926,23 @@ GROW_LIQUID_POOL_3X1 =
 },
 
 GROW_LIQUID_POOL_3X1_NEW_AREA =
+{
+  prob = 3,
+  skip_prob = 85,
+
+  structure =
+  {
+    "x...x","x111x",
+    "x...x","x111x",
+    ".....","AA~AA",
+    ".....","AA~AA",
+    ".....","AA~AA",
+    "x...x","x111x",
+    "xx1xx","xx1xx",
+  },
+},
+
+GROW_LIQUID_POOL_3X1_NEW_AREA_ALT =
 {
   prob = 25,
   skip_prob = 75,
@@ -3931,8 +3963,8 @@ GROW_LIQUID_POOL_3X1_NEW_AREA =
 
 GROW_LIQUID_POOL_3X1_TRIPLE =
 {
-  prob = 30,
-  skip_prob = 50,
+  prob = 35,
+  skip_prob = 65,
 
   structure =
   {
@@ -3948,8 +3980,8 @@ GROW_LIQUID_POOL_3X1_TRIPLE =
 
 GROW_LIQUID_POOL_3X1_TRIPLE_NEW_AREA =
 {
-  prob = 30,
-  skip_prob = 80,
+  prob = 35,
+  skip_prob = 75,
 
   structure =
   {
@@ -4339,6 +4371,35 @@ GROW_LIQUID_OVAL_SPLIT =
          "~1","1~",
     "~1","1~","~1","1~",
     "~1","1~","~1","1~",
+         "~1","1~",
+  },
+},
+
+GROW_LIQUID_OVAL_SPLIT_SOLID_PILLAR =
+{
+  prob = 30,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xxx11xxx","xxx11xxx",
+    "........","~~~11~~~",
+    "........","~~/11%~~",
+    "........","~/1/%1%~",
+    "........","~11..11~",
+    "........","~11..11~",
+    "........","~%1%/1/~",
+    "........","~~%11/~~",
+    "........","~~~11~~~",
+    "xxx..xxx","xxx11xxx",
+    "xxx..xxx","xxx11xxx",
+  },
+
+  diagonals =
+  {
+         "~1","1~",
+    "~1","1.",".1","1~",
+    "~1","1.",".1","1~",
          "~1","1~",
   },
 },
