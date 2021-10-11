@@ -34,3 +34,25 @@ PREFABS.Window_gothic_archs_3 =
 
   seed_w = 3,
 }
+
+--
+
+PREFABS.Window_gothic_archs_2_tall =
+{
+  template = "Window_gothic_archs_1",
+  map = "MAP02",
+
+  seed_w = 2,
+
+  z_fit = { 58,60 , 90,91}
+}
+
+PREFABS.Window_gothic_archs_3_tall =
+{
+  template = "Window_gothic_archs_1",
+  map = "MAP03",
+
+  seed_w = 3,
+
+  z_fit = { 58,60 , 90,91}
+}
