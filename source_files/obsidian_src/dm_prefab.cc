@@ -355,9 +355,6 @@ int wadfab_get_line(lua_State *L) {
     lua_pushinteger(L, LD->tag);
     lua_setfield(L, -2, "tag");
 
-    lua_pushinteger(L, index);
-    lua_setfield(L, -2, "lineid");
-
     return 1;
 }
 

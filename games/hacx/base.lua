@@ -40,7 +40,6 @@ OB_GAMES["hacx"] =
 	priority = 30,
 	
 	format = "doom",
-	sub_format = "hexen", -- Test - Dasho
 
 	engine = "zdoom",
 	

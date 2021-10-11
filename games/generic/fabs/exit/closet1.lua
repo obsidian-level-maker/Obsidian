@@ -22,26 +22,6 @@ PREFABS.Exit_closet1_heretic =
   y_fit  = "top",
 }
 
-PREFABS.Exit_closet1_hexen =
-{
-  file   = "exit/closet1.wad",
-  map    = "MAP01",
-
-  game   = "hexen",
-
-  prob   = 100,
-
-  where  = "seeds",
-  seed_w = 1,
-  seed_h = 1,
-
-  deep   =  16,
-  over   = -16,
-
-  x_fit  = "frame",
-  y_fit  = "top",
-}
-
 PREFABS.Exit_closet1_chex3 =
 {
   file   = "exit/closet1.wad",
@@ -203,16 +183,6 @@ PREFABS.Exit_closet1_nukem =
 ----------------------------------------------------------------------
 
 PREFABS.Exit_closet1_secret_heretic =
-{
-  template = "Exit_closet1_heretic",
-
-  kind = "secret_exit",
-
-  -- replace normal exit special with "exit to secret" special
-  line_11 = 51,
-}
-
-PREFABS.Exit_closet1_secret_hexen =
 {
   template = "Exit_closet1_heretic",
 

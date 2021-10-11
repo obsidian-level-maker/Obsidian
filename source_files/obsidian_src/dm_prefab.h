@@ -20,6 +20,7 @@
 
 #ifndef __OBLIGE_DM_PREFAB_H__
 #define __OBLIGE_DM_PREFAB_H__
+
 #endif /* __OBLIGE_DM_PREFAB_H__ */
 
 //--- editor settings ---
