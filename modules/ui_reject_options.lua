@@ -65,6 +65,56 @@ OB_MODULES["ui_reject_options"] =
   }
 }
 
+UI_EDGE_MAP_OPTIONS = { }
+
+function UI_EDGE_MAP_OPTIONS.setup(self)
+  -- these parameters have to be instantiated in this hook
+  -- because begin_level happens *after* level size decisions
+  for name,opt in pairs(self.options) do
+    if opt.valuator then
+      if opt.valuator == "button" then
+        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+      elseif opt.valuator == "slider" then
+        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)
+      end
+    else
+      PARAM[opt.name] = self.options[name].value
+    end
+  end
+end
+
+OB_MODULES["ui_edge_map_options"] =
+{
+
+  name = "ui_edge_map_options",
+
+  label = _("Map Build Options"),
+  
+  engine = "edge",
+
+  side = "left",
+  priority = 105,
+
+  hooks = 
+  {
+    pre_setup = UI_EDGE_MAP_OPTIONS.setup,
+  },
+
+  options =
+  {
+    {
+      name = "bool_build_nodes_edge",
+      label = _("Build Nodes"),
+      valuator = "button",
+      default = 0,
+      tooltip = "Choose to either build nodes or allow the engine itself to do so " ..
+      "upon loading the map.",
+      longtip = "Warning! If GL v5 nodes are needed due to map size/complexity, it is best to leave this unchecked as ZDBSP currently " ..
+      "creates v5 nodes that are out of spec and will likely crash EDGE."
+    }
+  }
+}
+
 UI_UDMF_MAP_OPTIONS = { }
 
 function UI_UDMF_MAP_OPTIONS.setup(self)
@@ -97,6 +147,7 @@ OB_MODULES["ui_udmf_map_options"] =
   label = _("Map Build Options"),
   
   engine = "advanced",
+  engine2 = "!edge",
 
   side = "left",
   priority = 105,
@@ -115,9 +166,7 @@ OB_MODULES["ui_udmf_map_options"] =
       default = 0,
       tooltip = "Choose to either build nodes or allow the engine itself to do so " ..
       "upon loading the map.",
-      longtip = "Some of the advanced engines supported by Obsidian are capable of building their own nodes when none are detected.\n\n" ..
-        "If EDGE is selected, nodes will will only be skipped if Binary map format is selected.\n\n" ..
-        "ZDoom is capable of building its own nodes in either Binary or UDMF.\n\n" ..
+      longtip = "ZDoom is capable of building its own nodes in either Binary or UDMF.\n\n" ..
         "If Eternity is selected, nodes will always be built."
     },
     {

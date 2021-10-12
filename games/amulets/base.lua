@@ -34,7 +34,7 @@ gui.import("levels")
 gui.import("resources")
 ----------------------------------------------------------------
 
-OB_GAMES["amulets"] =
+UNFINISHED["amulets"] =
 {
 	label = _("Amulets and Armor (Exp)"),
 	priority = 30,

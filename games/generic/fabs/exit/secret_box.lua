@@ -7,7 +7,7 @@ PREFABS.Exit_secret_box1 =
   file  = "exit/secret_box.wad",
 
   prob  = 100,
-  game  = "heretic",
+  game  = { heretic=1, doom1=1, doom2=1 },
 
   -- the kind means "an exit to a secret level",
   -- the key  means "a closet which is hidden in the room",

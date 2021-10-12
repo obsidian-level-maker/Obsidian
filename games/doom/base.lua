@@ -48,7 +48,7 @@ OB_GAMES["doom2"] =
   game_dir = "doom",
   iwad_name = "doom2.wad",
 
-  use_generics = false,
+  use_generics = true,
 
   tables =
   {
