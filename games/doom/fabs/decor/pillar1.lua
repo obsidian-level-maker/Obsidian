@@ -13,7 +13,7 @@ PREFABS.Pillar_round1 =
   env    = "building",
 
   size   = 80,
-  height = 128,
+  height = { 128,384 },
 
   bound_z1 = 0,
   bound_z2 = 128,

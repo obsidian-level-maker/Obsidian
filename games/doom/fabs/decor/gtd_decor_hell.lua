@@ -28,7 +28,7 @@ PREFABS.Decor_blood_drip_pool =
 
   where  = "point",
   size   = 64,
-  height = 160,
+  height = { 160,256 },
 
   bound_z1 = 0,
   bound_z2 = 160,
