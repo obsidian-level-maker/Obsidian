@@ -3199,7 +3199,7 @@ GROW_COLONNADE_CORNER_LIQUID =
 
 GROW_COLONNADE_CORNER_SOLID =
 {
-  prob = 15,
+  prob = 25,
   skip_prob = 75,
 
   structure =
@@ -3525,6 +3525,29 @@ GROW_COLONNADE_CLOISTER_LIQUID =
   }
 },
 -- 3.57-style rules
+
+GROW_357_OPEN_ROOF_LIQUID =
+{
+  prob = 25,
+  skip_prob = 75,
+
+  structure =
+  {
+    "............","111111111111",
+    "............","1#11111111#1",
+    "............","11AAAAAAAA11",
+    "............","11AAAAAAAA11",
+    "............","11AA~~~~AA11",
+    "............","11AA~~~~AA11",
+    "............","11AA~~~~AA11",
+    "............","11AA~~~~AA11",
+    "............","11AAAAAAAA11",
+    "............","11AAAAAAAA11",
+    "............","1#11111111#1",
+    "............","111111111111",
+    "xxxxx11xxxxx","xxxxx11xxxxx",
+  }
+},
 
 GROW_357_OPEN_ROOF_NEW_AREA =
 {
@@ -4795,6 +4818,22 @@ GROW_CAUSEWAY_SINGLE_WATERBOUND =
   },
 },
 
+GROW_CAUSEWAY_SINGLE_SOLID_PILLAR =
+{
+  prob = 15,
+  skip_prob = 75,
+
+  structure =
+  {
+    "1......","111##AA",
+    "1......","111>>AA",
+    "x......","x11##AA",
+    "x......","x11##AA",
+    "x......","x11>>AA",
+    "x......","x11##AA",
+  },
+},
+
 GROW_CAUSEWAY_CORNER =
 {
   prob = 10,
@@ -4815,6 +4854,59 @@ GROW_CAUSEWAY_CORNER =
   diagonals =
   {
     "1A",
+  },
+},
+
+GROW_CAUSEWAY_CORNER_LIQUID_OUTER =
+{
+  prob = 8,
+  skip_prob = 70,
+
+  structure =
+  {
+    "x........","x11111111",
+    "x........","x11/~~v~~",
+    "x........","x1//AAAAA",
+    "x........","x1~AAAAAA",
+    "x........","x1~AA~~^~",
+    "x........","x1>AA~111",
+    "1........","11~AA<111",
+    "1.......x","11~AA~11x",
+  },
+
+  diagonals =
+  {
+         "1~",
+    "1~","1A",
+  },
+},
+
+GROW_CAUSEWAY_CORNER_LIQUID_INNER =
+{
+  prob = 7,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x............","x111111111111",
+    "x............","x111111111v11",
+    "x............","x11/AAAAAAAAA",
+    "x............","x11AAAAAAAAAA",
+    "x............","x11AA/~~~~A~~",
+    "x............","x11AA~~~~~A~~",
+    "x............","x11AA~~%AAAAA",
+    "x............","x11AA~~AAAAAA",
+    "x............","x11AA~~AA11^1",
+    "x............","x1>AAAAAA1111",
+    "1............","111AA~~AA<111",
+    "1...........x","111AA~~AA111x",
+  },
+
+  diagonals =
+  {
+    "1A",
+    "A~",
+    "~A"
   },
 },
 
