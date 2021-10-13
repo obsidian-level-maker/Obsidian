@@ -12,7 +12,7 @@ PREFABS.Decor_tech_epic_comptil_point_1_red =
   height = 96,
 
   bound_z1 = 0,
-  bound_z2 = 96,
+  bound_z2 = 96
 }
 
 PREFABS.Decor_tech_epic_comptil_point_1_green =
@@ -64,7 +64,7 @@ PREFABS.Decor_tech_epic_comptil_point_large_red =
 
   where = "point",
 
-  prob = 5000,
+  prob = 2500,
   group = "gtd_comptil_plain_red",
   
   size = 96,
@@ -83,7 +83,7 @@ PREFABS.Decor_tech_epic_comptil_point_large_red =
   }
 }
 
-PREFABS.Decor_tech_epic_comptil_point_1_green =
+PREFABS.Decor_tech_epic_comptil_point_large_green =
 {
   template = "Decor_tech_epic_comptil_point_large_red",
 
@@ -93,7 +93,7 @@ PREFABS.Decor_tech_epic_comptil_point_1_green =
   flat_TEK1 = "TEK2"
 }
 
-PREFABS.Decor_tech_epic_comptil_point_1_yellow =
+PREFABS.Decor_tech_epic_comptil_point_large_yellow =
 {
   template = "Decor_tech_epic_comptil_point_large_red",
 
@@ -103,7 +103,7 @@ PREFABS.Decor_tech_epic_comptil_point_1_yellow =
   flat_TEK1 = "TEK7"
 }
 
-PREFABS.Decor_tech_epic_comptil_point_1_purple =
+PREFABS.Decor_tech_epic_comptil_point_large_purple =
 {
   template = "Decor_tech_epic_comptil_point_large_red",
 
@@ -113,7 +113,7 @@ PREFABS.Decor_tech_epic_comptil_point_1_purple =
   flat_TEK1 = "TEK3"
 }
 
-PREFABS.Decor_tech_epic_comptil_point_1_blue =
+PREFABS.Decor_tech_epic_comptil_point_large_blue =
 {
   template = "Decor_tech_epic_comptil_point_large_red",
 
