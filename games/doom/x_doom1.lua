@@ -3773,6 +3773,40 @@ ULTDOOM.PREBUILT_LEVELS =
   },
 }
 
+function ULTDOOM.nolimit_themes()
+  if OB_CONFIG.engine == "nolimit" then
+    GAME.THEMES.DEFAULTS.narrow_halls = { vent = 50 }
+    GAME.THEMES.DEFAULTS.wide_halls = { deuce = 50 }
+    GAME.THEMES.tech.narrow_halls = { vent = 50 }
+    GAME.THEMES.tech.beam_groups = { beam_metal = 50 }
+    GAME.THEMES.tech.wall_groups = { PLAIN = 50 }
+    GAME.THEMES.tech.outdoor_wall_groups = { PLAIN = 50 }
+    GAME.THEMES.tech.window_groups = { square = 70, tall = 30 }
+    GAME.THEMES.tech.fence_groups = { PLAIN = 50 }
+    GAME.THEMES.tech.fence_posts = { Post = 50 }
+    GAME.THEMES.deimos.narrow_halls = { vent = 50 }
+    GAME.THEMES.deimos.beam_groups = { beam_metal = 50 }
+    GAME.THEMES.deimos.wall_groups = { PLAIN = 50 }
+    GAME.THEMES.deimos.outdoor_wall_groups = { PLAIN = 50 }
+    GAME.THEMES.deimos.window_groups = { square = 70, tall = 30 }
+    GAME.THEMES.deimos.fence_groups = { PLAIN = 50 }
+    GAME.THEMES.deimos.fence_posts = { Post = 50 }
+    GAME.THEMES.hell.narrow_halls = { vent = 50 }
+    GAME.THEMES.hell.beam_groups = { beam_metal = 50 }
+    GAME.THEMES.hell.wall_groups = { PLAIN = 50 }
+    GAME.THEMES.hell.outdoor_wall_groups = { PLAIN = 50 }
+    GAME.THEMES.hell.window_groups = { square = 70, tall = 30 }
+    GAME.THEMES.hell.fence_groups = { PLAIN = 50 }
+    GAME.THEMES.hell.fence_posts = { Post = 50 }
+    GAME.THEMES.flesh.narrow_halls = { vent = 50 }
+    GAME.THEMES.flesh.beam_groups = { beam_metal = 50 }
+    GAME.THEMES.flesh.wall_groups = { PLAIN = 50 }
+    GAME.THEMES.flesh.outdoor_wall_groups = { PLAIN = 50 }
+    GAME.THEMES.flesh.window_groups = { square = 70, tall = 30 }
+    GAME.THEMES.flesh.fence_groups = { PLAIN = 50 }
+    GAME.THEMES.flesh.fence_posts = { Post = 50 }
+  end
+end
 
 function ULTDOOM.get_levels()
   local EP_MAX  = sel(OB_CONFIG.game   == "ultdoom", 4, 3)
@@ -3928,41 +3962,7 @@ function ULTDOOM.get_levels()
     end
 
   end -- for episode
-end
-
-function ULTDOOM.setup()
-  if OB_CONFIG.engine == "nolimit" then
-    ULTDOOM.THEMES.DEFAULTS.narrow_halls = { vent = 50 }
-    ULTDOOM.THEMES.DEFAULTS.wide_halls = { deuce = 50 }
-    ULTDOOM.THEMES.tech.narrow_halls = { vent = 50 }
-    ULTDOOM.THEMES.tech.beam_groups = { beam_metal = 50 }
-    ULTDOOM.THEMES.tech.wall_groups = { PLAIN = 50 }
-    ULTDOOM.THEMES.tech.outdoor_wall_groups = { PLAIN = 50 }
-    ULTDOOM.THEMES.tech.window_groups = { square = 70, tall = 30 }
-    ULTDOOM.THEMES.tech.fence_groups = { PLAIN = 50 }
-    ULTDOOM.THEMES.tech.fence_posts = { Post = 50 }
-    ULTDOOM.THEMES.deimos.narrow_halls = { vent = 50 }
-    ULTDOOM.THEMES.deimos.beam_groups = { beam_metal = 50 }
-    ULTDOOM.THEMES.deimos.wall_groups = { PLAIN = 50 }
-    ULTDOOM.THEMES.deimos.outdoor_wall_groups = { PLAIN = 50 }
-    ULTDOOM.THEMES.deimos.window_groups = { square = 70, tall = 30 }
-    ULTDOOM.THEMES.deimos.fence_groups = { PLAIN = 50 }
-    ULTDOOM.THEMES.deimos.fence_posts = { Post = 50 }
-    ULTDOOM.THEMES.hell.narrow_halls = { vent = 50 }
-    ULTDOOM.THEMES.hell.beam_groups = { beam_metal = 50 }
-    ULTDOOM.THEMES.hell.wall_groups = { PLAIN = 50 }
-    ULTDOOM.THEMES.hell.outdoor_wall_groups = { PLAIN = 50 }
-    ULTDOOM.THEMES.hell.window_groups = { square = 70, tall = 30 }
-    ULTDOOM.THEMES.hell.fence_groups = { PLAIN = 50 }
-    ULTDOOM.THEMES.hell.fence_posts = { Post = 50 }
-    ULTDOOM.THEMES.flesh.narrow_halls = { vent = 50 }
-    ULTDOOM.THEMES.flesh.beam_groups = { beam_metal = 50 }
-    ULTDOOM.THEMES.flesh.wall_groups = { PLAIN = 50 }
-    ULTDOOM.THEMES.flesh.outdoor_wall_groups = { PLAIN = 50 }
-    ULTDOOM.THEMES.flesh.window_groups = { square = 70, tall = 30 }
-    ULTDOOM.THEMES.flesh.fence_groups = { PLAIN = 50 }
-    ULTDOOM.THEMES.flesh.fence_posts = { Post = 50 }
-  end
+  ULTDOOM.nolimit_themes()
 end
 
 --------------------------------------------------------------------
@@ -3986,7 +3986,6 @@ OB_GAMES["doom1"] =
 
   hooks =
   {
-    setup      = ULTDOOM.setup,
     get_levels = ULTDOOM.get_levels,
     end_level  = DOOM.end_level,
     all_done   = DOOM.all_done

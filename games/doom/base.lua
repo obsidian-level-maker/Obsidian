@@ -35,35 +35,6 @@ gui.import("themes")
 gui.import("levels")
 gui.import("resources")
 
-function DOOM.setup()
-  if OB_CONFIG.engine == "nolimit" then
-    DOOM.THEMES.DEFAULTS.narrow_halls = { vent = 50 }
-    DOOM.THEMES.DEFAULTS.wide_halls = { deuce = 50 }
-    DOOM.THEMES.DEFAULTS.has_triple_key_door = false
-    DOOM.THEMES.DEFAULTS.has_double_switch_door = false
-    DOOM.THEMES.tech.narrow_halls = { vent = 50 }
-    DOOM.THEMES.tech.beam_groups = { beam_metal = 50 }
-    DOOM.THEMES.tech.wall_groups = { PLAIN = 50 }
-    DOOM.THEMES.tech.outdoor_wall_groups = { PLAIN = 50 }
-    DOOM.THEMES.tech.window_groups = { square = 70, tall = 30 }
-    DOOM.THEMES.tech.fence_groups = { PLAIN = 50 }
-    DOOM.THEMES.tech.fence_posts = { Post = 50 }
-    DOOM.THEMES.urban.narrow_halls = { vent = 50 }
-    DOOM.THEMES.urban.beam_groups = { beam_metal = 50 }
-    DOOM.THEMES.urban.wall_groups = { PLAIN = 50 }
-    DOOM.THEMES.urban.outdoor_wall_groups = { PLAIN = 50 }
-    DOOM.THEMES.urban.window_groups = { square = 70, tall = 30 }
-    DOOM.THEMES.urban.fence_groups = { PLAIN = 50 }
-    DOOM.THEMES.urban.fence_posts = { Post = 50 }
-    DOOM.THEMES.hell.narrow_halls = { vent = 50 }
-    DOOM.THEMES.hell.beam_groups = { beam_metal = 50 }
-    DOOM.THEMES.hell.wall_groups = { PLAIN = 50 }
-    DOOM.THEMES.hell.outdoor_wall_groups = { PLAIN = 50 }
-    DOOM.THEMES.hell.window_groups = { square = 70, tall = 30 }
-    DOOM.THEMES.hell.fence_groups = { PLAIN = 50 }
-    DOOM.THEMES.hell.fence_posts = { Post = 50 }
-  end
-end
 ------------------------------------------------------------------------
 
 OB_GAMES["doom2"] =
@@ -85,7 +56,6 @@ OB_GAMES["doom2"] =
 
   hooks =
   {
-    setup = DOOM.setup,
     get_levels = DOOM.get_levels,
     end_level  = DOOM.end_level,
     all_done   = DOOM.all_done
