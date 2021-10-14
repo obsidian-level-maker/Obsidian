@@ -1,6 +1,6 @@
 PREFABS.Decor_point_bunkbed_2x =
 {
-  file = "decor/gtd_custom_tree_planters_EPIC.wad",
+  file = "decor/gtd_decor_bunkerbeds.wad",
   map = "MAP01",
 
   prob = 5000,
