@@ -7,7 +7,7 @@ PREFABS.Exit_closet1_heretic =
   file   = "exit/closet1.wad",
   map    = "MAP01",
 
-  game   = { heretic=1, doom1=1, doom2=1 },
+  game   = "heretic",
 
   prob   = 100,
 
@@ -20,6 +20,36 @@ PREFABS.Exit_closet1_heretic =
 
   x_fit  = "frame",
   y_fit  = "top",
+}
+
+PREFABS.Exit_closet1_doomish =
+{
+  file   = "exit/closet1.wad",
+  map    = "MAP01",
+
+  game   = { doom1=1, doom2=1 },
+
+  prob   = 100,
+
+  where  = "seeds",
+  seed_w = 1,
+  seed_h = 1,
+
+  deep   =  16,
+  over   = -16,
+
+  x_fit  = "frame",
+  y_fit  = "top",
+
+  forced_offsets = 
+  {
+    [4] = {x=12,y=40},
+    [5] = {x=12,y=40},
+    [6] = {x=12,y=40},
+    [7] = {x=12,y=40},
+    [21] = {x=12,y=40}
+  }
+
 }
 
 PREFABS.Exit_closet1_chex3 =
@@ -185,6 +215,16 @@ PREFABS.Exit_closet1_nukem =
 PREFABS.Exit_closet1_secret_heretic =
 {
   template = "Exit_closet1_heretic",
+
+  kind = "secret_exit",
+
+  -- replace normal exit special with "exit to secret" special
+  line_11 = 51,
+}
+
+PREFABS.Exit_closet1_secret_doomish =
+{
+  template = "Exit_closet1_doomish",
 
   kind = "secret_exit",
 
