@@ -1251,7 +1251,9 @@ DOOM.THEMES =
       --
       gtd_wall_tech_top_corner_light_set = 50,
       gtd_wall_server_room = 50,
-      gtd_wall_sewer = 50,
+      --
+      gtd_wall_sewer = 35,
+      gtd_sewer_set_2 = 35,
       --
       gtd_generic_beamed_inset = 25,
       gtd_generic_beamed_green_inset = 25,
@@ -1671,7 +1673,9 @@ DOOM.THEMES =
       gtd_full_storage = 50,
       --
       gtd_wall_tech_top_corner_light_set = 50,
-      gtd_wall_sewer = 40,
+      --
+      gtd_wall_sewer = 30,
+      gtd_sewer_set_2 = 30,
       --
       gtd_generic_beamed_inset = 25,
       gtd_generic_beamed_green_inset = 25,
