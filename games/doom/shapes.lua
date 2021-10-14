@@ -8062,7 +8062,7 @@ GROW_CHAMFER_WIDE_ROOM_CORNER_LIQUID =
 
   diagonals =
   {
-    "1~","~1",
+    ".~","~1",
       "~1",
     "~1",
   },
