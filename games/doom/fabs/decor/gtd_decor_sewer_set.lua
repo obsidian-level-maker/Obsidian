@@ -76,7 +76,7 @@ PREFABS.Decor_open_pipe_sewer_group_2 =
 
 PREFABS.Decor_bunchy_pipe_2 =
 {
-  template = "Decor_bunchy_pipe"
+  template = "Decor_bunchy_pipe",
 
   group = "gtd_sewer_set_2"
 }
