@@ -24,7 +24,7 @@ PREFABS.Pic_craneo_bunkbed_2x1 =
 
 PREFABS.Pic_craneo_bunkbed_3x1 =
 {
-  template = "Pic_craneo_bunkbed_1x",
+  template = "Pic_craneo_bunkbed_2x1",
   map = "MAP02",
 
   seed_w = 3,
@@ -32,7 +32,7 @@ PREFABS.Pic_craneo_bunkbed_3x1 =
 
 PREFABS.Pic_craneo_bunkbed_2x2 =
 {
-  template = "Pic_craneo_bunkbed_1x",
+  template = "Pic_craneo_bunkbed_2x1",
   map = "MAP03",
 
   seed_w = 2,
