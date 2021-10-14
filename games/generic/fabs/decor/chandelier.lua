@@ -6,7 +6,7 @@ PREFABS.Decor_chandelier =
 {
   file   = "decor/chandelier.wad",
   map    = "MAP01",
-  game   = "!chex3",
+  game   = { chex3=0, doom1=0, doom2=0, hacx=1, harmony=1, heretic=1, nukem=1, quake=1, strife=1},
 
   prob   = 100,
   env    = "building",
@@ -20,11 +20,11 @@ PREFABS.Decor_chandelier =
   bound_z2 = 0,
 }
 
-PREFABS.Decor_chandelier_chex = -- Chex Quest 3 seems to be the only game so far without a hanging light thing, so use a flat "light" instead
+PREFABS.Decor_chandelier_flatlight = -- For games without hanging light thingys
 {
   file   = "decor/chandelier.wad",
   map    = "MAP02",
-  game   = "chex3",
+  game   = { chex3=1, doom2=1, doom1=1 },
 
   prob   = 100,
   env    = "building",

@@ -243,11 +243,11 @@ function Fab_load_all_definitions()
   assert(GAME.game_dir)
 
   if GAME.use_generics and GAME.use_generics == true then
-    if not ob_match_game("doomish") or OB_CONFIG.engine == "nolimit" then
+    if not ob_match_game({game = "doomish"}) or OB_CONFIG.engine == "nolimit" then
       visit_dir("games/generic/fabs", "*.lua")
     end
   end
-  if not ob_match_game("doomish") or OB_CONFIG.engine ~= "nolimit" then
+  if not ob_match_game({game = "doomish"}) or OB_CONFIG.engine ~= "nolimit" then
     visit_dir("games/" .. GAME.game_dir .. "/fabs", "*.lua")
   end
   ob_invoke_hook("addon_fabs")
