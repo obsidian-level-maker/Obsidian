@@ -1,10 +1,10 @@
 --
--- Arch joiners
+-- Plain joiners
 --
 
-PREFABS.Joiner_archy1 =
+PREFABS.Joiner_plain =
 {
-  file   = "joiner/archy.wad",
+  file   = "joiner/plain.wad",
   map    = "MAP01",
 
   prob  = 140,
@@ -23,9 +23,9 @@ PREFABS.Joiner_archy1 =
 }
 
 
-PREFABS.Joiner_archy1_wide =
+PREFABS.Joiner_plain_wide =
 {
-  file   = "joiner/archy.wad",
+  file   = "joiner/plain.wad",
   map    = "MAP02",
 
   prob  = 400,
