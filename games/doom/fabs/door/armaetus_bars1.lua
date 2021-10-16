@@ -76,7 +76,7 @@ PREFABS.Decor_gtd_Armaetus_bars_EPIC_stretchy =
 
   seed_w = 2,
 
-  x_fit = { 72,120 , 136,184 }
+  x_fit = { 72,120 , 138,184 }
 }
 
 PREFABS.Decor_gtd_Armaetus_bars_EPIC_stretchy_tech =
@@ -89,7 +89,7 @@ PREFABS.Decor_gtd_Armaetus_bars_EPIC_stretchy_tech =
 
   seed_w = 2,
 
-  x_fit = { 72,120 , 136,184 }
+  x_fit = { 72,120 , 138,184 }
 }
 
 --[[
