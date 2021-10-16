@@ -1948,7 +1948,7 @@ void CSG_BSP(double grid, bool is_clip_hull) {
         R->ClockwiseSnags();
     }
 
-    CSG_SwallowBrushes();
+    //CSG_SwallowBrushes();
 
     CSG_DiscoverGaps();
 

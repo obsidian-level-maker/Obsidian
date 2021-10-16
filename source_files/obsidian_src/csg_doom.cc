@@ -52,7 +52,7 @@ static int dummy_pos_y;
 
 double light_dist_factor = 800.0;
 
-#define COLINEAR_THRESHHOLD 0.24
+#define COLINEAR_THRESHHOLD 0.02
 
 #define MTF_ALL_SKILLS (MTF_Easy | MTF_Medium | MTF_Hard)
 
