@@ -14,7 +14,7 @@ PREFABS.Start_armaetus_start_center_pillar =
   deep  =  16,
 
   x_fit = "frame",
-  y_fit = "top",
+  y_fit = { 80,96 },
 
   tex_DOOR3 =
   {
