@@ -8,6 +8,8 @@ PREFABS.Window_tall_octagon_1 =
 
   prob   = 50,
 
+  passable = true,
+
   where  = "edge",
   seed_w = 1,
 
