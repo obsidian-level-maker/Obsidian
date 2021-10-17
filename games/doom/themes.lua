@@ -388,7 +388,7 @@ DOOM.SINKS =
   sky_modwall =
   {
     mat   = "_SKY",
-    dz    = 64,
+    dz    = 80,
     light = 16,
 
     trim_mat = "MODWALL3",
