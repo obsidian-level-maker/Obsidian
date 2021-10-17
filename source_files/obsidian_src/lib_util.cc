@@ -361,7 +361,7 @@ u32_t TimeGetMillies() {
 
 #ifdef WIN32
 
-    return static_cast<u32_t>(GetTickCount64());
+    return static_cast<u32_t>(GetTickCount());
 
 #else  // UNIX or MacOSX
     struct timeval tm;

@@ -22,19 +22,13 @@
 3. CMake Utilities:
    * package: `cmake` 
 
-4. FLTK 1.3 (optional)
-   * website: http://www.fltk.org/
-   * package: `libfltk1.3-dev`
-   * You may also need: `libxft-dev` `libxinerama-dev` `libjpeg-dev` `libpng-dev` `libfontconfig1-dev`
+4. Development libraries
+   * packages: `libfltk1.3-dev` `libxft-dev` `libxinerama-dev` `libjpeg-dev` `libpng-dev` `libfontconfig1-dev`
 
-5. zlib (optional)
-   * website: http://www.zlib.net/
-   * package: `zlib1g-dev`
-
-6. FLEX
+5. FLEX
    * package: `flex`
    
-7. Code formatting tools
+6. Code formatting tools
    * package: `clang-tidy`
    * python package (optional, install with pip): `cmakelang`
 

@@ -14,13 +14,17 @@ Features of OBSIDIAN include:
 * built-in node builder, so the levels are ready to play
 * uses the LUA scripting language for easy customisation
 
-## QUICK START GUIDE
+## QUICK START GUIDE (Windows)
 
-First, unpack the zip somewhere (e.g. My Documents).  Make sure it is extracted with folders, and also make sure the OBSIDIAN.EXE file gets extracted too (at least one person had a problem where Microsoft Windows would skip the EXE, and he had to change something in the control panels to get it extracted properly).
+First, unpack the zip somewhere (e.g. My Documents).  Make sure it is extracted with folders, and also make sure the OBSIDIAN.EXE file gets extracted too.
 
 Double click on the OBSIDIAN icon to run it.  Select the game in the top left panel, and any other options which take your fancy. Then click the BUILD button in the bottom left panel, and enter an output filename, for example "TEST" (without the quotes).
 
 OBSIDIAN will then build all the maps, showing a blueprint of each one as it goes, and if everything goes smoothly the output file (e.g. "TEST.WAD") will be created at the end.  Then you can play it using the normal method for playing mods with that game (e.g. for DOOM source ports: dragging-n-dropping the WAD file onto the source port's EXE is usually enough).
+
+## QUICK START GUIDE (Linux)
+
+Please refer to COMPILING.md to build Obsidian for Linux
 
 ## About This Repository
 
