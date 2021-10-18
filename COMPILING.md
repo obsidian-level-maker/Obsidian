@@ -1,13 +1,17 @@
 
 # COMPILING Obsidian
 
-## Windows Dependencies (stub; in-progress)
+## Windows Dependencies (example using MSVC and VSCode)
 
-1. MSVC Toolchain
+1. Download the Visual Studio Build Tools installer, and install the 'Desktop Development with C++' workload
 
-2. ???
+2. Install VSCode, as well as the C/C++ and CMake Tools extensions
 
-3. Profit
+3. Using VSCode, select the 'Visual Studio Build Tools (version) Release - x86_amd64' kit for 64-bit, or the x86 kit for 32-bit
+
+4. Select the Release CMake build variant
+
+5. Click Build
 
 ## Linux Dependencies (MSYS has some differences; see MSYS Cross-Compilation section below)
 
