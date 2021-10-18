@@ -43,7 +43,8 @@
  * a later release */
 #ifdef _MSC_VER
 #define RAND_SUCKS
-#define USE_STRICMP
+#define strncasecmp _strnicmp
+#define strcasecmp _stricmp
 #endif
 
 typedef unsigned char boolean;

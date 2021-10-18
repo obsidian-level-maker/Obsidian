@@ -1240,7 +1240,7 @@ static void Q1_CreateBSPFile(const char *name) {
 
 //------------------------------------------------------------------------
 
-void Q1_add_tex_wad(lua_State *L) {
+int Q1_add_tex_wad(lua_State *L) {
     // LUA: q1_add_tex_wad(filename)
     //
     // Note: filename must be relative (no path)
@@ -1253,7 +1253,7 @@ void Q1_add_tex_wad(lua_State *L) {
     } else {
         lua_pushboolean(L, 0);
     }
-
+    return 1;
     // TODO: support more than one
 }
 
