@@ -33,7 +33,7 @@ PREFABS.Window_tall_octagon_2 =
 
 PREFABS.Window_tall_octagon_3 =
 {
-  template = "Window_weabdows_1",
+  template = "Window_tall_octagon_1",
   map = "MAP03",
 
   seed_w = 3,
