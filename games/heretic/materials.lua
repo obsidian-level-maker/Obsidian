@@ -257,7 +257,7 @@ HERETIC.PREFAB_FIELDS =
   line_702 = 26,
 
   -- These are used for converting generic fab things --
-  thing_11000 = 2035, -- Barrel
+  thing_11000 = 43, -- Barrel
   thing_11001 = 28, -- Ceiling light
   thing_11002 = 27, -- Standalone light
   thing_11003 = 50, -- Wall light (torch)
