@@ -1725,7 +1725,8 @@ function Fab_load_wad(def)
   local function load_it()
     create_it()
 
-    gui.printf(table.tostr(def) .. "\n")
+    gui.debugf("Processing " .. table.tostr(def) .. "\n")
+
     local filename = assert(def.dir_name) .. "/" .. def.file
 
     gui.debugf("Loading wad-fab %s / %s\n", def.file, def.map or "*")

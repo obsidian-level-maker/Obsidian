@@ -316,3 +316,383 @@ PREFABS.Wall_epic_comptil_plain_blue_diag =
 
   z_fit = { 34,36 }
 }
+
+--
+--
+--
+
+PREFABS.Wall_epic_comptil_lite_red =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP52",
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comptil_lite_red",
+
+  tex_METAL4 =
+  {
+    METAL4 = 5,
+    METAL2 = 8
+  },
+
+  z_fit = { 72,80 }
+}
+
+PREFABS.Wall_epic_comptil_lite_red_diag =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP53",
+
+  height = 96,
+  where = "diagonal",
+
+  group = "gtd_comptil_lite_red",
+
+  tex_METAL4 =
+  {
+    METAL4 = 5,
+    METAL2 = 8
+  },
+
+  bound_z2 = 96,
+  z_fit = { 72,80 }
+}
+
+--
+
+PREFABS.Wall_epic_comptil_lite_green =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP52",
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comptil_lite_green",
+
+  tex_METAL4 =
+  {
+    METAL4 = 5,
+    METAL2 = 8
+  },
+
+  tex_COMPTIL2 = "COMPTIL4",
+  tex_COMPRED = "COMPGREN",
+  tex_T_VSLTER = "T_VSLTEG",
+
+  z_fit = { 72,80 }
+}
+
+PREFABS.Wall_epic_comptil_lite_green_diag =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP53",
+
+  height = 96,
+  where = "diagonal",
+
+  group = "gtd_comptil_lite_green",
+
+  tex_METAL4 =
+  {
+    METAL4 = 5,
+    METAL2 = 8
+  },
+
+  tex_COMPTIL2 = "COMPTIL4",
+  tex_COMPRED = "COMPGREN",
+  tex_T_VSLTER = "T_VSLTEG",
+
+  bound_z2 = 96,
+  z_fit = { 72,80 }
+}
+
+--
+
+PREFABS.Wall_epic_comptil_lite_yellow =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP52",
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comptil_lite_yellow",
+
+  tex_METAL4 =
+  {
+    METAL4 = 5,
+    METAL2 = 8
+  },
+
+  tex_COMPTIL2 = "COMPTIL5",
+  tex_COMPRED = "COMPYELL",
+  tex_T_VSLTER = "T_VSLTEY",
+
+  z_fit = { 72,80 }
+}
+
+PREFABS.Wall_epic_comptil_lite_yellow_diag =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP53",
+
+  height = 96,
+  where = "diagonal",
+
+  group = "gtd_comptil_lite_yellow",
+
+  tex_METAL4 =
+  {
+    METAL4 = 5,
+    METAL2 = 8
+  },
+
+  tex_COMPTIL2 = "COMPTIL5",
+  tex_COMPRED = "COMPYELL",
+  tex_T_VSLTER = "T_VSLTEY",
+
+  bound_z2 = 96,
+  z_fit = { 72,80 }
+}
+
+--
+
+PREFABS.Wall_epic_comptil_lite_purple =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP52",
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comptil_lite_purple",
+
+  tex_METAL4 =
+  {
+    METAL4 = 5,
+    METAL2 = 8
+  },
+
+  tex_COMPTIL2 = "COMPTIL6",
+  tex_COMPRED = "COMPBLAK",
+  tex_T_VSLTER = "T_VSLTEP",
+
+  z_fit = { 72,80 }
+}
+
+PREFABS.Wall_epic_comptil_lite_purple_diag =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP53",
+
+  height = 96,
+  where = "diagonal",
+
+  group = "gtd_comptil_lite_purple",
+
+  tex_METAL4 =
+  {
+    METAL4 = 5,
+    METAL2 = 8
+  },
+
+  tex_COMPTIL2 = "COMPTIL6",
+  tex_COMPRED = "COMPBLAK",
+  tex_T_VSLTER = "T_VSLTEP",
+
+  bound_z2 = 96,
+  z_fit = { 72,80 }
+}
+
+--
+
+PREFABS.Wall_epic_comptil_lite_blue =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP52",
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comptil_lite_blue",
+
+  tex_METAL4 =
+  {
+    METAL4 = 5,
+    METAL2 = 8
+  },
+
+  tex_COMPTIL2 = "CMPTILE",
+  tex_COMPRED = "COMPBLUE",
+  tex_T_VSLTER = "LITEBLU4",
+
+  z_fit = { 72,80 }
+}
+
+PREFABS.Wall_epic_comptil_lite_blue_diag =
+{
+  template = "Wall_epic_comp_set_yellow_1",
+  map = "MAP53",
+
+  height = 96,
+  where = "diagonal",
+
+  group = "gtd_comptil_lite_blue",
+
+  tex_METAL4 =
+  {
+    METAL4 = 5,
+    METAL2 = 8
+  },
+
+  tex_COMPTIL2 = "CMPTILE",
+  tex_COMPRED = "COMPBLUE",
+  tex_T_VSLTER = "LITEBLU4",
+
+  bound_z2 = 96,
+  z_fit = { 72,80 }
+}
+
+--
+
+PREFABS.Wall_epic_graymet_blue =
+{
+  file = "wall/gtd_wall_tech_comp_set_EPIC.wad",
+  map = "MAP54",
+
+  prob = 50,
+  rank = 2,
+
+  group = "gtd_comp_graymet_blue",
+
+  where  = "edge",
+  height = 160,
+  deep = 16,
+
+  bound_z1 = 0,
+  bound_z2 = 160,
+
+  z_fit = "bottom"
+}
+
+PREFABS.Wall_epic_graymet_blue_short =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP55",
+
+  height = 96,
+  bound_z2 = 96,
+
+  rank = 1
+}
+
+--
+
+PREFABS.Wall_epic_graymet_green =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP54",
+
+  group = "gtd_comp_graymet_green",
+
+  tex_GRAYMET6 = "GRAYMET8"
+}
+
+PREFABS.Wall_epic_graymet_green_short =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP55",
+
+  rank = 1,
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comp_graymet_green",
+
+  tex_GRAYMET6 = "GRAYMET8"
+}
+
+--
+
+PREFABS.Wall_epic_graymet_red =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP54",
+
+  group = "gtd_comp_graymet_red",
+
+  tex_GRAYMET6 = "GRAYMET9"
+}
+
+PREFABS.Wall_epic_graymet_red_short =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP55",
+
+  rank = 1,
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comp_graymet_red",
+
+  tex_GRAYMET6 = "GRAYMET9"
+}
+
+--
+
+PREFABS.Wall_epic_graymet_orange =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP54",
+
+  group = "gtd_comp_graymet_orange",
+
+  tex_GRAYMET6 = "GRAYMETC"
+}
+
+PREFABS.Wall_epic_graymet_orange_short =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP55",
+
+  rank = 1,
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comp_graymet_orange",
+
+  tex_GRAYMET6 = "GRAYMETC"
+}
+
+--
+
+PREFABS.Wall_epic_graymet_purple =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP54",
+
+  group = "gtd_comp_graymet_purple",
+
+  tex_GRAYMET6 = "GRAYMET7"
+}
+
+PREFABS.Wall_epic_graymet_purple_short =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP55",
+
+  rank = 1,
+
+  height = 96,
+  bound_z2 = 96,
+
+  group = "gtd_comp_graymet_purple",
+
+  tex_GRAYMET6 = "GRAYMET7"
+}

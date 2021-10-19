@@ -3005,10 +3005,8 @@ function Cave_build_a_park(R, entry_h)
 
     table.insert(area.walk_floors, BLOB)
 
-    if not BLOB.is_tower then
-      area.min_floor_h = math.min(area.min_floor_h, BLOB.floor_h)
-      area.max_floor_h = math.max(area.max_floor_h, BLOB.floor_h)
-    end
+    area.min_floor_h = math.min(area.min_floor_h, BLOB.floor_h)
+    area.max_floor_h = math.max(area.max_floor_h, BLOB.floor_h)
 
     if B.decor then
       local mx = area.base_x + (B.decor.cx - 1) * 64 + 32

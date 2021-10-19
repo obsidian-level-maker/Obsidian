@@ -256,7 +256,7 @@ PREFABS.Wall_generic_artsy_base_braced =
   z_fit = { 32,64 },
 
   tex_METAL = "SHAWN2",
-  tex_CEIL5_2 = "FLAT23"
+  flat_CEIL5_2 = "FLAT23"
 }
 
 PREFABS.Wall_generic_artsy_base_braced_gothic =
@@ -285,7 +285,7 @@ PREFABS.Wall_generic_artsy_base_braced_diag =
   z_fit = { 32,64 },
 
   tex_METAL = "SHAWN2",
-  tex_CEIL5_2 = "FLAT23",
+  flat_CEIL5_2 = "FLAT23",
 }
 
 PREFABS.Wall_generic_artsy_base_braced_gothic_diag =

@@ -3,8 +3,8 @@ PREFABS.Wall_gtd_generic_sunderfall =
   file   = "wall/gtd_wall_generic_liquids_set.wad",
   map    = "MAP01",
 
-  rank = 1,
-  liquids = true,
+  rank = 2,
+  liquids = "there_is",
 
   prob = 50,
   group = "gtd_sunderfall",
@@ -26,7 +26,7 @@ PREFABS.Wall_gtd_generic_sunderfall_no_liq =
   file   = "wall/gtd_wall_generic_liquids_set.wad",
   map    = "MAP01",
 
-  rank = 2,
+  rank = 1,
 
   prob = 50,
   group = "gtd_sunderfall",

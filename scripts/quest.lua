@@ -2590,15 +2590,15 @@ function Quest_nice_items()
             do_it = true
           end            
 
+          if info.min_prog == 0 and info.max_prog == 0 and
+          R.is_start then
+            do_it = true
+          end
+
           if (info.not_start and R.is_start) or
           (info.not_exit and R.is_exit) or
           (info.not_secret and R.is_secret) then
             do_it = false
-          end
-
-          if info.min_prog == 0 and info.max_prog == 0 and
-          R.is_start then
-            do_it = true
           end
 
           if do_it then

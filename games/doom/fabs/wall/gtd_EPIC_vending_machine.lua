@@ -1,4 +1,4 @@
-PREFABS.Decor_EPIC_vending_machine =
+PREFABS.Wall_EPIC_vending_machine =
 {
   file   = "wall/gtd_EPIC_vending_machine.wad",
   map    = "MAP01",

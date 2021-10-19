@@ -50,11 +50,11 @@ namelib.NAMES =
         --["Avenged"]=10,
         --["Breaks Loose"]=10,
         --["Destroyed"]=10,
-        ["Gone Bad"]=5,
+        --["Gone Bad"]=5,
         --["Reboot"]=10,
         --["Redux"]=10,
-        ["Revisited"]=5,
-        ["the Way Obsidian Did"]=5
+        --["Revisited"]=5,
+        --["the Way Obsidian Did"]=5
         --[": The Return"]=10,
         --["is Back"]=10,
 
@@ -529,9 +529,9 @@ namelib.NAMES =
       ["%t %b %n"]    = 17,
       ["%t %a %b %n"] = 5,
 
-      ["%a %n %x"]    = 17,
-      ["%b %n %x"]    = 17,
-      ["%a %b %n %x"] = 5,
+      --["%a %n %x"]    = 17,
+      --["%b %n %x"]    = 17,
+      --["%a %b %n %x"] = 5,
 
       ["%v %n"]    = 24,
       ["%v %a %n"] = 24,
@@ -1284,8 +1284,8 @@ namelib.NAMES =
       ["%a %n"] = 60,
       ["%t %a %n"] = 20,
 
-      ["%a %n %x"] = 20,
-      ["%t %a %n %x"] = 8,
+      --["%a %n %x"] = 20,
+      --["%t %a %n %x"] = 8,
 
       ["%n of %h"] = 26,
       ["%a %n of %h"] = 10,
@@ -2313,10 +2313,10 @@ namelib.NAMES =
       ["%v %n"]    = 25,
       ["%v %a %n"] = 25,
 
-      ["%a %n %x"] = 20,
-      ["%n of the %o %x"] = 3,
-      ["%v %n %x"] = 5,
-      ["%v %a %n %x"] = 5,
+      --["%a %n %x"] = 20,
+      --["%n of the %o %x"] = 3,
+      --["%v %n %x"] = 5,
+      --["%v %a %n %x"] = 5,
 
       ["%s"] = 50,
 
@@ -3048,10 +3048,10 @@ namelib.NAMES =
       ["%v %n"]    = 25,
       ["%v %a %n"] = 25,
 
-      ["%a %n %x"] = 20,
-      ["%n of the %o %x"] = 3,
-      ["%v %n %x"] = 5,
-      ["%v %a %n %x"] = 5,
+      --["%a %n %x"] = 20,
+      --["%n of the %o %x"] = 3,
+      --["%v %n %x"] = 5,
+      --["%v %a %n %x"] = 5,
 
       ["%s"] = 50,
 
