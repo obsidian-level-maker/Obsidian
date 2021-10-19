@@ -879,6 +879,7 @@ PREFABS.Item_dem_gtd_alcove_secret =
   file   = "item/dem_secret_closets.wad",
   map    = "MAP28",
 
+  engine = "zdoom",
   theme  = "hell",
   env    = "building",
   prob   = 100,
@@ -911,16 +912,16 @@ PREFABS.Item_dem_gtd_alcove_secret =
 
 PREFABS.Item_dem_cavein7_secret =
 {
-  file   = "item/dem_secret_closets.wad",
-  map    = "MAP29",
+  file = "item/dem_secret_closets.wad",
+  map = "MAP29",
 
-  prob   = 100,
+  prob = 100,
 
-  key   = "secret",
-
+  key = "secret",
   env = "cave",
 
-  where  = "seeds",
+  engine = "!limit",
+  where = "seeds",
   height = 128,
 
   seed_w = 2,

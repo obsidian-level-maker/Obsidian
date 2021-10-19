@@ -64,3 +64,42 @@ PREFABS.Decor_treatment_pool =
 
   z_fit = "top",
 }
+
+--
+
+PREFABS.Decor_open_pipe_sewer_group_2 =
+{
+  template = "Decor_open_pipe_sewer_group",
+
+  group = "gtd_sewer_set_2"
+}
+
+PREFABS.Decor_bunchy_pipe_2 =
+{
+  template = "Decor_bunchy_pipe",
+
+  group = "gtd_sewer_set_2"
+}
+
+PREFABS.Decor_pool_thing_whatever_man_nobody_cares_2 =
+{
+  template = "Decor_bunchy_pipe",
+  map = "MAP02",
+
+  group = "gtd_sewer_set_2",
+
+  z_fit = "top"
+}
+
+PREFABS.Decor_treatment_pool_2 =
+{
+  template = "Decor_bunchy_pipe",
+  map = "MAP03",
+
+  prob = 10000,
+  group = "gtd_sewer_set_2",
+
+  size = 96,
+
+  z_fit = "top"
+}

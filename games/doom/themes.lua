@@ -388,7 +388,7 @@ DOOM.SINKS =
   sky_modwall =
   {
     mat   = "_SKY",
-    dz    = 64,
+    dz    = 80,
     light = 16,
 
     trim_mat = "MODWALL3",
@@ -1251,7 +1251,9 @@ DOOM.THEMES =
       --
       gtd_wall_tech_top_corner_light_set = 50,
       gtd_wall_server_room = 50,
-      gtd_wall_sewer = 50,
+      --
+      gtd_wall_sewer = 35,
+      gtd_sewer_set_2 = 35,
       --
       gtd_generic_beamed_inset = 25,
       gtd_generic_beamed_green_inset = 25,
@@ -1325,6 +1327,8 @@ DOOM.THEMES =
       --
       gtd_sunderfall = 13,
       gtd_sunderfall_barred = 13,
+      --
+      cran_bunkbeds = 50
     },
 
     outdoor_wall_groups =
@@ -1385,7 +1389,9 @@ DOOM.THEMES =
       gtd_window_metal_frames = 30,
       gtd_window_construction_frames = 5,
       gtd_window_hexagon = 30,
-      gtd_window_slump_tall = 30
+      gtd_window_tall_octagon = 25,
+      gtd_window_slump_tall = 30,
+      gtd_window_industrial_lite_archs = 25
     },
 
     fence_groups =
@@ -1668,7 +1674,9 @@ DOOM.THEMES =
       gtd_full_storage = 50,
       --
       gtd_wall_tech_top_corner_light_set = 50,
-      gtd_wall_sewer = 40,
+      --
+      gtd_wall_sewer = 30,
+      gtd_sewer_set_2 = 30,
       --
       gtd_generic_beamed_inset = 25,
       gtd_generic_beamed_green_inset = 25,
@@ -1757,6 +1765,8 @@ DOOM.THEMES =
       --
       gtd_sunderfall = 25,
       gtd_sunderfall_barred = 25,
+      --
+      cran_bunkbeds = 50
     },
 
     window_groups =
@@ -1785,7 +1795,10 @@ DOOM.THEMES =
       gtd_window_pencil_holes = 35,
       gtd_window_construction_frames = 65,
       gtd_window_hexagon = 25,
-      gtd_window_slump_tall = 65
+      gtd_window_tall_octagon = 35,
+      gtd_window_slump_tall = 65,
+      gtd_window_industrial_lite_archs = 30,
+      gtd_window_gothic_archs = 30
     },
 
     fence_groups =
@@ -2294,7 +2307,10 @@ DOOM.THEMES =
       gtd_window_metal_frames = 60,
       gtd_window_pencil_holes = 60,
       gtd_window_construction_frames = 60,
-      gtd_window_slump_tall = 40
+      gtd_window_slump_tall = 40,
+      gtd_window_industrial_lite_archs = 35,
+      gtd_window_gothic_archs = 60,
+      gtd_window_tall_octagon = 40
     },
 
     fence_groups =

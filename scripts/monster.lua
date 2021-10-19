@@ -22,6 +22,7 @@
 
 function Monster_init()
   LEVEL.mon_stats = {}
+  LEVEL.mon_count = 0
 
   -- build replacement table --
 
@@ -1610,6 +1611,8 @@ function Monster_fill_room(R)
       if (skill <= 2) then props.flags = props.flags + DOOM_FLAGS.MEDIUM end
     end
 
+    LEVEL.mon_count = LEVEL.mon_count + 1
+
     Trans.entity(mon, x, y, z, props)
   end
 
@@ -2483,6 +2486,8 @@ function Monster_show_stats()
   for _,count in pairs(LEVEL.mon_stats) do
     total = total + count
   end
+
+  gui.printf(LEVEL.mon_count .. " hostile entities detected.\n")
 
   local function get_stat(mon)
     local num = LEVEL.mon_stats[mon] or 0

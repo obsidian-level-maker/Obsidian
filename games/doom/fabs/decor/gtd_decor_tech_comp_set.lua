@@ -13,8 +13,6 @@ PREFABS.Decor_tech_comp_lite5_1 =
 
   bound_z1 = 0,
   bound_z2 = 88,
-
-  sink_mode = "never",
 }
 
 PREFABS.Decor_tech_comp_lite5_2 =

@@ -65,7 +65,7 @@ PREFABS.Joiner_simple_arched_2 =
   file   = "joiner/gtd_simple_arched.wad",
   map    = "MAP02",
 
-  prob   = 1000,
+  prob   = 750,
   engine = "zdoom",
   theme = "!hell",
 
@@ -93,7 +93,8 @@ PREFABS.Joiner_simple_arched_2_hell =
 
   theme = "hell",
 
-  tex_GRAY = "METAL",
+  tex_SUPPORT3 = "SUPPORT3",
+  tex_GRAY7 = "BROWN144",
   tex_SILVER1 = "BRONZE3",
   flat_FLAT23 = "CEIL5_2"
 }
@@ -116,9 +117,45 @@ PREFABS.Joiner_simple_arched_2_hell_limit =
   engine = "!zdoom",
   theme = "hell",
 
-  tex_GRAY = "METAL",
+  tex_SUPPORT3 = "SUPPORT3",
+  tex_GRAY7 = "BROWN144",
   tex_SILVER1 = "BRONZE3",
   flat_FLAT23 = "CEIL5_2",
 
   line_342 = 0
+}
+
+--
+
+PREFABS.Joiner_simple_arched_3 =
+{
+  file   = "joiner/gtd_simple_arched.wad",
+  map    = "MAP03",
+
+  prob   = 750,
+  engine = "zdoom",
+
+  where  = "seeds",
+  shape  = "I",
+
+  seed_w = 2,
+  seed_h = 1,
+
+  deep   = 16,
+  over   = 16,
+
+  bound_z1 = 0,
+  bound_z2 = 128,
+
+  x_fit = { 88, 168 },
+  y_fit = { 24, 136 }
+}
+
+PREFABS.Joiner_simple_arched_3_limit =
+{
+  template = "Joiner_simple_arched_3",
+
+  engine = "!zdoom",
+
+  line_344 = 0
 }

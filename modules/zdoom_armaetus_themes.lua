@@ -380,7 +380,7 @@ ARMAETUS_ROOM_THEMES =
   },
 
   -- Multi colors here!
-  tech_ComputersMulti =
+  --[[tech_ComputersMulti =
   {
     prob = 2,
     env = "building",
@@ -557,7 +557,7 @@ ARMAETUS_ROOM_THEMES =
     keep_prob = 10
   },
 
-  --[[tech_ComputersGreen =
+  tech_ComputersGreen =
   {
     prob = 3,
     env = "building",
@@ -673,7 +673,7 @@ ARMAETUS_ROOM_THEMES =
     },
 
     keep_prob = 10
-  },]]
+  },
 
   tech_ComputersParple =
   {
@@ -724,7 +724,7 @@ ARMAETUS_ROOM_THEMES =
     },
 
     keep_prob = 10
-  },
+  },]]
 
   -- Hooray, CEMENT textures!
   tech_Cement =
@@ -4927,7 +4927,19 @@ ARMAETUS_THEMES =
       gtd_comptil_plain_green = 13,
       gtd_comptil_plain_yellow = 13,
       gtd_comptil_plain_purple = 13,
-      gtd_comptil_plain_blue = 13
+      gtd_comptil_plain_blue = 13,
+      --
+      gtd_comptil_lite_red = 13,
+      gtd_comptil_lite_green = 13,
+      gtd_comptil_lite_yellow = 13,
+      gtd_comptil_lite_purple = 13,
+      gtd_comptil_lite_blue = 13,
+      --
+      gtd_comp_graymet_blue = 13,
+      gtd_comp_graymet_green = 13,
+      gtd_comp_graymet_red = 13,
+      gtd_comp_graymet_orange = 13,
+      gtd_comp_graymet_purple = 13
     },
 
     window_groups =

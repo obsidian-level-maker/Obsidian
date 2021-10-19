@@ -5,6 +5,8 @@ PREFABS.Lift_gtd_slumpish_128 =
 
   prob = 5,
   style = "steepness",
+  
+  engine = "zdoom",
 
   where = "seeds",
   shape = "I",
@@ -25,4 +27,26 @@ PREFABS.Lift_gtd_slumpish_128_frame =
   template = "Lift_gtd_slumpish_128",
 
   x_fit = "frame",
+}
+
+--
+
+PREFABS.Lift_gtd_slumpish_128_limit =
+{
+  template = "Lift_gtd_slumpish_128",
+
+  engine = "!zdoom",
+  
+  line_261 = 0
+}
+
+PREFABS.Lift_gtd_slumpish_128_frame_limit =
+{
+  template = "Lift_gtd_slumpish_128",
+
+  engine = "!zdoom",
+
+  x_fit = "frame",
+
+  line_261 = 0
 }

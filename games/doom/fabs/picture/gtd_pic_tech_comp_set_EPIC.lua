@@ -145,3 +145,202 @@ PREFABS.Pic_tech_comp_set_2_blue =
 
   tex_COMPTIL2 = "CMPTILE"
 }
+
+--
+--
+--
+
+PREFABS.Pic_tech_comptil_lite_red =
+{
+  template = "Pic_tech_comp_set_1_red",
+  map = "MAP03",
+
+  seed_w = 2,
+
+  group = " gtd_comptil_lite_red",
+
+  x_fit = "frame",
+  z_fit = "top"
+}
+
+PREFABS.Pic_tech_comptil_lite_red_2 =
+{
+  template = "Pic_tech_comp_set_1_red",
+  map = "MAP03",
+
+  seed_w = 2,
+
+  group = " gtd_comptil_lite_red",
+
+  x_fit = "frame",
+  z_fit = "top",
+
+  forced_offsets =
+  {
+    [26] = {x=1, y=64}
+  }
+}
+
+--
+
+PREFABS.Pic_tech_comptil_lite_green =
+{
+  template = "Pic_tech_comp_set_1_red",
+  map = "MAP03",
+
+  seed_w = 2,
+
+  group = " gtd_comptil_lite_green",
+
+  x_fit = "frame",
+  z_fit = "top",
+
+  tex_COMPTIL2 = "COMPTIL4",
+  tex_COMPRED = "COMPGREN",
+  tex_T_VSLTER = "T_VSLTEG",
+}
+
+PREFABS.Pic_tech_comptil_lite_green_2 =
+{
+  template = "Pic_tech_comp_set_1_red",
+  map = "MAP03",
+
+  seed_w = 2,
+
+  group = " gtd_comptil_lite_green",
+
+  x_fit = "frame",
+  z_fit = "top",
+
+  forced_offsets =
+  {
+    [26] = {x=1, y=64}
+  },
+
+  tex_COMPTIL2 = "COMPTIL4",
+  tex_COMPRED = "COMPGREN",
+  tex_T_VSLTER = "T_VSLTEG",
+}
+
+--
+
+PREFABS.Pic_tech_comptil_lite_yellow =
+{
+  template = "Pic_tech_comp_set_1_red",
+  map = "MAP03",
+
+  seed_w = 2,
+
+  group = " gtd_comptil_lite_yellow",
+
+  x_fit = "frame",
+  z_fit = "top",
+
+  tex_COMPTIL2 = "COMPTIL5",
+  tex_COMPRED = "COMPYELL",
+  tex_T_VSLTER = "T_VSLTEY",
+}
+
+PREFABS.Pic_tech_comptil_lite_yellow_2 =
+{
+  template = "Pic_tech_comp_set_1_red",
+  map = "MAP03",
+
+  seed_w = 2,
+
+  group = " gtd_comptil_lite_yellow",
+
+  x_fit = "frame",
+  z_fit = "top",
+
+  forced_offsets =
+  {
+    [26] = {x=1, y=64}
+  },
+
+  tex_COMPTIL2 = "COMPTIL5",
+  tex_COMPRED = "COMPYELL",
+  tex_T_VSLTER = "T_VSLTEY",
+}
+
+--
+
+PREFABS.Pic_tech_comptil_lite_purple =
+{
+  template = "Pic_tech_comp_set_1_red",
+  map = "MAP03",
+
+  seed_w = 2,
+
+  group = "gtd_comptil_lite_purple",
+
+  x_fit = "frame",
+  z_fit = "top",
+
+  tex_COMPTIL2 = "COMPTIL6",
+  tex_COMPRED = "COMPBLAK",
+  tex_T_VSLTER = "T_VSLTEP",
+}
+
+PREFABS.Pic_tech_comptil_lite_purple_2 =
+{
+  template = "Pic_tech_comp_set_1_red",
+  map = "MAP03",
+
+  seed_w = 2,
+
+  group = "gtd_comptil_lite_purple",
+
+  x_fit = "frame",
+  z_fit = "top",
+
+  forced_offsets =
+  {
+    [26] = {x=1, y=64}
+  },
+
+  tex_COMPTIL2 = "COMPTIL6",
+  tex_COMPRED = "COMPBLAK",
+  tex_T_VSLTER = "T_VSLTEP",
+}
+
+--
+
+PREFABS.Pic_tech_comptil_lite_blue =
+{
+  template = "Pic_tech_comp_set_1_red",
+  map = "MAP03",
+
+  seed_w = 2,
+
+  group = " gtd_comptil_lite_blue",
+
+  x_fit = "frame",
+  z_fit = "top",
+
+  tex_COMPTIL2 = "CMPTILE",
+  tex_COMPRED = "COMPBLUE",
+  tex_T_VSLTER = "LITEBLU4",
+}
+
+PREFABS.Pic_tech_comptil_lite_blue_2 =
+{
+  template = "Pic_tech_comp_set_1_red",
+  map = "MAP03",
+
+  seed_w = 2,
+
+  group = " gtd_comptil_lite_blue",
+
+  x_fit = "frame",
+  z_fit = "top",
+
+  forced_offsets =
+  {
+    [26] = {x=1, y=64}
+  },
+
+  tex_COMPTIL2 = "CMPTILE",
+  tex_COMPRED = "COMPBLUE",
+  tex_T_VSLTER = "LITEBLU4",
+}
