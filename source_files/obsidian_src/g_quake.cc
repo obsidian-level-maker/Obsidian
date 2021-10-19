@@ -37,6 +37,7 @@
 #include "q_common.h"
 #include "q_light.h"
 #include "q_vis.h"
+#include <filesystem>
 
 /*
  *  Differences between HALF-LIFE and QUAKE
@@ -1244,13 +1245,16 @@ int Q1_add_tex_wad(lua_State *L) {
     //
     // Note: filename must be relative (no path)
 
-    const char *name = luaL_checkstring(L, 1);
-
-    // TODO: support more than one
-
-    qk_texture_wad = name;
-
+    std::filesystem::path name = luaL_optstring(L, 1, "");
+    
+    if (std::filesystem::exists(name)) {
+        qk_texture_wad = name.string();
+        lua_pushboolean(L, 1);
+    } else {
+        lua_pushboolean(L, 0);
+    }
     return 1;
+    // TODO: support more than one
 }
 
 //------------------------------------------------------------------------

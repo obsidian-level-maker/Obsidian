@@ -75,6 +75,35 @@ DOOM.PREBUILT_LEVELS =
 
 --------------------------------------------------------------------
 
+function DOOM.nolimit_themes()
+  if OB_CONFIG.engine == "nolimit" then
+    GAME.THEMES.DEFAULTS.narrow_halls = { vent = 50 }
+    GAME.THEMES.DEFAULTS.wide_halls = { deuce = 50 }
+    GAME.THEMES.DEFAULTS.has_triple_key_door = false
+    GAME.THEMES.DEFAULTS.has_double_switch_door = false
+    GAME.THEMES.tech.narrow_halls = { vent = 50 }
+    GAME.THEMES.tech.beam_groups = { beam_metal = 50 }
+    GAME.THEMES.tech.wall_groups = { PLAIN = 50 }
+    GAME.THEMES.tech.outdoor_wall_groups = { PLAIN = 50 }
+    GAME.THEMES.tech.window_groups = { square = 70, tall = 30 }
+    GAME.THEMES.tech.fence_groups = { PLAIN = 50 }
+    GAME.THEMES.tech.fence_posts = { Post = 50 }
+    GAME.THEMES.urban.narrow_halls = { vent = 50 }
+    GAME.THEMES.urban.beam_groups = { beam_metal = 50 }
+    GAME.THEMES.urban.wall_groups = { PLAIN = 50 }
+    GAME.THEMES.urban.outdoor_wall_groups = { PLAIN = 50 }
+    GAME.THEMES.urban.window_groups = { square = 70, tall = 30 }
+    GAME.THEMES.urban.fence_groups = { PLAIN = 50 }
+    GAME.THEMES.urban.fence_posts = { Post = 50 }
+    GAME.THEMES.hell.narrow_halls = { vent = 50 }
+    GAME.THEMES.hell.beam_groups = { beam_metal = 50 }
+    GAME.THEMES.hell.wall_groups = { PLAIN = 50 }
+    GAME.THEMES.hell.outdoor_wall_groups = { PLAIN = 50 }
+    GAME.THEMES.hell.window_groups = { square = 70, tall = 30 }
+    GAME.THEMES.hell.fence_groups = { PLAIN = 50 }
+    GAME.THEMES.hell.fence_posts = { Post = 50 }
+  end
+end
 
 function DOOM.get_levels()
   local MAP_LEN_TAB = { few=4, episode=11, game=32 }
@@ -303,4 +332,5 @@ function DOOM.get_levels()
       GAME.levels[#GAME.levels - 2].dist_to_end = 3
     end
   end
+  DOOM.nolimit_themes()
 end

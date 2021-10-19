@@ -37,6 +37,45 @@ DOOM.MATERIALS =
   _DEFAULT = { t="GRAY1",  f="FLAT1" },
   _SKY     = { t="METAL",  f="F_SKY1" },
 
+  -- materials for generic prefab set --
+  _SBARS = { t="MIDBRN1", f="XX" }, -- Short bars, i.e. railings
+  _MBARS = { t="MIDBARS3", f="XX" }, -- Medium bars, i.e. barred windows
+  _TBARS = { t="MIDBARS1", f="XX" }, -- Tall bars, i.e. cage/jail bars
+  
+  _CRATE   = { t="CRATE1",   f="CRATOP2" }, -- Crate/box
+  _CRATE2  = { t="CRATE2",   f="CRATOP1" },
+  _CRATWID = { t="CRATWIDE", f="CRATOP1" },
+  
+  -- Slime instead of water for Doom
+  _WATER   = { f="NUKAGE1", t="SFALL1" }, -- "Standing water", sorta
+  _WTRFALL = { f="NUKAGE1", t="SFALL1"  }, -- "Flowing water", sorta
+  
+  _DOOR  = { t="DOOR1",    f="FLAT23" }, -- Open says me
+  _DORRAIL = { t="DOORTRAK", f="FLAT23" }, -- Inner door slider thingys
+  
+  _NPIC    = { t="COMPBLUE", f="FLAT14" }, -- Narrow (non-tiling) pic box insert, 64 pixels wide x 128 high
+  
+  _MPIC    = { t="TEKWALL4",  f="CEIL5_1" }, -- Medium (or tiling) pic box insert, 128 pixels wide x 128 high
+  
+  _WPIC    = { t="COMPTALL", f="CEIL5_1" }, -- Wide (or tiling) pic box insert, 256 pixels wide x 128 high
+  
+  _KEYTRM1 = { t="DOORBLU",  f="FLAT23" }, -- Trim for locked door, Key 1
+  _KEYTRM2 = { t="DOORYEL",  f="FLAT23" }, -- Trim for locked door, Key 2
+  _KEYTRM3 = { t="DOORRED",  f="FLAT23" }, -- Trim for locked door, Key 3
+  
+  _EXITDR = { t="EXITDOOR", f="FLAT5_5" }, -- Exit door
+  _EXITSW  = { t="SW1BLUE",  f="FLAT14" }, -- Exit switch
+  _EXITTR  = { t="COMPBLUE",    f="FLAT14" }, -- Exit switch trim
+  _EXITRM  = { t="COMPBLUE",    f="FLAT14" }, -- Exit switch room
+  _EXITSGN = { t="EXITSIGN", f="CEIL5_1" }, -- Exit sign
+  
+  _STRUCT = {t="METAL", f="CEIL5_2"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
+
+  _SW  = { t="SW1COMP",  f="CEIL5_1" }, -- General purpose swtich, full size
+  _SWTRIM = { t="COMPSPAN", f="CEIL5_1" }, -- Trim for switch
+  
+  _TELE = { f="GATE4", t="METAL" }, -- Teleporter
+
 
   -- general purpose --
 
@@ -695,6 +734,27 @@ DOOM.MATERIALS =
 
 DOOM.PREFAB_FIELDS =
 {
+  -- Generic locked door conversion --
+  line_700 = 26,
+  line_701 = 27,
+  line_702 = 28,
+
+  -- These are used for converting generic fab things --
+  thing_11000 = 2035, -- Barrel
+  thing_11001 = 0, -- Ceiling light
+  thing_11002 = 86, -- Standalone light
+  thing_11003 = 0, -- Wall light (torch)
+  thing_11004 = 85, -- Wide standalone light
+  thing_11005 = 70, -- Small pillar
+  thing_11006 = 5, -- Key one
+  thing_11007 = 6, -- Key two
+  thing_11008 = 13, -- Key three
+  thing_11009 = 1, -- P1 Start
+  thing_11010 = 2, -- P2 Start
+  thing_11011 = 3, -- P3 Start
+  thing_11012 = 4, -- P4 Start
+  thing_11013 = 14, -- Teleport destination
+  thing_11014 = 0, -- Passable ceiling decor
 }
 
 

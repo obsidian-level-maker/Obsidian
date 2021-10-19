@@ -10,7 +10,6 @@ NUKEM.SINKS =
   {
     mat   = "_SKY",
     dz    = 64,
-    light = 16
   },
 
   -- liquid floor --
@@ -73,8 +72,8 @@ NUKEM.THEMES =
     liquids =
     {
       water  = 50,
-      lava   = 10,
       slime = 15,
+      plasma = 10,
     },
 
     narrow_halls =
@@ -163,9 +162,7 @@ NUKEM.THEMES =
 
     scenic_fences =
     {
-      STONES = 30,
-      BSTONES = 10,
-      WOOD3 = 20
+      MASKWALL5 = 50,
     },
 
     sink_style =

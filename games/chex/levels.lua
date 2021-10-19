@@ -25,7 +25,7 @@ CHEX3.EPISODES =
   {
     ep_index = 1,
 
-    theme = "spaceport",
+    theme = "bazoik",
     sky_patch = "CJSKY3A",
     boss = "Maximus",
     sky_light = 0.75,

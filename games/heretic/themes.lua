@@ -1274,7 +1274,6 @@ HERETIC.ROOM_THEMES =
     naturals =
     {
       FLOOR17 = 50,
-      FLOOR27 = 50,
     },
 
     porch_floors =
@@ -2747,7 +2746,6 @@ HERETIC.ROOM_THEMES =
     naturals =
     {
       FLAT513 = 20,
-      FLOOR27 = 20,
     },
 
     porch_floors =

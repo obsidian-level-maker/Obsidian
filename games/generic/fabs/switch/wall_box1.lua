@@ -8,7 +8,7 @@ PREFABS.Switch_wall_box1 =
 
   prob   = 50,
 
-  game = "heretic",
+  game = { heretic=1, doom1=1, doom2=1 },
 
   where  = "seeds",
   seed_w = 1,

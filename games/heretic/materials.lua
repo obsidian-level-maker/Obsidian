@@ -33,7 +33,6 @@ HERETIC.MATERIALS =
   
   -- materials for generic prefab set --  
   _SBARS = { t="GATMETL3", f="FLOOR30" }, -- Short bars, i.e. railings
-  _SBARS2 = { t="GATMETL2", f="FLOOR30" },
   _MBARS = { t="GATMETL4", f="FLOOR30" }, -- Medium bars, i.e. barred windows
   _TBARS = { t="GATMETL5", f="FLOOR30" }, -- Tall bars, i.e. cage/jail bars
   
@@ -45,37 +44,26 @@ HERETIC.MATERIALS =
   _WTRFALL = { t="WATRWAL1", f="FLTFLWW1" }, -- "Flowing water", sorta
     
   _DOOR  = { t="DOORWOOD", f="FLAT507" }, -- Open says me
-  _DOOR2 = { t="DOORSTON", f="FLOOR08"},
   _DORRAIL = { t="METL2", f="FLOOR28"}, -- Inner door slider thingys
   
   _NPIC    = { t="CELTIC", f="FLOOR06"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
-  _NPIC2    = { t="MOSAIC5", f="FLAT502"},
-  _NPIC3    = { t="SAINT1", f="FLAT523"},
   
   _MPIC    = { t="CELTIC", f="FLOOR06"}, -- Medium (or tiling) pic box insert, 128 pixels wide
-  _MPIC2    = { t="DMNMSK", f="FLAT521"},
-  _MPIC3    = { t="GRSKULL3", f="FLAT521"},
-  _MPIC4    = { t="SKULLSB2", f="FLOOR30"},
-  _MPIC5    = { t="STNGLS1", f="FLOOR30"},
-  _MPIC6    = { t="STNGLS2", f="FLOOR30"},
-  _MPIC7    = { t="STNGLS3", f="FLOOR30"},
   
   _WPIC    = { t="CHAINMAN", f="FLAT520"}, -- Wide (or tiling) pic box insert, 256 pixels wide
-  _WPIC2    = { t="HORSES1", f="FLAT502"},
-  _WPIC3    = { t="CELTIC", f="FLOOR06"},
   
   _KEYTRM1 = { t="SPINE1", f="FLOOR25" }, -- Trim for locked door, Key 1
   _KEYTRM2 = { t="GRNBLOK1", f="FLOOR19" }, -- Trim for locked door, Key 2
   _KEYTRM3 = { t="BLUEFRAG", f="FLOOR16" }, -- Trim for locked door, Key 3
   
-  _EXITDR1 = { t="DOOREXIT", f="FLAT520" }, -- Exit door
-  _EXITSW1  = { t="SW2OFF", f="FLOOR28" }, -- Exit switch
-  _EXITRM1  = { t="METL2", f="FLOOR28" }, -- Exit switch
+  _EXITDR = { t="DOOREXIT", f="FLAT520" }, -- Exit door
+  _EXITSW  = { t="SW2OFF", f="FLOOR28" }, -- Exit switch
+  _EXITRM  = { t="METL2", f="FLOOR28" }, -- Exit switch
   
   _STRUCT = {t="METL2", f="FLOOR30"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
-  _SW1  = { t="SW1OFF", f="FLOOR30" }, -- General purpose swtich, full size
-  _SW1TRIM = { t="METL2", f="FLOOR30" }, -- Trim for switch
+  _SW  = { t="SW1OFF", f="FLOOR30" }, -- General purpose swtich, full size
+  _SWTRIM = { t="METL2", f="FLOOR30" }, -- Trim for switch
   
   _TELE = { t="CHAINSD", f="FLTTELE1" }, -- Teleporter
   

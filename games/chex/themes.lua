@@ -32,6 +32,12 @@ CHEX3.SINKS =
     dz  = -12
   },
 
+  liquid_slime0 =
+  {
+    mat = "SLIME0",
+    dz = -12
+  },
+
   liquid_slime1 =
   {
     mat = "SLIME1",
@@ -84,6 +90,137 @@ CHEX3.THEMES =
     }
   },
 
+  -- Episode 1 Theme by Cubebert --
+
+  bazoik =
+  {
+
+   style_list =
+    {
+      caves = { none=80, few=12, some=5, heaps=3 },
+      outdoors = { none=80, few=18, some=2 },
+      pictures = { few=20, some=80, heaps=30 },
+      hallways = { none=30, few=80, some=15, heaps=10 },
+      windows = { few=25, some=50, heaps=90 },
+      cages = { none=60, few=20, some=10, heaps=10 },
+      liquids = { none=45, few=30, some=20, heaps=5 },
+      doors = { few=20, some=70, heaps=30 },
+      steepness = { few=25, some=50, heaps=90 },
+      big_rooms = { none=15, few=60, some=20, heaps=5 },
+      ambushes = { none=5, few=50, some=45, heaps=30 },
+      teleporters = { none=20, few=30, some=65, heaps=10 },
+      keys = { none=15, few=50, some=50, heaps=20 },
+      symmetry = { none=40, few=30, some=35, heaps=25 },
+      switches = { none=20, few=60, some=40, heaps=10 },
+      secrets = { few=5, some=80, heaps=25 },
+      traps   = { none=10, few=40, some=70, heaps=25 },
+      barrels = { none=10, few=50, some=20, heaps=5 }
+    },
+
+    liquids =
+    {
+      slime0 = 15,
+      slime1 = 10
+    },
+
+
+    narrow_halls =
+    {
+      vent = 50
+    },
+
+    wide_halls =
+    {
+      deuce = 50
+    },
+
+    floor_sinks =
+    {
+      liquid_slime0 = 50,
+      liquid_slime1 = 25,
+    },
+
+    ceiling_sinks =
+    {
+      sky_plain = 50
+    },
+
+    fences =
+    {
+      GSTVINE1 = 30,
+      MIDVINE1 = 10
+    },
+
+    cage_mats =
+    {
+      GRAY7 = 30,
+      STARG3 = 10
+    },
+
+    facades =
+    {
+      GRAY7 = 50,
+      STARG3 = 20,
+      CEMENT5 = 5,
+    },
+
+    fence_groups =
+    {
+      PLAIN = 50
+    },
+
+    fence_posts =
+    {
+      Post = 50
+    },
+
+    beam_groups =
+    {
+      beam_metal = 50
+    },
+
+    window_groups =
+    {
+      square = 70,
+      tall   = 30
+    },
+
+    wall_groups =
+    {
+      PLAIN = 50,
+      torches1 = 10
+    },
+
+    cave_torches =
+    {
+      green_torch = 50,
+      green_torch_sm = 50
+    },
+
+    outdoor_torches =
+    {
+      -- TODO
+    },
+
+    ceil_light_prob = 70,
+
+    scenic_fences =
+    {
+      VINE1 = 80,
+      VINE2 = 20
+    },
+
+    sink_style =
+    {
+      sharp = 1,
+      curved = 0.1
+    },
+
+    steps_mat = "FLAT1_1",
+
+    post_mat  = "FLOOR0_6"
+
+  },
 
   spaceport =
   {
@@ -349,6 +486,146 @@ CHEX3.THEMES =
 
 CHEX3.ROOM_THEMES =
 {
+
+  ---- BAZOIK THEME --------------------------------
+
+  bazoik_Generic =
+  {
+    env  = "building",
+    prob = 50,
+  
+    walls =
+    {
+      GRAY7 = 50,
+      STARG3  = 15,
+    },
+  
+    floors =
+    {
+      FLAT1_1 = 50,
+      FLAT1 = 50,
+      FLAT14 = 50,
+      FLOOR0_2 = 50,
+      STEP1 = 50
+    },
+  
+    ceilings =
+    {
+      FLAT14 = 50,
+      CJFCOMM3 = 50,
+      CEIL5_1 = 50,
+      CEIL4_2 = 25,
+      FLOOR0_6 = 25
+    }
+  },
+  
+  bazoik_vent_Hallway =
+  {
+    env   = "hallway",
+    group = "vent",
+    prob  = 50,
+  
+    walls =
+    {
+      GRAY7 = 50,
+      STARG3  = 15,
+    },
+  
+    floors =
+    {
+      FLAT1_1 = 50,
+      FLAT1 = 50,
+      FLAT14 = 50,
+      FLOOR0_2 = 50,
+      STEP1 = 50
+    },
+  
+    ceilings =
+    {
+      FLAT14 = 50,
+      CJFCOMM3 = 50,
+      CEIL5_1 = 50,
+      CEIL4_2 = 25,
+      FLOOR0_6 = 25
+    }
+  
+  },
+  
+  bazoik_deuce_Hallway =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob  = 50,
+  
+    walls =
+    {
+      GRAY7 = 50,
+      STARG3  = 15,
+    },
+  
+    floors =
+    {
+      FLAT1_1 = 50,
+      FLAT1 = 50,
+      FLAT14 = 50,
+      FLOOR0_2 = 50,
+      STEP1 = 50
+    },
+  
+    ceilings =
+    {
+      FLAT14 = 50,
+      CJFCOMM3 = 50,
+      CEIL5_1 = 50,
+      CEIL4_2 = 25,
+      FLOOR0_6 = 25
+    }
+  
+  },
+  
+  bazoik_Outdoors =
+  {
+    env  = "outdoor",
+    prob = 50,
+  
+    floors =
+    {
+      CEIL3_1 = 50,
+    },
+  
+    naturals =
+    {
+      BIGDOOR2 = 50,
+      BAZOIK1 = 50
+    },
+  
+    porch_floors =
+    {
+      FLAT1_1 = 50,
+      CJFCOMM5 = 50,
+      STEP1 = 15,
+    },
+  
+  },
+  
+  bazoik_Cave =
+  {
+    env  = "cave",
+    prob = 50,
+  
+    floors =
+    {
+      CEIL3_1 = 50,
+    },
+  
+    walls =
+    {
+      BIGDOOR2 = 50,
+      BAZOIK1 = 50
+    }
+  
+  },
+
 
   ---- SPACEPORT THEME --------------------------------
 
@@ -652,6 +929,13 @@ CHEX3.ROOMS =
 
 ------------------------------------------------------------------------
 
+OB_THEMES["bazoik"] =
+{
+  label = _("Bazoik"),
+  game = "chex3",
+  name_class = "TECH",
+  mixed_prob = 50
+}
 
 OB_THEMES["spaceport"] =
 {

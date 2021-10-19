@@ -12,6 +12,35 @@
 --
 ------------------------------------------------------------------------
 
+QUAKE.SINKS =
+{
+  -- sky holes --
+
+  sky_plain =
+  {
+    mat   = "_SKY",
+    dz    = 64,
+  },
+
+  -- liquid floor --
+
+  liquid_plain =
+  {
+    mat = water,
+    dz  = -12
+  },
+
+  -- street sink def, do not use for anything else
+  floor_default_streets =
+  {
+    mat = "GROUND1_1",
+    dz = 2,
+  
+    trim_mat = "GROUND1_1",
+    trim_dz = 2,
+  }
+}
+
 
 QUAKE.THEMES =
 {
@@ -27,6 +56,16 @@ QUAKE.THEMES =
     {
       ROCK5_2 = 50,
     },
+
+    cage_lights = { 0, 8, 12, 13 },
+
+    pool_depth = 24,
+
+    skyboxes = 
+    {
+
+    }
+
   },
 
 
@@ -46,10 +85,93 @@ QUAKE.THEMES =
       slime  = 50,
     },
 
+    narrow_halls =
+    {
+      vent = 50
+    },
+
+    wide_halls =
+    {
+      deuce = 50
+    },
+
+    floor_sinks =
+    {
+      liquid_plain = 50
+    },
+
+    ceiling_sinks =
+    {
+      sky_plain = 50
+    },
+
+    fences =
+    {
+      TECH14_2 = 50,
+    },
+
+    cage_mats =
+    {
+      TECH14_2 = 50,
+    },
+
     facades =
     {
       TECH14_2 = 50,
     },
+
+    fence_groups =
+    {
+      PLAIN = 50
+    },
+
+    fence_posts =
+    {
+      Post = 50
+    },
+
+    beam_groups =
+    {
+      beam_metal = 50
+    },
+
+    window_groups =
+    {
+      square = 70,
+      tall   = 30
+    },
+
+    wall_groups =
+    {
+      PLAIN = 50,
+    },
+
+    cave_torches =
+    {
+
+    },
+
+    outdoor_torches =
+    {
+
+    },
+
+    ceil_light_prob = 70,
+
+    scenic_fences =
+    {
+      CLIP_RAIL = 50
+    },
+
+    sink_style =
+    {
+      sharp = 1,
+      curved = 0.1
+    },
+
+    steps_mat = "TECH14_2",
+
+    post_mat  = "TECH14_2"
   },
 
 
@@ -68,10 +190,93 @@ QUAKE.THEMES =
       lava1 = 50,
     },
 
-    facades =
+    narrow_halls =
+    {
+      vent = 50
+    },
+
+    wide_halls =
+    {
+      deuce = 50
+    },
+
+    floor_sinks =
+    {
+      liquid_plain = 50
+    },
+
+    ceiling_sinks =
+    {
+      sky_plain = 50
+    },
+
+    fences =
     {
       BRICKA2_4 = 50,
     },
+
+    cage_mats =
+    {
+      BRICKA2_4 = 50,
+    },
+
+    facades =
+    {
+      BRICKA2_4 = 50,
+    },  
+
+    fence_groups =
+    {
+      PLAIN = 50
+    },
+
+    fence_posts =
+    {
+      Post = 50
+    },
+
+    beam_groups =
+    {
+      beam_metal = 50
+    },
+
+    window_groups =
+    {
+      square = 70,
+      tall   = 30
+    },
+
+    wall_groups =
+    {
+      PLAIN = 50,
+    },
+
+    cave_torches =
+    {
+
+    },
+
+    outdoor_torches =
+    {
+
+    },
+
+    ceil_light_prob = 70,
+
+    scenic_fences =
+    {
+      CLIP_RAIL = 50
+    },
+
+    sink_style =
+    {
+      sharp = 1,
+      curved = 0.1
+    },
+
+    steps_mat = "BRICKA2_4",
+
+    post_mat  = "BRICKA2_4"
   },
 }
 
@@ -81,6 +286,51 @@ QUAKE.ROOM_THEMES =
   any_Hallway =
   {
     env = "hallway",
+    prob = 50,
+
+    walls =
+    {
+      WOOD1_5 = 30,
+    },
+
+    floors =
+    {
+      WOODFLR1_5 = 50,
+    },
+
+    ceilings =
+    {
+      WOODFLR1_4 = 50,
+    },
+  },
+
+  any_deuce_Hallway =
+  {
+    env = "hallway",
+    group = "deuce",
+    prob = 50,
+
+    walls =
+    {
+      WOOD1_5 = 30,
+    },
+
+    floors =
+    {
+      WOODFLR1_5 = 50,
+    },
+
+    ceilings =
+    {
+      WOODFLR1_4 = 50,
+    },
+  },
+
+  any_vent_Hallway =
+  {
+    env = "hallway",
+    group = "vent",
+    prob = 50,
 
     walls =
     {
@@ -101,9 +351,10 @@ QUAKE.ROOM_THEMES =
 
   ----- TECH BASE ----------------------------------
 
-  q1_tech_Room =
+  q1_tech_Generic =
   {
     env = "building",
+    prob = 50,
 
     walls =
     {
@@ -135,8 +386,16 @@ QUAKE.ROOM_THEMES =
   q1_tech_Cave =
   {
     env = "cave",
+    prob = 50,
 
-    naturals =
+    floors =
+    {
+      ROCK1_2=10, ROCK5_2=40, ROCK3_8=20,
+      WALL11_2=10, GROUND1_6=10, GROUND1_7=10,
+      GRAVE01_3=10, WSWAMP1_2=20,
+    },
+
+    walls =
     {
       ROCK1_2=10, ROCK5_2=40, ROCK3_8=20,
       WALL11_2=10, GROUND1_6=10, GROUND1_7=10,
@@ -148,6 +407,7 @@ QUAKE.ROOM_THEMES =
   q1_tech_Outdoors =
   {
     env = "outdoor",
+    prob = 50,
 
     floors =
     {
@@ -163,14 +423,22 @@ QUAKE.ROOM_THEMES =
       ROCK3_7=50, ROCK3_8=50, ROCK4_2=50,
       VINE1_2=50,
     },
+
+    porch_floors = 
+    {
+      CITY4_6=30, CITY6_7=30,
+      CITY4_5=30, CITY4_8=30, CITY6_8=30,
+      WALL14_6=20, CITY4_1=30, CITY4_2=30, CITY4_7=30,
+    },
   },
 
 
   ----- CASTLE ----------------------------------
 
-  q1_castle_Room =
+  q1_castle_Generic =
   {
     env = "building",
+    prob = 50,
 
     walls =
     {
@@ -206,6 +474,7 @@ QUAKE.ROOM_THEMES =
   q1_castle_Outdoors =
   {
     env = "outdoor",
+    prob = 50,
 
     floors =
     {
@@ -221,14 +490,30 @@ QUAKE.ROOM_THEMES =
       ROCK3_7=50, ROCK3_8=50, ROCK4_2=50,
       VINE1_2=50,
     },
+
+    porch_floors = 
+    {
+      CITY4_6=30, CITY6_7=30,
+      CITY4_5=30, CITY4_8=30, CITY6_8=30,
+      WALL14_6=20, CITY4_1=30, CITY4_2=30, CITY4_7=30,
+    },
+
   },
 
 
   q1_castle_Cave =
   {
     env = "cave",
+    prob = 50,
 
-    naturals =
+    floors =
+    {
+      ROCK1_2=10, ROCK5_2=40, ROCK3_8=20,
+      WALL11_2=10, GROUND1_6=10, GROUND1_7=10,
+      GRAVE01_3=10, WSWAMP1_2=20,
+    },
+
+    walls =
     {
       ROCK1_2=10, ROCK5_2=40, ROCK3_8=20,
       WALL11_2=10, GROUND1_6=10, GROUND1_7=10,
@@ -250,8 +535,15 @@ QUAKE.ROOMS =
 {
   GENERIC =
   {
-    env = "any",
+    env = "any"
   },
+
+  OUTSIDE =
+  {
+    env = "outdoor",
+    prob = 50
+  }
+
 }
 
 

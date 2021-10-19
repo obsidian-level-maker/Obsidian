@@ -30,6 +30,6 @@ NUKEM.PLAYER_MODEL =
   duke =
   {
     stats = { health=0 },
-    weapons = { foot=1 }
+    weapons = { foot=1, pistol=1 }
   }
 }

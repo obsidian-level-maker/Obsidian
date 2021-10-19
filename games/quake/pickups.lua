@@ -20,7 +20,7 @@ QUAKE.PICKUPS =
   {
     id = "item_health",
     spawnflags = 1,
-    prob = 20,
+    add_prob = 20,
     cluster = { 1,2 },
     give = { {health=8} },   -- real amount is 5-10 units
   },
@@ -29,7 +29,7 @@ QUAKE.PICKUPS =
   {
     id = "item_health",
     spawnflags = 0,
-    prob = 50,
+    add_prob = 50,
     give = { {health=25} },
   },
 
@@ -39,7 +39,7 @@ QUAKE.PICKUPS =
   {
     id = "item_shells",
     spawnflags = 0,
-    prob = 10,
+    add_prob = 10,
     give = { {ammo="shell",count=20} },
   },
 
@@ -47,7 +47,7 @@ QUAKE.PICKUPS =
   {
     id = "item_shells",
     spawnflags = 1,
-    prob = 20,
+    add_prob = 20,
     give = { {ammo="shell",count=40} },
   },
 
@@ -55,7 +55,7 @@ QUAKE.PICKUPS =
   {
     id = "item_spikes",
     spawnflags = 0,
-    prob = 10,
+    add_prob = 10,
     give = { {ammo="nail",count=25} },
   },
 
@@ -63,7 +63,7 @@ QUAKE.PICKUPS =
   {
     id = "item_spikes",
     spawnflags = 1,
-    prob = 20,
+    add_prob = 20,
     give = { {ammo="nail",count=50} },
   },
 
@@ -71,7 +71,7 @@ QUAKE.PICKUPS =
   {
     id = "item_rockets",
     spawnflags = 0,
-    prob = 10,
+    add_prob = 10,
     give = { {ammo="rocket",count=5} },
   },
 
@@ -79,7 +79,7 @@ QUAKE.PICKUPS =
   {
     id = "item_rockets",
     spawnflags = 1,
-    prob = 20,
+    add_prob = 20,
     give = { {ammo="rocket",count=10} },
   },
 
@@ -87,7 +87,7 @@ QUAKE.PICKUPS =
   {
     id = "item_cells",
     spawnflags = 0,
-    prob = 10,
+    add_prob = 10,
     give = { {ammo="cell",count=6} },
   },
 
@@ -95,7 +95,7 @@ QUAKE.PICKUPS =
   {
     id = "item_cells",
     spawnflags = 1,
-    prob = 20,
+    add_prob = 20,
     give = { {ammo="cell",count=12} },
   },
 }

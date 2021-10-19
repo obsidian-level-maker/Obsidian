@@ -1,0 +1,13 @@
+AMULETS.PICKUPS =
+{
+  -- HEALTH --
+
+
+  -- ARMOR --
+}
+
+AMULETS.NICE_ITEMS =
+{
+
+}
+

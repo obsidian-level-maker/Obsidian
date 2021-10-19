@@ -77,17 +77,14 @@ QUAKE.PALETTES =
 
 
 function QUAKE.begin_level()
-  -- find the texture wad
-  local primary_tex_wad = gui.locate_data("quake_tex.wd2")
 
-  if not primary_tex_wad then
-    error("cannot find texture file: quake_tex.wd2\n\n" ..
-          "Please visit the following link which takes you to the " ..
-          "Quake Setup documentation on the OBLIGE website: " ..
-          "<a http://oblige.sourceforge.net/doc_usage.html#quake>Setting Up Quake</a>")
+  local tex_wad_add = gui.q1_add_tex_wad("games/quake/data/quake_tex.wd2")
+
+  if tex_wad_add == false then
+    error("cannot find texture file: games/quake/data/quake_tex.wd2\n\n" ..
+          "Please place pak0.pak and pak1.pak in the tools/ directory " ..
+          "and run qsavetex to extract the required file.")
   end
-
-  gui.q1_add_tex_wad(primary_tex_wad)
 
   -- set worldtype (controls the way keys look, doors sound, etc)
   gui.property("worldtype", LEVEL.theme.worldtype)
