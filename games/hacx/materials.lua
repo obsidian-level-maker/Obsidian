@@ -44,6 +44,7 @@ HACX.MATERIALS =
   
   _EXITDR = { t="DOORRED", f="RROCK02" }, -- Exit door
   _EXITSW  = { t="HD5", f="RROCK02" }, -- Exit switch
+  _EXITTR  = { t="LITE5", f="RROCK02" }, -- Exit switch trim
   _EXITRM  = { t="LITE5", f="RROCK02" }, -- Exit switch room
   
   _STRUCT = {t="HW209", f="RROCK03"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)

@@ -68,8 +68,10 @@ ULTDOOM.MATERIALS =
   _KEYTRM3 = { t="DOORRED",  f="FLAT23" }, -- Trim for locked door, Key 3
   
   _EXITDR = { t="EXITDOOR", f="FLAT5_5" }, -- Exit door
-  _EXITSW  = { t="SW1BLUE",  f="FLAT14" }, -- Exit switch
-  _EXITRM  = { t="COMPBLUE",    f="FLAT14" }, -- Exit switch room
+  _EXITSW  = { t="SW1GRAY",  f="FLAT18" }, -- Exit switch
+  _EXITTR  = { t="GRAY1",    f="FLAT18" }, -- Exit switch trim
+  _EXITRM  = { t="GRAY1",    f="FLAT18" }, -- Exit switch room
+  _EXITSGN = { t="EXITSIGN", f="CEIL5_1" }, -- Exit sign
   
   _STRUCT = {t="METAL", f="CEIL5_2"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 

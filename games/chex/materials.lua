@@ -45,6 +45,7 @@ CHEX3.MATERIALS =
   
   _EXITDR = { t="BIGDOOR1", f="FLAT5_6" }, -- Exit door
   _EXITSW = { t="SW1STON1", f="FLAT5_6"  }, -- Exit switch
+  _EXITTR = { t="EXITSTON", f="FLAT5_6"},
   _EXITRM = { t="EXITSTON", f="FLAT5_6"}, -- Exit room walls (to match switch)
   
   _SW  = { t="SW1COMP",  f="CEIL5_1" }, -- General purpose swtich, full size

@@ -45,8 +45,10 @@ HARMONY.MATERIALS =
   _KEYTRM3 = { t="0DARKBLU", f="XX" }, -- Trim for locked door, Key 3
   
   _EXITDR = { t="1DOORK1", f="CEIL5_1" }, -- Exit door
-  _EXITSW = { t="SW1MET2", f="CEIL5_1" }, -- Exit switch
-  _EXITRM = { t="0TTT", f="CEIL5_1" }, -- Exit switch
+  _EXITSW = { t="SW1COMP", f="FLOOR4_8" }, -- Exit switch
+  _EXITTR = { t="SILVER3", f="FLOOR4_8" }, -- Exit switch
+  _EXITRM = { t="SILVER3", f="FLOOR4_8" }, -- Exit switch trim
+  _EXITSGN = { t="EXITSIGN", f="DEM1_5" }, -- Exit sign
   
   _STRUCT = {t="METAL3",   f="DEM1_6" }, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
