@@ -7,7 +7,7 @@ PREFABS.Joiner_plain_cage =
   file   = "joiner/plain_cage.wad",
   map    = "MAP01",
 
-  prob  = 140,
+  prob  = 70,
 
   where  = "seeds",
   shape  = "I",
@@ -23,12 +23,12 @@ PREFABS.Joiner_plain_cage =
 }
 
 
---[[PREFABS.Joiner_plain_cage_wide =
+PREFABS.Joiner_plain_cage_wide =
 {
-  file   = "joiner/plain.wad",
+  file   = "joiner/plain_cage.wad",
   map    = "MAP02",
 
-  prob  = 400,
+  prob  = 200,
 
   where  = "seeds",
   shape  = "I",
@@ -41,5 +41,5 @@ PREFABS.Joiner_plain_cage =
 
   x_fit = "frame",
   y_fit = "frame",
-}]]--
+}
 
