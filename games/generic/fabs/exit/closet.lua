@@ -81,6 +81,13 @@ PREFABS.Exit_closet_wide_nosign =
 
   x_fit  = "frame",
   y_fit  = "top",
+
+  forced_offsets = -- CQ3 Specific - Dasho
+  {
+    [22] = { x=0, y=64 },
+    [26] = { x=0, y=64 },
+  }
+
 }
 
 ----------------------------------------------------------------------
