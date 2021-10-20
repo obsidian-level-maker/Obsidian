@@ -20,7 +20,6 @@ OB_GAMES["harmony"] =
 	
 	format = "doom",
 	--sub_format = "harmony",
-	engine = "zdoom",
 	
 	game_dir = "harmony",
 	iwad_name = "harm1.wad",
