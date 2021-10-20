@@ -1,13 +1,13 @@
 --
--- a simple square shaped window
+-- window from V5 prefab set
 --
 
-PREFABS.Window_square1 =
+PREFABS.Window_straddle =
 {
-  file   = "window/square.wad",
+  file   = "window/straddle.wad",
   map    = "MAP01",
 
-  group  = "square",
+  group  = "straddle",
 
   prob   = 50,
 
@@ -23,9 +23,9 @@ PREFABS.Window_square1 =
 }
 
 
-PREFABS.Window_square2 =
+PREFABS.Window_straddle2 =
 {
-  template = "Window_square1",
+  template = "Window_straddle",
 
   map      = "MAP02",
 
@@ -33,9 +33,9 @@ PREFABS.Window_square2 =
 }
 
 
-PREFABS.Window_square3 =
+PREFABS.Window_straddle3 =
 {
-  template = "Window_square1",
+  template = "Window_straddle",
 
   map      = "MAP03",
 

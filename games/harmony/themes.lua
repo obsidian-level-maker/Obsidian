@@ -189,8 +189,7 @@ HARMONY.THEMES =
 
     window_groups =
     {
-      square = 70,
-      tall   = 30,
+      straddle = 70,
     },
 
     wall_groups =

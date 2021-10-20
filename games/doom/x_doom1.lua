@@ -3783,28 +3783,28 @@ function ULTDOOM.nolimit_themes()
     GAME.THEMES.tech.beam_groups = { beam_metal = 50 }
     GAME.THEMES.tech.wall_groups = { PLAIN = 50 }
     GAME.THEMES.tech.outdoor_wall_groups = { PLAIN = 50 }
-    GAME.THEMES.tech.window_groups = { square = 70, tall = 30 }
+    GAME.THEMES.tech.window_groups = { straddle = 70 }
     GAME.THEMES.tech.fence_groups = { PLAIN = 50 }
     GAME.THEMES.tech.fence_posts = { Post = 50 }
     GAME.THEMES.deimos.narrow_halls = { vent = 50 }
     GAME.THEMES.deimos.beam_groups = { beam_metal = 50 }
     GAME.THEMES.deimos.wall_groups = { PLAIN = 50 }
     GAME.THEMES.deimos.outdoor_wall_groups = { PLAIN = 50 }
-    GAME.THEMES.deimos.window_groups = { square = 70, tall = 30 }
+    GAME.THEMES.deimos.window_groups = { straddle = 70 }
     GAME.THEMES.deimos.fence_groups = { PLAIN = 50 }
     GAME.THEMES.deimos.fence_posts = { Post = 50 }
     GAME.THEMES.hell.narrow_halls = { vent = 50 }
     GAME.THEMES.hell.beam_groups = { beam_metal = 50 }
     GAME.THEMES.hell.wall_groups = { PLAIN = 50 }
     GAME.THEMES.hell.outdoor_wall_groups = { PLAIN = 50 }
-    GAME.THEMES.hell.window_groups = { square = 70, tall = 30 }
+    GAME.THEMES.hell.window_groups = { straddle = 70 }
     GAME.THEMES.hell.fence_groups = { PLAIN = 50 }
     GAME.THEMES.hell.fence_posts = { Post = 50 }
     GAME.THEMES.flesh.narrow_halls = { vent = 50 }
     GAME.THEMES.flesh.beam_groups = { beam_metal = 50 }
     GAME.THEMES.flesh.wall_groups = { PLAIN = 50 }
     GAME.THEMES.flesh.outdoor_wall_groups = { PLAIN = 50 }
-    GAME.THEMES.flesh.window_groups = { square = 70, tall = 30 }
+    GAME.THEMES.flesh.window_groups = { straddle = 70, tall = 30 }
     GAME.THEMES.flesh.fence_groups = { PLAIN = 50 }
     GAME.THEMES.flesh.fence_posts = { Post = 50 }
   end
