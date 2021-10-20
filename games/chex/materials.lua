@@ -1,7 +1,7 @@
 CHEX3.LIQUIDS =
 {
   water  = { mat="WATER", light_add=16, special=0 },
-  slime0 = { mat="BLOOD1", light_add=16, special=16, damage=20 },
+  slime0 = { mat="SLIME0", light_add=16, special=16, damage=20 },
   slime1 = { mat="SLIME1", light_add=16, special=16, damage=20 },
   slime2   = { mat="SLIME2", light_add=24, special=16, damage=20 }    
 }

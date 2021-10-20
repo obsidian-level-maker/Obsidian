@@ -34,19 +34,19 @@ CHEX3.SINKS =
 
   liquid_slime0 =
   {
-    mat = "slime0",
+    mat = "SLIME0",
     dz = -12
   },
 
   liquid_slime1 =
   {
-    mat = "slime1",
+    mat = "SLIME1",
     dz  = -12
   },
 
   liquid_slime2 =
   {
-    mat = "slime2",
+    mat = "SLIME2",
     dz  = -12
   },
 
