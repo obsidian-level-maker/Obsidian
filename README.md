@@ -40,7 +40,7 @@ Modified SLUMP level builder included for Vanilla Doom usage.
 
 ZDBSP as the internal nodebuilder, replacing GLBSP.
 
-UDMF map generation option for GZDoom, EDGE, and Eternity Engine.
+UDMF map generation option for GZDoom and Eternity Engine.
 
 64-bit seeds and random numbers.
 

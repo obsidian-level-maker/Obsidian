@@ -2,12 +2,12 @@
 -- 2-seed-wide hallway : straight piece
 --
 
-PREFABS.Hallway_deuce_i1 =
+PREFABS.Hallway_curve_i =
 {
-  file   = "hall/deuce_i.wad",
+  file   = "hall/curve_i.wad",
   map    = "MAP01",
 
-  group  = "deuce",
+  group  = "curve",
   prob   = 50,
 
   where  = "seeds",

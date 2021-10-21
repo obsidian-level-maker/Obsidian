@@ -2,13 +2,13 @@
 -- 2-seed-wide hallway : terminators
 --
 
-PREFABS.Hallway_deuce_term =
+PREFABS.Hallway_curve_term =
 {
   file   = "hall/deuce_j.wad",
   map    = "MAP01",
   kind   = "terminator",
 
-  group  = "deuce",
+  group  = "curve",
   prob   = 50,
 
   where  = "seeds",
@@ -21,9 +21,9 @@ PREFABS.Hallway_deuce_term =
 }
 
 
-PREFABS.Hallway_deuce_secret =
+PREFABS.Hallway_curve_secret =
 {
-  template = "Hallway_deuce_term",
+  template = "Hallway_curve_term",
 
   map  = "MAP05",
   key  = "secret",

@@ -2,13 +2,13 @@
 -- 2-seed-wide hallway : locked terminators
 --
 
-PREFABS.Hallway_deuce_locked_key1 =
+PREFABS.Hallway_curve_locked_key1 =
 {
   file   = "hall/deuce_k.wad",
   map    = "MAP01",
 
   kind   = "terminator",
-  group  = "deuce",
+  group  = "curve",
   key    = "k_one",
 
   prob   = 50,
@@ -22,13 +22,13 @@ PREFABS.Hallway_deuce_locked_key1 =
   deep   = 16,
 }
 
-PREFABS.Hallway_deuce_locked_key2 =
+PREFABS.Hallway_curve_locked_key2 =
 {
   file   = "hall/deuce_k.wad",
   map    = "MAP02",
 
   kind   = "terminator",
-  group  = "deuce",
+  group  = "curve",
   key    = "k_two",
 
   prob   = 50,
@@ -43,13 +43,13 @@ PREFABS.Hallway_deuce_locked_key2 =
 }
 
 
-PREFABS.Hallway_deuce_locked_key3 =
+PREFABS.Hallway_curve_locked_key3 =
 {
   file   = "hall/deuce_k.wad",
   map    = "MAP03",
 
   kind   = "terminator",
-  group  = "deuce",
+  group  = "curve",
   key    = "k_three",
 
   prob   = 50,
@@ -66,13 +66,13 @@ PREFABS.Hallway_deuce_locked_key3 =
 
 ----------------------------------------------------------------
 
-PREFABS.Hallway_deuce_barred =
+PREFABS.Hallway_curve_barred =
 {
   file   = "hall/deuce_k.wad",
   map    = "MAP04",
 
   kind   = "terminator",
-  group  = "deuce",
+  group  = "curve",
   key    = "barred",
 
   prob   = 50,

@@ -131,7 +131,7 @@ CHEX3.THEMES =
 
     wide_halls =
     {
-      deuce = 50
+      curve = 50
     },
 
     floor_sinks =
@@ -259,7 +259,7 @@ CHEX3.THEMES =
 
     wide_halls =
     {
-      deuce = 50
+      curve = 50
     },
 
     floor_sinks =
@@ -390,7 +390,7 @@ CHEX3.THEMES =
 
     wide_halls =
     {
-      deuce = 50
+      curve = 50
     },
 
     floor_sinks =
@@ -548,10 +548,10 @@ CHEX3.ROOM_THEMES =
   
   },
   
-  bazoik_deuce_Hallway =
+  bazoik_curve_Hallway =
   {
     env   = "hallway",
-    group = "deuce",
+    group = "curve",
     prob  = 50,
   
     walls =
@@ -688,10 +688,10 @@ CHEX3.ROOM_THEMES =
 
   },
 
-  spaceport_deuce_Hallway =
+  spaceport_curve_Hallway =
   {
     env   = "hallway",
-    group = "deuce",
+    group = "curve",
     prob  = 50,
 
     walls =
@@ -825,10 +825,10 @@ sewer_vent_Hallway =
 
 },
 
-sewer_deuce_Hallway =
+sewer_curve_Hallway =
 {
   env   = "hallway",
-  group = "deuce",
+  group = "curve",
   prob  = 50,
 
   walls =

@@ -216,10 +216,10 @@ NUKEM.ROOM_THEMES =
     }
   },
 
- nukem_city_Hallway_deuce =
+ nukem_city_Hallway_curve =
   {
     env   = "hallway",
-    group = "deuce",
+    group = "curve",
     prob = 50,
 
     walls =

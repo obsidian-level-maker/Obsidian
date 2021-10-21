@@ -2,12 +2,12 @@
 -- 2-seed-wide hallway : four-way "+" junction
 --
 
-PREFABS.Hallway_deuce_p1 =
+PREFABS.Hallway_curve_p =
 {
-  file   = "hall/deuce_p.wad",
+  file   = "hall/curve_p.wad",
   map    = "MAP01",
 
-  group  = "deuce",
+  group  = "curve",
   prob   = 50,
 
   where  = "seeds",

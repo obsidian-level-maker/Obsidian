@@ -2,12 +2,12 @@
 -- 2-seed-wide hallway : dead-end piece
 --
 
-PREFABS.Hallway_deuce_u1 =
+PREFABS.Hallway_curve_u =
 {
-  file   = "hall/deuce_u.wad",
+  file   = "hall/curve_u.wad",
   map    = "MAP01",
 
-  group  = "deuce",
+  group  = "curve",
   prob   = 50,
 
   where  = "seeds",

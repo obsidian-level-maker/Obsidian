@@ -103,7 +103,7 @@ HACX.THEMES =
 
     wide_halls =
     {
-      deuce = 50
+      curve = 50
     },
 
     floor_sinks =
@@ -244,10 +244,10 @@ HACX.ROOM_THEMES =
     }
   },
 
- hacx_urban_Hallway_deuce =
+ hacx_urban_Hallway_curve =
   {
     env   = "hallway",
-    group = "deuce",
+    group = "curve",
     prob = 50,
 
     walls =

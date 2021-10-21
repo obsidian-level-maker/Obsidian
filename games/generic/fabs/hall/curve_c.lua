@@ -2,12 +2,12 @@
 -- 2-seed-wide hallway : corner (L shape)
 --
 
-PREFABS.Hallway_deuce_c1 =
+PREFABS.Hallway_curve_c =
 {
-  file   = "hall/deuce_c.wad",
+  file   = "hall/curve_c.wad",
   map    = "MAP01",
 
-  group  = "deuce",
+  group  = "curve",
   prob   = 50,
 
   where  = "seeds",

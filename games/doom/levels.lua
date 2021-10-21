@@ -78,7 +78,7 @@ DOOM.PREBUILT_LEVELS =
 function DOOM.nolimit_themes()
   if OB_CONFIG.engine == "nolimit" then
     GAME.THEMES.DEFAULTS.narrow_halls = { vent = 50 }
-    GAME.THEMES.DEFAULTS.wide_halls = { deuce = 50 }
+    GAME.THEMES.DEFAULTS.wide_halls = { curve = 50 }
     GAME.THEMES.DEFAULTS.has_triple_key_door = false
     GAME.THEMES.DEFAULTS.has_double_switch_door = false
     GAME.THEMES.tech.narrow_halls = { vent = 50 }
