@@ -1404,7 +1404,8 @@ DOOM.THEMES =
       fence_sloped_silver = 50,
       fence_highway_bars = 10,
       fence_jurassic_park = 50,
-      fence_planters = 10
+      fence_planters = 10,
+      fence_tech_cover = 50
     },
 
     fence_posts =
@@ -1813,7 +1814,8 @@ DOOM.THEMES =
       fence_sloped_silver = 12,
       fence_highway_bars = 25,
       fence_jurassic_park = 12,
-      fence_planters = 40
+      fence_planters = 40,
+      fence_tech_cover = 25
     },
 
     fence_posts =
