@@ -1,0 +1,7 @@
+[*.{cc,h}]
+indent_style = space
+indent_size = 4
+
+[*.{l,y}]
+indent_style = space
+indent_size = 4
