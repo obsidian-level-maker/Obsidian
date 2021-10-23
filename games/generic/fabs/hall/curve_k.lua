@@ -4,7 +4,7 @@
 
 PREFABS.Hallway_curve_locked_key1 =
 {
-  file   = "hall/deuce_k.wad",
+  file   = "hall/curve_k.wad",
   map    = "MAP01",
 
   kind   = "terminator",
@@ -24,7 +24,7 @@ PREFABS.Hallway_curve_locked_key1 =
 
 PREFABS.Hallway_curve_locked_key2 =
 {
-  file   = "hall/deuce_k.wad",
+  file   = "hall/curve_k.wad",
   map    = "MAP02",
 
   kind   = "terminator",
@@ -45,7 +45,7 @@ PREFABS.Hallway_curve_locked_key2 =
 
 PREFABS.Hallway_curve_locked_key3 =
 {
-  file   = "hall/deuce_k.wad",
+  file   = "hall/curve_k.wad",
   map    = "MAP03",
 
   kind   = "terminator",
@@ -68,7 +68,7 @@ PREFABS.Hallway_curve_locked_key3 =
 
 PREFABS.Hallway_curve_barred =
 {
-  file   = "hall/deuce_k.wad",
+  file   = "hall/curve_k.wad",
   map    = "MAP04",
 
   kind   = "terminator",

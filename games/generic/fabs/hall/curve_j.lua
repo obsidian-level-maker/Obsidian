@@ -4,7 +4,7 @@
 
 PREFABS.Hallway_curve_term =
 {
-  file   = "hall/deuce_j.wad",
+  file   = "hall/curve_j.wad",
   map    = "MAP01",
   kind   = "terminator",
 
