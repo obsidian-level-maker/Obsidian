@@ -22,6 +22,7 @@
 
 #include <array>
 #include <iostream>
+#include <sstream>
 
 #include "fmt/core.h"
 #include "hdr_fltk.h"
@@ -34,6 +35,11 @@
 #include "main.h"
 
 typedef enum { CCTX_Load, CCTX_Save, CCTX_Arguments } cookie_context_e;
+
+struct cookie_line_s {
+    std::string key;
+    std::string value;
+};
 
 static int context;
 
@@ -83,38 +89,105 @@ static void Cookie_SetValue(std::string name, std::string value) {
     ob_set_config(name, value);
 }
 
+static cookie_line_s Cookie_LexLine(std::string buf) {
+    cookie_line_s line;
+
+    // the possible lexer states.
+    enum class lexer_mode_e {
+        // initial whitespace
+        Initial,
+        // the key, like "test" or "test set"
+        // note that it can have interior whitespace
+        Key,
+        // whitespace following the = sign
+        BeforeValue,
+        // the value, like "i5yefhg405"
+        // can be literally anything, but won't begin or end with
+        // whitespace.
+        Value,
+    };
+    auto lexer_mode = lexer_mode_e::Initial;
+    // the token builder
+    std::ostringstream text;
+    // for handling interior whitespace in tokens,
+    // because we need arbitrary lookahead to allow such
+    // a thing.
+    std::ostringstream interior_whitespace;
+
+    // for readability
+    const auto is_whitespace = [](char c) { return c == ' ' || c == '\t'; };
+
+    for (std::string::size_type i = 0; i < buf.size(); ++i) {
+        switch (lexer_mode) {
+            case lexer_mode_e::Initial:
+                if (!is_whitespace(buf[i])) {
+                    lexer_mode = lexer_mode_e::Key;
+                }
+                break;
+            case lexer_mode_e::Key:
+                if (is_whitespace(buf[i])) {
+                    // tentatively push to the interior_whitespace buffer
+                    interior_whitespace << buf[i];
+                } else if (buf[i] == '=') {
+                    // end of key, discard interior_whitespace
+                    // as it's actually trailing
+                    line.key = text.str();
+                    interior_whitespace.str("");
+                    lexer_mode = lexer_mode_e::BeforeValue;
+                } else {
+                    if (!interior_whitespace.str().empty()) {
+                        // interior_whitespace is definitely interior
+                        text << interior_whitespace.str();
+                        interior_whitespace.str("");
+                    }
+                    text << buf[i];
+                }
+                break;
+            case lexer_mode_e::BeforeValue:
+                if (!is_whitespace(buf[i])) {
+                    // finished consuming whitespace after =
+                    lexer_mode = lexer_mode_e::Value;
+                }
+                break;
+            case lexer_mode_e::Value:
+                // same algorithm as the Key case, but without
+                // special handling for =.
+                if (is_whitespace(buf[i])) {
+                    interior_whitespace << buf[i];
+                } else {
+                    if (!interior_whitespace.str().empty()) {
+                        text << interior_whitespace.str();
+                        interior_whitespace.str("");
+                    }
+                    text << buf[i];
+                }
+                break;
+        }
+    }
+    // value was implicitly finished by the loop terminating.
+    // again, discard trailing whitespace that was left in interior_whitespace.
+    line.value = text.str();
+    return line;
+}
+
 static bool Cookie_ParseLine(std::string buf) {
-    std::string::size_type pos = 0;
+    auto line = Cookie_LexLine(buf);
 
-    pos = buf.find('=', 0);
-    if (pos == std::string::npos) {
-        // Skip blank lines, comments, etc
-        return true;
-    }
-
-    while (std::find(buf.begin(), buf.end(), ' ') != buf.end()) {
-        buf.erase(std::find(buf.begin(), buf.end(), ' '));
-    }
-
-    if (!(isalpha(buf.front()) || buf.front() == '@')) {
+    if (!(isalpha(line.key.front()) || line.key.front() == '@')) {
         LogPrintf("Weird config line: [{}]\n", buf);
         return false;
     }
 
-    pos = buf.find('=', 0);  // Fix pos after whitespace deletion
-    std::string name = buf.substr(0, pos);
-    std::string value = buf.substr(pos + 1);
-
-    if (name.empty() || value.empty()) {
+    if (line.key.empty() || line.value.empty()) {
         LogPrintf("Name or value missing!\n");
         return false;
     }
 
-    if (StringCaseCmp(value, "MixItUp") == 0) {
-        value = "Mix It Up";
+    if (StringCaseCmp(line.value, "MixItUp") == 0) {
+        line.value = "Mix It Up";
     }
 
-    Cookie_SetValue(name, value);
+    Cookie_SetValue(line.key, line.value);
     return true;
 }
 
