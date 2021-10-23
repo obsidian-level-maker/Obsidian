@@ -1,10 +1,10 @@
 --
--- Keyed doors, medium size
+-- Keyed doors, door size
 --
 
-PREFABS.Locked_medium_key1 =
+PREFABS.Locked_door_key1 =
 {
-  file   = "door/key_medium.wad",
+  file   = "door/key_door.wad",
   map    = "MAP01",
 
   prob   = 50,
@@ -22,9 +22,9 @@ PREFABS.Locked_medium_key1 =
 }
 
 
-PREFABS.Locked_medium_key1_diag =
+PREFABS.Locked_door_key1_diag =
 {
-  file   = "door/key_medium.wad",
+  file   = "door/key_door.wad",
   map    = "MAP02",
 
   key    = "k_one",
@@ -41,9 +41,9 @@ PREFABS.Locked_medium_key1_diag =
 ----------------------------------------------
 
 
-PREFABS.Locked_medium_key2 =
+PREFABS.Locked_door_key2 =
 {
-  file   = "door/key_medium.wad",
+  file   = "door/key_door.wad",
   map    = "MAP03",
 
   prob   = 50,
@@ -62,9 +62,9 @@ PREFABS.Locked_medium_key2 =
 }
 
 
-PREFABS.Locked_medium_key2_diag =
+PREFABS.Locked_door_key2_diag =
 {
-  file   = "door/key_medium.wad",
+  file   = "door/key_door.wad",
   map    = "MAP04",
 
   prob   = 50,
@@ -80,9 +80,9 @@ PREFABS.Locked_medium_key2_diag =
 ----------------------------------------------
 
 
-PREFABS.Locked_medium_key3 =
+PREFABS.Locked_door_key3 =
 {
-  file   = "door/key_medium.wad",
+  file   = "door/key_door.wad",
   map    = "MAP05",
 
   prob   = 50,
@@ -101,9 +101,9 @@ PREFABS.Locked_medium_key3 =
 }
 
 
-PREFABS.Locked_medium_key3_diag =
+PREFABS.Locked_door_key3_diag =
 {
-  file   = "door/key_medium.wad",
+  file   = "door/key_door.wad",
   map    = "MAP06",
 
   prob   = 50,
