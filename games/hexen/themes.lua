@@ -150,6 +150,8 @@ HEXEN.THEMES =
 
       steps_mat = "F_011",
 
+      post_mat  = "_STRUCT",
+
     },
 
     fire =

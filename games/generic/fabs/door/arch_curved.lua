@@ -2,10 +2,12 @@
 -- Archway with a curved arch
 --
 
+-- Limit to games with medieval/fantasy elements, as it looks a bit odd in modern/future settings
 PREFABS.Arch_curved1 =
 {
   file   = "door/arch_curved.wad",
   map    = "MAP01",
+  game   = { chex3=0, doom1=0, doom2=0, hacx=0, harmony=0, heretic=1, hexen=1, nukem=0, quake=0, strife=1 },
 
   prob   = 50,
 

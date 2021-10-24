@@ -15,22 +15,6 @@
 HEXEN.ENTITIES =
 {
 
-  --- entities for generic prefabs, the rid field stands for "Real ID" --
-  generic_barrel = { id=11000, rid=8100, r=12, h=32 },
-  generic_ceiling_light = { id=11001, rid=17, r=31, h=60, light=255, pass=true, ceil=true, add_mode="island" },
-  generic_standalone_light = { id=11002, rid=116, r=12, h=54, light=255 }, -- "torches" and such, freestanding on a floor
-  generic_wall_light    = { id=11003, rid=54, r=10, h=64, light=255, pass=true, add_mode="extend" }, -- "torches" and such, attached to a wall
-  generic_wide_light    = { id=11004, rid=8060, r=16, h=44, light=255 }, -- wide standalone light, braziers, etc
-  generic_small_pillar  = { id=11005, rid=103, r=16, h=36 },
-  k_one = { id=11006, rid=8030 },
-  k_two = { id=11007, rid=8031 },
-  k_three = { id=11008, rid=8032 },
-  generic_p1_start = { id=11009, rid=1, r=16, h=64 },
-  generic_p2_start = { id=11010, rid=2, r=16, h=64 },
-  generic_p3_start = { id=11011, rid=3, r=16, h=64 },
-  generic_p4_start = { id=11012, rid=4, r=16, h=64 },
-  generic_teleport_spot = { id=11013, rid=14},
-
   --- players
   player1 = { id=1, r=16, h=64 },
   player2 = { id=2, r=16, h=64 },

@@ -40,14 +40,6 @@ HEXEN.PARAMETERS =
 
 HEXEN.ACTIONS =
 {
-  -- Hexen's actions work differently, so will revisit this - Dasho
-  --[[
-  -- These are used for converting generic linedef types
-  
-  Generic_Key_One = { id=700, rid=27 },
-  Generic_Key_Two = { id=701, rid=28 },
-  Generic_Key_Three = { id=702, rid=26 },
-
   --
   -- These keywords are used by prefabs that are remotely
   -- triggered (by a switch or walk-over line).
@@ -66,5 +58,4 @@ HEXEN.ACTIONS =
 
   S1_LowerFloor = { id=23, kind="lower" },  -- down to lowest nb floor
   W1_LowerFloor = { id=38, kind="lower" }  --
-  ]]--
 }
