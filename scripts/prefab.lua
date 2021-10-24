@@ -662,6 +662,16 @@ function Fab_transform_Z(fab, T)
       if E.angles then
         E.angles = Trans.apply_angles_z(E.angles)
       end
+
+      for _, table in pairs(GAME.ENTITIES) do -- Put Hexen stuff back on the ceiling? - Dasho
+        if table.id == E.id then
+            if table.ceil and table.ceil == true then
+              E.z = 0
+            end
+            goto continue
+        end
+      end
+      ::continue::
     end
   end
 
