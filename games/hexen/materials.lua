@@ -485,9 +485,9 @@ HEXEN.MATERIALS =
 
 HEXEN.PREFAB_FIELDS =
 {
-  doom_line_to_hexen_700 = { special=13, arg1=0, arg2=16, arg3=150, arg4=1, arg5=0 },
-  doom_line_to_hexen_701 = { special=13, arg1=0, arg2=16, arg3=150, arg4=2, arg5=0 },
-  doom_line_to_hexen_702 = { special=13, arg1=0, arg2=16, arg3=150, arg4=3, arg5=0 },
+  doom_line_to_hexen_700 = { special=13, arg1=0, arg2=16, arg3=150, arg4=1, arg5=0, flags=0x0400 },
+  doom_line_to_hexen_701 = { special=13, arg1=0, arg2=16, arg3=150, arg4=2, arg5=0, flags=0x0400 },
+  doom_line_to_hexen_702 = { special=13, arg1=0, arg2=16, arg3=150, arg4=3, arg5=0, flags=0x0400 },
 
   -- These are used for converting generic fab things --
   thing_11000 = 8100, -- Barrel

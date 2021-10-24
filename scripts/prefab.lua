@@ -2225,9 +2225,7 @@ function Fab_replacements(fab)
         if OB_CONFIG.game ~= "hexen" then 
           C.special = check("line", C.special)
         else
-          print("C SPECIAL: " .. C.special)
           local info = check("doom_line_to_hexen", C.special) -- In the future there might be a need to hexen->hexen subs, but this should work for now - Dasho
-          print("TYPE: " .. type(info))
           if type(info) == "table" then
             C.special = info.special
             if info.arg1 then C.arg1 = info.arg1 end
@@ -2235,10 +2233,7 @@ function Fab_replacements(fab)
             if info.arg3 then C.arg3 = info.arg3 end
             if info.arg4 then C.arg4 = info.arg4 end
             if info.arg5 then C.arg5 = info.arg5 end
-            for k,v in pairs (C) do 
-              print("KEY: " .. k)
-              print("VALUE: " .. v)
-            end         
+            if info.flags then C.flags = info.flags end  
           end
         end
       end
