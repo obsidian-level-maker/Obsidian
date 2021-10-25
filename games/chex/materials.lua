@@ -43,7 +43,7 @@ CHEX3.MATERIALS =
   _KEYTRM2 = { t="DOORYEL", f="XX" }, -- Trim for locked door, Key 2
   _KEYTRM3 = { t="DOORBLU", f="XX" }, -- Trim for locked door, Key 3
   
-  _EXITDR = { t="BIGDOOR1", f="FLAT5_6" }, -- Exit door
+  _EXITDR = { t="BIGDOOR7", f="FLAT5_6" }, -- Exit door
   _EXITSW = { t="SW1STON1", f="FLAT5_6"  }, -- Exit switch
   _EXITTR = { t="EXITSTON", f="FLAT5_6"},
   _EXITRM = { t="EXITSTON", f="FLAT5_6"}, -- Exit room walls (to match switch)

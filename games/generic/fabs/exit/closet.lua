@@ -12,8 +12,8 @@ PREFABS.Exit_closet = -- Default offsets are for Doom 1/2
   prob   = 100,
 
   where  = "seeds",
-  seed_w = 2,
-  seed_h = 2,
+  seed_w = 1,
+  seed_h = 1,
 
   deep   =  16,
   over   = -16,
@@ -39,8 +39,8 @@ PREFABS.Exit_closet_strife =
   prob   = 100,
 
   where  = "seeds",
-  seed_w = 2,
-  seed_h = 2,
+  seed_w = 1,
+  seed_h = 1,
 
   deep   =  16,
   over   = -16,
@@ -68,8 +68,8 @@ PREFABS.Exit_closet_harmony =
   prob   = 100,
 
   where  = "seeds",
-  seed_w = 2,
-  seed_h = 2,
+  seed_w = 1,
+  seed_h = 1,
 
   deep   =  16,
   over   = -16,
@@ -96,8 +96,8 @@ PREFABS.Exit_closet_nosign = -- Default offset is for Heretic
   prob   = 100,
 
   where  = "seeds",
-  seed_w = 2,
-  seed_h = 2,
+  seed_w = 1,
+  seed_h = 1,
 
   deep   =  16,
   over   = -16,
@@ -122,8 +122,8 @@ PREFABS.Exit_closet_nosign_hacx =
   prob   = 100,
 
   where  = "seeds",
-  seed_w = 2,
-  seed_h = 2,
+  seed_w = 1,
+  seed_h = 1,
 
   deep   =  16,
   over   = -16,
@@ -150,8 +150,8 @@ PREFABS.Exit_closet_wide =
   prob   = 100,
 
   where  = "seeds",
-  seed_w = 2,
-  seed_h = 2,
+  seed_w = 1,
+  seed_h = 1,
 
   deep   =  16,
   over   = -16,
@@ -170,8 +170,8 @@ PREFABS.Exit_closet_wide_nosign = -- Default offset is for Chex Quest 3
   prob   = 100,
 
   where  = "seeds",
-  seed_w = 2,
-  seed_h = 2,
+  seed_w = 1,
+  seed_h = 1,
 
   deep   =  16,
   over   = -16,
