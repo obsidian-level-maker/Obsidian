@@ -176,7 +176,7 @@ Vanilla DOOM: Doom with its original engine limits. This option will use SLUMP a
 Limit Removing: Any engine that raises the limits of the original Doom to prevent crashes.\n\n\
 BOOM Compatible: Engines compatible with Boom that are able to use the entire suite of Boom types and features.\n\n\
 PrBoom Compatible: Boom-compatible, but also capable of using extended nodes.\n\n\
-EDGE: Formerly known as 3DGE. Boom and UDMF compatible, with additional special features. Support is currently experimental.\n\n\
+EDGE: Boom compatible, plus additional specials and other advanced features. Support is currently experimental.\n\n\
 Eternity: Software renderer only, but with advanced features such as UDMF. Support is currently experimental.");
 }
 

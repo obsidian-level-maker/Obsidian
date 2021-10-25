@@ -22,10 +22,3 @@ PREFABS.Pillar_square_A =
   z_fit  = "stretch",
 }
 
-
-PREFABS.Pillar_square_B =
-{
-  template = "Pillar_square_A",
-  map      = "MAP02",
-}
-

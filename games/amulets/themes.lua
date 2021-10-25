@@ -96,7 +96,7 @@ AMULETS.THEMES =
 
     wide_halls =
     {
-      deuce = 50
+      curve = 50
     },
 
     floor_sinks =
@@ -141,8 +141,7 @@ AMULETS.THEMES =
 
     window_groups =
     {
-      square = 70,
-      tall   = 30
+      straddle = 70,
     },
 
     wall_groups =
@@ -207,10 +206,10 @@ AMULETS.ROOM_THEMES =
     }
   },
 
-  amulets_city_Hallway_deuce =
+  amulets_city_Hallway_curve =
   {
     env   = "hallway",
-    group = "deuce",
+    group = "curve",
     prob = 50,
 
     walls =

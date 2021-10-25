@@ -41,8 +41,6 @@ OB_GAMES["hacx"] =
 	
 	format = "doom",
 
-	engine = "zdoom",
-	
 	game_dir = "hacx",
 	iwad_name = "hacx.wad",
 

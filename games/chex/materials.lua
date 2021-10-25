@@ -1,7 +1,7 @@
 CHEX3.LIQUIDS =
 {
   water  = { mat="WATER", light_add=16, special=0 },
-  slime0 = { mat="BLOOD1", light_add=16, special=16, damage=20 },
+  slime0 = { mat="SLIME0", light_add=16, special=16, damage=20 },
   slime1 = { mat="SLIME1", light_add=16, special=16, damage=20 },
   slime2   = { mat="SLIME2", light_add=24, special=16, damage=20 }    
 }
@@ -12,7 +12,7 @@ CHEX3.MATERIALS =
   _DEFAULT = { t="COMPSPAN", f="CEIL5_1" },
   _ERROR = { t="COMPSPAN", f="CEIL5_1" },
   _SKY   = { t="COMPSPAN", f="F_SKY1" },
-  _FLATLIT = { t="XX", f="FLAT5_8"},
+  _FLATLIT = { t="COMPSPAN", f="LABFLAT"},
   _LIQUID = { t="GSTFONT1", f="FWATER1" },
 
   -- materials for generic prefab set --
@@ -44,8 +44,9 @@ CHEX3.MATERIALS =
   _KEYTRM3 = { t="DOORBLU", f="XX" }, -- Trim for locked door, Key 3
   
   _EXITDR = { t="BIGDOOR7", f="FLAT5_6" }, -- Exit door
-  _EXITSW = { t="SW1METAL", f="FLAT1"  }, -- Exit switch
-  _EXITRM = { t="STARG3", f="CJFLOD06"}, -- Exit room walls (to match switch)
+  _EXITSW = { t="SW1STON1", f="FLAT5_6"  }, -- Exit switch
+  _EXITTR = { t="EXITSTON", f="FLAT5_6"},
+  _EXITRM = { t="EXITSTON", f="FLAT5_6"}, -- Exit room walls (to match switch)
   
   _SW  = { t="SW1COMP",  f="CEIL5_1" }, -- General purpose swtich, full size
   _SWTRIM = { t="COMPSPAN",  f="CEIL5_1" }, -- Trim for switch

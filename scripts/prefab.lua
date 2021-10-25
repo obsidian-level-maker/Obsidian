@@ -662,6 +662,16 @@ function Fab_transform_Z(fab, T)
       if E.angles then
         E.angles = Trans.apply_angles_z(E.angles)
       end
+
+      for _, table in pairs(GAME.ENTITIES) do -- Put Hexen stuff back on the ceiling? - Dasho
+        if table.id == E.id then
+            if table.ceil and table.ceil == true then
+              E.z = 0
+            end
+            goto continue
+        end
+      end
+      ::continue::
     end
   end
 
@@ -1899,6 +1909,7 @@ function Fab_collect_fields(fab)
     if string.match(name, "^offset_") then return true end
     if string.match(name, "^delta") then return true end
     if string.match(name, "^forced_offsets") then return true end
+    if string.match(name, "^doom_line_to_hexen_") then return true end
 
     return false
   end
@@ -1952,7 +1963,7 @@ function Fab_substitutions(fab, SKIN)
     for _,name in pairs(keys) do
       local value = fab.fields[name]
 
-      if type(value) ~= "table" or string.match(name, "^forced_offsets") then goto continue end
+      if type(value) ~= "table" or string.match(name, "^forced_offsets") or string.match(name, "^doom_line_to_hexen") then goto continue end
 
       if table.size(value) == 0 then
         error("Fab_substitutions: random table is empty: " .. tostring(name))
@@ -2061,7 +2072,6 @@ function Fab_replacements(fab)
 
     return val
   end
-
 
   local function check_tex(val)
     local k = "tex_" .. val
@@ -2221,7 +2231,22 @@ function Fab_replacements(fab)
 
   for _,B in pairs(fab.brushes) do
     for _,C in pairs(B) do
-      if C.special and C.x     then C.special = check("line",   C.special) end
+      if C.special and C.x then
+        if OB_CONFIG.game ~= "hexen" then 
+          C.special = check("line", C.special)
+        else
+          local info = check("doom_line_to_hexen", C.special) -- In the future there might be a need to hexen->hexen subs, but this should work for now - Dasho
+          if type(info) == "table" then
+            C.special = info.special
+            if info.arg1 then C.arg1 = info.arg1 end
+            if info.arg2 then C.arg2 = info.arg2 end
+            if info.arg3 then C.arg3 = info.arg3 end
+            if info.arg4 then C.arg4 = info.arg4 end
+            if info.arg5 then C.arg5 = info.arg5 end
+            if info.flags then C.flags = info.flags end  
+          end
+        end
+      end
       if C.special and not C.x then C.special = check("sector", C.special) end
 
       if C.tag then 
@@ -2229,8 +2254,15 @@ function Fab_replacements(fab)
         current_tag = C.tag  
       end
       
+      -- This is in severe need of fleshing out, probably need something like a miniature XLAT table - Dasho
       if OB_CONFIG.game == "hexen" then
-        if C.x and C.special and (C.special >= 10 and C.special <= 12) then C.arg1 = current_tag end -- Flesh out which special ranges need to have arg1 match a sector tag
+        if C.x and C.special then 
+          if (C.special >= 10 and C.special <= 12) then 
+            C.arg1 = current_tag 
+          elseif C.special == 13 then
+            C.arg5 = current_tag
+          end
+        end
       end
 
       if C.u1  then C.u1  = check("offset", C.u1) end

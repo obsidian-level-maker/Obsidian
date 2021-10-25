@@ -40,6 +40,7 @@ ULTDOOM.PARAMETERS =
 
 ULTDOOM.MATERIALS =
 {
+  _FLATLIT = { t="METAL", f="TLITE6_6" },
 
   -- materials for generic prefab set --
   _SBARS = { t="MIDBRN1", f="XX" }, -- Short bars, i.e. railings
@@ -68,8 +69,10 @@ ULTDOOM.MATERIALS =
   _KEYTRM3 = { t="DOORRED",  f="FLAT23" }, -- Trim for locked door, Key 3
   
   _EXITDR = { t="EXITDOOR", f="FLAT5_5" }, -- Exit door
-  _EXITSW  = { t="SW1BLUE",  f="FLAT14" }, -- Exit switch
-  _EXITRM  = { t="COMPBLUE",    f="FLAT14" }, -- Exit switch room
+  _EXITSW  = { t="SW1GRAY",  f="FLAT18" }, -- Exit switch
+  _EXITTR  = { t="GRAY1",    f="FLAT18" }, -- Exit switch trim
+  _EXITRM  = { t="GRAY1",    f="FLAT18" }, -- Exit switch room
+  _EXITSGN = { t="EXITSIGN", f="CEIL5_1" }, -- Exit sign
   
   _STRUCT = {t="METAL", f="CEIL5_2"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
@@ -2171,6 +2174,28 @@ ULTDOOM.ROOM_THEMES =
     },
   },
 
+  -- For Limit-Removing/generics - Dasho
+  any_curve_Hallway =
+  {
+    env   = "hallway",
+    group = "curve",
+    prob  = 1,
+
+    walls =
+    {
+      GRAY1 = 50,
+    },
+
+    floors =
+    {
+      FLAT1 = 30,
+    },
+
+    ceilings =
+    {
+      CEIL3_5 = 30,
+    },
+  },
 
   any_deuce_Hallway =
   {
@@ -3776,33 +3801,33 @@ ULTDOOM.PREBUILT_LEVELS =
 function ULTDOOM.nolimit_themes()
   if OB_CONFIG.engine == "nolimit" then
     GAME.THEMES.DEFAULTS.narrow_halls = { vent = 50 }
-    GAME.THEMES.DEFAULTS.wide_halls = { deuce = 50 }
+    GAME.THEMES.DEFAULTS.wide_halls = { curve = 50 }
     GAME.THEMES.tech.narrow_halls = { vent = 50 }
     GAME.THEMES.tech.beam_groups = { beam_metal = 50 }
     GAME.THEMES.tech.wall_groups = { PLAIN = 50 }
     GAME.THEMES.tech.outdoor_wall_groups = { PLAIN = 50 }
-    GAME.THEMES.tech.window_groups = { square = 70, tall = 30 }
+    GAME.THEMES.tech.window_groups = { straddle = 70 }
     GAME.THEMES.tech.fence_groups = { PLAIN = 50 }
     GAME.THEMES.tech.fence_posts = { Post = 50 }
     GAME.THEMES.deimos.narrow_halls = { vent = 50 }
     GAME.THEMES.deimos.beam_groups = { beam_metal = 50 }
     GAME.THEMES.deimos.wall_groups = { PLAIN = 50 }
     GAME.THEMES.deimos.outdoor_wall_groups = { PLAIN = 50 }
-    GAME.THEMES.deimos.window_groups = { square = 70, tall = 30 }
+    GAME.THEMES.deimos.window_groups = { straddle = 70 }
     GAME.THEMES.deimos.fence_groups = { PLAIN = 50 }
     GAME.THEMES.deimos.fence_posts = { Post = 50 }
     GAME.THEMES.hell.narrow_halls = { vent = 50 }
     GAME.THEMES.hell.beam_groups = { beam_metal = 50 }
     GAME.THEMES.hell.wall_groups = { PLAIN = 50 }
     GAME.THEMES.hell.outdoor_wall_groups = { PLAIN = 50 }
-    GAME.THEMES.hell.window_groups = { square = 70, tall = 30 }
+    GAME.THEMES.hell.window_groups = { straddle = 70 }
     GAME.THEMES.hell.fence_groups = { PLAIN = 50 }
     GAME.THEMES.hell.fence_posts = { Post = 50 }
     GAME.THEMES.flesh.narrow_halls = { vent = 50 }
     GAME.THEMES.flesh.beam_groups = { beam_metal = 50 }
     GAME.THEMES.flesh.wall_groups = { PLAIN = 50 }
     GAME.THEMES.flesh.outdoor_wall_groups = { PLAIN = 50 }
-    GAME.THEMES.flesh.window_groups = { square = 70, tall = 30 }
+    GAME.THEMES.flesh.window_groups = { straddle = 70, tall = 30 }
     GAME.THEMES.flesh.fence_groups = { PLAIN = 50 }
     GAME.THEMES.flesh.fence_posts = { Post = 50 }
   end

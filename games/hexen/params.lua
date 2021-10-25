@@ -40,31 +40,21 @@ HEXEN.PARAMETERS =
 
 HEXEN.ACTIONS =
 {
-  -- Hexen's actions work differently, so will revisit this - Dasho
-  --[[
-  -- These are used for converting generic linedef types
-  
-  Generic_Key_One = { id=700, rid=27 },
-  Generic_Key_Two = { id=701, rid=28 },
-  Generic_Key_Three = { id=702, rid=26 },
-
   --
   -- These keywords are used by prefabs that are remotely
   -- triggered (by a switch or walk-over line).
   --
+  S1_OpenDoor = { id=11, arg1="tag", arg2=16, flags=0x0400, kind="open" },    -- opens and stays open
+  W1_OpenDoor = { id=11, arg1="tag", arg2=16, kind="open" },
+  GR_OpenDoor = { id=11, arg1="tag", arg2=16, flags=0x2E00, kind="open" },
 
-  S1_OpenDoor = { id=103,  kind="open" },    -- opens and stays open
-  W1_OpenDoor = { id=2,    kind="open" },    --
-  GR_OpenDoor = { id=46,   kind="open" },    --
+  W1_OpenDoorFast = { id=11, arg1="tag", arg2=64, kind="open" },   -- [ Heretic lacks this ]
 
-  W1_OpenDoorFast = { id=2, kind="open" },   -- [ Heretic lacks this ]
+  S1_RaiseStair = { id=217, arg1="tag", arg2=2, arg3=16, kind="stair", flags=0x0400 },  -- 16 units
+  W1_RaiseStair = { id=217, arg1="tag", arg2=2, arg3=16, kind="stair" },
 
-  S1_RaiseStair = { id=106,  kind="stair" },  -- 16 units
-  W1_RaiseStair = { id=107,  kind="stair" },  --
+  S1_FloorUp    = { id=25, arg1="tag", arg2=8, flags=0x0400, kind="floor_up" },
 
-  S1_FloorUp    = { id=18,  kind="floor_up" }, -- up to next highest floor
-
-  S1_LowerFloor = { id=23, kind="lower" },  -- down to lowest nb floor
-  W1_LowerFloor = { id=38, kind="lower" }  --
-  ]]--
+  S1_LowerFloor = { id=22, arg1="tag", arg2=8, flags=0x0400, kind="lower" }, -- down to lowest nb floor
+  W1_LowerFloor = { id=22, arg1="tag", arg2=8, kind="lower" },  --
 }

@@ -8,7 +8,7 @@ PREFABS.Switch_wall_box1 =
 
   prob   = 50,
 
-  game = { heretic=1, doom1=1, doom2=1 },
+  game = "heretic",
 
   where  = "seeds",
   seed_w = 1,
@@ -24,6 +24,20 @@ PREFABS.Switch_wall_box1 =
 
   sector_1  = { [0]=70, [1]=15, [2]=5, [3]=5, [8]=10, [12]=3, [13]=3 },
 
+}
+
+PREFABS.Switch_wall_box1_doomish = 
+{
+  template = "Switch_wall_box1",
+
+  game = { doom1=1, doom2=1 },
+  
+  forced_offsets = 
+  {
+    [7] = { x=1,y=63 },
+    [8] = { x=1,y=63 },
+    [9] = { x=1,y=63 },
+  }
 }
 
 PREFABS.Switch_wall_box1_chex3 = 

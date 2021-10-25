@@ -95,6 +95,19 @@ function Action_lookup(action)
   return info.id
 end
 
+-- This will be used for Hexen lookups; it will need to return a table for special + args - Dasho
+--[[function Action_lookup_hexen(action)
+  assert(action)
+
+  local info = GAME.ACTIONS[action]
+
+  if not info then
+    error("Unknown action: " .. tostring(action))
+  end
+
+  return info
+end]]--
+
 
 ------------------------------------------------------------------------
 --  Ambient Lighting

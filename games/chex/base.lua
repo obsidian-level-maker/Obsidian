@@ -39,8 +39,6 @@ OB_GAMES["chex3"] =
 	label = _("Chex Quest 3 (Exp)"),
 	priority = 30,
 	
-	engine = "zdoom",
-
 	format = "doom",
 	--sub_format = "hexen",
 	

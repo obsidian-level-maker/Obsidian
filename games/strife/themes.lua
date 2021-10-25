@@ -147,7 +147,7 @@ STRIFE.THEMES =
 
     wide_halls =
     {
-      deuce = 50,
+      curve = 50,
     },
 
     floor_sinks =
@@ -193,8 +193,7 @@ STRIFE.THEMES =
 
     window_groups =
     {
-      square = 70,
-      tall   = 30,
+      straddle = 70,
     },
 
     wall_groups =
@@ -243,10 +242,10 @@ STRIFE.ROOM_THEMES =
     },
   },
 
-  any_Hallway_Deuce =
+  any_Hallway_curve =
   {
     env  = "hallway",
-    group = "deuce",
+    group = "curve",
     prob = 1,
 
     walls =

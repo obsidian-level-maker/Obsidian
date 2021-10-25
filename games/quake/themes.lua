@@ -92,7 +92,7 @@ QUAKE.THEMES =
 
     wide_halls =
     {
-      deuce = 50
+      curve = 50
     },
 
     floor_sinks =
@@ -137,8 +137,7 @@ QUAKE.THEMES =
 
     window_groups =
     {
-      square = 70,
-      tall   = 30
+      straddle = 70,
     },
 
     wall_groups =
@@ -197,7 +196,7 @@ QUAKE.THEMES =
 
     wide_halls =
     {
-      deuce = 50
+      curve = 50
     },
 
     floor_sinks =
@@ -242,8 +241,7 @@ QUAKE.THEMES =
 
     window_groups =
     {
-      square = 70,
-      tall   = 30
+      straddle = 70,
     },
 
     wall_groups =
@@ -304,10 +302,10 @@ QUAKE.ROOM_THEMES =
     },
   },
 
-  any_deuce_Hallway =
+  any_curve_Hallway =
   {
     env = "hallway",
-    group = "deuce",
+    group = "curve",
     prob = 50,
 
     walls =

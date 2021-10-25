@@ -35,7 +35,7 @@ HERETIC.ENTITIES =
   fire_brazier  = { id=76, r=16, h=44, light=255 },
   chandelier    = { id=28, r=31, h=60, light=255, pass=true, ceil=true, add_mode="island" },
 
-  barrel  = { id=44,   r=12, h=32 },
+  barrel  = { id=43,   r=12, h=32 }, -- Pod Spawner
   pod     = { id=2035, r=16, h=54 },
 
   blue_statue   = { id=94, r=16, h=54 },

@@ -58,9 +58,10 @@ HERETIC.MATERIALS =
   
   _EXITDR = { t="DOOREXIT", f="FLAT520" }, -- Exit door
   _EXITSW  = { t="SW2OFF", f="FLOOR28" }, -- Exit switch
-  _EXITRM  = { t="METL2", f="FLOOR28" }, -- Exit switch
+  _EXITTR  = { t="METL2", f="FLOOR28" }, -- Exit switch trim
+  _EXITRM  = { t="METL2", f="FLOOR28" }, -- Exit room
   
-  _STRUCT = {t="METL2", f="FLOOR30"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
+  _STRUCT = {t="WOODWL", f="FLOOR10"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
   _SW  = { t="SW1OFF", f="FLOOR30" }, -- General purpose swtich, full size
   _SWTRIM = { t="METL2", f="FLOOR30" }, -- Trim for switch
@@ -257,7 +258,7 @@ HERETIC.PREFAB_FIELDS =
   line_702 = 26,
 
   -- These are used for converting generic fab things --
-  thing_11000 = 2035, -- Barrel
+  thing_11000 = 43, -- Barrel
   thing_11001 = 28, -- Ceiling light
   thing_11002 = 27, -- Standalone light
   thing_11003 = 50, -- Wall light (torch)
