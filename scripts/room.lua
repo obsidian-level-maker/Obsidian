@@ -3381,7 +3381,7 @@ function Room_floor_ceil_heights()
     -- whereas normal is Oblige's default behavior
 
     if R.height_style == "short" then
-      if add_h > 128 then add_h = 128 end
+      if add_h > 144 then add_h = 144 end
     elseif R.height_style == "tall" then
 
       local tall_offsets =

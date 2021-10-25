@@ -17,7 +17,7 @@ PREFABS.Window_tall_octagon_1 =
   deep   = 16,
   over   = 16,
 
-  z_fit = { 38,90 },
+  z_fit = { 54,90 },
 
   bound_z1 = 0,
   bound_z2 = 128,
