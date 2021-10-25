@@ -562,7 +562,8 @@ function Layout_place_hub_gates()
     local count = 0
 
     for _,chunk in pairs(list) do
-      if chunk.content == nil then
+      if chunk.content == nil
+      or chunk.content == "DECORATION" then
         count = count + 1
       end
     end
