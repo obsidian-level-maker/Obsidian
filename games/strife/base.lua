@@ -45,7 +45,7 @@ function STRIFE.merge_conversation_script()
 end
 
 
-OB_GAMES["strife"] =
+UNFINISHED["strife"] =
 {
   label = _("Strife (Exp)"),
   priority = 34,

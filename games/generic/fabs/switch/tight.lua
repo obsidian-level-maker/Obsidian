@@ -3,7 +3,7 @@ PREFABS.Switch_wall_tight =
   file   = "switch/tight.wad",
 
   map = "MAP01",
-  game = { heretic=1, doom1=1, doom2=1 },
+  game = "heretic",
 
   prob   = 18,
 
@@ -21,6 +21,19 @@ PREFABS.Switch_wall_tight =
 
   sector_1  = { [0]=70, [1]=15, [2]=5, [3]=5, [8]=10, [12]=3, [13]=3 },
 
+}
+
+PREFABS.Switch_wall_tight_doomish =
+{
+  template   = "Switch_wall_tight",
+
+  game = { doom1=1, doom2=1 },
+  forced_offsets = 
+  {
+    [8] = { x=4,y=72 },
+    [9] = { x=4,y=72 },
+    [10] = { x=4,y=72 },
+  }
 }
 
 PREFABS.Switch_wall_tight_chex3 =

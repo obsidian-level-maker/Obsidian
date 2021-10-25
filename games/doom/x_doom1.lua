@@ -40,6 +40,7 @@ ULTDOOM.PARAMETERS =
 
 ULTDOOM.MATERIALS =
 {
+  _FLATLIT = { t="METAL", f="TLITE6_6" },
 
   -- materials for generic prefab set --
   _SBARS = { t="MIDBRN1", f="XX" }, -- Short bars, i.e. railings

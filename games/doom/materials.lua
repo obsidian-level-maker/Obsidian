@@ -36,6 +36,7 @@ DOOM.MATERIALS =
   _ERROR   = { t="METAL",  f="FLAT5_1" },
   _DEFAULT = { t="GRAY1",  f="FLAT1" },
   _SKY     = { t="METAL",  f="F_SKY1" },
+  _FLATLIT = { t="METAL", f="TLITE6_6" },
 
   -- materials for generic prefab set --
   _SBARS = { t="MIDBRN1", f="XX" }, -- Short bars, i.e. railings

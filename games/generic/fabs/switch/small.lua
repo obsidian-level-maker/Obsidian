@@ -6,7 +6,6 @@ PREFABS.Switch_small =
 {
   file   = "switch/small.wad",
   map    = "MAP01",
-  game   = { heretic=1, doom1=1, doom2=1 },
 
   key    = "sw_metal",
   prob   = 50,
@@ -16,7 +15,8 @@ PREFABS.Switch_small =
   tag_1  = "?switch_tag",
 }
 
-PREFABS.Switch_small_chex3 =
+-- Need to rework offsets due to fab change - Dasho
+--[[PREFABS.Switch_small_chex3 =
 {
   template = "Switch_small",
 
@@ -70,5 +70,5 @@ PREFABS.Switch_small_strife =
     [16] = { x=4,y=54 },
     [18] = { x=4,y=54 },
   }
-}
+}]]--
 
