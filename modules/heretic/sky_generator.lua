@@ -317,12 +317,157 @@ SKY_GEN_HERETIC.themes =
       WHITE_CLOUDS = 30,
       HELLISH_CLOUDS = 20,
     },
-
-    -- no dark_hills
   },
 
   castle =
-    -- at the moment a 1:1 copy of the Doom generator urban theme values
+  {
+    clouds =
+    {
+      SKY_CLOUDS = 130,
+      BLUE_CLOUDS = 80,
+      WHITE_CLOUDS = 80,
+      GREY_CLOUDS = 100,
+      DARK_CLOUDS = 100,
+
+      BROWN_CLOUDS = 60,
+      BROWNISH_CLOUDS = 40,
+      PEACH_CLOUDS = 40,
+      YELLOW_CLOUDS = 40,
+      ORANGE_CLOUDS = 40,
+      GREEN_CLOUDS = 25,
+      JADE_CLOUDS = 25,
+    },
+
+    hills =
+    {
+      TAN_HILLS = 30,
+      BROWN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      GREENISH_HILLS = 30,
+      ICE_HILLS = 12,
+      BLACK_HILLS = 5,
+    },
+
+    dark_hills =
+    {
+      DARKGREEN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      ICE_HILLS = 25,
+    },
+  },
+
+  maw =
+  {
+    clouds =
+    {
+      SKY_CLOUDS = 130,
+      BLUE_CLOUDS = 80,
+      WHITE_CLOUDS = 80,
+      GREY_CLOUDS = 100,
+      DARK_CLOUDS = 100,
+
+      BROWN_CLOUDS = 60,
+      BROWNISH_CLOUDS = 40,
+      PEACH_CLOUDS = 40,
+      YELLOW_CLOUDS = 40,
+      ORANGE_CLOUDS = 40,
+      GREEN_CLOUDS = 25,
+      JADE_CLOUDS = 25,
+    },
+
+    hills =
+    {
+      TAN_HILLS = 30,
+      BROWN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      GREENISH_HILLS = 30,
+      ICE_HILLS = 12,
+      BLACK_HILLS = 5,
+    },
+
+    dark_hills =
+    {
+      DARKGREEN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      ICE_HILLS = 25,
+    },
+  },
+
+  ossuary =
+  {
+    clouds =
+    {
+      SKY_CLOUDS = 130,
+      BLUE_CLOUDS = 80,
+      WHITE_CLOUDS = 80,
+      GREY_CLOUDS = 100,
+      DARK_CLOUDS = 100,
+
+      BROWN_CLOUDS = 60,
+      BROWNISH_CLOUDS = 40,
+      PEACH_CLOUDS = 40,
+      YELLOW_CLOUDS = 40,
+      ORANGE_CLOUDS = 40,
+      GREEN_CLOUDS = 25,
+      JADE_CLOUDS = 25,
+    },
+
+    hills =
+    {
+      TAN_HILLS = 30,
+      BROWN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      GREENISH_HILLS = 30,
+      ICE_HILLS = 12,
+      BLACK_HILLS = 5,
+    },
+
+    dark_hills =
+    {
+      DARKGREEN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      ICE_HILLS = 25,
+    },
+  },
+
+  dome =
+  {
+    clouds =
+    {
+      SKY_CLOUDS = 130,
+      BLUE_CLOUDS = 80,
+      WHITE_CLOUDS = 80,
+      GREY_CLOUDS = 100,
+      DARK_CLOUDS = 100,
+
+      BROWN_CLOUDS = 60,
+      BROWNISH_CLOUDS = 40,
+      PEACH_CLOUDS = 40,
+      YELLOW_CLOUDS = 40,
+      ORANGE_CLOUDS = 40,
+      GREEN_CLOUDS = 25,
+      JADE_CLOUDS = 25,
+    },
+
+    hills =
+    {
+      TAN_HILLS = 30,
+      BROWN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      GREENISH_HILLS = 30,
+      ICE_HILLS = 12,
+      BLACK_HILLS = 5,
+    },
+
+    dark_hills =
+    {
+      DARKGREEN_HILLS = 50,
+      DARKBROWN_HILLS = 50,
+      ICE_HILLS = 25,
+    },
+  },
+
+  demense =
   {
     clouds =
     {

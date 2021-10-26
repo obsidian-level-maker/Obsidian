@@ -300,7 +300,7 @@ OB_MODULES["ui_mons"] =
       max = 12,
       increment = .05,
       default = 1,
-      presets = "0.55:0.55 (Weak),0.75:0.75 (Easier),1:1 (Average),1.3:1.3 (Harder),1.7:1.7 (Tough),2.5: 2.5 (Fierce),12:12 (CRAZY),",
+      presets = "0.55:0.55 (Weak),0.75:0.75 (Easier),1:1 (Average),1.3:1.3 (Harder),1.7:1.7 (Tough),2.5:2.5 (Fierce),12:12 (CRAZY),",
     },
 
     {
