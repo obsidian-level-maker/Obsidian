@@ -18,6 +18,7 @@ PREFABS.Locked_door_key1 =
   over   = 32,
 
   x_fit  = "frame",
+  z_fit  = "top",
 
 }
 
@@ -35,6 +36,7 @@ PREFABS.Locked_door_key1_diag =
 
   seed_w = 2,
   seed_h = 2,
+  z_fit  = "top",
 }
 
 
@@ -57,8 +59,7 @@ PREFABS.Locked_door_key2 =
   over   = 32,
 
   x_fit  = "frame",
-
-  tex__KEYTRM1 = "_KEYTRM2",
+  z_fit  = "top",
 }
 
 
@@ -74,6 +75,7 @@ PREFABS.Locked_door_key2_diag =
 
   seed_w = 2,
   seed_h = 2,
+  z_fit  = "top",
 }
 
 
@@ -96,8 +98,7 @@ PREFABS.Locked_door_key3 =
   over   = 32,
 
   x_fit  = "frame",
-
-  tex__KEYTRM1 = "_KEYTRM2",
+  z_fit  = "top",
 }
 
 
@@ -113,5 +114,6 @@ PREFABS.Locked_door_key3_diag =
 
   seed_w = 2,
   seed_h = 2,
+  z_fit  = "top",
 }
 
