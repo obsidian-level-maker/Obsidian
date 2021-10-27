@@ -426,7 +426,7 @@ function Episode_plan_monsters()
       end
 
       -- default probability
-      if not info.prob then
+      if not info.prob and not info.replaces then -- Try to keep replacement-only monsters from being added to the palette - Dasho
         info.prob = 50
       end
 
