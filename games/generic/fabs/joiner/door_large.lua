@@ -1,14 +1,13 @@
 --
--- Joiner with opening door
+-- Large door
 --
 
-PREFABS.Joiner_door2 =
+PREFABS.Door_joiner_large =
 {
-  file   = "joiner/door2.wad",
+  file   = "joiner/door_large.wad",
   map    = "MAP01",
 
   prob   = 100,
-  style  = "doors",
 
   where  = "seeds",
   shape  = "I",
@@ -20,5 +19,7 @@ PREFABS.Joiner_door2 =
   over   = 16,
 
   x_fit  = "frame",
-  y_fit  = { 8,64 , 96,152 },
+  y_fit  = "frame",
+
+  nearby_h = 160,
 }

@@ -426,7 +426,7 @@ function Episode_plan_monsters()
       end
 
       -- default probability
-      if not info.prob then
+      if not info.prob and not info.replaces then -- Try to keep replacement-only monsters from being added to the palette - Dasho
         info.prob = 50
       end
 
@@ -548,7 +548,7 @@ function Episode_plan_monsters()
 
 
   local function is_monster_usable(LEV, mon, info)
-    if info.prob <= 0 then return false end
+    if not info.prob or info.prob <= 0 then return false end
 
     if info.level > LEV.monster_level 
     + (MONSTER_KIND_JUMPSTART_LEVELS[OB_CONFIG.mon_variety_jumpstart] or 0)
@@ -765,7 +765,7 @@ function Episode_plan_monsters()
 
 
   local function prob_for_guard(LEV, info)
-    if info.prob <= 0 then return 0 end
+    if not info.prob or info.prob <= 0 then return 0 end
 
     -- simply too weak
     if info.health < 45 then return 0 end
