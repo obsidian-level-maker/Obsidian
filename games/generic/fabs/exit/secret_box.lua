@@ -7,7 +7,7 @@ PREFABS.Exit_secret_box1 =
   file  = "exit/secret_box.wad",
 
   prob  = 100,
-  game  = { heretic=1, doom1=1, doom2=1 },
+  game  = "heretic",
 
   -- the kind means "an exit to a secret level",
   -- the key  means "a closet which is hidden in the room",
@@ -29,7 +29,7 @@ PREFABS.Exit_secret_box1_chex3 =
 {
   template = "Exit_secret_box1",
 
-  game = "chex3",
+  game = { chex3=1, doom1=1, doom2=1 }, -- First made for Chex 3, but happens to work for Doom 1/2
   forced_offsets = 
   {
     [16] = { x=0,y=-64 },
