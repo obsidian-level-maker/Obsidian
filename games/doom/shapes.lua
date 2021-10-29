@@ -7946,7 +7946,7 @@ GROW_PILLAR_3X3_STAIRS =
   diagonals =
   {
     "1.",".1",
-    "1.",".1",
+    "A.",".A",
   },
 },
 
