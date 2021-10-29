@@ -470,7 +470,7 @@ PREFABS.Item_dem_bar_closets =
   where = "seeds",
 
   texture_pack = "armaetus",
-  replaces = "Item_dem_bar_closets_thin",
+  replaces = "Item_dem_bar_closets_vanilla",
 
   seed_w = 3,
   seed_h = 2,
@@ -492,7 +492,7 @@ PREFABS.Item_dem_bar_closets =
   }
 }
 
-PREFABS.Item_dem_bar_closets_thin =
+PREFABS.Item_dem_bar_closets_vanilla =
 {
   file = "item/dem_item_closets.wad",
   map = "MAP11",
@@ -520,11 +520,9 @@ PREFABS.Item_dem_bar_closets_thin =
     STONE2=50, SHAWN4=50, SHAWN5=50,
     STUCCO=50, STUCCO1=50, STUCCO3=50, 
     STARGR1=50, GRAY7=50,
-    PANEL6=50, BRIKS40=50, BRIKS43=50,
-    GOTH16=50, GOTH31=50, WD03=50,
   },
-
-  tex_TEKGRDR = "SHAWN1"
+  tex_TEKGRDR = "SHAWN1",
+  tex_MIDSPAC5 = "MIDSPACE"
 }
 
 --a waiting room with an item on the desk
@@ -596,13 +594,15 @@ PREFABS.Item_dem_waiting_room_closets_vanilla =
     BRICK2=50, BRICK4=50,
     BRICK6=50, BRICK7=50, BRICK8=50,
     STONE2=50, SHAWN4=50, SHAWN5=50,
-    STUCCO=50,  STUCCO1=50,  STUCCO3=50, STARGR1=50, GRAY7=50,
-    PANEL6=50, BRIKS40=50, BRIKS43=50,
-    GOTH16=50, GOTH31=50, WD03=50,
+    STUCCO=50, STUCCO1=50, STUCCO3=50, 
+    STARGR1=50, GRAY7=50,
   },
   tex_CPAQLRRE = {
     SKY1 = 50, SKY2 = 50, SKY3 = 50
-  }
+  },
+  flat_SNOW5 = "FLAT19",
+  flat_FASHWITE = "FLAT23",
+  flat_GRENFLOR = "RROCK20"
 }
 
 --a raided electronic store with an item
