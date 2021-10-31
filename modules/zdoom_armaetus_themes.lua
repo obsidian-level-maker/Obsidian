@@ -191,13 +191,6 @@ ARMAETUS_ROOM_THEMES =
       GRAYMET3 = 20,
       GRAYMET4 = 20,
       GRAYMET5 = 20,
-      GRAYMET6 = 6,
-      GRAYMET7 = 6,
-      GRAYMET8 = 6,
-      GRAYMET9 = 6,
-      GRAYMETA = 6,
-      GRAYMETB = 6,
-      GRAYMETC = 6,
 
       METAL8 = 25,
       METAL9 = 25,
