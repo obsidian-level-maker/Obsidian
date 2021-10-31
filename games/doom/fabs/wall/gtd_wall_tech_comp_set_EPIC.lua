@@ -696,3 +696,29 @@ PREFABS.Wall_epic_graymet_purple_short =
 
   tex_GRAYMET6 = "GRAYMET7"
 }
+
+--
+
+PREFABS.Wall_epic_comp_set_grntek_blue =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP56",
+
+  height = 120,
+  bound_z2 = 120,
+
+  group = "gtd_comp_grntek_blue"
+}
+
+PREFABS.Wall_epic_comp_set_grntek_blue_diag =
+{
+  template = "Wall_epic_graymet_blue",
+  map = "MAP57",
+
+  where = "diagonal",
+
+  height = 120,
+  bound_z2 = 120,
+
+  group = "gtd_comp_grntek_blue"
+}

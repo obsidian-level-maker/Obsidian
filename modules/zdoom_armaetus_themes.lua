@@ -4939,7 +4939,9 @@ ARMAETUS_THEMES =
       gtd_comp_graymet_green = 13,
       gtd_comp_graymet_red = 13,
       gtd_comp_graymet_orange = 13,
-      gtd_comp_graymet_purple = 13
+      gtd_comp_graymet_purple = 13,
+      --
+      gtd_comp_grntek_blue = 26
     },
 
     window_groups =
@@ -5384,6 +5386,8 @@ ARMAETUS_THEMES =
       gtd_wall_hell_engraving_1 = 8,
       gtd_wall_hell_engraving_2 = 8,
       gtd_wall_hell_engraving_3 = 8,
+      --
+      gtd_comp_grntek_blue = 20
     },
 
     window_groups =
