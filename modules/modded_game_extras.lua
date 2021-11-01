@@ -825,6 +825,23 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_PICKUPS =
   --
 }
 
+MODDED_GAME_EXTRAS.TRAILBLAZER_THINGS =
+{
+  upgrade_spawner =
+  {
+    id = 30001,
+    kind = "powerup",
+    add_prob = 35,
+    start_prob = 20,
+    closet_prob = 10,
+  },
+}
+
+MODDED_GAME_EXTRAS.TRAILBLAZER_DOOMEDNUMS =
+[[
+  30001 = BlueprintSpawner
+]]
+
 function MODDED_GAME_EXTRAS.setup(self)
   for name,opt in pairs(self.options) do
     if opt.valuator then
@@ -852,6 +869,17 @@ function MODDED_GAME_EXTRAS.setup(self)
 
   if PARAM.bool_d4t_ents == 1 then
     MODDED_GAME_EXTRAS.add_d4t_ents()
+  end
+
+  if PARAM.bool_trailblazer == 1 then
+    table.name_up(MODDED_GAME_EXTRAS.TRAILBLAZER_THINGS)
+  
+    GAME.NICE_ITEMS = table.deep_merge(GAME.NICE_ITEMS, MODDED_GAME_EXTRAS.TRAILBLAZER_THINGS, 2)
+    if SCRIPTS.doomednums then
+      SCRIPTS.doomednums = SCRIPTS.doomednums .. MODDED_GAME_EXTRAS.TRAILBLAZER_DOOMEDNUMS
+    else
+      SCRIPTS.doomednums = MODDED_GAME_EXTRAS.TRAILBLAZER_DOOMEDNUMS
+    end
   end
 
   if PARAM.bool_complex_doom == 1 then
@@ -1636,6 +1664,17 @@ OB_MODULES["modded_game_extras"] =
       priority = 1,
     },
 
+    bool_trailblazer =
+    {
+      name = "bool_trailblazer",
+      label = _("Trailblazer Upgrades"),
+      valuator = "button",
+      default = 0,
+      tooltip = "Adds Trailblazer's upgrade blueprints as separate pickups " ..
+                "that can be found in the map.",
+      priority = 0,
+    },
+
     bool_complex_doom =
     {
       name = "bool_complex_doom",
@@ -1644,7 +1683,7 @@ OB_MODULES["modded_game_extras"] =
       default = 0,
       tooltip = "Modifies general gameplay settings to balance generated maps " ..
                 "more for use with Complex Doom due to its difficulty spike.",
-      priority = 0,
+      priority = -1,
     }
   },
 }

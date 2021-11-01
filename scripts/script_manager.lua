@@ -79,6 +79,9 @@ function ScriptMan_assemble_mapinfo_lump()
       "DoomedNums\n",
       "{\n",
   }
+  if SCRIPTS.doomednums then
+    table.insert(doomednum_lines,SCRIPTS.doomednums)
+  end
   if SCRIPTS.fauna_mapinfo then
     for _,line in pairs(SCRIPTS.fauna_mapinfo) do
       table.insert(doomednum_lines,line)

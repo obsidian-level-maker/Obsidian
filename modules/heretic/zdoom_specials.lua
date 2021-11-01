@@ -210,13 +210,6 @@ actor ObLightBeige : ObLightWhite 14993 {}
 actor ObLightPurple : ObLightWhite 14992 {}
 ]]
 
-ZDOOM_SPECIALS_HERETIC.DYNAMIC_LIGHT_EDNUMS =
-[[
-DoomEdNums =
-{
-}
-]]
-
 ZDOOM_SPECIALS_HERETIC.DYNAMIC_LIGHT_GLDEFS =
 [[
 PointLight WhiteLight
