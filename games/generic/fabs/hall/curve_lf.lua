@@ -7,7 +7,7 @@ PREFABS.Hallway_curve_lift = -- Default offsets are for Doom
   group  = "curve",
   prob   = 25,
 
-  style = "steepness",
+  --style = "steepness",
 
   where  = "seeds",
   shape  = "I",
