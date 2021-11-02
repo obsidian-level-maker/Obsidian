@@ -42,9 +42,6 @@ HEXEN.MATERIALS =
   _CRATE   = { t="CRATE04",  f="F_052" }, -- Crate/box
   _CRATE2  = { t="CRATE05", f="F_053" },
   _CRATWID = { t="CRATE03",  f="F_050" }, -- Wide crates
-  
-  _WATER   = { t="X_WATER1", f="X_005" }, -- "Standing water", sorta
-  _WTRFALL = { t="X_WATER1", f="X_005" }, -- "Flowing water", sorta
     
   _DOOR  = { t="D_WD08", f="F_082" }, -- Open says me
   _DORRAIL = { t="PILLAR02", f="F_082"}, -- Inner door slider thingys

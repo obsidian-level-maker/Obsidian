@@ -38,9 +38,6 @@ QUAKE.MATERIALS =
   _CRATE2  = { t="crate1_side",  f="crate1_top" },
   _CRATWID = { t="crate0_side",  f="crate0_top" },
   
-  _WATER   = { f="*water0", t="*water0" }, -- "Standing water", sorta
-  _WTRFALL = { f="*water0", t="*water0"  }, -- "Flowing water", sorta
-  
   _DOOR  = { t="door01_2", f="door01_2" }, -- Open says me
   _DORRAIL = { t="metal1_1", f="metal1_1" }, -- Inner door slider thingys
   

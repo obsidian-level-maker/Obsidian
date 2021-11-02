@@ -27,9 +27,6 @@ HARMONY.MATERIALS =
   _CRATE   = { t="0EXPLOS",  f="FLOOR6_1" }, -- Crate/box
   _CRATE2  = { t="SPCDOOR2", f="FLOOR4_1" },
   _CRATWID = { t="SPCDOOR2", f="FLOOR4_1" }, -- Wide crates
-  
-  _WATER   = { f="FWATER1", t="SFALL1"   }, -- "Standing water", sorta
-  _WTRFALL = { f="FWATER1", t="SFALL1"   }, -- "Flowing water", sorta
     
   _DOOR  = { t="WOODMET3", f="CEIL5_1" }, -- Open says me
   _DORRAIL = { t="DOORTRAK", f="CEIL5_1" }, -- Inner door slider thingys

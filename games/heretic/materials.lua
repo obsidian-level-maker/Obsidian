@@ -39,9 +39,6 @@ HERETIC.MATERIALS =
   _CRATE   = { t="DOORWOOD",  f="FLAT507" }, -- Crate/box
   _CRATE2  = { t="CTYSTCI4", f="FLOOR10" },
   _CRATWID = { t="DOORWOOD",  f="FLAT507" }, -- Wide crates
-  
-  _WATER   = { t="WATRWAL1", f="FLTWAWA1" }, -- "Standing water", sorta
-  _WTRFALL = { t="WATRWAL1", f="FLTFLWW1" }, -- "Flowing water", sorta
     
   _DOOR  = { t="DOORWOOD", f="FLAT507" }, -- Open says me
   _DORRAIL = { t="METL2", f="FLOOR28"}, -- Inner door slider thingys
