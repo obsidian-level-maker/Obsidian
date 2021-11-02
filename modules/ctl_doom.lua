@@ -621,7 +621,7 @@ function CTL_DOOM.item_setup(self)
   end
 
   local function change_probz(name, info)
-    if PARAM[name] ~= "Default" then
+    if PARAM[name] and PARAM[name] ~= "Default" then
       local mult = PARAM[name] or 0
 
       if info.add_prob then info.add_prob = info.add_prob * mult end
