@@ -2933,7 +2933,7 @@ function Level_make_all()
   -- semi-supported games warning
   if OB_CONFIG.game ~= "doom2" then
     if not PARAM.bool_extra_games or PARAM.bool_extra_games == 0 then
-      error("Warning: ObAddon development is mostly focused " ..
+      error("Warning: Obsidian development is mostly focused " ..
     "on creating content for the Doom 2 game setting.\n\n" ..
     "As a consequence, other games available on the list are " ..
     "lagging behind in features. These games' " ..
