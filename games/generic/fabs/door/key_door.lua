@@ -15,8 +15,8 @@ PREFABS.Locked_door_key1 =
 
   seed_w = 2,
 
-  deep   = 32,
-  over   = 32,
+  deep   = 16,
+  over   = 16,
 
   x_fit  = "frame",
 
@@ -35,8 +35,8 @@ PREFABS.Locked_door_key1_heretic =
 
   seed_w = 2,
 
-  deep   = 32,
-  over   = 32,
+  deep   = 16,
+  over   = 16,
 
   x_fit  = "frame",
 
@@ -114,8 +114,8 @@ PREFABS.Locked_door_key2 =
 
   seed_w = 2,
 
-  deep   = 32,
-  over   = 32,
+  deep   = 16,
+  over   = 16,
 
   x_fit  = "frame",
 }
@@ -151,8 +151,8 @@ PREFABS.Locked_door_key3 =
 
   seed_w = 2,
 
-  deep   = 32,
-  over   = 32,
+  deep   = 16,
+  over   = 16,
 
   x_fit  = "frame",
 }
