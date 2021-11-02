@@ -40,9 +40,9 @@ ULTDOOM.PARAMETERS =
 
 ULTDOOM.MATERIALS =
 {
-  _FLATLIT = { t="METAL", f="TLITE6_6" },
-
   -- materials for generic prefab set --
+  _FLATLIT = { t="METAL", f="TLITE6_6" },
+  _LIFT  = { t="PLAT1", f="STEP1"},
   _SBARS = { t="MIDBRN1", f="XX" }, -- Short bars, i.e. railings
   _MBARS = { t="MIDBARS3", f="XX" }, -- Medium bars, i.e. barred windows
   _TBARS = { t="MIDBARS1", f="XX" }, -- Tall bars, i.e. cage/jail bars
@@ -50,10 +50,6 @@ ULTDOOM.MATERIALS =
   _CRATE   = { t="CRATE1",   f="CRATOP2" }, -- Crate/box
   _CRATE2  = { t="CRATE2",   f="CRATOP1" },
   _CRATWID = { t="CRATWIDE", f="CRATOP1" },
-  
-  -- Slime instead of water for Doom
-  _WATER   = { f="NUKAGE1", t="SFALL1" }, -- "Standing water", sorta
-  _WTRFALL = { f="NUKAGE1", t="SFALL1"  }, -- "Flowing water", sorta
   
   _DOOR  = { t="DOOR1",    f="FLAT23" }, -- Open says me
   _DORRAIL = { t="DOORTRAK", f="FLAT23" }, -- Inner door slider thingys

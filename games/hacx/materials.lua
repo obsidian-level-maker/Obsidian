@@ -18,6 +18,7 @@ HACX.MATERIALS =
   _LIQUID = { f="FWATER1", t="BLODRIP1" },
 
   -- materials for generic prefab set --
+  _LIFT  = { t="BIGDOOR2", f="CONS1_5" },
   _SBARS = { t="HW211", f="RROCK03" }, -- Short bars, i.e. railings
   _MBARS = { t="TEKGREN2", f="RROCK03" }, -- Medium bars, i.e. barred windows
   _TBARS = { t="HW203", f="RROCK03" }, -- Tall bars, i.e. cage/jail bars
@@ -25,9 +26,6 @@ HACX.MATERIALS =
   _CRATE   = { t="HW200",  f="RROCK14" }, -- Crate/box
   _CRATE2  = { t="HW200", f="RROCK14" },
   _CRATWID = { t="HW200", f="RROCK14" },
-  
-  _WATER   = { f="FWATER1", t="BLODRIP1" }, -- "Standing water", sorta
-  _WTRFALL = { f="SLIME05", t="WFALL1"  }, -- "Flowing water", sorta
   
   _DOOR  = { t="BIGDOOR1", f="RROCK03" }, -- Open says me
   _DORRAIL = { t="HW209", f="RROCK03" }, -- Inner door slider thingys

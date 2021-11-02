@@ -110,28 +110,25 @@ PREFABS.Crate_group_medium_alt =
   flat__CRATE = "_CRATE2",
 }
 
-PREFABS.Small_cover =
+PREFABS.Crate_group_mixed =
 {
   file   = "decor/crates1.wad",
-  map    = "MAP13",
+  map    = "MAP05",
+  env    = "!cave",
 
-  env    = "building",
-  prob   = 3500,
+  prob   = 1000,
 
   where  = "point",
-  size   = 80,
-  height = 128,
+  size   = 128,
+  height = 160,
+
+  bound_z1 = 0,
+
+  sink_mode = "never",
 }
 
-PREFABS.Small_cover_2 =
+PREFABS.Crate_group_mixed_alt =
 {
-  file   = "decor/crates1.wad",
-  map    = "MAP14",
-
-  env    = "building",
-  prob   = 3500,
-
-  where  = "point",
-  size   = 112,
-  height = 128,
+  template = "Crate_group_mixed",
+  map = "MAP06"
 }
