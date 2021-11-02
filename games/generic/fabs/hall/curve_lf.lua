@@ -3,7 +3,7 @@ PREFABS.Hallway_curve_lift = -- Default offsets are for Doom
   file   = "hall/curve_lf.wad",
   map    = "MAP01",
 
-  game   = { chex3=1, doom1=1, doom2=1, hacx=0, },
+  game   = { chex3=1, doom1=1, doom2=1 },
   group  = "curve",
   prob   = 25,
 
