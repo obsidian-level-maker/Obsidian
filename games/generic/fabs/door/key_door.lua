@@ -27,7 +27,6 @@ PREFABS.Locked_door_key1_heretic =
   file   = "door/key_door.wad",
   map    = "MAP01",
   game   = "heretic",
-
   prob   = 50,
 
   where  = "edge",
@@ -42,14 +41,10 @@ PREFABS.Locked_door_key1_heretic =
 
   forced_offsets = 
   {
-    [21] = { x=24, y=0 },
-    [23] = { x=24, y=0 },
-    [29] = { x=24, y=0 },
-    [31] = { x=24, y=0 },
-    [14] = { x=39, y=1 },
-    [16] = { x=39, y=1 },
-    [12] = { x=14, y=1 },
-    [18] = { x=14, y=1 },
+    [36] = { x=-40, y=0 },
+    [38] = { x=-40, y=0 },
+    [39] = { x=-40, y=0 },
+    [42] = { x=-40, y=0 },
   }
 }
 
@@ -87,14 +82,10 @@ PREFABS.Locked_door_key1_diag_heretic =
 
   forced_offsets = 
   {
-    [21] = { x=24, y=0 },
-    [23] = { x=24, y=0 },
-    [29] = { x=24, y=0 },
-    [31] = { x=24, y=0 },
-    [14] = { x=39, y=1 },
-    [16] = { x=39, y=1 },
-    [12] = { x=14, y=1 },
-    [18] = { x=14, y=1 },
+    [36] = { x=-40, y=0 },
+    [38] = { x=-40, y=0 },
+    [39] = { x=-40, y=0 },
+    [42] = { x=-40, y=0 },
   }
 }
 
