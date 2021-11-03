@@ -830,10 +830,11 @@ MODDED_GAME_EXTRAS.TRAILBLAZER_THINGS =
   upgrade_spawner =
   {
     id = 30001,
-    kind = "powerup",
-    add_prob = 35,
+    kind = "other",
+    add_prob = 5,
+    storage_prob = 25,
     start_prob = 20,
-    closet_prob = 10,
+    secret_prob = 10,
   },
 }
 
