@@ -313,7 +313,7 @@ PREFABS.Pic_tech_comptil_lite_blue =
 
   seed_w = 2,
 
-  group = " gtd_comptil_lite_blue",
+  group = "gtd_comptil_lite_blue",
 
   x_fit = "frame",
   z_fit = "top",
@@ -330,7 +330,7 @@ PREFABS.Pic_tech_comptil_lite_blue_2 =
 
   seed_w = 2,
 
-  group = " gtd_comptil_lite_blue",
+  group = "gtd_comptil_lite_blue",
 
   x_fit = "frame",
   z_fit = "top",
@@ -356,7 +356,7 @@ PREFABS.Pic_tech_grntek_blue =
 
   seed_w = 2,
 
-  group = " gtd_comp_grntek_blue",
+  group = "gtd_comp_grntek_blue",
 
   x_fit = "frame",
   z_fit = "top",
