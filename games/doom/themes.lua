@@ -2525,6 +2525,28 @@ DOOM.ROOM_THEMES =
     }
   },
 
+  any_subway_Hallway =
+  {
+    env   = "hallway",
+    group = "subway",
+    prob  = 1,
+
+    walls =
+    {
+      GRAY1 = 50
+    },
+
+    floors =
+    {
+      FLAT1 = 30
+    },
+
+    ceilings =
+    {
+      FLAT1 = 30
+    }
+  },
+
   -- For Limit-Removing/generics - Dasho
   any_curve_Hallway =
   {

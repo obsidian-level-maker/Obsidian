@@ -75,7 +75,7 @@ DOOM.PREBUILT_LEVELS =
 
 --------------------------------------------------------------------
 
-function DOOM.nolimit_themes()
+function DOOM.themes_alts()
   if OB_CONFIG.engine == "nolimit" then
     GAME.THEMES.DEFAULTS.narrow_halls = { vent = 50 }
     GAME.THEMES.DEFAULTS.wide_halls = { curve = 50 }
@@ -102,6 +102,11 @@ function DOOM.nolimit_themes()
     GAME.THEMES.hell.window_groups = { straddle = 70 }
     GAME.THEMES.hell.fence_groups = { PLAIN = 50 }
     GAME.THEMES.hell.fence_posts = { Post = 50 }
+  end
+
+  if OB_CONFIG.engine == "zdoom" or OB_CONFIG.engine == "gzdoom" then
+    GAME.THEMES.tech.wide_halls["subway"] = 10
+    GAME.THEMES.urban.wide_halls["subway"] = 25
   end
 end
 
@@ -332,5 +337,6 @@ function DOOM.get_levels()
       GAME.levels[#GAME.levels - 2].dist_to_end = 3
     end
   end
-  DOOM.nolimit_themes()
+
+  DOOM.themes_alts()
 end
