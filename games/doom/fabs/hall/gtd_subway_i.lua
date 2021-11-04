@@ -12,3 +12,11 @@ PREFABS.Hallway_subway_i =
   seed_w = 2,
   seed_h = 2,
 }
+
+PREFABS.Hallway_subway_i_train =
+{
+  template = "Hallway_subway_i",
+  map = "MAP02",
+
+  prob = 25
+}

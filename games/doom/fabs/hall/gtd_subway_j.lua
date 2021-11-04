@@ -12,5 +12,5 @@ PREFABS.Hallway_subway_basic_joiner =
   shape  = "I",
 
   seed_w = 2,
-  seed_h = 2,
+  seed_h = 1,
 }
