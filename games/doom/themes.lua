@@ -1328,7 +1328,8 @@ DOOM.THEMES =
       gtd_sunderfall = 13,
       gtd_sunderfall_barred = 13,
       --
-      cran_bunkbeds = 50
+      cran_bunkbeds = 50,
+      gtd_craneo_bank_set = 10
     },
 
     outdoor_wall_groups =
@@ -1767,7 +1768,8 @@ DOOM.THEMES =
       gtd_sunderfall = 25,
       gtd_sunderfall_barred = 25,
       --
-      cran_bunkbeds = 50
+      cran_bunkbeds = 50,
+      gtd_craneo_bank_set = 50
     },
 
     window_groups =
