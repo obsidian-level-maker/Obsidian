@@ -17,7 +17,7 @@ PREFABS.Decor_money_pile_small_EPIC =
 
 PREFABS.Decor_money_pile_medium_EPIC =
 {
-  template = "Decor_money_pile_small",
+  template = "Decor_money_pile_small_EPIC",
   map = "MAP02",
 
   prob = 7500,
@@ -27,7 +27,7 @@ PREFABS.Decor_money_pile_medium_EPIC =
 
 PREFABS.Decor_money_pile_large_EPIC =
 {
-  tempate = "Decor_money_pile_small",
+  template = "Decor_money_pile_small_EPIC",
   map = "MAP03",
 
   prob = 10000

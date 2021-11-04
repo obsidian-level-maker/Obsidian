@@ -4,7 +4,6 @@ PREFABS.Wall_bank_small_safes =
   map = "MAP01",
 
   prob = 50,
-
   group = "gtd_craneo_bank_set",
 
   where = "edge",
