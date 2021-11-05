@@ -1,4 +1,5 @@
 --Secret lift
+
 PREFABS.Door_scionox_secret_lift =
 {
   file   = "door/scionox_secret_lift.wad",
