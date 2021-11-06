@@ -26,7 +26,7 @@ PREFABS.Decor_air_vent_pillar =
   size = 64,
 }
 
-PREFABS.Decor_air_vent_large_module =
+PREFABS.Decor_air_vent_tetromino_curve =
 {
   template = "Decor_air_vent_large_module",
   map = "MAP03",
