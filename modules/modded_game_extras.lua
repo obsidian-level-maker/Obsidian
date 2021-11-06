@@ -832,9 +832,9 @@ MODDED_GAME_EXTRAS.TRAILBLAZER_THINGS =
     id = 30001,
     kind = "other",
     add_prob = 5,
-    storage_prob = 25,
-    start_prob = 20,
-    secret_prob = 10,
+    storage_prob = 50,
+    start_prob = 50,
+    secret_prob = 25,
   },
 }
 
@@ -874,8 +874,15 @@ function MODDED_GAME_EXTRAS.setup(self)
 
   if PARAM.bool_trailblazer == 1 then
     table.name_up(MODDED_GAME_EXTRAS.TRAILBLAZER_THINGS)
-  
+
     GAME.NICE_ITEMS = table.deep_merge(GAME.NICE_ITEMS, MODDED_GAME_EXTRAS.TRAILBLAZER_THINGS, 2)
+    GAME.NICE_ITEMS["backpack"].give = {
+      {ammo = "bullet", count = 100},
+      {ammo = "cell", count = 200},
+      {ammo = "rocket", count = 25},
+      {ammo = "shell", count = 50},
+    }
+
     if SCRIPTS.doomednums then
       SCRIPTS.doomednums = SCRIPTS.doomednums .. MODDED_GAME_EXTRAS.TRAILBLAZER_DOOMEDNUMS
     else
