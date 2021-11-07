@@ -15,8 +15,5 @@ PREFABS.Hallway_curve_i_bulge =
 
   seed_w = 2,
   seed_h = 2,
-
-  thing_8132 = { [0] = 75, [8132] = 25 } -- Most of the time just nothing
-
 }
 

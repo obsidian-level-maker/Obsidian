@@ -33,9 +33,6 @@ STRIFE.MATERIALS =
  _CRATE   = { t="BOXCOM01",  f="F_MBOXTP" }, -- Crate/box
  _CRATE2  = { t="BOXWOD02", f="F_WBOXTP" },
  _CRATWID = { t="BOXWOD03",  f="F_WBOXTP" }, -- Wide crates
- 
- _WATER   = { t="WATR01", f="F_WATR01" }, -- "Standing water", sorta
- _WTRFALL = { t="WATR01", f="F_VWATR2" }, -- "Flowing water", sorta
    
  _DOOR  = { t="DORWL01", f="F_UNDOOR" }, -- Open says me
  _DORRAIL = { t="DORTRK02", f="F_UNDOOR"}, -- Inner door slider thingys

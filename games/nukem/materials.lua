@@ -22,9 +22,6 @@ NUKEM.MATERIALS =
   _CRATE2  = { t=437, f=437 },
   _CRATWID = { t=437, f=437 },
   
-  _WATER   = { t=437, f=437 }, -- "Standing water", sorta
-  _WTRFALL = { t=437, f=437 }, -- "Flowing water", sorta
-  
   _DOOR  = { t=437, f=437 }, -- Open says me
   _DORRAIL = { t=437, f=437 }, -- Inner door slider thingys
   
