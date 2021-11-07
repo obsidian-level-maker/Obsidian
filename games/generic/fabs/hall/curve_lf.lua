@@ -5,9 +5,9 @@ PREFABS.Hallway_curve_lift = -- Default offsets are for Doom
 
   game   = { chex3=1, doom1=1, doom2=1 },
   group  = "curve",
-  prob   = 25,
+  prob   = 100,
 
-  --style = "steepness",
+  style = "steepness",
 
   where  = "seeds",
   shape  = "I",
@@ -28,6 +28,8 @@ PREFABS.Hallway_curve_lift_hacx =
 {
   template = "Hallway_curve_lift",
   game = "hacx",
+
+  force_offsets =
   {
     [13] = { x=64, y=6 },
     [17] = { x=64, y=6 },
