@@ -137,6 +137,13 @@ MISC_STUFF.ROOM_SIZE_CONSISTENCY_CHOICES =
   "mixed", _("Mix It Up")
 }
 
+MISC_STUFF.ROOM_SIZE_MIX_FINE_TUNE_CHOICES =
+{
+  "conservative", _("Conservative"),
+  "normal", _("Normal"),
+  "random", _("Random")
+}
+
 function MISC_STUFF.setup(self)
   -- these parameters have to be instantiated in this hook
   -- because begin_level happens *after* level size decisions
@@ -252,7 +259,17 @@ OB_MODULES["misc"] =
         "Vanilla: Original behavior. Rooms in a level have vary in size from each other. Big Rooms options are respected.\n\n" ..
         "Strict: All rooms in the level have a single set size/coverage.\n\n" ..
         "Mix It Up: A mixture of 75% Vanilla, 25% Strict.",
-      gap = 1,
+    },
+    {
+      name="room_sa_mix_type", label=_("Room/Area Mix Fine Tune"),
+      choices = MISC_STUFF.ROOM_SIZE_MIX_FINE_TUNE_CHOICES,
+      default = "normal",
+      tooltip = "Alters the behavior of Mix It Up for Room Size and Room Area multiplier options.\n\n" ..
+      "Normal: Mix it up uses a normal curve distribution. Traditional-sized rooms are common and smaller or larger sizes" ..
+      "are slightly less so.\n\n" ..
+      "Conservative: Probability is biased more towards regular room sizes, making much smaller or much larger rooms significantly rarer.\n\n" ..
+      "Random: No curve distribution - room sizes and room area counts are picked compeltely randomly.",
+      gap = 1
     },
 
     { name="big_rooms",   label=_("Big Rooms"),      choices=STYLE_CHOICES },
