@@ -13,9 +13,7 @@ PREFABS.Hallway_subway_basic_keyed_red =
   shape  = "I",
 
   seed_w = 2,
-  seed_h = 1,
-
-  deep = 16
+  seed_h = 1
 }
 
 PREFABS.Hallway_subway_basic_keyed_blue =
@@ -45,5 +43,5 @@ PREFABS.Hallway_subway_basic_keyed_barred =
   key    = "barred",
 
   tag_3  = "?door_tag",
-  door_action = "S1_LowerFloor",
+  door_action = "S1_LowerFloor"
 }
