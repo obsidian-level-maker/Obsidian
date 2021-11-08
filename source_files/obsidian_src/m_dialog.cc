@@ -579,6 +579,11 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
 
     chooser.title(_("Pick file to save to"));
     chooser.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
+
+    if (overwrite_warning) {
+        chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
+    }
+
     chooser.filter("Text files\t*.txt");
 
     if (!last_directory.empty()) {
