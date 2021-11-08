@@ -1,13 +1,13 @@
 PREFABS.Hallway_subway_basic_keyed_red =
 {
-  file   = "hall/gtd_subway_k.wad",
-  map    = "MAP01",
+  file = "hall/gtd_subway_k.wad",
+  map = "MAP01",
 
   kind = "terminator",
 
-  group  = "subway",
-  prob   = 50,
-  key    = "k_red",
+  group = "subway",
+  prob = 50,
+  key = "k_red",
 
   where  = "seeds",
   shape  = "I",
@@ -22,8 +22,9 @@ PREFABS.Hallway_subway_basic_keyed_blue =
 {
   template = "Hallway_subway_basic_keyed_red",
 
-  key    = "k_blue",
+  key = "k_blue",
 
+  tex_DOORRED = "DOORBLU",
   line_33 = 32
 }
 
@@ -31,8 +32,9 @@ PREFABS.Hallway_subway_basic_keyed_yellow =
 {
   template = "Hallway_subway_basic_keyed_red",
 
-  key    = "k_yellow",
+  key = "k_yellow",
 
+  tex_DOORRED = "DOORYEL",
   line_33 = 34
 }
 
