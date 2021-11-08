@@ -1259,9 +1259,9 @@ DOOM.THEMES =
       gtd_generic_beamed_green_inset = 25,
       gtd_generic_beamed_brown_inset = 25,
       --
-      gtd_computers = 32,
-      gtd_computers_lite5 = 32,
-      gtd_computers_blue_shawn = 32,
+      gtd_computers = 25,
+      gtd_computers_lite5 = 25,
+      gtd_computers_blue_shawn = 25,
       --
       gtd_writhing_mass = 10,
       gtd_wall_octagon_insets = 50,
@@ -1684,9 +1684,9 @@ DOOM.THEMES =
       gtd_generic_beamed_green_inset = 25,
       gtd_generic_beamed_brown_inset = 25,
       --
-      gtd_computers = 20,
-      gtd_computers_lite5 = 20,
-      gtd_computers_blue_shawn = 20,
+      gtd_computers = 17,
+      gtd_computers_lite5 = 17,
+      gtd_computers_blue_shawn = 17,
       --
       gtd_drywall = 50,
       gtd_writhing_mass = 20,
