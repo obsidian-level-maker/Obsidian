@@ -28,7 +28,8 @@ HARMONY.MATERIALS =
   _CRATE2  = { t="SPCDOOR2", f="FLOOR4_1" },
   _CRATWID = { t="SPCDOOR2", f="FLOOR4_1" }, -- Wide crates
     
-  _DOOR  = { t="WOODMET3", f="CEIL5_1" }, -- Open says me
+  _SMLDOOR  = { t="SPCDOOR3", f="CEIL5_1" }, -- Open says me
+  _BIGDOOR = { t="BIGDOOR2", f="CEIL5_1" },
   _DORRAIL = { t="DOORTRAK", f="CEIL5_1" }, -- Inner door slider thingys
   
   _NPIC    = { t="BRICK6", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
@@ -41,7 +42,7 @@ HARMONY.MATERIALS =
   _KEYTRM2 = { t="PANBORD2", f="XX" }, -- Trim for locked door, Key 2
   _KEYTRM3 = { t="0DARKBLU", f="XX" }, -- Trim for locked door, Key 3
   
-  _EXITDR = { t="1DOORK1", f="CEIL5_1" }, -- Exit door
+  _EXITDR = { t="0DOORS1", f="CEIL5_1" }, -- Exit door
   _EXITSW = { t="SW1COMP", f="FLOOR4_8" }, -- Exit switch
   _EXITTR = { t="SILVER3", f="FLOOR4_8" }, -- Exit switch
   _EXITRM = { t="SILVER3", f="FLOOR4_8" }, -- Exit switch trim

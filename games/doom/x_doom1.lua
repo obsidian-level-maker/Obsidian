@@ -51,7 +51,8 @@ ULTDOOM.MATERIALS =
   _CRATE2  = { t="CRATE2",   f="CRATOP1" },
   _CRATWID = { t="CRATWIDE", f="CRATOP1" },
   
-  _DOOR  = { t="DOOR1",    f="FLAT23" }, -- Open says me
+  _SMLDOOR = { t="DOOR1",    f="FLAT23" },
+  _BIGDOOR = { t="BIGDOOR2", f="FLAT20" }, -- Open says me
   _DORRAIL = { t="DOORTRAK", f="FLAT23" }, -- Inner door slider thingys
   
   _NPIC    = { t="COMPBLUE", f="FLAT14" }, -- Narrow (non-tiling) pic box insert, 64 pixels wide x 128 high
