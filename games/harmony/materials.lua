@@ -48,7 +48,7 @@ HARMONY.MATERIALS =
   _EXITRM = { t="SILVER3", f="FLOOR4_8" }, -- Exit switch trim
   _EXITSGN = { t="EXITSIGN", f="DEM1_5" }, -- Exit sign
   
-  _STRUCT = {t="METAL3",   f="DEM1_6" }, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
+  _STRUCT = {t="METAL",   f="DEM1_6" }, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
   _SW  = { t="SW1COMP", f="FLOOR4_8" }, -- General purpose swtich, full size
   _SWTRIM = { t="SILVER3", f="FLOOR4_8" }, -- Trim for switch
