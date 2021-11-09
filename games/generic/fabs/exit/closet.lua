@@ -92,7 +92,7 @@ PREFABS.Exit_closet_nosign = -- Default offset is for Heretic
   file   = "exit/closet.wad",
   map    = "MAP02",
 
-  game = { chex3=1, doom1=0, doom2=0, hacx=0, harmony=0, heretic=1, strife=0 },
+  game = { chex3=0, doom1=0, doom2=0, hacx=0, harmony=0, heretic=1, strife=0 },
   prob   = 100,
 
   where  = "seeds",
