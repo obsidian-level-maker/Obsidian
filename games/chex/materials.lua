@@ -77,9 +77,9 @@ CHEX3.MATERIALS =
   GRAY_PIPES   = { t="STONE",    f="FLAT5_6" },
   GRAY_PANELS  = { t="STONE3",   f="FLAT5_6" },
   GRAY_LITE    = { t="LITESTON", f="FLAT5_6" },
-  GRAY_STRIPE  = { t="GRAY7",    f="FLAT5_6" },
+  GRAY7  = { t="GRAY7",    f="FLAT5_6" },
 
-  ORANGE_TILE   = { t="STARG3",   f="FLAT2" },
+  STARG3   = { t="STARG3",   f="FLAT2" },
   ORANGE_LAB    = { t="COMPUTE3", f="FLAT2" },
   ORANGE_SLIMED = { t="SKINMET2", f="FLAT2" },
   ORANGE_CUPBD  = { t="DOOR3",    f="FLAT2" },
@@ -125,13 +125,19 @@ CHEX3.MATERIALS =
 
   MET_SLADS = { t="SP_DUDE4", f="STEP1" },
 
-  STEP_ORANGE = { t="STEP1",    f="FLAT2" },
+  STEP1 = { t="STEP1", f="FLAT2" },
   STEP_GRAY   = { t="STEP2",    f="FLAT5_6" },
   STEP_WHITE  = { t="SW2SATYR", f="FLAT5_6" },
   STEP_CAVE   = { t="SKSNAKE2", f="CEIL3_1" },
 
 
   -- floors --
+  
+  FLOOR0_6 = { t="GRAYTALL", f="FLOOR0_6" },
+  FLAT1 = { t="STARG3", f="FLAT1" },
+  CEIL5_1 = { t="COMPSPAN", f="CEIL5_1" },
+  CEIL4_2 = { t="COMPSPAN", f="CEIL4_2" },
+  FLOOR0_2 = { t="SP_DUDE2", f="FLOOR0_2" },
 
   ENDFLAT2 = { f="ENDFLAT2", t="GRAY2"},
 
@@ -139,7 +145,7 @@ CHEX3.MATERIALS =
 
   VERYDARK_BLUE = { f="CEIL4_1",  t="SP_DUDE2" },
   ANOTHER_BLUE  = { f="FLOOR1_1", t="SP_DUDE2" },
-  BLUE_CARPET   = { f="FLAT14",   t="SP_DUDE2" },
+  FLAT14  = { f="FLAT14",   t="SP_DUDE2" },
 
   CAVE_POOL = { f="FLAT19", t="SKSNAKE2" },
 
@@ -173,6 +179,7 @@ CHEX3.MATERIALS =
   DOOR_RED    = { t="BRNBIGL",  f="FLAT5_6" },
   DOOR_YELLOW = { t="BRNSMAL2", f="FLAT5_6" },
 
+  BIGDOOR2   = { t="BIGDOOR2", f="ENDFLAT1" },
   DOOR_LAB   = { t="BIGDOOR4", f="FLAT5_6" },
   DOOR_ARBOR = { t="BIGDOOR5", f="FLAT2" },
   DOOR_HYDRO = { t="BIGDOOR6", f="FLAT2" },
@@ -202,7 +209,8 @@ CHEX3.MATERIALS =
 
 
   -- rails --
-
+  MIDVINE1  = { t="MIDVINE1", f="BROWN" },
+  GSTVINE1 = { t="GSTVINE1", f="BLOOD1"},
   VINE1  = { t="MIDVINE1", rail_h=128 },
   VINE2  = { t="MIDVINE2", rail_h=128 },
 
@@ -505,9 +513,9 @@ CHEX3.MATERIALS =
   CJFVIL05 = { f="CJFVIL05", t="CJVILL01" },
   CJFVIL06 = { f="CJFVIL06", t="CJVILL01" },
 
-  MARS_GROUND = { f="ENDFLAT3", t="BAZOIK1" },
+  BAZOIK1 = { f="ENDFLAT3", t="BAZOIK1" },
 
-  SIMPLE_TILE = { f="FLAT1_1", t="GRAYTALL" },
+  FLAT1_1 = { f="FLAT1_1", t="GRAYTALL" },
   YELLOWISH   = { f="FLAT5_8", t="SP_ROCK2" },
 
   FLOURO_LITE = { f="LABFLAT", t="FIREWALL" },
