@@ -8,7 +8,7 @@ PREFABS.Hallway_curve_i_bulge =
   map    = "MAP01",
 
   group  = "curve",
-  prob   = 50,
+  prob   = 15,
 
   where  = "seeds",
   shape  = "I",
