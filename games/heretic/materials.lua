@@ -40,7 +40,8 @@ HERETIC.MATERIALS =
   _CRATE2  = { t="CTYSTCI4", f="FLOOR10" },
   _CRATWID = { t="DOORWOOD",  f="FLAT507" }, -- Wide crates
     
-  _DOOR  = { t="DOORWOOD", f="FLAT507" }, -- Open says me
+  _SMLDOOR  = { t="DOORWOOD", f="FLAT507" }, -- Open says me
+  _BIGDOOR = { t="DOORSTON", f="FLOOR30" },
   _DORRAIL = { t="METL2", f="FLOOR28"}, -- Inner door slider thingys
   
   _NPIC    = { t="CELTIC", f="FLOOR06"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
@@ -255,11 +256,11 @@ HERETIC.PREFAB_FIELDS =
   line_702 = 26,
 
   -- These are used for converting generic fab things --
-  thing_11000 = 43, -- Barrel
+  thing_11000 = 2035, -- Barrel
   thing_11001 = 28, -- Ceiling light
   thing_11002 = 76, -- Standalone light
   thing_11003 = 50, -- Wall light (torch)
-  thing_11004 = 27, -- Short standalone light
+  thing_11004 = 27, -- Short standalone light (Heretic's serpent torch is a little tall, but still)
   thing_11005 = 29, -- Small pillar
   thing_11006 = 80, -- Key one
   thing_11007 = 73, -- Key two

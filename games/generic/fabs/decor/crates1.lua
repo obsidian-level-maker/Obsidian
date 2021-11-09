@@ -63,6 +63,7 @@ PREFABS.Crate_medium =
   file   = "decor/crates1.wad",
   map    = "MAP03",
   env    = "!cave",
+  game   = "!harmony",
 
   prob   = 3500,
 
@@ -73,15 +74,6 @@ PREFABS.Crate_medium =
 
   sink_mode = "never",
 }
-
-PREFABS.Crate_medium_alt =
-{
-  template = "Crate_medium",
-
-  tex__CRATE = "_CRATE2",
-  flat__CRATE = "_CRATE2",
-}
-
 
 -- a group of three and a half crates
 
@@ -109,6 +101,8 @@ PREFABS.Crate_group_medium_alt =
   tex__CRATE = "_CRATE2",
   flat__CRATE = "_CRATE2",
 }
+
+-- Loosely arranged crates
 
 PREFABS.Crate_group_mixed =
 {

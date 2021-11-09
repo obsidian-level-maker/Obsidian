@@ -27,7 +27,8 @@ CHEX3.MATERIALS =
   _CRATE2  = { t="CRATE2",   f="CRATOP1" },
   _CRATWID = { t="CRATWIDE", f="CRATOP1"}, -- Wide crate
     
-  _DOOR  = { t="BIGDOOR4", f="STEEL32" }, -- Open says me
+  _SMLDOOR = { t="SP_DUDE4", f="STEP1" }, -- 64 units wide, varying height (Chex Quest will probably require a lot of offset trickery)
+  _BIGDOOR = { t="BIGDOOR1", f="FLAT5_6" },
   _DORRAIL = { t="COMPSTA1", f="STEP1"}, -- Inner door slider thingys
   
   _NPIC    = { t="FIREWALL", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
@@ -546,7 +547,7 @@ CHEX3.PREFAB_FIELDS =
   -- These are used for converting generic fab things --
   thing_11000 = 2035, -- Barrel
   thing_11001 = 46, -- Ceiling light
-  thing_11002 = 35, -- Standalone light
+  thing_11002 = 2028, -- Standalone light
   thing_11003 = 0, -- Wall light (torch)
   thing_11004 = 34, -- Short standalone light
   thing_11005 = 32, -- Small pillar

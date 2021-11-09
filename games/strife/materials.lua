@@ -34,7 +34,8 @@ STRIFE.MATERIALS =
  _CRATE2  = { t="BOXWOD02", f="F_WBOXTP" },
  _CRATWID = { t="BOXWOD03",  f="F_WBOXTP" }, -- Wide crates
    
- _DOOR  = { t="DORWL01", f="F_UNDOOR" }, -- Open says me
+ _SMLDOOR  = { t="DORWS02", f="F_UNDOOR" }, -- Open says me
+ _BIGDOOR = { t="DORWL01", f="F_UNDOOR" },
  _DORRAIL = { t="DORTRK02", f="F_UNDOOR"}, -- Inner door slider thingys
  
  _NPIC    = { t="BRNSCN02", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
