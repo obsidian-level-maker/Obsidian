@@ -4,6 +4,7 @@
 --
 --  Copyright (C) 2009-2010 Andrew Apted
 --  Copyright (C) 2020-2021 MsrSgtShooterPerson
+--  Copyright (C) 2021 Cubebert
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
