@@ -1259,9 +1259,9 @@ DOOM.THEMES =
       gtd_generic_beamed_green_inset = 25,
       gtd_generic_beamed_brown_inset = 25,
       --
-      gtd_computers = 32,
-      gtd_computers_lite5 = 32,
-      gtd_computers_blue_shawn = 32,
+      gtd_computers = 17,
+      gtd_computers_lite5 = 25,
+      gtd_computers_blue_shawn = 25,
       --
       gtd_writhing_mass = 10,
       gtd_wall_octagon_insets = 50,
@@ -1328,7 +1328,8 @@ DOOM.THEMES =
       gtd_sunderfall = 13,
       gtd_sunderfall_barred = 13,
       --
-      cran_bunkbeds = 50
+      cran_bunkbeds = 50,
+      gtd_craneo_bank_set = 10
     },
 
     outdoor_wall_groups =
@@ -1683,9 +1684,9 @@ DOOM.THEMES =
       gtd_generic_beamed_green_inset = 25,
       gtd_generic_beamed_brown_inset = 25,
       --
-      gtd_computers = 20,
-      gtd_computers_lite5 = 20,
-      gtd_computers_blue_shawn = 20,
+      gtd_computers = 12,
+      gtd_computers_lite5 = 18,
+      gtd_computers_blue_shawn = 18,
       --
       gtd_drywall = 50,
       gtd_writhing_mass = 20,
@@ -1767,7 +1768,8 @@ DOOM.THEMES =
       gtd_sunderfall = 25,
       gtd_sunderfall_barred = 25,
       --
-      cran_bunkbeds = 50
+      cran_bunkbeds = 50,
+      gtd_craneo_bank_set = 50
     },
 
     window_groups =
@@ -2507,6 +2509,28 @@ DOOM.ROOM_THEMES =
   {
     env   = "hallway",
     group = "access",
+    prob  = 1,
+
+    walls =
+    {
+      GRAY1 = 50
+    },
+
+    floors =
+    {
+      FLAT1 = 30
+    },
+
+    ceilings =
+    {
+      FLAT1 = 30
+    }
+  },
+
+  any_subway_Hallway =
+  {
+    env   = "hallway",
+    group = "subway",
     prob  = 1,
 
     walls =
