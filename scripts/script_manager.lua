@@ -95,7 +95,13 @@ function ScriptMan_assemble_mapinfo_lump()
   if #doomednum_lines > 2 then
     table.insert(doomednum_lines, "}\n")
     for _,line in pairs(doomednum_lines) do
-      table.insert(mapinfo_lines,line)
+      if type(line) == "table" then
+        for _,string in pairs(line) do
+          table.insert(mapinfo_lines,string)
+        end
+      else
+        table.insert(mapinfo_lines, line)
+      end
     end
   end
 

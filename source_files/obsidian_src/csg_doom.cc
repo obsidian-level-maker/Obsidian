@@ -617,7 +617,7 @@ class linedef_c {
             } else {
                 int diff = (bx + B_len) - ax;
 
-                if (abs(diff) >= 4) {
+                if (abs(diff) >= 2) {
                     return false;
                 }
             }
