@@ -4897,8 +4897,8 @@ ARMAETUS_THEMES =
       --
       gtd_wall_hydroponics = 50,
       --
-      gtd_computers_shawn = 25,
-      gtd_computers_compsta = 25,
+      gtd_computers_shawn = 17,
+      gtd_computers_compsta = 17,
       --
       gtd_wall_teklitecomp_red = 16,
       gtd_wall_teklitecomp_orange = 16,
@@ -5357,8 +5357,8 @@ ARMAETUS_THEMES =
       --
       gtd_epic_craneo_paintings = 40,
       --
-      gtd_computers_shawn = 35,
-      gtd_computers_compsta = 35,
+      gtd_computers_shawn = 12,
+      gtd_computers_compsta = 12,
       --
       gtd_wall_gothic_bottom_glass = 25,
       --
