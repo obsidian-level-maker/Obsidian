@@ -1,17 +1,20 @@
-PREFABS.Hallway_curve_lift = -- Default offsets are for Doom
+PREFABS.Joiner_circle_lift = -- Default offsets are for Doom
 {
-  file   = "hall/curve_lf.wad",
+  file   = "joiner/circle_lift.wad",
   map    = "MAP01",
 
   game   = { chex3=1, doom1=1, doom2=1 },
-  group  = "curve",
-  prob   = 25,
-
-  --style = "steepness",
+  prob   = 100,
 
   where  = "seeds",
   shape  = "I",
 
+  seed_w = 1,
+  seed_h = 1,
+
+  deep   = 16,
+  over   = 16,
+  
   delta_h = 104,
 
   can_flip = true,
@@ -24,10 +27,12 @@ PREFABS.Hallway_curve_lift = -- Default offsets are for Doom
   }
 }
 
-PREFABS.Hallway_curve_lift_hacx = 
+PREFABS.Joiner_circle_lift_hacx = 
 {
-  template = "Hallway_curve_lift",
+  template = "Joiner_circle_lift",
   game = "hacx",
+
+  force_offsets =
   {
     [13] = { x=64, y=6 },
     [17] = { x=64, y=6 },

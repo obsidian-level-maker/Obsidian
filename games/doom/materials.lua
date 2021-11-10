@@ -48,7 +48,8 @@ DOOM.MATERIALS =
   _CRATE2  = { t="CRATE2",   f="CRATOP1" },
   _CRATWID = { t="CRATWIDE", f="CRATOP1" },
   
-  _DOOR  = { t="DOOR1",    f="FLAT23" }, -- Open says me
+  _SMLDOOR = { t="SPCDOOR3", f="FLAT19" },
+  _BIGDOOR = { t="BIGDOOR2", f="FLAT20" },
   _DORRAIL = { t="DOORTRAK", f="FLAT23" }, -- Inner door slider thingys
   
   _NPIC    = { t="COMPBLUE", f="FLAT14" }, -- Narrow (non-tiling) pic box insert, 64 pixels wide x 128 high
@@ -742,7 +743,7 @@ DOOM.PREFAB_FIELDS =
   thing_11001 = 0, -- Ceiling light
   thing_11002 = 86, -- Standalone light
   thing_11003 = 0, -- Wall light (torch)
-  thing_11004 = 85, -- Wide standalone light
+  thing_11004 = 34, -- Short standalone light
   thing_11005 = 70, -- Small pillar
   thing_11006 = 5, -- Key one
   thing_11007 = 6, -- Key two

@@ -29,6 +29,7 @@
 #include "m_cookie.h"
 #include "m_trans.h"
 #include "main.h"
+#include <filesystem>
 
 bool skip_color_picker = false;
 
@@ -51,7 +52,9 @@ std::string Theme_OutputFilename() {
 
     chooser.filter("Text files\t*.txt");
 
-    chooser.directory("theme");
+    std::filesystem::path theme_dir = install_dir;
+    theme_dir /= "theme";
+    chooser.directory(theme_dir.string().c_str());
 
     int result = chooser.show();
 
@@ -106,9 +109,13 @@ const char *Theme_AskLoadFilename() {
 
     chooser.filter("Text files\t*.txt");
 
-    chooser.directory("theme");
+    std::filesystem::path theme_dir = install_dir;
+    theme_dir /= "theme";
+    chooser.directory(theme_dir.string().c_str());
 
-    switch (chooser.show()) {
+    int result = chooser.show();
+
+    switch (result) {
         case -1:
             LogPrintf("Error choosing load file:\n");
             LogPrintf("   {}\n", chooser.errmsg());

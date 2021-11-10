@@ -34,7 +34,8 @@ STRIFE.MATERIALS =
  _CRATE2  = { t="BOXWOD02", f="F_WBOXTP" },
  _CRATWID = { t="BOXWOD03",  f="F_WBOXTP" }, -- Wide crates
    
- _DOOR  = { t="DORWL01", f="F_UNDOOR" }, -- Open says me
+ _SMLDOOR  = { t="DORWS02", f="F_UNDOOR" }, -- Open says me
+ _BIGDOOR = { t="DORWL01", f="F_UNDOOR" },
  _DORRAIL = { t="DORTRK02", f="F_UNDOOR"}, -- Inner door slider thingys
  
  _NPIC    = { t="BRNSCN02", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
@@ -101,7 +102,7 @@ STRIFE.PREFAB_FIELDS =
   thing_11001 = 28, -- Ceiling light
   thing_11002 = 2028, -- Standalone light
   thing_11003 = 107, -- Wall light (torch)
-  thing_11004 = 105, -- Wide standalone light
+  thing_11004 = 34, -- Short standalone light
   thing_11005 = 69, -- Small pillar
   thing_11006 = 40, -- Key one
   thing_11007 = 184, -- Key two

@@ -27,7 +27,8 @@ HACX.MATERIALS =
   _CRATE2  = { t="HW200", f="RROCK14" },
   _CRATWID = { t="HW200", f="RROCK14" },
   
-  _DOOR  = { t="BIGDOOR1", f="RROCK03" }, -- Open says me
+  _SMLDOOR  = { t="BIGDOOR1", f="RROCK03" }, -- Open says me
+  _BIGDOOR = { t="BIGDOOR2", f="RROCK03" },
   _DORRAIL = { t="HW209", f="RROCK03" }, -- Inner door slider thingys
   
   _NPIC    = { t="HW223", f="RROCK03"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide x 128 high
@@ -182,7 +183,7 @@ HACX.PREFAB_FIELDS =
   thing_11001 = 44, -- Ceiling light
   thing_11002 = 57, -- Standalone light
   thing_11003 = 56, -- Wall light (torch)
-  thing_11004 = 57, -- Wide standalone light
+  thing_11004 = 55, -- Short standalone light
   thing_11005 = 48, -- Small pillar
   thing_11006 = 38, -- Key one
   thing_11007 = 39, -- Key two

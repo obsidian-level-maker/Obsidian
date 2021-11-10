@@ -1706,12 +1706,26 @@ function Fab_load_wad(def)
       end
 
       -- create the brush
-      local props =
-      {
-        tex = tex,
-        u1  = convert_offset(side.x_offset),
-        v1  = convert_offset(side.y_offset)
-      }
+
+      local props = { tex = tex }
+
+      if not def.forced_offsets then
+        props.u1 = convert_offset(side.x_offset)
+        props.v1 = convert_offset(side.y_offset)
+      else
+        if def.forced_offsets[side.sidedef_index] then
+          if def.forced_offsets[side.sidedef_index].x then
+            props.u1 = def.forced_offsets[side.sidedef_index].x
+          else
+            props.u1 = convert_offset(side.x_offset)
+          end
+          if def.forced_offsets[side.sidedef_index].y then
+            props.v1 = def.forced_offsets[side.sidedef_index].y
+          else
+            props.v1 = convert_offset(side.y_offset)
+          end
+        end
+      end
 
       local B = brushlib.rail_brush(x1,y1, x2,y2, z, props)
 
@@ -2211,16 +2225,16 @@ function Fab_replacements(fab)
   end
 
   local function forced_offset_check(C)
-	if C.sidedef_index and fab.fields["forced_offsets"] then 
-	    if fab.fields["forced_offsets"][C.sidedef_index] then
-	      if fab.fields["forced_offsets"][C.sidedef_index].x then
-	        C.u1 = fab.fields["forced_offsets"][C.sidedef_index].x
-	      end
-	      if fab.fields["forced_offsets"][C.sidedef_index].y then
-	        C.v1 = fab.fields["forced_offsets"][C.sidedef_index].y
-	      end
-	    end
-	end
+    if C.sidedef_index and fab.fields["forced_offsets"] then 
+        if fab.fields["forced_offsets"][C.sidedef_index] then
+          if fab.fields["forced_offsets"][C.sidedef_index].x then
+            C.u1 = fab.fields["forced_offsets"][C.sidedef_index].x
+          end
+          if fab.fields["forced_offsets"][C.sidedef_index].y then
+            C.v1 = fab.fields["forced_offsets"][C.sidedef_index].y
+          end
+        end
+    end
   end
 
   ---| Fab_replacements |---
