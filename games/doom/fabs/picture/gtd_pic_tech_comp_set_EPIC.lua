@@ -1,9 +1,9 @@
 PREFABS.Pic_tech_comp_set_1_red =
 {
-  file   = "picture/gtd_pic_tech_comp_set_EPIC.wad",
-  map    = "MAP01",
+  file = "picture/gtd_pic_tech_comp_set_EPIC.wad",
+  map = "MAP01",
 
-  prob   = 5000,
+  prob = 5000,
 
   group = "gtd_comptil_plain_red",
 
@@ -313,7 +313,7 @@ PREFABS.Pic_tech_comptil_lite_blue =
 
   seed_w = 2,
 
-  group = " gtd_comptil_lite_blue",
+  group = "gtd_comptil_lite_blue",
 
   x_fit = "frame",
   z_fit = "top",
@@ -330,7 +330,7 @@ PREFABS.Pic_tech_comptil_lite_blue_2 =
 
   seed_w = 2,
 
-  group = " gtd_comptil_lite_blue",
+  group = "gtd_comptil_lite_blue",
 
   x_fit = "frame",
   z_fit = "top",
@@ -343,4 +343,23 @@ PREFABS.Pic_tech_comptil_lite_blue_2 =
   tex_COMPTIL2 = "CMPTILE",
   tex_COMPRED = "COMPBLUE",
   tex_T_VSLTER = "LITEBLU4",
+}
+
+--
+
+PREFABS.Pic_tech_grntek_blue =
+{
+  template = "Pic_tech_comp_set_1_red",
+  map = "MAP04",
+
+  height = 112,
+
+  seed_w = 2,
+
+  group = "gtd_comp_grntek_blue",
+
+  x_fit = "frame",
+  z_fit = "top",
+
+  bound_z2 = 112
 }

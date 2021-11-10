@@ -61,7 +61,7 @@ PREFABS.Decor_Armaetus_bars_EPIC_wide_tech =
 
   seed_w = 2,
 
-  x_fit  = "frame",
+  x_fit = "frame",
 }
 
 --
@@ -76,7 +76,7 @@ PREFABS.Decor_gtd_Armaetus_bars_EPIC_stretchy =
 
   seed_w = 2,
 
-  x_fit = { 72,120 , 138,184 }
+  x_fit = { 72,120 , 136,184 }
 }
 
 PREFABS.Decor_gtd_Armaetus_bars_EPIC_stretchy_tech =
@@ -89,29 +89,5 @@ PREFABS.Decor_gtd_Armaetus_bars_EPIC_stretchy_tech =
 
   seed_w = 2,
 
-  x_fit = { 72,120 , 138,184 }
+  x_fit = { 72,120 , 136,184 }
 }
-
---[[
--- Does this even work???
--- Left UNFINISHED because unsure if it will even work!
--- Remove it if nothing for it from testing.
-UNFINISHED.Armaetus_bars_EPIC_diag =
-{
-  file   = "door/armaetus_bars1.wad",
-  map    = "MAP02",
-  theme  = "!tech",
-
-  texture_pack = "armaetus",
-
-  prob   = 50,
-
-  where  = "diagonal",
-  key    = "barred",
-
-  bound_z1 = 0,
-  bound_z2 = 128,
-
-  tag_1  = "?door_tag",
-  door_action = "S1_OpenDoor",
-}]]

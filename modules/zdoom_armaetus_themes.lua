@@ -191,13 +191,6 @@ ARMAETUS_ROOM_THEMES =
       GRAYMET3 = 20,
       GRAYMET4 = 20,
       GRAYMET5 = 20,
-      GRAYMET6 = 6,
-      GRAYMET7 = 6,
-      GRAYMET8 = 6,
-      GRAYMET9 = 6,
-      GRAYMETA = 6,
-      GRAYMETB = 6,
-      GRAYMETC = 6,
 
       METAL8 = 25,
       METAL9 = 25,
@@ -4904,8 +4897,8 @@ ARMAETUS_THEMES =
       --
       gtd_wall_hydroponics = 50,
       --
-      gtd_computers_shawn = 25,
-      gtd_computers_compsta = 25,
+      gtd_computers_shawn = 17,
+      gtd_computers_compsta = 17,
       --
       gtd_wall_teklitecomp_red = 16,
       gtd_wall_teklitecomp_orange = 16,
@@ -4939,7 +4932,9 @@ ARMAETUS_THEMES =
       gtd_comp_graymet_green = 13,
       gtd_comp_graymet_red = 13,
       gtd_comp_graymet_orange = 13,
-      gtd_comp_graymet_purple = 13
+      gtd_comp_graymet_purple = 13,
+      --
+      gtd_comp_grntek_blue = 26
     },
 
     window_groups =
@@ -5362,8 +5357,8 @@ ARMAETUS_THEMES =
       --
       gtd_epic_craneo_paintings = 40,
       --
-      gtd_computers_shawn = 35,
-      gtd_computers_compsta = 35,
+      gtd_computers_shawn = 12,
+      gtd_computers_compsta = 12,
       --
       gtd_wall_gothic_bottom_glass = 25,
       --
@@ -5384,6 +5379,8 @@ ARMAETUS_THEMES =
       gtd_wall_hell_engraving_1 = 8,
       gtd_wall_hell_engraving_2 = 8,
       gtd_wall_hell_engraving_3 = 8,
+      --
+      gtd_comp_grntek_blue = 20
     },
 
     window_groups =

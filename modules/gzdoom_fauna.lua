@@ -484,7 +484,13 @@ function FAUNA_MODULE.all_done()
     else
       SCRIPTS.zscript = FAUNA_MODULE.ZSC
     end
-    SCRIPTS.fauna_mapinfo = FAUNA_MODULE.DOOMEDNUMS
+
+    if SCRIPTS.doomednums then
+      SCRIPTS.doomednums = SCRIPTS.doomednums .. FAUNA_MODULE.DOOMEDNUMS
+    else      
+      SCRIPTS.doomednums = FAUNA_MODULE.DOOMEDNUMS
+    end
+
     local dir = "games/doom/data/"
     gui.wad_merge_sections(dir .. "Fly.wad")
     gui.wad_insert_file("data/sounds/FLYBUZZ.ogg", "FLYBUZZ")

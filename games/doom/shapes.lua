@@ -2689,8 +2689,8 @@ GROW_STAIRPAIR_4C =
 
 GROW_STAIRPAIR_5 =
 {
-  prob = 20, --20,
-  skip_prob = 45, --50,
+  prob = 15, --20,
+  skip_prob = 80, --50,
   aversion = 5,
 
   z_dir = "up",
@@ -7946,7 +7946,7 @@ GROW_PILLAR_3X3_STAIRS =
   diagonals =
   {
     "1.",".1",
-    "1.",".1",
+    "A.",".A",
   },
 },
 
@@ -10678,7 +10678,7 @@ GROW_EXTRUSION_CORNER_4x4_NEW_AREA =
 GROW_EXTRUSION_4X6 =
 {
   prob = 50,
-  skip_prob = 10,
+  skip_prob = 25,
 
   structure =
   {
@@ -10695,7 +10695,7 @@ GROW_EXTRUSION_4X6 =
 GROW_EXTRUSION_4X4 =
 {
   prob = 65,
-  skip_prob = 10,
+  skip_prob = 25,
 
   structure =
   {
@@ -10710,7 +10710,7 @@ GROW_EXTRUSION_4X4 =
 GROW_EXTRUSION_NEW_AREA_4x2 =
 {
   prob = 35,
-  skip_prob = 10,
+  skip_prob = 25,
 
   structure =
   {
@@ -10723,7 +10723,7 @@ GROW_EXTRUSION_NEW_AREA_4x2 =
 GROW_EXTRUSION_NEW_AREA_4x2_RETURN =
 {
   prob = 45,
-  skip_prob = 10,
+  skip_prob = 30,
 
   structure =
   {

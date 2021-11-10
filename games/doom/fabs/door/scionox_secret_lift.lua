@@ -1,4 +1,5 @@
 --Secret lift
+
 PREFABS.Door_scionox_secret_lift =
 {
   file   = "door/scionox_secret_lift.wad",
@@ -8,8 +9,10 @@ PREFABS.Door_scionox_secret_lift =
 
   where  = "edge",
   key    = "secret",
-  deep   = 52,
-  over   = 52,
+  seed_w = 2,
+
+  deep   = 48,
+  over   = 48,
 
   bound_z1 = -128,
   bound_z2 = 16,

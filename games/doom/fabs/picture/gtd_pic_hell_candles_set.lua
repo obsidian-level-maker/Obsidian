@@ -1,18 +1,33 @@
 PREFABS.Pic_gtd_candles_grouped_1 =
 {
-  template = "Pic_armaetus_candles",
+  file = "picture/armaetus_candles.wad",
+  map = "MAP01",
 
-  prob_skew = nil,
+  prob = 50,
+  env = "building",
 
-  group = "gtd_wall_candles"
+  texture_pack = "armaetus",
+  group = "gtd_wall_candles",
+
+  where  = "seeds",
+  height = 128,
+
+  seed_w = 2,
+  seed_h = 1,
+
+  bound_z1 = 0,
+  bound_z2 = 128,
+
+  deep =  16,
+
+  x_fit = { 56,72 },
+  y_fit = "top",
 }
 
 PREFABS.Pic_gtd_candles_grouped_2 =
 {
-  template = "Pic_armaetus_candles",
+  template = "Pic_gtd_candles_grouped_1",
   map = "MAP02",
-
-  prob_skew = nil,
 
   group = "gtd_wall_candles",
 
@@ -23,11 +38,10 @@ PREFABS.Pic_gtd_candles_grouped_2 =
 
 PREFABS.Pic_gtd_candles_grouped_3 =
 {
-  template = "Pic_armaetus_candles",
+  template = "Pic_gtd_candles_grouped_1",
   map = "MAP03",
 
-  prob_skew = nil,
-  prob = 35,
+  prob = 75,
 
   group = "gtd_wall_candles",
 
