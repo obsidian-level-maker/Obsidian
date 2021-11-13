@@ -141,9 +141,9 @@ MISC_STUFF.ROOM_SIZE_MIX_FINE_TUNE_CHOICES =
 {
   "small", _("Small"),
   "large", _("Large"),
-  "very_conservative", _("Very Conservative"),
-  "conservative", _("Conservative"),
   "normal", _("Normal"),
+  "conservative", _("Conservative"),
+  "very_conservative", _("Very Conservative"),
   "random", _("Random")
 }
 
