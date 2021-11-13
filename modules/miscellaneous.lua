@@ -139,6 +139,9 @@ MISC_STUFF.ROOM_SIZE_CONSISTENCY_CHOICES =
 
 MISC_STUFF.ROOM_SIZE_MIX_FINE_TUNE_CHOICES =
 {
+  "small", _("Small"),
+  "large", _("Large"),
+  "very_conservative", _("Very Conservative"),
   "conservative", _("Conservative"),
   "normal", _("Normal"),
   "random", _("Random")
@@ -267,8 +270,11 @@ OB_MODULES["misc"] =
       tooltip = "Alters the behavior of Mix It Up for Room Size and Room Area multiplier options.\n\n" ..
       "Normal: Mix it up uses a normal curve distribution. Traditional-sized rooms are common and smaller or larger sizes" ..
       "are slightly less so.\n\n" ..
+      "Small: Bias is only towards smaller room sizes with no larger room sizes.\n\n" ..
+      "Large: Bias is only towards large rooms sizes with no smaller room sizes..\n\n" ..
       "Conservative: Probability is biased more towards regular room sizes, making much smaller or much larger rooms significantly rarer.\n\n" ..
-      "Random: No curve distribution - room sizes and room area counts are picked compeltely randomly.",
+      "Very Conservative: Bias is even stronger towards regular and smaller rooms sizes, while larger rooms are very rare.\n\n" ..
+      "Random: No curve distribution - room sizes and room area counts are picked completely randomly.",
       gap = 1
     },
 
