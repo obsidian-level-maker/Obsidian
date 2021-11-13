@@ -104,10 +104,10 @@ function DOOM.themes_alts()
     GAME.THEMES.hell.fence_posts = { Post = 50 }
   end
 
-  --[[if OB_CONFIG.engine == "zdoom" or OB_CONFIG.engine == "gzdoom" then
+  if OB_CONFIG.engine == "zdoom" or OB_CONFIG.engine == "gzdoom" then
     GAME.THEMES.tech.wide_halls["subway"] = 10
     GAME.THEMES.urban.wide_halls["subway"] = 50
-  end]]
+  end
 end
 
 function DOOM.get_levels()

@@ -802,6 +802,10 @@ function ARMAETUS_EPIC_TEXTURES.generate_environment_themes()
     THEME.wide_halls.sewers = 50 * style_sel("liquids", 0.3, 0.7, 1.2, 1.5)
   end
 
+  if PARAM.bool_jump_crouch == 0 then
+    THEMES.hell.wide_halls.organs = 0
+    THEMES.hell.wide_halls.conveyorh = 0
+  end
 
   -- initialize default tables
   if not PARAM.default_environment_themes_init then
@@ -916,7 +920,6 @@ end
 
 function ARMAETUS_EPIC_TEXTURES.put_new_materials()
   -- MSSP-TODO - redo all this code to just use a single deep merge table operation
-
   if OB_CONFIG.game == "doom2" or OB_CONFIG.game == "plutonia"
   or OB_CONFIG.game == "tnt" then
 

@@ -134,6 +134,12 @@ function PREFAB_CONTROL.fine_tune_filters()
     end
 
   end
+
+  if PARAM.bool_jump_crouch == 0 then
+    GAME.THEMES.hell.wide_halls.organs = 0
+    GAME.THEMES.hell.wide_halls.conveyorh = 0
+    PREFABS["Item_secret_garage_closet"] = nil
+  end
 end
 
 function PREFAB_CONTROL.set_damaging_hallways()
@@ -364,6 +370,17 @@ OB_MODULES["prefab_control"] =
       tooltip="Changes probabilities for high-step ladders (stairs).",
       default="1",
       priority = 8,
+      gap = 1
+    },
+
+    bool_jump_crouch =
+    {
+      name = "bool_jump_crouch",
+      label=("Jump/Crouch Fabs"),
+      valuator = "button",
+      default = 1,
+      tooltip = "Enables or disables prefabs that require jumping or crouching to navigate.",
+      priority = 7,
       gap = 1
     },
 
