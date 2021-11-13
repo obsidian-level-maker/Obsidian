@@ -262,7 +262,7 @@ ROOM_SIZE_MULTIPLIER_MIXED_PROBS =
     [8] = 0  
   },
 
-  big =
+  large =
   {
     [0.25] = 0,
     [0.5] = 0,
