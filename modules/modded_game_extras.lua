@@ -220,7 +220,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 1,
     prob = 60,
     density = 1
-  }
+  },
 
   railgunner =
   {
@@ -234,7 +234,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 2.5,
     prob = 28,
     density = 28 / 56
-  }
+  },
 
   demontechzombie = 
   {
@@ -248,7 +248,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 4,
     prob = 8,
     density = 8 / 56
-  }
+  },
 
   rocketzombie =
   {
@@ -262,7 +262,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 7,
     prob = 3,
     density = 3 / 56
-  }
+  },
 
   -- shotgunner replacements
   shotter =
@@ -277,7 +277,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 1.2,
     prob = 52,
     density = 1
-  }
+  },
 
   assaultshotter =
   {
@@ -291,7 +291,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 2.7,
     prob = 28,
     density = 28 / 52
-  }
+  },
 
   supershotter =
   {
@@ -305,7 +305,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 4.5,
     prob = 16,
     density = 16 / 52
-  }
+  },
 
   quadshotter =
   {
@@ -319,7 +319,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 7,
     prob = 16,
     density = 3 / 52
-  }
+  },
 
   -- chaingunner replacements
   arzombie =
@@ -334,7 +334,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 1.2,
     prob = 54,
     density = 1
-  }
+  },
 
   chaingunner_cd =
   {
@@ -348,7 +348,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 2.5,
     prob = 28,
     density = 28 / 54
-  }
+  },
 
   minigunner =
   {
@@ -362,7 +362,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 4.5,
     prob = 14,
     density = 14 / 54
-  }
+  },
 
   bfgzombieman =
   {
@@ -376,7 +376,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 8,
     prob = 3,
     density = 3 / 54
-  }
+  },
 
   -- special boi
   marauder =
@@ -391,7 +391,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 4.5,
     prob = 3,
     density = 1 / 55
-  }
+  },
 
   -- imps
   imp_cd =
@@ -406,7 +406,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 1,
     prob = 61,
     density = 1
-  }
+  },
 
   void_imp =
   {
@@ -420,7 +420,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 2.25,
     prob = 61,
     density = 26 / 61
-  }
+  },
 
   devil =
   {
@@ -434,7 +434,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 3.5,
     prob = 10,
     density = 10 / 61
-  }
+  },
 
   phaseimp =
   {
