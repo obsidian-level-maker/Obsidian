@@ -205,6 +205,604 @@ MODDED_GAME_EXTRAS.D4T_MONS =
   },
 }
 
+MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
+{
+  -- zombieman replacements
+  plasmagunner =
+  {
+    id = 21022,
+    r = 20,
+    h = 56,
+    health = 30,
+    damage = 15,
+    attack = "missile",
+
+    level = 1,
+    prob = 60,
+    density = 1
+  },
+
+  railgunner =
+  {
+    id = 21023,
+    r = 20,
+    h = 56,
+    health = 40,
+    damage = 25,
+    attack = "hitscan",
+
+    level = 2.5,
+    prob = 28,
+    density = 28 / 56
+  },
+
+  demontechzombie = 
+  {
+    id = 28983,
+    r = 20,
+    h = 56,
+    health = 60,
+    damage = 25,
+    attack = "hitscan",
+
+    level = 4,
+    prob = 8,
+    density = 8 / 56
+  },
+
+  rocketzombie =
+  {
+    id = 20105,
+    r = 20,
+    h = 56,
+    health = 80,
+    damage = 40,
+    attack = "missile",
+
+    level = 7,
+    prob = 3,
+    density = 3 / 56
+  },
+
+  -- shotgunner replacements
+  shotter =
+  {
+    id = 20103,
+    r = 20,
+    h = 56,
+    health = 30,
+    damage = 27 * 0.5,
+    attack = "hitscan",
+
+    level = 1.2,
+    prob = 52,
+    density = 1
+  },
+
+  assaultshotter =
+  {
+    id = 26224,
+    r = 20,
+    h = 56,
+    health = 50,
+    damage = 81 * 0.5,
+    attack = "hitscan",
+
+    level = 2.7,
+    prob = 28,
+    density = 28 / 52
+  },
+
+  supershotter =
+  {
+    id = 21025,
+    r = 20,
+    h = 56,
+    health = 70,
+    damage = 90 * 0.5,
+    attack = "hitscan",
+
+    level = 4.5,
+    prob = 16,
+    density = 16 / 52
+  },
+
+  quadshotter =
+  {
+    id = 25732,
+    r = 20,
+    h = 56,
+    health = 90,
+    damage = 216 * 0.5,
+    attack = "hitscan",
+
+    level = 7,
+    prob = 16,
+    density = 3 / 52
+  },
+
+  -- chaingunner replacements
+  arzombie =
+  {
+    id = 20009,
+    r = 20,
+    h = 56,
+    health = 60,
+    damage = 18,
+    attack = "hitscan",
+
+    level = 1.2,
+    prob = 54,
+    density = 1
+  },
+
+  chaingunner_cd =
+  {
+    id = 24601,
+    r = 20,
+    h = 56,
+    health = 80,
+    damage = 9 * 5,
+    attack = "hitscan",
+
+    level = 2.5,
+    prob = 28,
+    density = 28 / 54
+  },
+
+  minigunner =
+  {
+    id = 21150,
+    r = 20,
+    h = 56,
+    health = 100,
+    damage = 9 * 5,
+    attack = "hitscan",
+
+    level = 4.5,
+    prob = 14,
+    density = 14 / 54
+  },
+
+  bfgzombieman =
+  {
+    id = 21225,
+    r = 20,
+    h = 56,
+    health = 120,
+    damage = 100,
+    attack = "hitscan",
+
+    level = 8,
+    prob = 3,
+    density = 3 / 54
+  },
+
+  -- special boi
+  marauder =
+  {
+    id = 22046,
+    r = 20,
+    h = 56,
+    health = 500,
+    damage = 90,
+    attack = "hitscan",
+
+    level = 4.5,
+    prob = 3,
+    density = 1 / 55
+  },
+
+  -- imps
+  imp_cd =
+  {
+    id = 21026,
+    r = 20,
+    h = 56,
+    health = 60,
+    damage = 8,
+    attack = "missile",
+
+    level = 1,
+    prob = 61,
+    density = 1
+  },
+
+  void_imp =
+  {
+    id = 21027,
+    r = 20,
+    h = 56,
+    health = 85,
+    damage = 8,
+    attack = "missile",
+
+    level = 2.25,
+    prob = 61,
+    density = 26 / 61
+  },
+
+  devil =
+  {
+    id = 21763,
+    r = 20,
+    h = 56,
+    health = 95,
+    damage = 10,
+    attack = "missile",
+
+    level = 3.5,
+    prob = 10,
+    density = 10 / 61
+  },
+
+  phaseimp =
+  {
+    id = 24105,
+    r = 20,
+    h = 56,
+    health = 115,
+    damage = 45,
+    attack = "hitscan",
+
+    level = 3.5,
+    prob = 3,
+    density = 3 / 61
+  },
+
+  -- demons
+  bulldemon =
+  {
+    id = 21028,
+    r = 24,
+    h = 48,
+    health = 150,
+    damage = 30,
+    attack = "melee",
+
+    level = 1.2,
+    prob = 65,
+    density = 1
+  },
+
+  cyberfiend =
+  {
+    id = 23421,
+    r = 24,
+    h = 48,
+    health = 250,
+    damage = 30,
+    attack = "melee",
+
+    level = 2.5,
+    prob = 24,
+    density = 24 / 65
+  },
+
+  magmafiend =
+  {
+    id = 29992,
+    r = 24,
+    h = 48,
+    health = 300,
+    damage = 24,
+    attack = "missile",
+
+    level = 3.75,
+    prob = 8,
+    density = 8 / 65
+  },
+
+  dtechfiend =
+  {
+    id = 29789,
+    r = 24,
+    h = 48,
+    health = 350,
+    damage = 30,
+    attack = "missile",
+
+    level = 6,
+    prob = 3,
+    density = 3 / 65
+  },
+
+  -- spectres
+  bulldemon_spectre =
+  {
+    id = 21029,
+    r = 24,
+    h = 48,
+    health = 150,
+    damage = 30,
+    attack = "melee",
+
+    level = 1.2,
+    prob = 65 * 0.25,
+    density = 1 * 0.25
+  },
+
+  cyberfiend_spectre =
+  {
+    id = 21563,
+    r = 24,
+    h = 48,
+    health = 250,
+    damage = 30,
+    attack = "melee",
+
+    level = 2.5,
+    prob = 24 * 0.25,
+    density = 24 / 65 * 0.25
+  },
+
+  magmafiend_spectre =
+  {
+    id = 27468,
+    r = 24,
+    h = 48,
+    health = 300,
+    damage = 24,
+    attack = "missile",
+
+    level = 3.75,
+    prob = 8 * 0.25,
+    density = 8 / 65 * 0.25
+  },
+
+  dtechfiend_spectre =
+  {
+    id = 29482,
+    r = 24,
+    h = 48,
+    health = 350,
+    damage = 30,
+    attack = "missile",
+
+    level = 6,
+    prob = 3 * 0.25,
+    density = 3 / 65 * 0.25
+  },
+
+  -- souls
+  terrorsoul =
+  {
+    id = 21031,
+    r = 16,
+    h = 48,
+    health = 70,
+    damage = 9,
+    attack = "missile",
+
+    level = 1.5,
+    prob = 62 * 0.5,
+    density = 1
+  },
+
+  forgottenone =
+  {
+    id = 30102,
+    r = 16,
+    h = 48,
+    health = 85,
+    damage = 9,
+    attack = "melee",
+
+    level = 3.75,
+    prob = 24 * 0.5,
+    density = 24/62
+  },
+
+  poisonsoul =
+  {
+    id = 24414,
+    r = 16,
+    h = 48,
+    health = 95,
+    damage = 12,
+    attack = "missile",
+
+    level = 5.5,
+    prob = 10 * 0.5,
+    density = 10/62
+  },
+
+  rictus =
+  {
+    id = 24781,
+    r = 16,
+    h = 48,
+    health = 105,
+    damage = 15,
+    attack = "missile",
+
+    level = 7,
+    prob = 6 * 0.5,
+    density = 6/62
+  },
+
+  -- cacodemon replacements
+  cacodemon_cd =
+  {
+    id = 21032,
+    r = 30,
+    h = 56,
+    health = 400,
+    damage = 18,
+    attack = "missile",
+
+    level = 3,
+    prob = 81 * 0.5,
+    density = 1
+  },
+
+  watcher =
+  {
+    id = 21033,
+    r = 30,
+    h = 56,
+    health = 600,
+    damage = 18,
+    attack = "missile",
+
+    level = 5,
+    prob = 10 * 0.5,
+    density = 10 / 81
+  },
+
+  cacomental =
+  {
+    id = 21034,
+    r = 30,
+    h = 56,
+    health = 800,
+    damage = 24,
+    attack = "missile",
+
+    level = 6.5,
+    prob = 6 * 0.5,
+    density = 6 / 81
+  },
+
+  abaddon =
+  {
+    id = 21403,
+    r = 30,
+    h = 56,
+    health = 1000,
+    damage = 24,
+    attack = "missile",
+
+    level = 8,
+    prob = 3 * 0.5,
+    density = 3 / 81
+  },
+
+  -- pain elemental replacements
+  soulkeeper =
+  {
+    id = 21035,
+    r = 31,
+    h = 56,
+    health = 400,
+    damage = 24,
+    attack = "missile",
+
+    level = 5,
+    prob = 81 * 0.25,
+    density = 1,
+
+    boss_type = "nasty"
+  },
+
+  defiler =
+  {
+    id = 21520,
+    r = 31,
+    h = 56,
+    health = 550,
+    damage = 16,
+    attack = "missile",
+
+    level = 7.2,
+    prob = 10 * 0.25,
+    density = 10 / 81,
+
+    boss_type = "nasty"
+  },
+
+  poisonelemental =
+  {
+    id = 25556,
+    r = 31,
+    h = 56,
+    health = 700,
+    damage = 16,
+    attack = "missile",
+
+    level = 8,
+    prob = 6 * 0.25,
+    density = 6 / 81,
+
+    boss_type = "nasty"
+  },
+
+  bombelemental =
+  {
+    id = 25852,
+    r = 31,
+    h = 56,
+    health = 850,
+    damage = 21,
+    attack = "missile",
+
+    level = 8,
+    prob = 3 * 0.25,
+    density = 3 / 81,
+
+    boss_type = "nasty"
+  },
+
+  -- arachnotron replacements
+  dualarach =
+  {
+    id = 21259,
+    r = 52,
+    h = 64,
+    health = 500,
+    damage = 16,
+    attack = "missile",
+
+    level = 4,
+    prob = 50,
+    density = 1,
+  },
+
+  fusionite =
+  {
+    id = 21038,
+    r = 52,
+    h = 64,
+    health = 750,
+    damage = 25,
+    attack = "hitscan",
+
+    level = 6,
+    prob = 5,
+    density = 5/50,
+  },
+
+  bdemolisher =
+  {
+    id = 23332,
+    r = 52,
+    h = 64,
+    health = 1000,
+    damage = 100,
+    attack = "hitscan",
+
+    level = 7.5,
+    prob = 2,
+    density = 2/50,
+  },
+
+  bsentient =
+  {
+    id = 23333,
+    r = 52,
+    h = 64,
+    health = 1250,
+    damage = 100,
+    attack = "hitscan",
+
+    level = 8,
+    prob = 1,
+    density = 1/50,
+  }
+
+  -- mancubus replacements
+}
+
 MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS =
 {
 -- Possible replacements:
@@ -1583,6 +2181,21 @@ function MODDED_GAME_EXTRAS.add_complex_doom_things()
     GAME.MONSTERS["pain"] = nil
     GAME.MONSTERS["ss_nazi"] = nil
   end
+
+  GAME.MONSTERS = MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS
+  -- disable entries for traditional Doom monsters since they now
+  -- have appropriate specific ID and stat replacements
+  GAME.MONSTERS["zombiemen"] = nil
+  GAME.MONSTERS["shooter"] = nil
+  GAME.MONSTERS["imp"] = nil
+  GAME.MONSTERS["gunner"] = nil
+  GAME.MONSTERS["demon"] = nil
+  GAME.MONSTERS["spectre"] = nil
+  GAME.MONSTERS["skull"] = nil
+  GAME.MONSTERS["caco"] = nil
+  GAME.MONSTERS["arach"] = nil
+  GAME.MONSTERS["pain"] = nil
+  table.deep_merge(GAME.MONSTERS, MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X, 2)
 
   for name,_ in pairs(MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS) do
     local M = GAME.MONSTERS[name]
