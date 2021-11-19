@@ -1,0 +1,98 @@
+#include "doomdata.h"
+#include "workdata.h"
+#include "tarray.h"
+
+class FNodeBuilder
+{
+	struct FPrivSeg
+	{
+		int v1, v2;
+		int sidedef;
+		int linedef;
+		int frontsector;
+		int backsector;
+		int next;
+		int nextforvert;
+		int loopnum;	// loop number for split avoidance (0 means splitting is okay)
+		angle_t angle;
+		fixed_t offset;
+
+		int planenum;
+		FPrivSeg *hashnext;
+	};
+	struct FPrivVert
+	{
+		fixed_t x, y;
+		WORD segs;		// segs that use this vertex as v1
+
+		bool operator== (const FPrivVert &other)
+		{
+			return x == other.x && y == other.y;
+		}
+	};
+	union USegPtr
+	{
+		int SegNum;
+		FPrivSeg *SegPtr;
+	};
+public:
+	struct FPolyStart
+	{
+		int polynum;
+		fixed_t x, y;
+	};
+
+	FNodeBuilder (FLevel &level,
+		TArray<FPolyStart> &polyspots, TArray<FPolyStart> &anchors,
+		const char *name);
+
+	void GetVertices (WideVertex *&verts, int &count);
+	void GetSegs (MapSeg *&segs, int &count);
+	void GetNodes (MapNode *&nodes, int &count);
+	void GetSubsectors (MapSubsector *&ssecs, int &count);
+
+private:
+	TArray<node_t> Nodes;
+	TArray<MapSubsector> Subsectors;
+	TArray<FPrivSeg> Segs;
+	TArray<FPrivVert> Vertices;
+	TArray<USegPtr> SegList;
+	TArray<BYTE> PlaneChecked;
+
+	TArray<int> Touched;	// Loops a splitter touches on a vertex
+	TArray<int> Colinear;	// Loops with edges colinear to a splitter 
+
+	FLevel &Level;
+
+	// Progress meter stuff
+	int SegsStuffed;
+	const char *MapName;
+
+	void FindUsedVertices (WideVertex *vertices, int max);
+	void BuildTree ();
+	void MakeSegsFromSides ();
+	void GroupSegPlanes ();
+	void FindPolyContainers (TArray<FPolyStart> &spots, TArray<FPolyStart> &anchors);
+	bool GetPolyExtents (int polynum, fixed_t bbox[4]);
+	int MarkLoop (int firstseg, int loopnum);
+	void AddSegToBBox (fixed_t bbox[4], const FPrivSeg *seg);
+	int CreateNode (WORD set, fixed_t bbox[4]);
+	int CreateSubsector (WORD set, fixed_t bbox[4]);
+	bool CheckSubsector (WORD set, node_t &node, int setsize);
+	int SelectSplitter (WORD set, node_t &node, int step, bool nosplit);
+	void SplitSegs (WORD set, node_t &node, WORD &outset0, WORD &outset1);
+	int Heuristic (node_t &node, WORD set, bool honorNoSplit);
+	int ClassifyLine (node_t &node, const FPrivSeg *seg, int &sidev1, int &sidev2);
+	int CountSegs (WORD set) const;
+
+	static int SortSegs (const void *a, const void *b);
+
+	//  < 0 : in front of line
+	// == 0 : on line
+	//  > 0 : behind line
+
+	inline int PointOnSide (int x, int y, int x1, int y1, int dx, int dy);
+	fixed_t InterceptVector (const node_t &splitter, const FPrivSeg &seg);
+
+	void PrintSet (int l, WORD set);
+};

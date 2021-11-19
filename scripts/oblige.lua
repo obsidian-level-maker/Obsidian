@@ -1285,6 +1285,10 @@ function ob_default_filename()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
   
+  print("SEED: " .. tostring(OB_CONFIG.seed))
+
+  gui.rand_seed(OB_CONFIG.seed)
+
   Naming_init()
 
   OB_CONFIG.title = Naming_grab_one("TITLE")
@@ -1608,6 +1612,8 @@ function ob_build_setup()
 
   Fab_load_all_definitions()
 
+  gui.rand_seed(OB_CONFIG.seed)
+
   table.name_up(GAME.THEMES)
   table.name_up(GAME.ROOM_THEMES)
   table.name_up(GAME.ROOMS)
@@ -1635,6 +1641,8 @@ function ob_clean_up()
   EPISODE = nil
   PREFABS = nil
   SEEDS   = nil
+
+  gui.rand_seed(OB_CONFIG.seed)
 
   collectgarbage("collect")
 end
