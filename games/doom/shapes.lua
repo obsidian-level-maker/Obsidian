@@ -1274,7 +1274,7 @@ SPROUT_JOINER_4x2 =
   new_room =
   {
     symmetry = { kind="mirror", x=3, y=4, dir=8 },
-    symmetry2 = { kind="mirror", x=3, y=4, dir=6 },
+    --symmetry2 = { kind="mirror", x=3, y=5, dir=4 },
     symmetry3 = { kind="rotate", x=2, y=3, x2=5, y2=5 },
   },
 
