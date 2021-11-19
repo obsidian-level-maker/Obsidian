@@ -1,9 +1,10 @@
 ---------------------------------------------------------------
---  MODULE: Harmony Control
+--  MODULE: Chex Quest 3 Control
 ----------------------------------------------------------------
 --
 --  Copyright (C) 2009-2010 Andrew Apted
 --  Copyright (C) 2020-2021 MsrSgtShooterPerson
+--  Copyright (C) 2021 Cubebert
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -17,9 +18,9 @@
 --
 ----------------------------------------------------------------
 
-CTL_HARMONY = {}
+CTL_CHEX3 = {}
 
-function CTL_HARMONY.monster_setup(self)
+function CTL_CHEX3.monster_setup(self)
 
   for _,opt in pairs(self.options) do
     PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)
@@ -50,26 +51,26 @@ function CTL_HARMONY.monster_setup(self)
 end
 
 
-OB_MODULES["harmony_mon_control"] =
+OB_MODULES["chex3_mon_control"] =
 {
 
-  name = "harmony_mon_control",
+  name = "chex3_mon_control",
 
-  label = _("Harmony Monster Control"),
+  label = _("Chex Quest 3 Monster Control"),
 
-  game = "harmony",
+  game = "chex3",
   engine = "!vanilla",
 
   hooks =
   {
-    setup = CTL_HARMONY.monster_setup
+    setup = CTL_CHEX3.monster_setup
   },
 
   options =
   {
-     float_beastling=
+     float_commonus=
      {
-      label = _("Beastling"),
+      label = _("Commonus"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -86,9 +87,9 @@ OB_MODULES["harmony_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_critter=
+     float_bipedicus=
      {
-      label = _("Critter"),
+      label = _("Bipedicus"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -105,9 +106,9 @@ OB_MODULES["harmony_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_follower=
+     float_armored_biped=
      {
-      label = _("Follower"),
+      label = _("Armored Bipedicus"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -124,9 +125,9 @@ OB_MODULES["harmony_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_predator=
+     float_quadrumpus=
      {
-      label = _("Predator"),
+      label = _("Quadrumpus"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -143,9 +144,9 @@ OB_MODULES["harmony_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_centaur=
+     float_cycloptis=
      {
-      label = _("Centaur"),
+      label = _("Cycloptis"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -162,9 +163,9 @@ OB_MODULES["harmony_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_mutant=
+     float_larva=
      {
-      label = _("Mutant"),
+      label = _("Larva"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -181,9 +182,9 @@ OB_MODULES["harmony_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_phage=
+     float_flemmine=
      {
-      label = _("Phage"),
+      label = _("Flem Mine"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -199,10 +200,29 @@ OB_MODULES["harmony_mon_control"] =
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
      },
-
-     float_echidna=
+	 
+     float_stridicus=
      {
-      label = _("Echidna"),
+      label = _("Stridicus"),
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+	 
+     float_super_cyclop=
+     {
+      label = _("Super Cycloptis"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -224,7 +244,7 @@ OB_MODULES["harmony_mon_control"] =
 
 ----------------------------------------------------------------
 
-CTL_HARMONY.WEAPON_PREF_CHOICES =
+CTL_CHEX3.WEAPON_PREF_CHOICES =
 {
   "normal",  _("Normal"),
   "vanilla", _("Vanilla"),
@@ -232,7 +252,7 @@ CTL_HARMONY.WEAPON_PREF_CHOICES =
 }
 
 
-function CTL_HARMONY.weapon_setup(self)
+function CTL_CHEX3.weapon_setup(self)
 
   for _,opt in pairs(self.options) do
     if opt.valuator and opt.valuator == "slider" then
@@ -261,32 +281,32 @@ function CTL_HARMONY.weapon_setup(self)
   end
 
   if PARAM.weapon_prefs == "vanilla" then
-    GAME.MONSTERS["Beastling"].weap_prefs = { launcher = 2.0 }
+    GAME.MONSTERS["Flem Mine"].weap_prefs = { zorch_propulsor = 2.0 }
   end
 
 end
 
 
-OB_MODULES["harmony_weapon_control"] =
+OB_MODULES["chex3_weapon_control"] =
 {
 
-  name = "harmony_weapon_control",
+  name = "chex3_weapon_control",
 
-  label = _("Harmony Weapon Control"),
+  label = _("Chex Quest 3 Weapon Control"),
 
-  game = "harmony",
+  game = "chex3",
   engine = "!vanilla",
 
   hooks =
   {
-    setup = CTL_HARMONY.weapon_setup
+    setup = CTL_CHEX3.weapon_setup
   },
 
   options =
   {
-     float_minigun=
+     float_super_bootspork=
      {
-      label = _("Minigun"),
+      label = _("Super Bootspork"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -303,9 +323,9 @@ OB_MODULES["harmony_weapon_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_shotgun=
+     float_large_zorcher=
      {
-      label = _("Compensator"),
+      label = _("Large Zorcher"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -322,9 +342,9 @@ OB_MODULES["harmony_weapon_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_launcher=
+     float_rapid_zorcher=
      {
-      label = _("Grenade Launcher"),
+      label = _("Rapid Zorcher"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -341,9 +361,47 @@ OB_MODULES["harmony_weapon_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_entropy=
+     float_zorch_propulsor=
      {
-      label = _("Entropy Thrower"),
+      label = _("Zorch Propulsor"),
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 10,
+      increment = .02,
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+	 
+     float_phasing_zorcher=
+     {
+      label = _("Phasing Zorcher"),
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 10,
+      increment = .02,
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+	 
+     float_laz_device=
+     {
+      label = _("LAZ Device"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -364,12 +422,13 @@ OB_MODULES["harmony_weapon_control"] =
     {
       name="weapon_prefs",
       label=_("Weapon Preferences"),
-      choices=CTL_DOOM.WEAPON_PREF_CHOICES,
+      choices=CTL_CHEX3.WEAPON_PREF_CHOICES,
       tooltip="Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\n" ..
       "Normal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\n" ..
-      "Vanilla: Vanilla Oblige-style preferences. Increases grenade launchers if the map has more beastlings. \n\n" ..
-      "NONE: No preferences at all. For those who like to live life dangerously with Phages and only miniguns.",
+      "Vanilla: Vanilla Oblige-style preferences. Increases Zorch Propulsors if the map has more Flem Mines. \n\n" ..
+      "NONE: No preferences at all. For those who like to live life dangerously with Super Cycloptises and only Super Bootsporks.",
       default="normal",
+	  priority = 0,
     },
   },
 }
