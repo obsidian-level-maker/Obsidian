@@ -205,6 +205,252 @@ MODDED_GAME_EXTRAS.D4T_MONS =
   },
 }
 
+MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
+{
+  -- zombieman replacements
+  plasmagunner =
+  {
+    id = 21022,
+    r = 20,
+    h = 56,
+    health = 30,
+    damage = 15,
+    attack = "missile",
+
+    level = 1,
+    prob = 60,
+    density = 1
+  }
+
+  railgunner =
+  {
+    id = 21023,
+    r = 20,
+    h = 56,
+    health = 40,
+    damage = 25,
+    attack = "hitscan",
+
+    level = 2.5,
+    prob = 28,
+    density = 28 / 56
+  }
+
+  demontechzombie = 
+  {
+    id = 28983,
+    r = 20,
+    h = 56,
+    health = 60,
+    damage = 25,
+    attack = "hitscan",
+
+    level = 4,
+    prob = 8,
+    density = 8 / 56
+  }
+
+  rocketzombie =
+  {
+    id = 20105,
+    r = 20,
+    h = 56,
+    health = 80,
+    damage = 40,
+    attack = "missile",
+
+    level = 7,
+    prob = 3,
+    density = 3 / 56
+  }
+
+  -- shotgunner replacements
+  shotter =
+  {
+    id = 20103,
+    r = 20,
+    h = 56,
+    health = 30,
+    damage = 27 * 0.5,
+    attack = "hitscan",
+
+    level = 1.2,
+    prob = 52,
+    density = 1
+  }
+
+  assaultshotter =
+  {
+    id = 26224,
+    r = 20,
+    h = 56,
+    health = 50,
+    damage = 81 * 0.5,
+    attack = "hitscan",
+
+    level = 2.7,
+    prob = 28,
+    density = 28 / 52
+  }
+
+  supershotter =
+  {
+    id = 21025,
+    r = 20,
+    h = 56,
+    health = 70,
+    damage = 90 * 0.5,
+    attack = "hitscan",
+
+    level = 4.5,
+    prob = 16,
+    density = 16 / 52
+  }
+
+  quadshotter =
+  {
+    id = 25732,
+    r = 20,
+    h = 56,
+    health = 90,
+    damage = 216 * 0.5,
+    attack = "hitscan",
+
+    level = 7,
+    prob = 16,
+    density = 3 / 52
+  }
+
+  -- chaingunner replacements
+  arzombie =
+  {
+    id = 20009,
+    r = 20,
+    h = 56,
+    health = 60,
+    damage = 18,
+    attack = "hitscan",
+
+    level = 1.2,
+    prob = 54,
+    density = 1
+  }
+
+  chaingunner_cd =
+  {
+    id = 24601,
+    r = 20,
+    h = 56,
+    health = 80,
+    damage = 9 * 5,
+    attack = "hitscan",
+
+    level = 2.5,
+    prob = 28,
+    density = 28 / 54
+  }
+
+  minigunner =
+  {
+    id = 21150,
+    r = 20,
+    h = 56,
+    health = 100,
+    damage = 9 * 5,
+    attack = "hitscan",
+
+    level = 4.5,
+    prob = 14,
+    density = 14 / 54
+  }
+
+  bfgzombieman =
+  {
+    id = 21225,
+    r = 20,
+    h = 56,
+    health = 120,
+    damage = 100,
+    attack = "hitscan",
+
+    level = 8,
+    prob = 3,
+    density = 3 / 54
+  }
+
+  -- special boi
+  marauder =
+  {
+    id = 22046,
+    r = 20,
+    h = 56,
+    health = 500,
+    damage = 90,
+    attack = "hitscan",
+
+    level = 4.5,
+    prob = 3,
+    density = 1 / 55
+  }
+
+  -- imps
+  imp_cd =
+  {
+    id = 21026,
+    r = 20,
+    h = 56,
+    health = 60,
+    damage = 8,
+    attack = "missile",
+
+    level = 1,
+    prob = 61,
+    density = 1
+  }
+
+  void_imp =
+  {
+    id = 21027,
+    r = 20,
+    h = 56,
+    health = 85,
+    damage = 8,
+    attack = "missile",
+
+    level = 2.25,
+    prob = 61,
+    density = 26 / 61
+  }
+
+  devil =
+  {
+    id = 21763,
+    r = 20,
+    h = 56,
+    health = 95,
+    damage = 10,
+    attack = "missile",
+
+    level = 3.5,
+    prob = 10,
+    density = 10 / 61
+  }
+
+  phaseimp =
+  {
+    id = 24105,
+    r = 20,
+    h = 56,
+    health = 115,
+    damage = 45,
+    attack = "hitscan",
+
+    level = 3.5,
+    prob = 3,
+    density = 3 / 61
+  }
+}
+
 MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS =
 {
 -- Possible replacements:
