@@ -505,6 +505,120 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 6,
     prob = 3,
     density = 3 / 65
+  },
+
+  -- spectres
+  bulldemon_spectre =
+  {
+    id = 21029,
+    r = 24,
+    h = 48,
+    health = 150,
+    damage = 30,
+    attack = "melee",
+
+    level = 1.2,
+    prob = 65 * 0.25,
+    density = 1 * 0.25
+  },
+
+  cyberfiend_spectre =
+  {
+    id = 21563,
+    r = 24,
+    h = 48,
+    health = 250,
+    damage = 30,
+    attack = "melee",
+
+    level = 2.5,
+    prob = 24 * 0.25,
+    density = 24 / 65 * 0.25
+  },
+
+  magmafiend_spectre =
+  {
+    id = 27468,
+    r = 24,
+    h = 48,
+    health = 300,
+    damage = 24,
+    attack = "missile",
+
+    level = 3.75,
+    prob = 8 * 0.25,
+    density = 8 / 65 * 0.25
+  },
+
+  dtechfiend_spectre =
+  {
+    id = 29482,
+    r = 24,
+    h = 48,
+    health = 350,
+    damage = 30,
+    attack = "missile",
+
+    level = 6,
+    prob = 3 * 0.25,
+    density = 3 / 65 * 0.25
+  },
+
+  -- souls
+  terrorsoul =
+  {
+    id = 21031,
+    r = 16,
+    h = 48,
+    health = 70,
+    damage = 9,
+    attack = "missile",
+
+    level = 1.5,
+    prob = 62,
+    density = 1
+  },
+
+  forgottenone =
+  {
+    id = 30102,
+    r = 16,
+    h = 48,
+    health = 85,
+    damage = 9,
+    attack = "melee",
+
+    level = 3.75,
+    prob = 24,
+    density = 24/62
+  },
+
+  poisonsoul =
+  {
+    id = 24414,
+    r = 16,
+    h = 48,
+    health = 95,
+    damage = 12,
+    attack = "missile",
+
+    level = 5.5,
+    prob = 10,
+    density = 10/62
+  },
+
+  rictus =
+  {
+    id = 24781,
+    r = 16,
+    h = 48,
+    health = 105,
+    damage = 15,
+    attack = "missile",
+
+    level = 7,
+    prob = 6,
+    density = 6/62
   }
 }
 
@@ -1895,6 +2009,8 @@ function MODDED_GAME_EXTRAS.add_complex_doom_things()
   GAME.MONSTERS["imp"] = nil
   GAME.MONSTERS["gunner"] = nil
   GAME.MONSTERS["demon"] = nil
+  GAME.MONSTERS["spectre"] = nil
+  GAME.MONSTERS["skull"] = nil
   table.deep_merge(GAME.MONSTERS, MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X, 2)
 
   for name,_ in pairs(MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS) do
