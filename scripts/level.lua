@@ -2863,9 +2863,6 @@ function Level_make_level(LEV)
     table.merge_missing(THEME, GAME.THEMES.DEFAULTS)
   end
 
-  gui.rand_seed(LEVEL.seed)
-
-
   -- use a pre-built level ?
 
   if LEVEL.prebuilt then
@@ -2885,8 +2882,6 @@ function Level_make_level(LEV)
 
   gui.begin_level()
   gui.property("level_name", LEVEL.name);
-
-  gui.rand_seed(gui.random_int())
 
   Level_do_styles()
 
@@ -2908,9 +2903,6 @@ function Level_make_level(LEV)
       gui.property("description", LEVEL.description)
     end
   end
-
-
-  gui.rand_seed(gui.random_int())
 
   local res = Level_build_it()
   if res ~= "ok" then
@@ -2951,9 +2943,6 @@ function Level_make_all()
     end
   end
 
-
-  gui.rand_seed(gui.random_int())
-
   ob_invoke_hook("get_levels")
 
   if #GAME.levels == 0 then
@@ -2963,14 +2952,9 @@ function Level_make_all()
   table.index_up(GAME.levels)
   table.index_up(GAME.episodes)
 
-
-  gui.rand_seed(gui.random_int())
-
   Level_choose_themes()
 
   ob_invoke_hook("get_levels_after_themes")
-
-  gui.rand_seed(gui.random_int())
 
   Episode_plan_game()
 

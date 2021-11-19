@@ -100,8 +100,6 @@ void SKY_AddStars(unsigned long long seed, byte *pixels, int W, int H,
     SYS_ASSERT(powscale > 0);
     SYS_ASSERT(thresh < 0.99);
 
-    twister_Reseed(seed);
-
     for (int y = 0; y < H; y++) {
         byte *dest = &pixels[y * W];
         byte *d_end = dest + W;
@@ -138,8 +136,6 @@ void SKY_AddHills(unsigned long long seed, byte *pixels, int W, int H,
     float *height_map = new float[W * W];
 
     TX_SpectralSynth(seed, height_map, W, fracdim, powscale);
-
-    twister_Reseed(seed ^ 0x1234567);
 
     bool use_slope_z = (twister_UInt() & 255) < 20;
 
@@ -242,8 +238,6 @@ void SKY_AddBuilding(unsigned long long seed, byte *pixels, int W, int H,
     SYS_ASSERT(numcol >= 2);
 
     win_prob = win_prob * 65535 / 100;
-
-    twister_Reseed(seed);
 
     int x, y;
 

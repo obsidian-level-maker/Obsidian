@@ -1015,8 +1015,6 @@ restart:;
 
     LogEnableDebug(debug_messages);
 
-    twister_Init();
-
     Main_CalcNewSeed();
 
     //	TX_TestSynth(next_rand_seed); - Fractal testing stuff

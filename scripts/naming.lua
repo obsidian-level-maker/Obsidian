@@ -8466,7 +8466,6 @@ end
 function namelib.test()
   local function test_theme(T)
     for set = 1,30 do
-      gui.rand_seed(set)
       local list = namelib.generate(T, 12, 28)
 
       for _,name in pairs(list) do

@@ -13,23 +13,15 @@ other sections of code.
 
 #include "sys_twister.h"
 
-std::independent_bits_engine<
-    std::mersenne_twister_engine<unsigned long long, 64, 312, 156, 31,
-                                 0xb5026f5aa96619e9, 29, 0x5555555555555555, 17,
-                                 0x71d67fffeda60000, 37, 0xfff7eee000000000, 43,
-                                 6364136223846793005>,
-    63, unsigned long long>
-    twister;
+using namespace XoshiroCpp;
 
-void twister_Init() { twister.seed(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())); }
+Xoshiro256PlusPlus xoshiro(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()));
 
-void twister_Reseed(unsigned long long random) { twister.seed(random); }
+unsigned long long twister_UInt() { return xoshiro(); }
 
-unsigned long long twister_UInt() { return twister(); }
-
-double twister_Double() { return ldexp(twister(), -63); }
+double twister_Double() { return DoubleFromBits(xoshiro()); }
 
 int twister_Between(int low, int high) {
     std::uniform_int_distribution<> roll(low, high);
-    return roll(twister);
+    return roll(xoshiro);
 }

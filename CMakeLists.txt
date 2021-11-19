@@ -183,6 +183,7 @@ target_include_directories(obsidian PRIVATE source_files/lua_src)
 target_include_directories(obsidian PRIVATE source_files/slump_src)
 target_include_directories(obsidian PRIVATE source_files/zlib_src)
 target_include_directories(obsidian PRIVATE source_files/gui)
+target_include_directories(obsidian PRIVATE source_files/xoshiro)
 
 if(MINGW OR WIN32 OR MSYS)
   target_compile_definitions(obsidian PRIVATE WIN32)

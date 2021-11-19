@@ -304,8 +304,6 @@ void TX_SpectralSynth(unsigned long long seed, float *buf, int width,
         }
     }
 
-    twister_Reseed(seed);
-
     init_gauss();
 
     create_mesh(width);

@@ -13,10 +13,9 @@ other sections of code
 
 #include <chrono>
 #include <random>
+#include "XoshiroCpp.hpp"
 
 void twister_Init();
-
-void twister_Reseed(unsigned long long random);
 
 unsigned long long twister_UInt();
 
