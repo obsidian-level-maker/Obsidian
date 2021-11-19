@@ -1063,6 +1063,12 @@ DOOM.THEMES =
 
   tech =
   {
+
+    wide_halls = -- Added empty table to use with themes_alt function - Dasho
+    {
+
+    },
+
     narrow_halls =
     {
       vent = 50,
@@ -1513,6 +1519,11 @@ DOOM.THEMES =
 
   urban =
   {
+    wide_halls = -- Added empty table to use with themes_alt function - Dasho
+    {
+
+    },
+
     narrow_halls =
     {
       vent = 50,
