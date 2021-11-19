@@ -1274,7 +1274,7 @@ SPROUT_JOINER_4x2 =
   new_room =
   {
     symmetry = { kind="mirror", x=3, y=4, dir=8 },
-    symmetry2 = { kind="mirror", x=3, y=4, dir=6 },
+    --symmetry2 = { kind="mirror", x=3, y=5, dir=4 },
     symmetry3 = { kind="rotate", x=2, y=3, x2=5, y2=5 },
   },
 
@@ -10400,9 +10400,9 @@ GROW_DIAGONAL_STALK_LIQUID_STAIRS =
 
   structure =
   {
-    "xxx.....","xxx11111",
-    "xx......","xx/1111/",
-    "x.......","x/~111//",
+    "xxx.....","xxxAAAAA",
+    "xx......","xx/AAAA/",
+    "x.......","x/~AAA//",
     "x......x","x~~^^~~x",
     ".......x","//111~/x",
     "......xx","/1111/xx",
@@ -10411,8 +10411,8 @@ GROW_DIAGONAL_STALK_LIQUID_STAIRS =
 
   diagonals =
   {
-         ".~","1~",
-    ".~"     ,"1~","~.",
+         ".~","A~",
+    ".~"     ,"A~","~.",
     ".~","~1",     "~.",
          "~1","~.",
   },
