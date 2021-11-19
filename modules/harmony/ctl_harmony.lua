@@ -4,6 +4,7 @@
 --
 --  Copyright (C) 2009-2010 Andrew Apted
 --  Copyright (C) 2020-2021 MsrSgtShooterPerson
+--  Copyright (C) 2021 Cubebert
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -364,7 +365,7 @@ OB_MODULES["harmony_weapon_control"] =
     {
       name="weapon_prefs",
       label=_("Weapon Preferences"),
-      choices=CTL_DOOM.WEAPON_PREF_CHOICES,
+      choices=CTL_HARMONY.WEAPON_PREF_CHOICES,
       tooltip="Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\n" ..
       "Normal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\n" ..
       "Vanilla: Vanilla Oblige-style preferences. Increases grenade launchers if the map has more beastlings. \n\n" ..
