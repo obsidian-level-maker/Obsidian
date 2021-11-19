@@ -575,7 +575,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     attack = "missile",
 
     level = 1.5,
-    prob = 62,
+    prob = 62 * 0.5,
     density = 1
   },
 
@@ -589,7 +589,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     attack = "melee",
 
     level = 3.75,
-    prob = 24,
+    prob = 24 * 0.5,
     density = 24/62
   },
 
@@ -603,7 +603,7 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     attack = "missile",
 
     level = 5.5,
-    prob = 10,
+    prob = 10 * 0.5,
     density = 10/62
   },
 
@@ -617,9 +617,190 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     attack = "missile",
 
     level = 7,
-    prob = 6,
+    prob = 6 * 0.5,
     density = 6/62
+  },
+
+  -- cacodemon replacements
+  cacodemon_cd =
+  {
+    id = 21032,
+    r = 30,
+    h = 56,
+    health = 400,
+    damage = 18,
+    attack = "missile",
+
+    level = 3,
+    prob = 81 * 0.5,
+    density = 1
+  },
+
+  watcher =
+  {
+    id = 21033,
+    r = 30,
+    h = 56,
+    health = 600,
+    damage = 18,
+    attack = "missile",
+
+    level = 5,
+    prob = 10 * 0.5,
+    density = 10 / 81
+  },
+
+  cacomental =
+  {
+    id = 21034,
+    r = 30,
+    h = 56,
+    health = 800,
+    damage = 24,
+    attack = "missile",
+
+    level = 6.5,
+    prob = 6 * 0.5,
+    density = 6 / 81
+  },
+
+  abaddon =
+  {
+    id = 21403,
+    r = 30,
+    h = 56,
+    health = 1000,
+    damage = 24,
+    attack = "missile",
+
+    level = 8,
+    prob = 3 * 0.5,
+    density = 3 / 81
+  },
+
+  -- pain elemental replacements
+  soulkeeper =
+  {
+    id = 21035,
+    r = 31,
+    h = 56,
+    health = 400,
+    damage = 24,
+    attack = "missile",
+
+    level = 5,
+    prob = 81 * 0.25,
+    density = 1,
+
+    boss_type = "nasty"
+  },
+
+  defiler =
+  {
+    id = 21520,
+    r = 31,
+    h = 56,
+    health = 550,
+    damage = 16,
+    attack = "missile",
+
+    level = 7.2,
+    prob = 10 * 0.25,
+    density = 10 / 81,
+
+    boss_type = "nasty"
+  },
+
+  poisonelemental =
+  {
+    id = 25556,
+    r = 31,
+    h = 56,
+    health = 700,
+    damage = 16,
+    attack = "missile",
+
+    level = 8,
+    prob = 6 * 0.25,
+    density = 6 / 81,
+
+    boss_type = "nasty"
+  },
+
+  bombelemental =
+  {
+    id = 25852,
+    r = 31,
+    h = 56,
+    health = 850,
+    damage = 21,
+    attack = "missile",
+
+    level = 8,
+    prob = 3 * 0.25,
+    density = 3 / 81,
+
+    boss_type = "nasty"
+  },
+
+  -- arachnotron replacements
+  dualarach =
+  {
+    id = 21259,
+    r = 52,
+    h = 64,
+    health = 500,
+    damage = 16,
+    attack = "missile",
+
+    level = 4,
+    prob = 50,
+    density = 1,
+  },
+
+  fusionite =
+  {
+    id = 21038,
+    r = 52,
+    h = 64,
+    health = 750,
+    damage = 25,
+    attack = "hitscan",
+
+    level = 6,
+    prob = 5,
+    density = 5/50,
+  },
+
+  bdemolisher =
+  {
+    id = 23332,
+    r = 52,
+    h = 64,
+    health = 1000,
+    damage = 100,
+    attack = "hitscan",
+
+    level = 7.5,
+    prob = 2,
+    density = 2/50,
+  },
+
+  bsentient =
+  {
+    id = 23333,
+    r = 52,
+    h = 64,
+    health = 1250,
+    damage = 100,
+    attack = "hitscan",
+
+    level = 8,
+    prob = 1,
+    density = 1/50,
   }
+
+  -- mancubus replacements
 }
 
 MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS =
@@ -2011,6 +2192,9 @@ function MODDED_GAME_EXTRAS.add_complex_doom_things()
   GAME.MONSTERS["demon"] = nil
   GAME.MONSTERS["spectre"] = nil
   GAME.MONSTERS["skull"] = nil
+  GAME.MONSTERS["caco"] = nil
+  GAME.MONSTERS["arach"] = nil
+  GAME.MONSTERS["pain"] = nil
   table.deep_merge(GAME.MONSTERS, MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X, 2)
 
   for name,_ in pairs(MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS) do
