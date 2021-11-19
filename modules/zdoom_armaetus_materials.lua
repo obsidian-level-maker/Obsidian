@@ -908,6 +908,53 @@ ARMAETUS_MATERIALS = {
   ENGRAV7 = { t="ENGRAV7", f="FLAT5_4" }, -- Medieval style brick/stone decor, 256x96 (Figures)
   ENGRAV8 = { t="ENGRAV8", f="FLAT5_4" }, -- Medieval style brick/stone decor, 256x96 (Figures)
 
+  -- NOTE: FLATS USED IN DOOM 64 TEXTURES AT THE MOMENT ARE PLACEHOLDERS!! -A, Nov 12th, 2021
+  -------------
+  -- DOOM 64 --
+  -------------
+
+  -- Gore, anything bloody
+  D64BOD01 = { t="D64BOD01", f="CEIL5_1" }, -- Body packed into wall, skeletonized, 32x128
+
+  -- Reliefs, misc. details
+  D64REL01 = { t="D64REL01", f="CEIL5_1" }, -- Lioney relief, 64x64
+  D64REL02 = { t="D64REL02", f="CEIL5_1" }, -- Evil looking face, 64x64
+  D64REL03 = { t="D64REL03", f="CEIL5_1" },
+  D64REL04 = { t="D64REL04", f="CEIL5_1" }, -- Evil looking face, 64x64
+  D64REL05 = { t="D64REL05", f="CEIL5_1" }, -- Evil looking face, 64x64 (similar to 04)
+  D64REL06 = { t="D64REL06", f="CEIL5_1" }, -- Evil looking face, 64x64
+  D64REL07 = { t="D64REL07", f="CEIL5_1" }, -- Evil looking face, 64x64
+  D64REL08 = { t="D64REL08", f="CEIL5_1" }, -- Pentagram on dark stone, 64x64
+  D64REL09 = { t="D64REL09", f="FLAT5_5" }, -- "Arrow" fleshy thing pointing right, 128x32 (for scrollers)
+  D64REL10 = { t="D64REL10", f="FLAT5_5" }, -- "Arrow" fleshy thing pointing left, 128x32 (for scrollers)
+
+  -- Support beams and such
+  D64SUP01 = { t="D64SUP01", f="CEIL5_1" }, -- Evil looking support beam, similar look to D64REL02, 32x128
+  D64SUP02 = { t="D64SUP02", f="CEIL5_1" }, -- Stone support with curvy relief, 32x128
+  D64SUP03 = { t="D64SUP03", f="CEIL5_1" }, -- Skeletony face-like support beam, 32x128
+  D64SUP04 = { t="D64SUP04", f="CEIL5_2" }, -- Riveted metal support beam, 16x128
+  D64SUP05 = { t="D64SUP05", f="CEIL5_2" }, -- Riveted metal support beam with relief indentations, 16x128
+  D64SUP06 = { t="D64SUP06", f="CEIL5_2" }, -- Dark riveted metal support beam, 16x128
+  D64SUP07 = { t="D64SUP07", f="CEIL5_1" }, -- Stone engraved pillar, 32x128
+  D64SUP08 = { t="D64SUP08", f="CEIL5_1" }, -- Draconic looking pillar, 32x128
+
+  -- Animated walls
+  D64ANM1A = { t="D64ANM1A", f="FLOOR7_2" }, -- Evil face anim 1 of 3, 64x64. This one needs similar timing like in Doom 64!
+  D64ANM1B = { t="D64ANM1B", f="FLOOR7_2" }, -- Evil face anim 2 of 3, 64x64
+  D64ANM1C = { t="D64ANM1C", f="FLOOR7_2" }, -- Evil face anim 3 of 3, 64x64
+
+  -- Animated floors
+  D64TEL01 = { t="BROWNHUG",  f="D64TEL01" }, -- Hellish teleporter
+  D64TEL02 = { t="BROWNHUG",  f="D64TEL02" }, -- Hellish teleporter
+  D64TEL03 = { t="BROWNHUG",  f="D64TEL03" }, -- Hellish teleporter
+  D64TEL04 = { t="BROWNHUG",  f="D64TEL04" }, -- Hellish teleporter
+
+
+  
+ -- ------------------ --
+ --  END DOOM 64 STUFF --
+ -- ------------------ --
+
   --------------------
   --------------------
   --- Extra floors ---
