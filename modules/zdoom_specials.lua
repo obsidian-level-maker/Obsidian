@@ -1106,7 +1106,7 @@ function ZDOOM_SPECIALS.do_special_stuff()
       if not PARAM.episode_sky_color then
         gui.printf("WARNING: User set fog color to be set by Sky Generator " ..
         "but Sky Generator is turned off! Behavior will now be Random instead.\n")
-        PARAM.fog_generator = "random"
+        info.fog_color = pick_random_fog_color()
         goto continue
       end
       if i <= 11 then

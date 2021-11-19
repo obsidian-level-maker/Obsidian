@@ -1,9 +1,10 @@
 ---------------------------------------------------------------
---  MODULE: Harmony Control
+--  MODULE: Hacx Control
 ----------------------------------------------------------------
 --
 --  Copyright (C) 2009-2010 Andrew Apted
 --  Copyright (C) 2020-2021 MsrSgtShooterPerson
+--  Copyright (C) 2021 Cubebert
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -17,9 +18,9 @@
 --
 ----------------------------------------------------------------
 
-CTL_HARMONY = {}
+CTL_HACX = {}
 
-function CTL_HARMONY.monster_setup(self)
+function CTL_HACX.monster_setup(self)
 
   for _,opt in pairs(self.options) do
     PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)
@@ -50,26 +51,26 @@ function CTL_HARMONY.monster_setup(self)
 end
 
 
-OB_MODULES["harmony_mon_control"] =
+OB_MODULES["hacx_mon_control"] =
 {
 
-  name = "harmony_mon_control",
+  name = "hacx_mon_control",
 
-  label = _("Harmony Monster Control"),
+  label = _("HacX 1.2 Monster Control"),
 
-  game = "harmony",
+  game = "hacx",
   engine = "!vanilla",
 
   hooks =
   {
-    setup = CTL_HARMONY.monster_setup
+    setup = CTL_HACX.monster_setup
   },
 
   options =
   {
-     float_beastling=
+     float_thug=
      {
-      label = _("Beastling"),
+      label = _("Thug"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -86,9 +87,9 @@ OB_MODULES["harmony_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_critter=
+     float_android=
      {
-      label = _("Critter"),
+      label = _("Android"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -105,9 +106,9 @@ OB_MODULES["harmony_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_follower=
+     float_stealth=
      {
-      label = _("Follower"),
+      label = _("Stealth Buzzer"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -124,47 +125,9 @@ OB_MODULES["harmony_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_predator=
+     float_roam_mine=
      {
-      label = _("Predator"),
-      valuator = "slider",
-      units = "",
-      min = 0,
-      max = 20,
-      increment = .02,
-      default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
-     },
-
-     float_centaur=
-     {
-      label = _("Centaur"),
-      valuator = "slider",
-      units = "",
-      min = 0,
-      max = 20,
-      increment = .02,
-      default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
-     },
-
-     float_mutant=
-     {
-      label = _("Mutant"),
+      label = _("Roaming Mine"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -200,9 +163,142 @@ OB_MODULES["harmony_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_echidna=
+     float_buzzer=
      {
-      label = _("Echidna"),
+      label = _("Buzzer"),
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_i_c_e=
+     {
+      label = _("ICE"),
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_d_man=
+     {
+      label = _("D-Man"),
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+	 
+     float_monstruct=
+     {
+      label = _("Monstruct"),
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+	 
+     float_majong7=
+     {
+      label = _("Majong 7"),
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+	 
+     float_terminatrix=
+     {
+      label = _("Terminatrix"),
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+	 
+     float_thorn=
+     {
+      label = _("Thorn"),
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+     },
+
+     float_mecha=
+     {
+      label = _("Mecha Maniac"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -224,7 +320,7 @@ OB_MODULES["harmony_mon_control"] =
 
 ----------------------------------------------------------------
 
-CTL_HARMONY.WEAPON_PREF_CHOICES =
+CTL_HACX.WEAPON_PREF_CHOICES =
 {
   "normal",  _("Normal"),
   "vanilla", _("Vanilla"),
@@ -232,7 +328,7 @@ CTL_HARMONY.WEAPON_PREF_CHOICES =
 }
 
 
-function CTL_HARMONY.weapon_setup(self)
+function CTL_HACX.weapon_setup(self)
 
   for _,opt in pairs(self.options) do
     if opt.valuator and opt.valuator == "slider" then
@@ -261,32 +357,34 @@ function CTL_HARMONY.weapon_setup(self)
   end
 
   if PARAM.weapon_prefs == "vanilla" then
-    GAME.MONSTERS["Beastling"].weap_prefs = { launcher = 2.0 }
+    GAME.MONSTERS["ICE"].weap_prefs = { zooka = 2.0 }
+	GAME.MONSTERS["D-Man"].weap_prefs = { zooka = 2.0 }
+	GAME.MONSTERS["Roaming Mine"].weap_prefs = { zooka = 2.0 }
   end
 
 end
 
 
-OB_MODULES["harmony_weapon_control"] =
+OB_MODULES["hacx_weapon_control"] =
 {
 
-  name = "harmony_weapon_control",
+  name = "hacx_weapon_control",
 
-  label = _("Harmony Weapon Control"),
+  label = _("HacX 1.2 Weapon Control"),
 
-  game = "harmony",
+  game = "hacx",
   engine = "!vanilla",
 
   hooks =
   {
-    setup = CTL_HARMONY.weapon_setup
+    setup = CTL_HACX.weapon_setup
   },
 
   options =
   {
-     float_minigun=
+     float_reznator=
      {
-      label = _("Minigun"),
+      label = _("Hoig Reznator"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -303,9 +401,9 @@ OB_MODULES["harmony_weapon_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_shotgun=
+     float_tazer=
      {
-      label = _("Compensator"),
+      label = _("Tazer"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -322,9 +420,9 @@ OB_MODULES["harmony_weapon_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_launcher=
+     float_cyrogun=
      {
-      label = _("Grenade Launcher"),
+      label = _("Cyrogun"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -341,9 +439,66 @@ OB_MODULES["harmony_weapon_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_entropy=
+     float_fu2=
      {
-      label = _("Entropy Thrower"),
+      label = _("Uzi"),
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 10,
+      increment = .02,
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+	 
+     float_zooka=
+     {
+      label = _("Photon 'Zooka"),
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 10,
+      increment = .02,
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+	 
+     float_antigun=
+     {
+      label = _("Anti-gun"),
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 10,
+      increment = .02,
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "10:10 (I LOVE IT),",
+     },
+	 
+     float_nuker=
+     {
+      label = _("Nuker"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -364,11 +519,11 @@ OB_MODULES["harmony_weapon_control"] =
     {
       name="weapon_prefs",
       label=_("Weapon Preferences"),
-      choices=CTL_DOOM.WEAPON_PREF_CHOICES,
+      choices=CTL_HACX.WEAPON_PREF_CHOICES,
       tooltip="Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\n" ..
       "Normal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\n" ..
-      "Vanilla: Vanilla Oblige-style preferences. Increases grenade launchers if the map has more beastlings. \n\n" ..
-      "NONE: No preferences at all. For those who like to live life dangerously with Phages and only miniguns.",
+      "Vanilla: Vanilla Oblige-style preferences. Increases 'Zookas if the map has more ICEs, D-Mans, or roaming mines. \n\n" ..
+      "NONE: No preferences at all. For those who like to live life dangerously with ICEs and only 'Zookas.",
       default="normal",
     },
   },

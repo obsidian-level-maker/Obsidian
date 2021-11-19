@@ -1285,6 +1285,8 @@ function ob_default_filename()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
   
+  print("SEED: " .. tostring(OB_CONFIG.seed))
+
   gui.rand_seed(OB_CONFIG.seed)
 
   Naming_init()
