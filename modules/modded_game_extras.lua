@@ -1830,6 +1830,15 @@ function MODDED_GAME_EXTRAS.add_complex_doom_things()
     GAME.MONSTERS["ss_nazi"] = nil
   end
 
+  GAME.MONSTERS = MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS
+  -- disable entries for traditional Doom monsters since they now
+  -- have appropriate specific ID and stat replacements
+  GAME.MONSTERS["zombiemen"] = nil
+  GAME.MONSTERS["shooter"] = nil
+  GAME.MOSNTERS["imp"] = nil
+  GAME.MONSTERS["gunner"] = nil
+  table.deep_merge(GAME.MONSTERS, MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X, 2)
+
   for name,_ in pairs(MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS) do
     local M = GAME.MONSTERS[name]
 
