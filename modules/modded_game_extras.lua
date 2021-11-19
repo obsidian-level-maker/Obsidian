@@ -448,6 +448,63 @@ MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X =
     level = 3.5,
     prob = 3,
     density = 3 / 61
+  },
+
+  -- demons
+  bulldemon =
+  {
+    id = 21028,
+    r = 24,
+    h = 48,
+    health = 150,
+    damage = 30,
+    attack = "melee",
+
+    level = 1.2,
+    prob = 65,
+    density = 1
+  },
+
+  cyberfiend =
+  {
+    id = 23421,
+    r = 24,
+    h = 48,
+    health = 250,
+    damage = 30,
+    attack = "melee",
+
+    level = 2.5,
+    prob = 24,
+    density = 24 / 65
+  },
+
+  magmafiend =
+  {
+    id = 29992,
+    r = 24,
+    h = 48,
+    health = 300,
+    damage = 24,
+    attack = "missile",
+
+    level = 3.75,
+    prob = 8,
+    density = 8 / 65
+  },
+
+  dtechfiend =
+  {
+    id = 29789,
+    r = 24,
+    h = 48,
+    health = 350,
+    damage = 30,
+    attack = "missile",
+
+    level = 6,
+    prob = 3,
+    density = 3 / 65
   }
 }
 
@@ -1835,8 +1892,9 @@ function MODDED_GAME_EXTRAS.add_complex_doom_things()
   -- have appropriate specific ID and stat replacements
   GAME.MONSTERS["zombiemen"] = nil
   GAME.MONSTERS["shooter"] = nil
-  GAME.MOSNTERS["imp"] = nil
+  GAME.MONSTERS["imp"] = nil
   GAME.MONSTERS["gunner"] = nil
+  GAME.MONSTERS["demon"] = nil
   table.deep_merge(GAME.MONSTERS, MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS_X, 2)
 
   for name,_ in pairs(MODDED_GAME_EXTRAS.COMPLEX_DOOM_MONS) do
