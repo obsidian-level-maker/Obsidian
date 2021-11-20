@@ -19,7 +19,9 @@ HARMONY.MATERIALS =
   _ERROR = { t="METAL3", f="DEM1_6" },
   _SKY   = { t="METAL3", f="F_SKY1" },
 
-  -- materials for generic prefab set --  
+  -- materials for generic prefab set --
+  _VOID = { t="0ARK5", f="XX" },
+  _WALLLIT = { t="PANBORD2", f="XX"},  
   _SBARS = { t="0LASER4", f="XX" }, -- Short bars, i.e. railings
   _MBARS = { t="1LIFT1", f="XX" }, -- Medium bars, i.e. barred windows
   _TBARS = { t="1LIFT1", f="XX" }, -- Tall bars, i.e. cage/jail bars
