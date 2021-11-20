@@ -1,0 +1,51 @@
+//
+// OSIDIAN WIN32 RESOURCES
+//
+
+#define MAIN_MENU            100
+#define MAIN_MENU_FILE_EXIT  1001
+
+#define MAIN_ICON            1
+
+
+MAIN_MENU MENU DISCARDABLE
+{
+  POPUP "File"
+  {
+    MENUITEM "Exit", MAIN_MENU_FILE_EXIT
+  }
+}
+
+MAIN_ICON ICON "./obsidian.ico"
+
+1 VERSIONINFO
+FILEVERSION 20, 0, 0, 0
+PRODUCTVERSION 20, 0, 0, 0
+FILEFLAGSMASK 0x0
+FILEOS 0x40004 // VOS_NT_WINDOWS32
+FILETYPE 1     // VFT_APP
+FILESUBTYPE 0  // VFT_UNKNOWN
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    // 0409 means "US English"; 04B0 means "Unicode encoding"
+    BLOCK "040904B0"
+    BEGIN
+      VALUE "CompanyName",      "Obsidian/ObAddon Community\0"
+      VALUE "FileDescription",  "OBSIDIAN Level Maker\0"
+      VALUE "FileVersion",      "Beta\0"
+      VALUE "InternalName",     "OBSIDIAN\0"
+      VALUE "LegalCopyright",   "\251 Andrew Apted, GNU General Public License\0"
+      VALUE "OriginalFilename", "OBSIDIAN.EXE\0"
+      VALUE "ProductName",      "OBSIDIAN\0"
+      VALUE "ProductVersion",   "Beta\0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x0409, 0x04B0
+  END
+END
+
+//--- editor settings ---
+// vi:ts=4:sw=4:noexpandtab:filetype=rc

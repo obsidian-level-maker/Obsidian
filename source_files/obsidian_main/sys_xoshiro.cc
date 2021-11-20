@@ -1,0 +1,31 @@
+/*
+Xoshiro256 Random Generator
+
+By Dashodanger, 2020
+
+This is meant to be a replacement for the AJ_Random library that
+uses the fastPRNG xoshiro256 implementation for random number generation. 
+Usage will be as similar to AJ_Random as possible in order to minimize 
+changes in other sections of code.
+*/
+
+#include "fastPRNG.h"
+
+using namespace fastPRNG;
+
+fastXS64 xoshiro;
+
+void xoshiro_Reseed(unsigned long long newseed) { xoshiro.seed(newseed); }
+
+unsigned long long xoshiro_UInt() {
+    long long rand_num = (long long)(xoshiro.xoshiro256p());
+    if (rand_num >= 0) { return rand_num; }
+    return -rand_num;
+}
+
+double xoshiro_Double() { return xoshiro.xoshiro256p_UNI<double>(); }
+
+// This probably isn't super efficient, but it's only used by SLUMP which takes barely any time to run as it is - Dasho
+int xoshiro_Between(int low, int high) {
+    return (int)(xoshiro.xoshiro256p_Range<float>(low, high));
+}
