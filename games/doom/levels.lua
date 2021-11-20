@@ -83,7 +83,26 @@ function DOOM.themes_alts()
     GAME.THEMES.DEFAULTS.has_double_switch_door = false
     GAME.THEMES.tech.narrow_halls = { vent = 50 }
     GAME.THEMES.tech.beam_groups = { beam_metal = 50 }
-    GAME.THEMES.tech.wall_groups = { PLAIN = 50 }
+    GAME.THEMES.tech.wall_groups = 
+    {
+      PLAIN = 0.01,
+      low_gap = 10,
+      low_gap2 = 10,
+      mid_band = 10,
+      lite1 = 20,
+      lite2 = 20,
+      torches1 = 12,
+      torches2 = 12,
+      beamed_inset = 25,
+      beamed_inset_alt = 25,
+      high_gap = 25,
+      vert_gab = 25,
+      half_floor = 20,
+      half_floor_no_trim = 20,
+      half_floor_inverted_braced = 20,
+      wallgutters = 10,
+      lamptorch = 16,
+    }
     GAME.THEMES.tech.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.tech.window_groups = 
     {
@@ -100,7 +119,26 @@ function DOOM.themes_alts()
     GAME.THEMES.tech.fence_posts = { Post = 50 }
     GAME.THEMES.urban.narrow_halls = { vent = 50 }
     GAME.THEMES.urban.beam_groups = { beam_metal = 50 }
-    GAME.THEMES.urban.wall_groups = { PLAIN = 50 }
+    GAME.THEMES.urban.wall_groups =
+    {
+      PLAIN = 0.01,
+      low_gap = 10,
+      low_gap2 = 10,
+      mid_band = 10,
+      lite1 = 20,
+      lite2 = 20,
+      torches1 = 12,
+      torches2 = 12,
+      beamed_inset = 25,
+      beamed_inset_alt = 25,
+      high_gap = 25,
+      vert_gab = 25,
+      half_floor = 20,
+      half_floor_no_trim = 20,
+      half_floor_inverted_braced = 20,
+      wallgutters = 10,
+      lamptorch = 16,
+    }
     GAME.THEMES.urban.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.urban.window_groups = 
     {
@@ -117,7 +155,26 @@ function DOOM.themes_alts()
     GAME.THEMES.urban.fence_posts = { Post = 50 }
     GAME.THEMES.hell.narrow_halls = { vent = 50 }
     GAME.THEMES.hell.beam_groups = { beam_metal = 50 }
-    GAME.THEMES.hell.wall_groups = { PLAIN = 50 }
+    GAME.THEMES.hell.wall_groups =
+    {
+      PLAIN = 0.01,
+      low_gap = 10,
+      low_gap2 = 10,
+      mid_band = 10,
+      lite1 = 20,
+      lite2 = 20,
+      torches1 = 12,
+      torches2 = 12,
+      beamed_inset = 25,
+      beamed_inset_alt = 25,
+      high_gap = 25,
+      vert_gab = 25,
+      half_floor = 20,
+      half_floor_no_trim = 20,
+      half_floor_inverted_braced = 20,
+      wallgutters = 10,
+      lamptorch = 16,
+    }
     GAME.THEMES.hell.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.hell.window_groups =
     {

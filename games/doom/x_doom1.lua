@@ -3803,7 +3803,26 @@ function ULTDOOM.nolimit_themes()
     GAME.THEMES.DEFAULTS.wide_halls = { curve = 50 }
     GAME.THEMES.tech.narrow_halls = { vent = 50 }
     GAME.THEMES.tech.beam_groups = { beam_metal = 50 }
-    GAME.THEMES.tech.wall_groups = { PLAIN = 50 }
+    GAME.THEMES.tech.wall_groups = 
+    {
+      PLAIN = 0.01,
+      low_gap = 10,
+      low_gap2 = 10,
+      mid_band = 10,
+      lite1 = 20,
+      lite2 = 20,
+      torches1 = 12,
+      torches2 = 12,
+      beamed_inset = 25,
+      beamed_inset_alt = 25,
+      high_gap = 25,
+      vert_gab = 25,
+      half_floor = 20,
+      half_floor_no_trim = 20,
+      half_floor_inverted_braced = 20,
+      wallgutters = 10,
+      lamptorch = 16,
+    }
     GAME.THEMES.tech.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.tech.window_groups = 
     {
@@ -3820,7 +3839,26 @@ function ULTDOOM.nolimit_themes()
     GAME.THEMES.tech.fence_posts = { Post = 50 }
     GAME.THEMES.deimos.narrow_halls = { vent = 50 }
     GAME.THEMES.deimos.beam_groups = { beam_metal = 50 }
-    GAME.THEMES.deimos.wall_groups = { PLAIN = 50 }
+    GAME.THEMES.deimos.wall_groups = 
+    {
+      PLAIN = 0.01,
+      low_gap = 10,
+      low_gap2 = 10,
+      mid_band = 10,
+      lite1 = 20,
+      lite2 = 20,
+      torches1 = 12,
+      torches2 = 12,
+      beamed_inset = 25,
+      beamed_inset_alt = 25,
+      high_gap = 25,
+      vert_gab = 25,
+      half_floor = 20,
+      half_floor_no_trim = 20,
+      half_floor_inverted_braced = 20,
+      wallgutters = 10,
+      lamptorch = 16,
+    }
     GAME.THEMES.deimos.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.deimos.window_groups =
     {
@@ -3837,7 +3875,26 @@ function ULTDOOM.nolimit_themes()
     GAME.THEMES.deimos.fence_posts = { Post = 50 }
     GAME.THEMES.hell.narrow_halls = { vent = 50 }
     GAME.THEMES.hell.beam_groups = { beam_metal = 50 }
-    GAME.THEMES.hell.wall_groups = { PLAIN = 50 }
+    GAME.THEMES.hell.wall_groups = 
+    {
+      PLAIN = 0.01,
+      low_gap = 10,
+      low_gap2 = 10,
+      mid_band = 10,
+      lite1 = 20,
+      lite2 = 20,
+      torches1 = 12,
+      torches2 = 12,
+      beamed_inset = 25,
+      beamed_inset_alt = 25,
+      high_gap = 25,
+      vert_gab = 25,
+      half_floor = 20,
+      half_floor_no_trim = 20,
+      half_floor_inverted_braced = 20,
+      wallgutters = 10,
+      lamptorch = 16,
+    }
     GAME.THEMES.hell.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.hell.window_groups = 
     {
@@ -3854,7 +3911,26 @@ function ULTDOOM.nolimit_themes()
     GAME.THEMES.hell.fence_posts = { Post = 50 }
     GAME.THEMES.flesh.narrow_halls = { vent = 50 }
     GAME.THEMES.flesh.beam_groups = { beam_metal = 50 }
-    GAME.THEMES.flesh.wall_groups = { PLAIN = 50 }
+    GAME.THEMES.flesh.wall_groups = 
+    {
+      PLAIN = 0.01,
+      low_gap = 10,
+      low_gap2 = 10,
+      mid_band = 10,
+      lite1 = 20,
+      lite2 = 20,
+      torches1 = 12,
+      torches2 = 12,
+      beamed_inset = 25,
+      beamed_inset_alt = 25,
+      high_gap = 25,
+      vert_gab = 25,
+      half_floor = 20,
+      half_floor_no_trim = 20,
+      half_floor_inverted_braced = 20,
+      wallgutters = 10,
+      lamptorch = 16,
+    }
     GAME.THEMES.flesh.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.flesh.window_groups = 
     {
