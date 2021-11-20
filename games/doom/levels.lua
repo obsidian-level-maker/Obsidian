@@ -95,7 +95,7 @@ function DOOM.themes_alts()
       slits = 20,
       pillbox = 20,
       slumpish = 30,
-    },
+    }
     GAME.THEMES.tech.fence_groups = { PLAIN = 50 }
     GAME.THEMES.tech.fence_posts = { Post = 50 }
     GAME.THEMES.urban.narrow_halls = { vent = 50 }
@@ -112,7 +112,7 @@ function DOOM.themes_alts()
       slits = 20,
       pillbox = 20,
       slumpish = 30,
-    },
+    }
     GAME.THEMES.urban.fence_groups = { PLAIN = 50 }
     GAME.THEMES.urban.fence_posts = { Post = 50 }
     GAME.THEMES.hell.narrow_halls = { vent = 50 }
@@ -129,7 +129,7 @@ function DOOM.themes_alts()
       slits = 20,
       pillbox = 20,
       slumpish = 30,
-    },
+    }
     GAME.THEMES.hell.fence_groups = { PLAIN = 50 }
     GAME.THEMES.hell.fence_posts = { Post = 50 }
   end

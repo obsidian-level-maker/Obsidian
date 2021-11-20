@@ -3813,7 +3813,7 @@ function ULTDOOM.nolimit_themes()
       slits = 20,
       pillbox = 20,
       slumpish = 30,
-    },
+    }
     GAME.THEMES.tech.fence_groups = { PLAIN = 50 }
     GAME.THEMES.tech.fence_posts = { Post = 50 }
     GAME.THEMES.deimos.narrow_halls = { vent = 50 }
@@ -3830,7 +3830,7 @@ function ULTDOOM.nolimit_themes()
       slits = 20,
       pillbox = 20,
       slumpish = 30,
-    },
+    }
     GAME.THEMES.deimos.fence_groups = { PLAIN = 50 }
     GAME.THEMES.deimos.fence_posts = { Post = 50 }
     GAME.THEMES.hell.narrow_halls = { vent = 50 }
@@ -3847,7 +3847,7 @@ function ULTDOOM.nolimit_themes()
       slits = 20,
       pillbox = 20,
       slumpish = 30,
-    },
+    }
     GAME.THEMES.hell.fence_groups = { PLAIN = 50 }
     GAME.THEMES.hell.fence_posts = { Post = 50 }
     GAME.THEMES.flesh.narrow_halls = { vent = 50 }
@@ -3864,7 +3864,7 @@ function ULTDOOM.nolimit_themes()
       slits = 20,
       pillbox = 20,
       slumpish = 30,
-    },
+    }
     GAME.THEMES.flesh.fence_groups = { PLAIN = 50 }
     GAME.THEMES.flesh.fence_posts = { Post = 50 }
   end
