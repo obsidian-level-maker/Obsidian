@@ -269,9 +269,16 @@ HERETIC.THEMES =
       beam_metal = 50,
     },
 
-    window_groups =
+    window_groups = 
     {
       straddle = 70,
+      tall   = 80,
+      grate  = 45,
+      barred = 10,
+      supertall = 60,
+      slits = 20,
+      pillbox = 20,
+      slumpish = 30,
     },
 
     wall_groups =
@@ -415,9 +422,16 @@ HERETIC.THEMES =
       beam_metal = 50,
     },
 
-    window_groups =
+    window_groups = 
     {
       straddle = 70,
+      tall   = 80,
+      grate  = 45,
+      barred = 10,
+      supertall = 60,
+      slits = 20,
+      pillbox = 20,
+      slumpish = 30,
     },
 
     wall_groups =
@@ -569,9 +583,16 @@ HERETIC.THEMES =
       beam_metal = 50,
     },
 
-    window_groups =
+    window_groups = 
     {
       straddle = 70,
+      tall   = 80,
+      grate  = 45,
+      barred = 10,
+      supertall = 60,
+      slits = 20,
+      pillbox = 20,
+      slumpish = 30,
     },
 
     wall_groups =
@@ -702,9 +723,16 @@ HERETIC.THEMES =
       beam_metal = 50,
     },
 
-    window_groups =
+    window_groups = 
     {
       straddle = 70,
+      tall   = 80,
+      grate  = 45,
+      barred = 10,
+      supertall = 60,
+      slits = 20,
+      pillbox = 20,
+      slumpish = 30,
     },
 
     wall_groups =
@@ -854,9 +882,16 @@ HERETIC.THEMES =
       beam_metal = 50,
     },
 
-    window_groups =
+    window_groups = 
     {
       straddle = 70,
+      tall   = 80,
+      grate  = 45,
+      barred = 10,
+      supertall = 60,
+      slits = 20,
+      pillbox = 20,
+      slumpish = 30,
     },
 
     wall_groups =

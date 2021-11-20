@@ -85,21 +85,51 @@ function DOOM.themes_alts()
     GAME.THEMES.tech.beam_groups = { beam_metal = 50 }
     GAME.THEMES.tech.wall_groups = { PLAIN = 50 }
     GAME.THEMES.tech.outdoor_wall_groups = { PLAIN = 50 }
-    GAME.THEMES.tech.window_groups = { straddle = 70 }
+    GAME.THEMES.tech.window_groups = 
+    {
+      straddle = 70,
+      tall   = 80,
+      grate  = 45,
+      barred = 10,
+      supertall = 60,
+      slits = 20,
+      pillbox = 20,
+      slumpish = 30,
+    },
     GAME.THEMES.tech.fence_groups = { PLAIN = 50 }
     GAME.THEMES.tech.fence_posts = { Post = 50 }
     GAME.THEMES.urban.narrow_halls = { vent = 50 }
     GAME.THEMES.urban.beam_groups = { beam_metal = 50 }
     GAME.THEMES.urban.wall_groups = { PLAIN = 50 }
     GAME.THEMES.urban.outdoor_wall_groups = { PLAIN = 50 }
-    GAME.THEMES.urban.window_groups = { straddle = 70 }
+    GAME.THEMES.urban.window_groups = 
+    {
+      straddle = 70,
+      tall   = 80,
+      grate  = 45,
+      barred = 10,
+      supertall = 60,
+      slits = 20,
+      pillbox = 20,
+      slumpish = 30,
+    },
     GAME.THEMES.urban.fence_groups = { PLAIN = 50 }
     GAME.THEMES.urban.fence_posts = { Post = 50 }
     GAME.THEMES.hell.narrow_halls = { vent = 50 }
     GAME.THEMES.hell.beam_groups = { beam_metal = 50 }
     GAME.THEMES.hell.wall_groups = { PLAIN = 50 }
     GAME.THEMES.hell.outdoor_wall_groups = { PLAIN = 50 }
-    GAME.THEMES.hell.window_groups = { straddle = 70 }
+    GAME.THEMES.hell.window_groups =
+    {
+      straddle = 70,
+      tall   = 80,
+      grate  = 45,
+      barred = 10,
+      supertall = 60,
+      slits = 20,
+      pillbox = 20,
+      slumpish = 30,
+    },
     GAME.THEMES.hell.fence_groups = { PLAIN = 50 }
     GAME.THEMES.hell.fence_posts = { Post = 50 }
   end
