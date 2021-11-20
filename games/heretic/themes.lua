@@ -283,8 +283,23 @@ HERETIC.THEMES =
 
     wall_groups =
     {
-      PLAIN = 50,
-      torches1 = 10,
+      PLAIN = 0.01,
+      low_gap = 10,
+      low_gap2 = 10,
+      mid_band = 10,
+      lite1 = 20,
+      lite2 = 20,
+      torches1 = 12,
+      torches2 = 12,
+      beamed_inset = 25,
+      beamed_inset_alt = 25,
+      high_gap = 25,
+      vert_gab = 25,
+      half_floor = 20,
+      half_floor_no_trim = 20,
+      half_floor_inverted_braced = 20,
+      wallgutters = 10,
+      lamptorch = 16,
     },
 
     cliff_trees =
@@ -436,8 +451,23 @@ HERETIC.THEMES =
 
     wall_groups =
     {
-      PLAIN = 50,
-      torches1 = 10,
+      PLAIN = 0.01,
+      low_gap = 10,
+      low_gap2 = 10,
+      mid_band = 10,
+      lite1 = 20,
+      lite2 = 20,
+      torches1 = 12,
+      torches2 = 12,
+      beamed_inset = 25,
+      beamed_inset_alt = 25,
+      high_gap = 25,
+      vert_gab = 25,
+      half_floor = 20,
+      half_floor_no_trim = 20,
+      half_floor_inverted_braced = 20,
+      wallgutters = 10,
+      lamptorch = 16,
     },
 
     cliff_trees =
@@ -597,8 +627,23 @@ HERETIC.THEMES =
 
     wall_groups =
     {
-      PLAIN = 50,
-      torches1 = 10,
+      PLAIN = 0.01,
+      low_gap = 10,
+      low_gap2 = 10,
+      mid_band = 10,
+      lite1 = 20,
+      lite2 = 20,
+      torches1 = 12,
+      torches2 = 12,
+      beamed_inset = 25,
+      beamed_inset_alt = 25,
+      high_gap = 25,
+      vert_gab = 25,
+      half_floor = 20,
+      half_floor_no_trim = 20,
+      half_floor_inverted_braced = 20,
+      wallgutters = 10,
+      lamptorch = 16,
     },
 
     outdoor_torches =
@@ -737,8 +782,23 @@ HERETIC.THEMES =
 
     wall_groups =
     {
-      PLAIN = 50,
-      torches1 = 10,
+      PLAIN = 0.01,
+      low_gap = 10,
+      low_gap2 = 10,
+      mid_band = 10,
+      lite1 = 20,
+      lite2 = 20,
+      torches1 = 12,
+      torches2 = 12,
+      beamed_inset = 25,
+      beamed_inset_alt = 25,
+      high_gap = 25,
+      vert_gab = 25,
+      half_floor = 20,
+      half_floor_no_trim = 20,
+      half_floor_inverted_braced = 20,
+      wallgutters = 10,
+      lamptorch = 16,
     },
 
     cliff_trees =
@@ -896,8 +956,23 @@ HERETIC.THEMES =
 
     wall_groups =
     {
-      PLAIN = 50,
-      torches1 = 10,
+      PLAIN = 0.01,
+      low_gap = 10,
+      low_gap2 = 10,
+      mid_band = 10,
+      lite1 = 20,
+      lite2 = 20,
+      torches1 = 12,
+      torches2 = 12,
+      beamed_inset = 25,
+      beamed_inset_alt = 25,
+      high_gap = 25,
+      vert_gab = 25,
+      half_floor = 20,
+      half_floor_no_trim = 20,
+      half_floor_inverted_braced = 20,
+      wallgutters = 10,
+      lamptorch = 16,
     },
 
     cliff_trees =

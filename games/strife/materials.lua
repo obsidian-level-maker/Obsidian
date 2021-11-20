@@ -25,7 +25,9 @@ STRIFE.MATERIALS =
   _ERROR = { t="BIGSTN02", f="P_SPLATR" },
   _SKY   = { t="BIGSTN01", f="F_SKY001" },
 
- -- materials for generic prefab set --  
+ -- materials for generic prefab set --
+ _VOID = { t="BLACK01", f="XX" },
+ _WALLLIT = { t="SCAN01", f="XX"},  
  _SBARS = { t="RAIL01", f="XX" }, -- Short bars, i.e. railings
  _MBARS = { t="GRATE04", f="XX" }, -- Medium bars, i.e. barred windows
  _TBARS = { t="GRATE02", f="XX" }, -- Tall bars, i.e. cage/jail bars

@@ -18,6 +18,8 @@ HACX.MATERIALS =
   _LIQUID = { f="FWATER1", t="BLODRIP1" },
 
   -- materials for generic prefab set --
+  _VOID = { t="GRAY5", f="XX" },
+  _WALLLIT = { t="HW208", f="XX"},
   _LIFT  = { t="BIGDOOR2", f="CONS1_5" },
   _SBARS = { t="HW211", f="RROCK03" }, -- Short bars, i.e. railings
   _MBARS = { t="TEKGREN2", f="RROCK03" }, -- Medium bars, i.e. barred windows

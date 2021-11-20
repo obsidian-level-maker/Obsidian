@@ -1,17 +1,18 @@
 --
--- Diagonal wall with some torches
+-- Diagonal wall with standing lights
 --
 -- NOTE: no straight wall version, as a torch might completely
 --       block player movement.
 --
 
-PREFABS.Wall_torches1_diag =
+PREFABS.Wall_torches2_diag =
 {
-  file   = "wall/torches.wad",
+  file   = "wall/torches2.wad",
   map    = "MAP02",
+  game   = { chex3=1, doom1=1, doom2=1, hacx=0, heretic=0, strife=0 },
 
   prob   = 50,
-  group  = "torches1",
+  group  = "torches2",
 
   where  = "diagonal",
 
@@ -19,5 +20,6 @@ PREFABS.Wall_torches1_diag =
   bound_z2 = 64,
 
   z_fit  = "top",
-}
 
+  solid_ents = false
+}

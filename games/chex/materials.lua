@@ -17,7 +17,9 @@ CHEX3.MATERIALS =
   -- materials for generic prefab set --
 
   -- The idea is to have one singular default material for these; variants should be specified in theme-specific PREFAB_FIELDS tables as replacements - Dasho
+  _VOID = { t="O_BLACK", f="XX"},
   _FLATLIT = { t="COMPSPAN", f="LABFLAT" },
+  _WALLLIT = { t="FIREWALL", f="XX"},
   _LIFT  = { t="COMPSTA1", f="CJFCOMM3" },
   _SBARS = { t="STEP4", f="XX" }, -- Short bars, i.e. railings
   _MBARS = { t="BARS", f="XX" }, -- Medium bars, i.e. barred windows

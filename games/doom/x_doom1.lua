@@ -41,7 +41,9 @@ ULTDOOM.PARAMETERS =
 ULTDOOM.MATERIALS =
 {
   -- materials for generic prefab set --
+  _VOID = { t="O_BLACK", f="XX" },
   _FLATLIT = { t="METAL", f="TLITE6_6" },
+  _WALLLIT = { t="LITE5", f="XX"},
   _LIFT  = { t="PLAT1", f="STEP1"},
   _SBARS = { t="MIDBRN1", f="XX" }, -- Short bars, i.e. railings
   _MBARS = { t="MIDBARS3", f="XX" }, -- Medium bars, i.e. barred windows
