@@ -24,9 +24,3 @@ PREFABS.Item_cage_balcony_2 =
   template = "Item_cage_balcony",
   map = "MAP02",
 }
-
-PREFABS.Item_cage_balcony_3 =
-{
-  template = "Item_cage_balcony",
-  map = "MAP03",
-}

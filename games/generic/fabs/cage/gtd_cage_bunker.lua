@@ -4,8 +4,6 @@ PREFABS.Cage_wall_bunker_tech =
 
   prob  = 800,
 
-  theme  = "tech",
-
   where  = "seeds",
   shape  = "U",
 
@@ -21,19 +19,4 @@ PREFABS.Cage_wall_bunker_tech =
   y_fit = "top",
 
   sector_8  = { [8]=60, [2]=10, [3]=10, [17]=10, [21]=5 },
-
-  tex_DOOR3 =
-  {
-    DOOR1=50,
-    DOOR3=50,
-  }
-}
-
-PREFABS.Cage_wall_bunker_hell =
-{
-  template = "Cage_wall_bunker_tech",
-
-  theme    = "hell",
-
-  tex_DOOR3 = "WOODMET1",
 }

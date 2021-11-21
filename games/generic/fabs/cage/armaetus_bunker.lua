@@ -12,8 +12,6 @@ PREFABS.Cage_wall_armaetus_bunker =
   seed_w = 2,
   seed_h = 1,
 
-  texture_pack = "armaetus",
-
   deep   =  16,
 
   x_fit = { 112,144 },
