@@ -39,6 +39,7 @@ PREFABS.Hallway_subway_basic_keyed_yellow =
 PREFABS.Hallway_subway_basic_keyed_barred =
 {
   template = "Hallway_subway_basic_keyed_red",
+  map = "MAP02",
 
   key    = "barred",
 
