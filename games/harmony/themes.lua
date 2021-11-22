@@ -145,6 +145,7 @@ HARMONY.THEMES =
     wide_halls =
     {
       curve = 50,
+      deuce = 50,
     },
 
     floor_sinks =

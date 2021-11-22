@@ -123,7 +123,9 @@ function Ambient_push(value)
     error("Ambient_push : missing value")
   end
 
-  table.insert(AMBIENT_LIGHT, 1, math.clamp(PARAM.wad_minimum_brightness, value, PARAM.wad_maximum_brightness))
+  if value > 0 then -- Preserve intentional zero values for fabs
+    table.insert(AMBIENT_LIGHT, 1, math.clamp(PARAM.wad_minimum_brightness, value, PARAM.wad_maximum_brightness))
+  end
 end
 
 

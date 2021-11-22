@@ -3800,7 +3800,7 @@ ULTDOOM.PREBUILT_LEVELS =
 function ULTDOOM.nolimit_themes()
   if OB_CONFIG.engine == "nolimit" then
     GAME.THEMES.DEFAULTS.narrow_halls = { vent = 50 }
-    GAME.THEMES.DEFAULTS.wide_halls = { curve = 50 }
+    GAME.THEMES.DEFAULTS.wide_halls = { curve = 50, deuce = 50 }
     GAME.THEMES.tech.narrow_halls = { vent = 50 }
     GAME.THEMES.tech.beam_groups = { beam_metal = 50 }
     GAME.THEMES.tech.wall_groups = 
