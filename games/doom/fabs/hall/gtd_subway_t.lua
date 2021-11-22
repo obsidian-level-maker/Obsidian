@@ -1,4 +1,4 @@
-PREFABS.Hallway_subway_junction =
+PREFABS.Hallway_subway_t_junction =
 {
   file   = "hall/gtd_subway_t.wad",
   map    = "MAP01",
