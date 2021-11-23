@@ -12,8 +12,6 @@ PREFABS.Window_supertall_1 =
   group  = "supertall",
   prob   = 50,
 
-  passable = true,
-
   rank   = 2,
   height = 128,
 

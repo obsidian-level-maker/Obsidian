@@ -20,6 +20,7 @@ HARMONY.MATERIALS =
   _SKY   = { t="METAL3", f="F_SKY1" },
 
   -- materials for generic prefab set --
+  _STAIRS = { t="STEP6", f="FLAT5_4" },
   _VOID = { t="0ARK5", f="XX" },
   _WALLLIT = { t="PANBORD2", f="XX"},  
   _SBARS = { t="0LASER4", f="XX" }, -- Short bars, i.e. railings

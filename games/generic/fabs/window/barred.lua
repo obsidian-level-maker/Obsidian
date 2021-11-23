@@ -7,8 +7,6 @@ PREFABS.Window_barred1 =
   file   = "window/barred.wad",
   map    = "MAP01",
 
-  passable = true,
-
   group  = "barred",
   prob   = 50,
 

@@ -26,6 +26,7 @@ STRIFE.MATERIALS =
   _SKY   = { t="BIGSTN01", f="F_SKY001" },
 
  -- materials for generic prefab set --
+ _STAIRS = { t="STAIR09", f="F_OLDWOD" },
  _VOID = { t="BLACK01", f="XX" },
  _WALLLIT = { t="SCAN01", f="XX"},  
  _SBARS = { t="RAIL01", f="XX" }, -- Short bars, i.e. railings
