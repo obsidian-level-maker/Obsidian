@@ -74,10 +74,6 @@ function UI_ARCH.setup(self)
     end
   end
   
-  --Brightness sliders test - Dasho
-  PARAM["wad_minimum_brightness"] = math.min(PARAM.float_minimum_brightness, PARAM.float_maximum_brightness)
-  PARAM["wad_maximum_brightness"] = math.max(PARAM.float_minimum_brightness, PARAM.float_maximum_brightness)
-
   if OB_CONFIG.engine ~= "vanilla" then
     if type(PARAM.float_size) == "string" then -- Use upper bound for Mix It Up, Progressive, and Episodic level sizes - Dasho
     -- MSSP: the absolute maximum size is tightened down to the largest
@@ -128,40 +124,6 @@ OB_MODULES["ui_arch"] =
 
   options =
   {
-
-    float_minimum_brightness=
-    { 
-      name="float_minimum_brightness", 
-      label=_("Minimum Brightness"),
-      valuator = "slider",
-      units = "",
-      min = 0,
-      max = 256,
-      increment = 16,
-      default = 0,
-      nan = "",
-      presets = "",
-      tooltip = "Sets the minimum brightness for the map.",
-      longtip = "",
-      priority = 102
-    },
-
-    float_maximum_brightness=
-    { 
-      name="float_maximum_brightness", 
-      label=_("Maximum Brightness"),
-      valuator = "slider",
-      units = "",
-      min = 0,
-      max = 256,
-      increment = 16,
-      default = 256,
-      nan = "",
-      presets = "",
-      tooltip = "Sets the maximum brightness for the map.",
-      longtip = "",
-      priority = 101
-    },
 
     float_size=
     { 
