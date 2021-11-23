@@ -20,6 +20,8 @@ PREFABS.Wall_lite2 =
 
   bound_z1 = 0,
   bound_z2 = 128,
+
+  sector_0 = { [0]=50, [1]=20 },
 }
 
 PREFABS.Wall_lite2_hacx =

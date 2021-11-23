@@ -32,6 +32,7 @@ HERETIC.MATERIALS =
   _SKY     = { t="CHAINSD", f="F_SKY1"  },
   
   -- materials for generic prefab set --
+  _STAIRS = { t="WOODWL", f="FLOOR10" },
   _VOID = { t="STNGLS3", f="XX" }, -- Only works with small areas and exact offsets, but it's the only thing I could find with solid black areas
   _WALLLIT = { t="STNGLS1", f="XX" }, -- Same as above, but for "wall lights"
   _SBARS = { t="GATMETL3", f="FLOOR30" }, -- Short bars, i.e. railings
@@ -61,7 +62,7 @@ HERETIC.MATERIALS =
   _EXITTR  = { t="METL2", f="FLOOR28" }, -- Exit switch trim
   _EXITRM  = { t="METL2", f="FLOOR28" }, -- Exit room
   
-  _STRUCT = {t="WOODWL", f="FLOOR10"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
+  _STRUCT = {t="METL2", f="FLOOR30"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
   _SW  = { t="SW1OFF", f="FLOOR30" }, -- General purpose swtich, full size
   _SWTRIM = { t="METL2", f="FLOOR30" }, -- Trim for switch

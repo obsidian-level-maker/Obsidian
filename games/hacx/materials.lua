@@ -18,6 +18,7 @@ HACX.MATERIALS =
   _LIQUID = { f="FWATER1", t="BLODRIP1" },
 
   -- materials for generic prefab set --
+  _STAIRS = { t="STEPTOP", f="CONS1_5" },
   _VOID = { t="GRAY5", f="XX" },
   _WALLLIT = { t="HW208", f="XX"},
   _LIFT  = { t="BIGDOOR2", f="CONS1_5" },
@@ -50,7 +51,7 @@ HACX.MATERIALS =
   
   _STRUCT = {t="HW209", f="RROCK03"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
-  _SW  = { t="BLAKWAL2",  f="FLOOR0_2" }, -- General purpose swtich, full size
+  _SW  = { t="SW1BRN1",  f="FLOOR0_2" }, -- General purpose swtich, full size
   _SWTRIM = { t="BRICK10",  f="FLOOR0_2" }, -- Trim for switch
   
   _TELE = { f="BLOOD1",  t="BRONZE1" }, -- Teleporter

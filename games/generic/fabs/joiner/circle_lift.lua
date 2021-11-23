@@ -7,6 +7,7 @@ PREFABS.Joiner_circle_lift = -- Default offsets are for Doom
   prob   = 100,
 
   where  = "seeds",
+  style  = "steepness",
   shape  = "I",
 
   seed_w = 1,
@@ -16,8 +17,7 @@ PREFABS.Joiner_circle_lift = -- Default offsets are for Doom
   over   = 16,
   
   delta_h = 104,
-
-  can_flip = true,
+  nearby_h = 104,
 
   forced_offsets = -- Need to force 1,1 otherwise Obsidian will think it wants to be 0,0
   {
