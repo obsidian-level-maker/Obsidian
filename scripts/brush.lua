@@ -124,7 +124,11 @@ function Ambient_push(value)
   end
 
   if value > 0 then -- Preserve intentional zero values for fabs
-    table.insert(AMBIENT_LIGHT, 1, math.clamp(PARAM.wad_minimum_brightness, value, PARAM.wad_maximum_brightness))
+    if PARAM.wad_minimum_brightness and PARAM.wad_maximum_brightness then
+      table.insert(AMBIENT_LIGHT, 1, math.clamp(PARAM.wad_minimum_brightness, value, PARAM.wad_maximum_brightness))
+    else
+      table.insert(value)
+    end
   end
 end
 
