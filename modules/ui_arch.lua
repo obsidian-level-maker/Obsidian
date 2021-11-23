@@ -65,44 +65,52 @@ function UI_ARCH.setup(self)
   -- these parameters have to be instantiated in this hook
   -- because begin_level happens *after* level size decisions
   for _,opt in pairs(self.options) do
-    if opt.valuator then
-      if opt.valuator == "button" then
-        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
-      elseif opt.valuator == "slider" then
-        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+    if OB_CONFIG.batch_mode == "yes" then
+      if not PARAM[opt.name] then
+        PARAM[opt.name] = opt.default
       end
-    end
+    else
+	    if opt.valuator then
+		    if opt.valuator == "button" then
+		        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+		    elseif opt.valuator == "slider" then
+		        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+		    end
+	    end
+	  end
   end
   
   if OB_CONFIG.engine ~= "vanilla" then
-    if type(PARAM.float_size) == "string" then -- Use upper bound for Mix It Up, Progressive, and Episodic level sizes - Dasho
-    -- MSSP: the absolute maximum size is tightened down to the largest
-    -- agreed map size for performance's sake. Current agreed maximum is 74 W.
-    -- any higher will cause skyboxes and teleporter rooms to start merging with
-    -- the main map.
-
-    -- Dasho: This shifts the default value of 90 for SEED_W and SEED_H to here instead of defs.lua. It will remain 90 unless someone
-    -- who is using slider overrides sets extremely high values for Level Size, then it is changed to prevent assertion errors later on.
-      if (PARAM.float_level_upper_bound > 86) then
-        SEED_W = PARAM.float_level_upper_bound + 4
-        SEED_H = PARAM.float_level_upper_bound + 4
-      else
-        SEED_W = 90
-        SEED_H = 90
-      end
+    if OB_CONFIG.batch_mode == "yes" or type(PARAM.float_size) ~= "string" then
+      SEED_W = 90
+      SEED_H = 90
     else
-      if (PARAM.float_size > 86) then
-        SEED_W = PARAM.float_size + 4
-        SEED_H = PARAM.float_size + 4
-      else
-        SEED_W = 90
-        SEED_H = 90
-      end
-    end
-  else
-    SEED_W = 90
-    SEED_H = 90
-  end
+      if type(PARAM.float_size) == "string" then -- Use upper bound for Mix It Up, Progressive, and Episodic level sizes - Dasho
+      -- MSSP: the absolute maximum size is tightened down to the largest
+      -- agreed map size for performance's sake. Current agreed maximum is 74 W.
+      -- any higher will cause skyboxes and teleporter rooms to start merging with
+      -- the main map.
+
+      -- Dasho: This shifts the default value of 90 for SEED_W and SEED_H to here instead of defs.lua. It will remain 90 unless someone
+      -- who is using slider overrides sets extremely high values for Level Size, then it is changed to prevent assertion errors later on.
+        if (PARAM.float_level_upper_bound > 86) then
+          SEED_W = PARAM.float_level_upper_bound + 4
+          SEED_H = PARAM.float_level_upper_bound + 4
+        else
+          SEED_W = 90
+          SEED_H = 90
+        end
+		  else
+        if (PARAM.float_size > 86) then
+          SEED_W = PARAM.float_size + 4
+          SEED_H = PARAM.float_size + 4
+        else
+          SEED_W = 90
+          SEED_H = 90
+        end
+		  end
+	  end
+  end 
 end
 
 OB_MODULES["ui_arch"] =

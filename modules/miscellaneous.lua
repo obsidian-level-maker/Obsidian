@@ -150,18 +150,22 @@ MISC_STUFF.ROOM_SIZE_MIX_FINE_TUNE_CHOICES =
 function MISC_STUFF.setup(self)
   -- these parameters have to be instantiated in this hook
   -- because begin_level happens *after* level size decisions
-  for _,opt in pairs(self.options) do
-    if opt.name == "room_size_multiplier" or
-    opt.name == "room_area_multiplier" or
-    opt.name == "room_size_consistency" then
-      PARAM[opt.name] = opt.value
-    elseif opt.valuator then
-      if opt.valuator == "button" then
-        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
-      elseif opt.valuator == "slider" then
-        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+  for name,opt in pairs(self.options) do
+    if OB_CONFIG.batch_mode == "yes" then
+      if not PARAM[opt.name] then
+        PARAM[opt.name] = opt.default
       end
-    end
+    else
+	    if opt.valuator then
+		    if opt.valuator == "button" then
+		        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+		    elseif opt.valuator == "slider" then
+		        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+		    end
+	    else
+        PARAM[name] = self.options[name].value
+      end
+	  end
   end
 
   --Brightness sliders
