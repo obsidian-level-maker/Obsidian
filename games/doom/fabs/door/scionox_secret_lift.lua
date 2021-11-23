@@ -1,6 +1,7 @@
 --Secret lift
 
-PREFABS.Door_scionox_secret_lift =
+-- Needs a redo
+--[[PREFABS.Door_scionox_secret_lift =
 {
   file   = "door/scionox_secret_lift.wad",
   map    = "MAP01",
@@ -18,4 +19,4 @@ PREFABS.Door_scionox_secret_lift =
   bound_z2 = 16,
 
   x_fit  = "frame",
-}
+}]]
