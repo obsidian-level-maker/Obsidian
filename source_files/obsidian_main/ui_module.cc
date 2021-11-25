@@ -574,8 +574,8 @@ void UI_Module::callback_SliderPrevious(Fl_Widget *w, void *data) {
         int steps = (int)((current_slider->mod_slider->maximum() /
                            current_slider->mod_slider->step()) *
                           .10);
-        if (steps < current_slider->mod_slider->step()) {
-            steps = current_slider->mod_slider->step();
+        if (steps < 1) {
+            steps = 1;
         }
         double temp_value =
             current_slider->mod_slider->increment(value, -steps);
@@ -620,8 +620,8 @@ void UI_Module::callback_SliderNext(Fl_Widget *w, void *data) {
         int steps = (int)((current_slider->mod_slider->maximum() /
                            current_slider->mod_slider->step()) *
                           .10);
-        if (steps < current_slider->mod_slider->step()) {
-            steps = current_slider->mod_slider->step();
+        if (steps < 1) {
+            steps = 1;
         }
         double temp_value = current_slider->mod_slider->increment(value, steps);
         if (temp_value > current_slider->mod_slider->maximum()) {
