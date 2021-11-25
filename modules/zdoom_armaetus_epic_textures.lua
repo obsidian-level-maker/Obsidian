@@ -656,15 +656,21 @@ function ARMAETUS_EPIC_TEXTURES.setup(self)
   ARMAETUS_EPIC_TEXTURES.put_new_materials()
   PARAM.obsidian_resource_pack_active = true
   for name,opt in pairs(self.options) do
-    if opt.valuator then
-      if opt.valuator == "button" then
-        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
-      elseif opt.valuator == "slider" then
-        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+    if OB_CONFIG.batch_mode == "yes" then
+      if not PARAM[opt.name] then
+        PARAM[opt.name] = opt.default
       end
     else
-      PARAM[name] = self.options[name].value
-    end
+	    if opt.valuator then
+		    if opt.valuator == "button" then
+		        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+		    elseif opt.valuator == "slider" then
+		        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+		    end
+	    else
+        PARAM[name] = self.options[name].value
+      end
+	  end
   end
 end
 
@@ -803,8 +809,8 @@ function ARMAETUS_EPIC_TEXTURES.generate_environment_themes()
   end
 
   if PARAM.bool_jump_crouch == 0 then
-    THEMES.hell.wide_halls.organs = 0
-    THEMES.hell.wide_halls.conveyorh = 0
+    GAME.THEMES["hell"].wide_halls.organs = 0
+    GAME.THEMES["hell"].wide_halls.conveyorh = 0
   end
 
   -- initialize default tables

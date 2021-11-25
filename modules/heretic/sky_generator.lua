@@ -508,16 +508,21 @@ SKY_GEN_HERETIC.themes =
 
 function SKY_GEN_HERETIC.setup(self)
   for name,opt in pairs(self.options) do
-    if opt.valuator then
-      if opt.valuator == "button" then
-        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
-      elseif opt.valuator == "slider" then
-        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+    if OB_CONFIG.batch_mode == "yes" then
+      if not PARAM[opt.name] then
+        PARAM[opt.name] = opt.default
       end
     else
-      local value = self.options[name].value
-      PARAM[name] = value
-    end
+	    if opt.valuator then
+		    if opt.valuator == "button" then
+		        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+		    elseif opt.valuator == "slider" then
+		        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+		    end
+	    else
+        PARAM[name] = self.options[name].value
+      end
+	  end
   end
 
   PARAM.episode_sky_color = {}

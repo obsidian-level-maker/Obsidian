@@ -65,48 +65,52 @@ function UI_ARCH.setup(self)
   -- these parameters have to be instantiated in this hook
   -- because begin_level happens *after* level size decisions
   for _,opt in pairs(self.options) do
-    if opt.valuator then
-      if opt.valuator == "button" then
-        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
-      elseif opt.valuator == "slider" then
-        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
-      end
-    end
-  end
-  
-  --Brightness sliders test - Dasho
-  PARAM["wad_minimum_brightness"] = math.min(PARAM.float_minimum_brightness, PARAM.float_maximum_brightness)
-  PARAM["wad_maximum_brightness"] = math.max(PARAM.float_minimum_brightness, PARAM.float_maximum_brightness)
-
-  if OB_CONFIG.engine ~= "vanilla" then
-    if type(PARAM.float_size) == "string" then -- Use upper bound for Mix It Up, Progressive, and Episodic level sizes - Dasho
-    -- MSSP: the absolute maximum size is tightened down to the largest
-    -- agreed map size for performance's sake. Current agreed maximum is 74 W.
-    -- any higher will cause skyboxes and teleporter rooms to start merging with
-    -- the main map.
-
-    -- Dasho: This shifts the default value of 90 for SEED_W and SEED_H to here instead of defs.lua. It will remain 90 unless someone
-    -- who is using slider overrides sets extremely high values for Level Size, then it is changed to prevent assertion errors later on.
-      if (PARAM.float_level_upper_bound > 86) then
-        SEED_W = PARAM.float_level_upper_bound + 4
-        SEED_H = PARAM.float_level_upper_bound + 4
-      else
-        SEED_W = 90
-        SEED_H = 90
+    if OB_CONFIG.batch_mode == "yes" then
+      if not PARAM[opt.name] then
+        PARAM[opt.name] = opt.default
       end
     else
-      if (PARAM.float_size > 86) then
-        SEED_W = PARAM.float_size + 4
-        SEED_H = PARAM.float_size + 4
-      else
-        SEED_W = 90
-        SEED_H = 90
-      end
-    end
-  else
-    SEED_W = 90
-    SEED_H = 90
+	    if opt.valuator then
+		    if opt.valuator == "button" then
+		        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+		    elseif opt.valuator == "slider" then
+		        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+		    end
+	    end
+	  end
   end
+  
+  if OB_CONFIG.engine ~= "vanilla" then
+    if OB_CONFIG.batch_mode == "yes" or type(PARAM.float_size) ~= "string" then
+      SEED_W = 90
+      SEED_H = 90
+    else
+      if type(PARAM.float_size) == "string" then -- Use upper bound for Mix It Up, Progressive, and Episodic level sizes - Dasho
+      -- MSSP: the absolute maximum size is tightened down to the largest
+      -- agreed map size for performance's sake. Current agreed maximum is 74 W.
+      -- any higher will cause skyboxes and teleporter rooms to start merging with
+      -- the main map.
+
+      -- Dasho: This shifts the default value of 90 for SEED_W and SEED_H to here instead of defs.lua. It will remain 90 unless someone
+      -- who is using slider overrides sets extremely high values for Level Size, then it is changed to prevent assertion errors later on.
+        if (PARAM.float_level_upper_bound > 86) then
+          SEED_W = PARAM.float_level_upper_bound + 4
+          SEED_H = PARAM.float_level_upper_bound + 4
+        else
+          SEED_W = 90
+          SEED_H = 90
+        end
+		  else
+        if (PARAM.float_size > 86) then
+          SEED_W = PARAM.float_size + 4
+          SEED_H = PARAM.float_size + 4
+        else
+          SEED_W = 90
+          SEED_H = 90
+        end
+		  end
+	  end
+  end 
 end
 
 OB_MODULES["ui_arch"] =
@@ -128,40 +132,6 @@ OB_MODULES["ui_arch"] =
 
   options =
   {
-
-    float_minimum_brightness=
-    { 
-      name="float_minimum_brightness", 
-      label=_("Minimum Brightness"),
-      valuator = "slider",
-      units = "",
-      min = 0,
-      max = 256,
-      increment = 1,
-      default = 0,
-      nan = "",
-      presets = "",
-      tooltip = "Sets the minimum brightness for the map.",
-      longtip = "",
-      priority = 102
-    },
-
-    float_maximum_brightness=
-    { 
-      name="float_maximum_brightness", 
-      label=_("Maximum Brightness"),
-      valuator = "slider",
-      units = "",
-      min = 0,
-      max = 256,
-      increment = 1,
-      default = 256,
-      nan = "",
-      presets = "",
-      tooltip = "Sets the maximum brightness for the map.",
-      longtip = "",
-      priority = 101
-    },
 
     float_size=
     { 

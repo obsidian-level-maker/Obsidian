@@ -134,19 +134,26 @@ MISC_STUFF_HARMONY.ROOM_SIZE_CONSISTENCY_CHOICES =
 function MISC_STUFF_HARMONY.setup(self)
   -- these parameters have to be instantiated in this hook
   -- because begin_level happens *after* level size decisions
-  for _,opt in pairs(self.options) do
-    if opt.name == "room_size_multiplier" or
-    opt.name == "room_area_multiplier" or
-    opt.name == "room_size_consistency" then
-      PARAM[opt.name] = opt.value
-    elseif opt.valuator then
-      if opt.valuator == "button" then
-        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
-      elseif opt.valuator == "slider" then
-        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+  for name,opt in pairs(self.options) do
+    if OB_CONFIG.batch_mode == "yes" then
+      if not PARAM[opt.name] then
+        PARAM[opt.name] = opt.default
       end
-    end
+    else
+	    if opt.valuator then
+		    if opt.valuator == "button" then
+		        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+		    elseif opt.valuator == "slider" then
+		        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+		    end
+	    else
+        PARAM[name] = self.options[name].value
+      end
+	  end
   end
+    --Brightness sliders
+    PARAM["wad_minimum_brightness"] = math.min(PARAM.float_minimum_brightness, PARAM.float_maximum_brightness)
+    PARAM["wad_maximum_brightness"] = math.max(PARAM.float_minimum_brightness, PARAM.float_maximum_brightness)
 end
 
 function MISC_STUFF_HARMONY.begin_level(self)
@@ -340,6 +347,35 @@ OB_MODULES["misc_harmony"] =
       choices=MISC_STUFF_HARMONY.LIGHT_CHOICES,
       tooltip = "Creates an extra brightness offset for rooms. Does not change the lighting palette for rooms.",
       default = "none",
+    },
+    { 
+      name="float_minimum_brightness", 
+      label=_("Minimum Brightness"),
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 256,
+      increment = 16,
+      default = 0,
+      nan = "",
+      presets = "",
+      tooltip = "Sets the minimum brightness for the map.",
+      longtip = "",
+    },
+
+    { 
+      name="float_maximum_brightness", 
+      label=_("Maximum Brightness"),
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 256,
+      increment = 16,
+      default = 256,
+      nan = "",
+      presets = "",
+      tooltip = "Sets the maximum brightness for the map.",
+      longtip = "",
     },
     { name="barrels",     label=_("Canisters"),        choices=STYLE_CHOICES, gap=1 },
 

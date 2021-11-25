@@ -131,7 +131,8 @@ CHEX3.THEMES =
 
     wide_halls =
     {
-      curve = 50
+      curve = 50,
+      deuce = 50,
     },
 
     floor_sinks =
@@ -281,7 +282,8 @@ CHEX3.THEMES =
 
     wide_halls =
     {
-      curve = 50
+      curve = 50,
+      deuce = 50,
     },
 
     floor_sinks =
@@ -434,7 +436,8 @@ CHEX3.THEMES =
 
     wide_halls =
     {
-      curve = 50
+      curve = 50,
+      deuce = 50,
     },
 
     floor_sinks =
