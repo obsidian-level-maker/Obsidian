@@ -809,8 +809,8 @@ function ARMAETUS_EPIC_TEXTURES.generate_environment_themes()
   end
 
   if PARAM.bool_jump_crouch == 0 then
-    THEMES.hell.wide_halls.organs = 0
-    THEMES.hell.wide_halls.conveyorh = 0
+    GAME.THEMES["hell"].wide_halls.organs = 0
+    GAME.THEMES["hell"].wide_halls.conveyorh = 0
   end
 
   -- initialize default tables
