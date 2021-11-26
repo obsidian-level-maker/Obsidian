@@ -209,7 +209,16 @@ PREFABS.Pic_EPIC_box_small_facesofevil =
     EVILFAC4 = 50,
     EVILFAC5 = 50,
     EVILFAC6 = 50,
-    EVILFAC7 = 50
+    EVILFAC7 = 50,
+    D64ANM1A = 50,
+    D64REL01 = 50,
+    D64REL02 = 50,
+    D64REL03 = 50,
+    D64REL04 = 50,
+    D64REL05 = 50,
+    D64REL06 = 50,
+    D64REL07 = 50,
+    D64REL08 = 50
   }
 }
 
