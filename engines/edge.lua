@@ -140,7 +140,7 @@ OB_ENGINES["edge"] =
 
   extends = "advanced",
 
-  game = { doom1=1, doom2=1, hacx=1 },
+  game = { doom1=1, doom2=1, hacx=1, harmony=1 },
 
   tables =
   {
