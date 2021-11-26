@@ -648,6 +648,38 @@ CHEX3.ROOM_THEMES =
     }
   
   },
+
+  bazoik_deuce_Hallway =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob  = 50,
+  
+    walls =
+    {
+      GRAY7 = 50,
+      STARG3  = 15,
+    },
+  
+    floors =
+    {
+      FLAT1_1 = 50,
+      FLAT1 = 50,
+      FLAT14 = 50,
+      FLOOR0_2 = 50,
+      STEP1 = 50
+    },
+  
+    ceilings =
+    {
+      FLAT14 = 50,
+      CJFCOMM3 = 50,
+      CEIL5_1 = 50,
+      CEIL4_2 = 25,
+      FLOOR0_6 = 25
+    }
+  
+  },
   
   bazoik_Outdoors =
   {
@@ -789,6 +821,38 @@ CHEX3.ROOM_THEMES =
 
   },
 
+  spaceport_deuce_Hallway =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob  = 50,
+
+    walls =
+    {
+      SP_DUDE2 = 30,
+      STONE3 = 10,
+      STONE = 20,
+      GRAY7 = 10,
+      STARG3 = 30,
+      TEKWALL5 = 10,
+      BROWN1 = 10
+    },
+
+    floors =
+    {
+      CEIL5_1 = 50,
+      FLAT14 = 50,
+      STARG3 = 50,
+      CEIL4_1 = 50
+    },
+
+    ceilings =
+    {
+      CEIL4_1 = 50
+    }
+
+  },
+
   spaceport_Outdoors =
   {
     env  = "outdoor",
@@ -898,6 +962,37 @@ sewer_curve_Hallway =
 {
   env   = "hallway",
   group = "curve",
+  prob  = 50,
+
+  walls =
+  {
+    GREEN_BRICK = 50,
+    GRAY2  = 15,
+    SEWERA = 15,
+    SEWER2 = 15,
+  },
+
+  floors =
+  {
+    CJFCRA02 = 50,
+    CJFLOD05 = 50,
+    ENDFLAT2 = 50,
+    GREEN_TILE = 50
+  },
+
+  ceilings =
+  {
+    CJFCRA01 = 50,
+    CJFCRA02 = 50,
+    CJFVIL02 = 15,
+  }
+
+},
+
+sewer_deuce_Hallway =
+{
+  env   = "hallway",
+  group = "deuce",
   prob  = 50,
 
   walls =
