@@ -3,7 +3,7 @@ PREFABS.Switch_wall_tight =
   file   = "switch/tight.wad",
 
   map = "MAP01",
-  game = "heretic",
+  game = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=0, heretic=0, strife=0 },
 
   prob   = 18,
 
@@ -23,30 +23,11 @@ PREFABS.Switch_wall_tight =
 
 }
 
-PREFABS.Switch_wall_tight_doomish =
-{
-  template   = "Switch_wall_tight",
-
-  game = { doom1=1, doom2=1 },
-  forced_offsets = 
-  {
-    [8] = { x=4,y=72 },
-    [9] = { x=4,y=72 },
-    [10] = { x=4,y=72 },
-  }
-}
-
 PREFABS.Switch_wall_tight_chex3 =
 {
   template   = "Switch_wall_tight",
-
   game = "chex3",
-  forced_offsets = 
-  {
-    [8] = { x=4,y=76 },
-    [9] = { x=4,y=76 },
-    [10] = { x=4,y=76 },
-  }
+  map = "MAP02"
 }
 
 PREFABS.Switch_wall_tight_hacx =
@@ -56,9 +37,7 @@ PREFABS.Switch_wall_tight_hacx =
   game = "hacx",
   forced_offsets = 
   {
-    [8] = { x=68,y=65 },
-    [9] = { x=68,y=65 },
-    [10] = { x=68,y=65 },
+    [9] = { x=32,y=0 },
   }
 }
 
@@ -69,11 +48,21 @@ PREFABS.Switch_wall_tight_harmony =
   game = "harmony",
   forced_offsets = 
   {
-    [8] = { x=4,y=80 },
-    [9] = { x=4,y=80 },
-    [10] = { x=4,y=80 },
+    [9] = { x=16,y=88 },
   }
 }
+
+PREFABS.Switch_wall_tight_heretic =
+{
+  template   = "Switch_wall_tight",
+
+  game = "heretic",
+  forced_offsets = 
+  {
+    [9] = { x=16,y=49 },
+  }
+}
+
 
 PREFABS.Switch_wall_tight_strife =
 {
@@ -82,8 +71,6 @@ PREFABS.Switch_wall_tight_strife =
   game = "strife",
   forced_offsets = 
   {
-    [8] = { x=4,y=62 },
-    [9] = { x=4,y=62 },
-    [10] = { x=4,y=62 },
+    [9] = { x=0,y=72 },
   }
 }

@@ -6,7 +6,7 @@ PREFABS.Switch_small = -- Default offsets are for Doom 1/2
 {
   file   = "switch/small.wad",
   map    = "MAP01",
-  game   = { doom1=1, doom2=1 },
+  game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=0, heretic=0, strife= },
 
   key    = "sw_metal",
   prob   = 50,
@@ -16,20 +16,11 @@ PREFABS.Switch_small = -- Default offsets are for Doom 1/2
   tag_1  = "?switch_tag",
 }
 
--- Need to rework offsets due to fab change - Dasho
 PREFABS.Switch_small_chex3 =
 {
   template = "Switch_small",
-
   game = "chex3",
-
-  forced_offsets =
-  {
-    [32] = { x=8,y=76 },
-    [34] = { x=8,y=76 },
-    [36] = { x=8,y=76 },
-    [38] = { x=8,y=76 },
-  }
+  map = "MAP02"
 }
 
 PREFABS.Switch_small_hacx =
@@ -39,10 +30,10 @@ PREFABS.Switch_small_hacx =
   game = "hacx",
   forced_offsets =
   {
-    [32] = { x=72,y=65 },
-    [34] = { x=72,y=65 },
-    [36] = { x=72,y=65 },
-    [38] = { x=72,y=65 },
+    [32] = { x=64,y=0 },
+    [34] = { x=64,y=0 },
+    [36] = { x=64,y=0 },
+    [38] = { x=64,y=0 },
   }
 }
 
@@ -53,10 +44,10 @@ PREFABS.Switch_small_harmony =
   game = "harmony",
   forced_offsets =
   {
-    [32] = { x=8,y=80 },
-    [34] = { x=8,y=80 },
-    [36] = { x=8,y=80 },
-    [38] = { x=8,y=80 },
+    [32] = { x=16,y=16 },
+    [34] = { x=16,y=16 },
+    [36] = { x=16,y=16 },
+    [38] = { x=16,y=16 },
   }
 }
 
@@ -67,10 +58,10 @@ PREFABS.Switch_small_heretic =
   game = "heretic",
   forced_offsets =
   {
-    [32] = { x=8,y=48 },
-    [34] = { x=8,y=48 },
-    [36] = { x=8,y=48 },
-    [38] = { x=8,y=48 },
+    [32] = { x=16,y=48 },
+    [34] = { x=16,y=48 },
+    [36] = { x=16,y=48 },
+    [38] = { x=16,y=48 },
   }
 }
 
@@ -81,10 +72,9 @@ PREFABS.Switch_small_strife =
   game = "strife",
   forced_offsets =
   {
-    [32] = { x=8,y=62 },
-    [34] = { x=8,y=62 },
-    [36] = { x=8,y=62 },
-    [38] = { x=8,y=62 },
+    [32] = { x=0,y=72 },
+    [34] = { x=0,y=72 },
+    [36] = { x=0,y=72 },
+    [38] = { x=0,y=72 },
   }
 }
-
