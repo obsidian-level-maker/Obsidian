@@ -24,6 +24,13 @@ PREFABS.Switch_niche2 =
   sector_1  = { [0]=80, [1]=15, [2]=5, [3]=5, [8]=5 },
 }
 
+PREFABS.Switch_niche2_chex3 = 
+{
+  template = "Switch_niche2",
+  game = "chex3",
+  map = "MAP02"
+}
+
 PREFABS.Switch_niche2_hacx = 
 {
   template = "Switch_niche2",
