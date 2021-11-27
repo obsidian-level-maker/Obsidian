@@ -23,6 +23,8 @@
 function Render_add_exit_sign(E, z)
   if PARAM.bool_exit_signs and PARAM.bool_exit_signs ~= 1 then return end
 
+  if not ob_match_game({ game = { chex3=0, doom1=1, doom2=1, hacx=0, heretic=0, harmony=1, strife=1} }) then return end
+
   local def = PREFABS["Decor_exit_sign"]
   if not def then return end
 

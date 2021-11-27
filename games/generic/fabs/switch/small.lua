@@ -6,7 +6,7 @@ PREFABS.Switch_small = -- Default offsets are for Doom 1/2
 {
   file   = "switch/small.wad",
   map    = "MAP01",
-  game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=0, heretic=0, strife= },
+  game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=0, heretic=0, strife=0 },
 
   key    = "sw_metal",
   prob   = 50,
