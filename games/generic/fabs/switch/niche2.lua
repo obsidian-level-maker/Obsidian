@@ -6,7 +6,7 @@ PREFABS.Switch_niche2 =
 {
   file   = "switch/niche2.wad",
   map    = "MAP01",
-  game   = "!hacx",
+  game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=0, heretic=0, strife=0 },
 
   key    = "sw_metal",
   prob   = 50,
@@ -31,6 +31,47 @@ PREFABS.Switch_niche2_hacx =
   game = "hacx",
   forced_offsets = 
   {
-    [19] = { x=-64, y=1 }
+    [31] = { x=0, y=0 },
+    [32] = { x=0, y=0 },
+    [33] = { x=0, y=0 },
+  }
+}
+
+PREFABS.Switch_niche2_harmony = 
+{
+  template = "Switch_niche2",
+
+  game = "harmony",
+  forced_offsets = 
+  {
+    [31] = { x=16, y=16 },
+    [32] = { x=16, y=16 },
+    [33] = { x=16, y=16 },
+  }
+}
+
+PREFABS.Switch_niche2_heretic = 
+{
+  template = "Switch_niche2",
+
+  game = "heretic",
+  forced_offsets = 
+  {
+    [31] = { x=16, y=48 },
+    [32] = { x=16, y=48 },
+    [33] = { x=16, y=48 },
+  }
+}
+
+PREFABS.Switch_niche2_strife = 
+{
+  template = "Switch_niche2",
+
+  game = "strife",
+  forced_offsets = 
+  {
+    [31] = { x=0, y=72 },
+    [32] = { x=0, y=72 },
+    [33] = { x=0, y=72 },
   }
 }
