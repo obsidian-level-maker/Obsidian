@@ -45,11 +45,11 @@ CHEX3.MATERIALS =
   _KEYTRM3 = { t="DOORBLU", f="XX" }, -- Trim for locked door, Key 3
   
   _EXITDR = { t="BIGDOOR7", f="FLAT5_6" }, -- Exit door
-  _EXITSW = { t="SW1STON1", f="FLAT5_6"  }, -- Exit switch
-  _EXITTR = { t="EXITSTON", f="FLAT5_6"},
-  _EXITRM = { t="EXITSTON", f="FLAT5_6"}, -- Exit room walls (to match switch)
+  _EXITSW = { t="SW1SLAD", f="STEEL32" }, -- Exit switch
+  _EXITTR = { t="CEMENT1", f="STEEL32" },
+  _EXITRM = { t="CEMENT1", f="STEEL32" }, -- Exit room walls (to match switch)
   
-  _SW  = { t="SW1COMP",  f="CEIL5_1" }, -- General purpose swtich, full size
+  _SW  = { t="SW1COMP",  f="CEIL5_1" }, -- Switch is roughly 32x32 in size, rest of the texture is 'hidden' (Chex needs its own fabs for this because of its switch dimensions)
   _SWTRIM = { t="COMPSPAN",  f="CEIL5_1" }, -- Trim for switch
 
   _STRUCT = {t="COMPSPAN", f="CEIL5_1"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
