@@ -25,7 +25,14 @@ function Render_add_exit_sign(E, z)
 
   if not ob_match_game({ game = { chex3=0, doom1=1, doom2=1, hacx=0, heretic=0, harmony=1, strife=1} }) then return end
 
-  local def = PREFABS["Decor_exit_sign"]
+  local def
+
+  if OB_CONFIG.game == "strife" then -- Strife needs special offsets for its "exit sign"
+    def = PREFABS["Decor_exit_sign_strife"]
+  else
+    def = PREFABS["Decor_exit_sign"]
+  end
+
   if not def then return end
 
   assert(z)
