@@ -406,6 +406,7 @@ PREFABS.Wall_tech_outdoor_black_mesa_overlook_EPIC =
 
   rank = 2,
   engine = "zdoom",
+  texture_pack = "armaetus",
   replaces = "Wall_tech_outdoor_black_mesa_overlook",
 
   height = 192,
