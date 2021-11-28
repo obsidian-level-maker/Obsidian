@@ -22,7 +22,7 @@ CHEX3.MATERIALS =
   _FLATLIT = { t="COMPSPAN", f="LABFLAT" },
   _WALLLIT = { t="FIREWALL", f="XX"},
   _LIFT  = { t="COMPSTA1", f="CJFCOMM3" },
-  _SBARS = { t="STEP4", f="XX" }, -- Short bars, i.e. railings
+  _SBARS = { t="LITEMET", f="XX" }, -- Short bars, i.e. railings
   _MBARS = { t="BARS", f="XX" }, -- Medium bars, i.e. barred windows
   _TBARS = { t="LITE4", f = "XX" }, -- Tall bars, i.e. cage/jail bars
   

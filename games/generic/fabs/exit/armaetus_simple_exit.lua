@@ -9,7 +9,7 @@ PREFABS.Exit_armaetus_simple_exit =
   where  = "seeds",
 
   seed_w = 1,
-  seed_h = 2,
+  seed_h = 1,
 
   deep   =  16,
 
@@ -49,7 +49,7 @@ PREFABS.Exit_armaetus_simple_exit_nosign =
   where  = "seeds",
 
   seed_w = 1,
-  seed_h = 2,
+  seed_h = 1,
 
   deep   =  16,
 
