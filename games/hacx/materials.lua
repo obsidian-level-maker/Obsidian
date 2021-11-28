@@ -18,7 +18,7 @@ HACX.MATERIALS =
   _LIQUID = { f="FWATER1", t="BLODRIP1" },
 
   -- materials for generic prefab set --
-  _STAIRS = { t="STEPTOP", f="CONS1_5" },
+  _STAIRS = { t="HW216", f="CONS1_5" },
   _VOID = { t="GRAY5", f="XX" },
   _WALLLIT = { t="HW208", f="XX"},
   _LIFT  = { t="BIGDOOR2", f="CONS1_5" },
@@ -45,13 +45,13 @@ HACX.MATERIALS =
   _KEYTRM3 = { t="HW512", f="RROCK03" }, -- Trim for locked door, Key 3
   
   _EXITDR = { t="DOORRED", f="RROCK02" }, -- Exit door
-  _EXITSW  = { t="HD5", f="RROCK02" }, -- Exit switch
-  _EXITTR  = { t="LITE5", f="RROCK02" }, -- Exit switch trim
-  _EXITRM  = { t="LITE5", f="RROCK02" }, -- Exit switch room
+  _EXITSW  = { t="SW1BRN1",  f="FLOOR0_2" }, -- Exit switch
+  _EXITTR  = { t="BRICK10",  f="FLOOR0_2" }, -- Exit switch trim
+  _EXITRM  = { t="BRICK10",  f="FLOOR0_2" }, -- Exit switch room
   
   _STRUCT = {t="HW209", f="RROCK03"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
-  _SW  = { t="SW1BRN1",  f="FLOOR0_2" }, -- General purpose swtich, full size
+  _SW  = { t="SW1BRN1",  f="FLOOR0_2" }, -- Switch is roughly 32x32 in size, rest of the texture is 'hidden'
   _SWTRIM = { t="BRICK10",  f="FLOOR0_2" }, -- Trim for switch
   
   _TELE = { f="BLOOD1",  t="BRONZE1" }, -- Teleporter

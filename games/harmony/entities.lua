@@ -33,7 +33,7 @@ HARMONY.ENTITIES =
   solid_shroom = { id=30, r=20, h=56 },
   truck_pipe   = { id=31, r=20, h=56 },
   sculpture    = { id=33, r=20, h=56 },
-  tree_stump    = { id=47, r=20, h=56 },
+  tree_stump    = { id=54, r=20, h=56 },
   dead_tree    = { id=54, r=20, h=56 },
   water_drip   = { id=42, r=20, h=56 },
   dope_fish    = { id=45, r=20, h=56 },
