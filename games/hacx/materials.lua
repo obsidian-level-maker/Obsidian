@@ -18,7 +18,7 @@ HACX.MATERIALS =
   _LIQUID = { f="FWATER1", t="BLODRIP1" },
 
   -- materials for generic prefab set --
-  _STAIRS = { t="STEPTOP", f="CONS1_5" },
+  _STAIRS = { t="HW216", f="CONS1_5" },
   _VOID = { t="GRAY5", f="XX" },
   _WALLLIT = { t="HW208", f="XX"},
   _LIFT  = { t="BIGDOOR2", f="CONS1_5" },

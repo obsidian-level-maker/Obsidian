@@ -55,6 +55,10 @@ PREFABS.Exit_armaetus_simple_exit_nosign =
 
   x_fit  = "frame",
   y_fit  = "top",
+  forced_offsets =
+  {
+    [30] = { x=0, y=96 }
+  }
 }
 
 PREFABS.Exit_armaetus_simple_exit_nosign_chex3 =
