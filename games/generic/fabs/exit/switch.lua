@@ -11,7 +11,7 @@ PREFABS.Exit_switch1 =
   prob   = 200,
 
   where  = "point",
-  size   = 128,
+  size   = 80,
 }
 
 PREFABS.Exit_switch1_chex3 =
