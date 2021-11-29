@@ -17,6 +17,51 @@ PREFABS.Exit_armaetus_tp_closet =
   y_fit  = "top",
 }
 
+PREFABS.Exit_armaetus_tp_closet_chex3 =
+{
+  template = "Exit_armaetus_tp_closet",
+  game = "chex3",
+  engine = "advanced"
+}
+
+PREFABS.Exit_armaetus_tp_closet_chex3_nosign =
+{
+  template = "Exit_armaetus_tp_closet",
+  game = "chex3",
+  engine = "!advanced",
+  map = "MAP02"
+}
+
+PREFABS.Exit_armaetus_tp_closet_hacx =
+{
+  template = "Exit_armaetus_tp_closet",
+  game = "hacx",
+  engine = "advanced"
+}
+
+PREFABS.Exit_armaetus_tp_closet_hacx_nosign =
+{
+  template = "Exit_armaetus_tp_closet",
+  game = "hacx",
+  engine = "!advanced",
+  map = "MAP02"
+}
+
+PREFABS.Exit_armaetus_tp_closet_heretic =
+{
+  template = "Exit_armaetus_tp_closet",
+  game = "heretic",
+  engine = "advanced"
+}
+
+PREFABS.Exit_armaetus_tp_closet_heretic_nosign =
+{
+  template = "Exit_armaetus_tp_closet",
+  game = "heretic",
+  engine = "!advanced",
+  map = "MAP02"
+}
+
 PREFABS.Exit_armaetus_tp_closet_strife =
 {
   template = "Exit_armaetus_tp_closet",
@@ -25,23 +70,4 @@ PREFABS.Exit_armaetus_tp_closet_strife =
   {
     [32] = { x=0, y=25 }
   }
-}
-
-PREFABS.Exit_armaetus_tp_closet_nosign =
-{
-  file   = "exit/armaetus_tp_closet_exit.wad",
-  map    = "MAP02",
-  game = { chex3=1, doom1=0, doom2=0, hacx=1, harmony=0, heretic=1, strife=0 },
-
-  prob   = 300,
-
-  where  = "seeds",
-
-  seed_w = 1,
-  seed_h = 2,
-
-  deep   = 16,
-
-  x_fit  = "frame",
-  y_fit  = "top",
 }

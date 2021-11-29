@@ -27,21 +27,47 @@ PREFABS.Exit_armaetus_sky_floor_exit_strife =
   }
 }
 
-PREFABS.Exit_armaetus_sky_floor_exit_nosign =
+PREFABS.Exit_armaetus_sky_floor_exit_chex3 = 
 {
-  file   = "exit/armaetus_sky_floor_exit.wad",
-  map    = "MAP02",
-  game = { chex3=1, doom1=0, doom2=0, hacx=1, harmony=0, heretic=1, strife=0 },
+  template = "Exit_armaetus_sky_floor_exit",
+  game = "chex3",
+  engine = "advanced"
+}
 
-  prob   = 300,
+PREFABS.Exit_armaetus_sky_floor_exit_chex3_nosign = 
+{
+  template = "Exit_armaetus_sky_floor_exit",
+  game = "chex3",
+  engine = "!advanced",
+  map = "MAP02"
+}
 
-  where  = "seeds",
+PREFABS.Exit_armaetus_sky_floor_exit_hacx = 
+{
+  template = "Exit_armaetus_sky_floor_exit",
+  game = "hacx",
+  engine = "advanced"
+}
 
-  seed_w = 2,
-  seed_h = 2,
+PREFABS.Exit_armaetus_sky_floor_exit_hacx_nosign = 
+{
+  template = "Exit_armaetus_sky_floor_exit",
+  game = "hacx",
+  engine = "!advanced",
+  map = "MAP02"
+}
 
-  deep   = 16,
+PREFABS.Exit_armaetus_sky_floor_exit_heretic = 
+{
+  template = "Exit_armaetus_sky_floor_exit",
+  game = "heretic",
+  engine = "advanced"
+}
 
-  x_fit  = "frame",
-  y_fit  = "top",
+PREFABS.Exit_armaetus_sky_floor_exit_heretic_nosign = 
+{
+  template = "Exit_armaetus_sky_floor_exit",
+  game = "heretic",
+  engine = "!advanced",
+  map = "MAP02"
 }

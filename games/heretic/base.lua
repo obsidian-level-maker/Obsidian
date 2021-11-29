@@ -39,8 +39,10 @@ gui.import("resources")
 ------------------------------------------------------------
 
 function HERETIC.all_done()
-	local wad_file = "games/heretic/data/HER_EXIT.wad"
-	gui.wad_transfer_lump(wad_file, "HER_EXIT", "HER_EXIT")
+  if ob_match_engine("advanced") then
+	  local wad_file = "games/heretic/data/HER_EXIT.wad"
+	  gui.wad_merge_sections(wad_file)
+  end
 end
 
 OB_GAMES["heretic"] =

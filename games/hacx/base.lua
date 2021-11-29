@@ -35,8 +35,10 @@ gui.import("resources")
 ----------------------------------------------------------------
 
 function HACX.all_done()
-	local wad_file = "games/hacx/data/HAC_EXIT.wad"
-	gui.wad_transfer_lump(wad_file, "HAC_EXIT", "HAC_EXIT")
+	if ob_match_engine("advanced") then
+	  local wad_file = "games/hacx/data/HAC_EXIT.wad"
+	  gui.wad_merge_sections(wad_file)
+	end
 end
 
 OB_GAMES["hacx"] =

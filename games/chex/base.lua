@@ -35,8 +35,10 @@ gui.import("resources")
 ----------------------------------------------------------------
 
 function CHEX3.all_done()
-	local wad_file = "games/chex3/data/CQ3_EXIT.wad"
-	gui.wad_transfer_lump(wad_file, "CQ3_EXIT", "CQ3_EXIT")
+	if ob_match_engine("advanced") then
+	  local wad_file = "games/chex3/data/CQ3_EXIT.wad"
+	  gui.wad_merge_sections(wad_file)
+	end
 end
 
 OB_GAMES["chex3"] =

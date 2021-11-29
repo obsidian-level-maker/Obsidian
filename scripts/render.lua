@@ -26,6 +26,11 @@ function Render_add_exit_sign(E, z)
 
   if PARAM.bool_exit_signs ~= 1 then return end
 
+  -- These games need an engine that supports TX_START/TX_END merging
+  if ob_match_game({ game = { chex3=1, hacx=1, heretic=1} }) then
+     if not ob_match_engine("advanced") then return end
+  end
+
   local def
 
   if OB_CONFIG.game == "strife" then -- Strife needs special offsets for its "exit sign"
