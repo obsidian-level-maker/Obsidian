@@ -1,19 +1,19 @@
 --
--- Lava / slime pit
+-- Liquid pit
 --
 
-UNFINISHED.Floor_lavapit =
+PREFABS.Floor_lavapit =
 {
-  file   = "floor/lava_pit.wad"
+  file   = "floor/lava_pit.wad",
 
-  prob   = 50
+  prob   = 50,
 
-  where  = "seeds"
+  where  = "seeds",
 
-  seed_w = 2
-  seed_h = 2
+  seed_w = 2,
+  seed_h = 2,
 
-  x_fit = "frame"
+  x_fit = "frame",
   y_fit = "frame"
 }
 

@@ -34,6 +34,11 @@ gui.import("levels")
 gui.import("resources")
 ----------------------------------------------------------------
 
+function CHEX3.all_done()
+	local wad_file = "games/chex3/data/CQ3_EXIT.wad"
+	gui.wad_transfer_lump(wad_file, "CQ3_EXIT", "CQ3_EXIT")
+end
+
 OB_GAMES["chex3"] =
 {
 	label = _("Chex Quest 3 (Exp)"),

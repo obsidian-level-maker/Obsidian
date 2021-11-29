@@ -48,6 +48,7 @@ CHEX3.MATERIALS =
   _EXITSW = { t="SW1SLAD", f="STEEL32" }, -- Exit switch
   _EXITTR = { t="CEMENT1", f="STEEL32" },
   _EXITRM = { t="CEMENT1", f="STEEL32" }, -- Exit room walls (to match switch)
+  _EXITSGN = { t="CQ3_EXIT", f="CJFCOMM3"},
   
   _SW  = { t="SW1COMP",  f="CEIL5_1" }, -- Switch is roughly 32x32 in size, rest of the texture is 'hidden' (Chex needs its own fabs for this because of its switch dimensions)
   _SWTRIM = { t="COMPSPAN",  f="CEIL5_1" }, -- Trim for switch
@@ -558,7 +559,7 @@ CHEX3.PREFAB_FIELDS =
   -- These are used for converting generic fab things --
   thing_11000 = 2035, -- Barrel
   thing_11001 = 46, -- Ceiling light
-  thing_11002 = 2028, -- Standalone light
+  thing_11002 = 2028, -- Standalone light 
   thing_11003 = 0, -- Wall light (torch)
   thing_11004 = 34, -- Short standalone light
   thing_11005 = 32, -- Small pillar

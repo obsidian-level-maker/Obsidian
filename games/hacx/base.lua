@@ -34,6 +34,11 @@ gui.import("levels")
 gui.import("resources")
 ----------------------------------------------------------------
 
+function HACX.all_done()
+	local wad_file = "games/hacx/data/HAC_EXIT.wad"
+	gui.wad_transfer_lump(wad_file, "HAC_EXIT", "HAC_EXIT")
+end
+
 OB_GAMES["hacx"] =
 {
 	label = _("HacX 1.2 (Exp)"),
