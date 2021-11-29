@@ -4,6 +4,7 @@ PREFABS.Pic_gtd_warning_days_since_last =
   map = "MAP01",
 
   theme = "!hell",
+  env = "building",
 
   prob = 50,
   skip_prob = 75,
