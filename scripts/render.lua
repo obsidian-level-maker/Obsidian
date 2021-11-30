@@ -21,9 +21,15 @@
 
 
 function Render_add_exit_sign(E, z)
-  if PARAM.bool_exit_signs and PARAM.bool_exit_signs ~= 1 then return end
 
-  if not ob_match_game({ game = { chex3=0, doom1=1, doom2=1, hacx=0, heretic=0, harmony=1, strife=1} }) then return end
+  if not PARAM.bool_exit_signs then return end
+
+  if PARAM.bool_exit_signs ~= 1 then return end
+
+  -- These games need an engine that supports TX_START/TX_END merging
+  if ob_match_game({ game = { chex3=1, hacx=1, heretic=1} }) then
+     if not ob_match_engine({ engine = { edge=1, eternity=1, zdoom=1 } }) then return end
+  end
 
   local def
 

@@ -61,6 +61,7 @@ HERETIC.MATERIALS =
   _EXITSW  = { t="SW2OFF", f="FLOOR28" }, -- Exit switch
   _EXITTR  = { t="METL2", f="FLOOR28" }, -- Exit switch trim
   _EXITRM  = { t="METL2", f="FLOOR28" }, -- Exit room
+  _EXITSGN = { t="HER_EXIT", f="FLOOR04"},
   
   _STRUCT = {t="METL2", f="FLOOR30"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 

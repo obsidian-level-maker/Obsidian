@@ -34,6 +34,13 @@ gui.import("levels")
 gui.import("resources")
 ----------------------------------------------------------------
 
+function CHEX3.all_done()
+	if ob_match_engine("advanced") then
+	  local wad_file = "games/chex/data/CQ3_EXIT.wad"
+	  gui.wad_merge_sections(wad_file)
+	end
+end
+
 OB_GAMES["chex3"] =
 {
 	label = _("Chex Quest 3 (Exp)"),

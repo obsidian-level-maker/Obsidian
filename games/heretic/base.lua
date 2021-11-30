@@ -38,6 +38,13 @@ gui.import("resources")
 
 ------------------------------------------------------------
 
+function HERETIC.all_done()
+  if ob_match_engine("advanced") then
+	  local wad_file = "games/heretic/data/HER_EXIT.wad"
+	  gui.wad_merge_sections(wad_file)
+  end
+end
+
 OB_GAMES["heretic"] =
 {
   label = _("Heretic"),

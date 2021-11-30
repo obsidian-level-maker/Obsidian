@@ -1,4 +1,4 @@
-PREFABS.Wall_generic_direct_waterfall =
+PREFABS.Wall_generic_waterfall =
 {
   file   = "wall/liquids_only.wad",
   map    = "MAP01",
@@ -21,9 +21,9 @@ PREFABS.Wall_generic_direct_waterfall =
   sound = "Water_Streaming",
 }
 
-PREFABS.Wall_generic_direct_waterfall_heretic =
+PREFABS.Wall_generic_waterfall_heretic =
 {
-  template = "Wall_generic_direct_waterfall",
+  template = "Wall_generic_waterfall",
   game = "heretic",
   forced_offsets = 
   {
@@ -31,7 +31,7 @@ PREFABS.Wall_generic_direct_waterfall_heretic =
   }
 }
 
-PREFABS.Wall_generic_ceiling_sleuce =
+PREFABS.Wall_ceiling_sleuce =
 {
   file   = "wall/liquids_only.wad",
   map    = "MAP02",
@@ -53,7 +53,7 @@ PREFABS.Wall_generic_ceiling_sleuce =
   sound = "Waterfall_Rush",
 }
 
-PREFABS.Wall_generic_side_sleuce =
+PREFABS.Wall_side_sleuce =
 {
   file   = "wall/liquids_only.wad",
   map    = "MAP03",

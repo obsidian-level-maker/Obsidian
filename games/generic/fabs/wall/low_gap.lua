@@ -2,7 +2,7 @@
 -- Wall with gap at bottom
 --
 
-PREFABS.Wall_lowgap =
+PREFABS.Wall_low_gap =
 {
   file   = "wall/low_gap.wad",
   map    = "MAP01",
@@ -21,7 +21,7 @@ PREFABS.Wall_lowgap =
 }
 
 
-PREFABS.Wall_lowgap_diag =
+PREFABS.Wall_low_gap_diag =
 {
   file   = "wall/low_gap.wad",
   map    = "MAP02",
@@ -39,7 +39,7 @@ PREFABS.Wall_lowgap_diag =
 }
 
 
-PREFABS.Wall_lowgap_innerdiag =
+PREFABS.Wall_low_gap_innerdiag =
 {
   file = "wall/low_gap.wad",
   map = "MAP04",
@@ -57,16 +57,16 @@ PREFABS.Wall_lowgap_innerdiag =
 }
 
 
-PREFABS.Wall_lowgap2 =
+PREFABS.Wall_low_gap2 =
 {
-  template = "Wall_lowgap",
+  template = "Wall_low_gap",
 
   group = "low_gap2",
 }
 
-PREFABS.Wall_lowgap2_diag =
+PREFABS.Wall_low_gap2_diag =
 {
-  template = "Wall_lowgap_diag",
+  template = "Wall_low_gap_diag",
   map = "MAP03",
 
   group = "low_gap2",

@@ -1,8 +1,8 @@
 -- square windows
 
-PREFABS.Cage_wall_windowed_rooms_square =
+PREFABS.Cage_windowed_rooms_square =
 {
-  file   = "cage/gtd_cage_windowed_rooms.wad",
+  file   = "cage/cage_windowed_rooms.wad",
   map   = "MAP01",
 
   prob  = 1000,
@@ -24,9 +24,9 @@ PREFABS.Cage_wall_windowed_rooms_square =
 
 -- barred windows
 
-PREFABS.Cage_wall_windowed_rooms_barred =
+PREFABS.Cage_windowed_rooms_barred =
 {
-  template = "Cage_wall_windowed_rooms_square",
+  template = "Cage_windowed_rooms_square",
   map = "MAP02",
 
   prob = 150,
@@ -34,9 +34,9 @@ PREFABS.Cage_wall_windowed_rooms_barred =
   x_fit = "frame",
 }
 
-PREFABS.Cage_wall_windowed_rooms_barred_wide =
+PREFABS.Cage_windowed_rooms_barred_wide =
 {
-  template = "Cage_wall_windowed_rooms_square",
+  template = "Cage_windowed_rooms_square",
   map = "MAP03",
 
   prob = 250,
@@ -48,9 +48,9 @@ PREFABS.Cage_wall_windowed_rooms_barred_wide =
 
 -- open windows with MIDBARS
 
-PREFABS.Cage_wall_windowed_rooms_open =
+PREFABS.Cage_windowed_rooms_open =
 {
-  template = "Cage_wall_windowed_rooms_square",
+  template = "Cage_windowed_rooms_square",
   map = "MAP04",
 
   x_fit = {24,232},

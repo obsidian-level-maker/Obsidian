@@ -2,7 +2,7 @@
 -- Outdoor ponds based on Oblige 0.97,
 --
 
-PREFABS.Decor_frozsoul_097_water_pond1 =
+PREFABS.Decor_frozsoul_097_water_pond =
 {
   file   = "decor/frozsoul_097_ponds.wad",
   map    = "MAP01",
@@ -21,9 +21,9 @@ PREFABS.Decor_frozsoul_097_water_pond1 =
   sink_mode = "never",
 }
 
-PREFABS.Decor_frozsoul_097_water_pond2 =
+PREFABS.Decor_frozsoul_097_water_pond_alt =
 {
-  template = "Decor_frozsoul_097_water_pond1",
+  template = "Decor_frozsoul_097_water_pond",
   map      = "MAP02",
 
   size   = 128,

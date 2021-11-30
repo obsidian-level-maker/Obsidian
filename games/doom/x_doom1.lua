@@ -41,6 +41,7 @@ ULTDOOM.PARAMETERS =
 ULTDOOM.MATERIALS =
 {
   -- materials for generic prefab set --
+  _STAIRS = { t="STEP3",    f="CEIL5_1" },
   _VOID = { t="O_BLACK", f="XX" },
   _FLATLIT = { t="METAL", f="TLITE6_6" },
   _WALLLIT = { t="LITE5", f="XX"},
@@ -3813,8 +3814,6 @@ function ULTDOOM.nolimit_themes()
       lite2 = 20,
       torches1 = 12,
       torches2 = 12,
-      beamed_inset = 25,
-      beamed_inset_alt = 25,
       high_gap = 25,
       vert_gab = 25,
       half_floor = 20,
@@ -3835,7 +3834,7 @@ function ULTDOOM.nolimit_themes()
       pillbox = 20,
       slumpish = 30,
     }
-    GAME.THEMES.tech.fence_groups = { PLAIN = 50 }
+    GAME.THEMES.tech.fence_groups = { PLAIN = 50, crenels = 12 }
     GAME.THEMES.tech.fence_posts = { Post = 50 }
     GAME.THEMES.deimos.narrow_halls = { vent = 50 }
     GAME.THEMES.deimos.beam_groups = { beam_metal = 50 }
@@ -3849,8 +3848,6 @@ function ULTDOOM.nolimit_themes()
       lite2 = 20,
       torches1 = 12,
       torches2 = 12,
-      beamed_inset = 25,
-      beamed_inset_alt = 25,
       high_gap = 25,
       vert_gab = 25,
       half_floor = 20,
@@ -3871,7 +3868,7 @@ function ULTDOOM.nolimit_themes()
       pillbox = 20,
       slumpish = 30,
     }
-    GAME.THEMES.deimos.fence_groups = { PLAIN = 50 }
+    GAME.THEMES.deimos.fence_groups = { PLAIN = 50, crenels = 12 }
     GAME.THEMES.deimos.fence_posts = { Post = 50 }
     GAME.THEMES.hell.narrow_halls = { vent = 50 }
     GAME.THEMES.hell.beam_groups = { beam_metal = 50 }
@@ -3885,8 +3882,6 @@ function ULTDOOM.nolimit_themes()
       lite2 = 20,
       torches1 = 12,
       torches2 = 12,
-      beamed_inset = 25,
-      beamed_inset_alt = 25,
       high_gap = 25,
       vert_gab = 25,
       half_floor = 20,
@@ -3907,7 +3902,7 @@ function ULTDOOM.nolimit_themes()
       pillbox = 20,
       slumpish = 30,
     }
-    GAME.THEMES.hell.fence_groups = { PLAIN = 50 }
+    GAME.THEMES.hell.fence_groups = { PLAIN = 50, crenels = 12 }
     GAME.THEMES.hell.fence_posts = { Post = 50 }
     GAME.THEMES.flesh.narrow_halls = { vent = 50 }
     GAME.THEMES.flesh.beam_groups = { beam_metal = 50 }
@@ -3921,8 +3916,6 @@ function ULTDOOM.nolimit_themes()
       lite2 = 20,
       torches1 = 12,
       torches2 = 12,
-      beamed_inset = 25,
-      beamed_inset_alt = 25,
       high_gap = 25,
       vert_gab = 25,
       half_floor = 20,
@@ -3943,7 +3936,7 @@ function ULTDOOM.nolimit_themes()
       pillbox = 20,
       slumpish = 30,
     }
-    GAME.THEMES.flesh.fence_groups = { PLAIN = 50 }
+    GAME.THEMES.flesh.fence_groups = { PLAIN = 50, crenels = 12 }
     GAME.THEMES.flesh.fence_posts = { Post = 50 }
   end
 end

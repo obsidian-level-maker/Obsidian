@@ -2,7 +2,7 @@
 -- Waterfall for caves
 --
 
-UNFINISHED.Decor_cave_waterfall =
+PREFABS.Decor_cave_waterfall =
 {
   file   = "decor/waterfall.wad",
 

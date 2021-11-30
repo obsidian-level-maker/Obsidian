@@ -1,4 +1,4 @@
-PREFABS.Wall_generic_lamptorch =
+PREFABS.Wall_lamptorch =
 {
   file   = "wall/lamptorch.wad",
   map    = "MAP01",

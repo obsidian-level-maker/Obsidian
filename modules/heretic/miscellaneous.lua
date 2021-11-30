@@ -405,17 +405,17 @@ OB_MODULES["misc_heretic"] =
       tooltip = _("If Street Mode is enabled, changes the density of prefabs such " ..
       "as cars, barriers, crates, and relevant items on the roads."),
       gap = 1,
-    },
+    },]]--
 
     {
       name="bool_exit_signs",
-      label=_("Exit Signs")
+      label=_("Exit Signs"),
       valuator = "button",
       default = 1,
-      tooltip=_("Places exit signs by exiting room")
+      tooltip=_("Places exit signs by exiting room"),
       gap=1,
     },
---]]
+
     {
       name="linear_start",
       label=_("Linear Start"),

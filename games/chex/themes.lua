@@ -167,7 +167,8 @@ CHEX3.THEMES =
 
     fence_groups =
     {
-      PLAIN = 50
+      PLAIN = 50,
+      crenels = 12,
     },
 
     fence_posts =
@@ -202,8 +203,6 @@ CHEX3.THEMES =
       lite2 = 20,
       torches1 = 12,
       torches2 = 12,
-      beamed_inset = 25,
-      beamed_inset_alt = 25,
       high_gap = 25,
       vert_gab = 25,
       half_floor = 20,
@@ -321,7 +320,8 @@ CHEX3.THEMES =
 
     fence_groups =
     {
-      PLAIN = 50
+      PLAIN = 50,
+      crenels = 12,
     },
 
     fence_posts =
@@ -356,8 +356,6 @@ CHEX3.THEMES =
       lite2 = 20,
       torches1 = 12,
       torches2 = 12,
-      beamed_inset = 25,
-      beamed_inset_alt = 25,
       high_gap = 25,
       vert_gab = 25,
       half_floor = 20,
@@ -472,7 +470,8 @@ CHEX3.THEMES =
 
     fence_groups =
     {
-      PLAIN = 50
+      PLAIN = 50,
+      crenels = 12,
     },
 
     fence_posts =
@@ -507,8 +506,6 @@ CHEX3.THEMES =
       lite2 = 20,
       torches1 = 12,
       torches2 = 12,
-      beamed_inset = 25,
-      beamed_inset_alt = 25,
       high_gap = 25,
       vert_gab = 25,
       half_floor = 20,
