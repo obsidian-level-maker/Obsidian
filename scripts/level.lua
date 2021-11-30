@@ -265,29 +265,27 @@ function Episode_determine_map_sizes()
     LEV.area_multiplier = 1
     LEV.size_consistency = "normal"
     local mix_type = "normal"
-
-    if PARAM.room_size_mix_type then
-      size_mix_type = PARAM.room_size_mix_type
-    end
-
-    if PARAM.room_area_mix_type then
-      area_mix_type = PARAM.room_area_mix_type
-    end
-
+    
     if PARAM.room_size_multiplier then
-      if PARAM.room_size_multiplier == "mixed" then
-        LEV.size_multiplier = rand.key_by_probs(ROOM_SIZE_MULTIPLIER_MIXED_PROBS[size_mix_type])
-      elseif PARAM.room_size_multiplier ~= "vanilla" then
+      if PARAM.room_size_multiplier ~= "vanilla"
+      and PARAM.room_size_multiplier ~= "mixed" then
         LEV.size_multiplier = tonumber(PARAM.room_size_multiplier)
       end
     end
 
     if PARAM.room_area_multiplier then
-      if PARAM.room_area_multiplier == "mixed" then
-        LEV.area_multiplier = rand.key_by_probs(ROOM_AREA_MULTIPLIER_MIXED_PROBS[area_mix_type])
-      elseif PARAM.room_area_multiplier ~= "vanilla" then
+      if PARAM.room_area_multiplier ~= "vanilla"
+      and PARAM.room_area_multiplier ~= "mixed" then
         LEV.area_multiplier = tonumber(PARAM.room_area_multiplier)
       end
+    end
+
+    if PARAM.room_size_mix_type and PARAM.room_size_multiplier == "mixed" then
+      LEV.size_multiplier = rand.key_by_probs(ROOM_SIZE_MULTIPLIER_MIXED_PROBS[PARAM.room_size_mix_type])
+    end
+
+    if PARAM.room_area_mix_type and PARAM.room_area_multiplier == "mixed" then
+      LEV.area_multiplier = rand.key_by_probs(ROOM_AREA_MULTIPLIER_MIXED_PROBS[PARAM.room_area_mix_type])
     end
 
     if PARAM.room_size_consistency then
