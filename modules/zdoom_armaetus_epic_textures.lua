@@ -1012,8 +1012,6 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
     gui.wad_merge_sections(wad_file_3)
 
     local dir = "games/doom/data/"
-    -- wad_merge_sections currently does not support merging HI_START
-    -- and HI_END... *sigh*
     gui.wad_add_binary_lump("HI_START",{})
     gui.wad_insert_file(dir .. "ARCD2.png", "ARCD2")
     gui.wad_insert_file(dir .. "ARCD3.png", "ARCD3")
@@ -1030,7 +1028,8 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
     gui.wad_insert_file(dir .. "OBVNMCH3.png", "OBVNMCH3")
     gui.wad_insert_file(dir .. "OBVNMCH4.png", "OBVNMCH4")
     gui.wad_insert_file(dir .. "OBVNMCH5.png", "OBVNMCH5")
-    gui.wad_insert_file(dir .. "CRATJOKE.png", "CRATJOKE") -- Do we need this here anymore?
+    gui.wad_insert_file(dir .. "CRATJOKE.png", "CRATJOKE")
+    gui.wad_insert_file(dir .. "G7DODSLS.png", "G7DODSLS")
     gui.wad_add_binary_lump("HI_END",{})
   end
 

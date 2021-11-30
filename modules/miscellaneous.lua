@@ -139,8 +139,22 @@ MISC_STUFF.ROOM_SIZE_CONSISTENCY_CHOICES =
 
 MISC_STUFF.ROOM_SIZE_MIX_FINE_TUNE_CHOICES =
 {
+  "smallish", _("Small-ish"),
   "small", _("Small"),
   "large", _("Large"),
+  "largeish", _("Large-ish"),
+  "normal", _("Normal"),
+  "conservative", _("Conservative"),
+  "very_conservative", _("Very Conservative"),
+  "random", _("Random")
+}
+
+MISC_STUFF.ROOM_AREA_MIX_FINE_TUNE_CHOICES =
+{
+  "lessish", _("Less-ish"),
+  "less", _("Less"),
+  "more", _("More"),
+  "moreish", _("More-ish"),
   "normal", _("Normal"),
   "conservative", _("Conservative"),
   "very_conservative", _("Very Conservative"),
@@ -163,7 +177,7 @@ function MISC_STUFF.setup(self)
 		        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
 		    end
 	    else
-        PARAM[name] = self.options[name].value
+        PARAM[opt.name] = self.options[name].value
       end
 	  end
   end
@@ -270,19 +284,36 @@ OB_MODULES["misc"] =
         "Vanilla: Original behavior. Rooms in a level have vary in size from each other. Big Rooms options are respected.\n\n" ..
         "Strict: All rooms in the level have a single set size/coverage.\n\n" ..
         "Mix It Up: A mixture of 75% Vanilla, 25% Strict.",
+        gap = 1
     },
     {
-      name="room_sa_mix_type", label=_("Room/Area Mix Fine Tune"),
+      name="room_size_mix_type", label=_("Room Size Mix Fine Tune"),
       choices = MISC_STUFF.ROOM_SIZE_MIX_FINE_TUNE_CHOICES,
       default = "normal",
-      tooltip = "Alters the behavior of Mix It Up for Room Size and Room Area multiplier options.\n\n" ..
+      tooltip = "Alters the behavior of Mix It Up for Room Size Multiplier options.\n\n" ..
       "Normal: Mix it up uses a normal curve distribution. Traditional-sized rooms are common and smaller or larger sizes" ..
       "are slightly less so.\n\n" ..
-      "Small: Bias is only towards smaller room sizes with no larger room sizes.\n\n" ..
-      "Large: Bias is only towards large rooms sizes with no smaller room sizes..\n\n" ..
+      "Small-ish: Only smaller room sizes, but biased towards normal sizes.\n\n"..
+      "Small: Biased towards smaller room sizes with no larger room sizes.\n\n" ..
+      "Large: Biased towards large rooms sizes with no smaller room sizes..\n\n" ..
+      "Large-ish: Only larger room sizes, but biased towards normal sizes.\n\n"..
       "Conservative: Probability is biased more towards regular room sizes, making much smaller or much larger rooms significantly rarer.\n\n" ..
       "Very Conservative: Bias is even stronger towards regular and smaller rooms sizes, while larger rooms are very rare.\n\n" ..
       "Random: No curve distribution - room sizes and room area counts are picked completely randomly.",
+    },
+    {
+      name="room_area_mix_type", label=_("Room Area Mix Fine Tune"),
+      choices = MISC_STUFF.ROOM_AREA_MIX_FINE_TUNE_CHOICES,
+      default = "normal",
+      tooltip = "Alters the behavior of Mix It Up for Room Area Multiplier options.\n\n" ..
+      "Normal: Mix it up uses a normal curve distribution.\n\n" ..
+      "Less-ish: Only rooms with less floors and simple ceilings, but biased towards normal counts.\n\n"..
+      "Less: Biased towards rooms with less floors and simple ceilings.\n\n" ..
+      "More: Biased towards rooms with more floors and complex ceilings.\n\n" ..
+      "More-ish: Only rooms with more floors and complex ceilings, but biased towards normal counts.\n\n"..
+      "Conservative: Biased towards normal area counts.\n\n" ..
+      "Very Conservative: Further biased towards normal area counts.\n\n" ..
+      "Random: No curve distribution - room area counts are picked completely randomly.",
       gap = 1
     },
 

@@ -1495,6 +1495,9 @@ ARMAETUS_MATERIALS = {
   -- 256-wide doors
   G8_SVDR3 = { t="G8_SVDR3", f="FLAT23"},
 
+  -- it unfortunately needs to be said.
+  G7DODSLS = { t="G7DODSLS", f="FLAT23"},
+
   ----------------------
   -- Special Textures --
   ----------------------

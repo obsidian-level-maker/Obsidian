@@ -435,13 +435,6 @@ Glow
     GATE2
     GATE3
     GATE4
-    GATE3TN
-    GATE4BL
-    GATE4MG
-    GATE4OR
-    GATE4PU
-    GATE4RD
-    GATE4YL
 
     //composite flats
     T_GHFLY

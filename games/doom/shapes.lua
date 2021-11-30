@@ -3927,14 +3927,33 @@ GROW_LIQUID_POOL_2X2_NEW_AREA =
     "......","AA~~AA",
     "......","AA~~AA",
     "x....x","x1111x",
-    "xx11xx","xx11xx",
+    "xxx11x","xxx11x",
   },
+},
+
+GROW_LIQUID_POOL_2_2x2_STAIR =
+{
+  prob = 25,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x....x","x1111x",
+    "x....x","x1111x",
+    "......","~~vv~~",
+    "......","~~AA~~",
+    "......","~~AA~~",
+    "......","~~^^~~",
+    "x....x","x1111x",
+    "x....x","x1111x",
+    "xxx11x","xxx11x",
+  }
 },
 
 GROW_LIQUID_POOL_3X1 =
 {
-  prob = 3,
-  skip_prob = 85,
+  prob = 30,
+  skip_prob = 75,
 
   structure =
   {
@@ -3944,14 +3963,14 @@ GROW_LIQUID_POOL_3X1 =
     "...","1~1",
     "...","1~1",
     "...","111",
-    "x1x","x1x",
+    "x11","x11",
   },
 },
 
 GROW_LIQUID_POOL_3X1_NEW_AREA =
 {
-  prob = 3,
-  skip_prob = 85,
+  prob = 30,
+  skip_prob = 75,
 
   structure =
   {
@@ -3961,13 +3980,13 @@ GROW_LIQUID_POOL_3X1_NEW_AREA =
     ".....","AA~AA",
     ".....","AA~AA",
     "x...x","x111x",
-    "xx1xx","xx1xx",
+    "xx11x","xx11x",
   },
 },
 
 GROW_LIQUID_POOL_3X1_NEW_AREA_ALT =
 {
-  prob = 25,
+  prob = 35,
   skip_prob = 75,
 
   structure =
@@ -3980,7 +3999,7 @@ GROW_LIQUID_POOL_3X1_NEW_AREA_ALT =
     "...","A~A",
     "...","^1^",
     "...","111",
-    "x1x","x1x",
+    "x11","x11",
   },
 },
 
@@ -3997,7 +4016,7 @@ GROW_LIQUID_POOL_3X1_TRIPLE =
     ".......","1~1~1~1",
     ".......","1~1~1~1",
     ".......","1111111",
-    "xx111xx","xx111xx",
+    "xxxx111","xxxx111",
   },
 },
 
@@ -4016,7 +4035,7 @@ GROW_LIQUID_POOL_3X1_TRIPLE_NEW_AREA =
     ".......","A~A~A~A",
     ".......","^1^1^1^",
     ".......","1111111",
-    "xx111xx","xx111xx",
+    "xxxx111","xxxx111",
   }
 },
 
@@ -4035,7 +4054,7 @@ GROW_LIQUID_POOL_DEPRESSED =
     "........","^^~~~~^^",
     "........","11111111",
     "........","11111111",
-    "xxx11xxx","xxx11xxx",
+    "xxxxxx11","xxxxxx11",
   }
 },
 

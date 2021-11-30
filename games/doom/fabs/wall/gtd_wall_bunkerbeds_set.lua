@@ -13,5 +13,20 @@ PREFABS.Wall_gtd_bunkerbeds_lockers =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  z_fit  = "top"
+  z_fit  = {122,124}
+}
+
+PREFABS.Wall_gtd_bunkerbeds_comp =
+{
+  template = "Wall_gtd_bunkerbeds_lockers",
+  map = "MAP02",
+
+  prob = 12,
+
+  tex_COMPTALL =
+  {
+    COMPTALL = 50,
+    COMPWERD = 50,
+    GRAY2 = 50
+  }
 }
