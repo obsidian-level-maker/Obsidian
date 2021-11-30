@@ -2,7 +2,7 @@
 -- Exit tunnel
 --
 
-PREFABS.Exit_beed28_tunnel =
+PREFABS.Exit_beed28tunnel =
 {
   file  = "exit/beed28_exit_tunnel.wad",
   map   = "MAP01",
@@ -21,16 +21,16 @@ PREFABS.Exit_beed28_tunnel =
   start_fab_peer = "Start_beed28_tunnel",
 }
 
-PREFABS.Exit_beed28_tunnel_chex3 = 
+PREFABS.Exit_beed28tunnel_chex3 = 
 {
-  template = "Exit_beed28_tunnel",
+  template = "Exit_beed28tunnel",
   game = "chex3",
   map = "MAP02"
 }
 
-PREFABS.Exit_beed28_tunnel_hacx = 
+PREFABS.Exit_beed28tunnel_hacx = 
 {
-  template = "Exit_beed28_tunnel",
+  template = "Exit_beed28tunnel",
   game = "hacx",
   forced_offsets = 
   {
@@ -38,9 +38,9 @@ PREFABS.Exit_beed28_tunnel_hacx =
   }
 }
 
-PREFABS.Exit_beed28_tunnel_harmony = 
+PREFABS.Exit_beed28tunnel_harmony = 
 {
-  template = "Exit_beed28_tunnel",
+  template = "Exit_beed28tunnel",
   game = "harmony",
   forced_offsets = 
   {
@@ -48,9 +48,9 @@ PREFABS.Exit_beed28_tunnel_harmony =
   }
 }
 
-PREFABS.Exit_beed28_tunnel_heretic = 
+PREFABS.Exit_beed28tunnel_heretic = 
 {
-  template = "Exit_beed28_tunnel",
+  template = "Exit_beed28tunnel",
   game = "heretic",
   forced_offsets = 
   {
@@ -58,9 +58,9 @@ PREFABS.Exit_beed28_tunnel_heretic =
   }
 }
 
-PREFABS.Exit_beed28_tunnel_strife = 
+PREFABS.Exit_beed28tunnel_strife = 
 {
-  template = "Exit_beed28_tunnel",
+  template = "Exit_beed28tunnel",
   game = "strife",
   forced_offsets = 
   {

@@ -1,4 +1,4 @@
-PREFABS.Wall_generic_half_floor =
+PREFABS.Wall_half_floor =
 {
   file   = "wall/half_floor.wad",
   map    = "MAP01",
@@ -17,7 +17,7 @@ PREFABS.Wall_generic_half_floor =
   z_fit = "top",
 }
 
-PREFABS.Wall_generic_half_floor_diag =
+PREFABS.Wall_half_floor_diag =
 {
   file   = "wall/half_floor.wad",
   map    = "MAP02",
@@ -38,17 +38,17 @@ PREFABS.Wall_generic_half_floor_diag =
 
 --
 
-PREFABS.Wall_generic_half_floor_no_trim =
+PREFABS.Wall_half_floor_no_trim =
 {
-  template = "Wall_generic_half_floor",
+  template = "Wall_half_floor",
   map = "MAP03",
 
   group = "half_floor_no_trim",
 }
 
-PREFABS.Wall_generic_half_floor_no_trim_diag =
+PREFABS.Wall_half_floor_no_trim_diag =
 {
-  template = "Wall_generic_half_floor_diag",
+  template = "Wall_half_floor_diag",
   map = "MAP04",
 
   group = "half_floor_no_trim",
@@ -56,17 +56,17 @@ PREFABS.Wall_generic_half_floor_no_trim_diag =
 
 --
 
-PREFABS.Wall_generic_half_floor_inverted_braced =
+PREFABS.Wall_half_floor_inverted_braced =
 {
-  template = "Wall_generic_half_floor",
+  template = "Wall_half_floor",
   map = "MAP05",
 
   group = "half_floor_inverted_braced",
 }
 
-PREFABS.Wall_generic_half_floor_inverted_braced_diag =
+PREFABS.Wall_half_floor_inverted_braced_diag =
 {
-  template = "Wall_generic_half_floor_diag",
+  template = "Wall_half_floor_diag",
   map = "MAP06",
 
   group = "half_floor_inverted_braced",

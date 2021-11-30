@@ -53,7 +53,6 @@ end
 
 OB_MODULES["chex3_mon_control"] =
 {
-
   name = "chex3_mon_control",
 
   label = _("Chex Quest 3 Monster Control"),
@@ -68,8 +67,8 @@ OB_MODULES["chex3_mon_control"] =
 
   options =
   {
-     float_commonus=
      {
+      name = "float_commonus",
       label = _("Commonus"),
       valuator = "slider",
       units = "",
@@ -87,8 +86,8 @@ OB_MODULES["chex3_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_bipedicus=
      {
+      name = "float_bipedicus",
       label = _("Bipedicus"),
       valuator = "slider",
       units = "",
@@ -106,8 +105,8 @@ OB_MODULES["chex3_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_armored_biped=
-     {
+    {
+      name = "float_armored_biped",
       label = _("Armored Bipedicus"),
       valuator = "slider",
       units = "",
@@ -125,8 +124,8 @@ OB_MODULES["chex3_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_quadrumpus=
      {
+      name = "float_quadrumpus",
       label = _("Quadrumpus"),
       valuator = "slider",
       units = "",
@@ -144,8 +143,8 @@ OB_MODULES["chex3_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_cycloptis=
      {
+      name = "float_cycloptis",
       label = _("Cycloptis"),
       valuator = "slider",
       units = "",
@@ -163,8 +162,9 @@ OB_MODULES["chex3_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_larva=
+     
      {
+      name = "float_larva",
       label = _("Larva"),
       valuator = "slider",
       units = "",
@@ -182,8 +182,9 @@ OB_MODULES["chex3_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_flemmine=
+     
      {
+      name = "float_flemmine",
       label = _("Flem Mine"),
       valuator = "slider",
       units = "",
@@ -201,8 +202,9 @@ OB_MODULES["chex3_mon_control"] =
       "20:20 (INSANE),",
      },
 	 
-     float_stridicus=
+     
      {
+      name = "float_stridicus",
       label = _("Stridicus"),
       valuator = "slider",
       units = "",
@@ -220,8 +222,9 @@ OB_MODULES["chex3_mon_control"] =
       "20:20 (INSANE),",
      },
 	 
-     float_super_cyclop=
+     
      {
+      name = "float_super_cyclop",
       label = _("Super Cycloptis"),
       valuator = "slider",
       units = "",
@@ -304,8 +307,9 @@ OB_MODULES["chex3_weapon_control"] =
 
   options =
   {
-     float_super_bootspork=
+     
      {
+      name = "float_super_bootspork",
       label = _("Super Bootspork"),
       valuator = "slider",
       units = "",
@@ -323,8 +327,8 @@ OB_MODULES["chex3_weapon_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_large_zorcher=
      {
+      name = "float_large_zorcher",
       label = _("Large Zorcher"),
       valuator = "slider",
       units = "",
@@ -342,8 +346,8 @@ OB_MODULES["chex3_weapon_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_rapid_zorcher=
      {
+      name = "float_rapid_zorcher",
       label = _("Rapid Zorcher"),
       valuator = "slider",
       units = "",
@@ -361,8 +365,8 @@ OB_MODULES["chex3_weapon_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_zorch_propulsor=
      {
+      name = "float_zorch_propulsor",
       label = _("Zorch Propulsor"),
       valuator = "slider",
       units = "",
@@ -380,8 +384,8 @@ OB_MODULES["chex3_weapon_control"] =
       "10:10 (I LOVE IT),",
      },
 	 
-     float_phasing_zorcher=
      {
+      name = "float_phasing_zorcher",
       label = _("Phasing Zorcher"),
       valuator = "slider",
       units = "",
@@ -399,8 +403,8 @@ OB_MODULES["chex3_weapon_control"] =
       "10:10 (I LOVE IT),",
      },
 	 
-     float_laz_device=
      {
+      name = "float_laz_device",
       label = _("LAZ Device"),
       valuator = "slider",
       units = "",

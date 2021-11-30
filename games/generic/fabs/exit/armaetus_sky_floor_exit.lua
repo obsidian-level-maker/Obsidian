@@ -1,4 +1,4 @@
-PREFABS.Exit_armaetus_sky_floor_exit =
+PREFABS.Exit_sky_floor_exit =
 {
   file   = "exit/armaetus_sky_floor_exit.wad",
   map    = "MAP01",
@@ -17,9 +17,9 @@ PREFABS.Exit_armaetus_sky_floor_exit =
   y_fit  = "top",
 }
 
-PREFABS.Exit_armaetus_sky_floor_exit_strife =
+PREFABS.Exit_sky_floor_exit_strife =
 {
-  template = "Exit_armaetus_sky_floor_exit",
+  template = "Exit_sky_floor_exit",
   game = "strife",
   forced_offsets = 
   {
@@ -27,46 +27,46 @@ PREFABS.Exit_armaetus_sky_floor_exit_strife =
   }
 }
 
-PREFABS.Exit_armaetus_sky_floor_exit_chex3 = 
+PREFABS.Exit_sky_floor_exit_chex3 = 
 {
-  template = "Exit_armaetus_sky_floor_exit",
+  template = "Exit_sky_floor_exit",
   game = "chex3",
   engine = "advanced"
 }
 
-PREFABS.Exit_armaetus_sky_floor_exit_chex3_nosign = 
+PREFABS.Exit_sky_floor_exit_chex3_nosign = 
 {
-  template = "Exit_armaetus_sky_floor_exit",
+  template = "Exit_sky_floor_exit",
   game = "chex3",
   engine = "!advanced",
   map = "MAP02"
 }
 
-PREFABS.Exit_armaetus_sky_floor_exit_hacx = 
+PREFABS.Exit_sky_floor_exit_hacx = 
 {
-  template = "Exit_armaetus_sky_floor_exit",
+  template = "Exit_sky_floor_exit",
   game = "hacx",
   engine = "advanced"
 }
 
-PREFABS.Exit_armaetus_sky_floor_exit_hacx_nosign = 
+PREFABS.Exit_sky_floor_exit_hacx_nosign = 
 {
-  template = "Exit_armaetus_sky_floor_exit",
+  template = "Exit_sky_floor_exit",
   game = "hacx",
   engine = "!advanced",
   map = "MAP02"
 }
 
-PREFABS.Exit_armaetus_sky_floor_exit_heretic = 
+PREFABS.Exit_sky_floor_exit_heretic = 
 {
-  template = "Exit_armaetus_sky_floor_exit",
+  template = "Exit_sky_floor_exit",
   game = "heretic",
   engine = "advanced"
 }
 
-PREFABS.Exit_armaetus_sky_floor_exit_heretic_nosign = 
+PREFABS.Exit_sky_floor_exit_heretic_nosign = 
 {
-  template = "Exit_armaetus_sky_floor_exit",
+  template = "Exit_sky_floor_exit",
   game = "heretic",
   engine = "!advanced",
   map = "MAP02"

@@ -1,6 +1,6 @@
 -- Adapted from GTD's set
 
-PREFABS.Wall_generic_high_gap_straight =
+PREFABS.Wall_high_gap_straight =
 {
   file   = "wall/high_gap.wad",
   map    = "MAP01",
@@ -22,7 +22,7 @@ PREFABS.Wall_generic_high_gap_straight =
   sector_1 = { [0]=90, [1]=10 },
 }
 
-PREFABS.Wall_generic_high_gap_straight_chex3 =
+PREFABS.Wall_high_gap_straight_chex3 =
 {
   file   = "wall/high_gap.wad",
   map    = "MAP01",
@@ -49,7 +49,7 @@ PREFABS.Wall_generic_high_gap_straight_chex3 =
   }
 }
 
-PREFABS.Wall_generic_high_gap_straight_hacx =
+PREFABS.Wall_high_gap_straight_hacx =
 {
   file   = "wall/high_gap.wad",
   map    = "MAP01",
@@ -76,7 +76,7 @@ PREFABS.Wall_generic_high_gap_straight_hacx =
   }
 }
 
-PREFABS.Wall_generic_high_gap_straight_heretic =
+PREFABS.Wall_high_gap_straight_heretic =
 {
   file   = "wall/high_gap.wad",
   map    = "MAP01",
@@ -105,7 +105,7 @@ PREFABS.Wall_generic_high_gap_straight_heretic =
 
 PREFABS.Wall_generic_gtd_straight_plain =
 {
-  template = "Wall_generic_high_gap_straight",
+  template = "Wall_high_gap_straight",
 
   map      = "MAP02",
 
@@ -114,7 +114,7 @@ PREFABS.Wall_generic_gtd_straight_plain =
 
 PREFABS.Wall_generic_gtd_straight_plain_chex3 =
 {
-  template = "Wall_generic_high_gap_straight_chex3",
+  template = "Wall_high_gap_straight_chex3",
 
   map      = "MAP02",
 
@@ -123,7 +123,7 @@ PREFABS.Wall_generic_gtd_straight_plain_chex3 =
 
 PREFABS.Wall_generic_gtd_straight_plain_hacx =
 {
-  template = "Wall_generic_high_gap_straight_hacx",
+  template = "Wall_high_gap_straight_hacx",
 
   map      = "MAP02",
 
@@ -132,14 +132,14 @@ PREFABS.Wall_generic_gtd_straight_plain_hacx =
 
 PREFABS.Wall_generic_gtd_straight_plain_heretic =
 {
-  template = "Wall_generic_high_gap_straight_heretic",
+  template = "Wall_high_gap_straight_heretic",
 
   map      = "MAP02",
 
   prob = 50,
 }
 
-PREFABS.Wall_generic_high_gap_diagonal =
+PREFABS.Wall_high_gap_diagonal =
 {
   file   = "wall/high_gap.wad",
   map    = "MAP03",
@@ -160,9 +160,9 @@ PREFABS.Wall_generic_high_gap_diagonal =
   sector_1 = { [0]=90, [1]=10 },
 }
 
-PREFABS.Wall_generic_high_gap_diagonal_chex3 = 
+PREFABS.Wall_high_gap_diagonal_chex3 = 
 {
-  template = "Wall_generic_high_gap_diagonal",
+  template = "Wall_high_gap_diagonal",
   game = "chex3",
   forced_offsets = 
   {
@@ -170,9 +170,9 @@ PREFABS.Wall_generic_high_gap_diagonal_chex3 =
   }
 }
 
-PREFABS.Wall_generic_high_gap_diagonal_hacx = 
+PREFABS.Wall_high_gap_diagonal_hacx = 
 {
-  template = "Wall_generic_high_gap_diagonal",
+  template = "Wall_high_gap_diagonal",
   game = "hacx",
   forced_offsets = 
   {
@@ -180,9 +180,9 @@ PREFABS.Wall_generic_high_gap_diagonal_hacx =
   }
 }
 
-PREFABS.Wall_generic_high_gap_diagonal_heretic = 
+PREFABS.Wall_high_gap_diagonal_heretic = 
 {
-  template = "Wall_generic_high_gap_diagonal",
+  template = "Wall_high_gap_diagonal",
   game = "heretic",
   forced_offsets = 
   {

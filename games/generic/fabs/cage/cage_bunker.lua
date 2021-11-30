@@ -1,6 +1,6 @@
-PREFABS.Cage_wall_bunker_tech =
+PREFABS.Cage_wall_bunker =
 {
-  file   = "cage/gtd_cage_bunker.wad",
+  file   = "cage/cage_bunker.wad",
 
   prob  = 800,
 

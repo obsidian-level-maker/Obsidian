@@ -1,4 +1,4 @@
-PREFABS.Exit_armaetus_simple_exit =
+PREFABS.Exit_simple_exit =
 {
   file   = "exit/armaetus_simple_exit.wad",
   map    = "MAP01",
@@ -17,9 +17,9 @@ PREFABS.Exit_armaetus_simple_exit =
   y_fit  = "top",
 }
 
-PREFABS.Exit_armaetus_simple_exit_chex3 = 
+PREFABS.Exit_simple_exit_chex3 = 
 {
-  template = "Exit_armaetus_simple_exit",
+  template = "Exit_simple_exit",
   game = "chex3",
   engine = "advanced",
   forced_offsets =
@@ -28,9 +28,9 @@ PREFABS.Exit_armaetus_simple_exit_chex3 =
   }
 }
 
-PREFABS.Exit_armaetus_simple_exit_chex3_nosign = 
+PREFABS.Exit_simple_exit_chex3_nosign = 
 {
-  template = "Exit_armaetus_simple_exit",
+  template = "Exit_simple_exit",
   game = "chex3",
   engine = "!advanced",
   map = "MAP02",
@@ -40,9 +40,9 @@ PREFABS.Exit_armaetus_simple_exit_chex3_nosign =
   }
 }
 
-PREFABS.Exit_armaetus_simple_exit_hacx = 
+PREFABS.Exit_simple_exit_hacx = 
 {
-  template = "Exit_armaetus_simple_exit",
+  template = "Exit_simple_exit",
   game = "hacx",
   engine = "advanced",
   forced_offsets =
@@ -51,9 +51,9 @@ PREFABS.Exit_armaetus_simple_exit_hacx =
   }
 }
 
-PREFABS.Exit_armaetus_simple_exit_hacx_nosign = 
+PREFABS.Exit_simple_exit_hacx_nosign = 
 {
-  template = "Exit_armaetus_simple_exit",
+  template = "Exit_simple_exit",
   game = "hacx",
   engine = "!advanced",
   map = "MAP02",
@@ -63,9 +63,9 @@ PREFABS.Exit_armaetus_simple_exit_hacx_nosign =
   }
 }
 
-PREFABS.Exit_armaetus_simple_exit_harmony =
+PREFABS.Exit_simple_exit_harmony =
 {
-  template = "Exit_armaetus_simple_exit",
+  template = "Exit_simple_exit",
   game = "harmony",
   forced_offsets =
   {
@@ -73,9 +73,9 @@ PREFABS.Exit_armaetus_simple_exit_harmony =
   }
 }
 
-PREFABS.Exit_armaetus_simple_exit_heretic = 
+PREFABS.Exit_simple_exit_heretic = 
 {
-  template = "Exit_armaetus_simple_exit",
+  template = "Exit_simple_exit",
   game = "heretic",
   engine = "advanced",
   forced_offsets =
@@ -84,9 +84,9 @@ PREFABS.Exit_armaetus_simple_exit_heretic =
   }
 }
 
-PREFABS.Exit_armaetus_simple_exit_heretic_nosign = 
+PREFABS.Exit_simple_exit_heretic_nosign = 
 {
-  template = "Exit_armaetus_simple_exit",
+  template = "Exit_simple_exit",
   game = "heretic",
   engine = "!advanced",
   map = "MAP02",
@@ -96,9 +96,9 @@ PREFABS.Exit_armaetus_simple_exit_heretic_nosign =
   }
 }
 
-PREFABS.Exit_armaetus_simple_exit_strife =
+PREFABS.Exit_simple_exit_strife =
 {
-  template = "Exit_armaetus_simple_exit",
+  template = "Exit_simple_exit",
   game = "strife",
   forced_offsets =
   {

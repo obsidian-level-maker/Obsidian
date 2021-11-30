@@ -2,7 +2,7 @@
 -- Start tunnel
 --
 
-PREFABS.Start_beed28_tunnel = -- Default offsets are for Doom
+PREFABS.Start_beed28tunnel = -- Default offsets are for Doom
 {
   file  = "start/beed28_start_tunnel.wad",
 
@@ -20,16 +20,16 @@ PREFABS.Start_beed28_tunnel = -- Default offsets are for Doom
   x_fit = "frame",
 }
 
-PREFABS.Start_beed28_tunnel_chex3 =
+PREFABS.Start_beed28tunnel_chex3 =
 {
-  template = "Start_beed28_tunnel",
+  template = "Start_beed28tunnel",
   map = "MAP02",
   game = "chex3",
 }
 
-PREFABS.Start_beed28_tunnel_hacx =
+PREFABS.Start_beed28tunnel_hacx =
 {
-  template = "Start_beed28_tunnel",
+  template = "Start_beed28tunnel",
   game = "hacx",
   forced_offsets =
   {
@@ -37,9 +37,9 @@ PREFABS.Start_beed28_tunnel_hacx =
   }
 }
 
-PREFABS.Start_beed28_tunnel_harmony =
+PREFABS.Start_beed28tunnel_harmony =
 {
-  template = "Start_beed28_tunnel",
+  template = "Start_beed28tunnel",
   game = "harmony",
   forced_offsets =
   {
@@ -47,9 +47,9 @@ PREFABS.Start_beed28_tunnel_harmony =
   }
 }
 
-PREFABS.Start_beed28_tunnel_heretic =
+PREFABS.Start_beed28tunnel_heretic =
 {
-  template = "Start_beed28_tunnel",
+  template = "Start_beed28tunnel",
   game = "heretic",
   forced_offsets =
   {
@@ -57,9 +57,9 @@ PREFABS.Start_beed28_tunnel_heretic =
   }
 }
 
-PREFABS.Start_beed28_tunnel_strife =
+PREFABS.Start_beed28tunnel_strife =
 {
-  template = "Start_beed28_tunnel",
+  template = "Start_beed28tunnel",
   game = "strife",
   forced_offsets =
   {

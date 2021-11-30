@@ -1,4 +1,4 @@
-PREFABS.Wall_wallgutters1 =
+PREFABS.Wall_wall_gutters1 =
 {
   file   = "wall/wallgutters.wad",
   map    = "MAP01",
@@ -18,14 +18,14 @@ PREFABS.Wall_wallgutters1 =
   z_fit  = "top",
 }
 
-PREFABS.Wall_wallgutters2 =
+PREFABS.Wall_wall_gutters2 =
 {
-  template = "Wall_wallgutters1",
+  template = "Wall_wall_gutters1",
 
   map = "MAP02",
 }
 
-PREFABS.Wall_wallgutters_diag =
+PREFABS.Wall_wall_gutters_diag =
 {
   file   = "wall/wallgutters.wad",
   map    = "MAP03",
@@ -44,9 +44,9 @@ PREFABS.Wall_wallgutters_diag =
   z_fit  = "top",
 }
 
-PREFABS.Wall_wallgutters_diag_heretic =
+PREFABS.Wall_wall_gutters_diag_heretic =
 {
-  template = "Wall_wallgutters_diag",
+  template = "Wall_wall_gutters_diag",
   game = "heretic",
   forced_offsets =
   {

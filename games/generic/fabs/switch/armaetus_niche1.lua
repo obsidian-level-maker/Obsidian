@@ -1,4 +1,4 @@
-PREFABS.Switch_armaetus_niche1 =
+PREFABS.Switch_niche1 =
 {
   file   = "switch/armaetus_niche1.wad",
   map = "MAP01",
@@ -18,16 +18,16 @@ PREFABS.Switch_armaetus_niche1 =
   y_fit = "top",
 }
 
-PREFABS.Switch_armaetus_niche1_chex3 =
+PREFABS.Switch_niche1_chex3 =
 {
-  template = "Switch_armaetus_niche1",
+  template = "Switch_niche1",
   game = "chex3",
   map = "MAP02"
 }
 
-PREFABS.Switch_armaetus_niche1_hacx =
+PREFABS.Switch_niche1_hacx =
 {
-  template = "Switch_armaetus_niche1",
+  template = "Switch_niche1",
   game = "hacx",
   forced_offsets =
   {
@@ -35,9 +35,9 @@ PREFABS.Switch_armaetus_niche1_hacx =
   }
 }
 
-PREFABS.Switch_armaetus_niche1_harmony =
+PREFABS.Switch_niche1_harmony =
 {
-  template = "Switch_armaetus_niche1",
+  template = "Switch_niche1",
   game = "harmony",
   forced_offsets =
   {
@@ -45,9 +45,9 @@ PREFABS.Switch_armaetus_niche1_harmony =
   }
 }
 
-PREFABS.Switch_armaetus_niche1_heretic =
+PREFABS.Switch_niche1_heretic =
 {
-  template = "Switch_armaetus_niche1",
+  template = "Switch_niche1",
   game = "heretic",
   forced_offsets =
   {
@@ -55,9 +55,9 @@ PREFABS.Switch_armaetus_niche1_heretic =
   }
 }
 
-PREFABS.Switch_armaetus_niche1_strife =
+PREFABS.Switch_niche1_strife =
 {
-  template = "Switch_armaetus_niche1",
+  template = "Switch_niche1",
   game = "strife",
   forced_offsets =
   {
@@ -65,7 +65,7 @@ PREFABS.Switch_armaetus_niche1_strife =
   }
 }
 
-PREFABS.Switch_armaetus_niche1_up =
+PREFABS.Switch_niche1_up =
 {
   file  = "switch/armaetus_niche1.wad",
   map = "MAP03",
@@ -85,16 +85,16 @@ PREFABS.Switch_armaetus_niche1_up =
   y_fit = "top",
 }
 
-PREFABS.Switch_armaetus_niche1_up_chex3 =
+PREFABS.Switch_niche1_up_chex3 =
 {
-  template = "Switch_armaetus_niche1_up",
+  template = "Switch_niche1_up",
   game = "chex3",
   map = "MAP04"
 }
 
-PREFABS.Switch_armaetus_niche1_up_hacx =
+PREFABS.Switch_niche1_up_hacx =
 {
-  template = "Switch_armaetus_niche1_up",
+  template = "Switch_niche1_up",
   game = "hacx",
   forced_offsets =
   {
@@ -102,9 +102,9 @@ PREFABS.Switch_armaetus_niche1_up_hacx =
   }
 }
 
-PREFABS.Switch_armaetus_niche1_up_harmony =
+PREFABS.Switch_niche1_up_harmony =
 {
-  template = "Switch_armaetus_niche1_up",
+  template = "Switch_niche1_up",
   game = "harmony",
   forced_offsets =
   {
@@ -112,9 +112,9 @@ PREFABS.Switch_armaetus_niche1_up_harmony =
   }
 }
 
-PREFABS.Switch_armaetus_niche1_up_heretic =
+PREFABS.Switch_niche1_up_heretic =
 {
-  template = "Switch_armaetus_niche1_up",
+  template = "Switch_niche1_up",
   game = "heretic",
   forced_offsets =
   {
@@ -122,9 +122,9 @@ PREFABS.Switch_armaetus_niche1_up_heretic =
   }
 }
 
-PREFABS.Switch_armaetus_niche1_up_strife =
+PREFABS.Switch_niche1_up_strife =
 {
-  template = "Switch_armaetus_niche1_up",
+  template = "Switch_niche1_up",
   game = "strife",
   forced_offsets =
   {

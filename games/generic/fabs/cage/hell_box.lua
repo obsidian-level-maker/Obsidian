@@ -2,7 +2,7 @@
 -- Not really a hell box anymore, but based on it
 --
 
-PREFABS.Cage_hellbox1 =
+PREFABS.Cage_hellbox =
 {
   file   = "cage/hell_box.wad",
   map    = "MAP01",
