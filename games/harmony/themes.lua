@@ -176,7 +176,6 @@ HARMONY.THEMES =
     fence_groups =
     {
       PLAIN = 50,
-      gappy = 50,
       crenels = 12,
     },
 

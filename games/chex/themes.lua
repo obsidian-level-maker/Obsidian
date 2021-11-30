@@ -168,7 +168,6 @@ CHEX3.THEMES =
     fence_groups =
     {
       PLAIN = 50,
-      gappy = 50,
       crenels = 12,
     },
 
@@ -322,7 +321,6 @@ CHEX3.THEMES =
     fence_groups =
     {
       PLAIN = 50,
-      gappy = 50,
       crenels = 12,
     },
 
@@ -473,7 +471,6 @@ CHEX3.THEMES =
     fence_groups =
     {
       PLAIN = 50,
-      gappy = 50,
       crenels = 12,
     },
 
