@@ -306,7 +306,7 @@ OB_MODULES["misc"] =
       choices = MISC_STUFF.ROOM_AREA_MIX_FINE_TUNE_CHOICES,
       default = "normal",
       tooltip = "Alters the behavior of Mix It Up for Room Area Multiplier options.\n\n" ..
-      "Normal: Mix it up uses a normal curve distribution." ..
+      "Normal: Mix it up uses a normal curve distribution.\n\n" ..
       "Less-ish: Only rooms with less floors and simple ceilings, but biased towards normal counts.\n\n"..
       "Less: Biased towards rooms with less floors and simple ceilings.\n\n" ..
       "More: Biased towards rooms with more floors and complex ceilings.\n\n" ..
