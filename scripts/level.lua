@@ -242,6 +242,9 @@ end
 
 
 function Episode_determine_map_sizes()
+  gui.printf(table.tostr(PARAM,2) .. "\n")
+  gui.printf(table.tostr(OB_CONFIG,2) .. "\n")
+
   for _,LEV in pairs(GAME.levels) do
     local W, H = Level_determine_map_size(LEV)
 
