@@ -3823,6 +3823,7 @@ function ULTDOOM.nolimit_themes()
       wallgutters = 10,
       lamptorch = 16,
       runic = 10,
+      croix = 10,
     }
     GAME.THEMES.tech.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.tech.window_groups = 
@@ -3858,6 +3859,7 @@ function ULTDOOM.nolimit_themes()
       wallgutters = 10,
       lamptorch = 16,
       runic = 10,
+      croix = 10,
     }
     GAME.THEMES.deimos.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.deimos.window_groups =
@@ -3893,6 +3895,7 @@ function ULTDOOM.nolimit_themes()
       wallgutters = 10,
       lamptorch = 16,
       runic = 10,
+      croix = 10,
     }
     GAME.THEMES.hell.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.hell.window_groups = 
@@ -3928,6 +3931,7 @@ function ULTDOOM.nolimit_themes()
       wallgutters = 10,
       lamptorch = 16,
       runic = 10,
+      croix = 10,
     }
     GAME.THEMES.flesh.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.flesh.window_groups = 

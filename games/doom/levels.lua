@@ -101,6 +101,7 @@ function DOOM.themes_alts()
       wallgutters = 10,
       lamptorch = 16,
       runic = 10,
+      croix = 10,
     }
     GAME.THEMES.tech.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.tech.window_groups = 
@@ -136,6 +137,7 @@ function DOOM.themes_alts()
       wallgutters = 10,
       lamptorch = 16,
       runic = 10,
+      croix = 10,
     }
     GAME.THEMES.urban.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.urban.window_groups = 
@@ -171,6 +173,7 @@ function DOOM.themes_alts()
       wallgutters = 10,
       lamptorch = 16,
       runic = 10,
+      croix = 10,
     }
     GAME.THEMES.hell.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.hell.window_groups =
