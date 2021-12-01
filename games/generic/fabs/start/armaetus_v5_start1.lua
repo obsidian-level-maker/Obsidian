@@ -1,4 +1,4 @@
-PREFABS.Start_armaetus_v5_start1 =
+PREFABS.Start_v5_start1 =
 {
   file  = "start/armaetus_v5_start1.wad",
   map   = "MAP01",

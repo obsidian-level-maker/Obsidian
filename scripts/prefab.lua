@@ -1757,6 +1757,7 @@ function Fab_load_wad(def)
 
     -- load the map structures into memory
     -- [ if map is not specified, use "*" to load the first one ]
+    print("FAB FILENAME: " .. filename)
     gui.wadfab_load(filename, def.map or "*")
 
     local E

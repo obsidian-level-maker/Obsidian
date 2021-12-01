@@ -2,7 +2,7 @@
 -- Single lighting niche
 --
 
-PREFABS.Wall_lite1 =
+PREFABS.Wall_lite =
 {
   file   = "wall/lite_1.wad",
   map    = "MAP01",
@@ -25,9 +25,9 @@ PREFABS.Wall_lite1 =
   sector_1 = { [0]=50, [1]=20 },
 }
 
-PREFABS.Wall_lite1_hacx = 
+PREFABS.Wall_lite_hacx = 
 {
-  template = "Wall_lite1",
+  template = "Wall_lite",
   game = "hacx",
   forced_offsets =
   {
@@ -38,9 +38,9 @@ PREFABS.Wall_lite1_hacx =
   }
 }
 
-PREFABS.Wall_lite1_harmony = 
+PREFABS.Wall_lite_harmony = 
 {
-  template = "Wall_lite1",
+  template = "Wall_lite",
   game = "harmony",
   forced_offsets =
   {
@@ -51,9 +51,9 @@ PREFABS.Wall_lite1_harmony =
   }
 }
 
-PREFABS.Wall_lite1_heretic = 
+PREFABS.Wall_lite_heretic = 
 {
-  template = "Wall_lite1",
+  template = "Wall_lite",
   game = "heretic",
   forced_offsets =
   {
@@ -64,9 +64,9 @@ PREFABS.Wall_lite1_heretic =
   }
 }
 
-PREFABS.Wall_lite1_strife = 
+PREFABS.Wall_lite_strife = 
 {
-  template = "Wall_lite1",
+  template = "Wall_lite",
   game = "strife",
   forced_offsets =
   {

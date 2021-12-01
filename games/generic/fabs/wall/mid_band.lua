@@ -2,7 +2,7 @@
 -- Wall with horizontal band
 --
 
-PREFABS.Wall_midband =
+PREFABS.Wall_mid_band =
 {
   file   = "wall/mid_band.wad",
   map    = "MAP01",
@@ -21,9 +21,9 @@ PREFABS.Wall_midband =
   z_fit  = "top",
 }
 
-PREFABS.Wall_midband_chex3 =
+PREFABS.Wall_mid_band_chex3 =
 {
-  template = "Wall_midband",
+  template = "Wall_mid_band",
   game = "chex3",
 
   forced_offsets =
@@ -32,9 +32,9 @@ PREFABS.Wall_midband_chex3 =
   }
 }
 
-PREFABS.Wall_midband_hacx =
+PREFABS.Wall_mid_band_hacx =
 {
-  template = "Wall_midband",
+  template = "Wall_mid_band",
   game = "hacx",
 
   forced_offsets =
@@ -43,9 +43,9 @@ PREFABS.Wall_midband_hacx =
   }
 }
 
-PREFABS.Wall_midband_harmony =
+PREFABS.Wall_mid_band_harmony =
 {
-  template = "Wall_midband",
+  template = "Wall_mid_band",
   game = "harmony",
 
   forced_offsets =
@@ -54,9 +54,9 @@ PREFABS.Wall_midband_harmony =
   }
 }
 
-PREFABS.Wall_midband_heretic =
+PREFABS.Wall_mid_band_heretic =
 {
-  template = "Wall_midband",
+  template = "Wall_mid_band",
   game = "heretic",
 
   forced_offsets =
@@ -65,7 +65,7 @@ PREFABS.Wall_midband_heretic =
   }
 }
 
-PREFABS.Wall_midband_diag =
+PREFABS.Wall_mid_band_diag =
 {
   file   = "wall/mid_band.wad",
   map    = "MAP02",
@@ -82,9 +82,9 @@ PREFABS.Wall_midband_diag =
   z_fit  = "top",
 }
 
-PREFABS.Wall_midband_diag_chex3 =
+PREFABS.Wall_mid_band_diag_chex3 =
 {
-  template = "Wall_midband_diag",
+  template = "Wall_mid_band_diag",
   game = "chex3",
 
   forced_offsets =
@@ -93,9 +93,9 @@ PREFABS.Wall_midband_diag_chex3 =
   }
 }
 
-PREFABS.Wall_midband_diag_hacx =
+PREFABS.Wall_mid_band_diag_hacx =
 {
-  template = "Wall_midband_diag",
+  template = "Wall_mid_band_diag",
   game = "hacx",
 
   forced_offsets =
@@ -104,9 +104,9 @@ PREFABS.Wall_midband_diag_hacx =
   }
 }
 
-PREFABS.Wall_midband_diag_harmony =
+PREFABS.Wall_mid_band_diag_harmony =
 {
-  template = "Wall_midband_diag",
+  template = "Wall_mid_band_diag",
   game = "harmony",
 
   forced_offsets =
@@ -115,9 +115,9 @@ PREFABS.Wall_midband_diag_harmony =
   }
 }
 
-PREFABS.Wall_midband_diag_heretic =
+PREFABS.Wall_mid_band_diag_heretic =
 {
-  template = "Wall_midband_diag",
+  template = "Wall_mid_band_diag",
   game = "heretic",
 
   forced_offsets =

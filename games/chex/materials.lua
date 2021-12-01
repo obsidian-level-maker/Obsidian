@@ -22,7 +22,7 @@ CHEX3.MATERIALS =
   _FLATLIT = { t="COMPSPAN", f="LABFLAT" },
   _WALLLIT = { t="FIREWALL", f="XX"},
   _LIFT  = { t="COMPSTA1", f="CJFCOMM3" },
-  _SBARS = { t="STEP4", f="XX" }, -- Short bars, i.e. railings
+  _SBARS = { t="LITEMET", f="XX" }, -- Short bars, i.e. railings
   _MBARS = { t="BARS", f="XX" }, -- Medium bars, i.e. barred windows
   _TBARS = { t="LITE4", f = "XX" }, -- Tall bars, i.e. cage/jail bars
   
@@ -45,11 +45,12 @@ CHEX3.MATERIALS =
   _KEYTRM3 = { t="DOORBLU", f="XX" }, -- Trim for locked door, Key 3
   
   _EXITDR = { t="BIGDOOR7", f="FLAT5_6" }, -- Exit door
-  _EXITSW = { t="SW1STON1", f="FLAT5_6"  }, -- Exit switch
-  _EXITTR = { t="EXITSTON", f="FLAT5_6"},
-  _EXITRM = { t="EXITSTON", f="FLAT5_6"}, -- Exit room walls (to match switch)
+  _EXITSW = { t="SW1SLAD", f="STEEL32" }, -- Exit switch
+  _EXITTR = { t="CEMENT1", f="STEEL32" },
+  _EXITRM = { t="CEMENT1", f="STEEL32" }, -- Exit room walls (to match switch)
+  _EXITSGN = { t="CQ3_EXIT", f="CJFCOMM3"},
   
-  _SW  = { t="SW1COMP",  f="CEIL5_1" }, -- General purpose swtich, full size
+  _SW  = { t="SW1COMP",  f="CEIL5_1" }, -- Switch is roughly 32x32 in size, rest of the texture is 'hidden' (Chex needs its own fabs for this because of its switch dimensions)
   _SWTRIM = { t="COMPSPAN",  f="CEIL5_1" }, -- Trim for switch
 
   _STRUCT = {t="COMPSPAN", f="CEIL5_1"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
@@ -558,7 +559,7 @@ CHEX3.PREFAB_FIELDS =
   -- These are used for converting generic fab things --
   thing_11000 = 2035, -- Barrel
   thing_11001 = 46, -- Ceiling light
-  thing_11002 = 2028, -- Standalone light
+  thing_11002 = 2028, -- Standalone light 
   thing_11003 = 0, -- Wall light (torch)
   thing_11004 = 34, -- Short standalone light
   thing_11005 = 32, -- Small pillar

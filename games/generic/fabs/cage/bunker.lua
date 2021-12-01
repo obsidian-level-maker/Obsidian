@@ -1,6 +1,6 @@
-PREFABS.Cage_wall_armaetus_bunker =
+PREFABS.Cage_wall_bunker =
 {
-  file   = "cage/armaetus_bunker.wad",
+  file   = "cage/bunker.wad",
 
   prob  = 300,
 

@@ -38,6 +38,7 @@ DOOM.MATERIALS =
   _SKY     = { t="METAL",  f="F_SKY1" },
 
   -- materials for generic prefab set --
+  _STAIRS = { t="STEP3",    f="CEIL5_1" },
   _VOID = { t="O_BLACK", f="XX" },
   _FLATLIT = { t="METAL", f="TLITE6_6" },
   _WALLLIT = { t="LITE5", f="XX"},
@@ -65,15 +66,15 @@ DOOM.MATERIALS =
   _KEYTRM3 = { t="DOORRED",  f="FLAT23" }, -- Trim for locked door, Key 3
   
   _EXITDR = { t="EXITDOOR", f="FLAT5_5" }, -- Exit door
-  _EXITSW  = { t="SW1GRAY",  f="FLAT18" }, -- Exit switch
-  _EXITTR  = { t="GRAY1",    f="FLAT18" }, -- Exit switch trim
-  _EXITRM  = { t="GRAY1",    f="FLAT18" }, -- Exit switch room
+  _EXITSW  = { t="SW1EXIT",  f="FLAT19" }, -- Exit switch, roughly 32x32
+  _EXITTR  = { t="GRAY1",    f="FLAT19" }, -- Exit switch trim
+  _EXITRM  = { t="GRAY1",    f="FLAT19" }, -- Exit switch room
   _EXITSGN = { t="EXITSIGN", f="CEIL5_1" }, -- Exit sign
   
   _STRUCT = {t="METAL", f="CEIL5_2"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
-  _SW  = { t="SW1COMP",  f="CEIL5_1" }, -- General purpose swtich, full size
-  _SWTRIM = { t="COMPSPAN", f="CEIL5_1" }, -- Trim for switch
+  _SW  = { t="SW1COMM",  f="FLAT23" }, -- Switch is roughly 32x32 in size, rest of the texture is 'hidden'
+  _SWTRIM = { t="SHAWN2", f="FLAT23" }, -- Trim for switch
   
   _TELE = { f="GATE4", t="METAL" }, -- Teleporter
 

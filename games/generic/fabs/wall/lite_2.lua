@@ -2,7 +2,7 @@
 -- Double lighting niche
 --
 
-PREFABS.Wall_lite2 =
+PREFABS.Wall_lite_double =
 {
   file   = "wall/lite_2.wad",
   map    = "MAP01",
@@ -24,9 +24,9 @@ PREFABS.Wall_lite2 =
   sector_0 = { [0]=50, [1]=20 },
 }
 
-PREFABS.Wall_lite2_hacx =
+PREFABS.Wall_lite_double_hacx =
 {
-  template = "Wall_lite2",
+  template = "Wall_lite_double",
   game = "hacx",
   forced_offsets =
   {
@@ -35,15 +35,15 @@ PREFABS.Wall_lite2_hacx =
     [13] = { x=0, y=16 },
     [20] = { x=0, y=-16 },
     [18] = { x=0, y=-16 },
-    [16] = { x=0, y=16 },
+    [19] = { x=0, y=16 },
     [15] = { x=0, y=16 },
     [21] = { x=0, y=-16 },
   }
 }
 
-PREFABS.Wall_lite2_harmony =
+PREFABS.Wall_lite_double_harmony =
 {
-  template = "Wall_lite2",
+  template = "Wall_lite_double",
   game = "harmony",
   forced_offsets =
   {
@@ -52,15 +52,15 @@ PREFABS.Wall_lite2_harmony =
     [13] = { x=4, y=1 },
     [20] = { x=4, y=1 },
     [18] = { x=4, y=1 },
-    [16] = { x=4, y=1 },
+    [19] = { x=4, y=1 },
     [15] = { x=4, y=1 },
     [21] = { x=4, y=1 },
   }
 }
 
-PREFABS.Wall_lite2_heretic =
+PREFABS.Wall_lite_double_heretic =
 {
-  template = "Wall_lite2",
+  template = "Wall_lite_double",
   game = "heretic",
   forced_offsets =
   {
@@ -69,15 +69,15 @@ PREFABS.Wall_lite2_heretic =
     [13] = { x=118, y=156 },
     [20] = { x=-126, y=-132 },
     [18] = { x=-11, y=-132 },
-    [16] = { x=1, y=28 },
+    [19] = { x=1, y=28 },
     [15] = { x=118, y=156 },
     [21] = { x=-126, y=-132 },
   }
 }
 
-PREFABS.Wall_lite2_strife =
+PREFABS.Wall_lite_double_strife =
 {
-  template = "Wall_lite2",
+  template = "Wall_lite_double",
   game = "strife",
   forced_offsets =
   {
@@ -86,7 +86,7 @@ PREFABS.Wall_lite2_strife =
     [13] = { x=0, y=0 },
     [20] = { x=0, y=0 },
     [18] = { x=0, y=0 },
-    [16] = { x=0, y=0 },
+    [19] = { x=0, y=0 },
     [15] = { x=0, y=0 },
     [21] = { x=0, y=0 },
   }

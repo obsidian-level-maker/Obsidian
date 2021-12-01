@@ -2,12 +2,12 @@
 -- Exit tunnel
 --
 
-PREFABS.Exit_beed28_tunnel =
+PREFABS.Exit_beed28tunnel =
 {
   file  = "exit/beed28_exit_tunnel.wad",
-
+  map   = "MAP01",
   prob  = 250,
-  theme = "!hell",
+  game = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=0, heretic=0, strife=0 },
 
   where  = "seeds",
   seed_w = 1,
@@ -19,30 +19,51 @@ PREFABS.Exit_beed28_tunnel =
   x_fit = "frame",
 
   start_fab_peer = "Start_beed28_tunnel",
+}
 
-  thing_45 =
+PREFABS.Exit_beed28tunnel_chex3 = 
+{
+  template = "Exit_beed28tunnel",
+  game = "chex3",
+  map = "MAP02"
+}
+
+PREFABS.Exit_beed28tunnel_hacx = 
+{
+  template = "Exit_beed28tunnel",
+  game = "hacx",
+  forced_offsets = 
   {
-   mercury_lamp = 50,
-   mercury_small = 50,
-   lamp = 50,
+    [20] = { x=0, y=95 }
   }
 }
 
-PREFABS.Exit_beed28_tunnel_hell =
+PREFABS.Exit_beed28tunnel_harmony = 
 {
-  template = "Exit_beed28_tunnel",
-
-  map = "MAP02",
-
-  theme = "hell",
-
-  start_fab_peer = "Start_beed28_tunnel_hell",
-
-  thing_45 =
+  template = "Exit_beed28tunnel",
+  game = "harmony",
+  forced_offsets = 
   {
-   blue_torch = 50,
-   green_torch = 50,
-   red_torch = 50,
-   candelabra = 50,
+    [20] = { x=16, y=79 }
+  }
+}
+
+PREFABS.Exit_beed28tunnel_heretic = 
+{
+  template = "Exit_beed28tunnel",
+  game = "heretic",
+  forced_offsets = 
+  {
+    [20] = { x=16, y=50 }
+  }
+}
+
+PREFABS.Exit_beed28tunnel_strife = 
+{
+  template = "Exit_beed28tunnel",
+  game = "strife",
+  forced_offsets = 
+  {
+    [20] = { x=0, y=66 }
   }
 }

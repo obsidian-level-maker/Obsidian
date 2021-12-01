@@ -41,6 +41,7 @@ ULTDOOM.PARAMETERS =
 ULTDOOM.MATERIALS =
 {
   -- materials for generic prefab set --
+  _STAIRS = { t="STEP3",    f="CEIL5_1" },
   _VOID = { t="O_BLACK", f="XX" },
   _FLATLIT = { t="METAL", f="TLITE6_6" },
   _WALLLIT = { t="LITE5", f="XX"},
@@ -68,15 +69,15 @@ ULTDOOM.MATERIALS =
   _KEYTRM3 = { t="DOORRED",  f="FLAT23" }, -- Trim for locked door, Key 3
   
   _EXITDR = { t="EXITDOOR", f="FLAT5_5" }, -- Exit door
-  _EXITSW  = { t="SW1GRAY",  f="FLAT18" }, -- Exit switch
-  _EXITTR  = { t="GRAY1",    f="FLAT18" }, -- Exit switch trim
-  _EXITRM  = { t="GRAY1",    f="FLAT18" }, -- Exit switch room
+  _EXITSW  = { t="SW1EXIT",  f="FLAT19" }, -- Exit switch, roughly 32x32
+  _EXITTR  = { t="GRAY1",    f="FLAT19" }, -- Exit switch trim
+  _EXITRM  = { t="GRAY1",    f="FLAT19" }, -- Exit switch room
   _EXITSGN = { t="EXITSIGN", f="CEIL5_1" }, -- Exit sign
   
   _STRUCT = {t="METAL", f="CEIL5_2"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
-  _SW  = { t="SW1COMP",  f="CEIL5_1" }, -- General purpose swtich, full size
-  _SWTRIM = { t="COMPSPAN", f="CEIL5_1" }, -- Trim for switch
+  _SW  = { t="SW1COMM",  f="FLAT23" }, -- Switch is roughly 32x32 in size, rest of the texture is 'hidden'
+  _SWTRIM = { t="SHAWN2", f="FLAT23" }, -- Trim for switch
   
   _TELE = { f="GATE4", t="METAL" }, -- Teleporter
 
@@ -3813,8 +3814,6 @@ function ULTDOOM.nolimit_themes()
       lite2 = 20,
       torches1 = 12,
       torches2 = 12,
-      beamed_inset = 25,
-      beamed_inset_alt = 25,
       high_gap = 25,
       vert_gab = 25,
       half_floor = 20,
@@ -3835,7 +3834,7 @@ function ULTDOOM.nolimit_themes()
       pillbox = 20,
       slumpish = 30,
     }
-    GAME.THEMES.tech.fence_groups = { PLAIN = 50 }
+    GAME.THEMES.tech.fence_groups = { PLAIN = 50, crenels = 12 }
     GAME.THEMES.tech.fence_posts = { Post = 50 }
     GAME.THEMES.deimos.narrow_halls = { vent = 50 }
     GAME.THEMES.deimos.beam_groups = { beam_metal = 50 }
@@ -3849,8 +3848,6 @@ function ULTDOOM.nolimit_themes()
       lite2 = 20,
       torches1 = 12,
       torches2 = 12,
-      beamed_inset = 25,
-      beamed_inset_alt = 25,
       high_gap = 25,
       vert_gab = 25,
       half_floor = 20,
@@ -3871,7 +3868,7 @@ function ULTDOOM.nolimit_themes()
       pillbox = 20,
       slumpish = 30,
     }
-    GAME.THEMES.deimos.fence_groups = { PLAIN = 50 }
+    GAME.THEMES.deimos.fence_groups = { PLAIN = 50, crenels = 12 }
     GAME.THEMES.deimos.fence_posts = { Post = 50 }
     GAME.THEMES.hell.narrow_halls = { vent = 50 }
     GAME.THEMES.hell.beam_groups = { beam_metal = 50 }
@@ -3885,8 +3882,6 @@ function ULTDOOM.nolimit_themes()
       lite2 = 20,
       torches1 = 12,
       torches2 = 12,
-      beamed_inset = 25,
-      beamed_inset_alt = 25,
       high_gap = 25,
       vert_gab = 25,
       half_floor = 20,
@@ -3907,7 +3902,7 @@ function ULTDOOM.nolimit_themes()
       pillbox = 20,
       slumpish = 30,
     }
-    GAME.THEMES.hell.fence_groups = { PLAIN = 50 }
+    GAME.THEMES.hell.fence_groups = { PLAIN = 50, crenels = 12 }
     GAME.THEMES.hell.fence_posts = { Post = 50 }
     GAME.THEMES.flesh.narrow_halls = { vent = 50 }
     GAME.THEMES.flesh.beam_groups = { beam_metal = 50 }
@@ -3921,8 +3916,6 @@ function ULTDOOM.nolimit_themes()
       lite2 = 20,
       torches1 = 12,
       torches2 = 12,
-      beamed_inset = 25,
-      beamed_inset_alt = 25,
       high_gap = 25,
       vert_gab = 25,
       half_floor = 20,
@@ -3943,7 +3936,7 @@ function ULTDOOM.nolimit_themes()
       pillbox = 20,
       slumpish = 30,
     }
-    GAME.THEMES.flesh.fence_groups = { PLAIN = 50 }
+    GAME.THEMES.flesh.fence_groups = { PLAIN = 50, crenels = 12 }
     GAME.THEMES.flesh.fence_posts = { Post = 50 }
   end
 end

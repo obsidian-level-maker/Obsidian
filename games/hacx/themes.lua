@@ -149,7 +149,8 @@ HACX.THEMES =
 
     fence_groups =
     {
-      PLAIN = 50
+      PLAIN = 50,
+      crenels = 12,
     },
 
     fence_posts =
@@ -184,8 +185,6 @@ HACX.THEMES =
       lite2 = 20,
       torches1 = 12,
       torches2 = 12,
-      beamed_inset = 25,
-      beamed_inset_alt = 25,
       high_gap = 25,
       vert_gab = 25,
       half_floor = 20,
@@ -271,6 +270,44 @@ HACX.ROOM_THEMES =
   {
     env   = "hallway",
     group = "curve",
+    prob = 50,
+
+    walls =
+    {
+      MODWALL3 = 30,
+      STONY1 = 10,
+      TECHY1 = 20,
+      CAVEY1 = 10,
+      BLOCKY1 = 30,
+      BLOCKY2 = 10,
+    },
+
+    floors =
+    {
+      MODWALL3 = 50,
+      STONY1 = 50,
+      TECHY1 = 50,
+      CAVEY1 = 50,
+      BLOCKY1 = 50,
+      WOODY1 = 50,
+      WOOD_TILE = 50
+    },
+
+    ceilings =
+    {
+      MODWALL3 = 30,
+      STONY1 = 10,
+      TECHY1 = 20,
+      CAVEY1 = 10,
+      BLOCKY1 = 30,
+      WOODY1 = 10,
+    }
+  },
+
+  hacx_urban_Hallway_deuce =
+  {
+    env   = "hallway",
+    group = "deuce",
     prob = 50,
 
     walls =

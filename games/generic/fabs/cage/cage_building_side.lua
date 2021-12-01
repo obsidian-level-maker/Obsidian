@@ -1,6 +1,6 @@
-PREFABS.Cage_wall_building_terrace =
+PREFABS.Cage_wall_terrace =
 {
-  file   = "cage/gtd_cage_building_side.wad",
+  file   = "cage/cage_building_side.wad",
   map   = "MAP01",
 
   prob  = 1500,
@@ -21,9 +21,9 @@ PREFABS.Cage_wall_building_terrace =
   y_fit = "top",
 }
 
-PREFABS.Cage_wall_building_terrace_tall =
+PREFABS.Cage_wall_terrace_tall =
 {
-  template = "Cage_wall_building_terrace",
+  template = "Cage_wall_terrace",
   map = "MAP02",
 
   height = 264,

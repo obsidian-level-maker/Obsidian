@@ -258,6 +258,7 @@ HERETIC.THEMES =
     fence_groups =
     {
       PLAIN = 50,
+      crenels = 12,
     },
 
     fence_posts =
@@ -287,14 +288,8 @@ HERETIC.THEMES =
       PLAIN = 0.01,
       low_gap = 10,
       low_gap2 = 10,
-      mid_band = 10,
-      lite1 = 20,
-      lite2 = 20,
       torches1 = 12,
       torches2 = 12,
-      beamed_inset = 25,
-      beamed_inset_alt = 25,
-      high_gap = 25,
       vert_gab = 25,
       half_floor = 20,
       half_floor_no_trim = 20,
@@ -427,6 +422,7 @@ HERETIC.THEMES =
     fence_groups =
     {
       PLAIN = 50,
+      crenels = 12,
     },
 
     fence_posts =
@@ -456,14 +452,8 @@ HERETIC.THEMES =
       PLAIN = 0.01,
       low_gap = 10,
       low_gap2 = 10,
-      mid_band = 10,
-      lite1 = 20,
-      lite2 = 20,
       torches1 = 12,
       torches2 = 12,
-      beamed_inset = 25,
-      beamed_inset_alt = 25,
-      high_gap = 25,
       vert_gab = 25,
       half_floor = 20,
       half_floor_no_trim = 20,
@@ -604,6 +594,7 @@ HERETIC.THEMES =
     fence_groups =
     {
       PLAIN = 50,
+      crenels = 12,
     },
 
     fence_posts =
@@ -633,14 +624,8 @@ HERETIC.THEMES =
       PLAIN = 0.01,
       low_gap = 10,
       low_gap2 = 10,
-      mid_band = 10,
-      lite1 = 20,
-      lite2 = 20,
       torches1 = 12,
       torches2 = 12,
-      beamed_inset = 25,
-      beamed_inset_alt = 25,
-      high_gap = 25,
       vert_gab = 25,
       half_floor = 20,
       half_floor_no_trim = 20,
@@ -760,6 +745,7 @@ HERETIC.THEMES =
     fence_groups =
     {
       PLAIN = 50,
+      crenels = 12,
     },
 
     fence_posts =
@@ -794,8 +780,6 @@ HERETIC.THEMES =
       lite2 = 20,
       torches1 = 12,
       torches2 = 12,
-      beamed_inset = 25,
-      beamed_inset_alt = 25,
       high_gap = 25,
       vert_gab = 25,
       half_floor = 20,
@@ -935,6 +919,7 @@ HERETIC.THEMES =
     fence_groups =
     {
       PLAIN = 50,
+      crenels = 12,
     },
 
     fence_posts =
@@ -964,14 +949,8 @@ HERETIC.THEMES =
       PLAIN = 0.01,
       low_gap = 10,
       low_gap2 = 10,
-      mid_band = 10,
-      lite1 = 20,
-      lite2 = 20,
       torches1 = 12,
       torches2 = 12,
-      beamed_inset = 25,
-      beamed_inset_alt = 25,
-      high_gap = 25,
       vert_gab = 25,
       half_floor = 20,
       half_floor_no_trim = 20,
@@ -1249,6 +1228,31 @@ HERETIC.ROOM_THEMES =
 
   },
 
+  city_deuce_Hallway_Floor03 =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob  = 50,
+
+    walls =
+    {
+      GRSTNPB = 50,
+      GRSTNPBV = 50,
+      WOODWL = 20,
+    },
+
+    floors =
+    {
+      FLOOR03 = 50,
+    },
+
+    ceilings =
+    {
+      FLOOR03 = 50,
+    },
+
+  },
+
   city_vent_Hallway_Floor03 =
   {
     env   = "hallway",
@@ -1298,6 +1302,30 @@ HERETIC.ROOM_THEMES =
 
   },
 
+  city_deuce_Hallway_Floor04 =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob  = 50,
+
+    walls =
+    {
+      GRSTNPB = 50,
+      GRSTNPBV = 50,
+    },
+
+    floors =
+    {
+      FLOOR04 = 50,
+    },
+
+    ceilings =
+    {
+      FLOOR04 = 50,
+    },
+
+  },
+
   city_vent_Hallway_Floor04 =
   {
     env   = "hallway",
@@ -1322,10 +1350,33 @@ HERETIC.ROOM_THEMES =
 
   },
 
-    city_curve_Hallway_Sndchnks =
+  city_curve_Hallway_Sndchnks =
   {
     env   = "hallway",
     group = "curve",
+    prob  = 15,
+
+    walls =
+    {
+      SNDCHNKS = 50,
+    },
+
+    floors =
+    {
+      FLOOR06 = 50,
+    },
+
+    ceilings =
+    {
+      FLOOR06 = 20,
+    },
+
+  },
+
+  city_deuce_Hallway_Sndchnks =
+  {
+    env   = "hallway",
+    group = "deuce",
     prob  = 15,
 
     walls =
@@ -1476,6 +1527,29 @@ HERETIC.ROOM_THEMES =
 
   },
 
+  maw_deuce_Hallway_Looserck =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob  = 50,
+
+    walls =
+    {
+      LOOSERCK = 50,
+    },
+
+    floors =
+    {
+      FLAT516 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT509 = 50,
+    },
+
+  },
+
   maw_vent_Hallway_Looserck =
   {
     env   = "hallway",
@@ -1503,6 +1577,30 @@ HERETIC.ROOM_THEMES =
   {
     env   = "hallway",
     group = "curve",
+    prob  = 50,
+
+    walls =
+    {
+      GRSTNPB = 50,
+      GRSTNPBV = 25,
+    },
+
+    floors =
+    {
+      FLOOR04 = 50,
+    },
+
+    ceilings =
+    {
+      FLOOR04 = 50,
+    },
+
+  },
+
+  maw_deuce_Hallway_Grstnpb =
+  {
+    env   = "hallway",
+    group = "deuce",
     prob  = 50,
 
     walls =
@@ -1755,6 +1853,31 @@ HERETIC.ROOM_THEMES =
 
   },
 
+  dome_deuce_Hallway_Grstnpb =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob  = 50,
+
+    walls =
+    {
+      GRSTNPB = 50,
+    },
+
+    floors =
+    {
+      FLAT503 = 50,
+      FLAT523 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT503 = 50,
+      FLOOR27 = 50,
+    },
+
+  },
+
   dome_vent_Hallway_Grstnpb =
   {
     env   = "hallway",
@@ -1803,6 +1926,29 @@ HERETIC.ROOM_THEMES =
 
   },
 
+  dome_deuce_Hallway_Grnblok1 =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob  = 25,
+
+    walls =
+    {
+      GRNBLOK1 = 50,
+    },
+
+    floors =
+    {
+      FLAT522 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT522 = 50,
+    },
+
+  },
+
   dome_vent_Hallway_Grnblok1 =
   {
     env   = "hallway",
@@ -1830,6 +1976,29 @@ HERETIC.ROOM_THEMES =
   {
     env   = "hallway",
     group = "curve",
+    prob  = 25,
+
+    walls =
+    {
+      SNDPLAIN = 50,
+    },
+
+    floors =
+    {
+      FLAT521 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT521 = 50,
+    },
+
+  },
+
+  dome_deuce_Hallway_Sndplain =
+  {
+    env   = "hallway",
+    group = "deuce",
     prob  = 25,
 
     walls =
@@ -2197,6 +2366,29 @@ HERETIC.ROOM_THEMES =
 
   },
 
+  ossuary_deuce_Hallway_Cstlrck =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob  = 50,
+
+    walls =
+    {
+      CSTLRCK = 50,
+    },
+
+    floors =
+    {
+      FLAT522 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT523 = 50,
+    },
+
+  },
+
   ossuary_vent_Hallway_Cstlrck =
   {
     env   = "hallway",
@@ -2224,6 +2416,29 @@ HERETIC.ROOM_THEMES =
   {
     env   = "hallway",
     group = "curve",
+    prob  = 50,
+
+    walls =
+    {
+      GRSTNPB = 50,
+    },
+
+    floors =
+    {
+      FLAT521 = 50,
+    },
+
+    ceilings =
+    {
+      FLOOR19 = 50,
+    },
+
+  },
+
+  ossuary_deuce_Hallway_Grstnpb =
+  {
+    env   = "hallway",
+    group = "deuce",
     prob  = 50,
 
     walls =
@@ -2288,6 +2503,29 @@ HERETIC.ROOM_THEMES =
     },
 
   },
+  
+  ossuary_deuce_Hallway_Sndplain =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob  = 50,
+
+    walls =
+    {
+      SNDPLAIN = 50,
+    },
+
+    floors =
+    {
+      FLAT522 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT503 = 50,
+    },
+
+  },
 
   ossuary_vent_Hallway_Sndplain =
   {
@@ -2316,6 +2554,31 @@ HERETIC.ROOM_THEMES =
   {
     env   = "hallway",
     group = "curve",
+    prob  = 50,
+
+    walls =
+    {
+      WOODWL = 50,
+    },
+
+    floors =
+    {
+      FLOOR10 = 50,
+      FLAT523 = 50,
+    },
+
+    ceilings =
+    {
+      FLOOR11 = 50,
+      FLOOR10 = 50,
+    },
+
+  },
+
+  ossuary_deuce_Hallway_Woodwl =
+  {
+    env   = "hallway",
+    group = "deuce",
     prob  = 50,
 
     walls =
@@ -2658,6 +2921,31 @@ HERETIC.ROOM_THEMES =
 
   },
 
+  demense_deuce_Hallway_Sqpeb1 =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob  = 50,
+
+    walls =
+    {
+      SQPEB1 = 50,
+    },
+
+    floors =
+    {
+      FLOOR17 = 50,
+      FLAT523 = 50,
+    },
+
+    ceilings =
+    {
+      FLOOR27 = 50,
+      FLAT523 = 50,
+    },
+
+  },
+
   demense_vent_Hallway_Sqpeb1 =
   {
     env   = "hallway",
@@ -2687,6 +2975,33 @@ HERETIC.ROOM_THEMES =
   {
     env   = "hallway",
     group = "curve",
+    prob  = 50,
+
+    walls =
+    {
+      SNDPLAIN = 50,
+      SNDBLCKS = 50,
+    },
+
+    floors =
+    {
+      FLAT523 = 50,
+      FLOOR06 = 50,
+      FLOOR19 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT503 = 50,
+      FLAT521 = 50,
+    },
+
+  },
+
+  demense_deuce_Hallway_Sndplain_Sndblcks =
+  {
+    env   = "hallway",
+    group = "deuce",
     prob  = 50,
 
     walls =
@@ -2763,6 +3078,32 @@ HERETIC.ROOM_THEMES =
 
   },
 
+  demense_deuce_Hallway_Metl2 =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob  = 50,
+
+    walls =
+    {
+      METL2 = 50,
+    },
+
+    floors =
+    {
+      FLAT523 = 50,
+      FLAT522 = 50,
+      FLOOR28 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT523 = 50,
+      FLAT521 = 50,
+    },
+
+  },
+
   demense_vent_Hallway_Metl2 =
   {
     env   = "hallway",
@@ -2793,6 +3134,31 @@ HERETIC.ROOM_THEMES =
   {
     env   = "hallway",
     group = "curve",
+    prob  = 50,
+
+    walls =
+    {
+      CSTLRCK = 50,
+      GRSTNPB = 50,
+    },
+
+    floors =
+    {
+      FLAT523 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT523 = 50,
+      FLAT504 = 50,
+    },
+
+  },
+
+  demense_deuce_Hallway_Cstlrck_Grstnpb =
+  {
+    env   = "hallway",
+    group = "deuce",
     prob  = 50,
 
     walls =

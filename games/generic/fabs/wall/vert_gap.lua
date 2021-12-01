@@ -2,7 +2,7 @@
 -- Wall with vertical gap
 --
 
-PREFABS.Wall_vertgap =
+PREFABS.Wall_vert_gap =
 {
   file   = "wall/vert_gap.wad",
   map    = "MAP01",
@@ -21,7 +21,7 @@ PREFABS.Wall_vertgap =
 }
 
 
-PREFABS.Wall_vertgap_diag =
+PREFABS.Wall_vert_gap_diag =
 {
   file   = "wall/vert_gap.wad",
   map    = "MAP02",

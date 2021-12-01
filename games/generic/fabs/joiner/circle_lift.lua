@@ -19,6 +19,9 @@ PREFABS.Joiner_circle_lift = -- Default offsets are for Doom
   delta_h = 104,
   nearby_h = 104,
 
+  x_fit = "frame",
+  y_fit = "frame",
+
   forced_offsets = -- Need to force 1,1 otherwise Obsidian will think it wants to be 0,0
   {
     [13] = { x=1, y=1 },
