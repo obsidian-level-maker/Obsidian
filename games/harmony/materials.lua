@@ -20,6 +20,7 @@ HARMONY.MATERIALS =
   _SKY   = { t="METAL3", f="F_SKY1" },
 
   -- materials for generic prefab set --
+  _RUNIC = { t="0ROOD02", f="SLIME13" },
   _STAIRS = { t="STEP6", f="FLAT5_4" },
   _VOID = { t="0ARK5", f="XX" },
   _WALLLIT = { t="PANBORD2", f="XX"},  

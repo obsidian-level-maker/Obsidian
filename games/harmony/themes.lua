@@ -218,6 +218,7 @@ HARMONY.THEMES =
       half_floor_inverted_braced = 20,
       wallgutters = 10,
       lamptorch = 16,
+      runic = 10,
     },
 
     ceil_light_prob = 70,

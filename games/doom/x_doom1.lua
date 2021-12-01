@@ -41,6 +41,7 @@ ULTDOOM.PARAMETERS =
 ULTDOOM.MATERIALS =
 {
   -- materials for generic prefab set --
+  _RUNIC = { t="FIREBLU1", f="FLOOR6_1" },
   _STAIRS = { t="STEP3",    f="CEIL5_1" },
   _VOID = { t="O_BLACK", f="XX" },
   _FLATLIT = { t="METAL", f="TLITE6_6" },
@@ -3821,6 +3822,7 @@ function ULTDOOM.nolimit_themes()
       half_floor_inverted_braced = 20,
       wallgutters = 10,
       lamptorch = 16,
+      runic = 10,
     }
     GAME.THEMES.tech.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.tech.window_groups = 
@@ -3855,6 +3857,7 @@ function ULTDOOM.nolimit_themes()
       half_floor_inverted_braced = 20,
       wallgutters = 10,
       lamptorch = 16,
+      runic = 10,
     }
     GAME.THEMES.deimos.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.deimos.window_groups =
@@ -3889,6 +3892,7 @@ function ULTDOOM.nolimit_themes()
       half_floor_inverted_braced = 20,
       wallgutters = 10,
       lamptorch = 16,
+      runic = 10,
     }
     GAME.THEMES.hell.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.hell.window_groups = 
@@ -3923,6 +3927,7 @@ function ULTDOOM.nolimit_themes()
       half_floor_inverted_braced = 20,
       wallgutters = 10,
       lamptorch = 16,
+      runic = 10,
     }
     GAME.THEMES.flesh.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.flesh.window_groups = 

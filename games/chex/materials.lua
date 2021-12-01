@@ -17,6 +17,7 @@ CHEX3.MATERIALS =
   -- materials for generic prefab set --
 
   -- The idea is to have one singular default material for these; variants should be specified in theme-specific PREFAB_FIELDS tables as replacements - Dasho
+  _RUNIC = { t="GRAYDANG", f="CJFSHIP3" },
   _STAIRS = { t="STEP2", f="FLAT5_6" },
   _VOID = { t="O_BLACK", f="XX"},
   _FLATLIT = { t="COMPSPAN", f="LABFLAT" },

@@ -38,6 +38,7 @@ DOOM.MATERIALS =
   _SKY     = { t="METAL",  f="F_SKY1" },
 
   -- materials for generic prefab set --
+  _RUNIC = { t="FIREBLU1", f="FLOOR6_1" },
   _STAIRS = { t="STEP3",    f="CEIL5_1" },
   _VOID = { t="O_BLACK", f="XX" },
   _FLATLIT = { t="METAL", f="TLITE6_6" },
