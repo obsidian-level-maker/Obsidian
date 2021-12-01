@@ -2,7 +2,7 @@
 -- this window is just grate!
 --
 
-PREFABS.Window_grate_1 =
+PREFABS.Window_low_grate =
 {
   file   = "window/grate.wad",
   map    = "MAP01",
@@ -21,16 +21,16 @@ PREFABS.Window_grate_1 =
   z_fit = "top"
 }
 
-PREFABS.Window_grate_2 =
+PREFABS.Window_low_grate_2 =
 {
-  template = "Window_grate_1",
+  template = "Window_low_grate",
   map      = "MAP02",
   seed_w   = 2,
 }
 
-PREFABS.Window_grate_3 =
+PREFABS.Window_low_grate_3 =
 {
-  template = "Window_grate_1",
+  template = "Window_low_grate",
   map      = "MAP03",
   seed_w   = 3,
 }

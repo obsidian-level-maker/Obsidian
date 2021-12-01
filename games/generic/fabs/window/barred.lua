@@ -2,7 +2,7 @@
 -- a window with thick bars
 --
 
-PREFABS.Window_barred1 =
+PREFABS.Window_bars =
 {
   file   = "window/barred.wad",
   map    = "MAP01",
@@ -22,17 +22,17 @@ PREFABS.Window_barred1 =
 
 }
 
-PREFABS.Window_barred2 =
+PREFABS.Window_bars2 =
 {
-  template = "Window_barred1",
+  template = "Window_bars",
 
   map      = "MAP02",
   seed_w   = 2,
 }
 
-PREFABS.Window_barred3 =
+PREFABS.Window_bars3 =
 {
-  template = "Window_barred1",
+  template = "Window_bars",
   map      = "MAP03",
   seed_w   = 3,
 

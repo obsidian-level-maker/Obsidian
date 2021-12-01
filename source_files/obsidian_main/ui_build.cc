@@ -242,7 +242,7 @@ void UI_Build::Prog_Step(const char *step_name) {
         val = 1;
     }
 
-    prog_label = fmt::format("{:2g}%", val * 100);
+    prog_label = fmt::format("{0:.2f}%", val * 100);
 
     progress->value(val);
     progress->label(prog_label.c_str());
@@ -273,7 +273,7 @@ void UI_Build::Prog_Nodes(int pos, int limit) {
     float val = node_along + (node_fracs * pos);
     if (val > 1) { val = 1; }    
 
-    prog_label = fmt::format("{:2g}%", val * 100);
+    prog_label = fmt::format("{0:.2f}%", val * 100);
 
     progress->value(val);
     progress->label(prog_label.c_str());
