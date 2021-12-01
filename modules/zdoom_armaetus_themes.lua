@@ -5380,6 +5380,9 @@ ARMAETUS_THEMES =
       gtd_wall_hell_engraving_2 = 8,
       gtd_wall_hell_engraving_3 = 8,
       --
+      gtd_wall_hell_engraving_dark = 25,
+      gtd_wall_hell_engraving_arch = 25,
+      --
       gtd_comp_grntek_blue = 20
     },
 
