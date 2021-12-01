@@ -24,7 +24,7 @@ PREFABS.Exit_simple_exit_chex3 =
   engine = "advanced",
   forced_offsets =
   {
-    [30] = { x=47, y=11 }
+    [31] = { x=47, y=11 }
   }
 }
 
@@ -47,7 +47,7 @@ PREFABS.Exit_simple_exit_hacx =
   engine = "advanced",
   forced_offsets =
   {
-    [30] = { x=0, y=96 }
+    [31] = { x=0, y=96 }
   }
 }
 
@@ -80,7 +80,7 @@ PREFABS.Exit_simple_exit_heretic =
   engine = "advanced",
   forced_offsets =
   {
-    [30] = { x=16, y=50 }
+    [31] = { x=16, y=50 }
   }
 }
 
@@ -139,7 +139,7 @@ PREFABS.Exit_simple_exit_secret_chex3 =
   engine = "advanced",
   forced_offsets =
   {
-    [30] = { x=47, y=11 }
+    [31] = { x=47, y=11 }
   }
 }
 
@@ -162,7 +162,7 @@ PREFABS.Exit_simple_exit_secret_hacx =
   engine = "advanced",
   forced_offsets =
   {
-    [30] = { x=0, y=96 }
+    [31] = { x=0, y=96 }
   }
 }
 
@@ -195,7 +195,7 @@ PREFABS.Exit_simple_exit_secret_heretic =
   engine = "advanced",
   forced_offsets =
   {
-    [30] = { x=16, y=50 }
+    [31] = { x=16, y=50 }
   }
 }
 
