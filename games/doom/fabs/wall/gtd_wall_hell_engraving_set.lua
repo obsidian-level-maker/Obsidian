@@ -108,3 +108,71 @@ PREFABS.Wall_hell_engraving_arched_3 =
 
   bound_z2 = 128
 }
+
+--
+
+PREFABS.Wall_hell_engraving_dark =
+{
+  template = "Wall_hell_engraving_plain_1",
+  map = "MAP03",
+
+  height = 128,
+
+  bound_z2 = 128,
+
+  group = "gtd_wall_hell_engraving_dark"
+}
+
+PREFABS.Wall_hell_engraving_dark_diag =
+{
+  template = "Wall_hell_engraving_plain_1",
+  map = "MAP04",
+
+  height = 128,
+  where = "diagonal",
+
+  bound_z2 = 128,
+
+  group = "gtd_wall_hell_engraving_dark"
+}
+
+--
+
+PREFABS.Wall_hell_engraving_arch =
+{
+  template = "Wall_hell_engraving_plain_1",
+  map = "MAP05",
+
+  height = 128,
+
+  bound_z2 = 128,
+
+  group = "gtd_wall_hell_engraving_arch"
+}
+
+PREFABS.Wall_hell_engraving_arch_triple =
+{
+  template = "Wall_hell_engraving_plain_1",
+  map = "MAP06",
+
+  prob = 25,
+
+  height = 128,
+
+  bound_z2 = 128,
+
+  group = "gtd_wall_hell_engraving_arch"
+}
+
+PREFABS.Wall_hell_engraving_arch_diag =
+{
+  template = "Wall_hell_engraving_plain_1",
+  map = "MAP07",
+
+  height = 128,
+  where = "diagonal",
+
+  bound_z2 = 128,
+
+  group = "gtd_wall_hell_engraving_arch"
+}

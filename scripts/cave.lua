@@ -4803,7 +4803,7 @@ function Cave_prepare_scenic_vista(area)
 
   vista_type = rand.key_by_probs(vista_list)
 
-  local nice_view_prob = style_sel("scenics", 0, 33, 67, 100)
+  local nice_view_prob = style_sel("scenics", 0, 16, 33, 50)
   if room.is_outdoor then nice_view_prob = style_sel("scenics", 5, 50, 75, 100) end
 
   nice_view_prob = math.clamp(0, nice_view_prob - (LEVEL.autodetail_group_walls_factor * 4) + 1, 100)

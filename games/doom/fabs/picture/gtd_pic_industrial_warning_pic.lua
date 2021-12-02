@@ -19,5 +19,6 @@ PREFABS.Pic_gtd_warning_days_since_last =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  x_fit = "stretch",
+  x_fit = "frame",
+  y_fit = "top",
 }
