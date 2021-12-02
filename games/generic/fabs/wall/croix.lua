@@ -4,21 +4,21 @@
 
 PREFABS.Wall_croix =
 {
-  file   = "wall/croix.wad"
-  map    = "MAP01"
+  file   = "wall/croix.wad",
+  map    = "MAP01",
   game = "doomish",
 
-  prob   = 50
-  group  = "croix"
+  prob   = 50,
+  group  = "croix",
 
-  where  = "edge"
-  deep   = 16
+  where  = "edge",
+  deep   = 16,
 
-  height = 128
+  height = 128,
 
-  x_fit  = "frame"
-  z_fit  = "frame"
+  x_fit  = "frame",
+  z_fit  = "frame",
 
-  bound_z1 = 0
+  bound_z1 = 0,
   bound_z2 = 128
 }
