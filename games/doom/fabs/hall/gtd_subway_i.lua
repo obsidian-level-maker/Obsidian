@@ -18,5 +18,21 @@ PREFABS.Hallway_subway_i_train =
   template = "Hallway_subway_i",
   map = "MAP02",
 
-  prob = 25
+  prob = 17
+}
+
+PREFABS.Hallway_subway_i_side_stairs =
+{
+  template = "Hallway_subway_i",
+  map = "MAP03",
+
+  prob = 17
+}
+
+PREFABS.Hallway_subway_i_crate_platform =
+{
+  template = "Hallway_subway_i",
+  map = "MAP04",
+
+  prob = 17
 }

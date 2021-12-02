@@ -12,6 +12,8 @@ PREFABS.Hallway_subway_basic_keyed_red =
   where  = "seeds",
   shape  = "I",
 
+  deep = 16,
+
   seed_w = 2,
   seed_h = 1
 }

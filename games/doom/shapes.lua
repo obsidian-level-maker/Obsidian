@@ -5921,7 +5921,7 @@ GROW_DIAGONAL_SIDE_BLOB_ALT =
     "x..xxx","xAAxxx",
     "x...xx","xAA%xx",
     "x....x","xAAA%x",
-    "!.....","!%AA/1",
+    "x.....","x%AA/1",
     "xx....","xx%/11",
     "xxx.11","xxx111",
   },
@@ -5956,6 +5956,56 @@ GROW_DIAGONAL_SIDE_BLOB_ALT_2 =
     "1A","A.",
     ".A","A1",
     ".A","A1",
+  },
+},
+
+GROW_DIAGONAL_SIDE_BLOB_ALT_L =
+{
+  prob = 15,
+  skip_prob = 75,
+
+  structure =
+  {
+    ".....x","111/%x",
+    "......","11/AA%",
+    "xx....","xx%AA/",
+    "xxx...","xxx%/1",
+    "xxxx..","xxxx11",
+    "xxxx11","xxxx11",
+  },
+
+  diagonals =
+  {
+    "1A","A.",
+    "1A","A.",
+    ".A","A1",
+    ".A","A1",
+  },
+},
+
+GROW_DIAGONAL_SIDE_BLOB_ALT_PILLARED =
+{
+  prob = 10,
+  skip_prob = 75,
+
+  structure =
+  {
+    "....xxxx","1111xxxx",
+    "....xxxx","1111xxxx",
+    ".....xxx","11#A%xxx",
+    "......xx","11AAA%xx",
+    "xx......","xx%AAA11",
+    "xxx.....","xxx%A#11",
+    "xxxx....","xxxx1111",
+    "xxxx..11","xxxx1111",
+  },
+
+  diagonals =
+  {
+    "A.",
+    "A.",
+    ".A",
+    ".A",
   },
 },
 
