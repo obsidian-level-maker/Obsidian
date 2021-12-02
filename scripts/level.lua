@@ -2928,17 +2928,13 @@ function Level_make_all()
   GAME.episodes = {}
 
   -- semi-supported games warning
-  if OB_CONFIG.game ~= "doom2" then
-    if not PARAM.bool_extra_games or PARAM.bool_extra_games == 0 then
-      error("Warning: Obsidian development is mostly focused " ..
-    "on creating content for the Doom 2 game setting.\n\n" ..
-    "As a consequence, other games available on the list are " ..
-    "lagging behind in features. These games' " ..
-    "content and feature set are currently " ..
-    "only updated for compatibility being legacy choices " ..
-    "provided by vanilla Oblige. To ignore this warning " ..
+  if ob_match_game({ game = { hexen=1, nukem=1, quake=1, strife=1} }) then
+    if not PARAM.bool_experimental_games or PARAM.bool_experimental_games == 0 then
+      error("Warning: The game that you have selected is in an experimental " ..
+    "state. WADs may not build successfully and certain gameplay features may not" ..
+    "be implemented yet!. To ignore this warning " ..
     "and continue generation for these games, set " ..
-    "Extra Games under Debug Control Module to 'Yes'.\n\n" ..
+    "Experimental Games under Debug Control Module to 'Yes'.\n\n" ..
     "This message will change should development scope expand.")
     end
   end

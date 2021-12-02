@@ -43,7 +43,7 @@ end
 
 OB_GAMES["chex3"] =
 {
-	label = _("Chex Quest 3 (Exp)"),
+	label = _("Chex Quest 3"),
 	priority = 30,
 	
 	format = "doom",
