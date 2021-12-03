@@ -35,6 +35,13 @@ HEXEN.MATERIALS =
   _SKY   = { t="STEEL01", f="F_SKY" },
 
   -- materials for generic prefab set --  
+  --_RUNIC = { t="GRAYDANG", f="CJFSHIP3" }, No idea for this one
+  _STAIRS = { t="T2_STEP", f="F_082" },
+  --_VOID = { t="O_BLACK", f="XX"}, --? No sure yet
+  _FLATLIT = { t="TOMB04", f="F_081" },
+  _WALLLIT = { t="GLASS01", f="XX"},
+  _LIFT  = { t="PILLAR02", f="F_082" },
+
   _SBARS = { t="GATE04", f="XX" }, -- Short bars, i.e. railings
   _MBARS = { t="GATE03", f="XX" }, -- Medium bars, i.e. barred windows
   _TBARS = { t="GATE02", f="XX" }, -- Tall bars, i.e. cage/jail bars
@@ -43,7 +50,8 @@ HEXEN.MATERIALS =
   _CRATE2  = { t="CRATE05", f="F_053" },
   _CRATWID = { t="CRATE03",  f="F_050" }, -- Wide crates
     
-  _DOOR  = { t="D_WD08", f="F_082" }, -- Open says me
+  _SMLDOOR  = { t="D_WD10", f="F_008" }, -- Open says me
+  _BIGDOOR = { t="D_WD07", f="F_008" },
   _DORRAIL = { t="PILLAR02", f="F_082"}, -- Inner door slider thingys
   
   _NPIC    = { t="GLASS01", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
@@ -58,8 +66,11 @@ HEXEN.MATERIALS =
   
   _EXITDR = { t="D_WD08", f="F_082" }, -- Exit door
   _EXITSW  = { t="FIRE15", f="F_032" }, -- Exit switch
-  _EXITRM  = { t="FIRE01", f="F_032" }, -- Exit switch
-  
+  _EXITRM  = { t="FIRE01", f="F_032" }, -- Exit room
+  _EXITTR  = { t="FIRE01", f="F_032" }, -- Exit switch trim
+  -- _EXITSGN = { t="HER_EXIT", f="FLOOR04"}, -- Need to make
+
+
   _STRUCT = {t="PLAT01", f="F_082"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
   _SW  = { t="FIRE15", f="F_032" }, -- Wall/general purpose swtich
