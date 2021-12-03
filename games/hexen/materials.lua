@@ -64,10 +64,10 @@ HEXEN.MATERIALS =
   _KEYTRM2 = { t="STEEL08", f="F_082" }, -- Trim for locked door, Key 2
   _KEYTRM3 = { t="GILO1", f="F_082" }, -- Trim for locked door, Key 3
   
-  _EXITDR = { t="D_WD08", f="F_082" }, -- Exit door
-  _EXITSW  = { t="FIRE15", f="F_032" }, -- Exit switch
-  _EXITRM  = { t="FIRE01", f="F_032" }, -- Exit room
-  _EXITTR  = { t="FIRE01", f="F_032" }, -- Exit switch trim
+  _EXITDR = { t="PLAT02", f="F_082" }, -- Exit door
+  _EXITSW  = { t="SW51_OFF", f="F_073" }, -- Exit switch
+  _EXITRM  = { t="CASTLE01", f="F_013" }, -- Exit room
+  _EXITTR  = { t="PUZZLE4", f="F_073" }, -- Exit switch trim
   -- _EXITSGN = { t="HER_EXIT", f="FLOOR04"}, -- Need to make
 
 

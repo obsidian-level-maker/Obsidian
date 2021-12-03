@@ -2,7 +2,7 @@ PREFABS.Exit_simple_exit =
 {
   file   = "exit/armaetus_simple_exit.wad",
   map    = "MAP01",
-  game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=0, heretic=0, strife=0 },
+  game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=0, heretic=0, hexen=0, strife=0 },
 
   prob   = 300,
 
@@ -96,6 +96,14 @@ PREFABS.Exit_simple_exit_heretic_nosign =
   }
 }
 
+PREFABS.Exit_simple_exit_hexen_nosign = 
+{
+  template = "Exit_simple_exit",
+  game = "hexen",
+  --engine = "!advanced",
+  map = "MAP02",
+}
+
 PREFABS.Exit_simple_exit_strife =
 {
   template = "Exit_simple_exit",
@@ -111,7 +119,7 @@ PREFABS.Exit_simple_exit_secret =
 {
   file   = "exit/armaetus_simple_exit.wad",
   map    = "MAP01",
-  game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=0, heretic=0, strife=0 },
+  game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=0, heretic=0, hexen=0, strife=0 },
 
   prob   = 300,
 
@@ -209,6 +217,14 @@ PREFABS.Exit_simple_exit_secret_heretic_nosign =
   {
     [30] = { x=16, y=50 }
   }
+}
+
+PREFABS.Exit_simple_exit_secret_hexen_nosign = 
+{
+  template = "Exit_simple_exit_secret",
+  game = "heretic",
+  --engine = "!advanced",
+  map = "MAP02",
 }
 
 PREFABS.Exit_simple_exit_secret_strife =

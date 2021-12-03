@@ -164,7 +164,7 @@ OB_MODULES["debugger"] =
       longtip = "The following games are in an experimental status, meaning that " ..
       "they may have errors when building levels, or support for certain gameplay features has" ..
       " not been implemented yet!\n\n" ..
-      "HEXEN: Hub system not yet implemented. Only partial compatibility with the generic prefab set.\n\n" ..
+      "HEXEN: Hub system not yet implemented. Teleporter fabs not yet functional. Only partial compatibility with the generic prefab set.\n\n" ..
       "STRIFE: Hub system not yet implemented. Must use the \"rift01\" cheat code to start the first map." ..
       " Not all weapons/items/monsters are properly implemented yet.",
       priority = 60,
