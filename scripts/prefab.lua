@@ -2258,7 +2258,9 @@ function Fab_replacements(fab)
             if info.arg3 then C.arg3 = info.arg3 end
             if info.arg4 then C.arg4 = info.arg4 end
             if info.arg5 then C.arg5 = info.arg5 end
-            if info.flags then C.flags = info.flags end  
+            if info.flags then C.flags = info.flags end
+          else
+            C.special = check("line", C.special)
           end
         end
       end
