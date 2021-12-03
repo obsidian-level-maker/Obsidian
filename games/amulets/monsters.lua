@@ -6,6 +6,7 @@ AMULETS.MONSTERS =
     r = 32,
     h = 64,
     prob = 40,
+    level = 1,
     health = 20,
     attack = "melee",
     damage = 4
