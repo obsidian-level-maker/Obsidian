@@ -136,22 +136,7 @@ STRIFE.MONSTERS =
     invis = true
   },
 
-  acolyte_becoming =
-  {
-    id=201,
-    r=24,
-    h=64,
-    level = 1,
-    prob = 5,
-    density = 0.2,
-    health = 70,
-    damage = 8,
-    attack = "hitscan",
-    weap_needed = { assault=true },
-    give = { {ammo="bullet",count=50} },
-  },
-
-  stalker =
+  --[[stalker = -- Need to see if there's a way to only let the spawn in areas with a real ceiling so they don't crawl in the sky - Dasho
   {
     id=186,
     r=24,
@@ -162,7 +147,7 @@ STRIFE.MONSTERS =
     health = 70,
     damage = 10, -- No idea
     attack = "melee",
-  },
+  },]]--
 
   sentinel =
   {

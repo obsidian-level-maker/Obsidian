@@ -72,6 +72,38 @@ STRIFE.PICKUPS =
     give = { {ammo="missile",count=4} }
   },
 
+  electric_bolts =
+  {
+    id = 114,
+    add_prob = 10,
+    cluster = { 1,2 },
+    give = { {ammo="bolt",count=20} }
+  },
+
+  poison_bolts =
+  {
+    id = 115,
+    add_prob = 2,
+    cluster = { 1,2 },
+    give = { {ammo="bolt",count=10} }
+  },
+
+  explosive_grenades =
+  {
+    id = 152,
+    add_prob = 10,
+    cluster = { 1,2 },
+    give = { {ammo="grenade",count=6} }
+  },
+
+  phosphorous_grenades =
+  {
+    id = 153,
+    add_prob = 2,
+    cluster = { 1,2 },
+    give = { {ammo="grenade",count=4} }
+  },
+
 }
 
 
