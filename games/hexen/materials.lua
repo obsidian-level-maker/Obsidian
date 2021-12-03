@@ -37,7 +37,7 @@ HEXEN.MATERIALS =
   -- materials for generic prefab set --  
   --_RUNIC = { t="GRAYDANG", f="CJFSHIP3" }, No idea for this one
   _STAIRS = { t="T2_STEP", f="F_082" },
-  --_VOID = { t="O_BLACK", f="XX"}, --? No sure yet
+  _VOID = { t="SKYWALL", f="XX"},
   _FLATLIT = { t="TOMB04", f="F_081" },
   _WALLLIT = { t="GLASS01", f="XX"},
   _LIFT  = { t="PILLAR02", f="F_082" },
@@ -498,18 +498,18 @@ HEXEN.PREFAB_FIELDS =
   doom_line_to_hexen_701 = { special=13, arg1=0, arg2=16, arg3=150, arg4=2, arg5=0, flags=0x0400 }, -- Key two door
   doom_line_to_hexen_702 = { special=13, arg1=0, arg2=16, arg3=150, arg4=3, arg5=0, flags=0x0400 }, -- Key three door
   doom_line_to_hexen_703 = { special=12, arg1=0, arg2=16, arg3=150, arg4=0, arg5=0, flags=0x0400 },  -- Regular door open
-  doom_line_to_hexen_704 = { special=243, arg1=0, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0400 }, -- Switch, exit
-  doom_line_to_hexen_705 = { special=244, arg1=0, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0400 }, -- Switch, secret exit
-  doom_line_to_hexen_706 = { special=243, arg1=0, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0000 }, -- Walk-over line, exit
-  doom_line_to_hexen_707 = { special=244, arg1=0, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0000 }, -- Walk-over line, secret exit
+  doom_line_to_hexen_704 = { special=74, arg1=2, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0400 }, -- Switch, exit
+  doom_line_to_hexen_705 = { special=74, arg1=2, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0400 }, -- Switch, secret exit
+  doom_line_to_hexen_706 = { special=74, arg1=2, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0000 }, -- Walk-over line, exit
+  doom_line_to_hexen_707 = { special=74, arg1=2, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0000 }, -- Walk-over line, secret exit
   doom_line_to_hexen_708 = { special=70, arg1=0, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0000 }, -- Walk-over line, teleport (need to work on teleport destination placement)
   --doom_line_to_hexen_709 = Unused at the moment
   doom_line_to_hexen_710 = { special=62, arg1=0, arg2=64, arg3=105, arg4=0, arg5=0, flags=0x0400 }, -- Switched, lower lift, wait, raise (fast) -- Is this too specific? - Dasho
   doom_line_to_hexen_711 = { special=11, arg1=0, arg2=16, arg3=0, arg4=0, arg5=0, flags=0x0400 }, -- Regular door open stay
   doom_line_to_hexen_712 = { special=11, arg1=0, arg2=64, arg3=0, arg4=0, arg5=0, flags=0x0000 }, -- Walk-over, door open stay (fast)
   doom_line_to_hexen_713 = { special=22, arg1=0, arg2=8, arg3=0, arg4=0, arg5=0, flags=0x0400 }, -- Switched, floor lower to nearest floor
-  doom_line_to_hexen_714 = 103, -- Switched, door open stay
-  doom_line_to_hexen_715 = 126, -- Walk-over line, teleport (monsters only)
+  doom_line_to_hexen_714 = { special=11, arg1=0, arg2=16, arg3=0, arg4=0, arg5=0, flags=0x0400 }, -- Switched, door open stay
+  doom_line_to_hexen_715 = { special=70, arg1=0, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0800 }, -- Walk-over line, teleport (monsters only)
 
   -- These are used for converting generic fab things --
   thing_11000 = 8100, -- Barrel

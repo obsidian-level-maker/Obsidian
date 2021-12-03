@@ -70,6 +70,18 @@ PREFABS.Switch_wall_box1_heretic =
   }
 }
 
+PREFABS.Switch_wall_box1_hexen = 
+{
+  template = "Switch_wall_box1",
+
+  game = "hexen",
+  
+  forced_offsets = 
+  {
+    [8] = { x=16,y=49 },
+  }
+}
+
 PREFABS.Switch_wall_box1_strife = 
 {
   template = "Switch_wall_box1",

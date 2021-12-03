@@ -137,7 +137,7 @@ PREFABS.Exit_simple_exit_secret =
     kind = "secret_exit",
 
     -- replace normal exit special with "exit to secret" special
-    line_11 = 51
+    line_704 = 705
 }
 
 PREFABS.Exit_simple_exit_secret_chex3 = 

@@ -55,6 +55,16 @@ PREFABS.Switch_niche1_heretic =
   }
 }
 
+PREFABS.Switch_niche1_hexen =
+{
+  template = "Switch_niche1",
+  game = "hexen",
+  forced_offsets =
+  {
+    [62] = { x=16, y=49 }
+  }
+}
+
 PREFABS.Switch_niche1_strife =
 {
   template = "Switch_niche1",
@@ -116,6 +126,16 @@ PREFABS.Switch_niche1_up_heretic =
 {
   template = "Switch_niche1_up",
   game = "heretic",
+  forced_offsets =
+  {
+    [62] = { x=16, y=49 }
+  }
+}
+
+PREFABS.Switch_niche1_up_hexen =
+{
+  template = "Switch_niche1_up",
+  game = "hexen",
   forced_offsets =
   {
     [62] = { x=16, y=49 }
