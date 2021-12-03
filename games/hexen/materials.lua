@@ -496,6 +496,17 @@ HEXEN.PREFAB_FIELDS =
   doom_line_to_hexen_700 = { special=13, arg1=0, arg2=16, arg3=150, arg4=1, arg5=0, flags=0x0400 },
   doom_line_to_hexen_701 = { special=13, arg1=0, arg2=16, arg3=150, arg4=2, arg5=0, flags=0x0400 },
   doom_line_to_hexen_702 = { special=13, arg1=0, arg2=16, arg3=150, arg4=3, arg5=0, flags=0x0400 },
+  doom_line_to_hexen_703 = 1,  -- Regular door open
+  doom_line_to_hexen_704 = 11, -- Switch, exit
+  doom_line_to_hexen_705 = 51, -- Switch, secret exit
+  doom_line_to_hexen_706 = 52, -- Walk-over line, exit
+  doom_line_to_hexen_707 = 124, -- Walk-over line, secret exit
+  doom_line_to_hexen_708 = 97, -- Walk-over line, teleport
+  doom_line_to_hexen_709 = 888, -- Switch?
+  doom_line_to_hexen_710 = 123, -- Switched, lower lift, wait, raise (fast) -- Is this too specific? - Dasho
+  doom_line_to_hexen_711 = 31, -- Door open stay
+  doom_line_to_hexen_712 = 109, -- Walk-over, door open stay (fast)
+  doom_line_to_hexen_713 = 23, -- Switched, floor lower to nearest floor
 
   -- These are used for converting generic fab things --
   thing_11000 = 8100, -- Barrel

@@ -46,7 +46,7 @@ STRIFE.MATERIALS =
  
  _MPIC    = { t="BANR02", f="XX"}, -- Medium (or tiling) pic box insert, 128 pixels wide
  
- _WPIC    = { t="GLASS03", f="XX"}, -- Wide (or tiling) pic box insert, 256 pixels wide
+ _WPIC    = { t="GLASS05", f="XX"}, -- Wide (or tiling) pic box insert, 256 pixels wide
  
  _KEYTRM1 = { t="WINDW03", f="XX" }, -- Trim for locked door, Key 1
  _KEYTRM2 = { t="WINDW02", f="XX" }, -- Trim for locked door, Key 2
@@ -100,6 +100,17 @@ STRIFE.PREFAB_FIELDS =
   line_700 = 28,
   line_701 = 26,
   line_702 = 27,
+  line_703 = 1,  -- Regular door open
+  line_704 = 11, -- Switch, exit
+  line_705 = 51, -- Switch, secret exit
+  line_706 = 52, -- Walk-over line, exit
+  line_707 = 124, -- Walk-over line, secret exit
+  line_708 = 97, -- Walk-over line, teleport
+  line_709 = 888, -- Switch?
+  line_710 = 123, -- Switched, lower lift, wait, raise (fast) -- Is this too specific? - Dasho
+  line_711 = 31, -- Door open stay
+  line_712 = 109, -- Walk-over, door open stay (fast)
+  line_713 = 23, -- Switched, floor lower to nearest floor
 
   -- These are used for converting generic fab things --
   thing_11000 = 94, -- Barrel

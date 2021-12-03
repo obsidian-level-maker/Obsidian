@@ -94,7 +94,7 @@ PREFABS.Exit_sky_floor_exit_secret =
     kind = "secret_exit",
 
     -- replace normal exit special with "exit to secret" special
-    line_11 = 51
+    line_52 = 124
 }
 
 PREFABS.Exit_sky_floor_exit_secret_strife =
