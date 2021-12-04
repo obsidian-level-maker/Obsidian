@@ -37,7 +37,7 @@ gui.import("resources")
 UNFINISHED["amulets"] =
 {
 	label = _("Amulets and Armor (Exp)"),
-	priority = 30,
+	priority = 46,
 	
 	format = "doom",
 	

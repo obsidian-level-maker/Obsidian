@@ -96,7 +96,7 @@ function Action_lookup(action)
 end
 
 -- This will be used for Hexen lookups; it will need to return a table for special + args - Dasho
---[[function Action_lookup_hexen(action)
+function Action_lookup_hexen(action)
   assert(action)
 
   local info = GAME.ACTIONS[action]
@@ -106,7 +106,7 @@ end
   end
 
   return info
-end]]--
+end
 
 
 ------------------------------------------------------------------------
@@ -127,8 +127,10 @@ function Ambient_push(value)
     if PARAM.wad_minimum_brightness and PARAM.wad_maximum_brightness then
       table.insert(AMBIENT_LIGHT, 1, math.clamp(PARAM.wad_minimum_brightness, value, PARAM.wad_maximum_brightness))
     else
-      table.insert(AMBIENT_LIGHT, 1, value)
+      table.insert(AMBIENT_LIGHT, 1, value) -- Fallback for if these are somehow missing
     end
+  else
+    table.insert(AMBIENT_LIGHT, 1, value)
   end
 end
 
@@ -1045,12 +1047,8 @@ function brushlib.collect_flags(coords)
     if GAME.format == "doom" then
       local flags = C.flags or 0
 
-      if C.act and GAME.sub_format == "hexen" then
-        local spac = HEXEN_ACTIONS[C.act]
-        if not spac then
-          error("Unknown act value: " .. tostring(C.act))
-        end
-        flags = bit.bor(flags, spac)
+      if C.special and GAME.sub_format == "hexen" then
+        -- I think I already have flags handled, but leave this here in case - Dasho
       end
 
       for name,value in pairs(DOOM_LINE_FLAGS) do

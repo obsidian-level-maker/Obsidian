@@ -210,6 +210,7 @@ CHEX3.THEMES =
       half_floor_inverted_braced = 20,
       wallgutters = 10,
       lamptorch = 16,
+      runic = 10,
     },
 
     cave_torches =
@@ -363,6 +364,7 @@ CHEX3.THEMES =
       half_floor_inverted_braced = 20,
       wallgutters = 10,
       lamptorch = 16,
+      runic = 10,
     },
 
     cave_torches =
@@ -513,6 +515,7 @@ CHEX3.THEMES =
       half_floor_inverted_braced = 20,
       wallgutters = 10,
       lamptorch = 16,
+      runic = 10,
     },
 
     cave_torches =

@@ -36,6 +36,36 @@ STRIFE.WEAPONS =
     give = { {ammo="bullet", count=20} }
   },
 
+  crossbow = -- Base stats are based on electric bolt usage - Dasho
+  {
+    id = 2001,
+    level = 1,
+    pref = 20,
+    add_prob = 10,
+    attack = "missile",
+    rate = 1.2,
+    accuracy = 100,
+    damage = 10,
+    ammo = "bolt",
+    per = 1,
+    give = { {ammo="bolt", count=8} }
+  },
+
+  grenade_launcher = -- Base stats are based on explosive grenade usage - Dasho
+  {
+    id = 154,
+    level = 1,
+    pref = 20,
+    add_prob = 10,
+    attack = "missile",
+    rate = 1.2,
+    accuracy = 100,
+    damage = 192,
+    ammo = "grenade",
+    per = 2,
+    give = { {ammo="grenade", count=12} }
+  },
+
   mauler =
   {
     id = 2004,

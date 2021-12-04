@@ -65,6 +65,20 @@ PREFABS.Switch_small_heretic =
   }
 }
 
+PREFABS.Switch_small_hexen =
+{
+  template = "Switch_small",
+
+  game = "hexen",
+  forced_offsets =
+  {
+    [32] = { x=0,y=0 },
+    [34] = { x=0,y=0 },
+    [36] = { x=0,y=0 },
+    [38] = { x=0,y=0 },
+  }
+}
+
 PREFABS.Switch_small_strife =
 {
   template = "Switch_small",

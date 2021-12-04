@@ -35,6 +35,13 @@ HEXEN.MATERIALS =
   _SKY   = { t="STEEL01", f="F_SKY" },
 
   -- materials for generic prefab set --  
+  --_RUNIC = { t="GRAYDANG", f="CJFSHIP3" }, No idea for this one
+  _STAIRS = { t="T2_STEP", f="F_082" },
+  _VOID = { t="SKYWALL", f="XX"},
+  _FLATLIT = { t="TOMB04", f="F_081" },
+  _WALLLIT = { t="GLASS01", f="XX"},
+  _LIFT  = { t="PILLAR02", f="F_082" },
+
   _SBARS = { t="GATE04", f="XX" }, -- Short bars, i.e. railings
   _MBARS = { t="GATE03", f="XX" }, -- Medium bars, i.e. barred windows
   _TBARS = { t="GATE02", f="XX" }, -- Tall bars, i.e. cage/jail bars
@@ -43,7 +50,8 @@ HEXEN.MATERIALS =
   _CRATE2  = { t="CRATE05", f="F_053" },
   _CRATWID = { t="CRATE03",  f="F_050" }, -- Wide crates
     
-  _DOOR  = { t="D_WD08", f="F_082" }, -- Open says me
+  _SMLDOOR  = { t="D_WD10", f="F_008" }, -- Open says me
+  _BIGDOOR = { t="D_WD07", f="F_008" },
   _DORRAIL = { t="PILLAR02", f="F_082"}, -- Inner door slider thingys
   
   _NPIC    = { t="GLASS01", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide
@@ -56,14 +64,17 @@ HEXEN.MATERIALS =
   _KEYTRM2 = { t="STEEL08", f="F_082" }, -- Trim for locked door, Key 2
   _KEYTRM3 = { t="GILO1", f="F_082" }, -- Trim for locked door, Key 3
   
-  _EXITDR = { t="D_WD08", f="F_082" }, -- Exit door
-  _EXITSW  = { t="FIRE15", f="F_032" }, -- Exit switch
-  _EXITRM  = { t="FIRE01", f="F_032" }, -- Exit switch
-  
+  _EXITDR = { t="PLAT02", f="F_082" }, -- Exit door
+  _EXITSW  = { t="SW51_OFF", f="F_073" }, -- Exit switch
+  _EXITRM  = { t="CASTLE01", f="F_013" }, -- Exit room
+  _EXITTR  = { t="PUZZLE4", f="F_073" }, -- Exit switch trim
+  -- _EXITSGN = { t="HER_EXIT", f="FLOOR04"}, -- Need to make
+
+
   _STRUCT = {t="PLAT01", f="F_082"}, -- "Structural" texture (window trim, beams, other areas where a window/floor flat just isn't always right)
 
-  _SW  = { t="FIRE15", f="F_032" }, -- Wall/general purpose swtich
-  _SWTRIM = { t="FIRE01", f="F_032" },
+  _SW  = { t="SW52_OFF", f="F_073" }, -- Wall/general purpose swtich
+  _SWTRIM = { t="PUZZLE4", f="F_073" },
   
   _TELE = { t="CASTLE01", f="X_012" }, -- Teleporter
 
@@ -482,9 +493,23 @@ HEXEN.MATERIALS =
 
 HEXEN.PREFAB_FIELDS =
 {
-  doom_line_to_hexen_700 = { special=13, arg1=0, arg2=16, arg3=150, arg4=1, arg5=0, flags=0x0400 },
-  doom_line_to_hexen_701 = { special=13, arg1=0, arg2=16, arg3=150, arg4=2, arg5=0, flags=0x0400 },
-  doom_line_to_hexen_702 = { special=13, arg1=0, arg2=16, arg3=150, arg4=3, arg5=0, flags=0x0400 },
+  -- These are for converting the Doom-formatted generic prefabs to their Hexen equivalents
+  doom_line_to_hexen_700 = { special=13, arg1=0, arg2=16, arg3=150, arg4=1, arg5=0, flags=0x0600 }, -- Key one door
+  doom_line_to_hexen_701 = { special=13, arg1=0, arg2=16, arg3=150, arg4=2, arg5=0, flags=0x0600 }, -- Key two door
+  doom_line_to_hexen_702 = { special=13, arg1=0, arg2=16, arg3=150, arg4=3, arg5=0, flags=0x0600 }, -- Key three door
+  doom_line_to_hexen_703 = { special=12, arg1=0, arg2=16, arg3=150, arg4=0, arg5=0, flags=0x0600 },  -- Regular door open
+  doom_line_to_hexen_704 = { special=74, arg1=2, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0400 }, -- Switch, exit
+  doom_line_to_hexen_705 = { special=74, arg1=2, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0400 }, -- Switch, secret exit
+  doom_line_to_hexen_706 = { special=74, arg1=2, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0000 }, -- Walk-over line, exit
+  doom_line_to_hexen_707 = { special=74, arg1=2, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0000 }, -- Walk-over line, secret exit
+  doom_line_to_hexen_708 = { special=70, arg1=0, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0000 }, -- Walk-over line, teleport (need to work on teleport destination placement)
+  --doom_line_to_hexen_709 = Unused at the moment
+  doom_line_to_hexen_710 = { special=62, arg1=0, arg2=64, arg3=105, arg4=0, arg5=0, flags=0x0600 }, -- Switched, lower lift, wait, raise (fast) -- Is this too specific? - Dasho
+  doom_line_to_hexen_711 = { special=11, arg1=0, arg2=16, arg3=0, arg4=0, arg5=0, flags=0x0400 }, -- Regular door open stay
+  doom_line_to_hexen_712 = { special=11, arg1=0, arg2=64, arg3=0, arg4=0, arg5=0, flags=0x0000 }, -- Walk-over, door open stay (fast)
+  doom_line_to_hexen_713 = { special=22, arg1=0, arg2=8, arg3=0, arg4=0, arg5=0, flags=0x0400 }, -- Switched, floor lower to nearest floor
+  doom_line_to_hexen_714 = { special=11, arg1=0, arg2=16, arg3=0, arg4=0, arg5=0, flags=0x0400 }, -- Switched, door open stay
+  doom_line_to_hexen_715 = { special=70, arg1=0, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0800 }, -- Walk-over line, teleport (monsters only)
 
   -- These are used for converting generic fab things --
   thing_11000 = 8100, -- Barrel

@@ -15,8 +15,8 @@ gui.import("resources")
 
 OB_GAMES["harmony"] =
 {
-	label = _("Harmony (Exp)"),
-	priority = 29,
+	label = _("Harmony"),
+	priority = 91,
 	
 	format = "doom",
 	--sub_format = "harmony",

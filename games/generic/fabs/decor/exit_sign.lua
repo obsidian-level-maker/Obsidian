@@ -6,7 +6,6 @@ PREFABS.Decor_exit_sign =
 {
   file   = "decor/exit_sign.wad",
   map    = "MAP01",
-  game = { doom1=1, doom2=1, harmony=1 },
 
   group  = "exit_sign",
   prob   = 80,
@@ -18,7 +17,6 @@ PREFABS.Decor_exit_sign_strife =
 {
   file   = "decor/exit_sign.wad",
   map    = "MAP01",
-  game = "strife",
 
   group  = "exit_sign",
   prob   = 80,

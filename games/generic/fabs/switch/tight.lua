@@ -63,6 +63,17 @@ PREFABS.Switch_wall_tight_heretic =
   }
 }
 
+PREFABS.Switch_wall_tight_hexen =
+{
+  template   = "Switch_wall_tight",
+
+  game = "hexen",
+  forced_offsets = 
+  {
+    [9] = { x=0,y=96 },
+  }
+}
+
 
 PREFABS.Switch_wall_tight_strife =
 {

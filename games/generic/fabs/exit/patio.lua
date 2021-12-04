@@ -75,6 +75,19 @@ PREFABS.Exit_patio_heretic =
   }
 }
 
+PREFABS.Exit_patio_hexen =
+{
+  template = "Exit_patio",
+  game = "hexen",
+  forced_offsets =
+  {
+    [20] = { x=0, y=0 },
+    [22] = { x=0, y=0 },
+    [24] = { x=0, y=0 },
+    [26] = { x=0, y=0 },
+  }
+}
+
 PREFABS.Exit_patio_strife =
 {
   template = "Exit_patio",

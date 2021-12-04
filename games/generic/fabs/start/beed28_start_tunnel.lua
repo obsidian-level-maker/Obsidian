@@ -57,6 +57,16 @@ PREFABS.Start_beed28tunnel_heretic =
   }
 }
 
+PREFABS.Start_beed28tunnel_hexen =
+{
+  template = "Start_beed28tunnel",
+  game = "hexen",
+  forced_offsets =
+  {
+    [20] = { x=0, y=0 }
+  }
+}
+
 PREFABS.Start_beed28tunnel_strife =
 {
   template = "Start_beed28tunnel",

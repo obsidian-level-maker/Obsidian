@@ -72,6 +72,14 @@ PREFABS.Exit_sky_floor_exit_heretic_nosign =
   map = "MAP02"
 }
 
+PREFABS.Exit_sky_floor_exit_hexen_nosign = 
+{
+  template = "Exit_sky_floor_exit",
+  game = "hexen",
+  --engine = "!advanced",
+  map = "MAP02"
+}
+
 PREFABS.Exit_sky_floor_exit_secret =
 {
   file   = "exit/armaetus_sky_floor_exit.wad",
@@ -94,7 +102,7 @@ PREFABS.Exit_sky_floor_exit_secret =
     kind = "secret_exit",
 
     -- replace normal exit special with "exit to secret" special
-    line_11 = 51
+    line_706 = 707
 }
 
 PREFABS.Exit_sky_floor_exit_secret_strife =
@@ -149,5 +157,13 @@ PREFABS.Exit_sky_floor_exit_secret_heretic_nosign =
   template = "Exit_sky_floor_exit_secret",
   game = "heretic",
   engine = "!advanced",
+  map = "MAP02"
+}
+
+PREFABS.Exit_sky_floor_exit_secret_hexen_nosign = 
+{
+  template = "Exit_sky_floor_exit_secret",
+  game = "hexen",
+  --engine = "!advanced",
   map = "MAP02"
 }

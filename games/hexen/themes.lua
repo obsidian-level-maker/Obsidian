@@ -70,6 +70,28 @@ HEXEN.THEMES =
 
     },
 
+    style_list =
+    {
+      caves = { none=80, few=12, some=5, heaps=3 },
+      outdoors = { none=80, few=18, some=2 },
+      pictures = { few=20, some=80, heaps=30 },
+      hallways = { none=30, few=80, some=15, heaps=10 },
+      windows = { few=25, some=50, heaps=90 },
+      cages = { none=60, few=20, some=10, heaps=10 },
+      liquids = { none=45, few=30, some=20, heaps=5 },
+      doors = { few=20, some=70, heaps=30 },
+      steepness = { few=25, some=50, heaps=90 },
+      big_rooms = { none=15, few=60, some=20, heaps=5 },
+      ambushes = { none=5, few=50, some=45, heaps=30 },
+      teleporters = { none=0, few=0, some=0, heaps=0 },
+      keys = { none=15, few=50, some=50, heaps=20 },
+      symmetry = { none=40, few=30, some=35, heaps=25 },
+      switches = { none=20, few=60, some=40, heaps=10 },
+      secrets = { few=5, some=80, heaps=25 },
+      traps   = { none=10, few=40, some=70, heaps=25 },
+      barrels = { none=10, few=50, some=20, heaps=5 }
+    },
+
   },
 
     dungeon =

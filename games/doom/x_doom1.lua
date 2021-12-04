@@ -41,6 +41,7 @@ ULTDOOM.PARAMETERS =
 ULTDOOM.MATERIALS =
 {
   -- materials for generic prefab set --
+  _RUNIC = { t="FIREBLU1", f="FLOOR6_1" },
   _STAIRS = { t="STEP3",    f="CEIL5_1" },
   _VOID = { t="O_BLACK", f="XX" },
   _FLATLIT = { t="METAL", f="TLITE6_6" },
@@ -424,7 +425,20 @@ ULTDOOM.PREFAB_FIELDS =
   line_700 = 26,
   line_701 = 27,
   line_702 = 28,
-
+  line_703 = 1,  -- Regular door open
+  line_704 = 11, -- Switch, exit
+  line_705 = 51, -- Switch, secret exit
+  line_706 = 52, -- Walk-over line, exit
+  line_707 = 124, -- Walk-over line, secret exit
+  line_708 = 97, -- Walk-over line, teleport
+  --line_709 = 888, -- Switch (don't think I need this one)
+  line_710 = 123, -- Switched, lower lift, wait, raise (fast) -- Is this too specific? - Dasho
+  line_711 = 31, -- Door open stay
+  line_712 = 109, -- Walk-over, door open stay (fast)
+  line_713 = 23, -- Switched, floor lower to nearest floor
+  line_714 = 103, -- Switched, door open stay
+  line_715 = 126, -- Walk-over line, teleport (monsters only)
+  
   -- These are used for converting generic fab things --
   thing_11000 = 2035, -- Barrel
   thing_11001 = 0, -- Ceiling light
@@ -3821,6 +3835,8 @@ function ULTDOOM.nolimit_themes()
       half_floor_inverted_braced = 20,
       wallgutters = 10,
       lamptorch = 16,
+      runic = 10,
+      croix = 10,
     }
     GAME.THEMES.tech.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.tech.window_groups = 
@@ -3855,6 +3871,8 @@ function ULTDOOM.nolimit_themes()
       half_floor_inverted_braced = 20,
       wallgutters = 10,
       lamptorch = 16,
+      runic = 10,
+      croix = 10,
     }
     GAME.THEMES.deimos.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.deimos.window_groups =
@@ -3889,6 +3907,8 @@ function ULTDOOM.nolimit_themes()
       half_floor_inverted_braced = 20,
       wallgutters = 10,
       lamptorch = 16,
+      runic = 10,
+      croix = 10,
     }
     GAME.THEMES.hell.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.hell.window_groups = 
@@ -3923,6 +3943,8 @@ function ULTDOOM.nolimit_themes()
       half_floor_inverted_braced = 20,
       wallgutters = 10,
       lamptorch = 16,
+      runic = 10,
+      croix = 10,
     }
     GAME.THEMES.flesh.outdoor_wall_groups = { PLAIN = 50 }
     GAME.THEMES.flesh.window_groups = 

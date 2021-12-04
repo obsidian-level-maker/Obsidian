@@ -296,6 +296,7 @@ HERETIC.THEMES =
       half_floor_inverted_braced = 20,
       wallgutters = 10,
       lamptorch = 16,
+      runic = 10,
     },
 
     cliff_trees =
@@ -460,6 +461,7 @@ HERETIC.THEMES =
       half_floor_inverted_braced = 20,
       wallgutters = 10,
       lamptorch = 16,
+      runic = 10,
     },
 
     cliff_trees =
@@ -632,6 +634,7 @@ HERETIC.THEMES =
       half_floor_inverted_braced = 20,
       wallgutters = 10,
       lamptorch = 16,
+      runic = 10,
     },
 
     outdoor_torches =
@@ -787,6 +790,7 @@ HERETIC.THEMES =
       half_floor_inverted_braced = 20,
       wallgutters = 10,
       lamptorch = 16,
+      runic = 10,
     },
 
     cliff_trees =
@@ -957,6 +961,7 @@ HERETIC.THEMES =
       half_floor_inverted_braced = 20,
       wallgutters = 10,
       lamptorch = 16,
+      runic = 10,
     },
 
     cliff_trees =

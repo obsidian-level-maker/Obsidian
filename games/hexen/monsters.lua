@@ -64,7 +64,7 @@ HEXEN.MONSTERS =
     attack = "missile",
   },
 
-  serpent1 =
+  --[[serpent1 =
   {
     id = 121,
     r = 33,
@@ -85,8 +85,8 @@ HEXEN.MONSTERS =
     health = 90,
     damage = 16,
     attack = "missile",
-  },
-
+  },]]--
+  
   wendigo =  -- iceguy
   {
     id = 8020,

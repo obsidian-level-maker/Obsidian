@@ -24,7 +24,7 @@ HEXEN.PARAMETERS =
   -- special logic for Hexen weapon system
   hexen_weapons = true,
 
-  teleporters = true,
+  teleporters = false,
 
   jump_height = 66,
 

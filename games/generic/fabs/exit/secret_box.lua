@@ -64,6 +64,13 @@ PREFABS.Exit_secret_box1_harmony =
   }
 }
 
+PREFABS.Exit_secret_box1_hexen = 
+{
+  template = "Exit_secret_box1",
+
+  game = "hexen",
+}
+
 PREFABS.Exit_secret_box1_strife = 
 {
   template = "Exit_secret_box1",

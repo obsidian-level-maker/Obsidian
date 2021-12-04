@@ -62,6 +62,14 @@ PREFABS.Exit_tp_closet_heretic_nosign =
   map = "MAP02"
 }
 
+PREFABS.Exit_tp_closet_hexen_nosign =
+{
+  template = "Exit_tp_closet",
+  game = "heretic",
+  --engine = "!advanced",
+  map = "MAP02"
+}
+
 PREFABS.Exit_tp_closet_strife =
 {
   template = "Exit_tp_closet",
@@ -94,7 +102,7 @@ PREFABS.Exit_tp_closet_secret =
     kind = "secret_exit",
 
     -- replace normal exit special with "exit to secret" special
-    line_11 = 51  
+    line_706 = 707  
 }
 
 PREFABS.Exit_tp_closet_secret_chex3 =
@@ -139,6 +147,14 @@ PREFABS.Exit_tp_closet_secret_heretic_nosign =
   template = "Exit_tp_closet_secret",
   game = "heretic",
   engine = "!advanced",
+  map = "MAP02"
+}
+
+PREFABS.Exit_tp_closet_secret_hexen_nosign =
+{
+  template = "Exit_tp_closet_secret",
+  game = "heretic",
+  --engine = "!advanced",
   map = "MAP02"
 }
 

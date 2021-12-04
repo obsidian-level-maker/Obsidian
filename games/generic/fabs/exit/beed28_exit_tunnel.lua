@@ -58,6 +58,16 @@ PREFABS.Exit_beed28tunnel_heretic =
   }
 }
 
+PREFABS.Exit_beed28tunnel_hexen = 
+{
+  template = "Exit_beed28tunnel",
+  game = "hexen",
+  forced_offsets = 
+  {
+    [20] = { x=0, y=0 }
+  }
+}
+
 PREFABS.Exit_beed28tunnel_strife = 
 {
   template = "Exit_beed28tunnel",

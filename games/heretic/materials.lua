@@ -32,6 +32,7 @@ HERETIC.MATERIALS =
   _SKY     = { t="CHAINSD", f="F_SKY1"  },
   
   -- materials for generic prefab set --
+  _RUNIC = { t="REDWALL", f="FLOOR09" },
   _STAIRS = { t="WOODWL", f="FLOOR10" },
   _VOID = { t="STNGLS3", f="XX" }, -- Only works with small areas and exact offsets, but it's the only thing I could find with solid black areas
   _WALLLIT = { t="STNGLS1", f="XX" }, -- Same as above, but for "wall lights"
@@ -258,6 +259,19 @@ HERETIC.PREFAB_FIELDS =
   line_700 = 27,
   line_701 = 28,
   line_702 = 26,
+  line_703 = 1,  -- Regular door open
+  line_704 = 11, -- Switch, exit
+  line_705 = 51, -- Switch, secret exit
+  line_706 = 52, -- Walk-over line, exit
+  line_707 = 124, -- Walk-over line, secret exit
+  line_708 = 97, -- Walk-over line, teleport
+  --line_709 = 888, -- Switch (don't think I need this one)
+  line_710 = 123, -- Switched, lower lift, wait, raise (fast) -- Is this too specific? - Dasho
+  line_711 = 31, -- Door open stay
+  line_712 = 109, -- Walk-over, door open stay (fast)
+  line_713 = 23, -- Switched, floor lower to nearest floor
+  line_714 = 103, -- Switched, door open stay
+  line_715 = 126, -- Walk-over line, teleport (monsters only)
 
   -- These are used for converting generic fab things --
   thing_11000 = 2035, -- Barrel

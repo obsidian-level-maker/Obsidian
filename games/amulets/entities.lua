@@ -10,6 +10,11 @@ AMULETS.ENTITIES =
   dm_player     = { id=11 },
   teleport_spot = { id=14 },
 
+  --- keys ---
+  --k_password = { id=5 }, -- "Blue" key
+  --k_ckey     = { id=6 }, -- "Yellow" key
+  --k_keycard  = { id=13 }, -- "Red" key
+
   --- PICKUPS ---
 
   potion = { id=811 },
@@ -31,6 +36,6 @@ AMULETS.PLAYER_MODEL =
   avatar =
   {
     stats   = { health=0 },
-    weapons = { }
+    weapons = { dagger_wood=1 } -- This is very likely not accurate at all
   }
 }

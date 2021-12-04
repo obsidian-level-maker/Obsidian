@@ -17,6 +17,7 @@ CHEX3.MATERIALS =
   -- materials for generic prefab set --
 
   -- The idea is to have one singular default material for these; variants should be specified in theme-specific PREFAB_FIELDS tables as replacements - Dasho
+  _RUNIC = { t="GRAYDANG", f="CJFSHIP3" },
   _STAIRS = { t="STEP2", f="FLAT5_6" },
   _VOID = { t="O_BLACK", f="XX"},
   _FLATLIT = { t="COMPSPAN", f="LABFLAT" },
@@ -551,11 +552,24 @@ CHEX3.MATERIALS =
 
 CHEX3.PREFAB_FIELDS = 
 {
-  -- These are used for converting generic locked door linedefs --
-  line_700 = 28,
-  line_701 = 27,
-  line_702 = 26,
-
+  -- These are used for converting generic linedefs --
+  line_700 = 28, -- Key one
+  line_701 = 27, -- Key two
+  line_702 = 26, -- Key three
+  line_703 = 1,  -- Regular door open
+  line_704 = 11, -- Switch, exit
+  line_705 = 51, -- Switch, secret exit
+  line_706 = 52, -- Walk-over line, exit
+  line_707 = 124, -- Walk-over line, secret exit
+  line_708 = 97, -- Walk-over line, teleport
+  --line_709 = 888, -- Switch (don't think I need this one)
+  line_710 = 123, -- Switched, lower lift, wait, raise (fast) -- Is this too specific? - Dasho
+  line_711 = 31, -- Door open stay
+  line_712 = 109, -- Walk-over, door open stay (fast)
+  line_713 = 23, -- Switched, floor lower to nearest floor
+  line_714 = 103, -- Switched, door open stay
+  line_715 = 126, -- Walk-over line, teleport (monsters only)
+  
   -- These are used for converting generic fab things --
   thing_11000 = 2035, -- Barrel
   thing_11001 = 46, -- Ceiling light

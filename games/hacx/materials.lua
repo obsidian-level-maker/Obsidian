@@ -18,6 +18,7 @@ HACX.MATERIALS =
   _LIQUID = { f="FWATER1", t="BLODRIP1" },
 
   -- materials for generic prefab set --
+  _RUNIC = { t="STONE2", f="FLAT5_2" },
   _STAIRS = { t="HW216", f="CONS1_5" },
   _VOID = { t="GRAY5", f="XX" },
   _WALLLIT = { t="HW208", f="XX"},
@@ -181,6 +182,19 @@ HACX.PREFAB_FIELDS =
   line_700 = 28,
   line_701 = 27,
   line_702 = 26,
+  line_703 = 1,  -- Regular door open
+  line_704 = 11, -- Switch, exit
+  line_705 = 51, -- Switch, secret exit
+  line_706 = 52, -- Walk-over line, exit
+  line_707 = 124, -- Walk-over line, secret exit
+  line_708 = 97, -- Walk-over line, teleport
+  --line_709 = 888, -- Switch (don't think I need this one)
+  line_710 = 123, -- Switched, lower lift, wait, raise (fast) -- Is this too specific? - Dasho
+  line_711 = 31, -- Door open stay
+  line_712 = 109, -- Walk-over, door open stay (fast)
+  line_713 = 23, -- Switched, floor lower to nearest floor
+  line_714 = 103, -- Switched, door open stay
+  line_715 = 126, -- Walk-over line, teleport (monsters only)
 
   -- These are used for converting generic fab things --
   thing_11000 = 2035, -- Barrel

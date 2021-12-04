@@ -43,8 +43,8 @@ end
 
 OB_GAMES["hacx"] =
 {
-	label = _("HacX 1.2 (Exp)"),
-	priority = 30,
+	label = _("HacX 1.2"),
+	priority = 92,
 	
 	format = "doom",
 

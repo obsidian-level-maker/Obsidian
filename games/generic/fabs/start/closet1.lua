@@ -7,7 +7,7 @@ PREFABS.Start_closet1 =
   file  = "start/closet1.wad",
   map   = "MAP01",
 
-  game = { chex3=0, doom1=1, doom2=1, hacx=1, harmony=0, heretic=1, strife=1 },
+  game = { chex3=0, doom1=1, doom2=1, hacx=1, harmony=0, heretic=1, hexen=1, strife=1 },
 
   prob  = 80,
 
