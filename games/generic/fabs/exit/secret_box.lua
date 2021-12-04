@@ -69,12 +69,6 @@ PREFABS.Exit_secret_box1_hexen =
   template = "Exit_secret_box1",
 
   game = "hexen",
-  forced_offsets = 
-  {
-    [16] = { x=0,y=-64 },
-    [17] = { x=16,y=-67 },
-    [18] = { x=0,y=-64 },    
-  }
 }
 
 PREFABS.Exit_secret_box1_strife = 

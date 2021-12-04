@@ -1332,6 +1332,10 @@ function Fab_load_wad(def)
       C2.v1 = convert_offset(side.y_offset)
     end
 
+    if side and side.sidedef_index then
+      C2.sidedef_index = side.sidedef_index
+    end
+
     return C2
   end
 
@@ -2230,7 +2234,7 @@ function Fab_replacements(fab)
   end
 
   local function forced_offset_check(C)
-    if C.sidedef_index and fab.fields["forced_offsets"] then 
+    if C.sidedef_index and fab.fields["forced_offsets"] then
         if fab.fields["forced_offsets"][C.sidedef_index] then
           if fab.fields["forced_offsets"][C.sidedef_index].x then
             C.u1 = fab.fields["forced_offsets"][C.sidedef_index].x

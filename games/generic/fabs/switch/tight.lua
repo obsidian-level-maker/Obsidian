@@ -70,7 +70,7 @@ PREFABS.Switch_wall_tight_hexen =
   game = "hexen",
   forced_offsets = 
   {
-    [9] = { x=16,y=49 },
+    [9] = { x=0,y=96 },
   }
 }
 

@@ -63,7 +63,7 @@ PREFABS.Start_beed28tunnel_hexen =
   game = "hexen",
   forced_offsets =
   {
-    [20] = { x=-48, y=50 }
+    [20] = { x=0, y=0 }
   }
 }
 

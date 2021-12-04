@@ -61,7 +61,7 @@ PREFABS.Switch_niche1_hexen =
   game = "hexen",
   forced_offsets =
   {
-    [62] = { x=16, y=49 }
+    [62] = { x=0, y=32 }
   }
 }
 
@@ -138,7 +138,7 @@ PREFABS.Switch_niche1_up_hexen =
   game = "hexen",
   forced_offsets =
   {
-    [62] = { x=16, y=49 }
+    [62] = { x=0, y=32 }
   }
 }
 

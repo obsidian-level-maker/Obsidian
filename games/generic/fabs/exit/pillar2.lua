@@ -113,6 +113,21 @@ PREFABS.Exit_pillar2_heretic_nosign =
   }
 }
 
+PREFABS.Exit_pillar2_hexen_nosign = 
+{
+  template = "Exit_pillar2",
+  game = "hexen",
+  --engine = "!advanced",
+  map = "MAP02",
+  forced_offsets = 
+  {
+    [26] = { x=16, y=50 },
+    [34] = { x=16, y=50 },
+    [44] = { x=16, y=50 },
+    [54] = { x=16, y=50 },
+  }
+}
+
 PREFABS.Exit_pillar2_strife =
 {
   template = "Exit_pillar2",
@@ -251,10 +266,10 @@ PREFABS.Exit_pillar2_secret_hexen_nosign =
   map = "MAP02",
   forced_offsets = 
   {
-    [26] = { x=16, y=50 },
-    [34] = { x=16, y=50 },
-    [44] = { x=16, y=50 },
-    [54] = { x=16, y=50 },
+    [26] = { x=0, y=0 },
+    [34] = { x=0, y=0 },
+    [44] = { x=0, y=0 },
+    [54] = { x=0, y=0 },
   }
 }
 

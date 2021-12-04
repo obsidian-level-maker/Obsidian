@@ -78,7 +78,7 @@ PREFABS.Switch_wall_box1_hexen =
   
   forced_offsets = 
   {
-    [8] = { x=16,y=49 },
+    [8] = { x=0,y=32 },
   }
 }
 

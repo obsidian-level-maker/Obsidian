@@ -102,6 +102,10 @@ PREFABS.Exit_simple_exit_hexen_nosign =
   game = "hexen",
   --engine = "!advanced",
   map = "MAP02",
+  forced_offsets =
+  {
+    [30] = { x=0, y=96 }
+  }
 }
 
 PREFABS.Exit_simple_exit_strife =
@@ -225,6 +229,10 @@ PREFABS.Exit_simple_exit_secret_hexen_nosign =
   game = "heretic",
   --engine = "!advanced",
   map = "MAP02",
+  forced_offsets =
+  {
+    [30] = { x=0, y=96 }
+  }
 }
 
 PREFABS.Exit_simple_exit_secret_strife =
