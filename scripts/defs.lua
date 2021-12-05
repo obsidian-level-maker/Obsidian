@@ -444,6 +444,14 @@ SIZE_CONSISTENCY_MIXED_PROBS =
   normal = 75
 }
 
+-- outdoor sky sector brightness
+SKY_LIGHT_NORMAL =
+{ 152,160,168,176,176,192,192,200,208,216,224 }
+
+-- outdor sky sector brightness if level has Dark Outdoors
+SKY_LIGHT_DARK =
+{ 104,112,120,128,136,144 }
+
 --
 
 PROC_GOTCHA_MAP_SIZES =

@@ -2588,16 +2588,14 @@ function Level_choose_darkness()
     --prob = style_sel("darkness", 0, 10, 30, 90) --Original
   end
 
-  -- Daytime will be varying degrees of bright here, from morning (152) to afternoon (224).
-  LEVEL.sky_light  = rand.pick({ 152,160,168,176,176,192,192,200,208,216,224 })
+  LEVEL.sky_light  = rand.pick(SKY_LIGHT_NORMAL)
   LEVEL.sky_shadow = 32
 
-  -- Dark areas will be varying degrees of dark, from dusky (144) to stygian (104).
   if rand.odds(prob) then
     gui.printf("Level is dark.\n")
 
     LEVEL.is_dark = true
-    LEVEL.sky_light  = rand.pick({ 104,112,120,128,136,144 })
+    LEVEL.sky_light = rand.pick(SKY_LIGHT_DARK)
     LEVEL.sky_shadow = 32
   end
 
