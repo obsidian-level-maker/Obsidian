@@ -2592,21 +2592,21 @@ function Level_choose_darkness()
   LEVEL.sky_light  = rand.pick({ 152,160,168,176,176,192,192,200,208,216,224 })
   LEVEL.sky_shadow = 32
 
-  local darkness_messages =
-  {
-    "Darkness falls across the land...\n\n",
-    "This land becomes shrouded in darkness...\n\n",
-    "The world has become dark...\n\n",
-    "The Sun has been blotted out...\n\n",
-  }
-
   -- Dark areas will be varying degrees of dark, from dusky (144) to stygian (104).
   if rand.odds(prob) then
-    gui.printf(rand.pick(darkness_messages))
+    gui.printf("Level is dark.\n")
 
     LEVEL.is_dark = true
     LEVEL.sky_light  = rand.pick({ 104,112,120,128,136,144 })
     LEVEL.sky_shadow = 32
+  end
+
+  LEVEL.sky_light = math.clamp(PARAM.wad_minimum_brightness or 0, 
+    LEVEL.sky_light, PARAM.wad_maximum_brightness or 255)
+
+  if (LEVEL.sky_light - LEVEL.sky_shadow) <= PARAM.wad_minimum_brightness then
+    LEVEL.sky_shadow = math.abs((LEVEL.sky_light - LEVEL.sky_shadow)
+    - PARAM.wad_minimum_brightness)
   end
 end
 

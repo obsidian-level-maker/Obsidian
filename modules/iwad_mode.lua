@@ -34,7 +34,6 @@
 -- LEVEL.size_consistency = "strict"/"normal"
 -- LEVEL.sky_light = # here
 -- LEVEL.has_streets = true/false
--- PARAM.brightness_offset
 
 IWAD_MODE = { }
 
