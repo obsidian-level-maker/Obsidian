@@ -2931,7 +2931,7 @@ function Level_make_all()
   if ob_match_game({ game = { hexen=1, nukem=1, quake=1, strife=1} }) then
     if not PARAM.bool_experimental_games or PARAM.bool_experimental_games == 0 then
       error("Warning: The game that you have selected is in an experimental " ..
-    "state. WADs may not build successfully and certain gameplay features may not" ..
+    "state. WADs may not build successfully and certain gameplay features may not " ..
     "be implemented yet!. To ignore this warning " ..
     "and continue generation for these games, set " ..
     "Experimental Games under Debug Control Module to 'Yes'.\n\n" ..
