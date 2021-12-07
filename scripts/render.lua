@@ -3724,7 +3724,7 @@ function Render_properties_for_area(A)
 
       -- porchy worchy -- MSSP
       if A.is_porch then
-        A.lighting = A.lighting - 32
+        A.lighting = A.lighting - LEVEL.sky_shadow
       end
 
     elseif A.room and A.room.is_outdoor then

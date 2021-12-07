@@ -123,15 +123,7 @@ function Ambient_push(value)
     error("Ambient_push : missing value")
   end
 
-  if value > 50 then -- Preserve very low values for fabs that need darkness effects
-    if PARAM.wad_minimum_brightness and PARAM.wad_maximum_brightness then
-      table.insert(AMBIENT_LIGHT, 1, math.clamp(PARAM.wad_minimum_brightness, value, PARAM.wad_maximum_brightness))
-    else
-      table.insert(AMBIENT_LIGHT, 1, value) -- Fallback for if these are somehow missing
-    end
-  else
-    table.insert(AMBIENT_LIGHT, 1, value)
-  end
+  table.insert(AMBIENT_LIGHT, 1, value)
 end
 
 
