@@ -2614,6 +2614,15 @@ function Level_choose_misc()
 
   LEVEL.room_height_style = PARAM.room_heights or "mixed"
 
+  if rand.odds(style_sel("outdoors", 0, 50, 50, 100)) then
+    LEVEL.has_outdoors = true
+
+    if rand.odds(style_sel("outdoors", 0, 15, 25, 0)) then
+      LEVEL.alternating_outdoors = true
+      gui.printf("-- Alternating Outdoors! --\n\n")
+    end
+  end
+
   LEVEL.room_height_style_tab = 
   {
     tall = rand.pick({0.8, 0.9, 1, 1.1, 1.2}),
