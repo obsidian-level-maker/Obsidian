@@ -403,13 +403,6 @@ OB_MODULES["misc"] =
     },
 
     { name="darkness",    label=_("Dark Outdoors"),  choices=STYLE_CHOICES },
-    { name="brightness_offset",
-      label=_("Brightness Offset"),
-      choices=MISC_STUFF.LIGHT_CHOICES,
-      tooltip = "Creates an extra brightness offset for rooms. Does not change the lighting palette for rooms.",
-      default = "none",
-    },
-
     { 
       name="float_minimum_brightness", 
       label=_("Minimum Brightness"),
