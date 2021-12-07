@@ -53,7 +53,7 @@ PREFAB_CONTROL_HERETIC.FINE_TUNE_MULT_FACTORS =
 
 function PREFAB_CONTROL_HERETIC.setup(self)
   for name,opt in pairs(self.options) do
-    if OB_CONFIG.batch_mode == "yes" then
+    if OB_CONFIG.batch == "yes" then
       if not PARAM[opt.name] then
         PARAM[opt.name] = opt.default
       end
