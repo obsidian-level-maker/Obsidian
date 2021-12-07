@@ -2423,6 +2423,8 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
 
 
   local function should_add_decor()
+    if R.is_secret then return false end
+
     return true  -- YES --
   end
 
