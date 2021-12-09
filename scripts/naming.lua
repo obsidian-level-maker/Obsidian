@@ -239,19 +239,22 @@ namelib.NAMES =
 
         -- OwO what's this? More from Armaetus?!
         -- Just straight up weird or funny, rarely chosen though. Some memey stuff present!
+        ["Another Generated Map"]=2,
         ["I Accidentally Hotel Doom"]=2, -- YouTube "I Accidentally Hotel Mario"
         ["It's Been One of Those Days"]=2, -- See above
         ["Hetfield's Inflated Ego"]=2,
         ["lol"]=2,
         ["Marty's Loveable Funhouse"]=2, -- Refers to MArty Stratton, one of id's executive producers
         ["OH NOES"]=2,
+        ["OwO"]=2,
         ["Phobos and Deimos Kissfest"]=2,
         ["Reverse Cowgirl with a PC"]=2, -- YouTube "Reverse Cowgirl with a CD-I"
         ["Romero's Oversized Mindset"]=2,
         ["Take It Like a Man"]=2,
         ["The Trail to the Toilet"]=2, -- In-joke with Obsidian team, I blame Shooter for this lol
         ["Tom Hall's Halls"]=2,
-        ["We are not COMPET-N friendly"]=2,
+        ["UwU"]=2,
+        ["We are not COMPET-N friendly!"]=2,
 
         -- What do we have? MORE Naming? Owo
         -- A bunch of abstract shit is here too! - Armaetus, Jun. 13, 2021
@@ -397,7 +400,22 @@ namelib.NAMES =
 
         -- Foreign shit for the luls
         ["Chaos und Verachtung"]=10, -- "Chaos and Contempt"
-        ["No se puede inventar esta mierda"]=10 -- "You Can't Make This Shit Up" in Spanish
+        ["No se puede inventar esta mierda"]=10, -- "You Can't Make This Shit Up" in Spanish
+
+        -- End of 2021 additions
+        ["Angles of Hell"]=10,
+        ["Among Predaceous Cliffs"]=10,
+        ["Ascending the Unknown"]=10,
+        ["Choice and Consequence"]=10,
+        ["Crafting the Demise"]=10,
+        ["Everything Has Its Place"]=10, -- Chapter name from Dead Space 3
+        ["Hell's Heavy Burden"]=10,
+        ["History's Ember"]=10, -- Chapter name from Dead Space 3
+        ["Reaching the Sky"]=10,
+        ["Rude Awakening"]=10,
+        ["Testing One's Limits"]=10,
+        ["The Long Way Forward"]=10,
+        ["Turning the Page"]=10
 
       },
 
@@ -432,32 +450,6 @@ namelib.NAMES =
 
         ["Adventure to the"]=10,
         ["A Jaunt to the"]=10,
-
-        --[[ 
-        -- More annoyed types by Armaetus
-        ["Oh God Not Another"]=5,
-        ["Yet Another"]=5,
-        ["Just Another"]=5,
-        ["Oh Dear Not Another"]=10,
-        ["It's Totally Another"]=10,
-        ["Just stop with the"]=5,
-        ["Fuck off with the"]=5,
-        ["No, not another"]=5,
-        ["Great, it's another"]=5,
-        ["Great, another"]=5,
-        ["Enough with the"]=5,
-        ["Meh, another"]=5,
-        ["Come on, another"]=5,
-        ["Eh, it's just a"]=5,
-        ["Oh, it's another"]=5,
-        ["Why another"]=5,
-        ["Piss off with the"]=5,
-        ["Wait, why another"]=5,
-        ["Good lord, another"]=5,
-
-        -- 2021 additions!
-        ["Really, another"]=5,
-        ["Wow, another"]=5,]]
 
         -- these by MSSP
         ["Battle for the"]=15,

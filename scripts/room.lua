@@ -2078,6 +2078,21 @@ function Room_choose_kind(R, last_R)
     out_prob = style_sel("outdoors", 0, 30, 60, 100)
   end
 
+  -- alternating outdoors: 
+  if LEVEL.alternating_outdoors then
+    if last_R then
+      if last_R.is_outdoor then
+        out_prob = 0
+      else
+        out_prob = 100
+      end
+    end
+  end
+
+  if not LEVEL.has_outdoors then
+    out_prob = 0
+  end
+
   local is_outdoor = rand.odds(out_prob)
 
   if LEVEL.is_nature then
