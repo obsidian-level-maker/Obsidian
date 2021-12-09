@@ -32,8 +32,9 @@ HARMONY.MATERIALS =
   _CRATE2  = { t="SPCDOOR2", f="FLOOR4_1" },
   _CRATWID = { t="SPCDOOR2", f="FLOOR4_1" }, -- Wide crates
     
-  _SMLDOOR  = { t="0DOORS1", f="CEIL5_1" }, -- Open says me
+  _SMLDOOR  = { t="BIGDOOR3", f="FLAT8" }, -- Open says me
   _BIGDOOR = { t="BIGDOOR2", f="CEIL5_1" },
+  _TALDOOR  = { t="ZIMMER1", f="FLAT23" },
   _DORRAIL = { t="DOORTRAK", f="CEIL5_1" }, -- Inner door slider thingys
   
   _NPIC    = { t="BRICK6", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide

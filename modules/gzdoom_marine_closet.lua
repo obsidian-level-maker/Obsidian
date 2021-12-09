@@ -1295,7 +1295,7 @@ function MARINE_CLOSET_TUNE.setup(self)
   PARAM.marine_tech = 1
 
   for name,opt in pairs(self.options) do
-    if OB_CONFIG.batch_mode == "yes" then
+    if OB_CONFIG.batch == "yes" then
       if not PARAM[opt.name] then
         PARAM[opt.name] = opt.default
       end

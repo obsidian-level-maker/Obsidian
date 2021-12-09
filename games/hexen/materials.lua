@@ -52,6 +52,7 @@ HEXEN.MATERIALS =
     
   _SMLDOOR  = { t="D_WD10", f="F_008" }, -- Open says me
   _BIGDOOR = { t="D_WD07", f="F_008" },
+  _TALDOOR = { t="D_WD10", f="F_008" },
   _DORRAIL = { t="PILLAR02", f="F_082"}, -- Inner door slider thingys
   
   _NPIC    = { t="GLASS01", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide

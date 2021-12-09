@@ -1250,7 +1250,7 @@ function ob_get_param(parameter)
 
   local param
 
-  if OB_CONFIG.batch_mode == "yes" then
+  if OB_CONFIG.batch == "yes" then
     if OB_CONFIG[parameter] then
       param = OB_CONFIG[parameter]
     else

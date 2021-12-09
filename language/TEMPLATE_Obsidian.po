@@ -1,0 +1,8013 @@
+# Language Translation for Obsidian.
+# This file is put in the public domain.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Obsidian Level Maker\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-05-09 23:41+1000\n"
+"PO-Revision-Date: 2021-12-05 04:40+0430\n"
+"Last-Translator:  Dasho\n"
+"Language-Team: English\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# ###################################################################################################################################################################################### #
+# Comments by Dashodanger: One can automate this process for each time the code is changed with the following nightmarish one-liner:                                                     #
+# grep -n -r -o "[_][(]\".*\"[)]" | sed -r {s/"^"/"#: "/} | sed -r {s/":_"/"\n"/} | sed -r {s/"\("/"msgid\t"/} | sed -r {s/"\)$"/"\nmsgstr\t\"\"\n"/} | sed -r {s/":$"/""/}              #
+# ###################################################################################################################################################################################### #
+
+#: engines/boom.lua:144
+msgid "BOOM Compat"
+msgstr ""
+
+#: engines/boom.lua:179
+msgid "PrBoom Compat"
+msgstr ""
+
+#: engines/boom.lua:219
+msgid "Advanced"
+msgstr ""
+
+#: engines/edge.lua:139
+msgid "EDGE (Experimental)"
+msgstr ""
+
+#: engines/eternity.lua:25
+msgid "Eternity (Experimental)"
+msgstr ""
+
+#: engines/vanilla.lua:22
+msgid "Vanilla DOOM"
+msgstr ""
+
+#: engines/zdoom.lua:62
+msgid "ZDoom Family"
+msgstr ""
+
+#: games/amulets/base.lua:39
+msgid "Amulets and Armor (Exp)"
+msgstr ""
+
+#: games/chex/base.lua:46
+msgid "Chex Quest 3"
+msgstr ""
+
+#: games/chex/themes.lua:1095
+msgid "Bazoik"
+msgstr ""
+
+#: games/chex/themes.lua:1103
+msgid "Spaceport"
+msgstr ""
+
+#: games/chex/themes.lua:1111
+msgid "Sewer"
+msgstr ""
+
+#: games/doom/base.lua:42
+msgid "Doom 2"
+msgstr ""
+
+#: games/doom/themes.lua:4978
+msgid "Tech"
+msgstr ""
+
+#: games/doom/themes.lua:4988
+msgid "Urban"
+msgstr ""
+
+#: games/doom/themes.lua:4998
+msgid "Hell"
+msgstr ""
+
+#: games/doom/x_doom1.lua:4127
+msgid "Doom 1"
+msgstr ""
+
+#: games/doom/x_doom1.lua:4153
+msgid "Ultimate Doom"
+msgstr ""
+
+#: games/doom/x_doom1.lua:4169
+msgid "Deimos"
+msgstr ""
+
+#: games/doom/x_doom1.lua:4179
+msgid "Thy Flesh"
+msgstr ""
+
+#: games/doom/x_plutonia.lua:1044
+msgid "Plutonia"
+msgstr ""
+
+#: games/doom/x_tnt.lua:466
+msgid "TNT Evilution"
+msgstr ""
+
+#: games/doom/x_tnt.lua:485
+msgid "Egypt"
+msgstr ""
+
+#: games/hacx/base.lua:46
+msgid "HacX 1.2"
+msgstr ""
+
+#: games/harmony/base.lua:18
+msgid "Harmony"
+msgstr ""
+
+#: games/harmony/themes.lua:415
+msgid "NDF Base"
+msgstr ""
+
+#: games/heretic/base.lua:50
+msgid "Heretic"
+msgstr ""
+
+#: games/heretic/themes.lua:3285
+msgid "City"
+msgstr ""
+
+#: games/heretic/themes.lua:3293
+msgid "Maw"
+msgstr ""
+
+#: games/heretic/themes.lua:3301
+msgid "Dome"
+msgstr ""
+
+#: games/heretic/themes.lua:3309
+msgid "Ossuary"
+msgstr ""
+
+#: games/heretic/themes.lua:3317
+msgid "Demense"
+msgstr ""
+
+#: games/hexen/base.lua:43
+msgid "Hexen (Exp)"
+msgstr ""
+
+#: games/hexen/themes.lua:2249
+msgid "Dungeon"
+msgstr ""
+
+#: games/hexen/themes.lua:2257
+msgid "Fire"
+msgstr ""
+
+#: games/hexen/themes.lua:2265
+msgid "Ice"
+msgstr ""
+
+#: games/hexen/themes.lua:2273
+msgid "Steel"
+msgstr ""
+
+#: games/hexen/themes.lua:2281
+msgid "Desert"
+msgstr ""
+
+#: games/hexen/themes.lua:2289
+msgid "Cave"
+msgstr ""
+
+#: games/hexen/themes.lua:2297
+msgid "Swamp"
+msgstr ""
+
+#: games/hexen/themes.lua:2305
+msgid "Forest"
+msgstr ""
+
+#: games/hexen/themes.lua:2313
+msgid "Village"
+msgstr ""
+
+#: games/nukem/base.lua:39
+msgid "Duke Nukem 3D (Exp)"
+msgstr ""
+
+#: games/quake/base.lua:42
+msgid "Quake"
+msgstr ""
+
+#: games/quake/themes.lua:553
+msgid "Tech"
+msgstr ""
+
+#: games/quake/themes.lua:562
+msgid "Castle"
+msgstr ""
+
+#: games/strife/base.lua:50
+msgid "Strife (Exp)"
+msgstr ""
+
+#: games/strife/themes.lua:424
+msgid "Town"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:58
+msgid "Chex Quest 3 Monster Control"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:72
+msgid "Commonus"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:91
+msgid "Bipedicus"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:110
+msgid "Armored Bipedicus"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:129
+msgid "Quadrumpus"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:148
+msgid "Cycloptis"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:168
+msgid "Larva"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:188
+msgid "Flem Mine"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:208
+msgid "Stridicus"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:228
+msgid "Super Cycloptis"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:252
+msgid "Normal"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:253
+msgid "Vanilla"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:254
+msgid "NONE"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:298
+msgid "Chex Quest 3 Weapon Control"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:313
+msgid "Super Bootspork"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:332
+msgid "Large Zorcher"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:351
+msgid "Rapid Zorcher"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:370
+msgid "Zorch Propulsor"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:389
+msgid "Phasing Zorcher"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:408
+msgid "LAZ Device"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:428
+msgid "Weapon Preferences"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:25
+msgid "FLAT"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:26
+msgid "Lower"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:27
+msgid "Normal"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:28
+msgid "Higher"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:33
+msgid "Pitch-black"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:34
+msgid "Gloomy"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:35
+msgid "Darker"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:36
+msgid "NONE"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:37
+msgid "Brighter"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:38
+msgid "Vivid"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:39
+msgid "Radiant"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:44
+msgid "Per Step (Very Slow)"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:45
+msgid "Per Room (Slightly Slow)"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:46
+msgid "No Live Minimap"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:51
+msgid "Per Theme"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:52
+msgid "Curved"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:53
+msgid "Sharp"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:54
+msgid "Random"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:59
+msgid "Mostly Short"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:60
+msgid "Slightly Short"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:61
+msgid "Normal"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:62
+msgid "Slightly Tall"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:63
+msgid "Mostly Tall"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:64
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:69
+msgid "Not on Vistas"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:70
+msgid "Never"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:71
+msgid "All"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:76
+msgid "Never"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:77
+msgid "Occasional"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:78
+msgid "All"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:83
+msgid "Yes"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:84
+msgid "No Damaging"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:85
+msgid "No"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:90
+msgid "All"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:91
+msgid "75% of All Levels"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:92
+msgid "50% of All Levels"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:93
+msgid "25% of All Levels"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:94
+msgid "12% of All Levels"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:95
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:100
+msgid "x0.25"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:101
+msgid "x0.5"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:102
+msgid "x0.75"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:103
+msgid "x1"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:104
+msgid "x1.25"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:105
+msgid "x1.5"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:106
+msgid "x2"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:107
+msgid "x4"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:108
+msgid "x6"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:109
+msgid "x8"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:110
+msgid "Vanilla"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:111
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:116
+msgid "x0.15"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:117
+msgid "x0.5"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:118
+msgid "x0.75"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:119
+msgid "x1"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:120
+msgid "x1.5"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:121
+msgid "x2"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:122
+msgid "x4"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:123
+msgid "Vanilla"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:124
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:129
+msgid "Vanilla"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:130
+msgid "Strict"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:131
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:191
+msgid "Miscellaneous"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:208
+msgid "Zorcher Starts"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:211
+msgid "Ensure every map can be completed from a zorcher start (ignore weapons obtained from earlier maps)"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:215
+msgid "Alt-start Rooms"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:218
+msgid "For Co-operative games, sometimes have players start in different rooms"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:223
+msgid "Foreshadowing Exit"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:231
+msgid "Room Size Multiplier"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:239
+msgid "Area Count Multiplier"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:248
+msgid "Size Consistency"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:259
+msgid "Big Rooms"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:260
+msgid "Big Outdoors"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:263
+msgid "Room Heights"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:273
+msgid "Parks"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:276
+msgid "Natural Cliffs"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:277
+msgid "Percentage of parks that use completely naturalistic walls."
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:282
+msgid "Park Detail"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:283
+msgid "Reduces or increases the probability of park decorations such as trees on park rooms."
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:288
+msgid "Windows"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:291
+msgid "Passable Windows"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:299
+msgid "Passable Railings"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:309
+msgid "Symmetry"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:310
+msgid "Beams"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:313
+msgid "Fences"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:316
+msgid "Porches\\Gazebos"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:319
+msgid "Scenics"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:324
+msgid "Sink Style"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:335
+msgid "Liquid Sinks"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:344
+msgid "Dark Outdoors"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:346
+msgid "Brightness Offset"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:353
+msgid "Minimum Brightness"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:368
+msgid "Maximum Brightness"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:380
+msgid "Canisters"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:382
+msgid "Doors"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:383
+msgid "Keyed Doors"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:384
+msgid "Triple-Keyed Doors"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:388
+msgid "Switched Doors"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:390
+msgid "Switch Rooms"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:396
+msgid "Road Markings"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:399
+msgid "Adds street markings to roads."
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:403
+msgid "Street Traffic"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:412
+msgid "Exit Signs"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:415
+msgid "Places exit signs by exiting room"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:421
+msgid "Linear Start"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:432
+msgid "Dead Ends"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:443
+msgid "Live Growth Minimap"
+msgstr ""
+
+#: modules/chex3/miscellaneous.lua:445
+msgid "Shows more steps Oblige performs on rooms as they are grown on the GUI minimap. May take a hit on generation speed."
+msgstr ""
+
+#: modules/ctl_doom.lua:58
+msgid "Doom Monster Control"
+msgstr ""
+
+#: modules/ctl_doom.lua:72
+msgid "Zombieman"
+msgstr ""
+
+#: modules/ctl_doom.lua:91
+msgid "Shotgun Guy"
+msgstr ""
+
+#: modules/ctl_doom.lua:110
+msgid "Chaingunner"
+msgstr ""
+
+#: modules/ctl_doom.lua:129
+msgid "SS Nazi"
+msgstr ""
+
+#: modules/ctl_doom.lua:148
+msgid "Imp"
+msgstr ""
+
+#: modules/ctl_doom.lua:167
+msgid "Lost Soul"
+msgstr ""
+
+#: modules/ctl_doom.lua:186
+msgid "Demon"
+msgstr ""
+
+#: modules/ctl_doom.lua:205
+msgid "Spectre"
+msgstr ""
+
+#: modules/ctl_doom.lua:224
+msgid "Pain Elemental"
+msgstr ""
+
+#: modules/ctl_doom.lua:243
+msgid "Cacodemon"
+msgstr ""
+
+#: modules/ctl_doom.lua:262
+msgid "Hell Knight"
+msgstr ""
+
+#: modules/ctl_doom.lua:281
+msgid "Revenant"
+msgstr ""
+
+#: modules/ctl_doom.lua:300
+msgid "Mancubus"
+msgstr ""
+
+#: modules/ctl_doom.lua:319
+msgid "Arachnotron"
+msgstr ""
+
+#: modules/ctl_doom.lua:337
+msgid "Arch-vile"
+msgstr ""
+
+#: modules/ctl_doom.lua:356
+msgid "Baron of Hell"
+msgstr ""
+
+#: modules/ctl_doom.lua:375
+msgid "Cyberdemon"
+msgstr ""
+
+#: modules/ctl_doom.lua:394
+msgid "Spiderdemon"
+msgstr ""
+
+#: modules/ctl_doom.lua:418
+msgid "Normal"
+msgstr ""
+
+#: modules/ctl_doom.lua:419
+msgid "Vanilla"
+msgstr ""
+
+#: modules/ctl_doom.lua:420
+msgid "NONE"
+msgstr ""
+
+#: modules/ctl_doom.lua:490
+msgid "Doom Weapon Control"
+msgstr ""
+
+#: modules/ctl_doom.lua:505
+msgid "Chainsaw"
+msgstr ""
+
+#: modules/ctl_doom.lua:524
+msgid "Shotgun"
+msgstr ""
+
+#: modules/ctl_doom.lua:543
+msgid "Super Shotgun"
+msgstr ""
+
+#: modules/ctl_doom.lua:562
+msgid "Chaingun"
+msgstr ""
+
+#: modules/ctl_doom.lua:581
+msgid "Rocket Launcher"
+msgstr ""
+
+#: modules/ctl_doom.lua:600
+msgid "Plasma Rifle"
+msgstr ""
+
+#: modules/ctl_doom.lua:619
+msgid "BFG 9000"
+msgstr ""
+
+#: modules/ctl_doom.lua:639
+msgid "Weapon Preferences"
+msgstr ""
+
+#: modules/ctl_doom.lua:688
+msgid "Doom Item Control"
+msgstr ""
+
+#: modules/ctl_doom.lua:702
+msgid "Health Bonus"
+msgstr ""
+
+#: modules/ctl_doom.lua:722
+msgid "Stimpack"
+msgstr ""
+
+#: modules/ctl_doom.lua:742
+msgid "Medikit"
+msgstr ""
+
+#: modules/ctl_doom.lua:763
+msgid "Armor Bonus"
+msgstr ""
+
+#: modules/ctl_doom.lua:785
+msgid "Green Armor"
+msgstr ""
+
+#: modules/ctl_doom.lua:805
+msgid "Blue Armor"
+msgstr ""
+
+#: modules/ctl_doom.lua:826
+msgid "Soulsphere"
+msgstr ""
+
+#: modules/ctl_doom.lua:845
+msgid "Backpack"
+msgstr ""
+
+#: modules/ctl_doom.lua:864
+msgid "Berserk Pack"
+msgstr ""
+
+#: modules/ctl_doom.lua:883
+msgid "Invisibility"
+msgstr ""
+
+#: modules/ctl_doom.lua:902
+msgid "Invulnerability"
+msgstr ""
+
+#: modules/ctl_doom.lua:921
+msgid "Map Computer"
+msgstr ""
+
+#: modules/ctl_doom.lua:940
+msgid "Light Goggles"
+msgstr ""
+
+#: modules/ctl_doom.lua:959
+msgid "Megasphere"
+msgstr ""
+
+#: modules/ctl_doom.lua:980
+msgid "Clips"
+msgstr ""
+
+#: modules/ctl_doom.lua:1000
+msgid "Bullet Box"
+msgstr ""
+
+#: modules/ctl_doom.lua:1020
+msgid "Shells"
+msgstr ""
+
+#: modules/ctl_doom.lua:1040
+msgid "Shell Box"
+msgstr ""
+
+#: modules/ctl_doom.lua:1060
+msgid "Rocket"
+msgstr ""
+
+#: modules/ctl_doom.lua:1080
+msgid "Rocket Box"
+msgstr ""
+
+#: modules/ctl_doom.lua:1100
+msgid "Cell"
+msgstr ""
+
+#: modules/ctl_doom.lua:1120
+msgid "Cell Pack"
+msgstr ""
+
+#: modules/debugger.lua:23
+msgid "Test Level Names"
+msgstr ""
+
+#: modules/debugger.lua:24
+msgid "Test Title Names"
+msgstr ""
+
+#: modules/debugger.lua:25
+msgid "None"
+msgstr ""
+
+#: modules/debugger.lua:30
+msgid "Show All Steps"
+msgstr ""
+
+#: modules/debugger.lua:31
+msgid "Show Successful Steps Only"
+msgstr ""
+
+#: modules/debugger.lua:32
+msgid "No"
+msgstr ""
+
+#: modules/debugger.lua:80
+msgid "Debug Control"
+msgstr ""
+
+#: modules/debugger.lua:100
+msgid "Name Generator"
+msgstr ""
+
+#: modules/debugger.lua:112
+msgid "Print ZDoom Strings"
+msgstr ""
+
+#: modules/debugger.lua:123
+msgid "Build Level"
+msgstr ""
+
+#: modules/debugger.lua:139
+msgid "Shape Rule Stats"
+msgstr ""
+
+#: modules/debugger.lua:149
+msgid "Save Map Previews"
+msgstr ""
+
+#: modules/debugger.lua:160
+msgid "Experimental Games"
+msgstr ""
+
+#: modules/debugger.lua:176
+msgid "Custom Error Texture"
+msgstr ""
+
+#: modules/debugger.lua:189
+msgid "Attach DEBUG Info"
+msgstr ""
+
+#: modules/export_map.lua:267
+msgid "Export .MAP files"
+msgstr ""
+
+#: modules/gzdoom_fauna.lua:517
+msgid "GZDoom: Fauna"
+msgstr ""
+
+#: modules/gzdoom_fauna.lua:538
+msgid "Flies"
+msgstr ""
+
+#: modules/gzdoom_fauna.lua:541
+msgid "Adds flies to maps. \n"
+msgstr ""
+
+#: modules/gzdoom_fauna.lua:547
+msgid "Rats"
+msgstr ""
+
+#: modules/gzdoom_fauna.lua:550
+msgid "Adds scurrying rats to maps. \n"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:18
+msgid "Very Low Tech"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:19
+msgid "Low Tech"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:20
+msgid "Mid Tech"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:21
+msgid "High Tech"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:22
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:23
+msgid "Progressive"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:24
+msgid "BFG Fiesta"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:29
+msgid "Sight"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:30
+msgid "Range"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:31
+msgid "Close Range"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:32
+msgid "Map Start"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:37
+msgid "Normal"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:38
+msgid "More"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:39
+msgid "Lots"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:40
+msgid "Hordes"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:45
+msgid "Unmodified"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:46
+msgid "Harder"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:47
+msgid "Tough"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:48
+msgid "Fierce"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:53
+msgid "Random"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:54
+msgid "Progressive"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:55
+msgid "Regressive"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:56
+msgid "Episodic"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:57
+msgid "Regressive Episodic"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:62
+msgid "No"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:63
+msgid "Yes + Merge"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:64
+msgid "Yes + No Merge"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:69
+msgid "Green"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:70
+msgid "Grey"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:71
+msgid "Brown"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:72
+msgid "Dark Red"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:73
+msgid "Blue"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:74
+msgid "Purple"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:75
+msgid "White"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:76
+msgid "Yellow"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:77
+msgid "Orange"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:78
+msgid "Dark Blue"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:79
+msgid "Red"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:80
+msgid "Gold"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:81
+msgid "Random OG Doom"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:82
+msgid "Full Random"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:87
+msgid "Yes"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:88
+msgid "No + Self Damage"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:89
+msgid "No"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1500
+msgid "[Exp]GZDoom Marine Closets"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1523
+msgid "Chance per map"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1539
+msgid "Minimum closets"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1554
+msgid "Maximum closets"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1569
+msgid "Closet scaling type"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1584
+msgid "Minimum marines"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1599
+msgid "Maximum marines"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1614
+msgid "Marine Health"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1629
+msgid "Marine scaling type"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1643
+msgid "Level Min Position"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1658
+msgid "Level Max Position"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1673
+msgid "Weapon tech level"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1690
+msgid "Trigger Type"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1705
+msgid "Marine Color"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1715
+msgid "Friendly Fire"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1727
+msgid "Player Damage Immunity"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1737
+msgid "Weapon Sprites"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1750
+msgid "Monster Quantity Multiplier"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1760
+msgid "Monster Strength Modifier"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1771
+msgid "Strong Marines"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1781
+msgid "Followers"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1792
+msgid "Allow in Gotchas"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1802
+msgid "Death Messages"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1812
+msgid "In Secret Rooms"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:59
+msgid "HacX 1.2 Monster Control"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:73
+msgid "Thug"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:92
+msgid "Android"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:111
+msgid "Stealth Buzzer"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:130
+msgid "Roaming Mine"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:149
+msgid "Phage"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:168
+msgid "Buzzer"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:187
+msgid "ICE"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:206
+msgid "D-Man"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:225
+msgid "Monstruct"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:244
+msgid "Majong 7"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:263
+msgid "Terminatrix"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:282
+msgid "Thorn"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:301
+msgid "Mecha Maniac"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:325
+msgid "Normal"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:326
+msgid "Vanilla"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:327
+msgid "NONE"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:373
+msgid "HacX 1.2 Weapon Control"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:387
+msgid "Hoig Reznator"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:406
+msgid "Tazer"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:425
+msgid "Cyrogun"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:444
+msgid "Uzi"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:463
+msgid "Photon 'Zooka"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:482
+msgid "Anti-gun"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:501
+msgid "Nuker"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:521
+msgid "Weapon Preferences"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:25
+msgid "FLAT"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:26
+msgid "Lower"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:27
+msgid "Normal"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:28
+msgid "Higher"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:33
+msgid "Pitch-black"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:34
+msgid "Gloomy"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:35
+msgid "Darker"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:36
+msgid "NONE"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:37
+msgid "Brighter"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:38
+msgid "Vivid"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:39
+msgid "Radiant"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:44
+msgid "Per Step (Very Slow)"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:45
+msgid "Per Room (Slightly Slow)"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:46
+msgid "No Live Minimap"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:51
+msgid "Per Theme"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:52
+msgid "Curved"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:53
+msgid "Sharp"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:54
+msgid "Random"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:59
+msgid "Mostly Short"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:60
+msgid "Slightly Short"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:61
+msgid "Normal"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:62
+msgid "Slightly Tall"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:63
+msgid "Mostly Tall"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:64
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:69
+msgid "Not on Vistas"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:70
+msgid "Never"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:71
+msgid "All"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:76
+msgid "Never"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:77
+msgid "Occasional"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:78
+msgid "All"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:83
+msgid "Yes"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:84
+msgid "No Damaging"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:85
+msgid "No"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:90
+msgid "All"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:91
+msgid "75% of All Levels"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:92
+msgid "50% of All Levels"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:93
+msgid "25% of All Levels"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:94
+msgid "12% of All Levels"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:95
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:155
+msgid "Miscellaneous"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:172
+msgid "Pistol Starts"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:175
+msgid "Ensure every map can be completed from a pistol start (ignore weapons obtained from earlier maps)"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:179
+msgid "Alt-start Rooms"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:182
+msgid "For Co-operative games, sometimes have players start in different rooms"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:186
+msgid "Foreshadowing Exit"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:193
+msgid "Big Rooms"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:194
+msgid "Big Outdoors"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:197
+msgid "Room Heights"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:207
+msgid "Parks"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:210
+msgid "Natural Cliffs"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:211
+msgid "Percentage of parks that use completely naturalistic walls."
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:216
+msgid "Park Detail"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:217
+msgid "Reduces or increases the probability of park decorations such as trees on park rooms."
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:222
+msgid "Windows"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:225
+msgid "Passable Windows"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:233
+msgid "Passable Railings"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:243
+msgid "Symmetry"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:244
+msgid "Beams"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:247
+msgid "Fences"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:250
+msgid "Porches\\Gazebos"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:253
+msgid "Scenics"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:258
+msgid "Sink Style"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:269
+msgid "Liquid Sinks"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:278
+msgid "Dark Outdoors"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:280
+msgid "Brightness Offset"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:287
+msgid "Minimum Brightness"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:302
+msgid "Maximum Brightness"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:314
+msgid "Barrels"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:316
+msgid "Doors"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:317
+msgid "Keyed Doors"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:318
+msgid "Triple-Keyed Doors"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:321
+msgid "Switched Doors"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:325
+msgid "Road Markings"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:328
+msgid "Adds street markings to roads."
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:332
+msgid "Street Traffic"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:341
+msgid "Exit Signs"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:344
+msgid "Places exit signs by exiting room"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:350
+msgid "Linear Start"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:361
+msgid "Dead Ends"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:372
+msgid "Live Growth Minimap"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:374
+msgid "Shows more steps Oblige performs on rooms as they are grown on the GUI minimap. May take a hit on generation speed."
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:380
+msgid "Lighting"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:381
+msgid "Detail"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:383
+msgid "Pictures"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:384
+msgid "Multiple Paths"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:385
+msgid "3D Floors"
+msgstr ""
+
+#: modules/hacx/miscellaneous.lua:387
+msgid "Lakes"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:59
+msgid "Harmony Monster Control"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:73
+msgid "Beastling"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:92
+msgid "Critter"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:111
+msgid "Follower"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:130
+msgid "Predator"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:149
+msgid "Centaur"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:168
+msgid "Mutant"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:187
+msgid "Phage"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:206
+msgid "Echidna"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:230
+msgid "Normal"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:231
+msgid "Vanilla"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:232
+msgid "NONE"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:276
+msgid "Harmony Weapon Control"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:290
+msgid "Minigun"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:309
+msgid "Compensator"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:328
+msgid "Grenade Launcher"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:347
+msgid "Entropy Thrower"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:367
+msgid "Weapon Preferences"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:25
+msgid "FLAT"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:26
+msgid "Lower"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:27
+msgid "Normal"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:28
+msgid "Higher"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:33
+msgid "Pitch-black"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:34
+msgid "Gloomy"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:35
+msgid "Darker"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:36
+msgid "NONE"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:37
+msgid "Brighter"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:38
+msgid "Vivid"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:39
+msgid "Radiant"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:44
+msgid "Per Step (Very Slow)"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:45
+msgid "Per Room (Slightly Slow)"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:46
+msgid "No Live Minimap"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:51
+msgid "Per Theme"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:52
+msgid "Curved"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:53
+msgid "Sharp"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:54
+msgid "Random"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:59
+msgid "Mostly Short"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:60
+msgid "Slightly Short"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:61
+msgid "Normal"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:62
+msgid "Slightly Tall"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:63
+msgid "Mostly Tall"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:64
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:69
+msgid "Not on Vistas"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:70
+msgid "Never"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:71
+msgid "All"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:76
+msgid "Never"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:77
+msgid "Occasional"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:78
+msgid "All"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:83
+msgid "Yes"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:84
+msgid "No Damaging"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:85
+msgid "No"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:90
+msgid "All"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:91
+msgid "75% of All Levels"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:92
+msgid "50% of All Levels"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:93
+msgid "25% of All Levels"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:94
+msgid "12% of All Levels"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:95
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:100
+msgid "x0.25"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:101
+msgid "x0.5"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:102
+msgid "x0.75"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:103
+msgid "x1"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:104
+msgid "x1.25"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:105
+msgid "x1.5"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:106
+msgid "x2"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:107
+msgid "x4"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:108
+msgid "x6"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:109
+msgid "x8"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:110
+msgid "Vanilla"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:111
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:116
+msgid "x0.15"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:117
+msgid "x0.5"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:118
+msgid "x0.75"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:119
+msgid "x1"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:120
+msgid "x1.5"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:121
+msgid "x2"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:122
+msgid "x4"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:123
+msgid "Vanilla"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:124
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:129
+msgid "Vanilla"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:130
+msgid "Strict"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:131
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:191
+msgid "Miscellaneous"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:208
+msgid "Pistol Starts"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:211
+msgid "Ensure every map can be completed from a zorcher start (ignore weapons obtained from earlier maps)"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:215
+msgid "Alt-start Rooms"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:218
+msgid "For Co-operative games, sometimes have players start in different rooms"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:223
+msgid "Foreshadowing Exit"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:231
+msgid "Room Size Multiplier"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:239
+msgid "Area Count Multiplier"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:248
+msgid "Size Consistency"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:259
+msgid "Big Rooms"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:260
+msgid "Big Outdoors"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:263
+msgid "Room Heights"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:273
+msgid "Parks"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:276
+msgid "Natural Cliffs"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:277
+msgid "Percentage of parks that use completely naturalistic walls."
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:282
+msgid "Park Detail"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:283
+msgid "Reduces or increases the probability of park decorations such as trees on park rooms."
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:288
+msgid "Windows"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:291
+msgid "Passable Windows"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:299
+msgid "Passable Railings"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:309
+msgid "Symmetry"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:310
+msgid "Beams"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:313
+msgid "Fences"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:316
+msgid "Porches\\Gazebos"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:319
+msgid "Scenics"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:324
+msgid "Sink Style"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:335
+msgid "Liquid Sinks"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:344
+msgid "Dark Outdoors"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:346
+msgid "Brightness Offset"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:353
+msgid "Minimum Brightness"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:368
+msgid "Maximum Brightness"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:380
+msgid "Canisters"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:382
+msgid "Doors"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:383
+msgid "Keyed Doors"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:384
+msgid "Triple-Keyed Doors"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:388
+msgid "Switched Doors"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:390
+msgid "Switch Rooms"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:396
+msgid "Road Markings"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:399
+msgid "Adds street markings to roads."
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:403
+msgid "Street Traffic"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:412
+msgid "Exit Signs"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:415
+msgid "Places exit signs by exiting room"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:421
+msgid "Linear Start"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:432
+msgid "Dead Ends"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:443
+msgid "Live Growth Minimap"
+msgstr ""
+
+#: modules/harmony/miscellaneous.lua:445
+msgid "Shows more steps Oblige performs on rooms as they are grown on the GUI minimap. May take a hit on generation speed."
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:57
+msgid "Heretic Monster Control"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:71
+msgid "Gargoyle"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:90
+msgid "Fire Gargoyle"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:109
+msgid "Warrior"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:128
+msgid "Warrior Ghost"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:147
+msgid "Golem"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:166
+msgid "Golem Ghost"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:185
+msgid "Nitro"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:204
+msgid "Nitro Ghost"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:223
+msgid "Disciple"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:242
+msgid "Sabreclaw"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:261
+msgid "Weredragon"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:280
+msgid "Ophidian"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:299
+msgid "Ironlich"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:318
+msgid "Maulotaur"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:337
+msgid "D'Sparil"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:384
+msgid "Heretic Weapon Control"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:397
+msgid "Gauntlets"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:416
+msgid "Crossbow"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:435
+msgid "Dragon Claw"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:454
+msgid "Hellstaff"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:473
+msgid "Phoenix Rod"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:492
+msgid "Fire Mace"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:25
+msgid "FLAT"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:26
+msgid "Lower"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:27
+msgid "Normal"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:28
+msgid "Higher"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:33
+msgid "Pitch-black"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:34
+msgid "Gloomy"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:35
+msgid "Darker"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:36
+msgid "NONE"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:37
+msgid "Brighter"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:38
+msgid "Vivid"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:39
+msgid "Radiant"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:44
+msgid "Per Step (Very Slow)"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:45
+msgid "Per Room (Slightly Slow)"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:46
+msgid "No Live Minimap"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:51
+msgid "Per Theme"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:52
+msgid "Curved"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:53
+msgid "Sharp"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:54
+msgid "Random"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:59
+msgid "Mostly Short"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:60
+msgid "Slightly Short"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:61
+msgid "Normal"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:62
+msgid "Slightly Tall"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:63
+msgid "Mostly Tall"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:64
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:69
+msgid "Not on Vistas"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:70
+msgid "Never"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:71
+msgid "All"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:76
+msgid "Never"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:77
+msgid "Occasional"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:78
+msgid "All"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:83
+msgid "Yes"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:84
+msgid "No Damaging"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:85
+msgid "No"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:90
+msgid "All"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:91
+msgid "75% of All Levels"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:92
+msgid "50% of All Levels"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:93
+msgid "25% of All Levels"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:94
+msgid "12% of All Levels"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:95
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:100
+msgid "x0.25"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:101
+msgid "x0.5"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:102
+msgid "x0.75"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:103
+msgid "x1"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:104
+msgid "x1.25"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:105
+msgid "x1.5"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:106
+msgid "x2"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:107
+msgid "x4"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:108
+msgid "x6"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:109
+msgid "x8"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:110
+msgid "Vanilla"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:111
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:116
+msgid "x0.15"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:117
+msgid "x0.5"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:118
+msgid "x0.75"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:119
+msgid "x1"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:120
+msgid "x1.5"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:121
+msgid "x2"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:122
+msgid "x4"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:123
+msgid "Vanilla"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:124
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:129
+msgid "Vanilla"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:130
+msgid "Strict"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:131
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:191
+msgid "Miscellaneous"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:208
+msgid "Wand Starts"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:211
+msgid "Ensure every map can be completed from a wand start (ignore weapons obtained from earlier maps)"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:215
+msgid "Alt-start Rooms"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:218
+msgid "For Co-operative games, sometimes have players start in different rooms"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:223
+msgid "Foreshadowing Exit"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:231
+msgid "Room Size Multiplier"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:239
+msgid "Area Count Multiplier"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:248
+msgid "Size Consistency"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:259
+msgid "Big Rooms"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:260
+msgid "Big Outdoors"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:263
+msgid "Room Heights"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:273
+msgid "Parks"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:276
+msgid "Natural Cliffs"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:277
+msgid "Percentage of parks that use completely naturalistic walls."
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:282
+msgid "Park Detail"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:283
+msgid "Reduces or increases the probability of park decorations such as trees on park rooms."
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:288
+msgid "Windows"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:291
+msgid "Passable Windows"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:299
+msgid "Passable Railings"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:309
+msgid "Symmetry"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:310
+msgid "Beams"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:313
+msgid "Fences"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:316
+msgid "Porches\\Gazebos"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:319
+msgid "Scenics"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:324
+msgid "Sink Style"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:335
+msgid "Liquid Sinks"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:344
+msgid "Dark Outdoors"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:346
+msgid "Brightness Offset"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:353
+msgid "Minimum Brightness"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:368
+msgid "Maximum Brightness"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:380
+msgid "Pods"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:382
+msgid "Doors"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:383
+msgid "Keyed Doors"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:384
+msgid "Triple-Keyed Doors"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:388
+msgid "Switched Doors"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:390
+msgid "Switch Rooms"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:396
+msgid "Road Markings"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:399
+msgid "Adds street markings to roads."
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:403
+msgid "Street Traffic"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:412
+msgid "Exit Signs"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:415
+msgid "Places exit signs by exiting room"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:421
+msgid "Linear Start"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:432
+msgid "Dead Ends"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:443
+msgid "Live Growth Minimap"
+msgstr ""
+
+#: modules/heretic/miscellaneous.lua:445
+msgid "Shows more steps Oblige performs on rooms as they are grown on the GUI minimap. May take a hit on generation speed."
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:24
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:25
+msgid "Some"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:26
+msgid "Less"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:27
+msgid "Few"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:28
+msgid "Rare"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:29
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:34
+msgid "NONE"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:35
+msgid "Rare"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:36
+msgid "Few"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:37
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:38
+msgid "More"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:39
+msgid "Heaps"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:44
+msgid "NONE"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:45
+msgid "Rare"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:46
+msgid "Few"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:47
+msgid "Less"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:48
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:49
+msgid "More"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:50
+msgid "Heaps"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:51
+msgid "I LOVE IT"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:121
+msgid "Advanced Level Control"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:150
+msgid "Decor"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:160
+msgid "Walls"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:172
+msgid "Crushers"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:180
+msgid "Dexterity Fabs"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:188
+msgid "Gambling Fabs"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:196
+msgid "Sight Ambush Cages"
+msgstr ""
+
+#: modules/heretic/prefab_controller.lua:205
+msgid "Mirror Mazes"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:26
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:27
+msgid "Random"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:28
+msgid "Night"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:29
+msgid "Day"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:34
+msgid "Random"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:35
+msgid "Never"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:36
+msgid "Always"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:41
+msgid "Random"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:42
+msgid "Hills"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:43
+msgid "Mountainous"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:44
+msgid "Cavernous"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:49
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:50
+msgid "Blue + White Clouds"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:51
+msgid "Grey"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:52
+msgid "Dark Grey"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:53
+msgid "Dark Blue"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:54
+msgid "Red"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:55
+msgid "Orange"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:56
+msgid "Red-ish"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:57
+msgid "Brown"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:58
+msgid "Brown-ish"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:59
+msgid "Yellow"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:60
+msgid "Green"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:61
+msgid "Jade"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:62
+msgid "Dark Red"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:63
+msgid "Peach"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:64
+msgid "White"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:65
+msgid "Purple"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:66
+msgid "Rainbow"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:71
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:72
+msgid "Black"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:73
+msgid "Brown"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:74
+msgid "Tan"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:75
+msgid "Green"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:76
+msgid "Dark Green"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:77
+msgid "Red"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:78
+msgid "Dark Brown"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:79
+msgid "Green-ish"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:80
+msgid "Ice"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:85
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:86
+msgid "None"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:87
+msgid "Blue"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:88
+msgid "Red"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:89
+msgid "Brown"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:90
+msgid "Green"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:743
+msgid "Sky Generator"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:760
+msgid "Time of Day"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:771
+msgid "Terrain Foreground"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:780
+msgid "Terrain Parameters"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:792
+msgid "Day Sky Color"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:801
+msgid "Terrain Color"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:810
+msgid "Nebula Color"
+msgstr ""
+
+#: modules/heretic/sky_generator.lua:821
+msgid "Sky Gen Lighting"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:26
+msgid "Yes"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:27
+msgid "No"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:32
+msgid "Per Sky Generator"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:33
+msgid "Random"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:34
+msgid "No"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:39
+msgid "All"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:40
+msgid "Outdoors Only"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:45
+msgid "Subtle"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:46
+msgid "Misty"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:47
+msgid "Smoky"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:48
+msgid "Foggy"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:49
+msgid "Dense"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:50
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:55
+msgid "Generic"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:56
+msgid "Generated"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:57
+msgid "NONE"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:186
+msgid "Universal Intermission"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:1131
+msgid "ZDoom Special Addons"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:1153
+msgid "Fog Generator"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:1161
+msgid "Fog Environment"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:1169
+msgid "Fog Intensity"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:1178
+msgid "Sky Fog"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:1188
+msgid "Dynamic Lights"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:1197
+msgid "Glowing Flats"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:1207
+msgid "Shuffle Music"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:1216
+msgid "Story Generator"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:1225
+msgid "Quit Messages"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:1233
+msgid "Intermission Music"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:1242
+msgid "Disable Intermissions"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:59
+msgid "Hexen Monster Control"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:73
+msgid "Ettin"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:92
+msgid "Afrit"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:111
+msgid "Centaur"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:130
+msgid "Slaughtaur"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:149
+msgid "Stalker"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:168
+msgid "Stalker w/ projectile"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:187
+msgid "Wendigo"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:206
+msgid "Green Serpent"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:225
+msgid "Brown Serpent"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:244
+msgid "Bishop"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:263
+msgid "Reiver"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:282
+msgid "Buried Reiver"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:301
+msgid "Death Wyvern"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:320
+msgid "Heresiarch"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:339
+msgid "Zedek"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:358
+msgid "Traductus"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:377
+msgid "Menelkir"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:396
+msgid "Korax"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:420
+msgid "Normal"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:421
+msgid "Vanilla"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:422
+msgid "NONE"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:466
+msgid "Hexen Weapon Control"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:480
+msgid "Serpent Staff"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:499
+msgid "Firestorm"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:518
+msgid "Wraithverge"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:537
+msgid "Timon's Axe"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:556
+msgid "Hammer of Retribution"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:575
+msgid "Quietus"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:594
+msgid "Frost Shards"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:613
+msgid "Arcs of Death"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:632
+msgid "Bloodscourge"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:652
+msgid "Weapon Preferences"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:25
+msgid "FLAT"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:26
+msgid "Lower"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:27
+msgid "Normal"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:28
+msgid "Higher"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:33
+msgid "Pitch-black"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:34
+msgid "Gloomy"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:35
+msgid "Darker"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:36
+msgid "NONE"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:37
+msgid "Brighter"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:38
+msgid "Vivid"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:39
+msgid "Radiant"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:44
+msgid "Per Step (Very Slow)"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:45
+msgid "Per Room (Slightly Slow)"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:46
+msgid "No Live Minimap"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:51
+msgid "Per Theme"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:52
+msgid "Curved"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:53
+msgid "Sharp"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:54
+msgid "Random"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:59
+msgid "Mostly Short"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:60
+msgid "Slightly Short"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:61
+msgid "Normal"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:62
+msgid "Slightly Tall"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:63
+msgid "Mostly Tall"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:64
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:69
+msgid "Not on Vistas"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:70
+msgid "Never"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:71
+msgid "All"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:76
+msgid "Never"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:77
+msgid "Occasional"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:78
+msgid "All"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:83
+msgid "Yes"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:84
+msgid "No Damaging"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:85
+msgid "No"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:90
+msgid "All"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:91
+msgid "75% of All Levels"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:92
+msgid "50% of All Levels"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:93
+msgid "25% of All Levels"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:94
+msgid "12% of All Levels"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:95
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:155
+msgid "Miscellaneous"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:172
+msgid "Melee/Wand Starts"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:175
+msgid "Ensure every map can be completed from a melee/wand start (ignore weapons obtained from earlier maps). Unsure if this works with Hexen."
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:179
+msgid "Alt-start Rooms"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:182
+msgid "For Co-operative games, sometimes have players start in different rooms"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:186
+msgid "Foreshadowing Exit"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:193
+msgid "Big Rooms"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:194
+msgid "Big Outdoors"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:197
+msgid "Room Heights"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:207
+msgid "Parks"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:210
+msgid "Natural Cliffs"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:211
+msgid "Percentage of parks that use completely naturalistic walls."
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:216
+msgid "Park Detail"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:217
+msgid "Reduces or increases the probability of park decorations such as trees on park rooms."
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:222
+msgid "Windows"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:225
+msgid "Passable Windows"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:233
+msgid "Passable Railings"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:243
+msgid "Symmetry"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:244
+msgid "Beams"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:247
+msgid "Fences"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:250
+msgid "Porches\\Gazebos"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:253
+msgid "Scenics"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:258
+msgid "Sink Style"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:269
+msgid "Liquid Sinks"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:278
+msgid "Dark Outdoors"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:280
+msgid "Brightness Offset"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:287
+msgid "Minimum Brightness"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:302
+msgid "Maximum Brightness"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:314
+msgid "Barrels"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:316
+msgid "Doors"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:317
+msgid "Keyed Doors"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:318
+msgid "Triple-Keyed Doors"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:322
+msgid "Switched Doors"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:326
+msgid "Road Markings"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:329
+msgid "Adds street markings to roads."
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:333
+msgid "Street Traffic"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:342
+msgid "Exit Signs"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:345
+msgid "Places exit signs by exiting room"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:351
+msgid "Linear Start"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:362
+msgid "Dead Ends"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:373
+msgid "Live Growth Minimap"
+msgstr ""
+
+#: modules/hexen/miscellaneous.lua:375
+msgid "Shows more steps Oblige performs on rooms as they are grown on the GUI minimap. May take a hit on generation speed."
+msgstr ""
+
+#: modules/iwad_mode.lua:1719
+msgid "IWAD Style Mode"
+msgstr ""
+
+#: modules/jokewad_module.lua:433
+msgid "Jokewad Module"
+msgstr ""
+
+#: modules/jokewad_module.lua:453
+msgid "FIREBLU Mode"
+msgstr ""
+
+#: modules/jokewad_module.lua:466
+msgid "Pandemic Mode"
+msgstr ""
+
+#: modules/megawad_swap.lua:92
+msgid "Megawad Music Swapper"
+msgstr ""
+
+#: modules/megawad_swap.lua:100
+msgid "Ideal if you have a music WAD replacing all tracks in the game. A note if you are using the ZDoom Specials Shuffle Music option, there is no need to use this module. This is ideal for non-ZDoom ports only."
+msgstr ""
+
+#: modules/miscellaneous.lua:25
+msgid "No"
+msgstr ""
+
+#: modules/miscellaneous.lua:26
+msgid "Yes"
+msgstr ""
+
+#: modules/miscellaneous.lua:31
+msgid "FLAT"
+msgstr ""
+
+#: modules/miscellaneous.lua:32
+msgid "Lower"
+msgstr ""
+
+#: modules/miscellaneous.lua:33
+msgid "Normal"
+msgstr ""
+
+#: modules/miscellaneous.lua:34
+msgid "Higher"
+msgstr ""
+
+#: modules/miscellaneous.lua:39
+msgid "Pitch-black"
+msgstr ""
+
+#: modules/miscellaneous.lua:40
+msgid "Gloomy"
+msgstr ""
+
+#: modules/miscellaneous.lua:41
+msgid "Darker"
+msgstr ""
+
+#: modules/miscellaneous.lua:42
+msgid "NONE"
+msgstr ""
+
+#: modules/miscellaneous.lua:43
+msgid "Brighter"
+msgstr ""
+
+#: modules/miscellaneous.lua:44
+msgid "Vivid"
+msgstr ""
+
+#: modules/miscellaneous.lua:45
+msgid "Radiant"
+msgstr ""
+
+#: modules/miscellaneous.lua:50
+msgid "Per Step (Very Slow)"
+msgstr ""
+
+#: modules/miscellaneous.lua:51
+msgid "Per Room (Slightly Slow)"
+msgstr ""
+
+#: modules/miscellaneous.lua:52
+msgid "No Live Minimap"
+msgstr ""
+
+#: modules/miscellaneous.lua:57
+msgid "Per Theme"
+msgstr ""
+
+#: modules/miscellaneous.lua:58
+msgid "Curved"
+msgstr ""
+
+#: modules/miscellaneous.lua:59
+msgid "Sharp"
+msgstr ""
+
+#: modules/miscellaneous.lua:60
+msgid "Random"
+msgstr ""
+
+#: modules/miscellaneous.lua:65
+msgid "Mostly Short"
+msgstr ""
+
+#: modules/miscellaneous.lua:66
+msgid "Slightly Short"
+msgstr ""
+
+#: modules/miscellaneous.lua:67
+msgid "Normal"
+msgstr ""
+
+#: modules/miscellaneous.lua:68
+msgid "Slightly Tall"
+msgstr ""
+
+#: modules/miscellaneous.lua:69
+msgid "Mostly Tall"
+msgstr ""
+
+#: modules/miscellaneous.lua:70
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/miscellaneous.lua:75
+msgid "Not on Vistas"
+msgstr ""
+
+#: modules/miscellaneous.lua:76
+msgid "Never"
+msgstr ""
+
+#: modules/miscellaneous.lua:77
+msgid "All"
+msgstr ""
+
+#: modules/miscellaneous.lua:82
+msgid "Never"
+msgstr ""
+
+#: modules/miscellaneous.lua:83
+msgid "Occasional"
+msgstr ""
+
+#: modules/miscellaneous.lua:84
+msgid "All"
+msgstr ""
+
+#: modules/miscellaneous.lua:89
+msgid "Yes"
+msgstr ""
+
+#: modules/miscellaneous.lua:90
+msgid "No Damaging"
+msgstr ""
+
+#: modules/miscellaneous.lua:91
+msgid "No"
+msgstr ""
+
+#: modules/miscellaneous.lua:96
+msgid "All"
+msgstr ""
+
+#: modules/miscellaneous.lua:97
+msgid "75% of All Levels"
+msgstr ""
+
+#: modules/miscellaneous.lua:98
+msgid "50% of All Levels"
+msgstr ""
+
+#: modules/miscellaneous.lua:99
+msgid "25% of All Levels"
+msgstr ""
+
+#: modules/miscellaneous.lua:100
+msgid "12% of All Levels"
+msgstr ""
+
+#: modules/miscellaneous.lua:101
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/miscellaneous.lua:106
+msgid "x0.25"
+msgstr ""
+
+#: modules/miscellaneous.lua:107
+msgid "x0.5"
+msgstr ""
+
+#: modules/miscellaneous.lua:108
+msgid "x0.75"
+msgstr ""
+
+#: modules/miscellaneous.lua:109
+msgid "x1"
+msgstr ""
+
+#: modules/miscellaneous.lua:110
+msgid "x1.25"
+msgstr ""
+
+#: modules/miscellaneous.lua:111
+msgid "x1.5"
+msgstr ""
+
+#: modules/miscellaneous.lua:112
+msgid "x2"
+msgstr ""
+
+#: modules/miscellaneous.lua:113
+msgid "x4"
+msgstr ""
+
+#: modules/miscellaneous.lua:114
+msgid "x6"
+msgstr ""
+
+#: modules/miscellaneous.lua:115
+msgid "x8"
+msgstr ""
+
+#: modules/miscellaneous.lua:116
+msgid "Vanilla"
+msgstr ""
+
+#: modules/miscellaneous.lua:117
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/miscellaneous.lua:122
+msgid "x0.15"
+msgstr ""
+
+#: modules/miscellaneous.lua:123
+msgid "x0.5"
+msgstr ""
+
+#: modules/miscellaneous.lua:124
+msgid "x0.75"
+msgstr ""
+
+#: modules/miscellaneous.lua:125
+msgid "x1"
+msgstr ""
+
+#: modules/miscellaneous.lua:126
+msgid "x1.5"
+msgstr ""
+
+#: modules/miscellaneous.lua:127
+msgid "x2"
+msgstr ""
+
+#: modules/miscellaneous.lua:128
+msgid "x4"
+msgstr ""
+
+#: modules/miscellaneous.lua:129
+msgid "Vanilla"
+msgstr ""
+
+#: modules/miscellaneous.lua:130
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/miscellaneous.lua:135
+msgid "Vanilla"
+msgstr ""
+
+#: modules/miscellaneous.lua:136
+msgid "Strict"
+msgstr ""
+
+#: modules/miscellaneous.lua:137
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/miscellaneous.lua:142
+msgid "Small-ish"
+msgstr ""
+
+#: modules/miscellaneous.lua:143
+msgid "Small"
+msgstr ""
+
+#: modules/miscellaneous.lua:144
+msgid "Large"
+msgstr ""
+
+#: modules/miscellaneous.lua:145
+msgid "Large-ish"
+msgstr ""
+
+#: modules/miscellaneous.lua:146
+msgid "Normal"
+msgstr ""
+
+#: modules/miscellaneous.lua:147
+msgid "Conservative"
+msgstr ""
+
+#: modules/miscellaneous.lua:148
+msgid "Very Conservative"
+msgstr ""
+
+#: modules/miscellaneous.lua:149
+msgid "Random"
+msgstr ""
+
+#: modules/miscellaneous.lua:154
+msgid "Less-ish"
+msgstr ""
+
+#: modules/miscellaneous.lua:155
+msgid "Less"
+msgstr ""
+
+#: modules/miscellaneous.lua:156
+msgid "More"
+msgstr ""
+
+#: modules/miscellaneous.lua:157
+msgid "More-ish"
+msgstr ""
+
+#: modules/miscellaneous.lua:158
+msgid "Normal"
+msgstr ""
+
+#: modules/miscellaneous.lua:159
+msgid "Conservative"
+msgstr ""
+
+#: modules/miscellaneous.lua:160
+msgid "Very Conservative"
+msgstr ""
+
+#: modules/miscellaneous.lua:161
+msgid "Random"
+msgstr ""
+
+#: modules/miscellaneous.lua:222
+msgid "Miscellaneous"
+msgstr ""
+
+#: modules/miscellaneous.lua:240
+msgid "Pistol Starts"
+msgstr ""
+
+#: modules/miscellaneous.lua:243
+msgid "Ensure every map can be completed from a pistol start (ignore weapons obtained from earlier maps)"
+msgstr ""
+
+#: modules/miscellaneous.lua:247
+msgid "Alt-start Rooms"
+msgstr ""
+
+#: modules/miscellaneous.lua:250
+msgid "For Co-operative games, sometimes have players start in different rooms"
+msgstr ""
+
+#: modules/miscellaneous.lua:254
+msgid "Foreshadowing Exit"
+msgstr ""
+
+#: modules/miscellaneous.lua:262
+msgid "Room Size Multiplier"
+msgstr ""
+
+#: modules/miscellaneous.lua:270
+msgid "Area Count Multiplier"
+msgstr ""
+
+#: modules/miscellaneous.lua:279
+msgid "Size Consistency"
+msgstr ""
+
+#: modules/miscellaneous.lua:290
+msgid "Room Size Mix Fine Tune"
+msgstr ""
+
+#: modules/miscellaneous.lua:305
+msgid "Room Area Mix Fine Tune"
+msgstr ""
+
+#: modules/miscellaneous.lua:320
+msgid "Big Rooms"
+msgstr ""
+
+#: modules/miscellaneous.lua:321
+msgid "Big Outdoors"
+msgstr ""
+
+#: modules/miscellaneous.lua:324
+msgid "Room Heights"
+msgstr ""
+
+#: modules/miscellaneous.lua:334
+msgid "Parks"
+msgstr ""
+
+#: modules/miscellaneous.lua:337
+msgid "Natural Cliffs"
+msgstr ""
+
+#: modules/miscellaneous.lua:338
+msgid "Percentage of parks that use completely naturalistic walls."
+msgstr ""
+
+#: modules/miscellaneous.lua:343
+msgid "Park Detail"
+msgstr ""
+
+#: modules/miscellaneous.lua:344
+msgid "Reduces or increases the probability of park decorations such as trees on park rooms."
+msgstr ""
+
+#: modules/miscellaneous.lua:349
+msgid "Windows"
+msgstr ""
+
+#: modules/miscellaneous.lua:352
+msgid "Passable Windows"
+msgstr ""
+
+#: modules/miscellaneous.lua:360
+msgid "Passable Railings"
+msgstr ""
+
+#: modules/miscellaneous.lua:370
+msgid "Symmetry"
+msgstr ""
+
+#: modules/miscellaneous.lua:371
+msgid "Beams"
+msgstr ""
+
+#: modules/miscellaneous.lua:374
+msgid "Fences"
+msgstr ""
+
+#: modules/miscellaneous.lua:377
+msgid "Porches\\Gazebos"
+msgstr ""
+
+#: modules/miscellaneous.lua:380
+msgid "Scenics"
+msgstr ""
+
+#: modules/miscellaneous.lua:385
+msgid "Sink Style"
+msgstr ""
+
+#: modules/miscellaneous.lua:396
+msgid "Liquid Sinks"
+msgstr ""
+
+#: modules/miscellaneous.lua:405
+msgid "Dark Outdoors"
+msgstr ""
+
+#: modules/miscellaneous.lua:407
+msgid "Brightness Offset"
+msgstr ""
+
+#: modules/miscellaneous.lua:415
+msgid "Minimum Brightness"
+msgstr ""
+
+#: modules/miscellaneous.lua:430
+msgid "Maximum Brightness"
+msgstr ""
+
+#: modules/miscellaneous.lua:443
+msgid "Barrels"
+msgstr ""
+
+#: modules/miscellaneous.lua:445
+msgid "Doors"
+msgstr ""
+
+#: modules/miscellaneous.lua:446
+msgid "Keyed Doors"
+msgstr ""
+
+#: modules/miscellaneous.lua:447
+msgid "Triple-Keyed Doors"
+msgstr ""
+
+#: modules/miscellaneous.lua:450
+msgid "Switch Goals"
+msgstr ""
+
+#: modules/miscellaneous.lua:453
+msgid "Switch Rooms"
+msgstr ""
+
+#: modules/miscellaneous.lua:460
+msgid "Road Markings"
+msgstr ""
+
+#: modules/miscellaneous.lua:463
+msgid "Adds street markings to roads."
+msgstr ""
+
+#: modules/miscellaneous.lua:467
+msgid "Street Traffic"
+msgstr ""
+
+#: modules/miscellaneous.lua:476
+msgid "Exit Signs"
+msgstr ""
+
+#: modules/miscellaneous.lua:479
+msgid "Places exit signs by exiting room"
+msgstr ""
+
+#: modules/miscellaneous.lua:485
+msgid "Linear Start"
+msgstr ""
+
+#: modules/miscellaneous.lua:496
+msgid "Dead Ends"
+msgstr ""
+
+#: modules/miscellaneous.lua:507
+msgid "Live Growth Minimap"
+msgstr ""
+
+#: modules/miscellaneous.lua:510
+msgid "Shows more steps Oblige performs on rooms as they are grown on the GUI minimap. May take a hit on generation speed."
+msgstr ""
+
+#: modules/miscellaneous.lua:516
+msgid "Lighting"
+msgstr ""
+
+#: modules/miscellaneous.lua:517
+msgid "Detail"
+msgstr ""
+
+#: modules/miscellaneous.lua:519
+msgid "Pictures"
+msgstr ""
+
+#: modules/miscellaneous.lua:520
+msgid "Multiple Paths"
+msgstr ""
+
+#: modules/miscellaneous.lua:521
+msgid "3D Floors"
+msgstr ""
+
+#: modules/miscellaneous.lua:523
+msgid "Lakes"
+msgstr ""
+
+#: modules/modded_game_extras.lua:2229
+msgid "Modded Game Extras"
+msgstr ""
+
+#: modules/modded_game_extras.lua:2251
+msgid "HN Markers"
+msgstr ""
+
+#: modules/modded_game_extras.lua:2262
+msgid "Custom Actor Names"
+msgstr ""
+
+#: modules/modded_game_extras.lua:2276
+msgid "QC:DE Lootboxes"
+msgstr ""
+
+#: modules/modded_game_extras.lua:2286
+msgid "D4T Entities"
+msgstr ""
+
+#: modules/modded_game_extras.lua:2297
+msgid "Trailblazer Upgrades"
+msgstr ""
+
+#: modules/modded_game_extras.lua:2308
+msgid "Complex Doom Modifications"
+msgstr ""
+
+#: modules/music_swap.lua:115
+msgid "Music Swapper"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:25
+msgid "FLAT"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:26
+msgid "Lower"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:27
+msgid "Normal"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:28
+msgid "Higher"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:33
+msgid "Pitch-black"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:34
+msgid "Gloomy"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:35
+msgid "Darker"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:36
+msgid "NONE"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:37
+msgid "Brighter"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:38
+msgid "Vivid"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:39
+msgid "Radiant"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:44
+msgid "Per Step (Very Slow)"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:45
+msgid "Per Room (Slightly Slow)"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:46
+msgid "No Live Minimap"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:51
+msgid "Per Theme"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:52
+msgid "Curved"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:53
+msgid "Sharp"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:54
+msgid "Random"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:59
+msgid "Mostly Short"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:60
+msgid "Slightly Short"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:61
+msgid "Normal"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:62
+msgid "Slightly Tall"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:63
+msgid "Mostly Tall"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:64
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:69
+msgid "Not on Vistas"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:70
+msgid "Never"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:71
+msgid "All"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:76
+msgid "Never"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:77
+msgid "Occasional"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:78
+msgid "All"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:83
+msgid "Yes"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:84
+msgid "No Damaging"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:85
+msgid "No"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:90
+msgid "All"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:91
+msgid "75% of All Levels"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:92
+msgid "50% of All Levels"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:93
+msgid "25% of All Levels"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:94
+msgid "12% of All Levels"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:95
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:100
+msgid "x0.25"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:101
+msgid "x0.5"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:102
+msgid "x0.75"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:103
+msgid "x1"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:104
+msgid "x1.25"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:105
+msgid "x1.5"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:106
+msgid "x2"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:107
+msgid "x4"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:108
+msgid "x6"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:109
+msgid "x8"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:110
+msgid "Vanilla"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:111
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:116
+msgid "x0.15"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:117
+msgid "x0.5"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:118
+msgid "x0.75"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:119
+msgid "x1"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:120
+msgid "x1.5"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:121
+msgid "x2"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:122
+msgid "x4"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:123
+msgid "Vanilla"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:124
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:129
+msgid "Vanilla"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:130
+msgid "Strict"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:131
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:191
+msgid "Miscellaneous"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:208
+msgid "Pistol Starts"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:211
+msgid "Ensure every map can be completed from a zorcher start (ignore weapons obtained from earlier maps)"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:215
+msgid "Alt-start Rooms"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:218
+msgid "For Co-operative games, sometimes have players start in different rooms"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:223
+msgid "Foreshadowing Exit"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:231
+msgid "Room Size Multiplier"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:239
+msgid "Area Count Multiplier"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:248
+msgid "Size Consistency"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:259
+msgid "Big Rooms"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:260
+msgid "Big Outdoors"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:263
+msgid "Room Heights"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:273
+msgid "Parks"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:276
+msgid "Natural Cliffs"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:277
+msgid "Percentage of parks that use completely naturalistic walls."
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:282
+msgid "Park Detail"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:283
+msgid "Reduces or increases the probability of park decorations such as trees on park rooms."
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:288
+msgid "Windows"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:291
+msgid "Passable Windows"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:299
+msgid "Passable Railings"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:309
+msgid "Symmetry"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:310
+msgid "Beams"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:313
+msgid "Fences"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:316
+msgid "Porches\\Gazebos"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:319
+msgid "Scenics"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:324
+msgid "Sink Style"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:335
+msgid "Liquid Sinks"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:344
+msgid "Dark Outdoors"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:346
+msgid "Brightness Offset"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:353
+msgid "Minimum Brightness"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:368
+msgid "Maximum Brightness"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:380
+msgid "Canisters"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:382
+msgid "Doors"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:383
+msgid "Keyed Doors"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:384
+msgid "Triple-Keyed Doors"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:388
+msgid "Switched Doors"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:390
+msgid "Switch Rooms"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:396
+msgid "Road Markings"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:399
+msgid "Adds street markings to roads."
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:403
+msgid "Street Traffic"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:412
+msgid "Exit Signs"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:415
+msgid "Places exit signs by exiting room"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:421
+msgid "Linear Start"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:432
+msgid "Dead Ends"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:443
+msgid "Live Growth Minimap"
+msgstr ""
+
+#: modules/nukem/miscellaneous.lua:445
+msgid "Shows more steps Oblige performs on rooms as they are grown on the GUI minimap. May take a hit on generation speed."
+msgstr ""
+
+#: modules/prefab_controller.lua:23
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/prefab_controller.lua:24
+msgid "Some"
+msgstr ""
+
+#: modules/prefab_controller.lua:25
+msgid "Less"
+msgstr ""
+
+#: modules/prefab_controller.lua:26
+msgid "Few"
+msgstr ""
+
+#: modules/prefab_controller.lua:27
+msgid "Rare"
+msgstr ""
+
+#: modules/prefab_controller.lua:28
+msgid "NONE"
+msgstr ""
+
+#: modules/prefab_controller.lua:42
+msgid "NONE"
+msgstr ""
+
+#: modules/prefab_controller.lua:43
+msgid "Rare"
+msgstr ""
+
+#: modules/prefab_controller.lua:44
+msgid "Few"
+msgstr ""
+
+#: modules/prefab_controller.lua:45
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/prefab_controller.lua:46
+msgid "More"
+msgstr ""
+
+#: modules/prefab_controller.lua:47
+msgid "Heaps"
+msgstr ""
+
+#: modules/prefab_controller.lua:66
+msgid "Always"
+msgstr ""
+
+#: modules/prefab_controller.lua:67
+msgid "Heaps"
+msgstr ""
+
+#: modules/prefab_controller.lua:68
+msgid "Lots"
+msgstr ""
+
+#: modules/prefab_controller.lua:69
+msgid "More"
+msgstr ""
+
+#: modules/prefab_controller.lua:70
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/prefab_controller.lua:71
+msgid "Some"
+msgstr ""
+
+#: modules/prefab_controller.lua:72
+msgid "Less"
+msgstr ""
+
+#: modules/prefab_controller.lua:73
+msgid "Few"
+msgstr ""
+
+#: modules/prefab_controller.lua:74
+msgid "Rare"
+msgstr ""
+
+#: modules/prefab_controller.lua:75
+msgid "NONE"
+msgstr ""
+
+#: modules/prefab_controller.lua:81
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/prefab_controller.lua:82
+msgid "Non-damaging"
+msgstr ""
+
+#: modules/prefab_controller.lua:87
+msgid "NONE"
+msgstr ""
+
+#: modules/prefab_controller.lua:88
+msgid "Rare"
+msgstr ""
+
+#: modules/prefab_controller.lua:89
+msgid "Few"
+msgstr ""
+
+#: modules/prefab_controller.lua:90
+msgid "Less"
+msgstr ""
+
+#: modules/prefab_controller.lua:91
+msgid "Default"
+msgstr ""
+
+#: modules/prefab_controller.lua:92
+msgid "More"
+msgstr ""
+
+#: modules/prefab_controller.lua:93
+msgid "Heaps"
+msgstr ""
+
+#: modules/prefab_controller.lua:94
+msgid "I LOVE IT"
+msgstr ""
+
+#: modules/prefab_controller.lua:187
+msgid "Advanced Level Control"
+msgstr ""
+
+#: modules/prefab_controller.lua:218
+msgid "Point Decor"
+msgstr ""
+
+#: modules/prefab_controller.lua:232
+msgid "Wall Decor"
+msgstr ""
+
+#: modules/prefab_controller.lua:242
+msgid "Group Walls"
+msgstr ""
+
+#: modules/prefab_controller.lua:255
+msgid "Single Room Themes"
+msgstr ""
+
+#: modules/prefab_controller.lua:271
+msgid "Limited Wall Groups"
+msgstr ""
+
+#: modules/prefab_controller.lua:290
+msgid "Peered Starts/Exits"
+msgstr ""
+
+#: modules/prefab_controller.lua:299
+msgid "Steppy Caves"
+msgstr ""
+
+#: modules/prefab_controller.lua:302
+msgid "Always"
+msgstr ""
+
+#: modules/prefab_controller.lua:303
+msgid "Yes"
+msgstr ""
+
+#: modules/prefab_controller.lua:304
+msgid "No"
+msgstr ""
+
+#: modules/prefab_controller.lua:326
+msgid "Crushers"
+msgstr ""
+
+#: modules/prefab_controller.lua:334
+msgid "Dexterity Fabs"
+msgstr ""
+
+#: modules/prefab_controller.lua:342
+msgid "Gambling Fabs"
+msgstr ""
+
+#: modules/prefab_controller.lua:350
+msgid "Sight Ambush Cages"
+msgstr ""
+
+#: modules/prefab_controller.lua:359
+msgid "Mirror Mazes"
+msgstr ""
+
+#: modules/prefab_controller.lua:367
+msgid "Dark Mazes"
+msgstr ""
+
+#: modules/prefab_controller.lua:375
+msgid "Stair Ladders"
+msgstr ""
+
+#: modules/prefab_controller.lua:397
+msgid "Damaging Hallways"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:23
+msgid "Large"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:24
+msgid "Regular"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:25
+msgid "Small"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:26
+msgid "Tiny"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:31
+msgid "Final Map Only"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:32
+msgid "Episodic (MAP11, MAP20, MAP30)"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:33
+msgid "2 per ep (5,11,16,20,25,30)"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:34
+msgid "3 per ep (3,7,11,14,17,20,23,27,30)"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:35
+msgid "4 per ep (3,6,9,11,14,16,18,20,23,26,28,30)"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:36
+msgid "_"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:37
+msgid "5% Chance, Any Map After MAP04"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:38
+msgid "10% Chance, Any Map After MAP04"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:39
+msgid "Everything"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:67
+msgid "Procedural Gotchas"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:87
+msgid "Gotcha Frequency"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:100
+msgid "Extra Quantity"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:114
+msgid "Extra Strength"
+msgstr ""
+
+#: modules/procedural_gotcha.lua:133
+msgid "Map Size"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:24
+msgid "Easier"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:25
+msgid "Moderate"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:26
+msgid "Harder"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:27
+msgid "Nightmare"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:32
+msgid "Reduced by 50%"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:33
+msgid "Reduced by 25%"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:34
+msgid "Default"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:35
+msgid "Increased by 50%"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:36
+msgid "Increased by 100%"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:37
+msgid "Increased by 200%"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:42
+msgid "Default"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:43
+msgid "50% less"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:44
+msgid "80% less"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:45
+msgid "100% less"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:50
+msgid "NONE"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:51
+msgid "Rare"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:52
+msgid "Few"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:53
+msgid "Less"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:54
+msgid "Some"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:55
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:60
+msgid "NONE"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:61
+msgid "Weaker"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:62
+msgid "Default"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:63
+msgid "Harder"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:64
+msgid "Much Harder"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:65
+msgid "Nightmare"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:70
+msgid "Extremely slow"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:71
+msgid "Very slow"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:72
+msgid "Slow"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:73
+msgid "Default"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:74
+msgid "Fast"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:75
+msgid "Faster"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:76
+msgid "Nightmare"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:81
+msgid "Scatter around arena"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:82
+msgid "Close to player start"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:87
+msgid "Exit after 10 seconds"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:88
+msgid "Spawn pickup that exits the level"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:93
+msgid "Hard Limit"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:94
+msgid "Soft Limit"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:95
+msgid "No Limit"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1591
+msgid "Large"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1592
+msgid "Regular"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1593
+msgid "Small"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1594
+msgid "Tiny"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1599
+msgid "Final Map Only"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1600
+msgid "Episodic (MAP11, MAP20, MAP30)"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1601
+msgid "2 per ep (5,11,16,20,25,30)"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1602
+msgid "3 per ep (3,7,11,14,17,20,23,27,30)"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1603
+msgid "4 per ep (3,6,9,11,14,16,18,20,23,26,28,30)"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1604
+msgid "_"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1605
+msgid "5% Chance, Any Map After MAP04"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1606
+msgid "10% Chance, Any Map After MAP04"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1607
+msgid "Everything"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1688
+msgid "ZDoom Procedural Gotchas"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1711
+msgid "Gotcha Frequency"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1724
+msgid "Extra Quantity"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1739
+msgid "Extra Strength"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1759
+msgid "Map Size"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1770
+msgid "Enable Bosses"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1780
+msgid "Force Boss Fight"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1790
+msgid "Boss Difficulty"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1800
+msgid "Boss Health Modifier"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1810
+msgid "Hitscan Bosses"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1821
+msgid "Visible Health Bar"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1831
+msgid "Enable Boss Music"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1842
+msgid "Arena Steepness"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1852
+msgid "Reinforcement Strength"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1861
+msgid "Reinforcement Rate"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1870
+msgid "Respect zero prob"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1881
+msgid "Monster limit type"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1893
+msgid "Weapon placement"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1904
+msgid "Exit type"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1913
+msgid "Ammo supplies mult"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1928
+msgid "Healing supplies mult"
+msgstr ""
+
+#: modules/procedural_textures.lua:26
+msgid "Vanilla Only"
+msgstr ""
+
+#: modules/procedural_textures.lua:27
+msgid "Include Epic Textures"
+msgstr ""
+
+#: modules/procedural_textures.lua:238
+msgid "Procedural Textures"
+msgstr ""
+
+#: modules/procedural_textures.lua:255
+msgid "Scope"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:23
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:24
+msgid "None at all"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:25
+msgid "Scarce"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:26
+msgid "Less"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:27
+msgid "Plenty"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:28
+msgid "More"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:29
+msgid "Heaps"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:30
+msgid "INSANE"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:78
+msgid "Quake Monster Control"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:113
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:114
+msgid "None at all"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:115
+msgid "Scarce"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:116
+msgid "Less"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:117
+msgid "Plenty"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:118
+msgid "More"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:119
+msgid "Heaps"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:120
+msgid "I LOVE IT"
+msgstr ""
+
+#: modules/quake/ctl_quake.lua:163
+msgid "Quake Weapon Control"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:23
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:24
+msgid "None at all"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:25
+msgid "Scarce"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:26
+msgid "Less"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:27
+msgid "Plenty"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:28
+msgid "More"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:29
+msgid "Heaps"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:30
+msgid "INSANE"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:75
+msgid "Quake2 Monster Control"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:121
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:122
+msgid "None at all"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:123
+msgid "Scarce"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:124
+msgid "Less"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:125
+msgid "Plenty"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:126
+msgid "More"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:127
+msgid "Heaps"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:128
+msgid "I LOVE IT"
+msgstr ""
+
+#: modules/quake/ctl_quake2.lua:171
+msgid "Quake2 Weapon Control"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:25
+msgid "FLAT"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:26
+msgid "Lower"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:27
+msgid "Normal"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:28
+msgid "Higher"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:33
+msgid "Pitch-black"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:34
+msgid "Gloomy"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:35
+msgid "Darker"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:36
+msgid "NONE"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:37
+msgid "Brighter"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:38
+msgid "Vivid"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:39
+msgid "Radiant"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:44
+msgid "Per Step (Very Slow)"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:45
+msgid "Per Room (Slightly Slow)"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:46
+msgid "No Live Minimap"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:51
+msgid "Per Theme"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:52
+msgid "Curved"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:53
+msgid "Sharp"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:54
+msgid "Random"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:59
+msgid "Mostly Short"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:60
+msgid "Slightly Short"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:61
+msgid "Normal"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:62
+msgid "Slightly Tall"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:63
+msgid "Mostly Tall"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:64
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:69
+msgid "Not on Vistas"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:70
+msgid "Never"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:71
+msgid "All"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:76
+msgid "Never"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:77
+msgid "Occasional"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:78
+msgid "All"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:83
+msgid "Yes"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:84
+msgid "No Damaging"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:85
+msgid "No"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:90
+msgid "All"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:91
+msgid "75% of All Levels"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:92
+msgid "50% of All Levels"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:93
+msgid "25% of All Levels"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:94
+msgid "12% of All Levels"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:95
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:100
+msgid "x0.25"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:101
+msgid "x0.5"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:102
+msgid "x0.75"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:103
+msgid "x1"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:104
+msgid "x1.25"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:105
+msgid "x1.5"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:106
+msgid "x2"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:107
+msgid "x4"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:108
+msgid "x6"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:109
+msgid "x8"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:110
+msgid "Vanilla"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:111
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:116
+msgid "x0.15"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:117
+msgid "x0.5"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:118
+msgid "x0.75"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:119
+msgid "x1"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:120
+msgid "x1.5"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:121
+msgid "x2"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:122
+msgid "x4"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:123
+msgid "Vanilla"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:124
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:129
+msgid "Vanilla"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:130
+msgid "Strict"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:131
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:191
+msgid "Miscellaneous"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:208
+msgid "Pistol Starts"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:211
+msgid "Ensure every map can be completed from a zorcher start (ignore weapons obtained from earlier maps)"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:215
+msgid "Alt-start Rooms"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:218
+msgid "For Co-operative games, sometimes have players start in different rooms"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:223
+msgid "Foreshadowing Exit"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:231
+msgid "Room Size Multiplier"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:239
+msgid "Area Count Multiplier"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:248
+msgid "Size Consistency"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:259
+msgid "Big Rooms"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:260
+msgid "Big Outdoors"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:263
+msgid "Room Heights"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:273
+msgid "Parks"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:276
+msgid "Natural Cliffs"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:277
+msgid "Percentage of parks that use completely naturalistic walls."
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:282
+msgid "Park Detail"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:283
+msgid "Reduces or increases the probability of park decorations such as trees on park rooms."
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:288
+msgid "Windows"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:291
+msgid "Passable Windows"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:299
+msgid "Passable Railings"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:309
+msgid "Symmetry"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:310
+msgid "Beams"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:313
+msgid "Fences"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:316
+msgid "Porches\\Gazebos"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:319
+msgid "Scenics"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:324
+msgid "Sink Style"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:335
+msgid "Liquid Sinks"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:344
+msgid "Dark Outdoors"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:346
+msgid "Brightness Offset"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:353
+msgid "Minimum Brightness"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:368
+msgid "Maximum Brightness"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:380
+msgid "Canisters"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:382
+msgid "Doors"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:383
+msgid "Keyed Doors"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:384
+msgid "Triple-Keyed Doors"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:388
+msgid "Switched Doors"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:390
+msgid "Switch Rooms"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:396
+msgid "Road Markings"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:399
+msgid "Adds street markings to roads."
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:403
+msgid "Street Traffic"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:412
+msgid "Exit Signs"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:415
+msgid "Places exit signs by exiting room"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:421
+msgid "Linear Start"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:432
+msgid "Dead Ends"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:443
+msgid "Live Growth Minimap"
+msgstr ""
+
+#: modules/quake/miscellaneous.lua:445
+msgid "Shows more steps Oblige performs on rooms as they are grown on the GUI minimap. May take a hit on generation speed."
+msgstr ""
+
+#: modules/sky_generator.lua:25
+msgid "Default"
+msgstr ""
+
+#: modules/sky_generator.lua:26
+msgid "Random"
+msgstr ""
+
+#: modules/sky_generator.lua:27
+msgid "Night"
+msgstr ""
+
+#: modules/sky_generator.lua:28
+msgid "Day"
+msgstr ""
+
+#: modules/sky_generator.lua:33
+msgid "Random"
+msgstr ""
+
+#: modules/sky_generator.lua:34
+msgid "Never"
+msgstr ""
+
+#: modules/sky_generator.lua:35
+msgid "Always"
+msgstr ""
+
+#: modules/sky_generator.lua:40
+msgid "Random"
+msgstr ""
+
+#: modules/sky_generator.lua:41
+msgid "Hills"
+msgstr ""
+
+#: modules/sky_generator.lua:42
+msgid "Mountainous"
+msgstr ""
+
+#: modules/sky_generator.lua:43
+msgid "Cavernous"
+msgstr ""
+
+#: modules/sky_generator.lua:48
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/sky_generator.lua:49
+msgid "Blue + White Clouds"
+msgstr ""
+
+#: modules/sky_generator.lua:50
+msgid "Grey"
+msgstr ""
+
+#: modules/sky_generator.lua:51
+msgid "Dark Grey"
+msgstr ""
+
+#: modules/sky_generator.lua:52
+msgid "Dark Blue"
+msgstr ""
+
+#: modules/sky_generator.lua:53
+msgid "Red"
+msgstr ""
+
+#: modules/sky_generator.lua:54
+msgid "Orange"
+msgstr ""
+
+#: modules/sky_generator.lua:55
+msgid "Red-ish"
+msgstr ""
+
+#: modules/sky_generator.lua:56
+msgid "Brown"
+msgstr ""
+
+#: modules/sky_generator.lua:57
+msgid "Brown-ish"
+msgstr ""
+
+#: modules/sky_generator.lua:58
+msgid "Yellow"
+msgstr ""
+
+#: modules/sky_generator.lua:59
+msgid "Green"
+msgstr ""
+
+#: modules/sky_generator.lua:60
+msgid "Jade"
+msgstr ""
+
+#: modules/sky_generator.lua:61
+msgid "Dark Red"
+msgstr ""
+
+#: modules/sky_generator.lua:62
+msgid "Peach"
+msgstr ""
+
+#: modules/sky_generator.lua:63
+msgid "White"
+msgstr ""
+
+#: modules/sky_generator.lua:64
+msgid "Purple"
+msgstr ""
+
+#: modules/sky_generator.lua:65
+msgid "Rainbow"
+msgstr ""
+
+#: modules/sky_generator.lua:70
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/sky_generator.lua:71
+msgid "Black"
+msgstr ""
+
+#: modules/sky_generator.lua:72
+msgid "Brown"
+msgstr ""
+
+#: modules/sky_generator.lua:73
+msgid "Tan"
+msgstr ""
+
+#: modules/sky_generator.lua:74
+msgid "Green"
+msgstr ""
+
+#: modules/sky_generator.lua:75
+msgid "Dark Green"
+msgstr ""
+
+#: modules/sky_generator.lua:76
+msgid "Red"
+msgstr ""
+
+#: modules/sky_generator.lua:77
+msgid "Dark Brown"
+msgstr ""
+
+#: modules/sky_generator.lua:78
+msgid "Green-ish"
+msgstr ""
+
+#: modules/sky_generator.lua:79
+msgid "Ice"
+msgstr ""
+
+#: modules/sky_generator.lua:84
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/sky_generator.lua:85
+msgid "None"
+msgstr ""
+
+#: modules/sky_generator.lua:86
+msgid "Blue"
+msgstr ""
+
+#: modules/sky_generator.lua:87
+msgid "Red"
+msgstr ""
+
+#: modules/sky_generator.lua:88
+msgid "Brown"
+msgstr ""
+
+#: modules/sky_generator.lua:89
+msgid "Green"
+msgstr ""
+
+#: modules/sky_generator.lua:652
+msgid "Sky Generator"
+msgstr ""
+
+#: modules/sky_generator.lua:670
+msgid "Time of Day"
+msgstr ""
+
+#: modules/sky_generator.lua:681
+msgid "Terrain Foreground"
+msgstr ""
+
+#: modules/sky_generator.lua:690
+msgid "Terrain Parameters"
+msgstr ""
+
+#: modules/sky_generator.lua:702
+msgid "Day Sky Color"
+msgstr ""
+
+#: modules/sky_generator.lua:711
+msgid "Terrain Color"
+msgstr ""
+
+#: modules/sky_generator.lua:720
+msgid "Nebula Color"
+msgstr ""
+
+#: modules/sky_generator.lua:731
+msgid "Sky Gen Lighting"
+msgstr ""
+
+#: modules/small_spiderdemon.lua:32
+msgid "Smaller Spiderdemon"
+msgstr ""
+
+#: modules/stealth_mons.lua:241
+msgid "Normal"
+msgstr ""
+
+#: modules/stealth_mons.lua:242
+msgid "Less"
+msgstr ""
+
+#: modules/stealth_mons.lua:243
+msgid "More"
+msgstr ""
+
+#: modules/stealth_mons.lua:274
+msgid "Stealth Monsters"
+msgstr ""
+
+#: modules/stealth_mons.lua:294
+msgid "Default Quantity"
+msgstr ""
+
+#: modules/stealth_mons.lua:306
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/stealth_mons.lua:307
+msgid "None at all"
+msgstr ""
+
+#: modules/stealth_mons.lua:308
+msgid "Scarce"
+msgstr ""
+
+#: modules/stealth_mons.lua:309
+msgid "Less"
+msgstr ""
+
+#: modules/stealth_mons.lua:310
+msgid "Plenty"
+msgstr ""
+
+#: modules/stealth_mons.lua:311
+msgid "More"
+msgstr ""
+
+#: modules/stealth_mons.lua:312
+msgid "Heaps"
+msgstr ""
+
+#: modules/stealth_mons.lua:313
+msgid "INSANE"
+msgstr ""
+
+#: modules/stealth_mons.lua:347
+msgid "Stealth Monsters : Control"
+msgstr ""
+
+#: modules/stealth_mons.lua:360
+msgid "Zombieman"
+msgstr ""
+
+#: modules/stealth_mons.lua:361
+msgid "Shotgun Guy"
+msgstr ""
+
+#: modules/stealth_mons.lua:362
+msgid "Imp"
+msgstr ""
+
+#: modules/stealth_mons.lua:363
+msgid "Demon"
+msgstr ""
+
+#: modules/stealth_mons.lua:364
+msgid "Cacodemon"
+msgstr ""
+
+#: modules/stealth_mons.lua:365
+msgid "Baron of Hell"
+msgstr ""
+
+#: modules/stealth_mons.lua:367
+msgid "Chaingunner"
+msgstr ""
+
+#: modules/stealth_mons.lua:368
+msgid "Hell Knight"
+msgstr ""
+
+#: modules/stealth_mons.lua:369
+msgid "Revenant"
+msgstr ""
+
+#: modules/stealth_mons.lua:370
+msgid "Mancubus"
+msgstr ""
+
+#: modules/stealth_mons.lua:371
+msgid "Arachnotron"
+msgstr ""
+
+#: modules/stealth_mons.lua:372
+msgid "Arch-vile"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:25
+msgid "FLAT"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:26
+msgid "Lower"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:27
+msgid "Normal"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:28
+msgid "Higher"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:33
+msgid "Pitch-black"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:34
+msgid "Gloomy"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:35
+msgid "Darker"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:36
+msgid "NONE"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:37
+msgid "Brighter"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:38
+msgid "Vivid"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:39
+msgid "Radiant"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:44
+msgid "Per Step (Very Slow)"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:45
+msgid "Per Room (Slightly Slow)"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:46
+msgid "No Live Minimap"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:51
+msgid "Per Theme"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:52
+msgid "Curved"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:53
+msgid "Sharp"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:54
+msgid "Random"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:59
+msgid "Mostly Short"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:60
+msgid "Slightly Short"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:61
+msgid "Normal"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:62
+msgid "Slightly Tall"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:63
+msgid "Mostly Tall"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:64
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:69
+msgid "Not on Vistas"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:70
+msgid "Never"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:71
+msgid "All"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:76
+msgid "Never"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:77
+msgid "Occasional"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:78
+msgid "All"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:83
+msgid "Yes"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:84
+msgid "No Damaging"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:85
+msgid "No"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:90
+msgid "All"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:91
+msgid "75% of All Levels"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:92
+msgid "50% of All Levels"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:93
+msgid "25% of All Levels"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:94
+msgid "12% of All Levels"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:95
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:155
+msgid "Miscellaneous"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:172
+msgid "Crossbow Starts"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:175
+msgid "Ensure every map can be completed from a crossbow start (ignore weapons obtained from earlier maps)"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:179
+msgid "Alt-start Rooms"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:182
+msgid "For Co-operative games, sometimes have players start in different rooms"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:186
+msgid "Foreshadowing Exit"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:193
+msgid "Big Rooms"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:194
+msgid "Big Outdoors"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:197
+msgid "Room Heights"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:207
+msgid "Parks"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:210
+msgid "Natural Cliffs"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:211
+msgid "Percentage of parks that use completely naturalistic walls."
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:216
+msgid "Park Detail"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:217
+msgid "Reduces or increases the probability of park decorations such as trees on park rooms."
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:222
+msgid "Windows"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:225
+msgid "Passable Windows"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:233
+msgid "Passable Railings"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:243
+msgid "Symmetry"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:244
+msgid "Beams"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:247
+msgid "Fences"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:250
+msgid "Porches\\Gazebos"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:253
+msgid "Scenics"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:258
+msgid "Sink Style"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:269
+msgid "Liquid Sinks"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:278
+msgid "Dark Outdoors"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:280
+msgid "Brightness Offset"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:287
+msgid "Minimum Brightness"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:302
+msgid "Maximum Brightness"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:314
+msgid "Barrels"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:316
+msgid "Doors"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:317
+msgid "Keyed Doors"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:318
+msgid "Triple-Keyed Doors"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:321
+msgid "Switched Doors"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:325
+msgid "Road Markings"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:328
+msgid "Adds street markings to roads."
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:332
+msgid "Street Traffic"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:341
+msgid "Exit Signs"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:344
+msgid "Places exit signs by exiting room"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:350
+msgid "Linear Start"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:361
+msgid "Dead Ends"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:372
+msgid "Live Growth Minimap"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:374
+msgid "Shows more steps Oblige performs on rooms as they are grown on the GUI minimap. May take a hit on generation speed."
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:380
+msgid "Lighting"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:381
+msgid "Detail"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:383
+msgid "Pictures"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:384
+msgid "Multiple Paths"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:385
+msgid "3D Floors"
+msgstr ""
+
+#: modules/strife/miscellaneous.lua:387
+msgid "Lakes"
+msgstr ""
+
+#: modules/theme_control.lua:127
+msgid "[Exp] Doom 2 Theme Control"
+msgstr ""
+
+#: modules/theme_control.lua:168
+msgid "[Exp] Doom 1 Theme Control"
+msgstr ""
+
+#: modules/ui_arch.lua:25
+msgid "Enable"
+msgstr ""
+
+#: modules/ui_arch.lua:26
+msgid "Sky-gen Smart"
+msgstr ""
+
+#: modules/ui_arch.lua:27
+msgid "Disable"
+msgstr ""
+
+#: modules/ui_arch.lua:32
+msgid "Per Theme"
+msgstr ""
+
+#: modules/ui_arch.lua:33
+msgid "Episodic"
+msgstr ""
+
+#: modules/ui_arch.lua:34
+msgid "Random"
+msgstr ""
+
+#: modules/ui_arch.lua:35
+msgid "Generic"
+msgstr ""
+
+#: modules/ui_arch.lua:36
+msgid "Disable"
+msgstr ""
+
+#: modules/ui_arch.lua:41
+msgid "Mostly"
+msgstr ""
+
+#: modules/ui_arch.lua:42
+msgid "Normal"
+msgstr ""
+
+#: modules/ui_arch.lua:43
+msgid "Less"
+msgstr ""
+
+#: modules/ui_arch.lua:49
+msgid "Very Fast Curve"
+msgstr ""
+
+#: modules/ui_arch.lua:50
+msgid "Fast Curve"
+msgstr ""
+
+#: modules/ui_arch.lua:51
+msgid "Linear"
+msgstr ""
+
+#: modules/ui_arch.lua:52
+msgid "Slow Curve"
+msgstr ""
+
+#: modules/ui_arch.lua:53
+msgid "Very Slow Curve"
+msgstr ""
+
+#: modules/ui_arch.lua:59
+msgid "Smaller"
+msgstr ""
+
+#: modules/ui_arch.lua:60
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/ui_arch.lua:61
+msgid "Larger"
+msgstr ""
+
+#: modules/ui_arch.lua:120
+msgid "Architecture"
+msgstr ""
+
+#: modules/ui_arch.lua:139
+msgid "Level Size"
+msgstr ""
+
+#: modules/ui_arch.lua:167
+msgid "Upper Bound"
+msgstr ""
+
+#: modules/ui_arch.lua:191
+msgid "Lower Bound"
+msgstr ""
+
+#: modules/ui_arch.lua:216
+msgid "Ramp Factor"
+msgstr ""
+
+#: modules/ui_arch.lua:232
+msgid "Level Size Bias"
+msgstr ""
+
+#: modules/ui_arch.lua:244
+msgid "Theme Mix-in Type"
+msgstr ""
+
+#: modules/ui_arch.lua:258
+msgid "Linear Mode"
+msgstr ""
+
+#: modules/ui_arch.lua:278
+msgid "Nature Mode"
+msgstr ""
+
+#: modules/ui_arch.lua:294
+msgid "Streets Mode"
+msgstr ""
+
+#: modules/ui_arch.lua:309
+msgid "Urban Only Streets"
+msgstr ""
+
+#: modules/ui_arch.lua:320
+msgid "Prebuilt Levels"
+msgstr ""
+
+#: modules/ui_arch.lua:333
+msgid "Layout Absurdity"
+msgstr ""
+
+#: modules/ui_arch.lua:350
+msgid "Outdoors"
+msgstr ""
+
+#: modules/ui_arch.lua:351
+msgid "Caves"
+msgstr ""
+
+#: modules/ui_arch.lua:352
+msgid "Liquids"
+msgstr ""
+
+#: modules/ui_arch.lua:353
+msgid "Hallways"
+msgstr ""
+
+#: modules/ui_arch.lua:354
+msgid "Teleports"
+msgstr ""
+
+#: modules/ui_arch.lua:355
+msgid "Steepness"
+msgstr ""
+
+#: modules/ui_arch.lua:360
+msgid "Bottomless Vistas"
+msgstr ""
+
+#: modules/ui_arch.lua:374
+msgid "ZDoom 3D Skybox"
+msgstr ""
+
+#: modules/ui_mons.lua:25
+msgid "NONE"
+msgstr ""
+
+#: modules/ui_mons.lua:26
+msgid "Easier"
+msgstr ""
+
+#: modules/ui_mons.lua:27
+msgid "Average"
+msgstr ""
+
+#: modules/ui_mons.lua:28
+msgid "Harder"
+msgstr ""
+
+#: modules/ui_mons.lua:33
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/ui_mons.lua:34
+msgid "Teleports Only"
+msgstr ""
+
+#: modules/ui_mons.lua:35
+msgid "Closets Only"
+msgstr ""
+
+#: modules/ui_mons.lua:36
+msgid "20% Closets - 80% Teleports"
+msgstr ""
+
+#: modules/ui_mons.lua:37
+msgid "40% Closets - 60% Teleports"
+msgstr ""
+
+#: modules/ui_mons.lua:38
+msgid "60% Closets - 40% Teleports"
+msgstr ""
+
+#: modules/ui_mons.lua:39
+msgid "80% Closets - 20% Teleports"
+msgstr ""
+
+#: modules/ui_mons.lua:44
+msgid "Weaker"
+msgstr ""
+
+#: modules/ui_mons.lua:45
+msgid "Easier"
+msgstr ""
+
+#: modules/ui_mons.lua:46
+msgid "Average"
+msgstr ""
+
+#: modules/ui_mons.lua:47
+msgid "Tricky"
+msgstr ""
+
+#: modules/ui_mons.lua:48
+msgid "Treacherous"
+msgstr ""
+
+#: modules/ui_mons.lua:49
+msgid "Dangerous"
+msgstr ""
+
+#: modules/ui_mons.lua:50
+msgid "Deadly"
+msgstr ""
+
+#: modules/ui_mons.lua:51
+msgid "Lethal"
+msgstr ""
+
+#: modules/ui_mons.lua:52
+msgid "CRAZY"
+msgstr ""
+
+#: modules/ui_mons.lua:57
+msgid "Yes - Full Strength"
+msgstr ""
+
+#: modules/ui_mons.lua:58
+msgid "Yes - Weak"
+msgstr ""
+
+#: modules/ui_mons.lua:59
+msgid "No"
+msgstr ""
+
+#: modules/ui_mons.lua:64
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/ui_mons.lua:65
+msgid "Harder"
+msgstr ""
+
+#: modules/ui_mons.lua:66
+msgid "Tougher"
+msgstr ""
+
+#: modules/ui_mons.lua:67
+msgid "Fiercer"
+msgstr ""
+
+#: modules/ui_mons.lua:68
+msgid "CRAZIER"
+msgstr ""
+
+#: modules/ui_mons.lua:73
+msgid "Disabled"
+msgstr ""
+
+#: modules/ui_mons.lua:74
+msgid "Minor Bosses Only"
+msgstr ""
+
+#: modules/ui_mons.lua:75
+msgid "Minor and Nasty Bosses Only"
+msgstr ""
+
+#: modules/ui_mons.lua:76
+msgid "All Bosses"
+msgstr ""
+
+#: modules/ui_mons.lua:106
+msgid "Monsters"
+msgstr ""
+
+#: modules/ui_mons.lua:120
+msgid "Quantity"
+msgstr ""
+
+#: modules/ui_mons.lua:181
+msgid "Upper Bound"
+msgstr ""
+
+#: modules/ui_mons.lua:241
+msgid "Lower Bound"
+msgstr ""
+
+#: modules/ui_mons.lua:302
+msgid "Strength"
+msgstr ""
+
+#: modules/ui_mons.lua:314
+msgid "Ramp Up"
+msgstr ""
+
+#: modules/ui_mons.lua:329
+msgid "Quiet Start"
+msgstr ""
+
+#: modules/ui_mons.lua:336
+msgid "Monster Variety"
+msgstr ""
+
+#: modules/ui_mons.lua:342
+msgid "Monster Variety Jumpstart"
+msgstr ""
+
+#: modules/ui_mons.lua:349
+msgid "Bosses"
+msgstr ""
+
+#: modules/ui_mons.lua:352
+msgid "Bosses As Regulars"
+msgstr ""
+
+#: modules/ui_mons.lua:358
+msgid "Traps"
+msgstr ""
+
+#: modules/ui_mons.lua:361
+msgid "Trap Style"
+msgstr ""
+
+#: modules/ui_mons.lua:368
+msgid "Trap Monsters"
+msgstr ""
+
+#: modules/ui_mons.lua:375
+msgid "Cages"
+msgstr ""
+
+#: modules/ui_mons.lua:379
+msgid "Cage Monsters"
+msgstr ""
+
+#: modules/ui_mons.lua:388
+msgid "Monsters in Secrets"
+msgstr ""
+
+#: modules/ui_pickups.lua:24
+msgid "NONE"
+msgstr ""
+
+#: modules/ui_pickups.lua:25
+msgid "Scarce"
+msgstr ""
+
+#: modules/ui_pickups.lua:26
+msgid "Less"
+msgstr ""
+
+#: modules/ui_pickups.lua:27
+msgid "Bit Less"
+msgstr ""
+
+#: modules/ui_pickups.lua:28
+msgid "Normal"
+msgstr ""
+
+#: modules/ui_pickups.lua:29
+msgid "Bit More"
+msgstr ""
+
+#: modules/ui_pickups.lua:30
+msgid "More"
+msgstr ""
+
+#: modules/ui_pickups.lua:31
+msgid "Heaps"
+msgstr ""
+
+#: modules/ui_pickups.lua:36
+msgid "NONE"
+msgstr ""
+
+#: modules/ui_pickups.lua:37
+msgid "Very Soon"
+msgstr ""
+
+#: modules/ui_pickups.lua:38
+msgid "Sooner"
+msgstr ""
+
+#: modules/ui_pickups.lua:39
+msgid "Normal"
+msgstr ""
+
+#: modules/ui_pickups.lua:40
+msgid "Later"
+msgstr ""
+
+#: modules/ui_pickups.lua:41
+msgid "Very Late"
+msgstr ""
+
+#: modules/ui_pickups.lua:46
+msgid "NONE"
+msgstr ""
+
+#: modules/ui_pickups.lua:47
+msgid "Rare"
+msgstr ""
+
+#: modules/ui_pickups.lua:48
+msgid "Less"
+msgstr ""
+
+#: modules/ui_pickups.lua:49
+msgid "Normal"
+msgstr ""
+
+#: modules/ui_pickups.lua:50
+msgid "More"
+msgstr ""
+
+#: modules/ui_pickups.lua:51
+msgid "Heaps"
+msgstr ""
+
+#: modules/ui_pickups.lua:56
+msgid "NONE"
+msgstr ""
+
+#: modules/ui_pickups.lua:57
+msgid "More"
+msgstr ""
+
+#: modules/ui_pickups.lua:58
+msgid "Heaps"
+msgstr ""
+
+#: modules/ui_pickups.lua:59
+msgid "Rich"
+msgstr ""
+
+#: modules/ui_pickups.lua:60
+msgid "Resplendent"
+msgstr ""
+
+#: modules/ui_pickups.lua:66
+msgid "Pickups"
+msgstr ""
+
+#: modules/ui_pickups.lua:74
+msgid "Health"
+msgstr ""
+
+#: modules/ui_pickups.lua:75
+msgid "Ammo"
+msgstr ""
+
+#: modules/ui_pickups.lua:77
+msgid "Weapons"
+msgstr ""
+
+#: modules/ui_pickups.lua:78
+msgid "Items"
+msgstr ""
+
+#: modules/ui_pickups.lua:80
+msgid "Secrets"
+msgstr ""
+
+#: modules/ui_pickups.lua:82
+msgid "Secrets Bonus"
+msgstr ""
+
+#: modules/ui_reject_options.lua:48
+msgid "Map Build Options"
+msgstr ""
+
+#: modules/ui_reject_options.lua:64
+msgid "Build REJECT"
+msgstr ""
+
+#: modules/ui_reject_options.lua:97
+msgid "Map Build Options"
+msgstr ""
+
+#: modules/ui_reject_options.lua:113
+msgid "Build Nodes"
+msgstr ""
+
+#: modules/ui_reject_options.lua:144
+msgid "Binary"
+msgstr ""
+
+#: modules/ui_reject_options.lua:145
+msgid "UDMF"
+msgstr ""
+
+#: modules/ui_reject_options.lua:153
+msgid "Map Build Options"
+msgstr ""
+
+#: modules/ui_reject_options.lua:170
+msgid "Build Nodes"
+msgstr ""
+
+#: modules/ui_reject_options.lua:180
+msgid "Map Format"
+msgstr ""
+
+#: modules/ui_slump.lua:25
+msgid "Normal"
+msgstr ""
+
+#: modules/ui_slump.lua:26
+msgid "Ranged Only"
+msgstr ""
+
+#: modules/ui_slump.lua:27
+msgid "No Fly Zone"
+msgstr ""
+
+#: modules/ui_slump.lua:28
+msgid "Oops! All Nazis!"
+msgstr ""
+
+#: modules/ui_slump.lua:58
+msgid "SLUMP Architecture"
+msgstr ""
+
+#: modules/ui_slump.lua:73
+msgid "Level Size"
+msgstr ""
+
+#: modules/ui_slump.lua:87
+msgid "Room Bigification Chance"
+msgstr ""
+
+#: modules/ui_slump.lua:100
+msgid "Forkiness"
+msgstr ""
+
+#: modules/ui_slump.lua:115
+msgid "Deathmatch Spawns"
+msgstr ""
+
+#: modules/ui_slump.lua:123
+msgid "Major Nukage Mode"
+msgstr ""
+
+#: modules/ui_slump.lua:131
+msgid "Quiet Start"
+msgstr ""
+
+#: modules/ui_slump.lua:145
+msgid "SLUMP Monsters"
+msgstr ""
+
+#: modules/ui_slump.lua:160
+msgid "Monster Variety"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:34
+msgid "ZScript"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:35
+msgid "ACS-Decorate"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:36
+msgid "No"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:41
+msgid "Random"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:42
+msgid "Episodic"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:43
+msgid "A Bit Mixed"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:44
+msgid "Snow-ish"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:45
+msgid "Desert-ish"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:46
+msgid "Always Snow"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:47
+msgid "Always Desert"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:48
+msgid "No"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:1053
+msgid "Obsidian Epic Resource Pack"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:1078
+msgid "Custom Liquids"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:1088
+msgid "Custom Trees"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:1102
+msgid "Environment Theme"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:1114
+msgid "Merge Textures WAD"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:1127
+msgid "Include Brightmaps"
+msgstr ""
+
+#: modules/zdoom_armaetus_epic_textures.lua:1138
+msgid "No Hell Environment Themes"
+msgstr ""
+
+#: modules/zdoom_frozsoul_sound.lua:55
+msgid "20000"
+msgstr ""
+
+#: modules/zdoom_frozsoul_sound.lua:56
+msgid "22000"
+msgstr ""
+
+#: modules/zdoom_frozsoul_sound.lua:57
+msgid "24000"
+msgstr ""
+
+#: modules/zdoom_frozsoul_sound.lua:58
+msgid "26000"
+msgstr ""
+
+#: modules/zdoom_frozsoul_sound.lua:59
+msgid "28000"
+msgstr ""
+
+#: modules/zdoom_frozsoul_sound.lua:60
+msgid "30000"
+msgstr ""
+
+#: modules/zdoom_frozsoul_sound.lua:239
+msgid "ZDoom: Ambient Sounds"
+msgstr ""
+
+#: modules/zdoom_marines.lua:181
+msgid "Plenty"
+msgstr ""
+
+#: modules/zdoom_marines.lua:182
+msgid "Scarce"
+msgstr ""
+
+#: modules/zdoom_marines.lua:183
+msgid "Heaps"
+msgstr ""
+
+#: modules/zdoom_marines.lua:216
+msgid "ZDoom Marines"
+msgstr ""
+
+#: modules/zdoom_marines.lua:236
+msgid "Default Quantity"
+msgstr ""
+
+#: modules/zdoom_marines.lua:248
+msgid "DEFAULT"
+msgstr ""
+
+#: modules/zdoom_marines.lua:249
+msgid "None at all"
+msgstr ""
+
+#: modules/zdoom_marines.lua:250
+msgid "Scarce"
+msgstr ""
+
+#: modules/zdoom_marines.lua:251
+msgid "Less"
+msgstr ""
+
+#: modules/zdoom_marines.lua:252
+msgid "Plenty"
+msgstr ""
+
+#: modules/zdoom_marines.lua:253
+msgid "More"
+msgstr ""
+
+#: modules/zdoom_marines.lua:254
+msgid "Heaps"
+msgstr ""
+
+#: modules/zdoom_marines.lua:255
+msgid "INSANE"
+msgstr ""
+
+#: modules/zdoom_marines.lua:292
+msgid "ZDoom Marines : Control"
+msgstr ""
+
+#: modules/zdoom_specials.lua:25
+msgid "Yes"
+msgstr ""
+
+#: modules/zdoom_specials.lua:26
+msgid "Merge Doom 1 and 2"
+msgstr ""
+
+#: modules/zdoom_specials.lua:27
+msgid "No"
+msgstr ""
+
+#: modules/zdoom_specials.lua:32
+msgid "Per Sky Generator"
+msgstr ""
+
+#: modules/zdoom_specials.lua:33
+msgid "Random"
+msgstr ""
+
+#: modules/zdoom_specials.lua:34
+msgid "No"
+msgstr ""
+
+#: modules/zdoom_specials.lua:39
+msgid "All"
+msgstr ""
+
+#: modules/zdoom_specials.lua:40
+msgid "Outdoors Only"
+msgstr ""
+
+#: modules/zdoom_specials.lua:45
+msgid "Subtle"
+msgstr ""
+
+#: modules/zdoom_specials.lua:46
+msgid "Misty"
+msgstr ""
+
+#: modules/zdoom_specials.lua:47
+msgid "Smoky"
+msgstr ""
+
+#: modules/zdoom_specials.lua:48
+msgid "Foggy"
+msgstr ""
+
+#: modules/zdoom_specials.lua:49
+msgid "Dense"
+msgstr ""
+
+#: modules/zdoom_specials.lua:50
+msgid "Mix It Up"
+msgstr ""
+
+#: modules/zdoom_specials.lua:55
+msgid "Generic"
+msgstr ""
+
+#: modules/zdoom_specials.lua:56
+msgid "Generated"
+msgstr ""
+
+#: modules/zdoom_specials.lua:57
+msgid "NONE"
+msgstr ""
+
+#: modules/zdoom_specials.lua:193
+msgid "Universal Intermission"
+msgstr ""
+
+#: modules/zdoom_specials.lua:194
+msgid "Doom 2 Vanilla"
+msgstr ""
+
+#: modules/zdoom_specials.lua:195
+msgid "Doom 1 Vanilla"
+msgstr ""
+
+#: modules/zdoom_specials.lua:1210
+msgid "ZDoom Special Addons"
+msgstr ""
+
+#: modules/zdoom_specials.lua:1232
+msgid "Fog Generator"
+msgstr ""
+
+#: modules/zdoom_specials.lua:1240
+msgid "Fog Environment"
+msgstr ""
+
+#: modules/zdoom_specials.lua:1248
+msgid "Fog Intensity"
+msgstr ""
+
+#: modules/zdoom_specials.lua:1257
+msgid "Sky Fog"
+msgstr ""
+
+#: modules/zdoom_specials.lua:1267
+msgid "Dynamic Lights"
+msgstr ""
+
+#: modules/zdoom_specials.lua:1276
+msgid "Glowing Flats"
+msgstr ""
+
+#: modules/zdoom_specials.lua:1286
+msgid "Shuffle Music"
+msgstr ""
+
+#: modules/zdoom_specials.lua:1297
+msgid "Story Generator"
+msgstr ""
+
+#: modules/zdoom_specials.lua:1306
+msgid "Quit Messages"
+msgstr ""
+
+#: modules/zdoom_specials.lua:1314
+msgid "Intermission Music"
+msgstr ""
+
+#: modules/zdoom_specials.lua:1323
+msgid "Episode Selection"
+msgstr ""
+
+#: modules/zdoom_specials.lua:1333
+msgid "Disable Intermissions"
+msgstr ""
+
+#: scripts/defs.lua:59
+msgid "Limit Removing"
+msgstr ""
+
+#: scripts/defs.lua:67
+msgid "Original"
+msgstr ""
+
+#: scripts/defs.lua:74
+msgid "Episodic"
+msgstr ""
+
+#: scripts/defs.lua:81
+msgid "Jumbled Up"
+msgstr ""
+
+#: scripts/defs.lua:88
+msgid "Bit Mixed"
+msgstr ""
+
+#: scripts/defs.lua:95
+msgid "Psychedelic"
+msgstr ""
+
+#: scripts/defs.lua:103
+msgid "Single Level"
+msgstr ""
+
+#: scripts/defs.lua:104
+msgid "A Few Maps"
+msgstr ""
+
+#: scripts/defs.lua:105
+msgid "One Episode"
+msgstr ""
+
+#: scripts/defs.lua:106
+msgid "Full Game"
+msgstr ""
+
+#: scripts/defs.lua:532
+msgid "NONE"
+msgstr ""
+
+#: scripts/defs.lua:533
+msgid "Rare"
+msgstr ""
+
+#: scripts/defs.lua:534
+msgid "Few"
+msgstr ""
+
+#: scripts/defs.lua:535
+msgid "Less"
+msgstr ""
+
+#: scripts/defs.lua:536
+msgid "Some"
+msgstr ""
+
+#: scripts/defs.lua:537
+msgid "More"
+msgstr ""
+
+#: scripts/defs.lua:538
+msgid "Heaps"
+msgstr ""
+
+#: scripts/defs.lua:539
+msgid "Mix It Up"
+msgstr ""
+
+#: source_files/obsidian_main/g_doom.cc:207
+msgid "Unable to create wad file:\n\n%s"
+msgstr ""
+
+#: source_files/obsidian_main/g_doom.cc:815
+msgid "ZDBSP Error!"
+msgstr ""
+
+#: source_files/obsidian_main/g_doom.cc:861
+msgid "Cancelled"
+msgstr ""
+
+#: source_files/obsidian_main/g_doom.cc:879
+msgid "Error (create file)"
+msgstr ""
+
+#: source_files/obsidian_main/g_doom.cc:884
+msgid "CSG"
+msgstr ""
+
+#: source_files/obsidian_main/g_nukem.cc:430
+msgid "Cancelled"
+msgstr ""
+
+#: source_files/obsidian_main/g_nukem.cc:439
+msgid "Error (create file)"
+msgstr ""
+
+#: source_files/obsidian_main/g_nukem.cc:444
+msgid "CSG"
+msgstr ""
+
+#: source_files/obsidian_main/g_quake.cc:1263
+msgid "CSG"
+msgstr ""
+
+#: source_files/obsidian_main/g_quake.cc:1264
+msgid "BSP"
+msgstr ""
+
+#: source_files/obsidian_main/g_quake.cc:1265
+msgid "Vis"
+msgstr ""
+
+#: source_files/obsidian_main/g_quake.cc:1266
+msgid "Light"
+msgstr ""
+
+#: source_files/obsidian_main/g_quake.cc:1267
+msgid "Hull"
+msgstr ""
+
+#: source_files/obsidian_main/g_quake.cc:1313
+msgid "Cancelled"
+msgstr ""
+
+#: source_files/obsidian_main/g_quake.cc:1322
+msgid "Error (create file)"
+msgstr ""
+
+#: source_files/obsidian_main/g_quake2.cc:1021
+msgid "Cancelled"
+msgstr ""
+
+#: source_files/obsidian_main/g_quake2.cc:1030
+msgid "Error (create file)"
+msgstr ""
+
+#: source_files/obsidian_main/g_quake3.cc:1247
+msgid "Cancelled"
+msgstr ""
+
+#: source_files/obsidian_main/g_quake3.cc:1256
+msgid "Error (create file)"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:745
+msgid "No"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:746
+msgid "Yes"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:747
+msgid "OK"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:748
+msgid "Cancel"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:749
+msgid "Close"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:881
+msgid "Preparing..."
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:901
+msgid "Success"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:933
+msgid "Cancelled"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1049
+msgid "No such config file: {}\n"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1098
+msgid "No such config file: {}\n"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1192
+msgid "Sorry, an internal error occurred:\n{}"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1195
+msgid "An unknown problem occurred (UI code)"
+msgstr ""
+
+#: source_files/obsidian_main/m_about.cc:160
+msgid "About OBSIDIAN"
+msgstr ""
+
+#: source_files/obsidian_main/m_addons.cc:466
+msgid "No Addons Found!"
+msgstr ""
+
+#: source_files/obsidian_main/m_addons.cc:503
+msgid "Changes require a restart"
+msgstr ""
+
+#: source_files/obsidian_main/m_addons.cc:635
+msgid "OBSIDIAN Addons"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:213
+msgid "OBSIDIAN - Error Message"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:235
+msgid "Select output file"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:261
+msgid "Unable to create the file:\n\n%s"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:301
+msgid "Enter New Seed Number:"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:437
+msgid "Save"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:449
+msgid "Copy"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:580
+msgid "Pick file to save to"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:595
+msgid "Unable to save the file:\n\n%s"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:619
+msgid "Unable to save the file:\n\n%s"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:633
+msgid "OBSIDIAN Log Viewer"
+msgstr ""
+
+#: source_files/obsidian_main/m_lua.cc:1358
+msgid "Script Error: %s"
+msgstr ""
+
+#: source_files/obsidian_main/m_lua.cc:1675
+msgid "Script Error"
+msgstr ""
+
+#: source_files/obsidian_main/m_lua.cc:1684
+msgid "Script Error"
+msgstr ""
+
+#: source_files/obsidian_main/m_lua.cc:1702
+msgid "Cancelled"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:322
+msgid "CURRENT SETTINGS"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:336
+msgid "Pick file to save to"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:348
+msgid "Unable to save the file:\n\n%s"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:382
+msgid "Error writing to file."
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:384
+msgid "Unable to save the file:\n\n%s"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:444
+msgid "Select file to load"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:465
+msgid "Unable to load the file:\n\n%s"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:487
+msgid "Cannot open: %s\n\n%s"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:495
+msgid "No config found in file."
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:520
+msgid "PASTED TEXT"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:707
+msgid "Load"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:717
+msgid "(can be WAD or PAK)"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:722
+msgid "Recent"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:734
+msgid "Save"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:744
+msgid "Use"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:753
+msgid "Note: this will replace\nall current settings!"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:783
+msgid " Clipboard Operations"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:794
+msgid "Cut"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:806
+msgid "Copy"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:818
+msgid "Paste"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:846
+msgid "OBSIDIAN Config Manager"
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:198
+msgid "AUTO"
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:328
+msgid "Enter Custom Prefix Format:"
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:359
+msgid "Language: "
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:373
+msgid "Filename Prefix: "
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:377
+msgid "Date and Time|Number of Levels|Game|Theme|Version|Custom|Nothing"
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:387
+msgid "Set Custom Prefix..."
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:403
+msgid " Create Backups"
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:413
+msgid " Overwrite File Warning"
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:423
+msgid " Debugging Messages"
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:433
+msgid " Ignore Slider Limits"
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:466
+msgid "Note: some options require a restart."
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:503
+msgid "OBSIDIAN Misc Options"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:46
+msgid "Select output file"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:68
+msgid "Unable to create the file:\n\n%s"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:107
+msgid "Select Theme file to load"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:123
+msgid "Unable to load the file:\n\n%s"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1510
+msgid "Window Scaling: "
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1512
+msgid "AUTO|Tiny|Small|Medium|Large|Huge"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1524
+msgid "Font Size: "
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1541
+msgid "Font: "
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1557
+msgid "Widget Theme: "
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1559
+msgid "Default|Gleam|Win95|Plastic"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1571
+msgid "Box Theme: "
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1573
+msgid "Default|Shadow|Embossed|Engraved|Inverted|Raised"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1585
+msgid "Button Theme: "
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1587
+msgid "Default|Raised|Engraved|Embossed|Flat"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1599
+msgid "Color Scheme: "
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1601
+msgid "Default|Custom"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1612
+msgid "Panel Font"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1622
+msgid "Button Font"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1632
+msgid "Panels"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1642
+msgid "Highlights"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1653
+msgid "Buttons"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1664
+msgid "Gradient"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1675
+msgid "Borders"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1686
+msgid "Gaps"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1699
+msgid " Use System Fonts (disables bundled fonts)"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1709
+msgid " Single Pane Mode"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1719
+msgid "Load Defaults"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1729
+msgid "Load Theme"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1740
+msgid "Save Theme"
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1776
+msgid "Note: Some options require a restart."
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1813
+msgid "OBSIDIAN Theme Options"
+msgstr ""
+
+#: source_files/obsidian_main/m_trans.cc:52
+msgid "AUTO"
+msgstr ""
+
+#: source_files/obsidian_main/ui_build.cc:66
+msgid "Ready to go!"
+msgstr ""
+
+#: source_files/obsidian_main/ui_build.cc:220
+msgid "Plan"
+msgstr ""
+
+#: source_files/obsidian_main/ui_build.cc:314
+msgid "Plan"
+msgstr ""
+
+#: source_files/obsidian_main/ui_build.cc:315
+msgid "Rooms"
+msgstr ""
+
+#: source_files/obsidian_main/ui_build.cc:316
+msgid "Mons"
+msgstr ""
+
+#: source_files/obsidian_main/ui_game.cc:49
+msgid "Game Settings"
+msgstr ""
+
+#: source_files/obsidian_main/ui_game.cc:61
+msgid "Game: "
+msgstr ""
+
+#: source_files/obsidian_main/ui_game.cc:71
+msgid "Engine: "
+msgstr ""
+
+#: source_files/obsidian_main/ui_game.cc:84
+msgid "Length: "
+msgstr ""
+
+#: source_files/obsidian_main/ui_game.cc:97
+msgid "Theme: "
+msgstr ""
+
+#: source_files/obsidian_main/ui_game.cc:109
+msgid "Build"
+msgstr ""
+
+#: source_files/obsidian_main/ui_game.cc:120
+msgid "Quit"
+msgstr ""
+
+#: source_files/obsidian_main/ui_game.cc:306
+msgid "Cancel"
+msgstr ""
+
+#: source_files/obsidian_main/ui_game.cc:314
+msgid "Quit"
+msgstr ""
+
+#: source_files/obsidian_main/ui_module.cc:685
+msgid "Enter Value:"
+msgstr ""

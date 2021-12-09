@@ -1073,13 +1073,13 @@ void Trans_SetLanguage() {
     }
 
     // see if the translation file exists
-    std::string path = fmt::format("{}/language/{}.po", install_dir, langcode);
+    std::string path = fmt::format("{}/language/{}.po", install_dir.string(), langcode);
 
     if (!std::filesystem::exists(path)) {
         // if language has a territory field (like zh_TW or en_AU) then
         // try again with the plain language code.
 
-        path = fmt::format("{}/language/{}.po", install_dir, lang_plain);
+        path = fmt::format("{}/language/{}.po", install_dir.string(), lang_plain);
     }
 
     FILE *fp = fopen(path.c_str(), "rb");
