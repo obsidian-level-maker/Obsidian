@@ -33,6 +33,7 @@ HACX.MATERIALS =
   
   _SMLDOOR  = { t="BIGDOOR1", f="RROCK03" }, -- Open says me
   _BIGDOOR = { t="BIGDOOR2", f="RROCK03" },
+  _TALDOOR  = { t="BIGDOOR1", f="RROCK03" },
   _DORRAIL = { t="HW209", f="RROCK03" }, -- Inner door slider thingys
   
   _NPIC    = { t="HW223", f="RROCK03"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide x 128 high

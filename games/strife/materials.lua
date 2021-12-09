@@ -40,6 +40,7 @@ STRIFE.MATERIALS =
    
  _SMLDOOR  = { t="DORWS02", f="F_UNDOOR" }, -- Open says me
  _BIGDOOR = { t="DORWL01", f="F_UNDOOR" },
+ _TALDOOR = { t="DORMS01", f="F_UNDOOR" },
  _DORRAIL = { t="DORTRK02", f="F_UNDOOR"}, -- Inner door slider thingys
  
  _NPIC    = { t="BRNSCN02", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide

@@ -428,6 +428,21 @@ function CTL_DOOM.weapon_setup(self)
       PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name) 
     end
 
+    if opt.name == "float_saw" then 
+      if PARAM["float_saw"] and PARAM["float_saw"] ~= "Default" then
+        local info = GAME.NICE_ITEMS.saw
+        local mult = PARAM["float_saw"] or 0
+  
+        if info.add_prob then info.add_prob = info.add_prob * mult end
+        if info.start_prob then info.start_prob = info.start_prob * mult end
+        if info.crazy_prob then info.crazy_prob = info.crazy_prob * mult end
+        if info.closet_prob then info.closet_prob = info.closet_prob * mult end
+        if info.secret_prob then info.secret_prob = info.secret_prob * mult end
+        if info.storage_prob then info.storage_prob = info.storage_prob * mult end
+      end    
+      goto skip
+    end
+
     local W = GAME.WEAPONS[string.sub(opt.name, 7)] -- Strip the float_ prefix from the weapon name for table lookup
 
     if W and PARAM[opt.name] ~= "Default" then
@@ -437,6 +452,9 @@ function CTL_DOOM.weapon_setup(self)
       -- loosen some of the normal restrictions
       W.level = 1
     end
+
+    ::skip::
+
   end -- for opt
 
   -- specific instructions for the weapon_pref choices
@@ -481,6 +499,26 @@ OB_MODULES["doom_weapon_control"] =
 
   options =
   {
+    float_saw=
+    {
+     name = "float_saw",
+     label = _("Chainsaw"),
+     valuator = "slider",
+     units = "",
+     min = 0,
+     max = 10,
+     increment = .02,
+     default = "Default",
+     nan = "Default,", 
+     presets = "0:0 (None)," ..
+     ".02:0.02 (Scarce)," ..
+     ".14:0.14 (Less)," ..
+     ".5:0.5 (Plenty)," ..
+     "1.2:1.2 (More)," ..
+     "3:3 (Heaps)," ..
+     "10:10 (I LOVE IT),",
+    },
+
      float_shotty=
      {
       label = _("Shotgun"),

@@ -534,6 +534,27 @@ function Monster_zone_palettes()
     local pal   = generate_palette(LEVEL.global_pal)
     local tough = palette_toughness(pal)
 
+    -- Check for monsters that we don't want spawning outdoors/with open sky - Dasho
+
+    local has_sky = false
+
+    for _,zone_room in pairs(LEVEL.zones[i].rooms) do
+      if zone_room.is_outdoor == true then
+        has_sky = true
+        goto skyfound
+      end
+    end
+
+    ::skyfound::
+
+    if has_sky == true then 
+      for monster, _ in pairs(pal) do
+        if GAME.MONSTERS[monster].indoor_only and GAME.MONSTERS[monster].indoor_only == true then
+          pal[monster] = 0
+        end
+      end
+    end   
+
     zone_pals[i] = { pal=pal, tough=tough }
   end
 

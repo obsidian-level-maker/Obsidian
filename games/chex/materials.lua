@@ -31,8 +31,9 @@ CHEX3.MATERIALS =
   _CRATE2  = { t="CRATE2",   f="CRATOP1" },
   _CRATWID = { t="CRATWIDE", f="CRATOP1"}, -- Wide crate
     
-  _SMLDOOR = { t="SP_DUDE4", f="STEP1" }, -- 64 units wide, varying height (Chex Quest will probably require a lot of offset trickery)
-  _BIGDOOR = { t="BIGDOOR1", f="FLAT5_6" },
+  _SMLDOOR = { t="SP_DUDE4", f="STEP1" }, -- 64 units wide, around 64 high (Chex Quest will probably require a lot of offset trickery)
+  _BIGDOOR = { t="BIGDOOR1", f="FLAT5_6" }, -- 128x128
+  _TALDOOR = { t="SP_DUDE4", f="STEP1" },
   _DORRAIL = { t="COMPSTA1", f="STEP1"}, -- Inner door slider thingys
   
   _NPIC    = { t="FIREWALL", f="XX"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide

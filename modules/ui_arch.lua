@@ -65,7 +65,7 @@ function UI_ARCH.setup(self)
   -- these parameters have to be instantiated in this hook
   -- because begin_level happens *after* level size decisions
   for _,opt in pairs(self.options) do
-    if OB_CONFIG.batch_mode == "yes" then
+    if OB_CONFIG.batch == "yes" then
       if not PARAM[opt.name] then
         PARAM[opt.name] = opt.default
       end
@@ -81,7 +81,7 @@ function UI_ARCH.setup(self)
   end
   
   if OB_CONFIG.engine ~= "vanilla" then
-    if OB_CONFIG.batch_mode == "yes" or type(PARAM.float_size) ~= "string" then
+    if OB_CONFIG.batch == "yes" or type(PARAM.float_size) ~= "string" then
       SEED_W = 90
       SEED_H = 90
     else
