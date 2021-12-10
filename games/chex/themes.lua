@@ -148,8 +148,7 @@ CHEX3.THEMES =
 
     fences =
     {
-      GSTVINE1 = 30,
-      MIDVINE1 = 10
+      LITE4_RAIL = 30,
     },
 
     cage_mats =
@@ -228,8 +227,7 @@ CHEX3.THEMES =
 
     scenic_fences =
     {
-      VINE1 = 80,
-      VINE2 = 20
+      LITE4_RAIL = 30,
     },
 
     sink_style =
@@ -531,10 +529,9 @@ CHEX3.THEMES =
 
     ceil_light_prob = 70,
 
-    scenic_fences =
+    fences =
     {
-      VINE1 = 80,
-      VINE2 = 20
+      LITE4_RAIL = 30,
     },
 
     sink_style =
