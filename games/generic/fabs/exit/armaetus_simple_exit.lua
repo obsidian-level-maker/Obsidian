@@ -15,6 +15,10 @@ PREFABS.Exit_simple_exit =
 
   x_fit  = "frame",
   y_fit  = "top",
+  forced_offsets =
+  {
+    [31] = { x=0, y=16 }
+  }
 }
 
 PREFABS.Exit_simple_exit_chex3 = 

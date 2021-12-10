@@ -136,9 +136,11 @@ end
 
 OB_ENGINES["edge"] =
 {
-  label = _("EDGE (Experimental)"),
+  label = _("EDGE-Classic"),
 
   extends = "advanced",
+
+  priority = 95,
 
   game = { doom1=1, doom2=1, hacx=1, harmony=1 },
 
