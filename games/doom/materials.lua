@@ -721,6 +721,9 @@ DOOM.MATERIALS =
   XG19  = { t="G19", f="G19" },
   XGRAY1  = { t="GRAY1", f="GRAY1" },
 
+  XFWATER = { t="FWATER1", f="FWATER1" },
+  XNUKAGE = { t="NUKAGE1", f="NUKAGE1" },
+
   -- Allows compatibility with Egypt theme prefabs (if Prefabs are set to not match Theme)
   MURAL2   = { t="MARBFAC3",   f="FLAT1_1" },
   BIGMURAL = { t="STARTAN3",   f="FLAT1_1" },
