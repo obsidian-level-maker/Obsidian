@@ -27,3 +27,15 @@ PREFABS.Decor_gtd_water_purifier_limit =
   line_426 = 0,
   line_428 = 0
 }
+
+--
+
+PREFABS.Decor_gtd_water_purifier_tank =
+{
+  template = "Decor_gtd_water_purifier",
+  map = "MAP02",
+
+  size = 36,
+
+  z_fit = "top"
+}
