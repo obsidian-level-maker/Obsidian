@@ -239,8 +239,9 @@ namelib.NAMES =
 
         -- OwO what's this? More from Armaetus?!
         -- Just straight up weird or funny, rarely chosen though. Some memey stuff present!
+        ["A Stupid Level Name"]=2,
         ["Another Generated Map"]=2,
-        ["I Accidentally Hotel Doom"]=2, -- YouTube "I Accidentally Hotel Mario"
+        ["Comment Ninja"]=2,
         ["It's Been One of Those Days"]=2, -- See above
         ["Hetfield's Inflated Ego"]=2,
         ["lol"]=2,
@@ -248,7 +249,6 @@ namelib.NAMES =
         ["OH NOES"]=2,
         ["OwO"]=2,
         ["Phobos and Deimos Kissfest"]=2,
-        ["Reverse Cowgirl with a PC"]=2, -- YouTube "Reverse Cowgirl with a CD-I"
         ["Romero's Oversized Mindset"]=2,
         ["Take It Like a Man"]=2,
         ["The Trail to the Toilet"]=2, -- In-joke with Obsidian team, I blame Shooter for this lol
@@ -3005,7 +3005,54 @@ namelib.NAMES =
 
         -- MSSP adds more names as well
         ["Damned Demon Destruction"]=10, -- Demios
-        ["Nothing Personnel"]=10
+        ["Nothing Personnel"]=10,
+
+        -- End of 2021 additions by Armaetus
+        ["A Weeping Statue"]=10,
+        ["As Shade Falls Upon Thee"]=10,
+        ["As The Candle Fades"]=10,
+        ["Ashes and Remembrance"]=10,
+        ["Ballad of Fog"]=10,
+        ["Bereavement of Earth"]=10,
+        ["Broken Future"]=10,
+        ["Cathedris Titanus Ruina"]=10,
+        ["Concrete and Twisted Metal"]=10,
+        ["Could it Get Worse?"]=10,
+        ["Dawn's Covenant"]=10,
+        ["Death Tally: Billions"]=10,
+        ["Discarded Kevlar"]=10,
+        ["Embracing Silent Death"]=10,
+        ["Empty Streets"]=10,
+        ["Fading From Existence"]=10,
+        ["Flatline Earth"]=10,
+        ["Her Silence is Telling Us"]=10,
+        ["Hunted Like Dogs"]=10,
+        ["Hunkered Down"]=10,
+        ["Induced Self-Destruction"]=10,
+        ["Lights That Lead"]=10,
+        ["Nameless Seeker"]=10,
+        ["Of Dust And Ash"]=10,
+        ["On Scorched Grounds"]=10,
+        ["Only Silent Skies"]=10,
+        ["Permanent Blackout"]=10,
+        ["Raindrops and Ashfall"]=10,
+        ["Reach For The Stars"]=10,
+        ["Requiem For The Planet"]=10,
+        ["Scattered To The Winds"]=10,
+        ["Seeing Dark Skies"]=10,
+        ["Shrouded Hopelessness"]=10,
+        ["Stardrifter"]=10,
+        ["Take Us Away"]=10,
+        ["That Special City.."]=10,
+        ["The Hobo's Den"]=10,
+        ["The Memories of Life"]=10,
+        ["The Ravens Come To Us"]=10,
+        ["The Skyward Gaze"]=10,
+        ["The Slow Death"]=10,
+        ["The Walls Whisper My Name"]=10,
+        ["Urban Hellscape"]=10,
+        ["Weaponized Despair"]=10,
+        ["World of Shit"]=10
       }
     }
   },
