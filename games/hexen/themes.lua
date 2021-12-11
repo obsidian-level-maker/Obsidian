@@ -105,6 +105,7 @@ HEXEN.THEMES =
       fence_groups =
       {
         PLAIN = 50,
+        crenels = 12,
       },
 
       beam_groups =
@@ -112,9 +113,44 @@ HEXEN.THEMES =
         beam_metal = 50,
       },
 
+      narrow_halls =
+      {
+        vent = 50,
+      },
+  
+      wide_halls =
+      {
+        curve = 50,
+        deuce = 50,
+      },
+
+      window_groups = 
+      {
+        straddle = 70,
+        tall   = 80,
+        grate  = 45,
+        barred = 10,
+        supertall = 60,
+        slits = 20,
+        pillbox = 20,
+        slumpish = 30,
+      },
+
       wall_groups =
       {
         PLAIN = 0.01,
+        low_gap = 10,
+        low_gap2 = 10,
+        mid_band = 10,
+        lite1 = 20,
+        lite2 = 20,
+        torches1 = 12,
+        torches2 = 12,
+        high_gap = 25,
+        vert_gap = 25,
+        wallgutters = 10,
+        lamptorch = 16,
+        runic = 10,
       },
 
       fences =
