@@ -51,100 +51,102 @@
 #
 ################################################################################
 
-macro (CREATE_EXAMPLE NAME SOURCES LIBRARIES)
+macro(CREATE_EXAMPLE NAME SOURCES LIBRARIES)
 
-  set (srcs)                    # source files
-  set (flsrcs)                  # fluid source (.fl) files
-  set (TARGET_NAME ${NAME})     # CMake target name
-  set (ICON_NAME)               # macOS icon (max. one)
-  set (PLIST)                   # macOS .plist file (max. one)
-  set (ICON_PATH)               # macOS icon resource path
+  set(srcs)                    # source files
+  set(flsrcs)                  # fluid source (.fl) files
+  set(TARGET_NAME ${NAME})     # CMake target name
+  set(ICON_NAME)               # macOS icon (max. one)
+  set(PLIST)                   # macOS .plist file (max. one)
+  set(ICON_PATH)               # macOS icon resource path
 
   # create macOS bundle? 0 = no, 1 = yes
 
-  if (APPLE AND (NOT OPTION_APPLE_X11))
-    set (MAC_BUNDLE 1)
-  else ()
-    set (MAC_BUNDLE 0)
-  endif (APPLE AND (NOT OPTION_APPLE_X11))
+  if(APPLE AND (NOT OPTION_APPLE_X11))
+    set(MAC_BUNDLE 1)
+  else()
+    set(MAC_BUNDLE 0)
+  endif(APPLE AND (NOT OPTION_APPLE_X11))
 
   # rename target name "help" (reserved since CMake 2.8.12)
   # FIXME: not necessary in FLTK 1.4 but left for compatibility (06/2020)
 
-  if (${TARGET_NAME} STREQUAL "help")
-    set (TARGET_NAME "test_help")
-  endif (${TARGET_NAME} STREQUAL "help")
+  if(${TARGET_NAME} STREQUAL "help")
+    set(TARGET_NAME "test_help")
+  endif(${TARGET_NAME} STREQUAL "help")
 
   # filter input files for different handling (fluid, icon, plist, source)
 
-  foreach (src ${SOURCES})
-    if ("${src}" MATCHES "\\.fl$")
-      list (APPEND flsrcs ${src})
-    elseif ("${src}" MATCHES "\\.icns$")
-      set (ICON_NAME "${src}")
-    elseif ("${src}" MATCHES "\\.plist$")
-      set (PLIST "${src}")
-    else ()
-      list (APPEND srcs ${src})
-    endif ("${src}" MATCHES "\\.fl$")
-  endforeach (src)
+  foreach(src ${SOURCES})
+    if("${src}" MATCHES "\\.fl$")
+      list(APPEND flsrcs ${src})
+    elseif("${src}" MATCHES "\\.icns$")
+      set(ICON_NAME "${src}")
+    elseif("${src}" MATCHES "\\.plist$")
+      set(PLIST "${src}")
+    else()
+      list(APPEND srcs ${src})
+    endif("${src}" MATCHES "\\.fl$")
+  endforeach(src)
 
   # generate source files from .fl files, add output to sources
 
-  if (flsrcs)
-    FLTK_RUN_FLUID (FLUID_SOURCES "${flsrcs}")
-    list (APPEND srcs ${FLUID_SOURCES})
-    unset (FLUID_SOURCES)
-  endif (flsrcs)
+  if(flsrcs)
+    fltk_run_fluid(FLUID_SOURCES "${flsrcs}")
+    list(APPEND srcs ${FLUID_SOURCES})
+    unset(FLUID_SOURCES)
+  endif(flsrcs)
 
   # set macOS (icon) resource path if applicable
 
-  if (MAC_BUNDLE AND ICON_NAME)
-    set (ICON_PATH "${CMAKE_CURRENT_SOURCE_DIR}/mac-resources/${ICON_NAME}")
-  endif (MAC_BUNDLE AND ICON_NAME)
+  if(MAC_BUNDLE AND ICON_NAME)
+    set(ICON_PATH "${CMAKE_CURRENT_SOURCE_DIR}/mac-resources/${ICON_NAME}")
+  endif(MAC_BUNDLE AND ICON_NAME)
 
   ##############################################################################
   # add executable target and set properties (all platforms)
   ##############################################################################
 
-  if (MAC_BUNDLE)
-    add_executable        (${TARGET_NAME} MACOSX_BUNDLE ${srcs} ${ICON_PATH})
-  else ()
-    add_executable        (${TARGET_NAME} WIN32 ${srcs} ${ICON_PATH})
-  endif (MAC_BUNDLE)
+  if(MAC_BUNDLE)
+    add_executable(${TARGET_NAME} MACOSX_BUNDLE ${srcs} ${ICON_PATH})
+  else()
+    add_executable(${TARGET_NAME} WIN32 ${srcs} ${ICON_PATH})
+  endif(MAC_BUNDLE)
 
-  set_target_properties   (${TARGET_NAME} PROPERTIES OUTPUT_NAME ${NAME})
-  target_link_libraries   (${TARGET_NAME} ${LIBRARIES})
+  set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME ${NAME})
+  target_link_libraries(${TARGET_NAME} ${LIBRARIES})
 
-  if (FLTK_HAVE_CAIRO)
-    if (CMAKE_VERSION VERSION_LESS "3.13")
-      link_directories    (${PKG_CAIRO_LIBRARY_DIRS})
+  if(FLTK_HAVE_CAIRO)
+    if(CMAKE_VERSION VERSION_LESS "3.13")
+      link_directories(${PKG_CAIRO_LIBRARY_DIRS})
     else()
-      target_link_directories (${TARGET_NAME} PRIVATE ${PKG_CAIRO_LIBRARY_DIRS})
+      target_link_directories(${TARGET_NAME} PRIVATE ${PKG_CAIRO_LIBRARY_DIRS})
     endif()
-  endif (FLTK_HAVE_CAIRO)
+  endif(FLTK_HAVE_CAIRO)
 
-  if (ICON_PATH)
-    set_target_properties (${TARGET_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE ${ICON_NAME})
-    set_target_properties (${TARGET_NAME} PROPERTIES RESOURCE ${ICON_PATH})
-  endif (ICON_PATH)
+  if(ICON_PATH)
+    set_target_properties(${TARGET_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE ${ICON_NAME})
+    set_target_properties(${TARGET_NAME} PROPERTIES RESOURCE ${ICON_PATH})
+  endif(ICON_PATH)
 
-  if (PLIST)
-    set_target_properties (${TARGET_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST
-                           "${CMAKE_CURRENT_SOURCE_DIR}/mac-resources/${PLIST}")
-  elseif (MAC_BUNDLE)
-    set_target_properties (${TARGET_NAME} PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "${TARGET_NAME}")
-    set_target_properties (${TARGET_NAME} PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.fltk.${TARGET_NAME}")
-  endif ()
+  if(PLIST)
+    set_target_properties(
+      ${TARGET_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST
+      "${CMAKE_CURRENT_SOURCE_DIR}/mac-resources/${PLIST}"
+    )
+  elseif(MAC_BUNDLE)
+    set_target_properties(${TARGET_NAME} PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "${TARGET_NAME}")
+    set_target_properties(${TARGET_NAME} PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.fltk.${TARGET_NAME}")
+  endif()
 
   ##############################################################################
   # Copy macOS "bundle wrapper" (shell script) to target directory.
   # The "custom command" will be executed "POST_BUILD".
   ##############################################################################
 
-  if (MAC_BUNDLE)
-    set (WRAPPER "${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/${TARGET_NAME}")
-    add_custom_command (
+  if(MAC_BUNDLE)
+    set(WRAPPER "${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/${TARGET_NAME}")
+    add_custom_command(
       TARGET ${TARGET_NAME} POST_BUILD
       COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/../CMake/macOS-bundle-wrapper.in ${WRAPPER}
       COMMAND chmod u+x,g+x,o+x ${WRAPPER}
@@ -152,19 +154,19 @@ macro (CREATE_EXAMPLE NAME SOURCES LIBRARIES)
       # COMMENT "Creating macOS bundle wrapper script ${WRAPPER}"
       VERBATIM
     )
-    unset (WRAPPER)
-  endif (MAC_BUNDLE)
+    unset(WRAPPER)
+  endif(MAC_BUNDLE)
 
   ######################################################################
   # Parse optional fourth argument "ANDROID_OK", see description above.
   ######################################################################
 
-  if (${ARGC} GREATER 3)
-    foreach (OPTION ${ARGV3})
-      if (${OPTION} STREQUAL "ANDROID_OK" AND OPTION_CREATE_ANDROID_STUDIO_IDE)
-        CREATE_ANDROID_IDE_FOR_TEST (${NAME} ${SOURCES} ${LIBRARIES})
-      endif ()
-    endforeach ()
-  endif ()
+  if(${ARGC} GREATER 3)
+    foreach(OPTION ${ARGV3})
+      if(${OPTION} STREQUAL "ANDROID_OK" AND OPTION_CREATE_ANDROID_STUDIO_IDE)
+        create_android_ide_for_test(${NAME} ${SOURCES} ${LIBRARIES})
+      endif()
+    endforeach()
+  endif()
 
-endmacro (CREATE_EXAMPLE NAME SOURCES LIBRARIES)
+endmacro(CREATE_EXAMPLE NAME SOURCES LIBRARIES)

@@ -2715,7 +2715,7 @@ static void WriteFraggleScript() {
                 continue;
             }
 
-            HeaderPrintf("  spawn(%s, %d, %d, %d, %d);\n", thing.fs_name,
+            HeaderPrintf("  spawn(%s, %d, %d, %d, %d);\n", thing.fs_name.c_str(),
                          thing.x, thing.y, thing.angle, thing.z);
         }
 

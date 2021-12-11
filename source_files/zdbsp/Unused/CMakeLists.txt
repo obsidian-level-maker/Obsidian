@@ -9,12 +9,13 @@ include(CheckCXXCompilerFlag)
 project(ZDBSP)
 
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE
-      Debug
-      CACHE
-        STRING
-        "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel."
-        FORCE
+  set(
+    CMAKE_BUILD_TYPE
+    Debug
+    CACHE
+    STRING
+    "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel."
+    FORCE
   )
 endif(NOT CMAKE_BUILD_TYPE)
 
@@ -38,43 +39,49 @@ endif(CMAKE_SIZEOF_VOID_P MATCHES "4")
 
 if(SSE_MATTERS)
   if(WIN32)
-    set(BACKPATCH
-        1
-        CACHE BOOL "Enable backpatching."
+    set(
+      BACKPATCH
+      1
+      CACHE BOOL "Enable backpatching."
     )
   else(WIN32)
     check_function_exists(mprotect HAVE_MPROTECT)
     if(HAVE_MPROTECT)
-      set(BACKPATCH
-          1
-          CACHE BOOL "Enable backpatching."
+      set(
+        BACKPATCH
+        1
+        CACHE BOOL "Enable backpatching."
       )
     else(HAVE_MPROTECT)
       set(BACKPATCH 0)
     endif(HAVE_MPROTECT)
   endif(WIN32)
-  set(FULL_SSE2
-      0
-      CACHE BOOL "Use SSE2 math everywhere."
+  set(
+    FULL_SSE2
+    0
+    CACHE BOOL "Use SSE2 math everywhere."
   )
-  set(SSE
-      1
-      CACHE BOOL "Build SSE and SSE2 versions of key code."
+  set(
+    SSE
+    1
+    CACHE BOOL "Build SSE and SSE2 versions of key code."
   )
 else(SSE_MATTERS)
   set(BACKPATCH 0)
 endif(SSE_MATTERS)
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-  set(GPROF
-      0
-      CACHE
-        BOOL
-        "Enable profiling with gprof for Debug and RelWithDebInfo build types."
+  set(
+    GPROF
+    0
+    CACHE
+    BOOL
+    "Enable profiling with gprof for Debug and RelWithDebInfo build types."
   )
-  set(PROFILE
-      0
-      CACHE INT "1=Generate profile coverage info, 2=Use it"
+  set(
+    PROFILE
+    0
+    CACHE INT "1=Generate profile coverage info, 2=Use it"
   )
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
@@ -98,18 +105,22 @@ if(MSVC)
   # The CMake configurations set /GR and /MD by default, which conflict with our
   # settings.
   string(REPLACE "/MD " " " CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
-  string(REPLACE "/MD " " " CMAKE_CXX_FLAGS_MINSIZEREL
-                 ${CMAKE_CXX_FLAGS_MINSIZEREL}
+  string(
+    REPLACE "/MD " " " CMAKE_CXX_FLAGS_MINSIZEREL
+    ${CMAKE_CXX_FLAGS_MINSIZEREL}
   )
-  string(REPLACE "/MD " " " CMAKE_CXX_FLAGS_RELWITHDEBINFO
-                 ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}
+  string(
+    REPLACE "/MD " " " CMAKE_CXX_FLAGS_RELWITHDEBINFO
+    ${CMAKE_CXX_FLAGS_RELWITHDEBINFO}
   )
   string(REPLACE "/MD " " " CMAKE_C_FLAGS_RELEASE ${CMAKE_C_FLAGS_RELEASE})
-  string(REPLACE "/MD " " " CMAKE_C_FLAGS_MINSIZEREL
-                 ${CMAKE_C_FLAGS_MINSIZEREL}
+  string(
+    REPLACE "/MD " " " CMAKE_C_FLAGS_MINSIZEREL
+    ${CMAKE_C_FLAGS_MINSIZEREL}
   )
-  string(REPLACE "/MD " " " CMAKE_C_FLAGS_RELWITHDEBINFO
-                 ${CMAKE_C_FLAGS_RELWITHDEBINFO}
+  string(
+    REPLACE "/MD " " " CMAKE_C_FLAGS_RELWITHDEBINFO
+    ${CMAKE_C_FLAGS_RELWITHDEBINFO}
   )
   string(REPLACE " /GR" " " CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 endif(MSVC)
@@ -160,21 +171,22 @@ if(NOT STRNICMP_EXISTS)
 endif(NOT STRNICMP_EXISTS)
 
 set(ZDBSP_LIBS "${ZLIB_LIBRARIES}")
-set(SOURCES
-    main.cpp
-    getopt.c
-    getopt1.c
-    blockmapbuilder.cpp
-    processor.cpp
-    processor_udmf.cpp
-    sc_man.cpp
-    wad.cpp
-    nodebuild.cpp
-    nodebuild_events.cpp
-    nodebuild_extract.cpp
-    nodebuild_gl.cpp
-    nodebuild_utility.cpp
-    nodebuild_classify_nosse2.cpp
+set(
+  SOURCES
+  main.cpp
+  getopt.c
+  getopt1.c
+  blockmapbuilder.cpp
+  processor.cpp
+  processor_udmf.cpp
+  sc_man.cpp
+  wad.cpp
+  nodebuild.cpp
+  nodebuild_events.cpp
+  nodebuild_extract.cpp
+  nodebuild_gl.cpp
+  nodebuild_utility.cpp
+  nodebuild_classify_nosse2.cpp
 )
 if(WIN32)
   set(SOURCES "${SOURCES}" view.cpp)
@@ -182,20 +194,21 @@ else(WIN32)
   add_definitions(-DNO_MAP_VIEWER)
 endif(WIN32)
 
-set(HEADERS
-    blockmapbuilder.h
-    doomdata.h
-    getopt.h
-    nodebuild.h
-    processor.h
-    resource.h
-    sc_man.h
-    tarray.h
-    templates.h
-    wad.h
-    workdata.h
-    zdbsp.h
-    xs_Float.h
+set(
+  HEADERS
+  blockmapbuilder.h
+  doomdata.h
+  getopt.h
+  nodebuild.h
+  processor.h
+  resource.h
+  sc_man.h
+  tarray.h
+  templates.h
+  wad.h
+  workdata.h
+  zdbsp.h
+  xs_Float.h
 )
 
 if(SSE_MATTERS)
@@ -207,15 +220,12 @@ if(SSE_MATTERS)
   else(FULL_SSE2)
     if(SSE)
       message(STATUS "Using SSE math for ClassifyLine only.")
-      set(SOURCES ${SOURCES} nodebuild_classify_sse1.cpp
-                  nodebuild_classify_sse2.cpp
+      set(
+        SOURCES ${SOURCES} nodebuild_classify_sse1.cpp
+        nodebuild_classify_sse2.cpp
       )
-      set_source_files_properties(
-        nodebuild_classify_sse1.cpp PROPERTIES COMPILE_FLAGS "${SSE1_ENABLE}"
-      )
-      set_source_files_properties(
-        nodebuild_classify_sse2.cpp PROPERTIES COMPILE_FLAGS "${SSE2_ENABLE}"
-      )
+      set_source_files_properties(nodebuild_classify_sse1.cpp PROPERTIES COMPILE_FLAGS "${SSE1_ENABLE}")
+      set_source_files_properties(nodebuild_classify_sse2.cpp PROPERTIES COMPILE_FLAGS "${SSE2_ENABLE}")
     else(SSE)
       message(STATUS "SSE math is completely disabled.")
       set(ALL_C_FLAGS "${ALL_C_FLAGS} -DDISABLE_SSE")
@@ -233,7 +243,7 @@ if(WIN32)
     add_custom_command(
       OUTPUT zdbsp-rc.o
       COMMAND ${CMAKE_RC_COMPILER} -o zdbsp-rc.o -i
-              ${CMAKE_CURRENT_SOURCE_DIR}/resource.rc
+      ${CMAKE_CURRENT_SOURCE_DIR}/resource.rc
       DEPENDS resource.rc
     )
     set(SOURCES ${SOURCES} zdbsp-rc.o)
@@ -242,29 +252,34 @@ if(WIN32)
   endif(CMAKE_COMPILER_IS_GNUCXX)
 endif(WIN32)
 
-set(CMAKE_EXE_LINKER_FLAGS_RELEASE
-    "${CMAKE_EXE_LINKER_FLAGS_RELEASE} ${REL_LINKER_FLAGS}"
+set(
+  CMAKE_EXE_LINKER_FLAGS_RELEASE
+  "${CMAKE_EXE_LINKER_FLAGS_RELEASE} ${REL_LINKER_FLAGS}"
 )
-set(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL
-    "${CMAKE_EXE_LINKER_FLAGS_MINSIZEREL} ${REL_LINKER_FLAGS}"
+set(
+  CMAKE_EXE_LINKER_FLAGS_MINSIZEREL
+  "${CMAKE_EXE_LINKER_FLAGS_MINSIZEREL} ${REL_LINKER_FLAGS}"
 )
-set(CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO
-    "${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO} ${REL_LINKER_FLAGS}"
+set(
+  CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO
+  "${CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO} ${REL_LINKER_FLAGS}"
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ALL_C_FLAGS}")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} ${REL_C_FLAGS}")
 set(CMAKE_C_FLAGS_MINSIZEREL "${CMAKE_C_FLAGS_MINSIZEREL} ${REL_C_FLAGS}")
-set(CMAKE_C_FLAGS_RELWITHDEBINFO
-    "${CMAKE_C_FLAGS_RELWITHDEBINFO} ${REL_C_FLAGS}"
+set(
+  CMAKE_C_FLAGS_RELWITHDEBINFO
+  "${CMAKE_C_FLAGS_RELWITHDEBINFO} ${REL_C_FLAGS}"
 )
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${DEB_C_FLAGS} -D_DEBUG")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ALL_C_FLAGS}")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${REL_C_FLAGS}")
 set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} ${REL_C_FLAGS}")
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO
-    "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} ${REL_C_FLAGS}"
+set(
+  CMAKE_CXX_FLAGS_RELWITHDEBINFO
+  "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} ${REL_C_FLAGS}"
 )
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${DEB_C_FLAGS} -D_DEBUG")
 

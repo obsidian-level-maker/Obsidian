@@ -8,25 +8,30 @@ set(VERSION "1.2.11")
 option(ASM686 "Enable building i686 assembly implementation")
 option(AMD64 "Enable building amd64 assembly implementation")
 
-set(INSTALL_BIN_DIR
-    "${CMAKE_INSTALL_PREFIX}/bin"
-    CACHE PATH "Installation directory for executables"
+set(
+  INSTALL_BIN_DIR
+  "${CMAKE_INSTALL_PREFIX}/bin"
+  CACHE PATH "Installation directory for executables"
 )
-set(INSTALL_LIB_DIR
-    "${CMAKE_INSTALL_PREFIX}/lib"
-    CACHE PATH "Installation directory for libraries"
+set(
+  INSTALL_LIB_DIR
+  "${CMAKE_INSTALL_PREFIX}/lib"
+  CACHE PATH "Installation directory for libraries"
 )
-set(INSTALL_INC_DIR
-    "${CMAKE_INSTALL_PREFIX}/include"
-    CACHE PATH "Installation directory for headers"
+set(
+  INSTALL_INC_DIR
+  "${CMAKE_INSTALL_PREFIX}/include"
+  CACHE PATH "Installation directory for headers"
 )
-set(INSTALL_MAN_DIR
-    "${CMAKE_INSTALL_PREFIX}/share/man"
-    CACHE PATH "Installation directory for manual pages"
+set(
+  INSTALL_MAN_DIR
+  "${CMAKE_INSTALL_PREFIX}/share/man"
+  CACHE PATH "Installation directory for manual pages"
 )
-set(INSTALL_PKGCONFIG_DIR
-    "${CMAKE_INSTALL_PREFIX}/share/pkgconfig"
-    CACHE PATH "Installation directory for pkgconfig (.pc) files"
+set(
+  INSTALL_PKGCONFIG_DIR
+  "${CMAKE_INSTALL_PREFIX}/share/pkgconfig"
+  CACHE PATH "Installation directory for pkgconfig (.pc) files"
 )
 
 include(CheckTypeSize)
@@ -86,14 +91,11 @@ if(NOT CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_CURRENT_BINARY_DIR)
   if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h)
     message(STATUS "Renaming")
     message(STATUS "    ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h")
-    message(
-      STATUS "to 'zconf.h.included' because this file is included with zlib"
-    )
-    message(
-      STATUS "but CMake generates it automatically in the build directory."
-    )
-    file(RENAME ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h
-         ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h.included
+    message(STATUS "to 'zconf.h.included' because this file is included with zlib")
+    message(STATUS "but CMake generates it automatically in the build directory.")
+    file(
+      RENAME ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h
+      ${CMAKE_CURRENT_SOURCE_DIR}/zconf.h.included
     )
   endif()
 endif()
@@ -111,38 +113,41 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_SOURCE_DIR})
 # ============================================================================
 
 set(ZLIB_PUBLIC_HDRS ${CMAKE_CURRENT_BINARY_DIR}/zconf.h zlib.h)
-set(ZLIB_PRIVATE_HDRS
-    crc32.h
-    deflate.h
-    gzguts.h
-    inffast.h
-    inffixed.h
-    inflate.h
-    inftrees.h
-    trees.h
-    zutil.h
+set(
+  ZLIB_PRIVATE_HDRS
+  crc32.h
+  deflate.h
+  gzguts.h
+  inffast.h
+  inffixed.h
+  inflate.h
+  inftrees.h
+  trees.h
+  zutil.h
 )
-set(ZLIB_SRCS
-    adler32.c
-    compress.c
-    crc32.c
-    deflate.c
-    gzclose.c
-    gzlib.c
-    gzread.c
-    gzwrite.c
-    inflate.c
-    infback.c
-    inftrees.c
-    inffast.c
-    trees.c
-    uncompr.c
-    zutil.c
+set(
+  ZLIB_SRCS
+  adler32.c
+  compress.c
+  crc32.c
+  deflate.c
+  gzclose.c
+  gzlib.c
+  gzread.c
+  gzwrite.c
+  inflate.c
+  infback.c
+  inftrees.c
+  inffast.c
+  trees.c
+  uncompr.c
+  zutil.c
 )
 
 if(NOT MINGW)
-  set(ZLIB_DLL_SRCS win32/zlib1.rc # If present will override custom build rule
-                                   # below.
+  set(
+    ZLIB_DLL_SRCS win32/zlib1.rc # If present will override custom build rule
+    # below.
   )
 endif()
 
@@ -155,9 +160,7 @@ if(CMAKE_COMPILER_IS_GNUCC)
 
   if(ZLIB_ASMS)
     add_definitions(-DASMV)
-    set_source_files_properties(
-      ${ZLIB_ASMS} PROPERTIES LANGUAGE C COMPILE_FLAGS -DNO_UNDERLINE
-    )
+    set_source_files_properties(${ZLIB_ASMS} PROPERTIES LANGUAGE C COMPILE_FLAGS -DNO_UNDERLINE)
   endif()
 endif()
 
@@ -177,8 +180,9 @@ endif()
 
 # parse the full version number from zlib.h and include in ZLIB_FULL_VERSION
 file(READ ${CMAKE_CURRENT_SOURCE_DIR}/zlib.h _zlib_h_contents)
-string(REGEX REPLACE ".*#define[ \t]+ZLIB_VERSION[ \t]+\"([-0-9A-Za-z.]+)\".*"
-                     "\\1" ZLIB_FULL_VERSION ${_zlib_h_contents}
+string(
+  REGEX REPLACE ".*#define[ \t]+ZLIB_VERSION[ \t]+\"([-0-9A-Za-z.]+)\".*"
+  "\\1" ZLIB_FULL_VERSION ${_zlib_h_contents}
 )
 
 if(MINGW)
@@ -190,20 +194,20 @@ if(MINGW)
   add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/zlib1rc.obj
     COMMAND
-      ${CMAKE_RC_COMPILER} -D GCC_WINDRES -I ${CMAKE_CURRENT_SOURCE_DIR} -I
-      ${CMAKE_CURRENT_BINARY_DIR} -o ${CMAKE_CURRENT_BINARY_DIR}/zlib1rc.obj -i
-      ${CMAKE_CURRENT_SOURCE_DIR}/win32/zlib1.rc
+    ${CMAKE_RC_COMPILER} -D GCC_WINDRES -I ${CMAKE_CURRENT_SOURCE_DIR} -I
+    ${CMAKE_CURRENT_BINARY_DIR} -o ${CMAKE_CURRENT_BINARY_DIR}/zlib1rc.obj -i
+    ${CMAKE_CURRENT_SOURCE_DIR}/win32/zlib1.rc
   )
   set(ZLIB_DLL_SRCS ${CMAKE_CURRENT_BINARY_DIR}/zlib1rc.obj)
 endif(MINGW)
 
 add_library(
   zlib SHARED ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_DLL_SRCS} ${ZLIB_PUBLIC_HDRS}
-              ${ZLIB_PRIVATE_HDRS}
+  ${ZLIB_PRIVATE_HDRS}
 )
 add_library(
   zlibstatic STATIC ${ZLIB_SRCS} ${ZLIB_ASMS} ${ZLIB_PUBLIC_HDRS}
-                    ${ZLIB_PRIVATE_HDRS}
+  ${ZLIB_PRIVATE_HDRS}
 )
 set_target_properties(zlib PROPERTIES DEFINE_SYMBOL ZLIB_DLL)
 set_target_properties(zlib PROPERTIES SOVERSION 1)
@@ -226,7 +230,7 @@ if(UNIX)
     set_target_properties(
       zlib
       PROPERTIES LINK_FLAGS
-                 "-Wl,--version-script,\"${CMAKE_CURRENT_SOURCE_DIR}/zlib.map\""
+      "-Wl,--version-script,\"${CMAKE_CURRENT_SOURCE_DIR}/zlib.map\""
     )
   endif()
 elseif(BUILD_SHARED_LIBS AND WIN32)

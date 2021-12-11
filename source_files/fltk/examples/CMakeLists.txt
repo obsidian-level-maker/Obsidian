@@ -15,10 +15,10 @@
 #
 ################################################################################
 
-include (../CMake/fl_create_example.cmake)
+include(../CMake/fl_create_example.cmake)
 
-set (EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/../bin/examples)
-file (MAKE_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/../bin/examples)
+file(MAKE_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
 
 ################################################################################
 
@@ -29,7 +29,8 @@ file (MAKE_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
 # simple examples w/o extra libs
 ############################################################
 
-set (SIMPLE_SOURCES
+set(
+  SIMPLE_SOURCES
   howto-add_fd-and-popen
   howto-browser-with-icons
   howto-drag-and-drop
@@ -60,7 +61,8 @@ set (SIMPLE_SOURCES
 # examples requiring fltk_images
 ############################################################
 
-set (IMAGE_SOURCES
+set(
+  IMAGE_SOURCES
   clipboard
 )
 
@@ -68,7 +70,8 @@ set (IMAGE_SOURCES
 # examples requiring OpenGL + libGLEW
 ############################################################
 
-set (OPENGL_SOURCES
+set(
+  OPENGL_SOURCES
   OpenGL3-glut-test
   OpenGL3test
 )
@@ -77,17 +80,17 @@ set (OPENGL_SOURCES
 # create simple example programs
 ############################################################
 
-foreach (src ${SIMPLE_SOURCES})
-  CREATE_EXAMPLE (${src} ${src}.cxx fltk)
-endforeach (src)
+foreach(src ${SIMPLE_SOURCES})
+  create_example(${src} ${src}.cxx fltk)
+endforeach(src)
 
 ############################################################
 # create example programs with fltk_images library
 ############################################################
 
-foreach (src ${IMAGE_SOURCES})
-  CREATE_EXAMPLE (${src} ${src}.cxx "fltk_images;fltk")
-endforeach (src)
+foreach(src ${IMAGE_SOURCES})
+  create_example(${src} ${src}.cxx "fltk_images;fltk")
+endforeach(src)
 
 ############################################################
 # create example programs with OpenGL + libGLEW
@@ -95,25 +98,27 @@ endforeach (src)
 
 # Note: macOS does not need libGLEW
 
-if (APPLE AND (NOT OPTION_APPLE_X11))
-  if (NOT LIB_GLEW)
-    set (LIB_GLEW TRUE)
-  endif ()
-  set (REQUIRED_LIBS fltk_gl fltk ${OPENGL_LIBRARIES})
-else ()
-  set (REQUIRED_LIBS fltk_gl fltk ${OPENGL_LIBRARIES} GLEW)
-endif ()
+if(APPLE AND (NOT OPTION_APPLE_X11))
+  if(NOT LIB_GLEW)
+    set(LIB_GLEW TRUE)
+  endif()
+  set(REQUIRED_LIBS fltk_gl fltk ${OPENGL_LIBRARIES})
+else()
+  set(REQUIRED_LIBS fltk_gl fltk ${OPENGL_LIBRARIES} GLEW)
+endif()
 
-if (OPENGL_FOUND AND LIB_GLEW)
-  foreach (src ${OPENGL_SOURCES})
-    CREATE_EXAMPLE (${src} ${src}.cxx "${REQUIRED_LIBS}")
-  endforeach (src)
-else ()
-  message (STATUS
-    "OpenGL or libGLEW not present: OpenGL example programs will not be built.")
-  fl_debug_var (OPENGL_FOUND)
-  fl_debug_var (LIB_GLEW)
-  message ("")
-endif (OPENGL_FOUND AND LIB_GLEW)
+if(OPENGL_FOUND AND LIB_GLEW)
+  foreach(src ${OPENGL_SOURCES})
+    create_example(${src} ${src}.cxx "${REQUIRED_LIBS}")
+  endforeach(src)
+else()
+  message(
+    STATUS
+    "OpenGL or libGLEW not present: OpenGL example programs will not be built."
+  )
+  fl_debug_var(OPENGL_FOUND)
+  fl_debug_var(LIB_GLEW)
+  message("")
+endif(OPENGL_FOUND AND LIB_GLEW)
 
-unset (REQUIRED_LIBS)
+unset(REQUIRED_LIBS)

@@ -35,7 +35,7 @@ if(false)
   file(GLOB ALL_SOURCES "source_files/obsidian_main/*.cc" "source_files/obsidian_main/*.hh")
   add_custom_target(
     clang-tidy COMMAND "${CMAKE_CXX_CLANG_TIDY}" -p "${CMAKE_BINARY_DIR}"
-                       ${ALL_SOURCES}
+    ${ALL_SOURCES}
   )
 endif()
 
@@ -174,7 +174,7 @@ add_executable(
   source_files/obsidian_main/vis_occlude.h
   source_files/obsidian_main/zf_menu.cc
   source_files/obsidian_main/zf_menu.h
-  "source_files/obsidian_main/defines.h"
+  source_files/obsidian_main/defines.h
 )
 
 target_include_directories(obsidian PRIVATE source_files/fastPRNG)
@@ -219,11 +219,11 @@ add_custom_command(
   TARGET obsidian
   POST_BUILD
   COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:obsidian>"
-          "${CMAKE_CURRENT_LIST_DIR}"
+  "${CMAKE_CURRENT_LIST_DIR}"
   COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:filename_formatter>"
-          "${CMAKE_CURRENT_LIST_DIR}/tools"
+  "${CMAKE_CURRENT_LIST_DIR}/tools"
   COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:qsavetex>"
-          "${CMAKE_CURRENT_LIST_DIR}/tools"
+  "${CMAKE_CURRENT_LIST_DIR}/tools"
 )
 
 add_dependencies(obsidian filename_formatter qsavetex)
@@ -232,21 +232,21 @@ if(UNIX)
   target_link_libraries(
     obsidian
     PRIVATE zlibstatic
-            obsidian_lua
-            obsidian_physfs
-            obsidian_acc
-            obsidian_zdbsp
-            obsidian_slump
-            fontconfig
+    obsidian_lua
+    obsidian_physfs
+    obsidian_acc
+    obsidian_zdbsp
+    obsidian_slump
+    fontconfig
   )
 else()
   target_link_libraries(
     obsidian
     PRIVATE zlibstatic
-            obsidian_lua
-            obsidian_physfs
-            obsidian_acc
-            obsidian_zdbsp
-            obsidian_slump
+    obsidian_lua
+    obsidian_physfs
+    obsidian_acc
+    obsidian_zdbsp
+    obsidian_slump
   )
 endif()
