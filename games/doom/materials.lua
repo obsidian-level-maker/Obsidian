@@ -701,6 +701,10 @@ DOOM.MATERIALS =
   SLIME05  = { t="BLODRIP1", f="SLIME05", sane=1 },
 
 
+  -- alternative assignments
+  TKGRASS1 = { t="TEKGREN2", f="GRASS1" },
+  TKGRASS2 = { t="BROWNGRN", f="GRASS2" },
+
   -- walls as flats and vice versa --
   XCEIL5_1 = { t="CEIL5_1", f="CEIL5_1" },
   XFLAT14 = { t="FLAT14", f="FLAT14" },

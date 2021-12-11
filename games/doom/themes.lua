@@ -2767,7 +2767,7 @@ DOOM.ROOM_THEMES =
   tech_Tekgren =
   {
     env  = "building",
-    prob = 20,
+    prob = 30,
 
     walls =
     {
@@ -2776,29 +2776,38 @@ DOOM.ROOM_THEMES =
 
     floors =
     {
-      FLAT14 = 45,
+      TKGRASS1 = 50,
+      TKGRASS2 = 50,
+
       FLAT4 = 30,
       FLAT5_4 = 30,
-      CEIL4_2  = 20,
-      CEIL4_1  = 20,
       FLOOR1_1 = 20,
       FLOOR0_3 = 20,
+      FLOOR0_5 = 20,
       FLOOR3_3 = 40,
-      FLOOR5_1 = 20,
+      FLOOR4_6 = 20,
       FLOOR4_8 = 20,
       FLOOR5_1 = 20,
-      FLOOR4_6 = 20,
+      FLOOR5_3 = 20,
+      FLOOR5_4 = 20,
       FLAT5 = 10,
+
+      SLIME14 = 20,
+      SLIME16 = 10
     },
 
     ceilings =
     {
+      TKGRASS1 = 50,
+      TKGRASS2 = 50,
+
       FLAT1   = 15,
       CEIL3_5 = 5,
       SLIME15 = 5,
       SLIME14 = 5,
-      CEIL4_1 = 3,
-      CEIL4_2 = 3,
+
+      SLIME14 = 20,
+      SLIME16 = 10
     },
   },
 
