@@ -168,7 +168,7 @@ function Level_determine_map_size(LEV)
 
   if LEV.custom_w then
     if LEV.custom_h then
-      return LEV.custom_h, LEV.custom_w
+      return LEV.custom_w, LEV.custom_h
     else
       ob_size = LEV.custom_size
       W = ob_size
