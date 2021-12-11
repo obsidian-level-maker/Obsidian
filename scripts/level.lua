@@ -168,9 +168,7 @@ function Level_determine_map_size(LEV)
 
   if LEV.custom_w then
     if LEV.custom_h then
-      W = LEV.custom_w
-      H = LEV.custom_h
-      goto customwh
+      return LEV.custom_h, LEV.custom_w
     else
       ob_size = LEV.custom_size
       W = ob_size
@@ -247,8 +245,6 @@ function Level_determine_map_size(LEV)
   gui.printf("Initial size for " .. LEV.name .. ": " .. W .. "\n")
 
   local H = 1 + int(W * 0.8)
-
-  ::customwh::
 
   return W, H
 end
