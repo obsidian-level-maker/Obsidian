@@ -37,6 +37,7 @@
 -- LEVEL.sky_light = # here
 -- LEVEL.has_streets = true/false
 -- LEVEL.squareishness
+-- LEVEL.liquid_usage = # ? (0-100)
 -- LEVEL.room_height_style
 -- LEVEL.has_outdoors = "true/false?"
 -- PARAM.room_heights = "normal/short-ish/short/tall/tall-ish" ???
