@@ -203,13 +203,15 @@ STRIFE.THEMES =
       slits = 20,
       pillbox = 20,
       slumpish = 30,
+      window_crossfire = 10,
+      window_arched = 10,
+      window_arched_tall = 10,
+      window_arched_inverted = 10
     },
 
     wall_groups =
     {
       PLAIN = 0.01,
-      low_gap = 10,
-      low_gap2 = 10,
       mid_band = 10,
       lite1 = 20,
       lite2 = 20,

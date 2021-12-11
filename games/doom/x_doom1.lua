@@ -3822,8 +3822,6 @@ function ULTDOOM.nolimit_themes()
     GAME.THEMES.tech.wall_groups = 
     {
       PLAIN = 0.01,
-      low_gap = 10,
-      low_gap2 = 10,
       mid_band = 10,
       lite1 = 20,
       lite2 = 20,
@@ -3847,6 +3845,7 @@ function ULTDOOM.nolimit_themes()
       slits = 20,
       pillbox = 20,
       slumpish = 30,
+      window_crossfire = 10,
     }
     GAME.THEMES.tech.fence_groups = { PLAIN = 50, crenels = 12 }
     GAME.THEMES.tech.fence_posts = { Post = 50 }
@@ -3855,8 +3854,6 @@ function ULTDOOM.nolimit_themes()
     GAME.THEMES.deimos.wall_groups = 
     {
       PLAIN = 0.01,
-      low_gap = 10,
-      low_gap2 = 10,
       mid_band = 10,
       lite1 = 20,
       lite2 = 20,
@@ -3880,6 +3877,7 @@ function ULTDOOM.nolimit_themes()
       slits = 20,
       pillbox = 20,
       slumpish = 30,
+      window_crossfire = 10,
     }
     GAME.THEMES.deimos.fence_groups = { PLAIN = 50, crenels = 12 }
     GAME.THEMES.deimos.fence_posts = { Post = 50 }
@@ -3888,8 +3886,6 @@ function ULTDOOM.nolimit_themes()
     GAME.THEMES.hell.wall_groups = 
     {
       PLAIN = 0.01,
-      low_gap = 10,
-      low_gap2 = 10,
       mid_band = 10,
       lite1 = 20,
       lite2 = 20,
@@ -3913,6 +3909,7 @@ function ULTDOOM.nolimit_themes()
       slits = 20,
       pillbox = 20,
       slumpish = 30,
+      window_crossfire = 10,
     }
     GAME.THEMES.hell.fence_groups = { PLAIN = 50, crenels = 12 }
     GAME.THEMES.hell.fence_posts = { Post = 50 }
@@ -3921,8 +3918,6 @@ function ULTDOOM.nolimit_themes()
     GAME.THEMES.flesh.wall_groups = 
     {
       PLAIN = 0.01,
-      low_gap = 10,
-      low_gap2 = 10,
       mid_band = 10,
       lite1 = 20,
       lite2 = 20,
@@ -3946,6 +3941,7 @@ function ULTDOOM.nolimit_themes()
       slits = 20,
       pillbox = 20,
       slumpish = 30,
+      window_crossfire = 10,
     }
     GAME.THEMES.flesh.fence_groups = { PLAIN = 50, crenels = 12 }
     GAME.THEMES.flesh.fence_posts = { Post = 50 }

@@ -163,7 +163,19 @@ function Level_determine_map_size(LEV)
   if LEV.custom_size then
     ob_size = LEV.custom_size
     W = ob_size
-    goto continue
+    goto customsize
+  end
+
+  if LEV.custom_w then
+    if LEV.custom_h then
+      W = LEV.custom_w
+      H = LEV.custom_h
+      goto customwh
+    else
+      ob_size = LEV.custom_size
+      W = ob_size
+      goto customsize
+    end
   end
 
   -- there is no real "progression" when making a single level.
@@ -226,7 +238,7 @@ function Level_determine_map_size(LEV)
     W = ob_size
   end
 
-  ::continue::
+  ::customsize::
 
   if not W then
     error("Invalid value for size : " .. tostring(ob_size))
@@ -235,6 +247,8 @@ function Level_determine_map_size(LEV)
   gui.printf("Initial size for " .. LEV.name .. ": " .. W .. "\n")
 
   local H = 1 + int(W * 0.8)
+
+  ::customwh::
 
   return W, H
 end
