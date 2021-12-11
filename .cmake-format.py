@@ -230,7 +230,7 @@ with section("format"):
 
     # If true, the parsers may infer whether or not an argument list is sortable
     # (without annotation).
-    autosort = False
+    autosort = True
 
     # By default, if cmake-format cannot successfully fit everything into the
     # desired linewidth it will apply the last, most agressive attempt that it

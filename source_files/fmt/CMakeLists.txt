@@ -21,9 +21,10 @@ function(join result_var)
   foreach(arg ${ARGN})
     set(result "${result}${arg}")
   endforeach()
-  set(${result_var}
-      "${result}"
-      PARENT_SCOPE
+  set(
+    ${result_var}
+    "${result}"
+    PARENT_SCOPE
   )
 endfunction()
 
@@ -56,9 +57,10 @@ function(set_verbose)
   list(GET ARGN 0 type)
   list(REMOVE_AT ARGN 0)
   join(doc ${ARGN})
-  set(${var}
-      ${val}
-      CACHE ${type} ${doc}
+  set(
+    ${var}
+    ${val}
+    CACHE ${type} ${doc}
   )
 endfunction()
 
@@ -82,8 +84,9 @@ set_verbose(
 )
 
 option(FMT_PEDANTIC "Enable extra warnings and expensive tests." OFF)
-option(FMT_WERROR "Halt the compilation with an error on compiler warnings."
-       OFF
+option(
+  FMT_WERROR "Halt the compilation with an error on compiler warnings."
+  OFF
 )
 
 # Options that control generation of various targets.
@@ -96,10 +99,11 @@ option(FMT_OS "Include core requiring OS (Windows/Posix) " ON)
 option(FMT_MODULE "Build a module instead of a traditional library." OFF)
 
 set(FMT_CAN_MODULE OFF)
-if(CMAKE_CXX_STANDARD GREATER 17
-   AND # msvc 16.10-pre4
-       MSVC
-   AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 19.29.30035
+if(
+  CMAKE_CXX_STANDARD GREATER 17
+  AND # msvc 16.10-pre4
+  MSVC
+  AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 19.29.30035
 )
   set(FMT_CAN_MODULE ON)
 endif()
@@ -121,8 +125,9 @@ endif()
 math(EXPR CPACK_PACKAGE_VERSION_MAJOR ${CMAKE_MATCH_1})
 math(EXPR CPACK_PACKAGE_VERSION_MINOR ${CMAKE_MATCH_2})
 math(EXPR CPACK_PACKAGE_VERSION_PATCH ${CMAKE_MATCH_3})
-join(FMT_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.
-                 ${CPACK_PACKAGE_VERSION_PATCH}
+join(
+  FMT_VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.
+  ${CPACK_PACKAGE_VERSION_PATCH}
 )
 message(STATUS "Version: ${FMT_VERSION}")
 
@@ -132,8 +137,9 @@ if(NOT CMAKE_RUNTIME_OUTPUT_DIRECTORY)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endif()
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
-                      "${CMAKE_CURRENT_SOURCE_DIR}/support/cmake"
+set(
+  CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
+  "${CMAKE_CURRENT_SOURCE_DIR}/support/cmake"
 )
 
 include(cxx14)
@@ -153,9 +159,7 @@ if(FMT_MASTER_PROJECT AND NOT DEFINED CMAKE_CXX_VISIBILITY_PRESET)
     CMAKE_CXX_VISIBILITY_PRESET hidden CACHE STRING
     "Preset for the export of private symbols"
   )
-  set_property(
-    CACHE CMAKE_CXX_VISIBILITY_PRESET PROPERTY STRINGS hidden default
-  )
+  set_property(CACHE CMAKE_CXX_VISIBILITY_PRESET PROPERTY STRINGS hidden default)
 endif()
 
 if(FMT_MASTER_PROJECT AND NOT DEFINED CMAKE_VISIBILITY_INLINES_HIDDEN)
@@ -166,71 +170,77 @@ if(FMT_MASTER_PROJECT AND NOT DEFINED CMAKE_VISIBILITY_INLINES_HIDDEN)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-  set(PEDANTIC_COMPILE_FLAGS
-      -pedantic-errors
-      -Wall
-      -Wextra
-      -pedantic
-      -Wold-style-cast
-      -Wundef
-      -Wredundant-decls
-      -Wwrite-strings
-      -Wpointer-arith
-      -Wcast-qual
-      -Wformat=2
-      -Wmissing-include-dirs
-      -Wcast-align
-      -Wctor-dtor-privacy
-      -Wdisabled-optimization
-      -Winvalid-pch
-      -Woverloaded-virtual
-      -Wconversion
-      -Wswitch-enum
-      -Wundef
-      -Wno-ctor-dtor-privacy
-      -Wno-format-nonliteral
+  set(
+    PEDANTIC_COMPILE_FLAGS
+    -pedantic-errors
+    -Wall
+    -Wextra
+    -pedantic
+    -Wold-style-cast
+    -Wundef
+    -Wredundant-decls
+    -Wwrite-strings
+    -Wpointer-arith
+    -Wcast-qual
+    -Wformat=2
+    -Wmissing-include-dirs
+    -Wcast-align
+    -Wctor-dtor-privacy
+    -Wdisabled-optimization
+    -Winvalid-pch
+    -Woverloaded-virtual
+    -Wconversion
+    -Wswitch-enum
+    -Wundef
+    -Wno-ctor-dtor-privacy
+    -Wno-format-nonliteral
   )
   if(NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.6)
-    set(PEDANTIC_COMPILE_FLAGS ${PEDANTIC_COMPILE_FLAGS} -Wno-dangling-else
-                               -Wno-unused-local-typedefs
+    set(
+      PEDANTIC_COMPILE_FLAGS ${PEDANTIC_COMPILE_FLAGS} -Wno-dangling-else
+      -Wno-unused-local-typedefs
     )
   endif()
   if(NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5.0)
-    set(PEDANTIC_COMPILE_FLAGS
-        ${PEDANTIC_COMPILE_FLAGS}
-        -Wdouble-promotion
-        -Wtrampolines
-        -Wzero-as-null-pointer-constant
-        -Wuseless-cast
-        -Wvector-operation-performance
-        -Wsized-deallocation
-        -Wshadow
+    set(
+      PEDANTIC_COMPILE_FLAGS
+      ${PEDANTIC_COMPILE_FLAGS}
+      -Wdouble-promotion
+      -Wtrampolines
+      -Wzero-as-null-pointer-constant
+      -Wuseless-cast
+      -Wvector-operation-performance
+      -Wsized-deallocation
+      -Wshadow
     )
   endif()
   if(NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
-    set(PEDANTIC_COMPILE_FLAGS ${PEDANTIC_COMPILE_FLAGS} -Wshift-overflow=2
-                               -Wnull-dereference -Wduplicated-cond
+    set(
+      PEDANTIC_COMPILE_FLAGS ${PEDANTIC_COMPILE_FLAGS} -Wshift-overflow=2
+      -Wnull-dereference -Wduplicated-cond
     )
   endif()
   set(WERROR_FLAG -Werror)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  set(PEDANTIC_COMPILE_FLAGS
-      -Wall
-      -Wextra
-      -pedantic
-      -Wconversion
-      -Wundef
-      -Wdeprecated
-      -Wweak-vtables
-      -Wshadow
-      -Wno-gnu-zero-variadic-macro-arguments
+  set(
+    PEDANTIC_COMPILE_FLAGS
+    -Wall
+    -Wextra
+    -pedantic
+    -Wconversion
+    -Wundef
+    -Wdeprecated
+    -Wweak-vtables
+    -Wshadow
+    -Wno-gnu-zero-variadic-macro-arguments
   )
   check_cxx_compiler_flag(-Wzero-as-null-pointer-constant HAS_NULLPTR_WARNING)
   if(HAS_NULLPTR_WARNING)
-    set(PEDANTIC_COMPILE_FLAGS ${PEDANTIC_COMPILE_FLAGS}
-                               -Wzero-as-null-pointer-constant
+    set(
+      PEDANTIC_COMPILE_FLAGS ${PEDANTIC_COMPILE_FLAGS}
+      -Wzero-as-null-pointer-constant
     )
   endif()
   set(WERROR_FLAG -Werror)
@@ -251,9 +261,10 @@ if(FMT_MASTER_PROJECT AND CMAKE_GENERATOR MATCHES "Visual Studio")
     set(MSBUILD_SETUP "call \"${WINSDK_SETENV}\"")
   endif()
   # Set FrameworkPathOverride to get rid of MSB3644 warnings.
-  join(netfxpath
-       "C:\\Program Files\\Reference Assemblies\\Microsoft\\Framework\\"
-       ".NETFramework\\v4.0"
+  join(
+    netfxpath
+    "C:\\Program Files\\Reference Assemblies\\Microsoft\\Framework\\"
+    ".NETFramework\\v4.0"
   )
   file(
     WRITE run-msbuild.bat
@@ -280,9 +291,10 @@ function(add_headers VAR)
   foreach(header ${ARGN})
     set(headers ${headers} include/fmt/${header})
   endforeach()
-  set(${VAR}
-      ${headers}
-      PARENT_SCOPE
+  set(
+    ${VAR}
+    ${headers}
+    PARENT_SCOPE
   )
 endfunction()
 
@@ -339,19 +351,20 @@ target_compile_features(fmt INTERFACE ${FMT_REQUIRED_FEATURES})
 
 target_include_directories(
   fmt PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-             $<INSTALL_INTERFACE:${FMT_INC_DIR}>
+  $<INSTALL_INTERFACE:${FMT_INC_DIR}>
 )
 
-set(FMT_DEBUG_POSTFIX
-    d
-    CACHE STRING "Debug library postfix."
+set(
+  FMT_DEBUG_POSTFIX
+  d
+  CACHE STRING "Debug library postfix."
 )
 
 set_target_properties(
   fmt
   PROPERTIES VERSION ${FMT_VERSION}
-             SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR}
-             DEBUG_POSTFIX "${FMT_DEBUG_POSTFIX}"
+  SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR}
+  DEBUG_POSTFIX "${FMT_DEBUG_POSTFIX}"
 )
 
 # Set FMT_LIB_NAME for pkg-config fmt.pc. We cannot use the OUTPUT_NAME target
@@ -362,10 +375,11 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 if(BUILD_SHARED_LIBS)
-  if(UNIX
-     AND NOT APPLE
-     AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "SunOS"
-     AND NOT EMSCRIPTEN
+  if(
+    UNIX
+    AND NOT APPLE
+    AND NOT ${CMAKE_SYSTEM_NAME} MATCHES "SunOS"
+    AND NOT EMSCRIPTEN
   )
     # Fix rpmlint warning: unused-direct-shlib-dependency
     # /usr/lib/libformat.so.1.1.0 /lib/libm.so.6.
@@ -389,7 +403,7 @@ target_compile_features(fmt-header-only INTERFACE ${FMT_REQUIRED_FEATURES})
 
 target_include_directories(
   fmt-header-only INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-                            $<INSTALL_INTERFACE:${FMT_INC_DIR}>
+  $<INSTALL_INTERFACE:${FMT_INC_DIR}>
 )
 
 # Install targets.
@@ -435,9 +449,7 @@ if(FMT_INSTALL)
   join_paths(libdir_for_pc_file "\${exec_prefix}" "${FMT_LIB_DIR}")
   join_paths(includedir_for_pc_file "\${prefix}" "${FMT_INC_DIR}")
 
-  configure_file(
-    "${PROJECT_SOURCE_DIR}/support/cmake/fmt.pc.in" "${pkgconfig}" @ONLY
-  )
+  configure_file("${PROJECT_SOURCE_DIR}/support/cmake/fmt.pc.in" "${pkgconfig}" @ONLY)
   configure_package_config_file(
     ${PROJECT_SOURCE_DIR}/support/cmake/fmt-config.cmake.in ${project_config}
     INSTALL_DESTINATION ${FMT_CMAKE_DIR}
@@ -463,8 +475,9 @@ if(FMT_INSTALL)
   )
 
   # Install version, config and target files.
-  install(FILES ${project_config} ${version_config}
-          DESTINATION ${FMT_CMAKE_DIR}
+  install(
+    FILES ${project_config} ${version_config}
+    DESTINATION ${FMT_CMAKE_DIR}
   )
   install(
     EXPORT ${targets_export_name}
@@ -512,14 +525,15 @@ if(FMT_MASTER_PROJECT AND EXISTS ${gitignore})
     string(REPLACE "*" ".*" line "${line}")
     set(ignored_files ${ignored_files} "${line}$" "${line}/")
   endforeach()
-  set(ignored_files
-      ${ignored_files}
-      /.git
-      /breathe
-      /format-benchmark
-      sphinx/
-      .buildinfo
-      .doctrees
+  set(
+    ignored_files
+    ${ignored_files}
+    /.git
+    /breathe
+    /format-benchmark
+    sphinx/
+    .buildinfo
+    .doctrees
   )
 
   set(CPACK_SOURCE_GENERATOR ZIP)

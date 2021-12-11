@@ -21,10 +21,10 @@
 
 # USAGE: FLTK_RUN_FLUID TARGET_NAME "FLUID_SOURCE [.. FLUID_SOURCE]"
 
-function (FLTK_RUN_FLUID TARGET SOURCES)
-  set (CXX_FILES)
-  foreach (src ${SOURCES})
-    if ("${src}" MATCHES "\\.fl$")
+function(FLTK_RUN_FLUID TARGET SOURCES)
+  set(CXX_FILES)
+  foreach(src ${SOURCES})
+    if("${src}" MATCHES "\\.fl$")
       string(REGEX REPLACE "(.*).fl" \\1 basename ${src})
       add_custom_command(
         OUTPUT "${basename}.cxx" "${basename}.h"
@@ -32,20 +32,21 @@ function (FLTK_RUN_FLUID TARGET SOURCES)
         DEPENDS ${src}
         MAIN_DEPENDENCY ${src}
       )
-      list (APPEND CXX_FILES "${basename}.cxx")
-    endif ("${src}" MATCHES "\\.fl$")
-  endforeach ()
-  set (${TARGET} ${CXX_FILES} PARENT_SCOPE)
-endfunction (FLTK_RUN_FLUID TARGET SOURCES)
+      list(APPEND CXX_FILES "${basename}.cxx")
+    endif("${src}" MATCHES "\\.fl$")
+  endforeach()
+  set(${TARGET} ${CXX_FILES} PARENT_SCOPE)
+endfunction(FLTK_RUN_FLUID TARGET SOURCES)
 
 #######################################################################
 
 # sets the bundle icon for OSX bundles
 
-function (FLTK_SET_BUNDLE_ICON TARGET ICON_PATH)
-  get_filename_component (ICON_NAME "${ICON_PATH}" NAME)
-  set_target_properties ("${TARGET}" PROPERTIES
+function(FLTK_SET_BUNDLE_ICON TARGET ICON_PATH)
+  get_filename_component(ICON_NAME "${ICON_PATH}" NAME)
+  set_target_properties(
+    "${TARGET}" PROPERTIES
     MACOSX_BUNDLE_ICON_FILE "${ICON_NAME}"
     RESOURCE "${ICON_PATH}"
   )
-endfunction (FLTK_SET_BUNDLE_ICON TARGET ICON_PATH)
+endfunction(FLTK_SET_BUNDLE_ICON TARGET ICON_PATH)

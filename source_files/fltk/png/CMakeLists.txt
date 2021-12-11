@@ -15,7 +15,8 @@
 #
 
 # source files for png
-set(PNG_SRCS
+set(
+  PNG_SRCS
   png.c
   pngerror.c
   pngget.c
@@ -31,7 +32,7 @@ set(PNG_SRCS
   pngwrite.c
   pngwtran.c
   pngwutil.c
-
+  
   # build on ARM (Apple M1 systems)
   arm/arm_init.c
   arm/filter_neon_intrinsics.c
@@ -39,29 +40,30 @@ set(PNG_SRCS
 )
 
 #######################################################################
-FL_ADD_LIBRARY(fltk_png STATIC "${PNG_SRCS}")
+fl_add_library(fltk_png STATIC "${PNG_SRCS}")
 # install the png headers
-install(FILES png.h;pngconf.h;pnglibconf.h
-    DESTINATION ${FLTK_INCLUDEDIR}/FL/images
+install(
+  FILES png.h;pngconf.h;pnglibconf.h
+  DESTINATION ${FLTK_INCLUDEDIR}/FL/images
 )
 
 if(OPTION_USE_SYSTEM_ZLIB)
-    target_link_libraries(fltk_png ${FLTK_ZLIB_LIBRARIES})
+  target_link_libraries(fltk_png ${FLTK_ZLIB_LIBRARIES})
 else()
-    target_link_libraries(fltk_png fltk_z)
+  target_link_libraries(fltk_png fltk_z)
 endif(OPTION_USE_SYSTEM_ZLIB)
 
 #######################################################################
 if(OPTION_BUILD_SHARED_LIBS)
-#######################################################################
-FL_ADD_LIBRARY(fltk_png SHARED "${PNG_SRCS}")
+  #######################################################################
+  fl_add_library(fltk_png SHARED "${PNG_SRCS}")
 
-if(OPTION_USE_SYSTEM_ZLIB)
+  if(OPTION_USE_SYSTEM_ZLIB)
     target_link_libraries(fltk_png_SHARED ${FLTK_ZLIB_LIBRARIES})
-else()
+  else()
     target_link_libraries(fltk_png_SHARED fltk_z_SHARED)
-endif(OPTION_USE_SYSTEM_ZLIB)
+  endif(OPTION_USE_SYSTEM_ZLIB)
 
-#######################################################################
+  #######################################################################
 endif(OPTION_BUILD_SHARED_LIBS)
 #######################################################################

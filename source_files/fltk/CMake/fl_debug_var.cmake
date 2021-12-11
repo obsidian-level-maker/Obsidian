@@ -33,15 +33,15 @@
 #
 #######################################################################
 
-macro (fl_debug_var name)
-  set (min_len 30)
-  set (var "${name}")
+macro(fl_debug_var name)
+  set(min_len 30)
+  set(var "${name}")
   string(LENGTH "${var}" len)
-  while (len LESS min_len)
+  while(len LESS min_len)
     # add one space until min_len is reached
     # ** string(APPEND var " ") # requires CMake 3.4.x (otherwise loop...)
-    set (var "${var} ")
+    set(var "${var} ")
     string(LENGTH "${var}" len)
-  endwhile (len LESS min_len)
-  message (STATUS "${var} = '${${name}}'")
-endmacro (fl_debug_var)
+  endwhile(len LESS min_len)
+  message(STATUS "${var} = '${${name}}'")
+endmacro(fl_debug_var)
