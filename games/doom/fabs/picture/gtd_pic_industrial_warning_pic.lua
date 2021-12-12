@@ -6,7 +6,7 @@ PREFABS.Pic_gtd_warning_days_since_last =
   theme = "!hell",
   env = "building",
 
-  prob = 50,
+  prob = 100,
   skip_prob = 75,
   texture_pack = "armaetus",
 

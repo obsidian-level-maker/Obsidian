@@ -10,10 +10,10 @@ PREFABS.Decor_air_vent_large_module =
 
   where  = "point",
   size   = 104,
-  height = 96,
+  height = 104,
 
   bound_z1 = 0,
-  bound_z2 = 96,
+  bound_z2 = 104,
 
   z_fit  = "top",
 }
@@ -24,6 +24,9 @@ PREFABS.Decor_air_vent_pillar =
   map = "MAP02",
 
   size = 64,
+  height = 96,
+
+  bound_z2 = 96,
 }
 
 PREFABS.Decor_air_vent_tetromino_curve =
@@ -32,5 +35,7 @@ PREFABS.Decor_air_vent_tetromino_curve =
   map = "MAP03",
 
   size = 128,
-  height = 80
+  height = 80,
+
+  bound_z2 = 80
 }

@@ -701,6 +701,10 @@ DOOM.MATERIALS =
   SLIME05  = { t="BLODRIP1", f="SLIME05", sane=1 },
 
 
+  -- alternative assignments
+  TKGRASS1 = { t="TEKGREN2", f="GRASS1" },
+  TKGRASS2 = { t="BROWNGRN", f="GRASS2" },
+
   -- walls as flats and vice versa --
   XCEIL5_1 = { t="CEIL5_1", f="CEIL5_1" },
   XFLAT14 = { t="FLAT14", f="FLAT14" },
@@ -720,6 +724,9 @@ DOOM.MATERIALS =
   XFLAT3  = { t="FLAT3", f="FLAT3" },
   XG19  = { t="G19", f="G19" },
   XGRAY1  = { t="GRAY1", f="GRAY1" },
+
+  XFWATER = { t="FWATER1", f="FWATER1" },
+  XNUKAGE = { t="NUKAGE1", f="NUKAGE1" },
 
   -- Allows compatibility with Egypt theme prefabs (if Prefabs are set to not match Theme)
   MURAL2   = { t="MARBFAC3",   f="FLAT1_1" },
