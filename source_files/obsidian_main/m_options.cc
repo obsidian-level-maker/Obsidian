@@ -238,6 +238,12 @@ class UI_OptionsWin : public Fl_Window {
                 t_language = "AUTO";
             }
         }
+        fl_alert("%s", _("Obsidian will now close to apply language changes.\nObsidian will be in your selected language"
+                " when you restart the program."));
+
+        main_action = MAIN_QUIT;
+
+        that->want_quit = true;
     }
 
     static void callback_Backups(Fl_Widget *w, void *data) {
@@ -386,6 +392,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_custom_prefix = new Fl_Button(136 + KF * 40, cy, kf_w(130), kf_h(24),
                                       _("Set Custom Prefix..."));
     opt_custom_prefix->box(button_style);
+    opt_custom_prefix->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     opt_custom_prefix->visible_focus(0);
     opt_custom_prefix->color(BUTTON_COLOR);
     opt_custom_prefix->callback(callback_SetCustomPrefix, this);

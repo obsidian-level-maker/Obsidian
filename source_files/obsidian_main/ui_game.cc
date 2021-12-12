@@ -109,6 +109,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
     build = new Fl_Button(button_x, cy, button_w, button_h, _("Build"));
     build->visible_focus(0);
     build->box(button_style);
+    build->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     build->color(BUTTON_COLOR);
     build->labelcolor(FONT2_COLOR);
     build->labelfont(use_system_fonts ? font_style : font_style | FL_BOLD);
@@ -120,6 +121,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
                          _("Quit"));
     quit->visible_focus(0);
     quit->box(button_style);
+    quit->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     quit->color(BUTTON_COLOR);
     quit->labelcolor(FONT2_COLOR);
     quit->labelfont(font_style);
