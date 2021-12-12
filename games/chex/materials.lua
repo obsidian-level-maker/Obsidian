@@ -19,7 +19,7 @@ CHEX3.MATERIALS =
   -- The idea is to have one singular default material for these; variants should be specified in theme-specific PREFAB_FIELDS tables as replacements - Dasho
   _RUNIC = { t="GRAYDANG", f="CJFSHIP3" },
   _STAIRS = { t="STEP2", f="FLAT5_6" },
-  _VOID = { t="O_BLACK", f="XX"},
+  _VOID = { t="REDWALL", f="XX"}, -- Need to be creative with offsets - Dasho
   _FLATLIT = { t="COMPSPAN", f="LABFLAT" },
   _WALLLIT = { t="FIREWALL", f="XX"},
   _LIFT  = { t="COMPSTA1", f="CJFCOMM3" },
@@ -219,6 +219,7 @@ CHEX3.MATERIALS =
   GSTVINE1 = { t="GSTVINE1", f="BLOOD1"},
   VINE1  = { t="MIDVINE1", rail_h=128 },
   VINE2  = { t="MIDVINE2", rail_h=128 },
+  LITE4_RAIL  = { t="LITE4", rail_h=128 },
 
 
   -- liquids --

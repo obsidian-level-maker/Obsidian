@@ -84,16 +84,13 @@ static void Cookie_SetValue(std::string name, std::string value) {
 }
 
 static bool Cookie_ParseLine(std::string buf) {
-    std::string::size_type pos = 0;
-
-    pos = buf.find('=', 0);
-    if (pos == std::string::npos) {
+    if (buf.find('=') == std::string::npos) {
         // Skip blank lines, comments, etc
         return true;
     }
 
-    while (std::find(buf.begin(), buf.end(), ' ') != buf.end()) {
-        buf.erase(std::find(buf.begin(), buf.end(), ' '));
+    while (std::isspace(buf[0])) {
+        buf.erase(buf.begin());
     }
 
     if (!(isalpha(buf.front()) || buf.front() == '@')) {
@@ -101,7 +98,19 @@ static bool Cookie_ParseLine(std::string buf) {
         return false;
     }
 
-    pos = buf.find('=', 0);  // Fix pos after whitespace deletion
+    std::string::size_type pos = buf.find('=');
+
+    while (pos > 0 && std::isspace(buf[pos - 1])) {
+        buf.erase(buf.begin() + (pos - 1));
+        pos--;
+    }
+    while (pos + 1 < buf.size() && std::isspace(buf[pos + 1])) {
+        buf.erase(buf.begin() + (pos + 1));
+    }
+    while (std::isspace(buf[buf.size() - 1])) {
+        buf.erase(buf.end() - 1);
+    }
+
     std::string name = buf.substr(0, pos);
     std::string value = buf.substr(pos + 1);
 
