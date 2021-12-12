@@ -653,9 +653,22 @@ OB_MODULES["doom_weapon_control"] =
 
 function CTL_DOOM.item_setup(self)
 
-  for _,opt in pairs(self.options) do
-    local param_name = string.gsub(opt.name, "float_", "") 
-    PARAM[param_name] = gui.get_module_slider_value(self.name, opt.name) -- They are all sliders in this case
+  for name,opt in pairs(self.options) do
+    if OB_CONFIG.batch == "yes" then
+      if not PARAM[name] then
+        PARAM[name] = opt.default
+      end
+    else
+	    if opt.valuator then
+		    if opt.valuator == "button" then
+		        PARAM[name] = gui.get_module_button_value(self.name, opt.name)
+		    elseif opt.valuator == "slider" then
+		        PARAM[name] = gui.get_module_slider_value(self.name, opt.name)      
+		    end
+	    else
+        PARAM[name] = self.options[name].value
+      end
+	  end
   end
 
   local function change_probz(name, info)

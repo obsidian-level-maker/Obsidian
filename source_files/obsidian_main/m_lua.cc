@@ -1352,13 +1352,14 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
         }
 
         // this will appear in the log file too
-        main_win->label(
-            fmt::format("[ ERROR ] {} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION)
-                .c_str());
-        DLG_ShowError(_("Script Error: %s"), err_msg);
-        main_win->label(
-            fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION).c_str());
-
+        if (main_win) {
+            main_win->label(
+                fmt::format("[ ERROR ] {} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION)
+                    .c_str());
+            DLG_ShowError(_("Script Error: %s"), err_msg);
+            main_win->label(
+                fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION).c_str());
+        }
         lua_pop(LUA_ST, 2);  // ob_traceback, message
         return false;
     }
@@ -1678,15 +1679,19 @@ void ob_invoke_hook(std::string hookname) {
 
 bool ob_build_cool_shit() {
     if (!Script_CallFunc("ob_build_cool_shit", 1)) {
-        main_win->label(
-            fmt::format("[ ERROR ] {} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION)
-                .c_str());
+        if (main_win) {
+            main_win->label(
+                fmt::format("[ ERROR ] {} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION)
+                    .c_str());
+        }
         Main::ProgStatus(_("Script Error"));
-        main_win->label(
-            fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION).c_str());
-        #ifdef WIN32
-        Main::Blinker();
-        #endif
+        if (main_win) {
+            main_win->label(
+                fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION).c_str());
+            #ifdef WIN32
+            Main::Blinker();
+            #endif
+        }
         return false;
     }
 
