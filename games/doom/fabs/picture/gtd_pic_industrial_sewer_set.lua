@@ -1,6 +1,6 @@
 PREFABS.Pic_sewer_set_sewer_hole =
 {
-  file   = "picture/gtd_pic_sewer_set.wad",
+  file   = "picture/gtd_pic_industrial_sewer_set.wad",
   map    = "MAP01",
 
   prob   = 5000,
