@@ -49,22 +49,18 @@ endif()
 set(CMAKE_REQUIRED_FLAGS ${CXX_STANDARD_FLAG})
 
 # Check if user-defined literals are available
-check_cxx_source_compiles(
-  "
+check_cxx_source_compiles("
   void operator\"\" _udl(long double);
-  int main() {}" SUPPORTS_USER_DEFINED_LITERALS
-)
+  int main() {}" SUPPORTS_USER_DEFINED_LITERALS)
 if(NOT SUPPORTS_USER_DEFINED_LITERALS)
   set(SUPPORTS_USER_DEFINED_LITERALS OFF)
 endif()
 
 # Check if <variant> is available
 set(CMAKE_REQUIRED_FLAGS -std=c++1z)
-check_cxx_source_compiles(
-  "
+check_cxx_source_compiles("
   #include <variant>
-  int main() {}" FMT_HAS_VARIANT
-)
+  int main() {}" FMT_HAS_VARIANT)
 if(NOT FMT_HAS_VARIANT)
   set(FMT_HAS_VARIANT OFF)
 endif()

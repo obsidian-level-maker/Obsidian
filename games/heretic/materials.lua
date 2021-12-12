@@ -32,6 +32,7 @@ HERETIC.MATERIALS =
   _SKY     = { t="CHAINSD", f="F_SKY1"  },
   
   -- materials for generic prefab set --
+  _LIFT = { t="SKULLSB1", f="FLOOR30" },
   _RUNIC = { t="REDWALL", f="FLOOR09" },
   _STAIRS = { t="WOODWL", f="FLOOR10" },
   _VOID = { t="STNGLS3", f="XX" }, -- Only works with small areas and exact offsets, but it's the only thing I could find with solid black areas

@@ -569,7 +569,7 @@ static int v_row_bits;  // number of leafs or clusters
 static int v_bytes_per_row;
 
 // statistic stuff
-typedef struct {
+struct vis_statistics_t {
     int uncompressed;
     int compressed;
 
@@ -612,7 +612,7 @@ typedef struct {
 
         return MAX(0, saved) * 100.0 / (float)MAX(1, uncompressed);
     }
-} vis_statistics_t;
+};
 
 static vis_statistics_t pvs_stats;
 static vis_statistics_t phs_stats;
