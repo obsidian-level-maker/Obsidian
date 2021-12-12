@@ -4,7 +4,7 @@ PREFABS.Window_arch_inverse_1 =
   map    = "MAP01",
   game   = { chex3=0, doom1=0, doom2=0, hacx=0, harmony=0, heretic=1, hexen=1, strife=1 },
 
-  group  = "window_arched_inverse",
+  group  = "window_arched_inverted",
   prob   = 50,
 
   passable = true,
