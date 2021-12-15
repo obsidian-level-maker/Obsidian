@@ -385,14 +385,8 @@ function DOOM.get_levels()
 
       -- nature mode
       if PARAM.float_nature_mode and not LEV.has_streets then
-        if OB_CONFIG.batch == "yes" then
-          if rand.odds(OB_CONFIG.float_nature_mode) then
-            LEV.is_nature = true
-          end
-        else
-          if rand.odds(PARAM.float_nature_mode) then
-            LEV.is_nature = true
-          end
+        if rand.odds(PARAM.float_nature_mode) then
+          LEV.is_nature = true
         end
       end
 
