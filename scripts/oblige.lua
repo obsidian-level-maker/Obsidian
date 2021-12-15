@@ -1250,19 +1250,13 @@ function ob_get_param(parameter)
 
   local param
 
-  if OB_CONFIG.batch == "yes" then
-    if OB_CONFIG[parameter] then
-      param = OB_CONFIG[parameter]
-    else
-      error("ERROR! " .. parameter .. " not found in config!")
-    end
+  if PARAM[parameter] then
+    param = PARAM[parameter]
+  elseif OB_CONFIG[parameter] then
+    param = OB_CONFIG[parameter]
   else
-    if PARAM[parameter] or OB_CONFIG[parameter] then
-      if (PARAM[parameter]) then
-        param = PARAM[parameter]
-      else
-        param = OB_CONFIG[parameter]
-      end
+    if OB_CONFIG.batch == "yes" then
+      print("MISSING PARAMETER: " .. parameter)
     else
       error("ERROR! " .. parameter .. " not found in config!")
     end

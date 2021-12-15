@@ -150,6 +150,8 @@ PREFABS.Exit_pillar2_secret =
   file  = "exit/pillar2.wad",
   map    = "MAP01",
   game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=0, heretic=0, strife=0 },
+  where  = "point",
+  prob = 100,
 
   -- this kind means "an exit to a secret level"
   kind = "secret_exit",

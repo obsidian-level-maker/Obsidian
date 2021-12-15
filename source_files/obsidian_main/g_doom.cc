@@ -866,13 +866,12 @@ bool Doom::game_interface_c::Start(const char *preset) {
         Main::BackupFile(filename, "old");
     }
 
+    current_engine = ob_get_param("engine");
+
     // Need to preempt the rest of this process for now if we are using Vanilla Doom
-    if (main_win) {
-        current_engine = ob_get_param("engine");
-        if (StringCaseCmp(current_engine, "vanilla") == 0) {
-            build_reject = StringToInt(ob_get_param("bool_build_reject"));
-            return true;
-        }
+    if (StringCaseCmp(current_engine, "vanilla") == 0) {
+        build_reject = StringToInt(ob_get_param("bool_build_reject"));
+        return true;
     }
 
     if (!StartWAD(filename)) {
@@ -880,26 +879,25 @@ bool Doom::game_interface_c::Start(const char *preset) {
         return false;
     }
 
-    if (main_win) {
-        main_win->build_box->Prog_Init(20, N_("CSG"));
-        if (StringCaseCmp(current_engine, "zdoom") == 0 || StringCaseCmp(current_engine, "eternity") == 0) {
-            build_reject = false;
-            map_format = ob_get_param("map_format");
-            build_nodes = StringToInt(ob_get_param("bool_build_nodes_udmf"));
-        } else if (StringCaseCmp(current_engine, "edge") == 0) {
-            build_reject = false;
-            map_format = "binary";
-            build_nodes = StringToInt(ob_get_param("bool_build_nodes_edge"));          
-        } else {
-            build_reject = StringToInt(ob_get_param("bool_build_reject"));
-            map_format = "binary";
-            build_nodes = true;
-        }
-        if (StringCaseCmp(map_format, "udmf") == 0) {
-            UDMF_mode = true;
-        } else {
-            UDMF_mode = false;
-        }
+    if (main_win) main_win->build_box->Prog_Init(20, N_("CSG"));
+
+    if (StringCaseCmp(current_engine, "zdoom") == 0 || StringCaseCmp(current_engine, "eternity") == 0) {
+        build_reject = false;
+        map_format = ob_get_param("map_format");
+        build_nodes = StringToInt(ob_get_param("bool_build_nodes_udmf"));
+    } else if (StringCaseCmp(current_engine, "edge") == 0) {
+        build_reject = false;
+        map_format = "binary";
+        build_nodes = StringToInt(ob_get_param("bool_build_nodes_edge"));          
+    } else {
+        build_reject = StringToInt(ob_get_param("bool_build_reject"));
+        map_format = "binary";
+        build_nodes = true;
+    }
+    if (StringCaseCmp(map_format, "udmf") == 0) {
+        UDMF_mode = true;
+    } else {
+        UDMF_mode = false;
     }
     return true;
 }
@@ -941,7 +939,7 @@ void Doom::game_interface_c::BeginLevel() {
 void Doom::game_interface_c::Property(std::string key, std::string value) {
     if (StringCaseCmp(key, "level_name") == 0) {
         level_name = value.c_str();
-    } else if (StringCaseCmp(key, "description") == 0) {
+    } else if (StringCaseCmp(key, "description") == 0 && main_win) {
         main_win->build_box->name_disp->copy_label(value.c_str());
         main_win->build_box->name_disp->redraw();
     } else if (StringCaseCmp(key, "sub_format") == 0) {
