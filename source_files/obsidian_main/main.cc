@@ -967,6 +967,13 @@ restart:;
 
         batch_mode = true;
         batch_output_file = argv::list[batch_arg + 1];
+        #ifdef WIN32
+            if (AllocConsole()) {
+                freopen("CONOUT$", "r", stdin);
+                freopen("CONOUT$", "w", stdout);
+                freopen("CONOUT$", "w", stderr);
+            }
+        #endif
     }
 
     Determine_WorkingPath(argv[0]);
