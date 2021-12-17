@@ -889,7 +889,9 @@ function Item_pickups_for_class(CL)
       end
     end
 
-    assert(not table.empty(item_tab))
+    if table.empty(item_tab) then
+      error("Missing linked item for " .. stat .. "!")
+    end
 
     local name = rand.key_by_probs(item_tab)
     local info = GAME.PICKUPS[name]
@@ -901,7 +903,9 @@ function Item_pickups_for_class(CL)
       local min_num  = info.cluster[1]
       local max_num  = info.cluster[2]
 
-      assert(max_num <= 9)
+      if max_num > 9 then
+        error("Cannot handle a cluster of more than 9 for pickup " .. stat .. "!")
+      end
 
       --- count = rand.irange(min_num, max_num)
 
