@@ -3152,9 +3152,6 @@ end
 
       for x = x1, x2 do
       for y = y1, y2 do
-        local score = gui.random() * 100
-
-        if score < best.score then goto continue end
 
         T.x = x
         T.y = y
@@ -3163,7 +3160,7 @@ end
 
         if match_or_install_pattern("TEST", T) then
           best.T = table.copy(T)
-          best.score = score
+          best.score = 1
 
           -- this is less memory hungry than copying the whole table
           best.areas[1] = area_map[1]
@@ -3171,6 +3168,7 @@ end
           best.areas[3] = area_map[3]
 
           best.link_chunk = link_chunk
+          goto justpickone
         end
         ::continue::
       end -- x, y
@@ -3178,6 +3176,8 @@ end
     end -- transp, flip_x, flip_y
     end
     end
+
+    ::justpickone::
 
     if best.score < 0 then
       --gui.printf(" NOPE!\n")
@@ -3410,16 +3410,11 @@ end
 
     local rules = table.copy(rule_tab)
 
-    local loop = 0
-    local max_loop = 20
+    local tries = 5 -- Maybe tune this parameter to test build speed? - Dasho
 
-    repeat
-      -- tried too many?
-      loop = loop + 1
+    if tries > table.size(rules) then tries = table.size(rules) end
 
-      if loop > max_loop then return end
-
-      -- nothing left to try?
+    for x = tries,0,-1 do
       if table.empty(rules) then return end
 
       local name = rand.key_by_probs(rules)
@@ -3431,7 +3426,10 @@ end
       -- don't try this rule again
       rules[name] = nil
 
-    until try_apply_a_rule()
+      if try_apply_a_rule() then goto success end
+    end
+
+    ::success::
 
     -- SUCCESS --
 
