@@ -2826,15 +2826,6 @@ function Level_handle_prebuilt()
   return "ok"
 end
 
-
-function Level_between_clean()
-  LEVEL    = nil
-  SEEDS    = nil
-
-  collectgarbage("collect")
-end
-
-
 function Level_make_level(LEV)
   assert(LEV)
   assert(LEV.name)
@@ -2863,10 +2854,7 @@ function Level_make_level(LEV)
     gui.printf("Level " .. LEV.id .. " title: " .. LEV.description)
   end
 
-  -- copy level info, so that all new information added into the LEVEL
-  -- object by the generator can be garbage collected once this level is
-  -- finished.
-  LEVEL = table.copy(LEV)
+  LEVEL = LEV
 
   gui.at_level(LEVEL.name, index, total)
 
@@ -2874,7 +2862,7 @@ function Level_make_level(LEV)
 
   LEVEL.ids  = {}
 
-  THEME = table.copy(assert(LEVEL.theme))
+  THEME = assert(LEVEL.theme)
 
   if GAME.THEMES.DEFAULTS then
     table.merge_missing(THEME, GAME.THEMES.DEFAULTS)
@@ -2929,11 +2917,6 @@ function Level_make_level(LEV)
   ob_invoke_hook("end_level")
 
   gui.end_level()
-
-
-  if index < total then
-    Level_between_clean()
-  end
 
   if gui.abort() then return "abort" end
 
