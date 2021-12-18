@@ -28,6 +28,7 @@
 #include "main.h"
 #include <string>
 #include <iostream>
+#include "sys_xoshiro.h"
 
 UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
                      std::string label, std::string tip, int red, int green,
@@ -412,6 +413,40 @@ void UI_Module::update_Enable() {
             M->show();
         } else {
             M->hide();
+        }
+    }
+}
+
+void UI_Module::randomize_Values() {
+    std::map<std::string, UI_RChoice *>::const_iterator IT;
+    std::map<std::string, UI_RSlide *>::const_iterator IT2;
+    std::map<std::string, UI_RButton *>::const_iterator IT3;
+
+    for (IT = choice_map.begin(); IT != choice_map.end(); IT++) {
+        UI_RChoice *M = IT->second;
+
+        if (mod_button->value()) {
+            M->mod_menu->value(xoshiro_Between(0, M->mod_menu->size() - 1));
+            M->do_callback();
+        }
+    }
+
+    for (IT2 = choice_map_slider.begin(); IT2 != choice_map_slider.end();
+         IT2++) {
+        UI_RSlide *M = IT2->second;
+
+        if (mod_button->value()) {
+            M->mod_slider->value(xoshiro.xoshiro256p_Range<double>(M->mod_slider->minimum(), M->mod_slider->maximum()));
+            M->do_callback();
+        }
+    }
+
+    for (IT3 = choice_map_button.begin(); IT3 != choice_map_button.end();
+         IT3++) {
+        UI_RButton *M = IT3->second;
+        if (mod_button->value()) {
+            M->mod_check->value(xoshiro_Between(0, 1));
+            M->do_callback();
         }
     }
 }
@@ -1377,6 +1412,16 @@ void UI_CustomMods::Locked(bool value) {
             UI_Module *M = (UI_Module *)mod_pack->child(j);
             SYS_ASSERT(M);
             M->activate();
+        }
+    }
+}
+
+void UI_CustomMods::SurpriseMe() {
+    for (int j = 0; j < mod_pack->children(); j++) {
+        UI_Module *M = (UI_Module *)mod_pack->child(j);
+        SYS_ASSERT(M);
+        if (M->visible()) {
+            M->randomize_Values();
         }
     }
 }
