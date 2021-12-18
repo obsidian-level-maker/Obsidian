@@ -3427,6 +3427,8 @@ end
       rules[name] = nil
 
       if try_apply_a_rule() then goto success end
+
+      if x == 0 then return end
     end
 
     ::success::
