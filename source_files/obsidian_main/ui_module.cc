@@ -424,6 +424,7 @@ void UI_Module::randomize_Values() {
 
     for (IT = choice_map.begin(); IT != choice_map.end(); IT++) {
         UI_RChoice *M = IT->second;
+        SYS_ASSERT(M);
         M->mod_menu->value(xoshiro_Between(0, M->mod_menu->size() - 1));
         M->mod_menu->do_callback();
     }
@@ -431,7 +432,8 @@ void UI_Module::randomize_Values() {
     for (IT2 = choice_map_slider.begin(); IT2 != choice_map_slider.end();
          IT2++) {
         UI_RSlide *M = IT2->second;
-        if (M->nan_options) {
+        SYS_ASSERT(M);
+        if (M->nan_choices.size() > 0) {
             M->nan_options->value(0);
             M->nan_options->do_callback();
         }
@@ -442,6 +444,7 @@ void UI_Module::randomize_Values() {
     for (IT3 = choice_map_button.begin(); IT3 != choice_map_button.end();
          IT3++) {
         UI_RButton *M = IT3->second;
+        SYS_ASSERT(M);
         if (xoshiro.xoshiro256p_UNI<float>() < 0.5) {
             M->mod_check->value(0);
         } else {
