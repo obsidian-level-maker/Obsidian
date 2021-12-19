@@ -424,30 +424,30 @@ void UI_Module::randomize_Values() {
 
     for (IT = choice_map.begin(); IT != choice_map.end(); IT++) {
         UI_RChoice *M = IT->second;
-
-        if (mod_button->value()) {
-            M->mod_menu->value(xoshiro_Between(0, M->mod_menu->size() - 1));
-            M->do_callback();
-        }
+        M->mod_menu->value(xoshiro_Between(0, M->mod_menu->size() - 1));
+        M->mod_menu->do_callback();
     }
 
     for (IT2 = choice_map_slider.begin(); IT2 != choice_map_slider.end();
          IT2++) {
         UI_RSlide *M = IT2->second;
-
-        if (mod_button->value()) {
-            M->mod_slider->value(xoshiro.xoshiro256p_Range<double>(M->mod_slider->minimum(), M->mod_slider->maximum()));
-            M->do_callback();
+        if (M->nan_options) {
+            M->nan_options->value(0);
+            M->nan_options->do_callback();
         }
+        M->mod_slider->value(M->mod_slider->round(xoshiro.xoshiro256p_Range<double>(M->mod_slider->minimum(), M->mod_slider->maximum())));
+        M->mod_slider->do_callback();
     }
 
     for (IT3 = choice_map_button.begin(); IT3 != choice_map_button.end();
          IT3++) {
         UI_RButton *M = IT3->second;
-        if (mod_button->value()) {
-            M->mod_check->value(xoshiro_Between(0, 1));
-            M->do_callback();
+        if (xoshiro.xoshiro256p_UNI<float>() < 0.5) {
+            M->mod_check->value(0);
+        } else {
+            M->mod_check->value(1);
         }
+        M->mod_check->do_callback();
     }
 }
 
@@ -1420,8 +1420,13 @@ void UI_CustomMods::SurpriseMe() {
     for (int j = 0; j < mod_pack->children(); j++) {
         UI_Module *M = (UI_Module *)mod_pack->child(j);
         SYS_ASSERT(M);
-        if (M->visible()) {
-            M->randomize_Values();
+        std::string mod_label = M->heading->label();
+        if (StringCaseCmp(mod_label, "Map Build Options") != 0) {
+            if (M->mod_button->value() == 1) {
+                if (StringCaseCmp(mod_label, "Debug Control") != 0) {
+                    M->randomize_Values();
+                }
+            }
         }
     }
 }
