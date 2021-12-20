@@ -146,6 +146,7 @@ extern bool create_backups;
 extern bool overwrite_warning;
 extern bool debug_messages;
 extern bool limit_break;
+extern bool preserve_failures;
 
 extern std::filesystem::path last_directory;
 extern std::string numeric_locale;

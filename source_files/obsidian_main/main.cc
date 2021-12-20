@@ -120,6 +120,7 @@ bool create_backups = true;
 bool overwrite_warning = true;
 bool debug_messages = false;
 bool limit_break = false;
+bool preserve_failures = false;
 
 game_interface_c *game_object = NULL;
 
@@ -929,7 +930,10 @@ bool Build_Cool_Shit() {
 
     if (main_action == MAIN_CANCEL) {
         main_action = 0;
-
+        if (main_win) {
+            main_win->label(
+                fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION).c_str());
+        }
         Main::ProgStatus(_("Cancelled"));
     }
 
