@@ -783,10 +783,6 @@ function Grower_preprocess_grammar()
 
   process_some_cool_grammars(gramgram)
 
-  if rand.odds(50) then
-    LEVEL.fixed_transform_iteration = true
-  end
-
 end
 
 
@@ -3135,8 +3131,6 @@ end
 
     best = { score=-1, areas={} }
 
-    print("CURRENT RULE: " .. table.tostr(cur_rule))
-
     -- no need to mirror a symmetrical pattern
     local transp_max = sel(cur_rule.t_symmetry, 0, 1)
     local flip_x_max = sel(cur_rule.x_symmetry, 0, 1)
@@ -3149,16 +3143,14 @@ end
       flip_y_max = 0
     end
 
-    local T
-    if LEVEL.fixed_transform_iteration then
-      T = calc_transform(transpose, flip_x, flip_y)
-    else
-      T = calc_transform(rand.sel(50, transp_max, 0), rand.sel(50, flip_x_max, 0), rand.sel(50, flip_y_max, 0))
-    end
+    for transpose = 0, transp_max do
+    for flip_x = 0, flip_x_max do
+    for flip_y = 0, flip_y_max do
+      local T = calc_transform(transpose, flip_x, flip_y)
 
-    local x1,y1, x2,y2 = get_iteration_range(T)
+      local x1,y1, x2,y2 = get_iteration_range(T)
 
-    for x = x1, x2 do
+      for x = x1, x2 do
       for y = y1, y2 do
 
         T.x = x
@@ -3175,11 +3167,14 @@ end
           best.areas[2] = area_map[2]
           best.areas[3] = area_map[3]
 
-            best.link_chunk = link_chunk
+          best.link_chunk = link_chunk
           goto justpickone
         end
         ::continue::
       end -- x, y
+      end
+    end -- transp, flip_x, flip_y
+    end
     end
 
     ::justpickone::
