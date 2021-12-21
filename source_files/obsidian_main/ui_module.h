@@ -87,6 +87,8 @@ class UI_Module : public Fl_Group {
 
     void update_Enable();
 
+    void randomize_Values();
+
     UI_RChoice *FindOpt(std::string opt);  // const;
 
     UI_RSlide *FindSliderOpt(std::string opt);  // const;
@@ -160,6 +162,8 @@ class UI_CustomMods : public Fl_Group {
     bool SetButtonOption(std::string module, std::string option, int value);
 
     void Locked(bool value);
+
+    void SurpriseMe();
 
     UI_Module *FindID(std::string id) const;
 

@@ -39,6 +39,7 @@ class UI_Game : public Fl_Group {
     UI_HelpLink *length_help;
     Fl_Button *build;
     Fl_Button *quit;
+    Fl_Button *surprise;
 
    private:
    public:
@@ -66,6 +67,7 @@ class UI_Game : public Fl_Group {
     static void build_callback(Fl_Widget *, void *);
     static void stop_callback(Fl_Widget *, void *);
     static void quit_callback(Fl_Widget *, void *);
+    static void surprise_callback(Fl_Widget *, void *);
 };
 
 #endif /* __UI_GAME_H__ */

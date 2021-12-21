@@ -177,7 +177,6 @@ add_executable(
   source_files/obsidian_main/defines.h
 )
 
-target_include_directories(obsidian PRIVATE source_files/fastPRNG)
 target_include_directories(obsidian PRIVATE source_files/lua)
 target_include_directories(obsidian PRIVATE source_files/physfs)
 target_include_directories(obsidian PRIVATE source_files/slump)

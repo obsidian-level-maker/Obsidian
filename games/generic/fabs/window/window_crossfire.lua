@@ -33,7 +33,7 @@ PREFABS.Window_crossfire_3 =
 {
   template = "Window_crossfire_1",
   map    = "MAP03",
-  game = { chex3=0, doom1=0, doom2=0, hacx=0, harmony=0, heretic=1, hexen=1, strife=1 },
+  --game = { chex3=0, doom1=0, doom2=0, hacx=0, harmony=0, heretic=1, hexen=1, strife=1 },
 
   passable = true,
 
