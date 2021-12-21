@@ -3131,50 +3131,71 @@ end
 
     best = { score=-1, areas={} }
 
-    -- no need to mirror a symmetrical pattern
-    local transp_max = sel(cur_rule.t_symmetry, 0, 1)
-    local flip_x_max = sel(cur_rule.x_symmetry, 0, 1)
-    local flip_y_max = sel(cur_rule.y_symmetry, 0, 1)
+    gui.debugf("CURRENT RULE: " .. table.tostr(cur_rule))
+
+    local T
+    local x1, y1, x2, y2
 
     -- exit rooms (and auxiliary pieces) do not rotate or mirror
     if cur_rule.no_rotate then
-      transp_max = 0
-      flip_x_max = 0
-      flip_y_max = 0
-    end
-
-    for transpose = 0, transp_max do
-    for flip_x = 0, flip_x_max do
-    for flip_y = 0, flip_y_max do
-      local T = calc_transform(transpose, flip_x, flip_y)
-
-      local x1,y1, x2,y2 = get_iteration_range(T)
-
+      T = calc_transform(0, 0, 0)
+      x1,y1, x2,y2 = get_iteration_range(T)
+  
       for x = x1, x2 do
-      for y = y1, y2 do
-
-        T.x = x
-        T.y = y
-
-        if not match_all_focal_points(T) then goto continue end
-
-        if match_or_install_pattern("TEST", T) then
-          best.T = table.copy(T)
-          best.score = 1
-
-          -- this is less memory hungry than copying the whole table
-          best.areas[1] = area_map[1]
-          best.areas[2] = area_map[2]
-          best.areas[3] = area_map[3]
-
-          best.link_chunk = link_chunk
-          goto justpickone
-        end
-        ::continue::
-      end -- x, y
+        for y = y1, y2 do
+  
+          T.x = x
+          T.y = y
+  
+          if not match_all_focal_points(T) then goto continue end
+  
+          if match_or_install_pattern("TEST", T) then
+            best.T = table.copy(T)
+            best.score = 1
+  
+            -- this is less memory hungry than copying the whole table
+            best.areas[1] = area_map[1]
+            best.areas[2] = area_map[2]
+            best.areas[3] = area_map[3]
+  
+              best.link_chunk = link_chunk
+            goto justpickone
+          end
+          ::continue::
+        end -- x, y
       end
-    end -- transp, flip_x, flip_y
-    end
+    else
+      if LEVEL.shape_transform_mode == "random" then
+        rand.shuffle(LEVEL.shape_transform_possiblities)
+      end
+      for _,transform in pairs(LEVEL.shape_transform_possiblities) do
+        T = calc_transform(transform[1], transform[2], transform[3])
+        x1,y1, x2,y2 = get_iteration_range(T)
+  
+        for x = x1, x2 do
+          for y = y1, y2 do
+    
+            T.x = x
+            T.y = y
+    
+            if not match_all_focal_points(T) then goto continue end
+    
+            if match_or_install_pattern("TEST", T) then
+              best.T = table.copy(T)
+              best.score = 1
+    
+              -- this is less memory hungry than copying the whole table
+              best.areas[1] = area_map[1]
+              best.areas[2] = area_map[2]
+              best.areas[3] = area_map[3]
+    
+                best.link_chunk = link_chunk
+              goto justpickone
+            end
+            ::continue::
+          end -- x, y
+        end
+      end
     end
 
     ::justpickone::
