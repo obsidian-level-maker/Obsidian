@@ -122,6 +122,7 @@ bool debug_messages = false;
 bool limit_break = false;
 bool preserve_failures = false;
 bool preserve_old_config = false;
+bool did_randomize = false;
 
 game_interface_c *game_object = NULL;
 
@@ -783,8 +784,15 @@ void Main::Detail::Shutdown(const bool error) {
     if (main_win) {
         // on fatal error we cannot risk calling into the Lua runtime
         // (it's state may be compromised by a script error).
-        if (!config_file.empty() && !error && !preserve_old_config) {
-            Cookie_Save(config_file);
+        if (!config_file.empty() && !error) {
+            if (did_randomize) {
+                if (!preserve_old_config) {
+                    Cookie_Save(config_file);
+                }
+            }
+            else {
+                Cookie_Save(config_file);
+            }
         }
 
         delete main_win;
@@ -1202,7 +1210,12 @@ restart:;
                 Main_SetSeed();
 
                 // save config in case everything blows up
-                if (!preserve_old_config) {
+                if (did_randomize) {
+                    if (!preserve_old_config) {
+                        Cookie_Save(config_file);
+                    }
+                }
+                else {
                     Cookie_Save(config_file);
                 }
 
@@ -1229,7 +1242,14 @@ restart:;
             // on fatal error we cannot risk calling into the Lua runtime
             // (it's state may be compromised by a script error).
             if (!config_file.empty() && !preserve_old_config) {
-                Cookie_Save(config_file);
+                if (did_randomize) {
+                    if (!preserve_old_config) {
+                        Cookie_Save(config_file);
+                    }
+                }
+                else {
+                    Cookie_Save(config_file);
+                }
             }
             delete main_win;
             main_win = nullptr;
