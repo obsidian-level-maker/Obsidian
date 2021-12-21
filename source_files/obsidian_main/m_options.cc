@@ -49,6 +49,8 @@ static void Parse_Option(std::string name, std::string value) {
         limit_break = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "preserve_failures") == 0) {
         preserve_failures = StringToInt(value) ? true : false;
+    } else if (StringCaseCmp(name, "preserve_old_config") == 0) {
+        preserve_old_config = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "last_directory") == 0) {
         last_directory = value;
     } else if (StringCaseCmp(name, "filename_prefix") == 0) {
@@ -145,6 +147,7 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "debug_messages = " << (debug_messages ? 1 : 0) << "\n";
     option_fp << "limit_break = " << (limit_break ? 1 : 0) << "\n";
     option_fp << "preserve_failures = " << (preserve_failures ? 1 : 0) << "\n";
+    option_fp << "preserve_old_config = " << (preserve_old_config ? 1 : 0) << "\n";
     option_fp << "filename_prefix = " << filename_prefix << "\n";
     option_fp << "custom_prefix = " << custom_prefix << "\n";
 
