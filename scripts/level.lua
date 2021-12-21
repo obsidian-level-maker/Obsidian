@@ -2651,6 +2651,23 @@ function Level_choose_misc()
   elseif PARAM.room_heights == "short-ish" then
     LEVEL.room_height_style_tab["tall"] = 0
   end
+
+  LEVEL.shape_transform_mode = rand.pick({"linear","random"})
+
+  LEVEL.shape_transform_possiblities =
+  {
+    {0, 0, 0},
+    {0, 0, 1},
+    {0, 1, 0},
+    {0, 1, 1},
+    {1, 0, 0},
+    {1, 0, 1},
+    {1, 1, 0},
+    {1, 1, 1},
+  }
+
+  gui.printf("Level shape transform mode: %s\n", LEVEL.shape_transform_mode)
+  rand.shuffle(LEVEL.shape_transform_possiblities)
 end
 
 

@@ -577,8 +577,6 @@ function ZDOOM_SPECIALS.do_special_stuff()
     return octet1 .. " " .. octet2 .. " " .. octet3
   end
 
-  local function add_languagelump()
-  end
 
   local function add_gamedef()
     gamedef_lines = {}
@@ -856,22 +854,20 @@ function ZDOOM_SPECIALS.do_special_stuff()
     special_attributes = special_attributes .. '  ClipMidTextures\n'
 
     local mapinfo =
-    {
-      'map ' .. map_id .. ' lookup HUSTR_'.. name_string_map_id ..'\n',
-      '{\n',
+      'map ' .. map_id .. ' lookup HUSTR_'.. name_string_map_id ..'\n' ..
+      '{\n' ..
       --'  cluster = 1\n'
-      '  sky1 = "' .. sky_tex .. '"\n',
-      '' .. cluster_line .. '',
-      '' .. fog_color_line .. '',
-      '' .. fog_intensity_line .. '',
-      '' .. next_level_line .. '',
-      '' .. secret_level_line .. '',
-      '' .. music_line .. '',
-      '  EnterPic = "' .. interpic .. '"\n',
-      '  ExitPic = "' .. interpic .. '"\n',
-      '' .. special_attributes .. '',
+      '  sky1 = "' .. sky_tex .. '"\n' ..
+      '' .. cluster_line .. '' ..
+      '' .. fog_color_line .. '' ..
+      '' .. fog_intensity_line .. '' ..
+      '' .. next_level_line .. '' ..
+      '' .. secret_level_line .. '' ..
+      '' .. music_line .. '' ..
+      '  EnterPic = "' .. interpic .. '"\n' ..
+      '  ExitPic = "' .. interpic .. '"\n' ..
+      '' .. special_attributes .. '' ..
       '}\n'
-    }
 
     return mapinfo
   end
@@ -885,171 +881,167 @@ function ZDOOM_SPECIALS.do_special_stuff()
 
 
       clusterdef =
-      {
-        'cluster 5\n', -- MAP01-05,
+        'cluster 5\n', -- MAP01-05
         '{\n',
-        '' .. cluster_music_line .. '',
-        '  pic = "' .. interpic .. '"\n',
-        '  exittext =\n',
-        '    "Hell has taken a strong hold",\n',
-        '    "upon these lands, corrupting it",\n',
-        '    "in their wake!",\n',
-        '    " ",\n',
-        '    "Ahead, their forces gather in strength",\n',
-        '    "almost inumerable in count."\n',
-        '}\n',
-        'cluster 6\n', -- MAP06-MAP11,
-        '{\n',
-        '' .. cluster_music_line .. '',
-        '  pic = "' .. interpic .. '"\n',
-        '  exittext =\n',
-        '    "A lieutenant of hell falls",\n',
-        '    "but otherworldly shrieks echo",\n',
-        '    "further still.",\n',
-        '    " ",\n',
-        '    "You pick up your armaments",\n',
-        '    "and point them forward",\n',
-        '    "to continue the siege",\n',
-        '    "against the darkness.",\n',
-        '    " ",\n',
-        '    "The battle rages on!"\n',
-        '}\n',
-        'cluster 7\n', -- MAP12-14,
-        '{\n',
-        '' .. cluster_music_line .. '',
-        '  pic = "' .. interpic .. '"\n',
-        '  exittext =\n',
-        '    "You tirelessly battle against",\n',
-        '    "waves upon waves of",\n',
-        '    "seemingly infinite hellspawn.",\n',
-        '    " ",\n',
-        '    "Your tracker informs you",\n',
-        '    "a secret point of interest",\n',
-        '    "may exist nearby..."\n',
-        '}\n',
-        'cluster 8\n', -- MAP15-20,
-        '{\n',
-        '' .. cluster_music_line .. '',
-        '  pic = "' .. interpic .. '"\n',
-        '  exittext =\n',
-        '    "Hell\'s forces attempt to push back",\n',
-        '    "but your relentless assault on their",\n',
-        '    "breaches keeps them at bay!",\n',
-        '    " ",\n',
-        '    "More of their overlords have fallen",\n',
-        '    "and the opportunity for their defeat",\n',
-        '    "draws ever closer..."\n',
-        '}\n',
-        'cluster 9\n', -- MAP21-30,
-        '{\n',
-        '' .. cluster_music_line .. '',
-        '  pic = "' .. interpic .. '"\n',
-        '  exittext =\n',
-        '    "Mission Accomplished!",\n',
-        '    " ",\n',
-        '    "You have loosened hell\'s grip upon",\n',
-        '    "this place! Demonic entities flee in terror",\n',
-        '    "from your display of indomitable strength.",\n',
-        '    " ",\n',
-        '    "You realize, however,",\n',
-        '    "while hell lies defeated today,",\n',
-        '    "hell has not yet been destroyed.",\n',
-        '    "Rest for now, but remember:",\n',
-        '    "Hell is already preparing",\n',
-        '    "for another challenge."\n',
-        '}\n',
-        'cluster 10\n', -- MAP31,
-        '{\n',
-        '' .. cluster_music_line .. '',
-        '  pic = "' .. interpic .. '"\n',
-        '  entertext =\n',
-        '    "You have found a secret zone!",\n',
-        '    "It seems the hellspawn have barricaded",\n',
-        '    "themselves within its confines with to",\n',
-        '    "gestate their hellish infection.",\n',
-        '    " ",\n',
-        '    "You are about to prove them otherwise."\n',
-        '}\n',
-        'cluster 11\n', -- MAP32,
-        '{\n',
-        '' .. cluster_music_line .. '',
-        '  pic = "' .. interpic .. '"\n',
-        '  entertext =\n',
-        '    "It seems this secret trail",\n',
-        '    "goes further than expected.",\n',
-        '    "It is time to finish this",\n',
-        '    "once and for all and eradicate",\n',
-        '    "this hidden pocket of hellish infestation."\n',
+        '' .. cluster_music_line .. '' ..
+        '  pic = "' .. interpic .. '"\n' ..
+        '  exittext =\n' ..
+        '    "Hell has taken a strong hold",\n' ..
+        '    "upon these lands, corrupting it",\n' ..
+        '    "in their wake!",\n' ..
+        '    " ",\n' ..
+        '    "Ahead, their forces gather in strength",\n' ..
+        '    "almost inumerable in count."\n' ..
+        '}\n' ..
+        'cluster 6\n' .. -- MAP06-MAP11
+        '{\n' ..
+        '' .. cluster_music_line .. '' ..
+        '  pic = "' .. interpic .. '"\n' ..
+        '  exittext =\n' ..
+        '    "A lieutenant of hell falls",\n' ..
+        '    "but otherworldly shrieks echo",\n' ..
+        '    "further still.",\n' ..
+        '    " ",\n' ..
+        '    "You pick up your armaments",\n' ..
+        '    "and point them forward",\n' ..
+        '    "to continue the siege",\n' ..
+        '    "against the darkness.",\n' ..
+        '    " ",\n' ..
+        '    "The battle rages on!"\n' ..
+        '}\n' ..
+        'cluster 7\n' .. -- MAP12-14
+        '{\n' ..
+        '' .. cluster_music_line .. '' ..
+        '  pic = "' .. interpic .. '"\n' ..
+        '  exittext =\n' ..
+        '    "You tirelessly battle against",\n' ..
+        '    "waves upon waves of",\n' ..
+        '    "seemingly infinite hellspawn.",\n' ..
+        '    " ",\n' ..
+        '    "Your tracker informs you",\n' ..
+        '    "a secret point of interest",\n' ..
+        '    "may exist nearby..."\n' ..
+        '}\n' ..
+        'cluster 8\n' .. -- MAP15-20
+        '{\n' ..
+        '' .. cluster_music_line .. '' ..
+        '  pic = "' .. interpic .. '"\n' ..
+        '  exittext =\n' ..
+        '    "Hell\'s forces attempt to push back",\n' ..
+        '    "but your relentless assault on their",\n' ..
+        '    "breaches keeps them at bay!",\n' ..
+        '    " ",\n' ..
+        '    "More of their overlords have fallen",\n' ..
+        '    "and the opportunity for their defeat",\n' ..
+        '    "draws ever closer..."\n' ..
+        '}\n' ..
+        'cluster 9\n' .. -- MAP21-30
+        '{\n' ..
+        '' .. cluster_music_line .. '' ..
+        '  pic = "' .. interpic .. '"\n' ..
+        '  exittext =\n' ..
+        '    "Mission Accomplished!",\n' ..
+        '    " ",\n' ..
+        '    "You have loosened hell\'s grip upon",\n' ..
+        '    "this place! Demonic entities flee in terror",\n' ..
+        '    "from your display of indomitable strength.",\n' ..
+        '    " ",\n' ..
+        '    "You realize, however,",\n' ..
+        '    "while hell lies defeated today,",\n' ..
+        '    "hell has not yet been destroyed.",\n' ..
+        '    "Rest for now, but remember:",\n' ..
+        '    "Hell is already preparing",\n' ..
+        '    "for another challenge."\n' ..
+        '}\n' ..
+        'cluster 10\n' .. -- MAP31
+        '{\n' ..
+        '' .. cluster_music_line .. '' ..
+        '  pic = "' .. interpic .. '"\n' ..
+        '  entertext =\n' ..
+        '    "You have found a secret zone!",\n' ..
+        '    "It seems the hellspawn have barricaded",\n' ..
+        '    "themselves within its confines with to",\n' ..
+        '    "gestate their hellish infection.",\n' ..
+        '    " ",\n' ..
+        '    "You are about to prove them otherwise."\n' ..
+        '}\n' ..
+        'cluster 11\n' .. -- MAP32
+        '{\n' ..
+        '' .. cluster_music_line .. '' ..
+        '  pic = "' .. interpic .. '"\n' ..
+        '  entertext =\n' ..
+        '    "It seems this secret trail",\n' ..
+        '    "goes further than expected.",\n' ..
+        '    "It is time to finish this",\n' ..
+        '    "once and for all and eradicate",\n' ..
+        '    "this hidden pocket of hellish infestation."\n' ..
         '}\n'
-      }
     end
 
     if ( OB_CONFIG.game == "doom2" or OB_CONFIG.game == "tnt" or OB_CONFIG.game == "plutonia" ) and PARAM.story_generator == "proc" then
       -- create cluster information
       clusterdef =
-      {
-        'cluster 1\n', -- MAP01-MAP05,
-        '{\n',
-        '' .. cluster_music_line .. '',
-        '  pic = "' .. interpic .. '"\n',
-        '  exittext = lookup, "STORYSTART1"\n',
-        '}\n',
-        'cluster 2\n', -- MAP06-MAP11,
-        '{\n',
-        '' .. cluster_music_line .. '',
-        '  pic = "' .. interpic .. '"\n',
-        '  exittext = lookup, "STORYEND1"\n',
-        '}\n',
-        'cluster 3\n', -- MAP012,
-        '{\n',
-        '' .. cluster_music_line .. '',
-        '  pic = "' .. interpic .. '"\n',
-        '  exittext = lookup, "STORYSTART2"\n',
-        '}\n',
-        'cluster 4\n', -- MAP13-MAP14,
-        '{\n',
-        '' .. cluster_music_line .. '',
-        '  pic = "' .. interpic .. '"\n',
-        '  exittext = lookup, "SECRETNEARBY"\n',
-        '}\n',
-        'cluster 5\n', -- MAP15-MAP20,
-        '{\n',
-        '' .. cluster_music_line .. '',
-        '  pic = "' .. interpic .. '"\n',
-        '  exittext = lookup, "STORYEND2"\n',
-        '}\n',
-        'cluster 6\n', -- MAP21,
-        '{\n',
-        '' .. cluster_music_line .. '',
-        '  pic = "' .. interpic .. '"\n',
-        '  exittext = lookup, "STORYSTART3"\n',
-        '}\n',
-        'cluster 7\n', -- MAP22-30,
-        '{\n',
-        '' .. cluster_music_line .. '',
-        '  pic = "' .. interpic .. '"\n',
-        '  exittext = lookup, "STORYEND3"\n',
-        '}\n',
-        'cluster 8\n', -- MAP31,
-        '{\n',
-        '' .. cluster_music_line .. '',
-        '  pic = "' .. interpic .. '"\n',
-        '  entertext = lookup, "SECRET1"\n',
-        '}\n',
-        'cluster 9\n', -- MAP32,
-        '{\n',
-        '' .. cluster_music_line .. '',
-        '  pic = "' .. interpic .. '"\n',
-        '  entertext = lookup, "SECRET2"\n',
-        '}\n',
-      }
+        'cluster 1\n' .. -- MAP01-MAP05
+        '{\n' ..
+        '' .. cluster_music_line .. '' ..
+        '  pic = "' .. interpic .. '"\n' ..
+        '  exittext = lookup, "STORYSTART1"\n' ..
+        '}\n' ..
+        'cluster 2\n' .. -- MAP06-MAP11
+        '{\n' ..
+        '' .. cluster_music_line .. '' ..
+        '  pic = "' .. interpic .. '"\n' ..
+        '  exittext = lookup, "STORYEND1"\n' ..
+        '}\n' ..
+        'cluster 3\n' .. -- MAP012
+        '{\n' ..
+        '' .. cluster_music_line .. '' ..
+        '  pic = "' .. interpic .. '"\n' ..
+        '  exittext = lookup, "STORYSTART2"\n' ..
+        '}\n' ..
+        'cluster 4\n' .. -- MAP13-MAP14
+        '{\n' ..
+        '' .. cluster_music_line .. '' ..
+        '  pic = "' .. interpic .. '"\n' ..
+        '  exittext = lookup, "SECRETNEARBY"\n' ..
+        '}\n' ..
+        'cluster 5\n' .. -- MAP15-MAP20
+        '{\n' ..
+        '' .. cluster_music_line .. '' ..
+        '  pic = "' .. interpic .. '"\n' ..
+        '  exittext = lookup, "STORYEND2"\n' ..
+        '}\n' ..
+        'cluster 6\n' .. -- MAP21
+        '{\n' ..
+        '' .. cluster_music_line .. '' ..
+        '  pic = "' .. interpic .. '"\n' ..
+        '  exittext = lookup, "STORYSTART3"\n' ..
+        '}\n' ..
+        'cluster 7\n' .. -- MAP22-30
+        '{\n' ..
+        '' .. cluster_music_line .. '' ..
+        '  pic = "' .. interpic .. '"\n' ..
+        '  exittext = lookup, "STORYEND3"\n' ..
+        '}\n' ..
+        'cluster 8\n' .. -- MAP31
+        '{\n' ..
+        '' .. cluster_music_line .. '' ..
+        '  pic = "' .. interpic .. '"\n' ..
+        '  entertext = lookup, "SECRET1"\n' ..
+        '}\n' ..
+        'cluster 9\n' .. -- MAP32
+        '{\n' ..
+        '' .. cluster_music_line .. '' ..
+        '  pic = "' .. interpic .. '"\n' ..
+        '  entertext = lookup, "SECRET2"\n' ..
+        '}\n'
     end
 
     return clusterdef
   end
 
   local function add_episodedef(map_num)
-    local episodedef = {''}
+    local episodedef
     local map_string
 
     if OB_CONFIG.game == "doom2" or OB_CONFIG.game == "tnt" or OB_CONFIG.game == "plutonia" then
@@ -1066,13 +1058,11 @@ function ZDOOM_SPECIALS.do_special_stuff()
       return nil
     end
 
-    episodedef =
-    {
-      'episode ' .. map_string .. '\n',
-      '{\n',
-      '  name = "' .. GAME.levels[map_num].episode.description .. '"\n',
+    episodedef =  
+      'episode ' .. map_string .. '\n' ..
+      '{\n' ..
+      '  name = "' .. GAME.levels[map_num].episode.description .. '"\n' ..
       '}\n'
-    }
 
     return episodedef
   end
@@ -1082,7 +1072,6 @@ function ZDOOM_SPECIALS.do_special_stuff()
   local ipic = rand.key_by_probs(ZDOOM_SPECIALS.INTERPICS)
 
   -- collect lines for MAPINFO lump
-  PARAM.mapinfolump = {}
   PARAM.gameinfolump = {}
 
   if PARAM.bool_custom_quit_messages == 1 then
@@ -1123,10 +1112,7 @@ function ZDOOM_SPECIALS.do_special_stuff()
       info.fog_color = ""
     end
 
-    local mapinfo_lines = add_mapinfo(info)
-    for _,line in pairs(mapinfo_lines) do
-      table.insert(PARAM.mapinfolump,line)
-    end
+    PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_mapinfo(info))
 
   end
 
@@ -1136,45 +1122,24 @@ function ZDOOM_SPECIALS.do_special_stuff()
     -- for Doom2 (yes, there's no Doom2 episode splitting)
     -- but there is from now on
     if OB_CONFIG.game == "doom2" or OB_CONFIG.game == "tnt" or OB_CONFIG.game == "plutonia" then
-      local episode_1_info = add_episodedef(1)
-      for _,line in pairs(episode_1_info) do
-        table.insert(PARAM.mapinfolump,line)
-      end
+      PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(1))
 
       if #GAME.levels > 11 then
-        local episode_2_info = add_episodedef(12)
-        local episode_3_info = add_episodedef(21)
-        for _,line in pairs(episode_2_info) do
-          table.insert(PARAM.mapinfolump,line)
-        end
-        for _,line in pairs(episode_3_info) do
-          table.insert(PARAM.mapinfolump,line)
-        end
+        PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(12))
+        PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(21))
       end
     end
 
     if OB_CONFIG.game == "doom1" or OB_CONFIG.game == "ultdoom" then
-      local episode_info = add_episodedef(1)
-      for _,line in pairs(episode_info) do
-        table.insert(PARAM.mapinfolump,line)
-      end
+      PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(1))
 
       if #GAME.levels > 9 then
-        episode_info = add_episodedef(10)
-        for _,line in pairs(episode_info) do
-          table.insert(PARAM.mapinfolump,line)
-        end
-        episode_info = add_episodedef(19)
-        for _,line in pairs(episode_info) do
-          table.insert(PARAM.mapinfolump,line)
-        end
+        PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(10))
+        PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(19))
       end
 
       if #GAME.levels > 27 then
-        episode_info = add_episodedef(28)
-        for _,line in pairs(episode_info) do
-          table.insert(PARAM.mapinfolump,line)
-        end
+        PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(28))
       end
     end
   end
@@ -1182,9 +1147,7 @@ function ZDOOM_SPECIALS.do_special_stuff()
   -- collect lines for the cluster information in MAPINFO
   local clusterinfo_lines = add_clusterdef(ipic)
   if clusterinfo_lines then
-    for _,line in pairs(clusterinfo_lines) do
-      table.insert(PARAM.mapinfolump,line)
-    end
+    PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, clusterinfo_lines)
   end
 
   if PARAM.story_generator == "proc" then

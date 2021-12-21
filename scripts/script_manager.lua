@@ -34,6 +34,17 @@ file itself.
 ]]
 
 
+function ScriptMan_combine_script(script, text)
+  if script then
+    script = script .. text
+  else
+    script = text
+  end
+
+  return script
+end
+
+
 function ScriptMan_assemble_acs_lump()
 -- MSSP-TODO
 end
@@ -105,10 +116,8 @@ function ScriptMan_assemble_mapinfo_lump()
     end
   end
 
-  if PARAM.mapinfolump ~= nil then
-    for _,line in pairs(PARAM.mapinfolump) do
-      table.insert(mapinfo_lines,line)
-    end
+  if PARAM.mapinfolump then
+    table.insert(mapinfo_lines,PARAM.mapinfolump)
   end
 
   if #mapinfo_lines > 2 then
