@@ -120,12 +120,21 @@ bool create_backups = true;
 bool overwrite_warning = true;
 bool debug_messages = false;
 bool limit_break = false;
+bool preserve_failures = false;
+bool preserve_old_config = false;
+bool did_randomize = false;
 
 game_interface_c *game_object = NULL;
 
 #ifdef WIN32
 FLASHWINFO blinker;
 #endif
+
+static void main_win_surprise_config_CB(Fl_Widget *w, void *data) {
+   Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
+   const Fl_Menu_Item *checkbox = menu->find_item(main_win_surprise_config_CB);
+   preserve_old_config = (checkbox->value() != 0) ? true : false;
+}
 
 /* ----- user information ----------------------------- */
 
@@ -776,7 +785,14 @@ void Main::Detail::Shutdown(const bool error) {
         // on fatal error we cannot risk calling into the Lua runtime
         // (it's state may be compromised by a script error).
         if (!config_file.empty() && !error) {
-            Cookie_Save(config_file);
+            if (did_randomize) {
+                if (!preserve_old_config) {
+                    Cookie_Save(config_file);
+                }
+            }
+            else {
+                Cookie_Save(config_file);
+            }
         }
 
         delete main_win;
@@ -929,7 +945,10 @@ bool Build_Cool_Shit() {
 
     if (main_action == MAIN_CANCEL) {
         main_action = 0;
-
+        if (main_win) {
+            main_win->label(
+                fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION).c_str());
+        }
         Main::ProgStatus(_("Cancelled"));
     }
 
@@ -1108,6 +1127,10 @@ restart:;
 
     Cookie_ParseArguments();
 
+    if (main_win) {
+        main_win->menu_bar->add("Surprise Me/Preserve Old Config", NULL, main_win_surprise_config_CB, 0, FL_MENU_TOGGLE | (preserve_old_config ? FL_MENU_VALUE : 0));
+    }
+
     #ifdef WIN32
     main_win->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(1)));
     #else
@@ -1187,7 +1210,14 @@ restart:;
                 Main_SetSeed();
 
                 // save config in case everything blows up
-                Cookie_Save(config_file);
+                if (did_randomize) {
+                    if (!preserve_old_config) {
+                        Cookie_Save(config_file);
+                    }
+                }
+                else {
+                    Cookie_Save(config_file);
+                }
 
                 Build_Cool_Shit();
 
@@ -1211,8 +1241,15 @@ restart:;
         if (main_win) {
             // on fatal error we cannot risk calling into the Lua runtime
             // (it's state may be compromised by a script error).
-            if (!config_file.empty()) {
-                Cookie_Save(config_file);
+            if (!config_file.empty() && !preserve_old_config) {
+                if (did_randomize) {
+                    if (!preserve_old_config) {
+                        Cookie_Save(config_file);
+                    }
+                }
+                else {
+                    Cookie_Save(config_file);
+                }
             }
             delete main_win;
             main_win = nullptr;

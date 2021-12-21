@@ -45,6 +45,12 @@ static void main_win_close_CB(Fl_Widget *w, void *data) {
     main_action = MAIN_QUIT;
 }
 
+static void main_win_surprise_go_CB(Fl_Widget *w, void *data) {
+   main_win->left_mods->SurpriseMe();
+   if (main_win->right_mods) main_win->right_mods->SurpriseMe();
+   did_randomize = true;
+}
+
 //
 // MainWin Constructor
 //
@@ -72,8 +78,8 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     menu_bar->add("File/Config Manager", FL_F + 9, menu_do_manage_config);
     menu_bar->add("Help/About", FL_F + 1, menu_do_about);
     menu_bar->add("Help/View Logs", FL_F + 6, menu_do_view_logs);
+    menu_bar->add("Surprise Me/Go", FL_F + 8, main_win_surprise_go_CB);
     menu_bar->selection_color(SELECTION);
-    menu_bar->textfont(font_style);
 
     sizing_group = new Fl_Group(0, kf_h(22), W, H - kf_h(22));
     sizing_group->box(FL_NO_BOX);
