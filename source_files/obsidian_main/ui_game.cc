@@ -106,7 +106,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
 
     cy += y_step + kf_h(10);
 
-    build = new Fl_Button(button_x, cy, button_w * .9, button_h, _("Build"));
+    build = new Fl_Button(button_x, cy, button_w, button_h, _("Build"));
     build->visible_focus(0);
     build->box(button_style);
     build->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
@@ -117,7 +117,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
     build->callback(build_callback, this);
     build->shortcut(FL_F + 2);
 
-    quit = new Fl_Button(W - button_x - button_w * 1.33, cy, button_w * .9, button_h,
+    quit = new Fl_Button(W - button_x - button_w, cy, button_w, button_h,
                          _("Quit"));
     quit->visible_focus(0);
     quit->box(button_style);
@@ -127,16 +127,6 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
     quit->labelfont(font_style);
     quit->callback(quit_callback, this);
     quit->shortcut(FL_COMMAND + 'q');
-
-    surprise = new Fl_Button(W - button_x - button_w * .4, cy, button_w * .4, button_h,
-                        "@refresh");
-    surprise->visible_focus(0);
-    surprise->box(button_style);
-    surprise->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
-    surprise->color(BUTTON_COLOR);
-    surprise->labelcolor(FONT2_COLOR);
-    surprise->labelfont(font_style);
-    surprise->callback(surprise_callback, this);
 
     end();
 }
@@ -348,11 +338,5 @@ void UI_Game::stop_callback(Fl_Widget *w, void *data) {
 void UI_Game::quit_callback(Fl_Widget *w, void *data) {
     main_action = MAIN_QUIT;
 }
-
-void UI_Game::surprise_callback(Fl_Widget *w, void *data) {
-   main_win->left_mods->SurpriseMe();
-   if (main_win->right_mods) main_win->right_mods->SurpriseMe();
-}
-
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

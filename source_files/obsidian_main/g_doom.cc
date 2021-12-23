@@ -917,7 +917,9 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
 
     if (!build_ok) {
         // remove the WAD if an error occurred
-        std::filesystem::remove(filename);
+        if (!preserve_failures) {
+            std::filesystem::remove(filename);
+        }
     } else {
         Recent_AddFile(RECG_Output, filename);
     }

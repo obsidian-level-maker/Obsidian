@@ -47,6 +47,10 @@ static void Parse_Option(std::string name, std::string value) {
         debug_messages = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "limit_break") == 0) {
         limit_break = StringToInt(value) ? true : false;
+    } else if (StringCaseCmp(name, "preserve_failures") == 0) {
+        preserve_failures = StringToInt(value) ? true : false;
+    } else if (StringCaseCmp(name, "preserve_old_config") == 0) {
+        preserve_old_config = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "last_directory") == 0) {
         last_directory = value;
     } else if (StringCaseCmp(name, "filename_prefix") == 0) {
@@ -142,6 +146,8 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "overwrite_warning = " << (overwrite_warning ? 1 : 0) << "\n";
     option_fp << "debug_messages = " << (debug_messages ? 1 : 0) << "\n";
     option_fp << "limit_break = " << (limit_break ? 1 : 0) << "\n";
+    option_fp << "preserve_failures = " << (preserve_failures ? 1 : 0) << "\n";
+    option_fp << "preserve_old_config = " << (preserve_old_config ? 1 : 0) << "\n";
     option_fp << "filename_prefix = " << filename_prefix << "\n";
     option_fp << "custom_prefix = " << custom_prefix << "\n";
 
@@ -180,6 +186,7 @@ class UI_OptionsWin : public Fl_Window {
     UI_CustomCheckBox *opt_overwrite;
     UI_CustomCheckBox *opt_debug;
     UI_CustomCheckBox *opt_limit_break;
+    UI_CustomCheckBox *opt_preserve_failures;
 
    public:
     UI_OptionsWin(int W, int H, const char *label = NULL);
@@ -303,6 +310,12 @@ slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this wi
 
             that->want_quit = true;
         }
+    }
+
+    static void callback_PreserveFailures(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+        preserve_failures = that->opt_preserve_failures->value() ? true : false;
     }
 
     static void callback_PrefixHelp(Fl_Widget *w, void *data) {
@@ -444,6 +457,16 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_limit_break->selection_color(SELECTION);
     opt_limit_break->down_box(button_style);
 
+    cy += opt_limit_break->h() + y_step * .5;
+
+    opt_preserve_failures = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_preserve_failures->copy_label(_(" Preserve Failed Builds"));
+    opt_preserve_failures->value(preserve_failures ? 1 : 0);
+    opt_preserve_failures->callback(callback_PreserveFailures, this);
+    opt_preserve_failures->labelfont(font_style);
+    opt_preserve_failures->selection_color(SELECTION);
+    opt_preserve_failures->down_box(button_style);
+
     //----------------
 
     int dh = kf_h(60);
@@ -504,7 +527,7 @@ int UI_OptionsWin::handle(int event) {
 
 void DLG_OptionsEditor(void) {
     int opt_w = kf_w(350);
-    int opt_h = kf_h(300);
+    int opt_h = kf_h(350);
 
     UI_OptionsWin *option_window =
         new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));
