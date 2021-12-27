@@ -308,17 +308,6 @@ OB_MODULES["prefab_control"] =
       priority = 47
     },
 
-    bool_start_room_size =
-    {
-      name = "bool_start_room_size",
-      label = _ ("Start Size Variance"),
-      valuator = "button",
-      default = 1,
-      tooltip = "Affects whether Room Size Variance also influences start rooms.",
-      priority = 46,
-      gap = 1
-    },
-
     --
 
     pf_crushers =
