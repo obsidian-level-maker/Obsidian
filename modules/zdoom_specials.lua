@@ -873,7 +873,7 @@ function ZDOOM_SPECIALS.do_special_stuff()
   end
 
   local function add_clusterdef(interpic)
-    local clusterdef = {''}
+    local clusterdef = ''
 
     local cluster_music_line = '  music = "' .. PARAM.generic_intermusic .. '"\n'
 
@@ -1145,11 +1145,8 @@ function ZDOOM_SPECIALS.do_special_stuff()
   end
 
   -- collect lines for the cluster information in MAPINFO
-  local clusterinfo_lines = add_clusterdef(ipic)
-  if clusterinfo_lines then
-    PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, clusterinfo_lines)
-  end
-
+  PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_clusterdef(ipic))
+ 
   if PARAM.story_generator == "proc" then
     -- language lump is written inside the story generator
     ZStoryGen_init()

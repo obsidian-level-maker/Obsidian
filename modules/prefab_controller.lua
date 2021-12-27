@@ -142,8 +142,8 @@ function PREFAB_CONTROL.fine_tune_filters()
   end
 
   if PARAM.bool_jump_crouch == 0 then
-    GAME.THEMES.hell.wide_halls.organs = 0
-    GAME.THEMES.hell.wide_halls.conveyorh = 0
+    if GAME.THEMES.hell.wide_halls.organs then GAME.THEMES.hell.wide_halls.organs = 0 end
+    if GAME.THEMES.hell.wide_halls.conveyorh then GAME.THEMES.hell.wide_halls.conveyorh = 0 end
     PREFABS["Item_secret_garage_closet"] = nil
   end
 end
@@ -306,17 +306,6 @@ OB_MODULES["prefab_control"] =
       tooltip = "Disables or enables caves with height variations.",
       default = "yes",
       priority = 47
-    },
-
-    bool_start_room_size =
-    {
-      name = "bool_start_room_size",
-      label = _ ("Start Size Variance"),
-      valuator = "button",
-      default = 1,
-      tooltip = "Affects whether Room Size Variance also influences start rooms.",
-      priority = 46,
-      gap = 1
     },
 
     --
