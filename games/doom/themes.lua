@@ -1260,6 +1260,7 @@ DOOM.THEMES =
       --
       gtd_wall_sewer = 35,
       gtd_sewer_set_2 = 35,
+      gtd_sewer_set_3 = 35,
       gtd_water_purifier = 35,
       --
       gtd_generic_beamed_inset = 25,
@@ -1691,6 +1692,7 @@ DOOM.THEMES =
       --
       gtd_wall_sewer = 30,
       gtd_sewer_set_2 = 30,
+      gtd_sewer_set_3 = 30,
       gtd_water_purifier = 30,
       --
       gtd_generic_beamed_inset = 25,
