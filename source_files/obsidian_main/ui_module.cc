@@ -91,7 +91,7 @@ typedef struct {
 } opt_change_callback_data_t;
 
 void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
-                          std::string longtip, int gap) {
+                          std::string longtip, int gap, std::string randomize_group) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
@@ -158,7 +158,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
                                 std::string tip, std::string longtip, int gap,
                                 double min, double max, double inc,
                                 std::string units, std::string presets,
-                                std::string nan) {
+                                std::string nan, std::string randomize_group) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
@@ -320,7 +320,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
 }
 
 void UI_Module::AddButtonOption(std::string opt, std::string label,
-                                std::string tip, std::string longtip, int gap) {
+                                std::string tip, std::string longtip, int gap, std::string randomize_group) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
@@ -855,14 +855,14 @@ void UI_CustomMods::AddModule(std::string id, std::string label,
 
 bool UI_CustomMods::AddOption(std::string module, std::string option,
                               std::string label, std::string tip,
-                              std::string longtip, int gap) {
+                              std::string longtip, int gap, std::string randomize_group) {
     UI_Module *M = FindID(module);
 
     if (!M) {
         return false;
     }
 
-    M->AddOption(option, label, tip, longtip, gap);
+    M->AddOption(option, label, tip, longtip, gap, randomize_group);
 
     PositionAll();
 
@@ -873,7 +873,7 @@ bool UI_CustomMods::AddSliderOption(std::string module, std::string option,
                                     std::string label, std::string tip,
                                     std::string longtip, int gap, double min,
                                     double max, double inc, std::string units,
-                                    std::string presets, std::string nan) {
+                                    std::string presets, std::string nan, std::string randomize_group) {
     UI_Module *M = FindID(module);
 
     if (!M) {
@@ -881,7 +881,7 @@ bool UI_CustomMods::AddSliderOption(std::string module, std::string option,
     }
 
     M->AddSliderOption(option, label, tip, longtip, gap, min, max, inc, units,
-                       presets, nan);
+                       presets, nan, randomize_group);
 
     PositionAll();
 
@@ -890,14 +890,14 @@ bool UI_CustomMods::AddSliderOption(std::string module, std::string option,
 
 bool UI_CustomMods::AddButtonOption(std::string module, std::string option,
                                     std::string label, std::string tip,
-                                    std::string longtip, int gap) {
+                                    std::string longtip, int gap, std::string randomize_group) {
     UI_Module *M = FindID(module);
 
     if (!M) {
         return false;
     }
 
-    M->AddButtonOption(option, label, tip, longtip, gap);
+    M->AddButtonOption(option, label, tip, longtip, gap, randomize_group);
 
     PositionAll();
 
