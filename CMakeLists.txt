@@ -6,11 +6,11 @@ add_subdirectory(source_files/acc)
 add_subdirectory(source_files/filename_formatter)
 add_subdirectory(source_files/fmt)
 add_subdirectory(source_files/lua)
+add_subdirectory(source_files/miniz)
 add_subdirectory(source_files/physfs)
 add_subdirectory(source_files/qsavetex)
 add_subdirectory(source_files/slump)
 add_subdirectory(source_files/zdbsp)
-add_subdirectory(source_files/zlib)
 
 project(
   obsidian
@@ -27,7 +27,7 @@ if(WIN32 AND NOT MINGW AND NOT MSYS)
   set(CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
 endif()
 if(MSYS)
-  set(CMAKE_EXE_LINKER_FLAGS "-static -mwindows -Isource_files/zlib/libzlibstatic.a")
+  set(CMAKE_EXE_LINKER_FLAGS "-static -mwindows")
 endif()
 
 if(false)
@@ -181,7 +181,7 @@ target_include_directories(obsidian PRIVATE source_files/lua)
 target_include_directories(obsidian PRIVATE source_files/physfs)
 target_include_directories(obsidian PRIVATE source_files/slump)
 target_include_directories(obsidian PRIVATE source_files/zdbsp)
-target_include_directories(obsidian PRIVATE source_files/zlib)
+target_include_directories(obsidian PRIVATE source_files/miniz)
 
 if(MINGW OR WIN32 OR MSYS)
   target_compile_definitions(obsidian PRIVATE WIN32)
@@ -230,7 +230,7 @@ add_dependencies(obsidian filename_formatter qsavetex)
 if(UNIX)
   target_link_libraries(
     obsidian
-    PRIVATE zlibstatic
+    PRIVATE miniz
     obsidian_lua
     obsidian_physfs
     obsidian_acc
@@ -241,7 +241,7 @@ if(UNIX)
 else()
   target_link_libraries(
     obsidian
-    PRIVATE zlibstatic
+    PRIVATE miniz
     obsidian_lua
     obsidian_physfs
     obsidian_acc
