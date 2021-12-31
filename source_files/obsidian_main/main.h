@@ -151,6 +151,7 @@ extern bool preserve_old_config;
 extern bool did_randomize;
 extern bool randomize_architecture;
 extern bool randomize_monsters;
+extern bool randomize_pickups;
 extern bool randomize_misc;
 
 extern std::filesystem::path last_directory;

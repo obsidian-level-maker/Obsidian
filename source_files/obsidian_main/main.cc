@@ -125,6 +125,7 @@ bool preserve_old_config = false;
 bool did_randomize = false;
 bool randomize_architecture = false;
 bool randomize_monsters = false;
+bool randomize_pickups = false;
 bool randomize_misc = false;
 
 game_interface_c *game_object = NULL;
@@ -149,6 +150,12 @@ static void main_win_monsters_config_CB(Fl_Widget *w, void *data) {
    Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
    const Fl_Menu_Item *checkbox = menu->find_item(main_win_monsters_config_CB);
    randomize_monsters = (checkbox->value() != 0) ? true : false;
+}
+
+static void main_win_pickups_config_CB(Fl_Widget *w, void *data) {
+   Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
+   const Fl_Menu_Item *checkbox = menu->find_item(main_win_pickups_config_CB);
+   randomize_pickups = (checkbox->value() != 0) ? true : false;
 }
 
 static void main_win_misc_config_CB(Fl_Widget *w, void *data) {
@@ -1153,6 +1160,7 @@ restart:;
         main_win->menu_bar->add("Surprise Me/Preserve Old Config", NULL, main_win_surprise_config_CB, 0, FL_MENU_TOGGLE | (preserve_old_config ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add("Surprise Me/Randomize Architecture", NULL, main_win_architecture_config_CB, 0, FL_MENU_TOGGLE | (randomize_architecture ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add("Surprise Me/Randomize Monsters", NULL, main_win_monsters_config_CB, 0, FL_MENU_TOGGLE | (randomize_monsters ? FL_MENU_VALUE : 0));
+        main_win->menu_bar->add("Surprise Me/Randomize Pickups", NULL, main_win_pickups_config_CB, 0, FL_MENU_TOGGLE | (randomize_pickups ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add("Surprise Me/Randomize Misc", NULL, main_win_misc_config_CB, 0, FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
     }
 

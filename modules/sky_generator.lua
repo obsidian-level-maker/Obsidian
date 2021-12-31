@@ -683,6 +683,7 @@ OB_MODULES["sky_generator"] =
       priority = 9,
       tooltip = "Influences whether the sky generator should generate terrain in the skybox.",
       default = "hs_random",
+      randomize_group = "misc",
     },
 
     force_hill_params =
@@ -695,6 +696,7 @@ OB_MODULES["sky_generator"] =
                 "making an impression of being inside a cave or crater.",
       default = "hp_random",
       gap = 1,
+      randomize_group = "misc",
     },
 
     cloud_color =
@@ -704,6 +706,7 @@ OB_MODULES["sky_generator"] =
       priority= 7,
       tooltip = "Picks the color of the sky if day. Default means random and theme-ish.",
       default = "default",
+      randomize_group = "misc",
     },
 
     terrain_color =
@@ -713,6 +716,7 @@ OB_MODULES["sky_generator"] =
       priority = 6,
       tooltip = "Picks the color of the terrain in the sky if available. Default means random and theme-ish.",
       default = "default",
+      randomize_group = "misc",
     },
 
     nebula_color =
@@ -724,6 +728,7 @@ OB_MODULES["sky_generator"] =
                 "Default means random and theme-ish.",
       default = "default",
       gap = 1,
+      randomize_group = "misc",
     },
 
     bool_influence_map_darkness =

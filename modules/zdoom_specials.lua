@@ -1194,6 +1194,7 @@ OB_MODULES["zdoom_specials"] =
       choices = ZDOOM_SPECIALS.FOG_GEN_CHOICES,
       default = "no",
       tooltip = "Generates fog colors based on the Sky Generator or generate completely randomly.",
+      randomize_group = "misc"
     },
 
     fog_env = {
@@ -1202,6 +1203,7 @@ OB_MODULES["zdoom_specials"] =
       choices = ZDOOM_SPECIALS.FOG_ENV_CHOICES,
       default = "all",
       tooltip = "Limits fog to outdoors (sectors with exposed sky ceilings) or allows for all.",
+      randomize_group = "misc"
     },
 
     fog_intensity = {
@@ -1210,6 +1212,7 @@ OB_MODULES["zdoom_specials"] =
       choices = ZDOOM_SPECIALS.FOG_DENSITY_CHOICES,
       default = "subtle",
       tooltip = "Determines thickness and intensity of fog, if the Fog Generator is enabled. Subtle or Misty is recommended.",
+      randomize_group = "misc"
     },
 
     bool_fog_affects_sky = {
@@ -1259,6 +1262,7 @@ OB_MODULES["zdoom_specials"] =
       choices = ZDOOM_SPECIALS.STORY_CHOICES,
       default = "proc",
       tooltip = "Adds cluster information with generic or randomized story text into the MAPINFO structure!",
+      randomize_group = "misc"
     },
 
     bool_custom_quit_messages = {

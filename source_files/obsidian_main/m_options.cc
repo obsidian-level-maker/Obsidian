@@ -55,6 +55,8 @@ static void Parse_Option(std::string name, std::string value) {
         randomize_architecture = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "randomize_monsters") == 0) {
         randomize_monsters = StringToInt(value) ? true : false;
+    } else if (StringCaseCmp(name, "randomize_pickups") == 0) {
+        randomize_pickups = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "randomize_misc") == 0) {
         randomize_misc = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "last_directory") == 0) {
@@ -155,7 +157,8 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "preserve_failures = " << (preserve_failures ? 1 : 0) << "\n";
     option_fp << "preserve_old_config = " << (preserve_old_config ? 1 : 0) << "\n";
     option_fp << "randomize_architecture = " << (randomize_architecture ? 1 : 0) << "\n";
-    option_fp << "randomize_monsters = " << (randomize_monsters? 1 : 0) << "\n";
+    option_fp << "randomize_monsters = " << (randomize_monsters ? 1 : 0) << "\n";
+    option_fp << "randomize_pickups = " << (randomize_pickups ? 1 : 0) << "\n";
     option_fp << "randomize_misc = " << (randomize_misc ? 1 : 0) << "\n";
     option_fp << "filename_prefix = " << filename_prefix << "\n";
     option_fp << "custom_prefix = " << custom_prefix << "\n";
