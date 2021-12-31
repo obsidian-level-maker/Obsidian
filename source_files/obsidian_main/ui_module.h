@@ -23,6 +23,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 #include "FL/Fl_Check_Button.H"
 #include "FL/Fl_Group.H"
@@ -59,15 +60,15 @@ class UI_Module : public Fl_Group {
     virtual ~UI_Module();
 
     void AddOption(std::string option, std::string label, std::string tip,
-                   std::string longtip, int gap);
+                   std::string longtip, int gap, std::string randomize_group);
 
     void AddSliderOption(std::string option, std::string label, std::string tip,
                          std::string longtip, int gap, double min, double max,
                          double inc, std::string units, std::string presets,
-                         std::string nan);
+                         std::string nan, std::string randomize_group);
 
     void AddButtonOption(std::string opt, std::string label, std::string tip,
-                         std::string longtip, int gap);
+                         std::string longtip, int gap, std::string randomize_group);
 
     void AddOptionChoice(std::string option, std::string id, std::string label);
 
@@ -87,7 +88,7 @@ class UI_Module : public Fl_Group {
 
     void update_Enable();
 
-    void randomize_Values();
+    void randomize_Values(std::vector<std::string> selected_randomize_groups);
 
     UI_RChoice *FindOpt(std::string opt);  // const;
 
@@ -139,17 +140,17 @@ class UI_CustomMods : public Fl_Group {
     bool EnableMod(std::string id, bool enable);
 
     bool AddOption(std::string module, std::string option, std::string label,
-                   std::string tip, std::string longtip, int gap);
+                   std::string tip, std::string longtip, int gap, std::string randomize_group);
 
     bool AddSliderOption(std::string module, std::string option,
                          std::string label, std::string tip,
                          std::string longtip, int gap, double min, double max,
                          double inc, std::string units, std::string presets,
-                         std::string nan);
+                         std::string nan, std::string randomize_group);
 
     bool AddButtonOption(std::string module, std::string option,
                          std::string label, std::string tip,
-                         std::string longtip, int gap);
+                         std::string longtip, int gap, std::string randomize_group);
 
     void AddOptionChoice(std::string module, std::string option, std::string id,
                          std::string label);

@@ -22,7 +22,7 @@
 
 #include "headers.h"
 
-#include <zlib.h>
+#include "miniz.h"
 
 #include <list>
 

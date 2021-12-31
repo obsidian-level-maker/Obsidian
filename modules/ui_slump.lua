@@ -79,7 +79,8 @@ OB_MODULES["ui_slump_arch"] =
       default = 15,
       nan = "Mix It Up,",
       presets = "",
-      tooltip = "Minimum number of rooms per level."
+      tooltip = "Minimum number of rooms per level.",
+      randomize_group = "architecture"
     },
 
     {
@@ -92,7 +93,8 @@ OB_MODULES["ui_slump_arch"] =
       increment = 1,
       default = 50,
       presets = "",
-      tooltip = "% chance that SLUMP will attempt to grow a room."
+      tooltip = "% chance that SLUMP will attempt to grow a room.",
+      randomize_group = "architecture"
     },
     
     {
@@ -107,7 +109,8 @@ OB_MODULES["ui_slump_arch"] =
       presets = "",
       tooltip = "% chance that a room will attempt to fork as the level grows. "..
                 "0% should be a bunch of murder hallways. Forks are not guaranteed " ..
-                "to succeed, especially if the room bigification chance is increased."
+                "to succeed, especially if the room bigification chance is increased.",
+      randomize_group = "architecture"
     },
 
     {
@@ -123,7 +126,7 @@ OB_MODULES["ui_slump_arch"] =
       label = _("Major Nukage Mode"),
       valuator = "button",
       default = 0,
-      tooltip = "Watch your step!"
+      tooltip = "Watch your step!",
     },
     
     {
@@ -160,7 +163,8 @@ OB_MODULES["ui_slump_mons"] =
       label = _("Monster Variety"),
       choices = UI_SLUMP.MON_VARIETY,
       default = "normal",
-      tooltip = "Control what types of monsters are available"
+      tooltip = "Control what types of monsters are available",
+      randomize_group = "monsters"
     },
   }
 }

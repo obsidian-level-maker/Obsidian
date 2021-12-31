@@ -1161,14 +1161,14 @@ function ob_init()
               if not opt.nan then
                 opt.nan = ""
               end
-              gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.min, opt.max, opt.increment, opt.units, opt.presets, opt.nan)
+              gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.min, opt.max, opt.increment, opt.units, opt.presets, opt.nan, opt.randomize_group or "")
               if not opt.default then
                 opt.default = (opt.min + opt.max) / 2
               end
               opt.value = opt.default
               gui.set_module_slider_option(mod.name, opt.name, opt.value)
             elseif opt.valuator == "button" then
-              gui.add_module_button_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap)
+              gui.add_module_button_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.randomize_group or "")
               if not opt.default then
                 opt.default = 0
               end
@@ -1176,7 +1176,7 @@ function ob_init()
               gui.set_module_button_option(mod.name, opt.name, opt.value)
             end
           else
-            gui.add_module_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap)
+            gui.add_module_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.randomize_group or "")
             opt.avail_choices = {}
 
             for i = 1,#opt.choices,2 do

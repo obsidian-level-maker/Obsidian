@@ -182,6 +182,8 @@ class UI_RChoice : public Fl_Group {
 
     UI_RChoiceMenu *mod_menu;
 
+    std::string randomize_group;
+
    private:
 };
 
@@ -246,6 +248,8 @@ class UI_RSlide : public Fl_Group {
 
     std::vector<std::string> nan_choices;
 
+    std::string randomize_group;
+
    public:
 };
 
@@ -270,6 +274,8 @@ class UI_RButton : public Fl_Group {
     Fl_Box *mod_label;
 
     UI_HelpLink *mod_help;
+
+    std::string randomize_group;
 
    private:
 };
