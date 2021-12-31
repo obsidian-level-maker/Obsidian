@@ -26,7 +26,6 @@
 #include "lib_util.h"
 #include "m_lua.h"
 #include "main.h"
-#include <string>
 #include <iostream>
 #include "sys_xoshiro.h"
 
@@ -138,6 +137,8 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
     cb_data->opt_name = opt;
 
     rch->mod_menu->callback(callback_OptChange, cb_data);
+
+    rch->randomize_group = randomize_group;
 
     if (!mod_button->value()) {
         rch->hide();
@@ -304,6 +305,8 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     }
     std::setlocale(LC_NUMERIC, numeric_locale.c_str());
 
+    rsl->randomize_group = randomize_group;
+
     if (!mod_button->value()) {
         rsl->hide();
     }
@@ -357,6 +360,8 @@ void UI_Module::AddButtonOption(std::string opt, std::string label,
     rbt->mod_help->help_text = longtip;
     rbt->mod_help->help_title = label;
     rbt->mod_help->callback(callback_ShowHelp, NULL);
+
+    rbt->randomize_group = randomize_group;
 
     if (!mod_button->value()) {
         rbt->hide();
@@ -417,7 +422,7 @@ void UI_Module::update_Enable() {
     }
 }
 
-void UI_Module::randomize_Values() {
+void UI_Module::randomize_Values(std::vector<std::string> selected_randomize_groups) {
     std::map<std::string, UI_RChoice *>::const_iterator IT;
     std::map<std::string, UI_RSlide *>::const_iterator IT2;
     std::map<std::string, UI_RButton *>::const_iterator IT3;
@@ -425,32 +430,47 @@ void UI_Module::randomize_Values() {
     for (IT = choice_map.begin(); IT != choice_map.end(); IT++) {
         UI_RChoice *M = IT->second;
         SYS_ASSERT(M);
-        M->mod_menu->value(xoshiro_Between(0, M->mod_menu->size() - 1));
-        M->mod_menu->do_callback();
+        for (auto group : selected_randomize_groups) {
+            if (StringCaseCmp(group, M->randomize_group) == 0) {
+                M->mod_menu->value(xoshiro_Between(0, M->mod_menu->size() - 1));
+                M->mod_menu->do_callback();
+                break;
+            }
+        }
     }
 
     for (IT2 = choice_map_slider.begin(); IT2 != choice_map_slider.end();
          IT2++) {
         UI_RSlide *M = IT2->second;
         SYS_ASSERT(M);
-        if (M->nan_choices.size() > 0) {
-            M->nan_options->value(0);
-            M->nan_options->do_callback();
+        for (auto group : selected_randomize_groups) {
+            if (StringCaseCmp(group, M->randomize_group) == 0) {
+                if (M->nan_choices.size() > 0) {
+                    M->nan_options->value(0);
+                    M->nan_options->do_callback();
+                }
+                M->mod_slider->value(M->mod_slider->round(xoshiro.xoshiro256p_Range<double>(M->mod_slider->minimum(), M->mod_slider->maximum())));
+                M->mod_slider->do_callback();
+                break;
+            }
         }
-        M->mod_slider->value(M->mod_slider->round(xoshiro.xoshiro256p_Range<double>(M->mod_slider->minimum(), M->mod_slider->maximum())));
-        M->mod_slider->do_callback();
     }
 
     for (IT3 = choice_map_button.begin(); IT3 != choice_map_button.end();
          IT3++) {
         UI_RButton *M = IT3->second;
         SYS_ASSERT(M);
-        if (xoshiro.xoshiro256p_UNI<float>() < 0.5) {
-            M->mod_check->value(0);
-        } else {
-            M->mod_check->value(1);
+        for (auto group : selected_randomize_groups) {
+            if (StringCaseCmp(group, M->randomize_group) == 0) {
+                if (xoshiro.xoshiro256p_UNI<float>() < 0.5) {
+                    M->mod_check->value(0);
+                } else {
+                    M->mod_check->value(1);
+                }
+                M->mod_check->do_callback();
+                break;
+            }
         }
-        M->mod_check->do_callback();
     }
 }
 
@@ -1423,14 +1443,11 @@ void UI_CustomMods::SurpriseMe() {
     for (int j = 0; j < mod_pack->children(); j++) {
         UI_Module *M = (UI_Module *)mod_pack->child(j);
         SYS_ASSERT(M);
-        std::string mod_label = M->heading->label();
-        if (StringCaseCmp(mod_label, "Map Build Options") != 0) {
-            if (M->mod_button->value() == 1) {
-                if (StringCaseCmp(mod_label, "Debug Control") != 0) {
-                    M->randomize_Values();
-                }
-            }
-        }
+        std::vector<std::string> selected_randomize_groups;
+        if (randomize_architecture) selected_randomize_groups.push_back("architecture");
+        if (randomize_monsters) selected_randomize_groups.push_back("monsters");
+        if (randomize_misc) selected_randomize_groups.push_back("misc");
+        M->randomize_Values(selected_randomize_groups);
     }
 }
 

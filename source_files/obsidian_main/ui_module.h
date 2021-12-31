@@ -23,6 +23,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 #include "FL/Fl_Check_Button.H"
 #include "FL/Fl_Group.H"
@@ -87,7 +88,7 @@ class UI_Module : public Fl_Group {
 
     void update_Enable();
 
-    void randomize_Values();
+    void randomize_Values(std::vector<std::string> selected_randomize_groups);
 
     UI_RChoice *FindOpt(std::string opt);  // const;
 

@@ -84,6 +84,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_shooter=
@@ -103,6 +104,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_gunner=
@@ -122,6 +124,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_ss_nazi=
@@ -141,6 +144,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_imp=
@@ -160,6 +164,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_skull=
@@ -179,6 +184,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_demon=
@@ -198,6 +204,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_spectre=
@@ -217,6 +224,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_pain=
@@ -236,6 +244,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_caco=
@@ -255,6 +264,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_knight=
@@ -274,6 +284,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_revenant=
@@ -293,6 +304,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_mancubus=
@@ -312,6 +324,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_arach=
@@ -331,6 +344,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
      float_vile=
      {
@@ -349,6 +363,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_baron=
@@ -368,6 +383,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_Cyberdemon=
@@ -387,6 +403,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_Spiderdemon=
@@ -406,6 +423,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      }
   },
 }
