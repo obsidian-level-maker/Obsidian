@@ -91,7 +91,8 @@ OB_MODULES["procedural_gotcha"] =
       "but immensely-sized exit room with gratitiously intensified monster strength. " ..
       "Essentially an arena - prepare for a tough, tough fight!\n\nNotes:\n\n" ..
       "5% of levels may create at least 1 or 2 gotcha maps in a standard full game.",
-      priority = 100
+      priority = 100,
+      randomize_group = "architecture"
     },
     
     float_gotcha_qty =
@@ -106,6 +107,7 @@ OB_MODULES["procedural_gotcha"] =
       default = 1.2,
       presets = "",
       tooltip = "Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting).",
+      randomize_group = "monsters"
     },
 
     float_gotcha_strength =
@@ -125,6 +127,7 @@ OB_MODULES["procedural_gotcha"] =
       "8:8 (CRAZIER)," ..
       "16:16 (NIGHTMARISH),",
       tooltip = "Offset monster quantity from your default strength of choice plus the increasing level ramp.",
+      randomize_group = "monsters"
     },
 
     gotcha_map_size =
@@ -134,6 +137,7 @@ OB_MODULES["procedural_gotcha"] =
       choices=PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_MAP_SIZES,
       default = "small",
       tooltip = "Size of the procedural gotcha. Start and arena room sizes are relative to map size as well.",
+      randomize_group = "architecture"
     },
   },
 }

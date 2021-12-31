@@ -141,10 +141,10 @@ OB_MODULES["theme_ctl_doom2"] =
 
   options =
   {
-    episode1  = { label="Episode 1",     choices=THEME_CONTROL.CHOICES, default = "no_change" },
-    episode2  = { label="Episode 2",     choices=THEME_CONTROL.CHOICES, default = "no_change" },
-    episode3  = { label="Episode 3",     choices=THEME_CONTROL.CHOICES, default = "no_change" },
-    secret    = { label="Secret Levels", choices=THEME_CONTROL.CHOICES, default = "no_change" },
+    episode1  = { label="Episode 1",     choices=THEME_CONTROL.CHOICES, default = "no_change", randomize_group = "architecture" },
+    episode2  = { label="Episode 2",     choices=THEME_CONTROL.CHOICES, default = "no_change", randomize_group = "architecture" },
+    episode3  = { label="Episode 3",     choices=THEME_CONTROL.CHOICES, default = "no_change", randomize_group = "architecture" },
+    secret    = { label="Secret Levels", choices=THEME_CONTROL.CHOICES, default = "no_change", randomize_group = "architecture" },
   },
 
   tooltip = "Warning: Mix-ins are for now completely overriden when picking a choice with change.",
@@ -183,11 +183,11 @@ OB_MODULES["theme_ctl_doom1"] =
 
   options =
   {
-    episode1  = { label="Episode 1",     choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change" },
-    episode2  = { label="Episode 2",     choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change" },
-    episode3  = { label="Episode 3",     choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change" },
-    episode4  = { label="Episode 4",     choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change" },
-    secret    = { label="Secret Levels", choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change" },
+    episode1  = { label="Episode 1",     choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change", randomize_group = "architecture" },
+    episode2  = { label="Episode 2",     choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change", randomize_group = "architecture" },
+    episode3  = { label="Episode 3",     choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change", randomize_group = "architecture" },
+    episode4  = { label="Episode 4",     choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change", randomize_group = "architecture" },
+    secret    = { label="Secret Levels", choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change", randomize_group = "architecture" },
   },
 
   tooltip = "Warning: Mix-ins are for now completely overriden when picking a choice with change.",

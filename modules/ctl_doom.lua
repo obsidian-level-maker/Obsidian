@@ -84,6 +84,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_shooter=
@@ -103,6 +104,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_gunner=
@@ -122,6 +124,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_ss_nazi=
@@ -141,6 +144,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_imp=
@@ -160,6 +164,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_skull=
@@ -179,6 +184,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_demon=
@@ -198,6 +204,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_spectre=
@@ -217,6 +224,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_pain=
@@ -236,6 +244,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_caco=
@@ -255,6 +264,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_knight=
@@ -274,6 +284,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_revenant=
@@ -293,6 +304,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_mancubus=
@@ -312,6 +324,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_arach=
@@ -331,6 +344,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
      float_vile=
      {
@@ -349,6 +363,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_baron=
@@ -368,6 +383,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_Cyberdemon=
@@ -387,6 +403,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      },
 
      float_Spiderdemon=
@@ -406,6 +423,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters"
      }
   },
 }
@@ -517,6 +535,7 @@ OB_MODULES["doom_weapon_control"] =
      "1.2:1.2 (More)," ..
      "3:3 (Heaps)," ..
      "10:10 (I LOVE IT),",
+     randomize_group="pickups"
     },
 
      float_shotty=
@@ -536,6 +555,7 @@ OB_MODULES["doom_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups"
      },
 
      float_super=
@@ -555,6 +575,7 @@ OB_MODULES["doom_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups"
      },
 
      float_chain=
@@ -574,6 +595,7 @@ OB_MODULES["doom_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups"
      },
 
      float_launch=
@@ -593,6 +615,7 @@ OB_MODULES["doom_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups"
      },
 
      float_plasma=
@@ -612,6 +635,7 @@ OB_MODULES["doom_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups"
      },
 
      float_bfg=
@@ -631,6 +655,7 @@ OB_MODULES["doom_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups"
      },
 
     weapon_prefs =
@@ -644,6 +669,7 @@ OB_MODULES["doom_weapon_control"] =
       "while increases BFG's for cyberdemons and spider masterminds. No other weapon preferences.\n\n" ..
       "NONE: No preferences at all. For those who like to live life dangerously with lost souls and only rockets.",
       default="normal",
+      randomize_group="pickups"
     },
   },
 }
@@ -656,17 +682,17 @@ function CTL_DOOM.item_setup(self)
   for name,opt in pairs(self.options) do
     if OB_CONFIG.batch == "yes" then
       if not PARAM[name] then
-        PARAM[name] = opt.default
+        PARAM[string.sub(name, 7)] = opt.default
       end
     else
 	    if opt.valuator then
 		    if opt.valuator == "button" then
-		        PARAM[name] = gui.get_module_button_value(self.name, opt.name)
+		        PARAM[string.sub(name, 7)] = gui.get_module_button_value(self.name, opt.name)
 		    elseif opt.valuator == "slider" then
-		        PARAM[name] = gui.get_module_slider_value(self.name, opt.name)      
+		        PARAM[string.sub(name, 7)] = gui.get_module_slider_value(self.name, opt.name)      
 		    end
 	    else
-        PARAM[name] = self.options[name].value
+        PARAM[string.sub(name, 7)] = self.options[name].value
       end
 	  end
   end
@@ -728,6 +754,7 @@ OB_MODULES["doom_item_control"] =
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
       priority = 100,
+      randomize_group="pickups"
      },
      
      float_stimpack=
@@ -748,6 +775,7 @@ OB_MODULES["doom_item_control"] =
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
       priority = 99,
+      randomize_group="pickups"
      },
      
      float_medikit=
@@ -769,6 +797,7 @@ OB_MODULES["doom_item_control"] =
       "10:10 (I LOVE IT),",
       priority = 98,
       gap = 1,
+      randomize_group="pickups"
      },
      
      float_helmet=
@@ -789,6 +818,7 @@ OB_MODULES["doom_item_control"] =
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
       priority = 95,
+      randomize_group="pickups"
      },    
 
     -- nice items
@@ -811,6 +841,7 @@ OB_MODULES["doom_item_control"] =
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
       priority = 94,
+      randomize_group="pickups"
      },
 
      float_blue_armor=
@@ -832,6 +863,7 @@ OB_MODULES["doom_item_control"] =
       "10:10 (I LOVE IT),",
       priority = 93,
       gap = 1,
+      randomize_group="pickups"
      },
 
      float_soul=
@@ -851,6 +883,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups"
      },
 
      float_backpack=
@@ -870,6 +903,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups"
      },
 
      float_berserk=
@@ -889,6 +923,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups"
      },
 
      float_invis=
@@ -908,6 +943,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups"
      },
      
      float_invul=
@@ -927,6 +963,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups"
      },
 
      float_allmap=
@@ -946,6 +983,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups"
      },
 
      float_goggles=
@@ -965,6 +1003,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups"
      },
 
      float_mega=
@@ -984,6 +1023,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups"
      },
 
     -- ammo
@@ -1006,6 +1046,7 @@ OB_MODULES["doom_item_control"] =
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
       priority = 75,
+      randomize_group="pickups"
      },
 
      float_bullet_box=
@@ -1026,6 +1067,7 @@ OB_MODULES["doom_item_control"] =
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
       priority = 74,
+      randomize_group="pickups"
      },
 
      float_shells=
@@ -1046,6 +1088,7 @@ OB_MODULES["doom_item_control"] =
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
       priority = 73,
+      randomize_group="pickups"
      },
 
      float_shell_box=
@@ -1066,6 +1109,7 @@ OB_MODULES["doom_item_control"] =
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
       priority = 72,
+      randomize_group="pickups"
      },
 
      float_rocket=
@@ -1086,6 +1130,7 @@ OB_MODULES["doom_item_control"] =
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
       priority = 71,
+      randomize_group="pickups"
      },
 
      float_rocket_box=
@@ -1106,6 +1151,7 @@ OB_MODULES["doom_item_control"] =
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
       priority = 70,
+      randomize_group="pickups"
      },
 
      float_cells=
@@ -1126,6 +1172,7 @@ OB_MODULES["doom_item_control"] =
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
       priority = 69,
+      randomize_group="pickups"
      },
 
      float_cell_pack=
@@ -1147,6 +1194,7 @@ OB_MODULES["doom_item_control"] =
       "10:10 (I LOVE IT),",
       priority = 68,
       gap = 1,
+      randomize_group="pickups"
      }
   },
 }

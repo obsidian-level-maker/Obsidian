@@ -529,7 +529,7 @@ int gui_show_module(lua_State *L) {
     return 0;
 }
 
-// LUA: add_module_option(module, option, label, tooltip, gap)
+// LUA: add_module_option(module, option, label, tooltip, gap, randomize_group)
 //
 int gui_add_module_option(lua_State *L) {
     std::string module = luaL_optstring(L, 1, "");
@@ -540,6 +540,8 @@ int gui_add_module_option(lua_State *L) {
     std::string longtip = luaL_optstring(L, 5, "");
 
     int gap = luaL_optinteger(L, 6, 0);
+
+    std::string randomize_group = luaL_optstring(L, 7, "");
 
     SYS_ASSERT(!module.empty() && !option.empty());
 
@@ -557,10 +559,10 @@ int gui_add_module_option(lua_State *L) {
 
     // FIXME : error if module is unknown
 
-    main_win->left_mods->AddOption(module, option, label, tip, longtip, gap);
+    main_win->left_mods->AddOption(module, option, label, tip, longtip, gap, randomize_group);
     if (!single_pane) {
         main_win->right_mods->AddOption(module, option, label, tip, longtip,
-                                        gap);
+                                        gap, randomize_group);
     }
 
     return 0;
@@ -586,6 +588,8 @@ int gui_add_module_slider_option(lua_State *L) {
     std::string presets = luaL_optstring(L, 11, "");
     std::string nan = luaL_optstring(L, 12, "");
 
+    std::string randomize_group = luaL_optstring(L, 13, "");
+
     SYS_ASSERT(!module.empty() && !option.empty());
 
     //	DebugPrintf("  add_module_option: {}.{}\n", module, option);
@@ -604,11 +608,11 @@ int gui_add_module_slider_option(lua_State *L) {
 
     main_win->left_mods->AddSliderOption(module, option, label, tip, longtip,
                                          gap, min, max, inc, units, presets,
-                                         nan);
+                                         nan, randomize_group);
     if (!single_pane) {
         main_win->right_mods->AddSliderOption(module, option, label, tip,
                                               longtip, gap, min, max, inc,
-                                              units, presets, nan);
+                                              units, presets, nan, randomize_group);
     }
 
     return 0;
@@ -625,6 +629,8 @@ int gui_add_module_button_option(lua_State *L) {
     std::string longtip = luaL_optstring(L, 5, "");
 
     int gap = luaL_optinteger(L, 6, 0);
+
+    std::string randomize_group = luaL_optstring(L, 7, "");
 
     SYS_ASSERT(!module.empty() && !option.empty());
 
@@ -643,10 +649,10 @@ int gui_add_module_button_option(lua_State *L) {
     // FIXME : error if module is unknown
 
     main_win->left_mods->AddButtonOption(module, option, label, tip, longtip,
-                                         gap);
+                                         gap, randomize_group);
     if (!single_pane) {
         main_win->right_mods->AddButtonOption(module, option, label, tip,
-                                              longtip, gap);
+                                              longtip, gap, randomize_group);
     }
 
     return 0;

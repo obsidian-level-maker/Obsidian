@@ -1,6 +1,0 @@
-To create the necessary files to cross-compile zLib for Obsidian on Windows:
-cd mingw
-cmake .. -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw64.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_RC_COMPILER=/usr/bin/x86_64-w64-mingw32-windres
-make
-
-Replace Toolchain-mingw64.cmake with Toolchain-mingw32.cmake and x86_64-w64-mingw32-windres with i686-w64-mingw32-windres if building for 32-bit

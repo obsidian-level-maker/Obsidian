@@ -234,7 +234,8 @@ OB_MODULES["zdoom_marines"] =
     qty =
     {
       label = _("Default Quantity"),
-      choices = ZDOOM_MARINE.CHOICES
+      choices = ZDOOM_MARINE.CHOICES,
+      randomize_group = "monsters"
     },
   },
 }
@@ -299,17 +300,17 @@ OB_MODULES["zdoom_marine_control"] =
 
   options =
   {
-    marine_fist      = { label="Fist Marine",        choices=ZDOOM_MARINE.CTL_CHOICES },
-    marine_berserk   = { label="Berserk Marine",     choices=ZDOOM_MARINE.CTL_CHOICES },
-    marine_saw       = { label="Chainsaw Marine",    choices=ZDOOM_MARINE.CTL_CHOICES },
-    marine_pistol    = { label="Pistol Marine",      choices=ZDOOM_MARINE.CTL_CHOICES },
-    marine_shotty    = { label="Shotgun Marine",     choices=ZDOOM_MARINE.CTL_CHOICES },
-    marine_ssg       = { label="SSG Marine",         choices=ZDOOM_MARINE.CTL_CHOICES },
-    marine_chain     = { label="Chaingun Marine",    choices=ZDOOM_MARINE.CTL_CHOICES },
-    marine_rocket    = { label="Rocket Marine",      choices=ZDOOM_MARINE.CTL_CHOICES },
-    marine_plasma    = { label="Plasma Marine",      choices=ZDOOM_MARINE.CTL_CHOICES },
-    marine_rail      = { label="Railgun Marine",     choices=ZDOOM_MARINE.CTL_CHOICES },
-    marine_bfg       = { label="BFG Marine",         choices=ZDOOM_MARINE.CTL_CHOICES },
+    marine_fist      = { label="Fist Marine",        choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
+    marine_berserk   = { label="Berserk Marine",     choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
+    marine_saw       = { label="Chainsaw Marine",    choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
+    marine_pistol    = { label="Pistol Marine",      choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
+    marine_shotty    = { label="Shotgun Marine",     choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
+    marine_ssg       = { label="SSG Marine",         choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
+    marine_chain     = { label="Chaingun Marine",    choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
+    marine_rocket    = { label="Rocket Marine",      choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
+    marine_plasma    = { label="Plasma Marine",      choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
+    marine_rail      = { label="Railgun Marine",     choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
+    marine_bfg       = { label="BFG Marine",         choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
   },
 }
 

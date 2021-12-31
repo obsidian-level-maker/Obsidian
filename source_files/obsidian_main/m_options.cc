@@ -51,6 +51,14 @@ static void Parse_Option(std::string name, std::string value) {
         preserve_failures = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "preserve_old_config") == 0) {
         preserve_old_config = StringToInt(value) ? true : false;
+    } else if (StringCaseCmp(name, "randomize_architecture") == 0) {
+        randomize_architecture = StringToInt(value) ? true : false;
+    } else if (StringCaseCmp(name, "randomize_monsters") == 0) {
+        randomize_monsters = StringToInt(value) ? true : false;
+    } else if (StringCaseCmp(name, "randomize_pickups") == 0) {
+        randomize_pickups = StringToInt(value) ? true : false;
+    } else if (StringCaseCmp(name, "randomize_misc") == 0) {
+        randomize_misc = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "last_directory") == 0) {
         last_directory = value;
     } else if (StringCaseCmp(name, "filename_prefix") == 0) {
@@ -148,6 +156,10 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "limit_break = " << (limit_break ? 1 : 0) << "\n";
     option_fp << "preserve_failures = " << (preserve_failures ? 1 : 0) << "\n";
     option_fp << "preserve_old_config = " << (preserve_old_config ? 1 : 0) << "\n";
+    option_fp << "randomize_architecture = " << (randomize_architecture ? 1 : 0) << "\n";
+    option_fp << "randomize_monsters = " << (randomize_monsters ? 1 : 0) << "\n";
+    option_fp << "randomize_pickups = " << (randomize_pickups ? 1 : 0) << "\n";
+    option_fp << "randomize_misc = " << (randomize_misc ? 1 : 0) << "\n";
     option_fp << "filename_prefix = " << filename_prefix << "\n";
     option_fp << "custom_prefix = " << custom_prefix << "\n";
 
@@ -344,8 +356,7 @@ slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this wi
     }
 
     static void callback_SetCustomPrefix(Fl_Widget *w, void *data) {
-        const char *user_buf = fl_input("%s", _("Enter Custom Prefix Format:"),
-                                        custom_prefix.c_str());
+        const char *user_buf = fl_input("%s", custom_prefix.c_str(), _("Enter Custom Prefix Format:"));
 
         if (user_buf) {
             custom_prefix = user_buf;
