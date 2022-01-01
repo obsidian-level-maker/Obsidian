@@ -7,8 +7,8 @@
 --  Copyright (C) 2008-2018 Andrew Apted
 --  Copyright (C) 2008-2009 Jon Vail
 --  Copyright (C)      2009 Enhas
---  Copyright (C) 2010-2021 Armaetus
---  Copyright (C) 2010-2021 MsrSgtShooterPerson
+--  Copyright (C) 2010-2022 Armaetus
+--  Copyright (C) 2010-2022 MsrSgtShooterPerson
 --  Copyright (C) 2020 EpicTyphlosion
 --
 --  This program is free software; you can redistribute it and/or
