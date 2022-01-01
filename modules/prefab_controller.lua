@@ -2,7 +2,7 @@
 --  MODULE: Prefab Controller
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2019-2020 MsrSgtShooterPerson
+--  Copyright (C) 2019-2022 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -223,8 +223,7 @@ OB_MODULES["prefab_control"] =
       "not the density for decor prefabs in any given room. " ..
       "\n\nNote: DEFAULT actually behaves like Mix-It-Up.",
       default = "fab_default",
-      priority = 101,
-      randomize_group = "architecture"
+      priority = 101
     },
 
     wall_prob =
@@ -234,8 +233,7 @@ OB_MODULES["prefab_control"] =
       choices=PREFAB_CONTROL.WALL_CHOICES,
       tooltip = "Determines the odds for decorated wall junctions in a map versus plain ones.",
       default = "fab_default",
-      priority = 100,
-      randomize_group = "architecture"
+      priority = 100
     },
 
     group_wall_prob =
@@ -246,8 +244,7 @@ OB_MODULES["prefab_control"] =
       tooltip = "Determines the percentage at which grouped walls are applied to rooms.",
       default = "fab_default",
       priority = 99,
-      gap = 1,
-      randomize_group = "architecture"
+      gap = 1
     },
 
     --
@@ -265,8 +262,7 @@ OB_MODULES["prefab_control"] =
       presets = "",
       tooltip = "Determines the odds at which a level would use a universal, single room theme " ..
                 "for all indoors (buildings). Default is 50%.",
-      priority = 50,
-      randomize_group = "architecture"
+      priority = 50
     },
 
     float_limit_wall_groups =
@@ -283,8 +279,7 @@ OB_MODULES["prefab_control"] =
       tooltip = "Determines the odds at which a level would use fewer wall group choices but at greater quantites " ..
                 "for more consistent visuals. Default is 50%.",
       priority = 49,
-      gap = 1,
-      randomize_group = "architecture"
+      gap = 1
     },
 
     --
@@ -320,8 +315,7 @@ OB_MODULES["prefab_control"] =
       name="pf_crushers", label=_("Crushers"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
       tooltip="Changes probabilities for fabs with crushing sectors. Default is on.",
       default="1",
-      priority = 14,
-      randomize_group = "architecture"
+      priority = 14
     },
 
     pf_dexterity =
@@ -329,8 +323,7 @@ OB_MODULES["prefab_control"] =
       name="pf_dexterity", label=_("Dexterity Fabs"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
       tooltip="Changes probabilities for fabs featuring Chasm-ish navigation. Default is on.",
       default="1",
-      priority = 13,
-      randomize_group = "architecture"
+      priority = 13
     },
 
     pf_gamble =
@@ -338,8 +331,7 @@ OB_MODULES["prefab_control"] =
       name="pf_dexterity", label=_("Gambling Fabs"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
       tooltip="Changes probabilities for fabs that may lockout a player on items. Default is on.",
       default="1",
-      priority = 12,
-      randomize_group = "architecture"
+      priority = 12
     },
 
     pf_sight_ambushes =
@@ -348,8 +340,7 @@ OB_MODULES["prefab_control"] =
       tooltip="Changes probabilities for cages that unleash its monsters when player is in sight. " ..
       "Default is on.",
       default="1",
-      priority = 11,
-      randomize_group = "architecture"
+      priority = 11
     },
 
     pf_mirror_mazes =
@@ -357,8 +348,7 @@ OB_MODULES["prefab_control"] =
       name = "pf_mirror_mazes", label=_("Mirror Mazes"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
       tooltip="Changes probabilities for hell mirror maze closets and joiners.",
       default="1",
-      priority = 10,
-      randomize_group = "architecture"
+      priority = 10
     },
 
     pf_dark_mazes =
@@ -367,7 +357,6 @@ OB_MODULES["prefab_control"] =
       tooltip="Changes probabilities for dark/eye maze joiners in hell theme.",
       default="1",
       priority = 9,
-      randomize_group = "architecture"
     },
     
     pf_stair_ladders =
@@ -376,8 +365,7 @@ OB_MODULES["prefab_control"] =
       tooltip="Changes probabilities for high-step ladders (stairs).",
       default="1",
       priority = 8,
-      gap = 1,
-      randomize_group = "architecture"
+      gap = 1
     },
 
     bool_jump_crouch =
@@ -388,7 +376,7 @@ OB_MODULES["prefab_control"] =
       default = 1,
       tooltip = "Enables or disables prefabs that require jumping or crouching to navigate.",
       priority = 7,
-      gap = 1,
+      gap = 1
     },
 
     --
@@ -399,8 +387,7 @@ OB_MODULES["prefab_control"] =
       tooltip = "Changes the liquids on hallways with damaging floors to either be damaging (default) or non-damaging.",
       default = "default",
       priority = 5,
-      gap = 1,
-      randomize_group = "architecture"
+      gap = 1
     },
 
     --
@@ -412,8 +399,7 @@ OB_MODULES["prefab_control"] =
       valuator = "button",
       default = 1,
       tooltip = "Ensures that prefabs selected match their intended Theme.",
-      priority = 1,
-      randomize_group = "architecture"
+      priority = 1
     }
   }
 }

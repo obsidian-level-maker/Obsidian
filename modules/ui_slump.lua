@@ -4,7 +4,7 @@
 --
 --  Copyright (C) 2016-2017 Andrew Apted
 --  Copyright (C) 2019 Armaetus
---  Copyright (C) 2019-2020 MsrSgtShooterPerson
+--  Copyright (C) 2019-2022 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -79,8 +79,7 @@ OB_MODULES["ui_slump_arch"] =
       default = 15,
       nan = "Mix It Up,",
       presets = "",
-      tooltip = "Minimum number of rooms per level.",
-      randomize_group = "architecture"
+      tooltip = "Minimum number of rooms per level."
     },
 
     {
@@ -93,8 +92,7 @@ OB_MODULES["ui_slump_arch"] =
       increment = 1,
       default = 50,
       presets = "",
-      tooltip = "% chance that SLUMP will attempt to grow a room.",
-      randomize_group = "architecture"
+      tooltip = "% chance that SLUMP will attempt to grow a room."
     },
     
     {
@@ -109,8 +107,7 @@ OB_MODULES["ui_slump_arch"] =
       presets = "",
       tooltip = "% chance that a room will attempt to fork as the level grows. "..
                 "0% should be a bunch of murder hallways. Forks are not guaranteed " ..
-                "to succeed, especially if the room bigification chance is increased.",
-      randomize_group = "architecture"
+                "to succeed, especially if the room bigification chance is increased."
     },
 
     {
@@ -126,7 +123,7 @@ OB_MODULES["ui_slump_arch"] =
       label = _("Major Nukage Mode"),
       valuator = "button",
       default = 0,
-      tooltip = "Watch your step!",
+      tooltip = "Watch your step!"
     },
     
     {
@@ -163,8 +160,7 @@ OB_MODULES["ui_slump_mons"] =
       label = _("Monster Variety"),
       choices = UI_SLUMP.MON_VARIETY,
       default = "normal",
-      tooltip = "Control what types of monsters are available",
-      randomize_group = "monsters"
+      tooltip = "Control what types of monsters are available"
     },
   }
 }
