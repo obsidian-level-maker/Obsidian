@@ -2,8 +2,8 @@
 --  MODULE: Fauna Module
 ------------------------------------------------------------------------
 --
---  Copyright (C) 2020 Frozsoul (based off MsrSgtShooterPerson's Jokewad Module)
---  Copyright (C) 2020 josh771  (ZScript code for SpringyFly)
+--  Copyright (C) 2020-2022 Frozsoul (based off MsrSgtShooterPerson's Jokewad Module)
+--  Copyright (C) 2020-2022 josh771  (ZScript code for SpringyFly)
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License

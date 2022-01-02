@@ -5,7 +5,7 @@
 --  Oblige Level Maker
 --
 --  Copyright (C) 2006-2017 Andrew Apted
---  Copyright (C) 2011,2014 Chris Pisarczyk
+--  Copyright (C) 2011,2014, 2022 Armaetus
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License

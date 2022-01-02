@@ -3,7 +3,7 @@
 ----------------------------------------------------------------
 --  Copyright (C) 2022 Armaetus
 --  Copyright (C) 2022 dasho
---  Copyrighr (C) 2022 MsrSgtShooterPerson
+--  Copyright (C) 2022 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
