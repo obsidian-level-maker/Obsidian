@@ -2698,6 +2698,7 @@ ZDOOM_STORIES.QUIT_MESSAGES =
   [[Oblige is the machine. Obsidian is the ghost in the machine.]], -- credits to FrozSoul!
   [[Obsidian can generate more maps than you will ever speak words in your whole life.]],
   [[Poor you. Demons don't have a housing crisis. Obsidian provides free real estate for all of them.]],
+  [[Karma's a bitch. Then you die. -Tina Belcher]],
 
   -- helpful // technical
   [[Obsidian is always improving. Stop by our Discord server, talk to the denizens and report bugs to us there!]],
