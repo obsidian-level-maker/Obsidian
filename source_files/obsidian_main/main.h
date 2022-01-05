@@ -153,6 +153,7 @@ extern bool randomize_architecture;
 extern bool randomize_monsters;
 extern bool randomize_pickups;
 extern bool randomize_misc;
+extern int zip_output;
 
 extern std::filesystem::path last_directory;
 extern std::string numeric_locale;
