@@ -65,6 +65,7 @@ unsigned long long next_rand_seed;
 bool batch_mode = false;
 std::filesystem::path batch_output_file;
 std::string numeric_locale;
+std::vector<std::string> batch_randomize_groups;
 
 // options
 uchar text_red = 225;
@@ -191,6 +192,12 @@ static void ShowInfo() {
         "  -a --addon    <file>...  Addon(s) to use\n"
         "  -l --load     <file>     Load settings from a file\n"
         "  -k --keep                Keep SEED from loaded settings\n"
+        "\n"
+        "     --randomize-all       Randomize all options\n"
+        "     --randomize-arch      Randomize architecture settings\n"
+        "     --randomize-monsters  Randomize monster-related settings\n"
+        "     --randomize-pickups   Randomize item/weapon settings\n"
+        "     --randomize-misc      Randomize miscellaneous settings\n"
         "\n"
         "  -d --debug               Enable debugging\n"
         "  -v --verbose             Print log messages to stdout\n"
@@ -1023,6 +1030,44 @@ restart:;
             }
         #endif
     }
+
+    // These switches will only apply in batch mode, as the GUI has its own mechanism for randomization of options - Dasho
+
+    if (argv::Find(0, "randomize-all") >= 0) {
+        if (batch_mode) {
+            batch_randomize_groups.push_back("architecture");
+            batch_randomize_groups.push_back("monsters");
+            batch_randomize_groups.push_back("pickups");
+            batch_randomize_groups.push_back("misc");
+        }
+        goto skiprest;
+    }
+
+    if (argv::Find(0, "randomize-arch") >= 0) {
+        if (batch_mode) {
+            batch_randomize_groups.push_back("architecture");
+        }
+    }
+
+    if (argv::Find(0, "randomize-monsters") >= 0) {
+        if (batch_mode) {
+            batch_randomize_groups.push_back("monsters");
+        }
+    }
+
+    if (argv::Find(0, "randomize-pickups") >= 0) {
+        if (batch_mode) {
+            batch_randomize_groups.push_back("pickups");
+        }
+    }
+
+    if (argv::Find(0, "randomize-misc") >= 0) {
+        if (batch_mode) {
+            batch_randomize_groups.push_back("misc");
+        }
+    }
+
+    skiprest:
 
     Determine_WorkingPath(argv[0]);
     Determine_InstallDir(argv[0]);

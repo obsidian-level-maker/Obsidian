@@ -361,6 +361,26 @@ int gui_scan_directory(lua_State *L) {
     return 1;
 }
 
+// LUA: get_batch_randomize_groups() --> list
+//
+// Note: 'match' parameter must be of the form "*" or "*.xxx"
+//       or must be "DIRS" to return all the sub-directories
+//
+int gui_get_batch_randomize_groups(lua_State *L) {
+    lua_newtable(L);
+
+    if (!batch_randomize_groups.empty()) {
+        for (unsigned int k = 0; k < batch_randomize_groups.size(); k++) {
+            lua_pushstring(L, batch_randomize_groups[k].c_str());
+            lua_rawseti(L, -2, (int)(k + 1));
+        }
+    } else {
+        lua_pushnil(L);
+    }
+
+    return 1;
+}
+
 // LUA: add_choice(button, id, label)
 //
 int gui_add_choice(lua_State *L) {
@@ -1209,6 +1229,8 @@ static const luaL_Reg gui_script_funcs[] = {
     {"set_module_button_option", gui_set_module_button_option},
     {"get_module_slider_value", gui_get_module_slider_value},
     {"get_module_button_value", gui_get_module_button_value},
+
+    {"get_batch_randomize_groups", gui_get_batch_randomize_groups},
 
     {"at_level", gui_at_level},
     {"prog_step", gui_prog_step},

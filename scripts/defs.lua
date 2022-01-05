@@ -35,6 +35,7 @@ PREFABS = {}
 GROUPS  = {}
 TEMPLATES = {}
 
+RANDOMIZE_GROUPS = {}
 
 -- a place for unfinished stuff
 UNFINISHED = {}

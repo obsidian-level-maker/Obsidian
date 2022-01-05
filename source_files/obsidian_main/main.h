@@ -157,6 +157,7 @@ extern int zip_output;
 
 extern std::filesystem::path last_directory;
 extern std::string numeric_locale;
+extern std::vector<std::string> batch_randomize_groups;
 
 // Dialog Windows
 void DLG_ShowError(const char *msg, ...);

@@ -1600,8 +1600,11 @@ function ob_build_setup()
 
   table.merge_missing(PARAM, GLOBAL_PARAMETERS)
 
-
   -- load all the prefab definitions
+  if OB_CONFIG.batch == "yes" then
+    RANDOMIZE_GROUPS = gui.get_batch_randomize_groups()
+  end
+
   ob_invoke_hook("setup")
 
   Fab_load_all_definitions()
