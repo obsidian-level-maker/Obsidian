@@ -55,11 +55,48 @@ CTL_QUAKE.DENSITIES =
 
 function CTL_QUAKE.monster_setup(self)
   for name,opt in pairs(self.options) do
+    if OB_CONFIG.batch == "yes" then
+      if not PARAM[opt.name] then PARAM[opt.name] = OB_CONFIG[opt.name] end
+      if RANDOMIZE_GROUPS then
+        for _,group in pairs(RANDOMIZE_GROUPS) do
+          if opt.randomize_group and opt.randomize_group == group then
+            if opt.valuator then
+              if opt.valuator == "button" then
+                  PARAM[opt.name] = rand.sel(50, 1, 0)
+                  goto done
+              elseif opt.valuator == "slider" then
+                  if opt.increment < 1 then
+                    PARAM[opt.name] = rand.range(opt.min, opt.max)
+                  else
+                    PARAM[opt.name] = rand.irange(opt.min, opt.max)
+                  end
+                  goto done
+              end
+            else
+              PARAM[opt.name] = rand.pick(opt.choices)
+              goto done
+            end
+          end
+        end
+      end
+      ::done::
+    else
+	    if opt.valuator then
+		    if opt.valuator == "button" then
+		        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+		    elseif opt.valuator == "slider" then
+		        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+		    end
+      else
+        PARAM[opt.name] = opt.value
+	    end
+	  end
+
     local M = GAME.MONSTERS[name]
 
-    if M and opt.value ~= "default" then
-      M.prob    = CTL_QUAKE.MON_PROBS[opt.value]
-      M.density = CTL_QUAKE.DENSITIES[opt.value]
+    if M and PARAM[opt.name] ~= "default" then
+      M.prob    = CTL_QUAKE.MON_PROBS[PARAM[opt.name]]
+      M.density = CTL_QUAKE.DENSITIES[PARAM[opt.name]]
 
       -- allow Rottweilers to be controlled individually
       M.replaces = nil
@@ -145,6 +182,43 @@ CTL_QUAKE.WEAPON_PREFS =
 
 function CTL_QUAKE.weapon_setup(self)
   for name,opt in pairs(self.options) do
+    if OB_CONFIG.batch == "yes" then
+      if not PARAM[opt.name] then PARAM[opt.name] = OB_CONFIG[opt.name] end
+      if RANDOMIZE_GROUPS then
+        for _,group in pairs(RANDOMIZE_GROUPS) do
+          if opt.randomize_group and opt.randomize_group == group then
+            if opt.valuator then
+              if opt.valuator == "button" then
+                  PARAM[opt.name] = rand.sel(50, 1, 0)
+                  goto done
+              elseif opt.valuator == "slider" then
+                  if opt.increment < 1 then
+                    PARAM[opt.name] = rand.range(opt.min, opt.max)
+                  else
+                    PARAM[opt.name] = rand.irange(opt.min, opt.max)
+                  end
+                  goto done
+              end
+            else
+              PARAM[opt.name] = rand.pick(opt.choices)
+              goto done
+            end
+          end
+        end
+      end
+      ::done::
+    else
+	    if opt.valuator then
+		    if opt.valuator == "button" then
+		        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
+		    elseif opt.valuator == "slider" then
+		        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
+		    end
+      else
+        PARAM[opt.name] = opt.value
+	    end
+	  end
+
     local W = GAME.WEAPONS[name]
 
     if W and opt.value ~= "default" then
