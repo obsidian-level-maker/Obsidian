@@ -67,7 +67,7 @@ function UI_ARCH.setup(self)
   for _,opt in pairs(self.options) do
     if OB_CONFIG.batch == "yes" then
       if not PARAM[opt.name] then PARAM[opt.name] = opt.default end
-      if #RANDOMIZE_GROUPS > 0 then
+      if RANDOMIZE_GROUPS then
         for _,group in pairs(RANDOMIZE_GROUPS) do
           if opt.randomize_group and opt.randomize_group == group then
             if opt.valuator then
@@ -93,6 +93,8 @@ function UI_ARCH.setup(self)
 		    elseif opt.valuator == "slider" then
 		        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
 		    end
+      else
+        PARAM[opt.name] = opt.value
 	    end
 	  end
   end
