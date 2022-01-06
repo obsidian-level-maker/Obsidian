@@ -33,18 +33,18 @@
 #include "m_lua.h"
 #include "main.h"
 
-typedef enum { CCTX_Load, CCTX_Save, CCTX_Arguments } cookie_context_e;
+enum struct cookie_context_e { Load, Save, Arguments };
 
-static int context;
+static cookie_context_e context;
 
 static std::string active_module;
 
 static bool keep_seed;
 
 static void Cookie_SetValue(std::string name, std::string value) {
-    if (context == CCTX_Load) {
+    if (context == cookie_context_e::Load) {
         DebugPrintf("CONFIG: Name: [{}] Value: [{}]\n", name, value);
-    } else if (context == CCTX_Arguments) {
+    } else if (context == cookie_context_e::Arguments) {
         DebugPrintf("ARGUMENT: Name: [{}] Value: [{}]\n", name, value);
     }
 
@@ -64,7 +64,7 @@ static void Cookie_SetValue(std::string name, std::string value) {
         // ignore seed when loading a config file
         // unless the -k / --keep option is given.
 
-        if (context == CCTX_Arguments || keep_seed) {
+        if (context == cookie_context_e::Arguments || keep_seed) {
             try {
                 next_rand_seed = std::stoull(value);
                 return;
@@ -119,6 +119,7 @@ static bool Cookie_ParseLine(std::string buf) {
         return false;
     }
 
+    // FIXME: Can't remember if this is needed anymore.
     if (StringCaseCmp(value, "MixItUp") == 0) {
         value = "Mix It Up";
     }
@@ -130,7 +131,7 @@ static bool Cookie_ParseLine(std::string buf) {
 //----------------------------------------------------------------------
 
 bool Cookie_Load(std::filesystem::path filename) {
-    context = CCTX_Load;
+    context = cookie_context_e::Load;
 
     keep_seed = (argv::Find('k', "keep") >= 0);
 
@@ -159,13 +160,12 @@ bool Cookie_Load(std::filesystem::path filename) {
         LogPrintf("DONE.\n\n");
     }
 
-    cookie_fp.close();
     std::setlocale(LC_NUMERIC, numeric_locale.c_str());
     return true;
 }
 
 bool Cookie_LoadString(std::string str, bool _keep_seed) {
-    context = CCTX_Load;
+    context = cookie_context_e::Load;
     keep_seed = _keep_seed;
 
     active_module.clear();
@@ -187,7 +187,7 @@ bool Cookie_LoadString(std::string str, bool _keep_seed) {
 }
 
 bool Cookie_Save(std::filesystem::path filename) {
-    context = CCTX_Save;
+    context = cookie_context_e::Save;
     std::setlocale(LC_NUMERIC, "C");
     std::ofstream cookie_fp(filename, std::ios::out);
 
@@ -221,7 +221,7 @@ bool Cookie_Save(std::filesystem::path filename) {
 }
 
 void Cookie_ParseArguments(void) {
-    context = CCTX_Arguments;
+    context = cookie_context_e::Arguments;
 
     active_module.clear();
 
