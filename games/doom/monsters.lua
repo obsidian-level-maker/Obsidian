@@ -4,7 +4,7 @@
 --
 --  Copyright (C) 2006-2017 Andrew Apted
 --  Copyright (C) 2011, 2019 Armaetus
---  Copyright (C) 2019 MsrShooterPerson
+--  Copyright (C) 2019-2022 MsrShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License

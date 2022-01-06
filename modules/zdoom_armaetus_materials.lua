@@ -2,8 +2,8 @@
 --  MODULE: Obsidian Texture Materials
 ----------------------------------------------------------------
 --
---  Copyright (C) 2019-2021 MsrSgtShooterPerson
---  Copyright (C) 2015-2021 Armaetus
+--  Copyright (C) 2019-2022 MsrSgtShooterPerson
+--  Copyright (C) 2015-2022 Armaetus
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License

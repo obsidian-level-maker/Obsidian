@@ -7,8 +7,8 @@
 --  Copyright (C) 2008-2018 Andrew Apted
 --  Copyright (C) 2008-2009 Jon Vail
 --  Copyright (C)      2009 Enhas
---  Copyright (C) 2010-2021 Armaetus
---  Copyright (C) 2010-2021 MsrSgtShooterPerson
+--  Copyright (C) 2010-2022 Armaetus
+--  Copyright (C) 2010-2022 MsrSgtShooterPerson
 --  Copyright (C) 2020 EpicTyphlosion
 --
 --  This program is free software; you can redistribute it and/or
@@ -3067,7 +3067,25 @@ namelib.NAMES =
         ["The Walls Whisper My Name"]=10,
         ["Urban Hellscape"]=10,
         ["Weaponized Despair"]=10,
-        ["World of Shit"]=10
+        ["World of Shit"]=10,
+
+        -- New Year's Eve 2021 additions by Armaetus!
+        ["Architects of Sadism"]=10,
+        ["Candlestick Bitch"]=10,
+        ["Chaotic Opportunism"]=10,
+        ["Cries of the Shadows"]=10,
+        ["Dusk Overture"]=10,
+        ["Fourthcoming Kingdoms"]=10,
+        ["Incense, Gore and Nihility"]=10,
+        ["Jump In The Acid"]=10, -- Play on Metallica's "Jump in the Fire" song
+        ["Liquid Blood Skies"]=10,
+        ["Lost in the Bloody Haze"]=10,
+        ["Nightmarish Fixation"]=10,
+        ["Nothingness Hereforth"]=10,
+        ["Our Evil Oaths"]=10,
+        ["The Wizards of Gore"]=10,
+        ["When the Skin Strand Pops"]=10,
+        ["Winds That Shred Skin"]=10
       }
     }
   },
