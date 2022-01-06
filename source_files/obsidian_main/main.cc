@@ -127,6 +127,7 @@ bool randomize_architecture = false;
 bool randomize_monsters = false;
 bool randomize_pickups = false;
 bool randomize_misc = false;
+int zip_output = 0;
 
 game_interface_c *game_object = NULL;
 

@@ -65,6 +65,8 @@ static void Parse_Option(std::string name, std::string value) {
         filename_prefix = StringToInt(value);
     } else if (StringCaseCmp(name, "custom_prefix") == 0) {
         custom_prefix = value;
+    } else if (StringCaseCmp(name, "zip_output") == 0) {
+        zip_output = StringToInt(value);
     } else {
         LogPrintf("Unknown option: '{}'\n", name);
     }
@@ -162,6 +164,7 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "randomize_misc = " << (randomize_misc ? 1 : 0) << "\n";
     option_fp << "filename_prefix = " << filename_prefix << "\n";
     option_fp << "custom_prefix = " << custom_prefix << "\n";
+    option_fp << "zip_output = " << zip_output << "\n";
 
     if (!last_directory.empty()) {
         option_fp << "\n";
@@ -189,6 +192,7 @@ class UI_OptionsWin : public Fl_Window {
 
    private:
     UI_CustomMenu *opt_language;
+    UI_CustomMenu *opt_zip_output;
     UI_CustomMenu *opt_filename_prefix;
 
     Fl_Button *opt_custom_prefix;
@@ -263,6 +267,12 @@ class UI_OptionsWin : public Fl_Window {
         main_action = MAIN_QUIT;
 
         that->want_quit = true;
+    }
+
+    static void callback_ZipOutput(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+        zip_output = that->opt_zip_output->value();
     }
 
     static void callback_Backups(Fl_Widget *w, void *data) {
@@ -397,6 +407,20 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     PopulateLanguages();
 
     cy += opt_language->h() + y_step;
+
+    opt_zip_output =
+        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+    opt_zip_output->copy_label(_("Compress Output: "));
+    opt_zip_output->align(FL_ALIGN_LEFT);
+    opt_zip_output->callback(callback_ZipOutput, this);
+    opt_zip_output->add(_("OFF|ZIP|PK3"));
+    opt_zip_output->labelfont(font_style);
+    opt_zip_output->textfont(font_style);
+    opt_zip_output->textcolor(FONT2_COLOR);
+    opt_zip_output->selection_color(SELECTION);
+    opt_zip_output->value(zip_output);
+
+    cy += opt_zip_output->h() + y_step;
 
     opt_filename_prefix =
         new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
@@ -538,7 +562,7 @@ int UI_OptionsWin::handle(int event) {
 
 void DLG_OptionsEditor(void) {
     int opt_w = kf_w(350);
-    int opt_h = kf_h(350);
+    int opt_h = kf_h(375);
 
     UI_OptionsWin *option_window =
         new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));
