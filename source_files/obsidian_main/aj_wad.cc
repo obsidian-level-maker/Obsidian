@@ -37,8 +37,11 @@ int CheckMagic(const char type[4]) {
 }
 
 int CheckLevelLump(const char *name) {
-    for (int i = 0; level_lumps[i]; i++)
-        if (strcmp(name, level_lumps[i]) == 0) return 1 + i;
+    for (int i = 0; level_lumps[i]; i++) {
+        if (strcmp(name, level_lumps[i]) == 0) {
+            return 1 + i;
+        }
+    }
 
     return 0;
 }
@@ -54,11 +57,15 @@ wad_c::~wad_c() {
 
     FreeData();
 
-    for (unsigned int i = 0; i < lumps.size(); i++) delete lumps[i];
+    for (unsigned int i = 0; i < lumps.size(); i++) {
+        delete lumps[i];
+    }
 }
 
 byte *wad_c::AllocateData(int length) {
-    if (data_block && length <= data_len) return data_block;
+    if (data_block && length <= data_len) {
+        return data_block;
+    }
 
     FreeData();
 
@@ -69,7 +76,9 @@ byte *wad_c::AllocateData(int length) {
 }
 
 void wad_c::FreeData() {
-    if (data_block) delete[] data_block;
+    if (data_block) {
+        delete[] data_block;
+    }
 
     data_block = NULL;
     data_len = -1;
@@ -149,7 +158,9 @@ bool wad_c::ReadDirectory() {
 #endif
 
     for (int i = 0; i < num_entries; i++) {
-        if (!ReadDirEntry()) return false;
+        if (!ReadDirEntry()) {
+            return false;
+        }
     }
 
     return true;  // OK
@@ -160,25 +171,33 @@ void wad_c::DetermineLevels() {
         lump_c *L = lumps[k];
 
         // skip known lumps (these are never valid level names)
-        if (CheckLevelLump(L->name)) continue;
+        if (CheckLevelLump(L->name)) {
+            continue;
+        }
 
         // check if the next four lumps after the current lump match the
         // level-lump names.  Order doesn't matter, but repeats do.
         int matched = 0;
 
         for (unsigned int i = 1; i <= 4; i++) {
-            if (k + i >= lumps.size()) break;
+            if (k + i >= lumps.size()) {
+                break;
+            }
 
             lump_c *N = lumps[k + i];
 
             int idx = CheckLevelLump(N->name);
 
-            if (!idx || idx > 8 /* SECTORS */ || (matched & (1 << idx))) break;
+            if (!idx || idx > 8 /* SECTORS */ || (matched & (1 << idx))) {
+                break;
+            }
 
             matched |= (1 << idx);
         }
 
-        if ((matched & 0xF) == 0xF) continue;
+        if ((matched & 0xF) == 0xF) {
+            continue;
+        }
 
 #if DEBUG_WAD
         Appl_Printf("Found level name: %s\n", L->name);
@@ -188,11 +207,15 @@ void wad_c::DetermineLevels() {
         L->children = 4;
 
         for (unsigned int j = 5; j < 16; j++) {
-            if (k + j >= lumps.size()) break;
+            if (k + j >= lumps.size()) {
+                break;
+            }
 
             lump_c *N = lumps[k + j];
 
-            if (!CheckLevelLump(N->name)) break;
+            if (!CheckLevelLump(N->name)) {
+                break;
+            }
 
             L->children = j;
         }
@@ -243,7 +266,9 @@ int wad_c::FindLump(const char *name, int level) {
     for (int i = first; i <= last; i++) {
         lump_c *L = lumps[i];
 
-        if (strcmp(L->name, name) == 0 && L->children == 0) return i;
+        if (strcmp(L->name, name) == 0 && L->children == 0) {
+            return i;
+        }
     }
 
     return -1;  // NOT FOUND
@@ -253,9 +278,13 @@ int wad_c::FindLevel(const char *name) {
     for (int i = 0; i < (int)lumps.size(); i++) {
         lump_c *L = lumps[i];
 
-        if (L->children == 0) continue;
+        if (L->children == 0) {
+            continue;
+        }
 
-        if (name[0] == '*' || (strcmp(L->name, name) == 0)) return i;
+        if (name[0] == '*' || (strcmp(L->name, name) == 0)) {
+            return i;
+        }
     }
 
     return -1;  // NOT FOUND
@@ -275,7 +304,9 @@ byte *wad_c::ReadLump(const char *name, int *length, int level) {
     Appl_Printf("Reading lump: %s (%d bytes)\n", L->name, L->length);
 #endif
 
-    if (length) (*length) = L->length;
+    if (length) {
+        (*length) = L->length;
+    }
 
     byte *data = AllocateData(L->length);
 
@@ -315,13 +346,17 @@ bool LoadWAD(const char *wad_filename) {
 
     the_wad = wad_c::Open(wad_filename);
 
-    if (!the_wad) return false;  // error will be set
+    if (!the_wad) {
+        return false;  // error will be set
+    }
 
     return true;  // OK
 }
 
 void FreeWAD() {
-    if (the_wad) delete the_wad;
+    if (the_wad) {
+        delete the_wad;
+    }
 
     the_wad = NULL;
 }

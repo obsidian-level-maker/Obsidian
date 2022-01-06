@@ -332,7 +332,9 @@ void cplastic_up_frame(int x, int y, int w, int h, Fl_Color c) {
 }
 
 void cplastic_narrow_thin_box(int x, int y, int w, int h, Fl_Color c) {
-    if (h <= 0 || w <= 0) return;
+    if (h <= 0 || w <= 0) {
+        return;
+    }
     const uchar *g = c_fl_gray_ramp();
     fl_color(cplastic_shade_color(g[(int)'R'], c));
     fl_rectf(x + 1, y + 1, w - 2, h - 2);
@@ -450,27 +452,36 @@ void cframe2(int x, int y, int w, int h) {
 
 void cframe3(const char *s, int x, int y, int w, int h) {
     const uchar *g = c_fl_gray_ramp();
-    if (h > 0 && w > 0)
+    if (h > 0 && w > 0) {
         for (; *s;) {
             // draw bottom line:
             fl_color(g[(int)*s++]);
             fl_xyline(x, y + h - 1, x + w - 1);
-            if (--h <= 0) break;
+            if (--h <= 0) {
+                break;
+            }
             // draw right line:
             fl_color(g[(int)*s++]);
             fl_yxline(x + w - 1, y + h - 1, y);
-            if (--w <= 0) break;
+            if (--w <= 0) {
+                break;
+            }
             // draw top line:
             fl_color(g[(int)*s++]);
             fl_xyline(x, y, x + w - 1);
             y++;
-            if (--h <= 0) break;
+            if (--h <= 0) {
+                break;
+            }
             // draw left line:
             fl_color(g[(int)*s++]);
             fl_yxline(x, y + h - 1, y);
             x++;
-            if (--w <= 0) break;
+            if (--w <= 0) {
+                break;
+            }
         }
+    }
 }
 
 /** Draws a frame of type FL_THIN_UP_FRAME */

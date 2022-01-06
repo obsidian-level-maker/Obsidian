@@ -227,7 +227,8 @@ static s32_t Q3_AddBrush(const csg_brush_c *A) {
         }
     } else if (A->bflags & BFLAG_NoDraw) {
         raw_brush.shaderNum = SHADER_COMMON_CLIP;
-    } else if ((A->t.face.getStr("tex", "")).find("skies/") != std::string::npos) {
+    } else if ((A->t.face.getStr("tex", "")).find("skies/") !=
+               std::string::npos) {
         raw_brush.shaderNum = SHADER_COMMON_SKY;
     }
 

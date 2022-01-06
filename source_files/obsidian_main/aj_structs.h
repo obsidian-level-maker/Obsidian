@@ -58,13 +58,13 @@ typedef struct {
 } PACKEDATTR raw_linedef_t;
 
 typedef struct {
-    u16_t start;       // from this vertex...
-    u16_t end;         // ... to this vertex
-    u16_t flags;       // linedef flags (impassible, etc)
-    u8_t type;         // linedef type
+    u16_t start;                   // from this vertex...
+    u16_t end;                     // ... to this vertex
+    u16_t flags;                   // linedef flags (impassible, etc)
+    u8_t type;                     // linedef type
     std::array<u8_t, 5> specials;  // hexen specials
-    u16_t sidedef1;    // right sidedef
-    u16_t sidedef2;    // left sidedef
+    u16_t sidedef1;                // right sidedef
+    u16_t sidedef2;                // left sidedef
 
 } PACKEDATTR raw_hexen_linedef_t;
 
@@ -109,8 +109,8 @@ typedef struct {
     u16_t type;     // type of thing
     u16_t options;  // when appears, deaf, dormant, etc..
 
-    u8_t special;  // special type
-    std::array<u8_t, 5> arg;   // special arguments
+    u8_t special;             // special type
+    std::array<u8_t, 5> arg;  // special arguments
 
 } PACKEDATTR raw_hexen_thing_t;
 

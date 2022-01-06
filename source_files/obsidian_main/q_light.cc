@@ -1481,7 +1481,8 @@ static const int grid_xy_deltas[9 * 2] = {0,   0,   +9,  +9,  +9,  -9,
                                           -9,  +9,  -9,  -9,  +18, +18,
                                           +18, -18, -18, +18, -18, -18};
 
-static void Q3_CalcAngularDirection(std::array<float, 3> vec3, dlightgrid3_t *out) {
+static void Q3_CalcAngularDirection(std::array<float, 3> vec3,
+                                    dlightgrid3_t *out) {
     float x = vec3[0];
     float y = vec3[1];
     float z = vec3[2];
@@ -1506,7 +1507,8 @@ static void Q3_CalcAngularDirection(std::array<float, 3> vec3, dlightgrid3_t *ou
     }
 }
 
-static void Q3_ColorToBytes(int r, int g, int b, float mul, std::array<byte, 3> out) {
+static void Q3_ColorToBytes(int r, int g, int b, float mul,
+                            std::array<byte, 3> out) {
     float r2 = r * mul;
     float g2 = g * mul;
     float b2 = b * mul;

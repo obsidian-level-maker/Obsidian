@@ -120,7 +120,14 @@ class sidedef_c {
     std::array<char, 10> mid_tex;
 
    public:
-    sidedef_c() : index(-1), sector(), x_offset(), y_offset(), upper_tex(), lower_tex(), mid_tex() { }
+    sidedef_c()
+        : index(-1),
+          sector(),
+          x_offset(),
+          y_offset(),
+          upper_tex(),
+          lower_tex(),
+          mid_tex() {}
 };
 
 class linedef_c {
@@ -153,7 +160,7 @@ class linedef_c {
           flags(),
           special(),
           tag(),
-          args() { }
+          args() {}
 };
 
 class thing_c {

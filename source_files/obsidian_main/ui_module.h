@@ -68,7 +68,8 @@ class UI_Module : public Fl_Group {
                          std::string nan, std::string randomize_group);
 
     void AddButtonOption(std::string opt, std::string label, std::string tip,
-                         std::string longtip, int gap, std::string randomize_group);
+                         std::string longtip, int gap,
+                         std::string randomize_group);
 
     void AddOptionChoice(std::string option, std::string id, std::string label);
 
@@ -140,7 +141,8 @@ class UI_CustomMods : public Fl_Group {
     bool EnableMod(std::string id, bool enable);
 
     bool AddOption(std::string module, std::string option, std::string label,
-                   std::string tip, std::string longtip, int gap, std::string randomize_group);
+                   std::string tip, std::string longtip, int gap,
+                   std::string randomize_group);
 
     bool AddSliderOption(std::string module, std::string option,
                          std::string label, std::string tip,
@@ -150,7 +152,8 @@ class UI_CustomMods : public Fl_Group {
 
     bool AddButtonOption(std::string module, std::string option,
                          std::string label, std::string tip,
-                         std::string longtip, int gap, std::string randomize_group);
+                         std::string longtip, int gap,
+                         std::string randomize_group);
 
     void AddOptionChoice(std::string module, std::string option, std::string id,
                          std::string label);

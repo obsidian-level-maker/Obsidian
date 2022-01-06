@@ -271,7 +271,9 @@ void UI_Build::Prog_Nodes(int pos, int limit) {
     }
 
     float val = node_along + (node_fracs * pos);
-    if (val > 1) { val = 1; }    
+    if (val > 1) {
+        val = 1;
+    }
 
     prog_label = fmt::format("{0:.2f}%", val * 100);
 
@@ -290,12 +292,12 @@ void UI_Build::Prog_Nodes(int pos, int limit) {
 }
 
 void UI_Build::SetStatus(std::string_view msg) {
-    //int limit = (int)sizeof(status_label);
+    // int limit = (int)sizeof(status_label);
 
 #ifdef WIN32
 #undef min
 #endif
-    //strncpy(status_label, msg.data(), std::min<int>(limit, msg.size()));
+    // strncpy(status_label, msg.data(), std::min<int>(limit, msg.size()));
     status_label = msg;
 
     if (StringCaseCmp(status_label, "Success") == 0) {
