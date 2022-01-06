@@ -330,7 +330,8 @@ void DLG_EditSeed(void) {
 #undef max
 #endif
     unsigned long long split_limit =
-        (std::numeric_limits<long long>::max() / 127); // It is intentional that I am using the max for signed - Dasho
+        (std::numeric_limits<long long>::max() /
+         127);  // It is intentional that I am using the max for signed - Dasho
     next_rand_seed = split_limit;
     for (size_t i = 0; i < word.size(); i++) {
         char character = word.at(i);

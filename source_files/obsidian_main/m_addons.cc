@@ -74,7 +74,8 @@ bool VFS_AddArchive(std::filesystem::path filename, bool options_file) {
         std::filesystem::path new_name =
             fmt::format("{}/addons/{}", home_dir.string(), filename.string());
         if (!std::filesystem::exists(new_name)) {
-            new_name = fmt::format("{}/addons/{}", install_dir.string(), filename.string());
+            new_name = fmt::format("{}/addons/{}", install_dir.string(),
+                                   filename.string());
         }
         filename = new_name;
     }
@@ -173,14 +174,15 @@ void VFS_ScanForAddons() {
 
     for (auto &file : std::filesystem::directory_iterator(dir_name)) {
         if (file.path().has_extension() &&
-            StringCaseCmp(file.path().extension().generic_string(), ".pk3") == 0) {
+            StringCaseCmp(file.path().extension().generic_string(), ".pk3") ==
+                0) {
             result1 += 1;
             list.push_back(file.path());
         }
     }
 
     if (StringCaseCmp(home_dir.generic_string(),
-                       install_dir.generic_string()) != 0) {
+                      install_dir.generic_string()) != 0) {
         dir_name = home_dir;
         dir_name /= "addons";
         if (!std::filesystem::exists(dir_name)) {
@@ -197,8 +199,10 @@ void VFS_ScanForAddons() {
                 list2.push_back(file.path());
             }
         }
-        //std::vector<std::filesystem::path>().swap(list2);
-        for (auto x : list2) { list.push_back(x); }
+        // std::vector<std::filesystem::path>().swap(list2);
+        for (auto x : list2) {
+            list.push_back(x);
+        }
     }
 
 no_home_addon_dir:
@@ -342,7 +346,8 @@ class UI_Addon : public Fl_Group {
 
         button = new UI_CustomCheckBox(x + kf_w(6), y + kf_h(4), w - kf_w(12),
                                        kf_h(24), "");
-        button->copy_label(fmt::format(" {}", info->name.filename().string()).c_str());
+        button->copy_label(
+            fmt::format(" {}", info->name.filename().string()).c_str());
         button->labelfont(font_style);
         button->selection_color(SELECTION);
         // if (tip)

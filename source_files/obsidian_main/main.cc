@@ -137,33 +137,34 @@ FLASHWINFO blinker;
 #endif
 
 static void main_win_surprise_config_CB(Fl_Widget *w, void *data) {
-   Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
-   const Fl_Menu_Item *checkbox = menu->find_item(main_win_surprise_config_CB);
-   preserve_old_config = (checkbox->value() != 0) ? true : false;
+    Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
+    const Fl_Menu_Item *checkbox = menu->find_item(main_win_surprise_config_CB);
+    preserve_old_config = (checkbox->value() != 0) ? true : false;
 }
 
 static void main_win_architecture_config_CB(Fl_Widget *w, void *data) {
-   Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
-   const Fl_Menu_Item *checkbox = menu->find_item(main_win_architecture_config_CB);
-   randomize_architecture = (checkbox->value() != 0) ? true : false;
+    Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
+    const Fl_Menu_Item *checkbox =
+        menu->find_item(main_win_architecture_config_CB);
+    randomize_architecture = (checkbox->value() != 0) ? true : false;
 }
 
 static void main_win_monsters_config_CB(Fl_Widget *w, void *data) {
-   Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
-   const Fl_Menu_Item *checkbox = menu->find_item(main_win_monsters_config_CB);
-   randomize_monsters = (checkbox->value() != 0) ? true : false;
+    Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
+    const Fl_Menu_Item *checkbox = menu->find_item(main_win_monsters_config_CB);
+    randomize_monsters = (checkbox->value() != 0) ? true : false;
 }
 
 static void main_win_pickups_config_CB(Fl_Widget *w, void *data) {
-   Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
-   const Fl_Menu_Item *checkbox = menu->find_item(main_win_pickups_config_CB);
-   randomize_pickups = (checkbox->value() != 0) ? true : false;
+    Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
+    const Fl_Menu_Item *checkbox = menu->find_item(main_win_pickups_config_CB);
+    randomize_pickups = (checkbox->value() != 0) ? true : false;
 }
 
 static void main_win_misc_config_CB(Fl_Widget *w, void *data) {
-   Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
-   const Fl_Menu_Item *checkbox = menu->find_item(main_win_misc_config_CB);
-   randomize_misc = (checkbox->value() != 0) ? true : false;
+    Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
+    const Fl_Menu_Item *checkbox = menu->find_item(main_win_misc_config_CB);
+    randomize_misc = (checkbox->value() != 0) ? true : false;
 }
 
 /* ----- user information ----------------------------- */
@@ -385,7 +386,8 @@ void Determine_LoggingFile() {
         std::ofstream fp{logging_file};
 
         if (!fp.is_open()) {
-            Main::FatalError("Cannot create log file: {}\n", logging_file.string());
+            Main::FatalError("Cannot create log file: {}\n",
+                             logging_file.string());
         }
 
         fp.close();
@@ -455,7 +457,6 @@ static int DetermineScaling() {
 
 bool Main::LoadInternalFont(const char *fontpath, const int fontnum,
                             const char *fontname) {
-
     /* set the extra font */
     if (i_load_private_font(fontpath)) {
         Fl::set_font(fontnum, fontname);
@@ -559,8 +560,8 @@ void Main::PopulateFontMap() {
             }
         }
 
-        if (LoadInternalFont("./theme/fonts/3270/3270.ttf",
-                             current_free_font, "3270 Condensed")) {
+        if (LoadInternalFont("./theme/fonts/3270/3270.ttf", current_free_font,
+                             "3270 Condensed")) {
             Fl::set_font(current_free_font + 1, "3270 Condensed");
             font_menu_items.push_back(
                 std::map<std::string, int>{{"3270", current_free_font}});
@@ -571,18 +572,19 @@ void Main::PopulateFontMap() {
                              current_free_font, "Workbench Light Regular")) {
             if (LoadInternalFont("./theme/fonts/Workbench/Workbench.ttf",
                                  current_free_font + 1, "Workbench Regular")) {
-                font_menu_items.push_back(
-                    std::map<std::string, int>{{"Workbench", current_free_font}});
+                font_menu_items.push_back(std::map<std::string, int>{
+                    {"Workbench", current_free_font}});
                 current_free_font += 2;
             }
         }
 
         if (LoadInternalFont("./theme/fonts/FPD-Pressure/FPDPressure-Light.otf",
                              current_free_font, "FPD Pressure Light")) {
-            if (LoadInternalFont("./theme/fonts/FPD-Pressure/FPDPressure-Regular.otf",
-                                 current_free_font + 1, "FPD Pressure")) {
-                font_menu_items.push_back(
-                    std::map<std::string, int>{{"FPD Pressure", current_free_font}});
+            if (LoadInternalFont(
+                    "./theme/fonts/FPD-Pressure/FPDPressure-Regular.otf",
+                    current_free_font + 1, "FPD Pressure")) {
+                font_menu_items.push_back(std::map<std::string, int>{
+                    {"FPD Pressure", current_free_font}});
                 current_free_font += 2;
             }
         }
@@ -602,7 +604,6 @@ void Main::PopulateFontMap() {
                 std::map<std::string, int>{{"Sam I Am", current_free_font}});
             current_free_font += 2;
         }
-
     }
 
     // lossy conversion, size_t?
@@ -796,9 +797,7 @@ void SetupFltk() {
 }  // namespace Main
 
 #ifdef WIN32
-void Main::Blinker() {
-    FlashWindowEx(&blinker);
-}
+void Main::Blinker() { FlashWindowEx(&blinker); }
 #endif
 
 void Main::Ticker() {
@@ -825,8 +824,7 @@ void Main::Detail::Shutdown(const bool error) {
                 if (!preserve_old_config) {
                     Cookie_Save(config_file);
                 }
-            }
-            else {
+            } else {
                 Cookie_Save(config_file);
             }
         }
@@ -959,9 +957,9 @@ bool Build_Cool_Shit() {
 
         if (main_win) {
             main_win->build_box->string_seed = "";
-            #ifdef WIN32
+#ifdef WIN32
             Main::Blinker();
-            #endif
+#endif
         }
     } else {
         if (main_win) {
@@ -983,7 +981,8 @@ bool Build_Cool_Shit() {
         main_action = 0;
         if (main_win) {
             main_win->label(
-                fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION).c_str());
+                fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION)
+                    .c_str());
         }
         Main::ProgStatus(_("Cancelled"));
     }
@@ -1022,16 +1021,17 @@ restart:;
 
         batch_mode = true;
         batch_output_file = argv::list[batch_arg + 1];
-        #ifdef WIN32
-            if (AllocConsole()) {
-                freopen("CONOUT$", "r", stdin);
-                freopen("CONOUT$", "w", stdout);
-                freopen("CONOUT$", "w", stderr);
-            }
-        #endif
+#ifdef WIN32
+        if (AllocConsole()) {
+            freopen("CONOUT$", "r", stdin);
+            freopen("CONOUT$", "w", stdout);
+            freopen("CONOUT$", "w", stderr);
+        }
+#endif
     }
 
-    // These switches will only apply in batch mode, as the GUI has its own mechanism for randomization of options - Dasho
+    // These switches will only apply in batch mode, as the GUI has its own
+    // mechanism for randomization of options - Dasho
 
     if (argv::Find(0, "randomize-all") >= 0) {
         if (batch_mode) {
@@ -1067,7 +1067,7 @@ restart:;
         }
     }
 
-    skiprest:
+skiprest:
 
     Determine_WorkingPath(argv[0]);
     Determine_InstallDir(argv[0]);
@@ -1203,23 +1203,35 @@ restart:;
 
     // Have to add these after reading existing settings - Dasho
     if (main_win) {
-        main_win->menu_bar->add("Surprise Me/Preserve Old Config", NULL, main_win_surprise_config_CB, 0, FL_MENU_TOGGLE | (preserve_old_config ? FL_MENU_VALUE : 0));
-        main_win->menu_bar->add("Surprise Me/Randomize Architecture", NULL, main_win_architecture_config_CB, 0, FL_MENU_TOGGLE | (randomize_architecture ? FL_MENU_VALUE : 0));
-        main_win->menu_bar->add("Surprise Me/Randomize Monsters", NULL, main_win_monsters_config_CB, 0, FL_MENU_TOGGLE | (randomize_monsters ? FL_MENU_VALUE : 0));
-        main_win->menu_bar->add("Surprise Me/Randomize Pickups", NULL, main_win_pickups_config_CB, 0, FL_MENU_TOGGLE | (randomize_pickups ? FL_MENU_VALUE : 0));
-        main_win->menu_bar->add("Surprise Me/Randomize Misc", NULL, main_win_misc_config_CB, 0, FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
+        main_win->menu_bar->add(
+            "Surprise Me/Preserve Old Config", NULL,
+            main_win_surprise_config_CB, 0,
+            FL_MENU_TOGGLE | (preserve_old_config ? FL_MENU_VALUE : 0));
+        main_win->menu_bar->add(
+            "Surprise Me/Randomize Architecture", NULL,
+            main_win_architecture_config_CB, 0,
+            FL_MENU_TOGGLE | (randomize_architecture ? FL_MENU_VALUE : 0));
+        main_win->menu_bar->add(
+            "Surprise Me/Randomize Monsters", NULL, main_win_monsters_config_CB,
+            0, FL_MENU_TOGGLE | (randomize_monsters ? FL_MENU_VALUE : 0));
+        main_win->menu_bar->add(
+            "Surprise Me/Randomize Pickups", NULL, main_win_pickups_config_CB,
+            0, FL_MENU_TOGGLE | (randomize_pickups ? FL_MENU_VALUE : 0));
+        main_win->menu_bar->add(
+            "Surprise Me/Randomize Misc", NULL, main_win_misc_config_CB, 0,
+            FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
     }
 
-    #ifdef WIN32
+#ifdef WIN32
     main_win->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(1)));
-    #else
-		#ifdef UNIX
-		fl_register_images();
-		Fl_Pixmap program_icon(obsidian_icon);
-		Fl_RGB_Image rgb_icon(&program_icon, FL_BLACK);
-		UI_MainWin::default_icon(&rgb_icon);
-		#endif
-    #endif
+#else
+#ifdef UNIX
+    fl_register_images();
+    Fl_Pixmap program_icon(obsidian_icon);
+    Fl_RGB_Image rgb_icon(&program_icon, FL_BLACK);
+    UI_MainWin::default_icon(&rgb_icon);
+#endif
+#endif
 
     // show window (pass some dummy arguments)
     {
@@ -1229,9 +1241,11 @@ restart:;
         main_win->show(1 /* argc */, fake_argv);
     }
 
-    #ifdef WIN32 // Populate structure for taskbar/window flash. Must be done after main_win->show() function - Dasho
-    blinker = { sizeof(FLASHWINFO), fl_xid(main_win), FLASHW_ALL | FLASHW_TIMERNOFG, 0, 0 };
-    #endif
+#ifdef WIN32  // Populate structure for taskbar/window flash. Must be done after
+              // main_win->show() function - Dasho
+    blinker = {sizeof(FLASHWINFO), fl_xid(main_win),
+               FLASHW_ALL | FLASHW_TIMERNOFG, 0, 0};
+#endif
 
     // kill the stupid bright background of the "plastic" scheme
     if (widget_theme == 3) {
@@ -1293,8 +1307,7 @@ restart:;
                     if (!preserve_old_config) {
                         Cookie_Save(config_file);
                     }
-                }
-                else {
+                } else {
                     Cookie_Save(config_file);
                 }
 
@@ -1325,8 +1338,7 @@ restart:;
                     if (!preserve_old_config) {
                         Cookie_Save(config_file);
                     }
-                }
-                else {
+                } else {
                     Cookie_Save(config_file);
                 }
             }

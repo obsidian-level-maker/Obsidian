@@ -776,14 +776,14 @@ static bool BuildNodes(std::filesystem::path filename) {
             }
         }
     }
-    
+
     if (StringCaseCmp(current_engine, "zdoom") == 0) {
         if (!build_nodes) {
             LogPrintf("Skipping nodes per user selection...\n");
             return true;
         }
     }
-    
+
     // Is this really the best way to do this at the moment? - Dasho
     int map_nums;
     std::string wadlength = ob_get_param("length");
@@ -793,32 +793,38 @@ static bool BuildNodes(std::filesystem::path filename) {
     } else if (StringCaseCmp(wadlength, "few") == 0) {
         map_nums = 4;
     } else if (StringCaseCmp(wadlength, "episode") == 0) {
-        if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0) {
+        if (StringCaseCmp(current_game, "doom2") == 0 ||
+            StringCaseCmp(current_game, "plutonia") == 0 ||
+            StringCaseCmp(current_game, "tnt") == 0) {
             map_nums = 11;
         } else {
-            // Hexen is included in this although I don't think it's accurate. Will fix as Hexen support evolves - Dasho
+            // Hexen is included in this although I don't think it's accurate.
+            // Will fix as Hexen support evolves - Dasho
             map_nums = 9;
         }
     } else {
-        if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0) {
+        if (StringCaseCmp(current_game, "doom2") == 0 ||
+            StringCaseCmp(current_game, "plutonia") == 0 ||
+            StringCaseCmp(current_game, "tnt") == 0) {
             map_nums = 32;
         } else if (StringCaseCmp(current_game, "doom1") == 0) {
             map_nums = 27;
         } else if (StringCaseCmp(current_game, "ultdoom") == 0) {
             map_nums = 36;
         } else {
-            // Heretic and Hexen have the same value for this currently, as I used Heretic as a template for Hexen. Will fix
-            // as Hexen support evolves - Dasho
+            // Heretic and Hexen have the same value for this currently, as I
+            // used Heretic as a template for Hexen. Will fix as Hexen support
+            // evolves - Dasho
             map_nums = 45;
         }
     }
-    if (zdmain(filename, current_engine, UDMF_mode, build_reject, map_nums) != 0) {
+    if (zdmain(filename, current_engine, UDMF_mode, build_reject, map_nums) !=
+        0) {
         Main::ProgStatus(_("ZDBSP Error!"));
         return false;
     }
 
     return true;
-
 }
 
 }  // namespace Doom
@@ -839,7 +845,6 @@ class game_interface_c : public ::game_interface_c {
     void BeginLevel();
     void EndLevel();
     void Property(std::string key, std::string value);
-
 };
 }  // namespace Doom
 
@@ -869,7 +874,8 @@ bool Doom::game_interface_c::Start(const char *preset) {
 
     current_engine = ob_get_param("engine");
 
-    // Need to preempt the rest of this process for now if we are using Vanilla Doom
+    // Need to preempt the rest of this process for now if we are using Vanilla
+    // Doom
     if (StringCaseCmp(current_engine, "vanilla") == 0) {
         build_reject = StringToInt(ob_get_param("bool_build_reject"));
         return true;
@@ -882,14 +888,15 @@ bool Doom::game_interface_c::Start(const char *preset) {
 
     if (main_win) main_win->build_box->Prog_Init(20, N_("CSG"));
 
-    if (StringCaseCmp(current_engine, "zdoom") == 0 || StringCaseCmp(current_engine, "eternity") == 0) {
+    if (StringCaseCmp(current_engine, "zdoom") == 0 ||
+        StringCaseCmp(current_engine, "eternity") == 0) {
         build_reject = false;
         map_format = ob_get_param("map_format");
         build_nodes = StringToInt(ob_get_param("bool_build_nodes_udmf"));
     } else if (StringCaseCmp(current_engine, "edge") == 0) {
         build_reject = false;
         map_format = "binary";
-        build_nodes = StringToInt(ob_get_param("bool_build_nodes_edge"));          
+        build_nodes = StringToInt(ob_get_param("bool_build_nodes_edge"));
     } else {
         build_reject = StringToInt(ob_get_param("bool_build_reject"));
         map_format = "binary";
@@ -936,13 +943,19 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
         }
         mz_zip_archive zip_file;
         mz_zip_zero_struct(&zip_file);
-        if(mz_zip_writer_init_file(&zip_file, zip_filename.generic_string().c_str(), 0)) {
-            mz_zip_writer_add_file(&zip_file, filename.filename().generic_string().c_str(), filename.generic_string().c_str(), NULL, 0, MZ_DEFAULT_COMPRESSION);
+        if (mz_zip_writer_init_file(&zip_file,
+                                    zip_filename.generic_string().c_str(), 0)) {
+            mz_zip_writer_add_file(&zip_file,
+                                   filename.filename().generic_string().c_str(),
+                                   filename.generic_string().c_str(), NULL, 0,
+                                   MZ_DEFAULT_COMPRESSION);
             mz_zip_writer_finalize_archive(&zip_file);
             mz_zip_writer_end(&zip_file);
             std::filesystem::remove(filename);
         } else {
-            LogPrintf("Zipping output WAD to {} failed! Retaining original WAD.\n", zip_filename.generic_string());
+            LogPrintf(
+                "Zipping output WAD to {} failed! Retaining original WAD.\n",
+                zip_filename.generic_string());
         }
     }
 

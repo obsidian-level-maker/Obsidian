@@ -46,9 +46,9 @@ static void main_win_close_CB(Fl_Widget *w, void *data) {
 }
 
 static void main_win_surprise_go_CB(Fl_Widget *w, void *data) {
-   main_win->left_mods->SurpriseMe();
-   if (main_win->right_mods) main_win->right_mods->SurpriseMe();
-   did_randomize = true;
+    main_win->left_mods->SurpriseMe();
+    if (main_win->right_mods) main_win->right_mods->SurpriseMe();
+    did_randomize = true;
 }
 
 //

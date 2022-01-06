@@ -81,7 +81,8 @@ static bool Options_ParseLine(std::string buf) {
         return true;
     }
 
-    // For options file, don't strip whitespace as it can cause issue with addon paths that have whitespace - Dasho
+    // For options file, don't strip whitespace as it can cause issue with addon
+    // paths that have whitespace - Dasho
 
     /*while (std::find(buf.begin(), buf.end(), ' ') != buf.end()) {
         buf.erase(std::find(buf.begin(), buf.end(), ' '));
@@ -92,7 +93,7 @@ static bool Options_ParseLine(std::string buf) {
         return false;
     }
 
-    //pos = buf.find('=', 0);  // Fix pos after whitespace deletion
+    // pos = buf.find('=', 0);  // Fix pos after whitespace deletion
     std::string name = buf.substr(0, pos - 1);
     std::string value = buf.substr(pos + 2);
 
@@ -138,8 +139,8 @@ bool Options_Save(std::filesystem::path filename) {
     std::ofstream option_fp(filename, std::ios::out);
 
     if (!option_fp.is_open()) {
-        LogPrintf("Error: unable to create file: {}\n({})\n\n", filename.string(),
-                  strerror(errno));
+        LogPrintf("Error: unable to create file: {}\n({})\n\n",
+                  filename.string(), strerror(errno));
         return false;
     }
 
@@ -157,9 +158,12 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "debug_messages = " << (debug_messages ? 1 : 0) << "\n";
     option_fp << "limit_break = " << (limit_break ? 1 : 0) << "\n";
     option_fp << "preserve_failures = " << (preserve_failures ? 1 : 0) << "\n";
-    option_fp << "preserve_old_config = " << (preserve_old_config ? 1 : 0) << "\n";
-    option_fp << "randomize_architecture = " << (randomize_architecture ? 1 : 0) << "\n";
-    option_fp << "randomize_monsters = " << (randomize_monsters ? 1 : 0) << "\n";
+    option_fp << "preserve_old_config = " << (preserve_old_config ? 1 : 0)
+              << "\n";
+    option_fp << "randomize_architecture = " << (randomize_architecture ? 1 : 0)
+              << "\n";
+    option_fp << "randomize_monsters = " << (randomize_monsters ? 1 : 0)
+              << "\n";
     option_fp << "randomize_pickups = " << (randomize_pickups ? 1 : 0) << "\n";
     option_fp << "randomize_misc = " << (randomize_misc ? 1 : 0) << "\n";
     option_fp << "filename_prefix = " << filename_prefix << "\n";
@@ -261,8 +265,9 @@ class UI_OptionsWin : public Fl_Window {
                 t_language = "AUTO";
             }
         }
-        fl_alert("%s", _("Obsidian will now close to apply language changes.\nObsidian will be in your selected language"
-                " when you restart the program."));
+        fl_alert("%s", _("Obsidian will now close to apply language "
+                         "changes.\nObsidian will be in your selected language"
+                         " when you restart the program."));
 
         main_action = MAIN_QUIT;
 
@@ -366,7 +371,8 @@ slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this wi
     }
 
     static void callback_SetCustomPrefix(Fl_Widget *w, void *data) {
-        const char *user_buf = fl_input("%s", custom_prefix.c_str(), _("Enter Custom Prefix Format:"));
+        const char *user_buf = fl_input("%s", custom_prefix.c_str(),
+                                        _("Enter Custom Prefix Format:"));
 
         if (user_buf) {
             custom_prefix = user_buf;
@@ -494,7 +500,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_limit_break->h() + y_step * .5;
 
-    opt_preserve_failures = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_preserve_failures =
+        new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
     opt_preserve_failures->copy_label(_(" Preserve Failed Builds"));
     opt_preserve_failures->value(preserve_failures ? 1 : 0);
     opt_preserve_failures->callback(callback_PreserveFailures, this);

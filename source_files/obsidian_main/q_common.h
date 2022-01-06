@@ -40,7 +40,6 @@ enum quake_subformat_e {
 /***** CLASSES ****************/
 
 class qLump_c {
-
    public:
     std::string name;
 

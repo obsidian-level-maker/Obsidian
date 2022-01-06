@@ -306,7 +306,7 @@ int wadfab_get_side(lua_State *L) {
 
     lua_pushstring(L, SD->mid_tex.data());
     lua_setfield(L, -2, "mid_tex");
-    
+
     lua_pushinteger(L, index);
     lua_setfield(L, -2, "sidedef_index");
 
