@@ -32,6 +32,7 @@
 #include "m_cookie.h"
 #include "m_lua.h"
 #include "main.h"
+#include "miniz.h"
 #include "q_common.h"  // qLump_c
 #include "sys_xoshiro.h"
 
@@ -922,6 +923,27 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
         }
     } else {
         Recent_AddFile(RECG_Output, filename);
+    }
+
+    if (zip_output > 0) {
+        std::filesystem::path zip_filename = filename;
+        zip_filename.replace_extension(zip_output == 1 ? "zip" : "pk3");
+        if (std::filesystem::exists(zip_filename)) {
+            if (create_backups) {
+                Main::BackupFile(zip_filename, ".old");
+            }
+            std::filesystem::remove(zip_filename);
+        }
+        mz_zip_archive zip_file;
+        mz_zip_zero_struct(&zip_file);
+        if(mz_zip_writer_init_file(&zip_file, zip_filename.generic_string().c_str(), 0)) {
+            mz_zip_writer_add_file(&zip_file, filename.filename().generic_string().c_str(), filename.generic_string().c_str(), NULL, 0, MZ_DEFAULT_COMPRESSION);
+            mz_zip_writer_finalize_archive(&zip_file);
+            mz_zip_writer_end(&zip_file);
+            std::filesystem::remove(filename);
+        } else {
+            LogPrintf("Zipping output WAD to {} failed! Retaining original WAD.\n", zip_filename.generic_string());
+        }
     }
 
     return build_ok;
