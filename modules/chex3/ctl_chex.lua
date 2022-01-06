@@ -41,7 +41,11 @@ function CTL_CHEX3.monster_setup(self)
                   goto done
               end
             else
-              PARAM[opt.name] = rand.pick(opt.choices)
+              local index
+              repeat
+                index = rand.irange(1, #opt.choices)
+              until (index % 2 == 1)
+              PARAM[opt.name] = opt.choices[index]
               goto done
             end
           end
@@ -311,7 +315,11 @@ function CTL_CHEX3.weapon_setup(self)
                   goto done
               end
             else
-              PARAM[opt.name] = rand.pick(opt.choices)
+              local index
+              repeat
+                index = rand.irange(1, #opt.choices)
+              until (index % 2 == 1)
+              PARAM[opt.name] = opt.choices[index]
               goto done
             end
           end

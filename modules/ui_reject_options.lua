@@ -40,7 +40,11 @@ function UI_REJECT_OPTIONS.setup(self)
                   goto done
               end
             else
-              PARAM[opt.name] = rand.pick(opt.choices)
+              local index
+              repeat
+                index = rand.irange(1, #opt.choices)
+              until (index % 2 == 1)
+              PARAM[opt.name] = opt.choices[index]
               goto done
             end
           end
@@ -99,8 +103,35 @@ function UI_EDGE_MAP_OPTIONS.setup(self)
   -- because begin_level happens *after* level size decisions
   for name,opt in pairs(self.options) do
     if OB_CONFIG.batch == "yes" then
-      if not PARAM[opt.name] then
-        PARAM[opt.name] = opt.default
+      if OB_CONFIG.batch == "yes" then
+        if not PARAM[opt.name] then PARAM[opt.name] = OB_CONFIG[opt.name] end
+        if RANDOMIZE_GROUPS then
+          for _,group in pairs(RANDOMIZE_GROUPS) do
+            if opt.randomize_group and opt.randomize_group == group then
+              if opt.valuator then
+                if opt.valuator == "button" then
+                    PARAM[opt.name] = rand.sel(50, 1, 0)
+                    goto done
+                elseif opt.valuator == "slider" then
+                    if opt.increment < 1 then
+                      PARAM[opt.name] = rand.range(opt.min, opt.max)
+                    else
+                      PARAM[opt.name] = rand.irange(opt.min, opt.max)
+                    end
+                    goto done
+                end
+              else
+                local index
+                repeat
+                  index = rand.irange(1, #opt.choices)
+                until (index % 2 == 1)
+                PARAM[opt.name] = opt.choices[index]
+                goto done
+              end
+            end
+          end
+        end
+        ::done::
       end
     else
 	    if opt.valuator then
@@ -155,8 +186,35 @@ function UI_UDMF_MAP_OPTIONS.setup(self)
   -- because begin_level happens *after* level size decisions
   for name,opt in pairs(self.options) do
     if OB_CONFIG.batch == "yes" then
-      if not PARAM[opt.name] then
-        PARAM[opt.name] = opt.default
+      if OB_CONFIG.batch == "yes" then
+        if not PARAM[opt.name] then PARAM[opt.name] = OB_CONFIG[opt.name] end
+        if RANDOMIZE_GROUPS then
+          for _,group in pairs(RANDOMIZE_GROUPS) do
+            if opt.randomize_group and opt.randomize_group == group then
+              if opt.valuator then
+                if opt.valuator == "button" then
+                    PARAM[opt.name] = rand.sel(50, 1, 0)
+                    goto done
+                elseif opt.valuator == "slider" then
+                    if opt.increment < 1 then
+                      PARAM[opt.name] = rand.range(opt.min, opt.max)
+                    else
+                      PARAM[opt.name] = rand.irange(opt.min, opt.max)
+                    end
+                    goto done
+                end
+              else
+                local index
+                repeat
+                  index = rand.irange(1, #opt.choices)
+                until (index % 2 == 1)
+                PARAM[opt.name] = opt.choices[index]
+                goto done
+              end
+            end
+          end
+        end
+        ::done::
       end
     else
 	    if opt.valuator then

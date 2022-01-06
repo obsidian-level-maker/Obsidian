@@ -41,7 +41,11 @@ function CTL_HARMONY.monster_setup(self)
                   goto done
               end
             else
-              PARAM[opt.name] = rand.pick(opt.choices)
+              local index
+              repeat
+                index = rand.irange(1, #opt.choices)
+              until (index % 2 == 1)
+              PARAM[opt.name] = opt.choices[index]
               goto done
             end
           end
@@ -289,7 +293,11 @@ function CTL_HARMONY.weapon_setup(self)
                   goto done
               end
             else
-              PARAM[opt.name] = rand.pick(opt.choices)
+              local index
+              repeat
+                index = rand.irange(1, #opt.choices)
+              until (index % 2 == 1)
+              PARAM[opt.name] = opt.choices[index]
               goto done
             end
           end
