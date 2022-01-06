@@ -200,6 +200,9 @@ static void ShowInfo() {
         "     --randomize-pickups   Randomize item/weapon settings\n"
         "     --randomize-misc      Randomize miscellaneous settings\n"
         "\n"
+        "  -3 --pk3                 Compress output file to PK3\n"
+        "  -z --zip                 Compress output file to ZIP\n"
+        "\n"
         "  -d --debug               Enable debugging\n"
         "  -v --verbose             Print log messages to stdout\n"
         "  -h --help                Show this help message\n"
@@ -1028,6 +1031,14 @@ restart:;
             freopen("CONOUT$", "w", stderr);
         }
 #endif
+    }
+
+    if (argv::Find('z', "zip") >= 0) {
+        zip_output = 1;
+    }
+
+    if (argv::Find('3', "pk3") >= 0) {
+        zip_output = 2;
     }
 
     // These switches will only apply in batch mode, as the GUI has its own
