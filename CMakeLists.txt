@@ -33,10 +33,10 @@ if(MSYS)
   set(CMAKE_EXE_LINKER_FLAGS "-static -mwindows")
 endif()
 
-if(false)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(CMAKE_CXX_CLANG_TIDY clang-tidy)
   file(GLOB ALL_SOURCES "source_files/obsidian_main/*.cc"
-       "source_files/obsidian_main/*.hh"
+       "source_files/obsidian_main/*.h"
   )
   add_custom_target(
     clang-tidy COMMAND "${CMAKE_CXX_CLANG_TIDY}" -p "${CMAKE_BINARY_DIR}"
