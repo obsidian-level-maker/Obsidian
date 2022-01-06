@@ -66,7 +66,7 @@ function UI_ARCH.setup(self)
   -- because begin_level happens *after* level size decisions
   for _,opt in pairs(self.options) do
     if OB_CONFIG.batch == "yes" then
-      if not PARAM[opt.name] then PARAM[opt.name] = opt.default end
+      if not PARAM[opt.name] then PARAM[opt.name] = OB_CONFIG[opt.name] end
       if RANDOMIZE_GROUPS then
         for _,group in pairs(RANDOMIZE_GROUPS) do
           if opt.randomize_group and opt.randomize_group == group then
@@ -75,7 +75,11 @@ function UI_ARCH.setup(self)
                   PARAM[opt.name] = rand.sel(50, 1, 0)
                   goto done
               elseif opt.valuator == "slider" then
-                  PARAM[opt.name] = rand.range(opt.min, opt.max)
+                  if opt.increment < 1 then
+                    PARAM[opt.name] = rand.range(opt.min, opt.max)
+                  else
+                    PARAM[opt.name] = rand.irange(opt.min, opt.max)
+                  end
                   goto done
               end
             else
