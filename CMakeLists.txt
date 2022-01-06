@@ -22,7 +22,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-O2 -Wall")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-if(WIN32 AND NOT MINGW AND NOT MSYS)
+if(WIN32
+   AND NOT MINGW
+   AND NOT MSYS
+)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHa")
   set(CMAKE_EXE_LINKER_FLAGS "/SUBSYSTEM:WINDOWS")
 endif()
@@ -32,10 +35,12 @@ endif()
 
 if(false)
   set(CMAKE_CXX_CLANG_TIDY clang-tidy)
-  file(GLOB ALL_SOURCES "source_files/obsidian_main/*.cc" "source_files/obsidian_main/*.hh")
+  file(GLOB ALL_SOURCES "source_files/obsidian_main/*.cc"
+       "source_files/obsidian_main/*.hh"
+  )
   add_custom_target(
     clang-tidy COMMAND "${CMAKE_CXX_CLANG_TIDY}" -p "${CMAKE_BINARY_DIR}"
-    ${ALL_SOURCES}
+                       ${ALL_SOURCES}
   )
 endif()
 
@@ -77,6 +82,7 @@ add_executable(
   source_files/obsidian_main/csg_quake.h
   source_files/obsidian_main/csg_shade.cc
   source_files/obsidian_main/csg_spots.cc
+  source_files/obsidian_main/defines.h
   source_files/obsidian_main/dm_extra.cc
   source_files/obsidian_main/dm_extra.h
   source_files/obsidian_main/dm_prefab.cc
@@ -152,10 +158,10 @@ add_executable(
   source_files/obsidian_main/tx_forge.h
   source_files/obsidian_main/tx_skies.cc
   source_files/obsidian_main/tx_skies.h
-  source_files/obsidian_main/ui_build.cc
-  source_files/obsidian_main/ui_build.h
   source_files/obsidian_main/ui_boxes.cc
   source_files/obsidian_main/ui_boxes.h
+  source_files/obsidian_main/ui_build.cc
+  source_files/obsidian_main/ui_build.h
   source_files/obsidian_main/ui_game.cc
   source_files/obsidian_main/ui_game.h
   source_files/obsidian_main/ui_hyper.cc
@@ -174,7 +180,6 @@ add_executable(
   source_files/obsidian_main/vis_occlude.h
   source_files/obsidian_main/zf_menu.cc
   source_files/obsidian_main/zf_menu.h
-  source_files/obsidian_main/defines.h
 )
 
 target_include_directories(obsidian PRIVATE source_files/lua)
@@ -183,7 +188,10 @@ target_include_directories(obsidian PRIVATE source_files/slump)
 target_include_directories(obsidian PRIVATE source_files/zdbsp)
 target_include_directories(obsidian PRIVATE source_files/miniz)
 
-if(MINGW OR WIN32 OR MSYS)
+if(MINGW
+   OR WIN32
+   OR MSYS
+)
   target_compile_definitions(obsidian PRIVATE WIN32)
 else()
   target_compile_definitions(obsidian PRIVATE UNIX)
@@ -218,11 +226,11 @@ add_custom_command(
   TARGET obsidian
   POST_BUILD
   COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:obsidian>"
-  "${CMAKE_CURRENT_LIST_DIR}"
+          "${CMAKE_CURRENT_LIST_DIR}"
   COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:filename_formatter>"
-  "${CMAKE_CURRENT_LIST_DIR}/tools"
+          "${CMAKE_CURRENT_LIST_DIR}/tools"
   COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:qsavetex>"
-  "${CMAKE_CURRENT_LIST_DIR}/tools"
+          "${CMAKE_CURRENT_LIST_DIR}/tools"
 )
 
 add_dependencies(obsidian filename_formatter qsavetex)
@@ -231,21 +239,16 @@ if(UNIX)
   target_link_libraries(
     obsidian
     PRIVATE miniz
-    obsidian_lua
-    obsidian_physfs
-    obsidian_acc
-    obsidian_zdbsp
-    obsidian_slump
-    fontconfig
+            obsidian_lua
+            obsidian_physfs
+            obsidian_acc
+            obsidian_zdbsp
+            obsidian_slump
+            fontconfig
   )
 else()
   target_link_libraries(
-    obsidian
-    PRIVATE miniz
-    obsidian_lua
-    obsidian_physfs
-    obsidian_acc
-    obsidian_zdbsp
-    obsidian_slump
+    obsidian PRIVATE miniz obsidian_lua obsidian_physfs obsidian_acc
+                     obsidian_zdbsp obsidian_slump
   )
 endif()
