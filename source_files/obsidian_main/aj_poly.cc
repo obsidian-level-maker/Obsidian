@@ -14,6 +14,7 @@
 //
 //------------------------------------------------------------------------
 
+#include <cstddef>
 #include "aj_local.h"
 
 #define DEBUG_POLY 0
@@ -701,10 +702,12 @@ bool polygon_c::ContainsPoint(double x, double y) const {
     return true;
 }
 
+static constexpr std::size_t EDGE_BUFFER_SIZE = 32;
+
 void polygon_c::ClockwiseOrder() {
     edge_c *cur;
     edge_c **array;
-    edge_c *edge_buffer[32];
+    std::array<edge_c *, EDGE_BUFFER_SIZE> edge_buffer;
 
     int i;
     int total = 0;
@@ -720,8 +723,8 @@ void polygon_c::ClockwiseOrder() {
     }
 
     // use local array if small enough
-    if (total <= 32) {
-        array = edge_buffer;
+    if (total <= EDGE_BUFFER_SIZE) {
+        array = edge_buffer.data();
     } else {
         array = new edge_c *[total];
     }
@@ -769,7 +772,7 @@ void polygon_c::ClockwiseOrder() {
         edge_list = array[i];
     }
 
-    if (total > 32) {
+    if (total > EDGE_BUFFER_SIZE) {
         delete[] array;
     }
 
@@ -981,7 +984,7 @@ void CreateOuterEdges() {
     limit_x2 += 64;
     limit_y2 += 64;
 
-    vertex_c *v[4];
+    std::array<vertex_c *, 4> v;
 
     v[0] = NewSplit();
     v[0]->x = limit_x1;
