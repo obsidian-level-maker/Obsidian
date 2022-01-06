@@ -54,64 +54,77 @@ int num_wall_tips;
 /* ------- access functions --------- */
 
 vertex_c *Vertex(int index) {
-    if (index < 0 || index >= num_vertices)
+    if (index < 0 || index >= num_vertices) {
         Appl_FatalError("No such vertex: #%d\n", index);
+    }
 
     return all_vertices[index];
 }
 
 linedef_c *Linedef(int index) {
-    if (index < 0 || index >= num_linedefs)
+    if (index < 0 || index >= num_linedefs) {
         Appl_FatalError("No such linedef: #%d\n", index);
+    }
 
     return all_linedefs[index];
 }
 
 sidedef_c *Sidedef(int index) {
-    if (index < 0 || index >= num_sidedefs)
+    if (index < 0 || index >= num_sidedefs) {
         Appl_FatalError("No such sidedef: #%d\n", index);
+    }
 
     return all_sidedefs[index];
 }
 
 sector_c *Sector(int index) {
-    if (index < 0 || index >= num_sectors)
+    if (index < 0 || index >= num_sectors) {
         Appl_FatalError("No such sector: #%d\n", index);
+    }
 
     return all_sectors[index];
 }
 
 thing_c *Thing(int index) {
-    if (index < 0 || index >= num_things)
+    if (index < 0 || index >= num_things) {
         Appl_FatalError("No such thing: #%d\n", index);
+    }
 
     return all_things[index];
 }
 
 edge_c *Edge(int index) {
-    if (index < 0 || index >= num_edges)
+    if (index < 0 || index >= num_edges) {
         Appl_FatalError("No such edge: #%d\n", index);
+    }
 
     return all_edges[index];
 }
 
 polygon_c *Polygon(int index) {
-    if (index < 0 || index >= num_polygons)
+    if (index < 0 || index >= num_polygons) {
         Appl_FatalError("No such polygon: #%d\n", index);
+    }
 
     return all_polygons[index];
 }
 
 inline sidedef_c *SafeSidedef(u16_t num) {
-    if (num == 0xFFFF) return NULL;
+    if (num == 0xFFFF) {
+        return NULL;
+    }
 
-    if ((int)num >= num_sidedefs && (s16_t)(num) < 0) return NULL;
+    if ((int)num >= num_sidedefs && (s16_t)(num) < 0) {
+        return NULL;
+    }
 
     return Sidedef(num);
 }
 
 linedef_c *sector_c::getExtraFloor(int index) {
-    if (index < 0 || index >= num_floors) return NULL;
+    if (index < 0 || index >= num_floors) {
+        return NULL;
+    }
 
     return all_ex_floors[floor_start + index];
 }
@@ -461,7 +474,9 @@ bool LoadLinedefsHexen() {
         line->right = SafeSidedef(LE_U16(raw->sidedef1));
         line->left = SafeSidedef(LE_U16(raw->sidedef2));
 
-        for (int k = 0; k < 5; k++) line->args[k] = raw->specials[k];
+        for (int k = 0; k < 5; k++) {
+            line->args[k] = raw->specials[k];
+        }
     }
 
     return true;  // OK
@@ -486,8 +501,9 @@ void DetermineMapLimits() {
         linedef_c *L = Linedef(i);
 
         // ignore dummy sectors
-        if (L->right && L->right->sector && L->right->sector->is_dummy)
+        if (L->right && L->right->sector && L->right->sector->is_dummy) {
             continue;
+        }
 
         int x1 = (int)L->start->x;
         int y1 = (int)L->start->y;
@@ -506,7 +522,9 @@ void DetermineMapLimits() {
 }
 
 void CheckSectorIsDummy(sector_c *sec) {
-    if (sec->index < 0 || sec->index == VOID_SECTOR_IDX) return;
+    if (sec->index < 0 || sec->index == VOID_SECTOR_IDX) {
+        return;
+    }
 
     int line_count = 0;
 
@@ -519,14 +537,22 @@ void CheckSectorIsDummy(sector_c *sec) {
         linedef_c *line = all_linedefs[k];
 
         // sector exists on back of a line?  disqualify...
-        if (line->left && line->left->sector == sec) return;
+        if (line->left && line->left->sector == sec) {
+            return;
+        }
 
-        if (!line->right) continue;
+        if (!line->right) {
+            continue;
+        }
 
-        if (line->right->sector != sec) continue;
+        if (line->right->sector != sec) {
+            continue;
+        }
 
         // disqualify if sector contains a two-sided line
-        if (line->left) return;
+        if (line->left) {
+            return;
+        }
 
         line_count++;
 
@@ -542,10 +568,16 @@ void CheckSectorIsDummy(sector_c *sec) {
         }
     }
 
-    if (line_count < 3 || line_count > 4) return;
+    if (line_count < 3 || line_count > 4) {
+        return;
+    }
 
-    if (bound_x2 - bound_x1 > 32) return;
-    if (bound_y2 - bound_y1 > 32) return;
+    if (bound_x2 - bound_x1 > 32) {
+        return;
+    }
+    if (bound_y2 - bound_y1 > 32) {
+        return;
+    }
 
     // OK found one
 
@@ -563,7 +595,9 @@ void FindDummySectors() {
 
     int i;
 
-    if (num_sectors <= 1) return;
+    if (num_sectors <= 1) {
+        return;
+    }
 
     byte *joined_secs = new byte[num_sectors];
 
@@ -572,7 +606,9 @@ void FindDummySectors() {
     for (i = 0; i < num_linedefs; i++) {
         linedef_c *line = all_linedefs[i];
 
-        if (!(line->left && line->right)) continue;
+        if (!(line->left && line->right)) {
+            continue;
+        }
 
         // this line straddles two sectors
         // (or possible a single one -- that too rules it out)
@@ -580,15 +616,19 @@ void FindDummySectors() {
         for (int pass = 0; pass < 2; pass++) {
             sector_c *sec = pass ? line->right->sector : line->left->sector;
 
-            if (!sec || sec->index < 0 || sec->index == VOID_SECTOR_IDX)
+            if (!sec || sec->index < 0 || sec->index == VOID_SECTOR_IDX) {
                 continue;
+            }
 
             joined_secs[sec->index] = 1;
         }
     }
 
-    for (i = 0; i < num_sectors; i++)
-        if (!joined_secs[i]) CheckSectorIsDummy(all_sectors[i]);
+    for (i = 0; i < num_sectors; i++) {
+        if (!joined_secs[i]) {
+            CheckSectorIsDummy(all_sectors[i]);
+        }
+    }
 
     delete[] joined_secs;
 }
@@ -601,20 +641,26 @@ int CollectFloorsAtSector(sector_c *sec, bool count_only) {
 
         // line must be in a dummy sector
         if (!(line->right && line->right->sector &&
-              line->right->sector->is_dummy))
+              line->right->sector->is_dummy)) {
             continue;
+        }
 
         // special must be an extrafloor
         if (!(line->special == SOLID_EXTRA_FLOOR ||
-              line->special == LIQUID_EXTRA_FLOOR))
+              line->special == LIQUID_EXTRA_FLOOR)) {
             continue;
+        }
 
         // tag must match this sector
-        if (line->tag != sec->tag) continue;
+        if (line->tag != sec->tag) {
+            continue;
+        }
 
         total++;
 
-        if (!count_only) all_ex_floors.push_back(line);
+        if (!count_only) {
+            all_ex_floors.push_back(line);
+        }
     }
 
     return total;
@@ -624,16 +670,24 @@ void ProcessExtraFloors() {
     for (int k = 0; k < num_sectors; k++) {
         sector_c *sec = all_sectors[k];
 
-        if (sec->index < 0 || sec->index == VOID_SECTOR_IDX) continue;
+        if (sec->index < 0 || sec->index == VOID_SECTOR_IDX) {
+            continue;
+        }
 
-        if (sec->tag <= 0) continue;
+        if (sec->tag <= 0) {
+            continue;
+        }
 
         // skip dummy sectors too
-        if (sec->is_dummy) continue;
+        if (sec->is_dummy) {
+            continue;
+        }
 
         int total = CollectFloorsAtSector(sec, true /* count_only */);
 
-        if (total == 0) continue;
+        if (total == 0) {
+            continue;
+        }
 
         sec->num_floors = total;
         sec->floor_start = (int)all_ex_floors.size();
@@ -652,9 +706,13 @@ int VertexCompare(const void *p1, const void *p2) {
     vertex_c *A = all_vertices[vert1];
     vertex_c *B = all_vertices[vert2];
 
-    if (vert1 == vert2) return 0;
+    if (vert1 == vert2) {
+        return 0;
+    }
 
-    if ((int)A->x != (int)B->x) return (int)A->x - (int)B->x;
+    if ((int)A->x != (int)B->x) {
+        return (int)A->x - (int)B->x;
+    }
 
     return (int)A->y - (int)B->y;
 }
@@ -665,13 +723,17 @@ bool DetectDuplicateVertices() {
 
     // sort array of indices
     // FIXME: exclude unused vertices
-    for (i = 0; i < num_vertices; i++) array[i] = i;
+    for (i = 0; i < num_vertices; i++) {
+        array[i] = i;
+    }
 
     qsort(array, num_vertices, sizeof(int), VertexCompare);
 
     // now mark them off
     for (i = 0; i < num_vertices - 1; i++) {
-        if (VertexCompare(array + i, array + i + 1) != 0) continue;
+        if (VertexCompare(array + i, array + i + 1) != 0) {
+            continue;
+        }
 
         // found a duplicate !
 
@@ -680,7 +742,9 @@ bool DetectDuplicateVertices() {
             vertex_c *B = all_vertices[array[i + 1]];
 
             // we only care if the vertices both belong to a linedef
-            if (A->ref_count == 0 || B->ref_count == 0) continue;
+            if (A->ref_count == 0 || B->ref_count == 0) {
+                continue;
+            }
 
             SetErrorMsg("Vertices #%d and #%d overlap", array[i], array[i + 1]);
             return false;
@@ -711,16 +775,19 @@ int LineStartCompare(const void *p1, const void *p2) {
     vertex_c *C;
     vertex_c *D;
 
-    if (line1 == line2) return 0;
+    if (line1 == line2) {
+        return 0;
+    }
 
     // determine left-most vertex of each line
     C = LineVertexLowest(A) ? A->end : A->start;
     D = LineVertexLowest(B) ? B->end : B->start;
 
-    if ((int)C->x != (int)D->x)
+    if ((int)C->x != (int)D->x) {
         return (int)C->x - (int)D->x;
-    else
+    } else {
         return (int)C->y - (int)D->y;
+    }
 }
 
 int LineEndCompare(const void *p1, const void *p2) {
@@ -733,16 +800,19 @@ int LineEndCompare(const void *p1, const void *p2) {
     vertex_c *C;
     vertex_c *D;
 
-    if (line1 == line2) return 0;
+    if (line1 == line2) {
+        return 0;
+    }
 
     // determine right-most vertex of each line
     C = LineVertexLowest(A) ? A->start : A->end;
     D = LineVertexLowest(B) ? B->start : B->end;
 
-    if ((int)C->x != (int)D->x)
+    if ((int)C->x != (int)D->x) {
         return (int)C->x - (int)D->x;
-    else
+    } else {
         return (int)C->y - (int)D->y;
+    }
 }
 
 bool DetectOverlappingLines() {
@@ -756,7 +826,9 @@ bool DetectOverlappingLines() {
     int *array = new int[num_linedefs + 1];
 
     // sort array of indices
-    for (i = 0; i < num_linedefs; i++) array[i] = i;
+    for (i = 0; i < num_linedefs; i++) {
+        array[i] = i;
+    }
 
     qsort(array, num_linedefs, sizeof(int), LineStartCompare);
 
@@ -764,7 +836,9 @@ bool DetectOverlappingLines() {
         int k;
 
         for (k = i + 1; k < num_linedefs; k++) {
-            if (LineStartCompare(array + i, array + k) != 0) break;
+            if (LineStartCompare(array + i, array + k) != 0) {
+                break;
+            }
 
             if (LineEndCompare(array + i, array + k) == 0) {
                 // found an overlap !
@@ -794,19 +868,24 @@ void vertex_c::AddTip(double dx, double dy, sector_c *left, sector_c *right) {
     for (after = tip_set; after && after->next; after = after->next) {
     }
 
-    while (after && tip->angle + ANG_EPSILON < after->angle)
+    while (after && tip->angle + ANG_EPSILON < after->angle) {
         after = after->prev;
+    }
 
     // link it in
     tip->next = after ? after->next : tip_set;
     tip->prev = after;
 
     if (after) {
-        if (after->next) after->next->prev = tip;
+        if (after->next) {
+            after->next->prev = tip;
+        }
 
         after->next = tip;
     } else {
-        if (tip_set) tip_set->prev = tip;
+        if (tip_set) {
+            tip_set->prev = tip;
+        }
 
         tip_set = tip;
     }
@@ -816,13 +895,15 @@ bool ValidateWallTip(const vertex_c *vert) {
     const wall_tip_c *tip;
     const sector_c *first_right;
 
-    if (!vert->tip_set)
+    if (!vert->tip_set) {
         Appl_FatalError("INTERNAL ERROR: vertex #%d got no wall tips\n",
                         vert->index);
+    }
 
-    if (!vert->tip_set->next)
+    if (!vert->tip_set->next) {
         Appl_FatalError("INTERNAL ERROR: vertex #%d only has one linedef\n",
                         vert->index);
+    }
 
     first_right = vert->tip_set->right;
 
@@ -875,8 +956,12 @@ bool CalculateWallTips() {
     for (i = 0; i < num_linedefs; i++) {
         const linedef_c *line = all_linedefs[i];
 
-        if (!ValidateWallTip(line->start)) return false;
-        if (!ValidateWallTip(line->end)) return false;
+        if (!ValidateWallTip(line->start)) {
+            return false;
+        }
+        if (!ValidateWallTip(line->end)) {
+            return false;
+        }
     }
 
 #if DEBUG_LOAD
@@ -964,11 +1049,14 @@ bool VerifyOuterLines() {
         int x2 = (int)L->end->x;
         int y2 = (int)L->end->y;
 
-        if (L->left && L->right) continue;
+        if (L->left && L->right) {
+            continue;
+        }
 
         // ignore lines of dummy sectors
-        if (L->right && L->right->sector && L->right->sector->is_dummy)
+        if (L->right && L->right->sector && L->right->sector->is_dummy) {
             continue;
+        }
 
         if (x1 == limit_x1 && x2 == limit_x2 && y1 == limit_y2 && y2 == y1) {
             seen |= 0x0008;
@@ -1009,10 +1097,11 @@ bool OpenMap(const char *level_name) {
     load_level = the_wad->FindLevel(level_name);
 
     if (load_level < 0) {
-        if (level_name[0] == '*')
+        if (level_name[0] == '*') {
             SetErrorMsg("No levels found in the wad");
-        else
+        } else {
             SetErrorMsg("Level '%s' not found in the wad", level_name);
+        }
 
         return false;
     }
@@ -1020,18 +1109,34 @@ bool OpenMap(const char *level_name) {
     // identify hexen mode by presence of BEHAVIOR lump
     bool doing_hexen = false;
 
-    if (the_wad->ReadLump("BEHAVIOR", NULL, load_level)) doing_hexen = true;
+    if (the_wad->ReadLump("BEHAVIOR", NULL, load_level)) {
+        doing_hexen = true;
+    }
 
-    if (!LoadVertices()) return false;
-    if (!LoadSectors()) return false;
-    if (!LoadSidedefs()) return false;
+    if (!LoadVertices()) {
+        return false;
+    }
+    if (!LoadSectors()) {
+        return false;
+    }
+    if (!LoadSidedefs()) {
+        return false;
+    }
 
     if (doing_hexen) {
-        if (!LoadLinedefsHexen()) return false;
-        if (!LoadThingsHexen()) return false;
+        if (!LoadLinedefsHexen()) {
+            return false;
+        }
+        if (!LoadThingsHexen()) {
+            return false;
+        }
     } else {
-        if (!LoadLinedefs()) return false;
-        if (!LoadThings()) return false;
+        if (!LoadLinedefs()) {
+            return false;
+        }
+        if (!LoadThings()) {
+            return false;
+        }
     }
 
     Appl_Printf(
@@ -1042,10 +1147,16 @@ bool OpenMap(const char *level_name) {
 
     DetermineMapLimits();
 
-    if (!DetectOverlappingLines()) return false;
-    if (!DetectDuplicateVertices()) return false;
+    if (!DetectOverlappingLines()) {
+        return false;
+    }
+    if (!DetectDuplicateVertices()) {
+        return false;
+    }
 
-    if (!CalculateWallTips()) return false;
+    if (!CalculateWallTips()) {
+        return false;
+    }
 
     ProcessExtraFloors();
 

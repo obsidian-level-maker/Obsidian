@@ -886,7 +886,9 @@ bool Doom::game_interface_c::Start(const char *preset) {
         return false;
     }
 
-    if (main_win) main_win->build_box->Prog_Init(20, N_("CSG"));
+    if (main_win) {
+        main_win->build_box->Prog_Init(20, N_("CSG"));
+    }
 
     if (StringCaseCmp(current_engine, "zdoom") == 0 ||
         StringCaseCmp(current_engine, "eternity") == 0) {

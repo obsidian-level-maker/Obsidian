@@ -1461,11 +1461,18 @@ void UI_CustomMods::SurpriseMe() {
         UI_Module *M = (UI_Module *)mod_pack->child(j);
         SYS_ASSERT(M);
         std::vector<std::string> selected_randomize_groups;
-        if (randomize_architecture)
+        if (randomize_architecture) {
             selected_randomize_groups.push_back("architecture");
-        if (randomize_monsters) selected_randomize_groups.push_back("monsters");
-        if (randomize_pickups) selected_randomize_groups.push_back("pickups");
-        if (randomize_misc) selected_randomize_groups.push_back("misc");
+        }
+        if (randomize_monsters) {
+            selected_randomize_groups.push_back("monsters");
+        }
+        if (randomize_pickups) {
+            selected_randomize_groups.push_back("pickups");
+        }
+        if (randomize_misc) {
+            selected_randomize_groups.push_back("misc");
+        }
         M->randomize_Values(selected_randomize_groups);
     }
 }
