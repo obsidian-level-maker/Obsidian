@@ -664,6 +664,9 @@ function ob_set_config(name, value)
       for _,opt in pairs(mod.options) do
         if opt.name == name then
           ob_set_mod_option(mod.name, name, value)
+          if OB_CONFIG.batch == "yes" then
+            OB_CONFIG[name] = value
+          end
           return
         end
       end

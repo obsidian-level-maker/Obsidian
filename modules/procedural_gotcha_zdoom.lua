@@ -1611,7 +1611,19 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.setup(self)
 
   for name,opt in pairs(self.options) do
     if OB_CONFIG.batch == "yes" then
-      if not PARAM[opt.name] then PARAM[opt.name] = OB_CONFIG[opt.name] end
+      if opt.valuator then
+        if opt.valuator == "slider" then 
+          if opt.increment < 1 then
+            PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
+          else
+            PARAM[opt.name] = int(tonumber(OB_CONFIG[opt.name]))
+          end
+        elseif opt.valuator == "button" then
+          PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
+        end
+      else
+        PARAM[opt.name] = OB_CONFIG[opt.name]
+      end
       if RANDOMIZE_GROUPS then
         for _,group in pairs(RANDOMIZE_GROUPS) do
           if opt.randomize_group and opt.randomize_group == group then
