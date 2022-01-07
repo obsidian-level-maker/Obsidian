@@ -14,6 +14,7 @@
 //
 //------------------------------------------------------------------------
 
+#include <cstddef>
 #include "aj_local.h"
 
 #define DEBUG_POLY 0
@@ -105,8 +106,9 @@ void edge_c::Recompute() {
     p_length = hypot(pdx, pdy);
     p_angle = ComputeAngle(pdx, pdy);
 
-    if (p_length <= 0)
+    if (p_length <= 0) {
         Appl_FatalError("INTERNAL ERROR: edge has zero length!\n");
+    }
 
     p_perp = psy * pdx - psx * pdy;
     p_para = -psx * pdx - psy * pdy;
@@ -186,15 +188,17 @@ inline void CalcIntersection(edge_c *cur, edge_c *part, double perp_c,
     // 0 = start, 1 = end
     double ds = perp_c / (perp_c - perp_d);
 
-    if (cur->pdx == 0)
+    if (cur->pdx == 0) {
         *x = cur->psx;
-    else
+    } else {
         *x = cur->psx + (cur->pdx * ds);
+    }
 
-    if (cur->pdy == 0)
+    if (cur->pdy == 0) {
         *y = cur->psy;
-    else
+    } else {
         *y = cur->psy + (cur->pdy * ds);
+    }
 }
 
 void AddIntersection(intersect_c **cut_list, vertex_c *vert, edge_c *part) {
@@ -202,7 +206,9 @@ void AddIntersection(intersect_c **cut_list, vertex_c *vert, edge_c *part) {
 
     // check if vertex already present
     for (cut = (*cut_list); cut; cut = cut->next) {
-        if (vert == cut->vertex) return;
+        if (vert == cut->vertex) {
+            return;
+        }
     }
 
     // create new intersection
@@ -223,17 +229,23 @@ void AddIntersection(intersect_c **cut_list, vertex_c *vert, edge_c *part) {
     for (next = (*cut_list); next && next->next; next = next->next) {
     }
 
-    while (next && cut->along_dist < next->along_dist) next = next->prev;
+    while (next && cut->along_dist < next->along_dist) {
+        next = next->prev;
+    }
 
     cut->next = next ? next->next : (*cut_list);
     cut->prev = next;
 
     if (next) {
-        if (next->next) next->next->prev = cut;
+        if (next->next) {
+            next->next->prev = cut;
+        }
 
         next->next = cut;
     } else {
-        if (*cut_list) (*cut_list)->prev = cut;
+        if (*cut_list) {
+            (*cut_list)->prev = cut;
+        }
 
         (*cut_list) = cut;
     }
@@ -287,10 +299,11 @@ int EvalPartition(edge_c *part, edge_c *edge_list) {
 
         // check for being on the same line
         if (a_side == 0 && b_side == 0) {
-            if (check->pdx * part->pdx + check->pdy * part->pdy < 0)
+            if (check->pdx * part->pdx + check->pdy * part->pdy < 0) {
                 ADD_LEFT();
-            else
+            } else {
                 ADD_RIGHT();
+            }
 
             continue;
         }
@@ -351,7 +364,9 @@ int EvalPartition(edge_c *part, edge_c *edge_list) {
 
     // show a slight preference for purely horizontally or vertical
     // partition lines.
-    if (part->pdx != 0 && part->pdy != 0) cost += 60;
+    if (part->pdx != 0 && part->pdy != 0) {
+        cost += 60;
+    }
 
 #if DEBUG_POLY
     Appl_Printf(
@@ -372,7 +387,9 @@ void DivideAnEdge(edge_c *cur, edge_c *part, edge_c **left_list,
     double a = part->PerpDist(cur->psx, cur->psy);
     double b = part->PerpDist(cur->pex, cur->pey);
 
-    if (part->source_line && cur->source_line == part->source_line) a = b = 0;
+    if (part->source_line && cur->source_line == part->source_line) {
+        a = b = 0;
+    }
 
     int a_side = (fabs(a) <= DIST_EPSILON) ? 0 : (a < 0) ? -1 : +1;
     int b_side = (fabs(b) <= DIST_EPSILON) ? 0 : (b < 0) ? -1 : +1;
@@ -396,8 +413,12 @@ void DivideAnEdge(edge_c *cur, edge_c *part, edge_c **left_list,
 
     // check for right side
     if (a_side >= 0 && b_side >= 0) {
-        if (a_side == 0) AddIntersection(cut_list, cur->start, part);
-        if (b_side == 0) AddIntersection(cut_list, cur->end, part);
+        if (a_side == 0) {
+            AddIntersection(cut_list, cur->start, part);
+        }
+        if (b_side == 0) {
+            AddIntersection(cut_list, cur->end, part);
+        }
 
         InsertEdge(right_list, cur);
         return;
@@ -405,8 +426,12 @@ void DivideAnEdge(edge_c *cur, edge_c *part, edge_c **left_list,
 
     // check for left side
     if (a_side <= 0 && b_side <= 0) {
-        if (a_side == 0) AddIntersection(cut_list, cur->start, part);
-        if (b_side == 0) AddIntersection(cut_list, cur->end, part);
+        if (a_side == 0) {
+            AddIntersection(cut_list, cur->start, part);
+        }
+        if (b_side == 0) {
+            AddIntersection(cut_list, cur->end, part);
+        }
 
         InsertEdge(left_list, cur);
         return;
@@ -443,7 +468,9 @@ edge_c *ChoosePartition(edge_c *edge_list, int depth) {
 
     for (edge_c *part = edge_list; part; part = part->next) {
         // ignore edges which are not from a linedef
-        if (!part->linedef) continue;
+        if (!part->linedef) {
+            continue;
+        }
 
         int cost = EvalPartition(part, edge_list);
 
@@ -456,7 +483,9 @@ edge_c *ChoosePartition(edge_c *edge_list, int depth) {
 #endif
 
         // unsuitable or too costly?
-        if (cost < 0 || cost >= best_cost) continue;
+        if (cost < 0 || cost >= best_cost) {
+            continue;
+        }
 
         best = part;
         best_cost = cost;
@@ -493,7 +522,9 @@ void DivideEdges(edge_c *edge_list, edge_c *part, edge_c **left_list,
 
 void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list,
                          intersect_c *cut_list) {
-    if (!cut_list) return;
+    if (!cut_list) {
+        return;
+    }
 
 #if DEBUG_POLY
     Appl_Printf("CUT LIST:\n");
@@ -515,8 +546,9 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list,
     while (cur && next) {
         double len = next->along_dist - cur->along_dist;
 
-        if (len < -0.1)
+        if (len < -0.1) {
             Appl_FatalError("INTERNAL ERROR: intersect list not sorted\n");
+        }
 
         if (len > 0.2) {
             cur = next;
@@ -534,9 +566,13 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list,
             next->after);
 #endif
 
-        if (!cur->before && next->before) cur->before = next->before;
+        if (!cur->before && next->before) {
+            cur->before = next->before;
+        }
 
-        if (!cur->after && next->after) cur->after = next->after;
+        if (!cur->after && next->after) {
+            cur->after = next->after;
+        }
 
 #if DEBUG_POLY
         Appl_Printf("---> merged (%1.0f,%1.0f) [%d/%d]\n", cur->vertex->x,
@@ -558,7 +594,9 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list,
     for (cur = cut_list; cur && cur->next; cur = cur->next) {
         next = cur->next;
 
-        if (!cur->after && !next->before) continue;
+        if (!cur->after && !next->before) {
+            continue;
+        }
 
         // check for some nasty OPEN/CLOSED or CLOSED/OPEN cases
         if ((cur->after && !next->before) || (!cur->after && next->before)) {
@@ -625,7 +663,9 @@ void EdgesAlongPartition(edge_c *part, edge_c **left_list, edge_c **right_list,
 int polygon_c::CountEdges() const {
     int count = 0;
 
-    for (edge_c *cur = edge_list; cur; cur = cur->next) count++;
+    for (edge_c *cur = edge_list; cur; cur = cur->next) {
+        count++;
+    }
 
     return count;
 }
@@ -654,16 +694,20 @@ bool polygon_c::ContainsPoint(double x, double y) const {
     for (edge_c *E = edge_list; E; E = E->next) {
         double d = E->PerpDist(x, y);
 
-        if (d < -epsilon) return false;
+        if (d < -epsilon) {
+            return false;
+        }
     }
 
     return true;
 }
 
+static constexpr std::size_t EDGE_BUFFER_SIZE = 32;
+
 void polygon_c::ClockwiseOrder() {
     edge_c *cur;
     edge_c **array;
-    edge_c *edge_buffer[32];
+    std::array<edge_c *, EDGE_BUFFER_SIZE> edge_buffer;
 
     int i;
     int total = 0;
@@ -674,18 +718,24 @@ void polygon_c::ClockwiseOrder() {
 #endif
 
     // count edges and create an array to manipulate them
-    for (cur = edge_list; cur; cur = cur->next) total++;
+    for (cur = edge_list; cur; cur = cur->next) {
+        total++;
+    }
 
     // use local array if small enough
-    if (total <= 32)
-        array = edge_buffer;
-    else
+    if (total <= EDGE_BUFFER_SIZE) {
+        array = edge_buffer.data();
+    } else {
         array = new edge_c *[total];
+    }
 
-    for (cur = edge_list, i = 0; cur; cur = cur->next, i++) array[i] = cur;
+    for (cur = edge_list, i = 0; cur; cur = cur->next, i++) {
+        array[i] = cur;
+    }
 
-    if (i != total)
+    if (i != total) {
         Appl_FatalError("INTERNAL ERROR: ClockwiseOrder miscounted\n");
+    }
 
     // sort them by angle (from the middle point to the start vertex).
     // the desired order (clockwise) means descending angles.
@@ -705,7 +755,9 @@ void polygon_c::ClockwiseOrder() {
             array[i + 1] = A;
 
             // bubble down
-            if (i > 0) i--;
+            if (i > 0) {
+                i--;
+            }
         } else {
             // bubble up
             i++;
@@ -720,7 +772,9 @@ void polygon_c::ClockwiseOrder() {
         edge_list = array[i];
     }
 
-    if (total > 32) delete[] array;
+    if (total > EDGE_BUFFER_SIZE) {
+        delete[] array;
+    }
 
 #if 0  // DEBUGGING
 	Appl_Printf("Sorted edges around (%1.1f %1.1f)\n", poly->mid_x, poly->mid_y);
@@ -788,13 +842,15 @@ bool RecursiveDivideEdges(edge_c *edge_list, int depth) {
     DivideEdges(edge_list, part, &lefts, &rights, &cut_list);
 
     /* sanity checks... */
-    if (!rights)
+    if (!rights) {
         Appl_FatalError(
             "INTERNAL ERROR: Separated edge-list has no RIGHT side\n");
+    }
 
-    if (!lefts)
+    if (!lefts) {
         Appl_FatalError(
             "INTERNAL ERROR: Separated edge-list has no LEFT side\n");
+    }
 
     EdgesAlongPartition(part, &lefts, &rights, cut_list);
 
@@ -802,13 +858,17 @@ bool RecursiveDivideEdges(edge_c *edge_list, int depth) {
     Appl_Printf("Build: Going LEFT\n");
 #endif
 
-    if (!RecursiveDivideEdges(lefts, depth + 1)) return false;
+    if (!RecursiveDivideEdges(lefts, depth + 1)) {
+        return false;
+    }
 
 #if DEBUG_POLY
     Appl_Printf("Build: Going RIGHT\n");
 #endif
 
-    if (!RecursiveDivideEdges(rights, depth + 1)) return false;
+    if (!RecursiveDivideEdges(rights, depth + 1)) {
+        return false;
+    }
 
 #if DEBUG_POLY
     Appl_Printf("Build: DONE\n");
@@ -830,10 +890,14 @@ bool ProcessSectors() {
         sector_c *sec = Sector(i);
 
         // skip unused sectors
-        if (!sec->edge_list) continue;
+        if (!sec->edge_list) {
+            continue;
+        }
 
         // skip dummy sectors
-        if (sec->is_dummy) continue;
+        if (sec->is_dummy) {
+            continue;
+        }
 
 #if DEBUG_POLY
         Appl_Printf("-------------------------------\n");
@@ -841,7 +905,9 @@ bool ProcessSectors() {
         Appl_Printf("-------------------------------\n");
 #endif
 
-        if (!ProcessOneSector(sec)) return false;
+        if (!ProcessOneSector(sec)) {
+            return false;
+        }
     }
 
     return true;  // OK
@@ -889,14 +955,16 @@ void CreateEdges() {
         linedef_c *line = Linedef(i);
 
         // ignore dummy sectors
-        if (line->right && line->right->sector && line->right->sector->is_dummy)
+        if (line->right && line->right->sector &&
+            line->right->sector->is_dummy) {
             continue;
+        }
 
         right = CreateAnEdge(line, line->start, line->end, line->right, 0);
 
-        if (line->is_border)
+        if (line->is_border) {
             left = NULL;
-        else {
+        } else {
             left = CreateAnEdge(line, line->end, line->start, line->left, 1);
         }
 
@@ -916,7 +984,7 @@ void CreateOuterEdges() {
     limit_x2 += 64;
     limit_y2 += 64;
 
-    vertex_c *v[4];
+    std::array<vertex_c *, 4> v;
 
     v[0] = NewSplit();
     v[0]->x = limit_x1;
@@ -971,7 +1039,9 @@ bool Polygonate(bool require_border) {
 
     CreateEdges();
 
-    if (need_outer) CreateOuterEdges();
+    if (need_outer) {
+        CreateOuterEdges();
+    }
 
     bool was_ok = ProcessSectors();
 

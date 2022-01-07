@@ -261,7 +261,6 @@ UI_CustomCheckBox::~UI_CustomCheckBox() {}
 // Will also, in the absence of a down box, revert to drawing +/- instead.
 // This is for modules that expand into a series of options
 void UI_CustomCheckBox::draw() {
-
     int W = labelsize();
     int bx = Fl::box_dx(box());  // box frame width
     int dx = bx + 2;             // relative position of check mark etc.
@@ -293,12 +292,12 @@ void UI_CustomCheckBox::draw() {
             fl_color(FONT_COLOR);
             int tx = x() + dx + 3;
             int tw = W - 6;
-            int d1 = tw/3;
-            int d2 = tw-d1;
-            int ty = y() + dy + (W+d2)/2-d1-2;
+            int d1 = tw / 3;
+            int d2 = tw - d1;
+            int ty = y() + dy + (W + d2) / 2 - d1 - 2;
             fl_xyline(tx, ty, tx + tw);
-            fl_yxline(tx+d1+2, ty-d1-2, ty+d1+2);
-        }       
+            fl_yxline(tx + d1 + 2, ty - d1 - 2, ty + d1 + 2);
+        }
     }
     lx = dx + W + 2;
     draw_label(x() + lx, y(), w() - lx - bx, h());

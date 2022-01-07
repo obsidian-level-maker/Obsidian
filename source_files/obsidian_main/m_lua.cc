@@ -361,6 +361,26 @@ int gui_scan_directory(lua_State *L) {
     return 1;
 }
 
+// LUA: get_batch_randomize_groups() --> list
+//
+// Note: 'match' parameter must be of the form "*" or "*.xxx"
+//       or must be "DIRS" to return all the sub-directories
+//
+int gui_get_batch_randomize_groups(lua_State *L) {
+    lua_newtable(L);
+
+    if (!batch_randomize_groups.empty()) {
+        for (unsigned int k = 0; k < batch_randomize_groups.size(); k++) {
+            lua_pushstring(L, batch_randomize_groups[k].c_str());
+            lua_rawseti(L, -2, (int)(k + 1));
+        }
+    } else {
+        lua_pushnil(L);
+    }
+
+    return 1;
+}
+
 // LUA: add_choice(button, id, label)
 //
 int gui_add_choice(lua_State *L) {
@@ -462,12 +482,15 @@ int gui_add_module(lua_State *L) {
     }
 
     if (single_pane) {
-        main_win->left_mods->AddModule(id, label, tip, red, green, blue, suboptions);
+        main_win->left_mods->AddModule(id, label, tip, red, green, blue,
+                                       suboptions);
     } else {
         if (!StringCaseCmp(where, "left")) {
-            main_win->left_mods->AddModule(id, label, tip, red, green, blue, suboptions);
+            main_win->left_mods->AddModule(id, label, tip, red, green, blue,
+                                           suboptions);
         } else if (!StringCaseCmp(where, "right")) {
-            main_win->right_mods->AddModule(id, label, tip, red, green, blue, suboptions);
+            main_win->right_mods->AddModule(id, label, tip, red, green, blue,
+                                            suboptions);
         } else {
             return luaL_error(L, "add_module: unknown where value '%s'\n",
                               where.c_str());
@@ -559,7 +582,8 @@ int gui_add_module_option(lua_State *L) {
 
     // FIXME : error if module is unknown
 
-    main_win->left_mods->AddOption(module, option, label, tip, longtip, gap, randomize_group);
+    main_win->left_mods->AddOption(module, option, label, tip, longtip, gap,
+                                   randomize_group);
     if (!single_pane) {
         main_win->right_mods->AddOption(module, option, label, tip, longtip,
                                         gap, randomize_group);
@@ -610,9 +634,9 @@ int gui_add_module_slider_option(lua_State *L) {
                                          gap, min, max, inc, units, presets,
                                          nan, randomize_group);
     if (!single_pane) {
-        main_win->right_mods->AddSliderOption(module, option, label, tip,
-                                              longtip, gap, min, max, inc,
-                                              units, presets, nan, randomize_group);
+        main_win->right_mods->AddSliderOption(
+            module, option, label, tip, longtip, gap, min, max, inc, units,
+            presets, nan, randomize_group);
     }
 
     return 0;
@@ -1210,6 +1234,8 @@ static const luaL_Reg gui_script_funcs[] = {
     {"get_module_slider_value", gui_get_module_slider_value},
     {"get_module_button_value", gui_get_module_button_value},
 
+    {"get_batch_randomize_groups", gui_get_batch_randomize_groups},
+
     {"at_level", gui_at_level},
     {"prog_step", gui_prog_step},
     {"ticker", gui_ticker},
@@ -1359,12 +1385,13 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
 
         // this will appear in the log file too
         if (main_win) {
-            main_win->label(
-                fmt::format("[ ERROR ] {} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION)
-                    .c_str());
+            main_win->label(fmt::format("[ ERROR ] {} {}", _(OBSIDIAN_TITLE),
+                                        OBSIDIAN_VERSION)
+                                .c_str());
             DLG_ShowError(_("Script Error: %s"), err_msg);
             main_win->label(
-                fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION).c_str());
+                fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION)
+                    .c_str());
         }
         lua_pop(LUA_ST, 2);  // ob_traceback, message
         return false;
@@ -1686,17 +1713,18 @@ void ob_invoke_hook(std::string hookname) {
 bool ob_build_cool_shit() {
     if (!Script_CallFunc("ob_build_cool_shit", 1)) {
         if (main_win) {
-            main_win->label(
-                fmt::format("[ ERROR ] {} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION)
-                    .c_str());
+            main_win->label(fmt::format("[ ERROR ] {} {}", _(OBSIDIAN_TITLE),
+                                        OBSIDIAN_VERSION)
+                                .c_str());
         }
         Main::ProgStatus(_("Script Error"));
         if (main_win) {
             main_win->label(
-                fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION).c_str());
-            #ifdef WIN32
+                fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION)
+                    .c_str());
+#ifdef WIN32
             Main::Blinker();
-            #endif
+#endif
         }
         return false;
     }
