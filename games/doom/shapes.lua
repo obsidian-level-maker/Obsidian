@@ -4076,7 +4076,7 @@ GROW_LIQUID_POOL_DEPRESSED_DIAG =
     "........","^^~~~~^^",
     "........","11111111",
     "........","11111111",
-    "xxx11xxx","xxx11xxx",
+    "11xxxxxx","11xxxxxx",
   },
 
   diagonals =
@@ -4089,7 +4089,7 @@ GROW_LIQUID_POOL_DEPRESSED_DIAG =
 GROW_LIQUID_PILLAR_CENTER =
 {
   prob = 10,
-  skip_prob = 50,
+  skip_prob = 75,
 
   structure =
   {
@@ -4099,7 +4099,7 @@ GROW_LIQUID_PILLAR_CENTER =
     ".....","1~.~1",
     ".....","1%~/1",
     ".....","11111",
-    "x111x","x111x",
+    "11xxx","11xxx",
   },
 
   diagonals =
@@ -4112,7 +4112,7 @@ GROW_LIQUID_PILLAR_CENTER =
 GROW_LIQUID_PILLAR_CENTER_LONG =
 {
   prob = 10,
-  skip_prob = 50,
+  skip_prob = 75,
 
   structure =
   {
@@ -4124,10 +4124,10 @@ GROW_LIQUID_PILLAR_CENTER_LONG =
     ".....","1~.~1",
     ".....","1%~/1",
     ".....","11111",
-    "x111x","x111x",
+    "11xxx","11xxx",
   },
 
-    diagonals =
+  diagonals =
   {
     "1~","~1",
     "1~","~1",
@@ -4149,10 +4149,10 @@ GROW_LIQUID_PILLAR_CENTER_CROSS =
     ".......","1%~.~/1",
     ".......","11%~/11",
     ".......","1111111",
-    "xx111xx","xx111xx",
+    "11xxxxx","11xxxxx",
   },
 
-    diagonals =
+  diagonals =
   {
     "1~","~1",
     "1~","~1",
