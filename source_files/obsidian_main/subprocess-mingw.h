@@ -364,16 +364,18 @@ int subprocess_create_named_pipe_helper(void **rd, void **wr) {
                                                       SUBPROCESS_NULL, 1};
     char name[256] = {0};
 
-    *rd = CreateNamedPipeA(name, pipeAccessInbound | fileFlagOverlapped,
-                           pipeTypeByte | pipeWait, 1, 4096, 4096,
-                           reinterpret_cast<long long unsigned int>(SUBPROCESS_NULL),
-                           SUBPROCESS_PTR_CAST(LPSECURITY_ATTRIBUTES, &saAttr));
+    *rd = CreateNamedPipeA(
+        name, pipeAccessInbound | fileFlagOverlapped, pipeTypeByte | pipeWait,
+        1, 4096, 4096,
+        reinterpret_cast<long long unsigned int>(SUBPROCESS_NULL),
+        SUBPROCESS_PTR_CAST(LPSECURITY_ATTRIBUTES, &saAttr));
 
     if (invalidHandleValue == rd) {
         return -1;
     }
 
-    *wr = CreateFileA(name, genericWrite, reinterpret_cast<long long unsigned int>(SUBPROCESS_NULL),
+    *wr = CreateFileA(name, genericWrite,
+                      reinterpret_cast<long long unsigned int>(SUBPROCESS_NULL),
                       SUBPROCESS_PTR_CAST(LPSECURITY_ATTRIBUTES, &saAttr),
                       openExisting, fileAttributeNormal, SUBPROCESS_NULL);
 

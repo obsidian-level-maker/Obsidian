@@ -44,7 +44,9 @@ UI_Module::UI_Module(int X, int Y, int W, int H, std::string id,
     mod_button =
         new UI_CustomCheckBox(X + kf_w(6), Y + kf_h(5), W - kf_w(12), kf_h(24));
     mod_button->box(FL_NO_BOX);
-    if (!suboptions) { mod_button->down_box(FL_NO_BOX); }
+    if (!suboptions) {
+        mod_button->down_box(FL_NO_BOX);
+    }
     mod_button->color(WINDOW_BG);
 
     if (Is_UI()) {
@@ -90,7 +92,8 @@ typedef struct {
 } opt_change_callback_data_t;
 
 void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
-                          std::string longtip, int gap, std::string randomize_group) {
+                          std::string longtip, int gap,
+                          std::string randomize_group) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
@@ -98,8 +101,10 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
     int ny = y() + cur_opt_y - kf_h(15);
 
     if (longtip.empty()) {
-        longtip =
-            fmt::format("Detailed help not yet written for this setting.\nCurrent short help/tooltip:\n{}", tip);
+        longtip = fmt::format(
+            "Detailed help not yet written for this setting.\nCurrent short "
+            "help/tooltip:\n{}",
+            tip);
     }
 
     UI_RChoice *rch = new UI_RChoice(nx, ny + kf_h(15), nw * .95,
@@ -167,8 +172,10 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     int ny = y() + cur_opt_y - kf_h(15);
 
     if (longtip.empty()) {
-        longtip =
-            fmt::format("Detailed help not yet written for this setting.\nCurrent short help/tooltip:\n{}", tip);
+        longtip = fmt::format(
+            "Detailed help not yet written for this setting.\nCurrent short "
+            "help/tooltip:\n{}",
+            tip);
     }
 
     label = fmt::format("{}: ", label);
@@ -323,7 +330,8 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
 }
 
 void UI_Module::AddButtonOption(std::string opt, std::string label,
-                                std::string tip, std::string longtip, int gap, std::string randomize_group) {
+                                std::string tip, std::string longtip, int gap,
+                                std::string randomize_group) {
     int nw = this->parent()->w();
     //	int nh = kf_h(30);
 
@@ -331,8 +339,10 @@ void UI_Module::AddButtonOption(std::string opt, std::string label,
     int ny = y() + cur_opt_y - kf_h(15);
 
     if (longtip.empty()) {
-        longtip =
-            fmt::format("Detailed help not yet written for this setting.\nCurrent short help/tooltip:\n{}", tip);
+        longtip = fmt::format(
+            "Detailed help not yet written for this setting.\nCurrent short "
+            "help/tooltip:\n{}",
+            tip);
     }
 
     UI_RButton *rbt = new UI_RButton(nx, ny + kf_h(15), nw * .95, kf_h(24));
@@ -422,7 +432,8 @@ void UI_Module::update_Enable() {
     }
 }
 
-void UI_Module::randomize_Values(std::vector<std::string> selected_randomize_groups) {
+void UI_Module::randomize_Values(
+    std::vector<std::string> selected_randomize_groups) {
     std::map<std::string, UI_RChoice *>::const_iterator IT;
     std::map<std::string, UI_RSlide *>::const_iterator IT2;
     std::map<std::string, UI_RButton *>::const_iterator IT3;
@@ -449,7 +460,9 @@ void UI_Module::randomize_Values(std::vector<std::string> selected_randomize_gro
                     M->nan_options->value(0);
                     M->nan_options->do_callback();
                 }
-                M->mod_slider->value(M->mod_slider->round(xoshiro.xoshiro256p_Range<double>(M->mod_slider->minimum(), M->mod_slider->maximum())));
+                M->mod_slider->value(
+                    M->mod_slider->round(xoshiro.xoshiro256p_Range<double>(
+                        M->mod_slider->minimum(), M->mod_slider->maximum())));
                 M->mod_slider->do_callback();
                 break;
             }
@@ -856,7 +869,8 @@ typedef struct {
 } mod_enable_callback_data_t;
 
 void UI_CustomMods::AddModule(std::string id, std::string label,
-                              std::string tip, int red, int green, int blue, bool suboptions) {
+                              std::string tip, int red, int green, int blue,
+                              bool suboptions) {
     UI_Module *M = new UI_Module(mx, my, mw - 4, kf_h(34), id, label, tip, red,
                                  green, blue, suboptions);
 
@@ -875,7 +889,8 @@ void UI_CustomMods::AddModule(std::string id, std::string label,
 
 bool UI_CustomMods::AddOption(std::string module, std::string option,
                               std::string label, std::string tip,
-                              std::string longtip, int gap, std::string randomize_group) {
+                              std::string longtip, int gap,
+                              std::string randomize_group) {
     UI_Module *M = FindID(module);
 
     if (!M) {
@@ -893,7 +908,8 @@ bool UI_CustomMods::AddSliderOption(std::string module, std::string option,
                                     std::string label, std::string tip,
                                     std::string longtip, int gap, double min,
                                     double max, double inc, std::string units,
-                                    std::string presets, std::string nan, std::string randomize_group) {
+                                    std::string presets, std::string nan,
+                                    std::string randomize_group) {
     UI_Module *M = FindID(module);
 
     if (!M) {
@@ -910,7 +926,8 @@ bool UI_CustomMods::AddSliderOption(std::string module, std::string option,
 
 bool UI_CustomMods::AddButtonOption(std::string module, std::string option,
                                     std::string label, std::string tip,
-                                    std::string longtip, int gap, std::string randomize_group) {
+                                    std::string longtip, int gap,
+                                    std::string randomize_group) {
     UI_Module *M = FindID(module);
 
     if (!M) {
@@ -1444,10 +1461,18 @@ void UI_CustomMods::SurpriseMe() {
         UI_Module *M = (UI_Module *)mod_pack->child(j);
         SYS_ASSERT(M);
         std::vector<std::string> selected_randomize_groups;
-        if (randomize_architecture) selected_randomize_groups.push_back("architecture");
-        if (randomize_monsters) selected_randomize_groups.push_back("monsters");
-        if (randomize_pickups) selected_randomize_groups.push_back("pickups");
-        if (randomize_misc) selected_randomize_groups.push_back("misc");
+        if (randomize_architecture) {
+            selected_randomize_groups.push_back("architecture");
+        }
+        if (randomize_monsters) {
+            selected_randomize_groups.push_back("monsters");
+        }
+        if (randomize_pickups) {
+            selected_randomize_groups.push_back("pickups");
+        }
+        if (randomize_misc) {
+            selected_randomize_groups.push_back("misc");
+        }
         M->randomize_Values(selected_randomize_groups);
     }
 }

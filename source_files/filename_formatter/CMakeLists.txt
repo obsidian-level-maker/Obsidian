@@ -21,5 +21,7 @@ if(WIN32 OR MSYS)
 endif()
 
 if(MSYS)
-  set(CMAKE_EXE_LINKER_FLAGS "-static -mwindows -Isource_files/zlib_src/libzlibstatic.a")
+  set(CMAKE_EXE_LINKER_FLAGS
+      "-static -mwindows -Isource_files/zlib_src/libzlibstatic.a"
+  )
 endif()

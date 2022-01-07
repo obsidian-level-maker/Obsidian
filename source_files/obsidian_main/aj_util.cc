@@ -23,11 +23,15 @@ namespace ajpoly {
 double ComputeAngle(double dx, double dy) {
     double angle;
 
-    if (dx == 0) return (dy > 0) ? 90.0 : 270.0;
+    if (dx == 0) {
+        return (dy > 0) ? 90.0 : 270.0;
+    }
 
     angle = atan2((double)dy, (double)dx) * 180.0 / M_PI;
 
-    if (angle < 0) angle += 360.0;
+    if (angle < 0) {
+        angle += 360.0;
+    }
 
     return angle;
 }

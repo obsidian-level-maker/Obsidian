@@ -1246,7 +1246,7 @@ int Q1_add_tex_wad(lua_State *L) {
     // Note: filename must be relative (no path)
 
     std::filesystem::path name = luaL_optstring(L, 1, "");
-    
+
     if (std::filesystem::exists(name)) {
         qk_texture_wad = name.string();
         lua_pushboolean(L, 1);

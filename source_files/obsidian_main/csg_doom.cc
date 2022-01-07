@@ -1657,7 +1657,6 @@ static void AlignTextures() {
             }
 
             i += 1;
-
         }
 
         count += prev_count + next_count;
@@ -2547,8 +2546,7 @@ int Doom::sidedef_c::Write() {
 
         int sec_index = sector->Write();
 
-        AddSidedef(sec_index, lower, mid, upper,
-                   x_offset & 1023, y_offset);
+        AddSidedef(sec_index, lower, mid, upper, x_offset & 1023, y_offset);
     }
 
     return index;
@@ -2715,8 +2713,9 @@ static void WriteFraggleScript() {
                 continue;
             }
 
-            HeaderPrintf("  spawn(%s, %d, %d, %d, %d);\n", thing.fs_name.c_str(),
-                         thing.x, thing.y, thing.angle, thing.z);
+            HeaderPrintf("  spawn(%s, %d, %d, %d, %d);\n",
+                         thing.fs_name.c_str(), thing.x, thing.y, thing.angle,
+                         thing.z);
         }
 
         HeaderPrintf("}\n\n");
@@ -2730,7 +2729,6 @@ static void WriteFraggleScript() {
 //------------------------------------------------------------------------
 
 void FreeStuff() {
-    
     // This is erroring out right now
     std::for_each(vertices.begin(), vertices.end(), [](auto *i) { delete i; });
     std::for_each(linedefs.begin(), linedefs.end(), [](auto *i) { delete i; });

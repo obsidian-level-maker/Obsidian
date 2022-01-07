@@ -178,7 +178,7 @@ u16_t Q2_AddTexInfo(std::string texture, int flags, int value, float *s4,
         Main::FatalError("Quake2 texture name too long: '{}'\n", texture);
     }
 
-    //strcpy(raw_tex.texture, texture);
+    // strcpy(raw_tex.texture, texture);
     std::copy(texture.data(), texture.data() + texture.size(), raw_tex.texture);
 
     for (int k = 0; k < 4; k++) {
