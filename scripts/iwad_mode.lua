@@ -3,7 +3,7 @@
 ----------------------------------------------------------------
 --  Copyright (C) 2022 Armaetus
 --  Copyright (C) 2022 dasho
---  Copyrighr (C) 2022 MsrSgtShooterPerson
+--  Copyright (C) 2022 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1552,7 +1552,7 @@ function IWAD_MODE.begin_level()
     LEVEL.area_multiplier = 1.2
     LEVEL.size_consistency = "strict"
     LEVEL.sky_light = 192
-    LEVEL.room_height_style = "tall"
+    LEVEL.room_height_style "tall"
   elseif LEVEL.name == "MAP18" then
     LEVEL.map_W = 26
     LEVEL.size_multiplier = 0.7

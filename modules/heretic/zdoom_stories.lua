@@ -1072,6 +1072,7 @@ ZDOOM_STORIES_HERETIC.QUIT_MESSAGES =
   [[Thanos needs two fingers to erase half the universe. Oblige builds a whole with only one.]],
   [[Oblige is the machine. ObAddon is the ghost in the machine.]], -- credits to FrozSoul!
   [[Oblige can generate more maps than you will ever speak words in your whole life.]],
+  [[Karma's a bitch. Then you die. -Tina Belcher]],
 
   -- helpful // technical
   [[ObAddon is always improving. Stop by our Discord server, talk to the denizens and report bugs to us there!]],

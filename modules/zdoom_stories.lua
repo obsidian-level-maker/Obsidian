@@ -2,12 +2,12 @@
 --  MODULE: ZDoom Story Tables
 ----------------------------------------------------------------
 --
---  Copyright (C) 2021 MsrSgtShooterPerson
---  Copyright (C) 2021 Armaetus
---  Copyright (C) 2021 Tapwave
---  Copyright (C) 2021 Simon-v
---  Copyright (C) 2021 EpicTyphlosion
---  Copyright (C) 2021 Beed28,
+--  Copyright (C) 2022 MsrSgtShooterPerson
+--  Copyright (C) 2022 Armaetus
+--  Copyright (C) 2022 Tapwave
+--  Copyright (C) 2022 Simon-v
+--  Copyright (C) 2022 EpicTyphlosion
+--  Copyright (C) 2022 Beed28
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -2698,6 +2698,7 @@ ZDOOM_STORIES.QUIT_MESSAGES =
   [[Oblige is the machine. Obsidian is the ghost in the machine.]], -- credits to FrozSoul!
   [[Obsidian can generate more maps than you will ever speak words in your whole life.]],
   [[Poor you. Demons don't have a housing crisis. Obsidian provides free real estate for all of them.]],
+  [[Karma's a bitch. Then you die. -Tina Belcher]],
 
   -- helpful // technical
   [[Obsidian is always improving. Stop by our Discord server, talk to the denizens and report bugs to us there!]],

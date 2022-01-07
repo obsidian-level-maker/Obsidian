@@ -3,8 +3,8 @@
 --------------------------------------------------------------------
 --
 --  Copyright (C) 2006-2017 Andrew Apted
---  Copyright (C) 2011,2019, 2021 Armaetus
---  Copyright (C) 2019-2021 MsrSgtShooterPerson
+--  Copyright (C) 2011,2019, 2021-2022 Armaetus
+--  Copyright (C) 2019-2022 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1260,7 +1260,6 @@ DOOM.THEMES =
       --
       gtd_wall_sewer = 35,
       gtd_sewer_set_2 = 35,
-      gtd_sewer_set_3 = 35,
       gtd_water_purifier = 35,
       --
       gtd_generic_beamed_inset = 25,
@@ -1692,7 +1691,6 @@ DOOM.THEMES =
       --
       gtd_wall_sewer = 30,
       gtd_sewer_set_2 = 30,
-      gtd_sewer_set_3 = 30,
       gtd_water_purifier = 30,
       --
       gtd_generic_beamed_inset = 25,

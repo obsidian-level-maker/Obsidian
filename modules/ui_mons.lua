@@ -3,8 +3,8 @@
 ------------------------------------------------------------------------
 --
 --  Copyright (C) 2016-2017 Andrew Apted
---  Copyright (C) 2019 Armaetus
---  Copyright (C) 2019-2020 MsrSgtShooterPerson
+--  Copyright (C) 2019-2022 Armaetus
+--  Copyright (C) 2019-2022 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -211,7 +211,6 @@ OB_MODULES["ui_mons"] =
               "Barbaric/Savage: Up into the hardest slaughterwads out there. \n" ..
               "Brutal/Draconian: Legions of demons await you on this setting. \n" ..
               "Merciless: Hell will throw everything at you at this setting, you masochist.",
-      randomize_group="monsters"
     },
 
     {
@@ -345,7 +344,6 @@ OB_MODULES["ui_mons"] =
       increment = .05,
       default = 1,
       presets = "0.55:0.55 (Weak),0.75:0.75 (Easier),1:1 (Average),1.3:1.3 (Harder),1.7:1.7 (Tough),2.5:2.5 (Fierce),12:12 (CRAZY),",
-      randomize_group="monsters"
     },
 
     {
@@ -361,7 +359,6 @@ OB_MODULES["ui_mons"] =
       presets = "0.5:0.5 (Very Slow),0.75:0.75 (Slow),1:1 (Average),1.5:1.5 (Fast),2:2 (Very Fast),3:3 (Extra Fast),",
       tooltip = "Rate at which monster strength increases as you progress through levels.",
       gap = 1,
-      randomize_group="monsters"
     },
 
     {
@@ -377,35 +374,31 @@ OB_MODULES["ui_mons"] =
       tooltip= "Affects how many different monster types can " ..
                "appear in each room.\n" ..
                "Setting this to NONE will make each level use a single monster type",
-               randomize_group="monsters"
     },
     {
       name="mon_variety_jumpstart", label=_("Monster Variety Jumpstart"),
       choices=UI_MONS.MONSTER_KIND_JUMPSTART_CHOICES,
       default = "default",
       tooltip = "Affects how many monster variations initially appear at the very first map.",
-      gap = 1,
-      randomize_group="monsters"
+      gap = 1
     },
 
-    { name="bosses",    label=_("Bosses"),    choices=UI_MONS.BOSSES,       randomize_group="monsters" },
+    { name="bosses",    label=_("Bosses"),    choices=UI_MONS.BOSSES },
     {
       name="bossesnormal",
       label=_("Bosses As Regulars"),
       choices=UI_MONS.BOSSREGULARS,
       default="no",
       tooltip="Normally Archviles/Barons/Cyberdemons and other big monsters are excluded from normal monster pool and only can appear as guard for important objective e.g. key. With this option enabled they are allowed to(rarely) spawn as a regular monster. \n\n WARNING: This CAN make maps much more difficult than normal.",
-      gap = 1,
-      randomize_group="monsters"
+      gap = 1
     },
-    { name="traps",     label=_("Traps"),     choices=STYLE_CHOICES,       randomize_group="monsters" },
+    { name="traps",     label=_("Traps"),     choices=STYLE_CHOICES },
     {
       name="trap_style",
       label=_("Trap Style"),
       choices=UI_MONS.TRAP_STYLE,
       default="default",
       tooltip="This option selects between using only teleport or closet traps. DEFAULT means both are used.",
-      randomize_group="monsters"
     },
     {
       name="trap_qty",
@@ -414,10 +407,9 @@ OB_MODULES["ui_mons"] =
       default="default",
       tooltip="Changes the quantity of ambushing monsters from traps.",
       gap = 1,
-      randomize_group="monsters"
     },
 
-    { name="cages",     label=_("Cages"),     choices=STYLE_CHOICES,       randomize_group="monsters" },
+    { name="cages",     label=_("Cages"),     choices=STYLE_CHOICES },
 
     {
       name="cage_qty",
@@ -426,7 +418,6 @@ OB_MODULES["ui_mons"] =
       default="default",
       tooltip="Changes the quantity of monsters in cages.",
       gap=1,
-      randomize_group="monsters"
     },
 
     {
@@ -435,7 +426,6 @@ OB_MODULES["ui_mons"] =
       choices=UI_MONS.SECRET_MONSTERS,
       tooltip="I'm in your secret rooms, placing some monsters. Note: default is none.",
       default="no",
-      randomize_group="monsters"
     },
 
   },

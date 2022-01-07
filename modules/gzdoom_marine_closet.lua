@@ -2,7 +2,7 @@
 --  GZDoom Marine Closets
 --------------------------------------------------------------------
 --
---  Copyright (C) 2019-2021 MsrShooterPerson
+--  Copyright (C) 2019-2022 MsrShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License

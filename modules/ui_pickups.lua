@@ -3,7 +3,7 @@
 ------------------------------------------------------------------------
 --
 --  Copyright (C) 2016-2017 Andrew Apted
---  Copyright (C) 2020 MsrSgtShooterPerson
+--  Copyright (C) 2020-2022 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -128,19 +128,18 @@ OB_MODULES["ui_pickups"] =
 
   options =
   {
-    { name="health",     label=_("Health"),    choices=UI_PICKUPS.HEALTH_CHOICES, randomize_group="pickups" },
-    { name="ammo",       label=_("Ammo"),      choices=UI_PICKUPS.HEALTH_CHOICES,  gap=1, randomize_group="pickups" },
+    { name="health",     label=_("Health"),    choices=UI_PICKUPS.HEALTH_CHOICES },
+    { name="ammo",       label=_("Ammo"),      choices=UI_PICKUPS.HEALTH_CHOICES,  gap=1 },
 
-    { name="weapons",    label=_("Weapons"),   choices=UI_PICKUPS.WEAPON_CHOICES, randomize_group="pickups" },
-    { name="items",      label=_("Items"),     choices=UI_PICKUPS.ITEM_CHOICES, randomize_group="pickups" },
+    { name="weapons",    label=_("Weapons"),   choices=UI_PICKUPS.WEAPON_CHOICES },
+    { name="items",      label=_("Items"),     choices=UI_PICKUPS.ITEM_CHOICES },
 
-    { name="secrets",    label=_("Secrets"),   choices=STYLE_CHOICES, randomize_group="pickups" },
+    { name="secrets",    label=_("Secrets"),   choices=STYLE_CHOICES },
     { name="secrets_bonus",
       label=_("Secrets Bonus"),
       choices=UI_PICKUPS.SECRET_ROOM_BONUS,
       tooltip="Adds extra content to secret rooms. Larger rooms offer more content. Default is NONE.",
       default="none",
-      randomize_group="pickups"
     },
   },
 }
