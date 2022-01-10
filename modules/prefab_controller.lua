@@ -184,6 +184,7 @@ function PREFAB_CONTROL.fine_tune_filters()
       GAME.THEMES.hell.wide_halls.conveyorh = 0
     end
     PREFABS["Item_secret_garage_closet"] = nil
+    PREFSBS["Arch_gtd_beed28_door_crouch"] = nil
   end
 end
 

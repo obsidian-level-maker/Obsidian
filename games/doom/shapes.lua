@@ -4243,6 +4243,29 @@ GROW_LIQUID_POOL_VENT_QUAD =
   }
 },
 
+GROW_LIQUID_POOL_VENT_QUAD_STAIRS =
+{
+  prob = 15,
+  skip_prob = 75,
+
+  structure =
+  {
+    "1.............","1111>>AAAAAAAA",
+    "1.............","111/~~~1~~~%AA",
+    "x.............","x11~~~~1~~~~AA",
+    "x.............","x11111111111AA",
+    "x.............","x11~~~~1~~~~AA",
+    "x.............","x11%~~~1~~~/AA",
+    "x.............","x111>>AAAAAAAA",
+  },
+
+  diagonals =
+  {
+    "1~","~A",
+    "1~","~A",
+  }
+},
+
 GROW_LIQUID_POOL_VENT_QUAD_STAIR =
 {
   prob = 15,
