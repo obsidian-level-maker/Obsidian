@@ -5,7 +5,7 @@
 --  // Obsidian //
 --
 --  Copyright (C) 2015-2017 Andrew Apted
---  Copyright (C) 2018-2021 MsrSgtShooterPerson
+--  Copyright (C) 2018-2022 MsrSgtShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -4197,6 +4197,121 @@ GROW_LIQUID_SIDE_POOL_THIN =
   {
     ".~","~.",
   },
+},
+
+GROW_LIQUID_POOL_VENT_DOUBLE =
+{
+  prob = 10,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x.............","x1111111111111",
+    "x.............","x11/~~~1~~~%11",
+    "1.............","111~~~~1~~~~11",
+    "1.............","11111111111111",
+  },
+
+  diagonals =
+  {
+    "1~","~1",
+  }
+},
+
+GROW_LIQUID_POOL_VENT_QUAD =
+{
+  prob = 15,
+  skip_prob = 75,
+
+  structure =
+  {
+    "1.............","11111111111111",
+    "1.............","111/~~~1~~~%11",
+    "x.............","x11~~~~1~~~~11",
+    "x.............","x1111111111111",
+    "x.............","x11~~~~1~~~~11",
+    "x.............","x11%~~~1~~~/11",
+    "x.............","x1111111111111",
+  },
+
+  diagonals =
+  {
+    "1~","~1",
+    "1~","~1",
+  }
+},
+
+GROW_LIQUID_POOL_VENT_QUAD_STAIR =
+{
+  prob = 15,
+  skip_prob = 75,
+
+  structure =
+  {
+    "1.............","1111>AAAAA<111",
+    "1.............","111/~~~A~~~%11",
+    "x.............","x11~~~~A~~~~11",
+    "x.............","x11>AAAAAAA<11",
+    "x.............","x11~~~~A~~~~11",
+    "x.............","x11%~~~A~~~/11",
+    "x.............","x111>AAAAA<111",
+  },
+
+  diagonals =
+  {
+    "1~","~1",
+    "1~","~1",
+  }
+},
+
+GROW_LIQUID_POOL_VENT_QUAD_CENTER_BRIDGE =
+{
+  prob = 15,
+  skip_prob = 75,
+
+  structure =
+  {
+    "1.............","11111111111111",
+    "1.............","111/~~~~~~~%11",
+    "x.............","x11~~/111%~~11",
+    "x.............","x1111111111111",
+    "x.............","x11~~%111/~~11",
+    "x.............","x11%~~~~~~~/11",
+    "x.............","x1111111111111",
+  },
+
+  diagonals =
+  {
+    "1~","~1",
+    "~1","1~",
+    "~1","1~",
+    "1~","~1",
+  }
+},
+
+GROW_LIQUID_POOL_VENT_QUAD_CENTER_BRIDGE_STAIR =
+{
+  prob = 15,
+  skip_prob = 75,
+
+  structure =
+  {
+    "1.............","1111>AAAAAAAAA",
+    "1.............","111/~~~~~~~%AA",
+    "x.............","x11~~/AAA%~~AA",
+    "x.............","x11>AAAAAAAAAA",
+    "x.............","x11~~%AAA/~~AA",
+    "x.............","x11%~~~~~~~/AA",
+    "x.............","x111>AAAAAAAAA",
+  },
+
+  diagonals =
+  {
+    "1~","~A",
+    "~A","A~",
+    "~A","A~",
+    "1~","~A",
+  }
 },
 
 GROW_LIQUID_FIGURE_CORRIDOR =
