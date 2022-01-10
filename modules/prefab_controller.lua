@@ -179,8 +179,10 @@ function PREFAB_CONTROL.fine_tune_filters()
   end
 
   if PARAM.bool_jump_crouch == 0 and OB_CONFIG.engine ~= "nolimit" then
-    if GAME.THEMES.hell.wide_halls.organs then GAME.THEMES.hell.wide_halls.organs = 0 end
-    if GAME.THEMES.hell.wide_halls.conveyorh then GAME.THEMES.hell.wide_halls.conveyorh = 0 end
+    if PARAM.obsidian_resource_pack_active then
+      GAME.THEMES.hell.wide_halls.organs = 0
+      GAME.THEMES.hell.wide_halls.conveyorh = 0
+    end
     PREFABS["Item_secret_garage_closet"] = nil
   end
 end
