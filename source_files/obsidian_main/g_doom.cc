@@ -943,21 +943,15 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
             }
             std::filesystem::remove(zip_filename);
         }
-        mz_zip_archive zip_file;
-        mz_zip_zero_struct(&zip_file);
-        if (mz_zip_writer_init_file(&zip_file,
-                                    zip_filename.generic_string().c_str(), 0)) {
-            mz_zip_writer_add_file(&zip_file,
-                                   filename.filename().generic_string().c_str(),
-                                   filename.generic_string().c_str(), NULL, 0,
-                                   MZ_DEFAULT_COMPRESSION);
-            mz_zip_writer_finalize_archive(&zip_file);
-            mz_zip_writer_end(&zip_file);
-            std::filesystem::remove(filename);
+        std::string zip_buf = FileLoad(filename);
+        if (!zip_buf.empty()) {
+            if (mz_zip_add_mem_to_archive_file_in_place(zip_filename.string().c_str(), filename.filename().string().c_str(), zip_buf.data(), zip_buf.size(), NULL, 0, MZ_DEFAULT_COMPRESSION)) {
+                std::filesystem::remove(filename);
+            } else {
+                LogPrintf("Zipping output WAD to {} failed! Retaining original WAD.\n", zip_filename.generic_string());
+            }
         } else {
-            LogPrintf(
-                "Zipping output WAD to {} failed! Retaining original WAD.\n",
-                zip_filename.generic_string());
+            LogPrintf("Zipping output WAD to {} failed! Retaining original WAD.\n", zip_filename.generic_string());
         }
     }
 
