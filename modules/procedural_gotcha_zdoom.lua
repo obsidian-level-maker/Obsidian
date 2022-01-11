@@ -1814,10 +1814,11 @@ OB_MODULES["procedural_gotcha_zdoom"] =
     bool_gotcha_boss_fight =
     {
       name = "bool_gotcha_boss_fight",
-      label=_("Force Boss Fight"),
+      label=_("Force Big-Boss Fight"),
       valuator = "button",
       default = 1,
-      tooltip = "EXPERIMENTAL: Forces procedural gotchas to have guaranteed boss fights.",
+      tooltip = "EXPERIMENTAL: Attempts to guarantee a fight against a boss-type (nasty tier) monster " ..
+      "in the procedural gotcha.",
       priority = 100
     },
 
