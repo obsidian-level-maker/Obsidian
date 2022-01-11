@@ -1804,10 +1804,10 @@ OB_MODULES["procedural_gotcha_zdoom"] =
     bool_boss_gen =
     {
       name = "bool_boss_gen",
-      label=_("Enable Bosses"),
+      label=_("[ZScript] Enable Procedural Bosses"),
       valuator = "button",
       default = 1,
-      tooltip = "Toggles Boss Monster generation for Gotchas.",
+      tooltip = "Toggles Boss Monster generation with special traits for Gotchas. ZScript only.",
       priority = 101
     },
 
