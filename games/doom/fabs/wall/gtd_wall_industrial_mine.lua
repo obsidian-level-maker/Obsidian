@@ -26,6 +26,8 @@ PREFABS.Wall_mining_dirt_fenced =
 
 PREFABS.Wall_mining_dirt_fenced_diag =
 {
-  template = "Wall_mining",
+  template = "Wall_mining_dirt_fenced",
   map = "MAP02",
+
+  where = "diagonal"
 }
