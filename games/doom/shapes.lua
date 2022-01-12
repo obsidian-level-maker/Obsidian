@@ -4659,6 +4659,56 @@ GROW_RAMP_THIN_SINK_LIQUID =
   },
 },
 
+GROW_RAMP_INTERSECTION =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xxx11xxx","xxx11xxx",
+    "........","/AA11AA%",
+    "........","AAA11AAA",
+    "........","AA^11^AA",
+    "........","11111111",
+    "........","11111111",
+    "........","AAv11vAA",
+    "........","AAA11AAA",
+    "........","%AA11AA/"
+  },
+
+  diagonals =
+  {
+    ".A","A.",
+    ".A","A."
+  }
+},
+
+GROW_RAMP_INTERSECTION_QUARTERS =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xxx11xxx","xxx11xxx",
+    "........","/AA1111%",
+    "........","AAA11111",
+    "........","AA^11111",
+    "........","11111111",
+    "........","11111111",
+    "........","11111vAA",
+    "........","11111AAA",
+    "........","%1111AA/"
+  },
+
+  diagonals =
+  {
+    ".A","1.",
+    ".1","A."
+  }
+},
+
 GROW_RAMP_THIN_RISE =
 {
   prob = 20,
@@ -4829,7 +4879,6 @@ GROW_REVERSE_FUNNEL =
     "1A",
   },
 },
-
 
 GROW_REVERSE_FUNNEL_REVERSE =
 {
