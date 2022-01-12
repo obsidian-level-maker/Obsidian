@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  Engine: 3DGE (Enhanced Doom Gaming Engine)
+--  Engine: EDGE-Classic
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -106,7 +106,7 @@ function EDGE.create_language()
     "[ENGLISH]\n"
   }
 
-  for _,L in GAME.levels do
+  for _,L in pairs(GAME.levels) do
     if L.description then
       local id = string.format("%sDesc", L.name)
       local text = L.name .. ": " .. L.description;
@@ -115,7 +115,6 @@ function EDGE.create_language()
     end
   end
 
-  -- TODO: use TNTLANG and PLUTLANG when necessary
   gui.wad_add_text_lump("DDFLANG", data);
 end
 
@@ -142,7 +141,7 @@ OB_ENGINES["edge"] =
 
   priority = 95,
 
-  game = { doom1=1, doom2=1, hacx=1, harmony=1 },
+  game = { doom1=1, doom2=1, hacx=1, harmony=1, heretic=1 },
 
   tables =
   {
@@ -152,7 +151,7 @@ OB_ENGINES["edge"] =
   hooks =
   {
     setup    = EDGE.setup,
-    --all_done = EDGE.all_done
+    all_done = EDGE.all_done
   }
 }
 

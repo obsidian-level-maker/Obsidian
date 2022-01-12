@@ -139,21 +139,21 @@ OB_MODULES["quake_mon_control"] =
 
   options =
   {
-    dog      = { label="Rottweiler", choices=CTL_QUAKE.MON_CHOICES },
-    fish     = { label="Rotfish",    choices=CTL_QUAKE.MON_CHOICES },
-    grunt    = { label="Grunt",      choices=CTL_QUAKE.MON_CHOICES },
-    enforcer = { label="Enforcer",   choices=CTL_QUAKE.MON_CHOICES },
-    zombie   = { label="Zombie",     choices=CTL_QUAKE.MON_CHOICES },
+    dog      = { label="Rottweiler", choices=CTL_QUAKE.MON_CHOICES, randomize_group = "monsters" },
+    fish     = { label="Rotfish",    choices=CTL_QUAKE.MON_CHOICES, randomize_group = "monsters" },
+    grunt    = { label="Grunt",      choices=CTL_QUAKE.MON_CHOICES, randomize_group = "monsters" },
+    enforcer = { label="Enforcer",   choices=CTL_QUAKE.MON_CHOICES, randomize_group = "monsters" },
+    zombie   = { label="Zombie",     choices=CTL_QUAKE.MON_CHOICES, randomize_group = "monsters" },
 
-    knight   = { label="Knight",     choices=CTL_QUAKE.MON_CHOICES },
-    scrag    = { label="Scrag",      choices=CTL_QUAKE.MON_CHOICES },
-    tarbaby  = { label="Spawn",      choices=CTL_QUAKE.MON_CHOICES },
-    ogre     = { label="Ogre",       choices=CTL_QUAKE.MON_CHOICES },
-    fiend    = { label="Fiend",      choices=CTL_QUAKE.MON_CHOICES },
+    knight   = { label="Knight",     choices=CTL_QUAKE.MON_CHOICES, randomize_group = "monsters" },
+    scrag    = { label="Scrag",      choices=CTL_QUAKE.MON_CHOICES, randomize_group = "monsters" },
+    tarbaby  = { label="Spawn",      choices=CTL_QUAKE.MON_CHOICES, randomize_group = "monsters" },
+    ogre     = { label="Ogre",       choices=CTL_QUAKE.MON_CHOICES, randomize_group = "monsters" },
+    fiend    = { label="Fiend",      choices=CTL_QUAKE.MON_CHOICES, randomize_group = "monsters" },
 
-    dth_knight = { label="Death Knight", choices=CTL_QUAKE.MON_CHOICES },
-    Vore       = { label="Vore",      choices=CTL_QUAKE.MON_CHOICES },
-    Shambler   = { label="Schambler", choices=CTL_QUAKE.MON_CHOICES }
+    dth_knight = { label="Death Knight", choices=CTL_QUAKE.MON_CHOICES, randomize_group = "monsters" },
+    Vore       = { label="Vore",      choices=CTL_QUAKE.MON_CHOICES, randomize_group = "monsters" },
+    Shambler   = { label="Schambler", choices=CTL_QUAKE.MON_CHOICES, randomize_group = "monsters" }
   }
 }
 
@@ -277,12 +277,12 @@ OB_MODULES["quake_weapon_control"] =
 
   options =
   {
-    ssg      = { label="Double Shotgun",   choices=CTL_QUAKE.WEAPON_CHOICES },
-    nailgun  = { label="Nailgun",          choices=CTL_QUAKE.WEAPON_CHOICES },
-    nailgun2 = { label="Perforator",       choices=CTL_QUAKE.WEAPON_CHOICES },
-    grenade  = { label="Grenade Launcher", choices=CTL_QUAKE.WEAPON_CHOICES },
-    rocket   = { label="Rocket Launcher",  choices=CTL_QUAKE.WEAPON_CHOICES },
-    zapper   = { label="Thunderbolt",      choices=CTL_QUAKE.WEAPON_CHOICES }
+    ssg      = { label="Double Shotgun",   choices=CTL_QUAKE.WEAPON_CHOICES, randomize_group = "pickups" },
+    nailgun  = { label="Nailgun",          choices=CTL_QUAKE.WEAPON_CHOICES, randomize_group = "pickups" },
+    nailgun2 = { label="Perforator",       choices=CTL_QUAKE.WEAPON_CHOICES, randomize_group = "pickups" },
+    grenade  = { label="Grenade Launcher", choices=CTL_QUAKE.WEAPON_CHOICES, randomize_group = "pickups" },
+    rocket   = { label="Rocket Launcher",  choices=CTL_QUAKE.WEAPON_CHOICES, randomize_group = "pickups"},
+    zapper   = { label="Thunderbolt",      choices=CTL_QUAKE.WEAPON_CHOICES, randomize_group = "pickups" }
   }
 }
 

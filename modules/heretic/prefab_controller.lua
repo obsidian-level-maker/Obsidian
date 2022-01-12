@@ -189,6 +189,7 @@ OB_MODULES["prefab_control_heretic"] =
       tooltip = "Decor prefabs are prefabs placed along the floors such as crates, pillars, and other decorative elements which aren't tied to walls. This directly modifies probabilities on a per-room basis, not the density for decor prefabs in any given room.\n\nNote: DEFAULT actually behaves like Mix-It-Up.",
       default = "fab_default",
       priority = 101,
+      randomize_group = "architecture"
     },
 
     wall_prob = -- code for this option is currently under revision
@@ -200,6 +201,7 @@ OB_MODULES["prefab_control_heretic"] =
       default = "fab_default",
       priority = 100,
       gap = 1,
+      randomize_group = "architecture"
     },
 
     --

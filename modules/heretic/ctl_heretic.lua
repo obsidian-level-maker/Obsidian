@@ -134,6 +134,7 @@ OB_MODULES["heretic_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_fire_garg=
@@ -153,6 +154,7 @@ OB_MODULES["heretic_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_warrior=
@@ -172,6 +174,7 @@ OB_MODULES["heretic_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_warrior_ghost=
@@ -191,6 +194,7 @@ OB_MODULES["heretic_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_golem=
@@ -210,6 +214,7 @@ OB_MODULES["heretic_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_golem_ghost=
@@ -229,6 +234,7 @@ OB_MODULES["heretic_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_nitro=
@@ -248,6 +254,7 @@ OB_MODULES["heretic_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_nitro_ghost=
@@ -267,6 +274,7 @@ OB_MODULES["heretic_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_disciple=
@@ -286,6 +294,7 @@ OB_MODULES["heretic_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_sabreclaw=
@@ -305,6 +314,7 @@ OB_MODULES["heretic_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_weredragon=
@@ -324,6 +334,7 @@ OB_MODULES["heretic_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_ophidian=
@@ -343,6 +354,7 @@ OB_MODULES["heretic_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_Ironlich=
@@ -362,6 +374,7 @@ OB_MODULES["heretic_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_Maulotaur=
@@ -381,6 +394,7 @@ OB_MODULES["heretic_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_D_Sparil=
@@ -400,6 +414,7 @@ OB_MODULES["heretic_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      }
   }
 }
@@ -509,6 +524,7 @@ OB_MODULES["heretic_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
      
      float_crossbow=
@@ -528,6 +544,7 @@ OB_MODULES["heretic_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
      
      float_claw=
@@ -547,6 +564,7 @@ OB_MODULES["heretic_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
      float_hellstaff=
@@ -566,6 +584,7 @@ OB_MODULES["heretic_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
      
      float_phoenix=
@@ -585,6 +604,7 @@ OB_MODULES["heretic_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
      float_firemace=
@@ -604,6 +624,7 @@ OB_MODULES["heretic_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      }
   }
 }

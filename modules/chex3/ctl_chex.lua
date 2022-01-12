@@ -135,6 +135,7 @@ OB_MODULES["chex3_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      {
@@ -154,6 +155,7 @@ OB_MODULES["chex3_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
     {
@@ -173,6 +175,7 @@ OB_MODULES["chex3_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      {
@@ -192,6 +195,7 @@ OB_MODULES["chex3_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      {
@@ -211,6 +215,7 @@ OB_MODULES["chex3_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      
@@ -231,6 +236,7 @@ OB_MODULES["chex3_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      
@@ -251,6 +257,7 @@ OB_MODULES["chex3_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 	 
      
@@ -271,6 +278,7 @@ OB_MODULES["chex3_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 	 
      
@@ -291,6 +299,7 @@ OB_MODULES["chex3_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      }
   },
 }
@@ -425,6 +434,7 @@ OB_MODULES["chex3_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
      {
@@ -444,6 +454,7 @@ OB_MODULES["chex3_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
      {
@@ -463,6 +474,7 @@ OB_MODULES["chex3_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
      {
@@ -482,6 +494,7 @@ OB_MODULES["chex3_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 	 
      {
@@ -501,6 +514,7 @@ OB_MODULES["chex3_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 	 
      {
@@ -520,6 +534,7 @@ OB_MODULES["chex3_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
     weapon_prefs =

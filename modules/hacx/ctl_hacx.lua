@@ -136,6 +136,7 @@ OB_MODULES["hacx_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_android=
@@ -155,6 +156,7 @@ OB_MODULES["hacx_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_stealth=
@@ -174,6 +176,7 @@ OB_MODULES["hacx_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_roam_mine=
@@ -193,6 +196,7 @@ OB_MODULES["hacx_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_phage=
@@ -212,6 +216,7 @@ OB_MODULES["hacx_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_buzzer=
@@ -231,6 +236,7 @@ OB_MODULES["hacx_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_i_c_e=
@@ -250,6 +256,7 @@ OB_MODULES["hacx_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_d_man=
@@ -269,6 +276,7 @@ OB_MODULES["hacx_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 	 
      float_monstruct=
@@ -288,6 +296,7 @@ OB_MODULES["hacx_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 	 
      float_majong7=
@@ -307,6 +316,7 @@ OB_MODULES["hacx_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 	 
      float_terminatrix=
@@ -326,6 +336,7 @@ OB_MODULES["hacx_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 	 
      float_thorn=
@@ -345,6 +356,7 @@ OB_MODULES["hacx_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_mecha=
@@ -364,6 +376,7 @@ OB_MODULES["hacx_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      }
   },
 }
@@ -499,6 +512,7 @@ OB_MODULES["hacx_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
      float_tazer=
@@ -518,6 +532,7 @@ OB_MODULES["hacx_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
      float_cyrogun=
@@ -537,6 +552,7 @@ OB_MODULES["hacx_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
      float_fu2=
@@ -556,6 +572,7 @@ OB_MODULES["hacx_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 	 
      float_zooka=
@@ -575,6 +592,7 @@ OB_MODULES["hacx_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 	 
      float_antigun=
@@ -594,6 +612,7 @@ OB_MODULES["hacx_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 	 
      float_nuker=
@@ -613,6 +632,7 @@ OB_MODULES["hacx_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
     weapon_prefs =

@@ -227,8 +227,8 @@ OB_MODULES["misc_hexen"] =
       gap=1,
     },
 ]]
-    { name="big_rooms",   label=_("Big Rooms"),      choices=STYLE_CHOICES },
-    { name="big_outdoor_rooms", label=_("Big Outdoors"), choices=STYLE_CHOICES },
+    { name="big_rooms",   label=_("Big Rooms"),      choices=STYLE_CHOICES, randomize_group = "architecture" },
+    { name="big_outdoor_rooms", label=_("Big Outdoors"), choices=STYLE_CHOICES, randomize_group = "architecture" },
     {
       name="room_heights",
       label=_("Room Heights"),
@@ -238,25 +238,28 @@ OB_MODULES["misc_hexen"] =
       "doubled heights. Normal is the default Oblige behavior."),
       default="normal",
       gap=1,
+      randomize_group = "architecture"
     },
 
 
-    { name="parks",       label=_("Parks"),          choices=STYLE_CHOICES },
+    { name="parks",       label=_("Parks"),          choices=STYLE_CHOICES, randomize_group = "architecture" },
     {
       name="natural_parks",
       label=_("Natural Cliffs"),
       tooltip=_("Percentage of parks that use completely naturalistic walls."),
       choices=STYLE_CHOICES,
       default="none",
+      randomize_group = "architecture"
     },
     { name="park_detail",
       label=_("Park Detail"),
       tooltip=_("Reduces or increases the probability of park decorations such as trees on park rooms."),
       choices=STYLE_CHOICES,
       gap=1,
+      randomize_group = "architecture"
     },
 
-    { name="windows",     label=_("Windows"),        choices=STYLE_CHOICES },
+    { name="windows",     label=_("Windows"),        choices=STYLE_CHOICES, randomize_group = "architecture" },
     {
       name="passable_windows",
       label=_("Passable Windows"),
@@ -277,19 +280,23 @@ OB_MODULES["misc_hexen"] =
       gap=1,
     },
 
-    { name="symmetry",    label=_("Symmetry"),       choices=STYLE_CHOICES },
+    { name="symmetry",    label=_("Symmetry"),       choices=STYLE_CHOICES, randomize_group = "architecture" },
     { name="beams",       label=_("Beams"),          choices=STYLE_CHOICES,
       tooltip = "Allows the appearance of thin pillars to appear between the borders of different elevations.",
+      randomize_group = "architecture"
     },
     { name="fences",      label=_("Fences"),         choices=STYLE_CHOICES,
       tooltip = "Creates thick solid fences and fence posts between areas of varying height for outdoor rooms.",
+      randomize_group = "architecture"
     },
     { name="porches",     label=_("Porches\\Gazebos"),        choices=STYLE_CHOICES,
       tooltip = "Occasional outdoor areas with a lowered indoor-ish ceiling.",
+      randomize_group = "architecture"
     },
     { name="scenics",     label=_("Scenics"),          choices=STYLE_CHOICES,
       tooltip = "Controls the amount of fancy scenics visible at room bordering the maps.",
       gap = 1,
+      randomize_group = "architecture"
     },
     { name = "corner_style",
       label=_("Sink Style"),
@@ -300,6 +307,7 @@ OB_MODULES["misc_hexen"] =
                 "Per Theme means choice is controlled by theme profile instead. " ..
                 "Tech-ish maps favor sharp corners while hell-ish favor curved.",
       default = "themed",
+      randomize_group = "architecture"
     },
     {
       name = "liquid_sinks",
@@ -310,6 +318,7 @@ OB_MODULES["misc_hexen"] =
                 "May greatly inconvenience the player but default Oblige behavior is 'Yes'.",
       default = "yes",
       gap = 1,
+      randomize_group = "architecture"
     },
 
     { name="darkness",    label=_("Dark Outdoors"),  choices=STYLE_CHOICES },
@@ -342,15 +351,15 @@ OB_MODULES["misc_hexen"] =
       tooltip = "Sets the maximum brightness for the map.",
       longtip = "",
     },
-    { name="barrels",     label=_("Barrels"),        choices=STYLE_CHOICES, gap=1 },
+    { name="barrels",     label=_("Barrels"),        choices=STYLE_CHOICES, gap=1, randomize_group = "architecture" },
 
-    { name="doors",       label=_("Doors"),          choices=STYLE_CHOICES },
-    { name="keys",        label=_("Keyed Doors"),    choices=STYLE_CHOICES },
+    { name="doors",       label=_("Doors"),          choices=STYLE_CHOICES, randomize_group = "architecture" },
+    { name="keys",        label=_("Keyed Doors"),    choices=STYLE_CHOICES, randomize_group = "architecture" },
 --[[    { name="trikeys",     label=_("Triple-Keyed Doors"),          choices=STYLE_CHOICES,
       tooltip = "Controls the chance to get three key door whenever three keys are present.",
     },
 ]]
-    { name="switches",    label=_("Switched Doors"), choices=STYLE_CHOICES, gap=1 },
+    { name="switches",    label=_("Switched Doors"), choices=STYLE_CHOICES, gap=1, randomize_group = "architecture" },
 
 --[[    {
       name="bool_road_markings",
@@ -397,6 +406,7 @@ OB_MODULES["misc_hexen"] =
       "Heaps means all dead ends are preserved (Oblige default)."),
       default = "heaps",
       gap = 1,
+      randomize_group = "architecture"
     },
 
     {
