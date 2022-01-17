@@ -2976,8 +2976,8 @@ AUX_LIQUID_3 =
 
 GROW_STAIR_TRI =
 {
-  prob = 40,
-  skip_prob = 50,
+  prob = 25,
+  skip_prob = 75,
 
   structure =
   {
@@ -2985,7 +2985,7 @@ GROW_STAIR_TRI =
     ".....","AAAAA",
     ".....","^A^A^",
     ".....","11111",
-    "x111x","x111x",
+    "11xxx","11xxx",
   }
 },
 
@@ -3470,7 +3470,7 @@ GROW_COLONNADE_STRAIGHT_VAULT_BELT =
     "..........","AA%/11%/AA",
     "..........","%AA1111AA/",
     "x........x","xAA1111AAx",
-    "xxxxx11xxx","xxxxx11xxx",
+    "xxx11xxxxx","xxx11xxxxx",
   },
 
   diagonals =
@@ -3581,6 +3581,7 @@ GROW_357_ROUND_HOLLOW_1 =
 
   structure =
   {
+    "xx11xxxxxx","xx11xxxxxx",  
     "x........x","x/111111%x",
     "..........","/11111111%",
     "..........","11/#vv#%11",
@@ -3593,7 +3594,6 @@ GROW_357_ROUND_HOLLOW_1 =
     "..........","11%#^^#/11",
     "..........","%11111111/",
     "x........x","x%111111/x",
-    "xxxxxx11xx","xxxxxx11xx",  
   },
 
   diagonals =
@@ -3616,6 +3616,7 @@ GROW_357_ROUND_HOLLOW_1_LIQUID =
 
   structure =
   {
+    "xx11xxxxxx","xx11xxxxxx",
     "x........x","x/111111%x",
     "..........","/11111111%",
     "..........","11/#vv#%11",
@@ -3628,7 +3629,6 @@ GROW_357_ROUND_HOLLOW_1_LIQUID =
     "..........","11%#^^#/11",
     "..........","%11111111/",
     "x........x","x%111111/x",
-    "xxxxxx11xx","xxxxxx11xx",  
   },
 
   diagonals =
@@ -3653,6 +3653,7 @@ GROW_357_ROUND_HOLLOW_2 =
 
   structure =
   {
+    "xx11xxxxxx","xx11xxxxxx",
     "x........x","x/111111%x",
     "..........","/11111111%",
     "..........","11/#AA#%11",
@@ -3665,7 +3666,6 @@ GROW_357_ROUND_HOLLOW_2 =
     "..........","11%#AA#/11",
     "..........","%11111111/",
     "x........x","x%111111/x",
-    "xxxxxx11xx","xxxxxx11xx",
   },
 
   diagonals =
@@ -3695,7 +3695,7 @@ GROW_357_ROUND_HOLLOW_HALF =
     "..........","11%#^^#/11",
     "..........","%11111111/",
     "x........x","x%111111/x",
-    "xxxxxx11xx","xxxxxx11xx",
+    "xx11xxxxxx","xx11xxxxxx",
   },
 
   diagonals =
@@ -3721,7 +3721,7 @@ GROW_357_ROUND_HOLLOW_HALF_LIQUID =
     "..........","11%#^^#/11",
     "..........","%11111111/",
     "x........x","x%111111/x",
-    "xxxxxx11xx","xxxxxx11xx",
+    "xx11xxxxxx","xx11xxxxxx",
   },
 
   diagonals =
@@ -3741,13 +3741,13 @@ GROW_357_ROUND_ARCH =
 
   structure =
   { 
-    ".......","1111111",
+    "11xxxxx","11xxxxx",
     ".......","1111111",
     ".......","1/AAA%1",
     ".......","1#AAA#1",
     ".......","1%AAA/1",
     ".......","1111111",
-    "xxxxx11","xxxxx11",
+    ".......","1111111",
   },
 
   diagonals =
@@ -3764,6 +3764,7 @@ GROW_357_ROUND_ARCH_STAIRS =
 
   structure =
   { 
+    "11xxxxx","11xxxxx",
     ".......","1111111",
     ".......","11vvv11",
     ".......","1/AAA%1",
@@ -3771,7 +3772,6 @@ GROW_357_ROUND_ARCH_STAIRS =
     ".......","1%AAA/1",
     ".......","11^^^11",
     ".......","1111111",
-    "xxxxx11","xxxxx11",
   },
 
   diagonals =
@@ -3788,13 +3788,13 @@ GROW_357_ROUND_ARCH_ALT =
 
   structure =
   { 
-    ".......","1111111",
+    "11xxxxx","11xxxxx",
     ".......","1111111",
     ".......","1/AAA%1",
     ".......","AA#A#AA",
     ".......","1%AAA/1",
     ".......","1111111",
-    "xxxxx11","xxxxx11",
+    ".......","1111111",
   },
 
   diagonals =
@@ -3811,13 +3811,13 @@ GROW_357_ROUND_ARCH_ALT_STAIRS =
 
   structure =
   { 
-    ".......","1111111",
+    "11xxxxx","11xxxxx",
     ".......","1111111",
     ".......","v/AAA%v",
     ".......","AA#A#AA",
     ".......","^%AAA/^",
     ".......","1111111",
-    "xxxxx11","xxxxx11",
+    ".......","1111111",
   },
 
   diagonals =
@@ -3834,13 +3834,13 @@ GROW_357_ROUND_ARCH_ALT_2 =
 
   structure =
   { 
+    "xx111xx","xx111xx",
     ".......","11AAA11",
     ".......","11AAA11",
     ".......","1/A#A%1",
     ".......","1AAAAA1",
     ".......","1%A#A/1",
     ".......","11AAA11",
-    "xx111xx","xx111xx",
   },
 
   diagonals =
@@ -5674,7 +5674,7 @@ GROW_CAGE_DOOM_MAP01 =
     "......","111111",
     "......","1C11C1",
     "......","111111",
-    "xx11xx","xx11xx",
+    "11xxxx","11xxxx",
   }
 },
 
@@ -5693,20 +5693,20 @@ GROW_CAGE_DOOM_MAP01_PILLARED =
     "......","1#11#1",
     "......","1C11C1",
     "......","111111",
-    "xx11xx","xx11xx",
+    "11xxxx","11xxxx",
   }
 },
 
-DECORATE_CAGE_ON_LIQUID_CANAL_SIDE =
+GROW_CAGE_ON_LIQUID_CANAL_SIDE =
 {
   prob = 10,
 
   structure =
   {
-    "~~~~","~CC~",
-    "1111","1111",
-    "1111","1111",
-    "~~~~","~CC~",
+    "x~~~~","x~CC~",
+    "11111","11111",
+    "11111","11111",
+    "x~~~~","x~CC~",
   },
 },
 
@@ -5725,7 +5725,7 @@ GROW_CAGE_ROUND_ARENA =
     ".....","1CCC1",
     ".....","1%C/1",
     ".....","11111",
-    "x111x","x111x",
+    "11xxx","11xxx",
   },
 
   diagonals =
@@ -5774,7 +5774,7 @@ GROW_CAGE_SIDEWAYS_BOTH_SIDES =
 
   structure =
   {
-    "xxx11xxx","xxx11xxx",
+    "11xxxxxx","11xxxxxx",
     "........","11111111",
     "........","11#11#11",
     "........","11C11C11",
@@ -7120,7 +7120,7 @@ GROW_TWO_WAY_SMALL =
     "....","AAAA",
     "....","^^11",
     "....","1111",
-    "x11x","x11x",
+    "11xx","11xx",
   }
 },
 
@@ -7137,7 +7137,7 @@ GROW_THREE_WAY_SMALL =
     "......","AAAAAA",
     "......","^^11^^",
     "......","111111",
-    "xx11xx","xx11xx",
+    "11xxxx","11xxxx",
   }
 },
 
