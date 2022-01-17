@@ -2494,12 +2494,12 @@ namelib.NAMES =
 
         -- territories
         City=20, Town=20, Village=10,
-        World=5, Country=10, Zone=10,
-        Square=5, Kingdom=15,
+        --[[World=5, Country=10,]] Zone=10,
+        Square=5, --[[Kingdom=15,]]
         District=10, Precinct=10,
         Dominion=10, Domain=3, Trail=10,
         Region=10, Territory=5, Path=5,
-        Province=10, Jurisdiction=10,
+        --[[Province=10,]] Jurisdiction=10,
         Township=10, Municipality=7, Borough=7,
 
         -- adventure
@@ -4036,9 +4036,9 @@ namelib.NAMES =
         Emirate = 3,
         Empire = 5,
         ["Free State"] = 3,
-        Kingdom = 7,
+        --Kingdom = 7,
         Principality = 3,
-        Hegemony = 10,
+        --Hegemony = 10,
 
         -- medieval
         Citadel = 15,
