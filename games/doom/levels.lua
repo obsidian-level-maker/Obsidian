@@ -182,6 +182,7 @@ function DOOM.themes_alts()
   if OB_CONFIG.engine == "zdoom" or OB_CONFIG.engine == "gzdoom" then
     GAME.THEMES.tech.wide_halls["subway"] = 10
     GAME.THEMES.urban.wide_halls["subway"] = 50
+    GAME.THEMES.urban.window_groups["gtd_dem_windows"] = 40
   end
 end
 
