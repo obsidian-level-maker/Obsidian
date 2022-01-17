@@ -180,9 +180,40 @@ function DOOM.themes_alts()
   end
 
   if OB_CONFIG.engine == "zdoom" or OB_CONFIG.engine == "gzdoom" then
-    GAME.THEMES.tech.wide_halls["subway"] = 10
+    local tab =
+    {
+      tech =
+      {
+        wide_halls = 
+        {
+          subway = 10
+        },
+
+        window_groups =
+        {
+          gtd_dem_windows = 40
+        }
+      },
+
+      urban =
+      {
+        wide_halls =
+        {
+          subway = 50
+        },
+
+        window_groups =
+        {
+          gtd_dem_windows = 40
+        }
+      }
+    }
+
+    table.deep_merge(GAME.THEMES, tab, 4)
+    --[[GAME.THEMES.tech.wide_halls["subway"] = 10
     GAME.THEMES.urban.wide_halls["subway"] = 50
-    GAME.THEMES.urban.window_groups["gtd_dem_windows"] = 40
+    GAME.THEMES.tech.window_groups["gtd_dem_windows"] = 40
+    GAME.THEMES.urban.window_groups["gtd_dem_windows"] = 40]]
   end
 end
 

@@ -1,12 +1,13 @@
 PREFABS.Window_gtd_dem_1 =
 {
-  file   = "window/gtd_dem_windows.wad",
-  map    = "MAP01",
+  file = "window/gtd_dem_windows.wad",
+  map = "MAP01",
 
-  group  = "gtd_dem_windows",
-  prob   = 50,
+  group = "gtd_dem_windows",
+  prob = 50,
+  theme = "urban",
 
-  where  = "edge",
+  where = "edge",
   seed_w = 1,
 
   height = 16,
@@ -22,15 +23,45 @@ PREFABS.Window_gtd_dem_1 =
 PREFABS.Window_gtd_dem_2 =
 {
   template = "Window_gtd_dem_1",
-  map      = "MAP02",
+  map = "MAP02",
 
-  seed_w   = 2,
+  seed_w = 2,
 }
 
 PREFABS.Window_gtd_dem_3 =
 {
   template = "Window_gtd_dem_1",
-  map      = "MAP03",
+  map = "MAP03",
 
-  seed_w   = 3,
+  seed_w = 3,
+}
+
+--
+
+PREFABS.Window_gtd_dem_1_tech =
+{
+  template = "Window_gtd_dem_1",
+  map = "MAP04",
+
+  theme = "tech"
+}
+
+PREFABS.Window_gtd_dem_2_tech =
+{
+  template = "Window_gtd_dem_1",
+  map = "MAP05",
+
+  theme = "tech",
+
+  seed_w = 2
+}
+
+PREFABS.Window_gtd_dem_3_tech =
+{
+  template = "Window_gtd_dem_1",
+  map = "MAP06",
+
+  theme = "tech",
+
+  seed_w = 3
 }
