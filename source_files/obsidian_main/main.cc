@@ -130,6 +130,8 @@ bool randomize_pickups = false;
 bool randomize_misc = false;
 int zip_output = 0;
 
+std::filesystem::path gif_filename = "gif_output.gif";
+
 game_interface_c *game_object = NULL;
 
 #ifdef WIN32

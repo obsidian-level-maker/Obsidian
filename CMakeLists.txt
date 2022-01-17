@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.12..3.20)
 
 include(cmake/CPM.cmake)
 
-add_subdirectory(source_files/acc)
 add_subdirectory(source_files/filename_formatter)
 add_subdirectory(source_files/fmt)
 add_subdirectory(source_files/lua)
@@ -182,11 +181,12 @@ add_executable(
   source_files/obsidian_main/zf_menu.h
 )
 
+target_include_directories(obsidian PRIVATE source_files/gif-h)
 target_include_directories(obsidian PRIVATE source_files/lua)
+target_include_directories(obsidian PRIVATE source_files/miniz)
 target_include_directories(obsidian PRIVATE source_files/physfs)
 target_include_directories(obsidian PRIVATE source_files/slump)
 target_include_directories(obsidian PRIVATE source_files/zdbsp)
-target_include_directories(obsidian PRIVATE source_files/miniz)
 
 if(MINGW
    OR WIN32
@@ -241,14 +241,12 @@ if(UNIX)
     PRIVATE miniz
             obsidian_lua
             obsidian_physfs
-            obsidian_acc
             obsidian_zdbsp
             obsidian_slump
             fontconfig
   )
 else()
   target_link_libraries(
-    obsidian PRIVATE miniz obsidian_lua obsidian_physfs obsidian_acc
-                     obsidian_zdbsp obsidian_slump
+    obsidian PRIVATE miniz obsidian_lua obsidian_physfs obsidian_zdbsp obsidian_slump
   )
 endif()

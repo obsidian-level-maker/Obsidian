@@ -155,6 +155,8 @@ extern bool randomize_pickups;
 extern bool randomize_misc;
 extern int zip_output;
 
+extern std::string def_filename;
+
 extern std::filesystem::path last_directory;
 extern std::string numeric_locale;
 extern std::vector<std::string> batch_randomize_groups;
@@ -164,6 +166,8 @@ void DLG_ShowError(const char *msg, ...);
 
 std::filesystem::path DLG_OutputFilename(const char *ext,
                                          const char *preset = nullptr);
+
+extern std::filesystem::path gif_filename;
 
 void DLG_AboutText();
 void DLG_OptionsEditor();

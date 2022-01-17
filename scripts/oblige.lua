@@ -742,7 +742,7 @@ function ob_read_all_config(need_full, log_only)
      need_full = false
   end
 
-  do_line("-- Obsidian (C) 2018-2021")
+  do_line("-- Obsidian (C) 2018-2022")
   do_line("-- MsrSgtShooterPerson")
   do_line("-- Armaetus")
   do_line("-- Garrett")
@@ -1040,7 +1040,7 @@ function ob_init()
   end
 
   gui.printf("****************************\n")
-  gui.printf("** Obsidian (C) 2018-2021 **\n")
+  gui.printf("** Obsidian (C) 2018-2022 **\n")
   gui.printf("****************************\n")
   gui.printf("|    A Creation of the     |\n")
   gui.printf("|        Community         |\n")
@@ -1726,8 +1726,12 @@ function ob_build_cool_shit()
   local status
 
   ob_build_setup()
-  
+
+  gui.minimap_gif_start()
+
   status = Level_make_all()
+
+  gui.minimap_gif_finish()
 
   ob_clean_up()
 
