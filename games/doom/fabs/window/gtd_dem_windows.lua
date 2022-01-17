@@ -17,7 +17,9 @@ PREFABS.Window_gtd_dem_1 =
   z_fit = "top",
 
   bound_z1 = 0,
-  bound_z2 = 96
+  bound_z2 = 96,
+
+  passable =  true
 }
 
 PREFABS.Window_gtd_dem_2 =
