@@ -331,3 +331,104 @@ PREFABS.Wall_generic_artsy_sloped_bump_diag =
 
   group = "gtd_generic_artsy_sloped_bump",
 }
+
+--
+
+PREFABS.Wall_generic_small_lite_tech =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP33",
+
+  theme = "tech",
+
+  group = "gtd_generic_small_lite",
+
+  height = 96,
+
+  bound_z2 = 96
+}
+
+PREFABS.Wall_generic_small_lite_tech_diag =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP34",
+
+  theme = "tech",
+
+  group = "gtd_generic_small_lite",
+
+  height = 96,
+  where = "diagonal",
+
+  bound_z2 = 96
+}
+
+PREFABS.Wall_generic_small_lite_urban =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP33",
+
+  theme = "urban",
+
+  group = "gtd_generic_small_lite",
+
+  height = 96,
+
+  bound_z2 = 96,
+
+  tex_LITEBLU4 = "LITE3",
+  flat_CEIL4_3 = "TLITE6_4"
+}
+
+PREFABS.Wall_generic_small_lite_urban_diag =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP34",
+
+  theme = "urban",
+
+  group = "gtd_generic_small_lite",
+
+  height = 96,
+  where = "diagonal",
+
+  bound_z2 = 96,
+
+  tex_LITEBLU4 = "LITE3",
+  flat_CEIL4_3 = "TLITE6_4"
+}
+
+PREFABS.Wall_generic_small_lite_hell =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP33",
+
+  theme = "hell",
+
+  group = "gtd_generic_small_lite",
+
+  height = 96,
+
+  bound_z2 = 96,
+
+  tex_LITEBLU4 = "CRACKLE2",
+  flat_CEIL4_3 = "FLOOR1_7"
+}
+
+PREFABS.Wall_generic_small_lite_hell_diag =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP34",
+
+  theme = "hell",
+
+  group = "gtd_generic_small_lite",
+
+  height = 96,
+  where = "diagonal",
+
+  bound_z2 = 96,
+
+  tex_LITEBLU4 = "CRACKLE2",
+  flat_CEIL4_3 = "FLOOR1_7"
+}

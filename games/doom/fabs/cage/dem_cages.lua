@@ -311,14 +311,12 @@ PREFABS.Cage_dem_ledge_ambush1 =
   seed_h = 1,
 
   deep   = 16,
-  over   = -16,
 
   bound_z1 = 0,
   bound_z2 = 128,
 
   x_fit = "frame",
-  z_fit = "top",
-
+  z_fit = { 2,3 , 125,128 }
 }
 
 PREFABS.Cage_dem_ledge_ambush2 =
@@ -328,10 +326,8 @@ PREFABS.Cage_dem_ledge_ambush2 =
   map = "MAP08",
   env    = "cave",
 
-
   x_fit = "frame",
   z_fit = { 16,24 }
-
 }
 
 PREFABS.Cage_dem_ledge_ambush3 =
@@ -342,7 +338,6 @@ PREFABS.Cage_dem_ledge_ambush3 =
   env = "nature",
   group = "natural_walls",
 
-
   x_fit = "frame",
   z_fit = { 18,26 }
 }
@@ -352,12 +347,15 @@ PREFABS.Cage_dem_ledge_ambush4 =
   template = "Cage_dem_ledge_ambush1",
   map = "MAP17",
 
+  deep = 16,
+
   env = "park",
   park_mode = "no_nature",
 
   bound_z1 = 0,
-  bound_z2 = 184,
+  bound_z2 = 136,
 
+  z_fit = { 2,3 , 133,136 }
 }
 
 PREFABS.Cage_dem_ledge_ambush5 =
@@ -369,8 +367,7 @@ PREFABS.Cage_dem_ledge_ambush5 =
   park_mode = "no_nature",
 
   bound_z1 = 0,
-  bound_z2 = 232,
-
+  bound_z2 = 232
 }
 
 ---- natural shrine getting corrupted by demon ----

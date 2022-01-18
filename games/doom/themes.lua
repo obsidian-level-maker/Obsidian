@@ -1260,7 +1260,10 @@ DOOM.THEMES =
       --
       gtd_wall_sewer = 35,
       gtd_sewer_set_2 = 35,
-      gtd_water_purifier = 35,
+      gtd_sewer_set_3 = 35,
+      --
+      gtd_water_purifier = 50,
+      gtd_toilet_gallery = 50,
       --
       gtd_generic_beamed_inset = 25,
       gtd_generic_beamed_green_inset = 25,
@@ -1319,6 +1322,7 @@ DOOM.THEMES =
       gtd_generic_artsy_slope_y_inset = 20,
       gtd_generic_artsy_base_braced = 20,
       gtd_generic_artsy_sloped_bump = 20,
+      gtd_generic_small_lite = 20,
       --
       gtd_modquake_set = 18,
       gtd_modquake_jawlike = 18,
@@ -1336,7 +1340,9 @@ DOOM.THEMES =
       gtd_sunderfall_barred = 13,
       --
       cran_bunkbeds = 50,
-      gtd_craneo_bank_set = 10
+      gtd_craneo_bank_set = 10,
+      --
+      gtd_mining_set = 50
     },
 
     outdoor_wall_groups =
@@ -1691,7 +1697,10 @@ DOOM.THEMES =
       --
       gtd_wall_sewer = 30,
       gtd_sewer_set_2 = 30,
-      gtd_water_purifier = 30,
+      gtd_sewer_set_3 = 30,
+      --
+      gtd_water_purifier = 50,
+      gtd_toilet_gallery = 50,
       --
       gtd_generic_beamed_inset = 25,
       gtd_generic_beamed_green_inset = 25,
@@ -1755,6 +1764,7 @@ DOOM.THEMES =
       gtd_generic_artsy_slope_y_inset = 20,
       gtd_generic_artsy_base_braced = 20,
       gtd_generic_artsy_sloped_bump = 20,
+      gtd_generic_small_lite = 20,
       --
       gtd_modquake_set = 11,
       gtd_modquake_jawlike = 11,
@@ -1782,7 +1792,9 @@ DOOM.THEMES =
       gtd_sunderfall_barred = 25,
       --
       cran_bunkbeds = 50,
-      gtd_craneo_bank_set = 50
+      gtd_craneo_bank_set = 50,
+      --
+      gtd_mining_set = 50
     },
 
     window_groups =
@@ -2237,6 +2249,7 @@ DOOM.THEMES =
       gtd_generic_artsy_slope_y_inset = 20,
       gtd_generic_artsy_base_braced = 20,
       gtd_generic_artsy_sloped_bump = 20,
+      gtd_generic_small_lite = 20,
       --
       gtd_modquake_set = 11,
       gtd_modquake_jawlike = 11,
