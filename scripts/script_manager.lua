@@ -103,30 +103,8 @@ function ScriptMan_assemble_mapinfo_lump()
       table.insert(doomednum_lines,line)
     end
   end
-  if #doomednum_lines > 2 then
-    table.insert(doomednum_lines, "}\n")
-    for _,line in pairs(doomednum_lines) do
-      if type(line) == "table" then
-        for _,string in pairs(line) do
-          table.insert(mapinfo_lines,string)
-        end
-      else
-        table.insert(mapinfo_lines, line)
-      end
-    end
-  end
 
-  if PARAM.mapinfolump then
-    if type(PARAM.mapinfolump) == "table" then
-      for _,line in pairs(PARAM.mapinfolump) do
-        for _,string in pairs(line) do
-          table.insert(mapinfo_lines,string)
-        end
-      end
-    else
-      table.insert(mapinfo_lines, PARAM.mapinfolump)
-    end
-  end
+  table.insert(mapinfo_lines, SCRIPTS.mapinfolump)
 
   if #mapinfo_lines > 2 then
     print(table.tostr(mapinfo_line))
