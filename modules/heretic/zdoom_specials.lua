@@ -476,9 +476,6 @@ function ZDOOM_SPECIALS_HERETIC.do_special_stuff()
     return color
   end
 
-if map_num == 44 then
-        next_level_line = '  next = "EndGame1"\n'
-      end
   local function pick_random_fog_color()
     local function give_random_hex()
       return rand.pick({'0','1','2','3','4','5','6','8','9','a','b','c','d','e','f'})
