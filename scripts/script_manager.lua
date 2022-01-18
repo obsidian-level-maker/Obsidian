@@ -117,14 +117,14 @@ function ScriptMan_assemble_mapinfo_lump()
   end
 
   if PARAM.mapinfolump then
-    for _,line in pairs(PARAM.mapinfolump) do
-      if type(line) == "table" then
+    if type(PARAM.mapinfolump) == "table" then
+      for _,line in pairs(PARAM.mapinfolump) do
         for _,string in pairs(line) do
           table.insert(mapinfo_lines,string)
         end
-      else
-        table.insert(mapinfo_lines, line)
       end
+    else
+      table.insert(mapinfo_lines, PARAM.mapinfolump)
     end
   end
 
