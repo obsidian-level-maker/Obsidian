@@ -32,6 +32,13 @@ DEBUG_CONTROL.GROWTH_STEP_CHOICES =
   "no",       _("No"),
 }
 
+DEBUG_CONTROL.LIVEMAP_CHOICES =
+{
+  "step", _("Per Step (Very Slow)"),
+  "room", _("Per Room (Slightly Slow)"),
+  "none", _("No Live Minimap"),
+}
+
 function DEBUG_CONTROL.setup(self)
   for name,opt in pairs(self.options) do
     if OB_CONFIG.batch == "yes" then
@@ -180,13 +187,24 @@ OB_MODULES["debugger"] =
       priority=95,
     },
     
-    save_svg =
+    bool_save_svg =
     {
       name = "bool_save_svg",
       label = _("Save Map Previews"),
       valuator = "button",
       default = 0,
       tooltip = "Saves SVG format images of generated map thumbnails.",
+      priority=94,
+      gap = 1,
+    },
+
+    bool_save_gif =
+    {
+      name = "bool_save_gif",
+      label = _("Save Minimap GIF"),
+      valuator = "button",
+      default = 0,
+      tooltip = "Save an animated GIF of the building process. Recommended in combination with the Live Growth Minimap.",
       priority=94,
       gap = 1,
     },
@@ -217,6 +235,14 @@ OB_MODULES["debugger"] =
         "for easier detection of broken level geometry or missing textures.",
       priority = 50,
       gap = 1,
+    },
+
+    {
+      name="live_minimap",
+      label=_("Live Growth Minimap"),
+      choices=DEBUG_CONTROL.LIVEMAP_CHOICES,
+      default="none",
+      tooltip=_("Shows more steps Oblige performs on rooms as they are grown on the GUI minimap. May take a hit on generation speed.")
     },
 
 --[[

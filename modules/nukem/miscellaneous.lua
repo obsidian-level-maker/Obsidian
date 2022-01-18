@@ -39,13 +39,6 @@ MISC_STUFF_NUKEM.LIGHT_CHOICES =
   "+3",   _("Radiant"),
 }
 
-MISC_STUFF_NUKEM.LIVEMAP_CHOICES =
-{
-  "step", _("Per Step (Very Slow)"),
-  "room", _("Per Room (Slightly Slow)"),
-  "none", _("No Live Minimap"),
-}
-
 MISC_STUFF_NUKEM.SINK_STYLE_CHOICES =
 {
   "themed", _("Per Theme"),
@@ -481,13 +474,6 @@ OB_MODULES["misc_nukem"] =
       default = "heaps",
       gap = 1,
       randomize_group = "architecture"
-    },
-
-    {
-      name="live_minimap",
-      label=_("Live Growth Minimap"),
-      choices=MISC_STUFF_NUKEM.LIVEMAP_CHOICES,
-      tooltip=_("Shows more steps Oblige performs on rooms as they are grown on the GUI minimap. May take a hit on generation speed.")
     },
 
   },

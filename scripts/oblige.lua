@@ -1727,11 +1727,15 @@ function ob_build_cool_shit()
 
   ob_build_setup()
 
-  gui.minimap_gif_start()
+  if PARAM["bool_save_gif"] == 1 then
+    gui.minimap_gif_start()
+  end
 
   status = Level_make_all()
 
-  gui.minimap_gif_finish()
+  if PARAM["bool_save_gif"] == 1 then
+    gui.minimap_gif_finish()
+  end
 
   ob_clean_up()
 
