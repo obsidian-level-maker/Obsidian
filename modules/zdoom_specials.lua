@@ -1149,7 +1149,7 @@ function ZDOOM_SPECIALS.do_special_stuff()
       info.fog_color = ""
     end
 
-    PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_mapinfo(info))
+    SCRIPTS.mapinfolump = ScriptMan_combine_script(SCRIPTS.mapinfolump, add_mapinfo(info))
 
   end
 
@@ -1159,30 +1159,30 @@ function ZDOOM_SPECIALS.do_special_stuff()
     -- for Doom2 (yes, there's no Doom2 episode splitting)
     -- but there is from now on
     if OB_CONFIG.game == "doom2" or OB_CONFIG.game == "tnt" or OB_CONFIG.game == "plutonia" then
-      PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(1))
+      SCRIPTS.mapinfolump = ScriptMan_combine_script(SCRIPTS.mapinfolump, add_episodedef(1))
 
       if #GAME.levels > 11 then
-        PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(12))
-        PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(21))
+        SCRIPTS.mapinfolump = ScriptMan_combine_script(SCRIPTS.mapinfolump, add_episodedef(12))
+        SCRIPTS.mapinfolump = ScriptMan_combine_script(SCRIPTS.mapinfolump, add_episodedef(21))
       end
     end
 
     if OB_CONFIG.game == "doom1" or OB_CONFIG.game == "ultdoom" then
-      PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(1))
+      SCRIPTS.mapinfolump = ScriptMan_combine_script(SCRIPTS.mapinfolump, add_episodedef(1))
 
       if #GAME.levels > 9 then
-        PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(10))
-        PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(19))
+        SCRIPTS.mapinfolump = ScriptMan_combine_script(SCRIPTS.mapinfolump, add_episodedef(10))
+        SCRIPTS.mapinfolump = ScriptMan_combine_script(SCRIPTS.mapinfolump, add_episodedef(19))
       end
 
       if #GAME.levels > 27 then
-        PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(28))
+        SCRIPTS.mapinfolump = ScriptMan_combine_script(SCRIPTS.mapinfolump, add_episodedef(28))
       end
     end
   end
 
   -- collect lines for the cluster information in MAPINFO
-  PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_clusterdef(ipic))
+  SCRIPTS.mapinfolump = ScriptMan_combine_script(SCRIPTS.mapinfolump, add_clusterdef(ipic))
  
   if PARAM.story_generator == "proc" then
     -- language lump is written inside the story generator
