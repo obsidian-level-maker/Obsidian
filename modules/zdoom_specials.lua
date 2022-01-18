@@ -616,7 +616,7 @@ function ZDOOM_SPECIALS.do_special_stuff()
 
 
   local function add_gamedef()
-    gamedef_lines = {}
+    local gamedef_lines = {}
 
     local x = 1
     local quit_msg_line = ""

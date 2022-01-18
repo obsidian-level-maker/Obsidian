@@ -493,7 +493,7 @@ if map_num == 44 then
   end
 
   local function add_gamedef()
-    local gamedef_lines
+    local gamedef_lines = {}
 
     local x = 1
     local quit_msg_line = ""
