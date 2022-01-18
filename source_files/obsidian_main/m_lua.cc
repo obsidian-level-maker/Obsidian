@@ -1094,8 +1094,9 @@ int gui_minimap_finish(lua_State *L) {
 }
 
 int gui_minimap_gif_start(lua_State *L) {
+    int delay = luaL_optinteger(L, 1, 10);
     if (main_win) {
-        main_win->build_box->mini_map->GifStart(gif_filename);
+        main_win->build_box->mini_map->GifStart(gif_filename, delay);
     }
     return 0;
 }

@@ -54,7 +54,7 @@ class UI_MiniMap : public Fl_Box {
 
     void MapClear();
 
-    void GifStart(std::filesystem::path filename);
+    void GifStart(std::filesystem::path filename, int delay);
     void GifFrame();
     void GifFinish();
 

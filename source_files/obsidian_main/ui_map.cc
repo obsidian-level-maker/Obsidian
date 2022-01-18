@@ -28,7 +28,7 @@
 
 // The includes got too messy to make these part of the UI_MiniMap class - Dasho
 GifWriter *gif_writer;
-int gif_delay = 10;
+int gif_delay;
 
 UI_MiniMap::UI_MiniMap(int x, int y, int w, int h, const char *label)
     : Fl_Box(x, y, w, h, label), pixels(NULL), cur_image(NULL) {
@@ -302,8 +302,9 @@ void UI_MiniMap::DrawEntity(int x, int y, byte r, byte g, byte b) {
     RawPixel(x, y + 1, r, g, b);
 }
 
-void UI_MiniMap::GifStart(std::filesystem::path filename) {
+void UI_MiniMap::GifStart(std::filesystem::path filename, int delay) {
     gif_writer = new GifWriter;
+    gif_delay = delay;
     GifBegin(gif_writer, filename.string().c_str(), map_W, map_H, gif_delay);
 }
 
