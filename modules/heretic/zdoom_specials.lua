@@ -1151,6 +1151,13 @@ if map_num == 44 then
     end
   end
 
+  -- FIX-ME!!! Redo all code here to use strings as per original Doom ZDoom Specials Module.
+  local lines_as_string = ''
+  for _,line in pairs(PARAM.mapinfolump,line) do
+    lines_as_string = lines_as_string .. line
+  end
+  SCRIPTS.mapinfolump = ScriptMan_combine_script(SCRIPTS.mapinfolump, lines_as_string)
+
   if PARAM.story_generator == "proc" then
     -- language lump is written inside the story generator
     ZStoryGen_heretic_init()
