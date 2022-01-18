@@ -1093,6 +1093,28 @@ int gui_minimap_finish(lua_State *L) {
     return 0;
 }
 
+int gui_minimap_gif_start(lua_State *L) {
+    int delay = luaL_optinteger(L, 1, 10);
+    if (main_win) {
+        main_win->build_box->mini_map->GifStart(gif_filename, delay);
+    }
+    return 0;
+}
+
+int gui_minimap_gif_frame(lua_State *L) {
+    if (main_win) {
+        main_win->build_box->mini_map->GifFrame();
+    }
+    return 0;
+}
+
+int gui_minimap_gif_finish(lua_State *L) {
+    if (main_win) {
+        main_win->build_box->mini_map->GifFinish();
+    }
+    return 0;
+}
+
 int gui_minimap_draw_line(lua_State *L) {
     int x1 = luaL_checkinteger(L, 1);
     int y1 = luaL_checkinteger(L, 2);
@@ -1265,6 +1287,9 @@ static const luaL_Reg gui_script_funcs[] = {
     {"minimap_finish", gui_minimap_finish},
     {"minimap_draw_line", gui_minimap_draw_line},
     {"minimap_fill_box", gui_minimap_fill_box},
+    {"minimap_gif_start", gui_minimap_gif_start},
+    {"minimap_gif_frame", gui_minimap_gif_frame},
+    {"minimap_gif_finish", gui_minimap_gif_finish},
 
     // Doom/Heretic/Hexen functions
     {"wad_name_gfx", Doom::wad_name_gfx},

@@ -868,6 +868,10 @@ bool Doom::game_interface_c::Start(const char *preset) {
         return false;
     }
 
+    gif_filename = filename;
+
+    gif_filename.replace_extension("gif");
+
     if (create_backups) {
         Main::BackupFile(filename, "old");
     }

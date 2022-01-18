@@ -3455,7 +3455,7 @@ end
     -- debug statistics
     GROWER_DEBUG_INFO[cur_rule.name].applied = GROWER_DEBUG_INFO[cur_rule.name].applied + 1
 
-    if PARAM.live_minimap == "step" then
+    if PARAM["live_minimap"] == "step" then
       Seed_draw_minimap()
     end
 

@@ -136,6 +136,7 @@ OB_MODULES["harmony_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_critter=
@@ -155,6 +156,7 @@ OB_MODULES["harmony_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_follower=
@@ -174,6 +176,7 @@ OB_MODULES["harmony_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_predator=
@@ -193,6 +196,7 @@ OB_MODULES["harmony_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_centaur=
@@ -212,6 +216,7 @@ OB_MODULES["harmony_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_mutant=
@@ -231,6 +236,7 @@ OB_MODULES["harmony_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_phage=
@@ -250,6 +256,7 @@ OB_MODULES["harmony_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_echidna=
@@ -269,6 +276,7 @@ OB_MODULES["harmony_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      }
   },
 }
@@ -402,6 +410,7 @@ OB_MODULES["harmony_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
      float_shotgun=
@@ -421,6 +430,7 @@ OB_MODULES["harmony_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
      float_launcher=
@@ -440,6 +450,7 @@ OB_MODULES["harmony_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
      float_entropy=
@@ -459,6 +470,7 @@ OB_MODULES["harmony_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
     weapon_prefs =

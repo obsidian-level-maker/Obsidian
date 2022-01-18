@@ -66,8 +66,4 @@
 #include <FL/fl_draw.H>
 #include <FL/x.H>
 
-/* Customisations */
-
-// #include "zf_input.h"
-
 #endif  // __OB_HDR_FLTK__

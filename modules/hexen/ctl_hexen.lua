@@ -136,6 +136,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_afrit=
@@ -155,6 +156,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_centaur1=
@@ -174,6 +176,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_centaur2=
@@ -193,6 +196,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_serpent1=
@@ -212,6 +216,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_serpent2=
@@ -231,6 +236,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_wendigo=
@@ -250,6 +256,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_demon1=
@@ -269,6 +276,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 	 
      float_demon2=
@@ -288,6 +296,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 	 
      float_bishop=
@@ -307,6 +316,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 	 
      float_reiver=
@@ -326,6 +336,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 	 
      float_reiver_b=
@@ -345,6 +356,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 	 
      float_Wyvern=
@@ -364,6 +376,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 	 
      float_Heresiarch=
@@ -383,6 +396,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 	 
      float_Zedek=
@@ -402,6 +416,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 	 
      float_Traductus=
@@ -421,6 +436,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 	 
      float_Menelkir=
@@ -440,6 +456,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      },
 
      float_Korax=
@@ -459,6 +476,7 @@ OB_MODULES["hexen_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group = "monsters"
      }
   },
 }
@@ -592,6 +610,7 @@ OB_MODULES["hexen_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
      float_c_fire=
@@ -611,6 +630,7 @@ OB_MODULES["hexen_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
      float_c_wraith=
@@ -630,6 +650,7 @@ OB_MODULES["hexen_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
      float_f_axe=
@@ -649,6 +670,7 @@ OB_MODULES["hexen_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 	 
      float_f_hammer=
@@ -668,6 +690,7 @@ OB_MODULES["hexen_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 	 
      float_f_quietus=
@@ -687,6 +710,7 @@ OB_MODULES["hexen_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 	 
      float_m_cone=
@@ -706,6 +730,7 @@ OB_MODULES["hexen_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 	 
      float_m_blitz=
@@ -725,6 +750,7 @@ OB_MODULES["hexen_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 	 
      float_m_scourge=
@@ -744,6 +770,7 @@ OB_MODULES["hexen_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group = "pickups"
      },
 
     weapon_prefs =

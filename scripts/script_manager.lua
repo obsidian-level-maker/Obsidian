@@ -117,10 +117,19 @@ function ScriptMan_assemble_mapinfo_lump()
   end
 
   if PARAM.mapinfolump then
-    table.insert(mapinfo_lines,PARAM.mapinfolump)
+    for _,line in pairs(PARAM.mapinfolump) do
+      if type(line) == "table" then
+        for _,string in pairs(line) do
+          table.insert(mapinfo_lines,string)
+        end
+      else
+        table.insert(mapinfo_lines, line)
+      end
+    end
   end
 
   if #mapinfo_lines > 2 then
+    print(table.tostr(mapinfo_line))
     gui.wad_add_text_lump("MAPINFO", mapinfo_lines)
   end
 end

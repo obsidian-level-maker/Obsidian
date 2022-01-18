@@ -24,6 +24,7 @@
 #include "FL/Fl_Box.H"
 #include "FL/Fl_Image.H"
 #include "sys_type.h"
+#include <filesystem>
 
 class UI_MiniMap : public Fl_Box {
    private:
@@ -52,6 +53,10 @@ class UI_MiniMap : public Fl_Box {
     void DrawEntity(int x, int y, byte r, byte g, byte b);
 
     void MapClear();
+
+    void GifStart(std::filesystem::path filename, int delay);
+    void GifFrame();
+    void GifFinish();
 
    private:
     inline void RawPixel(int x, int y, byte r, byte g, byte b) {

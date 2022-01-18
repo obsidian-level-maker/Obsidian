@@ -1192,6 +1192,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       choices = ZDOOM_SPECIALS_HERETIC.FOG_GEN_CHOICES,
       default = "no",
       tooltip = "Generates fog colors based on the Sky Generator or generate completely randomly.",
+      randomize_group = "misc"
     },
 
     fog_env = {
@@ -1200,6 +1201,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       choices = ZDOOM_SPECIALS_HERETIC.FOG_ENV_CHOICES,
       default = "all",
       tooltip = "Limits fog to outdoors (sectors with exposed sky ceilings) or allows for all.",
+      randomize_group = "misc"
     },
 
     fog_intensity = {
@@ -1208,6 +1210,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       choices = ZDOOM_SPECIALS_HERETIC.FOG_DENSITY_CHOICES,
       default = "subtle",
       tooltip = "Determines thickness and intensity of fog, if the Fog Generator is enabled. Subtle or Misty is recommended.",
+      randomize_group = "misc"
     },
 
     bool_fog_affects_sky = {
@@ -1218,6 +1221,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       default = 1,
       tooltip = "Tints the sky texture with the fog color, intensity is based on the Fog Intensity selection.",
       gap = 1,
+      randomize_group = "misc"
     },
 
     bool_dynamic_lights = {
@@ -1245,8 +1249,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       priority = 6,
       choices = ZDOOM_SPECIALS_HERETIC.MUSIC_SHUFFLER_CHOICES,
       default = "no",
-      tooltip = "Shuffles music in the MAPINFO lump. Oblige's vanilla music shuffler uses " ..
-                "a BEX lump and is therefore ignored when the ZDoom Addons module is active.",
+      tooltip = "Shuffles music in the MAPINFO lump.",
     },
 
     story_generator = {

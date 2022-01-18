@@ -45,13 +45,6 @@ MISC_STUFF.LIGHT_CHOICES =
   "+3",   _("Radiant"),
 }
 
-MISC_STUFF.LIVEMAP_CHOICES =
-{
-  "step", _("Per Step (Very Slow)"),
-  "room", _("Per Room (Slightly Slow)"),
-  "none", _("No Live Minimap"),
-}
-
 MISC_STUFF.SINK_STYLE_CHOICES =
 {
   "themed", _("Per Theme"),
@@ -530,14 +523,6 @@ OB_MODULES["misc"] =
       "Heaps means all dead ends are preserved (Oblige default)."),
       default = "heaps",
       gap = 1,
-    },
-
-    {
-      name="live_minimap",
-      label=_("Live Growth Minimap"),
-      choices=MISC_STUFF.LIVEMAP_CHOICES,
-      default="none",
-      tooltip=_("Shows more steps Oblige performs on rooms as they are grown on the GUI minimap. May take a hit on generation speed.")
     },
 
 ---- PLANNED (UNFINISHED) STUFF ----
