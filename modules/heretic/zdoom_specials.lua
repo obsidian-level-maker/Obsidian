@@ -743,7 +743,7 @@ if map_num == 44 then
   end
 
   local function add_clusterdef(interpic)
-    local clusterdef
+    local clusterdef = ''
 
     local cluster_music_line = '  music = "' .. PARAM.generic_intermusic .. '"\n'
 
@@ -1033,11 +1033,9 @@ if map_num == 44 then
 
   -- collect lines for MAPINFO lump
   if PARAM.bool_custom_quit_messages == 1 then
-    if PARAM.gameinfolump then
-      PARAM.gameinfolump = PARAM.gameinfolump .. add_gamedef()
-    else
-      PARAM.gameinfolump = add_gamedef()
-    end
+
+    PARAM.gameinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_gamedef())
+
     ZStoryGen_heretic_quitmessages()
   end
 
@@ -1087,40 +1085,32 @@ if map_num == 44 then
       info.fog_color = ""
     end
 
-    if PARAM.mapinfolump then
-      PARAM.mapinfolump = PARAM.mapinfolump .. add_mapinfo(info)
-    else
-      PARAM.mapinfolump = add_mapinfo(info)
-    end
+    PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_mapinfo(info))
 
   end
 
   -- lines for episode definition
 
-  local episode_info .. "clearepisodes\n"
-
-  episode_info = episode_info .. add_episodedef(1)
+  PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, "clearepisodes\n" .. add_episodedef(1))
 
   if #GAME.levels > 9 then
-    episode_info = episode_info .. add_episodedef(10)
+    PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(10))
   end
 
   if #GAME.levels > 18 then
-    episode_info = episode_info .. add_episodedef(19)
+    PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(19))
   end
 
   if #GAME.levels > 27 then
-    episode_info = episode_info .. add_episodedef(28)
+    PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(28))
   end
 
   if #GAME.levels > 36 then
-    episode_info = episode_info .. add_episodedef(37)
+    PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_episodedef(37))
   end
 
-  PARAM.mapinfo_lump = PARAM.mapinfo_lump .. episode_info
-
   -- collect lines for the cluster information in MAPINFO
-  PARAM.mapinfo_lump = PARAM.mapinfo_lump = add_clusterdef(info.interpic)
+  PARAM.mapinfolump = ScriptMan_combine_script(PARAM.mapinfolump, add_clusterdef(info.interpic))
 
   if PARAM.story_generator == "proc" then
     -- language lump is written inside the story generator
