@@ -4,7 +4,7 @@ PREFABS.Stair_slope =
   map    = "MAP01",
 
   prob   = 100,
-  prob_skew = 3,
+  prob_skew = 5,
 
   style  = "steepness",
 

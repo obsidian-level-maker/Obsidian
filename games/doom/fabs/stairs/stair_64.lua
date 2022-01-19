@@ -22,7 +22,7 @@ PREFABS.Stair_64_red =
 
   map   = "MAP01",
   prob  = 0,
-  prob_skew = 3,
+  prob_skew = 5,
 
   theme = "urban",
 
