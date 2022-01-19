@@ -4,7 +4,7 @@ PREFABS.Stair_fancy_32_brown =
   map = "MAP01",
 
   prob = 10,
-  prob_skew = 3,
+  prob_skew = 5,
 
   style = "steepness",
 
@@ -49,6 +49,8 @@ PREFABS.Stair_fancy_diagonal_edged_32_1X =
 
   theme = "!hell",
   prob = 20,
+  prob_skew = 5,
+
   style = "steepness",
 
   where = "seeds",

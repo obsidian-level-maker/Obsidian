@@ -9,7 +9,7 @@ PREFABS.Lift_gtd_disguised_128 =
   engine = "!limit",
 
   prob = 10,
-  prob_skew = 2,
+  prob_skew = 5,
 
   style = "steepness",
   env = "building",

@@ -4,6 +4,7 @@ PREFABS.Lift_gtd_slumpish_64 =
   map = "MAP01",
 
   prob = 5,
+  prob_skew = 2.5,
   style = "steepness",
 
   engine = "zdoom",
