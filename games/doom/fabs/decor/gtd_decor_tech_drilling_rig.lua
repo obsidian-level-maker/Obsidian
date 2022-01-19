@@ -50,7 +50,7 @@ PREFABS.Decor_tech_drilling_rig_small_grouped =
 PREFABS.Decor_tech_drilling_rig_empty_grouped =
 {
   template = "Decor_tech_drilling_rig",
-  map = "MAP03"
+  map = "MAP03",
 
   theme = "any",
 
