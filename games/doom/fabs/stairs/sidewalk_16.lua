@@ -3,7 +3,7 @@ PREFABS.Sidewalk_16_tech =
   file   = "stairs/sidewalk_16.wad",
 
   prob   = 12,
-  prob_skew = 1.5,
+  prob_skew = 4,
 
   map    = "MAP01",
   theme  = "tech",
