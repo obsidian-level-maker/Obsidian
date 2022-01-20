@@ -1,9 +1,9 @@
 PREFABS.Window_gtd_dem_1 =
 {
-  file = "window/gtd_windows_dem.wad",
+  file = "window/gtd_window_dem.wad",
   map = "MAP01",
 
-  group = "gtd_dem_windows",
+  group = "gtd_window_dem",
   prob = 50,
   theme = "urban",
 
