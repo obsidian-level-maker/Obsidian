@@ -1,6 +1,6 @@
 PREFABS.Window_gtd_dem_1 =
 {
-  file = "window/gtd_dem_windows.wad",
+  file = "window/gtd_windows_dem.wad",
   map = "MAP01",
 
   group = "gtd_dem_windows",
@@ -64,6 +64,36 @@ PREFABS.Window_gtd_dem_3_tech =
   map = "MAP06",
 
   theme = "tech",
+
+  seed_w = 3
+}
+
+--
+
+PREFABS.Window_gtd_dem_1_hell =
+{
+  template = "Window_gtd_dem_1",
+  map = "MAP07",
+
+  theme = "hell"
+}
+
+PREFABS.Window_gtd_dem_2_hell =
+{
+  template = "Window_gtd_dem_1",
+  map = "MAP08",
+
+  theme = "hell",
+
+  seed_w = 2
+}
+
+PREFABS.Window_gtd_dem_3_hell =
+{
+  template = "Window_gtd_dem_1",
+  map = "MAP09",
+
+  theme = "hell",
 
   seed_w = 3
 }
