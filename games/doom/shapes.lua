@@ -11601,15 +11601,18 @@ GROW_CLIFF_DOUBLE_TRIDENT_X2_LIQUID =
 
 -- cliff-side/area-to-area cages
 
-DECORATE_CLIFF_CAGE =
+DECORATE_CLIFF_CAGE_2X_ROW =
 {
   prob = 8,
+  skip_prob = 80,
 
   structure =
   {
-    "111","111",
-    "111","1C1",
-    "222","222",
+    "x11x","x11x",
+    "1111","1111",
+    "1111","1CC1",
+    "2222","2222",
+    "x22x","x22x",
   },
 
   cage_mode = "fancy",
@@ -11618,12 +11621,15 @@ DECORATE_CLIFF_CAGE =
 DECORATE_CLIFF_CAGE_3X_ROW =
 {
   prob = 8,
+  skip_prob = 80,
 
   structure =
   {
+    "x111x","x111x",
     "11111","11111",
     "11111","1CCC1",
     "22222","22222",
+    "x222x","x222x"
   },
 
   cage_mode = "fancy",
@@ -11632,12 +11638,15 @@ DECORATE_CLIFF_CAGE_3X_ROW =
 DECORATE_CLIFF_CAGE_3X_STAGGERED =
 {
   prob = 3,
+  skip_prob = 80,
 
   structure =
   {
+    "x11111x","x11111x",
     "1111111","1111111",
     "1111111","1C1C1C1",
     "2222222","2222222",
+    "x22222x","x22222x"
   },
 
   cage_mode = "fancy",
