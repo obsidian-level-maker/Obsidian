@@ -43,26 +43,7 @@ namelib.NAMES =
 
     lexicon =
     {
-      x =
-      {
-        -- a new table... for suffixes! -MSSP
-        --["Annihilated"]=10,
-        --["Avenged"]=10,
-        --["Breaks Loose"]=10,
-        --["Destroyed"]=10,
-        --["Gone Bad"]=5,
-        --["Reboot"]=10,
-        --["Redux"]=10,
-        --["Revisited"]=5,
-        --["the Way Obsidian Did"]=5
-        --[": The Return"]=10,
-        --["is Back"]=10,
-
-        -- these from Frozsoul
-        --[": The Next Generation"]=5
-
-      },
-
+      
       -- Why not some level names common in all themes?
       -- Also, how do we keep 'Common' theme full names
       -- from not being in more than one theme?
@@ -501,7 +482,6 @@ namelib.NAMES =
 
       t = 1,    -- article: The XX
       v = 20,   -- phrase before a noun: Curse of the XX
-      x = 20,   -- phrase AFTER a noun: XX the Way Obsidian Did
       r = 40,
 
       s = 1000  -- single complete names
