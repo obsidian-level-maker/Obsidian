@@ -5489,8 +5489,8 @@ namelib.NAMES =
         Soldiers = 10,
         Slayer = 10,
 
+        Unbelievier = 10,
         -- Armaetus adds things here
-        ["Christ Denier"] = 15,
         ["Sin Bringer"] = 10,
         ["The Icon"] = 10,
         Deathbringers = 10,
