@@ -10890,6 +10890,37 @@ GROW_EIGHT_STAIRS =
   }
 },
 
+GROW_DEUCE_DIAMONDS =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xx....xx","xx/11%xx",
+    "x......x","x/1111%x",
+    "........","/1/%111%",
+    "........","11%/1111",
+    "........","1111/%11",
+    "........","%111%/1/",
+    "x......x","x%1111/x",
+    "xx....xx","xx%11/xx",
+    "xxx11xxx","xxx11xxx"
+  },
+
+  diagonals =
+  {
+        ".1","1.",
+        ".1","1.",
+    ".1","1.",".1","1.",
+        "1.",".1",
+        "1.",".1",
+    ".1","1.",".1","1.",
+        ".1","1.",
+        ".1","1."
+}
+},
+
 -- MSSP's rooms shaped like English alphabet letters. [LETTERS]
 
 GROW_DIAGONAL_STALK =
