@@ -38,6 +38,11 @@
 #include <stdio.h>
 #include "flstring.h"
 
+#ifdef _MSC_VER
+#include <cstdint>
+typedef uint32_t U32;
+#endif
+
 static int ncolors, chars_per_pixel;
 
 /**

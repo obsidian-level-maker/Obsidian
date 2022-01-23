@@ -371,11 +371,18 @@ slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this wi
     }
 
     static void callback_SetCustomPrefix(Fl_Widget *w, void *data) {
+        tryagain:
         const char *user_buf = fl_input("%s", custom_prefix.c_str(),
                                         _("Enter Custom Prefix Format:"));
 
         if (user_buf) {
             custom_prefix = user_buf;
+            if (custom_prefix.empty()) {
+                fl_alert(
+                "%s",
+                _("Custom prefix cannot be blank!"));
+                goto tryagain;
+            }
         }
     }
 };
