@@ -3368,7 +3368,7 @@ namelib.NAMES =
       {
         -- single complete level names
         ["Castle of Incomplete Heretic Support"]=10,
-        ["Chapel of Partial Heretic Support"]=10,
+        ["Chapel of Partial Heretic Support"]=10
       }
     }
   },
