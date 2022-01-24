@@ -128,11 +128,13 @@ namelib.NAMES =
         ["Drained"]=10,
         ["Dread"]=10,
         ["Envy"]=10,
+        ["Euphoria"]=10,
         ["Evil"]=10,
         ["Fear"]=10, -- Why not?
         ["Fury"]=10,
         ["Guilt"]=10,
         ["Hatred"]=10,
+        ["Lunacy"]=10,
         ["Misery"]=10,
         ["Nihility"]=10,
         ["Numb"]=10,
@@ -399,9 +401,35 @@ namelib.NAMES =
         ["Testing One's Limits"]=10,
         ["The Fading Skies"]=10,
         ["The Long Way Forward"]=10,
-        ["Turning the Page"]=10
+        ["Turning the Page"]=10,
+
+        -- 2022 marker, now with me combing through my music collection for names! (16k songs!) -A
+        ["Achtung!"]=10, -- "Attention!" in German
+        ["Admitting Fear"]=10,
+        ["After"]=10,
+        ["Approaching Death"]=10,
+        ["Autumn Overture"]=10,
+        ["Beginning of a Nightmare"]=10,
+        ["Behind the Times"]=10,
+        ["Between the Abyss"]=10,
+        ["Breaking Silence"]=10,
+        ["Death in Your Eyes"]=10,
+        ["Face the Nightmare"]=10,
+        ["Heaven Give Me Say"]=10,
+        ["King of the Kill"]=10,
+        ["Lex Obsidianis"]=10,
+        ["Not Going Anywhere"]=10,
+        ["Premonition"]=10,
+        ["Rain"]=10,
+        ["Struck by Fate"]=10,
+        ["Take a Turn"]=10,
+        ["Voices and Victims"]=10,
+        ["Warwolf"]=10,
+        ["When the Kite String Breaks"]=10 -- end, for now?
 
       },
+
+      -- end COMMON names
 
       v =
       {
@@ -1234,7 +1262,21 @@ namelib.NAMES =
         ["Clawing at the Terminal"]=10,
         ["Dark Echos"]=10,
         ["Glitch Rot"]=10,
-        ["Transmission Unsent"]=10
+        ["Transmission Unsent"]=10,
+
+        -- 2022 marker
+        ["Against Nature"]=10,
+        ["Blueprints"]=10,
+        ["Brought to the Edge"]=10,
+        ["Codex V"]=10,
+        ["Dead Ringer"]=10,
+        ["Fabricated"]=10,
+        ["God Machine"]=10,
+        ["Interference"]=10,
+        ["Hymns to the Machine"]=10,
+        ["Stonewalled"]=10,
+        ["The Perfect Virus"]=10,
+        ["Wounded Warsong"]=10 -- end?
 
       }
     }
@@ -2262,7 +2304,35 @@ namelib.NAMES =
         ["Deep Rock Satanic"]=10,
         ["Mausoleum of History"]=10, -- quote from FreeSpace 2's intro
         ["Meathooks"]=10,
-        ["The Needleworks"]=10
+        ["The Needleworks"]=10,
+
+        -- 2022 marker
+        ["1349"]=10,
+        ["A Shadowplay for Yesterday"]=10,
+        ["Alla Xul"]=10,
+        ["Anti-God, Anti-Christ"]=10,
+        ["Atrocious Humanity"]=10,
+        ["Ave Satanas"]=10,
+        ["Black Gives Way to Blood"]=10,
+        ["Bleed for Ancient Gods"]=10,
+        ["Bleed Us An Ocean"]=10,
+        ["Blood of Seraphim"]=10,
+        ["Dark Manifestations"]=10,
+        ["Enter Thy Coven"]=10,
+        ["Flammenmanifest"]=10,
+        ["For the Sake of Death"]=10,
+        ["Forgotten Inferno"]=10,
+        ["Friends of the Hellcross"]=10,
+        ["Gnawing Bones"]=10,
+        ["God is Dead"]=10,
+        ["Loving the Sinner"]=10,
+        ["Nightmare Waltz"]=10,
+        ["Raven's Eye View"]=10,
+        ["Room of Angel"]=10,
+        ["Sepulchral Winter"]=10,
+        ["Unholy Praises"]=10,
+        ["Whispers in the Dark"]=10 -- end?
+
       }
     }
   },
@@ -3065,7 +3135,39 @@ namelib.NAMES =
         ["Our Evil Oaths"]=10,
         ["The Wizards of Gore"]=10,
         ["When the Skin Strand Pops"]=10,
-        ["Winds That Shred Skin"]=10
+        ["Winds That Shred Skin"]=10,
+        
+        -- 2022 marker
+        ["Action at a Distance"]=10,
+        ["Corvus Corona"]=10,
+        ["Crisis of Life"]=10,
+        ["Dry Water"]=10,
+        ["Dustman"]=10,
+        ["Esperandote"]=10,
+        ["Far From Rescue"]=10,
+        ["Fear Locked Away"]=10,
+        ["Flesh and Dust"]=10,
+        ["Fog Ensues"]=10,
+        ["Ghosting"]=10,
+        ["Glory Hunter"]=10,
+        ["Ground Dawn"]=10,
+        ["Hear Nothing"]=10,
+        ["Innocent Moon"]=10,
+        ["Liquid Dimensions Change"]=10,
+        ["Magical Mystical Marine"]=10,
+        ["The Upper Art"]=10,
+        ["Thunder's Cannon"]=10,
+        ["Thundering Hooves"]=10,
+        ["Time Destroys It All"]=10,
+        ["To Die in the Dark"]=10,
+        ["Too Far Gone"]=10,
+        ["Tragedy and Weeds"]=10,
+        ["Turbulence"]=10,
+        ["Unseen"]=10,
+        ["Warped Mind"]=10,
+        ["We Shun the Light"]=10,
+        ["Without Fear"]=10,
+        ["Wrapped in Solitude"]=10 --  end?
       }
     }
   },
@@ -3266,7 +3368,7 @@ namelib.NAMES =
       {
         -- single complete level names
         ["Castle of Incomplete Heretic Support"]=10,
-        ["Chapel of Partial Heretic Support"]=10
+        ["Chapel of Partial Heretic Support"]=10,
       }
     }
   },
