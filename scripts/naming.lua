@@ -149,6 +149,7 @@ namelib.NAMES =
         ["Ruin"]=10,
         ["Seclusion"]=10,
         ["Spite"]=10,
+        ["Tarnished"]=10,
         ["Terror"]=10,
         ["Turmoil"]=10,
         ["Wasted"]=10,
@@ -227,19 +228,24 @@ namelib.NAMES =
         ["A Stupid Level Name"]=2,
         ["Another Generated Map"]=2,
         ["Comment Ninja"]=2,
-        ["It's Been One of Those Days"]=2, -- See above
+        ["DOOM2.WAD"]=2,
         ["Hetfield's Inflated Ego"]=2,
+        ["It's Been One of Those Days"]=2, -- See above
         ["lol"]=2,
         ["Marty's Loveable Funhouse"]=2, -- Refers to Marty Stratton, one of id's executive producers
+        ["Naming.lua"]=2,
         ["OH NOES"]=2,
         ["OwO"]=2,
         ["Phobos and Deimos Kissfest"]=2,
         ["Romero's Oversized Mindset"]=2,
+        ["Popcorn"]=2,
+        ["Songs of Praise"]=2,
         ["Take It Like a Man"]=2,
         ["The Trail to the Toilet"]=2, -- In-joke with Obsidian team, I blame Shooter for this lol
         ["Tom Hall's Halls"]=2,
         ["UwU"]=2,
         ["We are not COMPET-N friendly!"]=2,
+        ["You Are Not Special"]=2,
 
         -- What do we have? MORE Naming? Owo
         -- A bunch of abstract shit is here too! - Armaetus, Jun. 13, 2021
@@ -404,6 +410,7 @@ namelib.NAMES =
         ["Turning the Page"]=10,
 
         -- 2022 marker, now with me combing through my music collection for names! (16k songs!) -A
+        ["...Again it Shall Be"]=10,
         ["Achtung!"]=10, -- "Attention!" in German
         ["Admitting Fear"]=10,
         ["After"]=10,
@@ -412,20 +419,40 @@ namelib.NAMES =
         ["Beginning of a Nightmare"]=10,
         ["Behind the Times"]=10,
         ["Between the Abyss"]=10,
+        ["Beyond Northern Waves"]=10,
         ["Breaking Silence"]=10,
+        ["Bring it On!"]=10,
+        ["Crippled Beyond Belief"]=10,
+        ["Crisis of Life"]=10,
         ["Death in Your Eyes"]=10,
+        ["Death, Why Do I Envy You?"]=10,
+        ["Disciples of Death"]=10,
+        ["Doomsower"]=10,
         ["Face the Nightmare"]=10,
+        ["Free Will Sacrifice"]=10,
+        ["He Who Walks Further"]=10,
         ["Heaven Give Me Say"]=10,
+        ["How Much is Enough?"]=10,
+        ["I am The Black Demons"]=10,
+        ["Inspiration on Demand"]=10,
         ["King of the Kill"]=10,
         ["Lex Obsidianis"]=10,
+        ["Metallic Storm"]=10,
         ["Not Going Anywhere"]=10,
+        ["One Man's Failure"]=10,
         ["Premonition"]=10,
         ["Rain"]=10,
+        ["So Grim So True So Real"]=10,
         ["Struck by Fate"]=10,
         ["Take a Turn"]=10,
+        ["The Cruel Transcendency"]=10,
+        ["The First Noble Truth"]=10,
+        ["Thrash It or Trash It"]=10,
+        ["Threnody"]=10,
+        ["Ultraviolence"]=10,
         ["Voices and Victims"]=10,
         ["Warwolf"]=10,
-        ["When the Kite String Breaks"]=10 -- end, for now?
+        ["When the Kite String Breaks"]=10 -- end marker
 
       },
 
@@ -1266,17 +1293,33 @@ namelib.NAMES =
 
         -- 2022 marker
         ["Against Nature"]=10,
+        ["Aggressive Perfector"]=10,
+        ["Armor of Armegeddon"]=10,
+        ["Bitter Metallic Side"]=10,
         ["Blueprints"]=10,
         ["Brought to the Edge"]=10,
         ["Codex V"]=10,
         ["Dead Ringer"]=10,
+        ["Doubletap"]=10,
+        ["Enocian Electrode"]=10,
+        ["Eternal Glory of War"]=10,
         ["Fabricated"]=10,
         ["God Machine"]=10,
-        ["Interference"]=10,
+        ["Hearing the Bullet"]=10,
         ["Hymns to the Machine"]=10,
+        ["Impact"]=10,
+        ["Interference"]=10,
+        ["International Robots"]=10,
+        ["Just Keep Fighting"]=10,
+        ["Menace of the Milky Way"]=10,
+        ["Remorseless Wargrinder"]=10,
+        ["Satan Inc."]=10,
+        ["Smoke 'em Out"]=10,
         ["Stonewalled"]=10,
         ["The Perfect Virus"]=10,
-        ["Wounded Warsong"]=10 -- end?
+        ["To Thee We Confide"]=10,
+        ["Window of Time"]=10,
+        ["Wounded Warsong"]=10 -- end marker
 
       }
     }
@@ -2311,27 +2354,46 @@ namelib.NAMES =
         ["A Shadowplay for Yesterday"]=10,
         ["Alla Xul"]=10,
         ["Anti-God, Anti-Christ"]=10,
+        ["Archon"]=10,
         ["Atrocious Humanity"]=10,
         ["Ave Satanas"]=10,
+        ["Better Off Dead"]=10,
         ["Black Gives Way to Blood"]=10,
+        ["Blackened Sabbath"]=10,
         ["Bleed for Ancient Gods"]=10,
         ["Bleed Us An Ocean"]=10,
+        ["Blessed Black Wings"]=10,
         ["Blood of Seraphim"]=10,
+        ["Bolted to the Cross"]=10,
+        ["Book of Blood"]=10,
+        ["Chaotic Alliance"]=10,
+        ["Damnation's Pride"]=10,
         ["Dark Manifestations"]=10,
+        ["Dominator of Flesh"]=10,
         ["Enter Thy Coven"]=10,
         ["Flammenmanifest"]=10,
         ["For the Sake of Death"]=10,
         ["Forgotten Inferno"]=10,
+        ["Forgotten Tales"]=10,
         ["Friends of the Hellcross"]=10,
+        ["Funeral Bitch"]=10,
+        ["Glory Hole Hacksaw"]=10,
         ["Gnawing Bones"]=10,
         ["God is Dead"]=10,
+        ["God Made Filth"]=10,
+        ["Hate's Plague"]=10,
+        ["He Tells Lies"]=10,
+        ["Let's Die!"]=10,
         ["Loving the Sinner"]=10,
         ["Nightmare Waltz"]=10,
         ["Raven's Eye View"]=10,
         ["Room of Angel"]=10,
+        ["Satan's Hammer"]=10,
+        ["Secrets of Black Arts"]=10,
         ["Sepulchral Winter"]=10,
+        ["The Claw of Religion"]=10,
         ["Unholy Praises"]=10,
-        ["Whispers in the Dark"]=10 -- end?
+        ["Whispers in the Dark"]=10 -- end marker
 
       }
     }
@@ -3138,12 +3200,18 @@ namelib.NAMES =
         ["Winds That Shred Skin"]=10,
         
         -- 2022 marker
+        ["A Not So Pretty Place"]=10,
         ["Action at a Distance"]=10,
+        ["As the Journey Begins"]=10,
+        ["Cage of Mirrors"]=10,
+        ["Casting Shade"]=10,
         ["Corvus Corona"]=10,
         ["Crisis of Life"]=10,
+        ["Damned to Extinction"]=10,
         ["Dry Water"]=10,
         ["Dustman"]=10,
         ["Esperandote"]=10,
+        ["Eternal Gloom"]=10,
         ["Far From Rescue"]=10,
         ["Fear Locked Away"]=10,
         ["Flesh and Dust"]=10,
@@ -3155,6 +3223,12 @@ namelib.NAMES =
         ["Innocent Moon"]=10,
         ["Liquid Dimensions Change"]=10,
         ["Magical Mystical Marine"]=10,
+        ["Memories Remain"]=10,
+        ["Mutiny on the World"]=10,
+        ["Nightwind"]=10,
+        ["Neon Nights"]=10,
+        ["On The Razor's Edge"]=10,
+        ["The Beauty of Dust"]=10,
         ["The Upper Art"]=10,
         ["Thunder's Cannon"]=10,
         ["Thundering Hooves"]=10,
@@ -3167,10 +3241,13 @@ namelib.NAMES =
         ["Warped Mind"]=10,
         ["We Shun the Light"]=10,
         ["Without Fear"]=10,
-        ["Wrapped in Solitude"]=10 --  end?
+        ["White Roses, White Coffin"]=10,
+        ["Wrapped in Solitude"]=10,
+        ["Your Beauty Measures More"]=10 -- end marker
       }
     }
   },
+
   -- end of 'URBAN' theme
 
   CASTLE =
