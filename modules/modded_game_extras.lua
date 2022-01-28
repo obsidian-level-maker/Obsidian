@@ -1524,11 +1524,7 @@ function MODDED_GAME_EXTRAS.setup(self)
       {ammo = "shell", count = 50},
     }
 
-    if SCRIPTS.doomednums then
-      SCRIPTS.doomednums = SCRIPTS.doomednums .. MODDED_GAME_EXTRAS.TRAILBLAZER_DOOMEDNUMS
-    else
-      SCRIPTS.doomednums = MODDED_GAME_EXTRAS.TRAILBLAZER_DOOMEDNUMS
-    end
+    SCRIPTS.doomednums = ScriptMan_combine_script(SCRIPTS.doomednums, MODDED_GAME_EXTRAS.TRAILBLAZER_DOOMEDNUMS)
   end
 
   if PARAM.bool_complex_doom == 1 then

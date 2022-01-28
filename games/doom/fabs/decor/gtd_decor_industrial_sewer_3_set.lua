@@ -13,7 +13,7 @@ PREFABS.Decor_gtd_sewer_3_hatch =
   bound_z1 = 0,
   bound_z2 = 96,
 
-  z_fit = { 55,56, 91,94 }
+  z_fit = { 56,57, 91,94 }
 }
 
 PREFABS.Decor_gtd_sewer_3_hatch_pouring =

@@ -187,11 +187,6 @@ function DOOM.themes_alts()
         wide_halls = 
         {
           subway = 10
-        },
-
-        window_groups =
-        {
-          gtd_dem_windows = 40
         }
       },
 
@@ -204,16 +199,12 @@ function DOOM.themes_alts()
 
         window_groups =
         {
-          gtd_dem_windows = 40
+          gtd_window_dem = 40
         }
       }
     }
 
     table.deep_merge(GAME.THEMES, tab, 4)
-    --[[GAME.THEMES.tech.wide_halls["subway"] = 10
-    GAME.THEMES.urban.wide_halls["subway"] = 50
-    GAME.THEMES.tech.window_groups["gtd_dem_windows"] = 40
-    GAME.THEMES.urban.window_groups["gtd_dem_windows"] = 40]]
   end
 end
 
