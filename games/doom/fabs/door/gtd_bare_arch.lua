@@ -82,3 +82,17 @@ PREFABS.Arch_bare_columned_2X_hell =
 
   tex_EXITDOOR = "FIREMAG1",
 }
+
+--
+
+PREFABS.Arch_bare_sloped =
+{
+  template = "Arch_bare",
+  map = "MAP04",
+
+  engine = "zdoom",
+
+  theme = "any",
+
+  x_fit = { 24,28 , 56,72 , 100,104 }
+}

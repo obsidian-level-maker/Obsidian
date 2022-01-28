@@ -10547,6 +10547,33 @@ GROW_3x_X =
   },
 },
 
+GROW_3x_X_NEW_AREA =
+{
+  prob = 50,
+  skip_prob = 80,
+
+  structure =
+  {
+    "..xx..","11xxAA",
+    "..xx..","11xxAA",
+    "......","11%/AA",
+    "......","%1/AA/",
+    "......","/1%AA%",
+    "......","11/%AA",
+    "..xx..","11xxAA",
+    "..xx..","11xxAA",
+    "11xxxx","11xxxx"
+  },
+
+  diagonals =
+  {
+    "1.",".A",
+    ".1","1A","A.",
+    ".1","1A","A.",
+    "1.",".A"
+  }
+},
+
 GROW_3x_Y =
 {
   prob = 15,
@@ -10627,6 +10654,272 @@ GROW_3x_Y_LIQUID =
 },
 
 -- Z (skipped because it would be the same as 'N'?)
+
+-- Numbers
+
+GROW_ONE =
+{
+  prob = 10,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x...xx","x/11xx",
+    "....xx","/111xx",
+    "....xx","1111xx",
+    "....xx","1111xx",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "......","111111",
+    "......","111111",
+    "11xxxx","11xxxx"
+  },
+
+  diagonals =
+  {
+    ".1",
+    ".1"
+  }
+},
+
+GROW_ONE_STAIRS =
+{
+  prob = 15,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x...xx","x/AAxx",
+    "....xx","/AA^xx",
+    "....xx","AA11xx",
+    "....xx","A<11xx",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "......","111111",
+    "......","111111",
+    "11xxxx","11xxxx"
+  },
+
+  diagonals =
+  {
+    ".A",
+    ".A"
+  }
+},
+
+GROW_FOUR =
+{
+  prob = 15,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x..x..","x11x11",
+    "...x..","/11x11",
+    "...x..","11/x11",
+    "..xx..","11xx11",
+    "......","111111",
+    "......","111111",
+    "xxxx..","xxxx11",
+    "xxxx..","xxxx11",
+    "xxxx..","xxxx11",
+    "xxxx..","xxxx11",
+    "xxxx11","xxxx11"
+  },
+
+  diagonals =
+  {
+    ".1",
+    "1."
+  }
+},
+
+GROW_FOUR_STAIRS =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x..x..","xAAxAA",
+    "...x..","/AAxAA",
+    "...x..","AA/xAA",
+    "..xx..","AAxx^^",
+    "......","AAA<11",
+    "......","AAA<11",
+    "xxxx..","xxxx11",
+    "xxxx..","xxxx11",
+    "xxxx..","xxxx11",
+    "xxxx..","xxxx11",
+    "xxxx11","xxxx11"
+  },
+
+  diagonals =
+  {
+    ".A",
+    "A."
+  }
+},
+
+GROW_SEVEN =
+{
+  prob = 15,
+  skip_prob = 75,
+
+  structure =
+  {
+    "......","111111",
+    "......","111111",
+    "xxx...","xxx/11",
+    "xx....","xx/111",
+    "xx....","xx111/",
+    "xx...x","xx11/x",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "xx11xx","xx11xx"
+  },
+
+  diagonals =
+  {
+    ".1",
+    ".1",
+    "1.",
+    "1."
+  }
+},
+
+GROW_SEVEN_STAIRS =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    "......","AAAAAA",
+    "......","AAAAAA",
+    "xxx...","xxx/A1",
+    "xx....","xx/A/1",
+    "xx....","xxA/1/",
+    "xx...x","xx^1/x",
+    "xx..xx","xx^1xx",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "xx11xx","xx11xx"
+  },
+
+  diagonals =
+  {
+        ".A",
+      ".A",
+    "A1",
+    "A1","1.",
+      "1."
+  }
+},
+
+GROW_EIGHT =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x....x","x/11%x",
+    "......","/1111%",
+    "......","11/%11",
+    "......","11##11",
+    "......","%1111/",
+    "......","/1111%",
+    "......","11##11",
+    "......","11%/11",
+    "......","%1111/",
+    "x....x","x%11/x",
+    "xx11xx","xx11xx"
+  },
+
+  diagonals =
+  {
+    ".1","1.",
+    ".1","1.",
+    "1.",".1",
+    ".1","1.",
+    ".1","1.",
+    "1.",".1",
+    ".1","1.",
+    ".1","1."
+  }
+},
+
+GROW_EIGHT_STAIRS =
+{
+  prob = 25,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x....x","x/AA%x",
+    "......","/AAAA%",
+    "......","AA/%AA",
+    "......","AA##AA",
+    "......","%^11^/",
+    "......","/1111%",
+    "......","11##11",
+    "......","11%/11",
+    "......","%1111/",
+    "x....x","x%11/x",
+    "xx11xx","xx11xx"
+  },
+
+  diagonals =
+  {
+    ".A","A.",
+    ".A","A.",
+    "A.",".A",
+    ".1","1.",
+    ".1","1.",
+    "1.",".1",
+    ".1","1.",
+    ".1","1."
+  }
+},
+
+GROW_DEUCE_DIAMONDS =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xx....xx","xx/11%xx",
+    "x......x","x/1111%x",
+    "........","/1/%111%",
+    "........","11%/1111",
+    "........","1111/%11",
+    "........","%111%/1/",
+    "x......x","x%1111/x",
+    "xx....xx","xx%11/xx",
+    "xxx11xxx","xxx11xxx"
+  },
+
+  diagonals =
+  {
+        ".1","1.",
+        ".1","1.",
+    ".1","1.",".1","1.",
+        "1.",".1",
+        "1.",".1",
+    ".1","1.",".1","1.",
+        ".1","1.",
+        ".1","1."
+}
+},
 
 -- MSSP's rooms shaped like English alphabet letters. [LETTERS]
 
@@ -11574,15 +11867,18 @@ GROW_CLIFF_DOUBLE_TRIDENT_X2_LIQUID =
 
 -- cliff-side/area-to-area cages
 
-DECORATE_CLIFF_CAGE =
+DECORATE_CLIFF_CAGE_2X_ROW =
 {
   prob = 8,
+  skip_prob = 80,
 
   structure =
   {
-    "111","111",
-    "111","1C1",
-    "222","222",
+    "x11x","x11x",
+    "1111","1111",
+    "1111","1CC1",
+    "2222","2222",
+    "x22x","x22x",
   },
 
   cage_mode = "fancy",
@@ -11591,12 +11887,15 @@ DECORATE_CLIFF_CAGE =
 DECORATE_CLIFF_CAGE_3X_ROW =
 {
   prob = 8,
+  skip_prob = 80,
 
   structure =
   {
+    "x111x","x111x",
     "11111","11111",
     "11111","1CCC1",
     "22222","22222",
+    "x222x","x222x"
   },
 
   cage_mode = "fancy",
@@ -11605,12 +11904,15 @@ DECORATE_CLIFF_CAGE_3X_ROW =
 DECORATE_CLIFF_CAGE_3X_STAGGERED =
 {
   prob = 3,
+  skip_prob = 80,
 
   structure =
   {
+    "x11111x","x11111x",
     "1111111","1111111",
     "1111111","1C1C1C1",
     "2222222","2222222",
+    "x22222x","x22222x"
   },
 
   cage_mode = "fancy",

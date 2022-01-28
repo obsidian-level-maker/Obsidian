@@ -13,6 +13,8 @@ PREFABS.Pic_gtd_warning_days_since_last =
   where = "seeds",
   height = 128,
 
+  deep = 16,
+
   seed_w = 2,
   seed_h = 1,
 
@@ -20,5 +22,5 @@ PREFABS.Pic_gtd_warning_days_since_last =
   bound_z2 = 128,
 
   x_fit = "frame",
-  y_fit = "top",
+  y_fit = "top"
 }

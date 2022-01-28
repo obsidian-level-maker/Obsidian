@@ -18,7 +18,8 @@ PREFABS.Pic_industrial_sewer_3_liquid_pit =
   bound_z2 = 96,
 
   x_fit = {64,72 , 184,192},
-  y_fit = {16,24}
+  y_fit = { 16,24 },
+  z_fit = { 76,78 }
 }
 
 PREFABS.Pic_industrial_sewer_3_liquid_pit_falls =

@@ -1243,7 +1243,6 @@ class BFGBallAIMarine : BFGBall
 }
 
 MARINE_CLOSET_TUNE.MAPINFO =
-{
 [[
   31000 = AIMarineWaker
   31001 = AIMarinePistol
@@ -1254,7 +1253,6 @@ MARINE_CLOSET_TUNE.MAPINFO =
   31006 = AIMarineRocket
   31007 = AIMarineBFG
 ]]
-}
 
 MARINE_CLOSET_TUNE.TRNSLATE =
 [[
@@ -1516,13 +1514,11 @@ function MARINE_CLOSET_TUNE.all_done()
     scripty = string.gsub(scripty, "MDEATHMESSAGEX", "")
   end
 
-  if SCRIPTS.zscript then
-    SCRIPTS.zscript = SCRIPTS.zscript .. scripty
-  else
-    SCRIPTS.zscript = scripty
-  end
-  --PARAM.MARINESCRIPT = PARAM.MARINESCRIPT .. scripty
-  PARAM.MARINEMAPINFO = MARINE_CLOSET_TUNE.MAPINFO
+  SCRIPTS.zscript = ScriptMan_combine_script(SCRIPTS.zscript,
+    scripty)
+
+  SCRIPTS.doomednums = ScriptMan_combine_script(SCRIPTS.doomednums,
+    MARINE_CLOSET_TUNE.MAPINFO)
 
   if PARAM.m_c_color ~= "MarAI1" then
     PARAM.MARINETRNSLATE = MARINE_CLOSET_TUNE.TRNSLATE
