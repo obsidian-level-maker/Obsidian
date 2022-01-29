@@ -25,10 +25,15 @@ function UI_REJECT_OPTIONS.setup(self)
     if OB_CONFIG.batch == "yes" then
       if opt.valuator then
         if opt.valuator == "slider" then 
-          if opt.increment < 1 then
-            PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
+          local value = tonumber(OB_CONFIG[opt.name])
+          if not value then
+            PARAM[opt.name] = OB_CONFIG[opt.name]
           else
-            PARAM[opt.name] = int(tonumber(OB_CONFIG[opt.name]))
+            if opt.increment < 1 then
+              PARAM[opt.name] = value
+            else
+              PARAM[opt.name] = int(value)
+            end
           end
         elseif opt.valuator == "button" then
           PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
@@ -117,10 +122,15 @@ function UI_EDGE_MAP_OPTIONS.setup(self)
     if OB_CONFIG.batch == "yes" then
       if opt.valuator then
         if opt.valuator == "slider" then 
-          if opt.increment < 1 then
-            PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
+          local value = tonumber(OB_CONFIG[opt.name])
+          if not value then
+            PARAM[opt.name] = OB_CONFIG[opt.name]
           else
-            PARAM[opt.name] = int(tonumber(OB_CONFIG[opt.name]))
+            if opt.increment < 1 then
+              PARAM[opt.name] = value
+            else
+              PARAM[opt.name] = int(value)
+            end
           end
         elseif opt.valuator == "button" then
           PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
@@ -210,10 +220,15 @@ function UI_UDMF_MAP_OPTIONS.setup(self)
     if OB_CONFIG.batch == "yes" then
       if opt.valuator then
         if opt.valuator == "slider" then 
-          if opt.increment < 1 then
-            PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
+          local value = tonumber(OB_CONFIG[opt.name])
+          if not value then
+            PARAM[opt.name] = OB_CONFIG[opt.name]
           else
-            PARAM[opt.name] = int(tonumber(OB_CONFIG[opt.name]))
+            if opt.increment < 1 then
+              PARAM[opt.name] = value
+            else
+              PARAM[opt.name] = int(value)
+            end
           end
         elseif opt.valuator == "button" then
           PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])

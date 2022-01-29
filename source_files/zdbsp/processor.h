@@ -3,6 +3,8 @@
 
 #ifdef _MSC_VER
 #pragma once
+#define strncasecmp _strnicmp
+#define strcasecmp _stricmp
 #endif
 
 #include "blockmapbuilder.h"

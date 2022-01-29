@@ -161,10 +161,15 @@ function MISC_STUFF.setup(self)
     if OB_CONFIG.batch == "yes" then
       if opt.valuator then
         if opt.valuator == "slider" then 
-          if opt.increment < 1 then
-            PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
+          local value = tonumber(OB_CONFIG[opt.name])
+          if not value then
+            PARAM[opt.name] = OB_CONFIG[opt.name]
           else
-            PARAM[opt.name] = int(tonumber(OB_CONFIG[opt.name]))
+            if opt.increment < 1 then
+              PARAM[opt.name] = value
+            else
+              PARAM[opt.name] = int(value)
+            end
           end
         elseif opt.valuator == "button" then
           PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
@@ -251,7 +256,6 @@ OB_MODULES["misc"] =
 
   label = _("Miscellaneous"),
 
-  game = "doomish",
   engine = "!vanilla",
 
   side = "left",
@@ -267,10 +271,10 @@ OB_MODULES["misc"] =
   {
     {
       name="bool_pistol_starts",
-      label=_("Pistol Starts"),
+      label=_("Default Weapon Starts"),
       valuator = "button",
       default = 1,
-      tooltip=_("Ensure every map can be completed from a pistol start (ignore weapons obtained from earlier maps)")
+      tooltip=_("Ensure every map can be completed with only the default weapon (ignore weapons obtained from earlier maps)")
     },
     {
       name="bool_alt_starts",
@@ -463,7 +467,9 @@ OB_MODULES["misc"] =
       longtip = "",
     },
 
-    { name="barrels",     label=_("Barrels"),        choices=STYLE_CHOICES, gap=1 },
+    { name="barrels",     label=_("Explosive Decor"),        choices=STYLE_CHOICES, gap=1,
+      tooltip = "Controls the presence of barrels, pods, canisters, etc.",
+    },
 
     { name="doors",       label=_("Doors"),          choices=STYLE_CHOICES },
     { name="keys",        label=_("Keyed Doors"),    choices=STYLE_CHOICES },

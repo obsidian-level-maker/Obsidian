@@ -43,6 +43,11 @@
 
 #define MAXBUFFER 0x40000 // 256k
 
+#ifdef _MSC_VER
+#include <cstdint>
+typedef uint32_t U32;
+#endif
+
 #if USE_COLORMAP
 
 // error-diffusion dither into the FLTK colormap
