@@ -24,10 +24,15 @@ function CTL_DOOM.monster_setup(self)
     if OB_CONFIG.batch == "yes" then
       if opt.valuator then
         if opt.valuator == "slider" then 
-          if opt.increment < 1 then
-            PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
+          local value = tonumber(OB_CONFIG[opt.name])
+          if not value then
+            PARAM[opt.name] = OB_CONFIG[opt.name]
           else
-            PARAM[opt.name] = int(tonumber(OB_CONFIG[opt.name]))
+            if opt.increment < 1 then
+              PARAM[opt.name] = value
+            else
+              PARAM[opt.name] = int(value)
+            end
           end
         elseif opt.valuator == "button" then
           PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
@@ -477,10 +482,15 @@ function CTL_DOOM.weapon_setup(self)
     if OB_CONFIG.batch == "yes" then
       if opt.valuator then
         if opt.valuator == "slider" then 
-          if opt.increment < 1 then
-            PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
+          local value = tonumber(OB_CONFIG[opt.name])
+          if not value then
+            PARAM[opt.name] = OB_CONFIG[opt.name]
           else
-            PARAM[opt.name] = int(tonumber(OB_CONFIG[opt.name]))
+            if opt.increment < 1 then
+              PARAM[opt.name] = value
+            else
+              PARAM[opt.name] = int(value)
+            end
           end
         elseif opt.valuator == "button" then
           PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
@@ -756,10 +766,15 @@ function CTL_DOOM.item_setup(self)
     if OB_CONFIG.batch == "yes" then
       if opt.valuator then
         if opt.valuator == "slider" then 
-          if opt.increment < 1 then
-            PARAM[string.sub(name, 7)] = tonumber(OB_CONFIG[opt.name])
+          local value = tonumber(OB_CONFIG[opt.name])
+          if not value then
+            PARAM[opt.name] = OB_CONFIG[opt.name]
           else
-            PARAM[string.sub(name, 7)] = int(tonumber(OB_CONFIG[opt.name]))
+            if opt.increment < 1 then
+              PARAM[opt.name] = value
+            else
+              PARAM[opt.name] = int(value)
+            end
           end
         elseif opt.valuator == "button" then
           PARAM[string.sub(name, 7)] = tonumber(OB_CONFIG[opt.name])
