@@ -1,6 +1,6 @@
 PREFABS.Pic_mining_dirt_fenced =
 {
-  file = "picture/gtd_wall_industrial_mine.wad",
+  file = "picture/gtd_pic_industrial_mine.wad",
   map = "MAP01",
 
   prob = 50,
@@ -18,7 +18,7 @@ PREFABS.Pic_mining_dirt_fenced =
   bound_z2 = 96,
 
   x_fit = { 20,236 },
-  y_fit = "top",
+  y_fit = { 8,16 },
   z_fit = { 24,26 },
 
   tex_STONE7 =
@@ -40,5 +40,6 @@ PREFABS.Pic_mining_dirt_fenced_driller =
     [0] = 1,
   },
 
+  y_fit = "top",
   x_fit = { 20,72 , 168,220 }
 }
