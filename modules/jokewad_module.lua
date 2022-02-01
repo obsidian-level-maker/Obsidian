@@ -461,13 +461,12 @@ end
 function JOKEWAD_MODULE.all_done()
 
   if PARAM.bool_pandemic_mode == 1 then
-
     SCRIPTS.tissue_doc = JOKEWAD_MODULE.SUPER_DEC
     local dir = "games/doom/data/"
     gui.wad_merge_sections(dir .. "events.wad")
-
   end
 
+  SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, SCRIPTS.SOUND_DEC)
 end
 
 OB_MODULES["jokewad_module"] =

@@ -139,44 +139,16 @@ end
 
 
 function ScriptMan_assemble_decorate_lump()
-  local decorate_script_lines = ""
-
-  if PARAM.custom_trees == "decorate" then
-    decorate_script_lines = decorate_script_lines ..
-    ARMAETUS_EPIC_TEXTURES.TEMPLATES.DEC_TREES .. "\n"
-  end
-  if PARAM.bool_dynamic_lights == 1 then
+  if PARAM.bool_dynamic_lights == 1 then -- TODO: Move these to respective modules.
     if OB_CONFIG.game == "heretic" then
-        decorate_script_lines = decorate_script_lines ..
-        ZDOOM_SPECIALS_HERETIC.DYNAMIC_LIGHT_DECORATE .. "\n"
+        SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, ZDOOM_SPECIALS_HERETIC.DYNAMIC_LIGHT_DECORATE)
     else
-        decorate_script_lines = decorate_script_lines ..
-        ZDOOM_SPECIALS.DYNAMIC_LIGHT_DECORATE .. "\n"
+        SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, ZDOOM_SPECIALS.DYNAMIC_LIGHT_DECORATE)
     end
   end
-  if SCRIPTS.hn_marker_decorate_lines then
-    decorate_script_lines = decorate_script_lines ..
-    SCRIPTS.hn_marker_decorate_lines .. "\n"
-  end
-  if PARAM.ambient_sounds then
-    decorate_script_lines = decorate_script_lines ..
-    SCRIPTS.SOUND_DEC .. "\n"
-  end
-  if SCRIPTS.tissue_doc then
-    decorate_script_lines = decorate_script_lines ..
-    SCRIPTS.tissue_doc .. "\n"
-  end
-  if SCRIPTS.fauna_dec then
-    decorate_script_lines = decorate_script_lines ..
-    SCRIPTS.fauna_dec .. "\n"
-  end
-  if SCRIPTS.decorate_lines then
-    decorate_script_lines = decorate_script_lines ..
-    SCRIPTS.decorate_lines .. "\n"
-  end
 
-  if decorate_script_lines ~= "" then
-    add_script_lump("DECORATE", decorate_script_lines)
+  if SCRIPTS.decorate then
+    add_script_lump("DECORATE", SCRIPTS.decorate)
   end
 end
 
