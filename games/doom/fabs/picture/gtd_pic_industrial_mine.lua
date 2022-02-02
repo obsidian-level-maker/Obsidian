@@ -18,7 +18,7 @@ PREFABS.Pic_mining_dirt_fenced =
   bound_z2 = 96,
 
   x_fit = { 20,236 },
-  y_fit = { 8,16 },
+  y_fit = "top",
   z_fit = { 24,26 },
 
   tex_STONE7 =
