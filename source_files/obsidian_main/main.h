@@ -34,9 +34,15 @@
 #include "defines.h"
 constexpr const char *OBSIDIAN_TITLE = "OBSIDIAN Level Maker";
 
-constexpr const char *OBSIDIAN_VERSION = "Beta 20 Preview";
-constexpr const char *OBSIDIAN_SHORT_VERSION = "Beta20";
-constexpr unsigned int OBSIDIAN_HEX_VER = 0x014;
+#ifdef OBSIDIAN_TIMESTAMP
+constexpr const char *OBSIDIAN_VERSION = OBSIDIAN_TIMESTAMP;
+constexpr const char *OBSIDIAN_SHORT_VERSION = OBSIDIAN_TIMESTAMP;
+#else
+// Fallback in case the CMake timestamp stuff fails for some reason, but this shouldn't be used in practice
+constexpr const char *OBSIDIAN_VERSION = __DATE__;
+constexpr const char *OBSIDIAN_SHORT_VERSION = __DATE__;
+#endif
+
 constexpr const char *OBSIDIAN_WEBSITE =
     "https://github.com/dashodanger/Obsidian/wiki";
 

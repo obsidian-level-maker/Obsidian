@@ -17,6 +17,9 @@ project(
   VERSION 0.1.0
 )
 
+string(TIMESTAMP BUILD_TIMESTAMP "%Y.%m.%d" UTC)
+add_compile_definitions(OBSIDIAN_TIMESTAMP="${BUILD_TIMESTAMP}")
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-O2 -Wall")
