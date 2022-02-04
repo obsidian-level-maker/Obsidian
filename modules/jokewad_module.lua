@@ -466,7 +466,7 @@ function JOKEWAD_MODULE.all_done()
     gui.wad_merge_sections(dir .. "events.wad")
   end
 
-  SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, SCRIPTS.SOUND_DEC)
+  SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, SCRIPTS.tissue_doc)
 end
 
 OB_MODULES["jokewad_module"] =

@@ -89,6 +89,7 @@ ZDOOM_SOUND.TEMPLATES =
 function ZDOOM_SOUND.build_lumps()
   local offset_count = tonumber(PARAM.snd_start_id)
   local sndtable = table.deep_copy(ZDOOM_SOUND_DEFS)
+  local dec_lump
   SCRIPTS.SNDINFO = ""
 
   table.name_up(sndtable)
@@ -110,7 +111,7 @@ function ZDOOM_SOUND.build_lumps()
       dec_chunk = string.gsub(dec_chunk, "ARGHS", ZDOOM_SOUND.DEFAULT_A_PLAYSOUND_ARGS)
     end
 
-    SCRIPTS.SOUND_DEC = SCRIPTS.SOUND_DEC .. dec_chunk .. "\n\n"
+    dec_lump = dec_lump .. dec_chunk .. "\n\n"
   
     -- build SNDINFO chunk
     local sndinfo_chunk = sound.lump .. " " .. sound.lump .. "\n"
@@ -124,7 +125,7 @@ function ZDOOM_SOUND.build_lumps()
     offset_count = offset_count + 1
   end
 
-  SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, SCRIPTS.SOUND_DEC)
+  SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, dec_lump)
 end
 
 function ZDOOM_SOUND.populate_level_ambience()
