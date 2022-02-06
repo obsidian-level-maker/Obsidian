@@ -1507,55 +1507,55 @@ ARMAETUS_MATERIALS = {
 
 ARMAETUS_ANIMDEFS =
 [[
-  // All animations go here
+// Animations for Obsidian Resource Pack:
 
 	texture CGCANI00
-    allowdecals
-    pic CGCANI00 tics 1.5
-    pic CGCANI01 tics 1.5
-    pic CGCANI02 tics 1.5
-    pic CGCANI03 tics 1.5
-    pic CGCANI04 tics 1.5
-    pic CGCANI05 tics 1.5
-    pic CGCANI06 tics 1.5
-    pic CGCANI07 tics 1.5
+  allowdecals
+  pic CGCANI00 tics 1.5
+  pic CGCANI01 tics 1.5
+  pic CGCANI02 tics 1.5
+  pic CGCANI03 tics 1.5
+  pic CGCANI04 tics 1.5
+  pic CGCANI05 tics 1.5
+  pic CGCANI06 tics 1.5
+  pic CGCANI07 tics 1.5
 	
 	texture DECMP04A
-    allowdecals
-    pic DECMP04A tics 2
-    pic DECMP04B tics 2
-    pic DECMP04C tics 2
-    pic DECMP04D tics 2
-    pic DECMP04E tics 2
-    pic DECMP04F tics 2
-    pic DECMP04G tics 2
-    pic DECMP04H tics 2
+  allowdecals
+  pic DECMP04A tics 2
+  pic DECMP04B tics 2
+  pic DECMP04C tics 2
+  pic DECMP04D tics 2
+  pic DECMP04E tics 2
+  pic DECMP04F tics 2
+  pic DECMP04G tics 2
+  pic DECMP04H tics 2
 	pic DECMP04B tics 2
 	
 	texture TVSNOW01
-    allowdecals
-    pic TVSNOW01 tics 2
-    pic TVSNOW02 tics 2
-    pic TVSNOW03 tics 2
+  allowdecals
+  pic TVSNOW01 tics 2
+  pic TVSNOW02 tics 2
+  pic TVSNOW03 tics 2
 
 	texture COMPFUZ1
-    allowdecals
-    pic COMPFUZ1 tics 2
-    pic COMPFUZ2 tics 2
-    pic COMPFUZ3 tics 2
+  allowdecals
+  pic COMPFUZ1 tics 2
+  pic COMPFUZ2 tics 2
+  pic COMPFUZ3 tics 2
 	pic COMPFUZ4 tics 2
 	
 	texture COMPY1
-    allowdecals
-    pic COMPY1 tics 4
-    pic COMPY2 tics 4
-    pic COMPY3 tics 4
-    pic COMPY2 tics 4
+  allowdecals
+  pic COMPY1 tics 4
+  pic COMPY2 tics 4
+  pic COMPY3 tics 4
+  pic COMPY2 tics 4
 	
 	texture CANDLE1
-    pic CANDLE1 tics 4
-    pic CANDLE2 tics 4
-    pic CANDLE3 tics 4
+  pic CANDLE1 tics 4
+  pic CANDLE2 tics 4
+  pic CANDLE3 tics 4
 	
 	// Black FIRELAVA
 	Texture LAVBLAK1
@@ -1590,23 +1590,23 @@ ARMAETUS_ANIMDEFS =
 	// Doom1 SLADWALL slime fall
 	texture SLADRIP1
 	allowdecals
-    pic SLADRIP1 tics 6
-    pic SLADRIP2 tics 6
-    pic SLADRIP3 tics 6
+  pic SLADRIP1 tics 6
+  pic SLADRIP2 tics 6
+  pic SLADRIP3 tics 6
 	
 	//Red version of black GST fontfall
 	texture KSTFONT1
-    allowdecals
-    pic KSTFONT1 tics 6
-    pic KSTFONT2 tics 6
-    pic KSTFONT3 tics 6
+  allowdecals
+  pic KSTFONT1 tics 6
+  pic KSTFONT2 tics 6
+  pic KSTFONT3 tics 6
 	
 	//Green version
 	texture KSTFNTG1
-    allowdecals
-    pic KSTFNTG1 tics 6
-    pic KSTFNTG2 tics 6
-    pic KSTFNTG3 tics 6
+  allowdecals
+  pic KSTFNTG1 tics 6
+  pic KSTFNTG2 tics 6
+  pic KSTFNTG3 tics 6
 	
 	// Broken animated screen
 	Texture COMPSA1

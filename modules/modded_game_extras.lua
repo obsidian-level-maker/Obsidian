@@ -1803,7 +1803,7 @@ function MODDED_GAME_EXTRAS.generate_hn_decorate()
     decorate_string = decorate_string .. thing_chunk
   end
 
-  SCRIPTS.hn_marker_decorate_lines = decorate_string
+  SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, decorate_string)
 end
 
 MODDED_GAME_EXTRAS.ACTOR_NAME_SCRIPT =
