@@ -176,11 +176,12 @@ static void main_win_misc_config_CB(Fl_Widget *w, void *data) {
 static void ShowInfo() {
     fmt::print(
         "\n"
-        "** {} {}"
+        "** {} {} \"{}\"\n"
+        "** Build {}\n"
         " **\n"
         "** Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted **\n"
         "\n",
-        OBSIDIAN_TITLE, OBSIDIAN_VERSION);
+        OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME, OBSIDIAN_VERSION);
 
     fmt::print(
         "Usage: Obsidian [options...] [key=value...]\n"
@@ -230,7 +231,7 @@ static void ShowInfo() {
 }
 
 static void ShowVersion() {
-    fmt::print("Obsidian version {} (" __DATE__ ")\n", OBSIDIAN_VERSION);
+    fmt::print("Obsidian version {} {} \"{}\" Build {}\n", OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME, OBSIDIAN_VERSION);
 
     fflush(stdout);
 }
@@ -986,7 +987,7 @@ bool Build_Cool_Shit() {
         main_action = 0;
         if (main_win) {
             main_win->label(
-                fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION)
+                fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME)
                     .c_str());
         }
         Main::ProgStatus(_("Cancelled"));
@@ -1103,7 +1104,8 @@ skiprest:
 
     LogPrintf("\n");
     LogPrintf("********************************************************\n");
-    LogPrintf("** {} {} **\n", OBSIDIAN_TITLE, OBSIDIAN_VERSION);
+    LogPrintf("** {} {} \"{}\" **\n", OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME);
+    LogPrintf("** Build {} **\n", OBSIDIAN_VERSION);
     LogPrintf("********************************************************\n");
     LogPrintf("\n");
 
@@ -1191,7 +1193,7 @@ skiprest:
     UI_MainWin::CalcWindowSize(&main_w, &main_h);
 
     std::string main_title =
-        fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION);
+        fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME);
     main_win = new UI_MainWin(main_w, main_h, main_title.c_str());
 
     //???	Default_Location();
