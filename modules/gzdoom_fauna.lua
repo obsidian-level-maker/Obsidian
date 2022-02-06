@@ -324,11 +324,9 @@ FAUNA_MODULE.ACTORS =
 }
 
 FAUNA_MODULE.DOOMEDNUMS =
-{
 [[
   30000 = SpringyFly
 ]]
-}
 
 function FAUNA_MODULE.get_levels(self)
   for name,opt in pairs(self.options) do
@@ -514,7 +512,6 @@ end
 
 
 function FAUNA_MODULE.all_done()
-
   if PARAM.bool_flies == 1 or PARAM.bool_rats == 1 then
     SCRIPTS.fauna_SNDINFO = FAUNA_MODULE.SNDINFO
   end
@@ -529,7 +526,8 @@ function FAUNA_MODULE.all_done()
   end
 
   if PARAM.bool_rats == 1 then
-    SCRIPTS.fauna_dec = FAUNA_MODULE.DEC
+    SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, FAUNA_MODULE.DEC)
+
     local dir = "games/doom/data/"
     gui.wad_merge_sections(dir .. "Rats.wad")
     gui.wad_insert_file("data/sounds/DSRAT.ogg", "DSRAT")
@@ -538,7 +536,6 @@ function FAUNA_MODULE.all_done()
     gui.wad_insert_file("data/sounds/DSRATDI2.ogg", "DSRATDI2")
     gui.wad_insert_file("data/sounds/RATCRAWL.ogg", "RATCRAWL")
   end
-
 end
 
 OB_MODULES["fauna_module"] =

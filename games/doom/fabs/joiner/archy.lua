@@ -23,11 +23,13 @@ PREFABS.Joiner_archy1 =
 
   thing_57 =
   {
-    red_torch_sm = 50,
+    [2028] = 50,
+    [85] = 50,
+    [86] = 50
+    --[[red_torch_sm = 50,
     blue_torch_sm = 30,
-    green_torch_sm = 20,
-  },
-
+    green_torch_sm = 20]]
+  }
 }
 
 
@@ -42,9 +44,8 @@ PREFABS.Joiner_archy_workaround =
   theme = "any",
 
  x_fit = "frame",
- y_fit = "stretch",
+ y_fit = "stretch"
 }
-
 
 
 PREFABS.Joiner_archy1_hell =
@@ -61,8 +62,7 @@ PREFABS.Joiner_archy1_hell =
   },
 
   flat_FLAT1 = "FLOOR6_2",
-  tex_STONE2 = "ASHWALL2",
-
+  tex_STONE2 = "ASHWALL2"
 }
 
 
@@ -87,11 +87,13 @@ PREFABS.Joiner_archy1_wide =
 
   thing_56 =
   {
-    red_torch_sm = 30,
+    [2028] = 50,
+    [85] = 50,
+    [86] = 50
+    --[[red_torch_sm = 30,
     blue_torch_sm = 50,
-    green_torch_sm = 30,
-  },
-
+    green_torch_sm = 30]]
+  }
 }
 
 
@@ -106,10 +108,9 @@ PREFABS.Joiner_archy1_wide_hell =
   {
     red_torch_sm = 50,
     blue_torch_sm = 50,
-    green_torch_sm = 50,
+    green_torch_sm = 50
   },
 
   flat_FLAT1 = "FLOOR6_2",
-  tex_STONE2 = "ASHWALL2",
-
+  tex_STONE2 = "ASHWALL2"
 }

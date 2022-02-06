@@ -6202,6 +6202,7 @@ namelib.COMMUNITY_MEMBERS =
   regulars =
   {
     "Brad Man X",
+    "Cherry Bawble",
     "Crowbars", -- crowbars82, Mr. Octothrop!
     "Dan the Noob",
     "Hexa Doken",
@@ -6218,7 +6219,6 @@ namelib.COMMUNITY_MEMBERS =
     "TiZ",
     "The Dude", --TheDude1,
     "TTBNC",
-    "Yandere Princess",
 
     -- the following individuals are no longer active
     -- or haven't been in the server for a while...
