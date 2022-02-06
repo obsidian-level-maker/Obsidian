@@ -175,6 +175,8 @@ std::filesystem::path DLG_OutputFilename(const char *ext,
 
 extern std::filesystem::path gif_filename;
 
+extern std::string string_seed;
+
 void DLG_AboutText();
 void DLG_OptionsEditor();
 void DLG_ThemeEditor();

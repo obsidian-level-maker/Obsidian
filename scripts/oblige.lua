@@ -657,6 +657,11 @@ function ob_set_config(name, value)
     return
   end
   
+  if name == "string_seed" then
+    OB_CONFIG[name] = value
+    return
+  end   
+
   -- check all the UI modules for a matching option
   -- [ this is only needed when parsing the CONFIG.txt file ]
   for _,mod in pairs(OB_MODULES) do
@@ -1339,7 +1344,11 @@ function ob_default_filename()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
   
-  print("SEED: " .. tostring(OB_CONFIG.seed))
+  if OB_CONFIG.string_seed then
+    print("SEED: " .. OB_CONFIG.string_seed)
+  else
+    print("SEED: " .. tostring(OB_CONFIG.seed))
+  end
 
   gui.rand_seed(OB_CONFIG.seed)
 
@@ -1700,6 +1709,10 @@ function ob_clean_up()
   SEEDS   = nil
 
   gui.rand_seed(OB_CONFIG.seed)
+
+  if OB_CONFIG.string_seed then
+    table.remove(OB_CONFIG, string_seed)
+  end
 
   collectgarbage("collect")
 end

@@ -132,6 +132,8 @@ int zip_output = 0;
 
 std::filesystem::path gif_filename = "gif_output.gif";
 
+std::string string_seed;
+
 game_interface_c *game_object = NULL;
 
 #ifdef WIN32
@@ -922,10 +924,9 @@ bool Build_Cool_Shit() {
     // lock most widgets of user interface
     if (main_win) {
         std::string seed = NumToString(next_rand_seed);
-        if (!main_win->build_box->string_seed.empty()) {
+        if (!string_seed.empty()) {
             main_win->build_box->seed_disp->copy_label(
-                fmt::format("Seed: {}", main_win->build_box->string_seed)
-                    .c_str());
+                fmt::format("Seed: {}", string_seed).c_str());
             main_win->build_box->seed_disp->redraw();
         } else {
             main_win->build_box->seed_disp->copy_label(
@@ -960,19 +961,18 @@ bool Build_Cool_Shit() {
 
         LogPrintf("\nTOTAL TIME: {}.2f seconds\n\n", total_time / 1000.0);
 
-        if (main_win) {
-            main_win->build_box->string_seed = "";
-#ifdef WIN32
-            Main::Blinker();
-#endif
-        }
+        string_seed.clear();
+
+        #ifdef WIN32
+        if (main_win) Main::Blinker();
+        #endif
     } else {
+        string_seed.clear();
         if (main_win) {
             main_win->build_box->seed_disp->copy_label("Seed: -");
             main_win->build_box->seed_disp->redraw();
             main_win->build_box->name_disp->copy_label("");
             main_win->build_box->name_disp->redraw();
-            main_win->build_box->string_seed = "";
         }
     }
 
