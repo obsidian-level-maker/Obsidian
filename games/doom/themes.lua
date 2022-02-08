@@ -1263,7 +1263,7 @@ DOOM.THEMES =
       gtd_sewer_set_3 = 35,
       --
       gtd_water_purifier = 50,
-      gtd_toilet_gallery = 50,
+      gtd_toilet_gallery = 25,
       --
       gtd_generic_beamed_inset = 25,
       gtd_generic_beamed_green_inset = 25,
@@ -1338,6 +1338,7 @@ DOOM.THEMES =
       --
       gtd_sunderfall = 13,
       gtd_sunderfall_barred = 13,
+      gtd_lavafall = 13,
       --
       cran_bunkbeds = 50,
       gtd_craneo_bank_set = 10,
@@ -1701,7 +1702,7 @@ DOOM.THEMES =
       gtd_sewer_set_3 = 30,
       --
       gtd_water_purifier = 50,
-      gtd_toilet_gallery = 50,
+      gtd_toilet_gallery = 25,
       --
       gtd_generic_beamed_inset = 25,
       gtd_generic_beamed_green_inset = 25,
@@ -1791,6 +1792,7 @@ DOOM.THEMES =
       --
       gtd_sunderfall = 25,
       gtd_sunderfall_barred = 25,
+      gtd_lavafall = 7,
       --
       cran_bunkbeds = 50,
       gtd_craneo_bank_set = 50,
@@ -2276,6 +2278,7 @@ DOOM.THEMES =
       --
       gtd_sunderfall = 25,
       gtd_sunderfall_barred = 25,
+      gtd_lavafall = 25
     },
 
     outdoor_wall_groups =
