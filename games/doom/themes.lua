@@ -1343,7 +1343,8 @@ DOOM.THEMES =
       cran_bunkbeds = 50,
       gtd_craneo_bank_set = 10,
       --
-      gtd_mining_set = 50
+      gtd_mining_set = 50,
+      gtd_power_plant_set = 50
     },
 
     outdoor_wall_groups =
@@ -1797,7 +1798,8 @@ DOOM.THEMES =
       cran_bunkbeds = 50,
       gtd_craneo_bank_set = 50,
       --
-      gtd_mining_set = 50
+      gtd_mining_set = 35,
+      gtd_power_plant_set = 35
     },
 
     window_groups =
