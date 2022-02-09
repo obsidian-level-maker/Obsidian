@@ -132,6 +132,8 @@ int zip_output = 0;
 
 std::filesystem::path gif_filename = "gif_output.gif";
 
+std::string string_seed;
+
 game_interface_c *game_object = NULL;
 
 #ifdef WIN32
@@ -174,11 +176,12 @@ static void main_win_misc_config_CB(Fl_Widget *w, void *data) {
 static void ShowInfo() {
     fmt::print(
         "\n"
-        "** {} {}"
+        "** {} {} \"{}\"\n"
+        "** Build {}\n"
         " **\n"
         "** Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted **\n"
         "\n",
-        OBSIDIAN_TITLE, OBSIDIAN_VERSION);
+        OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME, OBSIDIAN_VERSION);
 
     fmt::print(
         "Usage: Obsidian [options...] [key=value...]\n"
@@ -228,7 +231,7 @@ static void ShowInfo() {
 }
 
 static void ShowVersion() {
-    fmt::print("Obsidian version {} (" __DATE__ ")\n", OBSIDIAN_VERSION);
+    fmt::print("Obsidian version {} {} \"{}\" Build {}\n", OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME, OBSIDIAN_VERSION);
 
     fflush(stdout);
 }
@@ -922,10 +925,9 @@ bool Build_Cool_Shit() {
     // lock most widgets of user interface
     if (main_win) {
         std::string seed = NumToString(next_rand_seed);
-        if (!main_win->build_box->string_seed.empty()) {
+        if (!string_seed.empty()) {
             main_win->build_box->seed_disp->copy_label(
-                fmt::format("Seed: {}", main_win->build_box->string_seed)
-                    .c_str());
+                fmt::format("Seed: {}", string_seed).c_str());
             main_win->build_box->seed_disp->redraw();
         } else {
             main_win->build_box->seed_disp->copy_label(
@@ -960,19 +962,18 @@ bool Build_Cool_Shit() {
 
         LogPrintf("\nTOTAL TIME: {}.2f seconds\n\n", total_time / 1000.0);
 
-        if (main_win) {
-            main_win->build_box->string_seed = "";
-#ifdef WIN32
-            Main::Blinker();
-#endif
-        }
+        string_seed.clear();
+
+        #ifdef WIN32
+        if (main_win) Main::Blinker();
+        #endif
     } else {
+        string_seed.clear();
         if (main_win) {
             main_win->build_box->seed_disp->copy_label("Seed: -");
             main_win->build_box->seed_disp->redraw();
             main_win->build_box->name_disp->copy_label("");
             main_win->build_box->name_disp->redraw();
-            main_win->build_box->string_seed = "";
         }
     }
 
@@ -986,7 +987,7 @@ bool Build_Cool_Shit() {
         main_action = 0;
         if (main_win) {
             main_win->label(
-                fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION)
+                fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME)
                     .c_str());
         }
         Main::ProgStatus(_("Cancelled"));
@@ -1103,7 +1104,8 @@ skiprest:
 
     LogPrintf("\n");
     LogPrintf("********************************************************\n");
-    LogPrintf("** {} {} **\n", OBSIDIAN_TITLE, OBSIDIAN_VERSION);
+    LogPrintf("** {} {} \"{}\" **\n", OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME);
+    LogPrintf("** Build {} **\n", OBSIDIAN_VERSION);
     LogPrintf("********************************************************\n");
     LogPrintf("\n");
 
@@ -1191,7 +1193,7 @@ skiprest:
     UI_MainWin::CalcWindowSize(&main_w, &main_h);
 
     std::string main_title =
-        fmt::format("{} {}", _(OBSIDIAN_TITLE), OBSIDIAN_VERSION);
+        fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME);
     main_win = new UI_MainWin(main_w, main_h, main_title.c_str());
 
     //???	Default_Location();

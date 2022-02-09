@@ -37,6 +37,8 @@
 #include "lib_util.h"
 #include "main.h"
 
+#include "m_lua.h"
+
 std::filesystem::path last_directory;
 
 static int dialog_result;
@@ -298,8 +300,8 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
 void DLG_EditSeed(void) {
     ;
 
-    const char *user_buf = fl_input(_("Enter New Seed Number:"),
-                                    std::to_string(next_rand_seed).c_str());
+    const char *user_buf = fl_input(_("Enter New Seed Number or Phrase:"),
+                                    string_seed.empty() ? std::to_string(next_rand_seed).c_str() : string_seed.c_str());
 
     // cancelled?
     if (!user_buf) {
@@ -325,7 +327,8 @@ void DLG_EditSeed(void) {
     } catch (std::exception &e) {
         std::cout << e.what();
     }
-    main_win->build_box->string_seed = word;
+    string_seed = word;
+    ob_set_config("string_seed", word.c_str());
 #ifdef max
 #undef max
 #endif
