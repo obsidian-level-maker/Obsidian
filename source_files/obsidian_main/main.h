@@ -42,7 +42,7 @@ constexpr const char *OBSIDIAN_VERSION = __DATE__;
 #endif
 
 constexpr const char *OBSIDIAN_SHORT_VERSION = "V20";
-constexpr const char *OBSIDIAN_CODE_NAME = "Perfect Placeholder";
+constexpr const char *OBSIDIAN_CODE_NAME = "Unstable";
 
 constexpr const char *OBSIDIAN_WEBSITE =
     "https://github.com/dashodanger/Obsidian/wiki";
