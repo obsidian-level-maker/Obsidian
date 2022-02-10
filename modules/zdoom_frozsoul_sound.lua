@@ -89,7 +89,7 @@ ZDOOM_SOUND.TEMPLATES =
 function ZDOOM_SOUND.build_lumps()
   local offset_count = tonumber(PARAM.snd_start_id)
   local sndtable = table.deep_copy(ZDOOM_SOUND_DEFS)
-  local dec_lump
+  local dec_lump = ""
   SCRIPTS.SNDINFO = ""
 
   table.name_up(sndtable)
