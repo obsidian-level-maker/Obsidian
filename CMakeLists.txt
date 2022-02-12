@@ -238,16 +238,12 @@ add_dependencies(obsidian filename_formatter qsavetex)
 
 if(UNIX)
   target_link_libraries(
-    obsidian
-    PRIVATE miniz
-            obsidian_lua
-            obsidian_physfs
-            obsidian_zdbsp
-            obsidian_slump
-            fontconfig
+    obsidian PRIVATE miniz obsidian_lua obsidian_physfs obsidian_zdbsp
+                     obsidian_slump fontconfig
   )
 else()
   target_link_libraries(
-    obsidian PRIVATE miniz obsidian_lua obsidian_physfs obsidian_zdbsp obsidian_slump
+    obsidian PRIVATE miniz obsidian_lua obsidian_physfs obsidian_zdbsp
+                     obsidian_slump
   )
 endif()
