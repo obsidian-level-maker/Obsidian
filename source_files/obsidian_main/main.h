@@ -37,7 +37,8 @@ constexpr const char *OBSIDIAN_TITLE = "OBSIDIAN Level Maker";
 #ifdef OBSIDIAN_TIMESTAMP
 constexpr const char *OBSIDIAN_VERSION = OBSIDIAN_TIMESTAMP;
 #else
-// Fallback in case the CMake timestamp stuff fails for some reason, but this shouldn't be used in practice
+// Fallback in case the CMake timestamp stuff fails for some reason, but this
+// shouldn't be used in practice
 constexpr const char *OBSIDIAN_VERSION = __DATE__;
 #endif
 

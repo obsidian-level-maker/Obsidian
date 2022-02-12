@@ -320,11 +320,11 @@ void UI_MiniMap::GifFrame() {
             rgb_counter = 0;
         }
     }
-	GifWriteFrame(gif_writer, frame_pixels.data(), map_W, map_H, gif_delay);
+    GifWriteFrame(gif_writer, frame_pixels.data(), map_W, map_H, gif_delay);
 }
 
 void UI_MiniMap::GifFinish() {
-	GifEnd(gif_writer);
+    GifEnd(gif_writer);
     delete gif_writer;
 }
 

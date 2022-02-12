@@ -181,7 +181,8 @@ static void ShowInfo() {
         " **\n"
         "** Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted **\n"
         "\n",
-        OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME, OBSIDIAN_VERSION);
+        OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME,
+        OBSIDIAN_VERSION);
 
     fmt::print(
         "Usage: Obsidian [options...] [key=value...]\n"
@@ -231,7 +232,8 @@ static void ShowInfo() {
 }
 
 static void ShowVersion() {
-    fmt::print("Obsidian version {} {} \"{}\" Build {}\n", OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME, OBSIDIAN_VERSION);
+    fmt::print("Obsidian version {} {} \"{}\" Build {}\n", OBSIDIAN_TITLE,
+               OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME, OBSIDIAN_VERSION);
 
     fflush(stdout);
 }
@@ -964,9 +966,9 @@ bool Build_Cool_Shit() {
 
         string_seed.clear();
 
-        #ifdef WIN32
+#ifdef WIN32
         if (main_win) Main::Blinker();
-        #endif
+#endif
     } else {
         string_seed.clear();
         if (main_win) {
@@ -986,9 +988,10 @@ bool Build_Cool_Shit() {
     if (main_action == MAIN_CANCEL) {
         main_action = 0;
         if (main_win) {
-            main_win->label(
-                fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME)
-                    .c_str());
+            main_win->label(fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE),
+                                        OBSIDIAN_SHORT_VERSION,
+                                        OBSIDIAN_CODE_NAME)
+                                .c_str());
         }
         Main::ProgStatus(_("Cancelled"));
     }
@@ -1104,7 +1107,8 @@ skiprest:
 
     LogPrintf("\n");
     LogPrintf("********************************************************\n");
-    LogPrintf("** {} {} \"{}\" **\n", OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME);
+    LogPrintf("** {} {} \"{}\" **\n", OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
+              OBSIDIAN_CODE_NAME);
     LogPrintf("** Build {} **\n", OBSIDIAN_VERSION);
     LogPrintf("********************************************************\n");
     LogPrintf("\n");
@@ -1193,7 +1197,8 @@ skiprest:
     UI_MainWin::CalcWindowSize(&main_w, &main_h);
 
     std::string main_title =
-        fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME);
+        fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE), OBSIDIAN_SHORT_VERSION,
+                    OBSIDIAN_CODE_NAME);
     main_win = new UI_MainWin(main_w, main_h, main_title.c_str());
 
     //???	Default_Location();

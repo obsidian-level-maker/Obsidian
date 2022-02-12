@@ -249,7 +249,8 @@ void UI_Build::Prog_Step(const char *step_name) {
     std::string newtitle = "[ ";
     newtitle.append(prog_label);
     newtitle.append(" ] ");
-    newtitle.append(fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME));
+    newtitle.append(fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE),
+                                OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME));
     newtitle.append(" - ");
     newtitle.append(status_label.c_str());
     main_win->copy_label(newtitle.c_str());
@@ -283,7 +284,8 @@ void UI_Build::Prog_Nodes(int pos, int limit) {
     std::string newtitle = "[ ";
     newtitle.append(prog_label);
     newtitle.append(" ] ");
-    newtitle.append(fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME));
+    newtitle.append(fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE),
+                                OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME));
     newtitle.append(" - ");
     newtitle.append(status_label.c_str());
     main_win->copy_label(newtitle.c_str());
@@ -301,8 +303,9 @@ void UI_Build::SetStatus(std::string_view msg) {
     status_label = msg;
 
     if (StringCaseCmp(status_label, "Success") == 0) {
-        main_win->label(
-            fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME).c_str());
+        main_win->label(fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE),
+                                    OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME)
+                            .c_str());
     }
 
     status->copy_label(status_label.c_str());
