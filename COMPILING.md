@@ -22,16 +22,16 @@
 
 2. GNU make
    * package: `make`
-   
+
 3. CMake Utilities:
-   * package: `cmake` 
+   * package: `cmake`
 
 4. Development libraries
    * packages: `libfltk1.3-dev` `libxft-dev` `libxinerama-dev` `libjpeg-dev` `libpng-dev` `libfontconfig1-dev`
 
 5. FLEX
    * package: `flex`
-   
+
 6. Code formatting tools
    * package: `clang-tidy`
    * python package (optional, install with pip): `cmakelang`
@@ -41,9 +41,9 @@
 Assuming all those dependencies are met, then the following steps
 will build the Obsidian binary. (The '>' is just the prompt)
 
-    > cmake -B build
-    > cmake --build build (-j# optional, with # being the number of cores you'd like to use)
-    
+    > cmake --preset dist
+    > cmake --build --preset dist (-j# optional, with # being the number of cores you'd like to use)
+
 Then, Obsidian can be launched with:
 
     > ./obsidian
@@ -54,8 +54,8 @@ You will need the `mingw-w64` package as well (or your distro's equivalent)
 
 Similar to the above directions:
 
-    > cmake -B build -DCMAKE_TOOLCHAIN_FILE=../Toolchain-mingw64.cmake (use Toolchain-mingw32.cmake for a 32-bit build)
-    > cmake --build build (-j# optional, with # being the number of cores you'd like to use)
+    > cmake --preset cross64 (use cross32 for a 32-bit build)
+    > cmake --build --preset cross64 (-j# optional, with # being the number of cores you'd like to use)
 
 Then, Obsidian can be launched (in Windows) with:
 
@@ -74,8 +74,7 @@ Similar to the above directions:
 Then, Obsidian can be launched (in Windows) with:
 
     > obsidian.exe
-    
+
 # INSTALLING Obsidian
 
 This is a work-in-progress; needs to be revisited after the CMake conversion is finalized
-

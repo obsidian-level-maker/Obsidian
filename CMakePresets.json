@@ -7,7 +7,8 @@
       "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_FLAGS": "-Wall"
       }
     },
     {
@@ -20,11 +21,21 @@
       }
     },
     {
-      "name": "cross-mingw",
+      "name": "cross32",
       "description": "Cross-compile to Windows",
-      "binaryDir": "build/cross",
+      "binaryDir": "build/cross32",
       "generator": "Unix Makefiles",
-      "toolchainFile": "Toolchain-mingw64.cmake",
+      "toolchainFile": "${sourceDir}/Toolchain-mingw32.cmake",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "cross64",
+      "description": "Cross-compile to Windows",
+      "binaryDir": "build/cross64",
+      "generator": "Unix Makefiles",
+      "toolchainFile": "${sourceDir}/Toolchain-mingw64.cmake",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
@@ -40,8 +51,12 @@
       "configurePreset": "dist"
     },
     {
-      "name": "cross-mingw",
-      "configurePreset": "cross-mingw"
+      "name": "cross32",
+      "configurePreset": "cross32"
+    },
+    {
+      "name": "cross64",
+      "configurePreset": "cross64"
     }
   ]
 }
