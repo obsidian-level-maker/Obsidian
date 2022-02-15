@@ -59,5 +59,7 @@ PREFABS.Decor_tech_drilling_rig_empty_grouped =
 
   group = "gtd_mining_set",
 
+  delta = 16,
+
   bound_z2 = 48
 }
