@@ -48,12 +48,10 @@ void LogPrintf(std::string_view str, Args &&...args) {
 template <typename... Args>
 void DebugPrintf(std::string_view format, Args &&...args) {
     if (debugging) {
-        std::string buffer = fmt::format(format, args...);
-        auto next = std::find(buffer.begin(), buffer.end(), '\n');
-        for (auto pos = buffer.begin(); pos != buffer.end();) {
-            LogPrintf("{}", std::string{pos, next});
-            pos = next;
-            next = std::find(pos + 1, buffer.end(), '\n');
+        fmt::print(log_file, format, args...);
+        // show on the Linux terminal too
+        if (terminal) {
+            fmt::print(format, args...);
         }
     }
 }

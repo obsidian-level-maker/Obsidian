@@ -36,7 +36,6 @@ class UI_Build : public Fl_Group {
     Fl_Box *name_disp;
     Fl_Box *status;
     Fl_Progress *progress;
-    std::string string_seed = "";
 
    private:
     std::string status_label;
