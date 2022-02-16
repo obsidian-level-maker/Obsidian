@@ -95,7 +95,7 @@ PREFABS.Pic_dem_cavein7 =
   bound_z2 = 128,
 
   x_fit = "stretch",
-  z_fit = { 56,64 },
+  z_fit = { 64,80 },
 }
 
 PREFABS.Pic_dem_cavein8 =
@@ -319,6 +319,7 @@ PREFABS.Pic_dem_caveind8 =
 texture_pack = "armaetus",
   liquid = true,
   sound = "Water_Streaming",
+  z_fit = { 64,80 },
 }
 
 PREFABS.Pic_dem_caveind9 =
@@ -478,6 +479,8 @@ PREFABS.Pic_dem_nook6 =
 {
   template  = "Pic_dem_nook4",
   map    = "MAP33",
+
+  z_fit = { 72,80 },
 }
 
 PREFABS.Pic_dem_nook7 =
@@ -574,12 +577,16 @@ PREFABS.Pic_dem_nook11 =
 {
   template  = "Pic_dem_nook10",
   map    = "MAP38",
+
+  z_fit = { 72,80 },
 }
 
 PREFABS.Pic_dem_nook12 =
 {
   template  = "Pic_dem_nook10",
   map    = "MAP39",
+
+  z_fit = { 64,72 },
 }
 
 
