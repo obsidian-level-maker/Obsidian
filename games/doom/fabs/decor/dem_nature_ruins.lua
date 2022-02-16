@@ -9,7 +9,6 @@ PREFABS.Decor_dem_nature_ruins1 =
 {
   file   = "decor/dem_nature_ruins.wad",
   map    = "MAP01",
-rank = 1,
 
   prob   = 75000,
   theme  = "!hell",
