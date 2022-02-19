@@ -480,7 +480,7 @@ PREFABS.Pic_dem_nook6 =
   template  = "Pic_dem_nook4",
   map    = "MAP33",
 
-  z_fit = { 72,80 },
+  z_fit = { 32,40 },
 }
 
 PREFABS.Pic_dem_nook7 =
@@ -586,7 +586,7 @@ PREFABS.Pic_dem_nook12 =
   template  = "Pic_dem_nook10",
   map    = "MAP39",
 
-  z_fit = { 64,72 },
+  z_fit = { 16,48 },
 }
 
 
@@ -1220,9 +1220,6 @@ PREFABS.Pic_dem_ruinsC1 =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  x_fit = "stretch",
-  z_fit = { 84,92 },
-
   texture_pack = "armaetus",
 
 }
@@ -1231,4 +1228,92 @@ PREFABS.Pic_dem_ruinsC2 =
 {
   template  = "Pic_dem_ruinsC1",
   map    = "MAP71",
+}
+
+PREFABS.Pic_dem_caveirr =
+{
+  file   = "picture/dem_pic_nature.wad",
+  map    = "MAP72",
+
+  prob   = 100,
+
+  env = "cave",
+
+  where  = "seeds",
+  height = 128,
+
+  seed_w = 2,
+  seed_h = 2,
+
+  deep = 16,
+  over = -16,
+
+  bound_z1 = 0,
+  bound_z2 = 128,
+
+  x_fit = "stretch",
+  z_fit = { 64,80 },
+}
+
+PREFABS.Pic_dem_caveirr2 =
+{
+  template  = "Pic_dem_caveirr",
+  map    = "MAP73",
+}
+
+PREFABS.Pic_dem_caveirr3 =
+{
+  file   = "picture/dem_pic_nature.wad",
+  map    = "MAP74",
+
+  prob   = 100,
+
+  env = "cave",
+
+  where  = "seeds",
+  height = 128,
+
+  seed_w = 2,
+  seed_h = 1,
+
+  deep = 16,
+  over = -16,
+
+  bound_z1 = 0,
+  bound_z2 = 128,
+
+  x_fit = "stretch",
+  z_fit = { 56,64 },
+}
+
+PREFABS.Pic_dem_caveirr4 =
+{
+  template  = "Pic_dem_caveirr3",
+  map    = "MAP75",
+}
+
+PREFABS.Pic_dem_caveirr5 =
+{
+  file   = "picture/dem_pic_nature.wad",
+  map    = "MAP76",
+
+  engine = "zdoom",
+
+  prob   = 100,
+  env = "cave",
+
+  where  = "seeds",
+  height = 128,
+
+  seed_w = 3,
+  seed_h = 2,
+
+  deep = 16,
+  over = -16,
+
+  bound_z1 = 0,
+  bound_z2 = 128,
+
+texture_pack = "armaetus",
+
 }

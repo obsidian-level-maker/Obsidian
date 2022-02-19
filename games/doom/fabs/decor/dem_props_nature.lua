@@ -10,9 +10,6 @@ PREFABS.Decor_dem_cavevines1 =
   file   = "decor/dem_props_nature.wad",
   map    = "MAP01",
 
-
-
-
   prob   = 4500,
   env    = "cave",
 
@@ -29,7 +26,7 @@ PREFABS.Decor_dem_cavevines1 =
     MIDVINE1=50, MIDVINE2=50,
     },
 
-texture_pack = "armaetus",
+  texture_pack = "armaetus",
 
 }
 
@@ -360,5 +357,121 @@ PREFABS.Decor_dem_ruinsjs2 =
 {
   template  = "Decor_dem_ruinsjs1",
   map    = "MAP28",
+
+}
+
+----  cave radium ore ----
+
+PREFABS.Decor_dem_radium_ore1 =
+{
+  file   = "decor/dem_props_nature.wad",
+  map    = "MAP29",
+
+  prob   = 4500,
+
+  env    = "cave",
+
+  where  = "point",
+  size   = 104,
+
+  bound_z1 = 0,
+  bound_z2 = 128,
+
+  z_fit = "top",
+
+texture_pack = "armaetus",
+
+}
+
+PREFABS.Decor_dem_radium_ore2 =
+{
+  template  = "Decor_dem_radium_ore1",
+  map    = "MAP30",
+
+  engine = "zdoom",
+
+  z_fit = { 26,60 },
+
+
+}
+
+PREFABS.Decor_dem_radium_ore3 =
+{
+  template  = "Decor_dem_radium_ore1",
+  map    = "MAP31",
+
+}
+
+PREFABS.Decor_dem_radium_ore4 =
+{
+  template  = "Decor_dem_radium_ore1",
+  map    = "MAP32",
+
+}
+
+PREFABS.Decor_dem_radium_ore5 =
+{
+  template  = "Decor_dem_radium_ore1",
+  map    = "MAP33",
+
+  z_fit = "stretch",
+
+}
+
+PREFABS.Decor_dem_radium_ore6 =
+{
+  template  = "Decor_dem_radium_ore1",
+  map    = "MAP34",
+
+  z_fit = { 52,120 },
+
+}
+
+PREFABS.Decor_dem_radium_ore7 =
+{
+  template  = "Decor_dem_radium_ore1",
+  map    = "MAP35",
+
+  engine = "zdoom",
+
+  z_fit = "bottom",
+
+}
+
+PREFABS.Decor_dem_radium_ore8 =
+{
+  template  = "Decor_dem_radium_ore1",
+  map    = "MAP36",
+
+  z_fit = "bottom",
+
+}
+
+PREFABS.Decor_dem_radium_ore9 =
+{
+  template  = "Decor_dem_radium_ore1",
+  map    = "MAP37",
+
+  engine = "zdoom",
+
+  z_fit = { 80,88 },
+
+}
+
+PREFABS.Decor_dem_radium_ore10 =
+{
+  template  = "Decor_dem_radium_ore1",
+  map    = "MAP38",
+
+  engine = "zdoom",
+
+}
+
+PREFABS.Decor_dem_radium_ore11 =
+{
+  template  = "Decor_dem_radium_ore1",
+  map    = "MAP39",
+
+  size   = 64,
 
 }

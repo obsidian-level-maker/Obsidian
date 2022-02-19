@@ -11,3 +11,21 @@ PREFABS.Hallway_mineshaft_t1 =
 
   mon_height = 96,
 }
+
+PREFABS.Hallway_mineshaft_t2 =
+{
+  template = "Hallway_mineshaft_t1",
+  map = "MAP02",
+
+}
+
+--- Radium jutting out ---
+
+PREFABS.Hallway_mineshaft_t3 =
+{
+  template = "Hallway_mineshaft_t1",
+  map = "MAP03",
+
+  texture_pack = "armaetus",
+
+}

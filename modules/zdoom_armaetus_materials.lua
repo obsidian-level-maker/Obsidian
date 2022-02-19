@@ -531,7 +531,6 @@ ARMAETUS_MATERIALS = {
   CATACMB4 = { t="CATACMB4", f="FLOOR7_1" }, -- Dark brown rock, bones
   CATACMB5 = { t="CATACMB5", f="FLOOR7_1" }, -- Dark brown rock, empty
   CATACMB6 = { t="CATACMB6", f="FLOOR7_1" }, -- Dark brown rock
-  GRNSTONE = { t="GRNSTONE", f="GRNRKF" },
   RDROK1 = { t="RDROK1", f="RROCK01" },
   RDROK2 = { t="RDROK2", f="FLOOR6_1" },
   ROK01 = { t="ROK01", f="RROCK16" }, --ROCK4,
@@ -1067,7 +1066,6 @@ ARMAETUS_MATERIALS = {
   URB2 = { f="URB2", t="URBAN2" },
 
   -- Rock
-  GRNRKF  = { f="GRNRKF", t="GRNSTONE" }, --Green SP_ROCK1/MFLR8_3,
   RROCK14Z  = { f="RROCK14Z", t="BRIKS09" }, --Gray version
   RROCK21  = { f="RROCK21", t="TEKGRY01" }, --Grayscale version of RROCK20,
 
@@ -2331,5 +2329,16 @@ brightmap texture RDLITE01
 brightmap texture LITEBLU3
 {
   map OBRLTBL3
+}
+
+//nature
+brightmap texture GRNRKF
+{
+  map OBRGRNRK
+}
+
+brightmap texture GRNSTONE
+{
+  map OBRGRNST
 }
 ]]
