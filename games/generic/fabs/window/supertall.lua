@@ -12,7 +12,6 @@ PREFABS.Window_supertall_1 =
   group  = "supertall",
   prob   = 50,
 
-  rank   = 2,
   height = 128,
 
   where  = "edge",

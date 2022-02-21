@@ -7,7 +7,6 @@ PREFABS.Arch_viney1 =
   file   = "door/cave_hole.wad",
   map    = "MAP02",
 
-  rank = 1,
   prob = 400,
 
   env      = "cave",
@@ -40,7 +39,6 @@ PREFABS.Door_viney1 =
 {
   template = "Arch_viney1",
 
-  rank  = 2,
   kind  = "door",
 }
 
@@ -53,7 +51,6 @@ PREFABS.Joiner_viney1 =
   file   = "door/cave_hole.wad",
   map    = "MAP05",
 
-  rank   = 3,
   prob   = 50,
 
   env      = "!cave",
@@ -95,7 +92,5 @@ PREFABS.Joiner_viney1_CC =
 
   env      = "cave",
   neighbor = "cave",
-
-  rank   = 4,
 }
 

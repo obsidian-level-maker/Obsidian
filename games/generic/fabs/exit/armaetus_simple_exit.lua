@@ -126,7 +126,7 @@ PREFABS.Exit_simple_exit_strife =
 PREFABS.Exit_simple_exit_secret =
 {
   file   = "exit/armaetus_simple_exit.wad",
-  map    = "MAP01",
+  map    = "MAP03",
   game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=0, heretic=0, hexen=0, strife=0 },
 
   prob   = 300,
@@ -142,10 +142,7 @@ PREFABS.Exit_simple_exit_secret =
   y_fit  = "top",
 
     -- this kind means "an exit to a secret level"
-    kind = "secret_exit",
-
-    -- replace normal exit special with "exit to secret" special
-    line_704 = 705
+  kind = "secret_exit",
 }
 
 PREFABS.Exit_simple_exit_secret_chex3 = 
@@ -164,7 +161,7 @@ PREFABS.Exit_simple_exit_secret_chex3_nosign =
   template = "Exit_simple_exit_secret",
   game = "chex3",
   engine = "!advanced",
-  map = "MAP02",
+  map = "MAP04",
   forced_offsets =
   {
     [30] = { x=47, y=11 }
@@ -187,7 +184,7 @@ PREFABS.Exit_simple_exit_secret_hacx_nosign =
   template = "Exit_simple_exit_secret",
   game = "hacx",
   engine = "!advanced",
-  map = "MAP02",
+  map = "MAP04",
   forced_offsets =
   {
     [30] = { x=0, y=96 }
@@ -220,7 +217,7 @@ PREFABS.Exit_simple_exit_secret_heretic_nosign =
   template = "Exit_simple_exit_secret",
   game = "heretic",
   engine = "!advanced",
-  map = "MAP02",
+  map = "MAP04",
   forced_offsets =
   {
     [30] = { x=16, y=50 }
@@ -232,7 +229,7 @@ PREFABS.Exit_simple_exit_secret_hexen_nosign =
   template = "Exit_simple_exit_secret",
   game = "heretic",
   --engine = "!advanced",
-  map = "MAP02",
+  map = "MAP04",
   forced_offsets =
   {
     [30] = { x=0, y=96 }
