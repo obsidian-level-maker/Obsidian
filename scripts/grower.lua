@@ -714,7 +714,7 @@ function Grower_preprocess_grammar()
 
   ---| Grower_preprocess_grammar |---
 
-  local gramgram = GAME.SHAPE_GRAMMAR
+  local gramgram = SHAPE_GRAMMAR
 
   local function process_some_cool_grammars(grammar)
 
@@ -867,7 +867,7 @@ function Grower_calc_rule_probs()
 
   PARAM.skipped_rules = 0
 
-  for name,rule in pairs(GAME.SHAPE_GRAMMAR) do
+  for name,rule in pairs(SHAPE_GRAMMAR) do
     rule.use_prob = calc_prob(rule)
     if rule.use_prob == 0 then
       PARAM.skipped_rules = PARAM.skipped_rules + 1
@@ -904,7 +904,7 @@ function Grower_calc_rule_probs()
   local function Grower_absurdify()
     
     local function Grower_reset_absurdities()
-      for _,rule in pairs(GAME.SHAPE_GRAMMAR) do
+      for _,rule in pairs(SHAPE_GRAMMAR) do
         if not rule.initial_env then goto continue end
 
         if rule.initial_env == "none" then rule.env = nil
@@ -921,7 +921,7 @@ function Grower_calc_rule_probs()
     gui.printf(rules_to_absurdify .. " rules will be absurd!\n\n")
 
     local grammarset = {}
-    for _,rule in pairs(GAME.SHAPE_GRAMMAR) do
+    for _,rule in pairs(SHAPE_GRAMMAR) do
       table.insert(grammarset, rule.name)
     end
 
@@ -940,20 +940,20 @@ function Grower_calc_rule_probs()
       and not string.match(absurded_rule,"hall")
       and not string.match(absurded_rule,"HALL")
       and not string.match(absurded_rule,"START")
-      and GAME.SHAPE_GRAMMAR[absurded_rule].is_absurd ~= true
-      and GAME.SHAPE_GRAMMAR[absurded_rule].use_prob ~= 0 then
+      and SHAPE_GRAMMAR[absurded_rule].is_absurd ~= true
+      and SHAPE_GRAMMAR[absurded_rule].use_prob ~= 0 then
 
         local new_factor
 
         if rand.odds(75) then
           new_factor = high_ab_factor * rand.range( 0.75,1.25 )
-          GAME.SHAPE_GRAMMAR[absurded_rule].use_prob = GAME.SHAPE_GRAMMAR[absurded_rule].use_prob * new_factor
-          if GAME.SHAPE_GRAMMAR[absurded_rule].new_area then
+          SHAPE_GRAMMAR[absurded_rule].use_prob = SHAPE_GRAMMAR[absurded_rule].use_prob * new_factor
+          if SHAPE_GRAMMAR[absurded_rule].new_area then
             LEVEL.has_absurd_new_area_rules = true
           end
         else
           new_factor = low_ab_factor * rand.range( 0.75,1.25 )
-          GAME.SHAPE_GRAMMAR[absurded_rule].use_prob = GAME.SHAPE_GRAMMAR[absurded_rule].use_prob * new_factor
+          SHAPE_GRAMMAR[absurded_rule].use_prob = SHAPE_GRAMMAR[absurded_rule].use_prob * new_factor
         end
 
         -- diversify environments
@@ -966,9 +966,9 @@ function Grower_calc_rule_probs()
           end
         end
 
-        GAME.SHAPE_GRAMMAR[absurded_rule].initial_env = GAME.SHAPE_GRAMMAR[absurded_rule].env or "none"
-        GAME.SHAPE_GRAMMAR[absurded_rule].env = new_env
-        GAME.SHAPE_GRAMMAR[absurded_rule].is_absurd = true
+        SHAPE_GRAMMAR[absurded_rule].initial_env = SHAPE_GRAMMAR[absurded_rule].env or "none"
+        SHAPE_GRAMMAR[absurded_rule].env = new_env
+        SHAPE_GRAMMAR[absurded_rule].is_absurd = true
 
         gui.debugf(absurded_rule .. " is now ABSURDIFIED! WOOO!!!\n")
         gui.debugf("Factor: x" .. new_factor .. "\n")
@@ -1556,7 +1556,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
 
   -- Trying to force liquid-bordered outdoors if parks haven't shown up yet.
 
-  grammar = GAME.SHAPE_GRAMMAR
+  grammar = SHAPE_GRAMMAR
 
   --
 
@@ -4684,7 +4684,7 @@ function Grower_create_rooms()
     "NAME: APPLY COUNT / TRIAL COUNT : USE PROBABILITY\n")
     for rule, info in pairs(GROWER_DEBUG_INFO) do
 
-      local cur_prob = GAME.SHAPE_GRAMMAR[info.name].use_prob
+      local cur_prob = SHAPE_GRAMMAR[info.name].use_prob
 
       gui.printf(info.name .. ": ")
       if info.trials > 0 then
@@ -4695,7 +4695,7 @@ function Grower_create_rooms()
       end
 
 
-      if GAME.SHAPE_GRAMMAR[info.name].is_absurd then
+      if SHAPE_GRAMMAR[info.name].is_absurd then
         gui.printf(" (ABSURD)")
       end
 
