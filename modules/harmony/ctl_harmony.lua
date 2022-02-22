@@ -124,8 +124,9 @@ OB_MODULES["harmony_mon_control"] =
 
   options =
   {
-     float_beastling=
-     {
+
+    {
+      name = "float_beastling",
       label = _("Beastling"),
       valuator = "slider",
       units = "",
@@ -144,8 +145,8 @@ OB_MODULES["harmony_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_critter=
      {
+      name = "float_critter",
       label = _("Critter"),
       valuator = "slider",
       units = "",
@@ -164,8 +165,8 @@ OB_MODULES["harmony_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_follower=
      {
+      name = "float_follower",
       label = _("Follower"),
       valuator = "slider",
       units = "",
@@ -184,8 +185,8 @@ OB_MODULES["harmony_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_predator=
      {
+      name = "float_predator",
       label = _("Predator"),
       valuator = "slider",
       units = "",
@@ -204,8 +205,8 @@ OB_MODULES["harmony_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_centaur=
      {
+      name = "float_centaur",
       label = _("Centaur"),
       valuator = "slider",
       units = "",
@@ -224,8 +225,8 @@ OB_MODULES["harmony_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_mutant=
      {
+      name = "float_mutant",
       label = _("Mutant"),
       valuator = "slider",
       units = "",
@@ -244,8 +245,8 @@ OB_MODULES["harmony_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_phage=
      {
+      name = "float_phage",
       label = _("Phage"),
       valuator = "slider",
       units = "",
@@ -264,8 +265,8 @@ OB_MODULES["harmony_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_echidna=
      {
+      name = "float_echidna",
       label = _("Echidna"),
       valuator = "slider",
       units = "",
@@ -403,8 +404,9 @@ OB_MODULES["harmony_weapon_control"] =
 
   options =
   {
-     float_minigun=
+
      {
+      name = "float_minigun",
       label = _("Minigun"),
       valuator = "slider",
       units = "",
@@ -423,8 +425,8 @@ OB_MODULES["harmony_weapon_control"] =
       randomize_group = "pickups"
      },
 
-     float_shotgun=
      {
+      name = "float_shotgun",
       label = _("Compensator"),
       valuator = "slider",
       units = "",
@@ -443,8 +445,8 @@ OB_MODULES["harmony_weapon_control"] =
       randomize_group = "pickups"
      },
 
-     float_launcher=
      {
+      name = "float_launcher",
       label = _("Grenade Launcher"),
       valuator = "slider",
       units = "",
@@ -463,8 +465,8 @@ OB_MODULES["harmony_weapon_control"] =
       randomize_group = "pickups"
      },
 
-     float_entropy=
      {
+      name = "float_entropy",
       label = _("Entropy Thrower"),
       valuator = "slider",
       units = "",
@@ -483,7 +485,6 @@ OB_MODULES["harmony_weapon_control"] =
       randomize_group = "pickups"
      },
 
-    weapon_prefs =
     {
       name="weapon_prefs",
       label=_("Weapon Preferences"),

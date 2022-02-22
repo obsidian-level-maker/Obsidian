@@ -8,15 +8,15 @@ CUSTOMWEAP.WEAPONS =
 {
   weapon1 =
   {
-    id = 1234
-    level = 1
-    pref = 40
-    add_prob = 70
-    attack = "hitscan"
-    rate = 0.9
-    damage = 50
-    ammo = "shell"
-    per = 1
+    id = 1234,
+    level = 1,
+    pref = 40,
+    add_prob = 70,
+    attack = "hitscan",
+    rate = 0.9,
+    damage = 50,
+    ammo = "shell",
+    per = 1,
     give = { {ammo="shell",count=8} }
   }
 }
@@ -24,7 +24,7 @@ CUSTOMWEAP.WEAPONS =
 
 OB_MODULES["CUSTOMWEAP"] =
 {
-  label = "CUSTOMWEAP"
+  label = "CUSTOMWEAP",
 
   tables =
   {

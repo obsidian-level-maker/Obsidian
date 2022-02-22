@@ -797,8 +797,9 @@ OB_MODULES["sky_generator_heretic"] =
 
   options =
   {
-    force_sky =
+
     {
+      name = "force_sky",
       label=_("Time of Day"),
       choices=SKY_GEN_HERETIC.SKY_CHOICES,
       priority = 10,
@@ -809,8 +810,8 @@ OB_MODULES["sky_generator_heretic"] =
       randomize_group = "misc"
     },
 
-    force_hills =
     {
+      name = "force_hills",
       label=_("Terrain Foreground"),
       choices=SKY_GEN_HERETIC.HILL_STATE,
       priority = 9,
@@ -819,8 +820,8 @@ OB_MODULES["sky_generator_heretic"] =
       randomize_group = "misc"
     },
 
-    force_hill_params =
     {
+      name = "force_hill_params",
       label=_("Terrain Parameters"),
       choices=SKY_GEN_HERETIC.HILL_PARAMS,
       priority = 8,
@@ -832,8 +833,8 @@ OB_MODULES["sky_generator_heretic"] =
       randomize_group = "misc"
     },
 
-    cloud_color =
     {
+      name = "cloud_color",
       label = _("Day Sky Color"),
       choices = SKY_GEN_HERETIC.CLOUD_COLOR_CHOICES,
       priority= 7,
@@ -842,8 +843,8 @@ OB_MODULES["sky_generator_heretic"] =
       randomize_group = "misc"
     },
 
-    terrain_color =
     {
+      name = "terrain_color",
       label = _("Terrain Color"),
       choices = SKY_GEN_HERETIC.TERRAIN_COLOR_CHOICES,
       priority = 6,
@@ -852,8 +853,8 @@ OB_MODULES["sky_generator_heretic"] =
       randomize_group = "misc"
     },
 
-    nebula_color =
     {
+      name = "nebula_color",
       label = _("Nebula Color"),
       choices = SKY_GEN_HERETIC.NEBULA_COLOR_CHOICES,
       priority = 5,
@@ -864,8 +865,8 @@ OB_MODULES["sky_generator_heretic"] =
       randomize_group = "misc"
     },
 
-    bool_influence_map_darkness =
     {
+      name = "bool_influence_map_darkness",
       label=_("Sky Gen Lighting"),
       valuator = "button",
       default = 0,

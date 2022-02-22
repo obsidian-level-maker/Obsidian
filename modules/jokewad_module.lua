@@ -491,7 +491,7 @@ OB_MODULES["jokewad_module"] =
 
   options =
   {
-    bool_fireblu_mode =
+
     {
       name = "bool_fireblu_mode",
       label=_("FIREBLU Mode"),
@@ -504,7 +504,7 @@ OB_MODULES["jokewad_module"] =
         "part of the user. \n"),
     },
 
-    bool_pandemic_mode =
+
     {
       name = "bool_pandemic_mode",
       label=_("Pandemic Mode"),

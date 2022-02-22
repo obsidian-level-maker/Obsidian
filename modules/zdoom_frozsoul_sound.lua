@@ -311,7 +311,6 @@ OB_MODULES["zdoom_ambient_sound"] =
 
   options =
   {
-    snd_start_id =
     {
       name = "snd_start_id",
       label=("DoomEdNum Offset"),

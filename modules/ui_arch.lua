@@ -175,7 +175,7 @@ OB_MODULES["ui_arch"] =
 
   options =
   {
-    float_size=
+
     { 
       name="float_size", 
       label=_("Level Size"),
@@ -204,7 +204,7 @@ OB_MODULES["ui_arch"] =
       randomize_group="architecture"
     },
 
-    float_level_upper_bound =
+
     {
       name = "float_level_upper_bound",
       label = _("Upper Bound"),
@@ -228,7 +228,7 @@ OB_MODULES["ui_arch"] =
       priority = 99,
     },
 
-    float_level_lower_bound =
+
     {
       name = "float_level_lower_bound",
       label = _("Lower Bound"),
@@ -253,7 +253,7 @@ OB_MODULES["ui_arch"] =
       gap = 1,
     },
 
-    level_size_ramp_factor =
+
     {
       name = "level_size_ramp_factor",
       label = _("Ramp Factor"),
@@ -270,7 +270,7 @@ OB_MODULES["ui_arch"] =
       randomize_group="architecture"
     },
 
-    level_size_bias =
+
     {
       name = "level_size_bias",
       label = _("Level Size Bias"),
@@ -283,7 +283,7 @@ OB_MODULES["ui_arch"] =
       randomize_group="architecture"
     },
 
-    mixin_type =
+
     {
       name = "mixin_type",
       label = _("Theme Mix-in Type"),
@@ -298,7 +298,7 @@ OB_MODULES["ui_arch"] =
       randomize_group="architecture"
     },
   
-    bool_prebuilt_levels=
+
     {
       name="bool_prebuilt_levels",
       label=_("Prebuilt Levels"),
@@ -311,14 +311,14 @@ OB_MODULES["ui_arch"] =
       gap = 1
     },
 
-    outdoors = { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 78, randomize_group="architecture" },
-    caves = { name="caves",        label=_("Caves"),      choices=STYLE_CHOICES, priority = 77, randomize_group="architecture" },
-    liquids = { name="liquids",      label=_("Liquids"),    choices=STYLE_CHOICES, priority = 76, randomize_group="architecture" },
-    hallways = { name="hallways",     label=_("Hallways"),   choices=STYLE_CHOICES, priority = 75, randomize_group="architecture" },
-    teleporters = { name="teleporters",  label=_("Teleports"),  choices=STYLE_CHOICES, priority = 74, randomize_group="architecture" },
-    steepness = { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1, priority = 73, randomize_group="architecture" },
+    { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 78, randomize_group="architecture" },
+    { name="caves",        label=_("Caves"),      choices=STYLE_CHOICES, priority = 77, randomize_group="architecture" },
+    { name="liquids",      label=_("Liquids"),    choices=STYLE_CHOICES, priority = 76, randomize_group="architecture" },
+    { name="hallways",     label=_("Hallways"),   choices=STYLE_CHOICES, priority = 75, randomize_group="architecture" },
+    { name="teleporters",  label=_("Teleports"),  choices=STYLE_CHOICES, priority = 74, randomize_group="architecture" },
+    { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1, priority = 73, randomize_group="architecture" },
 
-    zdoom_vista=
+
     {
       name = "zdoom_vista",
       label = _("Bottomless Vistas"),
@@ -332,7 +332,7 @@ OB_MODULES["ui_arch"] =
       priority = 50
     },
 
-    zdoom_skybox=
+
     {
       name = "zdoom_skybox",
       label = _("ZDoom 3D Skybox"),

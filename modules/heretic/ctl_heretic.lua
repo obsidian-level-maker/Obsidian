@@ -122,8 +122,9 @@ OB_MODULES["heretic_mon_control"] =
 
   options =
   {
-     float_gargoyle=
+
      {
+      name = "float_gargoyle",
       label = _("Gargoyle"),
       valuator = "slider",
       units = "",
@@ -142,8 +143,8 @@ OB_MODULES["heretic_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_fire_garg=
      {
+      name = "float_fire_garg",
       label = _("Fire Gargoyle"),
       valuator = "slider",
       units = "",
@@ -162,8 +163,8 @@ OB_MODULES["heretic_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_warrior=
      {
+      name = "float_warrior",
       label = _("Warrior"),
       valuator = "slider",
       units = "",
@@ -182,8 +183,8 @@ OB_MODULES["heretic_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_warrior_ghost=
      {
+      name = "float_warrior_ghost",
       label = _("Warrior Ghost"),
       valuator = "slider",
       units = "",
@@ -202,8 +203,8 @@ OB_MODULES["heretic_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_golem=
      {
+      name = "float_golem",
       label = _("Golem"),
       valuator = "slider",
       units = "",
@@ -222,8 +223,8 @@ OB_MODULES["heretic_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_golem_ghost=
      {
+      name = "float_golem_ghost",
       label = _("Golem Ghost"),
       valuator = "slider",
       units = "",
@@ -242,8 +243,8 @@ OB_MODULES["heretic_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_nitro=
      {
+      name = "float_nitro",
       label = _("Nitro"),
       valuator = "slider",
       units = "",
@@ -262,8 +263,8 @@ OB_MODULES["heretic_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_nitro_ghost=
      {
+      name = "float_nitro_ghost",
       label = _("Nitro Ghost"),
       valuator = "slider",
       units = "",
@@ -282,8 +283,8 @@ OB_MODULES["heretic_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_disciple=
      {
+      name = "float_disciple",
       label = _("Disciple"),
       valuator = "slider",
       units = "",
@@ -302,8 +303,8 @@ OB_MODULES["heretic_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_sabreclaw=
      {
+      name = "float_sabreclaw",
       label = _("Sabreclaw"),
       valuator = "slider",
       units = "",
@@ -322,8 +323,8 @@ OB_MODULES["heretic_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_weredragon=
      {
+      name = "float_weredragon",
       label = _("Weredragon"),
       valuator = "slider",
       units = "",
@@ -342,8 +343,8 @@ OB_MODULES["heretic_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_ophidian=
      {
+      name = "float_ophidian",
       label = _("Ophidian"),
       valuator = "slider",
       units = "",
@@ -362,8 +363,8 @@ OB_MODULES["heretic_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_Ironlich=
      {
+      name = "float_Ironlich",
       label = _("Ironlich"),
       valuator = "slider",
       units = "",
@@ -382,8 +383,8 @@ OB_MODULES["heretic_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_Maulotaur=
      {
+      name = "float_Maulotaur",
       label = _("Maulotaur"),
       valuator = "slider",
       units = "",
@@ -402,8 +403,8 @@ OB_MODULES["heretic_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_D_Sparil=
      {
+      name = "float_D_Sparil",
       label = _("D'Sparil"),
       valuator = "slider",
       units = "",
@@ -517,8 +518,9 @@ OB_MODULES["heretic_weapon_control"] =
 
   options =
   {
-     float_gauntlets=
+
      {
+      name = "float_gauntlets",
       label = _("Gauntlets"),
       valuator = "slider",
       units = "",
@@ -537,8 +539,8 @@ OB_MODULES["heretic_weapon_control"] =
       randomize_group = "pickups"
      },
      
-     float_crossbow=
      {
+      name = "float_crossbow",
       label = _("Crossbow"),
       valuator = "slider",
       units = "",
@@ -557,8 +559,8 @@ OB_MODULES["heretic_weapon_control"] =
       randomize_group = "pickups"
      },
      
-     float_claw=
      {
+      name = "float_claw",
       label = _("Dragon Claw"),
       valuator = "slider",
       units = "",
@@ -577,8 +579,8 @@ OB_MODULES["heretic_weapon_control"] =
       randomize_group = "pickups"
      },
 
-     float_hellstaff=
      {
+      name = "float_hellstaff",
       label = _("Hellstaff"),
       valuator = "slider",
       units = "",
@@ -597,8 +599,8 @@ OB_MODULES["heretic_weapon_control"] =
       randomize_group = "pickups"
      },
      
-     float_phoenix=
      {
+      name = "float_phoenix",
       label = _("Phoenix Rod"),
       valuator = "slider",
       units = "",
@@ -617,8 +619,8 @@ OB_MODULES["heretic_weapon_control"] =
       randomize_group = "pickups"
      },
 
-     float_firemace=
      {
+      name = "float_firemace",
       label = _("Fire Mace"),
       valuator = "slider",
       units = "",

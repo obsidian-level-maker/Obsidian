@@ -1746,7 +1746,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
 
   options =
   {
-     gotcha_frequency=
+
      {
       name="gotcha_frequency",
       label=_("Gotcha Frequency"),
@@ -1759,7 +1759,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priority = 105
     },
 
-    float_gotcha_qty =
+
     {
       name="float_gotcha_qty",
       label=_("Extra Quantity"),
@@ -1774,7 +1774,6 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priority = 104
     },
 
-    float_gotcha_strength =
     {
       name="float_gotcha_strength",
       label=_("Extra Strength"),
@@ -1794,7 +1793,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priority = 103
     },
 
-    gotcha_map_size =
+
     {
       name="gotcha_map_size",
       label=_("Map Size"),
@@ -1804,7 +1803,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priority = 102
     },
 
-    boss_gen_steepness =
+
     {
       name = "boss_gen_steepness",
       label = _("Arena Steepness"),
@@ -1816,7 +1815,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       gap = 1
     },
 
-    bool_boss_gen =
+
     {
       name = "bool_boss_gen",
       label=_("[ZScript] Enable Procedural Bosses"),
@@ -1826,7 +1825,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priority = 100
     },
 
-    bool_gotcha_boss_fight =
+
     {
       name = "bool_gotcha_boss_fight",
       label=_("Force Big-Boss Fight"),
@@ -1837,7 +1836,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priority = 99
     },
 
-    boss_gen_diff =
+
     {
       name = "boss_gen_diff",
       label = _("Boss Difficulty"),
@@ -1847,7 +1846,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priority = 98
     },
 
-    boss_gen_health =
+
     {
       name = "boss_gen_health",
       label = _("Boss Health Modifier"),
@@ -1857,7 +1856,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priority = 97
     },
 
-    boss_gen_hitscan =
+
     {
       name = "boss_gen_hitscan",
       label = _("Hitscan Bosses"),
@@ -1867,7 +1866,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priority = 96,
     },
 
-    bool_boss_gen_hpbar =
+
     {
       name = "bool_boss_gen_hpbar",
       label = _("Visible Health Bar"),
@@ -1877,7 +1876,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priority = 95
     },
 
-    bool_boss_gen_music =
+
     {
       name = "bool_boss_gen_music",
       label=_("Enable Boss Music"),
@@ -1888,7 +1887,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priority = 94
     },
 
-    boss_gen_reinforce =
+
     {
       name = "boss_gen_reinforce",
       label = _("Reinforcement Strength"),
@@ -1898,7 +1897,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priority = 93
     },
 
-    boss_gen_reinforcerate =
+
     {
       name = "boss_gen_reinforcerate",
       label = _("Reinforcement Rate"),
@@ -1908,7 +1907,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priorty = 92
     },
 
-    bool_boss_gen_types =
+
     {
       name = "bool_boss_gen_types",
       label = _("Respect zero prob"),
@@ -1920,7 +1919,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       gap = 1
     },
 
-    boss_gen_typelimit =
+
     {
       name = "boss_gen_typelimit",
       label = _("Monster limit type"),
@@ -1933,7 +1932,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priority = 90
     },
 
-    boss_gen_weap =
+
     {
       name = "boss_gen_weap",
       label = _("Weapon placement"),
@@ -1944,7 +1943,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       gap = 1
     },
 
-    boss_gen_exit =
+
     {
       name = "boss_gen_exit",
       label = _("Exit type"),
@@ -1954,7 +1953,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priority = 88
     },
 
-    float_boss_gen_ammo =
+
     {
       name = "float_boss_gen_ammo",
       label = _("Ammo supplies mult"),
@@ -1969,7 +1968,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priority = 87
     },
 
-    float_boss_gen_heal =
+
     {
       name = "float_boss_gen_heal",
       label = _("Healing supplies mult"),

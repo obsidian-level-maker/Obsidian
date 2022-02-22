@@ -289,7 +289,6 @@ OB_MODULES["misc"] =
       randomize_group = "architecture",
     },
 
-    float_layout_absurdity=
     {
       name = "float_layout_absurdity",
       label = _("Layout Absurdity"),
@@ -310,7 +309,6 @@ OB_MODULES["misc"] =
       randomize_group="architecture"
     },
 
-    float_linear_mode=
     {
       name = "float_linear_mode",
       label = _("Linear Mode"),
@@ -331,7 +329,6 @@ OB_MODULES["misc"] =
       priority = 98
     },
 
-    float_nature_mode=
     {
       name = "float_nature_mode",
       label = _("Nature Mode"),
@@ -348,7 +345,6 @@ OB_MODULES["misc"] =
       priority = 97
     },
 
-    float_streets_mode=
     {
       name = "float_streets_mode",
       label = _("Streets Mode"),
@@ -364,7 +360,6 @@ OB_MODULES["misc"] =
       priority = 96
     },
 
-    bool_urban_streets_mode=
     {
       name = "bool_urban_streets_mode",
       label=_("Urban Only Streets"),

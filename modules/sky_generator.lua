@@ -707,7 +707,7 @@ OB_MODULES["sky_generator"] =
 
   options =
   {
-    force_sky =
+
     {
       name = "force_sky",
       label=_("Time of Day"),
@@ -719,7 +719,7 @@ OB_MODULES["sky_generator"] =
       default = "sky_default",
     },
 
-    force_hills =
+
     {
       name = "force_hills",
       label=_("Terrain Foreground"),
@@ -730,7 +730,7 @@ OB_MODULES["sky_generator"] =
       randomize_group = "misc",
     },
 
-    force_hill_params =
+
     {
       name = "force_hill_params",
       label=_("Terrain Parameters"),
@@ -744,7 +744,7 @@ OB_MODULES["sky_generator"] =
       randomize_group = "misc",
     },
 
-    cloud_color =
+
     {
       name = "cloud_color",
       label = _("Day Sky Color"),
@@ -755,7 +755,7 @@ OB_MODULES["sky_generator"] =
       randomize_group = "misc",
     },
 
-    terrain_color =
+
     {
       name = "terrain_color",
       label = _("Terrain Color"),
@@ -766,7 +766,7 @@ OB_MODULES["sky_generator"] =
       randomize_group = "misc",
     },
 
-    nebula_color =
+
     {
       name = "nebula_color",
       label = _("Nebula Color"),
@@ -779,7 +779,7 @@ OB_MODULES["sky_generator"] =
       randomize_group = "misc",
     },
 
-    bool_influence_map_darkness =
+
     {
       name = "bool_influence_map_darkness",
       label=_("Sky Gen Lighting"),

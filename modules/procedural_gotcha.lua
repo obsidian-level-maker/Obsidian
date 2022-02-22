@@ -123,7 +123,7 @@ OB_MODULES["procedural_gotcha"] =
 
   options =
   {
-    gotcha_frequency=   
+
     {
       name="gotcha_frequency",
       label=_("Gotcha Frequency"),
@@ -136,7 +136,7 @@ OB_MODULES["procedural_gotcha"] =
       priority = 100
     },
     
-    float_gotcha_qty =
+
     {
       name="float_gotcha_qty",
       label=_("Extra Quantity"),
@@ -150,7 +150,7 @@ OB_MODULES["procedural_gotcha"] =
       tooltip = "Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting).",
     },
 
-    float_gotcha_strength =
+
     {
       name="float_gotcha_strength",
       label=_("Extra Strength"),
@@ -169,7 +169,7 @@ OB_MODULES["procedural_gotcha"] =
       tooltip = "Offset monster quantity from your default strength of choice plus the increasing level ramp.",
     },
 
-    gotcha_map_size =
+
     {
       name="gotcha_map_size",
       label=_("Map Size"),
