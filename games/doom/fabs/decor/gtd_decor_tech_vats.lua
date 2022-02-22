@@ -18,3 +18,14 @@ PREFABS.Decor_tech_vats =
 
   z_fit = "top",
 }
+
+--- Version for Radium from Demiosis ---
+
+PREFABS.Decor_tech_vats2 =
+{
+  template  = "Decor_tech_vats",
+  map    = "MAP02",
+
+  texture_pack = "armaetus",
+
+}
