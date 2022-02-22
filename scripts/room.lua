@@ -1890,6 +1890,12 @@ function Room_border_up()
 
       tab[Z.window_group] = tab[Z.window_group] / 2
     end
+
+    for _,R in pairs(LEVEL.rooms) do
+      if R.is_exit and not R.is_secret then
+        R.zone.window_group = LEVEL.exit_windows
+      end
+    end
   end
 
 
