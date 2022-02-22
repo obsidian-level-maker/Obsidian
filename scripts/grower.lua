@@ -21,7 +21,7 @@
 
 GROWER_DEBUG_INFO = {} -- MSSP: table for containing details about growth statistics
 
-function Grower_preprocess_grammar()
+function Grower_preprocess_grammar(test_grammar)
 
   local def
   local diag_list
@@ -714,7 +714,7 @@ function Grower_preprocess_grammar()
 
   ---| Grower_preprocess_grammar |---
 
-  local gramgram = SHAPE_GRAMMAR
+  local gramgram = test_grammar
 
   local function process_some_cool_grammars(grammar)
 

@@ -19,7 +19,7 @@
 --
 ------------------------------------------------------------------------
 
-SHAPES_OBSIDIAN =
+SHAPES.OBSIDIAN =
 {
 
 ROOT_1 =
@@ -13370,7 +13370,7 @@ STREET_BUILDING_ENTRANCE_WITH_JOINER_3X2 =
 
 }
 
-SHAPES_OBLIGE_5X =
+SHAPES.OBLIGE_5X =
 {
 
 ROOT_1 =

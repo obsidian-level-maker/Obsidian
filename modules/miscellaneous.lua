@@ -254,7 +254,7 @@ OB_MODULES["misc"] =
 
   name = "misc",
 
-  label = _("Miscellaneous"),
+  label = _("Advanced Architecture"),
 
   engine = "!vanilla",
 
@@ -269,6 +269,23 @@ OB_MODULES["misc"] =
 
   options =
   {
+    {
+      name = "float_oblige5x_grammar",
+      label = _("Oblige 5.x Grammar"),
+      valuator = "slider",
+      units = "% of Levels",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 0,
+      nan = "",
+      presets = "",
+      tooltip = "Sets chance of levels using the Oblige 5.x shape grammar.",
+      longtip = "Gives levels a chance of being generated using the Oblige 5.x shape grammar. Indoor rooms are usually " ..
+      "square or diamond-shaped, while caves still have a more natural/organic layout. Hallways " ..
+      "and joiners are still used to a degree. Room sizes are fairly consistent."
+    },
+
     {
       name="bool_pistol_starts",
       label=_("Default Weapon Starts"),

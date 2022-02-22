@@ -18,8 +18,6 @@
 --
 ------------------------------------------------------------------------
 
-gui.import("ui_shapes.lua")
-
 UI_ARCH = { }
 
 UI_ARCH.ZDOOM_VISTA_CHOICES =
@@ -53,12 +51,6 @@ UI_ARCH.RAMP_FACTOR =
   "1",    _("Linear"),
   "1.5",  _("Slow Curve"),
   "2",    _("Very Slow Curve"),
-}
-
-UI_ARCH.SHAPE_GRAMMAR_SELECTION =
-{
-  "default", _("Default"),
-  "oblige5x",   _("Oblige 5.x"),
 }
 
 UI_ARCH.SIZE_BIAS =
@@ -162,12 +154,6 @@ function UI_ARCH.setup(self)
 		  end
 	  end
   end 
-
-  if PARAM["shape_grammar_selection"] == "default" then
-    SHAPE_GRAMMAR = SHAPES_OBSIDIAN
-  else
-    SHAPE_GRAMMAR = SHAPES_OBLIGE_5X
-  end
 end
 
 OB_MODULES["ui_arch"] =
@@ -189,23 +175,6 @@ OB_MODULES["ui_arch"] =
 
   options =
   {
-
-    shape_grammar_selection =
-    {
-      name = "shape_grammar_selection",
-      label = _("Shape Grammar"),
-      tooltip = "Select which shape grammar to use for map generation.",
-      longtip = "Default: The shape grammar system that started with Oblige 7.70\n" ..
-      "and is continually evolving.\n\n" ..
-      "Oblige 5.x: Mimics the map style of Oblige version 5. Indoor rooms are usually " ..
-      "square or diamond-shaped, while caves have a more natural/organic layout. Hallways " ..
-      "and joiners are still used to a degree. Room sizes are fairly consistent.",
-      choices = UI_ARCH.SHAPE_GRAMMAR_SELECTION,
-      default = "default",
-      priority = 101,
-      randomize_group="architecture"
-    },
-
     float_size=
     { 
       name="float_size", 

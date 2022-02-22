@@ -20,6 +20,7 @@
 ------------------------------------------------------------------------
 
 gui.import("defs")
+gui.import("shapes")
 gui.import("util")
 gui.import("brush")
 gui.import("prefab")
@@ -1684,7 +1685,9 @@ function ob_build_setup()
   table.name_up(GAME.ROOM_THEMES)
   table.name_up(GAME.ROOMS)
 
-  Grower_preprocess_grammar()
+  for _,grammar in pairs(SHAPES) do
+    Grower_preprocess_grammar(grammar)
+  end
 
   if GAME.sub_format then
     gui.property("sub_format", GAME.sub_format)
