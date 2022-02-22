@@ -298,71 +298,6 @@ OB_MODULES["ui_arch"] =
       randomize_group="architecture"
     },
   
-    float_linear_mode=
-    {
-      name = "float_linear_mode",
-      label = _("Linear Mode"),
-      valuator = "slider",
-      units = "% of Levels",
-      min = 0,
-      max = 100,
-      increment = 1,
-      default = 0,
-      presets = "",
-      tooltip = "Creates linear levels, where rooms are connected along a " ..
-      "linear layout from start to exit.",
-      longtip = "Due to the nature of linear levels, " ..
-      "you may encounter teleports even if you have teleports off. This is necessary " ..
-      "in order for linear levels not to prematuraly terminate and therefore become stunted " ..
-      "i.e. only have 2-5 rooms.",
-      priority = 85,
-      randomize_group="architecture"
-    },
-
-    float_nature_mode=
-    {
-      name = "float_nature_mode",
-      label = _("Nature Mode"),
-      valuator = "slider",
-      units = "% of Levels",
-      min = 0,
-      max = 100,
-      increment = 1,
-      default = 0,
-      presets = "",
-      tooltip = "Forces most of the map to be composed of naturalistic areas (parks and caves). " ..
-      "The ratio is decided by Outdoors style setting while competing styles are ignored.",
-      priority = 84,
-      randomize_group="architecture"
-    },
-
-    float_streets_mode=
-    {
-      name = "float_streets_mode",
-      label = _("Streets Mode"),
-      valuator = "slider",
-      units = "% of Levels",
-      min = 0,
-      max = 100,
-      increment = 1,
-      default = 15,
-      presets = "",
-      tooltip = "Allows Oblige to create large street-like outdoor rooms.",
-      priority = 83,
-      randomize_group="architecture"
-    },
-
-    bool_urban_streets_mode=
-    {
-      name = "bool_urban_streets_mode",
-      label=_("Urban Only Streets"),
-      valuator = "button",
-      default = 1,
-      tooltip="Changes streets mode percentage to affect all themes or only urban.",
-      gap = 1,
-      priority = 82,
-    },
-
     bool_prebuilt_levels=
     {
       name="bool_prebuilt_levels",
@@ -374,27 +309,6 @@ OB_MODULES["ui_arch"] =
       "This sort of level would be very difficult to generate procedurally, and thus a handmade map is used instead.",
       priority = 81,
       gap = 1
-    },
-
-    float_layout_absurdity=
-    {
-      name = "float_layout_absurdity",
-      label = _("Layout Absurdity"),
-      valuator = "slider",
-      units = "% of Levels",
-      min = 0,
-      max = 100,
-      increment = 1,
-      default = 0,
-      presets = "",
-      tooltip = "Chance that a level will be built using an ususual/irregular layout.",
-      longtip = "The layout absurdifier attempts to cause levels to overprefer specific shape " ..
-      "rules from the ruleset in order to create odd and possibly broken but interesting combinations. " ..
-      "Use at your own risk. These options will affect the amount of levels have the absurdity module activated on. " ..
-      "Selecting ALL will not necessarily make all levels absurd as it is all still based on chance.",
-      gap = 1,
-      priority = 80,
-      randomize_group="architecture"
     },
 
     outdoors = { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 78, randomize_group="architecture" },

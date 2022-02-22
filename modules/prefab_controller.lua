@@ -245,6 +245,29 @@ OB_MODULES["prefab_control"] =
 
   options =
   {
+    {
+      name="bool_pistol_starts",
+      label=_("Default Weapon Starts"),
+      valuator = "button",
+      default = 1,
+      tooltip=_("Ensure every map can be completed with only the default weapon (ignore weapons obtained from earlier maps)"),
+    },
+    {
+      name="bool_alt_starts",
+      label=_("Alt-start Rooms"),
+      valuator = "button",
+      default = 0,
+      tooltip=_("For Co-operative games, sometimes have players start in different rooms")
+    },
+    {
+      name = "bool_foreshadowing_exit",
+      label = _("Foreshadowing Exit"),
+      valuator = "button",
+      default = 1,
+      tooltip = "Gets exit room theme to follow the theme of the next level, if different.",
+      gap=1,
+    },
+
     bool_autodetail =
     {
       name = "bool_autodetail",
