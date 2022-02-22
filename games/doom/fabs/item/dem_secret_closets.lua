@@ -941,3 +941,14 @@ PREFABS.Item_dem_cavein7_secret =
     helmet = 50,
   }
 }
+
+Secret cavenook with liquid
+
+PREFABS.Item_dem_cavein23_secret =
+{
+  template = "Item_dem_cavein7_secret",
+
+  map = "MAP30",
+
+
+}
