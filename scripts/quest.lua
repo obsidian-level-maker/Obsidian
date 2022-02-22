@@ -2576,6 +2576,9 @@ function Quest_nice_items()
         end
       end
 
+      final_min_prog = math.clamp(min_along_room, final_min_prog, max_along_room)
+      final_max_prog = math.clamp(min_along_room, final_max_prog, max_along_room)
+
       for _,R in pairs(LEVEL.rooms) do
         if R.closets
         and not R.secondary_important
