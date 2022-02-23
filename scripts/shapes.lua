@@ -13859,6 +13859,28 @@ SPROUT_TELEPORTER_2x2 =
   },
 },
 
+SPROUT_TELEPORTER_2x2_EMERGENCY =
+{
+  prob = 7000,
+
+  structure =
+  {
+    "..", "TT",
+    "..", "TT",
+    "11", "11",
+    "11", "11",
+  },
+
+  emergency = true,
+
+  teleporter = true,
+
+  closet =
+  {
+    from_dir = 2,
+  },
+},
+
 SPROUT_TELEPORTER_1x1 =
 {
   prob = 7000,
@@ -13868,6 +13890,26 @@ SPROUT_TELEPORTER_1x1 =
     ".", "T",
     "1", "1",
   },
+
+  teleporter = true,
+
+  closet =
+  {
+    from_dir = 2,
+  },
+},
+
+SPROUT_TELEPORTER_1x1_EMERGENCY =
+{
+  prob = 7000,
+
+  structure =
+  {
+    ".", "T",
+    "1", "1",
+  },
+
+  emergency = true,
 
   teleporter = true,
 
@@ -14049,6 +14091,31 @@ SMOOTHER_1 =
 --   Cave stuff
 ------------------------------------------
 
+CAVE_ROOT_3x3 =
+{
+  prob = 1, --10,
+
+  structure =
+  {
+    "!!!", "RRR",
+    "!!!", "RRR",
+    "!!!", "RRR",
+  }
+},
+
+CAVE_ROOT_4x4 =
+{
+  prob = 1, --10,
+
+  structure =
+  {
+    "!!!!", "RRRR",
+    "!!!!", "RRRR",
+    "!!!!", "RRRR",
+    "!!!!", "RRRR",
+  }
+},
+
 CAVE_ROOT_5x5 =
 {
   prob = 20, --10,
@@ -14079,54 +14146,7 @@ CAVE_ROOT_6x6 =
   }
 },
 
-
-SPROUT_DIRECT_2_cave =
-{
-  prob = 100,
-
-  structure =
-  {
-    ".....", "RRRRR",
-    ".....", "RRRRR",
-    ".....", "RRRRR",
-    ".....", "RRRRR",
-    ".....", "RRRRR",
-    "xx11x", "xx11x",
-  },
-
-  new_room =
-  {
-    env = "cave",
-
-    conn = { x=3, y=1, w=2, dir=8 }
-  }
-},
-
-
-SPROUT_DIRECT_3_cave =
-{
-  prob = 300,
-
-  structure =
-  {
-    ".....", "RRRRR",
-    ".....", "RRRRR",
-    ".....", "RRRRR",
-    ".....", "RRRRR",
-    ".....", "RRRRR",
-    "x111x", "x111x",
-  },
-
-  new_room =
-  {
-    env = "cave",
-
-    conn = { x=2, y=1, w=3, dir=8 }
-  }
-},
-
-
-SPROUT_JOINER_2x1_cave =
+SPROUT_JOINER_2x1_5_cave =
 {
   prob = 500,
 
@@ -14152,20 +14172,18 @@ SPROUT_JOINER_2x1_cave =
   }
 },
 
-
-SPROUT_JOINER_3x1_cave =
+SPROUT_JOINER_2x1_4_cave =
 {
-  prob = 2000,
+  prob = 500,
 
   structure =
   {
-    ".....", "RRRRR",
-    ".....", "RRRRR",
-    ".....", "RRRRR",
-    ".....", "RRRRR",
-    ".....", "RRRRR",
-    "x...x", "xJJJx",
-    "x111x", "x111x",
+    "....", "RRRR",
+    "....", "RRRR",
+    "....", "RRRR",
+    "....", "RRRR",
+    "x..x", "xJJx",
+    "x11x", "x11x",
   },
 
   new_room =
@@ -14179,12 +14197,33 @@ SPROUT_JOINER_3x1_cave =
   }
 },
 
-
---[[ disabled for now....
-
-SPROUT_JOINER_3x2_cave =
+SPROUT_JOINER_2x1_3_cave =
 {
-  prob = 4000,
+  prob = 500,
+
+  structure =
+  {
+    "...", "RRR",
+    "...", "RRR",
+    "...", "RRR",
+    "..x", "JJx",
+    "11x", "11x",
+  },
+
+  new_room =
+  {
+    env = "cave"
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+},
+
+SPROUT_JOINER_1x1_5_cave =
+{
+  prob = 500,
 
   structure =
   {
@@ -14193,23 +14232,69 @@ SPROUT_JOINER_3x2_cave =
     ".....", "RRRRR",
     ".....", "RRRRR",
     ".....", "RRRRR",
-    "x...x", "xJJJx",
-    "x...x", "xJJJx",
-    "x111x", "x111x",
+    "xx.xx", "xxJxx",
+    "xx1xx", "xx1xx",
   },
 
   new_room =
   {
-    env = "cave",
+    env = "cave"
   },
 
   joiner =
   {
-    from_dir = 2,
+    from_dir = 2
   }
 },
---]]
 
+SPROUT_JOINER_1x1_4_cave =
+{
+  prob = 500,
+
+  structure =
+  {
+    "....", "RRRR",
+    "....", "RRRR",
+    "....", "RRRR",
+    "....", "RRRR",
+    "x.xx", "xJxx",
+    "x1xx", "x1xx",
+  },
+
+  new_room =
+  {
+    env = "cave"
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+},
+
+SPROUT_JOINER_1x1_3_cave =
+{
+  prob = 500,
+
+  structure =
+  {
+    "...", "RRR",
+    "...", "RRR",
+    "...", "RRR",
+    "x.x", "xJx",
+    "x1x", "x1x",
+  },
+
+  new_room =
+  {
+    env = "cave"
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+},
 
 CAVE_GROW_3x1 =
 {
