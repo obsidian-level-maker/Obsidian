@@ -2613,6 +2613,8 @@ function Quest_nice_items()
         local best_room
         local best_score = 10
 
+        -- pick the room that is closest to the average
+        -- of the room progress position choice
         for _,R in pairs(room_tab) do
           if R.SI_score <= best_score then
             best_room = R
@@ -3308,6 +3310,9 @@ function Quest_room_themes()
     end
 
     LEVEL.exit_windows = rand.key_by_probs(GAME.THEMES[next_theme].window_groups)
+    LEVEL.exit_scenic_fence_mat = GAME.MATERIALS[
+      rand.key_by_probs(GAME.THEMES[next_theme].scenic_fences)
+      ]
 
     for _,R in pairs(LEVEL.rooms) do 
       if R.is_exit and not R.is_secret then

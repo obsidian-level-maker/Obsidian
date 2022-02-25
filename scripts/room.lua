@@ -1179,6 +1179,11 @@ function Room_make_windows(A1, A2)
     local group1 = A1.zone.window_group
     local group2 = A2.zone.window_group
 
+    if R1.is_exit then
+      group1 = LEVEL.exit_windows
+      group2 = LEVEL.exit_windows
+    end
+
     if group1 == nil then return group2 end
     if group2 == nil then return group1 end
 
@@ -1889,12 +1894,6 @@ function Room_border_up()
       Z.window_group = rand.key_by_probs(tab)
 
       tab[Z.window_group] = tab[Z.window_group] / 2
-    end
-
-    for _,R in pairs(LEVEL.rooms) do
-      if R.is_exit and not R.is_secret then
-        R.zone.window_group = LEVEL.exit_windows
-      end
     end
   end
 
