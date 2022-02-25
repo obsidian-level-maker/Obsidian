@@ -246,13 +246,6 @@ OB_MODULES["prefab_control"] =
   options =
   {
     {
-      name="bool_pistol_starts",
-      label=_("Default Weapon Starts"),
-      valuator = "button",
-      default = 1,
-      tooltip=_("Ensure every map can be completed with only the default weapon (ignore weapons obtained from earlier maps)"),
-    },
-    {
       name="bool_alt_starts",
       label=_("Alt-start Rooms"),
       valuator = "button",

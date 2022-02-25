@@ -136,6 +136,11 @@ std::string string_seed;
 
 game_interface_c *game_object = NULL;
 
+// Tutorial stuff
+Fl_JPEG_Image *tutorial1;
+Fl_JPEG_Image *tutorial2;
+Fl_JPEG_Image *tutorial3;
+
 #ifdef WIN32
 FLASHWINFO blinker;
 #endif
@@ -1237,11 +1242,23 @@ skiprest:
             FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
     }
 
+    fl_register_images(); // Needed for Unix window icon and tutorial windows
+
+    // Load tutorial images
+    std::filesystem::path image_loc = install_dir;
+    image_loc.append("data").append("tutorial1.jpg");
+    tutorial1 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial2.jpg");
+    tutorial2 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial3.jpg");
+    tutorial3 = new Fl_JPEG_Image(image_loc.string().c_str());
+
 #ifdef WIN32
     main_win->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(1)));
 #else
 #ifdef UNIX
-    fl_register_images();
     Fl_Pixmap program_icon(obsidian_icon);
     Fl_RGB_Image rgb_icon(&program_icon, FL_BLACK);
     UI_MainWin::default_icon(&rgb_icon);
