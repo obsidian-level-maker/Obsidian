@@ -1179,7 +1179,7 @@ function Room_make_windows(A1, A2)
     local group1 = A1.zone.window_group
     local group2 = A2.zone.window_group
 
-    if R1.is_exit then
+    if R1.is_exit and LEVEL.exit_windows then
       group1 = LEVEL.exit_windows
       group2 = LEVEL.exit_windows
     end

@@ -905,7 +905,7 @@ function Junction_make_railing(junc, rail_mat, block)
     offset_h = 96
   end
 
-  if (A1.room and A1.room.is_exit) then
+  if (A1.room and A1.room.is_exit) and LEVEL.exit_scenic_fence_mat then
     rail_mat = LEVEL.exit_scenic_fence_mat.t
     offset_h = LEVEL.exit_scenic_fence_mat.rail_h
   end
