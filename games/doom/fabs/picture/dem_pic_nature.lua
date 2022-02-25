@@ -1220,6 +1220,9 @@ PREFABS.Pic_dem_ruinsC1 =
   bound_z1 = 0,
   bound_z2 = 128,
 
+  x_fit = "stretch",
+  z_fit = { 84,92 },
+
   texture_pack = "armaetus",
 
 }
