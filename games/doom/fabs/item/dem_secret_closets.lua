@@ -950,6 +950,8 @@ PREFABS.Item_dem_cavein23_secret =
 
   map = "MAP30",
 
+  liquid = true,
+
   sound = "Water_Streaming",
 
 
