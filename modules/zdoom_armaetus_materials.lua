@@ -1744,14 +1744,6 @@ ARMAETUS_ANIMDEFS =
 	allowdecals
 	pic ICEFALL tics 8
 	pic ICEFALL tics 8
-
-  //Green crystal
-  texture GRNSTONE
-  allowdecals
-  pic GRNSTONE tics 17
-  pic GRNSTON1 tics 2
-  pic GRNSTON2 tics 2
-  pic GRNSTON3 tics 2
 	
 // Switches //
 
