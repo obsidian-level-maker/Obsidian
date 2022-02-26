@@ -1787,8 +1787,10 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
       ::continue::
     end
 
-    if table.empty(tab) then
-      error("No rules found for " .. tostring(want_pass) .. " pass")
+    if SHAPE_GRAMMAR ~= SHAPES.OBLIGE_5X then
+      if table.empty(tab) then
+        error("No rules found for " .. tostring(want_pass) .. " pass")
+      end
     end
 
     if stop_prob > 0 then
@@ -3424,6 +3426,10 @@ end
 
   local function apply_a_rule()
     local rule_tab = collect_matching_rules(pass, stop_prob, hit_floor_limit)
+
+    if SHAPE_GRAMMAR == SHAPES.OBLIGE_5X then
+      if table.empty(rule_tab) then return end
+    end
 
     local rules = table.copy(rule_tab)
 
