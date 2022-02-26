@@ -311,7 +311,7 @@ void UI_MiniMap::GifStart(std::filesystem::path filename, int delay) {
 void UI_MiniMap::GifFrame() {
     std::vector<u8_t> frame_pixels;
     int rgb_counter = 0;
-    // Sloppy RGB->RGBA convesion for Gif-H - Dasho
+    // Sloppy RGB->RGBA conversion for Gif-H - Dasho
     for (int i = 0; i < map_W * map_H * 3; i++) {
         frame_pixels.push_back(pixels[i]);
         rgb_counter++;

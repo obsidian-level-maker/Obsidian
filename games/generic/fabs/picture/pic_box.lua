@@ -57,7 +57,6 @@ PREFABS.Pic_box_wide =
   seed_w   = 3,
   height   = 160,
 
-  rank      = 3,
   skip_prob = 10,
 }
 

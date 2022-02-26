@@ -145,7 +145,7 @@ OB_MODULES["ui_mons"] =
 
   name = "ui_mons",
 
-  label = _("Monsters"),
+  label = _("Combat"),
 
   hooks =
   {
@@ -159,7 +159,7 @@ OB_MODULES["ui_mons"] =
   {
     {
       name="float_mons",
-      label=_("Quantity"),
+      label=_("Monster Quantity"),
       valuator = "slider",
       units = "",
       min = 0,
@@ -192,7 +192,7 @@ OB_MODULES["ui_mons"] =
       "9.5:9.5 (Draconian)," ..
       "10.0:10.00 (Merciless),",
       tooltip="Changes the amount of monsters placed in a map. Scales with level size.",
-      longtip="For reference: Oblige 7.x's default for normal is 1.0.\n\n" ..
+      longtip="For reference: Obsidian's default for normal is 1.0.\n\n" ..
               "Mix It Up: Selects quantities specified between Upper and Lower " ..
               "Bound choices on a chosen by the user.\n\n" ..
               "Progressive: creates a curve of increasing monster population " ..
@@ -203,7 +203,7 @@ OB_MODULES["ui_mons"] =
               "Trivial: Very, very few monsters. Almost nothing to kill.\n" ..
               "Sporadic: Very few monsters. Not many things to kill.\n" ..
               "Meager: Fewer monsters. Not challenging for the average player.\n" ..
-              "Easy: Oblige default quantity. Not too bad for casual players.\n" ..
+              "Easy: Obsidian default quantity. Not too bad for casual players.\n" ..
               "Modest: Slightly above default. Still pretty easy for most. \n" ..
               "Bearable: Above average opposition. Getting warmer! \n" ..
               "Rough: Slightly difficult. Equivalent to late 90s megawads. \n" ..
@@ -252,7 +252,7 @@ OB_MODULES["ui_mons"] =
       "9.5:9.5 (Draconian)," ..
       "10.0:10.00 (Merciless),",
             tooltip="If you have Mix It Up or Progressive selected, you can define the upper bound here. Otherwise, this option is simply ignored.",
-            longtip="For reference: Oblige 7.x's default for normal is 1.0.\n\n" ..
+            longtip="For reference: Obsidian's default for normal is 1.0.\n\n" ..
               "Mix It Up: Selects quantities specified between Upper and Lower " ..
               "Bound choices on a chosen by the user.\n\n" ..
               "Progressive: creates a curve of increasing monster population " ..
@@ -263,7 +263,7 @@ OB_MODULES["ui_mons"] =
               "Trivial: Very, very few monsters. Almost nothing to kill.\n " ..
               "Sporadic: Very few monsters. Not many things to kill.\n " ..
               "Meager: Fewer monsters. Not challenging for the average player.\n " ..
-              "Easy: Oblige default quantity. Not too bad for casual players.\n " ..
+              "Easy: Obsidian default quantity. Not too bad for casual players.\n " ..
               "Modest: Slightly above default. Still pretty easy for most. \n " ..
               "Bearable: Above average opposition. Getting warmer! \n" ..
               "Rough: Slightly difficult. Equivalent to late 90s megawads. \n" ..
@@ -312,7 +312,7 @@ OB_MODULES["ui_mons"] =
       "9.5:9.5 (Draconian)," ..
       "10.0:10.00 (Merciless),",
             tooltip="If you have Mix It Up or Progressive selected, you can define the lower bound here. Otherwise, this option is simply ignored.",
-            longtip="For reference: Oblige 7.x's default for normal is 1.0.\n\n" ..
+            longtip="For reference: Obsidian's default for normal is 1.0.\n\n" ..
               "Mix It Up: Selects quantities specified between Upper and Lower " ..
               "Bound choices on a chosen by the user.\n\n" ..
               "Progressive: creates a curve of increasing monster population " ..
@@ -323,7 +323,7 @@ OB_MODULES["ui_mons"] =
               "Trivial: Very, very few monsters. Almost nothing to kill.\n " ..
               "Sporadic: Very few monsters. Not many things to kill.\n " ..
               "Meager: Fewer monsters. Not challenging for the average player.\n " ..
-              "Easy: Oblige default quantity. Not too bad for casual players.\n " ..
+              "Easy: Obsidian default quantity. Not too bad for casual players.\n " ..
               "Modest: Slightly above default. Still pretty easy for most. \n " ..
               "Bearable: Above average opposition. Getting warmer! \n" ..
               "Rough: Slightly difficult. Equivalent to late 90s megawads. \n" ..
@@ -341,7 +341,7 @@ OB_MODULES["ui_mons"] =
 
     {
       name="float_strength",
-      label=_("Strength"),
+      label=_("Monster Strength"),
       valuator = "slider",
       units = "",
       min = 0.55,
@@ -367,12 +367,20 @@ OB_MODULES["ui_mons"] =
     },
 
     {
+      name="bool_pistol_starts",
+      label=_("Default Weapon Starts"),
+      valuator = "button",
+      default = 1,
+      tooltip=_("Ensure every map can be completed with only the default weapon (ignore weapons obtained from earlier maps)"),
+    },
+
+    {
       name="bool_quiet_start",
       label=_("Quiet Start"),
       valuator = "button",
       default = 0,
       tooltip="Makes start rooms mostly safe - no enemies and all outlooking windows are removed. " ..
-      "(windows are retained on Procedural Gotchas) Default Oblige behavior is 'no'.",
+      "(windows are retained on Procedural Gotchas) Default Obsidian behavior is 'no'.",
     },
 
     { name="mon_variety", label=_("Monster Variety"),choices=STYLE_CHOICES,

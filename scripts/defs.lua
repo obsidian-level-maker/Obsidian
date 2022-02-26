@@ -35,6 +35,10 @@ PREFABS = {}
 GROUPS  = {}
 TEMPLATES = {}
 
+SHAPE_GRAMMAR = {}
+
+SHAPES = {}
+
 RANDOMIZE_GROUPS = {}
 
 -- a place for unfinished stuff

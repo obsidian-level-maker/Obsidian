@@ -547,7 +547,6 @@ OB_MODULES["chex3_weapon_control"] =
       randomize_group = "pickups"
      },
 
-    weapon_prefs =
     {
       name="weapon_prefs",
       label=_("Weapon Preferences"),

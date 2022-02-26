@@ -1195,7 +1195,8 @@ OB_MODULES["zdoom_specials_heretic"] =
 
   options =
   {
-    fog_generator = {
+    {
+      name = "fog_generator",
       label = _("Fog Generator"),
       priority = 12,
       choices = ZDOOM_SPECIALS_HERETIC.FOG_GEN_CHOICES,
@@ -1204,7 +1205,8 @@ OB_MODULES["zdoom_specials_heretic"] =
       randomize_group = "misc"
     },
 
-    fog_env = {
+    {
+      name = "fog_env",
       label = _("Fog Environment"),
       priority = 11,
       choices = ZDOOM_SPECIALS_HERETIC.FOG_ENV_CHOICES,
@@ -1213,7 +1215,8 @@ OB_MODULES["zdoom_specials_heretic"] =
       randomize_group = "misc"
     },
 
-    fog_intensity = {
+    {
+      name = "fog_intensity",
       label = _("Fog Intensity"),
       priority = 10,
       choices = ZDOOM_SPECIALS_HERETIC.FOG_DENSITY_CHOICES,
@@ -1222,7 +1225,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       randomize_group = "misc"
     },
 
-    bool_fog_affects_sky = {
+    {
       name = "bool_fog_affects_sky",
       label = _("Sky Fog"),
       valuator = "button",
@@ -1233,7 +1236,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       randomize_group = "misc"
     },
 
-    bool_dynamic_lights = {
+    {
       name = "bool_dynamic_lights",
       label = _("Dynamic Lights"),
       valuator = "button",
@@ -1242,7 +1245,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       tooltip = "Generates dynamic point lights on ceiling light prefabs.",
     },
 
-    bool_glowing_flats = {
+    {
       name = "bool_glowing_flats",
       label = _("Glowing Flats"),
       valuator = "button",
@@ -1253,7 +1256,8 @@ OB_MODULES["zdoom_specials_heretic"] =
       gap = 1,
     },
 
-    mapinfo_music_shuffler = {
+    {
+      name = "mapinfo_music_shuffler",
       label = _("Shuffle Music"),
       priority = 6,
       choices = ZDOOM_SPECIALS_HERETIC.MUSIC_SHUFFLER_CHOICES,
@@ -1261,7 +1265,8 @@ OB_MODULES["zdoom_specials_heretic"] =
       tooltip = "Shuffles music in the MAPINFO lump.",
     },
 
-    story_generator = {
+    {
+      name = "story_generator",
       label = _("Story Generator"),
       priority = 5,
       choices = ZDOOM_SPECIALS_HERETIC.STORY_CHOICES,
@@ -1269,7 +1274,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       tooltip = "Adds cluster information with generic or randomized story text into the MAPINFO structure!",
     },
 
-    bool_custom_quit_messages = {
+    {
       name = "bool_custom_quit_messages",
       label = _("Quit Messages"),
       valuator = "button",
@@ -1278,7 +1283,8 @@ OB_MODULES["zdoom_specials_heretic"] =
       tooltip = "Adds custom quit messages into the MAPINFO game definition.",
     },
 
-    generic_intermusic = {
+    {
+      name = "generic_intermusic",
       label = _("Intermission Music"),
       priority = 3,
       choices = ZDOOM_SPECIALS_HERETIC.INTERPIC_MUSIC,
@@ -1286,7 +1292,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       tooltip = "Changes the music playing during intermission screens.",
     },
 
-    bool_no_intermission = {
+    {
       name = "bool_no_intermission",
       label = _("Disable Intermissions"),
       valuator = "button",

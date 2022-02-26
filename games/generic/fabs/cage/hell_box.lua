@@ -7,7 +7,6 @@ PREFABS.Cage_hellbox =
   file   = "cage/hell_box.wad",
   map    = "MAP01",
 
-  rank   = 2,
   prob   = 100,
   env    = "building",
 

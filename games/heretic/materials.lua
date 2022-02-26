@@ -47,7 +47,7 @@ HERETIC.MATERIALS =
     
   _SMLDOOR  = { t="DOORWOOD", f="FLAT507" }, -- Open says me
   _BIGDOOR = { t="DOORSTON", f="FLOOR30" },
-  _BIGDOOR = { t="DOORWOOD", f="FLAT507" },
+  _TALDOOR = { t="DOORWOOD", f="FLAT507" },
   _DORRAIL = { t="METL2", f="FLOOR28"}, -- Inner door slider thingys
   
   _NPIC    = { t="CELTIC", f="FLOOR06"}, -- Narrow (non-tiling) pic box insert, 64 pixels wide

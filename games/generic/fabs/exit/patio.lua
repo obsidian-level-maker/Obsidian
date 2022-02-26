@@ -8,7 +8,6 @@ PREFABS.Exit_patio =
   map    = "MAP01",
   game = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=0, heretic=0, strife=0 },
 
-  rank   = 2,
   prob   = 100, --100,
 
   where  = "seeds",

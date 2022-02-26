@@ -8,13 +8,13 @@ CUSTOM.MONSTERS =
 {
   monster1 =
   {
-    id = 1234
-    r = 32
-    h = 80 
-    prob = 30
-    health = 100
-    damage = 10
-    attack = "missile"
+    id = 1234,
+    r = 32,
+    h = 80 ,
+    prob = 30,
+    health = 100,
+    damage = 10,
+    attack = "missile",
     density = 0.9
   }
 }
@@ -22,7 +22,7 @@ CUSTOM.MONSTERS =
 
 OB_MODULES["CUSTOM"] =
 {
-  label = "CUSTOM"
+  label = "CUSTOM",
 
   tables =
   {

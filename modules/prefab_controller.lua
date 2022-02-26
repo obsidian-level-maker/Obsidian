@@ -245,7 +245,22 @@ OB_MODULES["prefab_control"] =
 
   options =
   {
-    bool_autodetail =
+    {
+      name="bool_alt_starts",
+      label=_("Alt-start Rooms"),
+      valuator = "button",
+      default = 0,
+      tooltip=_("For Co-operative games, sometimes have players start in different rooms")
+    },
+    {
+      name = "bool_foreshadowing_exit",
+      label = _("Foreshadowing Exit"),
+      valuator = "button",
+      default = 1,
+      tooltip = "Gets exit room theme to follow the theme of the next level, if different.",
+      gap=1,
+    },
+
     {
       name = "bool_autodetail",
       label=("Auto Detailing"),
@@ -257,7 +272,6 @@ OB_MODULES["prefab_control"] =
       gap = 1
     },
 
-    point_prob =
     {
       name = "point_prob",
       label=_("Point Decor"),
@@ -271,7 +285,7 @@ OB_MODULES["prefab_control"] =
       priority = 101
     },
 
-    wall_prob =
+
     {
       name = "wall_prob",
       label=_("Wall Decor"),
@@ -281,7 +295,7 @@ OB_MODULES["prefab_control"] =
       priority = 100
     },
 
-    group_wall_prob =
+
     {
       name = "group_wall_prob",
       label = _("Group Walls"),
@@ -294,7 +308,7 @@ OB_MODULES["prefab_control"] =
 
     --
 
-    float_single_room_theme =
+
     {
       name = "float_single_room_theme",
       label = _("Single Room Themes"),
@@ -310,7 +324,7 @@ OB_MODULES["prefab_control"] =
       priority = 50
     },
 
-    float_limit_wall_groups =
+
     {
       name = "float_limit_wall_groups",
       label = _("Limited Wall Groups"),
@@ -329,7 +343,7 @@ OB_MODULES["prefab_control"] =
 
     --
 
-    bool_peered_exits =
+
     {
       name = "bool_peered_exits",
       label = _("Peered Starts/Exits"),
@@ -338,7 +352,7 @@ OB_MODULES["prefab_control"] =
       priority = 48
     },
 
-    steppy_caves =
+
     {
       name = "steppy_caves",
       label = _("Steppy Caves"),
@@ -355,7 +369,7 @@ OB_MODULES["prefab_control"] =
 
     --
 
-    pf_crushers =
+
     {
       name="pf_crushers", label=_("Crushers"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
       tooltip="Changes probabilities for fabs with crushing sectors. Default is on.",
@@ -363,7 +377,7 @@ OB_MODULES["prefab_control"] =
       priority = 14
     },
 
-    pf_dexterity =
+
     {
       name="pf_dexterity", label=_("Dexterity Fabs"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
       tooltip="Changes probabilities for fabs featuring Chasm-ish navigation. Default is on.",
@@ -371,15 +385,14 @@ OB_MODULES["prefab_control"] =
       priority = 13
     },
 
-    pf_gamble =
     {
-      name="pf_dexterity", label=_("Gambling Fabs"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
+      name="pf_gamble", label=_("Gambling Fabs"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
       tooltip="Changes probabilities for fabs that may lockout a player on items. Default is on.",
       default="1",
       priority = 12
     },
 
-    pf_sight_ambushes =
+
     {
       name="pf_sight_ambushes", label=_("Sight Ambush Cages"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
       tooltip="Changes probabilities for cages that unleash its monsters when player is in sight. " ..
@@ -388,7 +401,7 @@ OB_MODULES["prefab_control"] =
       priority = 11
     },
 
-    pf_mirror_mazes =
+
     {
       name = "pf_mirror_mazes", label=_("Mirror Mazes"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
       tooltip="Changes probabilities for hell mirror maze closets and joiners.",
@@ -396,7 +409,7 @@ OB_MODULES["prefab_control"] =
       priority = 10
     },
 
-    pf_dark_mazes =
+
     {
       name = "pf_dark_mazes", label=_("Dark Mazes"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
       tooltip="Changes probabilities for dark/eye maze joiners in hell theme.",
@@ -404,7 +417,7 @@ OB_MODULES["prefab_control"] =
       priority = 9,
     },
     
-    pf_stair_ladders =
+
     {
       name = "pf_stair_ladders", label=_("Stair Ladders"), choices=PREFAB_CONTROL.FINE_TUNE_MULT_FACTORS,
       tooltip="Changes probabilities for high-step ladders (stairs).",
@@ -413,7 +426,7 @@ OB_MODULES["prefab_control"] =
       gap = 1
     },
 
-    bool_jump_crouch =
+
     {
       name = "bool_jump_crouch",
       label=("Jump/Crouch Fabs"),
@@ -426,7 +439,7 @@ OB_MODULES["prefab_control"] =
 
     --
 
-    damaging_hallways =
+
     {
       name = "pf_damaging_halls", label = _("Damaging Hallways"), choices=PREFAB_CONTROL.DAMAGING_HALLWAY_CHOICES,
       tooltip = "Changes the liquids on hallways with damaging floors to either be damaging (default) or non-damaging.",
@@ -437,7 +450,7 @@ OB_MODULES["prefab_control"] =
 
     --
 
-    bool_fab_match_theme =
+
     {
       name = "bool_fab_match_theme",
       label=("Match Theme"),

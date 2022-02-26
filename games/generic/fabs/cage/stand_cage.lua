@@ -23,7 +23,6 @@ PREFABS.Cage_stand2 =
   file   = "cage/stand_cage.wad",
   map    = "MAP02",
 
-  rank   = 2,
   prob   = 100,
   env    = "cave",
 

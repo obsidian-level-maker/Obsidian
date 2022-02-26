@@ -2838,6 +2838,13 @@ function Area_create_rooms()
   gui.printf("Map size target: %dx%d seeds\n", LEVEL.map_W, LEVEL.map_H)
 
   gui.at_level(LEVEL.name .. " (Shapes)", LEVEL.id, #GAME.levels)
+
+  if PARAM.float_oblige5x_grammar and rand.odds(PARAM.float_oblige5x_grammar) then
+    SHAPE_GRAMMAR = SHAPES.OBLIGE_5X
+  else
+    SHAPE_GRAMMAR = SHAPES.OBSIDIAN
+  end
+
   Grower_create_rooms()
 
   gui.at_level(LEVEL.name .. " (Rooms)", LEVEL.id, #GAME.levels)

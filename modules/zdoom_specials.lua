@@ -1230,7 +1230,8 @@ OB_MODULES["zdoom_specials"] =
 
   options =
   {
-    fog_generator = {
+    {
+      name = "fog_generator",
       label = _("Fog Generator"),
       priority = 12,
       choices = ZDOOM_SPECIALS.FOG_GEN_CHOICES,
@@ -1238,7 +1239,8 @@ OB_MODULES["zdoom_specials"] =
       tooltip = "Generates fog colors based on the Sky Generator or generate completely randomly.",
     },
 
-    fog_env = {
+    {
+      name = "fog_env",
       label = _("Fog Environment"),
       priority = 11,
       choices = ZDOOM_SPECIALS.FOG_ENV_CHOICES,
@@ -1246,7 +1248,8 @@ OB_MODULES["zdoom_specials"] =
       tooltip = "Limits fog to outdoors (sectors with exposed sky ceilings) or allows for all.",
     },
 
-    fog_intensity = {
+    {
+      name = "fog_intensity",
       label = _("Fog Intensity"),
       priority = 10,
       choices = ZDOOM_SPECIALS.FOG_DENSITY_CHOICES,
@@ -1254,7 +1257,7 @@ OB_MODULES["zdoom_specials"] =
       tooltip = "Determines thickness and intensity of fog, if the Fog Generator is enabled. Subtle or Misty is recommended.",
     },
 
-    bool_fog_affects_sky = {
+    {
       name = "bool_fog_affects_sky",
       label = _("Sky Fog"),
       valuator = "button",
@@ -1264,7 +1267,7 @@ OB_MODULES["zdoom_specials"] =
       gap = 1,
     },
 
-    bool_dynamic_lights = {
+    {
       name = "bool_dynamic_lights",
       label = _("Dynamic Lights"),
       valuator = "button",
@@ -1273,7 +1276,7 @@ OB_MODULES["zdoom_specials"] =
       tooltip = "Generates dynamic point lights on ceiling light prefabs.",
     },
 
-    bool_glowing_flats = {
+    {
       name = "bool_glowing_flats",
       label = _("Glowing Flats"),
       valuator = "button",
@@ -1284,7 +1287,8 @@ OB_MODULES["zdoom_specials"] =
       gap = 1,
     },
 
-    mapinfo_music_shuffler = {
+    {
+      name = "mapinfo_music_shuffler",
       label = _("Shuffle Music"),
       priority = 6,
       choices = ZDOOM_SPECIALS.MUSIC_SHUFFLER_CHOICES,
@@ -1295,7 +1299,8 @@ OB_MODULES["zdoom_specials"] =
                 "Doom 1 and 2 direct patch replacements. Do not use unless you have such a pack.",
     },
 
-    story_generator = {
+    {
+      name = "story_generator",
       label = _("Story Generator"),
       priority = 5,
       choices = ZDOOM_SPECIALS.STORY_CHOICES,
@@ -1303,7 +1308,7 @@ OB_MODULES["zdoom_specials"] =
       tooltip = "Adds cluster information with generic or randomized story text into the MAPINFO structure!",
     },
 
-    bool_custom_quit_messages = {
+    {
       name = "bool_custom_quit_messages",
       label = _("Quit Messages"),
       valuator = "button",
@@ -1312,7 +1317,8 @@ OB_MODULES["zdoom_specials"] =
       tooltip = "Adds custom quit messages into the MAPINFO game definition.",
     },
 
-    generic_intermusic = {
+    {
+      name = "generic_intermusic",
       label = _("Intermission Music"),
       priority = 3,
       choices = ZDOOM_SPECIALS.INTERPIC_MUSIC,
@@ -1320,7 +1326,7 @@ OB_MODULES["zdoom_specials"] =
       tooltip = "Changes the music playing during intermission screens.",
     },
 
-    bool_episode_selection = {
+    {
       name = "bool_episode_selection",
       label = _("Episode Selection"),
       valuator = "button",
@@ -1330,7 +1336,7 @@ OB_MODULES["zdoom_specials"] =
       gap = 1,
     },
 
-    bool_no_intermission = {
+    {
       name = "bool_no_intermission",
       label = _("Disable Intermissions"),
       valuator = "button",

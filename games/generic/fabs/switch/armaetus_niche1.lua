@@ -45,7 +45,7 @@ PREFABS.Switch_niche1_harmony =
   }
 }
 
-PREFABS.Switch_niche1_heretic =
+PREFABS.Switch_niche1_heretic_generic =
 {
   template = "Switch_niche1",
   game = "heretic",
@@ -122,7 +122,7 @@ PREFABS.Switch_niche1_up_harmony =
   }
 }
 
-PREFABS.Switch_niche1_up_heretic =
+PREFABS.Switch_niche1_up_heretic_generic =
 {
   template = "Switch_niche1_up",
   game = "heretic",

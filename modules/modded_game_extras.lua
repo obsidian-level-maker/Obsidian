@@ -2283,7 +2283,7 @@ OB_MODULES["modded_game_extras"] =
 
   options =
   {
-    bool_hn_markers =
+
     {
       name = "bool_hn_markers",
       label=_("HN Markers"),
@@ -2294,7 +2294,7 @@ OB_MODULES["modded_game_extras"] =
       priority = 5,
     },
 
-    bool_custom_actor_names =
+
     {
       name = "bool_custom_actor_names",
       label=_("Custom Actor Names"),
@@ -2308,7 +2308,7 @@ OB_MODULES["modded_game_extras"] =
       priority = 4,
     },
 
-    bool_qcde_lootboxes =
+
     {
       name = "bool_qcde_lootboxes",
       label = _("QC:DE Lootboxes"),
@@ -2318,7 +2318,7 @@ OB_MODULES["modded_game_extras"] =
       priority = 2,
     },
 
-    bool_d4t_ents =
+
     {
       name = "bool_d4t_ents",
       label = _("D4T Entities"),
@@ -2329,7 +2329,7 @@ OB_MODULES["modded_game_extras"] =
       priority = 1,
     },
 
-    bool_trailblazer =
+
     {
       name = "bool_trailblazer",
       label = _("Trailblazer Upgrades"),
@@ -2340,7 +2340,7 @@ OB_MODULES["modded_game_extras"] =
       priority = 0,
     },
 
-    bool_complex_doom =
+
     {
       name = "bool_complex_doom",
       label = _("Complex Doom Modifications"),

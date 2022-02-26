@@ -7,8 +7,6 @@ PREFABS.Window_arch_1 =
   group  = "window_arched",
   prob   = 50,
 
-  passable = true,
-
   where  = "edge",
   seed_w = 1,
 

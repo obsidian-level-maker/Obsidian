@@ -11,6 +11,9 @@ PREFABS.Decor_exit_sign =
   prob   = 80,
 
   where  = "point",
+  sink_mode = "never",
+  on_liquids = "never"
+
 }
 
 PREFABS.Decor_exit_sign_strife =
@@ -22,6 +25,8 @@ PREFABS.Decor_exit_sign_strife =
   prob   = 80,
 
   where  = "point",
+  sink_mode = "never",
+  on_liquids = "never",
 
   forced_offsets = 
   {

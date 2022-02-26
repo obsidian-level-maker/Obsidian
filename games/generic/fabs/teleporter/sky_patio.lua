@@ -7,7 +7,6 @@ PREFABS.Teleporter_sky_patio =
   file   = "teleporter/sky_patio.wad",
   map    = "MAP01",
 
-  rank   = 2,
   prob   = 50,
 
   env    = "outdoor",

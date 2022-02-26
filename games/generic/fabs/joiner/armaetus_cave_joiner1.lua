@@ -46,11 +46,29 @@ PREFABS.Joiner_armaetus_cave_to_cave_joiner_2x1_any_to_cave =
   env = "any",
   neighbor = "cave",
 
-  rank = 3,
   prob = 50,
 
   map = "MAP03",
 
+  seed_h = 1,
+
+  delta_h = 64,
+
+  y_fit = {24,136},
+}
+
+PREFABS.Joiner_armaetus_cave_to_cave_joiner_1x1_any_to_cave =
+{
+  template = "Joiner_armaetus_cave_to_cave_joiner",
+
+  env = "any",
+  neighbor = "cave",
+
+  prob = 50,
+
+  map = "MAP04",
+
+  seed_w = 1,
   seed_h = 1,
 
   delta_h = 64,
