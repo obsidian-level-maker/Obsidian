@@ -130,6 +130,8 @@ bool randomize_pickups = false;
 bool randomize_misc = false;
 int zip_output = 0;
 
+bool first_run = false;
+
 std::filesystem::path gif_filename = "gif_output.gif";
 
 std::string string_seed;
@@ -140,6 +142,12 @@ game_interface_c *game_object = NULL;
 Fl_JPEG_Image *tutorial1;
 Fl_JPEG_Image *tutorial2;
 Fl_JPEG_Image *tutorial3;
+Fl_JPEG_Image *tutorial4;
+Fl_JPEG_Image *tutorial5;
+Fl_JPEG_Image *tutorial6;
+Fl_JPEG_Image *tutorial7;
+Fl_JPEG_Image *tutorial8;
+Fl_JPEG_Image *tutorial9;
 
 #ifdef WIN32
 FLASHWINFO blinker;
@@ -1211,6 +1219,7 @@ skiprest:
     // load config after creating window (will set widget values)
     if (!Cookie_Load(config_file)) {
         LogPrintf("Missing config file -- using defaults.\n\n");
+        first_run = true;
     }
 
     if (!load_file.empty()) {
@@ -1246,7 +1255,7 @@ skiprest:
 
     // Load tutorial images
     std::filesystem::path image_loc = install_dir;
-    image_loc.append("data").append("tutorial1.jpg");
+    image_loc.append("data").append("tutorial").append("tutorial1.jpg");
     tutorial1 = new Fl_JPEG_Image(image_loc.string().c_str());
     image_loc.remove_filename();
     image_loc.append("tutorial2.jpg");
@@ -1254,6 +1263,24 @@ skiprest:
     image_loc.remove_filename();
     image_loc.append("tutorial3.jpg");
     tutorial3 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial4.jpg");
+    tutorial4 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial5.jpg");
+    tutorial5 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial6.jpg");
+    tutorial6 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial7.jpg");
+    tutorial7 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial8.jpg");
+    tutorial8 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial9.jpg");
+    tutorial9 = new Fl_JPEG_Image(image_loc.string().c_str());
 
 #ifdef WIN32
     main_win->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(1)));
@@ -1271,6 +1298,9 @@ skiprest:
         fake_argv[0] = strdup("Obsidian.exe");
         fake_argv[1] = NULL;
         main_win->show(1 /* argc */, fake_argv);
+        if (first_run) {
+            DLG_Tutorial();
+        }
     }
 
 #ifdef WIN32  // Populate structure for taskbar/window flash. Must be done after

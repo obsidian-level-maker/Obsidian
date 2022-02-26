@@ -128,7 +128,7 @@ UI_Tutorial_Window::UI_Tutorial_Window(int W, int H, const char *label)
         back->callback(wiz_back, this->tutorial_wiz);
         Fl_Box *out = new Fl_Box(10,30,W-20,H-80);
         out->box(FL_FLAT_BOX);
-        out->labelsize(FL_NORMAL_SIZE * .9);
+        out->labelsize(FL_NORMAL_SIZE);
         out->label("Game Settings, in the upper left area of the program window, contains all you \
 need to build your very first WAD. Select the Game you would like to build a WAD for, the Engine that \
 it will be played on, the Length (number of maps) of the WAD, and the Theme that you would like it to have. \
@@ -141,6 +141,224 @@ with all versions of Doom, it is much simpler in nature than the maps made by Ob
         g->end();
     }
     // Wizard: page 3
+    {
+        Fl_Group *g = new Fl_Group(0,0,W,H);
+        g->box(box_style);
+        Fl_Button *next = new Fl_Button(W - 110, H - 35, 100, 25, "Next");
+        next->box(button_style);
+        next->visible_focus(0);
+        next->color(BUTTON_COLOR);
+        next->labelfont(font_style);
+        next->labelcolor(FONT2_COLOR);
+        next->callback(wiz_next, this->tutorial_wiz);
+        Fl_Button *back = new Fl_Button(W - 220, H - 35, 100, 25,"Back");
+        back->box(button_style);
+        back->visible_focus(0);
+        back->color(BUTTON_COLOR);
+        back->labelfont(font_style);
+        back->labelcolor(FONT2_COLOR);
+        back->callback(wiz_back, this->tutorial_wiz);
+        Fl_Box *out = new Fl_Box(10,30,W-20,H-80);
+        out->box(FL_FLAT_BOX);
+        out->labelsize(FL_NORMAL_SIZE);
+        out->label("\n\nAt some point, you will want to have more control over the contents of the \
+WADs that you generate. This is where modules come into play. Modules are groups of options that can be \
+changed to fine-tune your experience. Most modules are optional, and will need to be enabled or disabled \
+accordingly.");
+        out->align(FL_ALIGN_WRAP);
+        out->image(tutorial2);
+        g->end();
+    }
+    // Wizard: page 3
+    {
+        Fl_Group *g = new Fl_Group(0,0,W,H);
+        g->box(box_style);
+        Fl_Button *next = new Fl_Button(W - 110, H - 35, 100, 25, "Next");
+        next->box(button_style);
+        next->visible_focus(0);
+        next->color(BUTTON_COLOR);
+        next->labelfont(font_style);
+        next->labelcolor(FONT2_COLOR);
+        next->callback(wiz_next, this->tutorial_wiz);
+        Fl_Button *back = new Fl_Button(W - 220, H - 35, 100, 25,"Back");
+        back->box(button_style);
+        back->visible_focus(0);
+        back->color(BUTTON_COLOR);
+        back->labelfont(font_style);
+        back->labelcolor(FONT2_COLOR);
+        back->callback(wiz_back, this->tutorial_wiz);
+        Fl_Box *out = new Fl_Box(10,30,W-20,H-80);
+        out->box(FL_FLAT_BOX);
+        out->labelsize(FL_NORMAL_SIZE);
+        out->label("\n\nSome modules do not have any additional options to configure, \
+and only need to be enabled or disabled. To enable them, simply click the checkbox to the \
+left of their name. To disable them, clear the same checkbox by clicking it again.");
+        out->align(FL_ALIGN_WRAP);
+        out->image(tutorial3);
+        g->end();
+    }
+    // Wizard: page 3
+    {
+        Fl_Group *g = new Fl_Group(0,0,W,H);
+        g->box(box_style);
+        Fl_Button *next = new Fl_Button(W - 110, H - 35, 100, 25, "Next");
+        next->box(button_style);
+        next->visible_focus(0);
+        next->color(BUTTON_COLOR);
+        next->labelfont(font_style);
+        next->labelcolor(FONT2_COLOR);
+        next->callback(wiz_next, this->tutorial_wiz);
+        Fl_Button *back = new Fl_Button(W - 220, H - 35, 100, 25,"Back");
+        back->box(button_style);
+        back->visible_focus(0);
+        back->color(BUTTON_COLOR);
+        back->labelfont(font_style);
+        back->labelcolor(FONT2_COLOR);
+        back->callback(wiz_back, this->tutorial_wiz);
+        Fl_Box *out = new Fl_Box(10,30,W-20,H-80);
+        out->box(FL_FLAT_BOX);
+        out->labelsize(FL_NORMAL_SIZE);
+        out->label("\n\nOther modules will have options that you can adjust after you enable them. These modules will \
+have a + symbol next to their name instead of a checkbox. To enable them, click the + symbol. The + will turn into a - \
+and the module will expand to show its options. Once you have adjusted these options, you MUST LEAVE THE MODULE EXPANDED for them \
+to take effect. To disable the module, click the - symbol. It will collapse and the - will turn back into a +");
+        out->align(FL_ALIGN_WRAP);
+        out->image(tutorial4);
+        g->end();
+    }
+    {
+        Fl_Group *g = new Fl_Group(0,0,W,H);
+        g->box(box_style);
+        Fl_Button *next = new Fl_Button(W - 110, H - 35, 100, 25, "Next");
+        next->box(button_style);
+        next->visible_focus(0);
+        next->color(BUTTON_COLOR);
+        next->labelfont(font_style);
+        next->labelcolor(FONT2_COLOR);
+        next->callback(wiz_next, this->tutorial_wiz);
+        Fl_Button *back = new Fl_Button(W - 220, H - 35, 100, 25,"Back");
+        back->box(button_style);
+        back->visible_focus(0);
+        back->color(BUTTON_COLOR);
+        back->labelfont(font_style);
+        back->labelcolor(FONT2_COLOR);
+        back->callback(wiz_back, this->tutorial_wiz);
+        Fl_Box *out = new Fl_Box(10,30,W-20,H-80);
+        out->box(FL_FLAT_BOX);
+        out->labelsize(FL_NORMAL_SIZE);
+        out->label("\n\nModule options come in three different flavors: Checkboxes, drop-down menus, and sliders. Checkboxes and drop-down menus \
+are fairly self-explanatory, but we will cover some of the more advanced slider functions.");
+        out->align(FL_ALIGN_WRAP);
+        out->image(tutorial5);
+        g->end();
+    }
+    {
+        Fl_Group *g = new Fl_Group(0,0,W,H);
+        g->box(box_style);
+        Fl_Button *next = new Fl_Button(W - 110, H - 35, 100, 25, "Next");
+        next->box(button_style);
+        next->visible_focus(0);
+        next->color(BUTTON_COLOR);
+        next->labelfont(font_style);
+        next->labelcolor(FONT2_COLOR);
+        next->callback(wiz_next, this->tutorial_wiz);
+        Fl_Button *back = new Fl_Button(W - 220, H - 35, 100, 25,"Back");
+        back->box(button_style);
+        back->visible_focus(0);
+        back->color(BUTTON_COLOR);
+        back->labelfont(font_style);
+        back->labelcolor(FONT2_COLOR);
+        back->callback(wiz_back, this->tutorial_wiz);
+        Fl_Box *out = new Fl_Box(10,30,W-20,H-80);
+        out->box(FL_FLAT_BOX);
+        out->labelsize(FL_NORMAL_SIZE);
+        out->label("\n\nSome sliders will have an inverted triangle icon in the top right corner. Clicking this will show a menu \
+with various choices. With the exception of 'Use Slider Value', these will ignore the number that the slider is set to in favor of a different \
+means of determining the related value.");
+        out->align(FL_ALIGN_WRAP);
+        out->image(tutorial6);
+        g->end();
+    }
+    {
+        Fl_Group *g = new Fl_Group(0,0,W,H);
+        g->box(box_style);
+        Fl_Button *next = new Fl_Button(W - 110, H - 35, 100, 25, "Next");
+        next->box(button_style);
+        next->visible_focus(0);
+        next->color(BUTTON_COLOR);
+        next->labelfont(font_style);
+        next->labelcolor(FONT2_COLOR);
+        next->callback(wiz_next, this->tutorial_wiz);
+        Fl_Button *back = new Fl_Button(W - 220, H - 35, 100, 25,"Back");
+        back->box(button_style);
+        back->visible_focus(0);
+        back->color(BUTTON_COLOR);
+        back->labelfont(font_style);
+        back->labelcolor(FONT2_COLOR);
+        back->callback(wiz_back, this->tutorial_wiz);
+        Fl_Box *out = new Fl_Box(10,30,W-20,H-80);
+        out->box(FL_FLAT_BOX);
+        out->labelsize(FL_NORMAL_SIZE);
+        out->label("\n\nAll sliders will have a pair of brackets in the top right corner. Clicking these will open a dialog box where you \
+can enter a value manually instead of using the slider handle or arrow buttons.");
+        out->align(FL_ALIGN_WRAP);
+        out->image(tutorial7);
+        g->end();
+    }
+    {
+        Fl_Group *g = new Fl_Group(0,0,W,H);
+        g->box(box_style);
+        Fl_Button *next = new Fl_Button(W - 110, H - 35, 100, 25, "Next");
+        next->box(button_style);
+        next->visible_focus(0);
+        next->color(BUTTON_COLOR);
+        next->labelfont(font_style);
+        next->labelcolor(FONT2_COLOR);
+        next->callback(wiz_next, this->tutorial_wiz);
+        Fl_Button *back = new Fl_Button(W - 220, H - 35, 100, 25,"Back");
+        back->box(button_style);
+        back->visible_focus(0);
+        back->color(BUTTON_COLOR);
+        back->labelfont(font_style);
+        back->labelcolor(FONT2_COLOR);
+        back->callback(wiz_back, this->tutorial_wiz);
+        Fl_Box *out = new Fl_Box(10,30,W-20,H-80);
+        out->box(FL_FLAT_BOX);
+        out->labelsize(FL_NORMAL_SIZE);
+        out->label("\n\nAll module options will have a tooltip that is shown by hovering your cursor over the option title. In addition, there \
+is a question mark icon in the top right corner of each option that can be clicked to open a window with a more detailed explanation.");
+        out->align(FL_ALIGN_WRAP);
+        out->image(tutorial8);
+        g->end();
+    }
+    {
+        Fl_Group *g = new Fl_Group(0,0,W,H);
+        g->box(box_style);
+        Fl_Button *next = new Fl_Button(W - 110, H - 35, 100, 25, "Next");
+        next->box(button_style);
+        next->visible_focus(0);
+        next->color(BUTTON_COLOR);
+        next->labelfont(font_style);
+        next->labelcolor(FONT2_COLOR);
+        next->callback(wiz_next, this->tutorial_wiz);
+        Fl_Button *back = new Fl_Button(W - 220, H - 35, 100, 25,"Back");
+        back->box(button_style);
+        back->visible_focus(0);
+        back->color(BUTTON_COLOR);
+        back->labelfont(font_style);
+        back->labelcolor(FONT2_COLOR);
+        back->callback(wiz_back, this->tutorial_wiz);
+        Fl_Box *out = new Fl_Box(10,30,W-20,H-80);
+        out->box(FL_FLAT_BOX);
+        out->labelsize(FL_NORMAL_SIZE);
+        out->label("\n\nAddons are a way to enhance the Obsidian experience further by adding new content, modules, and options. They come in the \
+form of *.pk3 files that must be placed in the /addons folder of your Obsidian install. Once there, open the Addons window by pressing F3 or choosing \
+File->Addon List from the program menu. A list of available addon files will be shown, and can be enabled or disabled via checkbox.\n\nGood sources for \
+new addons are either the public Obsidian-Addons repo at https://github.com/GTD-Carthage/Obsidian-Addons or the #addon-files channel of our Discord.");
+        out->align(FL_ALIGN_WRAP);
+        out->image(tutorial9);
+        g->end();
+    }
     {
         Fl_Group *g = new Fl_Group(0,0,W,H);
         g->box(box_style);
@@ -160,13 +378,12 @@ with all versions of Doom, it is much simpler in nature than the maps made by Ob
         back->callback(wiz_back, this->tutorial_wiz);
         Fl_Box *out = new Fl_Box(10,30,W-20,H-80);
         out->box(FL_FLAT_BOX);
-        out->labelsize(FL_NORMAL_SIZE * .9);
-        out->label("\n\nAt some point, you will want to have more control over the contents of the \
-WADs that you generate. This is where modules come into play. Modules are groups of options that can be \
-changed to fine-tune your experience. Most modules are optional, and will need to be enabled or disabled \
-accordingly.");
+        out->labelsize(FL_NORMAL_SIZE);
+        out->label("\n\nThere are more options to explore within Obsidian, but this should be enough to get you started. \
+The tutorial can be viewed again at any time by choosing Help->Tutorial from the program menu.\n\nIf you need more help, please ask in our \
+Discord (invite link https://discord.gg/dfqCt9v) or check our wiki at https://github.com/dashodanger/Obsidian/wiki.\n\nGood luck in the \
+infinite Hells!");
         out->align(FL_ALIGN_WRAP);
-        out->image(tutorial2);
         g->end();
     }
     tutorial_wiz->end();

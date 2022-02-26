@@ -182,6 +182,12 @@ extern std::string string_seed;
 extern Fl_JPEG_Image *tutorial1;
 extern Fl_JPEG_Image *tutorial2;
 extern Fl_JPEG_Image *tutorial3;
+extern Fl_JPEG_Image *tutorial4;
+extern Fl_JPEG_Image *tutorial5;
+extern Fl_JPEG_Image *tutorial6;
+extern Fl_JPEG_Image *tutorial7;
+extern Fl_JPEG_Image *tutorial8;
+extern Fl_JPEG_Image *tutorial9;
 
 
 void DLG_AboutText();
