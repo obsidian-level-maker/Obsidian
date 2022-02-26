@@ -2561,6 +2561,7 @@ function Quest_nice_items()
 
       local final_min_prog = info.min_prog
       local final_max_prog = info.max_prog
+      local avg_prog = (info.min_prog + info.max_prog) / 2
 
       -- sanity check for when rooms fall out of the along range
       for _,R in pairs(LEVEL.rooms) do
@@ -2576,6 +2577,9 @@ function Quest_nice_items()
         end
       end
 
+      final_min_prog = math.clamp(min_along_room, final_min_prog, max_along_room)
+      final_max_prog = math.clamp(min_along_room, final_max_prog, max_along_room)
+
       for _,R in pairs(LEVEL.rooms) do
         if R.closets
         and not R.secondary_important
@@ -2590,11 +2594,6 @@ function Quest_nice_items()
             do_it = true
           end            
 
-          if info.min_prog == 0 and info.max_prog == 0 and
-          R.is_start then
-            do_it = true
-          end
-
           if (info.not_start and R.is_start) or
           (info.not_exit and R.is_exit) or
           (info.not_secret and R.is_secret) then
@@ -2602,6 +2601,7 @@ function Quest_nice_items()
           end
 
           if do_it then
+            R.SI_score = math.abs(R.lev_along - avg_prog)
             table.insert(room_tab, R)
           end
         end
@@ -2610,8 +2610,20 @@ function Quest_nice_items()
       for count = info.min_count or 1, info.max_count do
         if table.empty(room_tab) then goto continue end
 
-        chosen_room = rand.pick(room_tab)
-        chosen_room.secondary_important =
+        local best_room
+        local best_score = 10
+
+        -- pick the room that is closest to the average
+        -- of the room progress position choice
+        for _,R in pairs(room_tab) do
+          if R.SI_score <= best_score then
+            best_room = R
+            best_score = R.SI_score
+          end
+        end
+
+        --chosen_room = rand.pick(room_tab)
+        best_room.secondary_important =
         {
           kind = info.kind
         }
@@ -3295,6 +3307,17 @@ function Quest_room_themes()
       LEVEL.alt_outdoor_wall_group = rand.key_by_probs(wg_tab)
     else
       LEVEL.alt_outdoor_wall_group = "none"
+    end
+
+    LEVEL.exit_windows = rand.key_by_probs(GAME.THEMES[next_theme].window_groups)
+    LEVEL.exit_scenic_fence_mat = GAME.MATERIALS[
+      rand.key_by_probs(GAME.THEMES[next_theme].scenic_fences)
+      ]
+
+    for _,R in pairs(LEVEL.rooms) do 
+      if R.is_exit and not R.is_secret then
+        R.fence_group = rand.key_by_probs(GAME.THEMES[next_theme].fence_groups)
+      end
     end
 
     if exit_room.is_outdoor and not exit_room.is_park then
