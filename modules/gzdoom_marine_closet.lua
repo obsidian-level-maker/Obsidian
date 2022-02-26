@@ -1422,7 +1422,7 @@ function MARINE_CLOSET_TUNE.calc_closets()
     max_count = PARAM.marine_closets,
     min_prog = PARAM.float_m_c_level_min_pos,
     max_prog = PARAM.float_m_c_level_max_pos,
-    not_secret = PARAM.bool_m_c_in_secrets,
+    not_secret = PARAM.bool_m_c_in_secret,
     level_prob = 100,
   }
 
