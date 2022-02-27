@@ -469,9 +469,6 @@ function CTL_HACX.weapon_setup(self)
     end
   end -- for opt
 
-  -- specific instructions for the weapon_pref choices
-  PARAM.weapon_prefs = self.options.weapon_prefs.value
-
   if PARAM.weapon_prefs == "vanilla"
   or PARAM.weapon_prefs == "none" then
     for _,mon in pairs(GAME.MONSTERS) do
