@@ -535,3 +535,11 @@ HEXEN.SKIN_DEFAULTS =
 {
 }
 
+HEXEN.SKIES = -- For randomly packing skies when writing MAPINFO
+{
+  "SKY1",
+  "SKY2",
+  "SKY3",
+  "SKYFOG",
+}
+
