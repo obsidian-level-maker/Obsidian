@@ -253,6 +253,7 @@ HEXEN.MATERIALS =
 
   SEWER01  = { t="SEWER01",  f="F_018" },
   SEWER02  = { t="SEWER02",  f="F_018" },
+  SEWER03  = { t="SEWER03",  f="F_018" },
   SEWER05  = { t="SEWER05",  f="F_018" },
   SEWER06  = { t="SEWER06",  f="F_018" },
   SEWER07  = { t="SEWER07",  f="F_017" },

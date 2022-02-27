@@ -4223,7 +4223,7 @@ gui.spots_dump("Cave spot dump")
           spots_in_flat_floor(R, A)
         elseif A.floor_group then
           if A.floor_group.sink then
-            if A.floor_group.sink.mat == "_LIQUID" and not LEVEL.liquid.damage then
+            if A.floor_group.sink.mat == "_LIQUID" and LEVEL.liquid and not LEVEL.liquid.damage then
               spots_in_flat_floor(R, A)
             elseif A.floor_group.sink.mat ~= "_LIQUID" then
               spots_in_flat_floor(R, A)

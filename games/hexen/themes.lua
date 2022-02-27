@@ -25,7 +25,7 @@ HEXEN.SINKS =
 
   liquid_plain =
   {
-    mat = "X_005",
+    mat = "_LIQUID",
     dz  = -12,
   },
 
@@ -42,7 +42,7 @@ HEXEN.THEMES =
       k_steel = 50,
     },
 
-    hub_keys = 
+    --[[hub_keys = 
     {
       k_castle = 50,
       k_dungeon = 50,
@@ -52,7 +52,7 @@ HEXEN.THEMES =
       k_rusty = 50,
       k_silver = 50,
       k_swamp = 50,
-    },   
+    },]]--   
 
     skyboxes =
     {
@@ -225,11 +225,54 @@ HEXEN.THEMES =
       fence_groups =
       {
         PLAIN = 50,
+        crenels = 12,
       },
 
       beam_groups =
       {
         beam_metal = 50,
+      },
+
+      narrow_halls =
+      {
+        vent = 50,
+      },
+  
+      wide_halls =
+      {
+        curve = 50,
+        deuce = 50,
+      },
+
+      window_groups = 
+      {
+        straddle = 70,
+        tall   = 80,
+        grate  = 45,
+        barred = 10,
+        supertall = 60,
+        slits = 20,
+        pillbox = 20,
+        slumpish = 30,
+        window_crossfire = 10,
+        window_arched = 10,
+        window_arched_tall = 10,
+        window_arched_inverted = 10
+      },
+
+      wall_groups =
+      {
+        PLAIN = 0.01,
+        mid_band = 10,
+        lite1 = 20,
+        lite2 = 20,
+        torches1 = 12,
+        torches2 = 12,
+        high_gap = 25,
+        vert_gap = 25,
+        wallgutters = 10,
+        lamptorch = 16,
+        runic = 10,
       },
 
       fences =
@@ -265,7 +308,13 @@ HEXEN.THEMES =
 
       facades =
       {
-
+        FIRE06=15,
+        FIRE07=15,
+        FIRE08=10,
+        FIRE09=10,
+        FIRE10=10,
+        FIRE11=10,
+        FIRE12=10,
       },
 
       liquids =
@@ -274,6 +323,8 @@ HEXEN.THEMES =
       },
 
       steps_mat = "F_011",
+
+      post_mat  = "_STRUCT",
 
     },
 
@@ -1516,6 +1567,8 @@ HEXEN.ROOM_THEMES =
   -- This is the element fire, as in "The Guardian or fire" in Raven's original wad.
   fire_room1 =
   {
+    env  = "building",
+    prob = 50,
     walls =
     {
       FIRE06=15,
@@ -1547,13 +1600,118 @@ HEXEN.ROOM_THEMES =
 
   },
 
+  fire_Hallway_vent_room1 =
+  {
+    env   = "hallway",
+    group = "vent",
+    prob  = 50,
+    walls =
+    {
+      FIRE06=15,
+      FIRE07=15,
+      FIRE08=10,
+      FIRE09=10,
+      FIRE10=10,
+      FIRE11=10,
+      FIRE12=10,
+    },
+
+    floors =
+    {
+      F_013=25,
+      F_032=5,
+      F_040=4,
+      F_044=1,
+      F_082=5,
+    },
+
+    ceilings =
+    {
+      F_013=25,
+      F_032=5,
+      F_040=4,
+      F_044=1,
+      F_082=5,
+    },
+  },
+
+  fire_Hallway_curve_room1 =
+  {
+    env   = "hallway",
+    group = "curve",
+    prob  = 50,
+    walls =
+    {
+      FIRE06=15,
+      FIRE07=15,
+      FIRE08=10,
+      FIRE09=10,
+      FIRE10=10,
+      FIRE11=10,
+      FIRE12=10,
+    },
+
+    floors =
+    {
+      F_013=25,
+      F_032=5,
+      F_040=4,
+      F_044=1,
+      F_082=5,
+    },
+
+    ceilings =
+    {
+      F_013=25,
+      F_032=5,
+      F_040=4,
+      F_044=1,
+      F_082=5,
+    },
+  },
+
+  fire_Hallway_curve_room1 =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob  = 50,
+    walls =
+    {
+      FIRE06=15,
+      FIRE07=15,
+      FIRE08=10,
+      FIRE09=10,
+      FIRE10=10,
+      FIRE11=10,
+      FIRE12=10,
+    },
+
+    floors =
+    {
+      F_013=25,
+      F_032=5,
+      F_040=4,
+      F_044=1,
+      F_082=5,
+    },
+
+    ceilings =
+    {
+      F_013=25,
+      F_032=5,
+      F_040=4,
+      F_044=1,
+      F_082=5,
+    },
+  },
+
   fire_room2 =
   {
-
+    env  = "building",
+    prob = 50,
     walls =
     {
       FIRE01=30,
-      FIRE04=5,
       FIRE05=10,
     },
 
@@ -1573,34 +1731,83 @@ HEXEN.ROOM_THEMES =
 
   },
 
-
-  -- This is the element fire, as in "The Guardian or fire" in Raven's original wad.
-  fire_lavawalls =
-  { -- fire could be split up, but these textures were pretty mixed up in the
-    -- original wads, and it looks good as it is, JB
-
+  fire_Hallway_vent_room2 =
+  {
+    env   = "hallway",
+    group = "vent",
+    prob  = 50,
     walls =
     {
-      X_FIRE01=100,
+      FIRE01=30,
+      FIRE05=10,
     },
 
     floors =
     {
-      F_013=25,
       F_032=25,
-      F_040=15,
-      F_044=5,
-      F_082=15,
+      F_040=5,
+      F_082=5,
     },
 
     ceilings =
     {
-      X_001=85,
-      F_013=25,
       F_032=25,
-      F_040=15,
-      F_044=5,
-      F_082=15,
+      F_040=5,
+      F_082=5,
+    },
+
+  },
+
+  fire_Hallway_curve_room2 =
+  {
+    env   = "hallway",
+    group = "curve",
+    prob  = 50,
+    walls =
+    {
+      FIRE01=30,
+      FIRE05=10,
+    },
+
+    floors =
+    {
+      F_032=25,
+      F_040=5,
+      F_082=5,
+    },
+
+    ceilings =
+    {
+      F_032=25,
+      F_040=5,
+      F_082=5,
+    },
+
+  },
+
+  fire_Hallway_deuce_room2 =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob  = 50,
+    walls =
+    {
+      FIRE01=30,
+      FIRE05=10,
+    },
+
+    floors =
+    {
+      F_032=25,
+      F_040=5,
+      F_082=5,
+    },
+
+    ceilings =
+    {
+      F_032=25,
+      F_040=5,
+      F_082=5,
     },
 
   },
@@ -1622,7 +1829,6 @@ HEXEN.ROOM_THEMES =
     naturals =
     {
       FIRE01=30,
-      FIRE04=5,
       FIRE05=10,
       FIRE06=15,
       FIRE07=15,
@@ -1631,6 +1837,15 @@ HEXEN.ROOM_THEMES =
       FIRE10=10,
       FIRE11=10,
       FIRE12=10,
+    },
+
+    porch_floors =
+    {
+      F_013=5,
+      F_032=30,
+      F_040=25,
+      F_044=4,
+      F_082=20,
     },
 
   },
@@ -2398,7 +2613,7 @@ OB_THEMES["dungeon"] =
   mixed_prob = 50,
 }
 
-UNFINISHED["fire"] =
+OB_THEMES["fire"] =
 {
   label = _("Fire"),
   game = "hexen",
