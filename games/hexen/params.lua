@@ -22,7 +22,7 @@
 HEXEN.PARAMETERS =
 {
   -- special logic for Hexen weapon system
-  hexen_weapons = true,
+  --hexen_weapons = true,
 
   teleporters = false,
 

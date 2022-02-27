@@ -38,6 +38,7 @@ HEXEN.WEAPONS =
     give = { {ammo="blue_mana",count=25} },
     class = "cleric",
     slot = 2,
+    level = 2,
   },
 
   c_fire =
@@ -52,9 +53,10 @@ HEXEN.WEAPONS =
     give = { {ammo="green_mana",count=25} },
     class = "cleric",
     slot = 3,
+    level = 4,
   },
 
-  c_wraith =
+  --[[c_wraith =
   {
     pref = 20,
     attack = "missile",
@@ -65,7 +67,7 @@ HEXEN.WEAPONS =
     per = 18,
     class = "cleric",
     slot = 4,
-  },
+  },]]--
 
   -- FIGHTER --
 
@@ -91,6 +93,7 @@ HEXEN.WEAPONS =
     give = { {ammo="blue_mana",count=25} },
     class = "fighter",
     slot = 2,
+    level = 2,
   },
 
   f_hammer =
@@ -105,9 +108,10 @@ HEXEN.WEAPONS =
     give = { {ammo="green_mana",count=25} },
     class = "fighter",
     slot = 3,
+    level = 4
   },
 
-  f_quietus =
+  --[[f_quietus =
   {
     pref = 20,
     attack = "missile",
@@ -118,7 +122,7 @@ HEXEN.WEAPONS =
     per = 14,
     class = "fighter",
     slot = 4,
-  },
+  },]]--
 
   -- MAGE --
 
@@ -145,6 +149,7 @@ HEXEN.WEAPONS =
     give = { {ammo="blue_mana",count=25} },
     class = "mage",
     slot = 2,
+    level = 2,
   },
 
   m_blitz =
@@ -159,6 +164,7 @@ HEXEN.WEAPONS =
     give = { {ammo="green_mana",count=25} },
     class = "mage",
     slot = 3,
+    level = 4
   },
 
   m_scourge =
@@ -198,10 +204,10 @@ HEXEN.WEAPONS =
 }
 
 
-HEXEN.WEAPON_PIECES =
+--[[HEXEN.WEAPON_PIECES =
 {
   fighter = { "f1_hilt",  "f2_cross", "f3_blade" },
   cleric  = { "c1_shaft", "c2_cross", "c3_arc"   },
   mage    = { "m1_stick", "m2_stub",  "m3_skull" },
-}
+}]]--
 
