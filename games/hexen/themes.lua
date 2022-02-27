@@ -1335,6 +1335,114 @@ HEXEN.ROOM_THEMES =
 
   },
 
+  dungeon_deuce_Hallway_Monktan =
+  {
+    env   = "hallway",
+    group = "deuce",
+    prob  = 50,
+
+    walls =
+    {
+      MONK02=40,
+      MONK03=15,
+      MONK16=15,
+    },
+
+    floors =
+    {
+      F_011=20,
+      F_014=8,
+      F_025=15,
+      F_028=10,
+      F_029=10,
+      F_077=10,
+      F_089=12,
+    },
+
+    ceilings =
+    {
+      F_011=20,
+      F_014=8,
+      F_025=15,
+      F_028=10,
+      F_029=10,
+      F_092=5,
+    },
+
+  },
+
+  dungeon_curve_Hallway_Monktan =
+  {
+    env   = "hallway",
+    group = "curve",
+    prob  = 50,
+
+    walls =
+    {
+      MONK02=40,
+      MONK03=15,
+      MONK16=15,
+    },
+
+    floors =
+    {
+      F_011=20,
+      F_014=8,
+      F_025=15,
+      F_028=10,
+      F_029=10,
+      F_077=10,
+      F_089=12,
+    },
+
+    ceilings =
+    {
+      F_011=20,
+      F_014=8,
+      F_025=15,
+      F_028=10,
+      F_029=10,
+      F_092=5,
+    },
+
+  },
+
+  dungeon_vent_Hallway_Monktan =
+  {
+    env   = "hallway",
+    group = "vent",
+    prob  = 50,
+
+    walls =
+    {
+      MONK02=40,
+      MONK03=15,
+      MONK16=15,
+    },
+
+    floors =
+    {
+      F_011=20,
+      F_014=8,
+      F_025=15,
+      F_028=10,
+      F_029=10,
+      F_077=10,
+      F_089=12,
+    },
+
+    ceilings =
+    {
+      F_011=20,
+      F_014=8,
+      F_025=15,
+      F_028=10,
+      F_029=10,
+      F_092=5,
+    },
+
+  },
+
   dungeon_outdoors =
   {
     env  = "outdoor",

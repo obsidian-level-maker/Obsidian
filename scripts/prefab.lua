@@ -2307,7 +2307,7 @@ function Fab_replacements(fab)
         current_tag = C.tag
       end
 
-      -- This is in severe need of fleshing out, probably need something like a miniature XLAT table - Dasho
+      -- This should provide enough compatibility to work with the generic prefab set - Dasho
       if OB_CONFIG.game == "hexen" then
         if C.x and C.special then 
           if (C.special >= 10 and C.special <= 12) then 
@@ -2316,6 +2316,12 @@ function Fab_replacements(fab)
             C.arg5 = current_tag
           elseif C.special == 22 then
             C.arg1 = current_tag
+          elseif C.special == 74 then
+            if OB_CONFIG.length == "single" or LEVEL.game_along == 1.0 then
+              C.special = 75
+            else
+              C.arg1 = tonumber(string.sub(LEVEL.name, 4)) + 1
+            end
           end
         end
       end

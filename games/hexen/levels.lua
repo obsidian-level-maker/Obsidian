@@ -206,13 +206,13 @@ function HEXEN.get_levels()
 
     end -- for map
 
-    if MAP_NUM > 1 then
+    --[[if MAP_NUM > 1 then
       Hub_connect_levels(EPI, GAME.THEMES.DEFAULTS.hub_keys)
 
       Hub_assign_keys(EPI, GAME.THEMES.DEFAULTS.keys)
       Hub_assign_weapons(EPI)
       Hub_assign_pieces(EPI, { "piece1", "piece2", "piece3" })
-    end
+    end]]--
 
     -- set "dist_to_end" value
     if MAP_NUM >= 9 then
