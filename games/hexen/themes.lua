@@ -2394,7 +2394,7 @@ OB_THEMES["dungeon"] =
 {
   label = _("Dungeon"),
   game = "hexen",
-  name_theme = "GOTHIC",
+  name_class = "GOTHIC",
   mixed_prob = 50,
 }
 
@@ -2402,7 +2402,7 @@ UNFINISHED["fire"] =
 {
   label = _("Fire"),
   game = "hexen",
-  name_theme = "GOTHIC",
+  name_class = "GOTHIC",
   mixed_prob = 50,
 }
 
@@ -2410,7 +2410,7 @@ UNFINISHED["ice"] =
 {
   label = _("Ice"),
   game = "hexen",
-  name_theme = "GOTHIC",
+  name_class = "GOTHIC",
   mixed_prob = 50,
 }
 
@@ -2418,7 +2418,7 @@ UNFINISHED["steel"] =
 {
   label = _("Steel"),
   game = "hexen",
-  name_theme = "GOTHIC",
+  name_class = "GOTHIC",
   mixed_prob = 20,
 }
 
@@ -2426,7 +2426,7 @@ UNFINISHED["desert"] =
 {
   label = _("Desert"),
   game = "hexen",
-  name_theme = "GOTHIC",
+  name_class = "GOTHIC",
   mixed_prob = 10,
 }
 
@@ -2434,7 +2434,7 @@ UNFINISHED["cave"] =
 {
   label = _("Cave"),
   game = "hexen",
-  name_theme = "GOTHIC",
+  name_class = "GOTHIC",
   mixed_prob = 20,
 }
 
@@ -2442,7 +2442,7 @@ UNFINISHED["swamp"] =
 {
   label = _("Swamp"),
   game = "hexen",
-  name_theme = "GOTHIC",
+  name_class = "GOTHIC",
   mixed_prob = 20,
 }
 
@@ -2450,7 +2450,7 @@ UNFINISHED["forest"] =
 {
   label = _("Forest"),
   game = "hexen",
-  name_theme = "GOTHIC",
+  name_class = "GOTHIC",
   mixed_prob = 20,
 }
 
@@ -2458,7 +2458,7 @@ UNFINISHED["village"] =
 {
   label = _("Village"),
   game = "hexen",
-  name_theme = "URBAN",
+  name_class = "URBAN",
   mixed_prob = 20,
 }
 
