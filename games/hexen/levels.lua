@@ -59,6 +59,39 @@ HEXEN.EPISODES =
   },
 }
 
+HEXEN.MAPINFO_MAPS =
+{
+  [1] = 1,
+  [2] = 2,
+  [3] = 3,
+  [4] = 4,
+  [5] = 5,
+  [6] = 6,
+  [7] = 13,
+  [8] = 8,
+  [9] = 9,
+  [10] = 10,
+  [11] = 11,
+  [12] = 12,
+  [13] = 27,
+  [14] = 28,
+  [15] = 30,
+  [16] = 31,
+  [17] = 32,
+  [18] = 33,
+  [19] = 34,
+  [20] = 21,
+  [21] = 22,
+  [22] = 23,
+  [23] = 24,
+  [24] = 25,
+  [25] = 26,
+  [26] = 35,
+  [27] = 36,
+  [28] = 37,
+  [29] = 38,
+  [30] = 39
+}
 
 HEXEN.PREBUILT_LEVELS =
 {
@@ -127,7 +160,7 @@ function HEXEN.get_levels()
     local LEV =
     {
       episode = EPI,
-      name  = string.format("MAP%02d", map),
+      name  = string.format("MAP%02d", HEXEN.MAPINFO_MAPS[map]),
       ep_along = ep_along,
       game_along = game_along
     }

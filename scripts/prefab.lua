@@ -2320,7 +2320,14 @@ function Fab_replacements(fab)
             if OB_CONFIG.length == "single" or LEVEL.game_along == 1.0 then
               C.special = 75
             else
-              C.arg1 = tonumber(string.sub(LEVEL.name, 4)) + 1
+              local mapnum = tonumber(string.sub(LEVEL.name, 4))
+              for k, v in pairs(HEXEN.MAPINFO_MAPS) do
+                if v == mapnum then
+                  C.arg1 = HEXEN.MAPINFO_MAPS[k + 1]
+                  goto foundmap
+                end
+              end
+              ::foundmap::
             end
           end
         end

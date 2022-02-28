@@ -100,8 +100,15 @@ function ScriptMan_assemble_mapinfo_lump()
   else
     mapinfo_lines = {}
     for _,lev in pairs(GAME.levels) do
-      mapline = "map " .. tonumber(string.sub(lev.name, 4)) .. " \"" .. lev.description .. "\"\n"
-      mapline = mapline .. "warptrans " .. tonumber(string.sub(lev.name, 4)) .. "\n"
+      local mapnum = tonumber(string.sub(lev.name, 4))
+      mapline = "map " .. mapnum .. " \"" .. lev.description .. "\"\n"
+      for k, v in pairs(HEXEN.MAPINFO_MAPS) do
+        if v == mapnum then
+          mapline = mapline .. "warptrans " .. k .. "\n"
+          goto foundmap
+        end
+      end
+      ::foundmap::
       mapline = mapline .. "sky1 " .. rand.pick(HEXEN.SKIES) .. "\n\n"
       table.insert(mapinfo_lines, mapline)
     end
