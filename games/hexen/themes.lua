@@ -178,6 +178,11 @@ HEXEN.THEMES =
       barrels = { none=10, few=50, some=20, heaps=5 }
     },
 
+    street_sinks =
+    {
+      floor_default_streets = 1
+    }
+
   },
 
     dungeon =
