@@ -15,6 +15,8 @@
 
 HEXEN.SINKS =
 {
+  -- sky holes --
+
   sky_plain =
   {
     mat   = "_SKY",
@@ -22,11 +24,108 @@ HEXEN.SINKS =
     light = 16,
   },
 
+-- sky ceilings
+
+  sky_ceiling =
+  {
+    mat   = "_SKY",
+    dz    = 48,
+    light = 16,
+
+    trim_mat = "_WALL",
+    trim_dz  = -9,
+    trim_light = 16,
+  },
+
+  -- liquid floor --
+
   liquid_plain =
   {
     mat = "_LIQUID",
     dz  = -12,
   },
+
+  liquid_trim =
+  {
+    mat   = "_LIQUID",
+    dz    = -16,
+
+    trim_mat = "_WALL",
+    trim_dz  = -8,
+  },
+
+  -- ceiling lights --
+
+
+  light_plain =
+  {
+    mat = "_FLOOR",
+    dz  = 8,
+    light = 32,
+
+    trim_mat = "_WALL",
+    trim_dz  = -5,
+    trim_light = 16,
+  },
+
+-- plain ceilings
+
+  ceiling_plain =
+  {
+    mat   = "_CEIL",
+    dz    = 64,
+    light = 16,
+  },
+
+-- plain floors
+
+  floor_plain =
+  {
+    mat = "_FLOOR",
+    dz = -16,
+    light = 32,
+
+    trim_mat = "_WALL",
+    trim_dz = -8,
+  },
+
+  -- fantastic floors
+
+  floor_trim_sky =
+  {
+    mat = "_FLOOR",
+
+    trim_mat = "_SKY",
+    trim_dz = -8,
+  },
+
+  floor_trim_liquid =
+  {
+    mat = "_FLOOR",
+    dz = -4,
+
+    trim_mat = "_LIQUID",
+    trim_dz = -8,
+  },
+
+  floor_mixup =
+  {
+    mat = "_CEIL",
+    dz = -8,
+
+    trim_mat = "_WALL",
+    trim_dz = -4,
+  },
+
+  -- street sink def, do not use for anything else
+  floor_default_streets =
+  {
+    mat = "F_039",
+    dz = 2,
+
+    trim_mat = "CAVE04",
+    trim_dz = 2,
+  }
 }
 
 HEXEN.THEMES =
