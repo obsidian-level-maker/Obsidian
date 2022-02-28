@@ -10,7 +10,14 @@ PREFABS.Exit_pillar2 =
 
   prob  = 100,
 
-  where = "point"
+  where = "point",
+  forced_offsets = 
+  {
+    [26] = { x=0, y=16 },
+    [34] = { x=0, y=16 },
+    [44] = { x=0, y=16 },
+    [54] = { x=0, y=16 },
+  }
 }
 
 PREFABS.Exit_pillar2_chex3 = 
@@ -121,10 +128,10 @@ PREFABS.Exit_pillar2_hexen_nosign =
   map = "MAP02",
   forced_offsets = 
   {
-    [26] = { x=16, y=50 },
-    [34] = { x=16, y=50 },
-    [44] = { x=16, y=50 },
-    [54] = { x=16, y=50 },
+    [26] = { x=0, y=0 },
+    [34] = { x=0, y=0 },
+    [44] = { x=0, y=0 },
+    [54] = { x=0, y=0 },
   }
 }
 
@@ -155,6 +162,13 @@ PREFABS.Exit_pillar2_secret =
 
   -- this kind means "an exit to a secret level"
   kind = "secret_exit",
+  forced_offsets = 
+  {
+    [26] = { x=0, y=16 },
+    [34] = { x=0, y=16 },
+    [44] = { x=0, y=16 },
+    [54] = { x=0, y=16 },
+  }
 }
 
 PREFABS.Exit_pillar2_secret_chex3 = 

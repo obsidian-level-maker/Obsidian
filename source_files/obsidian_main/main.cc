@@ -148,6 +148,7 @@ Fl_JPEG_Image *tutorial6;
 Fl_JPEG_Image *tutorial7;
 Fl_JPEG_Image *tutorial8;
 Fl_JPEG_Image *tutorial9;
+Fl_JPEG_Image *tutorial10;
 
 #ifdef WIN32
 FLASHWINFO blinker;
@@ -216,7 +217,7 @@ static void ShowInfo() {
         "     --randomize-arch      Randomize architecture settings\n"
         "     --randomize-monsters  Randomize monster-related settings\n"
         "     --randomize-pickups   Randomize item/weapon settings\n"
-        "     --randomize-misc      Randomize miscellaneous settings\n"
+        "     --randomize-other     Randomize other settings\n"
         "\n"
         "  -3 --pk3                 Compress output file to PK3\n"
         "  -z --zip                 Compress output file to ZIP\n"
@@ -1088,7 +1089,7 @@ restart:;
         }
     }
 
-    if (argv::Find(0, "randomize-misc") >= 0) {
+    if (argv::Find(0, "randomize-other") >= 0) {
         if (batch_mode) {
             batch_randomize_groups.push_back("misc");
         }
@@ -1247,7 +1248,7 @@ skiprest:
             "Surprise Me/Randomize Pickups", NULL, main_win_pickups_config_CB,
             0, FL_MENU_TOGGLE | (randomize_pickups ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add(
-            "Surprise Me/Randomize Misc", NULL, main_win_misc_config_CB, 0,
+            "Surprise Me/Randomize Other", NULL, main_win_misc_config_CB, 0,
             FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
     }
 
@@ -1281,6 +1282,9 @@ skiprest:
     image_loc.remove_filename();
     image_loc.append("tutorial9.jpg");
     tutorial9 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial10.jpg");
+    tutorial10 = new Fl_JPEG_Image(image_loc.string().c_str());
 
 #ifdef WIN32
     main_win->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(1)));
