@@ -24,6 +24,9 @@ HEXEN.EPISODES =
 
     theme = "forest",
     sky_light = 0.65,
+    sky_patch1 = "SKY2 0",
+    sky_patch2 = "SKY3 0",
+    lightning_chance = 15
   },
 
   episode2 =
@@ -32,6 +35,9 @@ HEXEN.EPISODES =
 
     theme = "village",
     sky_light = 0.75,
+    sky_patch1 = "SKY2 40",
+    sky_patch2 = "SKY3 40",
+    lightning_chance = 30
   },
 
   episode3 =
@@ -40,6 +46,9 @@ HEXEN.EPISODES =
 
     theme = "steel",
     sky_light = 0.65,
+    sky_patch1 = "SKYWALL 0",
+    sky_patch2 = "SKY1 80",
+    doublesky = true
   },
 
   episode4 =
@@ -48,6 +57,9 @@ HEXEN.EPISODES =
 
     theme = "dungeon",
     sky_light = 0.60,
+    sky_patch1 = "SKYWALL2 0",
+    sky_patch2 = "SKY4 50",
+    doublesky = true
   },
 
   episode5 =
@@ -56,6 +68,10 @@ HEXEN.EPISODES =
 
     theme = "swamp",
     sky_light = 0.50,
+    sky_patch1 = "SKYFOG2 20",
+    sky_patch2 = "SKYFOG 60",
+    doublesky = true,
+    fadetable = true
   },
 }
 

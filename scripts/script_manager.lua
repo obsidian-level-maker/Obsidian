@@ -109,13 +109,24 @@ function ScriptMan_assemble_mapinfo_lump()
         end
       end
       ::foundmap::
-      mapline = mapline .. "sky1 " .. rand.pick(HEXEN.SKIES) .. "\n\n"
+      mapline = mapline .. "sky1 " .. lev.episode.sky_patch1 .. "\n"
+      mapline = mapline .. "sky2 " .. lev.episode.sky_patch2 .. "\n"
+      if lev.episode.lightning_chance then
+        if rand.odds(lev.episode.lightning_chance) then
+          mapline = mapline .. "lightning\n"
+        end
+      end
+      if lev.episode.doublesky then
+        mapline = mapline .. "doublesky\n"
+      end
+      if lev.episode.fadetable then
+        mapline = mapline .. "fadetable fogmap\n"
+      end
+      mapline = mapline .. "\n"
       table.insert(mapinfo_lines, mapline)
     end
   end
-
-  if #mapinfo_lines > 2 then
-    print(table.tostr(mapinfo_line))
+  if #mapinfo_lines > 2  or (OB_CONFIG.game == "hexen" and #mapinfo_lines > 0) then
     gui.wad_add_text_lump("MAPINFO", mapinfo_lines)
   end
 end

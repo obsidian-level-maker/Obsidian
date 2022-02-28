@@ -188,6 +188,7 @@ extern Fl_JPEG_Image *tutorial6;
 extern Fl_JPEG_Image *tutorial7;
 extern Fl_JPEG_Image *tutorial8;
 extern Fl_JPEG_Image *tutorial9;
+extern Fl_JPEG_Image *tutorial10;
 
 
 void DLG_AboutText();
