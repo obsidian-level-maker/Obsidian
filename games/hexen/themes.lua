@@ -169,8 +169,7 @@ HEXEN.THEMES =
 
       scenic_fences =
       {
-        SEWER_BAR3 = 50,
-        SEWER_BAR4 = 50,
+        GATE01 = 50,
       },
 
       fence_posts =
@@ -297,8 +296,7 @@ HEXEN.THEMES =
 
       scenic_fences =
       {
-        SEWER_BAR3 = 50,
-        SEWER_BAR4 = 50,
+        GATE01 = 50,
       },
 
       fence_posts =
@@ -322,10 +320,9 @@ HEXEN.THEMES =
         lava   = 10,
       },
 
-      steps_mat = "F_011",
+      steps_mat = "F_013",
 
       post_mat  = "_STRUCT",
-
     },
 
     ice =
@@ -350,6 +347,7 @@ HEXEN.THEMES =
       fence_groups =
       {
         PLAIN = 50,
+        crenels = 12,
       },
 
       beam_groups =
@@ -357,30 +355,65 @@ HEXEN.THEMES =
         beam_metal = 50,
       },
 
+      narrow_halls =
+      {
+        vent = 50,
+      },
+  
+      wide_halls =
+      {
+        curve = 50,
+        deuce = 50,
+      },
+
+      window_groups = 
+      {
+        straddle = 70,
+        tall   = 80,
+        grate  = 45,
+        barred = 10,
+        supertall = 60,
+        slits = 20,
+        pillbox = 20,
+        slumpish = 30,
+        window_crossfire = 10,
+        window_arched = 10,
+        window_arched_tall = 10,
+        window_arched_inverted = 10
+      },
+
+      wall_groups =
+      {
+        PLAIN = 0.01,
+        mid_band = 10,
+        lite1 = 20,
+        lite2 = 20,
+        torches1 = 12,
+        torches2 = 12,
+        high_gap = 25,
+        vert_gap = 25,
+        wallgutters = 10,
+        lamptorch = 16,
+        runic = 10,
+      },
+
       fences =
       {
-        STEEL01=40,
-        STEEL02=10,
-        STEEL05=10,
-        STEEL06=15,
-        STEEL07=5,
-        STEEL08=5,
+        ICE01=10,
+        ICE06=50,
       },
 
       cage_mats =
       {
-        STEEL01=40,
-        STEEL02=10,
-        STEEL05=10,
-        STEEL06=15,
-        STEEL07=5,
-        STEEL08=5,
+        ICE01=15,
+        ICE02=30,
+        ICE03=5,
+        ICE06=25,
       },
 
       scenic_fences =
       {
-        SEWER_BAR3 = 50,
-        SEWER_BAR4 = 50,
+        GATE01 = 50,
       },
 
       fence_posts =
@@ -390,16 +423,18 @@ HEXEN.THEMES =
 
       facades =
       {
-
+        ICE01=10,
+        ICE06=50,
       },
 
       liquids =
       {
-        lava   = 10,
+        icefloor   = 10,
       },
 
-      steps_mat = "F_011",
+      steps_mat = "F_040",
 
+      post_mat  = "_STRUCT",
     },
 
     steel =
@@ -424,11 +459,54 @@ HEXEN.THEMES =
       fence_groups =
       {
         PLAIN = 50,
+        crenels = 12,
       },
 
       beam_groups =
       {
         beam_metal = 50,
+      },
+
+      narrow_halls =
+      {
+        vent = 50,
+      },
+  
+      wide_halls =
+      {
+        curve = 50,
+        deuce = 50,
+      },
+
+      window_groups = 
+      {
+        straddle = 70,
+        tall   = 80,
+        grate  = 45,
+        barred = 10,
+        supertall = 60,
+        slits = 20,
+        pillbox = 20,
+        slumpish = 30,
+        window_crossfire = 10,
+        window_arched = 10,
+        window_arched_tall = 10,
+        window_arched_inverted = 10
+      },
+
+      wall_groups =
+      {
+        PLAIN = 0.01,
+        mid_band = 10,
+        lite1 = 20,
+        lite2 = 20,
+        torches1 = 12,
+        torches2 = 12,
+        high_gap = 25,
+        vert_gap = 25,
+        wallgutters = 10,
+        lamptorch = 16,
+        runic = 10,
       },
 
       fences =
@@ -453,8 +531,7 @@ HEXEN.THEMES =
 
       scenic_fences =
       {
-        SEWER_BAR3 = 50,
-        SEWER_BAR4 = 50,
+        GATE01 = 50,
       },
 
       fence_posts =
@@ -464,7 +541,12 @@ HEXEN.THEMES =
 
       facades =
       {
-
+        STEEL01=40,
+        STEEL02=10,
+        STEEL05=10,
+        STEEL06=15,
+        STEEL07=5,
+        STEEL08=5,
       },
 
       liquids =
@@ -472,8 +554,9 @@ HEXEN.THEMES =
         lava   = 10,
       },
 
-      steps_mat = "F_011",
+      steps_mat = "F_073",
 
+      post_mat  = "_STRUCT",
     },
 
     desert =
@@ -498,11 +581,54 @@ HEXEN.THEMES =
       fence_groups =
       {
         PLAIN = 50,
+        crenels = 12,
       },
 
       beam_groups =
       {
         beam_metal = 50,
+      },
+
+      narrow_halls =
+      {
+        vent = 50,
+      },
+  
+      wide_halls =
+      {
+        curve = 50,
+        deuce = 50,
+      },
+
+      window_groups = 
+      {
+        straddle = 70,
+        tall   = 80,
+        grate  = 45,
+        barred = 10,
+        supertall = 60,
+        slits = 20,
+        pillbox = 20,
+        slumpish = 30,
+        window_crossfire = 10,
+        window_arched = 10,
+        window_arched_tall = 10,
+        window_arched_inverted = 10
+      },
+
+      wall_groups =
+      {
+        PLAIN = 0.01,
+        mid_band = 10,
+        lite1 = 20,
+        lite2 = 20,
+        torches1 = 12,
+        torches2 = 12,
+        high_gap = 25,
+        vert_gap = 25,
+        wallgutters = 10,
+        lamptorch = 16,
+        runic = 10,
       },
 
       fences =
@@ -519,8 +645,7 @@ HEXEN.THEMES =
 
       scenic_fences =
       {
-        SEWER_BAR3 = 50,
-        SEWER_BAR4 = 50,
+        GATE04 = 50,
       },
 
       fence_posts =
@@ -539,8 +664,9 @@ HEXEN.THEMES =
         lava   = 10,
       },
 
-      steps_mat = "F_011",
+      steps_mat = "F_028",
 
+      post_mat  = "_STRUCT",
     },
 
     cave =
@@ -565,6 +691,7 @@ HEXEN.THEMES =
       fence_groups =
       {
         PLAIN = 50,
+        crenels = 12,
       },
 
       beam_groups =
@@ -572,24 +699,56 @@ HEXEN.THEMES =
         beam_metal = 50,
       },
 
+      narrow_halls =
+      {
+        vent = 50,
+      },
+  
+      wide_halls =
+      {
+        curve = 50,
+        deuce = 50,
+      },
+
+      window_groups = 
+      {
+        straddle = 70,
+        tall   = 80,
+        grate  = 45,
+        barred = 10,
+        supertall = 60,
+        slits = 20,
+        pillbox = 20,
+        slumpish = 30,
+        window_crossfire = 10,
+        window_arched = 10,
+        window_arched_tall = 10,
+        window_arched_inverted = 10
+      },
+
+      wall_groups =
+      {
+        PLAIN = 0.01,
+        mid_band = 10,
+        lite1 = 20,
+        lite2 = 20,
+        torches1 = 12,
+        torches2 = 12,
+        high_gap = 25,
+        vert_gap = 25,
+        wallgutters = 10,
+        lamptorch = 16,
+        runic = 10,
+      },
+
       fences =
       {
-        STEEL01=40,
-        STEEL02=10,
-        STEEL05=10,
-        STEEL06=15,
-        STEEL07=5,
-        STEEL08=5,
+        CAVE03 = 10,
       },
 
       cage_mats =
       {
-        STEEL01=40,
-        STEEL02=10,
-        STEEL05=10,
-        STEEL06=15,
-        STEEL07=5,
-        STEEL08=5,
+        CAVE03 = 10,
       },
 
       scenic_fences =
@@ -605,16 +764,17 @@ HEXEN.THEMES =
 
       facades =
       {
-        CAVE03=10,
+        CAVE03 = 10,
       },
 
       liquids =
       {
-        lava   = 10,
+        muck   = 10,
       },
 
-      steps_mat = "F_011",
+      steps_mat = "F_039",
 
+      post_mat  = "_STRUCT",
     },
 
     swamp =
@@ -639,6 +799,7 @@ HEXEN.THEMES =
       fence_groups =
       {
         PLAIN = 50,
+        crenels = 12,
       },
 
       beam_groups =
@@ -646,24 +807,72 @@ HEXEN.THEMES =
         beam_metal = 50,
       },
 
+      narrow_halls =
+      {
+        vent = 50,
+      },
+  
+      wide_halls =
+      {
+        curve = 50,
+        deuce = 50,
+      },
+
+      window_groups = 
+      {
+        straddle = 70,
+        tall   = 80,
+        grate  = 45,
+        barred = 10,
+        supertall = 60,
+        slits = 20,
+        pillbox = 20,
+        slumpish = 30,
+        window_crossfire = 10,
+        window_arched = 10,
+        window_arched_tall = 10,
+        window_arched_inverted = 10
+      },
+
+      wall_groups =
+      {
+        PLAIN = 0.01,
+        mid_band = 10,
+        lite1 = 20,
+        lite2 = 20,
+        torches1 = 12,
+        torches2 = 12,
+        high_gap = 25,
+        vert_gap = 25,
+        wallgutters = 10,
+        lamptorch = 16,
+        runic = 10,
+      },
+
       fences =
       {
-        STEEL01=40,
-        STEEL02=10,
-        STEEL05=10,
-        STEEL06=15,
-        STEEL07=5,
-        STEEL08=5,
+        SWAMP01=20,
+        SWAMP03=20,
+        SWAMP04=20,
+        FOREST07=10,
+        CAVE03=10,
+        CAVE04=10,
+        CAVE05=10,
+        CAVE06=10,
+        WASTE02=5,
       },
 
       cage_mats =
       {
-        STEEL01=40,
-        STEEL02=10,
-        STEEL05=10,
-        STEEL06=15,
-        STEEL07=5,
-        STEEL08=5,
+        SWAMP01=20,
+        SWAMP03=20,
+        SWAMP04=20,
+        FOREST07=10,
+        CAVE03=10,
+        CAVE04=10,
+        CAVE05=10,
+        CAVE06=10,
+        WASTE02=5,
       },
 
       scenic_fences =
@@ -679,16 +888,25 @@ HEXEN.THEMES =
 
       facades =
       {
-
+        SWAMP01=20,
+        SWAMP03=20,
+        SWAMP04=20,
+        FOREST07=10,
+        CAVE03=10,
+        CAVE04=10,
+        CAVE05=10,
+        CAVE06=10,
+        WASTE02=5,
       },
 
       liquids =
       {
-        lava   = 10,
+        muck   = 10,
       },
 
-      steps_mat = "F_011",
+      steps_mat = "F_019",
 
+      post_mat  = "_STRUCT",
     },
 
     forest =
@@ -713,6 +931,7 @@ HEXEN.THEMES =
       fence_groups =
       {
         PLAIN = 50,
+        crenels = 12,
       },
 
       beam_groups =
@@ -720,24 +939,60 @@ HEXEN.THEMES =
         beam_metal = 50,
       },
 
+      narrow_halls =
+      {
+        vent = 50,
+      },
+  
+      wide_halls =
+      {
+        curve = 50,
+        deuce = 50,
+      },
+
+      window_groups = 
+      {
+        straddle = 70,
+        tall   = 80,
+        grate  = 45,
+        barred = 10,
+        supertall = 60,
+        slits = 20,
+        pillbox = 20,
+        slumpish = 30,
+        window_crossfire = 10,
+        window_arched = 10,
+        window_arched_tall = 10,
+        window_arched_inverted = 10
+      },
+
+      wall_groups =
+      {
+        PLAIN = 0.01,
+        mid_band = 10,
+        lite1 = 20,
+        lite2 = 20,
+        torches1 = 12,
+        torches2 = 12,
+        high_gap = 25,
+        vert_gap = 25,
+        wallgutters = 10,
+        lamptorch = 16,
+        runic = 10,
+      },
+
       fences =
       {
-        STEEL01=40,
-        STEEL02=10,
-        STEEL05=10,
-        STEEL06=15,
-        STEEL07=5,
-        STEEL08=5,
+        FOREST01=40,
+        FOREST02=10,
+        WINN01=30,
       },
 
       cage_mats =
       {
-        STEEL01=40,
-        STEEL02=10,
-        STEEL05=10,
-        STEEL06=15,
-        STEEL07=5,
-        STEEL08=5,
+        FOREST01=40,
+        FOREST02=10,
+        WINN01=30,
       },
 
       scenic_fences =
@@ -760,13 +1015,15 @@ HEXEN.THEMES =
 
       liquids =
       {
-        lava   = 10,
+        muck   = 10,
       },
 
-      steps_mat = "F_011",
+      steps_mat = "F_014",
 
+      post_mat  = "_STRUCT",
     },
 
+ 
     village =
     {
 
@@ -789,6 +1046,7 @@ HEXEN.THEMES =
       fence_groups =
       {
         PLAIN = 50,
+        crenels = 12,
       },
 
       beam_groups =
@@ -796,30 +1054,67 @@ HEXEN.THEMES =
         beam_metal = 50,
       },
 
+      narrow_halls =
+      {
+        vent = 50,
+      },
+  
+      wide_halls =
+      {
+        curve = 50,
+        deuce = 50,
+      },
+
+      window_groups = 
+      {
+        straddle = 70,
+        tall   = 80,
+        grate  = 45,
+        barred = 10,
+        supertall = 60,
+        slits = 20,
+        pillbox = 20,
+        slumpish = 30,
+        window_crossfire = 10,
+        window_arched = 10,
+        window_arched_tall = 10,
+        window_arched_inverted = 10
+      },
+
+      wall_groups =
+      {
+        PLAIN = 0.01,
+        mid_band = 10,
+        lite1 = 20,
+        lite2 = 20,
+        torches1 = 12,
+        torches2 = 12,
+        high_gap = 25,
+        vert_gap = 25,
+        wallgutters = 10,
+        lamptorch = 16,
+        runic = 10,
+      },
+
       fences =
       {
-        STEEL01=40,
-        STEEL02=10,
-        STEEL05=10,
-        STEEL06=15,
-        STEEL07=5,
-        STEEL08=5,
+        WOOD01=5,
+        VILL04=10,
+        VILL05=10,
       },
 
       cage_mats =
       {
-        STEEL01=40,
-        STEEL02=10,
-        STEEL05=10,
-        STEEL06=15,
-        STEEL07=5,
-        STEEL08=5,
+        WOOD01=5,
+        VILL04=10,
+        VILL05=10,
       },
 
       scenic_fences =
       {
-        SEWER_BAR3 = 50,
-        SEWER_BAR4 = 50,
+        BAMBOO_6 = 50,
+        BAMBOO_7 = 50,
+        BAMBOO_8 = 50,
       },
 
       fence_posts =
@@ -829,16 +1124,19 @@ HEXEN.THEMES =
 
       facades =
       {
-
+        WOOD01=5,
+        VILL04=10,
+        VILL05=10,
       },
 
       liquids =
       {
-        lava   = 10,
+        muck   = 10,
       },
 
-      steps_mat = "F_011",
+      steps_mat = "F_055",
 
+      post_mat  = "_STRUCT",
     },
 
 }
@@ -1853,7 +2151,8 @@ HEXEN.ROOM_THEMES =
   -- This is the "element" ice
   ice_room1 =
   {
-
+    env  = "building",
+    prob = 50,
     walls =
     {
       ICE02=30,
@@ -1876,9 +2175,117 @@ HEXEN.ROOM_THEMES =
 
   },
 
+  ice_Hallway_vent_room1 =
+  {
+    env  = "hallway",
+    group = "vent",
+    prob = 50,
+    walls =
+    {
+      ICE02=30,
+      ICE03=5,
+      ICE06=25,
+    },
+
+    floors =
+    {
+      F_013=40,
+      F_040=30,
+    },
+
+    ceilings =
+    {
+      F_013=40,
+      F_040=30,
+    },
+
+  },
+
+  ice_Hallway_curve_room1 =
+  {
+    env  = "hallway",
+    group = "curve",
+    prob = 50,
+    walls =
+    {
+      ICE02=30,
+      ICE03=5,
+      ICE06=25,
+    },
+
+    floors =
+    {
+      F_013=40,
+      F_040=30,
+    },
+
+    ceilings =
+    {
+      F_013=40,
+      F_040=30,
+    },
+
+  },
+
+  ice_Hallway_deuce_room1 =
+  {
+    env  = "hallway",
+    group = "deuce",
+    prob = 50,
+    walls =
+    {
+      ICE02=30,
+      ICE03=5,
+      ICE06=25,
+    },
+
+    floors =
+    {
+      F_013=40,
+      F_040=30,
+    },
+
+    ceilings =
+    {
+      F_013=40,
+      F_040=30,
+    },
+
+  },
+
   ice_room2 =
   { -- Not technically right, but works for what it does ;-) JB
+    env  = "building",
+    prob = 50,
+    walls =
+    {
+      ICE01=15,
+      ICE02=30,
+      ICE03=5,
+      ICE06=25,
+    },
 
+    floors =
+    {
+      F_013=20,
+      F_033=25,
+      F_040=15,
+    },
+
+    ceilings =
+    {
+      F_013=40,
+      F_033=15,
+      F_040=30,
+    },
+
+  },
+  
+  ice_Hallway_vent_room2 =
+  { -- Not technically right, but works for what it does ;-) JB
+    env  = "hallway",
+    group = "vent",
+    prob = 50,
     walls =
     {
       ICE01=15,
@@ -1903,12 +2310,77 @@ HEXEN.ROOM_THEMES =
 
   },
 
+  ice_Hallway_curve_room2 =
+  { -- Not technically right, but works for what it does ;-) JB
+    env  = "hallway",
+    group = "curve",
+    prob = 50,
+    walls =
+    {
+      ICE01=15,
+      ICE02=30,
+      ICE03=5,
+      ICE06=25,
+    },
+
+    floors =
+    {
+      F_013=20,
+      F_033=25,
+      F_040=15,
+    },
+
+    ceilings =
+    {
+      F_013=40,
+      F_033=15,
+      F_040=30,
+    },
+
+  },
+
+  ice_Hallway_deuce_room2 =
+  { -- Not technically right, but works for what it does ;-) JB
+    env  = "hallway",
+    group = "deuce",
+    prob = 50,
+    walls =
+    {
+      ICE01=15,
+      ICE02=30,
+      ICE03=5,
+      ICE06=25,
+    },
+
+    floors =
+    {
+      F_013=20,
+      F_033=25,
+      F_040=15,
+    },
+
+    ceilings =
+    {
+      F_013=40,
+      F_033=15,
+      F_040=30,
+    },
+
+  },  
+
   ice_outdoors =
   {
     env  = "outdoor",
     prob = 50,
 
     floors =
+    {
+      F_013=15,
+      F_033=75,
+      F_040=30,
+    },
+
+    porch_floors =
     {
       F_013=15,
       F_033=75,
@@ -2621,7 +3093,7 @@ OB_THEMES["fire"] =
   mixed_prob = 50,
 }
 
-UNFINISHED["ice"] =
+OB_THEMES["ice"] =
 {
   label = _("Ice"),
   game = "hexen",
@@ -2629,7 +3101,7 @@ UNFINISHED["ice"] =
   mixed_prob = 50,
 }
 
-UNFINISHED["steel"] =
+OB_THEMES["steel"] =
 {
   label = _("Steel"),
   game = "hexen",
@@ -2637,7 +3109,7 @@ UNFINISHED["steel"] =
   mixed_prob = 20,
 }
 
-UNFINISHED["desert"] =
+OB_THEMES["desert"] =
 {
   label = _("Desert"),
   game = "hexen",
@@ -2645,7 +3117,7 @@ UNFINISHED["desert"] =
   mixed_prob = 10,
 }
 
-UNFINISHED["cave"] =
+OB_THEMES["cave"] =
 {
   label = _("Cave"),
   game = "hexen",
@@ -2653,7 +3125,7 @@ UNFINISHED["cave"] =
   mixed_prob = 20,
 }
 
-UNFINISHED["swamp"] =
+OB_THEMES["swamp"] =
 {
   label = _("Swamp"),
   game = "hexen",
@@ -2661,7 +3133,7 @@ UNFINISHED["swamp"] =
   mixed_prob = 20,
 }
 
-UNFINISHED["forest"] =
+OB_THEMES["forest"] =
 {
   label = _("Forest"),
   game = "hexen",
@@ -2669,7 +3141,7 @@ UNFINISHED["forest"] =
   mixed_prob = 20,
 }
 
-UNFINISHED["village"] =
+OB_THEMES["village"] =
 {
   label = _("Village"),
   game = "hexen",
