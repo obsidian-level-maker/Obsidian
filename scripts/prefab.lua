@@ -2318,6 +2318,7 @@ function Fab_replacements(fab)
             C.arg1 = current_tag
           elseif C.special == 70 then
             C.arg1 = fab.out_tag
+            C.arg2 = fab.out_tag
           elseif C.special == 74 then
             if OB_CONFIG.length == "single" or LEVEL.game_along == 1.0 then
               C.special = 75
