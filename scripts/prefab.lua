@@ -2316,6 +2316,8 @@ function Fab_replacements(fab)
             C.arg5 = current_tag
           elseif C.special == 22 then
             C.arg1 = current_tag
+          elseif C.special == 70 then
+            C.arg1 = fab.out_tag
           elseif C.special == 74 then
             if OB_CONFIG.length == "single" or LEVEL.game_along == 1.0 then
               C.special = 75
@@ -2353,6 +2355,11 @@ function Fab_replacements(fab)
     -- unknown entities set the 'id' to NIL
     -- (which prevents sending it to the CSG)
     E.id = check_thing(E.id)
+    if OB_CONFIG.game == "hexen" then
+      if E.id == 14 then
+        E.tid = fab.in_tag
+      end
+    end
   end
 
   -- TODO : models (for Quake)
@@ -2424,6 +2431,8 @@ function Fabricate(room, def, T, skins)
         fab.switch_tag = SKIN.switch_tag
       end
     end
+    if SKIN.in_tag then fab.in_tag = SKIN.in_tag end
+    if SKIN.out_tag then fab.out_tag = SKIN.out_tag end
   end
 
   Fab_replacements (fab)
