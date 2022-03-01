@@ -4,7 +4,6 @@
 
 Caligari87
   - Maintainer of Oblige 7.70 and ObAddon repositories
-  - Discord moderator
 
 MsrSgtShooterPerson
   - Upstream content repository maintainer
@@ -30,6 +29,13 @@ Craneo
   - Prefabs
   - Name generator contributions
   - Sprites
+  - Improved Heretic support and additional content
+
+Demios
+  - Complex, sloped and 3D floor prefab creator
+  - CSG threshold testing
+  - General QA testing
+  - Wiki and tutorial content
 
 EpicTyphlosion
   - Prefabs
@@ -52,6 +58,7 @@ MogWaltz
 
 Scionox
   - Prefabs
+  - Random boss generator module
 
 Simon-v
   - Lua normalizer
@@ -64,7 +71,7 @@ Tapwave
 ## GUI/MAIN PROGRAM DEVELOPERS
 
 Dashodanger
-  - 64-bit support
+  - 64-bit support and revamped RNG
   - ZDBSP and UDMF support
   - SLUMP integration for Vanilla Doom
   - GUI overhaul

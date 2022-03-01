@@ -1111,7 +1111,7 @@ OB_MODULES["armaetus_epic_textures"] =
 
   options =
   {
-    bool_custom_liquids =
+
     {
       name = "bool_custom_liquids",
       label = _("Custom Liquids"),
@@ -1121,7 +1121,7 @@ OB_MODULES["armaetus_epic_textures"] =
       priority=4
     },
 
-    custom_trees =
+
     {
       name = "custom_trees",
       label = _("Custom Trees"),
@@ -1135,7 +1135,7 @@ OB_MODULES["armaetus_epic_textures"] =
       priority=3
     },
 
-    environment_themes =
+
     {
       name = "environment_themes",
       label = _("Environment Theme"),
@@ -1147,7 +1147,7 @@ OB_MODULES["armaetus_epic_textures"] =
       priority=2,
     },
 
-    bool_include_package =
+
     {
       name = "bool_include_package",
       label = _("Merge Textures WAD"),
@@ -1160,7 +1160,7 @@ OB_MODULES["armaetus_epic_textures"] =
       priority=1
     },
 
-    bool_include_brightmaps =
+
     {
       name = "bool_include_brightmaps",
       label = _("Include Brightmaps"),
@@ -1171,7 +1171,7 @@ OB_MODULES["armaetus_epic_textures"] =
       priority = 0
     },
 
-    bool_no_env_theme_for_hell =
+
     {
       name = "bool_no_env_theme_for_hell",
       label = _("No Hell Environment Themes"),

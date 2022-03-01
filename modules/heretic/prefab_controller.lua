@@ -175,7 +175,7 @@ OB_MODULES["prefab_control_heretic"] =
 
   options =
   {
-    bool_autodetail =
+
     {
       name = "bool_autodetail",
       label=("Auto Detailing"),
@@ -186,7 +186,7 @@ OB_MODULES["prefab_control_heretic"] =
       gap = 1,
     },
 
-    point_prob =
+
     {
       name = "point_prob",
       label=_("Decor"),
@@ -197,7 +197,6 @@ OB_MODULES["prefab_control_heretic"] =
       randomize_group = "architecture"
     },
 
-    wall_prob = -- code for this option is currently under revision
     {
       name = "wall_prob",
       label=_("Walls"),
@@ -255,7 +254,6 @@ OB_MODULES["prefab_control_heretic"] =
 
     --
 
-    bool_fab_match_theme =
     {
       name = "bool_fab_match_theme",
       label=("Match Theme"),

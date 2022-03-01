@@ -1860,7 +1860,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Hub_connect_levels(epi, keys)
+--[[function Hub_connect_levels(epi, keys)
 
   local function connect(src, dest, kind)
     assert(src~= dest)
@@ -2082,7 +2082,7 @@ function Hub_find_link(kind)
   end
 
   return nil  -- none
-end
+end]]--
 
 
 ------------------------------------------------------------------------

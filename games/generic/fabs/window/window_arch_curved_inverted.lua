@@ -7,8 +7,6 @@ PREFABS.Window_arch_inverse_1 =
   group  = "window_arched_inverted",
   prob   = 50,
 
-  passable = true,
-
   where  = "edge",
   seed_w = 1,
 

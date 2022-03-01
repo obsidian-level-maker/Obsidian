@@ -185,15 +185,19 @@ function QUAKE.get_levels()
 
     -- handling for street mode
     -- actual handling for urban percentages are done
-    if not LEV.is_procedural_gotcha or not LEV.prebuilt then
-      if rand.odds(PARAM.float_streets_mode) then
-        LEV.has_streets = true
+    if PARAM.float_streets_mode then
+      if not LEV.is_procedural_gotcha or not LEV.prebuilt then
+        if rand.odds(PARAM.float_streets_mode) then
+          LEV.has_streets = true
+        end
       end
     end
 
     if not LEV.prebuilt then
-      if rand.odds(PARAM.float_linear_mode) then
-        LEV.is_linear = true
+      if PARAM.float_linear_mode then
+        if rand.odds(PARAM.float_linear_mode) then
+          LEV.is_linear = true
+        end
       end
 
       -- nature mode

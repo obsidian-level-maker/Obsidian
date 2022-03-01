@@ -124,8 +124,9 @@ OB_MODULES["hexen_mon_control"] =
 
   options =
   {
-     float_ettin=
+
      {
+      name = "float_ettin",
       label = _("Ettin"),
       valuator = "slider",
       units = "",
@@ -144,8 +145,8 @@ OB_MODULES["hexen_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_afrit=
      {
+      name = "float_afrit",
       label = _("Afrit"),
       valuator = "slider",
       units = "",
@@ -164,8 +165,8 @@ OB_MODULES["hexen_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_centaur1=
      {
+      name = "float_centaur1",
       label = _("Centaur"),
       valuator = "slider",
       units = "",
@@ -184,8 +185,8 @@ OB_MODULES["hexen_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_centaur2=
      {
+      name = "float_centaur2",
       label = _("Slaughtaur"),
       valuator = "slider",
       units = "",
@@ -204,8 +205,8 @@ OB_MODULES["hexen_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_serpent1=
      {
+      name = "float_serpent1",
       label = _("Stalker"),
       valuator = "slider",
       units = "",
@@ -224,8 +225,8 @@ OB_MODULES["hexen_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_serpent2=
      {
+      name = "float_serpent2",
       label = _("Stalker w/ projectile"),
       valuator = "slider",
       units = "",
@@ -244,8 +245,8 @@ OB_MODULES["hexen_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_wendigo=
      {
+      name = "float_wendigo",
       label = _("Wendigo"),
       valuator = "slider",
       units = "",
@@ -264,8 +265,8 @@ OB_MODULES["hexen_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_demon1=
      {
+      name = "float_demon1",
       label = _("Green Serpent"),
       valuator = "slider",
       units = "",
@@ -284,8 +285,8 @@ OB_MODULES["hexen_mon_control"] =
       randomize_group = "monsters"
      },
 	 
-     float_demon2=
      {
+      name = "float_demon2",
       label = _("Brown Serpent"),
       valuator = "slider",
       units = "",
@@ -304,8 +305,8 @@ OB_MODULES["hexen_mon_control"] =
       randomize_group = "monsters"
      },
 	 
-     float_bishop=
      {
+      name = "float_bishop",
       label = _("Bishop"),
       valuator = "slider",
       units = "",
@@ -324,8 +325,8 @@ OB_MODULES["hexen_mon_control"] =
       randomize_group = "monsters"
      },
 	 
-     float_reiver=
      {
+      name = "float_reiver",
       label = _("Reiver"),
       valuator = "slider",
       units = "",
@@ -344,8 +345,8 @@ OB_MODULES["hexen_mon_control"] =
       randomize_group = "monsters"
      },
 	 
-     float_reiver_b=
      {
+      name = "float_reiver_b",
       label = _("Buried Reiver"),
       valuator = "slider",
       units = "",
@@ -364,8 +365,8 @@ OB_MODULES["hexen_mon_control"] =
       randomize_group = "monsters"
      },
 	 
-     float_Wyvern=
      {
+      name = "float_Wyvern",
       label = _("Death Wyvern"),
       valuator = "slider",
       units = "",
@@ -384,8 +385,8 @@ OB_MODULES["hexen_mon_control"] =
       randomize_group = "monsters"
      },
 	 
-     float_Heresiarch=
      {
+      name = "float_Heresiarch",
       label = _("Heresiarch"),
       valuator = "slider",
       units = "",
@@ -404,8 +405,8 @@ OB_MODULES["hexen_mon_control"] =
       randomize_group = "monsters"
      },
 	 
-     float_Zedek=
      {
+      name = "float_Zedek",
       label = _("Zedek"),
       valuator = "slider",
       units = "",
@@ -424,8 +425,8 @@ OB_MODULES["hexen_mon_control"] =
       randomize_group = "monsters"
      },
 	 
-     float_Traductus=
      {
+      name = "float_Traductus",
       label = _("Traductus"),
       valuator = "slider",
       units = "",
@@ -444,8 +445,8 @@ OB_MODULES["hexen_mon_control"] =
       randomize_group = "monsters"
      },
 	 
-     float_Menelkir=
      {
+      name = "float_Menelkir",
       label = _("Menelkir"),
       valuator = "slider",
       units = "",
@@ -464,8 +465,8 @@ OB_MODULES["hexen_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_Korax=
      {
+      name = "float_Korax",
       label = _("Korax"),
       valuator = "slider",
       units = "",
@@ -569,9 +570,6 @@ function CTL_HEXEN.weapon_setup(self)
     end
   end -- for opt
 
-  -- specific instructions for the weapon_pref choices
-  PARAM.weapon_prefs = self.options.weapon_prefs.value
-
   if PARAM.weapon_prefs == "vanilla"
   or PARAM.weapon_prefs == "none" then
     for _,mon in pairs(GAME.MONSTERS) do
@@ -603,8 +601,9 @@ OB_MODULES["hexen_weapon_control"] =
 
   options =
   {
-     float_c_staff=
+
      {
+      name = "float_c_staff",
       label = _("Serpent Staff"),
       valuator = "slider",
       units = "",
@@ -623,8 +622,8 @@ OB_MODULES["hexen_weapon_control"] =
       randomize_group = "pickups"
      },
 
-     float_c_fire=
      {
+      name = "float_c_fire",
       label = _("Firestorm"),
       valuator = "slider",
       units = "",
@@ -643,8 +642,8 @@ OB_MODULES["hexen_weapon_control"] =
       randomize_group = "pickups"
      },
 
-     float_c_wraith=
      {
+      name = "float_c_wraith",
       label = _("Wraithverge"),
       valuator = "slider",
       units = "",
@@ -663,8 +662,8 @@ OB_MODULES["hexen_weapon_control"] =
       randomize_group = "pickups"
      },
 
-     float_f_axe=
      {
+      name = "float_f_axe",
       label = _("Timon's Axe"),
       valuator = "slider",
       units = "",
@@ -683,8 +682,8 @@ OB_MODULES["hexen_weapon_control"] =
       randomize_group = "pickups"
      },
 	 
-     float_f_hammer=
      {
+      name = "float_f_hammer",
       label = _("Hammer of Retribution"),
       valuator = "slider",
       units = "",
@@ -703,8 +702,8 @@ OB_MODULES["hexen_weapon_control"] =
       randomize_group = "pickups"
      },
 	 
-     float_f_quietus=
      {
+      name = "float_f_quietus",
       label = _("Quietus"),
       valuator = "slider",
       units = "",
@@ -723,8 +722,8 @@ OB_MODULES["hexen_weapon_control"] =
       randomize_group = "pickups"
      },
 	 
-     float_m_cone=
      {
+      name = "float_m_cone",
       label = _("Frost Shards"),
       valuator = "slider",
       units = "",
@@ -743,8 +742,8 @@ OB_MODULES["hexen_weapon_control"] =
       randomize_group = "pickups"
      },
 	 
-     float_m_blitz=
      {
+      name = "float_m_blitz",
       label = _("Arcs of Death"),
       valuator = "slider",
       units = "",
@@ -763,8 +762,8 @@ OB_MODULES["hexen_weapon_control"] =
       randomize_group = "pickups"
      },
 	 
-     float_m_scourge=
      {
+      name = "float_m_scourge",
       label = _("Bloodscourge"),
       valuator = "slider",
       units = "",
@@ -783,7 +782,6 @@ OB_MODULES["hexen_weapon_control"] =
       randomize_group = "pickups"
      },
 
-    weapon_prefs =
     {
       name="weapon_prefs",
       label=_("Weapon Preferences"),

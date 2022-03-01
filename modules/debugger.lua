@@ -143,7 +143,7 @@ OB_MODULES["debugger"] =
 
   options =
   {
-    name_gen_test =
+
     {
       name = "name_gen_test",
       label=_("Name Generator"),
@@ -155,7 +155,7 @@ OB_MODULES["debugger"] =
       priority=100,
     },
 
-    bool_print_story_strings =
+
     {
       name = "bool_print_story_strings",
       label=_("Print ZDoom Strings"),
@@ -166,7 +166,7 @@ OB_MODULES["debugger"] =
       priority=97,
     },
 
-    float_build_levels =
+
     {
       name = "float_build_levels",
       label = _("Build Level"),
@@ -182,7 +182,7 @@ OB_MODULES["debugger"] =
       priority=96,
     },
 
-    bool_shape_rule_stats =
+
     {
       name = "bool_shape_rule_stats",
       label = _("Shape Rule Stats"),
@@ -192,7 +192,7 @@ OB_MODULES["debugger"] =
       priority=95,
     },
     
-    bool_save_svg =
+
     {
       name = "bool_save_svg",
       label = _("Save Map Previews"),
@@ -203,7 +203,7 @@ OB_MODULES["debugger"] =
       gap = 1,
     },
 
-    bool_save_gif =
+
     {
       name = "bool_save_gif",
       label = _("Save Minimap GIF"),
@@ -214,7 +214,7 @@ OB_MODULES["debugger"] =
       gap = 1,
     },
 
-    bool_experimental_games =
+
     {
       name = "bool_experimental_games",
       label = _("Experimental Games"),
@@ -230,7 +230,7 @@ OB_MODULES["debugger"] =
       gap = 1,
     },
 
-    bool_custom_error_texture =
+
     {
       name = "bool_custom_error_texture",
       label = _("Custom Error Texture"),

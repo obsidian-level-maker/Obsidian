@@ -893,12 +893,21 @@ end
 function Junction_make_railing(junc, rail_mat, block)
 
   local offset_h = 0
+  local A1 = junc.A1
+  local A2 = junc.A2
+
   if rail_mat == "FENCE_MAT_FROM_THEME" then
-    rail_mat = junc.A1.room.scenic_fences.t
-    offset_h = junc.A1.room.scenic_fences.rail_h
+    local fence_mat = A1.room.scenic_fences
+    rail_mat = fence_mat.t
+    offset_h = fence_mat.rail_h
   elseif not rail_mat then
     rail_mat = "MIDBARS3"
     offset_h = 96
+  end
+
+  if (A1.room and A1.room.is_exit) and LEVEL.exit_scenic_fence_mat then
+    rail_mat = LEVEL.exit_scenic_fence_mat.t
+    offset_h = LEVEL.exit_scenic_fence_mat.rail_h
   end
 
   junc.E1 =
@@ -906,13 +915,13 @@ function Junction_make_railing(junc, rail_mat, block)
     kind = "railing",
     rail_mat = rail_mat,
     rail_block = block and 1,
-    area = junc.A1,
+    area = A1,
   }
 
   -- 3D midtex blocking support for rails
   if PARAM.passable_railings then
     if PARAM.passable_railings == "on_occasion" then
-      if junc.A1.room and junc.A2.room
+      if A1.room and A2.room
       and not (junc.A1.mode == "cage" or junc.A2.mode == "cage") then
         junc.E1.rail_3dmidtex = 1
         junc.E1.rail_block = nil
@@ -925,14 +934,14 @@ function Junction_make_railing(junc, rail_mat, block)
 
   -- calculate base Z
   -- TODO : handle "nature" areas better (checks cells along the junction)
-  local z1 = junc.A1.max_floor_h or junc.A1.floor_h or -EXTREME_H
-  local z2 = junc.A2.max_floor_h or junc.A2.floor_h or -EXTREME_H
+  local z1 = A1.max_floor_h or A1.floor_h or -EXTREME_H
+  local z2 = A2.max_floor_h or A2.floor_h or -EXTREME_H
 
   junc.E1.rail_z = math.max(z1, z2)
 
   junc.E1.rail_offset = offset_h
 
-  junc.E2 = { kind="nothing", area=junc.A2 }
+  junc.E2 = { kind="nothing", area=A2 }
 
   junc.E1.peer = junc.E2
   junc.E2.peer = junc.E1
@@ -2829,6 +2838,13 @@ function Area_create_rooms()
   gui.printf("Map size target: %dx%d seeds\n", LEVEL.map_W, LEVEL.map_H)
 
   gui.at_level(LEVEL.name .. " (Shapes)", LEVEL.id, #GAME.levels)
+
+  if PARAM.float_oblige5x_grammar and rand.odds(PARAM.float_oblige5x_grammar) then
+    SHAPE_GRAMMAR = SHAPES.OBLIGE_5X
+  else
+    SHAPE_GRAMMAR = SHAPES.OBSIDIAN
+  end
+
   Grower_create_rooms()
 
   gui.at_level(LEVEL.name .. " (Rooms)", LEVEL.id, #GAME.levels)

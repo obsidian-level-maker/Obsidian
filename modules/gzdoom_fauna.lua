@@ -561,7 +561,7 @@ OB_MODULES["fauna_module"] =
 
   options =
   {
-    bool_flies =
+
     {
       name = "bool_flies",
       label=_("Flies"),
@@ -570,7 +570,6 @@ OB_MODULES["fauna_module"] =
       tooltip = _("Adds flies to maps. \n"),
     },
 
-    bool_rats =
     {
       name = "bool_rats",
       label=_("Rats"),

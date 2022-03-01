@@ -1422,7 +1422,7 @@ function MARINE_CLOSET_TUNE.calc_closets()
     max_count = PARAM.marine_closets,
     min_prog = PARAM.float_m_c_level_min_pos,
     max_prog = PARAM.float_m_c_level_max_pos,
-    not_secret = PARAM.bool_m_c_in_secrets,
+    not_secret = PARAM.bool_m_c_in_secret,
     level_prob = 100,
   }
 
@@ -1555,7 +1555,7 @@ OB_MODULES["gzdoom_marine_closets"] =
 
   options =
   {
-    float_m_c_chance =
+
     {
       name = "float_m_c_chance",
       label = _("Chance per map"),
@@ -1572,7 +1572,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       randomize_group = "monsters"
     },
 
-    float_m_c_min =
+
     {
       name = "float_m_c_min",
       label = _("Minimum closets"),
@@ -1588,7 +1588,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       randomize_group = "monsters"
     },
 
-    float_m_c_max =
+
     {
       name = "float_m_c_max",
       label = _("Maximum closets"),
@@ -1604,7 +1604,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       randomize_group = "monsters"
     },
 
-    m_c_type =
+
     {
       name = "m_c_type",
       label = _("Closet scaling type"),
@@ -1620,7 +1620,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       randomize_group = "monsters"
     },
 
-    float_m_c_m_min =
+
     {
       name = "float_m_c_m_min",
       label = _("Minimum marines"),
@@ -1636,7 +1636,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       randomize_group = "monsters"
     },
 
-    float_m_c_m_max =
+
     {
       name = "float_m_c_m_max",
       label = _("Maximum marines"),
@@ -1652,7 +1652,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       randomize_group = "monsters"
     },
 
-    float_m_c_health =
+
     {
       name = "float_m_c_health",
       label = _("Marine Health"),
@@ -1668,7 +1668,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       randomize_group = "monsters"
     },
 
-    m_c_m_type =
+
     {
       name = "m_c_m_type",
       label = _("Marine scaling type"),
@@ -1683,7 +1683,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       randomize_group = "monsters"
     },
 
-    float_m_c_level_min_pos =
+
     {
       name = "float_m_c_level_min_pos",
       label = _("Level Min Position"),
@@ -1699,7 +1699,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       randomize_group = "monsters"
     },
 
-    float_m_c_level_max_pos =
+
     {
       name = "float_m_c_level_max_pos",
       label = _("Level Max Position"),
@@ -1715,7 +1715,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       randomize_group = "monsters"
     },
 
-    m_c_tech =
+
     {
       name = "m_c_ttech",
       label = _("Weapon tech level"),
@@ -1733,7 +1733,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       randomize_group = "monsters"
     },
 
-    m_c_waker =
+
     {
       name = "m_c_waker",
       label = _("Trigger Type"),
@@ -1749,7 +1749,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       randomize_group = "monsters"
     },
 
-    m_c_color =
+
     {
       name = "m_c_color",
       label = _("Marine Color"),
@@ -1760,7 +1760,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       randomize_group = "monsters"
     },
 
-    m_c_ff =
+
     {
       name = "m_c_ff",
       label = _("Friendly Fire"),
@@ -1773,7 +1773,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       randomize_group = "monsters"
     },
 
-  	bool_m_c_pdamage =
+
     {
       name = "bool_m_c_pdamage",
       label = _("Player Damage Immunity"),
@@ -1783,7 +1783,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       tooltip = "If enabled, marines will never take damage from player owned sources.",
     },
 
-    m_c_sprites =
+
     {
       name = "m_c_sprites",
       label = _("Weapon Sprites"),
@@ -1796,7 +1796,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       gap = 1
     },
 
-    m_c_quantity =
+
     {
       name = "m_c_quantity",
       label = _("Monster Quantity Multiplier"),
@@ -1807,7 +1807,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       randomize_group = "monsters"
     },
 
-    m_c_strength =
+
     {
       name = "m_c_strength",
       label = _("Monster Strength Modifier"),
@@ -1819,7 +1819,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       randomize_group = "monsters"
     },
 
-    bool_m_c_power =
+
     {
       name = "bool_m_c_power",
       label = _("Strong Marines"),
@@ -1830,7 +1830,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       randomize_group = "monsters"
     },
 
-    bool_m_c_follow =
+
     {
       name = "bool_m_c_follow",
       label = _("Followers"),
@@ -1841,7 +1841,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       "If this is enabled marines will much harder prioritize following player and will teleport if they are too far away.",
     },
 
-    bool_m_c_boss =
+
     {
       name = "bool_m_c_boss",
       label = _("Allow in Gotchas"),
@@ -1851,7 +1851,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       tooltip = "Allows or disallows marine closets to spawn on gotchas and boss generator levels.",
     },
 
-  	bool_m_c_rip =
+
     {
       name = "bool_m_c_rip",
       label = _("Death Messages"),
@@ -1861,7 +1861,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       tooltip = "If enabled, will print a message in message log whenever a marine dies.",
     },
 
-    bool_m_c_in_secret =
+
     {
       name = "bool_mc_in_secret",
       label = _("In Secret Rooms"),

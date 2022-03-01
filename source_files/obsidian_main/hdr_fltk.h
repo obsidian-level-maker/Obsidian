@@ -45,6 +45,7 @@
 #include <FL/Fl_Output.H>
 #include <FL/Fl_Pack.H>
 #include <FL/Fl_Pixmap.H>
+#include <FL/Fl_JPEG_Image.H>
 #include <FL/Fl_Progress.H>
 #include <FL/Fl_Return_Button.H>
 #include <FL/Fl_Round_Button.H>
@@ -61,6 +62,7 @@
 #include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Widget.H>
 #include <FL/Fl_Window.H>
+#include <FL/Fl_Wizard.H>
 #include <FL/filename.H>
 #include <FL/fl_ask.H>
 #include <FL/fl_draw.H>

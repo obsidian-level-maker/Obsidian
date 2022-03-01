@@ -52,12 +52,16 @@ PREFABS.Decor_tech_drilling_rig_empty_grouped =
   template = "Decor_tech_drilling_rig",
   map = "MAP03",
 
+  prob = 18000,
+
   theme = "any",
 
   size = 128,
   height = 48,
 
   group = "gtd_mining_set",
+
+  delta = 16,
 
   bound_z2 = 48
 }

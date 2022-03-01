@@ -122,8 +122,9 @@ OB_MODULES["doom_mon_control"] =
 
   options =
   {
-     float_zombie=
+
      {
+      name = "float_zombie",
       label = _("Zombieman"),
       valuator = "slider",
       units = "",
@@ -141,8 +142,8 @@ OB_MODULES["doom_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_shooter=
      {
+      name = "float_shooter",
       label = _("Shotgun Guy"),
       valuator = "slider",
       units = "",
@@ -160,8 +161,8 @@ OB_MODULES["doom_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_gunner=
      {
+      name = "float_gunner",
       label = _("Chaingunner"),
       valuator = "slider",
       units = "",
@@ -179,8 +180,8 @@ OB_MODULES["doom_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_ss_nazi=
      {
+      name = "float_ss_nazi",
       label = _("SS Nazi"),
       valuator = "slider",
       units = "",
@@ -198,8 +199,8 @@ OB_MODULES["doom_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_imp=
      {
+      name = "float_imp",
       label = _("Imp"),
       valuator = "slider",
       units = "",
@@ -217,8 +218,8 @@ OB_MODULES["doom_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_skull=
      {
+      name = "float_skull",
       label = _("Lost Soul"),
       valuator = "slider",
       units = "",
@@ -236,8 +237,8 @@ OB_MODULES["doom_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_demon=
      {
+      name = "float_demon",
       label = _("Demon"),
       valuator = "slider",
       units = "",
@@ -255,8 +256,8 @@ OB_MODULES["doom_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_spectre=
      {
+      name = "float_spectre",
       label = _("Spectre"),
       valuator = "slider",
       units = "",
@@ -274,8 +275,8 @@ OB_MODULES["doom_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_pain=
      {
+      name = "float_pain",
       label = _("Pain Elemental"),
       valuator = "slider",
       units = "",
@@ -293,8 +294,8 @@ OB_MODULES["doom_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_caco=
      {
+      name = "float_caco",
       label = _("Cacodemon"),
       valuator = "slider",
       units = "",
@@ -312,8 +313,8 @@ OB_MODULES["doom_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_knight=
      {
+      name = "float_knight",
       label = _("Hell Knight"),
       valuator = "slider",
       units = "",
@@ -331,8 +332,8 @@ OB_MODULES["doom_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_revenant=
      {
+      name = "float_revenant",
       label = _("Revenant"),
       valuator = "slider",
       units = "",
@@ -350,8 +351,8 @@ OB_MODULES["doom_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_mancubus=
      {
+      name = "float_mancubus",
       label = _("Mancubus"),
       valuator = "slider",
       units = "",
@@ -369,8 +370,8 @@ OB_MODULES["doom_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_arach=
      {
+      name = "float_arach",
       label = _("Arachnotron"),
       valuator = "slider",
       units = "",
@@ -387,8 +388,9 @@ OB_MODULES["doom_mon_control"] =
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
      },
-     float_vile=
+
      {
+      name = "float_vile",
       label = _("Arch-vile"),
       valuator = "slider",
       units = "",
@@ -406,8 +408,8 @@ OB_MODULES["doom_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_baron=
      {
+      name = "float_baron",
       label = _("Baron of Hell"),
       valuator = "slider",
       units = "",
@@ -425,8 +427,8 @@ OB_MODULES["doom_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_Cyberdemon=
      {
+      name = "float_Cyberdemon",
       label = _("Cyberdemon"),
       valuator = "slider",
       units = "",
@@ -444,8 +446,8 @@ OB_MODULES["doom_mon_control"] =
       "20:20 (INSANE),",
      },
 
-     float_Spiderdemon=
      {
+      name = "float_Spiderdemon",
       label = _("Spiderdemon"),
       valuator = "slider",
       units = "",
@@ -567,8 +569,6 @@ function CTL_DOOM.weapon_setup(self)
   end -- for opt
 
   -- specific instructions for the weapon_pref choices
-  PARAM.weapon_prefs = self.options.weapon_prefs.value
-
   if PARAM.weapon_prefs == "vanilla"
   or PARAM.weapon_prefs == "none" then
     for _,mon in pairs(GAME.MONSTERS) do
@@ -608,7 +608,7 @@ OB_MODULES["doom_weapon_control"] =
 
   options =
   {
-    float_saw=
+
     {
      name = "float_saw",
      label = _("Chainsaw"),
@@ -628,8 +628,8 @@ OB_MODULES["doom_weapon_control"] =
      "10:10 (I LOVE IT),",
     },
 
-     float_shotty=
      {
+      name = "float_shotty",
       label = _("Shotgun"),
       valuator = "slider",
       units = "",
@@ -647,8 +647,8 @@ OB_MODULES["doom_weapon_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_super=
      {
+      name = "float_super",
       label = _("Super Shotgun"),
       valuator = "slider",
       units = "",
@@ -666,8 +666,8 @@ OB_MODULES["doom_weapon_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_chain=
      {
+      name = "float_chain",
       label = _("Chaingun"),
       valuator = "slider",
       units = "",
@@ -685,8 +685,8 @@ OB_MODULES["doom_weapon_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_launch=
      {
+      name = "float_launch",
       label = _("Rocket Launcher"),
       valuator = "slider",
       units = "",
@@ -704,8 +704,8 @@ OB_MODULES["doom_weapon_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_plasma=
      {
+      name = "float_plasma",
       label = _("Plasma Rifle"),
       valuator = "slider",
       units = "",
@@ -723,8 +723,8 @@ OB_MODULES["doom_weapon_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_bfg=
      {
+      name = "float_bfg",
       label = _("BFG 9000"),
       valuator = "slider",
       units = "",
@@ -742,7 +742,6 @@ OB_MODULES["doom_weapon_control"] =
       "10:10 (I LOVE IT),",
      },
 
-    weapon_prefs =
     {
       name="weapon_prefs",
       label=_("Weapon Preferences"),
@@ -777,23 +776,23 @@ function CTL_DOOM.item_setup(self)
             end
           end
         elseif opt.valuator == "button" then
-          PARAM[string.sub(name, 7)] = tonumber(OB_CONFIG[opt.name])
+          PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
         end
       else
-        PARAM[string.sub(name, 7)] = OB_CONFIG[opt.name]
+        PARAM[opt.name] = OB_CONFIG[opt.name]
       end
       if RANDOMIZE_GROUPS then
         for _,group in pairs(RANDOMIZE_GROUPS) do
           if opt.randomize_group and opt.randomize_group == group then
             if opt.valuator then
               if opt.valuator == "button" then
-                  PARAM[string.sub(name, 7)] = rand.sel(50, 1, 0)
+                  PARAM[opt.name] = rand.sel(50, 1, 0)
                   goto done
               elseif opt.valuator == "slider" then
                   if opt.increment < 1 then
-                    PARAM[string.sub(name, 7)] = rand.range(opt.min, opt.max)
+                    PARAM[opt.name] = rand.range(opt.min, opt.max)
                   else
-                    PARAM[string.sub(name, 7)] = rand.irange(opt.min, opt.max)
+                    PARAM[opt.name] = rand.irange(opt.min, opt.max)
                   end
                   goto done
               end
@@ -802,7 +801,7 @@ function CTL_DOOM.item_setup(self)
               repeat
                 index = rand.irange(1, #opt.choices)
               until (index % 2 == 1)
-              PARAM[string.sub(name, 7)] = opt.choices[index]
+              PARAM[opt.name] = opt.choices[index]
               goto done
             end
           end
@@ -812,36 +811,39 @@ function CTL_DOOM.item_setup(self)
     else
 	    if opt.valuator then
 		    if opt.valuator == "button" then
-		        PARAM[string.sub(name, 7)] = gui.get_module_button_value(self.name, opt.name)
+		        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
 		    elseif opt.valuator == "slider" then
-		        PARAM[string.sub(name, 7)] = gui.get_module_slider_value(self.name, opt.name)      
+		        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
 		    end
       else
-        PARAM[string.sub(name, 7)] = opt.value
+        PARAM[opt.name] = opt.value
 	    end
 	  end
+  end
 
-    local function change_probz(name, info)
-      if PARAM[name] and PARAM[name] ~= "Default" then
-        local mult = PARAM[name] or 0
+  local function change_probz(name, info)
+    if PARAM[name] and PARAM[name] ~= "Default" then
+      local mult = PARAM[name] or 0
 
-        if info.add_prob then info.add_prob = info.add_prob * mult end
-        if info.start_prob then info.start_prob = info.start_prob * mult end
-        if info.crazy_prob then info.crazy_prob = info.crazy_prob * mult end
-        if info.closet_prob then info.closet_prob = info.closet_prob * mult end
-        if info.secret_prob then info.secret_prob = info.secret_prob * mult end
-        if info.storage_prob then info.storage_prob = info.storage_prob * mult end
-      end
-    end
-
-    for name, info in pairs(GAME.PICKUPS) do
-      change_probz(name, info)
-    end
-
-    for name, info in pairs(GAME.NICE_ITEMS) do
-      change_probz(name, info)
+      if info.add_prob then info.add_prob = info.add_prob * mult end
+      if info.start_prob then info.start_prob = info.start_prob * mult end
+      if info.crazy_prob then info.crazy_prob = info.crazy_prob * mult end
+      if info.closet_prob then info.closet_prob = info.closet_prob * mult end
+      if info.secret_prob then info.secret_prob = info.secret_prob * mult end
+      if info.storage_prob then info.storage_prob = info.storage_prob * mult end
     end
   end
+
+  for name, info in pairs(GAME.PICKUPS) do
+    float_name = "float_" .. name
+    change_probz(float_name, info)
+  end
+
+  for name, info in pairs(GAME.NICE_ITEMS) do
+    float_name = "float_" .. name
+    change_probz(float_name, info)
+  end
+
 end
 
 OB_MODULES["doom_item_control"] =
@@ -861,8 +863,9 @@ OB_MODULES["doom_item_control"] =
 
   options =
   {
-     float_potion=
+
      {
+      name = "float_potion",
       label = _("Health Bonus"),
       valuator = "slider",
       units = "",
@@ -881,8 +884,8 @@ OB_MODULES["doom_item_control"] =
       priority = 100,
      },
      
-     float_stimpack=
      {
+      name = "float_stimpack",
       label = _("Stimpack"),
       valuator = "slider",
       units = "",
@@ -901,8 +904,8 @@ OB_MODULES["doom_item_control"] =
       priority = 99,
      },
      
-     float_medikit=
      {
+      name = "float_medikit",
       label = _("Medikit"),
       valuator = "slider",
       units = "",
@@ -922,8 +925,8 @@ OB_MODULES["doom_item_control"] =
       gap = 1,
      },
      
-     float_helmet=
      {
+      name = "float_helmet",
       label = _("Armor Bonus"),
       valuator = "slider",
       units = "",
@@ -944,8 +947,8 @@ OB_MODULES["doom_item_control"] =
 
     -- nice items
     
-     float_green_armor=
      {
+      name = "float_green_armor",
       label = _("Green Armor"),
       valuator = "slider",
       units = "",
@@ -964,8 +967,8 @@ OB_MODULES["doom_item_control"] =
       priority = 94,
      },
 
-     float_blue_armor=
      {
+      name = "float_blue_armor",
       label = _("Blue Armor"),
       valuator = "slider",
       units = "",
@@ -985,8 +988,8 @@ OB_MODULES["doom_item_control"] =
       gap = 1,
      },
 
-     float_soul=
      {
+      name = "float_soul",
       label = _("Soulsphere"),
       valuator = "slider",
       units = "",
@@ -1004,8 +1007,8 @@ OB_MODULES["doom_item_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_backpack=
      {
+      name = "float_backpack",
       label = _("Backpack"),
       valuator = "slider",
       units = "",
@@ -1023,8 +1026,8 @@ OB_MODULES["doom_item_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_berserk=
      {
+      name = "float_berserk",
       label = _("Berserk Pack"),
       valuator = "slider",
       units = "",
@@ -1042,8 +1045,8 @@ OB_MODULES["doom_item_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_invis=
      {
+      name = "float_invis",
       label = _("Invisibility"),
       valuator = "slider",
       units = "",
@@ -1061,8 +1064,8 @@ OB_MODULES["doom_item_control"] =
       "10:10 (I LOVE IT),",
      },
      
-     float_invul=
      {
+      name = "float_invul",
       label = _("Invulnerability"),
       valuator = "slider",
       units = "",
@@ -1080,8 +1083,8 @@ OB_MODULES["doom_item_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_allmap=
      {
+      name = "float_allmap",
       label = _("Map Computer"),
       valuator = "slider",
       units = "",
@@ -1099,8 +1102,8 @@ OB_MODULES["doom_item_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_goggles=
      {
+      name = "float_goggles",
       label = _("Light Goggles"),
       valuator = "slider",
       units = "",
@@ -1118,8 +1121,8 @@ OB_MODULES["doom_item_control"] =
       "10:10 (I LOVE IT),",
      },
 
-     float_mega=
      {
+      name = "float_mega",
       label = _("Megasphere"),
       valuator = "slider",
       units = "",
@@ -1139,8 +1142,8 @@ OB_MODULES["doom_item_control"] =
 
     -- ammo
     
-     float_bullets=
      {
+      name = "float_bullets",
       label = _("Clips"),
       valuator = "slider",
       units = "",
@@ -1159,8 +1162,8 @@ OB_MODULES["doom_item_control"] =
       priority = 75,
      },
 
-     float_bullet_box=
      {
+      name = "float_bullet_box",
       label = _("Bullet Box"),
       valuator = "slider",
       units = "",
@@ -1179,8 +1182,8 @@ OB_MODULES["doom_item_control"] =
       priority = 74,
      },
 
-     float_shells=
      {
+      name = "float_shells",
       label = _("Shells"),
       valuator = "slider",
       units = "",
@@ -1199,8 +1202,8 @@ OB_MODULES["doom_item_control"] =
       priority = 73,
      },
 
-     float_shell_box=
      {
+      name = "float_shell_box",
       label = _("Shell Box"),
       valuator = "slider",
       units = "",
@@ -1219,8 +1222,8 @@ OB_MODULES["doom_item_control"] =
       priority = 72,
      },
 
-     float_rocket=
      {
+      name = "float_rocket",
       label = _("Rocket"),
       valuator = "slider",
       units = "",
@@ -1239,8 +1242,8 @@ OB_MODULES["doom_item_control"] =
       priority = 71,
      },
 
-     float_rocket_box=
      {
+      name = "float_rocket_box",
       label = _("Rocket Box"),
       valuator = "slider",
       units = "",
@@ -1259,8 +1262,8 @@ OB_MODULES["doom_item_control"] =
       priority = 70,
      },
 
-     float_cells=
      {
+      name = "float_cells",
       label = _("Cell"),
       valuator = "slider",
       units = "",
@@ -1279,8 +1282,8 @@ OB_MODULES["doom_item_control"] =
       priority = 69,
      },
 
-     float_cell_pack=
      {
+      name = "float_cell_pack",
       label = _("Cell Pack"),
       valuator = "slider",
       units = "",

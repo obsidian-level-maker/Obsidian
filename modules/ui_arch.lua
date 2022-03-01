@@ -53,7 +53,6 @@ UI_ARCH.RAMP_FACTOR =
   "2",    _("Very Slow Curve"),
 }
 
-
 UI_ARCH.SIZE_BIAS =
 {
   "small",   _("Smaller"),
@@ -124,7 +123,7 @@ function UI_ARCH.setup(self)
 	  end
   end
   
-  if OB_CONFIG.engine ~= "vanilla" then
+  if OB_CONFIG.engine ~= "vanilla" then -- Do I actually need this check? I forget - Dasho
     if OB_CONFIG.batch == "yes" or type(PARAM.float_size) ~= "string" then
       SEED_W = 90
       SEED_H = 90
@@ -177,7 +176,6 @@ OB_MODULES["ui_arch"] =
   options =
   {
 
-    float_size=
     { 
       name="float_size", 
       label=_("Level Size"),
@@ -206,7 +204,7 @@ OB_MODULES["ui_arch"] =
       randomize_group="architecture"
     },
 
-    float_level_upper_bound =
+
     {
       name = "float_level_upper_bound",
       label = _("Upper Bound"),
@@ -230,7 +228,7 @@ OB_MODULES["ui_arch"] =
       priority = 99,
     },
 
-    float_level_lower_bound =
+
     {
       name = "float_level_lower_bound",
       label = _("Lower Bound"),
@@ -255,7 +253,7 @@ OB_MODULES["ui_arch"] =
       gap = 1,
     },
 
-    level_size_ramp_factor =
+
     {
       name = "level_size_ramp_factor",
       label = _("Ramp Factor"),
@@ -272,7 +270,7 @@ OB_MODULES["ui_arch"] =
       randomize_group="architecture"
     },
 
-    level_size_bias =
+
     {
       name = "level_size_bias",
       label = _("Level Size Bias"),
@@ -285,7 +283,7 @@ OB_MODULES["ui_arch"] =
       randomize_group="architecture"
     },
 
-    mixin_type =
+
     {
       name = "mixin_type",
       label = _("Theme Mix-in Type"),
@@ -300,72 +298,7 @@ OB_MODULES["ui_arch"] =
       randomize_group="architecture"
     },
   
-    float_linear_mode=
-    {
-      name = "float_linear_mode",
-      label = _("Linear Mode"),
-      valuator = "slider",
-      units = "% of Levels",
-      min = 0,
-      max = 100,
-      increment = 1,
-      default = 0,
-      presets = "",
-      tooltip = "Creates linear levels, where rooms are connected along a " ..
-      "linear layout from start to exit.",
-      longtip = "Due to the nature of linear levels, " ..
-      "you may encounter teleports even if you have teleports off. This is necessary " ..
-      "in order for linear levels not to prematuraly terminate and therefore become stunted " ..
-      "i.e. only have 2-5 rooms.",
-      priority = 85,
-      randomize_group="architecture"
-    },
 
-    float_nature_mode=
-    {
-      name = "float_nature_mode",
-      label = _("Nature Mode"),
-      valuator = "slider",
-      units = "% of Levels",
-      min = 0,
-      max = 100,
-      increment = 1,
-      default = 0,
-      presets = "",
-      tooltip = "Forces most of the map to be composed of naturalistic areas (parks and caves). " ..
-      "The ratio is decided by Outdoors style setting while competing styles are ignored.",
-      priority = 84,
-      randomize_group="architecture"
-    },
-
-    float_streets_mode=
-    {
-      name = "float_streets_mode",
-      label = _("Streets Mode"),
-      valuator = "slider",
-      units = "% of Levels",
-      min = 0,
-      max = 100,
-      increment = 1,
-      default = 15,
-      presets = "",
-      tooltip = "Allows Oblige to create large street-like outdoor rooms.",
-      priority = 83,
-      randomize_group="architecture"
-    },
-
-    bool_urban_streets_mode=
-    {
-      name = "bool_urban_streets_mode",
-      label=_("Urban Only Streets"),
-      valuator = "button",
-      default = 1,
-      tooltip="Changes streets mode percentage to affect all themes or only urban.",
-      gap = 1,
-      priority = 82,
-    },
-
-    bool_prebuilt_levels=
     {
       name="bool_prebuilt_levels",
       label=_("Prebuilt Levels"),
@@ -378,35 +311,14 @@ OB_MODULES["ui_arch"] =
       gap = 1
     },
 
-    float_layout_absurdity=
-    {
-      name = "float_layout_absurdity",
-      label = _("Layout Absurdity"),
-      valuator = "slider",
-      units = "% of Levels",
-      min = 0,
-      max = 100,
-      increment = 1,
-      default = 0,
-      presets = "",
-      tooltip = "Chance that a level will be built using an ususual/irregular layout.",
-      longtip = "The layout absurdifier attempts to cause levels to overprefer specific shape " ..
-      "rules from the ruleset in order to create odd and possibly broken but interesting combinations. " ..
-      "Use at your own risk. These options will affect the amount of levels have the absurdity module activated on. " ..
-      "Selecting ALL will not necessarily make all levels absurd as it is all still based on chance.",
-      gap = 1,
-      priority = 80,
-      randomize_group="architecture"
-    },
+    { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 78, randomize_group="architecture" },
+    { name="caves",        label=_("Caves"),      choices=STYLE_CHOICES, priority = 77, randomize_group="architecture" },
+    { name="liquids",      label=_("Liquids"),    choices=STYLE_CHOICES, priority = 76, randomize_group="architecture" },
+    { name="hallways",     label=_("Hallways"),   choices=STYLE_CHOICES, priority = 75, randomize_group="architecture" },
+    { name="teleporters",  label=_("Teleports"),  choices=STYLE_CHOICES, priority = 74, randomize_group="architecture" },
+    { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1, priority = 73, randomize_group="architecture" },
 
-    outdoors = { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 78, randomize_group="architecture" },
-    caves = { name="caves",        label=_("Caves"),      choices=STYLE_CHOICES, priority = 77, randomize_group="architecture" },
-    liquids = { name="liquids",      label=_("Liquids"),    choices=STYLE_CHOICES, priority = 76, randomize_group="architecture" },
-    hallways = { name="hallways",     label=_("Hallways"),   choices=STYLE_CHOICES, priority = 75, randomize_group="architecture" },
-    teleporters = { name="teleporters",  label=_("Teleports"),  choices=STYLE_CHOICES, priority = 74, randomize_group="architecture" },
-    steepness = { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1, priority = 73, randomize_group="architecture" },
 
-    zdoom_vista=
     {
       name = "zdoom_vista",
       label = _("Bottomless Vistas"),
@@ -420,7 +332,7 @@ OB_MODULES["ui_arch"] =
       priority = 50
     },
 
-    zdoom_skybox=
+
     {
       name = "zdoom_skybox",
       label = _("ZDoom 3D Skybox"),

@@ -254,7 +254,7 @@ OB_MODULES["misc"] =
 
   name = "misc",
 
-  label = _("Miscellaneous"),
+  label = _("Advanced Architecture"),
 
   engine = "!vanilla",
 
@@ -270,26 +270,104 @@ OB_MODULES["misc"] =
   options =
   {
     {
-      name="bool_pistol_starts",
-      label=_("Default Weapon Starts"),
-      valuator = "button",
-      default = 1,
-      tooltip=_("Ensure every map can be completed with only the default weapon (ignore weapons obtained from earlier maps)")
-    },
-    {
-      name="bool_alt_starts",
-      label=_("Alt-start Rooms"),
-      valuator = "button",
+      name = "float_oblige5x_grammar",
+      label = _("Oblige 5.x Grammar"),
+      valuator = "slider",
+      units = "% of Levels",
+      min = 0,
+      max = 100,
+      increment = 1,
       default = 0,
-      tooltip=_("For Co-operative games, sometimes have players start in different rooms")
+      nan = "",
+      presets = "",
+      tooltip = "Sets chance of levels using the Oblige 5.x shape grammar.",
+      longtip = "Gives levels a chance of being generated using the Oblige 5.x shape grammar. With this grammar, indoor rooms are usually " ..
+      "square or diamond-shaped, while caves still have a more natural/organic layout. Hallways " ..
+      "and joiners are still used to a degree. Room sizes are fairly consistent.",
+      gap = 1,
+      priority = 100,
+      randomize_group = "architecture",
     },
+
     {
-      name = "bool_foreshadowing_exit",
-      label = _("Foreshadowing Exit"),
+      name = "float_layout_absurdity",
+      label = _("Layout Absurdity"),
+      valuator = "slider",
+      units = "% of Levels",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 0,
+      presets = "",
+      tooltip = "Chance that a level will be built using an ususual/irregular layout.",
+      longtip = "The layout absurdifier attempts to cause levels to overprefer specific shape " ..
+      "rules from the ruleset in order to create odd and possibly broken but interesting combinations. " ..
+      "Use at your own risk. These options will affect the amount of levels have the absurdity module activated on. " ..
+      "Selecting ALL will not necessarily make all levels absurd as it is all still based on chance.",
+      gap = 1,
+      priority = 99,
+      randomize_group="architecture"
+    },
+
+    {
+      name = "float_linear_mode",
+      label = _("Linear Mode"),
+      valuator = "slider",
+      units = "% of Levels",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 0,
+      presets = "",
+      tooltip = "Creates linear levels, where rooms are connected along a " ..
+      "linear layout from start to exit.",
+      longtip = "Due to the nature of linear levels, " ..
+      "you may encounter teleports even if you have teleports off. This is necessary " ..
+      "in order for linear levels not to prematuraly terminate and therefore become stunted " ..
+      "i.e. only have 2-5 rooms.",
+      randomize_group="architecture",
+      priority = 98
+    },
+
+    {
+      name = "float_nature_mode",
+      label = _("Nature Mode"),
+      valuator = "slider",
+      units = "% of Levels",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 0,
+      presets = "",
+      tooltip = "Forces most of the map to be composed of naturalistic areas (parks and caves). " ..
+      "The ratio is decided by Outdoors style setting while competing styles are ignored.",
+      randomize_group="architecture",
+      priority = 97
+    },
+
+    {
+      name = "float_streets_mode",
+      label = _("Streets Mode"),
+      valuator = "slider",
+      units = "% of Levels",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 15,
+      presets = "",
+      tooltip = "Allows Oblige to create large street-like outdoor rooms.",
+      randomize_group="architecture",
+      priority = 96
+    },
+
+    {
+      name = "bool_urban_streets_mode",
+      label=_("Urban Only Streets"),
       valuator = "button",
       default = 1,
-      tooltip = "Gets exit room theme to follow the theme of the next level, if different.",
-      gap=1,
+      tooltip="Changes streets mode percentage to affect all themes or only urban.",
+      priority = 95,
+      gap = 1,
     },
 
     {
@@ -299,6 +377,7 @@ OB_MODULES["misc"] =
       tooltip = "Alters the general size and ground coverage of rooms.\n\n" ..
         "Vanilla: No room size multipliers.\n\n" ..
         "Mix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest.",
+      priority = 94
     },
     {
       name="room_area_multiplier", label=_("Area Count Multiplier"),
@@ -308,6 +387,7 @@ OB_MODULES["misc"] =
         "simply different ceilings if a level has no steepness.\n\n" ..
         "Vanilla: No area quantity multipliers.\n\n" ..
         "Mix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest.",
+      priority = 93
     },
     {
       name="room_size_consistency", label=_("Size Consistency"),
@@ -318,7 +398,7 @@ OB_MODULES["misc"] =
         "Vanilla: Original behavior. Rooms in a level have vary in size from each other. Big Rooms options are respected.\n\n" ..
         "Strict: All rooms in the level have a single set size/coverage.\n\n" ..
         "Mix It Up: A mixture of 75% Vanilla, 25% Strict.",
-        gap = 1
+      priority = 92
     },
     {
       name="room_size_mix_type", label=_("Room Size Mix Fine Tune"),
@@ -334,6 +414,7 @@ OB_MODULES["misc"] =
       "Conservative: Probability is biased more towards regular room sizes, making much smaller or much larger rooms significantly rarer.\n\n" ..
       "Very Conservative: Bias is even stronger towards regular and smaller rooms sizes, while larger rooms are very rare.\n\n" ..
       "Random: No curve distribution - room sizes and room area counts are picked completely randomly.",
+      priority = 91
     },
     {
       name="room_area_mix_type", label=_("Room Area Mix Fine Tune"),
@@ -348,11 +429,12 @@ OB_MODULES["misc"] =
       "Conservative: Biased towards normal area counts.\n\n" ..
       "Very Conservative: Further biased towards normal area counts.\n\n" ..
       "Random: No curve distribution - room area counts are picked completely randomly.",
+      priority = 90,
       gap = 1
     },
 
-    { name="big_rooms",   label=_("Big Rooms"),      choices=STYLE_CHOICES },
-    { name="big_outdoor_rooms", label=_("Big Outdoors"), choices=STYLE_CHOICES },
+    { name="big_rooms",   label=_("Big Rooms"),      choices=STYLE_CHOICES, priority = 89 },
+    { name="big_outdoor_rooms", label=_("Big Outdoors"), choices=STYLE_CHOICES, priority = 88 },
     {
       name="room_heights",
       label=_("Room Heights"),
@@ -361,26 +443,29 @@ OB_MODULES["misc"] =
       "Short means room areas strictly have at most 128 units of height, tall means rooms immediately have " ..
       "doubled heights. Normal is the default Oblige behavior."),
       default="mixed",
+      priority = 87,
       gap=1,
     },
 
 
-    { name="parks",       label=_("Parks"),          choices=STYLE_CHOICES },
+    { name="parks",       label=_("Parks"),          choices=STYLE_CHOICES, priority = 86 },
     {
       name="natural_parks",
       label=_("Natural Cliffs"),
       tooltip=_("Percentage of parks that use completely naturalistic walls."),
       choices=STYLE_CHOICES,
       default="none",
+      priority = 85
     },
     { name="park_detail",
       label=_("Park Detail"),
       tooltip=_("Reduces or increases the probability of park decorations such as trees on park rooms."),
       choices=STYLE_CHOICES,
+      priority = 84,
       gap=1,
     },
 
-    { name="windows",     label=_("Windows"),        choices=STYLE_CHOICES },
+    { name="windows",     label=_("Windows"),        choices=STYLE_CHOICES, priority = 83 },
     {
       name="passable_windows",
       label=_("Passable Windows"),
@@ -388,6 +473,7 @@ OB_MODULES["misc"] =
       tooltip=_("Sets the preferences for passability on certain windows. On Vistas Only means only windows " ..
                 "that look out to vistas/map border scenics have a blocking line."),
       default="not_on_vistas",
+      priority = 82
     },
     {
       name="passable_railings",
@@ -398,21 +484,26 @@ OB_MODULES["misc"] =
             "circumvent. Always means the inclusion of cages and scenic rails, allowing flying monsters to " ..
             "potentially escape.\n\nNote: 3D midtex lines currently *block* projectiles as well."),
       default="never",
+      priority = 81,
       gap=1,
     },
 
-    { name="symmetry",    label=_("Symmetry"),       choices=STYLE_CHOICES },
+    { name="symmetry",    label=_("Symmetry"),       choices=STYLE_CHOICES, priority = 80 },
     { name="beams",       label=_("Beams"),          choices=STYLE_CHOICES,
       tooltip = "Allows the appearance of thin pillars to appear between the borders of different elevations.",
+      priority = 79
     },
     { name="fences",      label=_("Fences"),         choices=STYLE_CHOICES,
       tooltip = "Creates thick solid fences and fence posts between areas of varying height for outdoor rooms.",
+      priority = 78
     },
     { name="porches",     label=_("Porches\\Gazebos"),        choices=STYLE_CHOICES,
       tooltip = "Occasional outdoor areas with a lowered indoor-ish ceiling.",
+      priority = 77
     },
     { name="scenics",     label=_("Scenics"),          choices=STYLE_CHOICES,
       tooltip = "Controls the amount of fancy scenics visible at room bordering the maps.",
+      priority = 76,
       gap = 1,
     },
     { name = "corner_style",
@@ -424,6 +515,7 @@ OB_MODULES["misc"] =
                 "Per Theme means choice is controlled by theme profile instead. " ..
                 "Tech-ish maps favor sharp corners while hell-ish favor curved.",
       default = "themed",
+      priority = 75
     },
     {
       name = "liquid_sinks",
@@ -433,10 +525,11 @@ OB_MODULES["misc"] =
                 "are often converted into depressions with the level's liquid. " ..
                 "May greatly inconvenience the player but default Oblige behavior is 'Yes'.",
       default = "yes",
+      priority = 74,
       gap = 1,
     },
 
-    { name="darkness",    label=_("Dark Outdoors"),  choices=STYLE_CHOICES },
+    { name="darkness",    label=_("Dark Outdoors"),  choices=STYLE_CHOICES, priority = 73 },
     { 
       name="float_minimum_brightness", 
       label=_("Minimum Brightness"),
@@ -450,6 +543,7 @@ OB_MODULES["misc"] =
       presets = "",
       tooltip = "Sets the minimum brightness for the map.",
       longtip = "",
+      priority = 72
     },
 
     { 
@@ -465,22 +559,27 @@ OB_MODULES["misc"] =
       presets = "",
       tooltip = "Sets the maximum brightness for the map.",
       longtip = "",
+      priority = 71
     },
 
     { name="barrels",     label=_("Explosive Decor"),        choices=STYLE_CHOICES, gap=1,
       tooltip = "Controls the presence of barrels, pods, canisters, etc.",
+      priority = 70
     },
 
-    { name="doors",       label=_("Doors"),          choices=STYLE_CHOICES },
-    { name="keys",        label=_("Keyed Doors"),    choices=STYLE_CHOICES },
+    { name="doors",       label=_("Doors"),          choices=STYLE_CHOICES, priority = 69 },
+    { name="keys",        label=_("Keyed Doors"),    choices=STYLE_CHOICES, priority = 68 },
     { name="trikeys",     label=_("Triple-Keyed Doors"),          choices=STYLE_CHOICES,
       tooltip = "Controls the chance to get three key door whenever three keys are present.",
+      priority = 67
     },
     { name="switches",    label=_("Switch Goals"), choices=STYLE_CHOICES, 
-      tooltip = "Controls the chance for long-distance switch and lock quests."
+      tooltip = "Controls the chance for long-distance switch and lock quests.",
+      priority = 66
     },
     { name="local_switches",    label=_("Switch Rooms"), choices=STYLE_CHOICES, 
       tooltip = "Controls the chance same-room switches and locks.",
+      priority = 65,
       gap=1 
     },
 
@@ -490,6 +589,7 @@ OB_MODULES["misc"] =
       valuator = "button",
       default = 1,
       tooltip = _("Adds street markings to roads."),
+      priority = 64
     },
     {
       name="street_traffic",
@@ -497,6 +597,7 @@ OB_MODULES["misc"] =
       choices=STYLE_CHOICES,
       tooltip = _("If Street Mode is enabled, changes the density of prefabs such " ..
       "as cars, barriers, crates, and relevant items on the roads."),
+      priority = 63,
       gap = 1,
     },
 
@@ -506,6 +607,7 @@ OB_MODULES["misc"] =
       valuator = "button",
       default = 1,
       tooltip=_("Places exit signs by exiting room"),
+      priority = 62,
       gap=1,
     },
 
@@ -519,6 +621,7 @@ OB_MODULES["misc"] =
       "no control, and levels can have linear starts at random based on shape grammars as " ..
       "per original Oblige 7.7 behavior."),
       default = "default",
+      priority = 61
     },
     {
       name="dead_ends",
@@ -528,6 +631,7 @@ OB_MODULES["misc"] =
       "NONE means all dead ends are removed.\n" ..
       "Heaps means all dead ends are preserved (Oblige default)."),
       default = "heaps",
+      priority = 60,
       gap = 1,
     },
 

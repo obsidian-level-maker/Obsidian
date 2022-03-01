@@ -130,11 +130,25 @@ bool randomize_pickups = false;
 bool randomize_misc = false;
 int zip_output = 0;
 
+bool first_run = false;
+
 std::filesystem::path gif_filename = "gif_output.gif";
 
 std::string string_seed;
 
 game_interface_c *game_object = NULL;
+
+// Tutorial stuff
+Fl_JPEG_Image *tutorial1;
+Fl_JPEG_Image *tutorial2;
+Fl_JPEG_Image *tutorial3;
+Fl_JPEG_Image *tutorial4;
+Fl_JPEG_Image *tutorial5;
+Fl_JPEG_Image *tutorial6;
+Fl_JPEG_Image *tutorial7;
+Fl_JPEG_Image *tutorial8;
+Fl_JPEG_Image *tutorial9;
+Fl_JPEG_Image *tutorial10;
 
 #ifdef WIN32
 FLASHWINFO blinker;
@@ -204,7 +218,7 @@ static void ShowInfo() {
         "     --randomize-arch      Randomize architecture settings\n"
         "     --randomize-monsters  Randomize monster-related settings\n"
         "     --randomize-pickups   Randomize item/weapon settings\n"
-        "     --randomize-misc      Randomize miscellaneous settings\n"
+        "     --randomize-other     Randomize other settings\n"
         "\n"
         "  -3 --pk3                 Compress output file to PK3\n"
         "  -z --zip                 Compress output file to ZIP\n"
@@ -1078,7 +1092,7 @@ restart:;
         }
     }
 
-    if (argv::Find(0, "randomize-misc") >= 0) {
+    if (argv::Find(0, "randomize-other") >= 0) {
         if (batch_mode) {
             batch_randomize_groups.push_back("misc");
         }
@@ -1211,6 +1225,7 @@ skiprest:
     // load config after creating window (will set widget values)
     if (!Cookie_Load(config_file)) {
         LogPrintf("Missing config file -- using defaults.\n\n");
+        first_run = true;
     }
 
     if (!load_file.empty()) {
@@ -1238,15 +1253,48 @@ skiprest:
             "Surprise Me/Randomize Pickups", NULL, main_win_pickups_config_CB,
             0, FL_MENU_TOGGLE | (randomize_pickups ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add(
-            "Surprise Me/Randomize Misc", NULL, main_win_misc_config_CB, 0,
+            "Surprise Me/Randomize Other", NULL, main_win_misc_config_CB, 0,
             FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
     }
+
+    fl_register_images(); // Needed for Unix window icon and tutorial windows
+
+    // Load tutorial images
+    std::filesystem::path image_loc = install_dir;
+    image_loc.append("data").append("tutorial").append("tutorial1.jpg");
+    tutorial1 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial2.jpg");
+    tutorial2 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial3.jpg");
+    tutorial3 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial4.jpg");
+    tutorial4 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial5.jpg");
+    tutorial5 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial6.jpg");
+    tutorial6 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial7.jpg");
+    tutorial7 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial8.jpg");
+    tutorial8 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial9.jpg");
+    tutorial9 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial10.jpg");
+    tutorial10 = new Fl_JPEG_Image(image_loc.string().c_str());
 
 #ifdef WIN32
     main_win->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(1)));
 #else
 #ifdef UNIX
-    fl_register_images();
     Fl_Pixmap program_icon(obsidian_icon);
     Fl_RGB_Image rgb_icon(&program_icon, FL_BLACK);
     UI_MainWin::default_icon(&rgb_icon);
@@ -1259,6 +1307,9 @@ skiprest:
         fake_argv[0] = strdup("Obsidian.exe");
         fake_argv[1] = NULL;
         main_win->show(1 /* argc */, fake_argv);
+        if (first_run) {
+            DLG_Tutorial();
+        }
     }
 
 #ifdef WIN32  // Populate structure for taskbar/window flash. Must be done after

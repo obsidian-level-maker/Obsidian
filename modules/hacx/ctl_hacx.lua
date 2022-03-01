@@ -124,8 +124,8 @@ OB_MODULES["hacx_mon_control"] =
 
   options =
   {
-     float_thug=
      {
+      name = "float_thug",
       label = _("Thug"),
       valuator = "slider",
       units = "",
@@ -144,8 +144,8 @@ OB_MODULES["hacx_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_android=
      {
+      name = "float_android",
       label = _("Android"),
       valuator = "slider",
       units = "",
@@ -164,8 +164,8 @@ OB_MODULES["hacx_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_stealth=
      {
+      name = "float_stealth",
       label = _("Stealth Buzzer"),
       valuator = "slider",
       units = "",
@@ -184,8 +184,8 @@ OB_MODULES["hacx_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_roam_mine=
      {
+      name = "float_roam_mine",
       label = _("Roaming Mine"),
       valuator = "slider",
       units = "",
@@ -204,8 +204,8 @@ OB_MODULES["hacx_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_phage=
      {
+      name = "float_phage",
       label = _("Phage"),
       valuator = "slider",
       units = "",
@@ -224,8 +224,8 @@ OB_MODULES["hacx_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_buzzer=
      {
+      name = "float_buzzer",
       label = _("Buzzer"),
       valuator = "slider",
       units = "",
@@ -244,8 +244,8 @@ OB_MODULES["hacx_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_i_c_e=
      {
+      name = "float_i_c_e",
       label = _("ICE"),
       valuator = "slider",
       units = "",
@@ -264,8 +264,8 @@ OB_MODULES["hacx_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_d_man=
      {
+      name = "float_d_man",
       label = _("D-Man"),
       valuator = "slider",
       units = "",
@@ -284,8 +284,8 @@ OB_MODULES["hacx_mon_control"] =
       randomize_group = "monsters"
      },
 	 
-     float_monstruct=
      {
+      name = "float_monstruct",
       label = _("Monstruct"),
       valuator = "slider",
       units = "",
@@ -304,8 +304,8 @@ OB_MODULES["hacx_mon_control"] =
       randomize_group = "monsters"
      },
 	 
-     float_majong7=
      {
+      name = "float_majong7",
       label = _("Majong 7"),
       valuator = "slider",
       units = "",
@@ -324,8 +324,8 @@ OB_MODULES["hacx_mon_control"] =
       randomize_group = "monsters"
      },
 	 
-     float_terminatrix=
      {
+      name = "float_terminatrix",
       label = _("Terminatrix"),
       valuator = "slider",
       units = "",
@@ -344,8 +344,8 @@ OB_MODULES["hacx_mon_control"] =
       randomize_group = "monsters"
      },
 	 
-     float_thorn=
      {
+      name = "float_thorn",
       label = _("Thorn"),
       valuator = "slider",
       units = "",
@@ -364,8 +364,8 @@ OB_MODULES["hacx_mon_control"] =
       randomize_group = "monsters"
      },
 
-     float_mecha=
      {
+      name = "float_mecha",
       label = _("Mecha Maniac"),
       valuator = "slider",
       units = "",
@@ -469,9 +469,6 @@ function CTL_HACX.weapon_setup(self)
     end
   end -- for opt
 
-  -- specific instructions for the weapon_pref choices
-  PARAM.weapon_prefs = self.options.weapon_prefs.value
-
   if PARAM.weapon_prefs == "vanilla"
   or PARAM.weapon_prefs == "none" then
     for _,mon in pairs(GAME.MONSTERS) do
@@ -505,8 +502,9 @@ OB_MODULES["hacx_weapon_control"] =
 
   options =
   {
-     float_reznator=
+
      {
+      name = "float_reznator",
       label = _("Hoig Reznator"),
       valuator = "slider",
       units = "",
@@ -525,8 +523,8 @@ OB_MODULES["hacx_weapon_control"] =
       randomize_group = "pickups"
      },
 
-     float_tazer=
      {
+      name = "float_tazer",
       label = _("Tazer"),
       valuator = "slider",
       units = "",
@@ -545,8 +543,8 @@ OB_MODULES["hacx_weapon_control"] =
       randomize_group = "pickups"
      },
 
-     float_cyrogun=
      {
+      name = "float_cyrogun",
       label = _("Cyrogun"),
       valuator = "slider",
       units = "",
@@ -565,8 +563,8 @@ OB_MODULES["hacx_weapon_control"] =
       randomize_group = "pickups"
      },
 
-     float_fu2=
      {
+      name = "float_fu2",
       label = _("Uzi"),
       valuator = "slider",
       units = "",
@@ -585,8 +583,8 @@ OB_MODULES["hacx_weapon_control"] =
       randomize_group = "pickups"
      },
 	 
-     float_zooka=
      {
+      name = "float_zooka",
       label = _("Photon 'Zooka"),
       valuator = "slider",
       units = "",
@@ -605,8 +603,8 @@ OB_MODULES["hacx_weapon_control"] =
       randomize_group = "pickups"
      },
 	 
-     float_antigun=
      {
+      name = "float_antigun",
       label = _("Anti-gun"),
       valuator = "slider",
       units = "",
@@ -625,8 +623,8 @@ OB_MODULES["hacx_weapon_control"] =
       randomize_group = "pickups"
      },
 	 
-     float_nuker=
      {
+      name = "float_nuker",
       label = _("Nuker"),
       valuator = "slider",
       units = "",
@@ -645,7 +643,6 @@ OB_MODULES["hacx_weapon_control"] =
       randomize_group = "pickups"
      },
 
-    weapon_prefs =
     {
       name="weapon_prefs",
       label=_("Weapon Preferences"),

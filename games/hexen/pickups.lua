@@ -134,5 +134,89 @@ HEXEN.NICE_ITEMS =
   p3 = { pickup="torch",     prob=2 },
 
 --]]
+
+-- Weapon Pieces
+
+c1_shaft =
+{
+  id = 20,
+  kind = "other",
+  add_prob = 5,
+  secret_prob = 10,
+  once_only = true
+},
+
+c2_cross =
+{
+  id = 19,
+  kind = "other",
+  add_prob = 5,
+  secret_prob = 10,
+  once_only = true
+},
+
+c3_arc =
+{
+  id = 18,
+  kind = "other",
+  add_prob = 5,
+  secret_prob = 10,
+  once_only = true
+},
+
+f1_hilt =
+{
+  id = 16,
+  kind = "other",
+  add_prob = 5,
+  secret_prob = 10,
+  once_only = true
+},
+
+f2_cross =
+{
+  id = 13,
+  kind = "other",
+  add_prob = 5,
+  secret_prob = 10,
+  once_only = true
+},
+
+f3_blade =
+{
+  id = 12,
+  kind = "other",
+  add_prob = 5,
+  secret_prob = 10,
+  once_only = true
+},
+
+m1_stick =
+{
+  id = 23,
+  kind = "other",
+  add_prob = 5,
+  secret_prob = 10,
+  once_only = true
+},
+
+m2_stub =
+{
+  id = 22,
+  kind = "other",
+  add_prob = 5,
+  secret_prob = 10,
+  once_only = true
+},
+
+m3_skull =
+{
+  id = 21,
+  kind = "other",
+  add_prob = 5,
+  secret_prob = 10,
+  once_only = true
+},
+
 }
 

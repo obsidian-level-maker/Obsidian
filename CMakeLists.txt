@@ -132,6 +132,7 @@ add_executable(
   source_files/obsidian_main/m_theme.cc
   source_files/obsidian_main/m_trans.cc
   source_files/obsidian_main/m_trans.h
+  source_files/obsidian_main/m_tutorial.cc
   source_files/obsidian_main/main.cc
   source_files/obsidian_main/main.h
   source_files/obsidian_main/obsidian.rc

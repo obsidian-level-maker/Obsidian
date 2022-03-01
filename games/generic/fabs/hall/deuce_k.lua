@@ -69,7 +69,7 @@ PREFABS.Hallway_deuce_locked_key3 =
 PREFABS.Hallway_deuce_barred =
 {
   file   = "hall/deuce_k.wad",
-  map    = "MAP03",
+  map    = "MAP04",
 
   kind   = "terminator",
   group  = "deuce",
