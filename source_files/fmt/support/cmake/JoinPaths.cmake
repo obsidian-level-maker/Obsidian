@@ -19,9 +19,8 @@ function(join_paths joined_path first_path_segment)
       endif()
     endif()
   endforeach()
-  set(
-    ${joined_path}
-    "${temp_path}"
-    PARENT_SCOPE
+  set(${joined_path}
+      "${temp_path}"
+      PARENT_SCOPE
   )
 endfunction()

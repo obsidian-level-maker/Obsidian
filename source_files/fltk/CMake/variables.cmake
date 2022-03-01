@@ -4,18 +4,18 @@
 #
 # Copyright 1998-2020 by Bill Spitzak and others.
 #
-# This library is free software. Distribution and use rights are outlined in
-# the file "COPYING" which should have been included with this file.  If this
-# file is missing or damaged, see the license at:
+# This library is free software. Distribution and use rights are outlined in the
+# file "COPYING" which should have been included with this file.  If this file
+# is missing or damaged, see the license at:
 #
-#     https://www.fltk.org/COPYING.php
+# https://www.fltk.org/COPYING.php
 #
 # Please see the following page on how to report bugs and issues:
 #
-#     https://www.fltk.org/bugs.php
+# https://www.fltk.org/bugs.php
 #
 
-#######################################################################
+# ##############################################################################
 
 set(DEBUG_VARIABLES_CMAKE 0)
 if(DEBUG_VARIABLES_CMAKE)
@@ -34,10 +34,9 @@ if(DEBUG_VARIABLES_CMAKE)
   fl_debug_var(LIB_zlib)
 endif(DEBUG_VARIABLES_CMAKE)
 
-#######################################################################
-# add several libraries
-# FIXME: libraries may need reordering.
-# FIXME: check fontconfig conditions (only if Xft is used or ...)
+# ##############################################################################
+# add several libraries FIXME: libraries may need reordering. FIXME: check
+# fontconfig conditions (only if Xft is used or ...)
 
 if(WIN32)
   list(APPEND FLTK_LDLIBS -lole32 -luuid -lcomctl32 -lws2_32)
@@ -58,17 +57,16 @@ if(HAVE_DLSYM)
   endforeach()
 endif(HAVE_DLSYM)
 
-#######################################################################
+# ##############################################################################
 # Set variables for fltk-config (generated from fltk-config.in)
-#######################################################################
+# ##############################################################################
 
-# Variables in fltk-config.in (@VAR@) are used in configure(.ac)
-# and in CMake so their names and usage must be synchronized.
-# CMake generates two instances of fltk-config, one that can be used
-# directly in the build tree (see export.cmake) and one that is copied
-# to the installation directory (see install.cmake). Common variables
-# should be set here, whereas variables with different values should
-# be set in install.cmake or export.cmake, respectively.
+# Variables in fltk-config.in (@VAR@) are used in configure(.ac) and in CMake so
+# their names and usage must be synchronized. CMake generates two instances of
+# fltk-config, one that can be used directly in the build tree (see
+# export.cmake) and one that is copied to the installation directory (see
+# install.cmake). Common variables should be set here, whereas variables with
+# different values should be set in install.cmake or export.cmake, respectively.
 
 if(WIN32)
   set(LDFLAGS "${CMAKE_EXE_LINKER_FLAGS} -mwindows")
@@ -110,7 +108,7 @@ endif(FLTK_BUILTIN_ZLIB_FOUND)
 string(REPLACE ";" " " IMAGELIBS "${IMAGELIBS}")
 string(REPLACE ";" " " STATICIMAGELIBS "${STATICIMAGELIBS}")
 
-#######################################################################
+# ##############################################################################
 set(CC ${CMAKE_C_COMPILER})
 set(CXX ${CMAKE_CXX_COMPILER})
 

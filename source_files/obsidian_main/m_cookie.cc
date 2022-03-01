@@ -200,7 +200,8 @@ bool Cookie_Save(std::filesystem::path filename) {
     LogPrintf("Saving config file...\n");
 
     // header...
-    cookie_fp << "-- CONFIG FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION << " \"" << OBSIDIAN_CODE_NAME << "\"\n";
+    cookie_fp << "-- CONFIG FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION << " \""
+              << OBSIDIAN_CODE_NAME << "\"\n";
     cookie_fp << "-- Build " << OBSIDIAN_VERSION << "\n";
     cookie_fp << "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n";
     cookie_fp << "-- " << OBSIDIAN_WEBSITE << "\n\n";

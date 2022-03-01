@@ -3,17 +3,17 @@
 #
 # Copyright 2004-2021 by Bill Spitzak and others.
 #
-# This library is free software. Distribution and use rights are outlined in
-# the file "COPYING" which should have been included with this file.  If this
-# file is missing or damaged, see the license at:
+# This library is free software. Distribution and use rights are outlined in the
+# file "COPYING" which should have been included with this file.  If this file
+# is missing or damaged, see the license at:
 #
-#     https://www.fltk.org/COPYING.php
+# https://www.fltk.org/COPYING.php
 #
 # Please see the following page on how to report bugs and issues:
 #
-#     https://www.fltk.org/bugs.php
+# https://www.fltk.org/bugs.php
 #
-#######################################################################
+# ##############################################################################
 
 include(../CMake/FLTK-Functions.cmake)
 include(../CMake/fl_create_example.cmake)
@@ -26,7 +26,7 @@ set(TESTFILE_PATH ${CMAKE_CURRENT_BINARY_DIR}/../data)
 file(MAKE_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
 file(MAKE_DIRECTORY ${TESTFILE_PATH})
 
-#######################################################################
+# ##############################################################################
 # audio libs for test apps
 if(WIN32)
   set(AUDIOLIBS winmm)
@@ -40,13 +40,10 @@ elseif(HAVE_ALSA_ASOUNDLIB_H)
   mark_as_advanced(LIB_asound)
 endif(WIN32)
 
-#######################################################################
-include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}
-)
+# ##############################################################################
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
-#######################################################################
+# ##############################################################################
 
 create_example(adjuster adjuster.cxx fltk)
 create_example(arc arc.cxx fltk)
@@ -104,7 +101,10 @@ create_example(resizebox resizebox.cxx fltk)
 create_example(rotated_text rotated_text.cxx fltk)
 create_example(scroll scroll.cxx fltk)
 create_example(subwindow subwindow.cxx fltk)
-create_example(sudoku "sudoku.cxx;sudoku.plist;sudoku.icns;sudoku.rc" "fltk_images;fltk;${AUDIOLIBS}")
+create_example(
+  sudoku "sudoku.cxx;sudoku.plist;sudoku.icns;sudoku.rc"
+  "fltk_images;fltk;${AUDIOLIBS}"
+)
 create_example(symbols symbols.cxx fltk)
 create_example(tabs tabs.fl fltk)
 create_example(table table.cxx fltk)
@@ -120,7 +120,9 @@ create_example(windowfocus windowfocus.cxx fltk)
 
 # OpenGL demos...
 if(OPENGL_FOUND)
-  create_example(CubeView "CubeMain.cxx;CubeView.cxx;CubeViewUI.fl" "fltk_gl;fltk")
+  create_example(
+    CubeView "CubeMain.cxx;CubeView.cxx;CubeViewUI.fl" "fltk_gl;fltk"
+  )
   create_example(cube cube.cxx "fltk_gl;fltk;${OPENGL_LIBRARIES}")
   create_example(fractals "fractals.cxx;fracviewer.cxx" "fltk_gl;fltk")
   create_example(fullscreen fullscreen.cxx "fltk_gl;fltk")
@@ -136,17 +138,14 @@ else()
   create_example(cairo_test cairo_test.cxx fltk)
 endif(FLTK_HAVE_CAIRO)
 
-#####################################################
+# ##############################################################################
 # We need some support files for the demo programs
-#####################################################
+# ##############################################################################
 
 # copy the required test files
 
-file(
-  COPY
-  rgb.txt browser.cxx editor.cxx valuators.fl
-  help_dialog.html
-  DESTINATION ${TESTFILE_PATH}
+file(COPY rgb.txt browser.cxx editor.cxx valuators.fl help_dialog.html
+     DESTINATION ${TESTFILE_PATH}
 )
 
 # copy and modify test/demo.menu (replace "help" with "help_dialog")
@@ -157,14 +156,10 @@ file(WRITE ${TESTFILE_PATH}/demo.menu ${menu_out})
 
 # copy the image directory for help_dialog.html
 
-file(
-  COPY
-  ${CMAKE_CURRENT_SOURCE_DIR}/images
-  DESTINATION ${TESTFILE_PATH}
-)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/images DESTINATION ${TESTFILE_PATH})
 
-# The main test program 'demo' needs additional hints and configurations.
-# Note: CMake defines "CMAKE_INTDIR" which is the build type folder (e.g. "Debug")
-# for multi config builds (MSVC, Xcode)
+# The main test program 'demo' needs additional hints and configurations. Note:
+# CMake defines "CMAKE_INTDIR" which is the build type folder (e.g. "Debug") for
+# multi config builds (MSVC, Xcode)
 
 target_compile_definitions(demo PRIVATE GENERATED_BY_CMAKE)

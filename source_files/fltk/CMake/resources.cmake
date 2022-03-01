@@ -4,25 +4,24 @@
 #
 # Copyright 1998-2021 by Bill Spitzak and others.
 #
-# This library is free software. Distribution and use rights are outlined in
-# the file "COPYING" which should have been included with this file.  If this
-# file is missing or damaged, see the license at:
+# This library is free software. Distribution and use rights are outlined in the
+# file "COPYING" which should have been included with this file.  If this file
+# is missing or damaged, see the license at:
 #
-#     https://www.fltk.org/COPYING.php
+# https://www.fltk.org/COPYING.php
 #
 # Please see the following page on how to report bugs and issues:
 #
-#     https://www.fltk.org/bugs.php
+# https://www.fltk.org/bugs.php
 #
 
-#######################################################################
+# ##############################################################################
 # check for headers, libraries and functions
-#######################################################################
+# ##############################################################################
 
-# If CMAKE_REQUIRED_QUIET is 1 (default) the search is mostly quiet,
-# if it is 0 (or not defined) check_include_files() is more verbose
-# and the result of the search is logged with fl_debug_var().
-# This is useful for debugging.
+# If CMAKE_REQUIRED_QUIET is 1 (default) the search is mostly quiet, if it is 0
+# (or not defined) check_include_files() is more verbose and the result of the
+# search is logged with fl_debug_var(). This is useful for debugging.
 
 set(CMAKE_REQUIRED_QUIET 1)
 
@@ -35,19 +34,18 @@ macro(fl_find_header VAR HEADER)
   endif(NOT CMAKE_REQUIRED_QUIET)
 endmacro(fl_find_header)
 
-#######################################################################
+# ##############################################################################
 # Include FindPkgConfig for later use of pkg-config
-#######################################################################
+# ##############################################################################
 
 include(FindPkgConfig)
 
-# fl_debug_var (PKG_CONFIG_FOUND)
-# fl_debug_var (PKG_CONFIG_EXECUTABLE)
+# fl_debug_var (PKG_CONFIG_FOUND) fl_debug_var (PKG_CONFIG_EXECUTABLE)
 # fl_debug_var (PKG_CONFIG_VERSION_STRING)
 
-#######################################################################
+# ##############################################################################
 # Find header files...
-#######################################################################
+# ##############################################################################
 
 fl_find_header(HAVE_ALSA_ASOUNDLIB_H alsa/asoundlib.h)
 fl_find_header(HAVE_DLFCN_H dlfcn.h)
@@ -73,23 +71,23 @@ endif(WIN32 AND NOT CYGWIN)
 
 # Special case for Microsoft Visual Studio generator (MSVC):
 #
-# The header files <GL/glu.h> and <locale.h> are located in the SDK's
-# for Visual Studio. If CMake is invoked from a desktop icon or the Windows
-# menu it doesn't have the correct paths to find these header files.
-# The CMake folks recommend not to search for these files at all, because
-# they must always be there, but we do anyway.
-# If we don't find them we issue a warning and suggest to rerun CMake from
-# a "Developer Command Prompt for Visual Studio xxxx", but we fix the issue
-# by setting the *local* instance (not the cache variable) of the corresponding
-# CMake variable to '1' since we "know" the header file is available.
+# The header files <GL/glu.h> and <locale.h> are located in the SDK's for Visual
+# Studio. If CMake is invoked from a desktop icon or the Windows menu it doesn't
+# have the correct paths to find these header files. The CMake folks recommend
+# not to search for these files at all, because they must always be there, but
+# we do anyway. If we don't find them we issue a warning and suggest to rerun
+# CMake from a "Developer Command Prompt for Visual Studio xxxx", but we fix the
+# issue by setting the *local* instance (not the cache variable) of the
+# corresponding CMake variable to '1' since we "know" the header file is
+# available.
 #
-# If the user builds the solution, everything should run smoothly despite
-# the fact that the header files were not found.
+# If the user builds the solution, everything should run smoothly despite the
+# fact that the header files were not found.
 #
-# If the configuration is changed somehow (e.g. by editing CMakeLists.txt)
-# CMake will be rerun from within Visual Studio, find the header file, and
-# set the cache variable for the header file to its correct path. The latter is
-# only informational so you can see that (and where) the headers were found.
+# If the configuration is changed somehow (e.g. by editing CMakeLists.txt) CMake
+# will be rerun from within Visual Studio, find the header file, and set the
+# cache variable for the header file to its correct path. The latter is only
+# informational so you can see that (and where) the headers were found.
 #
 # Note: these cache variables can only be seen in "advanced" mode.
 
@@ -118,11 +116,11 @@ endif(MSVC)
 
 # Simulate the behavior of autoconf macro AC_HEADER_DIRENT, see:
 # https://www.gnu.org/software/autoconf/manual/autoconf-2.69/html_node/Particular-Headers.html
-# "Check for the following header files. For the first one that is found
-#  and defines 'DIR', define the listed C preprocessor macro ..."
+# "Check for the following header files. For the first one that is found and
+# defines 'DIR', define the listed C preprocessor macro ..."
 #
-# Note: we don't check if it really defines 'DIR', but we stop processing
-# once we found the first suitable header file.
+# Note: we don't check if it really defines 'DIR', but we stop processing once
+# we found the first suitable header file.
 
 fl_find_header(HAVE_DIRENT_H dirent.h)
 
@@ -145,9 +143,9 @@ mark_as_advanced(HAVE_SYS_NDIR_H HAVE_SYS_SELECT_H)
 mark_as_advanced(HAVE_SYS_STDTYPES_H HAVE_XDBE_H)
 mark_as_advanced(HAVE_X11_XREGION_H)
 
-#----------------------------------------------------------------------
-# The following code is used to find the include path for freetype
-# headers to be able to #include <ft2build.h> in Xft.h.
+# ----------------------------------------------------------------------
+# The following code is used to find the include path for freetype headers to be
+# able to #include <ft2build.h> in Xft.h.
 
 # where to find freetype headers
 
@@ -160,7 +158,7 @@ endif(FREETYPE_PATH)
 
 mark_as_advanced(FREETYPE_PATH)
 
-#######################################################################
+# ##############################################################################
 # libraries
 find_library(LIB_dl dl)
 if((NOT APPLE) OR OPTION_APPLE_X11)
@@ -178,7 +176,7 @@ mark_as_advanced(LIB_dl LIB_fontconfig LIB_freetype)
 mark_as_advanced(LIB_GL LIB_MesaGL LIB_GLEW)
 mark_as_advanced(LIB_jpeg LIB_png LIB_zlib)
 
-#######################################################################
+# ##############################################################################
 # functions
 include(CheckFunctionExists)
 
@@ -210,7 +208,8 @@ endif(LIB_png)
 check_function_exists(scandir HAVE_SCANDIR)
 check_function_exists(snprintf HAVE_SNPRINTF)
 
-# not really true but we convert strcasecmp calls to _stricmp calls in flstring.h
+# not really true but we convert strcasecmp calls to _stricmp calls in
+# flstring.h
 if(MSVC)
   set(HAVE_STRCASECMP 1)
 endif(MSVC)
@@ -225,13 +224,15 @@ if(HAVE_SCANDIR AND NOT HAVE_SCANDIR_POSIX)
   set(MSG "POSIX compatible scandir")
   message(STATUS "Looking for ${MSG}")
   try_compile(
-    V
-    ${CMAKE_CURRENT_BINARY_DIR}
+    V ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/CMake/posixScandir.cxx
   )
   if(V)
     message(STATUS "${MSG} - found")
-    set(HAVE_SCANDIR_POSIX 1 CACHE INTERNAL "")
+    set(HAVE_SCANDIR_POSIX
+        1
+        CACHE INTERNAL ""
+    )
   else()
     message(STATUS "${MSG} - not found")
     set(HAVE_SCANDIR_POSIX HAVE_SCANDIR_POSIX-NOTFOUND)
@@ -247,7 +248,7 @@ else(DEFINED SAVED_REQUIRED_LIBRARIES)
   unset(CMAKE_REQUIRED_LIBRARIES)
 endif(DEFINED SAVED_REQUIRED_LIBRARIES)
 
-#######################################################################
+# ##############################################################################
 # packages
 
 # Doxygen: necessary for HTML and PDF docs
@@ -255,8 +256,8 @@ find_package(Doxygen)
 
 # LaTex: necessary for PDF docs (note: FindLATEX doesn't return LATEX_FOUND)
 
-# Note: we only check existence of `latex' (LATEX_COMPILER), hence
-# building the pdf docs may still fail because of other missing tools.
+# Note: we only check existence of `latex' (LATEX_COMPILER), hence building the
+# pdf docs may still fail because of other missing tools.
 
 set(LATEX_FOUND)
 if(DOXYGEN_FOUND)
@@ -266,9 +267,8 @@ if(DOXYGEN_FOUND)
   endif(LATEX_COMPILER AND NOT LATEX_FOUND)
 endif(DOXYGEN_FOUND)
 
-# message ("Doxygen  found : ${DOXYGEN_FOUND}")
-# message ("LaTex    found : ${LATEX_FOUND}")
-# message ("LaTex Compiler : ${LATEX_COMPILER}")
+# message ("Doxygen  found : ${DOXYGEN_FOUND}") message ("LaTex    found :
+# ${LATEX_FOUND}") message ("LaTex Compiler : ${LATEX_COMPILER}")
 
 # Cleanup: unset local variables
 
