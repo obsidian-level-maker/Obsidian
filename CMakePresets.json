@@ -39,7 +39,16 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
-    }
+    },
+      {
+        "name": "msvc",
+        "description": "Compile natively on Windows",
+        "binaryDir": "build/msvc",
+        "generator": "Visual Studio 17 2022",
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Release"
+        }
+      }
   ],
   "buildPresets": [
     {
@@ -57,6 +66,10 @@
     {
       "name": "cross64",
       "configurePreset": "cross64"
+    },
+    {
+      "name": "msvc",
+      "configurePreset": "msvc"
     }
   ]
 }
