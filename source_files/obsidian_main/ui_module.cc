@@ -102,7 +102,8 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
 
     if (longtip.empty()) {
         longtip = fmt::format(
-            "Detailed help not yet written for this setting.\n----------------------------------------\n"
+            "Detailed help not yet written for this "
+            "setting.\n----------------------------------------\n"
             "Current tooltip:\n{}",
             tip);
     }
@@ -173,7 +174,8 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
 
     if (longtip.empty()) {
         longtip = fmt::format(
-            "Detailed help not yet written for this setting.\n----------------------------------------\n"
+            "Detailed help not yet written for this "
+            "setting.\n----------------------------------------\n"
             "Current tooltip:\n{}",
             tip);
     }
@@ -340,7 +342,8 @@ void UI_Module::AddButtonOption(std::string opt, std::string label,
 
     if (longtip.empty()) {
         longtip = fmt::format(
-            "Detailed help not yet written for this setting.\n----------------------------------------\n"
+            "Detailed help not yet written for this "
+            "setting.\n----------------------------------------\n"
             "Current tooltip:\n{}",
             tip);
     }

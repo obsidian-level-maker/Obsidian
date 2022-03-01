@@ -1,23 +1,23 @@
 #
-# CMakeLists.txt to build the FLTK project using CMake (www.cmake.org)
-# Written by Michael Surette
+# CMakeLists.txt to build the FLTK project using CMake (www.cmake.org) Written
+# by Michael Surette
 #
 # Copyright 1998-2020 by Bill Spitzak and others.
 #
-# This library is free software. Distribution and use rights are outlined in
-# the file "COPYING" which should have been included with this file.  If this
-# file is missing or damaged, see the license at:
+# This library is free software. Distribution and use rights are outlined in the
+# file "COPYING" which should have been included with this file.  If this file
+# is missing or damaged, see the license at:
 #
-#     https://www.fltk.org/COPYING.php
+# https://www.fltk.org/COPYING.php
 #
 # Please see the following page on how to report bugs and issues:
 #
-#     https://www.fltk.org/bugs.php
+# https://www.fltk.org/bugs.php
 #
 
-#######################################################################
+# ##############################################################################
 # basic setup
-#######################################################################
+# ##############################################################################
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/lib)
@@ -29,44 +29,54 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake")
 set(FLTK_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${FLTK_INCLUDE_DIRS})
 
-# Remember root of FLTK source directory in case we're in a subdirectory.
-# Used for instance to find the source directory for doxygen docs
+# Remember root of FLTK source directory in case we're in a subdirectory. Used
+# for instance to find the source directory for doxygen docs
 set(FLTK_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Setup install locations (requires CMake 2.8.4)
 
 include(GNUInstallDirs)
 
+set(FLTK_BINDIR
+    ${CMAKE_INSTALL_BINDIR}
+    CACHE
+      PATH
+      "Binary install path relative to CMAKE_INSTALL_PREFIX unless set to an absolute path."
+)
+set(FLTK_LIBDIR
+    ${CMAKE_INSTALL_LIBDIR}
+    CACHE
+      PATH
+      "Library install path relative to CMAKE_INSTALL_PREFIX unless set to an absolute path."
+)
+set(FLTK_INCLUDEDIR
+    ${CMAKE_INSTALL_INCLUDEDIR}
+    CACHE
+      PATH
+      "Public header install path relative to CMAKE_INSTALL_PREFIX unless set to an absolute path."
+)
+set(FLTK_DATADIR
+    ${CMAKE_INSTALL_DATADIR}
+    CACHE
+      PATH
+      "Non-arch data install path relative to CMAKE_INSTALL_PREFIX unless set to an absolute path."
+)
+set(FLTK_MANDIR
+    ${CMAKE_INSTALL_MANDIR}
+    CACHE
+      PATH
+      "Manual install path relative to CMAKE_INSTALL_PREFIX unless set to an absolute path."
+)
+set(FLTK_DOCDIR
+    ${CMAKE_INSTALL_DATADIR}/doc
+    CACHE
+      PATH
+      "Non-arch doc install path relative to CMAKE_INSTALL_PREFIX unless set to an absolute path."
+)
 
-set(
-  FLTK_BINDIR ${CMAKE_INSTALL_BINDIR} CACHE PATH
-  "Binary install path relative to CMAKE_INSTALL_PREFIX unless set to an absolute path."
-)
-set(
-  FLTK_LIBDIR ${CMAKE_INSTALL_LIBDIR} CACHE PATH
-  "Library install path relative to CMAKE_INSTALL_PREFIX unless set to an absolute path."
-)
-set(
-  FLTK_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR} CACHE PATH
-  "Public header install path relative to CMAKE_INSTALL_PREFIX unless set to an absolute path."
-)
-set(
-  FLTK_DATADIR ${CMAKE_INSTALL_DATADIR} CACHE PATH
-  "Non-arch data install path relative to CMAKE_INSTALL_PREFIX unless set to an absolute path."
-)
-set(
-  FLTK_MANDIR ${CMAKE_INSTALL_MANDIR} CACHE PATH
-  "Manual install path relative to CMAKE_INSTALL_PREFIX unless set to an absolute path."
-)
-set(
-  FLTK_DOCDIR ${CMAKE_INSTALL_DATADIR}/doc CACHE PATH
-  "Non-arch doc install path relative to CMAKE_INSTALL_PREFIX unless set to an absolute path."
-)
-
-
-#######################################################################
+# ##############################################################################
 # platform dependent information
-#######################################################################
+# ##############################################################################
 
 # set where config files go
 if(WIN32 AND NOT CYGWIN)
@@ -90,19 +100,22 @@ if(APPLE)
   if(OPTION_APPLE_X11)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -U__APPLE__")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -U__APPLE__")
-    if(NOT(${CMAKE_SYSTEM_VERSION} VERSION_LESS 17.0.0)) # a.k.a. macOS version ≥ 10.13
+    if(NOT (${CMAKE_SYSTEM_VERSION} VERSION_LESS 17.0.0)) # a.k.a. macOS version
+                                                          # ≥ 10.13
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LIBCPP_HAS_THREAD_API_PTHREAD")
-    endif(NOT(${CMAKE_SYSTEM_VERSION} VERSION_LESS 17.0.0))
+    endif(NOT (${CMAKE_SYSTEM_VERSION} VERSION_LESS 17.0.0))
   else()
     set(__APPLE_QUARTZ__ 1)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -framework Cocoa")
-    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -framework Cocoa")
+    set(CMAKE_SHARED_LINKER_FLAGS
+        "${CMAKE_SHARED_LINKER_FLAGS} -framework Cocoa"
+    )
   endif(OPTION_APPLE_X11)
 endif(APPLE)
 
 if(WIN32)
-  # we do no longer define WIN32 or _WIN32 (in FLTK 1.4.0 and later)
-  # ... but *must* define WIN32 in FLTK 1.3.x
+  # we do no longer define WIN32 or _WIN32 (in FLTK 1.4.0 and later) ... but
+  # *must* define WIN32 in FLTK 1.3.x
   add_definitions(-DWIN32)
   if(MSVC)
     add_definitions(-DWIN32_LEAN_AND_MEAN)
@@ -110,14 +123,16 @@ if(WIN32)
     set(BORDER_WIDTH 2)
   endif(MSVC)
   if(CMAKE_C_COMPILER_ID STREQUAL GNU)
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-subsystem,windows")
+    set(CMAKE_EXE_LINKER_FLAGS
+        "${CMAKE_EXE_LINKER_FLAGS} -Wl,-subsystem,windows"
+    )
   endif(CMAKE_C_COMPILER_ID STREQUAL GNU)
   if(MINGW AND EXISTS /mingw)
     list(APPEND CMAKE_PREFIX_PATH /mingw)
   endif(MINGW AND EXISTS /mingw)
 endif(WIN32)
 
-#######################################################################
+# ##############################################################################
 # size of ints
 include(CheckTypeSize)
 

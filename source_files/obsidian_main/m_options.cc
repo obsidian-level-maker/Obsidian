@@ -146,7 +146,8 @@ bool Options_Save(std::filesystem::path filename) {
 
     LogPrintf("Saving options file...\n");
 
-    option_fp << "-- OPTIONS FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION << " \"" << OBSIDIAN_CODE_NAME << "\"\n";
+    option_fp << "-- OPTIONS FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION
+              << " \"" << OBSIDIAN_CODE_NAME << "\"\n";
     option_fp << "-- Build " << OBSIDIAN_VERSION << "\n";
     option_fp << "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n";
     option_fp << "-- " << OBSIDIAN_WEBSITE << "\n\n";
@@ -372,16 +373,14 @@ slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this wi
     }
 
     static void callback_SetCustomPrefix(Fl_Widget *w, void *data) {
-        tryagain:
+    tryagain:
         const char *user_buf = fl_input("%s", custom_prefix.c_str(),
                                         _("Enter Custom Prefix Format:"));
 
         if (user_buf) {
             custom_prefix = user_buf;
             if (custom_prefix.empty()) {
-                fl_alert(
-                "%s",
-                _("Custom prefix cannot be blank!"));
+                fl_alert("%s", _("Custom prefix cannot be blank!"));
                 goto tryagain;
             }
         }

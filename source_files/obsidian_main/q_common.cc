@@ -660,7 +660,8 @@ void BSP_WriteEntities(int lump_num, const char *description) {
 
     if (qk_game >= 3) {
         std::string obsidian_version_string =
-            fmt::format("OBSIDIAN {} \"{}\" Build {}", OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME, OBSIDIAN_VERSION);
+            fmt::format("OBSIDIAN {} \"{}\" Build {}", OBSIDIAN_SHORT_VERSION,
+                        OBSIDIAN_CODE_NAME, OBSIDIAN_VERSION);
         lump->KeyPair("_generated_by", obsidian_version_string.c_str());
     } else if (description) {
         lump->KeyPair("message", description);
@@ -784,7 +785,8 @@ qLump_c *BSP_CreateInfoLump() {
     L->SetCRLF(true);
 
     L->Printf("\n");
-    L->Printf("-- Levels created by OBSIDIAN %s \"%s\"\n", OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME);
+    L->Printf("-- Levels created by OBSIDIAN %s \"%s\"\n",
+              OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME);
     L->Printf("-- Build %s\n", OBSIDIAN_VERSION);
     L->Printf(
         "-- Based on the OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");

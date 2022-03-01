@@ -282,7 +282,8 @@ bool Theme_Options_Save(std::filesystem::path filename) {
 
     LogPrintf("Saving theme file...\n");
 
-    option_fp << "-- THEME FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION << " \"" << OBSIDIAN_CODE_NAME << "\"\n";
+    option_fp << "-- THEME FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION << " \""
+              << OBSIDIAN_CODE_NAME << "\"\n";
     option_fp << "-- Build " << OBSIDIAN_VERSION << "\n";
     option_fp << "-- Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n";
     option_fp << "-- " << OBSIDIAN_WEBSITE << "\n\n";

@@ -3,98 +3,90 @@
 #
 # Copyright 2020-2021 by Bill Spitzak and others.
 #
-# This library is free software. Distribution and use rights are outlined in
-# the file "COPYING" which should have been included with this file.  If this
-# file is missing or damaged, see the license at:
+# This library is free software. Distribution and use rights are outlined in the
+# file "COPYING" which should have been included with this file.  If this file
+# is missing or damaged, see the license at:
 #
-#     https://www.fltk.org/COPYING.php
+# https://www.fltk.org/COPYING.php
 #
 # Please see the following page on how to report bugs and issues:
 #
-#     https://www.fltk.org/bugs.php
+# https://www.fltk.org/bugs.php
 #
-################################################################################
+# ##############################################################################
 
 include(../CMake/fl_create_example.cmake)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/../bin/examples)
 file(MAKE_DIRECTORY ${EXECUTABLE_OUTPUT_PATH})
 
-################################################################################
+# ##############################################################################
 
-# create separate lists of all source (.cxx) files
-# depending on the required FLTK and system libraries
+# create separate lists of all source (.cxx) files depending on the required
+# FLTK and system libraries
 
-############################################################
+# ##############################################################################
 # simple examples w/o extra libs
-############################################################
+# ##############################################################################
 
-set(
-  SIMPLE_SOURCES
-  howto-add_fd-and-popen
-  howto-browser-with-icons
-  howto-drag-and-drop
-  howto-parse-args
-  howto-text-over-image-button
-  menubar-add
-  nativefilechooser-simple-app
-  progress-simple
-  shapedwindow
-  table-as-container
-  table-simple
-  table-sort
-  table-spreadsheet
-  table-spreadsheet-with-keyboard-nav
-  table-with-keynav
-  tabs-simple
-  textdisplay-with-colors
-  texteditor-simple
-  tree-as-container
-  tree-custom-draw-items
-  tree-custom-sort
-  tree-of-tables
-  tree-simple
-  wizard-simple
+set(SIMPLE_SOURCES
+    howto-add_fd-and-popen
+    howto-browser-with-icons
+    howto-drag-and-drop
+    howto-parse-args
+    howto-text-over-image-button
+    menubar-add
+    nativefilechooser-simple-app
+    progress-simple
+    shapedwindow
+    table-as-container
+    table-simple
+    table-sort
+    table-spreadsheet
+    table-spreadsheet-with-keyboard-nav
+    table-with-keynav
+    tabs-simple
+    textdisplay-with-colors
+    texteditor-simple
+    tree-as-container
+    tree-custom-draw-items
+    tree-custom-sort
+    tree-of-tables
+    tree-simple
+    wizard-simple
 )
 
-############################################################
+# ##############################################################################
 # examples requiring fltk_images
-############################################################
+# ##############################################################################
 
-set(
-  IMAGE_SOURCES
-  clipboard
-)
+set(IMAGE_SOURCES clipboard)
 
-############################################################
+# ##############################################################################
 # examples requiring OpenGL + libGLEW
-############################################################
+# ##############################################################################
 
-set(
-  OPENGL_SOURCES
-  OpenGL3-glut-test
-  OpenGL3test
-)
+set(OPENGL_SOURCES OpenGL3-glut-test OpenGL3test)
 
-############################################################
+# ##############################################################################
 # create simple example programs
-############################################################
+# ##############################################################################
 
 foreach(src ${SIMPLE_SOURCES})
   create_example(${src} ${src}.cxx fltk)
 endforeach(src)
 
-############################################################
+# ##############################################################################
 # create example programs with fltk_images library
-############################################################
+# ##############################################################################
 
 foreach(src ${IMAGE_SOURCES})
   create_example(${src} ${src}.cxx "fltk_images;fltk")
 endforeach(src)
 
-############################################################
+# ##############################################################################
 # create example programs with OpenGL + libGLEW
-############################################################
+# ##############################################################################
 
 # Note: macOS does not need libGLEW
 
@@ -114,7 +106,7 @@ if(OPENGL_FOUND AND LIB_GLEW)
 else()
   message(
     STATUS
-    "OpenGL or libGLEW not present: OpenGL example programs will not be built."
+      "OpenGL or libGLEW not present: OpenGL example programs will not be built."
   )
   fl_debug_var(OPENGL_FOUND)
   fl_debug_var(LIB_GLEW)
