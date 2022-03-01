@@ -97,18 +97,16 @@ Then, Obsidian can be launched (in Windows) with:
 
     > obsidian.exe
 
-## Windows Compilation on Windows
+## Windows Compilation using Visual Studio
 
 Obsidian now supports compilation on native Windows. You will need Visual
 Studio 2022 installed to perform the build.
 
-* Clone the repository using Visual Studio or the following Git command:
+* Clone and open the repository using Visual Studio.
+* Ensure the "msvc" preset is selected in the following dropdown.
 
-    > git clone https://github.com/dashodanger/Obsidian.git
+![](images/msvc-cmake-preset.png)
 
-* Open the repository from within Visual Studio.
-* Ensure the "msvc" preset is selected in the following dropdown. (TODO: take a
-  picture of the relevant dropdown)
 * Hit "Build" (F7 by default) and wait for the magic to happen.
 * DO NOT run Obsidian from within Visual Studio! It won't work properly.
   Instead, open the Obsidian folder in the file explorer and run your brand new
