@@ -69,6 +69,7 @@
     },
     {
       "name": "msvc",
+      "configuration": "Release",
       "configurePreset": "msvc"
     }
   ]
