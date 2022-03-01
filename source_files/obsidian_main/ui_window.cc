@@ -27,7 +27,7 @@
 #include <unistd.h>
 #endif
 
-#if (FL_MAJOR_VERSION != 1 || FL_MINOR_VERSION != 3 || FL_PATCH_VERSION < 0)
+#if (FL_MAJOR_VERSION != 1 || FL_MINOR_VERSION < 3)
 #error "Require FLTK version 1.3.0 or later"
 #endif
 
