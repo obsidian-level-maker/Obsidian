@@ -812,7 +812,7 @@ end
 function Seed_save_svg_image(filename)
 
   -- grid size
-  local SIZE = 14
+  local SIZE = 10
 
   local TOP  = (SEED_H + 1) * SIZE
 
