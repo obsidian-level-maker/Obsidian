@@ -101,7 +101,7 @@ Andrew Apted
 
 ## CONTRIBUTORS:
 
-Chris Pisarczyk (Glaice)
+Armaetus
   - DOOM prefabs
   - Skulltag Monsters module
   - ZDoom Beastiary module
