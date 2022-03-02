@@ -80,6 +80,10 @@ QUAKE.ENTITIES =
 
   camera = { id="info_intermission" },
   spiker = { id="trap_spikeshooter" },
+
+  light  = { id="light", r=1, h=1, pass=true },
+  secret = { id="oblige_secret", r=1, h=1, pass=true },
+  depot_ref = { id="oblige_depot", r=1, h=1, pass=true },
 }
 
 

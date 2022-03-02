@@ -2265,7 +2265,11 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     Trans.brush(brush)
 
     -- add teleport entity
-    Trans.entity("teleport_spot", mx, my, top.t + 1)
+    if OB_CONFIG.game == "hexen" then
+      Trans.entity("teleport_spot", mx, my, top.t + 1, { tid = top.tag })
+    else
+      Trans.entity("teleport_spot", mx, my, top.t + 1)
+    end
   end
 
 

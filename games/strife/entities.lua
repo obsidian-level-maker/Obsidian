@@ -47,6 +47,10 @@ STRIFE.ENTITIES =
   tall_bush  = { id=62, r=40, h=64, pass=true },
   short_bush  = { id=62, r=30, h=40, pass=true },
 
+  light  = { id="light", r=1, h=1, pass=true },
+  secret = { id="oblige_secret", r=1, h=1, pass=true },
+  depot_ref = { id="oblige_depot", r=1, h=1, pass=true },
+
 }
 
 STRIFE.GENERIC_REQS =

@@ -35,7 +35,7 @@ HEXEN.MATERIALS =
   _SKY   = { t="STEEL01", f="F_SKY" },
 
   -- materials for generic prefab set --  
-  --_RUNIC = { t="GRAYDANG", f="CJFSHIP3" }, No idea for this one
+  _RUNIC = { t="X_FIRE01", f="X_001" },
   _STAIRS = { t="T2_STEP", f="F_082" },
   _VOID = { t="SKYWALL", f="XX"},
   _FLATLIT = { t="TOMB04", f="F_081" },
@@ -298,6 +298,7 @@ HEXEN.MATERIALS =
   VILL01   = { t="VILL01",   f="F_030" },
   VILL04   = { t="VILL04",   f="F_055" },
   VILL05   = { t="VILL05",   f="F_055" },
+  VILL08   = { t="VILL08",   f="F_055" },
 
   WASTE01  = { t="WASTE01",  f="F_005" },
   WASTE02  = { t="WASTE02",  f="F_044" },

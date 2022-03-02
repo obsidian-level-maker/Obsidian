@@ -2317,8 +2317,14 @@ function Fab_replacements(fab)
           elseif C.special == 22 then
             C.arg1 = current_tag
           elseif C.special == 70 then
-            C.arg1 = fab.out_tag
-            C.arg2 = fab.out_tag
+            if fab.out_tag1 then -- Handle monster depots
+              rand_tag = rand.pick( { fab.out_tag1, fab.out_tag2, fab.out_tag3 })
+              C.arg1 = rand_tag
+              C.arg2 = rand_tag
+            else
+              C.arg1 = fab.out_tag
+              C.arg2 = fab.out_tag
+            end
           elseif C.special == 74 then
             if OB_CONFIG.length == "single" or LEVEL.game_along == 1.0 then
               C.special = 75
@@ -2434,6 +2440,9 @@ function Fabricate(room, def, T, skins)
     end
     if SKIN.in_tag then fab.in_tag = SKIN.in_tag end
     if SKIN.out_tag then fab.out_tag = SKIN.out_tag end
+    if SKIN.out_tag1 then fab.out_tag1 = SKIN.out_tag1 end
+    if SKIN.out_tag2 then fab.out_tag2 = SKIN.out_tag2 end
+    if SKIN.out_tag3 then fab.out_tag3 = SKIN.out_tag3 end
   end
 
   Fab_replacements (fab)

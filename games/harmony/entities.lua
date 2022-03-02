@@ -61,6 +61,10 @@ HARMONY.ENTITIES =
   dead_beast  = { id=21, r=20, h=16, pass=true },
 
   passable_ceiling_decor = { id=61, r=16, h=24, pass=true, ceil=true }, -- For Harmony this is effectively nothing
+
+  light  = { id="light", r=1, h=1, pass=true },
+  secret = { id="oblige_secret", r=1, h=1, pass=true },
+  depot_ref = { id="oblige_depot", r=1, h=1, pass=true },
 }
 
 HARMONY.GENERIC_REQS =

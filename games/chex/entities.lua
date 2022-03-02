@@ -118,7 +118,11 @@ CHEX3.ENTITIES =
   hydro_plant = { id=50, r=16, h=45 },
   slimey_urn  = { id=86, r=16, h=83 },
 
-  ceiling_slime = { id=60, r=16, h=68, pass=true, ceil=true }
+  ceiling_slime = { id=60, r=16, h=68, pass=true, ceil=true },
+
+  light  = { id="light", r=1, h=1, pass=true },
+  secret = { id="oblige_secret", r=1, h=1, pass=true },
+  depot_ref = { id="oblige_depot", r=1, h=1, pass=true },
 }
 
 CHEX3.GENERIC_REQS =
