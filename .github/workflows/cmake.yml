@@ -40,6 +40,9 @@ jobs:
           tools/qsavetex
   build-msys:
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
       - uses: actions/checkout@v2
       - name: Setup MSYS2
