@@ -37,4 +37,34 @@ jobs:
         path: |
           obsidian
           tools/filename_formatter
-          tools/qsavetex      
+          tools/qsavetex
+  build-msys:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          msystem: mingw64
+          install: >-
+            git
+            make
+          pacboy: >-
+            toolchain:p
+            cmake:p
+      - name: Configure CMake
+        run: cmake --preset msys
+      - name: Build
+        run: cmake --build --preset msys
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2.3.1
+        with:
+          name: windows-x64
+          path: |
+            obsidian.exe
+            tools/filename_formatter.exe
+            tools/qsavetex.exe
