@@ -38,7 +38,7 @@ jobs:
           obsidian
           tools/filename_formatter
           tools/qsavetex
-  build-msvc:
+  build-msys:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
