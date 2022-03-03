@@ -3560,7 +3560,11 @@ function Render_establish_street_lanes()
     }
 
     local A = S.area
-    spot.floor_mat = A.floor_group.sink.mat
+    if A.floor_group.sink then
+      spot.floor_mat = A.floor_group.sink.mat
+    else
+      return nil
+    end
 
     return spot
   end

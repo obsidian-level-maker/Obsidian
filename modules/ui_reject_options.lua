@@ -19,67 +19,9 @@
 UI_REJECT_OPTIONS = { }
 
 function UI_REJECT_OPTIONS.setup(self)
-  -- these parameters have to be instantiated in this hook
-  -- because begin_level happens *after* level size decisions
-  for name,opt in pairs(self.options) do
-    if OB_CONFIG.batch == "yes" then
-      if opt.valuator then
-        if opt.valuator == "slider" then 
-          local value = tonumber(OB_CONFIG[opt.name])
-          if not value then
-            PARAM[opt.name] = OB_CONFIG[opt.name]
-          else
-            if opt.increment < 1 then
-              PARAM[opt.name] = value
-            else
-              PARAM[opt.name] = int(value)
-            end
-          end
-        elseif opt.valuator == "button" then
-          PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
-        end
-      else
-        PARAM[opt.name] = OB_CONFIG[opt.name]
-      end
-      if RANDOMIZE_GROUPS then
-        for _,group in pairs(RANDOMIZE_GROUPS) do
-          if opt.randomize_group and opt.randomize_group == group then
-            if opt.valuator then
-              if opt.valuator == "button" then
-                  PARAM[opt.name] = rand.sel(50, 1, 0)
-                  goto done
-              elseif opt.valuator == "slider" then
-                  if opt.increment < 1 then
-                    PARAM[opt.name] = rand.range(opt.min, opt.max)
-                  else
-                    PARAM[opt.name] = rand.irange(opt.min, opt.max)
-                  end
-                  goto done
-              end
-            else
-              local index
-              repeat
-                index = rand.irange(1, #opt.choices)
-              until (index % 2 == 1)
-              PARAM[opt.name] = opt.choices[index]
-              goto done
-            end
-          end
-        end
-      end
-      ::done::
-    else
-	    if opt.valuator then
-		    if opt.valuator == "button" then
-		        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
-		    elseif opt.valuator == "slider" then
-		        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
-		    end
-      else
-        PARAM[opt.name] = opt.value
-	    end
-	  end
-  end
+
+  module_param_up(self)
+
 end
 
 OB_MODULES["ui_reject_options"] =
@@ -116,67 +58,9 @@ OB_MODULES["ui_reject_options"] =
 UI_EDGE_MAP_OPTIONS = { }
 
 function UI_EDGE_MAP_OPTIONS.setup(self)
-  -- these parameters have to be instantiated in this hook
-  -- because begin_level happens *after* level size decisions
-  for name,opt in pairs(self.options) do
-    if OB_CONFIG.batch == "yes" then
-      if opt.valuator then
-        if opt.valuator == "slider" then 
-          local value = tonumber(OB_CONFIG[opt.name])
-          if not value then
-            PARAM[opt.name] = OB_CONFIG[opt.name]
-          else
-            if opt.increment < 1 then
-              PARAM[opt.name] = value
-            else
-              PARAM[opt.name] = int(value)
-            end
-          end
-        elseif opt.valuator == "button" then
-          PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
-        end
-      else
-        PARAM[opt.name] = OB_CONFIG[opt.name]
-      end
-      if RANDOMIZE_GROUPS then
-        for _,group in pairs(RANDOMIZE_GROUPS) do
-          if opt.randomize_group and opt.randomize_group == group then
-            if opt.valuator then
-              if opt.valuator == "button" then
-                  PARAM[opt.name] = rand.sel(50, 1, 0)
-                  goto done
-              elseif opt.valuator == "slider" then
-                  if opt.increment < 1 then
-                    PARAM[opt.name] = rand.range(opt.min, opt.max)
-                  else
-                    PARAM[opt.name] = rand.irange(opt.min, opt.max)
-                  end
-                  goto done
-              end
-            else
-              local index
-              repeat
-                index = rand.irange(1, #opt.choices)
-              until (index % 2 == 1)
-              PARAM[opt.name] = opt.choices[index]
-              goto done
-            end
-          end
-        end
-      end
-      ::done::
-    else
-	    if opt.valuator then
-		    if opt.valuator == "button" then
-		        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
-		    elseif opt.valuator == "slider" then
-		        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
-		    end
-	    else
-        PARAM[name] = self.options[name].value
-      end
-	  end
-  end
+  
+  module_param_up(self)
+
 end
 
 OB_MODULES["ui_edge_map_options"] =
@@ -214,67 +98,9 @@ OB_MODULES["ui_edge_map_options"] =
 UI_UDMF_MAP_OPTIONS = { }
 
 function UI_UDMF_MAP_OPTIONS.setup(self)
-  -- these parameters have to be instantiated in this hook
-  -- because begin_level happens *after* level size decisions
-  for name,opt in pairs(self.options) do
-    if OB_CONFIG.batch == "yes" then
-      if opt.valuator then
-        if opt.valuator == "slider" then 
-          local value = tonumber(OB_CONFIG[opt.name])
-          if not value then
-            PARAM[opt.name] = OB_CONFIG[opt.name]
-          else
-            if opt.increment < 1 then
-              PARAM[opt.name] = value
-            else
-              PARAM[opt.name] = int(value)
-            end
-          end
-        elseif opt.valuator == "button" then
-          PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
-        end
-      else
-        PARAM[opt.name] = OB_CONFIG[opt.name]
-      end
-      if RANDOMIZE_GROUPS then
-        for _,group in pairs(RANDOMIZE_GROUPS) do
-          if opt.randomize_group and opt.randomize_group == group then
-            if opt.valuator then
-              if opt.valuator == "button" then
-                  PARAM[opt.name] = rand.sel(50, 1, 0)
-                  goto done
-              elseif opt.valuator == "slider" then
-                  if opt.increment < 1 then
-                    PARAM[opt.name] = rand.range(opt.min, opt.max)
-                  else
-                    PARAM[opt.name] = rand.irange(opt.min, opt.max)
-                  end
-                  goto done
-              end
-            else
-              local index
-              repeat
-                index = rand.irange(1, #opt.choices)
-              until (index % 2 == 1)
-              PARAM[opt.name] = opt.choices[index]
-              goto done
-            end
-          end
-        end
-      end
-      ::done::
-    else
-	    if opt.valuator then
-		    if opt.valuator == "button" then
-		        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
-		    elseif opt.valuator == "slider" then
-		        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
-		    end
-	    else
-        PARAM[opt.name] = self.options[name].value
-      end
-	  end
-  end
+  
+  module_param_up(self)
+
 end
 
 UI_UDMF_MAP_OPTIONS.MAP_FORMAT_CHOICES = 
