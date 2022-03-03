@@ -32,7 +32,10 @@ This is a community continuation of the OBLIGE Level Maker, originally created b
 
 A brief summary of changes:
 
-Preliminary support added for HacX 1.2, Chex Quest 3, Harmony, and Strife
+Basic support added for HacX 1.2, Chex Quest 3, and Harmony.
+
+Experimental support added for Hexen and Strife. Hexen map format is supported; in addition there is a translation layer to convert
+some Doom-formatted prefabs to Hexen format.
 
 GUI Customization and Theming added
 
@@ -50,14 +53,6 @@ Patch by Simon-v for searching for .pk3 addons in both the install and user's ho
 
 Strings allowed for seed input (numbers with no other characters still processed as numbers).
 
-New random number generator based on the Mersenne Twister Engine.
+New random number generator based on the xoshiro256 algorithm from fastPRNG (https://github.com/BrutPitt/fastPRNG).
 
-FLTK and PHYSFS updated to latest versions.
-
-Added scrolling functionality to Addons List window.
-
-Added preservation of action specials when converting Hexen linedefs.
-
-Added library sources needed to cross-compile for Windows using MinGW.
-
-Minor bugfixes as discovered.
+Bugfixes as discovered.
