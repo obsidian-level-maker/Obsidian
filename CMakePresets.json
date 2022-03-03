@@ -40,15 +40,24 @@
         "CMAKE_BUILD_TYPE": "Release"
       }
     },
-      {
-        "name": "msvc",
-        "description": "Compile natively on Windows",
-        "binaryDir": "build/msvc",
-        "generator": "Visual Studio 17 2022",
-        "cacheVariables": {
-          "CMAKE_BUILD_TYPE": "Release"
-        }
+    {
+      "name": "msvc",
+      "description": "Compile natively on Windows",
+      "binaryDir": "build/msvc",
+      "generator": "Visual Studio 17 2022",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
       }
+    },
+    {
+      "name": "msys",
+      "description": "Compile natively on Windows with MSYS2",
+      "binaryDir": "build/msys",
+      "generator": "MSYS Makefiles",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
   ],
   "buildPresets": [
     {
@@ -71,6 +80,10 @@
       "name": "msvc",
       "configuration": "Release",
       "configurePreset": "msvc"
+    },
+    {
+      "name": "msys",
+      "configurePreset": "msys"
     }
   ]
 }
