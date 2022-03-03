@@ -19,7 +19,6 @@ PREFABS.Switch_Dem_closet1 =
   seed_h = 2,
 
   deep   = 16,
-  over   = 16,
 
   tag_1 = "?switch_tag",
 
@@ -42,7 +41,5 @@ PREFABS.Switch_Dem_closet1_ambush =
   template  = "Switch_Dem_closet1",
   map    = "MAP02",
 
-
   style  = "cages",
 }
-

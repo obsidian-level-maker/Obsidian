@@ -13,7 +13,6 @@ PREFABS.Switch_military_radio =
   height = 64,
   texture_pack = "armaetus",
 
-
   prob   = 90,
 
   tag_1 = "?switch_tag",
