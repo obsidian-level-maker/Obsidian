@@ -39,6 +39,8 @@ PREFABS.Item_closet_guts_big =
   template = "Item_closet_guts",
   map = "MAP04",
 
+  seed_w = 2,
+
   prob = 33,
 }
 
@@ -47,6 +49,8 @@ PREFABS.Item_closet_hellish_alcove_big =
   template = "Item_closet_guts",
   map = "MAP05",
 
+  seed_w = 2,
+
   prob = 33,
 }
 
@@ -54,6 +58,8 @@ PREFABS.Item_closet_hellish_furnace_big =
 {
   template = "Item_closet_guts",
   map = "MAP06",
+
+  seed_w = 2,
 
   prob = 33,
 }
