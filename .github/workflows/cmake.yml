@@ -30,10 +30,11 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build --preset dist
     
-    - name: Upload a Build Artifact
+    - name: Upload artifacts
       uses: actions/upload-artifact@v2.3.1
       with:
         name: linux-x64
-        path: build/dist/obsidian
-
-      
+        path: |
+          build/dist/obsidian
+          build/dist/source_files/filename_formatter/filename_formatter
+          build/dist/source_files/qsavetex/qsavetex      
