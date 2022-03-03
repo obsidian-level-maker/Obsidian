@@ -134,7 +134,7 @@ need to build your very first WAD. Select the Game you would like to build a WAD
 it will be played on, the Length (number of maps) of the WAD, and the Theme that you would like it to have. \
 Once you press 'Build', you will be prompted to choose a location and filename for your WAD. After that, your \
 WAD will be generated and saved to the location that you specified.\n\nNOTE: If you select 'Vanilla Doom' for the \
-engine, an alternate map generator called SLUMP will be used to create your WAD. Although this WAD will be compatible \
+engine, an alternate map generator will be used to create your WAD. Although this WAD will be compatible \
 with all versions of Doom, it is much simpler in nature than the maps made by Obsidian's main generator.");
         out->align(FL_ALIGN_WRAP);
         out->image(tutorial1);
@@ -357,6 +357,35 @@ File->Addon List from the program menu. A list of available addon files will be 
 new addons are either the public Obsidian-Addons repo at https://github.com/GTD-Carthage/Obsidian-Addons or the #addon-files channel of our Discord.");
         out->align(FL_ALIGN_WRAP);
         out->image(tutorial9);
+        g->end();
+    }
+    {
+        Fl_Group *g = new Fl_Group(0,0,W,H);
+        g->box(box_style);
+        Fl_Button *next = new Fl_Button(W - 110, H - 35, 100, 25, "Next");
+        next->box(button_style);
+        next->visible_focus(0);
+        next->color(BUTTON_COLOR);
+        next->labelfont(font_style);
+        next->labelcolor(FONT2_COLOR);
+        next->callback(wiz_next, this->tutorial_wiz);
+        Fl_Button *back = new Fl_Button(W - 220, H - 35, 100, 25,"Back");
+        back->box(button_style);
+        back->visible_focus(0);
+        back->color(BUTTON_COLOR);
+        back->labelfont(font_style);
+        back->labelcolor(FONT2_COLOR);
+        back->callback(wiz_back, this->tutorial_wiz);
+        Fl_Box *out = new Fl_Box(10,30,W-20,H-80);
+        out->box(FL_FLAT_BOX);
+        out->labelsize(FL_NORMAL_SIZE);
+        out->label("\n\nIf, for whatever reason, you receive an error while building, you can view Obsidian's logs by pressing F6 or \
+selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, \
+there is a LOGS.txt file with the same information that is stored in the same folder as obsidian.exe. This file is overwritten each time you \
+start the program, so be sure to save this information elsewhere if you need to refer to it later! These logs are extremely important when \
+seeking help or filing bug reports!");
+        out->align(FL_ALIGN_WRAP);
+        out->image(tutorial10);
         g->end();
     }
     {

@@ -52,52 +52,81 @@ end
 
 function ScriptMan_assemble_mapinfo_lump()
 
+  local mapinfo_lines
 
-  -- GAMEINFO stuff
-  local mapinfo_lines = {
-      "gameinfo\n",
-      "{\n",
-  }
+  if OB_CONFIG.game ~= "hexen" then
+    -- GAMEINFO stuff
+    mapinfo_lines = {
+        "gameinfo\n",
+        "{\n",
+    }
 
-  local eventhandler_lines = ""
-  if SCRIPTS.zs_eventhandlers then
-    eventhandler_lines = eventhandler_lines .. SCRIPTS.zs_eventhandlers
-  end
-  if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 then
-    eventhandler_lines = eventhandler_lines .. '"BossGenerator_Handler"'
-  end
-  eventhandler_lines = string.gsub(eventhandler_lines, ",$", "");
+    local eventhandler_lines = ""
+    if SCRIPTS.zs_eventhandlers then
+      eventhandler_lines = eventhandler_lines .. SCRIPTS.zs_eventhandlers
+    end
+    if PARAM.bool_boss_gen == 1 and PARAM.boss_count ~= -1 then
+      eventhandler_lines = eventhandler_lines .. '"BossGenerator_Handler"'
+    end
+    eventhandler_lines = string.gsub(eventhandler_lines, ",$", "");
 
-  if eventhandler_lines ~= "" then
-    eventhandler_lines = "addeventhandlers = " .. eventhandler_lines
-  end
+    if eventhandler_lines ~= "" then
+      eventhandler_lines = "addeventhandlers = " .. eventhandler_lines
+    end
 
-  if SCRIPTS.zs_eventhandlers ~= "" then
-    eventhandler_lines = eventhandler_lines .. "\n"
-    table.insert(mapinfo_lines, eventhandler_lines)
-  end
+    if SCRIPTS.zs_eventhandlers ~= "" then
+      eventhandler_lines = eventhandler_lines .. "\n"
+      table.insert(mapinfo_lines, eventhandler_lines)
+    end
 
-  -- MAPINFO extras
-  if PARAM.bool_custom_quit_messages == 1 then
-    for _,line in pairs(PARAM.gameinfolump) do
-      table.insert(mapinfo_lines,line)
+    -- MAPINFO extras
+    if PARAM.bool_custom_quit_messages == 1 then
+      for _,line in pairs(PARAM.gameinfolump) do
+        table.insert(mapinfo_lines,line)
+      end
+    end
+
+    table.insert(mapinfo_lines, "\n}\n")
+
+    -- doomednums
+    if SCRIPTS.doomednums then
+      SCRIPTS.doomednums = "DoomedNums\n" ..
+      "{\n" .. SCRIPTS.doomednums .. "}\n"
+    end
+
+    -- rest of map info lump
+    table.insert(mapinfo_lines, SCRIPTS.doomednums)
+    table.insert(mapinfo_lines, SCRIPTS.mapinfolump)
+  else
+    mapinfo_lines = {}
+    for _,lev in pairs(GAME.levels) do
+      local mapnum = tonumber(string.sub(lev.name, 4))
+      mapline = "map " .. mapnum .. " \"" .. lev.description .. "\"\n"
+      for k, v in pairs(HEXEN.MAPINFO_MAPS) do
+        if v == mapnum then
+          mapline = mapline .. "warptrans " .. k .. "\n"
+          goto foundmap
+        end
+      end
+      ::foundmap::
+      mapline = mapline .. "sky1 " .. lev.episode.sky_patch1 .. "\n"
+      mapline = mapline .. "sky2 " .. lev.episode.sky_patch2 .. "\n"
+      if lev.episode.lightning_chance then
+        if rand.odds(lev.episode.lightning_chance) then
+          mapline = mapline .. "lightning\n"
+        end
+      end
+      if lev.episode.doublesky then
+        mapline = mapline .. "doublesky\n"
+      end
+      if lev.episode.fadetable then
+        mapline = mapline .. "fadetable fogmap\n"
+      end
+      mapline = mapline .. "\n"
+      table.insert(mapinfo_lines, mapline)
     end
   end
-
-  table.insert(mapinfo_lines, "\n}\n")
-
-  -- doomednums
-  if SCRIPTS.doomednums then
-    SCRIPTS.doomednums = "DoomedNums\n" ..
-    "{\n" .. SCRIPTS.doomednums .. "}\n"
-  end
-
-  -- rest of map info lump
-  table.insert(mapinfo_lines, SCRIPTS.doomednums)
-  table.insert(mapinfo_lines, SCRIPTS.mapinfolump)
-
-  if #mapinfo_lines > 2 then
-    print(table.tostr(mapinfo_line))
+  if #mapinfo_lines > 2  or (OB_CONFIG.game == "hexen" and #mapinfo_lines > 0) then
     gui.wad_add_text_lump("MAPINFO", mapinfo_lines)
   end
 end

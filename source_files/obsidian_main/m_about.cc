@@ -95,8 +95,10 @@ UI_About::UI_About(int W, int H, const char *label)
     int cy = kf_h(6);
 
     Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), "");
-    box->copy_label(
-        fmt::format("{} {}\n\"{}\" Build {}", _(OBSIDIAN_TITLE), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME, OBSIDIAN_VERSION).c_str());
+    box->copy_label(fmt::format("{} {}\n\"{}\" Build {}", _(OBSIDIAN_TITLE),
+                                OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME,
+                                OBSIDIAN_VERSION)
+                        .c_str());
     box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP |
                FL_ALIGN_CLIP);
     box->labelsize(FL_NORMAL_SIZE * 5 / 3);

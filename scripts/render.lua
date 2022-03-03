@@ -26,6 +26,10 @@ function Render_add_exit_sign(E, z)
 
   if PARAM.bool_exit_signs ~= 1 then return end
 
+  -- Need to fashion an exit sign for Hexen
+
+  if OB_CONFIG.game == "hexen" then return end
+
   -- These games need an engine that supports TX_START/TX_END merging
   if ob_match_game({ game = { chex3=1, hacx=1, heretic=1} }) then
      if not ob_match_engine({ engine = { edge=1, eternity=1, zdoom=1 } }) then return end
@@ -4223,7 +4227,7 @@ gui.spots_dump("Cave spot dump")
           spots_in_flat_floor(R, A)
         elseif A.floor_group then
           if A.floor_group.sink then
-            if A.floor_group.sink.mat == "_LIQUID" and not LEVEL.liquid.damage then
+            if A.floor_group.sink.mat == "_LIQUID" and LEVEL.liquid and not LEVEL.liquid.damage then
               spots_in_flat_floor(R, A)
             elseif A.floor_group.sink.mat ~= "_LIQUID" then
               spots_in_flat_floor(R, A)

@@ -148,6 +148,7 @@ Fl_JPEG_Image *tutorial6;
 Fl_JPEG_Image *tutorial7;
 Fl_JPEG_Image *tutorial8;
 Fl_JPEG_Image *tutorial9;
+Fl_JPEG_Image *tutorial10;
 
 #ifdef WIN32
 FLASHWINFO blinker;
@@ -194,7 +195,8 @@ static void ShowInfo() {
         " **\n"
         "** Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted **\n"
         "\n",
-        OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME, OBSIDIAN_VERSION);
+        OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME,
+        OBSIDIAN_VERSION);
 
     fmt::print(
         "Usage: Obsidian [options...] [key=value...]\n"
@@ -216,7 +218,7 @@ static void ShowInfo() {
         "     --randomize-arch      Randomize architecture settings\n"
         "     --randomize-monsters  Randomize monster-related settings\n"
         "     --randomize-pickups   Randomize item/weapon settings\n"
-        "     --randomize-misc      Randomize miscellaneous settings\n"
+        "     --randomize-other     Randomize other settings\n"
         "\n"
         "  -3 --pk3                 Compress output file to PK3\n"
         "  -z --zip                 Compress output file to ZIP\n"
@@ -244,7 +246,8 @@ static void ShowInfo() {
 }
 
 static void ShowVersion() {
-    fmt::print("Obsidian version {} {} \"{}\" Build {}\n", OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME, OBSIDIAN_VERSION);
+    fmt::print("Obsidian version {} {} \"{}\" Build {}\n", OBSIDIAN_TITLE,
+               OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME, OBSIDIAN_VERSION);
 
     fflush(stdout);
 }
@@ -977,9 +980,9 @@ bool Build_Cool_Shit() {
 
         string_seed.clear();
 
-        #ifdef WIN32
+#ifdef WIN32
         if (main_win) Main::Blinker();
-        #endif
+#endif
     } else {
         string_seed.clear();
         if (main_win) {
@@ -999,9 +1002,10 @@ bool Build_Cool_Shit() {
     if (main_action == MAIN_CANCEL) {
         main_action = 0;
         if (main_win) {
-            main_win->label(
-                fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME)
-                    .c_str());
+            main_win->label(fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE),
+                                        OBSIDIAN_SHORT_VERSION,
+                                        OBSIDIAN_CODE_NAME)
+                                .c_str());
         }
         Main::ProgStatus(_("Cancelled"));
     }
@@ -1088,7 +1092,7 @@ restart:;
         }
     }
 
-    if (argv::Find(0, "randomize-misc") >= 0) {
+    if (argv::Find(0, "randomize-other") >= 0) {
         if (batch_mode) {
             batch_randomize_groups.push_back("misc");
         }
@@ -1117,7 +1121,8 @@ skiprest:
 
     LogPrintf("\n");
     LogPrintf("********************************************************\n");
-    LogPrintf("** {} {} \"{}\" **\n", OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME);
+    LogPrintf("** {} {} \"{}\" **\n", OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
+              OBSIDIAN_CODE_NAME);
     LogPrintf("** Build {} **\n", OBSIDIAN_VERSION);
     LogPrintf("********************************************************\n");
     LogPrintf("\n");
@@ -1206,7 +1211,8 @@ skiprest:
     UI_MainWin::CalcWindowSize(&main_w, &main_h);
 
     std::string main_title =
-        fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE), OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME);
+        fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE), OBSIDIAN_SHORT_VERSION,
+                    OBSIDIAN_CODE_NAME);
     main_win = new UI_MainWin(main_w, main_h, main_title.c_str());
 
     //???	Default_Location();
@@ -1247,7 +1253,7 @@ skiprest:
             "Surprise Me/Randomize Pickups", NULL, main_win_pickups_config_CB,
             0, FL_MENU_TOGGLE | (randomize_pickups ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add(
-            "Surprise Me/Randomize Misc", NULL, main_win_misc_config_CB, 0,
+            "Surprise Me/Randomize Other", NULL, main_win_misc_config_CB, 0,
             FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
     }
 
@@ -1281,6 +1287,9 @@ skiprest:
     image_loc.remove_filename();
     image_loc.append("tutorial9.jpg");
     tutorial9 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.remove_filename();
+    image_loc.append("tutorial10.jpg");
+    tutorial10 = new Fl_JPEG_Image(image_loc.string().c_str());
 
 #ifdef WIN32
     main_win->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(1)));

@@ -4,15 +4,15 @@
 #
 # Copyright 1998-2020 by Bill Spitzak and others.
 #
-# This library is free software. Distribution and use rights are outlined in
-# the file "COPYING" which should have been included with this file.  If this
-# file is missing or damaged, see the license at:
+# This library is free software. Distribution and use rights are outlined in the
+# file "COPYING" which should have been included with this file.  If this file
+# is missing or damaged, see the license at:
 #
-#     https://www.fltk.org/COPYING.php
+# https://www.fltk.org/COPYING.php
 #
 # Please see the following page on how to report bugs and issues:
 #
-#     https://www.fltk.org/bugs.php
+# https://www.fltk.org/bugs.php
 #
 
 set(DEBUG_OPTIONS_CMAKE 0)
@@ -22,40 +22,39 @@ if(DEBUG_OPTIONS_CMAKE)
   fl_debug_var(FLTK_LDLIBS)
 endif(DEBUG_OPTIONS_CMAKE)
 
-#######################################################################
+# ##############################################################################
 # options
-#######################################################################
-set(
-  OPTION_OPTIM ""
-  CACHE STRING
-  "custom optimization flags"
+# ##############################################################################
+set(OPTION_OPTIM
+    ""
+    CACHE STRING "custom optimization flags"
 )
 add_definitions(${OPTION_OPTIM})
 
-#######################################################################
-set(
-  OPTION_ARCHFLAGS ""
-  CACHE STRING
-  "custom architecture flags"
+# ##############################################################################
+set(OPTION_ARCHFLAGS
+    ""
+    CACHE STRING "custom architecture flags"
 )
 add_definitions(${OPTION_ARCHFLAGS})
 
-#######################################################################
-set(
-  OPTION_ABI_VERSION ""
-  CACHE STRING
-  "FLTK ABI Version FL_ABI_VERSION: 1xxyy for 1.x.y (xx,yy with leading zero)"
+# ##############################################################################
+set(OPTION_ABI_VERSION
+    ""
+    CACHE
+      STRING
+      "FLTK ABI Version FL_ABI_VERSION: 1xxyy for 1.x.y (xx,yy with leading zero)"
 )
 set(FL_ABI_VERSION ${OPTION_ABI_VERSION})
 
-#######################################################################
-#######################################################################
+# ##############################################################################
+# ##############################################################################
 if(UNIX)
   option(OPTION_CREATE_LINKS "create backwards compatibility links" OFF)
   list(APPEND FLTK_LDLIBS -lm)
 endif(UNIX)
 
-#######################################################################
+# ##############################################################################
 if(APPLE)
   option(OPTION_APPLE_X11 "use X11" OFF)
   if(CMAKE_OSX_SYSROOT)
@@ -78,9 +77,10 @@ if((NOT APPLE OR OPTION_APPLE_X11) AND NOT WIN32)
 endif((NOT APPLE OR OPTION_APPLE_X11) AND NOT WIN32)
 
 if(OPTION_APPLE_X11)
-  if(NOT(${CMAKE_SYSTEM_VERSION} VERSION_LESS 17.0.0)) # a.k.a. macOS version ≥ 10.13
+  if(NOT (${CMAKE_SYSTEM_VERSION} VERSION_LESS 17.0.0)) # a.k.a. macOS version ≥
+                                                        # 10.13
     list(APPEND FLTK_CFLAGS "-D_LIBCPP_HAS_THREAD_API_PTHREAD")
-  endif(NOT(${CMAKE_SYSTEM_VERSION} VERSION_LESS 17.0.0))
+  endif(NOT (${CMAKE_SYSTEM_VERSION} VERSION_LESS 17.0.0))
   include_directories(AFTER SYSTEM /opt/X11/include/freetype2)
   if(PATH_TO_XLIBS)
     set(LDFLAGS "-L${PATH_TO_XLIBS} ${LDFLAGS}")
@@ -92,7 +92,7 @@ if(OPTION_APPLE_X11)
   endif(X11_INCLUDE_DIR)
 endif(OPTION_APPLE_X11)
 
-#######################################################################
+# ##############################################################################
 option(OPTION_USE_POLL "use poll if available" OFF)
 mark_as_advanced(OPTION_USE_POLL)
 
@@ -100,14 +100,12 @@ if(OPTION_USE_POLL)
   check_function_exists(poll USE_POLL)
 endif(OPTION_USE_POLL)
 
-#######################################################################
-option(
-  OPTION_BUILD_SHARED_LIBS
-  "Build shared libraries (in addition to static libraries)"
-  OFF
+# ##############################################################################
+option(OPTION_BUILD_SHARED_LIBS
+       "Build shared libraries (in addition to static libraries)" OFF
 )
 
-#######################################################################
+# ##############################################################################
 option(OPTION_FILESYSTEM_SUPPORT "allow file system support" ON)
 
 option(FLTK_BUILD_TEST "Build test/demo programs" OFF)
@@ -116,20 +114,22 @@ option(FLTK_BUILD_EXAMPLES "Build example programs" OFF)
 if(DEFINED OPTION_BUILD_EXAMPLES)
   message(
     WARNING
-    "'OPTION_BUILD_EXAMPLES' is obsolete, please use 'FLTK_BUILD_TEST' instead."
+      "'OPTION_BUILD_EXAMPLES' is obsolete, please use 'FLTK_BUILD_TEST' instead."
   )
   message(
     STATUS
-    "To remove this warning, please delete 'OPTION_BUILD_EXAMPLES' from the CMake cache"
+      "To remove this warning, please delete 'OPTION_BUILD_EXAMPLES' from the CMake cache"
   )
 endif(DEFINED OPTION_BUILD_EXAMPLES)
 
-#######################################################################
+# ##############################################################################
 if(DOXYGEN_FOUND)
   option(OPTION_BUILD_HTML_DOCUMENTATION "build html docs" OFF)
   option(OPTION_INSTALL_HTML_DOCUMENTATION "install html docs" OFF)
 
-  option(OPTION_INCLUDE_DRIVER_DOCUMENTATION "include driver (developer) docs" OFF)
+  option(OPTION_INCLUDE_DRIVER_DOCUMENTATION "include driver (developer) docs"
+         OFF
+  )
   mark_as_advanced(OPTION_INCLUDE_DRIVER_DOCUMENTATION)
 
   if(LATEX_FOUND)
@@ -142,14 +142,13 @@ if(OPTION_BUILD_HTML_DOCUMENTATION OR OPTION_BUILD_PDF_DOCUMENTATION)
   add_subdirectory(documentation)
 endif(OPTION_BUILD_HTML_DOCUMENTATION OR OPTION_BUILD_PDF_DOCUMENTATION)
 
-#######################################################################
+# ##############################################################################
 # Include optional Cairo support
-#######################################################################
+# ##############################################################################
 
 option(OPTION_CAIRO "use lib Cairo" OFF)
-option(
-  OPTION_CAIROEXT
-  "use FLTK code instrumentation for Cairo extended use" OFF
+option(OPTION_CAIROEXT "use FLTK code instrumentation for Cairo extended use"
+       OFF
 )
 
 set(FLTK_HAVE_CAIRO 0)
@@ -167,20 +166,18 @@ if(OPTION_CAIRO OR OPTION_CAIROEXT)
     endif(OPTION_CAIROEXT)
     add_subdirectory(cairo)
 
-    # fl_debug_var (PKG_CAIRO_INCLUDE_DIRS)
-    # fl_debug_var (PKG_CAIRO_CFLAGS)
-    # fl_debug_var (PKG_CAIRO_STATIC_CFLAGS)
-    # fl_debug_var (PKG_CAIRO_LIBRARIES)
+    # fl_debug_var (PKG_CAIRO_INCLUDE_DIRS) fl_debug_var (PKG_CAIRO_CFLAGS)
+    # fl_debug_var (PKG_CAIRO_STATIC_CFLAGS) fl_debug_var (PKG_CAIRO_LIBRARIES)
     # fl_debug_var (PKG_CAIRO_STATIC_LIBRARIES)
 
     include_directories(${PKG_CAIRO_INCLUDE_DIRS})
 
     # Cairo libs and flags for fltk-config
 
-    # Hint: use either PKG_CAIRO_* or PKG_CAIRO_STATIC_* variables to
-    # create the list of libraries used to link programs with cairo
-    # by running fltk-config --use-cairo --compile ...
-    # Currently we're using the non-STATIC variables to link cairo shared.
+    # Hint: use either PKG_CAIRO_* or PKG_CAIRO_STATIC_* variables to create the
+    # list of libraries used to link programs with cairo by running fltk-config
+    # --use-cairo --compile ... Currently we're using the non-STATIC variables
+    # to link cairo shared.
 
     set(CAIROLIBS)
     foreach(lib ${PKG_CAIRO_LIBRARIES})
@@ -190,26 +187,30 @@ if(OPTION_CAIRO OR OPTION_CAIROEXT)
     string(REPLACE ";" " " CAIROLIBS "${CAIROLIBS}")
     string(REPLACE ";" " " CAIROFLAGS "${PKG_CAIRO_CFLAGS}")
 
-    # fl_debug_var (FLTK_LDLIBS)
-    # fl_debug_var (CAIROFLAGS)
-    # fl_debug_var (CAIROLIBS)
+    # fl_debug_var (FLTK_LDLIBS) fl_debug_var (CAIROFLAGS) fl_debug_var
+    # (CAIROLIBS)
 
   else()
-    message(STATUS "*** Cairo was requested but not found - please check your cairo installation")
-    message(STATUS "***   or disable options OPTION_CAIRO and OPTION_CAIRO_EXT.")
+    message(
+      STATUS
+        "*** Cairo was requested but not found - please check your cairo installation"
+    )
+    message(
+      STATUS "***   or disable options OPTION_CAIRO and OPTION_CAIRO_EXT."
+    )
     message(FATAL_ERROR "*** Terminating: missing Cairo libs or headers.")
   endif(PKG_CAIRO_FOUND)
 
 endif(OPTION_CAIRO OR OPTION_CAIROEXT)
 
-#######################################################################
+# ##############################################################################
 option(OPTION_USE_SVG "read/write SVG files" ON)
 
 if(OPTION_USE_SVG)
   set(FLTK_USE_SVG 1)
 endif(OPTION_USE_SVG)
 
-#######################################################################
+# ##############################################################################
 set(HAVE_GL LIB_GL OR LIB_MesaGL)
 
 if(HAVE_GL)
@@ -235,11 +236,10 @@ endif(OPTION_USE_GL)
 if(OPENGL_FOUND)
   set(CMAKE_REQUIRED_INCLUDES ${OPENGL_INCLUDE_DIR}/GL)
 
-  # Set GLLIBS (used in fltk-config).
-  # We should probably deduct this from OPENGL_LIBRARIES but it turned
-  # out to be difficult since FindOpenGL seems to return different
-  # syntax depending on the platform (and maybe also CMake version).
-  # Hence we use the following code...
+  # Set GLLIBS (used in fltk-config). We should probably deduct this from
+  # OPENGL_LIBRARIES but it turned out to be difficult since FindOpenGL seems to
+  # return different syntax depending on the platform (and maybe also CMake
+  # version). Hence we use the following code...
 
   if(WIN32)
     set(GLLIBS "-lglu32 -lopengl32")
@@ -262,23 +262,27 @@ else()
   set(GLLIBS)
 endif(OPENGL_FOUND)
 
-#######################################################################
+# ##############################################################################
 option(OPTION_LARGE_FILE "enable large file support" ON)
 
 if(OPTION_LARGE_FILE)
   if(NOT MSVC)
-    add_definitions(-D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64)
-    list(APPEND FLTK_CFLAGS -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64)
+    add_definitions(
+      -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
+    )
+    list(APPEND FLTK_CFLAGS -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
+         -D_FILE_OFFSET_BITS=64
+    )
   endif(NOT MSVC)
 endif(OPTION_LARGE_FILE)
 
-#######################################################################
-# Create an option whether we want to check for pthreads.
-# We must not do it on Windows unless we run under Cygwin, since we
-# always use native threads on Windows (even if libpthread is available).
+# ##############################################################################
+# Create an option whether we want to check for pthreads. We must not do it on
+# Windows unless we run under Cygwin, since we always use native threads on
+# Windows (even if libpthread is available).
 
-# Note: HAVE_PTHREAD_H has already been determined in resources.cmake
-# before this file is included (or set to 0 for WIN32).
+# Note: HAVE_PTHREAD_H has already been determined in resources.cmake before
+# this file is included (or set to 0 for WIN32).
 
 if(WIN32 AND NOT CYGWIN)
   # set (HAVE_PTHREAD_H 0) # (see resources.cmake)
@@ -325,7 +329,10 @@ endif(OPTION_USE_THREADS)
 set(debug_threads 0) # set to 1 to show debug info
 if(debug_threads)
   message("")
-  message(STATUS "options.cmake: set debug_threads to 0 to disable the following info:")
+  message(
+    STATUS
+      "options.cmake: set debug_threads to 0 to disable the following info:"
+  )
   fl_debug_var(OPTION_USE_THREADS)
   fl_debug_var(HAVE_PTHREAD)
   fl_debug_var(HAVE_PTHREAD_H)
@@ -335,7 +342,7 @@ if(debug_threads)
 endif(debug_threads)
 unset(debug_threads)
 
-#######################################################################
+# ##############################################################################
 option(OPTION_USE_SYSTEM_ZLIB "use system zlib" ON)
 
 if(OPTION_USE_SYSTEM_ZLIB AND NOT MSYS)
@@ -360,7 +367,7 @@ endif(ZLIB_FOUND)
 
 set(HAVE_LIBZ 1)
 
-#######################################################################
+# ##############################################################################
 if(APPLE)
   option(OPTION_USE_SYSTEM_LIBJPEG "use system libjpeg" OFF)
 else()
@@ -388,7 +395,7 @@ endif(JPEG_FOUND)
 
 set(HAVE_LIBJPEG 1)
 
-#######################################################################
+# ##############################################################################
 if(APPLE)
   option(OPTION_USE_SYSTEM_LIBPNG "use system libpng" OFF)
 else()
@@ -420,7 +427,7 @@ endif(PNG_FOUND)
 
 set(HAVE_LIBPNG 1)
 
-#######################################################################
+# ##############################################################################
 if(X11_Xinerama_FOUND)
   option(OPTION_USE_XINERAMA "use lib Xinerama" ON)
 endif(X11_Xinerama_FOUND)
@@ -434,7 +441,7 @@ else()
   set(FLTK_XINERAMA_FOUND FALSE)
 endif(OPTION_USE_XINERAMA)
 
-#######################################################################
+# ##############################################################################
 if(X11_Xfixes_FOUND)
   option(OPTION_USE_XFIXES "use lib Xfixes" ON)
 endif(X11_Xfixes_FOUND)
@@ -448,7 +455,7 @@ else()
   set(FLTK_XFIXES_FOUND FALSE)
 endif(OPTION_USE_XFIXES)
 
-#######################################################################
+# ##############################################################################
 if(X11_Xcursor_FOUND)
   option(OPTION_USE_XCURSOR "use lib Xcursor" ON)
 endif(X11_Xcursor_FOUND)
@@ -462,7 +469,7 @@ else()
   set(FLTK_XCURSOR_FOUND FALSE)
 endif(OPTION_USE_XCURSOR)
 
-#######################################################################
+# ##############################################################################
 if(X11_Xft_FOUND)
   option(OPTION_USE_XFT "use lib Xft" ON)
 endif(X11_Xft_FOUND)
@@ -478,7 +485,7 @@ else()
   set(FLTK_XFT_FOUND FALSE)
 endif(OPTION_USE_XFT)
 
-#######################################################################
+# ##############################################################################
 if(X11_Xrender_FOUND)
   option(OPTION_USE_XRENDER "use lib Xrender" ON)
 endif(X11_Xrender_FOUND)
@@ -496,7 +503,7 @@ else(OPTION_USE_XRENDER)
   set(FLTK_XRENDER_FOUND FALSE)
 endif(OPTION_USE_XRENDER)
 
-#######################################################################
+# ##############################################################################
 if(X11_FOUND)
   option(OPTION_USE_XDBE "use lib Xdbe" ON)
 endif(X11_FOUND)
@@ -508,22 +515,26 @@ else()
   set(FLTK_XDBE_FOUND FALSE)
 endif(OPTION_USE_XDBE AND HAVE_XDBE_H)
 
-#######################################################################
+# ##############################################################################
 set(FL_CFG_NO_FILESYSTEM_SUPPORT TRUE)
 if(OPTION_FILESYSTEM_SUPPORT)
   set(FL_CFG_NO_FILESYSTEM_SUPPORT FALSE)
 endif(OPTION_FILESYSTEM_SUPPORT)
-#######################################################################
+# ##############################################################################
 
-#######################################################################
-option(OPTION_CREATE_ANDROID_STUDIO_IDE "create files needed to compile FLTK for Android" OFF)
-#######################################################################
+# ##############################################################################
+option(OPTION_CREATE_ANDROID_STUDIO_IDE
+       "create files needed to compile FLTK for Android" OFF
+)
+# ##############################################################################
 
-#######################################################################
-option(CMAKE_SUPPRESS_REGENERATION "suppress rules to re-run CMake on rebuild" OFF)
+# ##############################################################################
+option(CMAKE_SUPPRESS_REGENERATION "suppress rules to re-run CMake on rebuild"
+       OFF
+)
 mark_as_advanced(CMAKE_SUPPRESS_REGENERATION)
 
-#######################################################################
+# ##############################################################################
 # Debugging ...
 
 if(DEBUG_OPTIONS_CMAKE)

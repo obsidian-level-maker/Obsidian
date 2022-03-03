@@ -300,8 +300,10 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
 void DLG_EditSeed(void) {
     ;
 
-    const char *user_buf = fl_input(_("Enter New Seed Number or Phrase:"),
-                                    string_seed.empty() ? std::to_string(next_rand_seed).c_str() : string_seed.c_str());
+    const char *user_buf =
+        fl_input(_("Enter New Seed Number or Phrase:"),
+                 string_seed.empty() ? std::to_string(next_rand_seed).c_str()
+                                     : string_seed.c_str());
 
     // cancelled?
     if (!user_buf) {

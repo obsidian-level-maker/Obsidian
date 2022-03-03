@@ -4,46 +4,43 @@
 #
 # Copyright 1998-2021 by Bill Spitzak and others.
 #
-# This library is free software. Distribution and use rights are outlined in
-# the file "COPYING" which should have been included with this file.  If this
-# file is missing or damaged, see the license at:
+# This library is free software. Distribution and use rights are outlined in the
+# file "COPYING" which should have been included with this file.  If this file
+# is missing or damaged, see the license at:
 #
-#     https://www.fltk.org/COPYING.php
+# https://www.fltk.org/COPYING.php
 #
 # Please see the following page on how to report bugs and issues:
 #
-#     https://www.fltk.org/bugs.php
+# https://www.fltk.org/bugs.php
 #
 
-#######################################################################
+# ##############################################################################
 # installation
-#######################################################################
+# ##############################################################################
 
 # generate uninstall target
 configure_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/CMake/cmake_uninstall.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-  @ONLY
+  "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake" @ONLY
 )
 add_custom_target(
-  uninstall
-  "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+  uninstall "${CMAKE_COMMAND}" -P
+            "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
 )
 
 install(
-  DIRECTORY
-  ${CMAKE_CURRENT_SOURCE_DIR}/FL
-  DESTINATION ${FLTK_INCLUDEDIR} USE_SOURCE_PERMISSIONS
-  FILES_MATCHING
+  DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/FL
+  DESTINATION ${FLTK_INCLUDEDIR}
+  USE_SOURCE_PERMISSIONS FILES_MATCHING
   PATTERN "*.[hH]"
   PATTERN "abi-version.h" EXCLUDE
 )
 
 install(
-  DIRECTORY
-  ${CMAKE_CURRENT_BINARY_DIR}/FL
-  DESTINATION ${FLTK_INCLUDEDIR} USE_SOURCE_PERMISSIONS
-  FILES_MATCHING
+  DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/FL
+  DESTINATION ${FLTK_INCLUDEDIR}
+  USE_SOURCE_PERMISSIONS FILES_MATCHING
   PATTERN "*.[hH]"
 )
 
@@ -64,33 +61,25 @@ install(
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/CMake/FLTKConfig.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/etc/FLTKConfig.cmake
-  @ONLY
+  ${CMAKE_CURRENT_BINARY_DIR}/etc/FLTKConfig.cmake @ONLY
 )
 
-install(
-  FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/etc/FLTKConfig.cmake
-  DESTINATION ${FLTK_CONFIG_PATH}
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/etc/FLTKConfig.cmake
+        DESTINATION ${FLTK_CONFIG_PATH}
 )
 
-install(
-  FILES
-  ${CMAKE_CURRENT_SOURCE_DIR}/CMake/FLTK-Functions.cmake
-  DESTINATION ${FLTK_CONFIG_PATH}
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/CMake/FLTK-Functions.cmake
+        DESTINATION ${FLTK_CONFIG_PATH}
 )
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/CMake/UseFLTK.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/etc/UseFLTK.cmake
-  @ONLY
+  ${CMAKE_CURRENT_BINARY_DIR}/etc/UseFLTK.cmake @ONLY
 )
 
 # Deprecated: install UseFLTK.cmake with deprecation warnings only
-install(
-  FILES
-  ${CMAKE_CURRENT_BINARY_DIR}/etc/UseFLTK.cmake
-  DESTINATION ${FLTK_CONFIG_PATH}
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/etc/UseFLTK.cmake
+        DESTINATION ${FLTK_CONFIG_PATH}
 )
 
 # generate fltk-config
@@ -105,8 +94,7 @@ set(LIBNAME "${libdir}/libfltk.a")
 
 configure_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/fltk-config.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/bin/fltk-config"
-  @ONLY
+  "${CMAKE_CURRENT_BINARY_DIR}/bin/fltk-config" @ONLY
 )
 
 if(UNIX)
@@ -116,21 +104,25 @@ if(UNIX)
   )
 endif(UNIX)
 
-install(
-  PROGRAMS
-  ${CMAKE_CURRENT_BINARY_DIR}/bin/fltk-config
-  DESTINATION ${FLTK_BINDIR}
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/bin/fltk-config
+        DESTINATION ${FLTK_BINDIR}
 )
 
-if(UNIX OR MSYS OR (MINGW AND CMAKE_CROSSCOMPILING))
+if(UNIX
+   OR MSYS
+   OR (MINGW AND CMAKE_CROSSCOMPILING)
+)
   macro(INSTALL_MAN FILE LEVEL)
     install(
-      FILES
-      ${CMAKE_CURRENT_SOURCE_DIR}/documentation/src/${FILE}.man
+      FILES ${CMAKE_CURRENT_SOURCE_DIR}/documentation/src/${FILE}.man
       DESTINATION ${FLTK_MANDIR}/man${LEVEL}
       RENAME ${FILE}.${LEVEL}
     )
-  endmacro(INSTALL_MAN FILE LEVEL)
+  endmacro(
+    INSTALL_MAN
+    FILE
+    LEVEL
+  )
 
   install_man(fluid 1)
   install_man(fltk-config 1)
@@ -139,4 +131,8 @@ if(UNIX OR MSYS OR (MINGW AND CMAKE_CROSSCOMPILING))
   install_man(checkers 6)
   install_man(sudoku 6)
 
-endif(UNIX OR MSYS OR (MINGW AND CMAKE_CROSSCOMPILING))
+endif(
+  UNIX
+  OR MSYS
+  OR (MINGW AND CMAKE_CROSSCOMPILING)
+)

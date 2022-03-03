@@ -776,23 +776,23 @@ function CTL_DOOM.item_setup(self)
             end
           end
         elseif opt.valuator == "button" then
-          PARAM[string.sub(name, 7)] = tonumber(OB_CONFIG[opt.name])
+          PARAM[opt.name] = tonumber(OB_CONFIG[opt.name])
         end
       else
-        PARAM[string.sub(name, 7)] = OB_CONFIG[opt.name]
+        PARAM[opt.name] = OB_CONFIG[opt.name]
       end
       if RANDOMIZE_GROUPS then
         for _,group in pairs(RANDOMIZE_GROUPS) do
           if opt.randomize_group and opt.randomize_group == group then
             if opt.valuator then
               if opt.valuator == "button" then
-                  PARAM[string.sub(name, 7)] = rand.sel(50, 1, 0)
+                  PARAM[opt.name] = rand.sel(50, 1, 0)
                   goto done
               elseif opt.valuator == "slider" then
                   if opt.increment < 1 then
-                    PARAM[string.sub(name, 7)] = rand.range(opt.min, opt.max)
+                    PARAM[opt.name] = rand.range(opt.min, opt.max)
                   else
-                    PARAM[string.sub(name, 7)] = rand.irange(opt.min, opt.max)
+                    PARAM[opt.name] = rand.irange(opt.min, opt.max)
                   end
                   goto done
               end
@@ -801,7 +801,7 @@ function CTL_DOOM.item_setup(self)
               repeat
                 index = rand.irange(1, #opt.choices)
               until (index % 2 == 1)
-              PARAM[string.sub(name, 7)] = opt.choices[index]
+              PARAM[opt.name] = opt.choices[index]
               goto done
             end
           end
@@ -811,36 +811,39 @@ function CTL_DOOM.item_setup(self)
     else
 	    if opt.valuator then
 		    if opt.valuator == "button" then
-		        PARAM[string.sub(name, 7)] = gui.get_module_button_value(self.name, opt.name)
+		        PARAM[opt.name] = gui.get_module_button_value(self.name, opt.name)
 		    elseif opt.valuator == "slider" then
-		        PARAM[string.sub(name, 7)] = gui.get_module_slider_value(self.name, opt.name)      
+		        PARAM[opt.name] = gui.get_module_slider_value(self.name, opt.name)      
 		    end
       else
-        PARAM[string.sub(name, 7)] = opt.value
+        PARAM[opt.name] = opt.value
 	    end
 	  end
+  end
 
-    local function change_probz(name, info)
-      if PARAM[name] and PARAM[name] ~= "Default" then
-        local mult = PARAM[name] or 0
+  local function change_probz(name, info)
+    if PARAM[name] and PARAM[name] ~= "Default" then
+      local mult = PARAM[name] or 0
 
-        if info.add_prob then info.add_prob = info.add_prob * mult end
-        if info.start_prob then info.start_prob = info.start_prob * mult end
-        if info.crazy_prob then info.crazy_prob = info.crazy_prob * mult end
-        if info.closet_prob then info.closet_prob = info.closet_prob * mult end
-        if info.secret_prob then info.secret_prob = info.secret_prob * mult end
-        if info.storage_prob then info.storage_prob = info.storage_prob * mult end
-      end
-    end
-
-    for name, info in pairs(GAME.PICKUPS) do
-      change_probz(name, info)
-    end
-
-    for name, info in pairs(GAME.NICE_ITEMS) do
-      change_probz(name, info)
+      if info.add_prob then info.add_prob = info.add_prob * mult end
+      if info.start_prob then info.start_prob = info.start_prob * mult end
+      if info.crazy_prob then info.crazy_prob = info.crazy_prob * mult end
+      if info.closet_prob then info.closet_prob = info.closet_prob * mult end
+      if info.secret_prob then info.secret_prob = info.secret_prob * mult end
+      if info.storage_prob then info.storage_prob = info.storage_prob * mult end
     end
   end
+
+  for name, info in pairs(GAME.PICKUPS) do
+    float_name = "float_" .. name
+    change_probz(float_name, info)
+  end
+
+  for name, info in pairs(GAME.NICE_ITEMS) do
+    float_name = "float_" .. name
+    change_probz(float_name, info)
+  end
+
 end
 
 OB_MODULES["doom_item_control"] =

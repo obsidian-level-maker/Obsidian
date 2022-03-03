@@ -3,38 +3,37 @@
 #
 # Copyright 1998-2021 by Bill Spitzak and others.
 #
-# This library is free software. Distribution and use rights are outlined in
-# the file "COPYING" which should have been included with this file.  If this
-# file is missing or damaged, see the license at:
+# This library is free software. Distribution and use rights are outlined in the
+# file "COPYING" which should have been included with this file.  If this file
+# is missing or damaged, see the license at:
 #
-#     https://www.fltk.org/COPYING.php
+# https://www.fltk.org/COPYING.php
 #
 # Please see the following page on how to report bugs and issues:
 #
-#     https://www.fltk.org/bugs.php
+# https://www.fltk.org/bugs.php
 #
 
-set(
-  CPPFILES
-  CodeEditor.cxx
-  Fl_Function_Type.cxx
-  Fl_Group_Type.cxx
-  Fl_Menu_Type.cxx
-  Fl_Type.cxx
-  Fl_Widget_Type.cxx
-  Fl_Window_Type.cxx
-  Fluid_Image.cxx
-  about_panel.cxx
-  align_widget.cxx
-  alignment_panel.cxx
-  code.cxx
-  factory.cxx
-  file.cxx
-  fluid.cxx
-  function_panel.cxx
-  template_panel.cxx
-  undo.cxx
-  widget_panel.cxx
+set(CPPFILES
+    CodeEditor.cxx
+    Fl_Function_Type.cxx
+    Fl_Group_Type.cxx
+    Fl_Menu_Type.cxx
+    Fl_Type.cxx
+    Fl_Widget_Type.cxx
+    Fl_Window_Type.cxx
+    Fluid_Image.cxx
+    about_panel.cxx
+    align_widget.cxx
+    alignment_panel.cxx
+    code.cxx
+    factory.cxx
+    file.cxx
+    fluid.cxx
+    function_panel.cxx
+    template_panel.cxx
+    undo.cxx
+    widget_panel.cxx
 )
 
 # ExternalCodeEditor: platform specific files
@@ -54,8 +53,10 @@ if(APPLE AND (NOT OPTION_APPLE_X11))
 
   set(WRAPPER "${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/fluid")
   add_custom_command(
-    TARGET fluid POST_BUILD
-    COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/../CMake/macOS-bundle-wrapper.in ${WRAPPER}
+    TARGET fluid
+    POST_BUILD
+    COMMAND cp ${CMAKE_CURRENT_SOURCE_DIR}/../CMake/macOS-bundle-wrapper.in
+            ${WRAPPER}
     COMMAND chmod u+x,g+x,o+x ${WRAPPER}
     BYPRODUCTS ${WRAPPER}
     # COMMENT "Creating macOS bundle wrapper script ${WRAPPER}"
@@ -80,7 +81,10 @@ endif(FLTK_HAVE_CAIRO)
 
 if(APPLE AND (NOT OPTION_APPLE_X11))
   # create bundle
-  set_target_properties(fluid PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/fluid.plist")
+  set_target_properties(
+    fluid PROPERTIES MACOSX_BUNDLE_INFO_PLIST
+                     "${CMAKE_CURRENT_SOURCE_DIR}/fluid.plist"
+  )
   set_target_properties(fluid PROPERTIES MACOSX_BUNDLE_ICON_FILE ${ICON_NAME})
   set_target_properties(fluid PROPERTIES RESOURCE ${ICON_PATH})
   # install
@@ -98,15 +102,9 @@ endif(APPLE AND (NOT OPTION_APPLE_X11))
 # install desktop files
 
 if(UNIX)
-  install(
-    FILES fluid.desktop
-    DESTINATION ${FLTK_DATADIR}/applications
-  )
+  install(FILES fluid.desktop DESTINATION ${FLTK_DATADIR}/applications)
   # Install mime-type file (x-fluid.desktop method is deprecated)
-  install(
-    FILES fluid.xml
-    DESTINATION ${FLTK_DATADIR}/mime/packages
-  )
+  install(FILES fluid.xml DESTINATION ${FLTK_DATADIR}/mime/packages)
 
   # Install desktop icons
   foreach(icon 32 48 64 128)

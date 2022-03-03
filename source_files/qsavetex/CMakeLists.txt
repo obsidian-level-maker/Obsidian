@@ -11,7 +11,5 @@ add_executable(
 target_compile_features(qsavetex PRIVATE cxx_std_17)
 
 if(MSYS)
-  set(CMAKE_EXE_LINKER_FLAGS
-      "-static -mwindows"
-  )
+  set(CMAKE_EXE_LINKER_FLAGS "-static -mwindows")
 endif()
