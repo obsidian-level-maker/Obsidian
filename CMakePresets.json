@@ -80,6 +80,10 @@
       "name": "msvc",
       "configuration": "Release",
       "configurePreset": "msvc"
+    },
+    {
+      "name": "msys",
+      "configurePreset": "msys"
     }
   ]
 }
