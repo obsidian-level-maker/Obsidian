@@ -190,12 +190,20 @@ HEXEN.THEMES =
 
       floor_sinks =
       {
-        liquid_plain = 50,
+        floor_plain = 50,
+        liquid_plain = 40,
+        liquid_trim = 40,
+        floor_trim_sky = 5,
+        floor_trim_liquid = 5,
+        floor_mixup = 5,
       },
-
+  
       ceiling_sinks =
       {
-        sky_plain = 50,
+        ceiling_plain = 50,
+        --sky_plain = 50,
+        --sky_ceiling = 50,
+        light_plain = 25,
       },
 
       sink_style =
@@ -315,12 +323,20 @@ HEXEN.THEMES =
 
       floor_sinks =
       {
-        liquid_plain = 50,
+        floor_plain = 50,
+        liquid_plain = 40,
+        liquid_trim = 40,
+        floor_trim_sky = 5,
+        floor_trim_liquid = 5,
+        floor_mixup = 5,
       },
-
+  
       ceiling_sinks =
       {
-        sky_plain = 50,
+        ceiling_plain = 50,
+        --sky_plain = 50,
+        --sky_ceiling = 50,
+        light_plain = 25,
       },
 
       sink_style =
@@ -444,12 +460,20 @@ HEXEN.THEMES =
 
       floor_sinks =
       {
-        liquid_plain = 50,
+        floor_plain = 50,
+        liquid_plain = 40,
+        liquid_trim = 40,
+        floor_trim_sky = 5,
+        floor_trim_liquid = 5,
+        floor_mixup = 5,
       },
-
+  
       ceiling_sinks =
       {
-        sky_plain = 50,
+        ceiling_plain = 50,
+        --sky_plain = 50,
+        --sky_ceiling = 50,
+        light_plain = 25,
       },
 
       sink_style =
@@ -565,12 +589,20 @@ HEXEN.THEMES =
 
       floor_sinks =
       {
-        liquid_plain = 50,
+        floor_plain = 50,
+        liquid_plain = 40,
+        liquid_trim = 40,
+        floor_trim_sky = 5,
+        floor_trim_liquid = 5,
+        floor_mixup = 5,
       },
-
+  
       ceiling_sinks =
       {
-        sky_plain = 50,
+        ceiling_plain = 50,
+        --sky_plain = 50,
+        --sky_ceiling = 50,
+        light_plain = 25,
       },
 
       sink_style =
@@ -697,12 +729,20 @@ HEXEN.THEMES =
 
       floor_sinks =
       {
-        liquid_plain = 50,
+        floor_plain = 50,
+        liquid_plain = 40,
+        liquid_trim = 40,
+        floor_trim_sky = 5,
+        floor_trim_liquid = 5,
+        floor_mixup = 5,
       },
-
+  
       ceiling_sinks =
       {
-        sky_plain = 50,
+        ceiling_plain = 50,
+        --sky_plain = 50,
+        --sky_ceiling = 50,
+        light_plain = 25,
       },
 
       sink_style =
