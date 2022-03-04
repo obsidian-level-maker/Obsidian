@@ -1399,7 +1399,9 @@ function ob_default_filename()
     elseif OB_CONFIG.length == "episode" then
       if OB_CONFIG.game == "doom2" or OB_CONFIG.game == "tnt" or OB_CONFIG.game == "plutonia" then
         levelcount = "11"
-      else 
+      elseif OB_CONFIG.game == "hexen" then
+        levelcount = "6"
+      else
         levelcount = "9"
       end
     else

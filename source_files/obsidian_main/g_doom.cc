@@ -807,9 +807,9 @@ static bool BuildNodes(std::filesystem::path filename) {
             StringCaseCmp(current_game, "plutonia") == 0 ||
             StringCaseCmp(current_game, "tnt") == 0) {
             map_nums = 11;
+        } else if (StringCaseCmp(current_game, "hexen") == 0) {
+            map_nums = 6;
         } else {
-            // Hexen is included in this although I don't think it's accurate.
-            // Will fix as Hexen support evolves - Dasho
             map_nums = 9;
         }
     } else {
@@ -821,10 +821,9 @@ static bool BuildNodes(std::filesystem::path filename) {
             map_nums = 27;
         } else if (StringCaseCmp(current_game, "ultdoom") == 0) {
             map_nums = 36;
+        } else if (StringCaseCmp(current_game, "hexen") == 0) {
+            map_nums = 30;
         } else {
-            // Heretic and Hexen have the same value for this currently, as I
-            // used Heretic as a template for Hexen. Will fix as Hexen support
-            // evolves - Dasho
             map_nums = 45;
         }
     }

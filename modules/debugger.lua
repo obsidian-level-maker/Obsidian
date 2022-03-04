@@ -168,7 +168,6 @@ OB_MODULES["debugger"] =
       longtip = "The following games are in an experimental status, meaning that " ..
       "they may have errors when building levels, or support for certain gameplay features has" ..
       " not been implemented yet!\n\n" ..
-      "HEXEN: MULTI-LEVEL WADs NOT RECOMMENDED! Hub system not yet implemented. Teleporter fabs not yet functional.\n\n" ..
       "STRIFE: MULTI-LEVEL WADs NOT RECOMMENDED! Hub/town system not yet implemented. Must use the \"rift01\" cheat code to start the first map.",
       priority = 60,
       gap = 1,
