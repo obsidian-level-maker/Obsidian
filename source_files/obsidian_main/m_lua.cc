@@ -1716,6 +1716,21 @@ std::string ob_get_param(std::string parameter) {
     return param;
 }
 
+bool ob_hexen_ceiling_check(int thing_id) {
+    std::array<std::string, 2> params = {NumToString(thing_id), ""};
+
+    if (!Script_CallFunc("ob_hexen_ceiling_check", 1, params.data())) {
+        return false;
+    }
+
+    std::string param = luaL_optlstring(LUA_ST, -1, "", NULL);
+
+    // remove result from lua stack
+    lua_pop(LUA_ST, 1);
+
+    return StringToInt(param);
+}
+
 std::string ob_default_filename() {
     if (!Script_CallFunc("ob_default_filename", 1)) {
         return NULL;

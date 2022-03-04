@@ -34,6 +34,9 @@ STRIFE.PARAMETERS =
   damage_factor = 1.0,
   ammo_factor   = 0.8,
   health_factor = 0.7,
+
+  titlepic_lump   = "TITLEPIC",
+  titlepic_format = "patch",
 }
 
 STRIFE.ACTIONS =

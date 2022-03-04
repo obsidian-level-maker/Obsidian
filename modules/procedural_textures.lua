@@ -220,10 +220,9 @@ PROC_TEX.GRAPHICS =
 }
 
 function PROC_TEX.setup(self)
-  for name,opt in pairs(self.options) do
-    local value = self.options[name].value
-    PARAM[name] = value
-  end
+
+  module_param_up(self)
+  
 end
 
 function generate_textures()

@@ -30,6 +30,10 @@ HACX.ENTITIES =
   small_pillar  = { id=48, r=16, h=36 },
   passable_ceiling_decor = { id=74, r=16, h=24, pass=true, ceil=true },
 
+  light  = { id="light", r=1, h=1, pass=true },
+  secret = { id="oblige_secret", r=1, h=1, pass=true },
+  depot_ref = { id="oblige_depot", r=1, h=1, pass=true },
+
   -- TODO: all other scenery!!
 }
 

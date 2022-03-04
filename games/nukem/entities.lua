@@ -22,7 +22,11 @@ NUKEM.ENTITIES =
   turn_switch   = { id=136, r=32, h=64, pass=true },
   handle_switch = { id=140, r=32, h=64, pass=true },
   light_switch  = { id=712, r=32, h=64, pass=true },
-  lever_switch  = { id=862, r=32, h=64, pass=true }
+  lever_switch  = { id=862, r=32, h=64, pass=true },
+
+  light  = { id="light", r=1, h=1, pass=true },
+  secret = { id="oblige_secret", r=1, h=1, pass=true },
+  depot_ref = { id="oblige_depot", r=1, h=1, pass=true },
 }
 
 NUKEM.PLAYER_MODEL =

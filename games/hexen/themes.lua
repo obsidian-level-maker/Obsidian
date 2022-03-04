@@ -169,7 +169,7 @@ HEXEN.THEMES =
       steepness = { few=25, some=50, heaps=90 },
       big_rooms = { none=15, few=60, some=20, heaps=5 },
       ambushes = { none=5, few=50, some=45, heaps=30 },
-      teleporters = { none=0, few=0, some=0, heaps=0 },
+      teleporters = { none=20, few=30, some=65, heaps=10 },
       keys = { none=15, few=50, some=50, heaps=20 },
       symmetry = { none=40, few=30, some=35, heaps=25 },
       switches = { none=20, few=60, some=40, heaps=10 },
@@ -190,12 +190,20 @@ HEXEN.THEMES =
 
       floor_sinks =
       {
-        liquid_plain = 50,
+        floor_plain = 50,
+        liquid_plain = 40,
+        liquid_trim = 40,
+        floor_trim_sky = 5,
+        floor_trim_liquid = 5,
+        floor_mixup = 5,
       },
-
+  
       ceiling_sinks =
       {
-        sky_plain = 50,
+        ceiling_plain = 50,
+        --sky_plain = 50,
+        --sky_ceiling = 50,
+        light_plain = 25,
       },
 
       sink_style =
@@ -315,12 +323,20 @@ HEXEN.THEMES =
 
       floor_sinks =
       {
-        liquid_plain = 50,
+        floor_plain = 50,
+        liquid_plain = 40,
+        liquid_trim = 40,
+        floor_trim_sky = 5,
+        floor_trim_liquid = 5,
+        floor_mixup = 5,
       },
-
+  
       ceiling_sinks =
       {
-        sky_plain = 50,
+        ceiling_plain = 50,
+        --sky_plain = 50,
+        --sky_ceiling = 50,
+        light_plain = 25,
       },
 
       sink_style =
@@ -444,12 +460,20 @@ HEXEN.THEMES =
 
       floor_sinks =
       {
-        liquid_plain = 50,
+        floor_plain = 50,
+        liquid_plain = 40,
+        liquid_trim = 40,
+        floor_trim_sky = 5,
+        floor_trim_liquid = 5,
+        floor_mixup = 5,
       },
-
+  
       ceiling_sinks =
       {
-        sky_plain = 50,
+        ceiling_plain = 50,
+        --sky_plain = 50,
+        --sky_ceiling = 50,
+        light_plain = 25,
       },
 
       sink_style =
@@ -565,12 +589,20 @@ HEXEN.THEMES =
 
       floor_sinks =
       {
-        liquid_plain = 50,
+        floor_plain = 50,
+        liquid_plain = 40,
+        liquid_trim = 40,
+        floor_trim_sky = 5,
+        floor_trim_liquid = 5,
+        floor_mixup = 5,
       },
-
+  
       ceiling_sinks =
       {
-        sky_plain = 50,
+        ceiling_plain = 50,
+        --sky_plain = 50,
+        --sky_ceiling = 50,
+        light_plain = 25,
       },
 
       sink_style =
@@ -697,12 +729,20 @@ HEXEN.THEMES =
 
       floor_sinks =
       {
-        liquid_plain = 50,
+        floor_plain = 50,
+        liquid_plain = 40,
+        liquid_trim = 40,
+        floor_trim_sky = 5,
+        floor_trim_liquid = 5,
+        floor_mixup = 5,
       },
-
+  
       ceiling_sinks =
       {
-        sky_plain = 50,
+        ceiling_plain = 50,
+        --sky_plain = 50,
+        --sky_ceiling = 50,
+        light_plain = 25,
       },
 
       sink_style =

@@ -18,7 +18,10 @@ CHEX3.PARAMETERS =
   damage_factor = 1.0,
   ammo_factor   = 0.8,
   health_factor = 0.7,
-  monster_factor = 0.8
+  monster_factor = 0.8,
+
+  titlepic_lump   = "TITLEPIC",
+  titlepic_format = "patch",
 }
 
 CHEX3.ACTIONS =

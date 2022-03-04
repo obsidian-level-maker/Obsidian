@@ -2265,7 +2265,11 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     Trans.brush(brush)
 
     -- add teleport entity
-    Trans.entity("teleport_spot", mx, my, top.t + 1)
+    if OB_CONFIG.game == "hexen" then
+      Trans.entity("teleport_spot", mx, my, top.t + 1, { tid = top.tag })
+    else
+      Trans.entity("teleport_spot", mx, my, top.t + 1)
+    end
   end
 
 
@@ -3556,7 +3560,11 @@ function Render_establish_street_lanes()
     }
 
     local A = S.area
-    spot.floor_mat = A.floor_group.sink.mat
+    if A.floor_group.sink then
+      spot.floor_mat = A.floor_group.sink.mat
+    else
+      return nil
+    end
 
     return spot
   end
