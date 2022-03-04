@@ -15,7 +15,7 @@ PREFABS.Decor_garrett_rotten_flesh =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  z_fit  = { 16,72 },
+  z_fit  = { 74,78 },
 
   sink_mode = "never_liquids",
 }

@@ -24,8 +24,7 @@ PREFABS.Cage_dem_garage_ambush1 =
   seed_h = 2,
 
   deep   = 16,
-  over   = -16,
-
+ 
   x_fit = "frame",
   y_fit = "frame",
 
@@ -80,8 +79,7 @@ PREFABS.Cage_dem_garage_ambush2 =
   seed_h = 2,
 
   deep   = 16,
-  over   = -16,
-
+  
   x_fit = "frame",
   y_fit  = "frame",
 
@@ -117,8 +115,7 @@ PREFABS.Cage_dem_store_ambush =
   seed_h = 2,
 
   deep = 16,
-  over = -16,
-
+  
   x_fit = "frame",
   y_fit  = "frame",
 
@@ -175,8 +172,7 @@ PREFABS.Cage_dem_store_ambush_vanilla =
   seed_h = 2,
 
   deep = 16,
-  over = -16,
-
+  
   x_fit = "frame",
   y_fit  = "frame",
 
@@ -247,8 +243,7 @@ PREFABS.Cage_dem_bunker_ambush1 =
   seed_h = 2,
 
   deep   = 16,
-  over   = -16,
-
+  
   bound_z1 = 0,
   bound_z2 = 128,
 
@@ -392,8 +387,7 @@ PREFABS.Cage_dem_shrineC =
   seed_h = 2,
 
   deep   = 16,
-  over   = -16,
-
+  
   bound_z1 = 0,
   bound_z2 = 128,
 
@@ -433,8 +427,7 @@ PREFABS.Cage_dem_ruinsN1amb =
   seed_h = 2,
 
   deep = 16,
-  over = -16,
-
+  
   bound_z1 = 0,
   bound_z2 = 144,
 
@@ -468,8 +461,7 @@ PREFABS.Cage_dem_ruinsC1amb =
   seed_h = 2,
 
   deep = 16,
-  over = -16,
-
+  
   bound_z1 = 0,
   bound_z2 = 128,
 
@@ -510,7 +502,6 @@ PREFABS.Cage_dem_cabinamb =
   seed_h = 2,
 
   deep = 16,
-  over = -16,
 
   bound_z1 = 0,
   bound_z2 = 128,
@@ -559,6 +550,4 @@ PREFABS.Decor_Dem_Graveamb1 =
   on_liquids = "never",
 
   sink_mode = "never_liquids",
-
 }
-
