@@ -662,16 +662,6 @@ function Fab_transform_Z(fab, T)
       if E.angles then
         E.angles = Trans.apply_angles_z(E.angles)
       end
-
-      for _, table in pairs(GAME.ENTITIES) do -- Put Hexen stuff back on the ceiling? - Dasho
-        if table.id == E.id then
-            if table.ceil and table.ceil == true then
-              E.z = 0
-            end
-            goto continue
-        end
-      end
-      ::continue::
     end
   end
 
@@ -2316,6 +2306,15 @@ function Fab_replacements(fab)
             C.arg5 = current_tag
           elseif C.special == 22 then
             C.arg1 = current_tag
+          elseif C.special == 70 then
+            if fab.out_tag1 then -- Handle monster depots
+              rand_tag = rand.pick( { fab.out_tag1, fab.out_tag2, fab.out_tag3 })
+              C.arg1 = rand_tag
+              C.arg2 = rand_tag
+            else
+              C.arg1 = fab.out_tag
+              C.arg2 = fab.out_tag
+            end
           elseif C.special == 74 then
             if OB_CONFIG.length == "single" or LEVEL.game_along == 1.0 then
               C.special = 75
@@ -2353,6 +2352,12 @@ function Fab_replacements(fab)
     -- unknown entities set the 'id' to NIL
     -- (which prevents sending it to the CSG)
     E.id = check_thing(E.id)
+    if OB_CONFIG.game == "hexen" then
+      if E.id == 14 then
+        E.tid = fab.in_tag
+      end
+      E.special = 0 -- Don't think we use any thing specials at this point - Dasho
+    end
   end
 
   -- TODO : models (for Quake)
@@ -2424,6 +2429,11 @@ function Fabricate(room, def, T, skins)
         fab.switch_tag = SKIN.switch_tag
       end
     end
+    if SKIN.in_tag then fab.in_tag = SKIN.in_tag end
+    if SKIN.out_tag then fab.out_tag = SKIN.out_tag end
+    if SKIN.out_tag1 then fab.out_tag1 = SKIN.out_tag1 end
+    if SKIN.out_tag2 then fab.out_tag2 = SKIN.out_tag2 end
+    if SKIN.out_tag3 then fab.out_tag3 = SKIN.out_tag3 end
   end
 
   Fab_replacements (fab)

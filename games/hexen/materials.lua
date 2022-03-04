@@ -35,7 +35,7 @@ HEXEN.MATERIALS =
   _SKY   = { t="STEEL01", f="F_SKY" },
 
   -- materials for generic prefab set --  
-  --_RUNIC = { t="GRAYDANG", f="CJFSHIP3" }, No idea for this one
+  _RUNIC = { t="X_FIRE01", f="X_001" },
   _STAIRS = { t="T2_STEP", f="F_082" },
   _VOID = { t="SKYWALL", f="XX"},
   _FLATLIT = { t="TOMB04", f="F_081" },
@@ -298,6 +298,7 @@ HEXEN.MATERIALS =
   VILL01   = { t="VILL01",   f="F_030" },
   VILL04   = { t="VILL04",   f="F_055" },
   VILL05   = { t="VILL05",   f="F_055" },
+  VILL08   = { t="VILL08",   f="F_055" },
 
   WASTE01  = { t="WASTE01",  f="F_005" },
   WASTE02  = { t="WASTE02",  f="F_044" },
@@ -504,7 +505,7 @@ HEXEN.PREFAB_FIELDS =
   doom_line_to_hexen_705 = { special=74, arg1=0, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0400 }, -- Switch, secret exit
   doom_line_to_hexen_706 = { special=74, arg1=0, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0000 }, -- Walk-over line, exit
   doom_line_to_hexen_707 = { special=74, arg1=0, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0000 }, -- Walk-over line, secret exit
-  doom_line_to_hexen_708 = { special=70, arg1=0, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0000 }, -- Walk-over line, teleport (need to work on teleport destination placement)
+  doom_line_to_hexen_708 = { special=70, arg1=0, arg2=0, arg3=0, arg4=0, arg5=0, flags=0x0200 }, -- Walk-over line, teleport (need to work on teleport destination placement)
   --doom_line_to_hexen_709 = Unused at the moment
   doom_line_to_hexen_710 = { special=62, arg1=0, arg2=64, arg3=105, arg4=0, arg5=0, flags=0x0600 }, -- Switched, lower lift, wait, raise (fast) -- Is this too specific? - Dasho
   doom_line_to_hexen_711 = { special=11, arg1=0, arg2=16, arg3=0, arg4=0, arg5=0, flags=0x0400 }, -- Regular door open stay

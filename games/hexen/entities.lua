@@ -187,6 +187,10 @@ HEXEN.ENTITIES =
   snd_ice    = { id=1407 },
   snd_earth  = { id=1408 },
   snd_metal2 = { id=1409 },
+
+  light  = { id="light", r=1, h=1, pass=true },
+  secret = { id="oblige_secret", r=1, h=1, pass=true },
+  depot_ref = { id="oblige_depot", r=1, h=1, pass=true },
 }
 
 HEXEN.GENERIC_REQS =

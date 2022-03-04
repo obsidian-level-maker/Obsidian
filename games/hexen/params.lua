@@ -36,6 +36,10 @@ HEXEN.PARAMETERS =
   health_factor  = 1.0,
   ammo_factor    = 1.0,
   time_factor    = 1.0,
+
+  titlepic_lump   = "TITLE",
+  titlepic_format = "raw",
+
 }
 
 HEXEN.ACTIONS =

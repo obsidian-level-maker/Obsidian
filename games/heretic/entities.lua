@@ -81,6 +81,10 @@ HERETIC.ENTITIES =
 
   env_water  = { id=41 },
   env_wind   = { id=42 },
+
+  light  = { id="light", r=1, h=1, pass=true },
+  secret = { id="oblige_secret", r=1, h=1, pass=true },
+  depot_ref = { id="oblige_depot", r=1, h=1, pass=true },
 }
 
 HERETIC.GENERIC_REQS =

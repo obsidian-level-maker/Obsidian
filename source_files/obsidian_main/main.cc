@@ -1165,6 +1165,23 @@ skiprest:
         load_file = argv::list[load_arg + 1];
     }
 
+    // Dumb ad-hoc function for if I need to update the images.h arrays - Dasho
+
+    /*std::filesystem::path logo_path = install_dir;
+    logo_path.append("data").append("obsidian_pill.raw");
+    std::string test_file = FileLoad(logo_path);
+    byte *testy = new byte[64 * 64];
+    memcpy(testy, (void *)test_file.data(), 64 * 64);
+    int numba_counter = 0;
+    for (int i = 0; i < 64 * 64; i++) {
+        LogPrintf("{:d},", testy[i]);
+        numba_counter++;
+        if (numba_counter == 16) {
+            LogPrintf("\n");
+            numba_counter = 0;
+        }
+    }*/
+
     if (batch_mode) {
         VFS_ParseCommandLine();
 

@@ -109,6 +109,7 @@ function ScriptMan_assemble_mapinfo_lump()
         end
       end
       ::foundmap::
+      mapline = mapline .. "cluster " .. lev.episode.ep_index .. "\n"
       mapline = mapline .. "sky1 " .. lev.episode.sky_patch1 .. "\n"
       mapline = mapline .. "sky2 " .. lev.episode.sky_patch2 .. "\n"
       if lev.episode.lightning_chance then
