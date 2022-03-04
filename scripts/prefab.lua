@@ -2346,20 +2346,33 @@ function Fab_replacements(fab)
     end
   end
 
-  for _,E in pairs(fab.entities) do
+  for idx,E in pairs(fab.entities) do
     check_props(E)
-
     -- unknown entities set the 'id' to NIL
     -- (which prevents sending it to the CSG)
     E.id = check_thing(E.id)
     if OB_CONFIG.game == "hexen" then
-      if E.id == 14 then
+      E.special = 0 -- Don't think we use any thing specials at this point - Dasho
+      if E.id == 14 then -- Teleporter destination fix
         E.tid = fab.in_tag
       end
-      E.special = 0 -- Don't think we use any thing specials at this point - Dasho
+      if E.id == 7000 or E.id == 7001 then -- Place all weapon variant with appropriate per-class flags
+        local wep
+        for _,v in pairs(GAME.WEAPONS) do
+          if E.id == v.id then
+            wep = v
+          end
+        end
+        for _,v in pairs(wep.class_weapon_ids) do
+          local wep_ent = table.copy(E)
+          wep_ent.id = v.id
+          wep_ent.flags = bit.bor(E.flags, v.flags)
+          table.add_unique(fab.entities, wep_ent)
+        end
+        table.remove(fab.entities, idx)
+      end
     end
   end
-
   -- TODO : models (for Quake)
 end
 

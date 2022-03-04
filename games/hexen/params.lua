@@ -40,6 +40,8 @@ HEXEN.PARAMETERS =
   titlepic_lump   = "TITLE",
   titlepic_format = "raw",
 
+  interpic_lump   = "INTERPIC",
+  interpic_format = "raw",
 }
 
 HEXEN.ACTIONS =

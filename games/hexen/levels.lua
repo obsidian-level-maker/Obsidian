@@ -185,7 +185,7 @@ function HEXEN.get_levels()
     table.insert(GAME.levels, LEV)
 
     -- prebuilt levels
-    --[[local pb_name = LEV.name
+    local pb_name = LEV.name
 
     if PARAM.bool_prebuilt_levels == 1 then
       LEV.prebuilt = GAME.PREBUILT_LEVELS[LEV.name]
@@ -193,7 +193,7 @@ function HEXEN.get_levels()
 
     if LEV.prebuilt then
       LEV.name_class = LEV.prebuilt.name_class or "BOSS"
-    end]]--
+    end
 
     -- procedural gotcha management code
 
