@@ -1659,7 +1659,7 @@ OB_MODULES["gzdoom_marine_closets"] =
 
 
     {
-      name = "m_c_ttech",
+      name = "m_c_tech",
       label = _("Weapon tech level"),
       priority = 91,
       choices = MARINE_CLOSET_TUNE.TECH,

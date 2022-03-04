@@ -151,8 +151,10 @@ PREFABS.Window_cage_1_hell =
 {
   template = "Window_cage_1",
 
-  group = "gtd_window_cage_hell",
+  theme = "any",
 
+  group = "gtd_window_cage_hell",
+ 
   tex_MIDBARS3 = "MIDGRATE",
 }
 
@@ -161,6 +163,7 @@ PREFABS.Window_cage_2_hell =
   template = "Window_cage_1",
   map = "MAP02",
 
+  theme = "any",
   seed_w = 2,
 
   group = "gtd_window_cage_hell",
@@ -173,6 +176,7 @@ PREFABS.Window_cage_3_hell =
   template = "Window_cage_1",
   map = "MAP03",
 
+  theme = "any",
   seed_w = 3,
 
   group = "gtd_window_cage_hell",
