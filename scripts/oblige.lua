@@ -1336,6 +1336,25 @@ function ob_get_param(parameter)
   
 end
 
+function ob_hexen_ceiling_check(thing_id)
+
+  assert(thing_id)
+
+  local on_ceiling = 0
+
+  for _, ent in pairs(GAME.ENTITIES) do 
+    if ent.id == thing_id then
+        if ent.ceil and ent.ceil == true then
+          on_ceiling = 1
+        end
+        goto continue
+    end
+  end
+  ::continue::
+  
+  return on_ceiling
+
+end
 
 function ob_default_filename()
   -- create a default filename [ WITHOUT any extension ]

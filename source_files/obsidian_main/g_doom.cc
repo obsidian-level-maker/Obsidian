@@ -643,7 +643,12 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
             thing.x = LE_S16(x);
             thing.y = LE_S16(y);
 
-            thing.height = LE_S16(h);
+            if (ob_hexen_ceiling_check(type)) {
+                thing.height = 0;
+            } else {
+                thing.height = LE_S16(h);
+            }
+            //thing.height = LE_S16(h);
             thing.type = LE_U16(type);
             thing.angle = LE_S16(angle);
             thing.options = LE_U16(options);
@@ -661,7 +666,12 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
             textmap_lump->Printf("\tid = %d;\n", tid);
             textmap_lump->Printf("\tx = %f;\n", (double)x);
             textmap_lump->Printf("\ty = %f;\n", (double)y);
-            textmap_lump->Printf("\theight = %f;\n", (double)h);
+            if (ob_hexen_ceiling_check(type)) {
+                textmap_lump->Printf("\theight = %f;\n", 0);
+            } else {
+                textmap_lump->Printf("\theight = %f;\n", (double)h);
+            }
+            //textmap_lump->Printf("\theight = %f;\n", (double)h);
             textmap_lump->Printf("\ttype = %d;\n", type);
             textmap_lump->Printf("\tangle = %d;\n", angle);
             std::bitset<16> udmf_flags(options);
