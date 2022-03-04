@@ -1343,7 +1343,7 @@ function ob_hexen_ceiling_check(thing_id)
   local on_ceiling = 0
 
   for _, ent in pairs(GAME.ENTITIES) do 
-    if ent.id == thing_id then
+    if ent.id == tonumber(thing_id) then
         if ent.ceil and ent.ceil == true then
           on_ceiling = 1
         end
