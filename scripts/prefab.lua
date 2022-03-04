@@ -2366,6 +2366,7 @@ function Fab_replacements(fab)
       if E.id == 14 then
         E.tid = fab.in_tag
       end
+      E.special = 0 -- Don't think we use any thing specials at this point - Dasho
     end
   end
 

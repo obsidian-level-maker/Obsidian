@@ -372,7 +372,8 @@ const logo_image_t logo_BOLT = {"BOLT", 64, 64, image_data_BOLT};
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2008-2009 Andrew Apted
+//  Copyright (C) 2022 MsrSgtShooterPerson
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -1102,6 +1103,7 @@ const logo_image_t font_CWILV = {"CWILV", 99, 64, image_data_CWILV};
 //  Oblige Level Maker
 //
 //  Copyright (C) 2008-2009 Andrew Apted
+//  Copyright (C) 2022 MsrSgtShooterPerson
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -1382,6 +1384,7 @@ const logo_image_t logo_PILL = {"PILL", 128, 32, image_data_PILL};
 //  Oblige Level Maker
 //
 //  Copyright (C) 2008-2009 Andrew Apted
+//  Copyright (C) 2022 MsrSgtShooterPerson
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
