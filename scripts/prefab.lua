@@ -2356,7 +2356,7 @@ function Fab_replacements(fab)
       if E.id == 14 then -- Teleporter destination fix
         E.tid = fab.in_tag
       end
-      if E.id == 7000 or E.id == 7001 then -- Place all weapon variant with appropriate per-class flags
+      if E.id == 7000 or E.id == 7001 then -- Place all weapon variants with appropriate per-class flags
         local wep
         for _,v in pairs(GAME.WEAPONS) do
           if E.id == v.id then
@@ -2370,7 +2370,25 @@ function Fab_replacements(fab)
           table.add_unique(fab.entities, wep_ent)
         end
         table.remove(fab.entities, idx)
+        goto entdone
       end
+      if E.id == 7002 or E.id == 7003 or E.id == 7004 then -- Place all ultimate weapon pieces with appropriate per-class flags
+        local piece
+        for _,v in pairs(GAME.NICE_ITEMS) do
+          if E.id == v.id then
+            piece = v
+          end
+        end
+        for _,v in pairs(piece.weapon_piece_ids) do
+          local piece_ent = table.copy(E)
+          piece_ent.id = v.id
+          piece_ent.flags = bit.bor(E.flags, v.flags)
+          table.add_unique(fab.entities, piece_ent)
+        end
+        table.remove(fab.entities, idx)
+        goto entdone
+      end
+      ::entdone::
     end
   end
   -- TODO : models (for Quake)
