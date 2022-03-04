@@ -36,9 +36,12 @@ PREFABS.Joiner_curve2_tech =
 --One with light
 PREFABS.Joiner_curve2_tech_light =
 {
-  template   = "Joiner_curve2_tech",
+  template   = "Joiner_curve2",
   map        = "MAP02",
+  theme = "tech",
 
   sector_1  = { [0]=50, [1]=10, [2]=5, [3]=5, [8]=15, [12]=5, [13]=5 },
-
+  flat_CEIL3_5 = { CEIL3_5=50, FLAT5_4=50, FLAT23=50, FLOOR4_8=50, FLOOR5_1=50, FLAT1=50, FLAT3=50,
+                 FLAT4=50, FLAT19=50, FLOOR0_1=50, FLOOR0_2=50, FLOOR0_3=50, FLOOR0_5=50, FLOOR0_7=50,
+                 FLOOR1_6=50, FLOOR3_3=50, FLOOR4_1=50, FLOOR4_6=50, FLAT14=50, FLOOR7_1=50 },
 }
