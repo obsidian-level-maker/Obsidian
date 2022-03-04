@@ -214,7 +214,7 @@ bool Doom::StartWAD(std::filesystem::path filename) {
     ClearSections();
 
     qLump_c *info = BSP_CreateInfoLump();
-    WriteLump("OBLIGDAT", info);
+    WriteLump("OBSIDATA", info);
     delete info;
 
     return true;  // OK
