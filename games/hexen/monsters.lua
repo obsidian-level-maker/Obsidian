@@ -168,7 +168,7 @@ HEXEN.MONSTERS =
 
   -- FIXME: proper damage and attack fields
 
-  Wyvern =
+  --[[Wyvern =
   {
     id = 254,
     r = 20,
@@ -178,7 +178,7 @@ HEXEN.MONSTERS =
     health = 640,
     damage = 60,
     float = true
-  },
+  },]]--
 
   Heresiarch =
   {

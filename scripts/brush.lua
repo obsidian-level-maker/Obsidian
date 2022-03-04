@@ -1039,10 +1039,6 @@ function brushlib.collect_flags(coords)
     if GAME.format == "doom" then
       local flags = C.flags or 0
 
-      if C.special and GAME.sub_format == "hexen" then
-        -- I think I already have flags handled, but leave this here in case - Dasho
-      end
-
       for name,value in pairs(DOOM_LINE_FLAGS) do
         if C[name] and C[name] ~= 0 then
           flags = bit.bor(flags, value)

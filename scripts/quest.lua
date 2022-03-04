@@ -2096,14 +2096,6 @@ function Quest_add_weapons()
   dump_weapons()
 end
 
-
-
-function Quest_do_hexen_weapons()
-  -- TODO
-end
-
-
-
 function Quest_nice_items()
   --
   -- Decides which nice items, including powerups, to use on this level,
@@ -3398,12 +3390,7 @@ function Quest_make_quests()
 
   Quest_room_themes()
 
-  -- special weapon handling for HEXEN and HEXEN II
-  if PARAM.hexen_weapons then
-    Quest_do_hexen_weapons()
-  else
-    Quest_add_weapons()
-  end
+  Quest_add_weapons()
 
   Quest_nice_items()
 
