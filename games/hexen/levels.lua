@@ -242,20 +242,25 @@ function HEXEN.get_levels()
       end
       if PARAM.gotcha_frequency == "4epi" then -- I dunno, the last 4 out of 6 levels in an episode? - Dasho
         if ep_index == 1 then
-          if map > 2 and map <= 6
-          LEV.is_procedural_gotcha = true
+          if map > 2 and map <= 6 then
+            LEV.is_procedural_gotcha = true
+          end
         elseif ep_index == 2 then
-          if map > 8 and map <= 12
-          LEV.is_procedural_gotcha = true
+          if map > 8 and map <= 12 then
+            LEV.is_procedural_gotcha = true
+          end
         elseif ep_index == 3 then
-          if map > 14 and map <= 18
-          LEV.is_procedural_gotcha = true
+          if map > 14 and map <= 18 then
+            LEV.is_procedural_gotcha = true
+          end
         elseif ep_index == 4 then
-          if map > 20 and map <= 24
-          LEV.is_procedural_gotcha = true
+          if map > 20 and map <= 24 then
+            LEV.is_procedural_gotcha = true
+          end
         elseif ep_index == 5 then
-          if map > 26 and map <= 30
-          LEV.is_procedural_gotcha = true
+          if map > 26 and map <= 30 then
+            LEV.is_procedural_gotcha = true
+          end
         end
       end
 
