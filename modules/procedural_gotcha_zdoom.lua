@@ -1236,7 +1236,7 @@ PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TRAITS =
 }
 
 function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.game_specific_hpbar()
-    if OB_CONFIG.game == "heretic" then
+    if OB_CONFIG.game == "heretic" or OB_CONFIG.game == "hexen" then
      PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TEMPLATES.BAR = [[if(bossFound)
         {
         ThinkerIterator BossFinder = ThinkerIterator.Create("bossController");

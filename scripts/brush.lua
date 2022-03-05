@@ -365,14 +365,55 @@ function Trans.entity(name, x, y, z, props)
     props.spawnflags = (props.spawnflags or 0) + info.spawnflags
   end
 
-  local ent = table.copy(props)
-
-  ent.id = info.id
-  ent.x  = x
-  ent.y  = y
-  ent.z  = z
-
-  raw_add_entity(ent)
+  if OB_CONFIG.game == "hexen" then
+    if info.id == 7000 or info.id == 7001 then -- Place all weapon variants with appropriate per-class flags
+      local wep
+      for _,v in pairs(GAME.WEAPONS) do
+        if info.id == v.id then
+          wep = v
+        end
+      end
+      for _,v in pairs(wep.class_weapon_ids) do
+        local wep_ent = table.copy(props)
+        wep_ent.id = v.id
+        wep_ent.flags = v.flags 
+        wep_ent.x  = x
+        wep_ent.y  = y
+        wep_ent.z  = z
+        raw_add_entity(wep_ent)
+      end
+    elseif info.id == 7002 or info.id == 7003 or info.id == 7004 then -- Place all ultimate weapon pieces with appropriate per-class flags
+      local piece
+      for _,v in pairs(GAME.NICE_ITEMS) do
+        if info.id == v.id then
+          piece = v
+        end
+      end
+      for _,v in pairs(piece.weapon_piece_ids) do
+        local piece_ent = table.copy(props)
+        piece_ent.id = v.id
+        piece_ent.flags = v.flags
+        piece_ent.x  = x
+        piece_ent.y  = y
+        piece_ent.z  = z
+        raw_add_entity(piece_ent)
+      end
+    else
+      local ent = table.copy(props)
+      ent.id = info.id
+      ent.x  = x
+      ent.y  = y
+      ent.z  = z
+      raw_add_entity(ent)
+    end
+  else
+    local ent = table.copy(props)
+    ent.id = info.id
+    ent.x  = x
+    ent.y  = y
+    ent.z  = z
+    raw_add_entity(ent)
+  end
 end
 
 

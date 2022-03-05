@@ -1212,11 +1212,14 @@ int CSG_add_entity(lua_State *L) {
     E->y = E->props.getDouble("y");
     E->z = E->props.getDouble("z");
 
+    E->flags = E->props.getInt("flags");
+
     // save a bit of space (and don't write into Q1/2/3 entities lump)
     E->props.Remove("id");
     E->props.Remove("x");
     E->props.Remove("y");
     E->props.Remove("z");
+    E->props.Remove("flags");
 
     all_entities.push_back(E);
 

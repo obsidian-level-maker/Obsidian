@@ -2188,7 +2188,6 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
   local function content_item(chunk)
     local item = assert(chunk.content_item)
-
     if (R.is_start or R.is_hallway) and not chunk.lock then
       -- bare item
       Trans.entity(item, chunk.mx, chunk.my, z1)

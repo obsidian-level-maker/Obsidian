@@ -521,7 +521,11 @@ function GRID_CLASS.solidify_pockets(grid, walk_id, solid_id)
   -- the 'solid_id' parameter is what to set the pockets to,
   -- defaulting to 1.
 
-  assert(walk_id)
+  if SHAPE_GRAMMAR == SHAPES.OBLIGE_5X then -- Testing 5.x case issue fix
+    if not walk_id then return nil end
+  else
+    assert(walk_id)
+  end
 
   solid_id = solid_id or 1
 

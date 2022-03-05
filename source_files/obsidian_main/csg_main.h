@@ -215,6 +215,8 @@ class csg_entity_c {
 
     double x, y, z;
 
+    u16_t flags;
+
     csg_property_set_c props;
 
     // this only used by DOOM Extrafloor code, -1 until known
