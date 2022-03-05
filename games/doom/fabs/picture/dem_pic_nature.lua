@@ -1256,6 +1256,9 @@ PREFABS.Pic_dem_caveirr =
 
   x_fit = "stretch",
   z_fit = { 64,80 },
+
+texture_pack = "armaetus",
+
 }
 
 PREFABS.Pic_dem_caveirr2 =
