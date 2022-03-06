@@ -32,10 +32,12 @@ This is a community continuation of the OBLIGE Level Maker, originally created b
 
 A brief summary of changes:
 
-Basic support added for HacX 1.2, Chex Quest 3, and Harmony.
+Basic support added for HacX 1.2, Chex Quest 3, Harmony, and Hexen.
 
-Experimental support added for Hexen and Strife. Hexen map format is supported; in addition there is a translation layer to convert
+Hexen map format is supported; in addition there is a translation layer to convert
 some Doom-formatted prefabs to Hexen format.
+
+Experimental support added for Strife.
 
 GUI Customization and Theming added
 
