@@ -31,6 +31,7 @@ class UI_Game : public Fl_Group {
    public:
     Fl_Box *heading;
     UI_RChoiceMenu *game;
+    UI_HelpLink *game_help;
     UI_RChoiceMenu *engine;
     UI_HelpLink *engine_help;
     UI_RChoiceMenu *theme;
@@ -61,6 +62,7 @@ class UI_Game : public Fl_Group {
     static void callback_Engine(Fl_Widget *, void *);
     static void callback_Length(Fl_Widget *, void *);
     static void callback_Theme(Fl_Widget *, void *);
+    static void callback_GameHelp(Fl_Widget *, void *);
     static void callback_EngineHelp(Fl_Widget *, void *);
     static void callback_LengthHelp(Fl_Widget *, void *);
     static void callback_ThemeHelp(Fl_Widget *, void *);

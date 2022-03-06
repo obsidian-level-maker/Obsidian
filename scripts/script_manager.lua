@@ -24,7 +24,7 @@
       SCRIPT MANAGER
 ==========================
 The Script Manager is a catch-all for the creation of various
-lumps from different ObAddon modules for better organization.
+lumps from different Obsidian modules for better organization.
 
 The goal is gather all lump data from various modules and create
 the necessary includes/import lines for each, as well as merging
@@ -54,7 +54,7 @@ function ScriptMan_assemble_mapinfo_lump()
 
   local mapinfo_lines
 
-  if OB_CONFIG.game ~= "hexen" then
+  if OB_CONFIG.engine == "zdoom" then
     -- GAMEINFO stuff
     mapinfo_lines = {
         "gameinfo\n",
@@ -93,41 +93,71 @@ function ScriptMan_assemble_mapinfo_lump()
       SCRIPTS.doomednums = "DoomedNums\n" ..
       "{\n" .. SCRIPTS.doomednums .. "}\n"
     end
-
     -- rest of map info lump
     table.insert(mapinfo_lines, SCRIPTS.doomednums)
     table.insert(mapinfo_lines, SCRIPTS.mapinfolump)
+    if OB_CONFIG.game == "hexen" then
+      for _,lev in pairs(GAME.levels) do
+        local mapnum = tonumber(string.sub(lev.name, 4))
+        mapline = "map " .. lev.name .. " \"" .. lev.description .. "\"\n{\n"
+        for k, v in pairs(HEXEN.MAPINFO_MAPS) do
+          if v == mapnum then
+            mapline = mapline .. "levelnum = " .. k .. "\n"
+            goto foundmap
+          end
+        end
+        ::foundmap::
+        mapline = mapline .. "cluster = " .. lev.episode.ep_index .. "\n"
+        mapline = mapline .. "sky1 = \"" .. lev.episode.sky_patch1 .. "\", " .. lev.episode.sky_speed1 / 100 .. "\n"
+        mapline = mapline .. "sky2 = \"" .. lev.episode.sky_patch2 .. "\", " .. lev.episode.sky_speed2 / 100 .. "\n"
+        if lev.episode.lightning_chance then
+          if rand.odds(lev.episode.lightning_chance) then
+            mapline = mapline .. "lightning\n"
+          end
+        end
+        if lev.episode.doublesky then
+          mapline = mapline .. "doublesky\n"
+        end
+        if lev.episode.fadetable then
+          mapline = mapline .. "fadetable = \"fogmap\"\n"
+        end
+        mapline = mapline .. "}\n\n"
+        table.insert(mapinfo_lines, mapline)
+      end
+    end
   else
-    mapinfo_lines = {}
-    for _,lev in pairs(GAME.levels) do
-      local mapnum = tonumber(string.sub(lev.name, 4))
-      mapline = "map " .. mapnum .. " \"" .. lev.description .. "\"\n"
-      for k, v in pairs(HEXEN.MAPINFO_MAPS) do
-        if v == mapnum then
-          mapline = mapline .. "warptrans " .. k .. "\n"
-          goto foundmap
+    if OB_CONFIG.game == "hexen" then
+      mapinfo_lines = {}
+      for _,lev in pairs(GAME.levels) do
+        local mapnum = tonumber(string.sub(lev.name, 4))
+        mapline = "map " .. mapnum .. " \"" .. lev.description .. "\"\n"
+        for k, v in pairs(HEXEN.MAPINFO_MAPS) do
+          if v == mapnum then
+            mapline = mapline .. "warptrans " .. k .. "\n"
+            goto foundmap
+          end
         end
-      end
-      ::foundmap::
-      mapline = mapline .. "cluster " .. lev.episode.ep_index .. "\n"
-      mapline = mapline .. "sky1 " .. lev.episode.sky_patch1 .. "\n"
-      mapline = mapline .. "sky2 " .. lev.episode.sky_patch2 .. "\n"
-      if lev.episode.lightning_chance then
-        if rand.odds(lev.episode.lightning_chance) then
-          mapline = mapline .. "lightning\n"
+        ::foundmap::
+        mapline = mapline .. "cluster " .. lev.episode.ep_index .. "\n"
+        mapline = mapline .. "sky1 " .. lev.episode.sky_patch1 .. " " .. lev.episode.sky_speed1 .. "\n"
+        mapline = mapline .. "sky2 " .. lev.episode.sky_patch2 .. " " .. lev.episode.sky_speed2 .. "\n"
+        if lev.episode.lightning_chance then
+          if rand.odds(lev.episode.lightning_chance) then
+            mapline = mapline .. "lightning\n"
+          end
         end
+        if lev.episode.doublesky then
+          mapline = mapline .. "doublesky\n"
+        end
+        if lev.episode.fadetable then
+          mapline = mapline .. "fadetable fogmap\n"
+        end
+        mapline = mapline .. "\n"
+        table.insert(mapinfo_lines, mapline)
       end
-      if lev.episode.doublesky then
-        mapline = mapline .. "doublesky\n"
-      end
-      if lev.episode.fadetable then
-        mapline = mapline .. "fadetable fogmap\n"
-      end
-      mapline = mapline .. "\n"
-      table.insert(mapinfo_lines, mapline)
     end
   end
-  if #mapinfo_lines > 2  or (OB_CONFIG.game == "hexen" and #mapinfo_lines > 0) then
+  if mapinfo_lines and (#mapinfo_lines > 2  or (OB_CONFIG.engine ~= "zdoom" and #mapinfo_lines > 0)) then
     gui.wad_add_text_lump("MAPINFO", mapinfo_lines)
   end
 end

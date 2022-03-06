@@ -1236,7 +1236,7 @@ PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TRAITS =
 }
 
 function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.game_specific_hpbar()
-    if OB_CONFIG.game == "heretic" then
+    if OB_CONFIG.game == "heretic" or OB_CONFIG.game == "hexen" then
      PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TEMPLATES.BAR = [[if(bossFound)
         {
         ThinkerIterator BossFinder = ThinkerIterator.Create("bossController");
@@ -1597,13 +1597,13 @@ PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.GOTCHA_MAP_SIZES =
 PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.PROC_GOTCHA_CHOICES =
 {
   "final", _("Final Map Only"),
-  "epi",   _("Episodic (MAP11, MAP20, MAP30)"),
-  "2epi",   _("2 per ep (5,11,16,20,25,30)"),
-  "3epi",   _("3 per ep (3,7,11,14,17,20,23,27,30)"),
-  "4epi",   _("4 per ep (3,6,9,11,14,16,18,20,23,26,28,30)"),
+  "epi",   _("Last Level of Episode"),
+  "2epi",   _("Two per Episode"),
+  "3epi",   _("Three per Episode"),
+  "4epi",   _("Four per Episode"),
   "_",     _("_"),
-  "5p",    _("5% Chance, Any Map After MAP04"),
-  "10p",   _("10% Chance, Any Map After MAP04"),
+  "5p",    _("5% Chance, Any Map After Map 4"),
+  "10p",   _("10% Chance, Any Map After Map 4"),
   "all",   _("Everything")
 }
 

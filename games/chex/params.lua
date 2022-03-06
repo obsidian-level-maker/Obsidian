@@ -22,6 +22,8 @@ CHEX3.PARAMETERS =
 
   titlepic_lump   = "TITLEPIC",
   titlepic_format = "patch",
+
+  bex_map_prefix = "HUSTR_",
 }
 
 CHEX3.ACTIONS =

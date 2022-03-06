@@ -24,8 +24,10 @@ HEXEN.EPISODES =
 
     theme = "forest",
     sky_light = 0.65,
-    sky_patch1 = "SKY2 20",
-    sky_patch2 = "SKY3 20",
+    sky_patch1 = "SKY2",
+    sky_speed1 = 20,
+    sky_patch2 = "SKY3",
+    sky_speed2 = 20,
     lightning_chance = 30
   },
 
@@ -35,8 +37,10 @@ HEXEN.EPISODES =
 
     theme = "ice_caves",
     sky_light = 0.75,
-    sky_patch1 = "SKYWALL 0",
-    sky_patch2 = "SKY3 50",
+    sky_patch1 = "SKYWALL",
+    sky_speed1 = 0,
+    sky_patch2 = "SKY3",
+    sky_speed2 = 50,
     doublesky = true
   },
 
@@ -46,8 +50,10 @@ HEXEN.EPISODES =
 
     theme = "fire_steel",
     sky_light = 0.65,
-    sky_patch1 = "SKYWALL 0",
-    sky_patch2 = "SKY4 50",
+    sky_patch1 = "SKYWALL",
+    sky_speed1 = 0,
+    sky_patch2 = "SKY4",
+    sky_speed2 = 50,
     doublesky = true
   },
 
@@ -57,8 +63,10 @@ HEXEN.EPISODES =
 
     theme = "swamp",
     sky_light = 0.60,
-    sky_patch1 = "SKYFOG2 20",
-    sky_patch2 = "SKYFOG 60",
+    sky_patch1 = "SKYFOG2",
+    sky_speed1 = 20,
+    sky_patch2 = "SKYFOG",
+    sky_speed2 = 60,
     doublesky = true,
     fadetable = true
   },
@@ -69,8 +77,10 @@ HEXEN.EPISODES =
 
     theme = "dungeon",
     sky_light = 0.50,
-    sky_patch1 = "SKYWALL 0",
-    sky_patch2 = "SKY1 80",
+    sky_patch1 = "SKYWALL",
+    sky_speed1 = 0,
+    sky_patch2 = "SKY1",
+    sky_speed2 = 80,
     doublesky = true,
   },
 }
@@ -185,7 +195,7 @@ function HEXEN.get_levels()
     table.insert(GAME.levels, LEV)
 
     -- prebuilt levels
-    --[[local pb_name = LEV.name
+    local pb_name = LEV.name
 
     if PARAM.bool_prebuilt_levels == 1 then
       LEV.prebuilt = GAME.PREBUILT_LEVELS[LEV.name]
@@ -193,7 +203,7 @@ function HEXEN.get_levels()
 
     if LEV.prebuilt then
       LEV.name_class = LEV.prebuilt.name_class or "BOSS"
-    end]]--
+    end
 
     -- procedural gotcha management code
 
@@ -215,25 +225,42 @@ function HEXEN.get_levels()
         end
       end
 
-      --every 10 maps
       if PARAM.gotcha_frequency == "epi" then
-        if map == 11 or map == 20 or map == 30 then
+        if map % 6 == 0 then
           LEV.is_procedural_gotcha = true
         end
       end
       if PARAM.gotcha_frequency == "2epi" then
-        if map == 5 or map == 11 or map == 16 or map == 20 or map == 25 or map == 30 then
+        if map % 3 == 0 then
           LEV.is_procedural_gotcha = true
         end
       end
       if PARAM.gotcha_frequency == "3epi" then
-        if map == 3 or map == 7 or map == 11 or map == 14 or map == 17 or map == 20 or map == 23 or map == 27 or map == 30 then
+        if map % 2 == 0 then
           LEV.is_procedural_gotcha = true
         end
       end
-      if PARAM.gotcha_frequency == "4epi" then
-        if map == 3 or map == 6 or map == 9 or map == 11 or map == 14 or map == 16 or map == 18 or map == 20 or map == 23 or map == 26 or map == 28 or map == 30 then
-          LEV.is_procedural_gotcha = true
+      if PARAM.gotcha_frequency == "4epi" then -- I dunno, the last 4 out of 6 levels in an episode? - Dasho
+        if ep_index == 1 then
+          if map > 2 and map <= 6 then
+            LEV.is_procedural_gotcha = true
+          end
+        elseif ep_index == 2 then
+          if map > 8 and map <= 12 then
+            LEV.is_procedural_gotcha = true
+          end
+        elseif ep_index == 3 then
+          if map > 14 and map <= 18 then
+            LEV.is_procedural_gotcha = true
+          end
+        elseif ep_index == 4 then
+          if map > 20 and map <= 24 then
+            LEV.is_procedural_gotcha = true
+          end
+        elseif ep_index == 5 then
+          if map > 26 and map <= 30 then
+            LEV.is_procedural_gotcha = true
+          end
         end
       end
 

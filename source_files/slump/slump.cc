@@ -1102,7 +1102,6 @@ config *get_config(std::filesystem::path filename) {
         if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0) {
             answer->levelcount = 11;
         } else {
-          // Hexen is included in this although I don't think it's accurate. Will fix as Hexen support evolves - Dasho
             answer->levelcount = 9;
         }
     } else {
@@ -1113,8 +1112,6 @@ config *get_config(std::filesystem::path filename) {
         } else if (StringCaseCmp(current_game, "ultdoom") == 0) {
             answer->levelcount = 36;
         } else {
-            // Heretic and Hexen have the same value for this currently, as I used Heretic as a template for Hexen. Will fix
-            // as Hexen support evolves - Dasho
             answer->levelcount = 45;
         }
     }

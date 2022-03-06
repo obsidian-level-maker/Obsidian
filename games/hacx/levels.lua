@@ -71,7 +71,7 @@ function HACX.get_levels()
 
   local EP_NUM = 1
   if MAP_NUM > 11 then EP_NUM = 2 end
-  if MAP_NUM > 30 then EP_NUM = 3 end
+  if MAP_NUM > 21 then EP_NUM = 3 end
 
   -- create episode info...
 
@@ -97,8 +97,8 @@ function HACX.get_levels()
 
     if map > 30 then
       ep_index = 3 ; ep_along = 0.5 ; game_along = 0.5
-    elseif map > 20 then
-      ep_index = 3 ; ep_along = (map - 20) / 10
+    elseif map > 21 then
+      ep_index = 3 ; ep_along = (map - 21) / 10
     elseif map > 11 then
       ep_index = 2 ; ep_along = (map - 11) / 9
     else
@@ -144,7 +144,7 @@ function HACX.get_levels()
     -- the 'dist_to_end' value is used for Boss monster decisions
     if map >= 26 and map <= 29 then
       LEV.dist_to_end = 30 - map
-    elseif map == 11 or map == 20 then
+    elseif map == 11 or map == 21 then
       LEV.dist_to_end = 1
     elseif map == 16 or map == 23 then
       LEV.dist_to_end = 2
@@ -183,22 +183,22 @@ function HACX.get_levels()
 
       --every 10 maps
       if PARAM.gotcha_frequency == "epi" then
-        if map == 11 or map == 20 or map == 30 then
+        if map == 11 or map == 21 or map == 30 then
           LEV.is_procedural_gotcha = true
         end
       end
       if PARAM.gotcha_frequency == "2epi" then
-        if map == 5 or map == 11 or map == 16 or map == 20 or map == 25 or map == 30 then
+        if map == 5 or map == 11 or map == 16 or map == 21 or map == 25 or map == 30 then
           LEV.is_procedural_gotcha = true
         end
       end
       if PARAM.gotcha_frequency == "3epi" then
-        if map == 3 or map == 7 or map == 11 or map == 14 or map == 17 or map == 20 or map == 23 or map == 27 or map == 30 then
+        if map == 3 or map == 7 or map == 11 or map == 14 or map == 17 or map == 21 or map == 23 or map == 27 or map == 30 then
           LEV.is_procedural_gotcha = true
         end
       end
       if PARAM.gotcha_frequency == "4epi" then
-        if map == 3 or map == 6 or map == 9 or map == 11 or map == 14 or map == 16 or map == 18 or map == 20 or map == 23 or map == 26 or map == 28 or map == 30 then
+        if map == 3 or map == 6 or map == 9 or map == 11 or map == 14 or map == 16 or map == 18 or map == 21 or map == 23 or map == 26 or map == 28 or map == 30 then
           LEV.is_procedural_gotcha = true
         end
       end

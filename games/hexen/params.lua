@@ -21,10 +21,7 @@
 
 HEXEN.PARAMETERS =
 {
-  -- special logic for Hexen weapon system
-  --hexen_weapons = true,
-
-  teleporters = false,
+  teleporters = true,
 
   jump_height = 66,
 
@@ -40,6 +37,8 @@ HEXEN.PARAMETERS =
   titlepic_lump   = "TITLE",
   titlepic_format = "raw",
 
+  interpic_lump   = "INTERPIC",
+  interpic_format = "raw",
 }
 
 HEXEN.ACTIONS =

@@ -64,6 +64,9 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
     game->textcolor(FONT2_COLOR);
     game->selection_color(SELECTION);
     game->callback(callback_Game, this);
+    game_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch);
+    game_help->labelfont(font_style);
+    game_help->callback(callback_GameHelp, this);
 
     cy += y_step;
 
@@ -160,6 +163,22 @@ void UI_Game::callback_Theme(Fl_Widget *w, void *data) {
     ob_set_config("theme", that->theme->GetID());
 }
 
+void UI_Game::callback_GameHelp(Fl_Widget *w, void *data) {
+    fl_cursor(FL_CURSOR_DEFAULT);
+    Fl_Window *win = new Fl_Window(640, 480, "Engine");
+    Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
+    disp->buffer(buff);
+    disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+    win->resizable(*disp);
+    win->hotspot(0, 0, 0);
+    win->set_modal();
+    win->show();
+    buff->text(
+        "The following games will have gameplay that differs from the original IWADs:\n\n\
+Hexen: Game progression is linear and episodic. There are no hubs present.");
+}
+
 void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
     fl_cursor(FL_CURSOR_DEFAULT);
     Fl_Window *win = new Fl_Window(640, 480, "Engine");
@@ -175,7 +194,7 @@ void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
         "Available Engines:\n\n\
 ZDoom Family: L/G/ZDoom, Zandronum, and similar engines that use ZDoom as a base.\n\n\
 Vanilla DOOM: Doom with its original engine limits. This option will use SLUMP as the map builder.\n\n\
-Limit Removing: Any engine that raises the limits of the original Doom to prevent crashes.\n\n\
+Limit Removing: Any engine that raises the limits of the original game to prevent crashes.\n\n\
 BOOM Compatible: Engines compatible with Boom that are able to use the entire suite of Boom types and features.\n\n\
 PrBoom Compatible: Boom-compatible, but also capable of using extended nodes.\n\n\
 EDGE-Classic: Boom compatible, plus additional specials and other advanced features.\n\n\

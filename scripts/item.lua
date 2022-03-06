@@ -132,7 +132,6 @@ end
 
 function Player_give_room_stuff(R)
   -- give weapons, plus any ammo they come with
-  --if not PARAM.hexen_weapons then
     for _,name in pairs(R.weapons) do
       Player_give_weapon(name)
 
@@ -145,7 +144,6 @@ function Player_give_room_stuff(R)
 
       EPISODE.seen_weapons[name] = 1
     end
-  --end
 
   -- take nice items into account too (except for secrets)
   if not R.is_secrets then
@@ -381,10 +379,7 @@ function Player_weapon_palettes()
   local function gen_palette(got_weaps)
     local total = table.size(got_weaps)
 
-    -- TODO: support Hexen
-    --[[if total < 2 or PARAM.hexen_weapons then
-      return {}
-    end]]--
+    if total < 2 then return {} end
 
     local pal = {}
 

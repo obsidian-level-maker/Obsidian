@@ -648,7 +648,6 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
             } else {
                 thing.height = LE_S16(h);
             }
-            //thing.height = LE_S16(h);
             thing.type = LE_U16(type);
             thing.angle = LE_S16(angle);
             thing.options = LE_U16(options);
@@ -671,7 +670,6 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
             } else {
                 textmap_lump->Printf("\theight = %f;\n", (double)h);
             }
-            //textmap_lump->Printf("\theight = %f;\n", (double)h);
             textmap_lump->Printf("\ttype = %d;\n", type);
             textmap_lump->Printf("\tangle = %d;\n", angle);
             std::bitset<16> udmf_flags(options);
@@ -794,7 +792,7 @@ static bool BuildNodes(std::filesystem::path filename) {
         }
     }
 
-    // Is this really the best way to do this at the moment? - Dasho
+    // Replace this with a Lua call at some point, maybe ob_get_param - Dasho
     int map_nums;
     std::string wadlength = ob_get_param("length");
     std::string current_game = ob_get_param("game");
@@ -805,26 +803,36 @@ static bool BuildNodes(std::filesystem::path filename) {
     } else if (StringCaseCmp(wadlength, "episode") == 0) {
         if (StringCaseCmp(current_game, "doom2") == 0 ||
             StringCaseCmp(current_game, "plutonia") == 0 ||
-            StringCaseCmp(current_game, "tnt") == 0) {
+            StringCaseCmp(current_game, "tnt") == 0 ||
+            StringCaseCmp(current_game, "hacx") == 0 ||
+            StringCaseCmp(current_game, "harmony") == 0 ||
+            StringCaseCmp(current_game, "strife") == 0) {
             map_nums = 11;
+        } else if (StringCaseCmp(current_game, "hexen") == 0) {
+            map_nums = 6;
+        } else if (StringCaseCmp(current_game, "chex3") == 0) {
+            map_nums = 5;
         } else {
-            // Hexen is included in this although I don't think it's accurate.
-            // Will fix as Hexen support evolves - Dasho
             map_nums = 9;
         }
     } else {
         if (StringCaseCmp(current_game, "doom2") == 0 ||
             StringCaseCmp(current_game, "plutonia") == 0 ||
-            StringCaseCmp(current_game, "tnt") == 0) {
+            StringCaseCmp(current_game, "tnt") == 0 ||
+            StringCaseCmp(current_game, "hacx") == 0 || 
+            StringCaseCmp(current_game, "harmony") == 0) {
             map_nums = 32;
         } else if (StringCaseCmp(current_game, "doom1") == 0) {
             map_nums = 27;
         } else if (StringCaseCmp(current_game, "ultdoom") == 0) {
             map_nums = 36;
+        } else if (StringCaseCmp(current_game, "hexen") == 0) {
+            map_nums = 30;
+        } else if (StringCaseCmp(current_game, "chex3") == 0) {
+            map_nums = 15;
+        } else if (StringCaseCmp(current_game, "strife") == 0) {
+            map_nums = 33;
         } else {
-            // Heretic and Hexen have the same value for this currently, as I
-            // used Heretic as a template for Hexen. Will fix as Hexen support
-            // evolves - Dasho
             map_nums = 45;
         }
     }

@@ -498,8 +498,6 @@ OB_MODULES["fauna_module"] =
 
   label = _("GZDoom: Fauna"),
 
---  game = "doomish",
-
   side = "left",
   priority = 68,
 

@@ -2840,7 +2840,11 @@ function Area_create_rooms()
   gui.at_level(LEVEL.name .. " (Shapes)", LEVEL.id, #GAME.levels)
 
   if PARAM.float_oblige5x_grammar and rand.odds(PARAM.float_oblige5x_grammar) then
-    SHAPE_GRAMMAR = SHAPES.OBLIGE_5X
+    if LEVEL.is_procedural_gotcha and PARAM.bool_gotcha_boss_fight == 1 then
+      SHAPE_GRAMMAR = SHAPES.OBSIDIAN
+    else
+      SHAPE_GRAMMAR = SHAPES.OBLIGE_5X
+    end
   else
     SHAPE_GRAMMAR = SHAPES.OBSIDIAN
   end

@@ -39,26 +39,7 @@ HEXEN.ENTITIES =
   k_swamp   = { id=8039 },  -- KEYA
   k_castle  = { id=8200 },  -- KEYB
 
-  -- weapons
-  c_staff   = { id=10,  r=20, h=16 },
-  c_fire    = { id=8009,r=20, h=16 },
-  --c1_shaft  = { id=20,  r=20, h=16 },
-  --c2_cross  = { id=19,  r=20, h=16 },
-  --c3_arc    = { id=18,  r=20, h=16 },
-
-  f_axe     = { id=8010,r=20, h=16 },
-  f_hammer  = { id=123, r=20, h=16 },
-  --f1_hilt   = { id=16,  r=20, h=16 },
-  --f2_cross  = { id=13,  r=20, h=16 },
-  --f3_blade  = { id=12,  r=20, h=16 },
-
-  m_cone    = { id=53,  r=20, h=16 },
-  m_blitz   = { id=8040,r=20, h=16 },
-  --m1_stick  = { id=23,  r=20, h=16 },
-  --m2_stub   = { id=22,  r=20, h=16 },
-  --m3_skull  = { id=21,  r=20, h=16 },
-
-  -- artifacts
+    -- artifacts
   wings = { id=83 },
   chaos = { id=36 },
   torch = { id=33 },
@@ -205,22 +186,10 @@ HEXEN.GENERIC_REQS =
 
 HEXEN.PLAYER_MODEL =
 {
-  fighter =
+  avatar =
   {
-    stats   = { health=0 },
-    weapons = { f_gaunt=1 },
-  },
-
-  cleric =
-  {
-    stats   = { health=0 },
-    weapons = { c_mace=1 },
-  },
-
-  mage =
-  {
-    stats   = { health=0 },
-    weapons = { m_wand=1 },
-  },
+    stats = { health=0 },
+    weapons = { h_weapon_one=1 }
+  }
 }
 
