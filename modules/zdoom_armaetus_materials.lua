@@ -559,6 +559,7 @@ ARMAETUS_MATERIALS = {
   ROK24 = { t="ROK24", f="RROCK03" },
   ROK25 = { t="ROK25", f="RROCK17" },
   ROK26 = { t="ROK26", f="RROCK16" },
+  ROKGRN = { t="ROKGRN", f="GRENFLOR" }, -- composite of various green cliff textures
   TNROK1 = { t="TNROK1", f="RROCK09" }, --TANROCK4,
   TNROK2 = { t="TNROK2", f="RROCK03" }, --TANROCK5,
 
