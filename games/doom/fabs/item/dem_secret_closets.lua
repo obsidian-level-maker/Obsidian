@@ -969,7 +969,7 @@ PREFABS.Item_secret_hellmachine2_closet =
   theme = "hell",
   env = "!nature",
 
-  prob  = 100,
+  prob  = 30,
 
   key   = "secret",
 
