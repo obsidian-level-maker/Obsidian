@@ -9,7 +9,7 @@ PREFABS.Locked_joiner_key1_tall =
 
   prob   = 100,
 
-  key    = "k_one",
+  key    = "k_red",
   where  = "seeds",
   shape  = "I",
 
@@ -24,52 +24,25 @@ PREFABS.Locked_joiner_key1_tall =
 
   nearby_h = 160,
 }
-
 
 PREFABS.Locked_joiner_key2_tall =
 {
-  file   = "joiner/key_tall.wad",
-  map    = "MAP02",
+  template = "Locked_joiner_key1_tall",
 
-  prob   = 100,
+  key = "k_blue"
 
-  key    = "k_two",
-  where  = "seeds",
-  shape  = "I",
+  tex_DOORRED = "DOORBLU"
 
-  seed_w = 1,
-  seed_h = 2,
-
-  deep   = 16,
-  over   = 16,
-
-  x_fit  = "frame",
-  y_fit  = "frame",
-
-  nearby_h = 160,
+  line_33 = 32
 }
-
 
 PREFABS.Locked_joiner_key3_tall =
 {
-  file   = "joiner/key_tall.wad",
-  map    = "MAP03",
+  template = "Locked_joiner_key1_tall",
 
-  prob   = 100,
+  key = "k_yellow"
 
-  key    = "k_three",
-  where  = "seeds",
-  shape  = "I",
+  tex_DOORRED = "DOORYEL"
 
-  seed_w = 1,
-  seed_h = 2,
-
-  deep   = 16,
-  over   = 16,
-
-  x_fit  = "frame",
-  y_fit  = "frame",
-
-  nearby_h = 160,
+  line_33 = 34
 }
-
