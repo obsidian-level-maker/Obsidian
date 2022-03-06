@@ -2589,7 +2589,7 @@ ARMAETUS_ROOM_THEMES =
       CRGRSWLL = 5,
       CRHRTWLL = 5,
   
-      GRNSTONE = 20,
+      ROKGRN = 20,
       GREEN02 = 15,
       GREEN03 = 15,
     },
@@ -5509,7 +5509,7 @@ ARMAETUS_THEMES =
       Skybox_city_bridge_EPIC = 50,
       Skybox_g99_hell_tower_EPIC = 15,
       Skybox_urban_cyber_EPIC = 50,
-      Skybox_char_EPIC = 35,
+      Skybox_char_EPIC = 30,
     },
   },
 
@@ -5925,7 +5925,7 @@ ARMAETUS_THEMES =
       Skybox_city_bridge_EPIC = 15,
       Skybox_g99_hell_tower_EPIC = 50,
       Skybox_city_hell_bloodfalls_EPIC = 50,
-      Skybox_char_EPIC = 35,
+      Skybox_char_EPIC = 50,
     },
   },
 }

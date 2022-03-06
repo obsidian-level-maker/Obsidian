@@ -29,9 +29,9 @@ PREFABS.Locked_joiner_key2_tall =
 {
   template = "Locked_joiner_key1_tall",
 
-  key = "k_blue"
+  key = "k_blue",
 
-  tex_DOORRED = "DOORBLU"
+  tex_DOORRED = "DOORBLU",
 
   line_33 = 32
 }
@@ -40,9 +40,9 @@ PREFABS.Locked_joiner_key3_tall =
 {
   template = "Locked_joiner_key1_tall",
 
-  key = "k_yellow"
+  key = "k_yellow",
 
-  tex_DOORRED = "DOORYEL"
+  tex_DOORRED = "DOORYEL",
 
   line_33 = 34
 }
