@@ -792,7 +792,7 @@ static bool BuildNodes(std::filesystem::path filename) {
         }
     }
 
-    // Is this really the best way to do this at the moment? - Dasho
+    // Replace this with a Lua call at some point, maybe ob_get_param - Dasho
     int map_nums;
     std::string wadlength = ob_get_param("length");
     std::string current_game = ob_get_param("game");
@@ -803,7 +803,10 @@ static bool BuildNodes(std::filesystem::path filename) {
     } else if (StringCaseCmp(wadlength, "episode") == 0) {
         if (StringCaseCmp(current_game, "doom2") == 0 ||
             StringCaseCmp(current_game, "plutonia") == 0 ||
-            StringCaseCmp(current_game, "tnt") == 0) {
+            StringCaseCmp(current_game, "tnt") == 0 ||
+            StringCaseCmp(current_game, "hacx") == 0 ||
+            StringCaseCmp(current_game, "harmony") == 0 ||
+            StringCaseCmp(current_game, "strife") == 0) {
             map_nums = 11;
         } else if (StringCaseCmp(current_game, "hexen") == 0) {
             map_nums = 6;
@@ -815,7 +818,9 @@ static bool BuildNodes(std::filesystem::path filename) {
     } else {
         if (StringCaseCmp(current_game, "doom2") == 0 ||
             StringCaseCmp(current_game, "plutonia") == 0 ||
-            StringCaseCmp(current_game, "tnt") == 0) {
+            StringCaseCmp(current_game, "tnt") == 0 ||
+            StringCaseCmp(current_game, "hacx") == 0 || 
+            StringCaseCmp(current_game, "harmony") == 0) {
             map_nums = 32;
         } else if (StringCaseCmp(current_game, "doom1") == 0) {
             map_nums = 27;
@@ -825,6 +830,8 @@ static bool BuildNodes(std::filesystem::path filename) {
             map_nums = 30;
         } else if (StringCaseCmp(current_game, "chex3") == 0) {
             map_nums = 15;
+        } else if (StringCaseCmp(current_game, "strife") == 0) {
+            map_nums = 33;
         } else {
             map_nums = 45;
         }
