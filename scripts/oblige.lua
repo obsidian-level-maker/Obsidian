@@ -1401,6 +1401,8 @@ function ob_default_filename()
         levelcount = "11"
       elseif OB_CONFIG.game == "hexen" then
         levelcount = "6"
+      elseif OB_CONFIG.game == "chex3" then
+        levelcount = "5"
       else
         levelcount = "9"
       end

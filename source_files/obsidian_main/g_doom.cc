@@ -807,6 +807,8 @@ static bool BuildNodes(std::filesystem::path filename) {
             map_nums = 11;
         } else if (StringCaseCmp(current_game, "hexen") == 0) {
             map_nums = 6;
+        } else if (StringCaseCmp(current_game, "chex3") == 0) {
+            map_nums = 5;
         } else {
             map_nums = 9;
         }
@@ -821,6 +823,8 @@ static bool BuildNodes(std::filesystem::path filename) {
             map_nums = 36;
         } else if (StringCaseCmp(current_game, "hexen") == 0) {
             map_nums = 30;
+        } else if (StringCaseCmp(current_game, "chex3") == 0) {
+            map_nums = 15;
         } else {
             map_nums = 45;
         }

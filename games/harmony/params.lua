@@ -19,6 +19,8 @@ HARMONY.PARAMETERS =
 
   titlepic_lump   = "TITLEPIC",
   titlepic_format = "patch",
+
+  bex_map_prefix = "HUSTR_",
 }
 
 HARMONY.ACTIONS =

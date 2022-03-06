@@ -157,7 +157,7 @@ function ScriptMan_assemble_mapinfo_lump()
       end
     end
   end
-  if #mapinfo_lines > 2  or (OB_CONFIG.engine ~= "zdoom" and #mapinfo_lines > 0) then
+  if mapinfo_lines and (#mapinfo_lines > 2  or (OB_CONFIG.engine ~= "zdoom" and #mapinfo_lines > 0)) then
     gui.wad_add_text_lump("MAPINFO", mapinfo_lines)
   end
 end
