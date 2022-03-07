@@ -107,6 +107,7 @@ HEXEN.ENTITIES =
   tree1 = { id=25, r=16, h=128 },
   tree2 = { id=26, r=12, h=180 },
   tree3 = { id=27, r=12, h=160 },
+  burnt_stump = { id=28, r=12, h=128 },
 
   lean_tree1 = { id=78,  r=16, h=180 },
   lean_tree2 = { id=79,  r=16, h=180 },

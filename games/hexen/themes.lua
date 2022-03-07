@@ -139,18 +139,6 @@ HEXEN.THEMES =
       k_steel = 50,
     },
 
-    --[[hub_keys = 
-    {
-      k_castle = 50,
-      k_dungeon = 50,
-      k_emerald = 50,
-      k_fire = 20,
-      k_horn = 50,
-      k_rusty = 50,
-      k_silver = 50,
-      k_swamp = 50,
-    },]]--   
-
     skyboxes =
     {
 
@@ -314,7 +302,35 @@ HEXEN.THEMES =
 
       monster_prefs =
       {
-        wendigo = 0
+        wendigo = 0,
+        serpent1 = 0,
+        serpent2 = 0
+      },
+
+      cave_torches =
+      {
+        twine_torch = 50,
+      },
+  
+      cliff_trees =
+      {
+        lean_tree1 = 80,
+        lean_tree2 = 80,
+      },
+  
+      park_decor =
+      {
+        lean_tree1 = 80,
+        lean_tree2 = 80,
+      },
+
+      sky_mapinfo =
+      {
+        sky_patch1 = "SKYWALL",
+        sky_speed1 = 0,
+        sky_patch2 = "SKY1",
+        sky_speed2 = 40,
+        doublesky = true,
       },
 
       steps_mat = "F_011",
@@ -452,12 +468,38 @@ HEXEN.THEMES =
 
       monster_prefs =
       {
-        wendigo = 0
+        wendigo = 0,
+        serpent1 = 0,
+        serpent2 = 0
       },
 
       liquids =
       {
         lava   = 10,
+      },
+
+      cave_torches =
+      {
+        twine_torch = 50,
+      },
+  
+      cliff_trees =
+      {
+        burnt_stump = 80,
+      },
+  
+      park_decor =
+      {
+        burnt_stump = 80,
+      },
+
+      sky_mapinfo =
+      {
+        sky_patch1 = "SKYWALL",
+        sky_speed1 = 0,
+        sky_patch2 = "SKY4",
+        sky_speed2 = 25,
+        doublesky = true
       },
 
       steps_mat = "F_013",
@@ -587,6 +629,42 @@ HEXEN.THEMES =
       liquids =
       {
         icefloor   = 10,
+      },
+
+      monster_prefs =
+      {
+        serpent1 = 0,
+        serpent2 = 0
+      },
+
+      cave_torches =
+      {
+        twine_torch = 50,
+      },
+  
+      cliff_trees =
+      {
+        ice_stal_F_big    = 80,
+        ice_stal_F_medium = 80,
+        ice_stal_F_small  = 80,
+        ice_stal_F_tiny = 80,
+      },
+  
+      park_decor =
+      {
+        ice_stal_F_big    = 80,
+        ice_stal_F_medium = 80,
+        ice_stal_F_small  = 80,
+        ice_stal_F_tiny = 80,
+      },
+
+      sky_mapinfo =
+      {
+        sky_patch1 = "SKY3",
+        sky_speed1 = 0,
+        sky_patch2 = "SKY2",
+        sky_speed2 = 25,
+        doublesky = true
       },
 
       steps_mat = "F_039",
@@ -734,6 +812,33 @@ HEXEN.THEMES =
         muck   = 10,
       },
 
+      cave_torches =
+      {
+        twine_torch = 50,
+      },
+  
+      cliff_trees =
+      {
+        tree2 = 80,
+        tree3 = 80,
+      },
+  
+      park_decor =
+      {
+        tree2 = 80,
+        tree3 = 80,
+      },
+
+      sky_mapinfo =
+      {
+        sky_patch1 = "SKYFOG2",
+        sky_speed1 = 10,
+        sky_patch2 = "SKYFOG",
+        sky_speed2 = 30,
+        doublesky = true,
+        fadetable = true
+      },
+
       steps_mat = "F_019",
 
       post_mat  = "_STRUCT",
@@ -869,7 +974,33 @@ HEXEN.THEMES =
 
       monster_prefs =
       {
-        wendigo = 0
+        wendigo = 0,
+        serpent1 = 0,
+        serpent2 = 0
+      },
+
+      cave_torches =
+      {
+        twine_torch = 50,
+      },
+  
+      cliff_trees =
+      {
+        xmas_tree = 80,
+      },
+  
+      park_decor =
+      {
+        xmas_tree = 80,
+      },
+
+      sky_mapinfo =
+      {
+        sky_patch1 = "SKY2",
+        sky_speed1 = 10,
+        sky_patch2 = "SKY3",
+        sky_speed2 = 10,
+        lightning_chance = 30
       },
 
       steps_mat = "F_055",

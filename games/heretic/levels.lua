@@ -51,7 +51,7 @@ HERETIC.EPISODES =
     ep_index = 3,
 
     theme = "dome",
-    boss = "D_sparil",
+    boss = "D_Sparil",
     sky_patch = "SKY3",
     dark_prob = 10,
 --    sky_light = 0.75,
