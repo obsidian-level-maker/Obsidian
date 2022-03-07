@@ -217,6 +217,9 @@ int wadfab_get_thing_hexen(lua_State *L) {
     lua_pushinteger(L, TH->options);
     lua_setfield(L, -2, "flags");
 
+    lua_pushinteger(L, TH->tid);
+    lua_setfield(L, -2, "tid");
+
     lua_pushinteger(L, TH->special);
     lua_setfield(L, -2, "special");
 

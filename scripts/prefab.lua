@@ -2352,7 +2352,14 @@ function Fab_replacements(fab)
     -- (which prevents sending it to the CSG)
     E.id = check_thing(E.id)
     if OB_CONFIG.game == "hexen" then
-      if not fab.native_hexen then E.special = 0 end
+      if not fab.native_hexen then 
+        E.tid = 0
+        E.special = 0
+      else
+        if E.tid ~= 0 then
+          E.tid = check_tag(E.tid)
+        end
+      end
       if E.id == 14 then -- Teleporter destination fix
         E.tid = fab.in_tag
       end
