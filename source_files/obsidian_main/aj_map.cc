@@ -336,6 +336,8 @@ bool LoadThingsHexen() {
         thing->options = LE_U16(raw->options);
         thing->angle = LE_S16(raw->angle);
 
+        thing->special = LE_U16(raw->special);
+
         thing->args = raw->arg;
     }
 

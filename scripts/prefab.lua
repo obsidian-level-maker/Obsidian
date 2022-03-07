@@ -2352,7 +2352,6 @@ function Fab_replacements(fab)
     -- (which prevents sending it to the CSG)
     E.id = check_thing(E.id)
     if OB_CONFIG.game == "hexen" then
-      E.special = 0 -- Don't think we use any thing specials at this point - Dasho
       if E.id == 14 then -- Teleporter destination fix
         E.tid = fab.in_tag
       end

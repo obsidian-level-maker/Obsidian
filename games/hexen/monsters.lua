@@ -229,7 +229,7 @@ HEXEN.MONSTERS =
     damage = 336, -- 3 * Bloodscourge projectile/blasts
   },
 
-  Korax =
+  --[[Korax =
   {
     id = 10200,
     r = 66,
@@ -239,6 +239,6 @@ HEXEN.MONSTERS =
     attack = "missile",
     health = 5000,
     damage = 500,
-  },
+  },]]--
 }
 
