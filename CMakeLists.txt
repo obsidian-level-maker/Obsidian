@@ -35,7 +35,7 @@ endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(CMAKE_CXX_CLANG_TIDY clang-tidy)
-  file(GLOB ALL_SOURCES # "source_files/obsidian_main/*.cc"
+  file(GLOB ALL_SOURCES "source_files/obsidian_main/*.cc"
        "source_files/obsidian_main/*.h"
   )
   add_custom_target(
