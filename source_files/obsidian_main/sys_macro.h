@@ -21,6 +21,8 @@
 #ifndef SYS_MACRO_H_
 #define SYS_MACRO_H_
 
+#include <type_traits>
+
 // basic macros
 
 // smallest distance between two points before being considered equal

@@ -17,6 +17,11 @@
 #ifndef __AJPOLY_WAD_H__
 #define __AJPOLY_WAD_H__
 
+#include <cstdio>
+#include <cstring>
+#include <vector>
+#include "sys_type.h"
+
 // directory entry
 
 class lump_c {
