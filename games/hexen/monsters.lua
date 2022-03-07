@@ -73,6 +73,7 @@ HEXEN.MONSTERS =
     health = 90,
     damage = 10,
     attack = "melee",
+    liquid_only = true
   },
 
   serpent2 =
@@ -85,6 +86,7 @@ HEXEN.MONSTERS =
     health = 90,
     damage = 16,
     attack = "missile",
+    liquid_only = true
   },
   
   wendigo =  -- iceguy
@@ -98,7 +100,6 @@ HEXEN.MONSTERS =
     health = 120,
     damage = 25,
     attack = "missile",
-    only_themes = { "ice_caves" }
   },
 
   demon1 =

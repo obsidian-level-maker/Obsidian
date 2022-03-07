@@ -312,6 +312,11 @@ HEXEN.THEMES =
         muck   = 20,
       },
 
+      monster_prefs =
+      {
+        wendigo = 0
+      },
+
       steps_mat = "F_011",
 
       post_mat  = "_STRUCT",
@@ -443,6 +448,11 @@ HEXEN.THEMES =
         STEEL06=15,
         STEEL07=5,
         STEEL08=5,
+      },
+
+      monster_prefs =
+      {
+        wendigo = 0
       },
 
       liquids =
@@ -714,6 +724,11 @@ HEXEN.THEMES =
         WASTE02=5,
       },
 
+      monster_prefs =
+      {
+        wendigo = 0
+      },
+
       liquids =
       {
         muck   = 10,
@@ -850,6 +865,11 @@ HEXEN.THEMES =
       {
         muck   = 10,
         water  = 10
+      },
+
+      monster_prefs =
+      {
+        wendigo = 0
       },
 
       steps_mat = "F_055",

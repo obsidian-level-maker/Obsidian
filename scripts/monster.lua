@@ -1123,7 +1123,7 @@ function Monster_fill_room(R)
 
     local count = 0
 
-    for _,spot in pairs(spot_list) do
+     for _,spot in pairs(spot_list) do
       local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
       w = int(w / 64) ; if w < 1 then w = 1 end
@@ -1556,6 +1556,16 @@ function Monster_fill_room(R)
     -- decide deafness and where to look
     local deaf, focus
 
+    if info.liquid_only then
+      local spot_in_water = false
+      for _, chunk in pairs(R.liquid_chunks) do
+        if spot.x1 >= chunk.x1 and spot.x2 <= chunk.x2 and spot.y1 >= chunk.y1 and spot.y2 <= chunk.y2 then
+          spot_in_water = true
+        end
+      end
+      if spot_in_water == false then goto notinliquid end
+    end
+
     -- monsters in traps are never deaf (esp. monster depots)
     if mode then
       deaf = false
@@ -1611,6 +1621,7 @@ function Monster_fill_room(R)
     LEVEL.mon_count = LEVEL.mon_count + 1
 
     Trans.entity(mon, x, y, z, props)
+    ::notinliquid::
   end
 
 
