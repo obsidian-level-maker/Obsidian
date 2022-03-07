@@ -2352,6 +2352,7 @@ function Fab_replacements(fab)
     -- (which prevents sending it to the CSG)
     E.id = check_thing(E.id)
     if OB_CONFIG.game == "hexen" then
+      if not fab.native_hexen then E.special = 0 end
       if E.id == 14 then -- Teleporter destination fix
         E.tid = fab.in_tag
       end
@@ -2464,6 +2465,7 @@ function Fabricate(room, def, T, skins)
     if SKIN.out_tag1 then fab.out_tag1 = SKIN.out_tag1 end
     if SKIN.out_tag2 then fab.out_tag2 = SKIN.out_tag2 end
     if SKIN.out_tag3 then fab.out_tag3 = SKIN.out_tag3 end
+    if def.native_hexen then fab.native_hexen = true end
   end
 
   Fab_replacements (fab)

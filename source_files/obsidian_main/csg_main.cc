@@ -1214,8 +1214,6 @@ int CSG_add_entity(lua_State *L) {
 
     E->flags = E->props.getInt("flags");
 
-    E->flags = E->props.getInt("special");
-
     // save a bit of space (and don't write into Q1/2/3 entities lump)
     E->props.Remove("id");
     E->props.Remove("x");
