@@ -16,6 +16,8 @@ PREFABS.Wall_generic_waterfall =
   x_fit = "frame",
   z_fit = "bottom",
 
+  liquid = true,
+
   on_liquids = "only",
 
   sound = "Water_Streaming",
@@ -48,6 +50,8 @@ PREFABS.Wall_ceiling_sleuce =
   x_fit = "frame",
   z_fit = "top",
 
+  liquid = true,
+
   on_liquids = "only",
 
   sound = "Waterfall_Rush",
@@ -70,6 +74,8 @@ PREFABS.Wall_side_sleuce =
 
   x_fit = "frame",
   z_fit = "top",
+
+  liquid = true,
 
   on_liquids = "only",
 

@@ -632,6 +632,15 @@ function Episode_plan_monsters()
 
     for name,_ in pairs(LEV.seen_monsters) do
       local info = GAME.MONSTERS[name]
+      if info.only_themes then
+        for _,v in pairs(info.only_themes) do
+          if v == LEV.theme.name then
+            goto righttheme
+          end
+        end
+        goto wrongtheme
+      end
+      ::righttheme::
       if not info.boss_type or PARAM.float_strength == 12 or LEV.is_procedural_gotcha then
         LEV.global_pal[name] = 1
       elseif info.boss_type and OB_CONFIG.bossesnormal ~= "no" then
@@ -645,6 +654,7 @@ function Episode_plan_monsters()
           LEV.global_pal[name] = 1
         end
       end
+      ::wrongtheme::
     end
 
     -- actually skip some monsters (esp. when # is high)
