@@ -24,6 +24,7 @@
 /* GRP reading */
 
 #include <array>
+#include <filesystem>
 #include <string>
 #include "sys_type.h"
 
