@@ -1179,6 +1179,7 @@ OB_MODULES["zdoom_specials"] =
       choices = ZDOOM_SPECIALS.FOG_GEN_CHOICES,
       default = "no",
       tooltip = "Generates fog colors based on the Sky Generator or generate completely randomly.",
+      randomize_group="misc",
     },
 
     {
@@ -1188,6 +1189,7 @@ OB_MODULES["zdoom_specials"] =
       choices = ZDOOM_SPECIALS.FOG_ENV_CHOICES,
       default = "all",
       tooltip = "Limits fog to outdoors (sectors with exposed sky ceilings) or allows for all.",
+      randomize_group="misc",
     },
 
     {
@@ -1197,6 +1199,7 @@ OB_MODULES["zdoom_specials"] =
       choices = ZDOOM_SPECIALS.FOG_DENSITY_CHOICES,
       default = "subtle",
       tooltip = "Determines thickness and intensity of fog, if the Fog Generator is enabled. Subtle or Misty is recommended.",
+      randomize_group="misc",
     },
 
     {
@@ -1207,6 +1210,7 @@ OB_MODULES["zdoom_specials"] =
       default = 1,
       tooltip = "Tints the sky texture with the fog color, intensity is based on the Fog Intensity selection.",
       gap = 1,
+      randomize_group="misc",
     },
 
     {

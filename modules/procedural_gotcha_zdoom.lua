@@ -1698,7 +1698,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       "but immensely-sized exit room with gratitiously intensified monster strength. " ..
       "Essentially an arena - prepare for a tough, tough fight!\n\nNotes:\n\n" ..
       "5% of levels may create at least 1 or 2 gotcha maps in a standard full game.",
-      priority = 105
+      priority = 105,
+      randomize_group="monsters",
     },
 
 
@@ -1713,7 +1714,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       default = 1.2,
       presets = "",
       tooltip = "Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting).",
-      priority = 104
+      priority = 104,
+      randomize_group="monsters",
     },
 
     {
@@ -1732,7 +1734,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       "8:8 (CRAZIER)," ..
       "16:16 (NIGHTMARISH),",
       tooltip = "Offset monster quantity from your default strength of choice plus the increasing level ramp.",
-      priority = 103
+      priority = 103,
+      randomize_group="monsters",
     },
 
 
@@ -1742,7 +1745,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       choices=PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.GOTCHA_MAP_SIZES,
       default = "small",
       tooltip = "Size of the procedural gotcha. Start and arena room sizes are relative to map size as well.",
-      priority = 102
+      priority = 102,
+      randomize_group="monsters",
     },
 
 
@@ -1754,7 +1758,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       tooltip = "Influences steepness settings for boss arenas. " ..
       "Boss arena steepness is capped to be less intrusive to boss movement.",
       priority = 101,
-      gap = 1
+      gap = 1,
+      randomize_group="monsters",
     },
 
 
@@ -1764,7 +1769,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       valuator = "button",
       default = 1,
       tooltip = "Toggles Boss Monster generation with special traits for Gotchas. ZScript only.",
-      priority = 100
+      priority = 100,
     },
 
 
@@ -1775,7 +1780,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       default = 1,
       tooltip = "EXPERIMENTAL: Attempts to guarantee a fight against a boss-type (nasty tier) monster " ..
       "in the procedural gotcha.",
-      priority = 99
+      priority = 99,
+      randomize_group="monsters",
     },
 
 
@@ -1785,7 +1791,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DIFF_CHOICES,
       default = "default",
       tooltip = "Increases or reduces chances of boss being based off more powerful monster and getting more powerful traits.",
-      priority = 98
+      priority = 98,
+      randomize_group="monsters",
     },
 
 
@@ -1795,7 +1802,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_HEALTH_CHOICES,
       default = "default",
       tooltip = "Makes boss health higher or lower than default, useful when playing with mods that have different average power level of weapons.",
-      priority = 97
+      priority = 97,
+      randomize_group="monsters",
     },
 
 
@@ -1806,6 +1814,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       default = "default",
       tooltip = "Reduces chance of hitscan bosses spawning.",
       priority = 96,
+      randomize_group="monsters",
     },
 
 
@@ -1815,7 +1824,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       valuator = "button",
       default = 1,
       tooltip = "If enabled, an hp bar will appear on UI while boss is active.",
-      priority = 95
+      priority = 95,
     },
 
 
@@ -1836,7 +1845,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.REINFORCE,
       default = "default",
       tooltip = "Influences the strength of reinforcements summoned by bosses",
-      priority = 93
+      priority = 93,
+      randomize_group="monsters",
     },
 
 
@@ -1846,7 +1856,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.REINFORCER,
       default = "default",
       tooltip = "Influences the spawn rate of reinforcements summoned by bosses",
-      priorty = 92
+      priorty = 92,
+      randomize_group="monsters",
     },
 
 
@@ -1858,7 +1869,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       default = 0,
       tooltip = "If enabled, monsters disabled in monster control module cant be chosen as a boss.",
       priorty = 91,
-      gap = 1
+      gap = 1,
+      randomize_group="monsters",
     },
 
 
@@ -1871,7 +1883,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       "Hard Limit: Doesn't allow monster types outside of range to ever spawn.\n\n" ..
       "Soft Limit: Reduces the probability of spawning of monster types outside of range.\n\n" ..
       "No Limit: Difficulty doesn't have effect on monster type selection.",
-      priority = 90
+      priority = 90,
+      randomize_group="monsters",
     },
 
 
@@ -1882,7 +1895,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       default = "scatter",
       tooltip = "Influences weapon placement in boss arena.",
       priority = 89,
-      gap = 1
+      gap = 1,
+      randomize_group="monsters",
     },
 
 
@@ -1892,7 +1906,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_EXIT,
       default = "default",
       tooltip = "Changes exit type after boss has been destroyed.",
-      priority = 88
+      priority = 88,
     },
 
 
@@ -1907,7 +1921,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       default = 3,
       presets = "",
       tooltip = "Changes multiplier of ammunition items on the boss arena(This is also affected by boss health multiplier).",
-      priority = 87
+      priority = 87,
+      randomize_group="monsters",
     },
 
 
@@ -1922,7 +1937,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       default = 3,
       presets = "",
       tooltip = "Changes multiplier of healing items on the boss arena.",
-      priority = 86
+      priority = 86,
+      randomize_group="monsters",
     },
   },
 }

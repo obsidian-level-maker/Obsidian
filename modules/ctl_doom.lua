@@ -87,6 +87,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      },
 
      {
@@ -106,6 +107,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      },
 
      {
@@ -125,6 +127,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      },
 
      {
@@ -144,6 +147,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      },
 
      {
@@ -163,6 +167,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      },
 
      {
@@ -182,6 +187,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      },
 
      {
@@ -201,6 +207,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      },
 
      {
@@ -220,6 +227,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      },
 
      {
@@ -239,6 +247,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      },
 
      {
@@ -258,6 +267,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      },
 
      {
@@ -277,6 +287,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      },
 
      {
@@ -296,6 +307,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      },
 
      {
@@ -315,6 +327,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      },
 
      {
@@ -334,6 +347,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      },
 
      {
@@ -353,6 +367,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      },
 
      {
@@ -372,6 +387,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      },
 
      {
@@ -391,6 +407,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      },
 
      {
@@ -410,6 +427,7 @@ OB_MODULES["doom_mon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "20:20 (INSANE),",
+      randomize_group="monsters",
      }
   },
 }
@@ -518,6 +536,7 @@ OB_MODULES["doom_weapon_control"] =
      "1.2:1.2 (More)," ..
      "3:3 (Heaps)," ..
      "10:10 (I LOVE IT),",
+     randomize_group="pickups",
     },
 
      {
@@ -537,6 +556,7 @@ OB_MODULES["doom_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
      },
 
      {
@@ -556,6 +576,7 @@ OB_MODULES["doom_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
      },
 
      {
@@ -575,6 +596,7 @@ OB_MODULES["doom_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
      },
 
      {
@@ -594,6 +616,7 @@ OB_MODULES["doom_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
      },
 
      {
@@ -613,6 +636,7 @@ OB_MODULES["doom_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
      },
 
      {
@@ -632,6 +656,7 @@ OB_MODULES["doom_weapon_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
      },
 
     {
@@ -716,6 +741,7 @@ OB_MODULES["doom_item_control"] =
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
       priority = 100,
+      randomize_group="pickups",
      },
      
      {
@@ -736,6 +762,7 @@ OB_MODULES["doom_item_control"] =
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
       priority = 99,
+      randomize_group="pickups",
      },
      
      {
@@ -757,6 +784,7 @@ OB_MODULES["doom_item_control"] =
       "10:10 (I LOVE IT),",
       priority = 98,
       gap = 1,
+      randomize_group="pickups",
      },
      
      {
@@ -777,6 +805,7 @@ OB_MODULES["doom_item_control"] =
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
       priority = 95,
+      randomize_group="pickups",
      },    
 
     -- nice items
@@ -799,6 +828,7 @@ OB_MODULES["doom_item_control"] =
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
       priority = 94,
+      randomize_group="pickups",
      },
 
      {
@@ -820,6 +850,7 @@ OB_MODULES["doom_item_control"] =
       "10:10 (I LOVE IT),",
       priority = 93,
       gap = 1,
+      randomize_group="pickups",
      },
 
      {
@@ -839,6 +870,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
      },
 
      {
@@ -858,6 +890,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
      },
 
      {
@@ -877,6 +910,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
      },
 
      {
@@ -896,6 +930,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
      },
      
      {
@@ -915,6 +950,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
      },
 
      {
@@ -934,6 +970,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
      },
 
      {
@@ -953,6 +990,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
      },
 
      {
@@ -972,6 +1010,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
      },
 
     -- ammo
@@ -993,6 +1032,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
       priority = 75,
      },
 
@@ -1013,6 +1053,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
       priority = 74,
      },
 
@@ -1033,6 +1074,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
       priority = 73,
      },
 
@@ -1053,6 +1095,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
       priority = 72,
      },
 
@@ -1073,6 +1116,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
       priority = 71,
      },
 
@@ -1093,6 +1137,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
       priority = 70,
      },
 
@@ -1113,6 +1158,7 @@ OB_MODULES["doom_item_control"] =
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
+      randomize_group="pickups",
       priority = 69,
      },
 
@@ -1134,6 +1180,7 @@ OB_MODULES["doom_item_control"] =
       "3:3 (Heaps)," ..
       "10:10 (I LOVE IT),",
       priority = 68,
+      randomize_group="pickups",
       gap = 1,
      }
   },

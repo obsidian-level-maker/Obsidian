@@ -216,7 +216,7 @@ static void ShowInfo() {
         "\n"
         "     --randomize-all       Randomize all options\n"
         "     --randomize-arch      Randomize architecture settings\n"
-        "     --randomize-monsters  Randomize monster-related settings\n"
+        "     --randomize-combat  Randomize combat-related settings\n"
         "     --randomize-pickups   Randomize item/weapon settings\n"
         "     --randomize-other     Randomize other settings\n"
         "\n"
@@ -1264,7 +1264,7 @@ skiprest:
             main_win_architecture_config_CB, 0,
             FL_MENU_TOGGLE | (randomize_architecture ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add(
-            "Surprise Me/Randomize Monsters", NULL, main_win_monsters_config_CB,
+            "Surprise Me/Randomize Combat", NULL, main_win_monsters_config_CB,
             0, FL_MENU_TOGGLE | (randomize_monsters ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add(
             "Surprise Me/Randomize Pickups", NULL, main_win_pickups_config_CB,
