@@ -2577,14 +2577,14 @@ function Quest_nice_items()
         if R.closets
         and not R.secondary_important
         and not R.is_hallway then
-          local do_it = false
+          local do_it = true
 
-          if final_min_prog and (R.lev_along >= final_min_prog) then
-            do_it = true
+          if R.lev_along < final_min_prog then
+            do_it = false
           end
 
-          if final_max_prog and (R.lev_along <= final_max_prog) then
-            do_it = true
+          if R.lev_along > final_max_prog then
+            do_it = false
           end            
 
           if (info.not_start and R.is_start) or
@@ -2619,6 +2619,13 @@ function Quest_nice_items()
         {
           kind = info.kind
         }
+
+        -- prevent picking the same room if there are
+        -- still other rooms available
+        if #room_tab > 2 then
+          table.kill_elem(room_tab, best_room)
+        end
+
         ::continue::
       end
     end
