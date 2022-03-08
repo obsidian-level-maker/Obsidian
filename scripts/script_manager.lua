@@ -102,12 +102,13 @@ function ScriptMan_assemble_mapinfo_lump()
         mapline = "map " .. lev.name .. " \"" .. lev.description .. "\"\n{\n"
         for k, v in pairs(HEXEN.MAPINFO_MAPS) do
           if v == mapnum then
-            mapline = mapline .. "levelnum = " .. k .. "\n"
+            mapline = mapline .. "warptrans = " .. k .. "\n"
             goto foundmap
           end
         end
         ::foundmap::
-        mapline = mapline .. "cluster = " .. lev.episode.ep_index .. "\n"
+        mapline = mapline .. "levelnum = " .. mapnum .. "\n"
+        mapline = mapline .. "cluster = 1\n"
         local sky = lev.theme.sky_mapinfo
         mapline = mapline .. "sky1 = \"" .. sky.sky_patch1 .. "\", " .. sky.sky_speed1 / 100 .. "\n"
         mapline = mapline .. "sky2 = \"" .. sky.sky_patch2 .. "\", " .. sky.sky_speed2 / 100 .. "\n"
@@ -139,7 +140,7 @@ function ScriptMan_assemble_mapinfo_lump()
           end
         end
         ::foundmap::
-        mapline = mapline .. "cluster " .. lev.episode.ep_index .. "\n"
+        mapline = mapline .. "cluster 1\n"
         local sky = lev.theme.sky_mapinfo
         mapline = mapline .. "sky1 " .. sky.sky_patch1 .. " " .. sky.sky_speed1 .. "\n"
         mapline = mapline .. "sky2 " .. sky.sky_patch2 .. " " .. sky.sky_speed2 .. "\n"
