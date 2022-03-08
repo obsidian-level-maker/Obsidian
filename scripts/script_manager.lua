@@ -108,17 +108,18 @@ function ScriptMan_assemble_mapinfo_lump()
         end
         ::foundmap::
         mapline = mapline .. "cluster = " .. lev.episode.ep_index .. "\n"
-        mapline = mapline .. "sky1 = \"" .. lev.episode.sky_patch1 .. "\", " .. lev.episode.sky_speed1 / 100 .. "\n"
-        mapline = mapline .. "sky2 = \"" .. lev.episode.sky_patch2 .. "\", " .. lev.episode.sky_speed2 / 100 .. "\n"
-        if lev.episode.lightning_chance then
-          if rand.odds(lev.episode.lightning_chance) then
+        local sky = lev.theme.sky_mapinfo
+        mapline = mapline .. "sky1 = \"" .. sky.sky_patch1 .. "\", " .. sky.sky_speed1 / 100 .. "\n"
+        mapline = mapline .. "sky2 = \"" .. sky.sky_patch2 .. "\", " .. sky.sky_speed2 / 100 .. "\n"
+        if sky.lightning_chance then
+          if rand.odds(sky.lightning_chance) then
             mapline = mapline .. "lightning\n"
           end
         end
-        if lev.episode.doublesky then
+        if sky.doublesky then
           mapline = mapline .. "doublesky\n"
         end
-        if lev.episode.fadetable then
+        if sky.fadetable then
           mapline = mapline .. "fadetable = \"fogmap\"\n"
         end
         mapline = mapline .. "}\n\n"
@@ -139,17 +140,18 @@ function ScriptMan_assemble_mapinfo_lump()
         end
         ::foundmap::
         mapline = mapline .. "cluster " .. lev.episode.ep_index .. "\n"
-        mapline = mapline .. "sky1 " .. lev.episode.sky_patch1 .. " " .. lev.episode.sky_speed1 .. "\n"
-        mapline = mapline .. "sky2 " .. lev.episode.sky_patch2 .. " " .. lev.episode.sky_speed2 .. "\n"
-        if lev.episode.lightning_chance then
-          if rand.odds(lev.episode.lightning_chance) then
+        local sky = lev.theme.sky_mapinfo
+        mapline = mapline .. "sky1 " .. sky.sky_patch1 .. " " .. sky.sky_speed1 .. "\n"
+        mapline = mapline .. "sky2 " .. sky.sky_patch2 .. " " .. sky.sky_speed2 .. "\n"
+        if sky.lightning_chance then
+          if rand.odds(sky.lightning_chance) then
             mapline = mapline .. "lightning\n"
           end
         end
-        if lev.episode.doublesky then
+        if sky.doublesky then
           mapline = mapline .. "doublesky\n"
         end
-        if lev.episode.fadetable then
+        if sky.fadetable then
           mapline = mapline .. "fadetable fogmap\n"
         end
         mapline = mapline .. "\n"

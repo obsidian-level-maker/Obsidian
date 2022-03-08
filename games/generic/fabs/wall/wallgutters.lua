@@ -16,6 +16,8 @@ PREFABS.Wall_wall_gutters1 =
   bound_z2 = 128,
 
   z_fit  = "top",
+
+  liquid = true,
 }
 
 PREFABS.Wall_wall_gutters2 =
@@ -42,6 +44,8 @@ PREFABS.Wall_wall_gutters_diag =
   bound_z2 = 128,
 
   z_fit  = "top",
+
+  liquid = true,
 }
 
 PREFABS.Wall_wall_gutters_diag_heretic =

@@ -329,12 +329,16 @@ bool LoadThingsHexen() {
     for (int i = 0; i < count; i++, raw++) {
         thing_c *thing = NewThing();
 
+        thing->tid = LE_U16(raw->tid);
+
         thing->x = LE_S16(raw->x);
         thing->y = LE_S16(raw->y);
 
         thing->type = LE_U16(raw->type);
         thing->options = LE_U16(raw->options);
         thing->angle = LE_S16(raw->angle);
+
+        thing->special = LE_U16(raw->special);
 
         thing->args = raw->arg;
     }

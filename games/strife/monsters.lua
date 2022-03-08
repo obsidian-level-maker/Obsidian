@@ -136,7 +136,7 @@ STRIFE.MONSTERS =
     invis = true
   },
 
-  stalker = -- Need to see if there's a way to only let the spawn in areas with a real ceiling so they don't crawl in the sky - Dasho
+  stalker =
   {
     id=186,
     r=24,

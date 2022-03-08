@@ -21,8 +21,8 @@ HEXEN.MONSTERS =
     h = 64,
     level = 1,
     prob = 60,
-    health = 170,
-    damage =  6,
+    health = 175,
+    damage =  16,
     attack = "melee",
   },
 
@@ -34,7 +34,7 @@ HEXEN.MONSTERS =
     level = 1,
     prob = 40,
     health = 80,
-    damage = 20,
+    damage = 8,
     attack = "missile",
     float = true
   },
@@ -64,7 +64,7 @@ HEXEN.MONSTERS =
     attack = "missile",
   },
 
-  --[[serpent1 =
+  serpent1 =
   {
     id = 121,
     r = 33,
@@ -73,6 +73,7 @@ HEXEN.MONSTERS =
     health = 90,
     damage = 10,
     attack = "melee",
+    liquid_only = true
   },
 
   serpent2 =
@@ -85,7 +86,8 @@ HEXEN.MONSTERS =
     health = 90,
     damage = 16,
     attack = "missile",
-  },]]--
+    liquid_only = true
+  },
   
   wendigo =  -- iceguy
   {
@@ -108,7 +110,7 @@ HEXEN.MONSTERS =
     level = 3,
     prob = 30,
     health = 250,
-    damage = 35,
+    damage = 40,
     attack = "missile",
   },
 
@@ -120,7 +122,7 @@ HEXEN.MONSTERS =
     replaces = "demon1",
     replace_prob = 40,
     health = 250,
-    damage = 35,
+    damage = 40,
     attack = "missile",
   },
 
@@ -189,7 +191,7 @@ HEXEN.MONSTERS =
     boss_type = "tough",
     attack = "missile",
     health = 5000,
-    damage = 70,
+    damage = 250,
   },
 
   Zedek =  -- Fighter_boss
@@ -200,8 +202,8 @@ HEXEN.MONSTERS =
     level = 9,
     boss_type = "tough",
     attack = "melee",
-    health = 5000,
-    damage = 90,
+    health = 800,
+    damage = 640, -- Full Quietus hit
   },
 
   Traductus =  -- Cleric_boss
@@ -212,8 +214,8 @@ HEXEN.MONSTERS =
     level = 9,
     boss_type = "tough",
     attack = "missile",
-    health = 5000,
-    damage = 90,
+    health = 800,
+    damage = 128, -- 4 * 32 per wraith from Wraithverge
   },
 
   Menelkir =  -- Mage_boss
@@ -224,11 +226,11 @@ HEXEN.MONSTERS =
     level = 9,
     boss_type = "tough",
     attack = "missile",
-    health = 5000,
-    damage = 90,
+    health = 800,
+    damage = 336, -- 3 * Bloodscourge projectile/blasts
   },
 
-  Korax =
+  --[[Korax =
   {
     id = 10200,
     r = 66,
@@ -237,7 +239,7 @@ HEXEN.MONSTERS =
     boss_type = "singular",
     attack = "missile",
     health = 5000,
-    damage = 90,
-  },
+    damage = 500,
+  },]]--
 }
 

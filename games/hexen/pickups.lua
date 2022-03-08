@@ -51,26 +51,16 @@ HEXEN.PICKUPS =
     give = { {ammo="green_mana",count=15} },
   },
 
-  dual_mana =
+-- ARMOR --
+
+  ar_helmet =
   {
-    id = 8004,
-    kind = "ammo",
-    add_prob = 50,
-    give =
-    {
-      {ammo="blue_mana", count=20},
-      {ammo="green_mana",count=20},
-    },
+    id = 8007,
+    kind = "armor",
+    add_prob = 5,
+    give = { {health=25} }
   },
 
-  --
-  -- NOTES:
-  --
-  -- Armor gives different amounts (and different decay rates)
-  -- for each player class.  We cannot model that completely.
-  -- Instead the 'best_class' gets the full amount and all
-  -- other classes get half the amount.
-  --
 }
 
 
@@ -85,7 +75,6 @@ HEXEN.NICE_ITEMS =
     id = 32,
     kind = "health",
     add_prob = 5,
-    give = { {health=100} },
   },
 
   -- ARMOR --
@@ -95,8 +84,7 @@ HEXEN.NICE_ITEMS =
     id = 8005,
     kind = "armor",
     add_prob = 5,
-    give = { {health=150} },
-    best_class = "fighter",
+    give = { {health=50} },
   },
 
   ar_shield =
@@ -104,8 +92,7 @@ HEXEN.NICE_ITEMS =
     id = 8006,
     kind = "armor",
     add_prob = 5,
-    give = { {health=150} },
-    best_class = "cleric",
+    give = { {health=100} },
   },
 
   ar_amulet =
@@ -113,27 +100,150 @@ HEXEN.NICE_ITEMS =
     id = 8008,
     kind = "armor",
     add_prob = 5,
-    give = { {health=150} },
-    best_class = "mage",
+    give = { {health=50} },
   },
 
-  ar_helmet =
+  dragonskin_bracers =
   {
-    id = 8007,
+    id = 10110,
     kind = "armor",
-    add_prob = 5,
-    give = { {health=60} }  -- rough average
+    add_prob = 7,
+    start_prob = 0,
+    closet_prob = 15,
+    give = { {health=50} },
   },
 
-  -- FIXME : ARTIFACTS
+-- AMMO --
 
---[[ TODO
+dual_mana =
+{
+  id = 8004,
+  kind = "ammo",
+  add_prob = 50,
+  give =
+  {
+    {ammo="blue_mana", count=20},
+    {ammo="green_mana",count=20},
+  },
+},
 
-  p1 = { pickup="flechette", prob=9 },
-  p2 = { pickup="bracer",    prob=5 },
-  p3 = { pickup="torch",     prob=2 },
+krater_of_might =
+{
+  id = 8003,
+  kind = "ammo",
+  add_prob = 7,
+  start_prob = 0,
+  closet_prob = 15,
+  give =
+  {
+    {ammo="blue_mana", count=200},
+    {ammo="green_mana",count=200},
+  },
+},
 
---]]
+-- ARTIFACTS --
+
+banishment_device =
+{
+  id = 10040,
+  kind = "powerup",
+  add_prob = 7,
+  start_prob = 0,
+  closet_prob = 15,
+},
+
+boots_of_speed =
+{
+  id = 8002,
+  kind = "powerup",
+  add_prob = 7,
+  start_prob = 0,
+  closet_prob = 15,
+},
+
+chaos_device =
+{
+  id = 36,
+  kind = "powerup",
+  add_prob = 7,
+  start_prob = 0,
+  closet_prob = 15,
+},
+
+dark_servant =
+{
+  id = 86,
+  kind = "powerup",
+  add_prob = 7,
+  start_prob = 0,
+  closet_prob = 15,
+},
+
+disc_of_repulsion =
+{
+  id = 10110,
+  kind = "powerup",
+  add_prob = 7,
+  start_prob = 0,
+  closet_prob = 15,
+},
+
+flechette =
+{
+  id = 8000,
+  kind = "powerup",
+  add_prob = 15,
+  start_prob = 0,
+  closet_prob = 30,
+},
+
+icon_of_the_defender =
+{
+  id = 84,
+  kind = "powerup",
+  add_prob = 7,
+  start_prob = 0,
+  closet_prob = 15,
+  time_limit = 30,
+},
+
+mystic_ambit_incant =
+{
+  id = 10120,
+  kind = "powerup",
+  add_prob = 7,
+  start_prob = 0,
+  closet_prob = 15,
+},
+
+porkalator =
+{
+  id = 30,
+  kind = "powerup",
+  add_prob = 7,
+  start_prob = 0,
+  closet_prob = 15,
+},
+
+torch =
+{
+  id = 33,
+  kind = "powerup",
+  add_prob = 7,
+  start_prob = 0,
+  closet_prob = 15,
+  time_limit = 120,
+},
+
+wings_of_wrath =
+{
+  id = 83,
+  kind = "powerup",
+  add_prob = 7,
+  start_prob = 0,
+  closet_prob = 15,
+  time_limit = 60,
+},
 
 -- Weapon Pieces
 

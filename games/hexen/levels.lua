@@ -24,11 +24,7 @@ HEXEN.EPISODES =
 
     theme = "forest",
     sky_light = 0.65,
-    sky_patch1 = "SKY2",
-    sky_speed1 = 20,
-    sky_patch2 = "SKY3",
-    sky_speed2 = 20,
-    lightning_chance = 30
+    boss = "Traductus"
   },
 
   episode2 =
@@ -37,11 +33,7 @@ HEXEN.EPISODES =
 
     theme = "ice_caves",
     sky_light = 0.75,
-    sky_patch1 = "SKYWALL",
-    sky_speed1 = 0,
-    sky_patch2 = "SKY3",
-    sky_speed2 = 50,
-    doublesky = true
+    boss = "Menelkir"
   },
 
   episode3 =
@@ -50,11 +42,7 @@ HEXEN.EPISODES =
 
     theme = "fire_steel",
     sky_light = 0.65,
-    sky_patch1 = "SKYWALL",
-    sky_speed1 = 0,
-    sky_patch2 = "SKY4",
-    sky_speed2 = 50,
-    doublesky = true
+    boss = "Zedek"
   },
 
   episode4 =
@@ -63,12 +51,7 @@ HEXEN.EPISODES =
 
     theme = "swamp",
     sky_light = 0.60,
-    sky_patch1 = "SKYFOG2",
-    sky_speed1 = 20,
-    sky_patch2 = "SKYFOG",
-    sky_speed2 = 60,
-    doublesky = true,
-    fadetable = true
+    boss = "Heresiarch"
   },
 
   episode5 =
@@ -77,11 +60,6 @@ HEXEN.EPISODES =
 
     theme = "dungeon",
     sky_light = 0.50,
-    sky_patch1 = "SKYWALL",
-    sky_speed1 = 0,
-    sky_patch2 = "SKY1",
-    sky_speed2 = 80,
-    doublesky = true,
   },
 }
 

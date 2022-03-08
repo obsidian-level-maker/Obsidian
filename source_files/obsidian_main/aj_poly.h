@@ -173,6 +173,7 @@ class thing_c {
     int angle;
 
     // Hexen support
+    int tid;
     int special;
     std::array<u8_t, 5> args;
 
