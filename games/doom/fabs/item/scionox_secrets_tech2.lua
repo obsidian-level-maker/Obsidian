@@ -65,7 +65,7 @@ PREFABS.Item_pipagery_2_secret =
   
   theme = "!hell",
 
-  env = "!cave",
+  env = "!nature",
   
   sector_1 = 1,
 
@@ -81,7 +81,7 @@ PREFABS.Item_pipagery_3_secret =
   
   theme = "!hell",
 
-  env = "!cave",
+  env = "!nature",
   
   sector_1 = 1,
 
@@ -99,7 +99,7 @@ PREFABS.Item_gtd_shaw_comp_secret =
   map = "MAP03",
   theme = "tech",
   
-  env = "!cave",
+  env = "!nature",
   
   sector_1 = 1,
 
@@ -115,7 +115,7 @@ PREFABS.Item_gtd_green_liquid_tank_secret =
   map = "MAP04",
   theme = "tech",
   
-  env = "!cave",
+  env = "!nature",
   
   sector_1 = 1,
 
@@ -132,7 +132,7 @@ PREFABS.Item_gtd_smelter_and_she_was_real_nice_this_is_not_creepy_at_all_secret 
   map = "MAP05",
   theme = "tech",
   
-  env = "!cave",
+  env = "!nature",
   
   sector_1 = 1,
 
@@ -149,7 +149,7 @@ PREFABS.Item_gtd_tech_heater_thing_secret =
   map = "MAP06",
   theme = "tech",
   
-  env = "!cave",
+  env = "!nature",
   
   sector_1 = 1,
 
@@ -166,7 +166,7 @@ PREFABS.Item_triple_glass_tube_i_dont_even_secret =
   map = "MAP07",
   theme = "tech",
   
-  env = "!cave",
+  env = "!nature",
   
   sector_1 = 1,
 
