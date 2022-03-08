@@ -1,15 +1,15 @@
 --Based on gtd_pic_hell_alcoves
 PREFABS.Item_hell_alcove_tomb_secret =
 {
-  file   = "item/scionox_secrets_hell.wad",
-  map    = "MAP01",
+  file = "item/scionox_secrets_hell.wad",
+  map = "MAP01",
 
-  prob   = 50,
-  theme  = "hell",
-  env    = "!nature",
+  prob = 50,
+  theme = "hell",
+  env = "!nature",
 
-  where  = "seeds",
-  key    = "secret",
+  where = "seeds",
+  key  = "secret",
   height = 128,
 
   seed_w = 2,
@@ -24,7 +24,7 @@ PREFABS.Item_hell_alcove_tomb_secret =
 PREFABS.Item_hell_alcove_window_secret =
 {
   template = "Item_hell_alcove_tomb_secret",
-  map      = "MAP02",
-  engine   = "zdoom",
+  map = "MAP02",
+  engine = "zdoom",
   seed_w = 3,
 }

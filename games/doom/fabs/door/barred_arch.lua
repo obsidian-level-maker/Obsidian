@@ -7,7 +7,7 @@ PREFABS.Arch_barred =
   file   = "door/barred_arch.wad",
   map    = "MAP01",
 
-  prob   = 35,
+  prob   = 5,
 
   where  = "edge",
   key    = "barred",

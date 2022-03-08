@@ -2571,6 +2571,7 @@ function Quest_nice_items()
 
       final_min_prog = math.clamp(min_along_room, final_min_prog, max_along_room)
       final_max_prog = math.clamp(min_along_room, final_max_prog, max_along_room)
+      final_distance = math.abs(final_max_prog - final_min_prog)
 
       for _,R in pairs(LEVEL.rooms) do
         if R.closets
@@ -2610,11 +2611,10 @@ function Quest_nice_items()
         for _,R in pairs(room_tab) do
           if R.SI_score <= best_score then
             best_room = R
-            best_score = R.SI_score
+            best_score = R.SI_score + rand.range(0, final_distance)
           end
         end
 
-        --chosen_room = rand.pick(room_tab)
         best_room.secondary_important =
         {
           kind = info.kind
