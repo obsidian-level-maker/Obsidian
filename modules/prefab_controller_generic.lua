@@ -106,6 +106,7 @@ OB_MODULES["prefab_control_generic"] =
       default = 1,
       tooltip = "Ensures that prefabs selected match their intended Theme.",
       priority = 1,
+      randomize_group="architecture",
     },
   },
 }
