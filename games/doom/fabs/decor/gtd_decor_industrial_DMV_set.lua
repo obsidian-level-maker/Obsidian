@@ -5,7 +5,6 @@ PREFABS.Decor_gtd_DMV_double_bench =
 
   prob = 5000,
   where = "point",
-  engine = "zdoom",
 
   group = "gtd_DMV_set",
 
