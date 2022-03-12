@@ -4880,7 +4880,7 @@ GROW_REVERSE_FUNNEL =
   },
 },
 
-GROW_REVERSE_FUNNEL_REVERSE =
+GROW_REVERSE_FUNNEL_LIQUID =
 {
   prob = 20,
   aversion = 3,
@@ -4902,6 +4902,32 @@ GROW_REVERSE_FUNNEL_REVERSE =
     "1~","~A",
     "1~","~A",
   },
+},
+
+GROW_REVERSE_FUNNEL_LIQUID_COMPLEX =
+{
+  prob = 25,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x.........","x11~AAA>11",
+    "1.........","111%%AA>11",
+    "1.........","1111~AA%11",
+    "x.........","x111>AAAAA",
+    "x.........","x111>AAAAA",
+    "x.........","x111~AA/11",
+    "x.........","x11//AA>11",
+    "x.........","x11~AAA>11"
+  },
+
+  diagonals =
+  {
+    "1~","~A",
+    "A1",
+    "A1",
+    "1~","~A"
+  }
 },
 
 GROW_SIDE_ON_RAMP =
@@ -4947,8 +4973,8 @@ GROW_SIDE_ON_RAMP_TALL =
 
 GROW_SIDE_ON_RAMP_TALL_TO_JUNCTION =
 {
-  prob = 25,
-  skip_prob = 15,
+  prob = 15,
+  skip_prob = 75,
 
   structure =
   {
@@ -4990,6 +5016,29 @@ GROW_SIDE_ON_RAMP_TALL_LIQUID =
   },
 },
 
+GROW_SIDE_ON_RAMP_TALL_LIQUID_TO_JUNCTION =
+{
+  prob = 10,
+  skip_prob = 75,
+
+  structure =
+  {
+    "......","AAAAAA",
+    "......","AAAAAA",
+    "x....x","x~^^~x",
+    "x....x","x~^^~x",
+    "1....x","1111~x",
+    "1....x","111/~x",
+    "x....x","x~~~/x"
+  },
+
+  diagonals =
+  {
+    "1~",
+    "~.",
+  },
+},
+
 GROW_CAUSEWAY =
 {
   prob = 15,
@@ -5015,14 +5064,14 @@ GROW_CAUSEWAY_WATERLOCKED =
 
   structure =
   {
-    "xxxx.....xxx","xxxxAA~AAxxx",
-    "1...........","1111AA~AA111",
-    "1...........","111>AA~AA<11",
-    "x...........","x111AA~AA111",
-    "x...........","x111AA~AA111",
-    "x...........","x11>AA~AA<11",
-    "x...........","x111AA~AA111",
-    "xxxx.....xxx","xxxxAA~AAxxx",
+    "11x.....xxx","11xAA~AAxxx",
+    "...........","111AA~AA111",
+    "...........","11>AA~AA<11",
+    "...........","111AA~AA111",
+    "...........","111AA~AA111",
+    "...........","11>AA~AA<11",
+    "...........","111AA~AA111",
+    "xxx.....xxx","xxxAA~AAxxx",
   },
 },
 
