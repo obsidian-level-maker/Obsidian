@@ -128,6 +128,7 @@ bool randomize_architecture = false;
 bool randomize_monsters = false;
 bool randomize_pickups = false;
 bool randomize_misc = false;
+bool random_string_seeds = false;
 int zip_output = 0;
 
 bool first_run = false;
@@ -888,12 +889,37 @@ int Main_key_handler(int event) {
 void Main_CalcNewSeed() { next_rand_seed = xoshiro_UInt(); }
 
 void Main_SetSeed() {
+    if (random_string_seeds) {
+        if (string_seed.empty()) {
+            string_seed = ob_get_random_words();
+            ob_set_config("string_seed", string_seed.c_str());
+            #ifdef max
+            #undef max
+            #endif
+            unsigned long long split_limit =
+                (std::numeric_limits<long long>::max() /
+                127);  // It is intentional that I am using the max for signed - Dasho
+            next_rand_seed = split_limit;
+            for (size_t i = 0; i < string_seed.size(); i++) {
+                char character = string_seed.at(i);
+                if (not std::iscntrl(character)) {
+                    if (next_rand_seed < split_limit) {
+                        next_rand_seed *= int(character);
+                    } else {
+                        next_rand_seed /= int(character);
+                    }
+                }
+            }
+        }
+    }
     std::string seed = NumToString(next_rand_seed);
     ob_set_config("seed", seed.c_str());
     if (!batch_mode) {
-        main_win->build_box->seed_disp->copy_label(
-            fmt::format("Seed: {}", seed).c_str());
-        main_win->build_box->seed_disp->redraw();
+        if (!random_string_seeds) {
+            main_win->build_box->seed_disp->copy_label(
+                fmt::format("Seed: {}", seed).c_str());
+            main_win->build_box->seed_disp->redraw();
+        }
     }
 }
 
