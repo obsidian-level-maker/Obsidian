@@ -771,8 +771,13 @@ function ob_read_all_config(need_full, log_only)
   do_line("-- https://github.com/caligari87/ObAddon/\n")
 
   if OB_CONFIG.seed and OB_CONFIG.seed ~= 0 then
-    do_line("seed = " .. OB_CONFIG.seed)
-    do_line("")
+    if OB_CONFIG.string_seed then
+      do_line("seed = " .. OB_CONFIG.string_seed)
+      do_line("")
+    else
+      do_line("seed = " .. OB_CONFIG.seed)
+      do_line("")
+    end
   end
 
   do_line("---- Game Settings ----")

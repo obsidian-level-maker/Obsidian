@@ -915,11 +915,9 @@ void Main_SetSeed() {
     std::string seed = NumToString(next_rand_seed);
     ob_set_config("seed", seed.c_str());
     if (!batch_mode) {
-        if (!random_string_seeds) {
-            main_win->build_box->seed_disp->copy_label(
-                fmt::format("Seed: {}", seed).c_str());
-            main_win->build_box->seed_disp->redraw();
-        }
+        main_win->build_box->seed_disp->copy_label(
+            fmt::format("Seed: {}", seed).c_str());
+        main_win->build_box->seed_disp->redraw();
     }
 }
 
