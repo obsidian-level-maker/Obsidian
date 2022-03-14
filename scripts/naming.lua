@@ -422,6 +422,7 @@ namelib.NAMES =
         ["Beyond Northern Waves"]=10,
         ["Breaking Silence"]=10,
         ["Bring it On!"]=10,
+        ["Completely Unprepared"]=10,
         ["Crippled Beyond Belief"]=10,
         ["Crisis of Life"]=10,
         ["Death in Your Eyes"]=10,
@@ -439,9 +440,11 @@ namelib.NAMES =
         ["Lex Obsidianis"]=10,
         ["Metallic Storm"]=10,
         ["Not Going Anywhere"]=10,
+        ["Of Monochrome Nights"]=10,
         ["One Man's Failure"]=10,
         ["Premonition"]=10,
         ["Rain"]=10,
+        ["Reflections"]=10,
         ["So Grim So True So Real"]=10,
         ["Struck by Fate"]=10,
         ["Take a Turn"]=10,
@@ -450,9 +453,12 @@ namelib.NAMES =
         ["Thrash It or Trash It"]=10,
         ["Threnody"]=10,
         ["Ultraviolence"]=10,
+        ["Unto Foolish Death"]=10,
         ["Voices and Victims"]=10,
+        ["Wail of Warning"]=10,
         ["Warwolf"]=10,
-        ["When the Kite String Breaks"]=10 -- end marker
+        ["When the Kite String Breaks"]=10,
+        ["Would You, Could You?"]=10 -- end marker
 
       },
 
@@ -2149,7 +2155,7 @@ namelib.NAMES =
         ["Stripped of Flesh"]=10,
         ["Stygiophobia"]=10,
         ["Sympathy Denied"]=10,
-        ["The Bleeding"]=10, -- Doom 64,
+        ["The Bleeding"]=10, -- Doom 64
         ["The Heretic's Touch"]=10,
         ["The Rotted Foul"]=10,
         ["Time and Dust"]=10,
@@ -2352,6 +2358,7 @@ namelib.NAMES =
         -- 2022 marker
         ["1349"]=10,
         ["A Shadowplay for Yesterday"]=10,
+        ["Acheron"]=10, -- A very good early Doom1 map
         ["Alla Xul"]=10,
         ["Anti-God, Anti-Christ"]=10,
         ["Archon"]=10,
@@ -2359,17 +2366,22 @@ namelib.NAMES =
         ["Ave Satanas"]=10,
         ["Better Off Dead"]=10,
         ["Black Gives Way to Blood"]=10,
+        ["Blackened Death's Embrace"]=10,
         ["Blackened Sabbath"]=10,
         ["Bleed for Ancient Gods"]=10,
         ["Bleed Us An Ocean"]=10,
+        ["Bleeding Soul"]=10,
         ["Blessed Black Wings"]=10,
+        ["Blight of God's Acre"]=10,
         ["Blood of Seraphim"]=10,
         ["Bolted to the Cross"]=10,
         ["Book of Blood"]=10,
         ["Chaotic Alliance"]=10,
+        ["Circle of Disease"]=10,
         ["Damnation's Pride"]=10,
         ["Dark Manifestations"]=10,
         ["Dominator of Flesh"]=10,
+        ["End Of All"]=10,
         ["Enter Thy Coven"]=10,
         ["Flammenmanifest"]=10,
         ["For the Sake of Death"]=10,
@@ -2377,6 +2389,7 @@ namelib.NAMES =
         ["Forgotten Tales"]=10,
         ["Friends of the Hellcross"]=10,
         ["Funeral Bitch"]=10,
+        ["Gathering the Impure"]=10,
         ["Glory Hole Hacksaw"]=10,
         ["Gnawing Bones"]=10,
         ["God is Dead"]=10,
@@ -2387,12 +2400,14 @@ namelib.NAMES =
         ["Loving the Sinner"]=10,
         ["Nightmare Waltz"]=10,
         ["Raven's Eye View"]=10,
+        ["Roads to Acheron"]=10,
         ["Room of Angel"]=10,
         ["Satan's Hammer"]=10,
         ["Secrets of Black Arts"]=10,
         ["Sepulchral Winter"]=10,
         ["The Claw of Religion"]=10,
         ["Unholy Praises"]=10,
+        ["Ways of the Magi"]=10,
         ["Whispers in the Dark"]=10 -- end marker
 
       }
@@ -3200,6 +3215,7 @@ namelib.NAMES =
         ["Winds That Shred Skin"]=10,
         
         -- 2022 marker
+        ["A Handful of Glass"]=10,
         ["A Not So Pretty Place"]=10,
         ["Action at a Distance"]=10,
         ["As the Journey Begins"]=10,
@@ -3208,6 +3224,7 @@ namelib.NAMES =
         ["Corvus Corona"]=10,
         ["Crisis of Life"]=10,
         ["Damned to Extinction"]=10,
+        ["Dirty Outskirts"]=10,
         ["Dry Water"]=10,
         ["Dustman"]=10,
         ["Esperandote"]=10,
@@ -3216,18 +3233,23 @@ namelib.NAMES =
         ["Fear Locked Away"]=10,
         ["Flesh and Dust"]=10,
         ["Fog Ensues"]=10,
+        ["From the Lost Days"]=10,
         ["Ghosting"]=10,
         ["Glory Hunter"]=10,
         ["Ground Dawn"]=10,
+        ["Guns to Rust, Hearts to Dust"]=10,
         ["Hear Nothing"]=10,
         ["Innocent Moon"]=10,
+        ["Let Us Depart"]=10,
         ["Liquid Dimensions Change"]=10,
         ["Magical Mystical Marine"]=10,
         ["Memories Remain"]=10,
+        ["Memory on the Waters"]=10,
         ["Mutiny on the World"]=10,
         ["Nightwind"]=10,
         ["Neon Nights"]=10,
         ["On The Razor's Edge"]=10,
+        ["Paleville"]=10,
         ["The Beauty of Dust"]=10,
         ["The Upper Art"]=10,
         ["Thunder's Cannon"]=10,
@@ -8635,9 +8657,9 @@ end
 
 
 function namelib.choose_one(DEF, max_len)
-  if PARAM.bool_whole_names_only then
-    whole_name = rand.key_by_probs(DEF.lexicon.s)
-    DEF.lexicon.s[whole_name] = 0
+  if PARAM.bool_whole_names_only and PARAM.bool_whole_names_only ~= 0 then
+    local whole_name = rand.key_by_probs(DEF.lexicon.s)
+    DEF.lexicon.s[whole_name] = DEF.lexicon.s[whole_name] / 10
     return whole_name
   end
 
