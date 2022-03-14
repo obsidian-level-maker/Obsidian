@@ -994,9 +994,13 @@ function Grower_decide_extents()
   -- decides how much of the map we can use for growing rooms.
   --
 
-  if (PARAM.bool_urban_streets_mode == 0 or (PARAM.bool_urban_streets_mode == 1 and LEVEL.theme_name == "urban"))
-  and rand.odds(PARAM.float_streets_mode) then
-    LEVEL.has_streets = true
+  if SHAPE_GRAMMAR == SHAPES.OBSIDIAN then
+    if (PARAM.bool_urban_streets_mode == 0 or (PARAM.bool_urban_streets_mode == 1 and LEVEL.theme_name == "urban"))
+    and rand.odds(PARAM.float_streets_mode) then
+      LEVEL.has_streets = true
+    else
+      LEVEL.has_streets = false
+    end
   else
     LEVEL.has_streets = false
   end

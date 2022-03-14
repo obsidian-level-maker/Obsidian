@@ -314,6 +314,21 @@ class AIMarine : Actor
 		MPLAYERDAMAGEX
         return super.TakeSpecialDamage(inflictor,source,damage,damagetype);
     }
+    override bool CanCollideWith(Actor other, bool passive)
+    {
+        if(other.bTELESTOMP)
+          return false;
+
+        if(!passive)
+        {
+            if(!other)
+              return false;
+
+            if (other.bSOLID && !other.bNONSHOOTABLE && !other.bSHOOTABLE)
+              return true;
+        }
+        return true;
+    }
 	MDEATHMESSAGEX
 }
 
