@@ -129,6 +129,7 @@ bool randomize_monsters = false;
 bool randomize_pickups = false;
 bool randomize_misc = false;
 bool random_string_seeds = false;
+bool did_specify_seed = false;
 int zip_output = 0;
 
 bool first_run = false;
@@ -889,7 +890,7 @@ int Main_key_handler(int event) {
 void Main_CalcNewSeed() { next_rand_seed = xoshiro_UInt(); }
 
 void Main_SetSeed() {
-    if (random_string_seeds) {
+    if (random_string_seeds && !did_specify_seed) {
         if (string_seed.empty()) {
             string_seed = ob_get_random_words();
             ob_set_config("string_seed", string_seed.c_str());
@@ -1427,6 +1428,8 @@ skiprest:
 
                 // regardless of success or fail, compute a new seed
                 Main_CalcNewSeed();
+
+                did_specify_seed = false;
             }
         }
     } catch (const assert_fail_c &err) {

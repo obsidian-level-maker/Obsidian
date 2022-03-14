@@ -1,4 +1,4 @@
-# OBSIDIAN (Section in progress)
+# OBSIDIAN
 
 ## LUA/PREFABS/ADDON DEVELOPERS
 
@@ -87,8 +87,22 @@ Simon-v
   - Patch for scanning both install and home directories for addons
   - Fixing Date/Time filename prefixes to be ISO-conformant
 
-## THANKS TO:
+## COMMUNITY CONTRIBUTORS:
 
+Cubebert
+  - Chex Quest 3 canon themes and other improvements
+  - Modules for newly supported games (CQ3, HacX, et al)
+  - Heretic skyboxes
+  - XBox Dashboard and ZDoom Forums program themes
+
+hytalego
+  - Russian translation file
+
+Twin Galaxy
+  - Windows 95 program theme
+
+WolVexus
+  - Black Ops program theme
 
 
 # OBLIGE

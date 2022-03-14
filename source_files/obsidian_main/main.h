@@ -162,6 +162,7 @@ extern bool randomize_monsters;
 extern bool randomize_pickups;
 extern bool randomize_misc;
 extern bool random_string_seeds;
+extern bool did_specify_seed;
 extern int zip_output;
 
 extern std::string def_filename;
