@@ -3530,7 +3530,7 @@ GROW_COLONNADE_CLOISTER_LIQUID =
 
 GROW_357_OPEN_ROOF_LIQUID =
 {
-  prob = 25,
+  prob = 45,
   skip_prob = 75,
 
   structure =
@@ -3553,7 +3553,7 @@ GROW_357_OPEN_ROOF_LIQUID =
 
 GROW_357_OPEN_ROOF_NEW_AREA =
 {
-  prob = 25,
+  prob = 45,
   skip_prob = 75,
 
   structure =
@@ -3611,7 +3611,7 @@ GROW_357_ROUND_HOLLOW_1 =
 
 GROW_357_ROUND_HOLLOW_1_LIQUID =
 {
-  prob = 25,
+  prob = 35,
   skip_prob = 75,
 
   structure =
@@ -4880,7 +4880,7 @@ GROW_REVERSE_FUNNEL =
   },
 },
 
-GROW_REVERSE_FUNNEL_REVERSE =
+GROW_REVERSE_FUNNEL_LIQUID =
 {
   prob = 20,
   aversion = 3,
@@ -4902,6 +4902,32 @@ GROW_REVERSE_FUNNEL_REVERSE =
     "1~","~A",
     "1~","~A",
   },
+},
+
+GROW_REVERSE_FUNNEL_LIQUID_COMPLEX =
+{
+  prob = 25,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x.........","x11~AAA>11",
+    "1.........","111%%AA>11",
+    "1.........","1111~AA%11",
+    "x.........","x111>AAAAA",
+    "x.........","x111>AAAAA",
+    "x.........","x111~AA/11",
+    "x.........","x11//AA>11",
+    "x.........","x11~AAA>11"
+  },
+
+  diagonals =
+  {
+    "1~","~A",
+    "A1",
+    "A1",
+    "1~","~A"
+  }
 },
 
 GROW_SIDE_ON_RAMP =
@@ -4945,6 +4971,29 @@ GROW_SIDE_ON_RAMP_TALL =
   },
 },
 
+GROW_SIDE_ON_RAMP_TALL_TO_JUNCTION =
+{
+  prob = 15,
+  skip_prob = 75,
+
+  structure =
+  {
+    "....","A%/A",
+    "....","AAAA",
+    "x..x","xAAx",
+    "x..x","xAAx",
+    "x..x","x^^x",
+    "x..x","x^^x",
+    "1..x","111x",
+    "1..x","11/x",
+  },
+
+  diagonals =
+  {
+    "A.",".A",
+    "1.",
+  },
+},
 
 GROW_SIDE_ON_RAMP_TALL_LIQUID =
 {
@@ -4964,6 +5013,29 @@ GROW_SIDE_ON_RAMP_TALL_LIQUID =
   diagonals =
   {
     "1.",
+  },
+},
+
+GROW_SIDE_ON_RAMP_TALL_LIQUID_TO_JUNCTION =
+{
+  prob = 10,
+  skip_prob = 75,
+
+  structure =
+  {
+    "......","AAAAAA",
+    "......","AAAAAA",
+    "x....x","x~^^~x",
+    "x....x","x~^^~x",
+    "1....x","1111~x",
+    "1....x","111/~x",
+    "x....x","x~~~/x"
+  },
+
+  diagonals =
+  {
+    "1~",
+    "~.",
   },
 },
 
@@ -4987,26 +5059,76 @@ GROW_CAUSEWAY =
 
 GROW_CAUSEWAY_WATERLOCKED =
 {
-  prob = 15,
-  skip_prob = 75,
+  prob = 35,
+  skip_prob = 80,
+
+  structure =
+  {
+    "11x.....xxx","11xAA~AAxxx",
+    "...........","111AA~AA111",
+    "...........","11>AA~AA<11",
+    "...........","111AA~AA111",
+    "...........","111AA~AA111",
+    "...........","11>AA~AA<11",
+    "...........","111AA~AA111",
+    "xxx.....xxx","xxxAA~AAxxx",
+  },
+},
+
+GROW_CAUSEWAY_WATERLOCKED_CROSSED_OUT =
+{
+  prob = 35,
+  skip_prob = 80,
 
   structure =
   {
     "xxxx.....xxx","xxxxAA~AAxxx",
     "1...........","1111AA~AA111",
     "1...........","111>AA~AA<11",
-    "x...........","x111AA~AA111",
-    "x...........","x111AA~AA111",
+    "x...........","x111A/~%A111",
+    "x...........","x11~~~~~~~11",
+    "x...........","x111A%~/A111",
     "x...........","x11>AA~AA<11",
     "x...........","x111AA~AA111",
     "xxxx.....xxx","xxxxAA~AAxxx",
   },
+
+  diagonals =
+  {
+    "1~","~1",
+    "1~","~1",
+  }
+},
+
+GROW_CAUSEWAY_WATERLOCKED_CENTER_PILLAR =
+{
+  prob = 35,
+  skip_prob = 80,
+
+  structure =
+  {
+    "xxxx.....xxx","xxxxAA~AAxxx",
+    "1...........","1111AA~AA111",
+    "1...........","111>AAAAA<11",
+    "x...........","x111A/#%A111",
+    "x...........","x~~~A###A~~~",
+    "x...........","x111A%#/A111",
+    "x...........","x11>AAAAA<11",
+    "x...........","x111AA~AA111",
+    "xxxx.....xxx","xxxxAA~AAxxx",
+  },
+
+  diagonals =
+  {
+    "A.",".A",
+    "A.",".A",
+  }
 },
 
 GROW_CAUSEWAY_WATERBOUND =
 {
-  prob = 20,
-  skip_prob = 75,
+  prob = 30,
+  skip_prob = 80,
 
   structure =
   {
@@ -5019,6 +5141,30 @@ GROW_CAUSEWAY_WATERBOUND =
     "1..........","111~~AA~~11",
     "1..........","111~~AA~~11",
   },
+},
+
+GROW_CAUSEWAY_WATERBOUND_PILLAR_INTERRUPT =
+{
+  prob = 40,
+  skip_prob = 80,
+
+  structure =
+  {
+    "x..........","x11~~AA~~11",
+    "x..........","x11~~AA~~11",
+    "x..........","x11>>AA<<11",
+    "x....xx....","x11~/xx%~11",
+    "x....xx....","x11~%xx/~11",
+    "x..........","x11>>AA<<11",
+    "1..........","111~~AA~~11",
+    "1..........","111~~AA~~11",
+  },
+
+  diagonals =
+  {
+    "~.",".~",
+    "~.",".~",
+  }
 },
 
 GROW_CAUSEWAY_SINGLE =
@@ -5044,13 +5190,72 @@ GROW_CAUSEWAY_SINGLE_WATERBOUND =
 
   structure =
   {
-    "1......","111~~AA",
-    "1......","111>>AA",
-    "x......","x11~~AA",
-    "x......","x11~~AA",
-    "x......","x11>>AA",
-    "x......","x11~~AA",
+    "11xxxx","11xxxx",
+    "......","11~~AA",
+    "......","11>>AA",
+    "......","11~~AA",
+    "......","11~~AA",
+    "......","11>>AA",
+    "......","11~~AA",
   },
+},
+
+GROW_CAUSEWAY_SINGLE_WATERBOUND_OFF_RAMP =
+{
+  prob = 30,
+  skip_prob = 80,
+
+  structure =
+  {
+    "11xxxxxxxx","11xxxxxxxx",
+    "..........","11~~AA1111",
+    "..........","11>>AA<<11",
+    "..........","11~~AA1111",
+    "..........","11~~AA1111",
+    "..........","11>>AA<<11",
+    "..........","11~~AA1111",
+  },
+},
+
+GROW_CAUSEWAY_SINGLE_WATERBOUND_ON_RAMP =
+{
+  prob = 30,
+  skip_prob = 80,
+
+  structure =
+  {
+    "11xxxxxxxx","11xxxxxxxx",
+    "..........","1111AA~~11",
+    "..........","11>>AA<<11",
+    "..........","1111AA~~11",
+    "..........","1111AA~~11",
+    "..........","11>>AA<<11",
+    "..........","1111AA~~11",
+  },
+},
+
+GROW_CAUSEWAY_SINGLE_WATERBOUND_BEND =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    "1......x","111~~AAx",
+    "1......x","111>>AAx",
+    "x.......","x11~~%A%",
+    "x.......","x11~~~AA",
+    "x.......","x11~~~AA",
+    "x.......","x11~~/A/",
+    "x......x","x11>>AAx",
+    "x......x","x11~~AAx",
+  },
+
+  diagonals =
+  {
+    "~A","A.",
+    "~A","A.",
+  }
 },
 
 GROW_CAUSEWAY_SINGLE_SOLID_PILLAR =
@@ -5060,12 +5265,47 @@ GROW_CAUSEWAY_SINGLE_SOLID_PILLAR =
 
   structure =
   {
-    "1......","111##AA",
-    "1......","111>>AA",
-    "x......","x11##AA",
-    "x......","x11##AA",
-    "x......","x11>>AA",
-    "x......","x11##AA",
+    "11xxxx","11xxxx",
+    "......","11##AA",
+    "......","11>>AA",
+    "......","11##AA",
+    "......","11##AA",
+    "......","11>>AA",
+    "......","11##AA",
+  },
+},
+
+GROW_CAUSEWAY_SINGLE_SOLID_PILLAR_OFF_RAMP =
+{
+  prob = 25,
+  skip_prob = 80,
+
+  structure =
+  {
+    "11xxxxxxxx","11xxxxxxxx",
+    "..........","11##AA1111",
+    "..........","11>>AA<<11",
+    "..........","11##AA1111",
+    "..........","11##AA1111",
+    "..........","11>>AA<<11",
+    "..........","11##AA1111",
+  },
+},
+
+GROW_CAUSEWAY_SINGLE_SOLID_PILLAR_ON_RAMP =
+{
+  prob = 25,
+  skip_prob = 80,
+
+  structure =
+  {
+    "11xxxxxxxx","11xxxxxxxx",
+    "..........","1111AA##11",
+    "..........","11>>AA<<11",
+    "..........","1111AA##11",
+    "..........","1111AA##11",
+    "..........","11>>AA<<11",
+    "..........","1111AA##11",
   },
 },
 
@@ -5530,6 +5770,32 @@ GROW_SQUEEZE_DRAIN_CURVE =
     "~1",
     "1~",
     "~.",
+  },
+},
+
+GROW_SQUEEZE_DRAIN_RING =
+{
+  prob = 15,
+  skip_prob = 75,
+
+  structure =
+  {
+    ".......","/~~~~11",
+    ".......","~/11111",
+    ".......","~1/~~1~",
+    ".......","~1~~/1~",
+    ".......","11111/~",
+    "1......","11~~~~/",
+  },
+
+  diagonals =
+  {
+    ".~",
+    "~1",
+         "1~",
+              "~1",
+                   "1~",
+                   "~.",
   },
 },
 
@@ -6542,7 +6808,7 @@ GROW_CANAL_SINGLE_UNG =
     "11..","1111",
     "11..","1111",
     "..xx","~~xx",
-  },
+  }
 },
 
 GROW_CANAL_SINGLE_CORNER_UNG =
@@ -6554,12 +6820,27 @@ GROW_CANAL_SINGLE_CORNER_UNG =
     "11..","1111",
     "11..","1111",
     "....","~~~~",
+  }
+},
+
+GROW_CANAL_SINGLE_CORNER_UNG_PILLARED =
+{
+  prob = 25,
+
+  structure =
+  {
+    "11......","11111111",
+    "11......","11/..%11",
+    "........","~~%../~~",
+    "x......x","x%~~~~/x",
   },
 
   diagonals =
   {
-    "~.",
-  },
+    "1.",".1",
+    "~.",".~",
+    ".~","~.",
+  }
 },
 
 -- [NARROW CANALS : NCANALS]
@@ -6573,7 +6854,7 @@ GROW_NARROW_CANAL_ENTRY =
     "1..","111",
     "1..","111",
     "x..","x~~",
-  },
+  }
 },
 
 GROW_NARROW_CANAL_ENTRY_FROMSIDE =
@@ -6584,7 +6865,7 @@ GROW_NARROW_CANAL_ENTRY_FROMSIDE =
   {
     "1...","111~",
     "1...","111~",
-  },
+  }
 },
 
 GROW_NARROW_CANAL_STRAIGHT =
@@ -12224,12 +12505,61 @@ GROW_TRENCH_CURVE_INNER_SOLID =
   },
 },
 
+GROW_TRENCH_CURVE_INNER_SOLID_RING =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xxxxx..","xxxxxAA",
+    "xx.....","xx/AAAA",
+    "xx.....","xxA/#A1",
+    "xx.....","xxA#/A1",
+    "1......","1>AAA/1",
+    "1......","1111111",
+  },
+
+  diagonals =
+  {
+    ".A",
+    "A.",
+         ".A",
+    "A1",
+  },
+},
+
 GROW_TRENCH_CURVE_OUTER_SOLID =
 {
   prob = 15,
   skip_prob = 70,
 
   aversion = 6,
+
+  structure =
+  {
+    "xxx...","xxx11A",
+    "x.....","x/111A",
+    "x.....","x1/#1A",
+    "x.....","x1#/1A",
+    "1.....","1111/A",
+    "1.....","1>AAA/",
+  },
+
+  diagonals =
+  {
+    ".1",
+    "1.",
+         ".1",
+    "1A",
+    "A.",
+  },
+},
+
+GROW_TRENCH_CURVE_OUTER_SOLID_RING =
+{
+  prob = 20,
+  skip_prob = 75,
 
   structure =
   {

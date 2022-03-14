@@ -1344,7 +1344,9 @@ DOOM.THEMES =
       gtd_craneo_bank_set = 10,
       --
       gtd_mining_set = 50,
-      gtd_power_plant_set = 50
+      gtd_power_plant_set = 50,
+      --
+      gtd_DMV_set = 35
     },
 
     outdoor_wall_groups =
@@ -1799,7 +1801,9 @@ DOOM.THEMES =
       gtd_craneo_bank_set = 50,
       --
       gtd_mining_set = 35,
-      gtd_power_plant_set = 35
+      gtd_power_plant_set = 35,
+      --
+      gtd_DMV_set = 50
     },
 
     window_groups =

@@ -226,7 +226,7 @@ class AIMarine : Actor
                 }
                 else
                 {
-                    if(!self.CheckSight(followtarget)&&followcd==0&&self.Distance2D(followtarget) > 2000)
+                    if(!self.CheckSight(followtarget)&&followcd==0&&self.Distance2D(followtarget) > FOLLOW_DIST)
                     {
                         if(self.Teleport(followtarget.Vec3Offset(-32, 0, 0, false),0,0))
                         {
@@ -1410,6 +1410,8 @@ function MARINE_CLOSET_TUNE.all_done()
     scripty = string.gsub(scripty, "MFOLLOW", "false")
   end
 
+  scripty = string.gsub(scripty, "FOLLOW_DIST", PARAM.float_m_c_follow_distance)
+
   if PARAM.m_c_waker == "sight" then
     scripty = string.gsub(scripty, "WSTATE", MARINE_CLOSET_TUNE.TEMPLATES.WAKER1)
   elseif PARAM.m_c_waker == "range" then
@@ -1785,9 +1787,23 @@ OB_MODULES["gzdoom_marine_closets"] =
 
 
     {
+      name = "float_m_c_follow_distance",
+      label = _("Follow Distance"),
+      priority = 79,
+      valuator = "slider",
+      units = "",
+      min = 500,
+      max = 5000,
+      increment = 100,
+      default = 2000,
+      tooltip = "If marines are followers, the maximum allowed distance they are allowed to stray before being teleported to the player.",
+    },
+
+
+    {
       name = "bool_m_c_boss",
       label = _("Allow in Gotchas"),
-      priority = 79,
+      priority = 78,
       valuator = "button",
       default = 0,
       tooltip = "Allows or disallows marine closets to spawn on gotchas and boss generator levels.",
@@ -1797,7 +1813,7 @@ OB_MODULES["gzdoom_marine_closets"] =
     {
       name = "bool_m_c_rip",
       label = _("Death Messages"),
-      priority = 78,
+      priority = 77,
       valuator = "button",
       default = 0,
       tooltip = "If enabled, will print a message in message log whenever a marine dies.",
@@ -1807,7 +1823,7 @@ OB_MODULES["gzdoom_marine_closets"] =
     {
       name = "bool_mc_in_secret",
       label = _("In Secret Rooms"),
-      priority = 77,
+      priority = 76,
       valuator = "button",
       default = 0,
       tooltip = "If enabled, allowed marine closets to be built in secret rooms."
