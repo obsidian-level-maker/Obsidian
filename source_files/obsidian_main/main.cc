@@ -128,6 +128,8 @@ bool randomize_architecture = false;
 bool randomize_monsters = false;
 bool randomize_pickups = false;
 bool randomize_misc = false;
+bool random_string_seeds = false;
+bool did_specify_seed = false;
 int zip_output = 0;
 
 bool first_run = false;
@@ -888,6 +890,29 @@ int Main_key_handler(int event) {
 void Main_CalcNewSeed() { next_rand_seed = xoshiro_UInt(); }
 
 void Main_SetSeed() {
+    if (random_string_seeds && !did_specify_seed) {
+        if (string_seed.empty()) {
+            string_seed = ob_get_random_words();
+            ob_set_config("string_seed", string_seed.c_str());
+            #ifdef max
+            #undef max
+            #endif
+            unsigned long long split_limit =
+                (std::numeric_limits<long long>::max() /
+                127);  // It is intentional that I am using the max for signed - Dasho
+            next_rand_seed = split_limit;
+            for (size_t i = 0; i < string_seed.size(); i++) {
+                char character = string_seed.at(i);
+                if (not std::iscntrl(character)) {
+                    if (next_rand_seed < split_limit) {
+                        next_rand_seed *= int(character);
+                    } else {
+                        next_rand_seed /= int(character);
+                    }
+                }
+            }
+        }
+    }
     std::string seed = NumToString(next_rand_seed);
     ob_set_config("seed", seed.c_str());
     if (!batch_mode) {
@@ -1403,6 +1428,8 @@ skiprest:
 
                 // regardless of success or fail, compute a new seed
                 Main_CalcNewSeed();
+
+                did_specify_seed = false;
             }
         }
     } catch (const assert_fail_c &err) {
