@@ -2396,6 +2396,8 @@ function Level_choose_misc()
 
   LEVEL.shape_transform_mode = rand.pick({"linear","random"})
 
+  if LEVEL.is_procedural_gotcha then LEVEL.shape_transform_mode = "random" end
+
   LEVEL.shape_transform_possiblities =
   {
     {0, 0, 0},
