@@ -8657,9 +8657,9 @@ end
 
 
 function namelib.choose_one(DEF, max_len)
-  if PARAM.bool_whole_names_only then
-    whole_name = rand.key_by_probs(DEF.lexicon.s)
-    DEF.lexicon.s[whole_name] = 0
+  if PARAM.bool_whole_names_only and PARAM.bool_whole_names_only ~= 0 then
+    local whole_name = rand.key_by_probs(DEF.lexicon.s)
+    DEF.lexicon.s[whole_name] = DEF.lexicon.s[whole_name] / 10
     return whole_name
   end
 
