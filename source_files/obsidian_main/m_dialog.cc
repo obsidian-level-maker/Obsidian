@@ -319,6 +319,7 @@ void DLG_EditSeed(void) {
                     "String contains non-digits. Will process as string\n");
             }
         }
+        did_specify_seed = true;
         next_rand_seed = std::stoull(word);
         return;
     } catch (std::invalid_argument &e) {
@@ -348,6 +349,7 @@ void DLG_EditSeed(void) {
             }
         }
     }
+    did_specify_seed = true;
     return;
 }
 

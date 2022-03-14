@@ -13707,7 +13707,7 @@ STREET_BUILDING_ENTRANCE_WITH_JOINER_3X2 =
 
 }
 
-SHAPES.OBLIGE_5X =
+SHAPES.OBLIGE_V5 =
 {
 
 ROOT_1 =
@@ -15072,6 +15072,945 @@ HALL_2_SPROUT_B =
 	".R", "R.",
 	".R", "R.",
   }
+},
+
+}
+
+SHAPES.OBLIGE_V2 =
+{
+
+ROOT_1 =
+{
+  prob = 10000,
+
+  structure =
+  {
+    "!!!!!!!", ".......",
+    "!!!!!!!", ".RRRRR.",
+    "!!!!!!!", ".RRRRR.",
+    "!!!!!!!", ".RRRRR.",
+    "!!!!!!!", ".RRRRR.",
+    "!!!!!!!", ".RRRRR.",
+	  "!!!!!!!", ".......",
+  },
+
+},
+
+-----------------------------------------
+
+GROW_1 =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".......",
+    ".11111.", ".11111.",
+  },
+},
+
+------------------------------------------
+
+SPROUT_DIRECT_1 =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".11111.", ".11111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+  },
+  
+},
+
+SPROUT_DIRECT_2 =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".#RRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".11111.", ".11111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+  },
+  
+},
+
+SPROUT_DIRECT_3 =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RR#RR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".11111.", ".11111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+  },
+  
+},
+
+SPROUT_DIRECT_4 =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RR#RR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RR#RR.",
+    ".11111.", ".11111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+  },
+  
+},
+
+SPROUT_DIRECT_5 =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".#1111.", ".#1111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+  },
+  
+},
+
+SPROUT_DIRECT_6 =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".11#11.", ".11#11.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+  },
+  
+},
+
+SPROUT_JOINER_1 =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", "..JJJ..",
+    ".11111.", ".11111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+  
+},
+
+SPROUT_JOINER_2 =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", "...JJ..",
+    ".11111.", ".11111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+  
+},
+
+SPROUT_JOINER_3 =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", "..JJ...",
+    ".11111.", ".11111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+  
+},
+
+SPROUT_JOINER_4 =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", "..JJJ..",
+    ".#1111.", ".#1111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+  
+},
+
+SPROUT_JOINER_5 =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", "...JJ..",
+    ".#1111.", ".#1111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+  
+},
+
+SPROUT_JOINER_6 =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", "..JJ...",
+    ".#1111.", ".#1111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+  
+},
+
+SPROUT_JOINER_7 =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".JJ....",
+    ".11#11.", ".11#11.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+  
+},
+
+SPROUT_TELEPORTER_2x2 =
+{
+  prob = 7000,
+
+  structure =
+  {
+    "..", "TT",
+    "..", "TT",
+    "11", "11",
+    "11", "11",
+  },
+
+  teleporter = true,
+
+  closet =
+  {
+    from_dir = 2,
+  },
+},
+
+SPROUT_TELEPORTER_2x2_EMERGENCY =
+{
+  prob = 7000,
+
+  structure =
+  {
+    "..", "TT",
+    "..", "TT",
+    "11", "11",
+    "11", "11",
+  },
+
+  emergency = true,
+
+  teleporter = true,
+
+  closet =
+  {
+    from_dir = 2,
+  },
+},
+
+SPROUT_TELEPORTER_1x1 =
+{
+  prob = 7000,
+
+  structure =
+  {
+    ".", "T",
+    "1", "1",
+  },
+
+  teleporter = true,
+
+  closet =
+  {
+    from_dir = 2,
+  },
+},
+
+SPROUT_TELEPORTER_1x1_EMERGENCY =
+{
+  prob = 7000,
+
+  structure =
+  {
+    ".", "T",
+    "1", "1",
+  },
+
+  emergency = true,
+
+  teleporter = true,
+
+  closet =
+  {
+    from_dir = 2,
+  },
+},
+
+SQUARE_OUT =
+{
+  pass = "square_out",
+
+  prob = 10000,
+
+  structure =
+  {
+    ".",".",
+    "1","1",
+  },
+},
+
+DECORATE_CLOSET_2x1 =
+{
+  prob = 6000, --40,
+  prob_skew = 2,
+
+  structure =
+  {
+    "..", "TT",
+    "11", "11",
+  },
+
+  closet = { from_dir=2 },
+},
+
+FILLER_1 =
+{
+  pass = "filler",
+  prob = 4000, --30,
+
+  structure =
+  {
+    "1.", "1.",
+    "1.", "11",
+    "11", "11",
+  },
+},
+
+SMOOTHER_1 =
+{
+  pass = "smoother",
+  prob = 7500, --50,
+
+  structure =
+  {
+    "x.", "x.",
+    "1.", "1%",
+    "11", "11",
+  },
+
+  diagonals = { "1." },
+},
+
+------------------------------------------
+--   Cave stuff
+------------------------------------------
+
+CAVE_ROOT_1 =
+{
+  prob = 10000,
+
+  structure =
+  {
+    "!!!!!!!", ".......",
+    "!!!!!!!", ".RRRRR.",
+    "!!!!!!!", ".RRRRR.",
+    "!!!!!!!", ".RRRRR.",
+    "!!!!!!!", ".RRRRR.",
+    "!!!!!!!", ".RRRRR.",
+	  "!!!!!!!", ".......",
+  },
+
+},
+
+SPROUT_DIRECT_1_cave =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".11111.", ".11111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+
+    env  = "cave",
+  },
+  
+},
+
+SPROUT_DIRECT_2_cave =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".#RRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".11111.", ".11111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+
+    env  = "cave",
+  },
+  
+},
+
+SPROUT_DIRECT_3_cave =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RR#RR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".11111.", ".11111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+
+    env  = "cave",
+  },
+  
+},
+
+SPROUT_DIRECT_4_cave =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RR#RR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RR#RR.",
+    ".11111.", ".11111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+
+    env  = "cave",
+  },
+  
+},
+
+SPROUT_DIRECT_5_cave =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".#1111.", ".#1111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+
+    env  = "cave",
+  },
+  
+},
+
+SPROUT_DIRECT_6_cave =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".11#11.", ".11#11.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+
+    env  = "cave",
+  },
+  
+},
+
+SPROUT_JOINER_1_cave =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", "..JJJ..",
+    ".11111.", ".11111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+
+    env  = "cave",
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+  
+},
+
+SPROUT_JOINER_2_cave =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", "...JJ..",
+    ".11111.", ".11111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+
+    env  = "cave",
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+  
+},
+
+SPROUT_JOINER_3_cave =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", "..JJ...",
+    ".11111.", ".11111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+
+    env  = "cave",
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+  
+},
+
+SPROUT_JOINER_4_cave =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", "..JJJ..",
+    ".#1111.", ".#1111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+
+    env  = "cave",
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+  
+},
+
+SPROUT_JOINER_5_cave =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", "...JJ..",
+    ".#1111.", ".#1111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+
+    env  = "cave",
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+  
+},
+
+SPROUT_JOINER_6_cave =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", "..JJ...",
+    ".#1111.", ".#1111.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+
+    env  = "cave",
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+  
+},
+
+SPROUT_JOINER_7_cave =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".RRRRR.",
+    ".......", ".JJ....",
+    ".11#11.", ".11#11.",
+  },
+  
+  new_room =
+  {
+    conn = { x=2, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=3, w=2, dir=8 },
+
+    env  = "cave",
+  },
+
+  joiner =
+  {
+    from_dir = 2
+  }
+  
+},
+
+CAVE_GROW_1 =
+{
+  prob = 10000, --Non-MSSP default: 100,
+  prob_skew = 2,
+
+  structure =
+  {
+    ".......", ".......",
+    ".11111.", ".11111.",
+  },
 },
 
 }

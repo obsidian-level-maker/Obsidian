@@ -48,6 +48,8 @@ gui.import("level")
 
 gui.import("script_manager")
 
+gui.import("random_words.lua")
+
 function ob_traceback(msg)
 
   -- guard against very early errors
@@ -769,8 +771,13 @@ function ob_read_all_config(need_full, log_only)
   do_line("-- https://github.com/caligari87/ObAddon/\n")
 
   if OB_CONFIG.seed and OB_CONFIG.seed ~= 0 then
-    do_line("seed = " .. OB_CONFIG.seed)
-    do_line("")
+    if OB_CONFIG.string_seed then
+      do_line("seed = " .. OB_CONFIG.string_seed)
+      do_line("")
+    else
+      do_line("seed = " .. OB_CONFIG.seed)
+      do_line("")
+    end
   end
 
   do_line("---- Game Settings ----")
@@ -1356,6 +1363,12 @@ function ob_hexen_ceiling_check(thing_id)
 
 end
 
+function ob_get_random_words()
+  assert(RANDOM_WORDS)
+
+  return rand.pick(RANDOM_WORDS) .. " " .. rand.pick(RANDOM_WORDS) .. " " .. rand.pick(RANDOM_WORDS)
+end
+
 function ob_default_filename()
   -- create a default filename [ WITHOUT any extension ]
 
@@ -1364,14 +1377,6 @@ function ob_default_filename()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
   
-  if OB_CONFIG.string_seed then
-    print("SEED: " .. OB_CONFIG.string_seed)
-  else
-    print("SEED: " .. tostring(OB_CONFIG.seed))
-  end
-
-  gui.rand_seed(OB_CONFIG.seed)
-
   Naming_init()
 
   OB_CONFIG.title = Naming_grab_one("TITLE")
@@ -1702,8 +1707,6 @@ function ob_build_setup()
 
   Fab_load_all_definitions()
 
-  gui.rand_seed(OB_CONFIG.seed)
-
   table.name_up(GAME.THEMES)
   table.name_up(GAME.ROOM_THEMES)
   table.name_up(GAME.ROOMS)
@@ -1733,8 +1736,6 @@ function ob_clean_up()
   EPISODE = nil
   PREFABS = nil
   SEEDS   = nil
-
-  gui.rand_seed(OB_CONFIG.seed)
 
   if OB_CONFIG.string_seed then
     table.remove(OB_CONFIG, string_seed)

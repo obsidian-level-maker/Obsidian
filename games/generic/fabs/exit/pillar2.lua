@@ -98,6 +98,10 @@ PREFABS.Exit_pillar2_heretic =
   engine = "advanced",
   forced_offsets = 
   {
+    [12] = { x=0, y=-1 },
+    [14] = { x=0, y=-1 },
+    [16] = { x=0, y=-1 },
+    [18] = { x=0, y=-1 },
     [26] = { x=16, y=50 },
     [34] = { x=16, y=50 },
     [44] = { x=16, y=50 },

@@ -67,6 +67,52 @@ WADFAB_ENTITIES =
   [8199] = { kind="secret" }
 }
 
+WADFAB_ENTITIES_HEXEN =
+{
+  -- monster spots
+
+  [8105] = { kind="monster", r= 20 },
+  [8106] = { kind="monster", r= 32 },
+  [8107] = { kind="monster", r= 48 },
+  [8108] = { kind="monster", r= 64 },
+  [8109] = { kind="monster", r=128 },
+
+  [8112] = { kind="flyer", r= 20 },
+  [8113] = { kind="flyer", r= 32 },
+  [8114] = { kind="flyer", r= 48 },
+  [8116] = { kind="flyer", r= 64 },
+  [8118] = { kind="flyer", r=128 },
+
+  [8122] = { kind="cage", r= 20 },
+  [8123] = { kind="cage", r= 32 },
+  [8124] = { kind="cage", r= 48 },
+  [8126] = { kind="cage", r= 64 },
+  [8128] = { kind="cage", r=128 },
+
+  [8132] = { kind="trap", r= 20 },
+  [8133] = { kind="trap", r= 32 },
+  [8134] = { kind="trap", r= 48 },
+  [8136] = { kind="trap", r= 64 },
+  [8138] = { kind="trap", r=128 },
+
+  -- special spots
+
+  [8151] = { kind="pickup",    r=16 },
+  [8152] = { kind="big_item",  r=16 },
+  [8160] = { kind="important", r=64 },
+
+  -- lighting
+
+  [8181] = { kind="light" },
+
+  -- souuuuund
+
+  [8185] = { kind="sound" },
+
+  -- miscellaneous
+
+  [8199] = { kind="secret" }
+}
 
 WADFAB_FX_DELTAS =
 {
@@ -1558,8 +1604,18 @@ function Fab_load_wad(def)
 
   local function handle_entity(fab, E)
   
-    local spot_info = WADFAB_ENTITIES[E.id]
-     
+    local spot_info
+
+    if OB_CONFIG.game == "hexen" then
+      if fab.native_hexen then
+        spot_info = WADFAB_ENTITIES_HEXEN[E.id]
+      else
+        spot_info = WADFAB_ENTITIES[E.id]
+      end
+    else
+      spot_info = WADFAB_ENTITIES[E.id]
+    end
+    
     if not spot_info then
       table.insert(fab.entities, E)
       return

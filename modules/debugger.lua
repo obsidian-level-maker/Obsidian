@@ -89,6 +89,17 @@ OB_MODULES["debugger"] =
   {
 
     {
+      name = "bool_whole_names_only",
+      label=_("Whole Name Generator Names Only"),
+      valuator = "button",
+      default = 0,
+      tooltip="Use only complete names from the Name Generator",
+      longtip="Uses name generator names that are already complete phrases/sentences \n" ..
+      "instead of trying to procedurally generate them.",
+      priority=101,
+    },
+
+    {
       name = "name_gen_test",
       label=_("Name Generator"),
       choices=DEBUG_CONTROL.NAME_GEN_CHOICES,
