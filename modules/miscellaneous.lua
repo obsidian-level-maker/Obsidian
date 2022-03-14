@@ -316,7 +316,8 @@ OB_MODULES["misc"] =
       increment = 1,
       default = 15,
       presets = "",
-      tooltip = "Allows Oblige to create large street-like outdoor rooms.",
+      tooltip = "Allows Oblige to create large street-like outdoor rooms. " ..
+      "Will be ignored if V2 or V5 shape grammar is selected for the level.",
       randomize_group="architecture",
       priority = 96
     },
