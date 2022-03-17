@@ -424,6 +424,38 @@ CHEX3.ROOM_THEMES =
     }
   },
   
+  bazoik_v2_Hallway =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+  
+    walls =
+    {
+      GRAY7 = 50,
+      STARG3  = 15,
+    },
+  
+    floors =
+    {
+      FLAT1_1 = 50,
+      FLAT1 = 50,
+      FLAT14 = 50,
+      FLOOR0_2 = 50,
+      STEP1 = 50
+    },
+  
+    ceilings =
+    {
+      FLAT14 = 50,
+      CJFCOMM3 = 50,
+      CEIL5_1 = 50,
+      CEIL4_2 = 25,
+      FLOOR0_6 = 25
+    }
+  
+  },
+
   bazoik_vent_Hallway =
   {
     env   = "hallway",
@@ -590,6 +622,35 @@ CHEX3.ROOM_THEMES =
       CEIL4_1 = 50,
 	  FLOOR0_6 = 50
     }
+  },
+
+  spaceport_v2_Hallway =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      MUSEUM = 50,
+      NICEWALL = 30,
+      BROWN1 = 20
+    },
+
+    floors =
+    {
+      CEIL5_1 = 50,
+      CJFVIL02 = 50,
+      MUFLOOR2 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT1 = 50,
+	  CJFCOMM3 = 50,
+	  BROWN = 50
+    }
+
   },
 
   spaceport_vent_Hallway =

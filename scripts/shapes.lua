@@ -16013,4 +16013,153 @@ CAVE_GROW_1 =
   },
 },
 
+-- V2 Hallway
+
+SPROUT_wide_hallway =
+{
+  prob = 3200, --1800 --1500,
+  skip_prob = 20,
+
+  structure =
+  {
+    "..", "..",
+    "..", "@@",
+    "..", "HH",
+    "11", "11",
+  },
+
+  new_room =
+  {
+    env = "hallway",
+
+    conn = { x=1, y=1, w=2, dir=8 },
+
+    hall_type = "wide",
+
+    grow_pass = "hall_2"
+  }
+},
+
+
+HALL_2_GROW_I1 =
+{
+  pass = "hall_2",
+  prob = 55, --40,
+
+  structure =
+  {
+    "..", "..",
+    "..", "@@",
+    "..", "HH",
+    "@@", "HH",
+    "11", "11",
+  }
+},
+
+
+HALL_2_GROW_L1 =
+{
+  pass = "hall_2",
+  prob = 35, --50,
+  prob_skew = 2,
+
+  structure =
+  {
+    "....", ".@HH",
+    "..@@", ".@HH",
+    "xx11", "xx11",
+  },
+
+  link2_2 = { dest_dir=4 }
+},
+
+
+HALL_2_GROW_T1 =
+{
+  pass = "hall_2",
+  prob = 30, --25,
+  prob_skew = 2,
+
+  structure =
+  {
+    "......", ".@HH@.",
+    "..@@..", ".@HH@.",
+    "xx11xx", "xx11xx",
+  },
+
+  hallway = { keep_shape_prob=50 },
+
+  link2_2 = { dest_dir=4 },
+  link5_2 = { dest_dir=6 }
+},
+
+
+HALL_2_GROW_P1 =
+{
+  pass = "hall_2",
+  prob = 10, --5,
+  prob_skew = 2,
+
+  structure =
+  {
+    "xx..xx", "xx..xx",
+    "xx..xx", "xx@@xx",
+    "......", ".@HH@.",
+    "..@@..", ".@HH@.",
+    "xx11xx", "xx11xx",
+  },
+
+  link2_2 = { dest_dir=4 },
+  link5_2 = { dest_dir=6 },
+  link3_4 = { dest_dir=8 }
+},
+
+
+HALL_2_SPROUT_A =
+{
+  pass = "hall_2_sprout",
+  prob = 100,
+
+  structure =
+  {
+    ".....", "RRRRR",
+    ".....", "RRRRR",
+    ".....", "RRRRR",
+    ".....", "RRRRR",
+    ".....", "RRRRR",
+    "xx@@x", "xxHHx",
+    "xx11x", "xx11x",
+  },
+
+  new_room =
+  {
+    conn = { x=2, y=2, w=2, dir=8 },
+
+    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 }
+  }
+},
+
+HALL_2_SPROUT_B =
+{
+  pass = "hall_2_sprout",
+  prob = 20,
+
+  structure =
+  {
+    "....", "RRRR",
+    "....", "RRRR",
+    "....", "RRRR",
+    "....", "RRRR",
+    "x@@x", "xHHx",
+    "x11x", "x11x",
+  },
+
+  new_room =
+  {
+    conn = { x=2, y=2, w=2, dir=8 },
+
+    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 }
+  }
+},
+
 }

@@ -8,7 +8,7 @@ PREFABS.Hallway_oblige_v2_term =
   map    = "MAP01",
   kind   = "terminator",
 
-  group  = "oblige_v2,
+  group  = "oblige_v2",
   prob   = 50,
 
   where  = "seeds",
