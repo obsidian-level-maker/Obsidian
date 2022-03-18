@@ -2772,6 +2772,10 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
         new_intconn.stair_chunk = chunk
 
         local from_area = assert(chunk.from_area)
+        if not from_area then
+          Seed_dump_rooms()
+          error("Missing staircase area source in ROOM_" .. r.id)
+        end
         chunk.area.prelim_h = assert(from_area.prelim_h)
 
         -- choose the stair prefab now
@@ -4264,12 +4268,23 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
 
   -- if map is too small, try to sprout some more rooms
   local MAX_LOOP = 10
+  local MAX_RETRIES = 5
 
   check_initial_room()
 
   for loop = 1, MAX_LOOP do
 
     local kw
+
+    if loop == 9 then
+      loop = 1
+      MAX_RETRIES = MAX_RETRIES - 1
+      rand.shuffle(LEVEL.shape_transform_possiblities)
+      if MAX_RETRIES == 0 then
+        Seed_draw_minimap()
+        error("Unable to sprout more rooms.")
+      end
+    end
 
     repeat
       kw = handle_next_room()
