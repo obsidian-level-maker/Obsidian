@@ -320,7 +320,7 @@ class AIMarine : Actor
         if(other.bTELESTOMP)
           return false;
 
-        if(other.Damage && other.target && other.target.player)
+        if(other.bMissile && other.target && other.target.player)
           return false;
 
         if(!passive)
