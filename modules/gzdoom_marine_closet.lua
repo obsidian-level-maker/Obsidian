@@ -2,6 +2,7 @@
 --  GZDoom Marine Closets
 --------------------------------------------------------------------
 --
+--  Copyright (C) 2019-2020 Scionox
 --  Copyright (C) 2019-2022 MsrShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
@@ -317,6 +318,9 @@ class AIMarine : Actor
     override bool CanCollideWith(Actor other, bool passive)
     {
         if(other.bTELESTOMP)
+          return false;
+
+        if(other.Damage && other.target && other.target.player)
           return false;
 
         if(!passive)
