@@ -432,3 +432,30 @@ PREFABS.Wall_generic_small_lite_hell_diag =
   tex_LITEBLU4 = "CRACKLE2",
   flat_CEIL4_3 = "FLOOR1_7"
 }
+
+--
+
+PREFABS.Wall_generic_artsy_lite_box =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP35",
+
+  group = "gtd_generic_artsy_lite_box",
+
+  height = 96,
+
+  bound_z2 = 96
+}
+
+PREFABS.Wall_generic_artsy_lite_box_diag =
+{
+  template = "Wall_generic_artsy_bedazzled",
+  map = "MAP36",
+
+  group = "gtd_generic_artsy_lite_box",
+
+  height = 96,
+  where = "diagonal",
+
+  bound_z2 = 96
+}
