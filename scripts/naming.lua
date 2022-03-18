@@ -8659,7 +8659,11 @@ end
 function namelib.choose_one(DEF, max_len)
   if PARAM.bool_whole_names_only and PARAM.bool_whole_names_only ~= 0 then
     local whole_name = rand.key_by_probs(DEF.lexicon.s)
-    DEF.lexicon.s[whole_name] = DEF.lexicon.s[whole_name] / 10
+    DEF.lexicon.s[whole_name] = nil
+    if table.empty(DEF.lexicon.s) then
+      error("No more single names left in names table!" ..
+      "More singles mixers required! If you like it put a ring on it!!!")
+    end
     return whole_name
   end
 
