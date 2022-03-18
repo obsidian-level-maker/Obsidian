@@ -187,6 +187,29 @@ static void main_win_misc_config_CB(Fl_Widget *w, void *data) {
     randomize_misc = (checkbox->value() != 0) ? true : false;
 }
 
+static void main_win_addon_CB(Fl_Widget *w, void *data) {
+    std::string menu_item = "Addons/";
+    Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
+    addon_info_t *addon = (addon_info_t *)data;
+    menu_item.append(addon->name.filename().string());
+    const Fl_Menu_Item *checkbox = menu->find_item(menu_item.c_str());
+    addon->enabled = (checkbox->value() != 0) ? true : false;
+    Options_Save(options_file);
+
+    fl_alert("%s", _("Changes to addons require a restart.\nOBSIDIAN will "
+                         "now restart."));
+
+    initial_enabled_addons.clear();
+
+    for (int j = 0; j < all_addons.size(); j++) {
+        if (all_addons[j].enabled) {
+            initial_enabled_addons[all_addons[j].name] = 1;
+        }
+    }
+
+    main_action = MAIN_RESTART;
+}
+
 /* ----- user information ----------------------------- */
 
 static void ShowInfo() {
@@ -1297,6 +1320,15 @@ skiprest:
         main_win->menu_bar->add(
             "Surprise Me/Randomize Other", NULL, main_win_misc_config_CB, 0,
             FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
+        if (all_addons.size() == 0) {
+            main_win->menu_bar->add("Addons/No Addons Detected", 0, 0, 0, FL_MENU_INACTIVE);
+        } else {
+            for (int i = 0; i < all_addons.size(); i++) {
+                std::string addon_entry = "Addons/";
+                addon_entry.append(all_addons[i].name.filename().string());
+                main_win->menu_bar->add(addon_entry.c_str(), 0, main_win_addon_CB, (void *)&all_addons[i], FL_MENU_TOGGLE | (all_addons[i].enabled ? FL_MENU_VALUE : 0));
+            }
+        }
     }
 
     fl_register_images(); // Needed for Unix window icon and tutorial windows
