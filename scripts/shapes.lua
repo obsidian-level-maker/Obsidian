@@ -9042,6 +9042,20 @@ GROW_36_TEE_NEW_AREA =
   },
 },
 
+GROW_36_BISECT_NEW_AREA_SMALL =
+{
+  prob = 25,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x....x","x#AA#x",
+    "1.....","11AA11",
+    "1.....","11AA11",
+    "x....x","x#AA#x",
+  },
+},
+
 GROW_36_CROSS_NEW_AREA_SMALL =
 {
   prob = 25,
