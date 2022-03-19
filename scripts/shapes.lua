@@ -15197,13 +15197,12 @@ ROOT_1 =
 
 GROW_1 =
 {
-  prob = 10000, --Non-MSSP default: 100,
-  prob_skew = 2,
+  prob = 20000, --Non-MSSP default: 100,
 
   structure =
   {
-    ".......", ".......",
-    ".11111.", ".11111.",
+    ".", ".",
+    "1", "1",
   },
 },
 
@@ -15642,16 +15641,211 @@ SPROUT_TELEPORTER_1x1_EMERGENCY =
   },
 },
 
-SQUARE_OUT =
+SQUARE_OUT_1 =
 {
   pass = "square_out",
 
-  prob = 10000,
+  prob = 20000,
 
   structure =
   {
     ".",".",
     "1","1",
+  },
+},
+
+SQUARE_OUT_3 =
+{
+  prob = 1000,
+  pass = "square_out",
+
+  structure =
+  {
+    "x1111", "x1111",
+    "11111", "11v11",
+    "11111", "1>A<1",
+    "11111", "11^11",
+    "11111", "11111",
+  },
+},
+
+SQUARE_OUT_4 =
+{
+  prob = 1000,
+  pass = "square_out",
+
+  structure =
+  {
+    "x1x11", "x1x11",
+    "11111", "11111",
+    "11111", "1vvv1",
+    "11111", "AAAAA",
+    "11111", "AAAAA",
+  },
+},
+
+SQUARE_OUT_5 =
+{
+  prob = 1000,
+  pass = "square_out",
+
+  structure =
+  {
+    "x1x11", "x1x11",
+    "11111", "11111",
+    "11111", "11v11",
+    "11111", "AAAAA",
+    "11111", "AAAAA",
+  },
+},
+
+SQUARE_OUT_6 =
+{
+  prob = 1000,
+  pass = "square_out",
+
+  structure =
+  {
+    "x1x11", "x1x11",
+    "11111", "11111",
+    "11111", "1v1v1",
+    "11111", "AAAAA",
+    "11111", "AAAAA",
+  },
+},
+
+SQUARE_OUT_7 =
+{
+  prob = 1000,
+  pass = "square_out",
+
+  structure =
+  {
+    "x1x11", "x1x11",
+    "11111", "11111",
+    "11111", "1vAv1",
+    "11111", "AvAvA",
+    "11111", "AAAAA",
+  },
+},
+
+SQUARE_OUT_8 =
+{
+  prob = 1000,
+  pass = "square_out",
+
+  structure =
+  {
+    "x1x11", "x1x11",
+    "11111", "1A1A1",
+    "11111", "1AAA1",
+    "11111", "1A1A1",
+    "11x11", "11x11",
+  },
+},
+
+SQUARE_OUT_9 =
+{
+  prob = 1000,
+  pass = "square_out",
+
+  structure =
+  {
+    "x1x11", "x1x11",
+    "11111", "11111",
+    "11111", "~~~~~",
+    "11111", "11111",
+    "11x11", "11x11",
+  },
+},
+
+SQUARE_OUT_10 =
+{
+  prob = 1000,
+  pass = "square_out",
+
+  structure =
+  {
+    "x1x11", "x1x11",
+    "11111", "11111",
+    "11111", "11111",
+    "11111", "AvvvA",
+    "11111", "AAAAA",
+  },
+},
+
+SQUARE_OUT_11 =
+{
+  prob = 1000,
+  pass = "square_out",
+
+  structure =
+  {
+    "x1x11", "x1x11",
+    "11111", "11111",
+    "11111", "11111",
+    "11111", "AAvAA",
+    "11111", "AAAAA",
+  },
+},
+
+SQUARE_OUT_12 =
+{
+  prob = 1000,
+  pass = "square_out",
+
+  structure =
+  {
+    "x1111", "x1111",
+    "11111", "1AAA1",
+    "11111", "1AAA1",
+    "11111", "1AAA1",
+    "11111", "11111",
+  },
+},
+
+SQUARE_OUT_13 =
+{
+  prob = 1000,
+  pass = "square_out",
+
+  structure =
+  {
+    "x1111", "x1111",
+    "11111", "1~~~1",
+    "11111", "1~~~1",
+    "11111", "1~~~1",
+    "11111", "11111",
+  },
+},
+
+SQUARE_OUT_14 =
+{
+  prob = 1000,
+  pass = "square_out",
+
+  structure =
+  {
+    "x1111", "x1111",
+    "11111", "1vvv1",
+    "11111", "1AAA1",
+    "11111", "1^^^1",
+    "11111", "11111",
+  },
+},
+
+SQUARE_OUT_15 =
+{
+  prob = 1000,
+  pass = "square_out",
+
+  structure =
+  {
+    "x1111", "x1111",
+    "11111", "11111",
+    "11111", "1AAA1",
+    "11111", "11111",
+    "11111", "11111",
   },
 },
 
@@ -15695,6 +15889,37 @@ SMOOTHER_1 =
   },
 
   diagonals = { "1." },
+},
+
+------------------------------------------
+--   Landscape stuff
+------------------------------------------
+
+
+PARK_ROOT_5x5 =
+{
+  prob = 90, --50,
+
+  structure =
+  {
+    "!!!!!", "RRRRR",
+    "!!!!!", "RRRRR",
+    "!!!!!", "RRRRR",
+    "!!!!!", "RRRRR",
+    "!!!!!", "RRRRR",
+  }
+},
+
+
+PARK_GROW_1 =
+{
+  prob = 200, --100,
+
+  structure =
+  {
+    ".", ".",
+    "1", "1",
+  }
 },
 
 ------------------------------------------
@@ -16105,9 +16330,158 @@ CAVE_GROW_1 =
 
   structure =
   {
-    ".......", ".......",
-    ".11111.", ".11111.",
+    ".", ".",
+    "1", "1",
   },
+},
+
+-- V2 Hallway
+
+SPROUT_wide_hallway =
+{
+  prob = 3200, --1800 --1500,
+  skip_prob = 20,
+
+  structure =
+  {
+    "..", "..",
+    "..", "@@",
+    "..", "HH",
+    "11", "11",
+  },
+
+  new_room =
+  {
+    env = "hallway",
+
+    conn = { x=1, y=1, w=2, dir=8 },
+
+    hall_type = "wide",
+
+    grow_pass = "hall_2"
+  }
+},
+
+
+HALL_2_GROW_I1 =
+{
+  pass = "hall_2",
+  prob = 55, --40,
+
+  structure =
+  {
+    "..", "..",
+    "..", "@@",
+    "..", "HH",
+    "@@", "HH",
+    "11", "11",
+  }
+},
+
+
+HALL_2_GROW_L1 =
+{
+  pass = "hall_2",
+  prob = 35, --50,
+  prob_skew = 2,
+
+  structure =
+  {
+    "....", ".@HH",
+    "..@@", ".@HH",
+    "xx11", "xx11",
+  },
+
+  link2_2 = { dest_dir=4 }
+},
+
+
+HALL_2_GROW_T1 =
+{
+  pass = "hall_2",
+  prob = 30, --25,
+  prob_skew = 2,
+
+  structure =
+  {
+    "......", ".@HH@.",
+    "..@@..", ".@HH@.",
+    "xx11xx", "xx11xx",
+  },
+
+  hallway = { keep_shape_prob=50 },
+
+  link2_2 = { dest_dir=4 },
+  link5_2 = { dest_dir=6 }
+},
+
+
+HALL_2_GROW_P1 =
+{
+  pass = "hall_2",
+  prob = 10, --5,
+  prob_skew = 2,
+
+  structure =
+  {
+    "xx..xx", "xx..xx",
+    "xx..xx", "xx@@xx",
+    "......", ".@HH@.",
+    "..@@..", ".@HH@.",
+    "xx11xx", "xx11xx",
+  },
+
+  link2_2 = { dest_dir=4 },
+  link5_2 = { dest_dir=6 },
+  link3_4 = { dest_dir=8 }
+},
+
+
+HALL_2_SPROUT_A =
+{
+  pass = "hall_2_sprout",
+  prob = 100,
+
+  structure =
+  {
+    ".....", "RRRRR",
+    ".....", "RRRRR",
+    ".....", "RRRRR",
+    ".....", "RRRRR",
+    ".....", "RRRRR",
+    "xx@@x", "xxHHx",
+    "xx11x", "xx11x",
+  },
+
+  new_room =
+  {
+    conn = { x=2, y=2, w=2, dir=8 },
+
+    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 }
+  }
+},
+
+HALL_2_SPROUT_B =
+{
+  pass = "hall_2_sprout",
+  prob = 20,
+
+  structure =
+  {
+    "....", "RRRR",
+    "....", "RRRR",
+    "....", "RRRR",
+    "....", "RRRR",
+    "x@@x", "xHHx",
+    "x11x", "x11x",
+  },
+
+  new_room =
+  {
+    conn = { x=2, y=2, w=2, dir=8 },
+
+    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 }
+  }
 },
 
 }

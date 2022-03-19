@@ -265,6 +265,29 @@ STRIFE.ROOM_THEMES =
     },
   },
 
+  any_v2_Hallway =
+  {
+    env  = "hallway",
+    group = "oblige_v2",
+    prob = 1,
+
+    walls =
+    {
+      BRKGRY01  = 60,
+      BRKGRY17  = 20,
+    },
+
+    floors =
+    {
+      F_BRKTOP = 50,
+    },
+
+    ceilings =
+    {
+      F_BRKTOP = 50,
+    },
+  },
+
   any_Hallway_curve =
   {
     env  = "hallway",

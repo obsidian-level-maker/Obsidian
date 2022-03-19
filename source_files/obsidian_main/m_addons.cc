@@ -19,7 +19,6 @@
 //----------------------------------------------------------------------
 
 #include "m_addons.h"
-#include <filesystem>
 
 #include "headers.h"
 
@@ -35,16 +34,9 @@
 
 // need this because the OPTIONS file is loaded *before* the addons
 // folder is scanned for PK3 packages, so remember enabled ones here.
-static std::map<std::filesystem::path, int> initial_enabled_addons;
+std::map<std::filesystem::path, int> initial_enabled_addons;
 
-typedef struct {
-    std::filesystem::path name;  // base filename, includes ".pk3" extension
-
-    bool enabled;
-
-} addon_info_t;
-
-static std::vector<addon_info_t> all_addons;
+std::vector<addon_info_t> all_addons;
 
 void VFS_AddFolder(std::string name) {
     std::filesystem::path path = install_dir;

@@ -1415,7 +1415,11 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env),
     assert(kind_tab and not table.empty(kind_tab))
 
     R.hall_type  = info.hall_type
-    R.hall_group = rand.key_by_probs(kind_tab)
+    if SHAPE_GRAMMAR == SHAPES.OBLIGE_V2 then
+      R.hall_group = "oblige_v2"
+    else
+      R.hall_group = rand.key_by_probs(kind_tab)
+    end
 
   else
     local A = AREA_CLASS.new("floor")
@@ -1791,7 +1795,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
       ::continue::
     end
 
-    if SHAPE_GRAMMAR ~= SHAPES.OBLIGE_V5 then
+    if SHAPE_GRAMMAR == SHAPES.OBSIDIAN then
       if table.empty(tab) then
         error("No rules found for " .. tostring(want_pass) .. " pass")
       end
@@ -3435,7 +3439,7 @@ end
   local function apply_a_rule()
     local rule_tab = collect_matching_rules(pass, stop_prob, hit_floor_limit)
 
-    if SHAPE_GRAMMAR == SHAPES.OBLIGE_V5 then
+    if SHAPE_GRAMMAR ~= SHAPES.OBSIDIAN then
       if table.empty(rule_tab) then return end
     end
 

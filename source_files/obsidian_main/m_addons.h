@@ -24,6 +24,8 @@
 #include <cstdio>
 #include <string>
 #include <fstream>
+#include <filesystem>
+#include <map>
 
 #include "sys_type.h"
 
@@ -38,6 +40,17 @@ void VFS_OptWrite(std::ofstream &fp);
 bool VFS_CopyFile(const char *src_name, const char *dest_name);
 byte *VFS_LoadFile(const char *filename, int *length);
 void VFS_FreeFile(const byte *mem);
+
+typedef struct {
+    std::filesystem::path name;  // base filename, includes ".pk3" extension
+
+    bool enabled;
+
+} addon_info_t;
+
+extern std::vector<addon_info_t> all_addons;
+
+extern std::map<std::filesystem::path, int> initial_enabled_addons;
 
 #endif /* __OBLIGE_ADDONS_H__ */
 
