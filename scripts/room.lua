@@ -2571,6 +2571,9 @@ function Room_floor_ceil_heights()
 
     for _,A in pairs(R.areas) do
       if A.floor_group then
+        if A.is_road then
+          A.floor_group.is_road = true
+        end
         table.add_unique(R.floor_groups, A.floor_group)
       end
     end

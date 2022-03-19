@@ -2350,7 +2350,9 @@ namelib.NAMES =
         ["Puhdas Helvetti"]=10, -- "Pure Hell" in Finnish
 
         -- MSSP names:
+        ["Belshazzar's Feast"]=10,
         ["Deep Rock Satanic"]=10,
+        ["First of the Nine Circles"]=10,
         ["Mausoleum of History"]=10, -- quote from FreeSpace 2's intro
         ["Meathooks"]=10,
         ["The Needleworks"]=10,
@@ -3604,6 +3606,8 @@ namelib.NAMES =
         ["Bellum Infinitus"]=10,
         ["Bone Hurting Juice"]=10,
         ["Big Guts"]=10,
+        ["Black Parade"]=10,
+        ["Blood Drive"]=10,
         ["Bloodlust"]=10,
         ["Bring It"]=10,
         ["Bring Out Your Dead"]=10,
@@ -3617,6 +3621,7 @@ namelib.NAMES =
         ["Don't Stop Me Now"]=10,
         ["Doom Eternal"]=10,
         ["Do Panic"]=10,
+        ["Don't Stop Dancing 'Til The Curtains Fall"]=10,
         ["Do You Want To Live Forever?"]=10,
         ["Endgame"]=10,
         ["Exterminatus"]=10,
@@ -3625,11 +3630,15 @@ namelib.NAMES =
         ["Forlorn Hope"]=10,
         ["FUBAR"]=10,
         ["Fucking Run"]=10,
+        ["Fustercluck"]=10,
         ["Future Imperfect"]=10,
+        ["Garbage Day"]=10,
         ["Get Psyched!"]=10,
+        ["Glorious Defeat"]=10,
         ["Gotcha!"]=10,
-        ["Greased"]=10,
         ["Gratuitous Combat Scenario"]=10,
+        ["Greased"]=10,
+        ["Grow Flowers Where You Fall"]=10,
         ["Hardboiled"]=10,
         ["Hardcore"]=10,
         ["Heavy Metal Mayhem"]=10,
@@ -3641,11 +3650,16 @@ namelib.NAMES =
         ["High Water"]=10,
         ["Iron Maiden"]=10,
         ["I Don't Feel So Good"]=10,
+        ["I Told You Not to Turn Around"]=10,
         ["I Ii II L"]=10,
         ["Judgement"]=10,
         ["Killing Fields"]=10,
+        ["Life's a Bitch, Then You Die"]=10,
         ["Max Pain"]=10,
         ["Meatgrinder"]=10,
+        ["Mene, Mene, Tekel, Parsin"]=10,
+        ["Mind-chaos"]=10,
+        ["Mind-fog"]=10,
         ["Musical Chairs but the Chair Explodes"]=10,
         ["Nine Inch Nails"]=10,
         ["No Chance in Hell"]=10,
@@ -3685,6 +3699,8 @@ namelib.NAMES =
         ["The Tribute"]=10,
         ["The World Burns"]=10,
         ["Trauma Conga Line"]=10,
+        ["Wayward Son"]=10,
+        ["Weighed and Found Wanting"]=10,
         ["Wild Hunt"]=10,
         ["You Are Already Dead"]=10,
         ["You'll Float Too"]=10,
@@ -8659,7 +8675,11 @@ end
 function namelib.choose_one(DEF, max_len)
   if PARAM.bool_whole_names_only and PARAM.bool_whole_names_only ~= 0 then
     local whole_name = rand.key_by_probs(DEF.lexicon.s)
-    DEF.lexicon.s[whole_name] = DEF.lexicon.s[whole_name] / 10
+    DEF.lexicon.s[whole_name] = nil
+    if table.empty(DEF.lexicon.s) then
+      error("No more single names left in names table!" ..
+      "More singles mixers required! If you like it put a ring on it!!!")
+    end
     return whole_name
   end
 

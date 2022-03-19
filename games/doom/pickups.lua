@@ -48,6 +48,8 @@ DOOM.PICKUPS =
     add_prob = 20,
     cluster = { 3,7 },
     give = { {health=1} },
+    storage_prob = 20,
+    storage_qty = 10
   },
 
   stimpack =
@@ -57,6 +59,8 @@ DOOM.PICKUPS =
     add_prob = 60,
     cluster = { 2,5 },
     give = { {health=10} },
+    storage_prob = 40,
+    storage_qty = 5
   },
 
   medikit =
@@ -69,7 +73,7 @@ DOOM.PICKUPS =
     secret_prob = 5,
     storage_prob = 80,
     storage_qty  = 2,
-    give = { {health=25} },
+    give = { {health=25} }
   },
 
   -- ARMOR --
@@ -81,6 +85,8 @@ DOOM.PICKUPS =
     add_prob = 10,
     cluster = { 3,7 },
     give = { {health=1} },
+    storage_prob = 20,
+    stroage_qty = 5
   },
 
   -- AMMO --
@@ -101,6 +107,8 @@ DOOM.PICKUPS =
     rank = 2,
     add_prob = 50,
     give = { {ammo="bullet",count=50} },
+    storage_prob = 15,
+    storage_qty = 3,
   },
 
   shells =
