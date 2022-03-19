@@ -3818,6 +3818,10 @@ function Grower_grow_room(R)
     Grower_grammatical_room(R, "grow")
 
     if is_too_small(R) and not LEVEL.is_linear then
+      if R.grow_parent and R.grow_parent.is_start 
+      and R.small_room then
+        return 
+      end
       Grower_kill_room(R)
       return
     end
@@ -3827,22 +3831,30 @@ function Grower_grow_room(R)
   if LEVEL.is_linear then
   if R.grow_parent then
     if R.grow_parent:prelim_conn_num() > 2 then
-        gui.debugf("ROOM_" .. R.id .. " was SHOT DOWN VIOLENTLY by the Linear Mode thugz.\n")
+        gui.debugf("Linear mode: ROOM_" .. R.id .. " culled.\n")
         Grower_kill_room(R)
         return
       end
     end
   end
 
-  if LEVEL.has_linear_start or LEVEL.is_linear then
-    if R.grow_parent then
-      if R.grow_parent.is_start and R.grow_parent:prelim_conn_num() > 1 then
-        gui.debugf("'OH SHIT HERE WE GO AGAIN', says ROOM " .. R.id .. " before " ..
-        "he was violently gunned down by the Linear Mode thugz...\n")
+  if LEVEL.is_linear then
+    if R.grow_parent and R.grow_parent.is_start then
+      if R.grow_parent:prelim_conn_num() > 1 then
+        gui.debugf("Linear mode: ROOM " .. R.id .. " culled.\n")
         Grower_kill_room(R)
       end
     end
   end
+
+  --[[if LEVEL.has_linear_start then
+    if R.grow_parent and R.grow_parent.is_start then
+      if R.grow_parent:prelim_conn_num() > 1 and not R.small_room then
+        gui.debugf("Linear start mode: ROOM " .. R.id .. " culled.\n")
+        Grower_kill_room(R)
+      end
+    end
+  end]]
 
   if PARAM["live_minimap"] == "room" then
     Seed_draw_minimap()
