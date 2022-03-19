@@ -3356,11 +3356,11 @@ function Quest_room_themes()
   choose_hallway_themes()
   choose_other_themes()
 
+  misc_fabs()
+  
   if PARAM.bool_foreshadowing_exit and PARAM.bool_foreshadowing_exit == 1 then
     choose_exit_theme()
   end
-
-        misc_fabs()
 
     misc_textures()
   facade_textures()

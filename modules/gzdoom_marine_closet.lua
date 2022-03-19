@@ -2,6 +2,7 @@
 --  GZDoom Marine Closets
 --------------------------------------------------------------------
 --
+--  Copyright (C) 2019-2020 Scionox
 --  Copyright (C) 2019-2022 MsrShooterPerson
 --
 --  This program is free software; you can redistribute it and/or
@@ -317,6 +318,9 @@ class AIMarine : Actor
     override bool CanCollideWith(Actor other, bool passive)
     {
         if(other.bTELESTOMP)
+          return false;
+
+        if(other.bMissile && other.target && other.target.player)
           return false;
 
         if(!passive)
@@ -1379,9 +1383,12 @@ function MARINE_CLOSET_TUNE.calc_closets()
     max_count = PARAM.marine_closets,
     min_prog = PARAM.float_m_c_level_min_pos,
     max_prog = PARAM.float_m_c_level_max_pos,
-    not_secret = PARAM.bool_m_c_in_secret,
     level_prob = 100,
   }
+  
+  if PARAM.bool_m_c_in_secret then
+    info.not_secret = true
+  end
 
   if PARAM.level_has_marine_closets then
     table.insert(LEVEL.secondary_importants, info)
@@ -1836,7 +1843,7 @@ OB_MODULES["gzdoom_marine_closets"] =
 
 
     {
-      name = "bool_mc_in_secret",
+      name = "bool_m_c_in_secret",
       label = _("In Secret Rooms"),
       priority = 76,
       valuator = "button",

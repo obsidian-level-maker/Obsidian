@@ -231,19 +231,20 @@ function Layout_spot_for_wotsit(R, kind, required)
     -- already used?
     if chunk.content then return -1 end
 
-    if LEVEL.is_procedural_gotcha == true and PARAM.bool_boss_gen == 1 and chunk.kind == "closet" then return -1 end
-
-    if LEVEL.is_procedural_gotcha == true and PARAM.bool_boss_gen == 1 and kind == "WEAPON" then
-      if PARAM.boss_gen_weap == "close" then
+    if LEVEL.is_procedural_gotcha == true and PARAM.bool_boss_gen == 1 then
+      if chunk.kind == "closet" then return -1 end
+      if kind == "WEAPON" and PARAM.boss_gen_weap == "close" then
         for _,goal in pairs(R.goals) do
-          if goal.chunk and goal.kind == "START" then
-            if geom.dist(chunk.mx,chunk.my,goal.chunk.mx,goal.chunk.my) > 726 then
-              return -1
-            end
+          if goal.chunk and goal.kind == "START" and
+            geom.dist(chunk.mx,chunk.my,goal.chunk.mx,goal.chunk.my) > 726 then
+            return -1
           end
         end
       end
     end
+
+    -- don't place important things right over the road
+    if chunk.area and chunk.area.is_road then return -1 end
 
     if kind == "LOCAL_SWITCH" then
       if chunk.kind ~= "closet" then return -1 end
@@ -2161,7 +2162,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       end
 
       -- for streets
-      if R.is_street and R.svolume > 16 then
+      if fg.is_road then
         if not GAME.THEMES[LEVEL.theme_name].street_sinks then
           gui.printf("WARNING! No street sinks for theme " .. LEVEL.theme_name .. ".\n")
           return

@@ -2780,6 +2780,10 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
         new_intconn.stair_chunk = chunk
 
         local from_area = assert(chunk.from_area)
+        if not from_area then
+          Seed_dump_rooms()
+          error("Missing staircase area source in ROOM_" .. r.id)
+        end
         chunk.area.prelim_h = assert(from_area.prelim_h)
 
         -- choose the stair prefab now
@@ -3822,6 +3826,10 @@ function Grower_grow_room(R)
     Grower_grammatical_room(R, "grow")
 
     if is_too_small(R) and not LEVEL.is_linear then
+      if R.grow_parent and R.grow_parent.is_start 
+      and R.small_room then
+        return 
+      end
       Grower_kill_room(R)
       return
     end
@@ -3831,22 +3839,30 @@ function Grower_grow_room(R)
   if LEVEL.is_linear then
   if R.grow_parent then
     if R.grow_parent:prelim_conn_num() > 2 then
-        gui.debugf("ROOM_" .. R.id .. " was SHOT DOWN VIOLENTLY by the Linear Mode thugz.\n")
+        gui.debugf("Linear mode: ROOM_" .. R.id .. " culled.\n")
         Grower_kill_room(R)
         return
       end
     end
   end
 
-  if LEVEL.has_linear_start or LEVEL.is_linear then
-    if R.grow_parent then
-      if R.grow_parent.is_start and R.grow_parent:prelim_conn_num() > 1 then
-        gui.debugf("'OH SHIT HERE WE GO AGAIN', says ROOM " .. R.id .. " before " ..
-        "he was violently gunned down by the Linear Mode thugz...\n")
+  if LEVEL.is_linear then
+    if R.grow_parent and R.grow_parent.is_start then
+      if R.grow_parent:prelim_conn_num() > 1 then
+        gui.debugf("Linear mode: ROOM " .. R.id .. " culled.\n")
         Grower_kill_room(R)
       end
     end
   end
+
+  --[[if LEVEL.has_linear_start then
+    if R.grow_parent and R.grow_parent.is_start then
+      if R.grow_parent:prelim_conn_num() > 1 and not R.small_room then
+        gui.debugf("Linear start mode: ROOM " .. R.id .. " culled.\n")
+        Grower_kill_room(R)
+      end
+    end
+  end]]
 
   if PARAM["live_minimap"] == "room" then
     Seed_draw_minimap()
@@ -4272,12 +4288,23 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
 
   -- if map is too small, try to sprout some more rooms
   local MAX_LOOP = 10
+  local MAX_RETRIES = 5
 
   check_initial_room()
 
   for loop = 1, MAX_LOOP do
 
     local kw
+
+    if loop == 9 then
+      loop = 1
+      MAX_RETRIES = MAX_RETRIES - 1
+      rand.shuffle(LEVEL.shape_transform_possiblities)
+      if MAX_RETRIES == 0 then
+        Seed_draw_minimap()
+        error("Unable to sprout more rooms.")
+      end
+    end
 
     repeat
       kw = handle_next_room()
