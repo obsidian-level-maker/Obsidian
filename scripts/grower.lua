@@ -3842,7 +3842,7 @@ function Grower_grow_room(R)
     end
   end
 
-  if LEVEL.is_linear then
+  if LEVEL.is_linear or LEVEL.is_procedural_gotcha then
     if R.grow_parent and R.grow_parent.is_start then
       if R.grow_parent:prelim_conn_num() > 1 then
         gui.debugf("Linear mode: ROOM " .. R.id .. " culled.\n")
