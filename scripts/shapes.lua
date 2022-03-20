@@ -9042,6 +9042,22 @@ GROW_36_TEE_NEW_AREA =
   },
 },
 
+GROW_36_BISECT_SMALL =
+{
+  prob = 25,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xx..xx","xx11xx",
+    "x....x","x#11#x",
+    "1.....","111111",
+    "1.....","111111",
+    "x....x","x#11#x",
+    "xx..xx","xx11xx"
+  },
+},
+
 GROW_36_BISECT_NEW_AREA_SMALL =
 {
   prob = 25,
@@ -9049,10 +9065,12 @@ GROW_36_BISECT_NEW_AREA_SMALL =
 
   structure =
   {
+    "xx..xx","xxAAxx",
     "x....x","x#AA#x",
     "1.....","11AA11",
     "1.....","11AA11",
     "x....x","x#AA#x",
+    "xx..xx","xxAAxx"
   },
 },
 
