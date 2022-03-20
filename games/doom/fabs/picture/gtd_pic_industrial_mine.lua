@@ -33,6 +33,7 @@ PREFABS.Pic_mining_dirt_fenced =
 PREFABS.Pic_mining_dirt_fenced_driller =
 {
   template = "Pic_mining_dirt_fenced",
+  map = "MAP02",
 
   line_85 =
   {
