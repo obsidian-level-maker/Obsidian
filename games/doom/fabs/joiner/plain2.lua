@@ -23,7 +23,7 @@ PREFABS.Joiner_plain2 =
 PREFABS.Joiner_plain2_stretchy =
 {
   template = "Joiner_plain2",
-  prob = 70
+  prob = 70,
 
   x_fit = { 32,96 }
 }
