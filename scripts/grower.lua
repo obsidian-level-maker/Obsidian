@@ -2775,10 +2775,12 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
         assert(new_intconn)
         new_intconn.stair_chunk = chunk
 
-        local from_area = assert(chunk.from_area)
+        local from_area = chunk.from_area --assert(chunk.from_area)
         if not from_area then
           Seed_dump_rooms()
-          error("Missing staircase area source in ROOM_" .. r.id)
+          error("Missing staircase area source in ROOM_" .. r.id ..
+          "Please check LOGS.txt for text map and report with it included."
+          )
         end
         chunk.area.prelim_h = assert(from_area.prelim_h)
 
