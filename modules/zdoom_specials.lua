@@ -429,6 +429,7 @@ Glow
     TEK5
     TEK6
     TEK7
+    TLIT65OF
 
     //teleporter gate textures
     GATE1
