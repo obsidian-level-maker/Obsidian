@@ -34,3 +34,41 @@ PREFABS.Window_plut_litebox_3 =
 
   seed_w   = 3,
 }
+
+--
+
+PREFABS.Window_plut_litebox_1_offset_lite =
+{
+  template = "Window_plut_litebox_1",
+
+  texture_pack = "armaetus",
+  rank = 1,
+
+  flat_FLOOR7_2 = "TLIT65OF"
+}
+
+PREFABS.Window_plut_litebox_2_offset_lite =
+{
+  template = "Window_plut_litebox_1",
+  map = "MAP02",
+
+  texture_pack = "armaetus",
+  rank = 1,
+
+  seed_w   = 3,
+
+  flat_FLOOR7_2 = "TLIT65OF"
+}
+
+PREFABS.Window_plut_litebox_3_offset_lite =
+{
+  template = "Window_plut_litebox_1",
+  map = "MAP03",
+
+  texture_pack = "armaetus",
+  rank = 1,
+
+  seed_w   = 3,
+
+  flat_FLOOR7_2 = "TLIT65OF"
+}
