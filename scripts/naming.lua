@@ -3655,6 +3655,7 @@ namelib.NAMES =
         ["Judgement"]=10,
         ["Killing Fields"]=10,
         ["Life's a Bitch, Then You Die"]=10,
+        ["Light at the End of the Tunnel, But It's a Train"]=10,
         ["Max Pain"]=10,
         ["Meatgrinder"]=10,
         ["Mene, Mene, Tekel, Parsin"]=10,

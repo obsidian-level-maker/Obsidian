@@ -3354,6 +3354,41 @@ GROW_COLONNADE_VAULT_THICK_PILLARS_NEW_AREA =
   }
 },
 
+GROW_COLONNADE_COLUMNS_SMALL_4x =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x.......","x1111111",
+    "x.......","x1111111",
+    "x.......","xAAAAAAA",
+    "x.......","xA#A#A#A",
+    "x.......","xAAAAAAA",
+    "1.......","11111111",
+    "1.......","11111111"
+  }
+},
+
+GROW_COLONNADE_COLUMNS_BIG_3x =
+{
+  prob = 35,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x..........","x1111111111",
+    "x..........","x1111111111",
+    "x..........","xAAAAAAAAAA",
+    "x..........","xA##A##A##A",
+    "x..........","xA##A##A##A",
+    "x..........","xAAAAAAAAAA",
+    "1..........","11111111111",
+    "1..........","11111111111"
+  }
+},
+
 GROW_COLONNADE_STRAIGHT_VAULT =
 {
   prob = 30,
