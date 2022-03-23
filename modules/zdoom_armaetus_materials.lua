@@ -161,6 +161,16 @@ ARMAETUS_MATERIALS = {
   CITY13 = { t="CITY13", f="FLOOR7_1" },
   CITY14 = { t="CITY14", f="CEIL5_2"},
 
+  -- night versions
+  CITY04N = { t="CITY04N", f="FLOOR7_1"},
+  CITY05N = { t="CITY05N", f="FLAT1"},
+  CITY06N = { t="CITY06N", f="FLOOR0_1"},
+  CITY07N = { t="CITY07N", f="FLAT1"},
+  CITY11N = { t="CITY11N", f="FLOOR7_1"},
+  CITY12N = { t="CITY12N", f="FLAT5_5"},
+  CITY13N = { t="CITY13N", f="FLOOR7_1"},
+  CITY14N = { t="CITY14N", f="CEIL5_2"},
+
   URBAN1 = { t="URBAN1", f="RROCK10" },
   URBAN2 = { t="URBAN2", f="FLAT1" },
   URBAN3 = { t="URBAN3", f="FLAT5_4" },
@@ -2293,6 +2303,46 @@ brightmap texture CITY12
 brightmap texture CITY14
 {
   map OBRCTY14
+}
+
+brightmap texture CITY04N
+{
+  map CTY04NBR
+}
+
+brightmap texture CITY05N
+{
+  map CTY05NBR
+}
+
+brightmap texture CITY06N
+{
+  map CTY04NBR
+}
+
+brightmap texture CITY07N
+{
+  map CTY07NBR
+}
+
+brightmap texture CITY11N
+{
+  map CTY11NBR
+}
+
+brightmap texture CITY12N
+{
+  map CTY12NBR
+}
+
+brightmap texture CITY13N
+{
+  map CTY13NBR
+}
+
+brightmap texture CITY14N
+{
+  map CTY14NBR
 }
 
 brightmap texture GRAYMET6
