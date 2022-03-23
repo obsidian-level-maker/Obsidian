@@ -3795,22 +3795,20 @@ function Grower_grow_room(R)
   local function is_too_small(R)
     -- never prune a root room (including the exit)
 
+    if R.is_root then return false end
+
     -- MSSP: Unless we're in linear mode, where
     -- the map must continue growing elsewhere
     -- or in Procedural Gotchas where the arena
     -- is much too small.
-    if LEVEL.is_linear or
-    LEVEL.is_procedural_gotcha then
-      if R.is_start then return false end
-    end
-
-    if R.is_root then return false end
-
     if LEVEL.is_procedural_gotcha then
-      return R:calc_walk_vol() < 24
-    else
-      return R:calc_walk_vol() < 8
+      return R:calc_walk_vol() < 128
     end
+    if LEVEL.is_linear then
+      return false
+    end
+
+    return R:calc_walk_vol() < 8
   end
 
   ---| Grower_grow_room |---
@@ -3835,8 +3833,8 @@ function Grower_grow_room(R)
 
   -- Linear Mode, kill mirrored sprouts of symmetric rooms
   if LEVEL.is_linear then
-  if R.grow_parent then
-    if R.grow_parent:prelim_conn_num() > 2 then
+    if R.grow_parent then
+      if R.grow_parent:prelim_conn_num() > 2 then
         gui.debugf("Linear mode: ROOM_" .. R.id .. " culled.\n")
         Grower_kill_room(R)
         return
@@ -3853,14 +3851,13 @@ function Grower_grow_room(R)
     end
   end
 
-  --[[if LEVEL.has_linear_start then
-    if R.grow_parent and R.grow_parent.is_start then
-      if R.grow_parent:prelim_conn_num() > 1 and not R.small_room then
-        gui.debugf("Linear start mode: ROOM " .. R.id .. " culled.\n")
-        Grower_kill_room(R)
+  if LEVEL.has_linear_start and #LEVEL.rooms == 4 then
+    for _,R2 in pairs(LEVEL.rooms) do
+      if #R2.conns == 1 and R2.grow_parent.is_start then
+        Grower_kill_room(R2)
       end
     end
-  end]]
+  end
 
   if PARAM["live_minimap"] == "room" then
     Seed_draw_minimap()
