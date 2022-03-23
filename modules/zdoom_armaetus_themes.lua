@@ -3310,6 +3310,174 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
+  urban_brownyMcBrown =
+  {
+    env = "building",
+    prob = 40,
+
+    walls =
+    {
+      BRICK1 = 10,
+      BRICK2 = 10,
+      BRICK5 = 10,
+      BRICK6 = 10,
+      BRICK7 = 10,
+      BRICK8 = 10,
+      BRICK12 = 10,
+
+      BRONZE1 = 25,
+      BRONZE2 = 25,
+      BRONZE3 = 25,
+      BROWN144 = 25,
+      BROWN96 = 25,
+      BROWNHUG = 15,
+
+      SPACEW4 = 25,
+      STARTAN2 = 30,
+      STARBR2 = 30,
+      STUCCO = 25,
+
+      BIGSTON4 = 40,
+      BRIKS16 = 10,
+
+      BRONZE5 = 40,
+      BRONZE6 = 40,
+
+      DRKCMT01 = 15,
+      DRKCMT02 = 15,
+      DRKCMT03 = 15,
+      DRKCMT04 = 15,
+      DRKCMT05 = 25,
+      DRKCMT06 = 25,
+
+      GOTH38 = 40,
+      GOTH39 = 40,
+      GOTH40 = 40,
+      GOTH41 = 40,
+      GOTH42 = 40,
+
+      HELMET1 = 15,
+      HELMET2 = 15,
+
+      URBAN5 = 40,
+      URBAN7 = 40,
+
+      G8_BRNW1 = 40,
+      G8_BRNW2 = 40,
+      G8_BRNW3 = 40,
+    },
+
+    floors =
+    {
+      CEIL3_1 = 20,
+      CEIL3_2 = 20,
+      CEIL3_3 = 20,
+      CEIL5_2 = 20,
+
+      FLAT5 = 20,
+      FLAT9 = 20,
+      FLOOR0_1 = 20,
+      FLOOR0_2 = 20,
+
+      FLOOR3_3 = 20,
+      FLOOR4_1 = 20,
+      FLOOR4_5 = 20,
+      FLOOR4_6 = 20,
+      FLOOR5_3 = 20,
+
+      FLOOR7_1 = 20,
+
+      BRIK01 = 40,
+      DARKF01 = 40,
+      EG02 = 40,
+      EG03 = 40,
+      EG06 = 40,
+
+      FLOOR46D = 40,
+      FLOOR46E = 40,
+
+      G09 = 40,
+      G10 = 40,
+      G14 = 40,
+      G16 = 40,
+      G17 = 40,
+      G18 = 20,
+
+      GMET02 = 30,
+      GMET03 = 30,
+      GMET04 = 30,
+
+      GSTN03 = 40,
+      GSTN04 = 40,
+      GSTN05 = 40,
+
+      QFLAT05 = 40,
+      QFLAT09 = 40,
+
+      STARBR2F = 40,
+      STARTANF = 40,
+
+      G8_BRNF1 = 35,
+      G8_BRNF2 = 35,
+      G8_BRNF3 = 35,
+    },
+
+    ceilings =
+    {
+      CEIL3_1 = 20,
+      CEIL3_2 = 20,
+      CEIL3_3 = 20,
+      CEIL5_2 = 20,
+
+      FLAT5 = 20,
+      FLAT9 = 20,
+      FLOOR0_1 = 20,
+      FLOOR0_2 = 20,
+
+      FLOOR3_3 = 20,
+      FLOOR4_1 = 20,
+      FLOOR4_5 = 20,
+      FLOOR4_6 = 20,
+      FLOOR5_3 = 20,
+
+      FLOOR7_1 = 20,
+
+      BRIK01 = 40,
+      DARKF01 = 40,
+      EG02 = 40,
+      EG03 = 40,
+      EG06 = 40,
+
+      FLOOR46D = 40,
+      FLOOR46E = 40,
+
+      G09 = 40,
+      G10 = 40,
+      G14 = 40,
+      G16 = 40,
+      G17 = 40,
+      G18 = 20,
+
+      GMET02 = 30,
+      GMET03 = 30,
+      GMET04 = 30,
+
+      GSTN03 = 40,
+      GSTN04 = 40,
+      GSTN05 = 40,
+
+      QFLAT05 = 40,
+      QFLAT09 = 40,
+
+      STARBR2F = 40,
+      STARTANF = 40,
+
+      G8_BRNF1 = 35,
+      G8_BRNF2 = 35,
+      G8_BRNF3 = 35,
+    }
+  },
+
   -- MSSP: inspired by Return to Castle Wolfenstein!
   -- Emphasis on grey/dark bricks and wood floors/ceilings
   urban_returnToCastleWolf =
