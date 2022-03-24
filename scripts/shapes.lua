@@ -3389,6 +3389,39 @@ GROW_COLONNADE_COLUMNS_BIG_3x =
   }
 },
 
+GROW_COLONNADE_STRAIGHT_HALF_VAULT_SHORT =
+{
+  prob = 25,
+  skip_prob = 50,
+
+  structure =
+  {
+    "1...","11AA",
+    "1...","11AA",
+    "x...","x1AA",
+    "x...","x1AA",
+    "x...","x1AA",
+    "x...","x1AA",
+  }
+},
+
+GROW_COLONNADE_STRAIGHT_HALF_VAULT_LONG =
+{
+  prob = 30,
+  skip_prob = 60,
+
+  structure =
+  {
+    "1...","11AA",
+    "1...","11AA",
+    "x...","x1AA",
+    "x...","x1AA",
+    "x...","x1AA",
+    "x...","x1AA",
+    "x...","x1AA",
+    "x...","x1AA",
+  }
+},
 GROW_COLONNADE_STRAIGHT_VAULT =
 {
   prob = 30,
