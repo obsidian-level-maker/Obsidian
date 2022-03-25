@@ -38,3 +38,11 @@ PREFABS.Exit_immersive_point_exit_door =
     EXITDOOR = 10
   }
 }
+
+PREFABS.Exit_immersive_point_exit_door2 =
+{
+  template = "Exit_immersive_point_exit1",
+  map = "MAP05",
+
+  size = 84
+}
