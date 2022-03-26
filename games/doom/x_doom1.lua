@@ -2167,6 +2167,28 @@ ULTDOOM.ROOM_THEMES =
 
 -----  GENERIC STUFF  ------------------------------
 
+  any_v2_Hallway =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      GRAY1 = 50,
+    },
+
+    floors =
+    {
+      FLAT1 = 30,
+    },
+
+    ceilings =
+    {
+      CEIL3_5 = 30,
+    },
+  },
+
   any_vent_Hallway =
   {
     env   = "hallway",
@@ -2423,6 +2445,63 @@ ULTDOOM.ROOM_THEMES =
     },
   },
 
+  tech_v2_Hallway =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 25,
+
+    walls =
+    {
+      BROWN1 = 50,
+      SHAWN2 = 50,
+      STARTAN3 = 50,
+      STARG3 = 50,
+      BROWNGRN = 50,
+      BROWN96 = 50,
+      GSTONE1 = 50,
+      SP_HOT = 50,
+    },
+
+    floors =
+    {
+      FLAT1 = 50,
+      FLAT4 = 50,
+      FLAT19 = 50,
+      FLAT20 = 50,
+      FLAT3 = 50,
+      FLAT5 = 50,
+      FLOOR0_1 = 50,
+      FLOOR0_2 = 50,
+      FLOOR0_3 = 50,
+      FLOOR1_1 = 50,
+      FLOOR1_6 = 50,
+      FLOOR3_3 = 50,
+      FLOOR4_1 = 50,
+      FLOOR4_5 = 50,
+      FLOOR4_6 = 50,
+      FLOOR4_8 = 50,
+      FLOOR5_3 = 50,
+    },
+
+    ceilings =
+    {
+      CEIL3_2 = 50,
+      CEIL3_3 = 50,
+      CEIL3_5 = 50,
+      FLAT1 = 50,
+      FLAT18 = 50,
+      FLAT19 = 50,
+      FLAT20 = 50,
+      FLAT3 = 50,
+      FLOOR3_3 = 50,
+      FLOOR4_1 = 50,
+      FLOOR4_6 = 50,
+      FLOOR4_8 = 50,
+      FLOOR5_3 = 50,
+      FLOOR5_4 = 50,
+    },
+  },
 
   tech_metro_Hallway =
   {
@@ -2758,6 +2837,69 @@ ULTDOOM.ROOM_THEMES =
     },
   },
 
+  deimos_v2_Hallway =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      BROWN1 = 33,
+      BROWNGRN = 50,
+      BROVINE = 20,
+      BROVINE2 = 15,
+      GRAY1 = 50,
+      GRAY5 = 33,
+      ICKWALL1 = 30,
+      ICKWALL3 = 30,
+      STONE2 = 40,
+      STONE3 = 50,
+      METAL1 = 30,
+    },
+
+    floors =
+    {
+      FLAT4 = 30,
+      CEIL4_1 = 15,
+      CEIL4_2 = 15,
+      CEIL5_1 = 30,
+      FLAT14 = 20,
+      FLAT5_4 = 20,
+      FLOOR3_3 = 30,
+      FLOOR4_8 = 40,
+      FLOOR5_1 = 25,
+      FLOOR5_2 = 10,
+      FLAT5 = 20,
+      FLOOR1_6 = 4,
+      FLOOR7_2 = 3,
+      FLAT5_1 = 3,
+      FLAT5_2 = 3,
+      DEM1_5 = 3,
+      DEM1_6 = 3,
+    },
+
+    ceilings =
+    {
+      FLAT4 = 20,
+      CEIL4_1 = 15,
+      CEIL4_2 = 15,
+      CEIL5_1 = 30,
+      CEIL3_5 = 25,
+      CEIL3_3 = 50,
+      FLAT18 = 15,
+      FLAT19 = 20,
+      FLAT5_4 = 10,
+      FLOOR4_8 = 25,
+      FLOOR5_1 = 20,
+      FLOOR7_1 = 15,
+      FLOOR7_2 = 2,
+      FLAT5_1 = 2,
+      FLAT5_2 = 2,
+      DEM1_5 = 2,
+      DEM1_6 = 2,
+    },
+  },
 
   deimos_Hallway =
   {
@@ -2823,6 +2965,64 @@ ULTDOOM.ROOM_THEMES =
     },
   },
 
+  deimos_v2_Hallway_hell =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      MARBLE1 = 20,
+      MARBLE2 = 20,
+      MARBLE3 = 20,
+      GSTONE1 = 20,
+      BROVINE = 20,
+      COMPTILE = 20,
+    },
+
+    floors =
+    {
+      FLAT4 = 30,
+      CEIL4_1 = 15,
+      CEIL4_2 = 15,
+      CEIL5_1 = 30,
+      FLAT14 = 20,
+      FLAT5_4 = 20,
+      FLOOR3_3 = 30,
+      FLOOR4_8 = 40,
+      FLOOR5_1 = 25,
+      FLOOR5_2 = 10,
+      FLAT5 = 20,
+      FLOOR1_6 = 4,
+      FLOOR7_2 = 15,
+      FLAT5_1 = 15,
+      FLAT5_2 = 15,
+      DEM1_5 = 15,
+      DEM1_6 = 15,
+    },
+
+    ceilings =
+    {
+      FLAT4 = 20,
+      CEIL4_1 = 15,
+      CEIL4_2 = 15,
+      CEIL5_1 = 30,
+      CEIL3_5 = 25,
+      CEIL3_3 = 20,
+      FLAT18 = 15,
+      FLAT19 = 20,
+      FLAT5_4 = 10,
+      FLOOR4_8 = 15,
+      FLOOR5_1 = 20,
+      FLOOR7_1 = 15,
+      FLOOR7_2 = 15,
+      FLAT5_1 = 15,
+      FLAT5_2 = 15,
+      DEM1_5 = 15,
+      DEM1_6 = 15,
+    },
+  },
 
   deimos_Hallway_hell =
   {
@@ -3174,6 +3374,60 @@ ULTDOOM.ROOM_THEMES =
     },
   },
 
+  hell_v2_Hallway =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      FIREBLU1 = 50,
+      FIREWALL = 50,
+      SKSPINE2 = 50,
+      SKIN2    = 50,
+      SKINSYMB = 50,
+      MARBGRAY = 50,
+    },
+
+    floors =
+    {
+      BLOOD1 = 50,
+      FLAT4 = 30,
+      CEIL4_1 = 15,
+      CEIL5_1 = 30,
+      FLAT14 = 20,
+      FLAT5_4 = 20,
+      FLOOR5_2 = 10,
+      FLAT5 = 20,
+      FLOOR7_2 = 3,
+      FLAT5_2 = 3,
+      DEM1_5 = 3,
+      DEM1_6 = 3,
+    },
+
+    ceilings =
+    {
+      BLOOD1 = 50,
+      LAVA1 = 20,
+      FLAT4 = 20,
+      CEIL4_2 = 15,
+      CEIL5_1 = 30,
+      CEIL3_3 = 50,
+      FLAT19 = 20,
+      FLAT5_4 = 10,
+      FLOOR7_1 = 2,
+      FLAT5_1 = 2,
+      DEM1_6 = 2,
+    },
+
+    y_offsets =
+    {
+      SKSPINE2 = 13,
+      SKINSYMB = 30,
+      MARBGRAY = 24,
+    },
+  },
 
   hell_Hallway =
   {
@@ -3538,6 +3792,65 @@ ULTDOOM.ROOM_THEMES =
 
 
   -- andrewj: this is a straight copy of deimos_Hallway_hell
+
+  flesh_v2_Hallway_hell =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      MARBLE1 = 20,
+      MARBLE2 = 20,
+      MARBLE3 = 20,
+      GSTONE1 = 20,
+      BROVINE = 20,
+      COMPTILE = 20,
+    },
+
+    floors =
+    {
+      FLAT4 = 30,
+      CEIL4_1 = 15,
+      CEIL4_2 = 15,
+      CEIL5_1 = 30,
+      FLAT14 = 20,
+      FLAT5_4 = 20,
+      FLOOR3_3 = 30,
+      FLOOR4_8 = 40,
+      FLOOR5_1 = 25,
+      FLOOR5_2 = 10,
+      FLAT5 = 20,
+      FLOOR1_6 = 4,
+      FLOOR7_2 = 15,
+      FLAT5_1 = 15,
+      FLAT5_2 = 15,
+      DEM1_5 = 15,
+      DEM1_6 = 15,
+    },
+
+    ceilings =
+    {
+      FLAT4 = 20,
+      CEIL4_1 = 15,
+      CEIL4_2 = 15,
+      CEIL5_1 = 30,
+      CEIL3_5 = 25,
+      CEIL3_3 = 20,
+      FLAT18 = 15,
+      FLAT19 = 20,
+      FLAT5_4 = 10,
+      FLOOR4_8 = 15,
+      FLOOR5_1 = 20,
+      FLOOR7_1 = 15,
+      FLOOR7_2 = 15,
+      FLAT5_1 = 15,
+      FLAT5_2 = 15,
+      DEM1_5 = 15,
+      DEM1_6 = 15,
+    },
+  },
 
   flesh_Hallway_hell =
   {

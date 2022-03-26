@@ -65,7 +65,7 @@ function UI_ARCH.setup(self)
   module_param_up(self)
 
   if OB_CONFIG.engine ~= "vanilla" then -- Do I actually need this check? I forget - Dasho
-    if OB_CONFIG.batch == "yes" or type(PARAM.float_size) ~= "string" then
+    if OB_CONFIG.batch == "yes" and type(PARAM.float_size) ~= "string" then
       SEED_W = 90
       SEED_H = 90
     else
@@ -94,7 +94,7 @@ function UI_ARCH.setup(self)
         end
 		  end
 	  end
-  end 
+  end
 end
 
 OB_MODULES["ui_arch"] =

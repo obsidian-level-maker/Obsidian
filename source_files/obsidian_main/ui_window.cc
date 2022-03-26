@@ -79,8 +79,9 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     menu_bar->add("File/Set Seed", FL_F + 5, menu_do_edit_seed);
     menu_bar->add("File/Config Manager", FL_F + 9, menu_do_manage_config);
     menu_bar->add("Help/About", FL_F + 1, menu_do_about);
-    menu_bar->add("Help/Tutorial", 0, menu_do_tutorial);
     menu_bar->add("Help/View Logs", FL_F + 6, menu_do_view_logs);
+    menu_bar->add("Help/ ", 0, 0, NULL, FL_MENU_INACTIVE);
+    menu_bar->add("Help/Tutorial", 0, menu_do_tutorial);
     menu_bar->add("Surprise Me/Go", FL_F + 8, main_win_surprise_go_CB);
     menu_bar->selection_color(SELECTION);
 

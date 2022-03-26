@@ -2515,6 +2515,37 @@ DOOM.ROOM_THEMES =
 
 -----  GENERIC STUFF  ------------------------------
 
+  any_v2_Hallway =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 1,
+
+    walls =
+    {
+      GRAY1 = 50,
+      GRAY5 = 50,
+      ICKWALL1 = 30,
+      ICKWALL3 = 30
+    },
+
+    floors =
+    {
+      FLAT1 = 30,
+      FLOOR0_3 = 20,
+      FLAT20 = 15,
+      FLAT3 = 10,
+    },
+
+    ceilings =
+    {
+      FLAT1 = 30,
+      FLAT19 = 20,
+      FLAT23 = 20,
+      FLAT5_4 = 15,
+    }
+  },
+
   any_vent_Hallway =
   {
     env   = "hallway",
@@ -3280,6 +3311,48 @@ DOOM.ROOM_THEMES =
     },
   },
 
+  tech_v2_Hallway =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      TEKGREN1 = 50,
+      BROWN1   = 50,
+      GRAY7    = 20,
+
+      TEKWALL4 = 20,
+      TEKGREN2 = 30,
+      STARGR1 = 10,
+      STARTAN3 = 15,
+      STARG3 = 15,
+
+      PIPEWAL2 = 40,
+      PIPE2 = 10,
+      PIPE4 = 10,
+    },
+
+    floors =
+    {
+      FLAT4  = 50,
+      FLAT14 = 50,
+      FLAT1  = 20,
+      FLOOR4_8 = 15,
+      FLOOR0_2 = 20,
+      CEIL4_1 = 20,
+    },
+
+    ceilings =
+    {
+      CEIL3_5 = 50,
+      CEIL3_1 = 50,
+      RROCK03 = 50,
+      CEIL4_2 = 20,
+      CEIL5_1 = 40,
+    },
+  },
 
   tech_deuce_Hallway =
   {
@@ -3909,6 +3982,72 @@ DOOM.ROOM_THEMES =
     }
   },
 
+  hell_v2_Hallway =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 100,
+
+    walls =
+    {
+      MARBGRAY = 80,
+      REDWALL  = 60,
+      SKIN2    = 60,
+
+      SKSPINE2 = 45,
+      SKINSYMB = 45,
+      GSTVINE1 = 40,
+      GSTVINE2 = 40,
+      WOODMET4 = 30,
+      WOODMET2 = 25,
+      WOODMET1 = 25,
+      GSTONE1  = 20,
+      SKINMET1 = 10,
+      SKINMET2 = 10,
+
+      GSTGARG = 10,
+      GSTLION = 10,
+      GSTSATYR = 10
+    },
+
+    floors =
+    {
+      FLAT1 = 50,
+      DEM1_6  = 30,
+      FLOOR6_2 = 15,
+      FLOOR7_1 = 20,
+      FLOOR7_2 = 25,
+      FLAT10  = 20
+    },
+
+    ceilings =
+    {
+      FLAT1 = 50,
+      SFLR6_1 = 20,
+      SFLR6_4 = 20,
+      FLAT5_2 = 10,
+      FLOOR7_2 = 20,
+      CEIL1_1 = 15,
+      BLOOD1 = 20,
+      LAVA1 = 15
+    },
+
+    y_offsets =
+    {
+      MARBGRAY = 24,
+      SKINSYMB = 30,
+      SKINMET1 = 30,
+      SKINMET2 = 30,
+      SKSPINE2 = 13,
+      SW1WOOD  = 47,
+      SW1LION  = 47,
+      SW1GARG  = 47,
+      SW1SATYR  = 47,
+      WOODMET4 = 16,
+      WOODMET2 = 16,
+      WOODMET1 = 16
+    }
+  },
 
   hell_deuce_Hallway =
   {
@@ -4600,6 +4739,53 @@ DOOM.ROOM_THEMES =
     }
   },
 
+  urban_v2_Hallway =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 75,
+
+    walls =
+    {
+      WOOD1    = 90,
+      WOOD12   = 90,
+      WOOD9    = 90,
+      WOODVERT = 90,
+
+      BIGBRIK1 = 50,
+      BIGBRIK2 = 50,
+      BRICK10  = 50,
+      BRICK11  = 10,
+
+      PANEL1   = 50,
+      PANEL7   = 30,
+      PANEL8   = 30,
+      PANEL9   = 30,
+      STUCCO   = 30,
+      STUCCO1  = 30,
+      STUCCO3  = 30
+    },
+
+    floors =
+    {
+      FLAT5_1 = 50,
+      FLAT5_2 = 20,
+      FLAT8   = 50,
+      FLAT5_4 = 50,
+      MFLR8_1 = 50,
+      FLOOR5_3 = 20,
+      FLAT5 = 20
+    },
+
+    ceilings =
+    {
+      CEIL1_1 = 30,
+      FLAT5_2 = 25,
+      CEIL3_5 = 20,
+      MFLR8_1 = 50,
+      FLAT1   = 30
+    }
+  },
 
   urban_deuce_Hallway =
   {

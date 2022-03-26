@@ -1203,6 +1203,31 @@ HERETIC.ROOM_THEMES =
     },
   },
 
+  city_v2_Hallway_Floor03 =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      GRSTNPB = 50,
+      GRSTNPBV = 50,
+      WOODWL = 20,
+    },
+
+    floors =
+    {
+      FLOOR03 = 50,
+    },
+
+    ceilings =
+    {
+      FLOOR03 = 50,
+    },
+
+  },
+
   city_curve_Hallway_Floor03 =
   {
     env   = "hallway",
@@ -1278,6 +1303,30 @@ HERETIC.ROOM_THEMES =
 
   },
 
+  city_v2_Hallway_Floor04 =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      GRSTNPB = 50,
+      GRSTNPBV = 50,
+    },
+
+    floors =
+    {
+      FLOOR04 = 50,
+    },
+
+    ceilings =
+    {
+      FLOOR04 = 50,
+    },
+
+  },
+
   city_curve_Hallway_Floor04 =
   {
     env   = "hallway",
@@ -1346,6 +1395,29 @@ HERETIC.ROOM_THEMES =
     ceilings =
     {
       FLOOR04 = 50,
+    },
+
+  },
+
+  city_v2_Hallway_Sndchnks =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 15,
+
+    walls =
+    {
+      SNDCHNKS = 50,
+    },
+
+    floors =
+    {
+      FLOOR06 = 50,
+    },
+
+    ceilings =
+    {
+      FLOOR06 = 20,
     },
 
   },
@@ -1504,6 +1576,29 @@ HERETIC.ROOM_THEMES =
 
   },
 
+  maw_v2_Hallway_Looserck =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      LOOSERCK = 50,
+    },
+
+    floors =
+    {
+      FLAT516 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT509 = 50,
+    },
+
+  },
+
   maw_curve_Hallway_Looserck =
   {
     env   = "hallway",
@@ -1569,6 +1664,30 @@ HERETIC.ROOM_THEMES =
     ceilings =
     {
       FLAT509 = 50,
+    },
+
+  },
+
+  maw_v2_Hallway_Grstnpb =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      GRSTNPB = 50,
+      GRSTNPBV = 25,
+    },
+
+    floors =
+    {
+      FLOOR04 = 50,
+    },
+
+    ceilings =
+    {
+      FLOOR04 = 50,
     },
 
   },
@@ -1828,6 +1947,31 @@ HERETIC.ROOM_THEMES =
 
   },
 
+  dome_v2_Hallway_Grstnpb =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      GRSTNPB = 50,
+    },
+
+    floors =
+    {
+      FLAT503 = 50,
+      FLAT523 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT503 = 50,
+      FLOOR27 = 50,
+    },
+
+  },
+
   dome_curve_Hallway_Grstnpb =
   {
     env   = "hallway",
@@ -1903,6 +2047,29 @@ HERETIC.ROOM_THEMES =
 
   },
 
+  dome_v2_Hallway_Grnblok1 =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 25,
+
+    walls =
+    {
+      GRNBLOK1 = 50,
+    },
+
+    floors =
+    {
+      FLAT522 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT522 = 50,
+    },
+
+  },
+
   dome_curve_Hallway_Grnblok1 =
   {
     env   = "hallway",
@@ -1968,6 +2135,29 @@ HERETIC.ROOM_THEMES =
     ceilings =
     {
       FLAT522 = 50,
+    },
+
+  },
+
+  dome_v2_Hallway_Sndplain =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 25,
+
+    walls =
+    {
+      SNDPLAIN = 50,
+    },
+
+    floors =
+    {
+      FLAT521 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT521 = 50,
     },
 
   },
@@ -2343,6 +2533,29 @@ HERETIC.ROOM_THEMES =
 
   },
 
+  ossuary_v2_Hallway_Cstlrck =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      CSTLRCK = 50,
+    },
+
+    floors =
+    {
+      FLAT522 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT523 = 50,
+    },
+
+  },
+
   ossuary_curve_Hallway_Cstlrck =
   {
     env   = "hallway",
@@ -2408,6 +2621,29 @@ HERETIC.ROOM_THEMES =
     ceilings =
     {
       FLAT523 = 50,
+    },
+
+  },
+
+  ossuary_v2_Hallway_Grstnpb =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      GRSTNPB = 50,
+    },
+
+    floors =
+    {
+      FLAT521 = 50,
+    },
+
+    ceilings =
+    {
+      FLOOR19 = 50,
     },
 
   },
@@ -2481,6 +2717,29 @@ HERETIC.ROOM_THEMES =
 
   },
 
+  ossuary_v2_Hallway_Sndplain =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      SNDPLAIN = 50,
+    },
+
+    floors =
+    {
+      FLAT522 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT503 = 50,
+    },
+
+  },
+
   ossuary_curve_Hallway_Sndplain =
   {
     env   = "hallway",
@@ -2546,6 +2805,31 @@ HERETIC.ROOM_THEMES =
     ceilings =
     {
       FLAT503 = 50,
+    },
+
+  },
+
+  ossuary_v2_Hallway_Woodwl =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      WOODWL = 50,
+    },
+
+    floors =
+    {
+      FLOOR10 = 50,
+      FLAT523 = 50,
+    },
+
+    ceilings =
+    {
+      FLOOR11 = 50,
+      FLOOR10 = 50,
     },
 
   },
@@ -2896,6 +3180,31 @@ HERETIC.ROOM_THEMES =
 
   },
 
+  demense_v2_Hallway_Sqpeb1 =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      SQPEB1 = 50,
+    },
+
+    floors =
+    {
+      FLOOR17 = 50,
+      FLAT523 = 50,
+    },
+
+    ceilings =
+    {
+      FLOOR27 = 50,
+      FLAT523 = 50,
+    },
+
+  },
+
   demense_curve_Hallway_Sqpeb1 =
   {
     env   = "hallway",
@@ -2967,6 +3276,33 @@ HERETIC.ROOM_THEMES =
     {
       FLOOR27 = 50,
       FLAT523 = 50,
+    },
+
+  },
+
+  demense_v2_Hallway_Sndplain_Sndblcks =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      SNDPLAIN = 50,
+      SNDBLCKS = 50,
+    },
+
+    floors =
+    {
+      FLAT523 = 50,
+      FLOOR06 = 50,
+      FLOOR19 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT503 = 50,
+      FLAT521 = 50,
     },
 
   },
@@ -3052,6 +3388,32 @@ HERETIC.ROOM_THEMES =
 
   },
 
+  demense_v2_Hallway_Metl2 =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      METL2 = 50,
+    },
+
+    floors =
+    {
+      FLAT523 = 50,
+      FLAT522 = 50,
+      FLOOR28 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT523 = 50,
+      FLAT521 = 50,
+    },
+
+  },
+
   demense_curve_Hallway_Metl2 =
   {
     env   = "hallway",
@@ -3126,6 +3488,31 @@ HERETIC.ROOM_THEMES =
     {
       FLAT523 = 50,
       FLAT521 = 50,
+    },
+
+  },
+
+  demense_v2_Hallway_Cstlrck_Grstnpb =
+  {
+    env   = "hallway",
+    group = "oblige_v2",
+    prob  = 50,
+
+    walls =
+    {
+      CSTLRCK = 50,
+      GRSTNPB = 50,
+    },
+
+    floors =
+    {
+      FLAT523 = 50,
+    },
+
+    ceilings =
+    {
+      FLAT523 = 50,
+      FLAT504 = 50,
     },
 
   },

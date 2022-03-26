@@ -428,7 +428,6 @@ void DLG_Tutorial(void) {
         new UI_Tutorial_Window(tutorial_w, tutorial_h, _("OBSIDIAN Tutorial"));
 
     tutorial_window->want_quit = false;
-    tutorial_window->set_modal();
     tutorial_window->show();
 
     // run the GUI until the user closes
