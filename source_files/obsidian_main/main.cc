@@ -131,6 +131,7 @@ bool randomize_misc = false;
 bool random_string_seeds = false;
 bool did_specify_seed = false;
 int zip_output = 0;
+bool zip_logs = false;
 
 bool first_run = false;
 
@@ -235,6 +236,7 @@ static void ShowInfo() {
         "     --config   <file>     Config file for GUI\n"
         "     --options  <file>     Options file for GUI\n"
         "     --log      <file>     Log file to create\n"
+        "     --ziplog              Zip log file after completion\n"
         "\n"
         "  -b --batch    <output>   Batch mode (no GUI)\n"
         "  -a --addon    <file>...  Addon(s) to use\n"
@@ -1109,6 +1111,10 @@ restart:;
 
     if (argv::Find('3', "pk3") >= 0) {
         zip_output = 2;
+    }
+
+    if (argv::Find(0, "ziplog") >= 0) {
+        zip_logs = true;
     }
 
     // These switches will only apply in batch mode, as the GUI has its own
