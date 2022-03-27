@@ -463,6 +463,14 @@ Texture "COMPYELL", 64, 128
   }
 }
 
+Texture "TLIT65OF", 64, 64
+{
+	Patch "TLITE6_5", -48, -48
+	Patch "TLITE6_5", 16, -48
+	Patch "TLITE6_5", 16, 16
+	Patch "TLITE6_5", -48, 16
+}
+
 // Composites based on Vol. 3
 WallTexture "DECO1RED", 64, 128
 {

@@ -8,7 +8,7 @@ PREFABS.Joiner_plain2 =
   where  = "seeds",
   shape  = "I",
 
-  prob   = 70, --50,
+  prob   = 15, --50,
 
   seed_w = 1,
   seed_h = 2,
@@ -18,4 +18,12 @@ PREFABS.Joiner_plain2 =
 
   x_fit  = "frame",
   y_fit  = "frame",
+}
+
+PREFABS.Joiner_plain2_stretchy =
+{
+  template = "Joiner_plain2",
+  prob = 70,
+
+  x_fit = { 32,96 }
 }

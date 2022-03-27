@@ -2720,7 +2720,7 @@ function Quest_big_secrets()
   -- secrets elsewhere.
   --
 
-  local max_size = 199
+  local max_size = 64 -- 199
 
 
   local function eval_secret_room(R)

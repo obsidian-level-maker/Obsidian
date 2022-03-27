@@ -3354,6 +3354,75 @@ GROW_COLONNADE_VAULT_THICK_PILLARS_NEW_AREA =
   }
 },
 
+GROW_COLONNADE_COLUMNS_SMALL_4x =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x.......","x1111111",
+    "x.......","x1111111",
+    "x.......","xAAAAAAA",
+    "x.......","xA#A#A#A",
+    "x.......","xAAAAAAA",
+    "1.......","11111111",
+    "1.......","11111111"
+  }
+},
+
+GROW_COLONNADE_COLUMNS_BIG_3x =
+{
+  prob = 35,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x..........","x1111111111",
+    "x..........","x1111111111",
+    "x..........","xAAAAAAAAAA",
+    "x..........","xA##A##A##A",
+    "x..........","xA##A##A##A",
+    "x..........","xAAAAAAAAAA",
+    "1..........","11111111111",
+    "1..........","11111111111"
+  }
+},
+
+GROW_COLONNADE_STRAIGHT_HALF_VAULT_SHORT =
+{
+  prob = 25,
+  skip_prob = 50,
+
+  structure =
+  {
+    "1...","11AA",
+    "1...","11AA",
+    "x...","x1AA",
+    "x...","x1AA",
+    "x...","x1AA",
+    "x...","x1AA",
+  }
+},
+
+GROW_COLONNADE_STRAIGHT_HALF_VAULT_LONG =
+{
+  prob = 30,
+  skip_prob = 60,
+
+  structure =
+  {
+    "1...","11AA",
+    "1...","11AA",
+    "x...","x1AA",
+    "x...","x1AA",
+    "x...","x1AA",
+    "x...","x1AA",
+    "x...","x1AA",
+    "x...","x1AA",
+  }
+},
+
 GROW_COLONNADE_STRAIGHT_VAULT =
 {
   prob = 30,
@@ -9042,6 +9111,22 @@ GROW_36_TEE_NEW_AREA =
   },
 },
 
+GROW_36_BISECT_SMALL =
+{
+  prob = 25,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xx..xx","xx11xx",
+    "x....x","x#11#x",
+    "1.....","111111",
+    "1.....","111111",
+    "x....x","x#11#x",
+    "xx..xx","xx11xx"
+  },
+},
+
 GROW_36_BISECT_NEW_AREA_SMALL =
 {
   prob = 25,
@@ -9049,10 +9134,12 @@ GROW_36_BISECT_NEW_AREA_SMALL =
 
   structure =
   {
+    "xx..xx","xxAAxx",
     "x....x","x#AA#x",
     "1.....","11AA11",
     "1.....","11AA11",
     "x....x","x#AA#x",
+    "xx..xx","xxAAxx"
   },
 },
 

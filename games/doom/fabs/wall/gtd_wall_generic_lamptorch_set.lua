@@ -8,7 +8,7 @@ PREFABS.Wall_generic_gtd_lamp_stubby =
 
   where  = "edge",
   height = 128,
-  deep   = 16,
+  deep   = 28,
 
   bound_z1 = 0,
   bound_z2 = 128,

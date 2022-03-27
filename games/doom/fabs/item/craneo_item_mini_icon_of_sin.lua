@@ -14,6 +14,8 @@ PREFABS.Item_craneo_mini_icon_of_sin =
   where = "seeds",
   height = 136,
 
+  deep = 16,
+
   seed_w = 2,
   seed_h = 1,
 

@@ -5,13 +5,16 @@ PREFABS.Exit_scionox_quakeish_gate_exit =
   file   = "exit/scionox_quakeish_gate_exit.wad",
   map    = "MAP01",
 
-  prob   = 250,
-
+  -- boosted probability to compensate for height req
+  prob   = 750, --250, 
+  
   theme = "hell",
 
   where  = "seeds",
 
   texture_pack = "armaetus",
+
+  height = 228,
 
   seed_w = 3,
   seed_h = 2,
