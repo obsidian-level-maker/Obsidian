@@ -26,6 +26,7 @@
 #include <fstream>
 #include <filesystem>
 #include <map>
+#include <vector>
 
 #include "sys_type.h"
 

@@ -194,10 +194,12 @@ static void main_win_addon_CB(Fl_Widget *w, void *data) {
     menu_item.append(addon->name.filename().string());
     const Fl_Menu_Item *checkbox = menu->find_item(menu_item.c_str());
     addon->enabled = (checkbox->value() != 0) ? true : false;
+}
+
+static void main_win_apply_addon_CB(Fl_Widget *w, void *data) {
     Options_Save(options_file);
 
-    fl_alert("%s", _("Changes to addons require a restart.\nOBSIDIAN will "
-                         "now restart."));
+    fl_alert("%s", _("OBSIDIAN will now restart and apply changes to addons."));
 
     initial_enabled_addons.clear();
 
@@ -1323,6 +1325,7 @@ skiprest:
         if (all_addons.size() == 0) {
             main_win->menu_bar->add("Addons/No Addons Detected", 0, 0, 0, FL_MENU_INACTIVE);
         } else {
+            main_win->menu_bar->add("Addons/Restart and Apply Changes", 0, main_win_apply_addon_CB, 0, 0);
             for (int i = 0; i < all_addons.size(); i++) {
                 std::string addon_entry = "Addons/";
                 addon_entry.append(all_addons[i].name.filename().string());
