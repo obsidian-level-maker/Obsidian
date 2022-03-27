@@ -660,6 +660,32 @@ function ARMAETUS_EPIC_TEXTURES.setup(self)
   
 end
 
+function ARMAETUS_EPIC_TEXTURES.get_levels_after_themes()
+  ARMAETUS_EPIC_TEXTURES.decide_environment_themes()
+end
+
+function ARMAETUS_EPIC_TEXTURES.decide_night_replacement_textures()
+  if LEVEL.episode and LEVEL.episode.dark_prob == 100 then
+    GAME.MATERIALS["CITY04"].t = "CITY04N"
+    GAME.MATERIALS["CITY05"].t = "CITY05N"
+    GAME.MATERIALS["CITY06"].t = "CITY06N"
+    GAME.MATERIALS["CITY07"].t = "CITY07N"
+    GAME.MATERIALS["CITY11"].t = "CITY11N"
+    GAME.MATERIALS["CITY12"].t = "CITY12N"
+    GAME.MATERIALS["CITY13"].t = "CITY13N"
+    GAME.MATERIALS["CITY14"].t = "CITY14N"
+  else
+    GAME.MATERIALS["CITY04"].t = "CITY04"
+    GAME.MATERIALS["CITY05"].t = "CITY05"
+    GAME.MATERIALS["CITY06"].t = "CITY06"
+    GAME.MATERIALS["CITY07"].t = "CITY07"
+    GAME.MATERIALS["CITY11"].t = "CITY11"
+    GAME.MATERIALS["CITY12"].t = "CITY12"
+    GAME.MATERIALS["CITY13"].t = "CITY13"
+    GAME.MATERIALS["CITY14"].t = "CITY14"
+  end
+end
+
 function ARMAETUS_EPIC_TEXTURES.decide_environment_themes()
   --------------------
   -- Outdoor Themes --
@@ -902,6 +928,8 @@ function ARMAETUS_EPIC_TEXTURES.generate_environment_themes()
       GAME.ROOM_THEMES.flesh_Outdoors.naturals = PARAM.def_flesh_naturals
     end
   end
+
+  ARMAETUS_EPIC_TEXTURES.decide_night_replacement_textures()
 end
 
 function ARMAETUS_EPIC_TEXTURES.table_insert(table1, table2)
@@ -1045,7 +1073,7 @@ OB_MODULES["armaetus_epic_textures"] =
   hooks =
   {
     setup = ARMAETUS_EPIC_TEXTURES.setup,
-    get_levels_after_themes = ARMAETUS_EPIC_TEXTURES.decide_environment_themes,
+    get_levels_after_themes = ARMAETUS_EPIC_TEXTURES.get_levels_after_themes,
     begin_level = ARMAETUS_EPIC_TEXTURES.generate_environment_themes,
     level_layout_finished = ARMAETUS_EPIC_TEXTURES.create_environment_themes,
     all_done = ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in

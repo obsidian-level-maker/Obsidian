@@ -69,7 +69,7 @@ PREFABS.Window_octo_glass_alt_3 =
   template = "Window_gtd_window_hexagon_1",
   map = "MAP03",
 
-  seed_2 = 3,
+  seed_w = 3,
 
   engine = "!zdoom",
   group = "gtd_window_octo_glass",

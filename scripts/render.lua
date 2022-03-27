@@ -2670,6 +2670,11 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
   if A.floor_group and A.floor_group.wall_group then
     reqs.group = A.floor_group.wall_group
   end
+  if chunk.from_area 
+  and chunk.from_area.floor_group
+  and chunk.from_area.floor_group.wall_group then
+    reqs.group = chunk.from_area.floor_group.wall_group
+  end
 
   if z2 then
     reqs.height = z2 - z1
