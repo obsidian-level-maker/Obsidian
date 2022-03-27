@@ -89,8 +89,7 @@ PREFABS.Joiner_bedroom_vanilla =
   seed_h = 2,
 
   tex_EVILFACA = "WOOD4",
-  tex_TVSNOW01 = "SPACEW3",
-  flat_GRENFLOR = "GRASS1"
+  tex_TVSNOW01 = "SPACEW3"
 }
 
 --a bedroom joiner but with a secret
