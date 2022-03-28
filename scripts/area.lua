@@ -778,6 +778,8 @@ function Junction_calc_fence_z(A1, A2)
   local z1 = A1.floor_h
   local z2 = A2.floor_h
 
+  local top_z
+
   if A1.podium_h then z1 = z1 + A1.podium_h end
   if A2.podium_h then z2 = z2 + A2.podium_h end
 
@@ -789,14 +791,15 @@ function Junction_calc_fence_z(A1, A2)
 
   -- pick max floor height in the zone (super tall brush fences
   -- but this is essentially the Oblige default)
-  local top_z = math.max(z1, z2)
-
+  local max_z = math.max(z1, z2)
   -- pick max height between two areas
-  local alt_top_z = math.max(A1.floor_h, A2.floor_h)
+  local per_area_z = math.max(A1.floor_h, A2.floor_h)
+
+  top_z = max_z
 
   if not (A1.room and A1.room.is_park)
   or not (A2.room and A2.room.is_park) then
-    top_z = alt_top_z
+    top_z = per_area_z
   end
 
   if A1.room and A1.room.fence_height_type 
@@ -804,7 +807,7 @@ function Junction_calc_fence_z(A1, A2)
   or (A2.room and A2.room.fence_height_type 
   and A2.room.fence_height_type == "max_floor")
   then
-    top_z = math.max(z1, z2)
+    top_z = max_z
   end
 
   -- porch worchy problems: specifically, fence gates straddled between
@@ -813,7 +816,7 @@ function Junction_calc_fence_z(A1, A2)
   -- MSSP
   if A1.is_porch or A2.is_porch then
     if not A1.room.is_outdoor or not A2.room.is_outdoor then
-      top_z = alt_top_z
+      top_z = per_area_z
     end
 
     if A1.room.is_outdoor or A2.room.is_outdoor then
