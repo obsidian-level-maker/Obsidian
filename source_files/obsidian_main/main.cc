@@ -131,6 +131,7 @@ bool randomize_misc = false;
 bool random_string_seeds = false;
 bool did_specify_seed = false;
 int zip_output = 0;
+bool zip_logs = false;
 
 bool first_run = false;
 
@@ -194,10 +195,12 @@ static void main_win_addon_CB(Fl_Widget *w, void *data) {
     menu_item.append(addon->name.filename().string());
     const Fl_Menu_Item *checkbox = menu->find_item(menu_item.c_str());
     addon->enabled = (checkbox->value() != 0) ? true : false;
+}
+
+static void main_win_apply_addon_CB(Fl_Widget *w, void *data) {
     Options_Save(options_file);
 
-    fl_alert("%s", _("Changes to addons require a restart.\nOBSIDIAN will "
-                         "now restart."));
+    fl_alert("%s", _("OBSIDIAN will now restart and apply changes to addons."));
 
     initial_enabled_addons.clear();
 
@@ -233,6 +236,7 @@ static void ShowInfo() {
         "     --config   <file>     Config file for GUI\n"
         "     --options  <file>     Options file for GUI\n"
         "     --log      <file>     Log file to create\n"
+        "     --ziplog              Zip log file after completion\n"
         "\n"
         "  -b --batch    <output>   Batch mode (no GUI)\n"
         "  -a --addon    <file>...  Addon(s) to use\n"
@@ -1109,6 +1113,10 @@ restart:;
         zip_output = 2;
     }
 
+    if (argv::Find(0, "ziplog") >= 0) {
+        zip_logs = true;
+    }
+
     // These switches will only apply in batch mode, as the GUI has its own
     // mechanism for randomization of options - Dasho
 
@@ -1323,6 +1331,7 @@ skiprest:
         if (all_addons.size() == 0) {
             main_win->menu_bar->add("Addons/No Addons Detected", 0, 0, 0, FL_MENU_INACTIVE);
         } else {
+            main_win->menu_bar->add("Addons/Restart and Apply Changes", 0, main_win_apply_addon_CB, 0, 0);
             for (int i = 0; i < all_addons.size(); i++) {
                 std::string addon_entry = "Addons/";
                 addon_entry.append(all_addons[i].name.filename().string());

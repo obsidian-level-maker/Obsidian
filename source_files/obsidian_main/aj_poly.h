@@ -174,6 +174,7 @@ class thing_c {
 
     // Hexen support
     int tid;
+    int height;
     int special;
     std::array<u8_t, 5> args;
 

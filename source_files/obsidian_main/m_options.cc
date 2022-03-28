@@ -69,6 +69,8 @@ static void Parse_Option(std::string name, std::string value) {
         custom_prefix = value;
     } else if (StringCaseCmp(name, "zip_output") == 0) {
         zip_output = StringToInt(value);
+    } else if (StringCaseCmp(name, "zip_logs") == 0) {
+        zip_logs = StringToInt(value) ? true : false;
     } else {
         LogPrintf("Unknown option: '{}'\n", name);
     }
@@ -174,6 +176,7 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "filename_prefix = " << filename_prefix << "\n";
     option_fp << "custom_prefix = " << custom_prefix << "\n";
     option_fp << "zip_output = " << zip_output << "\n";
+    option_fp << "zip_logs = " << zip_logs << "\n";
 
     if (!last_directory.empty()) {
         option_fp << "\n";
@@ -213,6 +216,7 @@ class UI_OptionsWin : public Fl_Window {
     UI_CustomCheckBox *opt_debug;
     UI_CustomCheckBox *opt_limit_break;
     UI_CustomCheckBox *opt_preserve_failures;
+    UI_CustomCheckBox *opt_zip_logs;
 
    public:
     UI_OptionsWin(int W, int H, const char *label = NULL);
@@ -278,6 +282,12 @@ class UI_OptionsWin : public Fl_Window {
         main_action = MAIN_QUIT;
 
         that->want_quit = true;
+    }
+
+    static void callback_ZipLogs(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+        zip_logs = that->opt_zip_logs->value() ? true : false;
     }
 
     static void callback_ZipOutput(Fl_Widget *w, void *data) {
@@ -536,6 +546,18 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_preserve_failures->selection_color(SELECTION);
     opt_preserve_failures->down_box(button_style);
 
+    cy += opt_preserve_failures->h() + y_step * .5;
+
+    opt_zip_logs =
+        new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_zip_logs->copy_label(_(" ZIP Log Output"));
+    opt_zip_logs->value(zip_logs ? 1 : 0);
+    opt_zip_logs->callback(callback_ZipLogs, this);
+    opt_zip_logs->labelfont(font_style);
+    opt_zip_logs->selection_color(SELECTION);
+    opt_zip_logs->down_box(button_style);
+
+
     //----------------
 
     int dh = kf_h(60);
@@ -596,7 +618,7 @@ int UI_OptionsWin::handle(int event) {
 
 void DLG_OptionsEditor(void) {
     int opt_w = kf_w(350);
-    int opt_h = kf_h(425);
+    int opt_h = kf_h(450);
 
     UI_OptionsWin *option_window =
         new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));
