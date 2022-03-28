@@ -4,6 +4,8 @@ PREFABS.Decor_tech_vats =
   map = "MAP01",
 
   prob = 5000,
+  skip_prob = 50,
+
   theme = "tech",
   env = "building",
 
@@ -26,6 +28,5 @@ PREFABS.Decor_tech_vats2 =
   template  = "Decor_tech_vats",
   map    = "MAP02",
 
-  texture_pack = "armaetus",
-
+  texture_pack = "armaetus"
 }

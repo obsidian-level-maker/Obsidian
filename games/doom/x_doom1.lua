@@ -815,7 +815,8 @@ ULTDOOM.THEMES =
       tech_o_grey_metal_sloped = 1,
       tech_o_tall_light = 0.5,
       tech_o_tall_light_alt = 0.5,
-      tech_o_hexagon_uac_spotlights = 1
+      tech_o_hexagon_uac_spotlights = 1,
+      tech_o_orange_oct_white_binding = 1
     },
 
     fence_groups =
@@ -1177,7 +1178,8 @@ ULTDOOM.THEMES =
       tech_o_grey_metal_sloped = 1,
       tech_o_tall_light = 0.5,
       tech_o_tall_light_alt = 0.5,
-      tech_o_hexagon_uac_spotlights = 1
+      tech_o_hexagon_uac_spotlights = 1,
+      tech_o_orange_oct_white_binding = 1
     },
 
     fences =
@@ -1600,7 +1602,8 @@ ULTDOOM.THEMES =
       hell_o_blood_ocatgon = 1,
       hell_o_catamet = 1,
       hell_o_crematorium_windows = 1,
-      hell_o_orange_arch_window = 1
+      hell_o_orange_arch_window = 1,
+      hell_o_marble_gargle_stone_pyramid = 1
     },
 
     fence_groups =
@@ -2022,7 +2025,8 @@ ULTDOOM.THEMES =
       hell_o_blood_ocatgon = 1,
       hell_o_catamet = 1,
       hell_o_crematorium_windows = 1,
-      hell_o_orange_arch_window = 1
+      hell_o_orange_arch_window = 1,
+      hell_o_marble_gargle_stone_pyramid = 1
     },
 
     fence_groups =

@@ -29,7 +29,7 @@ PREFABS.Exit_immersive_point_exit_door =
   template = "Exit_immersive_point_exit1",
   map = "MAP04",
 
-  size = 72,
+  size = 32,
 
   tex_DOOR1 =
   {
@@ -44,5 +44,5 @@ PREFABS.Exit_immersive_point_exit_door2 =
   template = "Exit_immersive_point_exit1",
   map = "MAP05",
 
-  size = 84
+  size = 32
 }

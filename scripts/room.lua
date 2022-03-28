@@ -767,6 +767,7 @@ function Room_pick_joiner_prefab(C, chunk)
   assert(chunk)
 
   local reqs = chunk:base_reqs(chunk.from_dir)
+  local none_ok = "not_ok"
 
   reqs.kind  = C.kind
   reqs.shape = assert(chunk.shape)
@@ -778,13 +779,29 @@ function Room_pick_joiner_prefab(C, chunk)
     reqs.env      = A1.room:get_env()
     reqs.neighbor = A2.room:get_env()
 
+    if A1.floor_group and A1.floor_group.wall_group then
+      reqs.group = assert(A1.floor_group.wall_group)
+    end
+    -- group string from the destination area is prioritized
+    if A2.floor_group and A2.floor_group.wall_group then
+      reqs.group = assert(A2.floor_group.wall_group)
+    end
+
   elseif C.kind == "terminator" then
     reqs.group = assert(chunk.area.room.hall_group)
   end
 
   C:get_lock_reqs(reqs)
 
-  chunk.prefab_def = Fab_pick(reqs)
+  if C.kind == "terminator" then
+    none_ok = nil
+  end
+
+  chunk.prefab_def = Fab_pick(reqs, none_ok)
+  if not chunk.prefab_def then
+    reqs.group = nil
+    chunk.prefab_def = Fab_pick(reqs)
+  end
 
   -- should we flip the joiner?
   -- [ hallway terminators are already ok, done in Connect_directly ]
@@ -1947,14 +1964,28 @@ function Room_border_up()
       return false
     end
 
+
+
     for _,A in pairs(LEVEL.areas) do
       if can_have_fences(A) then
         A.fence_up = true
+
         if rand.odds(50) then
           A.fence_up_type = "fence"
         else
           A.fence_up_type = "rail"
         end
+
+        if A.room 
+        and not A.room.fence_height_type
+        and A.room.is_outdoor then
+          if rand.odds(10) then
+            A.room.fence_height_type = "max_floor"
+          else
+            A.room.fence_height_type = "per_floor"
+          end
+        end
+
       end
     end
 
@@ -2733,7 +2764,7 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function room_add_steps(R)
+  --[[local function room_add_steps(R)
     -- NOT USED ATM [ should be done while flowing through room ]
 
     for _,C in pairs(R.internal_conns) do
@@ -2752,7 +2783,7 @@ function Room_floor_ceil_heights()
       Junction_make_steps(junc)
       ::continue::
     end
-  end
+  end]]
 
 
   local function process_room(R, entry_area)
