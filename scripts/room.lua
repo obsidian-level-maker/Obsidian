@@ -778,6 +778,14 @@ function Room_pick_joiner_prefab(C, chunk)
     reqs.env      = A1.room:get_env()
     reqs.neighbor = A2.room:get_env()
 
+    if A1.floor_group and A1.floor_group.wall_group then
+      reqs.group = assert(A1.floor_group.wall_group)
+    end
+    -- group string from the destination area is prioritized
+    if A2.floor_group and A2.floor_group.wall_group then
+      reqs.group = assert(A2.floor_group.wall_group)
+    end
+
   elseif C.kind == "terminator" then
     reqs.group = assert(chunk.area.room.hall_group)
   end
@@ -785,6 +793,10 @@ function Room_pick_joiner_prefab(C, chunk)
   C:get_lock_reqs(reqs)
 
   chunk.prefab_def = Fab_pick(reqs)
+  if not chunk.prefab_def then
+    reqs.group = nil
+    chunk.prefab_def = Fab_pick(reqs)
+  end
 
   -- should we flip the joiner?
   -- [ hallway terminators are already ok, done in Connect_directly ]
