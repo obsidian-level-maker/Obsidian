@@ -599,3 +599,20 @@ PREFABS.Wall_hell_orange_arch_window =
 
   sector_17 = {[17] = 1, [0] = 9}
 }
+
+PREFABS.Wall_hell_marble_gargle_stone_pyramid = --#
+{
+  template = "Wall_hell_stone_brace",
+  map    = "MAP24",
+
+  group = "hell_o_marble_gargle_stone_pyramid",
+
+  z_fit = {16,64},
+
+  tex_GSTGARG = 
+  {
+    GSTGARG = 10,
+    GSTLION = 10,
+    GSTSATYR = 10
+  }
+}
