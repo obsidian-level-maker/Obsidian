@@ -325,7 +325,7 @@ PREFABS.Item_dem_kitchen_closet =
   file = "item/dem_item_closets.wad",
   map = "MAP08",
 
-  prob = 2000,
+  prob = 7500,
 
   theme = "urban",
 
@@ -418,8 +418,7 @@ PREFABS.Item_dem_bedroom_closet_vanilla =
   },
 
   tex_EVILFACA = "WOOD4",
-  tex_TVSNOW01 = "SPACEW3",
-  flat_GRENFLOR = "GRASS1"
+  tex_TVSNOW01 = "SPACEW3"
 }
 
 --an appartment stairwell with a ritual and an item
@@ -428,7 +427,7 @@ PREFABS.Item_dem_stairwell_closet =
   file = "item/dem_item_closets.wad",
   map = "MAP10",
 
-  prob = 4500,
+  prob = 10000,
 
   theme = "urban",
 
@@ -648,7 +647,7 @@ PREFABS.Item_dem_cornerstore_closets =
 
   engine = "zdoom",
 
-  prob = 2000,
+  prob = 10000,
 
   theme = "urban",
 
@@ -686,7 +685,7 @@ PREFABS.Item_dem_cornerstore_closets_vanilla =
 
   engine = "zdoom",
 
-  prob = 2000,
+  prob = 10000,
 
   theme = "urban",
 
@@ -727,7 +726,7 @@ PREFABS.Item_dem_bookstore_closets =
 
   engine = "zdoom",
 
-  prob = 2000,
+  prob = 10000,
 
   theme = "urban",
 
@@ -764,7 +763,7 @@ PREFABS.Item_dem_bookstore_closets_vanilla =
 
   engine = "zdoom",
 
-  prob = 2000,
+  prob = 10000,
 
   theme = "urban",
 

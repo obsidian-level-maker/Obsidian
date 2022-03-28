@@ -89,8 +89,7 @@ PREFABS.Joiner_bedroom_vanilla =
   seed_h = 2,
 
   tex_EVILFACA = "WOOD4",
-  tex_TVSNOW01 = "SPACEW3",
-  flat_GRENFLOR = "GRASS1"
+  tex_TVSNOW01 = "SPACEW3"
 }
 
 --a bedroom joiner but with a secret
@@ -293,13 +292,14 @@ PREFABS.Joiner_waiting_room_vanilla =
     BRICK2=50, BRICK4=50,
     BRICK6=50, BRICK7=50, BRICK8=50,
     STONE2=50, SHAWN4=50, SHAWN5=50,
-    STUCCO=50,  STUCCO1=50,  STUCCO3=50, STARGR1=50, GRAY7=50,
-    PANEL6=50, BRIKS40=50, BRIKS43=50,
-    GOTH16=50, GOTH31=50, WD03=50
+    STUCCO=50, STUCCO1=50,  STUCCO3=50, STARGR1=50, GRAY7=50,
+    PANEL6=50,
   },
   tex_CPAQLRRE = {
     SKY1 = 50, SKY2 = 50, SKY3 = 50
-  }
+  },
+  flat_FASHWITE = "CRATOP1",
+  flat_SNOW5 = "CRATOP1"
 }
 
 --a raided electronic store joiner

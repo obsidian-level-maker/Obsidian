@@ -509,8 +509,35 @@ PREFABS.Wall_hexagon_uac_spotlights = --#
   map = "MAP22",
 
   texture_pack = "armaetus",
+  replaces = "Wall_hexagon_uac_spotlights_vanilla",
 
   group = "tech_o_hexagon_uac_spotlights",
 
-  z_fit = { 64,72  }
+  z_fit = { 64,72 }
+}
+
+PREFABS.Wall_hexagon_uac_spotlights_vanilla = 
+{
+  template = "Wall_tech_outdoor_caution_strip",
+  map = "MAP22",
+
+  group = "tech_o_hexagon_uac_spotlights",
+
+  z_fit = { 64,72 },
+
+  tex_WARNSTEP = "SLADWALL",
+  tex_BIGDOORH = "BIGDOOR2",
+  tex_BIGDOORM = "BIGDOOR2"
+}
+
+PREFABS.Wall_tech_outdoor_orange_oct_white_binding =
+{
+  template = "Wall_tech_outdoor_caution_strip",
+  map = "MAP23",
+
+  texture_pack = "armaetus",
+
+  group = "tech_o_orange_oct_white_binding",
+
+  z_fit = { 40,106 }
 }
