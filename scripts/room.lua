@@ -767,6 +767,7 @@ function Room_pick_joiner_prefab(C, chunk)
   assert(chunk)
 
   local reqs = chunk:base_reqs(chunk.from_dir)
+  local none_ok = "not_ok"
 
   reqs.kind  = C.kind
   reqs.shape = assert(chunk.shape)
@@ -792,7 +793,11 @@ function Room_pick_joiner_prefab(C, chunk)
 
   C:get_lock_reqs(reqs)
 
-  chunk.prefab_def = Fab_pick(reqs)
+  if C.kind == "terminator" then
+    none_ok = nil
+  end
+
+  chunk.prefab_def = Fab_pick(reqs, none_ok)
   if not chunk.prefab_def then
     reqs.group = nil
     chunk.prefab_def = Fab_pick(reqs)
