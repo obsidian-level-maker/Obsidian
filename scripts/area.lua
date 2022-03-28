@@ -799,6 +799,14 @@ function Junction_calc_fence_z(A1, A2)
     top_z = alt_top_z
   end
 
+  if A1.room and A1.room.fence_height_type 
+  and A1.room.fence_height_type == "max_floor"
+  or (A2.room and A2.room.fence_height_type 
+  and A2.room.fence_height_type == "max_floor")
+  then
+    top_z = math.max(z1, z2)
+  end
+
   -- porch worchy problems: specifically, fence gates straddled between
   -- areas that involve at least one porch is cut off wrongly by the
   -- one of the areas' ceiling heights (usually the one with the porch)
@@ -943,7 +951,7 @@ function Junction_make_railing(junc, rail_mat, block)
 end
 
 
-function Junction_make_steps(junc)
+--[[function Junction_make_steps(junc)
   assert(not junc.E1)
   assert(not junc.E2)
 
@@ -964,7 +972,7 @@ function Junction_make_steps(junc)
 
   junc.E1.area = junc.A1
   junc.E2.area = junc.A2
-end
+end]]
 
 
 ------------------------------------------------------------------------

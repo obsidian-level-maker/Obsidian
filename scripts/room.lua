@@ -1964,14 +1964,26 @@ function Room_border_up()
       return false
     end
 
+
+
     for _,A in pairs(LEVEL.areas) do
       if can_have_fences(A) then
         A.fence_up = true
+
         if rand.odds(50) then
           A.fence_up_type = "fence"
         else
           A.fence_up_type = "rail"
         end
+
+        if A.room and not A.room.fence_height_type then
+          if rand.odds(10) then
+            A.room.fence_height_type = "max_floor"
+          else
+            A.room.fence_height_type = "per_floor"
+          end
+        end
+
       end
     end
 
@@ -2750,7 +2762,7 @@ function Room_floor_ceil_heights()
   end
 
 
-  local function room_add_steps(R)
+  --[[local function room_add_steps(R)
     -- NOT USED ATM [ should be done while flowing through room ]
 
     for _,C in pairs(R.internal_conns) do
@@ -2769,7 +2781,7 @@ function Room_floor_ceil_heights()
       Junction_make_steps(junc)
       ::continue::
     end
-  end
+  end]]
 
 
   local function process_room(R, entry_area)
