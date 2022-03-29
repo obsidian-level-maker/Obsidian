@@ -333,6 +333,7 @@ bool LoadThingsHexen() {
 
         thing->x = LE_S16(raw->x);
         thing->y = LE_S16(raw->y);
+        thing->height = LE_S16(raw->height);
 
         thing->type = LE_U16(raw->type);
         thing->options = LE_U16(raw->options);

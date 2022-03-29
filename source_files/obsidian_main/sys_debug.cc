@@ -23,6 +23,7 @@
 #include "headers.h"
 #include "lib_util.h"
 #include "main.h"
+#include "miniz.h"
 
 #define DEBUG_BUF_LEN 20000
 
@@ -68,6 +69,44 @@ void LogClose(void) {
     LogPrintf("\n====== END OF OBSIDIAN LOGS ======\n\n");
 
     log_file.close();
+
+    if (zip_logs) {
+        std::filesystem::path zip_filename = log_filename;
+        zip_filename.replace_extension("zip");
+        if (std::filesystem::exists(zip_filename)) {
+            std::filesystem::remove(zip_filename);
+        }
+        FILE *zip_file = fopen(log_filename.string().c_str(), "rb");
+        int zip_length = std::filesystem::file_size(log_filename);
+        byte *zip_buf = new byte[zip_length];
+        if (zip_buf && zip_file) {
+            memset(zip_buf, 0, zip_length);
+            fread(zip_buf, 1, zip_length, zip_file);
+        }
+        if (zip_file) {
+            fclose(zip_file);
+        }
+        if (zip_buf) {
+            if (mz_zip_add_mem_to_archive_file_in_place(
+                    zip_filename.string().c_str(),
+                    log_filename.filename().string().c_str(), zip_buf,
+                    zip_length, NULL, 0, MZ_DEFAULT_COMPRESSION)) {
+                std::filesystem::remove(log_filename);
+                delete[] zip_buf;
+            } else {
+                fmt::print(
+                    "Zipping logs to {} failed! Retaining original "
+                    "LOGS.txt.\n",
+                    log_filename.generic_string());
+            }
+        } else {
+            fmt::print(
+                "Zipping logs to {} failed! Retaining original "
+                "LOGS.txt.\n",
+                log_filename.generic_string());
+        }
+    }
+    
     log_filename.clear();
 }
 

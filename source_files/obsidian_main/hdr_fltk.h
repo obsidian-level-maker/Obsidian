@@ -35,6 +35,7 @@
 #include <FL/Fl_File_Chooser.H>
 #include <FL/Fl_File_Icon.H>
 #include <FL/Fl_Group.H>
+#include <FL/Fl_Help_View.H>
 #include <FL/Fl_Image.H>
 #include <FL/Fl_Input.H>
 #include <FL/Fl_Int_Input.H>
