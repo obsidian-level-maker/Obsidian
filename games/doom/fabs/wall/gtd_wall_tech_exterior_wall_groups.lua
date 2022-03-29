@@ -530,14 +530,29 @@ PREFABS.Wall_hexagon_uac_spotlights_vanilla =
   tex_BIGDOORM = "BIGDOOR2"
 }
 
-PREFABS.Wall_tech_outdoor_orange_oct_white_binding =
+PREFABS.Wall_tech_outdoor_orange_oct_white_binding = --#
 {
   template = "Wall_tech_outdoor_caution_strip",
   map = "MAP23",
 
   texture_pack = "armaetus",
+  replaces = "Wall_tech_outdoor_orange_oct_white_binding_vanilla",
 
   group = "tech_o_orange_oct_white_binding",
 
   z_fit = { 40,106 }
+}
+
+PREFABS.Wall_tech_outdoor_orange_oct_white_binding_vanilla =
+{
+  template = "Wall_tech_outdoor_caution_strip",
+  map = "MAP23",
+
+  group = "tech_o_orange_oct_white_binding",
+
+  z_fit = { 40,106 },
+
+  tex_SILVER2O = "TEKGREN2",
+  tex_GRAYMET3 = "SHAWN2",
+  tex_GRAY6 = "GRAY7"
 }
