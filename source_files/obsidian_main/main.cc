@@ -299,11 +299,15 @@ void Determine_WorkingPath(const char *argv0) {
     home_dir = std::filesystem::current_path();
 
 #else
-    home_dir = std::getenv("HOME");
-    home_dir /= ".config/obsidian";
-
+    home_dir = std::getenv("XDG_CONFIG_HOME");
+    home_dir /= "obsidian";
     if (!home_dir.is_absolute()) {
-        Main::FatalError("Unable to find $HOME directory!\n");
+        home_dir = std::getenv("HOME");
+        home_dir /= ".config/obsidian";
+
+        if (!home_dir.is_absolute()) {
+            Main::FatalError("Unable to find $HOME directory!\n");
+        }
     }
 
     // try to create it (doesn't matter if it already exists)
