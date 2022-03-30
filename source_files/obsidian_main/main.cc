@@ -365,6 +365,7 @@ void Determine_InstallDir(const char *argv0) {
         "/usr/local",
         "/usr",
         "/opt",
+        "/app",
     };
 
     for (const char *prefix : prefixes) {
