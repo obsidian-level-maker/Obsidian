@@ -56,6 +56,7 @@ void ob_invoke_hook(std::string hookname);
 
 std::string ob_game_format();
 std::string ob_default_filename();
+std::string ob_datetime_string();
 std::string ob_get_random_words();
 
 bool ob_build_cool_shit();

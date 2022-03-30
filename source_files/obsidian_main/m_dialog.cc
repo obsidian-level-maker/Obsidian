@@ -38,6 +38,7 @@
 #include "main.h"
 
 #include "m_lua.h"
+#include "miniz.h"
 
 std::filesystem::path last_directory;
 
@@ -631,6 +632,43 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
     that->WriteLogs(fp);
 
     fp.close();
+
+    if (zip_logs) {
+        std::filesystem::path zip_filename = filename;
+        zip_filename.replace_extension("zip");
+        if (std::filesystem::exists(zip_filename)) {
+            std::filesystem::remove(zip_filename);
+        }
+        FILE *zip_file = fopen(filename.string().c_str(), "rb");
+        int zip_length = std::filesystem::file_size(filename);
+        byte *zip_buf = new byte[zip_length];
+        if (zip_buf && zip_file) {
+            memset(zip_buf, 0, zip_length);
+            fread(zip_buf, 1, zip_length, zip_file);
+        }
+        if (zip_file) {
+            fclose(zip_file);
+        }
+        if (zip_buf) {
+            if (mz_zip_add_mem_to_archive_file_in_place(
+                    zip_filename.string().c_str(),
+                    filename.filename().string().c_str(), zip_buf,
+                    zip_length, NULL, 0, MZ_DEFAULT_COMPRESSION)) {
+                std::filesystem::remove(filename);
+                delete[] zip_buf;
+            } else {
+                fmt::print(
+                    "Zipping logs to {} failed! Retaining original "
+                    "logs.\n",
+                    filename.generic_string());
+            }
+        } else {
+            fmt::print(
+                "Zipping logs to {} failed! Retaining original "
+                "logs.\n",
+                filename.generic_string());
+        }
+    }
 }
 
 void DLG_ViewLogs(void) {

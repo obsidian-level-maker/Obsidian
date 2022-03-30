@@ -2298,6 +2298,8 @@ function Fab_replacements(fab)
 
   current_tag = 0 -- Used to help Hexen arg1 match with appropriate sector tag when needed
 
+  local materials_table = {}
+
   for _,B in pairs(fab.brushes) do
     for _,C in pairs(B) do
       if C.special and C.x then
@@ -2394,11 +2396,51 @@ function Fab_replacements(fab)
       if C.v1  then C.v1  = check("offset", C.v1) end
 
       -- do textures last (may add e.g. special for liquids)
-      if C.tex and C.x     then C.tex  = check_tex (sanitize(C.tex)) end
-      if C.tex and not C.x then C.tex  = check_flat(sanitize(C.tex), C) end
+      -- probably add material checking here? - Dasho
+      if C.tex and C.x     then
+        if (PARAM.bool_print_fab_materials and PARAM.bool_print_fab_materials == 1) or 
+        (PARAM.missing_material_behavior and PARAM.missing_material_behavior ~= "ignore") then
+          table.add_unique(materials_table, C.tex)
+        end
+        C.tex  = check_tex (sanitize(C.tex))
+      end
+      if C.tex and not C.x then
+        if (PARAM.bool_print_fab_materials and PARAM.bool_print_fab_materials == 1) or 
+        (PARAM.missing_material_behavior and PARAM.missing_material_behavior ~= "ignore") then
+          table.add_unique(materials_table, C.tex)
+        end
+        C.tex  = check_flat(sanitize(C.tex), C) 
+      end
 
       fixup_x_offsets(C)
       forced_offset_check(C)
+    end
+  end
+
+  if PARAM.bool_print_fab_materials and PARAM.bool_print_fab_materials == 1 then
+    print("Materials for fab " .. fab.name .. ": " .. table.tostr(materials_table) .. "\n")
+  end
+
+  if PARAM.missing_material_behavior and PARAM.missing_material_behavior ~= "ignore" then
+    for _, mat in pairs(materials_table) do
+      if not string.match(mat, "^_") then -- ignore _WALL, _OUTER, etc
+        local material_defined = false
+        for _, def in pairs(GAME.MATERIALS) do
+          for _, subdef in pairs(def) do
+            if mat == subdef then
+              material_defined = true
+              goto matfound
+            end
+          end
+        end
+        ::matfound::
+        if material_defined == false then
+          print("WARNING! MATERIAL " .. mat .. " IN FAB " .. fab.name .. " IS NOT IN THE MATERIALS TABLE!\n")
+          if PARAM.missing_material_behavior == "abort" then
+            error("MATERIAL " .. mat .. " IN FAB " .. fab.name .. " IS NOT IN THE MATERIALS TABLE!\nABORTING!")
+          end
+        end
+      end
     end
   end
 

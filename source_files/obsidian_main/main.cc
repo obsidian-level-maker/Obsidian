@@ -132,6 +132,7 @@ bool random_string_seeds = false;
 bool did_specify_seed = false;
 int zip_output = 0;
 bool zip_logs = false;
+bool timestamp_logs = false;
 
 bool first_run = false;
 
@@ -890,9 +891,8 @@ void Main::Detail::Shutdown(const bool error) {
         delete main_win;
         main_win = nullptr;
     }
-
-    Script_Close();
     LogClose();
+    Script_Close();
 }
 
 int Main_key_handler(int event) {
@@ -1506,8 +1506,8 @@ skiprest:
             delete main_win;
             main_win = nullptr;
         }
-        Script_Close();
         LogClose();
+        Script_Close();
         PHYSFS_deinit();
         main_action = MAIN_NONE;
         goto restart;
