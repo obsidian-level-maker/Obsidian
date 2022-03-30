@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  MODULE: Obsidian Texture Materials
+--  MODULE: Obsidian Resource Pack Materials
 ----------------------------------------------------------------
 --
 --  Copyright (C) 2019-2022 MsrSgtShooterPerson

@@ -9,7 +9,7 @@ PREFABS.Locked_joiner_triple_tall =
   shape  = "I",
 
   key    = "k_ALL",
-  prob   = 100,
+  prob   = 25,
 
   seed_w = 1,
   seed_h = 2,
@@ -140,4 +140,68 @@ PREFABS.Locked_joiner_triple_boom_urban1_tall =
 
   sector_1  = { [0]=70, [1]=15, [2]=5, [3]=5, [8]=10, [12]=7, [13]=7, [17]=10 },
 
+}
+
+--
+
+PREFABS.Locked_joiner_triple_stretchy_tall_tech =
+{
+  template = "Locked_joiner_triple_tall",
+  map = "MAP03",
+
+  prob = 75,
+
+  theme = "!hell",
+
+  seed_w = 2,
+
+  x_fit = "frame"
+}
+
+PREFABS.Locked_joiner_triple_stretchy_tall_hell =
+{
+  template = "Locked_joiner_triple_tall",
+  map = "MAP03",
+
+  prob = 75,
+
+  theme = "hell",
+
+  seed_w = 2,
+
+  x_fit = "frame",
+
+  tex_SPCDOOR1 = "WOODMET2"
+}
+
+--
+
+PREFABS.Locked_joiner_triple_stretchy2_tall_tech =
+{
+  template = "Locked_joiner_triple_tall",
+  map = "MAP04",
+
+  prob = 75,
+
+  theme = "!hell",
+
+  seed_w = 2,
+
+  x_fit = "frame"
+}
+
+PREFABS.Locked_joiner_triple_stretchy2_tall_hell =
+{
+  template = "Locked_joiner_triple_tall",
+  map = "MAP04",
+
+  prob = 75,
+
+  theme = "hell",
+
+  seed_w = 2,
+
+  x_fit = "frame",
+
+  tex_SPCDOOR1 = "WOODGARG"
 }

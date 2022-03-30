@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
---  MODULE: Epic Composite Textures Lump
+--  MODULE: Obsidian Resource Pack Composite Textures Lump
 ------------------------------------------------------------------------
 --
 --  Copyright (C) 2019-2022 MsrSgtShooterPerson

@@ -79,6 +79,13 @@ PREFABS.Decor_dem_commercial_shelves  =
 
 }
 
+PREFABS.Decor_dem_commercial_cart  =
+{
+  template = "Decor_dem_commercial_display1",
+  map = "MAP09",
+
+}
+
 
 
 

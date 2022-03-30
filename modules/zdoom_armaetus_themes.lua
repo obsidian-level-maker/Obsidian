@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  MODULE: Armaetus Themes
+--  MODULE: Obsidian Resource Pack Themes
 ----------------------------------------------------------------
 --
 --  Copyright (C) 2019-2022 MsrSgtShooterPerson
@@ -5277,7 +5277,7 @@ ARMAETUS_THEMES =
       BRIKS22 = 20,
       BRIKS23 = 20,
       BRIKS24 = 20,
-      BRIKS25 = 10,
+      --BRIKS25 = 10,
       BRIKS26 = 20,
       BRIKS27 = 20,
       BRIKS28 = 10,
@@ -5370,7 +5370,7 @@ ARMAETUS_THEMES =
       BRIKS22 = 15,
       BRIKS23 = 15,
       BRIKS24 = 15,
-      BRIKS25 = 15,
+      --BRIKS25 = 15,
       BRIKS26 = 15,
       BRIKS27 = 15,
       BRIKS28 = 8,
@@ -5493,6 +5493,7 @@ ARMAETUS_THEMES =
     wall_groups =
     {
       dem_wall_commercial = 50,
+      dem_wall_hospital = 50,
       gtd_grocery = 25,
       gtd_grocery_2 = 25,
       --
