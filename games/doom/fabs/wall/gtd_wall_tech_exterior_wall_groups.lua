@@ -550,7 +550,7 @@ PREFABS.Wall_tech_outdoor_orange_oct_white_binding_vanilla =
 
   group = "tech_o_orange_oct_white_binding",
 
-  z_fit = { 40,106 },
+  z_fit = { 72,106 },
 
   tex_SILVER2O = "TEKGREN2",
   tex_GRAYMET3 = "SHAWN2",
