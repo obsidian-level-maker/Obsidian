@@ -89,7 +89,8 @@ PREFABS.Joiner_bedroom_vanilla =
   seed_h = 2,
 
   tex_EVILFACA = "WOOD4",
-  tex_TVSNOW01 = "SPACEW3"
+  tex_TVSNOW01 = "SPACEW3",
+  flat_GRENFLOR = "GRASS1"
 }
 
 --a bedroom joiner but with a secret
@@ -292,14 +293,13 @@ PREFABS.Joiner_waiting_room_vanilla =
     BRICK2=50, BRICK4=50,
     BRICK6=50, BRICK7=50, BRICK8=50,
     STONE2=50, SHAWN4=50, SHAWN5=50,
-    STUCCO=50, STUCCO1=50,  STUCCO3=50, STARGR1=50, GRAY7=50,
-    PANEL6=50,
+    STUCCO=50,  STUCCO1=50,  STUCCO3=50, STARGR1=50, GRAY7=50,
+    PANEL6=50, BRIKS40=50, BRIKS43=50,
+    GOTH16=50, GOTH31=50, WD03=50
   },
   tex_CPAQLRRE = {
     SKY1 = 50, SKY2 = 50, SKY3 = 50
-  },
-  flat_FASHWITE = "CRATOP1",
-  flat_SNOW5 = "CRATOP1"
+  }
 }
 
 --a raided electronic store joiner
@@ -574,4 +574,138 @@ PREFABS.Joiner_elevatorshaftcorr =
     SHAWGRY4=50, SHAWN01C=50, SHAWN01F=50,
     SHAWVEN2=50, SHAWVENT=50
   }
+}
+
+--a store entrance
+PREFABS.Joiner_commmercial_joiner =
+{
+  template = "Joiner_living_room",
+  map    = "MAP13",
+
+  engine = "zdoom",
+
+rank = 1,
+
+  prob   = 1000,
+
+  theme  = "!hell",
+
+  env      = "building",
+
+  group = "dem_wall_commercial",
+
+  seed_w = 2,
+  seed_h = 2,
+
+  can_flip = false,
+
+
+  texture_pack = "armaetus",
+
+}
+
+
+--a hospital entrance
+PREFABS.Joiner_hospital_joiner =
+{
+  template = "Joiner_living_room",
+  map    = "MAP14",
+
+  engine = "zdoom",
+
+
+rank = 1,
+
+  prob   = 1000,
+
+  theme  = "!hell",
+
+  env      = "building",
+  neighbor = "building",
+
+  group = "dem_wall_hospital",
+
+  seed_w = 2,
+  seed_h = 2,
+
+  can_flip = false,
+
+  texture_pack = "armaetus",
+
+  deep = 16,
+
+}
+
+
+--a hospital room broken window entrance
+PREFABS.Joiner_hospital_room_joiner =
+{
+  template = "Joiner_living_room",
+  map    = "MAP15",
+
+  engine = "zdoom",
+
+rank = 1,
+
+  prob   = 1000,
+
+  theme  = "!hell",
+
+  env      = "building",
+  neighbor = "outdoor",
+
+  group = "dem_wall_hospital",
+
+  seed_w = 2,
+  seed_h = 2,
+
+  can_flip = false,
+
+  texture_pack = "armaetus",
+
+  deep = 32,
+
+  thing_20 =
+  {
+    gibs = 50,
+    gibbed_player = 50,
+    pool_blood_1  = 50,
+    pool_brains = 50,
+    dead_player = 50,
+    dead_zombie = 50,
+    dead_shooter = 50,
+    nothing = 50,
+  },
+
+}
+
+--a hospital entrance
+PREFABS.Joiner_hospital_joiner2 =
+{
+  template = "Joiner_living_room",
+  map    = "MAP16",
+
+  engine = "zdoom",
+
+
+rank = 1,
+
+  prob   = 1000,
+
+  theme  = "!hell",
+
+  env      = "building",
+  neighbor = "outdoor",
+
+  group = "dem_wall_hospital",
+
+  seed_w = 2,
+  seed_h = 2,
+
+  can_flip = false,
+
+  texture_pack = "armaetus",
+
+  deep = 16,
+
 }

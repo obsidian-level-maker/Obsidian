@@ -5493,6 +5493,7 @@ ARMAETUS_THEMES =
     wall_groups =
     {
       dem_wall_commercial = 50,
+      dem_wall_hospital = 50,
       gtd_grocery = 25,
       gtd_grocery_2 = 25,
       --
