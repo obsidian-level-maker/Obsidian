@@ -20,6 +20,7 @@
 
 gui.import("zdoom_armaetus_materials.lua")
 gui.import("zdoom_armaetus_themes.lua")
+gui.import("zdoom_armaetus_entities.lua")
 
 gui.import("zdoom_armaetus_doom1_themes.lua")
 
@@ -1053,6 +1054,13 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
     wad_file = "games/doom/data/ObAddon_Textures_Brightmaps.wad"
     gui.wad_merge_sections(wad_file)
   end
+
+  -- TO-DO: Create UI switch for this
+  --if PARAM.custom_decor ~= "no" then
+    SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, ORP_ENTITIES.DECORATE)
+    wad_file = "games/doom/data/blood_pack.wad"
+    gui.wad_merge_sections(wad_file)
+  --end
 end
 ----------------------------------------------------------------
 

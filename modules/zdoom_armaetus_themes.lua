@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  MODULE: Armaetus Themes
+--  MODULE: Obsidian Resource Pack Themes
 ----------------------------------------------------------------
 --
 --  Copyright (C) 2019-2022 MsrSgtShooterPerson
