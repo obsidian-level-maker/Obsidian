@@ -24,11 +24,12 @@
 #include "lib_util.h"
 #include "main.h"
 #include "miniz.h"
+#include "m_lua.h"
 
 #define DEBUG_BUF_LEN 20000
 
 std::fstream log_file;
-static std::filesystem::path log_filename;
+std::filesystem::path log_filename;
 
 bool debugging = false;
 bool terminal = false;
@@ -66,18 +67,44 @@ void LogEnableDebug(bool enable) {
 void LogEnableTerminal(bool enable) { terminal = enable; }
 
 void LogClose(void) {
+
+    LogPrintf("\n--- CLOSED LUA VM ---\n\n"); // Moved here because I actually need to call ob_datetime_string right before closing - Dasho
+
     LogPrintf("\n====== END OF OBSIDIAN LOGS ======\n\n");
 
     log_file.close();
 
+    std::filesystem::path new_logpath;
+    std::string new_filename;
+
+    if (timestamp_logs) {
+        new_logpath = log_filename;
+        new_logpath.remove_filename();
+        new_filename = "LOGS_";
+        new_filename.append(ob_datetime_string()).append(".txt");
+        new_logpath.append(new_filename);
+        if (std::filesystem::exists(new_logpath)) {
+            std::filesystem::remove(new_logpath);
+        }
+        std::filesystem::rename(log_filename, new_logpath);
+    }
+
     if (zip_logs) {
-        std::filesystem::path zip_filename = log_filename;
+        std::filesystem::path txt_filename;
+        std::filesystem::path zip_filename;
+        if (timestamp_logs) {
+            txt_filename = new_logpath;
+            zip_filename = new_logpath;
+        } else {
+            txt_filename = log_filename;
+            zip_filename = log_filename;
+        }
         zip_filename.replace_extension("zip");
         if (std::filesystem::exists(zip_filename)) {
             std::filesystem::remove(zip_filename);
         }
-        FILE *zip_file = fopen(log_filename.string().c_str(), "rb");
-        int zip_length = std::filesystem::file_size(log_filename);
+        FILE *zip_file = fopen(txt_filename.string().c_str(), "rb");
+        int zip_length = std::filesystem::file_size(txt_filename);
         byte *zip_buf = new byte[zip_length];
         if (zip_buf && zip_file) {
             memset(zip_buf, 0, zip_length);
@@ -89,24 +116,24 @@ void LogClose(void) {
         if (zip_buf) {
             if (mz_zip_add_mem_to_archive_file_in_place(
                     zip_filename.string().c_str(),
-                    log_filename.filename().string().c_str(), zip_buf,
+                    txt_filename.filename().string().c_str(), zip_buf,
                     zip_length, NULL, 0, MZ_DEFAULT_COMPRESSION)) {
-                std::filesystem::remove(log_filename);
+                std::filesystem::remove(txt_filename);
                 delete[] zip_buf;
             } else {
                 fmt::print(
                     "Zipping logs to {} failed! Retaining original "
-                    "LOGS.txt.\n",
-                    log_filename.generic_string());
+                    "logs.\n",
+                    txt_filename.generic_string());
             }
         } else {
             fmt::print(
                 "Zipping logs to {} failed! Retaining original "
-                "LOGS.txt.\n",
-                log_filename.generic_string());
+                "logs.\n",
+                txt_filename.generic_string());
         }
     }
-    
+
     log_filename.clear();
 }
 

@@ -1629,8 +1629,6 @@ void Script_Close() {
     LUA_ST = NULL;
 
     has_added_buttons = false;  // Needed if doing live restart
-
-    LogPrintf("\n--- CLOSED LUA VM ---\n\n");
 }
 
 //------------------------------------------------------------------------
@@ -1746,6 +1744,19 @@ bool ob_hexen_ceiling_check(int thing_id) {
 
 std::string ob_default_filename() {
     if (!Script_CallFunc("ob_default_filename", 1)) {
+        return NULL;
+    }
+
+    std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
+
+    // remove result from lua stack
+    lua_pop(LUA_ST, 1);
+
+    return res;
+}
+
+std::string ob_datetime_string() {
+    if (!Script_CallFunc("ob_datetime_string", 1)) {
         return NULL;
     }
 

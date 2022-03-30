@@ -87,6 +87,9 @@ Simon-v
   - Patch for scanning both install and home directories for addons
   - Fixing Date/Time filename prefixes to be ISO-conformant
 
+HugLifeTiZ 
+  - XDG compliance and Flatpak compatibility prep work (Linux builds)
+
 ## COMMUNITY CONTRIBUTORS:
 
 Cubebert
