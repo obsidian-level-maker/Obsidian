@@ -2142,7 +2142,7 @@ function Fab_replacements(fab)
     return val
   end
 
-  local function check_tex(val)
+  local function check_tex(val, missing_mats)
     local k = "tex_" .. val
 
     if fab.fields[k] then
@@ -2157,13 +2157,13 @@ function Fab_replacements(fab)
       val = THEME.prefab_remap[val] or val
     end
 
-    local mat = Mat_lookup_tex(val)
+    local mat = Mat_lookup_tex(val, missing_mats)
 
     return assert(mat.t)
   end
 
 
-  local function check_flat(val, C)
+  local function check_flat(val, C, missing_mats)
     local k = "flat_" .. val
 
     if fab.fields[k] then
@@ -2180,7 +2180,7 @@ function Fab_replacements(fab)
       val = THEME.prefab_remap[val] or val
     end
 
-    local mat = Mat_lookup_flat(val)
+    local mat = Mat_lookup_flat(val, missing_mats)
 
     return assert(mat.f or mat.t)
   end
@@ -2300,6 +2300,8 @@ function Fab_replacements(fab)
 
   local materials_table = {}
 
+  local missing_mats = {}
+
   for _,B in pairs(fab.brushes) do
     for _,C in pairs(B) do
       if C.special and C.x then
@@ -2398,18 +2400,16 @@ function Fab_replacements(fab)
       -- do textures last (may add e.g. special for liquids)
       -- probably add material checking here? - Dasho
       if C.tex and C.x     then
-        if (PARAM.bool_print_fab_materials and PARAM.bool_print_fab_materials == 1) or 
-        (PARAM.missing_material_behavior and PARAM.missing_material_behavior ~= "ignore") then
+        if PARAM.bool_print_fab_materials and PARAM.bool_print_fab_materials == 1 then
           table.add_unique(materials_table, C.tex)
         end
-        C.tex  = check_tex (sanitize(C.tex))
+        C.tex  = check_tex (sanitize(C.tex), missing_mats)
       end
       if C.tex and not C.x then
-        if (PARAM.bool_print_fab_materials and PARAM.bool_print_fab_materials == 1) or 
-        (PARAM.missing_material_behavior and PARAM.missing_material_behavior ~= "ignore") then
+        if PARAM.bool_print_fab_materials and PARAM.bool_print_fab_materials == 1 then
           table.add_unique(materials_table, C.tex)
         end
-        C.tex  = check_flat(sanitize(C.tex), C) 
+        C.tex  = check_flat(sanitize(C.tex), C, missing_mats) 
       end
 
       fixup_x_offsets(C)
@@ -2417,29 +2417,18 @@ function Fab_replacements(fab)
     end
   end
 
-  if PARAM.bool_print_fab_materials and PARAM.bool_print_fab_materials == 1 then
-    print("Materials for fab " .. fab.name .. ": " .. table.tostr(materials_table) .. "\n")
+  if not table.empty(materials_table) then
+    print("Materials for fab " .. fab.name .. "\nIn file " .. fab.file .. ":" .. table.tostr(materials_table) .. "\n")
   end
 
   if PARAM.missing_material_behavior and PARAM.missing_material_behavior ~= "ignore" then
-    for _, mat in pairs(materials_table) do
-      if not string.match(mat, "^_") then -- ignore _WALL, _OUTER, etc
-        local material_defined = false
-        for _, def in pairs(GAME.MATERIALS) do
-          for _, subdef in pairs(def) do
-            if mat == subdef then
-              material_defined = true
-              goto matfound
-            end
-          end
-        end
-        ::matfound::
-        if material_defined == false then
-          print("WARNING! MATERIAL " .. mat .. " IN FAB " .. fab.name .. " IS NOT IN THE MATERIALS TABLE!\n")
-          if PARAM.missing_material_behavior == "abort" then
-            error("MATERIAL " .. mat .. " IN FAB " .. fab.name .. " IS NOT IN THE MATERIALS TABLE!\nABORTING!")
-          end
-        end
+    if not table.empty(missing_mats) then
+      print("FAB: " .. fab.name .. "\nIN FILE: " .. fab.file .. "\nHAS THE FOLLOWING UNDEFINED MATERIALS: \n")
+      for _,v in pairs(missing_mats) do
+        print(v .. "\n")
+      end
+      if PARAM.missing_material_behavior == "abort" then
+        error("\nFAB: " .. fab.name .. "\nIN FILE: " .. fab.file .. "\nHAS UNDEFINED MATERIALS! CHECK THE LOG FOR DETAILS!")
       end
     end
   end

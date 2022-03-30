@@ -544,7 +544,7 @@ function Mat_prepare_trip()
   end
 end
 
-function Mat_lookup_tex(name)
+function Mat_lookup_tex(name, missing_mats)
   if not name or name == "" or name == "-" then
     name = "_ERROR"
   end
@@ -565,8 +565,7 @@ function Mat_lookup_tex(name)
   end
 
   if not mat then
-    gui.printf("\nLACKING MATERIAL : %s\n\n", name)
-
+    if missing_mats then table.add_unique(missing_mats, name) end
     -- prevent further messages (create a new material)
     local src_mat = assert(GAME.MATERIALS["_DEFAULT"])
 
@@ -579,7 +578,7 @@ function Mat_lookup_tex(name)
 end
 
 
-function Mat_lookup_flat(name)
+function Mat_lookup_flat(name, missing_mats)
   if not name or name == "" or name == "-" then
     name = "_ERROR"
   end
@@ -593,6 +592,7 @@ function Mat_lookup_flat(name)
   if not mat then
     gui.printf("\nLACKING MATERIAL : %s\n\n", name)
 
+    if missing_mats then table.add_unique(missing_mats, name) end
     -- prevent further messages (create a new material)
     local src_mat = assert(GAME.MATERIALS["_DEFAULT"])
 
