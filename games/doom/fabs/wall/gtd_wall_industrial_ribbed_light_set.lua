@@ -110,3 +110,53 @@ PREFABS.Wall_gtd_ribbed_lights_slump_two_color_diag =
 
   group = "gtd_ribbed_lights_slump_two_color"
 }
+
+--
+
+PREFABS.Wall_gtd_ribbed_lights_tekmachine =
+{
+  template = "Wall_gtd_ribbed_lights",
+  map = "MAP09",
+
+  group = "gtd_ribbed_lights_tekmachine",
+
+  tex_LITE5 = "DOORSTOP",
+  tex_TEKLITE2 = "TEKWALL4"
+}
+
+PREFABS.Wall_gtd_ribbed_lights_tekmachine_diag =
+{
+  template = "Wall_gtd_ribbed_lights",
+  map = "MAP10",
+
+  where = "diagonal",
+
+  group = "gtd_ribbed_lights_tekmachine",
+
+  tex_LITE5 = "DOORSTOP",
+  tex_TEKLITE2 = "TEKWALL4"
+}
+
+
+PREFABS.Wall_gtd_ribbed_lights_tekmachine_alt =
+{
+  template = "Wall_gtd_ribbed_lights",
+  map = "MAP09",
+
+  group = "gtd_ribbed_lights_tekmachine_alt",
+
+  tex_LITEBLU1 = "LITE3"
+}
+
+PREFABS.Wall_gtd_ribbed_lights_tekmachine_alt_diag =
+{
+  template = "Wall_gtd_ribbed_lights",
+  map = "MAP10",
+
+  where = "diagonal",
+
+  group = "gtd_ribbed_lights_tekmachine_alt",
+
+  tex_LITEBLU1 = "LITE3"
+
+}
