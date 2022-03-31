@@ -132,6 +132,7 @@ bool random_string_seeds = false;
 bool did_specify_seed = false;
 int zip_output = 0;
 bool zip_logs = false;
+bool timestamp_logs = false;
 
 bool first_run = false;
 
@@ -299,11 +300,15 @@ void Determine_WorkingPath(const char *argv0) {
     home_dir = std::filesystem::current_path();
 
 #else
-    home_dir = std::getenv("HOME");
-    home_dir /= ".config/obsidian";
-
+    home_dir = std::getenv("XDG_CONFIG_HOME");
+    home_dir /= "obsidian";
     if (!home_dir.is_absolute()) {
-        Main::FatalError("Unable to find $HOME directory!\n");
+        home_dir = std::getenv("HOME");
+        home_dir /= ".config/obsidian";
+
+        if (!home_dir.is_absolute()) {
+            Main::FatalError("Unable to find $HOME directory!\n");
+        }
     }
 
     // try to create it (doesn't matter if it already exists)
@@ -361,6 +366,7 @@ void Determine_InstallDir(const char *argv0) {
         "/usr/local",
         "/usr",
         "/opt",
+        "/app",
     };
 
     for (const char *prefix : prefixes) {
@@ -885,9 +891,8 @@ void Main::Detail::Shutdown(const bool error) {
         delete main_win;
         main_win = nullptr;
     }
-
-    Script_Close();
     LogClose();
+    Script_Close();
 }
 
 int Main_key_handler(int event) {
@@ -1501,8 +1506,8 @@ skiprest:
             delete main_win;
             main_win = nullptr;
         }
-        Script_Close();
         LogClose();
+        Script_Close();
         PHYSFS_deinit();
         main_action = MAIN_NONE;
         goto restart;

@@ -18,6 +18,13 @@
 
 DEBUG_CONTROL = { }
 
+DEBUG_CONTROL.MISSING_MAT_CHOICES =
+{
+  "ignore",  _("Ignore"),
+  "warn",  _("Warn"),
+  "abort", _("Abort"),
+}
+
 DEBUG_CONTROL.NAME_GEN_CHOICES =
 {
   "32l",  _("Test Level Names"),
@@ -89,6 +96,32 @@ OB_MODULES["debugger"] =
   {
 
     {
+      name = "bool_print_fab_materials",
+      label=_("Print Fab Materials"),
+      valuator = "button",
+      default = 0,
+      tooltip="Print list of textures/flats present in each fab",
+      longtip="Print the names of all textures/flats preset in a prefab WAD. This " ..
+      "will also list values like _FLOOR, _WALL, etc, prior to their conversion.",
+      priority=103,
+    },
+
+    {
+      name = "missing_material_behavior",
+      label=_("Missing Fab Material Behavior"),
+      choices=DEBUG_CONTROL.MISSING_MAT_CHOICES,
+      default = "ignore",
+      tooltip="Choose what to do when encountering a missing material",
+      longtip="Provides the following options if a fab texture/flat isn't present in a game's MATERIALS table: \n\n" ..
+      "Ignore: Silently continue; missing materials are usually replaced by an _ERROR or _DEFAULT texture.\n\n" ..
+      "Warn: Continue, but write the name of the fab and the missing material to the logfile.\n\n" ..
+      "Abort: Throw an error and halt generation, with an error message explaining which fab and material are causing the issue. Will " ..
+      "also write this information to the logfile.",
+      priority=102,
+      gap = 1
+    },
+
+    {
       name = "bool_whole_names_only",
       label=_("Whole Name Generator Names Only"),
       valuator = "button",
@@ -128,7 +161,7 @@ OB_MODULES["debugger"] =
       valuator = "slider",
       units = " only",
       min = 0,
-      max = 36,
+      max = 45,
       increment = 1,
       default = 0,
       presets = "0:All,",

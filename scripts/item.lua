@@ -873,8 +873,8 @@ function Item_pickups_for_class(CL)
       local prob = info.add_prob or 0
 
       if prob > 0 and
-         (stat == "health" and info.give[1].health) or
-         (info.give[1].ammo == stat)
+         (stat == "health" and info.give and info.give[1].health) or
+         (info.give and info.give[1].ammo == stat)
       then
         item_tab[name] = prob
 

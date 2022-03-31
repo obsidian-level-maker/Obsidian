@@ -2142,7 +2142,7 @@ function Fab_replacements(fab)
     return val
   end
 
-  local function check_tex(val)
+  local function check_tex(val, missing_mats)
     local k = "tex_" .. val
 
     if fab.fields[k] then
@@ -2157,13 +2157,13 @@ function Fab_replacements(fab)
       val = THEME.prefab_remap[val] or val
     end
 
-    local mat = Mat_lookup_tex(val)
+    local mat = Mat_lookup_tex(val, missing_mats)
 
     return assert(mat.t)
   end
 
 
-  local function check_flat(val, C)
+  local function check_flat(val, C, missing_mats)
     local k = "flat_" .. val
 
     if fab.fields[k] then
@@ -2180,7 +2180,7 @@ function Fab_replacements(fab)
       val = THEME.prefab_remap[val] or val
     end
 
-    local mat = Mat_lookup_flat(val)
+    local mat = Mat_lookup_flat(val, missing_mats)
 
     return assert(mat.f or mat.t)
   end
@@ -2298,6 +2298,10 @@ function Fab_replacements(fab)
 
   current_tag = 0 -- Used to help Hexen arg1 match with appropriate sector tag when needed
 
+  local materials_table = {}
+
+  local missing_mats = {}
+
   for _,B in pairs(fab.brushes) do
     for _,C in pairs(B) do
       if C.special and C.x then
@@ -2394,11 +2398,38 @@ function Fab_replacements(fab)
       if C.v1  then C.v1  = check("offset", C.v1) end
 
       -- do textures last (may add e.g. special for liquids)
-      if C.tex and C.x     then C.tex  = check_tex (sanitize(C.tex)) end
-      if C.tex and not C.x then C.tex  = check_flat(sanitize(C.tex), C) end
+      -- probably add material checking here? - Dasho
+      if C.tex and C.x     then
+        if PARAM.bool_print_fab_materials and PARAM.bool_print_fab_materials == 1 then
+          table.add_unique(materials_table, C.tex)
+        end
+        C.tex  = check_tex (sanitize(C.tex), missing_mats)
+      end
+      if C.tex and not C.x then
+        if PARAM.bool_print_fab_materials and PARAM.bool_print_fab_materials == 1 then
+          table.add_unique(materials_table, C.tex)
+        end
+        C.tex  = check_flat(sanitize(C.tex), C, missing_mats) 
+      end
 
       fixup_x_offsets(C)
       forced_offset_check(C)
+    end
+  end
+
+  if not table.empty(materials_table) then
+    print("Materials for fab " .. fab.name .. "\nIn file " .. fab.file .. ":" .. table.tostr(materials_table) .. "\n")
+  end
+
+  if PARAM.missing_material_behavior and PARAM.missing_material_behavior ~= "ignore" then
+    if not table.empty(missing_mats) then
+      print("FAB: " .. fab.name .. "\nIN FILE: " .. fab.file .. "\nHAS THE FOLLOWING UNDEFINED MATERIALS: \n")
+      for _,v in pairs(missing_mats) do
+        print(v .. "\n")
+      end
+      if PARAM.missing_material_behavior == "abort" then
+        error("\nFAB: " .. fab.name .. "\nIN FILE: " .. fab.file .. "\nHAS UNDEFINED MATERIALS! CHECK THE LOG FOR DETAILS!")
+      end
     end
   end
 

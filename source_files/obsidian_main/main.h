@@ -165,6 +165,7 @@ extern bool random_string_seeds;
 extern bool did_specify_seed;
 extern int zip_output;
 extern bool zip_logs;
+extern bool timestamp_logs;
 
 extern std::string def_filename;
 

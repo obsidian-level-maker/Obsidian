@@ -72,6 +72,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
 
     menu_bar = new Fl_Menu_Bar(0, 0, W, kf_h(20));
     menu_bar->box(box_style);
+    menu_bar->textfont(font_style);
     menu_bar->textsize(menu_bar->textsize() * .90);
     menu_bar->add("File/Options", FL_F + 4, menu_do_options);
     menu_bar->add("File/Theme", FL_F + 7, menu_do_theme);
