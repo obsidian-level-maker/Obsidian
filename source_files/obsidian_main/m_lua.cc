@@ -262,7 +262,12 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
     // [ generally skip directories, unless match is "DIRS" ]
 
     std::filesystem::path temp_name = parent / name;
-    bool is_it_dir = std::filesystem::is_directory(temp_name);
+
+    PHYSFS_Stat dir_checker;
+
+    PHYSFS_stat(temp_name.generic_string().c_str(), &dir_checker);
+
+    bool is_it_dir = (dir_checker.filetype == PHYSFS_FILETYPE_DIRECTORY);
 
     if (match == "DIRS") {
         return is_it_dir;

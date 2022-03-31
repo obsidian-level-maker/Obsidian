@@ -246,7 +246,7 @@ static void ShowInfo() {
         "\n"
         "     --randomize-all       Randomize all options\n"
         "     --randomize-arch      Randomize architecture settings\n"
-        "     --randomize-combat  Randomize combat-related settings\n"
+        "     --randomize-combat    Randomize combat-related settings\n"
         "     --randomize-pickups   Randomize item/weapon settings\n"
         "     --randomize-other     Randomize other settings\n"
         "\n"
@@ -297,8 +297,8 @@ void Determine_WorkingPath(const char *argv0) {
     }
 
 #ifdef WIN32
-    home_dir = std::filesystem::current_path();
-
+    home_dir = argv0;
+    home_dir.remove_filename();
 #else
     const char *xdg_config_home = std::getenv("XDG_CONFIG_HOME");
     if (xdg_config_home == nullptr) {
@@ -371,7 +371,6 @@ void Determine_InstallDir(const char *argv0) {
 
 #ifdef WIN32
     install_dir = home_dir;
-
 #else
     constexpr std::array prefixes = {
         "/usr/local",
@@ -390,6 +389,7 @@ void Determine_InstallDir(const char *argv0) {
         install_dir.clear();
     }
 
+    // Last resort
     if (Verify_InstallDir(std::filesystem::current_path().c_str())) {
         install_dir = std::filesystem::current_path();
     }
@@ -465,7 +465,8 @@ void Determine_LoggingFile() {
         logging_file /= home_dir;
         logging_file /= LOG_FILENAME;
     } else {
-        logging_file.clear();
+        logging_file = std::filesystem::current_path();
+        logging_file /= LOG_FILENAME;
     }
 }
 
@@ -1095,10 +1096,36 @@ int main(int argc, char **argv) {
 restart:;
 
     if (argv::Find('?', NULL) >= 0 || argv::Find('h', "help") >= 0) {
+#ifdef WIN32
+        if (AllocConsole()) {
+            freopen("CONOUT$", "r", stdin);
+            freopen("CONOUT$", "w", stdout);
+            freopen("CONOUT$", "w", stderr);
+        }
+#endif
         ShowInfo();
+#ifdef WIN32
+        std::cout << '\n' << "Close window when finished...";
+        do 
+        {
+        } while (true);
+#endif
         exit(1);
     } else if (argv::Find(0, "version") >= 0) {
+#ifdef WIN32
+        if (AllocConsole()) {
+            freopen("CONOUT$", "r", stdin);
+            freopen("CONOUT$", "w", stdout);
+            freopen("CONOUT$", "w", stderr);
+        }
+#endif
         ShowVersion();
+#ifdef WIN32
+        std::cout << '\n' << "Close window when finished...";
+        do 
+        {
+        } while (true);
+#endif
         exit(1);
     }
 
@@ -1281,9 +1308,14 @@ skiprest:
             LogPrintf("FAILED!\n");
 
             Main::Detail::Shutdown(false);
+        #ifdef WIN32
+            std::cout << '\n' << "Close window when finished...";
+            do 
+            {
+            } while (true);
+        #endif
             return 3;
         }
-
         Main::Detail::Shutdown(false);
         return 0;
     }
