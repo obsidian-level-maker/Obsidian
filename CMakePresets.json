@@ -16,6 +16,7 @@
       "description": "Release preset",
       "binaryDir": "build/dist",
       "generator": "Unix Makefiles",
+      "installDir": "${sourceDir}/install",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
