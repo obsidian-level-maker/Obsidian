@@ -309,6 +309,8 @@ void Determine_WorkingPath(const char *argv0) {
             home_dir = xdg_config_home;
             home_dir /= ".config";
         }
+    } else {
+        home_dir = xdg_config_home;
     }
     home_dir /= "obsidian";
     if (!home_dir.is_absolute()) {
