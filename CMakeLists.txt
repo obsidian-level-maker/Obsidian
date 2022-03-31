@@ -249,11 +249,11 @@ else()
   )
 endif()
 
-install(TARGETS obsidian RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
+install(TARGETS obsidian RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/share/obsidian
                                  CONFIGURATIONS Release
 )
 install(TARGETS filename_formatter qsavetex
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/tools
+        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/share/obsidian/tools
                 CONFIGURATIONS Release
 )
 install(
@@ -266,6 +266,6 @@ install(
             scripts
             theme
             tools
-  DESTINATION ${CMAKE_INSTALL_PREFIX}
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/share/obsidian
   CONFIGURATIONS Release
 )
