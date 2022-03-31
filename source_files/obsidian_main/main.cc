@@ -300,7 +300,18 @@ void Determine_WorkingPath(const char *argv0) {
     home_dir = std::filesystem::current_path();
 
 #else
-    home_dir = std::getenv("XDG_CONFIG_HOME");
+    const char *xdg_config_home = std::getenv("XDG_CONFIG_HOME");
+    if (xdg_config_home == nullptr) {
+        xdg_config_home = std::getenv("HOME");
+        if (xdg_config_home == nullptr) {
+            home_dir = ".";
+        } else {
+            home_dir = xdg_config_home;
+            home_dir /= ".config";
+        }
+    } else {
+        home_dir = xdg_config_home;
+    }
     home_dir /= "obsidian";
     if (!home_dir.is_absolute()) {
         home_dir = std::getenv("HOME");
@@ -926,12 +937,13 @@ void Main_SetSeed() {
         if (string_seed.empty()) {
             string_seed = ob_get_random_words();
             ob_set_config("string_seed", string_seed.c_str());
-            #ifdef max
-            #undef max
-            #endif
+#ifdef max
+#undef max
+#endif
             unsigned long long split_limit =
                 (std::numeric_limits<long long>::max() /
-                127);  // It is intentional that I am using the max for signed - Dasho
+                 127);  // It is intentional that I am using the max for signed
+                        // - Dasho
             next_rand_seed = split_limit;
             for (size_t i = 0; i < string_seed.size(); i++) {
                 char character = string_seed.at(i);
@@ -1334,18 +1346,24 @@ skiprest:
             "Surprise Me/Randomize Other", NULL, main_win_misc_config_CB, 0,
             FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
         if (all_addons.size() == 0) {
-            main_win->menu_bar->add("Addons/No Addons Detected", 0, 0, 0, FL_MENU_INACTIVE);
+            main_win->menu_bar->add("Addons/No Addons Detected", 0, 0, 0,
+                                    FL_MENU_INACTIVE);
         } else {
-            main_win->menu_bar->add("Addons/Restart and Apply Changes", 0, main_win_apply_addon_CB, 0, 0);
+            main_win->menu_bar->add("Addons/Restart and Apply Changes", 0,
+                                    main_win_apply_addon_CB, 0, 0);
             for (int i = 0; i < all_addons.size(); i++) {
                 std::string addon_entry = "Addons/";
                 addon_entry.append(all_addons[i].name.filename().string());
-                main_win->menu_bar->add(addon_entry.c_str(), 0, main_win_addon_CB, (void *)&all_addons[i], FL_MENU_TOGGLE | (all_addons[i].enabled ? FL_MENU_VALUE : 0));
+                main_win->menu_bar->add(
+                    addon_entry.c_str(), 0, main_win_addon_CB,
+                    (void *)&all_addons[i],
+                    FL_MENU_TOGGLE |
+                        (all_addons[i].enabled ? FL_MENU_VALUE : 0));
             }
         }
     }
 
-    fl_register_images(); // Needed for Unix window icon and tutorial windows
+    fl_register_images();  // Needed for Unix window icon and tutorial windows
 
     // Load tutorial images
     std::filesystem::path image_loc = install_dir;
