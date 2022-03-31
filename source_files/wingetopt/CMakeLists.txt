@@ -13,6 +13,7 @@ if(BUILD_SHARED_LIBS)
 endif()
 
 add_library(wingetopt src/getopt.c src/getopt.h)
+target_include_directories(wingetopt PUBLIC src)
 
 install(FILES src/getopt.h DESTINATION include)
 
