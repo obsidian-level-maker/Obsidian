@@ -17,7 +17,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${FLEX_LIBRARIES})
 
 if(WIN32 OR MSYS)
   target_link_libraries(filename_formatter PRIVATE wingetopt)
-  target_include_directories(filename_formatter PRIVATE ../wingetopt/src)
 endif()
 
 if(MSYS)
