@@ -249,6 +249,9 @@ function Quest_create_initial_quest()
 
     local score = R.svolume
 
+    -- HACKY AF - give a bigger score to rooms grown much later 
+    score = score * (R.id * 0.25)
+
     -- caves are not ideal
     if R.is_cave then score = score / 4 end
 
