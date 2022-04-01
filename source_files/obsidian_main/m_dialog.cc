@@ -619,7 +619,7 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
     std::filesystem::path filename = chooser.filename();
 
     if (filename.extension() != ".txt") {
-        DLG_ShowError("Please choose a filename ending in .txt");
+        DLG_ShowError(_("Please choose a filename ending in .txt"));
         goto tryagain;
     }
 
@@ -651,7 +651,7 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
         }
         if (zip_buf) {
             if (std::filesystem::exists(zip_filename)) {
-                switch ( fl_choice("Log zipping is enabled, but %s already exists.\nOverwrite (original .txt file will still be kept) ?", "Yes", "No", 0, zip_filename.generic_string().c_str()) ) {
+                switch ( fl_choice(_("Log zipping is enabled, but %s already exists.\nOverwrite (original .txt file will still be kept) ?"), _("Yes"), _("No"), 0, zip_filename.generic_string().c_str()) ) {
                     case 0: 
                         std::filesystem::remove(zip_filename);
                         break;
@@ -666,16 +666,16 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
                 std::filesystem::remove(filename);
                 delete[] zip_buf;
             } else {
-                fmt::print(
-                    "Zipping logs to {} failed! Retaining original "
-                    "logs.\n",
-                    filename.generic_string());
+                DLG_ShowError(
+                    _("Zipping logs to %s failed! Retaining original "
+                    "logs.\n"),
+                    filename.generic_string().c_str());
             }
         } else {
-            fmt::print(
-                "Zipping logs to {} failed! Retaining original "
-                "logs.\n",
-                filename.generic_string());
+            DLG_ShowError(
+                _("Zipping logs to %s failed! Retaining original "
+                "logs.\n"),
+                filename.generic_string().c_str());
         }
     }
 }
