@@ -363,3 +363,56 @@ PREFABS.Pic_tech_grntek_blue =
 
   bound_z2 = 112
 }
+
+--
+
+PREFABS.Pic_gtd_yellow_comp_EPIC =
+{
+  template = "Pic_tech_comp_set_1_red",
+  map = "MAP05",
+
+  height = 96,
+
+  seed_w = 2,
+
+  group = "gtd_comp_set_yellow_EPIC",
+
+  x_fit = "frame",
+  z_fit = "top",
+
+  tex_COMPU1 =
+  {
+    COMPU1=50,
+    COMPU2=50,
+    COMPU3=50,
+    COMPVENT=50,
+    COMPVEN2 = 50
+  },
+
+  bound_z2 = 96
+}
+
+PREFABS.Pic_gtd_green_comp_EPIC =
+{
+  template = "Pic_tech_comp_set_1_red",
+  map = "MAP06",
+
+  height = 80,
+
+  seed_w = 2,
+
+  group = "gtd_comp_set_green_EPIC",
+
+  x_fit = "frame",
+  z_fit = "top",
+
+  bound_z2 = 80,
+
+  sector_1 =
+  {
+    [0]=10,
+    [2]=1,
+    [3]=1,
+    [21]=1
+  }
+}
