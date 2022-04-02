@@ -837,7 +837,6 @@ function ob_read_all_config(need_full, log_only)
 
   if OB_CONFIG.seed and OB_CONFIG.seed ~= 0 then
     if OB_CONFIG.string_seed then
-      print("STRING SEED: " .. OB_CONFIG.string_seed)
       do_line("seed = " .. OB_CONFIG.string_seed)
       do_line("")
     else
