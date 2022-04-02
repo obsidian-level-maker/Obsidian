@@ -1684,6 +1684,19 @@ bool ob_read_all_config(std::vector<std::string> *lines, bool need_full) {
     return result;
 }
 
+std::string ob_get_password() {
+    if (!Script_CallFunc("ob_get_password", 1)) {
+        return "";
+    }
+
+    std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
+
+    // remove result from lua stack
+    lua_pop(LUA_ST, 1);
+
+    return res;
+}
+
 std::string ob_get_random_words() {
     if (!Script_CallFunc("ob_get_random_words", 1)) {
         return "";

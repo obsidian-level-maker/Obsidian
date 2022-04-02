@@ -129,6 +129,7 @@ bool randomize_monsters = false;
 bool randomize_pickups = false;
 bool randomize_misc = false;
 bool random_string_seeds = false;
+bool password_mode = false;
 bool did_specify_seed = false;
 int zip_output = 0;
 bool zip_logs = false;
@@ -936,7 +937,11 @@ void Main_CalcNewSeed() { next_rand_seed = xoshiro_UInt(); }
 void Main_SetSeed() {
     if (random_string_seeds && !did_specify_seed) {
         if (string_seed.empty()) {
-            string_seed = ob_get_random_words();
+            if (password_mode) {
+                string_seed = ob_get_password();
+            } else {
+                string_seed = ob_get_random_words();
+            }
             ob_set_config("string_seed", string_seed.c_str());
 #ifdef max
 #undef max

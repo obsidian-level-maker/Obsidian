@@ -1428,6 +1428,24 @@ function ob_hexen_ceiling_check(thing_id)
 
 end
 
+function ob_get_password()
+
+  local pass_chars = 
+  {
+    "1","2","3","4","5","6","7","8","9","0","q","w","e","r","t","y","u","i","o","p","[","]","\\",
+    "a","s","d","f","g","h","j","k","l",";","'","z","x","c","v","b","n","m",",",".","/","!","@",
+    "#","$","%","^","&","*","(",")","_","+","Q","W","E","R","T","Y","U","I","O","P","{","}","|",
+    "A","S","D","F","G","H","J","K","L",":","Z","X","C","V","B","N","M","<",">","?","\""
+  }
+
+  pass_string = ""
+  for i=1,20 do
+    pass_string = pass_string .. rand.pick(pass_chars)
+  end
+  return pass_string
+
+end
+
 function ob_get_random_words()
   assert(RANDOM_WORDS)
 
@@ -1437,8 +1455,8 @@ function ob_get_random_words()
     {
       default = 40,
       capitalized = 30,
-      all_caps = 20,
-      alternating = 10
+      all_caps = 15,
+      alternating = 5
     }
     
     local case_pick = rand.key_by_probs(case_odds)
@@ -1446,8 +1464,7 @@ function ob_get_random_words()
     if case_pick == "default" then
       return random_word
     elseif case_pick == "capitalized" then
-      local cap_string = string.upper(string.sub(random_word, 1, 1))
-      return cap_string .. string.sub(random_word, 2)
+      return string.upper(string.sub(random_word, 1, 1)) .. string.sub(random_word, 2)
     elseif case_pick == "all_caps" then
       return string.upper(random_word)
     else

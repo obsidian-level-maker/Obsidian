@@ -3,7 +3,7 @@
 
 window_scaling      = 0                                                 
 font_scaling      = 18                                                
-font_theme      = 10                                                
+font_theme      = 0                                                
 widget_theme      = 0                                                 
 box_theme      = 0                                                 
 button_theme      = 1                                                 
