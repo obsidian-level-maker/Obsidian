@@ -112,7 +112,7 @@ OB_MODULES["debugger"] =
       choices=DEBUG_CONTROL.MISSING_MAT_CHOICES,
       default = "ignore",
       tooltip="Choose what to do when encountering a missing material",
-      longtip="Provides the following options if a fab texture/flat isn't present in a game's MATERIALS table: \n\n" ..
+      longtip="Provides the following options if a material definition isn't present in a game's MATERIALS table: \n\n" ..
       "Ignore: Silently continue; missing materials are usually replaced by an _ERROR or _DEFAULT texture.\n\n" ..
       "Warn: Continue, but write the name of the fab and the missing material to the logfile.\n\n" ..
       "Abort: Throw an error and halt generation, with an error message explaining which fab and material are causing the issue. Will " ..

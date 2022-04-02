@@ -595,6 +595,8 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
 
     chooser.filter("Text files\t*.txt");
 
+    tryagain:;
+
     if (!last_directory.empty()) {
         chooser.directory(last_directory.generic_string().c_str());
     }
@@ -616,8 +618,9 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
     // add an extension if missing
     std::filesystem::path filename = chooser.filename();
 
-    if (filename.extension().empty()) {
-        filename += ".txt";
+    if (filename.extension() != ".txt") {
+        DLG_ShowError(_("Please choose a filename ending in .txt"));
+        goto tryagain;
     }
 
     std::ofstream fp{filename};
@@ -636,9 +639,6 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
     if (zip_logs) {
         std::filesystem::path zip_filename = filename;
         zip_filename.replace_extension("zip");
-        if (std::filesystem::exists(zip_filename)) {
-            std::filesystem::remove(zip_filename);
-        }
         FILE *zip_file = fopen(filename.string().c_str(), "rb");
         int zip_length = std::filesystem::file_size(filename);
         byte *zip_buf = new byte[zip_length];
@@ -650,6 +650,15 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
             fclose(zip_file);
         }
         if (zip_buf) {
+            if (std::filesystem::exists(zip_filename)) {
+                switch ( fl_choice(_("Log zipping is enabled, but %s already exists.\nOverwrite (original .txt file will still be kept) ?"), _("Yes"), _("No"), 0, zip_filename.generic_string().c_str()) ) {
+                    case 0: 
+                        std::filesystem::remove(zip_filename);
+                        break;
+                    case 1:
+                        return;
+                }
+            }
             if (mz_zip_add_mem_to_archive_file_in_place(
                     zip_filename.string().c_str(),
                     filename.filename().string().c_str(), zip_buf,
@@ -657,16 +666,16 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
                 std::filesystem::remove(filename);
                 delete[] zip_buf;
             } else {
-                fmt::print(
-                    "Zipping logs to {} failed! Retaining original "
-                    "logs.\n",
-                    filename.generic_string());
+                DLG_ShowError(
+                    _("Zipping logs to %s failed! Retaining original "
+                    "logs.\n"),
+                    filename.generic_string().c_str());
             }
         } else {
-            fmt::print(
-                "Zipping logs to {} failed! Retaining original "
-                "logs.\n",
-                filename.generic_string());
+            DLG_ShowError(
+                _("Zipping logs to %s failed! Retaining original "
+                "logs.\n"),
+                filename.generic_string().c_str());
         }
     }
 }

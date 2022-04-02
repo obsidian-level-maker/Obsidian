@@ -96,7 +96,7 @@ Cubebert
   - Chex Quest 3 canon themes and other improvements
   - Modules for newly supported games (CQ3, HacX, et al)
   - Heretic skyboxes
-  - XBox Dashboard and ZDoom Forums program themes
+  - XBox Dashboard, ZDoom Forums, and ZDoom Forums Submerged program themes
 
 hytalego
   - Russian translation file
