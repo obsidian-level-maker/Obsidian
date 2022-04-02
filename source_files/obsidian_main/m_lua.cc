@@ -69,10 +69,14 @@ int gui_format_prefix(lua_State *L) {
 
     const char *ff_args[10];
 
+    std::filesystem::path ff_dir = install_dir;
+
 #ifdef WIN32
-    ff_args[0] = "tools/filename_formatter.exe";
+    ff_dir.append("tools").append("filename_formatter.exe");
+    ff_args[0] = ff_dir.generic_string().c_str();
 #else
-    ff_args[0] = "tools/filename_formatter";
+    ff_dir.append("tools").append("filename_formatter");
+    ff_args[0] = ff_dir.c_str();
 #endif
     ff_args[1] = "-c";
     ff_args[2] = levelcount;
@@ -262,7 +266,12 @@ static bool scan_dir_process_name(const std::filesystem::path &name,
     // [ generally skip directories, unless match is "DIRS" ]
 
     std::filesystem::path temp_name = parent / name;
-    bool is_it_dir = std::filesystem::is_directory(temp_name);
+
+    PHYSFS_Stat dir_checker;
+
+    PHYSFS_stat(temp_name.generic_string().c_str(), &dir_checker);
+
+    bool is_it_dir = (dir_checker.filetype == PHYSFS_FILETYPE_DIRECTORY);
 
     if (match == "DIRS") {
         return is_it_dir;

@@ -103,7 +103,7 @@ OB_MODULES["debugger"] =
       tooltip="Print list of textures/flats present in each fab",
       longtip="Print the names of all textures/flats preset in a prefab WAD. This " ..
       "will also list values like _FLOOR, _WALL, etc, prior to their conversion.",
-      priority=103,
+      priority=104,
     },
 
     {
@@ -117,6 +117,17 @@ OB_MODULES["debugger"] =
       "Warn: Continue, but write the name of the fab and the missing material to the logfile.\n\n" ..
       "Abort: Throw an error and halt generation, with an error message explaining which fab and material are causing the issue. Will " ..
       "also write this information to the logfile.",
+      priority=103,
+    },
+
+    {
+      name = "bool_non_vanilla_as_missing",
+      label=_("Treat Non-Vanilla Materials As Missing"),
+      valuator = "button",
+      default = 0,
+      tooltip="Choose what to do when encountering a non-vanilla material",
+      longtip="If checked, will compare all flats/textures used against a list of vanilla materials for that IWAD, and treat non-vanilla " ..
+      "materials as missing for the purposes of logging and throwing errors.",
       priority=102,
       gap = 1
     },

@@ -30,14 +30,14 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build --preset dist
     
+    - name: Install
+      run: cmake --install build/dist
+    
     - name: Upload artifacts
       uses: actions/upload-artifact@v2.3.1
       with:
         name: linux-x64
-        path: |
-          obsidian
-          tools/filename_formatter
-          tools/qsavetex
+        path: install
   build-msys:
     runs-on: windows-latest
     defaults:
@@ -57,14 +57,13 @@ jobs:
             toolchain:p
             cmake:p
       - name: Configure CMake
-        run: cmake --preset msys
+        run: cmake -DCMAKE_INSTALL_PREFIX=$PWD/install --preset msys
       - name: Build
         run: cmake --build --preset msys
+      - name: Install
+        run: cmake --install build/msys
       - name: Upload artifacts
         uses: actions/upload-artifact@v2.3.1
         with:
           name: windows-x64
-          path: |
-            obsidian.exe
-            tools/filename_formatter.exe
-            tools/qsavetex.exe
+          path: install

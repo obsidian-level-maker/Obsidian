@@ -31,6 +31,7 @@ gui.import("materials")
 gui.import("themes")
 gui.import("levels")
 gui.import("resources")
+gui.import("vanilla_mats")
 ----------------------------------------------------------------
 
 function CHEX3.all_done()

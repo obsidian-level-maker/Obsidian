@@ -248,3 +248,24 @@ else()
                      obsidian_slump
   )
 endif()
+
+install(TARGETS obsidian RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
+                                 CONFIGURATIONS Release
+)
+install(TARGETS filename_formatter qsavetex
+        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/tools
+                CONFIGURATIONS Release
+)
+install(
+  DIRECTORY addons
+            data
+            engines
+            games
+            language
+            modules
+            scripts
+            theme
+            tools
+  DESTINATION ${CMAKE_INSTALL_PREFIX}
+  CONFIGURATIONS Release
+)

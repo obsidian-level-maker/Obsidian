@@ -2302,6 +2302,10 @@ function Fab_replacements(fab)
 
   local missing_mats = {}
 
+  local used_texes = {}
+
+  local used_flats = {}
+
   for _,B in pairs(fab.brushes) do
     for _,C in pairs(B) do
       if C.special and C.x then
@@ -2404,12 +2408,22 @@ function Fab_replacements(fab)
           table.add_unique(materials_table, C.tex)
         end
         C.tex  = check_tex (sanitize(C.tex), missing_mats)
+        if PARAM.missing_material_behavior and PARAM.missing_material_behavior ~= "ignore" then
+          if PARAM.bool_non_vanilla_as_missing and PARAM.bool_non_vanilla_as_missing == 1 then
+            table.add_unique(used_texes, C.tex)
+          end
+        end
       end
       if C.tex and not C.x then
         if PARAM.bool_print_fab_materials and PARAM.bool_print_fab_materials == 1 then
           table.add_unique(materials_table, C.tex)
         end
-        C.tex  = check_flat(sanitize(C.tex), C, missing_mats) 
+        C.tex  = check_flat(sanitize(C.tex), C, missing_mats)
+        if PARAM.missing_material_behavior and PARAM.missing_material_behavior ~= "ignore" then
+          if PARAM.bool_non_vanilla_as_missing and PARAM.bool_non_vanilla_as_missing == 1 then
+            table.add_unique(used_flats, C.tex)
+          end
+        end
       end
 
       fixup_x_offsets(C)
@@ -2422,14 +2436,46 @@ function Fab_replacements(fab)
   end
 
   if PARAM.missing_material_behavior and PARAM.missing_material_behavior ~= "ignore" then
+    local error_out = false
+    local bad_flats = {}
+    local bad_texes = {}
     if not table.empty(missing_mats) then
       print("FAB: " .. fab.name .. "\nIN FILE: " .. fab.file .. "\nHAS THE FOLLOWING UNDEFINED MATERIALS: \n")
       for _,v in pairs(missing_mats) do
         print(v .. "\n")
       end
-      if PARAM.missing_material_behavior == "abort" then
-        error("\nFAB: " .. fab.name .. "\nIN FILE: " .. fab.file .. "\nHAS UNDEFINED MATERIALS! CHECK THE LOG FOR DETAILS!")
+      error_out = true
+    end
+    if not table.empty(used_flats) then
+      for _,v in pairs(used_flats) do
+        if not table.has_elem(GAME.VANILLA_MATS, v) then
+          table.add_unique(bad_flats, v)
+        end
       end
+      if not table.empty(bad_flats) then
+        print("FAB: " .. fab.name .. "\nIN FILE: " .. fab.file .. "\nHAS THE FOLLOWING NON-VANILLA FLATS: \n")
+        for _,v in pairs(bad_flats) do
+          print(v .. "\n")
+        end
+        error_out = true
+      end
+    end
+    if not table.empty(used_texes) then
+      for _,v in pairs(used_texes) do
+        if not table.has_elem(GAME.VANILLA_MATS, v) then
+          table.add_unique(bad_texes, v)
+        end
+      end
+      if not table.empty(bad_texes) then
+        print("FAB: " .. fab.name .. "\nIN FILE: " .. fab.file .. "\nHAS THE FOLLOWING NON-VANILLA TEXTURES: \n")
+        for _,v in pairs(bad_texes) do
+          print(v .. "\n")
+        end
+        error_out = true
+      end
+    end
+    if PARAM.missing_material_behavior == "abort" and error_out == true then
+      error("\nFAB: " .. fab.name .. "\nIN FILE: " .. fab.file .. "\nHAS UNDEFINED MATERIALS! CHECK THE LOG FOR DETAILS!")
     end
   end
 
