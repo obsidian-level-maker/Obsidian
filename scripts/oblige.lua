@@ -1431,7 +1431,48 @@ end
 function ob_get_random_words()
   assert(RANDOM_WORDS)
 
-  return rand.pick(RANDOM_WORDS) .. " " .. rand.pick(RANDOM_WORDS) .. " " .. rand.pick(RANDOM_WORDS)
+  local function case_randomizer(random_word)
+
+    local case_odds =
+    {
+      default = 40,
+      capitalized = 30,
+      all_caps = 20,
+      alternating = 10
+    }
+    
+    local case_pick = rand.key_by_probs(case_odds)
+
+    if case_pick == "default" then
+      return random_word
+    elseif case_pick == "capitalized" then
+      local cap_string = string.upper(string.sub(random_word, 1, 1))
+      return cap_string .. string.sub(random_word, 2)
+    elseif case_pick == "all_caps" then
+      return string.upper(random_word)
+    else
+      local alt_string = ""
+      for i = 1, #random_word do
+        local c = string.sub(random_word, i,i)
+        if i % 2 == 0 then
+          alt_string = alt_string .. string.upper(c)
+        else
+          alt_string = alt_string .. c
+        end
+      end
+      return alt_string
+    end 
+  end
+
+  local numwords = rand.irange(1, 3)
+
+  if numwords == 1 then
+    return case_randomizer(rand.pick(RANDOM_WORDS))
+  elseif numwords == 2 then
+    return case_randomizer(rand.pick(RANDOM_WORDS)) .. " " .. case_randomizer(rand.pick(RANDOM_WORDS))
+  else
+    return case_randomizer(rand.pick(RANDOM_WORDS)) .. " " .. case_randomizer(rand.pick(RANDOM_WORDS)) .. " " .. case_randomizer(rand.pick(RANDOM_WORDS))
+  end
 end
 
 function ob_default_filename()
@@ -1442,8 +1483,6 @@ function ob_default_filename()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
   
-  gui.rand_seed(OB_CONFIG.seed)
-
   Naming_init()
 
   OB_CONFIG.title = Naming_grab_one("TITLE")
@@ -1746,8 +1785,6 @@ function ob_build_setup()
 
   Fab_load_all_definitions()
 
-  gui.rand_seed(OB_CONFIG.seed)
-
   table.name_up(GAME.THEMES)
   table.name_up(GAME.ROOM_THEMES)
   table.name_up(GAME.ROOMS)
@@ -1777,8 +1814,6 @@ function ob_clean_up()
   EPISODE = nil
   PREFABS = nil
   SEEDS   = nil
-
-  gui.rand_seed(OB_CONFIG.seed)
 
   if OB_CONFIG.string_seed then
     table.remove(OB_CONFIG, string_seed)

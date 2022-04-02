@@ -1002,16 +1002,6 @@ int gui_abort(lua_State *L) {
     return 1;
 }
 
-// LUA: rand_seed(seed)
-//
-int gui_rand_seed(lua_State *L) {
-    unsigned long long the_seed = luaL_checkinteger(L, 1);
-
-    xoshiro_Reseed(the_seed);
-
-    return 0;
-}
-
 // LUA: random() --> number
 //
 int gui_random(lua_State *L) {
@@ -1271,7 +1261,6 @@ static const luaL_Reg gui_script_funcs[] = {
     {"prog_step", gui_prog_step},
     {"ticker", gui_ticker},
     {"abort", gui_abort},
-    {"rand_seed", gui_rand_seed},
     {"random", gui_random},
     {"random_int", gui_random_int},
 

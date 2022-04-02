@@ -958,6 +958,7 @@ void Main_SetSeed() {
             }
         }
     }
+    xoshiro_Reseed(next_rand_seed);
     std::string seed = NumToString(next_rand_seed);
     ob_set_config("seed", seed.c_str());
     if (!batch_mode) {
