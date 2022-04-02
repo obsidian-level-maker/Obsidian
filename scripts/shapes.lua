@@ -12565,6 +12565,49 @@ GROW_LIQUID_POOL_PLACE_3x6_STAIRS =
   },
 },
 
+GROW_PILLAR_LEDGE_DOUBLE_OUTER =
+{
+  prob = 25,
+  skip_prob = 50,
+
+  structure =
+  {
+    ".....","AAAAA",
+    ".....","AAAAA",
+    ".....","^^AAA",
+    ".....","11AAA",
+    ".....","11#AA",
+    ".....","11AAA",
+    ".....","11#AA",
+    ".....","11AAA",
+    "11xxx","11xxx",
+  },
+},
+
+GROW_PILLAR_LEDGE_DOUBLE_INNER =
+{
+  prob = 25,
+  skip_prob = 50,
+
+  structure =
+  {
+    ".....","AAAAA",
+    ".....","AAAAA",
+    ".....","^^AAA",
+    ".....","11%AA",
+    ".....","11#AA",
+    ".....","111AA",
+    ".....","11#AA",
+    ".....","111AA",
+    "11.xx","111xx",
+  },
+
+  diagonals =
+  {
+    "1A"
+  }
+},
+
 GROW_LIQUID_PILLAR =
 {
   prob = 25,
