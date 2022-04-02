@@ -246,7 +246,7 @@ static void ShowInfo() {
         "\n"
         "     --randomize-all       Randomize all options\n"
         "     --randomize-arch      Randomize architecture settings\n"
-        "     --randomize-combat  Randomize combat-related settings\n"
+        "     --randomize-combat    Randomize combat-related settings\n"
         "     --randomize-pickups   Randomize item/weapon settings\n"
         "     --randomize-other     Randomize other settings\n"
         "\n"
@@ -297,10 +297,21 @@ void Determine_WorkingPath(const char *argv0) {
     }
 
 #ifdef WIN32
-    home_dir = std::filesystem::current_path();
-
+    home_dir = argv0;
+    home_dir.remove_filename();
 #else
-    home_dir = std::getenv("XDG_CONFIG_HOME");
+    const char *xdg_config_home = std::getenv("XDG_CONFIG_HOME");
+    if (xdg_config_home == nullptr) {
+        xdg_config_home = std::getenv("HOME");
+        if (xdg_config_home == nullptr) {
+            home_dir = ".";
+        } else {
+            home_dir = xdg_config_home;
+            home_dir /= ".config";
+        }
+    } else {
+        home_dir = xdg_config_home;
+    }
     home_dir /= "obsidian";
     if (!home_dir.is_absolute()) {
         home_dir = std::getenv("HOME");
@@ -360,7 +371,6 @@ void Determine_InstallDir(const char *argv0) {
 
 #ifdef WIN32
     install_dir = home_dir;
-
 #else
     constexpr std::array prefixes = {
         "/usr/local",
@@ -379,6 +389,7 @@ void Determine_InstallDir(const char *argv0) {
         install_dir.clear();
     }
 
+    // Last resort
     if (Verify_InstallDir(std::filesystem::current_path().c_str())) {
         install_dir = std::filesystem::current_path();
     }
@@ -454,7 +465,8 @@ void Determine_LoggingFile() {
         logging_file /= home_dir;
         logging_file /= LOG_FILENAME;
     } else {
-        logging_file.clear();
+        logging_file = std::filesystem::current_path();
+        logging_file /= LOG_FILENAME;
     }
 }
 
@@ -926,12 +938,13 @@ void Main_SetSeed() {
         if (string_seed.empty()) {
             string_seed = ob_get_random_words();
             ob_set_config("string_seed", string_seed.c_str());
-            #ifdef max
-            #undef max
-            #endif
+#ifdef max
+#undef max
+#endif
             unsigned long long split_limit =
                 (std::numeric_limits<long long>::max() /
-                127);  // It is intentional that I am using the max for signed - Dasho
+                 127);  // It is intentional that I am using the max for signed
+                        // - Dasho
             next_rand_seed = split_limit;
             for (size_t i = 0; i < string_seed.size(); i++) {
                 char character = string_seed.at(i);
@@ -1083,10 +1096,36 @@ int main(int argc, char **argv) {
 restart:;
 
     if (argv::Find('?', NULL) >= 0 || argv::Find('h', "help") >= 0) {
+#ifdef WIN32
+        if (AllocConsole()) {
+            freopen("CONOUT$", "r", stdin);
+            freopen("CONOUT$", "w", stdout);
+            freopen("CONOUT$", "w", stderr);
+        }
+#endif
         ShowInfo();
+#ifdef WIN32
+        std::cout << '\n' << "Close window when finished...";
+        do 
+        {
+        } while (true);
+#endif
         exit(1);
     } else if (argv::Find(0, "version") >= 0) {
+#ifdef WIN32
+        if (AllocConsole()) {
+            freopen("CONOUT$", "r", stdin);
+            freopen("CONOUT$", "w", stdout);
+            freopen("CONOUT$", "w", stderr);
+        }
+#endif
         ShowVersion();
+#ifdef WIN32
+        std::cout << '\n' << "Close window when finished...";
+        do 
+        {
+        } while (true);
+#endif
         exit(1);
     }
 
@@ -1269,9 +1308,14 @@ skiprest:
             LogPrintf("FAILED!\n");
 
             Main::Detail::Shutdown(false);
+        #ifdef WIN32
+            std::cout << '\n' << "Close window when finished...";
+            do 
+            {
+            } while (true);
+        #endif
             return 3;
         }
-
         Main::Detail::Shutdown(false);
         return 0;
     }
@@ -1334,18 +1378,24 @@ skiprest:
             "Surprise Me/Randomize Other", NULL, main_win_misc_config_CB, 0,
             FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
         if (all_addons.size() == 0) {
-            main_win->menu_bar->add("Addons/No Addons Detected", 0, 0, 0, FL_MENU_INACTIVE);
+            main_win->menu_bar->add("Addons/No Addons Detected", 0, 0, 0,
+                                    FL_MENU_INACTIVE);
         } else {
-            main_win->menu_bar->add("Addons/Restart and Apply Changes", 0, main_win_apply_addon_CB, 0, 0);
+            main_win->menu_bar->add("Addons/Restart and Apply Changes", 0,
+                                    main_win_apply_addon_CB, 0, 0);
             for (int i = 0; i < all_addons.size(); i++) {
                 std::string addon_entry = "Addons/";
                 addon_entry.append(all_addons[i].name.filename().string());
-                main_win->menu_bar->add(addon_entry.c_str(), 0, main_win_addon_CB, (void *)&all_addons[i], FL_MENU_TOGGLE | (all_addons[i].enabled ? FL_MENU_VALUE : 0));
+                main_win->menu_bar->add(
+                    addon_entry.c_str(), 0, main_win_addon_CB,
+                    (void *)&all_addons[i],
+                    FL_MENU_TOGGLE |
+                        (all_addons[i].enabled ? FL_MENU_VALUE : 0));
             }
         }
     }
 
-    fl_register_images(); // Needed for Unix window icon and tutorial windows
+    fl_register_images();  // Needed for Unix window icon and tutorial windows
 
     // Load tutorial images
     std::filesystem::path image_loc = install_dir;

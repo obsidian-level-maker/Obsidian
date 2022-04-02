@@ -221,6 +221,12 @@ template <typename... Args>
 
     if (batch_mode) {
         fmt::print(std::cerr, "ERROR!\n");
+        #ifdef WIN32
+            std::cout << '\n' << "Close window when finished...";
+            do 
+            {
+            } while (true);
+        #endif
     }
 
     std::exit(9);
