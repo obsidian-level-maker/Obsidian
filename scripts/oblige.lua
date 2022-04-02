@@ -1548,7 +1548,7 @@ function ob_default_filename()
     elseif OB_CONFIG.filename_prefix == "theme" then
       formatstring = OB_CONFIG.theme .. "_"   
     elseif OB_CONFIG.filename_prefix == "version" then
-      formatstring = "version"
+      formatstring = "%v_"
     elseif OB_CONFIG.filename_prefix == "custom" then
       formatstring = "custom"
    end
