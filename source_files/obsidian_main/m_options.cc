@@ -531,6 +531,9 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_password_mode->labelfont(font_style);
     opt_password_mode->selection_color(SELECTION);
     opt_password_mode->down_box(button_style);
+    if (!random_string_seeds) {
+        opt_password_mode->deactivate();
+    }
 
     cy += opt_password_mode->h() + y_step * .5;
 
