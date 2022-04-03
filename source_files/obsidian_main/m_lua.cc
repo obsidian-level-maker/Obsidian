@@ -69,8 +69,6 @@ int gui_format_prefix(lua_State *L) {
         format = custom_prefix.c_str();
     }
 
-    LogPrintf("FORMAT STRING: {}\n", format);
-
     const char *result = ff_main(levelcount, game, theme, OBSIDIAN_SHORT_VERSION, format.c_str());
 
     if (!result) {
