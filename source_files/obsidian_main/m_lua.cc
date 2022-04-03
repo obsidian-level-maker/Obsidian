@@ -1369,6 +1369,10 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
             err_msg = msg;
         }
 
+        if (batch_mode) {
+            LogPrintf("ERROR MESSAGE: {}\n", err_msg);
+        }
+
         // this will appear in the log file too
         if (main_win) {
             main_win->label(
