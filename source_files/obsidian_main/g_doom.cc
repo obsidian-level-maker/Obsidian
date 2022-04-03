@@ -922,6 +922,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
     }
     if (StringCaseCmp(map_format, "udmf") == 0) {
         UDMF_mode = true;
+        std::setlocale(LC_NUMERIC, "C");
     } else {
         UDMF_mode = false;
     }
@@ -935,6 +936,10 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
         EndWAD();
     } else {
         build_ok = slump_main(filename);
+    }
+
+    if (UDMF_mode) {
+        std::setlocale(LC_NUMERIC, numeric_locale.c_str());
     }
 
     if (build_ok) {
