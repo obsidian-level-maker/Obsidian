@@ -508,25 +508,12 @@ std::string UI_LogViewer::GetSelectedText() const {
             continue;
         }
 
-        const char *line_text = browser->text(i);
-        if (!line_text) {
+        std::string line_text = browser->text(i);
+        if (line_text.empty()) {
             continue;
         }
 
-        // append current line onto previous ones
-
-        int new_len = buf.size() + (int)strlen(line_text);
-
-        std::string new_buf = buf;
-
-        new_buf += line_text;
-
-        if (new_len > 0 && new_buf[new_len - 1] != '\n') {
-            new_buf[new_len++] = '\n';
-            new_buf[new_len] = 0;
-        }
-
-        buf = new_buf;
+        buf.append(line_text).append("\n");        
     }
 
     return buf;

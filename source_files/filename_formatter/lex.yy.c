@@ -828,7 +828,7 @@ YY_DECL {
                     YY_RULE_SETUP
 #line 30 "filename.l"
                     {
-                        printf("%s", yytext);
+                        raw_append(yytext);
                     }
                     YY_BREAK
                 case YY_STATE_EOF(INITIAL):

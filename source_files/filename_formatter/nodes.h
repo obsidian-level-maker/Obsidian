@@ -32,6 +32,7 @@ extern void game(void);
 extern void theme(void);
 extern void version(void);
 extern void count(void);
+extern void raw_append(const char *string);
 
 #ifdef __cplusplus
 }

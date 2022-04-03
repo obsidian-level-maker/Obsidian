@@ -953,7 +953,7 @@ void Main_SetSeed() {
             next_rand_seed = split_limit;
             for (size_t i = 0; i < string_seed.size(); i++) {
                 char character = string_seed.at(i);
-                if (not std::iscntrl(character)) {
+                if (!std::iscntrl(character)) {
                     if (next_rand_seed < split_limit) {
                         next_rand_seed *= int(character);
                     } else {

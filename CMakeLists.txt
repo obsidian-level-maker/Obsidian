@@ -183,6 +183,7 @@ add_executable(
   source_files/obsidian_main/zf_menu.h
 )
 
+target_include_directories(obsidian PRIVATE source_files/filename_formatter)
 target_include_directories(obsidian PRIVATE source_files/gif-h)
 target_include_directories(obsidian PRIVATE source_files/lua)
 target_include_directories(obsidian PRIVATE source_files/miniz)
@@ -212,10 +213,6 @@ else()
   target_include_directories(obsidian PRIVATE source_files/fltk)
 endif()
 
-if(WIN32 OR MSYS)
-  add_subdirectory(source_files/wingetopt)
-endif()
-
 if(UNIX)
   find_package(X11 REQUIRED)
   target_link_libraries(obsidian PRIVATE X11::Xft)
@@ -229,22 +226,20 @@ add_custom_command(
   POST_BUILD
   COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:obsidian>"
           "${CMAKE_CURRENT_LIST_DIR}"
-  COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:filename_formatter>"
-          "${CMAKE_CURRENT_LIST_DIR}/tools"
   COMMAND "${CMAKE_COMMAND}" -E copy "$<TARGET_FILE:qsavetex>"
           "${CMAKE_CURRENT_LIST_DIR}/tools"
 )
 
-add_dependencies(obsidian filename_formatter qsavetex)
+add_dependencies(obsidian qsavetex)
 
 if(UNIX)
   target_link_libraries(
-    obsidian PRIVATE miniz obsidian_lua obsidian_physfs obsidian_zdbsp
+    obsidian PRIVATE filename_formatter miniz obsidian_lua obsidian_physfs obsidian_zdbsp
                      obsidian_slump fontconfig
   )
 else()
   target_link_libraries(
-    obsidian PRIVATE miniz obsidian_lua obsidian_physfs obsidian_zdbsp
+    obsidian PRIVATE filename_formatter miniz obsidian_lua obsidian_physfs obsidian_zdbsp
                      obsidian_slump
   )
 endif()
@@ -252,7 +247,7 @@ endif()
 install(TARGETS obsidian RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
                                  CONFIGURATIONS Release
 )
-install(TARGETS filename_formatter qsavetex
+install(TARGETS qsavetex
         RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/tools
                 CONFIGURATIONS Release
 )

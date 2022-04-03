@@ -776,15 +776,6 @@ namespace Doom {
 static bool BuildNodes(std::filesystem::path filename) {
     LogPrintf("\n");
 
-    if (StringCaseCmp(current_engine, "edge") == 0) {
-        if (!UDMF_mode) {
-            if (!build_nodes) {
-                LogPrintf("Skipping nodes per user selection...\n");
-                return true;
-            }
-        }
-    }
-
     if (StringCaseCmp(current_engine, "zdoom") == 0) {
         if (!build_nodes) {
             LogPrintf("Skipping nodes per user selection...\n");
@@ -912,15 +903,18 @@ bool Doom::game_interface_c::Start(const char *preset) {
         main_win->build_box->Prog_Init(20, N_("CSG"));
     }
 
-    if (StringCaseCmp(current_engine, "zdoom") == 0 ||
-        StringCaseCmp(current_engine, "eternity") == 0) {
+    if (StringCaseCmp(current_engine, "zdoom") == 0) {
         build_reject = false;
         map_format = ob_get_param("map_format");
-        build_nodes = StringToInt(ob_get_param("bool_build_nodes_udmf"));
+        build_nodes = StringToInt(ob_get_param("bool_build_nodes_zdoom"));
+    } else if (StringCaseCmp(current_engine, "eternity") == 0) {
+        build_reject = false;
+        map_format = ob_get_param("map_format");
+        build_nodes = true;
     } else if (StringCaseCmp(current_engine, "edge") == 0) {
         build_reject = false;
         map_format = "binary";
-        build_nodes = StringToInt(ob_get_param("bool_build_nodes_edge"));
+        build_nodes = false; // ZDBSP uses non-spec GL V5 nodes which will crash EDGE-Classic
     } else {
         build_reject = StringToInt(ob_get_param("bool_build_reject"));
         map_format = "binary";

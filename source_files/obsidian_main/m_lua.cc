@@ -35,13 +35,10 @@
 #include "lib_signal.h"
 #include "lib_util.h"
 #include "main.h"
-#if defined(__MINGW32__)
-#include "subprocess-mingw.h"
-#else
-#include "subprocess.h"
-#endif
 #include "physfs.h"
 #include "sys_xoshiro.h"
+
+#include "ff_main.h"
 
 static lua_State *LUA_ST;
 
@@ -60,59 +57,25 @@ color_mapping_t color_mappings[MAX_COLOR_MAPS];
 // LUA: format_prefix(levelcount, OB_CONFIG.game, OB_CONFIG.theme, formatstring)
 //
 int gui_format_prefix(lua_State *L) {
+
     const char *levelcount = luaL_checkstring(L, 1);
     const char *game = luaL_checkstring(L, 2);
     const char *theme = luaL_checkstring(L, 3);
-    const char *format = luaL_checkstring(L, 4);
+    std::string format = luaL_checkstring(L, 4);
 
-    SYS_ASSERT(levelcount && game && theme && format);
+    SYS_ASSERT(levelcount && game && theme && (!format.empty()));
 
-    const char *ff_args[10];
-
-    std::filesystem::path ff_dir = install_dir;
-
-#ifdef WIN32
-    ff_dir.append("tools").append("filename_formatter.exe");
-    ff_args[0] = ff_dir.generic_string().c_str();
-#else
-    ff_dir.append("tools").append("filename_formatter");
-    ff_args[0] = ff_dir.c_str();
-#endif
-    ff_args[1] = "-c";
-    ff_args[2] = levelcount;
-    ff_args[3] = "-g";
-    ff_args[4] = game;
-    ff_args[5] = "-t";
-    ff_args[6] = theme;
-    ff_args[7] = "-f";
-    if (StringCaseCmp(format, "version") == 0) {
-        std::string tempstring = OBSIDIAN_SHORT_VERSION;
-        tempstring.append("_");
-        ff_args[8] = tempstring.c_str();
-    } else if (StringCaseCmp(format, "custom") == 0) {
-        ff_args[8] = custom_prefix.c_str();
-    } else {
-        ff_args[8] = format;
-    }
-    ff_args[9] = NULL;
-
-    struct subprocess_s subprocess;
-    int result =
-        subprocess_create(ff_args, subprocess_option_no_window, &subprocess);
-    if (result != 0) {
-        return 0;
+    if (StringCaseCmp(format, "custom") == 0) {
+        format = custom_prefix.c_str();
     }
 
-    // Read the output of filename_formatter
-    FILE *p_stdout = subprocess_stdout(&subprocess);
-    char prefix[100];
-    fgets(prefix, 100, p_stdout);
+    const char *result = ff_main(levelcount, game, theme, OBSIDIAN_SHORT_VERSION, format.c_str());
 
-    result = subprocess_destroy(&subprocess);
-    if (result != 0) {
-        return 0;
+    if (!result) {
+        lua_pushstring(L, "FF_ERROR_"); // Will help people notice issues
+        return 1;
     } else {
-        lua_pushstring(L, (const char *)prefix);
+        lua_pushstring(L, result);
         return 1;
     }
 
