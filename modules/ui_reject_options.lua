@@ -142,7 +142,7 @@ OB_MODULES["ui_zdoom_map_options"] =
         "Obsidian uses the same internal nodebuilder as ZDoom, so maps should be compatible either way."
     },
     {
-      name = "map_format",
+      name = "map_format_zdoom",
       label = _("Map Format"),
       choices = UI_ZDOOM_MAP_OPTIONS.MAP_FORMAT_CHOICES,
       default = "udmf",

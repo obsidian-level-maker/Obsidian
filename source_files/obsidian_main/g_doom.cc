@@ -905,7 +905,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
 
     if (StringCaseCmp(current_engine, "zdoom") == 0) {
         build_reject = false;
-        map_format = ob_get_param("map_format");
+        map_format = ob_get_param("map_format_zdoom");
         build_nodes = StringToInt(ob_get_param("bool_build_nodes_zdoom"));
     } else if (StringCaseCmp(current_engine, "eternity") == 0) {
         build_reject = false;
