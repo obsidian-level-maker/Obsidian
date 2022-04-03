@@ -1583,9 +1583,14 @@ void Script_Open() {
 }
 
 void Script_Close() {
+
+    log_timestamp = ob_datetime_string().append(".txt");
+
     if (LUA_ST) {
         lua_close(LUA_ST);
     }
+
+    LogPrintf("\n--- CLOSED LUA VM ---\n\n");
 
     LUA_ST = NULL;
 

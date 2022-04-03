@@ -141,6 +141,8 @@ std::filesystem::path gif_filename = "gif_output.gif";
 
 std::string string_seed;
 
+std::string log_timestamp;
+
 game_interface_c *game_object = NULL;
 
 // Tutorial stuff
@@ -290,7 +292,7 @@ void Determine_WorkingPath(const char *argv0) {
     if (const int home_arg = argv::Find(0, "home"); home_arg >= 0) {
         if (home_arg + 1 >= argv::list.size() || argv::IsOption(home_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --home\n");
-            exit(9);
+            exit(EXIT_FAILURE);
         }
 
         home_dir = argv::list[home_arg + 1];
@@ -352,7 +354,7 @@ void Determine_InstallDir(const char *argv0) {
     if (const int inst_arg = argv::Find(0, "install"); inst_arg >= 0) {
         if (inst_arg + 1 >= argv::list.size() || argv::IsOption(inst_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --install\n");
-            exit(9);
+            exit(EXIT_FAILURE);
         }
 
         install_dir = argv::list[inst_arg + 1];
@@ -405,7 +407,7 @@ void Determine_ConfigFile() {
     if (const int conf_arg = argv::Find(0, "config"); conf_arg >= 0) {
         if (conf_arg + 1 >= argv::list.size() || argv::IsOption(conf_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --config\n");
-            exit(9);
+            exit(EXIT_FAILURE);
         }
 
         config_file = argv::list[conf_arg + 1];
@@ -419,7 +421,7 @@ void Determine_OptionsFile() {
     if (const int optf_arg = argv::Find(0, "options"); optf_arg >= 0) {
         if (optf_arg + 1 >= argv::list.size() || argv::IsOption(optf_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --options\n");
-            exit(9);
+            exit(EXIT_FAILURE);
         }
 
         options_file = argv::list[optf_arg + 1];
@@ -434,7 +436,7 @@ void Determine_ThemeFile() {
         if (themef_arg + 1 >= argv::list.size() ||
             argv::IsOption(themef_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --theme\n");
-            exit(9);
+            exit(EXIT_FAILURE);
         }
 
         theme_file = argv::list[themef_arg + 1];
@@ -448,7 +450,7 @@ void Determine_LoggingFile() {
     if (const int logf_arg = argv::Find(0, "log"); logf_arg >= 0) {
         if (logf_arg + 1 >= argv::list.size() || argv::IsOption(logf_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --log\n");
-            exit(9);
+            exit(EXIT_FAILURE);
         }
 
         logging_file = argv::list[logf_arg + 1];
@@ -904,8 +906,8 @@ void Main::Detail::Shutdown(const bool error) {
         delete main_win;
         main_win = nullptr;
     }
-    LogClose();
     Script_Close();
+    LogClose();
 }
 
 int Main_key_handler(int event) {
@@ -1116,7 +1118,7 @@ restart:;
         {
         } while (true);
 #endif
-        exit(1);
+        exit(EXIT_SUCCESS);
     } else if (argv::Find(0, "version") >= 0) {
 #ifdef WIN32
         if (AllocConsole()) {
@@ -1131,8 +1133,9 @@ restart:;
         do 
         {
         } while (true);
+        
 #endif
-        exit(1);
+        exit(EXIT_SUCCESS);
     }
 
     int batch_arg = argv::Find('b', "batch");
@@ -1141,7 +1144,7 @@ restart:;
             argv::IsOption(batch_arg + 1)) {
             fmt::print(stderr,
                        "OBSIDIAN ERROR: missing filename for --batch\n");
-            exit(9);
+            exit(EXIT_FAILURE);
         }
 
         batch_mode = true;
@@ -1265,7 +1268,7 @@ skiprest:
     if (const int load_arg = argv::Find('l', "load"); load_arg >= 0) {
         if (load_arg + 1 >= argv::list.size() || argv::IsOption(load_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing filename for --load\n");
-            exit(9);
+            exit(EXIT_FAILURE);
         }
 
         load_file = argv::list[load_arg + 1];
@@ -1320,7 +1323,7 @@ skiprest:
             {
             } while (true);
         #endif
-            return 3;
+            return EXIT_FAILURE;
         }
         Main::Detail::Shutdown(false);
         return 0;
@@ -1562,8 +1565,8 @@ skiprest:
             delete main_win;
             main_win = nullptr;
         }
-        LogClose();
         Script_Close();
+        LogClose();
         PHYSFS_deinit();
         main_action = MAIN_NONE;
         goto restart;

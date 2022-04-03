@@ -169,6 +169,7 @@ extern bool zip_logs;
 extern bool timestamp_logs;
 
 extern std::string def_filename;
+extern std::string log_timestamp;
 
 extern std::filesystem::path last_directory;
 extern std::string numeric_locale;

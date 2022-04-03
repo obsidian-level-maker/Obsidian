@@ -602,8 +602,23 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
             break;  // OK
     }
 
-    // add an extension if missing
     std::filesystem::path filename = chooser.filename();
+
+    // add an extension if missing
+    if (!filename.has_extension()) {
+        filename.replace_extension(".txt");
+    }
+
+    if (std::filesystem::exists(filename)) {
+        switch ( fl_choice(_("%s already exists.\nChoose Yes to overwrite or No to choose a new filename."), _("Yes"), _("No"), 0, filename.generic_string().c_str()) ) {
+            case 0: 
+                std::filesystem::remove(filename);
+                break;
+            case 1:
+                goto tryagain;
+                break;
+        }
+    }
 
     if (filename.extension() != ".txt") {
         DLG_ShowError(_("Please choose a filename ending in .txt"));

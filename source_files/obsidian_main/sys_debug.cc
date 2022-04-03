@@ -68,8 +68,6 @@ void LogEnableTerminal(bool enable) { terminal = enable; }
 
 void LogClose(void) {
 
-    LogPrintf("\n--- CLOSED LUA VM ---\n\n"); // Moved here because I actually need to call ob_datetime_string right before closing - Dasho
-
     LogPrintf("\n====== END OF OBSIDIAN LOGS ======\n\n");
 
     log_file.close();
@@ -81,7 +79,7 @@ void LogClose(void) {
         new_logpath = log_filename;
         new_logpath.remove_filename();
         new_filename = "LOGS_";
-        new_filename.append(ob_datetime_string()).append(".txt");
+        new_filename.append(log_timestamp);
         new_logpath.append(new_filename);
         if (std::filesystem::exists(new_logpath)) {
             std::filesystem::remove(new_logpath);
