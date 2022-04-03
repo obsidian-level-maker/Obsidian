@@ -2475,7 +2475,7 @@ function Fab_replacements(fab)
       end
     end
     if PARAM.missing_material_behavior == "abort" and error_out == true then
-      error("\nFAB: " .. fab.name .. "\nIN FILE: " .. fab.file .. "\nHAS UNDEFINED MATERIALS! CHECK THE LOG FOR DETAILS!")
+      error("\nFAB: " .. fab.name .. "\nIN FILE: " .. fab.file .. "\nHAS MATERIAL ERRORS! CHECK THE LOG FOR DETAILS!")
     end
   end
 

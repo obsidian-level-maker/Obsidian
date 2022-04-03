@@ -56,6 +56,9 @@ static void Cookie_SetValue(std::string name, std::string value) {
 
     if (!active_module.empty()) {
         ob_set_mod_option(active_module, name, value);
+        if (batch_mode) {
+            ob_set_config(name, value);
+        }
         return;
     }
 
