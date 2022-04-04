@@ -1,4 +1,6 @@
 //
+// "$Id$"
+//
 // Overlay window header file for the Fast Light Tool Kit (FLTK).
 //
 // Copyright 1998-2010 by Bill Spitzak and others.
@@ -7,11 +9,11 @@
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 /* \file
@@ -36,9 +38,8 @@
 class FL_EXPORT Fl_Overlay_Window : public Fl_Double_Window {
 #ifndef FL_DOXYGEN
   friend class _Fl_Overlay;
-  friend class Fl_Window_Driver;
 #endif
-public:
+protected:
   /**
    You must subclass Fl_Overlay_Window and provide this method.
    It is just like a draw() method, except it draws the overlay.
@@ -50,8 +51,8 @@ private:
   Fl_Window *overlay_;
 public:
   void show();
-  void hide();
   void flush();
+  void hide();
   void resize(int,int,int,int);
   ~Fl_Overlay_Window();
   /** Returns non-zero if there's hardware overlay support */
@@ -64,14 +65,17 @@ protected:
   Fl_Overlay_Window(int W, int H, const char *l=0);
   /**
    Creates a new Fl_Overlay_Window widget using the given
-   position, size, and label (title) string. If the
+   position, size, and label (title) string. If the 
    positions (x,y) are not given, then the window manager
    will choose them.
    */
   Fl_Overlay_Window(int X, int Y, int W, int H, const char *l=0);
 public:
   void show(int a, char **b) {Fl_Double_Window::show(a,b);}
-  virtual Fl_Overlay_Window *as_overlay_window() {return this; }
 };
 
 #endif
+
+//
+// End of "$Id$".
+//

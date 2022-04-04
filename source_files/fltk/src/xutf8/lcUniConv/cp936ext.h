@@ -1,24 +1,22 @@
 /*
+ * "$Id$"
+ *
  * Character encoding support for the Fast Light Tool Kit (FLTK).
  *
- * Copyright 1998-2018 by Bill Spitzak and others.
+ * Copyright 1998-2010 by Bill Spitzak and others.
  *
  * This library is free software. Distribution and use rights are outlined in
  * the file "COPYING" which should have been included with this file.  If this
  * file is missing or damaged, see the license at:
  *
- *     https://www.fltk.org/COPYING.php
+ *     http://www.fltk.org/COPYING.php
  *
- * Please see the following page on how to report bugs and issues:
+ * Please report all bugs and problems on the following page:
  *
- *     https://www.fltk.org/bugs.php
+ *     http://www.fltk.org/str.php
  */
 
-#if defined(_WIN32) || defined(__APPLE__) /* PORTME: is this really needed? It's huge! */
-
-  /* not needed */
-
-#else
+#if !defined(WIN32) && !defined(__APPLE__)
 
 #ifndef CP936
 #ifdef NEED_TOWC
@@ -33,7 +31,6 @@ cp936ext_mbtowc (conv_t conv, ucs4_t *pwc, const unsigned char *s, int n)
 static int
 cp936ext_wctomb (conv_t conv, unsigned char *r, ucs4_t wc, int n)
 {
-  (void)conv; (void)r; (void)wc; (void)n;
   return 0;
 }
 #endif /* NEED_TOMB */
@@ -6246,4 +6243,8 @@ cp936ext_wctomb (conv_t conv, unsigned char *r, ucs4_t wc, int n)
 
 #endif /* CP936 */
 
-#endif /* _WIN32 || __APPLE__  */ /* PORTME: Unicode stuff */
+#endif /* __APPLE__  WIN32 */
+
+/*
+ * End of "$Id$".
+ */

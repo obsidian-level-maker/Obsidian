@@ -2,8 +2,14 @@ cmake_minimum_required(VERSION 3.12..3.20)
 
 include(cmake/CPM.cmake)
 
+option(USE_FLTK_14 "Build with FLTK 1.4" OFF)
+
 add_subdirectory(source_files/filename_formatter)
-add_subdirectory(source_files/fltk)
+if (USE_FLTK_14)
+  add_subdirectory(source_files/fltk14)
+else()
+  add_subdirectory(source_files/fltk)
+endif()
 add_subdirectory(source_files/fmt)
 add_subdirectory(source_files/lua)
 add_subdirectory(source_files/miniz)
@@ -126,7 +132,11 @@ add_executable(
 )
 
 target_include_directories(obsidian PRIVATE source_files/filename_formatter)
-target_include_directories(obsidian PRIVATE source_files/fltk)
+if (USE_FLTK_14)
+  target_include_directories(obsidian PRIVATE source_files/fltk14)
+else ()
+  target_include_directories(obsidian PRIVATE source_files/fltk)
+endif ()
 target_include_directories(obsidian PRIVATE source_files/gif-h)
 target_include_directories(obsidian PRIVATE source_files/lua)
 target_include_directories(obsidian PRIVATE source_files/miniz)

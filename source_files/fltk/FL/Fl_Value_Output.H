@@ -1,4 +1,6 @@
 //
+// "$Id$"
+//
 // Value output header file for the Fast Light Tool Kit (FLTK).
 //
 // Copyright 1998-2010 by Bill Spitzak and others.
@@ -7,11 +9,11 @@
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 /* \file
@@ -28,12 +30,12 @@
   The Fl_Value_Output widget displays a floating point value.
   If step() is not zero, the user can adjust the value by
   dragging the mouse left and right.  The left button moves one step()
-  per pixel, the middle by 10 * step(), and the right button by
+  per pixel, the middle by 10 * step(), and the right button by 
   100 * step().
-  <P>This is much lighter-weight than
+  <P>This is much lighter-weight than 
   Fl_Value_Input because it contains no text editing code or
   character buffer. </P>
-  <P ALIGN=CENTER>\image html Fl_Value_Output.png
+  <P ALIGN=CENTER>\image html Fl_Value_Output.png 
   \image latex  Fl_Value_Output.png "Fl_Value_Output" width=4cm
 */
 class FL_EXPORT Fl_Value_Output : public Fl_Valuator {
@@ -78,3 +80,7 @@ public:
 };
 
 #endif
+
+//
+// End of "$Id$".
+//

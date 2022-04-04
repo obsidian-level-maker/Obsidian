@@ -1,17 +1,19 @@
 //
+// "$Id$"
+//
 // Tile widget for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2017 by Bill Spitzak and others.
+// Copyright 1998-2016 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file. If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 /**
@@ -82,9 +84,9 @@
   See also the complete example program in test/tile.cxx.
 */
 
+#include <FL/Fl.H>
 #include <FL/Fl_Tile.H>
 #include <FL/Fl_Window.H>
-#include <FL/Fl_Rect.H>
 #include <stdlib.h>
 
 /**
@@ -95,25 +97,25 @@
 */
 void Fl_Tile::position(int oldx, int oldy, int newx, int newy) {
   Fl_Widget*const* a = array();
-  Fl_Rect *p = bounds();
-  p += 2; // skip group & resizable's saved size
-  for (int i=children(); i--; p++) {
+  int *p = sizes();
+  p += 8; // skip group & resizable's saved size
+  for (int i=children(); i--; p += 4) {
     Fl_Widget* o = *a++;
     if (o == resizable()) continue;
     int X = o->x();
     int R = X+o->w();
     if (oldx) {
-      int t = p->x();
+      int t = p[0];
       if (t == oldx || (t>oldx && X<newx) || (t<oldx && X>newx) ) X = newx;
-      t = p->r();
+      t = p[1];
       if (t == oldx || (t>oldx && R<newx) || (t<oldx && R>newx) ) R = newx;
     }
     int Y = o->y();
     int B = Y+o->h();
     if (oldy) {
-      int t = p->y();
+      int t = p[2];
       if (t == oldy || (t>oldy && Y<newy) || (t<oldy && Y>newy) ) Y = newy;
-      t = p->b();
+      t = p[3];
       if (t == oldy || (t>oldy && B<newy) || (t<oldy && B>newy) ) B = newy;
     }
     o->damage_resize(X,Y,R-X,B-Y);
@@ -144,29 +146,29 @@ void Fl_Tile::resize(int X,int Y,int W,int H) {
   int dy = Y-y();
   int dw = W-w();
   int dh = H-h();
-  Fl_Rect *p = bounds();
+  int *p = sizes();
   // resize this (skip the Fl_Group resize):
   Fl_Widget::resize(X,Y,W,H);
 
   // find bottom-right corner of resizable:
-  int OR = p[1].r();            // old right border
-  int NR = X+W-(p[0].r()-OR);   // new right border
-  int OB = p[1].b();            // old bottom border
-  int NB = Y+H-(p[0].b()-OB);   // new bottom border
+  int OR = p[5];		// old right border
+  int NR = X+W-(p[1]-OR);	// new right border
+  int OB = p[7];		// old bottom border
+  int NB = Y+H-(p[3]-OB);	// new bottom border
 
   // move everything to be on correct side of new resizable:
   Fl_Widget*const* a = array();
-  p += 2;
-  for (int i=children(); i--; p++) {
+  p += 8;
+  for (int i=children(); i--;) {
     Fl_Widget* o = *a++;
     int xx = o->x()+dx;
     int R = xx+o->w();
-    if (p->x() >= OR) xx += dw; else if (xx > NR) xx = NR;
-    if (p->r() >= OR) R += dw; else if (R > NR) R = NR;
+    if (*p++ >= OR) xx += dw; else if (xx > NR) xx = NR;
+    if (*p++ >= OR) R += dw; else if (R > NR) R = NR;
     int yy = o->y()+dy;
     int B = yy+o->h();
-    if (p->y() >= OB) yy += dh; else if (yy > NB) yy = NB;
-    if (p->b() >= OB) B += dh; else if (B > NB) B = NB;
+    if (*p++ >= OB) yy += dh; else if (yy > NB) yy = NB;
+    if (*p++ >= OB) B += dh; else if (B > NB) B = NB;
     o->resize(xx,yy,R-xx,B-yy);
     // do *not* call o->redraw() here! If you do, and the tile is inside a
     // scroll, it'll set the damage areas wrong for all children!
@@ -214,26 +216,26 @@ int Fl_Tile::handle(int event) {
     int oldx = 0;
     int oldy = 0;
     Fl_Widget*const* a = array();
-    Fl_Rect *q = bounds();
-    Fl_Rect *p = q+2;
-    for (int i=children(); i--; p++) {
+    int *q = sizes();
+    int *p = q+8;
+    for (int i=children(); i--; p += 4) {
       Fl_Widget* o = *a++;
       if (o == resizable()) continue;
-      if (p->r() < q->r() && o->y()<=my+GRABAREA && o->y()+o->h()>=my-GRABAREA) {
-        int t = mx - (o->x()+o->w());
-        if (abs(t) < mindx) {
-          sdx = t;
-          mindx = abs(t);
-          oldx = p->r();
-        }
+      if (p[1]<q[1] && o->y()<=my+GRABAREA && o->y()+o->h()>=my-GRABAREA) {
+	int t = mx - (o->x()+o->w());
+	if (abs(t) < mindx) {
+	  sdx = t;
+	  mindx = abs(t);
+	  oldx = p[1];
+	}
       }
-      if (p->b() < q->b() && o->x()<=mx+GRABAREA && o->x()+o->w()>=mx-GRABAREA) {
-        int t = my - (o->y()+o->h());
-        if (abs(t) < mindy) {
-          sdy = t;
-          mindy = abs(t);
-          oldy = p->b();
-        }
+      if (p[3]<q[3] && o->x()<=mx+GRABAREA && o->x()+o->w()>=mx-GRABAREA) {
+	int t = my - (o->y()+o->h());
+	if (abs(t) < mindy) {
+	  sdy = t;
+	  mindy = abs(t);
+	  oldy = p[3];
+	}
       }
     }
     sdrag = 0; sx = sy = 0;
@@ -296,3 +298,8 @@ Fl_Tile::Fl_Tile(int X,int Y,int W,int H,const char*L)
 : Fl_Group(X,Y,W,H,L)
 {
 }
+
+
+//
+// End of "$Id$".
+//

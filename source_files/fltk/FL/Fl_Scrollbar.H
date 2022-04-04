@@ -1,4 +1,6 @@
 //
+// "$Id$"
+//
 // Scroll bar header file for the Fast Light Tool Kit (FLTK).
 //
 // Copyright 1998-2010 by Bill Spitzak and others.
@@ -7,11 +9,11 @@
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 /* \file
@@ -35,7 +37,7 @@
   have to use casts to get at the floating-point versions of value()
   from Fl_Slider.
 
-  \image html  scrollbar.png
+  \image html  scrollbar.png 
   \image latex scrollbar.png "Fl_Scrollbar" width=4cm
 */
 class FL_EXPORT Fl_Scrollbar : public Fl_Slider {
@@ -74,8 +76,8 @@ public:
     Sets the position, size and range of the slider in the scrollbar.
     \param[in] pos   position, first line displayed
     \param[in] windowSize  number of lines displayed
-    \param[in] first_line number of first line
-    \param[in] total_lines total number of lines
+    \param[in] first number of first line
+    \param[in] total total number of lines
 
     You should call this every time your window changes size, your data
     changes size, or your scroll position changes (even if in response
@@ -84,8 +86,8 @@ public:
 
     Calls Fl_Slider::scrollvalue(int pos, int size, int first, int total).
   */
-  int value(int pos, int windowSize, int first_line, int total_lines) {
-    return scrollvalue(pos, windowSize, first_line, total_lines);
+  int value(int pos, int windowSize, int first, int total) {
+    return scrollvalue(pos, windowSize, first, total);
   }
 
   /**
@@ -103,3 +105,7 @@ public:
 };
 
 #endif
+
+//
+// End of "$Id$".
+//

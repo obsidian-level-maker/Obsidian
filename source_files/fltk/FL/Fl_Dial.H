@@ -1,4 +1,6 @@
 //
+// "$Id$"
+//
 // Dial header file for the Fast Light Tool Kit (FLTK).
 //
 // Copyright 1998-2010 by Bill Spitzak and others.
@@ -7,11 +9,11 @@
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 /* \file
@@ -25,14 +27,14 @@
 #endif
 
 // values for type():
-#define FL_NORMAL_DIAL  0       /**< type() for dial variant with dot */
-#define FL_LINE_DIAL    1       /**< type() for dial variant with line */
-#define FL_FILL_DIAL    2       /**< type() for dial variant with filled arc */
+#define FL_NORMAL_DIAL	0	/**< type() for dial variant with dot */
+#define FL_LINE_DIAL	1	/**< type() for dial variant with line */
+#define FL_FILL_DIAL	2	/**< type() for dial variant with filled arc */
 
 /**
   The Fl_Dial widget provides a circular dial to control a
   single floating point value.
-  <P ALIGN=CENTER>\image html dial.png
+  <P ALIGN=CENTER>\image html dial.png 
   \image latex dial.png "Fl_Dial" width=4cm
   Use type() to set the type of the dial to:
   <UL>
@@ -61,7 +63,7 @@ public:
     and label string. The default type is FL_NORMAL_DIAL.
   */
   Fl_Dial(int x,int y,int w,int h, const char *l = 0);
-  /**
+  /** 
      Sets Or gets the angles used for the minimum and maximum values.  The default
      values are 45 and 315 (0 degrees is straight down and the angles
      progress clockwise).  Normally angle1 is less than angle2, but if you
@@ -80,3 +82,7 @@ public:
 };
 
 #endif
+
+//
+// End of "$Id$".
+//

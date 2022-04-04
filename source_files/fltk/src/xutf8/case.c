@@ -1,4 +1,6 @@
 /*
+ * "$Id: $"
+ *
  * Author: Jean-Marc Lienher ( http://oksid.ch )
  * Copyright 2000-2010 by O'ksi'D.
  *
@@ -6,24 +8,25 @@
  * the file "COPYING" which should have been included with this file.  If this
  * file is missing or damaged, see the license at:
  *
- *     https://www.fltk.org/COPYING.php
+ *     http://www.fltk.org/COPYING.php
  *
- * Please see the following page on how to report bugs and issues:
+ * Please report all bugs and problems on the following page:
  *
- *     https://www.fltk.org/bugs.php
+ *     http://www.fltk.org/str.php
  */
 
 /*
  * This file is required on all platforms for UTF-8 support
  */
 
-#include "../utf8_internal.h"
+#if !defined(WIN32) && !defined(__APPLE__)
+#  include "../Xutf8.h"
+#endif /* !defined(WIN32) && !defined(__APPLE__) */
+
+#include "headers/case.h"
 #include <stdlib.h>
 
-/* include UCS tables */
-#include "headers/case.h"
-
-int
+int 
 XUtf8Tolower(int ucs) {
   int ret;
   if (ucs <= 0x02B6) {
@@ -93,7 +96,7 @@ XUtf8Tolower(int ucs) {
   return ucs;
 }
 
-int
+int 
 XUtf8Toupper(int ucs) {
   int i;
   static unsigned short *table = NULL;
@@ -112,3 +115,7 @@ XUtf8Toupper(int ucs) {
   if (ucs >= 0x10000 || ucs < 0) return ucs;
   return table[ucs];
 }
+
+/*
+* End of "$Id$".
+*/

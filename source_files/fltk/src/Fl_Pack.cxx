@@ -1,21 +1,23 @@
 //
+// "$Id$"
+//
 // Packing widget for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2020 by Bill Spitzak and others.
+// Copyright 1998-2010 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 // Based on code by Curtis Edwards
-// Group that compresses all its children together and resizes to surround
+// Group that compresses all it's children together and resizes to surround
 // them on each redraw (only if box() is zero)
 // Bugs: ?
 
@@ -25,26 +27,16 @@
 
 /**
   Creates a new Fl_Pack widget using the given position, size,
-  and label string.
-
-  The default boxtype is FL_NO_BOX.
-
-  The default type() is Fl_Pack::VERTICAL.
-
-  The destructor <I>also deletes all the children</I>. This allows a
+  and label string. The default boxtype is FL_NO_BOX.
+  <P>The destructor <I>also deletes all the children</I>. This allows a
   whole tree to be deleted at once, without having to keep a pointer to
-  all the children in the user code. A kludge has been done so the
-  Fl_Pack and all of its children can be automatic (local)
-  variables, but you must declare the Fl_Pack <I>first</I>, so
+  all the children in the user code. A kludge has been done so the 
+  Fl_Pack and all of it's children can be automatic (local)
+  variables, but you must declare the Fl_Pack<I>first</I>, so
   that it is destroyed last.
-
-  \param[in] X,Y        X and Y coordinates (position)
-  \param[in] W,H        width and height, respectively
-  \param[in] L          label (optional)
-
 */
-Fl_Pack::Fl_Pack(int X, int Y, int W, int H, const char *L)
-: Fl_Group(X, Y, W, H, L) {
+Fl_Pack::Fl_Pack(int X, int Y, int W, int H,const char *l)
+: Fl_Group(X, Y, W, H, l) {
   resizable(0);
   spacing_ = 0;
   // type(VERTICAL); // already set like this
@@ -63,7 +55,7 @@ void Fl_Pack::draw() {
   if (horizontal()) {
     rw = -spacing_;
     rh = th;
-
+    
     for (int i = children(); i--;)
       if (child(i)->visible()) {
         if (child(i) != this->resizable()) rw += child(i)->w();
@@ -72,7 +64,7 @@ void Fl_Pack::draw() {
   } else {
     rw = tw;
     rh = -spacing_;
-
+    
     for (int i = children(); i--;)
       if (child(i)->visible()) {
         if (child(i) != this->resizable()) rh += child(i)->h();
@@ -124,7 +116,7 @@ void Fl_Pack::draw() {
       current_position += spacing_;
     }
   }
-
+  
   if (horizontal()) {
     if (maximum_position < tx+tw && box()) {
       fl_color(color());
@@ -138,7 +130,7 @@ void Fl_Pack::draw() {
     }
     th = maximum_position-ty;
   }
-
+  
   tw += Fl::box_dw(box()); if (tw <= 0) tw = 1;
   th += Fl::box_dh(box()); if (th <= 0) th = 1;
   if (tw != w() || th != h()) {
@@ -152,3 +144,7 @@ void Fl_Pack::draw() {
     draw_label();
   }
 }
+
+//
+// End of "$Id$".
+//

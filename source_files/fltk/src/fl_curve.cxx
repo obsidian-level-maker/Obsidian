@@ -1,5 +1,7 @@
 //
-// Bézier curve functions for the Fast Light Tool Kit (FLTK).
+// "$Id$"
+//
+// Bezier curve functions for the Fast Light Tool Kit (FLTK).
 //
 // Copyright 1998-2010 by Bill Spitzak and others.
 //
@@ -7,16 +9,16 @@
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 /**
   \file fl_curve.cxx
-  \brief Utility for drawing Bézier curves, adding the points to the
+  \brief Utility for drawing Bezier curves, adding the points to the
          current fl_begin/fl_vertex/fl_end path.
 
   Incremental math implementation:
@@ -27,17 +29,10 @@
 #include <FL/fl_draw.H>
 #include <math.h>
 
-/**
- \cond DriverDev
- \addtogroup DriverDeveloper
- \{
- */
-
-/** see fl_curve() */
 void Fl_Graphics_Driver::curve(double X0, double Y0,
-              double X1, double Y1,
-              double X2, double Y2,
-              double X3, double Y3) {
+	      double X1, double Y1,
+	      double X2, double Y2,
+	      double X3, double Y3) {
 
   double x = fl_transform_x(X0,Y0);
   double y = fl_transform_y(X0,Y0);
@@ -58,11 +53,11 @@ void Fl_Graphics_Driver::curve(double X0, double Y0,
   if (b > a) a = b;
 
   // use that to guess at the number of segments:
-  int nSeg = int(sqrt(a)/4);
-  if (nSeg > 1) {
-    if (nSeg > 100) nSeg = 100; // make huge curves not hang forever
+  int n = int(sqrt(a)/4);
+  if (n > 1) {
+    if (n > 100) n = 100; // make huge curves not hang forever
 
-    double e = 1.0/nSeg;
+    double e = 1.0/n;
 
     // calculate the coefficients of 3rd order equation:
     double xa = (x3-3*x2+3*x1-x);
@@ -82,8 +77,8 @@ void Fl_Graphics_Driver::curve(double X0, double Y0,
     double dy3 = 6*ya*e*e*e;
     double dy2 = dy3 + 2*yb*e*e;
 
-    // draw points 1 .. nSeg-2:
-    for (int i=2; i<nSeg; i++) {
+    // draw points 1 .. n-2:
+    for (int m=2; m<n; m++) {
       x += dx1;
       dx1 += dx2;
       dx2 += dx3;
@@ -93,15 +88,14 @@ void Fl_Graphics_Driver::curve(double X0, double Y0,
       fl_transformed_vertex(x,y);
     }
 
-    // draw point nSeg-1:
+    // draw point n-1:
     fl_transformed_vertex(x+dx1, y+dy1);
   }
 
-  // draw point nSeg:
+  // draw point n:
   fl_transformed_vertex(x3,y3);
 }
 
-/**
- \}
- \endcond
- */
+//
+// End of "$Id$".
+//

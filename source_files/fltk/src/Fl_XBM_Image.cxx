@@ -1,4 +1,6 @@
 //
+// "$Id$"
+//
 // Fl_XBM_Image routines.
 //
 // Copyright 1997-2016 by Bill Spitzak and others.
@@ -7,11 +9,11 @@
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 // Contents:
 //
@@ -33,15 +35,15 @@
 // 'Fl_XBM_Image::Fl_XBM_Image()' - Load an XBM file.
 //
 
-/**
+/**  
   The constructor loads the named XBM file from the given name filename.
 
   The destructor frees all memory and server resources that are used by
   the image.
 */
 Fl_XBM_Image::Fl_XBM_Image(const char *name) : Fl_Bitmap((const char *)0,0,0) {
-  FILE  *f;
-  uchar *ptr;
+  FILE	*f;
+  uchar	*ptr;
 
   if ((f = fl_fopen(name, "rb")) == NULL) return;
 
@@ -53,7 +55,7 @@ Fl_XBM_Image::Fl_XBM_Image(const char *name) : Fl_Bitmap((const char *)0,0,0) {
     for (;;) {
       if (!fgets(buffer,1024,f)) {
         fclose(f);
-        return;
+	return;
       }
       int r = sscanf(buffer,"#define %s %d",junk,&wh[i]);
       if (r >= 2) break;
@@ -87,7 +89,7 @@ Fl_XBM_Image::Fl_XBM_Image(const char *name) : Fl_Bitmap((const char *)0,0,0) {
       unsigned int t;
       if (sscanf(a," 0x%x",&t)>0) {
         *ptr++ = (uchar)t;
-        i ++;
+	i ++;
       }
       while (*a && *a++ != ',') {/*empty*/}
     }
@@ -95,3 +97,8 @@ Fl_XBM_Image::Fl_XBM_Image(const char *name) : Fl_Bitmap((const char *)0,0,0) {
 
   fclose(f);
 }
+
+
+//
+// End of "$Id$".
+//

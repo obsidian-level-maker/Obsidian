@@ -3559,7 +3559,6 @@ png_image_read_background(png_voidp argument)
                      }
 
                      row += display->row_bytes;
-                     (void)row; // FLTK: silence warning: FIXME - remove variable 'row'?
                   }
                }
             }

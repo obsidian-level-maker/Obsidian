@@ -1,4 +1,6 @@
 //
+// "$Id$"
+//
 // Slider header file for the Fast Light Tool Kit (FLTK).
 //
 // Copyright 1998-2010 by Bill Spitzak and others.
@@ -7,11 +9,11 @@
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 /* \file
@@ -25,12 +27,12 @@
 #endif
 
 // values for type(), lowest bit indicate horizontal:
-#define FL_VERT_SLIDER          0
-#define FL_HOR_SLIDER           1
-#define FL_VERT_FILL_SLIDER     2
-#define FL_HOR_FILL_SLIDER      3
-#define FL_VERT_NICE_SLIDER     4
-#define FL_HOR_NICE_SLIDER      5
+#define FL_VERT_SLIDER		0
+#define FL_HOR_SLIDER		1
+#define FL_VERT_FILL_SLIDER	2
+#define FL_HOR_FILL_SLIDER	3
+#define FL_VERT_NICE_SLIDER	4
+#define FL_HOR_NICE_SLIDER	5
 
 /**
   The Fl_Slider widget contains a sliding knob inside a box. It is
@@ -39,9 +41,9 @@
   maximum().  The minimum() may be greater than the maximum() to
   reverse the slider direction.
 
-  Use void Fl_Widget::type(int) to set how the slider is drawn,
+  Use void Fl_Widget::type(int) to set how the slider is drawn, 
   which can be one of the following:
-
+  
   \li FL_VERTICAL - Draws a vertical slider (this is the default).
   \li FL_HORIZONTAL - Draws a horizontal slider.
   \li FL_VERT_FILL_SLIDER - Draws a filled vertical slider,
@@ -53,7 +55,7 @@
   \li FL_HOR_NICE_SLIDER - Draws a horizontal slider with  a
       nice looking control knob.
 
-  \image html  slider.png
+  \image html  slider.png 
   \image latex slider.png "Fl_Slider" width=4cm
 */
 class FL_EXPORT Fl_Slider : public Fl_Valuator {
@@ -103,3 +105,7 @@ public:
 };
 
 #endif
+
+//
+// End of "$Id$".
+//

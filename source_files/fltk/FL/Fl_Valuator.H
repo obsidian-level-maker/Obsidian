@@ -1,4 +1,6 @@
 //
+// "$Id$"
+//
 // Valuator header file for the Fast Light Tool Kit (FLTK).
 //
 // Copyright 1998-2016 by Bill Spitzak and others.
@@ -7,11 +9,11 @@
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 /* \file
@@ -25,8 +27,8 @@
 #endif
 
 // shared type() values for classes that work in both directions:
-#define FL_VERTICAL             0 ///< The valuator can work vertically
-#define FL_HORIZONTAL           1 ///< The valuator can work horizontally
+#define FL_VERTICAL		0 ///< The valuator can work vertically
+#define FL_HORIZONTAL		1 ///< The valuator can work horizontally
 
 /**
   The Fl_Valuator class controls a single floating-point value
@@ -130,3 +132,7 @@ public:
 };
 
 #endif
+
+//
+// End of "$Id$".
+//

@@ -1,4 +1,6 @@
 //
+// "$Id$"
+//
 // Common hotspot routines for the Fast Light Tool Kit (FLTK).
 //
 // Copyright 1998-2010 by Bill Spitzak and others.
@@ -7,16 +9,17 @@
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
-#include "Fl_Window_Driver.H"
+#include <FL/x.H>
+#include <stdio.h>
 
 void Fl_Window::hotspot(int X, int Y, int offscreen) {
   int mx,my;
@@ -37,9 +40,30 @@ void Fl_Window::hotspot(int X, int Y, int offscreen) {
     int bottom = 0;
 
     if (border()) {
-      pWindowDriver->decoration_sizes(&top, &left, &right, &bottom);
+#ifdef WIN32
+      if (size_range_set && (maxw != minw || maxh != minh)) {
+        left = right = GetSystemMetrics(SM_CXSIZEFRAME);
+        top = bottom = GetSystemMetrics(SM_CYSIZEFRAME);
+      } else {
+        left = right = GetSystemMetrics(SM_CXFIXEDFRAME); 
+        top = bottom = GetSystemMetrics(SM_CYFIXEDFRAME);
+      }
+      top += GetSystemMetrics(SM_CYCAPTION);
+#elif defined(__APPLE__)
+      top = 24;
+      left = 2;
+      right = 2;
+      bottom = 2;
+#else
+      // Ensure border is on screen; these values are generic enough
+      // to work with many window managers, and are based on KDE defaults.
+      top = 20;
+      left = 4;
+      right = 4;
+      bottom = 8;
+#endif
     }
-    // now ensure contents are on-screen (more important than border):
+    // now insure contents are on-screen (more important than border):
     if (X+w()+right > scr_w+scr_x) X = scr_w+scr_x-right-w();
     if (X-left < scr_x) X = left + scr_x;
     if (Y+h()+bottom > scr_h+scr_y) Y = scr_h+scr_y-bottom-h();
@@ -60,3 +84,8 @@ void Fl_Window::hotspot(const Fl_Widget *o, int offscreen) {
   }
   hotspot(X,Y,offscreen);
 }
+
+
+//
+// End of "$Id$".
+//

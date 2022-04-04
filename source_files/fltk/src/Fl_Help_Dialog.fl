@@ -1,21 +1,23 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0400
+version 1.0307
 header_name {../FL/Fl_Help_Dialog.H}
 code_name {.cxx}
 comment {//
+// "$Id$"
+//
 // Fl_Help_Dialog dialog for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2021 by Bill Spitzak and others.
+// Copyright 1998-2015 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 // ========================================================================
 //  DO NOT EDIT FL/Fl_Help_Dialog.H and src/Fl_Help_Dialog.cxx !!!
@@ -25,9 +27,6 @@ comment {//
 // ========================================================================
 //
 } {in_source in_header
-}
-
-decl {\#include <FL/Fl_Shared_Image.H>} {private local
 }
 
 decl {\#include "flstring.h"} {private local
@@ -48,12 +47,13 @@ class FL_EXPORT Fl_Help_Dialog {open
   }
   decl {int find_pos_;} {private local
   }
-  Function {Fl_Help_Dialog()} {} {
+  Function {Fl_Help_Dialog()} {open
+  } {
     Fl_Window window_ {
       label {Help Dialog} open
       private xywh {398 64 530 385} type Double hide resizable size_range {260 150 0 0}
     } {
-      Fl_Group {} {open
+      Fl_Group {} {open selected
         xywh {10 10 511 25}
       } {
         Fl_Button back_ {
@@ -187,12 +187,11 @@ fl_register_images();} {}
   } {
     code {window_->hide();} {}
   }
-  Function {load(const char *f)} {open return_type int
+  Function {load(const char *f)} {return_type void
   } {
     code {view_->set_changed();
-int ret = view_->load(f);
-window_->label(view_->title());
-return ret;} {}
+view_->load(f);
+window_->label(view_->title());} {}
   }
   Function {position(int xx, int yy)} {return_type void
   } {
@@ -232,7 +231,7 @@ else
   } {
     code {view_->topline(n);} {}
   }
-  Function {topline(int n)} {selected return_type void
+  Function {topline(int n)} {return_type void
   } {
     code {view_->topline(n);} {}
   }
@@ -262,4 +261,10 @@ window_->label(view_->title());} {}
   } {
     code {return (window_->y());} {}
   }
+}
+
+comment {
+//
+// End of "$Id$".
+//} {in_source in_header
 }

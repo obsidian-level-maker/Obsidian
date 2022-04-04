@@ -1,4 +1,6 @@
 //
+// "$Id$"
+//
 // Repeat button widget for the Fast Light Tool Kit (FLTK).
 //
 // Copyright 1998-2010 by Bill Spitzak and others.
@@ -7,11 +9,11 @@
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 #include <FL/Fl.H>
@@ -38,14 +40,14 @@ int Fl_Repeat_Button::handle(int event) {
     if (Fl::visible_focus()) Fl::focus(this);
     newval = Fl::event_inside(this);
   J1:
-    if (!active())
+    if (!active()) 
       newval = 0;
     if (value(newval)) {
       if (newval) {
-        Fl::add_timeout(INITIALREPEAT,repeat_callback,this);
-        do_callback();
+	Fl::add_timeout(INITIALREPEAT,repeat_callback,this);
+	do_callback();
       } else {
-        Fl::remove_timeout(repeat_callback,this);
+	Fl::remove_timeout(repeat_callback,this);
       }
     }
     return 1;
@@ -56,6 +58,11 @@ int Fl_Repeat_Button::handle(int event) {
 
 
 Fl_Repeat_Button::Fl_Repeat_Button(int X,int Y,int W,int H,const char *l)
-: Fl_Button(X,Y,W,H,l)
+: Fl_Button(X,Y,W,H,l) 
 {
 }
+
+
+//
+// End of "$Id$".
+//

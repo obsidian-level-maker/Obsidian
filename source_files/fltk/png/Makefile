@@ -59,7 +59,6 @@ install: $(LIBPNG)
 	$(INSTALL_DATA) png.h $(DESTDIR)$(includedir)/FL/images
 	$(INSTALL_DATA) pngconf.h $(DESTDIR)$(includedir)/FL/images
 	$(INSTALL_DATA) pnglibconf.h $(DESTDIR)$(includedir)/FL/images
-	$(INSTALL_DATA) pngprefix.h $(DESTDIR)$(includedir)/FL/images
 
 
 #
@@ -73,7 +72,6 @@ uninstall:
 	$(RM) $(DESTDIR)$(includedir)/FL/images/png.h
 	$(RM) $(DESTDIR)$(includedir)/FL/images/pngconf.h
 	$(RM) $(DESTDIR)$(includedir)/FL/images/pnglibconf.h
-	$(RM) $(DESTDIR)$(includedir)/FL/images/pngprefix.h
 
 
 #
@@ -91,12 +89,8 @@ $(LIBPNG):	$(OBJS)
 # Make dependencies...
 #
 
-depend: $(OBJS:.o=.c)
-	makedepend -Y -I.. -f makedepend -w 20 $(OBJS:.o=.c)
-	echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > makedepend.tmp
-	echo "" >> makedepend.tmp
-	grep '^[a-zA-Z]' makedepend | ( LC_ALL=C sort -u -f >> makedepend.tmp; )
-	mv makedepend.tmp makedepend
+depend:	$(OBJS:.o=.c)
+	makedepend -Y -I.. -f makedepend $(OBJS:.o=.c)
 
 include makedepend
 

@@ -1,4 +1,6 @@
 //
+// "$Id$"
+//
 // Value slider header file for the Fast Light Tool Kit (FLTK).
 //
 // Copyright 1998-2010 by Bill Spitzak and others.
@@ -7,11 +9,11 @@
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 /* \file
@@ -25,7 +27,7 @@
 /**
   The Fl_Value_Slider widget is a Fl_Slider widget
   with a box displaying the current value.
-  <P ALIGN=CENTER>\image html value_slider.png
+  <P ALIGN=CENTER>\image html value_slider.png 
   \image latex  value_slider.png "Fl_Value_Slider" width=4cm
 */
 class FL_EXPORT Fl_Value_Slider : public Fl_Slider {
@@ -52,3 +54,7 @@ public:
 };
 
 #endif
+
+//
+// End of "$Id$".
+//

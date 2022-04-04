@@ -1,4 +1,6 @@
 //
+// "$Id$"
+//
 // Progress bar widget routines.
 //
 // Copyright 2000-2010 by Michael Sweet.
@@ -7,11 +9,11 @@
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 // Contents:
 
@@ -42,9 +44,9 @@
 /** Draws the progress bar. */
 void Fl_Progress::draw()
 {
-  int   progress;       // Size of progress bar...
-  int   bx, by, bw, bh; // Box areas...
-  int   tx, tw;         // Temporary X + width
+  int	progress;	// Size of progress bar...
+  int	bx, by, bw, bh;	// Box areas...
+  int	tx, tw;		// Temporary X + width
 
 
   // Get the box borders...
@@ -87,13 +89,13 @@ void Fl_Progress::draw()
 }
 
 
-/**
+/**  
     The constructor creates the progress bar using the position, size, and label.
-
+    
     You can set the background color with color() and the
     progress bar color with selection_color(), or you can set both colors
     together with color(unsigned bg, unsigned sel).
-
+    
     The default colors are FL_BACKGROUND2_COLOR and FL_YELLOW, resp.
 */
 Fl_Progress::Fl_Progress(int X, int Y, int W, int H, const char* L)
@@ -105,3 +107,8 @@ Fl_Progress::Fl_Progress(int X, int Y, int W, int H, const char* L)
   maximum(100.0f);
   value(0.0f);
 }
+
+
+//
+// End of "$Id$".
+//

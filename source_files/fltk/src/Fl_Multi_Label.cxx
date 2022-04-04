@@ -1,21 +1,23 @@
 //
+// "$Id$"
+//
 // Multi-label widget for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2017 by Bill Spitzak and others.
+// Copyright 1998-2010 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
-// Allows two or more labels to be used on a widget (by having one of them
-// be one of these it allows an infinite number!)
+// Allows two labels to be used on a widget (by having one of them
+// be one of these it allows an infinte number!)
 
 #include <FL/Fl.H>
 #include <FL/Fl_Widget.H>
@@ -54,16 +56,16 @@ static void multi_measure(const Fl_Label* o, int& w, int& h) {
   w += W; if (H>h) h = H;
 }
 
-// used by FL_MULTI_LABEL to set up the internal table, see FL/Enumerations.H
-Fl_Labeltype fl_define_FL_MULTI_LABEL() {
-  Fl::set_labeltype(_FL_MULTI_LABEL, multi_labeltype, multi_measure);
-  return _FL_MULTI_LABEL;
-}
-
 void Fl_Multi_Label::label(Fl_Widget* o) {
-  o->label(FL_MULTI_LABEL, (const char*)this); // calls fl_define_FL_MULTI_LABEL()
+  Fl::set_labeltype(_FL_MULTI_LABEL, multi_labeltype, multi_measure);
+  o->label(_FL_MULTI_LABEL, (const char*)this);
 }
 
 void Fl_Multi_Label::label(Fl_Menu_Item* o) {
-  o->label(FL_MULTI_LABEL, (const char*)this); // calls fl_define_FL_MULTI_LABEL()
+  Fl::set_labeltype(_FL_MULTI_LABEL, multi_labeltype, multi_measure);
+  o->label(_FL_MULTI_LABEL, (const char*)this);
 }
+
+//
+// End of "$Id$".
+//

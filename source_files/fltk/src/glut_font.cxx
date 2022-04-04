@@ -1,4 +1,6 @@
 //
+// "$Id$"
+//
 // GLUT font routines for the Fast Light Tool Kit (FLTK).
 //
 // Copyright 1998-2010 by Bill Spitzak and others.
@@ -7,11 +9,11 @@
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 // The stroked text code was copied from FreeGLUT 2.4.0 which carries
 // the following notice:
@@ -78,7 +80,7 @@ void glutStrokeCharacter(void* fontID, int character) {
   if (!schar) return;
 
   strip = schar->Strips;
-
+  
   for (i = 0; i < schar->Number; i++, strip++)
   {
     glBegin(GL_LINE_STRIP);
@@ -97,7 +99,7 @@ void glutStrokeString(void* fontID, const unsigned char *string) {
   Fl_Glut_StrokeFont* font = (Fl_Glut_StrokeFont *)fontID;
 
   if (!string || ! *string) return;
-
+  
  /*
   * Step through the string, drawing each character.
   * A newline will simply translate the next character's insertion
@@ -106,24 +108,24 @@ void glutStrokeString(void* fontID, const unsigned char *string) {
   while ((c = *string++) != 0) {
     if (c < font->Quantity) {
       if (c == '\n') {
-        glTranslatef(-length, -(float)(font->Height), 0.0);
-        length = 0.0;
+	glTranslatef(-length, -(float)(font->Height), 0.0);
+	length = 0.0;
       } else  {
         /* Not an EOL, draw the bitmap character */
-        const Fl_Glut_StrokeChar *schar = font->Characters[c];
-        if (schar) {
-          const Fl_Glut_StrokeStrip *strip = schar->Strips;
+	const Fl_Glut_StrokeChar *schar = font->Characters[c];
+	if (schar) {
+	  const Fl_Glut_StrokeStrip *strip = schar->Strips;
 
-          for (i = 0; i < schar->Number; i++, strip++) {
-            glBegin(GL_LINE_STRIP);
-            for (j = 0; j < strip->Number; j++)
-              glVertex2f(strip->Vertices[j].X, strip->Vertices[j].Y);
-            glEnd();
-          }
+	  for (i = 0; i < schar->Number; i++, strip++) {
+	    glBegin(GL_LINE_STRIP);
+	    for (j = 0; j < strip->Number; j++)
+	      glVertex2f(strip->Vertices[j].X, strip->Vertices[j].Y);
+	    glEnd();
+	  }
 
-          length += schar->Right;
-          glTranslatef(schar->Right, 0.0, 0.0);
-        }
+	  length += schar->Right;
+	  glTranslatef(schar->Right, 0.0, 0.0);
+	}
       }
     }
   }
@@ -157,12 +159,12 @@ int glutStrokeLength(void* fontID, const unsigned char* string) {
     if (c < font->Quantity) {
       if (c == '\n') {
         /* EOL; reset the length of this line */
-        if (length < this_line_length) length = this_line_length;
-        this_line_length = 0.0;
+	if (length < this_line_length) length = this_line_length;
+	this_line_length = 0.0;
       } else {
         /* Not an EOL, increment the length of this line */
-        const Fl_Glut_StrokeChar *schar = font->Characters[c];
-        if (schar) this_line_length += schar->Right;
+	const Fl_Glut_StrokeChar *schar = font->Characters[c];
+	if (schar) this_line_length += schar->Right;
       }
     }
   }
@@ -181,3 +183,7 @@ GLfloat glutStrokeHeight(void* fontID) {
 }
 
 #endif // HAVE_GL
+
+//
+// End of "$Id$".
+//

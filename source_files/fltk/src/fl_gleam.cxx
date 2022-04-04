@@ -1,4 +1,6 @@
 //
+// "$Id$"
+//
 // "Gleam" scheme box drawing routines for the Fast Light Tool Kit (FLTK).
 //
 // Copyright 1998-2018 by Bill Spitzak and others.
@@ -7,11 +9,11 @@
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 // These box types provide a sort of Clearlooks Glossy scheme
 // for FLTK.
@@ -177,3 +179,8 @@ Fl_Boxtype fl_define_FL_GLEAM_UP_BOX() {
   fl_internal_boxtype(_FL_GLEAM_ROUND_DOWN_BOX, down_box);
   return _FL_GLEAM_UP_BOX;
 }
+
+
+//
+// End of "$Id$".
+//

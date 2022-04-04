@@ -1,4 +1,6 @@
 //
+// "$Id$"
+//
 // Value slider widget for the Fast Light Tool Kit (FLTK).
 //
 // Copyright 1998-2010 by Bill Spitzak and others.
@@ -7,11 +9,11 @@
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 #include <FL/Fl.H>
@@ -42,9 +44,9 @@ void Fl_Value_Slider::draw() {
   }
   if (damage()&FL_DAMAGE_ALL) draw_box(box(),sxx,syy,sww,shh,color());
   Fl_Slider::draw(sxx+Fl::box_dx(box()),
-                  syy+Fl::box_dy(box()),
-                  sww-Fl::box_dw(box()),
-                  shh-Fl::box_dh(box()));
+		  syy+Fl::box_dy(box()),
+		  sww-Fl::box_dw(box()),
+		  shh-Fl::box_dh(box()));
   draw_box(box(),bxx,byy,bww,bhh,color());
   char buf[128];
   format(buf);
@@ -65,10 +67,10 @@ int Fl_Value_Slider::handle(int event) {
     syy += 25; shh -= 25;
   }
   return Fl_Slider::handle(event,
-                           sxx+Fl::box_dx(box()),
-                           syy+Fl::box_dy(box()),
-                           sww-Fl::box_dw(box()),
-                           shh-Fl::box_dh(box()));
+			   sxx+Fl::box_dx(box()),
+			   syy+Fl::box_dy(box()),
+			   sww-Fl::box_dw(box()),
+			   shh-Fl::box_dh(box()));
 }
 
 
@@ -76,3 +78,8 @@ Fl_Hor_Value_Slider::Fl_Hor_Value_Slider(int X,int Y,int W,int H,const char *l)
 : Fl_Value_Slider(X,Y,W,H,l) {
   type(FL_HOR_SLIDER);
 }
+
+
+//
+// End of "$Id$".
+//

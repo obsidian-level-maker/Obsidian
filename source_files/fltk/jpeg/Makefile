@@ -106,7 +106,6 @@ install:	$(LIBJPEG)
 	$(INSTALL_DATA) jerror.h $(DESTDIR)$(includedir)/FL/images
 	$(INSTALL_DATA) jmorecfg.h $(DESTDIR)$(includedir)/FL/images
 	$(INSTALL_DATA) jpeglib.h $(DESTDIR)$(includedir)/FL/images
-	$(INSTALL_DATA) fltk_jpeg_prefix.h $(DESTDIR)$(includedir)/FL/images
 
 
 #
@@ -121,7 +120,6 @@ uninstall:
 	$(RM) $(includedir)/FL/images/jerror.h
 	$(RM) $(includedir)/FL/images/jmorecfg.h
 	$(RM) $(includedir)/FL/images/jpeglib.h
-	$(RM) $(includedir)/FL/images/fltk_jpeg_prefix.h
 
 
 #
@@ -139,12 +137,8 @@ $(LIBJPEG):	$(OBJS)
 # Make dependencies...
 #
 
-depend: $(OBJS:.o=.c)
-	makedepend -Y -I.. -f makedepend -w 20 $(OBJS:.o=.c)
-	echo "# DO NOT DELETE THIS LINE -- make depend depends on it." > makedepend.tmp
-	echo "" >> makedepend.tmp
-	grep '^[a-zA-Z]' makedepend | ( LC_ALL=C sort -u -f >> makedepend.tmp; )
-	mv makedepend.tmp makedepend
+depend:	$(OBJS:.o=.c)
+	makedepend -Y -I.. -f makedepend $(OBJS:.o=.c)
 
 include makedepend
 

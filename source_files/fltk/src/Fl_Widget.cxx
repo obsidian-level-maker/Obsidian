@@ -1,17 +1,19 @@
 //
+// "$Id$"
+//
 // Base widget class for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2017 by Bill Spitzak and others.
+// Copyright 1998-2010 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 #include <FL/Fl.H>
@@ -19,7 +21,6 @@
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Tooltip.H>
 #include <FL/fl_draw.H>
-#include <FL/fl_string_functions.h>
 #include <stdlib.h>
 #include "flstring.h"
 
@@ -35,8 +36,17 @@ const int QUEUE_SIZE = 20;
 static Fl_Widget *obj_queue[QUEUE_SIZE];
 static int obj_head, obj_tail;
 
-void Fl_Widget::default_callback(Fl_Widget *widget, void * /*v*/) {
-  obj_queue[obj_head++] = widget;
+void Fl_Widget::default_callback(Fl_Widget *o, void * /*v*/) {
+#if 0
+  // This is necessary for strict forms compatibility but is confusing.
+  // Use the parent's callback if this widget does not have one.
+  for (Fl_Widget *p = o->parent(); p; p = p->parent())
+    if (p->callback() != default_callback) {
+      p->do_callback(o,v);
+      return;
+    }
+#endif
+  obj_queue[obj_head++] = o;
   if (obj_head >= QUEUE_SIZE) obj_head = 0;
   if (obj_head == obj_tail) {
     obj_tail++;
@@ -65,9 +75,9 @@ void Fl_Widget::default_callback(Fl_Widget *widget, void * /*v*/) {
 */
 Fl_Widget *Fl::readqueue() {
   if (obj_tail==obj_head) return 0;
-  Fl_Widget *widget = obj_queue[obj_tail++];
+  Fl_Widget *o = obj_queue[obj_tail++];
   if (obj_tail >= QUEUE_SIZE) obj_tail = 0;
-  return widget;
+  return o;
 }
 /*
     This static internal function removes all pending callbacks for a
@@ -79,13 +89,13 @@ Fl_Widget *Fl::readqueue() {
 static void cleanup_readqueue(Fl_Widget *w) {
 
   if (obj_tail==obj_head) return;
-
+  
   // Read the entire queue and copy over all valid entries.
   // The new head will be determined after the last copied entry.
 
-  int old_head = obj_head;      // save newest entry
-  int entry = obj_tail;         // oldest entry
-  obj_head = obj_tail;          // new queue start
+  int old_head = obj_head;	// save newest entry
+  int entry = obj_tail;		// oldest entry
+  obj_head = obj_tail;		// new queue start
   for (;;) {
     Fl_Widget *o = obj_queue[entry++];
     if (entry >= QUEUE_SIZE) entry = 0;
@@ -110,24 +120,24 @@ Fl_Widget::Fl_Widget(int X, int Y, int W, int H, const char* L) {
 
   x_ = X; y_ = Y; w_ = W; h_ = H;
 
-  label_.value   = L;
+  label_.value	 = L;
   label_.image   = 0;
   label_.deimage = 0;
-  label_.type    = FL_NORMAL_LABEL;
-  label_.font    = FL_HELVETICA;
-  label_.size    = FL_NORMAL_SIZE;
-  label_.color   = FL_FOREGROUND_COLOR;
-  label_.align_  = FL_ALIGN_CENTER;
+  label_.type	 = FL_NORMAL_LABEL;
+  label_.font	 = FL_HELVETICA;
+  label_.size	 = FL_NORMAL_SIZE;
+  label_.color	 = FL_FOREGROUND_COLOR;
+  label_.align_	 = FL_ALIGN_CENTER;
   tooltip_       = 0;
-  callback_      = default_callback;
-  user_data_     = 0;
-  type_          = 0;
-  flags_         = VISIBLE_FOCUS;
-  damage_        = 0;
-  box_           = FL_NO_BOX;
-  color_         = FL_GRAY;
-  color2_        = FL_GRAY;
-  when_          = FL_WHEN_RELEASE;
+  callback_	 = default_callback;
+  user_data_ 	 = 0;
+  type_		 = 0;
+  flags_	 = VISIBLE_FOCUS;
+  damage_	 = 0;
+  box_		 = FL_NO_BOX;
+  color_	 = FL_GRAY;
+  color2_	 = FL_GRAY;
+  when_		 = FL_WHEN_RELEASE;
 
   parent_ = 0;
   if (Fl_Group::current()) Fl_Group::current()->add(this);
@@ -182,38 +192,11 @@ Fl_Widget::~Fl_Widget() {
   if (callback_ == default_callback) cleanup_readqueue(this);
 }
 
-/**
-  Draws a focus box for the widget at the given position and size.
-
-  This method does nothing if
-  - the global option Fl::visible_focus() or
-  - the per-widget option visible_focus()
-  is false (off).
-
-  This means that Fl_Widget::draw_focus() or one of the more specialized
-  methods can be called without checking these visible focus options.
-
-  \note This method must only be called if the widget has the focus.
-        This is not tested internally.
-
-  The boxtype \p bt is used to calculate the inset so the focus box is drawn
-  inside the box borders.
-
-  The default focus box drawing color is black. The background color \p bg
-  is used to determine a better visible color if necessary by using
-  fl_contrast() with the given background color.
-
-  \param[in]  bt        Boxtype that needs to be considered (frame width)
-  \param[in]  X,Y,W,H   Bounding box
-  \param[in]  bg        Background color
-
-  \see Fl_Widget::draw_focus()
-  \see Fl_Widget::draw_focus(Fl_Boxtype, int, int, int, int) const
-*/
-void Fl_Widget::draw_focus(Fl_Boxtype bt, int X, int Y, int W, int H, Fl_Color bg) const {
+/** Draws a focus box for the widget at the given position and size */
+void
+Fl_Widget::draw_focus(Fl_Boxtype B, int X, int Y, int W, int H) const {
   if (!Fl::visible_focus()) return;
-  if (!visible_focus()) return;
-  switch (bt) {
+  switch (B) {
     case FL_DOWN_BOX:
     case FL_DOWN_FRAME:
     case FL_THIN_DOWN_BOX:
@@ -223,16 +206,37 @@ void Fl_Widget::draw_focus(Fl_Boxtype bt, int X, int Y, int W, int H, Fl_Color b
     default:
       break;
   }
-  X += Fl::box_dx(bt);
-  Y += Fl::box_dy(bt);
-  W -= Fl::box_dw(bt)+1;
-  H -= Fl::box_dh(bt)+1;
 
-  Fl_Color savecolor = fl_color();
-  fl_color(fl_contrast(FL_BLACK, bg));
-  fl_focus_rect(X, Y, W, H);
-  fl_color(savecolor);
+  fl_color(fl_contrast(FL_BLACK, color()));
+
+#if defined(USE_X11) || defined(__APPLE_QUARTZ__)
+  fl_line_style(FL_DOT);
+  fl_rect(X + Fl::box_dx(B), Y + Fl::box_dy(B),
+          W - Fl::box_dw(B) - 1, H - Fl::box_dh(B) - 1);
+  fl_line_style(FL_SOLID);
+#elif defined(WIN32) 
+  // Windows 95/98/ME do not implement the dotted line style, so draw
+  // every other pixel around the focus area...
+  //
+  // Also, QuickDraw (MacOS) does not support line styles specifically,
+  // and the hack we use in fl_line_style() will not draw horizontal lines
+  // on odd-numbered rows...
+  int i, xx, yy;
+
+  X += Fl::box_dx(B);
+  Y += Fl::box_dy(B);
+  W -= Fl::box_dw(B) + 2;
+  H -= Fl::box_dh(B) + 2;
+
+  for (xx = 0, i = 1; xx < W; xx ++, i ++) if (i & 1) fl_point(X + xx, Y);
+  for (yy = 0; yy < H; yy ++, i ++) if (i & 1) fl_point(X + W, Y + yy);
+  for (xx = W; xx > 0; xx --, i ++) if (i & 1) fl_point(X + xx, Y + H);
+  for (yy = H; yy > 0; yy --, i ++) if (i & 1) fl_point(X, Y + yy);
+#else
+# error unsupported platform
+#endif // WIN32
 }
+
 
 void Fl_Widget::activate() {
   if (!active()) {
@@ -302,7 +306,8 @@ int Fl_Widget::contains(const Fl_Widget *o) const {
 }
 
 
-void Fl_Widget::label(const char *a) {
+void
+Fl_Widget::label(const char *a) {
   if (flags() & COPIED_LABEL) {
     // reassigning a copied label remains the same copied label
     if (label_.value == a)
@@ -315,46 +320,37 @@ void Fl_Widget::label(const char *a) {
 }
 
 
-void Fl_Widget::copy_label(const char *a) {
+void
+Fl_Widget::copy_label(const char *a) {
   // reassigning a copied label remains the same copied label
   if ((flags() & COPIED_LABEL) && (label_.value == a))
     return;
   if (a) {
-    label(fl_strdup(a));
+    label(strdup(a));
     set_flag(COPIED_LABEL);
   } else {
     label(0);
   }
 }
 
-/** Calls the widget callback function with arbitrary arguments.
+/** Calls the widget callback.
 
-  All overloads of do_callback() call this method.
-  It does nothing if the widget's callback() is NULL.
-  It clears the widget's \e changed flag \b after the callback was
-  called unless the callback is the default callback. Hence it is not
-  necessary to call clear_changed() after calling do_callback()
-  in your own widget's handle() method.
+  Causes a widget to invoke its callback function with arbitrary arguments.
 
-  \note It is legal to delete the widget in the callback (i.e. in user code),
-        but you must not access the widget in the handle() method after
-        calling do_callback() if the widget was deleted in the callback.
-        We recommend to use Fl_Widget_Tracker to check whether the widget
-        was deleted in the callback.
-
-  \param[in] widget call the callback with \p widget as the first argument
-  \param[in] arg use \p arg as the user data (second) argument
-
-  \see default_callback()
+  \param[in] o call the callback with \p o as the widget argument
+  \param[in] arg use \p arg as the user data argument
   \see callback()
-  \see class Fl_Widget_Tracker
 */
-
-void Fl_Widget::do_callback(Fl_Widget *widget, void *arg) {
+void
+Fl_Widget::do_callback(Fl_Widget* o,void* arg) {
   if (!callback_) return;
   Fl_Widget_Tracker wp(this);
-  callback_(widget, arg);
+  callback_(o,arg);
   if (wp.deleted()) return;
   if (callback_ != default_callback)
     clear_changed();
 }
+
+//
+// End of "$Id$".
+//

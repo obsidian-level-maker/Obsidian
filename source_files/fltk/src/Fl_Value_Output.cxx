@@ -1,4 +1,6 @@
 //
+// "$Id$"
+//
 // Value output widget for the Fast Light Tool Kit (FLTK).
 //
 // Copyright 1998-2010 by Bill Spitzak and others.
@@ -7,11 +9,11 @@
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 // Fltk widget for drag-adjusting a floating point value.
@@ -91,3 +93,7 @@ Fl_Value_Output::Fl_Value_Output(int X, int Y, int W, int H,const char *l)
   textcolor_ = FL_FOREGROUND_COLOR;
   soft_ = 0;
 }
+
+//
+// End of "$Id$".
+//

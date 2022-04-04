@@ -9,11 +9,11 @@
 # * the file "COPYING" which should have been included with this file.  If this
 # * file is missing or damaged, see the license at:
 # *
-# *     https://www.fltk.org/COPYING.php
+# *     http://www.fltk.org/COPYING.php
 # *
-# * Please see the following page on how to report bugs and issues:
+# * Please report all bugs and problems on the following page:
 # *
-# *     https://www.fltk.org/bugs.php
+# *     http://www.fltk.org/str.php
 # */
 #
 
@@ -32,7 +32,7 @@ for enc in ${encode}
 do
 	echo ${enc}
 
-	case ${enc} in
+	case ${enc} in 
 	ksc5601.1987-0)
 #		cat ../MAPPINGS/EASTASIA/KSC/KSC5601.TXT | \
 		cat ../MAPPINGS/EASTASIA/KSC/KSX1001.TXT | \
@@ -125,7 +125,7 @@ do
 	esac
 	nm=`echo ${enc} |tr '.' '_' | tr '-' '_'`
 	cat ${enc}.txt | sort | uniq | \
-		./create_table "${nm}"  >> ../headers/${nm}_.h 2>> ../headers/tbl.txt
+	 	./create_table "${nm}"  >> ../headers/${nm}_.h 2>> ../headers/tbl.txt 
 	rm -f ${enc}.txt
 	enc=" "
 done
@@ -139,11 +139,11 @@ cat > ../ucs2fontmap.c << ENDOFTEXT
  * the file "COPYING" which should have been included with this file.  If this
  * file is missing or damaged, see the license at:
  *
- *     https://www.fltk.org/COPYING.php
+ *     http://www.fltk.org/COPYING.php
  *
- * Please see the following page on how to report bugs and issues:
+ * Please report all bugs and problems on the following page:
  *
- *     https://www.fltk.org/bugs.php
+ *     http://www.fltk.org/str.php
  */
 
 ENDOFTEXT

@@ -1,5 +1,7 @@
 /*
- * Copyright 1998-2018 by Bill Spitzak and others.
+ * "$Id$"
+ *
+ * Copyright 1998-2010 by Bill Spitzak and others.
  *
  * fl_call_main() calls main() for you Windows people.  Needs to be done in C
  * because Borland C++ won't let you call main() from C++.
@@ -8,18 +10,18 @@
  * the file "COPYING" which should have been included with this file.  If this
  * file is missing or damaged, see the license at:
  *
- *     https://www.fltk.org/COPYING.php
+ *     http://www.fltk.org/COPYING.php
  *
- * Please see the following page on how to report bugs and issues:
+ * Please report all bugs and problems on the following page:
  *
- *     https://www.fltk.org/bugs.php
+ *     http://www.fltk.org/str.php
  */
 
 /*
  * This WinMain() function can be overridden by an application and
  * is provided for compatibility with programs written for other
  * operating systems that conform to the ANSI standard entry point
- * "main()".  This will allow you to build a Windows Application
+ * "main()".  This will allow you to build a WIN32 Application
  * without any special settings.
  *
  * Because of problems with the Microsoft Visual C++ header files
@@ -35,7 +37,7 @@
  * Microsoft(r) Windows(r) that allows for it.
  */
 
-#if defined(_WIN32) && !defined(FL_DLL) && !defined (__GNUC__)
+#if defined(WIN32) && !defined(FL_DLL) && !defined (__GNUC__)
 
 #  include <windows.h>
 #  include <stdio.h>
@@ -52,11 +54,11 @@ extern int main(int, char *[]);
 /* static int mbcs2utf(const char *s, int l, char *dst, unsigned dstlen) */
 static int mbcs2utf(const char *s, int l, char *dst)
 {
-  static wchar_t *mbwbuf;
+  static xchar *mbwbuf;
   unsigned dstlen = 0;
   if (!s) return 0;
   dstlen = (l * 6) + 6;
-  mbwbuf = (wchar_t*)malloc(dstlen * sizeof(wchar_t));
+  mbwbuf = (xchar*)malloc(dstlen * sizeof(xchar));
   l = (int) mbstowcs(mbwbuf, s, l);
 /* l = fl_unicode2utf(mbwbuf, l, dst); */
   l = fl_utf8fromwc(dst, dstlen, mbwbuf, l);
@@ -77,7 +79,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
   *
   * While we can detect if the program was run from the command-line -
   * look at the CMDLINE environment variable, it will be "WIN" for
-  * programs started from the GUI - the shell seems to run all Windows
+  * programs started from the GUI - the shell seems to run all WIN32
   * applications in the background anyways...
   */
 
@@ -124,5 +126,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 #else
 /* STR# 2973: solves "empty translation unit" error (Sun, HP-UX..) */
 typedef int dummy;
-#endif /* _WIN32 && !FL_DLL && !__GNUC__ */
+#endif /* WIN32 && !FL_DLL && !__GNUC__ */
+
+/*
+ * End of "$Id$".
+ */
 

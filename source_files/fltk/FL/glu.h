@@ -1,4 +1,6 @@
 //
+// "$Id$"
+//
 // GLu header file for the Fast Light Tool Kit (FLTK).
 //
 // Copyright 1998-2010 by Bill Spitzak and others.
@@ -14,18 +16,18 @@
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 #ifndef FL_glu_H
 #  define FL_glu_H
 
 #  include "Enumerations.H" // for color names
-#  ifdef _WIN32
+#  ifdef WIN32
 #    include <windows.h>
 #  endif
 #  ifndef APIENTRY
@@ -36,10 +38,14 @@
 #    endif
 #  endif
 
-#  ifdef __APPLE__  // PORTME: OpenGL Path abstraction
+#  ifdef __APPLE__
 #    include <OpenGL/glu.h>
 #  else
 #    include <GL/glu.h>
 #  endif
 
 #endif // !FL_glu_H
+
+//
+// End of "$Id$".
+//

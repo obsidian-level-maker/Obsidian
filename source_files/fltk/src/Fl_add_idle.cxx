@@ -1,17 +1,19 @@
 //
+// "$Id$"
+//
 // Idle routine support for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2022 by Bill Spitzak and others.
+// Copyright 1998-2010 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 // Allows you to manage an arbitrary set of idle() callbacks.
@@ -32,13 +34,6 @@ static idle_cb* first;
 static idle_cb* last;
 static idle_cb* freelist;
 
-// The function call_idle()
-// - removes the first idle callback from the front of the list (ring)
-// - adds it as the last entry and
-// - calls the idle callback.
-// The idle callback may remove itself from the list of idle callbacks
-// by calling Fl::remove_idle()
-
 static void call_idle() {
   idle_cb* p = first;
   last = p; first = p->next;
@@ -49,14 +44,14 @@ static void call_idle() {
   Adds a callback function that is called every time by Fl::wait() and also
   makes it act as though the timeout is zero (this makes Fl::wait() return
   immediately, so if it is in a loop it is called repeatedly, and thus the
-  idle function is called repeatedly).  The idle function can be used to get
+  idle fucntion is called repeatedly).  The idle function can be used to get
   background processing done.
-
+    
   You can have multiple idle callbacks. To remove an idle callback use
   Fl::remove_idle().
-
+    
   Fl::wait() and Fl::check() call idle callbacks, but Fl::ready() does not.
-
+    
   The idle callback can call any FLTK functions, including Fl::wait(),
   Fl::check(), and Fl::ready().
 
@@ -113,3 +108,7 @@ void Fl::remove_idle(Fl_Idle_Handler cb, void* data) {
   p->next = freelist;
   freelist = p;
 }
+
+//
+// End of "$Id$".
+//

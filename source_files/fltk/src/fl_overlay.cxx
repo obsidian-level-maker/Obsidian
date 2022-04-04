@@ -1,17 +1,19 @@
 //
+// "$Id$"
+//
 // Overlay support for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2021 by Bill Spitzak and others.
+// Copyright 1998-2010 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 // Extremely limited "overlay" support.  You can use this to drag out
@@ -19,41 +21,34 @@
 // to erase the overlay before drawing anything that might intersect
 // it.
 
-#include <FL/fl_config.h>
-#include <FL/platform.H>
+#include <FL/x.H>
 #include <FL/fl_draw.H>
-
-//#define USE_XOR
-// unless USE_XOR is defined, this source file is cross-platform
-
-#ifdef USE_XOR
+#ifdef __APPLE__
 #include <config.h>
 #endif
+
+//#define USE_XOR
 
 static int px,py,pw,ph;
 
 #ifndef USE_XOR
 #include <stdlib.h>
-#include "Fl_Screen_Driver.H"
-#include <FL/Fl_RGB_Image.H>
-static Fl_RGB_Image *s_bgN = 0, *s_bgS = 0, *s_bgE = 0, *s_bgW = 0;
-
+static uchar *bgN = 0L, *bgS = 0L, *bgE = 0L, *bgW = 0L;
 static int bgx, bgy, bgw, bgh;
 #endif
 
 static void draw_current_rect() {
 #ifdef USE_XOR
-# if defined(FLTK_USE_X11)
-  GC gc = (GC)fl_graphics_driver->gc();
-  XSetFunction(fl_display, gc, GXxor);
-  XSetForeground(fl_display, gc, 0xffffffff);
-  XDrawRectangle(fl_display, fl_window, gc, px, py, pw, ph);
-  XSetFunction(fl_display, gc, GXcopy);
-# elif defined(_WIN32)
-  int old = SetROP2(fl_graphics_driver->gc(), R2_NOT);
+# if defined(USE_X11)
+  XSetFunction(fl_display, fl_gc, GXxor);
+  XSetForeground(fl_display, fl_gc, 0xffffffff);
+  XDrawRectangle(fl_display, fl_window, fl_gc, px, py, pw, ph);
+  XSetFunction(fl_display, fl_gc, GXcopy);
+# elif defined(WIN32)
+  int old = SetROP2(fl_gc, R2_NOT);
   fl_rect(px, py, pw, ph);
-  SetROP2(fl_graphics_driver->gc(), old);
-# elif defined(__APPLE__)
+  SetROP2(fl_gc, old);
+# elif defined(__APPLE_QUARTZ__)
   // warning: Quartz does not support xor drawing
   // Use the Fl_Overlay_Window instead.
   fl_color(FL_WHITE);
@@ -62,53 +57,40 @@ static void draw_current_rect() {
 #  error unsupported platform
 # endif
 #else
-  if (s_bgN) { delete s_bgN; s_bgN = 0; }
-  if (s_bgS) { delete s_bgS; s_bgS = 0; }
-  if (s_bgE) { delete s_bgE; s_bgE = 0; }
-  if (s_bgW) { delete s_bgW; s_bgW = 0; }
+  if (bgN) { free(bgN); bgN = 0L; }
+  if (bgS) { free(bgS); bgS = 0L; }
+  if (bgE) { free(bgE); bgE = 0L; }
+  if (bgW) { free(bgW); bgW = 0L; }
   if (pw>0 && ph>0) {
-    s_bgE = Fl::screen_driver()->read_win_rectangle( px+pw-1, py, 1, ph, Fl_Window::current());
-    if(s_bgE && s_bgE->w() && s_bgE->h()) {
-      s_bgE->scale(1, ph,0,1);
-    }
-    s_bgW = Fl::screen_driver()->read_win_rectangle( px, py, 1, ph, Fl_Window::current());
-    if(s_bgW && s_bgW->w() && s_bgW->h()) {
-      s_bgW->scale(1, ph,0,1);
-    }
-    s_bgS = Fl::screen_driver()->read_win_rectangle( px, py+ph-1, pw, 1, Fl_Window::current());
-    if(s_bgS && s_bgS->w() && s_bgS->h()) {
-      s_bgS->scale(pw, 1,0,1);
-    }
-    s_bgN = Fl::screen_driver()->read_win_rectangle( px, py, pw, 1, Fl_Window::current());
-    if(s_bgN && s_bgN->w() && s_bgN->h()) {
-      s_bgN->scale(pw, 1,0,1);
-    }
+    bgE = fl_read_image(0L, px+pw-1, py, 1, ph);
+    bgW = fl_read_image(0L, px, py, 1, ph);
+    bgS = fl_read_image(0L, px, py+ph-1, pw, 1);
+    bgN = fl_read_image(0L, px, py, pw, 1);
     bgx = px; bgy = py;
     bgw = pw; bgh = ph;
   }
   fl_color(FL_WHITE);
   fl_line_style(FL_SOLID);
-  fl_graphics_driver->overlay_rect(px, py, pw, ph);
-
+  fl_rect(px, py, pw, ph);
   fl_color(FL_BLACK);
   fl_line_style(FL_DOT);
-  fl_graphics_driver->overlay_rect(px, py, pw, ph);
+  fl_rect(px, py, pw, ph);
   fl_line_style(FL_SOLID);
-#endif // USE_XOR
+#endif
 }
 
 static void erase_current_rect() {
 #ifdef USE_XOR
-# ifdef __APPLE_QUARTZ__ // PORTME: Fl_Window_Driver - platform overlay
+# ifdef __APPLE_QUARTZ__
   fl_rect(px, py, pw, ph);
 # else
   draw_current_rect();
 # endif
 #else
-  if (s_bgN) s_bgN->draw(bgx, bgy);
-  if (s_bgS) s_bgS->draw(bgx, (bgy+bgh-1));
-  if (s_bgW) s_bgW->draw(bgx, bgy);
-  if (s_bgE) s_bgE->draw((bgx+bgw-1), bgy);
+  if (bgN) fl_draw_image(bgN, bgx, bgy, bgw, 1);
+  if (bgS) fl_draw_image(bgS, bgx, bgy+bgh-1, bgw, 1);
+  if (bgW) fl_draw_image(bgW, bgx, bgy, 1, bgh);
+  if (bgE) fl_draw_image(bgE, bgx+bgw-1, bgy, 1, bgh);
 #endif
 }
 
@@ -132,3 +114,7 @@ void fl_overlay_rect(int x, int y, int w, int h) {
   px = x; py = y; pw = w; ph = h;
   draw_current_rect();
 }
+
+//
+// End of "$Id$".
+//

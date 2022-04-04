@@ -1,81 +1,96 @@
 //
+// "$Id$"
+//
 // Font utilities for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2018 by Bill Spitzak and others.
+// Copyright 1998-2010 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 // Add a font to the internal table.
 // Also see fl_set_fonts.cxx which adds all possible fonts.
 
 #include <FL/Fl.H>
-#include <FL/platform.H>
+#include <FL/x.H>
 #include <FL/fl_draw.H>
-#include "Fl_Screen_Driver.H"
 #include "flstring.h"
+#include "Fl_Font.H"
 #include <stdlib.h>
-
-struct Fl_Fontdesc;
-extern FL_EXPORT Fl_Fontdesc *fl_fonts; // the table
 
 static int table_size;
 /**
-  Changes a face.
- \param fnum The font number to be assigned a new face
- \param name Name of the font to assign. The string pointer is simply stored,
- the string is not copied, so the string must be in static memory. The exact name to be used
- depends on the platform :
-
- \li Windows, X11, Xft: use the family name prefixed by one character to indicate the desired font variant.
- Characters <tt>' ', 'I', 'B', 'P' </tt>denote plain, italic, bold, and bold-italic variants, respectively. For example,
- string \c "IGabriola" is to be used to denote the <tt>"Gabriola italic"</tt> font. The \c "Oblique" suffix,
- in whatever case, is to be treated  as \c "italic", that is, prefix the family name with \c 'I'.
- \li Other platforms, i.e., X11 + Pango, Wayland, macOS: use the full font name as returned by
- function Fl::get_font_name() or as listed by applications test/fonts or test/utf8. No prefix is to be added.
-*/
+  Changes a face.  The string pointer is simply stored,
+  the string is not copied, so the string must be in static memory.
+*/    
 void Fl::set_font(Fl_Font fnum, const char* name) {
-  Fl_Graphics_Driver &d = Fl_Graphics_Driver::default_driver();
-  unsigned width = d.font_desc_size();
-  if (!fl_fonts) fl_fonts = d.calc_fl_fonts();
+#ifdef __APPLE__
+  if (!fl_fonts) fl_fonts = Fl_X::calc_fl_fonts();
+#endif
   while (fnum >= table_size) {
     int i = table_size;
-    if (!i) {   // don't realloc the built-in table
+    if (!i) {	// don't realloc the built-in table
       table_size = 2*FL_FREE_FONT;
       i = FL_FREE_FONT;
-      Fl_Fontdesc* t = (Fl_Fontdesc*)malloc(table_size*width);
-      memcpy(t, fl_fonts, FL_FREE_FONT*width);
+      Fl_Fontdesc* t = (Fl_Fontdesc*)malloc(table_size*sizeof(Fl_Fontdesc));
+      memcpy(t, fl_fonts, FL_FREE_FONT*sizeof(Fl_Fontdesc));
       fl_fonts = t;
     } else {
       table_size = 2*table_size;
-      fl_fonts=(Fl_Fontdesc*)realloc(fl_fonts, table_size*width);
+      fl_fonts=(Fl_Fontdesc*)realloc(fl_fonts, table_size*sizeof(Fl_Fontdesc));
     }
     for (; i < table_size; i++) {
-      memset((char*)fl_fonts + i * width, 0, width);
+      fl_fonts[i].fontname[0] = 0;
+      fl_fonts[i].name = 0;
+#if !defined(WIN32) && !defined(__APPLE__)
+      fl_fonts[i].xlist = 0;
+      fl_fonts[i].n = 0;
+#endif // !WIN32 && !__APPLE__
     }
   }
-  d.font_name(fnum, name);
-  d.font(-1, 0);
+  Fl_Fontdesc* s = fl_fonts+fnum;
+  if (s->name) {
+    if (!strcmp(s->name, name)) {s->name = name; return;}
+#if !defined(WIN32) && !defined(__APPLE__)
+    if (s->xlist && s->n >= 0) XFreeFontNames(s->xlist);
+#endif
+    for (Fl_Font_Descriptor* f = s->first; f;) {
+      Fl_Font_Descriptor* n = f->next; delete f; f = n;
+    }
+    s->first = 0;
+  }
+  s->name = name;
+  s->fontname[0] = 0;
+#if !defined(WIN32) && !defined(__APPLE__)
+  s->xlist = 0;
+#endif
+  s->first = 0;
+  Fl_Display_Device::display_device()->driver()->font(-1, 0);
 }
-
 /** Copies one face to another. */
 void Fl::set_font(Fl_Font fnum, Fl_Font from) {
   Fl::set_font(fnum, get_font(from));
 }
-
 /**
     Gets the string for this face.  This string is different for each
     face. Under X this value is passed to XListFonts to get all the sizes
     of this face.
 */
 const char* Fl::get_font(Fl_Font fnum) {
-  return Fl_Graphics_Driver::default_driver().font_name(fnum);
+#ifdef __APPLE__
+  if (!fl_fonts) fl_fonts = Fl_X::calc_fl_fonts();
+#endif
+  return fl_fonts[fnum].name;
 }
+
+//
+// End of "$Id$".
+//

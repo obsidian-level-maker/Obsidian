@@ -1,17 +1,19 @@
 //
+// "$Id$"
+//
 // Menu bar header file for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2017 by Bill Spitzak and others.
+// Copyright 1998-2016 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
 // file is missing or damaged, see the license at:
 //
-//     https://www.fltk.org/COPYING.php
+//     http://www.fltk.org/COPYING.php
 //
-// Please see the following page on how to report bugs and issues:
+// Please report all bugs and problems on the following page:
 //
-//     https://www.fltk.org/bugs.php
+//     http://www.fltk.org/str.php
 //
 
 /* \file
@@ -63,7 +65,6 @@
   callbacks exactly the same as when you pick the item with the mouse.
 */
 class FL_EXPORT Fl_Menu_Bar : public Fl_Menu_ {
-  friend class Fl_Sys_Menu_Bar_Driver;
 protected:
     void draw();
 public:
@@ -87,10 +88,10 @@ public:
     menu items.
   */
   Fl_Menu_Bar(int X, int Y, int W, int H, const char *l=0);
-  /** Updates the menu bar after any change to its items.
-   This is useful when the menu bar can be an Fl_Sys_Menu_Bar object.
-   */
-  virtual void update() {}
 };
 
 #endif
+
+//
+// End of "$Id$".
+//
