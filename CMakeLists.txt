@@ -201,7 +201,9 @@ else()
 endif()
 
 if(UNIX)
-  find_package(FLTK 1.3 FLTK_SKIP_FLUID FLTK_SKIP_OPENGL)
+  set(FLTK_SKIP_FLUID ON)
+  set(FLTK_SKIP_OPENGL ON)
+  find_package(FLTK 1.3)
 endif()
 
 if(FLTK_FOUND AND NOT MSYS)
