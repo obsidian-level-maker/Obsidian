@@ -107,32 +107,3 @@ endif(UNIX)
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/bin/fltk-config
         DESTINATION ${FLTK_BINDIR}
 )
-
-if(UNIX
-   OR MSYS
-   OR (MINGW AND CMAKE_CROSSCOMPILING)
-)
-  macro(INSTALL_MAN FILE LEVEL)
-    install(
-      FILES ${CMAKE_CURRENT_SOURCE_DIR}/documentation/src/${FILE}.man
-      DESTINATION ${FLTK_MANDIR}/man${LEVEL}
-      RENAME ${FILE}.${LEVEL}
-    )
-  endmacro(
-    INSTALL_MAN
-    FILE
-    LEVEL
-  )
-
-  install_man(fluid 1)
-  install_man(fltk-config 1)
-  install_man(fltk 3)
-  install_man(blocks 6)
-  install_man(checkers 6)
-  install_man(sudoku 6)
-
-endif(
-  UNIX
-  OR MSYS
-  OR (MINGW AND CMAKE_CROSSCOMPILING)
-)
