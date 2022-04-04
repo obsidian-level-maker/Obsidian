@@ -280,6 +280,7 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
         last_directory = dir_name;
     }
 
+#ifdef WIN32
     // add extension if missing
     if (src_name.extension().empty()) {
         src_name.replace_extension(ext);
@@ -292,6 +293,7 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
             }
         }
     }
+#endif
 
     return src_name;
 }
