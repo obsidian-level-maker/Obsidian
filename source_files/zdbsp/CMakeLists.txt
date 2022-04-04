@@ -9,31 +9,18 @@ set(CMAKE_CXX_FLAGS "-DINLINE_G=inline")
 add_library(
   obsidian_zdbsp
   blockmapbuilder.cc
-  blockmapbuilder.h
-  doomdata.h
   nodebuild.cc
-  nodebuild.h
   nodebuild_classify_nosse2.cc
   nodebuild_events.cc
   nodebuild_extract.cc
   nodebuild_gl.cc
   nodebuild_utility.cc
   processor.cc
-  processor.h
   processor_udmf.cc
   rejectbuilder_nogl.cc
-  rejectbuilder_nogl.h
   sc_man.cc
-  sc_man.h
-  tarray.h
-  templates.h
-  workdata.h
-  xs_Float.h
-  zdbsp.h
   zdmain.cc
-  zdmain.h
   zdwad.cc
-  zdwad.h
 )
 
 target_compile_features(obsidian_zdbsp PRIVATE cxx_std_17)
