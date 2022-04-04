@@ -67,6 +67,6 @@
 #include <FL/filename.H>
 #include <FL/fl_ask.H>
 #include <FL/fl_draw.H>
-#include <FL/x.H>
+#include <FL/platform.H>
 
 #endif  // __OB_HDR_FLTK__
