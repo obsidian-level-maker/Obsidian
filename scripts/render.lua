@@ -416,8 +416,9 @@ function Render_edge(E)
       seed_w = assert(E.long)
     }
 
-    if E.area and E.area.room and E.area.room.is_exit then
-      reqs.group = LEVEL.exit_fences
+    if E.area and E.area.room 
+    and E.area.room.is_exit and LEVEL.exit_fence then
+      reqs.group = LEVEL.exit_fence
     end
 
     if geom.is_corner(dir) then
