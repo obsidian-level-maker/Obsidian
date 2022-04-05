@@ -3318,7 +3318,7 @@ function Quest_room_themes()
 
     for _,R in pairs(LEVEL.rooms) do 
       if R.is_exit and not R.is_secret then
-        R.fence_group = rand.key_by_probs(GAME.THEMES[next_theme].fence_groups)
+        LEVEL.exit_fences = rand.key_by_probs(GAME.THEMES[next_theme].fence_groups)
       end
     end
 
