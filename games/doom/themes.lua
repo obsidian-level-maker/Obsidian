@@ -1811,7 +1811,9 @@ DOOM.THEMES =
       gtd_mining_set = 35,
       gtd_power_plant_set = 35,
       --
-      gtd_DMV_set = 50
+      gtd_DMV_set = 50,
+      --
+      cran_bloodtubes_set = 50
     },
 
     window_groups =
@@ -2294,7 +2296,9 @@ DOOM.THEMES =
       --
       gtd_sunderfall = 25,
       gtd_sunderfall_barred = 25,
-      gtd_lavafall = 25
+      gtd_lavafall = 25,
+      --
+      cran_bloodtubes_set = 50
     },
 
     outdoor_wall_groups =
