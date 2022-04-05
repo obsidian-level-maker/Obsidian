@@ -20,7 +20,7 @@ PREFABS.Locked_gtd_door_barred_red_EPIC =
   over = 16,
 
   x_fit = { 96,104 , 152,160 },
-  y_fit = "frame",
+  y_fit = { 76,84 },
 
   tex_BIGDOORC = 
   {
