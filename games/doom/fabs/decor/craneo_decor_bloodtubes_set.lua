@@ -1,6 +1,6 @@
 PREFABS.Decor_craneo_testtube_industrial =
 {
-  file = "decor/craneo_pic_bloodtubes_set.wad",
+  file = "decor/craneo_decor_bloodtubes_set.wad",
   map = "MAP01",
 
   engine = "zdoom",
