@@ -6,6 +6,7 @@ PREFABS.Trap_gtd_closet_vanillapic_tech =
   prob = 50,
 
   theme = "tech",
+  env = "building",
 
   kind = "trap",
 
