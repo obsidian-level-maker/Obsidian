@@ -248,28 +248,6 @@ else(DEFINED SAVED_REQUIRED_LIBRARIES)
   unset(CMAKE_REQUIRED_LIBRARIES)
 endif(DEFINED SAVED_REQUIRED_LIBRARIES)
 
-# ##############################################################################
-# packages
-
-# Doxygen: necessary for HTML and PDF docs
-find_package(Doxygen)
-
-# LaTex: necessary for PDF docs (note: FindLATEX doesn't return LATEX_FOUND)
-
-# Note: we only check existence of `latex' (LATEX_COMPILER), hence building the
-# pdf docs may still fail because of other missing tools.
-
-set(LATEX_FOUND)
-if(DOXYGEN_FOUND)
-  find_package(LATEX)
-  if(LATEX_COMPILER AND NOT LATEX_FOUND)
-    set(LATEX_FOUND YES)
-  endif(LATEX_COMPILER AND NOT LATEX_FOUND)
-endif(DOXYGEN_FOUND)
-
-# message ("Doxygen  found : ${DOXYGEN_FOUND}") message ("LaTex    found :
-# ${LATEX_FOUND}") message ("LaTex Compiler : ${LATEX_COMPILER}")
-
 # Cleanup: unset local variables
 
 unset(CMAKE_REQUIRED_QUIET)

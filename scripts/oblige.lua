@@ -1553,7 +1553,7 @@ function ob_default_filename()
       formatstring = "custom"
    end
    
-   return gui.format_prefix(levelcount, OB_CONFIG.game, OB_CONFIG.theme, formatstring) .. str
+   return gui.format_prefix(levelcount, OB_CONFIG.game, OB_CONFIG.theme, formatstring) .. str .. ".wad"
    
  end
  
