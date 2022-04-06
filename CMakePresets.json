@@ -42,6 +42,15 @@
       }
     },
     {
+      "name": "vscode+msvc2019",
+      "description": "Compile natively on Windows (Dasho)",
+      "binaryDir": "build/vscode",
+      "generator": "Visual Studio 16 2019",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
       "name": "msvc",
       "description": "Compile natively on Windows",
       "binaryDir": "build/msvc",
@@ -81,6 +90,11 @@
       "name": "msvc",
       "configuration": "Release",
       "configurePreset": "msvc"
+    },
+    {
+      "name": "vscode+msvc2019",
+      "configuration": "Release",
+      "configurePreset": "vscode+msvc2019"
     },
     {
       "name": "msys",

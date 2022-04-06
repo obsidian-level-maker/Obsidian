@@ -40,7 +40,7 @@
 
 #ifdef _MSC_VER
 #include <cstdint>
-typedef uint32_t U32;
+//typedef uint32_t U32; This seems to essentially try to define uint32_t as unsigned according to MSVC - Dasho
 #endif
 
 static int ncolors, chars_per_pixel;
