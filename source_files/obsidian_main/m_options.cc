@@ -61,6 +61,8 @@ static void Parse_Option(std::string name, std::string value) {
         randomize_misc = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "random_string_seeds") == 0) {
         random_string_seeds = StringToInt(value) ? true : false;
+    } else if (StringCaseCmp(name, "password_mode") == 0) {
+        password_mode = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "last_directory") == 0) {
         last_directory = value;
     } else if (StringCaseCmp(name, "filename_prefix") == 0) {
@@ -175,6 +177,7 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "randomize_pickups = " << (randomize_pickups ? 1 : 0) << "\n";
     option_fp << "randomize_misc = " << (randomize_misc ? 1 : 0) << "\n";
     option_fp << "random_string_seeds = " << (random_string_seeds ? 1 : 0) << "\n";
+    option_fp << "password_mode = " << (password_mode ? 1 : 0) << "\n";
     option_fp << "filename_prefix = " << filename_prefix << "\n";
     option_fp << "custom_prefix = " << custom_prefix << "\n";
     option_fp << "zip_output = " << zip_output << "\n";
@@ -214,6 +217,7 @@ class UI_OptionsWin : public Fl_Window {
     UI_HelpLink *custom_prefix_help;
 
     UI_CustomCheckBox *opt_random_string_seeds;
+    UI_CustomCheckBox *opt_password_mode;
     UI_CustomCheckBox *opt_backups;
     UI_CustomCheckBox *opt_overwrite;
     UI_CustomCheckBox *opt_debug;
@@ -310,6 +314,19 @@ class UI_OptionsWin : public Fl_Window {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         random_string_seeds = that->opt_random_string_seeds->value() ? true : false;
+
+        if (!random_string_seeds) {
+            that->opt_password_mode->deactivate();
+        }
+        else {
+            that->opt_password_mode->activate();
+        }
+    }
+
+    static void callback_Password_Mode(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+        password_mode = that->opt_password_mode->value() ? true : false;
     }
 
     static void callback_Backups(Fl_Widget *w, void *data) {
@@ -507,6 +524,19 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_random_string_seeds->h() + y_step * .5;
 
+    opt_password_mode = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_password_mode->copy_label(_(" Password Mode"));
+    opt_password_mode->value(password_mode ? 1 : 0);
+    opt_password_mode->callback(callback_Password_Mode, this);
+    opt_password_mode->labelfont(font_style);
+    opt_password_mode->selection_color(SELECTION);
+    opt_password_mode->down_box(button_style);
+    if (!random_string_seeds) {
+        opt_password_mode->deactivate();
+    }
+
+    cy += opt_password_mode->h() + y_step * .5;
+
     opt_backups = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
     opt_backups->copy_label(_(" Create Backups"));
     opt_backups->value(create_backups ? 1 : 0);
@@ -639,7 +669,7 @@ int UI_OptionsWin::handle(int event) {
 
 void DLG_OptionsEditor(void) {
     int opt_w = kf_w(350);
-    int opt_h = kf_h(450);
+    int opt_h = kf_h(500);
 
     UI_OptionsWin *option_window =
         new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));

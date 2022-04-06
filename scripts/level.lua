@@ -2694,8 +2694,8 @@ function Level_make_all()
       error("Warning: The game that you have selected is in an experimental " ..
     "state. WADs may not build successfully and certain gameplay features may not " ..
     "be implemented yet! To ignore this warning " ..
-    "and continue generation for these games, set " ..
-    "Experimental Games under Debug Control Module to 'Yes'.\n\n" ..
+    "and continue generation for these games, check the " ..
+    "Experimental Games checkbox located in the Debug Control Module.\n\n" ..
     "This message will change should development scope expand.")
     end
   end

@@ -5062,14 +5062,14 @@ GROW_REVERSE_FUNNEL_LIQUID_COMPLEX =
 
   structure =
   {
-    "x.........","x11~AAA>11",
-    "1.........","111%%AA>11",
+    "x.........","x11~AAA<11",
+    "1.........","111%%AA<11",
     "1.........","1111~AA%11",
     "x.........","x111>AAAAA",
     "x.........","x111>AAAAA",
     "x.........","x111~AA/11",
-    "x.........","x11//AA>11",
-    "x.........","x11~AAA>11"
+    "x.........","x11//AA<11",
+    "x.........","x11~AAA<11"
   },
 
   diagonals =
@@ -12563,6 +12563,49 @@ GROW_LIQUID_POOL_PLACE_3x6_STAIRS =
     "1~","~A",
     "1~","~A",
   },
+},
+
+GROW_PILLAR_LEDGE_DOUBLE_OUTER =
+{
+  prob = 25,
+  skip_prob = 50,
+
+  structure =
+  {
+    ".....","AAAAA",
+    ".....","AAAAA",
+    ".....","^^AAA",
+    ".....","11AAA",
+    ".....","11#AA",
+    ".....","11AAA",
+    ".....","11#AA",
+    ".....","11AAA",
+    "11xxx","11xxx",
+  },
+},
+
+GROW_PILLAR_LEDGE_DOUBLE_INNER =
+{
+  prob = 25,
+  skip_prob = 50,
+
+  structure =
+  {
+    ".....","AAAAA",
+    ".....","AAAAA",
+    ".....","^^AAA",
+    ".....","11%AA",
+    ".....","11#AA",
+    ".....","111AA",
+    ".....","11#AA",
+    ".....","111AA",
+    "11.xx","111xx",
+  },
+
+  diagonals =
+  {
+    "1A"
+  }
 },
 
 GROW_LIQUID_PILLAR =

@@ -55,46 +55,6 @@ OB_MODULES["ui_reject_options"] =
   }
 }
 
-UI_EDGE_MAP_OPTIONS = { }
-
-function UI_EDGE_MAP_OPTIONS.setup(self)
-  
-  module_param_up(self)
-
-end
-
-OB_MODULES["ui_edge_map_options"] =
-{
-
-  name = "ui_edge_map_options",
-
-  label = _("Map Build Options"),
-  
-  engine = "edge",
-
-  side = "left",
-  priority = 105,
-
-  hooks = 
-  {
-    pre_setup = UI_EDGE_MAP_OPTIONS.setup,
-  },
-
-  options =
-  {
-    {
-      name = "bool_build_nodes_edge",
-      label = _("Build Nodes"),
-      valuator = "button",
-      default = 0,
-      tooltip = "Choose to either build nodes or allow the engine itself to do so " ..
-      "upon loading the map.",
-      longtip = "Warning! If GL v5 nodes are needed due to map size/complexity, it is best to leave this unchecked as ZDBSP currently " ..
-      "creates v5 nodes that are out of spec and will likely crash EDGE."
-    }
-  }
-}
-
 UI_UDMF_MAP_OPTIONS = { }
 
 function UI_UDMF_MAP_OPTIONS.setup(self)
@@ -116,8 +76,7 @@ OB_MODULES["ui_udmf_map_options"] =
 
   label = _("Map Build Options"),
   
-  engine = "advanced",
-  engine2 = "!edge",
+  engine = "eternity", -- Other UDMF-capable engines may go in this group in the future - Dasho
 
   side = "left",
   priority = 105,
@@ -130,19 +89,62 @@ OB_MODULES["ui_udmf_map_options"] =
   options =
   {
     {
-      name = "bool_build_nodes_udmf",
+      name = "map_format",
+      label = _("Map Format"),
+      choices = UI_UDMF_MAP_OPTIONS.MAP_FORMAT_CHOICES,
+      default = "udmf",
+      tooltip = "Choose between UDMF and binary map format.",
+    }
+  }
+}
+
+UI_ZDOOM_MAP_OPTIONS = { }
+
+function UI_ZDOOM_MAP_OPTIONS.setup(self)
+  
+  module_param_up(self)
+
+end
+
+UI_ZDOOM_MAP_OPTIONS.MAP_FORMAT_CHOICES = 
+{
+  "binary",  _("Binary"),
+  "udmf", _("UDMF"),
+}
+
+OB_MODULES["ui_zdoom_map_options"] =
+{
+
+  name = "ui_zdoom_map_options",
+
+  label = _("Map Build Options"),
+  
+  engine = "zdoom",
+
+  side = "left",
+  priority = 105,
+
+  hooks = 
+  {
+    pre_setup = UI_ZDOOM_MAP_OPTIONS.setup,
+  },
+
+  options =
+  {
+    {
+      name = "bool_build_nodes_zdoom",
       label = _("Build Nodes"),
       valuator = "button",
       default = 0,
       tooltip = "Choose to either build nodes or allow the engine itself to do so " ..
       "upon loading the map.",
       longtip = "ZDoom is capable of building its own nodes in either Binary or UDMF.\n\n" ..
-        "If Eternity is selected, nodes will always be built."
+        "Obsidian uses the same internal nodebuilder as ZDoom, so maps should be compatible either way."
     },
     {
-      name = "map_format",
+      name = "map_format_zdoom",
       label = _("Map Format"),
-      choices = UI_UDMF_MAP_OPTIONS.MAP_FORMAT_CHOICES,
+      choices = UI_ZDOOM_MAP_OPTIONS.MAP_FORMAT_CHOICES,
       default = "udmf",
       tooltip = "Choose between UDMF and binary map format.",
     }

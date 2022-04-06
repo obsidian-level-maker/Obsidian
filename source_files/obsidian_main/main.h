@@ -162,12 +162,14 @@ extern bool randomize_monsters;
 extern bool randomize_pickups;
 extern bool randomize_misc;
 extern bool random_string_seeds;
+extern bool password_mode;
 extern bool did_specify_seed;
 extern int zip_output;
 extern bool zip_logs;
 extern bool timestamp_logs;
 
 extern std::string def_filename;
+extern std::string log_timestamp;
 
 extern std::filesystem::path last_directory;
 extern std::string numeric_locale;

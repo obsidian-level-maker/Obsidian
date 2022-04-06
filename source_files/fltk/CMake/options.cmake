@@ -211,58 +211,6 @@ if(OPTION_USE_SVG)
 endif(OPTION_USE_SVG)
 
 # ##############################################################################
-set(HAVE_GL LIB_GL OR LIB_MesaGL)
-
-if(HAVE_GL)
-  option(OPTION_USE_GL "use OpenGL" ON)
-endif(HAVE_GL)
-
-if(OPTION_USE_GL)
-  if(OPTION_APPLE_X11)
-    set(OPENGL_FOUND TRUE)
-    set(OPENGL_LIBRARIES -L${PATH_TO_XLIBS} -lGLU -lGL)
-    unset(HAVE_GL_GLU_H CACHE)
-    find_file(HAVE_GL_GLU_H GL/glu.h PATHS ${X11_INCLUDE_DIR})
-  else()
-    include(FindOpenGL)
-    if(APPLE)
-      set(HAVE_GL_GLU_H ${HAVE_OPENGL_GLU_H})
-    endif(APPLE)
-  endif(OPTION_APPLE_X11)
-else()
-  set(OPENGL_FOUND FALSE)
-endif(OPTION_USE_GL)
-
-if(OPENGL_FOUND)
-  set(CMAKE_REQUIRED_INCLUDES ${OPENGL_INCLUDE_DIR}/GL)
-
-  # Set GLLIBS (used in fltk-config). We should probably deduct this from
-  # OPENGL_LIBRARIES but it turned out to be difficult since FindOpenGL seems to
-  # return different syntax depending on the platform (and maybe also CMake
-  # version). Hence we use the following code...
-
-  if(WIN32)
-    set(GLLIBS "-lglu32 -lopengl32")
-  elseif(APPLE AND NOT OPTION_APPLE_X11)
-    set(GLLIBS "-framework OpenGL")
-  else()
-    set(GLLIBS "-lGLU -lGL")
-  endif(WIN32)
-
-  # check if function glXGetProcAddressARB exists
-  set(TEMP_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
-  set(CMAKE_REQUIRED_LIBRARIES ${OPENGL_LIBRARIES})
-  check_function_exists(glXGetProcAddressARB HAVE_GLXGETPROCADDRESSARB)
-  set(CMAKE_REQUIRED_LIBRARIES ${TEMP_REQUIRED_LIBRARIES})
-  unset(TEMP_REQUIRED_LIBRARIES)
-
-  set(FLTK_GL_FOUND TRUE)
-else()
-  set(FLTK_GL_FOUND FALSE)
-  set(GLLIBS)
-endif(OPENGL_FOUND)
-
-# ##############################################################################
 option(OPTION_LARGE_FILE "enable large file support" ON)
 
 if(OPTION_LARGE_FILE)
@@ -368,11 +316,11 @@ endif(ZLIB_FOUND)
 set(HAVE_LIBZ 1)
 
 # ##############################################################################
-if(APPLE)
+if(APPLE OR WIN32)
   option(OPTION_USE_SYSTEM_LIBJPEG "use system libjpeg" OFF)
 else()
   option(OPTION_USE_SYSTEM_LIBJPEG "use system libjpeg" ON)
-endif(APPLE)
+endif(APPLE OR WIN32)
 
 if(OPTION_USE_SYSTEM_LIBJPEG)
   include(FindJPEG)
@@ -396,11 +344,11 @@ endif(JPEG_FOUND)
 set(HAVE_LIBJPEG 1)
 
 # ##############################################################################
-if(APPLE)
+if(APPLE OR WIN32)
   option(OPTION_USE_SYSTEM_LIBPNG "use system libpng" OFF)
 else()
   option(OPTION_USE_SYSTEM_LIBPNG "use system libpng" ON)
-endif(APPLE)
+endif(APPLE OR WIN32)
 
 if(OPTION_USE_SYSTEM_LIBPNG)
   include(FindPNG)

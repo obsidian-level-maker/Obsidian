@@ -158,14 +158,6 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
             CompressNodes = true;
             CompressGLNodes = false;
             ForceCompression = false;
-        } else if (StringCaseCmp(current_engine, "edge") == 0) {
-            BuildGLNodes = true;
-            GLOnly = true;
-            RejectMode = ERM_DontTouch;
-            CheckPolyobjs = true;
-            CompressNodes = true;
-            CompressGLNodes = false;
-            ForceCompression = false;
         } else { // ZDoom is the only choice left, so customize for it
             BuildGLNodes = true;
             GLOnly = true;

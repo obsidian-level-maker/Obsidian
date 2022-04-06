@@ -7,8 +7,9 @@ PREFABS.Wall_gtd_dem_commercial_1 =
 
   group = "dem_wall_commercial",
 
-  where  = "diagonal",
+  where  = "edge",
   height = 96,
+  deep = 16,
 
   bound_z1 = 0,
   bound_z2 = 96,

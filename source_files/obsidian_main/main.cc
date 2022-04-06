@@ -129,6 +129,7 @@ bool randomize_monsters = false;
 bool randomize_pickups = false;
 bool randomize_misc = false;
 bool random_string_seeds = false;
+bool password_mode = false;
 bool did_specify_seed = false;
 int zip_output = 0;
 bool zip_logs = false;
@@ -139,6 +140,8 @@ bool first_run = false;
 std::filesystem::path gif_filename = "gif_output.gif";
 
 std::string string_seed;
+
+std::string log_timestamp;
 
 game_interface_c *game_object = NULL;
 
@@ -289,7 +292,7 @@ void Determine_WorkingPath(const char *argv0) {
     if (const int home_arg = argv::Find(0, "home"); home_arg >= 0) {
         if (home_arg + 1 >= argv::list.size() || argv::IsOption(home_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --home\n");
-            exit(9);
+            exit(EXIT_FAILURE);
         }
 
         home_dir = argv::list[home_arg + 1];
@@ -351,7 +354,7 @@ void Determine_InstallDir(const char *argv0) {
     if (const int inst_arg = argv::Find(0, "install"); inst_arg >= 0) {
         if (inst_arg + 1 >= argv::list.size() || argv::IsOption(inst_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --install\n");
-            exit(9);
+            exit(EXIT_FAILURE);
         }
 
         install_dir = argv::list[inst_arg + 1];
@@ -404,7 +407,7 @@ void Determine_ConfigFile() {
     if (const int conf_arg = argv::Find(0, "config"); conf_arg >= 0) {
         if (conf_arg + 1 >= argv::list.size() || argv::IsOption(conf_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --config\n");
-            exit(9);
+            exit(EXIT_FAILURE);
         }
 
         config_file = argv::list[conf_arg + 1];
@@ -418,7 +421,7 @@ void Determine_OptionsFile() {
     if (const int optf_arg = argv::Find(0, "options"); optf_arg >= 0) {
         if (optf_arg + 1 >= argv::list.size() || argv::IsOption(optf_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --options\n");
-            exit(9);
+            exit(EXIT_FAILURE);
         }
 
         options_file = argv::list[optf_arg + 1];
@@ -433,7 +436,7 @@ void Determine_ThemeFile() {
         if (themef_arg + 1 >= argv::list.size() ||
             argv::IsOption(themef_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --theme\n");
-            exit(9);
+            exit(EXIT_FAILURE);
         }
 
         theme_file = argv::list[themef_arg + 1];
@@ -447,7 +450,7 @@ void Determine_LoggingFile() {
     if (const int logf_arg = argv::Find(0, "log"); logf_arg >= 0) {
         if (logf_arg + 1 >= argv::list.size() || argv::IsOption(logf_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing path for --log\n");
-            exit(9);
+            exit(EXIT_FAILURE);
         }
 
         logging_file = argv::list[logf_arg + 1];
@@ -903,8 +906,8 @@ void Main::Detail::Shutdown(const bool error) {
         delete main_win;
         main_win = nullptr;
     }
-    LogClose();
     Script_Close();
+    LogClose();
 }
 
 int Main_key_handler(int event) {
@@ -936,7 +939,11 @@ void Main_CalcNewSeed() { next_rand_seed = xoshiro_UInt(); }
 void Main_SetSeed() {
     if (random_string_seeds && !did_specify_seed) {
         if (string_seed.empty()) {
-            string_seed = ob_get_random_words();
+            if (password_mode) {
+                string_seed = ob_get_password();
+            } else {
+                string_seed = ob_get_random_words();
+            }
             ob_set_config("string_seed", string_seed.c_str());
 #ifdef max
 #undef max
@@ -948,7 +955,7 @@ void Main_SetSeed() {
             next_rand_seed = split_limit;
             for (size_t i = 0; i < string_seed.size(); i++) {
                 char character = string_seed.at(i);
-                if (not std::iscntrl(character)) {
+                if (!std::iscntrl(character)) {
                     if (next_rand_seed < split_limit) {
                         next_rand_seed *= int(character);
                     } else {
@@ -958,6 +965,7 @@ void Main_SetSeed() {
             }
         }
     }
+    xoshiro_Reseed(next_rand_seed);
     std::string seed = NumToString(next_rand_seed);
     ob_set_config("seed", seed.c_str());
     if (!batch_mode) {
@@ -1110,7 +1118,7 @@ restart:;
         {
         } while (true);
 #endif
-        exit(1);
+        exit(EXIT_SUCCESS);
     } else if (argv::Find(0, "version") >= 0) {
 #ifdef WIN32
         if (AllocConsole()) {
@@ -1125,8 +1133,9 @@ restart:;
         do 
         {
         } while (true);
+        
 #endif
-        exit(1);
+        exit(EXIT_SUCCESS);
     }
 
     int batch_arg = argv::Find('b', "batch");
@@ -1135,7 +1144,7 @@ restart:;
             argv::IsOption(batch_arg + 1)) {
             fmt::print(stderr,
                        "OBSIDIAN ERROR: missing filename for --batch\n");
-            exit(9);
+            exit(EXIT_FAILURE);
         }
 
         batch_mode = true;
@@ -1259,7 +1268,7 @@ skiprest:
     if (const int load_arg = argv::Find('l', "load"); load_arg >= 0) {
         if (load_arg + 1 >= argv::list.size() || argv::IsOption(load_arg + 1)) {
             fmt::print(stderr, "OBSIDIAN ERROR: missing filename for --load\n");
-            exit(9);
+            exit(EXIT_FAILURE);
         }
 
         load_file = argv::list[load_arg + 1];
@@ -1314,7 +1323,7 @@ skiprest:
             {
             } while (true);
         #endif
-            return 3;
+            return EXIT_FAILURE;
         }
         Main::Detail::Shutdown(false);
         return 0;
@@ -1556,8 +1565,8 @@ skiprest:
             delete main_win;
             main_win = nullptr;
         }
-        LogClose();
         Script_Close();
+        LogClose();
         PHYSFS_deinit();
         main_action = MAIN_NONE;
         goto restart;

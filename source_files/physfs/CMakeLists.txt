@@ -7,7 +7,6 @@ project(
 add_library(
   obsidian_physfs
   physfs.c
-  physfs.h
   physfs_archiver_7z.c
   physfs_archiver_dir.c
   physfs_archiver_grp.c
@@ -21,14 +20,9 @@ add_library(
   physfs_archiver_wad.c
   physfs_archiver_zip.c
   physfs_byteorder.c
-  physfs_casefolding.h
-  physfs_internal.h
-  physfs_lzmasdk.h
-  physfs_miniz.h
   physfs_platform_posix.c
   physfs_platform_qnx.c
   physfs_platform_unix.c
   physfs_platform_windows.c
-  physfs_platforms.h
   physfs_unicode.c
 )

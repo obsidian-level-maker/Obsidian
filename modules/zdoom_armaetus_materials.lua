@@ -37,30 +37,33 @@ ARMAETUS_MATERIALS = {
 
   -- Organic / Semi-organic
   ALTASH = { t="ALTASH", f="RROCK03" }, --ASPHALT from Evilution
-  ASH01  = { t="ASH01",  f="FLOOR6_2" }, --ASHWALL2,
-  ASH02  = { t="ASH02",  f="RROCK03" }, --ASHWALL3,
-  ASH03  = { t="ASH03",  f="FLAT10" }, --ASHWALL4,
+  ASH01  = { t="ASH01",  f="FLOOR6_2" }, --ASHWALL2
+  ASH02  = { t="ASH02",  f="RROCK03" }, --ASHWALL3
+  ASH03  = { t="ASH03",  f="FLAT10" }, --ASHWALL4
   ASH04 = { t="ASH04", f="RROCK18" }, --ASHWALL7 variant
   ASH05  = { t="ASH05",  f="FLOOR6_2" }, --ASHWALL
   ASHWALL1  = { t="ASHWALL1", f="RROCK03" }, --ASHWALL2 & ASHWALL3 combo
-  GREEN01 = { t="GREEN01", f="RROCK20" }, --Plutonia 2,
-  GREEN02 = { t="GREEN02", f="RROCK20" }, --Plutonia 2,
-  GREEN03 = { t="GREEN03", f="RROCK20" }, --Plutonia 2,
+  GREEN01 = { t="GREEN01", f="RROCK20" }, --Plutonia 2
+  GREEN02 = { t="GREEN02", f="RROCK20" }, --Plutonia 2
+  GREEN03 = { t="GREEN03", f="RROCK20" }, --Plutonia 2
   VINES1 = { t="VINES1", f="RROCK16" },
   VINES2 = { t="VINES2", f="RROCK16" },
   VINES3 = { t="VINES3", f="RROCK16" },
   VINES4 = { t="VINES4", f="RROCK16" },
-  ZIM1 = { t="ZIM1", f="RROCK20" }, --ZIMMER1,
-  ZIM2 = { t="ZIM2", f="RROCK20" }, --ZIMMER2,
-  ZIM3 = { t="ZIM3", f="RROCK18" }, --ZIMMER3,
-  ZIM4 = { t="ZIM4", f="RROCK18" }, --ZIMMER4,
+  ZIM1 = { t="ZIM1", f="RROCK20" }, --ZIMMER1
+  ZIM2 = { t="ZIM2", f="RROCK20" }, --ZIMMER2
+  ZIM3 = { t="ZIM3", f="RROCK18" }, --ZIMMER3
+  ZIM4 = { t="ZIM4", f="RROCK18" }, --ZIMMER4
+
+  GRNSTONE = { t="GRNSTONE", f="GRNRKF"}, --originally green recolor of ROCKRED
+  GRNRKF = { t="GRNSTONE", f="GRNRKF"},   --now reapproiated as a green glowy crystal
 
   -- Doors
-  BIGDOOR8  = { t="BIGDOOR8",  f="CEIL5_2" }, --Similar to BIGDOOR7,
-  BIGDOOR9  = { t="BIGDOOR9",  f="CEIL5_2" }, --Similar to BIGDOOR7,
-  BIGDOOR0  = { t="BIGDOOR0",  f="CEIL5_2" }, --Similar to BIGDOOR7,
-  BIGDOORA  = { t="BIGDOORA",  f="FLOOR7_1" }, --Similar to BIGDOOR4,
-  BIGDOORB  = { t="BIGDOORB",  f="CEIL5_2" }, --Similar to BIGDOOR7, 64x128,
+  BIGDOOR8  = { t="BIGDOOR8",  f="CEIL5_2" }, --Similar to BIGDOOR7
+  BIGDOOR9  = { t="BIGDOOR9",  f="CEIL5_2" }, --Similar to BIGDOOR7
+  BIGDOOR0  = { t="BIGDOOR0",  f="CEIL5_2" }, --Similar to BIGDOOR7
+  BIGDOORA  = { t="BIGDOORA",  f="FLOOR7_1" }, --Similar to BIGDOOR4
+  BIGDOORB  = { t="BIGDOORB",  f="CEIL5_2" }, --Similar to BIGDOOR7, 64x128
   BIGDOORC  = { t="BIGDOORC",  f="CEIL5_1" },
   BIGDOORD  = { t="BIGDOORD",  f="CEIL5_1" },
   BIGDOORE  = { t="BIGDOORE",  f="FLOOR7_1" },

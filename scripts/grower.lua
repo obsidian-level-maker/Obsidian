@@ -2780,9 +2780,9 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
         local from_area = chunk.from_area --assert(chunk.from_area)
         if not from_area then
-          Seed_dump_rooms()
-          error("Missing staircase area source in ROOM_" .. r.id ..
-          "Please check LOGS.txt for text map and report with it included."
+          gui.printf(table.tostr(cur_rule, 3))
+          error("Missing staircase area source.\n" ..
+          "Please check LOGS.txt for info and report with it included."
           )
         end
         chunk.area.prelim_h = assert(from_area.prelim_h)
