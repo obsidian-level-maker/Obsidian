@@ -3275,6 +3275,101 @@ GROW_COLONNADE_510_STAIRS_TRI =
   }
 },
 
+GROW_COLONNADE_510_FANCY_CEILING_QUAD =
+{
+  prob = 30,
+  skip_prob = 80,
+
+  structure =
+  {
+    "........","111AA111",
+    "........","111AA111",
+    "........","AAA~~AAA",
+    "........","AAA~~AAA",
+    "........","111~~111",
+    "........","111~~111",
+    "........","AAA~~AAA",
+    "........","AAA~~AAA",
+    "........","11111111",
+    "xxxxxx11","xxxxxx11",
+  }
+},
+
+GROW_COLONNADE_510_FANCY_CEILING_OCTO =
+{
+  prob = 30,
+  skip_prob = 80,
+
+  structure =
+  {
+    "........","11111111",
+    "........","11111111",
+    "........","AAA~~AAA",
+    "........","111~~111",
+    "........","AAA~~AAA",
+    "........","111~~111",
+    "........","AAA~~AAA",
+    "........","111~~111",
+    "........","AAA~~AAA",
+    "........","11111111",
+    "xxxxxx11","xxxxxx11",
+  }
+},
+
+GROW_COLONNADE_510_FANCY_CEILING_HORSESHOE =
+{
+  prob = 30,
+  skip_prob = 80,
+
+  structure =
+  {
+    "........","AAAAAAAA",
+    "........","AAAAAAAA",
+    "........","AA/11%AA",
+    "........","AA1~~1AA",
+    "........","AA1~~1AA",
+    "........","AA1~~1AA",
+    "........","AA1~~1AA",
+    "........","A/1~~1%A",
+    "........","/11~~11%",
+    "........","11111111",
+    "xxxxxx11","xxxxxx11",
+  },
+
+  diagonals =
+  {
+    "A1","1A",
+    "A1","1A",
+    "A1","1A",
+  }
+},
+
+GROW_COLONNADE_510_FANCY_CEILING_HORSESHOE_STAIRS =
+{
+  prob = 45,
+  skip_prob = 80,
+
+  structure =
+  {
+    "xxx..xxx","xxx11xxx",
+    "........","AAA11AAA",
+    "........","AAA11AAA",
+    "........","AA/11%AA",
+    "........","AA1~~1AA",
+    "........","AA1~~1AA",
+    "........","AA1~~1AA",
+    "........","^^1~~1^^",
+    "........","^^1~~1^^",
+    "........","11111111",
+    "xxxxxx11","xxxxxx11",
+  },
+
+  diagonals =
+  {
+    "A1","1A",
+  }
+},
+
 GROW_COLONNADE_VAULT =
 {
   prob = 20,
@@ -3351,6 +3446,45 @@ GROW_COLONNADE_VAULT_THICK_PILLARS_NEW_AREA =
     "..........","AA##11##AA",
     "..........","AAA1111AAA",
     "xxxx11xxxx","xxxx11xxxx",
+  }
+},
+
+GROW_COLONNADE_VAULT_ALTERNATING =
+{
+  prob = 30,
+  skip_prob = 75,
+
+  structure =
+  {
+    "........","11111111",
+    "........","11111111",
+    "........","AA#11#AA",
+    "........","AA#11#AA",
+    "........","11111111",
+    "........","11111111",
+    "........","AA#11#AA",
+    "........","AA#11#AA",
+    "........","11111111",
+    "xxxxxx11","xxxxxx11",
+  }
+},
+
+GROW_COLONNADE_VAULT_ALTERNATING_THIN =
+{
+  prob = 35,
+  skip_prob = 75,
+
+  structure =
+  {
+    "........","11111111",
+    "........","11111111",
+    "........","AAA11AAA",
+    "........","11111111",
+    "........","AAA11AAA",
+    "........","11111111",
+    "........","AAA11AAA",
+    "........","11111111",
+    "xxxxxx11","xxxxxx11",
   }
 },
 
