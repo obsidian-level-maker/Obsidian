@@ -524,9 +524,6 @@ function Render_edge(E)
 
 
   local function edge_wall()
-
-    -- TODO : pictures
-
     local skin = {}
 
     skin.wall = assert(E.wall_mat)
