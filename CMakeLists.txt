@@ -134,6 +134,7 @@ add_executable(
 target_include_directories(obsidian PRIVATE source_files/filename_formatter)
 if (USE_FLTK_14)
   target_include_directories(obsidian PRIVATE source_files/fltk14)
+  target_include_directories(obsidian PRIVATE "${PROJECT_BINARY_DIR}/source_files/fltk14")
 else ()
   target_include_directories(obsidian PRIVATE source_files/fltk)
 endif ()
