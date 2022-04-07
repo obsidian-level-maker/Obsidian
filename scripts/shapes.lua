@@ -3557,6 +3557,44 @@ GROW_COLONNADE_STRAIGHT_HALF_VAULT_LONG =
   }
 },
 
+GROW_COLONNADE_STRAIGHT_HALF_VAULT_CORNER =
+{
+  prob = 30,
+  skip_prob = 60,
+
+  structure =
+  {
+    "1.....","111111",
+    "1.....","11AAAA",
+    "x.....","x1AAAA",
+    "x.....","x1AAAA",
+    "x.....","x1AAAA",
+    "x.....","x1AAAA",
+  }
+},
+
+GROW_COLONNADE_STRAIGHT_HALF_VAULT_CORNER_CHAMFERED =
+{
+  prob = 30,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x..xxxx","x11xxxx",
+    "1......","1111111",
+    "1......","11/AAAA",
+    "x......","x1AAAAA",
+    "x......","x1AAAAA",
+    "x......","x1AAAAA",
+    "x......","x1AAAAA",
+  },
+
+  diagonals =
+  {
+    "1A"
+  }
+},
+
 GROW_COLONNADE_STRAIGHT_VAULT =
 {
   prob = 30,
