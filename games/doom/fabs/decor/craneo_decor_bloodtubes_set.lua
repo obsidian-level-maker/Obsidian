@@ -48,5 +48,10 @@ PREFABS.Decor_craneo_bloodtubes_hell =
   tex_BROWNGRN = "MARBLE1",
   flat_FLAT23 = "SFLR6_4",
 
+  tex_EXITDOOR = "METAL",
+  tex_METAL2 = "GSTONE1",
+  tex_METAL3 = "GSTONE1",
+  tex_DOORSTOP = "METAL",
+
   thing_9028 = 9027
 }
