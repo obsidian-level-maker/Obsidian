@@ -3,7 +3,6 @@ PREFABS.Trap_gtd_closet_vanillapic_tech =
   file = "trap/gtd_trap_vanillapic.wad",
   map = "MAP01",
 
-  rank = 1,
   prob = 50,
 
   theme = "tech",
