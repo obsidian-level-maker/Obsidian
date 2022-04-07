@@ -3,6 +3,7 @@ PREFABS.Trap_gtd_closet_vanillapic_tech =
   file = "trap/gtd_trap_vanillapic.wad",
   map = "MAP01",
 
+  rank = 1,
   prob = 50,
 
   theme = "tech",
@@ -20,13 +21,11 @@ PREFABS.Trap_gtd_closet_vanillapic_tech =
 
   deep = 16,
 
-  x_fit = { 120,136 },
+  x_fit = {20,60 , 196,236},
   y_fit = { 56,72 },
 
   bound_z1 = 0,
   bound_z2 = 128,
-
-  tag_1 = "?trap_tag",
 
   tex_METAL = "DOORSTOP",
   tex_COMPSTA1 =
@@ -36,9 +35,9 @@ PREFABS.Trap_gtd_closet_vanillapic_tech =
     LITEBLU1 = 5,
     SPACEW3 = 5,
   },
-  flat_CEIL5_2 = "FLAT23",
+  flat_CEIL5_2 = "FLAT20",
 
-  x_fit = {20,60 , 196,236}
+  tag_1 = "?trap_tag"
 }
 
 PREFABS.Trap_gtd_closet_vanillapic_urban =
