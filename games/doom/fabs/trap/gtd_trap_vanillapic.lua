@@ -1,4 +1,4 @@
-PREFABS.Trap_gtd_closet_vanillapic_tech =
+--[[PREFABS.Trap_gtd_closet_vanillapic_tech =
 {
   file = "trap/gtd_trap_vanillapic.wad",
   map = "MAP01",
@@ -75,3 +75,4 @@ PREFABS.Trap_gtd_closet_vanillapic_hell =
   },
   flat_CEIL5_2 = "CEIL5_2"
 }
+]]
