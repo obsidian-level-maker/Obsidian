@@ -28,7 +28,7 @@ PREFABS.Item_sealed_armory_room_keyed =
   template = "Item_sealed_armory_room_regular",
   map      = "MAP01",
 
-  theme = "zdoom"
+  theme = "zdoom",
   item_kind = "key",
 
   rank   = 2,
@@ -42,7 +42,7 @@ PREFABS.Item_sealed_armory_room_keyed_limit =
   template = "Item_sealed_armory_room_regular",
   map      = "MAP01",
 
-  theme = "!zdoom"
+  theme = "!zdoom",
   item_kind = "key",
 
   rank   = 2,
