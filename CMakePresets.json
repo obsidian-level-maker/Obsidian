@@ -2,9 +2,17 @@
   "version": 3,
   "configurePresets": [
     {
+      "name": "fltk-14",
+      "hidden": true,
+      "cacheVariables": {
+        "USE_FLTK_14": "ON"
+      }
+    },
+    {
       "name": "dev",
       "binaryDir": "build",
       "generator": "Ninja",
+      "inherits": "fltk-14",
       "cacheVariables": {
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "CMAKE_BUILD_TYPE": "Debug",
