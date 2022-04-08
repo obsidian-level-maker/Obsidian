@@ -70,18 +70,6 @@ if (UNIX)
   endif (OPTION_USE_WAYLAND)
 endif (UNIX)
 
-if (WIN32)
-  if (NOT MSYS)
-    option (OPTION_USE_GDIPLUS "use GDI+ when possible for antialiased graphics" ON)
-    if (OPTION_USE_GDIPLUS)
-      set (USE_GDIPLUS TRUE)
-      if (NOT MSVC)
-        list (APPEND FLTK_LDLIBS "-lgdiplus")
-      endif (NOT MSVC)
-    endif (OPTION_USE_GDIPLUS)
-  endif()
-endif (WIN32)
-
 #######################################################################
 if (APPLE)
   option (OPTION_APPLE_X11 "use X11" OFF)

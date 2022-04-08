@@ -169,6 +169,18 @@ class UI_RChoiceMenu : public UI_CustomMenu {
     void GotoNext();
 };
 
+class UI_RHeader : public Fl_Group {
+   private:
+   public:
+    UI_RHeader(int x, int y, int w, int h);
+    virtual ~UI_RHeader();
+
+   public:
+    Fl_Box *mod_label;
+
+   private:
+};
+
 class UI_RChoice : public Fl_Group {
    private:
    public:
