@@ -3315,12 +3315,7 @@ function Quest_room_themes()
     LEVEL.exit_scenic_fence_mat = GAME.MATERIALS[
       rand.key_by_probs(GAME.THEMES[next_theme].scenic_fences)
       ]
-
-    for _,R in pairs(LEVEL.rooms) do 
-      if R.is_exit and not R.is_secret then
-        R.fence_group = rand.key_by_probs(GAME.THEMES[next_theme].fence_groups)
-      end
-    end
+    LEVEL.exit_fence = rand.key_by_probs(GAME.THEMES[next_theme].fence_groups)
 
     if exit_room.is_outdoor and not exit_room.is_park then
       exit_room.exit_facade = rand.key_by_probs(f_tab)

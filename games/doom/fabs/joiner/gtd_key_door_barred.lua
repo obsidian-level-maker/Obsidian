@@ -1,6 +1,6 @@
 PREFABS.Locked_gtd_door_barred_red_EPIC =
 {
-  file   = "door/gtd_key_door_barred.wad",
+  file = "joiner/gtd_key_door_barred.wad",
   map = "MAP01",
   theme = "!hell",
 
@@ -20,6 +20,7 @@ PREFABS.Locked_gtd_door_barred_red_EPIC =
   over = 16,
 
   x_fit = { 96,104 , 152,160 },
+  y_fit = { 76,84 },
 
   tex_BIGDOORC = 
   {

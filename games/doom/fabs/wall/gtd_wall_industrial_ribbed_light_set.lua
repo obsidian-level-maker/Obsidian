@@ -120,7 +120,7 @@ PREFABS.Wall_gtd_ribbed_lights_tekmachine =
 
   group = "gtd_ribbed_lights_tekmachine",
 
-  tex_LITE5 = "DOORSTOP",
+  tex_SHAWN2 = "METAL",
   tex_TEKLITE2 = "TEKWALL4"
 }
 
@@ -133,7 +133,7 @@ PREFABS.Wall_gtd_ribbed_lights_tekmachine_diag =
 
   group = "gtd_ribbed_lights_tekmachine",
 
-  tex_LITE5 = "DOORSTOP",
+  tex_SHAWN2 = "METAL",
   tex_TEKLITE2 = "TEKWALL4"
 }
 
@@ -145,6 +145,7 @@ PREFABS.Wall_gtd_ribbed_lights_tekmachine_alt =
 
   group = "gtd_ribbed_lights_tekmachine_alt",
 
+  flat_FLAT17 = "TLITE6_4",
   tex_LITEBLU1 = "LITE3"
 }
 
@@ -157,6 +158,6 @@ PREFABS.Wall_gtd_ribbed_lights_tekmachine_alt_diag =
 
   group = "gtd_ribbed_lights_tekmachine_alt",
 
+  flat_FLAT17 = "TLITE6_4",
   tex_LITEBLU1 = "LITE3"
-
 }

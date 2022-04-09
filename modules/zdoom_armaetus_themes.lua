@@ -3820,6 +3820,120 @@ ARMAETUS_ROOM_THEMES =
       TILES5 = 20,
       TILES6 = 20
     }
+  },
+
+  urban_whiteWallsDarkFloors =
+  {
+    env = "building",
+    prob = 30,
+
+    floors =
+    {
+      CEIL5_1 = 50,
+
+      BMARB1 = 50,
+      BMARB2 = 50,
+      BMARB3 = 50,
+      DARKF03 = 50,
+      DARKM01 = 50,
+      G07 = 50,
+      G08 = 50,
+      G15 = 50,
+      G16 = 50,
+      G18 = 50,
+      G19 = 50,
+
+      GMET01 = 50,
+      GMET02 = 50,
+      GMET03 = 50,
+      GMET04 = 50,
+      GMET05 = 50,
+
+      GRATE2 = 50,
+      GRATE3 = 50,
+      GRATE4 = 50,
+      GRATE7 = 50,
+      GRATE8 = 50,
+      QFLAT09 = 50,
+
+      OBTSVFB1 = 50,
+      OBTSVFB2 = 50,
+      OBTSVFB3 = 50,
+    },
+
+    ceilings =
+    {
+      CEIL5_1 = 50,
+
+      BMARB1 = 50,
+      BMARB2 = 50,
+      BMARB3 = 50,
+      DARKF03 = 50,
+      DARKM01 = 50,
+      G07 = 50,
+      G08 = 50,
+      G15 = 50,
+      G16 = 50,
+      G18 = 50,
+      G19 = 50,
+
+      GMET01 = 50,
+      GMET02 = 50,
+      GMET03 = 50,
+      GMET04 = 50,
+      GMET05 = 50,
+
+      GRATE2 = 50,
+      GRATE3 = 50,
+      GRATE4 = 50,
+      GRATE7 = 50,
+      GRATE8 = 50,
+      QFLAT09 = 50,
+
+      OBTSVFB1 = 50,
+      OBTSVFB2 = 50,
+      OBTSVFB3 = 50,
+    },
+
+    walls =
+    {
+      GRAY1 = 15,
+      GRAY4 = 15,
+      GRAY5 = 15,
+      GRAY7 = 15,
+      GRAYBIG = 15,
+      SHAWN2 = 15,
+      STARGR1 = 15,
+      
+      BIGSTONE = 25,
+      BRIKS32 = 25,
+      BRICKS34 = 50,
+      BROWN2 = 50,
+      BROWN3 = 50,
+      CEM10 = 50,
+
+      GRAY6 = 50,
+      GRAY8 = 50,
+      GRAY9 = 50,
+      HEX01 = 25,
+
+      SHAWGRY4 = 20,
+      SHAWN01C = 20,
+      SHAWN01D = 20,
+      SHAWN01E = 20,
+      SHAWN01F = 20,
+      SHAWN4 = 20,
+      SHAWN5 = 20,
+      SHAWSH04 = 20,
+
+      SNOWWAL1 = 20,
+      SNOWWAL2 = 20,
+      SNOWWAL3 = 20,
+      SNOWWAL4 = 10,
+
+      TEKGRY01 = 50,
+      TEKSHAW = 50,
+    }
   }
 
 -- END OF THEMES TABLES

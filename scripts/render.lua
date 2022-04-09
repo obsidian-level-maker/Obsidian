@@ -416,6 +416,11 @@ function Render_edge(E)
       seed_w = assert(E.long)
     }
 
+    if E.area and E.area.room 
+    and E.area.room.is_exit and LEVEL.exit_fence then
+      reqs.group = LEVEL.exit_fence
+    end
+
     if geom.is_corner(dir) then
       reqs.where = "diagonal"
       reqs.seed_h = reqs.seed_w
@@ -519,9 +524,6 @@ function Render_edge(E)
 
 
   local function edge_wall()
-
-    -- TODO : pictures
-
     local skin = {}
 
     skin.wall = assert(E.wall_mat)

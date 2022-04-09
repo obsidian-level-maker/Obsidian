@@ -31,3 +31,11 @@ PREFABS.Wall_gtd_DMV_door =
 
   prob = 8
 }
+
+PREFABS.Wall_gtd_DMV_diag =
+{
+  template = "Wall_gtd_DMV",
+  map = "MAP04",
+
+  where = "diagonal"
+}
