@@ -2306,6 +2306,13 @@ function Room_choose_size(R, not_big)
       end
     end
 
+  elseif not LEVEL.is_procedural_gotcha then
+
+    if R.is_start then
+      R.size_limit = R.size_limit / 2
+      R.floor_limit = R.floor_limit / 2
+    end
+
   end
 
   if R.is_street then
