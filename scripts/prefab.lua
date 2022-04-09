@@ -1352,7 +1352,7 @@ function Fab_load_wad(def)
         if not C2.special then C2.special = 0 end
       end
       
-      C.act = bit.band(flags, 0x1C00) >> 10
+      C.act = bit.rshift(bit.band(flags, 0x1C00), 10)
 
       upper_unpeg = (bit.band(flags, MLF_UpperUnpegged) ~= 0)
       lower_unpeg = (bit.band(flags, MLF_LowerUnpegged) ~= 0)

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12..3.20)
 
 include(cmake/CPM.cmake)
 
-option(USE_FLTK_14 "Build with FLTK 1.4" OFF)
+option(USE_FLTK_14 "Build with FLTK 1.4" ON)
 
 add_subdirectory(source_files/filename_formatter)
 if (USE_FLTK_14)
@@ -139,7 +139,7 @@ else ()
   target_include_directories(obsidian PRIVATE source_files/fltk)
 endif ()
 target_include_directories(obsidian PRIVATE source_files/gif-h)
-target_include_directories(obsidian PRIVATE source_files/lua)
+target_include_directories(obsidian PRIVATE source_files/lua/src)
 target_include_directories(obsidian PRIVATE source_files/miniz)
 target_include_directories(obsidian PRIVATE source_files/physfs)
 target_include_directories(obsidian PRIVATE source_files/slump)
@@ -175,12 +175,12 @@ add_dependencies(obsidian qsavetex)
 
 if(UNIX)
   target_link_libraries(
-    obsidian PRIVATE filename_formatter fltk fltk_images miniz obsidian_lua obsidian_physfs obsidian_zdbsp
+    obsidian PRIVATE filename_formatter fltk fltk_images miniz libluajit obsidian_physfs obsidian_zdbsp
                      obsidian_slump fontconfig
   )
 else()
   target_link_libraries(
-    obsidian PRIVATE filename_formatter fltk fltk_images miniz obsidian_lua obsidian_physfs obsidian_zdbsp
+    obsidian PRIVATE filename_formatter fltk fltk_images miniz libluajit obsidian_physfs obsidian_zdbsp
                      obsidian_slump
   )
 endif()

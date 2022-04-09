@@ -1538,7 +1538,9 @@ static int my_loadfile(lua_State *L, const std::filesystem::path &filename) {
         return LUA_ERRFILE;
     }
 
-    int status = lua_load(L, my_reader, &info, lua_tostring(L, -1), "bt");
+    //int status = lua_load(L, my_reader, &info, lua_tostring(L, -1), "bt");
+
+    int status = lua_load(L, my_reader, &info, lua_tostring(L, -1));
 
     /* close file (even in case of errors) */
     PHYSFS_close(info.fp);
