@@ -1791,6 +1791,14 @@ function Area_find_inner_points()
     collect_inner_points(A)
 
     A.openness = #A.inner_points / A.svolume
+    if A.room then
+      local R = A.room
+      if not R.openness then
+        R.openness = A.openness
+      else
+        R.openness = (R.openness + A.openness) / 2
+      end
+    end
   end
 end
 

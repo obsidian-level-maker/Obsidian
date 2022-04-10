@@ -998,26 +998,22 @@ function Monster_fill_room(R)
     gui.debugf("raw quantity in %s --> %1.2f\n", R.name, qty)
 --]]
 
-    -- MSSP: experiment; more monsters in big rooms with multiple platforms
-    -- even larger numbers if it has floor areas of a significant height
-    -- and distance from the initial entry point
-
-    -- R.trunk flag ensures ganking is unlikely on teleporter-entry rooms
-    if R.is_big and (R.grow_parent and not R.grow_parent:has_teleporter()) then
-      local total_extra = 0
-      for _,A in pairs(R.areas) do
-        if A.mode == "floor" then
-          local area_score = int(A.svolume / 16)
-          local height_score = math.abs(A.floor_h - R.entry_h) / 128 * 1.5
-          -- local distance_score
-
-          local extra = int(area_score * height_score)
-          qty = qty + extra
-
-          total_extra = total_extra + extra
-        end
+    -- prioritize denser monster placement in rooms with more
+    -- varying and radical elevations
+    local stair_score = #R.stairs * 0.075
+    local height_score = 0
+    for _,stair in pairs(R.stairs) do
+      if stair.prefab_def.delta_h then
+        height_score = height_score + stair.prefab_def.delta_h
       end
     end
+    height_score = (height_score / 128) * 0.075
+
+    -- local distance_score
+    qty = int(qty * (1 + stair_score + height_score))
+
+    -- give a bonus increase to monsters in less open rooms.
+    qty = int(qty * 1 + (math.abs(math.clamp(0, R.openness-1, -0.5) * 2)))
 
     -- a small random adjustment
     qty = qty * rand.range(0.9, 1.1)
