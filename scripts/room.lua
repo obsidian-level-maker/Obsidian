@@ -2172,6 +2172,12 @@ function Room_choose_size(R, not_big)
   end
 
   local sum = LEVEL.map_W * 2/3 + rand.range( 10,50 )
+  if not R.grow_parent and not R.is_start then
+    if not table.empty(R.teleporters) then
+      gui.printf(table.tostr(R))
+      error("heya: telly porters!")
+    end
+  end
 
   -- some extra size experiments - should be revised for
   -- more direct control. In fact, maybe this whole size
@@ -2309,8 +2315,8 @@ function Room_choose_size(R, not_big)
   elseif not LEVEL.is_procedural_gotcha then
 
     if R.is_start then
-      R.size_limit = R.size_limit / 2
-      R.floor_limit = R.floor_limit / 2
+      R.size_limit = int(R.size_limit / 3)
+      R.floor_limit = int(R.floor_limit / 3)
     end
 
   end
