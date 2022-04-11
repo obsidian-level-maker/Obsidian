@@ -2311,7 +2311,7 @@ function Room_choose_size(R, not_big)
 
     if R.is_start then
       R.size_limit = int(R.size_limit / 3)
-      R.floor_limit = int(R.floor_limit / 3)
+      R.floor_limit = int(R.floor_limit / 2)
     end
 
   end
@@ -2327,7 +2327,7 @@ function Room_choose_size(R, not_big)
   if (not R.grow_parent and not R.is_start)
   or (R.grow_parent and R.grow_parent.is_hallway) then
     R.size_limit = int(R.size_limit / 5)
-    R.floor_limit = int(R.floor_limit / 5)
+    R.floor_limit = int(R.floor_limit / 2)
     R.is_big = false
   end
 end
