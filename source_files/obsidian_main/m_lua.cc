@@ -526,6 +526,39 @@ int gui_show_module(lua_State *L) {
 
 // LUA: add_module_option(module, option, label, tooltip, gap, randomize_group)
 //
+int gui_add_module_header(lua_State *L) {
+    std::string module = luaL_optstring(L, 1, "");
+    std::string option = luaL_optstring(L, 2, "");
+
+    std::string label = luaL_optstring(L, 3, "");
+
+    int gap = luaL_optinteger(L, 4, 0);
+
+    SYS_ASSERT(!module.empty() && !option.empty());
+
+    if (!main_win) {
+        return 0;
+    }
+
+    // only allowed during startup
+    if (has_added_buttons) {
+        Main::FatalError(
+            "Script problem: gui.add_module_header called late.\n");
+    }
+
+    // FIXME : error if module is unknown
+
+    main_win->left_mods->AddHeader(module, option, label, gap);
+
+    if (!single_pane) {
+        main_win->right_mods->AddHeader(module, option, label, gap);
+    }
+
+    return 0;
+}
+
+// LUA: add_module_option(module, option, label, tooltip, gap, randomize_group)
+//
 int gui_add_module_option(lua_State *L) {
     std::string module = luaL_optstring(L, 1, "");
     std::string option = luaL_optstring(L, 2, "");
@@ -1208,6 +1241,7 @@ static const luaL_Reg gui_script_funcs[] = {
     {"show_module", gui_show_module},
     {"set_module", gui_set_module},
 
+    {"add_module_header", gui_add_module_header},
     {"add_module_option", gui_add_module_option},
     {"add_module_slider_option", gui_add_module_slider_option},
     {"add_module_button_option", gui_add_module_button_option},
@@ -1504,7 +1538,9 @@ static int my_loadfile(lua_State *L, const std::filesystem::path &filename) {
         return LUA_ERRFILE;
     }
 
-    int status = lua_load(L, my_reader, &info, lua_tostring(L, -1), "bt");
+    //int status = lua_load(L, my_reader, &info, lua_tostring(L, -1), "bt");
+
+    int status = lua_load(L, my_reader, &info, lua_tostring(L, -1));
 
     /* close file (even in case of errors) */
     PHYSFS_close(info.fp);

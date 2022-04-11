@@ -1669,7 +1669,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
 
   name = "procedural_gotcha_zdoom",
 
-  label = _("ZDoom Procedural Gotchas"),
+  label = _("Procedural Gotchas"),
 
   engine = "zdoom",
   side = "right",
@@ -1688,6 +1688,11 @@ OB_MODULES["procedural_gotcha_zdoom"] =
 
   options =
   {
+
+    {
+      name = "header_gotchaoptions",
+      label = _("Regular Gotcha Options"),
+    },
 
      {
       name="gotcha_frequency",
@@ -1747,31 +1752,22 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       tooltip = "Size of the procedural gotcha. Start and arena room sizes are relative to map size as well.",
       priority = 102,
       randomize_group="monsters",
+      gap = 1
     },
-
 
     {
-      name = "boss_gen_steepness",
-      label = _("Arena Steepness"),
-      choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.ARENA_STEEPNESS,
-      default = "none",
-      tooltip = "Influences steepness settings for boss arenas. " ..
-      "Boss arena steepness is capped to be less intrusive to boss movement.",
-      priority = 101,
-      gap = 1,
-      randomize_group="monsters",
+      name = "header_bossoptions",
+      label = _("ZScript Generated Boss Options"),
     },
-
 
     {
       name = "bool_boss_gen",
-      label=_("[ZScript] Enable Procedural Bosses"),
+      label=_("Enable Procedural Bosses"),
       valuator = "button",
       default = 1,
-      tooltip = "Toggles Boss Monster generation with special traits for Gotchas. ZScript only.",
-      priority = 100,
+      tooltip = "Toggles Boss Monster generation with special traits for Gotchas.",
+      priority = 101,
     },
-
 
     {
       name = "bool_gotcha_boss_fight",
@@ -1780,10 +1776,21 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       default = 1,
       tooltip = "EXPERIMENTAL: Attempts to guarantee a fight against a boss-type (nasty tier) monster " ..
       "in the procedural gotcha.",
-      priority = 99,
+      priority = 100,
       randomize_group="monsters",
     },
 
+    {
+      name = "boss_gen_steepness",
+      label = _("Arena Steepness"),
+      choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.ARENA_STEEPNESS,
+      default = "none",
+      tooltip = "Influences steepness settings for boss arenas. " ..
+      "Boss arena steepness is capped to be less intrusive to boss movement.",
+      priority = 99,
+      gap = 1,
+      randomize_group="monsters",
+    },
 
     {
       name = "boss_gen_diff",

@@ -833,7 +833,7 @@ function ob_read_all_config(need_full, log_only)
   do_line("-- josh771")
   do_line("-- dashodanger")
   do_line("-- Phytolizer")
-  do_line("-- https://github.com/caligari87/ObAddon/\n")
+  do_line("-- https://github.com/dashodanger/Obsidian/\n")
 
   if OB_CONFIG.seed and OB_CONFIG.seed ~= 0 then
     if OB_CONFIG.string_seed then
@@ -864,6 +864,7 @@ function ob_read_all_config(need_full, log_only)
       do_line("")
 
       for _,opt in pairs(def.options) do
+        if string.match(opt.name, "header_") then goto justaheader end
         if string.match(opt.name, "float_") then
             if OB_CONFIG.batch == "yes" then
               if OB_CONFIG[opt.name] then
@@ -898,6 +899,7 @@ function ob_read_all_config(need_full, log_only)
             do_value(opt.name, opt.value)
           end
         end
+        ::justaheader::
       end
 
       do_line("")
@@ -921,6 +923,7 @@ function ob_read_all_config(need_full, log_only)
       if def.options and not table.empty(def.options) then
         if def.options[1] then
           for _,opt in pairs(def.options) do
+            if string.match(opt.name, "header_") then goto justaheader end
             if string.match(opt.name, "float_") then
                 if OB_CONFIG.batch == "yes" then
                   if OB_CONFIG[opt.name] then
@@ -955,6 +958,7 @@ function ob_read_all_config(need_full, log_only)
                 do_mod_value(opt.name, opt.value)
               end
             end
+            ::justaheader::
           end
         else
           for o_name,opt in pairs(def.options) do
@@ -1142,7 +1146,7 @@ function ob_init()
   gui.printf("        Phytolizer\n")
   gui.printf("    And All of Our Fans!\n\n")
   gui.printf("--------------------------------------------\n")
-  gui.printf("-- https://github.com/caligari87/ObAddon/ --\n")
+  gui.printf("-- https://github.com/dashodanger/Obsidian/ --\n")
   gui.printf("--------------------------------------------\n\n")
 
   gui.printf("~~ Obsidian Lua initialization begun ~~\n\n")
@@ -1290,6 +1294,10 @@ function ob_init()
 
         for _,opt in pairs(list) do
           assert(opt.label)
+          if string.match(opt.name, "header_") then
+            gui.add_module_header(mod.name, opt.name, opt.label, opt.gap)
+            goto justaheader
+          end
           if not opt.valuator then
             assert(opt.choices)
           end
@@ -1338,6 +1346,7 @@ function ob_init()
             opt.value = opt.default
             gui.set_module_option(mod.name, opt.name, opt.value)
           end
+          ::justaheader::
         end -- for opt
       end
     end -- for mod

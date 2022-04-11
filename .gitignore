@@ -16,7 +16,7 @@ LOGS*.zip
 tmp.wad
 
 # VS Code
-build*/
+build/
 .cache/
 .vscode/
 

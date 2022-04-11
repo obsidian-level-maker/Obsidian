@@ -46,6 +46,8 @@ class UI_Module : public Fl_Group {
 
     std::map<std::string, UI_RButton *> choice_map_button;
 
+    std::map<std::string, UI_RHeader *> choice_map_header;
+
     UI_CustomCheckBox *mod_button;
 
    private:
@@ -61,6 +63,8 @@ class UI_Module : public Fl_Group {
 
     void AddOption(std::string option, std::string label, std::string tip,
                    std::string longtip, int gap, std::string randomize_group);
+
+    void AddHeader(std::string option, std::string label, int gap);
 
     void AddSliderOption(std::string option, std::string label, std::string tip,
                          std::string longtip, int gap, double min, double max,
@@ -139,6 +143,9 @@ class UI_CustomMods : public Fl_Group {
     // these return false if module is unknown
     bool ShowModule(std::string id, bool new_shown);
     bool EnableMod(std::string id, bool enable);
+
+    bool AddHeader(std::string module, std::string option, std::string label,
+                   int gap);
 
     bool AddOption(std::string module, std::string option, std::string label,
                    std::string tip, std::string longtip, int gap,

@@ -193,6 +193,7 @@ end
 
 function module_param_up(module)
   for _,opt in pairs(module.options) do
+    if string.match(opt.name, "header_") then goto justaheader end
     if OB_CONFIG.batch == "yes" then
       if opt.valuator then
         if opt.valuator == "slider" then 
@@ -250,6 +251,7 @@ function module_param_up(module)
         PARAM[opt.name] = opt.value
       end
     end
+    ::justaheader::
   end
 end
 

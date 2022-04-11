@@ -91,6 +91,40 @@ typedef struct {
     std::string opt_name;
 } opt_change_callback_data_t;
 
+void UI_Module::AddHeader(std::string opt, std::string label, int gap) {
+    int nw = this->parent()->w();
+
+    int nx = x() + kf_w(6);
+    int ny = y() + cur_opt_y - kf_h(15);
+
+    UI_RHeader *rhead = new UI_RHeader(nx, ny + kf_h(15), nw * .95,
+                                     (!single_pane ? kf_h(48) : kf_h(24)));
+
+    rhead->mod_label = new Fl_Box(
+        rhead->x(), rhead->y(), (!single_pane ? rhead->w() * .95 : rhead->w() * .40),
+        kf_h(24), "");
+    rhead->mod_label->copy_label(label.c_str());
+    rhead->mod_label->align(
+        (!single_pane ? (FL_ALIGN_CENTER | FL_ALIGN_INSIDE)
+                      : (FL_ALIGN_CENTER | FL_ALIGN_INSIDE | FL_ALIGN_CLIP)));
+    rhead->mod_label->labelfont(font_style + 1);
+    rhead->mod_label->labelsize(header_font_size - 2);
+
+    if (!mod_button->value()) {
+        rhead->hide();
+    }
+
+    add(rhead);
+
+    cur_opt_y += (!single_pane ? (gap ? kf_h(44) : kf_h(30))
+                               : (gap ? kf_h(39) : kf_h(25)));
+
+    resize(x(), y(), w(), CalcHeight());
+    redraw();
+
+    choice_map_header[opt] = rhead;
+}
+
 void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
                           std::string longtip, int gap,
                           std::string randomize_group) {
@@ -402,6 +436,7 @@ void UI_Module::update_Enable() {
     std::map<std::string, UI_RChoice *>::const_iterator IT;
     std::map<std::string, UI_RSlide *>::const_iterator IT2;
     std::map<std::string, UI_RButton *>::const_iterator IT3;
+    std::map<std::string, UI_RHeader *>::const_iterator IT4;
 
     for (IT = choice_map.begin(); IT != choice_map.end(); IT++) {
         UI_RChoice *M = IT->second;
@@ -427,6 +462,16 @@ void UI_Module::update_Enable() {
     for (IT3 = choice_map_button.begin(); IT3 != choice_map_button.end();
          IT3++) {
         UI_RButton *M = IT3->second;
+        if (mod_button->value()) {
+            M->show();
+        } else {
+            M->hide();
+        }
+    }
+
+    for (IT4 = choice_map_header.begin(); IT4 != choice_map_header.end();
+         IT4++) {
+        UI_RHeader *M = IT4->second;
         if (mod_button->value()) {
             M->show();
         } else {
@@ -888,6 +933,21 @@ void UI_CustomMods::AddModule(std::string id, std::string label,
     mod_pack->add(M);
 
     PositionAll();
+}
+
+bool UI_CustomMods::AddHeader(std::string module, std::string option,
+                              std::string label, int gap) {
+    UI_Module *M = FindID(module);
+
+    if (!M) {
+        return false;
+    }
+
+    M->AddHeader(option, label, gap);
+
+    PositionAll();
+
+    return true;
 }
 
 bool UI_CustomMods::AddOption(std::string module, std::string option,

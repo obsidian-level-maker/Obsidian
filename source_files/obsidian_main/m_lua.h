@@ -24,7 +24,7 @@
 #include <string>
 #include <vector>
 
-#include "../lua/lua.hpp"
+#include "../lua/src/lua.hpp"
 #include "sys_type.h"
 
 typedef struct lua_State lua_State;
