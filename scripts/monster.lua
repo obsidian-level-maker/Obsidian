@@ -1000,20 +1000,23 @@ function Monster_fill_room(R)
 
     -- prioritize denser monster placement in rooms with more
     -- varying and radical elevations
-    local stair_score = #R.stairs * 0.075
+    local stair_score = 1 + (#R.stairs * 0.075)
     local height_score = 0
     for _,stair in pairs(R.stairs) do
       if stair.prefab_def.delta_h then
         height_score = height_score + stair.prefab_def.delta_h
       end
     end
-    height_score = (height_score / 128) * 0.075
+    height_score = 1 + ((height_score / 128) * 0.075)
 
     -- local distance_score
-    qty = int(qty * (1 + stair_score + height_score))
+    qty = int(qty * (stair_score * height_score))
+    gui.debugf("Extra density per stair score in ROOM_" .. R.id .. ": " .. stair_score * height_score .. "\n")
 
     -- give a bonus increase to monsters in less open rooms.
-    qty = int(qty * 1 + (math.abs(math.clamp(0, R.openness-1, -0.5) * 2)))
+    local tightness_score = math.clamp(0, 1 - R.openness - 0.4, 0.5)
+    qty = int(qty * (1 + tightness_score * 2))
+    gui.debugf("Extra density per openness in ROOM_" .. R.id .. ": " .. 1 + tightness_score * 2 .. "\n")
 
     -- a small random adjustment
     qty = qty * rand.range(0.9, 1.1)
