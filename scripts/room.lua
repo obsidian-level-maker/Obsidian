@@ -2172,12 +2172,7 @@ function Room_choose_size(R, not_big)
   end
 
   local sum = LEVEL.map_W * 2/3 + rand.range( 10,50 )
-  if not R.grow_parent and not R.is_start then
-    if not table.empty(R.teleporters) then
-      gui.printf(table.tostr(R))
-      error("heya: telly porters!")
-    end
-  end
+
 
   -- some extra size experiments - should be revised for
   -- more direct control. In fact, maybe this whole size
@@ -2328,9 +2323,12 @@ function Room_choose_size(R, not_big)
     R.is_outdoor = true
   end
 
-  if R.is_sub_room then
-    R.size_limit = rand.irange(5,15)
-    R.floor_limit = rand.pick({1,1,2,3})
+  -- tame teleporter trunks and hallway exits
+  if (not R.grow_parent and not R.is_start)
+  or (R.grow_parent and R.grow_parent.is_hallway) then
+    R.size_limit = int(R.size_limit / 5)
+    R.floor_limit = int(R.floor_limit / 5)
+    R.is_big = false
   end
 end
 
