@@ -5675,7 +5675,7 @@ GROW_CAUSEWAY_CORNER_LIQUID_OUTER =
   diagonals =
   {
          "1~",
-    "1~","1A",
+    "1~","~A",
   },
 },
 
