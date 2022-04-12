@@ -26,6 +26,7 @@ PREFABS.Hallway_mineshaft_c3 =
   template = "Hallway_mineshaft_c",
   map = "MAP03",
 
-  texture_pack = "armaetus",
+  style = "traps",
 
+  texture_pack = "armaetus"
 }

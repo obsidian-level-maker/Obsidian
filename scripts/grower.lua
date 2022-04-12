@@ -1771,7 +1771,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
 
     if R.is_street then return 0 end
 
-    if LEVEL.has_linear_start 
+    if (LEVEL.has_linear_start or LEVEL.is_linear)
     and R.is_start then return 0 end
 
     if R.is_outdoor then
