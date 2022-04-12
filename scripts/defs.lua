@@ -445,8 +445,9 @@ ROOM_AREA_MULTIPLIER_MIXED_PROBS =
 
 SIZE_CONSISTENCY_MIXED_PROBS =
 {
-  strict = 25,
-  normal = 75
+  strict = 15,
+  bounded = 25,
+  normal = 60
 }
 
 -- outdoor sky sector brightness
