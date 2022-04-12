@@ -1013,17 +1013,17 @@ function Monster_fill_room(R)
     height_score = math.clamp(1, height_score, 1.5)
 
     -- local distance_score
-    gui.printf("Extra density per elevation complexity in ROOM_" .. 
+    gui.debugf("Extra density per elevation complexity in ROOM_" .. 
       R.id .. ": " .. stair_score .. ", " .. height_score .. "\n")
 
     -- give a bonus increase to monsters in less open rooms.
     local tightness_score = math.clamp(0, 1 - R.openness - 0.4, 0.5)
     tightness_score = 1 + (tightness_score * 1.5)
-    gui.printf("Extra density per openness in ROOM_" .. 
+    gui.debugf("Extra density per openness in ROOM_" .. 
       R.id .. ": " .. tightness_score .. "\n")
 
     local complexity_score = (stair_score + height_score + tightness_score) / 3
-    gui.printf("Final complexity score for ROOM_" .. R.id .. ": " .. complexity_score .. "\n" )
+    gui.debugf("Final complexity score for ROOM_" .. R.id .. ": " .. complexity_score .. "\n" )
 
     qty = qty * math.clamp(1, complexity_score, 2) 
 
@@ -1043,7 +1043,7 @@ function Monster_fill_room(R)
       qty = qty * rand.range(0.5, 0.8)
     end
 
-    gui.printf("ROOM_" .. R.id .. ", Mon quantity = " .. qty .. "\n")
+    gui.debugf("ROOM_" .. R.id .. ", Mon quantity = " .. qty .. "\n")
     return qty
   end
 
