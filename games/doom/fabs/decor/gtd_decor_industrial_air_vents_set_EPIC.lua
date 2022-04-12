@@ -35,7 +35,7 @@ PREFABS.Decor_air_vent_tetromino_curve =
   map = "MAP03",
 
   size = 128,
-  height = 80,
+  height = 81,
 
-  bound_z2 = 80
+  bound_z2 = 81
 }
