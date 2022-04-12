@@ -1603,9 +1603,13 @@ void Script_Open() {
 
     // load main scripts
 
-    LogPrintf("Loading main script: oblige.lua\n");
-
     import_dir = "scripts";
+
+    LogPrintf("Loading initial script: init.lua\n");
+
+    Script_Load("init.lua");
+
+    LogPrintf("Loading main script: oblige.lua\n");
 
     Script_Load("oblige.lua");
 
