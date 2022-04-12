@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12..3.20)
 
 include(cmake/CPM.cmake)
 
-option(USE_FLTK_14 "Build with FLTK 1.4" ON)
+option(USE_FLTK_14 "Build with FLTK 1.4" OFF)
 
 add_subdirectory(source_files/filename_formatter)
 if (USE_FLTK_14)
