@@ -1001,6 +1001,8 @@ function Monster_fill_room(R)
     -- prioritize denser monster placement in rooms with more
     -- varying and radical elevations
     local stair_score = 1 + (#R.stairs * 0.05)
+    stair_score = math.clamp(1, stair_score, 1.5) 
+
     local height_score = 0
     for _,stair in pairs(R.stairs) do
       if stair.prefab_def.delta_h then
@@ -1011,15 +1013,27 @@ function Monster_fill_room(R)
     height_score = math.clamp(1, height_score, 1.5)
 
     -- local distance_score
-    qty = int(qty * (stair_score * height_score))
-    gui.debugf("Extra density per stair score in ROOM_" .. 
-      R.id .. ": " .. stair_score * height_score .. "\n")
+    gui.printf("Extra density per elevation complexity in ROOM_" .. 
+      R.id .. ": " .. stair_score .. ", " .. height_score .. "\n")
 
     -- give a bonus increase to monsters in less open rooms.
     local tightness_score = math.clamp(0, 1 - R.openness - 0.4, 0.5)
-    qty = int(qty * (1 + tightness_score * 1.5))
-    gui.debugf("Extra density per openness in ROOM_" .. 
-      R.id .. ": " .. 1 + tightness_score * 1.5 .. "\n")
+    tightness_score = 1 + (tightness_score * 1.5)
+    gui.printf("Extra density per openness in ROOM_" .. 
+      R.id .. ": " .. tightness_score .. "\n")
+
+    local complexity_score = (stair_score + height_score + tightness_score) / 3
+    gui.printf("Final complexity score for ROOM_" .. R.id .. ": " .. complexity_score .. "\n" )
+
+    qty = qty * math.clamp(1, complexity_score, 2) 
+
+    -- reduction for teleporter and hallway exit rooms
+    if (not R.grow_parent and not R.is_start) 
+    or (R.grow_parent and R.grow_parent.is_hallway) then
+      if R.svolume <= 48 then
+        qty = qty * rand.range(0.3, 0.5)
+      end
+    end
 
     -- a small random adjustment
     qty = qty * rand.range(0.9, 1.1)
@@ -1029,7 +1043,7 @@ function Monster_fill_room(R)
       qty = qty * rand.range(0.5, 0.8)
     end
 
-    gui.debugf("Quantity = %1.1f%%\n", qty)
+    gui.printf("ROOM_" .. R.id .. ", Mon quantity = " .. qty .. "\n")
     return qty
   end
 
