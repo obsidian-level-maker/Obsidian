@@ -805,15 +805,9 @@ function Junction_calc_fence_z(A1, A2)
     top_z = max_z
   end
 
-  -- use per_area as long as it's not next to parks
-  if not (A1.room and A1.room.is_park)
-  or not (A2.room and A2.room.is_park) then
-    top_z = per_area_z
-  end
-
-  -- always use max_z when adjacent to parks
-  if (not A1.room and A2.room and A2.room.is_park)
-  or (not A2.room and A1.room and A1.room.is_park) then
+  -- use max whenever next to parks
+  if (A1.room and A1.room.is_park)
+  or (A2.room and A2.room.is_park) then
     top_z = max_z
   end
 
