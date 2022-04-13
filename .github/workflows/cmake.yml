@@ -72,7 +72,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Configure CMake
-        run: cmake -DCMAKE_INSTALL_PREFIX=./install --preset msvc
+        run: cmake -DCMAKE_INSTALL_PREFIX=install --preset msvc
       - name: Build
         run: cmake --build --preset msvc
       - name: Install
