@@ -66,4 +66,19 @@ jobs:
         uses: actions/upload-artifact@v2.3.1
         with:
           name: windows-x64
-          path: install/share/obsidian
+          path: install
+  build-msvc:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configure CMake
+        run: cmake -DCMAKE_INSTALL_PREFIX=install --preset msvc
+      - name: Build
+        run: cmake --build --preset msvc
+      - name: Install
+        run: cmake --install build/msvc
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2.3.1
+        with:
+          name: windows-x64-msvc
+          path: install
