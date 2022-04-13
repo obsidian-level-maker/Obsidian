@@ -1267,6 +1267,14 @@ static bool TestOverlap(std::vector<snag_c *> &list, int i, int k) {
         MergeSnags(A, B);
 
         // remove B from list and free it
+        for (size_t i = 0; i < list.size(); i++) {
+            snag_c *S = list[i];
+            if (S && S->partner == B) {
+                DebugPrintf("TestOverlap: FOUND DANGLING PARTNER ({}, {})\n", i,
+                            k);
+                S->partner = NULL;
+            }
+        }
         delete B;
         list[k] = NULL;
 

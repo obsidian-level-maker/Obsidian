@@ -20,6 +20,14 @@
       }
     },
     {
+      "name": "sanitize",
+      "binaryDir": "build/sanitize",
+      "inherits": "dev",
+      "cacheVariables": {
+        "OBSIDIAN_SANITIZE": "ON"
+      }
+    },
+    {
       "name": "dist",
       "description": "Release preset",
       "binaryDir": "build/dist",

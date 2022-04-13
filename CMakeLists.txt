@@ -154,6 +154,11 @@ else()
   target_compile_definitions(obsidian PRIVATE UNIX)
 endif()
 
+if(OBSIDIAN_SANITIZE)
+  target_compile_options(obsidian PRIVATE -fsanitize=address,undefined)
+  target_link_options(obsidian PRIVATE -fsanitize=address,undefined)
+endif()
+
 if(UNIX)
   find_package(X11 REQUIRED)
   target_link_libraries(obsidian PRIVATE X11::Xft)

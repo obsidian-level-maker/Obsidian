@@ -1219,10 +1219,6 @@ skiprest:
 
     LogInit(logging_file);
 
-    if (argv::Find('d', "debug") >= 0) {
-        debug_messages = true;
-    }
-
     // accept -t and --terminal for backwards compatibility
     if (argv::Find('v', "verbose") >= 0 || argv::Find('t', "terminal") >= 0) {
         LogEnableTerminal(true);
@@ -1250,6 +1246,10 @@ skiprest:
         Theme_Options_Load(theme_file);
         Trans_SetLanguage();
         Main::SetupFltk();
+    }
+
+    if (argv::Find('d', "debug") >= 0) {
+        debug_messages = true;
     }
 
     numeric_locale =
