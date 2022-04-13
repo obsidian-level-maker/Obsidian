@@ -31,6 +31,10 @@
 #include "lib_util.h"
 #include "main.h"
 
+#ifdef _MSC_VER
+#include <unordered_map>
+#endif
+
 // Properties
 int ef_solid_type;
 int ef_liquid_type;
