@@ -11,6 +11,7 @@ else()
   add_subdirectory(source_files/fltk)
 endif()
 add_subdirectory(source_files/fmt)
+add_subdirectory(source_files/hedley)
 add_subdirectory(source_files/lua)
 add_subdirectory(source_files/miniz)
 add_subdirectory(source_files/physfs)
@@ -164,7 +165,7 @@ if(UNIX)
   target_link_libraries(obsidian PRIVATE X11::Xft)
 endif()
 
-target_link_libraries(obsidian PRIVATE fmt::fmt-header-only)
+target_link_libraries(obsidian PRIVATE fmt::fmt-header-only hedley::hedley)
 
 # Copies executables to local install directory after build
 add_custom_command(
