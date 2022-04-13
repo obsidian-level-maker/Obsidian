@@ -4,19 +4,20 @@ include(cmake/CPM.cmake)
 
 option(USE_FLTK_14 "Build with FLTK 1.4" OFF)
 
-add_subdirectory(source_files/filename_formatter)
+add_subdirectory(source_files/filename_formatter EXCLUDE_FROM_ALL)
 if (USE_FLTK_14)
-  add_subdirectory(source_files/fltk14)
+  add_subdirectory(source_files/fltk14 EXCLUDE_FROM_ALL)
 else()
-  add_subdirectory(source_files/fltk)
+  add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
 endif()
-add_subdirectory(source_files/fmt)
-add_subdirectory(source_files/lua)
-add_subdirectory(source_files/miniz)
-add_subdirectory(source_files/physfs)
-add_subdirectory(source_files/qsavetex)
-add_subdirectory(source_files/slump)
-add_subdirectory(source_files/zdbsp)
+add_subdirectory(source_files/fmt EXCLUDE_FROM_ALL)
+add_subdirectory(source_files/hedley EXCLUDE_FROM_ALL)
+add_subdirectory(source_files/lua EXCLUDE_FROM_ALL)
+add_subdirectory(source_files/miniz EXCLUDE_FROM_ALL)
+add_subdirectory(source_files/physfs EXCLUDE_FROM_ALL)
+add_subdirectory(source_files/qsavetex EXCLUDE_FROM_ALL)
+add_subdirectory(source_files/slump EXCLUDE_FROM_ALL)
+add_subdirectory(source_files/zdbsp EXCLUDE_FROM_ALL)
 
 project(
   obsidian
@@ -40,7 +41,7 @@ if(MSYS)
   set(CMAKE_EXE_LINKER_FLAGS "-static -mwindows")
 endif()
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+if(OBSIDIAN_TIDY)
   set(CMAKE_CXX_CLANG_TIDY clang-tidy)
   file(GLOB ALL_SOURCES "source_files/obsidian_main/*.cc"
        "source_files/obsidian_main/*.h"
@@ -164,7 +165,7 @@ if(UNIX)
   target_link_libraries(obsidian PRIVATE X11::Xft)
 endif()
 
-target_link_libraries(obsidian PRIVATE fmt::fmt-header-only)
+target_link_libraries(obsidian PRIVATE fmt::fmt-header-only hedley::hedley)
 
 # Copies executables to local install directory after build
 add_custom_command(

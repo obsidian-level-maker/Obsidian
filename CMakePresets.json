@@ -9,10 +9,17 @@
       }
     },
     {
+      "name": "tidy",
+      "hidden": true,
+      "cacheVariables": {
+        "OBSIDIAN_TIDY": "ON"
+      }
+    },
+    {
       "name": "dev",
       "binaryDir": "build",
       "generator": "Ninja",
-      "inherits": "fltk-14",
+      "inherits": ["fltk-14", "tidy"],
       "cacheVariables": {
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "CMAKE_BUILD_TYPE": "Debug",

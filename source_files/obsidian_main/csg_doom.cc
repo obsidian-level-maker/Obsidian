@@ -19,6 +19,7 @@
 //------------------------------------------------------------------------
 
 #include <algorithm>
+#include <unordered_map>
 
 #include "csg_local.h"
 #include "csg_main.h"
@@ -751,7 +752,7 @@ struct vertex_map_key_s {
     int x;
     int y;
 
-    constexpr bool operator==(const vertex_map_key_s& other) const {
+    constexpr bool operator==(const vertex_map_key_s &other) const {
         return x == other.x && y == other.y;
     }
 };

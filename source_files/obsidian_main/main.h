@@ -21,6 +21,7 @@
 #ifndef __OBLIGE_MAIN_H__
 #define __OBLIGE_MAIN_H__
 
+#include <hedley.h>
 #include <cstddef>
 #include <fmt/format.h>
 #include <fmt/ostream.h>
@@ -31,7 +32,6 @@
 #include <filesystem>
 #include "hdr_fltk.h"
 #include "ui_window.h"
-#include "defines.h"
 constexpr const char *OBSIDIAN_TITLE = "OBSIDIAN Level Maker";
 
 #ifdef OBSIDIAN_TIMESTAMP
@@ -54,23 +54,23 @@ constexpr const char *THEME_FILENAME = "THEME.txt";
 constexpr const char *LOG_FILENAME = "LOGS.txt";
 
 #ifdef _WIN32
-ALWAYS_INLINE
-inline int i_load_private_font(const char *path) {
+HEDLEY_ALWAYS_INLINE
+int i_load_private_font(const char *path) {
     return AddFontResourceEx(path, FR_PRIVATE, nullptr);
 }
-ALWAYS_INLINE
-inline int v_unload_private_font(const char *path) {
+HEDLEY_ALWAYS_INLINE
+int v_unload_private_font(const char *path) {
     return RemoveFontResourceEx(path, FR_PRIVATE, nullptr);
 }
 #else
 #include <fontconfig/fontconfig.h>
-ALWAYS_INLINE
-inline int i_load_private_font(const char *path) {
+HEDLEY_ALWAYS_INLINE
+int i_load_private_font(const char *path) {
     return static_cast<int>(FcConfigAppFontAddFile(
         nullptr, reinterpret_cast<const FcChar8 *>(path)));
 }
-ALWAYS_INLINE
-inline int v_unload_private_font(const char *path) {
+HEDLEY_ALWAYS_INLINE
+int v_unload_private_font(const char *path) {
     FcConfigAppFontClear(nullptr);
     return 0;
 }
@@ -197,7 +197,6 @@ extern Fl_JPEG_Image *tutorial8;
 extern Fl_JPEG_Image *tutorial9;
 extern Fl_JPEG_Image *tutorial10;
 
-
 void DLG_AboutText();
 void DLG_OptionsEditor();
 void DLG_ThemeEditor();
@@ -223,12 +222,11 @@ template <typename... Args>
 
     if (batch_mode) {
         fmt::print(std::cerr, "ERROR!\n");
-        #ifdef WIN32
-            std::cout << '\n' << "Close window when finished...";
-            do 
-            {
-            } while (true);
-        #endif
+#ifdef WIN32
+        std::cout << '\n' << "Close window when finished...";
+        do {
+        } while (true);
+#endif
     }
 
     std::exit(9);
