@@ -747,7 +747,30 @@ static std::vector<dummy_sector_c *> dummies;
 static std::vector<extrafloor_c *> exfloors;
 static std::vector<fs_thing_t> fs_things;
 
-static std::map<int, unsigned int> vertex_map;
+struct vertex_map_key_s {
+    int x;
+    int y;
+
+    constexpr bool operator==(const vertex_map_key_s& other) const {
+        return x == other.x && y == other.y;
+    }
+};
+}  // namespace Doom
+
+namespace std {
+template <>
+struct hash<Doom::vertex_map_key_s> {
+    size_t operator()(const Doom::vertex_map_key_s &k) const {
+        size_t h = 0;
+        h ^= std::hash<int>()(k.x);
+        h ^= std::hash<int>()(k.y);
+        return h;
+    }
+};
+}  // namespace std
+
+namespace Doom {
+static std::unordered_map<vertex_map_key_s, unsigned int> vertex_map;
 }  // namespace Doom
 
 //------------------------------------------------------------------------
@@ -1001,7 +1024,7 @@ static void CoalesceSectors() {
 
 static vertex_c *MakeVertex(int x, int y) {
     // look for existing vertex
-    int combo = (x << 16) + y;
+    vertex_map_key_s combo{x, y};
 
     if (vertex_map.find(combo) != vertex_map.end()) {
         return vertices[vertex_map[combo]];
