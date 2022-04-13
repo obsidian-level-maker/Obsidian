@@ -1771,7 +1771,7 @@ function Cave_floor_heights(R, entry_h)
   end
 
 
-  local function update_min_max_floor()
+  local function update_min_max_floor(step)
     R.floor_min_h = entry_h
     R.floor_max_h = entry_h
 
@@ -4761,6 +4761,18 @@ gui.debugf("BUILD PARK IN %s\n", R.name)
   end
 
   update_chunk_textures()
+
+  --[[update room maximum and minimum heights
+  R.max_floor_h = area.max_floor_h
+  R.min_floor_h = area.floor_h
+
+  for _,closet in pairs(R.closets) do
+    R.max_floor_h = math.max(R.max_floor_h, closet.floor_h)
+    R.min_floor_h = math.min(R.min_floor_h, closet.floor_h)
+  end
+
+  gui.printf("ROOM_" .. R.id .. ": " ..
+  R.max_floor_h .. ", " .. R.min_floor_h .. "\n")]]
 end
 
 

@@ -126,6 +126,7 @@ MISC_STUFF.AREA_COUNT_MULTIPLIER_CHOICES =
 MISC_STUFF.ROOM_SIZE_CONSISTENCY_CHOICES =
 {
   "normal", _("Vanilla"),
+  "bounded", _("Bounded"),
   "strict", _("Strict"),
   "mixed", _("Mix It Up")
 }
@@ -360,6 +361,7 @@ OB_MODULES["misc"] =
       tooltip = "Changes whether rooms follow a strict single size or not. " ..
         "Can be paired with above choices for more enforced results.\n\n" ..
         "Vanilla: Original behavior. Rooms in a level have vary in size from each other. Big Rooms options are respected.\n\n" ..
+        "Bounded: Rooms vary in size but not radically from each other.\n\n" ..
         "Strict: All rooms in the level have a single set size/coverage.\n\n" ..
         "Mix It Up: A mixture of 75% Vanilla, 25% Strict.",
       priority = 92,

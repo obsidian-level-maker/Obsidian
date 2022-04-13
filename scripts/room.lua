@@ -1230,7 +1230,7 @@ function Room_make_windows(A1, A2)
       f1 = A1.room.max_floor_h
     end
     if A2.room and A2.room.is_park then
-      f2 = A1.room.max_floor_h
+      f2 = A2.room.max_floor_h
     end
 
     local max_f = math.max(f1, f2)
@@ -2173,6 +2173,7 @@ function Room_choose_size(R, not_big)
 
   local sum = LEVEL.map_W * 2/3 + rand.range( 10,50 )
 
+
   -- some extra size experiments - should be revised for
   -- more direct control. In fact, maybe this whole size
   -- decision code could use a clean-up
@@ -2187,6 +2188,15 @@ function Room_choose_size(R, not_big)
         LEVEL.strict_size = sum
       end
       sum = LEVEL.strict_size
+    end
+
+    if LEVEL.size_consistency == "bounded" then
+      if not R.grow_parent then
+        R.size_bounded_sum = sum
+      else
+        R.size_bounded_sum = sum * rand.range(0.75, 1.5)
+      end
+      sum = R.size_bounded_sum
     end
   end
 
@@ -2306,6 +2316,13 @@ function Room_choose_size(R, not_big)
       end
     end
 
+  elseif not LEVEL.is_procedural_gotcha then
+
+    if R.is_start then
+      R.size_limit = int(R.size_limit / 3)
+      R.floor_limit = int(R.floor_limit / 2)
+    end
+
   end
 
   if R.is_street then
@@ -2315,9 +2332,12 @@ function Room_choose_size(R, not_big)
     R.is_outdoor = true
   end
 
-  if R.is_sub_room then
-    R.size_limit = rand.irange(5,15)
-    R.floor_limit = rand.pick({1,1,2,3})
+  -- tame teleporter trunks and hallway exits
+  if (not R.grow_parent and not R.is_start)
+  or (R.grow_parent and R.grow_parent.is_hallway) then
+    R.size_limit = int(R.size_limit / 5)
+    R.floor_limit = int(R.floor_limit / 2)
+    R.is_big = false
   end
 end
 

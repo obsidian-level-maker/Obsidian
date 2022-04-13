@@ -32,6 +32,6 @@ PREFABS.Wall_cran_bloodtubes_hell =
   tex_SHAWN2 = "STONE4",
   tex_DOORSTOP = "METAL",
   tex_PIPEWAL2 = "SKSPINE2",
-  tex_008800 = "FF0000",
+  tex_008000 = "FF0000",
   flat_FLAT23 = "SFLR6_4"
 }

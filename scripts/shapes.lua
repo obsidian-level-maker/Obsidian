@@ -2872,7 +2872,7 @@ GROW_STAIR_HUGE =
 },
 
 
-GROW_XXX_BRIDGE1 =
+--[[GROW_XXX_BRIDGE1 =
 {
   prob = 0,
 
@@ -2887,7 +2887,7 @@ GROW_XXX_BRIDGE1 =
 },
 
 
---[[ test crud......
+test crud......
 
 GROW_LIQUID_1 =
 {
@@ -2986,6 +2986,44 @@ GROW_STAIR_TRI =
     ".....","^A^A^",
     ".....","11111",
     "11xxx","11xxx",
+  }
+},
+
+GROW_STAIR_5_MIRRORED_A =
+{
+  prob = 25,
+  skip_prob = 75,
+
+  structure =
+  {
+    "11...","11>AA",
+    "11...","11>AA",
+    ".....","vvAAA",
+    ".....","AAA^^",
+    ".....","AA<11",
+    ".....","AA<11"
+  }
+},
+
+GROW_STAIR_5_MIRRORED_B =
+{
+  prob = 25,
+  skip_prob = 75,
+
+  structure =
+  {
+    "11....","11>>AA",
+    "11....","111AAA",
+    "......","v1/AA^",
+    "......","vAA/1^",
+    "......","AAA111",
+    "......","AA<<11"
+  },
+
+  diagonals =
+  {
+    "1A",
+    "A1"
   }
 },
 
@@ -4679,6 +4717,24 @@ GROW_LIQUID_FIGURE_CORRIDOR =
   },
 },
 
+GROW_LIQUID_FIGURE_CORRIDOR_NEW_AREA =
+{
+  prob = 25,
+  skip_prob = 80,
+
+  structure =
+  {
+    "x....x","x1111x",
+    "x....x","x1111x",
+    "x....x","x~11~x",
+    "......","AAAAAA",
+    "......","AAAAAA",
+    "x....x","x~11~x",
+    "x....x","x1111x",
+    "xx11xx","xx11xx",
+  },
+},
+
 GROW_LIQUID_SQUEEZE_CORRIDOR =
 {
   prob = 5,
@@ -4848,6 +4904,28 @@ GROW_LIQUID_U_ALT =
   diagonals =
   {
     "1~","~1",
+  },
+},
+
+GROW_LIQUID_U_ALT_NEW_AREA =
+{
+  prob = 15,
+  skip_prob = 75,
+
+  structure =
+  {
+    "1.......","11A~~~A1",
+    "1.......","11A~~~A1",
+    "x.......","x1A~~~A1",
+    "x.......","x1A%~/A1",
+    "x.......","x1%AAA/1",
+    "x.......","x1111111",
+  },
+
+  diagonals =
+  {
+    "1~","~1",
+    "1A","A1",
   },
 },
 
@@ -5675,7 +5753,7 @@ GROW_CAUSEWAY_CORNER_LIQUID_OUTER =
   diagonals =
   {
          "1~",
-    "1~","1A",
+    "1~","~A",
   },
 },
 
@@ -11615,7 +11693,7 @@ GROW_EIGHT_STAIRS =
     ".A","A.",
     ".A","A.",
     "A.",".A",
-    ".1","1.",
+    ".A","A.",
     ".1","1.",
     "1.",".1",
     ".1","1.",

@@ -998,24 +998,40 @@ function Monster_fill_room(R)
     gui.debugf("raw quantity in %s --> %1.2f\n", R.name, qty)
 --]]
 
-    -- MSSP: experiment; more monsters in big rooms with multiple platforms
-    -- even larger numbers if it has floor areas of a significant height
-    -- and distance from the initial entry point
+    -- prioritize denser monster placement in rooms with more
+    -- varying and radical elevations
+    local stair_score = 1 + (#R.stairs * 0.05)
+    stair_score = math.clamp(1, stair_score, 1.5) 
 
-    -- R.trunk flag ensures ganking is unlikely on teleporter-entry rooms
-    if R.is_big and (R.grow_parent and not R.grow_parent:has_teleporter()) then
-      local total_extra = 0
-      for _,A in pairs(R.areas) do
-        if A.mode == "floor" then
-          local area_score = int(A.svolume / 16)
-          local height_score = math.abs(A.floor_h - R.entry_h) / 128 * 1.5
-          -- local distance_score
+    local height_score = 0
+    for _,stair in pairs(R.stairs) do
+      if stair.prefab_def.delta_h then
+        height_score = height_score + stair.prefab_def.delta_h
+      end
+    end
+    height_score = 1 + ((height_score / 128) * 0.05)
+    height_score = math.clamp(1, height_score, 1.5)
 
-          local extra = int(area_score * height_score)
-          qty = qty + extra
+    -- local distance_score
+    gui.debugf("Extra density per elevation complexity in ROOM_" .. 
+      R.id .. ": " .. stair_score .. ", " .. height_score .. "\n")
 
-          total_extra = total_extra + extra
-        end
+    -- give a bonus increase to monsters in less open rooms.
+    local tightness_score = math.clamp(0, 1 - R.openness - 0.4, 0.5)
+    tightness_score = 1 + (tightness_score * 1.5)
+    gui.debugf("Extra density per openness in ROOM_" .. 
+      R.id .. ": " .. tightness_score .. "\n")
+
+    local complexity_score = (stair_score + height_score + tightness_score) / 3
+    gui.debugf("Final complexity score for ROOM_" .. R.id .. ": " .. complexity_score .. "\n" )
+
+    qty = qty * math.clamp(1, complexity_score, 2) 
+
+    -- reduction for teleporter and hallway exit rooms
+    if (not R.grow_parent and not R.is_start) 
+    or (R.grow_parent and R.grow_parent.is_hallway) then
+      if R.svolume <= 48 then
+        qty = qty * rand.range(0.3, 0.5)
       end
     end
 
@@ -1027,7 +1043,7 @@ function Monster_fill_room(R)
       qty = qty * rand.range(0.5, 0.8)
     end
 
-    gui.debugf("Quantity = %1.1f%%\n", qty)
+    gui.debugf("ROOM_" .. R.id .. ", Mon quantity = " .. qty .. "\n")
     return qty
   end
 
