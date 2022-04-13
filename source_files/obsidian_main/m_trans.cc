@@ -821,7 +821,7 @@ void Trans_AddMessage(const char *before, const char *after) {
     trans_store[before] = std::string(after);
 }
 
-typedef struct {
+struct po_parse_state_t {
     char id[MAX_TRANS_STRING];
     char str[MAX_TRANS_STRING];
     char ctx[256];
@@ -960,8 +960,7 @@ typedef struct {
         ParseString(p, str, sizeof(str));
         has_str = true;
     }
-
-} po_parse_state_t;
+};
 
 void Trans_Read_PO_File(FILE *fp) {
     // the currently read message (not yet added)
