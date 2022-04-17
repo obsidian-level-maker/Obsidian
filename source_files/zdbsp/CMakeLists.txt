@@ -5,6 +5,12 @@ project(
 )
 
 set(CMAKE_CXX_FLAGS "-DINLINE_G=inline")
+if(WIN32
+   AND NOT MINGW
+   AND NOT MSYS
+)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHa")
+endif()
 
 add_library(
   obsidian_zdbsp

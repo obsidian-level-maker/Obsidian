@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <ctime>
 
 extern "C" {
 #include "lex.yy.h"
