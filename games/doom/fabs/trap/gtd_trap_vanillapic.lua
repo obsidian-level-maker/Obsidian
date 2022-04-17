@@ -1,3 +1,5 @@
+-- Disabled - presently unworkable due to a mixture of conditions.
+
 --[[PREFABS.Trap_gtd_closet_vanillapic_tech =
 {
   file = "trap/gtd_trap_vanillapic.wad",
@@ -5,6 +7,7 @@
 
   prob = 50,
 
+  engine = "zdoom",
   theme = "tech",
   env = "building",
 
@@ -74,5 +77,4 @@ PREFABS.Trap_gtd_closet_vanillapic_hell =
     FIRELAVA = 5,
   },
   flat_CEIL5_2 = "CEIL5_2"
-}
-]]
+}]]
