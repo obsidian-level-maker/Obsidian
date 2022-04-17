@@ -9,7 +9,7 @@ extern "C" {
 #include "lex.yy.h"
 }
 
-__time64_t now_;
+std::time_t now_;
 std::tm now;
 std::string gameValue;
 std::string themeValue;
