@@ -8,13 +8,12 @@ extern "C" {
 #include "lex.yy.h"
 }
 
-static auto now_ =
-    std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-static auto now = *std::localtime(&now_);
-static std::string gameValue;
-static std::string themeValue;
-static std::string countValue;
-static std::string versionValue;
+__time64_t now_;
+std::tm now;
+std::string gameValue;
+std::string themeValue;
+std::string countValue;
+std::string versionValue;
 std::string result;
 
 void year() { result.append(std::to_string(now.tm_year + 1900)); }
@@ -47,6 +46,8 @@ const char *ff_main(const char *levelcount, const char *game, const char *theme,
     versionValue = version;
     std::string input = format;
     result.clear();
+    now_ = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    now = *std::localtime(&now_);
 
     auto buffer_state = yy_scan_bytes(input.c_str(), input.size());
     yy_switch_to_buffer(buffer_state);
