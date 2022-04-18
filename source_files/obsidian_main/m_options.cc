@@ -75,6 +75,8 @@ static void Parse_Option(std::string name, std::string value) {
         zip_logs = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "timestamp_logs") == 0) {
         timestamp_logs = StringToInt(value) ? true : false;
+    } else if (StringCaseCmp(name, "restart_after_builds") == 0) {
+        restart_after_builds = StringToInt(value) ? true : false;
     } else {
         LogPrintf("Unknown option: '{}'\n", name);
     }
@@ -183,6 +185,7 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "zip_output = " << zip_output << "\n";
     option_fp << "zip_logs = " << zip_logs << "\n";
     option_fp << "timestamp_logs = " << timestamp_logs << "\n";
+    option_fp << "restart_after_builds = " << restart_after_builds << "\n";
 
     if (!last_directory.empty()) {
         option_fp << "\n";
@@ -225,6 +228,7 @@ class UI_OptionsWin : public Fl_Window {
     UI_CustomCheckBox *opt_preserve_failures;
     UI_CustomCheckBox *opt_zip_logs;
     UI_CustomCheckBox *opt_timestamp_logs;
+    UI_CustomCheckBox *opt_restart_after_builds;
 
    public:
     UI_OptionsWin(int W, int H, const char *label = NULL);
@@ -290,6 +294,12 @@ class UI_OptionsWin : public Fl_Window {
         main_action = MAIN_QUIT;
 
         that->want_quit = true;
+    }
+
+    static void callback_RestartAfterBuilds(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+        restart_after_builds = that->opt_restart_after_builds->value() ? true : false;
     }
 
     static void callback_TimestampLogs(Fl_Widget *w, void *data) {
@@ -607,6 +617,17 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_timestamp_logs->labelfont(font_style);
     opt_timestamp_logs->selection_color(SELECTION);
     opt_timestamp_logs->down_box(button_style);
+
+    cy += opt_timestamp_logs->h() + y_step * .5;
+
+    opt_restart_after_builds =
+        new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_restart_after_builds->copy_label(_(" Restart Lua VM Between Builds"));
+    opt_restart_after_builds->value(restart_after_builds ? 1 : 0);
+    opt_restart_after_builds->callback(callback_RestartAfterBuilds, this);
+    opt_restart_after_builds->labelfont(font_style);
+    opt_restart_after_builds->selection_color(SELECTION);
+    opt_restart_after_builds->down_box(button_style);
 
 
     //----------------

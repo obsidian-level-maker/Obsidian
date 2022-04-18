@@ -676,12 +676,12 @@ extern void *LJ_WIN_LOADLIBA(const char *path);
 
 #ifndef LUAJIT_SECURITY_STRHASH
 /* String hash: 0 = sparse only, 1 = sparse + dense. */
-#define LUAJIT_SECURITY_STRHASH	0
+#define LUAJIT_SECURITY_STRHASH	1
 #endif
 
 #ifndef LUAJIT_SECURITY_STRID
 /* String IDs: 0 = linear, 1 = reseed < 255, 2 = reseed < 15, 3 = random. */
-#define LUAJIT_SECURITY_STRID	4
+#define LUAJIT_SECURITY_STRID	1
 #endif
 
 #ifndef LUAJIT_SECURITY_MCODE
