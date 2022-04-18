@@ -1,6 +1,6 @@
 /*
 ** Public Lua/C API.
-** Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 **
 ** Major portions taken verbatim or adapted from the Lua interpreter.
 ** Copyright (C) 1994-2008 Lua.org, PUC-Rio. See Copyright Notice in lua.h
@@ -608,7 +608,7 @@ LUA_API void *lua_touserdata(lua_State *L, int idx)
   if (tvisudata(o))
     return uddata(udataV(o));
   else if (tvislightud(o))
-    return lightudV(o);
+    return lightudV(G(L), o);
   else
     return NULL;
 }
@@ -621,7 +621,7 @@ LUA_API lua_State *lua_tothread(lua_State *L, int idx)
 
 LUA_API const void *lua_topointer(lua_State *L, int idx)
 {
-  return lj_obj_ptr(index2adr(L, idx));
+  return lj_obj_ptr(G(L), index2adr(L, idx));
 }
 
 /* -- Stack setters (object creation) ------------------------------------- */
@@ -709,7 +709,10 @@ LUA_API void lua_pushboolean(lua_State *L, int b)
 
 LUA_API void lua_pushlightuserdata(lua_State *L, void *p)
 {
-  setlightudV(L->top, checklightudptr(L, p));
+#if LJ_64
+  p = lj_lightud_intern(L, p);
+#endif
+  setrawlightudV(L->top, p);
   incr_top(L);
 }
 
@@ -1149,7 +1152,10 @@ static TValue *cpcall(lua_State *L, lua_CFunction func, void *ud)
   fn->c.f = func;
   setfuncV(L, top++, fn);
   if (LJ_FR2) setnilV(top++);
-  setlightudV(top++, checklightudptr(L, ud));
+#if LJ_64
+  ud = lj_lightud_intern(L, ud);
+#endif
+  setrawlightudV(top++, ud);
   cframe_nres(L->cframe) = 1+0;  /* Zero results. */
   L->top = top;
   return top-1;  /* Now call the newly allocated C function. */
@@ -1210,11 +1216,12 @@ LUA_API int lua_yield(lua_State *L, int nresults)
       setcont(top, lj_cont_hook);
       if (LJ_FR2) top++;
       setframe_pc(top, cframe_pc(cf)-1);
-      if (LJ_FR2) top++;
+      top++;
       setframe_gc(top, obj2gco(L), LJ_TTHREAD);
+      if (LJ_FR2) top++;
       setframe_ftsz(top, ((char *)(top+1)-(char *)L->base)+FRAME_CONT);
       L->top = L->base = top+1;
-#if LJ_TARGET_X64
+#if ((defined(__GNUC__) || defined(__clang__)) && (LJ_TARGET_X64 || defined(LUAJIT_UNWIND_EXTERNAL)) && !LJ_NO_UNWIND) || LJ_TARGET_WINDOWS
       lj_err_throw(L, LUA_YIELD);
 #else
       L->cframe = NULL;

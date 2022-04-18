@@ -1,6 +1,6 @@
 /*
 ** Instruction dispatch handling.
-** Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 */
 
 #define lj_dispatch_c
@@ -295,7 +295,7 @@ int luaJIT_setmode(lua_State *L, int idx, int mode)
       if (idx != 0) {
 	cTValue *tv = idx > 0 ? L->base + (idx-1) : L->top + idx;
 	if (tvislightud(tv))
-	  g->wrapf = (lua_CFunction)lightudV(tv);
+	  g->wrapf = (lua_CFunction)lightudV(g, tv);
 	else
 	  return 0;  /* Failed. */
       } else {

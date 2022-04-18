@@ -1,6 +1,6 @@
 /*
 ** SSA IR (Intermediate Representation) emitter.
-** Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 */
 
 #define lj_ir_c
@@ -31,7 +31,7 @@
 #include "lj_vm.h"
 #include "lj_strscan.h"
 #include "lj_strfmt.h"
-#include "lj_lib.h"
+#include "lj_prng.h"
 
 /* Some local macros to save typing. Undef'd at the end. */
 #define IR(ref)			(&J->cur.ir[(ref)])
@@ -147,7 +147,7 @@ TRef lj_ir_call(jit_State *J, IRCallID id, ...)
 }
 
 /* Load field of type t from GG_State + offset. Must be 32 bit aligned. */
-LJ_FUNC TRef lj_ir_ggfload(jit_State *J, IRType t, uintptr_t ofs)
+TRef lj_ir_ggfload(jit_State *J, IRType t, uintptr_t ofs)
 {
   lj_assertJ((ofs & 3) == 0, "unaligned GG_State field offset");
   ofs >>= 2;
@@ -389,8 +389,10 @@ void lj_ir_kvalue(lua_State *L, TValue *tv, const IRIns *ir)
   case IR_KPRI: setpriV(tv, irt_toitype(ir->t)); break;
   case IR_KINT: setintV(tv, ir->i); break;
   case IR_KGC: setgcV(L, tv, ir_kgc(ir), irt_toitype(ir->t)); break;
-  case IR_KPTR: case IR_KKPTR: setlightudV(tv, ir_kptr(ir)); break;
-  case IR_KNULL: setlightudV(tv, NULL); break;
+  case IR_KPTR: case IR_KKPTR:
+    setnumV(tv, (lua_Number)(uintptr_t)ir_kptr(ir));
+    break;
+  case IR_KNULL: setintV(tv, 0); break;
   case IR_KNUM: setnumV(tv, ir_knum(ir)->n); break;
 #if LJ_HASFFI
   case IR_KINT64: {

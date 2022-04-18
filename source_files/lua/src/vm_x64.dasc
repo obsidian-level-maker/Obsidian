@@ -1,6 +1,6 @@
 |// Low-level VM code for x64 CPUs in LJ_GC64 mode.
 |// Bytecode interpreter, fast functions and helper functions.
-|// Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+|// Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 |
 |.arch x64
 |.section code_op, code_sub
@@ -1230,7 +1230,7 @@ static void build_subroutines(BuildCtx *ctx)
   |  mov [BASE-16], TAB:RC		// Store metatable as default result.
   |  mov STR:RC, [DISPATCH+DISPATCH_GL(gcroot)+8*(GCROOT_MMNAME+MM_metatable)]
   |  mov RAd, TAB:RB->hmask
-  |  and RAd, STR:RC->hash
+  |  and RAd, STR:RC->sid
   |  settp STR:RC, LJ_TSTR
   |  imul RAd, #NODE
   |  add NODE:RA, TAB:RB->node
@@ -2011,7 +2011,7 @@ static void build_subroutines(BuildCtx *ctx)
   |.endif
   |   mov RC, SBUF:CARG1->b
   |   mov SBUF:CARG1->L, L:RB
-  |   mov SBUF:CARG1->p, RC
+  |   mov SBUF:CARG1->w, RC
   |  mov SAVE_PC, PC
   |  call extern lj_buf_putstr_ .. name
   |  mov CARG1, rax
@@ -2509,10 +2509,10 @@ static void build_subroutines(BuildCtx *ctx)
   |  jmp <2
   |
   |9:  // Rethrow error from the right C frame.
-  |  neg RD
+  |  mov CARG2d, RDd
   |  mov CARG1, L:RB
-  |  mov CARG2, RD
-  |  call extern lj_err_throw		// (lua_State *L, int errcode)
+  |  neg CARG2d
+  |  call extern lj_err_trace		// (lua_State *L, int errcode)
   |.endif
   |
   |//-----------------------------------------------------------------------
@@ -3674,7 +3674,7 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
     |  checktab TAB:RB, ->vmeta_tgets
     |->BC_TGETS_Z:	// RB = GCtab *, RC = GCstr *
     |  mov TMPRd, TAB:RB->hmask
-    |  and TMPRd, STR:RC->hash
+    |  and TMPRd, STR:RC->sid
     |  imul TMPRd, #NODE
     |  add NODE:TMPR, TAB:RB->node
     |  settp ITYPE, STR:RC, LJ_TSTR
@@ -3806,7 +3806,7 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
     |  checktab TAB:RB, ->vmeta_tsets
     |->BC_TSETS_Z:	// RB = GCtab *, RC = GCstr *
     |  mov TMPRd, TAB:RB->hmask
-    |  and TMPRd, STR:RC->hash
+    |  and TMPRd, STR:RC->sid
     |  imul TMPRd, #NODE
     |  mov byte TAB:RB->nomm, 0		// Clear metamethod cache.
     |  add NODE:TMPR, TAB:RB->node

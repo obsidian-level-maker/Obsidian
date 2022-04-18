@@ -1,9 +1,9 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <title>ffi.* API Functions</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<meta name="Copyright" content="Copyright (C) 2005-2020">
+<meta charset="utf-8">
+<meta name="Copyright" content="Copyright (C) 2005-2021">
 <meta name="Language" content="en">
 <link rel="stylesheet" type="text/css" href="bluequad.css" media="screen">
 <link rel="stylesheet" type="text/css" href="bluequad-print.css" media="print">
@@ -41,6 +41,8 @@ td.abiparam { font-weight: bold; width: 6em; }
 </li><li>
 <a href="ext_ffi_semantics.html">FFI Semantics</a>
 </li></ul>
+</li><li>
+<a href="ext_buffer.html">String Buffers</a>
 </li><li>
 <a href="ext_jit.html">jit.* Library</a>
 </li><li>
@@ -255,7 +257,7 @@ contents of an <tt>__index</tt> table (if any) may be modified
 afterwards. The associated metatable automatically applies to all uses
 of this type, no matter how the objects are created or where they
 originate from. Note that pre-defined operations on types have
-precedence (e.g. declared field names cannot be overriden).
+precedence (e.g. declared field names cannot be overridden).
 </p>
 <p>
 All standard Lua metamethods are implemented. These are called directly,
@@ -556,7 +558,7 @@ named <tt>i</tt>.
 </div>
 <div id="foot">
 <hr class="hide">
-Copyright &copy; 2005-2020
+Copyright &copy; 2005-2021
 <span class="noprint">
 &middot;
 <a href="contact.html">Contact</a>

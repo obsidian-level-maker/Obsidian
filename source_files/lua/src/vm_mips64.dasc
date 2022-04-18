@@ -1,6 +1,6 @@
 |// Low-level VM code for MIPS64 CPUs.
 |// Bytecode interpreter, fast functions and helper functions.
-|// Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+|// Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 |//
 |// Contributed by Djordje Kovacevic and Stefan Pejic from RT-RK.com.
 |// Sponsored by Cisco Systems, Inc.
@@ -555,6 +555,10 @@ static void build_subroutines(BuildCtx *ctx)
   |    st_vmstate
   |  b ->vm_returnc
   |.  li RD, 16				// 2 results: false + error message.
+  |
+  |->vm_unwind_stub:			// Jump to exit stub from unwinder.
+  |  jr CARG1
+  |.  move ra, CARG2
   |
   |//-----------------------------------------------------------------------
   |//-- Grow stack for calls -----------------------------------------------
@@ -1201,9 +1205,9 @@ static void build_subroutines(BuildCtx *ctx)
   |  beqz TAB:RB, ->fff_restv
   |.  li CARG1, LJ_TNIL
   |  lw TMP0, TAB:RB->hmask
-  |   lw TMP1, STR:RC->hash
+  |   lw TMP1, STR:RC->sid
   |    ld NODE:TMP2, TAB:RB->node
-  |  and TMP1, TMP1, TMP0		// idx = str->hash & tab->hmask
+  |  and TMP1, TMP1, TMP0		// idx = str->sid & tab->hmask
   |  dsll TMP0, TMP1, 5
   |  dsll TMP1, TMP1, 3
   |  dsubu TMP1, TMP0, TMP1
@@ -2037,7 +2041,7 @@ static void build_subroutines(BuildCtx *ctx)
   |  ld TMP0, SBUF:CARG1->b
   |   sd L, SBUF:CARG1->L
   |   sd BASE, L->base
-  |  sd TMP0, SBUF:CARG1->p
+  |  sd TMP0, SBUF:CARG1->w
   |  call_intern extern lj_buf_putstr_ .. name
   |.  sd PC, SAVE_PC
   |  load_got lj_buf_tostr
@@ -2622,9 +2626,9 @@ static void build_subroutines(BuildCtx *ctx)
   |.  daddu RA, RA, BASE
   |
   |9:  // Rethrow error from the right C frame.
-  |  load_got lj_err_throw
-  |  negu CARG2, CRET1
-  |  call_intern lj_err_throw		// (lua_State *L, int errcode)
+  |  load_got lj_err_trace
+  |  sub CARG2, r0, CRET1
+  |  call_intern lj_err_trace		// (lua_State *L, int errcode)
   |.  move CARG1, L
   |.endif
   |
@@ -4239,9 +4243,9 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
     |->BC_TGETS_Z:
     |  // TAB:RB = GCtab *, STR:RC = GCstr *, RA = dst*8
     |  lw TMP0, TAB:RB->hmask
-    |   lw TMP1, STR:RC->hash
+    |   lw TMP1, STR:RC->sid
     |    ld NODE:TMP2, TAB:RB->node
-    |  and TMP1, TMP1, TMP0		// idx = str->hash & tab->hmask
+    |  and TMP1, TMP1, TMP0		// idx = str->sid & tab->hmask
     |  sll TMP0, TMP1, 5
     |  sll TMP1, TMP1, 3
     |  subu TMP1, TMP0, TMP1
@@ -4402,10 +4406,10 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
     |->BC_TSETS_Z:
     |  // TAB:RB = GCtab *, STR:RC = GCstr *, RA = BASE+src*8
     |  lw TMP0, TAB:RB->hmask
-    |   lw TMP1, STR:RC->hash
+    |   lw TMP1, STR:RC->sid
     |    ld NODE:TMP2, TAB:RB->node
     |   sb r0, TAB:RB->nomm		// Clear metamethod cache.
-    |  and TMP1, TMP1, TMP0		// idx = str->hash & tab->hmask
+    |  and TMP1, TMP1, TMP0		// idx = str->sid & tab->hmask
     |  sll TMP0, TMP1, 5
     |  sll TMP1, TMP1, 3
     |  subu TMP1, TMP0, TMP1

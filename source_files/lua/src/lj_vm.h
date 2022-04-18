@@ -1,6 +1,6 @@
 /*
 ** Assembler VM interface definitions.
-** Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 */
 
 #ifndef _LJ_VM_H
@@ -25,6 +25,9 @@ LJ_ASMF void lj_vm_unwind_c_eh(void);
 LJ_ASMF void lj_vm_unwind_ff_eh(void);
 #if LJ_TARGET_X86ORX64
 LJ_ASMF void lj_vm_unwind_rethrow(void);
+#endif
+#if LJ_TARGET_MIPS
+LJ_ASMF void lj_vm_unwind_stub(void);
 #endif
 
 /* Miscellaneous functions. */

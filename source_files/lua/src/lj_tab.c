@@ -1,6 +1,6 @@
 /*
 ** Table handling.
-** Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 **
 ** Major portions taken verbatim or adapted from the Lua interpreter.
 ** Copyright (C) 1994-2008 Lua.org, PUC-Rio. See Copyright Notice in lua.h
@@ -15,25 +15,6 @@
 #include "lj_tab.h"
 
 /* -- Object hashing ------------------------------------------------------ */
-
-/* Hash values are masked with the table hash mask and used as an index. */
-static LJ_AINLINE Node *hashmask(const GCtab *t, uint32_t hash)
-{
-  Node *n = noderef(t->node);
-  return &n[hash & t->hmask];
-}
-
-/* String hashes are precomputed when they are interned. */
-#define hashstr(t, s)		hashmask(t, (s)->hash)
-
-#define hashlohi(t, lo, hi)	hashmask((t), hashrot((lo), (hi)))
-#define hashnum(t, o)		hashlohi((t), (o)->u32.lo, ((o)->u32.hi << 1))
-#if LJ_GC64
-#define hashgcref(t, r) \
-  hashlohi((t), (uint32_t)gcrefu(r), (uint32_t)(gcrefu(r) >> 32))
-#else
-#define hashgcref(t, r)		hashlohi((t), gcrefu(r), gcrefu(r) + HASH_BIAS)
-#endif
 
 /* Hash an arbitrary key and return its anchor position in the hash table. */
 static Node *hashkey(const GCtab *t, cTValue *key)
@@ -413,7 +394,7 @@ cTValue * LJ_FASTCALL lj_tab_getinth(GCtab *t, int32_t key)
   return NULL;
 }
 
-cTValue *lj_tab_getstr(GCtab *t, GCstr *key)
+cTValue *lj_tab_getstr(GCtab *t, const GCstr *key)
 {
   Node *n = hashstr(t, key);
   do {
@@ -546,7 +527,7 @@ TValue *lj_tab_setinth(lua_State *L, GCtab *t, int32_t key)
   return lj_tab_newkey(L, t, &k);
 }
 
-TValue *lj_tab_setstr(lua_State *L, GCtab *t, GCstr *key)
+TValue *lj_tab_setstr(lua_State *L, GCtab *t, const GCstr *key)
 {
   TValue k;
   Node *n = hashstr(t, key);

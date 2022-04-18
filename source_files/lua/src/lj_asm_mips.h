@@ -1,6 +1,6 @@
 /*
 ** MIPS IR assembler (SSA IR -> machine code).
-** Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 */
 
 /* -- Register allocator extensions --------------------------------------- */
@@ -64,17 +64,29 @@ static Reg ra_alloc2(ASMState *as, IRIns *ir, RegSet allow)
 /* Setup spare long-range jump slots per mcarea. */
 static void asm_sparejump_setup(ASMState *as)
 {
-  MCode *mxp = as->mcbot;
-  if (((uintptr_t)mxp & (LJ_PAGESIZE-1)) == sizeof(MCLink)) {
+  MCode *mxp = as->mctop;
+  if ((char *)mxp == (char *)as->J->mcarea + as->J->szmcarea) {
+    mxp -= MIPS_SPAREJUMP*2;
     lj_assertA(MIPSI_NOP == 0, "bad NOP");
     memset(mxp, 0, MIPS_SPAREJUMP*2*sizeof(MCode));
-    mxp += MIPS_SPAREJUMP*2;
-    lj_assertA(mxp < as->mctop, "MIPS_SPAREJUMP too big");
-    lj_mcode_sync(as->mcbot, mxp);
-    lj_mcode_commitbot(as->J, mxp);
-    as->mcbot = mxp;
-    as->mclim = as->mcbot + MCLIM_REDZONE;
+    as->mctop = mxp;
   }
+}
+
+static MCode *asm_sparejump_use(MCode *mcarea, MCode tjump)
+{
+  MCode *mxp = (MCode *)((char *)mcarea + ((MCLink *)mcarea)->size);
+  int slot = MIPS_SPAREJUMP;
+  while (slot--) {
+    mxp -= 2;
+    if (*mxp == tjump) {
+      return mxp;
+    } else if (*mxp == MIPSI_NOP) {
+      *mxp = tjump;
+      return mxp;
+    }
+  }
+  return NULL;
 }
 
 /* Setup exit stub after the end of each trace. */
@@ -1041,7 +1053,7 @@ static void asm_href(ASMState *as, IRIns *ir, IROp merge)
     if (isk) {
       /* Nothing to do. */
     } else if (irt_isstr(kt)) {
-      emit_tsi(as, MIPSI_LW, tmp1, key, (int32_t)offsetof(GCstr, hash));
+      emit_tsi(as, MIPSI_LW, tmp1, key, (int32_t)offsetof(GCstr, sid));
     } else {  /* Must match with hash*() in lj_tab.c. */
       emit_dst(as, MIPSI_SUBU, tmp1, tmp1, tmp2);
       emit_rotr(as, tmp2, tmp2, dest, (-HASH_ROT3)&31);
@@ -2528,6 +2540,9 @@ static void asm_stack_restore(ASMState *as, SnapShot *snap)
 
 /* -- GC handling --------------------------------------------------------- */
 
+/* Marker to prevent patching the GC check exit. */
+#define MIPS_NOPATCH_GC_CHECK	MIPSI_OR
+
 /* Check GC threshold and do one or more GC steps. */
 static void asm_gc_check(ASMState *as)
 {
@@ -2543,6 +2558,7 @@ static void asm_gc_check(ASMState *as)
   args[0] = ASMREF_TMP1;  /* global_State *g */
   args[1] = ASMREF_TMP2;  /* MSize steps     */
   asm_gencall(as, ci, args);
+  l_end[-3] = MIPS_NOPATCH_GC_CHECK;  /* Replace the nop after the call. */
   emit_tsi(as, MIPSI_AADDIU, ra_releasetmp(as, ASMREF_TMP1), RID_JGL, -32768);
   tmp = ra_releasetmp(as, ASMREF_TMP2);
   emit_loadi(as, tmp, as->gcsteps);
@@ -2694,27 +2710,23 @@ void lj_asm_patchexit(jit_State *J, GCtrace *T, ExitNo exitno, MCode *target)
 #else
 	   (p[-1] & 0xff600000u) == MIPSI_BC1EQZ
 #endif
-	  )) {
+	  ) && p[-2] != MIPS_NOPATCH_GC_CHECK) {
 	ptrdiff_t delta = target - p;
 	if (((delta + 0x8000) >> 16) == 0) {  /* Patch in-range branch. */
 	patchbranch:
 	  p[-1] = (p[-1] & 0xffff0000u) | (delta & 0xffffu);
 	  *p = MIPSI_NOP;  /* Replace the load of the exit number. */
-	  cstop = p;
+	  cstop = p+1;
 	  if (!cstart) cstart = p-1;
 	} else {  /* Branch out of range. Use spare jump slot in mcarea. */
-	  int i;
-	  for (i = (int)(sizeof(MCLink)/sizeof(MCode));
-	       i < (int)(sizeof(MCLink)/sizeof(MCode)+MIPS_SPAREJUMP*2);
-	       i += 2) {
-	    if (mcarea[i] == tjump) {
-	      delta = mcarea+i - p;
+	  MCode *mcjump = asm_sparejump_use(mcarea, tjump);
+	  if (mcjump) {
+	    lj_mcode_sync(mcjump, mcjump+1);
+	    delta = mcjump - p;
+	    if (((delta + 0x8000) >> 16) == 0) {
 	      goto patchbranch;
-	    } else if (mcarea[i] == MIPSI_NOP) {
-	      mcarea[i] = tjump;
-	      cstart = mcarea+i;
-	      delta = mcarea+i - p;
-	      goto patchbranch;
+	    } else {
+	      lj_assertJ(0, "spare jump out of range: -Osizemcode too big");
 	    }
 	  }
 	  /* Ignore jump slot overflow. Child trace is simply not attached. */

@@ -1,6 +1,6 @@
 /*
 ** String scanning.
-** Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 */
 
 #include <math.h>
@@ -79,7 +79,7 @@ static void strscan_double(uint64_t x, TValue *o, int32_t ex2, int32_t neg)
   /* Avoid double rounding for denormals. */
   if (LJ_UNLIKELY(ex2 <= -1075 && x != 0)) {
     /* NYI: all of this generates way too much code on 32 bit CPUs. */
-#if defined(__GNUC__) && LJ_64
+#if (defined(__GNUC__) || defined(__clang__)) && LJ_64
     int32_t b = (int32_t)(__builtin_clzll(x)^63);
 #else
     int32_t b = (x>>32) ? 32+(int32_t)lj_fls((uint32_t)(x>>32)) :
@@ -443,6 +443,7 @@ StrScanFmt lj_strscan_scan(const uint8_t *p, MSize len, TValue *o,
 
     /* Handle decimal point. */
     if (dp) {
+      if (base == 2) return STRSCAN_ERROR;
       fmt = STRSCAN_NUM;
       if (dig) {
 	ex = (int32_t)(dp-(p-1)); dp = p-1;

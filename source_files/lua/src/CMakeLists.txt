@@ -386,7 +386,7 @@ set(LJ_BCDEF_PATH ${CMAKE_CURRENT_BINARY_DIR}/lj_bcdef.h)
 set(LJ_VMDEF_PATH ${CMAKE_CURRENT_BINARY_DIR}/jit/vmdef.lua)
 
 set(LJ_LIB_SOURCES
-  lib_base.c lib_math.c lib_bit.c lib_string.c lib_table.c
+  lib_base.c lib_buffer.c lib_math.c lib_bit.c lib_string.c lib_table.c
   lib_io.c lib_os.c lib_package.c lib_debug.c lib_jit.c lib_ffi.c)
 add_custom_command(
   OUTPUT ${LJ_LIBDEF_PATH} ${LJ_VMDEF_PATH} ${LJ_RECDEF_PATH} ${LJ_FFDEF_PATH}
@@ -421,6 +421,7 @@ set(luajit_sources
     lib_aux.c
     lib_base.c
     lib_bit.c
+    lib_buffer.c
     lib_debug.c
     lib_ffi.c
     lib_init.c
@@ -469,8 +470,10 @@ set(luajit_sources
     lj_opt_sink.c
     lj_opt_split.c
     lj_parse.c
+    lj_prng.c
     lj_profile.c
     lj_record.c
+    lj_serialize.c
     lj_snap.c
     lj_state.c
     lj_str.c

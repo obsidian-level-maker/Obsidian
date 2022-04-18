@@ -1,6 +1,6 @@
 /*
 ** I/O library.
-** Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 **
 ** Major portions taken verbatim or adapted from the Lua interpreter.
 ** Copyright (C) 1994-2011 Lua.org, PUC-Rio. See Copyright Notice in lua.h
@@ -25,6 +25,7 @@
 #include "lj_strfmt.h"
 #include "lj_ff.h"
 #include "lj_lib.h"
+#include "lj_fopen.h"
 
 /* Userdata payload for I/O file. */
 typedef struct IOFileUD {
@@ -84,7 +85,7 @@ static IOFileUD *io_file_open(lua_State *L, const char *mode)
 {
   const char *fname = strdata(lj_lib_checkstr(L, 1));
   IOFileUD *iof = io_file_new(L);
-  iof->fp = fopen(fname, mode);
+  iof->fp = _lua_fopen(fname, mode);
   if (iof->fp == NULL)
     luaL_argerror(L, 1, lj_strfmt_pushf(L, "%s: %s", fname, strerror(errno)));
   return iof;
@@ -178,7 +179,7 @@ static int io_file_readlen(lua_State *L, FILE *fp, MSize m)
     MSize n = (MSize)fread(buf, 1, m, fp);
     setstrV(L, L->top++, lj_str_new(L, buf, (size_t)n));
     lj_gc_check(L);
-    return (n > 0 || m == 0);
+    return n > 0;
   } else {
     int c = getc(fp);
     ungetc(c, fp);
@@ -253,8 +254,6 @@ static int io_file_iter(lua_State *L)
     lj_err_caller(L, LJ_ERR_IOCLFL);
   L->top = L->base;
   if (n) {  /* Copy upvalues with options to stack. */
-    if (n > LUAI_MAXCSTACK)
-      lj_err_caller(L, LJ_ERR_STKOV);
     lj_state_checkstack(L, (MSize)n);
     memcpy(L->top, &fn->c.upvalue[1], n*sizeof(TValue));
     L->top += n;
@@ -303,6 +302,14 @@ LJLIB_CF(io_method_flush)		LJLIB_REC(io_flush 0)
 {
   return luaL_fileresult(L, fflush(io_tofile(L)->fp) == 0, NULL);
 }
+
+#if LJ_32 && defined(__ANDROID__) && __ANDROID_API__ < 24
+/* The Android NDK is such an unmatched marvel of engineering. */
+extern int fseeko32(FILE *, long int, int) __asm__("fseeko");
+extern long int ftello32(FILE *) __asm__("ftello");
+#define fseeko(fp, pos, whence)	(fseeko32((fp), (pos), (whence)))
+#define ftello(fp)		(ftello32((fp)))
+#endif
 
 LJLIB_CF(io_method_seek)
 {
@@ -398,7 +405,7 @@ LJLIB_CF(io_open)
   GCstr *s = lj_lib_optstr(L, 2);
   const char *mode = s ? strdata(s) : "r";
   IOFileUD *iof = io_file_new(L);
-  iof->fp = fopen(fname, mode);
+  iof->fp = _lua_fopen(fname, mode);
   return iof->fp != NULL ? 1 : luaL_fileresult(L, 0, fname);
 }
 
