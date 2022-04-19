@@ -5396,6 +5396,31 @@ GROW_SIDE_ON_RAMP_TALL_TO_JUNCTION =
   },
 },
 
+GROW_SIDE_ON_RAMP_TALL_TO_JUNCTION_LIQUID =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    "......","A%/%/A",
+    "......","AA~~AA",
+    "x....x","x^~~^x",
+    "x....x","x^~~^x",
+    "x....x","x1%/1x",
+    "x....x","x1111x",
+    "1....x","11111x",
+    "1....x","1111/x",
+  },
+
+  diagonals =
+  {
+    "A.",".~","~.","A.",
+    "1~","~1",
+    "1."
+  }
+},
+
 GROW_SIDE_ON_RAMP_TALL_LIQUID =
 {
   prob = 25,
@@ -5565,6 +5590,57 @@ GROW_CAUSEWAY_WATERBOUND_PILLAR_INTERRUPT =
   {
     "~.",".~",
     "~.",".~",
+  }
+},
+
+GROW_CAUSEWAY_WATERBOUND_PILLAR_INNER_LOOP =
+{
+  prob = 25,
+  skip_prob = 80,
+
+  structure =
+  {
+    "x..........","x11~~AA~~11",
+    "x..........","x11~~AA~~11",
+    "x..........","x11~/AA%~11",
+    "x..........","x11>A..A<11",
+    "x..........","x11>A..A<11",
+    "x..........","x11~%AA/~11",
+    "1..........","111~~AA~~11",
+    "1..........","111~~AA~~11",
+  },
+
+  diagonals =
+  {
+    "~A","A~",
+    "~A","A~",
+  }
+},
+
+GROW_CAUSEWAY_WATERBOUND_PILLAR_INNER_LOOP_TEE =
+{
+  prob = 25,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x..........","xAAAAAAAAAA",
+    "x..........","xAAAAAAAAAA",
+    "x..........","x11~%AA/~11",
+    "x..........","x11~~AA~~11",
+    "x..........","x11~/AA%~11",
+    "x..........","x11>AAAA<11",
+    "x..........","x11>AAAA<11",
+    "x..........","x11~%AA/~11",
+    "1..........","111~~AA~~11",
+    "1..........","111~~AA~~11",
+  },
+
+  diagonals =
+  {
+    "~A","A~",
+    "~A","A~",
+    "~A","A~",
   }
 },
 
