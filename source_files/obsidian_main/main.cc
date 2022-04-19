@@ -165,7 +165,7 @@ Fl_JPEG_Image *tutorial9;
 Fl_JPEG_Image *tutorial10;
 
 #ifdef WIN32
-FLASHWINFO blinker;
+FLASHWINFO *blinker;
 #endif
 
 static void main_win_surprise_config_CB(Fl_Widget *w, void *data) {
@@ -878,7 +878,7 @@ void SetupFltk() {
 }  // namespace Main
 
 #ifdef WIN32
-void Main::Blinker() { FlashWindowEx(&blinker); }
+void Main::Blinker() { FlashWindowEx(blinker); }
 #endif
 
 void Main::Ticker() {
@@ -1472,8 +1472,18 @@ skiprest:
 
 #ifdef WIN32  // Populate structure for taskbar/window flash. Must be done after
               // main_win->show() function - Dasho
-    blinker = {sizeof(FLASHWINFO), fl_xid(main_win),
-               FLASHW_ALL | FLASHW_TIMERNOFG, 0, 0};
+    if (!blinker) {
+        blinker = new FLASHWINFO;
+        blinker->cbSize = sizeof(FLASHWINFO);
+        blinker->hwnd = fl_xid(main_win);
+        blinker->dwFlags = FLASHW_ALL | FLASHW_TIMERNOFG;
+        blinker->dwTimeout = 0;
+        blinker->uCount = 0;
+    } else {
+        blinker->hwnd = fl_xid(main_win);
+        if (!old_seed.empty() && !old_name.empty())
+            Main::Blinker();
+    }
 #endif
 
     // kill the stupid bright background of the "plastic" scheme
@@ -1520,10 +1530,12 @@ skiprest:
     if (!old_seed.empty()) {
         main_win->build_box->seed_disp->copy_label(
                 fmt::format("Seed: {}", old_seed).c_str());
+        old_seed.clear();
     }
 
     if (!old_name.empty()) {
         main_win->build_box->name_disp->copy_label(old_name.c_str());
+        old_name.clear();
     }
 
     if (old_pixels) {
