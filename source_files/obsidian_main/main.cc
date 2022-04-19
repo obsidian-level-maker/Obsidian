@@ -1465,7 +1465,7 @@ skiprest:
         fake_argv[0] = strdup("Obsidian.exe");
         fake_argv[1] = NULL;
         main_win->show(1 /* argc */, fake_argv);
-        if (first_run) {
+        if (first_run && !restart_after_builds) {
             DLG_Tutorial();
         }
     }
