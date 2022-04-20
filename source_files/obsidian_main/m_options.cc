@@ -220,7 +220,9 @@ class UI_OptionsWin : public Fl_Window {
     UI_HelpLink *custom_prefix_help;
 
     UI_CustomCheckBox *opt_random_string_seeds;
+    UI_HelpLink *random_string_seeds_help;
     UI_CustomCheckBox *opt_password_mode;
+    UI_HelpLink *password_mode_help;
     UI_CustomCheckBox *opt_backups;
     UI_CustomCheckBox *opt_overwrite;
     UI_CustomCheckBox *opt_debug;
@@ -229,6 +231,7 @@ class UI_OptionsWin : public Fl_Window {
     UI_CustomCheckBox *opt_zip_logs;
     UI_CustomCheckBox *opt_timestamp_logs;
     UI_CustomCheckBox *opt_restart_after_builds;
+    UI_HelpLink *restart_after_builds_help;
 
    public:
     UI_OptionsWin(int W, int H, const char *label = NULL);
@@ -302,6 +305,25 @@ class UI_OptionsWin : public Fl_Window {
         restart_after_builds = that->opt_restart_after_builds->value() ? true : false;
     }
 
+    static void callback_RestartAfterBuildsHelp(Fl_Widget *w, void *data) {
+        fl_cursor(FL_CURSOR_DEFAULT);
+        Fl_Window *win = new Fl_Window(640, 480, "Restart Lua VM After Builds");
+        Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+        Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
+        disp->buffer(buff);
+        disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+        win->resizable(*disp);
+        win->hotspot(0, 0, 0);
+        win->set_modal();
+        win->show();
+        buff->text(
+            "Obsidian has migrated from Lua to LuaJIT. One side effect of this is that even with a fixed seed, \
+subsequent runs with the same configuration will not guarantee the same result.\n\nRestarting the Lua VM between \
+builds will improve the odds of being able to repeat the results of a prior seed/setting combination, with the downside \
+of visibly restarting the program every time a map is generated (even unsuccessfully).\n\nIf you have no particular need \
+to recreate the results of prior runs, this option can be safely left off.");
+    }
+
     static void callback_TimestampLogs(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
@@ -333,10 +355,43 @@ class UI_OptionsWin : public Fl_Window {
         }
     }
 
+static void callback_RandomStringSeedsHelp(Fl_Widget *w, void *data) {
+        fl_cursor(FL_CURSOR_DEFAULT);
+        Fl_Window *win = new Fl_Window(640, 480, "Random String Seeds");
+        Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+        Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
+        disp->buffer(buff);
+        disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+        win->resizable(*disp);
+        win->hotspot(0, 0, 0);
+        win->set_modal();
+        win->show();
+        buff->text(
+            "Will randomly pull 1 to 3 words from Obsidian's random word list (found in \
+/scripts/random_words.lua) and use those as input for the map generation seed. Purely for \
+cosmetic/entertainment value.");
+    }
+
     static void callback_Password_Mode(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         password_mode = that->opt_password_mode->value() ? true : false;
+    }
+
+static void callback_PasswordModeHelp(Fl_Widget *w, void *data) {
+        fl_cursor(FL_CURSOR_DEFAULT);
+        Fl_Window *win = new Fl_Window(640, 480, "Password Mode");
+        Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+        Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
+        disp->buffer(buff);
+        disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+        win->resizable(*disp);
+        win->hotspot(0, 0, 0);
+        win->set_modal();
+        win->show();
+        buff->text(
+            "Will produce a pseudo-random sequence of characters as input for the map \
+generation seed. Random String Seeds must be enabled to use this option.");
     }
 
     static void callback_Backups(Fl_Widget *w, void *data) {
@@ -532,6 +587,12 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_random_string_seeds->selection_color(SELECTION);
     opt_random_string_seeds->down_box(button_style);
 
+    random_string_seeds_help = new UI_HelpLink(
+        136 + KF * 40 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
+    random_string_seeds_help->labelfont(font_style);
+    random_string_seeds_help->callback(callback_RandomStringSeedsHelp, this);
+
+
     cy += opt_random_string_seeds->h() + y_step * .5;
 
     opt_password_mode = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
@@ -544,6 +605,12 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     if (!random_string_seeds) {
         opt_password_mode->deactivate();
     }
+
+    password_mode_help = new UI_HelpLink(
+        136 + KF * 40 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
+    password_mode_help->labelfont(font_style);
+    password_mode_help->callback(callback_PasswordModeHelp, this);
+
 
     cy += opt_password_mode->h() + y_step * .5;
 
@@ -628,6 +695,11 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_restart_after_builds->labelfont(font_style);
     opt_restart_after_builds->selection_color(SELECTION);
     opt_restart_after_builds->down_box(button_style);
+
+    restart_after_builds_help = new UI_HelpLink(
+        136 + KF * 40 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
+    restart_after_builds_help->labelfont(font_style);
+    restart_after_builds_help->callback(callback_RestartAfterBuildsHelp, this);
 
 
     //----------------
