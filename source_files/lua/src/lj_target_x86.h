@@ -1,6 +1,6 @@
 /*
 ** Definitions for x86 and x64 CPUs.
-** Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 */
 
 #ifndef _LJ_TARGET_X86_H
@@ -164,6 +164,8 @@ typedef struct {
 /* Limited by the range of a short fwd jump (127): (2+2)*(32-1)-2 = 122. */
 #define EXITSTUB_SPACING	(2+2)
 #define EXITSTUBS_PER_GROUP	32
+
+#define EXITTRACE_VMSTATE	1	/* g->vmstate has traceno on exit. */
 
 /* -- x86 ModRM operand encoding ------------------------------------------ */
 

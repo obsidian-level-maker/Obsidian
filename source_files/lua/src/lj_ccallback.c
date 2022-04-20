@@ -1,6 +1,6 @@
 /*
 ** FFI C callback handling.
-** Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 */
 
 #include "lj_obj.h"
@@ -256,6 +256,11 @@ static void *callback_mcode_init(global_State *g, uint32_t *page)
 #ifndef MAP_ANONYMOUS
 #define MAP_ANONYMOUS   MAP_ANON
 #endif
+#ifdef PROT_MPROTECT
+#define CCPROT_CREATE	(PROT_MPROTECT(PROT_EXEC))
+#else
+#define CCPROT_CREATE	0
+#endif
 
 #endif
 
@@ -271,7 +276,7 @@ static void callback_mcode_new(CTState *cts)
   if (!p)
     lj_err_caller(cts->L, LJ_ERR_FFI_CBACKOV);
 #elif LJ_TARGET_POSIX
-  p = mmap(NULL, sz, (PROT_READ|PROT_WRITE), MAP_PRIVATE|MAP_ANONYMOUS,
+  p = mmap(NULL, sz, (PROT_READ|PROT_WRITE|CCPROT_CREATE), MAP_PRIVATE|MAP_ANONYMOUS,
 	   -1, 0);
   if (p == MAP_FAILED)
     lj_err_caller(cts->L, LJ_ERR_FFI_CBACKOV);
@@ -409,7 +414,7 @@ void lj_ccallback_mcode_free(CTState *cts)
       nfpr = CCALL_NARG_FPR;  /* Prevent reordering. */ \
     } \
   } else { \
-    if (!LJ_TARGET_IOS && n > 1) \
+    if (!LJ_TARGET_OSX && n > 1) \
       ngpr = (ngpr + 1u) & ~1u;  /* Align to regpair. */ \
     if (ngpr + n <= maxgpr) { \
       sp = &cts->cb.gpr[ngpr]; \
@@ -549,13 +554,13 @@ static void callback_conv_args(CTState *cts, lua_State *L)
   if (LJ_FR2) {
     (o++)->u64 = LJ_CONT_FFI_CALLBACK;
     (o++)->u64 = rid;
-    o++;
   } else {
     o->u32.lo = LJ_CONT_FFI_CALLBACK;
     o->u32.hi = rid;
     o++;
   }
   setframe_gc(o, obj2gco(fn), fntp);
+  if (LJ_FR2) o++;
   setframe_ftsz(o, ((char *)(o+1) - (char *)L->base) + FRAME_CONT);
   L->top = L->base = ++o;
   if (!ct)

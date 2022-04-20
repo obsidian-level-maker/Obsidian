@@ -134,8 +134,15 @@ bool did_specify_seed = false;
 int zip_output = 0;
 bool zip_logs = false;
 bool timestamp_logs = false;
+bool restart_after_builds = false;
 
 bool first_run = false;
+
+int old_x = 0;
+int old_y = 0;
+std::string old_seed;
+std::string old_name;
+u8_t *old_pixels;
 
 std::filesystem::path gif_filename = "gif_output.gif";
 
@@ -158,7 +165,7 @@ Fl_JPEG_Image *tutorial9;
 Fl_JPEG_Image *tutorial10;
 
 #ifdef WIN32
-FLASHWINFO blinker;
+FLASHWINFO *blinker;
 #endif
 
 static void main_win_surprise_config_CB(Fl_Widget *w, void *data) {
@@ -871,7 +878,7 @@ void SetupFltk() {
 }  // namespace Main
 
 #ifdef WIN32
-void Main::Blinker() { FlashWindowEx(&blinker); }
+void Main::Blinker() { FlashWindowEx(blinker); }
 #endif
 
 void Main::Ticker() {
@@ -1346,6 +1353,10 @@ skiprest:
                     OBSIDIAN_CODE_NAME);
     main_win = new UI_MainWin(main_w, main_h, main_title.c_str());
 
+    if (old_x > 0 || old_y > 0) {
+        main_win->resize(old_x, old_y, main_w, main_h);
+    }
+
     //???	Default_Location();
 
     Script_Open();
@@ -1454,15 +1465,25 @@ skiprest:
         fake_argv[0] = strdup("Obsidian.exe");
         fake_argv[1] = NULL;
         main_win->show(1 /* argc */, fake_argv);
-        if (first_run) {
+        if (first_run && !restart_after_builds) {
             DLG_Tutorial();
         }
     }
 
 #ifdef WIN32  // Populate structure for taskbar/window flash. Must be done after
               // main_win->show() function - Dasho
-    blinker = {sizeof(FLASHWINFO), fl_xid(main_win),
-               FLASHW_ALL | FLASHW_TIMERNOFG, 0, 0};
+    if (!blinker) {
+        blinker = new FLASHWINFO;
+        blinker->cbSize = sizeof(FLASHWINFO);
+        blinker->hwnd = fl_xid(main_win);
+        blinker->dwFlags = FLASHW_ALL | FLASHW_TIMERNOFG;
+        blinker->dwTimeout = 0;
+        blinker->uCount = 0;
+    } else {
+        blinker->hwnd = fl_xid(main_win);
+        if (!old_seed.empty() && !old_name.empty())
+            Main::Blinker();
+    }
 #endif
 
     // kill the stupid bright background of the "plastic" scheme
@@ -1506,6 +1527,28 @@ skiprest:
     // shown() because that is when FLTK finalises the colors).
     main_win->build_box->mini_map->EmptyMap();
 
+    if (!old_seed.empty()) {
+        main_win->build_box->seed_disp->copy_label(
+                fmt::format("Seed: {}", old_seed).c_str());
+        old_seed.clear();
+    }
+
+    if (!old_name.empty()) {
+        main_win->build_box->name_disp->copy_label(old_name.c_str());
+        old_name.clear();
+    }
+
+    if (old_pixels) {
+        if (main_win->build_box->mini_map->pixels)
+            delete[] main_win->build_box->mini_map->pixels;
+        int map_size = main_win->build_box->mini_map->map_W * main_win->build_box->mini_map->map_H * 3;
+        main_win->build_box->mini_map->pixels = new u8_t[map_size];
+        memcpy(main_win->build_box->mini_map->pixels, old_pixels, map_size);
+        delete[] old_pixels;
+        old_pixels = NULL;
+        main_win->build_box->mini_map->MapFinish();
+    }
+
     try {
         // run the GUI until the user quits
         for (;;) {
@@ -1529,12 +1572,31 @@ skiprest:
                     Cookie_Save(config_file);
                 }
 
-                Build_Cool_Shit();
+                bool result = Build_Cool_Shit();
+
+                did_specify_seed = false;
+
+                if (restart_after_builds) {
+                    if (result) {
+                        old_seed = string_seed.empty() ? NumToString(next_rand_seed) : string_seed;
+                        if (main_win->build_box->name_disp->label())
+                            old_name = main_win->build_box->name_disp->label();
+                        if (main_win->build_box->mini_map->pixels) {
+                            int map_size = main_win->build_box->mini_map->map_W * main_win->build_box->mini_map->map_H * 3;
+                            old_pixels = new u8_t[map_size];
+                            memcpy(old_pixels, main_win->build_box->mini_map->pixels, map_size);
+                        }
+                    } else {
+                        old_seed.clear();
+                        old_name.clear();
+                    }
+                }
 
                 // regardless of success or fail, compute a new seed
                 Main_CalcNewSeed();
 
-                did_specify_seed = false;
+                if (restart_after_builds)
+                    main_action = MAIN_RESTART;
             }
         }
     } catch (const assert_fail_c &err) {
@@ -1562,6 +1624,8 @@ skiprest:
                     Cookie_Save(config_file);
                 }
             }
+            old_x = main_win->x();
+            old_y = main_win->y();
             delete main_win;
             main_win = nullptr;
         }

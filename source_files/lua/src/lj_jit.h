@@ -1,6 +1,6 @@
 /*
 ** Common definitions for the JIT compiler.
-** Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 */
 
 #ifndef _LJ_JIT_H
@@ -184,6 +184,7 @@ typedef struct MCLink {
 typedef struct SnapShot {
   uint32_t mapofs;	/* Offset into snapshot map. */
   IRRef1 ref;		/* First IR ref for this snapshot. */
+  uint16_t mcofs;	/* Offset into machine code in MCode units. */
   uint8_t nslots;	/* Number of valid slots. */
   uint8_t topslot;	/* Maximum frame extent. */
   uint8_t nent;		/* Number of compressed entries. */
@@ -438,9 +439,9 @@ typedef struct jit_State {
   int32_t framedepth;	/* Current frame depth. */
   int32_t retdepth;	/* Return frame depth (count of RETF). */
 
+  uint32_t k32[LJ_K32__MAX];  /* Common 4 byte constants used by backends. */
   TValue ksimd[LJ_KSIMD__MAX*2+1];  /* 16 byte aligned SIMD constants. */
-  TValue k64[LJ_K64__MAX];  /* Common 8 byte constants used by backends. */
-  uint32_t k32[LJ_K32__MAX];  /* Ditto for 4 byte constants. */
+  TValue k64[LJ_K64__MAX];  /* Common 8 byte constants. */
 
   IRIns *irbuf;		/* Temp. IR instruction buffer. Biased with REF_BIAS. */
   IRRef irtoplim;	/* Upper limit of instuction buffer (biased). */
@@ -472,7 +473,6 @@ typedef struct jit_State {
 
   HotPenalty penalty[PENALTY_SLOTS];  /* Penalty slots. */
   uint32_t penaltyslot;	/* Round-robin index into penalty slots. */
-  uint32_t prngstate;	/* PRNG state. */
 
 #ifdef LUAJIT_ENABLE_TABLE_BUMP
   RBCHashEntry rbchash[RBCHASH_SLOTS];  /* Reverse bytecode map. */
@@ -486,6 +486,7 @@ typedef struct jit_State {
   const BCIns *startpc;	/* Bytecode PC of starting instruction. */
   TraceNo parent;	/* Parent of current side trace (0 for root traces). */
   ExitNo exitno;	/* Exit number in parent of current side trace. */
+  int exitcode;		/* Exit code from unwound trace. */
 
   BCIns *patchpc;	/* PC for pending re-patch. */
   BCIns patchins;	/* Instruction for pending re-patch. */
@@ -504,24 +505,12 @@ typedef struct jit_State {
   BCLine prev_line;	/* Previous line. */
   int prof_mode;	/* Profiling mode: 0, 'f', 'l'. */
 #endif
-}
-#if LJ_TARGET_ARM
-LJ_ALIGN(16)		/* For DISPATCH-relative addresses in assembler part. */
-#endif
-jit_State;
+} jit_State;
 
 #ifdef LUA_USE_ASSERT
 #define lj_assertJ(c, ...)	lj_assertG_(J2G(J), (c), __VA_ARGS__)
 #else
 #define lj_assertJ(c, ...)	((void)J)
 #endif
-
-/* Trivial PRNG e.g. used for penalty randomization. */
-static LJ_AINLINE uint32_t LJ_PRNG_BITS(jit_State *J, int bits)
-{
-  /* Yes, this LCG is very weak, but that doesn't matter for our use case. */
-  J->prngstate = J->prngstate * 1103515245 + 12345;
-  return J->prngstate >> (32-bits);
-}
 
 #endif

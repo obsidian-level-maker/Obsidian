@@ -19,6 +19,7 @@
 --
 ------------------------------------------------------------------------
 
+local bit = require("bit")
 
 WADFAB_ENTITIES =
 {
@@ -1812,8 +1813,11 @@ function Fab_load_wad(def)
     local E
 
     for thing_idx = 0,9999 do
-      if OB_CONFIG.game == "hexen" then
+      if OB_CONFIG.game == "hexen" and def.native_hexen then
         E = gui.wadfab_get_thing_hexen(thing_idx)
+        if E then 
+          E["native_hexen"] = 1
+        end
       else
         E = gui.wadfab_get_thing(thing_idx)
       end

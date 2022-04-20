@@ -773,6 +773,14 @@ int Doom::NumThings() {
 
 namespace Doom {
 
+void Send_Prog_Nodes(int progress, int num_maps) {
+    if (main_win) main_win->build_box->Prog_Nodes(progress, num_maps);
+}
+
+void Send_Prog_Step(const char *step_name) {
+    if (main_win) main_win->build_box->AddStatusStep(step_name);
+}
+
 static bool BuildNodes(std::filesystem::path filename) {
     LogPrintf("\n");
 

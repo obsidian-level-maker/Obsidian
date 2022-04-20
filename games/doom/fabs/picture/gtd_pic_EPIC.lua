@@ -244,7 +244,10 @@ PREFABS.Pic_EPIC_box_metal_big =
     SHAWVENT = 50,
     SHAWVEN2 = 50,
     CGCANI00 = 50
-  }
+  },
+
+  flat_CEIL5_2 = "FLAT20",
+  tex_METAL = "DOORSTOP"
 }
 
 PREFABS.Pic_EPIC_box_bishop =
@@ -287,7 +290,10 @@ PREFABS.Pic_EPIC_box_metal_big =
     SHAWVENT = 50,
     SHAWVEN2 = 50,
     CGCANI00 = 50
-  }
+  },
+
+  flat_CEIL5_2 = "FLAT20",
+  tex_METAL = "DOORSTOP"
 }
 
 PREFABS.Pic_EPIC_box_metal_big_bunchacomputers =
@@ -315,7 +321,10 @@ PREFABS.Pic_EPIC_box_metal_big_bunchacomputers =
     CONSOLEE = 50,
     CGCANI00 = 50,
     NOISE1   = 50
-  }
+  },
+
+  flat_CEIL5_2 = "FLAT20",
+  tex_METAL = "DOORSTOP"
 }
 
 PREFABS.Pic_EPIC_box_static =
@@ -337,7 +346,10 @@ PREFABS.Pic_EPIC_box_static =
     NOISE3A = 50,
     TVSNOW01 = 50,
     COMPFUZ1 = 50
-  }
+  },
+
+  flat_CEIL5_2 = "FLAT20",
+  tex_METAL = "DOORSTOP"
 }
 
 PREFABS.Pic_EPIC_box_metal_small =
@@ -367,7 +379,10 @@ PREFABS.Pic_EPIC_box_metal_small =
     COMPVEN2 = 50,
     NMONIA1 = 50,
     DECMP04A = 50
-  }
+  },
+
+  flat_CEIL5_2 = "FLAT20",
+  tex_METAL = "DOORSTOP"
 }
 
 PREFABS.Pic_EPIC_box_metal_wide =
@@ -396,7 +411,10 @@ PREFABS.Pic_EPIC_box_metal_wide =
     COMPSTA9 = 50,
     COMPSTAA = 50,
     COMPSTAB = 50
-  }
+  },
+
+  flat_CEIL5_2 = "FLAT20",
+  tex_METAL = "DOORSTOP"
 }
 
 PREFABS.Pic_EPIC_box_silverwall =
@@ -418,7 +436,10 @@ PREFABS.Pic_EPIC_box_silverwall =
    SILVER2R = 50,
    SILVER2W = 50,
    SILVER2Y = 50
-  }
+  },
+
+  flat_CEIL5_2 = "FLAT20",
+  tex_METAL = "DOORSTOP"
 }
 
 -- 3 seeds wide!!
@@ -448,8 +469,9 @@ PREFABS.Pic_EPIC_box_metal_superwide =
     SILVCOMP = 10
   },
 
-  sector_1 = { [0]=70, [1]=15 }
+  flat_CEIL5_2 = "FLAT20",
 
+  sector_1 = { [0]=70, [1]=15 }
 }
 
 -- This is 256x56,
@@ -469,8 +491,9 @@ PREFABS.Pic_EPIC_superwide_longconsole =
    CONSOLE5 = 100
   },
 
-  sector_1 = { [0]=70, [1]=20 }
+  flat_CEIL5_2 = "FLAT20",
 
+  sector_1 = { [0]=70, [1]=20 }
 }
 
 -- 64x192,

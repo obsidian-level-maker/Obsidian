@@ -1,6 +1,6 @@
 |// Low-level VM code for PowerPC 32 bit or 32on64 bit mode.
 |// Bytecode interpreter, fast functions and helper functions.
-|// Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+|// Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 |
 |.arch ppc
 |.section code_op, code_sub
@@ -1447,9 +1447,9 @@ static void build_subroutines(BuildCtx *ctx)
   |   beq ->fff_restv
   |  lwz TMP0, TAB:CARG1->hmask
   |   li CARG3, LJ_TTAB			// Use metatable as default result.
-  |  lwz TMP1, STR:RC->hash
+  |  lwz TMP1, STR:RC->sid
   |  lwz NODE:TMP2, TAB:CARG1->node
-  |  and TMP1, TMP1, TMP0		// idx = str->hash & tab->hmask
+  |  and TMP1, TMP1, TMP0		// idx = str->sid & tab->hmask
   |  slwi TMP0, TMP1, 5
   |  slwi TMP1, TMP1, 3
   |  sub TMP1, TMP0, TMP1
@@ -2516,7 +2516,7 @@ static void build_subroutines(BuildCtx *ctx)
   |  stw L, SBUF:CARG1->L
   |  stp BASE, L->base
   |  stw PC, SAVE_PC
-  |   stw TMP0, SBUF:CARG1->p
+  |   stw TMP0, SBUF:CARG1->w
   |  bl extern lj_buf_putstr_ .. name
   |  bl extern lj_buf_tostr
   |  b ->fff_resstr
@@ -3092,7 +3092,7 @@ static void build_subroutines(BuildCtx *ctx)
   |9:  // Rethrow error from the right C frame.
   |  neg CARG2, CARG1
   |  mr CARG1, L
-  |  bl extern lj_err_throw		// (lua_State *L, int errcode)
+  |  bl extern lj_err_trace		// (lua_State *L, int errcode)
   |.endif
   |
   |//-----------------------------------------------------------------------
@@ -4101,8 +4101,8 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
     |.macro addo32., y, a, b
     |  // Need to check overflow for (a<<32) + (b<<32).
     |  rldicr TMP0, a, 32, 31
-    |  rldicr TMP3, b, 32, 31
-    |  addo. TMP0, TMP0, TMP3
+    |  rldicr TMP1, b, 32, 31
+    |  addo. TMP0, TMP0, TMP1
     |  add y, a, b
     |.endmacro
     |  ins_arith addo32., fadd, __adddf3
@@ -4115,8 +4115,8 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
     |.macro subo32., y, a, b
     |  // Need to check overflow for (a<<32) - (b<<32).
     |  rldicr TMP0, a, 32, 31
-    |  rldicr TMP3, b, 32, 31
-    |  subo. TMP0, TMP0, TMP3
+    |  rldicr TMP1, b, 32, 31
+    |  subo. TMP0, TMP0, TMP1
     |  sub y, a, b
     |.endmacro
     |  ins_arith subo32., fsub, __subdf3
@@ -4588,9 +4588,9 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
     |->BC_TGETS_Z:
     |  // TAB:RB = GCtab *, STR:RC = GCstr *, RA = dst*8
     |  lwz TMP0, TAB:RB->hmask
-    |  lwz TMP1, STR:RC->hash
+    |  lwz TMP1, STR:RC->sid
     |  lwz NODE:TMP2, TAB:RB->node
-    |  and TMP1, TMP1, TMP0		// idx = str->hash & tab->hmask
+    |  and TMP1, TMP1, TMP0		// idx = str->sid & tab->hmask
     |  slwi TMP0, TMP1, 5
     |  slwi TMP1, TMP1, 3
     |  sub TMP1, TMP0, TMP1
@@ -4784,10 +4784,10 @@ static void build_ins(BuildCtx *ctx, BCOp op, int defop)
     |->BC_TSETS_Z:
     |  // TAB:RB = GCtab *, STR:RC = GCstr *, RA = src*8
     |  lwz TMP0, TAB:RB->hmask
-    |  lwz TMP1, STR:RC->hash
+    |  lwz TMP1, STR:RC->sid
     |  lwz NODE:TMP2, TAB:RB->node
     |    stb ZERO, TAB:RB->nomm		// Clear metamethod cache.
-    |  and TMP1, TMP1, TMP0		// idx = str->hash & tab->hmask
+    |  and TMP1, TMP1, TMP0		// idx = str->sid & tab->hmask
     |.if FPU
     |    lfdx f14, BASE, RA
     |.else

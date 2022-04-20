@@ -2650,6 +2650,10 @@ static void WriteThing(sector_c *S, csg_entity_c *E) {
         h = 0;
     }
 
+    if (E->props.getInt("native_hexen", 0)) {
+        h = z;
+    }
+
     // parse entity properties
     int angle = E->props.getInt("angle");
     int tid = E->props.getInt("tid");

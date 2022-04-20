@@ -1,6 +1,6 @@
 /*
 ** Trace recorder (bytecode -> SSA IR).
-** Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 */
 
 #define lj_record_c
@@ -33,6 +33,7 @@
 #include "lj_snap.h"
 #include "lj_dispatch.h"
 #include "lj_vm.h"
+#include "lj_prng.h"
 
 /* Some local macros to save typing. Undef'd at the end. */
 #define IR(ref)			(&J->cur.ir[(ref)])
@@ -210,6 +211,7 @@ static TRef getcurrf(jit_State *J)
 {
   if (J->base[-1-LJ_FR2])
     return J->base[-1-LJ_FR2];
+  /* Non-base frame functions ought to be loaded already. */
   lj_assertJ(J->baseslot == 1+LJ_FR2, "bad baseslot");
   return sloadt(J, -1-LJ_FR2, IRT_FUNC, IRSLOAD_READONLY);
 }
@@ -569,10 +571,10 @@ static LoopEvent rec_iterl(jit_State *J, const BCIns iterins)
 }
 
 /* Record LOOP/JLOOP. Now, that was easy. */
-static LoopEvent rec_loop(jit_State *J, BCReg ra)
+static LoopEvent rec_loop(jit_State *J, BCReg ra, int skip)
 {
   if (ra < J->maxslot) J->maxslot = ra;
-  J->pc++;
+  J->pc += skip;
   return LOOPEV_ENTER;
 }
 
@@ -830,6 +832,7 @@ void lj_record_ret(jit_State *J, BCReg rbase, ptrdiff_t gotresults)
     J->base -= cbase;
     J->base[--rbase] = TREF_TRUE;  /* Prepend true to results. */
     frame = frame_prevd(frame);
+    J->needsnap = 1;  /* Stop catching on-trace errors. */
   }
   /* Return to lower frame via interpreter for unhandled cases. */
   if (J->framedepth == 0 && J->pt && bc_isret(bc_op(*J->pc)) &&
@@ -916,6 +919,9 @@ void lj_record_ret(jit_State *J, BCReg rbase, ptrdiff_t gotresults)
       TRef tr = gotresults ? J->base[cbase+rbase] : TREF_NIL;
       if (bslot != J->maxslot) {  /* Concatenate the remainder. */
 	TValue *b = J->L->base, save;  /* Simulate lower frame and result. */
+	/* Can't handle MM_concat + CALLT + fast func side-effects. */
+	if (J->postproc != LJ_POST_NONE)
+	  lj_trace_err(J, LJ_TRERR_NYIRETL);
 	J->base[J->maxslot] = tr;
 	copyTV(J->L, &save, b-(2<<LJ_FR2));
 	if (gotresults)
@@ -1696,7 +1702,7 @@ static void check_call_unroll(jit_State *J, TraceNo lnk)
       if (lnk) {  /* Possible tail- or up-recursion. */
 	lj_trace_flush(J, lnk);  /* Flush trace that only returns. */
 	/* Set a small, pseudo-random hotcount for a quick retry of JFUNC*. */
-	hotcount_set(J2GG(J), J->pc+1, LJ_PRNG_BITS(J, 4));
+	hotcount_set(J2GG(J), J->pc+1, lj_prng_u64(&J2G(J)->prng) & 15u);
       }
       lj_trace_err(J, LJ_TRERR_CUNROLL);
     }
@@ -1933,9 +1939,9 @@ static TRef rec_cat(jit_State *J, BCReg baseslot, BCReg topslot)
     tr = hdr = emitir(IRT(IR_BUFHDR, IRT_PGC),
 		      lj_ir_kptr(J, &J2G(J)->tmpbuf), IRBUFHDR_RESET);
     do {
-      tr = emitir(IRT(IR_BUFPUT, IRT_PGC), tr, *trp++);
+      tr = emitir(IRTG(IR_BUFPUT, IRT_PGC), tr, *trp++);
     } while (trp <= top);
-    tr = emitir(IRT(IR_BUFSTR, IRT_STR), tr, hdr);
+    tr = emitir(IRTG(IR_BUFSTR, IRT_STR), tr, hdr);
     J->maxslot = (BCReg)(xbase - J->base);
     if (xbase == base) return tr;  /* Return simple concatenation result. */
     /* Pass partial result. */
@@ -2048,7 +2054,7 @@ void lj_record_ins(jit_State *J)
   /* Need snapshot before recording next bytecode (e.g. after a store). */
   if (J->needsnap) {
     J->needsnap = 0;
-    lj_snap_purge(J);
+    if (J->pt) lj_snap_purge(J);
     lj_snap_add(J);
     J->mergesnap = 1;
   }
@@ -2422,7 +2428,7 @@ void lj_record_ins(jit_State *J)
     rec_loop_interp(J, pc, rec_iterl(J, *pc));
     break;
   case BC_LOOP:
-    rec_loop_interp(J, pc, rec_loop(J, ra));
+    rec_loop_interp(J, pc, rec_loop(J, ra, 1));
     break;
 
   case BC_JFORL:
@@ -2432,7 +2438,8 @@ void lj_record_ins(jit_State *J)
     rec_loop_jit(J, rc, rec_iterl(J, traceref(J, rc)->startins));
     break;
   case BC_JLOOP:
-    rec_loop_jit(J, rc, rec_loop(J, ra));
+    rec_loop_jit(J, rc, rec_loop(J, ra,
+				 !bc_isret(bc_op(traceref(J, rc)->startins))));
     break;
 
   case BC_IFORL:

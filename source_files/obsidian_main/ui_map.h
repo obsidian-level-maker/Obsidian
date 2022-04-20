@@ -28,11 +28,12 @@
 
 class UI_MiniMap : public Fl_Box {
    private:
+    Fl_RGB_Image *cur_image;
+
+   public:
     int map_W, map_H;
 
     u8_t *pixels;
-
-    Fl_RGB_Image *cur_image;
 
    public:
     UI_MiniMap(int x, int y, int w, int h, const char *label = NULL);

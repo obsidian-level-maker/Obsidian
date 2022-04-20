@@ -397,7 +397,7 @@ PREFABS.Pic_gtd_green_comp_EPIC =
   template = "Pic_tech_comp_set_1_red",
   map = "MAP06",
 
-  height = 80,
+  height = 88,
 
   seed_w = 2,
 
@@ -406,7 +406,7 @@ PREFABS.Pic_gtd_green_comp_EPIC =
   x_fit = "frame",
   z_fit = "top",
 
-  bound_z2 = 80,
+  bound_z2 = 88,
 
   sector_1 =
   {

@@ -1,6 +1,6 @@
 /*
 ** x86/x64 instruction emitter.
-** Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 */
 
 /* -- Emit basic instructions --------------------------------------------- */
@@ -45,7 +45,7 @@ static LJ_AINLINE MCode *emit_op(x86Op xo, Reg rr, Reg rb, Reg rx,
     *(uint32_t *)(p+delta-5) = (uint32_t)xo;
     return p+delta-5;
   }
-#if defined(__GNUC__)
+#if defined(__GNUC__) || defined(__clang__)
   if (__builtin_constant_p(xo) && n == -2)
     p[delta-2] = (MCode)(xo >> 24);
   else if (__builtin_constant_p(xo) && n == -3)

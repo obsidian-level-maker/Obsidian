@@ -23,7 +23,7 @@
 
 
 -- this function is now deprecated
-require = function() error("require() is deprecated") end
+--require = function() error("require() is deprecated") end
 
 
 function int(val)

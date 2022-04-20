@@ -208,7 +208,7 @@ int wadfab_get_thing_hexen(lua_State *L) {
     lua_pushinteger(L, TH->y);
     lua_setfield(L, -2, "y");
 
-    lua_pushinteger(L, calc_thing_z(TH->x, TH->y) + TH->height);
+    lua_pushinteger(L, TH->height);
     lua_setfield(L, -2, "z");
 
     lua_pushinteger(L, TH->angle);

@@ -1,6 +1,6 @@
 /*
 ** SSA IR (Intermediate Representation) format.
-** Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 */
 
 #ifndef _LJ_IR_H
@@ -124,8 +124,8 @@
   \
   /* Buffer operations. */ \
   _(BUFHDR,	L , ref, lit) \
-  _(BUFPUT,	L , ref, ref) \
-  _(BUFSTR,	A , ref, ref) \
+  _(BUFPUT,	LW, ref, ref) \
+  _(BUFSTR,	AW, ref, ref) \
   \
   /* Barriers. */ \
   _(TBAR,	S , ref, ___) \
@@ -133,15 +133,15 @@
   _(XBAR,	S , ___, ___) \
   \
   /* Type conversions. */ \
-  _(CONV,	NW, ref, lit) \
+  _(CONV,	N , ref, lit) \
   _(TOBIT,	N , ref, ref) \
   _(TOSTR,	N , ref, lit) \
   _(STRTO,	N , ref, ___) \
   \
   /* Calls. */ \
-  _(CALLN,	N , ref, lit) \
-  _(CALLA,	A , ref, lit) \
-  _(CALLL,	L , ref, lit) \
+  _(CALLN,	NW, ref, lit) \
+  _(CALLA,	AW, ref, lit) \
+  _(CALLL,	LW, ref, lit) \
   _(CALLS,	S , ref, lit) \
   _(CALLXS,	S , ref, ref) \
   _(CARG,	N , ref, ref) \
@@ -204,6 +204,7 @@ IRFPMDEF(FPMENUM)
   _(UDATA_META,	offsetof(GCudata, metatable)) \
   _(UDATA_UDTYPE, offsetof(GCudata, udtype)) \
   _(UDATA_FILE,	sizeof(GCudata)) \
+  _(UDATA_BUF_R, sizeof(GCudata) + offsetof(SBufExt, r)) \
   _(CDATA_CTYPEID, offsetof(GCcdata, ctypeid)) \
   _(CDATA_PTR,	sizeof(GCcdata)) \
   _(CDATA_INT, sizeof(GCcdata)) \
@@ -586,5 +587,13 @@ static LJ_AINLINE int ir_sideeff(IRIns *ir)
 }
 
 LJ_STATIC_ASSERT((int)IRT_GUARD == (int)IRM_W);
+
+/* Replace IR instruction with NOP. */
+static LJ_AINLINE void lj_ir_nop(IRIns *ir)
+{
+  ir->ot = IRT(IR_NOP, IRT_NIL);
+  ir->op1 = ir->op2 = 0;
+  ir->prev = 0;
+}
 
 #endif

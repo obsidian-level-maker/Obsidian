@@ -1,6 +1,6 @@
 /*
 ** FFI C call handling.
-** Copyright (C) 2005-2020 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
 */
 
 #include "lj_obj.h"
@@ -334,7 +334,7 @@
   isfp = sz == 2*sizeof(float) ? 2 : 1;
 
 #define CCALL_HANDLE_REGARG \
-  if (LJ_TARGET_IOS && isva) { \
+  if (LJ_TARGET_OSX && isva) { \
     /* IOS: All variadic arguments are on the stack. */ \
   } else if (isfp) {  /* Try to pass argument in FPRs. */ \
     int n2 = ctype_isvector(d->info) ? 1 : \
@@ -345,10 +345,10 @@
       goto done; \
     } else { \
       nfpr = CCALL_NARG_FPR;  /* Prevent reordering. */ \
-      if (LJ_TARGET_IOS && d->size < 8) goto err_nyi; \
+      if (LJ_TARGET_OSX && d->size < 8) goto err_nyi; \
     } \
   } else {  /* Try to pass argument in GPRs. */ \
-    if (!LJ_TARGET_IOS && (d->info & CTF_ALIGN) > CTALIGN_PTR) \
+    if (!LJ_TARGET_OSX && (d->info & CTF_ALIGN) > CTALIGN_PTR) \
       ngpr = (ngpr + 1u) & ~1u;  /* Align to regpair. */ \
     if (ngpr + n <= maxgpr) { \
       dp = &cc->gpr[ngpr]; \
@@ -356,7 +356,7 @@
       goto done; \
     } else { \
       ngpr = maxgpr;  /* Prevent reordering. */ \
-      if (LJ_TARGET_IOS && d->size < 8) goto err_nyi; \
+      if (LJ_TARGET_OSX && d->size < 8) goto err_nyi; \
     } \
   }
 
@@ -1167,7 +1167,7 @@ int lj_ccall_func(lua_State *L, GCcdata *cd)
     lj_vm_ffi_call(&cc);
     if (cts->cb.slot != ~0u) {  /* Blacklist function that called a callback. */
       TValue tv;
-      setlightudV(&tv, (void *)cc.func);
+      tv.u64 = ((uintptr_t)(void *)cc.func >> 2) | U64x(800000000, 00000000);
       setboolV(lj_tab_set(L, cts->miscmap, &tv), 1);
     }
     ct = (CType *)((intptr_t)ct+(intptr_t)cts->tab);  /* May be reallocated. */
