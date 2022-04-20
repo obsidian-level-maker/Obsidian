@@ -2,6 +2,8 @@ HACX.VANILLA_MATS =
 {
     -- There are always added by Obsidian regardless of Engine selected
     "O_BOLT",
+    -- Added for exit sign fabs
+    "HAC_EXIT",
     -- Vanilla Flats
     "BLOOD1",
     "BLOOD2",

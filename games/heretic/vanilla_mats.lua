@@ -2,6 +2,8 @@ HERETIC.VANILLA_MATS =
 {
     -- There are always added by Obsidian regardless of Engine selected
     "O_BOLT",
+    -- Added for exit sign variants
+    "HER_EXIT",
     -- Vanilla Flats
     "FLAT500",
     "FLAT502",

@@ -527,7 +527,8 @@ PREFABS.Wall_hexagon_uac_spotlights_vanilla =
 
   tex_WARNSTEP = "SLADWALL",
   tex_BIGDOORH = "BIGDOOR2",
-  tex_BIGDOORM = "BIGDOOR2"
+  tex_BIGDOORM = "BIGDOOR2",
+  flat_WARN2 = "CEIL5_2"
 }
 
 PREFABS.Wall_tech_outdoor_orange_oct_white_binding = --#
