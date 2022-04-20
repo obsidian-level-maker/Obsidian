@@ -36,6 +36,7 @@ DOOM.MATERIALS =
   _ERROR   = { t="METAL",  f="FLAT5_1" },
   _DEFAULT = { t="GRAY1",  f="FLAT1" },
   _SKY     = { t="METAL",  f="F_SKY1" },
+  F_SKY1     = { t="METAL",  f="F_SKY1" }, -- To make the material checker happy - Dasho
 
   -- materials for generic prefab set --
   _RUNIC = { t="FIREBLU1", f="FLOOR6_1" },
@@ -138,11 +139,15 @@ DOOM.MATERIALS =
   EXITSIGN = { t="EXITSIGN", f="CEIL5_1", sane=1 },
   EXITSTON = { t="EXITSTON", f="MFLR8_1" },
 
-  -- these three are animated
+  -- these are animated
   FIREBLU1 = { t="FIREBLU1", f="FLOOR6_1" },
   FIREBLU2 = { t="FIREBLU2", f="FLOOR6_1" },
   FIRELAVA = { t="FIRELAVA", f="FLOOR6_1" },
+  FIRELAV2 = { t="FIRELAV2", f="FLOOR6_1" },
+  FIRELAV3 = { t="FIRELAV3", f="FLOOR6_1" },
   FIREWALL = { t="FIREWALL", f="FLAT5_3" },
+  FIREWALA = { t="FIREWALA", f="FLOOR6_1" },
+  FIREWALB = { t="FIREWALB", f="FLOOR6_1" },
 
   GRAY1    = { t="GRAY1",    f="FLAT18" },
   GRAY2    = { t="GRAY2",    f="FLAT18" },
