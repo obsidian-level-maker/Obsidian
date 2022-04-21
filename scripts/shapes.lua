@@ -5479,8 +5479,50 @@ GROW_CAUSEWAY =
     "x........","x111AA111",
     "x........","x11>AA<11",
     "x........","x111AA111",
-    "xxxx..xxx","xxxxAAxxx",
-  },
+    "xxxx..xxx","xxxxAAxxx"
+  }
+},
+
+GROW_CAUSEWAY_WATERLOCKED_PILLARED =
+{
+  prob = 25,
+  skip_prob = 75,
+
+  structure =
+  {
+    "........","11111111",
+    "........","11111111",
+    "........","~~#AA#~~",
+    "........","~~~AA~~~",
+    "........","~~~AA~~~",
+    "........","~~~AA~~~",
+    "........","~~~AA~~~",
+    "........","~~#AA#~~",
+    "........","11111111",
+    "........","11111111",
+    "11xxxxxx","11xxxxxx"
+  }
+},
+
+GROW_CAUSEWAY_WATERLOCKED_PILLARED_BRIDGE =
+{
+  prob = 20,
+  skip_prob = 80,
+
+  structure =
+  {
+    "........","11111111",
+    "........","11111111",
+    "........","~~#vv#~~",
+    "........","~~~AA~~~",
+    "........","~~~AA~~~",
+    "........","~~~AA~~~",
+    "........","~~~AA~~~",
+    "........","~~#^^#~~",
+    "........","11111111",
+    "........","11111111",
+    "11xxxxxx","11xxxxxx"
+  }
 },
 
 GROW_CAUSEWAY_WATERLOCKED =
@@ -5497,8 +5539,8 @@ GROW_CAUSEWAY_WATERLOCKED =
     "...........","111AA~AA111",
     "...........","11>AA~AA<11",
     "...........","111AA~AA111",
-    "xxx.....xxx","xxxAA~AAxxx",
-  },
+    "xxx.....xxx","xxxAA~AAxxx"
+  }
 },
 
 GROW_CAUSEWAY_WATERLOCKED_CROSSED_OUT =
