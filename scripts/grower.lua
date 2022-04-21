@@ -1771,9 +1771,14 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
 
     if R.is_street then return 0 end
 
-    if (LEVEL.has_linear_start or LEVEL.is_linear)
-    and R.is_start then return 0 end
+    if (LEVEL.has_linear_start or LEVEL.is_linear) then
+      if R.is_start then return 0 end 
+      if not R.grow_parent and not R.is_start then
+        return 0 
+      end
+    end
 
+ 
     if R.is_outdoor then
       return style_sel("symmetry", 0,  5, 15, 50)
     else
