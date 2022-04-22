@@ -952,9 +952,6 @@ void Main_SetSeed() {
                 string_seed = ob_get_random_words();
             }
             ob_set_config("string_seed", string_seed.c_str());
-#ifdef max
-#undef max
-#endif
             unsigned long long split_limit =
                 (std::numeric_limits<long long>::max() /
                  127);  // It is intentional that I am using the max for signed

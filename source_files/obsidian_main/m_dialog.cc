@@ -335,9 +335,6 @@ void DLG_EditSeed(void) {
     }
     string_seed = word;
     ob_set_config("string_seed", word.c_str());
-#ifdef max
-#undef max
-#endif
     unsigned long long split_limit =
         (std::numeric_limits<long long>::max() /
          127);  // It is intentional that I am using the max for signed - Dasho
