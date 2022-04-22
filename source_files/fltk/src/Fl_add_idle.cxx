@@ -20,17 +20,17 @@
 #include <FL/Fl.H>
 
 struct idle_cb {
-  void (*cb)(void*);
-  void* data;
+  void (*cb)(void *);
+  void *data;
   idle_cb *next;
 };
 
 // the callbacks are stored linked in a ring.  last points at the one
 // just called, first at the next to call.  last->next == first.
 
-static idle_cb* first;
-static idle_cb* last;
-static idle_cb* freelist;
+static idle_cb *first;
+static idle_cb *last;
+static idle_cb *freelist;
 
 // The function call_idle()
 // - removes the first idle callback from the front of the list (ring)
@@ -40,8 +40,9 @@ static idle_cb* freelist;
 // by calling Fl::remove_idle()
 
 static void call_idle() {
-  idle_cb* p = first;
-  last = p; first = p->next;
+  idle_cb *p = first;
+  last = p;
+  first = p->next;
   p->cb(p->data); // this may call add_idle() or remove_idle()!
 }
 
@@ -62,10 +63,12 @@ static void call_idle() {
 
   FLTK will not recursively call the idle callback.
 */
-void Fl::add_idle(Fl_Idle_Handler cb, void* data) {
-  idle_cb* p = freelist;
-  if (p) freelist = p->next;
-  else p = new idle_cb;
+void Fl::add_idle(Fl_Idle_Handler cb, void *data) {
+  idle_cb *p = freelist;
+  if (p)
+    freelist = p->next;
+  else
+    p = new idle_cb;
   p->cb = cb;
   p->data = data;
   if (first) {
@@ -82,25 +85,31 @@ void Fl::add_idle(Fl_Idle_Handler cb, void* data) {
 /**
   Returns true if the specified idle callback is currently installed.
 */
-int Fl::has_idle(Fl_Idle_Handler cb, void* data) {
-  idle_cb* p = first;
-  if (!p) return 0;
+int Fl::has_idle(Fl_Idle_Handler cb, void *data) {
+  idle_cb *p = first;
+  if (!p)
+    return 0;
   for (;; p = p->next) {
-    if (p->cb == cb && p->data == data) return 1;
-    if (p==last) return 0;
+    if (p->cb == cb && p->data == data)
+      return 1;
+    if (p == last)
+      return 0;
   }
 }
 
 /**
   Removes the specified idle callback, if it is installed.
 */
-void Fl::remove_idle(Fl_Idle_Handler cb, void* data) {
-  idle_cb* p = first;
-  if (!p) return;
-  idle_cb* l = last;
+void Fl::remove_idle(Fl_Idle_Handler cb, void *data) {
+  idle_cb *p = first;
+  if (!p)
+    return;
+  idle_cb *l = last;
   for (;; p = p->next) {
-    if (p->cb == cb && p->data == data) break;
-    if (p==last) return; // not found
+    if (p->cb == cb && p->data == data)
+      break;
+    if (p == last)
+      return; // not found
     l = p;
   }
   if (l == p) { // only one

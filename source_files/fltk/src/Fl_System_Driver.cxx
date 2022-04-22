@@ -32,13 +32,13 @@
 #include "flstring.h"
 #include <time.h>
 
-const int Fl_System_Driver::fl_NoValue =     0x0000;
-const int Fl_System_Driver::fl_WidthValue =  0x0004;
+const int Fl_System_Driver::fl_NoValue = 0x0000;
+const int Fl_System_Driver::fl_WidthValue = 0x0004;
 const int Fl_System_Driver::fl_HeightValue = 0x0008;
-const int Fl_System_Driver::fl_XValue =      0x0001;
-const int Fl_System_Driver::fl_YValue =      0x0002;
-const int Fl_System_Driver::fl_XNegative =   0x0010;
-const int Fl_System_Driver::fl_YNegative =   0x0020;
+const int Fl_System_Driver::fl_XValue = 0x0001;
+const int Fl_System_Driver::fl_YValue = 0x0002;
+const int Fl_System_Driver::fl_XNegative = 0x0010;
+const int Fl_System_Driver::fl_YNegative = 0x0020;
 
 // This default key table is used for all system drivers that don't define
 // and/or use their own table. It is defined here "static" and assigned
@@ -50,64 +50,60 @@ const int Fl_System_Driver::fl_YNegative =   0x0020;
 // constructors (which overwrites the pointer and size).
 
 static Fl_System_Driver::Keyname default_key_table[] = {
-  {' ',           "Space"},
-  {FL_BackSpace,  "Backspace"},
-  {FL_Tab,        "Tab"},
-  {0xff0b/*XK_Clear*/, "Clear"},
-  {FL_Enter,      "Enter"}, // X says "Enter"
-  {FL_Pause,      "Pause"},
-  {FL_Scroll_Lock, "Scroll_Lock"},
-  {FL_Escape,     "Escape"},
-  {FL_Home,       "Home"},
-  {FL_Left,       "Left"},
-  {FL_Up,         "Up"},
-  {FL_Right,      "Right"},
-  {FL_Down,       "Down"},
-  {FL_Page_Up,    "Page_Up"}, // X says "Prior"
-  {FL_Page_Down,  "Page_Down"}, // X says "Next"
-  {FL_End,        "End"},
-  {FL_Print,      "Print"},
-  {FL_Insert,     "Insert"},
-  {FL_Menu,       "Menu"},
-  {FL_Num_Lock,   "Num_Lock"},
-  {FL_KP_Enter,   "KP_Enter"},
-  {FL_Shift_L,    "Shift_L"},
-  {FL_Shift_R,    "Shift_R"},
-  {FL_Control_L,  "Control_L"},
-  {FL_Control_R,  "Control_R"},
-  {FL_Caps_Lock,  "Caps_Lock"},
-  {FL_Meta_L,     "Meta_L"},
-  {FL_Meta_R,     "Meta_R"},
-  {FL_Alt_L,      "Alt_L"},
-  {FL_Alt_R,      "Alt_R"},
-  {FL_Delete,     "Delete"}
-};
+    {' ', "Space"},
+    {FL_BackSpace, "Backspace"},
+    {FL_Tab, "Tab"},
+    {0xff0b /*XK_Clear*/, "Clear"},
+    {FL_Enter, "Enter"}, // X says "Enter"
+    {FL_Pause, "Pause"},
+    {FL_Scroll_Lock, "Scroll_Lock"},
+    {FL_Escape, "Escape"},
+    {FL_Home, "Home"},
+    {FL_Left, "Left"},
+    {FL_Up, "Up"},
+    {FL_Right, "Right"},
+    {FL_Down, "Down"},
+    {FL_Page_Up, "Page_Up"},     // X says "Prior"
+    {FL_Page_Down, "Page_Down"}, // X says "Next"
+    {FL_End, "End"},
+    {FL_Print, "Print"},
+    {FL_Insert, "Insert"},
+    {FL_Menu, "Menu"},
+    {FL_Num_Lock, "Num_Lock"},
+    {FL_KP_Enter, "KP_Enter"},
+    {FL_Shift_L, "Shift_L"},
+    {FL_Shift_R, "Shift_R"},
+    {FL_Control_L, "Control_L"},
+    {FL_Control_R, "Control_R"},
+    {FL_Caps_Lock, "Caps_Lock"},
+    {FL_Meta_L, "Meta_L"},
+    {FL_Meta_R, "Meta_R"},
+    {FL_Alt_L, "Alt_L"},
+    {FL_Alt_R, "Alt_R"},
+    {FL_Delete, "Delete"}};
 
-Fl_System_Driver::Fl_System_Driver()
-{
+Fl_System_Driver::Fl_System_Driver() {
   // initialize default key table (used in fl_shortcut.cxx)
   key_table = default_key_table;
-  key_table_size = sizeof(default_key_table)/sizeof(*default_key_table);
+  key_table_size = sizeof(default_key_table) / sizeof(*default_key_table);
 }
 
-Fl_System_Driver::~Fl_System_Driver()
-{
-}
+Fl_System_Driver::~Fl_System_Driver() {}
 
-void Fl_System_Driver::warning(const char* format, ...) {
+void Fl_System_Driver::warning(const char *format, ...) {
   va_list args;
   va_start(args, format);
   Fl::system_driver()->warning(format, args);
   va_end(args);
 }
 
-void Fl_System_Driver::warning(const char* format, va_list args) {
+void Fl_System_Driver::warning(const char *format, va_list args) {
   vfprintf(stderr, format, args);
   fputc('\n', stderr);
   fflush(stderr);
 }
 
-void Fl_System_Driver::error(const char* format, ...) {
+void Fl_System_Driver::error(const char *format, ...) {
   va_list args;
   va_start(args, format);
   Fl::system_driver()->error(format, args);
@@ -120,7 +116,7 @@ void Fl_System_Driver::error(const char *format, va_list args) {
   fflush(stderr);
 }
 
-void Fl_System_Driver::fatal(const char* format, ...) {
+void Fl_System_Driver::fatal(const char *format, ...) {
   va_list args;
   va_start(args, format);
   Fl::system_driver()->fatal(format, args);
@@ -163,8 +159,7 @@ void Fl_System_Driver::fatal(const char *format, va_list args) {
    not found, the corresponding argument is left unchanged.
  */
 
-static int ReadInteger(char* string, char** NextString)
-{
+static int ReadInteger(char *string, char **NextString) {
   int Result = 0;
   int Sign = 1;
 
@@ -184,18 +179,18 @@ static int ReadInteger(char* string, char** NextString)
     return (-Result);
 }
 
-int Fl_System_Driver::XParseGeometry(const char* string, int* x, int* y,
-                   unsigned int* width, unsigned int* height)
-{
+int Fl_System_Driver::XParseGeometry(const char *string, int *x, int *y, unsigned int *width,
+                                     unsigned int *height) {
   int mask = Fl_System_Driver::fl_NoValue;
   char *strind;
   unsigned int tempWidth = 0, tempHeight = 0;
   int tempX = 0, tempY = 0;
   char *nextCharacter;
 
-  if ( (string == NULL) || (*string == '\0')) return(mask);
+  if ((string == NULL) || (*string == '\0'))
+    return (mask);
   if (*string == '=')
-    string++;  /* ignore possible '=' at beg of geometry spec */
+    string++; /* ignore possible '=' at beg of geometry spec */
 
   strind = (char *)string;
   if (*strind != '+' && *strind != '-' && *strind != 'x') {
@@ -228,7 +223,7 @@ int Fl_System_Driver::XParseGeometry(const char* string, int* x, int* y,
       strind++;
       tempX = ReadInteger(strind, &nextCharacter);
       if (strind == nextCharacter)
-        return(0);
+        return (0);
       strind = nextCharacter;
     }
     mask |= fl_XValue;
@@ -237,7 +232,7 @@ int Fl_System_Driver::XParseGeometry(const char* string, int* x, int* y,
         strind++;
         tempY = -ReadInteger(strind, &nextCharacter);
         if (strind == nextCharacter)
-          return(0);
+          return (0);
         strind = nextCharacter;
         mask |= fl_YNegative;
 
@@ -245,7 +240,7 @@ int Fl_System_Driver::XParseGeometry(const char* string, int* x, int* y,
         strind++;
         tempY = ReadInteger(strind, &nextCharacter);
         if (strind == nextCharacter)
-          return(0);
+          return (0);
         strind = nextCharacter;
       }
       mask |= fl_YValue;
@@ -255,7 +250,8 @@ int Fl_System_Driver::XParseGeometry(const char* string, int* x, int* y,
   /* If strind isn't at the end of the string the it's an invalid
    geometry specification. */
 
-  if (*strind != '\0') return (0);
+  if (*strind != '\0')
+    return (0);
 
   if (mask & fl_XValue)
     *x = tempX;
@@ -268,29 +264,37 @@ int Fl_System_Driver::XParseGeometry(const char* string, int* x, int* y,
   return (mask);
 }
 
-unsigned Fl_System_Driver::utf8towc(const char* src, unsigned srclen, wchar_t* dst, unsigned dstlen) {
-  const char* p = src;
-  const char* e = src+srclen;
+unsigned Fl_System_Driver::utf8towc(const char *src, unsigned srclen, wchar_t *dst,
+                                    unsigned dstlen) {
+  const char *p = src;
+  const char *e = src + srclen;
   unsigned count = 0;
-  if (dstlen) for (;;) {
-    if (p >= e) {
-      dst[count] = 0;
-      return count;
+  if (dstlen)
+    for (;;) {
+      if (p >= e) {
+        dst[count] = 0;
+        return count;
+      }
+      if (!(*p & 0x80)) { /* ascii */
+        dst[count] = *p++;
+      } else {
+        int len;
+        unsigned ucs = fl_utf8decode(p, e, &len);
+        p += len;
+        dst[count] = (wchar_t)ucs;
+      }
+      if (++count == dstlen) {
+        dst[count - 1] = 0;
+        break;
+      }
     }
-    if (!(*p & 0x80)) { /* ascii */
-      dst[count] = *p++;
-    } else {
-      int len; unsigned ucs = fl_utf8decode(p,e,&len);
-      p += len;
-      dst[count] = (wchar_t)ucs;
-    }
-    if (++count == dstlen) {dst[count-1] = 0; break;}
-  }
   /* we filled dst, measure the rest: */
   while (p < e) {
-    if (!(*p & 0x80)) p++;
+    if (!(*p & 0x80))
+      p++;
     else {
-      int len; fl_utf8decode(p,e,&len);
+      int len;
+      fl_utf8decode(p, e, &len);
       p += len;
     }
     ++count;
@@ -298,40 +302,59 @@ unsigned Fl_System_Driver::utf8towc(const char* src, unsigned srclen, wchar_t* d
   return count;
 }
 
-unsigned Fl_System_Driver::utf8fromwc(char* dst, unsigned dstlen, const wchar_t* src, unsigned srclen)
-{
+unsigned Fl_System_Driver::utf8fromwc(char *dst, unsigned dstlen, const wchar_t *src,
+                                      unsigned srclen) {
   unsigned i = 0;
   unsigned count = 0;
-  if (dstlen) for (;;) {
-    unsigned ucs;
-    if (i >= srclen) {dst[count] = 0; return count;}
-    ucs = src[i++];
-    if (ucs < 0x80U) {
-      dst[count++] = ucs;
-      if (count >= dstlen) {dst[count-1] = 0; break;}
-    } else if (ucs < 0x800U) { /* 2 bytes */
-      if (count+2 >= dstlen) {dst[count] = 0; count += 2; break;}
-      dst[count++] = 0xc0 | (ucs >> 6);
-      dst[count++] = 0x80 | (ucs & 0x3F);
-    } else if (ucs >= 0x10000) {
-      if (ucs > 0x10ffff) {
-        ucs = 0xfffd;
-        goto J1;
+  if (dstlen)
+    for (;;) {
+      unsigned ucs;
+      if (i >= srclen) {
+        dst[count] = 0;
+        return count;
       }
-      if (count+4 >= dstlen) {dst[count] = 0; count += 4; break;}
-      dst[count++] = 0xf0 | (ucs >> 18);
-      dst[count++] = 0x80 | ((ucs >> 12) & 0x3F);
-      dst[count++] = 0x80 | ((ucs >> 6) & 0x3F);
-      dst[count++] = 0x80 | (ucs & 0x3F);
-    } else {
-J1:
-      /* all others are 3 bytes: */
-      if (count+3 >= dstlen) {dst[count] = 0; count += 3; break;}
-      dst[count++] = 0xe0 | (ucs >> 12);
-      dst[count++] = 0x80 | ((ucs >> 6) & 0x3F);
-      dst[count++] = 0x80 | (ucs & 0x3F);
+      ucs = src[i++];
+      if (ucs < 0x80U) {
+        dst[count++] = ucs;
+        if (count >= dstlen) {
+          dst[count - 1] = 0;
+          break;
+        }
+      } else if (ucs < 0x800U) { /* 2 bytes */
+        if (count + 2 >= dstlen) {
+          dst[count] = 0;
+          count += 2;
+          break;
+        }
+        dst[count++] = 0xc0 | (ucs >> 6);
+        dst[count++] = 0x80 | (ucs & 0x3F);
+      } else if (ucs >= 0x10000) {
+        if (ucs > 0x10ffff) {
+          ucs = 0xfffd;
+          goto J1;
+        }
+        if (count + 4 >= dstlen) {
+          dst[count] = 0;
+          count += 4;
+          break;
+        }
+        dst[count++] = 0xf0 | (ucs >> 18);
+        dst[count++] = 0x80 | ((ucs >> 12) & 0x3F);
+        dst[count++] = 0x80 | ((ucs >> 6) & 0x3F);
+        dst[count++] = 0x80 | (ucs & 0x3F);
+      } else {
+      J1:
+        /* all others are 3 bytes: */
+        if (count + 3 >= dstlen) {
+          dst[count] = 0;
+          count += 3;
+          break;
+        }
+        dst[count++] = 0xe0 | (ucs >> 12);
+        dst[count++] = 0x80 | ((ucs >> 6) & 0x3F);
+        dst[count++] = 0x80 | (ucs & 0x3F);
+      }
     }
-  }
   /* we filled dst, measure the rest: */
   while (i < srclen) {
     unsigned ucs = src[i++];
@@ -348,23 +371,26 @@ J1:
   return count;
 }
 
-unsigned Fl_System_Driver::utf8to_mb(const char* src, unsigned srclen, char* dst, unsigned dstlen) {
+unsigned Fl_System_Driver::utf8to_mb(const char *src, unsigned srclen, char *dst, unsigned dstlen) {
   wchar_t lbuf[1024];
-  wchar_t* buf = lbuf;
+  wchar_t *buf = lbuf;
   unsigned length = fl_utf8towc(src, srclen, buf, 1024);
   int ret; // note: wcstombs() returns unsigned(length) or unsigned(-1)
   if (length >= 1024) {
-    buf = (wchar_t*)(malloc((length+1)*sizeof(wchar_t)));
-    fl_utf8towc(src, srclen, buf, length+1);
+    buf = (wchar_t *)(malloc((length + 1) * sizeof(wchar_t)));
+    fl_utf8towc(src, srclen, buf, length + 1);
   }
   if (dstlen) {
     ret = (int)wcstombs(dst, buf, dstlen);
-    if (ret >= (int)dstlen-1) ret = (int)wcstombs(0,buf,0);
+    if (ret >= (int)dstlen - 1)
+      ret = (int)wcstombs(0, buf, 0);
   } else {
-    ret = (int)wcstombs(0,buf,0);
+    ret = (int)wcstombs(0, buf, 0);
   }
-  if (buf != lbuf) free(buf);
-  if (ret >= 0) return (unsigned)ret;
+  if (buf != lbuf)
+    free(buf);
+  if (ret >= 0)
+    return (unsigned)ret;
   // on any errors we return the UTF-8 as raw text...
   if (srclen < dstlen) {
     memcpy(dst, src, srclen);
@@ -375,20 +401,22 @@ unsigned Fl_System_Driver::utf8to_mb(const char* src, unsigned srclen, char* dst
   return srclen;
 }
 
-unsigned Fl_System_Driver::utf8from_mb(char* dst, unsigned dstlen, const char* src, unsigned srclen) {
+unsigned Fl_System_Driver::utf8from_mb(char *dst, unsigned dstlen, const char *src,
+                                       unsigned srclen) {
   wchar_t lbuf[1024];
-  wchar_t* buf = lbuf;
+  wchar_t *buf = lbuf;
   int length;
   unsigned ret;
   length = (int)mbstowcs(buf, src, 1024);
   if (length >= 1024) {
-    length = (int)mbstowcs(0, src, 0)+1;
-    buf = (wchar_t*)(malloc(length*sizeof(wchar_t)));
+    length = (int)mbstowcs(0, src, 0) + 1;
+    buf = (wchar_t *)(malloc(length * sizeof(wchar_t)));
     mbstowcs(buf, src, length);
   }
   if (length >= 0) {
     ret = fl_utf8fromwc(dst, dstlen, buf, length);
-    if (buf != lbuf) free(buf);
+    if (buf != lbuf)
+      free(buf);
     return ret;
   }
   // errors in conversion return the UTF-8 unchanged
@@ -405,7 +433,8 @@ int Fl_System_Driver::clocale_vprintf(FILE *output, const char *format, va_list 
   return vfprintf(output, format, args);
 }
 
-int Fl_System_Driver::clocale_vsnprintf(char *output, size_t output_size, const char *format, va_list args) {
+int Fl_System_Driver::clocale_vsnprintf(char *output, size_t output_size, const char *format,
+                                        va_list args) {
   return 0; // overridden in platform drivers
 }
 
@@ -413,43 +442,54 @@ int Fl_System_Driver::clocale_vsscanf(const char *input, const char *format, va_
   return 0; // overridden in platform drivers
 }
 
-int Fl_System_Driver::filename_expand(char *to,int tolen, const char *from) {
+int Fl_System_Driver::filename_expand(char *to, int tolen, const char *from) {
   char *temp = new char[tolen];
-  strlcpy(temp,from, tolen);
+  strlcpy(temp, from, tolen);
   char *start = temp;
-  char *end = temp+strlen(temp);
+  char *end = temp + strlen(temp);
 
   int ret = 0;
 
-  for (char *a=temp; a<end; ) { // for each slash component
-    char *e; for (e=a; e<end && *e != '/'; e++) {/*empty*/} // find next slash
-    const char *value = 0; // this will point at substitute value
+  for (char *a = temp; a < end;) { // for each slash component
+    char *e;
+    for (e = a; e < end && *e != '/'; e++) { /*empty*/
+    }                                        // find next slash
+    const char *value = 0;                   // this will point at substitute value
     switch (*a) {
-      case '~': // a home directory name
-        if (e <= a+1) { // current user's directory
+      case '~':           // a home directory name
+        if (e <= a + 1) { // current user's directory
           value = getenv("HOME");
-        } else {        // another user's directory
-          char t = *e; *(char *)e = 0;
-          value = getpwnam(a+1);
+        } else { // another user's directory
+          char t = *e;
+          *(char *)e = 0;
+          value = getpwnam(a + 1);
           *(char *)e = t;
         }
         break;
-      case '$':         /* an environment variable */
-      {char t = *e; *(char *)e = 0; value = getenv(a+1); *(char *)e = t;}
-        break;
+      case '$': /* an environment variable */
+      {
+        char t = *e;
+        *(char *)e = 0;
+        value = getenv(a + 1);
+        *(char *)e = t;
+      } break;
     }
     if (value) {
       // substitutions that start with slash delete everything before them:
-      if (value[0] == '/') start = a;
-      int t = (int) strlen(value); if (value[t-1] == '/') t--;
-      if ((end+1-e+t) >= tolen) end += tolen - (end+1-e+t);
-      memmove(a+t, e, end+1-e);
-      end = a+t+(end-e);
+      if (value[0] == '/')
+        start = a;
+      int t = (int)strlen(value);
+      if (value[t - 1] == '/')
+        t--;
+      if ((end + 1 - e + t) >= tolen)
+        end += tolen - (end + 1 - e + t);
+      memmove(a + t, e, end + 1 - e);
+      end = a + t + (end - e);
       *end = '\0';
       memcpy(a, value, t);
       ret++;
     } else {
-      a = e+1;
+      a = e + 1;
     }
   }
   strlcpy(to, start, tolen);
@@ -459,47 +499,40 @@ int Fl_System_Driver::filename_expand(char *to,int tolen, const char *from) {
 
 int Fl_System_Driver::file_browser_load_directory(const char *directory, char *filename,
                                                   size_t name_size, dirent ***pfiles,
-                                                  Fl_File_Sort_F *sort,
-                                                  char *errmsg, int errmsg_sz)
-{
+                                                  Fl_File_Sort_F *sort, char *errmsg,
+                                                  int errmsg_sz) {
   return filename_list(directory, pfiles, sort, errmsg, errmsg_sz);
 }
 
-int Fl_System_Driver::file_type(const char *filename)
-{
+int Fl_System_Driver::file_type(const char *filename) {
   return Fl_File_Icon::ANY;
 }
 
-void Fl_System_Driver::add_fd(int fd, int when, Fl_FD_Handler cb, void *d)
-{
+void Fl_System_Driver::add_fd(int fd, int when, Fl_FD_Handler cb, void *d) {
   // nothing to do, reimplement in driver if needed
 }
 
-void Fl_System_Driver::add_fd(int fd, Fl_FD_Handler cb, void *d)
-{
+void Fl_System_Driver::add_fd(int fd, Fl_FD_Handler cb, void *d) {
   // nothing to do, reimplement in driver if needed
 }
 
-void Fl_System_Driver::remove_fd(int fd, int when)
-{
+void Fl_System_Driver::remove_fd(int fd, int when) {
   // nothing to do, reimplement in driver if needed
 }
 
-void Fl_System_Driver::remove_fd(int fd)
-{
+void Fl_System_Driver::remove_fd(int fd) {
   // nothing to do, reimplement in driver if needed
 }
 
-FILE *Fl_System_Driver::fopen(const char* f, const char *mode) {
+FILE *Fl_System_Driver::fopen(const char *f, const char *mode) {
   return ::fopen(f, mode);
 }
 
-void Fl_System_Driver::open_callback(void (*)(const char *)) {
-}
+void Fl_System_Driver::open_callback(void (*)(const char *)) {}
 
 // Get elapsed time since Jan 1st, 1970.
 void Fl_System_Driver::gettime(time_t *sec, int *usec) {
-  *sec =  time(NULL);
+  *sec = time(NULL);
   *usec = 0;
 }
 

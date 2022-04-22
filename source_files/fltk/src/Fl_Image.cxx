@@ -38,24 +38,28 @@ Fl_RGB_Scaling Fl_Image::scaling_algorithm_ = FL_RGB_SCALING_BILINEAR;
  The depth is 0 for bitmaps, 1 for pixmap (colormap) images, and
  1 to 4 for color images.
  */
-Fl_Image::Fl_Image(int W, int H, int D) :
-  w_(W), h_(H), d_(D), ld_(0), count_(0), data_w_(W), data_h_(H), data_(0L)
-{}
+Fl_Image::Fl_Image(int W, int H, int D)
+  : w_(W)
+  , h_(H)
+  , d_(D)
+  , ld_(0)
+  , count_(0)
+  , data_w_(W)
+  , data_h_(H)
+  , data_(0L) {}
 
 /**
   The destructor is a virtual method that frees all memory used
   by the image.
 */
-Fl_Image::~Fl_Image() {
-}
+Fl_Image::~Fl_Image() {}
 
 /**
   If the image has been cached for display, delete the cache
   data. This allows you to change the data used for the image and
   then redraw it without recreating an image object.
 */
-void Fl_Image::uncache() {
-}
+void Fl_Image::uncache() {}
 
 void Fl_Image::draw(int XP, int YP, int, int, int, int) {
   draw_empty(XP, YP);
@@ -103,8 +107,7 @@ Fl_Image *Fl_Image::copy(int W, int H) {
   An internal copy is made of the original image before
   changes are applied, to avoid modifying the original image.
 */
-void Fl_Image::color_average(Fl_Color, float) {
-}
+void Fl_Image::color_average(Fl_Color, float) {}
 
 /**
   The desaturate() method converts an image to
@@ -114,8 +117,7 @@ void Fl_Image::color_average(Fl_Color, float) {
   An internal copy is made of the original image before
   changes are applied, to avoid modifying the original image.
 */
-void Fl_Image::desaturate() {
-}
+void Fl_Image::desaturate() {}
 
 // Doxygen documentation in FL/Enumerations.H
 Fl_Labeltype fl_define_FL_IMAGE_LABEL() {
@@ -134,7 +136,7 @@ Fl_Labeltype Fl_Image::define_FL_IMAGE_LABEL() {
   Fl_Widget and Fl_Menu_Item classes
   instead.
 */
-void Fl_Image::label(Fl_Widget* widget) {
+void Fl_Image::label(Fl_Widget *widget) {
   widget->image(this);
 }
 
@@ -145,8 +147,8 @@ void Fl_Image::label(Fl_Widget* widget) {
   Fl_Widget and Fl_Menu_Item classes
   instead.
 */
-void Fl_Image::label(Fl_Menu_Item* m) {
-  m->label(FL_IMAGE_LABEL, (const char*)this);
+void Fl_Image::label(Fl_Menu_Item *m) {
+  m->label(FL_IMAGE_LABEL, (const char *)this);
 }
 
 /**
@@ -175,48 +177,51 @@ void Fl_Image::label(Fl_Menu_Item* m) {
  \return ERR_FILE_ACCESS if there was a file access related error (errno should be set)
  \return ERR_FORMAT if image decoding failed.
  */
-int Fl_Image::fail() const
-{
-    // if no image exists, ld_ may contain a simple error code
-    if ( (w_<=0) || (h_<=0) || (d_<=0) ) {
-        if (ld_==0)
-            return ERR_NO_IMAGE;
-        else
-            return ld_;
-    }
-    return 0;
+int Fl_Image::fail() const {
+  // if no image exists, ld_ may contain a simple error code
+  if ((w_ <= 0) || (h_ <= 0) || (d_ <= 0)) {
+    if (ld_ == 0)
+      return ERR_NO_IMAGE;
+    else
+      return ld_;
+  }
+  return 0;
 }
 
-void
-Fl_Image::labeltype(const Fl_Label *lo,         // I - Label
-                    int            lx,          // I - X position
-                    int            ly,          // I - Y position
-                    int            lw,          // I - Width of label
-                    int            lh,          // I - Height of label
-                    Fl_Align       la) {        // I - Alignment
-  Fl_Image      *img;                           // Image pointer
-  int           cx, cy;                         // Image position
+void Fl_Image::labeltype(const Fl_Label *lo, // I - Label
+                         int lx,             // I - X position
+                         int ly,             // I - Y position
+                         int lw,             // I - Width of label
+                         int lh,             // I - Height of label
+                         Fl_Align la) {      // I - Alignment
+  Fl_Image *img;                             // Image pointer
+  int cx, cy;                                // Image position
 
   img = (Fl_Image *)(lo->value);
 
-  if (la & FL_ALIGN_LEFT) cx = 0;
-  else if (la & FL_ALIGN_RIGHT) cx = img->w() - lw;
-  else cx = (img->w() - lw) / 2;
+  if (la & FL_ALIGN_LEFT)
+    cx = 0;
+  else if (la & FL_ALIGN_RIGHT)
+    cx = img->w() - lw;
+  else
+    cx = (img->w() - lw) / 2;
 
-  if (la & FL_ALIGN_TOP) cy = 0;
-  else if (la & FL_ALIGN_BOTTOM) cy = img->h() - lh;
-  else cy = (img->h() - lh) / 2;
+  if (la & FL_ALIGN_TOP)
+    cy = 0;
+  else if (la & FL_ALIGN_BOTTOM)
+    cy = img->h() - lh;
+  else
+    cy = (img->h() - lh) / 2;
 
   fl_color((Fl_Color)lo->color);
 
   img->draw(lx, ly, lw, lh, cx, cy);
 }
 
-void
-Fl_Image::measure(const Fl_Label *lo,           // I - Label
-                  int            &lw,           // O - Width of image
-                  int            &lh) {         // O - Height of image
-  Fl_Image *img;                                // Image pointer
+void Fl_Image::measure(const Fl_Label *lo, // I - Label
+                       int &lw,            // O - Width of image
+                       int &lh) {          // O - Height of image
+  Fl_Image *img;                           // Image pointer
 
   img = (Fl_Image *)(lo->value);
 
@@ -263,24 +268,30 @@ Fl_RGB_Scaling Fl_Image::RGB_scaling() {
  b->image(img); // use the image as the box image
  \endcode
  */
-void Fl_Image::scale(int width, int height, int proportional, int can_expand)
-{
+void Fl_Image::scale(int width, int height, int proportional, int can_expand) {
   if ((width <= data_w() && height <= data_h()) || can_expand) {
     w_ = width;
     h_ = height;
   }
-  if (fail()) return;
-  if (!proportional && can_expand) return;
-  if (!proportional && width <= data_w() && height <= data_h()) return;
+  if (fail())
+    return;
+  if (!proportional && can_expand)
+    return;
+  if (!proportional && width <= data_w() && height <= data_h())
+    return;
   float fw = data_w() / float(width);
   float fh = data_h() / float(height);
   if (proportional) {
-    if (fh > fw) fw = fh;
-    else fh = fw;
+    if (fh > fw)
+      fw = fh;
+    else
+      fh = fw;
   }
   if (!can_expand) {
-    if (fw < 1) fw = 1;
-    if (fh < 1) fh = 1;
+    if (fw < 1)
+      fw = 1;
+    if (fh < 1)
+      fh = 1;
   }
   w_ = int((data_w() / fw) + 0.5);
   h_ = int((data_h() / fh) + 0.5);
@@ -310,7 +321,7 @@ bool Fl_Image::register_images_done = false;
 //
 size_t Fl_RGB_Image::max_size_ = ~((size_t)0);
 
-int fl_convert_pixmap(const char*const* cdata, uchar* out, Fl_Color bg);
+int fl_convert_pixmap(const char *const *cdata, uchar *out, Fl_Color bg);
 
 
 /**
@@ -347,16 +358,16 @@ int fl_convert_pixmap(const char*const* cdata, uchar* out, Fl_Color bg);
 
   \see Fl_Image::data(), Fl_Image::w(), Fl_Image::h(), Fl_Image::d(), Fl_Image::ld(int)
 */
-Fl_RGB_Image::Fl_RGB_Image(const uchar *bits, int W, int H, int D, int LD) :
-  Fl_Image(W,H,D),
-  array(bits),
-  alloc_array(0),
-  id_(0),
-  mask_(0),
-  cache_w_(0), cache_h_(0)
-{
-    data((const char **)&array, 1);
-    ld(LD);
+Fl_RGB_Image::Fl_RGB_Image(const uchar *bits, int W, int H, int D, int LD)
+  : Fl_Image(W, H, D)
+  , array(bits)
+  , alloc_array(0)
+  , id_(0)
+  , mask_(0)
+  , cache_w_(0)
+  , cache_h_(0) {
+  data((const char **)&array, 1);
+  ld(LD);
 }
 
 
@@ -370,18 +381,18 @@ Fl_RGB_Image::Fl_RGB_Image(const uchar *bits, int W, int H, int D, int LD) :
   Fl_RGB_Image::alloc_array to 1 so the data array is deleted when the
   image is destroyed.
 */
-Fl_RGB_Image::Fl_RGB_Image(const Fl_Pixmap *pxm, Fl_Color bg):
-  Fl_Image(pxm->data_w(), pxm->data_h(), 4),
-  array(0),
-  alloc_array(0),
-  id_(0),
-  mask_(0),
-  cache_w_(0), cache_h_(0)
-{
+Fl_RGB_Image::Fl_RGB_Image(const Fl_Pixmap *pxm, Fl_Color bg)
+  : Fl_Image(pxm->data_w(), pxm->data_h(), 4)
+  , array(0)
+  , alloc_array(0)
+  , id_(0)
+  , mask_(0)
+  , cache_w_(0)
+  , cache_h_(0) {
   if (pxm && pxm->data_w() > 0 && pxm->data_h() > 0) {
     array = new uchar[data_w() * data_h() * d()];
     alloc_array = 1;
-    fl_convert_pixmap(pxm->data(), (uchar*)array, bg);
+    fl_convert_pixmap(pxm->data(), (uchar *)array, bg);
   }
   data((const char **)&array, 1);
   scale(pxm->w(), pxm->h(), 0, 1);
@@ -394,7 +405,8 @@ Fl_RGB_Image::Fl_RGB_Image(const Fl_Pixmap *pxm, Fl_Color bg):
 */
 Fl_RGB_Image::~Fl_RGB_Image() {
   uncache();
-  if (alloc_array) delete[] (uchar *)array;
+  if (alloc_array)
+    delete[](uchar *) array;
 }
 
 void Fl_RGB_Image::uncache() {
@@ -402,21 +414,20 @@ void Fl_RGB_Image::uncache() {
 }
 
 Fl_Image *Fl_RGB_Image::copy(int W, int H) {
-  Fl_RGB_Image  *new_image;     // New RGB image
-  uchar         *new_array;     // New array for image data
+  Fl_RGB_Image *new_image; // New RGB image
+  uchar *new_array;        // New array for image data
 
   // Optimize the simple copy where the width and height are the same,
   // or when we are copying an empty image...
-  if ((W == data_w() && H == data_h()) ||
-      !w() || !h() || !d() || !array) {
+  if ((W == data_w() && H == data_h()) || !w() || !h() || !d() || !array) {
     if (array) {
       // Make a copy of the image data and return a new Fl_RGB_Image...
       new_array = new uchar[data_w() * data_h() * d()];
-      if (ld() && ld()!=data_w()*d()) {
+      if (ld() && ld() != data_w() * d()) {
         const uchar *src = array;
         uchar *dst = new_array;
-        int dy, dh = h(), wd = data_w()*d(), wld = ld();
-        for (dy=0; dy<dh; dy++) {
+        int dy, dh = h(), wd = data_w() * d(), wld = ld();
+        for (dy = 0; dy < dh; dy++) {
           memcpy(dst, src, wd);
           src += wld;
           dst += wd;
@@ -432,16 +443,17 @@ Fl_Image *Fl_RGB_Image::copy(int W, int H) {
       return new Fl_RGB_Image(array, data_w(), data_h(), d(), ld());
     }
   }
-  if (W <= 0 || H <= 0) return 0;
+  if (W <= 0 || H <= 0)
+    return 0;
 
   // OK, need to resize the image data; allocate memory and create new image
-  uchar         *new_ptr;       // Pointer into new array
-  const uchar   *old_ptr;       // Pointer into old array
-  int           dx, dy,         // Destination coordinates
-                line_d;         // stride from line to line
+  uchar *new_ptr;       // Pointer into new array
+  const uchar *old_ptr; // Pointer into old array
+  int dx, dy,           // Destination coordinates
+      line_d;           // stride from line to line
 
   // Allocate memory for the new image...
-  new_array = new uchar [W * H * d()];
+  new_array = new uchar[W * H * d()];
   new_image = new Fl_RGB_Image(new_array, W, H, d());
   new_image->alloc_array = 1;
 
@@ -449,48 +461,49 @@ Fl_Image *Fl_RGB_Image::copy(int W, int H) {
 
   if (Fl_Image::RGB_scaling() == FL_RGB_SCALING_NEAREST) {
 
-    int         c,              // Channel number
-                sy,             // Source coordinate
-                xerr, yerr,     // X & Y errors
-                xmod, ymod,     // X & Y moduli
-                xstep, ystep;   // X & Y step increments
+    int c,            // Channel number
+        sy,           // Source coordinate
+        xerr, yerr,   // X & Y errors
+        xmod, ymod,   // X & Y moduli
+        xstep, ystep; // X & Y step increments
 
     // Figure out Bresenham step/modulus values...
-    xmod   = data_w() % W;
-    xstep  = (data_w() / W) * d();
-    ymod   = data_h() % H;
-    ystep  = data_h() / H;
+    xmod = data_w() % W;
+    xstep = (data_w() / W) * d();
+    ymod = data_h() % H;
+    ystep = data_h() / H;
 
     // Scale the image using a nearest-neighbor algorithm...
-    for (dy = H, sy = 0, yerr = H, new_ptr = new_array; dy > 0; dy --) {
-      for (dx = W, xerr = W, old_ptr = array + sy * line_d; dx > 0; dx --) {
-        for (c = 0; c < d(); c ++) *new_ptr++ = old_ptr[c];
+    for (dy = H, sy = 0, yerr = H, new_ptr = new_array; dy > 0; dy--) {
+      for (dx = W, xerr = W, old_ptr = array + sy * line_d; dx > 0; dx--) {
+        for (c = 0; c < d(); c++)
+          *new_ptr++ = old_ptr[c];
 
         old_ptr += xstep;
-        xerr    -= xmod;
+        xerr -= xmod;
 
         if (xerr <= 0) {
-          xerr    += W;
+          xerr += W;
           old_ptr += d();
         }
       }
 
-      sy   += ystep;
+      sy += ystep;
       yerr -= ymod;
       if (yerr <= 0) {
         yerr += H;
-        sy ++;
+        sy++;
       }
     }
   } else {
     // Bilinear scaling (FL_RGB_SCALING_BILINEAR)
-    const float xscale = (data_w() - 1) / (float) W;
-    const float yscale = (data_h() - 1) / (float) H;
+    const float xscale = (data_w() - 1) / (float)W;
+    const float yscale = (data_h() - 1) / (float)H;
     for (dy = 0; dy < H; dy++) {
       float oldy = dy * yscale;
       if (oldy >= data_h())
         oldy = float(data_h() - 1);
-      const float yfract = oldy - (unsigned) oldy;
+      const float yfract = oldy - (unsigned)oldy;
 
       for (dx = 0; dx < W; dx++) {
         new_ptr = new_array + dy * W * d() + dx * d();
@@ -498,7 +511,7 @@ Fl_Image *Fl_RGB_Image::copy(int W, int H) {
         float oldx = dx * xscale;
         if (oldx >= data_w())
           oldx = float(data_w() - 1);
-        const float xfract = oldx - (unsigned) oldx;
+        const float xfract = oldx - (unsigned)oldx;
 
         const unsigned leftx = (unsigned)oldx;
         const unsigned lefty = (unsigned)oldy;
@@ -531,10 +544,8 @@ Fl_Image *Fl_RGB_Image::copy(int W, int H) {
         const float downf = yfract;
 
         for (i = 0; i < d(); i++) {
-          new_ptr[i] = (uchar)((left[i] * leftf +
-                   right[i] * rightf) * upf +
-                   (downleft[i] * leftf +
-                   downright[i] * rightf) * downf);
+          new_ptr[i] = (uchar)((left[i] * leftf + right[i] * rightf) * upf +
+                               (downleft[i] * leftf + downright[i] * rightf) * downf);
         }
 
         if (d() == 4 && new_ptr[3]) {
@@ -551,25 +562,29 @@ Fl_Image *Fl_RGB_Image::copy(int W, int H) {
 
 void Fl_RGB_Image::color_average(Fl_Color c, float i) {
   // Don't average an empty image...
-  if (!w() || !h() || !d() || !array) return;
+  if (!w() || !h() || !d() || !array)
+    return;
 
   // Delete any existing pixmap/mask objects...
   uncache();
 
   // Allocate memory as needed...
-  uchar         *new_array,
-                *new_ptr;
+  uchar *new_array, *new_ptr;
 
-  if (!alloc_array) new_array = new uchar[h() * w() * d()];
-  else new_array = (uchar *)array;
+  if (!alloc_array)
+    new_array = new uchar[h() * w() * d()];
+  else
+    new_array = (uchar *)array;
 
   // Get the color to blend with...
-  uchar         r, g, b;
-  unsigned      ia, ir, ig, ib;
+  uchar r, g, b;
+  unsigned ia, ir, ig, ib;
 
   Fl::get_color(c, r, g, b);
-  if (i < 0.0f) i = 0.0f;
-  else if (i > 1.0f) i = 1.0f;
+  if (i < 0.0f)
+    i = 0.0f;
+  else if (i > 1.0f)
+    i = 1.0f;
 
   ia = (unsigned)(256 * i);
   ir = r * (256 - ia);
@@ -577,31 +592,33 @@ void Fl_RGB_Image::color_average(Fl_Color c, float i) {
   ib = b * (256 - ia);
 
   // Update the image data to do the blend...
-  const uchar   *old_ptr;
-  int           x, y;
-  int   line_i = ld() ? ld() - (w()*d()) : 0; // increment from line end to beginning of next line
+  const uchar *old_ptr;
+  int x, y;
+  int line_i = ld() ? ld() - (w() * d()) : 0; // increment from line end to beginning of next line
 
   if (d() < 3) {
     ig = (r * 31 + g * 61 + b * 8) / 100 * (256 - ia);
 
-    for (new_ptr = new_array, old_ptr = array, y = 0; y < h(); y ++, old_ptr += line_i)
-      for (x = 0; x < w(); x ++) {
+    for (new_ptr = new_array, old_ptr = array, y = 0; y < h(); y++, old_ptr += line_i)
+      for (x = 0; x < w(); x++) {
         *new_ptr++ = (*old_ptr++ * ia + ig) >> 8;
-        if (d() > 1) *new_ptr++ = *old_ptr++;
+        if (d() > 1)
+          *new_ptr++ = *old_ptr++;
       }
   } else {
-    for (new_ptr = new_array, old_ptr = array, y = 0; y < h(); y ++, old_ptr += line_i)
-      for (x = 0; x < w(); x ++) {
+    for (new_ptr = new_array, old_ptr = array, y = 0; y < h(); y++, old_ptr += line_i)
+      for (x = 0; x < w(); x++) {
         *new_ptr++ = (*old_ptr++ * ia + ir) >> 8;
         *new_ptr++ = (*old_ptr++ * ia + ig) >> 8;
         *new_ptr++ = (*old_ptr++ * ia + ib) >> 8;
-        if (d() > 3) *new_ptr++ = *old_ptr++;
+        if (d() > 3)
+          *new_ptr++ = *old_ptr++;
       }
   }
 
   // Set the new pointers/values as needed...
   if (!alloc_array) {
-    array       = new_array;
+    array = new_array;
     alloc_array = 1;
 
     ld(0);
@@ -610,37 +627,40 @@ void Fl_RGB_Image::color_average(Fl_Color c, float i) {
 
 void Fl_RGB_Image::desaturate() {
   // Don't desaturate an empty image...
-  if (!w() || !h() || !d() || !array) return;
+  if (!w() || !h() || !d() || !array)
+    return;
 
   // Can only desaturate color images...
-  if (d() < 3) return;
+  if (d() < 3)
+    return;
 
   // Delete any existing pixmap/mask objects...
   uncache();
 
   // Allocate memory for a grayscale image...
-  uchar         *new_array,
-                *new_ptr;
-  int           new_d;
+  uchar *new_array, *new_ptr;
+  int new_d;
 
-  new_d     = d() - 2;
+  new_d = d() - 2;
   new_array = new uchar[h() * w() * new_d];
 
   // Copy the image data, converting to grayscale...
-  const uchar   *old_ptr;
-  int           x, y;
-  int   line_i = ld() ? ld() - (w()*d()) : 0; // increment from line end to beginning of next line
+  const uchar *old_ptr;
+  int x, y;
+  int line_i = ld() ? ld() - (w() * d()) : 0; // increment from line end to beginning of next line
 
-  for (new_ptr = new_array, old_ptr = array, y = 0; y < h(); y ++, old_ptr += line_i)
-    for (x = 0; x < w(); x ++, old_ptr += d()) {
+  for (new_ptr = new_array, old_ptr = array, y = 0; y < h(); y++, old_ptr += line_i)
+    for (x = 0; x < w(); x++, old_ptr += d()) {
       *new_ptr++ = (uchar)((31 * old_ptr[0] + 61 * old_ptr[1] + 8 * old_ptr[2]) / 100);
-      if (d() > 3) *new_ptr++ = old_ptr[3];
+      if (d() > 3)
+        *new_ptr++ = old_ptr[3];
     }
 
   // Free the old array as needed, and then set the new pointers/values...
-  if (alloc_array) delete[] (uchar *)array;
+  if (alloc_array)
+    delete[](uchar *) array;
 
-  array       = new_array;
+  array = new_array;
   alloc_array = 1;
 
   ld(0);
@@ -651,10 +671,10 @@ void Fl_RGB_Image::draw(int XP, int YP, int WP, int HP, int cx, int cy) {
   fl_graphics_driver->draw_rgb(this, XP, YP, WP, HP, cx, cy);
 }
 
-void Fl_RGB_Image::label(Fl_Widget* widget) {
+void Fl_RGB_Image::label(Fl_Widget *widget) {
   widget->image(this);
 }
 
-void Fl_RGB_Image::label(Fl_Menu_Item* m) {
-  m->label(FL_IMAGE_LABEL, (const char*)this);
+void Fl_RGB_Image::label(Fl_Menu_Item *m) {
+  m->label(FL_IMAGE_LABEL, (const char *)this);
 }

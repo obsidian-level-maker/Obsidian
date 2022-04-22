@@ -34,35 +34,35 @@
 #if defined(FLTK_USE_X11) && !defined(HAVE_SCANDIR)
 
 #ifndef HAVE_PTHREAD
-   /* Switch system headers into POSIX.1-1990 mode */
-#  define _POSIX_SOURCE
-#else  /* HAVE_PTHREAD */
-   /* Switch system headers into POSIX.1c-1995 mode */
-#  define _POSIX_C_SOURCE  199506L
-#endif  /* HAVE_PTHREAD */
+/* Switch system headers into POSIX.1-1990 mode */
+#define _POSIX_SOURCE
+#else /* HAVE_PTHREAD */
+/* Switch system headers into POSIX.1c-1995 mode */
+#define _POSIX_C_SOURCE 199506L
+#endif /* HAVE_PTHREAD */
 
-#include <sys/types.h>        /* XPG2 require this for '*dir()' functions */
+#include <sys/types.h> /* XPG2 require this for '*dir()' functions */
 #include <dirent.h>
 #include <errno.h>
-#include <stdlib.h>           /* For 'malloc()', 'realloc()' and 'qsort()' */
-#include <stddef.h>           /* For 'offsetof()', 'NULL' and 'size_t' */
-#include <limits.h>           /* For 'INT_MAX' */
-#include <string.h>           /* For 'memcpy()' */
-#include "flstring.h"         /* For 'fl_snprintf()' */
+#include <stdlib.h>   /* For 'malloc()', 'realloc()' and 'qsort()' */
+#include <stddef.h>   /* For 'offsetof()', 'NULL' and 'size_t' */
+#include <limits.h>   /* For 'INT_MAX' */
+#include <string.h>   /* For 'memcpy()' */
+#include "flstring.h" /* For 'fl_snprintf()' */
 #if defined(HAVE_PTHREAD) && defined(HAVE_PTHREAD_H)
-#  include <pthread.h>
-#endif  /* HAVE_PTHREAD */
+#include <pthread.h>
+#endif /* HAVE_PTHREAD */
 
 
 /* ========================================================================== */
 /* At startup allocate memory for this number of result array elements */
-#define ENTRIES_MIN  (size_t) 32
+#define ENTRIES_MIN (size_t)32
 
 
 /* ========================================================================== */
 #ifdef HAVE_PTHREAD
 static pthread_mutex_t scandir_mutex = PTHREAD_MUTEX_INITIALIZER;
-#endif  /* HAVE_PTHREAD */
+#endif /* HAVE_PTHREAD */
 
 
 /* ========================================================================== */
@@ -79,39 +79,31 @@ static pthread_mutex_t scandir_mutex = PTHREAD_MUTEX_INITIALIZER;
  *
  * Should be declared as 'static inline' if the compiler supports that.
  */
-static int
-readentry(DIR *dirp, struct dirent **entryp, size_t *len)
-{
+static int readentry(DIR *dirp, struct dirent **entryp, size_t *len) {
   int result = -1;
   struct dirent *e;
 
 #ifdef HAVE_PTHREAD
-  if (!pthread_mutex_lock(&scandir_mutex))
-  {
+  if (!pthread_mutex_lock(&scandir_mutex)) {
     /* Ensure that there is no code path that bypasses the '_unlock()' call! */
-#endif  /* HAVE_PTHREAD */
+#endif /* HAVE_PTHREAD */
     errno = 0;
     e = readdir(dirp);
-    if (NULL == e)
-    {
-      if (!errno)
-      {
+    if (NULL == e) {
+      if (!errno) {
         /* No more entries in directory */
         *entryp = NULL;
         *len = 0;
         result = 0;
       }
-    }
-    else
-    {
+    } else {
       /* Entry found, allocate local buffer */
-      *len = offsetof(struct dirent, d_name) + strlen(e->d_name) + (size_t) 1;
-      *entryp = (struct dirent *) malloc(*len);
-      if (NULL != *entryp)
-      {
-        memcpy((void *) *entryp, (void *) e, *len);
+      *len = offsetof(struct dirent, d_name) + strlen(e->d_name) + (size_t)1;
+      *entryp = (struct dirent *)malloc(*len);
+      if (NULL != *entryp) {
+        memcpy((void *)*entryp, (void *)e, *len);
         /* Force NUL termination at end of buffer */
-        ((char *) *entryp)[*len - (size_t) 1] = 0;
+        ((char *)*entryp)[*len - (size_t)1] = 0;
         result = 0;
       }
     }
@@ -123,7 +115,7 @@ readentry(DIR *dirp, struct dirent **entryp, size_t *len)
      */
     pthread_mutex_unlock(&scandir_mutex);
   }
-#endif  /* HAVE_PTHREAD */
+#endif /* HAVE_PTHREAD */
 
   return result;
 }
@@ -134,28 +126,27 @@ readentry(DIR *dirp, struct dirent **entryp, size_t *len)
  *
  * Returns -1 on error, errmsg returns error string (if non-NULL)
  */
-int
-fl_scandir(const char *dir, struct dirent ***namelist,
-           int (*sel)(struct dirent *),
-           int (*compar)(struct dirent **, struct dirent **),
-           char *errmsg, int errmsg_sz)
-{
+int fl_scandir(const char *dir, struct dirent ***namelist, int (*sel)(struct dirent *),
+               int (*compar)(struct dirent **, struct dirent **), char *errmsg, int errmsg_sz) {
   int result = -1;
   DIR *dirp;
   size_t len, num = 0, max = ENTRIES_MIN;
   struct dirent *entryp, **entries, **p;
 
-  if (errmsg && errmsg_sz>0) errmsg[0] = '\0';
-  entries = (struct dirent **) malloc(sizeof(*entries) * max);
+  if (errmsg && errmsg_sz > 0)
+    errmsg[0] = '\0';
+  entries = (struct dirent **)malloc(sizeof(*entries) * max);
   if (NULL == entries) {
-    if (errmsg) fl_snprintf(errmsg, errmsg_sz, "out of memory");
+    if (errmsg)
+      fl_snprintf(errmsg, errmsg_sz, "out of memory");
     return -1;
   }
 
   /* Open directory 'dir' (and verify that it really is a directory) */
   dirp = opendir(dir);
   if (NULL == dirp) {
-    if (errmsg) fl_snprintf(errmsg, errmsg_sz, "%s", strerror(errno));
+    if (errmsg)
+      fl_snprintf(errmsg, errmsg_sz, "%s", strerror(errno));
 
     // XXX: This would be a thread safe alternative to the above, but commented
     //      out because we can get either GNU or POSIX versions on linux,
@@ -171,27 +162,31 @@ fl_scandir(const char *dir, struct dirent ***namelist,
   }
 
   /* Read next directory entry */
-  while (!readentry(dirp, &entryp, &len))
-  {
-    if (NULL == entryp)
-    {
+  while (!readentry(dirp, &entryp, &len)) {
+    if (NULL == entryp) {
       /* EOD => Return number of directory entries */
-      result = (int) num;
+      result = (int)num;
       break;
     }
     /* Apply select function if there is one provided */
-    if (NULL != sel)  { if (!sel(entryp))  continue; }
+    if (NULL != sel) {
+      if (!sel(entryp))
+        continue;
+    }
     entries[num++] = entryp;
     if (num >= max) {
       /* Allocate exponentially increasing sized memory chunks */
-      if (INT_MAX / 2 >= (int) max)  { max *= (size_t) 2; }
-      else {
+      if (INT_MAX / 2 >= (int)max) {
+        max *= (size_t)2;
+      } else {
         errno = ENOMEM;
         break;
       }
-      p = (struct dirent **) realloc((void *)entries, sizeof(*entries)*max);
-      if (NULL != p) { entries = p; }
-      else  break;
+      p = (struct dirent **)realloc((void *)entries, sizeof(*entries) * max);
+      if (NULL != p) {
+        entries = p;
+      } else
+        break;
     }
   }
   closedir(dirp);
@@ -204,14 +199,15 @@ fl_scandir(const char *dir, struct dirent ***namelist,
 
   /* Sort entries in array if there is a compare function provided */
   if (NULL != compar) {
-    qsort((void *) entries, num, sizeof(*entries),
-          (int (*)(const void *, const void *)) compar);
+    qsort((void *)entries, num, sizeof(*entries), (int (*)(const void *, const void *))compar);
   }
   *namelist = entries;
   /* Check for error */
   if (-1 == result) {
     /* Free all memory we have allocated */
-    while (num--)  { free(entries[num]); }
+    while (num--) {
+      free(entries[num]);
+    }
     free(entries);
   }
   return result;

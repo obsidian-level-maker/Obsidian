@@ -178,7 +178,8 @@ bool Options_Save(std::filesystem::path filename) {
               << "\n";
     option_fp << "randomize_pickups = " << (randomize_pickups ? 1 : 0) << "\n";
     option_fp << "randomize_misc = " << (randomize_misc ? 1 : 0) << "\n";
-    option_fp << "random_string_seeds = " << (random_string_seeds ? 1 : 0) << "\n";
+    option_fp << "random_string_seeds = " << (random_string_seeds ? 1 : 0)
+              << "\n";
     option_fp << "password_mode = " << (password_mode ? 1 : 0) << "\n";
     option_fp << "filename_prefix = " << filename_prefix << "\n";
     option_fp << "custom_prefix = " << custom_prefix << "\n";
@@ -302,7 +303,8 @@ class UI_OptionsWin : public Fl_Window {
     static void callback_RestartAfterBuilds(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
-        restart_after_builds = that->opt_restart_after_builds->value() ? true : false;
+        restart_after_builds =
+            that->opt_restart_after_builds->value() ? true : false;
     }
 
     static void callback_RestartAfterBuildsHelp(Fl_Widget *w, void *data) {
@@ -345,17 +347,17 @@ to recreate the results of prior runs, this option can be safely left off.");
     static void callback_Random_String_Seeds(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
-        random_string_seeds = that->opt_random_string_seeds->value() ? true : false;
+        random_string_seeds =
+            that->opt_random_string_seeds->value() ? true : false;
 
         if (!random_string_seeds) {
             that->opt_password_mode->deactivate();
-        }
-        else {
+        } else {
             that->opt_password_mode->activate();
         }
     }
 
-static void callback_RandomStringSeedsHelp(Fl_Widget *w, void *data) {
+    static void callback_RandomStringSeedsHelp(Fl_Widget *w, void *data) {
         fl_cursor(FL_CURSOR_DEFAULT);
         Fl_Window *win = new Fl_Window(640, 480, "Random String Seeds");
         Fl_Text_Buffer *buff = new Fl_Text_Buffer();
@@ -378,7 +380,7 @@ cosmetic/entertainment value.");
         password_mode = that->opt_password_mode->value() ? true : false;
     }
 
-static void callback_PasswordModeHelp(Fl_Widget *w, void *data) {
+    static void callback_PasswordModeHelp(Fl_Widget *w, void *data) {
         fl_cursor(FL_CURSOR_DEFAULT);
         Fl_Window *win = new Fl_Window(640, 480, "Password Mode");
         Fl_Text_Buffer *buff = new Fl_Text_Buffer();
@@ -579,7 +581,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_custom_prefix->h() + y_step * 2;
 
-    opt_random_string_seeds = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_random_string_seeds =
+        new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
     opt_random_string_seeds->copy_label(_(" Random String Seeds"));
     opt_random_string_seeds->value(random_string_seeds ? 1 : 0);
     opt_random_string_seeds->callback(callback_Random_String_Seeds, this);
@@ -592,10 +595,10 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     random_string_seeds_help->labelfont(font_style);
     random_string_seeds_help->callback(callback_RandomStringSeedsHelp, this);
 
-
     cy += opt_random_string_seeds->h() + y_step * .5;
 
-    opt_password_mode = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_password_mode =
+        new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
     opt_password_mode->copy_label(_(" Password Mode"));
     opt_password_mode->value(password_mode ? 1 : 0);
     opt_password_mode->callback(callback_Password_Mode, this);
@@ -610,7 +613,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
         136 + KF * 40 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
     password_mode_help->labelfont(font_style);
     password_mode_help->callback(callback_PasswordModeHelp, this);
-
 
     cy += opt_password_mode->h() + y_step * .5;
 
@@ -665,8 +667,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_preserve_failures->h() + y_step * .5;
 
-    opt_zip_logs =
-        new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_zip_logs = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
     opt_zip_logs->copy_label(_(" Zip Logs When Saving"));
     opt_zip_logs->value(zip_logs ? 1 : 0);
     opt_zip_logs->callback(callback_ZipLogs, this);
@@ -700,7 +701,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
         136 + KF * 40 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
     restart_after_builds_help->labelfont(font_style);
     restart_after_builds_help->callback(callback_RestartAfterBuildsHelp, this);
-
 
     //----------------
 

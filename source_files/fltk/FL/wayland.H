@@ -15,7 +15,7 @@
 //
 
 #if !defined(FL_PLATFORM_H)
-#  error "Never use <FL/wayland.H> directly; include <FL/platform.H> instead."
+#error "Never use <FL/wayland.H> directly; include <FL/platform.H> instead."
 #endif // !FL_PLATFORM_H
 
 typedef struct wld_window *Window;

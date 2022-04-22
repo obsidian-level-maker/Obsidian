@@ -26,7 +26,8 @@ class Fl_RGB_Image;
  */
 class FL_EXPORT Fl_OpenGL_Display_Device : public Fl_Surface_Device {
   Fl_OpenGL_Display_Device(Fl_OpenGL_Graphics_Driver *graphics_driver);
+
 public:
   static Fl_OpenGL_Display_Device *display_device();
-  static Fl_RGB_Image* capture_gl_rectangle(Fl_Gl_Window*, int, int, int, int);
+  static Fl_RGB_Image *capture_gl_rectangle(Fl_Gl_Window *, int, int, int, int);
 };

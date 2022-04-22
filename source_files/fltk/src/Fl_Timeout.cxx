@@ -31,7 +31,7 @@ Fl_Timeout *Fl_Timeout::first_timeout = 0;
 Fl_Timeout *Fl_Timeout::current_timeout = 0;
 
 #if FL_TIMEOUT_DEBUG
-static int num_timers = 0;    // DEBUG
+static int num_timers = 0; // DEBUG
 #endif
 
 // Internal timestamp, used for delta time calculation.
@@ -82,9 +82,9 @@ static void get_timestamp(FlTimeStamp_t *ts) {
   Return:  double  Elapsed time since the last call
 */
 static double elapsed_time() {
-  static int first = 1;                 // initialization
-  static FlTimeStamp_t prev;            // previous timestamp
-  FlTimeStamp_t now;                    // current timestamp
+  static int first = 1;      // initialization
+  static FlTimeStamp_t prev; // previous timestamp
+  FlTimeStamp_t now;         // current timestamp
   double elapsed = 0.0;
   get_timestamp(&now);
   if (first) {
@@ -161,10 +161,10 @@ void Fl_Timeout::repeat_timeout(double time, Fl_Timeout_Handler cb, void *data) 
   Fl_Timeout *t = (Fl_Timeout *)get(time, cb, data);
   Fl_Timeout *cur = current_timeout;
   if (cur) {
-    t->time += cur->time;   // was: missed_timeout_by (always <= 0.0)
+    t->time += cur->time; // was: missed_timeout_by (always <= 0.0)
   }
   if (t->time < 0.0)
-    t->time = 0.001;        // at least 1 ms
+    t->time = 0.001; // at least 1 ms
   t->insert();
 }
 
@@ -178,8 +178,8 @@ void Fl_Timeout::repeat_timeout(double time, Fl_Timeout_Handler cb, void *data) 
   Implements Fl::remove_timeout(Fl_Timeout_Handler cb, void *data)
 */
 void Fl_Timeout::remove_timeout(Fl_Timeout_Handler cb, void *data) {
-  for (Fl_Timeout** p = &first_timeout; *p;) {
-    Fl_Timeout* t = *p;
+  for (Fl_Timeout **p = &first_timeout; *p;) {
+    Fl_Timeout *t = *p;
     if (t->callback == cb && (t->data == data || !data)) {
       *p = t->next;
       t->next = free_timeout;
@@ -202,8 +202,8 @@ void Fl_Timeout::remove_timeout(Fl_Timeout_Handler cb, void *data) {
 void Fl_Timeout::make_current() {
   // printf("[%4d] Fl_Timeout::make_current(%p)\n", __LINE__, this);
   // remove the timer entry from the active timer queue
-  for (Fl_Timeout** p = &first_timeout; *p;) {
-    Fl_Timeout* t = *p;
+  for (Fl_Timeout **p = &first_timeout; *p;) {
+    Fl_Timeout *t = *p;
     if (t == this) {
       *p = t->next;
       // push it to the current timer stack
@@ -312,7 +312,7 @@ Fl_Timeout *Fl_Timeout::get(double time, Fl_Timeout_Handler cb, void *data) {
   } else {
     t = new Fl_Timeout;
 #if FL_TIMEOUT_DEBUG
-    num_timers++;                 // DEBUG: count allocated timers
+    num_timers++; // DEBUG: count allocated timers
 #endif
   }
 
@@ -342,13 +342,13 @@ void Fl_Timeout::elapse_timeouts() {
 
     // active timers
 
-    for (Fl_Timeout* t = first_timeout; t; t = t->next) {
+    for (Fl_Timeout *t = first_timeout; t; t = t->next) {
       t->time -= elapsed;
     }
 
     // "current" timers, i.e. timers being serviced
 
-    for (Fl_Timeout* t = current_timeout; t; t = t->next) {
+    for (Fl_Timeout *t = current_timeout; t; t = t->next) {
       t->time -= elapsed;
     }
   }
@@ -362,7 +362,8 @@ void Fl_Timeout::do_timeouts() {
     Fl_Timeout::elapse_timeouts();
     Fl_Timeout *t;
     while ((t = Fl_Timeout::first_timeout)) {
-      if (t->time > 0) break;
+      if (t->time > 0)
+        break;
       // make this timeout the "current" timeout
       t->make_current();
       // now it is safe for the callback to do add_timeout:
@@ -400,9 +401,10 @@ void Fl_Timeout::do_timeouts() {
 */
 double Fl_Timeout::time_to_wait(double ttw) {
   Fl_Timeout *t = first_timeout;
-  if (!t) return ttw;
+  if (!t)
+    return ttw;
   double tdelay = t->delay();
-if (tdelay < 0.0)
+  if (tdelay < 0.0)
     return 0.0;
   if (tdelay < ttw)
     return tdelay;
@@ -444,7 +446,7 @@ void Fl_Timeout::debug(int level) {
   t = first_timeout;
   int n = 0;
   while (t) {
-    printf("Active timer %3d: time = %10.6f sec\n", n+1, t->delay());
+    printf("Active timer %3d: time = %10.6f sec\n", n + 1, t->delay());
     t = t->next;
     n++;
   }

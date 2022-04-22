@@ -43,7 +43,7 @@
 
 /** see fl_push_matrix() */
 void Fl_Graphics_Driver::push_matrix() {
-  if (sptr==matrix_stack_size)
+  if (sptr == matrix_stack_size)
     Fl::error("fl_push_matrix(): matrix stack overflow.");
   else
     stack[sptr++] = m;
@@ -51,7 +51,7 @@ void Fl_Graphics_Driver::push_matrix() {
 
 /** see fl_pop_matrix() */
 void Fl_Graphics_Driver::pop_matrix() {
-  if (sptr==0)
+  if (sptr == 0)
     Fl::error("fl_pop_matrix(): matrix stack underflow.");
   else
     m = stack[--sptr];
@@ -60,12 +60,12 @@ void Fl_Graphics_Driver::pop_matrix() {
 /** see fl_mult_matrix() */
 void Fl_Graphics_Driver::mult_matrix(double a, double b, double c, double d, double x, double y) {
   matrix o;
-  o.a = a*m.a + b*m.c;
-  o.b = a*m.b + b*m.d;
-  o.c = c*m.a + d*m.c;
-  o.d = c*m.b + d*m.d;
-  o.x = x*m.a + y*m.c + m.x;
-  o.y = x*m.b + y*m.d + m.y;
+  o.a = a * m.a + b * m.c;
+  o.b = a * m.b + b * m.d;
+  o.c = c * m.a + d * m.c;
+  o.d = c * m.b + d * m.d;
+  o.x = x * m.a + y * m.c + m.x;
+  o.y = x * m.b + y * m.d + m.y;
   m = o;
 }
 
@@ -73,18 +73,29 @@ void Fl_Graphics_Driver::mult_matrix(double a, double b, double c, double d, dou
 void Fl_Graphics_Driver::rotate(double d) {
   if (d) {
     double s, c;
-    if (d == 0) {s = 0; c = 1;}
-    else if (d == 90) {s = 1; c = 0;}
-    else if (d == 180) {s = 0; c = -1;}
-    else if (d == 270 || d == -90) {s = -1; c = 0;}
-    else {s = sin(d*M_PI/180); c = cos(d*M_PI/180);}
-    mult_matrix(c,-s,s,c,0,0);
+    if (d == 0) {
+      s = 0;
+      c = 1;
+    } else if (d == 90) {
+      s = 1;
+      c = 0;
+    } else if (d == 180) {
+      s = 0;
+      c = -1;
+    } else if (d == 270 || d == -90) {
+      s = -1;
+      c = 0;
+    } else {
+      s = sin(d * M_PI / 180);
+      c = cos(d * M_PI / 180);
+    }
+    mult_matrix(c, -s, s, c, 0, 0);
   }
 }
 
 /** see fl_translate() */
-void Fl_Graphics_Driver::translate(double x,double y) {
-  mult_matrix(1,0,0,1,x,y);
+void Fl_Graphics_Driver::translate(double x, double y) {
+  mult_matrix(1, 0, 0, 1, x, y);
 }
 
 /** see fl_begin_points() */
@@ -113,22 +124,22 @@ void Fl_Graphics_Driver::begin_polygon() {
 
 /** see fl_transform_x() */
 double Fl_Graphics_Driver::transform_x(double x, double y) {
-  return x*m.a + y*m.c + m.x;
+  return x * m.a + y * m.c + m.x;
 }
 
 /** see fl_transform_y() */
 double Fl_Graphics_Driver::transform_y(double x, double y) {
-  return x*m.b + y*m.d + m.y;
+  return x * m.b + y * m.d + m.y;
 }
 
 /** see fl_transform_dx() */
 double Fl_Graphics_Driver::transform_dx(double x, double y) {
-  return x*m.a + y*m.c;
+  return x * m.a + y * m.c;
 }
 
 /** see fl_transform_dy() */
 double Fl_Graphics_Driver::transform_dy(double x, double y) {
-  return x*m.b + y*m.d;
+  return x * m.b + y * m.d;
 }
 
 /**

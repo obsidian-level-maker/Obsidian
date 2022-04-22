@@ -774,11 +774,15 @@ int Doom::NumThings() {
 namespace Doom {
 
 void Send_Prog_Nodes(int progress, int num_maps) {
-    if (main_win) main_win->build_box->Prog_Nodes(progress, num_maps);
+    if (main_win) {
+        main_win->build_box->Prog_Nodes(progress, num_maps);
+    }
 }
 
 void Send_Prog_Step(const char *step_name) {
-    if (main_win) main_win->build_box->AddStatusStep(step_name);
+    if (main_win) {
+        main_win->build_box->AddStatusStep(step_name);
+    }
 }
 
 static bool BuildNodes(std::filesystem::path filename) {
@@ -818,7 +822,7 @@ static bool BuildNodes(std::filesystem::path filename) {
         if (StringCaseCmp(current_game, "doom2") == 0 ||
             StringCaseCmp(current_game, "plutonia") == 0 ||
             StringCaseCmp(current_game, "tnt") == 0 ||
-            StringCaseCmp(current_game, "hacx") == 0 || 
+            StringCaseCmp(current_game, "hacx") == 0 ||
             StringCaseCmp(current_game, "harmony") == 0) {
             map_nums = 32;
         } else if (StringCaseCmp(current_game, "doom1") == 0) {
@@ -922,7 +926,8 @@ bool Doom::game_interface_c::Start(const char *preset) {
     } else if (StringCaseCmp(current_engine, "edge") == 0) {
         build_reject = false;
         map_format = "binary";
-        build_nodes = false; // ZDBSP uses non-spec GL V5 nodes which will crash EDGE-Classic
+        build_nodes = false;  // ZDBSP uses non-spec GL V5 nodes which will
+                              // crash EDGE-Classic
     } else {
         build_reject = StringToInt(ob_get_param("bool_build_reject"));
         map_format = "binary";

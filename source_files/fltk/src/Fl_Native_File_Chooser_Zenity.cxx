@@ -31,7 +31,8 @@ bool Fl_Zenity_Native_File_Chooser_Driver::did_find_zenity = false;
 bool Fl_Zenity_Native_File_Chooser_Driver::have_looked_for_zenity = false;
 
 
-Fl_Zenity_Native_File_Chooser_Driver::Fl_Zenity_Native_File_Chooser_Driver(int val) :  Fl_Native_File_Chooser_FLTK_Driver(val) {
+Fl_Zenity_Native_File_Chooser_Driver::Fl_Zenity_Native_File_Chooser_Driver(int val)
+  : Fl_Native_File_Chooser_FLTK_Driver(val) {
   _tpathnames = 0;
   _pathnames = NULL;
   _directory = NULL;
@@ -41,18 +42,22 @@ Fl_Zenity_Native_File_Chooser_Driver::Fl_Zenity_Native_File_Chooser_Driver(int v
 
 
 Fl_Zenity_Native_File_Chooser_Driver::~Fl_Zenity_Native_File_Chooser_Driver() {
-  for (int i = 0; i < _tpathnames; i++) delete[] _pathnames[i];
+  for (int i = 0; i < _tpathnames; i++)
+    delete[] _pathnames[i];
   delete[] _pathnames;
-  if (_preset_file) free(_preset_file);
-  if (_directory) free(_directory);
-  if (_title) free(_title);
+  if (_preset_file)
+    free(_preset_file);
+  if (_directory)
+    free(_directory);
+  if (_title)
+    free(_title);
 }
 
 
-void Fl_Zenity_Native_File_Chooser_Driver::fnfc_fd_cb(int fd,
-                      Fl_Zenity_Native_File_Chooser_Driver::fnfc_pipe_struct *data) {
+void Fl_Zenity_Native_File_Chooser_Driver::fnfc_fd_cb(
+    int fd, Fl_Zenity_Native_File_Chooser_Driver::fnfc_pipe_struct *data) {
   char tmp[FL_PATH_MAX];
-  int l = read(fd, tmp, sizeof(tmp)-1);
+  int l = read(fd, tmp, sizeof(tmp) - 1);
   if (l > 0) {
     tmp[l] = 0;
     data->all_files = Fl_Native_File_Chooser_Driver::strapp(data->all_files, tmp);
@@ -62,7 +67,7 @@ void Fl_Zenity_Native_File_Chooser_Driver::fnfc_fd_cb(int fd,
 }
 
 
-static int fnfc_dispatch(int /*event*/, Fl_Window* /*win*/) {
+static int fnfc_dispatch(int /*event*/, Fl_Window * /*win*/) {
   return 0;
 }
 
@@ -73,25 +78,26 @@ int Fl_Zenity_Native_File_Chooser_Driver::show() {
     case Fl_Native_File_Chooser::BROWSE_MULTI_DIRECTORY: {
       // BROWSE_MULTI_DIRECTORY is not supported by zenity, run other chooser instead
       Fl_Native_File_Chooser fnfc(Fl_Native_File_Chooser::BROWSE_MULTI_DIRECTORY);
-      fnfc.title( title() );
+      fnfc.title(title());
       fnfc.directory(directory());
       fnfc.preset_file(preset_file());
       fnfc.filter(filter());
       fnfc.options(options());
       int retval = fnfc.show();
-      for (int i = 0; i < _tpathnames; i++) delete[] _pathnames[i];
-      delete[] _pathnames; _pathnames = NULL;
+      for (int i = 0; i < _tpathnames; i++)
+        delete[] _pathnames[i];
+      delete[] _pathnames;
+      _pathnames = NULL;
       _tpathnames = fnfc.count();
       if (_tpathnames && retval == 0) {
-        _pathnames = new char*[_tpathnames];
+        _pathnames = new char *[_tpathnames];
         for (int i = 0; i < _tpathnames; i++) {
-          _pathnames[i] = new char[strlen(fnfc.filename(i))+1];
+          _pathnames[i] = new char[strlen(fnfc.filename(i)) + 1];
           strcpy(_pathnames[i], fnfc.filename(i));
         }
       }
       return retval;
-    }
-      break;
+    } break;
     case Fl_Native_File_Chooser::BROWSE_DIRECTORY:
     case Fl_Native_File_Chooser::BROWSE_SAVE_DIRECTORY:
       option = "--file-selection --directory";
@@ -112,23 +118,23 @@ int Fl_Zenity_Native_File_Chooser_Driver::show() {
   if (_preset_file) {
     preset = new char[strlen(_preset_file) + 15];
     sprintf(preset, "--filename '%s'", _preset_file);
-  }
-  else if (_directory) {
+  } else if (_directory) {
     // This doesn't actually seem to do anything, but supply it anyway.
     preset = new char[strlen(_directory) + 15];
     sprintf(preset, "--filename '%s'", _directory);
   }
-  char *command = new char[strlen(option) + strlen(preset) + (_title?strlen(_title)+11:0) +
-                           (_parsedfilt?strlen(_parsedfilt):0) + 50];
+  char *command = new char[strlen(option) + strlen(preset) + (_title ? strlen(_title) + 11 : 0) +
+                           (_parsedfilt ? strlen(_parsedfilt) : 0) + 50];
   strcpy(command, "zenity ");
   if (_title) {
-    sprintf(command+strlen(command), " --title '%s'", _title);
+    sprintf(command + strlen(command), " --title '%s'", _title);
   }
-  sprintf(command+strlen(command), " %s %s ", option, preset ? preset : "");
+  sprintf(command + strlen(command), " %s %s ", option, preset ? preset : "");
   delete[] preset;
-  if (_parsedfilt) sprintf(command+strlen(command), " \"%s\" ", _parsedfilt);
+  if (_parsedfilt)
+    sprintf(command + strlen(command), " \"%s\" ", _parsedfilt);
   strcat(command, "2> /dev/null"); // get rid of stderr output
-//puts(command);
+                                   // puts(command);
   FILE *pipe = popen(command, "r");
   fnfc_pipe_struct data;
   data.all_files = NULL;
@@ -138,27 +144,32 @@ int Fl_Zenity_Native_File_Chooser_Driver::show() {
     Fl_Event_Dispatch old_dispatch = Fl::event_dispatch();
     // prevent FLTK from processing any event
     Fl::event_dispatch(fnfc_dispatch);
-    void *control = ((Fl_Unix_System_Driver*)Fl::system_driver())->control_maximize_button(NULL);
+    void *control = ((Fl_Unix_System_Driver *)Fl::system_driver())->control_maximize_button(NULL);
     // run event loop until pipe finishes
-    while (data.fd >= 0) Fl::wait();
+    while (data.fd >= 0)
+      Fl::wait();
     Fl::remove_fd(fileno(pipe));
     pclose(pipe);
     // return to previous event processing by FLTK
     Fl::event_dispatch(old_dispatch);
-    if (control) ((Fl_Unix_System_Driver*)Fl::system_driver())->control_maximize_button(control);
+    if (control)
+      ((Fl_Unix_System_Driver *)Fl::system_driver())->control_maximize_button(control);
     if (data.all_files) {
       // process text received from pipe
-      if (data.all_files[strlen(data.all_files)-1] == '\n') data.all_files[strlen(data.all_files)-1] = 0;
-      for (int i = 0; i < _tpathnames; i++) delete[] _pathnames[i];
+      if (data.all_files[strlen(data.all_files) - 1] == '\n')
+        data.all_files[strlen(data.all_files) - 1] = 0;
+      for (int i = 0; i < _tpathnames; i++)
+        delete[] _pathnames[i];
       delete[] _pathnames;
       char *p = data.all_files;
       int count = 1;
-      while ((p = strchr(p+1, ' '))) count++;
-      _pathnames = new char*[count];
+      while ((p = strchr(p + 1, ' ')))
+        count++;
+      _pathnames = new char *[count];
       _tpathnames = 0;
       char *q = strtok(data.all_files, " ");
       while (q) {
-        _pathnames[_tpathnames] = new char[strlen(q)+1];
+        _pathnames[_tpathnames] = new char[strlen(q) + 1];
         strcpy(_pathnames[_tpathnames], q);
         _tpathnames++;
         q = strtok(NULL, " ");
@@ -166,8 +177,12 @@ int Fl_Zenity_Native_File_Chooser_Driver::show() {
     }
   }
   delete[] command;
-  if (_title) { free(_title); _title = NULL; }
-  if (!pipe) return -1;
+  if (_title) {
+    free(_title);
+    _title = NULL;
+  }
+  if (!pipe)
+    return -1;
   return (data.all_files == NULL ? 1 : 0);
 }
 
@@ -176,11 +191,11 @@ const char *Fl_Zenity_Native_File_Chooser_Driver::filename() const {
   return _tpathnames >= 1 ? _pathnames[0] : NULL;
 }
 
-const char *Fl_Zenity_Native_File_Chooser_Driver::filename (int i) const {
+const char *Fl_Zenity_Native_File_Chooser_Driver::filename(int i) const {
   return _tpathnames > i ? _pathnames[i] : NULL;
 }
 
-const char *Fl_Zenity_Native_File_Chooser_Driver::filter() const  {
+const char *Fl_Zenity_Native_File_Chooser_Driver::filter() const {
   return _filter;
 }
 
@@ -193,20 +208,25 @@ int Fl_Zenity_Native_File_Chooser_Driver::count() const {
 }
 
 char *Fl_Zenity_Native_File_Chooser_Driver::parse_filter(const char *f) {
-  //In: "*.H\n" or "*.H"        Out: "(*.H)"
-  //In: "Headers\t*.H\n"        Out: "Headers (*.H)"
-  //In: "Headers\t*.{H,h}\n"    Out: "Headers (*.H *.h)"
+  // In: "*.H\n" or "*.H"        Out: "(*.H)"
+  // In: "Headers\t*.H\n"        Out: "Headers (*.H)"
+  // In: "Headers\t*.{H,h}\n"    Out: "Headers (*.H *.h)"
   const char *p = strchr(f, '\t');
-  if (!p) p = f - 1;
-  const char *q = strchr(f, '\n'); if (!q) q = f + strlen(f);
+  if (!p)
+    p = f - 1;
+  const char *q = strchr(f, '\n');
+  if (!q)
+    q = f + strlen(f);
   const char *r = strchr(f, '{');
   char *developed = NULL;
   if (r) { // with {}
-    char *lead = new char[r-p];
-    memcpy(lead, p+1, (r-p)-1); lead[(r-p)-1] = 0;
+    char *lead = new char[r - p];
+    memcpy(lead, p + 1, (r - p) - 1);
+    lead[(r - p) - 1] = 0;
     const char *r2 = strchr(r, '}');
-    char *ends = new char[r2-r];
-    memcpy(ends, r+1, (r2-r)-1); ends[(r2-r)-1] = 0;
+    char *ends = new char[r2 - r];
+    memcpy(ends, r + 1, (r2 - r) - 1);
+    ends[(r2 - r) - 1] = 0;
     char *ptr;
     char *part = strtok_r(ends, ",", &ptr);
     while (part) {
@@ -215,29 +235,35 @@ char *Fl_Zenity_Native_File_Chooser_Driver::parse_filter(const char *f) {
       developed = strapp(developed, " ");
       part = strtok_r(NULL, ",", &ptr);
     }
-    if (developed[strlen(developed)-1] == ' ') developed[strlen(developed)-1] = 0;
+    if (developed[strlen(developed) - 1] == ' ')
+      developed[strlen(developed) - 1] = 0;
     delete[] lead;
     delete[] ends;
   }
-  int lout = (p>f?p-f:0) + 2 + (r?strlen(developed):((q-p)-1)) + 2;
-  char *out = new char[lout]; *out = 0;
-  if (p > f) {memcpy(out, f, p-f); out[p-f] = 0; }
+  int lout = (p > f ? p - f : 0) + 2 + (r ? strlen(developed) : ((q - p) - 1)) + 2;
+  char *out = new char[lout];
+  *out = 0;
+  if (p > f) {
+    memcpy(out, f, p - f);
+    out[p - f] = 0;
+  }
   strcat(out, " (");
   if (r) {
-    strcpy(out+strlen(out), developed);
+    strcpy(out + strlen(out), developed);
     strfree(developed);
-  }
-  else memcpy(out+strlen(out), p+1, (q-p));
+  } else
+    memcpy(out + strlen(out), p + 1, (q - p));
   strcat(out, ")");
-//puts(out);
+  // puts(out);
   return out;
 }
 
 
 void Fl_Zenity_Native_File_Chooser_Driver::filter(const char *f) {
-  _parsedfilt = strfree(_parsedfilt);   // clear previous parsed filter (if any)
+  _parsedfilt = strfree(_parsedfilt); // clear previous parsed filter (if any)
   _nfilters = 0;
-  if (!f) return;
+  if (!f)
+    return;
   _filter = strdup(f);
   char *f2 = strdup(f);
   char *ptr;
@@ -253,11 +279,12 @@ void Fl_Zenity_Native_File_Chooser_Driver::filter(const char *f) {
   free(f2);
   _parsedfilt = strapp(_parsedfilt, "All files (*)");
   _nfilters++;
-//puts(_parsedfilt);
+  // puts(_parsedfilt);
 }
 
 void Fl_Zenity_Native_File_Chooser_Driver::preset_file(const char *val) {
-  if (_preset_file) free(_preset_file);
+  if (_preset_file)
+    free(_preset_file);
   _preset_file = strdup(val);
 }
 
@@ -266,7 +293,8 @@ const char *Fl_Zenity_Native_File_Chooser_Driver::preset_file() const {
 }
 
 void Fl_Zenity_Native_File_Chooser_Driver::directory(const char *val) {
-  if (_directory) free(_directory);
+  if (_directory)
+    free(_directory);
   _directory = strdup(val);
 }
 
@@ -274,9 +302,9 @@ const char *Fl_Zenity_Native_File_Chooser_Driver::directory() const {
   return _directory;
 }
 
-void Fl_Zenity_Native_File_Chooser_Driver::title(const char *val)
-{
-  if (_title) free(_title);
+void Fl_Zenity_Native_File_Chooser_Driver::title(const char *val) {
+  if (_title)
+    free(_title);
   _title = strdup(val);
 }
 

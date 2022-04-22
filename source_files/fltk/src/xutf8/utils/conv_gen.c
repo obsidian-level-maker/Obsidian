@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
   ptr = buffer;
 
   printf("const int ucs2fontmap"
-          "(char *s, unsigned int ucs, int enc)\n");
+         "(char *s, unsigned int ucs, int enc)\n");
   printf("{\n");
   printf("  switch(enc) {\n");
   printf("  case 0:\n");
@@ -56,7 +56,10 @@ int main(int argc, char **argv) {
     *(p - 1) = '\0';
     *(p - 6) = '\0';
     f = p - 5;
-    while (*p != '+') { i++; p++;}
+    while (*p != '+') {
+      i++;
+      p++;
+    }
     p++;
     t = p;
     *(p + 4) = '\0';
@@ -123,7 +126,7 @@ int main(int argc, char **argv) {
       }
       ptr--;
     }
-    printf("  } else if (!strcmp(enc, \"%s\")", encode[i] +11);
+    printf("  } else if (!strcmp(enc, \"%s\")", encode[i] + 11);
 
     if (!strcmp(encode[i] + 11, "big5-0")) {
       printf(" || !strcmp(enc, \"big5.eten-0\")");

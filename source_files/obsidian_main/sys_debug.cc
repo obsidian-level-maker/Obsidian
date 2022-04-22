@@ -67,7 +67,6 @@ void LogEnableDebug(bool enable) {
 void LogEnableTerminal(bool enable) { terminal = enable; }
 
 void LogClose(void) {
-
     LogPrintf("\n====== END OF OBSIDIAN LOGS ======\n\n");
 
     log_file.close();

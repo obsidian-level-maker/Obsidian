@@ -53,7 +53,7 @@
 
 #include "../Cairo/Fl_Cairo_Graphics_Driver.H"
 #include <stdint.h> // for uint32_t
-typedef struct _PangoLayout  PangoLayout;
+typedef struct _PangoLayout PangoLayout;
 
 struct fl_wld_buffer {
   struct wl_buffer *wl_buffer;
@@ -73,6 +73,7 @@ struct wld_window;
 class FL_EXPORT Fl_Wayland_Graphics_Driver : public Fl_Cairo_Graphics_Driver {
 private:
   struct fl_wld_buffer *buffer_;
+
 public:
   Fl_Wayland_Graphics_Driver();
   static const uint32_t wld_format;
@@ -82,7 +83,8 @@ public:
   static struct fl_wld_buffer *create_shm_buffer(int width, int height);
   static void buffer_release(struct wld_window *window);
   static void buffer_commit(struct wld_window *window);
-  static void cairo_init(struct fl_wld_buffer *buffer, int width, int height, int stride, cairo_format_t format);
+  static void cairo_init(struct fl_wld_buffer *buffer, int width, int height, int stride,
+                         cairo_format_t format);
   void set_spot(int font, int height, int x, int y, int w, int h, Fl_Window *win);
   void reset_spot();
   virtual void *gc();

@@ -38,7 +38,7 @@ public:
     The constructor specializes Fl_Browser() by setting the type to FL_SELECT_BROWSER.
     The destructor destroys the widget and frees all memory that has been allocated.
   */
-  Fl_Select_Browser(int X,int Y,int W,int H,const char *L=0);
+  Fl_Select_Browser(int X, int Y, int W, int H, const char *L = 0);
 };
 
 #endif

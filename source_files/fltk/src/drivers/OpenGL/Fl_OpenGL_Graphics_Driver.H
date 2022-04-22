@@ -34,10 +34,10 @@ public:
   float pixels_per_unit_;
   float line_width_;
   int line_stipple_;
-  Fl_OpenGL_Graphics_Driver() :
-  pixels_per_unit_(1.0f),
-  line_width_(1.0f),
-  line_stipple_(FL_SOLID) { }
+  Fl_OpenGL_Graphics_Driver()
+    : pixels_per_unit_(1.0f)
+    , line_width_(1.0f)
+    , line_stipple_(FL_SOLID) {}
   // --- line and polygon drawing with integer coordinates
   void point(int x, int y);
   void rect(int x, int y, int w, int h);
@@ -82,7 +82,7 @@ public:
   void arc(int x, int y, int w, int h, double a1, double a2);
   void arc(double x, double y, double r, double start, double end);
   void pie(int x, int y, int w, int h, double a1, double a2);
-  void line_style(int style, int width=0, char* dashes=0);
+  void line_style(int style, int width = 0, char *dashes = 0);
   void color(Fl_Color c);
   Fl_Color color() { return color_; }
   void color(uchar r, uchar g, uchar b);
@@ -94,7 +94,7 @@ public:
   void draw(int angle, const char *str, int n, int x, int y);
   double width(const char *str, int n);
   double width(unsigned int c);
-  void text_extents(const char*, int n, int& dx, int& dy, int& w, int& h);
+  void text_extents(const char *, int n, int &dx, int &dy, int &w, int &h);
   int height();
   int descent();
 };

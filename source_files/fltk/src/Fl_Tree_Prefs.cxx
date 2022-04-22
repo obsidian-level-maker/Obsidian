@@ -35,41 +35,15 @@
  \{
  */
 
-const char * const Fl_System_Driver::tree_open_xpm[] = {
-  "11 11 3 1",
-  ".    c #fefefe",
-  "#    c #444444",
-  "@    c #000000",
-  "###########",
-  "#.........#",
-  "#.........#",
-  "#....@....#",
-  "#....@....#",
-  "#..@@@@@..#",
-  "#....@....#",
-  "#....@....#",
-  "#.........#",
-  "#.........#",
-  "###########"
-};
+const char *const Fl_System_Driver::tree_open_xpm[] = {
+    "11 11 3 1",   ".    c #fefefe", "#    c #444444", "@    c #000000", "###########",
+    "#.........#", "#.........#",    "#....@....#",    "#....@....#",    "#..@@@@@..#",
+    "#....@....#", "#....@....#",    "#.........#",    "#.........#",    "###########"};
 
-const char * const Fl_System_Driver::tree_close_xpm[] = {
-"11 11 3 1",
-".      c #fefefe",
-"#      c #444444",
-"@      c #000000",
-"###########",
-"#.........#",
-"#.........#",
-"#.........#",
-"#.........#",
-"#..@@@@@..#",
-"#.........#",
-"#.........#",
-"#.........#",
-"#.........#",
-"###########"
-};
+const char *const Fl_System_Driver::tree_close_xpm[] = {
+    "11 11 3 1",   ".      c #fefefe", "#      c #444444", "@      c #000000", "###########",
+    "#.........#", "#.........#",      "#.........#",      "#.........#",      "#..@@@@@..#",
+    "#.........#", "#.........#",      "#.........#",      "#.........#",      "###########"};
 
 
 /**
@@ -111,8 +85,9 @@ int Fl_System_Driver::tree_connector_style() {
 void Fl_Tree_Prefs::openicon(Fl_Image *val) {
   _openimage = val ? val : Fl::system_driver()->tree_openpixmap();
   // Update deactivated version of icon..
-  if ( _opendeimage ) delete _opendeimage;
-  if ( _openimage ) {
+  if (_opendeimage)
+    delete _opendeimage;
+  if (_openimage) {
     _opendeimage = _openimage->copy();
     _opendeimage->inactive();
   } else {
@@ -128,8 +103,9 @@ void Fl_Tree_Prefs::openicon(Fl_Image *val) {
 void Fl_Tree_Prefs::closeicon(Fl_Image *val) {
   _closeimage = val ? val : Fl::system_driver()->tree_closepixmap();
   // Update deactivated version of icon..
-  if ( _closedeimage ) delete _closedeimage;
-  if ( _closeimage ) {
+  if (_closedeimage)
+    delete _closedeimage;
+  if (_closeimage) {
     _closedeimage = _closeimage->copy();
     _closedeimage->inactive();
   } else {
@@ -139,38 +115,38 @@ void Fl_Tree_Prefs::closeicon(Fl_Image *val) {
 
 /// Fl_Tree_Prefs constructor
 Fl_Tree_Prefs::Fl_Tree_Prefs() {
-  _labelfont              = FL_HELVETICA;
-  _labelsize              = FL_NORMAL_SIZE;
-  _marginleft             = 6;
-  _margintop              = 3;
-  _marginbottom           = 20;
+  _labelfont = FL_HELVETICA;
+  _labelsize = FL_NORMAL_SIZE;
+  _marginleft = 6;
+  _margintop = 3;
+  _marginbottom = 20;
   _openchild_marginbottom = 0;
-  _usericonmarginleft     = 3;
-  _labelmarginleft        = 3;
-  _widgetmarginleft       = 3;
-  _linespacing            = 0;
-  _labelfgcolor           = FL_FOREGROUND_COLOR;
-  _labelbgcolor           = 0xffffffff;         // we use this as 'transparent'
-  _connectorcolor         = Fl_Color(43);
-  _connectorstyle         = (Fl_Tree_Connector)Fl::system_driver()->tree_connector_style();
-  _openimage              = Fl::system_driver()->tree_openpixmap();
-  _closeimage             = Fl::system_driver()->tree_closepixmap();
-  _userimage              = 0;
+  _usericonmarginleft = 3;
+  _labelmarginleft = 3;
+  _widgetmarginleft = 3;
+  _linespacing = 0;
+  _labelfgcolor = FL_FOREGROUND_COLOR;
+  _labelbgcolor = 0xffffffff; // we use this as 'transparent'
+  _connectorcolor = Fl_Color(43);
+  _connectorstyle = (Fl_Tree_Connector)Fl::system_driver()->tree_connector_style();
+  _openimage = Fl::system_driver()->tree_openpixmap();
+  _closeimage = Fl::system_driver()->tree_closepixmap();
+  _userimage = 0;
   _opendeimage = _openimage->copy();
   _opendeimage->inactive();
   _closedeimage = _closeimage->copy();
   _closedeimage->inactive();
-  _userdeimage            = 0;
-  _showcollapse           = 1;
-  _showroot               = 1;
-  _connectorwidth         = 17;
-  _sortorder              = FL_TREE_SORT_NONE;
-  _selectbox              = FL_FLAT_BOX;
-  _selectmode             = FL_TREE_SELECT_SINGLE;
-  _itemreselectmode       = FL_TREE_SELECTABLE_ONCE;
-  _itemdrawmode           = FL_TREE_ITEM_DRAW_DEFAULT;
-  _itemdrawcallback       = 0;
-  _itemdrawuserdata       = 0;
+  _userdeimage = 0;
+  _showcollapse = 1;
+  _showroot = 1;
+  _connectorwidth = 17;
+  _sortorder = FL_TREE_SORT_NONE;
+  _selectbox = FL_FLAT_BOX;
+  _selectmode = FL_TREE_SELECT_SINGLE;
+  _itemreselectmode = FL_TREE_SELECTABLE_ONCE;
+  _itemdrawmode = FL_TREE_ITEM_DRAW_DEFAULT;
+  _itemdrawcallback = 0;
+  _itemdrawuserdata = 0;
   // Let fltk's current 'scheme' affect defaults
   if (Fl::is_scheme("gtk+")) {
     _selectbox = _FL_GTK_THIN_UP_BOX;
@@ -181,7 +157,10 @@ Fl_Tree_Prefs::Fl_Tree_Prefs() {
 
 /// Fl_Tree_Prefs destructor
 Fl_Tree_Prefs::~Fl_Tree_Prefs() {
-  if ( _opendeimage )  delete _opendeimage;
-  if ( _closedeimage ) delete _closedeimage;
-  if ( _userdeimage )  delete _userdeimage;
+  if (_opendeimage)
+    delete _opendeimage;
+  if (_closedeimage)
+    delete _closedeimage;
+  if (_userdeimage)
+    delete _userdeimage;
 }

@@ -42,16 +42,15 @@ char *optionString = 0;
  * returns 1 if argv[i] matches on its own,
  * returns 0 if argv[i] does not match.
  */
-int arg(int argc, char **argv, int &i)
-{
+int arg(int argc, char **argv, int &i) {
   if (strcmp("-h", argv[i]) == 0 || strcmp("--help", argv[i]) == 0) {
     helpFlag = 1;
     i += 1;
     return 1;
   }
   if (strcmp("-o", argv[i]) == 0 || strcmp("--option", argv[i]) == 0) {
-    if (i < argc-1 && argv[i+1] != 0) {
-      optionString = argv[i+1];
+    if (i < argc - 1 && argv[i + 1] != 0) {
+      optionString = argv[i + 1];
       i += 2;
       return 2;
     }
@@ -59,8 +58,7 @@ int arg(int argc, char **argv, int &i)
   return 0;
 }
 
-int main(int argc, char** argv)
-{
+int main(int argc, char **argv) {
   int i = 1;
   if (Fl::args(argc, argv, i, arg) < argc)
     // note the concatenated strings to give a single format string!
@@ -78,8 +76,8 @@ int main(int argc, char** argv)
               "%s\n",
               argv[0], Fl::help);
 
-  Fl_Window* mainWin = new Fl_Window(300, 200);
-  Fl_Box* textBox = new Fl_Box(0, 0, 300, 200);
+  Fl_Window *mainWin = new Fl_Window(300, 200);
+  Fl_Box *textBox = new Fl_Box(0, 0, 300, 200);
   if (optionString != 0)
     textBox->label(optionString);
   else

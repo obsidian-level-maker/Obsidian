@@ -27,7 +27,7 @@
 class FL_EXPORT Fl_Tile : public Fl_Group {
 public:
   int handle(int event);
-  Fl_Tile(int X, int Y, int W, int H, const char *L=0);
+  Fl_Tile(int X, int Y, int W, int H, const char *L = 0);
   void resize(int X, int Y, int W, int H);
   void position(int oldx, int oldy, int newx, int newy);
 };

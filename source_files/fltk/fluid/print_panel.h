@@ -42,13 +42,13 @@ extern Fl_Spinner *print_copies;
 extern Fl_Check_Button *print_collate_button;
 extern Fl_Group *print_collate_group[2];
 #include <FL/Fl_Return_Button.H>
-extern void print_cb(Fl_Return_Button*, void*);
+extern void print_cb(Fl_Return_Button *, void *);
 #include <FL/Fl_Progress.H>
 extern Fl_Progress *print_progress;
 extern Fl_Double_Window *print_properties_panel;
 extern Fl_Choice *print_page_size;
 extern Fl_Button *print_output_mode[4];
-Fl_Double_Window* make_print_panel();
+Fl_Double_Window *make_print_panel();
 extern Fl_Menu_Item menu_print_page_size[];
 extern void print_cb(Fl_Return_Button *, void *);
 void print_load();

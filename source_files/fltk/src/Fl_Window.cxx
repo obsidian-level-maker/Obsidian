@@ -64,23 +64,22 @@ void Fl_Window::_Fl_Window() {
   fullscreen_screen_bottom = -1;
   fullscreen_screen_left = -1;
   fullscreen_screen_right = -1;
-  callback((Fl_Callback*)default_callback);
+  callback((Fl_Callback *)default_callback);
 }
 
-Fl_Window::Fl_Window(int X,int Y,int W, int H, const char *l) :
-  Fl_Group(X, Y, W, H, l)
-{
+Fl_Window::Fl_Window(int X, int Y, int W, int H, const char *l)
+  : Fl_Group(X, Y, W, H, l) {
   pWindowDriver = Fl_Window_Driver::newWindowDriver(this);
   _Fl_Window();
   set_flag(FORCE_POSITION);
-  if (!parent()) clear_visible();
+  if (!parent())
+    clear_visible();
 }
 
 
-Fl_Window::Fl_Window(int W, int H, const char *l) :
-// fix common user error of a missing end() with current(0):
-Fl_Group((Fl_Group::current(0),0), 0, W, H, l)
-{
+Fl_Window::Fl_Window(int W, int H, const char *l)
+  : // fix common user error of a missing end() with current(0):
+  Fl_Group((Fl_Group::current(0), 0), 0, W, H, l) {
   pWindowDriver = Fl_Window_Driver::newWindowDriver(this);
   _Fl_Window();
   clear_visible();
@@ -106,7 +105,8 @@ Fl_Window::~Fl_Window() {
 */
 Fl_Window *Fl_Widget::window() const {
   for (Fl_Widget *o = parent(); o; o = o->parent())
-    if (o->type() >= FL_WINDOW) return (Fl_Window*)o;
+    if (o->type() >= FL_WINDOW)
+      return (Fl_Window *)o;
   return 0;
 }
 
@@ -118,8 +118,10 @@ Fl_Window *Fl_Widget::window() const {
 */
 Fl_Window *Fl_Widget::top_window() const {
   const Fl_Widget *w = this;
-  while (w->parent()) { w = w->parent(); }              // walk up the widget hierarchy to top-level item
-  return const_cast<Fl_Widget*>(w)->as_window();        // return if window, or NULL if not
+  while (w->parent()) {
+    w = w->parent();
+  }                                               // walk up the widget hierarchy to top-level item
+  return const_cast<Fl_Widget *>(w)->as_window(); // return if window, or NULL if not
 }
 
 /**
@@ -127,56 +129,59 @@ Fl_Window *Fl_Widget::top_window() const {
   \param[out] xoff,yoff Returns the x/y offset
   \returns the top-level window (or NULL for a widget that's not in any window)
 */
-Fl_Window* Fl_Widget::top_window_offset(int& xoff, int& yoff) const {
+Fl_Window *Fl_Widget::top_window_offset(int &xoff, int &yoff) const {
   xoff = yoff = 0;
   const Fl_Widget *w = this;
   while (w && w->window()) {
-    xoff += w->x();                     // accumulate offsets
+    xoff += w->x(); // accumulate offsets
     yoff += w->y();
-    w = w->window();                    // walk up window hierarchy
+    w = w->window(); // walk up window hierarchy
   }
-  return w ? const_cast<Fl_Widget*>(w)->as_window() : NULL;
+  return w ? const_cast<Fl_Widget *>(w)->as_window() : NULL;
 }
 
 /** Gets the x position of the window on the screen */
 int Fl_Window::x_root() const {
   Fl_Window *p = window();
-  if (p) return p->x_root() + x();
+  if (p)
+    return p->x_root() + x();
   return x();
 }
 /** Gets the y position of the window on the screen */
 int Fl_Window::y_root() const {
   Fl_Window *p = window();
-  if (p) return p->y_root() + y();
+  if (p)
+    return p->y_root() + y();
   return y();
 }
 
 void Fl_Window::label(const char *name) {
-  label(name, iconlabel());     // platform dependent
+  label(name, iconlabel()); // platform dependent
 }
 
 /** Sets the window titlebar label to a copy of a character string */
 void Fl_Window::copy_label(const char *a) {
   Fl_Widget::copy_label(a);
-  label(label(), iconlabel());  // platform dependent
+  label(label(), iconlabel()); // platform dependent
 }
 
 void Fl_Window::iconlabel(const char *iname) {
-  label(label(), iname);        // platform dependent
+  label(label(), iname); // platform dependent
 }
 
 // the Fl::atclose pointer is provided for back compatibility.  You
 // can now just change the callback for the window instead.
 
-/** Default callback for window widgets. It hides the window and then calls the default widget callback. */
-void Fl::default_atclose(Fl_Window* window, void* v) {
+/** Default callback for window widgets. It hides the window and then calls the default widget
+ * callback. */
+void Fl::default_atclose(Fl_Window *window, void *v) {
   window->hide();
   Fl_Widget::default_callback(window, v); // put on Fl::read_queue()
 }
 /** Back compatibility: default window callback handler \see Fl::set_atclose() */
-void (*Fl::atclose)(Fl_Window*, void*) = default_atclose;
+void (*Fl::atclose)(Fl_Window *, void *) = default_atclose;
 /** Back compatibility: Sets the default callback v for win to call on close event */
-void Fl_Window::default_callback(Fl_Window* win, void* v) {
+void Fl_Window::default_callback(Fl_Window *win, void *v) {
   Fl::atclose(win, v);
 }
 
@@ -190,8 +195,7 @@ Fl_Window *Fl_Window::current() {
   \see Fl_Window::default_xclass(const char *)
 
  */
-const char *Fl_Window::default_xclass()
-{
+const char *Fl_Window::default_xclass() {
   if (default_xclass_) {
     return default_xclass_;
   } else {
@@ -219,8 +223,7 @@ const char *Fl_Window::default_xclass()
 
   \see Fl_Window::xclass(const char *)
 */
-void Fl_Window::default_xclass(const char *xc)
-{
+void Fl_Window::default_xclass(const char *xc) {
   if (default_xclass_) {
     free(default_xclass_);
     default_xclass_ = 0L;
@@ -254,8 +257,7 @@ void Fl_Window::default_xclass(const char *xc)
 
   \see Fl_Window::default_xclass(const char *)
 */
-void Fl_Window::xclass(const char *xc)
-{
+void Fl_Window::xclass(const char *xc) {
   if (xclass_) {
     free(xclass_);
     xclass_ = 0L;
@@ -273,8 +275,7 @@ void Fl_Window::xclass(const char *xc)
   \see Fl_Window::default_xclass(const char *)
   \see Fl_Window::xclass(const char *)
 */
-const char *Fl_Window::xclass() const
-{
+const char *Fl_Window::xclass() const {
   if (xclass_) {
     return xclass_;
   } else {
@@ -384,7 +385,7 @@ const void *Fl_Window::icon() const {
 /** Sets the current icon window target dependent data.
   \deprecated in 1.3.3
  */
-void Fl_Window::icon(const void * ic) {
+void Fl_Window::icon(const void *ic) {
   pWindowDriver->icon(ic);
 }
 
@@ -460,21 +461,19 @@ void Fl_Window::wait_for_expose() {
 }
 
 
-int Fl_Window::decorated_w() const
-{
+int Fl_Window::decorated_w() const {
   return pWindowDriver->decorated_w();
 }
 
 
-int Fl_Window::decorated_h() const
-{
+int Fl_Window::decorated_h() const {
   return pWindowDriver->decorated_h();
 }
 
 
-void Fl_Window::flush()
-{
-  if (!shown()) return;
+void Fl_Window::flush() {
+  if (!shown())
+    return;
   make_current();
   fl_clip_region(i->region);
   i->region = 0;
@@ -482,11 +481,11 @@ void Fl_Window::flush()
 }
 
 
-void Fl_Window::draw()
-{
+void Fl_Window::draw() {
   Fl_Window *save_current = current_;
   bool to_display = Fl_Display_Device::display_device()->is_current();
-  if (!to_display) current_ = this; // so drawing of background Fl_Tiled_Image is correct
+  if (!to_display)
+    current_ = this; // so drawing of background Fl_Tiled_Image is correct
   pWindowDriver->draw_begin();
 
   // The following is similar to Fl_Group::draw(), but ...
@@ -499,30 +498,31 @@ void Fl_Window::draw()
   //   Other windows do not draw their labels at all, unless drawn by their
   //   parent widgets or by special draw() methods (derived classes).
 
-  if (damage() & ~FL_DAMAGE_CHILD) {     // draw the entire thing
-    draw_box(box(),0,0,w(),h(),color()); // draw box with x/y = 0
+  if (damage() & ~FL_DAMAGE_CHILD) {          // draw the entire thing
+    draw_box(box(), 0, 0, w(), h(), color()); // draw box with x/y = 0
 
     if (image() && (align() & FL_ALIGN_INSIDE)) { // draw the image only
       Fl_Label l1;
-      memset(&l1,0,sizeof(l1));
+      memset(&l1, 0, sizeof(l1));
       l1.align_ = align();
       l1.image = image();
-      if (!active_r() && l1.image && l1.deimage) l1.image = l1.deimage;
+      if (!active_r() && l1.image && l1.deimage)
+        l1.image = l1.deimage;
       l1.type = labeltype();
-      l1.draw(0,0,w(),h(),align());
+      l1.draw(0, 0, w(), h(), align());
     }
   }
   draw_children();
 
   pWindowDriver->draw_end();
-  if (!to_display) current_ = save_current;
-# if defined(FLTK_HAVE_CAIROEXT)
+  if (!to_display)
+    current_ = save_current;
+#if defined(FLTK_HAVE_CAIROEXT)
   Fl::cairo_make_current(this); // checkout if an update is necessary
-# endif
+#endif
 }
 
-void Fl_Window::make_current()
-{
+void Fl_Window::make_current() {
   pWindowDriver->make_current();
   current_ = this;
 }
@@ -547,7 +547,7 @@ void Fl_Window::show() {
   pWindowDriver->show();
 }
 
-void Fl_Window::resize(int X,int Y,int W,int H) {
+void Fl_Window::resize(int X, int Y, int W, int H) {
   pWindowDriver->resize(X, Y, W, H);
 }
 
@@ -563,12 +563,12 @@ void Fl_Window::hide() {
 // mapped or unmapped!!!  This is because this should only happen when
 // Fl_Window::show() or Fl_Window::hide() is called, or in response to
 // iconize/deiconize events from the system.
-int Fl_Window::handle(int ev)
-{
+int Fl_Window::handle(int ev) {
   if (parent()) {
     switch (ev) {
       case FL_SHOW:
-        if (!shown()) show();
+        if (!shown())
+          show();
         else {
           pWindowDriver->map();
         }
@@ -583,8 +583,11 @@ int Fl_Window::handle(int ev)
           // unmap because when the parent window is remapped we don't
           // want to reappear.
           if (visible()) {
-            Fl_Widget* p = parent(); for (;p->visible();p = p->parent()) {}
-            if (p->type() >= FL_WINDOW) break; // don't do the unmap
+            Fl_Widget *p = parent();
+            for (; p->visible(); p = p->parent()) {
+            }
+            if (p->type() >= FL_WINDOW)
+              break; // don't do the unmap
           }
           pWindowDriver->unmap();
         }
@@ -625,18 +628,17 @@ int Fl_Window::handle(int ev)
     its aspect ratio. This only works if both the maximum and minimum have
     the same aspect ratio (ignored on Windows and by many X window managers).
 */
-void Fl_Window::size_range(int minWidth, int minHeight,
-                           int maxWidth, int maxHeight,
-                           int deltaX, int deltaY, int aspectRatio) {
-  minw_           = minWidth;
-  minh_           = minHeight;
-  maxw_           = maxWidth;
-  maxh_           = maxHeight;
-  dw_             = deltaX;
-  dh_             = deltaY;
-  aspect_         = aspectRatio;
+void Fl_Window::size_range(int minWidth, int minHeight, int maxWidth, int maxHeight, int deltaX,
+                           int deltaY, int aspectRatio) {
+  minw_ = minWidth;
+  minh_ = minHeight;
+  maxw_ = maxWidth;
+  maxh_ = maxHeight;
+  dw_ = deltaX;
+  dh_ = deltaY;
+  aspect_ = aspectRatio;
   size_range_set_ = 1;
-  pWindowDriver->size_range();  // platform specific stuff
+  pWindowDriver->size_range(); // platform specific stuff
 }
 
 /**
@@ -738,19 +740,25 @@ void Fl_Window::default_size_range() {
 
   int L = r->x();
   int R = L + r->w();
-  if (R < 0 || L > w()) R = L; // outside the window
+  if (R < 0 || L > w())
+    R = L; // outside the window
   else {
-    if (L < 0)   L = 0;
-    if (R > w()) R = w();
+    if (L < 0)
+      L = 0;
+    if (R > w())
+      R = w();
   }
   int rw = R - L;
 
   int T = r->y();
   int B = T + r->h();
-  if (B < 0 || T > h()) B = T; // outside the window
+  if (B < 0 || T > h())
+    B = T; // outside the window
   else {
-    if (T < 0) T = 0;
-    if (B > h()) B = h();
+    if (T < 0)
+      T = 0;
+    if (B > h())
+      B = h();
   }
   int rh = B - T;
 
@@ -762,8 +770,10 @@ void Fl_Window::default_size_range() {
   // Limit the resizable dimensions to 100x100 according to the docs.
   // This makes the resizable widget shrinkable, otherwise it would
   // only be able to grow (issue #392)
-  if (rw > 100) rw = 100;
-  if (rh > 100) rh = 100;
+  if (rw > 100)
+    rw = 100;
+  if (rh > 100)
+    rh = 100;
 
   // Add the clipped resizable() width/height so we have at least
   // the non-resizable part + the clipped resizable() size
@@ -772,8 +782,10 @@ void Fl_Window::default_size_range() {
 
   // Disable resizing in the respective directions if any dimension
   // of the resizable widget is zero (see docs)
-  if (r->w() == 0) minw = maxw = w();
-  if (r->h() == 0) minh = maxh = h();
+  if (r->w() == 0)
+    minw = maxw = w();
+  if (r->h() == 0)
+    minh = maxh = h();
 
   // Finally set the size range
   size_range(minw, minh, maxw, maxh);
@@ -800,8 +812,10 @@ void Fl_Window::default_size_range() {
 int Fl_Window::is_resizable() {
   default_size_range();
   int ret = 0;
-  if (minw_ != maxw_) ret |= 1;
-  if (minh_ != maxh_) ret |= 2;
+  if (minw_ != maxw_)
+    ret |= 1;
+  if (minh_ != maxh_)
+    ret |= 2;
   return ret;
 }
 
@@ -825,25 +839,26 @@ int Fl_Window::screen_num() {
  where a window is to be mapped.
  */
 void Fl_Window::screen_num(int screen_num) {
-  if (!shown() && screen_num >= 0 && screen_num < Fl::screen_count()) pWindowDriver->screen_num(screen_num);
+  if (!shown() && screen_num >= 0 && screen_num < Fl::screen_count())
+    pWindowDriver->screen_num(screen_num);
 }
 
 /** Assigns a non-rectangular shape to the window.
  This function gives an arbitrary shape (not just a rectangular region) to an Fl_Window.
- An Fl_Image of any dimension can be used as mask; it is rescaled to the window's dimension as needed.
+ An Fl_Image of any dimension can be used as mask; it is rescaled to the window's dimension as
+ needed.
 
- The layout and widgets inside are unaware of the mask shape, and most will act as though the window's
- rectangular bounding box is available
- to them. It is up to you to make sure they adhere to the bounds of their masking shape.
+ The layout and widgets inside are unaware of the mask shape, and most will act as though the
+ window's rectangular bounding box is available to them. It is up to you to make sure they adhere to
+ the bounds of their masking shape.
 
  The \p img argument can be an Fl_Bitmap, Fl_Pixmap, Fl_RGB_Image or Fl_Shared_Image:
- \li With Fl_Bitmap or Fl_Pixmap, the shaped window covers the image part where bitmap bits equal one,
- or where the pixmap is not fully transparent.
- \li With an Fl_RGB_Image with an alpha channel (depths 2 or 4), the shaped window covers the image part
- that is not fully transparent.
- \li With an Fl_RGB_Image of depth 1 (gray-scale) or 3 (RGB), the shaped window covers the non-black image part.
- \li With an Fl_Shared_Image, the shape is determined by rules above applied to the underlying image.
- The shared image should not have been scaled through Fl_Image::scale().
+ \li With Fl_Bitmap or Fl_Pixmap, the shaped window covers the image part where bitmap bits equal
+ one, or where the pixmap is not fully transparent. \li With an Fl_RGB_Image with an alpha channel
+ (depths 2 or 4), the shaped window covers the image part that is not fully transparent. \li With an
+ Fl_RGB_Image of depth 1 (gray-scale) or 3 (RGB), the shaped window covers the non-black image part.
+ \li With an Fl_Shared_Image, the shape is determined by rules above applied to the underlying
+ image. The shared image should not have been scaled through Fl_Image::scale().
 
  Platform details:
  \li On the unix/linux platform, the SHAPE extension of the X server is required.
@@ -864,22 +879,32 @@ void Fl_Window::screen_num(int screen_num) {
 
  \version 1.3.3
  */
-void Fl_Window::shape(const Fl_Image* img) {pWindowDriver->shape(img);}
+void Fl_Window::shape(const Fl_Image *img) {
+  pWindowDriver->shape(img);
+}
 
 /** Set the window's shape with an Fl_Image.
  \see void shape(const Fl_Image* img)
  */
-void Fl_Window::shape(const Fl_Image& img) {pWindowDriver->shape(&img);}
+void Fl_Window::shape(const Fl_Image &img) {
+  pWindowDriver->shape(&img);
+}
 
 /** Returns the image controlling the window shape or NULL */
-const Fl_Image* Fl_Window::shape() {return pWindowDriver->shape();}
+const Fl_Image *Fl_Window::shape() {
+  return pWindowDriver->shape();
+}
 
 /** Returns true when a window is being rescaled */
-bool Fl_Window::is_a_rescale() {return Fl_Window_Driver::is_a_rescale_;}
+bool Fl_Window::is_a_rescale() {
+  return Fl_Window_Driver::is_a_rescale_;
+}
 
 /** Returns a platform-specific identification of a shown window, or 0 if not shown.
  \li X11 platform: the window's XID.
  \li macOS platform: The window number of the window’s window device.
  \li other platforms: 0.
  */
-fl_uintptr_t Fl_Window::os_id() { return pWindowDriver->os_id();}
+fl_uintptr_t Fl_Window::os_id() {
+  return pWindowDriver->os_id();
+}

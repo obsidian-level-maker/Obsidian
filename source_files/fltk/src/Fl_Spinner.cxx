@@ -30,7 +30,7 @@
 */
 
 void Fl_Spinner::sb_cb(Fl_Widget *w, Fl_Spinner *sb) {
-  double v;                             // New value
+  double v; // New value
 
   if (w == &(sb->input_)) {
     // Something changed in the input field...
@@ -42,7 +42,8 @@ void Fl_Spinner::sb_cb(Fl_Widget *w, Fl_Spinner *sb) {
     } else if (v > sb->maximum_) {
       sb->value_ = sb->maximum_;
       sb->update();
-    } else sb->value_ = v;
+    } else
+      sb->value_ = v;
   } else if (w == &(sb->up_button_)) {
     // Up button pressed...
     v = sb->value_ + sb->step_;
@@ -72,7 +73,7 @@ void Fl_Spinner::sb_cb(Fl_Widget *w, Fl_Spinner *sb) {
 }
 
 void Fl_Spinner::update() {
-  char s[255];    // Value string
+  char s[255]; // Value string
 
   if (format_[0] == '%' && format_[1] == '.' && format_[2] == '*') { // precision argument
     // this code block is a simplified version of
@@ -80,10 +81,15 @@ void Fl_Spinner::update() {
     int c = 0;
     char temp[64], *sp = temp;
     sprintf(temp, "%.12f", step_);
-    while (*sp) sp++;
+    while (*sp)
+      sp++;
     sp--;
-    while (sp > temp && *sp == '0') sp--;
-    while (sp > temp && (*sp >= '0' && *sp <= '9')) { sp--; c++; }
+    while (sp > temp && *sp == '0')
+      sp--;
+    while (sp > temp && (*sp >= '0' && *sp <= '9')) {
+      sp--;
+      c++;
+    }
     sprintf(s, format_, c, value_);
   } else {
     sprintf(s, format_, value_);
@@ -102,20 +108,18 @@ void Fl_Spinner::update() {
 */
 
 Fl_Spinner::Fl_Spinner(int X, int Y, int W, int H, const char *L)
-: Fl_Group(X, Y, W, H, L),
-  input_(X, Y, W - H / 2 - 2, H),
-  up_button_(X + W - H / 2 - 2, Y, H / 2 + 2, H / 2, FL_UP_ARROW_TX),
-  down_button_(X + W - H / 2 - 2, Y + H - H / 2,
-               H / 2 + 2, H / 2, FL_DOWN_ARROW_TX)
-{
+  : Fl_Group(X, Y, W, H, L)
+  , input_(X, Y, W - H / 2 - 2, H)
+  , up_button_(X + W - H / 2 - 2, Y, H / 2 + 2, H / 2, FL_UP_ARROW_TX)
+  , down_button_(X + W - H / 2 - 2, Y + H - H / 2, H / 2 + 2, H / 2, FL_DOWN_ARROW_TX) {
   end();
 
-  value_   = 1.0;
+  value_ = 1.0;
   minimum_ = 1.0;
   maximum_ = 100.0;
-  step_    = 1.0;
-  wrap_    = 1;
-  format_  = "%g";
+  step_ = 1.0;
+  wrap_ = 1;
+  format_ = "%g";
 
   align(FL_ALIGN_LEFT);
 
@@ -145,7 +149,8 @@ int Fl_Spinner::handle(int event) {
       return 0;
 
     case FL_FOCUS:
-      if (input_.take_focus()) return 1;
+      if (input_.take_focus())
+        return 1;
       return 0;
   }
 
@@ -153,12 +158,11 @@ int Fl_Spinner::handle(int event) {
 }
 
 void Fl_Spinner::resize(int X, int Y, int W, int H) {
-  Fl_Group::resize(X,Y,W,H);
+  Fl_Group::resize(X, Y, W, H);
 
   input_.resize(X, Y, W - H / 2 - 2, H);
   up_button_.resize(X + W - H / 2 - 2, Y, H / 2 + 2, H / 2);
-  down_button_.resize(X + W - H / 2 - 2, Y + H - H / 2,
-                      H / 2 + 2, H / 2);
+  down_button_.resize(X + W - H / 2 - 2, Y + H - H / 2, H / 2 + 2, H / 2);
 }
 
 /**
@@ -171,8 +175,10 @@ void Fl_Spinner::resize(int X, int Y, int W, int H) {
 
 void Fl_Spinner::step(double s) {
   step_ = s;
-  if (step_ != (int)step_) input_.type(FL_FLOAT_INPUT);
-  else input_.type(FL_INT_INPUT);
+  if (step_ != (int)step_)
+    input_.type(FL_FLOAT_INPUT);
+  else
+    input_.type(FL_INT_INPUT);
   update();
 }
 

@@ -22,31 +22,35 @@
   \brief Utility functions for drawing circles using integers
 */
 
-void Fl_Quartz_Graphics_Driver::arc(int x,int y,int w,int h,double a1,double a2) {
-  if (w <= 0 || h <= 0) return;
-  a1 = (-a1)/180.0f*M_PI; a2 = (-a2)/180.0f*M_PI;
-  float cx = x + 0.5f*w - 0.5f, cy = y + 0.5f*h - 0.5f;
+void Fl_Quartz_Graphics_Driver::arc(int x, int y, int w, int h, double a1, double a2) {
+  if (w <= 0 || h <= 0)
+    return;
+  a1 = (-a1) / 180.0f * M_PI;
+  a2 = (-a2) / 180.0f * M_PI;
+  float cx = x + 0.5f * w - 0.5f, cy = y + 0.5f * h - 0.5f;
   CGContextSetShouldAntialias(gc_, true);
-  if (w!=h) {
+  if (w != h) {
     CGContextSaveGState(gc_);
     CGContextTranslateCTM(gc_, cx, cy);
-    CGContextScaleCTM(gc_, w-1.0f, h-1.0f);
+    CGContextScaleCTM(gc_, w - 1.0f, h - 1.0f);
     CGContextAddArc(gc_, 0, 0, 0.5, a1, a2, 1);
     CGContextRestoreGState(gc_);
   } else {
-    float r = (w+h)*0.25f-0.5f;
+    float r = (w + h) * 0.25f - 0.5f;
     CGContextAddArc(gc_, cx, cy, r, a1, a2, 1);
   }
   CGContextStrokePath(gc_);
   CGContextSetShouldAntialias(gc_, false);
 }
 
-void Fl_Quartz_Graphics_Driver::pie(int x,int y,int w,int h,double a1,double a2) {
-  if (w <= 0 || h <= 0) return;
-  a1 = (-a1)/180.0f*M_PI; a2 = (-a2)/180.0f*M_PI;
-  float cx = x + 0.5f*w - 0.5f, cy = y + 0.5f*h - 0.5f;
+void Fl_Quartz_Graphics_Driver::pie(int x, int y, int w, int h, double a1, double a2) {
+  if (w <= 0 || h <= 0)
+    return;
+  a1 = (-a1) / 180.0f * M_PI;
+  a2 = (-a2) / 180.0f * M_PI;
+  float cx = x + 0.5f * w - 0.5f, cy = y + 0.5f * h - 0.5f;
   CGContextSetShouldAntialias(gc_, true);
-  if (w!=h) {
+  if (w != h) {
     CGContextSaveGState(gc_);
     CGContextTranslateCTM(gc_, cx, cy);
     CGContextScaleCTM(gc_, w, h);
@@ -55,7 +59,7 @@ void Fl_Quartz_Graphics_Driver::pie(int x,int y,int w,int h,double a1,double a2)
     CGContextClosePath(gc_);
     CGContextRestoreGState(gc_);
   } else {
-    float r = (w+h)*0.25f;
+    float r = (w + h) * 0.25f;
     CGContextAddArc(gc_, cx, cy, r, a1, a2, 1);
     CGContextAddLineToPoint(gc_, cx, cy);
     CGContextClosePath(gc_);

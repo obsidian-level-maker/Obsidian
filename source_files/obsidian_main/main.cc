@@ -346,8 +346,8 @@ static bool Verify_InstallDir(const std::filesystem::path &path) {
     const std::filesystem::path filename = path / "scripts" / "oblige.lua";
 
 #if 0  // DEBUG
-	fprintf(stderr, "Trying install dir: [%s]\n", path);
-	fprintf(stderr, "  using file: [%s]\n\n", filename);
+    fprintf(stderr, "Trying install dir: [%s]\n", path);
+    fprintf(stderr, "  using file: [%s]\n\n", filename);
 #endif
 
     return exists(filename);
@@ -859,7 +859,7 @@ void SetupFltk() {
     screen_h = Fl::h();
 
 #if 0  // debug
-	fmt::print(stderr, "Screen dimensions = {}x{}\n", screen_w, screen_h);
+    fmt::print(stderr, "Screen dimensions = {}x{}\n", screen_w, screen_h);
 #endif
 
     KF = DetermineScaling();
@@ -1121,8 +1121,7 @@ restart:;
         ShowInfo();
 #ifdef WIN32
         std::cout << '\n' << "Close window when finished...";
-        do 
-        {
+        do {
         } while (true);
 #endif
         exit(EXIT_SUCCESS);
@@ -1137,10 +1136,9 @@ restart:;
         ShowVersion();
 #ifdef WIN32
         std::cout << '\n' << "Close window when finished...";
-        do 
-        {
+        do {
         } while (true);
-        
+
 #endif
         exit(EXIT_SUCCESS);
     }
@@ -1324,12 +1322,11 @@ skiprest:
             LogPrintf("FAILED!\n");
 
             Main::Detail::Shutdown(false);
-        #ifdef WIN32
+#ifdef WIN32
             std::cout << '\n' << "Close window when finished...";
-            do 
-            {
+            do {
             } while (true);
-        #endif
+#endif
             return EXIT_FAILURE;
         }
         Main::Detail::Shutdown(false);
@@ -1481,8 +1478,7 @@ skiprest:
         blinker->uCount = 0;
     } else {
         blinker->hwnd = fl_xid(main_win);
-        if (!old_seed.empty() && !old_name.empty())
-            Main::Blinker();
+        if (!old_seed.empty() && !old_name.empty()) Main::Blinker();
     }
 #endif
 
@@ -1529,7 +1525,7 @@ skiprest:
 
     if (!old_seed.empty()) {
         main_win->build_box->seed_disp->copy_label(
-                fmt::format("Seed: {}", old_seed).c_str());
+            fmt::format("Seed: {}", old_seed).c_str());
         old_seed.clear();
     }
 
@@ -1539,9 +1535,11 @@ skiprest:
     }
 
     if (old_pixels) {
-        if (main_win->build_box->mini_map->pixels)
+        if (main_win->build_box->mini_map->pixels) {
             delete[] main_win->build_box->mini_map->pixels;
-        int map_size = main_win->build_box->mini_map->map_W * main_win->build_box->mini_map->map_H * 3;
+        }
+        int map_size = main_win->build_box->mini_map->map_W *
+                       main_win->build_box->mini_map->map_H * 3;
         main_win->build_box->mini_map->pixels = new u8_t[map_size];
         memcpy(main_win->build_box->mini_map->pixels, old_pixels, map_size);
         delete[] old_pixels;
@@ -1578,13 +1576,20 @@ skiprest:
 
                 if (restart_after_builds) {
                     if (result) {
-                        old_seed = string_seed.empty() ? NumToString(next_rand_seed) : string_seed;
-                        if (main_win->build_box->name_disp->label())
+                        old_seed = string_seed.empty()
+                                       ? NumToString(next_rand_seed)
+                                       : string_seed;
+                        if (main_win->build_box->name_disp->label()) {
                             old_name = main_win->build_box->name_disp->label();
+                        }
                         if (main_win->build_box->mini_map->pixels) {
-                            int map_size = main_win->build_box->mini_map->map_W * main_win->build_box->mini_map->map_H * 3;
+                            int map_size =
+                                main_win->build_box->mini_map->map_W *
+                                main_win->build_box->mini_map->map_H * 3;
                             old_pixels = new u8_t[map_size];
-                            memcpy(old_pixels, main_win->build_box->mini_map->pixels, map_size);
+                            memcpy(old_pixels,
+                                   main_win->build_box->mini_map->pixels,
+                                   map_size);
                         }
                     } else {
                         old_seed.clear();
@@ -1595,8 +1600,9 @@ skiprest:
                 // regardless of success or fail, compute a new seed
                 Main_CalcNewSeed();
 
-                if (restart_after_builds)
+                if (restart_after_builds) {
                     main_action = MAIN_RESTART;
+                }
             }
         }
     } catch (const assert_fail_c &err) {

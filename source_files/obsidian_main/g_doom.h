@@ -79,7 +79,6 @@ int NumThings();
 void Send_Prog_Nodes(int progress, int num_maps);
 void Send_Prog_Step(const char *step_name);
 
-
 /* ----- Level structures ---------------------- */
 
 #pragma pack(push, 1)

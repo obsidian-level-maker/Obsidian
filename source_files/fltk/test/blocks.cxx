@@ -33,25 +33,25 @@
 #include <config.h>
 
 #ifndef _WIN32
-#  include <unistd.h>
-#  include <sys/time.h> // gettimeofday()
-#endif // !_WIN32
+#include <unistd.h>
+#include <sys/time.h> // gettimeofday()
+#endif                // !_WIN32
 
 #ifdef HAVE_ALSA_ASOUNDLIB_H
-#  define ALSA_PCM_NEW_HW_PARAMS_API
-#  include <alsa/asoundlib.h>
+#define ALSA_PCM_NEW_HW_PARAMS_API
+#include <alsa/asoundlib.h>
 #endif // HAVE_ALSA_ASOUNDLIB_H
 #ifdef __APPLE__
-#  include <CoreAudio/AudioHardware.h>
+#include <CoreAudio/AudioHardware.h>
 #endif // __APPLE__
 #ifdef _WIN32
-#  include <mmsystem.h>
+#include <mmsystem.h>
 #endif // _WIN32
 
-#define BLOCK_COLS      25
-#define BLOCK_ROWS      15
-#define BLOCK_SIZE      32
-#define BLOCK_BLAST     100
+#define BLOCK_COLS 25
+#define BLOCK_ROWS 15
+#define BLOCK_SIZE 32
+#define BLOCK_BLAST 100
 
 // These factors are used to fine-tune the game when these events
 // occur by multiplying the timer interval with the given factor:
@@ -60,12 +60,12 @@
 // (b) click on a "normal block", destroy this one and adjacent blocks
 // (c) click on a "bomb", destroy all blocks of the same color
 
-#define LEVEL_FACTOR    0.900f    // was: 0.95
-#define NORMAL_FACTOR   0.999f
-#define BOMB_FACTOR     0.995f
+#define LEVEL_FACTOR 0.900f // was: 0.95
+#define NORMAL_FACTOR 0.999f
+#define BOMB_FACTOR 0.995f
 
 // Set this to 1 to debug the timer callback (should be 0)
-#define DEBUG_TIMER     0
+#define DEBUG_TIMER 0
 
 #include "pixmaps/blast.xpm"
 Fl_Pixmap blast_pixmap(blast_xpm);
@@ -105,28 +105,13 @@ Fl_Pixmap gray_pixmap(gray_xpm);
 #include "pixmaps/gray_bomb.xpm"
 Fl_Pixmap gray_bomb_pixmap(gray_bomb_xpm);
 
-Fl_Pixmap *normal_pixmaps[] = {
-  &red_pixmap,
-  &green_pixmap,
-  &blue_pixmap,
-  &yellow_pixmap,
-  &cyan_pixmap,
-  &magenta_pixmap,
-  &gray_pixmap
-};
-Fl_Pixmap *bomb_pixmaps[] = {
-  &red_bomb_pixmap,
-  &green_bomb_pixmap,
-  &blue_bomb_pixmap,
-  &yellow_bomb_pixmap,
-  &cyan_bomb_pixmap,
-  &magenta_bomb_pixmap,
-  &gray_bomb_pixmap
-};
+Fl_Pixmap *normal_pixmaps[] = {&red_pixmap,  &green_pixmap,   &blue_pixmap, &yellow_pixmap,
+                               &cyan_pixmap, &magenta_pixmap, &gray_pixmap};
+Fl_Pixmap *bomb_pixmaps[] = {&red_bomb_pixmap,    &green_bomb_pixmap, &blue_bomb_pixmap,
+                             &yellow_bomb_pixmap, &cyan_bomb_pixmap,  &magenta_bomb_pixmap,
+                             &gray_bomb_pixmap};
 
-const unsigned char screen_bits[] = {
-  0xff, 0x55, 0xff, 0xaa, 0xff, 0x55, 0xff, 0xaa
-};
+const unsigned char screen_bits[] = {0xff, 0x55, 0xff, 0xaa, 0xff, 0x55, 0xff, 0xaa};
 Fl_Bitmap screen_bitmap(screen_bits, 8, 8);
 Fl_Tiled_Image screen_tile(&screen_bitmap);
 
@@ -153,35 +138,31 @@ class BlockSound {
 #ifndef MAC_OS_X_VERSION_10_5
 #define MAC_OS_X_VERSION_10_5 1050
 #endif
-#  if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
   AudioDeviceIOProcID audio_proc_id;
-#  endif
+#endif
   AudioStreamBasicDescription format;
   short *data;
   int remaining;
 
-  static OSStatus audio_cb(AudioDeviceID device,
-                           const AudioTimeStamp *current_time,
-                           const AudioBufferList *data_in,
-                           const AudioTimeStamp *time_in,
-                           AudioBufferList *data_out,
-                           const AudioTimeStamp *time_out,
+  static OSStatus audio_cb(AudioDeviceID device, const AudioTimeStamp *current_time,
+                           const AudioBufferList *data_in, const AudioTimeStamp *time_in,
+                           AudioBufferList *data_out, const AudioTimeStamp *time_out,
                            void *client_data);
 #elif defined(_WIN32)
-  HWAVEOUT      device;
-  HGLOBAL       header_handle;
-  LPWAVEHDR     header_ptr;
-  HGLOBAL       data_handle;
-  LPSTR         data_ptr;
+  HWAVEOUT device;
+  HGLOBAL header_handle;
+  LPWAVEHDR header_ptr;
+  HGLOBAL data_handle;
+  LPSTR data_ptr;
 
 #else
-#  ifdef HAVE_ALSA_ASOUNDLIB_H
+#ifdef HAVE_ALSA_ASOUNDLIB_H
   snd_pcm_t *handle;
-#  endif // HAVE_ALSA_ASOUNDLIB_H
+#endif // HAVE_ALSA_ASOUNDLIB_H
 #endif // __APPLE__
 
-  public:
-
+public:
   // Common data...
   static short *sample_data;
   static int sample_size;
@@ -189,7 +170,7 @@ class BlockSound {
   BlockSound();
   ~BlockSound();
 
-  void  play_explosion(float duration);
+  void play_explosion(float duration);
 };
 
 // Sound class globals...
@@ -206,68 +187,75 @@ BlockSound::BlockSound() {
 
   UInt32 size = sizeof(device);
 
-  if (AudioHardwareGetProperty(kAudioHardwarePropertyDefaultOutputDevice,
-                               &size, (void *)&device) != noErr) return;
+  if (AudioHardwareGetProperty(kAudioHardwarePropertyDefaultOutputDevice, &size, (void *)&device) !=
+      noErr)
+    return;
 
   size = sizeof(format);
-  if (AudioDeviceGetProperty(device, 0, false, kAudioDevicePropertyStreamFormat,
-                             &size, &format) != noErr) return;
+  if (AudioDeviceGetProperty(device, 0, false, kAudioDevicePropertyStreamFormat, &size, &format) !=
+      noErr)
+    return;
 
   // Set up a format we like...
-  format.mSampleRate       = 44100.0;   // 44.1kHz
-  format.mChannelsPerFrame = 2;         // stereo
+  format.mSampleRate = 44100.0; // 44.1kHz
+  format.mChannelsPerFrame = 2; // stereo
 
-  if (AudioDeviceSetProperty(device, NULL, 0, false,
-                             kAudioDevicePropertyStreamFormat,
-                             sizeof(format), &format) != noErr) return;
+  if (AudioDeviceSetProperty(device, NULL, 0, false, kAudioDevicePropertyStreamFormat,
+                             sizeof(format), &format) != noErr)
+    return;
 
   // Check we got linear pcm - what to do if we did not ???
-  if (format.mFormatID != kAudioFormatLinearPCM) return;
+  if (format.mFormatID != kAudioFormatLinearPCM)
+    return;
 
-  // Attach the callback and start the device
-#  if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
-  if (AudioDeviceCreateIOProcID(device, audio_cb, (void *)this, &audio_proc_id) != noErr) return;
+    // Attach the callback and start the device
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
+  if (AudioDeviceCreateIOProcID(device, audio_cb, (void *)this, &audio_proc_id) != noErr)
+    return;
   AudioDeviceStart(device, audio_proc_id);
-#  else
-  if (AudioDeviceAddIOProc(device, audio_cb, (void *)this) != noErr) return;
+#else
+  if (AudioDeviceAddIOProc(device, audio_cb, (void *)this) != noErr)
+    return;
   AudioDeviceStart(device, audio_cb);
-#  endif
+#endif
 
   sample_size = (int)format.mSampleRate;
 
 #elif defined(_WIN32)
-  WAVEFORMATEX  format;
+  WAVEFORMATEX format;
 
   memset(&format, 0, sizeof(format));
-  format.cbSize          = sizeof(format);
-  format.wFormatTag      = WAVE_FORMAT_PCM;
-  format.nChannels       = 2;
-  format.nSamplesPerSec  = 44100;
+  format.cbSize = sizeof(format);
+  format.wFormatTag = WAVE_FORMAT_PCM;
+  format.nChannels = 2;
+  format.nSamplesPerSec = 44100;
   format.nAvgBytesPerSec = 44100 * 4;
-  format.nBlockAlign     = 4;
-  format.wBitsPerSample  = 16;
+  format.nBlockAlign = 4;
+  format.wBitsPerSample = 16;
 
   data_handle = GlobalAlloc(GMEM_MOVEABLE | GMEM_SHARE, format.nSamplesPerSec * 4);
-  if (!data_handle) return;
+  if (!data_handle)
+    return;
 
   data_ptr = (LPSTR)GlobalLock(data_handle);
 
   header_handle = GlobalAlloc(GMEM_MOVEABLE | GMEM_SHARE, sizeof(WAVEHDR));
-  if (!header_handle) return;
+  if (!header_handle)
+    return;
 
   header_ptr = (WAVEHDR *)GlobalLock(header_handle);
 
-  header_ptr->lpData  = data_ptr;
+  header_ptr->lpData = data_ptr;
   header_ptr->dwFlags = 0;
   header_ptr->dwLoops = 0;
 
-  if (waveOutOpen(&device, WAVE_MAPPER, &format, 0, 0, WAVE_ALLOWSYNC)
-          != MMSYSERR_NOERROR) return;
+  if (waveOutOpen(&device, WAVE_MAPPER, &format, 0, 0, WAVE_ALLOWSYNC) != MMSYSERR_NOERROR)
+    return;
 
   sample_size = format.nSamplesPerSec;
 
 #else
-#  ifdef HAVE_ALSA_ASOUNDLIB_H
+#ifdef HAVE_ALSA_ASOUNDLIB_H
   handle = NULL;
 
   if (snd_pcm_open(&handle, "default", SND_PCM_STREAM_PLAYBACK, 0) >= 0) {
@@ -293,7 +281,7 @@ BlockSound::BlockSound() {
       handle = NULL;
     }
   }
-#  endif // HAVE_ALSA_ASOUNDLIB_H
+#endif // HAVE_ALSA_ASOUNDLIB_H
 #endif // __APPLE__
 
   if (sample_size) {
@@ -307,13 +295,12 @@ BlockSound::BlockSound() {
     *sample_ptr++ = 0;
     *sample_ptr++ = 0;
 
-    for (int j = max_sample; j > 0; j --, sample_ptr ++) {
+    for (int j = max_sample; j > 0; j--, sample_ptr++) {
       float freq = (float)j / (float)max_sample;
       float volume = float(32767.0 * (0.5 * sqrt(freq) + 0.5));
       float sample = float(0.0001 * ((rand() % 20001) - 10000));
 
-      *sample_ptr = (int)(volume * freq * sample +
-                          (1.0 - freq) * sample_ptr[-2]);
+      *sample_ptr = (int)(volume * freq * sample + (1.0 - freq) * sample_ptr[-2]);
     }
   }
 }
@@ -323,13 +310,13 @@ BlockSound::BlockSound() {
 BlockSound::~BlockSound() {
 #ifdef __APPLE__
   if (sample_size) {
-#  if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_5
     AudioDeviceStop(device, audio_proc_id);
     AudioDeviceDestroyIOProcID(device, audio_proc_id);
-#  else
+#else
     AudioDeviceStop(device, audio_cb);
     AudioDeviceRemoveIOProc(device, audio_cb);
-#  endif
+#endif
   }
 
 #elif defined(_WIN32)
@@ -344,12 +331,12 @@ BlockSound::~BlockSound() {
   }
 
 #else
-#  ifdef HAVE_ALSA_ASOUNDLIB_H
+#ifdef HAVE_ALSA_ASOUNDLIB_H
   if (handle) {
     snd_pcm_drain(handle);
     snd_pcm_close(handle);
   }
-#  endif // HAVE_ALSA_ASOUNDLIB_H
+#endif // HAVE_ALSA_ASOUNDLIB_H
 #endif // __APPLE__
 
   if (sample_size) {
@@ -360,29 +347,26 @@ BlockSound::~BlockSound() {
 
 #ifdef __APPLE__
 // Callback function for writing audio data...
-OSStatus BlockSound::audio_cb(AudioDeviceID device,
-                              const AudioTimeStamp *current_time,
-                              const AudioBufferList *data_in,
-                              const AudioTimeStamp *time_in,
-                              AudioBufferList *data_out,
-                              const AudioTimeStamp *time_out,
+OSStatus BlockSound::audio_cb(AudioDeviceID device, const AudioTimeStamp *current_time,
+                              const AudioBufferList *data_in, const AudioTimeStamp *time_in,
+                              AudioBufferList *data_out, const AudioTimeStamp *time_out,
                               void *client_data) {
   BlockSound *ss = (BlockSound *)client_data;
   int count;
   float *buffer;
 
-  if (!ss->remaining) return noErr;
+  if (!ss->remaining)
+    return noErr;
 
   for (count = data_out->mBuffers[0].mDataByteSize / sizeof(float),
-          buffer = (float*) data_out->mBuffers[0].mData;
-       ss->remaining > 0 && count > 0;
-       count --, ss->data ++, ss->remaining --) {
+      buffer = (float *)data_out->mBuffers[0].mData;
+       ss->remaining > 0 && count > 0; count--, ss->data++, ss->remaining--) {
     *buffer++ = *(ss->data) / 32767.0;
   }
 
   while (count > 0) {
     *buffer++ = 0.0;
-    count --;
+    count--;
   }
 
   return noErr;
@@ -407,7 +391,7 @@ void BlockSound::play_explosion(float duration) {
 
 #ifdef __APPLE__
   // Point to the next note...
-  data      = sample_ptr;
+  data = sample_ptr;
   remaining = samples * 2;
 
 #elif defined(_WIN32)
@@ -435,78 +419,72 @@ void BlockSound::play_explosion(float duration) {
 
 
 class BlockWindow : public Fl_Double_Window {
-  public:
-
+public:
   struct Block {
-    int         color;
-    bool        bomb;
-    float       y;
+    int color;
+    bool bomb;
+    float y;
   };
 
   struct Column {
-    int         num_blocks;
-    Block       blocks[BLOCK_ROWS];
-    float       x;
+    int num_blocks;
+    Block blocks[BLOCK_ROWS];
+    float x;
   };
 
-  private:
+private:
+  int frames_, frames_per_second_;
+  time_t frame_time_;
+  bool show_fps_;
 
-  int           frames_,
-                frames_per_second_;
-  time_t        frame_time_;
-  bool          show_fps_;
+  Fl_Button *help_button_, *play_button_;
 
-  Fl_Button     *help_button_,
-                *play_button_;
-
-  int           num_columns_;
-  Column        columns_[BLOCK_COLS];
-  int           count_;
-  bool          help_;
-  int           high_score_;
-  float         interval_;
-  int           level_;
-  int           num_colors_;
-  int           opened_columns_;
-  bool          paused_;
+  int num_columns_;
+  Column columns_[BLOCK_COLS];
+  int count_;
+  bool help_;
+  int high_score_;
+  float interval_;
+  int level_;
+  int num_colors_;
+  int opened_columns_;
+  bool paused_;
   static Fl_Preferences prefs_;
-  int           score_;
-  BlockSound    *sound_;
-  char          title_[255];
-  int           title_y_;
+  int score_;
+  BlockSound *sound_;
+  char title_[255];
+  int title_y_;
 
-  void          _BlockWindow();
-  int           bomb(int color);
-  int           click(int col, int row);
-  static void   help_cb(Fl_Widget *wi, BlockWindow *bw);
-  void          init();
-  static void   play_cb(Fl_Widget *wi, BlockWindow *bw);
-  static void   timeout_cb(BlockWindow *bw);
+  void _BlockWindow();
+  int bomb(int color);
+  int click(int col, int row);
+  static void help_cb(Fl_Widget *wi, BlockWindow *bw);
+  void init();
+  static void play_cb(Fl_Widget *wi, BlockWindow *bw);
+  static void timeout_cb(BlockWindow *bw);
 
-  public:
-
+public:
   BlockWindow(int X, int Y, int W, int H, const char *L = 0);
   BlockWindow(int W, int H, const char *L = 0);
   ~BlockWindow();
 
-  void          draw();
-  int           handle(int event);
-  void          new_game();
-  int           score() { return (score_); }
-  void          up_level();
+  void draw();
+  int handle(int event);
+  void new_game();
+  int score() { return (score_); }
+  void up_level();
 };
 
 
-Fl_Preferences  BlockWindow::prefs_(Fl_Preferences::USER_L, "fltk.org", "blocks");
+Fl_Preferences BlockWindow::prefs_(Fl_Preferences::USER_L, "fltk.org", "blocks");
 
 
 int main(int argc, char *argv[]) {
   Fl::scheme("plastic");
   Fl::visible_focus(0);
 
-  BlockWindow   *bw = new BlockWindow(BLOCK_COLS * BLOCK_SIZE,
-                                      BLOCK_ROWS * BLOCK_SIZE + 20,
-                                      "Block Attack!");
+  BlockWindow *bw =
+      new BlockWindow(BLOCK_COLS * BLOCK_SIZE, BLOCK_ROWS * BLOCK_SIZE + 20, "Block Attack!");
 
   bw->show(argc, argv);
 
@@ -516,14 +494,14 @@ int main(int argc, char *argv[]) {
 
 // Create a block window at the specified position
 BlockWindow::BlockWindow(int X, int Y, int W, int H, const char *L)
-    : Fl_Double_Window(X, Y, W, H, L) {
+  : Fl_Double_Window(X, Y, W, H, L) {
   _BlockWindow();
 }
 
 
 // Create a block window
 BlockWindow::BlockWindow(int W, int H, const char *L)
-    : Fl_Double_Window(W, H, L) {
+  : Fl_Double_Window(W, H, L) {
   _BlockWindow();
 }
 
@@ -557,19 +535,20 @@ void BlockWindow::_BlockWindow() {
 
 // Bomb all blocks of a given color and return the number of affected blocks
 int BlockWindow::bomb(int color) {
-  int           j, k;
-  int           count;
-  Block         *b;
-  Column        *c;
+  int j, k;
+  int count;
+  Block *b;
+  Column *c;
 
 
-  if (color >= BLOCK_BLAST) return (0);
+  if (color >= BLOCK_BLAST)
+    return (0);
 
-  for (j = num_columns_, c = columns_, count = 1; j > 0; j --, c ++)
-    for (k = c->num_blocks, b = c->blocks; k > 0; k --, b ++)
+  for (j = num_columns_, c = columns_, count = 1; j > 0; j--, c++)
+    for (k = c->num_blocks, b = c->blocks; k > 0; k--, b++)
       if (b->color == color) {
         b->color = -color;
-        count ++;
+        count++;
       }
 
   return (count);
@@ -579,21 +558,22 @@ int BlockWindow::bomb(int color) {
 // Tag all blocks connected to the clicked block and return the number
 // of affected blocks
 int BlockWindow::click(int col, int row) {
-  Block         *b;
-  Column        *c;
-  int           count, color;
+  Block *b;
+  Column *c;
+  int count, color;
 
 
-  c     = columns_ + col;
-  b     = c->blocks + row;
+  c = columns_ + col;
+  b = c->blocks + row;
   color = b->color;
 
-  if (color < 0 || color >= BLOCK_BLAST) return (0);
+  if (color < 0 || color >= BLOCK_BLAST)
+    return (0);
 
   // Find the bottom block...
   while (row > 0 && b[-1].color == color) {
-    row --;
-    b --;
+    row--;
+    b--;
   }
 
   count = 0;
@@ -601,19 +581,17 @@ int BlockWindow::click(int col, int row) {
   while (row < c->num_blocks && b->color == color) {
     b->color = -color;
 
-    if (col > 0 && row < c[-1].num_blocks &&
-        c[-1].blocks[row].color == color) {
+    if (col > 0 && row < c[-1].num_blocks && c[-1].blocks[row].color == color) {
       count += click(col - 1, row);
     }
 
-    if (col < (num_columns_ - 1) && row < c[1].num_blocks &&
-        c[1].blocks[row].color == color) {
+    if (col < (num_columns_ - 1) && row < c[1].num_blocks && c[1].blocks[row].color == color) {
       count += click(col + 1, row);
     }
 
-    count ++;
-    row ++;
-    b ++;
+    count++;
+    row++;
+    b++;
   }
 
   return (count);
@@ -622,9 +600,9 @@ int BlockWindow::click(int col, int row) {
 
 // Draw the block window...
 void BlockWindow::draw() {
-  int           j, k, xx, yy;
-  Block         *b;
-  Column        *c;
+  int j, k, xx, yy;
+  Block *b;
+  Column *c;
 
 
   // Draw the blocks...
@@ -632,20 +610,24 @@ void BlockWindow::draw() {
   fl_rectf(0, 0, w(), h());
 
   // Draw the blocks...
-  for (j = num_columns_, c = columns_; j > 0; j --, c ++)
-    for (k = c->num_blocks, b = c->blocks; k > 0; k --, b ++) {
+  for (j = num_columns_, c = columns_; j > 0; j--, c++)
+    for (k = c->num_blocks, b = c->blocks; k > 0; k--, b++) {
       xx = w() - (int)c->x;
       yy = h() - BLOCK_SIZE - (int)b->y;
 
       if (b->color >= BLOCK_BLAST) {
-        b->color ++;
+        b->color++;
         blast_pixmap.draw(xx, yy);
       } else if (b->color < 0) {
-        if (b->bomb) bomb_pixmaps[-b->color - 1]->draw(xx, yy);
-        else normal_pixmaps[-b->color - 1]->draw(xx, yy);
+        if (b->bomb)
+          bomb_pixmaps[-b->color - 1]->draw(xx, yy);
+        else
+          normal_pixmaps[-b->color - 1]->draw(xx, yy);
       } else {
-        if (b->bomb) bomb_pixmaps[b->color - 1]->draw(xx, yy);
-        else normal_pixmaps[b->color - 1]->draw(xx, yy);
+        if (b->bomb)
+          bomb_pixmaps[b->color - 1]->draw(xx, yy);
+        else
+          normal_pixmaps[b->color - 1]->draw(xx, yy);
       }
     }
 
@@ -669,12 +651,10 @@ void BlockWindow::draw() {
 
       fl_font(FL_HELVETICA_BOLD, 24);
       fl_color(FL_BLACK);
-      fl_draw(s, 171, 3, w() - 250, h() - 6,
-              (Fl_Align)(FL_ALIGN_WRAP | FL_ALIGN_LEFT));
+      fl_draw(s, 171, 3, w() - 250, h() - 6, (Fl_Align)(FL_ALIGN_WRAP | FL_ALIGN_LEFT));
 
       fl_color(FL_YELLOW);
-      fl_draw(s, 168, 0, w() - 250, h(),
-              (Fl_Align)(FL_ALIGN_WRAP | FL_ALIGN_LEFT));
+      fl_draw(s, 168, 0, w() - 250, h(), (Fl_Align)(FL_ALIGN_WRAP | FL_ALIGN_LEFT));
     } else {
       if (interval_ < 0.0) {
 #ifdef DEBUG
@@ -684,11 +664,9 @@ void BlockWindow::draw() {
         for (i = 0; i < 2; i++) {
           fl_color(FL_RED + i);
           fl_begin_line();
-          for (j = 0, sample_ptr = sound_->sample_data + i;
-               j < sound_->sample_size;
-               j ++, sample_ptr += 2)
-            fl_vertex(j * w() / sound_->sample_size,
-                      *sample_ptr * h() / 4 / 65534 + h() / 2);
+          for (j = 0, sample_ptr = sound_->sample_data + i; j < sound_->sample_size;
+               j++, sample_ptr += 2)
+            fl_vertex(j * w() / sound_->sample_size, *sample_ptr * h() / 4 / 65534 + h() / 2);
           fl_end_line();
         }
 #endif // DEBUG
@@ -710,11 +688,11 @@ void BlockWindow::draw() {
   }
 
   time_t curtime = time(NULL);
-  frames_ ++;
+  frames_++;
   if (curtime > frame_time_) {
     frames_per_second_ = (frames_per_second_ + 3 * frames_ / int(curtime - frame_time_)) / 4;
-    frames_            = 0;
-    frame_time_        = curtime;
+    frames_ = 0;
+    frame_time_ = curtime;
   }
 
   // Draw the scores and level...
@@ -750,29 +728,29 @@ void BlockWindow::draw() {
 
 // Handle mouse clicks, etc.
 int BlockWindow::handle(int event) {
-  int           j, k, mx, my, count;
-  Block         *b;
-  Column        *c;
+  int j, k, mx, my, count;
+  Block *b;
+  Column *c;
 
 
-  if (Fl_Double_Window::handle(event)) return (1);
-  else if (interval_ < 0.0 || paused_) return (0);
+  if (Fl_Double_Window::handle(event))
+    return (1);
+  else if (interval_ < 0.0 || paused_)
+    return (0);
 
   switch (event) {
 
     case FL_KEYBOARD:
 
       // '+': raise level
-      if (Fl::event_text() &&
-          !Fl::event_state(FL_CTRL | FL_ALT | FL_META) &&
+      if (Fl::event_text() && !Fl::event_state(FL_CTRL | FL_ALT | FL_META) &&
           !strcmp(Fl::event_text(), "+")) {
         up_level();
         return (1);
       }
 
       // ALT + SHIFT + 'H': clear highscore
-      if (Fl::event_text() &&
-          (Fl::event_state() & (FL_ALT | FL_SHIFT)) == (FL_ALT | FL_SHIFT) &&
+      if (Fl::event_text() && (Fl::event_state() & (FL_ALT | FL_SHIFT)) == (FL_ALT | FL_SHIFT) &&
           !strcmp(Fl::event_text(), "H")) {
         high_score_ = score_;
         prefs_.set("high_score", high_score_);
@@ -785,26 +763,28 @@ int BlockWindow::handle(int event) {
       break;
 
     case FL_PUSH:
-      mx    = w() - Fl::event_x() + BLOCK_SIZE;
-      my    = h() - Fl::event_y();
+      mx = w() - Fl::event_x() + BLOCK_SIZE;
+      my = h() - Fl::event_y();
       count = 0;
-      b     = 0;
+      b = 0;
 
-      for (j = 0, c = columns_; !count && j < num_columns_; j ++, c ++)
-        for (k = 0, b = c->blocks; k < c->num_blocks; k ++, b ++)
-          if (mx >= c->x && mx < (c->x + BLOCK_SIZE) &&
-              my >= b->y && my < (b->y + BLOCK_SIZE)) {
-            if (b->bomb) count = bomb(b->color);
-            else count = click(j, k);
+      for (j = 0, c = columns_; !count && j < num_columns_; j++, c++)
+        for (k = 0, b = c->blocks; k < c->num_blocks; k++, b++)
+          if (mx >= c->x && mx < (c->x + BLOCK_SIZE) && my >= b->y && my < (b->y + BLOCK_SIZE)) {
+            if (b->bomb)
+              count = bomb(b->color);
+            else
+              count = click(j, k);
             break;
           }
 
       if (count < 2) {
-        for (j = 0, c = columns_; j < num_columns_; j ++, c ++)
-          for (k = 0, b = c->blocks; k < c->num_blocks; k ++, b ++)
-            if (b->color < 0) b->color = -b->color;
+        for (j = 0, c = columns_; j < num_columns_; j++, c++)
+          for (k = 0, b = c->blocks; k < c->num_blocks; k++, b++)
+            if (b->color < 0)
+              b->color = -b->color;
       } else {
-        count --;
+        count--;
 
         if (b->bomb) {
           sound_->play_explosion(float(0.19 + 0.005 * count));
@@ -823,9 +803,10 @@ int BlockWindow::handle(int event) {
           prefs_.set("high_score", high_score_);
         }
 
-        for (j = 0, c = columns_; j < num_columns_; j ++, c ++)
-          for (k = 0, b = c->blocks; k < c->num_blocks; k ++, b ++)
-            if (b->color < 0) b->color = BLOCK_BLAST;
+        for (j = 0, c = columns_; j < num_columns_; j++, c++)
+          for (k = 0, b = c->blocks; k < c->num_blocks; k++, b++)
+            if (b->color < 0)
+              b->color = BLOCK_BLAST;
       }
       return (1);
 
@@ -847,20 +828,20 @@ void BlockWindow::help_cb(Fl_Widget *, BlockWindow *bw) {
 
 // Initialize the block window...
 void BlockWindow::init() {
-  frames_            = 0;
+  frames_ = 0;
   frames_per_second_ = 0;
-  frame_time_        = time(NULL);
-  show_fps_          = false;
-  count_             = 0;
-  help_              = false;
-  interval_          = -1.0;
-  level_             = 1;
-  num_colors_        = 3;
-  num_columns_       = 0;
-  paused_            = false;
-  score_             = 0;
-  title_[0]          = '\0';
-  title_y_           = 0;
+  frame_time_ = time(NULL);
+  show_fps_ = false;
+  count_ = 0;
+  help_ = false;
+  interval_ = -1.0;
+  level_ = 1;
+  num_colors_ = 3;
+  num_columns_ = 0;
+  paused_ = false;
+  score_ = 0;
+  title_[0] = '\0';
+  title_y_ = 0;
 }
 
 
@@ -871,7 +852,7 @@ void BlockWindow::new_game() {
 
   init();
 
-  interval_       = 0.01666666666f;
+  interval_ = 0.01666666666f;
   opened_columns_ = 0;
 
   strcpy(title_, "Level: 1");
@@ -883,10 +864,13 @@ void BlockWindow::new_game() {
 
 // Play/pause...
 void BlockWindow::play_cb(Fl_Widget *wi, BlockWindow *bw) {
-  if (bw->interval_ < 0) bw->new_game();
-  else bw->paused_ = !bw->paused_;
+  if (bw->interval_ < 0)
+    bw->new_game();
+  else
+    bw->paused_ = !bw->paused_;
 
-  if (bw->paused_) wi->label("@>");
+  if (bw->paused_)
+    wi->label("@>");
   else {
     wi->label("@-2||");
     bw->help_ = false;
@@ -896,18 +880,19 @@ void BlockWindow::play_cb(Fl_Widget *wi, BlockWindow *bw) {
 void BlockWindow::up_level() {
   interval_ *= LEVEL_FACTOR;
   opened_columns_ = 0;
-  if (num_colors_ < 7) num_colors_ ++;
-  level_ ++;
+  if (num_colors_ < 7)
+    num_colors_++;
+  level_++;
   sprintf(title_, "Level: %d", level_);
   title_y_ = h();
 }
 
 // Animate the game...
 void BlockWindow::timeout_cb(BlockWindow *bw) {
-  int           i, j;
-  Block         *b;
-  Column        *c;
-  float         lastx, lasty;
+  int i, j;
+  Block *b;
+  Column *c;
+  float lastx, lasty;
 
 #if DEBUG_TIMER
   static double lasttime;
@@ -923,7 +908,7 @@ void BlockWindow::timeout_cb(BlockWindow *bw) {
     gettimeofday(&atime, NULL);
     curtime = atime.tv_sec % 60 + 0.000001 * atime.tv_usec;
   }
-#else // (_WIN32)
+#else  // (_WIN32)
   {
     SYSTEMTIME atime;
     GetLocalTime(&atime);
@@ -935,8 +920,8 @@ void BlockWindow::timeout_cb(BlockWindow *bw) {
   if (bw->interval_ > 0) { // game is active
     if (bw->level_ != level) {
       if (ntime > 0) {
-        printf("*** average delta time = %9.6f, n =%4d, level %d, interval %f\n",
-               delta_sum / ntime, ntime, level, interval);
+        printf("*** average delta time = %9.6f, n =%4d, level %d, interval %f\n", delta_sum / ntime,
+               ntime, level, interval);
         fflush(stdout);
       }
       delta_sum = 0; // reset average
@@ -948,8 +933,8 @@ void BlockWindow::timeout_cb(BlockWindow *bw) {
     if (delta < 0)
       delta += 60;
 
-    printf("%9.6f (%+f - %f = %9.6f), level: %d\n",
-           curtime, delta, interval, delta - interval, level);
+    printf("%9.6f (%+f - %f = %9.6f), level: %d\n", curtime, delta, interval, delta - interval,
+           level);
     fflush(stdout);
 
     interval = bw->interval_;
@@ -965,29 +950,29 @@ void BlockWindow::timeout_cb(BlockWindow *bw) {
 #endif // DEBUG_TIMER
 
   // Update blocks that have been destroyed...
-  for (i = 0, c = bw->columns_; i < bw->num_columns_; i ++, c ++)
-    for (j = 0, b = c->blocks; j < c->num_blocks; j ++, b ++)
+  for (i = 0, c = bw->columns_; i < bw->num_columns_; i++, c++)
+    for (j = 0, b = c->blocks; j < c->num_blocks; j++, b++)
       if (b->color > (BLOCK_BLAST + 5)) {
         bw->redraw();
 
-        c->num_blocks --;
+        c->num_blocks--;
 
         if (j < c->num_blocks) {
           memmove(b, b + 1, (c->num_blocks - j) * sizeof(Block));
         }
 
-        j --;
-        b --;
+        j--;
+        b--;
 
         if (!c->num_blocks) {
-          bw->num_columns_ --;
+          bw->num_columns_--;
 
           if (i < bw->num_columns_) {
             memmove(c, c + 1, (bw->num_columns_ - i) * sizeof(Column));
           }
 
-          i --;
-          c --;
+          i--;
+          c--;
           j = c->num_blocks;
         }
       }
@@ -1006,7 +991,7 @@ void BlockWindow::timeout_cb(BlockWindow *bw) {
       c->x += 0.25;
     }
 
-    for (j = c->num_blocks, b = c->blocks, lasty = 0; j > 0; j --, b ++) {
+    for (j = c->num_blocks, b = c->blocks, lasty = 0; j > 0; j--, b++) {
       if (b->y > lasty) {
         bw->redraw();
         b->y -= 4;
@@ -1024,7 +1009,7 @@ void BlockWindow::timeout_cb(BlockWindow *bw) {
 
   // Play the game...
   if (!bw->paused_ && bw->interval_ > 0.0) {
-    bw->count_ --;
+    bw->count_--;
 
     if (bw->count_ <= 0) {
       bw->redraw();
@@ -1035,7 +1020,7 @@ void BlockWindow::timeout_cb(BlockWindow *bw) {
         bw->sound_->play_explosion(0.8f);
         bw->play_button_->label("@>");
       } else {
-        bw->opened_columns_ ++;
+        bw->opened_columns_++;
 
         if (bw->opened_columns_ > (2 * BLOCK_COLS)) {
           bw->up_level();
@@ -1047,19 +1032,19 @@ void BlockWindow::timeout_cb(BlockWindow *bw) {
           memmove(c + 1, c, bw->num_columns_ * sizeof(Column));
         }
 
-        bw->num_columns_ ++;
-        c->x          = 0;
+        bw->num_columns_++;
+        c->x = 0;
         c->num_blocks = BLOCK_ROWS;
 
-        for (j = 0, b = c->blocks; j < BLOCK_ROWS; j ++, b ++) {
-          b->bomb  = bw->num_colors_ > 3 && (rand() & 127) < bw->num_colors_;
+        for (j = 0, b = c->blocks; j < BLOCK_ROWS; j++, b++) {
+          b->bomb = bw->num_colors_ > 3 && (rand() & 127) < bw->num_colors_;
           b->color = 1 + (rand() % bw->num_colors_);
-          b->y     = float(j * (BLOCK_SIZE + 8) + 24);
+          b->y = float(j * (BLOCK_SIZE + 8) + 24);
         }
       }
     }
   } else {
-    bw->count_ --;
+    bw->count_--;
 
     if (bw->count_ <= 0) {
       bw->count_ = 40;
@@ -1068,15 +1053,13 @@ void BlockWindow::timeout_cb(BlockWindow *bw) {
   }
 
   // Update the play/pause button as needed...
-  if ((bw->paused_ || bw->interval_< 0.0) &&
-      bw->play_button_->w() < 80) {
+  if ((bw->paused_ || bw->interval_ < 0.0) && bw->play_button_->w() < 80) {
     int s = bw->play_button_->w() + 5;
 
     bw->play_button_->resize(s, (s - 20) * (bw->h() - s) / 120, s, s);
     bw->play_button_->labelsize(s / 2 + 4);
     bw->redraw();
-  } else if ((!bw->paused_ && bw->interval_ > 0.0) &&
-             bw->play_button_->w() > 20) {
+  } else if ((!bw->paused_ && bw->interval_ > 0.0) && bw->play_button_->w() > 20) {
     int s = bw->play_button_->w() - 2;
 
     bw->play_button_->resize(s, (s - 20) * (bw->h() - s) / 120, s, s);

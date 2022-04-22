@@ -39,7 +39,8 @@
   The cursors are defined in the <FL/Enumerations.H> header file.
   */
 void fl_cursor(Fl_Cursor c) {
-  if (Fl::first_window()) Fl::first_window()->cursor(c);
+  if (Fl::first_window())
+    Fl::first_window()->cursor(c);
 }
 
 /* For back compatibility only. */
@@ -70,34 +71,34 @@ static void fallback_cursor(Fl_Window *w, Fl_Cursor c) {
     return;
 
   switch (c) {
-  case FL_CURSOR_WAIT:
-    xpm = (const char**)fl_cursor_wait_xpm;
-    hotx = 7;
-    hoty = 9;
-    break;
-  case FL_CURSOR_HELP:
-    xpm = (const char**)fl_cursor_help_xpm;
-    hotx = 1;
-    hoty = 3;
-    break;
-  case FL_CURSOR_NWSE:
-    xpm = (const char**)fl_cursor_nwse_xpm;
-    hotx = 7;
-    hoty = 7;
-    break;
-  case FL_CURSOR_NESW:
-    xpm = (const char**)fl_cursor_nesw_xpm;
-    hotx = 7;
-    hoty = 7;
-    break;
-  case FL_CURSOR_NONE:
-    xpm = (const char**)fl_cursor_none_xpm;
-    hotx = 0;
-    hoty = 0;
-    break;
-  default:
-    w->cursor(FL_CURSOR_ARROW);
-    return;
+    case FL_CURSOR_WAIT:
+      xpm = (const char **)fl_cursor_wait_xpm;
+      hotx = 7;
+      hoty = 9;
+      break;
+    case FL_CURSOR_HELP:
+      xpm = (const char **)fl_cursor_help_xpm;
+      hotx = 1;
+      hoty = 3;
+      break;
+    case FL_CURSOR_NWSE:
+      xpm = (const char **)fl_cursor_nwse_xpm;
+      hotx = 7;
+      hoty = 7;
+      break;
+    case FL_CURSOR_NESW:
+      xpm = (const char **)fl_cursor_nesw_xpm;
+      hotx = 7;
+      hoty = 7;
+      break;
+    case FL_CURSOR_NONE:
+      xpm = (const char **)fl_cursor_none_xpm;
+      hotx = 0;
+      hoty = 0;
+      break;
+    default:
+      w->cursor(FL_CURSOR_ARROW);
+      return;
   }
 
   Fl_Pixmap pxm(xpm);

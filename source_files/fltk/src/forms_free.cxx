@@ -27,7 +27,7 @@ void Fl_Free::step(void *v) {
   int old_event = Fl::e_number;
   f->handle(Fl::e_number == FL_STEP);
   Fl::e_number = old_event;
-  Fl::add_timeout(.01,step,v);
+  Fl::add_timeout(.01, step, v);
 }
 
 /**
@@ -60,40 +60,44 @@ void Fl_Free::step(void *v) {
   #define FL_THAW               FL_MAP
   \endcode
 */
-Fl_Free::Fl_Free(uchar t,int X, int Y, int W, int H,const char *L,
-                 FL_HANDLEPTR hdl) :
-Fl_Widget(X,Y,W,H,L) {
+Fl_Free::Fl_Free(uchar t, int X, int Y, int W, int H, const char *L, FL_HANDLEPTR hdl)
+  : Fl_Widget(X, Y, W, H, L) {
   type(t);
   hfunc = hdl;
-  if (t == FL_SLEEPING_FREE) set_flag(INACTIVE);
+  if (t == FL_SLEEPING_FREE)
+    set_flag(INACTIVE);
   if (t == FL_CONTINUOUS_FREE || t == FL_ALL_FREE)
-    Fl::add_timeout(.01,step,this);
+    Fl::add_timeout(.01, step, this);
 }
 
 /**
   The destructor will call the handle function with the event FL_FREE_MEM.
 */
 Fl_Free::~Fl_Free() {
-  Fl::remove_timeout(step,this);
-  hfunc(this,FL_FREEMEM,0,0,0);
+  Fl::remove_timeout(step, this);
+  hfunc(this, FL_FREEMEM, 0, 0, 0);
 }
 
-void Fl_Free::draw() {hfunc(this,FL_DRAW,0,0,0);}
+void Fl_Free::draw() {
+  hfunc(this, FL_DRAW, 0, 0, 0);
+}
 
 int Fl_Free::handle(int e) {
   char key = Fl::event_key();
   switch (e) {
-  case FL_FOCUS:
-    if (type()!=FL_INPUT_FREE && type()!=FL_ALL_FREE) return 0;
-    break;
-  case FL_PUSH:
-  case FL_DRAG:
-  case FL_RELEASE:
-    key = 4-Fl::event_button();
-    break;
-  case FL_SHORTCUT:
-    return 0;
+    case FL_FOCUS:
+      if (type() != FL_INPUT_FREE && type() != FL_ALL_FREE)
+        return 0;
+      break;
+    case FL_PUSH:
+    case FL_DRAG:
+    case FL_RELEASE:
+      key = 4 - Fl::event_button();
+      break;
+    case FL_SHORTCUT:
+      return 0;
   }
-  if (hfunc(this, e, float(Fl::event_x()), float(Fl::event_y()), key)) do_callback();
+  if (hfunc(this, e, float(Fl::event_x()), float(Fl::event_y()), key))
+    do_callback();
   return 1;
 }

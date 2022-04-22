@@ -33,6 +33,7 @@
 */
 class FL_EXPORT Fl_Tooltip {
   friend class Fl_TooltipBox;
+
 public:
   /**    Gets the tooltip delay. The default delay is 1.0 seconds.  */
   static float delay() { return delay_; }
@@ -55,15 +56,15 @@ public:
   /**    Returns non-zero if tooltips are enabled.  */
   static int enabled() { return Fl::option(Fl::OPTION_SHOW_TOOLTIPS); }
   /**    Enables tooltips on all widgets (or disables if <i>b</i> is false).  */
-  static void enable(int b = 1) { Fl::option(Fl::OPTION_SHOW_TOOLTIPS, (b!=0));}
+  static void enable(int b = 1) { Fl::option(Fl::OPTION_SHOW_TOOLTIPS, (b != 0)); }
   /**    Same as enable(0), disables tooltips on all widgets.  */
   static void disable() { enable(0); }
-  static void (*enter)(Fl_Widget* w);
-  static void enter_area(Fl_Widget* w, int X, int Y, int W, int H, const char* tip);
+  static void (*enter)(Fl_Widget *w);
+  static void enter_area(Fl_Widget *w, int X, int Y, int W, int H, const char *tip);
   static void (*exit)(Fl_Widget *w);
   /** Gets the current widget target */
-  static Fl_Widget* current() {return widget_;}
-  static void current(Fl_Widget*);
+  static Fl_Widget *current() { return widget_; }
+  static void current(Fl_Widget *);
 
   /**    Gets the typeface for the tooltip text.  */
   static Fl_Font font() { return font_; }
@@ -94,29 +95,29 @@ public:
   /** Sets the maximum width for tooltip's text before it word wraps. Default is 400. */
   static void wrap_width(int v) { wrap_width_ = v; }
   /** Returns the window that is used for tooltips */
-  static Fl_Window* current_window(void);
+  static Fl_Window *current_window(void);
 
   // These should not be public, but Fl_Widget::tooltip() needs them...
   // fabien: made it private with only a friend function access
 private:
   friend void Fl_Widget::tooltip(const char *);
   friend void Fl_Widget::copy_tooltip(const char *);
-  static void enter_(Fl_Widget* w);
+  static void enter_(Fl_Widget *w);
   static void exit_(Fl_Widget *w);
   static void set_enter_exit_once_();
 
 private:
-  static float delay_; //!< delay before a tooltip is shown
-  static float hidedelay_; //!< delay until tooltip is closed again
+  static float delay_;      //!< delay before a tooltip is shown
+  static float hidedelay_;  //!< delay until tooltip is closed again
   static float hoverdelay_; //!< delay between tooltips
   static Fl_Color color_;
   static Fl_Color textcolor_;
   static Fl_Font font_;
   static Fl_Fontsize size_;
-  static Fl_Widget* widget_; //!< Keeps track of the current target widget
-  static int margin_width_;     //!< distance around tooltip text left+right
-  static int margin_height_;    //!< distance around tooltip text top+bottom
-  static int wrap_width_;       //!< maximum width of tooltip text before it word wraps
+  static Fl_Widget *widget_;      //!< Keeps track of the current target widget
+  static int margin_width_;       //!< distance around tooltip text left+right
+  static int margin_height_;      //!< distance around tooltip text top+bottom
+  static int wrap_width_;         //!< maximum width of tooltip text before it word wraps
   static const int draw_symbols_; // 1 = draw @-symbols in tooltips, 0 = no
 };
 

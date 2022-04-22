@@ -105,10 +105,14 @@ private:
   double vAng, hAng;
   double xshift, yshift;
 
-  float boxv0[3]; float boxv1[3];
-  float boxv2[3]; float boxv3[3];
-  float boxv4[3]; float boxv5[3];
-  float boxv6[3]; float boxv7[3];
+  float boxv0[3];
+  float boxv1[3];
+  float boxv2[3];
+  float boxv3[3];
+  float boxv4[3];
+  float boxv5[3];
+  float boxv6[3];
+  float boxv7[3];
 };
 
 // [\endcode in documentation/src/fluid.dox]

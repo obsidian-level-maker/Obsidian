@@ -20,7 +20,7 @@
 
 #ifndef Fl_XPM_Image_H
 #define Fl_XPM_Image_H
-#  include "Fl_Pixmap.H"
+#include "Fl_Pixmap.H"
 
 /**
   The Fl_XPM_Image class supports loading, caching,
@@ -28,9 +28,8 @@
 */
 class FL_EXPORT Fl_XPM_Image : public Fl_Pixmap {
 
-  public:
-
-  Fl_XPM_Image(const char* filename);
+public:
+  Fl_XPM_Image(const char *filename);
 };
 
 #endif // !Fl_XPM_Image

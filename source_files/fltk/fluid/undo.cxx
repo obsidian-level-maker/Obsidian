@@ -28,11 +28,11 @@
 #include "../src/flstring.h"
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
-#  include <io.h>
-#  include <windows.h>
-#  define getpid (int)GetCurrentProcessId
+#include <io.h>
+#include <windows.h>
+#define getpid (int)GetCurrentProcessId
 #else
-#  include <unistd.h>
+#include <unistd.h>
 #endif // _WIN32 && !__CYGWIN__
 
 
@@ -44,11 +44,11 @@
 //
 
 
-int undo_current = 0;                   // Current undo level in buffer
-int undo_last = 0;                      // Last undo level in buffer
-int undo_max = 0;                       // Maximum undo level used
-int undo_save = -1;                     // Last undo level that was saved
-static int undo_paused = 0;             // Undo checkpointing paused?
+int undo_current = 0;       // Current undo level in buffer
+int undo_last = 0;          // Last undo level in buffer
+int undo_max = 0;           // Maximum undo level used
+int undo_save = -1;         // Last undo level that was saved
+static int undo_paused = 0; // Undo checkpointing paused?
 
 
 // Return the undo filename.
@@ -65,9 +65,8 @@ static char *undo_filename(int level) {
   }
 
   // append filename: "undo_PID_LEVEL.fl"
-  snprintf(undo_path + undo_path_len,
-           sizeof(undo_path) - undo_path_len - 1,
-           "undo_%d_%d.fl", getpid(), level);
+  snprintf(undo_path + undo_path_len, sizeof(undo_path) - undo_path_len - 1, "undo_%d_%d.fl",
+           getpid(), level);
   return undo_path;
 }
 
@@ -77,7 +76,8 @@ void redo_cb(Fl_Widget *, void *) {
   int undo_item = main_menubar->find_index(undo_cb);
   int redo_item = main_menubar->find_index(redo_cb);
 
-  if (undo_current >= undo_last) return;
+  if (undo_current >= undo_last)
+    return;
 
   undo_suspend();
   if (!read_file(undo_filename(undo_current + 1), 0)) {
@@ -87,14 +87,15 @@ void redo_cb(Fl_Widget *, void *) {
     return;
   }
 
-  undo_current ++;
+  undo_current++;
 
   // Update modified flag...
   set_modflag(undo_current != undo_save);
   widget_browser->rebuild();
 
   // Update undo/redo menu items...
-  if (undo_current >= undo_last) Main_Menu[redo_item].deactivate();
+  if (undo_current >= undo_last)
+    Main_Menu[redo_item].deactivate();
   Main_Menu[undo_item].activate();
 }
 
@@ -103,7 +104,8 @@ void undo_cb(Fl_Widget *, void *) {
   int undo_item = main_menubar->find_index(undo_cb);
   int redo_item = main_menubar->find_index(redo_cb);
 
-  if (undo_current <= 0) return;
+  if (undo_current <= 0)
+    return;
 
   if (undo_current == undo_last) {
     write_file(undo_filename(undo_current));
@@ -112,7 +114,8 @@ void undo_cb(Fl_Widget *, void *) {
   undo_suspend();
   // Undo first deletes all widgets which resets the widget_tree browser.
   // Save the current scroll position, so we don't scroll back to 0 at undo.
-  if (widget_browser) widget_browser->save_scroll_position();
+  if (widget_browser)
+    widget_browser->save_scroll_position();
   if (!read_file(undo_filename(undo_current - 1), 0)) {
     // Unable to read checkpoint file, don't undo...
     widget_browser->rebuild();
@@ -121,15 +124,17 @@ void undo_cb(Fl_Widget *, void *) {
   }
   // Restore old browser position.
   // Ideally, we would save the browser position insied the undo file.
-  if (widget_browser) widget_browser->restore_scroll_position();
+  if (widget_browser)
+    widget_browser->restore_scroll_position();
 
-  undo_current --;
+  undo_current--;
 
   // Update modified flag...
   set_modflag(undo_current != undo_save);
 
   // Update undo/redo menu items...
-  if (undo_current <= 0) Main_Menu[undo_item].deactivate();
+  if (undo_current <= 0)
+    Main_Menu[undo_item].deactivate();
   Main_Menu[redo_item].activate();
   widget_browser->rebuild();
   undo_resume();
@@ -143,7 +148,8 @@ void undo_checkpoint() {
   //         undo_current, undo_paused, modflag);
 
   // Don't checkpoint if undo_suspend() has been called...
-  if (undo_paused) return;
+  if (undo_paused)
+    return;
 
   // Save the current UI to a checkpoint file...
   const char *filename = undo_filename(undo_current);
@@ -154,13 +160,16 @@ void undo_checkpoint() {
   }
 
   // Update the saved level...
-  if (modflag && undo_current <= undo_save) undo_save = -1;
-  else if (!modflag) undo_save = undo_current;
+  if (modflag && undo_current <= undo_save)
+    undo_save = -1;
+  else if (!modflag)
+    undo_save = undo_current;
 
   // Update the current undo level...
-  undo_current ++;
+  undo_current++;
   undo_last = undo_current;
-  if (undo_current > undo_max) undo_max = undo_current;
+  if (undo_current > undo_max)
+    undo_max = undo_current;
 
   // Enable the Undo and disable the Redo menu items...
   Main_Menu[undo_item].activate();
@@ -172,14 +181,16 @@ void undo_clear() {
   int undo_item = main_menubar->find_index(undo_cb);
   int redo_item = main_menubar->find_index(redo_cb);
   // Remove old checkpoint files...
-  for (int i = 0; i <= undo_max; i ++) {
+  for (int i = 0; i <= undo_max; i++) {
     fl_unlink(undo_filename(i));
   }
 
   // Reset current, last, and save indices...
   undo_current = undo_last = undo_max = 0;
-  if (modflag) undo_save = -1;
-  else undo_save = 0;
+  if (modflag)
+    undo_save = -1;
+  else
+    undo_save = 0;
 
   // Disable the Undo and Redo menu items...
   Main_Menu[undo_item].deactivate();

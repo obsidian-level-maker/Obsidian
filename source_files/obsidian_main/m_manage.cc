@@ -622,7 +622,8 @@ class UI_Manage_Config : public Fl_Double_Window {
 
         free((void *)str);
 
-        did_specify_seed = true; // User likely wants to use the seed from a loaded config - Dasho
+        did_specify_seed = true;  // User likely wants to use the seed from a
+                                  // loaded config - Dasho
     }
 
     /* Leaving */

@@ -78,66 +78,59 @@
 /* -- PRIVATE FUNCTIONS ---------------------------------------------------- */
 
 
-static void fghTeapot( GLint grid, GLdouble scale, GLenum type )
-{
-    double p[4][4][3], q[4][4][3], r[4][4][3], s[4][4][3];
-    long i, j, k, l;
+static void fghTeapot(GLint grid, GLdouble scale, GLenum type) {
+  double p[4][4][3], q[4][4][3], r[4][4][3], s[4][4][3];
+  long i, j, k, l;
 
-    glPushAttrib( GL_ENABLE_BIT | GL_EVAL_BIT );
-    glEnable( GL_AUTO_NORMAL );
-    glEnable( GL_NORMALIZE );
-    glEnable( GL_MAP2_VERTEX_3 );
-    glEnable( GL_MAP2_TEXTURE_COORD_2 );
+  glPushAttrib(GL_ENABLE_BIT | GL_EVAL_BIT);
+  glEnable(GL_AUTO_NORMAL);
+  glEnable(GL_NORMALIZE);
+  glEnable(GL_MAP2_VERTEX_3);
+  glEnable(GL_MAP2_TEXTURE_COORD_2);
 
-    glPushMatrix();
-    glRotated( 270.0, 1.0, 0.0, 0.0 );
-    glScaled( 0.5 * scale, 0.5 * scale, 0.5 * scale );
-    glTranslated( 0.0, 0.0, -1.5 );
+  glPushMatrix();
+  glRotated(270.0, 1.0, 0.0, 0.0);
+  glScaled(0.5 * scale, 0.5 * scale, 0.5 * scale);
+  glTranslated(0.0, 0.0, -1.5);
 
-    for (i = 0; i < 10; i++) {
-      for (j = 0; j < 4; j++) {
-        for (k = 0; k < 4; k++) {
-          for (l = 0; l < 3; l++) {
-            p[j][k][l] = cpdata[patchdata[i][j * 4 + k]][l];
-            q[j][k][l] = cpdata[patchdata[i][j * 4 + (3 - k)]][l];
+  for (i = 0; i < 10; i++) {
+    for (j = 0; j < 4; j++) {
+      for (k = 0; k < 4; k++) {
+        for (l = 0; l < 3; l++) {
+          p[j][k][l] = cpdata[patchdata[i][j * 4 + k]][l];
+          q[j][k][l] = cpdata[patchdata[i][j * 4 + (3 - k)]][l];
+          if (l == 1)
+            q[j][k][l] *= -1.0;
+          if (i < 6) {
+            r[j][k][l] = cpdata[patchdata[i][j * 4 + (3 - k)]][l];
+            if (l == 0)
+              r[j][k][l] *= -1.0;
+            s[j][k][l] = cpdata[patchdata[i][j * 4 + k]][l];
+            if (l == 0)
+              s[j][k][l] *= -1.0;
             if (l == 1)
-              q[j][k][l] *= -1.0;
-            if (i < 6) {
-              r[j][k][l] =
-                cpdata[patchdata[i][j * 4 + (3 - k)]][l];
-              if (l == 0)
-                r[j][k][l] *= -1.0;
-              s[j][k][l] = cpdata[patchdata[i][j * 4 + k]][l];
-              if (l == 0)
-                s[j][k][l] *= -1.0;
-              if (l == 1)
-                s[j][k][l] *= -1.0;
-            }
+              s[j][k][l] *= -1.0;
           }
         }
       }
-
-      glMap2d(GL_MAP2_TEXTURE_COORD_2, 0.0, 1.0, 2, 2, 0.0, 1.0, 4, 2,
-        &tex[0][0][0]);
-      glMap2d(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 4, 0.0, 1.0, 12, 4,
-        &p[0][0][0]);
-      glMapGrid2d(grid, 0.0, 1.0, grid, 0.0, 1.0);
-      glEvalMesh2(type, 0, grid, 0, grid);
-      glMap2d(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 4, 0.0, 1.0, 12, 4,
-        &q[0][0][0]);
-      glEvalMesh2(type, 0, grid, 0, grid);
-      if (i < 6) {
-        glMap2d(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 4, 0.0, 1.0, 12, 4,
-          &r[0][0][0]);
-        glEvalMesh2(type, 0, grid, 0, grid);
-        glMap2d(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 4, 0.0, 1.0, 12, 4,
-          &s[0][0][0]);
-        glEvalMesh2(type, 0, grid, 0, grid);
-      }
     }
 
-    glPopMatrix();
-    glPopAttrib();
+    glMap2d(GL_MAP2_TEXTURE_COORD_2, 0.0, 1.0, 2, 2, 0.0, 1.0, 4, 2, &tex[0][0][0]);
+    glMap2d(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 4, 0.0, 1.0, 12, 4, &p[0][0][0]);
+    glMapGrid2d(grid, 0.0, 1.0, grid, 0.0, 1.0);
+    glEvalMesh2(type, 0, grid, 0, grid);
+    glMap2d(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 4, 0.0, 1.0, 12, 4, &q[0][0][0]);
+    glEvalMesh2(type, 0, grid, 0, grid);
+    if (i < 6) {
+      glMap2d(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 4, 0.0, 1.0, 12, 4, &r[0][0][0]);
+      glEvalMesh2(type, 0, grid, 0, grid);
+      glMap2d(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, 4, 0.0, 1.0, 12, 4, &s[0][0][0]);
+      glEvalMesh2(type, 0, grid, 0, grid);
+    }
+  }
+
+  glPopMatrix();
+  glPopAttrib();
 }
 
 
@@ -146,19 +139,17 @@ static void fghTeapot( GLint grid, GLdouble scale, GLenum type )
 /*
  * Renders a beautiful wired teapot...
  */
-void glutWireTeapot( GLdouble size )
-{
-    /* We will use the general teapot rendering code */
-    fghTeapot( 10, size, GL_LINE );
+void glutWireTeapot(GLdouble size) {
+  /* We will use the general teapot rendering code */
+  fghTeapot(10, size, GL_LINE);
 }
 
 /*
  * Renders a beautiful filled teapot...
  */
-void glutSolidTeapot( GLdouble size )
-{
-    /* We will use the general teapot rendering code */
-    fghTeapot( 7, size, GL_FILL );
+void glutSolidTeapot(GLdouble size) {
+  /* We will use the general teapot rendering code */
+  fghTeapot(7, size, GL_FILL);
 }
 
 /*** END OF FILE ***/

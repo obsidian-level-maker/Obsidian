@@ -56,7 +56,7 @@ static bool q3_overbrighting = false;
 static float grid_ambient_scale = 4.0;
 static float grid_directed_scale = 0.7;
 
-typedef struct {
+struct liquid_coloring_t {
     rgb_color_t color;
 
     float intensity;
@@ -84,8 +84,7 @@ typedef struct {
         // unknown property
         return false;
     }
-
-} liquid_coloring_t;
+};
 
 static liquid_coloring_t q_water;
 static liquid_coloring_t q_slime;
