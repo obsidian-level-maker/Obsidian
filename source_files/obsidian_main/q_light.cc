@@ -370,9 +370,9 @@ class q3_lightmap_block_c {
     // attempt to allocate a block
     bool Alloc(int bw, int bh, int *bx, int *by) {
 #if 0
-		// skip when failure count reaches a certain limit
-		if (fail_count & 64)
-			return false;
+        // skip when failure count reaches a certain limit
+        if (fail_count & 64)
+            return false;
 #endif
 
         *bx = -1;
@@ -547,10 +547,10 @@ void QLIT_BuildQ3Lighting(int lump, int max_size) {
         BL->Write(lightmap_lump);
 
 #if 0  // DEBUG
-		static char test_file[500];
-		snprintf(test_file, sizeof(test_file), "lm_block_%03d.ppm", (int)b);
-		FILE *fp = fopen(test_file, "wb");
-		if (fp) { BL->SavePPM(fp); fclose(fp); }
+        static char test_file[500];
+        snprintf(test_file, sizeof(test_file), "lm_block_%03d.ppm", (int)b);
+        FILE *fp = fopen(test_file, "wb");
+        if (fp) { BL->SavePPM(fp); fclose(fp); }
 #endif
     }
 
@@ -878,26 +878,26 @@ static void Q3_CalcFaceStuff(quake_face_c *F) {
     fmt::print(stderr, "  s range: %+8.2f .. %+8.2f\n", min_s, max_s);
 
 #if 0  // DEBUG
-	for (unsigned int k = 0 ; k < F->verts.size() ; k++)
-	{
-		const quake_vertex_c *V = &F->verts[k];
+    for (unsigned int k = 0 ; k < F->verts.size() ; k++)
+    {
+        const quake_vertex_c *V = &F->verts[k];
 
-		double s = V->x * sx + V->y * sy + V->z * sz;
-		double t = V->x * tx + V->y * ty + V->z * tz;
+        double s = V->x * sx + V->y * sy + V->z * sz;
+        double t = V->x * tx + V->y * ty + V->z * tz;
 
-		// reverse mapping, ST --> vertex
-		double xx = s * sx + t * tx + n_dist * nx;
-		double yy = s * sy + t * ty + n_dist * ny;
-		double zz = s * sz + t * tz + n_dist * nz;
+        // reverse mapping, ST --> vertex
+        double xx = s * sx + t * tx + n_dist * nx;
+        double yy = s * sy + t * ty + n_dist * ny;
+        double zz = s * sz + t * tz + n_dist * nz;
 
-		s = (s - min_s) / q3_luxel_size;
-		t = (s - min_t) / q3_luxel_size;
+        s = (s - min_s) / q3_luxel_size;
+        t = (s - min_t) / q3_luxel_size;
 
-		fprintf(stderr, "  st coord (%+5.3f %+5.3f)\n", s, t);
-		fprintf(stderr, "   from: (%+7.2f %+7.2f %+7.2f)\n", V->x, V->y, V->z);
-//		fprintf(stderr, "     to: (%+7.2f %+7.2f %+7.2f)\n", xx, yy, zz);
-//		fprintf(stderr, "  Error: %7.3f\n", fabs(V->x - xx) + fabs(V->y - yy) + fabs(V->z - zz));
-	}
+        fprintf(stderr, "  st coord (%+5.3f %+5.3f)\n", s, t);
+        fprintf(stderr, "   from: (%+7.2f %+7.2f %+7.2f)\n", V->x, V->y, V->z);
+//        fprintf(stderr, "     to: (%+7.2f %+7.2f %+7.2f)\n", xx, yy, zz);
+//        fprintf(stderr, "  Error: %7.3f\n", fabs(V->x - xx) + fabs(V->y - yy) + fabs(V->z - zz));
+    }
 #endif
 
     // compute size of lightmap
@@ -934,15 +934,15 @@ static void Q3_CalcFaceStuff(quake_face_c *F) {
     mat->t[3] = t_mul * -min_t;
 
 #if 0  // DEBUG
-	for (unsigned int k = 0 ; k < F->verts.size() ; k++)
-	{
-		const quake_vertex_c *V = &F->verts[k];
+    for (unsigned int k = 0 ; k < F->verts.size() ; k++)
+    {
+        const quake_vertex_c *V = &F->verts[k];
 
-		double s = mat->Calc_S(V->x, V->y, V->z);
-		double t = mat->Calc_T(V->x, V->y, V->z);
+        double s = mat->Calc_S(V->x, V->y, V->z);
+        double t = mat->Calc_T(V->x, V->y, V->z);
 
-		fprintf(stderr, "  LM coord (%+7.6f %+7.6f)\n", s, t);
-	}
+        fprintf(stderr, "  LM coord (%+7.6f %+7.6f)\n", s, t);
+    }
 #endif
 
     // create the points...
@@ -992,9 +992,9 @@ static void Q3_CalcFaceStuff(quake_face_c *F) {
                 }
             }
 
-            ///		fprintf(stderr, "point [%02d %02d] --> (%+7.2f %+7.2f
+            ///        fprintf(stderr, "point [%02d %02d] --> (%+7.2f %+7.2f
             ///%+7.2f)
-            /// medium:%d\n", 				px, py, P.x, P.y, P.z,
+            /// medium:%d\n",                 px, py, P.x, P.y, P.z,
             /// P.medium);
         }
     }
@@ -1408,8 +1408,8 @@ void QLIT_LightFace(quake_face_c *F) {
     }
 
 #if 0  // DEBUG
-	QLIT_TestingStuff(F->lmap);
-	return;
+    QLIT_TestingStuff(F->lmap);
+    return;
 #endif
 
     for (int pass = 0; pass < 4; pass++) {
@@ -1438,35 +1438,35 @@ void QLIT_LightFace(quake_face_c *F) {
 #if 0  // this needed for Q1 and Q2
 void QLIT_LightMapModel(quake_mapmodel_c *model)
 {
-	float value = q_low_light;
+    float value = q_low_light;
 
-	float mx = (model->x1 + model->x2) / 2.0;
-	float my = (model->y1 + model->y2) / 2.0;
-	float mz = (model->z1 + model->z2) / 2.0;
+    float mx = (model->x1 + model->x2) / 2.0;
+    float my = (model->y1 + model->y2) / 2.0;
+    float mz = (model->z1 + model->z2) / 2.0;
 
-	for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
-	{
-		quake_light_t & light = qk_all_lights[i];
+    for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
+    {
+        quake_light_t & light = qk_all_lights[i];
 
-		if (! QVIS_TraceRay(mx, my, mz, light.x, light.y, light.z))
-			continue;
+        if (! QVIS_TraceRay(mx, my, mz, light.x, light.y, light.z))
+            continue;
 
-		if (light.kind == LTK_Sun)
-		{
-			value += light.level;
-		}
-		else
-		{
-			float dist = ComputeDist(mx, my, mz, light.x, light.y, light.z);
+        if (light.kind == LTK_Sun)
+        {
+            value += light.level;
+        }
+        else
+        {
+            float dist = ComputeDist(mx, my, mz, light.x, light.y, light.z);
 
-			if (dist < light.radius)
-			{
-				value += light.level * (1.0 - dist / light.radius);
-			}
-		}
-	}
+            if (dist < light.radius)
+            {
+                value += light.level * (1.0 - dist / light.radius);
+            }
+        }
+    }
 
-	model->light = CLAMP(0, I_ROUND(value), 255);
+    model->light = CLAMP(0, I_ROUND(value), 255);
 }
 #endif
 
@@ -1772,10 +1772,10 @@ void QLIT_LightAllFaces() {
 
 // Todo: Q1/Q2 map models
 #if 0
-	for (unsigned int i = 0 ; i < qk_all_mapmodels.size() ; i++)
-	{
-		QLIT_LightMapModel(qk_all_mapmodels[i]);
-	}
+    for (unsigned int i = 0 ; i < qk_all_mapmodels.size() ; i++)
+    {
+        QLIT_LightMapModel(qk_all_mapmodels[i]);
+    }
 #endif
 
     QLIT_FreeLights();

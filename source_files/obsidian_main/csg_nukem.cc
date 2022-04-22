@@ -135,42 +135,42 @@ class nukem_sector_c {
     void AddEntity(csg_entity_c *E) { entities.push_back(E); }
 
 #if 0
-	bool Match(const nukem_sector_c *other) const
-	{
-		// deliberately absent: misc_flags
+    bool Match(const nukem_sector_c *other) const
+    {
+        // deliberately absent: misc_flags
 
-		return (f_h == other->f_h) &&
-			(c_h == other->c_h) &&
-			(light == other->light) &&
-			(special == other->special) &&
-			(tag  == other->tag)  &&
-			(mark == other->mark) &&
-			(strcmp(f_tex.c_str(), other->f_tex.c_str()) == 0) &&
-			(strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0)
-	}
+        return (f_h == other->f_h) &&
+            (c_h == other->c_h) &&
+            (light == other->light) &&
+            (special == other->special) &&
+            (tag  == other->tag)  &&
+            (mark == other->mark) &&
+            (strcmp(f_tex.c_str(), other->f_tex.c_str()) == 0) &&
+            (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0)
+    }
 
-	void CalcMiddle()
-	{
-		mid_x = 0;
-		mid_y = 0;
+    void CalcMiddle()
+    {
+        mid_x = 0;
+        mid_y = 0;
 
-		int count = (int)region->segs.size();
+        int count = (int)region->segs.size();
 
-		for (int i = 0; i < count; i++)
-		{
-			merge_segment_c *G = region->segs[i];
+        for (int i = 0; i < count; i++)
+        {
+            merge_segment_c *G = region->segs[i];
 
-			// tally both start and end, as segs may face either way
-			mid_x = mid_x + G->start->x + G->end->x;
-			mid_y = mid_y + G->start->y + G->end->y;
-		}
+            // tally both start and end, as segs may face either way
+            mid_x = mid_x + G->start->x + G->end->x;
+            mid_y = mid_y + G->start->y + G->end->y;
+        }
 
-		if (count > 0)
-		{
-			mid_x /= (double)(count * 2);
-			mid_y /= (double)(count * 2);
-		}
-	}
+        if (count > 0)
+        {
+            mid_x /= (double)(count * 2);
+            mid_y /= (double)(count * 2);
+        }
+    }
 #endif
 
     nukem_wall_c *FindSnagWall(snag_c *snag) {
@@ -221,7 +221,7 @@ static void NK_MakeBasicWall(nukem_sector_c *S, snag_c *snag) {
     int y2 = I_ROUND(-snag->y2 * NK_WALL_MUL);
 
     if (x1 == x2 && y1 == y2) {
-        //		LogPrintf("WARNING: degenerate wall @ ({} {})\n", x1,
+        //        LogPrintf("WARNING: degenerate wall @ ({} {})\n", x1,
         // y1);
         return;
     }
@@ -243,36 +243,36 @@ static void NK_GetPlaneInfo(nukem_plane_c *P, csg_property_set_c *face) {
 
 static void NK_DoLightingBrush(...) {
 #if 0
-	for (unsigned int i = 0; i < R->brushes.size(); i++)
-	{
-		csg_brush_c *B = R->brushes[i];
+    for (unsigned int i = 0; i < R->brushes.size(); i++)
+    {
+        csg_brush_c *B = R->brushes[i];
 
-		if (B->bkind != BKIND_Light)
-			continue;
+        if (B->bkind != BKIND_Light)
+            continue;
 
-		if (B->t.z < S->f_h+1 || B->b.z > S->c_h-1)
-			continue;
+        if (B->t.z < S->f_h+1 || B->b.z > S->c_h-1)
+            continue;
 
-		csg_property_set_c *t_face = &B->t.face;
-		csg_property_set_c *b_face = &B->b.face;
+        csg_property_set_c *t_face = &B->t.face;
+        csg_property_set_c *b_face = &B->b.face;
 
-		double raw = b_face->getInt("light", t_face->getInt("light"));
-		int light = I_ROUND(raw * 256);
+        double raw = b_face->getInt("light", t_face->getInt("light"));
+        int light = I_ROUND(raw * 256);
 
-		if (light < 0)
-		{
-			// don't put shadow in closed doors
-			if (S->f_h < S->c_h)
-				S->misc_flags |= SEC_SHADOW;
-			continue;
-		}
+        if (light < 0)
+        {
+            // don't put shadow in closed doors
+            if (S->f_h < S->c_h)
+                S->misc_flags |= SEC_SHADOW;
+            continue;
+        }
 
-		if (light > S->light)
-		{
-			S->light = light;
-			S->misc_flags |= SEC_PRIMARY_LIT;
-		}
-	}
+        if (light > S->light)
+        {
+            S->light = light;
+            S->misc_flags |= SEC_PRIMARY_LIT;
+        }
+    }
 #endif
 }
 
@@ -352,110 +352,110 @@ static void NK_CreateSectors() {
 #if 0
 static void LightingFloodFill(void)
 {
-	int i;
-	std::vector<nukem_sector_c *> active;
+    int i;
+    std::vector<nukem_sector_c *> active;
 
-	int valid_count = 1;
+    int valid_count = 1;
 
-	for (i = 1; i < (int)dm_sectors.size(); i++)
-	{
-		nukem_sector_c *S = dm_sectors[i];
+    for (i = 1; i < (int)dm_sectors.size(); i++)
+    {
+        nukem_sector_c *S = dm_sectors[i];
 
-		if (S->misc_flags & SEC_PRIMARY_LIT)
-		{
-			active.push_back(dm_sectors[i]);
-			S->valid_count = valid_count;
-		}
-	}
+        if (S->misc_flags & SEC_PRIMARY_LIT)
+        {
+            active.push_back(dm_sectors[i]);
+            S->valid_count = valid_count;
+        }
+    }
 
-	while (! active.empty())
-	{
-		valid_count++;
+    while (! active.empty())
+    {
+        valid_count++;
 
-		//fprintf(stderr, "LightingFloodFill: active=%d\n", active.size());
+        //fprintf(stderr, "LightingFloodFill: active=%d\n", active.size());
 
-		std::vector<nukem_sector_c *> changed;
+        std::vector<nukem_sector_c *> changed;
 
-		for (i = 0; i < (int)active.size(); i++)
-		{
-			nukem_sector_c *S = active[i];
+        for (i = 0; i < (int)active.size(); i++)
+        {
+            nukem_sector_c *S = active[i];
 
-			for (int k = 0; k < (int)S->region->segs.size(); k++)
-			{
-				merge_segment_c *G = S->region->segs[k];
+            for (int k = 0; k < (int)S->region->segs.size(); k++)
+            {
+                merge_segment_c *G = S->region->segs[k];
 
-				if (! G->front || ! G->back)
-					continue;
+                if (! G->front || ! G->back)
+                    continue;
 
-				if (G->front->index <= 0 || G->back->index <= 0)
-					continue;
+                if (G->front->index <= 0 || G->back->index <= 0)
+                    continue;
 
-				nukem_sector_c *F = dm_sectors[G->front->index];
-				nukem_sector_c *B = dm_sectors[G->back ->index];
+                nukem_sector_c *F = dm_sectors[G->front->index];
+                nukem_sector_c *B = dm_sectors[G->back ->index];
 
-				if (! (F==S || B==S))
-					continue;
+                if (! (F==S || B==S))
+                    continue;
 
-				if (B == S)
-					std::swap(F, B);
+                if (B == S)
+                    std::swap(F, B);
 
-				if (B->misc_flags & SEC_PRIMARY_LIT)
-					continue;
+                if (B->misc_flags & SEC_PRIMARY_LIT)
+                    continue;
 
-				int light = MIN(F->light, 176);
+                int light = MIN(F->light, 176);
 
-				SYS_ASSERT(B != F);
+                SYS_ASSERT(B != F);
 
-				double dist = ComputeDist(F->mid_x,F->mid_y, B->mid_x,B->mid_y);
+                double dist = ComputeDist(F->mid_x,F->mid_y, B->mid_x,B->mid_y);
 
-				double A = log(light) / log(2);
-				double L2 = pow(2, A - dist / light_dist_factor);
+                double A = log(light) / log(2);
+                double L2 = pow(2, A - dist / light_dist_factor);
 
-				light = (int)L2;
+                light = (int)L2;
 
-				// less light through closed doors
-				if (F->f_h >= B->c_h || B->f_h >= F->c_h)
-					light -= 32;
+                // less light through closed doors
+                if (F->f_h >= B->c_h || B->f_h >= F->c_h)
+                    light -= 32;
 
-				if (B->light >= light)
-					continue;
+                if (B->light >= light)
+                    continue;
 
-				// spread brighter light into back sector
+                // spread brighter light into back sector
 
-				B->light = light;
+                B->light = light;
 
-				if (B->valid_count != valid_count)
-				{
-					B->valid_count = valid_count;
-					changed.push_back(B);
-				}
-			}
-		}
+                if (B->valid_count != valid_count)
+                {
+                    B->valid_count = valid_count;
+                    changed.push_back(B);
+                }
+            }
+        }
 
-		std::swap(active, changed);
-	}
+        std::swap(active, changed);
+    }
 
-	//fprintf(stderr, "LightingFloodFill EMPTY\n");
+    //fprintf(stderr, "LightingFloodFill EMPTY\n");
 
-	for (i = 0; i < (int)dm_sectors.size(); i++)
-	{
-		nukem_sector_c *S = dm_sectors[i];
+    for (i = 0; i < (int)dm_sectors.size(); i++)
+    {
+        nukem_sector_c *S = dm_sectors[i];
 
-		if (smoother_lighting)
-			S->light = ((S->light + 1) / 8) * 8;
-		else
-			S->light = ((S->light + 3) / 16) * 16;
+        if (smoother_lighting)
+            S->light = ((S->light + 1) / 8) * 8;
+        else
+            S->light = ((S->light + 3) / 16) * 16;
 
-		if ((S->misc_flags & SEC_SHADOW))
-			S->light -= (S->light > 168) ? 48 : 32;
+        if ((S->misc_flags & SEC_SHADOW))
+            S->light -= (S->light > 168) ? 48 : 32;
 
-		if (S->light <= 64)
-			S->light = 96;
-		else if (S->light < 112)
-			S->light = 112;
-		else if (S->light > 255)
-			S->light = 255;
-	}
+        if (S->light <= 64)
+            S->light = 96;
+        else if (S->light < 112)
+            S->light = 112;
+        else if (S->light > 255)
+            S->light = 255;
+    }
 }
 #endif
 

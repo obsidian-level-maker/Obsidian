@@ -597,24 +597,24 @@ static void AddFatBrush(csg_brush_c *P2) {
 #if 0  // TODO
 static void AdjustSlope(slope_info_c *slope, double pad_w, bool is_ceil)
 {
-	double dx = slope->ex - slope->sx;
-	double dy = slope->ey - slope->sy;
+    double dx = slope->ex - slope->sx;
+    double dy = slope->ey - slope->sy;
 
-	double len = sqrt(dx*dx + dy*dy);
+    double len = sqrt(dx*dx + dy*dy);
 
-	dx = dx * pad_w / len;
-	dy = dy * pad_w / len;
+    dx = dx * pad_w / len;
+    dy = dy * pad_w / len;
 
-	// floor slopes have negative dz, ceilings have positive dz.
-	// hence move coordinates BACK by pad_w distance.
+    // floor slopes have negative dz, ceilings have positive dz.
+    // hence move coordinates BACK by pad_w distance.
 
-	slope->sx -= dx;
-	slope->sy -= dy;
+    slope->sx -= dx;
+    slope->sy -= dy;
 
-	slope->ex -= dx;
-	slope->ey -= dy;
+    slope->ex -= dx;
+    slope->ey -= dy;
 
-	slope->dz *= len / (pad_w + len);
+    slope->dz *= len / (pad_w + len);
 }
 #endif
 
@@ -645,20 +645,20 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b) {
         // !!!! FIXME: if floor is sloped, split this poly into two halves
         //             at the point where the (slope + fh) exceeds (z2 + fh)
 #if 0
-		if (P->t.slope)
-		{
-			P2->t.slope = new slope_info_c(P->t.slope);
+        if (P->t.slope)
+        {
+            P2->t.slope = new slope_info_c(P->t.slope);
 
-			AdjustSlope(P2->t.slope, pad_w, false);
-		}
+            AdjustSlope(P2->t.slope, pad_w, false);
+        }
 
-		// if ceiling is sloped, merely adjust slope to keep it in new bbox
-		if (P->b.slope)
-		{
-			P2->b.slope = new slope_info_c(P->b.slope);
+        // if ceiling is sloped, merely adjust slope to keep it in new bbox
+        if (P->b.slope)
+        {
+            P2->b.slope = new slope_info_c(P->b.slope);
 
-			AdjustSlope(P2->b.slope, pad_w, true);
-		}
+            AdjustSlope(P2->b.slope, pad_w, true);
+        }
 #endif
 
         AddFatBrush(P2);
@@ -982,7 +982,7 @@ static void DoWriteClip(dclipnode_t &raw_clip, bool flip) {
         short unsigned int clip1 = raw_clip.children[1];
         raw_clip.children[0] = clip1;
         raw_clip.children[1] = clip0;
-        //		std::swap(raw_clip.children[0], raw_clip.children[1]);
+        //        std::swap(raw_clip.children[0], raw_clip.children[1]);
     }
 
     // fix endianness
@@ -1058,9 +1058,9 @@ static void CreateClipSides(clip_group_c &group) {
 
             group.AddSide(CS);
 #if 0
-			fprintf(stderr, "New Side: %p %s (%1.0f %1.0f) .. (%1.0f %1.0f)\n",
-					CS, CS->TwoSided() ? "2S" : "1S",
-					CS->x1, CS->y1, CS->x2, CS->y2);
+            fprintf(stderr, "New Side: %p %s (%1.0f %1.0f) .. (%1.0f %1.0f)\n",
+                    CS, CS->TwoSided() ? "2S" : "1S",
+                    CS->x1, CS->y1, CS->x2, CS->y2);
 #endif
         }
     }
@@ -1069,14 +1069,14 @@ static void CreateClipSides(clip_group_c &group) {
 #if 0  // debugging stuff
 void CLIP_BEGIN()
 {
-	SaveBrushes();
+    SaveBrushes();
 
-	FattenBrushes(16, 24, 32);
+    FattenBrushes(16, 24, 32);
 }
 
 void CLIP_END()
 {
-	RestoreBrushes();
+    RestoreBrushes();
 }
 #endif
 

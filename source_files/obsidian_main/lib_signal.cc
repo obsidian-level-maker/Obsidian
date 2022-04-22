@@ -87,11 +87,11 @@ void Signal_DontCare(const char *name, signal_notify_f func) {
 void Signal_Raise(std::string name) {
     if (signal_in_progress) {
 #if 0
-		if (strcmp(signal_in_progress, name) == 0)
-		{
-			DebugPrintf("Signal '{}' raised when already in progress\n", name);
-			return;
-		}
+        if (strcmp(signal_in_progress, name) == 0)
+        {
+            DebugPrintf("Signal '{}' raised when already in progress\n", name);
+            return;
+        }
 #endif
 
         for (auto LI = pending_sigs.begin(); LI != pending_sigs.end(); LI++) {

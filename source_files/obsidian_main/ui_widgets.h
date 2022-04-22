@@ -163,7 +163,7 @@ class UI_RChoiceMenu : public UI_CustomMenu {
     // first entry.
     void Recreate();
 
-    //	const char *GetLabel() const;  // ????
+    //    const char *GetLabel() const;  // ????
 
     void GotoPrevious();
     void GotoNext();

@@ -445,9 +445,9 @@ static void CreateSides(quake_group_c &group) {
 
             group.AddSide(S);
 #if 0
-			fprintf(stderr, "New Side: %p %s (%1.0f %1.0f) .. (%1.0f %1.0f)\n",
-					S, S->TwoSided() ? "2S" : "1S",
-					S->x1, S->y1, S->x2, S->y2);
+            fprintf(stderr, "New Side: %p %s (%1.0f %1.0f) .. (%1.0f %1.0f)\n",
+                    S, S->TwoSided() ? "2S" : "1S",
+                    S->x1, S->y1, S->x2, S->y2);
 #endif
         }
     }
@@ -1831,8 +1831,8 @@ static quake_leaf_c *Solid_FloorOrCeil(region_c *R, unsigned int g, int is_ceil,
         if (range_z1 < B->b.z && B->t.z < range_z2) {
             leaf->AddBrush(B);
 
-            ///			if (B->bflags & BFLAG_Sky)
-            ///				sky_num++;
+            ///            if (B->bflags & BFLAG_Sky)
+            ///                sky_num++;
         }
     }
 

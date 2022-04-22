@@ -317,65 +317,65 @@ static void Q1_WriteMipTex() {
 #if 0 /* TEMP DUMMY STUFF */
 static void DummyMipTex(void)
 {
-	// 0 = "error"
-	// 1 = "gray"
+    // 0 = "error"
+    // 1 = "gray"
 
-	qLump_c *lump = BSP_NewLump(LUMP_TEXTURES);
-
-
-	dmiptexlump_t mm_dir;
-
-	mm_dir.num_miptex = LE_S32(2);
-
-	mm_dir.data_ofs[0] = LE_S32(sizeof(mm_dir));
-	mm_dir.data_ofs[1] = LE_S32(sizeof(mm_dir) + sizeof(miptex_t) + 85*4);
-
-	lump->Append(&mm_dir, sizeof(mm_dir));
+    qLump_c *lump = BSP_NewLump(LUMP_TEXTURES);
 
 
-	for (int mt = 0; mt < 2; mt++)
-	{
-		miptex_t mm_tex;
+    dmiptexlump_t mm_dir;
 
-		strcpy(mm_tex.name, (mt == 0) ? "error" : "gray");
+    mm_dir.num_miptex = LE_S32(2);
 
-		int size = 16;
+    mm_dir.data_ofs[0] = LE_S32(sizeof(mm_dir));
+    mm_dir.data_ofs[1] = LE_S32(sizeof(mm_dir) + sizeof(miptex_t) + 85*4);
 
-		mm_tex.width  = LE_U32(size);
-		mm_tex.height = LE_U32(size);
-
-		int offset = sizeof(mm_tex);
-
-		for (int i = 0; i < MIP_LEVELS; i++)
-		{
-			mm_tex.offsets[i] = LE_U32(offset);
-
-			offset += (u32_t)(size * size);
-
-			size = size / 2;
-		}
-
-		lump->Append(&mm_tex, sizeof(mm_tex));
+    lump->Append(&mm_dir, sizeof(mm_dir));
 
 
-		u8_t pixels[2];
+    for (int mt = 0; mt < 2; mt++)
+    {
+        miptex_t mm_tex;
 
-		pixels[0] = (mt == 0) ? 210 : 4;
-		pixels[1] = (mt == 0) ? 231 : 12;
+        strcpy(mm_tex.name, (mt == 0) ? "error" : "gray");
 
-		size = 16;
+        int size = 16;
 
-		for (int i = 0; i < MIP_LEVELS; i++)
-		{
-			for (int y = 0; y < size; y++)
-				for (int x = 0; x < size; x++)
-				{
-					lump->Append(pixels + (((x^y) & 2)/2), 1);
-				}
+        mm_tex.width  = LE_U32(size);
+        mm_tex.height = LE_U32(size);
 
-			size = size / 2;
-		}
-	}
+        int offset = sizeof(mm_tex);
+
+        for (int i = 0; i < MIP_LEVELS; i++)
+        {
+            mm_tex.offsets[i] = LE_U32(offset);
+
+            offset += (u32_t)(size * size);
+
+            size = size / 2;
+        }
+
+        lump->Append(&mm_tex, sizeof(mm_tex));
+
+
+        u8_t pixels[2];
+
+        pixels[0] = (mt == 0) ? 210 : 4;
+        pixels[1] = (mt == 0) ? 231 : 12;
+
+        size = 16;
+
+        for (int i = 0; i < MIP_LEVELS; i++)
+        {
+            for (int y = 0; y < size; y++)
+                for (int x = 0; x < size; x++)
+                {
+                    lump->Append(pixels + (((x^y) & 2)/2), 1);
+                }
+
+            size = size / 2;
+        }
+    }
 }
 #endif
 
@@ -460,49 +460,49 @@ static void Q1_WriteTexInfo(void) {
 #if 0 /* TEMP STUFF */
 static void DummyTexInfo(void)
 {
-	// 0 = "error" on PLANE_X / PLANE_ANYX
-	// 1 = "error" on PLANE_Y / PLANE_ANYY
-	// 2 = "error" on PLANE_Z / PLANE_ANYZ
-	//
-	// 3 = "gray"  on PLANE_X / PLANE_ANYX
-	// 4 = "gray"  on PLANE_Y / PLANE_ANYY
-	// 5 = "gray"  on PLANE_Z / PLANE_ANYZ
+    // 0 = "error" on PLANE_X / PLANE_ANYX
+    // 1 = "error" on PLANE_Y / PLANE_ANYY
+    // 2 = "error" on PLANE_Z / PLANE_ANYZ
+    //
+    // 3 = "gray"  on PLANE_X / PLANE_ANYX
+    // 4 = "gray"  on PLANE_Y / PLANE_ANYY
+    // 5 = "gray"  on PLANE_Z / PLANE_ANYZ
 
-	qLump_c *lump = BSP_NewLump(LUMP_TEXINFO);
+    qLump_c *lump = BSP_NewLump(LUMP_TEXINFO);
 
-	float scale = 2.0;
+    float scale = 2.0;
 
-	for (int T = 0; T < 6; T++)
-	{
-		int P = T % 3;
+    for (int T = 0; T < 6; T++)
+    {
+        int P = T % 3;
 
-		texinfo_t tex;
+        texinfo_t tex;
 
-		tex.s[0] = (P == PLANE_X) ? 0 : 1;
-		tex.s[1] = (P == PLANE_X) ? 1 : 0;
-		tex.s[2] = 0;
-		tex.s[3] = 0;
+        tex.s[0] = (P == PLANE_X) ? 0 : 1;
+        tex.s[1] = (P == PLANE_X) ? 1 : 0;
+        tex.s[2] = 0;
+        tex.s[3] = 0;
 
-		tex.t[0] = 0;
-		tex.t[1] = (P == PLANE_Z) ? 1 : 0;
-		tex.t[2] = (P == PLANE_Z) ? 0 : 1;
-		tex.t[3] = 0;
+        tex.t[0] = 0;
+        tex.t[1] = (P == PLANE_Z) ? 1 : 0;
+        tex.t[2] = (P == PLANE_Z) ? 0 : 1;
+        tex.t[3] = 0;
 
-		for (int k = 0; k < 3; k++)
-		{
-			tex.s[k] /= scale;
-			tex.t[k] /= scale;
+        for (int k = 0; k < 3; k++)
+        {
+            tex.s[k] /= scale;
+            tex.t[k] /= scale;
 
-			// FIXME: endianness swap!
-		}
+            // FIXME: endianness swap!
+        }
 
-		int flags = 0;
+        int flags = 0;
 
-		tex.miptex = LE_S32(T / 3);
-		tex.flags  = LE_S32(flags);
+        tex.miptex = LE_S32(T / 3);
+        tex.flags  = LE_S32(flags);
 
-		lump->Append(&tex, sizeof(tex));
-	}
+        lump->Append(&tex, sizeof(tex));
+    }
 }
 #endif
 
@@ -774,7 +774,7 @@ static void Q1_WriteNode(quake_node_c *node) {
         short int node1 = raw_node.children[1];
         raw_node.children[0] = node1;
         raw_node.children[1] = node0;
-        //		std::swap(raw_node.children[0], raw_node.children[1]);
+        //        std::swap(raw_node.children[0], raw_node.children[1]);
     }
 
     raw_node.firstface = q1_total_faces;
@@ -1082,7 +1082,7 @@ static void MapModel_Nodes(quake_mapmodel_c *model, float *mins, float *maxs) {
             short int node1 = raw_node.children[1];
             raw_node.children[0] = node1;
             raw_node.children[1] = node0;
-            //			std::swap(raw_node.children[0],
+            //            std::swap(raw_node.children[0],
             // raw_node.children[1]);
         }
 

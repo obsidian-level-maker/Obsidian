@@ -1261,7 +1261,7 @@ skiprest:
 
     Main_CalcNewSeed();
 
-    //	TX_TestSynth(next_rand_seed); - Fractal testing stuff
+    //    TX_TestSynth(next_rand_seed); - Fractal testing stuff
 
     VFS_InitAddons(argv[0]);
 
@@ -1351,7 +1351,7 @@ skiprest:
         main_win->resize(old_x, old_y, main_w, main_h);
     }
 
-    //???	Default_Location();
+    //???    Default_Location();
 
     Script_Open();
 

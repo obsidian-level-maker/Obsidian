@@ -141,9 +141,9 @@ brush_vert_c::~brush_vert_c() {
 
 #if 0  // needed?
 brush_plane_c::brush_plane_c(const brush_plane_c& other) :
-	z(other.z), slope(NULL), face(other.face), uv_mat(NULL)
+    z(other.z), slope(NULL), face(other.face), uv_mat(NULL)
 {
-	// NOTE: slope not cloned
+    // NOTE: slope not cloned
 }
 #endif
 

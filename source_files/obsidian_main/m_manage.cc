@@ -453,11 +453,11 @@ class UI_Manage_Config : public Fl_Double_Window {
         // and only one is active at a time.  That sucks, since only
         // files matching the active filter are shown.
 #if 0
-		chooser.filter("Text files\t*.txt\n"
-		               "Config files\t*.cfg\n"
-		               "WAD files\t*.wad\n"
-					   "GRP files\t*.grp\n"
-					   "PAK files\t*.pak\n");
+        chooser.filter("Text files\t*.txt\n"
+                       "Config files\t*.cfg\n"
+                       "WAD files\t*.wad\n"
+                       "GRP files\t*.grp\n"
+                       "PAK files\t*.pak\n");
 #endif
 
         // TODO: chooser.directory(LAST_USED_DIRECTORY)

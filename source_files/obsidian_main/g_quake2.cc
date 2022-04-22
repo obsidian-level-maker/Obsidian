@@ -253,39 +253,39 @@ static void Q2_DummyArea() {
 #if 0
 static void Q2_DummyVis()
 {
-	qLump_c *lump = BSP_NewLump(LUMP_VISIBILITY);
+    qLump_c *lump = BSP_NewLump(LUMP_VISIBILITY);
 
-	dvis_t vis;
+    dvis_t vis;
 
-	vis.numclusters = LE_U32(1);
+    vis.numclusters = LE_U32(1);
 
-	vis.offsets[0][0] = LE_U32(sizeof(vis));
-	vis.offsets[0][1] = LE_U32(sizeof(vis));
+    vis.offsets[0][0] = LE_U32(sizeof(vis));
+    vis.offsets[0][1] = LE_U32(sizeof(vis));
 
-	lump->Append(&vis, sizeof(vis));
+    lump->Append(&vis, sizeof(vis));
 
-	byte dummy_v = 255;
+    byte dummy_v = 255;
 
-	lump->Append(&dummy_v, 1);
-	lump->Append(&dummy_v, 1);
-	lump->Append(&dummy_v, 1);
-	lump->Append(&dummy_v, 1);
+    lump->Append(&dummy_v, 1);
+    lump->Append(&dummy_v, 1);
+    lump->Append(&dummy_v, 1);
+    lump->Append(&dummy_v, 1);
 }
 #endif
 
 #if 0
 static void Q2_DummyLeafBrush()
 {
-	qLump_c *lump = BSP_NewLump(LUMP_LEAFBRUSHES);
+    qLump_c *lump = BSP_NewLump(LUMP_LEAFBRUSHES);
 
-	dbrush_t brush;
+    dbrush_t brush;
 
-	brush.firstside = 0;
-	brush.numsides  = 0;
+    brush.firstside = 0;
+    brush.numsides  = 0;
 
-	brush.contents  = 0;
+    brush.contents  = 0;
 
-	lump->Append(&brush, sizeof(brush));
+    lump->Append(&brush, sizeof(brush));
 }
 #endif
 
@@ -579,7 +579,7 @@ static void Q2_WriteNode(quake_node_c *node) {
         int node1 = raw_node.children[1];
         raw_node.children[0] = node1;
         raw_node.children[1] = node0;
-        //		std::swap(raw_node.children[0], raw_node.children[1]);
+        //        std::swap(raw_node.children[0], raw_node.children[1]);
     }
 
     raw_node.firstface = q2_total_faces;
@@ -794,7 +794,7 @@ static void Q2_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs) {
             int node1 = raw_node.children[1];
             raw_node.children[0] = node1;
             raw_node.children[1] = node0;
-            //			std::swap(raw_node.children[0],
+            //            std::swap(raw_node.children[0],
             // raw_node.children[1]);
         }
 

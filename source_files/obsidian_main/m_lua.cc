@@ -362,7 +362,7 @@ int gui_add_choice(lua_State *L) {
 
     SYS_ASSERT(!button.empty() && !id.empty() && !label.empty());
 
-    //	DebugPrintf("  add_choice: {} id:{}\n", button, id);
+    //    DebugPrintf("  add_choice: {} id:{}\n", button, id);
 
     if (!main_win) {
         return 0;
@@ -391,7 +391,7 @@ int gui_enable_choice(lua_State *L) {
 
     SYS_ASSERT(!button.empty() && !id.empty());
 
-    //	DebugPrintf("  enable_choice: {} id:{} {}\n", button, id, enable ?
+    //    DebugPrintf("  enable_choice: {} id:{} {}\n", button, id, enable ?
     //"enable" : "DISABLE");
 
     if (!main_win) {
@@ -414,7 +414,7 @@ int gui_set_button(lua_State *L) {
 
     SYS_ASSERT(!button.empty() && !id.empty());
 
-    //	DebugPrintf("  change_button: {} --> {}\n", button, id);
+    //    DebugPrintf("  change_button: {} --> {}\n", button, id);
 
     if (!main_win) {
         return 0;
@@ -442,7 +442,7 @@ int gui_add_module(lua_State *L) {
 
     SYS_ASSERT(!where.empty() && !id.empty() && !label.empty());
 
-    //	DebugPrintf("  add_module: {} id:{}\n", where, id);
+    //    DebugPrintf("  add_module: {} id:{}\n", where, id);
 
     if (!main_win) {
         return 0;
@@ -481,7 +481,7 @@ int gui_set_module(lua_State *L) {
 
     SYS_ASSERT(!module.empty());
 
-    //	DebugPrintf("  set_module: {} --> {}\n", module, opt_val);
+    //    DebugPrintf("  set_module: {} --> {}\n", module, opt_val);
 
     if (!main_win) {
         return 0;
@@ -507,7 +507,7 @@ int gui_show_module(lua_State *L) {
 
     SYS_ASSERT(!module.empty());
 
-    //	DebugPrintf("  show_module: {} --> {}\n", what, module, shown ? "show" :
+    //    DebugPrintf("  show_module: {} --> {}\n", what, module, shown ? "show" :
     //"HIDE");
 
     if (!main_win) {
@@ -573,7 +573,7 @@ int gui_add_module_option(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty());
 
-    //	DebugPrintf("  add_module_option: {}.{}\n", module, option);
+    //    DebugPrintf("  add_module_option: {}.{}\n", module, option);
 
     if (!main_win) {
         return 0;
@@ -621,7 +621,7 @@ int gui_add_module_slider_option(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty());
 
-    //	DebugPrintf("  add_module_option: {}.{}\n", module, option);
+    //    DebugPrintf("  add_module_option: {}.{}\n", module, option);
 
     if (!main_win) {
         return 0;
@@ -663,7 +663,7 @@ int gui_add_module_button_option(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty());
 
-    //	DebugPrintf("  add_module_option: {}.{}\n", module, option);
+    //    DebugPrintf("  add_module_option: {}.{}\n", module, option);
 
     if (!main_win) {
         return 0;
@@ -698,7 +698,7 @@ int gui_add_option_choice(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty());
 
-    //	DebugPrintf("  add_option_choice: {}.{}\n", module, option);
+    //    DebugPrintf("  add_option_choice: {}.{}\n", module, option);
 
     if (!main_win) {
         return 0;
@@ -729,7 +729,7 @@ int gui_set_module_option(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty() && !value.empty());
 
-    //	DebugPrintf("  set_module_option: {}.{} --> {}\n", module, option,
+    //    DebugPrintf("  set_module_option: {}.{} --> {}\n", module, option,
     // value);
 
     if (!main_win) {
@@ -832,7 +832,7 @@ int gui_get_module_slider_value(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty());
 
-    //	DebugPrintf("  set_module_option: {}.{} --> {}\n", module, option,
+    //    DebugPrintf("  set_module_option: {}.{} --> {}\n", module, option,
     // value);
 
     if (!main_win) {
@@ -916,7 +916,7 @@ int gui_get_module_button_value(lua_State *L) {
 
     SYS_ASSERT(!module.empty() && !option.empty());
 
-    //	DebugPrintf("  set_module_option: {}.{} --> {}\n", module, option,
+    //    DebugPrintf("  set_module_option: {}.{} --> {}\n", module, option,
     // value);
 
     if (!main_win) {

@@ -127,7 +127,7 @@ void UI_MainWin::CalcWindowSize(int *W, int *H) {
     }
 
     //// DEBUG
-    //	fprintf(stderr, "\n\nCalcWindowSize --> %d x %d\n", *W, *H);
+    //    fprintf(stderr, "\n\nCalcWindowSize --> %d x %d\n", *W, *H);
 }
 
 void UI_MainWin::Locked(bool value) {

@@ -490,7 +490,7 @@ void QVIS_MarkWall(int cx, int cy, int side) {
 
 // debugging
 #if 0
-	fprintf(stderr, "@@@ %d %d %d\n", cx, cy, side);
+    fprintf(stderr, "@@@ %d %d %d\n", cx, cy, side);
 #endif
 }
 
@@ -712,8 +712,8 @@ static void CollectRowData(int src_x, int src_y, bool PHS) {
     }
 
 #if 0
-	fprintf(stderr, "cluster: %2d %2d  blocked: %d = %1.2f%%   \n",
-			src_x, src_y, blocked, blocked * 100.0 / v_row_bits);
+    fprintf(stderr, "cluster: %2d %2d  blocked: %d = %1.2f%%   \n",
+            src_x, src_y, blocked, blocked * 100.0 / v_row_bits);
 #endif
 
     // update statistics

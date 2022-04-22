@@ -424,27 +424,27 @@ class UI_ThemeWin : public Fl_Window {
         main_win->game_box->game->labelsize(FL_NORMAL_SIZE);
         main_win->game_box->game->textsize(FL_NORMAL_SIZE);
         main_win->game_box->game->copy_label(
-            "								"
-            "		");
+            "                                "
+            "        ");
         main_win->game_box->engine->labelsize(FL_NORMAL_SIZE);
         main_win->game_box->engine->textsize(FL_NORMAL_SIZE);
         main_win->game_box->engine->copy_label(
-            "								"
-            "		");
+            "                                "
+            "        ");
         main_win->game_box->engine_help->copy_label("");
         main_win->game_box->engine_help->labelsize(FL_NORMAL_SIZE);
         main_win->game_box->length->labelsize(FL_NORMAL_SIZE);
         main_win->game_box->length->textsize(FL_NORMAL_SIZE);
         main_win->game_box->length->copy_label(
-            "								"
-            "		");
+            "                                "
+            "        ");
         main_win->game_box->length_help->copy_label("");
         main_win->game_box->length_help->labelsize(FL_NORMAL_SIZE);
         main_win->game_box->theme->labelsize(FL_NORMAL_SIZE);
         main_win->game_box->theme->textsize(FL_NORMAL_SIZE);
         main_win->game_box->theme->copy_label(
-            "								"
-            "		");
+            "                                "
+            "        ");
         main_win->game_box->theme_help->labelsize(FL_NORMAL_SIZE);
         main_win->game_box->theme_help->copy_label("");
         main_win->game_box->build->labelsize(header_font_size);
@@ -552,27 +552,27 @@ class UI_ThemeWin : public Fl_Window {
         main_win->game_box->game->labelfont(font_style);
         main_win->game_box->game->textfont(font_style);
         main_win->game_box->game->copy_label(
-            "								"
-            "		");
+            "                                "
+            "        ");
         main_win->game_box->engine->labelfont(font_style);
         main_win->game_box->engine->textfont(font_style);
         main_win->game_box->engine->copy_label(
-            "								"
-            "		");
+            "                                "
+            "        ");
         main_win->game_box->engine_help->copy_label("");
         main_win->game_box->engine_help->labelfont(font_style);
         main_win->game_box->length->labelfont(font_style);
         main_win->game_box->length->textfont(font_style);
         main_win->game_box->length->copy_label(
-            "								"
-            "		");
+            "                                "
+            "        ");
         main_win->game_box->length_help->copy_label("");
         main_win->game_box->length_help->labelfont(font_style);
         main_win->game_box->theme->labelfont(font_style);
         main_win->game_box->theme->textfont(font_style);
         main_win->game_box->theme->copy_label(
-            "								"
-            "		");
+            "                                "
+            "        ");
         main_win->game_box->theme_help->labelfont(font_style);
         main_win->game_box->theme_help->copy_label("");
         main_win->game_box->build->labelfont(

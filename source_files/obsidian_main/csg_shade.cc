@@ -86,26 +86,26 @@ static std::vector< csg_entity_c *> cave_lights;
 
 static void SHADE_CollectLights()
 {
-	cave_lights.clear();
+    cave_lights.clear();
 
-	for (unsigned int i = 0 ; i < all_regions.size() ; i++)
-	{
-		region_c * R = all_regions[i];
+    for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+    {
+        region_c * R = all_regions[i];
 
-		// closed regions never provide light
-		if (R->isClosed())
-			continue;
+        // closed regions never provide light
+        if (R->isClosed())
+            continue;
 
-		for (unsigned int k = 0 ; k < R->entities.size() ; k++)
-		{
-			csg_entity_c *E = R->entities[k];
+        for (unsigned int k = 0 ; k < R->entities.size() ; k++)
+        {
+            csg_entity_c *E = R->entities[k];
 
-			if (E->props.getInt("cave_light", 0) > 0)
-				cave_lights.push_back(E);
-		}
-	}
+            if (E->props.getInt("cave_light", 0) > 0)
+                cave_lights.push_back(E);
+        }
+    }
 
-	LogPrintf("Found {} cave light entities\n", (int)cave_lights.size());
+    LogPrintf("Found {} cave light entities\n", (int)cave_lights.size());
 }
 #endif
 
@@ -207,50 +207,50 @@ static void SHADE_MergeResults() {
 #if 0
 static int SHADE_CaveLighting(region_c *R, double z2)
 {
-	int result = 0;
+    int result = 0;
 
-	double x2 = R->mid_x;
-	double y2 = R->mid_y;
+    double x2 = R->mid_x;
+    double y2 = R->mid_y;
 
-	for (unsigned int k = 0 ; k < cave_lights.size() ; k++)
-	{
-		csg_entity_c *E = cave_lights[k];
+    for (unsigned int k = 0 ; k < cave_lights.size() ; k++)
+    {
+        csg_entity_c *E = cave_lights[k];
 
-		double x1 = E->x;
-		double y1 = E->y;
-		double z1 = E->z + 64.0;
+        double x1 = E->x;
+        double y1 = E->y;
+        double z1 = E->z + 64.0;
 
-//??	int brightness = E->props.getInt("cave_light", 0);
+//??    int brightness = E->props.getInt("cave_light", 0);
 
-		// basic distance check
-		if (fabs(x1 - x2) > 500 || fabs(y1 - y2) > 500)
-			continue;
+        // basic distance check
+        if (fabs(x1 - x2) > 500 || fabs(y1 - y2) > 500)
+            continue;
 
-		// more complex distance check
-		double dist = ComputeDist(x1, y1, x2, y2);
+        // more complex distance check
+        double dist = ComputeDist(x1, y1, x2, y2);
 
-		int level;
+        int level;
 
-		if (dist <= 104)
-			level = 48;
-		else if (dist <= 232)
-			level = 32;
-		else if (dist <= 488)
-			level = 16;
-		else
-			continue;
+        if (dist <= 104)
+            level = 48;
+        else if (dist <= 232)
+            level = 32;
+        else if (dist <= 488)
+            level = 16;
+        else
+            continue;
 
-		if (level < result)
-			continue;
+        if (level < result)
+            continue;
 
-		// line of sight blocked?
-		if (CSG_TraceRay(x1,y1,z1, x2,y2,z2, "v"))
-			continue;
+        // line of sight blocked?
+        if (CSG_TraceRay(x1,y1,z1, x2,y2,z2, "v"))
+            continue;
 
-		result = level;
-	}
+        result = level;
+    }
 
-	return result;
+    return result;
 }
 #endif
 
@@ -314,15 +314,15 @@ static void SHADE_VisitRegion(region_c *R) {
 
 #if 0  // DISABLED, WE DO THIS IN LUA CODE NOW
        // check torch entities in caves
-	if (B->t.face.getInt("is_cave"))
-	{
-		double z2 = B->t.z + 80.0;
+    if (B->t.face.getInt("is_cave"))
+    {
+        double z2 = B->t.z + 80.0;
 
-		int cave = SHADE_CaveLighting(R, z2);
+        int cave = SHADE_CaveLighting(R, z2);
 
-		if (cave > 0)
-			light = MAX(light, cave);
-	}
+        if (cave > 0)
+            light = MAX(light, cave);
+    }
 #endif
 
     // combine them
@@ -362,7 +362,7 @@ static void SHADE_LightWorld() {
 void CSG_Shade() {
     LogPrintf("Lighting level...\n");
 
-    //	SHADE_CollectLights();
+    //    SHADE_CollectLights();
 
     SHADE_GroupRegions();
     SHADE_LightWorld();
