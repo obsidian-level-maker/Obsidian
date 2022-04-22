@@ -62,7 +62,6 @@ cpmaddpackage(
 
 add_executable(
   obsidian
-  cpp.hint
   source_files/obsidian_main/aj_map.cc
   source_files/obsidian_main/aj_poly.cc
   source_files/obsidian_main/aj_util.cc
