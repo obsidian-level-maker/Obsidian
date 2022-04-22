@@ -40,7 +40,7 @@ void argv::Init(const int argc, const char *const *argv) {
 
     int dest = 0;
 
-    for (int i = 0; i < list.size(); i++) {
+    for (size_t i = 0; i < list.size(); i++) {
         const char *cur = argv[i];
         SYS_NULL_CHECK(cur);
 
@@ -75,7 +75,7 @@ int argv::Find(const char shortName, const char *longName, int *numParams) {
         *numParams = 0;
     }
 
-    int p = 0;
+    size_t p = 0;
 
     for (; p < list.size(); ++p) {
         if (!IsOption(p)) {
@@ -101,7 +101,7 @@ int argv::Find(const char shortName, const char *longName, int *numParams) {
     }
 
     if (numParams) {
-        int q = p + 1;
+        size_t q = p + 1;
 
         while (q < list.size() && !IsOption(q)) {
             ++q;
