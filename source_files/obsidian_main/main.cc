@@ -1058,7 +1058,7 @@ bool Build_Cool_Shit() {
         const u32_t end_time = TimeGetMillies();
         const u32_t total_time = end_time - start_time;
 
-        LogPrintf("\nTOTAL TIME: {}.2f seconds\n\n", total_time / 1000.0);
+        LogPrintf("\nTOTAL TIME: {} seconds\n\n", total_time / 1000.0);
 
         string_seed.clear();
 
