@@ -507,7 +507,8 @@ int gui_show_module(lua_State *L) {
 
     SYS_ASSERT(!module.empty());
 
-    //    DebugPrintf("  show_module: {} --> {}\n", what, module, shown ? "show" :
+    //    DebugPrintf("  show_module: {} --> {}\n", what, module, shown ? "show"
+    //    :
     //"HIDE");
 
     if (!main_win) {
