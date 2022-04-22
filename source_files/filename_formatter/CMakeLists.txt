@@ -12,5 +12,5 @@ add_library(${PROJECT_NAME} ${SOURCES} ff_main.cpp lex.yy.c)
 # flex installed - Dasho
 if(!MINGW)
   find_package(FLEX REQUIRED)
+  target_link_libraries(${PROJECT_NAME} PRIVATE ${FLEX_LIBRARIES})
 endif()
-target_link_libraries(${PROJECT_NAME} PRIVATE ${FLEX_LIBRARIES})
