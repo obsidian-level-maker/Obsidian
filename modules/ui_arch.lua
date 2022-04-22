@@ -139,8 +139,7 @@ OB_MODULES["ui_arch"] =
       "75:75 (Transcendent),",
       tooltip = "Determines size of map (Width x Height) in grid squares.",
       longtip = "WARNING! If you are planning to play on any choices that involve maps " ..
-      "at sizes of 50 and above, Autodetail is required on. (on by default if you do not have " ..
-      "Prefab Control module on. The stability of maps with sizes 60 and beyond is not predictable.",
+      "at sizes of 50 and above, Autodetailing will be enabled by default. The stability of maps with sizes 60 and beyond is not predictable.",
       priority = 100,
       randomize_group="architecture"
     },
@@ -228,10 +227,11 @@ OB_MODULES["ui_arch"] =
     {
       name = "mixin_type",
       label = _("Theme Mix-in Type"),
-      tooltip = "This replaces the -ish theme choices. By selecting mostly, this means " ..
+      tooltip = "Override behavior of the -ish theme choices.",
+      longtip = "This replaces the -ish theme choices. By selecting Mostly, this means " ..
                 "your selected theme is occasionally littered by other themes while setting it to " ..
-                "less means the original selected theme is what's littered in instead. " ..
-                "Default behavior is normal.",
+                "Less means the original selected theme is what's littered in instead. " ..
+                "Default behavior is Normal.",
       choices = UI_ARCH.MIXIN_CHOICES,
       default = "normal",
       priority = 88,
@@ -252,12 +252,12 @@ OB_MODULES["ui_arch"] =
       gap = 1
     },
 
-    { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 78, randomize_group="architecture" },
-    { name="caves",        label=_("Caves"),      choices=STYLE_CHOICES, priority = 77, randomize_group="architecture" },
-    { name="liquids",      label=_("Liquids"),    choices=STYLE_CHOICES, priority = 76, randomize_group="architecture" },
-    { name="hallways",     label=_("Hallways"),   choices=STYLE_CHOICES, priority = 75, randomize_group="architecture" },
-    { name="teleporters",  label=_("Teleports"),  choices=STYLE_CHOICES, priority = 74, randomize_group="architecture" },
-    { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1, priority = 73, randomize_group="architecture" },
+    { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 78, randomize_group="architecture", tooltip = "Control the amount of outdoor areas." },
+    { name="caves",        label=_("Caves"),      choices=STYLE_CHOICES, priority = 77, randomize_group="architecture", tooltip = "Control the amount of caves." },
+    { name="liquids",      label=_("Liquids"),    choices=STYLE_CHOICES, priority = 76, randomize_group="architecture", tooltip = "Control the amount of liquids." },
+    { name="hallways",     label=_("Hallways"),   choices=STYLE_CHOICES, priority = 75, randomize_group="architecture", tooltip = "Control the amount of hallways." },
+    { name="teleporters",  label=_("Teleports"),  choices=STYLE_CHOICES, priority = 74, randomize_group="architecture", tooltip = "Control the amount of teleporters." },
+    { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1, priority = 73, randomize_group="architecture", tooltip = "Control the height difference of stairs, lifts, and joiners throughout levels." },
 
 
     {
@@ -279,9 +279,9 @@ OB_MODULES["ui_arch"] =
       label = _("ZDoom 3D Skybox"),
       choices=UI_ARCH.ZDOOM_SKYBOX_CHOICES,
       default="disable",
-      tooltip = "If a ZDoom based engine is selected, one has the option " ..
-      "to enable a custom 3D skybox to be rendered into the map. " ..
-      "It is preferable to put this on if you have ZDoom Vista enabled.",
+      tooltip = "Choose if 3D Skyboxes are rendered into levels and their style.",
+      longtip = "This is highly recommended when Bottomless Vistas are " ..
+      "enabled in combination with a ZDoom Family engine.",
       priority = 49
     }
   },

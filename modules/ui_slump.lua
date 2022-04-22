@@ -77,7 +77,7 @@ OB_MODULES["ui_slump_arch"] =
       increment = 1,
       default = 50,
       presets = "",
-      tooltip = "% chance that SLUMP will attempt to grow a room.",
+      tooltip = "% chance that SLUMP will attempt to increase a room's size.",
       randomize_group="architecture",
     },
     
@@ -91,9 +91,9 @@ OB_MODULES["ui_slump_arch"] =
       increment = 1,
       default = 50,
       presets = "",
-      tooltip = "% chance that a room will attempt to fork as the level grows. "..
-                "0% should be a bunch of murder hallways. Forks are not guaranteed " ..
-                "to succeed, especially if the room bigification chance is increased.",
+      tooltip = "% chance that a room will attempt to fork as the level grows.",
+      longtip = "0% should look like a bunch of murder hallways. Forking is not guaranteed " ..
+                "to succeed, especially if the Room Bigification Chance is increased.",
       randomize_group="architecture",
     },
 
@@ -111,6 +111,7 @@ OB_MODULES["ui_slump_arch"] =
       valuator = "button",
       default = 0,
       tooltip = "Watch your step!",
+      longtip = "Will fill most rooms with damaging liquids.",
       randomize_group="architecture",
     },
     
@@ -119,8 +120,9 @@ OB_MODULES["ui_slump_arch"] =
       label = _("Quiet Start"),
       valuator = "button",
       default = 1,
-      tooltip = "Prevents monsters from spawning in the starting room. Monsters in other rooms may still have" ..
-                " a line of sight to you, so be careful!"
+      tooltip = "Prevents monsters from spawning in the starting room.",
+      longtip = "Monsters in other rooms may still have" ..
+      " a line of sight to you, so be careful!",
     }
   }
 }
