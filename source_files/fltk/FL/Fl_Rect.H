@@ -17,7 +17,7 @@
 #ifndef Fl_Rect_H
 #define Fl_Rect_H
 
-#include <FL/Fl_Widget.H>       // for c'tor based on Fl_Widget
+#include <FL/Fl_Widget.H> // for c'tor based on Fl_Widget
 
 /**
   Rectangle with standard FLTK coordinates (X, Y, W, H).
@@ -35,33 +35,47 @@ class FL_EXPORT Fl_Rect {
   int h_;
 
 public:
-
   /** The default constructor creates an empty rectangle (x = y = w = h = 0). */
   Fl_Rect()
-          : x_(0), y_(0), w_(0), h_(0) {}
+    : x_(0)
+    , y_(0)
+    , w_(0)
+    , h_(0) {}
 
   /** This constructor creates a rectangle with x = y = 0 and
     the given width and height. */
   Fl_Rect(int W, int H)
-          : x_(0), y_(0), w_(W), h_(H) {}
+    : x_(0)
+    , y_(0)
+    , w_(W)
+    , h_(H) {}
 
   /** This constructor creates a rectangle with the given x,y coordinates
     and the given width and height. */
   Fl_Rect(int X, int Y, int W, int H)
-          : x_(X), y_(Y), w_(W), h_(H) {}
+    : x_(X)
+    , y_(Y)
+    , w_(W)
+    , h_(H) {}
 
   /** This constructor creates a rectangle based on a widget's position and size. */
-  Fl_Rect (const Fl_Widget& widget)
-          : x_(widget.x()), y_(widget.y()), w_(widget.w()), h_(widget.h()) {}
+  Fl_Rect(const Fl_Widget &widget)
+    : x_(widget.x())
+    , y_(widget.y())
+    , w_(widget.w())
+    , h_(widget.h()) {}
 
   /** This constructor creates a rectangle based on a widget's position and size. */
-  Fl_Rect (const Fl_Widget* const widget)
-          : x_(widget->x()), y_(widget->y()), w_(widget->w()), h_(widget->h()) {}
+  Fl_Rect(const Fl_Widget *const widget)
+    : x_(widget->x())
+    , y_(widget->y())
+    , w_(widget->w())
+    , h_(widget->h()) {}
 
-  int x() const { return x_; }          ///< gets the x coordinate (left edge)
-  int y() const { return y_; }          ///< gets the y coordinate (top edge)
-  int w() const { return w_; }          ///< gets the width
-  int h() const { return h_; }          ///< gets the height
+  int x() const { return x_; } ///< gets the x coordinate (left edge)
+  int y() const { return y_; } ///< gets the y coordinate (top edge)
+  int w() const { return w_; } ///< gets the width
+  int h() const { return h_; } ///< gets the height
 
   /** gets the right edge (x + w).
     \note r() and b() are coordinates \b outside the area of the rectangle.
@@ -72,10 +86,10 @@ public:
   */
   int b() const { return y_ + h_; }
 
-  void x(int X) { x_ = X; }             ///< sets the x coordinate (left edge)
-  void y(int Y) { y_ = Y; }             ///< sets the y coordinate (top edge)
-  void w(int W) { w_ = W; }             ///< sets the width
-  void h(int H) { h_ = H; }             ///< sets the height
+  void x(int X) { x_ = X; } ///< sets the x coordinate (left edge)
+  void y(int Y) { y_ = Y; } ///< sets the y coordinate (top edge)
+  void w(int W) { w_ = W; } ///< sets the width
+  void h(int H) { h_ = H; } ///< sets the height
 
 }; // class Fl_Rect
 

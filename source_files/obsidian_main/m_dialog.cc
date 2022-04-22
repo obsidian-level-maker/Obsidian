@@ -515,7 +515,7 @@ std::string UI_LogViewer::GetSelectedText() const {
             continue;
         }
 
-        buf.append(line_text).append("\n");        
+        buf.append(line_text).append("\n");
     }
 
     return buf;
@@ -584,7 +584,7 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
 
     chooser.filter("Text files\t*.txt");
 
-    tryagain:;
+tryagain:;
 
     if (!last_directory.empty()) {
         chooser.directory(last_directory.generic_string().c_str());
@@ -612,8 +612,11 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
     }
 
     if (std::filesystem::exists(filename)) {
-        switch ( fl_choice(_("%s already exists.\nChoose Yes to overwrite or No to choose a new filename."), _("Yes"), _("No"), 0, filename.generic_string().c_str()) ) {
-            case 0: 
+        switch (fl_choice(_("%s already exists.\nChoose Yes to overwrite or No "
+                            "to choose a new filename."),
+                          _("Yes"), _("No"), 0,
+                          filename.generic_string().c_str())) {
+            case 0:
                 std::filesystem::remove(filename);
                 break;
             case 1:
@@ -655,8 +658,12 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
         }
         if (zip_buf) {
             if (std::filesystem::exists(zip_filename)) {
-                switch ( fl_choice(_("Log zipping is enabled, but %s already exists.\nOverwrite (original .txt file will still be kept) ?"), _("Yes"), _("No"), 0, zip_filename.generic_string().c_str()) ) {
-                    case 0: 
+                switch (fl_choice(_("Log zipping is enabled, but %s already "
+                                    "exists.\nOverwrite (original .txt file "
+                                    "will still be kept) ?"),
+                                  _("Yes"), _("No"), 0,
+                                  zip_filename.generic_string().c_str())) {
+                    case 0:
                         std::filesystem::remove(zip_filename);
                         break;
                     case 1:
@@ -665,21 +672,19 @@ void UI_LogViewer::save_callback(Fl_Widget *w, void *data) {
             }
             if (mz_zip_add_mem_to_archive_file_in_place(
                     zip_filename.string().c_str(),
-                    filename.filename().string().c_str(), zip_buf,
-                    zip_length, NULL, 0, MZ_DEFAULT_COMPRESSION)) {
+                    filename.filename().string().c_str(), zip_buf, zip_length,
+                    NULL, 0, MZ_DEFAULT_COMPRESSION)) {
                 std::filesystem::remove(filename);
                 delete[] zip_buf;
             } else {
-                DLG_ShowError(
-                    _("Zipping logs to %s failed! Retaining original "
-                    "logs.\n"),
-                    filename.generic_string().c_str());
+                DLG_ShowError(_("Zipping logs to %s failed! Retaining original "
+                                "logs.\n"),
+                              filename.generic_string().c_str());
             }
         } else {
-            DLG_ShowError(
-                _("Zipping logs to %s failed! Retaining original "
-                "logs.\n"),
-                filename.generic_string().c_str());
+            DLG_ShowError(_("Zipping logs to %s failed! Retaining original "
+                            "logs.\n"),
+                          filename.generic_string().c_str());
         }
     }
 }

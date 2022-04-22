@@ -21,15 +21,10 @@
 #include <stdio.h>
 
 /** A drawing surface producing a Scalable Vector Graphics (SVG) file.
- This drawing surface allows to store any FLTK graphics in vectorial form in a "Scalable Vector Graphics" file.
- \n Usage example:
- \code
-   Fl_Window *win = ...// Window to draw to a .svg file
-   int ww = win->decorated_w();
-   int wh = win->decorated_h();
-   FILE *svg = fl_fopen("/path/to/mywindow.svg", "w");
-   if (svg) {
-     Fl_SVG_File_Surface *surface = new Fl_SVG_File_Surface(ww, wh, svg);
+ This drawing surface allows to store any FLTK graphics in vectorial form in a "Scalable Vector
+ Graphics" file. \n Usage example: \code Fl_Window *win = ...// Window to draw to a .svg file int ww
+ = win->decorated_w(); int wh = win->decorated_h(); FILE *svg = fl_fopen("/path/to/mywindow.svg",
+ "w"); if (svg) { Fl_SVG_File_Surface *surface = new Fl_SVG_File_Surface(ww, wh, svg);
      Fl_Surface_Device::push_current(surface);
      fl_color(FL_WHITE);
      fl_rectf(0, 0, ww, wh);
@@ -41,23 +36,26 @@
  \endcode
  \note FLTK uses the PNG and JPEG libraries to encode images to the SVG format.
  For this reason, class Fl_SVG_File_Surface is placed in the fltk_images library.
- If JPEG is not available at application build time, PNG is enough (but produces a quite larger output).
- If PNG isn't available either, images don't appear in the SVG output.
+ If JPEG is not available at application build time, PNG is enough (but produces a quite larger
+ output). If PNG isn't available either, images don't appear in the SVG output.
 */
 class FL_EXPORT Fl_SVG_File_Surface : public Fl_Widget_Surface {
   int width_, height_;
-  int (*closef_)(FILE*);
+  int (*closef_)(FILE *);
+
 public:
   /**
   Constructor of the SVG drawing surface.
   \param width,height Width and height of the graphics area in FLTK drawing units
-  \param svg A writable FILE pointer where the SVG data are to be sent. The resulting SVG data are not complete until after destruction of the Fl_SVG_File_Surface object or after calling close().
+  \param svg A writable FILE pointer where the SVG data are to be sent. The resulting SVG data are
+  not complete until after destruction of the Fl_SVG_File_Surface object or after calling close().
   \param closef If not NULL,  the destructor and close() will call \p closef(svg) after all
     SVG data has been sent. If NULL, \p fclose(svg) is called instead. This allows to close the FILE
-    pointer by, e.g., \p pclose, or, using a function such as \p "int keep_open(FILE*){return 0;}", to keep it open after
-    completion of all output to \p svg. Function \p closef should return non zero to indicate an error.
+    pointer by, e.g., \p pclose, or, using a function such as \p "int keep_open(FILE*){return 0;}",
+  to keep it open after completion of all output to \p svg. Function \p closef should return non
+  zero to indicate an error.
    */
-  Fl_SVG_File_Surface(int width, int height, FILE *svg, int (*closef)(FILE*) = NULL);
+  Fl_SVG_File_Surface(int width, int height, FILE *svg, int (*closef)(FILE *) = NULL);
   /**
    Destructor.
    The underlying FILE pointer is processed as by close().
@@ -71,9 +69,9 @@ public:
   virtual void untranslate();
   virtual int printable_rect(int *w, int *h);
   /** Closes the FILE pointer where SVG data is output.
-  The underlying FILE is closed by function fclose() unless another function was set at object's construction time.
-  The only operation possible after this on the Fl_SVG_File_Surface object is its destruction.
-  \return The value returned by the closing function call. */
+  The underlying FILE is closed by function fclose() unless another function was set at object's
+  construction time. The only operation possible after this on the Fl_SVG_File_Surface object is its
+  destruction. \return The value returned by the closing function call. */
   int close();
 };
 

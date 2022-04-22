@@ -37,10 +37,12 @@ static int obj_head, obj_tail;
 
 void Fl_Widget::default_callback(Fl_Widget *widget, void * /*v*/) {
   obj_queue[obj_head++] = widget;
-  if (obj_head >= QUEUE_SIZE) obj_head = 0;
+  if (obj_head >= QUEUE_SIZE)
+    obj_head = 0;
   if (obj_head == obj_tail) {
     obj_tail++;
-    if (obj_tail >= QUEUE_SIZE) obj_tail = 0;
+    if (obj_tail >= QUEUE_SIZE)
+      obj_tail = 0;
   }
 }
 /**
@@ -64,9 +66,11 @@ void Fl_Widget::default_callback(Fl_Widget *widget, void * /*v*/) {
     \see Fl_Widget::default_callback()
 */
 Fl_Widget *Fl::readqueue() {
-  if (obj_tail==obj_head) return 0;
+  if (obj_tail == obj_head)
+    return 0;
   Fl_Widget *widget = obj_queue[obj_tail++];
-  if (obj_tail >= QUEUE_SIZE) obj_tail = 0;
+  if (obj_tail >= QUEUE_SIZE)
+    obj_tail = 0;
   return widget;
 }
 /*
@@ -78,22 +82,26 @@ Fl_Widget *Fl::readqueue() {
 */
 static void cleanup_readqueue(Fl_Widget *w) {
 
-  if (obj_tail==obj_head) return;
+  if (obj_tail == obj_head)
+    return;
 
   // Read the entire queue and copy over all valid entries.
   // The new head will be determined after the last copied entry.
 
-  int old_head = obj_head;      // save newest entry
-  int entry = obj_tail;         // oldest entry
-  obj_head = obj_tail;          // new queue start
+  int old_head = obj_head; // save newest entry
+  int entry = obj_tail;    // oldest entry
+  obj_head = obj_tail;     // new queue start
   for (;;) {
     Fl_Widget *o = obj_queue[entry++];
-    if (entry >= QUEUE_SIZE) entry = 0;
+    if (entry >= QUEUE_SIZE)
+      entry = 0;
     if (o != w) { // valid entry
       obj_queue[obj_head++] = o;
-      if (obj_head >= QUEUE_SIZE) obj_head = 0;
+      if (obj_head >= QUEUE_SIZE)
+        obj_head = 0;
     } // valid entry
-    if (entry == old_head) break;
+    if (entry == old_head)
+      break;
   }
   return;
 }
@@ -106,59 +114,72 @@ int Fl_Widget::handle(int) {
 /** Default font size for widgets */
 Fl_Fontsize FL_NORMAL_SIZE = 14;
 
-Fl_Widget::Fl_Widget(int X, int Y, int W, int H, const char* L) {
+Fl_Widget::Fl_Widget(int X, int Y, int W, int H, const char *L) {
 
-  x_ = X; y_ = Y; w_ = W; h_ = H;
+  x_ = X;
+  y_ = Y;
+  w_ = W;
+  h_ = H;
 
-  label_.value   = L;
-  label_.image   = 0;
+  label_.value = L;
+  label_.image = 0;
   label_.deimage = 0;
-  label_.type    = FL_NORMAL_LABEL;
-  label_.font    = FL_HELVETICA;
-  label_.size    = FL_NORMAL_SIZE;
-  label_.color   = FL_FOREGROUND_COLOR;
-  label_.align_  = FL_ALIGN_CENTER;
-  tooltip_       = 0;
-  callback_      = default_callback;
-  user_data_     = 0;
-  type_          = 0;
-  flags_         = VISIBLE_FOCUS;
-  damage_        = 0;
-  box_           = FL_NO_BOX;
-  color_         = FL_GRAY;
-  color2_        = FL_GRAY;
-  when_          = FL_WHEN_RELEASE;
+  label_.type = FL_NORMAL_LABEL;
+  label_.font = FL_HELVETICA;
+  label_.size = FL_NORMAL_SIZE;
+  label_.color = FL_FOREGROUND_COLOR;
+  label_.align_ = FL_ALIGN_CENTER;
+  tooltip_ = 0;
+  callback_ = default_callback;
+  user_data_ = 0;
+  type_ = 0;
+  flags_ = VISIBLE_FOCUS;
+  damage_ = 0;
+  box_ = FL_NO_BOX;
+  color_ = FL_GRAY;
+  color2_ = FL_GRAY;
+  when_ = FL_WHEN_RELEASE;
 
   parent_ = 0;
-  if (Fl_Group::current()) Fl_Group::current()->add(this);
+  if (Fl_Group::current())
+    Fl_Group::current()->add(this);
   if (!fl_graphics_driver) {
-    // Make sure fl_graphics_driver is initialized. Important if we are called by a static initializer.
+    // Make sure fl_graphics_driver is initialized. Important if we are called by a static
+    // initializer.
     Fl_Display_Device::display_device();
   }
 }
 
 void Fl_Widget::resize(int X, int Y, int W, int H) {
-  x_ = X; y_ = Y; w_ = W; h_ = H;
+  x_ = X;
+  y_ = Y;
+  w_ = W;
+  h_ = H;
 }
 
 // this is useful for parent widgets to call to resize children:
 int Fl_Widget::damage_resize(int X, int Y, int W, int H) {
-  if (x() == X && y() == Y && w() == W && h() == H) return 0;
+  if (x() == X && y() == Y && w() == W && h() == H)
+    return 0;
   resize(X, Y, W, H);
   redraw();
   return 1;
 }
 
 int Fl_Widget::take_focus() {
-  if (!takesevents()) return 0;
-  if (!visible_focus()) return 0;
-  if (!handle(FL_FOCUS)) return 0; // see if it wants it
-  if (contains(Fl::focus())) return 1; // it called Fl::focus for us
+  if (!takesevents())
+    return 0;
+  if (!visible_focus())
+    return 0;
+  if (!handle(FL_FOCUS))
+    return 0; // see if it wants it
+  if (contains(Fl::focus()))
+    return 1; // it called Fl::focus for us
   Fl::focus(this);
   return 1;
 }
 
-extern void fl_throw_focus(Fl_Widget*); // in Fl_x.cxx
+extern void fl_throw_focus(Fl_Widget *); // in Fl_x.cxx
 
 /**
    Destroys the widget, taking care of throwing focus before if any.
@@ -167,19 +188,23 @@ extern void fl_throw_focus(Fl_Widget*); // in Fl_x.cxx
 */
 Fl_Widget::~Fl_Widget() {
   Fl::clear_widget_pointer(this);
-  if (flags() & COPIED_LABEL) free((void *)(label_.value));
-  if (flags() & COPIED_TOOLTIP) free((void *)(tooltip_));
+  if (flags() & COPIED_LABEL)
+    free((void *)(label_.value));
+  if (flags() & COPIED_TOOLTIP)
+    free((void *)(tooltip_));
   // remove from parent group
-  if (parent_) parent_->remove(this);
+  if (parent_)
+    parent_->remove(this);
 #ifdef DEBUG_DELETE
   if (parent_) { // this should never happen
-    printf("*** Fl_Widget: parent_->remove(this) failed [%p,%p]\n",parent_,this);
+    printf("*** Fl_Widget: parent_->remove(this) failed [%p,%p]\n", parent_, this);
   }
-#endif // DEBUG_DELETE
+#endif         // DEBUG_DELETE
   parent_ = 0; // Don't throw focus to a parent widget.
   fl_throw_focus(this);
   // remove stale entries from default callback queue (Fl::readqueue())
-  if (callback_ == default_callback) cleanup_readqueue(this);
+  if (callback_ == default_callback)
+    cleanup_readqueue(this);
 }
 
 /**
@@ -211,22 +236,24 @@ Fl_Widget::~Fl_Widget() {
   \see Fl_Widget::draw_focus(Fl_Boxtype, int, int, int, int) const
 */
 void Fl_Widget::draw_focus(Fl_Boxtype bt, int X, int Y, int W, int H, Fl_Color bg) const {
-  if (!Fl::visible_focus()) return;
-  if (!visible_focus()) return;
+  if (!Fl::visible_focus())
+    return;
+  if (!visible_focus())
+    return;
   switch (bt) {
     case FL_DOWN_BOX:
     case FL_DOWN_FRAME:
     case FL_THIN_DOWN_BOX:
     case FL_THIN_DOWN_FRAME:
-      X ++;
-      Y ++;
+      X++;
+      Y++;
     default:
       break;
   }
   X += Fl::box_dx(bt);
   Y += Fl::box_dy(bt);
-  W -= Fl::box_dw(bt)+1;
-  H -= Fl::box_dh(bt)+1;
+  W -= Fl::box_dw(bt) + 1;
+  H -= Fl::box_dh(bt) + 1;
 
   Fl_Color savecolor = fl_color();
   fl_color(fl_contrast(FL_BLACK, bg));
@@ -241,7 +268,8 @@ void Fl_Widget::activate() {
       redraw();
       redraw_label();
       handle(FL_ACTIVATE);
-      if (inside(Fl::focus())) Fl::focus()->take_focus();
+      if (inside(Fl::focus()))
+        Fl::focus()->take_focus();
     }
   }
 }
@@ -259,8 +287,9 @@ void Fl_Widget::deactivate() {
 }
 
 int Fl_Widget::active_r() const {
-  for (const Fl_Widget* o = this; o; o = o->parent())
-    if (!o->active()) return 0;
+  for (const Fl_Widget *o = this; o; o = o->parent())
+    if (!o->active())
+      return 0;
   return 1;
 }
 
@@ -271,7 +300,8 @@ void Fl_Widget::show() {
       redraw();
       redraw_label();
       handle(FL_SHOW);
-      if (inside(Fl::focus())) Fl::focus()->take_focus();
+      if (inside(Fl::focus()))
+        Fl::focus()->take_focus();
     }
   }
 }
@@ -280,7 +310,10 @@ void Fl_Widget::hide() {
   if (visible_r()) {
     set_flag(INVISIBLE);
     for (Fl_Widget *p = parent(); p; p = p->parent())
-      if (p->box() || !p->parent()) {p->redraw(); break;}
+      if (p->box() || !p->parent()) {
+        p->redraw();
+        break;
+      }
     handle(FL_HIDE);
     fl_throw_focus(this);
   } else {
@@ -289,15 +322,18 @@ void Fl_Widget::hide() {
 }
 
 int Fl_Widget::visible_r() const {
-  for (const Fl_Widget* o = this; o; o = o->parent())
-    if (!o->visible()) return 0;
+  for (const Fl_Widget *o = this; o; o = o->parent())
+    if (!o->visible())
+      return 0;
   return 1;
 }
 
 // return true if widget is inside (or equal to) this:
 // Returns false for null widgets.
 int Fl_Widget::contains(const Fl_Widget *o) const {
-  for (; o; o = o->parent_) if (o == this) return 1;
+  for (; o; o = o->parent_)
+    if (o == this)
+      return 1;
   return 0;
 }
 
@@ -310,7 +346,7 @@ void Fl_Widget::label(const char *a) {
     free((void *)(label_.value));
     clear_flag(COPIED_LABEL);
   }
-  label_.value=a;
+  label_.value = a;
   redraw_label();
 }
 
@@ -351,10 +387,12 @@ void Fl_Widget::copy_label(const char *a) {
 */
 
 void Fl_Widget::do_callback(Fl_Widget *widget, void *arg) {
-  if (!callback_) return;
+  if (!callback_)
+    return;
   Fl_Widget_Tracker wp(this);
   callback_(widget, arg);
-  if (wp.deleted()) return;
+  if (wp.deleted())
+    return;
   if (callback_ != default_callback)
     clear_changed();
 }

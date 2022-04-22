@@ -179,7 +179,17 @@ class thing_c {
     std::array<u8_t, 5> args;
 
    public:
-    thing_c() : index(-1), x(), y(), type(), options(), angle(), tid(), height(), special(), args() {}
+    thing_c()
+        : index(-1),
+          x(),
+          y(),
+          type(),
+          options(),
+          angle(),
+          tid(),
+          height(),
+          special(),
+          args() {}
 };
 
 class edge_c {

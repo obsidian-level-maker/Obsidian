@@ -26,9 +26,9 @@
 */
 
 #ifdef __GNUC__
-#  define __fl_attr(x) __attribute__ (x)
+#define __fl_attr(x) __attribute__(x)
 #else
-#  define __fl_attr(x)
+#define __fl_attr(x)
 #endif
 
 #endif /* !_FL_fl_attr_h_ */

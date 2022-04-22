@@ -64,48 +64,60 @@ Fl_Type *in_this_only; // set if menu popped-up in window
 
 // ---- various functions
 
-void select_all_cb(Fl_Widget *,void *) {
+void select_all_cb(Fl_Widget *, void *) {
   Fl_Type *p = Fl_Type::current ? Fl_Type::current->parent : 0;
   if (in_this_only) {
     Fl_Type *t = p;
-    for (; t && t != in_this_only; t = t->parent) {/*empty*/}
-    if (t != in_this_only) p = in_this_only;
+    for (; t && t != in_this_only; t = t->parent) { /*empty*/
+    }
+    if (t != in_this_only)
+      p = in_this_only;
   }
   for (;;) {
     if (p) {
       int foundany = 0;
-      for (Fl_Type *t = p->next; t && t->level>p->level; t = t->next) {
-        if (!t->new_selected) {widget_browser->select(t,1,0); foundany = 1;}
+      for (Fl_Type *t = p->next; t && t->level > p->level; t = t->next) {
+        if (!t->new_selected) {
+          widget_browser->select(t, 1, 0);
+          foundany = 1;
+        }
       }
-      if (foundany) break;
+      if (foundany)
+        break;
       p = p->parent;
     } else {
       for (Fl_Type *t = Fl_Type::first; t; t = t->next)
-        widget_browser->select(t,1,0);
+        widget_browser->select(t, 1, 0);
       break;
     }
   }
   selection_changed(p);
 }
 
-void select_none_cb(Fl_Widget *,void *) {
+void select_none_cb(Fl_Widget *, void *) {
   Fl_Type *p = Fl_Type::current ? Fl_Type::current->parent : 0;
   if (in_this_only) {
     Fl_Type *t = p;
-    for (; t && t != in_this_only; t = t->parent) {/*empty*/}
-    if (t != in_this_only) p = in_this_only;
+    for (; t && t != in_this_only; t = t->parent) { /*empty*/
+    }
+    if (t != in_this_only)
+      p = in_this_only;
   }
   for (;;) {
     if (p) {
       int foundany = 0;
-      for (Fl_Type *t = p->next; t && t->level>p->level; t = t->next) {
-        if (t->new_selected) {widget_browser->select(t,0,0); foundany = 1;}
+      for (Fl_Type *t = p->next; t && t->level > p->level; t = t->next) {
+        if (t->new_selected) {
+          widget_browser->select(t, 0, 0);
+          foundany = 1;
+        }
       }
-      if (foundany) break;
+      if (foundany)
+        break;
       p = p->parent;
     } else {
       for (Fl_Type *t = Fl_Type::first; t; t = t->next)
-        widget_browser->select(t,0,0);
+        widget_browser->select(t, 0, 0);
       break;
     }
   }
@@ -115,14 +127,15 @@ void select_none_cb(Fl_Widget *,void *) {
 /**
  Callback to move all selected items before their previous unselected sibling.
  */
-void earlier_cb(Fl_Widget*,void*) {
+void earlier_cb(Fl_Widget *, void *) {
   Fl_Type *f;
   int mod = 0;
-  for (f = Fl_Type::first; f; ) {
-    Fl_Type* nxt = f->next;
+  for (f = Fl_Type::first; f;) {
+    Fl_Type *nxt = f->next;
     if (f->selected) {
-      Fl_Type* g;
-      for (g = f->prev; g && g->level > f->level; g = g->prev) {/*empty*/}
+      Fl_Type *g;
+      for (g = f->prev; g && g->level > f->level; g = g->prev) { /*empty*/
+      }
       if (g && g->level == f->level && !g->selected) {
         f->move_before(g);
         mod = 1;
@@ -130,7 +143,8 @@ void earlier_cb(Fl_Widget*,void*) {
     }
     f = nxt;
   }
-  if (mod) set_modflag(1);
+  if (mod)
+    set_modflag(1);
   widget_browser->display(Fl_Type::current);
   widget_browser->rebuild();
 }
@@ -138,14 +152,15 @@ void earlier_cb(Fl_Widget*,void*) {
 /**
  Callback to move all selected items after their next unselected sibling.
  */
-void later_cb(Fl_Widget*,void*) {
+void later_cb(Fl_Widget *, void *) {
   Fl_Type *f;
   int mod = 0;
-  for (f = Fl_Type::last; f; ) {
-    Fl_Type* prv = f->prev;
+  for (f = Fl_Type::last; f;) {
+    Fl_Type *prv = f->prev;
     if (f->selected) {
-      Fl_Type* g;
-      for (g = f->next; g && g->level > f->level; g = g->next) {/*empty*/}
+      Fl_Type *g;
+      for (g = f->next; g && g->level > f->level; g = g->next) { /*empty*/
+      }
       if (g && g->level == f->level && !g->selected) {
         g->move_before(f);
         mod = 1;
@@ -153,15 +168,17 @@ void later_cb(Fl_Widget*,void*) {
     }
     f = prv;
   }
-  if (mod) set_modflag(1);
+  if (mod)
+    set_modflag(1);
   widget_browser->display(Fl_Type::current);
   widget_browser->rebuild();
 }
 
 static void delete_children(Fl_Type *p) {
   Fl_Type *f;
-  for (f = p; f && f->next && f->next->level > p->level; f = f->next) {/*empty*/}
-  for (; f != p; ) {
+  for (f = p; f && f->next && f->next->level > p->level; f = f->next) { /*empty*/
+  }
+  for (; f != p;) {
     Fl_Type *g = f->prev;
     delete f;
     f = g;
@@ -176,12 +193,13 @@ void delete_all(int selected_only) {
       Fl_Type *g = f->next;
       delete f;
       f = g;
-    } else f = f->next;
+    } else
+      f = f->next;
   }
-  if(!selected_only) {
+  if (!selected_only) {
     // FIXME: undo/redo uses this function, resetting the following preferences randomly
-    include_H_from_C=1;
-    use_FL_COMMAND=0;
+    include_H_from_C = 1;
+    use_FL_COMMAND = 0;
     utf8_in_src = 0;
     avoid_early_includes = 0;
     // reset the setting for the external shell command
@@ -196,25 +214,34 @@ void delete_all(int selected_only) {
 
 // update a string member:
 // replace a string pointer with new value, strips leading/trailing blanks:
-int storestring(const char *n, const char * & p, int nostrip) {
-  if (n == p) return 0;
+int storestring(const char *n, const char *&p, int nostrip) {
+  if (n == p)
+    return 0;
   undo_checkpoint();
   int length = 0;
   if (n) { // see if blank, strip leading & trailing blanks
-    if (!nostrip) while (isspace((int)(unsigned char)*n)) n++;
+    if (!nostrip)
+      while (isspace((int)(unsigned char)*n))
+        n++;
     const char *e = n + strlen(n);
-    if (!nostrip) while (e > n && isspace((int)(unsigned char)*(e-1))) e--;
-    length = int(e-n);
-    if (!length) n = 0;
+    if (!nostrip)
+      while (e > n && isspace((int)(unsigned char)*(e - 1)))
+        e--;
+    length = int(e - n);
+    if (!length)
+      n = 0;
   }
-  if (n == p) return 0;
-  if (n && p && !strncmp(n,p,length) && !p[length]) return 0;
-  if (p) free((void *)p);
+  if (n == p)
+    return 0;
+  if (n && p && !strncmp(n, p, length) && !p[length])
+    return 0;
+  if (p)
+    free((void *)p);
   if (!n || !*n) {
     p = 0;
   } else {
-    char *q = (char *)malloc(length+1);
-    strlcpy(q,n,length+1);
+    char *q = (char *)malloc(length + 1);
+    strlcpy(q, n, length + 1);
     p = q;
   }
   set_modflag(1);
@@ -224,10 +251,13 @@ int storestring(const char *n, const char * & p, int nostrip) {
 void fixvisible(Fl_Type *p) {
   Fl_Type *t = p;
   for (;;) {
-    if (t->parent) t->visible = t->parent->visible && t->parent->open_;
-    else t->visible = 1;
+    if (t->parent)
+      t->visible = t->parent->visible && t->parent->open_;
+    else
+      t->visible = 1;
     t = t->next;
-    if (!t || t->level <= p->level) break;
+    if (!t || t->level <= p->level)
+      break;
   }
 }
 
@@ -285,32 +315,50 @@ Fl_Type::Fl_Type() {
  */
 Fl_Type::~Fl_Type() {
   // warning: destructor only works for widgets that have been add()ed.
-  if (prev) prev->next = next; else first = next;
-  if (next) next->prev = prev; else last = prev;
-  if (Fl_Type::last==this) Fl_Type::last = prev;
-  if (Fl_Type::first==this) Fl_Type::first = next;
-  if (current == this) current = 0;
-  if (parent) parent->remove_child(this);
-  if (name_) free((void*)name_);
-  if (label_) free((void*)label_);
-  if (callback_) free((void*)callback_);
-  if (user_data_) free((void*)user_data_);
-  if (user_data_type_) free((void*)user_data_type_);
-  if (comment_) free((void*)comment_);
+  if (prev)
+    prev->next = next;
+  else
+    first = next;
+  if (next)
+    next->prev = prev;
+  else
+    last = prev;
+  if (Fl_Type::last == this)
+    Fl_Type::last = prev;
+  if (Fl_Type::first == this)
+    Fl_Type::first = next;
+  if (current == this)
+    current = 0;
+  if (parent)
+    parent->remove_child(this);
+  if (name_)
+    free((void *)name_);
+  if (label_)
+    free((void *)label_);
+  if (callback_)
+    free((void *)callback_);
+  if (user_data_)
+    free((void *)user_data_);
+  if (user_data_type_)
+    free((void *)user_data_type_);
+  if (comment_)
+    free((void *)comment_);
 }
 
 // Return the previous sibling in the tree structure or NULL.
 Fl_Type *Fl_Type::prev_sibling() {
   Fl_Type *n;
-  for (n = prev; n && n->level > level; n = n->prev) ;
+  for (n = prev; n && n->level > level; n = n->prev)
+    ;
   return n;
 }
 
 // Return the next sibling in the tree structure or NULL.
 Fl_Type *Fl_Type::next_sibling() {
   Fl_Type *n;
-  for (n = next; n && n->level > level; n = n->next) ;
-  if (n->level==level)
+  for (n = next; n && n->level > level; n = n->next)
+    ;
+  if (n->level == level)
     return n;
   return 0;
 }
@@ -324,8 +372,8 @@ Fl_Type *Fl_Type::first_child() {
 }
 
 // Generate a descriptive text for this item, to put in browser & window titles
-const char* Fl_Type::title() {
-  const char* c = name();
+const char *Fl_Type::title() {
+  const char *c = name();
   if (c)
     return c;
   return type_name();
@@ -338,9 +386,9 @@ const char* Fl_Type::title() {
 Fl_Window_Type *Fl_Type::window() {
   if (!is_widget())
     return NULL;
-  for (Fl_Type *t = this; t; t=t->parent)
+  for (Fl_Type *t = this; t; t = t->parent)
     if (t->is_window())
-      return (Fl_Window_Type*)t;
+      return (Fl_Window_Type *)t;
   return NULL;
 }
 
@@ -351,9 +399,9 @@ Fl_Window_Type *Fl_Type::window() {
 Fl_Group_Type *Fl_Type::group() {
   if (!is_widget())
     return NULL;
-  for (Fl_Type *t = this; t; t=t->parent)
+  for (Fl_Type *t = this; t; t = t->parent)
     if (t->is_group())
-      return (Fl_Group_Type*)t;
+      return (Fl_Group_Type *)t;
   return NULL;
 }
 
@@ -369,24 +417,28 @@ Fl_Group_Type *Fl_Type::group() {
  \param[in] strategy is kAddAsLastChild or kAddAfterCurrent
  */
 void Fl_Type::add(Fl_Type *p, Strategy strategy) {
-  if (p && parent == p) return;
+  if (p && parent == p)
+    return;
   undo_checkpoint();
   parent = p;
   // 'this' is not in the Widget_Browser, so we must run the linked list to find the last entry
   Fl_Type *end = this;
-  while (end->next) end = end->next;
+  while (end->next)
+    end = end->next;
   // run the list again to set the future node levels
   Fl_Type *q; // insert 'this' before q
   int newlevel;
   if (p) {
     // find the last node that is a child or grandchild of p
-    for (q = p->next; q && q->level > p->level; q = q->next) {/*empty*/}
-    newlevel = p->level+1;
+    for (q = p->next; q && q->level > p->level; q = q->next) { /*empty*/
+    }
+    newlevel = p->level + 1;
   } else {
     q = 0;
     newlevel = 0;
   }
-  for (Fl_Type *t = this->next; t; t = t->next) t->level += (newlevel-level);
+  for (Fl_Type *t = this->next; t; t = t->next)
+    t->level += (newlevel - level);
   level = newlevel;
   // now link 'this' and its children before 'q', or last, if 'q' is NULL
   if (q) {
@@ -405,21 +457,22 @@ void Fl_Type::add(Fl_Type *p, Strategy strategy) {
     prev = end->next = 0;
   }
   // tell this that it was added, so it can update itself
-  if (p) p->add_child(this,0);
+  if (p)
+    p->add_child(this, 0);
   open_ = 1;
   fixvisible(this);
   set_modflag(1);
 
-  if (strategy==kAddAfterCurrent && current) {
+  if (strategy == kAddAfterCurrent && current) {
     // we have current, t is the new node, p is the parent
     // find the next child of the parent after current
-    //t->add(p); // add as a last child
+    // t->add(p); // add as a last child
     Fl_Type *cc = current;
-    for (cc = current->next; cc; cc=cc->next) {
-      if (cc->level<=this->level)
+    for (cc = current->next; cc; cc = cc->next) {
+      if (cc->level <= this->level)
         break;
     }
-    if (cc && cc->level==this->level && cc!=this) {
+    if (cc && cc->level == this->level && cc != this) {
       this->move_before(cc);
     }
     select(this, 1);
@@ -440,36 +493,46 @@ void Fl_Type::add(Fl_Type *p, Strategy strategy) {
 void Fl_Type::insert(Fl_Type *g) {
   // 'this' is not in the Widget_Browser, so we must run the linked list to find the last entry
   Fl_Type *end = this;
-  while (end->next) end = end->next;
+  while (end->next)
+    end = end->next;
   // 'this' will get the same parent as 'g'
   parent = g->parent;
   // run the list again to set the future node levels
   int newlevel = g->level;
   visible = g->visible;
-  for (Fl_Type *t = this->next; t; t = t->next) t->level += newlevel-level;
+  for (Fl_Type *t = this->next; t; t = t->next)
+    t->level += newlevel - level;
   level = newlevel;
   // insert this in the list before g
   prev = g->prev;
-  if (prev) prev->next = this; else first = this;
+  if (prev)
+    prev->next = this;
+  else
+    first = this;
   end->next = g;
   g->prev = end;
   fixvisible(this);
   // tell parent that it has a new child, so it can update itself
-  if (parent) parent->add_child(this, g);
+  if (parent)
+    parent->add_child(this, g);
   widget_browser->redraw();
 }
 
 // Return message number for I18N...
 int Fl_Type::msgnum() {
-  int           count;
-  Fl_Type       *p;
+  int count;
+  Fl_Type *p;
 
   for (count = 0, p = this; p;) {
-    if (p->label()) count ++;
-    if (p != this && p->is_widget() && ((Fl_Widget_Type *)p)->tooltip()) count ++;
+    if (p->label())
+      count++;
+    if (p != this && p->is_widget() && ((Fl_Widget_Type *)p)->tooltip())
+      count++;
 
-    if (p->prev) p = p->prev;
-    else p = p->parent;
+    if (p->prev)
+      p = p->prev;
+    else
+      p = p->parent;
   }
 
   return count;
@@ -505,7 +568,8 @@ Fl_Type *Fl_Type::remove() {
   Fl_Type *r = end->next;
   prev = end->next = 0;
   // allow the parent to update changes in the UI
-  if (parent) parent->remove_child(this);
+  if (parent)
+    parent->remove_child(this);
   parent = 0;
   // tell the widget_browser that we removed some nodes
   widget_browser->redraw();
@@ -515,38 +579,41 @@ Fl_Type *Fl_Type::remove() {
 
 void Fl_Type::name(const char *n) {
   int nostrip = is_comment();
-  if (storestring(n,name_,nostrip)) {
-    if (visible) widget_browser->redraw();
+  if (storestring(n, name_, nostrip)) {
+    if (visible)
+      widget_browser->redraw();
   }
 }
 
 void Fl_Type::label(const char *n) {
-  if (storestring(n,label_,1)) {
+  if (storestring(n, label_, 1)) {
     setlabel(label_);
-    if (visible && !name_) widget_browser->redraw();
+    if (visible && !name_)
+      widget_browser->redraw();
   }
 }
 
 void Fl_Type::callback(const char *n) {
-  storestring(n,callback_);
+  storestring(n, callback_);
 }
 
 void Fl_Type::user_data(const char *n) {
-  storestring(n,user_data_);
+  storestring(n, user_data_);
 }
 
 void Fl_Type::user_data_type(const char *n) {
-  storestring(n,user_data_type_);
+  storestring(n, user_data_type_);
 }
 
 void Fl_Type::comment(const char *n) {
-  if (storestring(n,comment_,1)) {
-    if (visible) widget_browser->redraw();
+  if (storestring(n, comment_, 1)) {
+    if (visible)
+      widget_browser->redraw();
   }
 }
 
 void Fl_Type::open() {
-  printf("Open of '%s' is not yet implemented\n",type_name());
+  printf("Open of '%s' is not yet implemented\n", type_name());
 }
 
 // returns pointer to whatever is after f & children
@@ -557,59 +624,70 @@ void Fl_Type::open() {
  The caller must make sure that the widget browser is rebuilt correctly.
  \param[in] g move \c this tree before \c g
  */
-void Fl_Type::move_before(Fl_Type* g) {
-  if (level != g->level) printf("move_before levels don't match! %d %d\n",
-                                level, g->level);
+void Fl_Type::move_before(Fl_Type *g) {
+  if (level != g->level)
+    printf("move_before levels don't match! %d %d\n", level, g->level);
   // Find the last child in the list
   Fl_Type *n;
-  for (n = next; n && n->level > level; n = n->next) ;
-  if (n == g) return;
+  for (n = next; n && n->level > level; n = n->next)
+    ;
+  if (n == g)
+    return;
   // now link this tree before g
   Fl_Type *l = n ? n->prev : Fl_Type::last;
   prev->next = n;
-  if (n) n->prev = prev; else Fl_Type::last = prev;
+  if (n)
+    n->prev = prev;
+  else
+    Fl_Type::last = prev;
   prev = g->prev;
   l->next = g;
-  if (prev) prev->next = this; else Fl_Type::first = this;
+  if (prev)
+    prev->next = this;
+  else
+    Fl_Type::first = this;
   g->prev = l;
   // tell parent that it has a new child, so it can update itself
-  if (parent && is_widget()) parent->move_child(this,g);
+  if (parent && is_widget())
+    parent->move_child(this, g);
 }
 
 
 // write a widget and all its children:
 void Fl_Type::write() {
-    write_indent(level);
-    write_word(type_name());
+  write_indent(level);
+  write_word(type_name());
 
-    if (is_class()) {
-      const char * p =  ((Fl_Class_Type*)this)->prefix();
-      if (p &&  strlen(p))
-        write_word(p);
-    }
+  if (is_class()) {
+    const char *p = ((Fl_Class_Type *)this)->prefix();
+    if (p && strlen(p))
+      write_word(p);
+  }
 
-    write_word(name());
-    write_open(level);
-    write_properties();
-    write_close(level);
-    if (!is_parent()) return;
-    // now do children:
-    write_open(level);
-    Fl_Type *child;
-    for (child = next; child && child->level > level; child = child->next)
-        if (child->level == level+1) child->write();
-    write_close(level);
+  write_word(name());
+  write_open(level);
+  write_properties();
+  write_close(level);
+  if (!is_parent())
+    return;
+  // now do children:
+  write_open(level);
+  Fl_Type *child;
+  for (child = next; child && child->level > level; child = child->next)
+    if (child->level == level + 1)
+      child->write();
+  write_close(level);
 }
 
 void Fl_Type::write_properties() {
   // repeat this for each attribute:
   if (label()) {
-    write_indent(level+1);
+    write_indent(level + 1);
     write_word("label");
     write_word(label());
   }
   if (user_data()) {
-    write_indent(level+1);
+    write_indent(level + 1);
     write_word("user_data");
     write_word(user_data());
   }
@@ -618,52 +696,55 @@ void Fl_Type::write_properties() {
     write_word(user_data_type());
   }
   if (callback()) {
-    write_indent(level+1);
+    write_indent(level + 1);
     write_word("callback");
     write_word(callback());
   }
   if (comment()) {
-    write_indent(level+1);
+    write_indent(level + 1);
     write_word("comment");
     write_word(comment());
   }
-  if (is_parent() && open_) write_word("open");
-  if (selected) write_word("selected");
+  if (is_parent() && open_)
+    write_word("open");
+  if (selected)
+    write_word("selected");
 }
 
 void Fl_Type::read_property(const char *c) {
-  if (!strcmp(c,"label"))
+  if (!strcmp(c, "label"))
     label(read_word());
-  else if (!strcmp(c,"user_data"))
+  else if (!strcmp(c, "user_data"))
     user_data(read_word());
-  else if (!strcmp(c,"user_data_type"))
+  else if (!strcmp(c, "user_data_type"))
     user_data_type(read_word());
-  else if (!strcmp(c,"callback"))
+  else if (!strcmp(c, "callback"))
     callback(read_word());
-  else if (!strcmp(c,"comment"))
+  else if (!strcmp(c, "comment"))
     comment(read_word());
-  else if (!strcmp(c,"open"))
+  else if (!strcmp(c, "open"))
     open_ = 1;
-  else if (!strcmp(c,"selected"))
-    select(this,1);
+  else if (!strcmp(c, "selected"))
+    select(this, 1);
   else
     read_error("Unknown property \"%s\"", c);
 }
 
-int Fl_Type::read_fdesign(const char*, const char*) {return 0;}
+int Fl_Type::read_fdesign(const char *, const char *) {
+  return 0;
+}
 
 /**
  Write a comment into the header file.
  \param[in] pre indent the comment by this string
 */
-void Fl_Type::write_comment_h(const char *pre)
-{
+void Fl_Type::write_comment_h(const char *pre) {
   if (comment() && *comment()) {
     write_h("%s/**\n", pre);
     const char *s = comment();
     write_h("%s ", pre);
-    while(*s) {
-      if (*s=='\n') {
+    while (*s) {
+      if (*s == '\n') {
         if (s[1]) {
           write_h("\n%s ", pre);
         }
@@ -679,14 +760,13 @@ void Fl_Type::write_comment_h(const char *pre)
 /**
   Write a comment into the source file.
 */
-void Fl_Type::write_comment_c(const char *pre)
-{
+void Fl_Type::write_comment_c(const char *pre) {
   if (comment() && *comment()) {
     write_c("%s/**\n", pre);
     const char *s = comment();
     write_c("%s ", pre);
-    while(*s) {
-      if (*s=='\n') {
+    while (*s) {
+      if (*s == '\n') {
         if (s[1]) {
           write_c("\n%s ", pre);
         }
@@ -702,23 +782,24 @@ void Fl_Type::write_comment_c(const char *pre)
 /**
   Write a comment into the source file.
 */
-void Fl_Type::write_comment_inline_c(const char *pre)
-{
+void Fl_Type::write_comment_inline_c(const char *pre) {
   if (comment() && *comment()) {
     const char *s = comment();
-    if (strchr(s, '\n')==0L) {
+    if (strchr(s, '\n') == 0L) {
       // single line comment
-      if (pre) write_c("%s", pre);
+      if (pre)
+        write_c("%s", pre);
       write_c("// %s\n", s);
-      if (!pre) write_c("%s", indent_plus(1));
+      if (!pre)
+        write_c("%s", indent_plus(1));
     } else {
-      write_c("%s/*\n", pre?pre:"");
+      write_c("%s/*\n", pre ? pre : "");
       if (pre)
         write_c("%s ", pre);
       else
         write_c("%s ", indent_plus(1));
-      while(*s) {
-        if (*s=='\n') {
+      while (*s) {
+        if (*s == '\n') {
           if (s[1]) {
             if (pre)
               write_c("\n%s ", pre);
@@ -753,14 +834,12 @@ Fl_Widget *Fl_Type::enter_live_mode(int) {
   Release all resources created when entering live mode.
   \see enter_live_mode()
 */
-void Fl_Type::leave_live_mode() {
-}
+void Fl_Type::leave_live_mode() {}
 
 /**
   Copy all needed properties for this type into the live object.
 */
-void Fl_Type::copy_properties() {
-}
+void Fl_Type::copy_properties() {}
 
 /**
   Check whether callback \p cbname is declared anywhere else by the user.
@@ -770,8 +849,8 @@ void Fl_Type::copy_properties() {
   plain function or a member function within the same class and that
   the parameter types match.
  */
-int Fl_Type::user_defined(const char* cbname) const {
-  for (Fl_Type* p = Fl_Type::first; p ; p = p->next)
+int Fl_Type::user_defined(const char *cbname) const {
+  for (Fl_Type *p = Fl_Type::first; p; p = p->next)
     if (strcmp(p->type_name(), "Function") == 0 && p->name() != 0)
       if (strncmp(p->name(), cbname, strlen(cbname)) == 0)
         if (p->name()[strlen(cbname)] == '(')
@@ -780,21 +859,24 @@ int Fl_Type::user_defined(const char* cbname) const {
 }
 
 const char *Fl_Type::callback_name() {
-  if (is_name(callback())) return callback();
+  if (is_name(callback()))
+    return callback();
   return unique_id(this, "cb", name(), label());
 }
 
-const char* Fl_Type::class_name(const int need_nest) const {
-  Fl_Type* p = parent;
+const char *Fl_Type::class_name(const int need_nest) const {
+  Fl_Type *p = parent;
   while (p) {
     if (p->is_class()) {
       // see if we are nested in another class, we must fully-qualify name:
       // this is lame but works...
-      const char* q = 0;
-      if(need_nest) q=p->class_name(need_nest);
+      const char *q = 0;
+      if (need_nest)
+        q = p->class_name(need_nest);
       if (q) {
         static char s[256];
-        if (q != s) strlcpy(s, q, sizeof(s));
+        if (q != s)
+          strlcpy(s, q, sizeof(s));
         strlcat(s, "::", sizeof(s));
         strlcat(s, p->name(), sizeof(s));
         return s;
@@ -810,26 +892,23 @@ const char* Fl_Type::class_name(const int need_nest) const {
  If this Type resides inside a class, this function returns the class type, or null.
  */
 const Fl_Class_Type *Fl_Type::is_in_class() const {
-  Fl_Type* p = parent;
+  Fl_Type *p = parent;
   while (p) {
     if (p->is_class()) {
-      return (Fl_Class_Type*)p;
+      return (Fl_Class_Type *)p;
     }
     p = p->parent;
   }
   return 0;
 }
 
-void Fl_Type::write_static() {
-}
+void Fl_Type::write_static() {}
 
 void Fl_Type::write_code1() {
   write_h("// Header for %s\n", title());
   write_c("// Code for %s\n", title());
 }
 
-void Fl_Type::write_code2() {
-}
+void Fl_Type::write_code2() {}
 
 /// \}
-

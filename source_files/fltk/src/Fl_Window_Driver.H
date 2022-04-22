@@ -48,9 +48,9 @@ class Fl_RGB_Image;
  sure that the Graphics Driver will draw into the bitmap associated with
  this window.
 */
-class FL_EXPORT Fl_Window_Driver
-{
+class FL_EXPORT Fl_Window_Driver {
   friend class Fl_Window;
+
 private:
   static bool is_a_rescale_; // true when a top-level window is being rescaled
 
@@ -58,7 +58,7 @@ protected:
   Fl_Window *pWindow;
   struct shape_data_type;
   shape_data_type *shape_data_; ///< non-null means the window has a non-rectangular shape
-  void flush_Fl_Window(); // accessor to protected Fl_Window::flush()
+  void flush_Fl_Window();       // accessor to protected Fl_Window::flush()
 public:
   Fl_Window_Driver(Fl_Window *);
   virtual ~Fl_Window_Driver();
@@ -117,7 +117,8 @@ public:
   }
   /** for an Fl_Overlay_Window, sets the value of its overlay_ member variable */
   void overlay(Fl_Window *o) {
-    if (pWindow->as_overlay_window()) pWindow->as_overlay_window()->overlay_ = o;
+    if (pWindow->as_overlay_window())
+      pWindow->as_overlay_window()->overlay_ = o;
   }
 
   void resize_after_scale_change(int ns, float old_f, float new_f);
@@ -125,16 +126,18 @@ public:
   // --- window data
   virtual int decorated_w() { return w(); } // default, should be overidden by driver
   virtual int decorated_h() { return h(); }
-  virtual const Fl_Image* shape() { return NULL; }
+  virtual const Fl_Image *shape() { return NULL; }
 
   // --- window management
   virtual void take_focus();
   virtual void flush(); // the default implementation may be enough
   virtual void flush_double();
   virtual void flush_overlay();
-  /** Usable for platform-specific code executed before the platform-independent part of Fl_Window::draw() */
+  /** Usable for platform-specific code executed before the platform-independent part of
+   * Fl_Window::draw() */
   virtual void draw_begin();
-  /** Usable for platform-specific code executed after the platform-independent part of Fl_Window::draw() */
+  /** Usable for platform-specific code executed after the platform-independent part of
+   * Fl_Window::draw() */
   virtual void draw_end();
   void draw();
   virtual void make_current();
@@ -154,7 +157,7 @@ public:
   virtual void use_border();
   virtual void size_range();
   virtual void iconize() {}
-  virtual void decoration_sizes(int *top, int *left,  int *right, int *bottom) {
+  virtual void decoration_sizes(int *top, int *left, int *right, int *bottom) {
     *top = *left = *right = *bottom = 0;
   }
   virtual void show_with_args_begin() {}
@@ -164,26 +167,27 @@ public:
 
   // --- window cursor stuff
   virtual int set_cursor(Fl_Cursor);
-  virtual int set_cursor(const Fl_RGB_Image*, int, int);
+  virtual int set_cursor(const Fl_RGB_Image *, int, int);
 
   // --- window shape stuff
-  void shape_pixmap_(Fl_Image* pixmap); // platform-independent, support function
-  virtual void shape(const Fl_Image*) {}
-  virtual void shape_alpha_(Fl_Image*, int /*offset*/) {}
+  void shape_pixmap_(Fl_Image *pixmap); // platform-independent, support function
+  virtual void shape(const Fl_Image *) {}
+  virtual void shape_alpha_(Fl_Image *, int /*offset*/) {}
 
   // --- window icon stuff
-  virtual void icons(const Fl_RGB_Image* /*icons*/[], int /*count*/) {}
-  virtual const void *icon() const {return NULL;}
+  virtual void icons(const Fl_RGB_Image * /*icons*/[], int /*count*/) {}
+  virtual const void *icon() const { return NULL; }
   virtual void icon(const void *) {}
   virtual void free_icons() {}
 
   // --- window printing/drawing helper
-  virtual void capture_titlebar_and_borders(Fl_RGB_Image*& top, Fl_RGB_Image*& left,
-                                            Fl_RGB_Image*& bottom, Fl_RGB_Image*& right);
-  virtual int scroll(int /*src_x*/, int /*src_y*/, int /*src_w*/, int /*src_h*/,
-                     int /*dest_x*/, int /*dest_y*/,
-                     void (*)(void*, int,int,int,int), void*) { return 0; }
-  static inline Fl_Window_Driver* driver(const Fl_Window *win) {return win->pWindowDriver;}
+  virtual void capture_titlebar_and_borders(Fl_RGB_Image *&top, Fl_RGB_Image *&left,
+                                            Fl_RGB_Image *&bottom, Fl_RGB_Image *&right);
+  virtual int scroll(int /*src_x*/, int /*src_y*/, int /*src_w*/, int /*src_h*/, int /*dest_x*/,
+                     int /*dest_y*/, void (*)(void *, int, int, int, int), void *) {
+    return 0;
+  }
+  static inline Fl_Window_Driver *driver(const Fl_Window *win) { return win->pWindowDriver; }
 
   // --- support for menu windows
   // the default implementation of next 2 members is most probably enough

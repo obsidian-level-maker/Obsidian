@@ -21,19 +21,18 @@
 
 struct NSVGimage;
 
-/** The Fl_SVG_Image class supports loading, caching and drawing of scalable vector graphics (SVG) images.
- The FLTK library performs parsing and rasterization of SVG data using a modified version
- of the \c nanosvg software (https://github.com/memononen/nanosvg).
- The software modification allows the option to change the image ratio
- while performing rasterization.
+/** The Fl_SVG_Image class supports loading, caching and drawing of scalable vector graphics (SVG)
+ images. The FLTK library performs parsing and rasterization of SVG data using a modified version of
+ the \c nanosvg software (https://github.com/memononen/nanosvg). The software modification allows
+ the option to change the image ratio while performing rasterization.
 
  Use Fl_Image::fail() to check if the Fl_SVG_Image failed to load. fail() returns ERR_FILE_ACCESS
  if the file could not be opened or read, and ERR_FORMAT if the SVG format could not be decoded.
  If the image has loaded correctly, w(), h(), and d() should return values greater than zero.
 
- Rasterization is not done until the image is first drawn or resize() or normalize() is called. Therefore,
- \ref array is NULL until then. The delayed rasterization ensures an Fl_SVG_Image is always rasterized
- to the exact screen resolution at which it is drawn.
+ Rasterization is not done until the image is first drawn or resize() or normalize() is called.
+ Therefore, \ref array is NULL until then. The delayed rasterization ensures an Fl_SVG_Image is
+ always rasterized to the exact screen resolution at which it is drawn.
 
  The Fl_SVG_Image class draws images computed by \c nanosvg with the following known limitations
 
@@ -135,10 +134,10 @@ struct NSVGimage;
 class FL_EXPORT Fl_SVG_Image : public Fl_RGB_Image {
 private:
   typedef struct {
-    NSVGimage* svg_image;
+    NSVGimage *svg_image;
     int ref_count;
   } counted_NSVGimage;
-  counted_NSVGimage* counted_svg_image_;
+  counted_NSVGimage *counted_svg_image_;
   bool rasterized_;
   int raster_w_, raster_h_;
   bool to_desaturate_;
@@ -149,6 +148,7 @@ private:
   virtual void cache_size_(int &width, int &height);
   void init_(const char *filename, const char *filedata, Fl_SVG_Image *copy_source);
   Fl_SVG_Image(Fl_SVG_Image *source);
+
 public:
   /** Set this to \c false to allow image re-scaling that alters the image aspect ratio.
    Upon object creation, proportional is set to \c true, and the aspect ratio is kept constant.*/

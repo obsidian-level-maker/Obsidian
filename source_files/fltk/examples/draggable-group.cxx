@@ -187,9 +187,9 @@ void button_cb(Fl_Widget *w, void *v) {
 
 // tooltips:
 
-const char *tt_drag =   "Drag this DraggableGroup and/or its child groups and squares. "
-                        "Use the right mouse button (MB3) to drag objects.";
-const char *tt_group =  "You can drag this Fl_Group, but not its children (squares).";
+const char *tt_drag = "Drag this DraggableGroup and/or its child groups and squares. "
+                      "Use the right mouse button (MB3) to drag objects.";
+const char *tt_group = "You can drag this Fl_Group, but not its children (squares).";
 const char *tt_button = "You can drag this button with the right mouse button "
                         "and you can click it with the left mouse button.";
 

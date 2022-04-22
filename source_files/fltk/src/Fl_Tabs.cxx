@@ -45,61 +45,69 @@ int Fl_Tabs::tab_positions() {
   if (nc != tab_count) {
     clear_tab_positions();
     if (nc) {
-      tab_pos   = (int*)malloc((nc+1)*sizeof(int));
-      tab_width = (int*)malloc((nc)*sizeof(int));
+      tab_pos = (int *)malloc((nc + 1) * sizeof(int));
+      tab_width = (int *)malloc((nc) * sizeof(int));
     }
     tab_count = nc;
   }
-  if (nc == 0) return 0;
+  if (nc == 0)
+    return 0;
   int selected = 0;
-  Fl_Widget*const* a = array();
+  Fl_Widget *const *a = array();
   int i;
   char prev_draw_shortcut = fl_draw_shortcut;
   fl_draw_shortcut = 1;
 
   tab_pos[0] = Fl::box_dx(box());
-  for (i=0; i<nc; i++) {
-    Fl_Widget* o = *a++;
-    if (o->visible()) selected = i;
+  for (i = 0; i < nc; i++) {
+    Fl_Widget *o = *a++;
+    if (o->visible())
+      selected = i;
 
-    int wt = 0; int ht = 0;
+    int wt = 0;
+    int ht = 0;
     Fl_Labeltype ot = o->labeltype();
     Fl_Align oa = o->align();
     if (ot == FL_NO_LABEL) {
       o->labeltype(FL_NORMAL_LABEL);
     }
     o->align(tab_align());
-    o->measure_label(wt,ht);
+    o->measure_label(wt, ht);
     o->labeltype(ot);
     o->align(oa);
 
     tab_width[i] = wt + EXTRASPACE;
-    tab_pos[i+1] = tab_pos[i] + tab_width[i] + BORDER;
+    tab_pos[i + 1] = tab_pos[i] + tab_width[i] + BORDER;
   }
   fl_draw_shortcut = prev_draw_shortcut;
 
   int r = w();
-  if (tab_pos[i] <= r) return selected;
+  if (tab_pos[i] <= r)
+    return selected;
   // uh oh, they are too big:
   // pack them against right edge:
   tab_pos[i] = r;
   for (i = nc; i--;) {
-    int l = r-tab_width[i];
-    if (tab_pos[i+1] < l) l = tab_pos[i+1];
-    if (tab_pos[i] <= l) break;
+    int l = r - tab_width[i];
+    if (tab_pos[i + 1] < l)
+      l = tab_pos[i + 1];
+    if (tab_pos[i] <= l)
+      break;
     tab_pos[i] = l;
     r -= EXTRASPACE;
   }
   // pack them against left edge and truncate width if they still don't fit:
-  for (i = 0; i<nc; i++) {
-    if (tab_pos[i] >= i*EXTRASPACE) break;
-    tab_pos[i] = i*EXTRASPACE;
-    int W = w()-1-EXTRASPACE*(nc-i) - tab_pos[i];
-    if (tab_width[i] > W) tab_width[i] = W;
+  for (i = 0; i < nc; i++) {
+    if (tab_pos[i] >= i * EXTRASPACE)
+      break;
+    tab_pos[i] = i * EXTRASPACE;
+    int W = w() - 1 - EXTRASPACE * (nc - i) - tab_pos[i];
+    if (tab_width[i] > W)
+      tab_width[i] = W;
   }
   // adjust edges according to visiblity:
   for (i = nc; i > selected; i--) {
-    tab_pos[i] = tab_pos[i-1] + tab_width[i-1];
+    tab_pos[i] = tab_pos[i - 1] + tab_width[i - 1];
   }
   return selected;
 }
@@ -107,18 +115,23 @@ int Fl_Tabs::tab_positions() {
 // Returns space (height) in pixels needed for tabs. Negative to put them on the bottom.
 // Returns full height, if children() = 0.
 int Fl_Tabs::tab_height() {
-  if (children() == 0) return h();
+  if (children() == 0)
+    return h();
   int H = h();
   int H2 = y();
-  Fl_Widget*const* a = array();
-  for (int i=children(); i--;) {
-    Fl_Widget* o = *a++;
-    if (o->y() < y()+H) H = o->y()-y();
-    if (o->y()+o->h() > H2) H2 = o->y()+o->h();
+  Fl_Widget *const *a = array();
+  for (int i = children(); i--;) {
+    Fl_Widget *o = *a++;
+    if (o->y() < y() + H)
+      H = o->y() - y();
+    if (o->y() + o->h() > H2)
+      H2 = o->y() + o->h();
   }
-  H2 = y()+h()-H2;
-  if (H2 > H) return (H2 <= 0) ? 0 : -H2;
-  else return (H <= 0) ? 0 : H;
+  H2 = y() + h() - H2;
+  if (H2 > H)
+    return (H2 <= 0) ? 0 : -H2;
+  else
+    return (H <= 0) ? 0 : H;
 }
 
 /**
@@ -129,19 +142,23 @@ int Fl_Tabs::tab_height() {
            0 if there are no children or if the event is outside of the tabs area.
 */
 Fl_Widget *Fl_Tabs::which(int event_x, int event_y) {
-  if (children() == 0) return 0;
+  if (children() == 0)
+    return 0;
   int H = tab_height();
   if (H < 0) {
-    if (event_y > y()+h() || event_y < y()+h()+H) return 0;
+    if (event_y > y() + h() || event_y < y() + h() + H)
+      return 0;
   } else {
-    if (event_y > y()+H || event_y < y()) return 0;
+    if (event_y > y() + H || event_y < y())
+      return 0;
   }
-  if (event_x < x()) return 0;
+  if (event_x < x())
+    return 0;
   Fl_Widget *ret = 0L;
   const int nc = children();
   tab_positions();
-  for (int i=0; i<nc; i++) {
-    if (event_x < x()+tab_pos[i+1]) {
+  for (int i = 0; i < nc; i++) {
+    if (event_x < x() + tab_pos[i + 1]) {
       ret = child(i);
       break;
     }
@@ -149,8 +166,7 @@ Fl_Widget *Fl_Tabs::which(int event_x, int event_y) {
   return ret;
 }
 
-void Fl_Tabs::redraw_tabs()
-{
+void Fl_Tabs::redraw_tabs() {
   int H = tab_height();
   if (H >= 0) {
     H += Fl::box_dy(box());
@@ -168,113 +184,125 @@ int Fl_Tabs::handle(int event) {
 
   switch (event) {
 
-  case FL_PUSH:
-    {
+    case FL_PUSH: {
       int H = tab_height();
       if (H >= 0) {
-        if (Fl::event_y() > y()+H) return Fl_Group::handle(event);
+        if (Fl::event_y() > y() + H)
+          return Fl_Group::handle(event);
       } else {
-        if (Fl::event_y() < y()+h()+H) return Fl_Group::handle(event);
+        if (Fl::event_y() < y() + h() + H)
+          return Fl_Group::handle(event);
       }
     }
-    /* FALLTHROUGH */
-  case FL_DRAG:
-  case FL_RELEASE:
-    o = which(Fl::event_x(), Fl::event_y());
-    if (event == FL_RELEASE) {
-      push(0);
-      if (o && Fl::visible_focus() && Fl::focus()!=this) {
-        Fl::focus(this);
+      /* FALLTHROUGH */
+    case FL_DRAG:
+    case FL_RELEASE:
+      o = which(Fl::event_x(), Fl::event_y());
+      if (event == FL_RELEASE) {
+        push(0);
+        if (o && Fl::visible_focus() && Fl::focus() != this) {
+          Fl::focus(this);
+          redraw_tabs();
+        }
+        if (o &&                              // Released on a tab and..
+            (value(o) ||                      // tab changed value or..
+             (when() & (FL_WHEN_NOT_CHANGED)) // ..no change but WHEN_NOT_CHANGED set,
+             )                                // handles FL_WHEN_RELEASE_ALWAYS too.
+        ) {
+          Fl_Widget_Tracker wp(o);
+          set_changed();
+          do_callback();
+          if (wp.deleted())
+            return 1;
+        }
+        Fl_Tooltip::current(o);
+      } else {
+        push(o);
+      }
+      return 1;
+    case FL_MOVE: {
+      int ret = Fl_Group::handle(event);
+      Fl_Widget *tooltip_widget = Fl_Tooltip::current();
+      Fl_Widget *n; // initialized later
+      int H = tab_height();
+      if ((H >= 0) && (Fl::event_y() > y() + H))
+        return ret;
+      else if ((H < 0) && (Fl::event_y() < y() + h() + H))
+        return ret;
+      else {
+        n = which(Fl::event_x(), Fl::event_y());
+        if (!n)
+          n = this;
+      }
+      if (n != tooltip_widget)
+        Fl_Tooltip::enter(n);
+      return ret;
+    }
+    case FL_FOCUS:
+    case FL_UNFOCUS:
+      if (!Fl::visible_focus())
+        return Fl_Group::handle(event);
+      if (Fl::event() == FL_RELEASE || Fl::event() == FL_SHORTCUT || Fl::event() == FL_KEYBOARD ||
+          Fl::event() == FL_FOCUS || Fl::event() == FL_UNFOCUS) {
         redraw_tabs();
+        if (Fl::event() == FL_FOCUS)
+          return Fl_Group::handle(event);
+        if (Fl::event() == FL_UNFOCUS)
+          return 0;
+        else
+          return 1;
+      } else
+        return Fl_Group::handle(event);
+    case FL_KEYBOARD:
+      switch (Fl::event_key()) {
+        case FL_Left:
+          if (!children())
+            return 0;
+          if (child(0)->visible())
+            return 0;
+          for (i = 1; i < children(); i++)
+            if (child(i)->visible())
+              break;
+          value(child(i - 1));
+          set_changed();
+          do_callback();
+          return 1;
+        case FL_Right:
+          if (!children())
+            return 0;
+          if (child(children() - 1)->visible())
+            return 0;
+          for (i = 0; i < children(); i++)
+            if (child(i)->visible())
+              break;
+          value(child(i + 1));
+          set_changed();
+          do_callback();
+          return 1;
+        case FL_Down:
+          redraw();
+          return Fl_Group::handle(FL_FOCUS);
+        default:
+          break;
       }
-      if (o &&                              // Released on a tab and..
-          (value(o) ||                      // tab changed value or..
-           (when()&(FL_WHEN_NOT_CHANGED))   // ..no change but WHEN_NOT_CHANGED set,
-          )                                 // handles FL_WHEN_RELEASE_ALWAYS too.
-         ) {
-        Fl_Widget_Tracker wp(o);
-        set_changed();
-        do_callback();
-        if (wp.deleted()) return 1;
+      return Fl_Group::handle(event);
+    case FL_SHORTCUT:
+      for (i = 0; i < children(); ++i) {
+        Fl_Widget *c = child(i);
+        if (c->test_shortcut(c->label())) {
+          char sc = !c->visible();
+          value(c);
+          if (sc)
+            set_changed();
+          do_callback();
+          return 1;
+        }
       }
-      Fl_Tooltip::current(o);
-    } else {
-      push(o);
-    }
-    return 1;
-  case FL_MOVE: {
-    int ret = Fl_Group::handle(event);
-    Fl_Widget *tooltip_widget = Fl_Tooltip::current();
-    Fl_Widget *n; // initialized later
-    int H = tab_height();
-    if ( (H >= 0) && (Fl::event_y() > y()+H) )
-      return ret;
-    else if ( (H < 0) && (Fl::event_y() < y()+h()+H) )
-      return ret;
-    else {
-      n = which(Fl::event_x(), Fl::event_y());
-      if (!n) n = this;
-    }
-    if (n != tooltip_widget)
-      Fl_Tooltip::enter(n);
-    return ret; }
-  case FL_FOCUS:
-  case FL_UNFOCUS:
-    if (!Fl::visible_focus()) return Fl_Group::handle(event);
-    if (Fl::event() == FL_RELEASE ||
-        Fl::event() == FL_SHORTCUT ||
-        Fl::event() == FL_KEYBOARD ||
-        Fl::event() == FL_FOCUS ||
-        Fl::event() == FL_UNFOCUS) {
-      redraw_tabs();
-      if (Fl::event() == FL_FOCUS) return Fl_Group::handle(event);
-      if (Fl::event() == FL_UNFOCUS) return 0;
-      else return 1;
-    } else return Fl_Group::handle(event);
-  case FL_KEYBOARD:
-    switch (Fl::event_key()) {
-      case FL_Left:
-        if (!children()) return 0;
-        if (child(0)->visible()) return 0;
-        for (i = 1; i < children(); i ++)
-          if (child(i)->visible()) break;
-        value(child(i - 1));
-        set_changed();
-        do_callback();
-        return 1;
-      case FL_Right:
-        if (!children()) return 0;
-        if (child(children() - 1)->visible()) return 0;
-        for (i = 0; i < children(); i ++)
-          if (child(i)->visible()) break;
-        value(child(i + 1));
-        set_changed();
-        do_callback();
-        return 1;
-      case FL_Down:
-        redraw();
-        return Fl_Group::handle(FL_FOCUS);
-      default:
-        break;
-    }
-    return Fl_Group::handle(event);
-  case FL_SHORTCUT:
-    for (i = 0; i < children(); ++i) {
-      Fl_Widget *c = child(i);
-      if (c->test_shortcut(c->label())) {
-        char sc = !c->visible();
-        value(c);
-        if (sc) set_changed();
-        do_callback();
-        return 1;
-      }
-    }
-    return Fl_Group::handle(event);
-  case FL_SHOW:
-    value(); // update visibilities and fall through
-  default:
-    return Fl_Group::handle(event);
-
+      return Fl_Group::handle(event);
+    case FL_SHOW:
+      value(); // update visibilities and fall through
+    default:
+      return Fl_Group::handle(event);
   }
 }
 
@@ -290,8 +318,9 @@ int Fl_Tabs::handle(int event) {
   \see push().
 */
 int Fl_Tabs::push(Fl_Widget *o) {
-  if (push_ == o) return 0;
-  if ( (push_ && !push_->visible()) || (o && !o->visible()) )
+  if (push_ == o)
+    return 0;
+  if ((push_ && !push_->visible()) || (o && !o->visible()))
     redraw_tabs();
   push_ = o;
   return 1;
@@ -305,14 +334,19 @@ int Fl_Tabs::push(Fl_Widget *o) {
   This allows the tabs to be deleted, moved to other groups, and
   show()/hide() called without it screwing up.
 */
-Fl_Widget* Fl_Tabs::value() {
-  Fl_Widget* v = 0;
-  Fl_Widget*const* a = array();
-  for (int i=children(); i--;) {
-    Fl_Widget* o = *a++;
-    if (v) o->hide();
-    else if (o->visible()) v = o;
-    else if (!i) {o->show(); v = o;}
+Fl_Widget *Fl_Tabs::value() {
+  Fl_Widget *v = 0;
+  Fl_Widget *const *a = array();
+  for (int i = children(); i--;) {
+    Fl_Widget *o = *a++;
+    if (v)
+      o->hide();
+    else if (o->visible())
+      v = o;
+    else if (!i) {
+      o->show();
+      v = o;
+    }
   }
   return v;
 }
@@ -325,12 +359,13 @@ Fl_Widget* Fl_Tabs::value() {
            0 if there was no change (new value already set)
 */
 int Fl_Tabs::value(Fl_Widget *newvalue) {
-  Fl_Widget*const* a = array();
+  Fl_Widget *const *a = array();
   int ret = 0;
-  for (int i=children(); i--;) {
-    Fl_Widget* o = *a++;
+  for (int i = children(); i--;) {
+    Fl_Widget *o = *a++;
     if (o == newvalue) {
-      if (!o->visible()) ret = 1;
+      if (!o->visible())
+        ret = 1;
       o->show();
     } else {
       o->hide();
@@ -339,7 +374,7 @@ int Fl_Tabs::value(Fl_Widget *newvalue) {
   return ret;
 }
 
-enum {LEFT, RIGHT, SELECTED};
+enum { LEFT, RIGHT, SELECTED };
 
 void Fl_Tabs::draw() {
   Fl_Widget *v = value();
@@ -348,7 +383,7 @@ void Fl_Tabs::draw() {
   if (damage() & FL_DAMAGE_ALL) { // redraw the entire thing:
     Fl_Color c = v ? v->color() : color();
 
-    draw_box(box(), x(), y()+(H>=0?H:0), w(), h()-(H>=0?H:-H), c);
+    draw_box(box(), x(), y() + (H >= 0 ? H : 0), w(), h() - (H >= 0 ? H : -H), c);
 
     if (selection_color() != c) {
       // Draw the top or bottom SELECTION_BORDER lines of the tab pane in the
@@ -358,30 +393,29 @@ void Fl_Tabs::draw() {
       draw_box(box(), x(), clip_y, w(), SELECTION_BORDER, selection_color());
       fl_pop_clip();
     }
-    if (v) draw_child(*v);
+    if (v)
+      draw_child(*v);
   } else { // redraw the child
-    if (v) update_child(*v);
+    if (v)
+      update_child(*v);
   }
-  if (damage() & (FL_DAMAGE_SCROLL|FL_DAMAGE_ALL)) {
+  if (damage() & (FL_DAMAGE_SCROLL | FL_DAMAGE_ALL)) {
     const int nc = children();
     int selected = tab_positions();
     int i;
-    Fl_Widget*const* a = array();
-    for (i=0; i<selected; i++)
-      draw_tab(x()+tab_pos[i], x()+tab_pos[i+1],
-               tab_width[i], H, a[i], LEFT);
-    for (i=nc-1; i > selected; i--)
-      draw_tab(x()+tab_pos[i], x()+tab_pos[i+1],
-               tab_width[i], H, a[i], RIGHT);
+    Fl_Widget *const *a = array();
+    for (i = 0; i < selected; i++)
+      draw_tab(x() + tab_pos[i], x() + tab_pos[i + 1], tab_width[i], H, a[i], LEFT);
+    for (i = nc - 1; i > selected; i--)
+      draw_tab(x() + tab_pos[i], x() + tab_pos[i + 1], tab_width[i], H, a[i], RIGHT);
     if (v) {
       i = selected;
-      draw_tab(x()+tab_pos[i], x()+tab_pos[i+1],
-               tab_width[i], H, a[i], SELECTED);
+      draw_tab(x() + tab_pos[i], x() + tab_pos[i + 1], tab_width[i], H, a[i], SELECTED);
     }
   }
 }
 
-void Fl_Tabs::draw_tab(int x1, int x2, int W, int H, Fl_Widget* o, int what) {
+void Fl_Tabs::draw_tab(int x1, int x2, int W, int H, Fl_Widget *o, int what) {
   int sel = (what == SELECTED);
   int dh = Fl::box_dh(box());
   int dy = Fl::box_dy(box());
@@ -402,11 +436,14 @@ void Fl_Tabs::draw_tab(int x1, int x2, int W, int H, Fl_Widget* o, int what) {
   // compute offsets to make selected tab look bigger
   int yofs = sel ? 0 : BORDER;
 
-  if ((x2 < x1+W) && what == RIGHT) x1 = x2 - W;
+  if ((x2 < x1 + W) && what == RIGHT)
+    x1 = x2 - W;
 
   if (H >= 0) {
-    if (sel) fl_push_clip(x1, y(), x2 - x1, H + dh - dy);
-    else fl_push_clip(x1, y(), x2 - x1, H);
+    if (sel)
+      fl_push_clip(x1, y(), x2 - x1, H + dh - dy);
+    else
+      fl_push_clip(x1, y(), x2 - x1, H);
 
     H += dh;
 
@@ -423,8 +460,10 @@ void Fl_Tabs::draw_tab(int x1, int x2, int W, int H, Fl_Widget* o, int what) {
   } else {
     H = -H;
 
-    if (sel) fl_push_clip(x1, y() + h() - H - dy, x2 - x1, H + dy);
-    else fl_push_clip(x1, y() + h() - H, x2 - x1, H);
+    if (sel)
+      fl_push_clip(x1, y() + h() - H - dy, x2 - x1, H + dy);
+    else
+      fl_push_clip(x1, y() + h() - H, x2 - x1, H);
 
     H += dh;
 
@@ -467,9 +506,8 @@ void Fl_Tabs::draw_tab(int x1, int x2, int W, int H, Fl_Widget* o, int what) {
   can be automatic (local) variables, but you must declare the
   Fl_Tabs widget <I>first</I> so that it is destroyed last.
 */
-Fl_Tabs::Fl_Tabs(int X, int Y, int W, int H, const char *L) :
-  Fl_Group(X,Y,W,H,L)
-{
+Fl_Tabs::Fl_Tabs(int X, int Y, int W, int H, const char *L)
+  : Fl_Group(X, Y, W, H, L) {
   box(FL_THIN_UP_BOX);
   push_ = 0;
   tab_pos = 0;
@@ -507,32 +545,32 @@ Fl_Tabs::~Fl_Tabs() {
 */
 void Fl_Tabs::client_area(int &rx, int &ry, int &rw, int &rh, int tabh) {
 
-  if (children()) {                     // use existing values
+  if (children()) { // use existing values
 
     rx = child(0)->x();
     ry = child(0)->y();
     rw = child(0)->w();
     rh = child(0)->h();
 
-  } else {                              // calculate values
+  } else { // calculate values
 
     int y_offset;
-    int label_height = fl_height(labelfont(), labelsize()) + BORDER*2;
+    int label_height = fl_height(labelfont(), labelsize()) + BORDER * 2;
 
-    if (tabh == 0)                      // use default (at top)
+    if (tabh == 0) // use default (at top)
       y_offset = label_height;
-    else if (tabh == -1)                // use default (at bottom)
+    else if (tabh == -1) // use default (at bottom)
       y_offset = -label_height;
     else
-      y_offset = tabh;                  // user given value
+      y_offset = tabh; // user given value
 
     rx = x();
     rw = w();
 
-    if (y_offset >= 0) {                // labels at top
+    if (y_offset >= 0) { // labels at top
       ry = y() + y_offset;
       rh = h() - y_offset;
-    } else {                            // labels at bottom
+    } else { // labels at bottom
       ry = y();
       rh = h() + y_offset;
     }
@@ -544,7 +582,7 @@ void Fl_Tabs::clear_tab_positions() {
     free(tab_pos);
     tab_pos = 0;
   }
-  if (tab_width){
+  if (tab_width) {
     free(tab_width);
     tab_width = 0;
   }

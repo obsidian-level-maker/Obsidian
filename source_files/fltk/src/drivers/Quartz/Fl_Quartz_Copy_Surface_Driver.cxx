@@ -21,19 +21,19 @@
 #include "../Cocoa/Fl_Cocoa_Window_Driver.H"
 
 
-Fl_Quartz_Copy_Surface_Driver::Fl_Quartz_Copy_Surface_Driver(int w, int h) : Fl_Copy_Surface_Driver(w, h) {
+Fl_Quartz_Copy_Surface_Driver::Fl_Quartz_Copy_Surface_Driver(int w, int h)
+  : Fl_Copy_Surface_Driver(w, h) {
   driver(new Fl_Quartz_Printer_Graphics_Driver);
   pdfdata = CFDataCreateMutable(NULL, 0);
   CGDataConsumerRef myconsumer;
 #if MAC_OS_X_VERSION_MAX_ALLOWED >= 1040
   if (&CGDataConsumerCreateWithCFData != NULL) {
     myconsumer = CGDataConsumerCreateWithCFData(pdfdata); // 10.4
-  }
-  else
+  } else
 #endif
   {
-    static CGDataConsumerCallbacks callbacks = { Fl_Quartz_Copy_Surface_Driver::MyPutBytes, NULL };
-    myconsumer = CGDataConsumerCreate((void*) pdfdata, &callbacks);
+    static CGDataConsumerCallbacks callbacks = {Fl_Quartz_Copy_Surface_Driver::MyPutBytes, NULL};
+    myconsumer = CGDataConsumerCreate((void *)pdfdata, &callbacks);
   }
   float d = fl_graphics_driver->scale();
   CGRect bounds = CGRectMake(0, 0, w * d, h * d);
@@ -53,9 +53,8 @@ void Fl_Quartz_Copy_Surface_Driver::set_current() {
   Fl_Surface_Device::set_current();
 }
 
-size_t Fl_Quartz_Copy_Surface_Driver::MyPutBytes(void* info, const void* buffer, size_t count)
-{
-  CFDataAppendBytes ((CFMutableDataRef) info, (const UInt8 *)buffer, count);
+size_t Fl_Quartz_Copy_Surface_Driver::MyPutBytes(void *info, const void *buffer, size_t count) {
+  CFDataAppendBytes((CFMutableDataRef)info, (const UInt8 *)buffer, count);
   return count;
 }
 

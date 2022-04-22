@@ -57,7 +57,6 @@ color_mapping_t color_mappings[MAX_COLOR_MAPS];
 // LUA: format_prefix(levelcount, OB_CONFIG.game, OB_CONFIG.theme, formatstring)
 //
 int gui_format_prefix(lua_State *L) {
-
     const char *levelcount = luaL_checkstring(L, 1);
     const char *game = luaL_checkstring(L, 2);
     const char *theme = luaL_checkstring(L, 3);
@@ -69,10 +68,11 @@ int gui_format_prefix(lua_State *L) {
         format = custom_prefix.c_str();
     }
 
-    const char *result = ff_main(levelcount, game, theme, OBSIDIAN_SHORT_VERSION, format.c_str());
+    const char *result = ff_main(levelcount, game, theme,
+                                 OBSIDIAN_SHORT_VERSION, format.c_str());
 
     if (!result) {
-        lua_pushstring(L, "FF_ERROR_"); // Will help people notice issues
+        lua_pushstring(L, "FF_ERROR_");  // Will help people notice issues
         return 1;
     } else {
         lua_pushstring(L, result);
@@ -1538,7 +1538,7 @@ static int my_loadfile(lua_State *L, const std::filesystem::path &filename) {
         return LUA_ERRFILE;
     }
 
-    //int status = lua_load(L, my_reader, &info, lua_tostring(L, -1), "bt");
+    // int status = lua_load(L, my_reader, &info, lua_tostring(L, -1), "bt");
 
     int status = lua_load(L, my_reader, &info, lua_tostring(L, -1));
 
@@ -1627,7 +1627,6 @@ void Script_Open() {
 }
 
 void Script_Close() {
-
     log_timestamp = ob_datetime_string().append(".txt");
 
     if (LUA_ST) {

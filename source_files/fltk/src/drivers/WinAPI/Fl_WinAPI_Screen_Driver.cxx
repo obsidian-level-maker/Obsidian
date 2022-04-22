@@ -34,19 +34,20 @@ extern const char *fl_bg2;
 
 
 #if !defined(HMONITOR_DECLARED) && (_WIN32_WINNT < 0x0500)
-#  define COMPILE_MULTIMON_STUBS
-#  include <multimon.h>
+#define COMPILE_MULTIMON_STUBS
+#include <multimon.h>
 #endif // !HMONITOR_DECLARED && _WIN32_WINNT < 0x0500
 
 
-int Fl_WinAPI_Screen_Driver::visual(int flags)
-{
+int Fl_WinAPI_Screen_Driver::visual(int flags) {
   fl_GetDC(0);
-  if (flags & FL_DOUBLE) return 0;
+  if (flags & FL_DOUBLE)
+    return 0;
   HDC gc = (HDC)Fl_Graphics_Driver::default_driver().gc();
-  if (!(flags & FL_INDEX) &&
-      GetDeviceCaps(gc,BITSPIXEL) <= 8) return 0;
-  if ((flags & FL_RGB8) && GetDeviceCaps(gc,BITSPIXEL)<24) return 0;
+  if (!(flags & FL_INDEX) && GetDeviceCaps(gc, BITSPIXEL) <= 8)
+    return 0;
+  if ((flags & FL_RGB8) && GetDeviceCaps(gc, BITSPIXEL) < 24)
+    return 0;
   return 1;
 }
 
@@ -60,23 +61,22 @@ int Fl_WinAPI_Screen_Driver::visual(int flags)
 // before SP2 or earlier.
 
 // BOOL EnumDisplayMonitors(HDC, LPCRECT, MONITORENUMPROC, LPARAM)
-typedef BOOL(WINAPI* fl_edm_func)(HDC, LPCRECT, MONITORENUMPROC, LPARAM);
+typedef BOOL(WINAPI *fl_edm_func)(HDC, LPCRECT, MONITORENUMPROC, LPARAM);
 // BOOL GetMonitorInfo(HMONITOR, LPMONITORINFO)
-typedef BOOL(WINAPI* fl_gmi_func)(HMONITOR, LPMONITORINFO);
+typedef BOOL(WINAPI *fl_gmi_func)(HMONITOR, LPMONITORINFO);
 
 static fl_gmi_func fl_gmi = NULL; // used to get a proc pointer for GetMonitorInfoA
 
 
-BOOL Fl_WinAPI_Screen_Driver::screen_cb(HMONITOR mon, HDC hdc, LPRECT r, LPARAM d)
-{
-  Fl_WinAPI_Screen_Driver *drv = (Fl_WinAPI_Screen_Driver*)d;
+BOOL Fl_WinAPI_Screen_Driver::screen_cb(HMONITOR mon, HDC hdc, LPRECT r, LPARAM d) {
+  Fl_WinAPI_Screen_Driver *drv = (Fl_WinAPI_Screen_Driver *)d;
   return drv->screen_cb(mon, hdc, r);
 }
 
 
-BOOL Fl_WinAPI_Screen_Driver::screen_cb(HMONITOR mon, HDC, LPRECT r)
-{
-  if (num_screens >= MAX_SCREENS) return TRUE;
+BOOL Fl_WinAPI_Screen_Driver::screen_cb(HMONITOR mon, HDC, LPRECT r) {
+  if (num_screens >= MAX_SCREENS)
+    return TRUE;
 
   MONITORINFOEX mi;
   mi.cbSize = sizeof(mi);
@@ -93,8 +93,7 @@ BOOL Fl_WinAPI_Screen_Driver::screen_cb(HMONITOR mon, HDC, LPRECT r)
 }
 
 
-void Fl_WinAPI_Screen_Driver::init()
-{
+void Fl_WinAPI_Screen_Driver::init() {
   open_display();
   // Since not all versions of Windows include multiple monitor support,
   // we do a run-time check for the required functions...
@@ -129,29 +128,30 @@ void Fl_WinAPI_Screen_Driver::init()
 }
 
 
-void Fl_WinAPI_Screen_Driver::screen_work_area(int &X, int &Y, int &W, int &H, int n)
-{
-  if (num_screens < 0) init();
-  if (n < 0 || n >= num_screens) n = 0;
-  X = int(work_area[n].left/scale_of_screen[n]);
-  Y = int(work_area[n].top/scale_of_screen[n]);
-  W = int((work_area[n].right - work_area[n].left)/scale_of_screen[n]);
-  H = int((work_area[n].bottom - work_area[n].top)/scale_of_screen[n]);
+void Fl_WinAPI_Screen_Driver::screen_work_area(int &X, int &Y, int &W, int &H, int n) {
+  if (num_screens < 0)
+    init();
+  if (n < 0 || n >= num_screens)
+    n = 0;
+  X = int(work_area[n].left / scale_of_screen[n]);
+  Y = int(work_area[n].top / scale_of_screen[n]);
+  W = int((work_area[n].right - work_area[n].left) / scale_of_screen[n]);
+  H = int((work_area[n].bottom - work_area[n].top) / scale_of_screen[n]);
 }
 
 
-void Fl_WinAPI_Screen_Driver::screen_xywh(int &X, int &Y, int &W, int &H, int n)
-{
-  if (num_screens < 0) init();
+void Fl_WinAPI_Screen_Driver::screen_xywh(int &X, int &Y, int &W, int &H, int n) {
+  if (num_screens < 0)
+    init();
 
   if ((n < 0) || (n >= num_screens))
     n = 0;
 
   if (num_screens > 0) {
-    X = int(screens[n].left/scale_of_screen[n]);
-    Y = int(screens[n].top/scale_of_screen[n]);
-    W = int((screens[n].right - screens[n].left)/scale_of_screen[n]);
-    H = int((screens[n].bottom - screens[n].top)/scale_of_screen[n]);
+    X = int(screens[n].left / scale_of_screen[n]);
+    Y = int(screens[n].top / scale_of_screen[n]);
+    W = int((screens[n].right - screens[n].left) / scale_of_screen[n]);
+    H = int((screens[n].bottom - screens[n].top) / scale_of_screen[n]);
   } else {
     /* Fallback if something is broken... */
     X = 0;
@@ -163,8 +163,10 @@ void Fl_WinAPI_Screen_Driver::screen_xywh(int &X, int &Y, int &W, int &H, int n)
 
 
 void Fl_WinAPI_Screen_Driver::screen_xywh_unscaled(int &X, int &Y, int &W, int &H, int n) {
-  if (num_screens < 0) init();
-  if ((n < 0) || (n >= num_screens)) n = 0;
+  if (num_screens < 0)
+    init();
+  if ((n < 0) || (n >= num_screens))
+    n = 0;
   X = screens[n].left;
   Y = screens[n].top;
   W = screens[n].right - screens[n].left;
@@ -172,9 +174,9 @@ void Fl_WinAPI_Screen_Driver::screen_xywh_unscaled(int &X, int &Y, int &W, int &
 };
 
 
-void Fl_WinAPI_Screen_Driver::screen_dpi(float &h, float &v, int n)
-{
-  if (num_screens < 0) init();
+void Fl_WinAPI_Screen_Driver::screen_dpi(float &h, float &v, int n) {
+  if (num_screens < 0)
+    init();
   h = v = 0.0f;
   if (n >= 0 && n < num_screens) {
     h = float(dpi[n][0]);
@@ -183,8 +185,7 @@ void Fl_WinAPI_Screen_Driver::screen_dpi(float &h, float &v, int n)
 }
 
 
-int Fl_WinAPI_Screen_Driver::x()
-{
+int Fl_WinAPI_Screen_Driver::x() {
   /*RECT r;
 
   SystemParametersInfo(SPI_GETWORKAREA, 0, &r, 0);
@@ -195,8 +196,7 @@ int Fl_WinAPI_Screen_Driver::x()
 }
 
 
-int Fl_WinAPI_Screen_Driver::y()
-{
+int Fl_WinAPI_Screen_Driver::y() {
   /*RECT r;
 
   SystemParametersInfo(SPI_GETWORKAREA, 0, &r, 0);
@@ -207,8 +207,7 @@ int Fl_WinAPI_Screen_Driver::y()
 }
 
 
-int Fl_WinAPI_Screen_Driver::h()
-{
+int Fl_WinAPI_Screen_Driver::h() {
   /*RECT r;
 
   SystemParametersInfo(SPI_GETWORKAREA, 0, &r, 0);
@@ -219,8 +218,7 @@ int Fl_WinAPI_Screen_Driver::h()
 }
 
 
-int Fl_WinAPI_Screen_Driver::w()
-{
+int Fl_WinAPI_Screen_Driver::w() {
   /*RECT r;
 
   SystemParametersInfo(SPI_GETWORKAREA, 0, &r, 0);
@@ -231,31 +229,29 @@ int Fl_WinAPI_Screen_Driver::w()
 }
 
 
-void Fl_WinAPI_Screen_Driver::beep(int type)
-{
+void Fl_WinAPI_Screen_Driver::beep(int type) {
   switch (type) {
-    case FL_BEEP_QUESTION :
-    case FL_BEEP_PASSWORD :
+    case FL_BEEP_QUESTION:
+    case FL_BEEP_PASSWORD:
       MessageBeep(MB_ICONQUESTION);
       break;
-    case FL_BEEP_MESSAGE :
+    case FL_BEEP_MESSAGE:
       MessageBeep(MB_ICONASTERISK);
       break;
-    case FL_BEEP_NOTIFICATION :
+    case FL_BEEP_NOTIFICATION:
       MessageBeep(MB_ICONASTERISK);
       break;
-    case FL_BEEP_ERROR :
+    case FL_BEEP_ERROR:
       MessageBeep(MB_ICONERROR);
       break;
-    default :
+    default:
       MessageBeep(0xFFFFFFFF);
       break;
   }
 }
 
 
-void Fl_WinAPI_Screen_Driver::flush()
-{
+void Fl_WinAPI_Screen_Driver::flush() {
   GdiFlush();
 }
 
@@ -268,8 +264,7 @@ extern void fl_fix_focus(); // in Fl.cxx
 extern HWND fl_capture;
 
 
-void Fl_WinAPI_Screen_Driver::grab(Fl_Window* win)
-{
+void Fl_WinAPI_Screen_Driver::grab(Fl_Window *win) {
   if (win) {
     if (!Fl::grab_) {
       SetActiveWindow(fl_capture = fl_xid(Fl::first_window()));
@@ -287,39 +282,39 @@ void Fl_WinAPI_Screen_Driver::grab(Fl_Window* win)
 }
 
 
-static void set_selection_color(uchar r, uchar g, uchar b)
-{
-  Fl::set_color(FL_SELECTION_COLOR,r,g,b);
+static void set_selection_color(uchar r, uchar g, uchar b) {
+  Fl::set_color(FL_SELECTION_COLOR, r, g, b);
 }
 
 
-static void getsyscolor(int what, const char* arg, void (*func)(uchar,uchar,uchar))
-{
+static void getsyscolor(int what, const char *arg, void (*func)(uchar, uchar, uchar)) {
   if (arg) {
-    uchar r,g,b;
-    if (!fl_parse_color(arg, r,g,b))
+    uchar r, g, b;
+    if (!fl_parse_color(arg, r, g, b))
       Fl::error("Unknown color: %s", arg);
     else
-      func(r,g,b);
+      func(r, g, b);
   } else {
     DWORD x = GetSysColor(what);
-    func(uchar(x&255), uchar(x>>8), uchar(x>>16));
+    func(uchar(x & 255), uchar(x >> 8), uchar(x >> 16));
   }
 }
 
 
-void Fl_WinAPI_Screen_Driver::get_system_colors()
-{
-  if (!bg2_set) getsyscolor(COLOR_WINDOW,       fl_bg2,Fl::background2);
-  if (!fg_set) getsyscolor(COLOR_WINDOWTEXT,    fl_fg, Fl::foreground);
-  if (!bg_set) getsyscolor(COLOR_BTNFACE,       fl_bg, Fl::background);
-  getsyscolor(COLOR_HIGHLIGHT,  0,     set_selection_color);
+void Fl_WinAPI_Screen_Driver::get_system_colors() {
+  if (!bg2_set)
+    getsyscolor(COLOR_WINDOW, fl_bg2, Fl::background2);
+  if (!fg_set)
+    getsyscolor(COLOR_WINDOWTEXT, fl_fg, Fl::foreground);
+  if (!bg_set)
+    getsyscolor(COLOR_BTNFACE, fl_bg, Fl::background);
+  getsyscolor(COLOR_HIGHLIGHT, 0, set_selection_color);
 }
 
 
 int Fl_WinAPI_Screen_Driver::compose(int &del) {
   unsigned char ascii = (unsigned char)Fl::e_text[0];
-  int condition = (Fl::e_state & (FL_ALT | FL_META)) && !(ascii & 128) ;
+  int condition = (Fl::e_state & (FL_ALT | FL_META)) && !(ascii & 128);
   if (condition) { // this stuff is to be treated as a function key
     del = 0;
     return 0;
@@ -327,36 +322,40 @@ int Fl_WinAPI_Screen_Driver::compose(int &del) {
   del = Fl::compose_state;
   Fl::compose_state = 0;
   // Only insert non-control characters:
-  if ( (!Fl::compose_state) && ! (ascii & ~31 && ascii!=127)) {
+  if ((!Fl::compose_state) && !(ascii & ~31 && ascii != 127)) {
     return 0;
   }
   return 1;
 }
 
 
-Fl_RGB_Image *                                                  // O - image or NULL if failed
+Fl_RGB_Image * // O - image or NULL if failed
 Fl_WinAPI_Screen_Driver::read_win_rectangle(
-                                            int   X,            // I - Left position
-                                            int   Y,            // I - Top position
-                                            int   w,            // I - Width of area to read
-                                            int   h,            // I - Height of area to read
-                                            Fl_Window *win,     // I - window to capture from or NULL to capture from current offscreen
-                                            bool may_capture_subwins, bool *did_capture_subwins)
-{
+    int X,          // I - Left position
+    int Y,          // I - Top position
+    int w,          // I - Width of area to read
+    int h,          // I - Height of area to read
+    Fl_Window *win, // I - window to capture from or NULL to capture from current offscreen
+    bool may_capture_subwins, bool *did_capture_subwins) {
   float s = Fl_Surface_Device::surface()->driver()->scale();
   int ws, hs;
-  if (int(s) == s) { ws = w * int(s); hs = h * int(s);}
-  else {
-    ws = Fl_Scalable_Graphics_Driver::floor(X+w, s) - Fl_Scalable_Graphics_Driver::floor(X, s),
-    hs = Fl_Scalable_Graphics_Driver::floor(Y+h, s) - Fl_Scalable_Graphics_Driver::floor(Y, s);
-    if (ws < 1) ws = 1;
-    if (hs < 1) hs = 1;
+  if (int(s) == s) {
+    ws = w * int(s);
+    hs = h * int(s);
+  } else {
+    ws = Fl_Scalable_Graphics_Driver::floor(X + w, s) - Fl_Scalable_Graphics_Driver::floor(X, s),
+    hs = Fl_Scalable_Graphics_Driver::floor(Y + h, s) - Fl_Scalable_Graphics_Driver::floor(Y, s);
+    if (ws < 1)
+      ws = 1;
+    if (hs < 1)
+      hs = 1;
   }
-  return read_win_rectangle_unscaled(Fl_Scalable_Graphics_Driver::floor(X, s), Fl_Scalable_Graphics_Driver::floor(Y, s), ws, hs, win);
+  return read_win_rectangle_unscaled(Fl_Scalable_Graphics_Driver::floor(X, s),
+                                     Fl_Scalable_Graphics_Driver::floor(Y, s), ws, hs, win);
 }
 
-Fl_RGB_Image *Fl_WinAPI_Screen_Driver::read_win_rectangle_unscaled(int X, int Y, int w, int h, Fl_Window *win)
-{
+Fl_RGB_Image *Fl_WinAPI_Screen_Driver::read_win_rectangle_unscaled(int X, int Y, int w, int h,
+                                                                   Fl_Window *win) {
   // Depth of image is always 3 here
 
   // Grab all of the pixels in the image...
@@ -381,24 +380,25 @@ Fl_RGB_Image *Fl_WinAPI_Screen_Driver::read_win_rectangle_unscaled(int X, int Y,
     Y = 0;
   }
 
-  if (h < 1 || w < 1) return 0;            // nothing to copy
+  if (h < 1 || w < 1)
+    return 0; // nothing to copy
 
   // Allocate and initialize the image data array
   size_t arraySize = ((size_t)w * h) * 3;
   uchar *p = new uchar[arraySize];
   memset(p, 0, arraySize);
 
-  int line_size = ((3*w+3)/4) * 4;      // each line is aligned on a DWORD (4 bytes)
-  uchar *dib = new uchar[line_size*h];  // create temporary buffer to read DIB
+  int line_size = ((3 * w + 3) / 4) * 4; // each line is aligned on a DWORD (4 bytes)
+  uchar *dib = new uchar[line_size * h]; // create temporary buffer to read DIB
 
   // fill in bitmap info for GetDIBits
 
-  BITMAPINFO   bi;
+  BITMAPINFO bi;
   bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
   bi.bmiHeader.biWidth = w;
-  bi.bmiHeader.biHeight = -h;           // negative => top-down DIB
+  bi.bmiHeader.biHeight = -h; // negative => top-down DIB
   bi.bmiHeader.biPlanes = 1;
-  bi.bmiHeader.biBitCount = 24;         // 24 bits RGB
+  bi.bmiHeader.biBitCount = 24; // 24 bits RGB
   bi.bmiHeader.biCompression = BI_RGB;
   bi.bmiHeader.biSizeImage = 0;
   bi.bmiHeader.biXPelsPerMeter = 0;
@@ -407,14 +407,15 @@ Fl_RGB_Image *Fl_WinAPI_Screen_Driver::read_win_rectangle_unscaled(int X, int Y,
   bi.bmiHeader.biClrImportant = 0;
 
   // copy bitmap from original DC (Window, Fl_Offscreen, ...)
-  if (win && Fl_Window::current() != win) win->make_current();
+  if (win && Fl_Window::current() != win)
+    win->make_current();
   HDC gc = (HDC)fl_graphics_driver->gc();
   HDC hdc = CreateCompatibleDC(gc);
-  HBITMAP hbm = CreateCompatibleBitmap(gc,w,h);
+  HBITMAP hbm = CreateCompatibleBitmap(gc, w, h);
 
-  int save_dc = SaveDC(hdc);                    // save context for cleanup
-  SelectObject(hdc,hbm);                        // select bitmap
-  BitBlt(hdc,0,0,w,h,gc,X,Y,SRCCOPY);   // copy image section to DDB
+  int save_dc = SaveDC(hdc);                  // save context for cleanup
+  SelectObject(hdc, hbm);                     // select bitmap
+  BitBlt(hdc, 0, 0, w, h, gc, X, Y, SRCCOPY); // copy image section to DDB
 
   // copy RGB image data to the allocated DIB
 
@@ -422,24 +423,24 @@ Fl_RGB_Image *Fl_WinAPI_Screen_Driver::read_win_rectangle_unscaled(int X, int Y,
 
   // finally copy the image data to the user buffer
 
-  for (int j = 0; j<h; j++) {
-    const uchar *src = dib + j * line_size;                     // source line
-    uchar *tg = p + (j + shift_y) * 3 * ww + shift_x * 3;       // target line
-    for (int i = 0; i<w; i++) {
+  for (int j = 0; j < h; j++) {
+    const uchar *src = dib + j * line_size;               // source line
+    uchar *tg = p + (j + shift_y) * 3 * ww + shift_x * 3; // target line
+    for (int i = 0; i < w; i++) {
       uchar b = *src++;
       uchar g = *src++;
-      *tg++ = *src++;   // R
-      *tg++ = g;        // G
-      *tg++ = b;        // B
+      *tg++ = *src++; // R
+      *tg++ = g;      // G
+      *tg++ = b;      // B
     }
   }
 
   // free used GDI and other structures
 
-  RestoreDC(hdc,save_dc);       // reset DC
+  RestoreDC(hdc, save_dc); // reset DC
   DeleteDC(hdc);
   DeleteObject(hbm);
-  delete[] dib;         // delete DIB temporary buffer
+  delete[] dib; // delete DIB temporary buffer
 
   Fl_RGB_Image *rgb = new Fl_RGB_Image(p, w, h, 3);
   rgb->alloc_array = 1;
@@ -447,23 +448,22 @@ Fl_RGB_Image *Fl_WinAPI_Screen_Driver::read_win_rectangle_unscaled(int X, int Y,
 }
 
 
-void Fl_WinAPI_Screen_Driver::offscreen_size(Fl_Offscreen off, int &width, int &height)
-{
+void Fl_WinAPI_Screen_Driver::offscreen_size(Fl_Offscreen off, int &width, int &height) {
   BITMAP bitmap;
-  if ( GetObject(off, sizeof(BITMAP), &bitmap) ) {
+  if (GetObject(off, sizeof(BITMAP), &bitmap)) {
     width = bitmap.bmWidth;
     height = bitmap.bmHeight;
   }
 }
 
-//NOTICE: returns -1 if x,y is not in any screen
-int Fl_WinAPI_Screen_Driver::screen_num_unscaled(int x, int y)
-{
+// NOTICE: returns -1 if x,y is not in any screen
+int Fl_WinAPI_Screen_Driver::screen_num_unscaled(int x, int y) {
   int screen = -1;
-  if (num_screens < 0) init();
-  for (int i = 0; i < num_screens; i ++) {
-    if (x >= screens[i].left && x < screens[i].right &&
-        y >= screens[i].top && y < screens[i].bottom) {
+  if (num_screens < 0)
+    init();
+  for (int i = 0; i < num_screens; i++) {
+    if (x >= screens[i].left && x < screens[i].right && y >= screens[i].top &&
+        y < screens[i].bottom) {
       screen = i;
       break;
     }

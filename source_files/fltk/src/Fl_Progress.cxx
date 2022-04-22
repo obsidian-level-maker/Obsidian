@@ -40,11 +40,10 @@
 //
 
 /** Draws the progress bar. */
-void Fl_Progress::draw()
-{
-  int   progress;       // Size of progress bar...
-  int   bx, by, bw, bh; // Box areas...
-  int   tx, tw;         // Temporary X + width
+void Fl_Progress::draw() {
+  int progress;       // Size of progress bar...
+  int bx, by, bw, bh; // Box areas...
+  int tx, tw;         // Temporary X + width
 
 
   // Get the box borders...
@@ -68,16 +67,17 @@ void Fl_Progress::draw()
     labelcolor(fl_contrast(labelcolor(), selection_color()));
 
     fl_push_clip(x(), y(), progress + bx, h());
-      draw_box(box(), x(), y(), w(), h(), active_r() ? selection_color() : fl_inactive(selection_color()));
-      draw_label(tx, y() + by, tw, h() - bh);
+    draw_box(box(), x(), y(), w(), h(),
+             active_r() ? selection_color() : fl_inactive(selection_color()));
+    draw_label(tx, y() + by, tw, h() - bh);
     fl_pop_clip();
 
     labelcolor(c);
 
-    if (progress<w()) {
+    if (progress < w()) {
       fl_push_clip(tx + progress, y(), w() - progress, h());
-        draw_box(box(), x(), y(), w(), h(), active_r() ? color() : fl_inactive(color()));
-        draw_label(tx, y() + by, tw, h() - bh);
+      draw_box(box(), x(), y(), w(), h(), active_r() ? color() : fl_inactive(color()));
+      draw_label(tx, y() + by, tw, h() - bh);
       fl_pop_clip();
     }
   } else {
@@ -96,8 +96,8 @@ void Fl_Progress::draw()
 
     The default colors are FL_BACKGROUND2_COLOR and FL_YELLOW, resp.
 */
-Fl_Progress::Fl_Progress(int X, int Y, int W, int H, const char* L)
-: Fl_Widget(X, Y, W, H, L) {
+Fl_Progress::Fl_Progress(int X, int Y, int W, int H, const char *L)
+  : Fl_Widget(X, Y, W, H, L) {
   align(FL_ALIGN_INSIDE);
   box(FL_DOWN_BOX);
   color(FL_BACKGROUND2_COLOR, FL_YELLOW);

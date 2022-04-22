@@ -188,7 +188,7 @@ void Fl_OpenGL_Graphics_Driver::draw(const char *str, int n, float x, float y) {
 
 void Fl_OpenGL_Graphics_Driver::draw(int angle, const char *str, int n, int x, int y) {}
 
-void Fl_OpenGL_Graphics_Driver::draw(const char* str, int n, int x, int y) {
+void Fl_OpenGL_Graphics_Driver::draw(const char *str, int n, int x, int y) {
   Fl_Surface_Device::push_current(Fl_Display_Device::display_device());
   gl_draw(str, n, x, y);
   Fl_Surface_Device::pop_current();
@@ -201,7 +201,9 @@ double Fl_OpenGL_Graphics_Driver::width(const char *str, int n) {
   return w;
 }
 
-double Fl_OpenGL_Graphics_Driver::width(unsigned int c) { return Fl_Graphics_Driver::width(c); }
+double Fl_OpenGL_Graphics_Driver::width(unsigned int c) {
+  return Fl_Graphics_Driver::width(c);
+}
 
 int Fl_OpenGL_Graphics_Driver::descent() {
   Fl_Surface_Device::push_current(Fl_Display_Device::display_device());
@@ -217,8 +219,8 @@ int Fl_OpenGL_Graphics_Driver::height() {
   return h;
 }
 
-void Fl_OpenGL_Graphics_Driver::text_extents(const char *str, int n, int& dx, int& dy, int& w, int& h)
-{
+void Fl_OpenGL_Graphics_Driver::text_extents(const char *str, int n, int &dx, int &dy, int &w,
+                                             int &h) {
   Fl_Surface_Device::push_current(Fl_Display_Device::display_device());
   fl_text_extents(str, n, dx, dy, w, h);
   Fl_Surface_Device::pop_current();

@@ -42,13 +42,13 @@
   position and size.
   <P>The inherited destructor destroys the widget and its children.
 */
-Fl_Wizard::Fl_Wizard(int        xx,     // I - Lefthand position
-                     int        yy,     // I - Upper position
-                     int        ww,     // I - Width
-                     int        hh,     // I - Height
-                     const char *l) :   // I - Label
-    Fl_Group(xx, yy, ww, hh, l)
-{
+Fl_Wizard::Fl_Wizard(int xx, // I - Lefthand position
+                     int yy, // I - Upper position
+                     int ww, // I - Width
+                     int hh, // I - Height
+                     const char *l)
+  : // I - Label
+  Fl_Group(xx, yy, ww, hh, l) {
   box(FL_THIN_UP_BOX);
 
   value_ = (Fl_Widget *)0;
@@ -58,24 +58,20 @@ Fl_Wizard::Fl_Wizard(int        xx,     // I - Lefthand position
 //
 /** Draws the wizard border and visible child. */
 void Fl_Wizard::draw() {
-  Fl_Widget     *kid;   // Visible child
+  Fl_Widget *kid; // Visible child
 
 
   kid = value();
 
-  if (damage() & FL_DAMAGE_ALL)
-  {
+  if (damage() & FL_DAMAGE_ALL) {
     // Redraw everything...
-    if (kid)
-    {
+    if (kid) {
       draw_box(box(), x(), y(), w(), h(), kid->color());
       draw_child(*kid);
-    }
-    else
+    } else
       draw_box(box(), x(), y(), w(), h(), color());
 
-  }
-  else if (kid)
+  } else if (kid)
     update_child(*kid);
 }
 
@@ -85,14 +81,14 @@ void Fl_Wizard::draw() {
   is already visible, this function does nothing.
 */
 void Fl_Wizard::next() {
-  int                   num_kids;
-  Fl_Widget     * const *kids;
+  int num_kids;
+  Fl_Widget *const *kids;
 
 
   if ((num_kids = children()) == 0)
     return;
 
-  for (kids = array(); num_kids > 0; kids ++, num_kids --)
+  for (kids = array(); num_kids > 0; kids++, num_kids--)
     if ((*kids)->visible())
       break;
 
@@ -101,16 +97,15 @@ void Fl_Wizard::next() {
 }
 
 /** Shows the previous child.*/
-void Fl_Wizard::prev()
-{
-  int                   num_kids;
-  Fl_Widget     * const *kids;
+void Fl_Wizard::prev() {
+  int num_kids;
+  Fl_Widget *const *kids;
 
 
   if ((num_kids = children()) == 0)
     return;
 
-  for (kids = array(); num_kids > 0; kids ++, num_kids --)
+  for (kids = array(); num_kids > 0; kids++, num_kids--)
     if ((*kids)->visible())
       break;
 
@@ -119,20 +114,17 @@ void Fl_Wizard::prev()
 }
 
 /**  Gets the current visible child widget. */
-Fl_Widget* Fl_Wizard::value()
-{
-  int                   num_kids;
-  Fl_Widget     * const *kids;
-  Fl_Widget             *kid;
+Fl_Widget *Fl_Wizard::value() {
+  int num_kids;
+  Fl_Widget *const *kids;
+  Fl_Widget *kid;
 
 
   if ((num_kids = children()) == 0)
     return ((Fl_Widget *)0);
 
-  for (kids = array(), kid = (Fl_Widget *)0; num_kids > 0; kids ++, num_kids --)
-  {
-    if ((*kids)->visible())
-    {
+  for (kids = array(), kid = (Fl_Widget *)0; num_kids > 0; kids++, num_kids--) {
+    if ((*kids)->visible()) {
       if (kid)
         (*kids)->hide();
       else
@@ -140,9 +132,8 @@ Fl_Widget* Fl_Wizard::value()
     }
   }
 
-  if (!kid)
-  {
-    kids --;
+  if (!kid) {
+    kids--;
     kid = *kids;
     kid->show();
   }
@@ -151,28 +142,25 @@ Fl_Widget* Fl_Wizard::value()
 }
 
 /**  Sets the child widget that is visible.*/
-void Fl_Wizard::value(Fl_Widget *kid)
-{
-  int                   num_kids;
-  Fl_Widget     * const *kids;
+void Fl_Wizard::value(Fl_Widget *kid) {
+  int num_kids;
+  Fl_Widget *const *kids;
 
 
   if ((num_kids = children()) == 0)
     return;
 
-  for (kids = array(); num_kids > 0; kids ++, num_kids --)
-  {
-    if (*kids == kid)
-    {
+  for (kids = array(); num_kids > 0; kids++, num_kids--) {
+    if (*kids == kid) {
       if (!kid->visible())
         kid->show();
-    }
-    else
+    } else
       (*kids)->hide();
   }
 
   // This will restore the mouse pointer to the window's default cursor
   // whenever the wizard pane is changed.  Otherwise text widgets that
   // show the next pane may leave the cursor set to the I beam, etc...
-  if (window()) window()->cursor(FL_CURSOR_DEFAULT);
+  if (window())
+    window()->cursor(FL_CURSOR_DEFAULT);
 }

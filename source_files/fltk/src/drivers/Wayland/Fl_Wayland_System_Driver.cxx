@@ -23,11 +23,13 @@
 
 
 int Fl_Wayland_System_Driver::event_key(int k) {
-  if (k > FL_Button && k <= FL_Button+8)
-    return Fl::event_state(8<<(k-FL_Button));
+  if (k > FL_Button && k <= FL_Button + 8)
+    return Fl::event_state(8 << (k - FL_Button));
   int sym = Fl::event_key();
-  if (sym >= 'a' && sym <= 'z' ) sym -= 32;
-  if (k >= 'a' && k <= 'z' )  k -= 32;
+  if (sym >= 'a' && sym <= 'z')
+    sym -= 32;
+  if (k >= 'a' && k <= 'z')
+    k -= 32;
   return (Fl::event() == FL_KEYDOWN || Fl::event() == FL_SHORTCUT) && sym == k;
 }
 
@@ -55,7 +57,7 @@ void *Fl_Wayland_System_Driver::control_maximize_button(void *data) {
     Fl_Window *win = Fl::first_window();
     while (win) {
       if (!win->parent() && win->border() &&
-          !(Fl_X::i(win)->xid->state & LIBDECOR_WINDOW_STATE_MAXIMIZED) ) {
+          !(Fl_X::i(win)->xid->state & LIBDECOR_WINDOW_STATE_MAXIMIZED)) {
         win_dims *dim = new win_dims;
         dim->tracker = new Fl_Widget_Tracker(win);
         Fl_Window_Driver *dr = Fl_Window_Driver::driver(win);
@@ -63,7 +65,7 @@ void *Fl_Wayland_System_Driver::control_maximize_button(void *data) {
         dim->minh = dr->minh();
         dim->maxw = dr->maxw();
         dim->maxh = dr->maxh();
-        //make win un-resizable
+        // make win un-resizable
         win->size_range(win->w(), win->h(), win->w(), win->h());
         dim->next = first_dim;
         first_dim = dim;
@@ -75,9 +77,9 @@ void *Fl_Wayland_System_Driver::control_maximize_button(void *data) {
     win_dims *first_dim = (win_dims *)data;
     while (first_dim) {
       win_dims *dim = first_dim;
-      //give back win its resizing parameters
+      // give back win its resizing parameters
       if (dim->tracker->exists()) {
-        Fl_Window *win = (Fl_Window*)dim->tracker->widget();
+        Fl_Window *win = (Fl_Window *)dim->tracker->widget();
         win->size_range(dim->minw, dim->minh, dim->maxw, dim->maxh);
       }
       first_dim = dim->next;

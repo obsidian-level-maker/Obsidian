@@ -75,23 +75,24 @@ static void Cookie_SetValue(std::string name, std::string value) {
                 if (!value.empty()) {
                     string_seed = value;
                     ob_set_config("string_seed", value.c_str());
-                    #ifdef max
-                    #undef max
-                    #endif
-                        unsigned long long split_limit =
-                            (std::numeric_limits<long long>::max() /
-                            127);  // It is intentional that I am using the max for signed - Dasho
-                        next_rand_seed = split_limit;
-                        for (size_t i = 0; i < value.size(); i++) {
-                            char character = value.at(i);
-                            if (!std::iscntrl(character)) {
-                                if (next_rand_seed < split_limit) {
-                                    next_rand_seed *= int(character);
-                                } else {
-                                    next_rand_seed /= int(character);
-                                }
+#ifdef max
+#undef max
+#endif
+                    unsigned long long split_limit =
+                        (std::numeric_limits<long long>::max() /
+                         127);  // It is intentional that I am using the max for
+                                // signed - Dasho
+                    next_rand_seed = split_limit;
+                    for (size_t i = 0; i < value.size(); i++) {
+                        char character = value.at(i);
+                        if (!std::iscntrl(character)) {
+                            if (next_rand_seed < split_limit) {
+                                next_rand_seed *= int(character);
+                            } else {
+                                next_rand_seed /= int(character);
                             }
                         }
+                    }
                 } else {
                     LogPrintf("Invalid argument. Will generate new seed.\n");
                 }

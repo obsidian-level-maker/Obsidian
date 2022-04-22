@@ -34,49 +34,51 @@
   every newly exposed rectangular area.
   */
 void fl_scroll(int X, int Y, int W, int H, int dx, int dy,
-               void (*draw_area)(void*, int,int,int,int), void* data)
-{
-  if (!dx && !dy) return;
+               void (*draw_area)(void *, int, int, int, int), void *data) {
+  if (!dx && !dy)
+    return;
   if (dx <= -W || dx >= W || dy <= -H || dy >= H) {
     // no intersection of old an new scroll
-    draw_area(data,X,Y,W,H);
+    draw_area(data, X, Y, W, H);
     return;
   }
   int src_x, src_w, dest_x, clip_x, clip_w;
   if (dx > 0) {
     src_x = X;
-    dest_x = X+dx;
-    src_w = W-dx;
+    dest_x = X + dx;
+    src_w = W - dx;
     clip_x = X;
     clip_w = dx;
   } else {
-    src_x = X-dx;
+    src_x = X - dx;
     dest_x = X;
-    src_w = W+dx;
-    clip_x = X+src_w;
-    clip_w = W-src_w;
+    src_w = W + dx;
+    clip_x = X + src_w;
+    clip_w = W - src_w;
   }
   int src_y, src_h, dest_y, clip_y, clip_h;
   if (dy > 0) {
     src_y = Y;
-    dest_y = Y+dy;
-    src_h = H-dy;
+    dest_y = Y + dy;
+    src_h = H - dy;
     clip_y = Y;
     clip_h = dy;
   } else {
-    src_y = Y-dy;
+    src_y = Y - dy;
     dest_y = Y;
-    src_h = H+dy;
-    clip_y = Y+src_h;
-    clip_h = H-src_h;
+    src_h = H + dy;
+    clip_y = Y + src_h;
+    clip_h = H - src_h;
   }
 
-  int retval = Fl_Window_Driver::driver(Fl_Window::current())->scroll(src_x, src_y, src_w, src_h,
-                                                      dest_x, dest_y, draw_area, data);
+  int retval = Fl_Window_Driver::driver(Fl_Window::current())
+                   ->scroll(src_x, src_y, src_w, src_h, dest_x, dest_y, draw_area, data);
   if (retval) {
-    draw_area(data,X,Y,W,H);
+    draw_area(data, X, Y, W, H);
     return;
   }
-  if (dx) draw_area(data, clip_x, dest_y, clip_w, src_h);
-  if (dy) draw_area(data, X, clip_y, W, clip_h);
+  if (dx)
+    draw_area(data, clip_x, dest_y, clip_w, src_h);
+  if (dy)
+    draw_area(data, X, clip_y, W, clip_h);
 }

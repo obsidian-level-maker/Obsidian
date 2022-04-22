@@ -24,28 +24,28 @@
 // Cairo is currently supported for the following platforms:
 // Win32, Apple Quartz, X11
 
-#if defined(FLTK_USE_X11)         // X11
-#  include <cairo-xlib.h>
-#elif defined(_WIN32)             // Windows
-#  include <cairo-win32.h>
-#elif defined(__APPLE_QUARTZ__)   // macOS
-#  include <cairo-quartz.h>
+#if defined(FLTK_USE_X11) // X11
+#include <cairo-xlib.h>
+#elif defined(_WIN32) // Windows
+#include <cairo-win32.h>
+#elif defined(__APPLE_QUARTZ__) // macOS
+#include <cairo-quartz.h>
 #elif defined(FLTK_USE_WAYLAND)
-#  include "../src/drivers/Wayland/Fl_Wayland_Graphics_Driver.H"
-#  include "../src/drivers/Wayland/Fl_Wayland_Window_Driver.H"
+#include "../src/drivers/Wayland/Fl_Wayland_Graphics_Driver.H"
+#include "../src/drivers/Wayland/Fl_Wayland_Window_Driver.H"
 #else
-#  error Cairo is not supported on this platform.
+#error Cairo is not supported on this platform.
 #endif
 
 // static Fl module initialization :
-Fl_Cairo_State Fl::cairo_state_;        ///< contains all necessary info for current cairo context mapping
+Fl_Cairo_State Fl::cairo_state_; ///< contains all necessary info for current cairo context mapping
 
 
 // Fl cairo features implementation
 
 // Fl_Cairo_State class impl
 
-void  Fl_Cairo_State::autolink(bool b)  {
+void Fl_Cairo_State::autolink(bool b) {
 #ifdef FLTK_HAVE_CAIROEXT
   autolink_ = b;
 #else
@@ -70,26 +70,28 @@ void  Fl_Cairo_State::autolink(bool b)  {
     \note Only available when configure has the --enable-cairo option
     \return the valid cairo_t* cairo context associated to this window.
 */
-cairo_t * Fl::cairo_make_current(Fl_Window* wi) {
-    if (!wi) return NULL; // Precondition
-  cairo_t * cairo_ctxt;
+cairo_t *Fl::cairo_make_current(Fl_Window *wi) {
+  if (!wi)
+    return NULL; // Precondition
+  cairo_t *cairo_ctxt;
 #if defined(FLTK_USE_WAYLAND)
   Window xid = fl_xid(wi);
-  if (!xid->buffer) return NULL; // this may happen with GL windows
+  if (!xid->buffer)
+    return NULL; // this may happen with GL windows
   cairo_ctxt = xid->buffer->cairo_;
   cairo_state_.cc(cairo_ctxt, false);
 #else // FLTK_USE_WAYLAND
-    if (fl_gc==0) { // means remove current cc
-        Fl::cairo_cc(0); // destroy any previous cc
-        cairo_state_.window(0);
-        return 0;
-    }
+  if (fl_gc == 0) {  // means remove current cc
+    Fl::cairo_cc(0); // destroy any previous cc
+    cairo_state_.window(0);
+    return 0;
+  }
 
-    // don't re-create a context if it's the same gc/window couple
-    if (fl_gc==Fl::cairo_state_.gc() && fl_xid(wi) == (Window) Fl::cairo_state_.window())
-        return Fl::cairo_cc();
+  // don't re-create a context if it's the same gc/window couple
+  if (fl_gc == Fl::cairo_state_.gc() && fl_xid(wi) == (Window)Fl::cairo_state_.window())
+    return Fl::cairo_cc();
 
-    cairo_state_.window(wi);
+  cairo_state_.window(wi);
 
 #ifndef __APPLE__
   float scale = Fl::screen_scale(wi->screen_num()); // get the screen scaling factor
@@ -114,16 +116,16 @@ cairo_t * Fl::cairo_make_current(Fl_Window* wi) {
     a display on X11 (not used on this platform)
  */
 
-static cairo_surface_t * cairo_create_surface(void * gc, int W, int H) {
-# if defined(FLTK_USE_X11)
-    return cairo_xlib_surface_create(fl_display, fl_window, fl_visual->visual, W, H);
-# elif   defined(_WIN32)
-    return cairo_win32_surface_create((HDC) gc);
-# elif defined(__APPLE_QUARTZ__)
-  return cairo_quartz_surface_create_for_cg_context((CGContextRef) gc, W, H);
-# else
-#  error Cairo is not supported under this platform.
-# endif
+static cairo_surface_t *cairo_create_surface(void *gc, int W, int H) {
+#if defined(FLTK_USE_X11)
+  return cairo_xlib_surface_create(fl_display, fl_window, fl_visual->visual, W, H);
+#elif defined(_WIN32)
+  return cairo_win32_surface_create((HDC)gc);
+#elif defined(__APPLE_QUARTZ__)
+  return cairo_quartz_surface_create_for_cg_context((CGContextRef)gc, W, H);
+#else
+#error Cairo is not supported under this platform.
+#endif
 }
 
 /**
@@ -131,60 +133,57 @@ static cairo_surface_t * cairo_create_surface(void * gc, int W, int H) {
   offscreen size if fl_window is null.
   \note Only available when configure has the --enable-cairo option
 */
-cairo_t * Fl::cairo_make_current(void *gc) {
-    int W=0,H=0;
+cairo_t *Fl::cairo_make_current(void *gc) {
+  int W = 0, H = 0;
 #if defined(FLTK_USE_X11)
   // FIXME X11 get W,H
   // gc will be the window handle here
   // # warning FIXME get W,H for cairo_make_current(void*)
 #elif defined(__APPLE_QUARTZ__)
-    if (fl_window) {
-      W = Fl_Window::current()->w();
-      H = Fl_Window::current()->h();
-    }
-    else {
-      W = CGBitmapContextGetWidth(fl_gc);
-      H = CGBitmapContextGetHeight(fl_gc);
-    }
+  if (fl_window) {
+    W = Fl_Window::current()->w();
+    H = Fl_Window::current()->h();
+  } else {
+    W = CGBitmapContextGetWidth(fl_gc);
+    H = CGBitmapContextGetHeight(fl_gc);
+  }
 #elif defined(_WIN32)
-    // we don't need any W,H for Windows
+  // we don't need any W,H for Windows
 #else
-# error Cairo is not supported on this platform.
+#error Cairo is not supported on this platform.
 #endif
-    if (!gc) {
-        Fl::cairo_cc(0);
-        cairo_state_.gc(0); // keep track for next time
-        return 0;
-    }
-    if (gc==Fl::cairo_state_.gc() &&
-        fl_window== (Window) Fl::cairo_state_.window() &&
-        cairo_state_.cc()!=0)
-        return Fl::cairo_cc();
-    cairo_state_.gc(fl_gc); // keep track for next time
-    cairo_surface_t * s = cairo_create_surface(gc, W, H);
-    cairo_t * c = cairo_create(s);
-    cairo_surface_destroy(s);
-    cairo_state_.cc(c);
-    return c;
+  if (!gc) {
+    Fl::cairo_cc(0);
+    cairo_state_.gc(0); // keep track for next time
+    return 0;
+  }
+  if (gc == Fl::cairo_state_.gc() && fl_window == (Window)Fl::cairo_state_.window() &&
+      cairo_state_.cc() != 0)
+    return Fl::cairo_cc();
+  cairo_state_.gc(fl_gc); // keep track for next time
+  cairo_surface_t *s = cairo_create_surface(gc, W, H);
+  cairo_t *c = cairo_create(s);
+  cairo_surface_destroy(s);
+  cairo_state_.cc(c);
+  return c;
 }
 
 /**
    Creates a cairo context from a \a gc and its size
    \note Only available when configure has the --enable-cairo option
 */
-cairo_t * Fl::cairo_make_current(void *gc, int W, int H) {
-    if (gc==Fl::cairo_state_.gc() &&
-        fl_window== (Window) Fl::cairo_state_.window() &&
-        cairo_state_.cc()!=0) // no need to create a cc, just return that one
-        return cairo_state_.cc();
+cairo_t *Fl::cairo_make_current(void *gc, int W, int H) {
+  if (gc == Fl::cairo_state_.gc() && fl_window == (Window)Fl::cairo_state_.window() &&
+      cairo_state_.cc() != 0) // no need to create a cc, just return that one
+    return cairo_state_.cc();
 
-    // we need to (re-)create a fresh cc ...
-    cairo_state_.gc(gc); // keep track for next time
-    cairo_surface_t * s = cairo_create_surface(gc, W, H);
-    cairo_t * c = cairo_create(s);
-    cairo_state_.cc(c); //  and purge any previously owned context
-    cairo_surface_destroy(s);
-    return c;
+  // we need to (re-)create a fresh cc ...
+  cairo_state_.gc(gc); // keep track for next time
+  cairo_surface_t *s = cairo_create_surface(gc, W, H);
+  cairo_t *c = cairo_create(s);
+  cairo_state_.cc(c); //  and purge any previously owned context
+  cairo_surface_destroy(s);
+  return c;
 }
 
 #endif // !FLTK_USE_WAYLAND
@@ -192,5 +191,7 @@ cairo_t * Fl::cairo_make_current(void *gc, int W, int H) {
 #else
 // just don't leave the libfltk_cairo lib empty to avoid warnings
 #include <FL/Fl_Export.H>
-FL_EXPORT int fltk_cairo_dummy() { return 1;}
+FL_EXPORT int fltk_cairo_dummy() {
+  return 1;
+}
 #endif // FLTK_HAVE_CAIRO

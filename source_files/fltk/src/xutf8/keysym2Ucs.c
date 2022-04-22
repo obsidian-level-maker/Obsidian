@@ -17,5 +17,5 @@
 #include "imKStoUCS.c"
 
 long XKeysymToUcs(KeySym keysym) {
-  return (long) KeySymToUcs4(keysym);
+  return (long)KeySymToUcs4(keysym);
 }

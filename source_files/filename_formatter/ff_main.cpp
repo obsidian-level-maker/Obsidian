@@ -39,7 +39,8 @@ void version() { result.append(versionValue); }
 
 void raw_append(const char *string) { result.append(string); }
 
-const char *ff_main(const char *levelcount, const char *game, const char *theme, const char *version, const char *format) {
+const char *ff_main(const char *levelcount, const char *game, const char *theme,
+                    const char *version, const char *format) {
     int c;
     gameValue = game;
     themeValue = theme;
@@ -47,7 +48,8 @@ const char *ff_main(const char *levelcount, const char *game, const char *theme,
     versionValue = version;
     std::string input = format;
     result.clear();
-    now_ = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    now_ =
+        std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     now = *std::localtime(&now_);
 
     auto buffer_state = yy_scan_bytes(input.c_str(), input.size());

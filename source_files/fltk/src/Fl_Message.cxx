@@ -46,8 +46,8 @@
 #include <FL/Fl.H>
 #include "flstring.h"
 #include <FL/fl_ask.H>
-#include "Fl_Message.h"     // intentionally "hidden" in src/...
-#include "FL/fl_string_functions.h"   // fl_strdup()
+#include "Fl_Message.h"             // intentionally "hidden" in src/...
+#include "FL/fl_string_functions.h" // fl_strdup()
 
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Box.H>
@@ -111,8 +111,7 @@ void Fl_Message::button_cb_(Fl_Widget *w, void *d) {
 void Fl_Message::window_cb_(Fl_Widget *w, void *d) {
   Fl_Window *window = (Fl_Window *)w;
   Fl_Message *dialog = (Fl_Message *)window->user_data();
-  if ((Fl::event() == FL_KEYBOARD || Fl::event() == FL_SHORTCUT) &&
-      (Fl::event_key() == FL_Escape))
+  if ((Fl::event() == FL_KEYBOARD || Fl::event() == FL_SHORTCUT) && (Fl::event_key() == FL_Escape))
     dialog->window_closed_ = -1;
   else
     dialog->window_closed_ = -2;
@@ -166,12 +165,12 @@ Fl_Message::Fl_Message(const char *iconlabel)
   icon_->image(icon_template->image());
   icon_->align(icon_template->align());
 
-  if (message_icon_label_) {                // fl_message_icon_label() has been called
+  if (message_icon_label_) { // fl_message_icon_label() has been called
     icon_->copy_label(message_icon_label_);
     message_icon_label_ = 0;
-  } else if (icon_template->label()) {      // sticky icon template label() has been set
+  } else if (icon_template->label()) { // sticky icon template label() has been set
     icon_->copy_label(icon_template->label());
-  } else {                                  // default string (c'tor argument)
+  } else { // default string (c'tor argument)
     icon_->label(iconlabel);
   }
 
@@ -310,7 +309,8 @@ void Fl_Message::resizeform() {
   \retval  2  button 2 was pushed
 */
 
-int Fl_Message::innards(const char *fmt, va_list ap, const char *b0, const char *b1, const char *b2) {
+int Fl_Message::innards(const char *fmt, va_list ap, const char *b0, const char *b1,
+                        const char *b2) {
   Fl::pushed(0); // stop dragging (STR #2159)
 
   char buffer[1024];
@@ -380,7 +380,8 @@ int Fl_Message::innards(const char *fmt, va_list ap, const char *b0, const char 
   Fl_Window *g = Fl::grab();
   if (g)
     Fl::grab(0);
-  Fl_Group *current_group = Fl_Group::current(); // make sure the dialog does not interfere with any active group
+  Fl_Group *current_group =
+      Fl_Group::current(); // make sure the dialog does not interfere with any active group
   Fl_Group::current(0);
   window_->show();
   Fl_Group::current(current_group);
@@ -447,7 +448,8 @@ Fl_Box *Fl_Message::message_icon() {
 
   \see innards()
 */
-const char *Fl_Message::input_innards(const char *fmt, va_list ap, const char *defstr, uchar type, int maxchar) {
+const char *Fl_Message::input_innards(const char *fmt, va_list ap, const char *defstr, uchar type,
+                                      int maxchar) {
   message_->position(60, 10);
   input_->type(type);
   input_->show();
@@ -551,7 +553,7 @@ void Fl_Message::icon_label(const char *str) {
 // handle ctrl-c (command-c on macOS) to copy message text
 
 int Fl_Message_Box::handle(int e) {
-  unsigned int mods = Fl::event_state() & (FL_META|FL_CTRL|FL_ALT);
+  unsigned int mods = Fl::event_state() & (FL_META | FL_CTRL | FL_ALT);
   switch (e) {
     case FL_KEYBOARD:
     case FL_SHORTCUT:

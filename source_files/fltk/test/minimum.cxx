@@ -41,26 +41,26 @@
 #include <FL/Fl_Return_Button.H>
 
 int main(int argc, char **argv) {
-  Fl_Double_Window *window = new Fl_Double_Window(400,320,argv[0]);
-  window->resizable(*(new Fl_Box(FL_ENGRAVED_FRAME,10,10,300,300,
-"MINIMUM UPDATE TEST\n"
-"\n"
-"The slider on the right purposely\n"
-"draws outside its boundaries.\n"
-"Moving it should leave old copies\n"
-"of the label.  These copies should\n"
-"*not* be erased by any actions\n"
-"other than hiding and showing\n"
-"of that portion of the window\n"
-"or changing the button that\n"
-"intersects them.")));
+  Fl_Double_Window *window = new Fl_Double_Window(400, 320, argv[0]);
+  window->resizable(*(new Fl_Box(FL_ENGRAVED_FRAME, 10, 10, 300, 300,
+                                 "MINIMUM UPDATE TEST\n"
+                                 "\n"
+                                 "The slider on the right purposely\n"
+                                 "draws outside its boundaries.\n"
+                                 "Moving it should leave old copies\n"
+                                 "of the label.  These copies should\n"
+                                 "*not* be erased by any actions\n"
+                                 "other than hiding and showing\n"
+                                 "of that portion of the window\n"
+                                 "or changing the button that\n"
+                                 "intersects them.")));
 
   Fl_Slider *s;
-  s = new Fl_Slider(320,10,20,300,"Too_Big_Label");
+  s = new Fl_Slider(320, 10, 20, 300, "Too_Big_Label");
   s->align(0);
 
-  new Fl_Button(20,270,100,30,"Button");
-  new Fl_Return_Button(200,270,100,30,"Button");
+  new Fl_Button(20, 270, 100, 30, "Button");
+  new Fl_Return_Button(200, 270, 100, 30, "Button");
 
   window->show(argc, argv);
   return Fl::run();
