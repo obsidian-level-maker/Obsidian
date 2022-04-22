@@ -41,7 +41,6 @@ void raw_append(const char *string) { result.append(string); }
 
 const char *ff_main(const char *levelcount, const char *game, const char *theme,
                     const char *version, const char *format) {
-    int c;
     gameValue = game;
     themeValue = theme;
     countValue = levelcount;
