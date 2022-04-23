@@ -62,7 +62,6 @@ cpmaddpackage(
 
 add_executable(
   obsidian
-  cpp.hint
   source_files/obsidian_main/aj_map.cc
   source_files/obsidian_main/aj_poly.cc
   source_files/obsidian_main/aj_util.cc
@@ -128,7 +127,9 @@ add_executable(
 
 target_include_directories(obsidian PRIVATE source_files/filename_formatter)
 target_include_directories(obsidian PRIVATE source_files/fltk)
-target_include_directories(obsidian PRIVATE "${PROJECT_BINARY_DIR}/source_files/fltk") # Hack for FLTK 1.4 (for now)
+target_include_directories(
+  obsidian PRIVATE "${PROJECT_BINARY_DIR}/source_files/fltk"
+) # Hack for FLTK 1.4 (for now)
 target_include_directories(obsidian PRIVATE source_files/gif-h)
 target_include_directories(obsidian PRIVATE source_files/lua/src)
 target_include_directories(obsidian PRIVATE source_files/miniz)
@@ -141,6 +142,7 @@ if(MINGW
    OR MSYS
 )
   target_compile_definitions(obsidian PRIVATE WIN32)
+  target_compile_definitions(obsidian PRIVATE NOMINMAX)
 else()
   target_compile_definitions(obsidian PRIVATE UNIX)
 endif()
@@ -171,22 +173,36 @@ add_dependencies(obsidian qsavetex)
 
 if(UNIX)
   target_link_libraries(
-    obsidian PRIVATE filename_formatter fltk fltk_images miniz libluajit obsidian_physfs obsidian_zdbsp
-                     obsidian_slump fontconfig
+    obsidian
+    PRIVATE filename_formatter
+            fltk
+            fltk_images
+            miniz
+            libluajit
+            obsidian_physfs
+            obsidian_zdbsp
+            obsidian_slump
+            fontconfig
   )
 else()
   target_link_libraries(
-    obsidian PRIVATE filename_formatter fltk fltk_images miniz libluajit obsidian_physfs obsidian_zdbsp
-                     obsidian_slump
+    obsidian
+    PRIVATE filename_formatter
+            fltk
+            fltk_images
+            miniz
+            libluajit
+            obsidian_physfs
+            obsidian_zdbsp
+            obsidian_slump
   )
 endif()
 
 install(TARGETS obsidian RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}
                                  CONFIGURATIONS Release
 )
-install(TARGETS qsavetex
-        RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/tools
-                CONFIGURATIONS Release
+install(TARGETS qsavetex RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/tools
+                                 CONFIGURATIONS Release
 )
 install(
   DIRECTORY addons

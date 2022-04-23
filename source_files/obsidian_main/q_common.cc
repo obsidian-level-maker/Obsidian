@@ -675,13 +675,13 @@ void BSP_WriteEntities(int lump_num, const char *description) {
     }
 
 #if 0  // REMOVE THIS, let Lua code supply these values
-	if (qk_sub_format == SUBFMT_HalfLife)
-	{
-		lump->KeyPair("wad", "\\sierra\\half-life\\valve\\halflife.wad;");
-		lump->KeyPair("mapversion", "220");
-		lump->KeyPair("MaxRange", "4096");
-		lump->KeyPair("sounds", "1");
-	}
+    if (qk_sub_format == SUBFMT_HalfLife)
+    {
+        lump->KeyPair("wad", "\\sierra\\half-life\\valve\\halflife.wad;");
+        lump->KeyPair("mapversion", "220");
+        lump->KeyPair("MaxRange", "4096");
+        lump->KeyPair("sounds", "1");
+    }
 #endif
 
     csg_entity_c *ob_world = FindObligeWorldspawn();

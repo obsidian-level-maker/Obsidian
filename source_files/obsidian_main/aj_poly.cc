@@ -777,17 +777,17 @@ void polygon_c::ClockwiseOrder() {
     }
 
 #if 0  // DEBUGGING
-	Appl_Printf("Sorted edges around (%1.1f %1.1f)\n", poly->mid_x, poly->mid_y);
+    Appl_Printf("Sorted edges around (%1.1f %1.1f)\n", poly->mid_x, poly->mid_y);
 
-	for (cur = edge_list ; cur ; cur = cur->next)
-	{
-		double angle = ComputeAngle(cur->start->x - mid_x, cur->start->y - mid_y);
+    for (cur = edge_list ; cur ; cur = cur->next)
+    {
+        double angle = ComputeAngle(cur->start->x - mid_x, cur->start->y - mid_y);
 
-		Appl_Printf("  edge #%d : angle %1.6f  (%1.1f %1.1f) -> (%1.1f %1.1f)\n",
-					cur->index, angle,
-					cur->start->x, cur->start->y,
-					cur->end->x, cur->end->y);
-	}
+        Appl_Printf("  edge #%d : angle %1.6f  (%1.1f %1.1f) -> (%1.1f %1.1f)\n",
+                    cur->index, angle,
+                    cur->start->x, cur->start->y,
+                    cur->end->x, cur->end->y);
+    }
 #endif
 }
 

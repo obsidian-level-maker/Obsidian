@@ -343,7 +343,7 @@ class UI_Addon : public Fl_Group {
         button->labelfont(font_style);
         button->selection_color(SELECTION);
         // if (tip)
-        //	button->tooltip(tip);
+        //    button->tooltip(tip);
         end();
 
         resizable(NULL);
@@ -438,7 +438,7 @@ UI_AddonsWin::UI_AddonsWin(int W, int H, const char *label)
 
     color(WINDOW_BG, WINDOW_BG);
 
-    //	int pad = kf_w(6);
+    //    int pad = kf_w(6);
 
     int dh = kf_h(64);
 

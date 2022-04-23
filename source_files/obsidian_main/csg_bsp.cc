@@ -763,8 +763,8 @@ static void CreateRegion(group_c &root, csg_brush_c *P) {
         }
 
 #if 0  // vertex quantization is disabled -- probably a bad idea
-		snag_c *S = new snag_c(v2, v1->x, qx1 * QUANTIZE_GRID, qy1 * QUANTIZE_GRID,
-				qx2 * QUANTIZE_GRID, qy2 * QUANTIZE_GRID); */
+        snag_c *S = new snag_c(v2, v1->x, qx1 * QUANTIZE_GRID, qy1 * QUANTIZE_GRID,
+                qx2 * QUANTIZE_GRID, qy2 * QUANTIZE_GRID); */
 #else
         snag_c *S = new snag_c(v2, v1->x, v1->y, v2->x, v2->y);
 #endif
@@ -792,9 +792,9 @@ static void CreateRegion(group_c &root, csg_brush_c *P) {
 #if 0
 static void MoveOntoLine(partition_c *part, double *x, double *y)
 {
-	double along = AlongDist(*x, *y, part->x1,part->y1, part->x2,part->y2);
+    double along = AlongDist(*x, *y, part->x1,part->y1, part->x2,part->y2);
 
-	AlongCoord(along, part->x1,part->y1, part->x2,part->y2, x, y);
+    AlongCoord(along, part->x1,part->y1, part->x2,part->y2, x, y);
 }
 #endif
 
@@ -828,8 +828,8 @@ int region_c::TestSide(partition_c *part) {
 
 #if 0  // NOTE: this probably wasn't a good idea after all
        // adjust vertices which sit "nearly" on the line
-		if (a_side == 0) MoveOntoLine(part, &S->x1, &S->y1);
-		if (b_side == 0) MoveOntoLine(part, &S->x2, &S->y2);
+        if (a_side == 0) MoveOntoLine(part, &S->x1, &S->y1);
+        if (b_side == 0) MoveOntoLine(part, &S->x2, &S->y2);
 #endif
     }
 
@@ -1304,14 +1304,14 @@ static void ProcessOverlapList(std::vector<snag_c *> &overlap_list) {
         changes = 0;
 
 #if 0
-		for (int z = 0 ; z < (int)overlap_list.size() ; z++)
-			fprintf(stderr, "    snag %p : (%1.0f %1.0f) --> (%1.0f %1.0f)  partner %p\n",
-					overlap_list[z],
-					overlap_list[z] ? overlap_list[z]->x1 : 0,
-					overlap_list[z] ? overlap_list[z]->y1 : 0,
-					overlap_list[z] ? overlap_list[z]->x2 : 0,
-					overlap_list[z] ? overlap_list[z]->y2 : 0,
-					overlap_list[z] ? overlap_list[z]->partner : NULL);
+        for (int z = 0 ; z < (int)overlap_list.size() ; z++)
+            fprintf(stderr, "    snag %p : (%1.0f %1.0f) --> (%1.0f %1.0f)  partner %p\n",
+                    overlap_list[z],
+                    overlap_list[z] ? overlap_list[z]->x1 : 0,
+                    overlap_list[z] ? overlap_list[z]->y1 : 0,
+                    overlap_list[z] ? overlap_list[z]->x2 : 0,
+                    overlap_list[z] ? overlap_list[z]->y2 : 0,
+                    overlap_list[z] ? overlap_list[z]->partner : NULL);
 #endif
 
         // Note that new snags may get added (due to splits) while we are
@@ -1421,62 +1421,62 @@ static void AddBoundingRegion(group_c &group) {
 
 static void PruneBSPTree(bsp_node_c * node)
 {
-	// remove any dead regions from the BSP tree
+    // remove any dead regions from the BSP tree
 
-	if (node->front_leaf && node->front_leaf->degenerate)
-		node->front_leaf = NULL;
+    if (node->front_leaf && node->front_leaf->degenerate)
+        node->front_leaf = NULL;
 
-	if (node->back_leaf && node->back_leaf->degenerate)
-		node->back_leaf = NULL;
+    if (node->back_leaf && node->back_leaf->degenerate)
+        node->back_leaf = NULL;
 
 
-	if (node->front_node)
-	{
-		bsp_node_c *sub = node->front_node;
+    if (node->front_node)
+    {
+        bsp_node_c *sub = node->front_node;
 
-		PruneBSPTree(sub);
+        PruneBSPTree(sub);
 
-		if (! (sub->front_node || sub->front_leaf))
-		{
-			node->front_node = sub->back_node;
-			node->front_leaf = sub->back_leaf;
+        if (! (sub->front_node || sub->front_leaf))
+        {
+            node->front_node = sub->back_node;
+            node->front_leaf = sub->back_leaf;
 
-			sub->back_node = NULL;
-			delete sub;
-		}
-		else if (! (sub->back_node || sub->back_leaf))
-		{
-			node->front_node = sub->front_node;
-			node->front_leaf = sub->front_leaf;
+            sub->back_node = NULL;
+            delete sub;
+        }
+        else if (! (sub->back_node || sub->back_leaf))
+        {
+            node->front_node = sub->front_node;
+            node->front_leaf = sub->front_leaf;
 
-			sub->front_node = NULL;
-			delete sub;
-		}
-	}
+            sub->front_node = NULL;
+            delete sub;
+        }
+    }
 
-	if (node->back_node)
-	{
-		bsp_node_c *sub = node->back_node;
+    if (node->back_node)
+    {
+        bsp_node_c *sub = node->back_node;
 
-		PruneBSPTree(sub);
+        PruneBSPTree(sub);
 
-		if (! (sub->front_node || sub->front_leaf))
-		{
-			node->back_node = sub->back_node;
-			node->back_leaf = sub->back_leaf;
+        if (! (sub->front_node || sub->front_leaf))
+        {
+            node->back_node = sub->back_node;
+            node->back_leaf = sub->back_leaf;
 
-			sub->back_node = NULL;
-			delete sub;
-		}
-		else if (! (sub->back_node || sub->back_leaf))
-		{
-			node->back_node = sub->front_node;
-			node->back_leaf = sub->front_leaf;
+            sub->back_node = NULL;
+            delete sub;
+        }
+        else if (! (sub->back_node || sub->back_leaf))
+        {
+            node->back_node = sub->front_node;
+            node->back_leaf = sub->front_leaf;
 
-			sub->front_node = NULL;
-			delete sub;
-		}
-	}
+            sub->front_node = NULL;
+            delete sub;
+        }
+    }
 }
 #endif
 
@@ -1961,8 +1961,8 @@ void CSG_BSP(double grid, bool is_clip_hull) {
     CSG_DiscoverGaps();
 
 #if 0
-	fprintf(stderr, "CSG BSP Tree:\n");
-	DumpCSGTree(bsp_root);
+    fprintf(stderr, "CSG BSP Tree:\n");
+    DumpCSGTree(bsp_root);
 #endif
 }
 

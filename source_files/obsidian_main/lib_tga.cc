@@ -86,7 +86,7 @@ tga_image_c *TGA_LoadImage(const char *path) {
     }
 
     byte *buf_p = buffer;
-    ///	byte * buf_end = buffer + length;
+    ///    byte * buf_end = buffer + length;
 
     // decode the TGA header
 

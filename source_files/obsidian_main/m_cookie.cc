@@ -75,9 +75,6 @@ static void Cookie_SetValue(std::string name, std::string value) {
                 if (!value.empty()) {
                     string_seed = value;
                     ob_set_config("string_seed", value.c_str());
-#ifdef max
-#undef max
-#endif
                     unsigned long long split_limit =
                         (std::numeric_limits<long long>::max() /
                          127);  // It is intentional that I am using the max for

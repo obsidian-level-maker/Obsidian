@@ -130,7 +130,7 @@ class brush_plane_c {
    public:
     brush_plane_c(double _z = 0) : z(_z), slope(NULL), face(), uv_mat(NULL) {}
 
-    ///	brush_plane_c(const brush_plane_c& other);
+    ///    brush_plane_c(const brush_plane_c& other);
 
     ~brush_plane_c();
 

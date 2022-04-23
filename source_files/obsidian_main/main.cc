@@ -952,9 +952,6 @@ void Main_SetSeed() {
                 string_seed = ob_get_random_words();
             }
             ob_set_config("string_seed", string_seed.c_str());
-#ifdef max
-#undef max
-#endif
             unsigned long long split_limit =
                 (std::numeric_limits<long long>::max() /
                  127);  // It is intentional that I am using the max for signed
@@ -1061,7 +1058,7 @@ bool Build_Cool_Shit() {
         const u32_t end_time = TimeGetMillies();
         const u32_t total_time = end_time - start_time;
 
-        LogPrintf("\nTOTAL TIME: {}.2f seconds\n\n", total_time / 1000.0);
+        LogPrintf("\nTOTAL TIME: {} seconds\n\n", total_time / 1000.0);
 
         string_seed.clear();
 
@@ -1264,7 +1261,7 @@ skiprest:
 
     Main_CalcNewSeed();
 
-    //	TX_TestSynth(next_rand_seed); - Fractal testing stuff
+    //    TX_TestSynth(next_rand_seed); - Fractal testing stuff
 
     VFS_InitAddons(argv[0]);
 
@@ -1354,7 +1351,7 @@ skiprest:
         main_win->resize(old_x, old_y, main_w, main_h);
     }
 
-    //???	Default_Location();
+    //???    Default_Location();
 
     Script_Open();
 

@@ -41,7 +41,6 @@ void raw_append(const char *string) { result.append(string); }
 
 const char *ff_main(const char *levelcount, const char *game, const char *theme,
                     const char *version, const char *format) {
-    int c;
     gameValue = game;
     themeValue = theme;
     countValue = levelcount;
@@ -54,8 +53,8 @@ const char *ff_main(const char *levelcount, const char *game, const char *theme,
 
     auto buffer_state = yy_scan_bytes(input.c_str(), input.size());
     yy_switch_to_buffer(buffer_state);
-    token t;
-    while ((t = static_cast<token>(yylex())) != tokEof) {
+    int t;
+    while ((t = yylex()) != TOK_EOF) {
     }
 
     return result.c_str();

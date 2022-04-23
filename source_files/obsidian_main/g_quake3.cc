@@ -887,7 +887,7 @@ static void Q3_WriteNode(quake_node_c *node) {
         int node1 = raw_node.children[1];
         raw_node.children[0] = node1;
         raw_node.children[1] = node0;
-        //		std::swap(raw_node.children[0], raw_node.children[1]);
+        //        std::swap(raw_node.children[0], raw_node.children[1]);
     }
 
     for (int b = 0; b < 3; b++) {

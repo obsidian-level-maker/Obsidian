@@ -430,11 +430,12 @@ char *yytext;
 
 #define INITIAL 0
 
-/*windows compatibility case*/
-#if WIN32
-#include <io.h>
-#define isatty _isatty
-#define fileno _fileno
+#ifndef YY_NO_UNISTD_H
+/* Special case for "unistd.h", since it is non-ANSI. We include it way
+ * down here because we want the user's section 1 to have been scanned first.
+ * The user has a chance to override it with an option.
+ */
+#include <unistd.h>
 #endif
 
 #ifndef YY_EXTRA_TYPE
@@ -616,11 +617,17 @@ YY_DECL {
         YY_USER_INIT;
 #endif
 
-        if (!(yy_start)) (yy_start) = 1; /* first start state */
+        if (!(yy_start)) {
+            (yy_start) = 1; /* first start state */
+        }
 
-        if (!yyin) yyin = stdin;
+        if (!yyin) {
+            yyin = stdin;
+        }
 
-        if (!yyout) yyout = stdout;
+        if (!yyout) {
+            yyout = stdout;
+        }
 
         if (!YY_CURRENT_BUFFER) {
             yyensure_buffer_stack();
@@ -633,7 +640,7 @@ YY_DECL {
     {
 #line 8 "filename.l"
 
-#line 695 "lex.yy.c"
+#line 698 "lex.yy.c"
 
         while (/*CONSTCOND*/ 1) /* loops until end-of-file is reached */
         {
@@ -658,7 +665,9 @@ YY_DECL {
                 while (yy_chk[yy_base[yy_current_state] + yy_c] !=
                        yy_current_state) {
                     yy_current_state = (int)yy_def[yy_current_state];
-                    if (yy_current_state >= 59) yy_c = yy_meta[yy_c];
+                    if (yy_current_state >= 59) {
+                        yy_c = yy_meta[yy_c];
+                    }
                 }
                 yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
                 ++yy_cp;
@@ -689,6 +698,7 @@ YY_DECL {
 #line 10 "filename.l"
                     {
                         year();
+                        return 0;
                     }
                     YY_BREAK
                 case 2:
@@ -696,6 +706,7 @@ YY_DECL {
 #line 11 "filename.l"
                     {
                         month();
+                        return 0;
                     }
                     YY_BREAK
                 case 3:
@@ -703,6 +714,7 @@ YY_DECL {
 #line 12 "filename.l"
                     {
                         day();
+                        return 0;
                     }
                     YY_BREAK
                 case 4:
@@ -710,6 +722,7 @@ YY_DECL {
 #line 13 "filename.l"
                     {
                         hour();
+                        return 0;
                     }
                     YY_BREAK
                 case 5:
@@ -717,6 +730,7 @@ YY_DECL {
 #line 14 "filename.l"
                     {
                         minute();
+                        return 0;
                     }
                     YY_BREAK
                 case 6:
@@ -724,6 +738,7 @@ YY_DECL {
 #line 15 "filename.l"
                     {
                         second();
+                        return 0;
                     }
                     YY_BREAK
                 case 7:
@@ -731,6 +746,7 @@ YY_DECL {
 #line 16 "filename.l"
                     {
                         version();
+                        return 0;
                     }
                     YY_BREAK
                 case 8:
@@ -738,6 +754,7 @@ YY_DECL {
 #line 17 "filename.l"
                     {
                         game();
+                        return 0;
                     }
                     YY_BREAK
                 case 9:
@@ -745,6 +762,7 @@ YY_DECL {
 #line 18 "filename.l"
                     {
                         theme();
+                        return 0;
                     }
                     YY_BREAK
                 case 10:
@@ -752,6 +770,7 @@ YY_DECL {
 #line 19 "filename.l"
                     {
                         count();
+                        return 0;
                     }
                     YY_BREAK
                 case 11:
@@ -759,6 +778,7 @@ YY_DECL {
 #line 20 "filename.l"
                     {
                         year();
+                        return 0;
                     }
                     YY_BREAK
                 case 12:
@@ -766,6 +786,7 @@ YY_DECL {
 #line 21 "filename.l"
                     {
                         month();
+                        return 0;
                     }
                     YY_BREAK
                 case 13:
@@ -773,6 +794,7 @@ YY_DECL {
 #line 22 "filename.l"
                     {
                         day();
+                        return 0;
                     }
                     YY_BREAK
                 case 14:
@@ -780,6 +802,7 @@ YY_DECL {
 #line 23 "filename.l"
                     {
                         hour();
+                        return 0;
                     }
                     YY_BREAK
                 case 15:
@@ -787,6 +810,7 @@ YY_DECL {
 #line 24 "filename.l"
                     {
                         minute();
+                        return 0;
                     }
                     YY_BREAK
                 case 16:
@@ -794,6 +818,7 @@ YY_DECL {
 #line 25 "filename.l"
                     {
                         second();
+                        return 0;
                     }
                     YY_BREAK
                 case 17:
@@ -801,6 +826,7 @@ YY_DECL {
 #line 26 "filename.l"
                     {
                         version();
+                        return 0;
                     }
                     YY_BREAK
                 case 18:
@@ -808,6 +834,7 @@ YY_DECL {
 #line 27 "filename.l"
                     {
                         game();
+                        return 0;
                     }
                     YY_BREAK
                 case 19:
@@ -815,6 +842,7 @@ YY_DECL {
 #line 28 "filename.l"
                     {
                         theme();
+                        return 0;
                     }
                     YY_BREAK
                 case 20:
@@ -822,25 +850,27 @@ YY_DECL {
 #line 29 "filename.l"
                     {
                         count();
+                        return 0;
                     }
                     YY_BREAK
                 case 21:
                     YY_RULE_SETUP
 #line 30 "filename.l"
                     {
-                        raw_append(yytext);
+                        printf("%s", yytext);
+                        return 0;
                     }
                     YY_BREAK
                 case YY_STATE_EOF(INITIAL):
 #line 31 "filename.l"
-                    return tokEof;
+                    return TOK_EOF;
                     YY_BREAK
                 case 22:
                     YY_RULE_SETUP
 #line 32 "filename.l"
                     ECHO;
                     YY_BREAK
-#line 866 "lex.yy.c"
+#line 869 "lex.yy.c"
 
                 case YY_END_OF_BUFFER: {
                     /* Amount of text matched not including the EOB char. */
@@ -910,7 +940,7 @@ YY_DECL {
                         }
                     }
 
-                    else
+                    else {
                         switch (yy_get_next_buffer()) {
                             case EOB_ACT_END_OF_FILE: {
                                 (yy_did_buffer_switch_on_eof) = 0;
@@ -932,8 +962,9 @@ YY_DECL {
                                 }
 
                                 else {
-                                    if (!(yy_did_buffer_switch_on_eof))
+                                    if (!(yy_did_buffer_switch_on_eof)) {
                                         YY_NEW_FILE;
+                                    }
                                 }
                                 break;
                             }
@@ -958,6 +989,7 @@ YY_DECL {
                                 yy_bp = (yytext_ptr) + YY_MORE_ADJ;
                                 goto yy_find_action;
                         }
+                    }
                     break;
                 }
 
@@ -982,9 +1014,10 @@ static int yy_get_next_buffer(void) {
     int number_to_move, i;
     int ret_val;
 
-    if ((yy_c_buf_p) > &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[(yy_n_chars) + 1])
+    if ((yy_c_buf_p) > &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[(yy_n_chars) + 1]) {
         YY_FATAL_ERROR(
             "fatal flex scanner internal error--end of buffer missed");
+    }
 
     if (YY_CURRENT_BUFFER_LVALUE->yy_fill_buffer ==
         0) { /* Don't try to fill the buffer, so this is an EOF. */
@@ -1008,15 +1041,17 @@ static int yy_get_next_buffer(void) {
     /* First move last chars to start of buffer. */
     number_to_move = (int)((yy_c_buf_p) - (yytext_ptr)-1);
 
-    for (i = 0; i < number_to_move; ++i) *(dest++) = *(source++);
+    for (i = 0; i < number_to_move; ++i) {
+        *(dest++) = *(source++);
+    }
 
-    if (YY_CURRENT_BUFFER_LVALUE->yy_buffer_status == YY_BUFFER_EOF_PENDING)
+    if (YY_CURRENT_BUFFER_LVALUE->yy_buffer_status == YY_BUFFER_EOF_PENDING) {
         /* don't do the read, it's not guaranteed to return an EOF,
          * just force an EOF
          */
         YY_CURRENT_BUFFER_LVALUE->yy_n_chars = (yy_n_chars) = 0;
 
-    else {
+    } else {
         int num_to_read =
             YY_CURRENT_BUFFER_LVALUE->yy_buf_size - number_to_move - 1;
 
@@ -1031,21 +1066,24 @@ static int yy_get_next_buffer(void) {
             if (b->yy_is_our_buffer) {
                 int new_size = b->yy_buf_size * 2;
 
-                if (new_size <= 0)
+                if (new_size <= 0) {
                     b->yy_buf_size += b->yy_buf_size / 8;
-                else
+                } else {
                     b->yy_buf_size *= 2;
+                }
 
                 b->yy_ch_buf = (char *)
                     /* Include room in for 2 EOB chars. */
                     yyrealloc((void *)b->yy_ch_buf,
                               (yy_size_t)(b->yy_buf_size + 2));
-            } else
+            } else {
                 /* Can't grow it, we don't own it. */
                 b->yy_ch_buf = NULL;
+            }
 
-            if (!b->yy_ch_buf)
+            if (!b->yy_ch_buf) {
                 YY_FATAL_ERROR("fatal error - scanner input buffer overflow");
+            }
 
             (yy_c_buf_p) = &b->yy_ch_buf[yy_c_buf_p_offset];
 
@@ -1053,7 +1091,9 @@ static int yy_get_next_buffer(void) {
                 YY_CURRENT_BUFFER_LVALUE->yy_buf_size - number_to_move - 1;
         }
 
-        if (num_to_read > YY_READ_BUF_SIZE) num_to_read = YY_READ_BUF_SIZE;
+        if (num_to_read > YY_READ_BUF_SIZE) {
+            num_to_read = YY_READ_BUF_SIZE;
+        }
 
         /* Read in more data. */
         YY_INPUT((&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),
@@ -1074,8 +1114,9 @@ static int yy_get_next_buffer(void) {
         }
     }
 
-    else
+    else {
         ret_val = EOB_ACT_CONTINUE_SCAN;
+    }
 
     if (((yy_n_chars) + number_to_move) >
         YY_CURRENT_BUFFER_LVALUE->yy_buf_size) {
@@ -1083,8 +1124,9 @@ static int yy_get_next_buffer(void) {
         int new_size = (yy_n_chars) + number_to_move + ((yy_n_chars) >> 1);
         YY_CURRENT_BUFFER_LVALUE->yy_ch_buf = (char *)yyrealloc(
             (void *)YY_CURRENT_BUFFER_LVALUE->yy_ch_buf, (yy_size_t)new_size);
-        if (!YY_CURRENT_BUFFER_LVALUE->yy_ch_buf)
+        if (!YY_CURRENT_BUFFER_LVALUE->yy_ch_buf) {
             YY_FATAL_ERROR("out of dynamic memory in yy_get_next_buffer()");
+        }
         /* "- 2" to take care of EOB's */
         YY_CURRENT_BUFFER_LVALUE->yy_buf_size = (int)(new_size - 2);
     }
@@ -1115,7 +1157,9 @@ static yy_state_type yy_get_previous_state(void) {
         }
         while (yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state) {
             yy_current_state = (int)yy_def[yy_current_state];
-            if (yy_current_state >= 59) yy_c = yy_meta[yy_c];
+            if (yy_current_state >= 59) {
+                yy_c = yy_meta[yy_c];
+            }
         }
         yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
     }
@@ -1139,7 +1183,9 @@ static yy_state_type yy_try_NUL_trans(yy_state_type yy_current_state) {
     }
     while (yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state) {
         yy_current_state = (int)yy_def[yy_current_state];
-        if (yy_current_state >= 59) yy_c = yy_meta[yy_c];
+        if (yy_current_state >= 59) {
+            yy_c = yy_meta[yy_c];
+        }
     }
     yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
     yy_is_jam = (yy_current_state == 58);
@@ -1245,7 +1291,9 @@ void yy_switch_to_buffer(YY_BUFFER_STATE new_buffer) {
      *		yypush_buffer_state(new_buffer);
      */
     yyensure_buffer_stack();
-    if (YY_CURRENT_BUFFER == new_buffer) return;
+    if (YY_CURRENT_BUFFER == new_buffer) {
+        return;
+    }
 
     if (YY_CURRENT_BUFFER) {
         /* Flush out information for old buffer. */
@@ -1283,7 +1331,9 @@ YY_BUFFER_STATE yy_create_buffer(FILE *file, int size) {
     YY_BUFFER_STATE b;
 
     b = (YY_BUFFER_STATE)yyalloc(sizeof(struct yy_buffer_state));
-    if (!b) YY_FATAL_ERROR("out of dynamic memory in yy_create_buffer()");
+    if (!b) {
+        YY_FATAL_ERROR("out of dynamic memory in yy_create_buffer()");
+    }
 
     b->yy_buf_size = size;
 
@@ -1291,8 +1341,9 @@ YY_BUFFER_STATE yy_create_buffer(FILE *file, int size) {
      * we need to put in 2 end-of-buffer characters.
      */
     b->yy_ch_buf = (char *)yyalloc((yy_size_t)(b->yy_buf_size + 2));
-    if (!b->yy_ch_buf)
+    if (!b->yy_ch_buf) {
         YY_FATAL_ERROR("out of dynamic memory in yy_create_buffer()");
+    }
 
     b->yy_is_our_buffer = 1;
 
@@ -1306,12 +1357,17 @@ YY_BUFFER_STATE yy_create_buffer(FILE *file, int size) {
  *
  */
 void yy_delete_buffer(YY_BUFFER_STATE b) {
-    if (!b) return;
+    if (!b) {
+        return;
+    }
 
-    if (b == YY_CURRENT_BUFFER) /* Not sure if we should pop here. */
+    if (b == YY_CURRENT_BUFFER) { /* Not sure if we should pop here. */
         YY_CURRENT_BUFFER_LVALUE = (YY_BUFFER_STATE)0;
+    }
 
-    if (b->yy_is_our_buffer) yyfree((void *)b->yy_ch_buf);
+    if (b->yy_is_our_buffer) {
+        yyfree((void *)b->yy_ch_buf);
+    }
 
     yyfree((void *)b);
 }
@@ -1349,7 +1405,9 @@ static void yy_init_buffer(YY_BUFFER_STATE b, FILE *file)
  *
  */
 void yy_flush_buffer(YY_BUFFER_STATE b) {
-    if (!b) return;
+    if (!b) {
+        return;
+    }
 
     b->yy_n_chars = 0;
 
@@ -1365,7 +1423,9 @@ void yy_flush_buffer(YY_BUFFER_STATE b) {
     b->yy_at_bol = 1;
     b->yy_buffer_status = YY_BUFFER_NEW;
 
-    if (b == YY_CURRENT_BUFFER) yy_load_buffer_state();
+    if (b == YY_CURRENT_BUFFER) {
+        yy_load_buffer_state();
+    }
 }
 
 /** Pushes the new state onto the stack. The new state becomes
@@ -1375,7 +1435,9 @@ void yy_flush_buffer(YY_BUFFER_STATE b) {
  *
  */
 void yypush_buffer_state(YY_BUFFER_STATE new_buffer) {
-    if (new_buffer == NULL) return;
+    if (new_buffer == NULL) {
+        return;
+    }
 
     yyensure_buffer_stack();
 
@@ -1388,7 +1450,9 @@ void yypush_buffer_state(YY_BUFFER_STATE new_buffer) {
     }
 
     /* Only push if top exists. Otherwise, replace top. */
-    if (YY_CURRENT_BUFFER) (yy_buffer_stack_top)++;
+    if (YY_CURRENT_BUFFER) {
+        (yy_buffer_stack_top)++;
+    }
     YY_CURRENT_BUFFER_LVALUE = new_buffer;
 
     /* copied from yy_switch_to_buffer. */
@@ -1401,11 +1465,15 @@ void yypush_buffer_state(YY_BUFFER_STATE new_buffer) {
  *
  */
 void yypop_buffer_state(void) {
-    if (!YY_CURRENT_BUFFER) return;
+    if (!YY_CURRENT_BUFFER) {
+        return;
+    }
 
     yy_delete_buffer(YY_CURRENT_BUFFER);
     YY_CURRENT_BUFFER_LVALUE = NULL;
-    if ((yy_buffer_stack_top) > 0) --(yy_buffer_stack_top);
+    if ((yy_buffer_stack_top) > 0) {
+        --(yy_buffer_stack_top);
+    }
 
     if (YY_CURRENT_BUFFER) {
         yy_load_buffer_state();
@@ -1428,8 +1496,9 @@ static void yyensure_buffer_stack(void) {
             1; /* After all that talk, this was set to 1 anyways... */
         (yy_buffer_stack) = (struct yy_buffer_state **)yyalloc(
             num_to_alloc * sizeof(struct yy_buffer_state *));
-        if (!(yy_buffer_stack))
+        if (!(yy_buffer_stack)) {
             YY_FATAL_ERROR("out of dynamic memory in yyensure_buffer_stack()");
+        }
 
         memset((yy_buffer_stack), 0,
                num_to_alloc * sizeof(struct yy_buffer_state *));
@@ -1446,8 +1515,9 @@ static void yyensure_buffer_stack(void) {
         num_to_alloc = (yy_buffer_stack_max) + grow_size;
         (yy_buffer_stack) = (struct yy_buffer_state **)yyrealloc(
             (yy_buffer_stack), num_to_alloc * sizeof(struct yy_buffer_state *));
-        if (!(yy_buffer_stack))
+        if (!(yy_buffer_stack)) {
             YY_FATAL_ERROR("out of dynamic memory in yyensure_buffer_stack()");
+        }
 
         /* zero only the new slots.*/
         memset((yy_buffer_stack) + (yy_buffer_stack_max), 0,
@@ -1467,12 +1537,15 @@ YY_BUFFER_STATE yy_scan_buffer(char *base, yy_size_t size) {
     YY_BUFFER_STATE b;
 
     if (size < 2 || base[size - 2] != YY_END_OF_BUFFER_CHAR ||
-        base[size - 1] != YY_END_OF_BUFFER_CHAR)
+        base[size - 1] != YY_END_OF_BUFFER_CHAR) {
         /* They forgot to leave room for the EOB's. */
         return NULL;
+    }
 
     b = (YY_BUFFER_STATE)yyalloc(sizeof(struct yy_buffer_state));
-    if (!b) YY_FATAL_ERROR("out of dynamic memory in yy_scan_buffer()");
+    if (!b) {
+        YY_FATAL_ERROR("out of dynamic memory in yy_scan_buffer()");
+    }
 
     b->yy_buf_size = (int)(size - 2); /* "- 2" to take care of EOB's */
     b->yy_buf_pos = b->yy_ch_buf = base;
@@ -1517,14 +1590,20 @@ YY_BUFFER_STATE yy_scan_bytes(const char *yybytes, int _yybytes_len) {
     /* Get memory for full buffer, including space for trailing EOB's. */
     n = (yy_size_t)(_yybytes_len + 2);
     buf = (char *)yyalloc(n);
-    if (!buf) YY_FATAL_ERROR("out of dynamic memory in yy_scan_bytes()");
+    if (!buf) {
+        YY_FATAL_ERROR("out of dynamic memory in yy_scan_bytes()");
+    }
 
-    for (i = 0; i < _yybytes_len; ++i) buf[i] = yybytes[i];
+    for (i = 0; i < _yybytes_len; ++i) {
+        buf[i] = yybytes[i];
+    }
 
     buf[_yybytes_len] = buf[_yybytes_len + 1] = YY_END_OF_BUFFER_CHAR;
 
     b = yy_scan_buffer(buf, n);
-    if (!b) YY_FATAL_ERROR("bad buffer in yy_scan_bytes()");
+    if (!b) {
+        YY_FATAL_ERROR("bad buffer in yy_scan_bytes()");
+    }
 
     /* It's okay to grow etc. this buffer, and we should throw it
      * away when we're done.

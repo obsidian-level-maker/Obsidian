@@ -2246,122 +2246,122 @@ int title_draw_planet(lua_State *L) {
     // LUA: title_draw_planet(x,y,r, seed, flags, hue1,hue2,hue3)
 
 #if 0
-	int px = luaL_checkinteger(L, 1);
-	int py = luaL_checkinteger(L, 2);
+    int px = luaL_checkinteger(L, 1);
+    int py = luaL_checkinteger(L, 2);
 
-	int ph = luaL_checkinteger(L, 3);
-	int pw = ph * 5 / 4;
+    int ph = luaL_checkinteger(L, 3);
+    int pw = ph * 5 / 4;
 
-	int seed = luaL_checkinteger(L, 4);
+    int seed = luaL_checkinteger(L, 4);
 
-	const char *flag_str = luaL_checkstring(L, 5);
+    const char *flag_str = luaL_checkstring(L, 5);
 
-	rgb_color_t hue1 = Grab_Color(L, 6);
-	rgb_color_t hue2 = Grab_Color(L, 7);
-	rgb_color_t hue3 = Grab_Color(L, 8);
-
-
-	SYS_ASSERT(title_pix);
-
-	px *= 3;  py *= 3;
-	pw *= 3;  ph *= 3;
-
-	// FIXME : clip !!!!
+    rgb_color_t hue1 = Grab_Color(L, 6);
+    rgb_color_t hue2 = Grab_Color(L, 7);
+    rgb_color_t hue3 = Grab_Color(L, 8);
 
 
-	int W = 512;
+    SYS_ASSERT(title_pix);
 
-	float * synth = new float[W * W];
+    px *= 3;  py *= 3;
+    pw *= 3;  ph *= 3;
 
-	TX_SpectralSynth(seed, synth, W, 1.8, 1.0);
+    // FIXME : clip !!!!
 
-	// add craters
-	srand(seed);
 
-	if (false)
-	for (int ci = 0 ; ci < 250 ; ci++)
-	{
-		int cr = 8 + (rand() & 63);
+    int W = 512;
 
-		int mx = rand() & 511;
-		int my = rand() & 511;
+    float * synth = new float[W * W];
 
-		for (int dx = -cr ; dx < cr ; dx++)
-		for (int dy = -cr ; dy < cr ; dy++)
-		{
-			if (dx*dx + dy*dy > cr*cr)
-				continue;
+    TX_SpectralSynth(seed, synth, W, 1.8, 1.0);
 
-			float d = hypot(dx, dy) / (float)cr;
+    // add craters
+    srand(seed);
 
-			int sx = (mx + dx) & 511;
-			int sy = (my + dy) & 511;
+    if (false)
+    for (int ci = 0 ; ci < 250 ; ci++)
+    {
+        int cr = 8 + (rand() & 63);
 
-			synth[sy*W + sx] += 0.3 * (1 - d*d);
-		}
-	}
+        int mx = rand() & 511;
+        int my = rand() & 511;
+
+        for (int dx = -cr ; dx < cr ; dx++)
+        for (int dy = -cr ; dy < cr ; dy++)
+        {
+            if (dx*dx + dy*dy > cr*cr)
+                continue;
+
+            float d = hypot(dx, dy) / (float)cr;
+
+            int sx = (mx + dx) & 511;
+            int sy = (my + dy) & 511;
+
+            synth[sy*W + sx] += 0.3 * (1 - d*d);
+        }
+    }
 
 /*
 for (int ky = 40 ; ky < 110 ; ky++)
 for (int kx = 0   ; kx < W ; kx++)
 {
-	synth[ky*W + kx] -= 0.1;
+    synth[ky*W + kx] -= 0.1;
 }*/
 
 
-	for (int y = py - ph ; y < py + ph ; y++)
-	for (int x = px - pw ; x < px + pw ; x++)
-	{
-		int dx = (x - px) * 4 / 5;
-		int dy = (y - py);
+    for (int y = py - ph ; y < py + ph ; y++)
+    for (int x = px - pw ; x < px + pw ; x++)
+    {
+        int dx = (x - px) * 4 / 5;
+        int dy = (y - py);
 
-		if (dx * dx + dy * dy > ph * ph)
-			continue;
-
-
-		// coordinate in synthesized noise
-		int tx1 = dx & 511;
-		int tx2 = (dx+1) & 511;
-
-		int ty1 = dy & 511;
-		int ty2 = (dy+1) & 511;
+        if (dx * dx + dy * dy > ph * ph)
+            continue;
 
 
-		float K  = synth[tx1*W + ty1];
+        // coordinate in synthesized noise
+        int tx1 = dx & 511;
+        int tx2 = (dx+1) & 511;
 
-		float T1 = synth[ty1*W + tx2] - synth[ty1*W + tx1];
-		float T2 = synth[ty2*W + tx1] - synth[ty1*W + tx1];
-
-
-		// compute normal at point
-		float nx = dx / (float)ph + T1 * 10;
-		float ny = dy / (float)ph + T2 * 10;
-		float nz = 1.0 - hypot(nx, ny);
+        int ty1 = dy & 511;
+        int ty2 = (dy+1) & 511;
 
 
-		rgb_color_t col;
+        float K  = synth[tx1*W + ty1];
 
-		// TEMP CRUD
+        float T1 = synth[ty1*W + tx2] - synth[ty1*W + tx1];
+        float T2 = synth[ty2*W + tx1] - synth[ty1*W + tx1];
+
+
+        // compute normal at point
+        float nx = dx / (float)ph + T1 * 10;
+        float ny = dy / (float)ph + T2 * 10;
+        float nz = 1.0 - hypot(nx, ny);
+
+
+        rgb_color_t col;
+
+        // TEMP CRUD
 #if 1
-		int ity = 128 + (nx - ny + nz) * 128;
-		ity = CLAMP(0, ity, 255);
+        int ity = 128 + (nx - ny + nz) * 128;
+        ity = CLAMP(0, ity, 255);
 
-		if ((int)(K * 32) & 3)
-			col = MAKE_RGBA(0  , 0  , ity, 255);
-		else
-			col = MAKE_RGBA(0  ,ity ,   0, 255);
+        if ((int)(K * 32) & 3)
+            col = MAKE_RGBA(0  , 0  , ity, 255);
+        else
+            col = MAKE_RGBA(0  ,ity ,   0, 255);
 #else
-		// moon colors
-		int ity = 80 + (nx + nx + nx) * 60;
-		ity = CLAMP(0, ity, 255);
+        // moon colors
+        int ity = 80 + (nx + nx + nx) * 60;
+        ity = CLAMP(0, ity, 255);
 
-		col = MAKE_RGBA(ity, ity, ity, 255);
+        col = MAKE_RGBA(ity, ity, ity, 255);
 #endif
 
-		title_pix[y * title_W3 + x] = col;
-	}
+        title_pix[y * title_W3 + x] = col;
+    }
 
-	delete[] synth;
+    delete[] synth;
 #endif
 
     return 0;

@@ -129,7 +129,7 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
                           std::string longtip, int gap,
                           std::string randomize_group) {
     int nw = this->parent()->w();
-    //	int nh = kf_h(30);
+    //    int nh = kf_h(30);
 
     int nx = x() + kf_w(6);
     int ny = y() + cur_opt_y - kf_h(15);
@@ -197,7 +197,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
                                 std::string units, std::string presets,
                                 std::string nan, std::string randomize_group) {
     int nw = this->parent()->w();
-    //	int nh = kf_h(30);
+    //    int nh = kf_h(30);
 
     int nx = x() + kf_w(6);
     int ny = y() + cur_opt_y - kf_h(15);
@@ -361,7 +361,7 @@ void UI_Module::AddButtonOption(std::string opt, std::string label,
                                 std::string tip, std::string longtip, int gap,
                                 std::string randomize_group) {
     int nw = this->parent()->w();
-    //	int nh = kf_h(30);
+    //    int nh = kf_h(30);
 
     int nx = x() + kf_w(6);
     int ny = y() + cur_opt_y - kf_h(15);

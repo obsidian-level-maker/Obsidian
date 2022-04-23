@@ -714,7 +714,7 @@ static std::string Trans_GetUserLanguage() {
 
         // #elif defined(__APPLE__)
         //
-        //	return "UNKNOWN";
+        //    return "UNKNOWN";
 
 #else  // Unix
 
@@ -1144,7 +1144,7 @@ std::string mucked_up_string(std::string_view s) {
 
 const char *ob_gettext(const char *s) {
 #if 0  // DEBUGGING CRUD
-	return mucked_up_string(s);
+    return mucked_up_string(s);
 #endif
 
     std::map<std::string, std::string>::iterator IT;

@@ -1407,7 +1407,7 @@ static void MakeLine(region_c *R, snag_c *S) {
     int y2 = I_ROUND(S->y2);
 
     if (x1 == x2 && y1 == y2) {
-        //		LogPrintf("WARNING: degenerate linedef @ ({:1.0f}
+        //        LogPrintf("WARNING: degenerate linedef @ ({:1.0f}
         //{:1.0})\n", S->x1, S->y1);
         return;
     }
