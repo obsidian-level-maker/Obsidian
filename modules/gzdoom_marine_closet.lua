@@ -382,7 +382,6 @@ class AIMarineWaker : Actor
         PLAY E 4 A_FaceTarget;
         PLAY E 0 A_StartSound("weapons/pistol");
         PLAY F 6 BRIGHT A_CustomBulletAttack(9.6,0,1,5,"BulletPuff");
-        PLAY F 0 BRIGHT A_AlertMonsters;
         PLAY A 9 A_FaceTarget;
         PLAY A 0 A_CposRefire;
         Goto Missile;
@@ -396,10 +395,8 @@ class AIMarineChaingun : AIMarine
         PLAY E 4 A_FaceTarget;
         PLAY E 0 A_StartSound("weapons/pistol");
         PLAY F 4 BRIGHT A_CustomBulletAttack(13.6,0,1,5,"BulletPuff");
-        PLAY F 0 BRIGHT A_AlertMonsters;
         PLAY E 0 A_StartSound("weapons/pistol");
         PLAY F 4 BRIGHT A_CustomBulletAttack(13.6,0,1,5,"BulletPuff");
-        PLAY F 0 BRIGHT A_AlertMonsters;
         PLAY A 0 A_CposRefire;
         Goto Missile+1;
     }
@@ -412,7 +409,6 @@ class AIMarineShotgun : AIMarine
         PLAY E 3 A_FaceTarget;
         PLAY E 0 A_StartSound("weapons/shotgf");
         PLAY F 7 BRIGHT A_CustomBulletAttack(5.6,0,7,5,"BulletPuff");
-        PLAY F 0 BRIGHT A_AlertMonsters;
         PLAY BCDABCDABCDABCD 4 A_Chase(null,null);
         Goto See;
     }
@@ -425,7 +421,6 @@ class AIMarineSuperShotgun : AIMarine
         PLAY E 3 A_FaceTarget;
         PLAY E 0 A_StartSound("weapons/sshotf");
         PLAY F 7 Bright A_CustomBulletAttack(11.2,7.1,20,5,"BulletPuff");
-        PLAY F 0 BRIGHT A_AlertMonsters;
         PLAY ABC 4 A_Chase(null,null);
         PLAY A 0 A_StartSound ("weapons/sshoto");
         PLAY DABC 4 A_Chase(null,null);
@@ -443,7 +438,6 @@ class AIMarinePlasma : AIMarine
     Missile:
         PLAY E 2 A_FaceTarget;
         PLAY F 6 Bright A_SpawnProjectile("PlasmaBall");
-        PLAY F 0 BRIGHT A_AlertMonsters;
         PLAY E 0 A_MonsterRefire(40,"MissileOver");
         Goto Missile+1;
     MissileOver:
@@ -458,7 +452,6 @@ class AIMarineRocket : AIMarine
     Missile:
         PLAY E 8 A_FaceTarget;
         PLAY F 6 Bright A_SpawnProjectile("Rocket");
-        PLAY F 0 BRIGHT A_AlertMonsters;
         PLAY E 6;
         PLAY DABCD 4 A_Chase(null,null);
         Goto See;
@@ -472,7 +465,6 @@ class AIMarineBFG : AIMarine
         PLAY E 5 A_StartSound("weapons/bfgf");
         PLAY EEEEE 5 A_FaceTarget;
         PLAY F 6 Bright A_SpawnProjectile("BFGBall");
-        PLAY F 0 BRIGHT A_AlertMonsters;
         PLAY E 4 A_FaceTarget;
         PLAY CDABCDABCDABCD 4 A_Chase(null,null);
         Goto See;
@@ -488,7 +480,6 @@ class AIMarineBFG : AIMarine
         PLAY E 4 A_FaceTarget;
         PLAY E 0 A_StartSound("weapons/pistol");
         PLAY F 6 BRIGHT A_CustomBulletAttack(5.6,0,1,5,"BulletPuff");
-        PLAY F 0 BRIGHT A_AlertMonsters;
         PLAY A 4 A_FaceTarget;
         PLAY A 0 A_CposRefire;
         Goto Missile;
@@ -502,10 +493,8 @@ class AIMarineChaingun : AIMarine
         PLAY E 4 A_FaceTarget;
         PLAY E 0 A_StartSound("weapons/pistol");
         PLAY F 4 BRIGHT A_CustomBulletAttack(5.6,0,1,5,"BulletPuff");
-        PLAY F 0 BRIGHT A_AlertMonsters;
         PLAY E 0 A_StartSound("weapons/pistol");
         PLAY F 4 BRIGHT A_CustomBulletAttack(5.6,0,1,5,"BulletPuff");
-        PLAY F 0 BRIGHT A_AlertMonsters;
         PLAY A 0 A_CposRefire;
         Goto Missile+1;
     }
@@ -518,7 +507,6 @@ class AIMarineShotgun : AIMarine
         PLAY E 3 A_FaceTarget;
         PLAY E 0 A_StartSound("weapons/shotgf");
         PLAY F 7 BRIGHT A_CustomBulletAttack(5.6,0,7,5,"BulletPuff");
-        PLAY F 0 BRIGHT A_AlertMonsters;
         PLAY BCDABCD 4 A_Chase(null,null);
         Goto See;
     }
@@ -531,7 +519,6 @@ class AIMarineSuperShotgun : AIMarine
         PLAY E 3 A_FaceTarget;
         PLAY E 0 A_StartSound("weapons/sshotf");
         PLAY F 7 Bright A_CustomBulletAttack(11.2,7.1,20,5,"BulletPuff");
-        PLAY F 0 BRIGHT A_AlertMonsters;
         PLAY ABC 4 A_Chase(null,null);
         PLAY A 0 A_StartSound ("weapons/sshoto");
         PLAY DABC 4 A_Chase(null,null);
@@ -549,7 +536,6 @@ class AIMarinePlasma : AIMarine
     Missile:
         PLAY E 2 A_FaceTarget;
         PLAY F 3 Bright A_SpawnProjectile("PlasmaBall");
-        PLAY F 0 BRIGHT A_AlertMonsters;
         PLAY E 0 A_MonsterRefire(40,"MissileOver");
         Goto Missile+1;
     MissileOver:
@@ -564,7 +550,6 @@ class AIMarineRocket : AIMarine
     Missile:
         PLAY E 8 A_FaceTarget;
         PLAY F 6 Bright A_SpawnProjectile("Rocket");
-        PLAY F 0 BRIGHT A_AlertMonsters;
         PLAY E 6;
         PLAY E 0 A_CposRefire;
         Goto Missile;
@@ -580,7 +565,6 @@ class AIMarineBFG : AIMarine
         PLAY EEEEE 5 A_FaceTarget;
         PLAY F 6 Bright A_SpawnProjectile("BFGBall");
         PLAY F 0 {self.bNOPAIN=0;}
-        PLAY F 0 BRIGHT A_AlertMonsters;
         PLAY E 4 A_FaceTarget;
         PLAY E 0 A_MonsterRefire(40,"MissileOver");
         Goto Missile;
@@ -605,7 +589,6 @@ class AIMarineBFG : AIMarine
     ALY2 E 4 A_FaceTarget;
     ALY2 E 0 A_StartSound("weapons/pistol");
     ALY2 F 6 Bright A_CustomBulletAttack(5.6,0,1,5,"BulletPuff");
-    ALY2 F 0 BRIGHT A_AlertMonsters;
     ALY2 E 4 A_FaceTarget;
     ALY2 E 0 A_CposRefire;
     Goto Missile;
@@ -645,10 +628,8 @@ class AIMarineChaingun : AIMarine
   Missile:
     ALY4 X 4 A_FaceTarget;
     ALY4 E 0 A_StartSound("weapons/pistol");
-    ALY4 E 0 BRIGHT A_AlertMonsters;
     ALY4 E 4 Bright A_CustomBulletAttack(5.6,0,1,5,"BulletPuff");
     ALY4 F 0 A_StartSound("weapons/pistol");
-    ALY4 F 0 BRIGHT A_AlertMonsters;
     ALY4 F 4 Bright A_CustomBulletAttack(5.6,0,1,5,"BulletPuff");
     ALY4 E 0 A_CposRefire;
     Goto Missile+1;
@@ -689,7 +670,6 @@ class AIMarineShotgun : AIMarine
     ALY5 E 3 A_FaceTarget;
     ALY5 E 0 A_StartSound("weapons/shotgf");
     ALY5 F 7 Bright A_CustomBulletAttack(5.6,0,7,5,"BulletPuff");
-    ALY5 F 0 BRIGHT A_AlertMonsters;
     ALY5 BCDABCD 4 A_Chase(null,null);
     Goto See;
   Pain:
@@ -730,7 +710,6 @@ class AIMarineSuperShotgun : AIMarine
     AL11 E 3 A_FaceTarget;
     AL11 E 0 A_StartSound("weapons/sshotf");
     AL11 F 7 Bright A_CustomBulletAttack(11.2,7.1,20,5,"BulletPuff");
-    AL11 F 0 BRIGHT A_AlertMonsters;
     AL11 ABC 4 A_Chase(null,null);
     AL11 A 0 A_StartSound ("weapons/sshoto");
     AL11 DABC 4 A_Chase(null,null);
@@ -775,7 +754,6 @@ class AIMarinePlasma : AIMarine
   Missile:
     ALY8 E 2 A_FaceTarget;
     ALY8 F 3 Bright A_SpawnProjectile("PlasmaBall");
-    ALY8 F 0 BRIGHT A_AlertMonsters;
     ALY8 E 0 A_MonsterRefire(40,"MissileOver");
     Goto Missile+1;
   MissileOver:
@@ -817,7 +795,6 @@ class AIMarineRocket : AIMarine
   Missile:
     ALY9 E 8 A_FaceTarget;
     ALY9 F 6 Bright A_SpawnProjectile("Rocket");
-    ALY9 F 0 BRIGHT A_AlertMonsters;
     ALY9 E 6;
     ALY9 E 0 A_CposRefire;
     Goto Missile;
@@ -857,7 +834,6 @@ class AIMarineBFG : AIMarine
   Missile:
     AL10 E 0 {self.bNOPAIN=1;}
     AL10 E 5 A_StartSound("weapons/bfgf");
-    AL10 E 0 A_AlertMonsters;
     AL10 EEEEE 5 A_FaceTarget;
     AL10 F 6 Bright A_SpawnProjectile("BFGBall");
     AL10 F 0 {self.bNOPAIN=0;}
@@ -905,7 +881,6 @@ class AIMarineBFG : AIMarine
   Missile:
     ALY2 E 4 A_FaceTarget;
     ALY2 E 0 A_StartSound("weapons/pistol");
-    ALY2 F 0 BRIGHT A_AlertMonsters;
     ALY2 F 6 Bright A_CustomBulletAttack(9.6,0,1,5,"BulletPuff");
     ALY2 E 9 A_FaceTarget;
     ALY2 E 0 A_CposRefire;
@@ -946,10 +921,8 @@ class AIMarineChaingun : AIMarine
   Missile:
     ALY4 X 4 A_FaceTarget;
     ALY4 E 0 A_StartSound("weapons/pistol");
-    ALY4 E 0 BRIGHT A_AlertMonsters;
     ALY4 E 4 Bright A_CustomBulletAttack(13.6,0,1,5,"BulletPuff");
     ALY4 F 0 A_StartSound("weapons/pistol");
-    ALY4 F 0 BRIGHT A_AlertMonsters;
     ALY4 F 4 Bright A_CustomBulletAttack(13.6,0,1,5,"BulletPuff");
     ALY4 E 0 A_CposRefire;
     Goto Missile+1;
@@ -989,7 +962,6 @@ class AIMarineShotgun : AIMarine
   Missile:
     ALY5 E 3 A_FaceTarget;
     ALY5 E 0 A_StartSound("weapons/shotgf");
-    ALY5 F 0 BRIGHT A_AlertMonsters;
     ALY5 F 7 Bright A_CustomBulletAttack(5.6,0,7,5,"BulletPuff");
     ALY5 BCDABCDABCDABCD 4 A_Chase(null,null);
     Goto See;
@@ -1030,7 +1002,6 @@ class AIMarineSuperShotgun : AIMarine
   Missile:
     AL11 E 3 A_FaceTarget;
     AL11 E 0 A_StartSound("weapons/sshotf");
-    AL11 F 0 BRIGHT A_AlertMonsters;
     AL11 F 7 Bright A_CustomBulletAttack(11.2,7.1,20,5,"BulletPuff");
     AL11 ABC 4 A_Chase(null,null);
     AL11 A 0 A_StartSound ("weapons/sshoto");
@@ -1076,7 +1047,6 @@ class AIMarinePlasma : AIMarine
   Missile:
     ALY8 E 2 A_FaceTarget;
     ALY8 F 6 Bright A_SpawnProjectile("PlasmaBall");
-    ALY8 F 0 BRIGHT A_AlertMonsters;
     ALY8 E 0 A_MonsterRefire(40,"MissileOver");
     Goto Missile+1;
   MissileOver:
@@ -1118,7 +1088,6 @@ class AIMarineRocket : AIMarine
   Missile:
     ALY9 E 8 A_FaceTarget;
     ALY9 F 6 Bright A_SpawnProjectile("Rocket");
-    ALY9 F 0 BRIGHT A_AlertMonsters;
     ALY9 E 6;
     ALY9 DABCD 4 A_Chase(null,null);
     Goto See;
@@ -1157,7 +1126,6 @@ class AIMarineBFG : AIMarine
     Loop;
   Missile:
     AL10 E 5 A_StartSound("weapons/bfgf");
-    AL10 E 0 A_AlertMonsters;
     AL10 EEEEE 5 A_FaceTarget;
     AL10 F 6 Bright A_SpawnProjectile("BFGBall");
     AL10 E 4 A_FaceTarget;
@@ -1327,9 +1295,9 @@ MARINE_CLOSET_TUNE.TECHWPN =
 [2] = { 31003, 31001, 31001, 31001, 31001, 31001, 31001, 31001, 31002, 31002, 31001 },
 [3] = { 31003, 31002, 31001, 31001, 31001, 31001, 31001, 31001, 31003, 31002, 31001 },
 [4] = { 31003, 31002, 31001, 31001 },
-[5] = { 31003, 31002, 31001, 31003, 31002, 31003, 31002, 31004 },
-[6] = { 31003, 31002, 31001, 31003, 31002, 31005, 31003, 31002, 31006, 31004 },
-[7] = { 31003, 31002, 31001, 31004, 31002, 31005, 31006, 31004, 31003, 31003 },
+[5] = { 31003, 31002, 31002, 31003, 31002, 31003, 31002, 31004, 31003, 31005, 31006, 31004, 31003, 31001 },
+[6] = { 31003, 31002, 31002, 31003, 31002, 31005, 31003, 31002, 31006, 31004, 31004, 31003, 31002, 31001 },
+[7] = { 31003, 31002, 31003, 31004, 31002, 31005, 31006, 31004, 31003, 31003, 31002, 31002, 31002, 31001 },
 [8] = { 31004, 31004, 31002, 31004, 31005, 31005, 31006, 31002, 31005, 31006 },
 [9] = { 31005, 31005, 31005, 31005, 31006, 31006, 31006, 31004, 31007, 31002 },
 [10] = { 31002, 31003, 31004, 31005, 31006, 31007 },
