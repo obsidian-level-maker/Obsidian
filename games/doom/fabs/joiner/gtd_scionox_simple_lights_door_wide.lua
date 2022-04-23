@@ -29,7 +29,7 @@ PREFABS.Joiner_gtd_sc_simple_door_lights_hell =
 
   theme = "hell",
 
-  thing_2028 = 35
+  thing_2028 = 35,
 
   tex_WOODMET1 = { WOODMET1=50, WOODMET2=50, WOOD4=25, BIGDOOR5=25 },
   flat_FLOOR4_6 = { DEM1_6=50, FLAT1_1=50, FLAT5_3=50, FLOOR7_2=50, RROCK09=50, RROCK11=50 }
