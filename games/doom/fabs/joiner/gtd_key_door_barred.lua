@@ -26,7 +26,8 @@ PREFABS.Locked_gtd_door_barred_red_EPIC =
   {
     BIGDOORC = 10,
     BIGDOORD = 10
-  }
+  },
+  tex_LITEBLU3 = "RDLITE01"
 }
 
 PREFABS.Locked_gtd_door_barred_blue_EPIC =
@@ -35,9 +36,10 @@ PREFABS.Locked_gtd_door_barred_blue_EPIC =
 
   key = "k_blue",
 
-  tex_DOORED = "DOORBLU",
+  tex_DOORRED = "DOORBLU",
+  tex_LITEBLU3 = "LITEBLU3",
 
-  line_33 = 32,
+  line_33 = 32
 }
 
 PREFABS.Locked_gtd_door_barred_yellow_EPIC =
@@ -47,6 +49,7 @@ PREFABS.Locked_gtd_door_barred_yellow_EPIC =
   key = "k_yellow",
 
   tex_DOORRED = "DOORYEL",
+  tex_LITEBLU3 = "WARNSTEP",
 
-  line_33 = 34,
+  line_33 = 34
 }
