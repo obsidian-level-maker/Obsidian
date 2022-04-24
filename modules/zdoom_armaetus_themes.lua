@@ -1198,6 +1198,73 @@ ARMAETUS_ROOM_THEMES =
     }
   },
 
+  tech_redFloorsBrownWalls =
+  {
+    env = "building",
+    prob = 25,
+
+    walls =
+    {
+      BRONZE1 = 50,
+      BRONZE2 = 50,
+      BRONZE3 = 50,
+
+      BROWN1 = 30,
+      BROWN144 = 30,
+      BROWN96 = 30,
+      BROWNHUG = 30,
+
+      BRIKS31 = 50,
+      BRONZE5 = 50,
+      BRONZE6 = 50,
+
+      CEM11 = 20,
+
+      GOTH38 = 20,
+      GOTH39 = 20,
+      GOTH40 = 20,
+      GOTH41 = 20,
+      GOTH42 = 20,
+
+      HELMET1 = 20,
+      HELMET2 = 20,
+
+      STUC01 = 20,
+
+      URBAN5 = 50,
+      URBAN6 = 50,
+
+      ZIMMER3 = 50,
+      ZIMMER4 = 50
+    },
+
+    floors =
+    {
+      FLAT5_3 = 50,
+      FLOOR1_6 = 50,
+      FLAT15 = 50,
+      FLOOR1_2 = 25,
+    },
+
+    ceilings =
+    {
+      FLAT5_3 = 50,
+      FLOOR1_6 = 50,
+      FLAT15 = 50,
+      FLOOR1_2 = 25,
+
+      FLAT1 = 50,
+      FLAT18 = 50,
+      FLAT19 = 50,
+      FLAT3 = 50,
+      FLAT9 = 50,
+      FLOOR0_3 = 50,
+      FLOOR0_5 = 50,
+      FLOOR4_8 = 25,
+      SLIME14 = 50,
+    }
+  },
+
   tech_Outdoors_generic =
   {
     env  = "outdoor",
@@ -3475,6 +3542,90 @@ ARMAETUS_ROOM_THEMES =
       G8_BRNF1 = 35,
       G8_BRNF2 = 35,
       G8_BRNF3 = 35,
+    }
+  },
+
+  urban_greenFloorsGreyWalls =
+  {
+    env = "building",
+    prob = 40,
+
+    walls =
+    {
+      BIGBRIK2 = 50,
+      GRAY1 = 25,
+      GRAY4 = 25,
+      GRAY5 = 25,
+      GRAY7 = 25,
+      GRAYBIG = 25,
+
+      SILVER1 = 20,
+
+      BIGSTONE = 50,
+      BRIKS32 = 50,
+      BRIKS43 = 50,
+      BRONZEG1 = 50,
+      BRONZEG2 = 50,
+      BRONZEG3 = 50,
+      BROWN2 = 75,
+      BROWN3 = 75,
+      CEM10 = 30,
+
+      GOTH13 = 50,
+      GOTH43 = 50,
+      GRAY6 = 50,
+      GRAY8 = 50,
+      GRAY9 = 50,
+
+      SHAWGRY4 = 25,
+      SHAWN01C = 25,
+      SHAWN01D = 25,
+      SHAWN01E = 25,
+      SHAWN01F = 25,
+      SHAWN4 = 50,
+      SHAWN5 = 50,
+      SHAWSH04 = 20,
+
+      SNOWWAL1 = 25,
+      SNOWWAL2 = 50,
+      SNOWWAL3 = 50,
+      SNOWWAL4 = 25,
+
+      STARGRY1 = 50,
+      TEKGRY01 = 25,
+      TEKGRY02 = 25,
+      URBAN7 = 25,
+      URBAN8 = 25
+    },
+
+    floors =
+    {
+      GRASS1 = 50,
+      GRASS2 = 50,
+
+      FLOOR7_2 = 50,
+      DEM1_5 = 50,
+      DEM1_6 = 50,
+
+      RROCK20 = 25,
+
+      GRENFLOR = 50,
+      STARG1F = 25
+    },
+
+    ceilings =
+    {
+      GRASS1 = 50,
+      GRASS2 = 50,
+
+      FLOOR7_2 = 50,
+      DEM1_5 = 50,
+      DEM1_6 = 50,
+
+      RROCK20 = 25,
+
+      GRENFLOR = 50,
+      STARG1F = 25
     }
   },
 
