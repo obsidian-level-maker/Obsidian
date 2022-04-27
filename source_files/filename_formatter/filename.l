@@ -27,5 +27,5 @@
 "%g" { game(); return 0; }
 "%t" { theme(); return 0; }
 "%c" { count(); return 0; }
-. { printf("%s", yytext); return 0; }
+. { raw_append(yytext); return 0; }
 <<EOF>> return TOK_EOF;
