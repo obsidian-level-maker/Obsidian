@@ -78,8 +78,7 @@ inline fixed_t Scale(fixed_t a, fixed_t b, fixed_t c) {
 }
 
 inline fixed_t DivScale30(fixed_t a, fixed_t b) {
-    __asm mov edx, a __asm sar edx, 2 __asm mov eax, a __asm shl eax,
-        30 __asm idiv b
+    __asm mov edx, a __asm sar edx, 2 __asm mov eax, a __asm shl eax, 30 __asm idiv b
 }
 
 inline fixed_t MulScale30(fixed_t a, fixed_t b) {
@@ -87,9 +86,7 @@ inline fixed_t MulScale30(fixed_t a, fixed_t b) {
 }
 
 inline fixed_t DMulScale32(fixed_t a, fixed_t b, fixed_t c, fixed_t d) {
-    __asm mov eax, a __asm imul b __asm mov ebx, eax __asm mov eax,
-        c __asm mov esi, edx __asm imul d __asm add eax, ebx __asm adc edx,
-        esi __asm mov eax, edx
+    __asm mov eax, a __asm imul b __asm mov ebx, eax __asm mov eax, c __asm mov esi, edx __asm imul d __asm add eax, ebx __asm adc edx, esi __asm mov eax, edx
 }
 
 #pragma warning(default : 4035)

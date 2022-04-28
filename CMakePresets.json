@@ -2,13 +2,6 @@
   "version": 3,
   "configurePresets": [
     {
-      "name": "fltk-14",
-      "hidden": true,
-      "cacheVariables": {
-        "USE_FLTK_14": "ON"
-      }
-    },
-    {
       "name": "tidy",
       "hidden": true,
       "cacheVariables": {
@@ -74,6 +67,16 @@
       }
     },
     {
+      "name": "vscode+msvc2019+win32",
+      "description": "Compile natively on Windows (32-bit) (Dasho)",
+      "binaryDir": "build/vscode",
+      "generator": "Visual Studio 16 2019",
+      "architecture": "Win32",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
       "name": "msvc",
       "description": "Compile natively on Windows",
       "binaryDir": "build/msvc",
@@ -118,6 +121,11 @@
       "name": "vscode+msvc2019",
       "configuration": "Release",
       "configurePreset": "vscode+msvc2019"
+    },
+    {
+      "name": "vscode+msvc2019+win32",
+      "configuration": "Release",
+      "configurePreset": "vscode+msvc2019+win32"
     },
     {
       "name": "msys",

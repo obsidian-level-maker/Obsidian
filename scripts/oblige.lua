@@ -1442,7 +1442,6 @@ function ob_default_filename()
     end
         
     if OB_CONFIG.filename_prefix == "datetime" then
-      local current_date = os.date("*t")
       formatstring = ob_datetime_format_string() .. "_"
     elseif OB_CONFIG.filename_prefix == "numlevels" then
       formatstring = "ob" .. levelcount .. "_"
