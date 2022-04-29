@@ -71,6 +71,26 @@ void LogClose(void) {
 
     log_file.close();
 
+    std::filesystem::path bare_log = log_filename;
+    std::filesystem::path oldest_log;
+    int numlogs = 0;
+
+    for (const std::filesystem::directory_entry& dir_entry : 
+        std::filesystem::directory_iterator{bare_log.remove_filename()}) 
+    {
+        std::filesystem::path entry = dir_entry.path();
+        if (StringCaseCmp(entry.extension().string(), ".txt") == 0 && StringCaseCmpPartial(entry.filename().string(), "LOGS") == 0) {
+            numlogs++;
+            if (oldest_log.empty() || std::filesystem::last_write_time(entry) < std::filesystem::last_write_time(oldest_log)) {
+                oldest_log = entry;
+            }
+        }
+    }
+
+    if (numlogs >= log_limit) {
+        std::filesystem::remove(oldest_log);
+    }
+
     std::filesystem::path new_logpath;
     std::string new_filename;
 

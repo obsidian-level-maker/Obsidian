@@ -168,6 +168,7 @@ extern bool did_specify_seed;
 extern int zip_output;
 extern bool zip_logs;
 extern bool timestamp_logs;
+extern int log_limit;
 extern bool restart_after_builds;
 
 extern std::string def_filename;

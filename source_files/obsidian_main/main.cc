@@ -134,6 +134,7 @@ bool did_specify_seed = false;
 int zip_output = 0;
 bool zip_logs = false;
 bool timestamp_logs = false;
+int log_limit = 5;
 bool restart_after_builds = false;
 
 bool first_run = false;
