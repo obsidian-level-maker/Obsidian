@@ -12,7 +12,7 @@
       "name": "dev",
       "binaryDir": "build",
       "generator": "Ninja",
-      "inherits": ["fltk-14", "tidy"],
+      "inherits": "tidy",
       "cacheVariables": {
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "CMAKE_BUILD_TYPE": "Debug",
