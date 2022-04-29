@@ -138,9 +138,7 @@ static bool ExtractConfigData(FILE *fp, Fl_Text_Buffer *buf) {
         }
 
         if (stream.match("-- CONFIG FILE : OBSIDIAN ") ||
-            stream.match("-- Levels created by OBSIDIAN ") ||
-            stream.match("-- CONFIG FILE : OBLIGE ") ||
-            stream.match("-- Levels created by OBLIGE ")) {
+            stream.match("-- Levels created by OBSIDIAN ")) {
             break;  // found it
         }
 
@@ -204,18 +202,6 @@ class Fl_Text_Display_NoSelect : public Fl_Text_Display {
     }
 };
 
-#define RECENT_NUM 10
-
-typedef struct {
-    int group;
-    int index;
-
-    std::string short_name;
-
-    UI_Manage_Config *widget;
-
-} recent_file_data_t;
-
 class UI_Manage_Config : public Fl_Double_Window {
    public:
     bool want_quit;
@@ -225,18 +211,14 @@ class UI_Manage_Config : public Fl_Double_Window {
     Fl_Text_Display_NoSelect *conf_disp;
 
     Fl_Button *load_but;
-    Fl_Menu_Across *recent_menu;
-
     Fl_Button *save_but;
     Fl_Button *use_but;
+    Fl_Button *defaults_but;
     Fl_Button *close_but;
 
     Fl_Button *cut_but;
     Fl_Button *copy_but;
     Fl_Button *paste_but;
-
-    static recent_file_data_t recent_wads[RECENT_NUM];
-    static recent_file_data_t recent_configs[RECENT_NUM];
 
    public:
     UI_Manage_Config(int W, int H, const char *label = NULL);
@@ -392,57 +374,6 @@ class UI_Manage_Config : public Fl_Double_Window {
         }
     }
 
-    int PopulateRecentMenu(Fl_Menu_Across *menu, int group, int max_num) {
-        SYS_ASSERT(max_num <= RECENT_NUM);
-
-        recent_file_data_t *ptr;
-
-        if (group == RECG_Output) {
-            ptr = &recent_wads[0];
-        } else {
-            ptr = &recent_configs[0];
-        }
-
-        for (int k = 0; k < RECENT_NUM; k++) {
-            ptr[k].group = -1;
-            ptr[k].index = -1;
-            ptr[k].widget = NULL;
-        }
-
-        int i;
-
-        for (i = 0; i < max_num; i++, ptr++) {
-            if (!Recent_GetName(group, i, ptr->short_name,
-                                true /* for_menu */)) {
-                break;
-            }
-
-            ptr->group = group;
-            ptr->index = i;
-            ptr->widget = this;
-
-            menu->add(ptr->short_name.c_str(), 0, callback_Recent, ptr);
-        }
-
-        return i;  // total number
-    }
-
-    void SetupRecent() {
-        recent_menu->clear();
-
-        int count1 = PopulateRecentMenu(recent_menu, RECG_Config, 6);
-
-        recent_menu->add("", 0, 0, 0, FL_MENU_DIVIDER | FL_MENU_INACTIVE);
-
-        int count2 = PopulateRecentMenu(recent_menu, RECG_Output, 8);
-
-        if (count1 + count2 > 0) {
-            recent_menu->activate();
-        } else {
-            recent_menu->deactivate();
-        }
-    }
-
     const char *AskLoadFilename() {
         Fl_Native_File_Chooser chooser;
 
@@ -531,6 +462,17 @@ class UI_Manage_Config : public Fl_Double_Window {
     }
 
    private:
+
+    static void callback_Defaults(Fl_Widget *w, void *data) {
+        UI_Manage_Config *that = (UI_Manage_Config *)data;
+        if (std::filesystem::exists(config_file)) {
+            std::filesystem::remove(config_file);
+        }
+        config_file.clear();
+        main_action = MAIN_RESTART;
+        that->want_quit = true;
+    }
+
     /* Loading stuff */
 
     static void callback_Load(Fl_Widget *w, void *data) {
@@ -550,34 +492,6 @@ class UI_Manage_Config : public Fl_Double_Window {
         }
 
         that->LoadFromFile(filename);
-    }
-
-    static void callback_Recent(Fl_Widget *w, void *data) {
-        recent_file_data_t *priv = (recent_file_data_t *)data;
-
-        // invalid data? -- should not happen, but don't choke on it
-        if (priv->index < 0) {
-            LogPrintf("WARNING: callback_Recent with dud data\n");
-            return;
-        }
-
-        static std::string filename;
-
-        // this also should not happen...
-        if (!Recent_GetName(priv->group, priv->index, filename)) {
-            LogPrintf("WARNING: callback_Recent with bad index\n");
-            return;
-        }
-
-        UI_Manage_Config *that = priv->widget;
-        SYS_ASSERT(that);
-
-        if (!that->LoadFromFile(filename.c_str())) {
-            // unable to load that file, it has probably been deleted
-            // so remove it from the recent list
-            Recent_RemoveFile(priv->group, filename.c_str());
-            that->SetupRecent();
-        }
     }
 
     /* Saving and Using */
@@ -604,8 +518,6 @@ class UI_Manage_Config : public Fl_Double_Window {
         }
 
         that->SaveToFile(filename);
-
-        that->SetupRecent();
     }
 
     static void callback_Use(Fl_Widget *w, void *data) {
@@ -668,10 +580,6 @@ class UI_Manage_Config : public Fl_Double_Window {
     }
 };
 
-// define the recent arrays
-recent_file_data_t UI_Manage_Config::recent_wads[RECENT_NUM];
-recent_file_data_t UI_Manage_Config::recent_configs[RECENT_NUM];
-
 //
 // Constructor
 //
@@ -706,13 +614,15 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
     int button_h = kf_h(35);
 
     Fl_Box *o;
+    Fl_Box *use_warn;
+    Fl_Box *defaults_warn;
 
     {
         Fl_Group *g = new Fl_Group(0, 0, conf_disp->x(), conf_disp->h());
         g->resizable(NULL);
 
         load_but =
-            new Fl_Button(button_x, kf_h(25), button_w, button_h, _("Load"));
+            new Fl_Button(button_x, kf_h(25), button_w, button_h, _("Load WAD/TXT"));
         load_but->box(button_style);
         load_but->visible_focus(0);
         load_but->color(BUTTON_COLOR);
@@ -721,25 +631,8 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         load_but->labelfont(font_style);
         load_but->labelcolor(FONT2_COLOR);
 
-        o = new Fl_Box(0, kf_h(65), kf_w(160), kf_h(40),
-                       _("(can be WAD or PAK)"));
-        o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
-        o->labelsize(small_font_size);
-        o->labelfont(font_style);
-
-        std::string recent_title = fmt::format("   {} @-3>", _("Recent"));
-        recent_menu =
-            new Fl_Menu_Across(button_x, kf_h(95), button_w, button_h);
-        recent_menu->copy_label(recent_title.c_str());
-        recent_menu->box(button_style);
-        recent_menu->visible_focus(0);
-        recent_menu->color(BUTTON_COLOR);
-        recent_menu->textfont(font_style);
-        recent_menu->labelfont(font_style);
-        recent_menu->labelcolor(FONT2_COLOR);
-
         save_but =
-            new Fl_Button(button_x, kf_h(165), button_w, button_h, _("Save"));
+            new Fl_Button(button_x, kf_h(75), button_w, button_h, _("Save"));
         save_but->box(button_style);
         save_but->visible_focus(0);
         save_but->color(BUTTON_COLOR);
@@ -749,7 +642,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         save_but->labelcolor(FONT2_COLOR);
 
         use_but =
-            new Fl_Button(button_x, kf_h(225), button_w, button_h, _("Use"));
+            new Fl_Button(button_x, kf_h(125), button_w, button_h, _("Use"));
         use_but->box(button_style);
         use_but->visible_focus(0);
         use_but->color(BUTTON_COLOR);
@@ -757,11 +650,26 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         use_but->labelfont(font_style);
         use_but->labelcolor(FONT2_COLOR);
 
-        o = new Fl_Box(0, kf_h(265), kf_w(170), kf_h(50),
-                       _("Note: this will replace\nall current settings!"));
-        o->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
-        o->labelsize(small_font_size);
-        o->labelfont(font_style);
+        use_warn = new Fl_Box(0, kf_h(165), kf_w(140), kf_h(50),
+                       _("Note: This will replace\nall current settings!"));
+        use_warn->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
+        use_warn->labelsize(small_font_size);
+        use_warn->labelfont(font_style);
+
+        defaults_but =
+            new Fl_Button(button_x, kf_h(200), button_w, button_h, _("Reset to Default"));
+        defaults_but->box(button_style);
+        defaults_but->visible_focus(0);
+        defaults_but->color(BUTTON_COLOR);
+        defaults_but->callback(callback_Defaults, this);
+        defaults_but->labelfont(font_style);
+        defaults_but->labelcolor(FONT2_COLOR);
+
+        defaults_warn = new Fl_Box(0, kf_h(240), kf_w(140), kf_h(50),
+                       _("Note: This will delete\nthe current CONFIG.txt\nand restart Obsidian!"));
+        defaults_warn->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
+        defaults_warn->labelsize(small_font_size);
+        defaults_warn->labelfont(font_style);
 
         g->end();
     }
@@ -857,7 +765,6 @@ void DLG_ManageConfig(void) {
     config_window->set_modal();
     config_window->show();
 
-    config_window->SetupRecent();
     config_window->ReadCurrentSettings();
 
     // run the window until the user closes it

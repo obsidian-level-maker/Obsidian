@@ -122,7 +122,6 @@ add_executable(
   source_files/obsidian_main/ui_window.cc
   source_files/obsidian_main/vis_buffer.cc
   source_files/obsidian_main/vis_occlude.cc
-  source_files/obsidian_main/zf_menu.cc
 )
 
 target_include_directories(obsidian PRIVATE source_files/filename_formatter)

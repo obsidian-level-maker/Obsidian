@@ -79,6 +79,7 @@ int v_unload_private_font(const char *path) {
 extern std::filesystem::path home_dir;
 extern std::filesystem::path install_dir;
 
+extern std::filesystem::path config_file;
 extern std::filesystem::path options_file;
 extern std::filesystem::path theme_file;
 extern std::filesystem::path logging_file;
