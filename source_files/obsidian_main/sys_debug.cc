@@ -87,7 +87,7 @@ void LogClose(void) {
         }
     }
 
-    if (numlogs >= log_limit) {
+    if (numlogs > log_limit) {
         std::filesystem::remove(oldest_log);
     }
 
