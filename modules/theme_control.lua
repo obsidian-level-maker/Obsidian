@@ -100,10 +100,19 @@ function THEME_CONTROL.get_levels(self)
       name = "episode" .. tostring(LEV.episode.ep_index)
     end
 
-    local opt = self.options[name]
+    local option
 
-    if not opt then goto continue end
-    THEME_CONTROL.set_a_theme(LEV, opt)
+    for _,opt in pairs(self.options) do
+      if name == opt.name then
+        option = opt
+        goto foundit
+      end
+    end
+
+    ::foundit::
+
+    if not option then goto continue end
+    THEME_CONTROL.set_a_theme(LEV, option)
     ::continue::
   end
   
