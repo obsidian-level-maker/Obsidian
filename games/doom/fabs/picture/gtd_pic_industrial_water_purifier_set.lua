@@ -29,5 +29,8 @@ PREFABS.Pic_gtd_water_purifier_limit =
 
   engine = "!zdoom",
 
-  line_300 = 0
+  line_300 = 0,
+
+  tex_XFWATER = "FWATER1",
+  tex_XNUKAGE = "SFALL1"
 }

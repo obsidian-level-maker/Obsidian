@@ -51,7 +51,10 @@ PREFABS.Wall_gtd_water_purifier_water_wall_limit =
 
   prob = 10,
 
-  line_300 = 0
+  line_300 = 0,
+
+  tex_XFWATER = "FWATER1",
+  tex_XNUKAGE = "SFALL1"
 }
 
 PREFABS.Wall_gtd_water_purifier_water_comp_wall_limit =
@@ -67,7 +70,10 @@ PREFABS.Wall_gtd_water_purifier_water_comp_wall_limit =
   {
     COMPSTA1 = 1,
     COMPSTA2 = 1
-  }
+  },
+
+  tex_XFWATER = "FWATER1",
+  tex_XNUKAGE = "SFALL1"
 }
 
 PREFABS.Wall_gtd_water_purifier_water_wall_diag_limit =
@@ -77,5 +83,8 @@ PREFABS.Wall_gtd_water_purifier_water_wall_diag_limit =
 
   engine = "!zdoom",
 
-  line_300 = 0
+  line_300 = 0,
+
+  tex_XFWATER = "FWATER1",
+  tex_XNUKAGE = "SFALL1"
 }
