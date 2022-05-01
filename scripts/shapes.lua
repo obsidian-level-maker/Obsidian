@@ -1787,6 +1787,7 @@ CAVE_ROOT_6x6 =
 SPROUT_DIRECT_2_cave =
 {
   prob = 100,
+  env = "cave",
 
   structure =
   {
@@ -1810,6 +1811,7 @@ SPROUT_DIRECT_2_cave =
 SPROUT_DIRECT_3_cave =
 {
   prob = 300,
+  env = "cave", --disable direct connections for caves
 
   structure =
   {
@@ -1833,6 +1835,7 @@ SPROUT_DIRECT_3_cave =
 SPROUT_JOINER_2x1_cave =
 {
   prob = 500,
+  env = "cave", --disable direct connections for caves
 
   structure =
   {
