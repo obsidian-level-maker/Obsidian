@@ -80,14 +80,14 @@ PREFABS.Decor_Dem_Deformation6 =
 
 --  a big hole in the terrain with debris 1
 
-PREFABS.Decor_Dem_Deformation7 =
+--[[PREFABS.Decor_Dem_Deformation7 =
 {
   template = "Decor_Dem_Deformation1",
   map = "MAP07",
 
   size   = 256,
 
-}
+}]]
 
 --  a big hole in the terrain with debris 2
 
