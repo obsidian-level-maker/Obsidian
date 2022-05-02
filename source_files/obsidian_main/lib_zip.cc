@@ -768,10 +768,10 @@ void ZIPF_FinishLump(void) {
     // seek back and fix up the CRC and size fields
     w_zip_fp.seekp(w_local_start + LOCAL_CRC_OFFSET, std::ios::beg);
 
-    w_zip_fp.write(reinterpret_cast<const char *>(w_local.hdr.crc), 4);
-    w_zip_fp.write(reinterpret_cast<const char *>(w_local.hdr.compress_size),
+    w_zip_fp.write(reinterpret_cast<const char *>(&w_local.hdr.crc), 4);
+    w_zip_fp.write(reinterpret_cast<const char *>(&w_local.hdr.compress_size),
                    4);
-    w_zip_fp.write(reinterpret_cast<const char *>(w_local.hdr.full_size), 4);
+    w_zip_fp.write(reinterpret_cast<const char *>(&w_local.hdr.full_size), 4);
 
     w_zip_fp << std::flush;
 
