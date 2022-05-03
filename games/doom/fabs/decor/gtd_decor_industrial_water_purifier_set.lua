@@ -25,7 +25,10 @@ PREFABS.Decor_gtd_water_purifier_limit =
 
   line_424 = 0,
   line_426 = 0,
-  line_428 = 0
+  line_428 = 0,
+
+  tex_XFWATER = "FWATER1",
+  tex_XNUKAGE = "SFALL1"
 }
 
 --
@@ -38,4 +41,18 @@ PREFABS.Decor_gtd_water_purifier_tank =
   size = 36,
 
   z_fit = "top"
+}
+
+PREFABS.Decor_gtd_water_purifier_tank_limit =
+{
+  template = "Decor_gtd_water_purifier",
+  map = "MAP02",
+
+  engine = "!zdoom",
+  size = 36,
+
+  z_fit = "top",
+
+  tex_XFWATER = "FWATER1",
+  tex_XNUKAGE = "SFALL1"
 }

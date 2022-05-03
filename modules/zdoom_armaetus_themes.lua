@@ -174,6 +174,63 @@ ARMAETUS_ROOM_THEMES =
       FLAT1 = 1
     }
   },
+
+-- ALL-THEMES
+
+  any_greyBlocks =
+  {
+    env = "building",
+    prob = 10,
+
+    walls =
+    {
+      GOTH18 = 10,
+      GOTH36 = 10,
+      GOTH42 = 10,
+      GOTH43 = 30,
+      SPACEW5 = 30,
+      SPACEW6 = 30
+    },
+
+    floors =
+    {
+      GRATE7 = 10,
+
+      G09 = 10,
+      G10 = 10,
+      G14 = 10,
+      G15 = 10,
+      G16 = 10,
+      G17 = 10,
+      G18 = 10,
+
+      SLIME14 = 10,
+      SLIME15 = 10,
+      SLIME16 = 10,
+
+      STARG1F = 7,
+      STARGRF = 7
+    },
+
+    ceilings =
+    {
+      G09 = 10,
+      G10 = 10,
+      G14 = 10,
+      G15 = 10,
+      G16 = 10,
+      G17 = 10,
+      G18 = 10,
+
+      SLIME14 = 10,
+      SLIME15 = 10,
+      SLIME16 = 10,
+
+      STARG1F = 7,
+      STARGRF = 7
+    }
+  },
+
 -- START OF TECH THEMES
 
   tech_GrayMet =

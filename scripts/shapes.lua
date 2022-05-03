@@ -1787,6 +1787,7 @@ CAVE_ROOT_6x6 =
 SPROUT_DIRECT_2_cave =
 {
   prob = 100,
+  env = "cave",
 
   structure =
   {
@@ -1810,6 +1811,7 @@ SPROUT_DIRECT_2_cave =
 SPROUT_DIRECT_3_cave =
 {
   prob = 300,
+  env = "cave", --disable direct connections for caves
 
   structure =
   {
@@ -1833,6 +1835,7 @@ SPROUT_DIRECT_3_cave =
 SPROUT_JOINER_2x1_cave =
 {
   prob = 500,
+  env = "cave", --disable direct connections for caves
 
   structure =
   {
@@ -3957,6 +3960,23 @@ GROW_357_ROUND_HOLLOW_2 =
          "1.",".1",
          ".1","1.",
          ".1","1.",
+  }
+},
+
+GROW_DOOM2_ENTRY =
+{
+  prob = 20,
+  skip_prob = 85,
+
+  structure =
+  {
+    "x...x","xAAAx",
+    "x...x","xAAAx",
+    ".....","#AAA#",
+    ".....","1^^^1",
+    ".....","11111",
+    ".....","11111",
+    "11xxx","11xxx"
   }
 },
 
@@ -6463,6 +6483,24 @@ GROW_CAGE_DOOM_MAP01 =
   }
 },
 
+GROW_CAGE_DOOM_MAP01_LIQUID =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    "......","111111",
+    "......","111111",
+    "......","1C~~C1",
+    "......","1~~~~1",
+    "......","1~~~~1",
+    "......","1C~~C1",
+    "......","111111",
+    "11xxxx","11xxxx",
+  }
+},
+
 GROW_CAGE_DOOM_MAP01_PILLARED =
 {
   prob = 15,
@@ -6477,6 +6515,25 @@ GROW_CAGE_DOOM_MAP01_PILLARED =
     "......","111111",
     "......","1#11#1",
     "......","1C11C1",
+    "......","111111",
+    "11xxxx","11xxxx",
+  }
+},
+
+GROW_CAGE_DOOM_MAP01_PILLARED_LIQUID =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    "......","111111",
+    "......","111111",
+    "......","1C~~C1",
+    "......","1#~~#1",
+    "......","1~~~~1",
+    "......","1#~~#1",
+    "......","1C~~C1",
     "......","111111",
     "11xxxx","11xxxx",
   }
@@ -7909,8 +7966,8 @@ GROW_LARGE_MAZE_CROSS_NEW_AREA =
 
 GROW_TWO_WAY_SMALL =
 {
-  prob = 10,
-  skip_prob = 80,
+  prob = 20,
+  skip_prob = 75,
 
   structure =
   {
@@ -7926,8 +7983,8 @@ GROW_TWO_WAY_SMALL =
 
 GROW_THREE_WAY_SMALL =
 {
-  prob = 7,
-  skip_prob = 80,
+  prob = 25,
+  skip_prob = 75,
 
   structure =
   {
@@ -7966,6 +8023,34 @@ GROW_RUNIC_S =
     ".1","1A",
     "1A","A.",
          "A.",
+  }
+},
+
+GROW_RUNIC_S_LIQUID =
+{
+  prob = 10,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xx....","xx11~~",
+    "xx....","xx11~~",
+    "xx....","xx11#~",
+    "x.....","x/11~~",
+    "......","/11/~~",
+    "......","11/~~/",
+    ".....x","11~~/x",
+    "....xx","11#~xx",
+    "....xx","11~~xx",
+    "11..xx","11~~xx",
+  },
+
+  diagonals =
+  {
+    ".1",
+    ".1","1~",
+    "1~","~.",
+         "~.",
   }
 },
 
@@ -8061,7 +8146,7 @@ GROW_LIQUID_SLAB_DIAGONAL_REVERSE =
 
 GROW_LAKE_BIG_O_NEW_AREA =
 {
-  prob = 25,
+  prob = 40,
   skip_prob = 75,
 
   structure =
@@ -8096,7 +8181,7 @@ GROW_LAKE_BIG_O_NEW_AREA =
 
 GROW_LAKE_BIG_O_WIDE_NEW_AREA =
 {
-  prob = 25,
+  prob = 40,
   skip_prob = 80,
 
   structure =
@@ -8129,7 +8214,7 @@ GROW_LAKE_BIG_O_WIDE_NEW_AREA =
 
 GROW_LAKE_BIG_L_NEW_AREA =
 {
-  prob = 60,
+  prob = 75,
   skip_prob = 65,
 
   structure =
@@ -8167,7 +8252,7 @@ GROW_LAKE_BIG_L_NEW_AREA =
 
 GROW_LAKE_BIG_J_NEW_AREA =
 {
-  prob = 25,
+  prob = 35,
   skip_prob = 75,
 
   structure =
@@ -8200,7 +8285,7 @@ GROW_LAKE_BIG_J_NEW_AREA =
 
 GROW_LAKE_BIG_J_NEW_AREA_2 =
 {
-  prob = 25,
+  prob = 50,
   skip_prob = 75,
 
   structure =
@@ -8770,6 +8855,21 @@ GROW_ELEVATED_PILLAR_U =
 
 GROW_ELEVATED_PILLAR_U_FULL =
 {
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    "1.....","1>>AAA",
+    "1.....","1>>AAA",
+    "x.....","xAA.AA",
+    "x.....","xAAAAA",
+    "x.....","xAAAAA",
+  },
+},
+
+GROW_ELEVATED_PILLAR_U_FULL_LIQUID =
+{
   prob = 20,
   skip_prob = 70,
 
@@ -8777,7 +8877,7 @@ GROW_ELEVATED_PILLAR_U_FULL =
   {
     "1.....","1>>AAA",
     "1.....","1>>AAA",
-    "x.....","xAA.AA",
+    "x.....","x~~.AA",
     "x.....","xAAAAA",
     "x.....","xAAAAA",
   },
@@ -8805,7 +8905,7 @@ GROW_WIDE_SPACE_DEPRESSION =
 
 GROW_WIDE_SPACE_CATWALK_PLAIN =
 {
-  prob = 50,
+  prob = 40,
   skip_prob = 35,
 
   structure =
@@ -8815,12 +8915,27 @@ GROW_WIDE_SPACE_CATWALK_PLAIN =
     "......","11^^11",
     "......","111111",
     "xx11xx","xx11xx",
+  },
+},
+
+GROW_WIDE_SPACE_CATWALK_PLAIN_LIQUID =
+{
+  prob = 20,
+  skip_prob = 35,
+
+  structure =
+  {
+    "........","11~AA~11",
+    "........","11~AA~11",
+    "........","11~^^~11",
+    "........","11111111",
+    "xxx11xxx","xxx11xxx",
   },
 },
 
 GROW_WIDE_SPACE_CATWALK_TALL_PLAIN =
 {
-  prob = 50,
+  prob = 35,
   skip_prob = 35,
 
   structure =
@@ -8834,12 +8949,26 @@ GROW_WIDE_SPACE_CATWALK_TALL_PLAIN =
   },
 },
 
-GROW_WIDE_SPACE_PLATFORM_TINY =
+GROW_WIDE_SPACE_CATWALK_TALL_PLAIN_LIQUID =
 {
-  prob = 50,
+  prob = 25,
   skip_prob = 35,
 
-  env = "!cave",
+  structure =
+  {
+    "........","11~AA~11",
+    "........","11~AA~11",
+    "........","11~^^~11",
+    "........","11~^^~11",
+    "........","11111111",
+    "xxx11xxx","xxx11xxx",
+  },
+},
+
+GROW_WIDE_SPACE_PLATFORM_TINY =
+{
+  prob = 30,
+  skip_prob = 35,
 
   structure =
   {
@@ -8848,6 +8977,21 @@ GROW_WIDE_SPACE_PLATFORM_TINY =
     "......","11>A11",
     "......","111111",
     "xx11xx","xx11xx",
+  },
+},
+
+GROW_WIDE_SPACE_PLATFORM_TINY_LIQUID =
+{
+  prob = 20,
+  skip_prob = 35,
+
+  structure =
+  {
+    ".......","11AA~11",
+    ".......","11AA~11",
+    ".......","11>A~11",
+    ".......","1111111",
+    "xx11xxx","xx11xxx",
   },
 },
 
@@ -8860,10 +9004,10 @@ GROW_WIDE_LOW_CEILING_SIDE =
   {
     "....","1111",
     "....","1111",
-    "....","1.AA",
+    "....","1#AA",
     "....","1AAA",
     "....","1AAA",
-    "....","1.AA",
+    "....","1#AA",
     "11..","1111",
     "11xx","11xx",
   },
@@ -8882,6 +9026,24 @@ GROW_WIDE_LOW_CEILING_CENTER =
     "......","1AAAA1",
     "......","1AAAA1",
     "......","1.AA.1",
+    "......","111111",
+    "xx11xx","xx11xx",
+  },
+},
+
+GROW_WIDE_LOW_CEILING_CENTER_LIQUID =
+{
+  prob = 20,
+  skip_prob = 65,
+
+  structure =
+  {
+    "......","111111",
+    "......","111111",
+    "......","1.~~.1",
+    "......","1~~~~1",
+    "......","1~~~~1",
+    "......","1.~~.1",
     "......","111111",
     "xx11xx","xx11xx",
   },
@@ -9107,9 +9269,24 @@ GROW_PILLAR_GATE =
   },
 },
 
+GROW_PILLAR_GATE_LIQUID =
+{
+  prob = 15,
+  skip_prob = 50,
+
+  structure =
+  {
+    "......","111111",
+    "......","111111",
+    "......","1#~~#1",
+    "......","111111",
+    "11xxxx","11xxxx",
+  }
+},
+
 GROW_CHAMFER_WIDE_ROOM_CORNER =
 {
-  prob = 25,
+  prob = 20,
   skip_prob = 75,
 
   structure =

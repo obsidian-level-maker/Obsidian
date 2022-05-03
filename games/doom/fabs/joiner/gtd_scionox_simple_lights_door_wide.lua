@@ -104,6 +104,7 @@ PREFABS.Joiner_gtd_sc_simple_door_lights_k_yellow_hell =
 
   tex_WOODMET1 = { WOODMET1=50, WOODMET2=50, WOOD4=25, BIGDOOR5=25 },
   flat_FLOOR4_6 = { DEM1_6=50, FLAT1_1=50, FLAT5_3=50, FLOOR7_2=50, RROCK09=50, RROCK11=50 },
+  tex_DOORRED2 = "DOORYEL2",
 
   line_33 = 34
 }
@@ -120,6 +121,7 @@ PREFABS.Joiner_gtd_sc_simple_door_lights_k_blue_hell =
 
   tex_WOODMET1 = { WOODMET1=50, WOODMET2=50, WOOD4=25, BIGDOOR5=25 },
   flat_FLOOR4_6 = { DEM1_6=50, FLAT1_1=50, FLAT5_3=50, FLOOR7_2=50, RROCK09=50, RROCK11=50 },
+  tex_DOORRED2 = "DOORBLU2",
 
   line_33 = 32
 }
