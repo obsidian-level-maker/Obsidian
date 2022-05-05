@@ -79,7 +79,7 @@ void LogClose(void) {
         std::filesystem::directory_iterator{bare_log.remove_filename()}) 
     {
         std::filesystem::path entry = dir_entry.path();
-        if (StringCaseCmp(entry.extension().string(), ".txt") == 0 && StringCaseCmpPartial(entry.filename().string(), "LOGS") == 0) {
+        if ((StringCaseCmp(entry.extension().string(), ".txt") == 0 || StringCaseCmp(entry.extension().string(), ".zip") == 0) && StringCaseCmpPartial(entry.filename().string(), "LOGS") == 0) {
             numlogs++;
             if (oldest_log.empty() || std::filesystem::last_write_time(entry) < std::filesystem::last_write_time(oldest_log)) {
                 oldest_log = entry;
