@@ -3966,7 +3966,7 @@ GROW_357_ROUND_HOLLOW_2 =
 GROW_DOOM2_ENTRY =
 {
   prob = 20,
-  skip_prob = 85,
+  skip_prob = 75,
 
   structure =
   {
@@ -3975,6 +3975,48 @@ GROW_DOOM2_ENTRY =
     ".....","#AAA#",
     ".....","1^^^1",
     ".....","11111",
+    ".....","11111",
+    "11xxx","11xxx"
+  }
+},
+
+GROW_DOOM2_ENTRY_CAGE =
+{
+  prob = 10,
+  skip_prob = 80,
+
+  structure =
+  {
+    "x...x","xAAAx",
+    ".....","/AAA%",
+    ".....","CAAAC",
+    ".....","C^^^C",
+    ".....","C111C",
+    ".....","/111%",
+    ".....","11111",
+    "11xxx","11xxx"
+  },
+
+  diagonals =
+  {
+    "CA","AC",
+    "C1","1C"
+  }
+},
+
+GROW_DOOM2_ENTRY_CAGE_ALT =
+{
+  prob = 10,
+  skip_prob = 80,
+
+  structure =
+  {
+    "x...x","xAAAx",
+    ".....","#AAA#",
+    ".....","CAAAC",
+    ".....","#^^^#",
+    ".....","C111C",
+    ".....","#111#",
     ".....","11111",
     "11xxx","11xxx"
   }
@@ -4885,6 +4927,32 @@ GROW_LIQUID_LEAP_SINGLE =
   },
 },
 
+GROW_LIQUID_LEAP_SINGLE_CAGE =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    "...","111",
+    "...","111",
+    "...","vvv",
+    "...","AAA",
+    "...","%A/",
+    "...","C~C",
+    "...","/A%",
+    "...","AAA",
+    "...","^^^",
+    "111","111",
+  },
+
+  diagonals =
+  {
+    "CA","AC",
+    "CA","AC",
+  },
+},
+
 GROW_LIQUID_U =
 {
   prob = 15,
@@ -4924,6 +4992,27 @@ GROW_LIQUID_U_ALT =
   diagonals =
   {
     "1~","~1",
+  },
+},
+
+GROW_LIQUID_U_ALT_CAGE =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    "11.....","11C#C11",
+    "11.....","11C#C11",
+    ".......","11CCC11",
+    ".......","11%C/11",
+    ".......","1111111",
+    ".......","1111111",
+  },
+
+  diagonals =
+  {
+    "1C","C1",
   },
 },
 
@@ -5538,6 +5627,27 @@ GROW_CAUSEWAY_WATERLOCKED_PILLARED_BRIDGE =
     "........","~~~AA~~~",
     "........","~~~AA~~~",
     "........","~~~AA~~~",
+    "........","~~#^^#~~",
+    "........","11111111",
+    "........","11111111",
+    "11xxxxxx","11xxxxxx"
+  }
+},
+
+GROW_CAUSEWAY_WATERLOCKED_PILLARED_BRIDGE_CAGED =
+{
+  prob = 20,
+  skip_prob = 85,
+
+  structure =
+  {
+    "........","11111111",
+    "........","11111111",
+    "........","~~#vv#~~",
+    "........","~~CAAC~~",
+    "........","~~CAAC~~",
+    "........","~~CAAC~~",
+    "........","~~CAAC~~",
     "........","~~#^^#~~",
     "........","11111111",
     "........","11111111",
@@ -13435,7 +13545,8 @@ GROW_SEWER_CURVED =
   },
 },
 
-GROW_SEWER_CROSSING =
+-- crappy rule
+--[[GROW_SEWER_CROSSING = 
 {
   prob = 25,
   skip_prob = 75,
@@ -13450,7 +13561,7 @@ GROW_SEWER_CROSSING =
     "1....","11~11",
     "1....","11~11",
   },
-},
+},]]
 
 GROW_SEWER_STAIRS_SIDE_EXIT_NEW_AREA =
 {
