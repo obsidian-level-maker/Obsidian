@@ -142,7 +142,7 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
                                      (!single_pane ? kf_h(48) : kf_h(24)));
 
     rch->mod_label = new Fl_Box(
-        rch->x(), rch->y(), (!single_pane ? rch->w() * .95 : rch->w() * .40),
+        rch->x(), rch->y(), (!single_pane ? rch->w() * .90 : rch->w() * .40),
         kf_h(24), "");
     rch->mod_label->copy_label(fmt::format("{}: ", label).c_str());
     rch->mod_label->align(
@@ -154,9 +154,17 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
     rch->mod_menu = new UI_RChoiceMenu(
         (!single_pane ? rch->x() : rch->x() + (rch->w() * .40)),
         (!single_pane ? rch->y() + rch->mod_label->h() : rch->y()),
-        (single_pane ? rch->w() * .55 : rch->w()), kf_h(24));
+        (single_pane ? rch->w() * .50 : rch->w()), kf_h(24));
     rch->mod_menu->textcolor(FONT2_COLOR);
     rch->mod_menu->selection_color(SELECTION);
+
+    rch->mod_reset = new UI_ResetOption(
+        rch->x() + (!single_pane ? (rch->w() * .8) : (rch->w() * .90)),
+        rch->y(), rch->w() * .075, kf_h(24));
+    rch->mod_reset->box(FL_NO_BOX);
+    rch->mod_reset->labelcolor(FONT_COLOR);
+    rch->mod_reset->visible_focus(0);
+    //rsl->mod_reset->callback(callback_ManualEntry, NULL);
 
     rch->mod_help = new UI_HelpLink(
         rch->x() + (!single_pane ? (rch->w() * .9) : (rch->w() * .95)),
@@ -225,7 +233,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
 
     rsl->mod_label = new Fl_Box(
         rsl->x(), rsl->y(),
-        (!single_pane ? rsl->w() * (rsl->nan_choices.size() > 0 ? .7 : .8)
+        (!single_pane ? rsl->w() * (rsl->nan_choices.size() > 0 ? .6 : .7)
                       : rsl->w() * .40),
         kf_h(24), "");
     rsl->mod_label->copy_label(label.c_str());
@@ -250,7 +258,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
         (!single_pane ? rsl->x() + rsl->w() * .10 : rsl->x() + rsl->w() * .45),
         (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()),
         (!single_pane ? rsl->w() * .80
-                      : rsl->w() * (rsl->nan_choices.size() > 0 ? .35 : .40)),
+                      : rsl->w() * (rsl->nan_choices.size() > 0 ? .30 : .35)),
         kf_h(24), NULL);
     rsl->mod_slider->box(button_style);
     rsl->mod_slider->visible_focus(0);
@@ -264,7 +272,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     rsl->next_button = new UI_CustomArrowButton(
         (!single_pane
              ? rsl->x() + rsl->w() * .90
-             : rsl->x() + rsl->w() * (rsl->nan_choices.size() > 0 ? .80 : .85)),
+             : rsl->x() + rsl->w() * (rsl->nan_choices.size() > 0 ? .75 : .80)),
         (!single_pane ? rsl->y() + rsl->mod_label->h() : rsl->y()),
         (single_pane ? rsl->w() * .05 : rsl->w() * .10), kf_h(24));
     rsl->next_button->copy_label("@>");
@@ -278,7 +286,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
 
     if (rsl->nan_choices.size() > 0) {
         rsl->nan_options = new UI_CustomMenuButton(
-            rsl->x() + (!single_pane ? (rsl->w() * .7) : (rsl->w() * .85)),
+            rsl->x() + (!single_pane ? (rsl->w() * .6) : (rsl->w() * .80)),
             rsl->y(), rsl->w() * .075, kf_h(24));
         rsl->nan_options->box(FL_FLAT_BOX);
         rsl->nan_options->color(this->color());
@@ -291,12 +299,20 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     }
 
     rsl->mod_entry = new UI_ManualEntry(
-        rsl->x() + (!single_pane ? (rsl->w() * .8) : (rsl->w() * .90)),
+        rsl->x() + (!single_pane ? (rsl->w() * .7) : (rsl->w() * .85)),
         rsl->y(), rsl->w() * .075, kf_h(24));
     rsl->mod_entry->box(FL_NO_BOX);
     rsl->mod_entry->labelcolor(FONT_COLOR);
     rsl->mod_entry->visible_focus(0);
     rsl->mod_entry->callback(callback_ManualEntry, NULL);
+
+    rsl->mod_reset = new UI_ResetOption(
+        rsl->x() + (!single_pane ? (rsl->w() * .8) : (rsl->w() * .90)),
+        rsl->y(), rsl->w() * .075, kf_h(24));
+    rsl->mod_reset->box(FL_NO_BOX);
+    rsl->mod_reset->labelcolor(FONT_COLOR);
+    rsl->mod_reset->visible_focus(0);
+    //rsl->mod_reset->callback(callback_ManualEntry, NULL);
 
     rsl->mod_help = new UI_HelpLink(
         rsl->x() + (!single_pane ? (rsl->w() * .9) : (rsl->w() * .95)),
@@ -374,10 +390,10 @@ void UI_Module::AddButtonOption(std::string opt, std::string label,
 
     rbt->mod_label =
         new Fl_Box(rbt->x() + (single_pane ? 0 : (rbt->w() * .075)), rbt->y(),
-                   rbt->w() * .30, kf_h(24), "");
+                   rbt->w() * .70, kf_h(24), "");
     rbt->mod_label->copy_label(single_pane ? fmt::format("{}: ", label).c_str()
                                            : label.c_str());
-    rbt->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+    rbt->mod_label->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     rbt->mod_label->labelfont(font_style);
     rbt->mod_label->copy_tooltip(tip.c_str());
 
@@ -385,6 +401,14 @@ void UI_Module::AddButtonOption(std::string opt, std::string label,
         new UI_CustomCheckBox(rbt->x() + (!single_pane ? 0 : (rbt->w() * .40)),
                               rbt->y(), rbt->w() * .10, kf_h(24), "");
     rbt->mod_check->selection_color(SELECTION);
+
+    rbt->mod_reset = new UI_ResetOption(
+        rbt->x() + (!single_pane ? (rbt->w() * .8) : (rbt->w() * .90)),
+        rbt->y(), rbt->w() * .075, kf_h(24));
+    rbt->mod_reset->box(FL_NO_BOX);
+    rbt->mod_reset->labelcolor(FONT_COLOR);
+    rbt->mod_reset->visible_focus(0);
+    //rsl->mod_reset->callback(callback_ManualEntry, NULL);
 
     rbt->mod_help = new UI_HelpLink(
         rbt->x() + (!single_pane ? (rbt->w() * .9) : (rbt->w() * .95)),

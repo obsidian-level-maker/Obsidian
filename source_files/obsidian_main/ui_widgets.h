@@ -63,6 +63,29 @@ class choice_data_c {
     ~choice_data_c();
 };
 
+class UI_ResetOption : public Fl_Button {
+   private:
+    // true when mouse is over this widget
+    bool hover;
+
+    // area containing the label
+    int label_X, label_Y, label_W, label_H;
+
+   public:
+    UI_ResetOption(int x, int y, int w, int h);
+    virtual ~UI_ResetOption();
+
+   public:
+    // FLTK overrides
+
+    int handle(int event);
+
+    void draw();
+
+   private:
+    void checkLink();
+};
+
 class UI_HelpLink : public Fl_Button {
    private:
     // true when mouse is over this widget
@@ -194,6 +217,8 @@ class UI_RChoice : public Fl_Group {
 
     UI_RChoiceMenu *mod_menu;
 
+    UI_ResetOption *mod_reset;
+
     std::string randomize_group;
 
    private:
@@ -240,6 +265,8 @@ class UI_RSlide : public Fl_Group {
 
     Fl_Box *mod_label;
 
+    UI_ResetOption *mod_reset;
+
     UI_HelpLink *mod_help;
 
     UI_ManualEntry *mod_entry;
@@ -282,6 +309,8 @@ class UI_RButton : public Fl_Group {
     virtual ~UI_RButton();
 
     UI_CustomCheckBox *mod_check;
+
+    UI_ResetOption *mod_reset;
 
     Fl_Box *mod_label;
 

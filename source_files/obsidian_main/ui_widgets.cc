@@ -428,6 +428,104 @@ int UI_CustomMenuButton::handle(int event) {
 
 //----------------------------------------------------------------
 
+UI_ResetOption::UI_ResetOption(int x, int y, int w, int h)
+    : Fl_Button(x, y, w, h, "@-2undo"),
+      hover(false),
+      label_X(0),
+      label_Y(0),
+      label_W(0),
+      label_H(0) {
+    box(FL_NO_BOX);
+}
+
+UI_ResetOption::~UI_ResetOption() {}
+
+void UI_ResetOption::checkLink() {
+    // change the cursor if the mouse is over the link.
+    // the 'hover' variable reduces the number of times fl_cursor()
+    // needs to be called (since it can be expensive).
+
+    if (Fl::event_inside(x() + label_X, y() + label_Y, label_W, label_H)) {
+        if (!hover) {
+            fl_cursor(FL_CURSOR_HAND);
+        }
+
+        hover = true;
+    } else {
+        if (hover) {
+            fl_cursor(FL_CURSOR_DEFAULT);
+        }
+
+        hover = false;
+    }
+}
+
+int UI_ResetOption::handle(int event) {
+    if (!active_r()) {
+        return Fl_Button::handle(event);
+    }
+
+    switch (event) {
+        case FL_MOVE: {
+            checkLink();
+            return 1;
+        }
+
+        case FL_ENTER: {
+            checkLink();
+            return 1;
+        }
+
+        case FL_LEAVE: {
+            checkLink();
+            return 1;
+        }
+
+        default:
+            break;
+    }
+
+    return Fl_Button::handle(event);
+}
+
+void UI_ResetOption::draw() {
+    if (type() == FL_HIDDEN_BUTTON) {
+        return;
+    }
+
+    // determine where to draw the label
+
+    label_X = label_Y = label_W = label_H = 0;
+
+    fl_font(labelfont(), labelsize());
+    fl_measure(label(), label_W, label_H, 1);
+
+    if (align() & FL_ALIGN_LEFT) {
+        label_X = 2;
+    } else if (align() & FL_ALIGN_RIGHT) {
+        label_X = w() - label_W - 2;
+    } else {
+        label_X = (w() - label_W) / 2;
+    }
+
+    label_Y += h() / 2 - labelsize() / 2 - 2;
+
+    // draw the link text
+
+    fl_draw_box(box(), x(), y(), w(), h(), color());
+
+    fl_color(labelcolor());
+    fl_draw(label(), x() + label_X, y() + label_Y, label_W, label_H,
+            FL_ALIGN_LEFT);
+
+    /*
+       if (Fl::focus() == this)
+       draw_focus();
+     */
+}
+
+//----------------------------------------------------------------
+
 UI_HelpLink::UI_HelpLink(int x, int y, int w, int h)
     : Fl_Button(x, y, w, h, "?"),
       hover(false),

@@ -122,7 +122,7 @@ OB_MODULES["debugger"] =
 
     {
       name = "bool_non_vanilla_as_missing",
-      label=_("Treat Non-Vanilla Materials As Missing"),
+      label=_("Check For Non-Vanilla Materials"),
       valuator = "button",
       default = 0,
       tooltip="Choose what to do when encountering a non-vanilla material",
@@ -134,7 +134,7 @@ OB_MODULES["debugger"] =
 
     {
       name = "bool_whole_names_only",
-      label=_("Whole Name Generator Names Only"),
+      label=_("Whole Name Gen Names Only"),
       valuator = "button",
       default = 0,
       tooltip="Use only complete names from the Name Generator",
