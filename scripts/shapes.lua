@@ -13545,7 +13545,8 @@ GROW_SEWER_CURVED =
   },
 },
 
-GROW_SEWER_CROSSING =
+-- crappy rule
+--[[GROW_SEWER_CROSSING = 
 {
   prob = 25,
   skip_prob = 75,
@@ -13560,7 +13561,7 @@ GROW_SEWER_CROSSING =
     "1....","11~11",
     "1....","11~11",
   },
-},
+},]]
 
 GROW_SEWER_STAIRS_SIDE_EXIT_NEW_AREA =
 {
