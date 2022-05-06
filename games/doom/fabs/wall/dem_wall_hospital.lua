@@ -3,7 +3,7 @@ PREFABS.Wall_hospital1 =
   file   = "wall/dem_wall_hospital.wad",
   map    = "MAP01",
 
-rank = 1,
+  rank = 1,
 
   prob   = 200,
   theme = "!hell",
@@ -19,14 +19,12 @@ rank = 1,
 
   where  = "edge",
   height = 128,
-  deep   = 20,
+  deep   = 16,
 
   bound_z1 = 0,
   bound_z2 = 128,
 
-  x_fit = "frame",
-  z_fit = "top",
-
+  z_fit = "top"
 }
 
 PREFABS.Wall_hospital2 =
@@ -36,8 +34,7 @@ PREFABS.Wall_hospital2 =
 
   prob   = 20,
 
-  deep   = 52,
-
+  deep   = 48
 }
 
 PREFABS.Wall_hospital3 =
@@ -47,8 +44,7 @@ PREFABS.Wall_hospital3 =
 
   prob   = 20,
 
-  deep   = 52,
-
+  deep   = 48
 }
 
 PREFABS.Wall_hospital4 =
@@ -58,7 +54,5 @@ PREFABS.Wall_hospital4 =
 
   prob   = 20,
 
-  deep   = 52,
-
+  deep   = 48
 }
-
