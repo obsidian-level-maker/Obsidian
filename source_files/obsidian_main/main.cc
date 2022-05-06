@@ -144,6 +144,8 @@ bool first_run = false;
 
 int old_x = 0;
 int old_y = 0;
+int old_w = 0;
+int old_h = 0;
 std::string old_seed;
 std::string old_name;
 u8_t *old_pixels;
@@ -1361,10 +1363,6 @@ skiprest:
                     OBSIDIAN_CODE_NAME);
     main_win = new UI_MainWin(main_w, main_h, main_title.c_str());
 
-    if (old_x > 0 || old_y > 0) {
-        main_win->resize(old_x, old_y, main_w, main_h);
-    }
-
     //???    Default_Location();
 
     Script_Open();
@@ -1473,6 +1471,9 @@ skiprest:
         fake_argv[0] = strdup("Obsidian.exe");
         fake_argv[1] = NULL;
         main_win->show(1 /* argc */, fake_argv);
+        if (old_w > 0 && old_h > 0) {
+            main_win->resize(old_x, old_y, old_w, old_h);
+        }
         if (first_run && !restart_after_builds) {
             DLG_Tutorial();
         }
@@ -1643,6 +1644,8 @@ skiprest:
             }
             old_x = main_win->x();
             old_y = main_win->y();
+            old_w = main_win->w();
+            old_h = main_win->h();
             delete main_win;
             main_win = nullptr;
         }
