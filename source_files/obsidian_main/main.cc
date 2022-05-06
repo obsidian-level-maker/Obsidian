@@ -49,6 +49,9 @@ constexpr size_t TICKER_TIME = 50;
 
 std::filesystem::path home_dir;
 std::filesystem::path install_dir;
+#ifdef WIN32
+std::filesystem::path physfs_dir;
+#endif
 
 std::filesystem::path config_file;
 std::filesystem::path options_file;
@@ -293,6 +296,14 @@ static void ShowVersion() {
     fflush(stdout);
 }
 
+#ifdef WIN32
+char32_t *ucs4_path(const char *path) {
+    PHYSFS_uint32 *long_path = new PHYSFS_uint32[strlen(path) * 4 + 1];
+    PHYSFS_utf8ToUcs4(path, long_path, strlen(path) * 4);
+    return (char32_t *)long_path;
+}
+#endif
+
 void Determine_WorkingPath(const char *argv0) {
     // firstly find the "Working directory" : that's the place where
     // the CONFIG.txt and LOGS.txt files are, as well the temp files.
@@ -308,8 +319,10 @@ void Determine_WorkingPath(const char *argv0) {
     }
 
 #ifdef WIN32
-    home_dir = argv0;
+    home_dir = ucs4_path(argv0);
     home_dir.remove_filename();
+    physfs_dir = argv0;
+    physfs_dir.remove_filename();
 #else
     const char *xdg_config_home = std::getenv("XDG_CONFIG_HOME");
     if (xdg_config_home == nullptr) {

@@ -293,8 +293,9 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
             }
         }
     }
+    src_name = ucs4_path(src_name.string().c_str());
+    src_name.replace_extension(ext); // Ucs4 conversion sometimes goofs the extension
 #endif
-
     return src_name;
 }
 

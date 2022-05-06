@@ -39,7 +39,11 @@ std::map<std::filesystem::path, int> initial_enabled_addons;
 std::vector<addon_info_t> all_addons;
 
 void VFS_AddFolder(std::string name) {
+#ifdef _WIN32
+    std::filesystem::path path = physfs_dir;
+#else
     std::filesystem::path path = install_dir;
+#endif
     path /= name;
     std::string mount = fmt::format("/{}", name);
 
