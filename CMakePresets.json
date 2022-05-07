@@ -63,7 +63,7 @@
       "binaryDir": "build/vscode",
       "generator": "Visual Studio 16 2019",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+        "CMAKE_BUILD_TYPE": "Release"
       }
     },
     {
@@ -73,7 +73,7 @@
       "generator": "Visual Studio 16 2019",
       "architecture": "Win32",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+        "CMAKE_BUILD_TYPE": "Release"
       }
     },
     {
@@ -119,12 +119,12 @@
     },
     {
       "name": "vscode+msvc2019",
-      "configuration": "RelWithDebInfo",
+      "configuration": "Release",
       "configurePreset": "vscode+msvc2019"
     },
     {
       "name": "vscode+msvc2019+win32",
-      "configuration": "RelWithDebInfo",
+      "configuration": "Release",
       "configurePreset": "vscode+msvc2019+win32"
     },
     {

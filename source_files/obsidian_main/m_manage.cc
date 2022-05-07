@@ -610,6 +610,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         load_but =
             new Fl_Button(button_x, kf_h(25), button_w, button_h, _("Load WAD/TXT"));
         load_but->box(button_style);
+        load_but->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
         load_but->visible_focus(0);
         load_but->color(BUTTON_COLOR);
         load_but->callback(callback_Load, this);
@@ -645,6 +646,7 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         defaults_but =
             new Fl_Button(button_x, kf_h(200), button_w, button_h, _("Reset to Default"));
         defaults_but->box(button_style);
+        defaults_but->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
         defaults_but->visible_focus(0);
         defaults_but->color(BUTTON_COLOR);
         defaults_but->callback(callback_Defaults, this);

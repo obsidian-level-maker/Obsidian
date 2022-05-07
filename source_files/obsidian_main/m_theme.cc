@@ -124,6 +124,7 @@ std::filesystem::path Theme_AskLoadFilename() {
 
 #ifdef WIN32
     std::filesystem::path filename = ucs4_path(chooser.filename());
+    filename.replace_extension(".txt");
 #else
     std::filesystem::path filename = chooser.filename();
 #endif
