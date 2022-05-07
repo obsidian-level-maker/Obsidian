@@ -572,9 +572,9 @@ int gui_add_module_option(lua_State *L) {
 
     std::string randomize_group = luaL_optstring(L, 7, "");
 
-    SYS_ASSERT(!module.empty() && !option.empty());
+    std::string default_value = luaL_checkstring(L, 8);
 
-    //    DebugPrintf("  add_module_option: {}.{}\n", module, option);
+    SYS_ASSERT(!module.empty() && !option.empty() && !default_value.empty());
 
     if (!main_win) {
         return 0;
@@ -589,10 +589,10 @@ int gui_add_module_option(lua_State *L) {
     // FIXME : error if module is unknown
 
     main_win->left_mods->AddOption(module, option, label, tip, longtip, gap,
-                                   randomize_group);
+                                   randomize_group, default_value);
     if (!single_pane) {
         main_win->right_mods->AddOption(module, option, label, tip, longtip,
-                                        gap, randomize_group);
+                                        gap, randomize_group, default_value);
     }
 
     return 0;
@@ -620,9 +620,9 @@ int gui_add_module_slider_option(lua_State *L) {
 
     std::string randomize_group = luaL_optstring(L, 13, "");
 
-    SYS_ASSERT(!module.empty() && !option.empty());
+    std::string default_value = luaL_checkstring(L, 14);
 
-    //    DebugPrintf("  add_module_option: {}.{}\n", module, option);
+    SYS_ASSERT(!module.empty() && !option.empty() && !default_value.empty());
 
     if (!main_win) {
         return 0;
@@ -638,11 +638,11 @@ int gui_add_module_slider_option(lua_State *L) {
 
     main_win->left_mods->AddSliderOption(module, option, label, tip, longtip,
                                          gap, min, max, inc, units, presets,
-                                         nan, randomize_group);
+                                         nan, randomize_group, default_value);
     if (!single_pane) {
         main_win->right_mods->AddSliderOption(
             module, option, label, tip, longtip, gap, min, max, inc, units,
-            presets, nan, randomize_group);
+            presets, nan, randomize_group, default_value);
     }
 
     return 0;
@@ -662,9 +662,9 @@ int gui_add_module_button_option(lua_State *L) {
 
     std::string randomize_group = luaL_optstring(L, 7, "");
 
-    SYS_ASSERT(!module.empty() && !option.empty());
+    std::string default_value = luaL_checkstring(L, 8);
 
-    //    DebugPrintf("  add_module_option: {}.{}\n", module, option);
+    SYS_ASSERT(!module.empty() && !option.empty() && !default_value.empty());
 
     if (!main_win) {
         return 0;
@@ -679,10 +679,10 @@ int gui_add_module_button_option(lua_State *L) {
     // FIXME : error if module is unknown
 
     main_win->left_mods->AddButtonOption(module, option, label, tip, longtip,
-                                         gap, randomize_group);
+                                         gap, randomize_group, default_value);
     if (!single_pane) {
         main_win->right_mods->AddButtonOption(module, option, label, tip,
-                                              longtip, gap, randomize_group);
+                                              longtip, gap, randomize_group, default_value);
     }
 
     return 0;

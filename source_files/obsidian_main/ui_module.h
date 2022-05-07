@@ -50,7 +50,6 @@ class UI_Module : public Fl_Group {
 
     UI_CustomCheckBox *mod_button;
 
-   private:
     std::string id_name;
 
     // only used while positioning the options (as they are added)
@@ -62,18 +61,18 @@ class UI_Module : public Fl_Group {
     virtual ~UI_Module();
 
     void AddOption(std::string option, std::string label, std::string tip,
-                   std::string longtip, int gap, std::string randomize_group);
+                   std::string longtip, int gap, std::string randomize_group, std::string default_value);
 
     void AddHeader(std::string option, std::string label, int gap);
 
     void AddSliderOption(std::string option, std::string label, std::string tip,
                          std::string longtip, int gap, double min, double max,
                          double inc, std::string units, std::string presets,
-                         std::string nan, std::string randomize_group);
+                         std::string nan, std::string randomize_group, std::string default_value);
 
     void AddButtonOption(std::string opt, std::string label, std::string tip,
                          std::string longtip, int gap,
-                         std::string randomize_group);
+                         std::string randomize_group, std::string default_value);
 
     void AddOptionChoice(std::string option, std::string id, std::string label);
 
@@ -106,6 +105,9 @@ class UI_Module : public Fl_Group {
     void resize(int X, int Y, int W, int H);
 
     static void callback_OptChange(Fl_Widget *w, void *data);
+    static void callback_OptChangeDefault(Fl_Widget *w, void *data);
+    static void callback_OptButtonDefault(Fl_Widget *w, void *data);
+    static void callback_OptSliderDefault(Fl_Widget *w, void *data);
     static void callback_PresetCheck(Fl_Widget *w, void *data);
     static void callback_SliderPrevious(Fl_Widget *w, void *data);
     static void callback_SliderNext(Fl_Widget *w, void *data);
@@ -149,18 +151,18 @@ class UI_CustomMods : public Fl_Group {
 
     bool AddOption(std::string module, std::string option, std::string label,
                    std::string tip, std::string longtip, int gap,
-                   std::string randomize_group);
+                   std::string randomize_group, std::string default_value);
 
     bool AddSliderOption(std::string module, std::string option,
                          std::string label, std::string tip,
                          std::string longtip, int gap, double min, double max,
                          double inc, std::string units, std::string presets,
-                         std::string nan, std::string randomize_group);
+                         std::string nan, std::string randomize_group, std::string default_value);
 
     bool AddButtonOption(std::string module, std::string option,
                          std::string label, std::string tip,
                          std::string longtip, int gap,
-                         std::string randomize_group);
+                         std::string randomize_group, std::string default_value);
 
     void AddOptionChoice(std::string module, std::string option, std::string id,
                          std::string label);

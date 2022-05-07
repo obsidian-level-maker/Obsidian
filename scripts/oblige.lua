@@ -1201,22 +1201,31 @@ function ob_init()
               if not opt.nan then
                 opt.nan = ""
               end
-              gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.min, opt.max, opt.increment, opt.units, opt.presets, opt.nan, opt.randomize_group or "")
               if not opt.default then
                 opt.default = (opt.min + opt.max) / 2
               end
+              gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.min, opt.max, opt.increment, opt.units, opt.presets, opt.nan, opt.randomize_group or "", tostring(opt.default))
               opt.value = opt.default
               gui.set_module_slider_option(mod.name, opt.name, opt.value)
             elseif opt.valuator == "button" then
-              gui.add_module_button_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.randomize_group or "")
               if not opt.default then
                 opt.default = 0
               end
+              gui.add_module_button_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.randomize_group or "", tostring(opt.default))
               opt.value = opt.default
               gui.set_module_button_option(mod.name, opt.name, opt.value)
             end
           else
-            gui.add_module_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.randomize_group or "")
+            -- select a default value
+            if not opt.default then
+              if table.has_elem(opt.choices, "default") then opt.default = "default"
+              elseif table.has_elem(opt.choices, "normal")  then opt.default = "normal"
+              elseif table.has_elem(opt.choices, "medium")  then opt.default = "medium"
+              elseif table.has_elem(opt.choices, "mixed")   then opt.default = "mixed"
+              else   opt.default = opt.choices[1]
+              end
+            end
+            gui.add_module_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.randomize_group or "", opt.default)
             opt.avail_choices = {}
 
             for i = 1,#opt.choices,2 do
@@ -1226,17 +1235,6 @@ function ob_init()
               gui.add_option_choice(mod.name, opt.name, id, label)
               opt.avail_choices[id] = 1
             end
-
-            -- select a default value
-            if not opt.default then
-              if opt.avail_choices["default"] then opt.default = "default"
-              elseif opt.avail_choices["normal"]  then opt.default = "normal"
-              elseif opt.avail_choices["medium"]  then opt.default = "medium"
-              elseif opt.avail_choices["mixed"]   then opt.default = "mixed"
-              else   opt.default = opt.choices[1]
-              end
-            end
-
             opt.value = opt.default
             gui.set_module_option(mod.name, opt.name, opt.value)
           end

@@ -221,6 +221,8 @@ class UI_RChoice : public Fl_Group {
 
     std::string randomize_group;
 
+    std::string default_value;
+
    private:
 };
 
@@ -289,6 +291,8 @@ class UI_RSlide : public Fl_Group {
 
     std::string randomize_group;
 
+    std::string default_value;
+
    public:
 };
 
@@ -317,6 +321,8 @@ class UI_RButton : public Fl_Group {
     UI_HelpLink *mod_help;
 
     std::string randomize_group;
+
+    std::string default_value;
 
    private:
 };
