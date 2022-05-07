@@ -235,20 +235,8 @@ class UI_Manage_Config : public Fl_Double_Window {
         redraw();
     }
 
-    void MarkSource_FILE(const char *filename) {
-        std::string full;
-
-        // abbreviate the filename if too long
-        int len = strlen(filename);
-
-        if (len < 42) {
-            full = fmt::format("[ {} ]", filename);
-        } else {
-            full =
-                fmt::format("[ {:10}....{} ]", filename, filename + (len - 30));
-        }
-
-        conf_disp->copy_label(full.c_str());
+    void MarkSource_FILE(std::filesystem::path filename) {
+        conf_disp->copy_label(fmt::format("[ {} ]", filename.filename().generic_string()).c_str());
 
         redraw();
     }
@@ -374,7 +362,7 @@ class UI_Manage_Config : public Fl_Double_Window {
         }
     }
 
-    const char *AskLoadFilename() {
+    std::filesystem::path AskLoadFilename() {
         Fl_Native_File_Chooser chooser;
 
         chooser.title(_("Select file to load"));
@@ -400,24 +388,22 @@ class UI_Manage_Config : public Fl_Double_Window {
 
                 DLG_ShowError(_("Unable to load the file:\n\n%s"),
                               chooser.errmsg());
-                return NULL;
+                return "";
 
             case 1:  // cancelled
-                return NULL;
+                return "";
 
             default:
                 break;  // OK
         }
 
-        static char filename[FL_PATH_MAX + 10];
-
-        strcpy(filename, chooser.filename());
+        std::filesystem::path filename = chooser.filename();
 
         return filename;
     }
 
-    bool LoadFromFile(const char *filename) {
-        FILE *fp = fl_fopen(filename, "rb");
+    bool LoadFromFile(std::filesystem::path filename) {
+        FILE *fp = fl_fopen(filename.generic_string().c_str(), "rb");
 
         if (!fp) {
             DLG_ShowError(_("Cannot open: %s\n\n%s"), filename,
@@ -483,11 +469,11 @@ class UI_Manage_Config : public Fl_Double_Window {
         int old_font_h = FL_NORMAL_SIZE;
         FL_NORMAL_SIZE = 14 + KF;
 
-        const char *filename = that->AskLoadFilename();
+        std::filesystem::path filename = that->AskLoadFilename();
 
         FL_NORMAL_SIZE = old_font_h;
 
-        if (!filename) {
+        if (filename.empty()) {
             return;
         }
 

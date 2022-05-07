@@ -35,7 +35,7 @@ bool skip_color_picker = false;
 
 //----------------------------------------------------------------------
 
-std::string Theme_OutputFilename() {
+std::filesystem::path Theme_OutputFilename() {
     // save and restore the font height
     // (because FLTK's own browser get totally borked)
     int old_font_h = FL_NORMAL_SIZE;
@@ -56,11 +56,9 @@ std::string Theme_OutputFilename() {
     theme_dir /= "theme";
     chooser.directory(theme_dir.string().c_str());
 
-    int result = chooser.show();
-
     FL_NORMAL_SIZE = old_font_h;
 
-    switch (result) {
+    switch (chooser.show()) {
         case -1:
             LogPrintf("Error choosing output file:\n");
             LogPrintf("   {}\n", chooser.errmsg());
@@ -76,32 +74,25 @@ std::string Theme_OutputFilename() {
             break;  // OK
     }
 
-    static std::string filename;
-
-    const char *src_name = chooser.filename();
-
-    filename = src_name;
-
-    // add extension if missing
-    char *pos = (char *)fl_filename_ext(filename.c_str());
-    if (!*pos) {
-        filename += ".txt";
-
-        // check if exists, ask for confirmation
-        FILE *fp = fopen(filename.c_str(), "rb");
-        if (fp) {
-            fclose(fp);
-            if (!fl_choice("%s", fl_cancel, fl_ok, NULL,
+#ifdef WIN32
+    std::filesystem::path filename = ucs4_path(chooser.filename());
+    filename.replace_extension(".txt");
+#else
+    std::filesystem::path filename = chooser.filename();
+    filename.replace_extension(".txt");
+#endif
+    // re-check for overwriting
+    if (std::filesystem::exists(filename)) {
+        if (!fl_choice("%s", fl_cancel, fl_ok, NULL,
                            Fl_Native_File_Chooser::file_exists_message)) {
-                return NULL;  // cancelled
+                return "";  // cancelled
             }
-        }
     }
 
     return filename;
 }
 
-const char *Theme_AskLoadFilename() {
+std::filesystem::path Theme_AskLoadFilename() {
     Fl_Native_File_Chooser chooser;
 
     chooser.title(_("Select Theme file to load"));
@@ -111,7 +102,7 @@ const char *Theme_AskLoadFilename() {
 
     std::filesystem::path theme_dir = install_dir;
     theme_dir /= "theme";
-    chooser.directory(theme_dir.string().c_str());
+    chooser.directory(theme_dir.generic_string().c_str());
 
     int result = chooser.show();
 
@@ -122,18 +113,20 @@ const char *Theme_AskLoadFilename() {
 
             DLG_ShowError(_("Unable to load the file:\n\n%s"),
                           chooser.errmsg());
-            return NULL;
+            return "";
 
         case 1:  // cancelled
-            return NULL;
+            return "";
 
         default:
             break;  // OK
     }
 
-    static char filename[FL_PATH_MAX + 10];
-
-    strcpy(filename, chooser.filename());
+#ifdef WIN32
+    std::filesystem::path filename = ucs4_path(chooser.filename());
+#else
+    std::filesystem::path filename = chooser.filename();
+#endif
 
     return filename;
 }
@@ -1460,8 +1453,8 @@ class UI_ThemeWin : public Fl_Window {
     static void callback_LoadTheme(Fl_Widget *w, void *data) {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
-        const char *theme_file = Theme_AskLoadFilename();
-        if (theme_file) {
+        std::filesystem::path theme_file = Theme_AskLoadFilename();
+        if (!theme_file.empty()) {
             Theme_Options_Load(theme_file);
 
             fl_alert("%s", _("Theme loading requires a restart.\nOBSIDIAN will "
@@ -1474,7 +1467,7 @@ class UI_ThemeWin : public Fl_Window {
     }
 
     static void callback_SaveTheme(Fl_Widget *w, void *data) {
-        std::string new_theme_file = Theme_OutputFilename();
+        std::filesystem::path new_theme_file = Theme_OutputFilename();
         if (!new_theme_file.empty()) {
             Theme_Options_Save(new_theme_file);
         }
