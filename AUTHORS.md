@@ -107,6 +107,9 @@ Twin Galaxy
 WolVexus
   - Black Ops program theme
 
+username
+  - Updated tutorial imagery
+
 
 # OBLIGE
 

@@ -361,8 +361,10 @@ can enter a value manually instead of using the slider handle or arrow buttons.<
         out->textfont(font_style);
         out->textsize(FL_NORMAL_SIZE + 2);
         out->value(
-            "<center>All module options will have a tooltip that is shown by hovering your cursor over the option title. In addition, there \
-is a question mark icon in the top right corner of each option that can be clicked to open a window with a more detailed explanation.</center>");
+            "<center>At first, the amount of settings in Obsidian can seem daunting. To help with this, every option has several helper widgets.\
+To reset any option to its default value, click the \"rollback\" icon in the upper right corner. \
+For a brief explanation of an option, a tooltip can be shown by hovering your cursor over the option title.\
+In addition, there is a question mark icon in the top right corner of each option that can be clicked to open a window with a more detailed explanation.</center>");
         g->end();
     }
     {
@@ -392,9 +394,9 @@ is a question mark icon in the top right corner of each option that can be click
         out->textsize(FL_NORMAL_SIZE + 2);
         out->value(
             "<center>Addons are a way to enhance the Obsidian experience further by adding new content, modules, and options. They come in the \
-form of *.pk3 files that must be placed in the /addons folder of your Obsidian install. Once there, open the Addons window by pressing F3 or choosing \
-File->Addon List from the program menu. A list of available addon files will be shown, and can be enabled or disabled via checkbox.\n\nGood sources for \
-new addons are either <A HREF='https://github.com/GTD-Carthage/Obsidian-Addons'>the public Obsidian-Addons repo</A> or the #addon-files channel of our Discord.</center>");
+form of *.pk3 files that must be placed in the /addons folder of your Obsidian install before starting the program. Once there, they can be viewed, enabled, or \
+disabled by clicking the \"Addons\" menu located in the top bar of the program. Good sources for new addons are either<br />\
+<A HREF='https://github.com/GTD-Carthage/Obsidian-Addons'>the public Obsidian-Addons repo</A> or the #addon-files channel of our Discord.</center>");
         g->end();
     }
     {
@@ -426,8 +428,8 @@ new addons are either <A HREF='https://github.com/GTD-Carthage/Obsidian-Addons'>
             "<center>If, for whatever reason, you receive an error while building, you can view Obsidian's logs by pressing F6 or \
 selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, \
 there is a LOGS.txt file with the same information that is stored in the same folder as obsidian.exe. This file is overwritten each time you \
-start the program, so be sure to save this information elsewhere if you need to refer to it later! These logs are extremely important when \
-seeking help or filing bug reports!</center>");
+start the program, so be sure to save this information elsewhere or use the log preservation options from the File->Options menu \
+if you need to refer to it later! These logs are extremely important when seeking help or filing bug reports!</center>");
         g->end();
     }
     {
