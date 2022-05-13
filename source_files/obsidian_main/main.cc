@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 
+#include <array>
 #include "main.h"
 #include "fmt/core.h"
 #include "images.h"
@@ -398,7 +399,7 @@ void Determine_InstallDir(const char *argv0) {
 #ifdef WIN32
     install_dir = home_dir;
 #else
-    constexpr std::array prefixes = {
+    constexpr std::array<const char *, 4> prefixes = {
         "/usr/local",
         "/usr",
         "/opt",
