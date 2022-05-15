@@ -4,6 +4,8 @@ PREFABS.Decor_craneo_testtube_industrial =
   map = "MAP01",
 
   engine = "zdoom",
+  texture_pack = "armaetus",
+
   theme = "!hell",
 
   rank = 2,

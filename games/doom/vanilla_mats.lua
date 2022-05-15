@@ -9,6 +9,11 @@ DOOM.VANILLA_MATS =
     "O_CARVE",
     "O_NEON",
     "O_INVIST",
+    --SetLine special mats
+    "13131C",
+    "4548BA",
+    "041C08",
+    "1F4525",
     -- Vanilla Flats
     "BLOOD1",
     "BLOOD2",

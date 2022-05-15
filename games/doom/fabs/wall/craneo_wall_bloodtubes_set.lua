@@ -7,6 +7,8 @@ PREFABS.Wall_cran_testtubes_industrial =
   prob = 50,
   theme = "!hell",
   engine = "zdoom",
+  texture_pack = "armaetus",
+
 
   group = "cran_bloodtubes_set",
 
