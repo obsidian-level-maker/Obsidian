@@ -71,7 +71,7 @@ function HACX.get_levels()
 
   local EP_NUM = 1
   if MAP_NUM > 11 then EP_NUM = 2 end
-  if MAP_NUM > 21 then EP_NUM = 3 end
+  if MAP_NUM > 30 then EP_NUM = 3 end
 
   -- create episode info...
 
@@ -97,8 +97,8 @@ function HACX.get_levels()
 
     if map > 30 then
       ep_index = 3 ; ep_along = 0.5 ; game_along = 0.5
-    elseif map > 21 then
-      ep_index = 3 ; ep_along = (map - 21) / 10
+    elseif map > 20 then
+      ep_index = 3 ; ep_along = (map - 20) / 10
     elseif map > 11 then
       ep_index = 2 ; ep_along = (map - 11) / 9
     else
