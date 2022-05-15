@@ -4004,6 +4004,30 @@ GROW_DOOM2_ENTRY_CAGE =
   }
 },
 
+GROW_DOOM2_ENTRY_CAGE_DOUBLE =
+{
+  prob = 7,
+  skip_prob = 85,
+
+  structure =
+  {
+    "x......x","xAAAAAAx",
+    "........","%AA/%AA/",
+    "........","CAACCAAC",
+    "........","C^^CC^^C",
+    "........","C11CC11C",
+    "........","/11%/11%",
+    "........","11111111",
+    "11xxxxxx","11xxxxxx"
+  },
+
+  diagonals =
+  {
+    "CA","AC","CA","AC",
+    "C1","1C","C1","1C"
+  }
+},
+
 GROW_DOOM2_ENTRY_CAGE_ALT =
 {
   prob = 10,
@@ -5819,7 +5843,7 @@ GROW_CAUSEWAY_WATERBOUND_PILLAR_INNER_LOOP_TEE =
 GROW_CAUSEWAY_SINGLE =
 {
   prob = 10,
-  skip_prob = 75,
+  skip_prob = 70,
 
   structure =
   {
@@ -5852,7 +5876,7 @@ GROW_CAUSEWAY_SINGLE_WATERBOUND =
 GROW_CAUSEWAY_SINGLE_WATERBOUND_OFF_RAMP =
 {
   prob = 30,
-  skip_prob = 80,
+  skip_prob = 75,
 
   structure =
   {
@@ -5869,7 +5893,7 @@ GROW_CAUSEWAY_SINGLE_WATERBOUND_OFF_RAMP =
 GROW_CAUSEWAY_SINGLE_WATERBOUND_ON_RAMP =
 {
   prob = 30,
-  skip_prob = 80,
+  skip_prob = 75,
 
   structure =
   {
@@ -9503,6 +9527,24 @@ GROW_36_DOUBLE_AREA =
   },
 },
 
+GROW_36_DOUBLE_AREA_MIRRORED =
+{
+  prob = 20,
+  skip_prob = 80,
+
+  structure =
+  {
+    "..........","AAAA11AAAA",
+    "..........","AAAA11AAAA",
+    "xx......xx","xx111111xx",
+    "xx......xx","xx111111xx",
+    "xx......xx","xx111111xx",
+    "xx......xx","xx111111xx",
+    "..........","AAAA11AAAA",
+    "....11....","AAAA11AAAA",
+  },
+},
+
 GROW_36_SINGLE_AREA =
 {
   prob = 30,
@@ -9518,6 +9560,24 @@ GROW_36_SINGLE_AREA =
     ".....","AAA11",
     "x..11","x1111",
     "x..11","x1111",
+  },
+},
+
+GROW_36_SINGLE_AREA_MIRRORED =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    "x......x","x111111x",
+    "x......x","x111111x",
+    "........","AAA11AAA",
+    "........","AAA11AAA",
+    "........","AAA11AAA",
+    "........","AAA11AAA",
+    "x......x","x111111x",
+    "x..11..x","x111111x",
   },
 },
 
@@ -9538,6 +9598,26 @@ GROW_36_TRIPLE_AREA =
     "x...","x111",
     "..11","AA11",
     "..11","AA11",
+  },
+},
+
+GROW_36_TRIPLE_AREA_MIRRORED =
+{
+  prob = 10,
+  skip_prob = 80,
+
+  structure =
+  {
+    "......","AA11AA",
+    "......","AA11AA",
+    "x....x","x1111x",
+    "x....x","x1111x",
+    "......","AA11AA",
+    "......","AA11AA",
+    "x....x","x1111x",
+    "x....x","x1111x",
+    "......","AA11AA",
+    "..11..","AA11AA",
   },
 },
 
@@ -9668,6 +9748,44 @@ GROW_36_CROSS_NEW_AREA =
     "........","11AAAA11",
     "xx....xx","xx1111xx",
     "xxx11xxx","xxx11xxx",
+  },
+},
+
+GROW_SLIGE_BOXES =
+{
+  prob = 5,
+  skip_prob = 80,
+
+  structure =
+  {
+    "........","11111111",
+    "........","1AAAAAA1",
+    "........","1A1111A1",
+    "........","1A1AA1A1",
+    "........","1A1AA1A1",
+    "........","1A1111A1",
+    "........","1AAAAAA1",
+    "........","11111111",
+    "11xxxxxx","11xxxxxx"
+  },
+},
+
+GROW_SLIGE_BANDS =
+{
+  prob = 5,
+  skip_prob = 80,
+
+  structure =
+  {
+    "......","111111",
+    "......","AAAAAA",
+    "......","111111",
+    "......","AAAAAA",
+    "......","111111",
+    "......","AAAAAA",
+    "......","111111",
+    "......","AAAAAA",
+    "11xxxx","11xxxx"
   },
 },
 
