@@ -14751,9 +14751,7 @@ SPROUT_DIRECT_1 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=4, y=2, w=2, dir=8 },
   },
   
    joiner =
@@ -14782,9 +14780,7 @@ SPROUT_DIRECT_2 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=4, y=1, w=2, dir=8 },
   },
   
 },
@@ -14810,9 +14806,7 @@ SPROUT_DIRECT_3 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=4, y=2, w=2, dir=8 },
   },
   
   joiner =
@@ -14849,9 +14843,7 @@ SPROUT_DIRECT_4 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=4, y=2, w=2, dir=8 },
   },
   
   joiner =
@@ -14888,9 +14880,7 @@ SPROUT_DIRECT_5 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=4, y=2, w=2, dir=8 },
   },
   
    joiner =
@@ -14918,9 +14908,7 @@ SPROUT_DIRECT_6 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=3, y=2, w=1, dir=8 },
   },
   
    joiner =
@@ -14946,9 +14934,7 @@ SPROUT_DIRECT_7 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=2, y=1, w=3, dir=8 },
   },
   
 },
@@ -14973,9 +14959,7 @@ SPROUT_DIRECT_8 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=4, y=2, w=1, dir=8 },
   },
   
   joiner =
@@ -15011,9 +14995,7 @@ SPROUT_DIRECT_9 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=4, y=2, w=1, dir=8 },
   },
   
   joiner =
@@ -15047,9 +15029,7 @@ SPROUT_DIRECT_10 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=3, y=2, w=1, dir=8 },
   },
   
    joiner =
@@ -15383,6 +15363,8 @@ SPROUT_JOINER_2x1_5_cave =
 
   new_room =
   {
+    conn = { x=3, y=2, w=2, dir=8 },
+
     env = "cave"
   },
 
@@ -15408,6 +15390,8 @@ SPROUT_JOINER_2x1_4_cave =
 
   new_room =
   {
+    conn = { x=2, y=2, w=2, dir=8 },
+
     env = "cave"
   },
 
@@ -15432,6 +15416,8 @@ SPROUT_JOINER_2x1_3_cave =
 
   new_room =
   {
+    conn = { x=1, y=2, w=2, dir=8 },
+
     env = "cave"
   },
 
@@ -15458,6 +15444,8 @@ SPROUT_JOINER_1x1_5_cave =
 
   new_room =
   {
+    conn = { x=3, y=2, w=1, dir=8 },
+
     env = "cave"
   },
 
@@ -15483,6 +15471,8 @@ SPROUT_JOINER_1x1_4_cave =
 
   new_room =
   {
+    conn = { x=2, y=2, w=1, dir=8 },
+
     env = "cave"
   },
 
@@ -15507,6 +15497,8 @@ SPROUT_JOINER_1x1_3_cave =
 
   new_room =
   {
+    conn = { x=2, y=2, w=1, dir=8 },
+
     env = "cave"
   },
 
@@ -15611,7 +15603,7 @@ SPROUT_narrow_hallway =
   {
     env = "hallway",
 
-    conn = { x=2, y=1, dir=8 },
+    conn = { x=1, y=1, w=1, dir=8 },
 
     hall_type = "narrow",
 
@@ -15711,9 +15703,7 @@ HALL_1_SPROUT_A =
 
   new_room =
   {
-    conn = { x=2, y=2, dir=8 },
-
-    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 }
+    conn = { x=3, y=2, w=1, dir=8 },
   }
 },
 
@@ -15736,9 +15726,7 @@ HALL_1_SPROUT_B =
 
   new_room =
   {
-    conn = { x=2, y=2, dir=8 },
-
-    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 }
+    conn = { x=3, y=2, w=1, dir=8 },
   },
   
   diagonals = 
@@ -15765,9 +15753,7 @@ HALL_1_SPROUT_C =
 
   new_room =
   {
-    conn = { x=2, y=2, dir=8 },
-
-    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 }
+    conn = { x=2, y=2, w=1, dir=8 },
   }
 },
 
@@ -15789,9 +15775,7 @@ HALL_1_SPROUT_D =
 
   new_room =
   {
-    conn = { x=2, y=2, dir=8 },
-
-    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 }
+    conn = { x=3, y=2, w=1, dir=8 },
   },
   
   diagonals = 
@@ -15919,9 +15903,7 @@ HALL_2_SPROUT_A =
 
   new_room =
   {
-    conn = { x=2, y=2, w=2, dir=8 },
-
-    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 }
+    conn = { x=3, y=2, w=2, dir=8 },
   }
 },
 
@@ -15945,9 +15927,7 @@ HALL_2_SPROUT_B =
 
   new_room =
   {
-    conn = { x=2, y=2, dir=8 },
-
-    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 }
+    conn = { x=3, y=2, w=2, dir=8 },
   },
   
   diagonals = 
@@ -16011,9 +15991,7 @@ SPROUT_DIRECT_1 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=3, y=1, w=3, dir=8 },
   },
   
 },
@@ -16035,9 +16013,7 @@ SPROUT_DIRECT_2 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=3, y=1, w=3, dir=8 },
   },
   
 },
@@ -16059,9 +16035,7 @@ SPROUT_DIRECT_3 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=3, y=1, w=3, dir=8 },
   },
   
 },
@@ -16083,9 +16057,7 @@ SPROUT_DIRECT_4 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=5, y=1, w=2, dir=8 },
   },
   
 },
@@ -16107,9 +16079,7 @@ SPROUT_DIRECT_5 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=3, y=1, w=3, dir=8 },
   },
   
 },
@@ -16132,8 +16102,6 @@ SPROUT_DIRECT_6 =
   new_room =
   {
     conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
   },
   
 },
@@ -16156,9 +16124,7 @@ SPROUT_JOINER_1 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=3, y=2, w=3, dir=8 },
   },
 
   joiner =
@@ -16185,9 +16151,7 @@ SPROUT_JOINER_2 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=4, y=2, w=2, dir=8 },
   },
 
   joiner =
@@ -16215,9 +16179,7 @@ SPROUT_JOINER_3 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=3, y=2, w=2, dir=8 },
   },
 
   joiner =
@@ -16245,9 +16207,7 @@ SPROUT_JOINER_4 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=3, y=2, w=3, dir=8 },
   },
 
   joiner =
@@ -16275,9 +16235,7 @@ SPROUT_JOINER_5 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=4, y=2, w=2, dir=8 },
   },
 
   joiner =
@@ -16305,9 +16263,7 @@ SPROUT_JOINER_6 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=3, y=2, w=2, dir=8 },
   },
 
   joiner =
@@ -16335,9 +16291,7 @@ SPROUT_JOINER_7 =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=2, y=2, w=2, dir=8 },
   },
 
   joiner =
@@ -16746,9 +16700,7 @@ SPROUT_DIRECT_1_cave =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=3, y=1, w=3, dir=8 },
 
     env  = "cave",
   },
@@ -16772,9 +16724,7 @@ SPROUT_DIRECT_2_cave =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=3, y=1, w=3, dir=8 },
 
     env  = "cave",
   },
@@ -16798,9 +16748,7 @@ SPROUT_DIRECT_3_cave =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=3, y=1, w=3, dir=8 },
 
     env  = "cave",
   },
@@ -16826,8 +16774,6 @@ SPROUT_DIRECT_4_cave =
   {
     conn = { x=2, y=1, w=2, dir=8 },
 
-    symmetry = { x=2, y=3, w=2, dir=8 },
-
     env  = "cave",
   },
   
@@ -16850,9 +16796,7 @@ SPROUT_DIRECT_5_cave =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=5, y=1, w=2, dir=8 },
 
     env  = "cave",
   },
@@ -16878,8 +16822,6 @@ SPROUT_DIRECT_6_cave =
   {
     conn = { x=2, y=1, w=2, dir=8 },
 
-    symmetry = { x=2, y=3, w=2, dir=8 },
-
     env  = "cave",
   },
   
@@ -16903,9 +16845,7 @@ SPROUT_JOINER_1_cave =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=3, y=2, w=3, dir=8 },
 
     env  = "cave",
   },
@@ -16935,9 +16875,7 @@ SPROUT_JOINER_2_cave =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=4, y=2, w=2, dir=8 },
 
     env  = "cave",
   },
@@ -16967,9 +16905,7 @@ SPROUT_JOINER_3_cave =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=3, y=2, w=2, dir=8 },
 
     env  = "cave",
   },
@@ -16999,9 +16935,7 @@ SPROUT_JOINER_4_cave =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=3, y=2, w=3, dir=8 },
 
     env  = "cave",
   },
@@ -17031,9 +16965,7 @@ SPROUT_JOINER_5_cave =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=4, y=2, w=2, dir=8 },
 
     env  = "cave",
   },
@@ -17063,9 +16995,7 @@ SPROUT_JOINER_6_cave =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=3, y=2, w=2, dir=8 },
 
     env  = "cave",
   },
@@ -17095,9 +17025,7 @@ SPROUT_JOINER_7_cave =
   
   new_room =
   {
-    conn = { x=2, y=1, w=2, dir=8 },
-
-    symmetry = { x=2, y=3, w=2, dir=8 },
+    conn = { x=2, y=2, w=2, dir=8 },
 
     env  = "cave",
   },
@@ -17241,9 +17169,7 @@ HALL_2_SPROUT_A =
 
   new_room =
   {
-    conn = { x=2, y=2, w=2, dir=8 },
-
-    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 }
+    conn = { x=3, y=2, w=2, dir=8 },
   }
 },
 
@@ -17265,8 +17191,6 @@ HALL_2_SPROUT_B =
   new_room =
   {
     conn = { x=2, y=2, w=2, dir=8 },
-
-    symmetry = { kind="mirror", x=2, y=3, w=2, dir=8 }
   }
 },
 
