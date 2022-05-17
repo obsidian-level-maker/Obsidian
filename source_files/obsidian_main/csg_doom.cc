@@ -2674,7 +2674,7 @@ static void WriteThing(sector_c *S, csg_entity_c *E) {
             options |= MTF_HEXEN_MODES;
         }
 
-        if ((options & MTF_ALL_SKILLS) == 0) {
+        if ((options & MTF_Easy) == 0 && (options & MTF_Medium) == 0 && (options & MTF_Hard) == 0) {
             options |= MTF_ALL_SKILLS;
         }
     }
