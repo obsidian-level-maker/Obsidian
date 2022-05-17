@@ -22,7 +22,7 @@
  * of a DCT block read in natural order (left to right, top to bottom).
  */
 
-#if 0 /* This table is not actually needed in v6a */
+#if 0				/* This table is not actually needed in v6a */
 
 const int jpeg_zigzag_order[DCTSIZE2] = {
    0,  1,  5,  6, 14, 15, 27, 28,
@@ -51,47 +51,69 @@ const int jpeg_zigzag_order[DCTSIZE2] = {
  * fake entries.
  */
 
-const int jpeg_natural_order[DCTSIZE2 + 16] = {
-    0,  1,  8,  16, 9,  2,  3,  10, 17, 24, 32, 25, 18, 11, 4,  5,  12, 19, 26,
-    33, 40, 48, 41, 34, 27, 20, 13, 6,  7,  14, 21, 28, 35, 42, 49, 56, 57, 50,
-    43, 36, 29, 22, 15, 23, 30, 37, 44, 51, 58, 59, 52, 45, 38, 31, 39, 46, 53,
-    60, 61, 54, 47, 55, 62, 63, 63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in
-                                                                   decoder */
-    63, 63, 63, 63, 63, 63, 63, 63};
+const int jpeg_natural_order[DCTSIZE2+16] = {
+  0,  1,  8, 16,  9,  2,  3, 10,
+ 17, 24, 32, 25, 18, 11,  4,  5,
+ 12, 19, 26, 33, 40, 48, 41, 34,
+ 27, 20, 13,  6,  7, 14, 21, 28,
+ 35, 42, 49, 56, 57, 50, 43, 36,
+ 29, 22, 15, 23, 30, 37, 44, 51,
+ 58, 59, 52, 45, 38, 31, 39, 46,
+ 53, 60, 61, 54, 47, 55, 62, 63,
+ 63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
+ 63, 63, 63, 63, 63, 63, 63, 63
+};
 
-const int jpeg_natural_order7[7 * 7 + 16] = {
-    0,  1,  8,  16, 9,  2,  3,  10, 17, 24, 32, 25, 18, 11, 4,  5,  12, 19, 26, 33,
-    40, 48, 41, 34, 27, 20, 13, 6,  14, 21, 28, 35, 42, 49, 50, 43, 36, 29, 22, 30,
-    37, 44, 51, 52, 45, 38, 46, 53, 54, 63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety
-                                                                           in decoder */
-    63, 63, 63, 63, 63, 63, 63, 63};
+const int jpeg_natural_order7[7*7+16] = {
+  0,  1,  8, 16,  9,  2,  3, 10,
+ 17, 24, 32, 25, 18, 11,  4,  5,
+ 12, 19, 26, 33, 40, 48, 41, 34,
+ 27, 20, 13,  6, 14, 21, 28, 35,
+ 42, 49, 50, 43, 36, 29, 22, 30,
+ 37, 44, 51, 52, 45, 38, 46, 53,
+ 54,
+ 63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
+ 63, 63, 63, 63, 63, 63, 63, 63
+};
 
-const int jpeg_natural_order6[6 * 6 + 16] = {0,  1,  8,  16, 9,  2,  3,  10, 17, 24, 32, 25,
-                                             18, 11, 4,  5,  12, 19, 26, 33, 40, 41, 34, 27,
-                                             20, 13, 21, 28, 35, 42, 43, 36, 29, 37, 44, 45,
-                                             63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for
-                                                                                safety in decoder */
-                                             63, 63, 63, 63, 63, 63, 63, 63};
+const int jpeg_natural_order6[6*6+16] = {
+  0,  1,  8, 16,  9,  2,  3, 10,
+ 17, 24, 32, 25, 18, 11,  4,  5,
+ 12, 19, 26, 33, 40, 41, 34, 27,
+ 20, 13, 21, 28, 35, 42, 43, 36,
+ 29, 37, 44, 45,
+ 63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
+ 63, 63, 63, 63, 63, 63, 63, 63
+};
 
-const int jpeg_natural_order5[5 * 5 + 16] = {
-    0,  1,  8,  16, 9,  2,  3,  10, 17, 24, 32, 25, 18, 11, 4,  12, 19,
-    26, 33, 34, 27, 20, 28, 35, 36, 63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in
-                                                                       decoder */
-    63, 63, 63, 63, 63, 63, 63, 63};
+const int jpeg_natural_order5[5*5+16] = {
+  0,  1,  8, 16,  9,  2,  3, 10,
+ 17, 24, 32, 25, 18, 11,  4, 12,
+ 19, 26, 33, 34, 27, 20, 28, 35,
+ 36,
+ 63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
+ 63, 63, 63, 63, 63, 63, 63, 63
+};
 
-const int jpeg_natural_order4[4 * 4 + 16] = {
-    0,  1,  8,  16, 9,  2,  3,  10, 17, 24, 25, 18,
-    11, 19, 26, 27, 63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
-    63, 63, 63, 63, 63, 63, 63, 63};
+const int jpeg_natural_order4[4*4+16] = {
+  0,  1,  8, 16,  9,  2,  3, 10,
+ 17, 24, 25, 18, 11, 19, 26, 27,
+ 63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
+ 63, 63, 63, 63, 63, 63, 63, 63
+};
 
-const int jpeg_natural_order3[3 * 3 + 16] = {
-    0,  1,  8,  16, 9,  2,  10, 17, 18,
-    63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
-    63, 63, 63, 63, 63, 63, 63, 63};
+const int jpeg_natural_order3[3*3+16] = {
+  0,  1,  8, 16,  9,  2, 10, 17,
+ 18,
+ 63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
+ 63, 63, 63, 63, 63, 63, 63, 63
+};
 
-const int jpeg_natural_order2[2 * 2 + 16] = {
-    0,  1,  8,  9,  63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
-    63, 63, 63, 63, 63, 63, 63, 63};
+const int jpeg_natural_order2[2*2+16] = {
+  0,  1,  8,  9,
+ 63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
+ 63, 63, 63, 63, 63, 63, 63, 63
+};
 
 
 /*
@@ -99,7 +121,7 @@ const int jpeg_natural_order2[2 * 2 + 16] = {
  */
 
 GLOBAL(long)
-jdiv_round_up(long a, long b)
+jdiv_round_up (long a, long b)
 /* Compute a/b rounded up to next integer, ie, ceil(a/b) */
 /* Assumes a >= 0, b > 0 */
 {
@@ -108,7 +130,7 @@ jdiv_round_up(long a, long b)
 
 
 GLOBAL(long)
-jround_up(long a, long b)
+jround_up (long a, long b)
 /* Compute a rounded up to next multiple of b, ie, ceil(a/b)*b */
 /* Assumes a >= 0, b > 0 */
 {
@@ -126,22 +148,21 @@ jround_up(long a, long b)
  * is not all that great, because these routines aren't very heavily used.)
  */
 
-#ifndef NEED_FAR_POINTERS /* normal case, same as regular macro */
-#define FMEMCOPY(dest, src, size) MEMCOPY(dest, src, size)
-#else /* 80x86 case, define if we can */
+#ifndef NEED_FAR_POINTERS	/* normal case, same as regular macro */
+#define FMEMCOPY(dest,src,size)	MEMCOPY(dest,src,size)
+#else				/* 80x86 case, define if we can */
 #ifdef USE_FMEM
-#define FMEMCOPY(dest, src, size) \
-  _fmemcpy((void FAR *)(dest), (const void FAR *)(src), (size_t)(size))
+#define FMEMCOPY(dest,src,size)	_fmemcpy((void FAR *)(dest), (const void FAR *)(src), (size_t)(size))
 #else
 /* This function is for use by the FMEMZERO macro defined in jpegint.h.
  * Do not call this function directly, use the FMEMZERO macro instead.
  */
 GLOBAL(void)
-jzero_far(void FAR *target, size_t bytestozero)
+jzero_far (void FAR * target, size_t bytestozero)
 /* Zero out a chunk of FAR memory. */
 /* This might be sample-array data, block-array data, or alloc_large data. */
 {
-  register char FAR *ptr = (char FAR *)target;
+  register char FAR * ptr = (char FAR *) target;
   register size_t count;
 
   for (count = bytestozero; count > 0; count--) {
@@ -153,8 +174,9 @@ jzero_far(void FAR *target, size_t bytestozero)
 
 
 GLOBAL(void)
-jcopy_sample_rows(JSAMPARRAY input_array, int source_row, JSAMPARRAY output_array, int dest_row,
-                  int num_rows, JDIMENSION num_cols)
+jcopy_sample_rows (JSAMPARRAY input_array, int source_row,
+		   JSAMPARRAY output_array, int dest_row,
+		   int num_rows, JDIMENSION num_cols)
 /* Copy some rows of samples from one place to another.
  * num_rows rows are copied from input_array[source_row++]
  * to output_array[dest_row++]; these areas may overlap for duplication.
@@ -163,7 +185,7 @@ jcopy_sample_rows(JSAMPARRAY input_array, int source_row, JSAMPARRAY output_arra
 {
   register JSAMPROW inptr, outptr;
 #ifdef FMEMCOPY
-  register size_t count = (size_t)num_cols * SIZEOF(JSAMPLE);
+  register size_t count = (size_t) num_cols * SIZEOF(JSAMPLE);
 #else
   register JDIMENSION count;
 #endif
@@ -179,25 +201,26 @@ jcopy_sample_rows(JSAMPARRAY input_array, int source_row, JSAMPARRAY output_arra
     FMEMCOPY(outptr, inptr, count);
 #else
     for (count = num_cols; count > 0; count--)
-      *outptr++ = *inptr++; /* needn't bother with GETJSAMPLE() here */
+      *outptr++ = *inptr++;	/* needn't bother with GETJSAMPLE() here */
 #endif
   }
 }
 
 
 GLOBAL(void)
-jcopy_block_row(JBLOCKROW input_row, JBLOCKROW output_row, JDIMENSION num_blocks)
+jcopy_block_row (JBLOCKROW input_row, JBLOCKROW output_row,
+		 JDIMENSION num_blocks)
 /* Copy a row of coefficient blocks from one place to another. */
 {
 #ifdef FMEMCOPY
-  FMEMCOPY(output_row, input_row, (size_t)num_blocks * (DCTSIZE2 * SIZEOF(JCOEF)));
+  FMEMCOPY(output_row, input_row, (size_t) num_blocks * (DCTSIZE2 * SIZEOF(JCOEF)));
 #else
   register JCOEFPTR inptr, outptr;
   register long count;
 
-  inptr = (JCOEFPTR)input_row;
-  outptr = (JCOEFPTR)output_row;
-  for (count = (long)num_blocks * DCTSIZE2; count > 0; count--) {
+  inptr = (JCOEFPTR) input_row;
+  outptr = (JCOEFPTR) output_row;
+  for (count = (long) num_blocks * DCTSIZE2; count > 0; count--) {
     *outptr++ = *inptr++;
   }
 #endif

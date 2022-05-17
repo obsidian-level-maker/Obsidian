@@ -23,7 +23,6 @@
 class Fl_Xlib_Copy_Surface_Driver : public Fl_Copy_Surface_Driver {
   friend class Fl_Copy_Surface_Driver;
   virtual void end_current();
-
 protected:
   Fl_Offscreen xid;
   Window oldwindow;

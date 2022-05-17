@@ -85,55 +85,57 @@ struct FL_BLINE;
 */
 class FL_EXPORT Fl_Browser : public Fl_Browser_ {
 
-  FL_BLINE *first; // the array of lines
+  FL_BLINE *first;              // the array of lines
   FL_BLINE *last;
   FL_BLINE *cache;
-  int cacheline; // line number of cache
-  int lines;     // Number of lines
+  int cacheline;                // line number of cache
+  int lines;                    // Number of lines
   int full_height_;
-  const int *column_widths_;
-  char format_char_; // alternative to @-sign
-  char column_char_; // alternative to tab
+  const int* column_widths_;
+  char format_char_;            // alternative to @-sign
+  char column_char_;            // alternative to tab
 
 protected:
+
   // required routines for Fl_Browser_ subclass:
-  void *item_first() const;
-  void *item_next(void *item) const;
-  void *item_prev(void *item) const;
-  void *item_last() const;
-  int item_selected(void *item) const;
-  void item_select(void *item, int val);
-  int item_height(void *item) const;
-  int item_width(void *item) const;
-  void item_draw(void *item, int X, int Y, int W, int H) const;
-  int full_height() const;
-  int incr_height() const;
+  void* item_first() const ;
+  void* item_next(void* item) const ;
+  void* item_prev(void* item) const ;
+  void* item_last()const ;
+  int item_selected(void* item) const ;
+  void item_select(void* item, int val);
+  int item_height(void* item) const ;
+  int item_width(void* item) const ;
+  void item_draw(void* item, int X, int Y, int W, int H) const ;
+  int full_height() const ;
+  int incr_height() const ;
   const char *item_text(void *item) const;
   /** Swap the items \p a and \p b.
       You must call redraw() to make any changes visible.
       \param[in] a,b the items to be swapped.
       \see swap(int,int), item_swap()
    */
-  void item_swap(void *a, void *b) { swap((FL_BLINE *)a, (FL_BLINE *)b); }
+  void item_swap(void *a, void *b) { swap((FL_BLINE*)a, (FL_BLINE*)b); }
   /** Return the item at specified \p line.
       \param[in] line The line of the item to return. (1 based)
       \returns The item, or NULL if line out of range.
       \see item_at(), find_line(), lineno()
    */
-  void *item_at(int line) const { return (void *)find_line(line); }
+  void *item_at(int line) const { return (void*)find_line(line); }
 
-  FL_BLINE *find_line(int line) const;
-  FL_BLINE *_remove(int line);
-  void insert(int line, FL_BLINE *item);
-  int lineno(void *item) const;
+  FL_BLINE* find_line(int line) const ;
+  FL_BLINE* _remove(int line) ;
+  void insert(int line, FL_BLINE* item);
+  int lineno(void *item) const ;
   void swap(FL_BLINE *a, FL_BLINE *b);
 
 public:
+
   void remove(int line);
-  void add(const char *newtext, void *d = 0);
-  void insert(int line, const char *newtext, void *d = 0);
+  void add(const char* newtext, void* d = 0);
+  void insert(int line, const char* newtext, void* d = 0);
   void move(int to, int from);
-  int load(const char *filename);
+  int  load(const char* filename);
   void swap(int a, int b);
   void clear();
 
@@ -156,7 +158,7 @@ public:
   */
   void textsize(Fl_Fontsize newSize);
 
-  int topline() const;
+  int topline() const ;
   /** For internal use only? */
   enum Fl_Line_Position { TOP, BOTTOM, MIDDLE };
   void lineposition(int line, Fl_Line_Position pos);
@@ -182,27 +184,27 @@ public:
    */
   void middleline(int line) { lineposition(line, MIDDLE); }
 
-  int select(int line, int val = 1);
-  int selected(int line) const;
+  int select(int line, int val=1);
+  int selected(int line) const ;
   void show(int line);
   /** Shows the entire Fl_Browser widget -- opposite of hide(). */
   void show() { Fl_Widget::show(); }
   void hide(int line);
   /** Hides the entire Fl_Browser widget -- opposite of show(). */
   void hide() { Fl_Widget::hide(); }
-  int visible(int line) const;
+  int visible(int line) const ;
 
-  int value() const;
+  int value() const ;
   /**
     Sets the browser's value(), which selects the specified \p line.
     This is the same as calling select(line).
     \see select(), selected(), value(), item_select(), item_selected()
    */
   void value(int line) { select(line); }
-  const char *text(int line) const;
-  void text(int line, const char *newtext);
-  void *data(int line) const;
-  void data(int line, void *d);
+  const char* text(int line) const ;
+  void text(int line, const char* newtext);
+  void* data(int line) const ;
+  void data(int line, void* d);
 
   Fl_Browser(int X, int Y, int W, int H, const char *L = 0);
   /**
@@ -284,12 +286,12 @@ public:
     \endcode
     \see column_char(), column_widths()
   */
-  const int *column_widths() const { return column_widths_; }
+  const int* column_widths() const { return column_widths_; }
   /**
     Sets the current array to \p arr.  Make sure the last entry is zero.
     \see column_char(), column_widths()
   */
-  void column_widths(const int *arr) { column_widths_ = arr; }
+  void column_widths(const int* arr) { column_widths_ = arr; }
 
   /**
     Returns non-zero if \p line has been scrolled to a position where it is being displayed.
@@ -310,22 +312,19 @@ public:
     \see show(int), hide(int), display(), visible(), make_visible()
   */
   void make_visible(int line) {
-    if (line < 1)
-      Fl_Browser_::display(find_line(1));
-    else if (line > lines)
-      Fl_Browser_::display(find_line(lines));
-    else
-      Fl_Browser_::display(find_line(line));
+    if (line < 1) Fl_Browser_::display(find_line(1));
+    else if (line > lines) Fl_Browser_::display(find_line(lines));
+    else Fl_Browser_::display(find_line(line));
   }
 
   // icon support
-  void icon(int line, Fl_Image *icon);
-  Fl_Image *icon(int line) const;
+  void icon(int line, Fl_Image* icon);
+  Fl_Image* icon(int line) const;
   void remove_icon(int line);
 
   /** For back compatibility only. */
-  void replace(int a, const char *b) { text(a, b); }
-  void display(int line, int val = 1);
+  void replace(int a, const char* b) { text(a, b); }
+  void display(int line, int val=1);
 };
 
 #endif

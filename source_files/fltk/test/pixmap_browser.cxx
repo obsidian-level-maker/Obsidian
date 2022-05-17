@@ -23,7 +23,7 @@
 #include <FL/Fl_Printer.H>
 #include <string.h>
 #include <errno.h>
-#include <locale.h> // setlocale()..
+#include <locale.h>     // setlocale()..
 #include <FL/Fl_File_Chooser.H>
 #include <FL/fl_message.H>
 #include <FL/Fl_SVG_File_Surface.H>
@@ -38,7 +38,7 @@ static char name[1024];
 
 void load_file(const char *n) {
   if (img) {
-    ((Fl_Shared_Image *)b->image())->release();
+    ((Fl_Shared_Image*)b->image())->release();
     img = 0L;
   }
   if (fl_filename_isdir(n)) {
@@ -69,42 +69,36 @@ void load_file(const char *n) {
 }
 
 void file_cb(const char *n) {
-  if (!strcmp(name, n))
-    return;
+  if (!strcmp(name,n)) return;
   load_file(n);
-  strcpy(name, n);
+  strcpy(name,n);
   w->label(name);
 }
 
-void button_cb(Fl_Widget *, void *) {
+void button_cb(Fl_Widget *,void *) {
   fl_file_chooser_callback(file_cb);
-  const char *fname = fl_file_chooser("Image file?",
-                                      "*.{bm,bmp,gif,jpg,pbm,pgm,png,ppm,xbm,xpm"
+  const char *fname = fl_file_chooser("Image file?","*.{bm,bmp,gif,jpg,pbm,pgm,png,ppm,xbm,xpm"
 #ifdef FLTK_USE_SVG
                                       ",svg"
 #ifdef HAVE_LIBZ
                                       ",svgz"
 #endif // HAVE_LIBZ
 #endif // FLTK_USE_SVG
-                                      "}",
-                                      name);
-  puts(fname ? fname : "(null)");
-  fflush(stdout);
+                                      "}", name);
+  puts(fname ? fname : "(null)"); fflush(stdout);
   fl_file_chooser_callback(0);
 }
 
 void print_cb(Fl_Widget *widget, void *) {
   Fl_Printer printer;
   int width, height;
-  if (printer.start_job(1))
-    return;
+  if (printer.start_job(1)) return;
   printer.start_page();
   printer.printable_rect(&width, &height);
   float fw = widget->window()->decorated_w() / float(width);
   float fh = widget->window()->decorated_h() / float(height);
-  if (fh > fw)
-    fw = fh;
-  printer.scale(1 / fw);
+  if (fh > fw) fw = fh;
+  printer.scale(1/fw);
   printer.print_window(widget->window());
   printer.end_page();
   printer.end_job();
@@ -116,8 +110,7 @@ void svg_cb(Fl_Widget *widget, void *) {
   fnfc.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
   fnfc.filter("SVG\t*.svg\n");
   fnfc.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM | Fl_Native_File_Chooser::USE_FILTER_EXT);
-  if (fnfc.show())
-    return;
+  if (fnfc.show() ) return;
   FILE *svg = fl_fopen(fnfc.filename(), "w");
   Fl_SVG_File_Surface surf(widget->window()->decorated_w(), widget->window()->decorated_h(), svg);
   surf.draw_decorated_window(widget->window());
@@ -126,40 +119,32 @@ void svg_cb(Fl_Widget *widget, void *) {
 
 int dvisual = 0;
 int arg(int, char **argv, int &i) {
-  if (argv[i][1] == '8') {
-    dvisual = 1;
-    i++;
-    return 1;
-  }
+  if (argv[i][1] == '8') {dvisual = 1; i++; return 1;}
   return 0;
 }
 
 int main(int argc, char **argv) {
   int i = 1;
 
-  setlocale(LC_ALL, ""); // enable multilanguage errors in file chooser
+  setlocale(LC_ALL, "");    // enable multilanguage errors in file chooser
   fl_register_images();
 
-  Fl::args(argc, argv, i, arg);
+  Fl::args(argc,argv,i,arg);
 
-  Fl_Double_Window window(400, 450);
-  ::w = &window;
-  Fl_Box b(10, 45, 380, 380);
-  ::b = &b;
+  Fl_Double_Window window(400,450); ::w = &window;
+  Fl_Box b(10,45,380,380); ::b = &b;
   b.box(FL_THIN_DOWN_BOX);
-  b.align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_CLIP);
-  Fl_Button button(150, 5, 100, 30, "load");
+  b.align(FL_ALIGN_INSIDE|FL_ALIGN_CENTER|FL_ALIGN_CLIP);
+  Fl_Button button(150,5,100,30,"load");
   button.callback(button_cb);
-  if (!dvisual)
-    Fl::visual(FL_RGB);
-  if (argv[1])
-    load_file(argv[1]);
+  if (!dvisual) Fl::visual(FL_RGB);
+  if (argv[1]) load_file(argv[1]);
   window.resizable(b);
-  Fl_Button print(300, 425, 50, 25, "Print");
+  Fl_Button print(300,425,50,25,"Print");
   print.callback(print_cb);
-  Fl_Button svg(190, 425, 100, 25, "save as SVG");
+  Fl_Button svg(190,425,100,25,"save as SVG");
   svg.callback(svg_cb);
 
-  window.show(argc, argv);
+  window.show(argc,argv);
   return Fl::run();
 }

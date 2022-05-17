@@ -21,11 +21,10 @@
 #include <FL/Fl.H>
 #include <FL/Fl_Menu_.H>
 
-static Fl_Menu_ *the_widget;
+static Fl_Menu_* the_widget;
 
 static int handler(int e) {
-  if (e != FL_SHORTCUT || Fl::modal())
-    return 0;
+  if (e != FL_SHORTCUT || Fl::modal()) return 0;
   Fl::first_window(the_widget->window());
   return the_widget->handle(e);
 }
@@ -41,7 +40,6 @@ static int handler(int e) {
   global() setting (so don't destroy the widget!)
 */
 void Fl_Menu_::global() {
-  if (!the_widget)
-    Fl::add_handler(handler);
+  if (!the_widget) Fl::add_handler(handler);
   the_widget = this;
 }

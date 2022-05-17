@@ -27,8 +27,8 @@
 #endif
 
 // values for type():
-#define FL_NORMAL_COUNTER 0 /**< type() for counter with fast buttons */
-#define FL_SIMPLE_COUNTER 1 /**< type() for counter without fast buttons */
+#define FL_NORMAL_COUNTER       0       /**< type() for counter with fast buttons */
+#define FL_SIMPLE_COUNTER       1       /**< type() for counter without fast buttons */
 
 /**
   Controls a single floating point value with button (or keyboard) arrows.
@@ -55,12 +55,14 @@ class FL_EXPORT Fl_Counter : public Fl_Valuator {
   void increment_cb();
 
 protected:
+
   void draw();
 
 public:
+
   int handle(int);
 
-  Fl_Counter(int X, int Y, int W, int H, const char *L = 0);
+  Fl_Counter(int X, int Y, int W, int H, const char* L = 0);
   ~Fl_Counter();
 
   /**
@@ -68,42 +70,40 @@ public:
     The default value is 1.0.
     \param[in] a large step increment.
   */
-  void lstep(double a) { lstep_ = a; }
+  void lstep(double a) {lstep_ = a;}
 
   /**
     Sets the increments for the normal and large step buttons.
     \param[in] a, b normal and large step increments.
   */
-  void step(double a, double b) {
-    Fl_Valuator::step(a);
-    lstep_ = b;
-  }
+  void step(double a,double b) {Fl_Valuator::step(a); lstep_ = b;}
 
   /**
     Sets the increment for the normal step buttons.
     \param[in] a normal step increment.
   */
-  void step(double a) { Fl_Valuator::step(a); }
+  void step(double a) {Fl_Valuator::step(a);}
 
   /**
     Returns the increment for normal step buttons.
    */
-  double step() const { return Fl_Valuator::step(); }
+  double step() const {return Fl_Valuator::step();}
 
   /** Gets the text font */
-  Fl_Font textfont() const { return textfont_; }
+  Fl_Font textfont() const {return textfont_;}
   /** Sets the text font to \p s */
-  void textfont(Fl_Font s) { textfont_ = s; }
+  void textfont(Fl_Font s) {textfont_ = s;}
 
   /** Gets the font size */
-  Fl_Fontsize textsize() const { return textsize_; }
+  Fl_Fontsize textsize() const {return textsize_;}
   /** Sets the font size to \p s */
-  void textsize(Fl_Fontsize s) { textsize_ = s; }
+  void textsize(Fl_Fontsize s) {textsize_ = s;}
 
   /** Gets the font color */
-  Fl_Color textcolor() const { return textcolor_; }
+  Fl_Color textcolor() const {return textcolor_;}
   /** Sets the font color to \p s */
-  void textcolor(Fl_Color s) { textcolor_ = s; }
+  void textcolor(Fl_Color s) {textcolor_ = s;}
+
 };
 
 #endif

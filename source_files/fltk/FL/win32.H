@@ -20,7 +20,7 @@
 
 #ifndef FL_DOXYGEN
 #ifndef FL_PLATFORM_H
-#error "Never use <FL/win32.H> directly; include <FL/platform.H> instead."
+#  error "Never use <FL/win32.H> directly; include <FL/platform.H> instead."
 #endif // !FL_PLATFORM_H
 
 #include <windows.h>
@@ -31,7 +31,7 @@ typedef HWND Window;
 
 // In some of the distributions, the gcc header files are missing some stuff:
 #ifndef LPMINMAXINFO
-#define LPMINMAXINFO MINMAXINFO *
+#define LPMINMAXINFO MINMAXINFO*
 #endif
 #ifndef VK_LWIN
 #define VK_LWIN 0x5B
@@ -41,9 +41,9 @@ typedef HWND Window;
 
 extern FL_EXPORT UINT fl_wake_msg;
 extern FL_EXPORT char fl_override_redirect; // hack into Fl_Window::make_xid()
-extern FL_EXPORT HPALETTE fl_palette;       // non-zero only on 8-bit displays!
+extern FL_EXPORT HPALETTE fl_palette; // non-zero only on 8-bit displays!
 extern void fl_release_dc(HWND w, HDC dc);
-extern FL_EXPORT void fl_save_dc(HWND w, HDC dc);
+extern FL_EXPORT void fl_save_dc( HWND w, HDC dc);
 
 #endif // FL_LIBRARY || FL_INTERNALS
 
@@ -53,14 +53,10 @@ extern FL_EXPORT struct Fl_XMap {
   HPEN pen;     // pen, 0 if none created yet
   int brush;    // ref to solid brush, 0 if none created yet
   int pwidth;   // the width of the pen, if present
-} * fl_current_xmap;
-inline COLORREF fl_RGB() {
-  return fl_current_xmap->rgb;
-}
-inline HPEN fl_pen() {
-  return fl_current_xmap->pen;
-}
-FL_EXPORT HBRUSH fl_brush();           // allocates a brush if necessary
+} *fl_current_xmap;
+inline COLORREF fl_RGB() {return fl_current_xmap->rgb;}
+inline HPEN fl_pen() {return fl_current_xmap->pen;}
+FL_EXPORT HBRUSH fl_brush(); // allocates a brush if necessary
 FL_EXPORT HBRUSH fl_brush_action(int); // now does the real work
 
 extern FL_EXPORT HINSTANCE fl_display;

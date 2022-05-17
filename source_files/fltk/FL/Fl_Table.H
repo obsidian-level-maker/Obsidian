@@ -90,14 +90,12 @@
   CORE DEVELOPERS
 
   - Greg Ercolano : 12/16/2002 - initial implementation 12/16/02. Fl_Table, Fl_Table_Row, docs.
-  - Jean-Marc Lienher : 02/22/2004 - added keyboard nav + mouse selection, and ported Fl_Table into
-  fltk-utf8-1.1.4
+  - Jean-Marc Lienher : 02/22/2004 - added keyboard nav + mouse selection, and ported Fl_Table into fltk-utf8-1.1.4
 
   OTHER CONTRIBUTORS
 
   - Inspired by the Feb 2000 version of FLVW's Flvw_Table widget. Mucho thanks to those folks.
-  - Mister Satan : 04/07/2003 - MinGW porting mods, and singleinput.cxx; a cool Fl_Input oriented
-  spreadsheet example
+  - Mister Satan : 04/07/2003 - MinGW porting mods, and singleinput.cxx; a cool Fl_Input oriented spreadsheet example
   - Marek Paliwoda : 01/08/2003 - Porting mods for Borland
   - Ori Berger : 03/16/2006 - Optimizations for >500k rows/cols
 
@@ -116,29 +114,29 @@ public:
     or in a callback() to determine where a recent event occurred.
   */
   enum TableContext {
-    CONTEXT_NONE = 0,          ///< no known context
-    CONTEXT_STARTPAGE = 0x01,  ///< before the table is redrawn
-    CONTEXT_ENDPAGE = 0x02,    ///< after the table is redrawn
-    CONTEXT_ROW_HEADER = 0x04, ///< drawing or event occurred in the row header
-    CONTEXT_COL_HEADER = 0x08, ///< drawing or event occurred in the col header
-    CONTEXT_CELL = 0x10,       ///< drawing or event occurred in a cell
-    CONTEXT_TABLE = 0x20,      ///< drawing or event occurred in a dead zone of table
-    CONTEXT_RC_RESIZE = 0x40   ///< column or row is being resized
+    CONTEXT_NONE       = 0,     ///< no known context
+    CONTEXT_STARTPAGE  = 0x01,  ///< before the table is redrawn
+    CONTEXT_ENDPAGE    = 0x02,  ///< after the table is redrawn
+    CONTEXT_ROW_HEADER = 0x04,  ///< drawing or event occurred in the row header
+    CONTEXT_COL_HEADER = 0x08,  ///< drawing or event occurred in the col header
+    CONTEXT_CELL       = 0x10,  ///< drawing or event occurred in a cell
+    CONTEXT_TABLE      = 0x20,  ///< drawing or event occurred in a dead zone of table
+    CONTEXT_RC_RESIZE  = 0x40   ///< column or row is being resized
   };
 
 private:
-  int _rows, _cols;  // total rows/cols
-  int _row_header_w; // width of row header
-  int _col_header_h; // height of column header
-  int _row_position; // last row_position set (not necessarily == toprow!)
-  int _col_position; // last col_position set (not necessarily == leftcol!)
+  int _rows, _cols;     // total rows/cols
+  int _row_header_w;    // width of row header
+  int _col_header_h;    // height of column header
+  int _row_position;    // last row_position set (not necessarily == toprow!)
+  int _col_position;    // last col_position set (not necessarily == leftcol!)
 
-  char _row_header;    // row header enabled?
-  char _col_header;    // col header enabled?
-  char _row_resize;    // row resizing enabled?
-  char _col_resize;    // col resizing enabled?
-  int _row_resize_min; // row minimum resizing height (default=1)
-  int _col_resize_min; // col minimum resizing width (default=1)
+  char _row_header;     // row header enabled?
+  char _col_header;     // col header enabled?
+  char _row_resize;     // row resizing enabled?
+  char _col_resize;     // col resizing enabled?
+  int _row_resize_min;  // row minimum resizing height (default=1)
+  int _col_resize_min;  // col minimum resizing width (default=1)
 
   // OPTIMIZATION: partial row/column redraw variables
   int _redraw_toprow;
@@ -152,7 +150,7 @@ private:
   int _selecting;
   int _scrollbar_size;
   enum {
-    TABCELLNAV = 1 << 0, ///> tab cell navigation flag
+    TABCELLNAV = 1<<0,                  ///> tab cell navigation flag
   };
   unsigned int flags_;
 
@@ -165,54 +163,42 @@ private:
       _size = 0;
     }
     void copy(int *newarr, unsigned int newsize);
-
   public:
-    IntVector() { init(); } // CTOR
-    ~IntVector();           // DTOR
-    IntVector(IntVector &o) {
+    IntVector() { init(); }                                     // CTOR
+    ~IntVector();                                               // DTOR
+    IntVector(IntVector&o) { init(); copy(o.arr, o._size); }    // COPY CTOR
+    IntVector& operator=(IntVector&o) {                         // ASSIGN
       init();
       copy(o.arr, o._size);
-    }                                    // COPY CTOR
-    IntVector &operator=(IntVector &o) { // ASSIGN
-      init();
-      copy(o.arr, o._size);
-      return (*this);
+      return(*this);
     }
-    int operator[](int x) const { return (arr[x]); }
-    int &operator[](int x) { return (arr[x]); }
-    unsigned int size() { return (_size); }
+    int operator[](int x) const { return(arr[x]); }
+    int& operator[](int x) { return(arr[x]); }
+    unsigned int size() { return(_size); }
     void size(unsigned int count);
-    int pop_back() {
-      int tmp = arr[_size - 1];
-      _size--;
-      return (tmp);
-    }
-    void push_back(int val) {
-      unsigned int x = _size;
-      size(_size + 1);
-      arr[x] = val;
-    }
-    int back() { return (arr[_size - 1]); }
+    int pop_back() { int tmp = arr[_size-1]; _size--; return(tmp); }
+    void push_back(int val) { unsigned int x = _size; size(_size+1); arr[x] = val; }
+    int back() { return(arr[_size-1]); }
   };
 
-  IntVector _colwidths;  // column widths in pixels
-  IntVector _rowheights; // row heights in pixels
+  IntVector _colwidths;                 // column widths in pixels
+  IntVector _rowheights;                // row heights in pixels
 
-  Fl_Cursor _last_cursor; // last mouse cursor before changed to 'resize' cursor
+  Fl_Cursor _last_cursor;               // last mouse cursor before changed to 'resize' cursor
 
   // EVENT CALLBACK DATA
-  TableContext _callback_context;   // event context
-  int _callback_row, _callback_col; // event row/col
+  TableContext _callback_context;       // event context
+  int _callback_row, _callback_col;     // event row/col
 
   // handle() state variables.
   //    Put here instead of local statics in handle(), so more
   //    than one Fl_Table can exist without crosstalk between them.
   //
-  int _resizing_col; // column being dragged
-  int _resizing_row; // row being dragged
-  int _dragging_x;   // starting x position for horiz drag
-  int _dragging_y;   // starting y position for vert drag
-  int _last_row;     // last row we FL_PUSH'ed
+  int _resizing_col;                    // column being dragged
+  int _resizing_row;                    // row being dragged
+  int _dragging_x;                      // starting x position for horiz drag
+  int _dragging_y;                      // starting y position for vert drag
+  int _last_row;                        // last row we FL_PUSH'ed
 
   // Redraw single cell
   void _redraw_cell(TableContext context, int R, int C);
@@ -224,76 +210,64 @@ private:
 
 protected:
   enum ResizeFlag {
-    RESIZE_NONE = 0,
-    RESIZE_COL_LEFT = 1,
+    RESIZE_NONE      = 0,
+    RESIZE_COL_LEFT  = 1,
     RESIZE_COL_RIGHT = 2,
     RESIZE_ROW_ABOVE = 3,
     RESIZE_ROW_BELOW = 4
   };
 
-  int table_w;  ///< table's virtual width (in pixels)
-  int table_h;  ///< table's virtual height (in pixels)
-  int toprow;   ///< top row# of currently visible table on screen
-  int botrow;   ///< bottom row# of currently visible table on screen
-  int leftcol;  ///< left column# of currently visible table on screen
-  int rightcol; ///< right column# of currently visible table on screen
+  int table_w;                          ///< table's virtual width (in pixels)
+  int table_h;                          ///< table's virtual height (in pixels)
+  int toprow;                           ///< top row# of currently visible table on screen
+  int botrow;                           ///< bottom row# of currently visible table on screen
+  int leftcol;                          ///< left column# of currently visible table on screen
+  int rightcol;                         ///< right column# of currently visible table on screen
 
   // selection
-  int current_row; ///< selection cursor's current row (-1 if none)
-  int current_col; ///< selection cursor's current column (-1 if none)
-  int select_row;  ///< extended selection row (-1 if none)
-  int select_col;  ///< extended selection column (-1 if none)
+  int current_row;                      ///< selection cursor's current row (-1 if none)
+  int current_col;                      ///< selection cursor's current column (-1 if none)
+  int select_row;                       ///< extended selection row (-1 if none)
+  int select_col;                       ///< extended selection column (-1 if none)
 
   // OPTIMIZATION: Precomputed scroll positions for the toprow/leftcol
-  int toprow_scrollpos;  ///< precomputed scroll position for top row
-  int leftcol_scrollpos; ///< precomputed scroll position for left column
+  int toprow_scrollpos;                 ///< precomputed scroll position for top row
+  int leftcol_scrollpos;                ///< precomputed scroll position for left column
 
   // Data table's inner dimension
-  int tix; ///< Data table's inner x dimension, inside bounding box. See \ref
-           ///< table_dimensions_diagram "Table Dimension Diagram"
-  int tiy; ///< Data table's inner y dimension, inside bounding box. See \ref
-           ///< table_dimensions_diagram "Table Dimension Diagram"
-  int tiw; ///< Data table's inner w dimension, inside bounding box. See \ref
-           ///< table_dimensions_diagram "Table Dimension Diagram"
-  int tih; ///< Data table's inner h dimension, inside bounding box. See \ref
-           ///< table_dimensions_diagram "Table Dimension Diagram"
+  int tix;      ///< Data table's inner x dimension, inside bounding box. See \ref table_dimensions_diagram "Table Dimension Diagram"
+  int tiy;      ///< Data table's inner y dimension, inside bounding box. See \ref table_dimensions_diagram "Table Dimension Diagram"
+  int tiw;      ///< Data table's inner w dimension, inside bounding box. See \ref table_dimensions_diagram "Table Dimension Diagram"
+  int tih;      ///< Data table's inner h dimension, inside bounding box. See \ref table_dimensions_diagram "Table Dimension Diagram"
 
   // Data table's outer dimension
-  int tox; ///< Data table's outer x dimension, outside bounding box. See \ref
-           ///< table_dimensions_diagram "Table Dimension Diagram"
-  int toy; ///< Data table's outer y dimension, outside bounding box. See \ref
-           ///< table_dimensions_diagram "Table Dimension Diagram"
-  int tow; ///< Data table's outer w dimension, outside bounding box. See \ref
-           ///< table_dimensions_diagram "Table Dimension Diagram"
-  int toh; ///< Data table's outer h dimension, outside bounding box. See \ref
-           ///< table_dimensions_diagram "Table Dimension Diagram"
+  int tox;      ///< Data table's outer x dimension, outside bounding box. See \ref table_dimensions_diagram "Table Dimension Diagram"
+  int toy;      ///< Data table's outer y dimension, outside bounding box. See \ref table_dimensions_diagram "Table Dimension Diagram"
+  int tow;      ///< Data table's outer w dimension, outside bounding box. See \ref table_dimensions_diagram "Table Dimension Diagram"
+  int toh;      ///< Data table's outer h dimension, outside bounding box. See \ref table_dimensions_diagram "Table Dimension Diagram"
 
   // Table widget's inner dimension
-  int wix; ///< Table widget's inner x dimension, inside bounding box. See \ref
-           ///< table_dimensions_diagram "Table Dimension Diagram"
-  int wiy; ///< Table widget's inner y dimension, inside bounding box. See \ref
-           ///< table_dimensions_diagram "Table Dimension Diagram"
-  int wiw; ///< Table widget's inner w dimension, inside bounding box. See \ref
-           ///< table_dimensions_diagram "Table Dimension Diagram"
-  int wih; ///< Table widget's inner h dimension, inside bounding box. See \ref
-           ///< table_dimensions_diagram "Table Dimension Diagram"
+  int wix;      ///< Table widget's inner x dimension, inside bounding box. See \ref table_dimensions_diagram "Table Dimension Diagram"
+  int wiy;      ///< Table widget's inner y dimension, inside bounding box. See \ref table_dimensions_diagram "Table Dimension Diagram"
+  int wiw;      ///< Table widget's inner w dimension, inside bounding box. See \ref table_dimensions_diagram "Table Dimension Diagram"
+  int wih;      ///< Table widget's inner h dimension, inside bounding box. See \ref table_dimensions_diagram "Table Dimension Diagram"
 
-  Fl_Scroll *table;         ///< child Fl_Scroll widget container for child fltk widgets (if any)
-  Fl_Scrollbar *vscrollbar; ///< child vertical scrollbar widget
-  Fl_Scrollbar *hscrollbar; ///< child horizontal scrollbar widget
+  Fl_Scroll *table;                             ///< child Fl_Scroll widget container for child fltk widgets (if any)
+  Fl_Scrollbar *vscrollbar;                     ///< child vertical scrollbar widget
+  Fl_Scrollbar *hscrollbar;                     ///< child horizontal scrollbar widget
 
   // Fltk
-  int handle(int e); // fltk handle() override
+  int handle(int e);                            // fltk handle() override
 
   // Class maintenance
   void recalc_dimensions();
-  void table_resized();                 // table resized; recalc
-  void table_scrolled();                // table scrolled; recalc
-  void get_bounds(TableContext context, // return x/y/w/h bounds for context
+  void table_resized();                         // table resized; recalc
+  void table_scrolled();                        // table scrolled; recalc
+  void get_bounds(TableContext context,         // return x/y/w/h bounds for context
                   int &X, int &Y, int &W, int &H);
-  void change_cursor(Fl_Cursor newcursor); // change mouse cursor to some other shape
+  void change_cursor(Fl_Cursor newcursor);      // change mouse cursor to some other shape
   TableContext cursor2rowcol(int &R, int &C, ResizeFlag &resizeflag);
-  int find_cell(TableContext context, // find cell's x/y/w/h given r/c
+  int find_cell(TableContext context,           // find cell's x/y/w/h given r/c
                 int R, int C, int &X, int &Y, int &W, int &H);
   int row_col_clamp(TableContext context, int &R, int &C);
   // clamp r/c to known universe
@@ -364,9 +338,11 @@ protected:
 
     \code
     // This is called whenever Fl_Table wants you to draw a cell
-    void MyTable::draw_cell(TableContext context, int R=0, int C=0, int X=0, int Y=0, int W=0, int
-   H=0) { static char s[40]; sprintf(s, "%d/%d", R, C);             // text for each cell switch (
-   context ) { case CONTEXT_STARTPAGE:             // Fl_Table telling us it's starting to draw page
+    void MyTable::draw_cell(TableContext context, int R=0, int C=0, int X=0, int Y=0, int W=0, int H=0) {
+        static char s[40];
+        sprintf(s, "%d/%d", R, C);             // text for each cell
+        switch ( context ) {
+           case CONTEXT_STARTPAGE:             // Fl_Table telling us it's starting to draw page
                fl_font(FL_HELVETICA, 16);
                return;
 
@@ -406,28 +382,21 @@ protected:
    }
    \endcode
    */
-  virtual void draw_cell(TableContext context, int R = 0, int C = 0, int X = 0, int Y = 0,
-                         int W = 0, int H = 0) {
-    (void)context;
-    (void)R;
-    (void)C;
-    (void)X;
-    (void)Y;
-    (void)W;
-    (void)H;
-  } // overridden by deriving class
+  virtual void draw_cell(TableContext context, int R=0, int C=0,
+                         int X=0, int Y=0, int W=0, int H=0)
+  { (void)context; (void)R; (void)C; (void)X; (void)Y; (void)W; (void)H;}                                           // overridden by deriving class
 
-  long row_scroll_position(int row); // find scroll position of row (in pixels)
-  long col_scroll_position(int col); // find scroll position of col (in pixels)
+  long row_scroll_position(int row);            // find scroll position of row (in pixels)
+  long col_scroll_position(int col);            // find scroll position of col (in pixels)
 
   /**
    Does the table contain any child fltk widgets?
   */
-  int is_fltk_container() {            // does table contain fltk widgets?
-    return (Fl_Group::children() > 3); // (ie. more than box and 2 scrollbars?)
+  int is_fltk_container() {                     // does table contain fltk widgets?
+    return( Fl_Group::children() > 3 );         // (ie. more than box and 2 scrollbars?)
   }
 
-  static void scroll_cb(Fl_Widget *, void *); // h/v scrollbar callback
+  static void scroll_cb(Fl_Widget*,void*);      // h/v scrollbar callback
 
   void damage_zone(int r1, int c1, int r2, int c2, int r3 = 0, int c3 = 0);
 
@@ -436,7 +405,7 @@ protected:
    and then sets damage(DAMAGE_CHILD).  Extends any previously defined range to redraw.
   */
   void redraw_range(int topRow, int botRow, int leftCol, int rightCol) {
-    if (_redraw_toprow == -1) {
+    if ( _redraw_toprow == -1 ) {
       // Initialize redraw range
       _redraw_toprow = topRow;
       _redraw_botrow = botRow;
@@ -444,14 +413,10 @@ protected:
       _redraw_rightcol = rightCol;
     } else {
       // Extend redraw range
-      if (topRow < _redraw_toprow)
-        _redraw_toprow = topRow;
-      if (botRow > _redraw_botrow)
-        _redraw_botrow = botRow;
-      if (leftCol < _redraw_leftcol)
-        _redraw_leftcol = leftCol;
-      if (rightCol > _redraw_rightcol)
-        _redraw_rightcol = rightCol;
+      if ( topRow < _redraw_toprow ) _redraw_toprow = topRow;
+      if ( botRow > _redraw_botrow ) _redraw_botrow = botRow;
+      if ( leftCol < _redraw_leftcol ) _redraw_leftcol = leftCol;
+      if ( rightCol > _redraw_rightcol ) _redraw_rightcol = rightCol;
     }
     // Indicate partial redraw needed of some cells
     damage(FL_DAMAGE_CHILD);
@@ -461,7 +426,7 @@ protected:
   void draw();
 
 public:
-  Fl_Table(int X, int Y, int W, int H, const char *l = 0);
+  Fl_Table(int X, int Y, int W, int H, const char *l=0);
   ~Fl_Table();
 
   /**
@@ -490,21 +455,27 @@ public:
   /**
    Returns the current box type used for the data table.
   */
-  inline Fl_Boxtype table_box(void) { return (table->box()); }
+  inline Fl_Boxtype table_box( void ) {
+    return(table->box());
+  }
 
-  virtual void rows(int val); // set/get number of rows
+  virtual void rows(int val);                   // set/get number of rows
 
   /**
    Returns the number of rows in the table.
   */
-  inline int rows() { return (_rows); }
+  inline int rows() {
+    return(_rows);
+  }
 
-  virtual void cols(int val); // set/get number of columns
+  virtual void cols(int val);                   // set/get number of columns
 
   /**
    Get the number of columns in the table.
   */
-  inline int cols() { return (_cols); }
+  inline int cols() {
+    return(_cols);
+  }
 
   /**
     Returns the range of row and column numbers for all visible
@@ -534,7 +505,7 @@ public:
     - leftcol = 100
     - rightcol = 120
   */
-  inline void visible_cells(int &r1, int &r2, int &c1, int &c2) {
+  inline void visible_cells(int& r1, int& r2, int& c1, int& c2) {
     r1 = toprow;
     r2 = botrow;
     c1 = leftcol;
@@ -545,12 +516,16 @@ public:
     Returns 1 if someone is interactively resizing a row or column.
     You can currently call this only from within your callback().
   */
-  int is_interactive_resize() { return (_resizing_row != -1 || _resizing_col != -1); }
+  int is_interactive_resize() {
+    return(_resizing_row != -1 || _resizing_col != -1);
+  }
 
   /**
     Returns if row resizing by the user is allowed.
   */
-  inline int row_resize() { return (_row_resize); }
+  inline int row_resize() {
+    return(_row_resize);
+  }
 
   /**
     Allows/disallows row resizing by the user.
@@ -558,14 +533,16 @@ public:
     Since interactive resizing is done via the row headers,
     row_header() must also be enabled to allow resizing.
   */
-  void row_resize(int flag) { // enable row resizing
+  void row_resize(int flag) {                   // enable row resizing
     _row_resize = flag;
   }
 
   /**
     Returns if column resizing by the user is allowed.
   */
-  inline int col_resize() { return (_col_resize); }
+  inline int col_resize() {
+    return(_col_resize);
+  }
 
   /**
     Allows/disallows column resizing by the user.
@@ -573,15 +550,15 @@ public:
     Since interactive resizing is done via the column headers,
     \p col_header() must also be enabled to allow resizing.
   */
-  void col_resize(int flag) { // enable col resizing
+  void col_resize(int flag) {                   // enable col resizing
     _col_resize = flag;
   }
 
   /**
     Returns the current column minimum resize value.
   */
-  inline int col_resize_min() { // column minimum resizing width
-    return (_col_resize_min);
+  inline int col_resize_min() {                 // column minimum resizing width
+    return(_col_resize_min);
   }
 
   /**
@@ -589,13 +566,15 @@ public:
     This is used to prevent the user from interactively resizing
     any column to be smaller than 'pixels'. Must be a value >=1.
   */
-  void col_resize_min(int val) { _col_resize_min = (val < 1) ? 1 : val; }
+  void col_resize_min(int val) {
+    _col_resize_min = ( val < 1 ) ? 1 : val;
+  }
 
   /**
     Returns the current row minimum resize value.
   */
-  inline int row_resize_min() { // column minimum resizing width
-    return (_row_resize_min);
+  inline int row_resize_min() {                 // column minimum resizing width
+    return(_row_resize_min);
   }
 
   /**
@@ -603,13 +582,15 @@ public:
     This is used to prevent the user from interactively resizing
     any row to be smaller than 'pixels'. Must be a value >=1.
   */
-  void row_resize_min(int val) { _row_resize_min = (val < 1) ? 1 : val; }
+  void row_resize_min(int val) {
+    _row_resize_min = ( val < 1 ) ? 1 : val;
+  }
 
   /**
     Returns if row headers are enabled or not.
   */
-  inline int row_header() { // set/get row header enable flag
-    return (_row_header);
+  inline int row_header() {                     // set/get row header enable flag
+    return(_row_header);
   }
 
   /**
@@ -625,8 +606,8 @@ public:
   /**
     Returns if column headers are enabled or not.
   */
-  inline int col_header() { // set/get col header enable flag
-    return (_col_header);
+  inline int col_header() {                     // set/get col header enable flag
+    return(_col_header);
   }
 
   /**
@@ -642,7 +623,7 @@ public:
   /**
     Sets the height in pixels for column headers and redraws the table.
   */
-  inline void col_header_height(int height) { // set/get col header height
+  inline void col_header_height(int height) {   // set/get col header height
     _col_header_h = height;
     table_resized();
     redraw();
@@ -651,12 +632,14 @@ public:
   /**
     Gets the column header height.
   */
-  inline int col_header_height() { return (_col_header_h); }
+  inline int col_header_height() {
+    return(_col_header_h);
+  }
 
   /**
     Sets the row header width to n and causes the screen to redraw.
   */
-  inline void row_header_width(int width) { // set/get row header width
+  inline void row_header_width(int width) {     // set/get row header width
     _row_header_w = width;
     table_resized();
     redraw();
@@ -665,12 +648,14 @@ public:
   /**
     Returns the current row header width (in pixels).
   */
-  inline int row_header_width() { return (_row_header_w); }
+  inline int row_header_width() {
+    return(_row_header_w);
+  }
 
   /**
     Sets the row header color and causes the screen to redraw.
   */
-  inline void row_header_color(Fl_Color val) { // set/get row header color
+  inline void row_header_color(Fl_Color val) {  // set/get row header color
     _row_header_color = val;
     redraw();
   }
@@ -678,12 +663,14 @@ public:
   /**
     Returns the current row header color.
   */
-  inline Fl_Color row_header_color() { return (_row_header_color); }
+  inline Fl_Color row_header_color() {
+    return(_row_header_color);
+  }
 
   /**
     Sets the color for column headers and redraws the table.
   */
-  inline void col_header_color(Fl_Color val) { // set/get col header color
+  inline void col_header_color(Fl_Color val) {  // set/get col header color
     _col_header_color = val;
     redraw();
   }
@@ -691,32 +678,34 @@ public:
   /**
     Gets the color for column headers.
   */
-  inline Fl_Color col_header_color() { return (_col_header_color); }
+  inline Fl_Color col_header_color() {
+    return(_col_header_color);
+  }
 
-  void row_height(int row, int height); // set/get row height
+  void row_height(int row, int height);         // set/get row height
 
   /**
     Returns the current height of the specified row as a value in pixels.
   */
   inline int row_height(int row) {
-    return ((row < 0 || row >= (int)_rowheights.size()) ? 0 : _rowheights[row]);
+    return((row<0 || row>=(int)_rowheights.size()) ? 0 : _rowheights[row]);
   }
 
-  void col_width(int col, int width); // set/get a column's width
+  void col_width(int col, int width);           // set/get a column's width
 
   /**
     Returns the current width of the specified column in pixels.
   */
   inline int col_width(int col) {
-    return ((col < 0 || col >= (int)_colwidths.size()) ? 0 : _colwidths[col]);
+    return((col<0 || col>=(int)_colwidths.size()) ? 0 : _colwidths[col]);
   }
 
   /**
     Convenience method to set the height of all rows to the
     same value, in pixels. The screen is redrawn.
   */
-  void row_height_all(int height) { // set all row/col heights
-    for (int r = 0; r < rows(); r++) {
+  void row_height_all(int height) {             // set all row/col heights
+    for ( int r=0; r<rows(); r++ ) {
       row_height(r, height);
     }
   }
@@ -726,30 +715,34 @@ public:
     same value, in pixels. The screen is redrawn.
   */
   void col_width_all(int width) {
-    for (int c = 0; c < cols(); c++) {
+    for ( int c=0; c<cols(); c++ ) {
       col_width(c, width);
     }
   }
 
-  void row_position(int row); // set/get table's current scroll position
+  void row_position(int row);                   // set/get table's current scroll position
   void col_position(int col);
 
   /**
     Returns the current row scroll position as a row number.
   */
-  int row_position() { return (_row_position); }
+  int row_position() {
+    return(_row_position);
+  }
 
   /**
     Returns the current column scroll position as a column number.
   */
-  int col_position() { return (_col_position); }
+  int col_position() {
+    return(_col_position);
+  }
 
   /**
     Sets which row should be at the top of the table,
     scrolling as necessary, and the table is redrawn. If the table
     cannot be scrolled that far, it is scrolled as far as possible.
   */
-  inline void top_row(int row) { // set/get top row (deprecated)
+  inline void top_row(int row) {                // set/get top row (deprecated)
     row_position(row);
   }
 
@@ -757,13 +750,15 @@ public:
     Returns the current top row shown in the table.
     This row may be partially obscured.
   */
-  inline int top_row() { return (row_position()); }
-  int is_selected(int r, int c); // selected cell
+  inline int top_row() {
+    return(row_position());
+  }
+  int is_selected(int r, int c);                // selected cell
   void get_selection(int &row_top, int &col_left, int &row_bot, int &col_right);
   void set_selection(int row_top, int col_left, int row_bot, int col_right);
   int move_cursor(int R, int C, int shiftselect);
   int move_cursor(int R, int C);
-  void resize(int X, int Y, int W, int H); // fltk resize() override
+  void resize(int X, int Y, int W, int H);      // fltk resize() override
 
   // This crashes sortapp() during init.
   //  void box(Fl_Boxtype val) {
@@ -791,9 +786,9 @@ public:
     The specified widget is removed from its current group (if any)
     and added to the end of Fl_Table's group.
   */
-  void add(Fl_Widget &wgt) {
+  void add(Fl_Widget& wgt) {
     table->add(wgt);
-    if (table->children() > 2) {
+    if ( table->children() > 2 ) {
       table->show();
     } else {
       table->hide();
@@ -804,28 +799,38 @@ public:
     The specified widget is removed from its current group (if any)
     and added to the end of Fl_Table's group.
   */
-  void add(Fl_Widget *wgt) { add(*wgt); }
+  void add(Fl_Widget* wgt) {
+    add(*wgt);
+  }
 
   /**
     The specified widget is removed from its current group (if any)
     and inserted into the Fl_Table's group at position 'n'.
   */
-  void insert(Fl_Widget &wgt, int n) { table->insert(wgt, n); }
+  void insert(Fl_Widget& wgt, int n) {
+    table->insert(wgt,n);
+  }
 
   /**
     The specified widget is removed from its current group (if any)
     and inserted into Fl_Table's group before widget 'w2'.
     This will append if 'w2' is not in Fl_Table's group.
   */
-  void insert(Fl_Widget &wgt, Fl_Widget *w2) { table->insert(wgt, w2); }
+  void insert(Fl_Widget& wgt, Fl_Widget* w2) {
+    table->insert(wgt,w2);
+  }
 
   /**
     The specified widget is removed from Fl_Table's group.
   */
-  void remove(Fl_Widget &wgt) { table->remove(wgt); }
+  void remove(Fl_Widget& wgt) {
+    table->remove(wgt);
+  }
 
   // (doxygen will substitute Fl_Group's docs here)
-  void begin() { table->begin(); }
+  void begin() {
+    table->begin();
+  }
 
   // (doxygen will substitute Fl_Group's docs here)
   void end() {
@@ -833,7 +838,7 @@ public:
     // HACK: Avoid showing Fl_Scroll; seems to erase screen
     //       causing unnecessary flicker, even if its box() is FL_NO_BOX.
     //
-    if (table->children() > 2) {
+    if ( table->children() > 2 ) {
       table->show();
     } else {
       table->hide();
@@ -845,7 +850,9 @@ public:
     Returns a pointer to the array of children. <I>This pointer is only
     valid until the next time a child is added or removed.</I>
   */
-  Fl_Widget *const *array() { return (table->array()); }
+  Fl_Widget*const* array() {
+    return(table->array());
+  }
 
   /**
     Returns the child widget by an index.
@@ -861,7 +868,9 @@ public:
     }
     \endcode
   */
-  Fl_Widget *child(int n) const { return (table->child(n)); }
+  Fl_Widget *child(int n) const {
+    return(table->child(n));
+  }
 
   /**
     Returns the number of children in the table.
@@ -872,14 +881,18 @@ public:
     \see child(int)
   */
   int children() const {
-    return (table->children() - 2); // -2: skip Fl_Scroll's h/v scrollbar widgets
+    return(table->children()-2);    // -2: skip Fl_Scroll's h/v scrollbar widgets
   }
 
   // (doxygen will substitute Fl_Group's docs here)
-  int find(const Fl_Widget *wgt) const { return (table->find(wgt)); }
+  int find(const Fl_Widget *wgt) const {
+    return(table->find(wgt));
+  }
 
   // (doxygen will substitute Fl_Group's docs here)
-  int find(const Fl_Widget &wgt) const { return (table->find(wgt)); }
+  int find(const Fl_Widget &wgt) const {
+    return(table->find(wgt));
+  }
 
   // CALLBACKS
 
@@ -888,21 +901,27 @@ public:
 
     This function should only be used from within the user's callback function.
   */
-  int callback_row() { return (_callback_row); }
+  int callback_row() {
+    return(_callback_row);
+  }
 
   /**
     Returns the current column the event occurred on.
 
     This function should only be used from within the user's callback function.
   */
-  int callback_col() { return (_callback_col); }
+  int callback_col() {
+    return(_callback_col);
+  }
 
   /**
     Returns the current 'table context'.
 
     This function should only be used from within the user's callback function.
   */
-  TableContext callback_context() { return (_callback_context); }
+  TableContext callback_context() {
+    return(_callback_context);
+  }
 
   /**
     Calls the widget callback.
@@ -1028,7 +1047,7 @@ public:
     };
     \endcode
   */
-  void callback(Fl_Widget *, void *);
+  void callback(Fl_Widget*, void*);
 #endif
 
   /**
@@ -1040,7 +1059,9 @@ public:
     \returns Scrollbar size in pixels, or 0 if the global Fl::scrollbar_size() is being used.
     \see Fl::scrollbar_size(int)
   */
-  int scrollbar_size() const { return (_scrollbar_size); }
+  int scrollbar_size() const {
+      return(_scrollbar_size);
+  }
 
   /**
     Sets the pixel size of the scrollbars' troughs to \p newSize, in pixels.
@@ -1061,9 +1082,8 @@ public:
     \see Fl::scrollbar_size()
   */
   void scrollbar_size(int newSize) {
-    if (newSize != _scrollbar_size)
-      redraw();
-    _scrollbar_size = newSize;
+      if ( newSize != _scrollbar_size ) redraw();
+      _scrollbar_size = newSize;
   }
 
   /**
@@ -1077,14 +1097,11 @@ public:
     it's useful for Tab to be used to navigate cells in the Fl_Table.
 
     \param [in] val If \p val is 1, Tab key navigates cells in table, not fltk widgets.<BR>
-                    If \p val is 0, Tab key will advance focus to the next fltk widget (default),
-    and does not navigate cells in table.
+                    If \p val is 0, Tab key will advance focus to the next fltk widget (default), and does not navigate cells in table.
   */
   void tab_cell_nav(int val) {
-    if (val)
-      flags_ |= TABCELLNAV;
-    else
-      flags_ &= ~TABCELLNAV;
+    if ( val ) flags_ |=  TABCELLNAV;
+    else       flags_ &= ~TABCELLNAV;
   }
 
   /**
@@ -1094,7 +1111,9 @@ public:
 
     \see tab_cell_nav(int)
   */
-  int tab_cell_nav() const { return (flags_ & TABCELLNAV ? 1 : 0); }
+  int tab_cell_nav() const {
+    return(flags_ & TABCELLNAV ? 1 : 0);
+  }
 };
 
 #endif /*_FL_TABLE_H*/

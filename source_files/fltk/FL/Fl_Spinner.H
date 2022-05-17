@@ -36,18 +36,20 @@
 */
 class FL_EXPORT Fl_Spinner : public Fl_Group {
 
-  double value_;       // Current value
-  double minimum_;     // Minimum value
-  double maximum_;     // Maximum value
-  double step_;        // Amount to add/subtract for up/down
-  const char *format_; // Format string for input field
-  int wrap_;           // wrap around at bounds (1/0)
+  double        value_;                 // Current value
+  double        minimum_;               // Minimum value
+  double        maximum_;               // Maximum value
+  double        step_;                  // Amount to add/subtract for up/down
+  const char    *format_;               // Format string for input field
+  int           wrap_;                  // wrap around at bounds (1/0)
 
 private:
+
   static void sb_cb(Fl_Widget *w, Fl_Spinner *sb); // internal callback
   void update();                                   // update input field
 
 protected:
+
   // This class works like Fl_Input but ignores FL_Up and FL_Down key
   // presses so they are handled by its parent, the Fl_Spinner widget.
   // See STR #2989.
@@ -55,15 +57,17 @@ protected:
   class FL_EXPORT Fl_Spinner_Input : public Fl_Input {
   public:
     Fl_Spinner_Input(int X, int Y, int W, int H)
-      : Fl_Input(X, Y, W, H) {}
-    int handle(int event); // implemented in src/Fl_Spinner.cxx
+    : Fl_Input(X, Y, W, H) {}
+    int handle(int event);              // implemented in src/Fl_Spinner.cxx
   };
 
-  Fl_Spinner_Input input_;     // Input field for the value
-  Fl_Repeat_Button up_button_, // Up button
-      down_button_;            // Down button
+  Fl_Spinner_Input input_;              // Input field for the value
+  Fl_Repeat_Button
+                up_button_,             // Up button
+                down_button_;           // Down button
 
 public:
+
   // Constructor
   Fl_Spinner(int X, int Y, int W, int H, const char *L = 0);
   // Event handling
@@ -75,10 +79,7 @@ public:
   const char *format() const { return (format_); }
 
   /** Sets the format string for the value. */
-  void format(const char *f) {
-    format_ = f;
-    update();
-  }
+  void format(const char *f) { format_ = f; update(); }
 
   /** Gets the maximum value of the widget. */
   double maximum() const { return (maximum_); }
@@ -93,10 +94,7 @@ public:
   void minimum(double m) { minimum_ = m; }
 
   /** Sets the minimum and maximum values for the widget. */
-  void range(double a, double b) {
-    minimum_ = a;
-    maximum_ = b;
-  }
+  void range(double a, double b) { minimum_ = a; maximum_ = b; }
 
   // Sets the amount to change the value when the user clicks a button.
   // Docs in src/Fl_Spinner.cxx
@@ -173,10 +171,7 @@ public:
     Before setting value to a non-integer value, the spinner
     type() should be changed to floating point.
   */
-  void value(double v) {
-    value_ = v;
-    update();
-  }
+  void value(double v) { value_ = v; update(); }
 
   /**
     Sets the background color of the spinner widget's input field.
@@ -186,7 +181,7 @@ public:
   /**
     Returns the background color of the spinner widget's input field.
   */
-  Fl_Color color() const { return (input_.color()); }
+  Fl_Color color() const { return(input_.color()); }
 
   /**
     Sets the selection color of the spinner widget's input field.
@@ -201,10 +196,7 @@ public:
   /**
    Sets the maximum width of the input field.
    */
-  void maximum_size(int m) {
-    if (m > 0)
-      input_.maximum_size(m);
-  }
+  void maximum_size(int m) { if (m > 0) input_.maximum_size(m); }
 
   /**
    Returns the maximum width of the input field.

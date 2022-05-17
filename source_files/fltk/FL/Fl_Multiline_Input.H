@@ -48,7 +48,7 @@ public:
 
     Inherited destructor destroys the widget and any value associated with it.
   */
-  Fl_Multiline_Input(int X, int Y, int W, int H, const char *l = 0);
+  Fl_Multiline_Input(int X,int Y,int W,int H,const char *l = 0);
 };
 
 #endif

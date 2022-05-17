@@ -46,36 +46,32 @@ public:
    can use any of the routines described in &lt;FL/fl_draw.H&gt;.
    */
   virtual void draw_overlay() = 0;
-
 private:
   Fl_Window *overlay_;
-
 public:
   void show();
   void hide();
   void flush();
-  void resize(int, int, int, int);
+  void resize(int,int,int,int);
   ~Fl_Overlay_Window();
   /** Returns non-zero if there's hardware overlay support */
   int can_do_overlay();
   void redraw_overlay();
-
 protected:
   /**
    See Fl_Overlay_Window::Fl_Overlay_Window(int X, int Y, int W, int H, const char *l=0)
    */
-  Fl_Overlay_Window(int W, int H, const char *l = 0);
+  Fl_Overlay_Window(int W, int H, const char *l=0);
   /**
    Creates a new Fl_Overlay_Window widget using the given
    position, size, and label (title) string. If the
    positions (x,y) are not given, then the window manager
    will choose them.
    */
-  Fl_Overlay_Window(int X, int Y, int W, int H, const char *l = 0);
-
+  Fl_Overlay_Window(int X, int Y, int W, int H, const char *l=0);
 public:
-  void show(int a, char **b) { Fl_Double_Window::show(a, b); }
-  virtual Fl_Overlay_Window *as_overlay_window() { return this; }
+  void show(int a, char **b) {Fl_Double_Window::show(a,b);}
+  virtual Fl_Overlay_Window *as_overlay_window() {return this; }
 };
 
 #endif

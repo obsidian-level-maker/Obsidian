@@ -64,15 +64,12 @@
 */
 class FL_EXPORT Fl_Image_Surface : public Fl_Widget_Surface {
   friend class Fl_Graphics_Driver;
-
 private:
   class Fl_Image_Surface_Driver *platform_surface;
   Fl_Offscreen get_offscreen_before_delete_();
-
 protected:
   void translate(int x, int y);
   void untranslate();
-
 public:
   Fl_Image_Surface(int w, int h, int high_res = 0, Fl_Offscreen off = 0);
   ~Fl_Image_Surface();
@@ -101,19 +98,12 @@ public:
  */
 class Fl_Image_Surface_Driver : public Fl_Widget_Surface {
   friend class Fl_Image_Surface;
-
 protected:
   int width;
   int height;
   Fl_Offscreen offscreen;
   int external_offscreen;
-  Fl_Image_Surface_Driver(int w, int h, int /*high_res*/, Fl_Offscreen off)
-    : Fl_Widget_Surface(NULL)
-    , width(w)
-    , height(h)
-    , offscreen(off) {
-    external_offscreen = (off != 0);
-  }
+  Fl_Image_Surface_Driver(int w, int h, int /*high_res*/, Fl_Offscreen off) : Fl_Widget_Surface(NULL), width(w), height(h), offscreen(off) {external_offscreen = (off != 0);}
   virtual ~Fl_Image_Surface_Driver() {}
   virtual void set_current() = 0;
   virtual void translate(int x, int y) = 0;
@@ -124,8 +114,7 @@ protected:
    It returns an object implementing all virtual functions
    of class Fl_Image_Surface_Driver for the plaform.
    */
-  static Fl_Image_Surface_Driver *newImageSurfaceDriver(int w, int h, int high_res,
-                                                        Fl_Offscreen off);
+  static Fl_Image_Surface_Driver *newImageSurfaceDriver(int w, int h, int high_res, Fl_Offscreen off);
 };
 
 /**

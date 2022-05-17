@@ -34,28 +34,27 @@ int Fl_Gl_Window_Driver::nContext = 0;
 static int NContext = 0;
 
 void Fl_Gl_Window_Driver::add_context(GLContext ctx) {
-  if (!ctx)
-    return;
-  if (nContext == NContext) {
-    if (!NContext)
-      NContext = 8;
+  if (!ctx) return;
+  if (nContext==NContext) {
+    if (!NContext) NContext = 8;
     NContext *= 2;
-    context_list = (GLContext *)realloc(context_list, NContext * sizeof(GLContext));
+    context_list = (GLContext*)realloc(
+      context_list, NContext*sizeof(GLContext));
   }
   context_list[nContext++] = ctx;
 }
 
 void Fl_Gl_Window_Driver::del_context(GLContext ctx) {
   int i;
-  for (i = 0; i < nContext; i++) {
-    if (context_list[i] == ctx) {
-      memmove(context_list + i, context_list + i + 1, (nContext - i - 1) * sizeof(GLContext));
+  for (i=0; i<nContext; i++) {
+    if (context_list[i]==ctx) {
+      memmove(context_list+i, context_list+i+1,
+        (nContext-i-1) * sizeof(GLContext));
       context_list[--nContext] = 0;
       break;
     }
   }
-  if (!nContext)
-    gl_remove_displaylist_fonts();
+  if (!nContext) gl_remove_displaylist_fonts();
 }
 
 Fl_Gl_Choice *Fl_Gl_Window_Driver::first;

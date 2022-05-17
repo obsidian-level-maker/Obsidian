@@ -23,21 +23,23 @@
 
 #include <stdio.h>
 
-float Fl_Tooltip::delay_ = 1.0f;
-float Fl_Tooltip::hidedelay_ = 12.0f;
-float Fl_Tooltip::hoverdelay_ = 0.2f;
-Fl_Color Fl_Tooltip::color_ = fl_color_cube(FL_NUM_RED - 1, FL_NUM_GREEN - 1, FL_NUM_BLUE - 2);
-Fl_Color Fl_Tooltip::textcolor_ = FL_BLACK;
-Fl_Font Fl_Tooltip::font_ = FL_HELVETICA;
+float     Fl_Tooltip::delay_ = 1.0f;
+float     Fl_Tooltip::hidedelay_ = 12.0f;
+float     Fl_Tooltip::hoverdelay_ = 0.2f;
+Fl_Color  Fl_Tooltip::color_ = fl_color_cube(FL_NUM_RED - 1,
+                                             FL_NUM_GREEN - 1,
+                                             FL_NUM_BLUE - 2);
+Fl_Color  Fl_Tooltip::textcolor_ = FL_BLACK;
+Fl_Font   Fl_Tooltip::font_ = FL_HELVETICA;
 Fl_Fontsize Fl_Tooltip::size_ = -1;
-int Fl_Tooltip::margin_width_ = 3;
-int Fl_Tooltip::margin_height_ = 3;
-int Fl_Tooltip::wrap_width_ = 400;
+int       Fl_Tooltip::margin_width_ = 3;
+int       Fl_Tooltip::margin_height_ = 3;
+int       Fl_Tooltip::wrap_width_ = 400;
 const int Fl_Tooltip::draw_symbols_ = 1;
 
-static const char *tip;
+static const char* tip;
 
-static void tooltip_hide_timeout(void *);
+static void tooltip_hide_timeout(void*);
 
 /**
     This widget creates a tooltip box window, with no caption.
@@ -45,8 +47,7 @@ static void tooltip_hide_timeout(void *);
 class Fl_TooltipBox : public Fl_Menu_Window {
 public:
   /** Creates the box window */
-  Fl_TooltipBox()
-    : Fl_Menu_Window(0, 0) {
+  Fl_TooltipBox() : Fl_Menu_Window(0, 0) {
     set_override();
     set_tooltip_window();
     end();
@@ -55,8 +56,7 @@ public:
   void layout();
   /** Shows the tooltip windows only if a tooltip text is available. */
   void show() {
-    if (!tip)
-      return;
+    if (!tip) return;
 
     Fl_Menu_Window::show();
   }
@@ -71,12 +71,13 @@ public:
   }
 };
 
-Fl_Widget *Fl_Tooltip::widget_ = 0;
+Fl_Widget* Fl_Tooltip::widget_ = 0;
 static Fl_TooltipBox *window = 0;
 static int currentTooltipY, currentTooltipH;
 
-Fl_Window *Fl_Tooltip::current_window(void) {
-  return (Fl_Window *)window;
+Fl_Window *Fl_Tooltip::current_window(void)
+{
+  return (Fl_Window*)window;
 }
 
 void Fl_TooltipBox::layout() {
@@ -89,26 +90,21 @@ void Fl_TooltipBox::layout() {
 
   // find position on the screen of the widget:
   int ox = Fl::event_x_root();
-  int oy = currentTooltipY + currentTooltipH + 2;
-  for (Fl_Widget *p = Fl_Tooltip::current(); p; p = p->window()) {
+  int oy = currentTooltipY + currentTooltipH+2;
+  for (Fl_Widget* p = Fl_Tooltip::current(); p; p = p->window()) {
     oy += p->y();
   }
   int scr_x, scr_y, scr_w, scr_h;
   Fl::screen_xywh(scr_x, scr_y, scr_w, scr_h);
-  if (ox + ww > scr_x + scr_w)
-    ox = scr_x + scr_w - ww;
-  if (ox < scr_x)
-    ox = scr_x;
+  if (ox+ww > scr_x+scr_w) ox = scr_x+scr_w - ww;
+  if (ox < scr_x) ox = scr_x;
   if (currentTooltipH > 30) {
-    oy = Fl::event_y_root() + 13;
-    if (oy + hh > scr_y + scr_h)
-      oy -= 23 + hh;
+    oy = Fl::event_y_root()+13;
+    if (oy+hh > scr_y+scr_h) oy -= 23+hh;
   } else {
-    if (oy + hh > scr_y + scr_h)
-      oy -= (4 + hh + currentTooltipH);
+    if (oy+hh > scr_y+scr_h) oy -= (4+hh+currentTooltipH);
   }
-  if (oy < scr_y)
-    oy = scr_y;
+  if (oy < scr_y) oy = scr_y;
 
   resize(ox, oy, ww, hh);
 }
@@ -119,14 +115,14 @@ void Fl_TooltipBox::draw() {
   fl_font(Fl_Tooltip::font(), Fl_Tooltip::size());
   int X = Fl_Tooltip::margin_width();
   int Y = Fl_Tooltip::margin_height();
-  int W = w() - (Fl_Tooltip::margin_width() * 2);
-  int H = h() - (Fl_Tooltip::margin_height() * 2);
-  fl_draw(tip, X, Y, W, H, Fl_Align(FL_ALIGN_LEFT | FL_ALIGN_WRAP), 0, Fl_Tooltip::draw_symbols_);
+  int W = w() - (Fl_Tooltip::margin_width()*2);
+  int H = h() - (Fl_Tooltip::margin_height()*2);
+  fl_draw(tip, X, Y, W, H, Fl_Align(FL_ALIGN_LEFT|FL_ALIGN_WRAP), 0, Fl_Tooltip::draw_symbols_);
 }
 
 static char recent_tooltip;
 
-static void recent_timeout(void *) {
+static void recent_timeout(void*) {
 #ifdef DEBUG
   puts("recent_timeout();");
 #endif // DEBUG
@@ -139,43 +135,36 @@ static char recursion;
 // Is top level window iconified?
 static int top_win_iconified_() {
   Fl_Widget *w = Fl_Tooltip::current();
-  if (!w)
-    return 0;
+  if ( !w ) return 0;
   Fl_Window *topwin = w->top_window();
-  if (!topwin)
-    return 0;
+  if ( !topwin ) return 0;
   return !topwin->visible() ? 1 : 0;
 }
 
-static void tooltip_hide_timeout(void *) {
-  if (window)
-    window->hide();
+static void tooltip_hide_timeout(void*) {
+  if (window) window->hide();
   recent_tooltip = 0;
 }
 
-static void tooltip_timeout(void *) {
+static void tooltip_timeout(void*) {
 #ifdef DEBUG
   puts("tooltip_timeout();");
 #endif // DEBUG
 
-  if (recursion)
-    return;
+  if (recursion) return;
   recursion = 1;
-  if (!top_win_iconified_()) { // no tooltip if top win iconified (STR #3157)
+  if (!top_win_iconified_()) {   // no tooltip if top win iconified (STR #3157)
     if (!tip || !*tip) {
-      if (window)
-        window->hide();
+      if (window) window->hide();
       Fl::remove_timeout(tooltip_hide_timeout);
     } else {
       int condition = 1;
-      // bugfix: no need to refactor
-      if (Fl::system_driver()->use_tooltip_timeout_condition())
-        condition = (Fl::grab() == NULL);
-      if (condition) {
-        if (!window)
-          window = new Fl_TooltipBox;
+// bugfix: no need to refactor
+      if (Fl::system_driver()->use_tooltip_timeout_condition()) condition = (Fl::grab() == NULL);
+      if ( condition ) {
+        if (!window) window = new Fl_TooltipBox;
         // this cast bypasses the normal Fl_Window label() code:
-        ((Fl_Widget *)window)->label(tip);
+        ((Fl_Widget *) window)->label(tip);
         window->layout();
         window->redraw();
         // printf("tooltip_timeout: Showing window %p with tooltip \"%s\"...\n",
@@ -200,30 +189,24 @@ static void tooltip_timeout(void *) {
    if you want the tooltip to reappear when the mouse moves back in)
    call the fancier enter_area() below.
 */
-void Fl_Tooltip::enter_(Fl_Widget *w) {
+void Fl_Tooltip::enter_(Fl_Widget* w) {
 #ifdef DEBUG
   printf("Fl_Tooltip::enter_(w=%p)\n", w);
   printf("    window=%p\n", window);
 #endif // DEBUG
-  if (w && w->as_window() && ((Fl_Window *)w)->tooltip_window()) {
+  if (w && w->as_window() && ((Fl_Window*)w)->tooltip_window()) {
     // Fix STR #2650: if there's no better place for a tooltip window, don't move it.
     int oldx = w->x();
     int oldy = w->y();
-    ((Fl_TooltipBox *)w)->layout();
-    if (w->x() == oldx && w->y() == oldy)
-      return;
+    ((Fl_TooltipBox*)w)->layout();
+    if (w->x() == oldx && w->y() == oldy) return;
   }
   // find the enclosing group with a tooltip:
-  Fl_Widget *tw = w;
+  Fl_Widget* tw = w;
   for (;;) {
-    if (!tw) {
-      exit_(0);
-      return;
-    }
-    if (tw == widget_)
-      return;
-    if (tw->tooltip())
-      break;
+    if (!tw) {exit_(0); return;}
+    if (tw == widget_) return;
+    if (tw->tooltip()) break;
     tw = tw->parent();
   }
   enter_area(w, 0, 0, w->w(), w->h(), tw->tooltip());
@@ -235,19 +218,17 @@ void Fl_Tooltip::enter_(Fl_Widget *w) {
      a modal overlapping window is deleted. FLTK does this automatically
      when you click the mouse button.
 */
-void Fl_Tooltip::current(Fl_Widget *w) {
+void Fl_Tooltip::current(Fl_Widget* w) {
 #ifdef DEBUG
   printf("Fl_Tooltip::current(w=%p)\n", w);
 #endif // DEBUG
 
   exit_(0);
   // find the enclosing group with a tooltip:
-  Fl_Widget *tw = w;
+  Fl_Widget* tw = w;
   for (;;) {
-    if (!tw)
-      return;
-    if (tw->tooltip())
-      break;
+    if (!tw) return;
+    if (tw->tooltip()) break;
     tw = tw->parent();
   }
   // act just like Fl_Tooltip::enter_() except we can remember a zero:
@@ -262,8 +243,7 @@ void Fl_Tooltip::exit_(Fl_Widget *w) {
   printf("    widget=%p, window=%p\n", widget_, window);
 #endif // DEBUG
 
-  if (!widget_ || (w && w == window))
-    return;
+  if (!widget_ || (w && w == window)) return;
   widget_ = 0;
   Fl::remove_timeout(tooltip_timeout);
   Fl::remove_timeout(recent_timeout);
@@ -272,10 +252,8 @@ void Fl_Tooltip::exit_(Fl_Widget *w) {
     Fl::remove_timeout(tooltip_hide_timeout);
   }
   if (recent_tooltip) {
-    if (Fl::event_state() & FL_BUTTONS)
-      recent_tooltip = 0;
-    else
-      Fl::add_timeout(Fl_Tooltip::hoverdelay(), recent_timeout);
+    if (Fl::event_state() & FL_BUTTONS) recent_tooltip = 0;
+    else Fl::add_timeout(Fl_Tooltip::hoverdelay(), recent_timeout);
   }
 }
 
@@ -294,32 +272,28 @@ void Fl_Tooltip::exit_(Fl_Widget *w) {
   where to put the tooltip), and the text of the tooltip (which must be
   a pointer to static data as it is not copied).
 */
-void Fl_Tooltip::enter_area(Fl_Widget *wid, int x, int y, int w, int h, const char *t) {
+void Fl_Tooltip::enter_area(Fl_Widget* wid, int x,int y,int w,int h, const char* t)
+{
   (void)x;
   (void)w;
 
 #ifdef DEBUG
-  printf("Fl_Tooltip::enter_area(wid=%p, x=%d, y=%d, w=%d, h=%d, t=\"%s\")\n", wid, x, y, w, h,
-         t ? t : "(null)");
+  printf("Fl_Tooltip::enter_area(wid=%p, x=%d, y=%d, w=%d, h=%d, t=\"%s\")\n",
+         wid, x, y, w, h, t ? t : "(null)");
   printf("    recursion=%d, window=%p\n", recursion, window);
 #endif // DEBUG
 
-  if (recursion)
-    return;
+  if (recursion) return;
   if (!t || !*t || !enabled()) {
     exit_(0);
     return;
   }
   // do nothing if it is the same:
-  if (wid == widget_ /*&& x==X && y==currentTooltipY && w==W && h==currentTooltipH*/ && t == tip)
-    return;
+  if (wid==widget_ /*&& x==X && y==currentTooltipY && w==W && h==currentTooltipH*/ && t==tip) return;
   Fl::remove_timeout(tooltip_timeout);
   Fl::remove_timeout(recent_timeout);
   // remember it:
-  widget_ = wid;
-  currentTooltipY = y;
-  currentTooltipH = h;
-  tip = t;
+  widget_ = wid; currentTooltipY = y; currentTooltipH = h; tip = t;
   // popup the tooltip immediately if it was recently up:
   if (recent_tooltip) {
     if (window) {
@@ -352,9 +326,9 @@ void Fl_Tooltip::enter_area(Fl_Widget *wid, int x, int y, int w, int h, const ch
 void Fl_Tooltip::set_enter_exit_once_() {
   static char beenhere = 0;
   if (!beenhere) {
-    beenhere = 1;
+    beenhere          = 1;
     Fl_Tooltip::enter = Fl_Tooltip::enter_;
-    Fl_Tooltip::exit = Fl_Tooltip::exit_;
+    Fl_Tooltip::exit  = Fl_Tooltip::exit_;
   }
 }
 
@@ -379,10 +353,9 @@ void Fl_Widget::tooltip(const char *text) {
   Fl_Tooltip::set_enter_exit_once_();
   if (flags() & COPIED_TOOLTIP) {
     // reassigning a copied tooltip remains the same copied tooltip
-    if (tooltip_ == text)
-      return;
-    free((void *)(tooltip_));   // free maintained copy
-    clear_flag(COPIED_TOOLTIP); // disable copy flag (WE don't make copies)
+    if (tooltip_ == text) return;
+    free((void*)(tooltip_));            // free maintained copy
+    clear_flag(COPIED_TOOLTIP);         // disable copy flag (WE don't make copies)
   }
   tooltip_ = text;
 }
@@ -404,8 +377,7 @@ void Fl_Widget::tooltip(const char *text) {
 */
 void Fl_Widget::copy_tooltip(const char *text) {
   Fl_Tooltip::set_enter_exit_once_();
-  if (flags() & COPIED_TOOLTIP)
-    free((void *)(tooltip_));
+  if (flags() & COPIED_TOOLTIP) free((void *)(tooltip_));
   if (text) {
     set_flag(COPIED_TOOLTIP);
     tooltip_ = fl_strdup(text);

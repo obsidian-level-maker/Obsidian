@@ -20,7 +20,7 @@
  */
 
 #if 0
-#include <stdio.h> /* for size_t only */
+#include <stdio.h>              /* for size_t only */
 #endif
 
 static int mk_wcwidth(unsigned int ucs);

@@ -21,6 +21,6 @@
 // documentation in FL/platform.H to decide whether you need that file.
 
 #if !defined(Fl_X_H) && !defined(FL_DOXYGEN)
-#define Fl_X_H
-#include <FL/platform.H>
+#  define Fl_X_H
+#  include <FL/platform.H>
 #endif // !Fl_X_H

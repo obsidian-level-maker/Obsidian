@@ -23,10 +23,8 @@
 #include <FL/platform.H>
 
 
-Fl_Wayland_Copy_Surface_Driver::Fl_Wayland_Copy_Surface_Driver(int w, int h)
-  : Fl_Copy_Surface_Driver(w, h) {
-  int os_scale =
-      (Fl_Wayland_Window_Driver::wld_window ? Fl_Wayland_Window_Driver::wld_window->scale : 1);
+Fl_Wayland_Copy_Surface_Driver::Fl_Wayland_Copy_Surface_Driver(int w, int h) : Fl_Copy_Surface_Driver(w, h) {
+  int os_scale = (Fl_Wayland_Window_Driver::wld_window ? Fl_Wayland_Window_Driver::wld_window->scale : 1);
   img_surf = new Fl_Image_Surface(w * os_scale, h * os_scale);
   driver(img_surf->driver());
   driver()->scale(os_scale);
@@ -35,7 +33,7 @@ Fl_Wayland_Copy_Surface_Driver::Fl_Wayland_Copy_Surface_Driver(int w, int h)
 
 Fl_Wayland_Copy_Surface_Driver::~Fl_Wayland_Copy_Surface_Driver() {
   Fl_RGB_Image *rgb = img_surf->image();
-  Fl_Wayland_Screen_Driver *scr_driver = (Fl_Wayland_Screen_Driver *)Fl::screen_driver();
+  Fl_Wayland_Screen_Driver *scr_driver = (Fl_Wayland_Screen_Driver*)Fl::screen_driver();
   scr_driver->copy_image(rgb->array, rgb->data_w(), rgb->data_h());
   delete rgb;
   delete img_surf;
@@ -45,15 +43,15 @@ Fl_Wayland_Copy_Surface_Driver::~Fl_Wayland_Copy_Surface_Driver() {
 
 void Fl_Wayland_Copy_Surface_Driver::set_current() {
   Fl_Surface_Device::set_current();
-  ((Fl_Wayland_Graphics_Driver *)driver())->activate(img_surf->offscreen(), driver()->scale());
+  ((Fl_Wayland_Graphics_Driver*)driver())->set_buffer(img_surf->offscreen());
 }
 
 
 void Fl_Wayland_Copy_Surface_Driver::translate(int x, int y) {
-  ((Fl_Wayland_Graphics_Driver *)driver())->ps_translate(x, y);
+  ((Fl_Wayland_Graphics_Driver*)driver())->ps_translate(x, y);
 }
 
 
 void Fl_Wayland_Copy_Surface_Driver::untranslate() {
-  ((Fl_Wayland_Graphics_Driver *)driver())->ps_untranslate();
+  ((Fl_Wayland_Graphics_Driver*)driver())->ps_untranslate();
 }

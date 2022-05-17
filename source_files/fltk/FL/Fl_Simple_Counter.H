@@ -28,7 +28,7 @@
 */
 class FL_EXPORT Fl_Simple_Counter : public Fl_Counter {
 public:
-  Fl_Simple_Counter(int X, int Y, int W, int H, const char *L = 0);
+  Fl_Simple_Counter(int X,int Y,int W,int H, const char *L = 0);
 };
 
 #endif

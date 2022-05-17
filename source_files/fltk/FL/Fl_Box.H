@@ -32,7 +32,6 @@
 class FL_EXPORT Fl_Box : public Fl_Widget {
 protected:
   void draw();
-
 public:
   /**
     - The first constructor sets box() to FL_NO_BOX, which
@@ -43,7 +42,7 @@ public:
     type.
     <P>The destructor removes the box.
   */
-  Fl_Box(int X, int Y, int W, int H, const char *l = 0);
+  Fl_Box(int X, int Y, int W, int H, const char *l=0);
 
   /**    See Fl_Box::Fl_Box(int x, int y, int w, int h, const char * = 0)   */
   Fl_Box(Fl_Boxtype b, int X, int Y, int W, int H, const char *l);

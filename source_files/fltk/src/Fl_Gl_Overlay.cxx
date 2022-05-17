@@ -54,8 +54,7 @@ void Fl_Gl_Window_Driver::make_overlay(void *&o) {
  immediately after you show() your window.
  */
 void Fl_Gl_Window::redraw_overlay() {
-  if (!shown())
-    return;
+  if (!shown()) return;
   pGlWindowDriver->make_overlay(overlay);
   pGlWindowDriver->redraw_overlay();
 }

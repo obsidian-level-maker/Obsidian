@@ -18,6 +18,7 @@
 #include "Fl_Wayland_Gl_Window_Driver.H"
 
 
-Fl_Gl_Window_Driver *Fl_Gl_Window_Driver::newGlWindowDriver(Fl_Gl_Window *w) {
+Fl_Gl_Window_Driver *Fl_Gl_Window_Driver::newGlWindowDriver(Fl_Gl_Window *w)
+{
   return new Fl_Wayland_Gl_Window_Driver(w);
 }

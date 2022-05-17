@@ -36,32 +36,30 @@ void Fl_Quartz_Graphics_Driver::color(Fl_Color i) {
   uchar r, g, b;
   if (i & 0xFFFFFF00) {
     // translate rgb colors into color index
-    r = i >> 24;
-    g = i >> 16;
-    b = i >> 8;
+    r = i>>24;
+    g = i>>16;
+    b = i>> 8;
   } else {
     // translate index into rgb:
     unsigned c = fl_cmap[i];
-    r = c >> 24;
-    g = c >> 16;
-    b = c >> 8;
+    r = c>>24;
+    g = c>>16;
+    b = c>> 8;
   }
-  if (!gc_)
-    return; // no context yet? We will assign the color later.
-  float fr = r / 255.0f;
-  float fg = g / 255.0f;
-  float fb = b / 255.0f;
+  if (!gc_) return; // no context yet? We will assign the color later.
+  float fr = r/255.0f;
+  float fg = g/255.0f;
+  float fb = b/255.0f;
   CGContextSetRGBFillColor(gc_, fr, fg, fb, 1.0f);
   CGContextSetRGBStrokeColor(gc_, fr, fg, fb, 1.0f);
 }
 
 void Fl_Quartz_Graphics_Driver::color(uchar r, uchar g, uchar b) {
-  Fl_Graphics_Driver::color(fl_rgb_color(r, g, b));
-  float fr = r / 255.0f;
-  float fg = g / 255.0f;
-  float fb = b / 255.0f;
-  if (!gc_)
-    return; // no context yet? We will assign the color later.
+  Fl_Graphics_Driver::color( fl_rgb_color(r, g, b) );
+  float fr = r/255.0f;
+  float fg = g/255.0f;
+  float fb = b/255.0f;
+  if (!gc_) return; // no context yet? We will assign the color later.
   CGContextSetRGBFillColor(gc_, fr, fg, fb, 1.0f);
   CGContextSetRGBStrokeColor(gc_, fr, fg, fb, 1.0f);
 }

@@ -23,7 +23,6 @@
 class Fl_Wayland_Copy_Surface_Driver : public Fl_Copy_Surface_Driver {
   friend class Fl_Copy_Surface_Driver;
   Fl_Image_Surface *img_surf;
-
 protected:
   Fl_Wayland_Copy_Surface_Driver(int w, int h);
   ~Fl_Wayland_Copy_Surface_Driver();

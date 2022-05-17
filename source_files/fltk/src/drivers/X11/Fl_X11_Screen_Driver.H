@@ -30,9 +30,9 @@
 class Fl_Window;
 
 
-class FL_EXPORT Fl_X11_Screen_Driver : public Fl_Screen_Driver {
+class FL_EXPORT Fl_X11_Screen_Driver : public Fl_Screen_Driver
+{
   friend class Fl_Screen_Driver;
-
 protected:
   typedef struct {
     short x_org;
@@ -48,17 +48,17 @@ protected:
   int get_mouse_unscaled(int &xx, int &yy);
 
 public:
-#if USE_XFT              // scaling does not work without Xft
+#if USE_XFT // scaling does not work without Xft
   float current_xft_dpi; // current value of the Xft.dpi X resource
   virtual APP_SCALING_CAPABILITY rescalable() { return PER_SCREEN_APP_SCALING; }
-  virtual float scale(int n) { return screens[n].scale; }
-  virtual void scale(int n, float f) { screens[n].scale = f; }
+  virtual float scale(int n) {return screens[n].scale;}
+  virtual void scale(int n, float f) { screens[n].scale = f;}
   virtual void desktop_scale_factor();
   int screen_num_unscaled(int x, int y);
 #endif
 
   static int ewmh_supported();
-  static void copy_image(const unsigned char *data, int W, int H, int destination);
+  static void copy_image(const unsigned char* data, int W, int H, int destination);
   // --- display management
   virtual void display(const char *disp);
   virtual int visual(int flags);
@@ -70,23 +70,22 @@ public:
   virtual int w();
   virtual int h();
   virtual void screen_xywh(int &X, int &Y, int &W, int &H, int n);
-  virtual void screen_dpi(float &h, float &v, int n = 0);
+  virtual void screen_dpi(float &h, float &v, int n=0);
   virtual void screen_work_area(int &X, int &Y, int &W, int &H, int n);
   // --- audible output
   virtual void beep(int type);
   // --- global events
   virtual void flush();
-  virtual void grab(Fl_Window *win);
+  virtual void grab(Fl_Window* win);
   // --- global colors
-  virtual int parse_color(const char *p, uchar &r, uchar &g, uchar &b);
+  virtual int parse_color(const char* p, uchar& r, uchar& g, uchar& b);
   virtual void get_system_colors();
   virtual const char *get_system_scheme();
   virtual int dnd(int unused);
   virtual int compose(int &del);
   virtual void compose_reset();
   virtual int text_display_can_leak() const;
-  virtual Fl_RGB_Image *read_win_rectangle(int X, int Y, int w, int h, Fl_Window *win,
-                                           bool may_capture_subwins, bool *did_capture_subwins);
+  virtual Fl_RGB_Image *read_win_rectangle(int X, int Y, int w, int h, Fl_Window *win, bool may_capture_subwins, bool *did_capture_subwins);
   virtual int get_mouse(int &x, int &y);
   virtual void enable_im();
   virtual void disable_im();

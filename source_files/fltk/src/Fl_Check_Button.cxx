@@ -47,7 +47,7 @@
   \param[in] L widget label, default is no label
  */
 Fl_Check_Button::Fl_Check_Button(int X, int Y, int W, int H, const char *L)
-  : Fl_Light_Button(X, Y, W, H, L) {
+: Fl_Light_Button(X, Y, W, H, L) {
   box(FL_NO_BOX);
   down_box(FL_DOWN_BOX);
   selection_color(FL_FOREGROUND_COLOR);

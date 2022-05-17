@@ -24,11 +24,11 @@
 
 void Fl_Value_Output::draw() {
   Fl_Boxtype b = box() ? box() : FL_DOWN_BOX;
-  int X = x() + Fl::box_dx(b);
-  int Y = y() + Fl::box_dy(b);
-  int W = w() - Fl::box_dw(b);
-  int H = h() - Fl::box_dh(b);
-  if (damage() & ~FL_DAMAGE_CHILD)
+  int X = x()+Fl::box_dx(b);
+  int Y = y()+Fl::box_dy(b);
+  int W = w()-Fl::box_dw(b);
+  int H = h()-Fl::box_dh(b);
+  if (damage()&~FL_DAMAGE_CHILD)
     draw_box(b, color());
   else {
     fl_color(color());
@@ -38,53 +38,42 @@ void Fl_Value_Output::draw() {
   format(buf);
   fl_color(active_r() ? textcolor() : fl_inactive(textcolor()));
   fl_font(textfont(), textsize());
-  fl_draw(buf, X, Y, W, H, FL_ALIGN_LEFT);
+  fl_draw(buf,X,Y,W,H,FL_ALIGN_LEFT);
 }
 
 int Fl_Value_Output::handle(int event) {
-  if (!step())
-    return 0;
+  if (!step()) return 0;
   double v;
   int delta;
   int mx = Fl::event_x();
   static int ix, drag;
   switch (event) {
-    case FL_PUSH:
-      ix = mx;
-      drag = Fl::event_button();
-      handle_push();
-      return 1;
-    case FL_DRAG:
-      delta = Fl::event_x() - ix;
-      if (delta > 5)
-        delta -= 5;
-      else if (delta < -5)
-        delta += 5;
-      else
-        delta = 0;
-      switch (drag) {
-        case 3:
-          v = increment(previous_value(), delta * 100);
-          break;
-        case 2:
-          v = increment(previous_value(), delta * 10);
-          break;
-        default:
-          v = increment(previous_value(), delta);
-          break;
-      }
-      v = round(v);
-      handle_drag(soft() ? softclamp(v) : clamp(v));
-      ;
-      return 1;
-    case FL_RELEASE:
-      handle_release();
-      return 1;
-    case FL_ENTER:
-    case FL_LEAVE:
-      return 1;
-    default:
-      return 0;
+  case FL_PUSH:
+    ix = mx;
+    drag = Fl::event_button();
+    handle_push();
+    return 1;
+  case FL_DRAG:
+    delta = Fl::event_x()-ix;
+    if (delta > 5) delta -= 5;
+    else if (delta < -5) delta += 5;
+    else delta = 0;
+    switch (drag) {
+    case 3: v = increment(previous_value(),delta*100); break;
+    case 2: v = increment(previous_value(),delta*10); break;
+    default:v = increment(previous_value(),delta); break;
+    }
+    v = round(v);
+    handle_drag(soft()?softclamp(v):clamp(v));;
+    return 1;
+  case FL_RELEASE:
+    handle_release();
+    return 1;
+  case FL_ENTER :
+  case FL_LEAVE :
+    return 1;
+  default:
+    return 0;
   }
 }
 
@@ -93,8 +82,8 @@ int Fl_Value_Output::handle(int event) {
   position, size, and label string. The default boxtype is FL_NO_BOX.
   <P> Inherited destructor destroys the Valuator.
 */
-Fl_Value_Output::Fl_Value_Output(int X, int Y, int W, int H, const char *l)
-  : Fl_Valuator(X, Y, W, H, l) {
+Fl_Value_Output::Fl_Value_Output(int X, int Y, int W, int H,const char *l)
+: Fl_Valuator(X,Y,W,H,l) {
   box(FL_NO_BOX);
   align(FL_ALIGN_LEFT);
   textfont_ = FL_HELVETICA;

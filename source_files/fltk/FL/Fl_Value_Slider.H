@@ -29,28 +29,26 @@
   \image latex  value_slider.png "Fl_Value_Slider" width=4cm
 */
 class FL_EXPORT Fl_Value_Slider : public Fl_Slider {
-  Fl_Font textfont_;
-  Fl_Fontsize textsize_;
-  Fl_Color textcolor_;
-
+    Fl_Font textfont_;
+    Fl_Fontsize textsize_;
+    Fl_Color textcolor_;
 protected:
-  void draw();
-
+    void draw();
 public:
-  int handle(int);
-  Fl_Value_Slider(int x, int y, int w, int h, const char *l = 0);
-  /**    Gets the typeface of the text in the value box.  */
-  Fl_Font textfont() const { return textfont_; }
-  /**    Sets the typeface of the text in the value box.  */
-  void textfont(Fl_Font s) { textfont_ = s; }
-  /**    Gets the size of the text in the value box.  */
-  Fl_Fontsize textsize() const { return textsize_; }
-  /**    Sets the size of the text in the value box.  */
-  void textsize(Fl_Fontsize s) { textsize_ = s; }
-  /**    Gets the color of the text in the value box.  */
-  Fl_Color textcolor() const { return textcolor_; }
-  /**    Sets the color of the text in the value box.  */
-  void textcolor(Fl_Color s) { textcolor_ = s; }
+    int handle(int);
+    Fl_Value_Slider(int x,int y,int w,int h, const char *l = 0);
+    /**    Gets the typeface of the text in the value box.  */
+    Fl_Font textfont() const {return textfont_;}
+    /**    Sets the typeface of the text in the value box.  */
+    void textfont(Fl_Font s) {textfont_ = s;}
+    /**    Gets the size of the text in the value box.  */
+    Fl_Fontsize textsize() const {return textsize_;}
+    /**    Sets the size of the text in the value box.  */
+    void textsize(Fl_Fontsize s) {textsize_ = s;}
+    /**    Gets the color of the text in the value box.  */
+    Fl_Color textcolor() const {return textcolor_;}
+    /**    Sets the color of the text in the value box.  */
+    void textcolor(Fl_Color s) {textcolor_ = s;}
 };
 
 #endif

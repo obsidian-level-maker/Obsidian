@@ -29,6 +29,7 @@
 
  This does nothing on other platforms.
 */
-void Fl::display(const char *d) {
+void Fl::display(const char *d)
+{
   screen_driver()->display(d);
 }

@@ -18,9 +18,9 @@
    Fl_Tiled_Image widget . */
 
 #ifndef Fl_Tiled_Image_H
-#define Fl_Tiled_Image_H
+#  define Fl_Tiled_Image_H
 
-#include "Fl_Image.H"
+#  include "Fl_Image.H"
 
 
 /**
@@ -30,16 +30,20 @@
   color_average(), desaturate(), or inactive() methods.
 */
 class FL_EXPORT Fl_Tiled_Image : public Fl_Image {
-protected:
-  Fl_Image *image_; // The image that is tiled
-  int alloc_image_; // Did we allocate this image?
+  protected:
 
-public:
+  Fl_Image      *image_;                // The image that is tiled
+  int           alloc_image_;           // Did we allocate this image?
+
+  public:
+
   Fl_Tiled_Image(Fl_Image *i, int W = 0, int H = 0);
   virtual ~Fl_Tiled_Image();
 
-  virtual Fl_Image *copy(int W, int H);
-  Fl_Image *copy() { return Fl_Image::copy(); }
+  virtual Fl_Image *copy(int W, int H) const;
+  Fl_Image *copy() const {
+    return Fl_Image::copy();
+  }
   virtual void color_average(Fl_Color c, float i);
   virtual void desaturate();
   virtual void draw(int X, int Y, int W, int H, int cx = 0, int cy = 0);

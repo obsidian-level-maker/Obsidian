@@ -28,9 +28,9 @@
 #include "flstring.h"
 #include <FL/fl_ask.H>
 
-void Fl_Help_Dialog::cb_back__i(Fl_Button *, void *) {
+void Fl_Help_Dialog::cb_back__i(Fl_Button*, void*) {
   if (index_ > 0)
-    index_--;
+    index_ --;
 
   if (index_ == 0)
     back_->deactivate();
@@ -44,13 +44,13 @@ void Fl_Help_Dialog::cb_back__i(Fl_Button *, void *) {
 
   view_->topline(l);
 }
-void Fl_Help_Dialog::cb_back_(Fl_Button *o, void *v) {
-  ((Fl_Help_Dialog *)(o->parent()->parent()->user_data()))->cb_back__i(o, v);
+void Fl_Help_Dialog::cb_back_(Fl_Button* o, void* v) {
+  ((Fl_Help_Dialog*)(o->parent()->parent()->user_data()))->cb_back__i(o,v);
 }
 
-void Fl_Help_Dialog::cb_forward__i(Fl_Button *, void *) {
+void Fl_Help_Dialog::cb_forward__i(Fl_Button*, void*) {
   if (index_ < max_)
-    index_++;
+    index_ ++;
 
   if (index_ >= max_)
     forward_->deactivate();
@@ -64,11 +64,11 @@ void Fl_Help_Dialog::cb_forward__i(Fl_Button *, void *) {
 
   view_->topline(l);
 }
-void Fl_Help_Dialog::cb_forward_(Fl_Button *o, void *v) {
-  ((Fl_Help_Dialog *)(o->parent()->parent()->user_data()))->cb_forward__i(o, v);
+void Fl_Help_Dialog::cb_forward_(Fl_Button* o, void* v) {
+  ((Fl_Help_Dialog*)(o->parent()->parent()->user_data()))->cb_forward__i(o,v);
 }
 
-void Fl_Help_Dialog::cb_smaller__i(Fl_Button *, void *) {
+void Fl_Help_Dialog::cb_smaller__i(Fl_Button*, void*) {
   if (view_->textsize() > 8)
     view_->textsize(view_->textsize() - 2);
 
@@ -76,11 +76,11 @@ void Fl_Help_Dialog::cb_smaller__i(Fl_Button *, void *) {
     smaller_->deactivate();
   larger_->activate();
 }
-void Fl_Help_Dialog::cb_smaller_(Fl_Button *o, void *v) {
-  ((Fl_Help_Dialog *)(o->parent()->parent()->user_data()))->cb_smaller__i(o, v);
+void Fl_Help_Dialog::cb_smaller_(Fl_Button* o, void* v) {
+  ((Fl_Help_Dialog*)(o->parent()->parent()->user_data()))->cb_smaller__i(o,v);
 }
 
-void Fl_Help_Dialog::cb_larger__i(Fl_Button *, void *) {
+void Fl_Help_Dialog::cb_larger__i(Fl_Button*, void*) {
   if (view_->textsize() < 18)
     view_->textsize(view_->textsize() + 2);
 
@@ -88,23 +88,26 @@ void Fl_Help_Dialog::cb_larger__i(Fl_Button *, void *) {
     larger_->deactivate();
   smaller_->activate();
 }
-void Fl_Help_Dialog::cb_larger_(Fl_Button *o, void *v) {
-  ((Fl_Help_Dialog *)(o->parent()->parent()->user_data()))->cb_larger__i(o, v);
+void Fl_Help_Dialog::cb_larger_(Fl_Button* o, void* v) {
+  ((Fl_Help_Dialog*)(o->parent()->parent()->user_data()))->cb_larger__i(o,v);
 }
 
-void Fl_Help_Dialog::cb_find__i(Fl_Input *, void *) {
+void Fl_Help_Dialog::cb_find__i(Fl_Input*, void*) {
   find_pos_ = view_->find(find_->value(), find_pos_);
 }
-void Fl_Help_Dialog::cb_find_(Fl_Input *o, void *v) {
-  ((Fl_Help_Dialog *)(o->parent()->parent()->parent()->user_data()))->cb_find__i(o, v);
+void Fl_Help_Dialog::cb_find_(Fl_Input* o, void* v) {
+  ((Fl_Help_Dialog*)(o->parent()->parent()->parent()->user_data()))->cb_find__i(o,v);
 }
 
-void Fl_Help_Dialog::cb_view__i(Fl_Help_View *, void *) {
-  if (view_->filename()) {
-    if (view_->changed()) {
-      index_++;
+void Fl_Help_Dialog::cb_view__i(Fl_Help_View*, void*) {
+  if (view_->filename())
+  {
+    if (view_->changed())
+    {
+      index_ ++;
 
-      if (index_ >= 100) {
+      if (index_ >= 100)
+      {
         memmove(line_, line_ + 10, sizeof(line_[0]) * 90);
         memmove(file_, file_ + 10, sizeof(file_[0]) * 90);
         index_ -= 10;
@@ -112,7 +115,7 @@ void Fl_Help_Dialog::cb_view__i(Fl_Help_View *, void *) {
 
       max_ = index_;
 
-      strlcpy(file_[index_], view_->filename(), sizeof(file_[0]));
+      strlcpy(file_[index_], view_->filename(),sizeof(file_[0]));
       line_[index_] = view_->topline();
 
       if (index_ > 0)
@@ -122,82 +125,73 @@ void Fl_Help_Dialog::cb_view__i(Fl_Help_View *, void *) {
 
       forward_->deactivate();
       window_->label(view_->title());
-    } else // if ! view_->changed()
+    }
+    else // if ! view_->changed()
     {
       strlcpy(file_[index_], view_->filename(), sizeof(file_[0]));
       line_[index_] = view_->topline();
     }
-  } else {                // if ! view_->filename()
-    index_ = 0;           // hitting an internal page will disable the back/fwd buffer
+  } else { // if ! view_->filename()
+    index_ = 0; // hitting an internal page will disable the back/fwd buffer
     file_[index_][0] = 0; // unnamed internal page
     line_[index_] = view_->topline();
     back_->deactivate();
     forward_->deactivate();
   }
 }
-void Fl_Help_Dialog::cb_view_(Fl_Help_View *o, void *v) {
-  ((Fl_Help_Dialog *)(o->parent()->user_data()))->cb_view__i(o, v);
+void Fl_Help_Dialog::cb_view_(Fl_Help_View* o, void* v) {
+  ((Fl_Help_Dialog*)(o->parent()->user_data()))->cb_view__i(o,v);
 }
 
 Fl_Help_Dialog::Fl_Help_Dialog() {
-  {
-    window_ = new Fl_Double_Window(530, 385, "Help Dialog");
-    window_->user_data((void *)(this));
-    {
-      Fl_Group *o = new Fl_Group(10, 10, 511, 25);
-      {
-        back_ = new Fl_Button(10, 10, 25, 25, "@<-");
+  { window_ = new Fl_Double_Window(530, 385, "Help Dialog");
+    window_->user_data((void*)(this));
+    { Fl_Group* o = new Fl_Group(10, 10, 511, 25);
+      { back_ = new Fl_Button(10, 10, 25, 25, "@<-");
         back_->tooltip("Show the previous help page.");
         back_->shortcut(0xff51);
         back_->labelcolor((Fl_Color)2);
-        back_->callback((Fl_Callback *)cb_back_);
+        back_->callback((Fl_Callback*)cb_back_);
       } // Fl_Button* back_
-      {
-        forward_ = new Fl_Button(45, 10, 25, 25, "@->");
+      { forward_ = new Fl_Button(45, 10, 25, 25, "@->");
         forward_->tooltip("Show the next help page.");
         forward_->shortcut(0xff53);
         forward_->labelcolor((Fl_Color)2);
-        forward_->callback((Fl_Callback *)cb_forward_);
+        forward_->callback((Fl_Callback*)cb_forward_);
       } // Fl_Button* forward_
-      {
-        smaller_ = new Fl_Button(80, 10, 25, 25, "F");
+      { smaller_ = new Fl_Button(80, 10, 25, 25, "F");
         smaller_->tooltip("Make the help text smaller.");
         smaller_->labelfont(1);
         smaller_->labelsize(10);
-        smaller_->callback((Fl_Callback *)cb_smaller_);
+        smaller_->callback((Fl_Callback*)cb_smaller_);
       } // Fl_Button* smaller_
-      {
-        larger_ = new Fl_Button(115, 10, 25, 25, "F");
+      { larger_ = new Fl_Button(115, 10, 25, 25, "F");
         larger_->tooltip("Make the help text larger.");
         larger_->labelfont(1);
         larger_->labelsize(16);
-        larger_->callback((Fl_Callback *)cb_larger_);
+        larger_->callback((Fl_Callback*)cb_larger_);
       } // Fl_Button* larger_
-      {
-        Fl_Group *o = new Fl_Group(350, 10, 171, 25);
+      { Fl_Group* o = new Fl_Group(350, 10, 171, 25);
         o->box(FL_DOWN_BOX);
         o->color(FL_BACKGROUND2_COLOR);
-        {
-          find_ = new Fl_Input(375, 12, 143, 21, "@search");
+        { find_ = new Fl_Input(375, 12, 143, 21, "@search");
           find_->tooltip("find text in document");
           find_->box(FL_FLAT_BOX);
           find_->labelsize(13);
           find_->textfont(4);
-          find_->callback((Fl_Callback *)cb_find_);
+          find_->callback((Fl_Callback*)cb_find_);
           find_->when(FL_WHEN_ENTER_KEY_ALWAYS);
         } // Fl_Input* find_
         o->end();
       } // Fl_Group* o
-      {
-        Fl_Box *o = new Fl_Box(150, 10, 190, 25);
+      { Fl_Box* o = new Fl_Box(150, 10, 190, 25);
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o
       o->end();
     } // Fl_Group* o
-    {
-      view_ = new Fl_Help_View(10, 45, 510, 330);
+    { view_ = new Fl_Help_View(10, 45, 510, 330);
       view_->box(FL_DOWN_BOX);
-      view_->callback((Fl_Callback *)cb_view_);
+      view_->callback((Fl_Callback*)cb_view_);
       Fl_Group::current()->resizable(view_);
     } // Fl_Help_View* view_
     window_->size_range(260, 150);
@@ -206,8 +200,8 @@ Fl_Help_Dialog::Fl_Help_Dialog() {
   back_->deactivate();
   forward_->deactivate();
 
-  index_ = -1;
-  max_ = 0;
+  index_    = -1;
+  max_      = 0;
   find_pos_ = 0;
 
   fl_register_images();
@@ -280,7 +274,7 @@ void Fl_Help_Dialog::value(const char *f) {
   window_->label(view_->title());
 }
 
-const char *Fl_Help_Dialog::value() const {
+const char * Fl_Help_Dialog::value() const {
   return view_->value();
 }
 

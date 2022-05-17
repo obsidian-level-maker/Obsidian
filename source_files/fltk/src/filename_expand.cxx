@@ -39,6 +39,6 @@
     \param[in]  from filename containing shell variables
     \return 0 if no change, non zero otherwise
  */
-int fl_filename_expand(char *to, int tolen, const char *from) {
+int fl_filename_expand(char *to,int tolen, const char *from) {
   return Fl::system_driver()->filename_expand(to, tolen, from);
 }

@@ -38,10 +38,9 @@
 class FL_EXPORT Fl_Roller : public Fl_Valuator {
 protected:
   void draw();
-
 public:
   int handle(int);
-  Fl_Roller(int X, int Y, int W, int H, const char *L = 0);
+  Fl_Roller(int X,int Y,int W,int H,const char* L=0);
 };
 
 #endif

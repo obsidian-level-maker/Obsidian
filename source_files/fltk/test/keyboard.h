@@ -15,17 +15,16 @@
 //
 
 #ifndef keyboard_h
-#define keyboard_h
-#include <stdio.h>
-#include <FL/Fl.H>
-#include <FL/Fl_Window.H>
+#  define keyboard_h
+#  include <stdio.h>
+#  include <FL/Fl.H>
+#  include <FL/Fl_Window.H>
 
 class MyWindow : public Fl_Window {
   int handle(int);
-
 public:
-  MyWindow(int w, int h, const char *t = 0L)
-    : Fl_Window(w, h, t) {}
+  MyWindow(int w, int h, const char *t=0L)
+    : Fl_Window( w, h, t ) { }
 };
 
 #endif // !keyboard_h

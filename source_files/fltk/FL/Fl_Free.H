@@ -24,14 +24,14 @@
 #include "Fl_Widget.H"
 #endif
 
-#define FL_NORMAL_FREE 1     /**< normal event handling */
-#define FL_SLEEPING_FREE 2   /**< deactivate event handling */
-#define FL_INPUT_FREE 3      /**< accepts FL_FOCUS events */
-#define FL_CONTINUOUS_FREE 4 /**< repeated timeout handling */
-#define FL_ALL_FREE 5        /**< FL_INPUT_FREE and FL_CONTINOUS_FREE */
+#define FL_NORMAL_FREE          1 /**< normal event handling */
+#define FL_SLEEPING_FREE        2 /**< deactivate event handling */
+#define FL_INPUT_FREE           3 /**< accepts FL_FOCUS events */
+#define FL_CONTINUOUS_FREE      4 /**< repeated timeout handling */
+#define FL_ALL_FREE             5 /**< FL_INPUT_FREE and FL_CONTINOUS_FREE */
 
 /** appropriate signature for handle function */
-typedef int (*FL_HANDLEPTR)(Fl_Widget *, int, float, float, char);
+typedef int (*FL_HANDLEPTR)(Fl_Widget *, int , float, float, char);
 
 /**
   Emulation of the Forms "free" widget.
@@ -53,24 +53,22 @@ typedef int (*FL_HANDLEPTR)(Fl_Widget *, int, float, float, char);
 
 */
 class FL_EXPORT Fl_Free : public Fl_Widget {
-  FL_HANDLEPTR hfunc;
-  static void step(void *);
-
+    FL_HANDLEPTR hfunc;
+    static void step(void *);
 protected:
-  void draw();
-
+    void draw();
 public:
-  int handle(int e);
-  Fl_Free(uchar t, int X, int Y, int W, int H, const char *L, FL_HANDLEPTR hdl);
+    int handle(int e);
+  Fl_Free(uchar t,int X,int Y,int W,int H,const char *L,FL_HANDLEPTR hdl);
   ~Fl_Free();
 };
 
 // old event names for compatibility:
-#define FL_MOUSE FL_DRAG /**< for backward compatibility */
-#define FL_DRAW 100      /**< for backward compatibility [UNUSED]*/
-#define FL_STEP 101      /**< for backward compatibility */
-#define FL_FREEMEM 102   /**< for backward compatibility [UNUSED]*/
-#define FL_FREEZE 103    /**< for backward compatibility [UNUSED]*/
-#define FL_THAW 104      /**< for backward compatibility [UNUSED]*/
+#define FL_MOUSE        FL_DRAG /**< for backward compatibility */
+#define FL_DRAW         100     /**< for backward compatibility [UNUSED]*/
+#define FL_STEP         101     /**< for backward compatibility */
+#define FL_FREEMEM      102     /**< for backward compatibility [UNUSED]*/
+#define FL_FREEZE       103     /**< for backward compatibility [UNUSED]*/
+#define FL_THAW         104     /**< for backward compatibility [UNUSED]*/
 
 #endif

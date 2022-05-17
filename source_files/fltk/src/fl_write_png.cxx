@@ -73,7 +73,12 @@ extern "C" {
 */
 
 int fl_write_png(const char *filename, Fl_RGB_Image *img) {
-  return fl_write_png(filename, img->data()[0], img->data_w(), img->data_h(), img->d(), img->ld());
+  return fl_write_png(filename,
+                      img->data()[0],
+                      img->data_w(),
+                      img->data_h(),
+                      img->d(),
+                      img->ld());
 }
 
 /**
@@ -124,20 +129,11 @@ int fl_write_png(const char *filename, const char *pixels, int w, int h, int d, 
   }
 
   switch (d) {
-    case 1:
-      color_type = PNG_COLOR_TYPE_GRAY;
-      break;
-    case 2:
-      color_type = PNG_COLOR_TYPE_GRAY_ALPHA;
-      break;
-    case 3:
-      color_type = PNG_COLOR_TYPE_RGB;
-      break;
-    case 4:
-      color_type = PNG_COLOR_TYPE_RGB_ALPHA;
-      break;
-    default:
-      color_type = PNG_COLOR_TYPE_RGB;
+    case 1:  color_type = PNG_COLOR_TYPE_GRAY;        break;
+    case 2:  color_type = PNG_COLOR_TYPE_GRAY_ALPHA;  break;
+    case 3:  color_type = PNG_COLOR_TYPE_RGB;         break;
+    case 4:  color_type = PNG_COLOR_TYPE_RGB_ALPHA;   break;
+    default: color_type = PNG_COLOR_TYPE_RGB;
   }
 
   if (ld == 0)
@@ -148,7 +144,10 @@ int fl_write_png(const char *filename, const char *pixels, int w, int h, int d, 
   png_bytep ptr = (png_bytep)pixels;
 
   png_init_io(pptr, fp);
-  png_set_IHDR(pptr, iptr, w, h, 8, color_type, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
+  png_set_IHDR(pptr, iptr, w, h, 8,
+               color_type,
+               PNG_INTERLACE_NONE,
+               PNG_COMPRESSION_TYPE_DEFAULT,
                PNG_FILTER_TYPE_DEFAULT);
   png_set_sRGB(pptr, iptr, PNG_sRGB_INTENT_PERCEPTUAL);
 

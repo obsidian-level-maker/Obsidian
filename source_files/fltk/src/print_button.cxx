@@ -59,8 +59,8 @@
 
 // Global variables to simplify and clarify the code:
 
-static Fl_Window *print_window = 0;      // "print front window" dialog window
-static Fl_Check_Button *deco_button = 0; // window decoration button
+static Fl_Window *print_window = 0;       // "print front window" dialog window
+static Fl_Check_Button *deco_button = 0;  // window decoration button
 
 // The button callback does the job for both printing and copying to the
 // clipboard. The callback is called with 'mode' == (int)(data).
@@ -76,8 +76,7 @@ static void output_cb(Fl_Widget * /*unused*/, void *data) {
   // if no (other) window exists we return silently w/o showing the
   // print window again (which ends the program)
 
-  if (!win)
-    return;
+  if (!win) return;
   fl_print_or_copy_window(win, deco_button->value(), fl_int(data));
   print_window->show();
 }
@@ -93,8 +92,10 @@ static int shortcut_handler(int event) { // global shortcut handler
   const int key = 's';                 // global shortcut key
   const int state = FL_ALT | FL_SHIFT; //  | FL_CTRL | FL_COMMAND;
 
-  if (print_window && (event == FL_SHORTCUT || event == FL_KEYBOARD) &&
-      ((Fl::event_state() & state) == state) && (Fl::event_key() == key)) {
+  if (print_window &&
+      (event == FL_SHORTCUT || event == FL_KEYBOARD) &&
+      ((Fl::event_state() & state) == state) &&
+      (Fl::event_key() == key)) {
     print_window->show();
     return 1;
   }
@@ -116,10 +117,10 @@ int fl_create_print_window() {
     // prevent becoming a subwindow
     Fl_Group *cg = Fl_Group::current();
     Fl_Group::current(0);
-    print_window = new Fl_Window(0, 0, 200, 110, "FLTK screenshot");
-    Fl_Button *bp = new Fl_Button(10, 10, 180, 30, "Print front window");
-    Fl_Button *bc = new Fl_Button(10, 40, 180, 30, "Copy front window");
-    deco_button = new Fl_Check_Button(10, 70, 180, 30, "Window decoration");
+    print_window  =     new Fl_Window( 0,  0, 200, 110, "FLTK screenshot");
+    Fl_Button *bp =     new Fl_Button(10, 10, 180,  30, "Print front window");
+    Fl_Button *bc =     new Fl_Button(10, 40, 180,  30, "Copy front window");
+    deco_button = new Fl_Check_Button(10, 70, 180,  30, "Window decoration");
     bp->callback(output_cb, (void *)1);
     bc->callback(output_cb, (void *)2);
     print_window->end();
@@ -151,8 +152,7 @@ int fl_create_print_window() {
 */
 int fl_print_or_copy_window(Fl_Window *win, bool grab_decoration, int mode) {
 
-  if (!win)
-    return 0;
+  if (!win) return 0;
 
   int ww = grab_decoration ? win->decorated_w() : win->w();
   int wh = grab_decoration ? win->decorated_h() : win->h();
@@ -161,7 +161,7 @@ int fl_print_or_copy_window(Fl_Window *win, bool grab_decoration, int mode) {
 
     // exchange the 2 constructors below to test class Fl_PostScript_File_Device
     Fl_Printer printer;
-    // Fl_PostScript_File_Device printer;
+    //Fl_PostScript_File_Device printer;
     int w, h;
     if (printer.begin_job(1)) { // fail or cancel
       return 1;
@@ -187,10 +187,8 @@ int fl_print_or_copy_window(Fl_Window *win, bool grab_decoration, int mode) {
     printer.print_widget(win, -win->w() / 2, -win->h() / 2);
 #else
     printer.origin(w / 2, h / 2);
-    if (grab_decoration)
-      printer.draw_decorated_window(win, -ww / 2, -wh / 2);
-    else
-      printer.draw(win, -ww / 2, -wh / 2);
+    if (grab_decoration) printer.draw_decorated_window(win, -ww / 2, -wh / 2);
+    else printer.draw(win, -ww / 2, -wh / 2);
 #endif
     printer.end_page();
     printer.end_job();

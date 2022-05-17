@@ -38,11 +38,10 @@ void Fl_Quartz_Graphics_Driver::end_line() {
     end_points();
     return;
   }
-  if (n <= 1)
-    return;
+  if (n<=1) return;
   CGContextSetShouldAntialias(gc_, true);
   CGContextMoveToPoint(gc_, xpoint[0].x, xpoint[0].y);
-  for (int i = 1; i < n; i++)
+  for (int i=1; i<n; i++)
     CGContextAddLineToPoint(gc_, xpoint[i].x, xpoint[i].y);
   CGContextStrokePath(gc_);
   CGContextSetShouldAntialias(gc_, false);
@@ -54,11 +53,10 @@ void Fl_Quartz_Graphics_Driver::end_polygon() {
     end_line();
     return;
   }
-  if (n <= 1)
-    return;
+  if (n<=1) return;
   CGContextSetShouldAntialias(gc_, true);
   CGContextMoveToPoint(gc_, xpoint[0].x, xpoint[0].y);
-  for (int i = 1; i < n; i++)
+  for (int i=1; i<n; i++)
     CGContextAddLineToPoint(gc_, xpoint[i].x, xpoint[i].y);
   CGContextClosePath(gc_);
   CGContextFillPath(gc_);
@@ -71,31 +69,30 @@ void Fl_Quartz_Graphics_Driver::end_complex_polygon() {
     end_line();
     return;
   }
-  if (n <= 1)
-    return;
+  if (n<=1) return;
   CGContextSetShouldAntialias(gc_, true);
   CGContextMoveToPoint(gc_, xpoint[0].x, xpoint[0].y);
-  for (int i = 1; i < n; i++)
+  for (int i=1; i<n; i++)
     CGContextAddLineToPoint(gc_, xpoint[i].x, xpoint[i].y);
   CGContextClosePath(gc_);
   CGContextFillPath(gc_);
   CGContextSetShouldAntialias(gc_, false);
 }
 
-void Fl_Quartz_Graphics_Driver::circle(double x, double y, double r) {
-  double xt = transform_x(x, y);
-  double yt = transform_y(x, y);
-  double rx = r * (m.c ? sqrt(m.a * m.a + m.c * m.c) : fabs(m.a));
-  double ry = r * (m.b ? sqrt(m.b * m.b + m.d * m.d) : fabs(m.d));
-  int llx = (int)rint(xt - rx);
-  int w = (int)rint(xt + rx) - llx;
-  int lly = (int)rint(yt - ry);
-  int h = (int)rint(yt + ry) - lly;
+void Fl_Quartz_Graphics_Driver::circle(double x, double y,double r) {
+  double xt = transform_x(x,y);
+  double yt = transform_y(x,y);
+  double rx = r * (m.c ? sqrt(m.a*m.a+m.c*m.c) : fabs(m.a));
+  double ry = r * (m.b ? sqrt(m.b*m.b+m.d*m.d) : fabs(m.d));
+  int llx = (int)rint(xt-rx);
+  int w = (int)rint(xt+rx)-llx;
+  int lly = (int)rint(yt-ry);
+  int h = (int)rint(yt+ry)-lly;
 
   // Quartz warning: circle won't scale to current matrix!
   // Last argument must be 0 (counter-clockwise) or it draws nothing under __LP64__ !!!!
   CGContextSetShouldAntialias(gc_, true);
-  CGContextAddArc(gc_, xt, yt, (w + h) * 0.25f, 0, 2.0f * M_PI, 0);
+  CGContextAddArc(gc_, xt, yt, (w+h)*0.25f, 0, 2.0f*M_PI, 0);
   (what == POLYGON ? CGContextFillPath : CGContextStrokePath)(gc_);
   CGContextSetShouldAntialias(gc_, false);
 }

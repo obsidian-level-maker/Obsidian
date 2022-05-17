@@ -70,13 +70,9 @@ double read_version;
  \return 1 if successful. 0 if the operation failed
  */
 static int open_write(const char *s) {
-  if (!s) {
-    fout = stdout;
-    return 1;
-  }
-  FILE *f = fl_fopen(s, "w");
-  if (!f)
-    return 0;
+  if (!s) {fout = stdout; return 1;}
+  FILE *f = fl_fopen(s,"w");
+  if (!f) return 0;
   fout = f;
   return 1;
 }
@@ -98,47 +94,33 @@ static int close_write() {
  Write a string to the .fl file, quoting characters if necessary.
  */
 void write_word(const char *w) {
-  if (needspace)
-    putc(' ', fout);
+  if (needspace) putc(' ', fout);
   needspace = 1;
-  if (!w || !*w) {
-    fprintf(fout, "{}");
-    return;
-  }
+  if (!w || !*w) {fprintf(fout,"{}"); return;}
   const char *p;
   // see if it is a single word:
-  for (p = w; is_id(*p); p++)
-    ;
-  if (!*p) {
-    fprintf(fout, "%s", w);
-    return;
-  }
+  for (p = w; is_id(*p); p++) ;
+  if (!*p) {fprintf(fout,"%s",w); return;}
   // see if there are matching braces:
   int n = 0;
   for (p = w; *p; p++) {
-    if (*p == '{')
-      n++;
-    else if (*p == '}') {
-      n--;
-      if (n < 0)
-        break;
-    }
+    if (*p == '{') n++;
+    else if (*p == '}') {n--; if (n<0) break;}
   }
   int mismatched = (n != 0);
   // write out brace-quoted string:
   putc('{', fout);
   for (; *w; w++) {
     switch (*w) {
-      case '{':
-      case '}':
-        if (!mismatched)
-          break;
-      case '\\':
-      case '#':
-        putc('\\', fout);
-        break;
+    case '{':
+    case '}':
+      if (!mismatched) break;
+    case '\\':
+    case '#':
+      putc('\\',fout);
+      break;
     }
-    putc(*w, fout);
+    putc(*w,fout);
   }
   putc('}', fout);
 }
@@ -151,22 +133,18 @@ void write_word(const char *w) {
 void write_string(const char *format, ...) {
   va_list args;
   va_start(args, format);
-  if (needspace && *format != '\n')
-    fputc(' ', fout);
+  if (needspace && *format != '\n') fputc(' ',fout);
   vfprintf(fout, format, args);
   va_end(args);
-  needspace = !isspace(format[strlen(format) - 1] & 255);
+  needspace = !isspace(format[strlen(format)-1] & 255);
 }
 
 /**
  Start a new line in the .fl file and indent it for a given nesting level.
  */
 void write_indent(int n) {
-  fputc('\n', fout);
-  while (n--) {
-    fputc(' ', fout);
-    fputc(' ', fout);
-  }
+  fputc('\n',fout);
+  while (n--) {fputc(' ',fout); fputc(' ',fout);}
   needspace = 0;
 }
 
@@ -174,9 +152,8 @@ void write_indent(int n) {
  Write a '{' to the .fl file at the given indenting level.
  */
 void write_open(int) {
-  if (needspace)
-    fputc(' ', fout);
-  fputc('{', fout);
+  if (needspace) fputc(' ',fout);
+  fputc('{',fout);
   needspace = 0;
 }
 
@@ -184,9 +161,8 @@ void write_open(int) {
  Write a '}' to the .fl file at the given indenting level.
  */
 void write_close(int n) {
-  if (needspace)
-    write_indent(n);
-  fputc('}', fout);
+  if (needspace) write_indent(n);
+  fputc('}',fout);
   needspace = 1;
 }
 
@@ -201,14 +177,9 @@ void write_close(int n) {
  */
 static int open_read(const char *s) {
   lineno = 1;
-  if (!s) {
-    fin = stdin;
-    fname = "stdin";
-    return 1;
-  }
-  FILE *f = fl_fopen(s, "r");
-  if (!f)
-    return 0;
+  if (!s) {fin = stdin; fname = "stdin"; return 1;}
+  FILE *f = fl_fopen(s,"r");
+  if (!f) return 0;
   fin = f;
   fname = s;
   return 1;
@@ -252,12 +223,9 @@ void read_error(const char *format, ...) {
  Convert a single ASCII char, assumed to be a hex digit, into its decimal value.
  */
 static int hexdigit(int x) {
-  if (isdigit(x))
-    return x - '0';
-  if (isupper(x))
-    return x - 'A' + 10;
-  if (islower(x))
-    return x - 'a' + 10;
+  if (isdigit(x)) return x-'0';
+  if (isupper(x)) return x-'A'+10;
+  if (islower(x)) return x-'a'+10;
   return 20;
 }
 
@@ -266,53 +234,37 @@ static int hexdigit(int x) {
  Conversion includes the common C style \\ characters like \\n, \\x## hex
  values, and \\o### octal values.
  */
-static int read_quoted() { // read whatever character is after a \ .
-  int c, d, x;
-  switch (c = fgetc(fin)) {
-    case '\n':
-      lineno++;
-      return -1;
-    case 'a':
-      return ('\a');
-    case 'b':
-      return ('\b');
-    case 'f':
-      return ('\f');
-    case 'n':
-      return ('\n');
-    case 'r':
-      return ('\r');
-    case 't':
-      return ('\t');
-    case 'v':
-      return ('\v');
-    case 'x': /* read hex */
-      for (c = x = 0; x < 3; x++) {
-        int ch = fgetc(fin);
-        d = hexdigit(ch);
-        if (d > 15) {
-          ungetc(ch, fin);
-          break;
-        }
-        c = (c << 4) + d;
-      }
-      break;
-    default: /* read octal */
-      if (c < '0' || c > '7')
-        break;
-      c -= '0';
-      for (x = 0; x < 2; x++) {
-        int ch = fgetc(fin);
-        d = hexdigit(ch);
-        if (d > 7) {
-          ungetc(ch, fin);
-          break;
-        }
-        c = (c << 3) + d;
-      }
-      break;
+static int read_quoted() {      // read whatever character is after a \ .
+  int c,d,x;
+  switch(c = fgetc(fin)) {
+  case '\n': lineno++; return -1;
+  case 'a' : return('\a');
+  case 'b' : return('\b');
+  case 'f' : return('\f');
+  case 'n' : return('\n');
+  case 'r' : return('\r');
+  case 't' : return('\t');
+  case 'v' : return('\v');
+  case 'x' :    /* read hex */
+    for (c=x=0; x<3; x++) {
+      int ch = fgetc(fin);
+      d = hexdigit(ch);
+      if (d > 15) {ungetc(ch,fin); break;}
+      c = (c<<4)+d;
+    }
+    break;
+  default:              /* read octal */
+    if (c<'0' || c>'7') break;
+    c -= '0';
+    for (x=0; x<2; x++) {
+      int ch = fgetc(fin);
+      d = hexdigit(ch);
+      if (d>7) {ungetc(ch,fin); break;}
+      c = (c<<3)+d;
+    }
+    break;
   }
-  return (c);
+  return(c);
 }
 
 static char *buffer;
@@ -325,13 +277,12 @@ static int buflen;
 static void expand_buffer(int length) {
   if (length >= buflen) {
     if (!buflen) {
-      buflen = length + 1;
-      buffer = (char *)malloc(buflen);
+      buflen = length+1;
+      buffer = (char*)malloc(buflen);
     } else {
-      buflen = 2 * buflen;
-      if (length >= buflen)
-        buflen = length + 1;
-      buffer = (char *)realloc((void *)buffer, buflen);
+      buflen = 2*buflen;
+      if (length >= buflen) buflen = length+1;
+      buffer = (char *)realloc((void *)buffer,buflen);
     }
   }
 }
@@ -353,12 +304,10 @@ const char *read_word(int wantbrace) {
   // skip all the whitespace before it:
   for (;;) {
     x = getc(fin);
-    if (x < 0 && feof(fin)) { // eof
+    if (x < 0 && feof(fin)) {   // eof
       return 0;
-    } else if (x == '#') { // comment
-      do
-        x = getc(fin);
-      while (x >= 0 && x != '\n');
+    } else if (x == '#') {      // comment
+      do x = getc(fin); while (x >= 0 && x != '\n');
       lineno++;
       continue;
     } else if (x == '\n') {
@@ -377,27 +326,15 @@ const char *read_word(int wantbrace) {
     int nesting = 0;
     for (;;) {
       x = getc(fin);
-      if (x < 0) {
-        read_error("Missing '}'");
-        break;
-      } else if (x == '#') { // embedded comment
-        do
-          x = getc(fin);
-        while (x >= 0 && x != '\n');
+      if (x<0) {read_error("Missing '}'"); break;}
+      else if (x == '#') { // embedded comment
+        do x = getc(fin); while (x >= 0 && x != '\n');
         lineno++;
         continue;
-      } else if (x == '\n')
-        lineno++;
-      else if (x == '\\') {
-        x = read_quoted();
-        if (x < 0)
-          continue;
-      } else if (x == '{')
-        nesting++;
-      else if (x == '}') {
-        if (!nesting--)
-          break;
-      }
+      } else if (x == '\n') lineno++;
+      else if (x == '\\') {x = read_quoted(); if (x<0) continue;}
+      else if (x == '{') nesting++;
+      else if (x == '}') {if (!nesting--) break;}
       buffer[length++] = x;
       expand_buffer(length);
     }
@@ -415,12 +352,8 @@ const char *read_word(int wantbrace) {
     // read in an unquoted word:
     int length = 0;
     for (;;) {
-      if (x == '\\') {
-        x = read_quoted();
-        if (x < 0)
-          continue;
-      } else if (x < 0 || isspace(x & 255) || x == '{' || x == '}' || x == '#')
-        break;
+      if (x == '\\') {x = read_quoted(); if (x<0) continue;}
+      else if (x<0 || isspace(x & 255) || x=='{' || x=='}' || x=='#') break;
       buffer[length++] = x;
       expand_buffer(length);
       x = getc(fin);
@@ -428,6 +361,7 @@ const char *read_word(int wantbrace) {
     ungetc(x, fin);
     buffer[length] = 0;
     return buffer;
+
   }
 }
 
@@ -440,14 +374,12 @@ const char *read_word(int wantbrace) {
     is used to implement copy and paste.
  */
 int write_file(const char *filename, int selected_only) {
-  if (!open_write(filename))
-    return 0;
+  if (!open_write(filename)) return 0;
   write_string("# data file for the Fltk User Interface Designer (fluid)\n"
-               "version %.4f",
-               FL_VERSION);
-  if (!include_H_from_C)
+               "version %.4f",FL_VERSION);
+  if(!include_H_from_C)
     write_string("\ndo_not_include_H_from_C");
-  if (use_FL_COMMAND)
+  if(use_FL_COMMAND)
     write_string("\nuse_FL_COMMAND");
   if (utf8_in_src)
     write_string("\nutf8_in_src");
@@ -455,33 +387,26 @@ int write_file(const char *filename, int selected_only) {
     write_string("\navoid_early_includes");
   if (i18n_type) {
     write_string("\ni18n_type %d", i18n_type);
-    write_string("\ni18n_include");
-    write_word(i18n_include);
-    write_string("\ni18n_conditional");
-    write_word(i18n_conditional);
+    write_string("\ni18n_include"); write_word(i18n_include);
+    write_string("\ni18n_conditional"); write_word(i18n_conditional);
     switch (i18n_type) {
-      case 1: /* GNU gettext */
-        write_string("\ni18n_function");
-        write_word(i18n_function);
-        write_string("\ni18n_static_function");
-        write_word(i18n_static_function);
+    case 1 : /* GNU gettext */
+        write_string("\ni18n_function"); write_word(i18n_function);
+        write_string("\ni18n_static_function"); write_word(i18n_static_function);
         break;
-      case 2: /* POSIX catgets */
+    case 2 : /* POSIX catgets */
         if (i18n_file[0]) {
           write_string("\ni18n_file");
           write_word(i18n_file);
         }
-        write_string("\ni18n_set");
-        write_word(i18n_set);
+        write_string("\ni18n_set"); write_word(i18n_set);
         break;
     }
   }
 
   if (!selected_only) {
-    write_string("\nheader_name");
-    write_word(header_file_name);
-    write_string("\ncode_name");
-    write_word(code_file_name);
+    write_string("\nheader_name"); write_word(header_file_name);
+    write_string("\ncode_name"); write_word(code_file_name);
 
 #if 0
     // https://github.com/fltk/fltk/issues/328
@@ -507,8 +432,7 @@ int write_file(const char *filename, int selected_only) {
       p->write();
       write_string("\n");
       int q = p->level;
-      for (p = p->next; p && p->level > q; p = p->next) { /*empty*/
-      }
+      for (p = p->next; p && p->level > q; p = p->next) {/*empty*/}
     } else {
       p = p->next;
     }
@@ -530,41 +454,39 @@ int write_file(const char *filename, int selected_only) {
  \param[in] skip_options this is set if the options were already found in
     a previous call, and there is no need to waste time searchingg for them.
  */
-static void read_children(Fl_Type *p, int paste, Strategy strategy, char skip_options = 0) {
+static void read_children(Fl_Type *p, int paste, Strategy strategy, char skip_options=0) {
   Fl_Type::current = p;
   for (;;) {
     const char *c = read_word();
   REUSE_C:
     if (!c) {
-      if (p && !paste)
-        read_error("Missing '}'");
+      if (p && !paste) read_error("Missing '}'");
       break;
     }
 
-    if (!strcmp(c, "}")) {
-      if (!p)
-        read_error("Unexpected '}'");
+    if (!strcmp(c,"}")) {
+      if (!p) read_error("Unexpected '}'");
       break;
     }
 
     // Make sure that we don;t go through the list of options for child nodes
     if (!skip_options) {
       // this is the first word in a .fd file:
-      if (!strcmp(c, "Magic:")) {
+      if (!strcmp(c,"Magic:")) {
         read_fdesign();
         return;
       }
 
-      if (!strcmp(c, "version")) {
+      if (!strcmp(c,"version")) {
         c = read_word();
-        read_version = strtod(c, 0);
-        if (read_version <= 0 || read_version > double(FL_VERSION + 0.00001))
-          read_error("unknown version '%s'", c);
+        read_version = strtod(c,0);
+        if (read_version<=0 || read_version>double(FL_VERSION+0.00001))
+          read_error("unknown version '%s'",c);
         continue;
       }
 
       // back compatibility with Vincent Penne's original class code:
-      if (!p && !strcmp(c, "define_in_struct")) {
+      if (!p && !strcmp(c,"define_in_struct")) {
         Fl_Type *t = add_new_widget_from_file("class", kAddAsLastChild);
         t->name(read_word());
         Fl_Type::current = p = t;
@@ -572,67 +494,64 @@ static void read_children(Fl_Type *p, int paste, Strategy strategy, char skip_op
         continue;
       }
 
-      if (!strcmp(c, "do_not_include_H_from_C")) {
-        include_H_from_C = 0;
+      if (!strcmp(c,"do_not_include_H_from_C")) {
+        include_H_from_C=0;
         goto CONTINUE;
       }
-      if (!strcmp(c, "use_FL_COMMAND")) {
-        use_FL_COMMAND = 1;
+      if (!strcmp(c,"use_FL_COMMAND")) {
+        use_FL_COMMAND=1;
         goto CONTINUE;
       }
-      if (!strcmp(c, "utf8_in_src")) {
-        utf8_in_src = 1;
+      if (!strcmp(c,"utf8_in_src")) {
+        utf8_in_src=1;
         goto CONTINUE;
       }
-      if (!strcmp(c, "avoid_early_includes")) {
-        avoid_early_includes = 1;
+      if (!strcmp(c,"avoid_early_includes")) {
+        avoid_early_includes=1;
         goto CONTINUE;
       }
-      if (!strcmp(c, "i18n_type")) {
+      if (!strcmp(c,"i18n_type")) {
         i18n_type = atoi(read_word());
         goto CONTINUE;
       }
-      if (!strcmp(c, "i18n_function")) {
+      if (!strcmp(c,"i18n_function")) {
         i18n_function = fl_strdup(read_word());
         goto CONTINUE;
       }
-      if (!strcmp(c, "i18n_static_function")) {
+      if (!strcmp(c,"i18n_static_function")) {
         i18n_static_function = fl_strdup(read_word());
         goto CONTINUE;
       }
-      if (!strcmp(c, "i18n_file")) {
+      if (!strcmp(c,"i18n_file")) {
         i18n_file = fl_strdup(read_word());
         goto CONTINUE;
       }
-      if (!strcmp(c, "i18n_set")) {
+      if (!strcmp(c,"i18n_set")) {
         i18n_set = fl_strdup(read_word());
         goto CONTINUE;
       }
-      if (!strcmp(c, "i18n_include")) {
+      if (!strcmp(c,"i18n_include")) {
         i18n_include = fl_strdup(read_word());
         goto CONTINUE;
       }
-      if (!strcmp(c, "i18n_conditional")) {
+      if (!strcmp(c,"i18n_conditional")) {
         i18n_conditional = fl_strdup(read_word());
         goto CONTINUE;
       }
-      if (!strcmp(c, "i18n_type")) {
+      if (!strcmp(c,"i18n_type"))
+      {
         i18n_type = atoi(read_word());
         goto CONTINUE;
       }
-      if (!strcmp(c, "header_name")) {
-        if (!header_file_set)
-          header_file_name = fl_strdup(read_word());
-        else
-          read_word();
+      if (!strcmp(c,"header_name")) {
+        if (!header_file_set) header_file_name = fl_strdup(read_word());
+        else read_word();
         goto CONTINUE;
       }
 
-      if (!strcmp(c, "code_name")) {
-        if (!code_file_set)
-          code_file_name = fl_strdup(read_word());
-        else
-          read_word();
+      if (!strcmp(c,"code_name")) {
+        if (!code_file_set) code_file_name = fl_strdup(read_word());
+        else read_word();
         goto CONTINUE;
       }
 
@@ -642,28 +561,28 @@ static void read_children(Fl_Type *p, int paste, Strategy strategy, char skip_op
         goto CONTINUE;
       }
 
-      if (strcmp(c, "win_shell_cmd") == 0) {
+      if (strcmp(c, "win_shell_cmd")==0) {
         if (shell_settings_windows.command)
-          free((void *)shell_settings_windows.command);
+          free((void*)shell_settings_windows.command);
         shell_settings_windows.command = fl_strdup(read_word());
         goto CONTINUE;
-      } else if (strcmp(c, "win_shell_flags") == 0) {
+      } else if (strcmp(c, "win_shell_flags")==0) {
         shell_settings_windows.flags = atoi(read_word());
         goto CONTINUE;
-      } else if (strcmp(c, "linux_shell_cmd") == 0) {
+      } else if (strcmp(c, "linux_shell_cmd")==0) {
         if (shell_settings_linux.command)
-          free((void *)shell_settings_linux.command);
+          free((void*)shell_settings_linux.command);
         shell_settings_linux.command = fl_strdup(read_word());
         goto CONTINUE;
-      } else if (strcmp(c, "linux_shell_flags") == 0) {
+      } else if (strcmp(c, "linux_shell_flags")==0) {
         shell_settings_linux.flags = atoi(read_word());
         goto CONTINUE;
-      } else if (strcmp(c, "mac_shell_cmd") == 0) {
+      } else if (strcmp(c, "mac_shell_cmd")==0) {
         if (shell_settings_macos.command)
-          free((void *)shell_settings_macos.command);
+          free((void*)shell_settings_macos.command);
         shell_settings_macos.command = fl_strdup(read_word());
         goto CONTINUE;
-      } else if (strcmp(c, "mac_shell_flags") == 0) {
+      } else if (strcmp(c, "mac_shell_flags")==0) {
         shell_settings_macos.flags = atoi(read_word());
         goto CONTINUE;
       }
@@ -680,30 +599,28 @@ static void read_children(Fl_Type *p, int paste, Strategy strategy, char skip_op
       t->name(read_word());
 
       c = read_word(1);
-      if (strcmp(c, "{") && t->is_class()) { // <prefix> <name>
-        ((Fl_Class_Type *)t)->prefix(t->name());
+      if (strcmp(c,"{") && t->is_class()) {   // <prefix> <name>
+        ((Fl_Class_Type*)t)->prefix(t->name());
         t->name(c);
         c = read_word(1);
       }
 
-      if (strcmp(c, "{")) {
-        read_error("Missing property list for %s\n", t->title());
+      if (strcmp(c,"{")) {
+        read_error("Missing property list for %s\n",t->title());
         goto REUSE_C;
       }
 
       t->open_ = 0;
       for (;;) {
         const char *cc = read_word();
-        if (!cc || !strcmp(cc, "}"))
-          break;
+        if (!cc || !strcmp(cc,"}")) break;
         t->read_property(cc);
       }
 
-      if (!t->is_parent())
-        continue;
+      if (!t->is_parent()) continue;
       c = read_word(1);
-      if (strcmp(c, "{")) {
-        read_error("Missing child list for %s\n", t->title());
+      if (strcmp(c,"{")) {
+        read_error("Missing child list for %s\n",t->title());
         goto REUSE_C;
       }
       read_children(t, 0, strategy, skip_options);
@@ -737,7 +654,7 @@ int read_file(const char *filename, int merge, Strategy strategy) {
   // Force menu items to be rebuilt...
   for (o = Fl_Type::first; o; o = o->next)
     if (o->is_menu_button())
-      o->add_child(0, 0);
+      o->add_child(0,0);
   for (o = Fl_Type::first; o; o = o->next)
     if (o->selected) {
       Fl_Type::current = o;
@@ -751,110 +668,73 @@ int read_file(const char *filename, int merge, Strategy strategy) {
 ////////////////////////////////////////////////////////////////
 // Read Forms and XForms fdesign files:
 
-static int read_fdesign_line(const char *&name, const char *&value) {
+static int read_fdesign_line(const char*& name, const char*& value) {
   int length = 0;
   int x;
   // find a colon:
   for (;;) {
     x = getc(fin);
-    if (x < 0 && feof(fin))
-      return 0;
-    if (x == '\n') {
-      length = 0;
-      continue;
-    } // no colon this line...
+    if (x < 0 && feof(fin)) return 0;
+    if (x == '\n') {length = 0; continue;} // no colon this line...
     if (!isspace(x & 255)) {
       buffer[length++] = x;
       expand_buffer(length);
     }
-    if (x == ':')
-      break;
+    if (x == ':') break;
   }
   int valueoffset = length;
-  buffer[length - 1] = 0;
+  buffer[length-1] = 0;
 
   // skip to start of value:
   for (;;) {
     x = getc(fin);
-    if ((x < 0 && feof(fin)) || x == '\n' || !isspace(x & 255))
-      break;
+    if ((x < 0 && feof(fin)) || x == '\n' || !isspace(x & 255)) break;
   }
 
   // read the value:
   for (;;) {
-    if (x == '\\') {
-      x = read_quoted();
-      if (x < 0)
-        continue;
-    } else if (x == '\n')
-      break;
+    if (x == '\\') {x = read_quoted(); if (x<0) continue;}
+    else if (x == '\n') break;
     buffer[length++] = x;
     expand_buffer(length);
     x = getc(fin);
   }
   buffer[length] = 0;
   name = buffer;
-  value = buffer + valueoffset;
+  value = buffer+valueoffset;
   return 1;
 }
 
-static const char *class_matcher[] = {"FL_CHECKBUTTON",
-                                      "Fl_Check_Button",
-                                      "FL_ROUNDBUTTON",
-                                      "Fl_Round_Button",
-                                      "FL_ROUND3DBUTTON",
-                                      "Fl_Round_Button",
-                                      "FL_LIGHTBUTTON",
-                                      "Fl_Light_Button",
-                                      "FL_FRAME",
-                                      "Fl_Box",
-                                      "FL_LABELFRAME",
-                                      "Fl_Box",
-                                      "FL_TEXT",
-                                      "Fl_Box",
-                                      "FL_VALSLIDER",
-                                      "Fl_Value_Slider",
-                                      "FL_MENU",
-                                      "Fl_Menu_Button",
-                                      "3",
-                                      "FL_BITMAP",
-                                      "1",
-                                      "FL_BOX",
-                                      "71",
-                                      "FL_BROWSER",
-                                      "11",
-                                      "FL_BUTTON",
-                                      "4",
-                                      "FL_CHART",
-                                      "42",
-                                      "FL_CHOICE",
-                                      "61",
-                                      "FL_CLOCK",
-                                      "25",
-                                      "FL_COUNTER",
-                                      "22",
-                                      "FL_DIAL",
-                                      "101",
-                                      "FL_FREE",
-                                      "31",
-                                      "FL_INPUT",
-                                      "12",
-                                      "Fl_Light_Button",
-                                      "41",
-                                      "FL_MENU",
-                                      "23",
-                                      "FL_POSITIONER",
-                                      "13",
-                                      "Fl_Round_Button",
-                                      "21",
-                                      "FL_SLIDER",
-                                      "2",
-                                      "FL_BOX", // was FL_TEXT
-                                      "62",
-                                      "FL_TIMER",
-                                      "24",
-                                      "Fl_Value_Slider",
-                                      0};
+static const char *class_matcher[] = {
+"FL_CHECKBUTTON", "Fl_Check_Button",
+"FL_ROUNDBUTTON", "Fl_Round_Button",
+"FL_ROUND3DBUTTON", "Fl_Round_Button",
+"FL_LIGHTBUTTON", "Fl_Light_Button",
+"FL_FRAME", "Fl_Box",
+"FL_LABELFRAME", "Fl_Box",
+"FL_TEXT", "Fl_Box",
+"FL_VALSLIDER", "Fl_Value_Slider",
+"FL_MENU", "Fl_Menu_Button",
+"3", "FL_BITMAP",
+"1", "FL_BOX",
+"71","FL_BROWSER",
+"11","FL_BUTTON",
+"4", "FL_CHART",
+"42","FL_CHOICE",
+"61","FL_CLOCK",
+"25","FL_COUNTER",
+"22","FL_DIAL",
+"101","FL_FREE",
+"31","FL_INPUT",
+"12","Fl_Light_Button",
+"41","FL_MENU",
+"23","FL_POSITIONER",
+"13","Fl_Round_Button",
+"21","FL_SLIDER",
+"2", "FL_BOX", // was FL_TEXT
+"62","FL_TIMER",
+"24","Fl_Value_Slider",
+0};
 
 
 /**
@@ -877,32 +757,28 @@ static void forms_end(Fl_Group *g, int flip) {
   // set the dimensions of a group to surround its contents
   const int nc = g->children();
   if (nc && !g->w()) {
-    Fl_Widget *const *a = g->array();
-    Fl_Widget *o = *a++;
+    Fl_Widget*const* a = g->array();
+    Fl_Widget* o = *a++;
     int rx = o->x();
     int ry = o->y();
-    int rw = rx + o->w();
-    int rh = ry + o->h();
+    int rw = rx+o->w();
+    int rh = ry+o->h();
     for (int i = nc - 1; i--;) {
       o = *a++;
-      if (o->x() < rx)
-        rx = o->x();
-      if (o->y() < ry)
-        ry = o->y();
-      if (o->x() + o->w() > rw)
-        rw = o->x() + o->w();
-      if (o->y() + o->h() > rh)
-        rh = o->y() + o->h();
+      if (o->x() < rx) rx = o->x();
+      if (o->y() < ry) ry = o->y();
+      if (o->x() + o->w() > rw) rw = o->x() + o->w();
+      if (o->y() + o->h() > rh) rh = o->y() + o->h();
     }
-    g->Fl_Widget::resize(rx, ry, rw - rx, rh - ry);
+    g->Fl_Widget::resize(rx, ry, rw-rx, rh-ry);
   }
   // flip all the children's coordinate systems:
   if (nc && flip) {
-    Fl_Widget *o = (g->as_window()) ? g : g->window();
+    Fl_Widget* o = (g->as_window()) ? g : g->window();
     int Y = o->h();
-    Fl_Widget *const *a = g->array();
+    Fl_Widget*const* a = g->array();
     for (int i = nc; i--;) {
-      Fl_Widget *ow = *a++;
+      Fl_Widget* ow = *a++;
       int newy = Y - ow->y() - ow->h();
       ow->Fl_Widget::resize(ow->x(), newy, ow->w(), ow->h());
     }
@@ -931,24 +807,23 @@ void read_fdesign() {
   for (;;) {
     const char *name;
     const char *value;
-    if (!read_fdesign_line(name, value))
-      break;
+    if (!read_fdesign_line(name, value)) break;
 
-    if (!strcmp(name, "Name")) {
+    if (!strcmp(name,"Name")) {
 
-      window = (Fl_Widget_Type *)add_new_widget_from_file("Fl_Window", kAddAsLastChild);
+      window = (Fl_Widget_Type*)add_new_widget_from_file("Fl_Window", kAddAsLastChild);
       window->name(value);
       window->label(value);
       Fl_Type::current = widget = window;
 
-    } else if (!strcmp(name, "class")) {
+    } else if (!strcmp(name,"class")) {
 
-      if (!strcmp(value, "FL_BEGIN_GROUP")) {
-        group = widget = (Fl_Widget_Type *)add_new_widget_from_file("Fl_Group", kAddAsLastChild);
+      if (!strcmp(value,"FL_BEGIN_GROUP")) {
+        group = widget = (Fl_Widget_Type*)add_new_widget_from_file("Fl_Group", kAddAsLastChild);
         Fl_Type::current = group;
-      } else if (!strcmp(value, "FL_END_GROUP")) {
+      } else if (!strcmp(value,"FL_END_GROUP")) {
         if (group) {
-          Fl_Group *g = (Fl_Group *)(group->o);
+          Fl_Group* g = (Fl_Group*)(group->o);
           g->begin();
           forms_end(g, fdesign_flip);
           Fl_Group::current(0);
@@ -957,14 +832,12 @@ void read_fdesign() {
         Fl_Type::current = window;
       } else {
         for (int i = 0; class_matcher[i]; i += 2)
-          if (!strcmp(value, class_matcher[i])) {
-            value = class_matcher[i + 1];
-            break;
-          }
-        widget = (Fl_Widget_Type *)add_new_widget_from_file(value, kAddAsLastChild);
+          if (!strcmp(value,class_matcher[i])) {
+            value = class_matcher[i+1]; break;}
+        widget = (Fl_Widget_Type*)add_new_widget_from_file(value, kAddAsLastChild);
         if (!widget) {
           printf("class %s not found, using Fl_Button\n", value);
-          widget = (Fl_Widget_Type *)add_new_widget_from_file("Fl_Button", kAddAsLastChild);
+          widget = (Fl_Widget_Type*)add_new_widget_from_file("Fl_Button", kAddAsLastChild);
         }
       }
 

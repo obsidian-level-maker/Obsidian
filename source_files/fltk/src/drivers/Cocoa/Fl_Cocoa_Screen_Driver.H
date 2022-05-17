@@ -45,11 +45,10 @@ class Fl_RGB_Image;
 class NSImage;
 #endif
 
-class FL_EXPORT Fl_Cocoa_Screen_Driver : public Fl_Screen_Driver {
+class FL_EXPORT Fl_Cocoa_Screen_Driver : public Fl_Screen_Driver
+{
 protected:
-  struct XRectangle {
-    int x, y, width, height;
-  };
+  struct XRectangle {int x, y, width, height;};
   XRectangle screens[MAX_SCREENS];
   float dpi_h[MAX_SCREENS];
   float dpi_v[MAX_SCREENS];
@@ -57,12 +56,10 @@ protected:
   static int insertion_point_y;
   static int insertion_point_height;
   static bool insertion_point_location_is_valid;
-
 public:
   NSImage *default_icon;
   Fl_Cocoa_Screen_Driver();
-  static int next_marked_length; // next length of marked text after current marked text will have
-                                 // been replaced
+  static int next_marked_length; // next length of marked text after current marked text will have been replaced
   static void breakMacEventLoop();
   // --- display management
   // --- screen configuration
@@ -72,13 +69,13 @@ public:
   virtual int w();
   virtual int h();
   virtual void screen_xywh(int &X, int &Y, int &W, int &H, int n);
-  virtual void screen_dpi(float &h, float &v, int n = 0);
+  virtual void screen_dpi(float &h, float &v, int n=0);
   // implemented in Fl_cocoa.mm because uses Objective-c
   virtual void screen_work_area(int &X, int &Y, int &W, int &H, int n);
   // --- audible output
   virtual void beep(int type);
   // --- global events
-  virtual void grab(Fl_Window *win);
+  virtual void grab(Fl_Window* win);
   // --- global colors
   virtual void get_system_colors();
   virtual int has_marked_text() const;
@@ -96,15 +93,13 @@ public:
   virtual void offscreen_size(Fl_Offscreen o, int &width, int &height);
 
   virtual APP_SCALING_CAPABILITY rescalable() { return SYSTEMWIDE_APP_SCALING; }
-  virtual float scale(int /*nscreen*/) { return scale_; }
-  virtual void scale(int /*nscreen*/, float f) { scale_ = f; }
-  virtual Fl_RGB_Image *read_win_rectangle(int X, int Y, int w, int h, Fl_Window *win,
-                                           bool may_capture_subwins, bool *did_capture_subwins);
+  virtual float scale(int /*nscreen*/) {return scale_;}
+  virtual void scale(int /*nscreen*/, float f) { scale_ = f;}
+  virtual Fl_RGB_Image *read_win_rectangle(int X, int Y, int w, int h, Fl_Window *win, bool may_capture_subwins, bool *did_capture_subwins);
   virtual void default_icons(const Fl_RGB_Image *icons[], int count);
   virtual void copy(const char *stuff, int len, int clipboard, const char *type);
   virtual void paste(Fl_Widget &receiver, int clipboard, const char *type);
   virtual int clipboard_contains(const char *type);
-
 private:
   float scale_;
 };

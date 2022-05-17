@@ -28,47 +28,46 @@
 /**
  Allow widget navigation on text fields with Tab.
 */
-static int use_tab_navigation(int, Fl_Text_Editor *) {
+static int use_tab_navigation(int, Fl_Text_Editor*) {
   return 0;
 }
 
-Fl_Double_Window *function_panel = (Fl_Double_Window *)0;
+Fl_Double_Window *function_panel=(Fl_Double_Window *)0;
 
-Fl_Choice *f_public_member_choice = (Fl_Choice *)0;
+Fl_Choice *f_public_member_choice=(Fl_Choice *)0;
 
 Fl_Menu_Item menu_f_public_member_choice[] = {
-    {"private", 0, 0, (void *)(0), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {"public", 0, 0, (void *)(1), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {"protected", 0, 0, (void *)(2), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+ {"private", 0,  0, (void*)(0), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"public", 0,  0, (void*)(1), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"protected", 0,  0, (void*)(2), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {0,0,0,0,0,0,0,0,0}
+};
 
-Fl_Choice *f_public_choice = (Fl_Choice *)0;
+Fl_Choice *f_public_choice=(Fl_Choice *)0;
 
 Fl_Menu_Item menu_f_public_choice[] = {
-    {"static", 0, 0, (void *)(0), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {"global", 0, 0, (void *)(1), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {"local", 0, 0, (void *)(2), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+ {"static", 0,  0, (void*)(0), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"global", 0,  0, (void*)(1), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"local", 0,  0, (void*)(2), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {0,0,0,0,0,0,0,0,0}
+};
 
-Fl_Light_Button *f_c_button = (Fl_Light_Button *)0;
+Fl_Light_Button *f_c_button=(Fl_Light_Button *)0;
 
-Fl_Input *f_name_input = (Fl_Input *)0;
+Fl_Input *f_name_input=(Fl_Input *)0;
 
-Fl_Input *f_return_type_input = (Fl_Input *)0;
+Fl_Input *f_return_type_input=(Fl_Input *)0;
 
-Fl_Text_Editor *f_comment_input = (Fl_Text_Editor *)0;
+Fl_Text_Editor *f_comment_input=(Fl_Text_Editor *)0;
 
-Fl_Return_Button *f_panel_ok = (Fl_Return_Button *)0;
+Fl_Return_Button *f_panel_ok=(Fl_Return_Button *)0;
 
-Fl_Button *f_panel_cancel = (Fl_Button *)0;
+Fl_Button *f_panel_cancel=(Fl_Button *)0;
 
-Fl_Double_Window *make_function_panel() {
-  {
-    function_panel = new Fl_Double_Window(343, 232, "Function/Method Properties");
-    {
-      Fl_Group *o = new Fl_Group(10, 10, 270, 20);
-      {
-        f_public_member_choice = new Fl_Choice(10, 10, 75, 20);
+Fl_Double_Window* make_function_panel() {
+  { function_panel = new Fl_Double_Window(343, 232, "Function/Method Properties");
+    { Fl_Group* o = new Fl_Group(10, 10, 270, 20);
+      { f_public_member_choice = new Fl_Choice(10, 10, 75, 20);
         f_public_member_choice->tooltip("Change member access attribute.");
         f_public_member_choice->down_box(FL_BORDER_BOX);
         f_public_member_choice->labelsize(11);
@@ -76,8 +75,7 @@ Fl_Double_Window *make_function_panel() {
         f_public_member_choice->when(FL_WHEN_CHANGED);
         f_public_member_choice->menu(menu_f_public_member_choice);
       } // Fl_Choice* f_public_member_choice
-      {
-        f_public_choice = new Fl_Choice(10, 10, 75, 20);
+      { f_public_choice = new Fl_Choice(10, 10, 75, 20);
         f_public_choice->tooltip("Change widget accessibility.");
         f_public_choice->down_box(FL_BORDER_BOX);
         f_public_choice->labelsize(11);
@@ -85,19 +83,16 @@ Fl_Double_Window *make_function_panel() {
         f_public_choice->when(FL_WHEN_CHANGED);
         f_public_choice->menu(menu_f_public_choice);
       } // Fl_Choice* f_public_choice
-      {
-        f_c_button = new Fl_Light_Button(95, 10, 120, 20, "C declaration");
+      { f_c_button = new Fl_Light_Button(95, 10, 120, 20, "C declaration");
         f_c_button->tooltip("Declare with a C interface instead of C++.");
         f_c_button->labelsize(11);
       } // Fl_Light_Button* f_c_button
-      {
-        Fl_Box *o = new Fl_Box(235, 10, 45, 20);
+      { Fl_Box* o = new Fl_Box(235, 10, 45, 20);
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o
       o->end();
     } // Fl_Group* o
-    {
-      f_name_input = new Fl_Input(10, 50, 320, 20, "Name(args): (blank for main())");
+    { f_name_input = new Fl_Input(10, 50, 320, 20, "Name(args): (blank for main())");
       f_name_input->tooltip("The name of the function or method.");
       f_name_input->labelfont(1);
       f_name_input->labelsize(11);
@@ -106,9 +101,7 @@ Fl_Double_Window *make_function_panel() {
       f_name_input->align(Fl_Align(FL_ALIGN_TOP_LEFT));
       f_name_input->when(FL_WHEN_NEVER);
     } // Fl_Input* f_name_input
-    {
-      f_return_type_input =
-          new Fl_Input(10, 90, 320, 20, "Return Type: (blank to return outermost widget)");
+    { f_return_type_input = new Fl_Input(10, 90, 320, 20, "Return Type: (blank to return outermost widget)");
       f_return_type_input->tooltip("The return type of the function or method.");
       f_return_type_input->labelfont(1);
       f_return_type_input->labelsize(11);
@@ -117,8 +110,7 @@ Fl_Double_Window *make_function_panel() {
       f_return_type_input->align(Fl_Align(FL_ALIGN_TOP_LEFT));
       f_return_type_input->when(FL_WHEN_NEVER);
     } // Fl_Input* f_return_type_input
-    {
-      f_comment_input = new Fl_Text_Editor(10, 125, 320, 65, "Comment:");
+    { f_comment_input = new Fl_Text_Editor(10, 125, 320, 65, "Comment:");
       f_comment_input->tooltip("Function comment in Doxygen format");
       f_comment_input->box(FL_DOWN_BOX);
       f_comment_input->labelfont(1);
@@ -130,21 +122,17 @@ Fl_Double_Window *make_function_panel() {
       f_comment_input->buffer(new Fl_Text_Buffer());
       f_comment_input->add_key_binding(FL_Tab, 0, use_tab_navigation);
     } // Fl_Text_Editor* f_comment_input
-    {
-      Fl_Group *o = new Fl_Group(10, 200, 320, 20);
-      {
-        f_panel_ok = new Fl_Return_Button(220, 200, 50, 20, "OK");
+    { Fl_Group* o = new Fl_Group(10, 200, 320, 20);
+      { f_panel_ok = new Fl_Return_Button(220, 200, 50, 20, "OK");
         f_panel_ok->tooltip("Apply the changes.");
         f_panel_ok->labelsize(11);
         f_panel_ok->window()->hotspot(f_panel_ok);
       } // Fl_Return_Button* f_panel_ok
-      {
-        f_panel_cancel = new Fl_Button(280, 200, 50, 20, "Cancel");
+      { f_panel_cancel = new Fl_Button(280, 200, 50, 20, "Cancel");
         f_panel_cancel->tooltip("Cancel the changes.");
         f_panel_cancel->labelsize(11);
       } // Fl_Button* f_panel_cancel
-      {
-        Fl_Box *o = new Fl_Box(10, 200, 205, 20);
+      { Fl_Box* o = new Fl_Box(10, 200, 205, 20);
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o
       o->end();
@@ -155,27 +143,25 @@ Fl_Double_Window *make_function_panel() {
   return function_panel;
 }
 
-Fl_Double_Window *code_panel = (Fl_Double_Window *)0;
+Fl_Double_Window *code_panel=(Fl_Double_Window *)0;
 
-static void cb_code_panel(Fl_Double_Window *, void *) {
-  if (Fl::event() == FL_SHORTCUT && Fl::event_key() == FL_Escape)
-    return;           // ignore Escape
+static void cb_code_panel(Fl_Double_Window*, void*) {
+  if (Fl::event()==FL_SHORTCUT && Fl::event_key()==FL_Escape)
+    return; // ignore Escape
   code_panel->hide(); // otherwise hide..;
 }
 
-CodeEditor *code_input = (CodeEditor *)0;
+CodeEditor *code_input=(CodeEditor *)0;
 
-Fl_Return_Button *code_panel_ok = (Fl_Return_Button *)0;
+Fl_Return_Button *code_panel_ok=(Fl_Return_Button *)0;
 
-Fl_Button *code_panel_cancel = (Fl_Button *)0;
+Fl_Button *code_panel_cancel=(Fl_Button *)0;
 
-Fl_Double_Window *make_code_panel() {
-  {
-    Fl_Double_Window *o = code_panel = new Fl_Double_Window(540, 180, "Code Properties");
+Fl_Double_Window* make_code_panel() {
+  { Fl_Double_Window* o = code_panel = new Fl_Double_Window(540, 180, "Code Properties");
     code_panel->labelsize(11);
-    code_panel->callback((Fl_Callback *)cb_code_panel);
-    {
-      CodeEditor *o = code_input = new CodeEditor(10, 10, 520, 130);
+    code_panel->callback((Fl_Callback*)cb_code_panel);
+    { CodeEditor* o = code_input = new CodeEditor(10, 10, 520, 130);
       code_input->box(FL_DOWN_BOX);
       code_input->color(FL_BACKGROUND2_COLOR);
       code_input->selection_color(FL_SELECTION_COLOR);
@@ -188,22 +174,18 @@ Fl_Double_Window *make_code_panel() {
       code_input->align(Fl_Align(FL_ALIGN_TOP));
       code_input->when(FL_WHEN_RELEASE);
       Fl_Group::current()->resizable(code_input);
-      o->when(FL_WHEN_ENTER_KEY_CHANGED | FL_WHEN_RELEASE);
+      o->when(FL_WHEN_ENTER_KEY_CHANGED|FL_WHEN_RELEASE);
     } // CodeEditor* code_input
-    {
-      Fl_Group *o = new Fl_Group(10, 150, 520, 20);
+    { Fl_Group* o = new Fl_Group(10, 150, 520, 20);
       o->labelsize(11);
-      {
-        code_panel_ok = new Fl_Return_Button(400, 150, 60, 20, "OK");
+      { code_panel_ok = new Fl_Return_Button(400, 150, 60, 20, "OK");
         code_panel_ok->labelsize(11);
         code_panel_ok->window()->hotspot(code_panel_ok);
       } // Fl_Return_Button* code_panel_ok
-      {
-        code_panel_cancel = new Fl_Button(470, 150, 60, 20, "Cancel");
+      { code_panel_cancel = new Fl_Button(470, 150, 60, 20, "Cancel");
         code_panel_cancel->labelsize(11);
       } // Fl_Button* code_panel_cancel
-      {
-        Fl_Box *o = new Fl_Box(10, 150, 380, 20);
+      { Fl_Box* o = new Fl_Box(10, 150, 380, 20);
         o->labelsize(11);
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o
@@ -219,22 +201,20 @@ Fl_Double_Window *make_code_panel() {
   return code_panel;
 }
 
-Fl_Double_Window *codeblock_panel = (Fl_Double_Window *)0;
+Fl_Double_Window *codeblock_panel=(Fl_Double_Window *)0;
 
-Fl_Input *code_before_input = (Fl_Input *)0;
+Fl_Input *code_before_input=(Fl_Input *)0;
 
-Fl_Input *code_after_input = (Fl_Input *)0;
+Fl_Input *code_after_input=(Fl_Input *)0;
 
-Fl_Return_Button *codeblock_panel_ok = (Fl_Return_Button *)0;
+Fl_Return_Button *codeblock_panel_ok=(Fl_Return_Button *)0;
 
-Fl_Button *codeblock_panel_cancel = (Fl_Button *)0;
+Fl_Button *codeblock_panel_cancel=(Fl_Button *)0;
 
-Fl_Double_Window *make_codeblock_panel() {
-  {
-    Fl_Double_Window *o = codeblock_panel = new Fl_Double_Window(300, 115, "Code Block Properties");
+Fl_Double_Window* make_codeblock_panel() {
+  { Fl_Double_Window* o = codeblock_panel = new Fl_Double_Window(300, 115, "Code Block Properties");
     codeblock_panel->labelsize(11);
-    {
-      code_before_input = new Fl_Input(10, 15, 280, 20, "Conditional code block");
+    { code_before_input = new Fl_Input(10, 15, 280, 20, "Conditional code block");
       code_before_input->tooltip("#ifdef or similar conditional code block.");
       code_before_input->labelsize(11);
       code_before_input->textfont(4);
@@ -242,8 +222,7 @@ Fl_Double_Window *make_codeblock_panel() {
       code_before_input->align(Fl_Align(FL_ALIGN_TOP_LEFT));
       code_before_input->when(FL_WHEN_NEVER);
     } // Fl_Input* code_before_input
-    {
-      code_after_input = new Fl_Input(10, 55, 280, 20, "\"{...child code...}\" is inserted here");
+    { code_after_input = new Fl_Input(10, 55, 280, 20, "\"{...child code...}\" is inserted here");
       code_after_input->tooltip("#endif or similar conditional code block.");
       code_after_input->labelsize(11);
       code_after_input->textfont(4);
@@ -252,20 +231,16 @@ Fl_Double_Window *make_codeblock_panel() {
       code_after_input->when(FL_WHEN_NEVER);
       Fl_Group::current()->resizable(code_after_input);
     } // Fl_Input* code_after_input
-    {
-      Fl_Group *o = new Fl_Group(10, 85, 280, 20);
-      {
-        codeblock_panel_ok = new Fl_Return_Button(160, 85, 60, 20, "OK");
+    { Fl_Group* o = new Fl_Group(10, 85, 280, 20);
+      { codeblock_panel_ok = new Fl_Return_Button(160, 85, 60, 20, "OK");
         codeblock_panel_ok->labelsize(11);
         codeblock_panel_ok->window()->hotspot(codeblock_panel_ok);
       } // Fl_Return_Button* codeblock_panel_ok
-      {
-        codeblock_panel_cancel = new Fl_Button(230, 85, 60, 20, "Cancel");
+      { codeblock_panel_cancel = new Fl_Button(230, 85, 60, 20, "Cancel");
         codeblock_panel_cancel->shortcut(0xff1b);
         codeblock_panel_cancel->labelsize(11);
       } // Fl_Button* codeblock_panel_cancel
-      {
-        Fl_Box *o = new Fl_Box(10, 85, 140, 20);
+      { Fl_Box* o = new Fl_Box(10, 85, 140, 20);
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o
       o->end();
@@ -277,34 +252,31 @@ Fl_Double_Window *make_codeblock_panel() {
   return codeblock_panel;
 }
 
-Fl_Double_Window *declblock_panel = (Fl_Double_Window *)0;
+Fl_Double_Window *declblock_panel=(Fl_Double_Window *)0;
 
-Fl_Choice *declblock_public_choice = (Fl_Choice *)0;
+Fl_Choice *declblock_public_choice=(Fl_Choice *)0;
 
 Fl_Menu_Item menu_declblock_public_choice[] = {
-    {"in source code only", 0, 0, (void *)(0), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {"in header and source", 0, 0, (void *)(1), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+ {"in source code only", 0,  0, (void*)(0), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"in header and source", 0,  0, (void*)(1), 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {0,0,0,0,0,0,0,0,0}
+};
 
-Fl_Light_Button *declblock_public_button_x = (Fl_Light_Button *)0;
+Fl_Light_Button *declblock_public_button_x=(Fl_Light_Button *)0;
 
-Fl_Input *decl_before_input = (Fl_Input *)0;
+Fl_Input *decl_before_input=(Fl_Input *)0;
 
-Fl_Input *decl_after_input = (Fl_Input *)0;
+Fl_Input *decl_after_input=(Fl_Input *)0;
 
-Fl_Return_Button *declblock_panel_ok = (Fl_Return_Button *)0;
+Fl_Return_Button *declblock_panel_ok=(Fl_Return_Button *)0;
 
-Fl_Button *declblock_panel_cancel = (Fl_Button *)0;
+Fl_Button *declblock_panel_cancel=(Fl_Button *)0;
 
-Fl_Double_Window *make_declblock_panel() {
-  {
-    Fl_Double_Window *o = declblock_panel =
-        new Fl_Double_Window(300, 135, "Declaration Block Properties");
+Fl_Double_Window* make_declblock_panel() {
+  { Fl_Double_Window* o = declblock_panel = new Fl_Double_Window(300, 135, "Declaration Block Properties");
     declblock_panel->labelsize(11);
-    {
-      Fl_Group *o = new Fl_Group(10, 10, 280, 20);
-      {
-        declblock_public_choice = new Fl_Choice(10, 10, 140, 20);
+    { Fl_Group* o = new Fl_Group(10, 10, 280, 20);
+      { declblock_public_choice = new Fl_Choice(10, 10, 140, 20);
         declblock_public_choice->tooltip("Change widget accessibility.");
         declblock_public_choice->down_box(FL_BORDER_BOX);
         declblock_public_choice->labelsize(11);
@@ -312,21 +284,18 @@ Fl_Double_Window *make_declblock_panel() {
         declblock_public_choice->when(FL_WHEN_NEVER);
         declblock_public_choice->menu(menu_declblock_public_choice);
       } // Fl_Choice* declblock_public_choice
-      {
-        declblock_public_button_x = new Fl_Light_Button(10, 10, 60, 20, "public");
+      { declblock_public_button_x = new Fl_Light_Button(10, 10, 60, 20, "public");
         declblock_public_button_x->tooltip("Make the declaration publicly accessible.");
         declblock_public_button_x->labelsize(11);
         declblock_public_button_x->when(FL_WHEN_NEVER);
         declblock_public_button_x->hide();
       } // Fl_Light_Button* declblock_public_button_x
-      {
-        Fl_Box *o = new Fl_Box(155, 10, 135, 20);
+      { Fl_Box* o = new Fl_Box(155, 10, 135, 20);
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o
       o->end();
     } // Fl_Group* o
-    {
-      decl_before_input = new Fl_Input(10, 40, 280, 20);
+    { decl_before_input = new Fl_Input(10, 40, 280, 20);
       decl_before_input->tooltip("#ifdef or similar conditional declaration block.");
       decl_before_input->labelsize(11);
       decl_before_input->textfont(4);
@@ -335,9 +304,7 @@ Fl_Double_Window *make_declblock_panel() {
       decl_before_input->when(FL_WHEN_NEVER);
       Fl_Group::current()->resizable(decl_before_input);
     } // Fl_Input* decl_before_input
-    {
-      decl_after_input =
-          new Fl_Input(10, 75, 280, 20, "\"\\n...child code...\\n\" is inserted here");
+    { decl_after_input = new Fl_Input(10, 75, 280, 20, "\"\\n...child code...\\n\" is inserted here");
       decl_after_input->tooltip("#endif or similar declaration code block.");
       decl_after_input->labelsize(11);
       decl_after_input->textfont(4);
@@ -345,20 +312,16 @@ Fl_Double_Window *make_declblock_panel() {
       decl_after_input->align(Fl_Align(FL_ALIGN_TOP_LEFT));
       decl_after_input->when(FL_WHEN_NEVER);
     } // Fl_Input* decl_after_input
-    {
-      Fl_Group *o = new Fl_Group(10, 105, 280, 20);
-      {
-        declblock_panel_ok = new Fl_Return_Button(160, 105, 60, 20, "OK");
+    { Fl_Group* o = new Fl_Group(10, 105, 280, 20);
+      { declblock_panel_ok = new Fl_Return_Button(160, 105, 60, 20, "OK");
         declblock_panel_ok->labelsize(11);
         declblock_panel_ok->window()->hotspot(declblock_panel_ok);
       } // Fl_Return_Button* declblock_panel_ok
-      {
-        declblock_panel_cancel = new Fl_Button(230, 105, 60, 20, "Cancel");
+      { declblock_panel_cancel = new Fl_Button(230, 105, 60, 20, "Cancel");
         declblock_panel_cancel->shortcut(0xff1b);
         declblock_panel_cancel->labelsize(11);
       } // Fl_Button* declblock_panel_cancel
-      {
-        Fl_Box *o = new Fl_Box(10, 105, 140, 20);
+      { Fl_Box* o = new Fl_Box(10, 105, 140, 20);
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o
       o->end();
@@ -370,52 +333,49 @@ Fl_Double_Window *make_declblock_panel() {
   return declblock_panel;
 }
 
-Fl_Double_Window *decl_panel = (Fl_Double_Window *)0;
+Fl_Double_Window *decl_panel=(Fl_Double_Window *)0;
 
-Fl_Choice *decl_choice = (Fl_Choice *)0;
+Fl_Choice *decl_choice=(Fl_Choice *)0;
 
 Fl_Menu_Item menu_decl_choice[] = {
-    {"in source file only", 0, 0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {"in header file only", 0, 0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {"\"static\" in source file", 0, 0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {"in source and \"extern\" in header", 0, 0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+ {"in source file only", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"in header file only", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"\"static\" in source file", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"in source and \"extern\" in header", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {0,0,0,0,0,0,0,0,0}
+};
 
-Fl_Choice *decl_class_choice = (Fl_Choice *)0;
+Fl_Choice *decl_class_choice=(Fl_Choice *)0;
 
 Fl_Menu_Item menu_decl_class_choice[] = {
-    {"private", 0, 0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {"public", 0, 0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {"protected", 0, 0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+ {"private", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"public", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"protected", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {0,0,0,0,0,0,0,0,0}
+};
 
-Fl_Input *decl_input = (Fl_Input *)0;
+Fl_Input *decl_input=(Fl_Input *)0;
 
-Fl_Text_Editor *decl_comment_input = (Fl_Text_Editor *)0;
+Fl_Text_Editor *decl_comment_input=(Fl_Text_Editor *)0;
 
-Fl_Return_Button *decl_panel_ok = (Fl_Return_Button *)0;
+Fl_Return_Button *decl_panel_ok=(Fl_Return_Button *)0;
 
-Fl_Button *decl_panel_cancel = (Fl_Button *)0;
+Fl_Button *decl_panel_cancel=(Fl_Button *)0;
 
-Fl_Double_Window *make_decl_panel() {
-  {
-    decl_panel = new Fl_Double_Window(343, 237, "Declaration Properties");
-    decl_panel->align(Fl_Align(FL_ALIGN_CLIP | FL_ALIGN_INSIDE));
-    {
-      Fl_Group *o = new Fl_Group(10, 10, 270, 20);
-      {
-        Fl_Box *o = new Fl_Box(200, 10, 80, 20);
+Fl_Double_Window* make_decl_panel() {
+  { decl_panel = new Fl_Double_Window(343, 237, "Declaration Properties");
+    decl_panel->align(Fl_Align(FL_ALIGN_CLIP|FL_ALIGN_INSIDE));
+    { Fl_Group* o = new Fl_Group(10, 10, 270, 20);
+      { Fl_Box* o = new Fl_Box(200, 10, 80, 20);
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o
-      {
-        decl_choice = new Fl_Choice(10, 10, 185, 20);
+      { decl_choice = new Fl_Choice(10, 10, 185, 20);
         decl_choice->down_box(FL_BORDER_BOX);
         decl_choice->labelsize(11);
         decl_choice->textsize(11);
         decl_choice->menu(menu_decl_choice);
       } // Fl_Choice* decl_choice
-      {
-        decl_class_choice = new Fl_Choice(10, 10, 75, 20);
+      { decl_class_choice = new Fl_Choice(10, 10, 75, 20);
         decl_class_choice->down_box(FL_BORDER_BOX);
         decl_class_choice->labelsize(11);
         decl_class_choice->textsize(11);
@@ -423,10 +383,7 @@ Fl_Double_Window *make_decl_panel() {
       } // Fl_Choice* decl_class_choice
       o->end();
     } // Fl_Group* o
-    {
-      decl_input = new Fl_Input(
-          10, 40, 320, 20,
-          "This can be any declaration, like \"int x;\", an external symbol like \"exter\
+    { decl_input = new Fl_Input(10, 40, 320, 20, "This can be any declaration, like \"int x;\", an external symbol like \"exter\
 n int foo();\", a #directive like \"#include <foo.h>\", a comment like \"//foo\
 \" or \"/*foo*/\", or typedef like \"typedef char byte;\" or \"using std::list\
 ;\".");
@@ -437,8 +394,7 @@ n int foo();\", a #directive like \"#include <foo.h>\", a comment like \"//foo\
       decl_input->align(Fl_Align(134));
       decl_input->when(FL_WHEN_NEVER);
     } // Fl_Input* decl_input
-    {
-      decl_comment_input = new Fl_Text_Editor(10, 130, 320, 65, "Comment:");
+    { decl_comment_input = new Fl_Text_Editor(10, 130, 320, 65, "Comment:");
       decl_comment_input->tooltip("Declaration comment in Doxygen format");
       decl_comment_input->box(FL_DOWN_BOX);
       decl_comment_input->labelfont(1);
@@ -450,20 +406,16 @@ n int foo();\", a #directive like \"#include <foo.h>\", a comment like \"//foo\
       decl_comment_input->buffer(new Fl_Text_Buffer());
       decl_comment_input->add_key_binding(FL_Tab, 0, use_tab_navigation);
     } // Fl_Text_Editor* decl_comment_input
-    {
-      Fl_Group *o = new Fl_Group(10, 205, 320, 20);
-      {
-        decl_panel_ok = new Fl_Return_Button(200, 205, 60, 20, "OK");
+    { Fl_Group* o = new Fl_Group(10, 205, 320, 20);
+      { decl_panel_ok = new Fl_Return_Button(200, 205, 60, 20, "OK");
         decl_panel_ok->labelsize(11);
         decl_panel_ok->window()->hotspot(decl_panel_ok);
       } // Fl_Return_Button* decl_panel_ok
-      {
-        decl_panel_cancel = new Fl_Button(270, 205, 60, 20, "Cancel");
+      { decl_panel_cancel = new Fl_Button(270, 205, 60, 20, "Cancel");
         decl_panel_cancel->shortcut(0xff1b);
         decl_panel_cancel->labelsize(11);
       } // Fl_Button* decl_panel_cancel
-      {
-        Fl_Box *o = new Fl_Box(10, 205, 185, 20);
+      { Fl_Box* o = new Fl_Box(10, 205, 185, 20);
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o
       o->end();
@@ -474,77 +426,70 @@ n int foo();\", a #directive like \"#include <foo.h>\", a comment like \"//foo\
   return decl_panel;
 }
 
-Fl_Double_Window *data_panel = (Fl_Double_Window *)0;
+Fl_Double_Window *data_panel=(Fl_Double_Window *)0;
 
-Fl_Choice *data_choice = (Fl_Choice *)0;
+Fl_Choice *data_choice=(Fl_Choice *)0;
 
 Fl_Menu_Item menu_data_choice[] = {
-    {"in source file only", 0, 0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {"in header file only", 0, 0, 0, 16, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {"\"static\" in source file", 0, 0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {"in source and \"extern\" in header", 0, 0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+ {"in source file only", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"in header file only", 0,  0, 0, 16, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"\"static\" in source file", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"in source and \"extern\" in header", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {0,0,0,0,0,0,0,0,0}
+};
 
-Fl_Choice *data_class_choice = (Fl_Choice *)0;
+Fl_Choice *data_class_choice=(Fl_Choice *)0;
 
 Fl_Menu_Item menu_data_class_choice[] = {
-    {"private", 0, 0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {"public", 0, 0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {"protected", 0, 0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
-    {0, 0, 0, 0, 0, 0, 0, 0, 0}};
+ {"private", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"public", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {"protected", 0,  0, 0, 0, (uchar)FL_NORMAL_LABEL, 0, 11, 0},
+ {0,0,0,0,0,0,0,0,0}
+};
 
-Fl_Check_Button *data_mode = (Fl_Check_Button *)0;
+Fl_Check_Button *data_mode=(Fl_Check_Button *)0;
 
-Fl_Input *data_input = (Fl_Input *)0;
+Fl_Input *data_input=(Fl_Input *)0;
 
-Fl_Input *data_filename = (Fl_Input *)0;
+Fl_Input *data_filename=(Fl_Input *)0;
 
-Fl_Button *data_filebrowser = (Fl_Button *)0;
+Fl_Button *data_filebrowser=(Fl_Button *)0;
 
-Fl_Text_Editor *data_comment_input = (Fl_Text_Editor *)0;
+Fl_Text_Editor *data_comment_input=(Fl_Text_Editor *)0;
 
-Fl_Return_Button *data_panel_ok = (Fl_Return_Button *)0;
+Fl_Return_Button *data_panel_ok=(Fl_Return_Button *)0;
 
-Fl_Button *data_panel_cancel = (Fl_Button *)0;
+Fl_Button *data_panel_cancel=(Fl_Button *)0;
 
-Fl_Double_Window *make_data_panel() {
-  {
-    data_panel = new Fl_Double_Window(343, 237, "Inline Data Properties");
-    data_panel->align(Fl_Align(FL_ALIGN_CLIP | FL_ALIGN_INSIDE));
-    {
-      Fl_Group *o = new Fl_Group(10, 10, 320, 20);
-      {
-        Fl_Box *o = new Fl_Box(288, 10, 42, 20);
+Fl_Double_Window* make_data_panel() {
+  { data_panel = new Fl_Double_Window(343, 237, "Inline Data Properties");
+    data_panel->align(Fl_Align(FL_ALIGN_CLIP|FL_ALIGN_INSIDE));
+    { Fl_Group* o = new Fl_Group(10, 10, 320, 20);
+      { Fl_Box* o = new Fl_Box(288, 10, 42, 20);
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o
-      {
-        data_choice = new Fl_Choice(10, 10, 185, 20);
+      { data_choice = new Fl_Choice(10, 10, 185, 20);
         data_choice->down_box(FL_BORDER_BOX);
         data_choice->labelsize(11);
         data_choice->textsize(11);
         data_choice->menu(menu_data_choice);
       } // Fl_Choice* data_choice
-      {
-        data_class_choice = new Fl_Choice(10, 10, 75, 20);
+      { data_class_choice = new Fl_Choice(10, 10, 75, 20);
         data_class_choice->down_box(FL_BORDER_BOX);
         data_class_choice->labelsize(11);
         data_class_choice->textsize(11);
         data_class_choice->menu(menu_data_class_choice);
       } // Fl_Choice* data_class_choice
-      {
-        data_mode = new Fl_Check_Button(200, 10, 78, 20, "text mode");
-        data_mode->tooltip(
-            "When text mode is selected, the returned type is \"const char*\" and a traili\
+      { data_mode = new Fl_Check_Button(200, 10, 78, 20, "text mode");
+        data_mode->tooltip("When text mode is selected, the returned type is \"const char*\" and a traili\
 ng NUL will be appended to the data.");
         data_mode->down_box(FL_DOWN_BOX);
         data_mode->labelsize(11);
       } // Fl_Check_Button* data_mode
       o->end();
     } // Fl_Group* o
-    {
-      data_input = new Fl_Input(10, 52, 320, 20, "Variable Name:");
-      data_input->tooltip(
-          "Inline Data variables are declared \"const unsigned char []\" in binary mode \
+    { data_input = new Fl_Input(10, 52, 320, 20, "Variable Name:");
+      data_input->tooltip("Inline Data variables are declared \"const unsigned char []\" in binary mode \
 and \"const char*\" in text mode.");
       data_input->labelfont(1);
       data_input->labelsize(11);
@@ -553,8 +498,7 @@ and \"const char*\" in text mode.");
       data_input->align(Fl_Align(133));
       data_input->when(FL_WHEN_NEVER);
     } // Fl_Input* data_input
-    {
-      data_filename = new Fl_Input(10, 90, 280, 20, "Filename:");
+    { data_filename = new Fl_Input(10, 90, 280, 20, "Filename:");
       data_filename->tooltip("Name and path of file that will be inlined.");
       data_filename->labelfont(1);
       data_filename->labelsize(11);
@@ -563,12 +507,10 @@ and \"const char*\" in text mode.");
       data_filename->align(Fl_Align(133));
       data_filename->when(FL_WHEN_NEVER);
     } // Fl_Input* data_filename
-    {
-      data_filebrowser = new Fl_Button(290, 90, 40, 20, "@fileopen");
+    { data_filebrowser = new Fl_Button(290, 90, 40, 20, "@fileopen");
       data_filebrowser->labelcolor((Fl_Color)134);
     } // Fl_Button* data_filebrowser
-    {
-      data_comment_input = new Fl_Text_Editor(10, 130, 320, 65, "Comment:");
+    { data_comment_input = new Fl_Text_Editor(10, 130, 320, 65, "Comment:");
       data_comment_input->tooltip("Declaration comment in Doxygen format");
       data_comment_input->box(FL_DOWN_BOX);
       data_comment_input->labelfont(1);
@@ -580,20 +522,16 @@ and \"const char*\" in text mode.");
       data_comment_input->buffer(new Fl_Text_Buffer());
       data_comment_input->add_key_binding(FL_Tab, 0, use_tab_navigation);
     } // Fl_Text_Editor* data_comment_input
-    {
-      Fl_Group *o = new Fl_Group(10, 205, 320, 20);
-      {
-        data_panel_ok = new Fl_Return_Button(200, 205, 60, 20, "OK");
+    { Fl_Group* o = new Fl_Group(10, 205, 320, 20);
+      { data_panel_ok = new Fl_Return_Button(200, 205, 60, 20, "OK");
         data_panel_ok->labelsize(11);
         data_panel_ok->window()->hotspot(data_panel_ok);
       } // Fl_Return_Button* data_panel_ok
-      {
-        data_panel_cancel = new Fl_Button(270, 205, 60, 20, "Cancel");
+      { data_panel_cancel = new Fl_Button(270, 205, 60, 20, "Cancel");
         data_panel_cancel->shortcut(0xff1b);
         data_panel_cancel->labelsize(11);
       } // Fl_Button* data_panel_cancel
-      {
-        Fl_Box *o = new Fl_Box(10, 205, 185, 20);
+      { Fl_Box* o = new Fl_Box(10, 205, 185, 20);
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o
       o->end();
@@ -604,42 +542,37 @@ and \"const char*\" in text mode.");
   return data_panel;
 }
 
-Fl_Double_Window *class_panel = (Fl_Double_Window *)0;
+Fl_Double_Window *class_panel=(Fl_Double_Window *)0;
 
-Fl_Light_Button *c_public_button = (Fl_Light_Button *)0;
+Fl_Light_Button *c_public_button=(Fl_Light_Button *)0;
 
-Fl_Input *c_name_input = (Fl_Input *)0;
+Fl_Input *c_name_input=(Fl_Input *)0;
 
-Fl_Input *c_subclass_input = (Fl_Input *)0;
+Fl_Input *c_subclass_input=(Fl_Input *)0;
 
-Fl_Text_Editor *c_comment_input = (Fl_Text_Editor *)0;
+Fl_Text_Editor *c_comment_input=(Fl_Text_Editor *)0;
 
-Fl_Return_Button *c_panel_ok = (Fl_Return_Button *)0;
+Fl_Return_Button *c_panel_ok=(Fl_Return_Button *)0;
 
-Fl_Button *c_panel_cancel = (Fl_Button *)0;
+Fl_Button *c_panel_cancel=(Fl_Button *)0;
 
-Fl_Double_Window *make_class_panel() {
-  {
-    class_panel = new Fl_Double_Window(342, 196, "Class Properties");
+Fl_Double_Window* make_class_panel() {
+  { class_panel = new Fl_Double_Window(342, 196, "Class Properties");
     class_panel->labelsize(11);
-    {
-      Fl_Group *o = new Fl_Group(10, 10, 280, 20);
+    { Fl_Group* o = new Fl_Group(10, 10, 280, 20);
       o->hide();
-      {
-        c_public_button = new Fl_Light_Button(10, 10, 60, 20, "public");
+      { c_public_button = new Fl_Light_Button(10, 10, 60, 20, "public");
         c_public_button->tooltip("Make the class publicly accessible.");
         c_public_button->labelsize(11);
         c_public_button->when(FL_WHEN_NEVER);
         c_public_button->hide();
       } // Fl_Light_Button* c_public_button
-      {
-        Fl_Box *o = new Fl_Box(80, 10, 210, 20);
+      { Fl_Box* o = new Fl_Box(80, 10, 210, 20);
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o
       o->end();
     } // Fl_Group* o
-    {
-      c_name_input = new Fl_Input(10, 20, 320, 20, "Name:");
+    { c_name_input = new Fl_Input(10, 20, 320, 20, "Name:");
       c_name_input->tooltip("Name of class.");
       c_name_input->labelfont(1);
       c_name_input->labelsize(11);
@@ -648,8 +581,7 @@ Fl_Double_Window *make_class_panel() {
       c_name_input->align(Fl_Align(FL_ALIGN_TOP_LEFT));
       c_name_input->when(FL_WHEN_NEVER);
     } // Fl_Input* c_name_input
-    {
-      c_subclass_input = new Fl_Input(10, 55, 320, 20, "Subclass of (text between : and {)");
+    { c_subclass_input = new Fl_Input(10, 55, 320, 20, "Subclass of (text between : and {)");
       c_subclass_input->tooltip("Name of subclass.");
       c_subclass_input->labelfont(1);
       c_subclass_input->labelsize(11);
@@ -658,8 +590,7 @@ Fl_Double_Window *make_class_panel() {
       c_subclass_input->align(Fl_Align(FL_ALIGN_TOP_LEFT));
       c_subclass_input->when(FL_WHEN_NEVER);
     } // Fl_Input* c_subclass_input
-    {
-      c_comment_input = new Fl_Text_Editor(10, 90, 320, 65, "Comment:");
+    { c_comment_input = new Fl_Text_Editor(10, 90, 320, 65, "Comment:");
       c_comment_input->tooltip("Class comment in Doxygen format");
       c_comment_input->box(FL_DOWN_BOX);
       c_comment_input->labelfont(1);
@@ -671,20 +602,16 @@ Fl_Double_Window *make_class_panel() {
       c_comment_input->buffer(new Fl_Text_Buffer());
       c_comment_input->add_key_binding(FL_Tab, 0, use_tab_navigation);
     } // Fl_Text_Editor* c_comment_input
-    {
-      Fl_Group *o = new Fl_Group(10, 165, 320, 20);
-      {
-        c_panel_ok = new Fl_Return_Button(200, 165, 60, 20, "OK");
+    { Fl_Group* o = new Fl_Group(10, 165, 320, 20);
+      { c_panel_ok = new Fl_Return_Button(200, 165, 60, 20, "OK");
         c_panel_ok->labelsize(11);
         c_panel_ok->window()->hotspot(c_panel_ok);
       } // Fl_Return_Button* c_panel_ok
-      {
-        c_panel_cancel = new Fl_Button(270, 165, 60, 20, "Cancel");
+      { c_panel_cancel = new Fl_Button(270, 165, 60, 20, "Cancel");
         c_panel_cancel->shortcut(0xff1b);
         c_panel_cancel->labelsize(11);
       } // Fl_Button* c_panel_cancel
-      {
-        Fl_Box *o = new Fl_Box(10, 165, 185, 20);
+      { Fl_Box* o = new Fl_Box(10, 165, 185, 20);
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o
       o->end();
@@ -696,28 +623,26 @@ Fl_Double_Window *make_class_panel() {
   return class_panel;
 }
 
-Fl_Double_Window *comment_panel = (Fl_Double_Window *)0;
+Fl_Double_Window *comment_panel=(Fl_Double_Window *)0;
 
-CodeEditor *comment_input = (CodeEditor *)0;
+CodeEditor *comment_input=(CodeEditor *)0;
 
-Fl_Return_Button *comment_panel_ok = (Fl_Return_Button *)0;
+Fl_Return_Button *comment_panel_ok=(Fl_Return_Button *)0;
 
-Fl_Button *comment_panel_cancel = (Fl_Button *)0;
+Fl_Button *comment_panel_cancel=(Fl_Button *)0;
 
-Fl_Light_Button *comment_in_source = (Fl_Light_Button *)0;
+Fl_Light_Button *comment_in_source=(Fl_Light_Button *)0;
 
-Fl_Light_Button *comment_in_header = (Fl_Light_Button *)0;
+Fl_Light_Button *comment_in_header=(Fl_Light_Button *)0;
 
-Fl_Menu_Button *comment_predefined = (Fl_Menu_Button *)0;
+Fl_Menu_Button *comment_predefined=(Fl_Menu_Button *)0;
 
-Fl_Button *comment_load = (Fl_Button *)0;
+Fl_Button *comment_load=(Fl_Button *)0;
 
-Fl_Double_Window *make_comment_panel() {
-  {
-    Fl_Double_Window *o = comment_panel = new Fl_Double_Window(550, 280, "Comment Properties");
+Fl_Double_Window* make_comment_panel() {
+  { Fl_Double_Window* o = comment_panel = new Fl_Double_Window(550, 280, "Comment Properties");
     comment_panel->labelsize(11);
-    {
-      CodeEditor *o = comment_input = new CodeEditor(110, 10, 430, 230);
+    { CodeEditor* o = comment_input = new CodeEditor(110, 10, 430, 230);
       comment_input->box(FL_DOWN_BOX);
       comment_input->color(FL_BACKGROUND2_COLOR);
       comment_input->selection_color(FL_SELECTION_COLOR);
@@ -730,54 +655,44 @@ Fl_Double_Window *make_comment_panel() {
       comment_input->align(Fl_Align(FL_ALIGN_TOP));
       comment_input->when(FL_WHEN_RELEASE);
       Fl_Group::current()->resizable(comment_input);
-      o->when(FL_WHEN_ENTER_KEY_CHANGED | FL_WHEN_RELEASE);
+      o->when(FL_WHEN_ENTER_KEY_CHANGED|FL_WHEN_RELEASE);
     } // CodeEditor* comment_input
-    {
-      Fl_Group *o = new Fl_Group(110, 250, 430, 20);
+    { Fl_Group* o = new Fl_Group(110, 250, 430, 20);
       o->labelsize(11);
-      {
-        comment_panel_ok = new Fl_Return_Button(370, 250, 80, 20, "OK");
+      { comment_panel_ok = new Fl_Return_Button(370, 250, 80, 20, "OK");
         comment_panel_ok->labelsize(11);
         comment_panel_ok->window()->hotspot(comment_panel_ok);
       } // Fl_Return_Button* comment_panel_ok
-      {
-        comment_panel_cancel = new Fl_Button(460, 250, 80, 20, "Cancel");
+      { comment_panel_cancel = new Fl_Button(460, 250, 80, 20, "Cancel");
         comment_panel_cancel->shortcut(0xff1b);
         comment_panel_cancel->labelsize(11);
       } // Fl_Button* comment_panel_cancel
-      {
-        Fl_Box *o = new Fl_Box(110, 250, 250, 20);
+      { Fl_Box* o = new Fl_Box(110, 250, 250, 20);
         o->labelsize(11);
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o
       o->end();
     } // Fl_Group* o
-    {
-      Fl_Group *o = new Fl_Group(10, 10, 90, 243);
+    { Fl_Group* o = new Fl_Group(10, 10, 90, 243);
       o->labelsize(11);
-      {
-        comment_in_source = new Fl_Light_Button(10, 10, 90, 20, "In Source");
+      { comment_in_source = new Fl_Light_Button(10, 10, 90, 20, "In Source");
         comment_in_source->tooltip("Put the comment into the source (.cxx) file.");
         comment_in_source->labelsize(11);
         comment_in_source->when(FL_WHEN_NEVER);
       } // Fl_Light_Button* comment_in_source
-      {
-        comment_in_header = new Fl_Light_Button(10, 40, 90, 20, "In Header");
+      { comment_in_header = new Fl_Light_Button(10, 40, 90, 20, "In Header");
         comment_in_header->tooltip("Put the comment into the header (.h) file.");
         comment_in_header->labelsize(11);
         comment_in_header->when(FL_WHEN_NEVER);
       } // Fl_Light_Button* comment_in_header
-      {
-        comment_predefined = new Fl_Menu_Button(10, 70, 90, 20, "Predefined");
+      { comment_predefined = new Fl_Menu_Button(10, 70, 90, 20, "Predefined");
         comment_predefined->labelsize(11);
         comment_predefined->textsize(11);
       } // Fl_Menu_Button* comment_predefined
-      {
-        comment_load = new Fl_Button(10, 100, 90, 20, "Import...");
+      { comment_load = new Fl_Button(10, 100, 90, 20, "Import...");
         comment_load->labelsize(11);
       } // Fl_Button* comment_load
-      {
-        Fl_Box *o = new Fl_Box(10, 132, 90, 121);
+      { Fl_Box* o = new Fl_Box(10, 132, 90, 121);
         o->labelsize(11);
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o
@@ -790,101 +705,88 @@ Fl_Double_Window *make_comment_panel() {
   return comment_panel;
 }
 
-void type_make_cb(Fl_Widget *, void *d) {
-  const char *type_name = (const char *)d;
+void type_make_cb(Fl_Widget*,void*d) {
+  const char *type_name = (const char*)d;
   if (Fl_Type::current && Fl_Type::current->is_group())
     add_new_widget_from_user(type_name, kAddAsLastChild);
   else
     add_new_widget_from_user(type_name, kAddAfterCurrent);
 }
 
-Fl_Window *widgetbin_panel = (Fl_Window *)0;
+Fl_Window *widgetbin_panel=(Fl_Window *)0;
 
-static void cb_widgetbin_panel(Fl_Window *o, void *v) {
-  if (Fl::event() == FL_SHORTCUT && Fl::event_key() == FL_Escape)
-    exit_cb((Fl_Widget *)o, v);
+static void cb_widgetbin_panel(Fl_Window* o, void* v) {
+  if (Fl::event()==FL_SHORTCUT && Fl::event_key()==FL_Escape)
+    exit_cb((Fl_Widget*)o, v);
   else
-    toggle_widgetbin_cb((Fl_Widget *)o, v);
+    toggle_widgetbin_cb((Fl_Widget*)o, v);
 }
 
-Fl_Window *make_widgetbin() {
-  {
-    widgetbin_panel = new Fl_Window(600, 102, "Widget Bin");
-    widgetbin_panel->callback((Fl_Callback *)cb_widgetbin_panel);
-    widgetbin_panel->align(Fl_Align(FL_ALIGN_CLIP | FL_ALIGN_INSIDE));
-    {
-      Fl_Group *o = new Fl_Group(3, 19, 79, 79, "Code");
+Fl_Window* make_widgetbin() {
+  { widgetbin_panel = new Fl_Window(600, 102, "Widget Bin");
+    widgetbin_panel->callback((Fl_Callback*)cb_widgetbin_panel);
+    widgetbin_panel->align(Fl_Align(FL_ALIGN_CLIP|FL_ALIGN_INSIDE));
+    { Fl_Group* o = new Fl_Group(3, 19, 79, 79, "Code");
       o->labelsize(12);
-      {
-        Fl_Button *o = new Fl_Button(5, 21, 24, 24);
+      { Fl_Button* o = new Fl_Button(5, 21, 24, 24);
         o->tooltip("Function");
         o->box(FL_THIN_UP_BOX);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Function"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Function"));
         o->image(pixmap[7]);
       } // Fl_Button* o
-      {
-        Fl_Button *o = new Fl_Button(30, 21, 24, 24);
+      { Fl_Button* o = new Fl_Button(30, 21, 24, 24);
         o->tooltip("Class");
         o->box(FL_THIN_UP_BOX);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Class"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Class"));
         o->image(pixmap[12]);
       } // Fl_Button* o
-      {
-        Fl_Button *o = new Fl_Button(55, 21, 24, 24);
+      { Fl_Button* o = new Fl_Button(55, 21, 24, 24);
         o->tooltip("Comment");
         o->box(FL_THIN_UP_BOX);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("comment"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("comment"));
         o->image(pixmap[46]);
       } // Fl_Button* o
-      {
-        Fl_Button *o = new Fl_Button(5, 46, 24, 24);
+      { Fl_Button* o = new Fl_Button(5, 46, 24, 24);
         o->tooltip("Code");
         o->box(FL_THIN_UP_BOX);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Code"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Code"));
         o->image(pixmap[8]);
       } // Fl_Button* o
-      {
-        Fl_Button *o = new Fl_Button(30, 46, 24, 24);
+      { Fl_Button* o = new Fl_Button(30, 46, 24, 24);
         o->tooltip("Code Block");
         o->box(FL_THIN_UP_BOX);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("CodeBlock"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("CodeBlock"));
         o->image(pixmap[9]);
       } // Fl_Button* o
-      {
-        Fl_Button *o = new Fl_Button(55, 46, 24, 24);
+      { Fl_Button* o = new Fl_Button(55, 46, 24, 24);
         o->tooltip("Widget Class");
         o->box(FL_THIN_UP_BOX);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("widget_class"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("widget_class"));
         o->image(pixmap[48]);
       } // Fl_Button* o
-      {
-        Fl_Button *o = new Fl_Button(5, 71, 24, 24);
+      { Fl_Button* o = new Fl_Button(5, 71, 24, 24);
         o->tooltip("Declaration");
         o->box(FL_THIN_UP_BOX);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("decl"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("decl"));
         o->image(pixmap[10]);
       } // Fl_Button* o
-      {
-        Fl_Button *o = new Fl_Button(30, 71, 24, 24);
+      { Fl_Button* o = new Fl_Button(30, 71, 24, 24);
         o->tooltip("Declaration Block");
         o->box(FL_THIN_UP_BOX);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("declblock"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("declblock"));
         o->image(pixmap[11]);
       } // Fl_Button* o
-      {
-        Fl_Button *o = new Fl_Button(55, 71, 24, 24);
+      { Fl_Button* o = new Fl_Button(55, 71, 24, 24);
         o->tooltip("Inline Data");
         o->box(FL_THIN_UP_BOX);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("data"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("data"));
         o->image(pixmap[49]);
       } // Fl_Button* o
       o->end();
     } // Fl_Group* o
-    {
-      Fl_Group *o = new Fl_Group(87, 19, 79, 79, "Groups");
+    { Fl_Group* o = new Fl_Group(87, 19, 79, 79, "Groups");
       o->labelsize(12);
-      {
-        Widget_Bin_Window_Button *o = new Widget_Bin_Window_Button(89, 21, 24, 24);
+      { Widget_Bin_Window_Button* o = new Widget_Bin_Window_Button(89, 21, 24, 24);
         o->tooltip("Window");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -893,13 +795,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Window"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Window"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[1]);
       } // Widget_Bin_Window_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(114, 21, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(114, 21, 24, 24);
         o->tooltip("Group");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -908,13 +809,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Group"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Group"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[6]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(139, 21, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(139, 21, 24, 24);
         o->tooltip("Pack");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -923,13 +823,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Pack"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Pack"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[22]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(89, 46, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(89, 46, 24, 24);
         o->tooltip("Tabs");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -938,13 +837,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Tabs"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Tabs"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[13]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(114, 46, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(114, 46, 24, 24);
         o->tooltip("Scroll");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -953,13 +851,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Scroll"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Scroll"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[19]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(89, 71, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(89, 71, 24, 24);
         o->tooltip("Tile");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -968,13 +865,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Tile"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Tile"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[20]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(114, 71, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(114, 71, 24, 24);
         o->tooltip("Wizard");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -983,18 +879,16 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Wizard"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Wizard"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[21]);
       } // Widget_Bin_Button* o
       o->end();
     } // Fl_Group* o
-    {
-      Fl_Group *o = new Fl_Group(171, 19, 54, 79, "Buttons");
+    { Fl_Group* o = new Fl_Group(171, 19, 54, 79, "Buttons");
       o->labelsize(12);
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(173, 21, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(173, 21, 24, 24);
         o->tooltip("Button");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1003,13 +897,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Button"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Button"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[2]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(198, 21, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(198, 21, 24, 24);
         o->tooltip("Return Button");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1018,13 +911,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Return_Button"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Return_Button"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[23]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(173, 46, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(173, 46, 24, 24);
         o->tooltip("Light Button");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1033,13 +925,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Light_Button"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Light_Button"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[24]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(198, 46, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(198, 46, 24, 24);
         o->tooltip("Repeat Button");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1048,13 +939,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Repeat_Button"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Repeat_Button"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[25]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(173, 71, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(173, 71, 24, 24);
         o->tooltip("Check Button");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1063,13 +953,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Check_Button"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Check_Button"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[3]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(198, 71, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(198, 71, 24, 24);
         o->tooltip("Round Button");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1078,18 +967,16 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Round_Button"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Round_Button"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[4]);
       } // Widget_Bin_Button* o
       o->end();
     } // Fl_Group* o
-    {
-      Fl_Group *o = new Fl_Group(230, 19, 104, 79, "Valuators");
+    { Fl_Group* o = new Fl_Group(230, 19, 104, 79, "Valuators");
       o->labelsize(12);
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(232, 21, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(232, 21, 24, 24);
         o->tooltip("Slider");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1098,13 +985,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Slider"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Slider"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[37]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(257, 21, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(257, 21, 24, 24);
         o->tooltip("Scroll Bar");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1113,13 +999,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Scrollbar"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Scrollbar"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[38]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(282, 21, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(282, 21, 24, 24);
         o->tooltip("Value Slider");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1128,13 +1013,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Value_Slider"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Value_Slider"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[39]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(307, 21, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(307, 21, 24, 24);
         o->tooltip("Value Output");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1143,13 +1027,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Value_Output"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Value_Output"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[45]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(232, 46, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(232, 46, 24, 24);
         o->tooltip("Adjuster");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1158,13 +1041,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Adjuster"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Adjuster"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[40]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(257, 46, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(257, 46, 24, 24);
         o->tooltip("Counter");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1173,13 +1055,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Counter"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Counter"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[41]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(282, 46, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(282, 46, 24, 24);
         o->tooltip("Dial");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1188,13 +1069,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Dial"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Dial"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[42]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(232, 71, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(232, 71, 24, 24);
         o->tooltip("Roller");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1203,13 +1083,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Roller"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Roller"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[43]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(257, 71, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(257, 71, 24, 24);
         o->tooltip("Spinner");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1218,13 +1097,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Spinner"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Spinner"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[47]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(282, 71, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(282, 71, 24, 24);
         o->tooltip("Value Input");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1233,18 +1111,16 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Value_Input"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Value_Input"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[44]);
       } // Widget_Bin_Button* o
       o->end();
     } // Fl_Group* o
-    {
-      Fl_Group *o = new Fl_Group(339, 19, 54, 79, "Text");
+    { Fl_Group* o = new Fl_Group(339, 19, 54, 79, "Text");
       o->labelsize(12);
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(341, 21, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(341, 21, 24, 24);
         o->tooltip("Input");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1253,13 +1129,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Input"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Input"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[14]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(366, 21, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(366, 21, 24, 24);
         o->tooltip("Output");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1268,13 +1143,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Output"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Output"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[27]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(341, 46, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(341, 46, 24, 24);
         o->tooltip("Text Edit");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1283,13 +1157,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Text_Editor"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Text_Editor"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[29]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(366, 46, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(366, 46, 24, 24);
         o->tooltip("Text Display");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1298,13 +1171,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Text_Display"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Text_Display"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[28]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(341, 71, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(341, 71, 24, 24);
         o->tooltip("File Input");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1313,13 +1185,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_File_Input"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_File_Input"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[30]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(366, 71, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(366, 71, 24, 24);
         o->tooltip("Simple Terminal");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1328,18 +1199,16 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Simple_Terminal"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Simple_Terminal"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[52]);
       } // Widget_Bin_Button* o
       o->end();
     } // Fl_Group* o
-    {
-      Fl_Group *o = new Fl_Group(398, 19, 79, 79, "Menus");
+    { Fl_Group* o = new Fl_Group(398, 19, 79, 79, "Menus");
       o->labelsize(12);
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(400, 21, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(400, 21, 24, 24);
         o->tooltip("Input Choice");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1348,13 +1217,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Input_Choice"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Input_Choice"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[53]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(425, 21, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(425, 21, 24, 24);
         o->tooltip("Menu Item");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1363,13 +1231,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("menuitem"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("menuitem"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[16]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(450, 21, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(450, 21, 24, 24);
         o->tooltip("Menu Bar");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1378,13 +1245,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Menu_Bar"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Menu_Bar"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[17]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(400, 46, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(400, 46, 24, 24);
         o->tooltip("Menu Button");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1393,13 +1259,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Menu_Button"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Menu_Button"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[26]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(425, 46, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(425, 46, 24, 24);
         o->tooltip("Checkbox Menu Item");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1408,13 +1273,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("checkmenuitem"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("checkmenuitem"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[54]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(450, 46, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(450, 46, 24, 24);
         o->tooltip("Sub Menu");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1423,13 +1287,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("submenu"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("submenu"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[18]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(400, 71, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(400, 71, 24, 24);
         o->tooltip("Choice");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1438,13 +1301,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Choice"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Choice"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[15]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(425, 71, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(425, 71, 24, 24);
         o->tooltip("Radio Menu Item");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1453,18 +1315,16 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("radiomenuitem"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("radiomenuitem"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[55]);
       } // Widget_Bin_Button* o
       o->end();
     } // Fl_Group* o
-    {
-      Fl_Group *o = new Fl_Group(482, 19, 54, 79, "Browsers");
+    { Fl_Group* o = new Fl_Group(482, 19, 54, 79, "Browsers");
       o->labelsize(12);
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(484, 21, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(484, 21, 24, 24);
         o->tooltip("Browser");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1473,13 +1333,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Browser"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Browser"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[31]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(509, 21, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(509, 21, 24, 24);
         o->tooltip("Tree");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1488,13 +1347,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Tree"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Tree"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[50]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(484, 46, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(484, 46, 24, 24);
         o->tooltip("Check Browser");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1503,13 +1361,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Check_Browser"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Check_Browser"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[32]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(509, 46, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(509, 46, 24, 24);
         o->tooltip("Help Browser");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1518,13 +1375,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Help_View"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Help_View"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[35]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(484, 71, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(484, 71, 24, 24);
         o->tooltip("File Browser");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1533,13 +1389,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_File_Browser"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_File_Browser"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[33]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(509, 71, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(509, 71, 24, 24);
         o->tooltip("Table");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1548,18 +1403,16 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Table"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Table"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[51]);
       } // Widget_Bin_Button* o
       o->end();
     } // Fl_Group* o
-    {
-      Fl_Group *o = new Fl_Group(540, 19, 55, 79, "Misc");
+    { Fl_Group* o = new Fl_Group(540, 19, 55, 79, "Misc");
       o->labelsize(12);
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(542, 21, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(542, 21, 24, 24);
         o->tooltip("Box");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1568,13 +1421,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Box"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Box"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[5]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(567, 21, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(567, 21, 24, 24);
         o->tooltip("Clock");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1583,13 +1435,12 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Clock"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Clock"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[34]);
       } // Widget_Bin_Button* o
-      {
-        Widget_Bin_Button *o = new Widget_Bin_Button(542, 46, 24, 24);
+      { Widget_Bin_Button* o = new Widget_Bin_Button(542, 46, 24, 24);
         o->tooltip("Progress");
         o->box(FL_THIN_UP_BOX);
         o->color(FL_BACKGROUND_COLOR);
@@ -1598,7 +1449,7 @@ Fl_Window *make_widgetbin() {
         o->labelfont(0);
         o->labelsize(14);
         o->labelcolor(FL_FOREGROUND_COLOR);
-        o->callback((Fl_Callback *)type_make_cb, (void *)("Fl_Progress"));
+        o->callback((Fl_Callback*)type_make_cb, (void*)("Fl_Progress"));
         o->align(Fl_Align(FL_ALIGN_CENTER));
         o->when(FL_WHEN_RELEASE);
         o->image(pixmap[36]);
@@ -1611,33 +1462,29 @@ Fl_Window *make_widgetbin() {
   return widgetbin_panel;
 }
 
-Fl_Double_Window *sourceview_panel = (Fl_Double_Window *)0;
+Fl_Double_Window *sourceview_panel=(Fl_Double_Window *)0;
 
-Fl_Tabs *sv_tab = (Fl_Tabs *)0;
+Fl_Tabs *sv_tab=(Fl_Tabs *)0;
 
-CodeViewer *sv_source = (CodeViewer *)0;
+CodeViewer *sv_source=(CodeViewer *)0;
 
-CodeViewer *sv_header = (CodeViewer *)0;
+CodeViewer *sv_header=(CodeViewer *)0;
 
-Fl_Light_Button *sv_autorefresh = (Fl_Light_Button *)0;
+Fl_Light_Button *sv_autorefresh=(Fl_Light_Button *)0;
 
-Fl_Light_Button *sv_autoposition = (Fl_Light_Button *)0;
+Fl_Light_Button *sv_autoposition=(Fl_Light_Button *)0;
 
-Fl_Double_Window *make_sourceview() {
-  {
-    sourceview_panel = new Fl_Double_Window(520, 490, "Code View");
-    sourceview_panel->callback((Fl_Callback *)toggle_sourceview_cb);
-    sourceview_panel->align(Fl_Align(FL_ALIGN_CLIP | FL_ALIGN_INSIDE));
-    {
-      sv_tab = new Fl_Tabs(10, 10, 500, 440);
+Fl_Double_Window* make_sourceview() {
+  { sourceview_panel = new Fl_Double_Window(520, 490, "Code View");
+    sourceview_panel->callback((Fl_Callback*)toggle_sourceview_cb);
+    sourceview_panel->align(Fl_Align(FL_ALIGN_CLIP|FL_ALIGN_INSIDE));
+    { sv_tab = new Fl_Tabs(10, 10, 500, 440);
       sv_tab->selection_color((Fl_Color)4);
       sv_tab->labelcolor(FL_BACKGROUND2_COLOR);
-      sv_tab->callback((Fl_Callback *)update_sourceview_position_cb);
-      {
-        Fl_Group *o = new Fl_Group(10, 35, 500, 415, "Source");
+      sv_tab->callback((Fl_Callback*)update_sourceview_position_cb);
+      { Fl_Group* o = new Fl_Group(10, 35, 500, 415, "Source");
         o->labelsize(13);
-        {
-          CodeViewer *o = sv_source = new CodeViewer(20, 50, 480, 390);
+        { CodeViewer* o = sv_source = new CodeViewer(20, 50, 480, 390);
           sv_source->box(FL_DOWN_FRAME);
           sv_source->color(FL_BACKGROUND2_COLOR);
           sv_source->selection_color(FL_SELECTION_COLOR);
@@ -1656,12 +1503,10 @@ Fl_Double_Window *make_sourceview() {
         o->end();
         Fl_Group::current()->resizable(o);
       } // Fl_Group* o
-      {
-        Fl_Group *o = new Fl_Group(10, 35, 500, 415, "Header");
+      { Fl_Group* o = new Fl_Group(10, 35, 500, 415, "Header");
         o->labelsize(13);
         o->hide();
-        {
-          CodeViewer *o = sv_header = new CodeViewer(20, 50, 480, 390);
+        { CodeViewer* o = sv_header = new CodeViewer(20, 50, 480, 390);
           sv_header->box(FL_DOWN_FRAME);
           sv_header->color(FL_BACKGROUND2_COLOR);
           sv_header->selection_color(FL_SELECTION_COLOR);
@@ -1682,29 +1527,23 @@ Fl_Double_Window *make_sourceview() {
       sv_tab->end();
       Fl_Group::current()->resizable(sv_tab);
     } // Fl_Tabs* sv_tab
-    {
-      Fl_Group *o = new Fl_Group(10, 460, 500, 20);
-      {
-        Fl_Button *o = new Fl_Button(10, 460, 61, 20, "Refresh");
+    { Fl_Group* o = new Fl_Group(10, 460, 500, 20);
+      { Fl_Button* o = new Fl_Button(10, 460, 61, 20, "Refresh");
         o->labelsize(11);
-        o->callback((Fl_Callback *)update_sourceview_cb);
+        o->callback((Fl_Callback*)update_sourceview_cb);
       } // Fl_Button* o
-      {
-        Fl_Light_Button *o = sv_autorefresh = new Fl_Light_Button(76, 460, 91, 20, "Auto-Refresh");
+      { Fl_Light_Button* o = sv_autorefresh = new Fl_Light_Button(76, 460, 91, 20, "Auto-Refresh");
         sv_autorefresh->labelsize(11);
-        o->callback((Fl_Callback *)update_sourceview_cb);
+        o->callback((Fl_Callback*)update_sourceview_cb);
       } // Fl_Light_Button* sv_autorefresh
-      {
-        sv_autoposition = new Fl_Light_Button(172, 460, 89, 20, "Auto-Position");
+      { sv_autoposition = new Fl_Light_Button(172, 460, 89, 20, "Auto-Position");
         sv_autoposition->labelsize(11);
       } // Fl_Light_Button* sv_autoposition
-      {
-        Fl_Button *o = new Fl_Button(460, 460, 50, 20, "Close");
+      { Fl_Button* o = new Fl_Button(460, 460, 50, 20, "Close");
         o->labelsize(11);
-        o->callback((Fl_Callback *)toggle_sourceview_b_cb);
+        o->callback((Fl_Callback*)toggle_sourceview_b_cb);
       } // Fl_Button* o
-      {
-        Fl_Box *o = new Fl_Box(265, 460, 190, 20);
+      { Fl_Box* o = new Fl_Box(265, 460, 190, 20);
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o
       o->end();

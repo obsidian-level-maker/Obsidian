@@ -37,38 +37,37 @@
 #include <stdlib.h>
 
 #if defined(HAVE_LIBPNG) && defined(HAVE_LIBZ)
-extern "C" {
-#include <zlib.h>
-#ifdef HAVE_PNG_H
-#include <png.h>
-#else
-#include <libpng/png.h>
-#endif // HAVE_PNG_H
+extern "C"
+{
+#  include <zlib.h>
+#  ifdef HAVE_PNG_H
+#    include <png.h>
+#  else
+#    include <libpng/png.h>
+#  endif // HAVE_PNG_H
 }
 
-typedef struct {
+typedef struct  {
   png_structp pp;
   const unsigned char *current;
   const unsigned char *last;
 } fl_png_memory;
 
 extern "C" {
-static void
-png_read_data_from_mem(png_structp png_ptr, // pointer to our data
-                       png_bytep data,      // where to copy the image data for libpng computing
-                       png_size_t length)   // length of data to copy
-{
-  fl_png_memory *png_mem_data =
-      (fl_png_memory *)png_get_io_ptr(png_ptr); // get the pointer to our struct
-  if (png_mem_data->current + length > png_mem_data->last) {
-    png_error(png_mem_data->pp, "Invalid attempt to read row data");
-    return;
+  static void png_read_data_from_mem( png_structp png_ptr, //pointer to our data
+                                      png_bytep data,  // where to copy the image data for libpng computing
+                                      png_size_t length) // length of data to copy
+  {
+    fl_png_memory *png_mem_data = (fl_png_memory*)png_get_io_ptr(png_ptr); // get the pointer to our struct
+    if (png_mem_data->current + length > png_mem_data->last) {
+      png_error(png_mem_data->pp, "Invalid attempt to read row data");
+      return;
+    }
+    /* copy data from image buffer */
+    memcpy (data, png_mem_data->current, length);
+    /* advance in the memory data */
+    png_mem_data->current += length;
   }
-  /* copy data from image buffer */
-  memcpy(data, png_mem_data->current, length);
-  /* advance in the memory data */
-  png_mem_data->current += length;
-}
 } // extern "C"
 #endif // HAVE_LIBPNG && HAVE_LIBZ
 
@@ -86,8 +85,8 @@ png_read_data_from_mem(png_structp png_ptr, // pointer to our data
 
  \param[in] filename    Name of PNG file to read
  */
-Fl_PNG_Image::Fl_PNG_Image(const char *filename)
-  : Fl_RGB_Image(0, 0, 0) {
+Fl_PNG_Image::Fl_PNG_Image (const char *filename): Fl_RGB_Image(0,0,0)
+{
   load_png_(filename, NULL, 0);
 }
 
@@ -104,19 +103,21 @@ Fl_PNG_Image::Fl_PNG_Image(const char *filename)
  \param buffer    Pointer to the start of the PNG image in memory
  \param maxsize   Size in bytes of the memory buffer containing the PNG image
  */
-Fl_PNG_Image::Fl_PNG_Image(const char *name_png, const unsigned char *buffer, int maxsize)
-  : Fl_RGB_Image(0, 0, 0) {
+Fl_PNG_Image::Fl_PNG_Image (
+      const char *name_png, const unsigned char *buffer, int maxsize): Fl_RGB_Image(0,0,0)
+{
   load_png_(name_png, buffer, maxsize);
 }
 
 
-void Fl_PNG_Image::load_png_(const char *name_png, const unsigned char *buffer_png, int maxsize) {
+void Fl_PNG_Image::load_png_(const char *name_png, const unsigned char *buffer_png, int maxsize)
+{
 #if defined(HAVE_LIBPNG) && defined(HAVE_LIBZ)
-  int i;              // Looping var
-  int channels;       // Number of color channels
-  png_structp pp;     // PNG read pointer
-  png_infop info = 0; // PNG info pointers
-  png_bytep *rows;    // PNG row pointers
+  int i;                // Looping var
+  int channels;         // Number of color channels
+  png_structp pp;       // PNG read pointer
+  png_infop info = 0;   // PNG info pointers
+  png_bytep *rows;      // PNG row pointers
   fl_png_memory png_mem_data;
   int from_memory = (buffer_png != NULL); // true if reading image from memory
 
@@ -124,7 +125,7 @@ void Fl_PNG_Image::load_png_(const char *name_png, const unsigned char *buffer_p
   // to avoid potential clobbering by setjmp/longjmp (gcc: [-Wclobbered]).
   // Hence the actual 'fp' is allocated with operator new.
 
-  FILE **fp = new FILE *; // always allocate file pointer
+  FILE** fp = new FILE*;   // always allocate file pointer
   *fp = NULL;
 
   if (!from_memory) {
@@ -138,31 +139,21 @@ void Fl_PNG_Image::load_png_(const char *name_png, const unsigned char *buffer_p
 
   // Setup the PNG data structures...
   pp = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-  if (pp)
-    info = png_create_info_struct(pp);
+  if (pp) info = png_create_info_struct(pp);
   if (!pp || !info) {
-    if (pp)
-      png_destroy_read_struct(&pp, NULL, NULL);
-    if (!from_memory)
-      fclose(*fp);
+    if (pp) png_destroy_read_struct(&pp, NULL, NULL);
+    if (!from_memory) fclose(*fp);
     Fl::warning("Cannot allocate memory to read PNG file or data \"%s\".\n", display_name);
-    w(0);
-    h(0);
-    d(0);
-    ld(ERR_FORMAT);
+    w(0); h(0); d(0); ld(ERR_FORMAT);
     delete fp;
     return;
   }
 
   if (setjmp(png_jmpbuf(pp))) {
     png_destroy_read_struct(&pp, &info, NULL);
-    if (!from_memory)
-      fclose(*fp);
+    if (!from_memory) fclose(*fp);
     Fl::warning("PNG file or data \"%s\" is too large or contains errors!\n", display_name);
-    w(0);
-    h(0);
-    d(0);
-    ld(ERR_FORMAT);
+    w(0); h(0); d(0); ld(ERR_FORMAT);
     delete fp;
     return;
   }
@@ -172,7 +163,7 @@ void Fl_PNG_Image::load_png_(const char *name_png, const unsigned char *buffer_p
     png_mem_data.last = buffer_png + maxsize;
     png_mem_data.pp = pp;
     // Initialize the function pointer to the PNG read "engine"...
-    png_set_read_fn(pp, (png_voidp)&png_mem_data, png_read_data_from_mem);
+    png_set_read_fn (pp, (png_voidp) &png_mem_data, png_read_data_from_mem);
   } else {
     png_init_io(pp, *fp); // Initialize the PNG file read "engine"...
   }
@@ -191,41 +182,41 @@ void Fl_PNG_Image::load_png_(const char *name_png, const unsigned char *buffer_p
   int num_trans = 0;
   png_get_tRNS(pp, info, 0, &num_trans, 0);
   if ((png_get_color_type(pp, info) & PNG_COLOR_MASK_ALPHA) || (num_trans != 0))
-    channels++;
+    channels ++;
 
   w((int)(png_get_image_width(pp, info)));
   h((int)(png_get_image_height(pp, info)));
   d(channels);
 
-  if (png_get_bit_depth(pp, info) < 8) {
+  if (png_get_bit_depth(pp, info) < 8)
+  {
     png_set_packing(pp);
     png_set_expand(pp);
-  } else if (png_get_bit_depth(pp, info) == 16)
+  }
+  else if (png_get_bit_depth(pp, info) == 16)
     png_set_strip_16(pp);
 
-#if defined(HAVE_PNG_GET_VALID) && defined(HAVE_PNG_SET_TRNS_TO_ALPHA)
+#  if defined(HAVE_PNG_GET_VALID) && defined(HAVE_PNG_SET_TRNS_TO_ALPHA)
   // Handle transparency...
   if (png_get_valid(pp, info, PNG_INFO_tRNS))
     png_set_tRNS_to_alpha(pp);
-#endif // HAVE_PNG_GET_VALID && HAVE_PNG_SET_TRNS_TO_ALPHA
+#  endif // HAVE_PNG_GET_VALID && HAVE_PNG_SET_TRNS_TO_ALPHA
 
-  if (((size_t)w()) * h() * d() > max_size())
-    longjmp(png_jmpbuf(pp), 1);
+  if (((size_t)w()) * h() * d() > max_size() ) longjmp(png_jmpbuf(pp), 1);
   array = new uchar[w() * h() * d()];
   alloc_array = 1;
 
   // Allocate pointers...
   rows = new png_bytep[h()];
 
-  for (i = 0; i < h(); i++)
+  for (i = 0; i < h(); i ++)
     rows[i] = (png_bytep)(array + i * w() * d());
 
   // Read the image, handling interlacing as needed...
-  for (i = png_set_interlace_handling(pp); i > 0; i--)
+  for (i = png_set_interlace_handling(pp); i > 0; i --)
     png_read_rows(pp, rows, NULL, h());
 
-  if (channels == 4)
-    Fl::system_driver()->png_extra_rgba_processing((uchar *)array, w(), h());
+  if (channels == 4) Fl::system_driver()->png_extra_rgba_processing((uchar*)array, w(), h());
 
   // Free memory and return...
   delete[] rows;

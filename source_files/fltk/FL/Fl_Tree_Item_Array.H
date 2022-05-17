@@ -6,8 +6,8 @@
 #include <FL/Fl.H>
 #include "Fl_Export.H"
 
-class FL_EXPORT Fl_Tree_Item; // forward decl must *precede* first doxygen comment block
-                              // or doxygen will not document our class..
+class FL_EXPORT Fl_Tree_Item;   // forward decl must *precede* first doxygen comment block
+                                // or doxygen will not document our class..
 
 //////////////////////////
 // FL/Fl_Tree_Item_Array.H
@@ -43,26 +43,31 @@ class FL_EXPORT Fl_Tree_Item; // forward decl must *precede* first doxygen comme
 ///
 
 class FL_EXPORT Fl_Tree_Item_Array {
-  Fl_Tree_Item **_items; // items array
-  int _total;            // #items in array
-  int _size;             // #items *allocated* for array
-  int _chunksize;        // #items to enlarge mem allocation
+  Fl_Tree_Item **_items;        // items array
+  int _total;                   // #items in array
+  int _size;                    // #items *allocated* for array
+  int _chunksize;               // #items to enlarge mem allocation
   enum {
-    MANAGE_ITEM = 1, ///> manage the Fl_Tree_Item's internals (internal use only)
+    MANAGE_ITEM = 1,            ///> manage the Fl_Tree_Item's internals (internal use only)
   };
-  char _flags; // flags to control behavior
+  char _flags;                  // flags to control behavior
   void enlarge(int count);
-
 public:
-  Fl_Tree_Item_Array(int new_chunksize = 10);      // CTOR
-  ~Fl_Tree_Item_Array();                           // DTOR
-  Fl_Tree_Item_Array(const Fl_Tree_Item_Array *o); // COPY CTOR
+  Fl_Tree_Item_Array(int new_chunksize = 10);           // CTOR
+  ~Fl_Tree_Item_Array();                                // DTOR
+  Fl_Tree_Item_Array(const Fl_Tree_Item_Array *o);      // COPY CTOR
   /// Return the item and index \p i.
-  Fl_Tree_Item *operator[](int i) { return (_items[i]); }
+  Fl_Tree_Item *operator[](int i) {
+    return(_items[i]);
+  }
   /// Const version of operator[](int i)
-  const Fl_Tree_Item *operator[](int i) const { return (_items[i]); }
+  const Fl_Tree_Item *operator[](int i) const {
+    return(_items[i]);
+  }
   /// Return the total items in the array, or 0 if empty.
-  int total() const { return (_total); }
+  int total() const {
+    return(_total);
+  }
   /// Swap the two items at index positions \p ax and \p bx.
   void swap(int ax, int bx);
   int move(int to, int from);
@@ -73,17 +78,16 @@ public:
   void insert(int pos, Fl_Tree_Item *new_item);
   void replace(int pos, Fl_Tree_Item *new_item);
   void remove(int index);
-  int remove(Fl_Tree_Item *item);
+  int  remove(Fl_Tree_Item *item);
   /// Option to control if Fl_Tree_Item_Array's destructor will also destroy the Fl_Tree_Item's.
   /// If set: items and item array is destroyed.
   /// If clear: only the item array is destroyed, not items themselves.
   void manage_item_destroy(int val) {
-    if (val)
-      _flags |= MANAGE_ITEM;
-    else
-      _flags &= ~MANAGE_ITEM;
+    if ( val ) _flags |= MANAGE_ITEM; else _flags &= ~MANAGE_ITEM;
   }
-  int manage_item_destroy() const { return _flags & MANAGE_ITEM ? 1 : 0; }
+  int manage_item_destroy() const {
+    return _flags & MANAGE_ITEM ? 1 : 0;
+  }
 };
 
 #endif /*_FL_TREE_ITEM_ARRAY_H*/

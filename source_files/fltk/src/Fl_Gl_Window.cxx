@@ -29,13 +29,13 @@ extern int fl_gl_load_plugin;
 #include "drivers/OpenGL/Fl_OpenGL_Graphics_Driver.H"
 
 #include <stdlib.h>
-#if (HAVE_DLSYM && HAVE_DLFCN_H)
-#include <dlfcn.h>
-#endif // (HAVE_DLSYM && HAVE_DLFCN_H)
-#ifdef HAVE_GLXGETPROCADDRESSARB
-#define GLX_GLXEXT_LEGACY
-#include <GL/glx.h>
-#endif // HAVE_GLXGETPROCADDRESSARB
+#  if (HAVE_DLSYM && HAVE_DLFCN_H)
+#    include <dlfcn.h>
+#  endif // (HAVE_DLSYM && HAVE_DLFCN_H)
+#  ifdef HAVE_GLXGETPROCADDRESSARB
+#    define GLX_GLXEXT_LEGACY
+#    include <GL/glx.h>
+#  endif // HAVE_GLXGETPROCADDRESSARB
 
 
 ////////////////////////////////////////////////////////////////
@@ -54,17 +54,17 @@ extern int fl_gl_load_plugin;
 // GL_SWAP_TYPE, it should be equal to one of these symbols:
 
 // contents of back buffer after glXSwapBuffers():
-#define UNDEFINED 1 // anything
-#define SWAP 2      // former front buffer (same as unknown)
-#define COPY 3      // unchanged
-#define NODAMAGE 4  // unchanged even by X expose() events
+#define UNDEFINED 1     // anything
+#define SWAP 2          // former front buffer (same as unknown)
+#define COPY 3          // unchanged
+#define NODAMAGE 4      // unchanged even by X expose() events
 
-static char SWAP_TYPE = 0; // 0 = determine it from environment variable
+static char SWAP_TYPE = 0 ; // 0 = determine it from environment variable
 
 
 /**  Returns non-zero if the hardware supports the given or current OpenGL  mode. */
 int Fl_Gl_Window::can_do(int a, const int *b) {
-  return Fl_Gl_Window_Driver::global()->find(a, b) != 0;
+  return Fl_Gl_Window_Driver::global()->find(a,b) != 0;
 }
 
 void Fl_Gl_Window::show() {
@@ -72,11 +72,10 @@ void Fl_Gl_Window::show() {
   if (!shown()) {
     Fl_Window::default_size_range();
     if (!g) {
-      g = pGlWindowDriver->find(mode_, alist);
+      g = pGlWindowDriver->find(mode_,alist);
       if (!g && (mode_ & FL_DOUBLE) == FL_SINGLE) {
-        g = pGlWindowDriver->find(mode_ | FL_DOUBLE, alist);
-        if (g)
-          mode_ |= FL_FAKE_SINGLE;
+        g = pGlWindowDriver->find(mode_ | FL_DOUBLE,alist);
+        if (g) mode_ |= FL_FAKE_SINGLE;
       }
 
       if (!g) {
@@ -87,8 +86,7 @@ void Fl_Gl_Window::show() {
     pGlWindowDriver->before_show(need_after);
   }
   Fl_Window::show();
-  if (need_after)
-    pGlWindowDriver->after_show();
+  if (need_after) pGlWindowDriver->after_show();
 }
 
 
@@ -103,8 +101,7 @@ void Fl_Gl_Window::invalidate() {
 }
 
 int Fl_Gl_Window::mode(int m, const int *a) {
-  if (m == mode_ && a == alist)
-    return 0;
+  if (m == mode_ && a == alist) return 0;
   return pGlWindowDriver->mode_(m, a);
 }
 
@@ -118,8 +115,8 @@ int Fl_Gl_Window::mode(int m, const int *a) {
 */
 
 void Fl_Gl_Window::make_current() {
-  //  puts("Fl_Gl_Window::make_current()");
-  //  printf("make_current: context_=%p\n", context_);
+//  puts("Fl_Gl_Window::make_current()");
+//  printf("make_current: context_=%p\n", context_);
   pGlWindowDriver->make_current_before();
   if (!context_) {
     mode_ &= ~NON_LOCAL_CONTEXT;
@@ -151,8 +148,8 @@ void Fl_Gl_Window::ortho() {
   GLint v[2];
   glGetIntegerv(GL_MAX_VIEWPORT_DIMS, v);
   glLoadIdentity();
-  glViewport(pixel_w() - v[0], pixel_h() - v[1], v[0], v[1]);
-  glOrtho(pixel_w() - v[0], pixel_w(), pixel_h() - v[1], pixel_h(), -1, 1);
+  glViewport(pixel_w()-v[0], pixel_h()-v[1], v[0], v[1]);
+  glOrtho(pixel_w()-v[0], pixel_w(), pixel_h()-v[1], pixel_h(), -1, 1);
 #endif
 }
 
@@ -165,11 +162,9 @@ void Fl_Gl_Window::swap_buffers() {
 }
 
 void Fl_Gl_Window::flush() {
-  if (!shown())
-    return;
+  if (!shown()) return;
   uchar save_valid = valid_f_ & 1;
-  if (pGlWindowDriver->flush_begin(valid_f_))
-    return;
+  if (pGlWindowDriver->flush_begin(valid_f_) ) return;
   make_current();
 
   if (mode_ & FL_DOUBLE) {
@@ -178,54 +173,46 @@ void Fl_Gl_Window::flush() {
 
     if (!SWAP_TYPE) {
       SWAP_TYPE = pGlWindowDriver->swap_type();
-      const char *c = fl_getenv("GL_SWAP_TYPE");
+      const char* c = fl_getenv("GL_SWAP_TYPE");
       if (c) {
-        if (!strcmp(c, "COPY"))
-          SWAP_TYPE = COPY;
-        else if (!strcmp(c, "NODAMAGE"))
-          SWAP_TYPE = NODAMAGE;
-        else if (!strcmp(c, "SWAP"))
-          SWAP_TYPE = SWAP;
-        else
-          SWAP_TYPE = UNDEFINED;
+        if (!strcmp(c,"COPY")) SWAP_TYPE = COPY;
+        else if (!strcmp(c, "NODAMAGE")) SWAP_TYPE = NODAMAGE;
+        else if (!strcmp(c, "SWAP")) SWAP_TYPE = SWAP;
+        else SWAP_TYPE = UNDEFINED;
       }
     }
 
     if (SWAP_TYPE == NODAMAGE) {
 
       // don't draw if only overlay damage or expose events:
-      if ((damage() & ~(FL_DAMAGE_OVERLAY | FL_DAMAGE_EXPOSE)) || !save_valid)
+      if ((damage()&~(FL_DAMAGE_OVERLAY|FL_DAMAGE_EXPOSE)) || !save_valid)
         draw();
       swap_buffers();
 
     } else if (SWAP_TYPE == COPY) {
 
       // don't draw if only the overlay is damaged:
-      if (damage() != FL_DAMAGE_OVERLAY || !save_valid)
-        draw();
-      swap_buffers();
+      if (damage() != FL_DAMAGE_OVERLAY || !save_valid) draw();
+          swap_buffers();
 
-    } else if (SWAP_TYPE == SWAP) {
+    } else if (SWAP_TYPE == SWAP){
       damage(FL_DAMAGE_ALL);
       draw();
-      if (overlay == this)
-        draw_overlay();
+      if (overlay == this) draw_overlay();
       swap_buffers();
-    } else if (SWAP_TYPE == UNDEFINED) { // SWAP_TYPE == UNDEFINED
+    } else if (SWAP_TYPE == UNDEFINED){ // SWAP_TYPE == UNDEFINED
 
       // If we are faking the overlay, use CopyPixels to act like
       // SWAP_TYPE == COPY.  Otherwise overlay redraw is way too slow.
       if (overlay == this) {
         // don't draw if only the overlay is damaged:
-        if (damage1_ || damage() != FL_DAMAGE_OVERLAY || !save_valid)
-          draw();
+        if (damage1_ || damage() != FL_DAMAGE_OVERLAY || !save_valid) draw();
         // we use a separate context for the copy because rasterpos must be 0
         // and depth test needs to be off:
         static GLContext ortho_context = 0;
-        static Fl_Gl_Window *ortho_window = 0;
+        static Fl_Gl_Window* ortho_window = 0;
         int orthoinit = !ortho_context;
-        if (orthoinit)
-          ortho_context = pGlWindowDriver->create_gl_context(this, g);
+        if (orthoinit) ortho_context = pGlWindowDriver->create_gl_context(this, g);
         pGlWindowDriver->set_gl_context(this, ortho_context);
         if (orthoinit || !save_valid || ortho_window != this) {
           glDisable(GL_DEPTH_TEST);
@@ -234,48 +221,47 @@ void Fl_Gl_Window::flush() {
           glLoadIdentity();
           glViewport(0, 0, pixel_w(), pixel_h());
           glOrtho(0, pixel_w(), 0, pixel_h(), -1, 1);
-          glRasterPos2i(0, 0);
+          glRasterPos2i(0,0);
           ortho_window = this;
         }
-        glCopyPixels(0, 0, pixel_w(), pixel_h(), GL_COLOR);
+        glCopyPixels(0,0,pixel_w(),pixel_h(),GL_COLOR);
         make_current(); // set current context back to draw overlay
         damage1_ = 0;
 
       } else {
         damage1_ = damage();
-        clear_damage(0xff);
-        draw();
+        clear_damage(0xff); draw();
         swap_buffers();
       }
+
     }
-    if (overlay == this && SWAP_TYPE != SWAP) { // fake overlay in front buffer
+    if (overlay==this && SWAP_TYPE != SWAP) { // fake overlay in front buffer
       glDrawBuffer(GL_FRONT);
       draw_overlay();
       glDrawBuffer(GL_BACK);
       glFlush();
     }
 
-  } else { // single-buffered context is simpler:
+  } else {      // single-buffered context is simpler:
 
     draw();
-    if (overlay == this)
-      draw_overlay();
+    if (overlay == this) draw_overlay();
     glFlush();
+
   }
 
   valid(1);
   context_valid(1);
 }
 
-void Fl_Gl_Window::resize(int X, int Y, int W, int H) {
-  //  printf("Fl_Gl_Window::resize(X=%d, Y=%d, W=%d, H=%d)\n", X, Y, W, H);
-  //  printf("current: x()=%d, y()=%d, w()=%d, h()=%d\n", x(), y(), w(), h());
+void Fl_Gl_Window::resize(int X,int Y,int W,int H) {
+//  printf("Fl_Gl_Window::resize(X=%d, Y=%d, W=%d, H=%d)\n", X, Y, W, H);
+//  printf("current: x()=%d, y()=%d, w()=%d, h()=%d\n", x(), y(), w(), h());
 
   int is_a_resize = (W != Fl_Widget::w() || H != Fl_Widget::h() || is_a_rescale());
-  if (is_a_resize)
-    valid(0);
+  if (is_a_resize) valid(0);
   pGlWindowDriver->resize(is_a_resize, W, H);
-  Fl_Window::resize(X, Y, W, H);
+  Fl_Window::resize(X,Y,W,H);
 }
 
 /**
@@ -290,13 +276,10 @@ void Fl_Gl_Window::resize(int X, int Y, int W, int H) {
   or the next time context(x) is called.
 */
 void Fl_Gl_Window::context(GLContext v, int destroy_flag) {
-  if (context_ && !(mode_ & NON_LOCAL_CONTEXT))
-    pGlWindowDriver->delete_gl_context(context_);
+  if (context_ && !(mode_&NON_LOCAL_CONTEXT)) pGlWindowDriver->delete_gl_context(context_);
   context_ = v;
-  if (destroy_flag)
-    mode_ &= ~NON_LOCAL_CONTEXT;
-  else
-    mode_ |= NON_LOCAL_CONTEXT;
+  if (destroy_flag) mode_ &= ~NON_LOCAL_CONTEXT;
+  else mode_ |= NON_LOCAL_CONTEXT;
 }
 
 /**
@@ -314,7 +297,7 @@ void Fl_Gl_Window::hide() {
 */
 Fl_Gl_Window::~Fl_Gl_Window() {
   hide();
-  //  delete overlay; this is done by ~Fl_Group
+//  delete overlay; this is done by ~Fl_Group
   delete pGlWindowDriver;
 }
 
@@ -323,15 +306,15 @@ void Fl_Gl_Window::init() {
   end(); // we probably don't want any children
   box(FL_NO_BOX);
 
-  mode_ = FL_RGB | FL_DEPTH | FL_DOUBLE;
-  alist = 0;
+  mode_    = FL_RGB | FL_DEPTH | FL_DOUBLE;
+  alist    = 0;
   context_ = 0;
-  g = 0;
-  overlay = 0;
+  g        = 0;
+  overlay  = 0;
   valid_f_ = 0;
   damage1_ = 0;
 
-#if 0  // This breaks resizing on Linux/X11
+#if 0 // This breaks resizing on Linux/X11
   int H = h();
   h(1); // Make sure we actually do something in resize()...
   resize(x(), y(), w(), H);
@@ -357,8 +340,8 @@ void Fl_Gl_Window::draw_overlay() {}
 
 
 void Fl_Gl_Window::draw_begin() {
-  Fl_Surface_Device::push_current(Fl_OpenGL_Display_Device::display_device());
-  Fl_OpenGL_Graphics_Driver *drv = (Fl_OpenGL_Graphics_Driver *)fl_graphics_driver;
+  Fl_Surface_Device::push_current( Fl_OpenGL_Display_Device::display_device() );
+  Fl_OpenGL_Graphics_Driver *drv = (Fl_OpenGL_Graphics_Driver*)fl_graphics_driver;
   drv->pixels_per_unit_ = pixels_per_unit();
 
   if (!valid()) {
@@ -372,7 +355,7 @@ void Fl_Gl_Window::draw_begin() {
   glMatrixMode(GL_PROJECTION);
   glPushMatrix();
   glLoadIdentity();
-  //  glOrtho(-0.5, w()-0.5, h()-0.5, -0.5, -1, 1);
+//  glOrtho(-0.5, w()-0.5, h()-0.5, -0.5, -1, 1);
   glOrtho(0.0, w(), h(), 0.0, -1.0, 1.0);
 
   glMatrixMode(GL_MODELVIEW);
@@ -382,7 +365,7 @@ void Fl_Gl_Window::draw_begin() {
   glDisable(GL_DEPTH_TEST);
   glEnable(GL_POINT_SMOOTH);
 
-  glLineWidth((GLfloat)(drv->pixels_per_unit_ * drv->line_width_));
+  glLineWidth((GLfloat)(drv->pixels_per_unit_*drv->line_width_));
   glPointSize((GLfloat)(drv->pixels_per_unit_));
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
@@ -480,7 +463,8 @@ void Fl_Gl_Window::draw() {
 /**
  Handle some FLTK events as needed.
  */
-int Fl_Gl_Window::handle(int event) {
+int Fl_Gl_Window::handle(int event)
+{
   return Fl_Window::handle(event);
 }
 
@@ -508,9 +492,8 @@ float Fl_Gl_Window::pixels_per_unit() {
 
 int Fl_Gl_Window_Driver::copy = COPY;
 GLContext Fl_Gl_Window_Driver::cached_context = NULL;
-Fl_Window *Fl_Gl_Window_Driver::cached_window = NULL;
-float Fl_Gl_Window_Driver::gl_scale =
-    1; // scaling factor between FLTK and GL drawing units: GL = FLTK * gl_scale
+Fl_Window* Fl_Gl_Window_Driver::cached_window = NULL;
+float Fl_Gl_Window_Driver::gl_scale = 1; // scaling factor between FLTK and GL drawing units: GL = FLTK * gl_scale
 
 // creates a unique, dummy Fl_Gl_Window_Driver object used when no Fl_Gl_Window is around
 // necessary to support gl_start()/gl_finish()
@@ -521,45 +504,41 @@ Fl_Gl_Window_Driver *Fl_Gl_Window_Driver::global() {
 
 void Fl_Gl_Window_Driver::invalidate() {
   if (pWindow->overlay) {
-    ((Fl_Gl_Window *)pWindow->overlay)->valid(0);
-    ((Fl_Gl_Window *)pWindow->overlay)->context_valid(0);
+    ((Fl_Gl_Window*)pWindow->overlay)->valid(0);
+    ((Fl_Gl_Window*)pWindow->overlay)->context_valid(0);
   }
 }
 
 
-char Fl_Gl_Window_Driver::swap_type() {
-  return UNDEFINED;
-}
+char Fl_Gl_Window_Driver::swap_type() {return UNDEFINED;}
 
 
-void *Fl_Gl_Window_Driver::GetProcAddress(const char *procName) {
+void* Fl_Gl_Window_Driver::GetProcAddress(const char *procName) {
 #if (HAVE_DLSYM && HAVE_DLFCN_H)
   char symbol[1024];
 
   snprintf(symbol, sizeof(symbol), "_%s", procName);
 
-#ifdef RTLD_DEFAULT
+#    ifdef RTLD_DEFAULT
   return dlsym(RTLD_DEFAULT, symbol);
 
-#else // No RTLD_DEFAULT support, so open the current a.out symbols...
+#    else // No RTLD_DEFAULT support, so open the current a.out symbols...
   static void *rtld_default = dlopen(0, RTLD_LAZY);
 
-  if (rtld_default)
-    return dlsym(rtld_default, symbol);
-  else
-    return 0;
+  if (rtld_default) return dlsym(rtld_default, symbol);
+  else return 0;
 
-#endif // RTLD_DEFAULT
+#    endif // RTLD_DEFAULT
 
 #elif defined(HAVE_GLXGETPROCADDRESSARB)
-  return (void *)glXGetProcAddressARB((const GLubyte *)procName);
+  return (void*)glXGetProcAddressARB((const GLubyte *)procName);
 
 #else
   return 0;
 #endif // HAVE_DLSYM
 }
 
-Fl_Font_Descriptor **Fl_Gl_Window_Driver::fontnum_to_fontdescriptor(int fnum) {
+Fl_Font_Descriptor** Fl_Gl_Window_Driver::fontnum_to_fontdescriptor(int fnum) {
   extern FL_EXPORT Fl_Fontdesc *fl_fonts;
   return &(fl_fonts[fnum].first);
 }
