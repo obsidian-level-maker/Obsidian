@@ -73,9 +73,9 @@ char *__PHYSFS_platformCalcPrefDir(const char *org, const char *app)
 #if !defined(PHYSFS_NO_CDROM_SUPPORT)
 
 #include <IOKit/IOKitLib.h>
+#include <IOKit/storage/IOMedia.h>
 #include <IOKit/storage/IOCDMedia.h>
 #include <IOKit/storage/IODVDMedia.h>
-#include <IOKit/storage/IOMedia.h>
 #include <sys/mount.h>
 
 static int darwinIsWholeMedia(io_service_t service)

@@ -12,14 +12,15 @@
 #include "physfs_internal.h"
 
 #ifndef PHYSFS_Swap16
-static inline PHYSFS_uint16 PHYSFS_Swap16(PHYSFS_uint16 D) {
-    return ((D << 8) | (D >> 8));
+static inline PHYSFS_uint16 PHYSFS_Swap16(PHYSFS_uint16 D)
+{
+    return ((D<<8)|(D>>8));
 }
 #endif
 #ifndef PHYSFS_Swap32
-static inline PHYSFS_uint32 PHYSFS_Swap32(PHYSFS_uint32 D) {
-    return ((D << 24) | ((D << 8) & 0x00FF0000) | ((D >> 8) & 0x0000FF00) |
-            (D >> 24));
+static inline PHYSFS_uint32 PHYSFS_Swap32(PHYSFS_uint32 D)
+{
+    return ((D<<24)|((D<<8)&0x00FF0000)|((D>>8)&0x0000FF00)|(D>>24));
 }
 #endif
 #ifndef PHYSFS_NO_64BIT_SUPPORT
@@ -28,9 +29,9 @@ static inline PHYSFS_uint64 PHYSFS_Swap64(PHYSFS_uint64 val) {
     PHYSFS_uint32 hi, lo;
 
     /* Separate into high and low 32-bit values and swap them */
-    lo = (PHYSFS_uint32)(val & 0xFFFFFFFF);
+    lo = (PHYSFS_uint32)(val&0xFFFFFFFF);
     val >>= 32;
-    hi = (PHYSFS_uint32)(val & 0xFFFFFFFF);
+    hi = (PHYSFS_uint32)(val&0xFFFFFFFF);
     val = PHYSFS_Swap32(lo);
     val <<= 32;
     val |= PHYSFS_Swap32(hi);
@@ -43,9 +44,10 @@ static inline PHYSFS_uint64 PHYSFS_Swap64(PHYSFS_uint64 val) {
    If there is no real 64-bit datatype, then compilers will complain about
    the fake 64-bit datatype that PHYSFS provides when it compiles user code.
 */
-#define PHYSFS_Swap64(X) (X)
+#define PHYSFS_Swap64(X)    (X)
 #endif
 #endif /* PHYSFS_NO_64BIT_SUPPORT */
+
 
 /* Byteswap item from the specified endianness to the native endianness */
 #if PHYSFS_BYTEORDER == PHYSFS_LIL_ENDIAN
@@ -78,17 +80,18 @@ PHYSFS_uint64 PHYSFS_swapUBE64(PHYSFS_uint64 x) { return x; }
 PHYSFS_sint64 PHYSFS_swapSBE64(PHYSFS_sint64 x) { return x; }
 #endif
 
-static inline int readAll(PHYSFS_File *file, void *val, const size_t len) {
+static inline int readAll(PHYSFS_File *file, void *val, const size_t len)
+{
     return (PHYSFS_readBytes(file, val, len) == len);
 } /* readAll */
 
-#define PHYSFS_BYTEORDER_READ(datatype, swaptype)                          \
+#define PHYSFS_BYTEORDER_READ(datatype, swaptype) \
     int PHYSFS_read##swaptype(PHYSFS_File *file, PHYSFS_##datatype *val) { \
-        PHYSFS_##datatype in;                                              \
-        BAIL_IF(val == NULL, PHYSFS_ERR_INVALID_ARGUMENT, 0);              \
-        BAIL_IF_ERRPASS(!readAll(file, &in, sizeof(in)), 0);               \
-        *val = PHYSFS_swap##swaptype(in);                                  \
-        return 1;                                                          \
+        PHYSFS_##datatype in; \
+        BAIL_IF(val == NULL, PHYSFS_ERR_INVALID_ARGUMENT, 0); \
+        BAIL_IF_ERRPASS(!readAll(file, &in, sizeof (in)), 0); \
+        *val = PHYSFS_swap##swaptype(in); \
+        return 1; \
     }
 
 PHYSFS_BYTEORDER_READ(sint16, SLE16)
@@ -104,15 +107,17 @@ PHYSFS_BYTEORDER_READ(uint64, ULE64)
 PHYSFS_BYTEORDER_READ(sint64, SBE64)
 PHYSFS_BYTEORDER_READ(uint64, UBE64)
 
-static inline int writeAll(PHYSFS_File *f, const void *val, const size_t len) {
+
+static inline int writeAll(PHYSFS_File *f, const void *val, const size_t len)
+{
     return (PHYSFS_writeBytes(f, val, len) == len);
 } /* writeAll */
 
-#define PHYSFS_BYTEORDER_WRITE(datatype, swaptype)                         \
+#define PHYSFS_BYTEORDER_WRITE(datatype, swaptype) \
     int PHYSFS_write##swaptype(PHYSFS_File *file, PHYSFS_##datatype val) { \
-        const PHYSFS_##datatype out = PHYSFS_swap##swaptype(val);          \
-        BAIL_IF_ERRPASS(!writeAll(file, &out, sizeof(out)), 0);            \
-        return 1;                                                          \
+        const PHYSFS_##datatype out = PHYSFS_swap##swaptype(val); \
+        BAIL_IF_ERRPASS(!writeAll(file, &out, sizeof (out)), 0); \
+        return 1; \
     }
 
 PHYSFS_BYTEORDER_WRITE(sint16, SLE16)
@@ -129,3 +134,4 @@ PHYSFS_BYTEORDER_WRITE(sint64, SBE64)
 PHYSFS_BYTEORDER_WRITE(uint64, UBE64)
 
 /* end of physfs_byteorder.c ... */
+

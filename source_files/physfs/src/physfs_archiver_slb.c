@@ -7,7 +7,7 @@
  * The format begins with four zero bytes (version?), the file count and the
  * location of the table of contents. Each ToC entry contains a 64-byte buffer
  * containing a zero-terminated filename, the offset of the data, and its size.
- * All the filenames begin with the separator character '\'.
+ * All the filenames begin with the separator character '\'. 
  *
  * Please see the file LICENSE.txt in the source's root directory.
  *
@@ -20,9 +20,11 @@
 
 #if PHYSFS_SUPPORTS_SLB
 
-static int slbLoadEntries(PHYSFS_Io *io, const PHYSFS_uint32 count, void *arc) {
+static int slbLoadEntries(PHYSFS_Io *io, const PHYSFS_uint32 count, void *arc)
+{
     PHYSFS_uint32 i;
-    for (i = 0; i < count; i++) {
+    for (i = 0; i < count; i++)
+    {
         PHYSFS_uint32 pos;
         PHYSFS_uint32 size;
         char name[64];
@@ -38,8 +40,10 @@ static int slbLoadEntries(PHYSFS_Io *io, const PHYSFS_uint32 count, void *arc) {
         name[63] = '\0'; /* in case the name lacks the null terminator */
 
         /* convert backslashes */
-        for (ptr = name; *ptr; ptr++) {
-            if (*ptr == '\\') *ptr = '/';
+        for (ptr = name; *ptr; ptr++)
+        {
+            if (*ptr == '\\')
+                *ptr = '/';
         } /* for */
 
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &pos, 4), 0);
@@ -54,8 +58,10 @@ static int slbLoadEntries(PHYSFS_Io *io, const PHYSFS_uint32 count, void *arc) {
     return 1;
 } /* slbLoadEntries */
 
-static void *SLB_openArchive(PHYSFS_Io *io, const char *name, int forWriting,
-                             int *claimed) {
+
+static void *SLB_openArchive(PHYSFS_Io *io, const char *name,
+                             int forWriting, int *claimed)
+{
     PHYSFS_uint32 version;
     PHYSFS_uint32 count;
     PHYSFS_uint32 tocPos;
@@ -68,45 +74,50 @@ static void *SLB_openArchive(PHYSFS_Io *io, const char *name, int forWriting,
        covers all meaningful cases where we would accidentally accept a non-SLB
        file with this archiver. */
 
-    assert(io != NULL); /* shouldn't ever happen. */
+    assert(io != NULL);  /* shouldn't ever happen. */
 
     BAIL_IF(forWriting, PHYSFS_ERR_READ_ONLY, NULL);
 
-    BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &version, sizeof(version)), NULL);
+    BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &version, sizeof (version)), NULL);
     version = PHYSFS_swapULE32(version);
     BAIL_IF(version != 0, PHYSFS_ERR_UNSUPPORTED, NULL);
 
-    BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &count, sizeof(count)), NULL);
+    BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &count, sizeof (count)), NULL);
     count = PHYSFS_swapULE32(count);
     BAIL_IF(!count, PHYSFS_ERR_UNSUPPORTED, NULL);
 
     /* offset of the table of contents */
-    BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &tocPos, sizeof(tocPos)), NULL);
+    BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &tocPos, sizeof (tocPos)), NULL);
     tocPos = PHYSFS_swapULE32(tocPos);
     BAIL_IF(!tocPos, PHYSFS_ERR_UNSUPPORTED, NULL);
-
+    
     /* seek to the table of contents */
     BAIL_IF_ERRPASS(!io->seek(io, tocPos), NULL);
 
     unpkarc = UNPK_openArchive(io);
     BAIL_IF_ERRPASS(!unpkarc, NULL);
 
-    if (!slbLoadEntries(io, count, unpkarc)) {
+    if (!slbLoadEntries(io, count, unpkarc))
+    {
         UNPK_abandonArchive(unpkarc);
         return NULL;
     } /* if */
 
-    *claimed = 1; /* oh well. */
+    *claimed = 1;  /* oh well. */
 
     return unpkarc;
 } /* SLB_openArchive */
 
-const PHYSFS_Archiver __PHYSFS_Archiver_SLB = {
+
+const PHYSFS_Archiver __PHYSFS_Archiver_SLB =
+{
     CURRENT_PHYSFS_ARCHIVER_API_VERSION,
     {
-        "SLB", "I-War / Independence War Slab file",
+        "SLB",
+        "I-War / Independence War Slab file",
         "Aleksi Nurmi <aleksi.nurmi@gmail.com>",
-        "https://bitbucket.org/ahnurmi/", 0, /* supportsSymlinks */
+        "https://bitbucket.org/ahnurmi/",
+        0,  /* supportsSymlinks */
     },
     SLB_openArchive,
     UNPK_enumerate,
@@ -116,8 +127,9 @@ const PHYSFS_Archiver __PHYSFS_Archiver_SLB = {
     UNPK_remove,
     UNPK_mkdir,
     UNPK_stat,
-    UNPK_closeArchive};
+    UNPK_closeArchive
+};
 
-#endif /* defined PHYSFS_SUPPORTS_SLB */
+#endif  /* defined PHYSFS_SUPPORTS_SLB */
 
 /* end of physfs_archiver_slb.c ... */

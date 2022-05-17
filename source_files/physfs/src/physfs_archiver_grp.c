@@ -29,20 +29,22 @@
 
 #if PHYSFS_SUPPORTS_GRP
 
-static int grpLoadEntries(PHYSFS_Io *io, const PHYSFS_uint32 count, void *arc) {
-    PHYSFS_uint32 pos = 16 + (16 * count); /* past sig+metadata. */
+static int grpLoadEntries(PHYSFS_Io *io, const PHYSFS_uint32 count, void *arc)
+{
+    PHYSFS_uint32 pos = 16 + (16 * count);  /* past sig+metadata. */
     PHYSFS_uint32 i;
 
-    for (i = 0; i < count; i++) {
+    for (i = 0; i < count; i++)
+    {
         char *ptr;
         char name[13];
         PHYSFS_uint32 size;
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, name, 12), 0);
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &size, 4), 0);
 
-        name[12] = '\0'; /* name isn't null-terminated in file. */
+        name[12] = '\0';  /* name isn't null-terminated in file. */
         if ((ptr = strchr(name, ' ')) != NULL)
-            *ptr = '\0'; /* trim extra spaces. */
+            *ptr = '\0';  /* trim extra spaces. */
 
         size = PHYSFS_swapULE32(size);
         BAIL_IF_ERRPASS(!UNPK_addEntry(arc, name, 0, -1, -1, pos, size), 0);
@@ -53,18 +55,20 @@ static int grpLoadEntries(PHYSFS_Io *io, const PHYSFS_uint32 count, void *arc) {
     return 1;
 } /* grpLoadEntries */
 
-static void *GRP_openArchive(PHYSFS_Io *io, const char *name, int forWriting,
-                             int *claimed) {
+
+static void *GRP_openArchive(PHYSFS_Io *io, const char *name,
+                             int forWriting, int *claimed)
+{
     PHYSFS_uint8 buf[12];
     PHYSFS_uint32 count = 0;
     void *unpkarc = NULL;
 
-    assert(io != NULL); /* shouldn't ever happen. */
+    assert(io != NULL);  /* shouldn't ever happen. */
 
     BAIL_IF(forWriting, PHYSFS_ERR_READ_ONLY, NULL);
 
-    BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, buf, sizeof(buf)), NULL);
-    if (memcmp(buf, "KenSilverman", sizeof(buf)) != 0)
+    BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, buf, sizeof (buf)), NULL);
+    if (memcmp(buf, "KenSilverman", sizeof (buf)) != 0)
         BAIL(PHYSFS_ERR_UNSUPPORTED, NULL);
 
     *claimed = 1;
@@ -75,7 +79,8 @@ static void *GRP_openArchive(PHYSFS_Io *io, const char *name, int forWriting,
     unpkarc = UNPK_openArchive(io);
     BAIL_IF_ERRPASS(!unpkarc, NULL);
 
-    if (!grpLoadEntries(io, count, unpkarc)) {
+    if (!grpLoadEntries(io, count, unpkarc))
+    {
         UNPK_abandonArchive(unpkarc);
         return NULL;
     } /* if */
@@ -83,12 +88,16 @@ static void *GRP_openArchive(PHYSFS_Io *io, const char *name, int forWriting,
     return unpkarc;
 } /* GRP_openArchive */
 
-const PHYSFS_Archiver __PHYSFS_Archiver_GRP = {
+
+const PHYSFS_Archiver __PHYSFS_Archiver_GRP =
+{
     CURRENT_PHYSFS_ARCHIVER_API_VERSION,
     {
-        "GRP", "Build engine Groupfile format",
-        "Ryan C. Gordon <icculus@icculus.org>", "https://icculus.org/physfs/",
-        0, /* supportsSymlinks */
+        "GRP",
+        "Build engine Groupfile format",
+        "Ryan C. Gordon <icculus@icculus.org>",
+        "https://icculus.org/physfs/",
+        0,  /* supportsSymlinks */
     },
     GRP_openArchive,
     UNPK_enumerate,
@@ -98,8 +107,10 @@ const PHYSFS_Archiver __PHYSFS_Archiver_GRP = {
     UNPK_remove,
     UNPK_mkdir,
     UNPK_stat,
-    UNPK_closeArchive};
+    UNPK_closeArchive
+};
 
-#endif /* defined PHYSFS_SUPPORTS_GRP */
+#endif  /* defined PHYSFS_SUPPORTS_GRP */
 
 /* end of physfs_archiver_grp.c ... */
+

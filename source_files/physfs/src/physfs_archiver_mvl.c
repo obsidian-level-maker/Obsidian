@@ -32,16 +32,18 @@
 
 #if PHYSFS_SUPPORTS_MVL
 
-static int mvlLoadEntries(PHYSFS_Io *io, const PHYSFS_uint32 count, void *arc) {
-    PHYSFS_uint32 pos = 8 + (17 * count); /* past sig+metadata. */
+static int mvlLoadEntries(PHYSFS_Io *io, const PHYSFS_uint32 count, void *arc)
+{
+    PHYSFS_uint32 pos = 8 + (17 * count);   /* past sig+metadata. */
     PHYSFS_uint32 i;
 
-    for (i = 0; i < count; i++) {
+    for (i = 0; i < count; i++)
+    {
         PHYSFS_uint32 size;
         char name[13];
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, name, 13), 0);
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &size, 4), 0);
-        name[12] = '\0'; /* just in case. */
+        name[12] = '\0';  /* just in case. */
         size = PHYSFS_swapULE32(size);
         BAIL_IF_ERRPASS(!UNPK_addEntry(arc, name, 0, -1, -1, pos, size), 0);
         pos += size;
@@ -50,13 +52,15 @@ static int mvlLoadEntries(PHYSFS_Io *io, const PHYSFS_uint32 count, void *arc) {
     return 1;
 } /* mvlLoadEntries */
 
-static void *MVL_openArchive(PHYSFS_Io *io, const char *name, int forWriting,
-                             int *claimed) {
+
+static void *MVL_openArchive(PHYSFS_Io *io, const char *name,
+                             int forWriting, int *claimed)
+{
     PHYSFS_uint8 buf[4];
     PHYSFS_uint32 count = 0;
     void *unpkarc;
 
-    assert(io != NULL); /* shouldn't ever happen. */
+    assert(io != NULL);  /* shouldn't ever happen. */
     BAIL_IF(forWriting, PHYSFS_ERR_READ_ONLY, NULL);
     BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, buf, 4), NULL);
     BAIL_IF(memcmp(buf, "DMVL", 4) != 0, PHYSFS_ERR_UNSUPPORTED, NULL);
@@ -69,7 +73,8 @@ static void *MVL_openArchive(PHYSFS_Io *io, const char *name, int forWriting,
     unpkarc = UNPK_openArchive(io);
     BAIL_IF_ERRPASS(!unpkarc, NULL);
 
-    if (!mvlLoadEntries(io, count, unpkarc)) {
+    if (!mvlLoadEntries(io, count, unpkarc))
+    {
         UNPK_abandonArchive(unpkarc);
         return NULL;
     } /* if */
@@ -77,11 +82,16 @@ static void *MVL_openArchive(PHYSFS_Io *io, const char *name, int forWriting,
     return unpkarc;
 } /* MVL_openArchive */
 
-const PHYSFS_Archiver __PHYSFS_Archiver_MVL = {
+
+const PHYSFS_Archiver __PHYSFS_Archiver_MVL =
+{
     CURRENT_PHYSFS_ARCHIVER_API_VERSION,
     {
-        "MVL", "Descent II Movielib format", "Bradley Bell <btb@icculus.org>",
-        "https://icculus.org/physfs/", 0, /* supportsSymlinks */
+        "MVL",
+        "Descent II Movielib format",
+        "Bradley Bell <btb@icculus.org>",
+        "https://icculus.org/physfs/",
+        0,  /* supportsSymlinks */
     },
     MVL_openArchive,
     UNPK_enumerate,
@@ -91,8 +101,10 @@ const PHYSFS_Archiver __PHYSFS_Archiver_MVL = {
     UNPK_remove,
     UNPK_mkdir,
     UNPK_stat,
-    UNPK_closeArchive};
+    UNPK_closeArchive
+};
 
-#endif /* defined PHYSFS_SUPPORTS_MVL */
+#endif  /* defined PHYSFS_SUPPORTS_MVL */
 
 /* end of physfs_archiver_mvl.c ... */
+

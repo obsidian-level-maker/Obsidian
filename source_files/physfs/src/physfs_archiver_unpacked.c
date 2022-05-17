@@ -16,12 +16,14 @@
 #define __PHYSICSFS_INTERNAL__
 #include "physfs_internal.h"
 
-typedef struct {
+typedef struct
+{
     __PHYSFS_DirTree tree;
     PHYSFS_Io *io;
 } UNPKinfo;
 
-typedef struct {
+typedef struct
+{
     __PHYSFS_DirTreeEntry tree;
     PHYSFS_uint64 startPos;
     PHYSFS_uint64 size;
@@ -29,78 +31,96 @@ typedef struct {
     PHYSFS_sint64 mtime;
 } UNPKentry;
 
-typedef struct {
+typedef struct
+{
     PHYSFS_Io *io;
     UNPKentry *entry;
     PHYSFS_uint32 curPos;
 } UNPKfileinfo;
 
-void UNPK_closeArchive(void *opaque) {
-    UNPKinfo *info = ((UNPKinfo *)opaque);
-    if (info) {
+
+void UNPK_closeArchive(void *opaque)
+{
+    UNPKinfo *info = ((UNPKinfo *) opaque);
+    if (info)
+    {
         __PHYSFS_DirTreeDeinit(&info->tree);
 
-        if (info->io) info->io->destroy(info->io);
+        if (info->io)
+            info->io->destroy(info->io);
 
         allocator.Free(info);
     } /* if */
 } /* UNPK_closeArchive */
 
-void UNPK_abandonArchive(void *opaque) {
-    UNPKinfo *info = ((UNPKinfo *)opaque);
-    if (info) {
+void UNPK_abandonArchive(void *opaque)
+{
+    UNPKinfo *info = ((UNPKinfo *) opaque);
+    if (info)
+    {
         info->io = NULL;
         UNPK_closeArchive(info);
     } /* if */
 } /* UNPK_abandonArchive */
 
-static PHYSFS_sint64 UNPK_read(PHYSFS_Io *io, void *buffer, PHYSFS_uint64 len) {
-    UNPKfileinfo *finfo = (UNPKfileinfo *)io->opaque;
+static PHYSFS_sint64 UNPK_read(PHYSFS_Io *io, void *buffer, PHYSFS_uint64 len)
+{
+    UNPKfileinfo *finfo = (UNPKfileinfo *) io->opaque;
     const UNPKentry *entry = finfo->entry;
-    const PHYSFS_uint64 bytesLeft =
-        (PHYSFS_uint64)(entry->size - finfo->curPos);
+    const PHYSFS_uint64 bytesLeft = (PHYSFS_uint64)(entry->size-finfo->curPos);
     PHYSFS_sint64 rc;
 
-    if (bytesLeft < len) len = bytesLeft;
+    if (bytesLeft < len)
+        len = bytesLeft;
 
     rc = finfo->io->read(finfo->io, buffer, len);
-    if (rc > 0) finfo->curPos += (PHYSFS_uint32)rc;
+    if (rc > 0)
+        finfo->curPos += (PHYSFS_uint32) rc;
 
     return rc;
 } /* UNPK_read */
 
-static PHYSFS_sint64 UNPK_write(PHYSFS_Io *io, const void *b,
-                                PHYSFS_uint64 len) {
+
+static PHYSFS_sint64 UNPK_write(PHYSFS_Io *io, const void *b, PHYSFS_uint64 len)
+{
     BAIL(PHYSFS_ERR_READ_ONLY, -1);
 } /* UNPK_write */
 
-static PHYSFS_sint64 UNPK_tell(PHYSFS_Io *io) {
-    return ((UNPKfileinfo *)io->opaque)->curPos;
+
+static PHYSFS_sint64 UNPK_tell(PHYSFS_Io *io)
+{
+    return ((UNPKfileinfo *) io->opaque)->curPos;
 } /* UNPK_tell */
 
-static int UNPK_seek(PHYSFS_Io *io, PHYSFS_uint64 offset) {
-    UNPKfileinfo *finfo = (UNPKfileinfo *)io->opaque;
+
+static int UNPK_seek(PHYSFS_Io *io, PHYSFS_uint64 offset)
+{
+    UNPKfileinfo *finfo = (UNPKfileinfo *) io->opaque;
     const UNPKentry *entry = finfo->entry;
     int rc;
 
     BAIL_IF(offset >= entry->size, PHYSFS_ERR_PAST_EOF, 0);
     rc = finfo->io->seek(finfo->io, entry->startPos + offset);
-    if (rc) finfo->curPos = (PHYSFS_uint32)offset;
+    if (rc)
+        finfo->curPos = (PHYSFS_uint32) offset;
 
     return rc;
 } /* UNPK_seek */
 
-static PHYSFS_sint64 UNPK_length(PHYSFS_Io *io) {
-    const UNPKfileinfo *finfo = (UNPKfileinfo *)io->opaque;
-    return ((PHYSFS_sint64)finfo->entry->size);
+
+static PHYSFS_sint64 UNPK_length(PHYSFS_Io *io)
+{
+    const UNPKfileinfo *finfo = (UNPKfileinfo *) io->opaque;
+    return ((PHYSFS_sint64) finfo->entry->size);
 } /* UNPK_length */
 
-static PHYSFS_Io *UNPK_duplicate(PHYSFS_Io *_io) {
-    UNPKfileinfo *origfinfo = (UNPKfileinfo *)_io->opaque;
+
+static PHYSFS_Io *UNPK_duplicate(PHYSFS_Io *_io)
+{
+    UNPKfileinfo *origfinfo = (UNPKfileinfo *) _io->opaque;
     PHYSFS_Io *io = NULL;
-    PHYSFS_Io *retval = (PHYSFS_Io *)allocator.Malloc(sizeof(PHYSFS_Io));
-    UNPKfileinfo *finfo =
-        (UNPKfileinfo *)allocator.Malloc(sizeof(UNPKfileinfo));
+    PHYSFS_Io *retval = (PHYSFS_Io *) allocator.Malloc(sizeof (PHYSFS_Io));
+    UNPKfileinfo *finfo = (UNPKfileinfo *) allocator.Malloc(sizeof (UNPKfileinfo));
     GOTO_IF(!retval, PHYSFS_ERR_OUT_OF_MEMORY, UNPK_duplicate_failed);
     GOTO_IF(!finfo, PHYSFS_ERR_OUT_OF_MEMORY, UNPK_duplicate_failed);
 
@@ -109,7 +129,7 @@ static PHYSFS_Io *UNPK_duplicate(PHYSFS_Io *_io) {
     finfo->io = io;
     finfo->entry = origfinfo->entry;
     finfo->curPos = 0;
-    memcpy(retval, _io, sizeof(PHYSFS_Io));
+    memcpy(retval, _io, sizeof (PHYSFS_Io));
     retval->opaque = finfo;
     return retval;
 
@@ -120,95 +140,119 @@ UNPK_duplicate_failed:
     return NULL;
 } /* UNPK_duplicate */
 
-static int UNPK_flush(PHYSFS_Io *io) { return 1; /* no write support. */ }
+static int UNPK_flush(PHYSFS_Io *io) { return 1;  /* no write support. */ }
 
-static void UNPK_destroy(PHYSFS_Io *io) {
-    UNPKfileinfo *finfo = (UNPKfileinfo *)io->opaque;
+static void UNPK_destroy(PHYSFS_Io *io)
+{
+    UNPKfileinfo *finfo = (UNPKfileinfo *) io->opaque;
     finfo->io->destroy(finfo->io);
     allocator.Free(finfo);
     allocator.Free(io);
 } /* UNPK_destroy */
 
-static const PHYSFS_Io UNPK_Io = {CURRENT_PHYSFS_IO_API_VERSION,
-                                  NULL,
-                                  UNPK_read,
-                                  UNPK_write,
-                                  UNPK_seek,
-                                  UNPK_tell,
-                                  UNPK_length,
-                                  UNPK_duplicate,
-                                  UNPK_flush,
-                                  UNPK_destroy};
 
-static inline UNPKentry *findEntry(UNPKinfo *info, const char *path) {
-    return (UNPKentry *)__PHYSFS_DirTreeFind(&info->tree, path);
+static const PHYSFS_Io UNPK_Io =
+{
+    CURRENT_PHYSFS_IO_API_VERSION, NULL,
+    UNPK_read,
+    UNPK_write,
+    UNPK_seek,
+    UNPK_tell,
+    UNPK_length,
+    UNPK_duplicate,
+    UNPK_flush,
+    UNPK_destroy
+};
+
+
+static inline UNPKentry *findEntry(UNPKinfo *info, const char *path)
+{
+    return (UNPKentry *) __PHYSFS_DirTreeFind(&info->tree, path);
 } /* findEntry */
 
-PHYSFS_Io *UNPK_openRead(void *opaque, const char *name) {
+
+PHYSFS_Io *UNPK_openRead(void *opaque, const char *name)
+{
     PHYSFS_Io *retval = NULL;
-    UNPKinfo *info = (UNPKinfo *)opaque;
+    UNPKinfo *info = (UNPKinfo *) opaque;
     UNPKfileinfo *finfo = NULL;
     UNPKentry *entry = findEntry(info, name);
 
     BAIL_IF_ERRPASS(!entry, NULL);
     BAIL_IF(entry->tree.isdir, PHYSFS_ERR_NOT_A_FILE, NULL);
 
-    retval = (PHYSFS_Io *)allocator.Malloc(sizeof(PHYSFS_Io));
+    retval = (PHYSFS_Io *) allocator.Malloc(sizeof (PHYSFS_Io));
     GOTO_IF(!retval, PHYSFS_ERR_OUT_OF_MEMORY, UNPK_openRead_failed);
 
-    finfo = (UNPKfileinfo *)allocator.Malloc(sizeof(UNPKfileinfo));
+    finfo = (UNPKfileinfo *) allocator.Malloc(sizeof (UNPKfileinfo));
     GOTO_IF(!finfo, PHYSFS_ERR_OUT_OF_MEMORY, UNPK_openRead_failed);
 
     finfo->io = info->io->duplicate(info->io);
     GOTO_IF_ERRPASS(!finfo->io, UNPK_openRead_failed);
 
-    if (!finfo->io->seek(finfo->io, entry->startPos)) goto UNPK_openRead_failed;
+    if (!finfo->io->seek(finfo->io, entry->startPos))
+        goto UNPK_openRead_failed;
 
     finfo->curPos = 0;
     finfo->entry = entry;
 
-    memcpy(retval, &UNPK_Io, sizeof(*retval));
+    memcpy(retval, &UNPK_Io, sizeof (*retval));
     retval->opaque = finfo;
     return retval;
 
 UNPK_openRead_failed:
-    if (finfo != NULL) {
-        if (finfo->io != NULL) finfo->io->destroy(finfo->io);
+    if (finfo != NULL)
+    {
+        if (finfo->io != NULL)
+            finfo->io->destroy(finfo->io);
         allocator.Free(finfo);
     } /* if */
 
-    if (retval != NULL) allocator.Free(retval);
+    if (retval != NULL)
+        allocator.Free(retval);
 
     return NULL;
 } /* UNPK_openRead */
 
-PHYSFS_Io *UNPK_openWrite(void *opaque, const char *name) {
+
+PHYSFS_Io *UNPK_openWrite(void *opaque, const char *name)
+{
     BAIL(PHYSFS_ERR_READ_ONLY, NULL);
 } /* UNPK_openWrite */
 
-PHYSFS_Io *UNPK_openAppend(void *opaque, const char *name) {
+
+PHYSFS_Io *UNPK_openAppend(void *opaque, const char *name)
+{
     BAIL(PHYSFS_ERR_READ_ONLY, NULL);
 } /* UNPK_openAppend */
 
-int UNPK_remove(void *opaque, const char *name) {
+
+int UNPK_remove(void *opaque, const char *name)
+{
     BAIL(PHYSFS_ERR_READ_ONLY, 0);
 } /* UNPK_remove */
 
-int UNPK_mkdir(void *opaque, const char *name) {
+
+int UNPK_mkdir(void *opaque, const char *name)
+{
     BAIL(PHYSFS_ERR_READ_ONLY, 0);
 } /* UNPK_mkdir */
 
-int UNPK_stat(void *opaque, const char *path, PHYSFS_Stat *stat) {
-    UNPKinfo *info = (UNPKinfo *)opaque;
+
+int UNPK_stat(void *opaque, const char *path, PHYSFS_Stat *stat)
+{
+    UNPKinfo *info = (UNPKinfo *) opaque;
     const UNPKentry *entry = findEntry(info, path);
 
     BAIL_IF_ERRPASS(!entry, 0);
 
-    if (entry->tree.isdir) {
+    if (entry->tree.isdir)
+    {
         stat->filetype = PHYSFS_FILETYPE_DIRECTORY;
         stat->filesize = 0;
     } /* if */
-    else {
+    else
+    {
         stat->filetype = PHYSFS_FILETYPE_REGULAR;
         stat->filesize = entry->size;
     } /* else */
@@ -221,13 +265,15 @@ int UNPK_stat(void *opaque, const char *path, PHYSFS_Stat *stat) {
     return 1;
 } /* UNPK_stat */
 
+
 void *UNPK_addEntry(void *opaque, char *name, const int isdir,
                     const PHYSFS_sint64 ctime, const PHYSFS_sint64 mtime,
-                    const PHYSFS_uint64 pos, const PHYSFS_uint64 len) {
-    UNPKinfo *info = (UNPKinfo *)opaque;
+                    const PHYSFS_uint64 pos, const PHYSFS_uint64 len)
+{
+    UNPKinfo *info = (UNPKinfo *) opaque;
     UNPKentry *entry;
 
-    entry = (UNPKentry *)__PHYSFS_DirTreeAdd(&info->tree, name, isdir);
+    entry = (UNPKentry *) __PHYSFS_DirTreeAdd(&info->tree, name, isdir);
     BAIL_IF_ERRPASS(!entry, NULL);
 
     entry->startPos = isdir ? 0 : pos;
@@ -238,11 +284,14 @@ void *UNPK_addEntry(void *opaque, char *name, const int isdir,
     return entry;
 } /* UNPK_addEntry */
 
-void *UNPK_openArchive(PHYSFS_Io *io) {
-    UNPKinfo *info = (UNPKinfo *)allocator.Malloc(sizeof(UNPKinfo));
+
+void *UNPK_openArchive(PHYSFS_Io *io)
+{
+    UNPKinfo *info = (UNPKinfo *) allocator.Malloc(sizeof (UNPKinfo));
     BAIL_IF(!info, PHYSFS_ERR_OUT_OF_MEMORY, NULL);
 
-    if (!__PHYSFS_DirTreeInit(&info->tree, sizeof(UNPKentry))) {
+    if (!__PHYSFS_DirTreeInit(&info->tree, sizeof (UNPKentry)))
+    {
         allocator.Free(info);
         return NULL;
     } /* if */
@@ -253,3 +302,4 @@ void *UNPK_openArchive(PHYSFS_Io *io) {
 } /* UNPK_openArchive */
 
 /* end of physfs_archiver_unpacked.c ... */
+

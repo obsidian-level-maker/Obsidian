@@ -39,15 +39,16 @@
    fields aren't aligned anyhow, so you have to serialize them in any case
    to avoid crashes on many CPU archs in any case. */
 
-static int iso9660LoadEntries(PHYSFS_Io *io, const int joliet, const char *base,
-                              const PHYSFS_uint64 dirstart,
+static int iso9660LoadEntries(PHYSFS_Io *io, const int joliet,
+                              const char *base, const PHYSFS_uint64 dirstart,
                               const PHYSFS_uint64 dirend, void *unpkarc);
 
 static int iso9660AddEntry(PHYSFS_Io *io, const int joliet, const int isdir,
                            const char *base, PHYSFS_uint8 *fname,
                            const int fnamelen, const PHYSFS_sint64 ts,
                            const PHYSFS_uint64 pos, const PHYSFS_uint64 len,
-                           void *unpkarc) {
+                           void *unpkarc)
+{
     char *fullpath;
     char *fnamecpy;
     size_t baselen;
@@ -56,7 +57,7 @@ static int iso9660AddEntry(PHYSFS_Io *io, const int joliet, const int isdir,
     int i;
 
     if (fnamelen == 1 && ((fname[0] == 0) || (fname[0] == 1)))
-        return 1; /* Magic that represents "." and "..", ignore */
+        return 1;  /* Magic that represents "." and "..", ignore */
 
     BAIL_IF(fnamelen == 0, PHYSFS_ERR_CORRUPT, 0);
     assert(fnamelen > 0);
@@ -66,24 +67,29 @@ static int iso9660AddEntry(PHYSFS_Io *io, const int joliet, const int isdir,
     /* Joliet is UCS-2, so at most UTF-8 will double the byte size */
     baselen = strlen(base);
     fullpathlen = baselen + (fnamelen * (joliet ? 2 : 1)) + 2;
-    fullpath = (char *)__PHYSFS_smallAlloc(fullpathlen);
+    fullpath = (char *) __PHYSFS_smallAlloc(fullpathlen);
     BAIL_IF(!fullpath, PHYSFS_ERR_OUT_OF_MEMORY, 0);
     fnamecpy = fullpath;
-    if (baselen > 0) {
+    if (baselen > 0)
+    {
         snprintf(fullpath, fullpathlen, "%s/", base);
         fnamecpy += baselen + 1;
         fullpathlen -= baselen - 1;
     } /* if */
 
-    if (joliet) {
-        PHYSFS_uint16 *ucs2 = (PHYSFS_uint16 *)fname;
+    if (joliet)
+    {
+        PHYSFS_uint16 *ucs2 = (PHYSFS_uint16 *) fname;
         int total = fnamelen / 2;
-        for (i = 0; i < total; i++) ucs2[i] = PHYSFS_swapUBE16(ucs2[i]);
+        for (i = 0; i < total; i++)
+            ucs2[i] = PHYSFS_swapUBE16(ucs2[i]);
         ucs2[total] = '\0';
         PHYSFS_utf8FromUcs2(ucs2, fnamecpy, fullpathlen);
     } /* if */
-    else {
-        for (i = 0; i < fnamelen; i++) {
+    else
+    {
+        for (i = 0; i < fnamelen; i++)
+        {
             /* We assume the filenames are low-ASCII; consider the archive
                corrupt if we see something above 127, since we don't know the
                encoding. (We can change this later if we find out these exist
@@ -93,7 +99,8 @@ static int iso9660AddEntry(PHYSFS_Io *io, const int joliet, const int isdir,
         } /* for */
         fnamecpy[fnamelen] = '\0';
 
-        if (!isdir) {
+        if (!isdir)
+        {
             /* find last SEPARATOR2 */
             char *ptr = strrchr(fnamecpy, ';');
             if (ptr && (ptr != fnamecpy))
@@ -102,26 +109,30 @@ static int iso9660AddEntry(PHYSFS_Io *io, const int joliet, const int isdir,
                 ptr = fnamecpy + (fnamelen - 1);
 
             /* chop out any trailing '.', as done in all implementations */
-            if (*ptr == '.') *ptr = '\0';
+            if (*ptr == '.')
+                *ptr = '\0';
         } /* if */
-    }     /* else */
+    } /* else */
 
     entry = UNPK_addEntry(unpkarc, fullpath, isdir, ts, ts, pos, len);
-    if ((entry) && (isdir)) {
+    if ((entry) && (isdir))
+    {
         if (!iso9660LoadEntries(io, joliet, fullpath, pos, pos + len, unpkarc))
-            entry = NULL; /* so we report a failure later. */
-    }                     /* if */
+            entry = NULL;  /* so we report a failure later. */
+    } /* if */
 
     __PHYSFS_smallFree(fullpath);
     return entry != NULL;
 } /* iso9660AddEntry */
 
-static int iso9660LoadEntries(PHYSFS_Io *io, const int joliet, const char *base,
-                              const PHYSFS_uint64 dirstart,
-                              const PHYSFS_uint64 dirend, void *unpkarc) {
+static int iso9660LoadEntries(PHYSFS_Io *io, const int joliet,
+                              const char *base, const PHYSFS_uint64 dirstart,
+                              const PHYSFS_uint64 dirend, void *unpkarc)
+{
     PHYSFS_uint64 readpos = dirstart;
 
-    while (1) {
+    while (1)
+    {
         PHYSFS_uint8 recordlen;
         PHYSFS_uint8 extattrlen;
         PHYSFS_uint32 extent;
@@ -141,12 +152,14 @@ static int iso9660LoadEntries(PHYSFS_Io *io, const int joliet, const char *base,
         /* recordlen = 0 -> no more entries or fill entry */
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &recordlen, 1), 0);
         if (recordlen > 0)
-            readpos += recordlen; /* ready to seek to next record. */
-        else {
+            readpos += recordlen;  /* ready to seek to next record. */
+        else
+        {
             PHYSFS_uint64 nextpos;
 
             /* if we are in the last sector of the directory & it's 0 -> end */
-            if ((dirend - 2048) <= (readpos - 1)) break; /* finished */
+            if ((dirend - 2048) <= (readpos - 1))
+                break; /* finished */
 
             /* else skip to the next sector & continue; */
             nextpos = (((readpos - 1) / 2048) + 1) * 2048;
@@ -155,8 +168,8 @@ static int iso9660LoadEntries(PHYSFS_Io *io, const int joliet, const char *base,
             BAIL_IF(nextpos == readpos, PHYSFS_ERR_CORRUPT, 0);
 
             readpos = nextpos;
-            continue; /* start back at upper loop. */
-        }             /* else */
+            continue;  /* start back at upper loop. */
+        } /* else */
 
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &extattrlen, 1), 0);
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &extent, 4), 0);
@@ -176,11 +189,10 @@ static int iso9660LoadEntries(PHYSFS_Io *io, const int joliet, const char *base,
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &flags, 1), 0);
         isdir = (flags & (1 << 1)) != 0;
         multiextent = (flags & (1 << 7)) != 0;
-        BAIL_IF(multiextent, PHYSFS_ERR_UNSUPPORTED, 0); /* !!! FIXME */
+        BAIL_IF(multiextent, PHYSFS_ERR_UNSUPPORTED, 0);  /* !!! FIXME */
 
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 1), 0); /* unit size */
-        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 1),
-                        0); /* interleave gap */
+        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 1), 0); /* interleave gap */
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 2), 0); /* seqnum le */
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 2), 0); /* seqnum be */
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &fnamelen, 1), 0);
@@ -195,32 +207,36 @@ static int iso9660LoadEntries(PHYSFS_Io *io, const int joliet, const char *base,
         t.tm_wday = 0;
         t.tm_yday = 0;
         t.tm_isdst = -1;
-        timestamp = (PHYSFS_sint64)mktime(&t);
+        timestamp = (PHYSFS_sint64) mktime(&t);
 
-        extent += extattrlen; /* skip extended attribute record. */
+        extent += extattrlen;  /* skip extended attribute record. */
 
         /* infinite loop, corrupt file? */
         BAIL_IF((extent * 2048) == dirstart, PHYSFS_ERR_CORRUPT, 0);
 
         if (!iso9660AddEntry(io, joliet, isdir, base, fname, fnamelen,
-                             timestamp, extent * 2048, datalen, unpkarc)) {
+                             timestamp, extent * 2048, datalen, unpkarc))
+        {
             return 0;
         } /* if */
-    }     /* while */
+    } /* while */
 
     return 1;
 } /* iso9660LoadEntries */
 
+
 static int parseVolumeDescriptor(PHYSFS_Io *io, PHYSFS_uint64 *_rootpos,
                                  PHYSFS_uint64 *_rootlen, int *_joliet,
-                                 int *_claimed) {
+                                 int *_claimed)
+{
     PHYSFS_uint64 pos = 32768; /* start at the Primary Volume Descriptor */
     int found = 0;
     int done = 0;
 
     *_joliet = 0;
 
-    while (!done) {
+    while (!done)
+    {
         PHYSFS_uint8 type;
         PHYSFS_uint8 identifier[5];
         PHYSFS_uint8 version;
@@ -232,43 +248,41 @@ static int parseVolumeDescriptor(PHYSFS_Io *io, PHYSFS_uint64 *_rootpos,
         PHYSFS_uint32 datalen;
 
         BAIL_IF_ERRPASS(!io->seek(io, pos), 0);
-        pos += 2048; /* each volume descriptor is 2048 bytes */
+        pos += 2048;  /* each volume descriptor is 2048 bytes */
 
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &type, 1), 0);
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &identifier, 5), 0);
 
-        if (memcmp(identifier, "CD001", 5) != 0) /* maybe not an iso? */
+        if (memcmp(identifier, "CD001", 5) != 0)  /* maybe not an iso? */
         {
             BAIL_IF(!*_claimed, PHYSFS_ERR_UNSUPPORTED, 0);
-            continue; /* just skip this one */
-        }             /* if */
+            continue;  /* just skip this one */
+        } /* if */
 
         *_claimed = 1; /* okay, this is probably an iso. */
 
-        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &version, 1), 0); /* version */
+        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &version, 1), 0);  /* version */
         BAIL_IF(version != 1, PHYSFS_ERR_UNSUPPORTED, 0);
 
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &flags, 1), 0);
-        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 32), 0); /* system id */
-        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 32), 0); /* volume id */
+        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 32), 0);  /* system id */
+        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 32), 0);  /* volume id */
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 8), 0);  /* reserved */
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 4), 0);  /* space le */
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 4), 0);  /* space be */
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, escapeseqs, 32), 0);
-        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 2), 0); /* setsize le */
-        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 2), 0); /* setsize be */
-        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 2), 0); /* seq num le */
-        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 2), 0); /* seq num be */
+        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 2), 0);  /* setsize le */
+        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 2), 0);  /* setsize be */
+        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 2), 0);  /* seq num le */
+        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 2), 0);  /* seq num be */
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, &blocksize, 2), 0);
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 2), 0); /* blocklen be */
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 4), 0); /* pthtablen le */
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 4), 0); /* pthtablen be */
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 4), 0); /* pthtabpos le */
-        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 4),
-                        0); /* optpthtabpos le */
+        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 4), 0); /* optpthtabpos le */
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 4), 0); /* pthtabpos be */
-        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 4),
-                        0); /* optpthtabpos be */
+        BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 4), 0); /* optpthtabpos be */
 
         /* root directory record... */
         BAIL_IF_ERRPASS(!__PHYSFS_readAll(io, ignore, 1), 0); /* len */
@@ -282,23 +296,24 @@ static int parseVolumeDescriptor(PHYSFS_Io *io, PHYSFS_uint64 *_rootpos,
         blocksize = PHYSFS_swapULE32(blocksize);
         BAIL_IF(blocksize && (blocksize != 2048), PHYSFS_ERR_UNSUPPORTED, 0);
 
-        switch (type) {
-            case 1: /* Primary Volume Descriptor */
-            case 2: /* Supplementary Volume Descriptor */
-                if (found < type) {
+        switch (type)
+        {
+            case 1:  /* Primary Volume Descriptor */
+            case 2:  /* Supplementary Volume Descriptor */
+                if (found < type)
+                {
                     *_rootpos = PHYSFS_swapULE32(extent) * 2048;
                     *_rootlen = PHYSFS_swapULE32(datalen);
                     found = type;
 
-                    if (found == 2) /* possible Joliet volume */
+                    if (found == 2)  /* possible Joliet volume */
                     {
                         const PHYSFS_uint8 *s = escapeseqs;
-                        *_joliet = !(flags & 1) && (s[0] == 0x25) &&
-                                   (s[1] == 0x2F) &&
-                                   ((s[2] == 0x40) || (s[2] == 0x43) ||
-                                    (s[2] == 0x45));
+                        *_joliet = !(flags & 1) &&
+                            (s[0] == 0x25) && (s[1] == 0x2F) &&
+                            ((s[2] == 0x40) || (s[2] == 0x43) || (s[2] == 0x45));
                     } /* if */
-                }     /* if */
+                } /* if */
                 break;
 
             case 255: /* type 255 terminates the volume descriptor list */
@@ -306,23 +321,25 @@ static int parseVolumeDescriptor(PHYSFS_Io *io, PHYSFS_uint64 *_rootpos,
                 break;
 
             default:
-                break; /* skip unknown types. */
-        }              /* switch */
-    }                  /* while */
+                break;  /* skip unknown types. */
+        } /* switch */
+    } /* while */
 
     BAIL_IF(!found, PHYSFS_ERR_CORRUPT, 0);
 
     return 1;
 } /* parseVolumeDescriptor */
 
+
 static void *ISO9660_openArchive(PHYSFS_Io *io, const char *filename,
-                                 int forWriting, int *claimed) {
+                                 int forWriting, int *claimed)
+{
     PHYSFS_uint64 rootpos = 0;
     PHYSFS_uint64 len = 0;
     int joliet = 0;
     void *unpkarc = NULL;
 
-    assert(io != NULL); /* shouldn't ever happen. */
+    assert(io != NULL);  /* shouldn't ever happen. */
 
     BAIL_IF(forWriting, PHYSFS_ERR_READ_ONLY, NULL);
 
@@ -332,7 +349,8 @@ static void *ISO9660_openArchive(PHYSFS_Io *io, const char *filename,
     unpkarc = UNPK_openArchive(io);
     BAIL_IF_ERRPASS(!unpkarc, NULL);
 
-    if (!iso9660LoadEntries(io, joliet, "", rootpos, rootpos + len, unpkarc)) {
+    if (!iso9660LoadEntries(io, joliet, "", rootpos, rootpos + len, unpkarc))
+    {
         UNPK_abandonArchive(unpkarc);
         return NULL;
     } /* if */
@@ -340,11 +358,16 @@ static void *ISO9660_openArchive(PHYSFS_Io *io, const char *filename,
     return unpkarc;
 } /* ISO9660_openArchive */
 
-const PHYSFS_Archiver __PHYSFS_Archiver_ISO9660 = {
+
+const PHYSFS_Archiver __PHYSFS_Archiver_ISO9660 =
+{
     CURRENT_PHYSFS_ARCHIVER_API_VERSION,
     {
-        "ISO", "ISO9660 image file", "Ryan C. Gordon <icculus@icculus.org>",
-        "https://icculus.org/physfs/", 0, /* supportsSymlinks */
+        "ISO",
+        "ISO9660 image file",
+        "Ryan C. Gordon <icculus@icculus.org>",
+        "https://icculus.org/physfs/",
+        0,  /* supportsSymlinks */
     },
     ISO9660_openArchive,
     UNPK_enumerate,
@@ -354,8 +377,10 @@ const PHYSFS_Archiver __PHYSFS_Archiver_ISO9660 = {
     UNPK_remove,
     UNPK_mkdir,
     UNPK_stat,
-    UNPK_closeArchive};
+    UNPK_closeArchive
+};
 
-#endif /* defined PHYSFS_SUPPORTS_ISO9660 */
+#endif  /* defined PHYSFS_SUPPORTS_ISO9660 */
 
 /* end of physfs_archiver_iso9660.c ... */
+

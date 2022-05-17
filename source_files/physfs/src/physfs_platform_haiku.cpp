@@ -11,15 +11,15 @@
 
 #ifdef PHYSFS_PLATFORM_HAIKU
 
-#include <os/app/Roster.h>
-#include <os/device/scsi.h>
 #include <os/kernel/OS.h>
-#include <os/kernel/fs_info.h>
+#include <os/app/Roster.h>
+#include <os/storage/Volume.h>
+#include <os/storage/VolumeRoster.h>
 #include <os/storage/Directory.h>
 #include <os/storage/Entry.h>
 #include <os/storage/Path.h>
-#include <os/storage/Volume.h>
-#include <os/storage/VolumeRoster.h>
+#include <os/kernel/fs_info.h>
+#include <os/device/scsi.h>
 
 #include <errno.h>
 #include <unistd.h>
