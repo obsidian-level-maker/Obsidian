@@ -4064,9 +4064,9 @@ ARMAETUS_ROOM_THEMES =
       GRATE8 = 50,
       QFLAT09 = 50,
 
-      OBTSVFB1 = 50,
-      OBTSVFB2 = 50,
-      OBTSVFB3 = 50,
+      OBTSVBF1 = 50,
+      OBTSVBF2 = 50,
+      OBTSVBF3 = 50,
     },
 
     ceilings =
@@ -4098,9 +4098,9 @@ ARMAETUS_ROOM_THEMES =
       GRATE8 = 50,
       QFLAT09 = 50,
 
-      OBTSVFB1 = 50,
-      OBTSVFB2 = 50,
-      OBTSVFB3 = 50,
+      OBTSVBF1 = 50,
+      OBTSVBF2 = 50,
+      OBTSVBF3 = 50,
     },
 
     walls =
