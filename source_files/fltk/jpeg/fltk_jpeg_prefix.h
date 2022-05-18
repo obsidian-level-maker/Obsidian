@@ -1,7 +1,7 @@
 /*
  * FLTK symbol prefixes for libjpeg
  * This is a generated file: see README.bundled-libs.txt
- */
+*/
 #define jcopy_block_row fltk_jcopy_block_row
 #define jcopy_sample_rows fltk_jcopy_sample_rows
 #define jdiv_round_up fltk_jdiv_round_up

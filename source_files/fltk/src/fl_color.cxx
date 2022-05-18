@@ -49,10 +49,8 @@ FL_EXPORT unsigned fl_cmap[256] = {
  8 bits will always be 0.
  */
 unsigned Fl::get_color(Fl_Color i) {
-  if (i & 0xffffff00)
-    return (i);
-  else
-    return fl_cmap[i];
+  if (i & 0xffffff00) return (i);
+  else return fl_cmap[i];
 }
 
 /**
@@ -63,7 +61,7 @@ unsigned Fl::get_color(Fl_Color i) {
  */
 void Fl::set_color(Fl_Color i, uchar red, uchar green, uchar blue) {
   Fl::set_color((Fl_Color)(i & 255),
-                ((unsigned)red << 24) + ((unsigned)green << 16) + ((unsigned)blue << 8));
+                ((unsigned)red<<24)+((unsigned)green<<16)+((unsigned)blue<<8));
 }
 
 /**
@@ -72,17 +70,22 @@ void Fl::set_color(Fl_Color i, uchar red, uchar green, uchar blue) {
  You can set it to any 8-bit RGBA color.
  */
 void Fl::set_color(Fl_Color i, uchar red, uchar green, uchar blue, uchar alpha) {
-  Fl::set_color((Fl_Color)(i & 255), ((unsigned)red << 24) | ((unsigned)green << 16) |
-                                         ((unsigned)blue << 8) | (alpha ^ 0xff));
+  Fl::set_color((Fl_Color)(i & 255),
+                ((unsigned)red<<24)
+                |((unsigned)green<<16)
+                |((unsigned)blue<<8)
+                |(alpha^0xff));
 }
 
 
-void Fl::set_color(Fl_Color i, unsigned c) {
+void Fl::set_color(Fl_Color i, unsigned c)
+{
   Fl_Graphics_Driver::default_driver().set_color(i, c);
 }
 
 
-void Fl::free_color(Fl_Color i, int overlay) {
+void Fl::free_color(Fl_Color i, int overlay)
+{
   Fl_Graphics_Driver::default_driver().free_color(i, overlay);
 }
 
@@ -98,14 +101,12 @@ void Fl::free_color(Fl_Color i, int overlay) {
 void Fl::get_color(Fl_Color i, uchar &red, uchar &green, uchar &blue) {
   unsigned c;
 
-  if (i & 0xffffff00)
-    c = (unsigned)i;
-  else
-    c = fl_cmap[i];
+  if (i & 0xffffff00) c = (unsigned)i;
+  else c = fl_cmap[i];
 
-  red = uchar(c >> 24);
-  green = uchar(c >> 16);
-  blue = uchar(c >> 8);
+  red   = uchar(c>>24);
+  green = uchar(c>>16);
+  blue  = uchar(c>>8);
 }
 
 /**
@@ -119,15 +120,13 @@ void Fl::get_color(Fl_Color i, uchar &red, uchar &green, uchar &blue) {
 void Fl::get_color(Fl_Color i, uchar &red, uchar &green, uchar &blue, uchar &alpha) {
   unsigned c;
 
-  if (i & 0xffffff00)
-    c = (unsigned)i;
-  else
-    c = fl_cmap[i];
+  if (i & 0xffffff00) c = (unsigned)i;
+  else c = fl_cmap[i];
 
-  red = uchar(c >> 24);
-  green = uchar(c >> 16);
-  blue = uchar(c >> 8);
-  alpha = uchar(c ^ 0x000000ff);
+  red   = uchar(c>>24);
+  green = uchar(c>>16);
+  blue  = uchar(c>>8);
+  alpha = uchar(c^0x000000ff);
 }
 
 /**
@@ -147,19 +146,15 @@ Fl_Color fl_color_average(Fl_Color color1, Fl_Color color2, float weight) {
   unsigned rgb2;
   uchar r, g, b;
 
-  if (color1 & 0xffffff00)
-    rgb1 = color1;
-  else
-    rgb1 = fl_cmap[color1 & 255];
+  if (color1 & 0xffffff00) rgb1 = color1;
+  else rgb1 = fl_cmap[color1 & 255];
 
-  if (color2 & 0xffffff00)
-    rgb2 = color2;
-  else
-    rgb2 = fl_cmap[color2 & 255];
+  if (color2 & 0xffffff00) rgb2 = color2;
+  else rgb2 = fl_cmap[color2 & 255];
 
-  r = (uchar)(((uchar)(rgb1 >> 24)) * weight + ((uchar)(rgb2 >> 24)) * (1 - weight));
-  g = (uchar)(((uchar)(rgb1 >> 16)) * weight + ((uchar)(rgb2 >> 16)) * (1 - weight));
-  b = (uchar)(((uchar)(rgb1 >> 8)) * weight + ((uchar)(rgb2 >> 8)) * (1 - weight));
+  r = (uchar)(((uchar)(rgb1>>24))*weight + ((uchar)(rgb2>>24))*(1-weight));
+  g = (uchar)(((uchar)(rgb1>>16))*weight + ((uchar)(rgb2>>16))*(1-weight));
+  b = (uchar)(((uchar)(rgb1>>8))*weight + ((uchar)(rgb2>>8))*(1-weight));
 
   return fl_rgb_color(r, g, b);
 }
@@ -181,33 +176,25 @@ Fl_Color fl_inactive(Fl_Color c) {
  \return contrasting color
  */
 Fl_Color fl_contrast(Fl_Color fg, Fl_Color bg) {
-  unsigned c1, c2; // RGB colors
-  int l1, l2;      // Luminosities
+  unsigned c1, c2;      // RGB colors
+  int l1, l2;           // Luminosities
 
   // Get the RGB values for each color...
-  if (fg & 0xffffff00)
-    c1 = (unsigned)fg;
-  else
-    c1 = fl_cmap[fg];
+  if (fg & 0xffffff00) c1 = (unsigned)fg;
+  else c1 = fl_cmap[fg];
 
-  if (bg & 0xffffff00)
-    c2 = (unsigned)bg;
-  else
-    c2 = fl_cmap[bg];
+  if (bg & 0xffffff00) c2 = (unsigned)bg;
+  else c2 = fl_cmap[bg];
 
   // Compute the luminosity...
   l1 = ((c1 >> 24) * 30 + ((c1 >> 16) & 255) * 59 + ((c1 >> 8) & 255) * 11) / 100;
   l2 = ((c2 >> 24) * 30 + ((c2 >> 16) & 255) * 59 + ((c2 >> 8) & 255) * 11) / 100;
 
   // Compare and return the contrasting color...
-  if ((l1 - l2) > 99)
-    return fg;
-  else if ((l2 - l1) > 99)
-    return fg;
-  else if (l2 > 127)
-    return FL_BLACK;
-  else
-    return FL_WHITE;
+  if ((l1 - l2) > 99) return fg;
+  else if ((l2 - l1) > 99) return fg;
+  else if (l2 > 127) return FL_BLACK;
+  else return FL_WHITE;
 }
 /**
  \}

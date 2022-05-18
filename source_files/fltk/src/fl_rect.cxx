@@ -45,8 +45,7 @@ void Fl_Graphics_Driver::restore_clip() {
 /** see fl_clip_region(Fl_Region) */
 void Fl_Graphics_Driver::clip_region(Fl_Region r) {
   Fl_Region oldr = rstack[rstackptr];
-  if (oldr)
-    XDestroyRegion(oldr);
+  if (oldr) XDestroyRegion(oldr);
   rstack[rstackptr] = r;
   restore_clip();
 }

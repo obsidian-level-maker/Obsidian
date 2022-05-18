@@ -56,23 +56,23 @@ class FL_EXPORT Fl_Menu_ : public Fl_Widget {
   const Fl_Menu_Item *value_;
 
 protected:
-  uchar alloc; // flag indicates if menu_ is a dynamic copy (=1) or not (=0)
+
+  uchar alloc;                  // flag indicates if menu_ is a dynamic copy (=1) or not (=0)
   uchar down_box_;
   Fl_Font textfont_;
   Fl_Fontsize textsize_;
   Fl_Color textcolor_;
 
   int item_pathname_(char *name, int namelen, const Fl_Menu_Item *finditem,
-                     const Fl_Menu_Item *menu = 0) const;
-
+                     const Fl_Menu_Item *menu=0) const;
 public:
-  Fl_Menu_(int, int, int, int, const char * = 0);
+  Fl_Menu_(int,int,int,int,const char * =0);
   ~Fl_Menu_();
 
-  int item_pathname(char *name, int namelen, const Fl_Menu_Item *finditem = 0) const;
-  const Fl_Menu_Item *picked(const Fl_Menu_Item *);
-  const Fl_Menu_Item *find_item(const char *name);
-  const Fl_Menu_Item *find_item(Fl_Callback *);
+  int item_pathname(char *name, int namelen, const Fl_Menu_Item *finditem=0) const;
+  const Fl_Menu_Item* picked(const Fl_Menu_Item*);
+  const Fl_Menu_Item* find_item(const char *name);
+  const Fl_Menu_Item* find_item(Fl_Callback*);
   int find_index(const char *name) const;
   int find_index(const Fl_Menu_Item *item) const;
   int find_index(Fl_Callback *cb) const;
@@ -88,7 +88,7 @@ public:
 
     \return matched Fl_Menu_Item or NULL.
   */
-  const Fl_Menu_Item *test_shortcut() { return picked(menu()->test_shortcut()); }
+  const Fl_Menu_Item* test_shortcut() {return picked(menu()->test_shortcut());}
   void global();
 
   /**
@@ -121,72 +121,68 @@ public:
             t,
             item.label() ? item.label() : "(Null)",          // menu terminators have NULL labels
             (item.flags & FL_MENU_VALUE) ? "set" : "clear",  // value of toggle or radio items
-            (item.flags & FL_SUBMENU) ? "Submenu" : "Item"); // see if item is a submenu or actual
-    item
+            (item.flags & FL_SUBMENU) ? "Submenu" : "Item"); // see if item is a submenu or actual item
     }
     \endcode
 
   */
-  const Fl_Menu_Item *menu() const { return menu_; }
+  const Fl_Menu_Item *menu() const {return menu_;}
   const Fl_Menu_Item *menu_end(); // in src/Fl_Menu_add.cxx
   void menu(const Fl_Menu_Item *m);
-  void copy(const Fl_Menu_Item *m, void *user_data = 0);
-  int insert(int index, const char *, int shortcut, Fl_Callback *, void * = 0, int = 0);
-  int add(const char *, int shortcut, Fl_Callback *, void * = 0,
-          int = 0); // see src/Fl_Menu_add.cxx
-  /** See int Fl_Menu_::add(const char* label, int shortcut, Fl_Callback*, void *user_data=0, int
-   * flags=0) */
-  int add(const char *a, const char *b, Fl_Callback *c, void *d = 0, int e = 0) {
-    return add(a, fl_old_shortcut(b), c, d, e);
+  void copy(const Fl_Menu_Item *m, void* user_data = 0);
+  int insert(int index, const char*, int shortcut, Fl_Callback*, void* = 0, int = 0);
+  int  add(const char*, int shortcut, Fl_Callback*, void* = 0, int = 0); // see src/Fl_Menu_add.cxx
+  /** See int Fl_Menu_::add(const char* label, int shortcut, Fl_Callback*, void *user_data=0, int flags=0) */
+  int  add(const char* a, const char* b, Fl_Callback* c, void* d = 0, int e = 0) {
+      return add(a,fl_old_shortcut(b),c,d,e);
   }
-  /** See int Fl_Menu_::insert(const char* label, int shortcut, Fl_Callback*, void *user_data=0, int
-   * flags=0) */
-  int insert(int index, const char *a, const char *b, Fl_Callback *c, void *d = 0, int e = 0) {
-    return insert(index, a, fl_old_shortcut(b), c, d, e);
+  /** See int Fl_Menu_::insert(const char* label, int shortcut, Fl_Callback*, void *user_data=0, int flags=0) */
+  int insert(int index, const char* a, const char* b, Fl_Callback* c, void* d = 0, int e = 0) {
+      return insert(index,a,fl_old_shortcut(b),c,d,e);
   }
-  int add(const char *);
-  int size() const;
+  int  add(const char *);
+  int  size() const ;
   void size(int W, int H) { Fl_Widget::size(W, H); }
   void clear();
   int clear_submenu(int index);
-  void replace(int, const char *);
+  void replace(int,const char *);
   void remove(int);
   /** Changes the shortcut of item \p i to \p s. */
-  void shortcut(int i, int s) { menu_[i].shortcut(s); }
+  void shortcut(int i, int s) {menu_[i].shortcut(s);}
   /** Sets the flags of item i.  For a list of the flags, see Fl_Menu_Item.  */
-  void mode(int i, int fl) { menu_[i].flags = fl; }
+  void mode(int i,int fl) {menu_[i].flags = fl;}
   /** Gets the flags of item i.  For a list of the flags, see Fl_Menu_Item.  */
-  int mode(int i) const { return menu_[i].flags; }
+  int  mode(int i) const {return menu_[i].flags;}
 
   /** Returns a pointer to the last menu item that was picked.  */
-  const Fl_Menu_Item *mvalue() const { return value_; }
+  const Fl_Menu_Item *mvalue() const {return value_;}
   /** Returns the index into menu() of the last item chosen by the user.  It is zero initially. */
-  int value() const { return value_ ? (int)(value_ - menu_) : -1; }
-  int value(const Fl_Menu_Item *);
+  int value() const {return value_ ? (int)(value_-menu_) : -1;}
+  int value(const Fl_Menu_Item*);
   /**
     The value is the index into menu() of the last item chosen by
     the user.  It is zero initially.  You can set it as an integer, or set
     it with a pointer to a menu item.  The set routines return non-zero if
     the new value is different than the old one.
   */
-  int value(int i) { return value(menu_ + i); }
+  int value(int i) {return value(menu_+i);}
   /** Returns the title of the last item chosen.  */
-  const char *text() const { return value_ ? value_->text : 0; }
+  const char *text() const {return value_ ? value_->text : 0;}
   /** Returns the title of item i.  */
-  const char *text(int i) const { return menu_[i].text; }
+  const char *text(int i) const {return menu_[i].text;}
 
   /** Gets the current font of menu item labels.  */
-  Fl_Font textfont() const { return textfont_; }
+  Fl_Font textfont() const {return textfont_;}
   /**  Sets the current font of menu item labels.  */
-  void textfont(Fl_Font c) { textfont_ = c; }
+  void textfont(Fl_Font c) {textfont_=c;}
   /**  Gets the font size of menu item labels.  */
-  Fl_Fontsize textsize() const { return textsize_; }
+  Fl_Fontsize textsize() const {return textsize_;}
   /**  Sets the font size of menu item labels.  */
-  void textsize(Fl_Fontsize c) { textsize_ = c; }
+  void textsize(Fl_Fontsize c) {textsize_=c;}
   /** Get the current color of menu item labels.  */
-  Fl_Color textcolor() const { return textcolor_; }
+  Fl_Color textcolor() const {return textcolor_;}
   /** Sets the current color of menu item labels. */
-  void textcolor(Fl_Color c) { textcolor_ = c; }
+  void textcolor(Fl_Color c) {textcolor_=c;}
 
   /**
     This box type is used to surround the currently-selected items in the
@@ -194,15 +190,15 @@ public:
     FL_THIN_UP_BOX and selection_color() acts like
     FL_WHITE, for back compatibility.
   */
-  Fl_Boxtype down_box() const { return (Fl_Boxtype)down_box_; }
+  Fl_Boxtype down_box() const {return (Fl_Boxtype)down_box_;}
   /**    See Fl_Boxtype Fl_Menu_::down_box() const   */
-  void down_box(Fl_Boxtype b) { down_box_ = b; }
+  void down_box(Fl_Boxtype b) {down_box_ = b;}
 
   /** For back compatibility, same as selection_color() */
-  Fl_Color down_color() const { return selection_color(); }
+  Fl_Color down_color() const {return selection_color();}
   /** For back compatibility, same as selection_color() */
-  void down_color(unsigned c) { selection_color(c); }
-  void setonly(Fl_Menu_Item *item);
+  void down_color(unsigned c) {selection_color(c);}
+  void setonly(Fl_Menu_Item* item);
 };
 
 #endif

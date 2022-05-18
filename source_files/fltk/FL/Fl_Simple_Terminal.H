@@ -119,50 +119,49 @@
 */
 class FL_EXPORT Fl_Simple_Terminal : public Fl_Text_Display {
 protected:
-  Fl_Text_Buffer *buf;  // text buffer
-  Fl_Text_Buffer *sbuf; // style buffer
+  Fl_Text_Buffer *buf;      // text buffer
+  Fl_Text_Buffer *sbuf;     // style buffer
 
 private:
-  int history_lines_;   // max lines allowed in screen history
-  bool stay_at_bottom_; // lets scroller chase last line in buffer
-  bool ansi_;           // enables ANSI sequences
+  int history_lines_;       // max lines allowed in screen history
+  bool stay_at_bottom_;     // lets scroller chase last line in buffer
+  bool ansi_;               // enables ANSI sequences
   // scroll management
-  int lines;       // #lines in buffer (optimization: Fl_Text_Buffer slow to calc this)
-  bool scrollaway; // true when user changed vscroll away from bottom
-  bool scrolling;  // true while scroll callback active
+  int lines;                // #lines in buffer (optimization: Fl_Text_Buffer slow to calc this)
+  bool scrollaway;          // true when user changed vscroll away from bottom
+  bool scrolling;           // true while scroll callback active
   // Fl_Text_Display vscrollbar's callback+data
   Fl_Callback *orig_vscroll_cb;
   void *orig_vscroll_data;
   // Style table
-  const Fl_Text_Display::Style_Table_Entry *stable_; // the active style table
-  int stable_size_;                                  // active style table size (in bytes)
+  const Fl_Text_Display::Style_Table_Entry *stable_;  // the active style table
+  int stable_size_;         // active style table size (in bytes)
   int normal_style_index_;  // "normal" style used by "\033[0m" reset sequence
   int current_style_index_; // current style used for drawing text
 
 public:
-  Fl_Simple_Terminal(int X, int Y, int W, int H, const char *l = 0);
+  Fl_Simple_Terminal(int X,int Y,int W,int H,const char *l=0);
   ~Fl_Simple_Terminal();
 
   // Terminal options
   void stay_at_bottom(bool);
   bool stay_at_bottom() const;
   void history_lines(int);
-  int history_lines() const;
+  int  history_lines() const;
   void ansi(bool val);
   bool ansi() const;
-  void style_table(Fl_Text_Display::Style_Table_Entry *stable, int stable_size,
-                   int normal_style_index = 0);
+  void style_table(Fl_Text_Display::Style_Table_Entry *stable, int stable_size, int normal_style_index=0);
   const Fl_Text_Display::Style_Table_Entry *style_table() const;
   int style_table_size() const;
   void normal_style_index(int);
-  int normal_style_index() const;
+  int  normal_style_index() const;
   void current_style_index(int);
-  int current_style_index() const;
+  int  current_style_index() const;
 
   // Terminal text management
-  void append(const char *s, int len = -1);
-  void text(const char *s, int len = -1);
-  const char *text() const;
+  void append(const char *s, int len=-1);
+  void text(const char *s, int len=-1);
+  const char* text() const;
   void printf(const char *fmt, ...);
   void vprintf(const char *fmt, va_list ap);
   void clear();
@@ -177,7 +176,7 @@ private:
   //    TODO: There are probably other Fl_Text_Display methods that
   //          need to be blocked.
   //
-  void insert(const char *) {}
+  void insert(const char*) { }
 
 protected:
   // Fltk
@@ -186,8 +185,8 @@ protected:
   // Internal methods
   void enforce_stay_at_bottom();
   void enforce_history_lines();
-  void vscroll_cb2(Fl_Widget *, void *);
-  static void vscroll_cb(Fl_Widget *, void *);
+  void vscroll_cb2(Fl_Widget*, void*);
+  static void vscroll_cb(Fl_Widget*, void*);
 };
 
 #endif

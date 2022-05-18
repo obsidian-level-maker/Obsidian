@@ -73,12 +73,19 @@
  */
 int fl_open_uri(const char *uri, char *msg, int msglen) {
   // Supported URI schemes...
-  static const char *const schemes[] = {"file://", "ftp://",  "http://", "https://",
-                                        "mailto:", "news://", NULL};
+  static const char * const schemes[] = {
+    "file://",
+    "ftp://",
+    "http://",
+    "https://",
+    "mailto:",
+    "news://",
+    NULL
+  };
 
   // Validate the URI scheme...
   int i;
-  for (i = 0; schemes[i]; i++)
+  for (i = 0; schemes[i]; i ++)
     if (!strncmp(uri, schemes[i], strlen(schemes[i])))
       break;
 
@@ -99,19 +106,19 @@ int fl_open_uri(const char *uri, char *msg, int msglen) {
 
 /** Decodes a URL-encoded string.
 
- In a Uniform Resource Identifier (URI), all non-ASCII bytes and several others (e.g., '<', '%', '
- ') are URL-encoded using 3 bytes by "%XY" where XY is the hexadecimal value of the byte. This
- function decodes the URI restoring its original UTF-8 encoded content. Decoding is done in-place.
+ In a Uniform Resource Identifier (URI), all non-ASCII bytes and several others (e.g., '<', '%', ' ')
+ are URL-encoded using 3 bytes by "%XY" where XY is the hexadecimal value of the byte. This function
+ decodes the URI restoring its original UTF-8 encoded content. Decoding is done in-place.
  */
-void fl_decode_uri(char *uri) {
+void fl_decode_uri(char *uri)
+{
   char *last = uri + strlen(uri);
-  while (uri < last - 2) {
+  while (uri < last-2) {
     if (*uri == '%') {
       int h;
-      if (sscanf(uri + 1, "%2X", &h) != 1)
-        break;
+      if ( sscanf(uri+1, "%2X", &h) != 1 ) break;
       *uri = h;
-      memmove(uri + 1, uri + 3, last - (uri + 2));
+      memmove(uri+1, uri+3, last - (uri+2));
       last -= 2;
     }
     uri++;
@@ -138,7 +145,6 @@ int main(int argc, char **argv) {
   if (!fl_open_uri(argv[1], msg, sizeof(msg))) {
     puts(msg);
     return 1;
-  } else
-    return 0;
+  } else return 0;
 }
 #endif // TEST

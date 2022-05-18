@@ -24,9 +24,9 @@
   Creates a new Fl_Value_Slider widget using the given
   position, size, and label string. The default boxtype is FL_DOWN_BOX.
 */
-Fl_Value_Slider::Fl_Value_Slider(int X, int Y, int W, int H, const char *l)
-  : Fl_Slider(X, Y, W, H, l) {
-  step(1, 100);
+Fl_Value_Slider::Fl_Value_Slider(int X, int Y, int W, int H, const char*l)
+: Fl_Slider(X,Y,W,H,l) {
+  step(1,100);
   textfont_ = FL_HELVETICA;
   textsize_ = 10;
   textcolor_ = FL_FOREGROUND_COLOR;
@@ -36,19 +36,16 @@ void Fl_Value_Slider::draw() {
   int sxx = x(), syy = y(), sww = w(), shh = h();
   int bxx = x(), byy = y(), bww = w(), bhh = h();
   if (horizontal()) {
-    bww = 35;
-    sxx += 35;
-    sww -= 35;
+    bww = 35; sxx += 35; sww -= 35;
   } else {
-    syy += 25;
-    bhh = 25;
-    shh -= 25;
+    syy += 25; bhh = 25; shh -= 25;
   }
-  if (damage() & FL_DAMAGE_ALL)
-    draw_box(box(), sxx, syy, sww, shh, color());
-  Fl_Slider::draw(sxx + Fl::box_dx(box()), syy + Fl::box_dy(box()), sww - Fl::box_dw(box()),
-                  shh - Fl::box_dh(box()));
-  draw_box(box(), bxx, byy, bww, bhh, color());
+  if (damage()&FL_DAMAGE_ALL) draw_box(box(),sxx,syy,sww,shh,color());
+  Fl_Slider::draw(sxx+Fl::box_dx(box()),
+                  syy+Fl::box_dy(box()),
+                  sww-Fl::box_dw(box()),
+                  shh-Fl::box_dh(box()));
+  draw_box(box(),bxx,byy,bww,bhh,color());
   char buf[128];
   format(buf);
   fl_font(textfont(), textsize());
@@ -63,18 +60,19 @@ int Fl_Value_Slider::handle(int event) {
   }
   int sxx = x(), syy = y(), sww = w(), shh = h();
   if (horizontal()) {
-    sxx += 35;
-    sww -= 35;
+    sxx += 35; sww -= 35;
   } else {
-    syy += 25;
-    shh -= 25;
+    syy += 25; shh -= 25;
   }
-  return Fl_Slider::handle(event, sxx + Fl::box_dx(box()), syy + Fl::box_dy(box()),
-                           sww - Fl::box_dw(box()), shh - Fl::box_dh(box()));
+  return Fl_Slider::handle(event,
+                           sxx+Fl::box_dx(box()),
+                           syy+Fl::box_dy(box()),
+                           sww-Fl::box_dw(box()),
+                           shh-Fl::box_dh(box()));
 }
 
 
-Fl_Hor_Value_Slider::Fl_Hor_Value_Slider(int X, int Y, int W, int H, const char *l)
-  : Fl_Value_Slider(X, Y, W, H, l) {
+Fl_Hor_Value_Slider::Fl_Hor_Value_Slider(int X,int Y,int W,int H,const char *l)
+: Fl_Value_Slider(X,Y,W,H,l) {
   type(FL_HOR_SLIDER);
 }

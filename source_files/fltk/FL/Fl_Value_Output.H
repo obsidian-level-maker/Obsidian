@@ -47,7 +47,7 @@ protected:
 
 public:
   int handle(int);
-  Fl_Value_Output(int x, int y, int w, int h, const char *l = 0);
+  Fl_Value_Output(int x,int y,int w,int h,const char *l=0);
 
   /**
     If "soft" is turned on, the user is allowed to drag the value outside
@@ -55,26 +55,26 @@ public:
     grab again and continue to drag, they can get to any value.  Default is
     one.
   */
-  void soft(uchar s) { soft_ = s; }
+  void soft(uchar s) {soft_ = s;}
   /**
     If "soft" is turned on, the user is allowed to drag the value outside
     the range.  If they drag the value to one of the ends, let go, then
     grab again and continue to drag, they can get to any value.  Default is
     one.
   */
-  uchar soft() const { return soft_; }
+  uchar soft() const {return soft_;}
 
   /**    Gets the typeface of the text in the value box.  */
-  Fl_Font textfont() const { return textfont_; }
+  Fl_Font textfont() const {return textfont_;}
   /**    Sets the typeface of the text in the value box.  */
-  void textfont(Fl_Font s) { textfont_ = s; }
+  void textfont(Fl_Font s) {textfont_ = s;}
   /**    Gets the size of the text in the value box.  */
-  Fl_Fontsize textsize() const { return textsize_; }
-  void textsize(Fl_Fontsize s) { textsize_ = s; }
+  Fl_Fontsize textsize() const {return textsize_;}
+  void textsize(Fl_Fontsize s) {textsize_ = s;}
   /**    Sets the color of the text in the value box.  */
-  Fl_Color textcolor() const { return textcolor_; }
+  Fl_Color textcolor() const {return textcolor_;}
   /**    Gets the color of the text in the value box.  */
-  void textcolor(Fl_Color s) { textcolor_ = s; }
+  void textcolor(Fl_Color s) {textcolor_ = s;}
 };
 
 #endif

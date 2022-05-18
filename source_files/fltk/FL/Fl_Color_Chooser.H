@@ -35,41 +35,32 @@
 /** For internal use only */
 class FL_EXPORT Flcc_HueBox : public Fl_Widget {
   int px, py;
-
 protected:
   void draw();
   int handle_key(int);
-
 public:
   int handle(int);
-  Flcc_HueBox(int X, int Y, int W, int H)
-    : Fl_Widget(X, Y, W, H) {
-    px = py = 0;
-  }
+  Flcc_HueBox(int X, int Y, int W, int H) : Fl_Widget(X,Y,W,H) {
+  px = py = 0;}
 };
 
 /** For internal use only */
 class FL_EXPORT Flcc_ValueBox : public Fl_Widget {
   int py;
-
 protected:
   void draw();
   int handle_key(int);
-
 public:
   int handle(int);
-  Flcc_ValueBox(int X, int Y, int W, int H)
-    : Fl_Widget(X, Y, W, H) {
-    py = 0;
-  }
+  Flcc_ValueBox(int X, int Y, int W, int H) : Fl_Widget(X,Y,W,H) {
+  py = 0;}
 };
 
 /** For internal use only */
 class FL_EXPORT Flcc_Value_Input : public Fl_Value_Input {
 public:
-  int format(char *);
-  Flcc_Value_Input(int X, int Y, int W, int H)
-    : Fl_Value_Input(X, Y, W, H) {}
+  int format(char*);
+  Flcc_Value_Input(int X, int Y, int W, int H) : Fl_Value_Input(X,Y,W,H) {}
 };
 
 #endif // !FL_DOXYGEN
@@ -126,17 +117,17 @@ class FL_EXPORT Fl_Color_Chooser : public Fl_Group {
   double hue_, saturation_, value_;
   double r_, g_, b_;
   void set_valuators();
-  static void rgb_cb(Fl_Widget *, void *);
-  static void mode_cb(Fl_Widget *, void *);
-
+  static void rgb_cb(Fl_Widget*, void*);
+  static void mode_cb(Fl_Widget*, void*);
 public:
+
   int handle(int e);
 
   /**
    Returns which Fl_Color_Chooser variant is currently active
    \return color modes are rgb(0), byte(1), hex(2), or hsv(3)
    */
-  int mode() { return choice.value(); }
+  int mode() {return choice.value();}
 
   /**
    Set which Fl_Color_Chooser variant is currently active
@@ -150,50 +141,50 @@ public:
     <em>This value is convenient for the internal calculations - some other
     systems consider hue to run from zero to one, or from 0 to 360.</em>
    */
-  double hue() const { return hue_; }
+  double hue() const {return hue_;}
 
   /**
     Returns the saturation.
     0 <= saturation <= 1.
    */
-  double saturation() const { return saturation_; }
+  double saturation() const {return saturation_;}
 
   /**
     Returns the value/brightness.
     0 <= value <= 1.
    */
-  double value() const { return value_; }
+  double value() const {return value_;}
 
   /**
     Returns the current red value.
     0 <= r <= 1.
    */
-  double r() const { return r_; }
+  double r() const {return r_;}
 
   /**
     Returns the current green value.
     0 <= g <= 1.
    */
-  double g() const { return g_; }
+  double g() const {return g_;}
 
   /**
     Returns the current blue value.
     0 <= b <= 1.
    */
-  double b() const { return b_; }
+  double b() const {return b_;}
 
   int hsv(double H, double S, double V);
 
   int rgb(double R, double G, double B);
 
-  static void hsv2rgb(double H, double S, double V, double &R, double &G, double &B);
+  static void hsv2rgb(double H, double S, double V, double& R, double& G, double& B);
 
-  static void rgb2hsv(double R, double G, double B, double &H, double &S, double &V);
+  static void rgb2hsv(double R, double G, double B, double& H, double& S, double& V);
 
   Fl_Color_Chooser(int X, int Y, int W, int H, const char *L = 0);
 };
 
-FL_EXPORT int fl_color_chooser(const char *name, double &r, double &g, double &b, int m = -1);
-FL_EXPORT int fl_color_chooser(const char *name, uchar &r, uchar &g, uchar &b, int m = -1);
+FL_EXPORT int fl_color_chooser(const char* name, double& r, double& g, double& b, int m=-1);
+FL_EXPORT int fl_color_chooser(const char* name, uchar& r, uchar& g, uchar& b, int m=-1);
 
 #endif

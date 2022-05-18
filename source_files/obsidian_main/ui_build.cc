@@ -242,7 +242,7 @@ void UI_Build::Prog_Step(const char *step_name) {
         val = 1;
     }
 
-    prog_label = fmt::format("{0:2}%", val * 100);
+    prog_label = fmt::format("{0:.2f}%", val * 100);
 
     progress->value(val);
     progress->label(prog_label.c_str());

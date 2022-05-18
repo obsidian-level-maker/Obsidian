@@ -193,16 +193,16 @@ extern std::filesystem::path gif_filename;
 extern std::string string_seed;
 
 // Tutorial stuff
-extern Fl_JPEG_Image *tutorial1;
-extern Fl_JPEG_Image *tutorial2;
-extern Fl_JPEG_Image *tutorial3;
-extern Fl_JPEG_Image *tutorial4;
-extern Fl_JPEG_Image *tutorial5;
-extern Fl_JPEG_Image *tutorial6;
-extern Fl_JPEG_Image *tutorial7;
-extern Fl_JPEG_Image *tutorial8;
-extern Fl_JPEG_Image *tutorial9;
-extern Fl_JPEG_Image *tutorial10;
+extern Fl_BMP_Image *tutorial1;
+extern Fl_BMP_Image *tutorial2;
+extern Fl_BMP_Image *tutorial3;
+extern Fl_BMP_Image *tutorial4;
+extern Fl_BMP_Image *tutorial5;
+extern Fl_BMP_Image *tutorial6;
+extern Fl_BMP_Image *tutorial7;
+extern Fl_BMP_Image *tutorial8;
+extern Fl_BMP_Image *tutorial9;
+extern Fl_BMP_Image *tutorial10;
 
 void DLG_AboutText();
 void DLG_OptionsEditor();

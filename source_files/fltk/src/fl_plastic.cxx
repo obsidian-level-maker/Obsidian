@@ -39,16 +39,17 @@ inline Fl_Color shade_color(uchar gc, Fl_Color bc) {
 #ifdef USE_OLD_PLASTIC_COLOR
   return fl_color_average((Fl_Color)gc, bc, 0.75f);
 #else
-  unsigned grgb = Fl::get_color((Fl_Color)gc), brgb = Fl::get_color(bc);
-  int red, green, blue, gray;
+  unsigned      grgb = Fl::get_color((Fl_Color)gc),
+                brgb = Fl::get_color(bc);
+  int           red, green, blue, gray;
 
 
-  gray = ((grgb >> 24) & 255);
-  red = gray * ((brgb >> 24) & 255) / 255 + gray * gray / 510;
-  gray = ((grgb >> 16) & 255);
+  gray  = ((grgb >> 24) & 255);
+  red   = gray * ((brgb >> 24) & 255) / 255 + gray * gray / 510;
+  gray  = ((grgb >> 16) & 255);
   green = gray * ((brgb >> 16) & 255) / 255 + gray * gray / 510;
-  gray = ((grgb >> 8) & 255);
-  blue = gray * ((brgb >> 8) & 255) / 255 + gray * gray / 510;
+  gray  = ((grgb >> 8) & 255);
+  blue  = gray * ((brgb >> 8) & 255) / 255 + gray * gray / 510;
 
   if (red > 255)
     red = 255;
@@ -69,9 +70,10 @@ inline Fl_Color shade_color(uchar gc, Fl_Color bc) {
 
 static void frame_rect(int x, int y, int w, int h, const char *c, Fl_Color bc) {
   const uchar *g = fl_gray_ramp();
-  int b = ((int)strlen(c)) / 4 + 1;
+  int b = ((int) strlen(c)) / 4 + 1;
 
-  for (x += b, y += b, w -= 2 * b, h -= 2 * b; b > 1; b--) {
+  for (x += b, y += b, w -= 2 * b, h -= 2 * b; b > 1; b --)
+  {
     // Draw lines around the perimeter of the button, 4 colors per
     // circuit.
     fl_color(shade_color(g[(int)*c++], bc));
@@ -90,8 +92,9 @@ static void frame_round(int x, int y, int w, int h, const char *c, Fl_Color bc) 
   const uchar *g = fl_gray_ramp();
   size_t b = strlen(c) / 4 + 1;
 
-  if (w == h) {
-    for (; b > 1; b--, x++, y++, w -= 2, h -= 2) {
+  if (w==h) {
+    for (; b > 1; b --, x ++, y ++, w -= 2, h -= 2)
+    {
       fl_color(shade_color(g[(int)*c++], bc));
       fl_arc(x, y, w, h, 45.0, 135.0);
       fl_color(shade_color(g[(int)*c++], bc));
@@ -101,36 +104,38 @@ static void frame_round(int x, int y, int w, int h, const char *c, Fl_Color bc) 
       fl_color(shade_color(g[(int)*c++], bc));
       fl_arc(x, y, w, h, 135.0, 225.0);
     }
-  } else if (w > h) {
-    int d = h / 2;
-    for (; b > 1; d--, b--, x++, y++, w -= 2, h -= 2) {
+  } else if (w>h) {
+    int d = h/2;
+    for (; b > 1; d--, b --, x ++, y ++, w -= 2, h -= 2)
+    {
       fl_color(shade_color(g[(int)*c++], bc));
       fl_arc(x, y, h, h, 90.0, 135.0);
-      fl_xyline(x + d, y, x + w - d);
-      fl_arc(x + w - h, y, h, h, 45.0, 90.0);
+      fl_xyline(x+d, y, x+w-d);
+      fl_arc(x+w-h, y, h, h, 45.0, 90.0);
       fl_color(shade_color(g[(int)*c++], bc));
-      fl_arc(x + w - h, y, h, h, 315.0, 405.0);
+      fl_arc(x+w-h, y, h, h, 315.0, 405.0);
       fl_color(shade_color(g[(int)*c++], bc));
-      fl_arc(x + w - h, y, h, h, 270.0, 315.0);
-      fl_xyline(x + d, y + h - 1, x + w - d);
+      fl_arc(x+w-h, y, h, h, 270.0, 315.0);
+      fl_xyline(x+d, y+h-1, x+w-d);
       fl_arc(x, y, h, h, 225.0, 270.0);
       fl_color(shade_color(g[(int)*c++], bc));
       fl_arc(x, y, h, h, 135.0, 225.0);
     }
-  } else if (w < h) {
-    int d = w / 2;
-    for (; b > 1; d--, b--, x++, y++, w -= 2, h -= 2) {
+  } else if (w<h) {
+    int d = w/2;
+    for (; b > 1; d--, b --, x ++, y ++, w -= 2, h -= 2)
+    {
       fl_color(shade_color(g[(int)*c++], bc));
       fl_arc(x, y, w, w, 45.0, 135.0);
       fl_color(shade_color(g[(int)*c++], bc));
       fl_arc(x, y, w, w, 0.0, 45.0);
-      fl_yxline(x + w - 1, y + d, y + h - d);
-      fl_arc(x, y + h - w, w, w, 315.0, 360.0);
+      fl_yxline(x+w-1, y+d, y+h-d);
+      fl_arc(x, y+h-w, w, w, 315.0, 360.0);
       fl_color(shade_color(g[(int)*c++], bc));
-      fl_arc(x, y + h - w, w, w, 225.0, 315.0);
+      fl_arc(x, y+h-w, w, w, 225.0, 315.0);
       fl_color(shade_color(g[(int)*c++], bc));
-      fl_arc(x, y + h - w, w, w, 180.0, 225.0);
-      fl_yxline(x, y + d, y + h - d);
+      fl_arc(x, y+h-w, w, w, 180.0, 225.0);
+      fl_yxline(x, y+d, y+h-d);
       fl_arc(x, y, w, w, 135.0, 180.0);
     }
   }
@@ -139,17 +144,16 @@ static void frame_round(int x, int y, int w, int h, const char *c, Fl_Color bc) 
 
 static void shade_rect(int x, int y, int w, int h, const char *c, Fl_Color bc) {
   const uchar *g = fl_gray_ramp();
-  int i, j;
-  int clen = (int)strlen(c) - 1;
-  int chalf = clen / 2;
-  int cstep = 1;
+  int   i, j;
+  int   clen = (int) strlen(c) - 1;
+  int   chalf = clen / 2;
+  int   cstep = 1;
 
   if (h < (w * 2)) {
     // Horizontal shading...
-    if (clen >= h)
-      cstep = 2;
+    if (clen >= h) cstep = 2;
 
-    for (i = 0, j = 0; j < chalf; i++, j += cstep) {
+    for (i = 0, j = 0; j < chalf; i ++, j += cstep) {
       // Draw the top line and points...
       fl_color(shade_color(g[(int)c[i]], bc));
       fl_xyline(x + 1, y + i, x + w - 2);
@@ -178,10 +182,9 @@ static void shade_rect(int x, int y, int w, int h, const char *c, Fl_Color bc) {
     fl_yxline(x + w - 1, y + i, y + h - i);
   } else {
     // Vertical shading...
-    if (clen >= w)
-      cstep = 2;
+    if (clen >= w) cstep = 2;
 
-    for (i = 0, j = 0; j < chalf; i++, j += cstep) {
+    for (i = 0, j = 0; j < chalf; i ++, j += cstep) {
       // Draw the left line and points...
       fl_color(shade_color(g[(int)c[i]], bc));
       fl_yxline(x + i, y + 1, y + h - 1);
@@ -213,52 +216,54 @@ static void shade_rect(int x, int y, int w, int h, const char *c, Fl_Color bc) {
 
 static void shade_round(int x, int y, int w, int h, const char *c, Fl_Color bc) {
   const uchar *g = fl_gray_ramp();
-  int i;
-  int clen = (int)(strlen(c) - 1);
-  int chalf = clen / 2;
+  int   i;
+  int   clen = (int) (strlen(c) - 1);
+  int   chalf = clen / 2;
 
-  if (w > h) {
-    int d = h / 2;
+  if (w>h) {
+    int d = h/2;
     const int na = 8;
-    for (i = 0; i < chalf; i++, d--, x++, y++, w -= 2, h -= 2) {
+    for (i=0; i<chalf; i++, d--, x++, y++, w-=2, h-=2)
+    {
       fl_color(shade_color(g[(int)c[i]], bc));
-      fl_pie(x, y, h, h, 90.0, 135.0 + i * na);
-      fl_xyline(x + d, y, x + w - d);
-      fl_pie(x + w - h, y, h, h, 45.0 + i * na, 90.0);
+      fl_pie(x, y, h, h, 90.0, 135.0+i*na);
+      fl_xyline(x+d, y, x+w-d);
+      fl_pie(x+w-h, y, h, h, 45.0+i*na, 90.0);
       fl_color(shade_color(g[(int)c[i] - 2], bc));
-      fl_pie(x + w - h, y, h, h, 315.0 + i * na, 405.0 + i * na);
+      fl_pie(x+w-h, y, h, h, 315.0+i*na, 405.0+i*na);
       fl_color(shade_color(g[(int)c[clen - i]], bc));
-      fl_pie(x + w - h, y, h, h, 270.0, 315.0 + i * na);
-      fl_xyline(x + d, y + h - 1, x + w - d);
-      fl_pie(x, y, h, h, 225.0 + i * na, 270.0);
+      fl_pie(x+w-h, y, h, h, 270.0, 315.0+i*na);
+      fl_xyline(x+d, y+h-1, x+w-d);
+      fl_pie(x, y, h, h, 225.0+i*na, 270.0);
       fl_color(shade_color(g[c[(int)clen - i] - 2], bc));
-      fl_pie(x, y, h, h, 135.0 + i * na, 225.0 + i * na);
+      fl_pie(x, y, h, h, 135.0+i*na, 225.0+i*na);
     }
     fl_color(shade_color(g[(int)c[chalf]], bc));
-    fl_rectf(x + d, y, w - h + 1, h + 1);
+    fl_rectf(x+d, y, w-h+1, h+1);
     fl_pie(x, y, h, h, 90.0, 270.0);
-    fl_pie(x + w - h, y, h, h, 270.0, 90.0);
+    fl_pie(x+w-h, y, h, h, 270.0, 90.0);
   } else {
-    int d = w / 2;
+    int d = w/2;
     const int na = 8;
-    for (i = 0; i < chalf; i++, d--, x++, y++, w -= 2, h -= 2) {
+    for (i=0; i<chalf; i++, d--, x++, y++, w-=2, h-=2)
+    {
       fl_color(shade_color(g[(int)c[i]], bc));
-      fl_pie(x, y, w, w, 45.0 + i * na, 135.0 + i * na);
+      fl_pie(x, y, w, w, 45.0+i*na, 135.0+i*na);
       fl_color(shade_color(g[c[i] - 2], bc));
-      fl_pie(x, y, w, w, 0.0, 45.0 + i * na);
-      fl_yxline(x + w - 1, y + d, y + h - d);
-      fl_pie(x, y + h - w, w, w, 315.0 + i * na, 360.0);
+      fl_pie(x, y, w, w, 0.0, 45.0+i*na);
+      fl_yxline(x+w-1, y+d, y+h-d);
+      fl_pie(x, y+h-w, w, w, 315.0+i*na, 360.0);
       fl_color(shade_color(g[(int)c[clen - i]], bc));
-      fl_pie(x, y + h - w, w, w, 225.0 + i * na, 315.0 + i * na);
+      fl_pie(x, y+h-w, w, w, 225.0+i*na, 315.0+i*na);
       fl_color(shade_color(g[c[clen - i] - 2], bc));
-      fl_pie(x, y + h - w, w, w, 180.0, 225.0 + i * na);
-      fl_yxline(x, y + d, y + h - d);
-      fl_pie(x, y, w, w, 135.0 + i * na, 180.0);
+      fl_pie(x, y+h-w, w, w, 180.0, 225.0+i*na);
+      fl_yxline(x, y+d, y+h-d);
+      fl_pie(x, y, w, w, 135.0+i*na, 180.0);
     }
     fl_color(shade_color(g[(int)c[chalf]], bc));
-    fl_rectf(x, y + d, w + 1, h - w + 1);
+    fl_rectf(x, y+d, w+1, h-w+1);
     fl_pie(x, y, w, w, 0.0, 180.0);
-    fl_pie(x, y + h - w, w, w, 180.0, 360.0);
+    fl_pie(x, y+h-w, w, w, 180.0, 360.0);
   }
 }
 
@@ -269,19 +274,18 @@ static void up_frame(int x, int y, int w, int h, Fl_Color c) {
 
 
 static void narrow_thin_box(int x, int y, int w, int h, Fl_Color c) {
-  if (h <= 0 || w <= 0)
-    return;
+  if (h<=0 || w<=0) return;
   const uchar *g = fl_gray_ramp();
   fl_color(shade_color(g[(int)'R'], c));
-  fl_rectf(x + 1, y + 1, w - 2, h - 2);
+  fl_rectf(x+1, y+1, w-2, h-2);
   fl_color(shade_color(g[(int)'I'], c));
   if (w > 1) {
-    fl_xyline(x + 1, y, x + w - 2);
-    fl_xyline(x + 1, y + h - 1, x + w - 2);
+    fl_xyline(x+1, y, x+w-2);
+    fl_xyline(x+1, y+h-1, x+w-2);
   }
   if (h > 1) {
-    fl_yxline(x, y + 1, y + h - 2);
-    fl_yxline(x + w - 1, y + 1, y + h - 2);
+    fl_yxline(x, y+1, y+h-2);
+    fl_yxline(x+w-1, y+1, y+h-2);
   }
 }
 
@@ -331,7 +335,8 @@ static void down_box(int x, int y, int w, int h, Fl_Color c) {
   if (w > 6 && h > 6) {
     shade_rect(x + 2, y + 2, w - 4, h - 5, "STUVWWWVT", c);
     down_frame(x, y, w, h, c);
-  } else {
+  }
+  else {
     narrow_thin_box(x, y, w, h, c);
   }
 }
@@ -343,7 +348,7 @@ static void down_round(int x, int y, int w, int h, Fl_Color c) {
 }
 
 
-extern void fl_internal_boxtype(Fl_Boxtype, Fl_Box_Draw_F *);
+extern void fl_internal_boxtype(Fl_Boxtype, Fl_Box_Draw_F*);
 
 
 Fl_Boxtype fl_define_FL_PLASTIC_UP_BOX() {

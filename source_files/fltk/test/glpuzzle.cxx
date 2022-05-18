@@ -24,7 +24,7 @@
 #if !HAVE_GL || !HAVE_GL_GLU_H
 #include <FL/Fl.H>
 #include <FL/fl_message.H>
-int main(int, char **) {
+int main(int, char**) {
   fl_alert("This demo does not work without GL and GLU");
   return 1;
 }
@@ -37,9 +37,9 @@ int main(int, char **) {
 #include <sys/types.h>
 #include <time.h>
 #include <math.h>
-#include <FL/glut.H>   // changed for fltk
-#include <FL/glu.h>    // added for fltk
-#include "trackball.c" // changed from trackball.h for fltk
+#include <FL/glut.H>    // changed for fltk
+#include <FL/glu.h>     // added for fltk
+#include "trackball.c"  // changed from trackball.h for fltk
 
 #define WIDTH 4
 #define HEIGHT 5
@@ -65,12 +65,22 @@ struct puzzlelist {
   struct puzzlelist *next;
 };
 
-static char convert[PIECES + 1] = {0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 4};
+static char convert[PIECES + 1] =
+{0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 4};
 
-static unsigned char colors[PIECES + 1][3] = {
-    {0, 0, 0},       {255, 255, 127}, {255, 255, 127}, {255, 255, 127},
-    {255, 255, 127}, {255, 127, 255}, {255, 127, 255}, {255, 127, 255},
-    {255, 127, 255}, {255, 127, 127}, {255, 255, 255},
+static unsigned char colors[PIECES + 1][3] =
+{
+  {0, 0, 0},
+  {255, 255, 127},
+  {255, 255, 127},
+  {255, 255, 127},
+  {255, 255, 127},
+  {255, 127, 255},
+  {255, 127, 255},
+  {255, 127, 255},
+  {255, 127, 255},
+  {255, 127, 127},
+  {255, 255, 255},
 };
 
 void changeState(void);
@@ -90,18 +100,35 @@ static float curquat[4];
 static int doubleBuffer = 1;
 static int depth = 1;
 
-static char xsize[PIECES + 1] = {0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2};
-static char ysize[PIECES + 1] = {0, 1, 1, 1, 1, 2, 2, 2, 2, 1, 2};
-static float zsize[PIECES + 1] = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.6f};
+static char xsize[PIECES + 1] =
+{0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2};
+static char ysize[PIECES + 1] =
+{0, 1, 1, 1, 1, 2, 2, 2, 2, 1, 2};
+static float zsize[PIECES + 1] =
+{0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0.6f};
 
-static Config startConfig = {
-    {8, 10, 10, 7}, {8, 10, 10, 7}, {6, 9, 9, 5}, {6, 4, 3, 5}, {2, 0, 0, 1}};
+static Config startConfig =
+{
+  {8, 10, 10, 7},
+  {8, 10, 10, 7},
+  {6, 9, 9, 5},
+  {6, 4, 3, 5},
+  {2, 0, 0, 1}
+};
 
-static Config thePuzzle = {
-    {8, 10, 10, 7}, {8, 10, 10, 7}, {6, 9, 9, 5}, {6, 4, 3, 5}, {2, 0, 0, 1}};
+static Config thePuzzle =
+{
+  {8, 10, 10, 7},
+  {8, 10, 10, 7},
+  {6, 9, 9, 5},
+  {6, 4, 3, 5},
+  {2, 0, 0, 1}
+};
 
-static int xadds[4] = {-1, 0, 1, 0};
-static int yadds[4] = {0, -1, 0, 1};
+static int xadds[4] =
+{-1, 0, 1, 0};
+static int yadds[4] =
+{0, -1, 0, 1};
 
 static long W = 400, H = 300;
 static GLint viewport[4];
@@ -109,7 +136,9 @@ static GLint viewport[4];
 #define srandom srand
 #define random() (rand() >> 2)
 
-unsigned hash(Config config) {
+unsigned
+hash(Config config)
+{
   int i, j, value;
 
   value = 0;
@@ -122,65 +151,108 @@ unsigned hash(Config config) {
   return (value);
 }
 
-int solution(Config config) {
+int
+solution(Config config)
+{
   if (config[4][1] == 10 && config[4][2] == 10)
     return (1);
   return (0);
 }
 
-float boxcoords[][3] = {
-    {0.2f, 0.2f, 0.9f}, {0.8f, 0.2f, 0.9f}, {0.8f, 0.8f, 0.9f}, {0.2f, 0.8f, 0.9f},
-    {0.2f, 0.1f, 0.8f}, {0.8f, 0.1f, 0.8f}, {0.9f, 0.2f, 0.8f}, {0.9f, 0.8f, 0.8f},
-    {0.8f, 0.9f, 0.8f}, {0.2f, 0.9f, 0.8f}, {0.1f, 0.8f, 0.8f}, {0.1f, 0.2f, 0.8f},
-    {0.2f, 0.1f, 0.2f}, {0.8f, 0.1f, 0.2f}, {0.9f, 0.2f, 0.2f}, {0.9f, 0.8f, 0.2f},
-    {0.8f, 0.9f, 0.2f}, {0.2f, 0.9f, 0.2f}, {0.1f, 0.8f, 0.2f}, {0.1f, 0.2f, 0.2f},
-    {0.2f, 0.2f, 0.1f}, {0.8f, 0.2f, 0.1f}, {0.8f, 0.8f, 0.1f}, {0.2f, 0.8f, 0.1f},
+float boxcoords[][3] =
+{
+  {0.2f, 0.2f, 0.9f},
+  {0.8f, 0.2f, 0.9f},
+  {0.8f, 0.8f, 0.9f},
+  {0.2f, 0.8f, 0.9f},
+  {0.2f, 0.1f, 0.8f},
+  {0.8f, 0.1f, 0.8f},
+  {0.9f, 0.2f, 0.8f},
+  {0.9f, 0.8f, 0.8f},
+  {0.8f, 0.9f, 0.8f},
+  {0.2f, 0.9f, 0.8f},
+  {0.1f, 0.8f, 0.8f},
+  {0.1f, 0.2f, 0.8f},
+  {0.2f, 0.1f, 0.2f},
+  {0.8f, 0.1f, 0.2f},
+  {0.9f, 0.2f, 0.2f},
+  {0.9f, 0.8f, 0.2f},
+  {0.8f, 0.9f, 0.2f},
+  {0.2f, 0.9f, 0.2f},
+  {0.1f, 0.8f, 0.2f},
+  {0.1f, 0.2f, 0.2f},
+  {0.2f, 0.2f, 0.1f},
+  {0.8f, 0.2f, 0.1f},
+  {0.8f, 0.8f, 0.1f},
+  {0.2f, 0.8f, 0.1f},
 };
 
-float boxnormals[][3] = {
-    {0, 0, 1}, /* 0 */
-    {0, 1, 0},
-    {1, 0, 0},
-    {0, 0, -1},
-    {0, -1, 0},
-    {-1, 0, 0},
-    {0.7071f, 0.7071f, 0.0000f}, /* 6 */
-    {0.7071f, -0.7071f, 0.0000f},
-    {-0.7071f, 0.7071f, 0.0000f},
-    {-0.7071f, -0.7071f, 0.0000f},
-    {0.7071f, 0.0000f, 0.7071f}, /* 10 */
-    {0.7071f, 0.0000f, -0.7071f},
-    {-0.7071f, 0.0000f, 0.7071f},
-    {-0.7071f, 0.0000f, -0.7071f},
-    {0.0000f, 0.7071f, 0.7071f}, /* 14 */
-    {0.0000f, 0.7071f, -0.7071f},
-    {0.0000f, -0.7071f, 0.7071f},
-    {0.0000f, -0.7071f, -0.7071f},
-    {0.5774f, 0.5774f, 0.5774f}, /* 18 */
-    {0.5774f, 0.5774f, -0.5774f},
-    {0.5774f, -0.5774f, 0.5774f},
-    {0.5774f, -0.5774f, -0.5774f},
-    {-0.5774f, 0.5774f, 0.5774f},
-    {-0.5774f, 0.5774f, -0.5774f},
-    {-0.5774f, -0.5774f, 0.5774f},
-    {-0.5774f, -0.5774f, -0.5774f},
+float boxnormals[][3] =
+{
+  {0, 0, 1},            /* 0 */
+  {0, 1, 0},
+  {1, 0, 0},
+  {0, 0, -1},
+  {0, -1, 0},
+  {-1, 0, 0},
+  {0.7071f, 0.7071f, 0.0000f},  /* 6 */
+  {0.7071f, -0.7071f, 0.0000f},
+  {-0.7071f, 0.7071f, 0.0000f},
+  {-0.7071f, -0.7071f, 0.0000f},
+  {0.7071f, 0.0000f, 0.7071f},  /* 10 */
+  {0.7071f, 0.0000f, -0.7071f},
+  {-0.7071f, 0.0000f, 0.7071f},
+  {-0.7071f, 0.0000f, -0.7071f},
+  {0.0000f, 0.7071f, 0.7071f},  /* 14 */
+  {0.0000f, 0.7071f, -0.7071f},
+  {0.0000f, -0.7071f, 0.7071f},
+  {0.0000f, -0.7071f, -0.7071f},
+  {0.5774f, 0.5774f, 0.5774f},  /* 18 */
+  {0.5774f, 0.5774f, -0.5774f},
+  {0.5774f, -0.5774f, 0.5774f},
+  {0.5774f, -0.5774f, -0.5774f},
+  {-0.5774f, 0.5774f, 0.5774f},
+  {-0.5774f, 0.5774f, -0.5774f},
+  {-0.5774f, -0.5774f, 0.5774f},
+  {-0.5774f, -0.5774f, -0.5774f},
 };
 
-int boxfaces[][4] = {
-    {0, 1, 2, 3}, /* 0 */
-    {9, 8, 16, 17},   {6, 14, 15, 7},  {20, 23, 22, 21}, {12, 13, 5, 4},
-    {19, 11, 10, 18}, {7, 15, 16, 8},                                   /* 6 */
-    {13, 14, 6, 5},   {18, 10, 9, 17}, {19, 12, 4, 11},  {1, 6, 7, 2},  /* 10 */
-    {14, 21, 22, 15}, {11, 0, 3, 10},  {20, 19, 18, 23}, {3, 2, 8, 9},  /* 14 */
-    {17, 16, 22, 23}, {4, 5, 1, 0},    {20, 21, 13, 12}, {2, 7, 8, -1}, /* 18 */
-    {16, 15, 22, -1}, {5, 6, 1, -1},   {13, 21, 14, -1}, {10, 3, 9, -1},
-    {18, 17, 23, -1}, {11, 4, 0, -1},  {20, 12, 19, -1},
+int boxfaces[][4] =
+{
+  {0, 1, 2, 3},         /* 0 */
+  {9, 8, 16, 17},
+  {6, 14, 15, 7},
+  {20, 23, 22, 21},
+  {12, 13, 5, 4},
+  {19, 11, 10, 18},
+  {7, 15, 16, 8},       /* 6 */
+  {13, 14, 6, 5},
+  {18, 10, 9, 17},
+  {19, 12, 4, 11},
+  {1, 6, 7, 2},         /* 10 */
+  {14, 21, 22, 15},
+  {11, 0, 3, 10},
+  {20, 19, 18, 23},
+  {3, 2, 8, 9},         /* 14 */
+  {17, 16, 22, 23},
+  {4, 5, 1, 0},
+  {20, 21, 13, 12},
+  {2, 7, 8, -1},        /* 18 */
+  {16, 15, 22, -1},
+  {5, 6, 1, -1},
+  {13, 21, 14, -1},
+  {10, 3, 9, -1},
+  {18, 17, 23, -1},
+  {11, 4, 0, -1},
+  {20, 12, 19, -1},
 };
 
-#define NBOXFACES (sizeof(boxfaces) / sizeof(boxfaces[0]))
+#define NBOXFACES (sizeof(boxfaces)/sizeof(boxfaces[0]))
 
 /* Draw a box.  Bevel as desired. */
-void drawBox(int piece, float xoff, float yoff) {
+void
+drawBox(int piece, float xoff, float yoff)
+{
   int xlen, ylen;
   int i, k;
   float x, y, z;
@@ -234,47 +306,102 @@ void drawBox(int piece, float xoff, float yoff) {
   glEnd();
 }
 
-float containercoords[][3] = {
-    {-0.1f, -0.1f, 1.0f}, {-0.1f, -0.1f, -0.1f}, {4.1f, -0.1f, -0.1f},
-    {4.1f, -0.1f, 1.0f},  {1.0f, -0.1f, 0.6f}, /* 4 */
-    {3.0f, -0.1f, 0.6f},  {1.0f, -0.1f, 0.0f},   {3.0f, -0.1f, 0.0f},
-    {1.0f, 0.0f, 0.0f}, /* 8 */
-    {3.0f, 0.0f, 0.0f},   {3.0f, 0.0f, 0.6f},    {1.0f, 0.0f, 0.6f},
-    {0.0f, 0.0f, 1.0f}, /* 12 */
-    {4.0f, 0.0f, 1.0f},   {4.0f, 0.0f, 0.0f},    {0.0f, 0.0f, 0.0f},
-    {0.0f, 5.0f, 0.0f}, /* 16 */
-    {0.0f, 5.0f, 1.0f},   {4.0f, 5.0f, 1.0f},    {4.0f, 5.0f, 0.0f},
-    {-0.1f, 5.1f, -0.1f}, /* 20 */
-    {4.1f, 5.1f, -0.1f},  {4.1f, 5.1f, 1.0f},    {-0.1f, 5.1f, 1.0f},
+float containercoords[][3] =
+{
+  {-0.1f, -0.1f, 1.0f},
+  {-0.1f, -0.1f, -0.1f},
+  {4.1f, -0.1f, -0.1f},
+  {4.1f, -0.1f, 1.0f},
+  {1.0f, -0.1f, 0.6f},     /* 4 */
+  {3.0f, -0.1f, 0.6f},
+  {1.0f, -0.1f, 0.0f},
+  {3.0f, -0.1f, 0.0f},
+  {1.0f, 0.0f, 0.0f},      /* 8 */
+  {3.0f, 0.0f, 0.0f},
+  {3.0f, 0.0f, 0.6f},
+  {1.0f, 0.0f, 0.6f},
+  {0.0f, 0.0f, 1.0f},      /* 12 */
+  {4.0f, 0.0f, 1.0f},
+  {4.0f, 0.0f, 0.0f},
+  {0.0f, 0.0f, 0.0f},
+  {0.0f, 5.0f, 0.0f},      /* 16 */
+  {0.0f, 5.0f, 1.0f},
+  {4.0f, 5.0f, 1.0f},
+  {4.0f, 5.0f, 0.0f},
+  {-0.1f, 5.1f, -0.1f},    /* 20 */
+  {4.1f, 5.1f, -0.1f},
+  {4.1f, 5.1f, 1.0f},
+  {-0.1f, 5.1f, 1.0f},
 };
 
-float containernormals[][3] = {
-    {0, -1, 0}, {0, -1, 0}, {0, -1, 0}, {0, -1, 0}, {0, -1, 0}, {0, 1, 0},  {0, 1, 0}, {0, 1, 0},
-    {1, 0, 0},  {1, 0, 0},  {1, 0, 0},  {-1, 0, 0}, {-1, 0, 0}, {-1, 0, 0}, {0, 1, 0}, {0, 0, -1},
-    {0, 0, -1}, {0, 0, 1},  {0, 0, 1},  {0, 0, 1},  {0, 0, 1},  {0, 0, 1},  {0, 0, 1}, {0, 0, 1},
+float containernormals[][3] =
+{
+  {0, -1, 0},
+  {0, -1, 0},
+  {0, -1, 0},
+  {0, -1, 0},
+  {0, -1, 0},
+  {0, 1, 0},
+  {0, 1, 0},
+  {0, 1, 0},
+  {1, 0, 0},
+  {1, 0, 0},
+  {1, 0, 0},
+  {-1, 0, 0},
+  {-1, 0, 0},
+  {-1, 0, 0},
+  {0, 1, 0},
+  {0, 0, -1},
+  {0, 0, -1},
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 0, 1},
+  {0, 0, 1},
 };
 
-int containerfaces[][4] = {
-    {1, 6, 4, 0},     {0, 4, 5, 3},     {1, 2, 7, 6},    {7, 2, 3, 5},   {16, 19, 18, 17},
+int containerfaces[][4] =
+{
+  {1, 6, 4, 0},
+  {0, 4, 5, 3},
+  {1, 2, 7, 6},
+  {7, 2, 3, 5},
+  {16, 19, 18, 17},
 
-    {23, 22, 21, 20}, {12, 11, 8, 15},  {10, 13, 14, 9},
+  {23, 22, 21, 20},
+  {12, 11, 8, 15},
+  {10, 13, 14, 9},
 
-    {15, 16, 17, 12}, {2, 21, 22, 3},   {6, 8, 11, 4},
+  {15, 16, 17, 12},
+  {2, 21, 22, 3},
+  {6, 8, 11, 4},
 
-    {1, 0, 23, 20},   {14, 13, 18, 19}, {9, 7, 5, 10},
+  {1, 0, 23, 20},
+  {14, 13, 18, 19},
+  {9, 7, 5, 10},
 
-    {12, 13, 10, 11},
+  {12, 13, 10, 11},
 
-    {1, 20, 21, 2},   {4, 11, 10, 5},
+  {1, 20, 21, 2},
+  {4, 11, 10, 5},
 
-    {15, 8, 19, 16},  {19, 8, 9, 14},   {8, 6, 7, 9},    {0, 3, 13, 12}, {13, 3, 22, 18},
-    {18, 22, 23, 17}, {17, 23, 0, 12},
+  {15, 8, 19, 16},
+  {19, 8, 9, 14},
+  {8, 6, 7, 9},
+  {0, 3, 13, 12},
+  {13, 3, 22, 18},
+  {18, 22, 23, 17},
+  {17, 23, 0, 12},
 };
 
-#define NCONTFACES (sizeof(containerfaces) / sizeof(containerfaces[0]))
+#define NCONTFACES (sizeof(containerfaces)/sizeof(containerfaces[0]))
 
 /* Draw the container */
-void drawContainer(void) {
+void
+drawContainer(void)
+{
   int i, k;
   float *v;
 
@@ -294,7 +421,9 @@ void drawContainer(void) {
   glEnd();
 }
 
-void drawAll(void) {
+void
+drawAll(void)
+{
   int i, j;
   int piece;
   char done[PIECES + 1];
@@ -335,10 +464,12 @@ void drawAll(void) {
   }
 }
 
-void redraw(void) {
+void
+redraw(void)
+{
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  gluPerspective(45, viewport[2] * 1.0 / viewport[3], 0.1, 100.0);
+  gluPerspective(45, viewport[2]*1.0/viewport[3], 0.1, 100.0);
 
   drawAll();
 
@@ -348,7 +479,9 @@ void redraw(void) {
     glFinish();
 }
 
-void solidifyChain(struct puzzle *puzzle) {
+void
+solidifyChain(struct puzzle *puzzle)
+{
   int i;
   char buf[256];
 
@@ -362,7 +495,9 @@ void solidifyChain(struct puzzle *puzzle) {
   glutSetWindowTitle(buf);
 }
 
-int addConfig(Config config, struct puzzle *back) {
+int
+addConfig(Config config, struct puzzle *back)
+{
   unsigned hashvalue;
   struct puzzle *newpiece;
   struct puzzlelist *newlistentry;
@@ -376,7 +511,8 @@ int addConfig(Config config, struct puzzle *back) {
 
       for (i = 0; i < WIDTH; i++) {
         for (j = 0; j < HEIGHT; j++) {
-          if (convert[(int)config[j][i]] != convert[(int)newpiece->pieces[j][i]])
+          if (convert[(int)config[j][i]] !=
+            convert[(int)newpiece->pieces[j][i]])
             goto nomatch;
         }
       }
@@ -386,7 +522,7 @@ int addConfig(Config config, struct puzzle *back) {
     newpiece = newpiece->next;
   }
 
-  newpiece = (struct puzzle *)malloc(sizeof(struct puzzle));
+  newpiece = (struct puzzle *) malloc(sizeof(struct puzzle));
   newpiece->next = hashtable[hashvalue % HASHSIZE];
   newpiece->hashvalue = hashvalue;
   memcpy(newpiece->pieces, config, HEIGHT * WIDTH);
@@ -394,7 +530,7 @@ int addConfig(Config config, struct puzzle *back) {
   newpiece->solnptr = NULL;
   hashtable[hashvalue % HASHSIZE] = newpiece;
 
-  newlistentry = (struct puzzlelist *)malloc(sizeof(struct puzzlelist));
+  newlistentry = (struct puzzlelist *) malloc(sizeof(struct puzzlelist));
   newlistentry->puzzle = newpiece;
   newlistentry->next = NULL;
 
@@ -416,7 +552,9 @@ int addConfig(Config config, struct puzzle *back) {
 }
 
 /* Checks if a space can move */
-int canmove0(Config pieces, int x, int y, int dir, Config newpieces) {
+int
+canmove0(Config pieces, int x, int y, int dir, Config newpieces)
+{
   char piece;
   int xadd, yadd;
   int l, m;
@@ -424,7 +562,8 @@ int canmove0(Config pieces, int x, int y, int dir, Config newpieces) {
   xadd = xadds[dir];
   yadd = yadds[dir];
 
-  if (x + xadd < 0 || x + xadd >= WIDTH || y + yadd < 0 || y + yadd >= HEIGHT)
+  if (x + xadd < 0 || x + xadd >= WIDTH ||
+    y + yadd < 0 || y + yadd >= HEIGHT)
     return 0;
   piece = pieces[y + yadd][x + xadd];
   if (piece == 0)
@@ -445,7 +584,8 @@ int canmove0(Config pieces, int x, int y, int dir, Config newpieces) {
 
         newx = l + xadd;
         newy = m + yadd;
-        if (newx < 0 || newx >= WIDTH || newy < 0 || newy >= HEIGHT)
+        if (newx < 0 || newx >= WIDTH ||
+          newy < 0 || newy >= HEIGHT)
           return 0;
         if (newpieces[newy][newx] != 0)
           return 0;
@@ -457,13 +597,16 @@ int canmove0(Config pieces, int x, int y, int dir, Config newpieces) {
 }
 
 /* Checks if a piece can move */
-int canmove(Config pieces, int x, int y, int dir, Config newpieces) {
+int
+canmove(Config pieces, int x, int y, int dir, Config newpieces)
+{
   int xadd, yadd;
 
   xadd = xadds[dir];
   yadd = yadds[dir];
 
-  if (x + xadd < 0 || x + xadd >= WIDTH || y + yadd < 0 || y + yadd >= HEIGHT)
+  if (x + xadd < 0 || x + xadd >= WIDTH ||
+    y + yadd < 0 || y + yadd >= HEIGHT)
     return 0;
   if (pieces[y + yadd][x + xadd] == pieces[y][x]) {
     return canmove(pieces, x + xadd, y + yadd, dir, newpieces);
@@ -473,7 +616,9 @@ int canmove(Config pieces, int x, int y, int dir, Config newpieces) {
   return canmove0(pieces, x + xadd, y + yadd, (dir + 2) % 4, newpieces);
 }
 
-int generateNewConfigs(struct puzzle *puzzle) {
+int
+generateNewConfigs(struct puzzle *puzzle)
+{
   int i, j, k;
   Config pieces;
   Config newpieces;
@@ -494,14 +639,16 @@ int generateNewConfigs(struct puzzle *puzzle) {
   return 0;
 }
 
-void freeSolutions(void) {
+void
+freeSolutions(void)
+{
   struct puzzlelist *nextpuz;
   struct puzzle *puzzle, *next;
   int i;
 
   while (puzzles) {
     nextpuz = puzzles->next;
-    free((char *)puzzles);
+    free((char *) puzzles);
     puzzles = nextpuz;
   }
   lastentry = NULL;
@@ -510,14 +657,16 @@ void freeSolutions(void) {
     hashtable[i] = NULL;
     while (puzzle) {
       next = puzzle->next;
-      free((char *)puzzle);
+      free((char *) puzzle);
       puzzle = next;
     }
   }
   startPuzzle = NULL;
 }
 
-int continueSolving(void) {
+int
+continueSolving(void)
+{
   struct puzzle *nextpuz;
   int i, j;
   int movedPiece;
@@ -549,7 +698,8 @@ int continueSolving(void) {
           goto found_piece;
         } else {
           movedPiece = nextpuz->pieces[i][j];
-          if (i < HEIGHT - 1 && startPuzzle->pieces[i + 1][j] == movedPiece) {
+          if (i < HEIGHT - 1 &&
+            startPuzzle->pieces[i + 1][j] == movedPiece) {
             fromx = j;
             fromy = i + 1;
             movedir = 1;
@@ -580,7 +730,7 @@ found_piece:
   toy = fromy + yadds[movedir];
 
   if (move_x > tox - MOVE_SPEED / 2 && move_x < tox + MOVE_SPEED / 2 &&
-      move_y > toy - MOVE_SPEED / 2 && move_y < toy + MOVE_SPEED / 2) {
+    move_y > toy - MOVE_SPEED / 2 && move_y < toy + MOVE_SPEED / 2) {
     startPuzzle = nextpuz;
     movingPiece = 0;
   }
@@ -589,7 +739,9 @@ found_piece:
   return 1;
 }
 
-int solvePuzzle(void) {
+int
+solvePuzzle(void)
+{
   struct puzzlelist *nextpuz;
   char buf[256];
   int i;
@@ -606,7 +758,7 @@ int solvePuzzle(void) {
     if (generateNewConfigs(puzzles->puzzle))
       break;
     nextpuz = puzzles->next;
-    free((char *)puzzles);
+    free((char *) puzzles);
     puzzles = nextpuz;
   }
   if (puzzles == NULL) {
@@ -618,14 +770,16 @@ int solvePuzzle(void) {
   return 1;
 }
 
-int selectPiece(int mousex, int mousey) {
+int
+selectPiece(int mousex, int mousey)
+{
   long hits;
   GLuint selectBuf[1024];
   GLuint closest;
   GLuint dist;
 
   glSelectBuffer(1024, selectBuf);
-  (void)glRenderMode(GL_SELECT);
+  (void) glRenderMode(GL_SELECT);
   glInitNames();
 
   /* Because LoadName() won't work with no names on the stack */
@@ -634,7 +788,7 @@ int selectPiece(int mousex, int mousey) {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   gluPickMatrix(mousex, H - mousey, 4, 4, viewport);
-  gluPerspective(45, viewport[2] * 1.0 / viewport[3], 0.1, 100.0);
+  gluPerspective(45, viewport[2]*1.0/viewport[3], 0.1, 100.0);
 
   drawAll();
 
@@ -643,7 +797,7 @@ int selectPiece(int mousex, int mousey) {
     return 0;
   }
   closest = 0;
-  dist = 0xFFFFFFFFU; // 2147483647;
+  dist = 0xFFFFFFFFU; //2147483647;
   while (hits) {
     if (selectBuf[(hits - 1) * 4 + 1] < dist) {
       dist = selectBuf[(hits - 1) * 4 + 1];
@@ -654,7 +808,9 @@ int selectPiece(int mousex, int mousey) {
   return closest;
 }
 
-void nukePiece(int piece) {
+void
+nukePiece(int piece)
+{
   int i, j;
 
   for (i = 0; i < HEIGHT; i++) {
@@ -666,18 +822,25 @@ void nukePiece(int piece) {
   }
 }
 
-void multMatrices(const GLfloat a[16], const GLfloat b[16], GLfloat r[16]) {
+void
+multMatrices(const GLfloat a[16], const GLfloat b[16], GLfloat r[16])
+{
   int i, j;
 
   for (i = 0; i < 4; i++) {
     for (j = 0; j < 4; j++) {
-      r[i * 4 + j] = a[i * 4 + 0] * b[0 * 4 + j] + a[i * 4 + 1] * b[1 * 4 + j] +
-                     a[i * 4 + 2] * b[2 * 4 + j] + a[i * 4 + 3] * b[3 * 4 + j];
+      r[i * 4 + j] =
+        a[i * 4 + 0] * b[0 * 4 + j] +
+        a[i * 4 + 1] * b[1 * 4 + j] +
+        a[i * 4 + 2] * b[2 * 4 + j] +
+        a[i * 4 + 3] * b[3 * 4 + j];
     }
   }
 }
 
-void makeIdentity(GLfloat m[16]) {
+void
+makeIdentity(GLfloat m[16])
+{
   m[0 + 4 * 0] = 1;
   m[0 + 4 * 1] = 0;
   m[0 + 4 * 2] = 0;
@@ -697,9 +860,11 @@ void makeIdentity(GLfloat m[16]) {
 }
 
 /*
- ** inverse = invert(src)
+   ** inverse = invert(src)
  */
-int invertMatrix(const GLfloat src[16], GLfloat inverse[16]) {
+int
+invertMatrix(const GLfloat src[16], GLfloat inverse[16])
+{
   int i, j, k, swap;
   float t;
   GLfloat temp[4][4];
@@ -713,7 +878,7 @@ int invertMatrix(const GLfloat src[16], GLfloat inverse[16]) {
 
   for (i = 0; i < 4; i++) {
     /*
-     ** Look for largest element in column */
+       ** Look for largest element in column */
     swap = i;
     for (j = i + 1; j < 4; j++) {
       if (fabs(temp[j][i]) > fabs(temp[i][i])) {
@@ -723,7 +888,7 @@ int invertMatrix(const GLfloat src[16], GLfloat inverse[16]) {
 
     if (swap != i) {
       /*
-       ** Swap rows. */
+         ** Swap rows. */
       for (k = 0; k < 4; k++) {
         t = temp[i][k];
         temp[i][k] = temp[swap][k];
@@ -760,13 +925,16 @@ int invertMatrix(const GLfloat src[16], GLfloat inverse[16]) {
 }
 
 /*
- ** This is a screwball function.  What it does is the following:
- ** Given screen x and y coordinates, compute the corresponding object space
- **   x and y coordinates given that the object space z is 0.9 + OFFSETZ.
- ** Since the tops of (most) pieces are at z = 0.9 + OFFSETZ, we use that
- **   number.
+   ** This is a screwball function.  What it does is the following:
+   ** Given screen x and y coordinates, compute the corresponding object space
+   **   x and y coordinates given that the object space z is 0.9 + OFFSETZ.
+   ** Since the tops of (most) pieces are at z = 0.9 + OFFSETZ, we use that
+   **   number.
  */
-int computeCoords(int piece, int mousex, int mousey, GLfloat *selx, GLfloat *sely) {
+int
+computeCoords(int piece, int mousex, int mousey,
+  GLfloat * selx, GLfloat * sely)
+{
   GLfloat modelMatrix[16];
   GLfloat projMatrix[16];
   GLfloat finalMatrix[16];
@@ -790,9 +958,13 @@ int computeCoords(int piece, int mousex, int mousey, GLfloat *selx, GLfloat *sel
   in[0] = (2.0f * (mousex - viewport[0]) / viewport[2]) - 1;
   in[1] = (2.0f * ((H - mousey) - viewport[1]) / viewport[3]) - 1;
 
-  a = in[0] * finalMatrix[0 * 4 + 2] + in[1] * finalMatrix[1 * 4 + 2] + finalMatrix[3 * 4 + 2];
+  a = in[0] * finalMatrix[0 * 4 + 2] +
+    in[1] * finalMatrix[1 * 4 + 2] +
+    finalMatrix[3 * 4 + 2];
   b = finalMatrix[2 * 4 + 2];
-  c = in[0] * finalMatrix[0 * 4 + 3] + in[1] * finalMatrix[1 * 4 + 3] + finalMatrix[3 * 4 + 3];
+  c = in[0] * finalMatrix[0 * 4 + 3] +
+    in[1] * finalMatrix[1 * 4 + 3] +
+    finalMatrix[3 * 4 + 3];
   d = finalMatrix[2 * 4 + 3];
 
   /*
@@ -816,15 +988,15 @@ int computeCoords(int piece, int mousex, int mousey, GLfloat *selx, GLfloat *sel
   w = c + d * z;
 
   /*
-   ** Now for x and y: */
-  *selx = (in[0] * finalMatrix[0 * 4 + 0] + in[1] * finalMatrix[1 * 4 + 0] +
-           z * finalMatrix[2 * 4 + 0] + finalMatrix[3 * 4 + 0]) /
-              w -
-          OFFSETX;
-  *sely = (in[0] * finalMatrix[0 * 4 + 1] + in[1] * finalMatrix[1 * 4 + 1] +
-           z * finalMatrix[2 * 4 + 1] + finalMatrix[3 * 4 + 1]) /
-              w -
-          OFFSETY;
+     ** Now for x and y: */
+  *selx = (in[0] * finalMatrix[0 * 4 + 0] +
+    in[1] * finalMatrix[1 * 4 + 0] +
+    z * finalMatrix[2 * 4 + 0] +
+    finalMatrix[3 * 4 + 0]) / w - OFFSETX;
+  *sely = (in[0] * finalMatrix[0 * 4 + 1] +
+    in[1] * finalMatrix[1 * 4 + 1] +
+    z * finalMatrix[2 * 4 + 1] +
+    finalMatrix[3 * 4 + 1]) / w - OFFSETY;
   return 1;
 }
 
@@ -832,7 +1004,9 @@ static int selected;
 static int selectx, selecty;
 static float selstartx, selstarty;
 
-void grabPiece(int piece, float selx, float sely) {
+void
+grabPiece(int piece, float selx, float sely)
+{
   int hit;
 
   selectx = int(selx);
@@ -862,7 +1036,9 @@ void grabPiece(int piece, float selx, float sely) {
   changeState();
 }
 
-void moveSelection(float selx, float sely) {
+void
+moveSelection(float selx, float sely)
+{
   float deltax, deltay;
   int dir;
   Config newpieces;
@@ -916,7 +1092,8 @@ void moveSelection(float selx, float sely) {
       selstarty--;
     }
   } else {
-    if (deltay > 0 && thePuzzle[selecty][selectx] == 10 && selectx == 1 && selecty == 3) {
+    if (deltay > 0 && thePuzzle[selecty][selectx] == 10 &&
+      selectx == 1 && selecty == 3) {
       /* Allow visual movement of solution piece outside of the
 
          box */
@@ -929,7 +1106,9 @@ void moveSelection(float selx, float sely) {
   }
 }
 
-void dropSelection(void) {
+void
+dropSelection(void)
+{
   if (!selected)
     return;
   movingPiece = 0;
@@ -945,7 +1124,9 @@ static int enable_spinning = 1;
 static float lastquat[4];
 static int sel_piece;
 
-static void Reshape(int width, int height) {
+static void
+Reshape(int width, int height)
+{
 
   W = width;
   H = height;
@@ -953,102 +1134,113 @@ static void Reshape(int width, int height) {
   glGetIntegerv(GL_VIEWPORT, viewport);
 }
 
-void toggleSolve(void) {
-  if (solving) {
-    freeSolutions();
-    solving = 0;
-    glutChangeToMenuEntry(1, (char *)"Solving", 1);
-    glutSetWindowTitle((char *)"glpuzzle");
-    movingPiece = 0;
-  } else {
-    glutChangeToMenuEntry(1, (char *)"Stop solving", 1);
-    glutSetWindowTitle((char *)"Solving...");
-    if (solvePuzzle()) {
-      solving = 1;
+void
+toggleSolve(void)
+{
+    if (solving) {
+      freeSolutions();
+      solving = 0;
+      glutChangeToMenuEntry(1, (char *)"Solving", 1);
+      glutSetWindowTitle((char *)"glpuzzle");
+      movingPiece = 0;
+    } else {
+      glutChangeToMenuEntry(1, (char *)"Stop solving", 1);
+      glutSetWindowTitle((char *)"Solving...");
+      if (solvePuzzle()) {
+        solving = 1;
+      }
     }
-  }
-  changeState();
-  glutPostRedisplay();
-}
-
-void reset_position(void) {
-  spinning = 0;
-  trackball(curquat, 0.0, 0.0, 0.0, 0.0); // reset position
-  glutIdleFunc(animate);
-}
-
-void reset(void) {
-  reset_position();
-  if (solving) {
-    freeSolutions();
-    solving = 0;
-    glutChangeToMenuEntry(1, (char *)"Solving", 1);
-    glutSetWindowTitle((char *)"glpuzzle");
-    movingPiece = 0;
     changeState();
-  }
-  memcpy(thePuzzle, startConfig, HEIGHT * WIDTH);
-  glutPostRedisplay();
+    glutPostRedisplay();
 }
 
-void keyboard(unsigned char c, int x, int y) {
+void reset_position(void)
+{
+    spinning = 0;
+    trackball(curquat, 0.0, 0.0, 0.0, 0.0); // reset position
+    glutIdleFunc(animate);
+}
+
+void reset(void)
+{
+    reset_position();
+    if (solving) {
+      freeSolutions();
+      solving = 0;
+      glutChangeToMenuEntry(1, (char *)"Solving", 1);
+      glutSetWindowTitle((char *)"glpuzzle");
+      movingPiece = 0;
+      changeState();
+    }
+    memcpy(thePuzzle, startConfig, HEIGHT * WIDTH);
+    glutPostRedisplay();
+}
+
+void
+keyboard(unsigned char c, int x, int y)
+{
   int piece;
 
   switch (c) {
-    case 27:
-      exit(0);
-      break;
-    case ' ':
-    case 'n':
-    case 'N':
-      reset_position();
-      break;
-    case 'D':
-    case 'd':
-      if (solving) {
-        freeSolutions();
-        solving = 0;
-        glutChangeToMenuEntry(1, (char *)"Solving", 1);
-        glutSetWindowTitle((char *)"glpuzzle");
-        movingPiece = 0;
-        changeState();
-      }
-      piece = selectPiece(x, y);
-      if (piece) {
-        nukePiece(piece);
-      }
-      glutPostRedisplay();
-      break;
-    case 'R':
-    case 'r':
-      reset();
-      break;
-    case 'S':
-    case 's':
-      toggleSolve();
-      break;
-    case 'b':
-    case 'B':
-      depth = 1 - depth;
-      if (depth) {
-        glEnable(GL_DEPTH_TEST);
-      } else {
-        glDisable(GL_DEPTH_TEST);
-      }
-      glutPostRedisplay();
-      break;
-    default:
-      break;
+  case 27:
+    exit(0);
+    break;
+  case ' ':
+  case 'n':
+  case 'N':
+    reset_position();
+    break;
+  case 'D':
+  case 'd':
+    if (solving) {
+      freeSolutions();
+      solving = 0;
+      glutChangeToMenuEntry(1, (char *)"Solving", 1);
+      glutSetWindowTitle((char *)"glpuzzle");
+      movingPiece = 0;
+      changeState();
+    }
+    piece = selectPiece(x, y);
+    if (piece) {
+      nukePiece(piece);
+    }
+    glutPostRedisplay();
+    break;
+  case 'R':
+  case 'r':
+    reset();
+    break;
+  case 'S':
+  case 's':
+    toggleSolve();
+    break;
+  case 'b':
+  case 'B':
+    depth = 1 - depth;
+    if (depth) {
+      glEnable(GL_DEPTH_TEST);
+    } else {
+      glDisable(GL_DEPTH_TEST);
+    }
+    glutPostRedisplay();
+    break;
+  default:
+    break;
   }
 }
 
-void motion(int x, int y) {
+void
+motion(int x, int y)
+{
   float selx, sely;
 
   if (middle_mouse && !left_mouse) {
     if (mousex != x || mousey != y) {
-      trackball(lastquat, (2.0f * mousex - W) / W, (H - 2.0f * mousey) / H, (2.0f * x - W) / W,
-                (H - 2.0f * y) / H);
+      trackball(lastquat,
+        (2.0f*mousex - W) / W,
+        (H - 2.0f*mousey) / H,
+        (2.0f*x - W) / W,
+        (H - 2.0f*y) / H);
       spinning = enable_spinning; // 1 = yes, 0 = disabled (commandline -n)
     } else {
       spinning = 0;
@@ -1063,7 +1255,9 @@ void motion(int x, int y) {
   glutPostRedisplay();
 }
 
-void mouse(int b, int s, int x, int y) {
+void
+mouse(int b, int s, int x, int y)
+{
   float selx, sely;
 
   mousex = x;
@@ -1072,28 +1266,28 @@ void mouse(int b, int s, int x, int y) {
   curY = y;
   if (s == GLUT_DOWN) {
     switch (b) {
-      case GLUT_LEFT_BUTTON:
-        if (solving) {
-          freeSolutions();
-          solving = 0;
-          glutChangeToMenuEntry(1, (char *)"Solving", 1);
-          glutSetWindowTitle((char *)"glpuzzle");
-          movingPiece = 0;
-        }
-        left_mouse = GL_TRUE;
-        sel_piece = selectPiece(mousex, mousey);
-        if (!sel_piece) {
-          left_mouse = GL_FALSE;
-          middle_mouse = GL_TRUE; // let it rotate object
-        } else if (computeCoords(sel_piece, mousex, mousey, &selx, &sely)) {
-          grabPiece(sel_piece, selx, sely);
-        }
-        glutPostRedisplay();
-        break;
-      case GLUT_MIDDLE_BUTTON:
-        middle_mouse = GL_TRUE;
-        glutPostRedisplay();
-        break;
+    case GLUT_LEFT_BUTTON:
+      if (solving) {
+        freeSolutions();
+        solving = 0;
+      glutChangeToMenuEntry(1, (char *)"Solving", 1);
+        glutSetWindowTitle((char *)"glpuzzle");
+        movingPiece = 0;
+      }
+      left_mouse = GL_TRUE;
+      sel_piece = selectPiece(mousex, mousey);
+      if (!sel_piece) {
+      left_mouse = GL_FALSE;
+      middle_mouse = GL_TRUE; // let it rotate object
+      } else if (computeCoords(sel_piece, mousex, mousey, &selx, &sely)) {
+        grabPiece(sel_piece, selx, sely);
+      }
+      glutPostRedisplay();
+      break;
+    case GLUT_MIDDLE_BUTTON:
+      middle_mouse = GL_TRUE;
+      glutPostRedisplay();
+      break;
     }
   } else {
     if (left_mouse) {
@@ -1108,7 +1302,9 @@ void mouse(int b, int s, int x, int y) {
   motion(x, y);
 }
 
-void animate(void) {
+void
+animate(void)
+{
   if (spinning) {
     add_quats(lastquat, curquat, curquat);
   }
@@ -1125,7 +1321,9 @@ void animate(void) {
   }
 }
 
-void changeState(void) {
+void
+changeState(void)
+{
   if (visible) {
     if (!solving && !spinning) {
       glutIdleFunc(NULL);
@@ -1137,18 +1335,31 @@ void changeState(void) {
   }
 }
 
-void init(void) {
-  static float lmodel_ambient[] = {0.0, 0.0, 0.0, 0.0};
-  static float lmodel_twoside[] = {GL_FALSE};
-  static float lmodel_local[] = {GL_FALSE};
-  static float light0_ambient[] = {0.1f, 0.1f, 0.1f, 1.0f};
-  static float light0_diffuse[] = {1.0f, 1.0f, 1.0f, 0.0f};
-  static float light0_position[] = {0.8660254f, 0.5f, 1, 0};
-  static float light0_specular[] = {0.0, 0.0, 0.0, 0.0};
-  static float bevel_mat_ambient[] = {0.0, 0.0, 0.0, 1.0};
-  static float bevel_mat_shininess[] = {40.0};
-  static float bevel_mat_specular[] = {0.0, 0.0, 0.0, 0.0};
-  static float bevel_mat_diffuse[] = {1.0, 0.0, 0.0, 0.0};
+void
+init(void)
+{
+  static float lmodel_ambient[] =
+  {0.0, 0.0, 0.0, 0.0};
+  static float lmodel_twoside[] =
+  {GL_FALSE};
+  static float lmodel_local[] =
+  {GL_FALSE};
+  static float light0_ambient[] =
+  {0.1f, 0.1f, 0.1f, 1.0f};
+  static float light0_diffuse[] =
+  {1.0f, 1.0f, 1.0f, 0.0f};
+  static float light0_position[] =
+  {0.8660254f, 0.5f, 1, 0};
+  static float light0_specular[] =
+  {0.0, 0.0, 0.0, 0.0};
+  static float bevel_mat_ambient[] =
+  {0.0, 0.0, 0.0, 1.0};
+  static float bevel_mat_shininess[] =
+  {40.0};
+  static float bevel_mat_specular[] =
+  {0.0, 0.0, 0.0, 0.0};
+  static float bevel_mat_diffuse[] =
+  {1.0, 0.0, 0.0, 0.0};
 
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
@@ -1180,13 +1391,17 @@ void init(void) {
   srandom((unsigned int)time(NULL));
 }
 
-static void Usage(void) {
+static void
+Usage(void)
+{
   puts("Usage: puzzle [-s]");
   puts("   -s:  Run in single buffered mode");
   exit(-1);
 }
 
-void visibility(int v) {
+void
+visibility(int v)
+{
   if (v == GLUT_VISIBLE) {
     visible = 1;
   } else {
@@ -1195,24 +1410,28 @@ void visibility(int v) {
   changeState();
 }
 
-void menu(int choice) {
-  switch (choice) {
-    case 1:
+void
+menu(int choice)
+{
+   switch(choice) {
+   case 1:
       reset_position();
       break;
-    case 2:
+   case 2:
       toggleSolve();
       break;
-    case 3:
+   case 3:
       reset();
       break;
-    case 4:
+   case 4:
       exit(0);
       break;
-  }
+   }
 }
 
-int main(int argc, char **argv) {
+int
+main(int argc, char **argv)
+{
   long i;
 
   Fl::use_high_res_GL(1);
@@ -1220,14 +1439,14 @@ int main(int argc, char **argv) {
   for (i = 1; i < argc; i++) {
     if (argv[i][0] == '-') {
       switch (argv[i][1]) {
-        case 'n':
-          enable_spinning = 0; // disable (sometimes annoying) spinning behaviour
-          break;
-        case 's':
-          doubleBuffer = 0;
-          break;
-        default:
-          Usage();
+      case 'n':
+        enable_spinning = 0; // disable (sometimes annoying) spinning behaviour
+        break;
+      case 's':
+        doubleBuffer = 0;
+        break;
+      default:
+        Usage();
       }
     } else {
       Usage();
@@ -1272,7 +1491,7 @@ int main(int argc, char **argv) {
   glutAddMenuEntry((char *)"Quit", 4);
   glutAttachMenu(GLUT_RIGHT_BUTTON);
   glutMainLoop();
-  return 0; /* ANSI C requires main to return int. */
+  return 0;             /* ANSI C requires main to return int. */
 }
 
 #endif // added for fltk's distribution

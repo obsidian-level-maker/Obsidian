@@ -30,33 +30,32 @@
 // OpenGL implementation does not support custom patterns
 // OpenGL implementation does not support cap and join types
 
-void Fl_OpenGL_Graphics_Driver::line_style(int style, int width, char *dashes) {
-  if (width < 1)
-    width = 1;
+void Fl_OpenGL_Graphics_Driver::line_style(int style, int width, char* dashes) {
+  if (width<1) width = 1;
   line_width_ = (float)width;
 
   int stipple = style & 0x00ff;
   line_stipple_ = stipple;
-  //  int cap     = style & 0x0f00;
-  //  int join    = style & 0xf000;
+//  int cap     = style & 0x0f00;
+//  int join    = style & 0xf000;
 
-  if (stipple == FL_SOLID) {
+  if (stipple==FL_SOLID) {
     glLineStipple(1, 0xFFFF);
     glDisable(GL_LINE_STIPPLE);
   } else {
     char enable = 1;
     switch (stipple & 0x00ff) {
       case FL_DASH:
-        glLineStipple(GLint(pixels_per_unit_ * line_width_), 0x0F0F); // ....****....****
+        glLineStipple(GLint(pixels_per_unit_*line_width_), 0x0F0F); // ....****....****
         break;
       case FL_DOT:
-        glLineStipple(GLint(pixels_per_unit_ * line_width_), 0x5555); // .*.*.*.*.*.*.*.*
+        glLineStipple(GLint(pixels_per_unit_*line_width_), 0x5555); // .*.*.*.*.*.*.*.*
         break;
       case FL_DASHDOT:
-        glLineStipple(GLint(pixels_per_unit_ * line_width_), 0x2727); // ..*..***..*..***
+        glLineStipple(GLint(pixels_per_unit_*line_width_), 0x2727); // ..*..***..*..***
         break;
       case FL_DASHDOTDOT:
-        glLineStipple(GLint(pixels_per_unit_ * line_width_), 0x5757); // .*.*.***.*.*.***
+        glLineStipple(GLint(pixels_per_unit_*line_width_), 0x5757); // .*.*.***.*.*.***
         break;
       default:
         glLineStipple(1, 0xFFFF);
@@ -67,6 +66,6 @@ void Fl_OpenGL_Graphics_Driver::line_style(int style, int width, char *dashes) {
     else
       glDisable(GL_LINE_STIPPLE);
   }
-  glLineWidth((GLfloat)(pixels_per_unit_ * line_width_));
-  glPointSize((GLfloat)(pixels_per_unit_));
+  glLineWidth( (GLfloat)(pixels_per_unit_ * line_width_) );
+  glPointSize( (GLfloat)(pixels_per_unit_) );
 }

@@ -24,7 +24,7 @@
 
 class FL_EXPORT Fl_Radio_Button : public Fl_Button {
 public:
-  Fl_Radio_Button(int X, int Y, int W, int H, const char *L = 0);
+  Fl_Radio_Button(int X,int Y,int W,int H,const char *L=0);
 };
 
 #endif

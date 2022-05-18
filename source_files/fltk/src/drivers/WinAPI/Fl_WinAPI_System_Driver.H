@@ -24,7 +24,7 @@
 
 #include "../../Fl_System_Driver.H"
 #include <stdarg.h>
-#include <string.h> // strdup
+#include <string.h>  // strdup
 
 /*
  Move everything here that manages the system interface.
@@ -38,7 +38,8 @@
  - string management
  */
 
-class Fl_WinAPI_System_Driver : public Fl_System_Driver {
+class Fl_WinAPI_System_Driver : public Fl_System_Driver
+{
 public:
   virtual void warning(const char *format, va_list args);
   virtual void error(const char *format, va_list args);
@@ -60,8 +61,8 @@ public:
   virtual int mkdir(const char *fnam, int mode);
   virtual int rmdir(const char *fnam);
   virtual int rename(const char *fnam, const char *newnam);
-  virtual unsigned utf8towc(const char *src, unsigned srclen, wchar_t *dst, unsigned dstlen);
-  virtual unsigned utf8fromwc(char *dst, unsigned dstlen, const wchar_t *src, unsigned srclen);
+  virtual unsigned utf8towc(const char *src, unsigned srclen, wchar_t* dst, unsigned dstlen);
+  virtual unsigned utf8fromwc(char *dst, unsigned dstlen, const wchar_t* src, unsigned srclen);
   virtual int utf8locale();
   virtual unsigned utf8to_mb(const char *src, unsigned srclen, char *dst, unsigned dstlen);
   virtual unsigned utf8from_mb(char *dst, unsigned dstlen, const char *src, unsigned srclen);
@@ -72,47 +73,46 @@ public:
   virtual int event_key(int k);
   virtual int get_key(int k);
   virtual int filename_list(const char *d, dirent ***list,
-                            int (*sort)(struct dirent **, struct dirent **), char *errmsg = NULL,
-                            int errmsg_sz = 0);
-  virtual int filename_expand(char *to, int tolen, const char *from);
+                            int (*sort)(struct dirent **, struct dirent **),
+                            char *errmsg=NULL, int errmsg_sz=0);
+  virtual int filename_expand(char *to,int tolen, const char *from);
   virtual int filename_relative(char *to, int tolen, const char *from, const char *base);
   virtual int filename_absolute(char *to, int tolen, const char *from);
   virtual int filename_isdir(const char *n);
   virtual int filename_isdir_quick(const char *n);
   virtual const char *filename_ext(const char *buf);
   virtual int open_uri(const char *uri, char *msg, int msglen);
-  virtual int use_recent_tooltip_fix() { return 1; }
-  virtual int file_browser_load_filesystem(Fl_File_Browser *browser, char *filename, int lname,
-                                           Fl_File_Icon *icon);
+  virtual int use_recent_tooltip_fix() {return 1;}
+  virtual int file_browser_load_filesystem(Fl_File_Browser *browser, char *filename, int lname, Fl_File_Icon *icon);
   virtual int file_browser_load_directory(const char *directory, char *filename, size_t name_size,
                                           dirent ***pfiles, Fl_File_Sort_F *sort,
-                                          char *errmsg = NULL, int errmsg_sz = 0);
+                                          char *errmsg=NULL, int errmsg_sz=0);
   virtual void newUUID(char *uuidBuffer);
-  virtual char *preference_rootnode(Fl_Preferences *prefs, Fl_Preferences::Root root,
-                                    const char *vendor, const char *application);
+  virtual char *preference_rootnode(Fl_Preferences *prefs, Fl_Preferences::Root root, const char *vendor,
+                                    const char *application);
   virtual void *load(const char *filename);
   virtual void png_extra_rgba_processing(unsigned char *array, int w, int h);
   virtual const char *next_dir_sep(const char *start);
   // these 3 are implemented in Fl_lock.cxx
-  virtual void awake(void *);
+  virtual void awake(void*);
   virtual int lock();
   virtual void unlock();
   // this one is implemented in Fl_win32.cxx
-  virtual void *thread_message();
+  virtual void* thread_message();
   virtual int file_type(const char *filename);
   virtual const char *home_directory_name();
   virtual const char *filesystems_label() { return "My Computer"; }
-  virtual int backslash_as_slash() { return 1; }
-  virtual int colon_is_drive() { return 1; }
-  virtual int case_insensitive_filenames() { return 1; }
+  virtual int backslash_as_slash() {return 1;}
+  virtual int colon_is_drive() {return 1;}
+  virtual int case_insensitive_filenames() {return 1;}
   // this one is implemented in Fl_win32.cxx
   virtual const char *filename_name(const char *buf);
-  virtual void add_fd(int fd, int when, Fl_FD_Handler cb, void * = 0);
-  virtual void add_fd(int fd, Fl_FD_Handler cb, void * = 0);
+  virtual void add_fd(int fd, int when, Fl_FD_Handler cb, void* = 0);
+  virtual void add_fd(int fd, Fl_FD_Handler cb, void* = 0);
   virtual void remove_fd(int, int when);
   virtual void remove_fd(int);
   virtual void gettime(time_t *sec, int *usec);
-  virtual char *strdup(const char *s) { return ::_strdup(s); }
+  virtual char* strdup(const char *s) { return ::_strdup(s); }
   virtual void lock_ring();
   virtual void unlock_ring();
   virtual double wait(double time_to_wait);

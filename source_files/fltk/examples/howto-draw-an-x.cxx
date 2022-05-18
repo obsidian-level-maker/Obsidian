@@ -25,25 +25,24 @@
 
 class DrawX : public Fl_Widget {
 public:
-  DrawX(int X, int Y, int W, int H, const char *L = 0)
-    : Fl_Widget(X, Y, W, H, L) {}
-  void draw() {
-    // Draw background - a white filled rectangle
-    fl_color(FL_WHITE);
-    fl_rectf(x(), y(), w(), h());
-    // Draw black 'X' over base widget's background
-    fl_color(FL_BLACK);
-    int x1 = x(), y1 = y();
-    int x2 = x() + w() - 1, y2 = y() + h() - 1;
-    fl_line(x1, y1, x2, y2);
-    fl_line(x1, y2, x2, y1);
-  }
+    DrawX(int X, int Y, int W, int H, const char*L=0) : Fl_Widget(X,Y,W,H,L) {
+    }
+    void draw() {
+        // Draw background - a white filled rectangle
+        fl_color(FL_WHITE); fl_rectf(x(),y(),w(),h());
+        // Draw black 'X' over base widget's background
+        fl_color(FL_BLACK);
+        int x1 = x(),       y1 = y();
+        int x2 = x()+w()-1, y2 = y()+h()-1;
+        fl_line(x1, y1, x2, y2);
+        fl_line(x1, y2, x2, y1);
+    }
 };
 int main() {
-  Fl_Double_Window win(200, 200, "Draw X");
-  DrawX draw_x(10, 10, win.w() - 20, win.h() - 20); // put our widget 10 pixels within window edges
-  draw_x.color(FL_WHITE);                           // make widget's background white
-  win.resizable(draw_x);
-  win.show();
-  return (Fl::run());
+    Fl_Double_Window win(200,200,"Draw X");
+    DrawX draw_x(10, 10, win.w()-20, win.h()-20);       // put our widget 10 pixels within window edges
+    draw_x.color(FL_WHITE);                             // make widget's background white
+    win.resizable(draw_x);
+    win.show();
+    return(Fl::run());
 }

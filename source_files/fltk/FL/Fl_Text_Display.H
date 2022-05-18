@@ -22,7 +22,7 @@
 #ifndef FL_TEXT_DISPLAY_H
 #define FL_TEXT_DISPLAY_H
 
-#include <FL/Fl.H> // Fl::scrollbar_size()
+#include <FL/Fl.H>              // Fl::scrollbar_size()
 #include "fl_draw.H"
 #include "Fl_Group.H"
 #include "Fl_Widget.H"
@@ -75,19 +75,20 @@
  \note Line numbers were added in FLTK 1.3.3.
  \see Fl_Widget::shortcut_label(int)
  */
-class FL_EXPORT Fl_Text_Display : public Fl_Group {
+class FL_EXPORT Fl_Text_Display: public Fl_Group {
 
 public:
+
   /**
    text display cursor shapes enumeration
    */
   enum {
-    NORMAL_CURSOR, /**< I-beam */
-    CARET_CURSOR,  /**< caret under the text */
-    DIM_CURSOR,    /**< dim I-beam */
-    BLOCK_CURSOR,  /**< unfille box under the current character */
-    HEAVY_CURSOR,  /**< thick I-beam */
-    SIMPLE_CURSOR  /**< as cursor as Fl_Input cursor */
+    NORMAL_CURSOR,    /**< I-beam */
+    CARET_CURSOR,     /**< caret under the text */
+    DIM_CURSOR,       /**< dim I-beam */
+    BLOCK_CURSOR,     /**< unfille box under the current character */
+    HEAVY_CURSOR,     /**< thick I-beam */
+    SIMPLE_CURSOR    /**< as cursor as Fl_Input cursor */
   };
 
   /**
@@ -95,14 +96,23 @@ public:
    the cursor is thought to be between the centers of two consecutive
    characters.
    */
-  enum { CURSOR_POS, CHARACTER_POS };
+  enum {
+    CURSOR_POS,
+    CHARACTER_POS
+  };
 
   /**
    drag types - they match Fl::event_clicks() so that single clicking to
    start a collection selects by character, double clicking selects by
    word and triple clicking selects by line.
    */
-  enum { DRAG_NONE = -2, DRAG_START_DND = -1, DRAG_CHAR = 0, DRAG_WORD = 1, DRAG_LINE = 2 };
+  enum {
+    DRAG_NONE = -2,
+    DRAG_START_DND = -1,
+    DRAG_CHAR = 0,
+    DRAG_WORD = 1,
+    DRAG_LINE = 2
+  };
 
   /**
    wrap types - used in wrap_mode()
@@ -114,7 +124,7 @@ public:
     WRAP_AT_BOUNDS  /**< wrap text so that it fits into the widget width */
   };
 
-  friend void fl_text_drag_me(int pos, Fl_Text_Display *d);
+  friend void fl_text_drag_me(int pos, Fl_Text_Display* d);
 
   typedef void (*Unfinished_Style_Cb)(int, void *);
 
@@ -132,25 +142,25 @@ public:
    \see Fl_Text_Display::highlight_data()
    */
   struct Style_Table_Entry {
-    Fl_Color color;   ///< text color
-    Fl_Font font;     ///< text font
-    Fl_Fontsize size; ///< text font size
-    unsigned attr;    ///< further attributes for the text style (see `ATTR_BGCOLOR`, etc.)
-    Fl_Color bgcolor; ///< text background color if `ATTR_BGCOLOR` or `ATTR_BGCOLOR_EXT` is set
+    Fl_Color    color;    ///< text color
+    Fl_Font     font;     ///< text font
+    Fl_Fontsize size;     ///< text font size
+    unsigned    attr;     ///< further attributes for the text style (see `ATTR_BGCOLOR`, etc.)
+    Fl_Color    bgcolor;  ///< text background color if `ATTR_BGCOLOR` or `ATTR_BGCOLOR_EXT` is set
   };
 
   /**
    attribute flags in `Style_Table_Entry.attr`
    */
   enum {
-    ATTR_BGCOLOR = 0x0001,        ///< use the background color in the `bgcolor` field
-    ATTR_BGCOLOR_EXT_ = 0x0002,   ///< (internal use)
-    ATTR_BGCOLOR_EXT = 0x0003,    ///< extend background color to the end of the line
-    ATTR_UNDERLINE = 0x0004,      ///< a single underline, underline types are mutually exclusive
-    ATTR_GRAMMAR = 0x0008,        ///< grammar suggestion (blue dotted underline)
-    ATTR_SPELLING = 0x000C,       ///< spelling suggestion (red dotted underline)
+    ATTR_BGCOLOR        = 0x0001, ///< use the background color in the `bgcolor` field
+    ATTR_BGCOLOR_EXT_   = 0x0002, ///< (internal use)
+    ATTR_BGCOLOR_EXT    = 0x0003, ///< extend background color to the end of the line
+    ATTR_UNDERLINE      = 0x0004, ///< a single underline, underline types are mutually exclusive
+    ATTR_GRAMMAR        = 0x0008, ///< grammar suggestion (blue dotted underline)
+    ATTR_SPELLING       = 0x000C, ///< spelling suggestion (red dotted underline)
     ATTR_STRIKE_THROUGH = 0x0010, ///< line through the middle of the text
-    ATTR_LINES_MASK = 0x001C,     ///< the mask for all underline and strike through types
+    ATTR_LINES_MASK     = 0x001C, ///< the mask for all underline and strike through types
   };
 
   Fl_Text_Display(int X, int Y, int W, int H, const char *l = 0);
@@ -158,7 +168,7 @@ public:
 
   virtual int handle(int e);
 
-  void buffer(Fl_Text_Buffer *buf);
+  void buffer(Fl_Text_Buffer* buf);
 
   /**
    Sets the current text buffer associated with the text widget.
@@ -166,7 +176,7 @@ public:
    \param buf new text buffer
    \see Fl_Text_Display::buffer(Fl_Text_Buffer* buf)
    */
-  void buffer(Fl_Text_Buffer &buf) { buffer(&buf); }
+  void buffer(Fl_Text_Buffer& buf) { buffer(&buf); }
 
   /**
    Gets the current text buffer associated with the text widget.
@@ -175,19 +185,19 @@ public:
    \see Fl_Text_Display::buffer(Fl_Text_Buffer* buf)
    \see Fl_Text_Display::buffer(Fl_Text_Buffer& buf)
    */
-  Fl_Text_Buffer *buffer() const { return mBuffer; }
+  Fl_Text_Buffer* buffer() const { return mBuffer; }
   /**
    Gets the current style buffer associated with the text widget.
    Multiple text widgets can be associated with the same style buffer.
    \return current style buffer
    \see Fl_Text_Display::highlight_data()
    */
-  Fl_Text_Buffer *style_buffer() const { return mStyleBuffer; }
+  Fl_Text_Buffer* style_buffer() const { return mStyleBuffer; }
 
   void redisplay_range(int start, int end);
   void scroll(int topLineNum, int horizOffset);
-  void insert(const char *text);
-  void overstrike(const char *text);
+  void insert(const char* text);
+  void overstrike(const char* text);
   void insert_position(int newPos);
 
   /**
@@ -202,7 +212,7 @@ public:
     \see insert_position(int)
   */
   int insert_position() const { return mCursorPos; }
-  int position_to_xy(int pos, int *x, int *y) const;
+  int position_to_xy(int pos, int* x, int* y) const;
 
   int in_selection(int x, int y) const;
   void show_insert_position();
@@ -233,20 +243,22 @@ public:
    Gets the text cursor color.
    \return cursor color
    */
-  Fl_Color cursor_color() const { return mCursor_color; }
+  Fl_Color cursor_color() const {return mCursor_color;}
 
   /**
    Sets the text cursor color.
    \param n new cursor color
    */
-  void cursor_color(Fl_Color n) { mCursor_color = n; }
+  void cursor_color(Fl_Color n) {mCursor_color = n;}
 
   /**
     Returns the global value Fl::scrollbar_size() unless a specific scrollbar_width_ has been set.
    \deprecated Use scrollbar_size() instead.
     \todo This method should eventually be removed.
   */
-  int scrollbar_width() const { return scrollbar_width_ ? scrollbar_width_ : Fl::scrollbar_size(); }
+  int scrollbar_width() const {
+      return scrollbar_width_ ? scrollbar_width_ : Fl::scrollbar_size();
+  }
 
   /**
     Sets the global Fl::scrollbar_size(), and forces this instance of the widget to use it.
@@ -254,8 +266,8 @@ public:
     \todo This method should eventually be removed
   */
   void scrollbar_width(int width) {
-    Fl::scrollbar_size(width);
-    scrollbar_width_ = 0;
+      Fl::scrollbar_size(width);
+      scrollbar_width_ = 0;
   }
 
   /**
@@ -267,7 +279,9 @@ public:
     \returns Scrollbar size in pixels, or 0 if the global Fl::scrollbar_size() is being used.
     \see Fl::scrollbar_size(int)
   */
-  int scrollbar_size() const { return (scrollbar_width_); }
+  int scrollbar_size() const {
+      return(scrollbar_width_);
+  }
 
   /**
     Sets the pixel size of the scrollbars' troughs to \p newSize, in pixels.
@@ -288,7 +302,9 @@ public:
                     If 0 (default), scrollbar size tracks the global Fl::scrollbar_size()
     \see Fl::scrollbar_size()
   */
-  void scrollbar_size(int newSize) { scrollbar_width_ = newSize; }
+  void scrollbar_size(int newSize) {
+      scrollbar_width_ = newSize;
+  }
 
   /**
    Gets the scrollbar alignment type.
@@ -317,8 +333,11 @@ public:
   int word_end(int pos) const { return buffer()->word_end(pos); }
 
 
-  void highlight_data(Fl_Text_Buffer *styleBuffer, const Style_Table_Entry *styleTable, int nStyles,
-                      char unfinishedStyle, Unfinished_Style_Cb unfinishedHighlightCB, void *cbArg);
+  void highlight_data(Fl_Text_Buffer *styleBuffer,
+                      const Style_Table_Entry *styleTable,
+                      int nStyles, char unfinishedStyle,
+                      Unfinished_Style_Cb unfinishedHighlightCB,
+                      void *cbArg);
 
   int position_style(int lineStartPos, int lineLen, int lineIndex) const;
 
@@ -327,56 +346,50 @@ public:
    have no effects as shortcut_ is unused in this class and derived!
    \return the current shortcut key
    */
-  int shortcut() const { return shortcut_; }
+  int shortcut() const {return shortcut_;}
 
   /**
    \todo FIXME : get set methods pointing on shortcut_
    have no effects as shortcut_ is unused in this class and derived!
    \param s the new shortcut key
    */
-  void shortcut(int s) { shortcut_ = s; }
+  void shortcut(int s) {shortcut_ = s;}
 
   /**
    Gets the default font used when drawing text in the widget.
    \return current text font face unless overridden by a style
    */
-  Fl_Font textfont() const { return textfont_; }
+  Fl_Font textfont() const {return textfont_;}
 
   /**
    Sets the default font used when drawing text in the widget.
    \param s default text font face
    */
-  void textfont(Fl_Font s) {
-    textfont_ = s;
-    mColumnScale = 0;
-  }
+  void textfont(Fl_Font s) {textfont_ = s; mColumnScale = 0; }
 
   /**
    Gets the default size of text in the widget.
    \return current text height unless overridden by a style
    */
-  Fl_Fontsize textsize() const { return textsize_; }
+  Fl_Fontsize textsize() const {return textsize_;}
 
   /**
    Sets the default size of text in the widget.
    \param s new text size
    */
-  void textsize(Fl_Fontsize s) {
-    textsize_ = s;
-    mColumnScale = 0;
-  }
+  void textsize(Fl_Fontsize s) {textsize_ = s; mColumnScale = 0; }
 
   /**
    Gets the default color of text in the widget.
    \return text color unless overridden by a style
    */
-  Fl_Color textcolor() const { return textcolor_; }
+  Fl_Color textcolor() const {return textcolor_;}
 
   /**
    Sets the default color of text in the widget.
    \param n new text color
    */
-  void textcolor(Fl_Color n) { textcolor_ = n; }
+  void textcolor(Fl_Color n) {textcolor_ = n;}
 
   /**
    Sets the underline color for style attribute ATTR_GRAMMAR.
@@ -388,7 +401,7 @@ public:
    Gets the underline color for style attribute ATTR_GRAMMAR.
    \return underline color
    */
-  Fl_Color grammar_underline_color() const { return grammar_underline_color_; }
+  Fl_Color grammar_underline_color() const { return grammar_underline_color_;}
 
   /**
    Sets the underline color for style attribute ATTR_SPELLING.
@@ -400,7 +413,7 @@ public:
    Gets the underline color for style attribute ATTR_SPELLING.
    \return underline color
    */
-  Fl_Color spelling_underline_color() const { return spelling_underline_color_; }
+  Fl_Color spelling_underline_color() const { return spelling_underline_color_;}
 
   /**
    Sets the background color for the secondary selection block.
@@ -412,7 +425,7 @@ public:
    Gets the background color for the secondary selection block.
    \return background color color
    */
-  Fl_Color secondary_selection_color() const { return secondary_selection_color_; }
+  Fl_Color secondary_selection_color() const { return secondary_selection_color_;}
 
   int wrapped_column(int row, int column) const;
   int wrapped_row(int row) const;
@@ -448,8 +461,8 @@ public:
   Fl_Color linenumber_bgcolor() const;
   void linenumber_align(Fl_Align val);
   Fl_Align linenumber_align() const;
-  void linenumber_format(const char *val);
-  const char *linenumber_format() const;
+  void linenumber_format(const char* val);
+  const char* linenumber_format() const;
 
 protected:
   // Most (all?) of this stuff should only be called from resize() or
@@ -462,10 +475,11 @@ protected:
   void draw_range(int start, int end);
   void draw_cursor(int, int);
 
-  void draw_string(int style, int x, int y, int toX, const char *string, int nChars) const;
+  void draw_string(int style, int x, int y, int toX, const char *string,
+                   int nChars) const;
 
-  void draw_vline(int visLineNum, int leftClip, int rightClip, int leftCharIndex,
-                  int rightCharIndex);
+  void draw_vline(int visLineNum, int leftClip, int rightClip,
+                  int leftCharIndex, int rightCharIndex);
 
   int find_x(const char *s, int len, int style, int x) const;
 
@@ -474,11 +488,13 @@ protected:
     FIND_INDEX,
     FIND_INDEX_FROM_ZERO,
     GET_WIDTH,
-    FIND_CURSOR_INDEX // STR #2788
+    FIND_CURSOR_INDEX   // STR #2788
   };
 
-  int handle_vline(int mode, int lineStart, int lineLen, int leftChar, int rightChar, int topClip,
-                   int bottomClip, int leftClip, int rightClip) const;
+  int handle_vline(int mode,
+                   int lineStart, int lineLen, int leftChar, int rightChar,
+                   int topClip, int bottomClip,
+                   int leftClip, int rightClip) const;
 
   void draw_line_numbers(bool clearAll);
 
@@ -489,22 +505,23 @@ protected:
 
   void calc_line_starts(int startLine, int endLine);
 
-  void update_line_starts(int pos, int charsInserted, int charsDeleted, int linesInserted,
-                          int linesDeleted, int *scrolled);
+  void update_line_starts(int pos, int charsInserted, int charsDeleted,
+                          int linesInserted, int linesDeleted, int *scrolled);
 
   void calc_last_char();
 
-  int position_to_line(int pos, int *lineNum) const;
-  double string_width(const char *string, int length, int style) const;
+  int position_to_line( int pos, int* lineNum ) const;
+  double string_width(const char* string, int length, int style) const;
 
-  static void scroll_timer_cb(void *);
+  static void scroll_timer_cb(void*);
 
-  static void buffer_predelete_cb(int pos, int nDeleted, void *cbArg);
-  static void buffer_modified_cb(int pos, int nInserted, int nDeleted, int nRestyled,
-                                 const char *deletedText, void *cbArg);
+  static void buffer_predelete_cb(int pos, int nDeleted, void* cbArg);
+  static void buffer_modified_cb(int pos, int nInserted, int nDeleted,
+                                 int nRestyled, const char* deletedText,
+                                 void* cbArg);
 
-  static void h_scrollbar_cb(Fl_Scrollbar *w, Fl_Text_Display *d);
-  static void v_scrollbar_cb(Fl_Scrollbar *w, Fl_Text_Display *d);
+  static void h_scrollbar_cb(Fl_Scrollbar* w, Fl_Text_Display* d);
+  static void v_scrollbar_cb( Fl_Scrollbar* w, Fl_Text_Display* d);
   void update_v_scrollbar();
   void update_h_scrollbar();
   int measure_vline(int visLineNum) const;
@@ -513,25 +530,29 @@ protected:
   int vline_length(int visLineNum) const;
   int xy_to_position(int x, int y, int PosType = CHARACTER_POS) const;
 
-  void xy_to_rowcol(int x, int y, int *row, int *column, int PosType = CHARACTER_POS) const;
+  void xy_to_rowcol(int x, int y, int* row, int* column,
+                    int PosType = CHARACTER_POS) const;
   void maintain_absolute_top_line_number(int state);
   int get_absolute_top_line_number() const;
   void absolute_top_line_number(int oldFirstChar);
   int maintaining_absolute_top_line_number() const;
   void reset_absolute_top_line_number();
-  int position_to_linecol(int pos, int *lineNum, int *column) const;
+  int position_to_linecol(int pos, int* lineNum, int* column) const;
   int scroll_(int topLineNum, int horizOffset);
 
-  void extend_range_for_styles(int *start, int *end);
+  void extend_range_for_styles(int* start, int* end);
 
-  void find_wrap_range(const char *deletedText, int pos, int nInserted, int nDeleted,
-                       int *modRangeStart, int *modRangeEnd, int *linesInserted, int *linesDeleted);
+  void find_wrap_range(const char *deletedText, int pos, int nInserted,
+                       int nDeleted, int *modRangeStart, int *modRangeEnd,
+                       int *linesInserted, int *linesDeleted);
   void measure_deleted_lines(int pos, int nDeleted);
-  void wrapped_line_counter(Fl_Text_Buffer *buf, int startPos, int maxPos, int maxLines,
-                            bool startPosIsLineStart, int styleBufOffset, int *retPos,
-                            int *retLines, int *retLineStart, int *retLineEnd,
+  void wrapped_line_counter(Fl_Text_Buffer *buf, int startPos, int maxPos,
+                            int maxLines, bool startPosIsLineStart,
+                            int styleBufOffset, int *retPos, int *retLines,
+                            int *retLineStart, int *retLineEnd,
                             bool countLastLineMissingNewLine = true) const;
-  void find_line_end(int pos, bool start_pos_is_line_start, int *lineEnd, int *nextLineStart) const;
+  void find_line_end(int pos, bool start_pos_is_line_start, int *lineEnd,
+                     int *nextLineStart) const;
   double measure_proportional_character(const char *s, int colNum, int pos) const;
   int wrap_uses_character(int lineEndPos) const;
 
@@ -539,65 +560,65 @@ protected:
   int damage_range2_start, damage_range2_end;
   int mCursorPos;
   int mCursorOn;
-  int mCursorOldY;                            /* Y pos. of cursor for blanking */
-  int mCursorToHint;                          /* Tells the buffer modified callback
-                                               where to move the cursor, to reduce
-                                               the number of redraw calls */
-  int mCursorStyle;                           /* One of enum cursorStyles above */
-  int mCursorPreferredXPos;                   /* Pixel position for vert. cursor movement */
-  int mNVisibleLines;                         /* # of visible (displayed) lines. This is
-                                                 also the size of the mLineStarts[] array. */
-  int mNBufferLines;                          /* # of newlines in the buffer */
-  Fl_Text_Buffer *mBuffer;                    /* Contains text to be displayed */
-  Fl_Text_Buffer *mStyleBuffer;               /* Optional parallel buffer containing
-                                               color and font information */
-  int mFirstChar, mLastChar;                  /* Buffer positions of first and last
-                                               displayed character (lastChar points
-                                               either to a newline or one character
-                                               beyond the end of the buffer) */
-  int mContinuousWrap;                        /* Wrap long lines when displaying */
-  int mWrapMarginPix;                         /* Margin in # of pixels for
-                                               wrapping in continuousWrap mode */
-  int *mLineStarts;                           /* Array of the size mNVisibleLines.
-                                                 This array only keeps track of lines
-                                                 within the display area. Each entry
-                                                 contains the starting character offset
-                                                 (from the beginning of the text buffer)
-                                                 for each /visible/ line.
-                                                 If wrap enabled, points to the beginning
-                                                 of each wrap. So a long line wrapping
-                                                 into 3 separate lines in the display
-                                                 will take up 3 separate array entries. */
-  int mTopLineNum;                            /* Line number of top displayed line
-                                               of file (first line of file is 1) */
-  int mAbsTopLineNum;                         /* In continuous wrap mode, the line
-                                                number of the top line if the text
-                                                were not wrapped (note that this is
-                                                only maintained as needed). */
-  int mNeedAbsTopLineNum;                     /* Externally settable flag to continue
-                                               maintaining absTopLineNum even if
-                                               it isn't needed for line # display */
-  int mHorizOffset;                           /* Horizontal scroll pos. in pixels */
-  int mTopLineNumHint;                        /* Line number of top displayed line
-                                               of file (first line of file is 1) */
-  int mHorizOffsetHint;                       /* Horizontal scroll pos. in pixels */
-  int mNStyles;                               /* Number of entries in styleTable */
-  const Style_Table_Entry *mStyleTable;       /* Table of fonts and colors for
-                                               coloring/syntax-highlighting */
-  char mUnfinishedStyle;                      /* Style buffer entry which triggers
-                                               on-the-fly reparsing of region */
+  int mCursorOldY;              /* Y pos. of cursor for blanking */
+  int mCursorToHint;            /* Tells the buffer modified callback
+                                 where to move the cursor, to reduce
+                                 the number of redraw calls */
+  int mCursorStyle;             /* One of enum cursorStyles above */
+  int mCursorPreferredXPos;     /* Pixel position for vert. cursor movement */
+  int mNVisibleLines;           /* # of visible (displayed) lines. This is
+                                   also the size of the mLineStarts[] array. */
+  int mNBufferLines;            /* # of newlines in the buffer */
+  Fl_Text_Buffer* mBuffer;      /* Contains text to be displayed */
+  Fl_Text_Buffer* mStyleBuffer; /* Optional parallel buffer containing
+                                 color and font information */
+  int mFirstChar, mLastChar;    /* Buffer positions of first and last
+                                 displayed character (lastChar points
+                                 either to a newline or one character
+                                 beyond the end of the buffer) */
+  int mContinuousWrap;          /* Wrap long lines when displaying */
+  int mWrapMarginPix;           /* Margin in # of pixels for
+                                 wrapping in continuousWrap mode */
+  int* mLineStarts;             /* Array of the size mNVisibleLines.
+                                   This array only keeps track of lines
+                                   within the display area. Each entry
+                                   contains the starting character offset
+                                   (from the beginning of the text buffer)
+                                   for each /visible/ line.
+                                   If wrap enabled, points to the beginning
+                                   of each wrap. So a long line wrapping
+                                   into 3 separate lines in the display
+                                   will take up 3 separate array entries. */
+  int mTopLineNum;              /* Line number of top displayed line
+                                 of file (first line of file is 1) */
+  int mAbsTopLineNum;           /* In continuous wrap mode, the line
+                                  number of the top line if the text
+                                  were not wrapped (note that this is
+                                  only maintained as needed). */
+  int mNeedAbsTopLineNum;       /* Externally settable flag to continue
+                                 maintaining absTopLineNum even if
+                                 it isn't needed for line # display */
+  int mHorizOffset;             /* Horizontal scroll pos. in pixels */
+  int mTopLineNumHint;          /* Line number of top displayed line
+                                 of file (first line of file is 1) */
+  int mHorizOffsetHint;         /* Horizontal scroll pos. in pixels */
+  int mNStyles;                 /* Number of entries in styleTable */
+  const Style_Table_Entry *mStyleTable; /* Table of fonts and colors for
+                                         coloring/syntax-highlighting */
+  char mUnfinishedStyle;        /* Style buffer entry which triggers
+                                 on-the-fly reparsing of region */
   Unfinished_Style_Cb mUnfinishedHighlightCB; /* Callback to parse "unfinished" */
   /* regions */
-  void *mHighlightCBArg; /* Arg to unfinishedHighlightCB */
+  void* mHighlightCBArg;        /* Arg to unfinishedHighlightCB */
 
   int mMaxsize;
 
-  int mSuppressResync;       /* Suppress resynchronization of line
-                              starts during buffer updates */
-  int mNLinesDeleted;        /* Number of lines deleted during
-                              buffer modification (only used
-                              when resynchronization is suppressed) */
-  int mModifyingTabDistance; /* Whether tab distance is being modified XXX: UNUSED */
+  int mSuppressResync;          /* Suppress resynchronization of line
+                                 starts during buffer updates */
+  int mNLinesDeleted;           /* Number of lines deleted during
+                                 buffer modification (only used
+                                 when resynchronization is suppressed) */
+  int mModifyingTabDistance;    /* Whether tab distance is being modified XXX: UNUSED */
 
   mutable double mColumnScale; /* Width in pixels of an average character. This
                                  value is calculated as needed (lazy eval); it
@@ -606,15 +627,13 @@ protected:
 
   Fl_Color mCursor_color;
 
-  Fl_Scrollbar *mHScrollBar;
-  Fl_Scrollbar *mVScrollBar;
-  int scrollbar_width_; // size of scrollbar trough (behavior changed in 1.4)
+  Fl_Scrollbar* mHScrollBar;
+  Fl_Scrollbar* mVScrollBar;
+  int scrollbar_width_;         // size of scrollbar trough (behavior changed in 1.4)
   Fl_Align scrollbar_align_;
   int dragPos, dragType, dragging;
   int display_insert_position_hint;
-  struct {
-    int x, y, w, h;
-  } text_area;
+  struct { int x, y, w, h; } text_area;
 
   int shortcut_;
 
@@ -629,12 +648,12 @@ protected:
   int mLineNumLeft, mLineNumWidth;
 
   // Line number font/colors
-  Fl_Font linenumber_font_;
+  Fl_Font     linenumber_font_;
   Fl_Fontsize linenumber_size_;
-  Fl_Color linenumber_fgcolor_;
-  Fl_Color linenumber_bgcolor_;
-  Fl_Align linenumber_align_;
-  const char *linenumber_format_;
+  Fl_Color    linenumber_fgcolor_;
+  Fl_Color    linenumber_bgcolor_;
+  Fl_Align    linenumber_align_;
+  const char* linenumber_format_;
 };
 
 #endif

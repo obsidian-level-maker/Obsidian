@@ -39,61 +39,67 @@
 #include "os-compatibility.h"
 
 #ifndef HAVE_MKOSTEMP
-static int set_cloexec_or_close(int fd) {
-  long flags;
+static int
+set_cloexec_or_close(int fd)
+{
+	long flags;
 
-  if (fd == -1)
-    return -1;
+	if (fd == -1)
+		return -1;
 
-  flags = fcntl(fd, F_GETFD);
-  if (flags == -1)
-    goto err;
+	flags = fcntl(fd, F_GETFD);
+	if (flags == -1)
+		goto err;
 
-  if (fcntl(fd, F_SETFD, flags | FD_CLOEXEC) == -1)
-    goto err;
+	if (fcntl(fd, F_SETFD, flags | FD_CLOEXEC) == -1)
+		goto err;
 
-  return fd;
+	return fd;
 
 err:
-  close(fd);
-  return -1;
+	close(fd);
+	return -1;
 }
 #endif
 
-static int create_tmpfile_cloexec(char *tmpname) {
-  int fd;
+static int
+create_tmpfile_cloexec(char *tmpname)
+{
+	int fd;
 
 #ifdef HAVE_MKOSTEMP
-  fd = mkostemp(tmpname, O_CLOEXEC);
-  if (fd >= 0)
-    unlink(tmpname);
+	fd = mkostemp(tmpname, O_CLOEXEC);
+	if (fd >= 0)
+		unlink(tmpname);
 #else
-  fd = mkstemp(tmpname);
-  if (fd >= 0) {
-    fd = set_cloexec_or_close(fd);
-    unlink(tmpname);
-  }
+	fd = mkstemp(tmpname);
+	if (fd >= 0) {
+		fd = set_cloexec_or_close(fd);
+		unlink(tmpname);
+	}
 #endif
 
-  return fd;
+	return fd;
 }
 
-static int os_resize_anonymous_file(int fd, off_t size) {
+static int
+os_resize_anonymous_file(int fd, off_t size)
+{
 #ifdef HAVE_POSIX_FALLOCATE
-  /*
-   * Filesystems that do support fallocate will return EINVAL or
-   * EOPNOTSUPP. In this case we need to fall back to ftruncate
-   */
-  errno = posix_fallocate(fd, 0, size);
-  if (errno == 0)
-    return 0;
-  else if (errno != EINVAL && errno != EOPNOTSUPP)
-    return -1;
+	/* 
+	 * Filesystems that do support fallocate will return EINVAL or
+	 * EOPNOTSUPP. In this case we need to fall back to ftruncate
+	 */
+	errno = posix_fallocate(fd, 0, size);
+	if (errno == 0)
+		return 0;
+	else if (errno != EINVAL && errno != EOPNOTSUPP)
+		return -1;
 #endif
-  if (ftruncate(fd, size) < 0)
-    return -1;
+	if (ftruncate(fd, size) < 0)
+		return -1;
 
-  return 0;
+	return 0;
 }
 
 /*
@@ -124,50 +130,52 @@ static int os_resize_anonymous_file(int fd, off_t size) {
  * make sure SIGBUS can't happen.  It also avoids requiring
  * XDG_RUNTIME_DIR.
  */
-int os_create_anonymous_file(off_t size) {
-  static const char template[] = "/libdecor-shared-XXXXXX";
-  const char *path;
-  char *name;
-  int fd;
+int
+os_create_anonymous_file(off_t size)
+{
+	static const char template[] = "/libdecor-shared-XXXXXX";
+	const char *path;
+	char *name;
+	int fd;
 
 #ifdef HAVE_MEMFD_CREATE
-  fd = memfd_create("libdecor", MFD_CLOEXEC | MFD_ALLOW_SEALING);
-  if (fd >= 0) {
-    /* We can add this seal before calling posix_fallocate(), as
-     * the file is currently zero-sized anyway.
-     *
-     * There is also no need to check for the return value, we
-     * couldn't do anything with it anyway.
-     */
-    fcntl(fd, F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_SEAL);
-  } else
+	fd = memfd_create("libdecor", MFD_CLOEXEC | MFD_ALLOW_SEALING);
+	if (fd >= 0) {
+		/* We can add this seal before calling posix_fallocate(), as
+		 * the file is currently zero-sized anyway.
+		 *
+		 * There is also no need to check for the return value, we
+		 * couldn't do anything with it anyway.
+		 */
+		fcntl(fd, F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_SEAL);
+	} else
 #endif
-  {
-    path = getenv("XDG_RUNTIME_DIR");
-    if (!path) {
-      errno = ENOENT;
-      return -1;
-    }
+	{
+		path = getenv("XDG_RUNTIME_DIR");
+		if (!path) {
+			errno = ENOENT;
+			return -1;
+		}
 
-    name = malloc(strlen(path) + sizeof(template));
-    if (!name)
-      return -1;
+		name = malloc(strlen(path) + sizeof(template));
+		if (!name)
+			return -1;
 
-    strcpy(name, path);
-    strcat(name, template);
+		strcpy(name, path);
+		strcat(name, template);
 
-    fd = create_tmpfile_cloexec(name);
+		fd = create_tmpfile_cloexec(name);
 
-    free(name);
+		free(name);
 
-    if (fd < 0)
-      return -1;
-  }
+		if (fd < 0)
+			return -1;
+	}
 
-  if (os_resize_anonymous_file(fd, size) < 0) {
-    close(fd);
-    return -1;
-  }
+	if (os_resize_anonymous_file(fd, size) < 0) {
+		close(fd);
+		return -1;
+	}
 
-  return fd;
+	return fd;
 }

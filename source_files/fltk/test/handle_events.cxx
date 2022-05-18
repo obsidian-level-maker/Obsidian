@@ -30,7 +30,6 @@
 class app : public WINDOW_TYPE {
 protected:
   int handle(int);
-
 public:
   // storage for the last event
   int eventnum, ex, ey;
@@ -52,7 +51,8 @@ public:
     int scale = 100;
 #endif
     eventname = fl_eventnames[ev];
-    fprintf(stderr, "[%3d, win(%d,%d,%d,%d), screen %d, scale %3d%%] %-18.18s at (%4d, %4d)",
+    fprintf(stderr,
+            "[%3d, win(%d,%d,%d,%d), screen %d, scale %3d%%] %-18.18s at (%4d, %4d)",
             eventnum, x(), y(), w(), h(), screen_num, scale, eventname, ex, ey);
     eventnum %= 999;
   }
@@ -99,8 +99,7 @@ int app::handle(int ev) {
     default:
       break;
   }
-  fprintf(stderr, "\n");
-  fflush(stderr);
+  fprintf(stderr, "\n"); fflush(stderr);
   return res;
 } /* end of handle() method */
 

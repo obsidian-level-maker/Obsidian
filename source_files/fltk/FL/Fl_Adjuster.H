@@ -42,28 +42,26 @@ class FL_EXPORT Fl_Adjuster : public Fl_Valuator {
   int drag;
   int ix;
   int soft_;
-
 protected:
   void draw();
   int handle(int);
   void value_damage();
-
 public:
-  Fl_Adjuster(int X, int Y, int W, int H, const char *l = 0);
+  Fl_Adjuster(int X,int Y,int W,int H,const char *l=0);
   /**
     If "soft" is turned on, the user is allowed to drag the value outside
     the range.  If they drag the value to one of the ends, let go, then
     grab again and continue to drag, they can get to any value.  Default is
     one.
   */
-  void soft(int s) { soft_ = s; }
+  void soft(int s) {soft_ = s;}
   /**
     If "soft" is turned on, the user is allowed to drag the value outside
     the range.  If they drag the value to one of the ends, let go, then
     grab again and continue to drag, they can get to any value.  Default is
     one.
   */
-  int soft() const { return soft_; }
+  int soft() const {return soft_;}
 };
 
 #endif

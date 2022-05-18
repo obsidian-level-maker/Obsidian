@@ -18,6 +18,7 @@
 //
 //------------------------------------------------------------------------
 
+#include <array>
 #include "main.h"
 #include "fmt/core.h"
 #include "images.h"
@@ -159,16 +160,16 @@ std::string log_timestamp;
 game_interface_c *game_object = NULL;
 
 // Tutorial stuff
-Fl_JPEG_Image *tutorial1;
-Fl_JPEG_Image *tutorial2;
-Fl_JPEG_Image *tutorial3;
-Fl_JPEG_Image *tutorial4;
-Fl_JPEG_Image *tutorial5;
-Fl_JPEG_Image *tutorial6;
-Fl_JPEG_Image *tutorial7;
-Fl_JPEG_Image *tutorial8;
-Fl_JPEG_Image *tutorial9;
-Fl_JPEG_Image *tutorial10;
+Fl_BMP_Image *tutorial1;
+Fl_BMP_Image *tutorial2;
+Fl_BMP_Image *tutorial3;
+Fl_BMP_Image *tutorial4;
+Fl_BMP_Image *tutorial5;
+Fl_BMP_Image *tutorial6;
+Fl_BMP_Image *tutorial7;
+Fl_BMP_Image *tutorial8;
+Fl_BMP_Image *tutorial9;
+Fl_BMP_Image *tutorial10;
 
 #ifdef WIN32
 FLASHWINFO *blinker;
@@ -398,7 +399,7 @@ void Determine_InstallDir(const char *argv0) {
 #ifdef WIN32
     install_dir = home_dir;
 #else
-    constexpr std::array prefixes = {
+    constexpr std::array<const char *, 4> prefixes = {
         "/usr/local",
         "/usr",
         "/opt",
@@ -1425,35 +1426,26 @@ skiprest:
 
     // Load tutorial images
     std::filesystem::path image_loc = install_dir;
-    image_loc.append("data").append("tutorial").append("tutorial1.jpg");
-    tutorial1 = new Fl_JPEG_Image(image_loc.string().c_str());
-    image_loc.remove_filename();
-    image_loc.append("tutorial2.jpg");
-    tutorial2 = new Fl_JPEG_Image(image_loc.string().c_str());
-    image_loc.remove_filename();
-    image_loc.append("tutorial3.jpg");
-    tutorial3 = new Fl_JPEG_Image(image_loc.string().c_str());
-    image_loc.remove_filename();
-    image_loc.append("tutorial4.jpg");
-    tutorial4 = new Fl_JPEG_Image(image_loc.string().c_str());
-    image_loc.remove_filename();
-    image_loc.append("tutorial5.jpg");
-    tutorial5 = new Fl_JPEG_Image(image_loc.string().c_str());
-    image_loc.remove_filename();
-    image_loc.append("tutorial6.jpg");
-    tutorial6 = new Fl_JPEG_Image(image_loc.string().c_str());
-    image_loc.remove_filename();
-    image_loc.append("tutorial7.jpg");
-    tutorial7 = new Fl_JPEG_Image(image_loc.string().c_str());
-    image_loc.remove_filename();
-    image_loc.append("tutorial8.jpg");
-    tutorial8 = new Fl_JPEG_Image(image_loc.string().c_str());
-    image_loc.remove_filename();
-    image_loc.append("tutorial9.jpg");
-    tutorial9 = new Fl_JPEG_Image(image_loc.string().c_str());
-    image_loc.remove_filename();
-    image_loc.append("tutorial10.jpg");
-    tutorial10 = new Fl_JPEG_Image(image_loc.string().c_str());
+    image_loc.append("data").append("tutorial").append("tutorial1.bmp");
+    tutorial1 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+    image_loc.replace_filename("tutorial2.bmp");
+    tutorial2 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+    image_loc.replace_filename("tutorial3.bmp");
+    tutorial3 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+    image_loc.replace_filename("tutorial4.bmp");
+    tutorial4 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+    image_loc.replace_filename("tutorial5.bmp");
+    tutorial5 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+    image_loc.replace_filename("tutorial6.bmp");
+    tutorial6 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+    image_loc.replace_filename("tutorial7.bmp");
+    tutorial7 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+    image_loc.replace_filename("tutorial8.bmp");
+    tutorial8 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+    image_loc.replace_filename("tutorial9.bmp");
+    tutorial9 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+    image_loc.replace_filename("tutorial10.bmp");
+    tutorial10 = new Fl_BMP_Image(image_loc.generic_string().c_str());
 
 #ifdef WIN32
     main_win->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(1)));

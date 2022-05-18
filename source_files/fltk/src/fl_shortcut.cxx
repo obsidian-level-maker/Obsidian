@@ -49,39 +49,33 @@
   \return non-zero if there is a match.
 */
 int Fl::test_shortcut(unsigned int shortcut) {
-  if (!shortcut)
-    return 0;
+  if (!shortcut) return 0;
 
   unsigned int v = shortcut & FL_KEY_MASK;
-  if (((unsigned)fl_tolower(v)) != v) {
+  if (((unsigned)fl_tolower(v))!=v) {
     shortcut |= FL_SHIFT;
   }
 
   int shift = Fl::event_state();
   // see if any required shift flags are off:
-  if ((shortcut & shift) != (shortcut & 0x7fff0000))
-    return 0;
+  if ((shortcut&shift) != (shortcut&0x7fff0000)) return 0;
   // record shift flags that are wrong:
-  int mismatch = (shortcut ^ shift) & 0x7fff0000;
+  int mismatch = (shortcut^shift)&0x7fff0000;
   // these three must always be correct:
-  if (mismatch & (FL_META | FL_ALT | FL_CTRL))
-    return 0;
+  if (mismatch&(FL_META|FL_ALT|FL_CTRL)) return 0;
 
   unsigned int key = shortcut & FL_KEY_MASK;
 
   // if shift is also correct, check for exactly equal keysyms:
-  if (!(mismatch & (FL_SHIFT)) && key == (unsigned)Fl::event_key())
-    return 1;
+  if (!(mismatch&(FL_SHIFT)) && key == (unsigned)Fl::event_key()) return 1;
 
   // try matching utf8, ignore shift:
-  unsigned int firstChar =
-      fl_utf8decode(Fl::event_text(), Fl::event_text() + Fl::event_length(), 0);
-  if (!(FL_CAPS_LOCK & shift) && key == firstChar)
-    return 1;
+  unsigned int firstChar = fl_utf8decode(Fl::event_text(), Fl::event_text()+Fl::event_length(), 0);
+  if ( ! (FL_CAPS_LOCK&shift) && key==firstChar) return 1;
 
   // kludge so that Ctrl+'_' works (as opposed to Ctrl+'^_'):
-  if ((shift & FL_CTRL) && key >= 0x3f && key <= 0x5F && firstChar == (key ^ 0x40))
-    return 1; // firstChar should be within a-z
+  if ((shift&FL_CTRL) && key >= 0x3f && key <= 0x5F
+      && firstChar==(key^0x40)) return 1; // firstChar should be within a-z
   return 0;
 }
 
@@ -129,10 +123,10 @@ int Fl::test_shortcut(unsigned int shortcut) {
   the typical macOS modifier names in menus, e.g. cloverleaf, saucepan, etc.
   You may, however, redefine macOS modifier names as well.
 
-  \param [in] shortcut the integer value containing the ASCII character or extended keystroke plus
-  modifiers \return a pointer to a static buffer containing human readable text for the shortcut
+  \param [in] shortcut the integer value containing the ASCII character or extended keystroke plus modifiers
+  \return a pointer to a static buffer containing human readable text for the shortcut
   */
-const char *fl_shortcut_label(unsigned int shortcut) {
+const char* fl_shortcut_label(unsigned int shortcut) {
   return fl_shortcut_label(shortcut, 0L);
 }
 
@@ -151,45 +145,41 @@ const char *fl_shortcut_label(unsigned int shortcut) {
 
 static char *add_modifier_key(char *p, const char *end, const char *name) {
   size_t ln = strlen(name);
-  if (p + ln > end) {   // string too long
-    if (p + 4 <= end) { // can replace with "..." ?
-      strcpy(p, "...");
+  if (p+ln > end) {             // string too long
+    if (p+4 <= end) {           // can replace with "..." ?
+      strcpy(p,"...");
       p += 3;
     } else
       return p;
   } else {
-    strcpy(p, name);
+    strcpy(p,name);
     p += ln;
   }
-  if (p[-1] == '\\') // remove (last) '\' character
+  if (p[-1] == '\\')            // remove (last) '\' character
     p--;
-  else if (p[-1] == '+') // don't add another '+' character
-  {                      /*empty*/
-  } else                 // not a '\' or '+'
-    *p++ = '+';          // add a '+' character
+  else if (p[-1] == '+')        // don't add another '+' character
+    {/*empty*/}
+  else                          // not a '\' or '+'
+    *p++ = '+';                 // add a '+' character
   return p;
 }
 
 /**
   Get a human-readable string from a shortcut value.
 
-  \param [in] shortcut the integer value containing the ASCII character or extended keystroke plus
-  modifiers \param [in] eom if this pointer is set, it will receive a pointer to the end of the
-  modifier text \return a pointer to a static buffer containing human readable text for the shortcut
+  \param [in] shortcut the integer value containing the ASCII character or extended keystroke plus modifiers
+  \param [in] eom if this pointer is set, it will receive a pointer to the end of the modifier text
+  \return a pointer to a static buffer containing human readable text for the shortcut
 
   \see fl_shortcut_label(unsigned int shortcut)
 */
 
-const char *fl_shortcut_label(unsigned int shortcut, const char **eom) {
+const char* fl_shortcut_label(unsigned int shortcut, const char **eom) {
   static char buf[80];
   char *p = buf;
-  char *end = &buf[sizeof(buf) - 20]; // account for key name (max. ~10 + x)
-  if (eom)
-    *eom = p;
-  if (!shortcut) {
-    *p = 0;
-    return buf;
-  }
+  char *end = &buf[sizeof(buf)-20]; // account for key name (max. ~10 + x)
+  if (eom) *eom = p;
+  if (!shortcut) {*p = 0; return buf;}
   // fix upper case shortcuts
   unsigned int key = shortcut & FL_KEY_MASK;
   if (((unsigned)fl_tolower(key)) != key) {
@@ -201,20 +191,11 @@ const char *fl_shortcut_label(unsigned int shortcut, const char **eom) {
   // However, as discussed in fltk.coredev, the order appears to be the
   // same on all platforms, with exceptions in _some_ Linux applications.
 
-  if (shortcut & FL_CTRL) {
-    p = add_modifier_key(p, end, fl_local_ctrl);
-  }
-  if (shortcut & FL_ALT) {
-    p = add_modifier_key(p, end, fl_local_alt);
-  }
-  if (shortcut & FL_SHIFT) {
-    p = add_modifier_key(p, end, fl_local_shift);
-  }
-  if (shortcut & FL_META) {
-    p = add_modifier_key(p, end, fl_local_meta);
-  }
-  if (eom)
-    *eom = p;
+  if (shortcut & FL_CTRL)  {p = add_modifier_key(p, end, fl_local_ctrl);}
+  if (shortcut & FL_ALT)   {p = add_modifier_key(p, end, fl_local_alt);}
+  if (shortcut & FL_SHIFT) {p = add_modifier_key(p, end, fl_local_shift);}
+  if (shortcut & FL_META)  {p = add_modifier_key(p, end, fl_local_meta);}
+  if (eom) *eom = p;
 
   // add key name
   return Fl::system_driver()->shortcut_add_key_name(key, p, buf, eom);
@@ -289,34 +270,16 @@ const char *fl_shortcut_label(unsigned int shortcut, const char **eom) {
   \remarks Don't fix these silly legacy issues in a future release.
       Nobody is using this anymore.
 */
-unsigned int fl_old_shortcut(const char *s) {
-  if (!s || !*s)
-    return 0;
-  if (s[1] == 0 && strchr("@!", s[0]))
-    return (unsigned int)s[0]; // maintain legacy behavior for "!" and "@"
+unsigned int fl_old_shortcut(const char* s) {
+  if (!s || !*s) return 0;
+  if (s[1]==0 && strchr("@!",s[0])) return (unsigned int)s[0]; // maintain legacy behavior for "!" and "@"
   unsigned int n = 0;
-  if (*s == '#') {
-    n |= FL_ALT;
-    s++;
-  }
-  if (*s == '+') {
-    n |= FL_SHIFT;
-    s++;
-  }
-  if (*s == '^') {
-    n |= FL_CTRL;
-    s++;
-  }
-  if (*s == '!') {
-    n |= FL_META;
-    s++;
-  } // added in 1.3.3
-  if (*s == '@') {
-    n |= FL_COMMAND;
-    s++;
-  } // added in 1.3.3
-  if (*s && s[1])
-    return n | (int)strtol(s, 0, 0); // allow 0xf00 to get any key
+  if (*s == '#') {n |= FL_ALT; s++;}
+  if (*s == '+') {n |= FL_SHIFT; s++;}
+  if (*s == '^') {n |= FL_CTRL; s++;}
+  if (*s == '!') {n |= FL_META; s++;}     // added in 1.3.3
+  if (*s == '@') {n |= FL_COMMAND; s++;}  // added in 1.3.3
+  if (*s && s[1]) return n | (int)strtol(s,0,0); // allow 0xf00 to get any key
   return n | *s;
 }
 
@@ -335,19 +298,14 @@ unsigned int fl_old_shortcut(const char *s) {
   \note Internal use only.
 */
 unsigned int Fl_Widget::label_shortcut(const char *t) {
-  if (!t)
-    return 0;
+  if (!t) return 0;
   for (;;) {
-    if (*t == 0)
-      return 0;
-    if (*t == '&') {
-      unsigned int s = fl_utf8decode(t + 1, 0, 0);
-      if (s == 0)
-        return 0;
-      else if (s == (unsigned int)'&')
-        t++;
-      else
-        return s;
+    if (*t==0) return 0;
+    if (*t=='&') {
+      unsigned int s = fl_utf8decode(t+1, 0, 0);
+      if (s==0) return 0;
+      else if (s==(unsigned int)'&') t++;
+      else return s;
     }
     t++;
   }
@@ -374,23 +332,20 @@ unsigned int Fl_Widget::label_shortcut(const char *t) {
 */
 int Fl_Widget::test_shortcut(const char *t, const bool require_alt) {
   static int extra_test = Fl::system_driver()->need_test_shortcut_extra();
-  if (!t)
-    return 0;
+  if (!t) return 0;
   // for menubars etc. shortcuts must work only if the Alt modifier is pressed
-  if (require_alt && Fl::event_state(FL_ALT) == 0)
-    return 0;
-  unsigned int c = fl_utf8decode(Fl::event_text(), Fl::event_text() + Fl::event_length(), 0);
+  if (require_alt && Fl::event_state(FL_ALT)==0) return 0;
+  unsigned int c = fl_utf8decode(Fl::event_text(), Fl::event_text()+Fl::event_length(), 0);
   // this line makes underline shortcuts work the same way they do on Windows
   // and Linux.
   if (extra_test && c && Fl::event_state(FL_ALT))
     c = Fl::event_key();
-  if (!c)
-    return 0;
+  if (!c) return 0;
   unsigned int ls = label_shortcut(t);
   if (c == ls)
     return 1;
   // On macOS, we need to simulate the upper case keystroke as well
-  if (extra_test && Fl::event_state(FL_ALT) && c < 128 && isalpha(c) && (unsigned)toupper(c) == ls)
+  if (extra_test && Fl::event_state(FL_ALT) && c<128 && isalpha(c) && (unsigned)toupper(c)==ls)
     return 1;
   return 0;
 }
@@ -411,8 +366,7 @@ int Fl_Widget::test_shortcut(const char *t, const bool require_alt) {
 */
 
 int Fl_Widget::test_shortcut() {
-  if (!(flags() & SHORTCUT_LABEL))
-    return 0;
+  if (!(flags()&SHORTCUT_LABEL)) return 0;
   return test_shortcut(label());
 }
 
@@ -422,39 +376,34 @@ int Fl_Widget::test_shortcut() {
  \{
  */
 
-const char *Fl_System_Driver::shortcut_add_key_name(unsigned key, char *p, char *buf,
-                                                    const char **eom) {
+const char *Fl_System_Driver::shortcut_add_key_name(unsigned key, char *p, char *buf, const char **eom)
+{
   if (key >= FL_F && key <= FL_F_Last) {
     *p++ = 'F';
-    if (key > FL_F + 9)
-      *p++ = (char)((key - FL_F) / 10 + '0');
-    *p++ = (char)((key - FL_F) % 10 + '0');
+    if (key > FL_F+9) *p++ = (char)((key-FL_F)/10+'0');
+    *p++ = (char)((key-FL_F)%10 + '0');
   } else {
     // binary search the table for a match:
     int a = 0;
     int b = key_table_size;
     while (a < b) {
-      int c = (a + b) / 2;
+      int c = (a+b)/2;
       if (key_table[c].key == key) {
         if (p > buf) {
-          strcpy(p, key_table[c].name);
+          strcpy(p,key_table[c].name);
           return buf;
         } else {
           const char *sp = key_table[c].name;
-          if (eom)
-            *eom = sp;
+          if (eom) *eom = sp;
           return sp;
         }
       }
-      if (key_table[c].key < key)
-        a = c + 1;
-      else
-        b = c;
+      if (key_table[c].key < key) a = c+1;
+      else b = c;
     }
     if (key >= FL_KP && key <= FL_KP_Last) {
       // mark keypad keys with KP_ prefix
-      strcpy(p, "KP_");
-      p += 3;
+      strcpy(p,"KP_"); p += 3;
       *p++ = uchar(key & 127);
     } else {
       // if none found, use the keystroke as a match:

@@ -60,16 +60,11 @@ Fl_Font fl_message_font_ = FL_HELVETICA;
 Fl_Fontsize fl_message_size_ = -1;
 
 // pointers you can use to change FLTK to another language:
-const char *fl_no =
-    "No"; ///< string pointer used in common dialogs, you can change it to another language
-const char *fl_yes =
-    "Yes"; ///< string pointer used in common dialogs, you can change it to another language
-const char *fl_ok =
-    "OK"; ///< string pointer used in common dialogs, you can change it to another language
-const char *fl_cancel =
-    "Cancel"; ///< string pointer used in common dialogs, you can change it to another language
-const char *fl_close =
-    "Close"; ///< string pointer used in common dialogs, you can change it to another language
+const char *fl_no = "No";         ///< string pointer used in common dialogs, you can change it to another language
+const char *fl_yes = "Yes";       ///< string pointer used in common dialogs, you can change it to another language
+const char *fl_ok = "OK";         ///< string pointer used in common dialogs, you can change it to another language
+const char *fl_cancel = "Cancel"; ///< string pointer used in common dialogs, you can change it to another language
+const char *fl_close = "Close";   ///< string pointer used in common dialogs, you can change it to another language
 
 // fltk functions:
 

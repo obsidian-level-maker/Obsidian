@@ -40,10 +40,10 @@
 #include <FL/Fl_Text_Editor.H>
 #include <FL/filename.H>
 
-int changed = 0;
-char filename[FL_PATH_MAX] = "";
-char title[FL_PATH_MAX];
-Fl_Text_Buffer *textbuf = 0;
+int                changed = 0;
+char               filename[FL_PATH_MAX] = "";
+char               title[FL_PATH_MAX];
+Fl_Text_Buffer     *textbuf = 0;
 
 // width of line number display, if enabled
 const int line_num_width = 75;
@@ -54,41 +54,101 @@ const int line_num_width = 75;
 
 // Syntax highlighting stuff...
 #define TS 14 // default editor textsize
-Fl_Text_Buffer *stylebuf = 0;
-Fl_Text_Display::Style_Table_Entry styletable[] = {
-// Style table
+Fl_Text_Buffer     *stylebuf = 0;
+Fl_Text_Display::Style_Table_Entry
+                   styletable[] = {     // Style table
 #ifdef TESTING_ATTRIBUTES
-    {FL_BLACK, FL_COURIER, TS}, // A - Plain
-    {FL_DARK_GREEN, FL_HELVETICA_ITALIC, TS, Fl_Text_Display::ATTR_BGCOLOR,
-     FL_LIGHT2}, // B - Line comments
-    {FL_DARK_GREEN, FL_HELVETICA_ITALIC, TS, Fl_Text_Display::ATTR_BGCOLOR_EXT,
-     FL_LIGHT2},                                                              // C - Block comments
-    {FL_BLUE, FL_COURIER, TS, Fl_Text_Display::ATTR_UNDERLINE},               // D - Strings
-    {FL_DARK_RED, FL_COURIER, TS, Fl_Text_Display::ATTR_GRAMMAR},             // E - Directives
-    {FL_DARK_RED, FL_COURIER_BOLD, TS, Fl_Text_Display::ATTR_STRIKE_THROUGH}, // F - Types
-    {FL_BLUE, FL_COURIER_BOLD, TS, Fl_Text_Display::ATTR_SPELLING},           // G - Keywords
+                     { FL_BLACK,      FL_COURIER,           TS }, // A - Plain
+                     { FL_DARK_GREEN, FL_HELVETICA_ITALIC,  TS, Fl_Text_Display::ATTR_BGCOLOR, FL_LIGHT2  }, // B - Line comments
+                     { FL_DARK_GREEN, FL_HELVETICA_ITALIC,  TS, Fl_Text_Display::ATTR_BGCOLOR_EXT, FL_LIGHT2 }, // C - Block comments
+                     { FL_BLUE,       FL_COURIER,           TS, Fl_Text_Display::ATTR_UNDERLINE }, // D - Strings
+                     { FL_DARK_RED,   FL_COURIER,           TS, Fl_Text_Display::ATTR_GRAMMAR }, // E - Directives
+                     { FL_DARK_RED,   FL_COURIER_BOLD,      TS, Fl_Text_Display::ATTR_STRIKE_THROUGH }, // F - Types
+                     { FL_BLUE,       FL_COURIER_BOLD,      TS, Fl_Text_Display::ATTR_SPELLING }, // G - Keywords
 #else
-    {FL_BLACK, FL_COURIER, TS},               // A - Plain
-    {FL_DARK_GREEN, FL_HELVETICA_ITALIC, TS}, // B - Line comments
-    {FL_DARK_GREEN, FL_HELVETICA_ITALIC, TS}, // C - Block comments
-    {FL_BLUE, FL_COURIER, TS},                // D - Strings
-    {FL_DARK_RED, FL_COURIER, TS},            // E - Directives
-    {FL_DARK_RED, FL_COURIER_BOLD, TS},       // F - Types
-    {FL_BLUE, FL_COURIER_BOLD, TS},           // G - Keywords
+                     { FL_BLACK,      FL_COURIER,           TS }, // A - Plain
+                     { FL_DARK_GREEN, FL_HELVETICA_ITALIC,  TS }, // B - Line comments
+                     { FL_DARK_GREEN, FL_HELVETICA_ITALIC,  TS }, // C - Block comments
+                     { FL_BLUE,       FL_COURIER,           TS }, // D - Strings
+                     { FL_DARK_RED,   FL_COURIER,           TS }, // E - Directives
+                     { FL_DARK_RED,   FL_COURIER_BOLD,      TS }, // F - Types
+                     { FL_BLUE,       FL_COURIER_BOLD,      TS }, // G - Keywords
 #endif
-};
-const char *code_keywords[] = { // List of known C/C++ keywords...
-    "and",      "and_eq",  "asm",    "bitand",   "bitor", "break", "case",   "catch",  "compl",
-    "continue", "default", "delete", "do",       "else",  "false", "for",    "goto",   "if",
-    "new",      "not",     "not_eq", "operator", "or",    "or_eq", "return", "switch", "template",
-    "this",     "throw",   "true",   "try",      "while", "xor",   "xor_eq"};
-const char *code_types[] = { // List of known C/C++ types...
-    "auto",     "bool",         "char",        "class",    "const",    "const_cast",
-    "double",   "dynamic_cast", "enum",        "explicit", "extern",   "float",
-    "friend",   "inline",       "int",         "long",     "mutable",  "namespace",
-    "private",  "protected",    "public",      "register", "short",    "signed",
-    "sizeof",   "static",       "static_cast", "struct",   "template", "typedef",
-    "typename", "union",        "unsigned",    "virtual",  "void",     "volatile"};
+                   };
+const char         *code_keywords[] = { // List of known C/C++ keywords...
+                     "and",
+                     "and_eq",
+                     "asm",
+                     "bitand",
+                     "bitor",
+                     "break",
+                     "case",
+                     "catch",
+                     "compl",
+                     "continue",
+                     "default",
+                     "delete",
+                     "do",
+                     "else",
+                     "false",
+                     "for",
+                     "goto",
+                     "if",
+                     "new",
+                     "not",
+                     "not_eq",
+                     "operator",
+                     "or",
+                     "or_eq",
+                     "return",
+                     "switch",
+                     "template",
+                     "this",
+                     "throw",
+                     "true",
+                     "try",
+                     "while",
+                     "xor",
+                     "xor_eq"
+                   };
+const char         *code_types[] = {    // List of known C/C++ types...
+                     "auto",
+                     "bool",
+                     "char",
+                     "class",
+                     "const",
+                     "const_cast",
+                     "double",
+                     "dynamic_cast",
+                     "enum",
+                     "explicit",
+                     "extern",
+                     "float",
+                     "friend",
+                     "inline",
+                     "int",
+                     "long",
+                     "mutable",
+                     "namespace",
+                     "private",
+                     "protected",
+                     "public",
+                     "register",
+                     "short",
+                     "signed",
+                     "sizeof",
+                     "static",
+                     "static_cast",
+                     "struct",
+                     "template",
+                     "typedef",
+                     "typename",
+                     "union",
+                     "unsigned",
+                     "virtual",
+                     "void",
+                     "volatile"
+                   };
 
 
 //
@@ -96,20 +156,26 @@ const char *code_types[] = { // List of known C/C++ types...
 //
 
 extern "C" {
-int compare_keywords(const void *a, const void *b) {
-  return (strcmp(*((const char **)a), *((const char **)b)));
-}
+  int
+  compare_keywords(const void *a,
+                   const void *b) {
+    return (strcmp(*((const char **)a), *((const char **)b)));
+  }
 }
 
 //
 // 'style_parse()' - Parse text and produce style data.
 //
 
-void style_parse(const char *text, char *style, int length) {
-  char current;
-  int col;
-  int last;
-  char buf[255], *bufptr;
+void
+style_parse(const char *text,
+            char       *style,
+            int        length) {
+  char       current;
+  int        col;
+  int        last;
+  char       buf[255],
+             *bufptr;
   const char *temp;
 
   // Style letters:
@@ -122,9 +188,8 @@ void style_parse(const char *text, char *style, int length) {
   // F - Types
   // G - Keywords
 
-  for (current = *style, col = 0, last = 0; length > 0; length--, text++) {
-    if (current == 'B' || current == 'F' || current == 'G')
-      current = 'A';
+  for (current = *style, col = 0, last = 0; length > 0; length --, text ++) {
+    if (current == 'B' || current == 'F' || current == 'G') current = 'A';
     if (current == 'A') {
       // Check for directives, comments, strings, and keywords...
       if (col == 0 && *text == '#') {
@@ -132,46 +197,45 @@ void style_parse(const char *text, char *style, int length) {
         current = 'E';
       } else if (strncmp(text, "//", 2) == 0) {
         current = 'B';
-        for (; length > 0 && *text != '\n'; length--, text++)
-          *style++ = 'B';
-        if (length == 0)
-          break;
+        for (; length > 0 && *text != '\n'; length --, text ++) *style++ = 'B';
+        if (length == 0) break;
       } else if (strncmp(text, "/*", 2) == 0) {
         current = 'C';
       } else if (strncmp(text, "\\\"", 2) == 0) {
         // Quoted quote...
         *style++ = current;
         *style++ = current;
-        text++;
-        length--;
+        text ++;
+        length --;
         col += 2;
         continue;
       } else if (*text == '\"') {
         current = 'D';
-      } else if (!last && (islower((*text) & 255) || *text == '_')) {
+      } else if (!last && (islower((*text)&255) || *text == '_')) {
         // Might be a keyword...
         for (temp = text, bufptr = buf;
-             (islower((*temp) & 255) || *temp == '_') && bufptr < (buf + sizeof(buf) - 1);
+             (islower((*temp)&255) || *temp == '_') && bufptr < (buf + sizeof(buf) - 1);
              *bufptr++ = *temp++) {
           // nothing
         }
 
-        if (!islower((*temp) & 255) && *temp != '_') {
+        if (!islower((*temp)&255) && *temp != '_') {
           *bufptr = '\0';
 
           bufptr = buf;
 
-          if (bsearch(&bufptr, code_types, sizeof(code_types) / sizeof(code_types[0]),
+          if (bsearch(&bufptr, code_types,
+                      sizeof(code_types) / sizeof(code_types[0]),
                       sizeof(code_types[0]), compare_keywords)) {
             while (text < temp) {
               *style++ = 'F';
-              text++;
-              length--;
-              col++;
+              text ++;
+              length --;
+              col ++;
             }
 
-            text--;
-            length++;
+            text --;
+            length ++;
             last = 1;
             continue;
           } else if (bsearch(&bufptr, code_keywords,
@@ -179,13 +243,13 @@ void style_parse(const char *text, char *style, int length) {
                              sizeof(code_keywords[0]), compare_keywords)) {
             while (text < temp) {
               *style++ = 'G';
-              text++;
-              length--;
-              col++;
+              text ++;
+              length --;
+              col ++;
             }
 
-            text--;
-            length++;
+            text --;
+            length ++;
             last = 1;
             continue;
           }
@@ -195,8 +259,8 @@ void style_parse(const char *text, char *style, int length) {
       // Close a C comment...
       *style++ = current;
       *style++ = current;
-      text++;
-      length--;
+      text ++;
+      length --;
       current = 'A';
       col += 2;
       continue;
@@ -206,33 +270,30 @@ void style_parse(const char *text, char *style, int length) {
         // Quoted end quote...
         *style++ = current;
         *style++ = current;
-        text++;
-        length--;
+        text ++;
+        length --;
         col += 2;
         continue;
       } else if (*text == '\"') {
         // End quote...
         *style++ = current;
-        col++;
+        col ++;
         current = 'A';
         continue;
       }
     }
 
     // Copy style info...
-    if (current == 'A' && (*text == '{' || *text == '}'))
-      *style++ = 'G';
-    else
-      *style++ = current;
-    col++;
+    if (current == 'A' && (*text == '{' || *text == '}')) *style++ = 'G';
+    else *style++ = current;
+    col ++;
 
-    last = isalnum((*text) & 255) || *text == '_' || *text == '.';
+    last = isalnum((*text)&255) || *text == '_' || *text == '.';
 
     if (*text == '\n') {
       // Reset column and possibly reset the style
       col = 0;
-      if (current == 'B' || current == 'E')
-        current = 'A';
+      if (current == 'B' || current == 'E') current = 'A';
     }
   }
 }
@@ -242,15 +303,15 @@ void style_parse(const char *text, char *style, int length) {
 // 'style_init()' - Initialize the style buffer...
 //
 
-void style_init(void) {
+void
+style_init(void) {
   char *style = new char[textbuf->length() + 1];
   char *text = textbuf->text();
 
   memset(style, 'A', textbuf->length());
   style[textbuf->length()] = '\0';
 
-  if (!stylebuf)
-    stylebuf = new Fl_Text_Buffer(textbuf->length());
+  if (!stylebuf) stylebuf = new Fl_Text_Buffer(textbuf->length());
 
   style_parse(text, style, textbuf->length());
 
@@ -264,24 +325,27 @@ void style_init(void) {
 // 'style_unfinished_cb()' - Update unfinished styles.
 //
 
-void style_unfinished_cb(int, void *) {}
+void
+style_unfinished_cb(int, void*) {
+}
 
 
 //
 // 'style_update()' - Update the style buffer...
 //
 
-void style_update(int pos,                      // I - Position of update
-                  int nInserted,                // I - Number of inserted chars
-                  int nDeleted,                 // I - Number of deleted chars
-                  int /*nRestyled*/,            // I - Number of restyled chars
-                  const char * /*deletedText*/, // I - Text that was deleted
-                  void *cbArg) {                // I - Callback data
-  int start,                                    // Start of text
-      end;                                      // End of text
-  char last,                                    // Last style on line
-      *style,                                   // Style data
-      *text;                                    // Text data
+void
+style_update(int        pos,            // I - Position of update
+             int        nInserted,      // I - Number of inserted chars
+             int        nDeleted,       // I - Number of deleted chars
+             int        /*nRestyled*/,  // I - Number of restyled chars
+             const char * /*deletedText*/,// I - Text that was deleted
+             void       *cbArg) {       // I - Callback data
+  int   start,                          // Start of text
+        end;                            // End of text
+  char  last,                           // Last style on line
+        *style,                         // Style data
+        *text;                          // Text data
 
 
   // If this is just a selection change, just unselect the style buffer...
@@ -314,36 +378,36 @@ void style_update(int pos,                      // I - Position of update
   // style character and keep updating if we have a multi-line
   // comment character...
   start = textbuf->line_start(pos);
-  //  if (start > 0) start = textbuf->line_start(start - 1);
-  end = textbuf->line_end(pos + nInserted);
-  text = textbuf->text_range(start, end);
+//  if (start > 0) start = textbuf->line_start(start - 1);
+  end   = textbuf->line_end(pos + nInserted);
+  text  = textbuf->text_range(start, end);
   style = stylebuf->text_range(start, end);
-  if (start == end)
+  if (start==end)
     last = 0;
   else
-    last = style[end - start - 1];
+    last  = style[end - start - 1];
 
-  //  printf("start = %d, end = %d, text = \"%s\", style = \"%s\", last='%c'...\n",
-  //         start, end, text, style, last);
+//  printf("start = %d, end = %d, text = \"%s\", style = \"%s\", last='%c'...\n",
+//         start, end, text, style, last);
 
   style_parse(text, style, end - start);
 
-  //  printf("new style = \"%s\", new last='%c'...\n",
-  //         style, style[end - start - 1]);
+//  printf("new style = \"%s\", new last='%c'...\n",
+//         style, style[end - start - 1]);
 
   stylebuf->replace(start, end, style);
   ((Fl_Text_Editor *)cbArg)->redisplay_range(start, end);
 
-  if (start == end || last != style[end - start - 1]) {
-    //    printf("Recalculate the rest of the buffer style\n");
+  if (start==end || last != style[end - start - 1]) {
+//    printf("Recalculate the rest of the buffer style\n");
     // Either the user deleted some text, or the last character
     // on the line changed styles, so reparse the
     // remainder of the buffer...
     free(text);
     free(style);
 
-    end = textbuf->length();
-    text = textbuf->text_range(start, end);
+    end   = textbuf->length();
+    text  = textbuf->text_range(start, end);
     style = stylebuf->text_range(start, end);
 
     style_parse(text, style, end - start);
@@ -359,58 +423,57 @@ void style_update(int pos,                      // I - Position of update
 // Editor window functions and class...
 void save_cb();
 void saveas_cb();
-void find2_cb(Fl_Widget *, void *);
-void replall_cb(Fl_Widget *, void *);
-void replace2_cb(Fl_Widget *, void *);
-void replcan_cb(Fl_Widget *, void *);
+void find2_cb(Fl_Widget*, void*);
+void replall_cb(Fl_Widget*, void*);
+void replace2_cb(Fl_Widget*, void*);
+void replcan_cb(Fl_Widget*, void*);
 
 class EditorWindow : public Fl_Double_Window {
-public:
-  EditorWindow(int w, int h, const char *t);
-  ~EditorWindow();
+  public:
+    EditorWindow(int w, int h, const char* t);
+    ~EditorWindow();
 
-  Fl_Window *replace_dlg;
-  Fl_Input *replace_find;
-  Fl_Input *replace_with;
-  Fl_Button *replace_all;
-  Fl_Return_Button *replace_next;
-  Fl_Button *replace_cancel;
+    Fl_Window          *replace_dlg;
+    Fl_Input           *replace_find;
+    Fl_Input           *replace_with;
+    Fl_Button          *replace_all;
+    Fl_Return_Button   *replace_next;
+    Fl_Button          *replace_cancel;
 
 #ifdef DEV_TEST
 
-  Fl_Button *plus;    // increase width
-  Fl_Button *minus;   // decrease width
-  Fl_Button *vscroll; // toggle vert. scrollbar left/right
-  Fl_Button *hscroll; // toggle hor.  scrollbar top/bottom
-  Fl_Button *lnum;    // toggle line number display
-  Fl_Button *wrap;    // toggle wrap mode
+    Fl_Button           *plus;          // increase width
+    Fl_Button           *minus;         // decrease width
+    Fl_Button           *vscroll;       // toggle vert. scrollbar left/right
+    Fl_Button           *hscroll;       // toggle hor.  scrollbar top/bottom
+    Fl_Button           *lnum;          // toggle line number display
+    Fl_Button           *wrap;          // toggle wrap mode
 
 #endif // DEV_TEST
 
-  int wrap_mode;
-  int line_numbers;
+    int                 wrap_mode;
+    int                 line_numbers;
 
-  Fl_Text_Editor *editor;
-  char search[256];
+    Fl_Text_Editor     *editor;
+    char               search[256];
 };
 
-EditorWindow::EditorWindow(int w, int h, const char *t)
-  : Fl_Double_Window(w, h, t) {
+EditorWindow::EditorWindow(int w, int h, const char* t) : Fl_Double_Window(w, h, t) {
   replace_dlg = new Fl_Window(300, 105, "Replace");
-  replace_find = new Fl_Input(80, 10, 210, 25, "Find:");
-  replace_find->align(FL_ALIGN_LEFT);
+    replace_find = new Fl_Input(80, 10, 210, 25, "Find:");
+    replace_find->align(FL_ALIGN_LEFT);
 
-  replace_with = new Fl_Input(80, 40, 210, 25, "Replace:");
-  replace_with->align(FL_ALIGN_LEFT);
+    replace_with = new Fl_Input(80, 40, 210, 25, "Replace:");
+    replace_with->align(FL_ALIGN_LEFT);
 
-  replace_all = new Fl_Button(10, 70, 90, 25, "Replace All");
-  replace_all->callback((Fl_Callback *)replall_cb, this);
+    replace_all = new Fl_Button(10, 70, 90, 25, "Replace All");
+    replace_all->callback((Fl_Callback *)replall_cb, this);
 
-  replace_next = new Fl_Return_Button(105, 70, 120, 25, "Replace Next");
-  replace_next->callback((Fl_Callback *)replace2_cb, this);
+    replace_next = new Fl_Return_Button(105, 70, 120, 25, "Replace Next");
+    replace_next->callback((Fl_Callback *)replace2_cb, this);
 
-  replace_cancel = new Fl_Button(230, 70, 60, 25, "Cancel");
-  replace_cancel->callback((Fl_Callback *)replcan_cb, this);
+    replace_cancel = new Fl_Button(230, 70, 60, 25, "Cancel");
+    replace_cancel->callback((Fl_Callback *)replcan_cb, this);
   replace_dlg->end();
   replace_dlg->set_non_modal();
   editor = 0;
@@ -429,24 +492,24 @@ void resize_cb(Fl_Widget *b, void *v) {
   Fl_Window *w = b->window();
   int dw = (int)(long)v;
 
-  const int fac = 16; // factor
-  const int num = 1;  // loop count
+  const int fac = 16;   // factor
+  const int num = 1;    // loop count
 
   dw *= fac;
 
-  for (int i = 0; i < num; i++) {
-    w->resize(w->x(), w->y(), w->w() + dw, w->h());
+  for (int i=0; i<num; i++) {
+    w->resize(w->x(), w->y(), w->w()+dw, w->h());
   }
 }
 
 void scroll_cb(Fl_Widget *b, void *v) {
-  EditorWindow *ew = (EditorWindow *)b->parent();
+  EditorWindow *ew = (EditorWindow*)b->parent();
   Fl_Text_Editor *ed = ew->editor;
   int n = (int)(long)v;
   int align = ed->scrollbar_align();
 
-  switch (n) {
-    case 1: // vscroll
+  switch(n) {
+    case 1:                     // vscroll
       if (align & FL_ALIGN_LEFT) {
         align &= ~FL_ALIGN_LEFT;
         align |= FL_ALIGN_RIGHT;
@@ -455,7 +518,7 @@ void scroll_cb(Fl_Widget *b, void *v) {
         align |= FL_ALIGN_LEFT;
       }
       break;
-    case 2: // hscroll
+    case 2:                     // hscroll
       if (align & FL_ALIGN_TOP) {
         align &= ~FL_ALIGN_TOP;
         align |= FL_ALIGN_BOTTOM;
@@ -468,13 +531,13 @@ void scroll_cb(Fl_Widget *b, void *v) {
       break;
   }
   ed->scrollbar_align(align);
-  ed->resize(ed->x(), ed->y(), ed->w(), ed->h());
+  ed->resize(ed->x(),ed->y(),ed->w(),ed->h());
   ed->redraw();
 }
 
-void wrap_cb(Fl_Widget *w, void *v) {
-  EditorWindow *ew = (EditorWindow *)v;
-  Fl_Text_Editor *ed = (Fl_Text_Editor *)ew->editor;
+void wrap_cb(Fl_Widget *w, void* v) {
+  EditorWindow* ew = (EditorWindow*)v;
+  Fl_Text_Editor *ed = (Fl_Text_Editor*)ew->editor;
   ew->wrap_mode = 1 - ew->wrap_mode;
   if (ew->wrap_mode)
     ed->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
@@ -483,15 +546,15 @@ void wrap_cb(Fl_Widget *w, void *v) {
   ew->redraw();
 }
 
-void lnum_cb(Fl_Widget *w, void *v) {
-  EditorWindow *ew = (EditorWindow *)v;
-  Fl_Text_Editor *ed = (Fl_Text_Editor *)ew->editor;
+void lnum_cb(Fl_Widget *w, void* v) {
+  EditorWindow* ew = (EditorWindow*)v;
+  Fl_Text_Editor *ed = (Fl_Text_Editor*)ew->editor;
   ew->line_numbers = 1 - ew->line_numbers;
   if (ew->line_numbers) {
-    ed->linenumber_width(line_num_width); // enable
+    ed->linenumber_width(line_num_width);       // enable
     ed->linenumber_size(ed->textsize());
   } else {
-    ed->linenumber_width(0); // disable
+    ed->linenumber_width(0);                    // disable
   }
   ew->redraw();
 }
@@ -499,8 +562,7 @@ void lnum_cb(Fl_Widget *w, void *v) {
 #endif // DEV_TEST
 
 int check_save(void) {
-  if (!changed)
-    return 1;
+  if (!changed) return 1;
 
   int r = fl_choice("The current file has not been saved.\n"
                     "Would you like to save it now?",
@@ -519,18 +581,15 @@ void load_file(const char *newfile, int ipos) {
   loading = 1;
   int insert = (ipos != -1);
   changed = insert;
-  if (!insert)
-    strcpy(filename, "");
+  if (!insert) strcpy(filename, "");
   int r;
-  if (!insert)
-    r = textbuf->loadfile(newfile);
-  else
-    r = textbuf->insertfile(newfile, ipos);
+  if (!insert) r = textbuf->loadfile(newfile);
+  else r = textbuf->insertfile(newfile, ipos);
   changed = changed || textbuf->input_file_was_transcoded;
   if (r)
     fl_alert("Error reading from file \'%s\':\n%s.", newfile, strerror(errno));
-  else if (!insert)
-    strcpy(filename, newfile);
+  else
+    if (!insert) strcpy(filename, newfile);
   loading = 0;
   textbuf->call_modify_callbacks();
 }
@@ -544,48 +603,48 @@ void save_file(const char *newfile) {
   textbuf->call_modify_callbacks();
 }
 
-void copy_cb(Fl_Widget *, void *v) {
-  EditorWindow *e = (EditorWindow *)v;
+void copy_cb(Fl_Widget*, void* v) {
+  EditorWindow* e = (EditorWindow*)v;
   Fl_Text_Editor::kf_copy(0, e->editor);
 }
 
-void cut_cb(Fl_Widget *, void *v) {
-  EditorWindow *e = (EditorWindow *)v;
+void cut_cb(Fl_Widget*, void* v) {
+  EditorWindow* e = (EditorWindow*)v;
   Fl_Text_Editor::kf_cut(0, e->editor);
 }
 
-void delete_cb(Fl_Widget *, void *) {
+void delete_cb(Fl_Widget*, void*) {
   textbuf->remove_selection();
 }
 
-void linenumbers_cb(Fl_Widget *w, void *v) {
-  EditorWindow *e = (EditorWindow *)v;
-  Fl_Menu_Bar *m = (Fl_Menu_Bar *)w;
-  const Fl_Menu_Item *i = m->mvalue();
-  if (i->value()) {
-    e->editor->linenumber_width(line_num_width); // enable
+void linenumbers_cb(Fl_Widget *w, void* v) {
+  EditorWindow* e = (EditorWindow*)v;
+  Fl_Menu_Bar* m = (Fl_Menu_Bar*)w;
+  const Fl_Menu_Item* i = m->mvalue();
+  if ( i->value() ) {
+    e->editor->linenumber_width(line_num_width);        // enable
     e->editor->linenumber_size(e->editor->textsize());
   } else {
-    e->editor->linenumber_width(0); // disable
+    e->editor->linenumber_width(0);     // disable
   }
-  e->line_numbers = (i->value() ? 1 : 0);
+  e->line_numbers = (i->value()?1:0);
   e->redraw();
 }
 
-void wordwrap_cb(Fl_Widget *w, void *v) {
-  EditorWindow *e = (EditorWindow *)v;
-  Fl_Menu_Bar *m = (Fl_Menu_Bar *)w;
-  const Fl_Menu_Item *i = m->mvalue();
-  if (i->value())
+void wordwrap_cb(Fl_Widget *w, void* v) {
+  EditorWindow* e = (EditorWindow*)v;
+  Fl_Menu_Bar* m = (Fl_Menu_Bar*)w;
+  const Fl_Menu_Item* i = m->mvalue();
+  if ( i->value() )
     e->editor->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
   else
     e->editor->wrap_mode(Fl_Text_Display::WRAP_NONE, 0);
-  e->wrap_mode = (i->value() ? 1 : 0);
+  e->wrap_mode = (i->value()?1:0);
   e->redraw();
 }
 
-void find_cb(Fl_Widget *w, void *v) {
-  EditorWindow *e = (EditorWindow *)v;
+void find_cb(Fl_Widget* w, void* v) {
+  EditorWindow* e = (EditorWindow*)v;
   const char *val;
 
   val = fl_input("Search String:", e->search);
@@ -596,8 +655,8 @@ void find_cb(Fl_Widget *w, void *v) {
   }
 }
 
-void find2_cb(Fl_Widget *w, void *v) {
-  EditorWindow *e = (EditorWindow *)v;
+void find2_cb(Fl_Widget* w, void* v) {
+  EditorWindow* e = (EditorWindow*)v;
   if (e->search[0] == '\0') {
     // Search string is blank; get a new one...
     find_cb(w, v);
@@ -611,44 +670,36 @@ void find2_cb(Fl_Widget *w, void *v) {
     textbuf->select(pos, pos + (int)strlen(e->search));
     e->editor->insert_position(pos + (int)strlen(e->search));
     e->editor->show_insert_position();
-  } else
-    fl_alert("No occurrences of \'%s\' found!", e->search);
+  }
+  else fl_alert("No occurrences of \'%s\' found!", e->search);
 }
 
-void set_title(Fl_Window *w) {
-  if (filename[0] == '\0')
-    strcpy(title, "Untitled");
+void set_title(Fl_Window* w) {
+  if (filename[0] == '\0') strcpy(title, "Untitled");
   else {
     char *slash;
     slash = strrchr(filename, '/');
 #ifdef _WIN32
-    if (slash == NULL)
-      slash = strrchr(filename, '\\');
+    if (slash == NULL) slash = strrchr(filename, '\\');
 #endif
-    if (slash != NULL)
-      strcpy(title, slash + 1);
-    else
-      strcpy(title, filename);
+    if (slash != NULL) strcpy(title, slash + 1);
+    else strcpy(title, filename);
   }
 
-  if (changed)
-    strcat(title, " (modified)");
+  if (changed) strcat(title, " (modified)");
 
   w->label(title);
 }
 
-void changed_cb(int, int nInserted, int nDeleted, int, const char *, void *v) {
-  if ((nInserted || nDeleted) && !loading)
-    changed = 1;
+void changed_cb(int, int nInserted, int nDeleted,int, const char*, void* v) {
+  if ((nInserted || nDeleted) && !loading) changed = 1;
   EditorWindow *w = (EditorWindow *)v;
   set_title(w);
-  if (loading)
-    w->editor->show_insert_position();
+  if (loading) w->editor->show_insert_position();
 }
 
-void new_cb(Fl_Widget *, void *) {
-  if (!check_save())
-    return;
+void new_cb(Fl_Widget*, void*) {
+  if (!check_save()) return;
 
   filename[0] = '\0';
   textbuf->select(0, textbuf->length());
@@ -657,36 +708,34 @@ void new_cb(Fl_Widget *, void *) {
   textbuf->call_modify_callbacks();
 }
 
-void open_cb(Fl_Widget *, void *) {
-  if (!check_save())
-    return;
+void open_cb(Fl_Widget*, void*) {
+  if (!check_save()) return;
   Fl_Native_File_Chooser fnfc;
   fnfc.title("Open file");
   fnfc.type(Fl_Native_File_Chooser::BROWSE_FILE);
-  if (fnfc.show())
-    return;
+  if ( fnfc.show() ) return;
   load_file(fnfc.filename(), -1);
+
 }
 
-void insert_cb(Fl_Widget *, void *v) {
+void insert_cb(Fl_Widget*, void *v) {
   Fl_Native_File_Chooser fnfc;
   fnfc.title("Insert file");
   fnfc.type(Fl_Native_File_Chooser::BROWSE_FILE);
-  if (fnfc.show())
-    return;
+  if ( fnfc.show() ) return;
   EditorWindow *w = (EditorWindow *)v;
   load_file(fnfc.filename(), w->editor->insert_position());
 }
 
-void paste_cb(Fl_Widget *, void *v) {
-  EditorWindow *e = (EditorWindow *)v;
+void paste_cb(Fl_Widget*, void* v) {
+  EditorWindow* e = (EditorWindow*)v;
   Fl_Text_Editor::kf_paste(0, e->editor);
 }
 
 int num_windows = 0;
 
-void close_cb(Fl_Widget *, void *v) {
-  EditorWindow *w = (EditorWindow *)v;
+void close_cb(Fl_Widget*, void* v) {
+  EditorWindow* w = (EditorWindow*)v;
 
   if (num_windows == 1) {
     if (!check_save())
@@ -700,24 +749,23 @@ void close_cb(Fl_Widget *, void *v) {
   Fl::delete_widget(w);
 
   num_windows--;
-  if (!num_windows)
-    exit(0);
+  if (!num_windows) exit(0);
 }
 
-void quit_cb(Fl_Widget *, void *) {
+void quit_cb(Fl_Widget*, void*) {
   if (changed && !check_save())
     return;
 
   exit(0);
 }
 
-void replace_cb(Fl_Widget *, void *v) {
-  EditorWindow *e = (EditorWindow *)v;
+void replace_cb(Fl_Widget*, void* v) {
+  EditorWindow* e = (EditorWindow*)v;
   e->replace_dlg->show();
 }
 
-void replace2_cb(Fl_Widget *, void *v) {
-  EditorWindow *e = (EditorWindow *)v;
+void replace2_cb(Fl_Widget*, void* v) {
+  EditorWindow* e = (EditorWindow*)v;
   const char *find = e->replace_find->value();
   const char *replace = e->replace_with->value();
 
@@ -740,12 +788,12 @@ void replace2_cb(Fl_Widget *, void *v) {
     textbuf->select(pos, pos + (int)strlen(replace));
     e->editor->insert_position(pos + (int)strlen(replace));
     e->editor->show_insert_position();
-  } else
-    fl_alert("No occurrences of \'%s\' found!", find);
+  }
+  else fl_alert("No occurrences of \'%s\' found!", find);
 }
 
-void replall_cb(Fl_Widget *, void *v) {
-  EditorWindow *e = (EditorWindow *)v;
+void replall_cb(Fl_Widget*, void* v) {
+  EditorWindow* e = (EditorWindow*)v;
   const char *find = e->replace_find->value();
   const char *replace = e->replace_with->value();
 
@@ -777,14 +825,12 @@ void replall_cb(Fl_Widget *, void *v) {
     }
   }
 
-  if (times)
-    fl_message("Replaced %d occurrences.", times);
-  else
-    fl_alert("No occurrences of \'%s\' found!", find);
+  if (times) fl_message("Replaced %d occurrences.", times);
+  else fl_alert("No occurrences of \'%s\' found!", find);
 }
 
-void replcan_cb(Fl_Widget *, void *v) {
-  EditorWindow *e = (EditorWindow *)v;
+void replcan_cb(Fl_Widget*, void* v) {
+  EditorWindow* e = (EditorWindow*)v;
   e->replace_dlg->hide();
 }
 
@@ -793,115 +839,114 @@ void save_cb() {
     // No filename - get one!
     saveas_cb();
     return;
-  } else
-    save_file(filename);
+  }
+  else save_file(filename);
 }
 
 void saveas_cb() {
   Fl_Native_File_Chooser fnfc;
   fnfc.title("Save File As?");
   fnfc.type(Fl_Native_File_Chooser::BROWSE_SAVE_FILE);
-  if (fnfc.show())
-    return;
+  if ( fnfc.show() ) return;
   save_file(fnfc.filename());
 }
 
-Fl_Window *new_view();
+Fl_Window* new_view();
 
-void view_cb(Fl_Widget *, void *) {
-  Fl_Window *w = new_view();
+void view_cb(Fl_Widget*, void*) {
+  Fl_Window* w = new_view();
   w->show();
 }
 
 Fl_Menu_Item menuitems[] = {
-    {"&File", 0, 0, 0, FL_SUBMENU},
-    {"&New File", 0, (Fl_Callback *)new_cb},
-    {"&Open File...", FL_COMMAND + 'o', (Fl_Callback *)open_cb},
-    {"&Insert File...", FL_COMMAND + 'i', (Fl_Callback *)insert_cb, 0, FL_MENU_DIVIDER},
-    {"&Save File", FL_COMMAND + 's', (Fl_Callback *)save_cb},
-    {"Save File &As...", FL_COMMAND + FL_SHIFT + 's', (Fl_Callback *)saveas_cb, 0, FL_MENU_DIVIDER},
-    {"New &View",
-     FL_ALT
+  { "&File",              0, 0, 0, FL_SUBMENU },
+    { "&New File",        0, (Fl_Callback *)new_cb },
+    { "&Open File...",    FL_COMMAND + 'o', (Fl_Callback *)open_cb },
+    { "&Insert File...",  FL_COMMAND + 'i', (Fl_Callback *)insert_cb, 0, FL_MENU_DIVIDER },
+    { "&Save File",       FL_COMMAND + 's', (Fl_Callback *)save_cb },
+    { "Save File &As...", FL_COMMAND + FL_SHIFT + 's', (Fl_Callback *)saveas_cb, 0, FL_MENU_DIVIDER },
+    { "New &View",        FL_ALT
 #ifdef __APPLE__
-         + FL_COMMAND
+      + FL_COMMAND
 #endif
-         + 'v',
-     (Fl_Callback *)view_cb, 0},
-    {"&Close View", FL_COMMAND + 'w', (Fl_Callback *)close_cb, 0, FL_MENU_DIVIDER},
-    {"E&xit", FL_COMMAND + 'q', (Fl_Callback *)quit_cb, 0},
-    {0},
+      + 'v', (Fl_Callback *)view_cb, 0 },
+    { "&Close View",      FL_COMMAND + 'w', (Fl_Callback *)close_cb, 0, FL_MENU_DIVIDER },
+    { "E&xit",            FL_COMMAND + 'q', (Fl_Callback *)quit_cb, 0 },
+    { 0 },
 
-    {"&Edit", 0, 0, 0, FL_SUBMENU},
-    {"Cu&t", FL_COMMAND + 'x', (Fl_Callback *)cut_cb},
-    {"&Copy", FL_COMMAND + 'c', (Fl_Callback *)copy_cb},
-    {"&Paste", FL_COMMAND + 'v', (Fl_Callback *)paste_cb},
-    {"&Delete", 0, (Fl_Callback *)delete_cb},
-    {"Preferences", 0, 0, 0, FL_SUBMENU},
-    {"Line Numbers", FL_COMMAND + 'l', (Fl_Callback *)linenumbers_cb, 0, FL_MENU_TOGGLE},
-    {"Word Wrap", 0, (Fl_Callback *)wordwrap_cb, 0, FL_MENU_TOGGLE},
-    {0},
-    {0},
+  { "&Edit", 0, 0, 0, FL_SUBMENU },
+    { "Cu&t",             FL_COMMAND + 'x', (Fl_Callback *)cut_cb },
+    { "&Copy",            FL_COMMAND + 'c', (Fl_Callback *)copy_cb },
+    { "&Paste",           FL_COMMAND + 'v', (Fl_Callback *)paste_cb },
+    { "&Delete",          0, (Fl_Callback *)delete_cb },
+    { "Preferences",      0, 0, 0, FL_SUBMENU },
+      { "Line Numbers",   FL_COMMAND + 'l', (Fl_Callback *)linenumbers_cb, 0, FL_MENU_TOGGLE },
+      { "Word Wrap",      0,                (Fl_Callback *)wordwrap_cb, 0, FL_MENU_TOGGLE },
+      { 0 },
+    { 0 },
 
-    {"&Search", 0, 0, 0, FL_SUBMENU},
-    {"&Find...", FL_COMMAND + 'f', (Fl_Callback *)find_cb},
-    {"F&ind Again", FL_COMMAND + 'g', find2_cb},
-    {"&Replace...", FL_COMMAND + 'r', replace_cb},
-    {"Re&place Again", FL_COMMAND + 't', replace2_cb},
-    {0},
+  { "&Search", 0, 0, 0, FL_SUBMENU },
+    { "&Find...",         FL_COMMAND + 'f', (Fl_Callback *)find_cb },
+    { "F&ind Again",      FL_COMMAND + 'g', find2_cb },
+    { "&Replace...",      FL_COMMAND + 'r', replace_cb },
+    { "Re&place Again",   FL_COMMAND + 't', replace2_cb },
+    { 0 },
 
-    {0}};
+  { 0 }
+};
 
-Fl_Window *new_view() {
+Fl_Window* new_view() {
 #ifdef DEV_TEST
-  EditorWindow *w = new EditorWindow(660, 500, title);
+  EditorWindow* w = new EditorWindow(660, 500, title);
 #else
-  EditorWindow *w = new EditorWindow(660, 400, title);
+  EditorWindow* w = new EditorWindow(660, 400, title);
 #endif // DEV_TEST
 
-  w->begin();
-  Fl_Menu_Bar *m = new Fl_Menu_Bar(0, 0, 660, 30);
-  m->copy(menuitems, w);
-  w->editor = new Fl_Text_Editor(0, 30, 660, 370);
-  w->editor->textfont(FL_COURIER);
-  w->editor->textsize(TS);
-  // w->editor->wrap_mode(Fl_Text_Editor::WRAP_AT_BOUNDS, 250);
-  w->editor->buffer(textbuf);
-  w->editor->highlight_data(stylebuf, styletable, sizeof(styletable) / sizeof(styletable[0]), 'A',
-                            style_unfinished_cb, 0);
+    w->begin();
+    Fl_Menu_Bar* m = new Fl_Menu_Bar(0, 0, 660, 30);
+    m->copy(menuitems, w);
+    w->editor = new Fl_Text_Editor(0, 30, 660, 370);
+    w->editor->textfont(FL_COURIER);
+    w->editor->textsize(TS);
+  //w->editor->wrap_mode(Fl_Text_Editor::WRAP_AT_BOUNDS, 250);
+    w->editor->buffer(textbuf);
+    w->editor->highlight_data(stylebuf, styletable,
+                              sizeof(styletable) / sizeof(styletable[0]),
+                              'A', style_unfinished_cb, 0);
 
 #ifdef DEV_TEST
 
-  w->minus = new Fl_Button(60, 410, 120, 30, "&-");
-  w->minus->labelsize(20);
-  w->minus->labelfont(FL_BOLD);
-  w->minus->callback(resize_cb, (void *)(-1));
+    w->minus = new Fl_Button(60, 410, 120, 30, "&-");
+    w->minus->labelsize(20);
+    w->minus->labelfont(FL_BOLD);
+    w->minus->callback(resize_cb,(void *)(-1));
 
-  w->plus = new Fl_Button(60, 450, 120, 30, "&+");
-  w->plus->labelsize(20);
-  w->plus->labelfont(FL_BOLD);
-  w->plus->callback(resize_cb, (void *)1);
+    w->plus = new Fl_Button(60, 450, 120, 30, "&+");
+    w->plus->labelsize(20);
+    w->plus->labelfont(FL_BOLD);
+    w->plus->callback(resize_cb,(void *)1);
 
-  w->vscroll = new Fl_Button(220, 410, 120, 30, "&vscroll");
-  w->vscroll->labelsize(16);
-  w->vscroll->callback(scroll_cb, (void *)1);
+    w->vscroll = new Fl_Button(220, 410, 120, 30, "&vscroll");
+    w->vscroll->labelsize(16);
+    w->vscroll->callback(scroll_cb,(void *)1);
 
-  w->hscroll = new Fl_Button(220, 450, 120, 30, "&hscroll");
-  w->hscroll->labelsize(16);
-  w->hscroll->callback(scroll_cb, (void *)2);
+    w->hscroll = new Fl_Button(220, 450, 120, 30, "&hscroll");
+    w->hscroll->labelsize(16);
+    w->hscroll->callback(scroll_cb,(void *)2);
 
-  w->lnum = new Fl_Button(380, 410, 120, 30, "&line #");
-  w->lnum->labelsize(16);
-  w->lnum->callback(lnum_cb, (void *)w);
+    w->lnum = new Fl_Button(380, 410, 120, 30, "&line #");
+    w->lnum->labelsize(16);
+    w->lnum->callback(lnum_cb,(void *)w);
 
-  w->wrap = new Fl_Button(380, 450, 120, 30, "&wrap");
-  w->wrap->labelsize(16);
-  w->wrap->callback(wrap_cb, (void *)w);
+    w->wrap = new Fl_Button(380, 450, 120, 30, "&wrap");
+    w->wrap->labelsize(16);
+    w->wrap->callback(wrap_cb,(void *)w);
 
 #endif // DEV_TEST
 
   w->end();
   w->resizable(w->editor);
-  w->size_range(300, 200);
+  w->size_range(300,200);
   w->callback((Fl_Callback *)close_cb, w);
 
   textbuf->add_modify_callback(style_update, w->editor);
@@ -917,17 +962,16 @@ void cb(const char *fname) {
 
 int main(int argc, char **argv) {
   textbuf = new Fl_Text_Buffer;
-  // textbuf->transcoding_warning_action = NULL;
+//textbuf->transcoding_warning_action = NULL;
   style_init();
   fl_open_callback(cb);
 
-  Fl_Window *window = new_view();
+  Fl_Window* window = new_view();
 
   window->show(1, argv);
-  // window->wait_for_expose();
+  //window->wait_for_expose();
 #ifndef __APPLE__
-  if (argc > 1)
-    load_file(argv[1], -1);
+  if (argc > 1) load_file(argv[1], -1);
 #endif
 
   return Fl::run();

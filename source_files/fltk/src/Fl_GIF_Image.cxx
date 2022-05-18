@@ -83,8 +83,8 @@ static int gif_error(Fl_Image_Reader &rdr, int line, uchar *Image) {
     if (Image)
       delete[] Image; // delete temporary image array
 
-    Fl::error("[%d] Fl_GIF_Image: %s - unexpected EOF or read error at offset %ld", line,
-              rdr.name(), rdr.tell());
+    Fl::error("[%d] Fl_GIF_Image: %s - unexpected EOF or read error at offset %ld",
+              line, rdr.name(), rdr.tell());
     return 1;
   }
   return 0;
@@ -96,16 +96,16 @@ static int gif_error(Fl_Image_Reader &rdr, int line, uchar *Image) {
   loading is terminated with error code ERR_FORMAT.
   This calls gif_error (see above) to avoid code duplication.
 */
-#define CHECK_ERROR                      \
+#define CHECK_ERROR \
   if (gif_error(rdr, __LINE__, Image)) { \
-    ld(ERR_FORMAT);                      \
-    return;                              \
+    ld(ERR_FORMAT); \
+    return; \
   }
 
 /**
   This constructor loads a GIF image from the given file.
 
-  IF a GIF image is animated, Fl_GIF_Image will only read and display the
+  If a GIF image is animated, Fl_GIF_Image will only read and display the
   first frame of the animation.
 
   The destructor frees all memory and server resources that are used by
@@ -118,11 +118,11 @@ static int gif_error(Fl_Image_Reader &rdr, int line, uchar *Image) {
 
   \param[in] filename a full path and name pointing to a GIF image file.
 
-  \see Fl_GIF_Image::Fl_GIF_Image(const char *imagename, const unsigned char *data, const long
-  length)
+  \see Fl_GIF_Image::Fl_GIF_Image(const char *imagename, const unsigned char *data, const long length)
 */
-Fl_GIF_Image::Fl_GIF_Image(const char *filename)
-  : Fl_Pixmap((char *const *)0) {
+Fl_GIF_Image::Fl_GIF_Image(const char *filename) :
+  Fl_Pixmap((char *const*)0)
+{
   Fl_Image_Reader rdr;
   if (rdr.open(filename) == -1) {
     Fl::error("Fl_GIF_Image: Unable to open %s!", filename);
@@ -140,7 +140,7 @@ Fl_GIF_Image::Fl_GIF_Image(const char *filename)
   \p imagename can be NULL. If a name is given, the image is added to the list of
   shared images and will be available by that name.
 
-  IF a GIF image is animated, Fl_GIF_Image will only read and display the
+  If a GIF image is animated, Fl_GIF_Image will only read and display the
   first frame of the animation.
 
   The destructor frees all memory and server resources that are used by
@@ -163,8 +163,9 @@ Fl_GIF_Image::Fl_GIF_Image(const char *filename)
 
   \since 1.4.0
 */
-Fl_GIF_Image::Fl_GIF_Image(const char *imagename, const unsigned char *data, const size_t length)
-  : Fl_Pixmap((char *const *)0) {
+Fl_GIF_Image::Fl_GIF_Image(const char *imagename, const unsigned char *data, const size_t length) :
+  Fl_Pixmap((char *const*)0)
+{
   Fl_Image_Reader rdr;
   if (rdr.open(imagename, data, length) == -1) {
     ld(ERR_FILE_ACCESS);
@@ -193,8 +194,9 @@ Fl_GIF_Image::Fl_GIF_Image(const char *imagename, const unsigned char *data, con
   \see Fl_GIF_Image(const char *filename)
   \see Fl_GIF_Image(const char *imagename, const unsigned char *data, const size_t length)
 */
-Fl_GIF_Image::Fl_GIF_Image(const char *imagename, const unsigned char *data)
-  : Fl_Pixmap((char *const *)0) {
+Fl_GIF_Image::Fl_GIF_Image(const char *imagename, const unsigned char *data) :
+  Fl_Pixmap((char *const*)0)
+{
   Fl_Image_Reader rdr;
   if (rdr.open(imagename, data) == -1) {
     ld(ERR_FILE_ACCESS);
@@ -210,25 +212,23 @@ Fl_GIF_Image::Fl_GIF_Image(const char *imagename, const unsigned char *data)
   To avoid code duplication, we use an Fl_Image_Reader that reads data from
   either a file or from memory.
 */
-void Fl_GIF_Image::load_gif_(Fl_Image_Reader &rdr) {
-  char **new_data;   // Data array
-  uchar *Image = 0L; // internal temporary image data array
-  w(0);
-  h(0);
+void Fl_GIF_Image::load_gif_(Fl_Image_Reader &rdr)
+{
+  char **new_data;      // Data array
+  uchar *Image = 0L;    // internal temporary image data array
+  w(0); h(0);
 
   // printf("\nFl_GIF_Image::load_gif_ : %s\n", rdr.name());
 
-  {
-    char b[6] = {0};
-    for (int i = 0; i < 6; ++i)
-      b[i] = rdr.read_byte();
-    if (b[0] != 'G' || b[1] != 'I' || b[2] != 'F') {
+  {char b[6] = { 0 };
+    for (int i=0; i<6; ++i) b[i] = rdr.read_byte();
+    if (b[0]!='G' || b[1]!='I' || b[2] != 'F') {
       Fl::error("Fl_GIF_Image: %s is not a GIF file.\n", rdr.name());
       ld(ERR_FORMAT);
       return;
     }
-    if (b[3] != '8' || b[4] > '9' || b[5] != 'a')
-      Fl::warning("%s is version %c%c%c.", rdr.name(), b[3], b[4], b[5]);
+    if (b[3]!='8' || b[4]>'9' || b[5]!= 'a')
+      Fl::warning("%s is version %c%c%c.",rdr.name(),b[3],b[4],b[5]);
   }
 
   int Width = rdr.read_word();
@@ -255,7 +255,7 @@ void Fl_GIF_Image::load_gif_(Fl_Image_Reader &rdr) {
   char has_transparent = 0;
   uchar Red[256], Green[256], Blue[256]; /* color map */
   if (HasColormap) {
-    for (int i = 0; i < ColorMapSize; i++) {
+    for (int i=0; i < ColorMapSize; i++) {
       Red[i] = rdr.read_byte();
       Green[i] = rdr.read_byte();
       Blue[i] = rdr.read_byte();
@@ -263,7 +263,7 @@ void Fl_GIF_Image::load_gif_(Fl_Image_Reader &rdr) {
   }
   CHECK_ERROR
 
-  int CodeSize; /* Code size, init from GIF header, increases... */
+  int CodeSize;         /* Code size, init from GIF header, increases... */
   char Interlace;
 
   // Main parser loop: parse "blocks" until an image is found or error
@@ -274,35 +274,38 @@ void Fl_GIF_Image::load_gif_(Fl_Image_Reader &rdr) {
     CHECK_ERROR
     int blocklen;
 
-    if (i == 0x21) {        // a "gif extension"
-      ch = rdr.read_byte(); // extension type
+    if (i == 0x21) {                          // a "gif extension"
+      ch = rdr.read_byte();                   // extension type
       blocklen = rdr.read_byte();
       CHECK_ERROR
 
-      if (ch == 0xF9 && blocklen == 4) { // Graphic Control Extension
+      if (ch == 0xF9 && blocklen == 4) {      // Graphic Control Extension
         // printf("Graphic Control Extension at offset %ld\n", rdr.tell()-2);
-        char bits = rdr.read_byte();         // Packed Fields
-        rdr.read_word();                     // Delay Time
-        transparent_pixel = rdr.read_byte(); // Transparent Color Index
-        blocklen = rdr.read_byte();          // Block Terminator (must be zero)
+        char bits = rdr.read_byte();          // Packed Fields
+        rdr.read_word();                      // Delay Time
+        transparent_pixel = rdr.read_byte();  // Transparent Color Index
+        blocklen = rdr.read_byte();           // Block Terminator (must be zero)
         CHECK_ERROR
-        if (bits & 1)
-          has_transparent = 1;
-      } else if (ch == 0xFF) { // Application Extension
+        if (bits & 1) has_transparent = 1;
+      }
+      else if (ch == 0xFF) {                  // Application Extension
         // printf("Application Extension at offset %ld, length = %d\n", rdr.tell()-3, blocklen);
-        ;                      // skip data
-      } else if (ch == 0xFE) { // Comment Extension
-        // printf("Comment Extension at offset %ld, length = %d\n", rdr.tell()-3, blocklen);
-        ;                      // skip data
-      } else if (ch == 0x01) { // Plain Text Extension
-        // printf("Plain Text Extension at offset %ld, length = %d\n", rdr.tell()-3, blocklen);
-        ; // skip data
-      } else {
-        Fl::warning("%s: unknown GIF extension 0x%02x at offset %ld, length = %d", rdr.name(), ch,
-                    rdr.tell() - 3, blocklen);
         ; // skip data
       }
-    } else if (i == 0x2c) { // an image: Image Descriptor follows
+      else if (ch == 0xFE) {                  // Comment Extension
+        // printf("Comment Extension at offset %ld, length = %d\n", rdr.tell()-3, blocklen);
+        ; // skip data
+      }
+      else if (ch == 0x01) {                  // Plain Text Extension
+        // printf("Plain Text Extension at offset %ld, length = %d\n", rdr.tell()-3, blocklen);
+        ; // skip data
+      }
+      else {
+        Fl::warning("%s: unknown GIF extension 0x%02x at offset %ld, length = %d",
+                    rdr.name(), ch, rdr.tell()-3, blocklen);
+        ; // skip data
+      }
+    } else if (i == 0x2c) {       // an image: Image Descriptor follows
       // printf("Image Descriptor at offset %ld\n", rdr.tell());
       rdr.read_word();          // Image Left Position
       rdr.read_word();          // Image Top Position
@@ -311,25 +314,25 @@ void Fl_GIF_Image::load_gif_(Fl_Image_Reader &rdr) {
       ch = rdr.read_byte();     // Packed Fields
       CHECK_ERROR
       Interlace = ((ch & 0x40) != 0);
-      if (ch & 0x80) { // image has local color table
+      if (ch & 0x80) {          // image has local color table
         // printf("Local Color Table at offset %ld\n", rdr.tell());
         BitsPerPixel = (ch & 7) + 1;
         ColorMapSize = 2 << (ch & 7);
-        for (i = 0; i < ColorMapSize; i++) {
+        for (i=0; i < ColorMapSize; i++) {
           Red[i] = rdr.read_byte();
           Green[i] = rdr.read_byte();
           Blue[i] = rdr.read_byte();
         }
       }
       CHECK_ERROR
-      break;                // okay, this is the image we want
-    } else if (i == 0x3b) { // Trailer (end of GIF data)
+      break; // okay, this is the image we want
+    } else if (i == 0x3b) {       // Trailer (end of GIF data)
       // printf("Trailer found at offset %ld\n", rdr.tell());
       Fl::error("%s: no image data found.", rdr.name());
       ld(ERR_NO_IMAGE); // this GIF file is "empty" (no image)
       return;           // terminate
     } else {
-      Fl::error("%s: unknown GIF code 0x%02x at offset %ld", rdr.name(), i, rdr.tell() - 1);
+      Fl::error("%s: unknown GIF code 0x%02x at offset %ld", rdr.name(), i, rdr.tell()-1);
       ld(ERR_FORMAT); // broken file
       return;         // terminate
     }
@@ -363,8 +366,8 @@ void Fl_GIF_Image::load_gif_(Fl_Image_Reader &rdr) {
     Fl::warning("%s does not have a color table, using default.\n", rdr.name());
     BitsPerPixel = CodeSize - 1;
     ColorMapSize = 1 << BitsPerPixel;
-    Red[0] = Green[0] = Blue[0] = 0;   // black
-    Red[1] = Green[1] = Blue[1] = 255; // white
+    Red[0] = Green[0] = Blue[0] = 0;    // black
+    Red[1] = Green[1] = Blue[1] = 255;  // white
     for (int i = 2; i < ColorMapSize; i++) {
       Red[i] = Green[i] = Blue[i] = (uchar)(255 * i / (ColorMapSize - 1));
     }
@@ -387,18 +390,18 @@ void Fl_GIF_Image::load_gif_(Fl_Image_Reader &rdr) {
 
   // now read the LZW compressed image data
 
-  Image = new uchar[Width * Height];
+  Image = new uchar[Width*Height];
 
   int YC = 0, Pass = 0; /* Used to de-interlace the picture */
   uchar *p = Image;
-  uchar *eol = p + Width;
+  uchar *eol = p+Width;
 
   int InitCodeSize = CodeSize;
-  int ClearCode = (1 << (CodeSize - 1));
+  int ClearCode = (1 << (CodeSize-1));
   int EOFCode = ClearCode + 1;
   int FirstFree = ClearCode + 2;
   int FinChar = 0;
-  int ReadMask = (1 << CodeSize) - 1;
+  int ReadMask = (1<<CodeSize) - 1;
   int FreeCode = FirstFree;
   int OldCode = ClearCode;
 
@@ -407,8 +410,7 @@ void Fl_GIF_Image::load_gif_(Fl_Image_Reader &rdr) {
   uchar Suffix[4096];
 
   int blocklen = rdr.read_byte();
-  uchar thisbyte = rdr.read_byte();
-  blocklen--;
+  uchar thisbyte = rdr.read_byte(); blocklen--;
   CHECK_ERROR
   int frombit = 0;
 
@@ -422,36 +424,32 @@ void Fl_GIF_Image::load_gif_(Fl_Image_Reader &rdr) {
      * In addition, GIF adds totally useless and annoying block counts
      * that must be correctly skipped over. */
     int CurCode = thisbyte;
-    if (frombit + CodeSize > 7) {
+    if (frombit+CodeSize > 7) {
       if (blocklen <= 0) {
         blocklen = rdr.read_byte();
         CHECK_ERROR
-        if (blocklen <= 0)
-          break;
+        if (blocklen <= 0) break;
       }
-      thisbyte = rdr.read_byte();
-      blocklen--;
+      thisbyte = rdr.read_byte(); blocklen--;
       CHECK_ERROR
-      CurCode |= thisbyte << 8;
+      CurCode |= thisbyte<<8;
     }
-    if (frombit + CodeSize > 15) {
+    if (frombit+CodeSize > 15) {
       if (blocklen <= 0) {
         blocklen = rdr.read_byte();
         CHECK_ERROR
-        if (blocklen <= 0)
-          break;
+        if (blocklen <= 0) break;
       }
-      thisbyte = rdr.read_byte();
-      blocklen--;
+      thisbyte = rdr.read_byte(); blocklen--;
       CHECK_ERROR
-      CurCode |= thisbyte << 16;
+      CurCode |= thisbyte<<16;
     }
-    CurCode = (CurCode >> frombit) & ReadMask;
-    frombit = (frombit + CodeSize) % 8;
+    CurCode = (CurCode>>frombit)&ReadMask;
+    frombit = (frombit+CodeSize)%8;
 
     if (CurCode == ClearCode) {
       CodeSize = InitCodeSize;
-      ReadMask = (1 << CodeSize) - 1;
+      ReadMask = (1<<CodeSize) - 1;
       FreeCode = FirstFree;
       OldCode = ClearCode;
       continue;
@@ -478,8 +476,8 @@ void Fl_GIF_Image::load_gif_(Fl_Image_Reader &rdr) {
         *tp++ = Suffix[i];
         i = Prefix[i];
       } else { // FIXME - should never happen (?)
-        Fl::error("Fl_GIF_Image: %s - i(%d) >= FreeCode (%d) at offset %ld", rdr.name(), i,
-                  FreeCode, rdr.tell());
+        Fl::error("Fl_GIF_Image: %s - i(%d) >= FreeCode (%d) at offset %ld",
+                  rdr.name(), i, FreeCode, rdr.tell());
         // NOTREACHED
         i = FreeCode - 1; // fix broken index ???
         break;
@@ -489,39 +487,16 @@ void Fl_GIF_Image::load_gif_(Fl_Image_Reader &rdr) {
     do {
       *p++ = *--tp;
       if (p >= eol) {
-        if (!Interlace)
-          YC++;
-        else
-          switch (Pass) {
-            case 0:
-              YC += 8;
-              if (YC >= Height) {
-                Pass++;
-                YC = 4;
-              }
-              break;
-            case 1:
-              YC += 8;
-              if (YC >= Height) {
-                Pass++;
-                YC = 2;
-              }
-              break;
-            case 2:
-              YC += 4;
-              if (YC >= Height) {
-                Pass++;
-                YC = 1;
-              }
-              break;
-            case 3:
-              YC += 2;
-              break;
-          }
-        if (YC >= Height)
-          YC = 0; /* cheap bug fix when excess data */
-        p = Image + YC * Width;
-        eol = p + Width;
+        if (!Interlace) YC++;
+        else switch (Pass) {
+          case 0: YC += 8; if (YC >= Height) {Pass++; YC = 4;} break;
+          case 1: YC += 8; if (YC >= Height) {Pass++; YC = 2;} break;
+          case 2: YC += 4; if (YC >= Height) {Pass++; YC = 1;} break;
+          case 3: YC += 2; break;
+        }
+        if (YC>=Height) YC=0; /* cheap bug fix when excess data */
+        p = Image + YC*Width;
+        eol = p+Width;
       }
     } while (tp > OutCode);
 
@@ -548,75 +523,68 @@ void Fl_GIF_Image::load_gif_(Fl_Image_Reader &rdr) {
   d(1);
 
   // allocate line pointer arrays:
-  new_data = new char *[Height + 2];
+  new_data = new char*[Height+2];
 
   // transparent pixel must be zero, swap if it isn't:
   if (has_transparent && transparent_pixel != 0) {
     // swap transparent pixel with zero
-    p = Image + Width * Height;
+    p = Image+Width*Height;
     while (p-- > Image) {
-      if (*p == transparent_pixel)
-        *p = 0;
-      else if (!*p)
-        *p = transparent_pixel;
+      if (*p==transparent_pixel) *p = 0;
+      else if (!*p) *p = transparent_pixel;
     }
     uchar t;
-    t = Red[0];
-    Red[0] = Red[transparent_pixel];
-    Red[transparent_pixel] = t;
+    t                        = Red[0];
+    Red[0]                   = Red[transparent_pixel];
+    Red[transparent_pixel]   = t;
 
-    t = Green[0];
-    Green[0] = Green[transparent_pixel];
+    t                        = Green[0];
+    Green[0]                 = Green[transparent_pixel];
     Green[transparent_pixel] = t;
 
-    t = Blue[0];
-    Blue[0] = Blue[transparent_pixel];
-    Blue[transparent_pixel] = t;
+    t                        = Blue[0];
+    Blue[0]                  = Blue[transparent_pixel];
+    Blue[transparent_pixel]  = t;
   }
 
   // find out what colors are actually used:
-  uchar used[256];
-  uchar remap[256];
+  uchar used[256]; uchar remap[256];
   int i;
-  for (i = 0; i < ColorMapSize; i++)
-    used[i] = 0;
-  p = Image + Width * Height;
-  while (p-- > Image)
-    used[*p] = 1;
+  for (i = 0; i < ColorMapSize; i++) used[i] = 0;
+  p = Image+Width*Height;
+  while (p-- > Image) used[*p] = 1;
 
   // remap them to start with printing characters:
-  int base = has_transparent && used[0] ? ' ' : ' ' + 1;
+  int base = has_transparent && used[0] ? ' ' : ' '+1;
   int numcolors = 0;
-  for (i = 0; i < ColorMapSize; i++)
-    if (used[i]) {
-      remap[i] = (uchar)(base++);
-      numcolors++;
-    }
+  for (i = 0; i < ColorMapSize; i++) if (used[i]) {
+    remap[i] = (uchar)(base++);
+    numcolors++;
+  }
 
   // write the first line of xpm data (use suffix as temp array):
-  int length = sprintf((char *)(Suffix), "%d %d %d %d", Width, Height, -numcolors, 1);
-  new_data[0] = new char[length + 1];
-  strcpy(new_data[0], (char *)Suffix);
+  int length = sprintf((char*)(Suffix),
+                       "%d %d %d %d",Width,Height,-numcolors,1);
+  new_data[0] = new char[length+1];
+  strcpy(new_data[0], (char*)Suffix);
 
   // write the colormap
-  new_data[1] = (char *)(p = new uchar[4 * numcolors]);
-  for (i = 0; i < ColorMapSize; i++)
-    if (used[i]) {
-      *p++ = remap[i];
-      *p++ = Red[i];
-      *p++ = Green[i];
-      *p++ = Blue[i];
-    }
+  new_data[1] = (char*)(p = new uchar[4*numcolors]);
+  for (i = 0; i < ColorMapSize; i++) if (used[i]) {
+    *p++ = remap[i];
+    *p++ = Red[i];
+    *p++ = Green[i];
+    *p++ = Blue[i];
+  }
 
   // remap the image data:
-  p = Image + Width * Height;
-  while (p-- > Image)
-    *p = remap[*p];
+  p = Image+Width*Height;
+  while (p-- > Image) *p = remap[*p];
 
   // split the image data into lines:
-  for (i = 0; i < Height; i++) {
-    new_data[i + 2] = new char[Width + 1];
-    memcpy(new_data[i + 2], (char *)(Image + i * Width), Width);
+  for (i=0; i<Height; i++) {
+    new_data[i+2] = new char[Width+1];
+    memcpy(new_data[i + 2], (char*)(Image + i*Width), Width);
     new_data[i + 2][Width] = 0;
   }
 

@@ -43,14 +43,14 @@
 //       Changes to FL_BLINE *must* be reflected in Fl_File_Chooser.cxx as well.
 //       This hack in Fl_File_Chooser should be solved.
 //
-struct FL_BLINE { // data is in a linked list of these
-  FL_BLINE *prev;
-  FL_BLINE *next;
-  void *data;
-  Fl_Image *icon;
-  short length; // sizeof(txt)-1, may be longer than string
-  char flags;   // selected, displayed
-  char txt[1];  // start of allocated array
+struct FL_BLINE {       // data is in a linked list of these
+  FL_BLINE* prev;
+  FL_BLINE* next;
+  void* data;
+  Fl_Image* icon;
+  short length;         // sizeof(txt)-1, may be longer than string
+  char flags;           // selected, displayed
+  char txt[1];          // start of allocated array
 };
 
 /**
@@ -65,9 +65,7 @@ struct FL_BLINE { // data is in a linked list of these
   \returns The first item, or NULL if list is empty.
   \see item_first(), item_last(), item_next(), item_prev()
 */
-void *Fl_Browser::item_first() const {
-  return first;
-}
+void* Fl_Browser::item_first() const {return first;}
 
 /**
   Returns the next item after \p item.
@@ -75,9 +73,7 @@ void *Fl_Browser::item_first() const {
   \returns The next item after \p item, or NULL if there are none after this one.
   \see item_first(), item_last(), item_next(), item_prev()
 */
-void *Fl_Browser::item_next(void *item) const {
-  return ((FL_BLINE *)item)->next;
-}
+void* Fl_Browser::item_next(void* item) const {return ((FL_BLINE*)item)->next;}
 
 /**
   Returns the previous item before \p item.
@@ -85,9 +81,7 @@ void *Fl_Browser::item_next(void *item) const {
   \returns The previous item before \p item, or NULL if there are none before this one.
   \see item_first(), item_last(), item_next(), item_prev()
 */
-void *Fl_Browser::item_prev(void *item) const {
-  return ((FL_BLINE *)item)->prev;
-}
+void* Fl_Browser::item_prev(void* item) const {return ((FL_BLINE*)item)->prev;}
 
 /**
   Returns the very last item in the list.
@@ -101,9 +95,7 @@ void *Fl_Browser::item_prev(void *item) const {
   \returns The last item, or NULL if list is empty.
   \see item_first(), item_last(), item_next(), item_prev()
 */
-void *Fl_Browser::item_last() const {
-  return last;
-}
+void* Fl_Browser::item_last() const {return last;}
 
 /**
   See if \p item is selected.
@@ -111,8 +103,8 @@ void *Fl_Browser::item_last() const {
   \returns 1 if selected, 0 if not.
   \see select(), selected(), value(), item_select(), item_selected()
 */
-int Fl_Browser::item_selected(void *item) const {
-  return ((FL_BLINE *)item)->flags & SELECTED;
+int Fl_Browser::item_selected(void* item) const {
+  return ((FL_BLINE*)item)->flags&SELECTED;
 }
 /**
   Change the selection state of \p item to the value \p val.
@@ -121,10 +113,8 @@ int Fl_Browser::item_selected(void *item) const {
   \see select(), selected(), value(), item_select(), item_selected()
 */
 void Fl_Browser::item_select(void *item, int val) {
-  if (val)
-    ((FL_BLINE *)item)->flags |= SELECTED;
-  else
-    ((FL_BLINE *)item)->flags &= ~SELECTED;
+  if (val) ((FL_BLINE*)item)->flags |= SELECTED;
+  else     ((FL_BLINE*)item)->flags &= ~SELECTED;
 }
 
 /**
@@ -133,7 +123,7 @@ void Fl_Browser::item_select(void *item, int val) {
   \returns The item's text string. (Can be NULL)
 */
 const char *Fl_Browser::item_text(void *item) const {
-  return ((FL_BLINE *)item)->txt;
+  return ((FL_BLINE*)item)->txt;
 }
 
 /**
@@ -152,27 +142,20 @@ const char *Fl_Browser::item_text(void *item) const {
   \retval NULL if line is out of range.
   \see item_at(), find_line(), lineno()
 */
-FL_BLINE *Fl_Browser::find_line(int line) const {
-  int n;
-  FL_BLINE *l;
-  if (line == cacheline)
-    return cache;
-  if (cacheline && line > (cacheline / 2) && line < ((cacheline + lines) / 2)) {
-    n = cacheline;
-    l = cache;
-  } else if (line <= (lines / 2)) {
-    n = 1;
-    l = first;
+FL_BLINE* Fl_Browser::find_line(int line) const {
+  int n; FL_BLINE* l;
+  if (line == cacheline) return cache;
+  if (cacheline && line > (cacheline/2) && line < ((cacheline+lines)/2)) {
+    n = cacheline; l = cache;
+  } else if (line <= (lines/2)) {
+    n = 1; l = first;
   } else {
-    n = lines;
-    l = last;
+    n = lines; l = last;
   }
-  for (; n < line && l; n++)
-    l = l->next;
-  for (; n > line && l; n--)
-    l = l->prev;
-  ((Fl_Browser *)this)->cacheline = line;
-  ((Fl_Browser *)this)->cache = l;
+  for (; n < line && l; n++) l = l->next;
+  for (; n > line && l; n--) l = l->prev;
+  ((Fl_Browser*)this)->cacheline = line;
+  ((Fl_Browser*)this)->cache = l;
   return l;
 }
 
@@ -184,45 +167,29 @@ FL_BLINE *Fl_Browser::find_line(int line) const {
   \see item_at(), find_line(), lineno()
 */
 int Fl_Browser::lineno(void *item) const {
-  FL_BLINE *l = (FL_BLINE *)item;
-  if (!l)
-    return 0;
-  if (l == cache)
-    return cacheline;
-  if (l == first)
-    return 1;
-  if (l == last)
-    return lines;
+  FL_BLINE* l = (FL_BLINE*)item;
+  if (!l) return 0;
+  if (l == cache) return cacheline;
+  if (l == first) return 1;
+  if (l == last) return lines;
   if (!cache) {
-    ((Fl_Browser *)this)->cache = first;
-    ((Fl_Browser *)this)->cacheline = 1;
+    ((Fl_Browser*)this)->cache = first;
+    ((Fl_Browser*)this)->cacheline = 1;
   }
   // assume it is near cache, search both directions:
-  FL_BLINE *b = cache->prev;
-  int bnum = cacheline - 1;
-  FL_BLINE *f = cache->next;
-  int fnum = cacheline + 1;
+  FL_BLINE* b = cache->prev;
+  int bnum = cacheline-1;
+  FL_BLINE* f = cache->next;
+  int fnum = cacheline+1;
   int n = 0;
   for (;;) {
-    if (b == l) {
-      n = bnum;
-      break;
-    }
-    if (f == l) {
-      n = fnum;
-      break;
-    }
-    if (b) {
-      b = b->prev;
-      bnum--;
-    }
-    if (f) {
-      f = f->next;
-      fnum++;
-    }
+    if (b == l) {n = bnum; break;}
+    if (f == l) {n = fnum; break;}
+    if (b) {b = b->prev; bnum--;}
+    if (f) {f = f->next; fnum++;}
   }
-  ((Fl_Browser *)this)->cache = l;
-  ((Fl_Browser *)this)->cacheline = n;
+  ((Fl_Browser*)this)->cache = l;
+  ((Fl_Browser*)this)->cacheline = n;
   return n;
 }
 
@@ -234,24 +201,20 @@ int Fl_Browser::lineno(void *item) const {
   \returns Pointer to browser item that was removed (and is no longer valid).
   \see add(), insert(), remove(), swap(int,int), clear()
 */
-FL_BLINE *Fl_Browser::_remove(int line) {
-  FL_BLINE *ttt = find_line(line);
+FL_BLINE* Fl_Browser::_remove(int line) {
+  FL_BLINE* ttt = find_line(line);
   deleting(ttt);
 
-  cacheline = line - 1;
+  cacheline = line-1;
   cache = ttt->prev;
   lines--;
   full_height_ -= item_height(ttt);
-  if (ttt->prev)
-    ttt->prev->next = ttt->next;
-  else
-    first = ttt->next;
-  if (ttt->next)
-    ttt->next->prev = ttt->prev;
-  else
-    last = ttt->prev;
+  if (ttt->prev) ttt->prev->next = ttt->next;
+  else first = ttt->next;
+  if (ttt->next) ttt->next->prev = ttt->prev;
+  else last = ttt->prev;
 
-  return (ttt);
+  return(ttt);
 }
 
 /**
@@ -262,8 +225,7 @@ FL_BLINE *Fl_Browser::_remove(int line) {
   \see add(), insert(), remove(), swap(int,int), clear()
 */
 void Fl_Browser::remove(int line) {
-  if (line < 1 || line > lines)
-    return;
+  if (line < 1 || line > lines) return;
   free(_remove(line));
 }
 
@@ -276,7 +238,7 @@ void Fl_Browser::remove(int line) {
   \param[in] line  The new line will be inserted above this line (1 based).
   \param[in] item  The item to be added.
 */
-void Fl_Browser::insert(int line, FL_BLINE *item) {
+void Fl_Browser::insert(int line, FL_BLINE* item) {
   if (!first) {
     item->prev = item->next = 0;
     first = last = item;
@@ -292,7 +254,7 @@ void Fl_Browser::insert(int line, FL_BLINE *item) {
     item->next = 0;
     last = item;
   } else {
-    FL_BLINE *n = find_line(line);
+    FL_BLINE* n = find_line(line);
     inserting(n, item);
     item->next = n;
     item->prev = n->prev;
@@ -319,11 +281,10 @@ void Fl_Browser::insert(int line, FL_BLINE *item) {
   \param[in] newtext The label text for the new line.
   \param[in] d Optional pointer to user data to be associated with the new line.
 */
-void Fl_Browser::insert(int line, const char *newtext, void *d) {
-  if (!newtext)
-    newtext = ""; // STR #3269
-  int l = (int)strlen(newtext);
-  FL_BLINE *t = (FL_BLINE *)malloc(sizeof(FL_BLINE) + l);
+void Fl_Browser::insert(int line, const char* newtext, void* d) {
+  if (!newtext) newtext = "";           // STR #3269
+  int l = (int) strlen(newtext);
+  FL_BLINE* t = (FL_BLINE*)malloc(sizeof(FL_BLINE)+l);
   t->length = (short)l;
   t->flags = 0;
   strcpy(t->txt, newtext);
@@ -339,8 +300,7 @@ void Fl_Browser::insert(int line, const char *newtext, void *d) {
   \param[in] from Line number of item to be moved
 */
 void Fl_Browser::move(int to, int from) {
-  if (from < 1 || from > lines)
-    return;
+  if (from < 1 || from > lines) return;
   insert(to, _remove(from));
 }
 
@@ -355,15 +315,13 @@ void Fl_Browser::move(int to, int from) {
   \param[in] line The line of the item whose text will be changed. (1 based)
   \param[in] newtext The new string to be assigned to the item.
 */
-void Fl_Browser::text(int line, const char *newtext) {
-  if (line < 1 || line > lines)
-    return;
-  FL_BLINE *t = find_line(line);
-  if (!newtext)
-    newtext = ""; // STR #3269
-  int l = (int)strlen(newtext);
+void Fl_Browser::text(int line, const char* newtext) {
+  if (line < 1 || line > lines) return;
+  FL_BLINE* t = find_line(line);
+  if (!newtext) newtext = "";           // STR #3269
+  int l = (int) strlen(newtext);
   if (l > t->length) {
-    FL_BLINE *n = (FL_BLINE *)malloc(sizeof(FL_BLINE) + l);
+    FL_BLINE* n = (FL_BLINE*)malloc(sizeof(FL_BLINE)+l);
     replacing(t, n);
     cache = n;
     n->data = t->data;
@@ -371,15 +329,9 @@ void Fl_Browser::text(int line, const char *newtext) {
     n->length = (short)l;
     n->flags = t->flags;
     n->prev = t->prev;
-    if (n->prev)
-      n->prev->next = n;
-    else
-      first = n;
+    if (n->prev) n->prev->next = n; else first = n;
     n->next = t->next;
-    if (n->next)
-      n->next->prev = n;
-    else
-      last = n;
+    if (n->next) n->next->prev = n; else last = n;
     free(t);
     t = n;
   }
@@ -393,9 +345,8 @@ void Fl_Browser::text(int line, const char *newtext) {
   \param[in] line The line of the item whose data() is to be changed. (1 based)
   \param[in] d The new data to be assigned to the item. (can be NULL)
 */
-void Fl_Browser::data(int line, void *d) {
-  if (line < 1 || line > lines)
-    return;
+void Fl_Browser::data(int line, void* d) {
+  if (line < 1 || line > lines) return;
   find_line(line)->data = d;
 }
 
@@ -408,9 +359,8 @@ void Fl_Browser::data(int line, void *d) {
        incr_height(), full_height()
 */
 int Fl_Browser::item_height(void *item) const {
-  FL_BLINE *l = (FL_BLINE *)item;
-  if (l->flags & NOTDISPLAYED)
-    return 0;
+  FL_BLINE* l = (FL_BLINE*)item;
+  if (l->flags & NOTDISPLAYED) return 0;
 
   int hmax = 2; // use 2 to insure we don't return a zero!
 
@@ -418,73 +368,44 @@ int Fl_Browser::item_height(void *item) const {
     // For blank lines set the height to exactly 1 line!
     fl_font(textfont(), textsize());
     int hh = fl_height();
-    if (hh > hmax)
-      hmax = hh;
+    if (hh > hmax) hmax = hh;
   } else {
-    const int *i = column_widths();
+    const int* i = column_widths();
     // do each column separately as they may all set different fonts:
-    for (char *str = l->txt; str && *str; str++) {
+    for (char* str = l->txt; str && *str; str++) {
       Fl_Font font = textfont(); // default font
       int tsize = textsize();    // default size
-      if (format_char()) {       // can be NULL
-        while (*str == format_char() && *str++ && *str != format_char()) {
+      if ( format_char() ) {     // can be NULL
+        while (*str==format_char() && *str++ && *str!=format_char()) {
           switch (*str++) {
-            case 'l':
-            case 'L':
-              tsize = 24;
-              break;
-            case 'm':
-            case 'M':
-              tsize = 18;
-              break;
-            case 's':
-              tsize = 11;
-              break;
-            case 'b':
-              font = (Fl_Font)(font | FL_BOLD);
-              break;
-            case 'i':
-              font = (Fl_Font)(font | FL_ITALIC);
-              break;
-            case 'f':
-            case 't':
-              font = FL_COURIER;
-              break;
-            case 'B':
-            case 'C':
-              while (isdigit(*str & 255))
-                str++;
-              break; // skip a color number
-            case 'F':
-              font = (Fl_Font)strtol(str, &str, 10);
-              break;
-            case 'S':
-              tsize = strtol(str, &str, 10);
-              break;
-            case '.':
-              goto END_FORMAT;
+          case 'l': case 'L': tsize = 24; break;
+          case 'm': case 'M': tsize = 18; break;
+          case 's': tsize = 11; break;
+          case 'b': font = (Fl_Font)(font|FL_BOLD); break;
+          case 'i': font = (Fl_Font)(font|FL_ITALIC); break;
+          case 'f': case 't': font = FL_COURIER; break;
+          case 'B':
+          case 'C': while (isdigit(*str & 255)) str++; break; // skip a color number
+          case 'F': font = (Fl_Font)strtol(str,&str,10); break;
+          case 'S': tsize = strtol(str,&str,10); break;
+          case '.': goto END_FORMAT;
           }
         }
       }
-    END_FORMAT:
-      char *ptr = str;
-      if (ptr && *i++)
-        str = strchr(str, column_char());
-      else
-        str = NULL;
-      if ((!str && *ptr) || (str && ptr < str)) {
-        fl_font(font, tsize);
-        int hh = fl_height();
-        if (hh > hmax)
-          hmax = hh;
+      END_FORMAT:
+      char* ptr = str;
+      if (ptr && *i++) str = strchr(str, column_char());
+      else str = NULL;
+      if((!str && *ptr) || (str && ptr < str)) {
+        fl_font(font, tsize); int hh = fl_height();
+        if (hh > hmax) hmax = hh;
       }
-      if (!str || !*str)
-        break;
+      if (!str || !*str) break;
     }
   }
 
-  if (l->icon && (l->icon->h() + 2) > hmax) {
-    hmax = l->icon->h() + 2; // leave 2px above/below
+  if (l->icon && (l->icon->h()+2)>hmax) {
+    hmax = l->icon->h() + 2;    // leave 2px above/below
   }
   return hmax; // previous version returned hmax+2!
 }
@@ -498,17 +419,16 @@ int Fl_Browser::item_height(void *item) const {
        incr_height(), full_height()
 */
 int Fl_Browser::item_width(void *item) const {
-  FL_BLINE *l = (FL_BLINE *)item;
-  char *str = l->txt;
-  const int *i = column_widths();
+  FL_BLINE* l=(FL_BLINE*)item;
+  char* str = l->txt;
+  const int* i = column_widths();
   int ww = 0;
 
   while (*i) { // add up all tab-separated fields
-    char *e;
+    char* e;
     e = strchr(str, column_char());
-    if (!e)
-      break; // last one occupied by text
-    str = e + 1;
+    if (!e) break; // last one occupied by text
+    str = e+1;
     ww += *i++;
   }
 
@@ -517,56 +437,33 @@ int Fl_Browser::item_width(void *item) const {
   Fl_Font font = textfont();
   int done = 0;
 
-  if (format_char()) { // can be NULL
+  if ( format_char() ) {        // can be NULL
     while (*str == format_char_ && str[1] && str[1] != format_char_) {
-      str++;
+      str ++;
       switch (*str++) {
-        case 'l':
-        case 'L':
-          tsize = 24;
-          break;
-        case 'm':
-        case 'M':
-          tsize = 18;
-          break;
-        case 's':
-          tsize = 11;
-          break;
-        case 'b':
-          font = (Fl_Font)(font | FL_BOLD);
-          break;
-        case 'i':
-          font = (Fl_Font)(font | FL_ITALIC);
-          break;
-        case 'f':
-        case 't':
-          font = FL_COURIER;
-          break;
-        case 'B':
-        case 'C':
-          while (isdigit(*str & 255))
-            str++;
-          break; // skip a color number
-        case 'F':
-          font = (Fl_Font)strtol(str, &str, 10);
-          break;
-        case 'S':
-          tsize = strtol(str, &str, 10);
-          break;
-        case '.':
-          done = 1;
-          break;
+      case 'l': case 'L': tsize = 24; break;
+      case 'm': case 'M': tsize = 18; break;
+      case 's': tsize = 11; break;
+      case 'b': font = (Fl_Font)(font|FL_BOLD); break;
+      case 'i': font = (Fl_Font)(font|FL_ITALIC); break;
+      case 'f': case 't': font = FL_COURIER; break;
+      case 'B':
+      case 'C': while (isdigit(*str & 255)) str++; break; // skip a color number
+      case 'F': font = (Fl_Font)strtol(str, &str, 10); break;
+      case 'S': tsize = strtol(str, &str, 10); break;
+      case '.':
+        done = 1;
+        break;
       }
 
-      if (done)
-        break;
+    if (done)
+      break;
     }
     if (*str == format_char_ && str[1])
-      str++;
+      str ++;
   }
 
-  if (ww == 0 && l->icon)
-    ww = l->icon->w();
+  if (ww==0 && l->icon) ww = l->icon->w();
 
   fl_font(font, tsize);
   return ww + int(fl_width(str)) + 6;
@@ -592,7 +489,7 @@ int Fl_Browser::full_height() const {
        incr_height(), full_height()
 */
 int Fl_Browser::incr_height() const {
-  return textsize() + 2;
+  return textsize()+2;
 }
 
 /**
@@ -602,31 +499,26 @@ int Fl_Browser::incr_height() const {
   \param[in] item The item to be drawn
   \param[in] X,Y,W,H position and size.
 */
-void Fl_Browser::item_draw(void *item, int X, int Y, int W, int H) const {
-  FL_BLINE *l = (FL_BLINE *)item;
-  char *str = l->txt;
-  const int *i = column_widths();
+void Fl_Browser::item_draw(void* item, int X, int Y, int W, int H) const {
+  FL_BLINE* l = (FL_BLINE*)item;
+  char* str = l->txt;
+  const int* i = column_widths();
 
-  bool firstLoop = true; // for icon
-  while (W > 6) {        // do each tab-separated field
-    int w1 = W;          // width for this field
-    char *e = 0;         // pointer to end of field or null if none
-    if (*i) {            // find end of field and temporarily replace with 0
+  bool firstLoop = true;        // for icon
+  while (W > 6) {       // do each tab-separated field
+    int w1 = W; // width for this field
+    char* e = 0; // pointer to end of field or null if none
+    if (*i) { // find end of field and temporarily replace with 0
       e = strchr(str, column_char());
-      if (e) {
-        *e = 0;
-        w1 = *i++;
-      }
+      if (e) {*e = 0; w1 = *i++;}
     }
     // Icon drawing code
     if (firstLoop) {
       firstLoop = false;
       if (l->icon) {
-        l->icon->draw(X + 2, Y + 1); // leave 2px left, 1px above
-        int iconw = l->icon->w() + 2;
-        X += iconw;
-        W -= iconw;
-        w1 -= iconw;
+        l->icon->draw(X+2,Y+1); // leave 2px left, 1px above
+        int iconw = l->icon->w()+2;
+        X += iconw; W -= iconw; w1 -= iconw;
       }
     }
     int tsize = textsize();
@@ -637,69 +529,48 @@ void Fl_Browser::item_draw(void *item, int X, int Y, int W, int H) const {
     //#if defined(__GNUC__)
     //#warning FIXME This maybe needs to be more UTF8 aware now...?
     //#endif /*__GNUC__*/
-    if (format_char()) { // can be NULL
+    if ( format_char() ) {      // can be NULL
       while (*str == format_char() && *++str && *str != format_char()) {
         switch (*str++) {
-          case 'l':
-          case 'L':
-            tsize = 24;
-            break;
-          case 'm':
-          case 'M':
-            tsize = 18;
-            break;
-          case 's':
-            tsize = 11;
-            break;
-          case 'b':
-            font = (Fl_Font)(font | FL_BOLD);
-            break;
-          case 'i':
-            font = (Fl_Font)(font | FL_ITALIC);
-            break;
-          case 'f':
-          case 't':
-            font = FL_COURIER;
-            break;
-          case 'c':
-            talign = FL_ALIGN_CENTER;
-            break;
-          case 'r':
-            talign = FL_ALIGN_RIGHT;
-            break;
-          case 'B':
-            if (!(l->flags & SELECTED)) {
-              fl_color((Fl_Color)strtoul(str, &str, 10));
-              fl_rectf(X, Y, w1, H);
-            } else
-              while (isdigit(*str & 255))
-                str++; // skip digits
-            break;
-          case 'C':
-            lcol = (Fl_Color)strtoul(str, &str, 10);
-            break;
-          case 'F':
-            font = (Fl_Font)strtol(str, &str, 10);
-            break;
-          case 'N':
-            lcol = FL_INACTIVE_COLOR;
-            break;
-          case 'S':
-            tsize = strtol(str, &str, 10);
-            break;
-          case '-':
-            fl_color(FL_DARK3);
-            fl_line(X + 3, Y + H / 2, X + w1 - 3, Y + H / 2);
-            fl_color(FL_LIGHT3);
-            fl_line(X + 3, Y + H / 2 + 1, X + w1 - 3, Y + H / 2 + 1);
-            break;
-          case 'u':
-          case '_':
-            fl_color(lcol);
-            fl_line(X + 3, Y + H - 1, X + w1 - 3, Y + H - 1);
-            break;
-          case '.':
-            goto BREAK;
+        case 'l': case 'L': tsize = 24; break;
+        case 'm': case 'M': tsize = 18; break;
+        case 's': tsize = 11; break;
+        case 'b': font = (Fl_Font)(font|FL_BOLD); break;
+        case 'i': font = (Fl_Font)(font|FL_ITALIC); break;
+        case 'f': case 't': font = FL_COURIER; break;
+        case 'c': talign = FL_ALIGN_CENTER; break;
+        case 'r': talign = FL_ALIGN_RIGHT; break;
+        case 'B':
+          if (!(l->flags & SELECTED)) {
+            fl_color((Fl_Color)strtoul(str, &str, 10));
+            fl_rectf(X, Y, w1, H);
+          } else while (isdigit(*str & 255)) str++; // skip digits
+          break;
+        case 'C':
+          lcol = (Fl_Color)strtoul(str, &str, 10);
+          break;
+        case 'F':
+          font = (Fl_Font)strtol(str, &str, 10);
+          break;
+        case 'N':
+          lcol = FL_INACTIVE_COLOR;
+          break;
+        case 'S':
+          tsize = strtol(str, &str, 10);
+          break;
+        case '-':
+          fl_color(FL_DARK3);
+          fl_line(X+3, Y+H/2, X+w1-3, Y+H/2);
+          fl_color(FL_LIGHT3);
+          fl_line(X+3, Y+H/2+1, X+w1-3, Y+H/2+1);
+          break;
+        case 'u':
+        case '_':
+          fl_color(lcol);
+          fl_line(X+3, Y+H-1, X+w1-3, Y+H-1);
+          break;
+        case '.':
+          goto BREAK;
         }
       }
     }
@@ -707,16 +578,14 @@ void Fl_Browser::item_draw(void *item, int X, int Y, int W, int H) const {
     fl_font(font, tsize);
     if (l->flags & SELECTED)
       lcol = fl_contrast(lcol, selection_color());
-    if (!active_r())
-      lcol = fl_inactive(lcol);
+    if (!active_r()) lcol = fl_inactive(lcol);
     fl_color(lcol);
-    fl_draw(str, X + 3, Y, w1 - 6, H, e ? Fl_Align(talign | FL_ALIGN_CLIP) : talign, 0, 0);
-    if (!e)
-      break;            // no more fields...
+    fl_draw(str, X+3, Y, w1-6, H, e ? Fl_Align(talign|FL_ALIGN_CLIP) : talign, 0, 0);
+    if (!e) break; // no more fields...
     *e = column_char(); // put the separator back
     X += w1;
     W -= w1;
-    str = e + 1;
+    str = e+1;
   }
 }
 
@@ -728,7 +597,7 @@ static const int no_columns[1] = {0};
   \param[in] L label string, may be NULL.
 */
 Fl_Browser::Fl_Browser(int X, int Y, int W, int H, const char *L)
-  : Fl_Browser_(X, Y, W, H, L) {
+: Fl_Browser_(X, Y, W, H, L) {
   column_widths_ = no_columns;
   lines = 0;
   full_height_ = 0;
@@ -745,36 +614,26 @@ Fl_Browser::Fl_Browser(int X, int Y, int W, int H, const char *L)
   \see topline(), middleline(), bottomline()
 */
 void Fl_Browser::lineposition(int line, Fl_Line_Position pos) {
-  if (line < 1)
-    line = 1;
-  if (line > lines)
-    line = lines;
+  if (line<1) line = 1;
+  if (line>lines) line = lines;
   int p = 0;
 
-  FL_BLINE *l;
-  for (l = first; l && line > 1; l = l->next) {
-    line--;
-    p += item_height(l);
+  FL_BLINE* l;
+  for (l=first; l && line>1; l = l->next) {
+    line--; p += item_height(l);
   }
-  if (l && (pos == BOTTOM))
-    p += item_height(l);
+  if (l && (pos == BOTTOM)) p += item_height (l);
 
   int final = p, X, Y, W, H;
   bbox(X, Y, W, H);
 
-  switch (pos) {
-    case TOP:
-      break;
-    case BOTTOM:
-      final -= H;
-      break;
-    case MIDDLE:
-      final -= H / 2;
-      break;
+  switch(pos) {
+    case TOP: break;
+    case BOTTOM: final -= H; break;
+    case MIDDLE: final -= H/2; break;
   }
 
-  if (final > (full_height() - H))
-    final = full_height() - H;
+  if (final > (full_height() - H)) final = full_height() -H;
   position(final);
 }
 
@@ -809,9 +668,8 @@ void Fl_Browser::textsize(Fl_Fontsize newSize) {
   Fl_Browser_::textsize(newSize);
   new_list();
   full_height_ = 0;
-  if (lines == 0)
-    return;
-  for (FL_BLINE *itm = (FL_BLINE *)item_first(); itm; itm = (FL_BLINE *)item_next(itm)) {
+  if (lines == 0) return;
+  for (FL_BLINE* itm=(FL_BLINE *)item_first(); itm; itm=(FL_BLINE *)item_next(itm)) {
     full_height_ += item_height(itm);
   }
 }
@@ -821,8 +679,8 @@ void Fl_Browser::textsize(Fl_Fontsize newSize) {
   \see add(), insert(), remove(), swap(int,int), clear()
 */
 void Fl_Browser::clear() {
-  for (FL_BLINE *l = first; l;) {
-    FL_BLINE *n = l->next;
+  for (FL_BLINE* l = first; l;) {
+    FL_BLINE* n = l->next;
     free(l);
     l = n;
   }
@@ -845,9 +703,9 @@ void Fl_Browser::clear() {
   \param[in] d Optional user data() for the item (0 if unspecified)
   \see add(), insert(), remove(), swap(int,int), clear()
 */
-void Fl_Browser::add(const char *newtext, void *d) {
-  insert(lines + 1, newtext, d);
-  // Fl_Browser_::display(last);
+void Fl_Browser::add(const char* newtext, void* d) {
+  insert(lines+1, newtext, d);
+  //Fl_Browser_::display(last);
 }
 
 /**
@@ -857,9 +715,8 @@ void Fl_Browser::add(const char *newtext, void *d) {
   \param[in] line The line number of the item whose text is returned. (1 based)
   \returns The text string (can be NULL)
 */
-const char *Fl_Browser::text(int line) const {
-  if (line < 1 || line > lines)
-    return 0;
+const char* Fl_Browser::text(int line) const {
+  if (line < 1 || line > lines) return 0;
   return find_line(line)->txt;
 }
 
@@ -871,9 +728,8 @@ const char *Fl_Browser::text(int line) const {
   \returns The user data pointer (can be NULL)
 
 */
-void *Fl_Browser::data(int line) const {
-  if (line < 1 || line > lines)
-    return 0;
+void* Fl_Browser::data(int line) const {
+  if (line < 1 || line > lines) return 0;
   return find_line(line)->data;
 }
 
@@ -886,8 +742,7 @@ void *Fl_Browser::data(int line) const {
   \see select(), selected(), value(), item_select(), item_selected()
 */
 int Fl_Browser::select(int line, int val) {
-  if (line < 1 || line > lines)
-    return 0;
+  if (line < 1 || line > lines) return 0;
   return Fl_Browser_::select(find_line(line), val);
 }
 
@@ -898,8 +753,7 @@ int Fl_Browser::select(int line, int val) {
   \see select(), selected(), value(), item_select(), item_selected()
   */
 int Fl_Browser::selected(int line) const {
-  if (line < 1 || line > lines)
-    return 0;
+  if (line < 1 || line > lines) return 0;
   return find_line(line)->flags & SELECTED;
 }
 
@@ -912,12 +766,11 @@ int Fl_Browser::selected(int line) const {
   \see show(int), hide(int), display(), visible(), make_visible()
 */
 void Fl_Browser::show(int line) {
-  FL_BLINE *t = find_line(line);
+  FL_BLINE* t = find_line(line);
   if (t->flags & NOTDISPLAYED) {
     t->flags &= ~NOTDISPLAYED;
     full_height_ += item_height(t);
-    if (Fl_Browser_::displayed(t))
-      redraw();
+    if (Fl_Browser_::displayed(t)) redraw();
   }
 }
 
@@ -931,12 +784,11 @@ void Fl_Browser::show(int line) {
   \see show(int), hide(int), display(), visible(), make_visible()
 */
 void Fl_Browser::hide(int line) {
-  FL_BLINE *t = find_line(line);
+  FL_BLINE* t = find_line(line);
   if (!(t->flags & NOTDISPLAYED)) {
     full_height_ -= item_height(t);
     t->flags |= NOTDISPLAYED;
-    if (Fl_Browser_::displayed(t))
-      redraw();
+    if (Fl_Browser_::displayed(t)) redraw();
   }
 }
 
@@ -947,12 +799,8 @@ void Fl_Browser::hide(int line) {
   \see show(int), hide(int), display(), visible(), make_visible()
 */
 void Fl_Browser::display(int line, int val) {
-  if (line < 1 || line > lines)
-    return;
-  if (val)
-    show(line);
-  else
-    hide(line);
+  if (line < 1 || line > lines) return;
+  if (val) show(line); else hide(line);
 }
 
 /**
@@ -962,9 +810,8 @@ void Fl_Browser::display(int line, int val) {
   \see show(int), hide(int), display(), visible(), make_visible()
 */
 int Fl_Browser::visible(int line) const {
-  if (line < 1 || line > lines)
-    return 0;
-  return !(find_line(line)->flags & NOTDISPLAYED);
+  if (line < 1 || line > lines) return 0;
+  return !(find_line(line)->flags&NOTDISPLAYED);
 }
 
 /**
@@ -984,62 +831,37 @@ int Fl_Browser::value() const {
 */
 void Fl_Browser::swap(FL_BLINE *a, FL_BLINE *b) {
 
-  if (a == b || !a || !b)
-    return; // nothing to do
+  if ( a == b || !a || !b) return;          // nothing to do
   swapping(a, b);
-  FL_BLINE *aprev = a->prev;
-  FL_BLINE *anext = a->next;
-  FL_BLINE *bprev = b->prev;
-  FL_BLINE *bnext = b->next;
-  if (b->prev == a) { // A ADJACENT TO B
-    if (aprev)
-      aprev->next = b;
-    else
-      first = b;
-    b->next = a;
-    a->next = bnext;
-    b->prev = aprev;
-    a->prev = b;
-    if (bnext)
-      bnext->prev = a;
-    else
-      last = a;
-  } else if (a->prev == b) { // B ADJACENT TO A
-    if (bprev)
-      bprev->next = a;
-    else
-      first = a;
-    a->next = b;
-    b->next = anext;
-    a->prev = bprev;
-    b->prev = a;
-    if (anext)
-      anext->prev = b;
-    else
-      last = b;
-  } else { // A AND B NOT ADJACENT
-    // handle prev's
-    b->prev = aprev;
-    if (anext)
-      anext->prev = b;
-    else
-      last = b;
-    a->prev = bprev;
-    if (bnext)
-      bnext->prev = a;
-    else
-      last = a;
-    // handle next's
-    if (aprev)
-      aprev->next = b;
-    else
-      first = b;
-    b->next = anext;
-    if (bprev)
-      bprev->next = a;
-    else
-      first = a;
-    a->next = bnext;
+  FL_BLINE *aprev  = a->prev;
+  FL_BLINE *anext  = a->next;
+  FL_BLINE *bprev  = b->prev;
+  FL_BLINE *bnext  = b->next;
+  if ( b->prev == a ) {                 // A ADJACENT TO B
+     if ( aprev ) aprev->next = b; else first = b;
+     b->next = a;
+     a->next = bnext;
+     b->prev = aprev;
+     a->prev = b;
+     if ( bnext ) bnext->prev = a; else last = a;
+  } else if ( a->prev == b ) {          // B ADJACENT TO A
+     if ( bprev ) bprev->next = a; else first = a;
+     a->next = b;
+     b->next = anext;
+     a->prev = bprev;
+     b->prev = a;
+     if ( anext ) anext->prev = b; else last = b;
+  } else {                              // A AND B NOT ADJACENT
+     // handle prev's
+     b->prev = aprev;
+     if ( anext ) anext->prev = b; else last = b;
+     a->prev = bprev;
+     if ( bnext ) bnext->prev = a; else last = a;
+     // handle next's
+     if ( aprev ) aprev->next = b; else first = b;
+     b->next = anext;
+     if ( bprev ) bprev->next = a; else first = a;
+     a->next = bnext;
   }
   // Disable cache -- we played around with positions
   cacheline = 0;
@@ -1053,11 +875,10 @@ void Fl_Browser::swap(FL_BLINE *a, FL_BLINE *b) {
   \see swap(int,int), item_swap()
 */
 void Fl_Browser::swap(int a, int b) {
-  if (a < 1 || a > lines || b < 1 || b > lines)
-    return;
-  FL_BLINE *ai = find_line(a);
-  FL_BLINE *bi = find_line(b);
-  swap(ai, bi);
+  if (a < 1 || a > lines || b < 1 || b > lines) return;
+  FL_BLINE* ai = find_line(a);
+  FL_BLINE* bi = find_line(b);
+  swap(ai,bi);
 }
 
 /**
@@ -1068,31 +889,28 @@ void Fl_Browser::swap(int a, int b) {
   \param[in] icon The image icon to be assigned to the \p line.
                   If NULL, any previous icon is removed.
 */
-void Fl_Browser::icon(int line, Fl_Image *icon) {
+void Fl_Browser::icon(int line, Fl_Image* icon) {
 
-  if (line < 1 || line > lines)
-    return;
+  if (line<1 || line > lines) return;
 
-  FL_BLINE *bl = find_line(line);
+  FL_BLINE* bl = find_line(line);
 
-  int old_h = bl->icon ? bl->icon->h() + 2 : 0; // init with *old* icon height
+  int old_h = bl->icon ? bl->icon->h()+2 : 0;   // init with *old* icon height
   bl->icon = 0;                                 // remove icon, if any
   int th = item_height(bl);                     // height of text only
-  int new_h = icon ? icon->h() + 2 : 0;         // init with *new* icon height
-  if (th > old_h)
-    old_h = th;
-  if (th > new_h)
-    new_h = th;
+  int new_h = icon ? icon->h()+2 : 0;           // init with *new* icon height
+  if (th > old_h) old_h = th;
+  if (th > new_h) new_h = th;
   int dh = new_h - old_h;
-  full_height_ += dh; // do this *always*
+  full_height_ += dh;                           // do this *always*
 
-  bl->icon = icon; // set new icon
-  if (dh > 0) {
-    redraw(); // icon larger than item? must redraw widget
+  bl->icon = icon;                              // set new icon
+  if (dh>0) {
+    redraw();                                   // icon larger than item? must redraw widget
   } else {
-    redraw_line(bl); // icon same or smaller? can redraw just this line
+    redraw_line(bl);                            // icon same or smaller? can redraw just this line
   }
-  replacing(bl, bl); // recalc Fl_Browser_::max_width et al
+  replacing(bl,bl);                             // recalc Fl_Browser_::max_width et al
 }
 
 /**
@@ -1101,9 +919,9 @@ void Fl_Browser::icon(int line, Fl_Image *icon) {
   \param[in] line The line whose icon is returned.
   \returns The icon defined, or NULL if none.
 */
-Fl_Image *Fl_Browser::icon(int line) const {
-  FL_BLINE *l = find_line(line);
-  return (l ? l->icon : NULL);
+Fl_Image* Fl_Browser::icon(int line) const {
+  FL_BLINE* l = find_line(line);
+  return(l ? l->icon : NULL);
 }
 
 /**
@@ -1112,23 +930,26 @@ Fl_Image *Fl_Browser::icon(int line) const {
   \param[in] line The line whose icon is to be removed.
 */
 void Fl_Browser::remove_icon(int line) {
-  icon(line, 0);
+  icon(line,0);
 }
 
 
-Fl_Hold_Browser::Fl_Hold_Browser(int X, int Y, int W, int H, const char *L)
-  : Fl_Browser(X, Y, W, H, L) {
+Fl_Hold_Browser::Fl_Hold_Browser(int X,int Y,int W,int H,const char *L)
+: Fl_Browser(X,Y,W,H,L)
+{
   type(FL_HOLD_BROWSER);
 }
 
 
-Fl_Multi_Browser::Fl_Multi_Browser(int X, int Y, int W, int H, const char *L)
-  : Fl_Browser(X, Y, W, H, L) {
+Fl_Multi_Browser::Fl_Multi_Browser(int X,int Y,int W,int H,const char *L)
+: Fl_Browser(X,Y,W,H,L)
+{
   type(FL_MULTI_BROWSER);
 }
 
 
-Fl_Select_Browser::Fl_Select_Browser(int X, int Y, int W, int H, const char *L)
-  : Fl_Browser(X, Y, W, H, L) {
+Fl_Select_Browser::Fl_Select_Browser(int X,int Y,int W,int H,const char *L)
+: Fl_Browser(X,Y,W,H,L)
+{
   type(FL_SELECT_BROWSER);
 }

@@ -22,26 +22,20 @@
 #include <ApplicationServices/ApplicationServices.h>
 
 
-Fl_Quartz_Image_Surface_Driver::Fl_Quartz_Image_Surface_Driver(int w, int h, int high_res,
-                                                               Fl_Offscreen off)
-  : Fl_Image_Surface_Driver(w, h, high_res, off) {
+Fl_Quartz_Image_Surface_Driver::Fl_Quartz_Image_Surface_Driver(int w, int h, int high_res, Fl_Offscreen off) : Fl_Image_Surface_Driver(w, h, high_res, off) {
   int W = w, H = h;
   float s = 1;
   if (high_res) {
     s = Fl_Graphics_Driver::default_driver().scale();
     Fl_Window *cw = Fl_Window::current();
-    if (cw && Fl_Cocoa_Window_Driver::driver(cw)->mapped_to_retina())
-      s *= 2;
-    W *= s;
-    H *= s;
+    if (cw && Fl_Cocoa_Window_Driver::driver(cw)->mapped_to_retina()) s *= 2;
+    W *= s; H *= s;
   }
   CGColorSpaceRef lut = CGColorSpaceCreateDeviceRGB();
-  offscreen = off ? off
-                  : CGBitmapContextCreate(calloc(W * H, 4), W, H, 8, W * 4, lut,
-                                          kCGImageAlphaPremultipliedLast);
+  offscreen = off ? off : CGBitmapContextCreate(calloc(W*H,4), W, H, 8, W*4, lut, kCGImageAlphaPremultipliedLast);
   CGColorSpaceRelease(lut);
   driver(new Fl_Quartz_Graphics_Driver);
-  CGContextTranslateCTM(offscreen, 0.5 * s, -0.5 * s); // as when drawing to a window
+  CGContextTranslateCTM(offscreen, 0.5*s, -0.5*s); // as when drawing to a window
   if (high_res) {
     CGContextScaleCTM(offscreen, s, s);
     driver()->scale(s);
@@ -51,7 +45,7 @@ Fl_Quartz_Image_Surface_Driver::Fl_Quartz_Image_Surface_Driver(int w, int h, int
   CGContextScaleCTM(offscreen, 1.0f, -1.0f);
   CGContextSaveGState(offscreen);
   CGContextSetRGBFillColor(offscreen, 1, 1, 1, 0);
-  CGContextFillRect(offscreen, CGRectMake(0, 0, w, h));
+  CGContextFillRect(offscreen, CGRectMake(0,0,w,h));
 }
 
 Fl_Quartz_Image_Surface_Driver::~Fl_Quartz_Image_Surface_Driver() {
@@ -68,8 +62,7 @@ void Fl_Quartz_Image_Surface_Driver::set_current() {
   pre_window = fl_window;
   driver()->gc(offscreen);
   fl_window = 0;
-  ((Fl_Quartz_Graphics_Driver *)driver())
-      ->high_resolution(CGBitmapContextGetWidth(offscreen) > width);
+  ((Fl_Quartz_Graphics_Driver*)driver())->high_resolution( CGBitmapContextGetWidth(offscreen) > (size_t)width );
 }
 
 void Fl_Quartz_Image_Surface_Driver::translate(int x, int y) {
@@ -83,21 +76,22 @@ void Fl_Quartz_Image_Surface_Driver::untranslate() {
   CGContextRestoreGState(offscreen);
 }
 
-Fl_RGB_Image *Fl_Quartz_Image_Surface_Driver::image() {
+Fl_RGB_Image* Fl_Quartz_Image_Surface_Driver::image()
+{
   CGContextFlush(offscreen);
   int W = CGBitmapContextGetWidth(offscreen);
   int H = CGBitmapContextGetHeight(offscreen);
   int bpr = CGBitmapContextGetBytesPerRow(offscreen);
-  int bpp = CGBitmapContextGetBitsPerPixel(offscreen) / 8;
-  uchar *base = (uchar *)CGBitmapContextGetData(offscreen);
+  int bpp = CGBitmapContextGetBitsPerPixel(offscreen)/8;
+  uchar *base = (uchar*)CGBitmapContextGetData(offscreen);
   int idx, idy;
   uchar *pdst, *psrc;
   unsigned char *data = new uchar[W * H * 3];
-  for (idy = 0, pdst = data; idy < H; idy++) {
-    for (idx = 0, psrc = base + idy * bpr; idx < W; idx++, psrc += bpp, pdst += 3) {
-      pdst[0] = psrc[0]; // R
-      pdst[1] = psrc[1]; // G
-      pdst[2] = psrc[2]; // B
+  for (idy = 0, pdst = data; idy < H; idy ++) {
+    for (idx = 0, psrc = base + idy * bpr; idx < W; idx ++, psrc += bpp, pdst += 3) {
+      pdst[0] = psrc[0];  // R
+      pdst[1] = psrc[1];  // G
+      pdst[2] = psrc[2];  // B
     }
   }
   Fl_RGB_Image *image = new Fl_RGB_Image(data, W, H);
@@ -105,7 +99,8 @@ Fl_RGB_Image *Fl_Quartz_Image_Surface_Driver::image() {
   return image;
 }
 
-void Fl_Quartz_Image_Surface_Driver::end_current() {
+void Fl_Quartz_Image_Surface_Driver::end_current()
+{
   fl_window = pre_window;
   Fl_Surface_Device::end_current();
 }

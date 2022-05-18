@@ -22,18 +22,18 @@
 typedef struct {
   struct jpeg_decomp_master pub; /* public fields */
 
-  int pass_number; /* # of passes completed */
+  int pass_number;		/* # of passes completed */
 
   boolean using_merged_upsample; /* TRUE if using merged upsample/cconvert */
 
   /* Saved references to initialized quantizer modules,
    * in case we need to switch modes.
    */
-  struct jpeg_color_quantizer *quantizer_1pass;
-  struct jpeg_color_quantizer *quantizer_2pass;
+  struct jpeg_color_quantizer * quantizer_1pass;
+  struct jpeg_color_quantizer * quantizer_2pass;
 } my_decomp_master;
 
-typedef my_decomp_master *my_master_ptr;
+typedef my_decomp_master * my_master_ptr;
 
 
 /*
@@ -42,7 +42,8 @@ typedef my_decomp_master *my_master_ptr;
  */
 
 LOCAL(boolean)
-use_merged_upsample(j_decompress_ptr cinfo) {
+use_merged_upsample (j_decompress_ptr cinfo)
+{
 #ifdef UPSAMPLE_MERGING_SUPPORTED
   /* Merging is the equivalent of plain box-filter upsampling. */
   /* The following condition is only needed if fancy shall select
@@ -58,14 +59,20 @@ use_merged_upsample(j_decompress_ptr cinfo) {
   if (cinfo->CCIR601_sampling)
     return FALSE;
   /* jdmerge.c only supports YCC=>RGB color conversion */
-  if ((cinfo->jpeg_color_space != JCS_YCbCr && cinfo->jpeg_color_space != JCS_BG_YCC) ||
-      cinfo->num_components != 3 || cinfo->out_color_space != JCS_RGB ||
-      cinfo->out_color_components != RGB_PIXELSIZE || cinfo->color_transform)
+  if ((cinfo->jpeg_color_space != JCS_YCbCr &&
+       cinfo->jpeg_color_space != JCS_BG_YCC) ||
+      cinfo->num_components != 3 ||
+      cinfo->out_color_space != JCS_RGB ||
+      cinfo->out_color_components != RGB_PIXELSIZE ||
+      cinfo->color_transform)
     return FALSE;
   /* and it only handles 2h1v or 2h2v sampling ratios */
-  if (cinfo->comp_info[0].h_samp_factor != 2 || cinfo->comp_info[1].h_samp_factor != 1 ||
-      cinfo->comp_info[2].h_samp_factor != 1 || cinfo->comp_info[0].v_samp_factor > 2 ||
-      cinfo->comp_info[1].v_samp_factor != 1 || cinfo->comp_info[2].v_samp_factor != 1)
+  if (cinfo->comp_info[0].h_samp_factor != 2 ||
+      cinfo->comp_info[1].h_samp_factor != 1 ||
+      cinfo->comp_info[2].h_samp_factor != 1 ||
+      cinfo->comp_info[0].v_samp_factor >  2 ||
+      cinfo->comp_info[1].v_samp_factor != 1 ||
+      cinfo->comp_info[2].v_samp_factor != 1)
     return FALSE;
   /* furthermore, it doesn't work if we've scaled the IDCTs differently */
   if (cinfo->comp_info[0].DCT_h_scaled_size != cinfo->min_DCT_h_scaled_size ||
@@ -76,7 +83,7 @@ use_merged_upsample(j_decompress_ptr cinfo) {
       cinfo->comp_info[2].DCT_v_scaled_size != cinfo->min_DCT_v_scaled_size)
     return FALSE;
   /* ??? also need to test for upsample-time rescaling, when & if supported */
-  return TRUE; /* by golly, it'll work... */
+  return TRUE;			/* by golly, it'll work... */
 #else
   return FALSE;
 #endif
@@ -91,7 +98,7 @@ use_merged_upsample(j_decompress_ptr cinfo) {
  */
 
 GLOBAL(void)
-jpeg_calc_output_dimensions(j_decompress_ptr cinfo)
+jpeg_calc_output_dimensions (j_decompress_ptr cinfo)
 /* Do computations that are needed before master selection phase.
  * This function is used for full decompression.
  */
@@ -115,40 +122,45 @@ jpeg_calc_output_dimensions(j_decompress_ptr cinfo)
    * This saves time if the upsampler gets to use 1:1 scaling.
    * Note this code adapts subsampling ratios which are powers of 2.
    */
-  for (ci = 0, compptr = cinfo->comp_info; ci < cinfo->num_components; ci++, compptr++) {
+  for (ci = 0, compptr = cinfo->comp_info; ci < cinfo->num_components;
+       ci++, compptr++) {
     ssize = 1;
-    if (!cinfo->raw_data_out)
+    if (! cinfo->raw_data_out)
       while (cinfo->min_DCT_h_scaled_size * ssize <=
-                 (cinfo->do_fancy_upsampling ? DCTSIZE : DCTSIZE / 2) &&
-             (cinfo->max_h_samp_factor % (compptr->h_samp_factor * ssize * 2)) == 0) {
-        ssize = ssize * 2;
+	     (cinfo->do_fancy_upsampling ? DCTSIZE : DCTSIZE / 2) &&
+	     (cinfo->max_h_samp_factor % (compptr->h_samp_factor * ssize * 2)) ==
+	     0) {
+	ssize = ssize * 2;
       }
     compptr->DCT_h_scaled_size = cinfo->min_DCT_h_scaled_size * ssize;
     ssize = 1;
-    if (!cinfo->raw_data_out)
+    if (! cinfo->raw_data_out)
       while (cinfo->min_DCT_v_scaled_size * ssize <=
-                 (cinfo->do_fancy_upsampling ? DCTSIZE : DCTSIZE / 2) &&
-             (cinfo->max_v_samp_factor % (compptr->v_samp_factor * ssize * 2)) == 0) {
-        ssize = ssize * 2;
+	     (cinfo->do_fancy_upsampling ? DCTSIZE : DCTSIZE / 2) &&
+	     (cinfo->max_v_samp_factor % (compptr->v_samp_factor * ssize * 2)) ==
+	     0) {
+	ssize = ssize * 2;
       }
     compptr->DCT_v_scaled_size = cinfo->min_DCT_v_scaled_size * ssize;
 
     /* We don't support IDCT ratios larger than 2. */
     if (compptr->DCT_h_scaled_size > compptr->DCT_v_scaled_size * 2)
-      compptr->DCT_h_scaled_size = compptr->DCT_v_scaled_size * 2;
+	compptr->DCT_h_scaled_size = compptr->DCT_v_scaled_size * 2;
     else if (compptr->DCT_v_scaled_size > compptr->DCT_h_scaled_size * 2)
-      compptr->DCT_v_scaled_size = compptr->DCT_h_scaled_size * 2;
+	compptr->DCT_v_scaled_size = compptr->DCT_h_scaled_size * 2;
 
     /* Recompute downsampled dimensions of components;
      * application needs to know these if using raw downsampled data.
      */
     /* Size in samples, after IDCT scaling */
-    compptr->downsampled_width = (JDIMENSION)jdiv_round_up(
-        (long)cinfo->image_width * (long)(compptr->h_samp_factor * compptr->DCT_h_scaled_size),
-        (long)(cinfo->max_h_samp_factor * cinfo->block_size));
-    compptr->downsampled_height = (JDIMENSION)jdiv_round_up(
-        (long)cinfo->image_height * (long)(compptr->v_samp_factor * compptr->DCT_v_scaled_size),
-        (long)(cinfo->max_v_samp_factor * cinfo->block_size));
+    compptr->downsampled_width = (JDIMENSION)
+      jdiv_round_up((long) cinfo->image_width *
+		    (long) (compptr->h_samp_factor * compptr->DCT_h_scaled_size),
+		    (long) (cinfo->max_h_samp_factor * cinfo->block_size));
+    compptr->downsampled_height = (JDIMENSION)
+      jdiv_round_up((long) cinfo->image_height *
+		    (long) (compptr->v_samp_factor * compptr->DCT_v_scaled_size),
+		    (long) (cinfo->max_v_samp_factor * cinfo->block_size));
   }
 
 #endif /* IDCT_SCALING_SUPPORTED */
@@ -156,27 +168,28 @@ jpeg_calc_output_dimensions(j_decompress_ptr cinfo)
   /* Report number of components in selected colorspace. */
   /* Probably this should be in the color conversion module... */
   switch (cinfo->out_color_space) {
-    case JCS_GRAYSCALE:
-      cinfo->out_color_components = 1;
-      break;
-    case JCS_RGB:
-    case JCS_BG_RGB:
+  case JCS_GRAYSCALE:
+    cinfo->out_color_components = 1;
+    break;
+  case JCS_RGB:
+  case JCS_BG_RGB:
 #if RGB_PIXELSIZE != 3
-      cinfo->out_color_components = RGB_PIXELSIZE;
-      break;
+    cinfo->out_color_components = RGB_PIXELSIZE;
+    break;
 #endif /* else share code with YCbCr */
-    case JCS_YCbCr:
-    case JCS_BG_YCC:
-      cinfo->out_color_components = 3;
-      break;
-    case JCS_CMYK:
-    case JCS_YCCK:
-      cinfo->out_color_components = 4;
-      break;
-    default: /* else must be same colorspace as in file */
-      cinfo->out_color_components = cinfo->num_components;
+  case JCS_YCbCr:
+  case JCS_BG_YCC:
+    cinfo->out_color_components = 3;
+    break;
+  case JCS_CMYK:
+  case JCS_YCCK:
+    cinfo->out_color_components = 4;
+    break;
+  default:			/* else must be same colorspace as in file */
+    cinfo->out_color_components = cinfo->num_components;
   }
-  cinfo->output_components = (cinfo->quantize_colors ? 1 : cinfo->out_color_components);
+  cinfo->output_components = (cinfo->quantize_colors ? 1 :
+			      cinfo->out_color_components);
 
   /* See if upsampler will want to emit more than one row at a time */
   if (use_merged_upsample(cinfo))
@@ -220,23 +233,23 @@ jpeg_calc_output_dimensions(j_decompress_ptr cinfo)
  */
 
 LOCAL(void)
-prepare_range_limit_table(j_decompress_ptr cinfo)
+prepare_range_limit_table (j_decompress_ptr cinfo)
 /* Allocate and fill in the sample_range_limit table */
 {
-  JSAMPLE *table;
+  JSAMPLE * table;
   int i;
 
-  table = (JSAMPLE *)(*cinfo->mem->alloc_small)(
-      (j_common_ptr)cinfo, JPOOL_IMAGE, (RANGE_CENTER * 2 + MAXJSAMPLE + 1) * SIZEOF(JSAMPLE));
+  table = (JSAMPLE *) (*cinfo->mem->alloc_small) ((j_common_ptr) cinfo,
+    JPOOL_IMAGE, (RANGE_CENTER * 2 + MAXJSAMPLE + 1) * SIZEOF(JSAMPLE));
   /* First segment of range limit table: limit[x] = 0 for x < 0 */
   MEMZERO(table, RANGE_CENTER * SIZEOF(JSAMPLE));
-  table += RANGE_CENTER; /* allow negative subscripts of table */
+  table += RANGE_CENTER;	/* allow negative subscripts of table */
   cinfo->sample_range_limit = table;
   /* Main part of range limit table: limit[x] = x */
   for (i = 0; i <= MAXJSAMPLE; i++)
-    table[i] = (JSAMPLE)i;
+    table[i] = (JSAMPLE) i;
   /* End of range limit table: limit[x] = MAXJSAMPLE for x > MAXJSAMPLE */
-  for (; i <= MAXJSAMPLE + RANGE_CENTER; i++)
+  for (; i <=  MAXJSAMPLE + RANGE_CENTER; i++)
     table[i] = MAXJSAMPLE;
 }
 
@@ -253,8 +266,9 @@ prepare_range_limit_table(j_decompress_ptr cinfo)
  */
 
 LOCAL(void)
-master_selection(j_decompress_ptr cinfo) {
-  my_master_ptr master = (my_master_ptr)cinfo->master;
+master_selection (j_decompress_ptr cinfo)
+{
+  my_master_ptr master = (my_master_ptr) cinfo->master;
   boolean use_c_buffer;
   long samplesperrow;
   JDIMENSION jd_samplesperrow;
@@ -268,13 +282,14 @@ master_selection(j_decompress_ptr cinfo) {
   prepare_range_limit_table(cinfo);
 
   /* Sanity check on image dimensions */
-  if (cinfo->output_height <= 0 || cinfo->output_width <= 0 || cinfo->out_color_components <= 0)
+  if (cinfo->output_height <= 0 || cinfo->output_width <= 0 ||
+      cinfo->out_color_components <= 0)
     ERREXIT(cinfo, JERR_EMPTY_IMAGE);
 
   /* Width of an output scanline must be representable as JDIMENSION. */
-  samplesperrow = (long)cinfo->output_width * (long)cinfo->out_color_components;
-  jd_samplesperrow = (JDIMENSION)samplesperrow;
-  if ((long)jd_samplesperrow != samplesperrow)
+  samplesperrow = (long) cinfo->output_width * (long) cinfo->out_color_components;
+  jd_samplesperrow = (JDIMENSION) samplesperrow;
+  if ((long) jd_samplesperrow != samplesperrow)
     ERREXIT(cinfo, JERR_WIDTH_OVERFLOW);
 
   /* Initialize my private state */
@@ -285,7 +300,7 @@ master_selection(j_decompress_ptr cinfo) {
   master->quantizer_1pass = NULL;
   master->quantizer_2pass = NULL;
   /* No mode changes if not using buffered-image mode. */
-  if (!cinfo->quantize_colors || !cinfo->buffered_image) {
+  if (! cinfo->quantize_colors || ! cinfo->buffered_image) {
     cinfo->enable_1pass_quant = FALSE;
     cinfo->enable_external_quant = FALSE;
     cinfo->enable_2pass_quant = FALSE;
@@ -331,7 +346,7 @@ master_selection(j_decompress_ptr cinfo) {
   }
 
   /* Post-processing: in particular, color conversion first */
-  if (!cinfo->raw_data_out) {
+  if (! cinfo->raw_data_out) {
     if (master->using_merged_upsample) {
 #ifdef UPSAMPLE_MERGING_SUPPORTED
       jinit_merged_upsampler(cinfo); /* does color conversion too */
@@ -357,21 +372,22 @@ master_selection(j_decompress_ptr cinfo) {
   use_c_buffer = cinfo->inputctl->has_multiple_scans || cinfo->buffered_image;
   jinit_d_coef_controller(cinfo, use_c_buffer);
 
-  if (!cinfo->raw_data_out)
+  if (! cinfo->raw_data_out)
     jinit_d_main_controller(cinfo, FALSE /* never need full buffer here */);
 
   /* We can now tell the memory manager to allocate virtual arrays. */
-  (*cinfo->mem->realize_virt_arrays)((j_common_ptr)cinfo);
+  (*cinfo->mem->realize_virt_arrays) ((j_common_ptr) cinfo);
 
   /* Initialize input side of decompressor to consume first scan. */
-  (*cinfo->inputctl->start_input_pass)(cinfo);
+  (*cinfo->inputctl->start_input_pass) (cinfo);
 
 #ifdef D_MULTISCAN_FILES_SUPPORTED
   /* If jpeg_start_decompress will read the whole file, initialize
    * progress monitoring appropriately.  The input step is counted
    * as one pass.
    */
-  if (cinfo->progress != NULL && !cinfo->buffered_image && cinfo->inputctl->has_multiple_scans) {
+  if (cinfo->progress != NULL && ! cinfo->buffered_image &&
+      cinfo->inputctl->has_multiple_scans) {
     int nscans;
     /* Estimate number of scans to set pass_limit. */
     if (cinfo->progressive_mode) {
@@ -382,7 +398,7 @@ master_selection(j_decompress_ptr cinfo) {
       nscans = cinfo->num_components;
     }
     cinfo->progress->pass_counter = 0L;
-    cinfo->progress->pass_limit = (long)cinfo->total_iMCU_rows * nscans;
+    cinfo->progress->pass_limit = (long) cinfo->total_iMCU_rows * nscans;
     cinfo->progress->completed_passes = 0;
     cinfo->progress->total_passes = (cinfo->enable_2pass_quant ? 3 : 2);
     /* Count the input pass as done */
@@ -402,16 +418,17 @@ master_selection(j_decompress_ptr cinfo) {
  */
 
 METHODDEF(void)
-prepare_for_output_pass(j_decompress_ptr cinfo) {
-  my_master_ptr master = (my_master_ptr)cinfo->master;
+prepare_for_output_pass (j_decompress_ptr cinfo)
+{
+  my_master_ptr master = (my_master_ptr) cinfo->master;
 
   if (master->pub.is_dummy_pass) {
 #ifdef QUANT_2PASS_SUPPORTED
     /* Final pass of 2-pass quantization */
     master->pub.is_dummy_pass = FALSE;
-    (*cinfo->cquantize->start_pass)(cinfo, FALSE);
-    (*cinfo->post->start_pass)(cinfo, JBUF_CRANK_DEST);
-    (*cinfo->main->start_pass)(cinfo, JBUF_CRANK_DEST);
+    (*cinfo->cquantize->start_pass) (cinfo, FALSE);
+    (*cinfo->post->start_pass) (cinfo, JBUF_CRANK_DEST);
+    (*cinfo->main->start_pass) (cinfo, JBUF_CRANK_DEST);
 #else
     ERREXIT(cinfo, JERR_NOT_COMPILED);
 #endif /* QUANT_2PASS_SUPPORTED */
@@ -419,36 +436,37 @@ prepare_for_output_pass(j_decompress_ptr cinfo) {
     if (cinfo->quantize_colors && cinfo->colormap == NULL) {
       /* Select new quantization method */
       if (cinfo->two_pass_quantize && cinfo->enable_2pass_quant) {
-        cinfo->cquantize = master->quantizer_2pass;
-        master->pub.is_dummy_pass = TRUE;
+	cinfo->cquantize = master->quantizer_2pass;
+	master->pub.is_dummy_pass = TRUE;
       } else if (cinfo->enable_1pass_quant) {
-        cinfo->cquantize = master->quantizer_1pass;
+	cinfo->cquantize = master->quantizer_1pass;
       } else {
-        ERREXIT(cinfo, JERR_MODE_CHANGE);
+	ERREXIT(cinfo, JERR_MODE_CHANGE);
       }
     }
-    (*cinfo->idct->start_pass)(cinfo);
-    (*cinfo->coef->start_output_pass)(cinfo);
-    if (!cinfo->raw_data_out) {
-      if (!master->using_merged_upsample)
-        (*cinfo->cconvert->start_pass)(cinfo);
-      (*cinfo->upsample->start_pass)(cinfo);
+    (*cinfo->idct->start_pass) (cinfo);
+    (*cinfo->coef->start_output_pass) (cinfo);
+    if (! cinfo->raw_data_out) {
+      if (! master->using_merged_upsample)
+	(*cinfo->cconvert->start_pass) (cinfo);
+      (*cinfo->upsample->start_pass) (cinfo);
       if (cinfo->quantize_colors)
-        (*cinfo->cquantize->start_pass)(cinfo, master->pub.is_dummy_pass);
-      (*cinfo->post->start_pass)(cinfo,
-                                 (master->pub.is_dummy_pass ? JBUF_SAVE_AND_PASS : JBUF_PASS_THRU));
-      (*cinfo->main->start_pass)(cinfo, JBUF_PASS_THRU);
+	(*cinfo->cquantize->start_pass) (cinfo, master->pub.is_dummy_pass);
+      (*cinfo->post->start_pass) (cinfo,
+	    (master->pub.is_dummy_pass ? JBUF_SAVE_AND_PASS : JBUF_PASS_THRU));
+      (*cinfo->main->start_pass) (cinfo, JBUF_PASS_THRU);
     }
   }
 
   /* Set up progress monitor's pass info if present */
   if (cinfo->progress != NULL) {
     cinfo->progress->completed_passes = master->pass_number;
-    cinfo->progress->total_passes = master->pass_number + (master->pub.is_dummy_pass ? 2 : 1);
+    cinfo->progress->total_passes = master->pass_number +
+				    (master->pub.is_dummy_pass ? 2 : 1);
     /* In buffered-image mode, we assume one more output pass if EOI not
      * yet reached, but no more passes if EOI has been reached.
      */
-    if (cinfo->buffered_image && !cinfo->inputctl->eoi_reached) {
+    if (cinfo->buffered_image && ! cinfo->inputctl->eoi_reached) {
       cinfo->progress->total_passes += (cinfo->enable_2pass_quant ? 2 : 1);
     }
   }
@@ -460,11 +478,12 @@ prepare_for_output_pass(j_decompress_ptr cinfo) {
  */
 
 METHODDEF(void)
-finish_output_pass(j_decompress_ptr cinfo) {
-  my_master_ptr master = (my_master_ptr)cinfo->master;
+finish_output_pass (j_decompress_ptr cinfo)
+{
+  my_master_ptr master = (my_master_ptr) cinfo->master;
 
   if (cinfo->quantize_colors)
-    (*cinfo->cquantize->finish_pass)(cinfo);
+    (*cinfo->cquantize->finish_pass) (cinfo);
   master->pass_number++;
 }
 
@@ -476,18 +495,20 @@ finish_output_pass(j_decompress_ptr cinfo) {
  */
 
 GLOBAL(void)
-jpeg_new_colormap(j_decompress_ptr cinfo) {
-  my_master_ptr master = (my_master_ptr)cinfo->master;
+jpeg_new_colormap (j_decompress_ptr cinfo)
+{
+  my_master_ptr master = (my_master_ptr) cinfo->master;
 
   /* Prevent application from calling me at wrong times */
   if (cinfo->global_state != DSTATE_BUFIMAGE)
     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
 
-  if (cinfo->quantize_colors && cinfo->enable_external_quant && cinfo->colormap != NULL) {
+  if (cinfo->quantize_colors && cinfo->enable_external_quant &&
+      cinfo->colormap != NULL) {
     /* Select 2-pass quantizer for external colormap use */
     cinfo->cquantize = master->quantizer_2pass;
     /* Notify quantizer of colormap change */
-    (*cinfo->cquantize->new_color_map)(cinfo);
+    (*cinfo->cquantize->new_color_map) (cinfo);
     master->pub.is_dummy_pass = FALSE; /* just in case */
   } else
     ERREXIT(cinfo, JERR_MODE_CHANGE);
@@ -502,11 +523,12 @@ jpeg_new_colormap(j_decompress_ptr cinfo) {
  */
 
 GLOBAL(void)
-jinit_master_decompress(j_decompress_ptr cinfo) {
+jinit_master_decompress (j_decompress_ptr cinfo)
+{
   my_master_ptr master;
 
-  master = (my_master_ptr)(*cinfo->mem->alloc_small)((j_common_ptr)cinfo, JPOOL_IMAGE,
-                                                     SIZEOF(my_decomp_master));
+  master = (my_master_ptr) (*cinfo->mem->alloc_small)
+    ((j_common_ptr) cinfo, JPOOL_IMAGE, SIZEOF(my_decomp_master));
   cinfo->master = &master->pub;
   master->pub.prepare_for_output_pass = prepare_for_output_pass;
   master->pub.finish_output_pass = finish_output_pass;

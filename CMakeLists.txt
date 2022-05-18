@@ -132,7 +132,7 @@ target_include_directories(
 target_include_directories(obsidian PRIVATE source_files/gif-h)
 target_include_directories(obsidian PRIVATE source_files/lua/src)
 target_include_directories(obsidian PRIVATE source_files/miniz)
-target_include_directories(obsidian PRIVATE source_files/physfs)
+target_include_directories(obsidian PRIVATE source_files/physfs/src)
 target_include_directories(obsidian PRIVATE source_files/slump)
 target_include_directories(obsidian PRIVATE source_files/zdbsp)
 
@@ -178,7 +178,7 @@ if(UNIX)
             fltk_images
             miniz
             libluajit
-            obsidian_physfs
+            physfs-static
             obsidian_zdbsp
             obsidian_slump
             fontconfig
@@ -191,7 +191,7 @@ else()
             fltk_images
             miniz
             libluajit
-            obsidian_physfs
+            physfs-static
             obsidian_zdbsp
             obsidian_slump
   )

@@ -23,8 +23,9 @@
 
 #define MAXBUFFER 0x40000 // 256k
 
-static void dataReleaseCB(void *info, const void *data, size_t size) {
-  delete[](uchar *) data;
+static void dataReleaseCB(void *info, const void *data, size_t size)
+{
+  delete[] (uchar *)data;
 }
 
 /*
@@ -43,49 +44,48 @@ static void dataReleaseCB(void *info, const void *data, size_t size) {
    dst:       destination buffer
  userdata:  ?
  */
-static void innards(const uchar *buf, int X, int Y, int W, int H, int delta, int linedelta,
-                    int mono, Fl_Draw_Image_Cb cb, void *userdata, CGContextRef gc,
-                    Fl_Quartz_Graphics_Driver *driver) {
-  if (!linedelta)
-    linedelta = W * abs(delta);
+static void innards(const uchar *buf, int X, int Y, int W, int H,
+                    int delta, int linedelta, int mono,
+                    Fl_Draw_Image_Cb cb, void* userdata, CGContextRef gc, Fl_Quartz_Graphics_Driver *driver)
+{
+  if (!linedelta) linedelta = W*abs(delta);
 
   uchar *tmpBuf = 0;
   if (!cb) {
-    if (delta < 0)
-      buf -= (W - 1) * (-delta);
-    if (linedelta < 0)
-      buf -= (H - 1) * abs(linedelta);
+    if (delta < 0) buf -= (W-1)*(-delta);
+    if (linedelta < 0) buf -= (H-1)*abs(linedelta);
   }
   const void *array = buf;
   if (cb || driver->has_feature(Fl_Quartz_Graphics_Driver::PRINTER)) {
-    tmpBuf = new uchar[H * W * abs(delta)];
+    tmpBuf = new uchar[ H*W*abs(delta) ];
     if (cb) {
-      for (int i = 0; i < H; i++) {
-        cb(userdata, 0, i, W, tmpBuf + i * W * abs(delta));
+      for (int i=0; i<H; i++) {
+        cb(userdata, 0, i, W, tmpBuf+i*W*abs(delta));
       }
     } else {
       uchar *p = tmpBuf;
-      for (int i = 0; i < H; i++) {
-        memcpy(p, buf + i * abs(linedelta), W * abs(delta));
-        p += W * abs(delta);
-      }
+      for (int i=0; i<H; i++) {
+        memcpy(p, buf+i*abs(linedelta), W*abs(delta));
+        p += W*abs(delta);
+        }
     }
-    array = (void *)tmpBuf;
-    linedelta = W * abs(delta);
+    array = (void*)tmpBuf;
+    linedelta = W*abs(delta);
   }
   // create an image context
-  CGColorSpaceRef lut = 0;
-  if (abs(delta) <= 2)
+  CGColorSpaceRef   lut = 0;
+  if (abs(delta)<=2)
     lut = CGColorSpaceCreateDeviceGray();
   else
     lut = CGColorSpaceCreateDeviceRGB();
   // a release callback is necessary when the gc is a print context because the image data
   // must be kept until the page is closed. Thus tmpBuf can't be deleted here. It's too early.
-  CGDataProviderRef src =
-      CGDataProviderCreateWithData(0L, array, abs(linedelta) * H, tmpBuf ? dataReleaseCB : NULL);
-  CGImageRef img = CGImageCreate(W, H, 8, 8 * abs(delta), abs(linedelta), lut,
-                                 abs(delta) & 1 ? kCGImageAlphaNone : kCGImageAlphaLast, src, 0L,
-                                 false, kCGRenderingIntentDefault);
+  CGDataProviderRef src = CGDataProviderCreateWithData( 0L, array, abs(linedelta)*H,
+                                                       tmpBuf ? dataReleaseCB : NULL
+                                                       );
+  CGImageRef        img = CGImageCreate( W, H, 8, 8*abs(delta), abs(linedelta),
+                            lut, abs(delta)&1?kCGImageAlphaNone:kCGImageAlphaLast,
+                            src, 0L, false, kCGRenderingIntentDefault);
   CGColorSpaceRelease(lut);
   CGDataProviderRelease(src);
   // draw the image into the destination context
@@ -93,62 +93,56 @@ static void innards(const uchar *buf, int X, int Y, int W, int H, int delta, int
     CGContextSaveGState(gc);
     CGContextTranslateCTM(gc, X, Y);
     if (linedelta < 0) {
-      CGContextTranslateCTM(gc, 0, H - 1);
+      CGContextTranslateCTM(gc, 0, H-1);
       CGContextScaleCTM(gc, 1, -1);
     }
     if (delta < 0) {
-      CGContextTranslateCTM(gc, W - 1, 0);
+      CGContextTranslateCTM(gc, W-1, 0);
       CGContextScaleCTM(gc, -1, 1);
     }
-    driver->draw_CGImage(img, 0, 0, W, H, 0, 0, W, H);
+    driver->draw_CGImage(img, 0,0,W,H, 0,0,W,H);
     CGImageRelease(img);
     CGContextRestoreGState(gc);
   }
 }
 
-void Fl_Quartz_Graphics_Driver::draw_image(const uchar *buf, int x, int y, int w, int h, int d,
-                                           int l) {
-  innards(buf, x, y, w, h, d, l, (d < 3 && d > -3), 0, 0, gc_, this);
+void Fl_Quartz_Graphics_Driver::draw_image(const uchar* buf, int x, int y, int w, int h, int d, int l){
+  innards(buf,x,y,w,h,d,l,(d<3&&d>-3),0,0,gc_,this);
 }
-void Fl_Quartz_Graphics_Driver::draw_image(Fl_Draw_Image_Cb cb, void *data, int x, int y, int w,
-                                           int h, int d) {
-  innards(0, x, y, w, h, d, 0, (d < 3 && d > -3), cb, data, gc_, this);
+void Fl_Quartz_Graphics_Driver::draw_image(Fl_Draw_Image_Cb cb, void* data,
+                   int x, int y, int w, int h,int d) {
+  innards(0,x,y,w,h,d,0,(d<3&&d>-3),cb,data,gc_,this);
 }
-void Fl_Quartz_Graphics_Driver::draw_image_mono(const uchar *buf, int x, int y, int w, int h, int d,
-                                                int l) {
-  innards(buf, x, y, w, h, d, l, 1, 0, 0, gc_, this);
+void Fl_Quartz_Graphics_Driver::draw_image_mono(const uchar* buf, int x, int y, int w, int h, int d, int l){
+  innards(buf,x,y,w,h,d,l,1,0,0,gc_,this);
 }
-void Fl_Quartz_Graphics_Driver::draw_image_mono(Fl_Draw_Image_Cb cb, void *data, int x, int y,
-                                                int w, int h, int d) {
-  innards(0, x, y, w, h, d, 0, 1, cb, data, gc_, this);
+void Fl_Quartz_Graphics_Driver::draw_image_mono(Fl_Draw_Image_Cb cb, void* data,
+                   int x, int y, int w, int h,int d) {
+  innards(0,x,y,w,h,d,0,1,cb,data,gc_,this);
 }
 
 
-void Fl_Quartz_Graphics_Driver::draw_bitmap(Fl_Bitmap *bm, int XP, int YP, int WP, int HP, int cx,
-                                            int cy) {
+void Fl_Quartz_Graphics_Driver::draw_bitmap(Fl_Bitmap *bm, int XP, int YP, int WP, int HP, int cx, int cy) {
   int X, Y, W, H;
   if (!bm->array) {
     draw_empty(bm, XP, YP);
     return;
   }
-  if (start_image(bm, XP, YP, WP, HP, cx, cy, X, Y, W, H))
-    return;
+  if (start_image(bm, XP,YP,WP,HP,cx,cy,X,Y,W,H)) return;
   if (!*id(bm))
     cache(bm);
 
   if (*Fl_Graphics_Driver::id(bm) && gc_) {
-    draw_CGImage((CGImageRef)*Fl_Graphics_Driver::id(bm), X, Y, W, H, cx, cy, bm->w(), bm->h());
+    draw_CGImage((CGImageRef)*Fl_Graphics_Driver::id(bm), X,Y,W,H, cx, cy, bm->w(), bm->h());
   }
 }
 
 void Fl_Quartz_Graphics_Driver::cache(Fl_RGB_Image *rgb) {
-  CGColorSpaceRef lut =
-      rgb->d() <= 2 ? CGColorSpaceCreateDeviceGray() : CGColorSpaceCreateDeviceRGB();
+  CGColorSpaceRef lut = rgb->d()<=2 ? CGColorSpaceCreateDeviceGray() : CGColorSpaceCreateDeviceRGB();
   int ld = rgb->ld();
-  if (!ld)
-    ld = rgb->data_w() * rgb->d();
+  if (!ld) ld = rgb->data_w() * rgb->d();
   CGDataProviderRef src;
-  if (has_feature(PRINTER)) {
+  if ( has_feature(PRINTER) ) {
     // When printing or copying to clipboard, the data at rgb->array are used when
     // the PDF page is completed, that is, after return from this function.
     // At that stage, the rgb object has possibly been deleted. It is therefore necessary
@@ -165,16 +159,15 @@ void Fl_Quartz_Graphics_Driver::cache(Fl_RGB_Image *rgb) {
     // the CGImage data provider must not release the image data.
     src = CGDataProviderCreateWithData(NULL, rgb->array, ld * rgb->data_h(), NULL);
   }
-  CGImageRef cgimg = CGImageCreate(rgb->data_w(), rgb->data_h(), 8, rgb->d() * 8, ld, lut,
-                                   (rgb->d() & 1) ? kCGImageAlphaNone : kCGImageAlphaLast, src, 0L,
-                                   false, kCGRenderingIntentDefault);
+  CGImageRef cgimg = CGImageCreate(rgb->data_w(), rgb->data_h(), 8, rgb->d()*8, ld,
+                        lut, (rgb->d()&1)?kCGImageAlphaNone:kCGImageAlphaLast,
+                        src, 0L, false, kCGRenderingIntentDefault);
   *Fl_Graphics_Driver::id(rgb) = (fl_uintptr_t)cgimg;
   CGColorSpaceRelease(lut);
   CGDataProviderRelease(src);
 }
 
-void Fl_Quartz_Graphics_Driver::draw_rgb(Fl_RGB_Image *img, int XP, int YP, int WP, int HP, int cx,
-                                         int cy) {
+void Fl_Quartz_Graphics_Driver::draw_rgb(Fl_RGB_Image *img, int XP, int YP, int WP, int HP, int cx, int cy) {
   int X, Y, W, H;
   // Don't draw an empty image...
   if (!img->d() || !img->array) {
@@ -195,50 +188,47 @@ void Fl_Quartz_Graphics_Driver::draw_rgb(Fl_RGB_Image *img, int XP, int YP, int 
     cgimg = (CGImageRef)*Fl_Graphics_Driver::id(img);
   }
   if (cgimg && gc_) {
-    draw_CGImage(cgimg, X, Y, W, H, cx, cy, img->w(), img->h());
+    draw_CGImage(cgimg, X,Y,W,H, cx,cy, img->w(), img->h());
   }
 }
 
-void Fl_Quartz_Graphics_Driver::draw_pixmap(Fl_Pixmap *pxm, int XP, int YP, int WP, int HP, int cx,
-                                            int cy) {
+void Fl_Quartz_Graphics_Driver::draw_pixmap(Fl_Pixmap *pxm, int XP, int YP, int WP, int HP, int cx, int cy) {
   int X, Y, W, H;
   if (!pxm->data() || !pxm->w()) {
     draw_empty(pxm, XP, YP);
     return;
   }
-  if (start_image(pxm, XP, YP, WP, HP, cx, cy, X, Y, W, H))
-    return;
+  if ( start_image(pxm, XP,YP,WP,HP,cx,cy,X,Y,W,H) ) return;
   if (!*id(pxm)) {
     cache(pxm);
   }
 
   CGImageRef cgimg = (CGImageRef)*Fl_Graphics_Driver::id(pxm);
-  draw_CGImage(cgimg, X, Y, W, H, cx, cy, pxm->w(), pxm->h());
+  draw_CGImage(cgimg, X,Y,W,H, cx,cy, pxm->w(), pxm->h());
 }
 
 CGImageRef Fl_Quartz_Graphics_Driver::create_bitmask(int w, int h, const uchar *array) {
-  static uchar reverse[16] = /* Bit reversal lookup table */
-      {0x00, 0x88, 0x44, 0xcc, 0x22, 0xaa, 0x66, 0xee,
-       0x11, 0x99, 0x55, 0xdd, 0x33, 0xbb, 0x77, 0xff};
-  int rowBytes = (w + 7) >> 3;
-  uchar *bmask = new uchar[rowBytes * h];
+  static uchar reverse[16] =    /* Bit reversal lookup table */
+  { 0x00, 0x88, 0x44, 0xcc, 0x22, 0xaa, 0x66, 0xee,
+    0x11, 0x99, 0x55, 0xdd, 0x33, 0xbb, 0x77, 0xff };
+  int rowBytes = (w+7)>>3 ;
+  uchar *bmask = new uchar[rowBytes*h];
   uchar *dst = bmask;
   const uchar *src = array;
-  for (int i = rowBytes * h; i > 0; i--, src++) {
-    *dst++ = ((reverse[*src & 0x0f] & 0xf0) | (reverse[(*src >> 4) & 0x0f] & 0x0f)) ^ 0xff;
+  for ( int i=rowBytes*h; i>0; i--,src++ ) {
+    *dst++ = ((reverse[*src & 0x0f] & 0xf0) | (reverse[(*src >> 4) & 0x0f] & 0x0f))^0xff;
   }
-  CGDataProviderRef srcp = CGDataProviderCreateWithData(NULL, bmask, rowBytes * h, dataReleaseCB);
-  CGImageRef id_ = CGImageMaskCreate(w, h, 1, 1, rowBytes, srcp, 0L, false);
+  CGDataProviderRef srcp = CGDataProviderCreateWithData( NULL, bmask, rowBytes*h, dataReleaseCB);
+  CGImageRef id_ = CGImageMaskCreate( w, h, 1, 1, rowBytes, srcp, 0L, false);
   CGDataProviderRelease(srcp);
   return id_;
 }
 
 void Fl_Quartz_Graphics_Driver::delete_bitmask(fl_uintptr_t bm) {
-  if (bm)
-    CGImageRelease((CGImageRef)bm);
+  if (bm) CGImageRelease((CGImageRef)bm);
 }
 
-void Fl_Quartz_Graphics_Driver::uncache(Fl_RGB_Image *, fl_uintptr_t &id_, fl_uintptr_t &mask_) {
+void Fl_Quartz_Graphics_Driver::uncache(Fl_RGB_Image*, fl_uintptr_t &id_, fl_uintptr_t &mask_) {
   if (id_) {
     CGImageRelease((CGImageRef)id_);
     id_ = 0;
@@ -251,7 +241,7 @@ void Fl_Quartz_Graphics_Driver::cache(Fl_Bitmap *bm) {
 }
 
 
-static void pmProviderRelease(void *ctxt, const void *data, size_t size) {
+static void pmProviderRelease (void *ctxt, const void *data, size_t size) {
   CFRelease(ctxt);
 }
 
@@ -266,20 +256,19 @@ void Fl_Quartz_Graphics_Driver::cache(Fl_Pixmap *img) {
   int sh = CGBitmapContextGetHeight(src);
   CGImageAlphaInfo alpha = CGBitmapContextGetAlphaInfo(src);
   CGColorSpaceRef lut = CGColorSpaceCreateDeviceRGB();
-  CGDataProviderRef src_bytes =
-      CGDataProviderCreateWithData(src, cgdata, sw * sh * 4, pmProviderRelease);
-  CGImageRef cgimg = CGImageCreate(sw, sh, 8, 4 * 8, 4 * sw, lut, alpha, src_bytes, 0L, false,
-                                   kCGRenderingIntentDefault);
+  CGDataProviderRef src_bytes = CGDataProviderCreateWithData(src, cgdata, sw*sh*4, pmProviderRelease);
+  CGImageRef cgimg = CGImageCreate( sw, sh, 8, 4*8, 4*sw, lut, alpha,
+                                 src_bytes, 0L, false, kCGRenderingIntentDefault);
   CGColorSpaceRelease(lut);
   CGDataProviderRelease(src_bytes);
   *Fl_Graphics_Driver::id(img) = (fl_uintptr_t)cgimg;
 }
 
-void Fl_Quartz_Graphics_Driver::draw_CGImage(CGImageRef cgimg, int x, int y, int w, int h, int srcx,
-                                             int srcy, int sw, int sh) {
+void Fl_Quartz_Graphics_Driver::draw_CGImage(CGImageRef cgimg, int x, int y, int w, int h, int srcx, int srcy, int sw, int sh)
+{
   CGRect rect = CGRectMake(x, y, w, h);
   CGContextSaveGState(gc_);
-  CGContextClipToRect(gc_, CGRectOffset(rect, -0.5, -0.5));
+  CGContextClipToRect(gc_, CGRectOffset(rect, -0.5, -0.5 ));
   // move graphics context to origin of vertically reversed image
   // The 0.5 here cancels the 0.5 offset present in Quartz graphics contexts.
   // Thus, image and surface pixels are in phase.

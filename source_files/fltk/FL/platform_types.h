@@ -33,13 +33,12 @@ typedef opaque fl_intptr_t;
 typedef opaque fl_uintptr_t;
 
 typedef opaque Fl_Offscreen; /**< an offscreen drawing buffer */
-typedef opaque Fl_Region;    /**< a region made of several rectangles */
-typedef opaque FL_SOCKET;    /**< socket or file descriptor */
-typedef opaque
-    GLContext; /**< an OpenGL graphics context, into which all OpenGL calls are rendered */
+typedef opaque Fl_Region; /**< a region made of several rectangles */
+typedef opaque FL_SOCKET; /**< socket or file descriptor */
+typedef opaque GLContext; /**< an OpenGL graphics context, into which all OpenGL calls are rendered */
 
-#define FL_COMMAND opaque /**< An alias for FL_CTRL on Windows and X11, or FL_META on MacOS X */
-#define FL_CONTROL opaque /**< An alias for FL_META on Windows and X11, or FL_CTRL on MacOS X */
+#  define FL_COMMAND  opaque   /**< An alias for FL_CTRL on Windows and X11, or FL_META on MacOS X */
+#  define FL_CONTROL  opaque   /**< An alias for FL_META on Windows and X11, or FL_CTRL on MacOS X */
 
 #else
 
@@ -64,9 +63,9 @@ typedef opaque
 #ifdef _WIN64
 
 #if defined(_MSC_VER)
-#include <stddef.h> /* M$VC */
+# include <stddef.h>  /* M$VC */
 #else
-#include <stdint.h>
+# include <stdint.h>
 #endif
 
 typedef intptr_t fl_intptr_t;
@@ -81,42 +80,40 @@ typedef unsigned long fl_uintptr_t;
 
 
 #ifdef __APPLE__
-typedef struct CGContext *Fl_Offscreen;
-typedef struct flCocoaRegion *Fl_Region;
+typedef struct CGContext* Fl_Offscreen;
+typedef struct flCocoaRegion* Fl_Region;
 typedef int FL_SOCKET;
 #ifdef __OBJC__
-@class NSOpenGLContext;
-typedef NSOpenGLContext *GLContext;
+  @class NSOpenGLContext;
+  typedef NSOpenGLContext* GLContext;
 #elif defined(__cplusplus)
-typedef class NSOpenGLContext *GLContext;
+  typedef class NSOpenGLContext* GLContext;
 #endif /* __OBJC__ */
 
 #include <sys/types.h>
 #include <dirent.h>
-#define FL_COMMAND FL_META
-#define FL_CONTROL FL_CTRL
+#  define FL_COMMAND    FL_META
+#  define FL_CONTROL    FL_CTRL
 
 #elif defined(_WIN32)
 typedef struct HBITMAP__ *HBITMAP;
 typedef HBITMAP Fl_Offscreen;
 typedef struct HRGN__ *Fl_Region;
-#if defined(_WIN64) && defined(_MSC_VER)
-typedef unsigned __int64 FL_SOCKET; /* *FIXME* - FL_SOCKET (see above) */
-#else
-typedef int FL_SOCKET;
-#endif
+# if defined(_WIN64) && defined(_MSC_VER)
+typedef  unsigned __int64 FL_SOCKET;    /* *FIXME* - FL_SOCKET (see above) */
+# else
+typedef  int FL_SOCKET;
+# endif
 typedef struct HGLRC__ *GLContext;
 #ifdef __MINGW32__
-#include <dirent.h>
+#  include <dirent.h>
 #else
-struct dirent {
-  char d_name[1];
-};
+   struct dirent {char d_name[1];};
 #endif
 
 #elif defined(FLTK_USE_WAYLAND)
 typedef struct fl_wld_buffer *Fl_Offscreen; /**< an offscreen drawing buffer */
-typedef struct flCairoRegion *Fl_Region;
+typedef struct flCairoRegion* Fl_Region;
 typedef int FL_SOCKET; /**< socket or file descriptor */
 typedef void *EGLContext;
 typedef EGLContext GLContext;
@@ -136,8 +133,8 @@ typedef struct __GLXcontextRec *GLContext;
 
 
 #ifndef __APPLE__
-#define FL_COMMAND FL_CTRL /**< An alias for FL_CTRL on Windows and X11, or FL_META on MacOS X */
-#define FL_CONTROL FL_META /**< An alias for FL_META on Windows and X11, or FL_CTRL on MacOS X */
+#  define FL_COMMAND    FL_CTRL   /**< An alias for FL_CTRL on Windows and X11, or FL_META on MacOS X */
+#  define FL_CONTROL    FL_META   /**< An alias for FL_META on Windows and X11, or FL_CTRL on MacOS X */
 #endif
 
 #endif /* FL_PLATFORM_TYPES_H */

@@ -24,11 +24,10 @@
 
 class Fl_Quartz_Copy_Surface_Driver : public Fl_Copy_Surface_Driver {
   friend class Fl_Copy_Surface_Driver;
-
 protected:
   CFMutableDataRef pdfdata;
   CGContextRef gc;
-  static size_t MyPutBytes(void *info, const void *buffer, size_t count);
+  static size_t MyPutBytes(void* info, const void* buffer, size_t count);
   Fl_Quartz_Copy_Surface_Driver(int w, int h);
   // implemented in Fl_cocoa.mm because uses Objective-c
   ~Fl_Quartz_Copy_Surface_Driver();

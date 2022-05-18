@@ -25,6 +25,7 @@
 // This also modifies how Fl_Window::show() works, on X it turns on
 // override_redirect, it does similar things on Windows.
 
-void Fl::grab(Fl_Window *win) {
+void Fl::grab(Fl_Window *win)
+{
   screen_driver()->grab(win);
 }

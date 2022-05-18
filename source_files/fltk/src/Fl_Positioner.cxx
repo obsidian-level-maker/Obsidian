@@ -21,11 +21,10 @@
 #include <FL/Fl_Positioner.H>
 #include <FL/fl_draw.H>
 
-static double flinear(double val, double smin, double smax, double gmin, double gmax) {
-  if (smin == smax)
-    return gmax;
-  else
-    return gmin + (gmax - gmin) * (val - smin) / (smax - smin);
+static double flinear(double val, double smin, double smax, double gmin, double gmax)
+{
+  if (smin == smax) return gmax;
+  else return gmin + (gmax - gmin) * (val - smin) / (smax - smin);
 }
 
 void Fl_Positioner::draw(int X, int Y, int W, int H) {
@@ -33,12 +32,12 @@ void Fl_Positioner::draw(int X, int Y, int W, int H) {
   int y1 = Y + 4;
   int w1 = W - 2 * 4;
   int h1 = H - 2 * 4;
-  int xx = int(flinear(xvalue(), xmin, xmax, x1, x1 + w1 - 1) + .5);
-  int yy = int(flinear(yvalue(), ymin, ymax, y1, y1 + h1 - 1) + .5);
+  int xx = int(flinear(xvalue(), xmin, xmax, x1, x1+w1-1)+.5);
+  int yy = int(flinear(yvalue(), ymin, ymax, y1, y1+h1-1)+.5);
   draw_box(box(), X, Y, W, H, color());
   fl_color(selection_color());
-  fl_xyline(x1, yy, x1 + w1);
-  fl_yxline(xx, y1, y1 + h1);
+  fl_xyline(x1, yy, x1+w1);
+  fl_yxline(xx, y1, y1+h1);
 }
 
 void Fl_Positioner::draw() {
@@ -49,78 +48,63 @@ void Fl_Positioner::draw() {
 /** Returns the current position in x and y.*/
 int Fl_Positioner::value(double X, double Y) {
   clear_changed();
-  if (X == xvalue_ && Y == yvalue_)
-    return 0;
-  xvalue_ = X;
-  yvalue_ = Y;
+  if (X == xvalue_ && Y == yvalue_) return 0;
+  xvalue_ = X; yvalue_ = Y;
   redraw();
   return 1;
 }
 
 /** Sets the X axis coordinate.*/
 int Fl_Positioner::xvalue(double X) {
-  return (value(X, yvalue_));
+  return(value(X, yvalue_));
 }
 
 /** Sets the Y axis coordinate.*/
 int Fl_Positioner::yvalue(double Y) {
-  return (value(xvalue_, Y));
+  return(value(xvalue_, Y));
 }
 
 int Fl_Positioner::handle(int event, int X, int Y, int W, int H) {
   switch (event) {
-    case FL_PUSH:
-    case FL_DRAG:
-    case FL_RELEASE: {
-      double x1 = X + 4;
-      double y1 = Y + 4;
-      double w1 = W - 2 * 4;
-      double h1 = H - 2 * 4;
-      double xx = flinear(Fl::event_x(), x1, x1 + w1 - 1.0, xmin, xmax);
-      if (xstep_)
-        xx = int(xx / xstep_ + 0.5) * xstep_;
-      if (xmin < xmax) {
-        if (xx < xmin)
-          xx = xmin;
-        if (xx > xmax)
-          xx = xmax;
-      } else {
-        if (xx > xmin)
-          xx = xmin;
-        if (xx < xmax)
-          xx = xmax;
-      }
-      double yy = flinear(Fl::event_y(), y1, y1 + h1 - 1.0, ymin, ymax);
-      if (ystep_)
-        yy = int(yy / ystep_ + 0.5) * ystep_;
-      if (ymin < ymax) {
-        if (yy < ymin)
-          yy = ymin;
-        if (yy > ymax)
-          yy = ymax;
-      } else {
-        if (yy > ymin)
-          yy = ymin;
-        if (yy < ymax)
-          yy = ymax;
-      }
-      if (xx != xvalue_ || yy != yvalue_) {
-        xvalue_ = xx;
-        yvalue_ = yy;
-        set_changed();
-        redraw();
-      }
+  case FL_PUSH:
+  case FL_DRAG:
+  case FL_RELEASE: {
+    double x1 = X + 4;
+    double y1 = Y + 4;
+    double w1 = W - 2 * 4;
+    double h1 = H - 2 * 4;
+    double xx = flinear(Fl::event_x(), x1, x1+w1-1.0, xmin, xmax);
+    if (xstep_) xx = int(xx/xstep_+0.5) * xstep_;
+    if (xmin < xmax) {
+      if (xx < xmin) xx = xmin;
+      if (xx > xmax) xx = xmax;
+    } else {
+      if (xx > xmin) xx = xmin;
+      if (xx < xmax) xx = xmax;
     }
-      if (!(when() & FL_WHEN_CHANGED || (when() & FL_WHEN_RELEASE && event == FL_RELEASE)))
-        return 1;
-      if (changed() || when() & FL_WHEN_NOT_CHANGED) {
-        if (event == FL_RELEASE)
-          clear_changed();
-        do_callback();
-      }
-      return 1;
-    default:
-      return 0;
+    double yy = flinear(Fl::event_y(), y1, y1+h1-1.0, ymin, ymax);
+    if (ystep_) yy = int(yy/ystep_+0.5) * ystep_;
+    if (ymin < ymax) {
+      if (yy < ymin) yy = ymin;
+      if (yy > ymax) yy = ymax;
+    } else {
+      if (yy > ymin) yy = ymin;
+      if (yy < ymax) yy = ymax;
+    }
+    if (xx != xvalue_ || yy != yvalue_) {
+      xvalue_ = xx; yvalue_ = yy;
+      set_changed();
+      redraw();
+                   } }
+    if (!(when() & FL_WHEN_CHANGED ||
+          (when() & FL_WHEN_RELEASE && event == FL_RELEASE))) return 1;
+    if (changed() || when()&FL_WHEN_NOT_CHANGED) {
+      if (event == FL_RELEASE) clear_changed();
+      do_callback();
+    }
+    return 1;
+  default:
+    return 0;
   }
 }
 
@@ -132,8 +116,8 @@ int Fl_Positioner::handle(int e) {
   Creates a new Fl_Positioner widget using the given position,
   size, and label string. The default boxtype is FL_NO_BOX.
 */
-Fl_Positioner::Fl_Positioner(int X, int Y, int W, int H, const char *l)
-  : Fl_Widget(X, Y, W, H, l) {
+Fl_Positioner::Fl_Positioner(int X, int Y, int W, int H, const char* l)
+: Fl_Widget(X, Y, W, H, l) {
   box(FL_DOWN_BOX);
   selection_color(FL_RED);
   align(FL_ALIGN_BOTTOM);
@@ -147,8 +131,7 @@ Fl_Positioner::Fl_Positioner(int X, int Y, int W, int H, const char *l)
 /** Sets the X axis bounds.*/
 void Fl_Positioner::xbounds(double a, double b) {
   if (a != xmin || b != xmax) {
-    xmin = a;
-    xmax = b;
+    xmin = a; xmax = b;
     redraw();
   }
 }
@@ -156,8 +139,7 @@ void Fl_Positioner::xbounds(double a, double b) {
 /** Sets the Y axis bounds.*/
 void Fl_Positioner::ybounds(double a, double b) {
   if (a != ymin || b != ymax) {
-    ymin = a;
-    ymax = b;
+    ymin = a; ymax = b;
     redraw();
   }
 }

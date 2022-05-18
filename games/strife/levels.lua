@@ -60,13 +60,13 @@ STRIFE.PREBUILT_LEVELS =
 
 
 function STRIFE.get_levels()
-  local MAP_LEN_TAB = { few=4, episode=11, game=33 }
+  local MAP_LEN_TAB = { few=4, episode=11, game=32 }
 
   local MAP_NUM = MAP_LEN_TAB[OB_CONFIG.length] or 1
 
   local EP_NUM = 1
   if MAP_NUM > 11 then EP_NUM = 2 end
-  if MAP_NUM > 21 then EP_NUM = 3 end
+  if MAP_NUM > 30 then EP_NUM = 3 end
 
   -- create episode info...
 
@@ -90,8 +90,10 @@ function STRIFE.get_levels()
 
     local game_along = map / MAP_NUM
 
-    if map > 21 then
-      ep_index = 3 ; ep_along = (map - 21) / 10
+    if map > 30 then
+      ep_index = 3 ; ep_along = 0.5 ; game_along = 0.5
+    elseif map > 20 then
+      ep_index = 3 ; ep_along = (map - 20) / 10
     elseif map > 11 then
       ep_index = 2 ; ep_along = (map - 11) / 9
     else

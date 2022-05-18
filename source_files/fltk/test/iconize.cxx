@@ -35,28 +35,28 @@ void hide_cb(Fl_Widget *, void *v) {
   w->hide();
 }
 
-void window_cb(Fl_Widget *, void *) {
+void window_cb(Fl_Widget*, void*) {
   exit(0);
 }
 
 int main(int argc, char **argv) {
 
-  Fl_Window mainw(200, 200);
+  Fl_Window mainw(200,200);
   mainw.end();
-  mainw.show(argc, argv);
+  mainw.show(argc,argv);
 
-  Fl_Window control(120, 120);
+  Fl_Window control(120,120);
 
-  Fl_Button hide_button(0, 0, 120, 30, "hide()");
+  Fl_Button hide_button(0,0,120,30,"hide()");
   hide_button.callback(hide_cb, &mainw);
 
-  Fl_Button iconize_button(0, 30, 120, 30, "iconize()");
+  Fl_Button iconize_button(0,30,120,30,"iconize()");
   iconize_button.callback(iconize_cb, &mainw);
 
-  Fl_Button show_button(0, 60, 120, 30, "show()");
+  Fl_Button show_button(0,60,120,30,"show()");
   show_button.callback(show_cb, &mainw);
 
-  Fl_Button show_button2(0, 90, 120, 30, "show this");
+  Fl_Button show_button2(0,90,120,30,"show this");
   show_button2.callback(show_cb, &control);
 
   //  Fl_Box box(FL_NO_BOX,0,60,120,30,"Also try running\nwith -i switch");

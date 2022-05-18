@@ -20,12 +20,11 @@
 
 void Fl_Menu_Bar::draw() {
   draw_box();
-  if (!menu() || !menu()->text)
-    return;
-  const Fl_Menu_Item *m;
-  int X = x() + 6;
-  for (m = menu()->first(); m->text; m = m->next()) {
-    int W = m->measure(0, this) + 16;
+  if (!menu() || !menu()->text) return;
+  const Fl_Menu_Item* m;
+  int X = x()+6;
+  for (m=menu()->first(); m->text; m = m->next()) {
+    int W = m->measure(0,this) + 16;
     m->draw(X, y(), W, h(), this);
     X += W;
     if (m->flags & FL_MENU_DIVIDER) {
@@ -42,29 +41,29 @@ void Fl_Menu_Bar::draw() {
 }
 
 int Fl_Menu_Bar::handle(int event) {
-  const Fl_Menu_Item *v;
-  if (menu() && menu()->text)
-    switch (event) {
-      case FL_ENTER:
-      case FL_LEAVE:
-        return 1;
-      case FL_PUSH:
-        v = 0;
-      J1:
-        v = menu()->pulldown(x(), y(), w(), h(), v, this, 0, 1);
-        picked(v);
-        return 1;
-      case FL_SHORTCUT:
-        if (visible_r()) {
-          v = menu()->find_shortcut(0, true);
-          if (v && v->submenu())
-            goto J1;
-        }
-        return test_shortcut() != 0;
+  const Fl_Menu_Item* v;
+  if (menu() && menu()->text) switch (event) {
+  case FL_ENTER:
+  case FL_LEAVE:
+    return 1;
+  case FL_PUSH:
+    v = 0;
+  J1:
+    v = menu()->pulldown(x(), y(), w(), h(), v, this, 0, 1);
+    picked(v);
+    return 1;
+  case FL_SHORTCUT:
+    if (visible_r()) {
+      v = menu()->find_shortcut(0, true);
+      if (v && v->submenu()) goto J1;
     }
+    return test_shortcut() != 0;
+  }
   return 0;
 }
 
 
-Fl_Menu_Bar::Fl_Menu_Bar(int X, int Y, int W, int H, const char *l)
-  : Fl_Menu_(X, Y, W, H, l) {}
+Fl_Menu_Bar::Fl_Menu_Bar(int X, int Y, int W, int H,const char *l)
+: Fl_Menu_(X,Y,W,H,l)
+{
+}

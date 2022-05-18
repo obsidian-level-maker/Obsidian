@@ -5,6 +5,7 @@
 PREFABS.Lift_64 =
 {
   file   = "stairs/lift_64.wad",
+  game = "!hexen",
 
   prob   = 15,
   style  = "steepness",

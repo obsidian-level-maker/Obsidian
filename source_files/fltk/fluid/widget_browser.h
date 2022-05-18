@@ -25,35 +25,38 @@ class Widget_Browser;
 extern Widget_Browser *widget_browser;
 
 extern void redraw_browser();
-extern Fl_Widget *make_widget_browser(int x, int y, int w, int h);
+extern Fl_Widget *make_widget_browser(int x,int y,int w,int h);
 extern void redraw_widget_browser(Fl_Type *caller);
 extern void select(Fl_Type *o, int v);
 extern void select_only(Fl_Type *o);
 extern void deselect();
 extern void reveal_in_browser(Fl_Type *t);
 
-class Widget_Browser : public Fl_Browser_ {
+class Widget_Browser : public Fl_Browser_
+{
   friend class Fl_Type;
 
-  static void callback_stub(Fl_Widget *o, void *) { ((Widget_Browser *)o)->callback(); }
+  static void callback_stub(Fl_Widget *o, void *) {
+    ((Widget_Browser *)o)->callback();
+  }
 
-  Fl_Type *pushedtitle;
+  Fl_Type* pushedtitle;
   int saved_h_scroll_;
   int saved_v_scroll_;
 
   // required routines for Fl_Browser_ subclass:
-  void *item_first() const;
-  void *item_next(void *) const;
-  void *item_prev(void *) const;
-  int item_selected(void *) const;
-  void item_select(void *, int);
-  int item_width(void *) const;
-  int item_height(void *) const;
-  void item_draw(void *, int, int, int, int) const;
-  int incr_height() const;
+  void *item_first() const ;
+  void *item_next(void *) const ;
+  void *item_prev(void *) const ;
+  int item_selected(void *) const ;
+  void item_select(void *,int);
+  int item_width(void *) const ;
+  int item_height(void *) const ;
+  void item_draw(void *,int,int,int,int) const ;
+  int incr_height() const ;
 
 public:
-  Widget_Browser(int, int, int, int, const char * = NULL);
+  Widget_Browser(int,int,int,int,const char * =NULL);
   int handle(int);
   void callback();
   void save_scroll_position();

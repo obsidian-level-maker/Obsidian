@@ -33,7 +33,7 @@
 */
 class FL_EXPORT Fl_Round_Button : public Fl_Light_Button {
 public:
-  Fl_Round_Button(int x, int y, int w, int h, const char *l = 0);
+  Fl_Round_Button(int x,int y,int w,int h,const char *l = 0);
 };
 
 #endif

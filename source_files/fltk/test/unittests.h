@@ -21,18 +21,18 @@
 #include <FL/Fl_Double_Window.H>
 
 // WINDOW/WIDGET SIZES
-#define MAINWIN_W 700                           // main window w()
-#define MAINWIN_H 400                           // main window h()
-#define BROWSER_X 10                            // browser x()
-#define BROWSER_Y 25                            // browser y()
-#define BROWSER_W 150                           // browser w()
-#define BROWSER_H MAINWIN_H - 35                // browser h()
-#define TESTAREA_X (BROWSER_W + 20)             // test area x()
-#define TESTAREA_Y 25                           // test area y()
-#define TESTAREA_W (MAINWIN_W - BROWSER_W - 30) // test area w()
-#define TESTAREA_H BROWSER_H                    // test area h()
+#define MAINWIN_W       700                             // main window w()
+#define MAINWIN_H       400                             // main window h()
+#define BROWSER_X       10                              // browser x()
+#define BROWSER_Y       25                              // browser y()
+#define BROWSER_W       150                             // browser w()
+#define BROWSER_H       MAINWIN_H-35                    // browser h()
+#define TESTAREA_X      (BROWSER_W + 20)                // test area x()
+#define TESTAREA_Y      25                              // test area y()
+#define TESTAREA_W      (MAINWIN_W - BROWSER_W - 30)    // test area w()
+#define TESTAREA_H      BROWSER_H                       // test area h()
 
-typedef void (*UnitTestCallback)(const char *, class Fl_Group *);
+typedef void (*UnitTestCallback)(const char*, class Fl_Group*);
 
 extern class MainWindow *mainwin;
 extern class Fl_Hold_Browser *browser;
@@ -42,7 +42,7 @@ enum {
   kTestPoints,
   kTestFastShapes,
   kTestCircles,
-  //  kTestComplexShapes,
+//  kTestComplexShapes,
   kTestText,
   kTestSymbol,
   kTestImages,
@@ -56,7 +56,7 @@ enum {
 // Please see the examples on how this is used.
 class UnitTest {
 public:
-  UnitTest(int index, const char *label, Fl_Widget *(*create)());
+  UnitTest(int index, const char *label, Fl_Widget* (*create)());
   ~UnitTest();
   const char *label();
   void create();
@@ -64,7 +64,6 @@ public:
   void hide();
   static int numTest() { return nTest; }
   static UnitTest *test(int i) { return fTest[i]; }
-
 private:
   char *fLabel;
   Fl_Widget *(*fCreate)();
@@ -78,7 +77,7 @@ private:
 // the viewport alignment test.
 class MainWindow : public Fl_Double_Window {
 public:
-  MainWindow(int w, int h, const char *l = 0L);
+  MainWindow(int w, int h, const char *l=0L);
   void drawAlignmentIndicators();
   void draw();
   void testAlignment(int v);

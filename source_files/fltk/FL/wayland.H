@@ -15,7 +15,7 @@
 //
 
 #if !defined(FL_PLATFORM_H)
-#error "Never use <FL/wayland.H> directly; include <FL/platform.H> instead."
+#  error "Never use <FL/wayland.H> directly; include <FL/platform.H> instead."
 #endif // !FL_PLATFORM_H
 
 typedef struct wld_window *Window;
@@ -26,7 +26,8 @@ struct flCairoRegion {
 }; // a region is the union of a series of rectangles
 
 #include <stdint.h>
+typedef struct _cairo cairo_t;
 
 FL_EXPORT struct wl_display *fl_wl_display();
 FL_EXPORT struct wl_surface *fl_wl_surface(Window xid);
-FL_EXPORT struct _cairo *fl_wl_cairo();
+FL_EXPORT cairo_t *fl_wl_cairo();

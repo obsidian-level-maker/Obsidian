@@ -42,65 +42,65 @@
 
 static short cmap[256][3] = {
 
-    // 3-bit colormap:
+  // 3-bit colormap:
 
-    {0, 0, 0},       // black
-    {III, 0, 0},     // red
-    {0, III, 0},     // green
-    {III, III, 0},   // yellow
-    {0, 0, III},     // blue
-    {III, 0, III},   // magenta
-    {0, III, III},   // cyan
-    {III, III, III}, // white
+  {  0,  0,  0},        // black
+  {III,  0,  0},        // red
+  {  0,III,  0},        // green
+  {III,III,  0},        // yellow
+  {  0,  0,III},        // blue
+  {III,  0,III},        // magenta
+  {  0,III,III},        // cyan
+  {III,III,III},        // white
 
-    // pastel versions of those colors, from SGI's standard color map:
+  // pastel versions of those colors, from SGI's standard color map:
 
-    {85, 85, 85},    // 1/3 gray
-    {198, 113, 113}, // salmon? pale red?
-    {113, 198, 113}, // pale green
-    {142, 142, 56},  // khaki
-    {113, 113, 198}, // pale blue
-    {142, 56, 142},  // purple, orchid, pale magenta
-    {56, 142, 142},  // cadet blue, aquamarine, pale cyan
+  { 85, 85, 85},        // 1/3 gray
+  {198,113,113},        // salmon? pale red?
+  {113,198,113},        // pale green
+  {142,142, 56},        // khaki
+  {113,113,198},        // pale blue
+  {142, 56,142},        // purple, orchid, pale magenta
+  { 56,142,142},        // cadet blue, aquamarine, pale cyan
 
-    // The next location (15) is used for FL_SELECTION_COLOR. It formerly was
-    // 2/3 gray but this is changed to be the Windows blue color. This allows
-    // the default behavior on both X and Windows to match:
-    // {170,170,170},     // old 2/3 gray color
+  // The next location (15) is used for FL_SELECTION_COLOR. It formerly was
+  // 2/3 gray but this is changed to be the Windows blue color. This allows
+  // the default behavior on both X and Windows to match:
+  // {170,170,170},     // old 2/3 gray color
 
-    {0, 0, 128}, // 15 = FL_SELECTION_COLOR
+  {  0,  0,128},        // 15 = FL_SELECTION_COLOR
 
-    // These next 16 (index 16 - 31) are the FL_FREE_COLOR area. In some
-    // versions of fltk these were filled with random colors that a Irix 5.3
-    // machine placed in these locations.
+  // These next 16 (index 16 - 31) are the FL_FREE_COLOR area. In some
+  // versions of fltk these were filled with random colors that a Irix 5.3
+  // machine placed in these locations.
 
-    // This version uses colors that NewTek has assigned for their GUI
-    // (from George Yohng):
+  // This version uses colors that NewTek has assigned for their GUI
+  // (from George Yohng):
 
-    {168, 168, 152}, // 16 = FL_FREE_COLOR
-    {232, 232, 216},
-    {104, 104, 88},
-    {152, 168, 168},
-    {216, 232, 232},
-    {88, 104, 104},
-    {156, 156, 168},
-    {220, 220, 232},
-    {92, 92, 104},
-    {156, 168, 156},
-    {220, 232, 220},
-    {92, 104, 92},
-    {144, 144, 144},
-    {192, 192, 192},
-    {80, 80, 80},
-    {160, 160, 160}, // 31
+  {168,168,152},        // 16 = FL_FREE_COLOR
+  {232,232,216},
+  {104,104, 88},
+  {152,168,168},
+  {216,232,232},
+  { 88,104,104},
+  {156,156,168},
+  {220,220,232},
+  { 92, 92,104},
+  {156,168,156},
+  {220,232,220},
+  { 92,104, 92},
+  {144,144,144},
+  {192,192,192},
+  { 80, 80, 80},
+  {160,160,160},        // 31
 
-    // The rest of the colormap is a gray ramp and table, filled in below:
+  // The rest of the colormap is a gray ramp and table, filled in below:
 };
 
 // This is Fl::background from Fl_get_system_colors.cxx, with modifications:
 
 #define FL_GRAY_RAMP 32
-#define FL_NUM_GRAY 24
+#define FL_NUM_GRAY  24
 #define FL_GRAY 49 // old value is 47
 typedef unsigned char uchar;
 

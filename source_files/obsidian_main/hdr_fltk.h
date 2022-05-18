@@ -46,7 +46,7 @@
 #include <FL/Fl_Output.H>
 #include <FL/Fl_Pack.H>
 #include <FL/Fl_Pixmap.H>
-#include <FL/Fl_JPEG_Image.H>
+#include <FL/Fl_BMP_Image.H>
 #include <FL/Fl_Progress.H>
 #include <FL/Fl_Return_Button.H>
 #include <FL/Fl_Round_Button.H>

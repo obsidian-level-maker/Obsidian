@@ -35,33 +35,31 @@ static int table_size;
  the string is not copied, so the string must be in static memory. The exact name to be used
  depends on the platform :
 
- \li Windows, X11, Xft: use the family name prefixed by one character to indicate the desired font
- variant. Characters <tt>' ', 'I', 'B', 'P' </tt>denote plain, italic, bold, and bold-italic
- variants, respectively. For example, string \c "IGabriola" is to be used to denote the
- <tt>"Gabriola italic"</tt> font. The \c "Oblique" suffix, in whatever case, is to be treated  as \c
- "italic", that is, prefix the family name with \c 'I'. \li Other platforms, i.e., X11 + Pango,
- Wayland, macOS: use the full font name as returned by function Fl::get_font_name() or as listed by
- applications test/fonts or test/utf8. No prefix is to be added.
+ \li Windows, X11, Xft: use the family name prefixed by one character to indicate the desired font variant.
+ Characters <tt>' ', 'I', 'B', 'P' </tt>denote plain, italic, bold, and bold-italic variants, respectively. For example,
+ string \c "IGabriola" is to be used to denote the <tt>"Gabriola italic"</tt> font. The \c "Oblique" suffix,
+ in whatever case, is to be treated  as \c "italic", that is, prefix the family name with \c 'I'.
+ \li Other platforms, i.e., X11 + Pango, Wayland, macOS: use the full font name as returned by
+ function Fl::get_font_name() or as listed by applications test/fonts or test/utf8. No prefix is to be added.
 */
-void Fl::set_font(Fl_Font fnum, const char *name) {
+void Fl::set_font(Fl_Font fnum, const char* name) {
   Fl_Graphics_Driver &d = Fl_Graphics_Driver::default_driver();
   unsigned width = d.font_desc_size();
-  if (!fl_fonts)
-    fl_fonts = d.calc_fl_fonts();
+  if (!fl_fonts) fl_fonts = d.calc_fl_fonts();
   while (fnum >= table_size) {
     int i = table_size;
-    if (!i) { // don't realloc the built-in table
-      table_size = 2 * FL_FREE_FONT;
+    if (!i) {   // don't realloc the built-in table
+      table_size = 2*FL_FREE_FONT;
       i = FL_FREE_FONT;
-      Fl_Fontdesc *t = (Fl_Fontdesc *)malloc(table_size * width);
-      memcpy(t, fl_fonts, FL_FREE_FONT * width);
+      Fl_Fontdesc* t = (Fl_Fontdesc*)malloc(table_size*width);
+      memcpy(t, fl_fonts, FL_FREE_FONT*width);
       fl_fonts = t;
     } else {
-      table_size = 2 * table_size;
-      fl_fonts = (Fl_Fontdesc *)realloc(fl_fonts, table_size * width);
+      table_size = 2*table_size;
+      fl_fonts=(Fl_Fontdesc*)realloc(fl_fonts, table_size*width);
     }
     for (; i < table_size; i++) {
-      memset((char *)fl_fonts + i * width, 0, width);
+      memset((char*)fl_fonts + i * width, 0, width);
     }
   }
   d.font_name(fnum, name);
@@ -78,6 +76,6 @@ void Fl::set_font(Fl_Font fnum, Fl_Font from) {
     face. Under X this value is passed to XListFonts to get all the sizes
     of this face.
 */
-const char *Fl::get_font(Fl_Font fnum) {
+const char* Fl::get_font(Fl_Font fnum) {
   return Fl_Graphics_Driver::default_driver().font_name(fnum);
 }

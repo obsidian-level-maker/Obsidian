@@ -18,15 +18,16 @@
 #include <FL/Fl.H>
 #include "CubeViewUI.h"
 
-int main(int argc, char **argv) {
+int
+main(int argc, char **argv) {
 
-  CubeViewUI *cvui = new CubeViewUI;
+    CubeViewUI *cvui=new CubeViewUI;
 
-  // Initial global objects.
+//Initial global objects.
 
-  Fl::visual(FL_DOUBLE | FL_INDEX);
+    Fl::visual(FL_DOUBLE|FL_INDEX);
 
-  cvui->show(argc, argv);
+    cvui->show(argc, argv);
 
-  return Fl::run();
+    return Fl::run();
 }

@@ -16,8 +16,9 @@
 
 #include <FL/forms.H>
 /** Creates a bitmap widget from a box type, position, size and optional label specification */
-Fl_FormsBitmap::Fl_FormsBitmap(Fl_Boxtype t, int X, int Y, int W, int H, const char *l)
-  : Fl_Widget(X, Y, W, H, l) {
+Fl_FormsBitmap::Fl_FormsBitmap(
+  Fl_Boxtype t, int X, int Y, int W, int H, const char* l)
+: Fl_Widget(X, Y, W, H, l) {
   box(t);
   b = 0;
   color(FL_BLACK);
@@ -32,9 +33,6 @@ void Fl_FormsBitmap::set(int W, int H, const uchar *bits) {
 /** Draws the bitmap and its associated box. */
 void Fl_FormsBitmap::draw() {
   draw_box(box(), selection_color());
-  if (b) {
-    fl_color(color());
-    b->draw(x(), y(), w(), h());
-  }
+  if (b) {fl_color(color()); b->draw(x(), y(), w(), h());}
   draw_label();
 }

@@ -19,12 +19,10 @@
 
 void Fl_Window::border(int b) {
   if (b) {
-    if (border())
-      return;
+    if (border()) return;
     clear_flag(NOBORDER);
   } else {
-    if (!border())
-      return;
+    if (!border()) return;
     set_flag(NOBORDER);
   }
   pWindowDriver->use_border();
@@ -49,7 +47,7 @@ void Fl_Window::fullscreen() {
   }
 }
 
-void Fl_Window::fullscreen_off(int X, int Y, int W, int H) {
+void Fl_Window::fullscreen_off(int X,int Y,int W,int H) {
   if (shown() && (flags() & Fl_Widget::FULLSCREEN)) {
     pWindowDriver->fullscreen_off(X, Y, W, H);
   } else {

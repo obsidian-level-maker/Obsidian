@@ -472,7 +472,7 @@ if (OPTION_USE_WAYLAND)
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_SYSTEM_LIBDECOR")
   else()
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${CMAKE_CURRENT_SOURCE_DIR}/../libdecor/src   -DLIBDECOR_PLUGIN_API_VERSION=1 -DLIBDECOR_PLUGIN_DIR=\\\"/usr/local/lib\\\" ")
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DUSE_SYSTEM_LIBDECOR=0")
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DUSE_SYSTEM_LIBDECOR=0 -DHAVE_MEMFD_CREATE -DHAVE_MKOSTEMP -DHAVE_POSIX_FALLOCATE")
   endif (OPTION_USE_SYSTEM_LIBDECOR)
 
   if (GTK_FOUND)
@@ -483,12 +483,12 @@ if (OPTION_USE_WAYLAND)
     xutf8/keysym2Ucs.c
     scandir_posix.c
     ../libdecor/src/cursor-settings.c
+    ../libdecor/src/os-compatibility.c
     ../libdecor/build/fl_libdecor-plugins.c
     )
   if (NOT OPTION_USE_SYSTEM_LIBDECOR)
     list (APPEND CFILES
     ../libdecor/build/fl_libdecor.c
-    ../libdecor/src/os-compatibility.c
     ../libdecor/src/plugins/cairo/libdecor-cairo-blur.c
     )
   endif (NOT OPTION_USE_SYSTEM_LIBDECOR)

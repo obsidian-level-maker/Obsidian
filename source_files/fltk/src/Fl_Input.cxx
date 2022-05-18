@@ -30,7 +30,7 @@
 #include <FL/Fl_Input.H>
 #include <FL/fl_draw.H>
 #include <FL/fl_ask.H>
-#include "flstring.h" // this #includes "<config.h>" !
+#include "flstring.h"           // this #includes "<config.h>" !
 
 #include <FL/Fl_Float_Input.H>
 #include <FL/Fl_Int_Input.H>
@@ -40,18 +40,16 @@
 #include <FL/Fl_Secret_Input.H>
 
 #ifdef HAVE_LOCALE_H
-#include <locale.h>
+# include <locale.h>
 #endif
 
 
 void Fl_Input::draw() {
-  if (input_type() == FL_HIDDEN_INPUT)
-    return;
+  if (input_type() == FL_HIDDEN_INPUT) return;
   Fl_Boxtype b = box();
-  if (damage() & FL_DAMAGE_ALL)
-    draw_box(b, color());
-  Fl_Input_::drawtext(x() + Fl::box_dx(b), y() + Fl::box_dy(b), w() - Fl::box_dw(b),
-                      h() - Fl::box_dh(b));
+  if (damage() & FL_DAMAGE_ALL) draw_box(b, color());
+  Fl_Input_::drawtext(x()+Fl::box_dx(b), y()+Fl::box_dy(b),
+                      w()-Fl::box_dw(b), h()-Fl::box_dh(b));
 }
 
 // kludge so shift causes selection to extend:
@@ -77,7 +75,7 @@ int Fl_Input::shift_up_down_position(int p) {
 //
 #define NORMAL_INPUT_MOVE (Fl::option(Fl::OPTION_ARROW_FOCUS) ? 0 : 1)
 
-#define ctrl(x) ((x) ^ 0x40)
+#define ctrl(x) ((x)^0x40)
 
 // List of characters that are legal in a floating point input field.
 // This text string is created at run-time to take the current locale
@@ -97,14 +95,12 @@ static const char *legal_fp_chars = ".eE+-";
 int Fl_Input::kf_lines_up(int repeat_num) {
   int i = position();
   if (!line_start(i)) {
-    // UNNEEDED if (input_type()==FL_MULTILINE_INPUT && !Fl::option(Fl::OPTION_ARROW_FOCUS)) return
-    // 1;
+    //UNNEEDED if (input_type()==FL_MULTILINE_INPUT && !Fl::option(Fl::OPTION_ARROW_FOCUS)) return 1;
     return NORMAL_INPUT_MOVE;
   }
-  while (repeat_num--) {
+  while(repeat_num--) {
     i = line_start(i);
-    if (!i)
-      break;
+    if (!i) break;
     i--;
   }
   shift_up_down_position(line_start(i));
@@ -117,14 +113,12 @@ int Fl_Input::kf_lines_up(int repeat_num) {
 int Fl_Input::kf_lines_down(int repeat_num) {
   int i = position();
   if (line_end(i) >= size()) {
-    // UNNEEDED if (input_type()==FL_MULTILINE_INPUT && !Fl::option(Fl::OPTION_ARROW_FOCUS)) return
-    // 1;
+    //UNNEEDED if (input_type()==FL_MULTILINE_INPUT && !Fl::option(Fl::OPTION_ARROW_FOCUS)) return 1;
     return NORMAL_INPUT_MOVE;
   }
   while (repeat_num--) {
     i = line_end(i);
-    if (i >= size())
-      break;
+    if (i >= size()) break;
     i++;
   }
   shift_up_down_position(i);
@@ -143,82 +137,53 @@ int Fl_Input::kf_page_down() {
 
 // Toggle insert mode
 int Fl_Input::kf_insert_toggle() {
-  if (readonly()) {
-    fl_beep();
-    return 1;
-  }
-  return 1; // \todo: needs insert mode
+  if (readonly()) { fl_beep(); return 1; }
+  return 1;                             // \todo: needs insert mode
 }
 
 // Delete word right
 int Fl_Input::kf_delete_word_right() {
-  if (readonly()) {
-    fl_beep();
-    return 1;
-  }
-  if (mark() != position())
-    return cut();
+  if (readonly()) { fl_beep(); return 1; }
+  if (mark() != position()) return cut();
   cut(position(), word_end(position()));
   return 1;
 }
 
 // Delete word left
 int Fl_Input::kf_delete_word_left() {
-  if (readonly()) {
-    fl_beep();
-    return 1;
-  }
-  if (mark() != position())
-    return cut();
+  if (readonly()) { fl_beep(); return 1; }
+  if (mark() != position()) return cut();
   cut(word_start(position()), position());
   return 1;
 }
 
 // Delete to start of line
 int Fl_Input::kf_delete_sol() {
-  if (readonly()) {
-    fl_beep();
-    return 1;
-  }
-  if (mark() != position())
-    return cut();
+  if (readonly()) { fl_beep(); return 1; }
+  if (mark() != position()) return cut();
   cut(line_start(position()), position());
   return 1;
 }
 
 // Delete to end of line
 int Fl_Input::kf_delete_eol() {
-  if (readonly()) {
-    fl_beep();
-    return 1;
-  }
-  if (mark() != position())
-    return cut();
+  if (readonly()) { fl_beep(); return 1; }
+  if (mark() != position()) return cut();
   cut(position(), line_end(position()));
   return 1;
 }
 
 int Fl_Input::kf_delete_char_right() {
-  if (readonly()) {
-    fl_beep();
-    return 1;
-  }
-  if (mark() != position())
-    cut();
-  else
-    cut(1);
+  if (readonly()) { fl_beep(); return 1; }
+  if (mark() != position()) cut();
+  else cut(1);
   return 1;
 }
 
 int Fl_Input::kf_delete_char_left() {
-  if (readonly()) {
-    fl_beep();
-    return 1;
-  }
-  if (mark() != position())
-    cut();
-  else
-    cut(-1);
+  if (readonly()) { fl_beep(); return 1; }
+  if (mark() != position()) cut();
+  else cut(-1);
   return 1;
 }
 
@@ -234,15 +199,10 @@ int Fl_Input::kf_move_eol() {
 
 // Clear to end of line
 int Fl_Input::kf_clear_eol() {
-  if (readonly()) {
-    fl_beep();
-    return 1;
-  }
-  if (position() >= size())
-    return 0;
+  if (readonly()) { fl_beep(); return 1; }
+  if (position()>=size()) return 0;
   int i = line_end(position());
-  if (i == position() && i < size())
-    i++;
+  if (i == position() && i < size()) i++;
   cut(position(), i);
   return copy_cuts();
 }
@@ -251,7 +211,7 @@ int Fl_Input::kf_clear_eol() {
 //    If OPTION_ARROW_FOCUS is disabled, return 1 to prevent focus navigation.
 //
 int Fl_Input::kf_move_char_left() {
-  int i = shift_position(position() - 1) + NORMAL_INPUT_MOVE;
+  int i = shift_position(position()-1) + NORMAL_INPUT_MOVE;
   return Fl::option(Fl::OPTION_ARROW_FOCUS) ? i : 1;
 }
 
@@ -259,7 +219,7 @@ int Fl_Input::kf_move_char_left() {
 //    If OPTION_ARROW_FOCUS is disabled, return 1 to prevent focus navigation.
 //
 int Fl_Input::kf_move_char_right() {
-  int i = shift_position(position() + 1) + NORMAL_INPUT_MOVE;
+  int i = shift_position(position()+1) + NORMAL_INPUT_MOVE;
   return Fl::option(Fl::OPTION_ARROW_FOCUS) ? i : 1;
 }
 
@@ -277,16 +237,16 @@ int Fl_Input::kf_move_word_right() {
 
 // Move cursor up one line and to the start of line (paragraph up)
 int Fl_Input::kf_move_up_and_sol() {
-  if (line_start(position()) == position() && position() > 0)
-    return shift_position(line_start(position() - 1)) + NORMAL_INPUT_MOVE;
+  if (line_start(position())==position() && position()>0)
+    return shift_position(line_start(position()-1)) + NORMAL_INPUT_MOVE;
   else
     return shift_position(line_start(position())) + NORMAL_INPUT_MOVE;
 }
 
 // Move cursor down one line and to the end of line (paragraph down)
 int Fl_Input::kf_move_down_and_eol() {
-  if (line_end(position()) == position() && position() < size())
-    return shift_position(line_end(position() + 1)) + NORMAL_INPUT_MOVE;
+  if (line_end(position())==position() && position()<size())
+    return shift_position(line_end(position()+1)) + NORMAL_INPUT_MOVE;
   else
     return shift_position(line_end(position())) + NORMAL_INPUT_MOVE;
 }
@@ -305,26 +265,20 @@ int Fl_Input::kf_bottom() {
 
 // Select all text in the widget
 int Fl_Input::kf_select_all() {
-  position(0, size());
+  position(0,size());
   return 1;
 }
 
 // Undo.
 int Fl_Input::kf_undo() {
-  if (readonly()) {
-    fl_beep();
-    return 1;
-  }
+  if (readonly()) { fl_beep(); return 1; }
   return undo();
 }
 
 // Redo. (currently unimplemented.. toggles undo() instead)
 int Fl_Input::kf_redo() {
-  if (readonly()) {
-    fl_beep();
-    return 1;
-  }
-  return kf_undo(); // currently we don't support multilevel undo
+  if (readonly()) { fl_beep(); return 1; }
+  return kf_undo();                     // currently we don't support multilevel undo
 }
 
 // Do a copy operation
@@ -334,20 +288,14 @@ int Fl_Input::kf_copy() {
 
 // Do a paste operation
 int Fl_Input::kf_paste() {
-  if (readonly()) {
-    fl_beep();
-    return 1;
-  }
+  if (readonly()) { fl_beep(); return 1; }
   Fl::paste(*this, 1);
   return 1;
 }
 
 // Do a cut with copy
 int Fl_Input::kf_copy_cut() {
-  if (readonly()) {
-    fl_beep();
-    return 1;
-  }
+  if (readonly()) { fl_beep(); return 1; }
   copy(1);
   return cut();
 }
@@ -380,62 +328,53 @@ int Fl_Input::handle_key() {
         size_t len = strlen(standard_fp_chars);
         struct lconv *lc = localeconv();
         if (lc) {
-          if (lc->decimal_point)
-            len += strlen(lc->decimal_point);
-          if (lc->mon_decimal_point)
-            len += strlen(lc->mon_decimal_point);
-          if (lc->positive_sign)
-            len += strlen(lc->positive_sign);
-          if (lc->negative_sign)
-            len += strlen(lc->negative_sign);
+          if (lc->decimal_point) len += strlen(lc->decimal_point);
+          if (lc->mon_decimal_point) len += strlen(lc->mon_decimal_point);
+          if (lc->positive_sign) len += strlen(lc->positive_sign);
+          if (lc->negative_sign) len += strlen(lc->negative_sign);
         }
         // the following line is not a true memory leak because the array is only
         // allocated once if required, and automatically freed when the program quits
-        char *chars = (char *)malloc(len + 1);
+        char *chars = (char*)malloc(len+1);
         legal_fp_chars = chars;
         strcpy(chars, standard_fp_chars);
         if (lc) {
-          if (lc->decimal_point)
-            strcat(chars, lc->decimal_point);
-          if (lc->mon_decimal_point)
-            strcat(chars, lc->mon_decimal_point);
-          if (lc->positive_sign)
-            strcat(chars, lc->positive_sign);
-          if (lc->negative_sign)
-            strcat(chars, lc->negative_sign);
+          if (lc->decimal_point) strcat(chars, lc->decimal_point);
+          if (lc->mon_decimal_point) strcat(chars, lc->mon_decimal_point);
+          if (lc->positive_sign) strcat(chars, lc->positive_sign);
+          if (lc->negative_sign) strcat(chars, lc->negative_sign);
         }
       }
 #endif // HAVE_LOCALECONV
 
       // find the insert position
-      int ip = position() < mark() ? position() : mark();
+      int ip = position()<mark() ? position() : mark();
       // This is complex to allow "0xff12" hex to be typed:
-      if ((!ip && (ascii == '+' || ascii == '-')) || (ascii >= '0' && ascii <= '9') ||
-          (ip == 1 && index(0) == '0' && (ascii == 'x' || ascii == 'X')) ||
-          (ip > 1 && index(0) == '0' && (index(1) == 'x' || index(1) == 'X') &&
-           ((ascii >= 'A' && ascii <= 'F') || (ascii >= 'a' && ascii <= 'f'))) ||
-          (input_type() == FL_FLOAT_INPUT && ascii && strchr(legal_fp_chars, ascii))) {
-        if (readonly())
-          fl_beep();
-        else
-          replace(position(), mark(), &ascii, 1);
+      if (   (!ip && (ascii == '+' || ascii == '-'))
+          || (ascii >= '0' && ascii <= '9')
+          || (ip==1 && index(0)=='0' && (ascii=='x' || ascii == 'X'))
+          || (ip>1 && index(0)=='0' && (index(1)=='x'||index(1)=='X')
+              && ((ascii>='A'&& ascii<='F') || (ascii>='a'&& ascii<='f')))
+          || (input_type()==FL_FLOAT_INPUT && ascii && strchr(legal_fp_chars, ascii)))
+      {
+        if (readonly()) fl_beep();
+        else replace(position(), mark(), &ascii, 1);
       }
       return 1;
     }
 
     if (del || Fl::event_length()) {
-      if (readonly())
-        fl_beep();
-      else
-        replace(position(), del ? position() - del : mark(), Fl::event_text(), Fl::event_length());
+      if (readonly()) fl_beep();
+      else replace(position(), del ? position()-del : mark(),
+                   Fl::event_text(), Fl::event_length());
     }
     if (Fl::screen_driver()->has_marked_text() && Fl::compose_state) {
-      this->mark(this->position() - Fl::compose_state);
+      this->mark( this->position() - Fl::compose_state );
     }
     return 1;
   }
 
-  unsigned int mods = Fl::event_state() & (FL_META | FL_CTRL | FL_ALT);
+  unsigned int mods = Fl::event_state() & (FL_META|FL_CTRL|FL_ALT);
   unsigned int shift = Fl::event_state() & FL_SHIFT;
   unsigned int multiline = (input_type() == FL_MULTILINE_INPUT) ? 1 : 0;
   //
@@ -453,8 +392,7 @@ int Fl_Input::handle_key() {
 
   // handle keypresses that can have a platform-dependent processing
   int retval = Fl::screen_driver()->input_widget_handle_key(Fl::event_key(), mods, shift, this);
-  if (retval >= 0)
-    return retval;
+  if (retval >= 0) return retval;
 
   switch (Fl::event_key()) {
 
@@ -462,13 +400,10 @@ int Fl_Input::handle_key() {
       // Note: Mac has no "Insert" key; it's the "Help" key.
       //       This keypress is apparently not possible on macs.
       //
-      if (mods == 0 && shift)
-        return kf_paste(); // Shift-Insert   (WP,NP,WOW,GE,KE,OF)
-      if (mods == 0)
-        return kf_insert_toggle(); // Insert         (Standard)
-      if (mods == FL_CTRL)
-        return kf_copy(); // Ctrl-Insert    (WP,NP,WOW,GE,KE,OF)
-      return 0;           // ignore other combos, pass to parent
+      if (mods==0 && shift) return kf_paste();                  // Shift-Insert   (WP,NP,WOW,GE,KE,OF)
+      if (mods==0)          return kf_insert_toggle();          // Insert         (Standard)
+      if (mods==FL_CTRL)    return kf_copy();                   // Ctrl-Insert    (WP,NP,WOW,GE,KE,OF)
+      return 0;                                                 // ignore other combos, pass to parent
 
     case FL_Enter:
     case FL_KP_Enter:
@@ -478,64 +413,53 @@ int Fl_Input::handle_key() {
         return 1;
       } else if (multiline && !readonly()) {
         return replace(position(), mark(), "\n", 1);
-      }
-      return 0; // reserved for shortcuts
+      } return 0;                       // reserved for shortcuts
 
     case FL_Tab:
       // Handle special case for multiline input with 'old tab behavior';
       // tab handled as a normal insertable character.
       //
-      if (mods == 0 && !shift // Tab?
-          && !tab_nav()       // old tab behavior enabled?
-          && multiline) {     // multiline input?
-        break;                // insert tab character
+      if (mods==0 && !shift             // Tab?
+           && !tab_nav()                // old tab behavior enabled?
+           && multiline) {              // multiline input?
+        break;                          // insert tab character
       }
-      if (mods == 0)
-        return 0; // Tab, Shift-Tab? nav focus      (Standard/OSX-HIG)
-      return 0;   // ignore other combos, pass to parent
+      if (mods==0) return 0;                                    // Tab, Shift-Tab? nav focus      (Standard/OSX-HIG)
+      return 0;                                                 // ignore other combos, pass to parent
 
     case 'a':
-      if (mods == FL_COMMAND)
-        return kf_select_all(); // Ctrl-A, Mac:Meta-A             (Standard/OSX-HIG)
-      break;                    // handle other combos elsewhere
+      if (mods==FL_COMMAND) return kf_select_all();             // Ctrl-A, Mac:Meta-A             (Standard/OSX-HIG)
+      break;                                                    // handle other combos elsewhere
     case 'c':
-      if (mods == FL_COMMAND)
-        return kf_copy(); // Ctrl-C, Mac:Meta-C             (Standard/OSX-HIG)
-      break;              // handle other combos elsewhere
+      if (mods==FL_COMMAND) return kf_copy();                   // Ctrl-C, Mac:Meta-C             (Standard/OSX-HIG)
+      break;                                                    // handle other combos elsewhere
     case 'v':
-      if (mods == FL_COMMAND)
-        return kf_paste(); // Ctrl-V, Mac:Meta-V             (Standard/OSX-HIG)
-      break;               // handle other combos elsewhere
+      if (mods==FL_COMMAND) return kf_paste();                  // Ctrl-V, Mac:Meta-V             (Standard/OSX-HIG)
+      break;                                                    // handle other combos elsewhere
     case 'x':
-      if (mods == FL_COMMAND)
-        return kf_copy_cut(); // Ctrl-X, Mac:Meta-X             (Standard/OSX-HIG)
+      if (mods==FL_COMMAND) return kf_copy_cut();               // Ctrl-X, Mac:Meta-X             (Standard/OSX-HIG)
       break;
     case 'z':
-      if (mods == FL_COMMAND && !shift)
-        return kf_undo(); // Ctrl-Z, Mac:Meta-Z             (Standard/OSX-HIG)
-      if (mods == FL_COMMAND && shift)
-        return kf_redo(); // Shift-Ctrl-Z, Mac:Shift-Meta-Z (Standard/OSX-HIG)
-      break;              // handle other combos elsewhere
+      if (mods==FL_COMMAND && !shift) return kf_undo();         // Ctrl-Z, Mac:Meta-Z             (Standard/OSX-HIG)
+      if (mods==FL_COMMAND && shift)  return kf_redo();         // Shift-Ctrl-Z, Mac:Shift-Meta-Z (Standard/OSX-HIG)
+      break;                                                    // handle other combos elsewhere
   }
 
   switch (ascii) {
     case ctrl('H'):
-      return kf_delete_char_left(); // Ctrl-H (!WP,!NP,!WOW,!WOX,TE,SA,GE,KE,OF)
-    case ctrl('I'):                 // Ctrl-I (literal Tab)             (!WP,NP,!WOW,!GE,KE,OF)
-    case ctrl('J'):                 // Ctrl-J (literal Line Feed/Enter) (Standard)
-    case ctrl('L'):                 // Ctrl-L (literal Form Feed)       (Standard)
-    case ctrl('M'):                 // Ctrl-M (literal Cr)              (Standard)
-      if (readonly()) {
-        fl_beep();
-        return 1;
-      }
+      return kf_delete_char_left();                             // Ctrl-H                           (!WP,!NP,!WOW,!WOX,TE,SA,GE,KE,OF)
+    case ctrl('I'):                                             // Ctrl-I (literal Tab)             (!WP,NP,!WOW,!GE,KE,OF)
+    case ctrl('J'):                                             // Ctrl-J (literal Line Feed/Enter) (Standard)
+    case ctrl('L'):                                             // Ctrl-L (literal Form Feed)       (Standard)
+    case ctrl('M'):                                             // Ctrl-M (literal Cr)              (Standard)
+      if (readonly()) { fl_beep(); return 1; }
       // insert a few selected control characters literally:
       if (input_type() != FL_FLOAT_INPUT && input_type() != FL_INT_INPUT)
         return replace(position(), mark(), &ascii, 1);
       break;
   }
 
-  return 0; // ignored
+  return 0;             // ignored
 }
 
 int Fl_Input::handle(int event) {
@@ -544,7 +468,7 @@ int Fl_Input::handle(int event) {
   switch (event) {
     case FL_UNFOCUS:
       if (Fl::screen_driver()->has_marked_text() && Fl::compose_state) {
-        this->mark(this->position());
+        this->mark( this->position() );
         fl_reset_spot();
       }
       break;
@@ -563,10 +487,10 @@ int Fl_Input::handle(int event) {
           up_down_position(line_start(size()));
           break;
         case FL_Tab:
-          position(size(), 0);
+          position(size(),0);
           break;
         default:
-          position(position(), mark()); // turns off the saved up/down arrow position
+          position(position(),mark());// turns off the saved up/down arrow position
           break;
       }
       break;
@@ -576,13 +500,12 @@ int Fl_Input::handle(int event) {
       // where tab is entered as a character: make sure user attempt to 'tab over'
       // widget doesn't destroy the field, replacing it with a tab character.
       //
-      if (Fl::event_key() == FL_Tab             // Tab key?
-          && !Fl::event_state(FL_SHIFT)         // no shift?
-          && !tab_nav()                         // with tab navigation disabled?
-          && input_type() == FL_MULTILINE_INPUT // with a multiline input?
-          && size() > 0                         // non-empty field?
-          && ((mark() == 0 && position() == size()) ||
-              (position() == 0 && mark() == size()))) { // while entire field selected?
+      if (Fl::event_key() == FL_Tab                     // Tab key?
+          && !Fl::event_state(FL_SHIFT)                 // no shift?
+          && !tab_nav()                                 // with tab navigation disabled?
+          && input_type() == FL_MULTILINE_INPUT         // with a multiline input?
+          && size() > 0                                 // non-empty field?
+          && ((mark()==0 && position()==size()) || (position()==0 && mark()==size()))) {// while entire field selected?
         // Set cursor to the end of the selection...
         if (mark() > position())
           position(mark());
@@ -594,19 +517,19 @@ int Fl_Input::handle(int event) {
           window()->cursor(FL_CURSOR_NONE);
         return handle_key();
       }
-      // NOTREACHED
+      //NOTREACHED
 
     case FL_PUSH:
       if (Fl::dnd_text_ops()) {
         int oldpos = position(), oldmark = mark();
         Fl_Boxtype b = box();
-        Fl_Input_::handle_mouse(x() + Fl::box_dx(b), y() + Fl::box_dy(b), w() - Fl::box_dw(b),
-                                h() - Fl::box_dh(b), 0);
+        Fl_Input_::handle_mouse(x()+Fl::box_dx(b), y()+Fl::box_dy(b),
+                                w()-Fl::box_dw(b), h()-Fl::box_dh(b), 0);
         newpos = position();
-        position(oldpos, oldmark);
-        if (Fl::focus() == this && !Fl::event_state(FL_SHIFT) && input_type() != FL_SECRET_INPUT &&
-            ((newpos >= mark() && newpos < position()) ||
-             (newpos >= position() && newpos < mark()))) {
+        position( oldpos, oldmark );
+        if (Fl::focus()==this && !Fl::event_state(FL_SHIFT) && input_type()!=FL_SECRET_INPUT &&
+           ( (newpos >= mark() && newpos < position()) ||
+             (newpos >= position() && newpos < mark()) ) ) {
           // user clicked in the selection, may be trying to drag
           drag_start = newpos;
           return 1;
@@ -623,9 +546,8 @@ int Fl_Input::handle(int event) {
     case FL_DRAG:
       if (Fl::dnd_text_ops()) {
         if (drag_start >= 0) {
-          if (Fl::event_is_click())
-            return 1; // debounce the mouse
-                      // save the position because sometimes we don't get DND_ENTER:
+          if (Fl::event_is_click()) return 1; // debounce the mouse
+                                              // save the position because sometimes we don't get DND_ENTER:
           dnd_save_position = position();
           dnd_save_mark = mark();
           dnd_save_focus = this;
@@ -655,8 +577,7 @@ int Fl_Input::handle(int event) {
 
       // For output widgets, do the callback so the app knows the user
       // did something with the mouse...
-      if (readonly())
-        do_callback();
+      if (readonly()) do_callback();
 
       return 1;
 
@@ -671,18 +592,18 @@ int Fl_Input::handle(int event) {
       }
       // fall through:
     case FL_DND_DRAG:
-      // int p = mouse_position(X, Y, W, H);
+      //int p = mouse_position(X, Y, W, H);
 #ifdef DND_OUT_XXXX
-      if (Fl::focus() == this && (p >= dnd_save_position && p <= dnd_save_mark ||
-                                  p >= dnd_save_mark && p <= dnd_save_position)) {
+      if (Fl::focus()==this && (p>=dnd_save_position && p<=dnd_save_mark ||
+                                p>=dnd_save_mark && p<=dnd_save_position)) {
         position(dnd_save_position, dnd_save_mark);
         return 0;
       }
 #endif
       {
         Fl_Boxtype b = box();
-        Fl_Input_::handle_mouse(x() + Fl::box_dx(b), y() + Fl::box_dy(b), w() - Fl::box_dw(b),
-                                h() - Fl::box_dh(b), 0);
+        Fl_Input_::handle_mouse(x()+Fl::box_dx(b), y()+Fl::box_dy(b),
+                                w()-Fl::box_dw(b), h()-Fl::box_dh(b), 0);
       }
       return 1;
 
@@ -715,7 +636,7 @@ int Fl_Input::handle(int event) {
           else
             position(old_position);
         } // !readonly()
-      }   // from the same widget
+      } // from the same widget
       else if (dnd_save_focus) {
         dnd_save_focus->handle(FL_UNFOCUS);
       }
@@ -736,8 +657,9 @@ int Fl_Input::handle(int event) {
        */
   }
   Fl_Boxtype b = box();
-  return Fl_Input_::handletext(event, x() + Fl::box_dx(b), y() + Fl::box_dy(b), w() - Fl::box_dw(b),
-                               h() - Fl::box_dh(b));
+  return Fl_Input_::handletext(event,
+                               x()+Fl::box_dx(b), y()+Fl::box_dy(b),
+                               w()-Fl::box_dw(b), h()-Fl::box_dh(b));
 }
 
 /**
@@ -745,45 +667,47 @@ int Fl_Input::handle(int event) {
  and label string. The default boxtype is FL_DOWN_BOX.
  */
 Fl_Input::Fl_Input(int X, int Y, int W, int H, const char *l)
-  : Fl_Input_(X, Y, W, H, l) {}
+: Fl_Input_(X, Y, W, H, l) {
+}
 
 
-Fl_Float_Input::Fl_Float_Input(int X, int Y, int W, int H, const char *l)
-  : Fl_Input(X, Y, W, H, l) {
+Fl_Float_Input::Fl_Float_Input(int X,int Y,int W,int H,const char *l)
+: Fl_Input(X,Y,W,H,l)
+{
   type(FL_FLOAT_INPUT);
   clear_flag(MAC_USE_ACCENTS_MENU);
 }
 
 
-Fl_Int_Input::Fl_Int_Input(int X, int Y, int W, int H, const char *l)
-  : Fl_Input(X, Y, W, H, l) {
+Fl_Int_Input::Fl_Int_Input(int X,int Y,int W,int H,const char *l)
+: Fl_Input(X,Y,W,H,l) {
   type(FL_INT_INPUT);
   clear_flag(MAC_USE_ACCENTS_MENU);
 }
 
 
-Fl_Multiline_Input::Fl_Multiline_Input(int X, int Y, int W, int H, const char *l)
-  : Fl_Input(X, Y, W, H, l) {
+Fl_Multiline_Input::Fl_Multiline_Input(int X,int Y,int W,int H,const char *l)
+: Fl_Input(X,Y,W,H,l) {
   type(FL_MULTILINE_INPUT);
 }
 
 
-Fl_Output::Fl_Output(int X, int Y, int W, int H, const char *l)
-  : Fl_Input(X, Y, W, H, l) {
+Fl_Output::Fl_Output(int X,int Y,int W,int H, const char *l)
+: Fl_Input(X, Y, W, H, l) {
   type(FL_NORMAL_OUTPUT);
   clear_flag(NEEDS_KEYBOARD);
 }
 
 
-Fl_Multiline_Output::Fl_Multiline_Output(int X, int Y, int W, int H, const char *l)
-  : Fl_Output(X, Y, W, H, l) {
+Fl_Multiline_Output::Fl_Multiline_Output(int X,int Y,int W,int H,const char *l)
+: Fl_Output(X,Y,W,H,l) {
   type(FL_MULTILINE_OUTPUT);
   clear_flag(NEEDS_KEYBOARD);
 }
 
 
-Fl_Secret_Input::Fl_Secret_Input(int X, int Y, int W, int H, const char *l)
-  : Fl_Input(X, Y, W, H, l) {
+Fl_Secret_Input::Fl_Secret_Input(int X,int Y,int W,int H,const char *l)
+: Fl_Input(X,Y,W,H,l) {
   type(FL_SECRET_INPUT);
   clear_flag(MAC_USE_ACCENTS_MENU);
 }
@@ -791,7 +715,7 @@ Fl_Secret_Input::Fl_Secret_Input(int X, int Y, int W, int H, const char *l)
 int Fl_Secret_Input::handle(int event) {
   int retval = Fl_Input::handle(event);
   if (event == FL_KEYBOARD && Fl::screen_driver()->has_marked_text() && Fl::compose_state) {
-    this->mark(this->position()); // don't underline marked text
+    this->mark( this->position() ); // don't underline marked text
   }
   return retval;
 }

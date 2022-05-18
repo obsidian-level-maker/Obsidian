@@ -22,28 +22,23 @@
 #include <windows.h>
 
 
-Fl_GDI_Image_Surface_Driver::Fl_GDI_Image_Surface_Driver(int w, int h, int high_res,
-                                                         Fl_Offscreen off)
-  : Fl_Image_Surface_Driver(w, h, high_res, off) {
-  float d = fl_graphics_driver->scale();
+Fl_GDI_Image_Surface_Driver::Fl_GDI_Image_Surface_Driver(int w, int h, int high_res, Fl_Offscreen off) : Fl_Image_Surface_Driver(w, h, high_res, off) {
+  float d =  fl_graphics_driver->scale();
   if (!off && d != 1 && high_res) {
-    w = int(w * d);
-    h = int(h * d);
+    w = int(w*d);
+    h = int(h*d);
   }
   HDC gc = (HDC)Fl_Graphics_Driver::default_driver().gc();
-  offscreen = off ? off : CreateCompatibleBitmap((gc ? gc : fl_GetDC(0)), w, h);
-  if (!offscreen)
-    offscreen = CreateCompatibleBitmap(fl_GetDC(0), w, h);
+  offscreen = off ? off : CreateCompatibleBitmap( (gc ? gc : fl_GetDC(0) ) , w, h);
+  if (!offscreen) offscreen = CreateCompatibleBitmap(fl_GetDC(0), w, h);
   driver(Fl_Graphics_Driver::newMainGraphicsDriver());
-  if (d != 1 && high_res)
-    ((Fl_GDI_Graphics_Driver *)driver())->scale(d);
+  if (d != 1 && high_res) ((Fl_GDI_Graphics_Driver*)driver())->scale(d);
   origin.x = origin.y = 0;
 }
 
 
 Fl_GDI_Image_Surface_Driver::~Fl_GDI_Image_Surface_Driver() {
-  if (offscreen && !external_offscreen)
-    DeleteObject(offscreen);
+  if (offscreen && !external_offscreen) DeleteObject(offscreen);
   delete driver();
 }
 
@@ -55,27 +50,29 @@ void Fl_GDI_Image_Surface_Driver::set_current() {
   Fl_Surface_Device::set_current();
   pre_window = fl_window;
   _savedc = SaveDC(gc);
-  fl_window = (HWND)offscreen;
+  fl_window=(HWND)offscreen;
 }
 
 
 void Fl_GDI_Image_Surface_Driver::translate(int x, int y) {
-  ((Fl_GDI_Graphics_Driver *)driver())->translate_all(x, y);
+  ((Fl_GDI_Graphics_Driver*)driver())->translate_all(x, y);
 }
 
 
 void Fl_GDI_Image_Surface_Driver::untranslate() {
-  ((Fl_GDI_Graphics_Driver *)driver())->untranslate_all();
+  ((Fl_GDI_Graphics_Driver*)driver())->untranslate_all();
 }
 
 
-Fl_RGB_Image *Fl_GDI_Image_Surface_Driver::image() {
-  Fl_RGB_Image *image = Fl::screen_driver()->read_win_rectangle(0, 0, width, height, 0);
+Fl_RGB_Image* Fl_GDI_Image_Surface_Driver::image()
+{
+  Fl_RGB_Image *image = Fl::screen_driver()->read_win_rectangle( 0, 0, width, height, 0);
   return image;
 }
 
 
-void Fl_GDI_Image_Surface_Driver::end_current() {
+void Fl_GDI_Image_Surface_Driver::end_current()
+{
   HDC gc = (HDC)driver()->gc();
   GetWindowOrgEx(gc, &origin);
   RestoreDC(gc, _savedc);
