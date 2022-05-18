@@ -1369,6 +1369,7 @@ function MARINE_CLOSET_TUNE.calc_closets()
     elseif PARAM.m_c_type == "epi2" then
       PARAM.marine_closets = rngmax - math.round((rngmax - rngmin) * LEVEL.ep_along)
     end
+
     rngmin = math.min(PARAM.float_m_c_m_min,PARAM.float_m_c_m_max)
     rngmax = math.max(PARAM.float_m_c_m_min,PARAM.float_m_c_m_max)
 
@@ -1417,7 +1418,7 @@ function MARINE_CLOSET_TUNE.calc_closets()
     max_prog = PARAM.float_m_c_level_max_pos,
     level_prob = 100,
   }
-  
+
   if PARAM.bool_m_c_in_secret then
     info.not_secret = true
   end
@@ -1428,7 +1429,7 @@ function MARINE_CLOSET_TUNE.calc_closets()
 end
 
 function MARINE_CLOSET_TUNE.grab_type()
-   return rand.pick(MARINE_CLOSET_TUNE.TECHWPN[PARAM.marine_tech])
+  return rand.pick(MARINE_CLOSET_TUNE.TECHWPN[PARAM.marine_tech])
 end
 
 function MARINE_CLOSET_TUNE.randomize_count()
