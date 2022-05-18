@@ -2658,12 +2658,7 @@ static void WriteThing(sector_c *S, csg_entity_c *E) {
     int angle = E->props.getInt("angle");
     int tid = E->props.getInt("tid");
     int special = E->props.getInt("special");
-    int options = 0;
-    if (sub_format == SUBFMT_Hexen) {
-        options = E->flags;
-    } else {
-        options = E->props.getInt("flags", MTF_ALL_SKILLS);
-    }
+    int options = E->flags;
 
     if (sub_format == SUBFMT_Hexen) {
         if ((options & MTF_HEXEN_CLASSES) == 0) {
@@ -2674,7 +2669,7 @@ static void WriteThing(sector_c *S, csg_entity_c *E) {
             options |= MTF_HEXEN_MODES;
         }
 
-        if ((options & MTF_Easy) == 0 && (options & MTF_Medium) == 0 && (options & MTF_Hard) == 0) {
+        if ((options & MTF_ALL_SKILLS) == 0) {
             options |= MTF_ALL_SKILLS;
         }
     }
