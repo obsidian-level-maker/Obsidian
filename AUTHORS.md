@@ -89,6 +89,7 @@ Simon-v
 
 HugLifeTiZ 
   - XDG compliance and Flatpak compatibility prep work (Linux builds)
+  - Zenity File Picker patch for bundled FLTK 1.4
 
 ## COMMUNITY CONTRIBUTORS:
 
@@ -110,6 +111,11 @@ WolVexus
 username
   - Updated tutorial imagery
 
+Dan_The_Noob
+  - "Dan The Noob" theme
+
+Il Str
+  - Discord Dark/Discord Light themes
 
 # OBLIGE
 
