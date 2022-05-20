@@ -3200,8 +3200,23 @@ function Quest_room_themes()
 
 
   local function setup_room_theme(R)
+
+    local function resolve_room_theme(keyword)
+      -- hacky: don't interpret room keywords for Doom 1
+      if OB_CONFIG.game == "ultdoom" or OB_CONFIG.game == "doom1" then
+        return keyword
+      end
+
+      if keyword then
+        return ob_resolve_theme_keyword(R.theme.theme_override)
+      end
+
+      return keyword
+    end
+
     assert(R.theme)
     local theme = LEVEL.theme_name
+
     if R.theme.theme_override then
       theme = ob_resolve_theme_keyword(R.theme.theme_override)
     end

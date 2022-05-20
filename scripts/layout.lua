@@ -2006,6 +2006,8 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   local function try_secondary_importants(R)
     if not R.secondary_important then return end
 
+    gui.printf(R.secondary_important.kind .. " placed in ROOM_" .. R.id .. "\n")
+    
     local usable_chunks = {}
     local preferred_chunk
     local def

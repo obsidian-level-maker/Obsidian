@@ -901,22 +901,22 @@ function ARMAETUS_EPIC_TEXTURES.generate_environment_themes()
   elseif OB_CONFIG.game == "doom1"
   or OB_CONFIG.game == "ultdoom" then
     if LEVEL.outdoor_theme == "snow" then
-      GAME.ROOM_THEMES.tech_Outdoors.floors = snow_floors
+      GAME.ROOM_THEMES.tech_Outdoors.floors = snow_tech_floors
       GAME.ROOM_THEMES.tech_Outdoors.naturals = snow_naturals
-      GAME.ROOM_THEMES.deimos_Outdoors.floors = snow_floors
+      GAME.ROOM_THEMES.deimos_Outdoors.floors = snow_tech_floors
       GAME.ROOM_THEMES.deimos_Outdoors.naturals = snow_naturals
-      GAME.ROOM_THEMES.hell_Outdoors.floors = snow_floors
+      GAME.ROOM_THEMES.hell_Outdoors.floors = sand_hell_floors
       GAME.ROOM_THEMES.hell_Outdoors.naturals = snow_naturals
-      GAME.ROOM_THEMES.flesh_Outdoors.floors = snow_floors
+      GAME.ROOM_THEMES.flesh_Outdoors.floors = snow_urban_floors
       GAME.ROOM_THEMES.flesh_Outdoors.naturals = snow_naturals
     elseif LEVEL.outdoor_theme == "desert" then
-      GAME.ROOM_THEMES.tech_Outdoors.floors = sand_floors
+      GAME.ROOM_THEMES.tech_Outdoors.floors = sand_tech_floors
       GAME.ROOM_THEMES.tech_Outdoors.naturals = sand_naturals
-      GAME.ROOM_THEMES.deimos_Outdoors.floors = sand_floors
+      GAME.ROOM_THEMES.deimos_Outdoors.floors = snow_tech_floors
       GAME.ROOM_THEMES.deimos_Outdoors.naturals = sand_naturals
-      GAME.ROOM_THEMES.hell_Outdoors.floors = sand_floors
+      GAME.ROOM_THEMES.hell_Outdoors.floors = sand_hell_floors
       GAME.ROOM_THEMES.hell_Outdoors.naturals = sand_naturals
-      GAME.ROOM_THEMES.flesh_Outdoors.floors = sand_floors
+      GAME.ROOM_THEMES.flesh_Outdoors.floors = snow_urban_floors
       GAME.ROOM_THEMES.flesh_Outdoors.naturals = sand_naturals
     elseif LEVEL.outdoor_theme == "temperate" then
       GAME.ROOM_THEMES.tech_Outdoors.floors = PARAM.def_tech_floors
