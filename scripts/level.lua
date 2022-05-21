@@ -670,6 +670,14 @@ function Episode_plan_monsters()
 
       table.insert(LEV.skip_monsters, mon)
     end
+
+    -- Another attempt to really truly respect 0 prob in a theme's monster prefs
+    if LEV.theme.monster_prefs then
+      if LEV.theme.monster_prefs[mon] and LEV.theme.monster_prefs[mon] == 0 then
+        LEV.global_pal[mon] = nil
+      end
+    end
+
   end
 
 
