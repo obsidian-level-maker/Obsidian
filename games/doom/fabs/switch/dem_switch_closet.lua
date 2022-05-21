@@ -99,8 +99,6 @@ PREFABS.Switch_Dem_closetamb3 =
   template  = "Switch_Dem_closet1",
   map    = "MAP07",
 
-rank = 1,
-
   seed_w = 3,
 
 }
