@@ -69,7 +69,7 @@ HEXEN.MONSTERS =
     id = 121,
     r = 33,
     h = 64,
-    level = 3,
+    level = 1,
     health = 90,
     damage = 10,
     attack = "melee",
@@ -81,8 +81,7 @@ HEXEN.MONSTERS =
     id = 120,
     r = 33,
     h = 64,
-    replaces = "serpent1",
-    replace_prob = 33,
+    level = 1,
     health = 90,
     damage = 16,
     attack = "missile",
@@ -94,9 +93,7 @@ HEXEN.MONSTERS =
     id = 8020,
     r = 24,
     h = 80,
-    level = 2,
-    prob = 3,
-    skip_prob = 300,
+    level = 1,
     health = 120,
     damage = 25,
     attack = "missile",
@@ -230,7 +227,7 @@ HEXEN.MONSTERS =
     damage = 336, -- 3 * Bloodscourge projectile/blasts
   },
 
-  --[[Korax =
+  Korax =
   {
     id = 10200,
     r = 66,
@@ -240,6 +237,6 @@ HEXEN.MONSTERS =
     attack = "missile",
     health = 5000,
     damage = 500,
-  },]]--
+  },
 }
 

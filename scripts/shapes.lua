@@ -16055,6 +16055,1009 @@ HALL_2_SPROUT_B =
   }
 },
 
+STREETS_ENTRY_RSVOL_4 =
+{
+  prob = 5,
+
+  pass = "streets_entry_4",
+
+  structure =
+  {
+    "....","1111",
+    "....","1111",
+    "11..","1111",
+    "11..","1111",
+    "....","1111",
+  },
+},
+
+STREETS_ENTRY_RSVOL_6 =
+{
+  prob = 5,
+
+  pass = "streets_entry_6",
+
+  structure =
+  {
+    "....","1111",
+    "11..","1111",
+    "11..","1111",
+    "11..","1111",
+    "....","1111",
+  },
+},
+
+STREETS_ENTRY_RSVOL_8 =
+{
+  prob = 5,
+
+  pass = "streets_entry_8",
+
+  structure =
+  {
+    "....","1111",
+    "11..","1111",
+    "11..","1111",
+    "11..","1111",
+    "11..","1111",
+    "....","1111",
+  },
+},
+
+STREETS_STRAIGHT =
+{
+  prob = 100,
+
+  pass = "streets",
+
+  structure =
+  {
+    ".1111.",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+  },
+},
+
+STREETS_STRAIGHT_LONG =
+{
+  prob = 50,
+
+  pass = "streets",
+
+  structure =
+  {
+    ".1111.",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+  },
+
+},
+
+STREETS_BLOCK =
+{
+  prob = 25,
+
+  pass = "streets",
+
+  structure =
+  {
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "1.........................","11111111111111111111111111",
+    "1.........................","11111111111111111111111111",
+    "1.........................","11111111111111111111111111",
+    "1.........................","11111111111111111111111111",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................","11111111111111111111111111",
+    "..........................","11111111111111111111111111",
+    "..........................","11111111111111111111111111",
+    "..........................","11111111111111111111111111",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+  },
+},
+
+STREETS_INTERSECTION =
+{
+  prob = 15,
+
+  pass = "streets",
+
+  structure =
+  {
+    "......",".1111.",
+    "......",".1111.",
+    "1.....","111111",
+    "1.....","111111",
+    "1.....","111111",
+    "1.....","111111",
+    "......",".1111.",
+    "......",".1111.",
+  },
+},
+
+STREETS_T_JUNCTION =
+{
+  prob = 25,
+
+  pass = "streets",
+
+  structure =
+  {
+    ".....",".1111",
+    ".....",".1111",
+    "1....","11111",
+    "1....","11111",
+    "1....","11111",
+    "1....","11111",
+    ".....",".1111",
+    ".....",".1111",
+  },
+},
+
+STREETS_CURVE =
+{
+  prob = 15,
+
+  pass = "streets",
+
+  structure =
+  {
+    ".1111....",".1111....",
+    ".........",".1111%...",
+    ".........",".11111111",
+    ".........",".11111111",
+    ".........",".11111111",
+    ".........",".%1111111",
+  },
+
+  diagonals =
+  {
+    "1.",
+    ".1",
+  },
+},
+
+-- MSSP's sidewalks
+
+SIDEWALK_STRAIGHT =
+{
+  prob = 100,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "....","AAAA",
+    "....","AAAA",
+    "1111","1111",
+  },
+},
+
+SIDEWALK_STRAIGHT_INWARD =
+{
+  prob = 35,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1........","1AAAAAAAA",
+    "1........","1AAAAAAAA",
+  },
+},
+
+SIDEWALK_4X4 =
+{
+  prob = 25,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11..","11AA",
+    "11..","11AA",
+    "....","AAAA",
+    "....","AAAA",
+  },
+},
+
+SIDEWALK_STRAIGHT_INWARD_ANGLED =
+{
+  prob = 25,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1......","1AAAAAA",
+    "1......","1AAAAAA",
+    "1xxxx..","1xxxxAA",
+    "1xxxx..","1xxxxAA",
+    "1xxxx..","1xxxxAA",
+    "1xxxx..","1xxxxAA",
+  },
+},
+
+SIDEWALK_STRAIGHT_LARGE =
+{
+  prob = 50,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "........","AAAAAAAA",
+    "........","AAAAAAAA",
+    "11111111","11111111",
+  },
+},
+
+SIDEWALK_STRAIGHT_LARGE_CHAMFERED =
+{
+  prob = 15,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "........","/AAAAAA%",
+    "........","AAAAAAAA",
+    "11111111","11111111",
+  },
+
+  diagonals =
+  {
+    ".A","A.",
+  },
+},
+
+SIDEWALK_INTERSECTION_SIDE =
+{
+  prob = 100,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1....","1AAA%",
+    "1....","1AAAA",
+    "1....","1AAAA",
+    "1%...","1%AAA",
+    "11111","11111",
+  },
+
+  diagonals =
+  {
+    "A.",
+    "1.","1A",
+  },
+},
+
+SIDEWALK_OUTER_CORNER =
+{
+  prob = 100,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "xx....","xxAAAA",
+    "xx....","xxAAAA",
+    "x11%..","x11%AA",
+    "1111xx","1111xx",
+    "111xxx","111xxx",
+  },
+
+  diagonals =
+  {
+    "1.","1A",
+  },
+},
+
+SIDEWALK_EXTEND_SIDEWAYS =
+{
+  prob = 250,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "2..","222",
+    "2..","222",
+    "111","111",
+    "111","111",
+  },
+},
+
+SIDEWALK_FILL_2X =
+{
+  prob = 25,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "2..2","2222",
+    "2..2","2222",
+    "x11x","x11x",
+    "1111","1111",
+  },
+},
+
+SIDEWALK_SLOPE_SIDE_SMOL =
+{
+  prob = 15,
+  skip_prob = 40,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11..","11AA",
+    "11..","11AA",
+    "11..","11AA",
+    "11..","11>A",
+  },
+},
+
+SIDEWALK_SLOPE_SIDE_NEAR =
+{
+  prob = 15,
+  skip_prob = 40,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11....","11AAAA",
+    "11....","11>>AA",
+    "11....","11>>AA",
+    "11....","11AAAA",
+  },
+},
+
+SIDEWALK_SLOPE_SIDE_FAR =
+{
+  prob = 10,
+  skip_prob = 40,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11xx..","11xxAA",
+    "11....","11>>AA",
+    "11....","11>>AA",
+    "11xx..","11xxAA",
+  },
+},
+
+SIDEWALK_SLOPE_ON_RAMP =
+{
+  prob = 10,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11x..","11xAA",
+    "11...","11>AA",
+    "11...","11>AA",
+    "11...","11>AA",
+    "11...","11>AA",
+    "11x..","11xAA",
+  },
+},
+
+SIDEWALK_SLOPE_ON_RAMP_DOUBLE =
+{
+  prob = 10,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11x..","11xAA",
+    "11...","11>AA",
+    "11...","11>AA",
+    "111..","111AA",
+    "111..","111AA",
+    "11...","11>AA",
+    "11...","11>AA",
+    "11x..","11xAA",
+  },
+},
+
+SIDEWALK_PLAIN_STAIR =
+{
+  prob = 10,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "..","AA",
+    "..","AA",
+    "..","^^",
+    "11","11",
+    "11","11",
+  },
+},
+
+SIDEWALK_STAIR_Y_IN =
+{
+  prob = 10,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    ".....","..AAA",
+    ".....","1>AAA",
+    ".....","11%AA",
+    "11...","111^.",
+    "11...","1111.",
+  },
+
+  diagonals =
+  {
+    "1A",
+  },
+},
+
+SIDEWALK_STAIR_Y_OUT =
+{
+  prob = 15,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "......","AAAAAA",
+    "......","AAAAAA",
+    "......","11>>AA",
+    "......","1111AA",
+    "11....","1111AA",
+    "11....","1111AA",
+  },
+},
+
+SIDEWALK_BUILDING_4x4 =
+{
+  prob = 15,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11......","11AAAAAA",
+    "11......","11AAAAAA",
+    "........","AA....AA",
+    "........","AA....AA",
+    "........","AA....AA",
+    "........","AA....AA",
+    "........","AAAAAAAA",
+    "........","AAAAAAAA",
+  },
+},
+
+SIDEWALK_BUILDING_L =
+{
+  prob = 15,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11........","11AAAAAAAA",
+    "11........","11AAAAAAAA",
+    "..........","AAAA....AA",
+    "..........","AAAA....AA",
+    "..........","AA......AA",
+    "..........","AA......AA",
+    "..........","AA......AA",
+    "..........","AA......AA",
+    "..........","AAAAAAAAAA",
+    "..........","AAAAAAAAAA",
+  },
+},
+
+SIDEWALK_OVERHANG =
+{
+  prob = 20,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11....","11AAAA",
+    "11....","11AAAA",
+    "xx....","xx#AA#",
+  },
+},
+
+SIDEWALK_OVERHANG_CORNER =
+{
+  prob = 20,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "xx...","xxAAA",
+    "11...","11AAA",
+    "11...","11#AA",
+  },
+},
+
+SIDEWALK_CURVE =
+{
+  prob = 20,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1...x","1AA%x",
+    "1....","1AAA%",
+    "xx...","xx%AA",
+    "xxx..","xxxAA",
+  },
+
+  diagonals =
+  {
+    "A.",
+      "A.",
+    ".A",
+  },
+},
+
+SIDEWALK_ZIGZAG =
+{
+  prob = 20,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1...xx","1AA%xx",
+    "1....x","1AAA%x",
+    "xx....","xx%AAA",
+    "xxx...","xxx%AA",
+  },
+
+  diagonals =
+  {
+    "A.",
+      "A.",
+    ".A",
+      ".A",
+  },
+},
+
+SIDEWALK_LIQUID =
+{
+  prob = 50,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "........","AA~~~~AA",
+    "11111111","11111111",
+  },
+},
+
+SIDEWALK_LIQUID_POOL_LONG =
+{
+  prob = 50,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "......","AA~~~~",
+    "......","AA~~~~",
+    "11xxxx","11xxxx",
+  },
+},
+
+SIDEWALK_LIQUID_POOL =
+{
+  prob = 50,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "....","AA~~",
+    "....","AA~~",
+    "11xx","11xx",
+  },
+},
+
+SIDEWALK_CAGE =
+{
+  prob = 50,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "x..","xCC",
+    "1..","1AA",
+    "1..","1AA",
+  },
+
+  cage_mode = "fancy",
+},
+
+SIDEWALK_CAGE_4X =
+{
+  prob = 40,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "x....","xCCCC",
+    "1....","1AAAA",
+    "1....","1AAAA",
+  },
+
+  cage_mode = "fancy",
+},
+
+SIDEWALK_CAGE_4X4 =
+{
+  prob = 35,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "x..","xCC",
+    "x..","xCC",
+    "1..","1AA",
+    "1..","1AA",
+  },
+
+  cage_mode = "fancy",
+},
+
+SIDEWALK_CLOSET_2X2 =
+{
+  prob = 100,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1!!","1TT",
+    "1!!","1TT",
+  },
+
+  closet = { from_dir=4 },
+},
+
+SIDEWALK_CLOSET_2X1 =
+{
+  prob = 100,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1!","1T",
+    "1!","1T",
+  },
+
+  closet = { from_dir=4 },
+},
+
+SIDEWALK_CLOSET_3X1 =
+{
+  prob = 100,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+  },
+
+  closet = { from_dir=4 },
+},
+
+SIDEWALK_CLOSET_3X2 =
+{
+  prob = 100,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1!!","1TT",
+    "1!!","1TT",
+    "1!!","1TT",
+  },
+
+  closet = { from_dir=4 },
+},
+
+SIDEWALK_CLOSET_4X1 =
+{
+  prob = 25,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+  },
+
+  closet = { from_dir=4 },
+},
+
+SIDEWALK_CLOSET_6X1 =
+{
+  prob = 25,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+  },
+
+  closet = { from_dir=4 },
+},
+
+SIDEWALK_CLOSET_8X1 =
+{
+  prob = 25,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+  },
+
+  closet = { from_dir=4 },
+},
+-- MSSP's street 'smoothers'
+
+STREET_CORNER_FIXER =
+{
+  prob = 100,
+
+  pass = "street_fixer",
+
+  structure =
+  {
+    "x1111xx","x1111xx",
+    "111111.","11111..",
+    "111111.","11111..",
+    "111111.","11111..",
+    "111111.","1111/..",
+    "x1111..","x......",
+    "x......","x......",
+  },
+
+  diagonals =
+  {
+    "1.",
+  },
+},
+
+STREET_T_JUNCTION_FIXER =
+{
+  prob = 100,
+
+  pass = "street_fixer",
+
+  structure =
+  {
+    "11111.","11111.",
+    "11111!","1111/!",
+    "!1111!","!....!",
+    "!!!!!!","!!!!!!",
+  },
+
+  diagonals =
+  {
+    "1.",
+  },
+},
+
+STREET_WEIRD_DEAD_BRANCH_FIXER =
+{
+  prob = 100,
+
+  pass = "street_fixer",
+
+  structure =
+  {
+    "111111","111111",
+    ".1111.","......",
+    "......","......",
+  },
+},
+
+STREET_DEAD_END_FIXER =
+{
+  prob = 100,
+
+  pass = "street_fixer",
+
+  structure =
+  {
+    ".1111.",".1111.",
+    "......",".%11/.",
+  },
+
+  diagonals =
+  {
+    ".1","1.",
+  },
+},
+
+-- MSSP's building entrances... okay, just joiners and some such really
+
+STREET_BUILDING_ENTRANCE =
+{
+  prob = 300,
+
+  pass = "building_entrance",
+
+  structure =
+  {
+    "..","RR",
+    "..","RR",
+    "11","11",
+  },
+
+  new_room =
+  {
+    env = "building",
+
+    conn = { x=1, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=1, w=2, dir=8 },
+  },
+},
+
+STREET_BUILDING_ENTRANCE_WITH_JOINER_2X1 =
+{
+  prob = 100,
+
+  pass = "building_entrance",
+
+  structure =
+  {
+    "....",".RR.",
+    "....",".RR.",
+    "x..x","xJJx",
+    "x11x","x11x",
+  },
+
+  new_room =
+  {
+    symmetry = { x=3, y=2, w=2, dir=8 },
+  },
+
+  joiner =
+  {
+    from_dir = 2,
+  },
+},
+
+STREET_BUILDING_ENTRANCE_WITH_JOINER_2X2 =
+{
+  prob = 100,
+
+  pass = "building_entrance",
+
+  structure =
+  {
+    "....",".RR.",
+    "....",".RR.",
+    "x..x","xJJx",
+    "x..x","xJJx",
+    "x11x","x11x",
+  },
+
+  new_room =
+  {
+    symmetry = { x=2, y=3, w=2, dir=8 },
+  },
+
+  joiner =
+  {
+    from_dir = 2,
+  },
+},
+
+STREET_BUILDING_ENTRANCE_WITH_JOINER_3X2 =
+{
+  prob = 100,
+
+  pass = "building_entrance",
+
+  structure =
+  {
+    ".....",".RRR.",
+    ".....",".RRR.",
+    "x...x","xJJJx",
+    "x...x","xJJJx",
+    "x111x","x111x",
+  },
+
+  new_room =
+  {
+    symmetry = { x=3, y=3, w=2, dir=8 },
+  },
+
+  joiner =
+  {
+    from_dir = 2,
+  },
+}
+
 }
 
 SHAPES.OBLIGE_V2 =
@@ -17311,5 +18314,1008 @@ HALL_2_SPROUT_B =
     conn = { x=2, y=2, w=2, dir=8 },
   }
 },
+
+STREETS_ENTRY_RSVOL_4 =
+{
+  prob = 5,
+
+  pass = "streets_entry_4",
+
+  structure =
+  {
+    "....","1111",
+    "....","1111",
+    "11..","1111",
+    "11..","1111",
+    "....","1111",
+  },
+},
+
+STREETS_ENTRY_RSVOL_6 =
+{
+  prob = 5,
+
+  pass = "streets_entry_6",
+
+  structure =
+  {
+    "....","1111",
+    "11..","1111",
+    "11..","1111",
+    "11..","1111",
+    "....","1111",
+  },
+},
+
+STREETS_ENTRY_RSVOL_8 =
+{
+  prob = 5,
+
+  pass = "streets_entry_8",
+
+  structure =
+  {
+    "....","1111",
+    "11..","1111",
+    "11..","1111",
+    "11..","1111",
+    "11..","1111",
+    "....","1111",
+  },
+},
+
+STREETS_STRAIGHT =
+{
+  prob = 100,
+
+  pass = "streets",
+
+  structure =
+  {
+    ".1111.",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+  },
+},
+
+STREETS_STRAIGHT_LONG =
+{
+  prob = 50,
+
+  pass = "streets",
+
+  structure =
+  {
+    ".1111.",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+    "......",".1111.",
+  },
+
+},
+
+STREETS_BLOCK =
+{
+  prob = 25,
+
+  pass = "streets",
+
+  structure =
+  {
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "1.........................","11111111111111111111111111",
+    "1.........................","11111111111111111111111111",
+    "1.........................","11111111111111111111111111",
+    "1.........................","11111111111111111111111111",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+    "..........................","11111111111111111111111111",
+    "..........................","11111111111111111111111111",
+    "..........................","11111111111111111111111111",
+    "..........................","11111111111111111111111111",
+    "..........................",".1111................1111.",
+    "..........................",".1111................1111.",
+  },
+},
+
+STREETS_INTERSECTION =
+{
+  prob = 15,
+
+  pass = "streets",
+
+  structure =
+  {
+    "......",".1111.",
+    "......",".1111.",
+    "1.....","111111",
+    "1.....","111111",
+    "1.....","111111",
+    "1.....","111111",
+    "......",".1111.",
+    "......",".1111.",
+  },
+},
+
+STREETS_T_JUNCTION =
+{
+  prob = 25,
+
+  pass = "streets",
+
+  structure =
+  {
+    ".....",".1111",
+    ".....",".1111",
+    "1....","11111",
+    "1....","11111",
+    "1....","11111",
+    "1....","11111",
+    ".....",".1111",
+    ".....",".1111",
+  },
+},
+
+STREETS_CURVE =
+{
+  prob = 15,
+
+  pass = "streets",
+
+  structure =
+  {
+    ".1111....",".1111....",
+    ".........",".1111%...",
+    ".........",".11111111",
+    ".........",".11111111",
+    ".........",".11111111",
+    ".........",".%1111111",
+  },
+
+  diagonals =
+  {
+    "1.",
+    ".1",
+  },
+},
+
+-- MSSP's sidewalks
+
+SIDEWALK_STRAIGHT =
+{
+  prob = 100,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "....","AAAA",
+    "....","AAAA",
+    "1111","1111",
+  },
+},
+
+SIDEWALK_STRAIGHT_INWARD =
+{
+  prob = 35,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1........","1AAAAAAAA",
+    "1........","1AAAAAAAA",
+  },
+},
+
+SIDEWALK_4X4 =
+{
+  prob = 25,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11..","11AA",
+    "11..","11AA",
+    "....","AAAA",
+    "....","AAAA",
+  },
+},
+
+SIDEWALK_STRAIGHT_INWARD_ANGLED =
+{
+  prob = 25,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1......","1AAAAAA",
+    "1......","1AAAAAA",
+    "1xxxx..","1xxxxAA",
+    "1xxxx..","1xxxxAA",
+    "1xxxx..","1xxxxAA",
+    "1xxxx..","1xxxxAA",
+  },
+},
+
+SIDEWALK_STRAIGHT_LARGE =
+{
+  prob = 50,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "........","AAAAAAAA",
+    "........","AAAAAAAA",
+    "11111111","11111111",
+  },
+},
+
+SIDEWALK_STRAIGHT_LARGE_CHAMFERED =
+{
+  prob = 15,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "........","/AAAAAA%",
+    "........","AAAAAAAA",
+    "11111111","11111111",
+  },
+
+  diagonals =
+  {
+    ".A","A.",
+  },
+},
+
+SIDEWALK_INTERSECTION_SIDE =
+{
+  prob = 100,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1....","1AAA%",
+    "1....","1AAAA",
+    "1....","1AAAA",
+    "1%...","1%AAA",
+    "11111","11111",
+  },
+
+  diagonals =
+  {
+    "A.",
+    "1.","1A",
+  },
+},
+
+SIDEWALK_OUTER_CORNER =
+{
+  prob = 100,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "xx....","xxAAAA",
+    "xx....","xxAAAA",
+    "x11%..","x11%AA",
+    "1111xx","1111xx",
+    "111xxx","111xxx",
+  },
+
+  diagonals =
+  {
+    "1.","1A",
+  },
+},
+
+SIDEWALK_EXTEND_SIDEWAYS =
+{
+  prob = 250,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "2..","222",
+    "2..","222",
+    "111","111",
+    "111","111",
+  },
+},
+
+SIDEWALK_FILL_2X =
+{
+  prob = 25,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "2..2","2222",
+    "2..2","2222",
+    "x11x","x11x",
+    "1111","1111",
+  },
+},
+
+SIDEWALK_SLOPE_SIDE_SMOL =
+{
+  prob = 15,
+  skip_prob = 40,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11..","11AA",
+    "11..","11AA",
+    "11..","11AA",
+    "11..","11>A",
+  },
+},
+
+SIDEWALK_SLOPE_SIDE_NEAR =
+{
+  prob = 15,
+  skip_prob = 40,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11....","11AAAA",
+    "11....","11>>AA",
+    "11....","11>>AA",
+    "11....","11AAAA",
+  },
+},
+
+SIDEWALK_SLOPE_SIDE_FAR =
+{
+  prob = 10,
+  skip_prob = 40,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11xx..","11xxAA",
+    "11....","11>>AA",
+    "11....","11>>AA",
+    "11xx..","11xxAA",
+  },
+},
+
+SIDEWALK_SLOPE_ON_RAMP =
+{
+  prob = 10,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11x..","11xAA",
+    "11...","11>AA",
+    "11...","11>AA",
+    "11...","11>AA",
+    "11...","11>AA",
+    "11x..","11xAA",
+  },
+},
+
+SIDEWALK_SLOPE_ON_RAMP_DOUBLE =
+{
+  prob = 10,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11x..","11xAA",
+    "11...","11>AA",
+    "11...","11>AA",
+    "111..","111AA",
+    "111..","111AA",
+    "11...","11>AA",
+    "11...","11>AA",
+    "11x..","11xAA",
+  },
+},
+
+SIDEWALK_PLAIN_STAIR =
+{
+  prob = 10,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "..","AA",
+    "..","AA",
+    "..","^^",
+    "11","11",
+    "11","11",
+  },
+},
+
+SIDEWALK_STAIR_Y_IN =
+{
+  prob = 10,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    ".....","..AAA",
+    ".....","1>AAA",
+    ".....","11%AA",
+    "11...","111^.",
+    "11...","1111.",
+  },
+
+  diagonals =
+  {
+    "1A",
+  },
+},
+
+SIDEWALK_STAIR_Y_OUT =
+{
+  prob = 15,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "......","AAAAAA",
+    "......","AAAAAA",
+    "......","11>>AA",
+    "......","1111AA",
+    "11....","1111AA",
+    "11....","1111AA",
+  },
+},
+
+SIDEWALK_BUILDING_4x4 =
+{
+  prob = 15,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11......","11AAAAAA",
+    "11......","11AAAAAA",
+    "........","AA....AA",
+    "........","AA....AA",
+    "........","AA....AA",
+    "........","AA....AA",
+    "........","AAAAAAAA",
+    "........","AAAAAAAA",
+  },
+},
+
+SIDEWALK_BUILDING_L =
+{
+  prob = 15,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11........","11AAAAAAAA",
+    "11........","11AAAAAAAA",
+    "..........","AAAA....AA",
+    "..........","AAAA....AA",
+    "..........","AA......AA",
+    "..........","AA......AA",
+    "..........","AA......AA",
+    "..........","AA......AA",
+    "..........","AAAAAAAAAA",
+    "..........","AAAAAAAAAA",
+  },
+},
+
+SIDEWALK_OVERHANG =
+{
+  prob = 20,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "11....","11AAAA",
+    "11....","11AAAA",
+    "xx....","xx#AA#",
+  },
+},
+
+SIDEWALK_OVERHANG_CORNER =
+{
+  prob = 20,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "xx...","xxAAA",
+    "11...","11AAA",
+    "11...","11#AA",
+  },
+},
+
+SIDEWALK_CURVE =
+{
+  prob = 20,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1...x","1AA%x",
+    "1....","1AAA%",
+    "xx...","xx%AA",
+    "xxx..","xxxAA",
+  },
+
+  diagonals =
+  {
+    "A.",
+      "A.",
+    ".A",
+  },
+},
+
+SIDEWALK_ZIGZAG =
+{
+  prob = 20,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1...xx","1AA%xx",
+    "1....x","1AAA%x",
+    "xx....","xx%AAA",
+    "xxx...","xxx%AA",
+  },
+
+  diagonals =
+  {
+    "A.",
+      "A.",
+    ".A",
+      ".A",
+  },
+},
+
+SIDEWALK_LIQUID =
+{
+  prob = 50,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "........","AA~~~~AA",
+    "11111111","11111111",
+  },
+},
+
+SIDEWALK_LIQUID_POOL_LONG =
+{
+  prob = 50,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "......","AA~~~~",
+    "......","AA~~~~",
+    "11xxxx","11xxxx",
+  },
+},
+
+SIDEWALK_LIQUID_POOL =
+{
+  prob = 50,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "....","AA~~",
+    "....","AA~~",
+    "11xx","11xx",
+  },
+},
+
+SIDEWALK_CAGE =
+{
+  prob = 50,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "x..","xCC",
+    "1..","1AA",
+    "1..","1AA",
+  },
+
+  cage_mode = "fancy",
+},
+
+SIDEWALK_CAGE_4X =
+{
+  prob = 40,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "x....","xCCCC",
+    "1....","1AAAA",
+    "1....","1AAAA",
+  },
+
+  cage_mode = "fancy",
+},
+
+SIDEWALK_CAGE_4X4 =
+{
+  prob = 35,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "x..","xCC",
+    "x..","xCC",
+    "1..","1AA",
+    "1..","1AA",
+  },
+
+  cage_mode = "fancy",
+},
+
+SIDEWALK_CLOSET_2X2 =
+{
+  prob = 100,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1!!","1TT",
+    "1!!","1TT",
+  },
+
+  closet = { from_dir=4 },
+},
+
+SIDEWALK_CLOSET_2X1 =
+{
+  prob = 100,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1!","1T",
+    "1!","1T",
+  },
+
+  closet = { from_dir=4 },
+},
+
+SIDEWALK_CLOSET_3X1 =
+{
+  prob = 100,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+  },
+
+  closet = { from_dir=4 },
+},
+
+SIDEWALK_CLOSET_3X2 =
+{
+  prob = 100,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1!!","1TT",
+    "1!!","1TT",
+    "1!!","1TT",
+  },
+
+  closet = { from_dir=4 },
+},
+
+SIDEWALK_CLOSET_4X1 =
+{
+  prob = 25,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+  },
+
+  closet = { from_dir=4 },
+},
+
+SIDEWALK_CLOSET_6X1 =
+{
+  prob = 25,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+  },
+
+  closet = { from_dir=4 },
+},
+
+SIDEWALK_CLOSET_8X1 =
+{
+  prob = 25,
+
+  pass = "sidewalk",
+
+  structure =
+  {
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+    "1!","1T",
+  },
+
+  closet = { from_dir=4 },
+},
+-- MSSP's street 'smoothers'
+
+STREET_CORNER_FIXER =
+{
+  prob = 100,
+
+  pass = "street_fixer",
+
+  structure =
+  {
+    "x1111xx","x1111xx",
+    "111111.","11111..",
+    "111111.","11111..",
+    "111111.","11111..",
+    "111111.","1111/..",
+    "x1111..","x......",
+    "x......","x......",
+  },
+
+  diagonals =
+  {
+    "1.",
+  },
+},
+
+STREET_T_JUNCTION_FIXER =
+{
+  prob = 100,
+
+  pass = "street_fixer",
+
+  structure =
+  {
+    "11111.","11111.",
+    "11111!","1111/!",
+    "!1111!","!....!",
+    "!!!!!!","!!!!!!",
+  },
+
+  diagonals =
+  {
+    "1.",
+  },
+},
+
+STREET_WEIRD_DEAD_BRANCH_FIXER =
+{
+  prob = 100,
+
+  pass = "street_fixer",
+
+  structure =
+  {
+    "111111","111111",
+    ".1111.","......",
+    "......","......",
+  },
+},
+
+STREET_DEAD_END_FIXER =
+{
+  prob = 100,
+
+  pass = "street_fixer",
+
+  structure =
+  {
+    ".1111.",".1111.",
+    "......",".%11/.",
+  },
+
+  diagonals =
+  {
+    ".1","1.",
+  },
+},
+
+-- MSSP's building entrances... okay, just joiners and some such really
+
+STREET_BUILDING_ENTRANCE =
+{
+  prob = 300,
+
+  pass = "building_entrance",
+
+  structure =
+  {
+    "..","RR",
+    "..","RR",
+    "11","11",
+  },
+
+  new_room =
+  {
+    env = "building",
+
+    conn = { x=1, y=1, w=2, dir=8 },
+
+    symmetry = { x=2, y=1, w=2, dir=8 },
+  },
+},
+
+STREET_BUILDING_ENTRANCE_WITH_JOINER_2X1 =
+{
+  prob = 100,
+
+  pass = "building_entrance",
+
+  structure =
+  {
+    "....",".RR.",
+    "....",".RR.",
+    "x..x","xJJx",
+    "x11x","x11x",
+  },
+
+  new_room =
+  {
+    symmetry = { x=3, y=2, w=2, dir=8 },
+  },
+
+  joiner =
+  {
+    from_dir = 2,
+  },
+},
+
+STREET_BUILDING_ENTRANCE_WITH_JOINER_2X2 =
+{
+  prob = 100,
+
+  pass = "building_entrance",
+
+  structure =
+  {
+    "....",".RR.",
+    "....",".RR.",
+    "x..x","xJJx",
+    "x..x","xJJx",
+    "x11x","x11x",
+  },
+
+  new_room =
+  {
+    symmetry = { x=2, y=3, w=2, dir=8 },
+  },
+
+  joiner =
+  {
+    from_dir = 2,
+  },
+},
+
+STREET_BUILDING_ENTRANCE_WITH_JOINER_3X2 =
+{
+  prob = 100,
+
+  pass = "building_entrance",
+
+  structure =
+  {
+    ".....",".RRR.",
+    ".....",".RRR.",
+    "x...x","xJJJx",
+    "x...x","xJJJx",
+    "x111x","x111x",
+  },
+
+  new_room =
+  {
+    symmetry = { x=3, y=3, w=2, dir=8 },
+  },
+
+  joiner =
+  {
+    from_dir = 2,
+  },
+}
 
 }

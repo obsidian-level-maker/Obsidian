@@ -390,6 +390,26 @@ OB_MODULES["hexen_mon_control"] =
       "20:20 (INSANE),",
       randomize_group = "monsters"
      },
+
+     {
+      name = "float_Korax",
+      label = _("Korax"),
+      valuator = "slider",
+      units = "",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default,", 
+      presets = "0:0 (None at all)," ..
+      ".02:0.02 (Scarce)," ..
+      ".14:0.14 (Less)," ..
+      ".5:0.5 (Plenty)," ..
+      "1.2:1.2 (More)," ..
+      "3:3 (Heaps)," ..
+      "20:20 (INSANE),",
+      randomize_group = "monsters"
+     },
   },
 }
 

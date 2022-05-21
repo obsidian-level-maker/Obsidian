@@ -80,12 +80,6 @@ function UI_MONS.setup(self)
   
   module_param_up(self)
 
-  if OB_CONFIG.game == "hexen" then
-    PARAM.float_mons = PARAM.float_mons * 0.33
-    PARAM.float_mix_it_up_lower_range = PARAM.float_mix_it_up_lower_range * 0.33
-    PARAM.float_mix_it_up_upper_range = PARAM.float_mix_it_up_upper_range * 0.33
-  end
-
 end
 
 OB_MODULES["ui_mons"] =
