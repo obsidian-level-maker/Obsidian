@@ -226,62 +226,10 @@ if (OPTION_USE_SVG)
 endif (OPTION_USE_SVG)
 
 #######################################################################
-set (HAVE_GL LIB_GL OR LIB_MesaGL)
 
-if (HAVE_GL)
-   option (OPTION_USE_GL "use OpenGL" ON)
-endif (HAVE_GL)
+option (OPTION_USE_GL "use OpenGL" OFF)
+set (FLTK_GL_FOUND FALSE)
 
-if (OPTION_USE_GL)
-  if (OPTION_APPLE_X11)
-    set (OPENGL_FOUND TRUE)
-    set (OPENGL_LIBRARIES -L${PATH_TO_XLIBS} -lGLU -lGL)
-    unset(HAVE_GL_GLU_H CACHE)
-    find_file (HAVE_GL_GLU_H GL/glu.h PATHS ${X11_INCLUDE_DIR})
-  else()
-    include (FindOpenGL)
-    if (APPLE)
-      set (HAVE_GL_GLU_H ${HAVE_OPENGL_GLU_H})
-    endif (APPLE)
-  endif (OPTION_APPLE_X11)
-else ()
-  set (OPENGL_FOUND FALSE)
-  set (HAVE_GL FALSE)
-  set (HAVE_GL_GLU_H FALSE)
-  set (HAVE_GLXGETPROCADDRESSARB FALSE)
-endif (OPTION_USE_GL)
-
-if (OPENGL_FOUND)
-  set (CMAKE_REQUIRED_INCLUDES ${OPENGL_INCLUDE_DIR}/GL)
-
-  # Set GLLIBS (used in fltk-config).
-  # We should probably deduct this from OPENGL_LIBRARIES but it turned
-  # out to be difficult since FindOpenGL seems to return different
-  # syntax depending on the platform (and maybe also CMake version).
-  # Hence we use the following code...
-
-  if (WIN32)
-    set (GLLIBS "-lglu32 -lopengl32")
-  elseif (APPLE AND NOT OPTION_APPLE_X11)
-    set (GLLIBS "-framework OpenGL")
-  elseif (OPTION_USE_WAYLAND)
-    set (GLLIBS "-lwayland-egl -lEGL -lGLU -lGL")
-  else ()
-    set (GLLIBS "-lGLU -lGL")
-  endif (WIN32)
-
-  # check if function glXGetProcAddressARB exists
-  set (TEMP_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
-  set (CMAKE_REQUIRED_LIBRARIES ${OPENGL_LIBRARIES})
-  CHECK_FUNCTION_EXISTS (glXGetProcAddressARB HAVE_GLXGETPROCADDRESSARB)
-  set (CMAKE_REQUIRED_LIBRARIES ${TEMP_REQUIRED_LIBRARIES})
-  unset (TEMP_REQUIRED_LIBRARIES)
-
-  set (FLTK_GL_FOUND TRUE)
-else ()
-  set (FLTK_GL_FOUND FALSE)
-  set (GLLIBS)
-endif (OPENGL_FOUND)
 
 #######################################################################
 option (OPTION_LARGE_FILE "enable large file support" ON)
@@ -699,9 +647,9 @@ if (DEBUG_OPTIONS_CMAKE)
   fl_debug_var (LIBS)
   fl_debug_var (GLLIBS)
   fl_debug_var (FLTK_LDLIBS)
-  fl_debug_var (OPENGL_FOUND)
-  fl_debug_var (OPENGL_INCLUDE_DIR)
-  fl_debug_var (OPENGL_LIBRARIES)
+  #fl_debug_var (OPENGL_FOUND)
+  #fl_debug_var (OPENGL_INCLUDE_DIR)
+  #fl_debug_var (OPENGL_LIBRARIES)
   message ("--- X11 ---")
   fl_debug_var (X11_FOUND)
   fl_debug_var (X11_INCLUDE_DIR)
