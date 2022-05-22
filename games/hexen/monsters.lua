@@ -56,7 +56,6 @@ HEXEN.MONSTERS =
     id = 115,
     r = 20,
     h = 64,
-    -- not using 'replaces' here, centaur2 is much tougher
     level = 4,
     prob = 20,
     health = 250,
@@ -116,8 +115,7 @@ HEXEN.MONSTERS =
     id = 8080,
     r = 33,
     h = 70,
-    replaces = "demon1",
-    replace_prob = 40,
+    level = 4,
     health = 250,
     damage = 40,
     attack = "missile",
@@ -136,6 +134,18 @@ HEXEN.MONSTERS =
     float = true
   },
 
+  reiver_b  =
+  {
+    id = 10011,
+    r = 24,
+    h = 64,
+    level = 6,
+    health = 150,
+    damage = 50,
+    attack = "missile",
+    float = true
+  },
+  
   reiver =
   {
     id = 34,
@@ -148,20 +158,6 @@ HEXEN.MONSTERS =
     attack = "missile",
     float = true
   },
-
-  reiver_b  =
-  {
-    id = 10011,
-    r = 24,
-    h = 64,
-    replaces = "reiver",
-    replace_prob = 65,
-    health = 150,
-    damage = 50,
-    attack = "missile",
-    float = true
-  },
-
 
   ---| BOSSES |---
 
