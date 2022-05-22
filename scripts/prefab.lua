@@ -2400,6 +2400,31 @@ function Fab_replacements(fab)
         end
       end
 
+      -- Fix linear progression of first several maps for Strife and end game on last generated level
+      if OB_CONFIG.game == "strife" then
+        if C.special == 11 then
+          if OB_CONFIG.length == "single" or LEVEL.game_along == 1.0 then
+            C.special = 51
+          else
+            if LEVEL.name == "MAP02" then
+              C.tag = 1
+            elseif LEVEL.name == "MAP01" then
+              C.tag = 3
+            end
+          end
+        elseif C.special == 52 then
+          if OB_CONFIG.length == "single" or LEVEL.game_along == 1.0 then
+            C.special = 124
+          else
+            if LEVEL.name == "MAP02" then
+              C.tag = 100
+            elseif LEVEL.name == "MAP01" then
+              C.tag = 300
+            end
+          end
+        end
+      end
+
       ::skiptagcheck::
 
       if C.u1  then C.u1  = check("offset", C.u1) end

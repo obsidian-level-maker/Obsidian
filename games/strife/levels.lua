@@ -118,11 +118,17 @@ function STRIFE.get_levels()
     {
       episode = EPI,
 
-      name  = string.format("MAP%02d", map),
-
       ep_along = ep_along,
       game_along = game_along
     }
+
+    if map == 1 then
+      LEV.name = "MAP02"
+    elseif map == 2 then
+      LEV.name = "MAP01"
+    else
+      LEV.name  = string.format("MAP%02d", map)
+    end
 
     table.insert( EPI.levels, LEV)
     table.insert(GAME.levels, LEV)
@@ -233,10 +239,6 @@ function STRIFE.get_levels()
         end
       end
 
-    end
-
-    if MAP_NUM == 1 or (map % 10) == 3 then
-      LEV.demo_lump = string.format("DEMO%d", ep_index)
     end
   end
 
