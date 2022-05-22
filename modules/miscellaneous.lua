@@ -248,25 +248,7 @@ OB_MODULES["misc"] =
       "Caves retain their organic layouts. Hallways and joiners are still used as normal. Room sizes are fairly consistent.",
       priority = 101,
       randomize_group = "architecture",
-    },
-
-    {
-      name = "float_oblige_v750_grammar",
-      label = _("Oblige v7.50 Grammar"),
-      valuator = "slider",
-      units = "% of Levels",
-      min = 0,
-      max = 100,
-      increment = 1,
-      default = 0,
-      nan = "",
-      presets = "",
-      tooltip = "Sets chance of levels using the Oblige v7.50 shape grammar.",
-      longtip = "Gives levels a chance of being generated using the Oblige v7.50 shape grammar. This marked the very first " ..
-      "implementation of the shape grammar system that is the basis for Obsidian's map generation.",
-      gap = 1,
-      priority = 100,
-      randomize_group = "architecture",
+      gap = 1
     },
 
     {
