@@ -701,6 +701,7 @@ function Episode_plan_monsters()
     local tab = {}
 
     for name,info in pairs(GAME.MONSTERS) do
+      if LEV.theme.monster_prefs and LEV.theme.monster_prefs[name] and LEV.theme.monster_prefs[name] == 0 then goto skipboss end
       if LEV.is_procedural_gotcha and PARAM.bool_boss_gen == 1 then
         local bprob = 80
         if PARAM.boss_gen_typelimit ~= "nolimit" then
@@ -766,6 +767,7 @@ function Episode_plan_monsters()
           tab[name] = info.boss_prob or 50
         end
       end
+      ::skipboss::
     end
 
     return tab
@@ -820,6 +822,8 @@ function Episode_plan_monsters()
         elseif info.boss_type == "nasty" and OB_CONFIG.bossesnormal == "minor" then goto continue
         elseif info.boss_type == "tough" and OB_CONFIG.bossesnormal ~= "all" then goto continue end
       end
+
+      if LEV.theme.monster_prefs and LEV.theme.monster_prefs[name] and LEV.theme.monster_prefs[name] == 0 then goto continue end
 
       local prob = prob_for_guard(LEV, info)
 
