@@ -1609,7 +1609,7 @@ function Monster_fill_room(R)
               goto tryagain 
             end
             mon = new_mon
-            info = GAME.MONSTERS[mon]
+            info = assert(GAME.MONSTERS[mon])
             v.info = info
             goto liquidstuffdone
           end
