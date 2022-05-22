@@ -176,7 +176,8 @@ void UI_Game::callback_GameHelp(Fl_Widget *w, void *data) {
     win->show();
     buff->text(
         "The following games will have gameplay that differs from the original IWADs:\n\n\
-Hexen: Game progression is linear and episodic. There are no hubs present.");
+Hexen: Game progression is linear and episodic. There are no hubs present. The Death Wyvern is not present in the \
+monster table due to the infeasibility of scripting and flight pathing.");
 }
 
 void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {

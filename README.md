@@ -1,3 +1,9 @@
+# IF YOU JUST WANT THE PROGRAM
+https://github.com/dashodanger/Obsidian/releases
+
+# DISCORD SERVER FOR QUESTIONS, ADDONS, HELP, ETC
+https://discord.gg/dfqCt9v
+
 # OBSIDIAN
 by the ObAddon Community.
 
@@ -49,7 +55,7 @@ UDMF map generation option for GZDoom and Eternity Engine.
 
 64-bit seeds and random numbers.
 
-Migrated from Lua to LuaJIT. Lua scripts from previous versions of Oblige/ObAddon will be incompatible without conversion.
+Migrated from Lua to LuaJIT for improved build speeds.
 
 Patch by Simon-v for searching for .pk3 addons in both the install and user's home directories (https://github.com/dashodanger/Oblige/pull/1)
 

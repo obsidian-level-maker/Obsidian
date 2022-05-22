@@ -167,18 +167,6 @@ HEXEN.MONSTERS =
 
   -- FIXME: proper damage and attack fields
 
-  --[[Wyvern =
-  {
-    id = 254,
-    r = 20,
-    h = 66,
-    level = 7,
-    boss_type = "minor",
-    health = 640,
-    damage = 60,
-    float = true
-  },]]--
-
   Heresiarch =
   {
     id = 10080,
