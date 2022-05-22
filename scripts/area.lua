@@ -2863,6 +2863,10 @@ function Area_create_rooms()
   if PARAM.float_oblige_v5_grammar and rand.odds(PARAM.float_oblige_v5_grammar) then
     table.add_unique(level_grammar, SHAPES.OBLIGE_V5)
   end
+
+  if PARAM.float_oblige_v750_grammar and rand.odds(PARAM.float_oblige_v750_grammar) then
+    table.add_unique(level_grammar, SHAPES.OBLIGE_V750)
+  end
   
   if not table.empty(level_grammar) then
     if LEVEL.is_procedural_gotcha and PARAM.bool_gotcha_boss_fight == 1 then

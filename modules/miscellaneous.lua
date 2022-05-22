@@ -227,7 +227,7 @@ OB_MODULES["misc"] =
       longtip = "Gives levels a chance of being generated using the Oblige v2 shape grammar. With this grammar, rooms are always " ..
       "square-shaped, even in parks or caves, with the occasional chunk taken out of one of the corners or sides. Hallways " ..
       "are limited to the dedicated v2 hallway set. Room sizes are very consistent.",
-      priority = 101,
+      priority = 102,
       randomize_group = "architecture",
     },
 
@@ -246,6 +246,24 @@ OB_MODULES["misc"] =
       longtip = "Gives levels a chance of being generated using the Oblige v5 shape grammar. With this grammar, indoor rooms are usually " ..
       "square or diamond-shaped. Parks are larger than the indoor areas, but still more or less rectangular in nature. " ..
       "Caves retain their organic layouts. Hallways and joiners are still used as normal. Room sizes are fairly consistent.",
+      priority = 101,
+      randomize_group = "architecture",
+    },
+
+    {
+      name = "float_oblige_v750_grammar",
+      label = _("Oblige v7.50 Grammar"),
+      valuator = "slider",
+      units = "% of Levels",
+      min = 0,
+      max = 100,
+      increment = 1,
+      default = 0,
+      nan = "",
+      presets = "",
+      tooltip = "Sets chance of levels using the Oblige v7.50 shape grammar.",
+      longtip = "Gives levels a chance of being generated using the Oblige v7.50 shape grammar. This marked the very first " ..
+      "implementation of the shape grammar system that is the basis for Obsidian's map generation.",
       gap = 1,
       priority = 100,
       randomize_group = "architecture",
