@@ -223,7 +223,7 @@ OB_MODULES["debugger"] =
       longtip = "The following games are in an experimental status, meaning that " ..
       "they may have errors when building levels, or support for certain gameplay features has" ..
       " not been implemented yet!\n\n" ..
-      "STRIFE: MULTI-LEVEL WADs NOT RECOMMENDED! Hub/town system not yet implemented. Must use the \"rift01\" cheat code to start the first map.",
+      "STRIFE: Quests/multiple endings not yet implemented. Progression is linear and game will end on last level generated.",
       priority = 60,
       gap = 1,
     },
