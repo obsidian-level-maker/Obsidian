@@ -1572,15 +1572,52 @@ function Monster_fill_room(R)
     -- decide deafness and where to look
     local deaf, focus
 
-    if info.liquid_only then
-      local spot_in_water = false
-      for _, chunk in pairs(R.liquid_chunks) do
-        if spot.x1 >= chunk.x1 and spot.x2 <= chunk.x2 and spot.y1 >= chunk.y1 and spot.y2 <= chunk.y2 then
-          spot_in_water = true
+    local spot_in_water = false
+    for _, chunk in pairs(R.liquid_chunks) do
+      if spot.x1 >= chunk.x1 and spot.x2 <= chunk.x2 and spot.y1 >= chunk.y1 and spot.y2 <= chunk.y2 then
+        spot_in_water = true
+      end
+    end
+
+    -- if spot is in liquid, place a random liquid_only monster from the global pal if one exists since liquid spots are fairly rare
+    -- if spot is outside liquid, make sure it's not a liquid_only monster that's placed
+    if spot_in_water == true then
+      if not info.liquid_only then
+        for _,v in pairs(R.monster_list) do
+          if v.info == info then
+            local liquid_mon_list = {}
+            for k,_ in pairs(LEVEL.global_pal) do
+              if GAME.MONSTERS[k].liquid_only and (not LEVEL.theme.monster_prefs or not LEVEL.theme.monster_prefs[k] or LEVEL.theme.monster_prefs[k] > 0) then table.insert(liquid_mon_list, k) end
+            end
+            if not table.empty(liquid_mon_list) then
+              mon = rand.pick(liquid_mon_list)
+              info = assert(GAME.MONSTERS[mon])
+              v.info = info
+            end
+            goto liquidstuffdone
+          end
         end
       end
-      if spot_in_water == false then goto notinliquid end
+    else
+      if info.liquid_only then
+        for _,v in pairs(R.monster_list) do
+          if v.info == info then
+            local new_mon
+            ::tryagain::
+            new_mon = rand.key_by_probs(LEVEL.global_pal)
+            if new_mon == mon or GAME.MONSTERS[new_mon].liquid_only or (LEVEL.theme.monster_prefs and LEVEL.theme.monster_prefs[new_mon] and LEVEL.theme.monster_prefs[new_mon] == 0) then 
+              goto tryagain 
+            end
+            mon = new_mon
+            info = GAME.MONSTERS[mon]
+            v.info = info
+            goto liquidstuffdone
+          end
+        end
+      end
     end
+
+    ::liquidstuffdone::
 
     -- monsters in traps are never deaf (esp. monster depots)
     if mode then
@@ -1637,7 +1674,6 @@ function Monster_fill_room(R)
     LEVEL.mon_count = LEVEL.mon_count + 1
 
     Trans.entity(mon, x, y, z, props)
-    ::notinliquid::
   end
 
 

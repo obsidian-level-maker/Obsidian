@@ -60,6 +60,7 @@ HEXEN.EPISODES =
 
     theme = "dungeon",
     sky_light = 0.50,
+    boss = "Korax"
   },
 }
 
