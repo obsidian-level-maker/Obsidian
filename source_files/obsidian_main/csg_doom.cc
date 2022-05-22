@@ -2659,6 +2659,9 @@ static void WriteThing(sector_c *S, csg_entity_c *E) {
     int tid = E->props.getInt("tid");
     int special = E->props.getInt("special");
     int options = E->flags;
+    if ((options & MTF_ALL_SKILLS) == 0) {
+        options |= MTF_ALL_SKILLS;
+    }
 
     if (sub_format == SUBFMT_Hexen) {
         if ((options & MTF_HEXEN_CLASSES) == 0) {
@@ -2667,10 +2670,6 @@ static void WriteThing(sector_c *S, csg_entity_c *E) {
 
         if ((options & MTF_HEXEN_MODES) == 0) {
             options |= MTF_HEXEN_MODES;
-        }
-
-        if ((options & MTF_ALL_SKILLS) == 0) {
-            options |= MTF_ALL_SKILLS;
         }
     }
 
