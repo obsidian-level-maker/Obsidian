@@ -196,7 +196,7 @@ function Level_determine_map_size(LEV)
       end
     end
     
-    ob_size = math.clamp(10, int(rand.irange(low, high) * result_skew), 75)
+    ob_size = math.clamp(low, int(rand.irange(low, high) * result_skew), high)
   end
 
   if ob_size == "Episodic" or ob_size == "Progressive" then
@@ -231,6 +231,22 @@ function Level_determine_map_size(LEV)
   end
 
   ::customsize::
+
+  if OB_CONFIG.cap_level_sizes == "yes" then
+    if OB_CONFIG.length == "game" then
+      if OB_CONFIG.float_size == "Progressive" or OB_CONFIG.float_size == "Episodic" then
+        W = math.min(48, W)
+      elseif OB_CONFIG.float_size == "Mix It Up" then
+        W = math.min(42, W)
+      else
+        W = math.min(30, W)
+      end
+    elseif OB_CONFIG.length == "episode" then
+      if tonumber(OB_CONFIG.float_size) then
+        W = math.min(58, W)
+      end
+    end
+  end
 
   if not W then
     error("Invalid value for size : " .. tostring(ob_size))

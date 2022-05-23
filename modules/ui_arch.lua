@@ -138,7 +138,16 @@ OB_MODULES["ui_arch"] =
       "66:66 (Gargantuan)," ..
       "75:75 (Transcendent),",
       tooltip = "Determines size of map (Width x Height) in grid squares.",
-      longtip = "WARNING! If you are planning to play on any choices that involve maps " ..
+      longtip = "FOR 32-BIT USERS: To prevent memory usage issues, the following maximum map size limits will be enforced regardless of slider setting:\n\n" ..
+      "Full Game:\n" ..
+      "-Fixed size: 30\n" ..
+      "-Progressive: 48\n" ..
+      "-Episodic: 48\n" ..
+      "-Mix It Up: 42\n\n" ..
+      "Episode:\n" .. 
+      "-Fixed size: 58\n\n" ..
+      "All other combinations will honor the slider settings.\n\n" ..
+      "If you are planning to play on any choices that involve maps " ..
       "at sizes of 50 and above, Autodetailing will be enabled by default. The stability of maps with sizes 60 and beyond is not predictable.",
       priority = 100,
       randomize_group="architecture"

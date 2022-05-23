@@ -1318,6 +1318,10 @@ skiprest:
         // inform Lua code about batch mode (the value doesn't matter)
         ob_set_config("batch", "yes");
 
+#ifdef OBSIDIAN_32BIT_MAP_SIZES
+        ob_set_config("cap_level_sizes", "yes");
+#endif
+
         Module_Defaults();
 
         // batch mode never reads/writes the normal config file.
@@ -1367,6 +1371,10 @@ skiprest:
     //???    Default_Location();
 
     Script_Open();
+
+#ifdef OBSIDIAN_32BIT_MAP_SIZES
+    ob_set_config("cap_level_sizes", "yes");
+#endif
 
     // enable certain modules by default
     Module_Defaults();
