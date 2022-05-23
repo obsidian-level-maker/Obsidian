@@ -706,6 +706,10 @@ function Fab_transform_Z(fab, T)
         E.delta_z = nil
       end
 
+      if PARAM.entity_delta_z then
+        E.z = E.z + PARAM.entity_delta_z
+      end
+
       if E.angles then
         E.angles = Trans.apply_angles_z(E.angles)
       end

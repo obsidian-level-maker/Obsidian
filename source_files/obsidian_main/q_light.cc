@@ -1224,15 +1224,21 @@ static void QLIT_FindLights() {
         } else if (E->Match("oblige_sun")) {
             light.kind = LTK_Sun;
         } else {
-            continue;
+            // Change this back to "continue" when light entity placement is fixed
+            light.kind = LTK_Normal;
         }
 
         light.x = E->x;
         light.y = E->y;
         light.z = E->z;
 
-        light.radius = E->props.getDouble("radius", DEFAULT_LIGHT_RADIUS);
-        light.level = E->props.getDouble("level", light.radius * 0.5);
+        // Ridiculous values so I don't have to do r_fullbright 1 every time I try to test a level
+        light.radius = E->props.getDouble("radius", 1000);
+        light.level = E->props.getDouble("level", light.radius * 0.1);
+
+        // The real values
+        //light.radius = E->props.getDouble("radius", DEFAULT_LIGHT_RADIUS);
+        //light.level = E->props.getDouble("level", light.radius * 0.5);
 
         if (light.level < 1 || light.radius < 1) {
             continue;

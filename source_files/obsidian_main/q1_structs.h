@@ -36,17 +36,17 @@ constexpr int MAX_MAP_BRUSHED = 4096;
 constexpr int MAX_MAP_ENTITIES = 1024;
 constexpr int MAX_MAP_ENTSTRING = 65535;
 
-constexpr int MAX_MAP_PLANES = 32767;
+constexpr int MAX_MAP_PLANES = 65536;
 /* negative shorts are contents */
-constexpr int MAX_MAP_NODES = 32767;
+constexpr int MAX_MAP_NODES = 65530;
 /* negative shorts are contents */
-constexpr int MAX_MAP_CLIPNODES = 32767;
-constexpr int MAX_MAP_LEAFS = 8192;
+constexpr int MAX_MAP_CLIPNODES = 65530;
+constexpr int MAX_MAP_LEAFS = 32768;
 
 constexpr int MAX_MAP_VERTS = 65535;
 constexpr int MAX_MAP_FACES = 65535;
 constexpr int MAX_MAP_MARKSURFACES = 65535;
-constexpr int MAX_MAP_TEXINFO = 4096;
+constexpr int MAX_MAP_TEXINFO = 65536;
 constexpr int MAX_MAP_TEXTURES = 512;
 
 constexpr int MAX_MAP_EDGES = 256000;
