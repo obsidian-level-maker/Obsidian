@@ -29,7 +29,7 @@ PREFABS.Exit_secret_box1_chex3 =
 {
   template = "Exit_secret_box1",
 
-  game = { chex3=1, doom1=1, doom2=1 }, -- First made for Chex 3, but happens to work for Doom 1/2
+  game = { chex3=1, doom1=1, doom2=1, nukem=1, quake=1,  }, -- First made for Chex 3, but happens to work for Doom 1/2
   forced_offsets = 
   {
     [16] = { x=0,y=-64 },

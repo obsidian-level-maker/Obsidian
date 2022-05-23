@@ -30,13 +30,16 @@ cmake-build-*
 # User dirs
 addons/*.pk3
 
-# Quake texture files (not redistributable)
-games/quake/data/quake_tex.wd2
+# Quake files (not redistributable)
+quake_tex.wd2
+pak0.pak
+pak1.pak
 
 tools/filename_formatter
 tools/filename_formatter.exe
 tools/qsavetex
 tools/qsavetex.exe
+tools/qsavetex_log.txt
 
 web/out
 web/shots

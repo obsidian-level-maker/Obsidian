@@ -2,7 +2,7 @@ PREFABS.Exit_tp_closet =
 {
   file   = "exit/armaetus_tp_closet_exit.wad",
   map    = "MAP01",
-  game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=1, heretic=0, strife=0 },
+  game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=1, heretic=0, nukem=1, quake=1, strife=0 },
 
   prob   = 300,
 
@@ -84,7 +84,7 @@ PREFABS.Exit_tp_closet_secret =
 {
   file   = "exit/armaetus_tp_closet_exit.wad",
   map    = "MAP01",
-  game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=1, heretic=0, strife=0 },
+  game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=1, heretic=0, nukem=1, quake=1, strife=0 },
 
   prob   = 300,
 

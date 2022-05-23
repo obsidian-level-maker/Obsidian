@@ -6,7 +6,7 @@ PREFABS.Exit_pillar2 =
 {
   file  = "exit/pillar2.wad",
   map    = "MAP01",
-  game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=0, heretic=0, strife=0 },
+  game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=0, heretic=0, nukem=1, quake=1, strife=0 },
 
   prob  = 100,
 
