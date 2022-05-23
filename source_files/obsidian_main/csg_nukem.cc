@@ -109,6 +109,9 @@ class nukem_sector_c {
 
     // double mid_x, mid_y;
 
+    int lotag;
+    int hitag;
+
     int first_wall;
     int num_walls;
 
@@ -121,6 +124,8 @@ class nukem_sector_c {
           entities(),
           mark(0),
           index(-1),
+          lotag(0),
+          hitag(0),
           first_wall(-1),
           num_walls(-1) {}
 
@@ -321,6 +326,11 @@ static void NK_MakeSector(region_c *R) {
     int c_mark = c_face->getInt("mark");
 
     S->mark = f_mark ? f_mark : c_mark;
+
+    int f_lotag = f_face->getInt("tag");
+    int c_lotag = c_face->getInt("tag");
+
+    S->lotag = f_lotag ? f_lotag : c_lotag;
 
     if (T->bflags & BFLAG_Sky) {
         S->ceil.flags |= SECTOR_F_PARALLAX;
@@ -672,7 +682,7 @@ void nukem_sector_c::Write() {
     int c_h = I_ROUND(ceil.h * NK_HEIGHT_MUL);
 
     NK_AddSector(first_wall, num_walls, visibility, f_h, floor.pic, c_h,
-                 ceil.pic, ceil.flags, 0, 0);
+                 ceil.pic, ceil.flags, lotag, hitag);
 }
 
 static void NK_WriteSectors() {
