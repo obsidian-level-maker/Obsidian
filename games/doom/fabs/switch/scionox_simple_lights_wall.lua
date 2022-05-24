@@ -62,7 +62,7 @@ PREFABS.Switch_scionox_simple_lights_wall_6 =
   template = "Switch_scionox_simple_lights_wall",
   map = "MAP02",
   theme  = "hell",
-  tex_SW1BRN2 = { SW1GARG=50, SW1LION=50, SW1SATYR=50, SW1GSTON=50, SW1HOT=50, SW1WOOD=50, SW1PANEL=50, SW1ROCK=50, SW1SKIN=50, SW1WDMET=50 },
+  tex_SW1BRN2 = { SW1GARG=50, SW1LION=50, SW1SATYR=50, SW1GSTON=50, SW1HOT=50, SW1WOOD=50, SW1PANEL=50, SW1ROCK=50, SW1SKIN=50},
   thing_2028 =
   {
     blue_torch   = 50,
