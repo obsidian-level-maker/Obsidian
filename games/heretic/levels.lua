@@ -32,7 +32,7 @@ HERETIC.EPISODES =
     boss = "Ironlich",
     sky_patch = "SKY1",
     dark_prob = 10,
---    sky_light = 0.65,
+    sky_light = 0.65,
   },
 
   episode2 =
@@ -43,7 +43,7 @@ HERETIC.EPISODES =
     boss = "Maulotaur",
     sky_patch = "SKY2",
     dark_prob = 10,
---    sky_light = 0.75,
+    sky_light = 0.75,
   },
 
   episode3 =
@@ -54,7 +54,7 @@ HERETIC.EPISODES =
     boss = "D_Sparil",
     sky_patch = "SKY3",
     dark_prob = 10,
---    sky_light = 0.75,
+    sky_light = 0.75,
   },
 
   episode4 =
@@ -63,9 +63,9 @@ HERETIC.EPISODES =
 
     theme = "ossuary",
     boss = "Ironlich",
-    sky_patch = "SKY3",
+    sky_patch = "SKY4",
     dark_prob = 10,
---    sky_light = 0.50,
+    sky_light = 0.50,
   },
 
   episode5 =
@@ -74,9 +74,9 @@ HERETIC.EPISODES =
 
     theme = "demense",
     boss = "Maulotaur",
-    sky_patch = "SKY3",
+    sky_patch = "SKY5",
     dark_prob = 10,
---    sky_light = 0.65,
+    sky_light = 0.65,
   },
 }
 

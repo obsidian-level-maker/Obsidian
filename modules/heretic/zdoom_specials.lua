@@ -352,6 +352,27 @@ Glow
 
 ZDOOM_SPECIALS_HERETIC.MUSIC_SELECTION = {}
 
+ZDOOM_SPECIALS_HERETIC.FOG_COLORS = 
+{
+  SKY_CLOUDS = "00 00 ff",
+  BLUE_CLOUDS = "00 00 ff",
+  WHITE_CLOUDS = "ff ff ff",
+  GREY_CLOUDS = "ff ff ff",
+  DARK_CLOUDS = "ff ff ff",
+  BROWN_CLOUDS = "ff a8 5c", 
+  BROWNISH_CLOUDS = "ff d2 a6",
+  PEACH_CLOUDS = "ff a4 63",
+  YELLOW_CLOUDS = "ff cb 3d",
+  ORANGE_CLOUDS = "ff 6b 08",
+  GREEN_CLOUDS = "7a ff 5c",
+  JADE_CLOUDS = "df ff 9e",
+  DARKRED_CLOUDS = "ff 4c 4c",
+  HELLISH_CLOUDS = "ff 00 00",
+  HELL_CLOUDS = "ff 00 00",
+  PURPLE_CLOUDS = "ff 00 ff",
+  RAINBOW_CLOUDS = "ff 00 ff"
+}
+
 function ZDOOM_SPECIALS_HERETIC.setup(self)
   gui.printf("\n--== ZDoom Special Addons module active ==--\n\n")
 
@@ -377,47 +398,12 @@ function ZDOOM_SPECIALS_HERETIC.do_special_stuff()
   local level_count = #GAME.levels
 
   local function pick_sky_color_from_skygen_map(epi_num)
-    local color
+    local color = "00 00 00"
 
     local skyname = PARAM.episode_sky_color[epi_num]
 
-    if skyname == "SKY_CLOUDS" or skyname == "BLUE_CLOUDS" then
-      color = "00 00 ff"
-    elseif skyname == "WHITE_CLOUDS" then
-      color = "ff ff ff"
-    elseif skyname == "GREY_CLOUDS" then
-      color = "bf bf bf"
-    elseif skyname == "DARK_CLOUDS" then
-      color = "8a 8a 8a"
-    elseif skyname == "BROWN_CLOUDS" then
-      color = "ff a8 5c"
-    elseif skyname == "BROWNISH_CLOUDS" then
-      color = "ff d2 a6"
-    elseif skyname == "PEACH_CLOUDS" then
-      color = "ff a4 63"
-    elseif skyname == "YELLOW_CLOUDS" then
-      color = "ff cb 3d"
-    elseif skyname == "ORANGE_CLOUDS" then
-      color = "ff 6b 08"
-    elseif skyname == "GREEN_CLOUDS" then
-      color = "7a ff 5c"
-    elseif skyname == "JADE_CLOUDS" then
-      color = "df ff 9e"
-    elseif skyname == "DARKRED_CLOUDS" then
-      color = "ff 4c 4c"
-    elseif skyname == "HELLISH_CLOUDS" or skyname == "HELL_CLOUDS" then
-      color = "ff 00 00"
-    elseif skyname == "PURPLE_CLOUDS" or skyname == "RAINBOW_CLOUDS" then
-      color = "ff 00 ff"
-    elseif skyname == "STARS" then
-      color = "00 00 00"
-    else
-      color = "00 00 00"
-    end
-
-    if not color then
-      gui.printf("\nCould not resolve skybox generator color.\n")
-      return "00 00 00"
+    if ZDOOM_SPECIALS_HERETIC.FOG_COLORS[skyname] then
+      color = ZDOOM_SPECIALS_HERETIC.FOG_COLORS[skyname] 
     end
 
     return color
@@ -478,13 +464,33 @@ function ZDOOM_SPECIALS_HERETIC.do_special_stuff()
     map_id = ZDOOM_SPECIALS_HERETIC.MAP_NOMENCLATURE[map_num]
     map_id_next = ZDOOM_SPECIALS_HERETIC.MAP_NOMENCLATURE[map_num + 1]
 
+    local sky_texture
+
     -- resolve proper episodic sky texture assignments
-    if map_num <= 9 then
-      sky_tex = "SKY1"
-    elseif map_num > 18 and map_num <= 27 then
-      sky_tex = "SKY2"
-    elseif map_num > 27 then
-      sky_tex = "SKY3"
+    if not PARAM.episode_sky_color then
+      if map_num <= 9 then
+        sky_texture = "SKY1"
+      elseif map_num <= 18 then
+        sky_texture = "SKY2"
+      elseif map_num <= 27 then
+        sky_texture = "SKY3"
+      elseif map_num <= 36 then
+        sky_texture = "SKY1"
+      else
+        sky_texture = "SKY3"
+      end
+    else
+      if map_num <= 9 then
+        sky_texture = "SKY1"
+      elseif map_num <= 18 then
+        sky_texture = "SKY2"
+      elseif map_num <= 27 then
+        sky_texture = "SKY3"
+      elseif map_num <= 36 then
+        sky_texture = "SKY4"
+      else
+        sky_texture = "SKY5"
+      end
     end
 
     -- produce endtitle screen end of game
@@ -672,7 +678,7 @@ function ZDOOM_SPECIALS_HERETIC.do_special_stuff()
       'map ' .. map_id .. ' lookup HHUSTR_'.. name_string_map_id ..'\n',
       '{\n',
       '  cluster = 1\n',
-      '  sky1 = "' .. sky_tex .. '"\n',
+      '  sky1 = "' .. sky_texture .. '"\n',
       '' .. cluster_line .. '',
       '' .. fog_color_line .. '',
       '' .. fog_intensity_line .. '',
@@ -1018,29 +1024,38 @@ function ZDOOM_SPECIALS_HERETIC.do_special_stuff()
       info.interpic = ZDOOM_SPECIALS_HERETIC.INTERPICS[8]
     elseif i == 36 then
       info.interpic = ZDOOM_SPECIALS_HERETIC.INTERPICS[9]
-    elseif i== 45 then
+    elseif i == 45 then
       info.interpic = ZDOOM_SPECIALS_HERETIC.INTERPICS[10]
     end
 
     if PARAM.fog_generator == "per_sky_gen" then
       if not PARAM.episode_sky_color then
         gui.printf("WARNING: User set fog color to be set by Sky Generator " ..
-        "but Sky Generator is turned off! Behavior will now be Random instead.\n")
-        PARAM.fog_generator = "random"
-        goto continue
+        "but Sky Generator is turned off! Fog color will now match vanilla skies.\n")
+        if i <= 9 then
+          info.fog_color = "ff ff ff"
+        elseif i <= 18 then
+          info.fog_color = "ff 00 00"
+        elseif i <= 27 then
+          info.fog_color = "00 00 ff"
+        elseif i <= 36 then
+          info.fog_color = "ff ff ff"
+        else
+          info.fog_color = "00 00 ff"
+        end
+      else
+        if i <= 9 then
+          info.fog_color = pick_sky_color_from_skygen_map(1)
+        elseif i <= 18 then
+          info.fog_color = pick_sky_color_from_skygen_map(2)
+        elseif i <= 27 then
+          info.fog_color = pick_sky_color_from_skygen_map(3)
+        elseif i <= 36 then
+          info.fog_color = pick_sky_color_from_skygen_map(4)
+        else
+          info.fog_color = pick_sky_color_from_skygen_map(5)
+        end
       end
-      if i <= 9 then
-        info.fog_color = pick_sky_color_from_skygen_map(1)
-      elseif i > 9 and i <= 18 then
-        info.fog_color = pick_sky_color_from_skygen_map(2)
-      elseif i > 18 then
-        info.fog_color = pick_sky_color_from_skygen_map(3)
-      elseif i > 27 then
-        info.fog_color = pick_sky_color_from_skygen_map(4)
-      elseif i > 36 then
-        info.fog_color = pick_sky_color_from_skygen_map(5)
-      end
-      ::continue::
     elseif PARAM.fog_generator == "random" then
       info.fog_color = pick_random_fog_color()
     else
