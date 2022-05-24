@@ -215,17 +215,14 @@ function ZStoryGen_heretic_quitmessages()
   "\n",
   }
   -- custom quit message creation
-  PARAM.quit_messages = "yes"
-  if PARAM.quit_messages == "yes" then
-    x = 1
-    local info = ZStoryGen_heretic_create_characters_and_stuff()
-    for _,line in pairs(ZDOOM_STORIES_HERETIC.QUIT_MESSAGES) do
-      line = ZStoryGen_heretic_format_story_chunk(line, info)
-      table.insert(PARAM.quit_messagelump, "\nQUITMSG" .. x .. " =\n")
-      x = x + 1
-      for _,o_line in pairs(line) do
-        table.insert(PARAM.quit_messagelump, "  " .. o_line .. "\n")
-      end
+  local x = 1
+  local info = ZStoryGen_heretic_create_characters_and_stuff()
+  for _,line in pairs(ZDOOM_STORIES_HERETIC.QUIT_MESSAGES) do
+    line = ZStoryGen_heretic_format_story_chunk(line, info)
+    table.insert(PARAM.quit_messagelump, "\nQUITMSG" .. x .. " =\n")
+    x = x + 1
+    for _,o_line in pairs(line) do
+      table.insert(PARAM.quit_messagelump, "  " .. o_line .. "\n")
     end
   end
 end

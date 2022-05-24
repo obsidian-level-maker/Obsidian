@@ -80,7 +80,7 @@ function ScriptMan_assemble_mapinfo_lump()
     end
 
     -- MAPINFO extras
-    if PARAM.bool_custom_quit_messages == 1 then
+    if PARAM.bool_custom_quit_messages == 1 or PARAM.bool_heretic_quit_messages == 1 then
       for _,line in pairs(PARAM.gameinfolump) do
         table.insert(mapinfo_lines,line)
       end
@@ -291,7 +291,7 @@ function ScriptMan_assemble_language_lump()
       table.insert(language_lines,line)
     end
   end
-  if PARAM.bool_quit_messages == 1 then
+  if PARAM.bool_quit_messages == 1 or PARAM.bool_heretic_quit_messages == 1 then
     for _,line in pairs(PARAM.quit_messagelump) do
       table.insert(language_lines,line)
     end

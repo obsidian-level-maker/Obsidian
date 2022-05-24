@@ -989,7 +989,7 @@ function ZDOOM_SPECIALS_HERETIC.do_special_stuff()
   PARAM.mapinfolump = {}
   PARAM.gameinfolump = {}
 
-  if PARAM.bool_custom_quit_messages == 1 then
+  if PARAM.bool_heretic_quit_messages == 1 then
     local gamedef_lines = add_gamedef()
     for _,line in pairs(gamedef_lines) do
       table.insert(PARAM.gameinfolump,line)
@@ -1035,6 +1035,10 @@ function ZDOOM_SPECIALS_HERETIC.do_special_stuff()
         info.fog_color = pick_sky_color_from_skygen_map(2)
       elseif i > 18 then
         info.fog_color = pick_sky_color_from_skygen_map(3)
+      elseif i > 27 then
+        info.fog_color = pick_sky_color_from_skygen_map(4)
+      elseif i > 36 then
+        info.fog_color = pick_sky_color_from_skygen_map(5)
       end
       ::continue::
     elseif PARAM.fog_generator == "random" then
@@ -1217,7 +1221,7 @@ OB_MODULES["zdoom_specials_heretic"] =
     },
 
     {
-      name = "bool_custom_quit_messages",
+      name = "bool_heretic_quit_messages",
       label = _("Quit Messages"),
       valuator = "button",
       priority = 4,
