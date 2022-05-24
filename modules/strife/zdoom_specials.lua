@@ -17,7 +17,7 @@
 --
 -------------------------------------------------------------------
 
--- Right now for Strife all this will do is write the map names to the MAPINFO lump - Dasho
+-- Right now for Strife all this will do is write the map names, sky texture names, and music tracks to the MAPINFO lump - Dasho
 
 --gui.import("zdoom_story_gen.lua")
 
@@ -61,51 +61,23 @@ ZDOOM_SPECIALS_STRIFE.STORY_CHOICES =
 
 ZDOOM_SPECIALS_STRIFE.MUSIC =
 {
-  [1] = "MUS_E1M1",
-  [2] = "MUS_E1M2",
-  [3] = "MUS_E1M3",
-  [4] = "MUS_E1M4",
-  [5] = "MUS_E1M5",
-  [6] = "MUS_E1M6",
-  [7] = "MUS_E1M7",
-  [8] = "MUS_E1M8",
-  [9] = "MUS_E1M9",
-  [10] = "MUS_E2M1",
-  [11] = "MUS_E2M2",
-  [12] = "MUS_E2M3",
-  [13] = "MUS_E2M4",
-  [14] = "MUS_E1M4",
-  [15] = "MUS_E2M6",
-  [16] = "MUS_E2M7",
-  [17] = "MUS_E2M8",
-  [18] = "MUS_E2M9",
-  [19] = "MUS_E1M1",
-  [20] = "MUS_E3M2",
-  [21] = "MUS_E3M3",
-  [22] = "MUS_E1M6",
-  [23] = "MUS_E1M3",
-  [24] = "MUS_E1M2",
-  [25] = "MUS_E1M5",
-  [26] = "MUS_E1M9",
-  [27] = "MUS_E2M6",
-  [28] = "MUS_E1M6",
-  [29] = "MUS_E1M2",
-  [30] = "MUS_E1M3",
-  [31] = "MUS_E1M4",
-  [32] = "MUS_E1M5",
-  [33] = "MUS_E1M1",
-  [34] = "MUS_E1M7",
-  [35] = "MUS_E1M8",
-  [36] = "MUS_E1M9",
-  [37] = "MUS_E2M1",
-  [38] = "MUS_E2M2",
-  [39] = "MUS_E2M3",
-  [40] = "MUS_E2M4",
-  [41] = "MUS_E1M4",
-  [42] = "MUS_E2M6",
-  [43] = "MUS_E2M7",
-  [44] = "MUS_E2M8",
-  [45] = "MUS_E2M9",
+  [1] = "D_ACTION",
+  [2] = "D_FAST",
+  [3] = "D_DANGER",
+  [4] = "D_DARKER",
+  [5] = "D_STRIKE",
+  [6] = "D_SLIDE",
+  [7] = "D_TRIBAL",
+  [8] = "D_MARCH",
+  [9] = "D_MOOD",
+  [10] = "D_CASTLE",
+  [11] = "D_FIGHT",
+  [12] = "D_SPENSE",
+  [13] = "D_DARK",
+  [14] = "D_TECH",
+  [15] = "D_DRONE",
+  [16] = "D_PANTHR",
+  [17] = "D_INSTRY"
 }
 
 ZDOOM_SPECIALS_STRIFE.MAP_NOMENCLATURE =
@@ -439,24 +411,24 @@ function ZDOOM_SPECIALS_STRIFE.do_special_stuff()
     local map_num = mapinfo_tab.map_num
     --local interpic = mapinfo_tab.interpic
 
-    --local music_list = ZDOOM_SPECIALS_STRIFE.MUSIC
+    local music_list = ZDOOM_SPECIALS_STRIFE.MUSIC
 
-    --local music_line = ''
+    local music_line = ''
 
-    --[[if music_list then
-      music_line = '  Music = "' .. music_list[map_num] .. '"\n'
+    if music_list then
+      music_line = '  Music = "' .. rand.pick(music_list) .. '"\n'
     else
       music_line = ''
-    end]]--
+    end
 
     -- resolve map MAPINFO linkages
     local map_id = ZDOOM_SPECIALS_STRIFE.MAP_NOMENCLATURE[map_num]
     --map_id_next = ZDOOM_SPECIALS_STRIFE.MAP_NOMENCLATURE[map_num + 1]
 
-    --[[local sky_texture
+    local sky_texture = "P_BLUE1"
 
     -- resolve proper episodic sky texture assignments
-    if not PARAM.episode_sky_color then
+    --[[if not PARAM.episode_sky_color then
       if map_num <= 9 then
         sky_texture = "SKY1"
       elseif map_num <= 18 then
@@ -662,18 +634,26 @@ function ZDOOM_SPECIALS_STRIFE.do_special_stuff()
 
     special_attributes = special_attributes .. '  ClipMidTextures\n']]--
 
+    local mapline
+
+    if OB_CONFIG.length == "single" then
+      mapline = 'map MAP02 lookup HUSTR_2\n'
+    else
+      mapline = 'map ' .. map_id .. ' lookup HUSTR_'.. name_string_map_id ..'\n'
+    end
+
     local mapinfo =
     {
-      'map ' .. map_id .. ' lookup HUSTR_'.. name_string_map_id ..'\n',
+      mapline,
       '{\n',
       --'  cluster = 1\n',
-      --'  sky1 = "' .. sky_texture .. '"\n',
+      '  sky1 = "' .. sky_texture .. '"\n',
       --'' .. cluster_line .. '',
       --'' .. fog_color_line .. '',
       --'' .. fog_intensity_line .. '',
       --'' .. next_level_line .. '',
       --'' .. secret_level_line .. '',
-      --'' .. music_line .. '',
+      '' .. music_line .. '',
       --'  EnterPic = "' .. interpic .. '"\n',
       --'  ExitPic = "' .. interpic .. '"\n',
       --'' .. special_attributes .. '',
@@ -1119,7 +1099,7 @@ function ZDOOM_SPECIALS_STRIFE.do_special_stuff()
 
 end
 
-UNFINISHED["zdoom_specials_strife"] =
+OB_MODULES["zdoom_specials_strife"] =
 {
 
   name = "zdoom_specials_strife",

@@ -27,7 +27,8 @@ STRIFE.EPISODES =
 
     theme = "town",
     sky_patch = "P_BLUE1",
-    dark_prob = 10,
+    dark_prob = 0,
+    sky_light = 0.75,
   },
 
   episode2 =
@@ -36,7 +37,8 @@ STRIFE.EPISODES =
 
     theme = "town",
     sky_patch = "P_BLUE1",
-    dark_prob = 40,
+    dark_prob = 0,
+    sky_light = 0.75,
   },
 
   episode3 =
@@ -45,7 +47,8 @@ STRIFE.EPISODES =
 
     theme = "town",
     sky_patch = "P_BLUE1",
-    dark_prob = 10,
+    dark_prob = 0,
+    sky_light = 0.75,
   },
 }
 
