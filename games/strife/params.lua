@@ -38,6 +38,7 @@ STRIFE.PARAMETERS =
   titlepic_lump   = "TITLEPIC",
   titlepic_format = "patch",
 
+  -- This only works in conjunction with ZDoom's MAPINFO, as DEH/BEX don't work with vanilla Strife (I think)
   bex_map_prefix = "HUSTR_",
 }
 
