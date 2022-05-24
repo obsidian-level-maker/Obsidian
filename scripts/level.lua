@@ -2717,7 +2717,7 @@ function Level_make_all()
   GAME.episodes = {}
 
   -- semi-supported games warning
-  if ob_match_game({ game = { nukem=1, quake=1, strife=1} }) then
+  if ob_match_game({ game = { nukem=1, quake=1 } }) then
     if not PARAM.bool_experimental_games or PARAM.bool_experimental_games == 0 then
       error("Warning: The game that you have selected is in an experimental " ..
     "state. WADs may not build successfully and certain gameplay features may not " ..

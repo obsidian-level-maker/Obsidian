@@ -222,8 +222,7 @@ OB_MODULES["debugger"] =
       tooltip = "Enables building of levels for experimental games.",
       longtip = "The following games are in an experimental status, meaning that " ..
       "they may have errors when building levels, or support for certain gameplay features has" ..
-      " not been implemented yet!\n\n" ..
-      "STRIFE: Quests/multiple endings not yet implemented. Progression is linear and game will end on last level generated.",
+      " not been implemented yet!",
       priority = 60,
       gap = 1,
     },

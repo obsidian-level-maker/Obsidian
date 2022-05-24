@@ -26,20 +26,18 @@ STRIFE.PICKUPS =
    give = { {health=10} },
  },
 
- medkit =
+
+ -- Armor --
+
+ leather_armor =
  {
-   id = 2012,
-   kind = "health",
-   rank = 2,
-   add_prob = 120,
-   closet_prob = 20,
-   secret_prob = 5,
-   storage_prob = 80,
-   storage_qty  = 2,
+   id = 2018,
+   kind = "armor",
+   add_prob = 5,
    give = { {health=50} },
  },
 
- -- ammo -- 
+ -- Ammo -- 
 
    bullet_clip =
   {
@@ -112,6 +110,44 @@ STRIFE.PICKUPS =
 STRIFE.NICE_ITEMS =
 {
 
+  -- HEALTH --
+
+  medkit =
+  {
+    id = 2012,
+    kind = "health",
+    rank = 2,
+    add_prob = 120,
+    closet_prob = 20,
+    secret_prob = 5,
+    storage_prob = 80,
+    storage_qty  = 2,
+    give = { {health=50} },
+  },
+
+  surgery_kit =
+  {
+    id = 83,
+    kind = "health",
+    add_prob = 5,
+    start_prob = 0,
+    closet_prob = 2,
+    secret_prob = 40,
+    give = { {health=100} },
+  },
+
+  -- ARMOR --
+
+  metal_armor =
+  {
+    id = 2019,
+    kind = "armor",
+    add_prob = 5,
+    give = { {health=50} },
+  },
+
+  -- AMMO --
+
   energy_pack =
   {
     id = 17,
@@ -125,6 +161,102 @@ STRIFE.NICE_ITEMS =
     add_prob = 10,
     give = { {ammo="missile",count=20} }
   },
+
+
+  --MISCELLANEOUS--
+
+  shadow_armor =
+  {
+    id = 2024,
+    kind = "powerup",
+    add_prob = 7,
+    start_prob = 0,
+    closet_prob = 15,
+    time_limit = 100,
+  },
+
+  map =
+  {
+    id = 2026,
+    kind = "powerup",
+    secret_prob = 10,
+    once_only = true
+  },
+
+  scanner =
+  {
+    id = 2027,
+    kind = "powerup",
+    secret_prob = 10,
+  },
+
+  targeter =
+  {
+    id = 207,
+    kind = "powerup",
+    add_prob = 7,
+    start_prob = 0,
+    closet_prob = 15,
+  },
+
+  environmental_suit =
+  {
+    id = 2025,
+    kind = "powerup",
+    add_prob = 7,
+    start_prob = 0,
+    closet_prob = 15,
+    time_limit = 80,
+  },
+
+-- Sigil Pieces
+
+-- Only place first piece for now until some kind of gating/progression can be achieved
+
+sigil_lower_base = 
+{
+  id = 77,
+  kind = "other",
+  add_prob = 5,
+  secret_prob = 10,
+  once_only = true,
+},
+
+--[[sigil_upper_base = 
+{
+  id = 78,
+  kind = "other",
+  add_prob = 5,
+  secret_prob = 10,
+  once_only = true,
+},
+
+sigil_right_prong = 
+{
+  id = 79,
+  kind = "other",
+  add_prob = 5,
+  secret_prob = 10,
+  once_only = true,
+},
+
+sigil_left_prong = 
+{
+  id = 80,
+  kind = "other",
+  add_prob = 5,
+  secret_prob = 10,
+  once_only = true,
+},
+
+sigil_center_prong = 
+{
+  id = 81,
+  kind = "other",
+  add_prob = 5,
+  secret_prob = 10,
+  once_only = true,
+}]]--
 
 }
 

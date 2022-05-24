@@ -24,7 +24,7 @@ STRIFE.WEAPONS =
   assault =
   {
     id = 2002,
-    level = 1,
+    level = 2,
     pref = 20,
     add_prob = 10,
     attack = "hitscan",
@@ -54,7 +54,7 @@ STRIFE.WEAPONS =
   grenade_launcher = -- Base stats are based on explosive grenade usage - Dasho
   {
     id = 154,
-    level = 1,
+    level = 6,
     pref = 20,
     add_prob = 10,
     attack = "missile",
@@ -66,10 +66,25 @@ STRIFE.WEAPONS =
     give = { {ammo="grenade", count=12} }
   },
 
+  mini_missile_launcher = -- Not sure of damage stats, just copying grenade launcher for now - Dasho
+  {
+    id = 2003,
+    level = 5,
+    pref = 20,
+    add_prob = 10,
+    attack = "missile",
+    rate = 1.2,
+    accuracy = 100,
+    damage = 192,
+    ammo = "missile",
+    per = 2,
+    give = { {ammo="missile", count=8} }
+  },
+
   mauler =
   {
     id = 2004,
-    level = 1,
+    level = 4,
     pref = 20,
     add_prob = 10,
     attack = "hitscan",
@@ -84,7 +99,7 @@ STRIFE.WEAPONS =
   flamethrower =
   {
     id = 2005,
-    level = 1,
+    level = 3,
     pref = 20,
     add_prob = 10,
     attack = "hitscan",

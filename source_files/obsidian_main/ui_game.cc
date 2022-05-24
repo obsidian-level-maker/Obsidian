@@ -177,7 +177,8 @@ void UI_Game::callback_GameHelp(Fl_Widget *w, void *data) {
     buff->text(
         "The following games will have gameplay that differs from the original IWADs:\n\n\
 Hexen: Game progression is linear and episodic. There are no hubs present. The Death Wyvern is not present in the \
-monster table due to the infeasibility of scripting and flight pathing.");
+monster table due to the infeasibility of scripting and flight pathing.\n\n\
+Strife: Quests/multiple endings not yet implemented. Progression is linear and game will end on last level generated.");
 }
 
 void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {

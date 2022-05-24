@@ -46,8 +46,8 @@ end
 
 OB_GAMES["strife"] =
 {
-  label = _("Strife (Exp)"),
-  priority = 47,
+  label = _("Strife"),
+  priority = 89,
 
   format = "doom",
   --sub_format = "strife",
