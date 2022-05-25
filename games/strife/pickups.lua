@@ -165,6 +165,15 @@ STRIFE.NICE_ITEMS =
 
   --MISCELLANEOUS--
 
+  teleporter_beacon =
+  {
+    id = 10,
+    kind = "powerup",
+    add_prob = 7,
+    start_prob = 0,
+    closet_prob = 15,
+  },
+
   shadow_armor =
   {
     id = 2024,
