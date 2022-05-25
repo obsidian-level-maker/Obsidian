@@ -126,6 +126,35 @@ function ScriptMan_assemble_mapinfo_lump()
         mapline = mapline .. "}\n\n"
         table.insert(mapinfo_lines, mapline)
       end
+    elseif OB_CONFIG.game == "strife" then
+      for _,lev in pairs(GAME.levels) do
+        local mapnum = tonumber(string.sub(lev.name, 4))
+        mapline = "map " .. lev.name .. " \"" .. lev.description .. "\"\n{\n"
+        mapline = mapline .. "levelnum = " .. mapnum .. "\n"
+        mapline = mapline .. "music = " .. rand.pick(STRIFE.MUSIC_LIST) .. "\n"
+        if OB_CONFIG.length ~= "single" then
+          if mapnum == 1 then
+            mapline = mapline .. "next = MAP03\n"
+          elseif mapnum == 2 then
+            mapline = mapline .. "next = MAP01\n"
+          else
+            mapnum = mapnum + 1
+            if mapnum <= #GAME.levels then
+              if mapnum < 10 then
+                mapline = mapline .. "next = " .. "MAP0" .. mapnum .. "\n"
+              else
+                mapline = mapline .. "next = " .. "MAP" .. mapnum .. "\n"
+              end
+            else
+              mapline = mapline .. "next = EndGameS\n"
+            end
+          end
+        end
+        mapline = mapline .. "cluster = 1\n"
+        mapline = mapline .. "sky1 = " .. "P_BLUE1" .. "\n"
+        mapline = mapline .. "}\n\n"
+        table.insert(mapinfo_lines, mapline)
+      end
     end
   else
     if OB_CONFIG.game == "hexen" then

@@ -2410,20 +2410,24 @@ function Fab_replacements(fab)
           if OB_CONFIG.length == "single" or LEVEL.game_along == 1.0 then
             C.special = 51
           else
-            if LEVEL.name == "MAP02" then
-              C.tag = 1
-            elseif LEVEL.name == "MAP01" then
-              C.tag = 3
+            if OB_CONFIG.engine ~= "zdoom" then
+              if LEVEL.name == "MAP02" then
+                C.tag = 1
+              elseif LEVEL.name == "MAP01" then
+                C.tag = 3
+              end
             end
           end
         elseif C.special == 52 then
           if OB_CONFIG.length == "single" or LEVEL.game_along == 1.0 then
             C.special = 124
           else
-            if LEVEL.name == "MAP02" then
-              C.tag = 100
-            elseif LEVEL.name == "MAP01" then
-              C.tag = 300
+            if OB_CONFIG.engine ~= "zdoom" then
+              if LEVEL.name == "MAP02" then
+                C.tag = 100
+              elseif LEVEL.name == "MAP01" then
+                C.tag = 300
+              end
             end
           end
         end

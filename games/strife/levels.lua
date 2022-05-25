@@ -125,10 +125,14 @@ function STRIFE.get_levels()
       game_along = game_along
     }
 
-    if map == 1 then
-      LEV.name = "MAP02"
-    elseif map == 2 then
-      LEV.name = "MAP01"
+    if OB_CONFIG.engine ~= "zdoom" then
+      if map == 1 then
+        LEV.name = "MAP02"
+      elseif map == 2 then
+        LEV.name = "MAP01"
+      else
+        LEV.name  = string.format("MAP%02d", map)
+      end
     else
       LEV.name  = string.format("MAP%02d", map)
     end
@@ -172,7 +176,7 @@ function STRIFE.get_levels()
         elseif OB_CONFIG.length == "episode" then
           if map == 11 then LEV.is_procedural_gotcha = true end
         elseif OB_CONFIG.length == "game" then
-          if map == 33 then LEV.is_procedural_gotcha = true end
+          if map == 32 then LEV.is_procedural_gotcha = true end
         end
       end
 

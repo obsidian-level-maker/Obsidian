@@ -63,3 +63,24 @@ STRIFE.ACTIONS =
   S1_LowerFloor = { id=23, kind="lower" },  -- down to lowest nb floor
   W1_LowerFloor = { id=38, kind="lower" }  --
 }
+
+STRIFE.MUSIC_LIST =
+{
+  [1] = "D_ACTION",
+  [2] = "D_FAST",
+  [3] = "D_DANGER",
+  [4] = "D_DARKER",
+  [5] = "D_STRIKE",
+  [6] = "D_SLIDE",
+  [7] = "D_TRIBAL",
+  [8] = "D_MARCH",
+  [9] = "D_MOOD",
+  [10] = "D_CASTLE",
+  [11] = "D_FIGHT",
+  [12] = "D_SPENSE",
+  [13] = "D_DARK",
+  [14] = "D_TECH",
+  [15] = "D_DRONE",
+  [16] = "D_PANTHR",
+  [17] = "D_INSTRY"
+}
