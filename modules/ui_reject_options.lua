@@ -93,7 +93,8 @@ OB_MODULES["ui_udmf_map_options"] =
       label = _("Map Format"),
       choices = UI_UDMF_MAP_OPTIONS.MAP_FORMAT_CHOICES,
       default = "udmf",
-      tooltip = "Choose between UDMF and binary map format.",
+      tooltip = "Choose between UDMF and binary map format.\n\nBe advised that UDMF format can result in" ..
+      " very large WAD files due to the size of its TEXTMAP lumps."
     }
   }
 }
@@ -146,7 +147,8 @@ OB_MODULES["ui_zdoom_map_options"] =
       label = _("Map Format"),
       choices = UI_ZDOOM_MAP_OPTIONS.MAP_FORMAT_CHOICES,
       default = "udmf",
-      tooltip = "Choose between UDMF and binary map format.",
+      tooltip = "Choose between UDMF and binary map format.\n\nBe advised that UDMF format can result in" ..
+      " very large WAD files due to the size of its TEXTMAP lumps."
     }
   }
 }
