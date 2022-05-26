@@ -2752,18 +2752,18 @@ function Layout_indoor_lighting()
 
   local LIGHT_LEVELS =
   {
-    bright   = 160,
-    normal   = 144,
-    dark     = 120,
-    verydark = 104,
+    bright   = (int)(160 * PARAM.float_overall_lighting_mult),
+    normal   = (int)(144 * PARAM.float_overall_lighting_mult),
+    dark     = (int)(120 * PARAM.float_overall_lighting_mult),
+    verydark = (int)(104 * PARAM.float_overall_lighting_mult),
   }
 
   local CAVE_LEVELS =
   {
-    bright   = 144,
-    normal   = 128,
-    dark     = 112,
-    verydark = 96,
+    bright   = (int)(144 * PARAM.float_overall_lighting_mult),
+    normal   = (int)(128 * PARAM.float_overall_lighting_mult),
+    dark     = (int)(112 * PARAM.float_overall_lighting_mult),
+    verydark = (int)(96 * PARAM.float_overall_lighting_mult),
   }
 
   local function sky_light_to_keyword()
@@ -2791,10 +2791,12 @@ function Layout_indoor_lighting()
     end
 
     for _,A in pairs(R.areas) do
-      A.base_light = base_light
+      -- Mix it up slightly to prevent too much sameness across similar light levels
+      base_light = (int)(base_light * rand.range(0.95, 1.05))
+
       -- brightness clamp
       A.base_light = math.clamp(PARAM.wad_minimum_brightness or 0, 
-        A.base_light, PARAM.wad_maximum_brightness or 255)
+        base_light, PARAM.wad_maximum_brightness or 255)
     end
 
   end
@@ -2802,7 +2804,7 @@ function Layout_indoor_lighting()
  -- Very dark here! --Armaetus
 
   local function visit_room(R, prev_room)
-    local tab = { bright=20, normal=45, dark=65, verydark=25 }
+    local tab = { bright=20, normal=30, dark=30, verydark=20 }
 
     if R.is_start then
       tab["verydark"] = nil
@@ -2811,9 +2813,22 @@ function Layout_indoor_lighting()
     if prev_room then
       assert(prev_room.light_level)
 
-      if prev_room.light_level ~= "normal" or rand.odds(30) then
-        tab[prev_room.light_level] = nil
+      -- Try to keep adjacent rooms from moving up or down more than one relative light level
+      if prev_room.light_level == "bright" then
+        tab["dark"] = nil
+        tab["verydark"] = nil
+      elseif prev_room.light_level == "normal" then
+        tab["verydark"] = nil
+      elseif prev_room.light_level == "dark" then
+        tab["bright"] = nil
+      else
+        tab["bright"] = nil
+        tab["normal"] = nil
       end
+
+      --if prev_room.light_level ~= "normal" or rand.odds(30) then
+        --tab[prev_room.light_level] = nil
+      --end
     end
 
     if not R.light_level then
@@ -2841,10 +2856,6 @@ function Layout_indoor_lighting()
     if R.is_outdoor then
       -- cannot use set_room() here
       R.light_level = sky_light_to_keyword()
-    end
-
-    if R.is_hallway then
-      R.light_level = rand.pick({ 104,112,120,128,136,144,152})
     end
   end
 
