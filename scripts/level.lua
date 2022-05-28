@@ -2379,6 +2379,17 @@ function Level_choose_darkness()
     LEVEL.sky_shadow = 32
   end
 
+  if OB_CONFIG.engine ~= "zdoom" and OB_CONFIG.engine ~= "edge" then
+    local rounder = LEVEL.sky_light % 16
+    if rounder ~= 0 then
+      if rounder > 8 then
+        LEVEL.sky_light = LEVEL.sky_light + (16 - rounder)
+      else
+        LEVEL.sky_light = LEVEL.sky_light - rounder
+      end
+    end
+  end
+
   LEVEL.sky_light = math.clamp(PARAM.wad_minimum_brightness or 0, 
     LEVEL.sky_light, PARAM.wad_maximum_brightness or 255)
 

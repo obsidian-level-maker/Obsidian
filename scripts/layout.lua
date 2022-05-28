@@ -2752,17 +2752,17 @@ function Layout_indoor_lighting()
 
   local LIGHT_LEVELS =
   {
-    bright   = (int)(160 * PARAM.float_overall_lighting_mult),
-    normal   = (int)(144 * PARAM.float_overall_lighting_mult),
-    dark     = (int)(120 * PARAM.float_overall_lighting_mult),
-    verydark = (int)(104 * PARAM.float_overall_lighting_mult),
+    bright   = (int)(224 * PARAM.float_overall_lighting_mult),
+    normal   = (int)(192 * PARAM.float_overall_lighting_mult),
+    dark     = (int)(160 * PARAM.float_overall_lighting_mult),
+    verydark = (int)(128 * PARAM.float_overall_lighting_mult),
   }
 
   local CAVE_LEVELS =
   {
-    bright   = (int)(144 * PARAM.float_overall_lighting_mult),
-    normal   = (int)(128 * PARAM.float_overall_lighting_mult),
-    dark     = (int)(112 * PARAM.float_overall_lighting_mult),
+    bright   = (int)(192 * PARAM.float_overall_lighting_mult),
+    normal   = (int)(160 * PARAM.float_overall_lighting_mult),
+    dark     = (int)(128 * PARAM.float_overall_lighting_mult),
     verydark = (int)(96 * PARAM.float_overall_lighting_mult),
   }
 
@@ -2786,14 +2786,27 @@ function Layout_indoor_lighting()
 
     assert(base_light)
 
+    if OB_CONFIG.engine ~= "zdoom" and OB_CONFIG.engine ~= "edge" then
+      local rounder = base_light % 16
+      if rounder ~= 0 then
+        if rounder > 8 then
+          base_light = base_light + (16 - rounder)
+        else
+          base_light = base_light - rounder
+        end
+      end
+      local JITTER = {0, 0, 0, -16, 16}
+      base_light = base_light + rand.pick(JITTER)
+    else
+      local JITTER = {0, 0, 0, -(int)(base_light * 0.1), (int)(base_light * 0.1)}
+      base_light = base_light + rand.pick(JITTER)
+    end
+
     if R.theme.light_adjusts then
       base_light = base_light + rand.pick(R.theme.light_adjusts)
     end
 
     for _,A in pairs(R.areas) do
-      -- Mix it up slightly to prevent too much sameness across similar light levels
-      base_light = (int)(base_light * rand.range(0.95, 1.05))
-
       -- brightness clamp
       A.base_light = math.clamp(PARAM.wad_minimum_brightness or 0, 
         base_light, PARAM.wad_maximum_brightness or 255)
@@ -2804,7 +2817,7 @@ function Layout_indoor_lighting()
  -- Very dark here! --Armaetus
 
   local function visit_room(R, prev_room)
-    local tab = { bright=20, normal=30, dark=30, verydark=20 }
+    local tab = { bright=25, normal=50, dark=50, verydark=25 }
 
     if R.is_start then
       tab["verydark"] = nil
@@ -2813,22 +2826,19 @@ function Layout_indoor_lighting()
     if prev_room then
       assert(prev_room.light_level)
 
-      -- Try to keep adjacent rooms from moving up or down more than one relative light level
       if prev_room.light_level == "bright" then
         tab["dark"] = nil
         tab["verydark"] = nil
       elseif prev_room.light_level == "normal" then
         tab["verydark"] = nil
+        tab["dark"] = 25
       elseif prev_room.light_level == "dark" then
         tab["bright"] = nil
+        tab["normal"] = 25
       else
         tab["bright"] = nil
         tab["normal"] = nil
       end
-
-      --if prev_room.light_level ~= "normal" or rand.odds(30) then
-        --tab[prev_room.light_level] = nil
-      --end
     end
 
     if not R.light_level then
