@@ -1270,9 +1270,18 @@ skiprest:
     if (argv::Find('d', "debug") >= 0) {
         debug_messages = true;
     }
-
+#ifdef __unix__
+#ifndef __linux__
+    numeric_locale =
+        setlocale(LC_NUMERIC, NULL);  // Grab current numeric locale
+#else
     numeric_locale =
         std::setlocale(LC_NUMERIC, NULL);  // Grab current numeric locale
+#endif
+#else
+    numeric_locale =
+        std::setlocale(LC_NUMERIC, NULL);  // Grab current numeric locale
+#endif
 
     LogEnableDebug(debug_messages);
 

@@ -406,8 +406,7 @@ class UI_Manage_Config : public Fl_Double_Window {
         FILE *fp = fl_fopen(filename.generic_string().c_str(), "rb");
 
         if (!fp) {
-            DLG_ShowError(_("Cannot open: %s\n\n%s"), filename,
-                          strerror(errno));
+            DLG_ShowError(_("Cannot open: %s\n\n%s"), filename.filename().generic_string().c_str(), strerror(errno));
             return false;
         }
 
