@@ -1,6 +1,15 @@
 
 # COMPILING Obsidian
 
+## BSD Dependencies
+1. CMake Utilities:
+   * package: `cmake`
+
+2. Xorg:
+   * package: `xorg` (`xorg-libraries` on its own doesn't seem sufficient)
+
+The C++ compiler/toolchain should already be present on a typical BSD install
+
 ## Linux Dependencies (MSYS has some differences; see MSYS Cross-Compilation section below)
 
 1. C++ compiler and associated tools
