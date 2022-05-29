@@ -75,6 +75,7 @@ elseif ("${LJ_DETECTED_ARCH}" STREQUAL "AArch64")
   endif()
 elseif ("${LJ_DETECTED_ARCH}" STREQUAL "ARM")
   set(LJ_TARGET_ARCH "arm")
+  set(LUAJIT_DISABLE_JIT ON) # Throws a panic on Raspberry Pi 32-bit OS for some reason - Dasho
 elseif ("${LJ_DETECTED_ARCH}" STREQUAL "Mips64")
   set(LJ_TARGET_ARCH "mips64")
   if (NOT LJ_BIG_ENDIAN)

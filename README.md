@@ -54,6 +54,7 @@ UDMF map generation option for GZDoom and Eternity Engine.
 64-bit seeds and random numbers.
 
 Migrated from Lua to LuaJIT for improved build speeds.
+(Note: JIT currently disabled for 32-bit ARM builds; program will still function but at vanilla Lua speeds)
 
 Patch by Simon-v for searching for .pk3 addons in both the install and user's home directories (https://github.com/dashodanger/Oblige/pull/1)
 
