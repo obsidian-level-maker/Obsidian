@@ -102,7 +102,7 @@ inline fixed_t Scale(fixed_t a, fixed_t b, fixed_t c) {
         "idivl %4"
         : "=a"(result), "=&d"(dummy)
         : "a"(a), "r"(b), "r"(c)
-        : "%cc");
+        : "cc");
 
     return result;
 }
@@ -112,7 +112,7 @@ inline fixed_t DivScale30(fixed_t a, fixed_t b) {
     asm volatile("idivl %4"
                  : "=a"(result), "=d"(dummy)
                  : "a"(a << 30), "d"(a >> 2), "r"(b)
-                 : "%cc");
+                 : "cc");
     return result;
 }
 #else
