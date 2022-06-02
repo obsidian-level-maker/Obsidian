@@ -59,8 +59,9 @@ color_mapping_t color_mappings[MAX_COLOR_MAPS];
 int gui_format_prefix(lua_State *L) {
     const char *levelcount = luaL_checkstring(L, 1);
     const char *game = luaL_checkstring(L, 2);
-    const char *theme = luaL_checkstring(L, 3);
-    std::string format = luaL_checkstring(L, 4);
+    const char *engine = luaL_checkstring(L, 3);
+    const char *theme = luaL_checkstring(L, 4);
+    std::string format = luaL_checkstring(L, 5);
 
     SYS_ASSERT(levelcount && game && theme && (!format.empty()));
 
@@ -68,7 +69,7 @@ int gui_format_prefix(lua_State *L) {
         format = custom_prefix.c_str();
     }
 
-    const char *result = ff_main(levelcount, game, theme,
+    const char *result = ff_main(levelcount, game, engine, theme,
                                  OBSIDIAN_SHORT_VERSION, format.c_str());
 
     if (!result) {

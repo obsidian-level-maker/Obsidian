@@ -16,6 +16,7 @@ extern void hour(void);
 extern void minute(void);
 extern void second(void);
 extern void game(void);
+extern void engine(void);
 extern void theme(void);
 extern void version(void);
 extern void count(void);
