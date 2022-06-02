@@ -1985,6 +1985,19 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   local function try_decor_closets(R)
     local locs = {}
 
+    if not R.closet_mode then
+      if not rand.odds(style_sel("pictures", 0, 45, 75,100)) 
+      and not R.no_decor_closets then
+        R.closet_mode = "no_closets"
+      else
+        R.closet_mode = "has_closets"
+      end
+    end
+
+    if R.closet_mode and R.closet_mode == "no_closets" then
+      return
+    end
+
     for _,chunk in pairs(R.closets) do
       if not chunk.content then
         table.insert(locs, chunk)
