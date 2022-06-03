@@ -1524,15 +1524,18 @@ skiprest:
             ob_set_config("filename_prefix", "game");
             break;
         case 3:
-            ob_set_config("filename_prefix", "theme");
+            ob_set_config("filename_prefix", "engine");
             break;
         case 4:
-            ob_set_config("filename_prefix", "version");
+            ob_set_config("filename_prefix", "theme");
             break;
         case 5:
-            ob_set_config("filename_prefix", "custom");
+            ob_set_config("filename_prefix", "version");
             break;
         case 6:
+            ob_set_config("filename_prefix", "custom");
+            break;
+        case 7:
             ob_set_config("filename_prefix", "none");
             break;
         default:

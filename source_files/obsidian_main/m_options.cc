@@ -492,6 +492,7 @@ slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this wi
 %second or %s: The current second.\n\n\
 %version or %v: The current Obsidian version.\n\n\
 %game or %g: Which game the WAD is for.\n\n\
+%engine or %e: Which engine the WAD is for.\n\n\
 %theme or %t: Which theme was selected from the game's choices.\n\n\
 %count or %c: The number of levels in the generated WAD.");
     }
@@ -565,7 +566,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_filename_prefix->align(FL_ALIGN_LEFT);
     opt_filename_prefix->callback(callback_FilenamePrefix, this);
     opt_filename_prefix->add(
-        _("Date and Time|Number of Levels|Game|Theme|Version|Custom|Nothing"));
+        _("Date and Time|Number of Levels|Game|Engine|Theme|Version|Custom|Nothing"));
     opt_filename_prefix->labelfont(font_style);
     opt_filename_prefix->textfont(font_style);
     opt_filename_prefix->textcolor(FONT2_COLOR);
