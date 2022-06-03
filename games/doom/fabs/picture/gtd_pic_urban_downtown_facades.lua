@@ -581,7 +581,7 @@ PREFABS.Pic_urban_downtown_facade_destroyed_roof =
 PREFABS.Pic_urban_downtown_facade4_vanilla =
 {
   template = "Pic_urban_downtown_facade3_vanilla",
-  map      = "MAP09"
+  map      = "MAP09",
 
   prob = 300,
 
