@@ -872,6 +872,15 @@ function Grower_calc_rule_probs()
     if rule.use_prob == 0 then
       PARAM.skipped_rules = PARAM.skipped_rules + 1
     end
+
+    -- attempt to ignore hallway sprouts
+    if LEVEL.is_nature then
+      if rule.new_room 
+      and rule.new_room.env
+      and rule.new_room.env == "hallway" then
+        rule.use_prob = 0
+      end
+    end
   end
 
   gui.printf("Shape rules skipped for this level: " .. PARAM.skipped_rules ..
@@ -898,8 +907,6 @@ function Grower_calc_rule_probs()
 
   if LEVEL.is_absurd then
     gui.printf("This level is absurd!\n\n")
-  else
-    gui.printf("This level is not absurd...\n\n")
   end
 
 
