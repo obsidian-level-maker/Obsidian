@@ -11,6 +11,8 @@ PREFABS.Wall_full_storage =
   deep = 16,
   height = 96,
 
+  seed_w= 1,
+
   bound_z1 = 0,
   bound_z2 = 96,
 

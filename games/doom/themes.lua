@@ -1315,6 +1315,7 @@ DOOM.THEMES =
       --
       gtd_generic_tek_grate = 25,
       gtd_generic_tek_grate_bottom_slope = 25,
+      gtd_generic_tek_grate_xit_machine = 25,
       --
       gtd_generic_artsy_bedazzled = 5,
       gtd_generic_alt_colors = 20,
@@ -1768,6 +1769,7 @@ DOOM.THEMES =
       --
       gtd_generic_tek_grate = 40,
       gtd_generic_tek_grate_bottom_slope = 40,
+      gtd_generic_tek_grate_xit_machine = 40,
       --
       gtd_generic_artsy_bedazzled = 20,
       gtd_generic_alt_colors = 20,
@@ -2262,6 +2264,7 @@ DOOM.THEMES =
       --
       gtd_generic_tek_grate = 25,
       gtd_generic_tek_grate_bottom_slope = 25,
+      gtd_generic_tek_grate_xit_machine = 25,
       --
       gtd_generic_artsy_bedazzled = 20,
       gtd_generic_alt_colors = 20,

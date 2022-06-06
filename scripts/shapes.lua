@@ -3808,6 +3808,91 @@ GROW_COLONNADE_CLOISTER_LIQUID =
   }
 },
 
+-- DOOM2 - shapes vaguely resembling certain map layout pieces from Doom 2
+
+GROW_DOOM2_ENTRY =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    "x...x","xAAAx",
+    "x...x","xAAAx",
+    ".....","#AAA#",
+    ".....","1^^^1",
+    ".....","11111",
+    ".....","11111",
+    "11xxx","11xxx"
+  }
+},
+
+GROW_DOOM2_ENTRY_CAGE =
+{
+  prob = 10,
+  skip_prob = 80,
+
+  structure =
+  {
+    ".....","AAAAA",
+    ".....","%AAA/",
+    ".....","CAAAC",
+    ".....","C^^^C",
+    ".....","C111C",
+    ".....","/111%",
+    ".....","11111",
+    "11xxx","11xxx"
+  },
+
+  diagonals =
+  {
+    "CA","AC",
+    "C1","1C"
+  }
+},
+
+GROW_DOOM2_ENTRY_CAGE_DOUBLE =
+{
+  prob = 7,
+  skip_prob = 85,
+
+  structure =
+  {
+    "x......x","xAAAAAAx",
+    "........","%AA/%AA/",
+    "........","CAACCAAC",
+    "........","C^^CC^^C",
+    "........","C11CC11C",
+    "........","/11%/11%",
+    "........","11111111",
+    "11xxxxxx","11xxxxxx"
+  },
+
+  diagonals =
+  {
+    "CA","AC","CA","AC",
+    "C1","1C","C1","1C"
+  }
+},
+
+GROW_DOOM2_ENTRY_CAGE_ALT =
+{
+  prob = 10,
+  skip_prob = 80,
+
+  structure =
+  {
+    "x...x","xAAAx",
+    ".....","#AAA#",
+    ".....","CAAAC",
+    ".....","#^^^#",
+    ".....","C111C",
+    ".....","#111#",
+    ".....","11111",
+    "11xxx","11xxx"
+  }
+},
+
 -- 3.57-style rules
 
 GROW_357_OPEN_ROOF_LIQUID =
@@ -3963,89 +4048,6 @@ GROW_357_ROUND_HOLLOW_2 =
   }
 },
 
-GROW_DOOM2_ENTRY =
-{
-  prob = 20,
-  skip_prob = 75,
-
-  structure =
-  {
-    "x...x","xAAAx",
-    "x...x","xAAAx",
-    ".....","#AAA#",
-    ".....","1^^^1",
-    ".....","11111",
-    ".....","11111",
-    "11xxx","11xxx"
-  }
-},
-
-GROW_DOOM2_ENTRY_CAGE =
-{
-  prob = 10,
-  skip_prob = 80,
-
-  structure =
-  {
-    ".....","AAAAA",
-    ".....","%AAA/",
-    ".....","CAAAC",
-    ".....","C^^^C",
-    ".....","C111C",
-    ".....","/111%",
-    ".....","11111",
-    "11xxx","11xxx"
-  },
-
-  diagonals =
-  {
-    "CA","AC",
-    "C1","1C"
-  }
-},
-
-GROW_DOOM2_ENTRY_CAGE_DOUBLE =
-{
-  prob = 7,
-  skip_prob = 85,
-
-  structure =
-  {
-    "x......x","xAAAAAAx",
-    "........","%AA/%AA/",
-    "........","CAACCAAC",
-    "........","C^^CC^^C",
-    "........","C11CC11C",
-    "........","/11%/11%",
-    "........","11111111",
-    "11xxxxxx","11xxxxxx"
-  },
-
-  diagonals =
-  {
-    "CA","AC","CA","AC",
-    "C1","1C","C1","1C"
-  }
-},
-
-GROW_DOOM2_ENTRY_CAGE_ALT =
-{
-  prob = 10,
-  skip_prob = 80,
-
-  structure =
-  {
-    "x...x","xAAAx",
-    ".....","#AAA#",
-    ".....","CAAAC",
-    ".....","#^^^#",
-    ".....","C111C",
-    ".....","#111#",
-    ".....","11111",
-    "11xxx","11xxx"
-  }
-},
-
 GROW_357_ROUND_HOLLOW_HALF =
 {
   prob = 20,
@@ -4169,6 +4171,29 @@ GROW_357_ROUND_ARCH_ALT =
   }
 },
 
+GROW_357_ROUND_ARCH_DOUBLE =
+{
+  prob = 30,
+  skip_prob = 80,
+
+  structure =
+  { 
+    "11xxxxxxxx","11xxxxxxxx",
+    "..........","1111111111",
+    "..........","1/AAAAAA%1",
+    "..........","AA##AA##AA",
+    "..........","1%AAAAAA/1",
+    "..........","1111111111",
+    "..........","1111111111",
+  },
+
+  diagonals =
+  {
+    "1A","A1",
+    "1A","A1",
+  }
+},
+
 GROW_357_ROUND_ARCH_ALT_STAIRS =
 {
   prob = 40,
@@ -4183,6 +4208,29 @@ GROW_357_ROUND_ARCH_ALT_STAIRS =
     ".......","^%AAA/^",
     ".......","1111111",
     ".......","1111111",
+  },
+
+  diagonals =
+  {
+    "1A","A1",
+    "1A","A1",
+  }
+},
+
+GROW_357_ROUND_ARCH_DOUBLE_STAIRS =
+{
+  prob = 25,
+  skip_prob = 80,
+
+  structure =
+  { 
+    "11xxxxxxxx","11xxxxxxxx",
+    "..........","1111111111",
+    "..........","v/AAAAAA%v",
+    "..........","AA##AA##AA",
+    "..........","^%AAAAAA/^",
+    "..........","1111111111",
+    "..........","1111111111",
   },
 
   diagonals =
@@ -5064,7 +5112,7 @@ GROW_LIQUID_U_ALT_NEW_AREA =
 
 GROW_LIQUID_INTERSECTION =
 {
-  prob = 25,
+  prob = 30,
   skip_prob = 75,
 
   structure =
@@ -5120,7 +5168,7 @@ GROW_LIQUID_OVAL_SPLIT =
 
 GROW_LIQUID_OVAL_SPLIT_SOLID_PILLAR =
 {
-  prob = 30,
+  prob = 40,
   skip_prob = 75,
 
   structure =
@@ -5148,6 +5196,55 @@ GROW_LIQUID_OVAL_SPLIT_SOLID_PILLAR =
 },
 
 -- MSSP's ramps and all sorts of stuff. [RAMPS]
+
+GROW_RAMP_ROUND =
+{
+  prob = 10,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xx11xx","xx11xx",
+    "x....x","x/11%x",
+    "......","/1vv1%",
+    "......","AAAAAA",
+    "......","AAAAAA",
+    "......","%1^^1/",
+    "x....x","x%11/x"
+  },
+
+  diagonals =
+  {
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+  }
+},
+
+GROW_RAMP_ROUND_ALT =
+{
+  prob = 10,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xx....x","xx/AA%x",
+    "x......","x/1^^A%",
+    "1......","1111111",
+    "1......","1111111",
+    "x......","x%AvvA/",
+    "xx....x","xx%AA/x"
+  },
+
+  diagonals =
+  {
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+  }
+},
 
 GROW_RAMP_THIN_SINK =
 {
@@ -9995,7 +10092,7 @@ GROW_36_INVERSE_ATARI_LOGO_NEW_AREA =
 GROW_36_RIBBED_WALLS_NEW_AREA_DOUBLE =
 {
   prob = 25,
-  skip_prob = 75,
+  skip_prob = 70,
 
   structure =
   {
@@ -10015,8 +10112,8 @@ GROW_36_RIBBED_WALLS_NEW_AREA_DOUBLE =
 
 GROW_36_RIBBED_WALLS_NEW_AREA_SINGLE =
 {
-  prob = 15,
-  skip_prob = 75,
+  prob = 20,
+  skip_prob = 70,
 
   structure =
   {
@@ -10034,7 +10131,7 @@ GROW_36_RIBBED_WALLS_NEW_AREA_SINGLE =
 GROW_36_PEANUT_NEW_AREA =
 {
   prob = 30,
-  skip_prob = 75,
+  skip_prob = 70,
 
   structure =
   {
@@ -10060,7 +10157,7 @@ GROW_36_PEANUT_NEW_AREA =
 GROW_36_4PILLAR_ARCHS_NEW_AREA =
 {
   prob = 30,
-  skip_prob = 75,
+  skip_prob = 60,
 
   structure =
   {
@@ -10078,8 +10175,8 @@ GROW_36_4PILLAR_ARCHS_NEW_AREA =
 
 GROW_36_4PILLAR_OPEN_ROOF_GAZEBO_NEW_AREA =
 {
-  prob = 20,
-  skip_prob = 75,
+  prob = 25,
+  skip_prob = 60,
 
   structure =
   {
@@ -10097,8 +10194,8 @@ GROW_36_4PILLAR_OPEN_ROOF_GAZEBO_NEW_AREA =
 
 GROW_36_CANDY =
 {
-  prob = 20,
-  skip_prob = 75,
+  prob = 35,
+  skip_prob = 60,
 
   structure =
   {
@@ -10124,9 +10221,9 @@ GROW_36_CANDY =
 
 GROW_36_CENTER_PILLAR_CROSSED =
 {
-  prob = 20,
+  prob = 35,
 
-  skip_prob = 80,
+  skip_prob = 70,
 
   structure =
   {
