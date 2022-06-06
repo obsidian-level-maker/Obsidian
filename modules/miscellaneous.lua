@@ -253,7 +253,7 @@ OB_MODULES["misc"] =
 
     {
       name = "float_layout_absurdity",
-      label = _("Layout Absurdity"),
+      label = _("Layout Consistency"),
       valuator = "slider",
       units = "% of Levels",
       min = 0,
@@ -261,11 +261,10 @@ OB_MODULES["misc"] =
       increment = 1,
       default = 0,
       presets = "",
-      tooltip = "Chance that a level will be built using an ususual/irregular layout.",
-      longtip = "The layout absurdifier attempts to cause levels to overprefer specific shape " ..
-      "rules from the ruleset in order to create odd and possibly broken but interesting combinations. " ..
-      "Use at your own risk. These options will affect the amount of levels have the absurdity module activated on. " ..
-      "Selecting ALL will not necessarily make all levels absurd as it is all still based on chance.",
+      tooltip = "Chance that a level will be built with a layout from random set of prefered shape rules.",
+      longtip = "Layout consistency attempts to cause levels to overprefer specific shape " ..
+      "rules from the ruleset in order to create odd but more consistent combinations of pieces to build the general layout. " ..
+      "The effect will be more prominent in certain combinations and levels than others.",
       gap = 1,
       priority = 99,
       randomize_group="architecture"
@@ -476,12 +475,18 @@ OB_MODULES["misc"] =
       priority = 77,
       randomize_group="architecture",
     },
+    { name="pictures",     label=_("Pictures"),          choices=STYLE_CHOICES,
+      tooltip = "Controls the large wall setpieces in a map. Works on a chance per room basis.",
+      priority = 76.5,
+      randomize_group="architecture",
+    },
     { name="scenics",     label=_("Scenics"),          choices=STYLE_CHOICES,
       tooltip = "Controls the amount of fancy scenics visible at room bordering the maps.",
       priority = 76,
       gap = 1,
       randomize_group="architecture",
     },
+
     { name = "corner_style",
       label=_("Sink Style"),
       choices=MISC_STUFF.SINK_STYLE_CHOICES,

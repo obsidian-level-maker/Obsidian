@@ -1,17 +1,14 @@
 
 # COMPILING Obsidian
 
-## Windows Dependencies (example using MSVC and VSCode)
+## BSD Dependencies
+1. CMake Utilities:
+   * package: `cmake`
 
-1. Download the Visual Studio Build Tools installer, and install the 'Desktop Development with C++' workload
+2. Xorg:
+   * package: `xorg` (`xorg-libraries` on its own doesn't seem sufficient)
 
-2. Install VSCode, as well as the C/C++ and CMake Tools extensions
-
-3. Using VSCode, select the 'Visual Studio Build Tools (version) Release - x86_amd64' kit for 64-bit, or the x86 kit for 32-bit
-
-4. Select the Release CMake build variant
-
-5. Click Build
+The C++ compiler/toolchain should already be present on a typical BSD install
 
 ## Linux Dependencies (MSYS has some differences; see MSYS Cross-Compilation section below)
 
@@ -27,14 +24,16 @@
    * package: `cmake`
 
 4. Development libraries
-   * packages: `libfltk1.3-dev` `libxft-dev` `libxinerama-dev` `libjpeg-dev` `libpng-dev` `libfontconfig1-dev`
+   * packages: `libxft-dev` `libfontconfig1-dev`
 
 5. FLEX
    * package: `flex`
 
+### Optional
+
 6. Code formatting tools
    * package: `clang-tidy`
-   * python package (optional, install with pip): `cmakelang`
+   * python package (install with pip): `cmakelang`
 
 ## Linux Compilation
 

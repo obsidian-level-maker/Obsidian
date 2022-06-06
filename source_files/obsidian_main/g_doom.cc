@@ -952,7 +952,15 @@ bool Doom::game_interface_c::Start(const char *preset) {
     }
     if (StringCaseCmp(map_format, "udmf") == 0) {
         UDMF_mode = true;
-        std::setlocale(LC_NUMERIC, "C");
+#ifdef __unix__
+#ifndef __linux__
+        setlocale(LC_NUMERIC, "C");
+#else
+	std::setlocale(LC_NUMERIC, "C");
+#endif
+#else
+	std::setlocale(LC_NUMERIC, "C");
+#endif
     } else {
         UDMF_mode = false;
     }
@@ -969,7 +977,15 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
     }
 
     if (UDMF_mode) {
+#ifdef __unix__
+#ifndef __linux__
+        setlocale(LC_NUMERIC, numeric_locale.c_str());
+#else
         std::setlocale(LC_NUMERIC, numeric_locale.c_str());
+#endif
+#else
+        std::setlocale(LC_NUMERIC, numeric_locale.c_str());
+#endif
     }
 
     if (build_ok) {

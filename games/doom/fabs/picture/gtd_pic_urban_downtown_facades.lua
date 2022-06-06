@@ -575,3 +575,15 @@ PREFABS.Pic_urban_downtown_facade_destroyed_roof =
   bound_z1 = 0,
   bound_z2 = 240
 }
+
+  -- Garage door fakeout
+
+PREFABS.Pic_urban_downtown_facade4_vanilla =
+{
+  template = "Pic_urban_downtown_facade3_vanilla",
+  map      = "MAP09",
+
+  prob = 300,
+
+  seed_w = 3
+}

@@ -176,18 +176,32 @@ add_custom_command(
 add_dependencies(obsidian qsavetex)
 
 if(UNIX)
-  target_link_libraries(
-    obsidian
-    PRIVATE filename_formatter
-            fltk
-            fltk_images
-            miniz
-            libluajit
-            physfs-static
-            obsidian_zdbsp
-            obsidian_slump
-            fontconfig
-  )
+  if(${CMAKE_SYSTEM} MATCHES "BSD")
+    target_link_libraries(
+      obsidian
+      PRIVATE filename_formatter
+              fltk
+              fltk_images
+              miniz
+              libluajit
+              physfs-static
+              obsidian_zdbsp
+              obsidian_slump
+    )
+  else()
+    target_link_libraries(
+      obsidian
+      PRIVATE filename_formatter
+              fltk
+              fltk_images
+              miniz
+              libluajit
+              physfs-static
+              obsidian_zdbsp
+              obsidian_slump
+              fontconfig
+    )
+  endif()
 else()
   target_link_libraries(
     obsidian

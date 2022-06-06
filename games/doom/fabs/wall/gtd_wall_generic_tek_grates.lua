@@ -118,3 +118,35 @@ PREFABS.Wall_generic_tek_grate_bottom_slope_hell_limit =
 
   line_341 = 0
 }
+
+--
+
+PREFABS.Wall_generic_tek_grate_xit_machine =
+{
+  template = "Wall_generic_tek_grate_tech",
+  map = "MAP05",
+
+  theme = "any",
+
+  group = "gtd_generic_tek_grate_xit_machine",
+
+  height = 96,
+  deep = 16,
+
+  bound_z2 = 96
+}
+
+PREFABS.Wall_generic_tek_grate_xit_machine_diag =
+{
+  template = "Wall_generic_tek_grate_tech",
+  map = "MAP06",
+
+  theme = "any",
+  where = "diagonal",
+  group = "gtd_generic_tek_grate_xit_machine",
+
+  height = 96,
+  deep = 16,
+
+  bound_z2 = 96
+}

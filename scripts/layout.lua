@@ -290,9 +290,12 @@ function Layout_spot_for_wotsit(R, kind, required)
       score = score + 600
     end
 
+    -- due to unusual bugs with steppy caves, 
+    -- important closets are now allowed as normal in caves. -MSSP
+
     -- in caves, prefer spots which do not touch the room edge,
     -- and prefer not to use closets (which don't look good).
-    if R.is_cave then
+    --[[if R.is_cave then
       if chunk.kind == "closet" then
         score = score / 3
       elseif not chunk.touches_wall then
@@ -300,7 +303,7 @@ function Layout_spot_for_wotsit(R, kind, required)
       end
 
       return score
-    end
+    end]]
 
     -- in general, prefer closets over free-standing spots
     if chunk.kind == "closet" then
@@ -1984,6 +1987,19 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
   local function try_decor_closets(R)
     local locs = {}
+
+    if not R.closet_mode then
+      if not rand.odds(style_sel("pictures", 0, 45, 75,100)) 
+      and not R.no_decor_closets then
+        R.closet_mode = "no_closets"
+      else
+        R.closet_mode = "has_closets"
+      end
+    end
+
+    if R.closet_mode and R.closet_mode == "no_closets" then
+      return
+    end
 
     for _,chunk in pairs(R.closets) do
       if not chunk.content then

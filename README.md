@@ -28,9 +28,9 @@ Double click on the OBSIDIAN icon to run it.  Select the game in the top left pa
 
 OBSIDIAN will then build all the maps, showing a blueprint of each one as it goes, and if everything goes smoothly the output file (e.g. "TEST.WAD") will be created at the end.  Then you can play it using the normal method for playing mods with that game (e.g. for DOOM source ports: dragging-n-dropping the WAD file onto the source port's EXE is usually enough).
 
-## QUICK START GUIDE (Linux)
+## QUICK START GUIDE (Linux/BSD)
 
-Please refer to COMPILING.md to build Obsidian for Linux
+Please refer to COMPILING.md to build Obsidian for Linux/BSD
 
 ## About This Repository
 
@@ -54,6 +54,7 @@ UDMF map generation option for GZDoom and Eternity Engine.
 64-bit seeds and random numbers.
 
 Migrated from Lua to LuaJIT for improved build speeds.
+(Note: JIT currently disabled for 32-bit ARM builds; program will still function but at vanilla Lua speeds)
 
 Patch by Simon-v for searching for .pk3 addons in both the install and user's home directories (https://github.com/dashodanger/Oblige/pull/1)
 

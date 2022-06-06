@@ -12,6 +12,7 @@ extern "C" {
 std::time_t now_;
 std::tm now;
 std::string gameValue;
+std::string engineValue;
 std::string themeValue;
 std::string countValue;
 std::string versionValue;
@@ -31,6 +32,8 @@ void second() { result.append(std::to_string(now.tm_sec)); }
 
 void game() { result.append(gameValue); }
 
+void engine() { result.append(engineValue); }
+
 void theme() { result.append(themeValue); }
 
 void count() { result.append(countValue); }
@@ -39,9 +42,10 @@ void version() { result.append(versionValue); }
 
 void raw_append(const char *string) { result.append(string); }
 
-const char *ff_main(const char *levelcount, const char *game, const char *theme,
+const char *ff_main(const char *levelcount, const char *game, const char *engine, const char *theme,
                     const char *version, const char *format) {
     gameValue = game;
+    engineValue = engine;
     themeValue = theme;
     countValue = levelcount;
     versionValue = version;

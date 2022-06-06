@@ -1445,6 +1445,8 @@ function ob_default_filename()
       formatstring = "ob" .. levelcount .. "_"
     elseif OB_CONFIG.filename_prefix == "game" then
       formatstring = OB_CONFIG.game .. "_"
+    elseif OB_CONFIG.filename_prefix == "engine" then
+      formatstring = OB_CONFIG.engine .. "_"
     elseif OB_CONFIG.filename_prefix == "theme" then
       formatstring = OB_CONFIG.theme .. "_"   
     elseif OB_CONFIG.filename_prefix == "version" then
@@ -1453,7 +1455,7 @@ function ob_default_filename()
       formatstring = "custom"
    end
    
-   return gui.format_prefix(levelcount, OB_CONFIG.game, OB_CONFIG.theme, formatstring) .. str .. ".wad"
+   return gui.format_prefix(levelcount, OB_CONFIG.game, OB_CONFIG.engine, OB_CONFIG.theme, formatstring) .. str .. ".wad"
    
  end
  
