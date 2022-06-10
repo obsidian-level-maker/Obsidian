@@ -3,6 +3,7 @@ PREFABS.Stair_wide_v_curve_3x1 =
   file = "stairs/gtd_stair_v_curve_3x1.wad",
   map = "MAP01",
 
+  game = "doom2",
   prob = 250,
 
   theme = "!hell",
@@ -38,3 +39,25 @@ PREFABS.Stair_wide_v_curve_3x1_hell =
     [46] = 1,
   },
 }
+
+--
+
+PREFABS.Stair_wide_v_curve_3x1_old_doom =
+{
+  template = "Stair_wide_v_curve_3x1",
+
+  game = "doom",
+
+  thing_2028 = 2028
+}
+
+PREFABS.Stair_wide_v_curve_3x1_hell_old_doom =
+{
+  template = "Stair_wide_v_curve_3x1",
+
+  game = "doom",
+  theme = "hell",
+
+  thing_2028 = 35
+}
+
