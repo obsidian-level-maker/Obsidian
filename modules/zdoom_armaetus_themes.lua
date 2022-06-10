@@ -4115,7 +4115,7 @@ ARMAETUS_ROOM_THEMES =
       
       BIGSTONE = 25,
       BRIKS32 = 25,
-      BRICK34 = 50,
+      BRIKS34 = 50,
       BROWN2 = 50,
       BROWN3 = 50,
       CEM10 = 50,
