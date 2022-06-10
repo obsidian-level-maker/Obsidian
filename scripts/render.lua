@@ -646,9 +646,8 @@ function Render_edge(E)
       T = Trans.edge_transform(E, z, 0, 0, def.deep, def.over)
     end
 
-    -- choose lighting to be the average of each side
-    local min_light = (int)((E.area.lighting + E.peer.area.lighting) / 2)
-    Ambient_push(min_light)
+    -- choose lighting to be the minimum of each side
+    Ambient_push(math.min(E.area.lighting + E.peer.area.lighting))
 
     -- for fences, add impassable lines on certain occasions
     if def.passable then
@@ -703,8 +702,7 @@ function Render_edge(E)
     end
 
     -- choose lighting to be the minimum of each side
-    local min_light = (int)((E.area.lighting + E.peer.area.lighting) / 2)
-    Ambient_push(min_light)
+    Ambient_push(math.min(E.area.lighting + E.peer.area.lighting))
 
     Fabricate(A.room, def, T, { skin })
 
@@ -1006,8 +1004,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     end
 
     -- choose lighting to be the minimum of each side
-    local min_light = (int)((E.area.lighting + E.peer.area.lighting) / 2)
-    Ambient_push(min_light)
+    Ambient_push(math.min(E.area.lighting + E.peer.area.lighting))
 
     Fabricate(A.room, def, T, { skin })
 

@@ -512,6 +512,16 @@ OB_MODULES["misc"] =
     },
 
     { name="darkness",    label=_("Dark Outdoors"),  choices=STYLE_CHOICES, priority = 73 },
+
+    {
+      name="bool_outdoor_shadows",
+      label=_("Outdoor Shadows"),
+      valuator = "button",
+      default = 1,
+      tooltip = _("Adds shadows to outdoor structures."),
+      priority = 73
+    },
+
     { 
       name="float_minimum_brightness", 
       label=_("Minimum Brightness"),

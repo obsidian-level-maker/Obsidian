@@ -2394,8 +2394,7 @@ function Level_choose_darkness()
     LEVEL.sky_light, PARAM.wad_maximum_brightness or 255)
 
     if (LEVEL.sky_light - LEVEL.sky_shadow) <= (PARAM.wad_minimum_brightness or 0) then
-    LEVEL.sky_shadow = math.abs((LEVEL.sky_light - LEVEL.sky_shadow)
-    - (PARAM.wad_minimum_brightness or 0))
+    LEVEL.sky_shadow = LEVEL.sky_light - (PARAM.wad_minimum_brightness or 0)
   end
 end
 
