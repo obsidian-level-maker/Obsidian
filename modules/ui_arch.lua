@@ -261,6 +261,20 @@ OB_MODULES["ui_arch"] =
       gap = 1
     },
 
+    {
+      name = "float_overall_lighting_mult",
+      label = _("Overall Lighting Multiplier"),
+      valuator = "slider",
+      units = "x",
+      min = 0.5,
+      max = 1.5,
+      increment = .05,
+      default = 1.0,
+      presets = "",
+      tooltip = "",
+      priority = 80,
+    },
+
     { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 78, randomize_group="architecture", tooltip = "Control the amount of outdoor areas." },
     { name="caves",        label=_("Caves"),      choices=STYLE_CHOICES, priority = 77, randomize_group="architecture", tooltip = "Control the amount of caves." },
     { name="liquids",      label=_("Liquids"),    choices=STYLE_CHOICES, priority = 76, randomize_group="architecture", tooltip = "Control the amount of liquids." },

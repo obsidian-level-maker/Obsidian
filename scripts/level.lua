@@ -2368,15 +2368,26 @@ function Level_choose_darkness()
     --prob = style_sel("darkness", 0, 10, 30, 90) --Original
   end
 
-  LEVEL.sky_light  = rand.pick(SKY_LIGHT_NORMAL)
+  LEVEL.sky_light  = (int)(rand.pick(SKY_LIGHT_NORMAL) * PARAM.float_overall_lighting_mult)
   LEVEL.sky_shadow = 32
 
   if rand.odds(prob) then
     gui.printf("Level is dark.\n")
 
     LEVEL.is_dark = true
-    LEVEL.sky_light = rand.pick(SKY_LIGHT_DARK)
+    LEVEL.sky_light = (int)(rand.pick(SKY_LIGHT_DARK) * PARAM.float_overall_lighting_mult)
     LEVEL.sky_shadow = 32
+  end
+
+  if OB_CONFIG.engine ~= "zdoom" and OB_CONFIG.engine ~= "edge" then
+    local rounder = LEVEL.sky_light % 16
+    if rounder ~= 0 then
+      if rounder > 8 then
+        LEVEL.sky_light = LEVEL.sky_light + (16 - rounder)
+      else
+        LEVEL.sky_light = LEVEL.sky_light - rounder
+      end
+    end
   end
 
   LEVEL.sky_light = math.clamp(PARAM.wad_minimum_brightness or 0, 
