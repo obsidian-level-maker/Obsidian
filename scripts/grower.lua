@@ -914,6 +914,13 @@ function Grower_calc_rule_probs()
     
     local function Grower_reset_absurdities()
       for _,rule in pairs(SHAPE_GRAMMAR) do
+
+        rule.is_absurd = false
+
+        if rule.original_use_prob then
+          rule.use_prob = rule.original_use_prob
+        end
+
         if not rule.initial_env then goto continue end
 
         if rule.initial_env == "none" then rule.env = nil
@@ -951,6 +958,8 @@ function Grower_calc_rule_probs()
       and not string.match(absurded_rule,"START")
       and SHAPE_GRAMMAR[absurded_rule].is_absurd ~= true
       and SHAPE_GRAMMAR[absurded_rule].use_prob ~= 0 then
+
+        SHAPE_GRAMMAR[absurded_rule].original_use_prob = SHAPE_GRAMMAR[absurded_rule].use_prob
 
         local new_factor
 
