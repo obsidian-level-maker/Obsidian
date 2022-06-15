@@ -4248,7 +4248,7 @@ gui.spots_dump("Cave spot dump")
           end
         end
 
-      elseif A.mode == "liquid" and not LEVEL.liquid.damage
+      elseif A.mode == "liquid" and LEVEL.liquid and not LEVEL.liquid.damage
       and A.seeds[1] then
         spots_in_flat_floor(R, A)
 
