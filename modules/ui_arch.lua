@@ -273,6 +273,7 @@ OB_MODULES["ui_arch"] =
       presets = "",
       tooltip = "",
       priority = 80,
+      randomize_group="architecture"
     },
 
     { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 78, randomize_group="architecture", tooltip = "Control the amount of outdoor areas." },

@@ -2075,7 +2075,11 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     end
 
     if PARAM.group_wall_prob and PARAM.group_wall_prob ~= "fab_default" then
-      prob = prob * PREFAB_CONTROL.WALL_GROUP_ODDS[PARAM.group_wall_prob]
+      if not ob_match_game({game = "doomish"}) then
+        prob = prob * (PREFAB_CONTROL_GENERIC.WALL_GROUP_ODDS[PARAM.group_wall_prob] or 1)
+      else
+        prob = prob * (PREFAB_CONTROL.WALL_GROUP_ODDS[PARAM.group_wall_prob] or 1)
+      end
     end
 
     prob = math.clamp(0, prob, 100)

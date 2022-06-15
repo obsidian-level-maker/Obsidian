@@ -28,6 +28,15 @@ PREFAB_CONTROL_GENERIC.WALL_CHOICES =
   "fab_random",  _("Mix It Up"),
 }
 
+PREFAB_CONTROL_GENERIC.WALL_REDUCTION_ODDS =
+{
+  fab_some = 0.2,
+  fab_less = 0.4,
+  fab_few = 0.6,
+  fab_rare = 0.8,
+  fab_none = 1
+}
+
 PREFAB_CONTROL_GENERIC.POINT_CHOICES =
 {
   "fab_none",    _("NONE"),
@@ -36,6 +45,20 @@ PREFAB_CONTROL_GENERIC.POINT_CHOICES =
   "fab_default", _("DEFAULT"),
   "fab_more",    _("More"),
   "fab_heaps",   _("Heaps"),
+}
+
+PREFAB_CONTROL_GENERIC.WALL_GROUP_ODDS =
+{
+  fab_always = 100,
+  fab_heaps = 2.25,
+  fab_lots = 1.8,
+  fab_more = 1.35,
+  fab_default = 1,
+  fab_some = 0.8,
+  fab_less = 0.6,
+  fab_few = 0.4,
+  fab_rare = 0.2,
+  fab_none = 0,
 }
 
 function PREFAB_CONTROL_GENERIC.setup(self)
