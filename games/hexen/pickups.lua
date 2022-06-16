@@ -75,6 +75,7 @@ HEXEN.NICE_ITEMS =
     id = 32,
     kind = "health",
     add_prob = 5,
+    give = { {health=100} },
   },
 
   -- ARMOR --

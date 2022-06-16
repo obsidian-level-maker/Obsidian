@@ -42,6 +42,7 @@ STRIFE.PICKUPS =
    bullet_clip =
   {
     id = 2007,
+    kind = "ammo",
     add_prob = 10,
     cluster = { 2,5 },
     give = { {ammo="bullet",count=10} }
@@ -50,6 +51,7 @@ STRIFE.PICKUPS =
   bullet_box =
   {
     id = 2048,
+    kind = "ammo",
     add_prob = 10,
     give = { {ammo="bullet",count=50} }
   },
@@ -57,6 +59,7 @@ STRIFE.PICKUPS =
   energy_pod =
   {
     id = 2047,
+    kind = "ammo",
     add_prob = 10,
     cluster = { 2,5 },
     give = { {ammo="cell",count=20} }
@@ -65,6 +68,7 @@ STRIFE.PICKUPS =
   mini_missile =
   {
     id = 2010,
+    kind = "ammo",
     add_prob = 10,
     cluster = { 1,2 },
     give = { {ammo="missile",count=4} }
@@ -73,6 +77,7 @@ STRIFE.PICKUPS =
   electric_bolts =
   {
     id = 114,
+    kind = "ammo",
     add_prob = 10,
     cluster = { 1,2 },
     give = { {ammo="bolt",count=20} }
@@ -81,6 +86,7 @@ STRIFE.PICKUPS =
   poison_bolts =
   {
     id = 115,
+    kind = "ammo",
     add_prob = 2,
     cluster = { 1,2 },
     give = { {ammo="bolt",count=10} }
@@ -89,6 +95,7 @@ STRIFE.PICKUPS =
   explosive_grenades =
   {
     id = 152,
+    kind = "ammo",
     add_prob = 10,
     cluster = { 1,2 },
     give = { {ammo="grenade",count=6} }
@@ -97,6 +104,7 @@ STRIFE.PICKUPS =
   phosphorous_grenades =
   {
     id = 153,
+    kind = "ammo",
     add_prob = 2,
     cluster = { 1,2 },
     give = { {ammo="grenade",count=4} }
@@ -112,16 +120,11 @@ STRIFE.NICE_ITEMS =
 
   -- HEALTH --
 
-  medkit =
+  medical_kit =
   {
     id = 2012,
     kind = "health",
-    rank = 2,
-    add_prob = 120,
-    closet_prob = 20,
-    secret_prob = 5,
-    storage_prob = 80,
-    storage_qty  = 2,
+    add_prob = 10,
     give = { {health=50} },
   },
 
@@ -151,6 +154,7 @@ STRIFE.NICE_ITEMS =
   energy_pack =
   {
     id = 17,
+    kind = "ammo",
     add_prob = 10,
     give = { {ammo="cell",count=100} }
   },
@@ -158,6 +162,7 @@ STRIFE.NICE_ITEMS =
   missile_crate =
   {
     id = 2046,
+    kind = "ammo",
     add_prob = 10,
     give = { {ammo="missile",count=20} }
   },
