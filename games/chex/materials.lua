@@ -65,23 +65,28 @@ CHEX3.MATERIALS =
   CAVE   = { t="SKSNAKE2", f="CEIL3_1" },
   VENT   = { t="ASHWALL",  f="FLOOR0_3" },
   WHITE  = { t="SW2SATYR", f="FLAT5_6" },
-  DIRT   = { f="FLOOR0_1", t="TEKWALL5" },
+  FLOOR0_1   = { f="FLOOR0_1", t="TEKWALL5" },
 
 
   -- walls --
-
   WOOD4 = { t="WOOD4", f="CJFFLEM2"},
   GRAY2 = { t="GRAY2", f="ENDFLAT2"},
   SEWERA = { t="SEWERA", f="ENDFLAT2" },
+  NICEWALL = { t="NICEWALL", f="MUFLOOR2" },
+  WINDOH2 = { t="WINDOH2", f="MUFLOOR2" },
+  CITYWALL = { t="CITYWALL", f="CEIL5_1" },
+  WINDOH = { t="WINDOH", f="CEIL5_1" },
+  GRAY5 = { t="GRAY5", f="CEIL5_1" },
+  STONE = { t="STONE", f="CEIL5_1" },
 
   LIFT = { t="SKSNAKE1", f="STEP1" },
 
-  BLUE_WALL    = { t="SP_DUDE2", f="FLOOR0_2" },
+  SP_DUDE2    = { t="SP_DUDE2", f="FLOOR0_2" },
   BLUE_OBSDECK = { t="SLADSKUL", f="FLOOR0_2" },
   BLUE_SLIMED  = { t="SKINMET1", f="FLOOR0_2" },
 
   GRAY_PIPES   = { t="STONE",    f="FLAT5_6" },
-  GRAY_PANELS  = { t="STONE3",   f="FLAT5_6" },
+  STONE3  = { t="STONE3",   f="FLAT5_6" },
   GRAY_LITE    = { t="LITESTON", f="FLAT5_6" },
   GRAY7  = { t="GRAY7",    f="FLAT5_6" },
 
@@ -98,14 +103,15 @@ CHEX3.MATERIALS =
   ORANGE_MAP    = { t="BROWN96",  f="FLAT2" },
 
   STEEL1      = { t="CEMENT1",  f="CEIL3_2" },
-  STEEL2      = { t="CEMENT5",  f="CEIL3_2" },
+  CEMENT5      = { t="CEMENT5",  f="CEIL3_2" },
   STEEL_LITE  = { t="LITE96",   f="CEIL3_2" },
   STEEL_GRATE = { t="REDWALL1", f="CEIL3_2" },
 
   STARPORT  = { t="CEMENT2", f="FLAT5_6" },
 
-  TAN1      = { t="TEKWALL5", f="FLAT1" },
-  TAN2      = { t="BROWN1",   f="FLAT1" },
+  TEKWALL5      = { t="TEKWALL5", f="FLAT1" },
+  BROWN      = { t="BROWN1",   f="BROWN" },
+  BROWN1      = { t="BROWN1",   f="FLAT1" },
   TAN_LITE  = { t="LITE2",    f="FLAT1" },
   TAN_GRATE = { t="BRNSMAL1", f="FLAT1" },
   TAN_VINE  = { t="BROVINE",  f="FLAT1" },
@@ -149,7 +155,7 @@ CHEX3.MATERIALS =
 
   CEIL_LITE = { f="CEIL3_5",  t="SW2SATYR" },
 
-  VERYDARK_BLUE = { f="CEIL4_1",  t="SP_DUDE2" },
+  CEIL4_1 = { f="CEIL4_1",  t="SP_DUDE2" },
   ANOTHER_BLUE  = { f="FLOOR1_1", t="SP_DUDE2" },
   FLAT14  = { f="FLAT14",   t="SP_DUDE2" },
 
@@ -272,6 +278,7 @@ CHEX3.MATERIALS =
   -- Chex 2 compatibility --
 
   HEDGE  = { t="HEDGE",  f="HEDGEF" },
+  HEDGEF  = { t="HEDGE",  f="HEDGEF" },
   BEIGE  = { t="MUSEUM", f="BROWN" },
 
   GREEN_BRICK  = { t="SEWER1",   f="ENDFLAT2" },
