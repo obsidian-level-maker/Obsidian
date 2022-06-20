@@ -75,19 +75,18 @@ OB_MODULES["hexen_mon_control"] =
       name = "float_ettin",
       label = _("Ettin"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -95,19 +94,18 @@ OB_MODULES["hexen_mon_control"] =
       name = "float_afrit",
       label = _("Afrit"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -115,19 +113,18 @@ OB_MODULES["hexen_mon_control"] =
       name = "float_centaur1",
       label = _("Centaur"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -135,19 +132,18 @@ OB_MODULES["hexen_mon_control"] =
       name = "float_centaur2",
       label = _("Slaughtaur"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -155,19 +151,18 @@ OB_MODULES["hexen_mon_control"] =
       name = "float_serpent1",
       label = _("Stalker"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -175,19 +170,18 @@ OB_MODULES["hexen_mon_control"] =
       name = "float_serpent2",
       label = _("Stalker w/ projectile"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -195,19 +189,18 @@ OB_MODULES["hexen_mon_control"] =
       name = "float_wendigo",
       label = _("Wendigo"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -215,19 +208,18 @@ OB_MODULES["hexen_mon_control"] =
       name = "float_demon1",
       label = _("Green Serpent"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 	 
@@ -235,19 +227,18 @@ OB_MODULES["hexen_mon_control"] =
       name = "float_demon2",
       label = _("Brown Serpent"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 	 
@@ -255,19 +246,18 @@ OB_MODULES["hexen_mon_control"] =
       name = "float_bishop",
       label = _("Bishop"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 	 
@@ -275,19 +265,18 @@ OB_MODULES["hexen_mon_control"] =
       name = "float_reiver",
       label = _("Reiver"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 	 
@@ -295,19 +284,18 @@ OB_MODULES["hexen_mon_control"] =
       name = "float_reiver_b",
       label = _("Buried Reiver"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 	  
@@ -315,19 +303,18 @@ OB_MODULES["hexen_mon_control"] =
       name = "float_Heresiarch",
       label = _("Heresiarch"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 	 
@@ -335,19 +322,18 @@ OB_MODULES["hexen_mon_control"] =
       name = "float_Zedek",
       label = _("Zedek"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 	 
@@ -355,19 +341,18 @@ OB_MODULES["hexen_mon_control"] =
       name = "float_Traductus",
       label = _("Traductus"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 	 
@@ -375,19 +360,18 @@ OB_MODULES["hexen_mon_control"] =
       name = "float_Menelkir",
       label = _("Menelkir"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -395,19 +379,18 @@ OB_MODULES["hexen_mon_control"] =
       name = "float_Korax",
       label = _("Korax"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
   },
@@ -489,19 +472,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_h_vial",
       label = _("Crystal Vial"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       priority = 100,
       randomize_group="pickups",
      },
@@ -510,19 +492,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_h_flask",
       label = _("Quartz Flask"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       priority = 99,
       randomize_group="pickups",
      },
@@ -531,19 +512,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_h_urn",
       label = _("Mystic Urn"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       priority = 93,
       gap = 1,
       randomize_group="pickups",
@@ -553,19 +533,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_blue_mana",
       label = _("Blue Mana"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       priority = 98,
       randomize_group="pickups",
      },
@@ -574,19 +553,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_green_mana",
       label = _("Green Mana"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       priority = 95,
       randomize_group="pickups",
      },    
@@ -595,19 +573,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_dual_mana",
       label = _("Dual Mana"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group="pickups",
       gap = 1
      },
@@ -616,19 +593,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_ar_helmet",
       label = _("Platinum Helm"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       priority = 94,
       randomize_group="pickups",
      },
@@ -637,19 +613,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_ar_mesh",
       label = _("Mesh Armor"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group="pickups",
      },
 
@@ -657,19 +632,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_ar_shield",
       label = _("Falcon Shield"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group="pickups",
      },
 
@@ -677,19 +651,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_ar_amulet",
       label = _("Amulet of Warding"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group="pickups",
      },
 
@@ -697,19 +670,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_dragonskin_bracers",
       label = _("Dragonskin Bracers"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group="pickups",
       gap = 1
      },
@@ -718,19 +690,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_krater_of_might",
       label = _("Krater of Might"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group="pickups",
      },
 
@@ -738,19 +709,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_banishment_device",
       label = _("Banishment Device"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group="pickups",
      },
 
@@ -758,19 +728,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_boots_of_speed",
       label = _("Boots of Speed"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group="pickups",
      },
     
@@ -778,19 +747,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_chaos_device",
       label = _("Chaos Device"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group="pickups",
       priority = 75,
      },
@@ -799,19 +767,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_dark_servant",
       label = _("Dark Servant"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group="pickups",
       priority = 74,
      },
@@ -820,19 +787,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_disc_of_repulsion",
       label = _("Disc of Repulsion"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group="pickups",
       priority = 73,
      },
@@ -841,19 +807,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_flechette",
       label = _("Flechette"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group="pickups",
       priority = 72,
      },
@@ -862,19 +827,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_icon_of_the_defender",
       label = _("Icon of the Defender"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group="pickups",
       priority = 71,
      },
@@ -883,19 +847,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_mystic_ambit_incant",
       label = _("Mystic Ambit Incant"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group="pickups",
       priority = 70,
      },
@@ -904,19 +867,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_porkalator",
       label = _("Porkalator"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group="pickups",
       priority = 69,
      },
@@ -925,19 +887,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_torch",
       label = _("Torch"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       priority = 68,
       randomize_group="pickups",
      },
@@ -946,19 +907,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_wings_of_wrath",
       label = _("Wings of Wrath"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       priority = 68,
       randomize_group="pickups",
      },
@@ -967,19 +927,18 @@ OB_MODULES["hexen_item_control"] =
       name = "float_ultimate_weapon_pieces",
       label = _("Ultimate Weapon Pieces"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       priority = 68,
       randomize_group="pickups",
      },

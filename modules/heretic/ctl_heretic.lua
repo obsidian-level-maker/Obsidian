@@ -73,19 +73,18 @@ OB_MODULES["heretic_mon_control"] =
       name = "float_gargoyle",
       label = _("Gargoyle"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -93,19 +92,18 @@ OB_MODULES["heretic_mon_control"] =
       name = "float_fire_garg",
       label = _("Fire Gargoyle"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -113,19 +111,18 @@ OB_MODULES["heretic_mon_control"] =
       name = "float_warrior",
       label = _("Warrior"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -133,19 +130,18 @@ OB_MODULES["heretic_mon_control"] =
       name = "float_warrior_ghost",
       label = _("Warrior Ghost"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -153,19 +149,18 @@ OB_MODULES["heretic_mon_control"] =
       name = "float_golem",
       label = _("Golem"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -173,19 +168,18 @@ OB_MODULES["heretic_mon_control"] =
       name = "float_golem_ghost",
       label = _("Golem Ghost"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -193,19 +187,18 @@ OB_MODULES["heretic_mon_control"] =
       name = "float_nitro",
       label = _("Nitro"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -213,19 +206,18 @@ OB_MODULES["heretic_mon_control"] =
       name = "float_nitro_ghost",
       label = _("Nitro Ghost"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -233,19 +225,18 @@ OB_MODULES["heretic_mon_control"] =
       name = "float_disciple",
       label = _("Disciple"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -253,19 +244,18 @@ OB_MODULES["heretic_mon_control"] =
       name = "float_sabreclaw",
       label = _("Sabreclaw"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -273,19 +263,18 @@ OB_MODULES["heretic_mon_control"] =
       name = "float_weredragon",
       label = _("Weredragon"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -293,19 +282,18 @@ OB_MODULES["heretic_mon_control"] =
       name = "float_ophidian",
       label = _("Ophidian"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -313,19 +301,18 @@ OB_MODULES["heretic_mon_control"] =
       name = "float_Ironlich",
       label = _("Ironlich"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -333,19 +320,18 @@ OB_MODULES["heretic_mon_control"] =
       name = "float_Maulotaur",
       label = _("Maulotaur"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -353,19 +339,18 @@ OB_MODULES["heretic_mon_control"] =
       name = "float_D_Sparil",
       label = _("D'Sparil"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      }
   }
@@ -415,19 +400,18 @@ OB_MODULES["heretic_weapon_control"] =
       name = "float_gauntlets",
       label = _("Gauntlets"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group = "pickups"
      },
      
@@ -435,19 +419,18 @@ OB_MODULES["heretic_weapon_control"] =
       name = "float_crossbow",
       label = _("Crossbow"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group = "pickups"
      },
      
@@ -455,19 +438,18 @@ OB_MODULES["heretic_weapon_control"] =
       name = "float_claw",
       label = _("Dragon Claw"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group = "pickups"
      },
 
@@ -475,19 +457,18 @@ OB_MODULES["heretic_weapon_control"] =
       name = "float_hellstaff",
       label = _("Hellstaff"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group = "pickups"
      },
      
@@ -495,19 +476,18 @@ OB_MODULES["heretic_weapon_control"] =
       name = "float_phoenix",
       label = _("Phoenix Rod"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group = "pickups"
      },
 
@@ -515,19 +495,18 @@ OB_MODULES["heretic_weapon_control"] =
       name = "float_firemace",
       label = _("Fire Mace"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group = "pickups"
      }
   }

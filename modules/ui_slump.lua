@@ -62,7 +62,6 @@ OB_MODULES["ui_slump_arch"] =
       increment = 1,
       default = 15,
       nan = "Mix It Up",
-      presets = "",
       tooltip = "Minimum number of rooms per level.",
       randomize_group="architecture",
     },
@@ -76,7 +75,6 @@ OB_MODULES["ui_slump_arch"] =
       max = 100,
       increment = 1,
       default = 50,
-      presets = "",
       tooltip = "% chance that SLUMP will attempt to increase a room's size.",
       randomize_group="architecture",
     },
@@ -90,7 +88,6 @@ OB_MODULES["ui_slump_arch"] =
       max = 100,
       increment = 1,
       default = 50,
-      presets = "",
       tooltip = "% chance that a room will attempt to fork as the level grows.",
       longtip = "0% should look like a bunch of murder hallways. Forking is not guaranteed " ..
                 "to succeed, especially if the Room Bigification Chance is increased.",

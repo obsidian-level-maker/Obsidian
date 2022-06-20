@@ -91,7 +91,6 @@ OB_MODULES["procedural_gotcha"] =
       max = 10,
       increment = 0.1,
       default = 1.2,
-      presets = "",
       tooltip = "Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting).",
       randomize_group="monsters",
     },
@@ -101,7 +100,6 @@ OB_MODULES["procedural_gotcha"] =
       name="float_gotcha_strength",
       label=_("Extra Strength"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 16,
       increment = 1,
@@ -111,7 +109,7 @@ OB_MODULES["procedural_gotcha"] =
       "4:4 (Harder)," ..
       "6:6 (Tougher)," ..
       "8:8 (CRAZIER)," ..
-      "16:16 (NIGHTMARISH),",
+      "16:16 (NIGHTMARISH)",
       tooltip = "Offset monster quantity from your default strength of choice plus the increasing level ramp.",
       randomize_group="monsters",
     },

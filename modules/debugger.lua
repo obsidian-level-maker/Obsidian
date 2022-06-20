@@ -175,7 +175,7 @@ OB_MODULES["debugger"] =
       max = 45,
       increment = 1,
       default = 0,
-      presets = "0:All,",
+      presets = "0:All",
       tooltip="Allows the skipping of level construction along the WAD " ..
               "for debugging purposes.",
       priority=96,

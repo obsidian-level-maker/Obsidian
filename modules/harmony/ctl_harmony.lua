@@ -75,19 +75,18 @@ OB_MODULES["harmony_mon_control"] =
       name = "float_beastling",
       label = _("Beastling"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -95,19 +94,18 @@ OB_MODULES["harmony_mon_control"] =
       name = "float_critter",
       label = _("Critter"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -115,19 +113,18 @@ OB_MODULES["harmony_mon_control"] =
       name = "float_follower",
       label = _("Follower"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -135,19 +132,18 @@ OB_MODULES["harmony_mon_control"] =
       name = "float_predator",
       label = _("Predator"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -155,19 +151,18 @@ OB_MODULES["harmony_mon_control"] =
       name = "float_centaur",
       label = _("Centaur"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -175,19 +170,18 @@ OB_MODULES["harmony_mon_control"] =
       name = "float_mutant",
       label = _("Mutant"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -195,19 +189,18 @@ OB_MODULES["harmony_mon_control"] =
       name = "float_phage",
       label = _("Phage"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -215,19 +208,18 @@ OB_MODULES["harmony_mon_control"] =
       name = "float_echidna",
       label = _("Echidna"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      }
   },
@@ -297,19 +289,18 @@ OB_MODULES["harmony_weapon_control"] =
       name = "float_minigun",
       label = _("Minigun"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group = "pickups"
      },
 
@@ -317,19 +308,18 @@ OB_MODULES["harmony_weapon_control"] =
       name = "float_shotgun",
       label = _("Compensator"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group = "pickups"
      },
 
@@ -337,19 +327,18 @@ OB_MODULES["harmony_weapon_control"] =
       name = "float_launcher",
       label = _("Grenade Launcher"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group = "pickups"
      },
 
@@ -357,19 +346,18 @@ OB_MODULES["harmony_weapon_control"] =
       name = "float_entropy",
       label = _("Entropy Thrower"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group = "pickups"
      },
 

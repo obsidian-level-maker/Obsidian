@@ -73,19 +73,18 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_commonus",
       label = _("Commonus"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -93,19 +92,18 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_bipedicus",
       label = _("Bipedicus"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -113,19 +111,18 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_armored_biped",
       label = _("Armored Bipedicus"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -133,19 +130,18 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_quadrumpus",
       label = _("Quadrumpus"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -153,19 +149,18 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_cycloptis",
       label = _("Cycloptis"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -174,19 +169,18 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_larva",
       label = _("Larva"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 
@@ -195,19 +189,18 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_flemmine",
       label = _("Flem Mine"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 	 
@@ -216,19 +209,18 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_stridicus",
       label = _("Stridicus"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      },
 	 
@@ -237,19 +229,18 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_super_cyclop",
       label = _("Super Cycloptis"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      "20:20 (INSANE)",
       randomize_group = "monsters"
      }
   },
@@ -319,19 +310,18 @@ OB_MODULES["chex3_weapon_control"] =
       name = "float_super_bootspork",
       label = _("Super Bootspork"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group = "pickups"
      },
 
@@ -339,19 +329,18 @@ OB_MODULES["chex3_weapon_control"] =
       name = "float_large_zorcher",
       label = _("Large Zorcher"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group = "pickups"
      },
 
@@ -359,19 +348,18 @@ OB_MODULES["chex3_weapon_control"] =
       name = "float_rapid_zorcher",
       label = _("Rapid Zorcher"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group = "pickups"
      },
 
@@ -379,19 +367,18 @@ OB_MODULES["chex3_weapon_control"] =
       name = "float_zorch_propulsor",
       label = _("Zorch Propulsor"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group = "pickups"
      },
 	 
@@ -399,19 +386,18 @@ OB_MODULES["chex3_weapon_control"] =
       name = "float_phasing_zorcher",
       label = _("Phasing Zorcher"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group = "pickups"
      },
 	 
@@ -419,19 +405,18 @@ OB_MODULES["chex3_weapon_control"] =
       name = "float_laz_device",
       label = _("LAZ Device"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
+      nan = "Default", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
       ".5:0.5 (Plenty)," ..
       "1.2:1.2 (More)," ..
       "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      "10:10 (I LOVE IT)",
       randomize_group = "pickups"
      },
 

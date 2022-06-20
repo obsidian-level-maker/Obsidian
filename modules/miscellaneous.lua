@@ -221,8 +221,6 @@ OB_MODULES["misc"] =
       max = 100,
       increment = 1,
       default = 0,
-      nan = "",
-      presets = "",
       tooltip = "Sets chance of levels using the Oblige v2 shape grammar.",
       longtip = "Gives levels a chance of being generated using the Oblige v2 shape grammar. With this grammar, rooms are always " ..
       "square-shaped, even in parks or caves, with the occasional chunk taken out of one of the corners or sides. Hallways " ..
@@ -240,8 +238,6 @@ OB_MODULES["misc"] =
       max = 100,
       increment = 1,
       default = 0,
-      nan = "",
-      presets = "",
       tooltip = "Sets chance of levels using the Oblige v5 shape grammar.",
       longtip = "Gives levels a chance of being generated using the Oblige v5 shape grammar. With this grammar, indoor rooms are usually " ..
       "square or diamond-shaped. Parks are larger than the indoor areas, but still more or less rectangular in nature. " ..
@@ -260,7 +256,6 @@ OB_MODULES["misc"] =
       max = 100,
       increment = 1,
       default = 0,
-      presets = "",
       tooltip = "Chance that a level will be built with a layout from random set of prefered shape rules.",
       longtip = "Layout consistency attempts to cause levels to overprefer specific shape " ..
       "rules from the ruleset in order to create odd but more consistent combinations of pieces to build the general layout. " ..
@@ -279,7 +274,6 @@ OB_MODULES["misc"] =
       max = 100,
       increment = 1,
       default = 0,
-      presets = "",
       tooltip = "Creates linear levels, where rooms are connected along a " ..
       "linear layout from start to exit.",
       longtip = "Due to the nature of linear levels, " ..
@@ -299,7 +293,6 @@ OB_MODULES["misc"] =
       max = 100,
       increment = 1,
       default = 0,
-      presets = "",
       tooltip = "Forces most of the map to be composed of naturalistic areas (parks and caves). " ..
       "The ratio is decided by Outdoors style setting while competing styles are ignored.",
       randomize_group="architecture",
@@ -315,7 +308,6 @@ OB_MODULES["misc"] =
       max = 100,
       increment = 1,
       default = 15,
-      presets = "",
       tooltip = "Allows Oblige to create large street-like outdoor rooms. " ..
       "Will be ignored if V2 or V5 shape grammar is selected for the level.",
       randomize_group="architecture",
@@ -526,15 +518,11 @@ OB_MODULES["misc"] =
       name="float_minimum_brightness", 
       label=_("Minimum Brightness"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 256,
       increment = 16,
       default = 0,
-      nan = "",
-      presets = "",
       tooltip = "Sets the minimum brightness for the map.",
-      longtip = "",
       priority = 72
     },
 
@@ -542,15 +530,11 @@ OB_MODULES["misc"] =
       name="float_maximum_brightness", 
       label=_("Maximum Brightness"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 256,
       increment = 16,
       default = 256,
-      nan = "",
-      presets = "",
       tooltip = "Sets the maximum brightness for the map.",
-      longtip = "",
       priority = 71
     },
 
