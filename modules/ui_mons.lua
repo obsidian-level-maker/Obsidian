@@ -108,7 +108,7 @@ OB_MODULES["ui_mons"] =
       max = 10.00,
       increment = .05,
       default = 1.0,
-      nan = "Mix It Up,Progressive,",
+      nan = "Mix It Up,Progressive",
       presets = "0:None," ..
       "0.15:0.15 (Trivial)," ..
       "0.35:0.35 (Sporadic)," ..
@@ -132,7 +132,7 @@ OB_MODULES["ui_mons"] =
       "8.5:8.5 (Savage)," ..
       "9.0:9.0 (Brutal)," ..
       "9.5:9.5 (Draconian)," ..
-      "10.0:10.00 (Merciless),",
+      "10.0:10.00 (Merciless)",
       tooltip="Changes the amount of monsters placed in a map. Scales with level size.",
       longtip="For reference: Obsidian's default for normal is 1.0.\n\n" ..
               "Mix It Up: Selects quantities specified between Upper and Lower " ..
@@ -193,7 +193,7 @@ OB_MODULES["ui_mons"] =
       "8.5:8.5 (Savage)," ..
       "9.0:9.0 (Brutal)," ..
       "9.5:9.5 (Draconian)," ..
-      "10.0:10.00 (Merciless),",
+      "10.0:10.00 (Merciless)",
             tooltip="If you have Mix It Up or Progressive selected, you can define the upper bound here. Otherwise, this option is simply ignored.",
             longtip="For reference: Obsidian's default for normal is 1.0.\n\n" ..
               "Mix It Up: Selects quantities specified between Upper and Lower " ..
@@ -253,7 +253,7 @@ OB_MODULES["ui_mons"] =
       "8.5:8.5 (Savage)," ..
       "9.0:9.0 (Brutal)," ..
       "9.5:9.5 (Draconian)," ..
-      "10.0:10.00 (Merciless),",
+      "10.0:10.00 (Merciless)",
             tooltip="If you have Mix It Up or Progressive selected, you can define the lower bound here. Otherwise, this option is simply ignored.",
             longtip="For reference: Obsidian's default for normal is 1.0.\n\n" ..
               "Mix It Up: Selects quantities specified between Upper and Lower " ..
@@ -291,7 +291,7 @@ OB_MODULES["ui_mons"] =
       max = 12,
       increment = .05,
       default = 1,
-      presets = "0.55:0.55 (Weak),0.75:0.75 (Easier),1:1 (Average),1.3:1.3 (Harder),1.7:1.7 (Tough),2.5:2.5 (Fierce),12:12 (CRAZY),",
+      presets = "0.55:0.55 (Weak),0.75:0.75 (Easier),1:1 (Average),1.3:1.3 (Harder),1.7:1.7 (Tough),2.5:2.5 (Fierce),12:12 (CRAZY)",
       randomize_group="monsters",
     },
 
@@ -304,8 +304,8 @@ OB_MODULES["ui_mons"] =
       max = 3,
       increment = .05,
       default = 1,
-      nan = "Episodic,",
-      presets = "0.5:0.5 (Very Slow),0.75:0.75 (Slow),1:1 (Average),1.5:1.5 (Fast),2:2 (Very Fast),3:3 (Extra Fast),",
+      nan = "Episodic",
+      presets = "0.5:0.5 (Very Slow),0.75:0.75 (Slow),1:1 (Average),1.5:1.5 (Fast),2:2 (Very Fast),3:3 (Extra Fast)",
       tooltip = "Rate at which monster strength increases as you progress through levels.",
       gap = 1,
       randomize_group="monsters",

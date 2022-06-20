@@ -126,7 +126,7 @@ OB_MODULES["ui_arch"] =
       max = 75,
       increment = 1,
       default = 36,
-      nan = "Mix It Up,Episodic,Progressive,",
+      nan = "Mix It Up,Episodic,Progressive",
       presets = "10:10 (Microscopic)," ..
       "16:16 (Miniature)," ..
       "22:22 (Tiny)," ..
@@ -136,7 +136,7 @@ OB_MODULES["ui_arch"] =
       "48:48 (Huge)," ..
       "58:58 (Colossal)," ..
       "66:66 (Gargantuan)," ..
-      "75:75 (Transcendent),",
+      "75:75 (Transcendent)",
       tooltip = "Determines size of map (Width x Height) in grid squares.",
       longtip = "FOR 32-BIT USERS: To prevent memory usage issues, the following maximum map size limits will be enforced regardless of slider setting:\n\n" ..
       "Full Game:\n" ..
@@ -172,7 +172,7 @@ OB_MODULES["ui_arch"] =
       "48:48 (Huge)," ..
       "58:58 (Colossal)," ..
       "66:66 (Gargantuan)," ..
-      "75:75 (Transcendent),",
+      "75:75 (Transcendent)",
       tooltip = "Fine tune upper limit when Level Size is set to Episodic, Progressive or Mixed.",
       priority = 99,
     },
@@ -196,7 +196,7 @@ OB_MODULES["ui_arch"] =
       "48:48 (Huge)," ..
       "58:58 (Colossal)," ..
       "66:66 (Gargantuan)," ..
-      "75:75 (Transcendent),",
+      "75:75 (Transcendent)",
       tooltip = "Fine tune lower limit when Level Size is set to Episodic, Progressive or Mixed.",
       priority = 98,
       gap = 1,
