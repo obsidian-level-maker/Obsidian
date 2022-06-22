@@ -795,15 +795,7 @@ function Junction_calc_fence_z(A1, A2)
   -- pick max height between two areas
   local per_area_z = math.max(A1.floor_h, A2.floor_h)
 
-  top_z = max_z
-
-  if A1.room and A1.room.fence_height_type 
-  and A1.room.fence_height_type == "max_floor"
-  or (A2.room and A2.room.fence_height_type 
-  and A2.room.fence_height_type == "max_floor")
-  then
-    top_z = max_z
-  end
+  top_z = per_area_z
 
   -- use max whenever next to parks
   if (A1.room and A1.room.is_park)

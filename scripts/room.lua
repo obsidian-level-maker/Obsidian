@@ -1982,17 +1982,6 @@ function Room_border_up()
         else
           A.fence_up_type = "rail"
         end
-
-        if A.room 
-        and not A.room.fence_height_type
-        and A.room.is_outdoor then
-          if rand.odds(10) then
-            A.room.fence_height_type = "max_floor"
-          else
-            A.room.fence_height_type = "per_floor"
-          end
-        end
-
       end
     end
 
