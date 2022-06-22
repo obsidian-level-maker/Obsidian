@@ -114,6 +114,8 @@ PREFABS.Decor_floor_decal_stripes =
 
   bound_z2 = 32,
 
+  delta = 8,
+
   sink_mode = "never",
 }
 
