@@ -1359,7 +1359,8 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env),
     if info.env ~= "hallway"
     and info.env ~= "cave"
     and not R.is_park then
-      if R.id%2 == 0 and rand.odds(66) then
+      if R.id%2 == 0
+      and rand.odds(66 * style_sel("outdoors", 0, 0.25, 0.5, 0.75, 1)) then
         R.is_street = true
         R.is_outdoor = true
       end
