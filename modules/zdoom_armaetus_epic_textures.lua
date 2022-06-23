@@ -814,16 +814,20 @@ function ARMAETUS_EPIC_TEXTURES.generate_environment_themes()
 
   -- covers hallways only for now
   -- MSSP-TODO: revise this code to be more generic for future expansion
-  if LEVEL.theme_name == "hell" then
-    THEME.wide_halls.hellcata = 50 * style_sel("liquids", 0.3, 0.7, 1.2, 1.5)
-                                  * style_sel("traps", 0.3, 0.7, 1.2, 1.5)
-  elseif LEVEL.theme_name == "tech" or LEVEL.theme_name == "urban" then
-    THEME.wide_halls.sewers = 50 * style_sel("liquids", 0.3, 0.7, 1.2, 1.5)
+  if THEME.wide_halls then
+    if LEVEL.theme_name == "hell" then
+      THEME.wide_halls.hellcata = 50 * style_sel("liquids", 0.3, 0.7, 1.2, 1.5)
+                                    * style_sel("traps", 0.3, 0.7, 1.2, 1.5)
+    elseif LEVEL.theme_name == "tech" or LEVEL.theme_name == "urban" then
+      THEME.wide_halls.sewers = 50 * style_sel("liquids", 0.3, 0.7, 1.2, 1.5)
+    end
   end
 
   if PARAM.bool_jump_crouch == 0 then
-    GAME.THEMES["hell"].wide_halls.organs = 0
-    GAME.THEMES["hell"].wide_halls.conveyorh = 0
+    if THEME.wide_halls then
+      THEME.wide_halls.organs = 0
+      THEME.wide_halls.conveyorh = 0
+    end
   end
 
   -- initialize default tables
