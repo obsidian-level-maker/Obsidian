@@ -1359,7 +1359,8 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env),
     if info.env ~= "hallway"
     and info.env ~= "cave"
     and not R.is_park then
-      if R.id%2 == 0 and rand.odds(66) then
+      if R.id%2 == 0
+      and rand.odds(66) then
         R.is_street = true
         R.is_outdoor = true
       end
@@ -3947,6 +3948,8 @@ function Grower_make_street(R)
       A.is_road = true
     end
   end
+
+  R.floor_limit = math.clamp(5,R.areas[1].svolume/16,100)
 
   Grower_grammatical_room(R, "sidewalk")
 
