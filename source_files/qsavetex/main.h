@@ -2,7 +2,8 @@
 //  Headers / Global Vars
 //------------------------------------------------------------------------
 //
-//  Copyright (c) 2009  Andrew J Apted
+//  Copyright (C) 2021-2022 The OBSIDIAN Team
+//  Copyright (c) 2009-2017  Andrew J Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License

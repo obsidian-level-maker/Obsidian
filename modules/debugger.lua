@@ -244,7 +244,9 @@ OB_MODULES["debugger"] =
       label=_("Live Growth Minimap"),
       choices=DEBUG_CONTROL.LIVEMAP_CHOICES,
       default="none",
-      tooltip=_("Shows more steps Oblige performs on rooms as they are grown on the GUI minimap. May take a hit on generation speed.")
+      tooltip= "Controls the granularity of steps shown on the GUI minimap as a level is built.",
+      longtip= "Higher levels of detail will increase the amount of time that it takes to generate a WAD. If saving an " ..
+      "animated GIF of the build process, its animation speed will also be affected by this setting (less detail=slower, more detail=faster)."
     },
 
 --[[

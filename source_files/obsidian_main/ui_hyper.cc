@@ -2,9 +2,10 @@
 //  Hyperlinks
 //------------------------------------------------------------------------
 //
-//  Oblige Level Maker
+//  OBSIDIAN Level Maker
 //
-//  Copyright (C) 2011 Andrew Apted
+//  Copyright (C) 2021-2022 The OBSIDIAN Team
+//  Copyright (C) 2011-2017 Andrew Apted
 //  Copyright (C) 2002 Jason Bryan
 //
 //  This program is free software; you can redistribute it and/or

@@ -2,9 +2,10 @@
 //  TRANSLATION / INTERNATIONALIZATION
 //----------------------------------------------------------------------
 //
-//  Oblige Level Maker
+//  OBSIDIAN Level Maker
 //
-//  Copyright (C)      2016 Andrew Apted
+//  Copyright (C) 2021-2022 The OBSIDIAN Team
+//  Copyright (C) 2016-2017 Andrew Apted
 //  Copyright (C) 1995-2015 Free Software Foundation, Inc.
 //
 //  This program is free software; you can redistribute it and/or

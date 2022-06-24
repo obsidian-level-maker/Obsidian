@@ -1,8 +1,7 @@
 ------------------------------------------------------------------------
---  OBLIGE  :  INTERFACE WITH GUI CODE
+--  OBSIDIAN  :  INTERFACE WITH GUI CODE
 ------------------------------------------------------------------------
 --
---  // Obsidian //
 --
 --  Copyright (C) 2006-2017 Andrew Apted
 --  Copyright (C) 2019-2022 MsrSgtShooterPerson
@@ -1768,7 +1767,7 @@ function ob_build_cool_shit()
     elseif PARAM["live_minimap"] == "room" then
       gui.minimap_gif_start(75)
     else
-      gui.minimap_gif_start(250)
+      gui.minimap_gif_start(175)
     end
   end
 

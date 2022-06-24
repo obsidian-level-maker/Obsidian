@@ -260,7 +260,7 @@ OB_MODULES["ui_arch"] =
 
     {
       name = "float_overall_lighting_mult",
-      label = _("Overall Lighting Multiplier"),
+      label = _("Lighting Multiplier"),
       valuator = "slider",
       units = "x",
       min = 0.5,
@@ -268,7 +268,10 @@ OB_MODULES["ui_arch"] =
       increment = .05,
       default = 1.0,
       priority = 80,
-      randomize_group="architecture"
+      randomize_group="architecture",
+      tooltip = "Adjust overall map lighting",
+      longtip = "This will apply a multiplier to the values in the default lighting tables when determining the brightness level of a room. If control " ..
+      "over the minimum or maximum brightness values is desired, please use the Minimum/Maximum Brightness sliders in the Advanced Architecture module."
     },
 
     { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 78, randomize_group="architecture", tooltip = "Control the amount of outdoor areas." },
