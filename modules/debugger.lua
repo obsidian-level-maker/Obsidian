@@ -96,6 +96,15 @@ OB_MODULES["debugger"] =
   {
 
     {
+      name = "bool_scale_items_with_map_size",
+      label=_("Alternate Item Quantities"),
+      valuator = "button",
+      default = 0,
+      tooltip="Scales item distribution with map size (Experimental)",
+      priority=105,
+    },
+
+    {
       name = "bool_print_fab_materials",
       label=_("Print Fab Materials"),
       valuator = "button",

@@ -2390,16 +2390,22 @@ function Quest_nice_items()
     if OB_CONFIG.items == "more"  and rand.odds(50) then quota = 2 end
     if OB_CONFIG.items == "heaps" and rand.odds(80) then quota = 2 end
 
-    for loop = 1, quota do
-      -- add the same item into each start room
-      local item = pick_item(start_items)
+    if PARAM.bool_scale_items_with_map_size and PARAM.bool_scale_items_with_map_size == 1 then
+      quota = math.round(quota * (LEVEL.map_W / 75))
+    end
 
-      if item == nil then break; end
+    if quota >= 1 then
+      for loop = 1, quota do
+        -- add the same item into each start room
+        local item = pick_item(start_items)
 
-      for _,R in pairs(rooms) do
-        table.insert(R.items, item)
+        if item == nil then break; end
 
-        gui.debugf("Start Item '%s' --> %s\n", item, R.name)
+        for _,R in pairs(rooms) do
+          table.insert(R.items, item)
+
+          gui.debugf("Start Item '%s' --> %s\n", item, R.name)
+        end
       end
     end
   end
@@ -2469,21 +2475,27 @@ function Quest_nice_items()
 
     quota = rand.int(quota)
 
+    if PARAM.bool_scale_items_with_map_size and PARAM.bool_scale_items_with_map_size == 1 then
+      quota = math.round(quota * (LEVEL.map_W / 75))
+    end
+
     gui.printf("Other Item quota : %1.2f\n", quota)
 
     local locs = collect_other_rooms()
 
-    for i = 1, quota do
-      if table.empty(locs) then break; end
+    if quota >= 1 then
+      for i = 1, quota do
+        if table.empty(locs) then break; end
 
-      local R = table.remove(locs, 1)
+        local R = table.remove(locs, 1)
 
-      local item = pick_item(normal_items)
-      if item == nil then break; end
+        local item = pick_item(normal_items)
+        if item == nil then break; end
 
-      table.insert(R.items, item)
+        table.insert(R.items, item)
 
-      gui.debugf("Other Item '%s' --> %s\n", item, R.name)
+        gui.debugf("Other Item '%s' --> %s\n", item, R.name)
+      end
     end
   end
 
