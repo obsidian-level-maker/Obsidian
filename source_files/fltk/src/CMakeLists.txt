@@ -471,7 +471,7 @@ if (OPTION_USE_WAYLAND)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DLIBDECOR_PLUGIN_DIR=${LIBDECOR_PLUGIN_DIR} ")
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_SYSTEM_LIBDECOR")
   else()
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${CMAKE_CURRENT_SOURCE_DIR}/../libdecor/src   -DLIBDECOR_PLUGIN_API_VERSION=1 -DLIBDECOR_PLUGIN_DIR=\\\"/usr/local/lib\\\" ")
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${CMAKE_CURRENT_SOURCE_DIR}/../libdecor/src   -DLIBDECOR_PLUGIN_API_VERSION=1 -DLIBDECOR_PLUGIN_DIR=\\\"/usr/local/lib/libdecor/plugins-1\\\" ")
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DUSE_SYSTEM_LIBDECOR=0 -DHAVE_MEMFD_CREATE -DHAVE_MKOSTEMP -DHAVE_POSIX_FALLOCATE")
   endif (OPTION_USE_SYSTEM_LIBDECOR)
 
@@ -580,11 +580,16 @@ if (USE_XFT)
 endif (USE_XFT)
 
 if (OPTION_USE_WAYLAND)
+  if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "FreeBSD")
+    set(PROTOCOLS /usr/local/share/wayland-protocols)
+  else ()
+    set(PROTOCOLS /usr/share/wayland-protocols)
+  endif (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "FreeBSD")
   add_custom_command(
     OUTPUT xdg-shell-protocol.c xdg-shell-client-protocol.h
-    COMMAND wayland-scanner private-code /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml xdg-shell-protocol.c
-    COMMAND wayland-scanner client-header /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml xdg-shell-client-protocol.h
-    DEPENDS /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml
+    COMMAND wayland-scanner private-code ${PROTOCOLS}/stable/xdg-shell/xdg-shell.xml xdg-shell-protocol.c
+    COMMAND wayland-scanner client-header ${PROTOCOLS}/stable/xdg-shell/xdg-shell.xml xdg-shell-client-protocol.h
+    DEPENDS ${PROTOCOLS}/stable/xdg-shell/xdg-shell.xml
     VERBATIM
   )
   list (APPEND STATIC_FILES "xdg-shell-protocol.c")
@@ -592,9 +597,9 @@ if (OPTION_USE_WAYLAND)
   if (NOT OPTION_USE_SYSTEM_LIBDECOR)
     add_custom_command(
       OUTPUT xdg-decoration-protocol.c xdg-decoration-client-protocol.h
-      COMMAND wayland-scanner private-code /usr/share/wayland-protocols/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml xdg-decoration-protocol.c
-      COMMAND wayland-scanner client-header /usr/share/wayland-protocols/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml xdg-decoration-client-protocol.h
-      DEPENDS /usr/share/wayland-protocols/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml
+      COMMAND wayland-scanner private-code ${PROTOCOLS}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml xdg-decoration-protocol.c
+      COMMAND wayland-scanner client-header ${PROTOCOLS}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml xdg-decoration-client-protocol.h
+      DEPENDS ${PROTOCOLS}/unstable/xdg-decoration/xdg-decoration-unstable-v1.xml
       VERBATIM
     )
     list (APPEND STATIC_FILES "xdg-decoration-protocol.c")
@@ -602,9 +607,9 @@ if (OPTION_USE_WAYLAND)
   endif (NOT OPTION_USE_SYSTEM_LIBDECOR)
   add_custom_command(
     OUTPUT text-input-protocol.c text-input-client-protocol.h
-    COMMAND wayland-scanner private-code /usr/share/wayland-protocols/unstable/text-input/text-input-unstable-v3.xml text-input-protocol.c
-    COMMAND wayland-scanner client-header /usr/share/wayland-protocols/unstable/text-input/text-input-unstable-v3.xml text-input-client-protocol.h
-    DEPENDS /usr/share/wayland-protocols/unstable/text-input/text-input-unstable-v3.xml
+    COMMAND wayland-scanner private-code ${PROTOCOLS}/unstable/text-input/text-input-unstable-v3.xml text-input-protocol.c
+    COMMAND wayland-scanner client-header ${PROTOCOLS}/unstable/text-input/text-input-unstable-v3.xml text-input-client-protocol.h
+    DEPENDS ${PROTOCOLS}/unstable/text-input/text-input-unstable-v3.xml
     VERBATIM
   )
   list (APPEND STATIC_FILES "text-input-protocol.c")
@@ -620,9 +625,9 @@ if (OPTION_USE_WAYLAND)
   if (GTK_FOUND)
     list (APPEND OPTIONAL_LIBS ${GTK_LDFLAGS} )
   endif (GTK_FOUND)
-  if (NOT OPTION_BUILD_SHARED_LIBS)
+  if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux" AND NOT OPTION_BUILD_SHARED_LIBS)
     list (APPEND OPTIONAL_LIBS "-no-pie")
-  endif (NOT OPTION_BUILD_SHARED_LIBS)
+  endif (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux" AND NOT OPTION_BUILD_SHARED_LIBS)
 endif (OPTION_USE_WAYLAND)
 
 #######################################################################

@@ -14,17 +14,19 @@ CONTENTS
  3   PLATFORM SPECIFIC NOTES
    3.1    Debian and Derivatives (like Ubuntu)
    3.2    Fedora
+   3.3    FreeBSD
 
 
 1 INTRODUCTION
 ==============
 
 Version 1.4 of the FLTK library introduces support of the public FLTK API on
-the Wayland platform. It requires a Wayland-equipped OS which means Linux.
+the Wayland platform. It requires a Wayland-equipped OS, namely Linux or FreeBSD.
 Pre-existing platform-independent source code for FLTK 1.3.x should build and
 run unchanged with FLTK 1.4 and the Wayland platform.
 The code has been tested on Debian, Ubuntu and Fedora with 3 distinct Wayland
 compositors: mutter (Gnome's compositor), weston, and KDE.
+The code has also been tested under FreeBSD and the sway wayland compositor.
 CJK text-input methods, as well as dead and compose keys are supported.
 
 
@@ -32,8 +34,8 @@ CJK text-input methods, as well as dead and compose keys are supported.
 ==========================
 
 It is possible to have your FLTK application do all its windowing and drawing
-through the Wayland protocol on Linux systems. All graphics is done via Cairo or EGL.
-All text-drawing is done via Pango.
+through the Wayland protocol on Linux or FreeBSD systems.
+All graphics is done via Cairo or EGL. All text-drawing is done via Pango.
 
  2.1 Configuration
 ---------------
@@ -75,8 +77,8 @@ a minimized window has no effect.
 the system clipboard, that is, Fl::add_clipboard_notify() has no effect. The FLTK API to
 read from and write to the system clipboard is fully functional, though.
 
-* With GTK-style window titlebars, the minimum width of a window is currently
-set at 134 pixels.
+* With GTK-style window titlebars, narrow windows are silently forced to be wide enough
+for the titlebar to display window buttons and a few letters of the title.
 
 * The library should support multi-display configurations in principle, but has not been
 tested in that situation.
@@ -146,7 +148,8 @@ These packages allow to run FLTK apps under the KDE/Plasma-Wayland desktop:
 - plasma-workspace-wayland
 
 
-3.2 Fedora
+  3.2 Fedora
+  ----------
 
 The Wayland platform is known to work with Fedora version 35.
 
@@ -167,3 +170,28 @@ in a Fedora 35 Workstation distribution :
 - cmake-gui    <== if you plan to use the GUI of CMake
 
 Package installation command: sudo yum install <package-name ...>
+
+
+  3.3 FreeBSD
+  -----------
+
+The Wayland platform is known to work with FreeBSD version 13.1 and the sway compositor.
+
+These packages are necessary to build the FLTK library and the sway compositor:
+pkg install git autoconf pkgconf xorg urwfonts gnome glew seatd sway \
+                dmenu-wayland dmenu evdev-proto
+
+The FLTK library can be built as follows using either configure or CMake :
+
+1) Using configure
+
+cd <path-to-FLTK-source-tree>
+autoconf -f
+./configure --enable-localzlib --enable-wayland
+make
+
+2) Using CMake
+
+cmake -S <path-to-source> -B <path-to-build> -DOPTION_USE_WAYLAND=1
+
+cd <path-to-build>; make

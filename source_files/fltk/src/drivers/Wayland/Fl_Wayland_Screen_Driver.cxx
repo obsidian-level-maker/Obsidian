@@ -997,7 +997,7 @@ static void registry_handle_global(void *user_data, struct wl_registry *wl_regis
     wl_proxy_set_tag((struct wl_proxy *) output->wl_output, &proxy_tag);
     wl_output_add_listener(output->wl_output, &output_listener, output);
     wl_list_insert(&(scr_driver->outputs), &output->link);
-    scr_driver->screen_count( wl_list_length(&(scr_driver->outputs)) );
+    scr_driver->screen_count_set( wl_list_length(&(scr_driver->outputs)) );
 //fprintf(stderr, "wl_output: id=%d wl_output=%p screen_count()=%d\n", id, output->wl_output, Fl::screen_count());
 
   } else if (strcmp(interface, xdg_wm_base_interface.name) == 0) {
@@ -1041,7 +1041,7 @@ static void registry_handle_global_remove(void *data, struct wl_registry *regist
         xp = xp->next;
       }
       wl_list_remove(&output->link);
-      scr_driver->screen_count( wl_list_length(&(scr_driver->outputs)) );
+      scr_driver->screen_count_set( wl_list_length(&(scr_driver->outputs)) );
       wl_output_destroy(output->wl_output);
       free(output);
       break;
@@ -1058,6 +1058,8 @@ static const struct wl_registry_listener registry_listener = {
 
 static void fd_callback(int unused, struct wl_display *display) {
   wl_display_dispatch(display);
+  static Fl_Wayland_System_Driver *sys_dr = (Fl_Wayland_System_Driver*)Fl::system_driver();
+  while (sys_dr->poll_or_select() > 0) wl_display_dispatch(display);
 }
 
 
@@ -1090,9 +1092,9 @@ void Fl_Wayland_Screen_Driver::open_display_platform() {
   if (!has_xrgb) {
     Fl::fatal("Error: no WL_SHM_FORMAT_ARGB8888 shm format\n");
   }
-  if (compositor == Fl_Wayland_Screen_Driver::unspecified) {
+  /*if (compositor == Fl_Wayland_Screen_Driver::unspecified) {
     Fl::warning("FLTK could not identify the type of the running Wayland compositor");
-  }
+  }*/
   Fl::add_fd(wl_display_get_fd(wl_display), FL_READ, (Fl_FD_Handler)fd_callback, wl_display);
   fl_create_print_window();
 }
@@ -1428,4 +1430,16 @@ int Fl_Wayland_Screen_Driver::get_mouse(int &xx, int &yy) {
   xx = xx/s;
   yy = yy/s;
   return snum;
+}
+
+
+void Fl_Wayland_Screen_Driver::set_spot(int font, int height, int x, int y, int w, int h, Fl_Window *win) {
+  Fl_Wayland_Screen_Driver::insertion_point_location(x, y, height);
+}
+
+
+void Fl_Wayland_Screen_Driver::reset_spot() {
+  Fl::compose_state = 0;
+  Fl_Wayland_Screen_Driver::next_marked_length = 0;
+  Fl_Wayland_Screen_Driver::insertion_point_location_is_valid = false;
 }

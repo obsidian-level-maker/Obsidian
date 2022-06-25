@@ -193,28 +193,18 @@ const Fl_Image* Fl_Wayland_Window_Driver::shape() {
   return shape_data_ ? shape_data_->shape_ : NULL;
 }
 
-void Fl_Wayland_Window_Driver::shape_bitmap_(Fl_Image* b) { // needs testing
-  // complement the bits of the Fl_Bitmap and control its stride too
-  int i, j, w = b->w(), h = b->h();
-  int bytesperrow = cairo_format_stride_for_width(CAIRO_FORMAT_A1, w);
-  uchar* bits = new uchar[h * bytesperrow];
-  const uchar *q = ((Fl_Bitmap*)b)->array;
-  for (i = 0; i < h; i++) {
-    uchar *p = bits + i * bytesperrow;
-    for (j = 0; j < w; j++) {
-      *p++ = ~*q++;
-    }
-  }
-  cairo_surface_t *mask_surf = cairo_image_surface_create_for_data(bits, CAIRO_FORMAT_A1, w, h, bytesperrow);
-  shape_data_->mask_pattern_ = cairo_pattern_create_for_surface(mask_surf);
-  cairo_surface_destroy(mask_surf);
+
+void Fl_Wayland_Window_Driver::shape_bitmap_(Fl_Image* b) {
+  shape_data_->mask_pattern_ = Fl_Cairo_Graphics_Driver::bitmap_to_pattern(
+                                (Fl_Bitmap*)b, true, NULL);
   shape_data_->shape_ = b;
-  shape_data_->lw_ = w;
-  shape_data_->lh_ = h;
+  shape_data_->lw_ = b->data_w();
+  shape_data_->lh_ = b->data_h();
 }
 
+
 void Fl_Wayland_Window_Driver::shape_alpha_(Fl_Image* img, int offset) {
-  int i, j, d = img->d(), w = img->w(), h = img->h();
+  int i, j, d = img->d(), w = img->data_w(), h = img->data_h();
   int bytesperrow = cairo_format_stride_for_width(CAIRO_FORMAT_A1, w);
   unsigned u;
   uchar byte, onebit;
@@ -514,8 +504,7 @@ void Fl_Wayland_Window_Driver::hide() {
 void Fl_Wayland_Window_Driver::map() {
   Fl_X* ip = Fl_X::i(pWindow);
   struct wld_window *wl_win = ip->xid;
-  if (wl_win->kind == DECORATED) libdecor_frame_map(wl_win->frame);//needs checking
-  else if (pWindow->parent() && !wl_win->subsurface) {
+  if (wl_win->kind == SUBWINDOW && !wl_win->subsurface) {
     struct wld_window *parent = fl_xid(pWindow->window());
     if (parent) {
       Fl_Wayland_Screen_Driver *scr_driver = (Fl_Wayland_Screen_Driver*)Fl::screen_driver();
@@ -537,8 +526,7 @@ void Fl_Wayland_Window_Driver::map() {
 void Fl_Wayland_Window_Driver::unmap() {
   Fl_X* ip = Fl_X::i(pWindow);
   struct wld_window *wl_win = ip->xid;
-  if (wl_win->kind == DECORATED && wl_win->frame) { libdecor_frame_close(wl_win->frame);//needs checking
-  } else if (wl_win->kind == SUBWINDOW && wl_win->wl_surface) {
+  if (wl_win->kind == SUBWINDOW && wl_win->wl_surface) {
     wl_surface_attach(wl_win->wl_surface, NULL, 0, 0);
     Fl_Wayland_Graphics_Driver::buffer_release(wl_win);
     wl_subsurface_destroy(wl_win->subsurface);

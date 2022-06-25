@@ -104,8 +104,7 @@ void Fl_Wayland_Graphics_Driver::cairo_init(struct fl_wld_buffer *buffer, int wi
     return;
   }
   cairo_surface_destroy(surf);
-  cairo_set_source_rgba(buffer->cairo_, 1.0, 1.0, 1.0, 0.);
-  cairo_paint(buffer->cairo_);
+  memset(buffer->draw_buffer, 0, buffer->data_size); // useful for transparent windows
   cairo_set_source_rgba(buffer->cairo_, .0, .0, .0, 1.0); // Black default color
   cairo_save(buffer->cairo_);
 }
@@ -123,7 +122,7 @@ void Fl_Wayland_Graphics_Driver::buffer_release(struct wld_window *window)
   }
 }
 
-// these 2 refer to the same memory layout for pixel data
+// this refers to the same memory layout for pixel data as does CAIRO_FORMAT_ARGB32
 const uint32_t Fl_Wayland_Graphics_Driver::wld_format = WL_SHM_FORMAT_ARGB8888;
 
 
@@ -142,18 +141,6 @@ void Fl_Wayland_Graphics_Driver::set_color(Fl_Color i, unsigned c) {
   if (fl_cmap[i] != c) {
     fl_cmap[i] = c;
   }
-}
-
-
-void Fl_Wayland_Graphics_Driver::set_spot(int font, int height, int x, int y, int w, int h, Fl_Window *win) {
-  Fl_Wayland_Screen_Driver::insertion_point_location(x, y, height);
-}
-
-
-void Fl_Wayland_Graphics_Driver::reset_spot() {
-  Fl::compose_state = 0;
-  Fl_Wayland_Screen_Driver::next_marked_length = 0;
-  Fl_Wayland_Screen_Driver::insertion_point_location_is_valid = false;
 }
 
 
