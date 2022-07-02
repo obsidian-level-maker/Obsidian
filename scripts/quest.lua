@@ -2391,7 +2391,7 @@ function Quest_nice_items()
     if OB_CONFIG.items == "heaps" and rand.odds(80) then quota = 2 end
 
     if PARAM.bool_scale_items_with_map_size and PARAM.bool_scale_items_with_map_size == 1 then
-      quota = math.round(quota * (LEVEL.map_W / 75))
+      quota = math.round(quota * (1 + (LEVEL.map_W / 75)))
     end
 
     if quota >= 1 then
@@ -2476,7 +2476,7 @@ function Quest_nice_items()
     quota = rand.int(quota)
 
     if PARAM.bool_scale_items_with_map_size and PARAM.bool_scale_items_with_map_size == 1 then
-      quota = math.round(quota * (LEVEL.map_W / 75))
+      quota = math.round(quota * (1 + (LEVEL.map_W / 75)))
     end
 
     gui.printf("Other Item quota : %1.2f\n", quota)

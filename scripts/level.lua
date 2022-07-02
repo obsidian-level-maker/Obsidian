@@ -1250,7 +1250,7 @@ function Episode_plan_weapons()
     end
 
     if PARAM.bool_scale_items_with_map_size and PARAM.bool_scale_items_with_map_size == 1 then
-      quota = math.min(1, math.round(quota * (LEV.map_W / 75)))
+      quota = math.min(1, math.round(quota * (1 + (LEVEL.map_W / 75))))
     end    
 
     LEV.weapon_quota = quota

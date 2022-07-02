@@ -477,8 +477,8 @@ function Item_simulate_battle(R)
     end
 
     if PARAM.bool_scale_items_with_map_size and PARAM.bool_scale_items_with_map_size == 1 then
-      heal_mul = heal_mul * (LEVEL.map_W / 75)
-      ammo_mul = ammo_mul * (LEVEL.map_W / 75)
+      heal_mul = heal_mul * (1 + (LEVEL.map_W / 75))
+      ammo_mul = ammo_mul * (1 + (LEVEL.map_W / 75))
     end
 
     for name,qty in pairs(stats) do
@@ -953,7 +953,7 @@ function Item_pickups_for_class(CL)
     end
 
     if PARAM.bool_scale_items_with_map_size and PARAM.bool_scale_items_with_map_size == 1 then
-      bonus = bonus * (LEVEL.map_W / 75)
+      bonus = bonus * (1 + (LEVEL.map_W / 75))
     end
 
     return bonus
