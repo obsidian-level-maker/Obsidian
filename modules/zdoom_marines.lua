@@ -217,6 +217,8 @@ end
 
 OB_MODULES["zdoom_marines"] =
 {
+  name = "zdoom_marines",
+
   label = _("ZDoom Marines"),
 
   game = "doomish",
@@ -284,6 +286,8 @@ end
 
 OB_MODULES["zdoom_marine_control"] =
 {
+  name = "zdoom_marine_control",
+
   label = _("ZDoom Marines : Control"),
 
   game = "doomish",
