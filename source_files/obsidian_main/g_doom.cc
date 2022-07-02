@@ -806,11 +806,8 @@ void Send_Prog_Step(const char *step_name) {
 static bool BuildNodes(std::filesystem::path filename) {
     LogPrintf("\n");
 
-    if (StringCaseCmp(current_engine, "zdoom") == 0) {
-        if (!build_nodes) {
-            LogPrintf("Skipping nodes per user selection...\n");
-            return true;
-        }
+    if (!build_nodes) {
+        return true;
     }
 
     // Replace this with a Lua call at some point, maybe ob_get_param - Dasho
