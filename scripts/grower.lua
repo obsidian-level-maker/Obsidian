@@ -3160,6 +3160,7 @@ end
 
     best = { score=-1, areas={} }
 
+    gui.debugf("CURRENT ROOM: " .. table.tostr(R, 2))
     gui.debugf("CURRENT RULE: " .. table.tostr(cur_rule))
 
     local T
@@ -3890,7 +3891,7 @@ end
 
 
 function Grower_sprout_room(R)
-  if R.is_dead or R.is_street then return end
+  if R.is_dead then return end
 
   if rand.odds(LEVEL.squareishness) and not R.is_cave and not R.is_park
   and not R.is_hallway and not R.is_street then
@@ -3906,6 +3907,10 @@ function Grower_sprout_room(R)
   -- if hallway did not sprout, try again
   if R.is_hallway and R:prelim_conn_num() < 2 then
     Grower_clean_up_links(R)
+    Grower_grammatical_room(R, "sprout")
+  end
+
+  if R.is_street and R:prelim_conn_num() < rand.irange(2,5) then
     Grower_grammatical_room(R, "sprout")
   end
 
