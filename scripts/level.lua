@@ -2755,10 +2755,17 @@ function Level_make_all()
 
   ob_invoke_hook("get_levels_after_themes")
 
+  for k,v in pairs(GAME.PICKUPS) do
+    if not v.name then v.name = k end
+  end
+
+  for k,v in pairs(GAME.NICE_ITEMS) do
+    if not v.name then v.name = k end
+  end
+
   Episode_plan_game()
 
   Title_generate()
-
 
   for _,EPI in pairs(GAME.episodes) do
     EPISODE = EPI
