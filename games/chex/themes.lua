@@ -148,7 +148,7 @@ CHEX3.THEMES =
 
     fences =
     {
-      LITE4_RAIL = 30,
+      LITE4 = 30,
     },
 
     cage_mats =
@@ -223,7 +223,7 @@ CHEX3.THEMES =
 
     scenic_fences =
     {
-      LITE4_RAIL = 30,
+      LITE4 = 30,
     },
 
     sink_style =
@@ -372,7 +372,7 @@ CHEX3.THEMES =
 
     scenic_fences =
     {
-      METAL_FENCE = 80
+      DOORSTOP = 80
     },
 
     sink_style =
@@ -779,12 +779,12 @@ CHEX3.ROOM_THEMES =
 	  CJFCRA02 = 50,
 	  CJFLOD05 = 50,
 	  ENDFLAT2 = 50,
-	  GREEN_TILE = 50
+	  SLUGBRIK = 50
     },
 
     walls =
     {
-      GREEN_BRICK = 50,
+      SEWER1 = 50,
       GRAY2  = 15,
     }
 

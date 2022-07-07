@@ -1,9 +1,9 @@
 CHEX3.LIQUIDS =
 {
-  water  = { mat="WATER", light_add=16, special=0 },
-  slime0 = { mat="SLIME0", light_add=16, special=16, damage=20 },
-  slime1 = { mat="SLIME1", light_add=16, special=16, damage=20 },
-  slime2   = { mat="SLIME2", light_add=24, special=16, damage=20 }    
+  water  = { mat="FWATER1", light_add=16, special=0 },
+  slime0 = { mat="BLOOD1", light_add=16, special=16, damage=20 },
+  slime1 = { mat="NUKAGE1", light_add=16, special=16, damage=20 },
+  slime2   = { mat="LAVA1", light_add=24, special=16, damage=20 }    
 }
 
 CHEX3.MATERIALS =
@@ -62,7 +62,9 @@ CHEX3.MATERIALS =
   -- general purpose --
 
   COMPBLUE  = { t="COMPBLUE", f="STEP1" },
+  STEP1  = { t="COMPBLUE", f="STEP1" },
   SKSNAKE2   = { t="SKSNAKE2", f="CEIL3_1" },
+  CEIL3_1   = { t="SKSNAKE2", f="CEIL3_1" },
   ASHWALL   = { t="ASHWALL",  f="FLOOR0_3" },
   SW2SATYR  = { t="SW2SATYR", f="FLAT5_6" },
   FLOOR0_1   = { f="FLOOR0_1", t="TEKWALL5" },
