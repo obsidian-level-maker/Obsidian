@@ -534,27 +534,6 @@ function Monster_zone_palettes()
     local pal   = generate_palette(LEVEL.global_pal)
     local tough = palette_toughness(pal)
 
-    -- Check for monsters that we don't want spawning outdoors/with open sky - Dasho
-
-    local has_sky = false
-
-    for _,zone_room in pairs(LEVEL.zones[i].rooms) do
-      if zone_room.is_outdoor == true then
-        has_sky = true
-        goto skyfound
-      end
-    end
-
-    ::skyfound::
-
-    if has_sky == true then 
-      for monster, _ in pairs(pal) do
-        if GAME.MONSTERS[monster].indoor_only and GAME.MONSTERS[monster].indoor_only == true then
-          pal[monster] = 0
-        end
-      end
-    end   
-
     zone_pals[i] = { pal=pal, tough=tough }
   end
 
@@ -1618,6 +1597,28 @@ function Monster_fill_room(R)
     end
 
     ::liquidstuffdone::
+
+    -- if room is outdoors, make sure it's not an indoor_only monster that's placed
+    if R.is_outdoor == true then
+      if info.indoor_only then
+        for _,v in pairs(R.monster_list) do
+          if v.info == info then
+            local outdoor_mon_list = {}
+            for k,_ in pairs(LEVEL.global_pal) do
+              if not GAME.MONSTERS[k].indoor_only and (not LEVEL.theme.monster_prefs or not LEVEL.theme.monster_prefs[k] or LEVEL.theme.monster_prefs[k] > 0) then table.insert(outdoor_mon_list, k) end
+            end
+            if not table.empty(outdoor_mon_list) then
+              mon = rand.pick(outdoor_mon_list)
+              info = assert(GAME.MONSTERS[mon])
+              v.info = info
+            end
+            goto indoorstuffdone
+          end
+        end
+      end
+    end
+
+    ::indoorstuffdone::
 
     -- monsters in traps are never deaf (esp. monster depots)
     if mode then

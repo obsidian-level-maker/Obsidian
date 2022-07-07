@@ -125,14 +125,10 @@ function STRIFE.get_levels()
       game_along = game_along
     }
 
-    if OB_CONFIG.engine ~= "zdoom" then
-      if map == 1 then
-        LEV.name = "MAP02"
-      elseif map == 2 then
-        LEV.name = "MAP01"
-      else
-        LEV.name  = string.format("MAP%02d", map)
-      end
+    if map == 1 then
+      LEV.name = "MAP02"
+    elseif map == 2 then
+      LEV.name = "MAP01"
     else
       LEV.name  = string.format("MAP%02d", map)
     end
