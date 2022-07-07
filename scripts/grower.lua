@@ -3910,7 +3910,7 @@ function Grower_sprout_room(R)
     Grower_grammatical_room(R, "sprout")
   end
 
-  if R.is_street and R:prelim_conn_num() < rand.irange(2,5) then
+  if R.is_street and R:prelim_conn_num() < math.clamp(1, int(R.svolume/64), 10) then
     Grower_grammatical_room(R, "sprout")
   end
 
