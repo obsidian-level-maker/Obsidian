@@ -619,6 +619,8 @@ ULTDOOM.THEMES =
     },
 
     ceil_light_prob = 60,
+
+    streets_friendly = false
   },
 
 

@@ -87,7 +87,9 @@ CHEX3.THEMES =
     street_sinks =
     {
       floor_default_streets = 1
-    }
+    },
+
+    streets_friendly = false
   },
 
   -- Themes by Cubebert --
@@ -382,10 +384,12 @@ CHEX3.THEMES =
 
     post_mat  = "FLOOR0_6",
 	
-	skyboxes =
+	  skyboxes =
     {
       Skybox_chex3_spaceport = 50,
     },
+
+    streets_friendly = true
   
   },
   

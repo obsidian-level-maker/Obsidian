@@ -106,7 +106,9 @@ STRIFE.THEMES =
     street_sinks =
     {
       floor_default_streets = 1
-    }
+    },
+
+    streets_friendly = false
   },
 
 
@@ -235,6 +237,8 @@ STRIFE.THEMES =
     steps_mat = "F_BRKTOP",
 
     post_mat  = "BRKGRY01",
+
+    streets_friendly = true
 
   },
 

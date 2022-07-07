@@ -315,11 +315,15 @@ OB_MODULES["misc"] =
     },
 
     {
-      name = "bool_urban_streets_mode",
-      label=_("Urban Only Streets"),
+      name = "bool_appropriate_street_themes",
+      label=_("Streets-Friendly Themes Only"),
       valuator = "button",
       default = 1,
-      tooltip="Changes streets mode percentage to affect all themes or only urban.",
+      tooltip="Only allow Streets Mode slider to affect levels with the following themes:\n\n" ..
+      "Chex Quest 3 - Chextropolis\n" ..
+      "Doom 2 - Urban\n" ..
+      "Heretic - City\n" ..
+      "Strife - Town",
       priority = 95,
       gap = 1,
     },
