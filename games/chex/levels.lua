@@ -51,7 +51,7 @@ CHEX3.EPISODES =
   {
     ep_index = 3,
 
-    theme = "spaceport",
+    theme = "villa",
     sky_patch = "CJSKY3A",
     boss = "Snotfolus",
     sky_light = 0.75,
