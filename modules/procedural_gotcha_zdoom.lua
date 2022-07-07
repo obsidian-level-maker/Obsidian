@@ -1704,10 +1704,22 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       "but immensely-sized exit room with gratitiously intensified monster strength. " ..
       "Essentially an arena - prepare for a tough, tough fight!\n\nNotes:\n\n" ..
       "5% of levels may create at least 1 or 2 gotcha maps in a standard full game.",
-      priority = 105,
+      priority = 106,
       randomize_group="monsters",
+      gap = 1
     },
 
+    {
+      name = "bool_gotcha_boss_fight",
+      label=_("Force Big-Boss Fight"),
+      valuator = "button",
+      default = 1,
+      tooltip = "Attempts to guarantee a fight against a boss-type (nasty tier) monster " ..
+      "in the procedural gotcha.",
+      priority = 105,
+      randomize_group="monsters",
+      gap = 1
+    },
 
     {
       name="float_gotcha_qty",
@@ -1766,17 +1778,6 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       default = 1,
       tooltip = "Toggles Boss Monster generation with special traits for Gotchas.",
       priority = 101,
-    },
-
-    {
-      name = "bool_gotcha_boss_fight",
-      label=_("Force Big-Boss Fight"),
-      valuator = "button",
-      default = 1,
-      tooltip = "EXPERIMENTAL: Attempts to guarantee a fight against a boss-type (nasty tier) monster " ..
-      "in the procedural gotcha.",
-      priority = 100,
-      randomize_group="monsters",
     },
 
     {
