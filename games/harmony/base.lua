@@ -13,6 +13,10 @@ gui.import("resources")
 gui.import("vanilla_mats")
 ----------------------------------------------------------------
 
+function HARMONY.all_done()
+	gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
+end
+
 OB_GAMES["harmony"] =
 {
 	label = _("Harmony"),

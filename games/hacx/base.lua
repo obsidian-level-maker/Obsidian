@@ -39,6 +39,7 @@ function HACX.all_done()
 	  local wad_file = "games/hacx/data/HAC_EXIT.wad"
 	  gui.wad_merge_sections(wad_file)
 	end
+	gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
 end
 
 OB_GAMES["hacx"] =

@@ -41,6 +41,7 @@ function HERETIC.all_done()
 	  local wad_file = "games/heretic/data/HER_EXIT.wad"
 	  gui.wad_merge_sections(wad_file)
   end
+  gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDTEXT")
 end
 
 OB_GAMES["heretic"] =

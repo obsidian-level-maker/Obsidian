@@ -20,6 +20,7 @@ Armaetus
   - Textures
   - Extensive name generator additions
   - IWAD Mode
+  - ENDOOM/ENDTEXT/ENDSTRF screen
 
 Beed28
   - Prefabs
