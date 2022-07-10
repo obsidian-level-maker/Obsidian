@@ -196,6 +196,8 @@ function DOOM.all_done()
     gui.wad_merge_sections(dir .. "short_bars.wad")
   end
 
+  gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
+
 -- Honestly, this really should be an option
   if OB_CONFIG.length == "game" then
     gui.wad_merge_sections(dir .. "freedoom_face.wad")

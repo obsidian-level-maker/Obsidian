@@ -37,10 +37,6 @@ gui.import("vanilla_mats")
 
 ------------------------------------------------------------------------
 
-function DOOM.all_done()
-  gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
-end
-
 OB_GAMES["doom2"] =
 {
   label = _("Doom 2"),
