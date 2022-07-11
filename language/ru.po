@@ -1,5 +1,6 @@
-# Russian Language Translation for Obsidian by hytalego.
-# If helping with Russian translation, please send content to hytalego in a separate file instead of attempting to merge against this one
+# Russian Language Translation for Obsidian by hytalego and Morthimer McMare.
+# [McM]: due to hytalego's total inactivity (also after attempts to contact him), I'll take responsibility to change the translation leader.
+#   PREVIOUS TEXT: "If helping with Russian translation, please send content to hytalego in a separate file instead of attempting to merge against this one".
 # This file is put in the public domain.
 #
 msgid ""
@@ -7,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Obsidian Level Maker\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-09 23:41+1000\n"
-"PO-Revision-Date: 2021-12-05 04:40+0430\n"
-"Last-Translator:  hytalego\n"
+"PO-Revision-Date: 2022-07-11 20:14+0300\n"
+"Last-Translator:  Morthimer McMare\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
 "MIME-Version: 1.0\n"
@@ -23,35 +24,35 @@ msgstr ""
 
 #: engines/boom.lua:144
 msgid "BOOM Compat"
-msgstr ""
+msgstr "Совместимый с BOOM"
 
 #: engines/boom.lua:179
 msgid "PrBoom Compat"
-msgstr ""
+msgstr "Совместимый с PrBoom"
 
 #: engines/boom.lua:219
 msgid "Advanced"
-msgstr ""
+msgstr "Расширенный(ые?)"
 
 #: engines/edge.lua:139
 msgid "EDGE (Experimental)"
-msgstr ""
+msgstr "EDGE (экспериментальный)"
 
 #: engines/eternity.lua:25
 msgid "Eternity (Experimental)"
-msgstr ""
+msgstr "Eternity (экспериментальный)"
 
 #: engines/vanilla.lua:22
 msgid "Vanilla DOOM"
-msgstr ""
+msgstr "Ванильный Doom"
 
 #: engines/zdoom.lua:62
 msgid "ZDoom Family"
-msgstr ""
+msgstr "Семейство ZDoom-портов"
 
 #: games/amulets/base.lua:39
 msgid "Amulets and Armor (Exp)"
-msgstr ""
+msgstr "Амулеты и броня (эксп.)"
 
 #: games/chex/base.lua:46
 msgid "Chex Quest 3"
@@ -59,67 +60,67 @@ msgstr ""
 
 #: games/chex/themes.lua:1095
 msgid "Bazoik"
-msgstr ""
+msgstr "Базоик"
 
 #: games/chex/themes.lua:1103
 msgid "Spaceport"
-msgstr ""
+msgstr "Космопорт"
 
 #: games/chex/themes.lua:1111
 msgid "Sewer"
-msgstr ""
+msgstr "Канализация"
 
 #: games/doom/base.lua:42
 msgid "Doom 2"
-msgstr ""
+msgstr "Doom 2"
 
 #: games/doom/themes.lua:4978
 msgid "Tech"
-msgstr "Технический"
+msgstr "Техническая"
 
 #: games/doom/themes.lua:4988
 msgid "Urban"
-msgstr "Городской"
+msgstr "Городская"
 
 #: games/doom/themes.lua:4998
 msgid "Hell"
-msgstr "Адский"
+msgstr "Адская"
 
 #: games/doom/x_doom1.lua:4127
 msgid "Doom 1"
-msgstr ""
+msgstr "Doom 1"
 
 #: games/doom/x_doom1.lua:4153
 msgid "Ultimate Doom"
-msgstr ""
+msgstr "Ultimate Doom"
 
 #: games/doom/x_doom1.lua:4169
 msgid "Deimos"
-msgstr ""
+msgstr "Деймос"
 
 #: games/doom/x_doom1.lua:4179
 msgid "Thy Flesh"
-msgstr ""
+msgstr "По четвёртому эпизоду"
 
 #: games/doom/x_plutonia.lua:1044
 msgid "Plutonia"
-msgstr ""
+msgstr "The Plutonia Experiment"
 
 #: games/doom/x_tnt.lua:466
 msgid "TNT Evilution"
-msgstr ""
+msgstr "TNT: Evilution"
 
 #: games/doom/x_tnt.lua:485
 msgid "Egypt"
-msgstr ""
+msgstr "Египетская"
 
 #: games/hacx/base.lua:46
 msgid "HacX 1.2"
-msgstr ""
+msgstr "HacX 1.2"
 
 #: games/harmony/base.lua:18
 msgid "Harmony"
-msgstr ""
+msgstr "Harmony"
 
 #: games/harmony/themes.lua:415
 msgid "NDF Base"
@@ -131,91 +132,91 @@ msgstr ""
 
 #: games/heretic/themes.lua:3285
 msgid "City"
-msgstr ""
+msgstr "Город проклятых (эп. 1)"
 
 #: games/heretic/themes.lua:3293
 msgid "Maw"
-msgstr ""
+msgstr "Утроба Ада (эп. 2)"
 
 #: games/heretic/themes.lua:3301
 msgid "Dome"
-msgstr ""
+msgstr "Купол Д'Спарила (эп. 3)"
 
 #: games/heretic/themes.lua:3309
 msgid "Ossuary"
-msgstr ""
+msgstr "Склеп (эп. 4)"
 
 #: games/heretic/themes.lua:3317
 msgid "Demense"
-msgstr ""
+msgstr "Безумие (эп. 5)"
 
 #: games/hexen/base.lua:43
 msgid "Hexen (Exp)"
-msgstr ""
+msgstr "Hexen (экспериментальный)"
 
 #: games/hexen/themes.lua:2249
 msgid "Dungeon"
-msgstr ""
+msgstr "Темница"
 
 #: games/hexen/themes.lua:2257
 msgid "Fire"
-msgstr ""
+msgstr "Огненная"
 
 #: games/hexen/themes.lua:2265
 msgid "Ice"
-msgstr ""
+msgstr "Ледяная"
 
 #: games/hexen/themes.lua:2273
 msgid "Steel"
-msgstr ""
+msgstr "Стальная"
 
 #: games/hexen/themes.lua:2281
 msgid "Desert"
-msgstr ""
+msgstr "Пустынная"
 
 #: games/hexen/themes.lua:2289
 msgid "Cave"
-msgstr ""
+msgstr "Пещерная"
 
 #: games/hexen/themes.lua:2297
 msgid "Swamp"
-msgstr ""
+msgstr "Болотная"
 
 #: games/hexen/themes.lua:2305
 msgid "Forest"
-msgstr ""
+msgstr "Лесная"
 
 #: games/hexen/themes.lua:2313
 msgid "Village"
-msgstr ""
+msgstr "Деревенская"
 
 #: games/nukem/base.lua:39
 msgid "Duke Nukem 3D (Exp)"
-msgstr ""
+msgstr "Duke Nukem 3D (эксп.)"
 
 #: games/quake/base.lua:42
 msgid "Quake"
-msgstr ""
+msgstr "Quake"
 
 #: games/quake/themes.lua:553
 msgid "Tech"
-msgstr ""
+msgstr "Техническая"
 
 #: games/quake/themes.lua:562
 msgid "Castle"
-msgstr ""
+msgstr "Замковая"
 
 #: games/strife/base.lua:50
 msgid "Strife (Exp)"
-msgstr ""
+msgstr "Strife (экспериментальный)"
 
 #: games/strife/themes.lua:424
 msgid "Town"
-msgstr ""
+msgstr "Городская"
 
 #: modules/chex3/ctl_chex.lua:58
 msgid "Chex Quest 3 Monster Control"
-msgstr ""
+msgstr "Настройка монстров Chex Quest 3"
 
 #: modules/chex3/ctl_chex.lua:72
 msgid "Commonus"
@@ -255,19 +256,19 @@ msgstr ""
 
 #: modules/chex3/ctl_chex.lua:252
 msgid "Normal"
-msgstr ""
+msgstr "Нормальная"
 
 #: modules/chex3/ctl_chex.lua:253
 msgid "Vanilla"
-msgstr ""
+msgstr "Как в оригинале"
 
 #: modules/chex3/ctl_chex.lua:254
 msgid "NONE"
-msgstr ""
+msgstr "(НЕТ)"
 
 #: modules/chex3/ctl_chex.lua:298
 msgid "Chex Quest 3 Weapon Control"
-msgstr ""
+msgstr "Настройка оружия Chex Quest 3"
 
 #: modules/chex3/ctl_chex.lua:313
 msgid "Super Bootspork"
@@ -295,163 +296,163 @@ msgstr ""
 
 #: modules/chex3/ctl_chex.lua:428
 msgid "Weapon Preferences"
-msgstr ""
+msgstr "Логика размещения оружия"
 
 #: modules/chex3/miscellaneous.lua:25
 msgid "FLAT"
-msgstr ""
+msgstr "ПЛОСКИЙ (стр. 320)"
 
 #: modules/chex3/miscellaneous.lua:26
 msgid "Lower"
-msgstr ""
+msgstr "Низкий"
 
 #: modules/chex3/miscellaneous.lua:27
 msgid "Normal"
-msgstr ""
+msgstr "Нормальный"
 
 #: modules/chex3/miscellaneous.lua:28
 msgid "Higher"
-msgstr ""
+msgstr "Высокий"
 
 #: modules/chex3/miscellaneous.lua:33
 msgid "Pitch-black"
-msgstr ""
+msgstr "Непроглядная мгла"
 
 #: modules/chex3/miscellaneous.lua:34
 msgid "Gloomy"
-msgstr ""
+msgstr "Крайне темно"
 
 #: modules/chex3/miscellaneous.lua:35
 msgid "Darker"
-msgstr ""
+msgstr "Темнее"
 
 #: modules/chex3/miscellaneous.lua:36
 msgid "NONE"
-msgstr ""
+msgstr "(НЕТ)"
 
 #: modules/chex3/miscellaneous.lua:37
 msgid "Brighter"
-msgstr ""
+msgstr "Светлее"
 
 #: modules/chex3/miscellaneous.lua:38
 msgid "Vivid"
-msgstr ""
+msgstr "Светло"
 
 #: modules/chex3/miscellaneous.lua:39
 msgid "Radiant"
-msgstr ""
+msgstr "Ярчайше"
 
 #: modules/chex3/miscellaneous.lua:44
 msgid "Per Step (Very Slow)"
-msgstr ""
+msgstr "По шагам (крайне медленно)"
 
 #: modules/chex3/miscellaneous.lua:45
 msgid "Per Room (Slightly Slow)"
-msgstr ""
+msgstr "По комнатам (чуть медленнее)"
 
 #: modules/chex3/miscellaneous.lua:46
 msgid "No Live Minimap"
-msgstr ""
+msgstr "Только контуры (быстро)"
 
 #: modules/chex3/miscellaneous.lua:51
 msgid "Per Theme"
-msgstr ""
+msgstr "По темам"
 
 #: modules/chex3/miscellaneous.lua:52
 msgid "Curved"
-msgstr ""
+msgstr "Искривлённый"
 
 #: modules/chex3/miscellaneous.lua:53
 msgid "Sharp"
-msgstr ""
+msgstr "Резкий"
 
 #: modules/chex3/miscellaneous.lua:54
 msgid "Random"
-msgstr ""
+msgstr "Случайно"
 
 #: modules/chex3/miscellaneous.lua:59
 msgid "Mostly Short"
-msgstr ""
+msgstr "Довольно низкие"
 
 #: modules/chex3/miscellaneous.lua:60
 msgid "Slightly Short"
-msgstr ""
+msgstr "Низковатые"
 
 #: modules/chex3/miscellaneous.lua:61
 msgid "Normal"
-msgstr ""
+msgstr "Обычно"
 
 #: modules/chex3/miscellaneous.lua:62
 msgid "Slightly Tall"
-msgstr ""
+msgstr "Высоковатые"
 
 #: modules/chex3/miscellaneous.lua:63
 msgid "Mostly Tall"
-msgstr ""
+msgstr "Довольно высокие"
 
 #: modules/chex3/miscellaneous.lua:64
 msgid "Mix It Up"
-msgstr ""
+msgstr "Всегда по-разному"
 
 #: modules/chex3/miscellaneous.lua:69
 msgid "Not on Vistas"
-msgstr ""
+msgstr "Не на внеигровые зоны"
 
 #: modules/chex3/miscellaneous.lua:70
 msgid "Never"
-msgstr ""
+msgstr "Не создавать"
 
 #: modules/chex3/miscellaneous.lua:71
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 #: modules/chex3/miscellaneous.lua:76
 msgid "Never"
-msgstr ""
+msgstr "Не создавать"
 
 #: modules/chex3/miscellaneous.lua:77
 msgid "Occasional"
-msgstr ""
+msgstr "Периодически"
 
 #: modules/chex3/miscellaneous.lua:78
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 #: modules/chex3/miscellaneous.lua:83
 msgid "Yes"
-msgstr ""
+msgstr "Да"
 
 #: modules/chex3/miscellaneous.lua:84
 msgid "No Damaging"
-msgstr ""
+msgstr "Не наносящие урон"
 
 #: modules/chex3/miscellaneous.lua:85
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #: modules/chex3/miscellaneous.lua:90
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 #: modules/chex3/miscellaneous.lua:91
 msgid "75% of All Levels"
-msgstr ""
+msgstr "75% от всех уровней"
 
 #: modules/chex3/miscellaneous.lua:92
 msgid "50% of All Levels"
-msgstr ""
+msgstr "50% от всех уровней"
 
 #: modules/chex3/miscellaneous.lua:93
 msgid "25% of All Levels"
-msgstr ""
+msgstr "25% от всех уровней"
 
 #: modules/chex3/miscellaneous.lua:94
 msgid "12% of All Levels"
-msgstr ""
+msgstr "12% от всех уровней"
 
 #: modules/chex3/miscellaneous.lua:95
 msgid "DEFAULT"
-msgstr ""
+msgstr "ПО УМОЛЧАНИЮ"
 
 #: modules/chex3/miscellaneous.lua:100
 msgid "x0.25"
@@ -495,11 +496,11 @@ msgstr ""
 
 #: modules/chex3/miscellaneous.lua:110
 msgid "Vanilla"
-msgstr ""
+msgstr "Как в оригинале"
 
 #: modules/chex3/miscellaneous.lua:111
 msgid "Mix It Up"
-msgstr ""
+msgstr "Всегда по-разному"
 
 #: modules/chex3/miscellaneous.lua:116
 msgid "x0.15"
@@ -531,779 +532,779 @@ msgstr ""
 
 #: modules/chex3/miscellaneous.lua:123
 msgid "Vanilla"
-msgstr ""
+msgstr "Как в оригинале"
 
 #: modules/chex3/miscellaneous.lua:124
 msgid "Mix It Up"
-msgstr ""
+msgstr "Всегда по-разному"
 
 #: modules/chex3/miscellaneous.lua:129
 msgid "Vanilla"
-msgstr ""
+msgstr "Как в оригинале"
 
 #: modules/chex3/miscellaneous.lua:130
 msgid "Strict"
-msgstr ""
+msgstr "Строго"
 
 #: modules/chex3/miscellaneous.lua:131
 msgid "Mix It Up"
-msgstr ""
+msgstr "Всегда по-разному"
 
 #: modules/chex3/miscellaneous.lua:191
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Разное"
 
 #: modules/chex3/miscellaneous.lua:208
 msgid "Zorcher Starts"
-msgstr ""
+msgstr "Считать, что в начале нет оружия"
 
 #: modules/chex3/miscellaneous.lua:211
 msgid "Ensure every map can be completed from a zorcher start (ignore weapons obtained from earlier maps)"
-msgstr ""
+msgstr "Создавать карты так, чтобы их можно было пройти, имея лишь начальный набор амуниции. Иными словами, не принимать во внимание оружие, полученное с предыдущих уровней."
 
 #: modules/chex3/miscellaneous.lua:215
 msgid "Alt-start Rooms"
-msgstr ""
+msgstr "Разбросать кооп. старты"
 
 #: modules/chex3/miscellaneous.lua:218
 msgid "For Co-operative games, sometimes have players start in different rooms"
-msgstr ""
+msgstr "Иногда создавать старты в разных комнатах для кооперативных игр."
 
 #: modules/chex3/miscellaneous.lua:223
 msgid "Foreshadowing Exit"
-msgstr ""
+msgstr "Сквозная тема выхода"
 
 #: modules/chex3/miscellaneous.lua:231
 msgid "Room Size Multiplier"
-msgstr ""
+msgstr "Множитель размера комнат"
 
 #: modules/chex3/miscellaneous.lua:239
 msgid "Area Count Multiplier"
-msgstr ""
+msgstr "Множитель количества мест"
 
 #: modules/chex3/miscellaneous.lua:248
 msgid "Size Consistency"
-msgstr ""
+msgstr "Соответствие размеров"
 
 #: modules/chex3/miscellaneous.lua:259
 msgid "Big Rooms"
-msgstr ""
+msgstr "Крупные комнаты"
 
 #: modules/chex3/miscellaneous.lua:260
 msgid "Big Outdoors"
-msgstr ""
+msgstr "Крупные пространства под небом"
 
 #: modules/chex3/miscellaneous.lua:263
 msgid "Room Heights"
-msgstr ""
+msgstr "Высоты комнат"
 
 #: modules/chex3/miscellaneous.lua:273
 msgid "Parks"
-msgstr ""
+msgstr "Парки"
 
 #: modules/chex3/miscellaneous.lua:276
 msgid "Natural Cliffs"
-msgstr ""
+msgstr "Природные утёсы"
 
 #: modules/chex3/miscellaneous.lua:277
 msgid "Percentage of parks that use completely naturalistic walls."
-msgstr ""
+msgstr "Процент парков, использующий полностью природные стены."
 
 #: modules/chex3/miscellaneous.lua:282
 msgid "Park Detail"
-msgstr ""
+msgstr "Детализация парков"
 
 #: modules/chex3/miscellaneous.lua:283
 msgid "Reduces or increases the probability of park decorations such as trees on park rooms."
-msgstr ""
+msgstr "Изменяет шанс появления декораций в парках, например, таких, как деревья."
 
 #: modules/chex3/miscellaneous.lua:288
 msgid "Windows"
-msgstr ""
+msgstr "Окна"
 
 #: modules/chex3/miscellaneous.lua:291
 msgid "Passable Windows"
-msgstr ""
+msgstr "Проходимые окна"
 
 #: modules/chex3/miscellaneous.lua:299
 msgid "Passable Railings"
-msgstr ""
+msgstr "Трёхмерные перила"
 
 #: modules/chex3/miscellaneous.lua:309
 msgid "Symmetry"
-msgstr ""
+msgstr "Симметрия"
 
 #: modules/chex3/miscellaneous.lua:310
 msgid "Beams"
-msgstr ""
+msgstr "Балки"
 
 #: modules/chex3/miscellaneous.lua:313
 msgid "Fences"
-msgstr ""
+msgstr "Ворота"
 
 #: modules/chex3/miscellaneous.lua:316
 msgid "Porches\\Gazebos"
-msgstr ""
+msgstr "Террасы и беседки"
 
 #: modules/chex3/miscellaneous.lua:319
 msgid "Scenics"
-msgstr ""
+msgstr "Красивые виды вне карты"
 
 #: modules/chex3/miscellaneous.lua:324
 msgid "Sink Style"
-msgstr ""
+msgstr "Стиль акваторий"
 
 #: modules/chex3/miscellaneous.lua:335
 msgid "Liquid Sinks"
-msgstr ""
+msgstr "Акватории с жидкостью"
 
 #: modules/chex3/miscellaneous.lua:344
 msgid "Dark Outdoors"
-msgstr ""
+msgstr "Тёмные пространства под небом"
 
 #: modules/chex3/miscellaneous.lua:346
 msgid "Brightness Offset"
-msgstr ""
+msgstr "Смещение яркости"
 
 #: modules/chex3/miscellaneous.lua:353
 msgid "Minimum Brightness"
-msgstr ""
+msgstr "Минимальная яркость"
 
 #: modules/chex3/miscellaneous.lua:368
 msgid "Maximum Brightness"
-msgstr ""
+msgstr "Максимальная яркость"
 
 #: modules/chex3/miscellaneous.lua:380
 msgid "Canisters"
-msgstr ""
+msgstr "Канистры"
 
 #: modules/chex3/miscellaneous.lua:382
 msgid "Doors"
-msgstr ""
+msgstr "Двери"
 
 #: modules/chex3/miscellaneous.lua:383
 msgid "Keyed Doors"
-msgstr ""
+msgstr "Двери, запертые на ключ"
 
 #: modules/chex3/miscellaneous.lua:384
 msgid "Triple-Keyed Doors"
-msgstr ""
+msgstr "Двери, запертые на три ключа"
 
 #: modules/chex3/miscellaneous.lua:388
 msgid "Switched Doors"
-msgstr ""
+msgstr "Двери, управляемые переключателями"
 
 #: modules/chex3/miscellaneous.lua:390
 msgid "Switch Rooms"
-msgstr ""
+msgstr "Шанс локальных переключателей"
 
 #: modules/chex3/miscellaneous.lua:396
 msgid "Road Markings"
-msgstr ""
+msgstr "Дорожная разметка"
 
 #: modules/chex3/miscellaneous.lua:399
 msgid "Adds street markings to roads."
-msgstr ""
+msgstr "Добавляет дорожную разметку на улицы."
 
 #: modules/chex3/miscellaneous.lua:403
 msgid "Street Traffic"
-msgstr ""
+msgstr "Уличное движение"
 
 #: modules/chex3/miscellaneous.lua:412
 msgid "Exit Signs"
-msgstr ""
+msgstr "Таблички \"Выход\""
 
 #: modules/chex3/miscellaneous.lua:415
 msgid "Places exit signs by exiting room"
-msgstr ""
+msgstr "Добавляет информационные таблички с указанной надписью в соответственных комнатах."
 
 #: modules/chex3/miscellaneous.lua:421
 msgid "Linear Start"
-msgstr ""
+msgstr "Линейные старты"
 
 #: modules/chex3/miscellaneous.lua:432
 msgid "Dead Ends"
-msgstr ""
+msgstr "Тупики"
 
 #: modules/chex3/miscellaneous.lua:443
 msgid "Live Growth Minimap"
-msgstr ""
+msgstr "Детальность предпросмотра"
 
 #: modules/chex3/miscellaneous.lua:445
 msgid "Shows more steps Oblige performs on rooms as they are grown on the GUI minimap. May take a hit on generation speed."
-msgstr ""
+msgstr "Предпросмотр OBSIDIAN может отрисовывать больше информации по построению на каждом своём шаге. Однако эта настройка может сильно снизить общую производительность генератора карт."
 
 #: modules/ctl_doom.lua:58
 msgid "Doom Monster Control"
-msgstr ""
+msgstr "Настройка монстров Doom"
 
 #: modules/ctl_doom.lua:72
 msgid "Zombieman"
-msgstr ""
+msgstr "Zombieman/Зомби"
 
 #: modules/ctl_doom.lua:91
 msgid "Shotgun Guy"
-msgstr ""
+msgstr "Shotgun Guy/Сержант"
 
 #: modules/ctl_doom.lua:110
 msgid "Chaingunner"
-msgstr ""
+msgstr "Chaingunner/Пулемётчик"
 
 #: modules/ctl_doom.lua:129
 msgid "SS Nazi"
-msgstr ""
+msgstr "Солдат СС"
 
 #: modules/ctl_doom.lua:148
 msgid "Imp"
-msgstr ""
+msgstr "Imp/Имп/Бес"
 
 #: modules/ctl_doom.lua:167
 msgid "Lost Soul"
-msgstr ""
+msgstr "Lost Soul/Потерянная душа"
 
 #: modules/ctl_doom.lua:186
 msgid "Demon"
-msgstr ""
+msgstr "Demon/Демон"
 
 #: modules/ctl_doom.lua:205
 msgid "Spectre"
-msgstr ""
+msgstr "Spectre/Спектр"
 
 #: modules/ctl_doom.lua:224
 msgid "Pain Elemental"
-msgstr ""
+msgstr "Pain Elemental/Элементаль боли"
 
 #: modules/ctl_doom.lua:243
 msgid "Cacodemon"
-msgstr ""
+msgstr "Cacodemon/Какодемон"
 
 #: modules/ctl_doom.lua:262
 msgid "Hell Knight"
-msgstr ""
+msgstr "Hell Knight/Рыцарь Ада"
 
 #: modules/ctl_doom.lua:281
 msgid "Revenant"
-msgstr ""
+msgstr "Revenant/Ревенант"
 
 #: modules/ctl_doom.lua:300
 msgid "Mancubus"
-msgstr ""
+msgstr "Mancubus/Манкубус"
 
 #: modules/ctl_doom.lua:319
 msgid "Arachnotron"
-msgstr ""
+msgstr "Arachnotron/Арахнотрон"
 
 #: modules/ctl_doom.lua:337
 msgid "Arch-vile"
-msgstr ""
+msgstr "Arch-vile/Архимаг"
 
 #: modules/ctl_doom.lua:356
 msgid "Baron of Hell"
-msgstr ""
+msgstr "Baron of Hell/Барон Ада"
 
 #: modules/ctl_doom.lua:375
 msgid "Cyberdemon"
-msgstr ""
+msgstr "Cyberdemon/Кибердемон"
 
 #: modules/ctl_doom.lua:394
 msgid "Spiderdemon"
-msgstr ""
+msgstr "Spiderdemon/Паук-предводитель"
 
 #: modules/ctl_doom.lua:418
 msgid "Normal"
-msgstr ""
+msgstr "Обычно"
 
 #: modules/ctl_doom.lua:419
 msgid "Vanilla"
-msgstr ""
+msgstr "Как в оригинале"
 
 #: modules/ctl_doom.lua:420
 msgid "NONE"
-msgstr ""
+msgstr "(НЕТ)"
 
 #: modules/ctl_doom.lua:490
 msgid "Doom Weapon Control"
-msgstr ""
+msgstr "Настройка оружия Doom"
 
 #: modules/ctl_doom.lua:505
 msgid "Chainsaw"
-msgstr ""
+msgstr "Бензопила"
 
 #: modules/ctl_doom.lua:524
 msgid "Shotgun"
-msgstr ""
+msgstr "Дробовик"
 
 #: modules/ctl_doom.lua:543
 msgid "Super Shotgun"
-msgstr ""
+msgstr "Двустволка"
 
 #: modules/ctl_doom.lua:562
 msgid "Chaingun"
-msgstr ""
+msgstr "Пулемёт"
 
 #: modules/ctl_doom.lua:581
 msgid "Rocket Launcher"
-msgstr ""
+msgstr "Ракетница"
 
 #: modules/ctl_doom.lua:600
 msgid "Plasma Rifle"
-msgstr ""
+msgstr "Плазмоган"
 
 #: modules/ctl_doom.lua:619
 msgid "BFG 9000"
-msgstr ""
+msgstr "BFG9000"
 
 #: modules/ctl_doom.lua:639
 msgid "Weapon Preferences"
-msgstr ""
+msgstr "Логика размещения оружия"
 
 #: modules/ctl_doom.lua:688
 msgid "Doom Item Control"
-msgstr ""
+msgstr "Настройка предметов Doom"
 
 #: modules/ctl_doom.lua:702
 msgid "Health Bonus"
-msgstr ""
+msgstr "Health bonus/Бонус здоровья"
 
 #: modules/ctl_doom.lua:722
 msgid "Stimpack"
-msgstr ""
+msgstr "Stimpack/Малая аптечка"
 
 #: modules/ctl_doom.lua:742
 msgid "Medikit"
-msgstr ""
+msgstr "Medikit/Аптечка"
 
 #: modules/ctl_doom.lua:763
 msgid "Armor Bonus"
-msgstr ""
+msgstr "Armor bonus/Бонус брони"
 
 #: modules/ctl_doom.lua:785
 msgid "Green Armor"
-msgstr ""
+msgstr "Green armor/Зелёная броня"
 
 #: modules/ctl_doom.lua:805
 msgid "Blue Armor"
-msgstr ""
+msgstr "Blue armor/Синяя броня"
 
 #: modules/ctl_doom.lua:826
 msgid "Soulsphere"
-msgstr ""
+msgstr "Soulsphere/Соулсфера"
 
 #: modules/ctl_doom.lua:845
 msgid "Backpack"
-msgstr ""
+msgstr "Backpack/Рюкзак"
 
 #: modules/ctl_doom.lua:864
 msgid "Berserk Pack"
-msgstr ""
+msgstr "Berserk Pack/Берсерк"
 
 #: modules/ctl_doom.lua:883
 msgid "Invisibility"
-msgstr ""
+msgstr "Invisibility/Невидимость"
 
 #: modules/ctl_doom.lua:902
 msgid "Invulnerability"
-msgstr ""
+msgstr "Invulnerability/Неуязвимость"
 
 #: modules/ctl_doom.lua:921
 msgid "Map Computer"
-msgstr ""
+msgstr "Map computer/Карта уровня"
 
 #: modules/ctl_doom.lua:940
 msgid "Light Goggles"
-msgstr ""
+msgstr "Light goggles/Очки ночного зрения"
 
 #: modules/ctl_doom.lua:959
 msgid "Megasphere"
-msgstr ""
+msgstr "Megasphere/Мегасфера"
 
 #: modules/ctl_doom.lua:980
 msgid "Clips"
-msgstr ""
+msgstr "Clips/Обоймы"
 
 #: modules/ctl_doom.lua:1000
 msgid "Bullet Box"
-msgstr ""
+msgstr "Bullet box/Коробки патронов"
 
 #: modules/ctl_doom.lua:1020
 msgid "Shells"
-msgstr ""
+msgstr "Shells/Дробь"
 
 #: modules/ctl_doom.lua:1040
 msgid "Shell Box"
-msgstr ""
+msgstr "Shell box/Коробки дроби"
 
 #: modules/ctl_doom.lua:1060
 msgid "Rocket"
-msgstr ""
+msgstr "Rocket/Ракеты"
 
 #: modules/ctl_doom.lua:1080
 msgid "Rocket Box"
-msgstr ""
+msgstr "Rocket box/Коробки ракет"
 
 #: modules/ctl_doom.lua:1100
 msgid "Cell"
-msgstr ""
+msgstr "Cell/Малые энергоячейки"
 
 #: modules/ctl_doom.lua:1120
 msgid "Cell Pack"
-msgstr ""
+msgstr "Cell pack/Энергоячейки"
 
 #: modules/debugger.lua:23
 msgid "Test Level Names"
-msgstr ""
+msgstr "Тест названий уровней"
 
 #: modules/debugger.lua:24
 msgid "Test Title Names"
-msgstr ""
+msgstr "Тест остальных названий"
 
 #: modules/debugger.lua:25
 msgid "None"
-msgstr ""
+msgstr "Не включать"
 
 #: modules/debugger.lua:30
 msgid "Show All Steps"
-msgstr ""
+msgstr "Показывать все шаги"
 
 #: modules/debugger.lua:31
 msgid "Show Successful Steps Only"
-msgstr ""
+msgstr "Показывать только успешные шаги"
 
 #: modules/debugger.lua:32
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #: modules/debugger.lua:80
 msgid "Debug Control"
-msgstr ""
+msgstr "Отладка"
 
 #: modules/debugger.lua:100
 msgid "Name Generator"
-msgstr ""
+msgstr "Генератор названий"
 
 #: modules/debugger.lua:112
 msgid "Print ZDoom Strings"
-msgstr ""
+msgstr "Печать строк ZDoom"
 
 #: modules/debugger.lua:123
 msgid "Build Level"
-msgstr ""
+msgstr "Создать лишь эту карту"
 
 #: modules/debugger.lua:139
 msgid "Shape Rule Stats"
-msgstr ""
+msgstr "Сохранять правила форм"
 
 #: modules/debugger.lua:149
 msgid "Save Map Previews"
-msgstr ""
+msgstr "Сохранять миниатюру *.SVG"
 
 #: modules/debugger.lua:160
 msgid "Experimental Games"
-msgstr ""
+msgstr "Экспериментальные игры"
 
 #: modules/debugger.lua:176
 msgid "Custom Error Texture"
-msgstr ""
+msgstr "Выделяющаяся текстура ошибки"
 
 #: modules/debugger.lua:189
 msgid "Attach DEBUG Info"
-msgstr ""
+msgstr "Прикреплять DEBUG-вывод"
 
 #: modules/export_map.lua:267
 msgid "Export .MAP files"
-msgstr ""
+msgstr "Экспортировать *.MAP-файл"
 
 #: modules/gzdoom_fauna.lua:517
 msgid "GZDoom: Fauna"
-msgstr ""
+msgstr "Фауна GZDoom"
 
 #: modules/gzdoom_fauna.lua:538
 msgid "Flies"
-msgstr ""
+msgstr "Добавить мух"
 
 #: modules/gzdoom_fauna.lua:541
 msgid "Adds flies to maps. \n"
-msgstr ""
+msgstr "Добавляет мух на карты.\n"
 
 #: modules/gzdoom_fauna.lua:547
 msgid "Rats"
-msgstr ""
+msgstr "Добавить крыс"
 
 #: modules/gzdoom_fauna.lua:550
 msgid "Adds scurrying rats to maps. \n"
-msgstr ""
+msgstr "Добавляет мечущихся крыс на карты.\n"
 
 #: modules/gzdoom_marine_closet.lua:18
 msgid "Very Low Tech"
-msgstr ""
+msgstr "Почти нулевой"
 
 #: modules/gzdoom_marine_closet.lua:19
 msgid "Low Tech"
-msgstr ""
+msgstr "Низкий"
 
 #: modules/gzdoom_marine_closet.lua:20
 msgid "Mid Tech"
-msgstr ""
+msgstr "Средний"
 
 #: modules/gzdoom_marine_closet.lua:21
 msgid "High Tech"
-msgstr ""
+msgstr "Высокий"
 
 #: modules/gzdoom_marine_closet.lua:22
 msgid "Mix It Up"
-msgstr ""
+msgstr "Всегда по-разному"
 
 #: modules/gzdoom_marine_closet.lua:23
 msgid "Progressive"
-msgstr ""
+msgstr "Усиливается по ходу игры"
 
 #: modules/gzdoom_marine_closet.lua:24
 msgid "BFG Fiesta"
-msgstr ""
+msgstr "BFG-вечеринка"
 
 #: modules/gzdoom_marine_closet.lua:29
 msgid "Sight"
-msgstr ""
+msgstr "Игрок в зоне видимости"
 
 #: modules/gzdoom_marine_closet.lua:30
 msgid "Range"
-msgstr ""
+msgstr "Игрок рядом"
 
 #: modules/gzdoom_marine_closet.lua:31
 msgid "Close Range"
-msgstr ""
+msgstr "Игрок совсем близко"
 
 #: modules/gzdoom_marine_closet.lua:32
 msgid "Map Start"
-msgstr ""
+msgstr "Со старта карты"
 
 #: modules/gzdoom_marine_closet.lua:37
 msgid "Normal"
-msgstr ""
+msgstr "Нормально"
 
 #: modules/gzdoom_marine_closet.lua:38
 msgid "More"
-msgstr ""
+msgstr "Больше"
 
 #: modules/gzdoom_marine_closet.lua:39
 msgid "Lots"
-msgstr ""
+msgstr "Множество"
 
 #: modules/gzdoom_marine_closet.lua:40
 msgid "Hordes"
-msgstr ""
+msgstr "Орды"
 
 #: modules/gzdoom_marine_closet.lua:45
 msgid "Unmodified"
-msgstr ""
+msgstr "Без изменений"
 
 #: modules/gzdoom_marine_closet.lua:46
 msgid "Harder"
-msgstr ""
+msgstr "Сложнее"
 
 #: modules/gzdoom_marine_closet.lua:47
 msgid "Tough"
-msgstr ""
+msgstr "Гораздо сложнее"
 
 #: modules/gzdoom_marine_closet.lua:48
 msgid "Fierce"
-msgstr ""
+msgstr "Феерия"
 
 #: modules/gzdoom_marine_closet.lua:53
 msgid "Random"
-msgstr ""
+msgstr "Случайно"
 
 #: modules/gzdoom_marine_closet.lua:54
 msgid "Progressive"
-msgstr ""
+msgstr "Увеличивать"
 
 #: modules/gzdoom_marine_closet.lua:55
 msgid "Regressive"
-msgstr ""
+msgstr "Уменьшать"
 
 #: modules/gzdoom_marine_closet.lua:56
 msgid "Episodic"
-msgstr ""
+msgstr "По эпизодам"
 
 #: modules/gzdoom_marine_closet.lua:57
 msgid "Regressive Episodic"
-msgstr ""
+msgstr "Уменьшать по эпизодам"
 
 #: modules/gzdoom_marine_closet.lua:62
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #: modules/gzdoom_marine_closet.lua:63
 msgid "Yes + Merge"
-msgstr ""
+msgstr "Да, объединить"
 
 #: modules/gzdoom_marine_closet.lua:64
 msgid "Yes + No Merge"
-msgstr ""
+msgstr "Да, не объединять"
 
 #: modules/gzdoom_marine_closet.lua:69
 msgid "Green"
-msgstr ""
+msgstr "Зелёный"
 
 #: modules/gzdoom_marine_closet.lua:70
 msgid "Grey"
-msgstr ""
+msgstr "Серый"
 
 #: modules/gzdoom_marine_closet.lua:71
 msgid "Brown"
-msgstr ""
+msgstr "Коричневый"
 
 #: modules/gzdoom_marine_closet.lua:72
 msgid "Dark Red"
-msgstr ""
+msgstr "Тёмно-красный"
 
 #: modules/gzdoom_marine_closet.lua:73
 msgid "Blue"
-msgstr ""
+msgstr "Синий"
 
 #: modules/gzdoom_marine_closet.lua:74
 msgid "Purple"
-msgstr ""
+msgstr "Фиолетовый"
 
 #: modules/gzdoom_marine_closet.lua:75
 msgid "White"
-msgstr ""
+msgstr "Белый"
 
 #: modules/gzdoom_marine_closet.lua:76
 msgid "Yellow"
-msgstr ""
+msgstr "Жёлтый"
 
 #: modules/gzdoom_marine_closet.lua:77
 msgid "Orange"
-msgstr ""
+msgstr "Оранжевый"
 
 #: modules/gzdoom_marine_closet.lua:78
 msgid "Dark Blue"
-msgstr ""
+msgstr "Тёмно-синий"
 
 #: modules/gzdoom_marine_closet.lua:79
 msgid "Red"
-msgstr ""
+msgstr "Красный"
 
 #: modules/gzdoom_marine_closet.lua:80
 msgid "Gold"
-msgstr ""
+msgstr "Золотой"
 
 #: modules/gzdoom_marine_closet.lua:81
 msgid "Random OG Doom"
-msgstr ""
+msgstr "Случайный из Doom"
 
 #: modules/gzdoom_marine_closet.lua:82
 msgid "Full Random"
-msgstr ""
+msgstr "Полностью случайный"
 
 #: modules/gzdoom_marine_closet.lua:87
 msgid "Yes"
-msgstr ""
+msgstr "Да"
 
 #: modules/gzdoom_marine_closet.lua:88
 msgid "No + Self Damage"
-msgstr ""
+msgstr "Нет, проходит урон по себе"
 
 #: modules/gzdoom_marine_closet.lua:89
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #: modules/gzdoom_marine_closet.lua:1500
 msgid "[Exp]GZDoom Marine Closets"
-msgstr ""
+msgstr "[Эксп.] Комнаты ИИ-морпехов GZDoom"
 
 #: modules/gzdoom_marine_closet.lua:1523
 msgid "Chance per map"
-msgstr ""
+msgstr "Шанс на карту"
 
 #: modules/gzdoom_marine_closet.lua:1539
 msgid "Minimum closets"
-msgstr ""
+msgstr "Мин. комнат с морпехами"
 
 #: modules/gzdoom_marine_closet.lua:1554
 msgid "Maximum closets"
-msgstr ""
+msgstr "Макс. комнат с морпехами"
 
 #: modules/gzdoom_marine_closet.lua:1569
 msgid "Closet scaling type"
-msgstr ""
+msgstr "Изменение количества по уровням"
 
 #: modules/gzdoom_marine_closet.lua:1584
 msgid "Minimum marines"
-msgstr ""
+msgstr "Минимум морпехов"
 
 #: modules/gzdoom_marine_closet.lua:1599
 msgid "Maximum marines"
-msgstr ""
+msgstr "Максимум морпехов"
 
 #: modules/gzdoom_marine_closet.lua:1614
 msgid "Marine Health"
-msgstr ""
+msgstr "Здоровье морпехов"
 
 #: modules/gzdoom_marine_closet.lua:1629
 msgid "Marine scaling type"
-msgstr ""
+msgstr "Изменение числа морпехов по уровням"
 
 #: modules/gzdoom_marine_closet.lua:1643
 msgid "Level Min Position"
-msgstr ""
+msgstr "Мин. позиция уровня"
 
 #: modules/gzdoom_marine_closet.lua:1658
 msgid "Level Max Position"
-msgstr ""
+msgstr "Макс. позиция уровня"
 
 #: modules/gzdoom_marine_closet.lua:1673
 msgid "Weapon tech level"
-msgstr ""
+msgstr "Технический уровень оружия"
 
 #: modules/gzdoom_marine_closet.lua:1690
 msgid "Trigger Type"
-msgstr ""
+msgstr "Тип активации"
 
 #: modules/gzdoom_marine_closet.lua:1705
 msgid "Marine Color"
-msgstr ""
+msgstr "Цвет морпехов"
 
 #: modules/gzdoom_marine_closet.lua:1715
 msgid "Friendly Fire"
-msgstr ""
+msgstr "Огонь по своим"
 
 #: modules/gzdoom_marine_closet.lua:1727
 msgid "Player Damage Immunity"
-msgstr ""
+msgstr "Иммунитет к урону от игрока"
 
 #: modules/gzdoom_marine_closet.lua:1737
 msgid "Weapon Sprites"
-msgstr ""
+msgstr "Спрайты оружия"
 
 #: modules/gzdoom_marine_closet.lua:1750
 msgid "Monster Quantity Multiplier"
-msgstr ""
+msgstr "Множитель количества монстров"
 
 #: modules/gzdoom_marine_closet.lua:1760
 msgid "Monster Strength Modifier"
-msgstr ""
+msgstr "Множитель силы монстров"
 
 #: modules/gzdoom_marine_closet.lua:1771
 msgid "Strong Marines"
-msgstr ""
+msgstr "Сверхвысокая реакция морпехов"
 
 #: modules/gzdoom_marine_closet.lua:1781
 msgid "Followers"
-msgstr ""
+msgstr "Следуют за игроком"
 
 #: modules/gzdoom_marine_closet.lua:1792
 msgid "Allow in Gotchas"
-msgstr ""
+msgstr "Создавать на специальных картах"
 
 #: modules/gzdoom_marine_closet.lua:1802
 msgid "Death Messages"
-msgstr ""
+msgstr "Сообщения о смерти"
 
 #: modules/gzdoom_marine_closet.lua:1812
 msgid "In Secret Rooms"
-msgstr ""
+msgstr "Также создавать в секретках"
 
 #: modules/hacx/ctl_hacx.lua:59
 msgid "HacX 1.2 Monster Control"
@@ -2267,95 +2268,95 @@ msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:57
 msgid "Heretic Monster Control"
-msgstr ""
+msgstr "Настройка монстров Heretic"
 
 #: modules/heretic/ctl_heretic.lua:71
 msgid "Gargoyle"
-msgstr ""
+msgstr "Горгулья"
 
 #: modules/heretic/ctl_heretic.lua:90
 msgid "Fire Gargoyle"
-msgstr ""
+msgstr "Огненная горгулья"
 
 #: modules/heretic/ctl_heretic.lua:109
 msgid "Warrior"
-msgstr ""
+msgstr "Рыцарь"
 
 #: modules/heretic/ctl_heretic.lua:128
 msgid "Warrior Ghost"
-msgstr ""
+msgstr "Призрачный рыцарь"
 
 #: modules/heretic/ctl_heretic.lua:147
 msgid "Golem"
-msgstr ""
+msgstr "Голем"
 
 #: modules/heretic/ctl_heretic.lua:166
 msgid "Golem Ghost"
-msgstr ""
+msgstr "Призрачный голем"
 
 #: modules/heretic/ctl_heretic.lua:185
 msgid "Nitro"
-msgstr ""
+msgstr "Нитроголем"
 
 #: modules/heretic/ctl_heretic.lua:204
 msgid "Nitro Ghost"
-msgstr ""
+msgstr "Призр. нитроголем"
 
 #: modules/heretic/ctl_heretic.lua:223
 msgid "Disciple"
-msgstr ""
+msgstr "Человекозмей"
 
 #: modules/heretic/ctl_heretic.lua:242
 msgid "Sabreclaw"
-msgstr ""
+msgstr "Клинк"
 
 #: modules/heretic/ctl_heretic.lua:261
 msgid "Weredragon"
-msgstr ""
+msgstr "Оборотень"
 
 #: modules/heretic/ctl_heretic.lua:280
 msgid "Ophidian"
-msgstr ""
+msgstr "Маг"
 
 #: modules/heretic/ctl_heretic.lua:299
 msgid "Ironlich"
-msgstr ""
+msgstr "Железный Лич"
 
 #: modules/heretic/ctl_heretic.lua:318
 msgid "Maulotaur"
-msgstr ""
+msgstr "Малотавр"
 
 #: modules/heretic/ctl_heretic.lua:337
 msgid "D'Sparil"
-msgstr ""
+msgstr "Д'Спарил"
 
 #: modules/heretic/ctl_heretic.lua:384
 msgid "Heretic Weapon Control"
-msgstr ""
+msgstr "Настройка оружия Heretic"
 
 #: modules/heretic/ctl_heretic.lua:397
 msgid "Gauntlets"
-msgstr ""
+msgstr "Перчатки"
 
 #: modules/heretic/ctl_heretic.lua:416
 msgid "Crossbow"
-msgstr ""
+msgstr "Эфирный арбалет"
 
 #: modules/heretic/ctl_heretic.lua:435
 msgid "Dragon Claw"
-msgstr ""
+msgstr "Коготь дракона"
 
 #: modules/heretic/ctl_heretic.lua:454
 msgid "Hellstaff"
-msgstr ""
+msgstr "Адский посох"
 
 #: modules/heretic/ctl_heretic.lua:473
 msgid "Phoenix Rod"
-msgstr ""
+msgstr "Жезл Феникса"
 
 #: modules/heretic/ctl_heretic.lua:492
 msgid "Fire Mace"
-msgstr ""
+msgstr "Огненная булава"
 
 #: modules/heretic/miscellaneous.lua:25
 msgid "FLAT"
@@ -2415,7 +2416,7 @@ msgstr ""
 
 #: modules/heretic/miscellaneous.lua:51
 msgid "Per Theme"
-msgstr ""
+msgstr "По темам"
 
 #: modules/heretic/miscellaneous.lua:52
 msgid "Curved"
@@ -2615,11 +2616,11 @@ msgstr ""
 
 #: modules/heretic/miscellaneous.lua:208
 msgid "Wand Starts"
-msgstr ""
+msgstr "Считать, что в начале нет оружия"
 
 #: modules/heretic/miscellaneous.lua:211
 msgid "Ensure every map can be completed from a wand start (ignore weapons obtained from earlier maps)"
-msgstr ""
+msgstr "Создавать карты так, чтобы их можно было пройти, имея лишь начальный набор амуниции — волшебную палочку и посох. Иными словами, не принимать во внимание оружие, полученное с предыдущих уровней."
 
 #: modules/heretic/miscellaneous.lua:215
 msgid "Alt-start Rooms"
@@ -2735,7 +2736,7 @@ msgstr ""
 
 #: modules/heretic/miscellaneous.lua:380
 msgid "Pods"
-msgstr ""
+msgstr "Растительные капсулы"
 
 #: modules/heretic/miscellaneous.lua:382
 msgid "Doors"
@@ -2795,443 +2796,443 @@ msgstr ""
 
 #: modules/heretic/prefab_controller.lua:24
 msgid "DEFAULT"
-msgstr ""
+msgstr "ПО УМОЛЧАНИЮ"
 
 #: modules/heretic/prefab_controller.lua:25
 msgid "Some"
-msgstr ""
+msgstr "Немного"
 
 #: modules/heretic/prefab_controller.lua:26
 msgid "Less"
-msgstr ""
+msgstr "Мало"
 
 #: modules/heretic/prefab_controller.lua:27
 msgid "Few"
-msgstr ""
+msgstr "Совсем мало"
 
 #: modules/heretic/prefab_controller.lua:28
 msgid "Rare"
-msgstr ""
+msgstr "Изредка"
 
 #: modules/heretic/prefab_controller.lua:29
 msgid "Mix It Up"
-msgstr ""
+msgstr "Всегда по-разному"
 
 #: modules/heretic/prefab_controller.lua:34
 msgid "NONE"
-msgstr ""
+msgstr "(НЕТ)"
 
 #: modules/heretic/prefab_controller.lua:35
 msgid "Rare"
-msgstr ""
+msgstr "Изредка"
 
 #: modules/heretic/prefab_controller.lua:36
 msgid "Few"
-msgstr ""
+msgstr "Мало"
 
 #: modules/heretic/prefab_controller.lua:37
 msgid "DEFAULT"
-msgstr ""
+msgstr "По УМОЛЧАНИЮ"
 
 #: modules/heretic/prefab_controller.lua:38
 msgid "More"
-msgstr ""
+msgstr "Больше"
 
 #: modules/heretic/prefab_controller.lua:39
 msgid "Heaps"
-msgstr ""
+msgstr "Множество"
 
 #: modules/heretic/prefab_controller.lua:44
 msgid "NONE"
-msgstr ""
+msgstr "(НЕТ)"
 
 #: modules/heretic/prefab_controller.lua:45
 msgid "Rare"
-msgstr ""
+msgstr "Изредка"
 
 #: modules/heretic/prefab_controller.lua:46
 msgid "Few"
-msgstr ""
+msgstr "Мало"
 
 #: modules/heretic/prefab_controller.lua:47
 msgid "Less"
-msgstr ""
+msgstr "Меньше"
 
 #: modules/heretic/prefab_controller.lua:48
 msgid "Default"
-msgstr ""
+msgstr "По умолчанию"
 
 #: modules/heretic/prefab_controller.lua:49
 msgid "More"
-msgstr ""
+msgstr "Больше"
 
 #: modules/heretic/prefab_controller.lua:50
 msgid "Heaps"
-msgstr ""
+msgstr "Множество"
 
 #: modules/heretic/prefab_controller.lua:51
 msgid "I LOVE IT"
-msgstr ""
+msgstr "ЛЮБЛЮ ЭТО"
 
 #: modules/heretic/prefab_controller.lua:121
 msgid "Advanced Level Control"
-msgstr ""
+msgstr "Расширенный контроль уровней"
 
 #: modules/heretic/prefab_controller.lua:150
 msgid "Decor"
-msgstr ""
+msgstr "Декорации"
 
 #: modules/heretic/prefab_controller.lua:160
 msgid "Walls"
-msgstr ""
+msgstr "Стены"
 
 #: modules/heretic/prefab_controller.lua:172
 msgid "Crushers"
-msgstr ""
+msgstr "Давящие поверхности"
 
 #: modules/heretic/prefab_controller.lua:180
 msgid "Dexterity Fabs"
-msgstr ""
+msgstr "Префабы на ловкость"
 
 #: modules/heretic/prefab_controller.lua:188
 msgid "Gambling Fabs"
-msgstr ""
+msgstr "Префабы на азарт"
 
 #: modules/heretic/prefab_controller.lua:196
 msgid "Sight Ambush Cages"
-msgstr ""
+msgstr "Клетки для засад"
 
 #: modules/heretic/prefab_controller.lua:205
 msgid "Mirror Mazes"
-msgstr ""
+msgstr "Лабиринты из зеркал"
 
 #: modules/heretic/sky_generator.lua:26
 msgid "Default"
-msgstr ""
+msgstr "По умолчанию"
 
 #: modules/heretic/sky_generator.lua:27
 msgid "Random"
-msgstr ""
+msgstr "Случайно"
 
 #: modules/heretic/sky_generator.lua:28
 msgid "Night"
-msgstr ""
+msgstr "Ночь"
 
 #: modules/heretic/sky_generator.lua:29
 msgid "Day"
-msgstr ""
+msgstr "День"
 
 #: modules/heretic/sky_generator.lua:34
 msgid "Random"
-msgstr ""
+msgstr "Случайно"
 
 #: modules/heretic/sky_generator.lua:35
 msgid "Never"
-msgstr ""
+msgstr "Никогда"
 
 #: modules/heretic/sky_generator.lua:36
 msgid "Always"
-msgstr ""
+msgstr "Всегда"
 
 #: modules/heretic/sky_generator.lua:41
 msgid "Random"
-msgstr ""
+msgstr "Случайно"
 
 #: modules/heretic/sky_generator.lua:42
 msgid "Hills"
-msgstr ""
+msgstr "Холмы"
 
 #: modules/heretic/sky_generator.lua:43
 msgid "Mountainous"
-msgstr ""
+msgstr "Горы"
 
 #: modules/heretic/sky_generator.lua:44
 msgid "Cavernous"
-msgstr ""
+msgstr "Пещеры"
 
 #: modules/heretic/sky_generator.lua:49
 msgid "DEFAULT"
-msgstr ""
+msgstr "ПО УМОЛЧАНИЮ"
 
 #: modules/heretic/sky_generator.lua:50
 msgid "Blue + White Clouds"
-msgstr ""
+msgstr "Синий + белые облака"
 
 #: modules/heretic/sky_generator.lua:51
 msgid "Grey"
-msgstr ""
+msgstr "Серый"
 
 #: modules/heretic/sky_generator.lua:52
 msgid "Dark Grey"
-msgstr ""
+msgstr "Тёмно-серый"
 
 #: modules/heretic/sky_generator.lua:53
 msgid "Dark Blue"
-msgstr ""
+msgstr "Тёмно-синий"
 
 #: modules/heretic/sky_generator.lua:54
 msgid "Red"
-msgstr ""
+msgstr "Красный"
 
 #: modules/heretic/sky_generator.lua:55
 msgid "Orange"
-msgstr ""
+msgstr "Оранжевый"
 
 #: modules/heretic/sky_generator.lua:56
 msgid "Red-ish"
-msgstr ""
+msgstr "Красноватый"
 
 #: modules/heretic/sky_generator.lua:57
 msgid "Brown"
-msgstr ""
+msgstr "Коричневый"
 
 #: modules/heretic/sky_generator.lua:58
 msgid "Brown-ish"
-msgstr ""
+msgstr "Коричневатый"
 
 #: modules/heretic/sky_generator.lua:59
 msgid "Yellow"
-msgstr ""
+msgstr "Жёлтый"
 
 #: modules/heretic/sky_generator.lua:60
 msgid "Green"
-msgstr ""
+msgstr "Зелёный"
 
 #: modules/heretic/sky_generator.lua:61
 msgid "Jade"
-msgstr ""
+msgstr "Нефритовый/желтовато-зелёный"
 
 #: modules/heretic/sky_generator.lua:62
 msgid "Dark Red"
-msgstr ""
+msgstr "Тёмно-красный"
 
 #: modules/heretic/sky_generator.lua:63
 msgid "Peach"
-msgstr ""
+msgstr "Пляжный"
 
 #: modules/heretic/sky_generator.lua:64
 msgid "White"
-msgstr ""
+msgstr "Белый"
 
 #: modules/heretic/sky_generator.lua:65
 msgid "Purple"
-msgstr ""
+msgstr "Фиолетовый"
 
 #: modules/heretic/sky_generator.lua:66
 msgid "Rainbow"
-msgstr ""
+msgstr "Радужный"
 
 #: modules/heretic/sky_generator.lua:71
 msgid "DEFAULT"
-msgstr ""
+msgstr "ПО УМОЛЧАНИЮ"
 
 #: modules/heretic/sky_generator.lua:72
 msgid "Black"
-msgstr ""
+msgstr "Чёрный"
 
 #: modules/heretic/sky_generator.lua:73
 msgid "Brown"
-msgstr ""
+msgstr "Коричневый"
 
 #: modules/heretic/sky_generator.lua:74
 msgid "Tan"
-msgstr ""
+msgstr "Рыжевато-коричневый"
 
 #: modules/heretic/sky_generator.lua:75
 msgid "Green"
-msgstr ""
+msgstr "Зелёный"
 
 #: modules/heretic/sky_generator.lua:76
 msgid "Dark Green"
-msgstr ""
+msgstr "Тёмно-зелёный"
 
 #: modules/heretic/sky_generator.lua:77
 msgid "Red"
-msgstr ""
+msgstr "Красный"
 
 #: modules/heretic/sky_generator.lua:78
 msgid "Dark Brown"
-msgstr ""
+msgstr "Тёмно-коричневый"
 
 #: modules/heretic/sky_generator.lua:79
 msgid "Green-ish"
-msgstr ""
+msgstr "Зеленованый"
 
 #: modules/heretic/sky_generator.lua:80
 msgid "Ice"
-msgstr ""
+msgstr "Ледяной"
 
 #: modules/heretic/sky_generator.lua:85
 msgid "DEFAULT"
-msgstr ""
+msgstr "ПО УМОЛЧАНИЮ"
 
 #: modules/heretic/sky_generator.lua:86
 msgid "None"
-msgstr ""
+msgstr "Нет"
 
 #: modules/heretic/sky_generator.lua:87
 msgid "Blue"
-msgstr ""
+msgstr "Синий"
 
 #: modules/heretic/sky_generator.lua:88
 msgid "Red"
-msgstr ""
+msgstr "Красный"
 
 #: modules/heretic/sky_generator.lua:89
 msgid "Brown"
-msgstr ""
+msgstr "Коричневый"
 
 #: modules/heretic/sky_generator.lua:90
 msgid "Green"
-msgstr ""
+msgstr "Зелёный"
 
 #: modules/heretic/sky_generator.lua:743
 msgid "Sky Generator"
-msgstr ""
+msgstr "Создание неба"
 
 #: modules/heretic/sky_generator.lua:760
 msgid "Time of Day"
-msgstr ""
+msgstr "Время дня"
 
 #: modules/heretic/sky_generator.lua:771
 msgid "Terrain Foreground"
-msgstr ""
+msgstr "Ближний план"
 
 #: modules/heretic/sky_generator.lua:780
 msgid "Terrain Parameters"
-msgstr ""
+msgstr "Параметры ближнего плана"
 
 #: modules/heretic/sky_generator.lua:792
 msgid "Day Sky Color"
-msgstr ""
+msgstr "Цвет дневного неба"
 
 #: modules/heretic/sky_generator.lua:801
 msgid "Terrain Color"
-msgstr ""
+msgstr "Цвет ближнего плана"
 
 #: modules/heretic/sky_generator.lua:810
 msgid "Nebula Color"
-msgstr ""
+msgstr "Цвет туманности"
 
 #: modules/heretic/sky_generator.lua:821
 msgid "Sky Gen Lighting"
-msgstr ""
+msgstr "Освещение мест под небом"
 
 #: modules/heretic/zdoom_specials.lua:26
 msgid "Yes"
-msgstr ""
+msgstr "Да"
 
 #: modules/heretic/zdoom_specials.lua:27
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #: modules/heretic/zdoom_specials.lua:32
 msgid "Per Sky Generator"
-msgstr ""
+msgstr "Учитывать генератор неба"
 
 #: modules/heretic/zdoom_specials.lua:33
 msgid "Random"
-msgstr ""
+msgstr "Случайно"
 
 #: modules/heretic/zdoom_specials.lua:34
 msgid "No"
-msgstr ""
+msgstr "Да"
 
 #: modules/heretic/zdoom_specials.lua:39
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 #: modules/heretic/zdoom_specials.lua:40
 msgid "Outdoors Only"
-msgstr ""
+msgstr "Только под небом"
 
 #: modules/heretic/zdoom_specials.lua:45
 msgid "Subtle"
-msgstr ""
+msgstr "Трудноразличимый"
 
 #: modules/heretic/zdoom_specials.lua:46
 msgid "Misty"
-msgstr ""
+msgstr "Неясный"
 
 #: modules/heretic/zdoom_specials.lua:47
 msgid "Smoky"
-msgstr ""
+msgstr "Дымчатый"
 
 #: modules/heretic/zdoom_specials.lua:48
 msgid "Foggy"
-msgstr ""
+msgstr "Туманный"
 
 #: modules/heretic/zdoom_specials.lua:49
 msgid "Dense"
-msgstr ""
+msgstr "Плотный"
 
 #: modules/heretic/zdoom_specials.lua:50
 msgid "Mix It Up"
-msgstr ""
+msgstr "Всегда по-разному"
 
 #: modules/heretic/zdoom_specials.lua:55
 msgid "Generic"
-msgstr ""
+msgstr "Общий"
 
 #: modules/heretic/zdoom_specials.lua:56
 msgid "Generated"
-msgstr ""
+msgstr "Сгенерированный"
 
 #: modules/heretic/zdoom_specials.lua:57
 msgid "NONE"
-msgstr ""
+msgstr "(НЕТ)"
 
 #: modules/heretic/zdoom_specials.lua:186
 msgid "Universal Intermission"
-msgstr ""
+msgstr "Всегда одна и та же"
 
 #: modules/heretic/zdoom_specials.lua:1131
 msgid "ZDoom Special Addons"
-msgstr ""
+msgstr "Специальные аддоны ZDoom"
 
 #: modules/heretic/zdoom_specials.lua:1153
 msgid "Fog Generator"
-msgstr ""
+msgstr "Генерация тумана"
 
 #: modules/heretic/zdoom_specials.lua:1161
 msgid "Fog Environment"
-msgstr ""
+msgstr "Локации с туманом"
 
 #: modules/heretic/zdoom_specials.lua:1169
 msgid "Fog Intensity"
-msgstr ""
+msgstr "Плотность тумана"
 
 #: modules/heretic/zdoom_specials.lua:1178
 msgid "Sky Fog"
-msgstr ""
+msgstr "Туман в небе"
 
 #: modules/heretic/zdoom_specials.lua:1188
 msgid "Dynamic Lights"
-msgstr ""
+msgstr "Динамический свет"
 
 #: modules/heretic/zdoom_specials.lua:1197
 msgid "Glowing Flats"
-msgstr ""
+msgstr "Мерцающие поверхности"
 
 #: modules/heretic/zdoom_specials.lua:1207
 msgid "Shuffle Music"
-msgstr ""
+msgstr "Перемешать музыку"
 
 #: modules/heretic/zdoom_specials.lua:1216
 msgid "Story Generator"
-msgstr ""
+msgstr "Генерация историй"
 
 #: modules/heretic/zdoom_specials.lua:1225
 msgid "Quit Messages"
-msgstr ""
+msgstr "Подменить сообщения при выходе"
 
 #: modules/heretic/zdoom_specials.lua:1233
 msgid "Intermission Music"
-msgstr ""
+msgstr "Музыка на интермиссиях"
 
 #: modules/heretic/zdoom_specials.lua:1242
 msgid "Disable Intermissions"
-msgstr ""
+msgstr "Убрать межмиссионный экран"
 
 #: modules/hexen/ctl_hexen.lua:59
 msgid "Hexen Monster Control"
@@ -3691,23 +3692,23 @@ msgstr ""
 
 #: modules/iwad_mode.lua:1719
 msgid "IWAD Style Mode"
-msgstr ""
+msgstr "Имитировать стиль IWAD"
 
 #: modules/jokewad_module.lua:433
 msgid "Jokewad Module"
-msgstr ""
+msgstr "Шуточный модуль"
 
 #: modules/jokewad_module.lua:453
 msgid "FIREBLU Mode"
-msgstr ""
+msgstr "Режим FIREBLU"
 
 #: modules/jokewad_module.lua:466
 msgid "Pandemic Mode"
-msgstr ""
+msgstr "Режим пандемии"
 
 #: modules/megawad_swap.lua:92
 msgid "Megawad Music Swapper"
-msgstr ""
+msgstr "Перемешать музыку по мегаваду"
 
 #: modules/megawad_swap.lua:100
 msgid "Ideal if you have a music WAD replacing all tracks in the game. A note if you are using the ZDoom Specials Shuffle Music option, there is no need to use this module. This is ideal for non-ZDoom ports only."
@@ -3723,7 +3724,7 @@ msgstr ""
 
 #: modules/miscellaneous.lua:31
 msgid "FLAT"
-msgstr ""
+msgstr "ПЛОСКО"
 
 #: modules/miscellaneous.lua:32
 msgid "Lower"
@@ -3783,11 +3784,11 @@ msgstr ""
 
 #: modules/miscellaneous.lua:58
 msgid "Curved"
-msgstr ""
+msgstr "Искривлённый"
 
 #: modules/miscellaneous.lua:59
 msgid "Sharp"
-msgstr ""
+msgstr "Заострённый"
 
 #: modules/miscellaneous.lua:60
 msgid "Random"
@@ -3847,7 +3848,7 @@ msgstr ""
 
 #: modules/miscellaneous.lua:90
 msgid "No Damaging"
-msgstr ""
+msgstr "Не наносящие урон"
 
 #: modules/miscellaneous.lua:91
 msgid "No"
@@ -3859,19 +3860,19 @@ msgstr ""
 
 #: modules/miscellaneous.lua:97
 msgid "75% of All Levels"
-msgstr ""
+msgstr "75% от всех карт"
 
 #: modules/miscellaneous.lua:98
 msgid "50% of All Levels"
-msgstr ""
+msgstr "50% от всех карт"
 
 #: modules/miscellaneous.lua:99
 msgid "25% of All Levels"
-msgstr ""
+msgstr "25% от всех карт"
 
 #: modules/miscellaneous.lua:100
 msgid "12% of All Levels"
-msgstr ""
+msgstr "12% от всех карт"
 
 #: modules/miscellaneous.lua:101
 msgid "DEFAULT"
@@ -4039,15 +4040,15 @@ msgstr ""
 
 #: modules/miscellaneous.lua:222
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Разное"
 
 #: modules/miscellaneous.lua:240
 msgid "Pistol Starts"
-msgstr ""
+msgstr "Пистол-старт"
 
 #: modules/miscellaneous.lua:243
 msgid "Ensure every map can be completed from a pistol start (ignore weapons obtained from earlier maps)"
-msgstr ""
+msgstr "Быть уверенным, что каждую карту реально пройти с пистол-старта (не учитывая оружие, полученное с предыдущих уровней)."
 
 #: modules/miscellaneous.lua:247
 msgid "Alt-start Rooms"
@@ -4063,71 +4064,71 @@ msgstr ""
 
 #: modules/miscellaneous.lua:262
 msgid "Room Size Multiplier"
-msgstr ""
+msgstr "Множитель размера комнат"
 
 #: modules/miscellaneous.lua:270
 msgid "Area Count Multiplier"
-msgstr ""
+msgstr "Множитель количества областей"
 
 #: modules/miscellaneous.lua:279
 msgid "Size Consistency"
-msgstr ""
+msgstr "Соответствие размеров"
 
 #: modules/miscellaneous.lua:290
 msgid "Room Size Mix Fine Tune"
-msgstr ""
+msgstr "Уклон размера комнат"
 
 #: modules/miscellaneous.lua:305
 msgid "Room Area Mix Fine Tune"
-msgstr ""
+msgstr "Уклон размера областей"
 
 #: modules/miscellaneous.lua:320
 msgid "Big Rooms"
-msgstr ""
+msgstr "Крупные комнаты"
 
 #: modules/miscellaneous.lua:321
 msgid "Big Outdoors"
-msgstr ""
+msgstr "Крупные пространства под небом"
 
 #: modules/miscellaneous.lua:324
 msgid "Room Heights"
-msgstr ""
+msgstr "Высоты комнат"
 
 #: modules/miscellaneous.lua:334
 msgid "Parks"
-msgstr ""
+msgstr "Парки"
 
 #: modules/miscellaneous.lua:337
 msgid "Natural Cliffs"
-msgstr ""
+msgstr "Природные обрывы"
 
 #: modules/miscellaneous.lua:338
 msgid "Percentage of parks that use completely naturalistic walls."
-msgstr ""
+msgstr "Процент парков, использующих полностью природные стены."
 
 #: modules/miscellaneous.lua:343
 msgid "Park Detail"
-msgstr ""
+msgstr "Детализация парков"
 
 #: modules/miscellaneous.lua:344
 msgid "Reduces or increases the probability of park decorations such as trees on park rooms."
-msgstr ""
+msgstr "Изменяет вероятность появления парковых декораций, таких, как деревья или беседки."
 
 #: modules/miscellaneous.lua:349
 msgid "Windows"
-msgstr ""
+msgstr "Окна"
 
 #: modules/miscellaneous.lua:352
 msgid "Passable Windows"
-msgstr ""
+msgstr "Проходимые окна"
 
 #: modules/miscellaneous.lua:360
 msgid "Passable Railings"
-msgstr ""
+msgstr "Проходимые перила"
 
 #: modules/miscellaneous.lua:370
 msgid "Symmetry"
-msgstr ""
+msgstr "Симметрия"
 
 #: modules/miscellaneous.lua:371
 msgid "Beams"
@@ -4179,15 +4180,15 @@ msgstr ""
 
 #: modules/miscellaneous.lua:446
 msgid "Keyed Doors"
-msgstr ""
+msgstr "Запертые на ключ двери"
 
 #: modules/miscellaneous.lua:447
 msgid "Triple-Keyed Doors"
-msgstr ""
+msgstr "Запертые на три ключа двери"
 
 #: modules/miscellaneous.lua:450
 msgid "Switch Goals"
-msgstr ""
+msgstr "Удалённые от места воздействия рычаги"
 
 #: modules/miscellaneous.lua:453
 msgid "Switch Rooms"
@@ -4195,11 +4196,11 @@ msgstr ""
 
 #: modules/miscellaneous.lua:460
 msgid "Road Markings"
-msgstr ""
+msgstr "Дорожная разметка"
 
 #: modules/miscellaneous.lua:463
 msgid "Adds street markings to roads."
-msgstr ""
+msgstr "Добавляет дорожную разметку на улицы."
 
 #: modules/miscellaneous.lua:467
 msgid "Street Traffic"
@@ -4215,11 +4216,11 @@ msgstr ""
 
 #: modules/miscellaneous.lua:485
 msgid "Linear Start"
-msgstr ""
+msgstr "Линейные старты (в тупиках)"
 
 #: modules/miscellaneous.lua:496
 msgid "Dead Ends"
-msgstr ""
+msgstr "Тупики"
 
 #: modules/miscellaneous.lua:507
 msgid "Live Growth Minimap"
@@ -4235,7 +4236,7 @@ msgstr ""
 
 #: modules/miscellaneous.lua:517
 msgid "Detail"
-msgstr ""
+msgstr "Детализация"
 
 #: modules/miscellaneous.lua:519
 msgid "Pictures"
@@ -4247,43 +4248,43 @@ msgstr ""
 
 #: modules/miscellaneous.lua:521
 msgid "3D Floors"
-msgstr ""
+msgstr "3D-полы"
 
 #: modules/miscellaneous.lua:523
 msgid "Lakes"
-msgstr ""
+msgstr "Озёра"
 
 #: modules/modded_game_extras.lua:2229
 msgid "Modded Game Extras"
-msgstr ""
+msgstr "Для известных модификаций"
 
 #: modules/modded_game_extras.lua:2251
 msgid "HN Markers"
-msgstr ""
+msgstr "Метки Hellscape Navigator"
 
 #: modules/modded_game_extras.lua:2262
 msgid "Custom Actor Names"
-msgstr ""
+msgstr "Имя для каждого врага"
 
 #: modules/modded_game_extras.lua:2276
 msgid "QC:DE Lootboxes"
-msgstr ""
+msgstr "Лутбоксы QC:DE"
 
 #: modules/modded_game_extras.lua:2286
 msgid "D4T Entities"
-msgstr ""
+msgstr "Объекты из D4T"
 
 #: modules/modded_game_extras.lua:2297
 msgid "Trailblazer Upgrades"
-msgstr ""
+msgstr "Улучшения Trailblazer"
 
 #: modules/modded_game_extras.lua:2308
 msgid "Complex Doom Modifications"
-msgstr ""
+msgstr "Подгонка под Complex Doom"
 
 #: modules/music_swap.lua:115
 msgid "Music Swapper"
-msgstr ""
+msgstr "Перемешать музыку"
 
 #: modules/nukem/miscellaneous.lua:25
 msgid "FLAT"
@@ -4815,7 +4816,7 @@ msgstr ""
 
 #: modules/prefab_controller.lua:82
 msgid "Non-damaging"
-msgstr ""
+msgstr "Не наносящие урон"
 
 #: modules/prefab_controller.lua:87
 msgid "NONE"
@@ -4851,35 +4852,35 @@ msgstr ""
 
 #: modules/prefab_controller.lua:187
 msgid "Advanced Level Control"
-msgstr ""
+msgstr "Расширенный контроль уровней"
 
 #: modules/prefab_controller.lua:218
 msgid "Point Decor"
-msgstr ""
+msgstr "Точечные декорации"
 
 #: modules/prefab_controller.lua:232
 msgid "Wall Decor"
-msgstr ""
+msgstr "Декорации на стенах"
 
 #: modules/prefab_controller.lua:242
 msgid "Group Walls"
-msgstr ""
+msgstr "Группировать стены"
 
 #: modules/prefab_controller.lua:255
 msgid "Single Room Themes"
-msgstr ""
+msgstr "Одна тема на все комнаты"
 
 #: modules/prefab_controller.lua:271
 msgid "Limited Wall Groups"
-msgstr ""
+msgstr "Лимит группировки стен"
 
 #: modules/prefab_controller.lua:290
 msgid "Peered Starts/Exits"
-msgstr ""
+msgstr "Видимость выхода со старта (?)"
 
 #: modules/prefab_controller.lua:299
 msgid "Steppy Caves"
-msgstr ""
+msgstr "Крутые пещеры"
 
 #: modules/prefab_controller.lua:302
 msgid "Always"
@@ -4895,71 +4896,71 @@ msgstr ""
 
 #: modules/prefab_controller.lua:326
 msgid "Crushers"
-msgstr ""
+msgstr "Прессы, давящие поверхности"
 
 #: modules/prefab_controller.lua:334
 msgid "Dexterity Fabs"
-msgstr ""
+msgstr "Префабы на ловкость"
 
 #: modules/prefab_controller.lua:342
 msgid "Gambling Fabs"
-msgstr ""
+msgstr "Префабы на жадность игрока"
 
 #: modules/prefab_controller.lua:350
 msgid "Sight Ambush Cages"
-msgstr ""
+msgstr "Клетки с дальнозоркой засадой"
 
 #: modules/prefab_controller.lua:359
 msgid "Mirror Mazes"
-msgstr ""
+msgstr "Лабиринты из зеркал"
 
 #: modules/prefab_controller.lua:367
 msgid "Dark Mazes"
-msgstr ""
+msgstr "Тёмные лабиринты"
 
 #: modules/prefab_controller.lua:375
 msgid "Stair Ladders"
-msgstr ""
+msgstr "Лестничные пролёты"
 
 #: modules/prefab_controller.lua:397
 msgid "Damaging Hallways"
-msgstr ""
+msgstr "Наносящие урон коридоры"
 
 #: modules/procedural_gotcha.lua:23
 msgid "Large"
-msgstr ""
+msgstr "Крупные"
 
 #: modules/procedural_gotcha.lua:24
 msgid "Regular"
-msgstr ""
+msgstr "Обычные"
 
 #: modules/procedural_gotcha.lua:25
 msgid "Small"
-msgstr ""
+msgstr "Небольшие"
 
 #: modules/procedural_gotcha.lua:26
 msgid "Tiny"
-msgstr ""
+msgstr "Мелкие"
 
 #: modules/procedural_gotcha.lua:31
 msgid "Final Map Only"
-msgstr ""
+msgstr "Только последняя карта"
 
 #: modules/procedural_gotcha.lua:32
 msgid "Episodic (MAP11, MAP20, MAP30)"
-msgstr ""
+msgstr "По эпизодам (MAP11, MAP20, MAP30)"
 
 #: modules/procedural_gotcha.lua:33
 msgid "2 per ep (5,11,16,20,25,30)"
-msgstr ""
+msgstr "2 в эпизод (5,11,16,20,25,30)"
 
 #: modules/procedural_gotcha.lua:34
 msgid "3 per ep (3,7,11,14,17,20,23,27,30)"
-msgstr ""
+msgstr "3 в эпизод (3,7,11,14,17,20,23,27,30)"
 
 #: modules/procedural_gotcha.lua:35
 msgid "4 per ep (3,6,9,11,14,16,18,20,23,26,28,30)"
-msgstr ""
+msgstr "4 в эпизод (3,6,9,11,14,16,18,20,23,26,28,30)"
 
 #: modules/procedural_gotcha.lua:36
 msgid "_"
@@ -4967,59 +4968,59 @@ msgstr ""
 
 #: modules/procedural_gotcha.lua:37
 msgid "5% Chance, Any Map After MAP04"
-msgstr ""
+msgstr "Шанс 5%, любая после MAP04"
 
 #: modules/procedural_gotcha.lua:38
 msgid "10% Chance, Any Map After MAP04"
-msgstr ""
+msgstr "Шанс 10%, любая после MAP04"
 
 #: modules/procedural_gotcha.lua:39
 msgid "Everything"
-msgstr ""
+msgstr "Все"
 
 #: modules/procedural_gotcha.lua:67
 msgid "Procedural Gotchas"
-msgstr ""
+msgstr "Процедурные спец. уровни"
 
 #: modules/procedural_gotcha.lua:87
 msgid "Gotcha Frequency"
-msgstr ""
+msgstr "Частота спец. уровней"
 
 #: modules/procedural_gotcha.lua:100
 msgid "Extra Quantity"
-msgstr ""
+msgstr "Доп. монстры"
 
 #: modules/procedural_gotcha.lua:114
 msgid "Extra Strength"
-msgstr ""
+msgstr "Доп. сложность"
 
 #: modules/procedural_gotcha.lua:133
 msgid "Map Size"
-msgstr ""
+msgstr "Размер уровней"
 
 #: modules/procedural_gotcha_zdoom.lua:24
 msgid "Easier"
-msgstr ""
+msgstr "Проще"
 
 #: modules/procedural_gotcha_zdoom.lua:25
 msgid "Moderate"
-msgstr ""
+msgstr "Средне"
 
 #: modules/procedural_gotcha_zdoom.lua:26
 msgid "Harder"
-msgstr ""
+msgstr "Сложнее"
 
 #: modules/procedural_gotcha_zdoom.lua:27
 msgid "Nightmare"
-msgstr ""
+msgstr "Кошмар"
 
 #: modules/procedural_gotcha_zdoom.lua:32
 msgid "Reduced by 50%"
-msgstr ""
+msgstr "Уменьшено на 50%"
 
 #: modules/procedural_gotcha_zdoom.lua:33
 msgid "Reduced by 25%"
-msgstr ""
+msgstr "Уменьшено на 25%"
 
 #: modules/procedural_gotcha_zdoom.lua:34
 msgid "Default"
@@ -5027,15 +5028,15 @@ msgstr ""
 
 #: modules/procedural_gotcha_zdoom.lua:35
 msgid "Increased by 50%"
-msgstr ""
+msgstr "Увеличино на 50%"
 
 #: modules/procedural_gotcha_zdoom.lua:36
 msgid "Increased by 100%"
-msgstr ""
+msgstr "Увеличино на 100%"
 
 #: modules/procedural_gotcha_zdoom.lua:37
 msgid "Increased by 200%"
-msgstr ""
+msgstr "Увеличино на 200%"
 
 #: modules/procedural_gotcha_zdoom.lua:42
 msgid "Default"
@@ -5043,15 +5044,15 @@ msgstr ""
 
 #: modules/procedural_gotcha_zdoom.lua:43
 msgid "50% less"
-msgstr ""
+msgstr "Меньше на 50%"
 
 #: modules/procedural_gotcha_zdoom.lua:44
 msgid "80% less"
-msgstr ""
+msgstr "Меньше на 80%"
 
 #: modules/procedural_gotcha_zdoom.lua:45
 msgid "100% less"
-msgstr ""
+msgstr "Меньше на 100%"
 
 #: modules/procedural_gotcha_zdoom.lua:50
 msgid "NONE"
@@ -5095,23 +5096,23 @@ msgstr ""
 
 #: modules/procedural_gotcha_zdoom.lua:64
 msgid "Much Harder"
-msgstr ""
+msgstr "Много сложнее"
 
 #: modules/procedural_gotcha_zdoom.lua:65
 msgid "Nightmare"
-msgstr ""
+msgstr "Кошмар"
 
 #: modules/procedural_gotcha_zdoom.lua:70
 msgid "Extremely slow"
-msgstr ""
+msgstr "Крайне медленно"
 
 #: modules/procedural_gotcha_zdoom.lua:71
 msgid "Very slow"
-msgstr ""
+msgstr "Очень медленно"
 
 #: modules/procedural_gotcha_zdoom.lua:72
 msgid "Slow"
-msgstr ""
+msgstr "Медленно"
 
 #: modules/procedural_gotcha_zdoom.lua:73
 msgid "Default"
@@ -5119,43 +5120,43 @@ msgstr ""
 
 #: modules/procedural_gotcha_zdoom.lua:74
 msgid "Fast"
-msgstr ""
+msgstr "Быстро"
 
 #: modules/procedural_gotcha_zdoom.lua:75
 msgid "Faster"
-msgstr ""
+msgstr "Крайне быстро"
 
 #: modules/procedural_gotcha_zdoom.lua:76
 msgid "Nightmare"
-msgstr ""
+msgstr "Кошмар"
 
 #: modules/procedural_gotcha_zdoom.lua:81
 msgid "Scatter around arena"
-msgstr ""
+msgstr "Разбросаны по арене"
 
 #: modules/procedural_gotcha_zdoom.lua:82
 msgid "Close to player start"
-msgstr ""
+msgstr "Лежат близко к старту"
 
 #: modules/procedural_gotcha_zdoom.lua:87
 msgid "Exit after 10 seconds"
-msgstr ""
+msgstr "Выход после десяти секунд"
 
 #: modules/procedural_gotcha_zdoom.lua:88
 msgid "Spawn pickup that exits the level"
-msgstr ""
+msgstr "Создавать предмет для выхода с уровня"
 
 #: modules/procedural_gotcha_zdoom.lua:93
 msgid "Hard Limit"
-msgstr ""
+msgstr "Жёсткое ограничение"
 
 #: modules/procedural_gotcha_zdoom.lua:94
 msgid "Soft Limit"
-msgstr ""
+msgstr "Мягкое ограничение"
 
 #: modules/procedural_gotcha_zdoom.lua:95
 msgid "No Limit"
-msgstr ""
+msgstr "Без ограничения"
 
 #: modules/procedural_gotcha_zdoom.lua:1591
 msgid "Large"
@@ -5198,12 +5199,12 @@ msgid "_"
 msgstr ""
 
 #: modules/procedural_gotcha_zdoom.lua:1605
-msgid "5% Chance, Any Map After MAP04"
-msgstr ""
+msgid "5% Chance, Any Map After Map 4"
+msgstr "Шанс 5%, любая после MAP04"
 
 #: modules/procedural_gotcha_zdoom.lua:1606
 msgid "10% Chance, Any Map After MAP04"
-msgstr ""
+msgstr "Шанс 10%, любая после MAP04"
 
 #: modules/procedural_gotcha_zdoom.lua:1607
 msgid "Everything"
@@ -5211,7 +5212,7 @@ msgstr ""
 
 #: modules/procedural_gotcha_zdoom.lua:1688
 msgid "ZDoom Procedural Gotchas"
-msgstr ""
+msgstr "Процедурные спец. уровни ZDoom"
 
 #: modules/procedural_gotcha_zdoom.lua:1711
 msgid "Gotcha Frequency"
@@ -5231,83 +5232,83 @@ msgstr ""
 
 #: modules/procedural_gotcha_zdoom.lua:1770
 msgid "Enable Bosses"
-msgstr ""
+msgstr "Включить боссов"
 
 #: modules/procedural_gotcha_zdoom.lua:1780
 msgid "Force Boss Fight"
-msgstr ""
+msgstr "Обязательная босс-битва"
 
 #: modules/procedural_gotcha_zdoom.lua:1790
 msgid "Boss Difficulty"
-msgstr ""
+msgstr "Сложность босса"
 
 #: modules/procedural_gotcha_zdoom.lua:1800
 msgid "Boss Health Modifier"
-msgstr ""
+msgstr "Здоровье босса"
 
 #: modules/procedural_gotcha_zdoom.lua:1810
 msgid "Hitscan Bosses"
-msgstr ""
+msgstr "Хитскан-боссы"
 
 #: modules/procedural_gotcha_zdoom.lua:1821
 msgid "Visible Health Bar"
-msgstr ""
+msgstr "Полоса здоровья босса"
 
 #: modules/procedural_gotcha_zdoom.lua:1831
 msgid "Enable Boss Music"
-msgstr ""
+msgstr "Изменение музыки"
 
 #: modules/procedural_gotcha_zdoom.lua:1842
 msgid "Arena Steepness"
-msgstr ""
+msgstr "Крутизна рельефа арены"
 
 #: modules/procedural_gotcha_zdoom.lua:1852
 msgid "Reinforcement Strength"
-msgstr ""
+msgstr "Сила подкреплений босса"
 
 #: modules/procedural_gotcha_zdoom.lua:1861
 msgid "Reinforcement Rate"
-msgstr ""
+msgstr "Частота подкреплений босса"
 
 #: modules/procedural_gotcha_zdoom.lua:1870
 msgid "Respect zero prob"
-msgstr ""
+msgstr "Учитывать вероятность 0%"
 
 #: modules/procedural_gotcha_zdoom.lua:1881
 msgid "Monster limit type"
-msgstr ""
+msgstr "Ограничение вида монстров"
 
 #: modules/procedural_gotcha_zdoom.lua:1893
 msgid "Weapon placement"
-msgstr ""
+msgstr "Расположение оружия"
 
 #: modules/procedural_gotcha_zdoom.lua:1904
 msgid "Exit type"
-msgstr ""
+msgstr "Тип выхода после победы"
 
 #: modules/procedural_gotcha_zdoom.lua:1913
 msgid "Ammo supplies mult"
-msgstr ""
+msgstr "Множитель патронов"
 
 #: modules/procedural_gotcha_zdoom.lua:1928
 msgid "Healing supplies mult"
-msgstr ""
+msgstr "Множ. предм. здоровья"
 
 #: modules/procedural_textures.lua:26
 msgid "Vanilla Only"
-msgstr ""
+msgstr "Только из оригинала (ванили)"
 
 #: modules/procedural_textures.lua:27
 msgid "Include Epic Textures"
-msgstr ""
+msgstr "Добавить пафосные текстуры"
 
 #: modules/procedural_textures.lua:238
 msgid "Procedural Textures"
-msgstr ""
+msgstr "Процедурные текстуры"
 
 #: modules/procedural_textures.lua:255
 msgid "Scope"
-msgstr ""
+msgstr "Область"
 
 #: modules/quake/ctl_quake.lua:23
 msgid "DEFAULT"
@@ -5891,31 +5892,31 @@ msgstr ""
 
 #: modules/sky_generator.lua:25
 msgid "Default"
-msgstr ""
+msgstr "По умолчанию"
 
 #: modules/sky_generator.lua:26
 msgid "Random"
-msgstr ""
+msgstr "Случайно"
 
 #: modules/sky_generator.lua:27
 msgid "Night"
-msgstr ""
+msgstr "Ночное небо"
 
 #: modules/sky_generator.lua:28
 msgid "Day"
-msgstr ""
+msgstr "Дневное небо"
 
 #: modules/sky_generator.lua:33
 msgid "Random"
-msgstr ""
+msgstr "Случайно"
 
 #: modules/sky_generator.lua:34
 msgid "Never"
-msgstr ""
+msgstr "Никогда"
 
 #: modules/sky_generator.lua:35
 msgid "Always"
-msgstr ""
+msgstr "Всегда"
 
 #: modules/sky_generator.lua:40
 msgid "Random"
@@ -5923,15 +5924,15 @@ msgstr ""
 
 #: modules/sky_generator.lua:41
 msgid "Hills"
-msgstr ""
+msgstr "Холмы"
 
 #: modules/sky_generator.lua:42
 msgid "Mountainous"
-msgstr ""
+msgstr "Горы"
 
 #: modules/sky_generator.lua:43
 msgid "Cavernous"
-msgstr ""
+msgstr "Пещеры"
 
 #: modules/sky_generator.lua:48
 msgid "DEFAULT"
@@ -5939,71 +5940,71 @@ msgstr ""
 
 #: modules/sky_generator.lua:49
 msgid "Blue + White Clouds"
-msgstr ""
+msgstr "Синий, с белыми облаками"
 
 #: modules/sky_generator.lua:50
 msgid "Grey"
-msgstr ""
+msgstr "Серый"
 
 #: modules/sky_generator.lua:51
 msgid "Dark Grey"
-msgstr ""
+msgstr "Тёмно-серый"
 
 #: modules/sky_generator.lua:52
 msgid "Dark Blue"
-msgstr ""
+msgstr "Тёмно-синый"
 
 #: modules/sky_generator.lua:53
 msgid "Red"
-msgstr ""
+msgstr "Красный"
 
 #: modules/sky_generator.lua:54
 msgid "Orange"
-msgstr ""
+msgstr "Оранжевый"
 
 #: modules/sky_generator.lua:55
 msgid "Red-ish"
-msgstr ""
+msgstr "Красноватый"
 
 #: modules/sky_generator.lua:56
 msgid "Brown"
-msgstr ""
+msgstr "Коричневый"
 
 #: modules/sky_generator.lua:57
 msgid "Brown-ish"
-msgstr ""
+msgstr "Коричневатый"
 
 #: modules/sky_generator.lua:58
 msgid "Yellow"
-msgstr ""
+msgstr "Жёлтый"
 
 #: modules/sky_generator.lua:59
 msgid "Green"
-msgstr ""
+msgstr "Зелёный"
 
 #: modules/sky_generator.lua:60
 msgid "Jade"
-msgstr ""
+msgstr "Нефритовый/Малахитовый"
 
 #: modules/sky_generator.lua:61
 msgid "Dark Red"
-msgstr ""
+msgstr "Тёмно-красный"
 
 #: modules/sky_generator.lua:62
 msgid "Peach"
-msgstr ""
+msgstr "Персиковый"
 
 #: modules/sky_generator.lua:63
 msgid "White"
-msgstr ""
+msgstr "Белый"
 
 #: modules/sky_generator.lua:64
 msgid "Purple"
-msgstr ""
+msgstr "Фиолетовый"
 
 #: modules/sky_generator.lua:65
 msgid "Rainbow"
-msgstr ""
+msgstr "Радужный"
 
 #: modules/sky_generator.lua:70
 msgid "DEFAULT"
@@ -6011,39 +6012,39 @@ msgstr ""
 
 #: modules/sky_generator.lua:71
 msgid "Black"
-msgstr ""
+msgstr "Чёрный"
 
 #: modules/sky_generator.lua:72
 msgid "Brown"
-msgstr ""
+msgstr "Коричневый"
 
 #: modules/sky_generator.lua:73
 msgid "Tan"
-msgstr ""
+msgstr "Цвета кожи"
 
 #: modules/sky_generator.lua:74
 msgid "Green"
-msgstr ""
+msgstr "Зелёный"
 
 #: modules/sky_generator.lua:75
 msgid "Dark Green"
-msgstr ""
+msgstr "Тёмно-зелёный"
 
 #: modules/sky_generator.lua:76
 msgid "Red"
-msgstr ""
+msgstr "Красный"
 
 #: modules/sky_generator.lua:77
 msgid "Dark Brown"
-msgstr ""
+msgstr "Тёмно-коричневый"
 
 #: modules/sky_generator.lua:78
 msgid "Green-ish"
-msgstr ""
+msgstr "Зеленованый"
 
 #: modules/sky_generator.lua:79
 msgid "Ice"
-msgstr ""
+msgstr "Ледяной"
 
 #: modules/sky_generator.lua:84
 msgid "DEFAULT"
@@ -6051,59 +6052,59 @@ msgstr ""
 
 #: modules/sky_generator.lua:85
 msgid "None"
-msgstr ""
+msgstr "Отсутствует"
 
 #: modules/sky_generator.lua:86
 msgid "Blue"
-msgstr ""
+msgstr "Синий"
 
 #: modules/sky_generator.lua:87
 msgid "Red"
-msgstr ""
+msgstr "Красный"
 
 #: modules/sky_generator.lua:88
 msgid "Brown"
-msgstr ""
+msgstr "Коричневый"
 
 #: modules/sky_generator.lua:89
 msgid "Green"
-msgstr ""
+msgstr "Зелёный"
 
 #: modules/sky_generator.lua:652
 msgid "Sky Generator"
-msgstr ""
+msgstr "Генератор неба"
 
 #: modules/sky_generator.lua:670
 msgid "Time of Day"
-msgstr ""
+msgstr "Время суток"
 
 #: modules/sky_generator.lua:681
 msgid "Terrain Foreground"
-msgstr ""
+msgstr "Рельеф ближнего плана"
 
 #: modules/sky_generator.lua:690
 msgid "Terrain Parameters"
-msgstr ""
+msgstr "Параметры рельефа"
 
 #: modules/sky_generator.lua:702
 msgid "Day Sky Color"
-msgstr ""
+msgstr "Цвет дневного неба"
 
 #: modules/sky_generator.lua:711
 msgid "Terrain Color"
-msgstr ""
+msgstr "Цвет рельефа"
 
 #: modules/sky_generator.lua:720
 msgid "Nebula Color"
-msgstr ""
+msgstr "Цвет туманностей"
 
 #: modules/sky_generator.lua:731
 msgid "Sky Gen Lighting"
-msgstr ""
+msgstr "Общее освещение неба"
 
 #: modules/small_spiderdemon.lua:32
 msgid "Smaller Spiderdemon"
-msgstr ""
+msgstr "Уменьшенный Spiderdemon"
 
 #: modules/stealth_mons.lua:241
 msgid "Normal"
@@ -6119,11 +6120,11 @@ msgstr ""
 
 #: modules/stealth_mons.lua:274
 msgid "Stealth Monsters"
-msgstr ""
+msgstr "Стелс-монстры"
 
 #: modules/stealth_mons.lua:294
 msgid "Default Quantity"
-msgstr ""
+msgstr "Обычное количество"
 
 #: modules/stealth_mons.lua:306
 msgid "DEFAULT"
@@ -6131,7 +6132,7 @@ msgstr ""
 
 #: modules/stealth_mons.lua:307
 msgid "None at all"
-msgstr ""
+msgstr "Нет вовсе"
 
 #: modules/stealth_mons.lua:308
 msgid "Scarce"
@@ -6535,63 +6536,63 @@ msgstr ""
 
 #: modules/strife/miscellaneous.lua:380
 msgid "Lighting"
-msgstr ""
+msgstr "Освещение"
 
 #: modules/strife/miscellaneous.lua:381
 msgid "Detail"
-msgstr ""
+msgstr "Детализация (?)"
 
 #: modules/strife/miscellaneous.lua:383
 msgid "Pictures"
-msgstr ""
+msgstr "Картины и панно"
 
 #: modules/strife/miscellaneous.lua:384
 msgid "Multiple Paths"
-msgstr ""
+msgstr "Разделение пути"
 
 #: modules/strife/miscellaneous.lua:385
 msgid "3D Floors"
-msgstr ""
+msgstr "3D-полы"
 
 #: modules/strife/miscellaneous.lua:387
 msgid "Lakes"
-msgstr ""
+msgstr "Озёра"
 
 #: modules/theme_control.lua:127
 msgid "[Exp] Doom 2 Theme Control"
-msgstr ""
+msgstr "[Эксп.] Управление темами Doom 2"
 
 #: modules/theme_control.lua:168
 msgid "[Exp] Doom 1 Theme Control"
-msgstr ""
+msgstr "[Эксп.] Управление темами Doom 1"
 
 #: modules/ui_arch.lua:25
 msgid "Enable"
-msgstr ""
+msgstr "Включено"
 
 #: modules/ui_arch.lua:26
 msgid "Sky-gen Smart"
-msgstr ""
+msgstr "В зависимости от неба"
 
 #: modules/ui_arch.lua:27
 msgid "Disable"
-msgstr ""
+msgstr "Отключено"
 
 #: modules/ui_arch.lua:32
 msgid "Per Theme"
-msgstr ""
+msgstr "По темам"
 
 #: modules/ui_arch.lua:33
 msgid "Episodic"
-msgstr ""
+msgstr "По эпизодам"
 
 #: modules/ui_arch.lua:34
 msgid "Random"
-msgstr ""
+msgstr "Случайно"
 
 #: modules/ui_arch.lua:35
 msgid "Generic"
-msgstr ""
+msgstr "Общий"
 
 #: modules/ui_arch.lua:36
 msgid "Disable"
@@ -6599,39 +6600,39 @@ msgstr ""
 
 #: modules/ui_arch.lua:41
 msgid "Mostly"
-msgstr ""
+msgstr "В основном"
 
 #: modules/ui_arch.lua:42
 msgid "Normal"
-msgstr ""
+msgstr "Нормально"
 
 #: modules/ui_arch.lua:43
 msgid "Less"
-msgstr ""
+msgstr "Меньше"
 
 #: modules/ui_arch.lua:49
 msgid "Very Fast Curve"
-msgstr ""
+msgstr "Экспоненциальная (очень быстро)"
 
 #: modules/ui_arch.lua:50
 msgid "Fast Curve"
-msgstr ""
+msgstr "Квадратичная (быстро)"
 
 #: modules/ui_arch.lua:51
 msgid "Linear"
-msgstr ""
+msgstr "Линейная"
 
 #: modules/ui_arch.lua:52
 msgid "Slow Curve"
-msgstr ""
+msgstr "От корня (медленно)"
 
 #: modules/ui_arch.lua:53
 msgid "Very Slow Curve"
-msgstr ""
+msgstr "Логарифмическая (очень медленно)"
 
 #: modules/ui_arch.lua:59
 msgid "Smaller"
-msgstr ""
+msgstr "Меньше"
 
 #: modules/ui_arch.lua:60
 msgid "DEFAULT"
@@ -6639,15 +6640,15 @@ msgstr ""
 
 #: modules/ui_arch.lua:61
 msgid "Larger"
-msgstr ""
+msgstr "Больше"
 
 #: modules/ui_arch.lua:120
 msgid "Architecture"
-msgstr ""
+msgstr "Архитектура"
 
 #: modules/ui_arch.lua:139
 msgid "Level Size"
-msgstr ""
+msgstr "Размер уровней"
 
 #: modules/ui_arch.lua:167
 msgid "Upper Bound"
@@ -6659,71 +6660,71 @@ msgstr ""
 
 #: modules/ui_arch.lua:216
 msgid "Ramp Factor"
-msgstr ""
+msgstr "Скорость увеличения уровней"
 
 #: modules/ui_arch.lua:232
 msgid "Level Size Bias"
-msgstr ""
+msgstr "Уклон в определённый размер уровня"
 
 #: modules/ui_arch.lua:244
 msgid "Theme Mix-in Type"
-msgstr ""
+msgstr "Тип смешения тем"
 
 #: modules/ui_arch.lua:258
 msgid "Linear Mode"
-msgstr ""
+msgstr "Процент линейных карт"
 
 #: modules/ui_arch.lua:278
 msgid "Nature Mode"
-msgstr ""
+msgstr "Процент природных карт"
 
 #: modules/ui_arch.lua:294
 msgid "Streets Mode"
-msgstr ""
+msgstr "Процент карт с улицами"
 
 #: modules/ui_arch.lua:309
 msgid "Urban Only Streets"
-msgstr ""
+msgstr "Улицы только городские"
 
 #: modules/ui_arch.lua:320
 msgid "Prebuilt Levels"
-msgstr ""
+msgstr "Предсозданные спец. карты"
 
 #: modules/ui_arch.lua:333
 msgid "Layout Absurdity"
-msgstr ""
+msgstr "Абсурдность поверхности (?)"
 
 #: modules/ui_arch.lua:350
 msgid "Outdoors"
-msgstr ""
+msgstr "Пространство под небом"
 
 #: modules/ui_arch.lua:351
 msgid "Caves"
-msgstr ""
+msgstr "Пещеры"
 
 #: modules/ui_arch.lua:352
 msgid "Liquids"
-msgstr ""
+msgstr "Жидкости"
 
 #: modules/ui_arch.lua:353
 msgid "Hallways"
-msgstr ""
+msgstr "Коридоры"
 
 #: modules/ui_arch.lua:354
 msgid "Teleports"
-msgstr ""
+msgstr "Телепортаторы"
 
 #: modules/ui_arch.lua:355
 msgid "Steepness"
-msgstr ""
+msgstr "Крутизна рельефа"
 
 #: modules/ui_arch.lua:360
 msgid "Bottomless Vistas"
-msgstr ""
+msgstr "Виды на бездонные пропасти"
 
 #: modules/ui_arch.lua:374
 msgid "ZDoom 3D Skybox"
-msgstr ""
+msgstr "3D-скайбокс ZDoom"
 
 #: modules/ui_mons.lua:25
 msgid "NONE"
@@ -6731,15 +6732,15 @@ msgstr ""
 
 #: modules/ui_mons.lua:26
 msgid "Easier"
-msgstr ""
+msgstr "Проще"
 
 #: modules/ui_mons.lua:27
 msgid "Average"
-msgstr ""
+msgstr "Средне"
 
 #: modules/ui_mons.lua:28
 msgid "Harder"
-msgstr ""
+msgstr "Сложнее"
 
 #: modules/ui_mons.lua:33
 msgid "DEFAULT"
@@ -6747,31 +6748,31 @@ msgstr ""
 
 #: modules/ui_mons.lua:34
 msgid "Teleports Only"
-msgstr ""
+msgstr "Только телепортация"
 
 #: modules/ui_mons.lua:35
 msgid "Closets Only"
-msgstr ""
+msgstr "Только перекрывание пути"
 
 #: modules/ui_mons.lua:36
 msgid "20% Closets - 80% Teleports"
-msgstr ""
+msgstr "20% перекрытий на 80% телепортов"
 
 #: modules/ui_mons.lua:37
 msgid "40% Closets - 60% Teleports"
-msgstr ""
+msgstr "40% перекрытий на 60% телепортов"
 
 #: modules/ui_mons.lua:38
 msgid "60% Closets - 40% Teleports"
-msgstr ""
+msgstr "60% перекрытий на 40% телепортов"
 
 #: modules/ui_mons.lua:39
 msgid "80% Closets - 20% Teleports"
-msgstr ""
+msgstr "80% перекрытий на 20% телепортов"
 
 #: modules/ui_mons.lua:44
 msgid "Weaker"
-msgstr ""
+msgstr "Слабее"
 
 #: modules/ui_mons.lua:45
 msgid "Easier"
@@ -6783,39 +6784,39 @@ msgstr ""
 
 #: modules/ui_mons.lua:47
 msgid "Tricky"
-msgstr ""
+msgstr "Нервирующе"
 
 #: modules/ui_mons.lua:48
 msgid "Treacherous"
-msgstr ""
+msgstr "Опасно"
 
 #: modules/ui_mons.lua:49
 msgid "Dangerous"
-msgstr ""
+msgstr "Крайне опасно"
 
 #: modules/ui_mons.lua:50
 msgid "Deadly"
-msgstr ""
+msgstr "Смертельно"
 
 #: modules/ui_mons.lua:51
 msgid "Lethal"
-msgstr ""
+msgstr "Фатально"
 
 #: modules/ui_mons.lua:52
 msgid "CRAZY"
-msgstr ""
+msgstr "ДИКО"
 
 #: modules/ui_mons.lua:57
 msgid "Yes - Full Strength"
-msgstr ""
+msgstr "Да, с такой же сложностью"
 
 #: modules/ui_mons.lua:58
 msgid "Yes - Weak"
-msgstr ""
+msgstr "Да, но ослабленные"
 
 #: modules/ui_mons.lua:59
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #: modules/ui_mons.lua:64
 msgid "DEFAULT"
@@ -6823,103 +6824,103 @@ msgstr ""
 
 #: modules/ui_mons.lua:65
 msgid "Harder"
-msgstr ""
+msgstr "Сложнее"
 
 #: modules/ui_mons.lua:66
 msgid "Tougher"
-msgstr ""
+msgstr "Несколько сложнее"
 
 #: modules/ui_mons.lua:67
 msgid "Fiercer"
-msgstr ""
+msgstr "Жёстче"
 
 #: modules/ui_mons.lua:68
 msgid "CRAZIER"
-msgstr ""
+msgstr "СУМАСШЕСТВИЕ"
 
 #: modules/ui_mons.lua:73
 msgid "Disabled"
-msgstr ""
+msgstr "Отключено"
 
 #: modules/ui_mons.lua:74
 msgid "Minor Bosses Only"
-msgstr ""
+msgstr "Лишь малые боссы"
 
 #: modules/ui_mons.lua:75
 msgid "Minor and Nasty Bosses Only"
-msgstr ""
+msgstr "Малые и средние боссы"
 
 #: modules/ui_mons.lua:76
 msgid "All Bosses"
-msgstr ""
+msgstr "Все боссы"
 
 #: modules/ui_mons.lua:106
 msgid "Monsters"
-msgstr ""
+msgstr "Монстры"
 
 #: modules/ui_mons.lua:120
 msgid "Quantity"
-msgstr ""
+msgstr "Количество"
 
 #: modules/ui_mons.lua:181
 msgid "Upper Bound"
-msgstr ""
+msgstr "Максимум"
 
 #: modules/ui_mons.lua:241
 msgid "Lower Bound"
-msgstr ""
+msgstr "Минимум"
 
 #: modules/ui_mons.lua:302
 msgid "Strength"
-msgstr ""
+msgstr "Сила"
 
 #: modules/ui_mons.lua:314
 msgid "Ramp Up"
-msgstr ""
+msgstr "Усиление"
 
 #: modules/ui_mons.lua:329
 msgid "Quiet Start"
-msgstr ""
+msgstr "\"Тихий\" старт"
 
 #: modules/ui_mons.lua:336
 msgid "Monster Variety"
-msgstr ""
+msgstr "Вариативность монстров"
 
 #: modules/ui_mons.lua:342
 msgid "Monster Variety Jumpstart"
-msgstr ""
+msgstr "Вариативн. монстров со старта"
 
 #: modules/ui_mons.lua:349
 msgid "Bosses"
-msgstr ""
+msgstr "Боссы"
 
 #: modules/ui_mons.lua:352
 msgid "Bosses As Regulars"
-msgstr ""
+msgstr "Боссы в качестве обычных врагов"
 
 #: modules/ui_mons.lua:358
 msgid "Traps"
-msgstr ""
+msgstr "Ловушки"
 
 #: modules/ui_mons.lua:361
 msgid "Trap Style"
-msgstr ""
+msgstr "Стиль ловушек"
 
 #: modules/ui_mons.lua:368
 msgid "Trap Monsters"
-msgstr ""
+msgstr "Монстры в ловушках"
 
 #: modules/ui_mons.lua:375
 msgid "Cages"
-msgstr ""
+msgstr "Клетки"
 
 #: modules/ui_mons.lua:379
 msgid "Cage Monsters"
-msgstr ""
+msgstr "Монстры в клетках"
 
 #: modules/ui_mons.lua:388
 msgid "Monsters in Secrets"
-msgstr ""
+msgstr "Монстры в секретах"
 
 #: modules/ui_pickups.lua:24
 msgid "NONE"
@@ -6927,31 +6928,31 @@ msgstr ""
 
 #: modules/ui_pickups.lua:25
 msgid "Scarce"
-msgstr ""
+msgstr "Исключительно редко"
 
 #: modules/ui_pickups.lua:26
 msgid "Less"
-msgstr ""
+msgstr "Реже"
 
 #: modules/ui_pickups.lua:27
 msgid "Bit Less"
-msgstr ""
+msgstr "Меньше нормы"
 
 #: modules/ui_pickups.lua:28
 msgid "Normal"
-msgstr ""
+msgstr "Нормально"
 
 #: modules/ui_pickups.lua:29
 msgid "Bit More"
-msgstr ""
+msgstr "Больше нормы"
 
 #: modules/ui_pickups.lua:30
 msgid "More"
-msgstr ""
+msgstr "Многим больше"
 
 #: modules/ui_pickups.lua:31
 msgid "Heaps"
-msgstr ""
+msgstr "Множество"
 
 #: modules/ui_pickups.lua:36
 msgid "NONE"
@@ -6959,23 +6960,23 @@ msgstr ""
 
 #: modules/ui_pickups.lua:37
 msgid "Very Soon"
-msgstr ""
+msgstr "Крайне скоро"
 
 #: modules/ui_pickups.lua:38
 msgid "Sooner"
-msgstr ""
+msgstr "Довольно скоро"
 
 #: modules/ui_pickups.lua:39
 msgid "Normal"
-msgstr ""
+msgstr "Нормально"
 
 #: modules/ui_pickups.lua:40
 msgid "Later"
-msgstr ""
+msgstr "Позже"
 
 #: modules/ui_pickups.lua:41
 msgid "Very Late"
-msgstr ""
+msgstr "Крайне поздно"
 
 #: modules/ui_pickups.lua:46
 msgid "NONE"
@@ -6983,23 +6984,23 @@ msgstr ""
 
 #: modules/ui_pickups.lua:47
 msgid "Rare"
-msgstr ""
+msgstr "Редко"
 
 #: modules/ui_pickups.lua:48
 msgid "Less"
-msgstr ""
+msgstr "Меньше"
 
 #: modules/ui_pickups.lua:49
 msgid "Normal"
-msgstr ""
+msgstr "Нормально"
 
 #: modules/ui_pickups.lua:50
 msgid "More"
-msgstr ""
+msgstr "Больше"
 
 #: modules/ui_pickups.lua:51
 msgid "Heaps"
-msgstr ""
+msgstr "Множество"
 
 #: modules/ui_pickups.lua:56
 msgid "NONE"
@@ -7015,119 +7016,119 @@ msgstr ""
 
 #: modules/ui_pickups.lua:59
 msgid "Rich"
-msgstr ""
+msgstr "Очень богато"
 
 #: modules/ui_pickups.lua:60
 msgid "Resplendent"
-msgstr ""
+msgstr "Сравнимо с сокровищницами"
 
 #: modules/ui_pickups.lua:66
 msgid "Pickups"
-msgstr ""
+msgstr "Настройка предметов"
 
 #: modules/ui_pickups.lua:74
 msgid "Health"
-msgstr ""
+msgstr "Здоровье"
 
 #: modules/ui_pickups.lua:75
 msgid "Ammo"
-msgstr ""
+msgstr "Боеприпасы"
 
 #: modules/ui_pickups.lua:77
 msgid "Weapons"
-msgstr ""
+msgstr "Оружие"
 
 #: modules/ui_pickups.lua:78
 msgid "Items"
-msgstr ""
+msgstr "Другие предметы"
 
 #: modules/ui_pickups.lua:80
 msgid "Secrets"
-msgstr ""
+msgstr "Секреты"
 
 #: modules/ui_pickups.lua:82
 msgid "Secrets Bonus"
-msgstr ""
+msgstr "Бонусы в секретах"
 
 #: modules/ui_reject_options.lua:48
 msgid "Map Build Options"
-msgstr ""
+msgstr "Опции создания карты"
 
 #: modules/ui_reject_options.lua:64
 msgid "Build REJECT"
-msgstr ""
+msgstr "Генерировать REJECT"
 
 #: modules/ui_reject_options.lua:97
 msgid "Map Build Options"
-msgstr ""
+msgstr "Опции создания карты"
 
 #: modules/ui_reject_options.lua:113
 msgid "Build Nodes"
-msgstr ""
+msgstr "Генерировать Nodes"
 
 #: modules/ui_reject_options.lua:144
 msgid "Binary"
-msgstr ""
+msgstr "Бинарный (изначальный)"
 
 #: modules/ui_reject_options.lua:145
 msgid "UDMF"
-msgstr ""
+msgstr "UDMF"
 
 #: modules/ui_reject_options.lua:153
 msgid "Map Build Options"
-msgstr ""
+msgstr "Опции создания карты"
 
 #: modules/ui_reject_options.lua:170
 msgid "Build Nodes"
-msgstr ""
+msgstr "Генерировать Nodes"
 
 #: modules/ui_reject_options.lua:180
 msgid "Map Format"
-msgstr ""
+msgstr "Формат карты"
 
 #: modules/ui_slump.lua:25
 msgid "Normal"
-msgstr ""
+msgstr "Нормально"
 
 #: modules/ui_slump.lua:26
 msgid "Ranged Only"
-msgstr ""
+msgstr "Только дальнобойные"
 
 #: modules/ui_slump.lua:27
 msgid "No Fly Zone"
-msgstr ""
+msgstr "Запрет на летающих"
 
 #: modules/ui_slump.lua:28
 msgid "Oops! All Nazis!"
-msgstr ""
+msgstr "Оу! Все — нацисты!"
 
 #: modules/ui_slump.lua:58
 msgid "SLUMP Architecture"
-msgstr ""
+msgstr "Эмулировать генератор SLUMP"
 
 #: modules/ui_slump.lua:73
 msgid "Level Size"
-msgstr ""
+msgstr "Размер уровней"
 
 #: modules/ui_slump.lua:87
 msgid "Room Bigification Chance"
-msgstr ""
+msgstr "Шанс увеличить комнату"
 
 #: modules/ui_slump.lua:100
 msgid "Forkiness"
-msgstr ""
+msgstr "Разветвляемость"
 
 #: modules/ui_slump.lua:115
 msgid "Deathmatch Spawns"
-msgstr ""
+msgstr "Deathmatch-старты"
 
 #: modules/ui_slump.lua:123
 msgid "Major Nukage Mode"
-msgstr ""
+msgstr "Повышенная кислотность"
 
 #: modules/ui_slump.lua:131
 msgid "Quiet Start"
-msgstr ""
+msgstr "\"Тихий\" старт"
 
 #: modules/ui_slump.lua:145
 msgid "SLUMP Monsters"
@@ -7135,27 +7136,27 @@ msgstr ""
 
 #: modules/ui_slump.lua:160
 msgid "Monster Variety"
-msgstr ""
+msgstr "Вариативность монстров"
 
 #: modules/zdoom_armaetus_epic_textures.lua:34
 msgid "ZScript"
-msgstr ""
+msgstr "ZScript"
 
 #: modules/zdoom_armaetus_epic_textures.lua:35
 msgid "ACS-Decorate"
-msgstr ""
+msgstr "ACS-Decorate"
 
 #: modules/zdoom_armaetus_epic_textures.lua:36
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #: modules/zdoom_armaetus_epic_textures.lua:41
 msgid "Random"
-msgstr ""
+msgstr "Случайно"
 
 #: modules/zdoom_armaetus_epic_textures.lua:42
 msgid "Episodic"
-msgstr ""
+msgstr "По эпизодам"
 
 #: modules/zdoom_armaetus_epic_textures.lua:43
 msgid "A Bit Mixed"
@@ -7163,19 +7164,19 @@ msgstr ""
 
 #: modules/zdoom_armaetus_epic_textures.lua:44
 msgid "Snow-ish"
-msgstr ""
+msgstr "Более снежно"
 
 #: modules/zdoom_armaetus_epic_textures.lua:45
 msgid "Desert-ish"
-msgstr ""
+msgstr "Более пустынно"
 
 #: modules/zdoom_armaetus_epic_textures.lua:46
 msgid "Always Snow"
-msgstr ""
+msgstr "Всегда снег"
 
 #: modules/zdoom_armaetus_epic_textures.lua:47
 msgid "Always Desert"
-msgstr ""
+msgstr "Всегда пустыня"
 
 #: modules/zdoom_armaetus_epic_textures.lua:48
 msgid "No"
@@ -7187,23 +7188,23 @@ msgstr ""
 
 #: modules/zdoom_armaetus_epic_textures.lua:1078
 msgid "Custom Liquids"
-msgstr ""
+msgstr "Новые жидкости"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1088
 msgid "Custom Trees"
-msgstr ""
+msgstr "Новые деревья"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1102
 msgid "Environment Theme"
-msgstr ""
+msgstr "Тема окружения"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1114
 msgid "Merge Textures WAD"
-msgstr ""
+msgstr "Объединить текстурный WAD"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1127
 msgid "Include Brightmaps"
-msgstr ""
+msgstr "Включить карты теней"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1138
 msgid "No Hell Environment Themes"
@@ -7235,15 +7236,15 @@ msgstr ""
 
 #: modules/zdoom_frozsoul_sound.lua:239
 msgid "ZDoom: Ambient Sounds"
-msgstr ""
+msgstr "ZDoom: звуки окружения"
 
 #: modules/zdoom_marines.lua:181
 msgid "Plenty"
-msgstr ""
+msgstr "Много"
 
 #: modules/zdoom_marines.lua:182
 msgid "Scarce"
-msgstr ""
+msgstr "Мало"
 
 #: modules/zdoom_marines.lua:183
 msgid "Heaps"
@@ -7251,11 +7252,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:216
 msgid "ZDoom Marines"
-msgstr ""
+msgstr "Морпехи ZDoom"
 
 #: modules/zdoom_marines.lua:236
 msgid "Default Quantity"
-msgstr ""
+msgstr "Обычное количество"
 
 #: modules/zdoom_marines.lua:248
 msgid "DEFAULT"
@@ -7263,7 +7264,7 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:249
 msgid "None at all"
-msgstr ""
+msgstr "Нет вовсе"
 
 #: modules/zdoom_marines.lua:250
 msgid "Scarce"
@@ -7299,7 +7300,7 @@ msgstr ""
 
 #: modules/zdoom_specials.lua:26
 msgid "Merge Doom 1 and 2"
-msgstr ""
+msgstr "Объединить Doom 1 и Doom 2"
 
 #: modules/zdoom_specials.lua:27
 msgid "No"
@@ -7307,7 +7308,7 @@ msgstr ""
 
 #: modules/zdoom_specials.lua:32
 msgid "Per Sky Generator"
-msgstr ""
+msgstr "На каждый генератор неба"
 
 #: modules/zdoom_specials.lua:33
 msgid "Random"
@@ -7319,31 +7320,31 @@ msgstr ""
 
 #: modules/zdoom_specials.lua:39
 msgid "All"
-msgstr ""
+msgstr "Все"
 
 #: modules/zdoom_specials.lua:40
 msgid "Outdoors Only"
-msgstr ""
+msgstr "Только пространство под небом"
 
 #: modules/zdoom_specials.lua:45
 msgid "Subtle"
-msgstr ""
+msgstr "Легчайший"
 
 #: modules/zdoom_specials.lua:46
 msgid "Misty"
-msgstr ""
+msgstr "Загадочный"
 
 #: modules/zdoom_specials.lua:47
 msgid "Smoky"
-msgstr ""
+msgstr "Дымный"
 
 #: modules/zdoom_specials.lua:48
 msgid "Foggy"
-msgstr ""
+msgstr "Туманный"
 
 #: modules/zdoom_specials.lua:49
 msgid "Dense"
-msgstr ""
+msgstr "Плотный"
 
 #: modules/zdoom_specials.lua:50
 msgid "Mix It Up"
@@ -7351,11 +7352,11 @@ msgstr ""
 
 #: modules/zdoom_specials.lua:55
 msgid "Generic"
-msgstr ""
+msgstr "Общий"
 
 #: modules/zdoom_specials.lua:56
 msgid "Generated"
-msgstr ""
+msgstr "Сгенерированный"
 
 #: modules/zdoom_specials.lua:57
 msgid "NONE"
@@ -7363,7 +7364,7 @@ msgstr ""
 
 #: modules/zdoom_specials.lua:193
 msgid "Universal Intermission"
-msgstr ""
+msgstr "Универсальный Intermission"
 
 #: modules/zdoom_specials.lua:194
 msgid "Doom 2 Vanilla"
@@ -7375,55 +7376,55 @@ msgstr ""
 
 #: modules/zdoom_specials.lua:1210
 msgid "ZDoom Special Addons"
-msgstr ""
+msgstr "Специальные аддоны ZDoom"
 
 #: modules/zdoom_specials.lua:1232
 msgid "Fog Generator"
-msgstr ""
+msgstr "Генератор тумана"
 
 #: modules/zdoom_specials.lua:1240
 msgid "Fog Environment"
-msgstr ""
+msgstr "Туман как окружение"
 
 #: modules/zdoom_specials.lua:1248
 msgid "Fog Intensity"
-msgstr ""
+msgstr "Плотность тумана"
 
 #: modules/zdoom_specials.lua:1257
 msgid "Sky Fog"
-msgstr ""
+msgstr "Туманность неба"
 
 #: modules/zdoom_specials.lua:1267
 msgid "Dynamic Lights"
-msgstr ""
+msgstr "Динамический свет"
 
 #: modules/zdoom_specials.lua:1276
 msgid "Glowing Flats"
-msgstr ""
+msgstr "Мерцающие поверхности"
 
 #: modules/zdoom_specials.lua:1286
 msgid "Shuffle Music"
-msgstr ""
+msgstr "Перемешать музыку"
 
 #: modules/zdoom_specials.lua:1297
 msgid "Story Generator"
-msgstr ""
+msgstr "Генератор истории"
 
 #: modules/zdoom_specials.lua:1306
 msgid "Quit Messages"
-msgstr ""
+msgstr "Сообщения при выходе из игры"
 
 #: modules/zdoom_specials.lua:1314
 msgid "Intermission Music"
-msgstr ""
+msgstr "Intermission-музыка"
 
 #: modules/zdoom_specials.lua:1323
 msgid "Episode Selection"
-msgstr ""
+msgstr "Выбор эпизодов"
 
 #: modules/zdoom_specials.lua:1333
 msgid "Disable Intermissions"
-msgstr ""
+msgstr "Отключить экраны Intermission"
                                                              
 #: scripts/defs.lua:59
 msgid "Limit Removing"
@@ -7435,83 +7436,83 @@ msgstr "Оригинал"
 
 #: scripts/defs.lua:74
 msgid "Episodic"
-msgstr ""
+msgstr "По эпизодам"
 
 #: scripts/defs.lua:81
 msgid "Jumbled Up"
-msgstr ""
+msgstr "Сильно перемешать"
 
 #: scripts/defs.lua:88
 msgid "Bit Mixed"
-msgstr ""
+msgstr "Чуть перемешать"
 
 #: scripts/defs.lua:95
 msgid "Psychedelic"
-msgstr ""
+msgstr "Психоделия"
 
 #: scripts/defs.lua:103
 msgid "Single Level"
-msgstr ""
+msgstr "Уровень"
 
 #: scripts/defs.lua:104
 msgid "A Few Maps"
-msgstr ""
+msgstr "Несколько уровней"
 
 #: scripts/defs.lua:105
 msgid "One Episode"
-msgstr ""
+msgstr "Один эпизод"
 
 #: scripts/defs.lua:106
 msgid "Full Game"
-msgstr ""
+msgstr "Полная игра"
 
 #: scripts/defs.lua:532
 msgid "NONE"
-msgstr ""
+msgstr "ОТСУТСТВУЕТ"
 
 #: scripts/defs.lua:533
 msgid "Rare"
-msgstr ""
+msgstr "Крайне мало"
 
 #: scripts/defs.lua:534
 msgid "Few"
-msgstr ""
+msgstr "Мало"
 
 #: scripts/defs.lua:535
 msgid "Less"
-msgstr ""
+msgstr "Меньше среднего"
 
 #: scripts/defs.lua:536
 msgid "Some"
-msgstr ""
+msgstr "Средне"
 
 #: scripts/defs.lua:537
 msgid "More"
-msgstr ""
+msgstr "Больше"
 
 #: scripts/defs.lua:538
 msgid "Heaps"
-msgstr ""
+msgstr "Множество"
 
 #: scripts/defs.lua:539
 msgid "Mix It Up"
-msgstr ""
+msgstr "Случайно"
 
 #: source_files/obsidian_main/g_doom.cc:207
 msgid "Unable to create wad file:\n\n%s"
-msgstr ""
+msgstr "Невозможно создать WAD-файл:\n\n%s"
 
 #: source_files/obsidian_main/g_doom.cc:815
 msgid "ZDBSP Error!"
-msgstr ""
+msgstr "Ошибка ZDBSP!"
 
 #: source_files/obsidian_main/g_doom.cc:861
 msgid "Cancelled"
-msgstr ""
+msgstr "Отменено"
 
 #: source_files/obsidian_main/g_doom.cc:879
 msgid "Error (create file)"
-msgstr ""
+msgstr "Ошибка создания файла"
 
 #: source_files/obsidian_main/g_doom.cc:884
 msgid "CSG"
@@ -7623,35 +7624,35 @@ msgstr ""
 
 #: source_files/obsidian_main/m_about.cc:160
 msgid "About OBSIDIAN"
-msgstr ""
+msgstr "Об OBSIDIAN"
 
 #: source_files/obsidian_main/m_addons.cc:466
 msgid "No Addons Found!"
-msgstr ""
+msgstr "Аддонов не найдено"
 
 #: source_files/obsidian_main/m_addons.cc:503
 msgid "Changes require a restart"
-msgstr ""
+msgstr "Изменения требуют перезапуска"
 
 #: source_files/obsidian_main/m_addons.cc:635
 msgid "OBSIDIAN Addons"
-msgstr ""
+msgstr "Аддоны OBSIDIAN"
 
 #: source_files/obsidian_main/m_dialog.cc:213
 msgid "OBSIDIAN - Error Message"
-msgstr ""
+msgstr "OBSIDIAN — сообщение об ошибке"
 
 #: source_files/obsidian_main/m_dialog.cc:235
 msgid "Select output file"
-msgstr ""
+msgstr "Выберите выходной файл"
 
 #: source_files/obsidian_main/m_dialog.cc:261
 msgid "Unable to create the file:\n\n%s"
-msgstr ""
+msgstr "Невозможно создать файл:\n\n%s"
 
 #: source_files/obsidian_main/m_dialog.cc:301
 msgid "Enter New Seed Number:"
-msgstr ""
+msgstr "Новый ключ генерации:"
 
 #: source_files/obsidian_main/m_dialog.cc:437
 msgid "Save"
@@ -7667,35 +7668,35 @@ msgstr ""
 
 #: source_files/obsidian_main/m_dialog.cc:595
 msgid "Unable to save the file:\n\n%s"
-msgstr ""
+msgstr "Невозможно сохранить файл:\n\n%s"
 
 #: source_files/obsidian_main/m_dialog.cc:619
 msgid "Unable to save the file:\n\n%s"
-msgstr ""
+msgstr "Невозможно сохранить файл:\n\n%s"
 
 #: source_files/obsidian_main/m_dialog.cc:633
 msgid "OBSIDIAN Log Viewer"
-msgstr ""
+msgstr "Файл журналирования OBSIDIAN"
 
 #: source_files/obsidian_main/m_lua.cc:1358
 msgid "Script Error: %s"
-msgstr ""
+msgstr "Ошибка скрипта: %s"
 
 #: source_files/obsidian_main/m_lua.cc:1675
 msgid "Script Error"
-msgstr ""
+msgstr "Ошибка скрипта"
 
 #: source_files/obsidian_main/m_lua.cc:1684
 msgid "Script Error"
-msgstr ""
+msgstr "Ошибка скрипта"
 
 #: source_files/obsidian_main/m_lua.cc:1702
 msgid "Cancelled"
-msgstr ""
+msgstr "Отменено"
 
 #: source_files/obsidian_main/m_manage.cc:322
 msgid "CURRENT SETTINGS"
-msgstr ""
+msgstr "ТЕКУЩИЕ НАСТРОЙКИ"
 
 #: source_files/obsidian_main/m_manage.cc:336
 msgid "Pick file to save to"
@@ -7703,79 +7704,79 @@ msgstr ""
 
 #: source_files/obsidian_main/m_manage.cc:348
 msgid "Unable to save the file:\n\n%s"
-msgstr ""
+msgstr "Невозможно сохранить файл:\n\n%s"
 
 #: source_files/obsidian_main/m_manage.cc:382
 msgid "Error writing to file."
-msgstr ""
+msgstr "Ошибка записи в файл."
 
 #: source_files/obsidian_main/m_manage.cc:384
 msgid "Unable to save the file:\n\n%s"
-msgstr ""
+msgstr "Невозможно сохранить файл:\n\n%s"
 
 #: source_files/obsidian_main/m_manage.cc:444
 msgid "Select file to load"
-msgstr ""
+msgstr "Выберите файл для загрузки"
 
 #: source_files/obsidian_main/m_manage.cc:465
 msgid "Unable to load the file:\n\n%s"
-msgstr ""
+msgstr "Невозможно загрузить файл:\n\n%s"
 
 #: source_files/obsidian_main/m_manage.cc:487
 msgid "Cannot open: %s\n\n%s"
-msgstr ""
+msgstr "Невозможно открыть: %s\n\n%s"
 
 #: source_files/obsidian_main/m_manage.cc:495
 msgid "No config found in file."
-msgstr ""
+msgstr "В файле конфигурации не найдено."
 
 #: source_files/obsidian_main/m_manage.cc:520
 msgid "PASTED TEXT"
-msgstr ""
+msgstr "-= ВСТАВЛЕННЫЙ ТЕКСТ =-"
 
 #: source_files/obsidian_main/m_manage.cc:707
 msgid "Load"
-msgstr ""
+msgstr "Загрузить"
 
 #: source_files/obsidian_main/m_manage.cc:717
 msgid "(can be WAD or PAK)"
-msgstr ""
+msgstr "(может быть WAD или PAK)"
 
 #: source_files/obsidian_main/m_manage.cc:722
 msgid "Recent"
-msgstr ""
+msgstr "Недавние"
 
 #: source_files/obsidian_main/m_manage.cc:734
 msgid "Save"
-msgstr ""
+msgstr "Сохранить"
 
 #: source_files/obsidian_main/m_manage.cc:744
 msgid "Use"
-msgstr ""
+msgstr "Использовать"
 
 #: source_files/obsidian_main/m_manage.cc:753
 msgid "Note: this will replace\nall current settings!"
-msgstr ""
+msgstr "Предупреждение: это перезапишет\nвсе текущие настройки!"
 
 #: source_files/obsidian_main/m_manage.cc:783
 msgid " Clipboard Operations"
-msgstr ""
+msgstr "Операции с буфером обмена"
 
 #: source_files/obsidian_main/m_manage.cc:794
 msgid "Cut"
-msgstr ""
+msgstr "Вырезать"
 
 #: source_files/obsidian_main/m_manage.cc:806
 msgid "Copy"
-msgstr ""
+msgstr "Копировать"
 
 #: source_files/obsidian_main/m_manage.cc:818
 msgid "Paste"
-msgstr ""
+msgstr "Вставить"
 
 #: source_files/obsidian_main/m_manage.cc:846
 msgid "OBSIDIAN Config Manager"
-msgstr "OBSIDIAN Конфигурация Менеджера"
+msgstr "Конфигурация OBSIDIAN"
 
 #: source_files/obsidian_main/m_options.cc:198
 msgid "AUTO"
@@ -7791,7 +7792,7 @@ msgstr "Язык"
 
 #: source_files/obsidian_main/m_options.cc:373
 msgid "Filename Prefix: "
-msgstr "Префикс имени файла:"
+msgstr "Префикс файла:"
 
 #: source_files/obsidian_main/m_options.cc:377
 msgid "Date and Time|Number of Levels|Game|Theme|Version|Custom|Nothing"
@@ -7799,7 +7800,7 @@ msgstr "Дата и время|Количество уровней|Игра|Те
 
 #: source_files/obsidian_main/m_options.cc:387
 msgid "Set Custom Prefix..."
-msgstr "Установить собственный префикс..."
+msgstr "Ввести свой префикс"
 
 #: source_files/obsidian_main/m_options.cc:403
 msgid " Create Backups"
@@ -7823,7 +7824,7 @@ msgstr "Примечание: некоторые параметры требую
 
 #: source_files/obsidian_main/m_options.cc:503
 msgid "OBSIDIAN Misc Options"
-msgstr "OBSIDIAN Прочие параметры"
+msgstr "Прочие параметры OBSIDIAN"
 
 #: source_files/obsidian_main/m_theme.cc:46
 msgid "Select output file"
@@ -7851,15 +7852,15 @@ msgstr "АВТО|Микро|Маленький|Средний|Большой|О�
 
 #: source_files/obsidian_main/m_theme.cc:1524
 msgid "Font Size: "
-msgstr "Размер Шрифта"
+msgstr "Размер шрифта"
 
 #: source_files/obsidian_main/m_theme.cc:1541
 msgid "Font: "
-msgstr "Щрифт"
+msgstr "Шрифт"
 
 #: source_files/obsidian_main/m_theme.cc:1557
 msgid "Widget Theme: "
-msgstr "Тема Виджета"
+msgstr "Тема виджета"
 
 #: source_files/obsidian_main/m_theme.cc:1559
 msgid "Default|Gleam|Win95|Plastic"
@@ -7875,7 +7876,7 @@ msgstr "Стандарт|Тень|Тисненый|Гравированный|П
 
 #: source_files/obsidian_main/m_theme.cc:1585
 msgid "Button Theme: "
-msgstr "Тема кнопки"
+msgstr "Тема кнопки: "
 
 #: source_files/obsidian_main/m_theme.cc:1587
 msgid "Default|Raised|Engraved|Embossed|Flat"
@@ -7883,7 +7884,7 @@ msgstr "Стандарт|Поднятый|Гравированный|Тисне�
 
 #: source_files/obsidian_main/m_theme.cc:1599
 msgid "Color Scheme: "
-msgstr "Цветовая схема"
+msgstr "Цветовая схема:"
 
 #: source_files/obsidian_main/m_theme.cc:1601
 msgid "Default|Custom"
@@ -7943,11 +7944,11 @@ msgstr "Сохранить тему"
 
 #: source_files/obsidian_main/m_theme.cc:1776
 msgid "Note: Some options require a restart."
-msgstr "Примечание. Некоторые параметры требуют перезапуска."
+msgstr "Примечание: некоторые параметры требуют перезапуска."
 
 #: source_files/obsidian_main/m_theme.cc:1813
 msgid "OBSIDIAN Theme Options"
-msgstr "OBSIDIAN Настройки Тем"
+msgstr "Настройка тем OBSIDIAN"
 
 #: source_files/obsidian_main/m_trans.cc:52
 msgid "AUTO"
@@ -7962,15 +7963,16 @@ msgid "Plan"
 msgstr "План"
 
 #: source_files/obsidian_main/ui_build.cc:314
-msgid "План"
+msgid "Plan"
+msgstr "План"
 
 #: source_files/obsidian_main/ui_build.cc:315
 msgid "Rooms"
 msgstr "Комнаты"
 
 #: source_files/obsidian_main/ui_build.cc:316
-msgid "Монстры"
-msgstr ""
+msgid "Monsters"
+msgstr "Монстры"
 
 #: source_files/obsidian_main/ui_game.cc:49
 msgid "Game Settings"
@@ -7994,7 +7996,7 @@ msgstr "Темы:"
 
 #: source_files/obsidian_main/ui_game.cc:109
 msgid "Build"
-msgstr "Сгенерировать"
+msgstr "Старт"
 
 #: source_files/obsidian_main/ui_game.cc:120
 msgid "Quit"
@@ -8011,3 +8013,99 @@ msgstr "Выход"
 #: source_files/obsidian_main/ui_module.cc:685
 msgid "Enter Value:"
 msgstr "Введите значение:"
+
+### [McM]: Added for the completeness.
+
+### Doom 2, Limit Removing:
+
+msgid "Advanced Architecture"
+msgstr "Расширенная архитектура"
+
+msgid "Lighting Multiplier"
+msgstr "Множитель силы света"
+
+msgid "Layout Consistency"
+msgstr "Шанс случайной формы"
+
+msgid "Streets-Friendly Themes Only"
+msgstr "Для улиц проверяется тема"
+
+msgid "Outdoor Shadows"
+msgstr "Тени для линий под небом"
+
+msgid "Explosive Decor"
+msgstr "Взрывающиеся декорации"
+
+msgid "Auto Detailing"
+msgstr "Автоподгонка кол-ва деталей"
+
+msgid "Jump/Crouch Fabs"
+msgstr "Прыжки/приседания"
+
+msgid "Match Theme"
+msgstr "Префабы темы окружения"
+
+msgid "Save Minimap GIF"
+msgstr "Сохранить GIF-предпросмотр"
+
+msgid "Monsters Quantity"
+msgstr "Кол-во монстров"
+
+msgid "Monsters Strength"
+msgstr "Сила монстров"
+
+msgid "Default Weapon Starts"
+msgstr "Учитывать пистол-старт"
+
+msgid "Episode 1"
+msgstr "Эпизод 1"
+
+msgid "Episode 2"
+msgstr "Эпизод 2"
+
+msgid "Episode 3"
+msgstr "Эпизод 3"
+
+msgid "Secret Levels"
+msgstr "Секретные уровни"
+
+msgid "NO CHANGE"
+msgstr "БЕЗ ИЗМЕНЕНИЙ"
+
+msgid "Tech"
+msgstr "Техническая"
+
+msgid "Urban"
+msgstr "Городская"
+
+msgid "Hell"
+msgstr "Адская"
+
+msgid "Egypt (TNT)"
+msgstr "Египт (TNT)"
+
+msgid "Psychedelic"
+msgstr "Психоделия"
+
+msgid "Minisodic"
+msgstr "Разбить на микроэпизоды (?)"
+
+msgid "Gets exit room theme to follow the theme of the next level, if different."
+msgstr "Сохраняет тему комнаты выхода текущего уровня на старте следующего уровня."
+
+msgid "Force Big-Boss Fight"
+msgstr "Обязать битву с большим боссом"
+
+msgid "Enable Procedural Bosses"
+msgstr "Включить процедурных боссов"
+
+
+
+
+
+
+
+
+
+
+
