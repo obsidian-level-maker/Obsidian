@@ -76,7 +76,8 @@ OB_MODULES["ui_udmf_map_options"] =
 
   label = _("Map Build Options"),
   
-  engine = "eternity", -- Other UDMF-capable engines may go in this group in the future - Dasho
+  engine = "advanced",
+  engine2 = "!zdoom",
 
   side = "left",
   priority = 105,

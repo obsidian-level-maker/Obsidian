@@ -940,9 +940,8 @@ bool Doom::game_interface_c::Start(const char *preset) {
         build_nodes = true;
     } else if (StringCaseCmp(current_engine, "edge") == 0) {
         build_reject = false;
-        map_format = "binary";
-        build_nodes = false;  // ZDBSP uses non-spec GL V5 nodes which will
-                              // crash EDGE-Classic
+        map_format = ob_get_param("map_format");
+        build_nodes = false;  // EDGE-Classic has its own internal nodebuilder which is preferred
     } else {
         build_reject = StringToInt(ob_get_param("bool_build_reject"));
         map_format = "binary";
