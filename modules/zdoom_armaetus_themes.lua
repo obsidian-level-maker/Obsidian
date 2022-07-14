@@ -4181,14 +4181,17 @@ ARMAETUS_LIQUIDS =
 
   hell =
   {
-    hotlava = 80,
-    magma   = 80,
-    qlava   = 80,
-    purwater = 5,
-    sludge  = 20,
-    gwater  = 25,
-    ice     = 40,
-    ice2    = 40
+    liquids =
+    {
+      hotlava = 80,
+      magma   = 80,
+      qlava   = 80,
+      purwater = 5,
+      sludge  = 20,
+      gwater  = 25,
+      ice     = 40,
+      ice2    = 40  
+    }
   },
 
   exclusions =

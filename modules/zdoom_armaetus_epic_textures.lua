@@ -655,10 +655,10 @@ actor AssIsHell : Inventory
 
 function ARMAETUS_EPIC_TEXTURES.setup(self)
 
-  ARMAETUS_EPIC_TEXTURES.put_new_materials()
   PARAM.obsidian_resource_pack_active = true
   module_param_up(self)
-  
+  ARMAETUS_EPIC_TEXTURES.put_new_materials()  
+
 end
 
 function ARMAETUS_EPIC_TEXTURES.get_levels_after_themes()
