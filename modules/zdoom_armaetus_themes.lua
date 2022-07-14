@@ -3832,8 +3832,7 @@ ARMAETUS_ROOM_THEMES =
       FLAT10 = 60,
       MFLR8_3 = 50,
       RROCK03 = 50,
-      RROCK09 = 30,
-      FLAT5_4 = 10
+      RROCK09 = 30
     }
   },
 
