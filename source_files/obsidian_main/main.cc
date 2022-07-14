@@ -1633,8 +1633,8 @@ skiprest:
     } catch (const assert_fail_c &err) {
         Main::FatalError(_("Sorry, an internal error occurred:\n{}"),
                          err.GetMessage());
-    } catch (...) {
-        Main::FatalError(_("An unknown problem occurred (UI code)"));
+    } catch (std::exception &e) {
+        Main::FatalError(_("An exception occurred: \n{}"), e.what());
     }
 
     LogPrintf("\nQuit......\n\n");
