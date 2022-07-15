@@ -2125,6 +2125,10 @@ function Room_choose_kind(R, last_R)
     out_prob = 0
   end
 
+  if last_R and last_R.is_street then
+    out_prob = out_prob * 0.25
+  end
+
   local is_outdoor = rand.odds(out_prob)
 
   if LEVEL.is_nature then

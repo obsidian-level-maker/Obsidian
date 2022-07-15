@@ -2352,7 +2352,7 @@ function Level_choose_liquid()
 
   LEVEL.liquid = liquid
 
-  gui.printf("Liquid: %s (usage %d%%)\n\n", name, int(LEVEL.liquid_usage))
+  gui.printf("Liquid: " .. name .. ", usage: " .. LEVEL.liquid_usage .. "%%\n\n")
 
   -- setup the special '_LIQUID' material
   assert(liquid.mat)

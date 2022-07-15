@@ -1680,7 +1680,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       min = 0,
       max = 1,
       increment = 0.05,
-      default = 0.5,
+      default = 0,
       presets = "0:0 (Start Room), " ..
                 "1:1 (Exit Room) ",
       randomize_group = "monsters"
@@ -1695,7 +1695,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       min = 0,
       max = 1,
       increment = 0.05,
-      default = 0.5,
+      default = 1,
       presets = "0:0 (Start Room), " ..
                 "1:1 (Exit Room) ",
       randomize_group = "monsters"
