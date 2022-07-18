@@ -78,7 +78,8 @@ OB_MODULES["hacx_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Thugs.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -97,7 +98,8 @@ OB_MODULES["hacx_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Androids.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -116,7 +118,8 @@ OB_MODULES["hacx_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Stealth Buzzers.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -135,7 +138,8 @@ OB_MODULES["hacx_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Roaming Mines.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -154,7 +158,8 @@ OB_MODULES["hacx_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Phages.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -173,7 +178,8 @@ OB_MODULES["hacx_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Buzzers.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -192,7 +198,8 @@ OB_MODULES["hacx_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of ICEs.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -211,7 +218,8 @@ OB_MODULES["hacx_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of D-Men.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -230,7 +238,8 @@ OB_MODULES["hacx_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Monstructs.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -249,7 +258,8 @@ OB_MODULES["hacx_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Majong 7s.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -268,7 +278,8 @@ OB_MODULES["hacx_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Terminatrixes.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -287,7 +298,8 @@ OB_MODULES["hacx_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Thorns.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -306,7 +318,8 @@ OB_MODULES["hacx_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Mecha Maniacs.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -389,7 +402,8 @@ OB_MODULES["hacx_weapon_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the likelihood of finding the Hoig Reznator.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -409,6 +423,7 @@ OB_MODULES["hacx_weapon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default", 
+      tooltip = "Control the amount of Tazers.",
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -420,14 +435,15 @@ OB_MODULES["hacx_weapon_control"] =
      },
 
      {
-      name = "float_cyrogun",
-      label = _("Cyrogun"),
+      name = "float_cryogun",
+      label = _("Cryogun"),
       valuator = "slider",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Cryoguns.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -446,7 +462,8 @@ OB_MODULES["hacx_weapon_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Uzis.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -465,7 +482,8 @@ OB_MODULES["hacx_weapon_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Photon 'Zookas.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -478,13 +496,14 @@ OB_MODULES["hacx_weapon_control"] =
 	 
      {
       name = "float_antigun",
-      label = _("Anti-gun"),
+      label = _("Anti-Gun"),
       valuator = "slider",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Anti-Guns.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -503,7 +522,8 @@ OB_MODULES["hacx_weapon_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Nukers.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..

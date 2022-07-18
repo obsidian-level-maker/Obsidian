@@ -77,7 +77,8 @@ OB_MODULES["chex3_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Commoni.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -96,7 +97,8 @@ OB_MODULES["chex3_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Bipedici.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -115,7 +117,8 @@ OB_MODULES["chex3_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Armored Bipedici.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -134,7 +137,8 @@ OB_MODULES["chex3_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Quadrumpi.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -154,6 +158,7 @@ OB_MODULES["chex3_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default", 
+      tooltip = "Control the amount of Cyclopti.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -173,7 +178,8 @@ OB_MODULES["chex3_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Larvae.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -193,7 +199,8 @@ OB_MODULES["chex3_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Flem Mines.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -213,7 +220,8 @@ OB_MODULES["chex3_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Stridici.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -233,7 +241,8 @@ OB_MODULES["chex3_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Super Cyclopti.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -314,7 +323,8 @@ OB_MODULES["chex3_weapon_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the likelihood of finding the Super Bootspork.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -333,7 +343,8 @@ OB_MODULES["chex3_weapon_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Large Zorchers.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -352,7 +363,8 @@ OB_MODULES["chex3_weapon_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Rapid Zorchers.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -371,7 +383,8 @@ OB_MODULES["chex3_weapon_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Zorch Propulsors.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -390,7 +403,8 @@ OB_MODULES["chex3_weapon_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Phasing Zorchers.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -409,7 +423,8 @@ OB_MODULES["chex3_weapon_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of LAZ Devices.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..

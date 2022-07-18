@@ -79,7 +79,8 @@ OB_MODULES["hexen_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Ettins.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -98,7 +99,8 @@ OB_MODULES["hexen_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Afrits.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -117,7 +119,8 @@ OB_MODULES["hexen_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Centaurs.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -136,7 +139,8 @@ OB_MODULES["hexen_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Slaughtaurs.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -155,7 +159,8 @@ OB_MODULES["hexen_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Stalkers.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -174,7 +179,8 @@ OB_MODULES["hexen_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Projectile Stalkers.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -193,7 +199,8 @@ OB_MODULES["hexen_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Wendigos.",
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -212,7 +219,8 @@ OB_MODULES["hexen_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Green Serpents.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -231,7 +239,8 @@ OB_MODULES["hexen_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Brown Serpents.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -250,7 +259,8 @@ OB_MODULES["hexen_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Bishops.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -270,6 +280,7 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default", 
+      tooltip = "Control the amount of Reivers.",
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -289,6 +300,7 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default", 
+      tooltip = "Control the amount of Buried Reivers.",
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -307,7 +319,8 @@ OB_MODULES["hexen_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Heresiarchs.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -326,7 +339,8 @@ OB_MODULES["hexen_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Zedeks.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -345,7 +359,8 @@ OB_MODULES["hexen_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Traducti.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -364,7 +379,8 @@ OB_MODULES["hexen_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Menelkirs.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -383,7 +399,8 @@ OB_MODULES["hexen_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Koraxes.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -476,7 +493,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Crystal Vials.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -496,7 +514,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Quartz Flasks.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -516,7 +535,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Mystic Urns.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -537,7 +557,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Blue Mana.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -557,7 +578,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Green Mana.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -577,7 +599,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Dual Mana.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -597,7 +620,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Platinum Helms.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -617,7 +641,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Mesh Armors.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -636,7 +661,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Falcon Shields.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -655,7 +681,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Amulets of Warding.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -674,7 +701,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Dragonskin Bracers.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -694,7 +722,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Kraters of Might.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -713,7 +742,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Banishment Devices.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -732,7 +762,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Boots of Speed.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -751,7 +782,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Chaos Devices.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -771,7 +803,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Dark Servants.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -791,7 +824,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Discs of Repulsion.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -811,7 +845,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Flechettes.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -832,6 +867,7 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default", 
+      tooltip = "Control the amount of Icons of the Defender.",
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -851,7 +887,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Mystic Ambit Incants.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -871,7 +908,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Porkalators.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -891,7 +929,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Torches.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -911,7 +950,8 @@ OB_MODULES["hexen_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Wings of Wrath.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -932,6 +972,7 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default", 
+      tooltip = "Control the likelihood of finding Ultimate Weapon Pieces.",
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
