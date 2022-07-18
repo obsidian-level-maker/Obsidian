@@ -308,8 +308,7 @@ OB_MODULES["misc"] =
       max = 100,
       increment = 1,
       default = 15,
-      tooltip = "Allows Oblige to create large street-like outdoor rooms. " ..
-      "Will be ignored if V2 or V5 shape grammar is selected for the level.",
+      tooltip = "Allows Oblige to create large street-like outdoor rooms.",
       randomize_group="architecture",
       priority = 96
     },
@@ -397,8 +396,8 @@ OB_MODULES["misc"] =
       randomize_group="architecture",
     },
 
-    { name="big_rooms",   label=_("Big Rooms"),      choices=STYLE_CHOICES, priority = 89, randomize_group="architecture", },
-    { name="big_outdoor_rooms", label=_("Big Outdoors"), choices=STYLE_CHOICES, priority = 88, randomize_group="architecture", },
+    { name="big_rooms",   label=_("Big Rooms"), tooltip="Raises upper limits on individual room growth", choices=STYLE_CHOICES, priority = 89, randomize_group="architecture", },
+    { name="big_outdoor_rooms", label=_("Big Outdoors"), tooltip="Raises upper limits on outdoor area growth", choices=STYLE_CHOICES, priority = 88, randomize_group="architecture", },
     {
       name="room_heights",
       label=_("Room Heights"),
@@ -413,7 +412,7 @@ OB_MODULES["misc"] =
     },
 
 
-    { name="parks",       label=_("Parks"),          choices=STYLE_CHOICES, priority = 86, randomize_group="architecture", },
+    { name="parks",       label=_("Parks"), tooltip = "Control the amount of parks.", choices=STYLE_CHOICES, priority = 86, randomize_group="architecture", },
     {
       name="natural_parks",
       label=_("Natural Cliffs"),
@@ -432,7 +431,7 @@ OB_MODULES["misc"] =
       randomize_group="architecture",
     },
 
-    { name="windows",     label=_("Windows"),        choices=STYLE_CHOICES, priority = 83, randomize_group="architecture", },
+    { name="windows",     label=_("Windows"), tooltip = "Control the amount of windows.", choices=STYLE_CHOICES, priority = 83, randomize_group="architecture", },
     {
       name="passable_windows",
       label=_("Passable Windows"),
@@ -455,7 +454,7 @@ OB_MODULES["misc"] =
       gap=1,
     },
 
-    { name="symmetry",    label=_("Symmetry"),       choices=STYLE_CHOICES, priority = 80, randomize_group="architecture", },
+    { name="symmetry",    label=_("Symmetry"), tooltip = "Affects amount of symmetry when growing levels.", choices=STYLE_CHOICES, priority = 80, randomize_group="architecture", },
     { name="beams",       label=_("Beams"),          choices=STYLE_CHOICES,
       tooltip = "Allows the appearance of thin pillars to appear between the borders of different elevations.",
       priority = 79,
@@ -507,7 +506,7 @@ OB_MODULES["misc"] =
       gap = 1,
     },
 
-    { name="darkness",    label=_("Dark Outdoors"),  choices=STYLE_CHOICES, priority = 73 },
+    { name="darkness",    label=_("Dark Outdoors"),  tooltip="Affects the chance of a level having darker skies.", choices=STYLE_CHOICES, priority = 73 },
 
     {
       name="bool_outdoor_shadows",
@@ -548,8 +547,8 @@ OB_MODULES["misc"] =
       randomize_group="architecture",
     },
 
-    { name="doors",       label=_("Doors"),          choices=STYLE_CHOICES, priority = 69, randomize_group="architecture", },
-    { name="keys",        label=_("Keyed Doors"),    choices=STYLE_CHOICES, priority = 68, randomize_group="architecture", },
+    { name="doors",       label=_("Doors"), tooltip = "Control the amount of doors.", choices=STYLE_CHOICES, priority = 69, randomize_group="architecture", },
+    { name="keys",        label=_("Keyed Doors"), tooltip = "Control the amount of keyed doors.", choices=STYLE_CHOICES, priority = 68, randomize_group="architecture", },
     { name="trikeys",     label=_("Triple-Keyed Doors"),          choices=STYLE_CHOICES,
       tooltip = "Controls the chance to get three key door whenever three keys are present.",
       priority = 67,

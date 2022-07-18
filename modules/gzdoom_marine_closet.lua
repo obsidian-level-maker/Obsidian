@@ -1681,6 +1681,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       max = 1,
       increment = 0.05,
       default = 0,
+      tooltip = "Affects how early in the level a closet can be found.",
       presets = "0:0 (Start Room), " ..
                 "1:1 (Exit Room) ",
       randomize_group = "monsters"
@@ -1696,6 +1697,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       max = 1,
       increment = 0.05,
       default = 1,
+      tooltip = "Affects how late in the level a closet can be found.",
       presets = "0:0 (Start Room), " ..
                 "1:1 (Exit Room) ",
       randomize_group = "monsters"

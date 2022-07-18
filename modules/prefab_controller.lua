@@ -299,6 +299,7 @@ OB_MODULES["prefab_control"] =
       valuator = "button",
       default = 1,
       priority = 48,
+      tooltip = "Attempt to use matched start and exit fabs for a level (if a matched set is possible).",
       randomize_group="architecture",
     },
 

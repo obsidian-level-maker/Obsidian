@@ -301,7 +301,8 @@ OB_MODULES["stealth_mons"] =
     {
       label = _("Default Quantity"),
       choices = STEALTH.CHOICES,
-      randomize_group = "monsters"
+      randomize_group = "monsters",
+      tooltip = "Control the appearance of stealth monster variants (ZDoom Family and EDGE-Classic only)."
     },
   },
 }
@@ -373,7 +374,8 @@ OB_MODULES["stealth_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Stealth Zombiemen.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -392,7 +394,8 @@ OB_MODULES["stealth_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Stealth Shotgunners.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -411,7 +414,8 @@ OB_MODULES["stealth_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Stealth Imps.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -430,7 +434,8 @@ OB_MODULES["stealth_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Stealth Pinkies.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -450,6 +455,7 @@ OB_MODULES["stealth_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default", 
+      tooltip = "Control the amount of Stealth Cacodemons.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -468,7 +474,8 @@ OB_MODULES["stealth_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Stealth Barons of Hell.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -487,7 +494,8 @@ OB_MODULES["stealth_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Stealth Chaingunners.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -506,7 +514,8 @@ OB_MODULES["stealth_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Stealth Hell Knights.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -526,6 +535,7 @@ OB_MODULES["stealth_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default", 
+      tooltip = "Control the amount of Stealth Revenants.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -544,7 +554,8 @@ OB_MODULES["stealth_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Stealth Mancubi.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -563,7 +574,8 @@ OB_MODULES["stealth_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Stealth Arachnotrons.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -576,13 +588,14 @@ OB_MODULES["stealth_mon_control"] =
 
     {
       name = "float_stealth_vile",
-      label = _("Arch-vile"),
+      label = _("Arch-Vile"),
       valuator = "slider",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Stealth Arch-Viles.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..

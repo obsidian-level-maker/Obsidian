@@ -1839,7 +1839,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       name = "bool_boss_gen_music",
       label=_("Enable Boss Music"),
       valuator = "button",
-      default = 1,
+      default = 0,
       tooltip = "If enabled, encountering a boss will start boss theme music." ..
       "(For now you have to have your own music files with lumps named D_BOSSx where x is boss number)",
       priority = 94

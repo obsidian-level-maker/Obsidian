@@ -288,6 +288,7 @@ OB_MODULES["ui_mons"] =
       max = 12,
       increment = .05,
       default = 1,
+      tooltip = "Affects level of selected monsters for a level's monster palette.",
       presets = "0.55:0.55 (Weak),0.75:0.75 (Easier),1:1 (Average),1.3:1.3 (Harder),1.7:1.7 (Tough),2.5:2.5 (Fierce),12:12 (CRAZY)",
       randomize_group="monsters",
     },
@@ -337,7 +338,7 @@ OB_MODULES["ui_mons"] =
       gap = 1
     },
 
-    { name="bosses",    label=_("Bosses"),    choices=UI_MONS.BOSSES,  randomize_group="monsters", },
+    { name="bosses",    label=_("Bosses"), tooltip="Affects likelihood and difficulty of boss encounters.", choices=UI_MONS.BOSSES,  randomize_group="monsters", },
     {
       name="bossesnormal",
       label=_("Bosses As Regulars"),
@@ -347,7 +348,7 @@ OB_MODULES["ui_mons"] =
       gap = 1,
       randomize_group="monsters",
     },
-    { name="traps",     label=_("Traps"),     choices=STYLE_CHOICES, randomize_group="monsters", },
+    { name="traps",     label=_("Traps"), tooltip = "Control the amount of traps.", choices=STYLE_CHOICES, randomize_group="monsters", },
     {
       name="trap_style",
       label=_("Trap Style"),
@@ -366,7 +367,7 @@ OB_MODULES["ui_mons"] =
       randomize_group="monsters",
     },
 
-    { name="cages",     label=_("Cages"),     choices=STYLE_CHOICES, randomize_group="monsters", },
+    { name="cages",     label=_("Cages"), tooltip = "Control the amount of cages.", choices=STYLE_CHOICES, randomize_group="monsters", },
 
     {
       name="cage_qty",

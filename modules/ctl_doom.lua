@@ -78,7 +78,8 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Zombiemen.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -97,7 +98,8 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Shotgunners.", 
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -116,7 +118,8 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Chaingunners.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -135,7 +138,8 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of SS troops.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -154,7 +158,8 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Imps.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -173,7 +178,8 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Lost Souls.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -192,7 +198,8 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Pinkies.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -211,7 +218,8 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Spectres.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -230,7 +238,8 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Pain Elementals.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -249,7 +258,8 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Cacodemons.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -268,7 +278,8 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Hell Knights.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -287,7 +298,8 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Revenants.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -306,7 +318,8 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Mancubi.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -325,7 +338,8 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Arachnotrons.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -338,13 +352,14 @@ OB_MODULES["doom_mon_control"] =
 
      {
       name = "float_vile",
-      label = _("Arch-vile"),
+      label = _("Arch-Vile"),
       valuator = "slider",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Arch-Viles.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -363,7 +378,8 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Barons of Hell.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -382,7 +398,8 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Cyberdemons.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -401,7 +418,8 @@ OB_MODULES["doom_mon_control"] =
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Spider Masterminds.",  
       presets = "0:0 (None at all)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -509,7 +527,8 @@ OB_MODULES["doom_weapon_control"] =
      max = 10,
      increment = .02,
      default = "Default",
-     nan = "Default", 
+     nan = "Default",
+     tooltip = "Control the likelihood of finding a Chainsaw.",  
      presets = "0:0 (None)," ..
      ".02:0.02 (Scarce)," ..
      ".14:0.14 (Less)," ..
@@ -528,7 +547,8 @@ OB_MODULES["doom_weapon_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Shotguns.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -547,7 +567,8 @@ OB_MODULES["doom_weapon_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Super Shotguns.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -566,7 +587,8 @@ OB_MODULES["doom_weapon_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Chainguns.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -585,7 +607,8 @@ OB_MODULES["doom_weapon_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Rocket Launchers.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -604,7 +627,8 @@ OB_MODULES["doom_weapon_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Plasma Rifles.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -623,7 +647,8 @@ OB_MODULES["doom_weapon_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of BFG 9000s.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -706,7 +731,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Health Potions.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -726,7 +752,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Stimpacks.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -746,7 +773,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Medikits.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -767,7 +795,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Helmets.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -789,7 +818,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Green Armor.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -809,7 +839,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Blue Armor.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -830,7 +861,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Soulspheres.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -849,7 +881,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Backpacks.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -868,7 +901,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Berserk Packs.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -887,7 +921,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Invisibility Spheres.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -906,7 +941,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Invulnerability Spheres.", 
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -925,7 +961,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Map Computers.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -944,7 +981,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Light Goggles.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -963,7 +1001,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Megaspheres.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -984,7 +1023,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Clips.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -1004,7 +1044,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Bullet Boxes.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -1024,7 +1065,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Shells.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -1044,7 +1086,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Shell Boxes.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -1064,7 +1107,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Rockets.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -1084,7 +1128,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Rocket Boxes.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -1104,7 +1149,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Cells.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
@@ -1124,7 +1170,8 @@ OB_MODULES["doom_item_control"] =
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default", 
+      nan = "Default",
+      tooltip = "Control the amount of Cell Packs.",  
       presets = "0:0 (None)," ..
       ".02:0.02 (Scarce)," ..
       ".14:0.14 (Less)," ..
