@@ -79,14 +79,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Zombiemen.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Zombiemen."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -99,14 +93,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Shotgunners.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Shotgunners."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -119,14 +107,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Chaingunners.",  
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Chaingunners."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -139,14 +121,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of SS troops.",  
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of SS troops."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -159,14 +135,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Imps.",  
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Imps."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -179,14 +149,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Lost Souls.",  
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Lost Souls."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -199,14 +163,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Pinkies.",  
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Pinkies."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -219,14 +177,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Spectres.",  
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Spectres."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -239,14 +191,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Pain Elementals.",  
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Pain Elementals."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -259,14 +205,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Cacodemons.",  
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Cacodemons."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -279,14 +219,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Hell Knights.",  
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Hell Knights."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -299,14 +233,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Revenants.",  
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Revenants."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -319,14 +247,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Mancubi.",  
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Mancubi."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -339,14 +261,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Arachnotrons.",  
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Arachnotrons."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -359,14 +275,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Arch-Viles.",  
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Arch-Viles."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -379,14 +289,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Barons of Hell.",  
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Barons of Hell."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -399,14 +303,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Cyberdemons.",  
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Cyberdemons."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -419,14 +317,8 @@ OB_MODULES["doom_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Spider Masterminds.",  
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Spider Masterminds."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      }
   },
@@ -528,14 +420,8 @@ OB_MODULES["doom_weapon_control"] =
      increment = .02,
      default = "Default",
      nan = "Default",
-     tooltip = "Control the likelihood of finding a Chainsaw.",  
-     presets = "0:0 (None)," ..
-     ".02:0.02 (Scarce)," ..
-     ".14:0.14 (Less)," ..
-     ".5:0.5 (Plenty)," ..
-     "1.2:1.2 (More)," ..
-     "3:3 (Heaps)," ..
-     "10:10 (I LOVE IT)",
+     tooltip = _("Control the likelihood of finding a Chainsaw."),  
+     presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
      randomize_group="pickups",
     },
 
@@ -548,14 +434,8 @@ OB_MODULES["doom_weapon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Shotguns.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Shotguns."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -568,14 +448,8 @@ OB_MODULES["doom_weapon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Super Shotguns.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Super Shotguns."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -588,14 +462,8 @@ OB_MODULES["doom_weapon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Chainguns.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Chainguns."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -608,14 +476,8 @@ OB_MODULES["doom_weapon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Rocket Launchers.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Rocket Launchers."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -628,14 +490,8 @@ OB_MODULES["doom_weapon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Plasma Rifles.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Plasma Rifles."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -648,14 +504,8 @@ OB_MODULES["doom_weapon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of BFG 9000s.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of BFG 9000s."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -663,11 +513,7 @@ OB_MODULES["doom_weapon_control"] =
       name="weapon_prefs",
       label=_("Weapon Preferences"),
       choices=CTL_DOOM.WEAPON_PREF_CHOICES,
-      tooltip="Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\n" ..
-      "Normal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\n" ..
-      "Vanilla: Vanilla Oblige-style preferences. Reduces rocket launchers if the map has more pain elementals, lost souls, demons/specters " ..
-      "while increases BFG's for cyberdemons and spider masterminds. No other weapon preferences.\n\n" ..
-      "NONE: No preferences at all. For those who like to live life dangerously with lost souls and only rockets.",
+      tooltip=_("Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\nNormal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\nVanilla: Vanilla Oblige-style preferences. Reduces rocket launchers if the map has more pain elementals, lost souls, demons/specters while increases BFG's for cyberdemons and spider masterminds. No other weapon preferences.\n\nNONE: No preferences at all. For those who like to live life dangerously with lost souls and only rockets."),
       default="normal",
     },
   },
@@ -732,14 +578,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Health Potions.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Health Potions."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 100,
       randomize_group="pickups",
      },
@@ -753,14 +593,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Stimpacks.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Stimpacks."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 99,
       randomize_group="pickups",
      },
@@ -774,14 +608,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Medikits.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Medikits."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 98,
       gap = 1,
       randomize_group="pickups",
@@ -796,14 +624,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Helmets.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Helmets."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 95,
       randomize_group="pickups",
      },    
@@ -819,14 +641,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Green Armor.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Green Armor."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 94,
       randomize_group="pickups",
      },
@@ -840,14 +656,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Blue Armor.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Blue Armor."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 93,
       gap = 1,
       randomize_group="pickups",
@@ -862,14 +672,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Soulspheres.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Soulspheres."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -882,14 +686,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Backpacks.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Backpacks."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -902,14 +700,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Berserk Packs.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Berserk Packs."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -922,14 +714,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Invisibility Spheres.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Invisibility Spheres."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
      
@@ -942,14 +728,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Invulnerability Spheres.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Invulnerability Spheres."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -962,14 +742,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Map Computers.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Map Computers."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -982,14 +756,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Light Goggles.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Light Goggles."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -1002,14 +770,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Megaspheres.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Megaspheres."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -1024,14 +786,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Clips.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Clips."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 75,
      },
@@ -1045,14 +801,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Bullet Boxes.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Bullet Boxes."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 74,
      },
@@ -1066,14 +816,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Shells.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Shells."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 73,
      },
@@ -1087,14 +831,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Shell Boxes.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Shell Boxes."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 72,
      },
@@ -1108,14 +846,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Rockets.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Rockets."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 71,
      },
@@ -1129,14 +861,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Rocket Boxes.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Rocket Boxes."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 70,
      },
@@ -1150,14 +876,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Cells.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Cells."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 69,
      },
@@ -1171,14 +891,8 @@ OB_MODULES["doom_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Cell Packs.",  
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Cell Packs."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 68,
       randomize_group="pickups",
       gap = 1,

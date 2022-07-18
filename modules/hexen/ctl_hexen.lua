@@ -80,14 +80,8 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Ettins.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Ettins."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -100,14 +94,8 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Afrits.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Afrits."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -120,14 +108,8 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Centaurs.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Centaurs."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -140,14 +122,8 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Slaughtaurs.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Slaughtaurs."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -160,14 +136,8 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Stalkers.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Stalkers."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -180,14 +150,8 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Projectile Stalkers.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Projectile Stalkers."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -200,14 +164,8 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Wendigos.",
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Wendigos."),
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -220,14 +178,8 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Green Serpents.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Green Serpents."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 	 
@@ -240,14 +192,8 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Brown Serpents.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Brown Serpents."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 	 
@@ -260,14 +206,8 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Bishops.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Bishops."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 	 
@@ -280,14 +220,8 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default", 
-      tooltip = "Control the amount of Reivers.",
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Reivers."),
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 	 
@@ -300,14 +234,8 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default", 
-      tooltip = "Control the amount of Buried Reivers.",
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Buried Reivers."),
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 	  
@@ -320,14 +248,8 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Heresiarchs.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Heresiarchs."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 	 
@@ -340,14 +262,8 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Zedeks.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Zedeks."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 	 
@@ -360,14 +276,8 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Traducti.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Traducti."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 	 
@@ -380,14 +290,8 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Menelkirs.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Menelkirs."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -400,14 +304,8 @@ OB_MODULES["hexen_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Koraxes.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Koraxes."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
   },
@@ -494,14 +392,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Crystal Vials.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Crystal Vials."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 100,
       randomize_group="pickups",
      },
@@ -515,14 +407,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Quartz Flasks.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Quartz Flasks."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 99,
       randomize_group="pickups",
      },
@@ -536,14 +422,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Mystic Urns.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Mystic Urns."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 93,
       gap = 1,
       randomize_group="pickups",
@@ -558,14 +438,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Blue Mana.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Blue Mana."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 98,
       randomize_group="pickups",
      },
@@ -579,14 +453,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Green Mana.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Green Mana."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 95,
       randomize_group="pickups",
      },    
@@ -600,14 +468,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Dual Mana.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Dual Mana."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       gap = 1
      },
@@ -621,14 +483,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Platinum Helms.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Platinum Helms."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 94,
       randomize_group="pickups",
      },
@@ -642,14 +498,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Mesh Armors.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Mesh Armors."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -662,14 +512,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Falcon Shields.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Falcon Shields."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -682,14 +526,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Amulets of Warding.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Amulets of Warding."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -702,14 +540,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Dragonskin Bracers.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Dragonskin Bracers."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       gap = 1
      },
@@ -723,14 +555,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Kraters of Might.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Kraters of Might."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -743,14 +569,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Banishment Devices.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Banishment Devices."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -763,14 +583,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Boots of Speed.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Boots of Speed."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
     
@@ -783,14 +597,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Chaos Devices.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Chaos Devices."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 75,
      },
@@ -804,14 +612,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Dark Servants.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Dark Servants."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 74,
      },
@@ -825,14 +627,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Discs of Repulsion.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Discs of Repulsion."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 73,
      },
@@ -846,14 +642,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Flechettes.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Flechettes."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 72,
      },
@@ -867,14 +657,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default", 
-      tooltip = "Control the amount of Icons of the Defender.",
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Icons of the Defender."),
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 71,
      },
@@ -888,14 +672,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Mystic Ambit Incants.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Mystic Ambit Incants."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 70,
      },
@@ -909,14 +687,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Porkalators.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Porkalators."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 69,
      },
@@ -930,14 +702,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Torches.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Torches."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 68,
       randomize_group="pickups",
      },
@@ -951,14 +717,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Wings of Wrath.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Wings of Wrath."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 68,
       randomize_group="pickups",
      },
@@ -972,14 +732,8 @@ OB_MODULES["hexen_item_control"] =
       increment = .02,
       default = "Default",
       nan = "Default", 
-      tooltip = "Control the likelihood of finding Ultimate Weapon Pieces.",
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the likelihood of finding Ultimate Weapon Pieces."),
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 68,
       randomize_group="pickups",
      },

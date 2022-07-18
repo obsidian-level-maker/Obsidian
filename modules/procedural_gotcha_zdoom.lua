@@ -1684,8 +1684,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
     all_done = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.all_done
   },
 
-  tooltip=_(
-    "This module allows you to fine tune the Procedural Gotcha experience if you have Procedural Gotchas enabled. Does not affect prebuilts. It is recommended to pick higher scales on one of the two options, but not both at once for a balanced challenge."),
+  tooltip=_("This module allows you to fine tune the Procedural Gotcha experience if you have Procedural Gotchas enabled. Does not affect prebuilts. It is recommended to pick higher scales on one of the two options, but not both at once for a balanced challenge."),
 
   options =
   {
@@ -1700,10 +1699,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       label=_("Gotcha Frequency"),
       choices=PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.PROC_GOTCHA_CHOICES,
       default="final",
-      tooltip = "Procedural Gotchas are two room maps, where the second is an immediate " ..
-      "but immensely-sized exit room with gratitiously intensified monster strength. " ..
-      "Essentially an arena - prepare for a tough, tough fight!\n\nNotes:\n\n" ..
-      "5% of levels may create at least 1 or 2 gotcha maps in a standard full game.",
+      tooltip = _("Procedural Gotchas are two room maps, where the second is an immediate but immensely-sized exit room with gratitiously intensified monster strength. Essentially an arena - prepare for a tough, tough fight!\n\nNotes:\n\n5% of levels may create at least 1 or 2 gotcha maps in a standard full game."),
       priority = 106,
       randomize_group="monsters",
       gap = 1
@@ -1714,8 +1710,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       label=_("Force Big-Boss Fight"),
       valuator = "button",
       default = 1,
-      tooltip = "Attempts to guarantee a fight against a boss-type (nasty tier) monster " ..
-      "in the procedural gotcha.",
+      tooltip = _("Attempts to guarantee a fight against a boss-type (nasty tier) monster in the procedural gotcha."),
       priority = 105,
       randomize_group="monsters",
       gap = 1
@@ -1730,7 +1725,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       max = 10,
       increment = 0.1,
       default = 1.2,
-      tooltip = "Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting).",
+      tooltip = _("Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting)."),
       priority = 104,
       randomize_group="monsters",
     },
@@ -1743,13 +1738,8 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       max = 16,
       increment = 1,
       default = 4,
-      presets = "0:NONE," ..
-      "2:2 (Stronger)," ..
-      "4:4 (Harder)," ..
-      "6:6 (Tougher)," ..
-      "8:8 (CRAZIER)," ..
-      "16:16 (NIGHTMARISH)",
-      tooltip = "Offset monster quantity from your default strength of choice plus the increasing level ramp.",
+      presets = _("0:NONE,2:2 (Stronger),4:4 (Harder),6:6 (Tougher),8:8 (CRAZIER),16:16 (NIGHTMARISH)"),
+      tooltip = _("Offset monster quantity from your default strength of choice plus the increasing level ramp."),
       priority = 103,
       randomize_group="monsters",
     },
@@ -1760,7 +1750,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       label=_("Map Size"),
       choices=PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.GOTCHA_MAP_SIZES,
       default = "small",
-      tooltip = "Size of the procedural gotcha. Start and arena room sizes are relative to map size as well.",
+      tooltip = _("Size of the procedural gotcha. Start and arena room sizes are relative to map size as well."),
       priority = 102,
       randomize_group="monsters",
       gap = 1
@@ -1776,7 +1766,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       label=_("Enable Procedural Bosses"),
       valuator = "button",
       default = 1,
-      tooltip = "Toggles Boss Monster generation with special traits for Gotchas.",
+      tooltip = _("Toggles Boss Monster generation with special traits for Gotchas."),
       priority = 101,
     },
 
@@ -1785,8 +1775,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       label = _("Arena Steepness"),
       choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.ARENA_STEEPNESS,
       default = "none",
-      tooltip = "Influences steepness settings for boss arenas. " ..
-      "Boss arena steepness is capped to be less intrusive to boss movement.",
+      tooltip = _("Influences steepness settings for boss arenas. Boss arena steepness is capped to be less intrusive to boss movement."),
       priority = 99,
       gap = 1,
       randomize_group="monsters",
@@ -1797,7 +1786,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       label = _("Boss Difficulty"),
       choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DIFF_CHOICES,
       default = "default",
-      tooltip = "Increases or reduces chances of boss being based off more powerful monster and getting more powerful traits.",
+      tooltip = _("Increases or reduces chances of boss being based off more powerful monster and getting more powerful traits."),
       priority = 98,
       randomize_group="monsters",
     },
@@ -1808,7 +1797,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       label = _("Boss Health Modifier"),
       choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_HEALTH_CHOICES,
       default = "default",
-      tooltip = "Makes boss health higher or lower than default, useful when playing with mods that have different average power level of weapons.",
+      tooltip = _("Makes boss health higher or lower than default, useful when playing with mods that have different average power level of weapons."),
       priority = 97,
       randomize_group="monsters",
     },
@@ -1819,7 +1808,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       label = _("Hitscan Bosses"),
       choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_LESS_HITSCAN,
       default = "default",
-      tooltip = "Reduces chance of hitscan bosses spawning.",
+      tooltip = _("Reduces chance of hitscan bosses spawning."),
       priority = 96,
       randomize_group="monsters",
     },
@@ -1830,7 +1819,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       label = _("Visible Health Bar"),
       valuator = "button",
       default = 1,
-      tooltip = "If enabled, an hp bar will appear on UI while boss is active.",
+      tooltip = _("If enabled, an hp bar will appear on UI while boss is active."),
       priority = 95,
     },
 
@@ -1840,8 +1829,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       label=_("Enable Boss Music"),
       valuator = "button",
       default = 0,
-      tooltip = "If enabled, encountering a boss will start boss theme music." ..
-      "(For now you have to have your own music files with lumps named D_BOSSx where x is boss number)",
+      tooltip = _("If enabled, encountering a boss will start boss theme music. (For now you have to have your own music files with lumps named D_BOSSx where x is boss number)"),
       priority = 94
     },
 
@@ -1851,7 +1839,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       label = _("Reinforcement Strength"),
       choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.REINFORCE,
       default = "default",
-      tooltip = "Influences the strength of reinforcements summoned by bosses",
+      tooltip = _("Influences the strength of reinforcements summoned by bosses"),
       priority = 93,
       randomize_group="monsters",
     },
@@ -1862,7 +1850,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       label = _("Reinforcement Rate"),
       choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.REINFORCER,
       default = "default",
-      tooltip = "Influences the spawn rate of reinforcements summoned by bosses",
+      tooltip = _("Influences the spawn rate of reinforcements summoned by bosses"),
       priorty = 92,
       randomize_group="monsters",
     },
@@ -1874,7 +1862,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       priority = 96,
       valuator = "button",
       default = 0,
-      tooltip = "If enabled, monsters disabled in monster control module cant be chosen as a boss.",
+      tooltip = _("If enabled, monsters disabled in monster control module cant be chosen as a boss."),
       priorty = 91,
       gap = 1,
       randomize_group="monsters",
@@ -1886,10 +1874,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       label = _("Monster limit type"),
       choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_LIMITS,
       default = "softlimit",
-      tooltip = "Influences how boss difficulty and megawad progression affects the monster type of boss.\n\n" ..
-      "Hard Limit: Doesn't allow monster types outside of range to ever spawn.\n\n" ..
-      "Soft Limit: Reduces the probability of spawning of monster types outside of range.\n\n" ..
-      "No Limit: Difficulty doesn't have effect on monster type selection.",
+      tooltip = _("Influences how boss difficulty and megawad progression affects the monster type of boss.\n\nHard Limit: Doesn't allow monster types outside of range to ever spawn.\n\nSoft Limit: Reduces the probability of spawning of monster types outside of range.\n\nNo Limit: Difficulty doesn't have effect on monster type selection."),
       priority = 90,
       randomize_group="monsters",
     },
@@ -1900,7 +1885,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       label = _("Weapon placement"),
       choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_WEAP,
       default = "scatter",
-      tooltip = "Influences weapon placement in boss arena.",
+      tooltip = _("Influences weapon placement in boss arena."),
       priority = 89,
       gap = 1,
       randomize_group="monsters",
@@ -1912,7 +1897,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       label = _("Exit type"),
       choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_EXIT,
       default = "default",
-      tooltip = "Changes exit type after boss has been destroyed.",
+      tooltip = _("Changes exit type after boss has been destroyed."),
       priority = 88,
     },
 
@@ -1926,7 +1911,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       max = 5,
       increment = 1,
       default = 3,
-      tooltip = "Changes multiplier of ammunition items on the boss arena(This is also affected by boss health multiplier).",
+      tooltip = _("Changes multiplier of ammunition items on the boss arena(This is also affected by boss health multiplier)."),
       priority = 87,
       randomize_group="monsters",
     },
@@ -1941,7 +1926,7 @@ OB_MODULES["procedural_gotcha_zdoom"] =
       max = 5,
       increment = 1,
       default = 3,
-      tooltip = "Changes multiplier of healing items on the boss arena.",
+      tooltip = _("Changes multiplier of healing items on the boss arena."),
       priority = 86,
       randomize_group="monsters",
     },

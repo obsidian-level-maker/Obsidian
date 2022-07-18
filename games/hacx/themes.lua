@@ -484,7 +484,7 @@ HACX.ROOMS =
 
 OB_THEMES["hacx_urban"] =
 {
-  label = "Urban",
+  label = _("HacX Urban"),
   game = "hacx",
   name_theme = "URBAN",
   mixed_prob = 50

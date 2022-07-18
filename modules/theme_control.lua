@@ -21,15 +21,15 @@ THEME_CONTROL = { }
 
 THEME_CONTROL.CHOICES =
 {
-  "no_change", "NO CHANGE",
+  "no_change", _("NO CHANGE"),
 
-  "tech",       "Tech",
-  "urban",      "Urban",
-  "hell",       "Hell",
+  "tech",       _("Tech"),
+  "urban",      _("Urban"),
+  "hell",       _("Hell"),
   --[["wolf",   "Wolfenstein"]] --Sorry, boyos, this theme doesn't even exist at the moment.
-  "egypt",      "Egypt (TNT)",
-  "psycho",     "Psychedelic",
-  "minisodic",  "Minisodic",
+  "egypt",      _("Egypt (TNT)"),
+  "psycho",     _("Psychedelic"),
+  "minisodic",  _("Minisodic"),
 }
 
 
@@ -136,27 +136,39 @@ OB_MODULES["theme_ctl_doom2"] =
 
   options =
   {
-    { name = "episode1", label="Episode 1", tooltip="Override regular theme for Episode 1.",     choices=THEME_CONTROL.CHOICES, default = "no_change", randomize_group="architecture" },
-    { name = "episode2", label="Episode 2", tooltip="Override regular theme for Episode 2.",    choices=THEME_CONTROL.CHOICES, default = "no_change", randomize_group="architecture", },
-    { name = "episode3", label="Episode 3", tooltip="Override regular theme for Episode 3.",    choices=THEME_CONTROL.CHOICES, default = "no_change", randomize_group="architecture", },
-    { name = "secret", label="Secret Levels", tooltip="Override regular theme for Secret Levels.", choices=THEME_CONTROL.CHOICES, default = "no_change", randomize_group="architecture", },
+    { name = "episode1", 
+    label=_("Episode 1"), 
+    tooltip=_("Override regular theme for Episode 1."),     
+    choices=THEME_CONTROL.CHOICES, default = "no_change", randomize_group="architecture" },
+    { name = "episode2", 
+    label=_("Episode 2"), 
+    tooltip=_("Override regular theme for Episode 2."),    
+    choices=THEME_CONTROL.CHOICES, default = "no_change", randomize_group="architecture", },
+    { name = "episode3", 
+    label=_("Episode 3"), 
+    tooltip=_("Override regular theme for Episode 3."),    
+    choices=THEME_CONTROL.CHOICES, default = "no_change", randomize_group="architecture", },
+    { name = "secret", 
+    label=_("Secret Levels"), 
+    tooltip=_("Override regular theme for Secret Levels."), 
+    choices=THEME_CONTROL.CHOICES, default = "no_change", randomize_group="architecture", },
   },
 
-  tooltip = "Warning: Mix-ins are for now completely overriden when picking a choice with change.",
+  tooltip = _("Warning: Mix-ins are for now completely overriden when picking a choice with change."),
 }
 
 ------------------------------------------------------------------------
 
 THEME_CONTROL.DOOM1_CHOICES =
 {
-  "no_change", "NO CHANGE",
+  "no_change", _("NO CHANGE"),
 
-  "tech",   "Tech",
-  "deimos", "Deimos",
-  "hell",   "Hell",
-  "flesh",  "Flesh",
+  "tech",   _("Tech"),
+  "deimos", _("Deimos"),
+  "hell",   _("Hell"),
+  "flesh",  _("Flesh"),
 
-  "psycho", "Psychedelic",
+  "psycho", _("Psychedelic"),
 }
 
 
@@ -178,12 +190,27 @@ OB_MODULES["theme_ctl_doom1"] =
 
   options =
   {
-    { name = "episode1", label="Episode 1", tooltip="Override regular theme for Episode 1.",    choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change", randomize_group="architecture", },
-    { name = "episode2", label="Episode 2", tooltip="Override regular theme for Episode 2.",    choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change", randomize_group="architecture", },
-    { name = "episode3", label="Episode 3", tooltip="Override regular theme for Episode 3.",     choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change", randomize_group="architecture", },
-    { name = "episode4", label="Episode 4", tooltip="Override regular theme for Episode 4.",    choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change", randomize_group="architecture", },
-    { name = "secret", label="Secret Levels", tooltip="Override regular theme for Secret Levels.", choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change", randomize_group="architecture", },
+    { name = "episode1", 
+    label=_("Episode 1"), 
+    tooltip=_("Override regular theme for Episode 1."),    
+    choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change", randomize_group="architecture", },
+    { name = "episode2", 
+    label=_("Episode 2"), 
+    tooltip=_("Override regular theme for Episode 2."),    
+    choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change", randomize_group="architecture", },
+    { name = "episode3", 
+    label=_("Episode 3"), 
+    tooltip=_("Override regular theme for Episode 3."),     
+    choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change", randomize_group="architecture", },
+    { name = "episode4", 
+    label=_("Episode 4"), 
+    tooltip=_("Override regular theme for Episode 4."),    
+    choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change", randomize_group="architecture", },
+    { name = "secret", 
+    label=_("Secret Levels"), 
+    tooltip=_("Override regular theme for Secret Levels."), 
+    choices=THEME_CONTROL.DOOM1_CHOICES, default = "no_change", randomize_group="architecture", },
   },
 
-  tooltip = "Warning: Mix-ins are for now completely overriden when picking a choice with change.",
+  tooltip = _("Warning: Mix-ins are for now completely overriden when picking a choice with change."),
 }

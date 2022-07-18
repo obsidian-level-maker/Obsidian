@@ -78,14 +78,8 @@ OB_MODULES["heretic_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Gargoyles.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Gargoyles."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -98,14 +92,8 @@ OB_MODULES["heretic_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Fire Gargoyles.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Fire Gargoyles."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -118,14 +106,8 @@ OB_MODULES["heretic_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Warriors.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Warriors."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -138,14 +120,8 @@ OB_MODULES["heretic_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Warrior Ghosts.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Warrior Ghosts."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -158,14 +134,8 @@ OB_MODULES["heretic_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Golems.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Golems."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -178,14 +148,8 @@ OB_MODULES["heretic_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Golem Ghosts.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Golem Ghosts."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -198,14 +162,8 @@ OB_MODULES["heretic_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Nitrogolems.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Nitrogolems."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -218,14 +176,8 @@ OB_MODULES["heretic_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Nitrogolem Ghosts.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Nitrogolem Ghosts."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -238,14 +190,8 @@ OB_MODULES["heretic_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Disciples.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Disciples."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -258,14 +204,8 @@ OB_MODULES["heretic_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Sabreclaws.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Sabreclaws."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -278,14 +218,8 @@ OB_MODULES["heretic_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Weredragons.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Weredragons."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -298,14 +232,8 @@ OB_MODULES["heretic_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Ophidians.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Ophidians."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -318,14 +246,8 @@ OB_MODULES["heretic_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Ironliches.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Ironliches."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -338,14 +260,8 @@ OB_MODULES["heretic_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Maulotaurs.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Maulotaurs."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -358,14 +274,8 @@ OB_MODULES["heretic_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of D'Sparils.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of D'Sparils."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      }
   }
@@ -420,14 +330,8 @@ OB_MODULES["heretic_weapon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the likelihood of finding the Gauntlets of the Necromancer.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the likelihood of finding the Gauntlets of the Necromancer."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
      
@@ -440,14 +344,8 @@ OB_MODULES["heretic_weapon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Crossbows.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Crossbows."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
      
@@ -460,14 +358,8 @@ OB_MODULES["heretic_weapon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Dragon Claws.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Dragon Claws."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 
@@ -480,14 +372,8 @@ OB_MODULES["heretic_weapon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Hellstaves.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Hellstaves."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
      
@@ -500,14 +386,8 @@ OB_MODULES["heretic_weapon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Phoenix Rods.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Phoenix Rods."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 
@@ -520,14 +400,8 @@ OB_MODULES["heretic_weapon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Fire Maces.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Fire Maces."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      }
   }

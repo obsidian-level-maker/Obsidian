@@ -2222,7 +2222,7 @@ OB_MODULES["modded_game_extras"] =
     all_done = MODDED_GAME_EXTRAS.generate_hn_decorate
   },
 
-  tooltip = "Offers extra features and expanded support for various mods.",
+  tooltip = _("Offers extra features and expanded support for various mods."),
 
   options =
   {
@@ -2232,8 +2232,7 @@ OB_MODULES["modded_game_extras"] =
       label=_("HN Markers"),
       valuator = "button",
       default = 0,
-      tooltip = "Adds support for m8f's Hellscape Navigator by generating " ..
-      "name markers in the map per room.",
+      tooltip = _("Adds support for m8f's Hellscape Navigator by generating name markers in the map per room."),
       priority = 5,
     },
 
@@ -2243,11 +2242,7 @@ OB_MODULES["modded_game_extras"] =
       label=_("Custom Actor Names"),
       valuator = "button",
       default = 0,
-      tooltip = "Renames tags of monsters with generated names. Humans recieve human names, " ..
-      "demons recieve exotic names.\n" ..
-      "Best used with TargetSpy or other healthbar mods to see the name.\n" ..
-      "Uses class inheritance and string comparisons to determine monster species (human or demon). "..
-      "Use compatibility options only when necessary, preferably use Universal option instead.",
+      tooltip = _("Renames tags of monsters with generated names. Humans recieve human names, demons recieve exotic names.\nBest used with TargetSpy or other healthbar mods to see the name.\nUses class inheritance and string comparisons to determine monster species (human or demon). Use compatibility options only when necessary, preferably use Universal option instead."),
       priority = 4,
     },
 
@@ -2257,7 +2252,7 @@ OB_MODULES["modded_game_extras"] =
       label = _("QC:DE Lootboxes"),
       valuator = "button",
       default = 0,
-      tooltip = "Adds Quake Champions: Doom Edition Lootboxes as nice item pickups.",
+      tooltip = _("Adds Quake Champions: Doom Edition Lootboxes as nice item pickups."),
       priority = 2,
     },
 
@@ -2267,8 +2262,7 @@ OB_MODULES["modded_game_extras"] =
       label = _("D4T Entities"),
       valuator = "button",
       default = 0,
-      tooltip = "Adds Death Foretold field drones into items table and " ..
-                "gore nests as potential minor boss monsters.",
+      tooltip = _("Adds Death Foretold field drones into items table and gore nests as potential minor boss monsters."),
       priority = 1,
     },
 
@@ -2278,8 +2272,7 @@ OB_MODULES["modded_game_extras"] =
       label = _("Trailblazer Upgrades"),
       valuator = "button",
       default = 0,
-      tooltip = "Adds Trailblazer's upgrade blueprints as separate pickups " ..
-                "that can be found in the map.",
+      tooltip = _("Adds Trailblazer's upgrade blueprints as separate pickups that can be found in the map."),
       priority = 0,
     },
 
@@ -2289,8 +2282,7 @@ OB_MODULES["modded_game_extras"] =
       label = _("Complex Doom Modifications"),
       valuator = "button",
       default = 0,
-      tooltip = "Modifies general gameplay settings to balance generated maps " ..
-                "more for use with Complex Doom due to its difficulty spike.",
+      tooltip = _("Modifies general gameplay settings to balance generated maps more for use with Complex Doom due to its difficulty spike."),
       priority = -1,
     }
   },

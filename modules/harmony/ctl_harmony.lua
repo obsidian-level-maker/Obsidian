@@ -80,14 +80,8 @@ OB_MODULES["harmony_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Beastlings.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Beastlings."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -100,14 +94,8 @@ OB_MODULES["harmony_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Critters.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Critters."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -120,14 +108,8 @@ OB_MODULES["harmony_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Followers.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Followers."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -140,14 +122,8 @@ OB_MODULES["harmony_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Predators.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Predators."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -160,14 +136,8 @@ OB_MODULES["harmony_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Centaurs.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Centaurs."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -180,14 +150,8 @@ OB_MODULES["harmony_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Mutants.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Mutants."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -200,14 +164,8 @@ OB_MODULES["harmony_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Phages.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Phages."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -220,14 +178,8 @@ OB_MODULES["harmony_mon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Echidnae.", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE)",
+      tooltip = _("Control the amount of Echidnae."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      }
   },
@@ -302,14 +254,8 @@ OB_MODULES["harmony_weapon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Miniguns.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Miniguns."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 
@@ -322,14 +268,8 @@ OB_MODULES["harmony_weapon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Compensators.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Compensators."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 
@@ -342,14 +282,8 @@ OB_MODULES["harmony_weapon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Grenade Launchers.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Grenade Launchers."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 
@@ -362,14 +296,8 @@ OB_MODULES["harmony_weapon_control"] =
       increment = .02,
       default = "Default",
       nan = "Default",
-      tooltip = "Control the amount of Entropy Throwers.", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT)",
+      tooltip = _("Control the amount of Entropy Throwers."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 
@@ -377,10 +305,7 @@ OB_MODULES["harmony_weapon_control"] =
       name="weapon_prefs",
       label=_("Weapon Preferences"),
       choices=CTL_HARMONY.WEAPON_PREF_CHOICES,
-      tooltip="Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\n" ..
-      "Normal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\n" ..
-      "Vanilla: Vanilla Oblige-style preferences. Increases grenade launchers if the map has more beastlings. \n\n" ..
-      "NONE: No preferences at all. For those who like to live life dangerously with Phages and only miniguns.",
+      tooltip = _("Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\nNormal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\nVanilla: Vanilla Oblige-style preferences. Increases grenade launchers if the map has more beastlings. \n\nNONE: No preferences at all. For those who like to live life dangerously with Phages and only miniguns."),
       default="normal",
     },
   },

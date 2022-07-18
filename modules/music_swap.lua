@@ -122,6 +122,8 @@ OB_MODULES["music_swapper"] =
   engine = "!zdoom",
   engine2 = "!vanilla",
 
+  tooltip = _("Performs swapping of built-in music tracks via Dehacked."),
+
   hooks =
   {
     get_levels = MUSIC_SWAP.get_levels

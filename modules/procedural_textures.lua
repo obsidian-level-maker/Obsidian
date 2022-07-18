@@ -253,7 +253,7 @@ end
     {
       label = _("Scope")
       choices = PROC_TEX.TEXTURE_SCOPE_CHOICES
-      tooltip = "That one guy",
+      tooltip = _("That one guy"),
       default = "vanilla",
     },
   },
