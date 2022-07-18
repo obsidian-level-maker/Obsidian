@@ -101,8 +101,11 @@ Cubebert
   - Heretic skyboxes
   - XBox Dashboard, ZDoom Forums, and ZDoom Forums Submerged program themes
 
+Morthimer McMare
+  - Current Russian translation file updates
+
 hytalego
-  - Russian translation file
+  - Initial Russian translation file
 
 Twin Galaxy
   - Windows 95 program theme
