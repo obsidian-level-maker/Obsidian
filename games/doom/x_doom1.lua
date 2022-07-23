@@ -417,7 +417,16 @@ ULTDOOM.MATERIALS =
   FLOOR4_5 = { t="BROWN1", f="FLOOR4_5" },
   FLOOR5_4 = { t="BROWN1", f="FLOOR5_4" },
   FLAT18 = { t="GRAY1", f="FLAT18" },
-  FLAT18 = { t="GRAY7", f="FLAT20" }
+  FLAT18 = { t="GRAY7", f="FLAT20" },
+
+  -- hex colors used in some Set Line specials - these are NOT actually usable materials
+  -- and are just here to suppress warnings regarding them
+  ["13131C"] = { t="13131C", f="13131C" },
+  ["4548BA"] = { t="4548BA", f="4548BA" },
+  ["041C08"] = { t="041C08", f="041C08" },
+  ["1F4525"] = { t="1F4525", f="1F4525" },
+  ["281F11"] = { t="281F11", f="281F11" },
+  ["473618"] = { t="473618", f="473618" },
 }
 
 ULTDOOM.PREFAB_FIELDS =

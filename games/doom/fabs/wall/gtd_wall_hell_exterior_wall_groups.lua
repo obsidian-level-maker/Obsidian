@@ -523,6 +523,8 @@ PREFABS.Wall_hell_blood_ocatgon = --#
 
   group = "hell_o_blood_ocatgon",
 
+  tex_DESBRIK3 = "BSTONE2",
+
   z_fit = "top",
 }
 
@@ -592,7 +594,7 @@ PREFABS.Wall_hell_orange_arch_window =
   tex_GLASS12 = "WOODMET1",
   tex_SUPPORT4 = "WOODMET1",
 
-  flat_ORANFLOOR = "RROCK2",
+  flat_ORANFLOR = "RROCK02",
   tex_COLLITE2 = "CRACKLE2",
 
   z_fit = "top",
