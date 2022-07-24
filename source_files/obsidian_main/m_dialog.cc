@@ -248,6 +248,9 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
     if (!last_directory.empty()) {
         chooser.directory(last_directory.generic_string().c_str());
     }
+    else {
+        chooser.directory(install_dir.generic_string().c_str());
+    }
 
     if (preset) {
         chooser.preset_file(preset);

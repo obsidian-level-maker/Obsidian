@@ -314,7 +314,12 @@ class UI_Manage_Config : public Fl_Double_Window {
         chooser.options(Fl_Native_File_Chooser::SAVEAS_CONFIRM);
         chooser.filter("Text files\t*.txt");
 
-        // TODO: chooser.directory(LAST_USED_DIRECTORY)
+        if (!last_directory.empty()) {
+            chooser.directory(last_directory.generic_string().c_str());
+        }
+        else {
+            chooser.directory(install_dir.generic_string().c_str());
+        }
 
         switch (chooser.show()) {
             case -1:
@@ -380,7 +385,12 @@ class UI_Manage_Config : public Fl_Double_Window {
                        "PAK files\t*.pak\n");
 #endif
 
-        // TODO: chooser.directory(LAST_USED_DIRECTORY)
+        if (!last_directory.empty()) {
+            chooser.directory(last_directory.generic_string().c_str());
+        }
+        else {
+            chooser.directory(install_dir.generic_string().c_str());
+        }
 
         switch (chooser.show()) {
             case -1:
