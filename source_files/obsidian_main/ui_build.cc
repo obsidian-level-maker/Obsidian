@@ -266,7 +266,7 @@ void UI_Build::Prog_Nodes(int pos, int limit) {
 
     if (!node_begun) {
         node_begun = true;
-        SetStatus("Building Nodes");
+        SetStatus(_("Building Nodes"));
         progress->selection_color(SELECTION);
         node_along = progress->value();
         node_fracs = (1 - node_along) / limit;
@@ -303,7 +303,7 @@ void UI_Build::SetStatus(std::string_view msg) {
     // strncpy(status_label, msg.data(), std::min<int>(limit, msg.size()));
     status_label = msg;
 
-    if (StringCaseCmp(status_label, "Success") == 0) {
+    if (StringCaseCmp(status_label, _("Success")) == 0) {
         main_win->label(fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE),
                                     OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME)
                             .c_str());
@@ -349,6 +349,9 @@ int UI_Build::FindStep(std::string name) {
 
 void UI_Build::AddStatusStep(std::string name) {
     // modifies the current status string to show the current step
+    std::string blankout;
+    blankout.append(200 , ' ');
+    status->copy_label(blankout.c_str());
     status->copy_label(fmt::format("{} : {}", status_label, name).c_str());
     status->redraw();
 }
