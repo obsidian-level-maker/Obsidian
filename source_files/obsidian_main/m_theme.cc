@@ -1496,7 +1496,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     Fl_Box *heading;
 
     opt_window_scaling =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+        new UI_CustomMenu(cx + W * .30, cy, kf_w(130), kf_h(24), "");
     opt_window_scaling->copy_label(_("Window Scaling: "));
     opt_window_scaling->align(FL_ALIGN_LEFT);
     opt_window_scaling->add(_("AUTO|Tiny|Small|Medium|Large|Huge"));
@@ -1510,7 +1510,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     cy += opt_window_scaling->h() + y_step;
 
     opt_font_scaling =
-        new Fl_Simple_Counter(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+        new Fl_Simple_Counter(cx + W * .30, cy, kf_w(130), kf_h(24), "");
     opt_font_scaling->copy_label(_("Font Size: "));
     opt_font_scaling->align(FL_ALIGN_LEFT);
     opt_font_scaling->step(2);
@@ -1527,7 +1527,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     cy += opt_font_scaling->h() + y_step;
 
     opt_font_theme =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+        new UI_CustomMenu(cx + W * .30, cy, kf_w(130), kf_h(24), "");
     opt_font_theme->copy_label(_("Font: "));
     opt_font_theme->align(FL_ALIGN_LEFT);
     opt_font_theme->callback(callback_FontTheme, this);
@@ -1543,7 +1543,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     cy += opt_font_theme->h() + y_step;
 
     opt_widget_theme =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+        new UI_CustomMenu(cx + W * .30, cy, kf_w(130), kf_h(24), "");
     opt_widget_theme->copy_label(_("Widget Theme: "));
     opt_widget_theme->align(FL_ALIGN_LEFT);
     opt_widget_theme->add(_("Default|Gleam|Win95|Plastic"));
@@ -1557,7 +1557,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     cy += opt_widget_theme->h() + y_step;
 
     opt_box_theme =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+        new UI_CustomMenu(cx + W * .30, cy, kf_w(130), kf_h(24), "");
     opt_box_theme->copy_label(_("Box Theme: "));
     opt_box_theme->align(FL_ALIGN_LEFT);
     opt_box_theme->add(_("Default|Shadow|Embossed|Engraved|Inverted|Raised"));
@@ -1571,7 +1571,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     cy += opt_box_theme->h() + y_step;
 
     opt_button_theme =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+        new UI_CustomMenu(cx + W * .30, cy, kf_w(130), kf_h(24), "");
     opt_button_theme->copy_label(_("Button Theme: "));
     opt_button_theme->align(FL_ALIGN_LEFT);
     opt_button_theme->add(_("Default|Raised|Engraved|Embossed|Flat"));
@@ -1585,7 +1585,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     cy += opt_button_theme->h() + y_step;
 
     opt_color_scheme =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+        new UI_CustomMenu(cx + W * .30, cy, kf_w(130), kf_h(24), "");
     opt_color_scheme->copy_label(_("Color Scheme: "));
     opt_color_scheme->align(FL_ALIGN_LEFT);
     opt_color_scheme->add(_("Default|Custom"));
@@ -1608,7 +1608,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     opt_text_color->labelfont(font_style);
 
     opt_text2_color =
-        new Fl_Button(cx + W * .05 + opt_text_color->w() + (3 * pad), cy,
+        new Fl_Button(cx + W * .05 + opt_text_color->w() + (5 * pad), cy,
                       W * .15, kf_h(24), _("Button Font"));
     opt_text2_color->visible_focus(0);
     opt_text2_color->box(FL_BORDER_BOX);
@@ -1618,7 +1618,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     opt_text2_color->labelfont(font_style);
 
     opt_bg_color =
-        new Fl_Button(cx + W * .05 + (opt_text_color->w() + (3 * pad)) * 2, cy,
+        new Fl_Button(cx + W * .05 + (opt_text_color->w() + (5 * pad)) * 2, cy,
                       W * .15, kf_h(24), _("Panels"));
     opt_bg_color->visible_focus(0);
     opt_bg_color->box(FL_BORDER_BOX);
@@ -1628,7 +1628,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     opt_bg_color->labelfont(font_style);
 
     opt_bg2_color =
-        new Fl_Button(cx + W * .05 + (opt_text_color->w() + (3 * pad)) * 3, cy,
+        new Fl_Button(cx + W * .05 + (opt_text_color->w() + (5 * pad)) * 3, cy,
                       W * .15, kf_h(24), _("Highlights"));
     opt_bg2_color->visible_focus(0);
     opt_bg2_color->box(FL_BORDER_BOX);
@@ -1650,7 +1650,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     opt_button_color->labelfont(font_style);
 
     opt_gradient_color =
-        new Fl_Button(cx + W * .05 + opt_text_color->w() + (3 * pad), cy,
+        new Fl_Button(cx + W * .05 + opt_text_color->w() + (5 * pad), cy,
                       W * .15, kf_h(24), _("Gradient"));
     opt_gradient_color->visible_focus(0);
     opt_gradient_color->box(FL_BORDER_BOX);
@@ -1661,7 +1661,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     opt_gradient_color->labelfont(font_style);
 
     opt_border_color =
-        new Fl_Button(cx + W * .05 + (opt_text_color->w() + (3 * pad)) * 2, cy,
+        new Fl_Button(cx + W * .05 + (opt_text_color->w() + (5 * pad)) * 2, cy,
                       W * .15, kf_h(24), _("Borders"));
     opt_border_color->visible_focus(0);
     opt_border_color->box(FL_BORDER_BOX);
@@ -1672,7 +1672,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     opt_border_color->labelfont(font_style);
 
     opt_gap_color =
-        new Fl_Button(cx + W * .05 + (opt_text_color->w() + (3 * pad)) * 3, cy,
+        new Fl_Button(cx + W * .05 + (opt_text_color->w() + (5 * pad)) * 3, cy,
                       W * .15, kf_h(24), _("Gaps"));
     opt_gap_color->visible_focus(0);
     opt_gap_color->box(FL_BORDER_BOX);
@@ -1684,7 +1684,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     cy += opt_text_color->h() + y_step * 3;
 
     opt_system_fonts =
-        new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+        new UI_CustomCheckBox(cx + W * .05, cy, W - cx - pad, kf_h(24), "");
     opt_system_fonts->copy_label(
         _(" Use System Fonts (disables bundled fonts)"));
     opt_system_fonts->value(use_system_fonts ? 1 : 0);
@@ -1695,7 +1695,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
 
     cy += opt_system_fonts->h() + y_step;
 
-    opt_single_pane = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_single_pane = new UI_CustomCheckBox(cx + W * .05, cy, W - cx - pad, kf_h(24), "");
     opt_single_pane->copy_label(_(" Single Pane Mode"));
     opt_single_pane->value(single_pane ? 1 : 0);
     opt_single_pane->callback(callback_SinglePane, this);
@@ -1796,7 +1796,7 @@ int UI_ThemeWin::handle(int event) {
 }
 
 void DLG_ThemeEditor(void) {
-    int theme_w = kf_w(350);
+    int theme_w = kf_w(500);
     int theme_h = kf_h(500);
 
     UI_ThemeWin *theme_window =
