@@ -33,7 +33,7 @@
 #include <filesystem>
 #include "hdr_fltk.h"
 #include "ui_window.h"
-constexpr const char *OBSIDIAN_TITLE = "OBSIDIAN Level Maker";
+extern std::string OBSIDIAN_TITLE;
 
 #ifdef OBSIDIAN_TIMESTAMP
 constexpr const char *OBSIDIAN_VERSION = OBSIDIAN_TIMESTAMP;
@@ -43,8 +43,8 @@ constexpr const char *OBSIDIAN_VERSION = OBSIDIAN_TIMESTAMP;
 constexpr const char *OBSIDIAN_VERSION = __DATE__;
 #endif
 
-constexpr const char *OBSIDIAN_SHORT_VERSION = "V20";
-constexpr const char *OBSIDIAN_CODE_NAME = "Unstable";
+constexpr const char *OBSIDIAN_SHORT_VERSION = "20";
+extern std::string OBSIDIAN_CODE_NAME;
 
 constexpr const char *OBSIDIAN_WEBSITE =
     "https://github.com/dashodanger/Obsidian/wiki";
@@ -212,6 +212,7 @@ void DLG_SelectAddons();
 
 void DLG_EditSeed();
 void DLG_ViewLogs();
+void DLG_ViewGlossary();
 void DLG_ManageConfig();
 
 void DLG_Tutorial();

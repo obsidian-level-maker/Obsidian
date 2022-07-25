@@ -63,6 +63,7 @@ class UI_MainWin : public Fl_Double_Window {
     static void menu_do_about(Fl_Widget *w, void *data);
     static void menu_do_tutorial(Fl_Widget *w, void *data);
     static void menu_do_view_logs(Fl_Widget *w, void *data);
+    static void menu_do_glossary(Fl_Widget *w, void *data);
     static void menu_do_options(Fl_Widget *w, void *data);
     static void menu_do_theme(Fl_Widget *w, void *data);
     static void menu_do_addons(Fl_Widget *w, void *data);

@@ -304,7 +304,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
         rsl->nan_options->box(FL_FLAT_BOX);
         rsl->nan_options->color(this->color());
         rsl->nan_options->selection_color(SELECTION);
-        rsl->nan_options->add("Use Slider Value");
+        rsl->nan_options->add(_("Use Slider Value"));
         for (std::string::size_type x = 0; x < rsl->nan_choices.size(); x++) {
             rsl->nan_options->add(rsl->nan_choices[x].c_str());
         }

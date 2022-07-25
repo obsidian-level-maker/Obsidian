@@ -273,7 +273,7 @@ class UI_Manage_Config : public Fl_Double_Window {
         text_buf->append("-- CONFIG FILE : OBSIDIAN ");
         text_buf->append(OBSIDIAN_SHORT_VERSION);
         text_buf->append("\"");
-        text_buf->append(OBSIDIAN_CODE_NAME);
+        text_buf->append(OBSIDIAN_CODE_NAME.c_str());
         text_buf->append("\"\n");
         text_buf->append("-- Build ");
         text_buf->append(OBSIDIAN_VERSION);

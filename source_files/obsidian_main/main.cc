@@ -60,6 +60,9 @@ std::filesystem::path options_file;
 std::filesystem::path theme_file;
 std::filesystem::path logging_file;
 
+std::string OBSIDIAN_TITLE = "OBSIDIAN Level Maker";
+std::string OBSIDIAN_CODE_NAME = "Unstable";
+
 int screen_w;
 int screen_h;
 
@@ -208,7 +211,7 @@ static void main_win_misc_config_CB(Fl_Widget *w, void *data) {
 }
 
 static void main_win_addon_CB(Fl_Widget *w, void *data) {
-    std::string menu_item = "Addons/";
+    std::string menu_item = _("Addons/");
     Fl_Menu_Bar *menu = (Fl_Menu_Bar *)w;
     addon_info_t *addon = (addon_info_t *)data;
     menu_item.append(addon->name.filename().string());
@@ -1102,7 +1105,7 @@ bool Build_Cool_Shit() {
     if (main_action == MAIN_CANCEL) {
         main_action = 0;
         if (main_win) {
-            main_win->label(fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE),
+            main_win->label(fmt::format("{} {} \"{}\"", OBSIDIAN_TITLE,
                                         OBSIDIAN_SHORT_VERSION,
                                         OBSIDIAN_CODE_NAME)
                                 .c_str());
@@ -1265,6 +1268,8 @@ skiprest:
         Options_Load(options_file);
         Theme_Options_Load(theme_file);
         Trans_SetLanguage();
+        OBSIDIAN_TITLE = _("OBSIDIAN Level Maker");
+        OBSIDIAN_CODE_NAME = _("Unstable");
         Main::SetupFltk();
     }
 
@@ -1374,7 +1379,7 @@ skiprest:
     UI_MainWin::CalcWindowSize(&main_w, &main_h);
 
     std::string main_title =
-        fmt::format("{} {} \"{}\"", _(OBSIDIAN_TITLE), OBSIDIAN_SHORT_VERSION,
+        fmt::format("{} {} \"{}\"", OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
                     OBSIDIAN_CODE_NAME);
     main_win = new UI_MainWin(main_w, main_h, main_title.c_str());
 
