@@ -260,7 +260,7 @@ function ZDOOM_MARINE.control_setup(self)
 
     local M = GAME.MONSTERS[string.sub(opt.name, 7)]
 
-    if M and PARAM[opt.name] ~= _("Default") then
+    if M and PARAM[opt.name] ~= gui.gettext("Default") then
       M.prob    = PARAM[opt.name] * 100
       M.density = M.prob * .006 + .1
 

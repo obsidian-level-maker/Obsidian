@@ -27,7 +27,7 @@ function CTL_DOOM.monster_setup(self)
 
     local M = GAME.MONSTERS[string.sub(opt.name, 7)]
 
-    if M and PARAM[opt.name] ~= _("Default") then
+    if M and PARAM[opt.name] ~= gui.gettext("Default") then
       M.prob    = PARAM[opt.name] * 100
       M.density = M.prob * .006 + .1
 
@@ -527,7 +527,7 @@ function CTL_DOOM.item_setup(self)
   module_param_up(self)
 
   local function change_probz(name, info)
-    if PARAM[name] and PARAM[name] ~= _("Default") then
+    if PARAM[name] and PARAM[name] ~= gui.gettext("Default") then
       local mult = PARAM[name] or 0
 
       if info.add_prob then info.add_prob = info.add_prob * mult end

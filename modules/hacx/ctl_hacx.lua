@@ -28,7 +28,7 @@ function CTL_HACX.monster_setup(self)
 
     local M = GAME.MONSTERS[string.sub(opt.name, 7)]
 
-    if M and PARAM[opt.name] ~= _("Default") then
+    if M and PARAM[opt.name] ~= gui.gettext("Default") then
       M.prob    = PARAM[opt.name] * 100
       M.density = M.prob * .006 + .1
 
@@ -273,7 +273,7 @@ function CTL_HACX.weapon_setup(self)
 
     local W = GAME.WEAPONS[string.sub(opt.name, 7)] -- Strip the float_ prefix from the weapon name for table lookup
 
-    if W and PARAM[opt.name] ~= _("Default") then
+    if W and PARAM[opt.name] ~= gui.gettext("Default") then
       W.add_prob = PARAM[opt.name] * 100
       W.pref     = W.add_prob * 0.28 + 1 -- Complete guesswork right now - Dasho
 

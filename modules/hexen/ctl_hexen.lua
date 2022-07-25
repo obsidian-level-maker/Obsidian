@@ -28,7 +28,7 @@ function CTL_HEXEN.monster_setup(self)
 
     local M = GAME.MONSTERS[string.sub(opt.name, 7)]
 
-    if M and PARAM[opt.name] ~= _("Default") then
+    if M and PARAM[opt.name] ~= gui.gettext("Default") then
       M.prob    = PARAM[opt.name] * 100
       M.density = M.prob * .006 + .1
 
@@ -316,7 +316,7 @@ function CTL_HEXEN.item_setup(self)
   module_param_up(self)
 
   local function change_probz(name, info)
-    if PARAM[name] and PARAM[name] ~= _("Default") then
+    if PARAM[name] and PARAM[name] ~= gui.gettext("Default") then
       local mult = PARAM[name] or 0
 
       if info.add_prob then info.add_prob = info.add_prob * mult end
@@ -338,7 +338,7 @@ function CTL_HEXEN.item_setup(self)
     change_probz(float_name, info)
   end
 
-  if PARAM["float_ultimate_weapon_pieces"] ~= _("Default") then
+  if PARAM["float_ultimate_weapon_pieces"] ~= gui.gettext("Default") then
     local mult = PARAM["float_ultimate_weapon_pieces"] or 0
     local info = GAME.NICE_ITEMS["h_ultimate_piece_one"]
     if info.add_prob then info.add_prob = info.add_prob * mult end
