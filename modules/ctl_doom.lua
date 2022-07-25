@@ -342,7 +342,7 @@ function CTL_DOOM.weapon_setup(self)
   for _,opt in pairs(self.options) do
 
     if opt.name == "float_saw" then 
-      if PARAM["float_saw"] and PARAM["float_saw"] ~= _("Default") then
+      if PARAM["float_saw"] and PARAM["float_saw"] ~= gui.gettext("Default") then
         local info = GAME.NICE_ITEMS.saw
         local mult = PARAM["float_saw"] or 0
   
@@ -358,7 +358,7 @@ function CTL_DOOM.weapon_setup(self)
 
     local W = GAME.WEAPONS[string.sub(opt.name, 7)] -- Strip the float_ prefix from the weapon name for table lookup
 
-    if W and PARAM[opt.name] ~= _("Default") then
+    if W and PARAM[opt.name] ~= gui.gettext("Default") then
       W.add_prob = PARAM[opt.name] * 100
       W.pref     = W.add_prob * 0.28 + 1 -- Complete guesswork right now - Dasho
 

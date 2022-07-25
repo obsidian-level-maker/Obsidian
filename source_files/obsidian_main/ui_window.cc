@@ -81,7 +81,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     menu_bar->add(_("File/Config Manager"), FL_F + 9, menu_do_manage_config);
     menu_bar->add(_("Help/About"), FL_F + 1, menu_do_about);
     menu_bar->add(_("Help/View Logs"), FL_F + 6, menu_do_view_logs);
-    menu_bar->add(_("Help/Glossary"), NULL, menu_do_glossary);
+    menu_bar->add(_("Help/Glossary"), 0, menu_do_glossary);
     menu_bar->add(_("Help/ "), 0, 0, NULL, FL_MENU_INACTIVE);
     menu_bar->add(_("Help/Tutorial"), 0, menu_do_tutorial);
     menu_bar->add(_("Surprise Me/Go"), FL_F + 8, main_win_surprise_go_CB);

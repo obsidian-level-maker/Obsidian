@@ -961,7 +961,7 @@ int gui_at_level(lua_State *L) {
     int index = luaL_checkinteger(L, 2);
     int total = luaL_checkinteger(L, 3);
 
-    Main::ProgStatus(_(fmt::format("Making {}", name).c_str()));
+    Main::ProgStatus(fmt::format("{} {}", _("Making"), name).c_str());
 
     if (main_win) {
         main_win->build_box->Prog_AtLevel(index, total);
