@@ -417,7 +417,16 @@ ULTDOOM.MATERIALS =
   FLOOR4_5 = { t="BROWN1", f="FLOOR4_5" },
   FLOOR5_4 = { t="BROWN1", f="FLOOR5_4" },
   FLAT18 = { t="GRAY1", f="FLAT18" },
-  FLAT18 = { t="GRAY7", f="FLAT20" }
+  FLAT18 = { t="GRAY7", f="FLAT20" },
+
+  -- hex colors used in some Set Line specials - these are NOT actually usable materials
+  -- and are just here to suppress warnings regarding them
+  ["13131C"] = { t="13131C", f="13131C" },
+  ["4548BA"] = { t="4548BA", f="4548BA" },
+  ["041C08"] = { t="041C08", f="041C08" },
+  ["1F4525"] = { t="1F4525", f="1F4525" },
+  ["281F11"] = { t="281F11", f="281F11" },
+  ["473618"] = { t="473618", f="473618" },
 }
 
 ULTDOOM.PREFAB_FIELDS =
@@ -619,6 +628,8 @@ ULTDOOM.THEMES =
     },
 
     ceil_light_prob = 60,
+
+    streets_friendly = false
   },
 
 
@@ -4404,9 +4415,16 @@ function ULTDOOM.get_levels()
       end
 
       -- nature mode
-      if PARAM.float_nature_mode and not LEV.has_streets then
+      if PARAM.float_nature_mode then
         if rand.odds(PARAM.float_nature_mode) then
-          LEV.is_nature = true
+          if LEV.has_streets then
+            if rand.odds(50) then
+              LEV.has_streets = false
+              LEV.is_nature = true
+            end
+          else
+            LEV.is_nature = true
+          end
         end
       end
 

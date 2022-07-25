@@ -914,6 +914,13 @@ function Grower_calc_rule_probs()
     
     local function Grower_reset_absurdities()
       for _,rule in pairs(SHAPE_GRAMMAR) do
+
+        rule.is_absurd = false
+
+        if rule.original_use_prob then
+          rule.use_prob = rule.original_use_prob
+        end
+
         if not rule.initial_env then goto continue end
 
         if rule.initial_env == "none" then rule.env = nil
@@ -951,6 +958,8 @@ function Grower_calc_rule_probs()
       and not string.match(absurded_rule,"START")
       and SHAPE_GRAMMAR[absurded_rule].is_absurd ~= true
       and SHAPE_GRAMMAR[absurded_rule].use_prob ~= 0 then
+
+        SHAPE_GRAMMAR[absurded_rule].original_use_prob = SHAPE_GRAMMAR[absurded_rule].use_prob
 
         local new_factor
 
@@ -1001,20 +1010,10 @@ function Grower_decide_extents()
   -- decides how much of the map we can use for growing rooms.
   --
 
-  if (PARAM.bool_urban_streets_mode == 0 or (PARAM.bool_urban_streets_mode == 1 and LEVEL.theme_name == "urban"))
-  and rand.odds(PARAM.float_streets_mode) then
-    LEVEL.has_streets = true
-  else
-    LEVEL.has_streets = false
-  end
-
-  -- let nature mode take precedence over streets mode
-  if LEVEL.is_nature then
-    LEVEL.has_streets = false
-  end
-
-  if LEVEL.has_streets and LEVEL.is_procedural_gotcha then
-    LEVEL.has_streets = false
+  if LEVEL.has_streets == true then
+    if PARAM.bool_appropriate_street_themes and PARAM.bool_appropriate_street_themes == 1 and LEVEL.theme.streets_friendly == false then
+      LEVEL.has_streets = false
+    end
   end
 
   assert(int(LEVEL.map_W) < SEED_W)
@@ -1350,7 +1349,8 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env),
     if info.env ~= "hallway"
     and info.env ~= "cave"
     and not R.is_park then
-      if R.id%2 == 0 and rand.odds(66) then
+      if R.id%2 == 0
+      and rand.odds(66) then
         R.is_street = true
         R.is_outdoor = true
       end
@@ -3150,6 +3150,7 @@ end
 
     best = { score=-1, areas={} }
 
+    gui.debugf("CURRENT ROOM: " .. table.tostr(R, 2))
     gui.debugf("CURRENT RULE: " .. table.tostr(cur_rule))
 
     local T
@@ -3880,7 +3881,7 @@ end
 
 
 function Grower_sprout_room(R)
-  if R.is_dead or R.is_street then return end
+  if R.is_dead then return end
 
   if rand.odds(LEVEL.squareishness) and not R.is_cave and not R.is_park
   and not R.is_hallway and not R.is_street then
@@ -3896,6 +3897,10 @@ function Grower_sprout_room(R)
   -- if hallway did not sprout, try again
   if R.is_hallway and R:prelim_conn_num() < 2 then
     Grower_clean_up_links(R)
+    Grower_grammatical_room(R, "sprout")
+  end
+
+  if R.is_street and R:prelim_conn_num() < math.clamp(1, int(R.svolume/64), 10) then
     Grower_grammatical_room(R, "sprout")
   end
 
@@ -3938,6 +3943,8 @@ function Grower_make_street(R)
       A.is_road = true
     end
   end
+
+  R.floor_limit = math.clamp(5,R.areas[1].svolume/16,100)
 
   Grower_grammatical_room(R, "sidewalk")
 

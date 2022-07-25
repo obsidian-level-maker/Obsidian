@@ -43,7 +43,7 @@ HACX.WEAPONS =
     give = { {ammo="shell",count=8} }
   },
 
-  cyrogun =
+  cryogun =
   {
     id = 82,
     level = 3,

@@ -39,6 +39,7 @@ function CHEX3.all_done()
 	  local wad_file = "games/chex/data/CQ3_EXIT.wad"
 	  gui.wad_merge_sections(wad_file)
 	end
+	gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDOOM")
 end
 
 OB_GAMES["chex3"] =

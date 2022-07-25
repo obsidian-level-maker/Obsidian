@@ -2,9 +2,10 @@
 //  Custom Module list
 //------------------------------------------------------------------------
 //
-//  Oblige Level Maker
+//  OBSIDIAN Level Maker
 //
-//  Copyright (C) 2006-2016 Andrew Apted
+//  Copyright (C) 2021-2022 The OBSIDIAN Team
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -236,11 +237,11 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     std::string::size_type pos = 0;
     while (pos != std::string::npos) {
         pos = nan.find(',', oldpos);
-        if (pos != std::string::npos) {
-            std::string nan_string = nan.substr(oldpos, pos - oldpos);
+        std::string nan_string = nan.substr(oldpos, (pos == std::string::npos ? nan.size() : pos) - oldpos);
+        if (!nan_string.empty())
             rsl->nan_choices.push_back(nan_string);
+        if (pos != std::string::npos)
             oldpos = pos + 1;
-        }
     }
 
     rsl->mod_label = new Fl_Box(
@@ -350,11 +351,14 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
 #else
 	std::setlocale(LC_NUMERIC, "C");
 #endif
+
     while (pos != std::string::npos) {
         pos = presets.find(',', oldpos);
-        if (pos != std::string::npos) {
-            std::string map_string = presets.substr(oldpos, pos - oldpos);
+        std::string map_string = presets.substr(oldpos, (pos == std::string::npos ? nan.size() : pos) - oldpos);
+        if (!map_string.empty()) {
             std::string::size_type temp_pos = map_string.find(':');
+            if (temp_pos == std::string::npos)
+                goto skippreset;
             double key;
             try {
                 key = std::stod(map_string.substr(0, temp_pos));
@@ -369,9 +373,10 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
             } catch (std::exception &e) {
                 std::cout << e.what();
             }
-        skippreset:
-            oldpos = pos + 1;
         }
+        skippreset:
+        if (pos != std::string::npos)
+            oldpos = pos + 1;
     }
 #ifdef __unix__
 #ifndef __linux__

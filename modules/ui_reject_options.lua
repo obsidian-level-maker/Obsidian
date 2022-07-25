@@ -48,9 +48,8 @@ OB_MODULES["ui_reject_options"] =
       label = _("Build REJECT"),
       valuator = "button",
       default = 0,
-      tooltip = "Choose to build a proper REJECT lump.",
-      longtip = "If this option is not selected, a blank REJECT lump with the proper size will be inserted into the map instead." ..
-      "\n\nThis is to prevent errors with some engines that are expecting a \"full\" REJECT lump to be present."
+      tooltip = _("Choose to build a proper REJECT lump."),
+      longtip = _("If this option is not selected, a blank REJECT lump with the proper size will be inserted into the map instead.\n\nThis is to prevent errors with some engines that are expecting a \"full\" REJECT lump to be present.")
     }
   }
 }
@@ -76,7 +75,8 @@ OB_MODULES["ui_udmf_map_options"] =
 
   label = _("Map Build Options"),
   
-  engine = "eternity", -- Other UDMF-capable engines may go in this group in the future - Dasho
+  engine = "advanced",
+  engine2 = "!zdoom",
 
   side = "left",
   priority = 105,
@@ -93,8 +93,7 @@ OB_MODULES["ui_udmf_map_options"] =
       label = _("Map Format"),
       choices = UI_UDMF_MAP_OPTIONS.MAP_FORMAT_CHOICES,
       default = "udmf",
-      tooltip = "Choose between UDMF and binary map format.\n\nBe advised that UDMF format can result in" ..
-      " very large WAD files due to the size of its TEXTMAP lumps."
+      tooltip = _("Choose between UDMF and binary map format.\n\nBe advised that UDMF format can result in very large WAD files due to the size of its TEXTMAP lumps.")
     }
   }
 }
@@ -137,18 +136,15 @@ OB_MODULES["ui_zdoom_map_options"] =
       label = _("Build Nodes"),
       valuator = "button",
       default = 0,
-      tooltip = "Choose to either build nodes or allow the engine itself to do so " ..
-      "upon loading the map.",
-      longtip = "ZDoom is capable of building its own nodes in either Binary or UDMF.\n\n" ..
-        "Obsidian uses the same internal nodebuilder as ZDoom, so maps should be compatible either way."
+      tooltip = _("Choose to either build nodes or allow the engine itself to do so upon loading the map."),
+      longtip = _("ZDoom is capable of building its own nodes in either Binary or UDMF.\n\nObsidian uses the same internal nodebuilder as ZDoom, so maps should be compatible either way.")
     },
     {
       name = "map_format_zdoom",
       label = _("Map Format"),
       choices = UI_ZDOOM_MAP_OPTIONS.MAP_FORMAT_CHOICES,
       default = "udmf",
-      tooltip = "Choose between UDMF and binary map format.\n\nBe advised that UDMF format can result in" ..
-      " very large WAD files due to the size of its TEXTMAP lumps."
+      tooltip = _("Choose between UDMF and binary map format.\n\nBe advised that UDMF format can result in very large WAD files due to the size of its TEXTMAP lumps.")
     }
   }
 }

@@ -31,11 +31,11 @@ BEGIN
     // 0409 means "US English"; 04B0 means "Unicode encoding"
     BLOCK "040904B0"
     BEGIN
-      VALUE "CompanyName",      "Obsidian/ObAddon Community\0"
+      VALUE "CompanyName",      "The OBSIDIAN Team\0"
       VALUE "FileDescription",  "OBSIDIAN Level Maker\0"
       VALUE "FileVersion",      "Beta\0"
       VALUE "InternalName",     "OBSIDIAN\0"
-      VALUE "LegalCopyright",   "\251 Andrew Apted, GNU General Public License\0"
+      VALUE "LegalCopyright",   "\251 Andrew Apted et al, GNU General Public License\0"
       VALUE "OriginalFilename", "OBSIDIAN.EXE\0"
       VALUE "ProductName",      "OBSIDIAN\0"
       VALUE "ProductVersion",   "Beta\0"

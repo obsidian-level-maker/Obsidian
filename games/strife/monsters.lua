@@ -45,7 +45,8 @@ STRIFE.MONSTERS =
     give = { {ammo="bullet",count=50} },
   },
 
-  acolyte_dark_green =
+  -- Prevent spamming guard uniform drops
+  --[[acolyte_dark_green =
   {
     id=147,
     r=24,
@@ -58,7 +59,7 @@ STRIFE.MONSTERS =
     attack = "hitscan",
     weap_needed = { assault=true },
     give = { {ammo="bullet",count=50} },
-  },
+  },]]--
 
   acolyte_gold =
   {

@@ -758,7 +758,11 @@ function Junction_make_wall(junc)
     local plain_wall_prob = 0
 
     if PARAM.wall_prob and PARAM.wall_prob ~= "fab_default" then
-      plain_wall_prob = plain_wall_prob + (PREFAB_CONTROL.WALL_REDUCTION_ODDS[PARAM.wall_prob] * 100)
+      if not ob_match_game({game = "doomish"}) then
+        plain_wall_prob = plain_wall_prob + ((PREFAB_CONTROL_GENERIC.WALL_REDUCTION_ODDS[PARAM.wall_prob] or 0) * 100)
+      else
+        plain_wall_prob = plain_wall_prob + ((PREFAB_CONTROL.WALL_REDUCTION_ODDS[PARAM.wall_prob] or 0) * 100)
+      end
       plain_wall_prob = math.clamp(0, plain_wall_prob, 100)
     end
 
@@ -795,15 +799,7 @@ function Junction_calc_fence_z(A1, A2)
   -- pick max height between two areas
   local per_area_z = math.max(A1.floor_h, A2.floor_h)
 
-  top_z = max_z
-
-  if A1.room and A1.room.fence_height_type 
-  and A1.room.fence_height_type == "max_floor"
-  or (A2.room and A2.room.fence_height_type 
-  and A2.room.fence_height_type == "max_floor")
-  then
-    top_z = max_z
-  end
+  top_z = per_area_z
 
   -- use max whenever next to parks
   if (A1.room and A1.room.is_park)

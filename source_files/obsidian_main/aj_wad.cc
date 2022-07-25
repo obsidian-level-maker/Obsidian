@@ -1,6 +1,8 @@
 //------------------------------------------------------------------------
 //
-//  AJ-Polygonator (C) 2000-2013 Andrew Apted
+//  AJ-Polygonator 
+//  (C) 2021-2022 The OBSIDIAN Team
+//  (C) 2000-2013 Andrew Apted
 //
 //  This library is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License

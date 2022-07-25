@@ -2075,7 +2075,11 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     end
 
     if PARAM.group_wall_prob and PARAM.group_wall_prob ~= "fab_default" then
-      prob = prob * PREFAB_CONTROL.WALL_GROUP_ODDS[PARAM.group_wall_prob]
+      if not ob_match_game({game = "doomish"}) then
+        prob = prob * (PREFAB_CONTROL_GENERIC.WALL_GROUP_ODDS[PARAM.group_wall_prob] or 1)
+      else
+        prob = prob * (PREFAB_CONTROL.WALL_GROUP_ODDS[PARAM.group_wall_prob] or 1)
+      end
     end
 
     prob = math.clamp(0, prob, 100)
@@ -2894,7 +2898,7 @@ function Layout_outdoor_shadows()
 
   local function need_shadow(S, dir)
 
-    if OB_CONFIG.game == "quake" or OB_CONFIG.game == "nukem" then return false end
+    if OB_CONFIG.game == "quake" or OB_CONFIG.game == "nukem" or (PARAM.bool_outdoor_shadows and PARAM.bool_outdoor_shadows == 0) then return false end
 
     if not S.area then return false end
 

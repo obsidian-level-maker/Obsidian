@@ -83,8 +83,7 @@ OB_MODULES["debugger"] =
   engine = "!vanilla",
   priority = 50,
 
-  tooltip = "Provides options for printing out more verbose log information. " ..
-            "Advanced, highly experimental features can also be found here.",
+  tooltip = _("Provides options for printing out more verbose log information. Advanced, highly experimental features can also be found here."),
 
   hooks =
   {
@@ -96,13 +95,21 @@ OB_MODULES["debugger"] =
   {
 
     {
+      name = "bool_scale_items_with_map_size",
+      label=_("Alternate Item Quantities"),
+      valuator = "button",
+      default = 0,
+      tooltip = _("Scales item distribution with map size (Experimental)"),
+      priority=105,
+    },
+
+    {
       name = "bool_print_fab_materials",
       label=_("Print Fab Materials"),
       valuator = "button",
       default = 0,
-      tooltip="Print list of textures/flats present in each fab",
-      longtip="Print the names of all textures/flats preset in a prefab WAD. This " ..
-      "will also list values like _FLOOR, _WALL, etc, prior to their conversion.",
+      tooltip = _("Print list of textures/flats present in each fab"),
+      longtip = _("Print the names of all textures/flats preset in a prefab WAD. This will also list values like _FLOOR, _WALL, etc, prior to their conversion."),
       priority=104,
     },
 
@@ -111,12 +118,8 @@ OB_MODULES["debugger"] =
       label=_("Missing Fab Material Behavior"),
       choices=DEBUG_CONTROL.MISSING_MAT_CHOICES,
       default = "ignore",
-      tooltip="Choose what to do when encountering a missing material",
-      longtip="Provides the following options if a material definition isn't present in a game's MATERIALS table: \n\n" ..
-      "Ignore: Silently continue; missing materials are usually replaced by an _ERROR or _DEFAULT texture.\n\n" ..
-      "Warn: Continue, but write the name of the fab and the missing material to the logfile.\n\n" ..
-      "Abort: Throw an error and halt generation, with an error message explaining which fab and material are causing the issue. Will " ..
-      "also write this information to the logfile.",
+      tooltip = _("Choose what to do when encountering a missing material"),
+      longtip = _("Provides the following options if a material definition isn't present in a game's MATERIALS table: \n\nIgnore: Silently continue; missing materials are usually replaced by an _ERROR or _DEFAULT texture.\n\nWarn: Continue, but write the name of the fab and the missing material to the logfile.\n\nAbort: Throw an error and halt generation, with an error message explaining which fab and material are causing the issue. Will also write this information to the logfile."),
       priority=103,
     },
 
@@ -125,9 +128,8 @@ OB_MODULES["debugger"] =
       label=_("Check For Non-Vanilla Materials"),
       valuator = "button",
       default = 0,
-      tooltip="Choose what to do when encountering a non-vanilla material",
-      longtip="If checked, will compare all flats/textures used against a list of vanilla materials for that IWAD, and treat non-vanilla " ..
-      "materials as missing for the purposes of logging and throwing errors.",
+      tooltip = _("Choose what to do when encountering a non-vanilla material"),
+      longtip = _("If checked, will compare all flats/textures used against a list of vanilla materials for that IWAD, and treat non-vanilla materials as missing for the purposes of logging and throwing errors."),
       priority=102,
       gap = 1
     },
@@ -137,9 +139,8 @@ OB_MODULES["debugger"] =
       label=_("Whole Name Gen Names Only"),
       valuator = "button",
       default = 0,
-      tooltip="Use only complete names from the Name Generator",
-      longtip="Uses name generator names that are already complete phrases/sentences \n" ..
-      "instead of trying to procedurally generate them.",
+      tooltip = _("Use only complete names from the Name Generator"),
+      longtip = _("Uses name generator names that are already complete phrases/sentences \ninstead of trying to procedurally generate them."),
       priority=101,
     },
 
@@ -147,9 +148,7 @@ OB_MODULES["debugger"] =
       name = "name_gen_test",
       label=_("Name Generator"),
       choices=DEBUG_CONTROL.NAME_GEN_CHOICES,
-      tooltip="Prints a demonstration sample of 32 names per category.\n" ..
-              "Level Names = TECH, GOTHIC, URBAN, and BOSS level names\n" ..
-              "Title Names = TITLE, SUB_TITLE, and EPISODE names\n",
+      tooltip = _("Prints a demonstration sample of 32 names per category.\nLevel Names = TECH, GOTHIC, URBAN, and BOSS level names\nTitle Names = TITLE, SUB_TITLE, and EPISODE names\n"),
       default="none",
       priority=100,
     },
@@ -160,8 +159,7 @@ OB_MODULES["debugger"] =
       label=_("Print ZDoom Strings"),
       valuator = "button",
       default = 0,
-      tooltip="Displays the story generator and custom quit message strings "..
-              "added by the ZDoom Special Addons: Story Generator.",
+      tooltip = _("Displays the story generator and custom quit message strings added by the ZDoom Special Addons: Story Generator."),
       priority=97,
     },
 
@@ -175,9 +173,8 @@ OB_MODULES["debugger"] =
       max = 45,
       increment = 1,
       default = 0,
-      presets = "0:All,",
-      tooltip="Allows the skipping of level construction along the WAD " ..
-              "for debugging purposes.",
+      presets = "0:All",
+      tooltip = _("Allows the skipping of level construction along the WAD for debugging purposes."),
       priority=96,
     },
 
@@ -187,7 +184,7 @@ OB_MODULES["debugger"] =
       label = _("Shape Rule Stats"),
       valuator = "button",
       default = 0,
-      tooltip = "Displays usage statistics for shape grammar rules.",
+      tooltip = _("Displays usage statistics for shape grammar rules."),
       priority=95,
     },
     
@@ -197,7 +194,7 @@ OB_MODULES["debugger"] =
       label = _("Save Map Previews"),
       valuator = "button",
       default = 0,
-      tooltip = "Saves SVG format images of generated map thumbnails.",
+      tooltip = _("Saves SVG format images of generated map thumbnails."),
       priority=94,
       gap = 1,
     },
@@ -208,7 +205,7 @@ OB_MODULES["debugger"] =
       label = _("Save Minimap GIF"),
       valuator = "button",
       default = 0,
-      tooltip = "Save an animated GIF of the building process. Recommended in combination with the Live Growth Minimap.",
+      tooltip = _("Save an animated GIF of the building process. Recommended in combination with the Live Growth Minimap."),
       priority=94,
       gap = 1,
     },
@@ -219,10 +216,8 @@ OB_MODULES["debugger"] =
       label = _("Experimental Games"),
       valuator = "button",
       default = 0,
-      tooltip = "Enables building of levels for experimental games.",
-      longtip = "The following games are in an experimental status, meaning that " ..
-      "they may have errors when building levels, or support for certain gameplay features has" ..
-      " not been implemented yet:\n\nStrife",
+      tooltip = _("Enables building of levels for experimental games."),
+      longtip = _("The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n\nStrife"),
       priority = 60,
       gap = 1,
     },
@@ -233,8 +228,7 @@ OB_MODULES["debugger"] =
       label = _("Custom Error Texture"),
       valuator = "button",
       default = 0,
-      tooltip = "Replaces Obsidian's default texture with a high visibility version " ..
-        "for easier detection of broken level geometry or missing textures.",
+      tooltip = _("Replaces Obsidian's default texture with a high visibility version for easier detection of broken level geometry or missing textures."),
       priority = 50,
       gap = 1,
     },
@@ -244,7 +238,8 @@ OB_MODULES["debugger"] =
       label=_("Live Growth Minimap"),
       choices=DEBUG_CONTROL.LIVEMAP_CHOICES,
       default="none",
-      tooltip=_("Shows more steps Oblige performs on rooms as they are grown on the GUI minimap. May take a hit on generation speed.")
+      tooltip= _("Controls the granularity of steps shown on the GUI minimap as a level is built."),
+      longtip= _("Higher levels of detail will increase the amount of time that it takes to generate a WAD. If saving an animated GIF of the build process, its animation speed will also be affected by this setting (less detail=slower, more detail=faster).")
     },
 
 --[[
@@ -254,7 +249,7 @@ OB_MODULES["debugger"] =
       label = _("Attach DEBUG Info")
       valuator = "button",
       default = 0,
-      tooltip = "Attaches certain debug info into an OBLOGS text lump in the generated WAD.",
+      tooltip = _("Attaches certain debug info into an OBLOGS text lump in the generated WAD."),
       priority = 91,
     }
 ]]

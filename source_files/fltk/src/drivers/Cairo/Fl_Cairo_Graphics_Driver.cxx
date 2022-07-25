@@ -105,14 +105,18 @@ void Fl_Cairo_Graphics_Driver::set_cairo(cairo_t *cr, float s) {
 
 void Fl_Cairo_Graphics_Driver::rectf(int x, int y, int w, int h) {
   cairo_rectangle(cairo_, x-0.5, y-0.5, w, h);
+  cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_NONE);
   cairo_fill(cairo_);
+  cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_DEFAULT);
   check_status();
   surface_needs_commit();
 }
 
 void Fl_Cairo_Graphics_Driver::rect(int x, int y, int w, int h) {
   cairo_rectangle(cairo_, x, y, w-1, h-1);
+  if (linestyle_ == FL_SOLID) cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_NONE);
   cairo_stroke(cairo_);
+  if (linestyle_ == FL_SOLID) cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_DEFAULT);
   check_status();
   surface_needs_commit();
 }
@@ -137,7 +141,9 @@ void Fl_Cairo_Graphics_Driver::line(int x0, int y0, int x1, int y1, int x2, int 
 void Fl_Cairo_Graphics_Driver::xyline(int x, int y, int x1) {
   cairo_move_to(cairo_, x, y);
   cairo_line_to(cairo_, x1, y);
+  cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_NONE);
   cairo_stroke(cairo_);
+  cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_DEFAULT);
   check_status();
   surface_needs_commit();
 }
@@ -146,7 +152,9 @@ void Fl_Cairo_Graphics_Driver::xyline(int x, int y, int x1, int y2) {
   cairo_move_to(cairo_, x, y);
   cairo_line_to(cairo_, x1, y);
   cairo_line_to(cairo_, x1, y2);
+  cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_NONE);
   cairo_stroke(cairo_);
+  cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_DEFAULT);
   check_status();
   surface_needs_commit();
 }
@@ -156,7 +164,9 @@ void Fl_Cairo_Graphics_Driver::xyline(int x, int y, int x1, int y2, int x3) {
   cairo_line_to(cairo_, x1, y);
   cairo_line_to(cairo_, x1, y2);
   cairo_line_to(cairo_, x3, y2);
+  cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_NONE);
   cairo_stroke(cairo_);
+  cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_DEFAULT);
   check_status();
   surface_needs_commit();
 }
@@ -164,7 +174,9 @@ void Fl_Cairo_Graphics_Driver::xyline(int x, int y, int x1, int y2, int x3) {
 void Fl_Cairo_Graphics_Driver::yxline(int x, int y, int y1) {
   cairo_move_to(cairo_, x, y);
   cairo_line_to(cairo_, x, y1);
+  cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_NONE);
   cairo_stroke(cairo_);
+  cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_DEFAULT);
   check_status();
   surface_needs_commit();
 }
@@ -173,7 +185,9 @@ void Fl_Cairo_Graphics_Driver::yxline(int x, int y, int y1, int x2) {
   cairo_move_to(cairo_, x, y);
   cairo_line_to(cairo_, x, y1);
   cairo_line_to(cairo_, x2, y1);
+  cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_NONE);
   cairo_stroke(cairo_);
+  cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_DEFAULT);
   check_status();
   surface_needs_commit();
 }
@@ -183,7 +197,9 @@ void Fl_Cairo_Graphics_Driver::yxline(int x, int y, int y1, int x2, int y3) {
   cairo_line_to(cairo_, x, y1);
   cairo_line_to(cairo_, x2, y1);
   cairo_line_to(cairo_, x2, y3);
+  cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_NONE);
   cairo_stroke(cairo_);
+  cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_DEFAULT);
   check_status();
   surface_needs_commit();
 }
@@ -208,6 +224,9 @@ void Fl_Cairo_Graphics_Driver::loop(int x0, int y0, int x1, int y1, int x2, int 
   cairo_line_to(cairo_, x2, y2);
   cairo_line_to(cairo_, x3, y3);
   cairo_close_path(cairo_);
+  if ((y0==y1 && x1==x2 && y2==y3 && x3==x0) || (x0==x1 && y1==y2 && x2==x3 && y3==y0)) {
+    cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_NONE);
+  }
   cairo_stroke(cairo_);
   cairo_restore(cairo_);
   surface_needs_commit();
@@ -233,6 +252,9 @@ void Fl_Cairo_Graphics_Driver::polygon(int x0, int y0, int x1, int y1, int x2, i
   cairo_line_to(cairo_, x2, y2);
   cairo_line_to(cairo_, x3, y3);
   cairo_close_path(cairo_);
+  if ((y0==y1 && x1==x2 && y2==y3 && x3==x0) || (x0==x1 && y1==y2 && x2==x3 && y3==y0)) {
+    cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_NONE);
+  }
   cairo_fill(cairo_);
   cairo_restore(cairo_);
   surface_needs_commit();
@@ -499,8 +521,10 @@ void Fl_Cairo_Graphics_Driver::push_clip(int x, int y, int w, int h) {
   c->prev = clip_;
   clip_ = c;
   cairo_save(cairo_);
-  cairo_rectangle(cairo_, clip_->x-0.5 , clip_->y-0.5 , clip_->w  , clip_->h);
+  cairo_rectangle(cairo_, clip_->x - 0.5 , clip_->y - 0.5 , clip_->w, clip_->h);
+  cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_NONE);
   cairo_clip(cairo_);
+  cairo_set_antialias(cairo_, CAIRO_ANTIALIAS_DEFAULT);
   check_status();
 }
 
@@ -834,31 +858,44 @@ void Fl_Cairo_Graphics_Driver::draw_bitmap(Fl_Bitmap *bm,int XP, int YP, int WP,
 }
 
 
-void Fl_Cairo_Graphics_Driver::cache(Fl_Bitmap *bm) {
+cairo_pattern_t *Fl_Cairo_Graphics_Driver::bitmap_to_pattern(Fl_Bitmap *bm,
+                                    bool complement, cairo_surface_t **p_surface) {
   int stride = cairo_format_stride_for_width(CAIRO_FORMAT_A1, bm->data_w());
+  int w_bitmap = ((bm->data_w() + 7) / 8);
   uchar *BGRA = new uchar[stride * bm->data_h()];
   memset(BGRA, 0, stride * bm->data_h());
-    uchar  *r, p;
-    unsigned *q;
-    for (int j = 0; j < bm->data_h(); j++) {
-      r = (uchar*)bm->array + j * ((bm->data_w() + 7)/8);
-      q = (unsigned*)(BGRA + j * stride);
-      unsigned k = 0, mask32 = 1;
-      p = *r;
-      for (int i = 0; i < bm->data_w(); i++) {
-        if (p&1) (*q) |= mask32;
-        k++;
-        if (k % 8 != 0) p >>= 1; else p = *(++r);
-        if (k % 32 != 0) mask32 <<= 1; else {q++; mask32 = 1;}
+  for (int j = 0; j < bm->data_h(); j++) {
+    uchar *r = (uchar*)bm->array + j * w_bitmap;
+    unsigned *q = (unsigned*)(BGRA + j * stride);
+    unsigned k = 0, mask32 = 1;
+    uchar p = *r;
+    if (complement) p = ~p;
+    for (int i = 0; i < bm->data_w(); i++) {
+      if (p&1) (*q) |= mask32;
+      k++;
+      if (k % 8 != 0) p >>= 1;
+      else {
+        p = *(++r);
+        if (complement) p = ~p;
       }
+      if (k % 32 != 0) mask32 <<= 1; else {q++; mask32 = 1;}
     }
-  cairo_surface_t *surf = cairo_image_surface_create_for_data(BGRA, CAIRO_FORMAT_A1, bm->data_w(), bm->data_h(), stride);
-  if (cairo_surface_status(surf) == CAIRO_STATUS_SUCCESS) {
-    (void)cairo_surface_set_user_data(surf, &data_key_for_surface, BGRA, dealloc_surface_data);
-    cairo_pattern_t *pat = cairo_pattern_create_for_surface(surf);
-    cairo_surface_destroy(surf);
-    *Fl_Graphics_Driver::id(bm) = (fl_uintptr_t)pat;
   }
+  cairo_surface_t *surf = cairo_image_surface_create_for_data(BGRA, CAIRO_FORMAT_A1, bm->data_w(), bm->data_h(), stride);
+  cairo_pattern_t *pattern =  cairo_pattern_create_for_surface(surf);
+  if (p_surface) *p_surface = surf;
+  else cairo_surface_destroy(surf);
+  return pattern;
+}
+
+
+void Fl_Cairo_Graphics_Driver::cache(Fl_Bitmap *bm) {
+  cairo_surface_t *surf;
+  cairo_pattern_t *pattern = Fl_Cairo_Graphics_Driver::bitmap_to_pattern(bm, false, &surf);
+  uchar *BGRA = cairo_image_surface_get_data(surf);
+  (void)cairo_surface_set_user_data(surf, &data_key_for_surface, BGRA, dealloc_surface_data);
+  cairo_surface_destroy(surf);
+  *Fl_Graphics_Driver::id(bm) = (fl_uintptr_t)pattern;
 }
 
 

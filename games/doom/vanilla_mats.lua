@@ -14,6 +14,8 @@ DOOM.VANILLA_MATS =
     "4548BA",
     "041C08",
     "1F4525",
+    "281F11",
+	"473618",
     -- Vanilla Flats
     "BLOOD1",
     "BLOOD2",

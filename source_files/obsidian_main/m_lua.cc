@@ -2,8 +2,9 @@
 //  LUA interface
 //----------------------------------------------------------------------
 //
-//  Oblige Level Maker
+//  OBSIDIAN Level Maker
 //
+//  Copyright (C) 2021-2022 The OBSIDIAN Team
 //  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
@@ -1611,9 +1612,9 @@ void Script_Open() {
 
     Script_Load("init.lua");
 
-    LogPrintf("Loading main script: oblige.lua\n");
+    LogPrintf("Loading main script: obsidian.lua\n");
 
-    Script_Load("oblige.lua");
+    Script_Load("obsidian.lua");
 
     has_loaded = true;
     LogPrintf("DONE.\n\n");

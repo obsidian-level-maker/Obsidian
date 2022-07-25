@@ -57,7 +57,9 @@ HACX.THEMES =
     street_sinks =
     {
       floor_default_streets = 1
-    }
+    },
+
+    streets_friendly = false
   },
 
 
@@ -482,7 +484,7 @@ HACX.ROOMS =
 
 OB_THEMES["hacx_urban"] =
 {
-  label = "Urban",
+  label = _("HacX Urban"),
   game = "hacx",
   name_theme = "URBAN",
   mixed_prob = 50

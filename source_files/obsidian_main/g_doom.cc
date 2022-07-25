@@ -2,9 +2,10 @@
 //  LEVEL building - DOOM format
 //------------------------------------------------------------------------
 //
-//  Oblige Level Maker
+//  OBSIDIAN Level Maker
 //
-//  Copyright (C) 2006-2016 Andrew Apted
+//  Copyright (C) 2021-2022 The OBSIDIAN Team
+//  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -805,11 +806,8 @@ void Send_Prog_Step(const char *step_name) {
 static bool BuildNodes(std::filesystem::path filename) {
     LogPrintf("\n");
 
-    if (StringCaseCmp(current_engine, "zdoom") == 0) {
-        if (!build_nodes) {
-            LogPrintf("Skipping nodes per user selection...\n");
-            return true;
-        }
+    if (!build_nodes) {
+        return true;
     }
 
     // Replace this with a Lua call at some point, maybe ob_get_param - Dasho
@@ -942,9 +940,8 @@ bool Doom::game_interface_c::Start(const char *preset) {
         build_nodes = true;
     } else if (StringCaseCmp(current_engine, "edge") == 0) {
         build_reject = false;
-        map_format = "binary";
-        build_nodes = false;  // ZDBSP uses non-spec GL V5 nodes which will
-                              // crash EDGE-Classic
+        map_format = ob_get_param("map_format");
+        build_nodes = false;  // EDGE-Classic has its own internal nodebuilder which is preferred
     } else {
         build_reject = StringToInt(ob_get_param("bool_build_reject"));
         map_format = "binary";

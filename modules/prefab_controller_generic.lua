@@ -28,6 +28,15 @@ PREFAB_CONTROL_GENERIC.WALL_CHOICES =
   "fab_random",  _("Mix It Up"),
 }
 
+PREFAB_CONTROL_GENERIC.WALL_REDUCTION_ODDS =
+{
+  fab_some = 0.2,
+  fab_less = 0.4,
+  fab_few = 0.6,
+  fab_rare = 0.8,
+  fab_none = 1
+}
+
 PREFAB_CONTROL_GENERIC.POINT_CHOICES =
 {
   "fab_none",    _("NONE"),
@@ -36,6 +45,20 @@ PREFAB_CONTROL_GENERIC.POINT_CHOICES =
   "fab_default", _("DEFAULT"),
   "fab_more",    _("More"),
   "fab_heaps",   _("Heaps"),
+}
+
+PREFAB_CONTROL_GENERIC.WALL_GROUP_ODDS =
+{
+  fab_always = 100,
+  fab_heaps = 2.25,
+  fab_lots = 1.8,
+  fab_more = 1.35,
+  fab_default = 1,
+  fab_some = 0.8,
+  fab_less = 0.6,
+  fab_few = 0.4,
+  fab_rare = 0.2,
+  fab_none = 0,
 }
 
 function PREFAB_CONTROL_GENERIC.setup(self)
@@ -72,7 +95,7 @@ OB_MODULES["prefab_control_generic"] =
       label=("Auto Detailing"),
       valuator = "button",
       default = 1,
-      tooltip = "Reduces the amount of complex architecture in a map based on its size. Default is on.",
+      tooltip = _("Reduces the amount of complex architecture in a map based on its size. Default is on."),
       priority = 102,
       gap = 1,
     },
@@ -82,7 +105,7 @@ OB_MODULES["prefab_control_generic"] =
       name = "point_prob",
       label=_("Decor"),
       choices=PREFAB_CONTROL_GENERIC.POINT_CHOICES,
-      tooltip = "Decor prefabs are prefabs placed along the floors such as crates, pillars, and other decorative elements which aren't tied to walls. This directly modifies probabilities on a per-room basis, not the density for decor prefabs in any given room.\n\nNote: DEFAULT actually behaves like Mix-It-Up.",
+      tooltip = _("Decor prefabs are prefabs placed along the floors such as crates, pillars, and other decorative elements which aren't tied to walls. This directly modifies probabilities on a per-room basis, not the density for decor prefabs in any given room.\n\nNote: DEFAULT actually behaves like Mix-It-Up."),
       default = "fab_default",
       priority = 101,
       randomize_group = "architecture"
@@ -92,7 +115,7 @@ OB_MODULES["prefab_control_generic"] =
       name = "wall_prob",
       label=_("Walls"),
       choices=PREFAB_CONTROL_GENERIC.WALL_CHOICES,
-      tooltip = "Determines the amount plain wall prefabs. What it actually does is greatly increase the probability of Oblige's basic plain wall prefab, rather than reduce the probability of all the prefabs in the library.",
+      tooltip = _("Determines the amount plain wall prefabs. What it actually does is greatly increase the probability of Oblige's basic plain wall prefab, rather than reduce the probability of all the prefabs in the library."),
       default = "fab_default",
       priority = 100,
       gap = 1,
@@ -104,7 +127,7 @@ OB_MODULES["prefab_control_generic"] =
       label=("Match Theme"),
       valuator = "button",
       default = 1,
-      tooltip = "Ensures that prefabs selected match their intended Theme.",
+      tooltip = _("Ensures that prefabs selected match their intended Theme."),
       priority = 1,
       randomize_group="architecture",
     },

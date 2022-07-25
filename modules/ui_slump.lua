@@ -61,9 +61,8 @@ OB_MODULES["ui_slump_arch"] =
       max = 37,
       increment = 1,
       default = 15,
-      nan = "Mix It Up,",
-      presets = "",
-      tooltip = "Minimum number of rooms per level.",
+      nan = "Mix It Up",
+      tooltip = _("Minimum number of rooms per level."),
       randomize_group="architecture",
     },
 
@@ -76,8 +75,7 @@ OB_MODULES["ui_slump_arch"] =
       max = 100,
       increment = 1,
       default = 50,
-      presets = "",
-      tooltip = "% chance that SLUMP will attempt to increase a room's size.",
+      tooltip = _("% chance that SLUMP will attempt to increase a room's size."),
       randomize_group="architecture",
     },
     
@@ -90,10 +88,8 @@ OB_MODULES["ui_slump_arch"] =
       max = 100,
       increment = 1,
       default = 50,
-      presets = "",
-      tooltip = "% chance that a room will attempt to fork as the level grows.",
-      longtip = "0% should look like a bunch of murder hallways. Forking is not guaranteed " ..
-                "to succeed, especially if the Room Bigification Chance is increased.",
+      tooltip = _("% chance that a room will attempt to fork as the level grows."),
+      longtip = _("0% should look like a bunch of murder hallways. Forking is not guaranteed to succeed, especially if the Room Bigification Chance is increased."),
       randomize_group="architecture",
     },
 
@@ -102,7 +98,7 @@ OB_MODULES["ui_slump_arch"] =
       label = _("Deathmatch Spawns"),
       valuator = "button",
       default = 0,
-      tooltip = "Add Deathmatch starts to generated levels."
+      tooltip = _("Add Deathmatch starts to generated levels.")
     },
     
     {
@@ -110,8 +106,8 @@ OB_MODULES["ui_slump_arch"] =
       label = _("Major Nukage Mode"),
       valuator = "button",
       default = 0,
-      tooltip = "Watch your step!",
-      longtip = "Will fill most rooms with damaging liquids.",
+      tooltip = _("Watch your step!"),
+      longtip = _("Will fill most rooms with damaging liquids."),
       randomize_group="architecture",
     },
     
@@ -120,9 +116,8 @@ OB_MODULES["ui_slump_arch"] =
       label = _("Quiet Start"),
       valuator = "button",
       default = 1,
-      tooltip = "Prevents monsters from spawning in the starting room.",
-      longtip = "Monsters in other rooms may still have" ..
-      " a line of sight to you, so be careful!",
+      tooltip = _("Prevents monsters from spawning in the starting room."),
+      longtip = _("Monsters in other rooms may still have a line of sight to you, so be careful!"),
     }
   }
 }
@@ -150,7 +145,7 @@ OB_MODULES["ui_slump_mons"] =
       label = _("Monster Variety"),
       choices = UI_SLUMP.MON_VARIETY,
       default = "normal",
-      tooltip = "Control what types of monsters are available",
+      tooltip = _("Control what types of monsters are available"),
       randomize_group="monsters",
     },
   }

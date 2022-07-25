@@ -167,7 +167,9 @@ HERETIC.THEMES =
     street_sinks =
     {
       floor_default_streets = 1
-    }
+    },
+
+    streets_friendly = false
   },
 
 
@@ -341,6 +343,8 @@ HERETIC.THEMES =
     steps_mat = "CSTLRCK",
 
     post_mat  = "WOODWL",
+
+    streets_friendly = true
 
   },
 

@@ -73,19 +73,13 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_commonus",
       label = _("Commonus"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Commoni."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -93,19 +87,13 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_bipedicus",
       label = _("Bipedicus"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Bipedici."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -113,19 +101,13 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_armored_biped",
       label = _("Armored Bipedicus"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Armored Bipedici."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -133,19 +115,13 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_quadrumpus",
       label = _("Quadrumpus"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Quadrumpi."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -153,19 +129,13 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_cycloptis",
       label = _("Cycloptis"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default", 
+      tooltip = _("Control the amount of Cyclopti."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -174,19 +144,13 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_larva",
       label = _("Larva"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Larvae."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -195,19 +159,13 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_flemmine",
       label = _("Flem Mine"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Flem Mines."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 	 
@@ -216,19 +174,13 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_stridicus",
       label = _("Stridicus"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Stridici."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 	 
@@ -237,19 +189,13 @@ OB_MODULES["chex3_mon_control"] =
       name = "float_super_cyclop",
       label = _("Super Cycloptis"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Super Cyclopti."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      }
   },
@@ -319,19 +265,13 @@ OB_MODULES["chex3_weapon_control"] =
       name = "float_super_bootspork",
       label = _("Super Bootspork"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the likelihood of finding the Super Bootspork."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 
@@ -339,19 +279,13 @@ OB_MODULES["chex3_weapon_control"] =
       name = "float_large_zorcher",
       label = _("Large Zorcher"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Large Zorchers."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 
@@ -359,19 +293,13 @@ OB_MODULES["chex3_weapon_control"] =
       name = "float_rapid_zorcher",
       label = _("Rapid Zorcher"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Rapid Zorchers."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 
@@ -379,19 +307,13 @@ OB_MODULES["chex3_weapon_control"] =
       name = "float_zorch_propulsor",
       label = _("Zorch Propulsor"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Zorch Propulsors."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 	 
@@ -399,19 +321,13 @@ OB_MODULES["chex3_weapon_control"] =
       name = "float_phasing_zorcher",
       label = _("Phasing Zorcher"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Phasing Zorchers."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 	 
@@ -419,19 +335,13 @@ OB_MODULES["chex3_weapon_control"] =
       name = "float_laz_device",
       label = _("LAZ Device"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of LAZ Devices."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 
@@ -439,10 +349,7 @@ OB_MODULES["chex3_weapon_control"] =
       name="weapon_prefs",
       label=_("Weapon Preferences"),
       choices=CTL_CHEX3.WEAPON_PREF_CHOICES,
-      tooltip="Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\n" ..
-      "Normal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\n" ..
-      "Vanilla: Vanilla Oblige-style preferences. Increases Zorch Propulsors if the map has more Flem Mines. \n\n" ..
-      "NONE: No preferences at all. For those who like to live life dangerously with Super Cycloptises and only Super Bootsporks.",
+      tooltip = _("Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\nNormal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\nVanilla: Vanilla Oblige-style preferences. Increases Zorch Propulsors if the map has more Flem Mines. \n\nNONE: No preferences at all. For those who like to live life dangerously with Super Cyclopti and only Super Bootsporks."),
       default="normal",
 	  priority = 0,
     },

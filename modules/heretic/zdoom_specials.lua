@@ -1152,7 +1152,7 @@ OB_MODULES["zdoom_specials_heretic"] =
     all_done = ZDOOM_SPECIALS_HERETIC.do_special_stuff
   },
 
-  tooltip = "This module adds new ZDoom-exclusive features such as fog. More ZDoom-specific features will be included soon.",
+  tooltip = _("This module adds new ZDoom-exclusive features such as fog. More ZDoom-specific features will be included soon."),
 
   options =
   {
@@ -1162,7 +1162,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       priority = 12,
       choices = ZDOOM_SPECIALS_HERETIC.FOG_GEN_CHOICES,
       default = "no",
-      tooltip = "Generates fog colors based on the Sky Generator or generate completely randomly.",
+      tooltip = _("Generates fog colors based on the Sky Generator or generate completely randomly."),
       randomize_group = "misc"
     },
 
@@ -1172,7 +1172,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       priority = 11,
       choices = ZDOOM_SPECIALS_HERETIC.FOG_ENV_CHOICES,
       default = "all",
-      tooltip = "Limits fog to outdoors (sectors with exposed sky ceilings) or allows for all.",
+      tooltip = _("Limits fog to outdoors (sectors with exposed sky ceilings) or allows for all."),
       randomize_group = "misc"
     },
 
@@ -1182,7 +1182,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       priority = 10,
       choices = ZDOOM_SPECIALS_HERETIC.FOG_DENSITY_CHOICES,
       default = "subtle",
-      tooltip = "Determines thickness and intensity of fog, if the Fog Generator is enabled. Subtle or Misty is recommended.",
+      tooltip = _("Determines thickness and intensity of fog, if the Fog Generator is enabled. Subtle or Misty is recommended."),
       randomize_group = "misc"
     },
 
@@ -1192,7 +1192,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       valuator = "button",
       priority = 9,
       default = 1,
-      tooltip = "Tints the sky texture with the fog color, intensity is based on the Fog Intensity selection.",
+      tooltip = _("Tints the sky texture with the fog color, intensity is based on the Fog Intensity selection."),
       gap = 1,
       randomize_group = "misc"
     },
@@ -1203,7 +1203,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       valuator = "button",
       priority = 8,
       default = 1,
-      tooltip = "Generates dynamic point lights on ceiling light prefabs.",
+      tooltip = _("Generates dynamic point lights on ceiling light prefabs."),
     },
 
     {
@@ -1212,8 +1212,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       valuator = "button",
       priority = 7,
       default = 1,
-      tooltip = "Adds Doom-64 style lighting/glowing flats via GLDEFS lump. " ..
-                "Visible on Zandronum ports as well.",
+      tooltip = _("Adds Doom-64 style lighting/glowing flats via GLDEFS lump. Visible on Zandronum ports as well."),
       gap = 1,
     },
 
@@ -1223,7 +1222,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       priority = 6,
       choices = ZDOOM_SPECIALS_HERETIC.MUSIC_SHUFFLER_CHOICES,
       default = "no",
-      tooltip = "Shuffles music in the MAPINFO lump.",
+      tooltip = _("Shuffles music in the MAPINFO lump."),
     },
 
     {
@@ -1232,7 +1231,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       priority = 5,
       choices = ZDOOM_SPECIALS_HERETIC.STORY_CHOICES,
       default = "proc",
-      tooltip = "Adds cluster information with generic or randomized story text into the MAPINFO structure!",
+      tooltip = _("Adds cluster information with generic or randomized story text into the MAPINFO structure!"),
     },
 
     {
@@ -1241,7 +1240,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       valuator = "button",
       priority = 4,
       default = 1,
-      tooltip = "Adds custom quit messages into the MAPINFO game definition.",
+      tooltip = _("Adds custom quit messages into the MAPINFO game definition."),
     },
 
     {
@@ -1250,7 +1249,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       priority = 3,
       choices = ZDOOM_SPECIALS_HERETIC.INTERPIC_MUSIC,
       default = "MUS_INTR",
-      tooltip = "Changes the music playing during intermission screens.",
+      tooltip = _("Changes the music playing during intermission screens."),
     },
 
     {
@@ -1259,8 +1258,7 @@ OB_MODULES["zdoom_specials_heretic"] =
       valuator = "button",
       priority = 1,
       default = 0,
-      tooltip = "Removes end-level Intermission Screens (containing map completion data) but retains " ..
-                "Text Screens with story.",
+      tooltip = _("Removes end-level Intermission Screens (containing map completion data) but retains Text Screens with story."),
     },
   },
 }

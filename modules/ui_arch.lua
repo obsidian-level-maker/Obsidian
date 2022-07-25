@@ -121,34 +121,14 @@ OB_MODULES["ui_arch"] =
       name="float_size", 
       label=_("Level Size"),
       valuator = "slider",
-      units = "",
       min = 10,
       max = 75,
       increment = 1,
       default = 36,
-      nan = "Mix It Up,Episodic,Progressive,",
-      presets = "10:10 (Microscopic)," ..
-      "16:16 (Miniature)," ..
-      "22:22 (Tiny)," ..
-      "30:30 (Small)," ..
-      "36:36 (Average)," ..
-      "42:42 (Large)," ..
-      "48:48 (Huge)," ..
-      "58:58 (Colossal)," ..
-      "66:66 (Gargantuan)," ..
-      "75:75 (Transcendent),",
-      tooltip = "Determines size of map (Width x Height) in grid squares.",
-      longtip = "FOR 32-BIT USERS: To prevent memory usage issues, the following maximum map size limits will be enforced regardless of slider setting:\n\n" ..
-      "Full Game:\n" ..
-      "-Fixed size: 30\n" ..
-      "-Progressive: 48\n" ..
-      "-Episodic: 48\n" ..
-      "-Mix It Up: 42\n\n" ..
-      "Episode:\n" .. 
-      "-Fixed size: 58\n\n" ..
-      "All other combinations will honor the slider settings.\n\n" ..
-      "If you are planning to play on any choices that involve maps " ..
-      "at sizes of 50 and above, Autodetailing will be enabled by default. The stability of maps with sizes 60 and beyond is not predictable.",
+      nan = "Mix It Up,Episodic,Progressive",
+      presets = _("10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"),
+      tooltip = _("Determines size of map (Width x Height) in grid squares."),
+      longtip = _("FOR 32-BIT USERS: To prevent memory usage issues, the following maximum map size limits will be enforced regardless of slider setting:\n\nFull Game:\n-Fixed size: 30\n-Progressive: 48\n-Episodic: 48\n-Mix It Up: 42\n\nEpisode:\n-Fixed size: 58\n\nAll other combinations will honor the slider settings.\n\nIf you are planning to play on any choices that involve maps at sizes of 50 and above, Autodetailing will be enabled by default. The stability of maps with sizes 60 and beyond is not predictable."),
       priority = 100,
       randomize_group="architecture"
     },
@@ -158,22 +138,12 @@ OB_MODULES["ui_arch"] =
       name = "float_level_upper_bound",
       label = _("Upper Bound"),
       valuator = "slider",
-      units = "",
       min = 10,
       max = 75,
       increment = 1,
       default = 75,
-      presets = "10:10 (Microscopic)," ..
-      "16:16 (Miniature)," ..
-      "22:22 (Tiny)," ..
-      "30:30 (Small)," ..
-      "36:36 (Average)," ..
-      "42:42 (Large)," ..
-      "48:48 (Huge)," ..
-      "58:58 (Colossal)," ..
-      "66:66 (Gargantuan)," ..
-      "75:75 (Transcendent),",
-      tooltip = "Fine tune upper limit when Level Size is set to Episodic, Progressive or Mixed.",
+      presets = _("10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"),
+      tooltip = _("Fine tune upper limit when Level Size is set to Episodic, Progressive or Mixed."),
       priority = 99,
     },
 
@@ -182,22 +152,12 @@ OB_MODULES["ui_arch"] =
       name = "float_level_lower_bound",
       label = _("Lower Bound"),
       valuator = "slider",
-      units = "",
       min = 10,
       max = 75,
       increment = 1,
       default = 10,
-      presets = "10:10 (Microscopic)," ..
-      "16:16 (Miniature)," ..
-      "22:22 (Tiny)," ..
-      "30:30 (Small)," ..
-      "36:36 (Average)," ..
-      "42:42 (Large)," ..
-      "48:48 (Huge)," ..
-      "58:58 (Colossal)," ..
-      "66:66 (Gargantuan)," ..
-      "75:75 (Transcendent),",
-      tooltip = "Fine tune lower limit when Level Size is set to Episodic, Progressive or Mixed.",
+      presets = _("10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"),
+      tooltip = _("Fine tune lower limit when Level Size is set to Episodic, Progressive or Mixed."),
       priority = 98,
       gap = 1,
     },
@@ -206,13 +166,8 @@ OB_MODULES["ui_arch"] =
     {
       name = "level_size_ramp_factor",
       label = _("Ramp Factor"),
-      tooltip = "Determines how fast or slow larger level sizes are reached in Progressive/Episodic mode.",
-      longtip = "Very Fast Curve: Reach half-size at 1/4th of the game.\n" ..
-      "Fast Curve: Reach half-size at 1/3rds.\n" ..
-      "Linear: Reach half-size at half the game.\n" ..
-      "Slow Curve: Reach half-size at 2/3rds.\n" ..
-      "Very Slow Curve: Reach half-size at 3/4ths.\n\n" ..
-      "Obsidian default is Fast Curve.",
+      tooltip = _("Determines how fast or slow larger level sizes are reached in Progressive/Episodic mode."),
+      longtip = _("Very Fast Curve: Reach half-size at 1/4th of the game.\nFast Curve: Reach half-size at 1/3rds.\nLinear: Reach half-size at half the game.\nSlow Curve: Reach half-size at 2/3rds.\nVery Slow Curve: Reach half-size at 3/4ths.\n\nObsidian default is Fast Curve."),
       choices = UI_ARCH.RAMP_FACTOR,
       default = "0.66",
       priority = 97,
@@ -223,9 +178,8 @@ OB_MODULES["ui_arch"] =
     {
       name = "level_size_bias",
       label = _("Level Size Bias"),
-      tooltip = "Alters probability skew when using Mix It Up for level sizes.",
-      longtip = "DEFAULT is a normal curve where Average is the most common size while smaller or larger sizes " ..
-      "become rarer.\n\nCombine with Level Upper and Lower Bounds for greater control.",
+      tooltip = _("Alters probability skew when using Mix It Up for level sizes."),
+      longtip = _("DEFAULT is a normal curve where Average is the most common size while smaller or larger sizes become rarer.\n\nCombine with Level Upper and Lower Bounds for greater control."),
       choices = UI_ARCH.SIZE_BIAS,
       default = "default",
       priority = 96,
@@ -236,11 +190,8 @@ OB_MODULES["ui_arch"] =
     {
       name = "mixin_type",
       label = _("Theme Mix-in Type"),
-      tooltip = "Override behavior of the -ish theme choices.",
-      longtip = "This replaces the -ish theme choices. By selecting Mostly, this means " ..
-                "your selected theme is occasionally littered by other themes while setting it to " ..
-                "Less means the original selected theme is what's littered in instead. " ..
-                "Default behavior is Normal.",
+      tooltip = _("Override behavior of the -ish theme choices."),
+      longtip = _("This replaces the -ish theme choices. By selecting Mostly, this means your selected theme is occasionally littered by other themes while setting it to Less means the original selected theme is what's littered in instead. Default behavior is Normal."),
       choices = UI_ARCH.MIXIN_CHOICES,
       default = "normal",
       priority = 88,
@@ -254,33 +205,51 @@ OB_MODULES["ui_arch"] =
       label=_("Prebuilt Levels"),
       valuator = "button",
       default = 1,
-      tooltip = "Enable or disable prebuilt maps. When disabled, are replaced with generated maps instead.",
-      longtip = "Prebuilt levels are useful when, for example, a boss encounter like the Icon of Sin is desired." ..
-      "This sort of level would be very difficult to generate procedurally, and thus a handmade map is used instead.",
+      tooltip = _("Enable or disable prebuilt maps. When disabled, are replaced with generated maps instead."),
+      longtip = _("Prebuilt levels are useful when, for example, a boss encounter like the Icon of Sin is desired. This sort of level would be very difficult to generate procedurally, and thus a handmade map is used instead."),
       priority = 81,
       gap = 1
     },
 
     {
       name = "float_overall_lighting_mult",
-      label = _("Overall Lighting Multiplier"),
+      label = _("Lighting Multiplier"),
       valuator = "slider",
       units = "x",
       min = 0.5,
       max = 1.5,
       increment = .05,
       default = 1.0,
-      presets = "",
-      tooltip = "",
       priority = 80,
+      randomize_group="architecture",
+      tooltip = _("Adjust overall map lighting"),
+      longtip = _("This will apply a multiplier to the values in the default lighting tables when determining the brightness level of a room. If control over the minimum or maximum brightness values is desired, please use the Minimum/Maximum Brightness sliders in the Advanced Architecture module.")
     },
 
-    { name="outdoors",     label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 78, randomize_group="architecture", tooltip = "Control the amount of outdoor areas." },
-    { name="caves",        label=_("Caves"),      choices=STYLE_CHOICES, priority = 77, randomize_group="architecture", tooltip = "Control the amount of caves." },
-    { name="liquids",      label=_("Liquids"),    choices=STYLE_CHOICES, priority = 76, randomize_group="architecture", tooltip = "Control the amount of liquids." },
-    { name="hallways",     label=_("Hallways"),   choices=STYLE_CHOICES, priority = 75, randomize_group="architecture", tooltip = "Control the amount of hallways." },
-    { name="teleporters",  label=_("Teleports"),  choices=STYLE_CHOICES, priority = 74, randomize_group="architecture", tooltip = "Control the amount of teleporters." },
-    { name="steepness",    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1, priority = 73, randomize_group="architecture", tooltip = "Control the height difference of stairs, lifts, and joiners throughout levels." },
+    { name="outdoors",     
+    label=_("Outdoors"),   choices=STYLE_CHOICES, priority = 78, randomize_group="architecture", 
+    tooltip = _("Control the amount of outdoor areas.")
+    },
+    { name="caves",        
+    label=_("Caves"),      choices=STYLE_CHOICES, priority = 77, randomize_group="architecture", 
+    tooltip = _("Control the amount of caves.") 
+    },
+    { name="liquids",      
+    label=_("Liquids"),    choices=STYLE_CHOICES, priority = 76, randomize_group="architecture", 
+    tooltip = _("Control the amount of liquids.") 
+    },
+    { name="hallways",     
+    label=_("Hallways"),   choices=STYLE_CHOICES, priority = 75, randomize_group="architecture", 
+    tooltip = _("Control the amount of hallways.")
+    },
+    { name="teleporters",  
+    label=_("Teleports"),  choices=STYLE_CHOICES, priority = 74, randomize_group="architecture", 
+    tooltip = _("Control the amount of teleporters.") 
+    },
+    { name="steepness",    
+    label=_("Steepness"),  choices=STYLE_CHOICES, gap=1, priority = 73, randomize_group="architecture", 
+    tooltip = _("Control the height difference of stairs, lifts, and joiners throughout levels.") 
+    },
 
 
     {
@@ -288,11 +257,8 @@ OB_MODULES["ui_arch"] =
       label = _("Bottomless Vistas"),
       choices=UI_ARCH.ZDOOM_VISTA_CHOICES,
       default="disable",
-      tooltip = "This feature allows for vistas that show more of the skybox below the horizon. " ..
-      "This does not prevent skybox tiling.",
-      longtip = "Enable - Bottomless vistas can always show. Pick this choice when using 3D Skyboxes.\n\n" ..
-      "Sky-gen Smart - Bottomless vistas appear only on episodes with no mountain backdrop based on the Sky Generator.\n\n" ..
-      "Disable - Old Oblige behavior - no bottomless vistas.",
+      tooltip = _("This feature allows for vistas that show more of the skybox below the horizon. This does not prevent skybox tiling."),
+      longtip = _("Enable - Bottomless vistas can always show. Pick this choice when using 3D Skyboxes.\n\nSky-gen Smart - Bottomless vistas appear only on episodes with no mountain backdrop based on the Sky Generator.\n\nDisable - Old Oblige behavior - no bottomless vistas."),
       priority = 50
     },
 
@@ -302,9 +268,8 @@ OB_MODULES["ui_arch"] =
       label = _("ZDoom 3D Skybox"),
       choices=UI_ARCH.ZDOOM_SKYBOX_CHOICES,
       default="disable",
-      tooltip = "Choose if 3D Skyboxes are rendered into levels and their style.",
-      longtip = "This is highly recommended when Bottomless Vistas are " ..
-      "enabled in combination with a ZDoom Family engine.",
+      tooltip = _("Choose if 3D Skyboxes are rendered into levels and their style."),
+      longtip = _("This is highly recommended when Bottomless Vistas are enabled in combination with a ZDoom Family engine."),
       priority = 49
     }
   },

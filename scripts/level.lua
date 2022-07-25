@@ -1249,6 +1249,10 @@ function Episode_plan_weapons()
       quota = 2
     end
 
+    if PARAM.bool_scale_items_with_map_size and PARAM.bool_scale_items_with_map_size == 1 then
+      quota = math.min(1, math.round(quota * (1 + (LEV.map_W / 75))))
+    end    
+
     LEV.weapon_quota = quota
   end
 
@@ -2348,7 +2352,7 @@ function Level_choose_liquid()
 
   LEVEL.liquid = liquid
 
-  gui.printf("Liquid: %s (usage %d%%)\n\n", name, int(LEVEL.liquid_usage))
+  gui.printf("Liquid: " .. name .. ", usage: " .. LEVEL.liquid_usage .. "%%\n\n")
 
   -- setup the special '_LIQUID' material
   assert(liquid.mat)
@@ -2394,8 +2398,7 @@ function Level_choose_darkness()
     LEVEL.sky_light, PARAM.wad_maximum_brightness or 255)
 
     if (LEVEL.sky_light - LEVEL.sky_shadow) <= (PARAM.wad_minimum_brightness or 0) then
-    LEVEL.sky_shadow = math.abs((LEVEL.sky_light - LEVEL.sky_shadow)
-    - (PARAM.wad_minimum_brightness or 0))
+    LEVEL.sky_shadow = LEVEL.sky_light - (PARAM.wad_minimum_brightness or 0)
   end
 end
 
@@ -2752,10 +2755,17 @@ function Level_make_all()
 
   ob_invoke_hook("get_levels_after_themes")
 
+  for k,v in pairs(GAME.PICKUPS) do
+    if not v.name then v.name = k end
+  end
+
+  for k,v in pairs(GAME.NICE_ITEMS) do
+    if not v.name then v.name = k end
+  end
+
   Episode_plan_game()
 
   Title_generate()
-
 
   for _,EPI in pairs(GAME.episodes) do
     EPISODE = EPI

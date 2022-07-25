@@ -169,7 +169,9 @@ HEXEN.THEMES =
     street_sinks =
     {
       floor_default_streets = 1
-    }
+    },
+
+    streets_friendly = false
 
   },
 

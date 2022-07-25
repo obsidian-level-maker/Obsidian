@@ -20,7 +20,7 @@ PREFABS.Joiner_scionox_door_and_box =
   x_fit  = "frame",
   y_fit  = { 8,16 , 144,152 },
 
-  tex_BIGDOOR2 = { BIGDOOR1=50, BIGDOOR2=50, BIGDOOR3=50, BIGDOOR4=50 },
+  tex_BIGDOOR2 = { BIGDOOR2=50, BIGDOOR3=50, BIGDOOR4=50 },
 }
 
 PREFABS.Joiner_scionox_door_and_box_2 =

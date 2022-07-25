@@ -90,7 +90,10 @@ PREFABS.Joiner_bedroom_vanilla =
 
   tex_EVILFACA = "WOOD4",
   tex_TVSNOW01 = "SPACEW3",
-  flat_GRENFLOR = "GRASS1"
+  flat_GRENFLOR = "GRASS1",
+  tex_SKIN4 = "SKIN2",
+	tex_GOTH13 = "STONE4",
+	tex_COLLITE1 = "SHAWN2",
 }
 
 --a bedroom joiner but with a secret
@@ -150,7 +153,10 @@ PREFABS.Joiner_bedroom2_vanilla =
 
   tex_EVILFACA = "WOOD4",
   tex_TVSNOW01 = "SPACEW3",
-  flat_GRENFLOR = "GRASS1"
+  flat_GRENFLOR = "GRASS1",
+  tex_SKIN4 = "SKIN2",
+	tex_GOTH13 = "STONE4",
+	tex_COLLITE1 = "SHAWN2",
 }
 
 --an appartment stairwell joiner
@@ -233,7 +239,7 @@ PREFABS.Joiner_bar_vanilla =
     PANEL6=50, BRIKS40=50, BRIKS43=50,
     GOTH16=50, GOTH31=50, WD03=50,
   },
-
+  tex_MIDSPAC5 = "MIDSPACE",
   tex_TEKGRDR = "SHAWN1"
 }
 
@@ -499,7 +505,10 @@ PREFABS.Joiner_bookstore_vanilla =
   tex_COLLITE3 = "COMPBLUE",
   tex_GOTH13 = "SHAWN2",
   flat_GATE4YL = "FLAT5_5",
-  flat_GRENFLOR = "GRASS1"
+  flat_GRENFLOR = "GRASS1",
+  flat_CEIL4_4 = "CEIL4_2",
+  tex_COLLITE1 = "SHAWN2",
+  tex_COMPTIL5 = "COMPSPAN",
 }
 
 --an elevator shaft

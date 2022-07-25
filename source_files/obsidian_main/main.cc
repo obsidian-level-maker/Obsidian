@@ -2,8 +2,9 @@
 //  Main program
 //------------------------------------------------------------------------
 //
-//  Oblige Level Maker
+//  OBSIDIAN Level Maker
 //
+//  Copyright (C) 2021-2022 The OBSIDIAN Team
 //  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
@@ -360,7 +361,7 @@ void Determine_WorkingPath(const char *argv0) {
 }
 
 static bool Verify_InstallDir(const std::filesystem::path &path) {
-    const std::filesystem::path filename = path / "scripts" / "oblige.lua";
+    const std::filesystem::path filename = path / "scripts" / "obsidian.lua";
 
 #if 0  // DEBUG
     fprintf(stderr, "Trying install dir: [%s]\n", path);
@@ -1632,8 +1633,8 @@ skiprest:
     } catch (const assert_fail_c &err) {
         Main::FatalError(_("Sorry, an internal error occurred:\n{}"),
                          err.GetMessage());
-    } catch (...) {
-        Main::FatalError(_("An unknown problem occurred (UI code)"));
+    } catch (std::exception &e) {
+        Main::FatalError(_("An exception occurred: \n{}"), e.what());
     }
 
     LogPrintf("\nQuit......\n\n");

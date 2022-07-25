@@ -1057,6 +1057,8 @@ DOOM.THEMES =
       SLADWALL = 20,
       WOODVERT = 20
     },
+
+    streets_friendly = false
   },
 
   ------------------------------------
@@ -1988,7 +1990,9 @@ DOOM.THEMES =
     {
       Skybox_hellish_city = 50,
       Skybox_garrett_city = 50
-    }
+    },
+
+    streets_friendly = true
   },
 
   ------------------------------------

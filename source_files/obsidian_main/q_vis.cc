@@ -2,8 +2,9 @@
 //  QUAKE VISIBILITY and TRACING
 //------------------------------------------------------------------------
 //
-//  Oblige Level Maker
+//  OBSIDIAN Level Maker
 //
+//  Copyright (C) 2021-2022 The OBSIDIAN Team
 //  Copyright (C) 2010-2017 Andrew Apted
 //  Copyright (C) 2005-2006 Peter Brett
 //  Copyright (C) 1994-2001 iD Software

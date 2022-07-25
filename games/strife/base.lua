@@ -37,10 +37,12 @@ gui.import("vanilla_mats")
 
 ------------------------------------------------------------
 
-function STRIFE.merge_conversation_script()
+function STRIFE.all_done()
   local convo_file = "games/strife/data/CONVERSATIONS.wad"
 
   gui.wad_transfer_lump(convo_file, "SCRIPT00", "SCRIPT00")
+
+  gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDSTRF")
 end
 
 
@@ -65,7 +67,7 @@ OB_GAMES["strife"] =
   hooks =
   {
     get_levels = STRIFE.get_levels,
-    all_done   = STRIFE.merge_conversation_script
+    all_done   = STRIFE.all_done
   },
 }
 

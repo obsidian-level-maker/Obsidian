@@ -126,12 +126,14 @@ Fl_Gl_Choice *Fl_Wayland_Gl_Window_Driver::find(int m, const int *alistp)
     EGL_DEPTH_SIZE, 0, // set at 11
     EGL_SAMPLE_BUFFERS, 0,  // set at 13
     EGL_STENCIL_SIZE, 0, // set at 15
+    EGL_ALPHA_SIZE, 0, // set at 17
     EGL_NONE
   };
 
   if (m & FL_DEPTH) config_attribs[11] = 1;
   if (m & FL_MULTISAMPLE) config_attribs[13] = 1;
   if (m & FL_STENCIL) config_attribs[15] = 1;
+  if (m & FL_ALPHA) config_attribs[17] = (m & FL_RGB8) ? 8 : 1;
 
   static EGLConfig *configs = (void**)calloc(configs_count, sizeof(EGLConfig));
   eglChooseConfig(egl_display, config_attribs, configs, configs_count, &n);
@@ -170,6 +172,12 @@ GLContext Fl_Wayland_Gl_Window_Driver::create_gl_context(Fl_Window* window, cons
 //fprintf(stderr, "eglCreateContext=%p shared_ctx=%p\n", ctx, shared_ctx);
   if (ctx)
     add_context(ctx);
+  if (!egl_surface) { // useful for gl_start()
+    struct wld_window *xid = fl_xid(window);
+    float s = Fl::screen_scale(window->screen_num());
+    egl_window = wl_egl_window_create(xid->wl_surface, window->w() * s, window->h() * s);
+    egl_surface = eglCreateWindowSurface(egl_display, ((Fl_Wayland_Gl_Choice*)g)->egl_conf, egl_window, NULL);
+  }
   return ctx;
 }
 
@@ -217,16 +225,6 @@ void Fl_Wayland_Gl_Window_Driver::redraw_overlay() {
 }
 
 
-static void gl_frame_ready(void *data, struct wl_callback *cb, uint32_t time) {
-  *(bool*)data = true;
-}
-
-
-static const struct wl_callback_listener gl_surface_frame_listener = {
-  .done = gl_frame_ready,
-};
-
-
 void Fl_Wayland_Gl_Window_Driver::make_current_before() {
   if (!egl_window) {
     struct wld_window *win = fl_xid(pWindow);
@@ -241,14 +239,17 @@ void Fl_Wayland_Gl_Window_Driver::make_current_before() {
     egl_surface = eglCreateWindowSurface(egl_display, g->egl_conf, egl_window, NULL);
 //fprintf(stderr, "Created egl surface=%p at scale=%d\n", egl_surface, win->scale);
     wl_surface_set_buffer_scale(surface, win->scale);
-    bool done = false;
-    struct wl_callback *callback = wl_surface_frame(surface);
-    wl_surface_commit(surface);
-    wl_callback_add_listener(callback, &gl_surface_frame_listener, &done);
-    while (!done) {
-      wl_display_dispatch(Fl_Wayland_Screen_Driver::wl_display);
-      eglSwapBuffers(Fl_Wayland_Gl_Window_Driver::egl_display, egl_surface);
+    // Tested apps: shape, glpuzzle, cube, fractals, gl_overlay, fullscreen, unittests,
+    //   OpenGL3-glut-test, OpenGL3test.
+    // Tested wayland compositors: mutter, kde-plasma, weston, sway on FreeBSD.
+    // Origin of the 3 "roundtrips" below :
+    // All tests run OK with code below but glpuzzle, OpenGL3-glut-test and gl_overlay
+    // fail sometimes under KDE and sway without the 3rd roundtrip.
+    wl_display_roundtrip(Fl_Wayland_Screen_Driver::wl_display);
+    wl_display_roundtrip(Fl_Wayland_Screen_Driver::wl_display);
+    if (!pWindow->parent() || overlay()) { wl_display_roundtrip(Fl_Wayland_Screen_Driver::wl_display);
     }
+    eglSwapBuffers(Fl_Wayland_Gl_Window_Driver::egl_display, egl_surface);
   }
 }
 
@@ -356,10 +357,23 @@ char Fl_Wayland_Gl_Window_Driver::swap_type() {
   return copy;
 }
 
+
 void Fl_Wayland_Gl_Window_Driver::waitGL() {
+  struct wld_window *window = fl_xid(Fl_Window::current());
+  window->buffer->draw_buffer_needs_commit = false;
 }
 
+
 void Fl_Wayland_Gl_Window_Driver::gl_start() {
+  struct wld_window *win = fl_xid(Fl_Window::current());
+  float f = Fl::screen_scale(Fl_Window::current()->screen_num());
+  int W = Fl_Window::current()->w() * f;
+  int H = Fl_Window::current()->h() * f;
+  int W2, H2;
+  wl_egl_window_get_attached_size(egl_window, &W2, &H2);
+  if (W2 != W || H2 != H) wl_egl_window_resize(egl_window, W, H, 0, 0);
+  glClearColor(0., 0., 0., 0.);
+  glClear(GL_COLOR_BUFFER_BIT);
 }
 
 

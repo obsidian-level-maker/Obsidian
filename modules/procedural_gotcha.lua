@@ -62,8 +62,7 @@ OB_MODULES["procedural_gotcha"] =
     setup = PROCEDURAL_GOTCHA_FINE_TUNE.setup
   },
 
-  tooltip=_(
-    "This module allows you to fine tune the Procedural Gotcha experience if you have Procedural Gotchas enabled. Does not affect prebuilts. It is recommended to pick higher scales on one of the two options, but not both at once for a balanced challenge."),
+  tooltip=_("This module allows you to fine tune the Procedural Gotcha experience if you have Procedural Gotchas enabled. Does not affect prebuilts. It is recommended to pick higher scales on one of the two options, but not both at once for a balanced challenge."),
 
   options =
   {
@@ -73,10 +72,7 @@ OB_MODULES["procedural_gotcha"] =
       label=_("Gotcha Frequency"),
       choices=PROCEDURAL_GOTCHA_FINE_TUNE.PROC_GOTCHA_CHOICES,
       default="final",
-      tooltip = "Procedural Gotchas are two room maps, where the second is an immediate " ..
-      "but immensely-sized exit room with gratitiously intensified monster strength. " ..
-      "Essentially an arena - prepare for a tough, tough fight!\n\nNotes:\n\n" ..
-      "5% of levels may create at least 1 or 2 gotcha maps in a standard full game.",
+      tooltip = _("Procedural Gotchas are two room maps, where the second is an immediate but immensely-sized exit room with gratitiously intensified monster strength. Essentially an arena - prepare for a tough, tough fight!\n\nNotes:\n\n5% of levels may create at least 1 or 2 gotcha maps in a standard full game."),
       priority = 100,
       randomize_group="monsters",
     },
@@ -91,8 +87,7 @@ OB_MODULES["procedural_gotcha"] =
       max = 10,
       increment = 0.1,
       default = 1.2,
-      presets = "",
-      tooltip = "Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting).",
+      tooltip = _("Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting)."),
       randomize_group="monsters",
     },
 
@@ -101,18 +96,12 @@ OB_MODULES["procedural_gotcha"] =
       name="float_gotcha_strength",
       label=_("Extra Strength"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 16,
       increment = 1,
       default = 4,
-      presets = "0:NONE," ..
-      "2:2 (Stronger)," ..
-      "4:4 (Harder)," ..
-      "6:6 (Tougher)," ..
-      "8:8 (CRAZIER)," ..
-      "16:16 (NIGHTMARISH),",
-      tooltip = "Offset monster quantity from your default strength of choice plus the increasing level ramp.",
+      presets = _("0:NONE,2:2 (Stronger),4:4 (Harder),6:6 (Tougher),8:8 (CRAZIER),16:16 (NIGHTMARISH)"),
+      tooltip = _("Offset monster quantity from your default strength of choice plus the increasing level ramp."),
       randomize_group="monsters",
     },
 
@@ -122,7 +111,7 @@ OB_MODULES["procedural_gotcha"] =
       label=_("Map Size"),
       choices=PROCEDURAL_GOTCHA_FINE_TUNE.GOTCHA_MAP_SIZES,
       default = "small",
-      tooltip = "Size of the procedural gotcha. Start and arena room sizes are relative to map size as well.",
+      tooltip = _("Size of the procedural gotcha. Start and arena room sizes are relative to map size as well."),
       randomize_group="monsters",
     },
   },

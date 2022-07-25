@@ -20,6 +20,7 @@ Armaetus
   - Textures
   - Extensive name generator additions
   - IWAD Mode
+  - ENDOOM/ENDTEXT/ENDSTRF screen
 
 Beed28
   - Prefabs
@@ -96,11 +97,15 @@ HugLifeTiZ
 Cubebert
   - Chex Quest 3 canon themes and other improvements
   - Modules for newly supported games (CQ3, HacX, et al)
+  - Chex Quest 3 skyboxes
   - Heretic skyboxes
   - XBox Dashboard, ZDoom Forums, and ZDoom Forums Submerged program themes
 
+Morthimer McMare
+  - Current Russian translation file updates
+
 hytalego
-  - Russian translation file
+  - Initial Russian translation file
 
 Twin Galaxy
   - Windows 95 program theme

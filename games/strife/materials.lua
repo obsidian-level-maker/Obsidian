@@ -131,7 +131,7 @@ STRIFE.PREFAB_FIELDS =
   thing_11011 = 3, -- P3 Start
   thing_11012 = 4, -- P4 Start
   thing_11013 = 14, -- Teleport destination
-  thing_11014 = 80, -- Passable ceiling decor
+  thing_11014 = 0, -- Passable ceiling decor
 }
 
 

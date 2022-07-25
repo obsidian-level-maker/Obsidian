@@ -1,8 +1,9 @@
 //----------------------------------------------------------------------------
 //
-//  Angular Occlusion Buffer
+//  OBSIDIAN Level Maker
 //
-//  Copyright (c) 2007,2013  Andrew Apted
+//  Copyright (C) 2021-2022 The OBSIDIAN Team
+//  Copyright (C) 2007-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License

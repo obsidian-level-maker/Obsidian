@@ -656,9 +656,7 @@ OB_MODULES["sky_generator"] =
       label=_("Time of Day"),
       choices=SKY_GEN.SKY_CHOICES,
       priority = 10,
-      tooltip = "This forces the sky background (behind the hills and clouds) to either be night or day. " ..
-      "Default means vanilla Oblige behavior of picking one episode to be night. Random means 50% chance of " ..
-      "night or day to be picked per episode.",
+      tooltip = _("This forces the sky background (behind the hills and clouds) to either be night or day. Default means vanilla Oblige behavior of picking one episode to be night. Random means 50% chance of night or day to be picked per episode."),
       default = "sky_default",
     },
 
@@ -668,7 +666,7 @@ OB_MODULES["sky_generator"] =
       label=_("Terrain Foreground"),
       choices=SKY_GEN.HILL_STATE,
       priority = 9,
-      tooltip = "Influences whether the sky generator should generate terrain in the skybox.",
+      tooltip = _("Influences whether the sky generator should generate terrain in the skybox."),
       default = "hs_random",
       randomize_group = "misc",
     },
@@ -679,9 +677,7 @@ OB_MODULES["sky_generator"] =
       label=_("Terrain Parameters"),
       choices=SKY_GEN.HILL_PARAMS,
       priority = 8,
-      tooltip = "Changes the parameters of generated hills, if there are any. " ..
-                "'Cavernous' causes the terrain to nearly fill up most of the sky," ..
-                "making an impression of being inside a cave or crater.",
+      tooltip = _("Changes the parameters of generated hills, if there are any. 'Cavernous' causes the terrain to nearly fill up most of the sky, making an impression of being inside a cave or crater."),
       default = "hp_random",
       gap = 1,
       randomize_group = "misc",
@@ -693,7 +689,7 @@ OB_MODULES["sky_generator"] =
       label = _("Day Sky Color"),
       choices = SKY_GEN.CLOUD_COLOR_CHOICES,
       priority= 7,
-      tooltip = "Picks the color of the sky if day. Default means random and theme-ish.",
+      tooltip = _("Picks the color of the sky if day. Default means random and theme-ish."),
       default = "default",
       randomize_group = "misc",
     },
@@ -704,7 +700,7 @@ OB_MODULES["sky_generator"] =
       label = _("Terrain Color"),
       choices = SKY_GEN.TERRAIN_COLOR_CHOICES,
       priority = 6,
-      tooltip = "Picks the color of the terrain in the sky if available. Default means random and theme-ish.",
+      tooltip = _("Picks the color of the terrain in the sky if available. Default means random and theme-ish."),
       default = "default",
       randomize_group = "misc",
     },
@@ -715,8 +711,7 @@ OB_MODULES["sky_generator"] =
       label = _("Nebula Color"),
       choices = SKY_GEN.NEBULA_COLOR_CHOICES,
       priority = 5,
-      tooltip = "Picks the color of nebula if sky is night. 'None' means just a plain starry night sky. " ..
-                "Default means random and theme-ish.",
+      tooltip = _("Picks the color of nebula if sky is night. 'None' means just a plain starry night sky. Default means random and theme-ish."),
       default = "default",
       gap = 1,
       randomize_group = "misc",
@@ -729,8 +724,7 @@ OB_MODULES["sky_generator"] =
       valuator = "button",
       default = 0,
       priority = 4,
-      tooltip = "Overrides (and ignores) Dark Outdoors setting in Miscellaneous tab. If the sky generator " ..
-      "creates night skies for an episode, episode's map outdoors is also dark but bright if day-ish.",
+      tooltip = _("Overrides (and ignores) Dark Outdoors setting in Miscellaneous tab. If the sky generator creates night skies for an episode, episode's map outdoors is also dark but bright if day-ish."),
     },
   },
 }

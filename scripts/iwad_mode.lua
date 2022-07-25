@@ -1797,8 +1797,7 @@ OB_MODULES["iwad_mode"] =
   game = "doom2", -- Only one supported for now
   side = "left",
   priority = 60,
-  tooltip ="Attempts to mimic various architectural features seen in the Doom IWAD maps. Only Doom 2 is supported right now while Doom is in the works but not implemented yet.\n" ..
-  "NOTE: This will override settings in other parts of the program such as Level Size, Room Size, etc!",
+  tooltip =_("Attempts to mimic various architectural features seen in the Doom IWAD maps. Only Doom 2 is supported right now while Doom is in the works but not implemented yet.\nNOTE: This will override settings in other parts of the program such as Level Size, Room Size, etc!"),
 
   hooks =
   {

@@ -201,9 +201,16 @@ function QUAKE.get_levels()
       end
 
       -- nature mode
-      if PARAM.float_nature_mode and not LEV.has_streets then
+      if PARAM.float_nature_mode then
         if rand.odds(PARAM.float_nature_mode) then
-          LEV.is_nature = true
+          if LEV.has_streets then
+            if rand.odds(50) then
+              LEV.has_streets = false
+              LEV.is_nature = true
+            end
+          else
+            LEV.is_nature = true
+          end
         end
       end
 

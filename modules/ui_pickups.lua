@@ -77,17 +77,37 @@ OB_MODULES["ui_pickups"] =
 
   options =
   {
-    { name="health",     label=_("Health"),    choices=UI_PICKUPS.HEALTH_CHOICES, randomize_group="pickups", tooltip = "Control the amount of health items." },
-    { name="ammo",       label=_("Ammo"),      choices=UI_PICKUPS.HEALTH_CHOICES,  gap=1, randomize_group="pickups", tooltip = "Control the amount of ammunition." },
+    { name="health",     
+    label=_("Health"),    
+    choices=UI_PICKUPS.HEALTH_CHOICES, randomize_group="pickups", 
+    tooltip = _("Control the amount of health items.") 
+  },
+    { name="ammo",       
+    label=_("Ammo"),      
+    choices=UI_PICKUPS.HEALTH_CHOICES,  gap=1, randomize_group="pickups", 
+    tooltip = _("Control the amount of ammunition.") 
+  },
 
-    { name="weapons",    label=_("Weapons"),   choices=UI_PICKUPS.WEAPON_CHOICES, randomize_group="pickups", tooltip = "Control the amount of weapons." },
-    { name="items",      label=_("Items"),     choices=UI_PICKUPS.ITEM_CHOICES, randomize_group="pickups", tooltip = "Control the amount of armor and miscellaneous items."},
+    { name="weapons",    
+    label=_("Weapons"),   
+    choices=UI_PICKUPS.WEAPON_CHOICES, randomize_group="pickups", 
+    tooltip = _("Control the amount of weapons.") 
+  },
+    { name="items",      
+    label=_("Items"),     
+    choices=UI_PICKUPS.ITEM_CHOICES, randomize_group="pickups", 
+    tooltip = _("Control the amount of armor and miscellaneous items.")
+  },
 
-    { name="secrets",    label=_("Secrets"),   choices=STYLE_CHOICES, randomize_group="pickups", tooltip = "Control the amount of secrets." },
+    { name="secrets",    
+    label=_("Secrets"),   
+    choices=STYLE_CHOICES, randomize_group="pickups", 
+    tooltip = _("Control the amount of secrets.")
+   },
     { name="secrets_bonus",
       label=_("Secrets Bonus"),
       choices=UI_PICKUPS.SECRET_ROOM_BONUS,
-      tooltip="Adds extra content to secret rooms. Larger rooms offer more content. Default is NONE.",
+      tooltip=_("Adds extra content to secret rooms. Larger rooms offer more content. Default is NONE."),
       default="none",
       randomize_group="pickups",
     },

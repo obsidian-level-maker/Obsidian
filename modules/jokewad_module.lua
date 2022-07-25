@@ -443,11 +443,7 @@ OB_MODULES["jokewad_module"] =
       label=_("FIREBLU Mode"),
       valuator = "button",
       default = 0,
-      tooltip = _(
-        "Allows the creation of the greatest maps to ever be generated on " ..
-        "on the face of the earth. Warning: ticking this waives any " ..
-        "liability for potential emotional and physical damage on the " ..
-        "part of the user. \n"),
+      tooltip = _("Allows the creation of the greatest maps to ever be generated on the face of the earth. Warning: ticking this waives any liability for potential emotional and physical damage on the part of the user."),
     },
 
 
@@ -456,9 +452,7 @@ OB_MODULES["jokewad_module"] =
       label=_("Pandemic Mode"),
       valuator = "button",
       default = 0,
-      tooltip = _("Do your part in preventing the coronavirus crisis! Hell is taking " ..
-      "away all our tissue rolls and hand sanitizers! It's up to the Slayer to take " ..
-      "it back. Every square and every squeeze."),
+      tooltip = _("Do your part in preventing the coronavirus crisis! Hell is taking away all our tissue rolls and hand sanitizers! It's up to the Slayer to take it back. Every square and every squeeze."),
     }
   }
 }

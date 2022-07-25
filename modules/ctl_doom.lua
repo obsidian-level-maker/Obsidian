@@ -74,19 +74,13 @@ OB_MODULES["doom_mon_control"] =
       name = "float_zombie",
       label = _("Zombieman"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Zombiemen."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -94,19 +88,13 @@ OB_MODULES["doom_mon_control"] =
       name = "float_shooter",
       label = _("Shotgun Guy"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Shotgunners."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -114,19 +102,13 @@ OB_MODULES["doom_mon_control"] =
       name = "float_gunner",
       label = _("Chaingunner"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Chaingunners."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -134,19 +116,13 @@ OB_MODULES["doom_mon_control"] =
       name = "float_ss_nazi",
       label = _("SS Nazi"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of SS troops."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -154,19 +130,13 @@ OB_MODULES["doom_mon_control"] =
       name = "float_imp",
       label = _("Imp"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Imps."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -174,19 +144,13 @@ OB_MODULES["doom_mon_control"] =
       name = "float_skull",
       label = _("Lost Soul"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Lost Souls."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -194,19 +158,13 @@ OB_MODULES["doom_mon_control"] =
       name = "float_demon",
       label = _("Demon"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Pinkies."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -214,19 +172,13 @@ OB_MODULES["doom_mon_control"] =
       name = "float_spectre",
       label = _("Spectre"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Spectres."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -234,19 +186,13 @@ OB_MODULES["doom_mon_control"] =
       name = "float_pain",
       label = _("Pain Elemental"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Pain Elementals."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -254,19 +200,13 @@ OB_MODULES["doom_mon_control"] =
       name = "float_caco",
       label = _("Cacodemon"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Cacodemons."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -274,19 +214,13 @@ OB_MODULES["doom_mon_control"] =
       name = "float_knight",
       label = _("Hell Knight"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Hell Knights."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -294,19 +228,13 @@ OB_MODULES["doom_mon_control"] =
       name = "float_revenant",
       label = _("Revenant"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Revenants."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -314,19 +242,13 @@ OB_MODULES["doom_mon_control"] =
       name = "float_mancubus",
       label = _("Mancubus"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Mancubi."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -334,39 +256,27 @@ OB_MODULES["doom_mon_control"] =
       name = "float_arach",
       label = _("Arachnotron"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Arachnotrons."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
      {
       name = "float_vile",
-      label = _("Arch-vile"),
+      label = _("Arch-Vile"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Arch-Viles."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -374,19 +284,13 @@ OB_MODULES["doom_mon_control"] =
       name = "float_baron",
       label = _("Baron of Hell"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Barons of Hell."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -394,19 +298,13 @@ OB_MODULES["doom_mon_control"] =
       name = "float_Cyberdemon",
       label = _("Cyberdemon"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Cyberdemons."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      },
 
@@ -414,19 +312,13 @@ OB_MODULES["doom_mon_control"] =
       name = "float_Spiderdemon",
       label = _("Spiderdemon"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Spider Masterminds."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group="monsters",
      }
   },
@@ -523,19 +415,13 @@ OB_MODULES["doom_weapon_control"] =
      name = "float_saw",
      label = _("Chainsaw"),
      valuator = "slider",
-     units = "",
      min = 0,
      max = 10,
      increment = .02,
      default = "Default",
-     nan = "Default,", 
-     presets = "0:0 (None)," ..
-     ".02:0.02 (Scarce)," ..
-     ".14:0.14 (Less)," ..
-     ".5:0.5 (Plenty)," ..
-     "1.2:1.2 (More)," ..
-     "3:3 (Heaps)," ..
-     "10:10 (I LOVE IT),",
+     nan = "Default",
+     tooltip = _("Control the likelihood of finding a Chainsaw."),  
+     presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
      randomize_group="pickups",
     },
 
@@ -543,19 +429,13 @@ OB_MODULES["doom_weapon_control"] =
       name = "float_shotty",
       label = _("Shotgun"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Shotguns."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -563,19 +443,13 @@ OB_MODULES["doom_weapon_control"] =
       name = "float_super",
       label = _("Super Shotgun"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Super Shotguns."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -583,19 +457,13 @@ OB_MODULES["doom_weapon_control"] =
       name = "float_chain",
       label = _("Chaingun"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Chainguns."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -603,19 +471,13 @@ OB_MODULES["doom_weapon_control"] =
       name = "float_launch",
       label = _("Rocket Launcher"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Rocket Launchers."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -623,19 +485,13 @@ OB_MODULES["doom_weapon_control"] =
       name = "float_plasma",
       label = _("Plasma Rifle"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Plasma Rifles."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -643,19 +499,13 @@ OB_MODULES["doom_weapon_control"] =
       name = "float_bfg",
       label = _("BFG 9000"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of BFG 9000s."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -663,11 +513,7 @@ OB_MODULES["doom_weapon_control"] =
       name="weapon_prefs",
       label=_("Weapon Preferences"),
       choices=CTL_DOOM.WEAPON_PREF_CHOICES,
-      tooltip="Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\n" ..
-      "Normal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\n" ..
-      "Vanilla: Vanilla Oblige-style preferences. Reduces rocket launchers if the map has more pain elementals, lost souls, demons/specters " ..
-      "while increases BFG's for cyberdemons and spider masterminds. No other weapon preferences.\n\n" ..
-      "NONE: No preferences at all. For those who like to live life dangerously with lost souls and only rockets.",
+      tooltip=_("Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\nNormal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\nVanilla: Vanilla Oblige-style preferences. Reduces rocket launchers if the map has more pain elementals, lost souls, demons/specters while increases BFG's for cyberdemons and spider masterminds. No other weapon preferences.\n\nNONE: No preferences at all. For those who like to live life dangerously with lost souls and only rockets."),
       default="normal",
     },
   },
@@ -727,19 +573,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_potion",
       label = _("Health Bonus"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Health Potions."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 100,
       randomize_group="pickups",
      },
@@ -748,19 +588,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_stimpack",
       label = _("Stimpack"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Stimpacks."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 99,
       randomize_group="pickups",
      },
@@ -769,19 +603,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_medikit",
       label = _("Medikit"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Medikits."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 98,
       gap = 1,
       randomize_group="pickups",
@@ -791,19 +619,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_helmet",
       label = _("Armor Bonus"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Helmets."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 95,
       randomize_group="pickups",
      },    
@@ -814,19 +636,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_green_armor",
       label = _("Green Armor"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Green Armor."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 94,
       randomize_group="pickups",
      },
@@ -835,19 +651,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_blue_armor",
       label = _("Blue Armor"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Blue Armor."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 93,
       gap = 1,
       randomize_group="pickups",
@@ -857,19 +667,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_soul",
       label = _("Soulsphere"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Soulspheres."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -877,19 +681,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_backpack",
       label = _("Backpack"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Backpacks."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -897,19 +695,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_berserk",
       label = _("Berserk Pack"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Berserk Packs."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -917,19 +709,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_invis",
       label = _("Invisibility"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Invisibility Spheres."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
      
@@ -937,19 +723,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_invul",
       label = _("Invulnerability"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Invulnerability Spheres."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -957,19 +737,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_allmap",
       label = _("Map Computer"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Map Computers."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -977,19 +751,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_goggles",
       label = _("Light Goggles"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Light Goggles."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -997,19 +765,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_mega",
       label = _("Megasphere"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Megaspheres."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
      },
 
@@ -1019,19 +781,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_bullets",
       label = _("Clips"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Clips."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 75,
      },
@@ -1040,19 +796,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_bullet_box",
       label = _("Bullet Box"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Bullet Boxes."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 74,
      },
@@ -1061,19 +811,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_shells",
       label = _("Shells"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Shells."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 73,
      },
@@ -1082,19 +826,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_shell_box",
       label = _("Shell Box"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Shell Boxes."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 72,
      },
@@ -1103,19 +841,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_rocket",
       label = _("Rocket"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Rockets."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 71,
      },
@@ -1124,19 +856,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_rocket_box",
       label = _("Rocket Box"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Rocket Boxes."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 70,
      },
@@ -1145,19 +871,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_cells",
       label = _("Cell"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Cells."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group="pickups",
       priority = 69,
      },
@@ -1166,19 +886,13 @@ OB_MODULES["doom_item_control"] =
       name = "float_cell_pack",
       label = _("Cell Pack"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Cell Packs."),  
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       priority = 68,
       randomize_group="pickups",
       gap = 1,

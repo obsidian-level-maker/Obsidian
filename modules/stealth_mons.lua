@@ -245,10 +245,16 @@ STEALTH.CHOICES =
 
 
 function STEALTH.setup(self)
+
+  module_param_up(self)
+
+  table.merge_missing(GAME.MONSTERS, STEALTH.MONSTERS)
+
   -- apply the Quantity choice
   local qty = self.options.qty.value
 
   for name,_ in pairs(STEALTH.MONSTERS) do
+
     local M = GAME.MONSTERS[name]
 
     if M and qty == "less" then
@@ -262,8 +268,8 @@ function STEALTH.setup(self)
     end
 
     -- EDGE uses different id numbers -- fix them
-    if M and OB_CONFIG.game == "edge" then
-      M.id = EDGE_IDS[name]
+    if M and OB_CONFIG.engine == "edge" then
+      M.id = STEALTH.EDGE_IDS[name]
     end
   end
 end
@@ -271,11 +277,13 @@ end
 
 OB_MODULES["stealth_mons"] =
 {
+  name = "stealth_mons",
+
   label = _("Stealth Monsters"),
 
   game = "doomish",
 
-  engine = "zdoom",
+  engine = {zdoom=1, edge=1},
 
   tables =
   {
@@ -293,7 +301,8 @@ OB_MODULES["stealth_mons"] =
     {
       label = _("Default Quantity"),
       choices = STEALTH.CHOICES,
-      randomize_group = "monsters"
+      randomize_group = "monsters",
+      tooltip = _("Control the appearance of stealth monster variants (ZDoom Family and EDGE-Classic only).")
     },
   },
 }
@@ -301,55 +310,53 @@ OB_MODULES["stealth_mons"] =
 
 ----------------------------------------------------------------
 
-
-STEALTH.CONTROL_CHOICES =
-{
-  "default", _("DEFAULT"),
-  "none",    _("None at all"),
-  "scarce",  _("Scarce"),
-  "less",    _("Less"),
-  "plenty",  _("Plenty"),
-  "more",    _("More"),
-  "heaps",   _("Heaps"),
-  "insane",  _("INSANE"),
-}
-
-STEALTH.CONTROL_PROBS =
-{
-  none   = 0,
-  scarce = 2,
-  less   = 15,
-  plenty = 50,
-  more   = 120,
-  heaps  = 300,
-  insane = 2000,
-}
-
-
 function STEALTH.control_setup(self)
-  for name,opt in pairs(self.options) do
-    local M = GAME.MONSTERS[name]
+  module_param_up(self)
 
-    if M and opt.value ~= "default" then
-      local prob = STEALTH.CONTROL_PROBS[opt.value]
+  table.merge_missing(GAME.MONSTERS, STEALTH.MONSTERS)
 
+  for _,opt in pairs(self.options) do
+
+    local M = GAME.MONSTERS[string.sub(opt.name, 7)]
+
+    if M and PARAM[opt.name] ~= "Default" then
+      M.prob    = PARAM[opt.name] * 100
+      M.density = M.prob * .006 + .1
+
+      -- allow Spectres to be controlled individually
       M.replaces = nil
-      M.prob = prob
-      M.crazy_prob = prob
 
-      if prob > 80 then M.density = 1.0 end
+      -- loosen some of the normal restrictions
+      M.skip_prob = nil
+      M.crazy_prob = nil
+
+      if M.prob > 40 then
+        M.level = 1
+        M.weap_min_damage = nil
+      end
+
+      if M.prob > 200 then
+        M.boss_type = nil
+      end
+
+      -- EDGE uses different id numbers -- fix them
+      if OB_CONFIG.engine == "edge" then
+        M.id = STEALTH.EDGE_IDS[string.sub(opt.name, 7)]
+      end
     end
-  end -- for opt
+  end
 end
 
 
 OB_MODULES["stealth_mon_control"] =
 {
+  name = "stealth_mon_control",
+
   label = _("Stealth Monsters : Control"),
 
   game = "doomish",
 
-  engine = "zdoom",
+  engine = {zdoom=1, edge=1},
 	  
   hooks =
   {
@@ -358,19 +365,174 @@ OB_MODULES["stealth_mon_control"] =
 
   options =
   {
-    stealth_zombie   = { label=_("Zombieman"),     choices=STEALTH.CONTROL_CHOICES, randomize_group = "monsters" },
-    stealth_shooter  = { label=_("Shotgun Guy"),   choices=STEALTH.CONTROL_CHOICES, randomize_group = "monsters" },
-    stealth_imp      = { label=_("Imp"),           choices=STEALTH.CONTROL_CHOICES, randomize_group = "monsters" },
-    stealth_demon    = { label=_("Demon"),         choices=STEALTH.CONTROL_CHOICES, randomize_group = "monsters" },
-    stealth_caco     = { label=_("Cacodemon"),     choices=STEALTH.CONTROL_CHOICES, randomize_group = "monsters" },
-    stealth_baron    = { label=_("Baron of Hell"), choices=STEALTH.CONTROL_CHOICES, randomize_group = "monsters" },
 
-    stealth_gunner   = { label=_("Chaingunner"),   choices=STEALTH.CONTROL_CHOICES, randomize_group = "monsters" },
-    stealth_knight   = { label=_("Hell Knight"),   choices=STEALTH.CONTROL_CHOICES, randomize_group = "monsters" },
-    stealth_revenant = { label=_("Revenant"),      choices=STEALTH.CONTROL_CHOICES, randomize_group = "monsters" },
-    stealth_mancubus = { label=_("Mancubus"),      choices=STEALTH.CONTROL_CHOICES, randomize_group = "monsters" },
-    stealth_arach    = { label=_("Arachnotron"),   choices=STEALTH.CONTROL_CHOICES, randomize_group = "monsters" },
-    stealth_vile     = { label=_("Arch-vile"),     choices=STEALTH.CONTROL_CHOICES, randomize_group = "monsters" },
+    {
+      name = "float_stealth_zombie",
+      label = _("Zombieman"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Stealth Zombiemen."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_stealth_shooter",
+      label = _("Shotgun Guy"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Stealth Shotgunners."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_stealth_imp",
+      label = _("Imp"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Stealth Imps."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_stealth_demon",
+      label = _("Demon"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Stealth Pinkies."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_stealth_caco",
+      label = _("Cacodemon"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default", 
+      tooltip = _("Control the amount of Stealth Cacodemons."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_stealth_baron",
+      label = _("Baron of Hell"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Stealth Barons of Hell."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_stealth_gunner",
+      label = _("Chaingunner"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Stealth Chaingunners."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_stealth_knight",
+      label = _("Hell Knight"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Stealth Hell Knights."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_stealth_revenant",
+      label = _("Revenant"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default", 
+      tooltip = _("Control the amount of Stealth Revenants."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_stealth_mancubus",
+      label = _("Mancubus"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Stealth Mancubi."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_stealth_arach",
+      label = _("Arachnotron"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Stealth Arachnotrons."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_stealth_vile",
+      label = _("Arch-Vile"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Stealth Arch-Viles."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
   },
 }
 

@@ -429,7 +429,7 @@ NUKEM.ROOMS =
 
 OB_THEMES["nukem_city"] =
 {
-  label = "City",
+  label = _("Nukem City"),
   game = "nukem",
   name_theme = "URBAN",
   mixed_prob = 50

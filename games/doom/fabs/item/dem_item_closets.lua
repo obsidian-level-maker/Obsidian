@@ -268,7 +268,7 @@ PREFABS.Item_dem_bedroom_closet =
 
   theme = "urban",
 
-  texture_pack = "armeatus",
+  texture_pack = "armaetus",
   replaces = "Item_dem_bedroom_closet_vanilla",
 
   engine = "zdoom",
@@ -324,6 +324,12 @@ PREFABS.Item_dem_bedroom_closet_vanilla =
     BIGBRIK1=50, BIGBRIK2=50, STONE2=50,
     STUCCO=50, STUCCO1=50, STUCCO3=50,
   },
+
+  tex_SKIN4 = "SKIN2",
+	tex_GOTH13 = "STONE4",
+	tex_COLLITE1 = "SHAWN2",
+
+  flat_GRENFLOR = "GRASS2",
 
   tex_EVILFACA = "WOOD4",
   tex_TVSNOW01 = "SPACEW3"
@@ -429,6 +435,7 @@ PREFABS.Item_dem_bar_closets_vanilla =
     STARGR1=50, GRAY7=50,
   },
   tex_TEKGRDR = "SHAWN1",
+  tex_SHAWN4  = "SHAWN2",
   tex_MIDSPAC5 = "MIDSPACE"
 }
 
@@ -509,7 +516,8 @@ PREFABS.Item_dem_waiting_room_closets_vanilla =
   },
   flat_SNOW5 = "FLAT19",
   flat_FASHWITE = "FLAT23",
-  flat_GRENFLOR = "RROCK20"
+  flat_GRENFLOR = "RROCK20",
+  tex_SHAWN4 = "SHAWN2",
 }
 
 --a raided electronic store with an item

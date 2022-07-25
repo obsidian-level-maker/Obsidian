@@ -2,9 +2,10 @@
 //  TGA (Targa) IMAGE LOADING
 //------------------------------------------------------------------------
 //
-//  Oblige Level Maker
+//  OBSIDIAN Level Maker
 //
-//  Copyright (C) 2013-2016 Andrew Apted
+//  Copyright (C) 2021-2022 The OBSIDIAN Team
+//  Copyright (C) 2013-2017 Andrew Apted
 //  Copyright (C) 1997-2001 Id Software, Inc.
 //
 //  This program is free software; you can redistribute it and/or

@@ -217,6 +217,8 @@ end
 
 OB_MODULES["zdoom_marines"] =
 {
+  name = "zdoom_marines",
+
   label = _("ZDoom Marines"),
 
   game = "doomish",
@@ -227,6 +229,8 @@ OB_MODULES["zdoom_marines"] =
   {
     ZDOOM_MARINE
   },
+
+  tooltip = _("WARNING! ZDoom Marines are hostile by default unless their behavior is altered by another mod!"),
 
   hooks =
   {
@@ -239,7 +243,8 @@ OB_MODULES["zdoom_marines"] =
       name = "zdoom_marine_qty",
       label = _("Default Quantity"),
       choices = ZDOOM_MARINE.CHOICES,
-      randomize_group = "monsters"
+      randomize_group = "monsters",
+      tooltip = _("Control the appearance of hostile ZDoom Marines.") 
     },
   },
 }
@@ -247,60 +252,54 @@ OB_MODULES["zdoom_marines"] =
 
 ----------------------------------------------------------------
 
-
-ZDOOM_MARINE.CTL_CHOICES =
-{
-  "default", _("DEFAULT"),
-  "none",    _("None at all"),
-  "scarce",  _("Scarce"),
-  "less",    _("Less"),
-  "plenty",  _("Plenty"),
-  "more",    _("More"),
-  "heaps",   _("Heaps"),
-  "insane",  _("INSANE"),
-}
-
--- these probabilities are lower than in the Monster Control module
--- because these dudes really pack a punch.
-
-ZDOOM_MARINE.CTL_PROBS =
-{
-  none   = 0,
-  scarce = 1,
-  less   = 4,
-  plenty = 20,
-  more   = 70,
-  heaps  = 200,
-  insane = 1000,
-}
-
-
 function ZDOOM_MARINE.control_setup(self)
 
   module_param_up(self)
 
   for _,opt in pairs(self.options) do
 
-    local M = GAME.MONSTERS[opt.name]
+    local M = GAME.MONSTERS[string.sub(opt.name, 7)]
 
-    if M and opt.value ~= "default" then
-      local prob = ZDOOM_MARINE.CTL_PROBS[opt.value]
+    if M and PARAM[opt.name] ~= "Default" then
+      M.prob    = PARAM[opt.name] * 100
+      M.density = M.prob * .006 + .1
 
-      M.prob = prob
-      M.crazy_prob = prob
+      -- allow Spectres to be controlled individually
+      M.replaces = nil
 
-      if prob >  50 then M.density = 0.5 end
-      if prob > 150 then M.density = 1.0 end
+      -- loosen some of the normal restrictions
+      M.skip_prob = nil
+      M.crazy_prob = nil
+
+      if M.prob > 40 then
+        M.level = 1
+        M.weap_min_damage = nil
+      end
+
+      if M.prob > 200 then
+        M.boss_type = nil
+      end
     end
-  end -- for opt
+  end
+
 end
 
 
 OB_MODULES["zdoom_marine_control"] =
 {
+  name = "zdoom_marine_control",
+
   label = _("ZDoom Marines : Control"),
 
-  module = "zdoom_marines",
+  game = "doomish",
+
+  engine = "zdoom",
+
+  tables =
+  {
+    ZDOOM_MARINE
+  },
+
   hooks =
   {
     setup = ZDOOM_MARINE.control_setup
@@ -308,17 +307,159 @@ OB_MODULES["zdoom_marine_control"] =
 
   options =
   {
-    { name = "marine_fist", label="Fist Marine",        choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
-    { name = "marine_berserk", label="Berserk Marine",     choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
-    { name = "marine_saw", label="Chainsaw Marine",    choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
-    { name = "marine_pistol", label="Pistol Marine",      choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
-    { name = "marine_shotty", label="Shotgun Marine",     choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
-    { name = "marine_ssg", label="SSG Marine",         choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
-    { name = "marine_chain", label="Chaingun Marine",    choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
-    { name = "marine_rocket", label="Rocket Marine",      choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
-    { name = "marine_plasma", label="Plasma Marine",      choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
-    { name = "marine_rail", label="Railgun Marine",     choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
-    { name = "marine_bfg", label="BFG Marine",         choices=ZDOOM_MARINE.CTL_CHOICES, randomize_group = "monsters" },
+    {
+      name = "float_marine_fist",
+      label = _("Fist Marine"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Fist-wielding ZDoom Marines."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_marine_berserk",
+      label = _("Berserk Marine"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Berserked ZDoom Marines."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_marine_saw",
+      label = _("Chainsaw Marine"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Chainsaw-wielding ZDoom Marines."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_marine_pistol",
+      label = _("Pistol Marine"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Pistol-wielding ZDoom Marines."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_marine_shotty",
+      label = _("Shotgun Marine"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Shotgun-wielding ZDoom Marines."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_marine_ssg",
+      label = _("SSG Marine"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Super Shotgun-wielding ZDoom Marines."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_marine_chain",
+      label = _("Chaingun Marine"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Chaingun-wielding ZDoom Marines."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_marine_rocket",
+      label = _("Rocket Marine"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Rocket Launcher-wielding ZDoom Marines."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_marine_plasma",
+      label = _("Plasma Marine"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Plasma Rifle-wielding ZDoom Marines."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_marine_rail",
+      label = _("Railgun Marine"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of Railgun-wielding ZDoom Marines."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
+
+    {
+      name = "float_marine_bfg",
+      label = _("BFG Marine"),
+      valuator = "slider",
+      min = 0,
+      max = 20,
+      increment = .02,
+      default = "Default",
+      nan = "Default",
+      tooltip = _("Control the amount of BFG 9000-wielding ZDoom Marines."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
+      randomize_group="monsters",
+    },
   },
 }
 

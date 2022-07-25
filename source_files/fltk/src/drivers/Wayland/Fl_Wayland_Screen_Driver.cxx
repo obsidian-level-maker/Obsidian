@@ -39,6 +39,7 @@
 #include "text-input-client-protocol.h"
 #include <assert.h>
 #include <sys/mman.h>
+#include <poll.h>
 extern "C" {
   bool libdecor_get_cursor_settings(char **theme, int *size);
 }
@@ -238,6 +239,25 @@ Fl_Window *Fl_Wayland_Screen_Driver::surface_to_window(struct wl_surface *surfac
 }
 
 
+static Fl_Window *event_coords_from_surface(struct wl_surface *surface,
+                                       wl_fixed_t surface_x, wl_fixed_t surface_y) {
+  Fl_Window *win = Fl_Wayland_Screen_Driver::surface_to_window(surface);
+  if (!win) return NULL;
+  int delta_x = 0, delta_y = 0;
+  while (win->parent()) {
+    delta_x += win->x();
+    delta_y += win->y();
+    win = win->window();
+  }
+  float f = Fl::screen_scale(win->screen_num());
+  Fl::e_x = wl_fixed_to_int(surface_x) / f + delta_x;
+  Fl::e_x_root = Fl::e_x + win->x();
+  Fl::e_y = wl_fixed_to_int(surface_y) / f + delta_y;
+  Fl::e_y_root = Fl::e_y + win->y();
+  return win;
+}
+
+
 static void pointer_enter(void *data,
         struct wl_pointer *wl_pointer,
         uint32_t serial,
@@ -245,22 +265,13 @@ static void pointer_enter(void *data,
         wl_fixed_t surface_x,
         wl_fixed_t surface_y)
 {
-  Fl_Window *win = Fl_Wayland_Screen_Driver::surface_to_window(surface);
+  Fl_Window *win = event_coords_from_surface(surface, surface_x, surface_y);
   if (!win) return;
   Fl_Wayland_Window_Driver *driver = Fl_Wayland_Window_Driver::driver(win);
   struct wl_cursor *cursor = driver->cursor(); // use custom cursor if present
-  if (win->parent() && !cursor) {
-    driver = Fl_Wayland_Window_Driver::driver(win->top_window());
-    cursor = driver->cursor();
-  }
   struct seat *seat = (struct seat*)data;
   do_set_cursor(seat, cursor);
   seat->serial = serial;
-  float f = Fl::screen_scale(win->screen_num());
-  Fl::e_x = wl_fixed_to_int(surface_x) / f;
-  Fl::e_x_root = Fl::e_x + win->x();
-  Fl::e_y = wl_fixed_to_int(surface_y) / f;
-  Fl::e_y_root = Fl::e_y + win->y();
   set_event_xy(win);
   Fl::handle(FL_ENTER, win);
   //fprintf(stderr, "pointer_enter window=%p\n", win);
@@ -279,6 +290,7 @@ static void pointer_leave(void *data,
   if (win) {
     Fl::belowmouse(0);
     set_event_xy(win);
+    Fl::handle(FL_LEAVE, win->top_window());
   }
 //fprintf(stderr, "pointer_leave surface=%p window=%p\n", surface, win);
 }
@@ -291,18 +303,13 @@ static void pointer_motion(void *data,
          wl_fixed_t surface_y)
 {
   struct seat *seat = (struct seat*)data;
-  Fl_Window *win = Fl_Wayland_Screen_Driver::surface_to_window(seat->pointer_focus);
+  Fl_Window *win = event_coords_from_surface(seat->pointer_focus, surface_x, surface_y);
   if (!win) return;
-  float f = Fl::screen_scale(win->screen_num());
-  Fl::e_x = wl_fixed_to_int(surface_x) / f;
-  Fl::e_x_root = Fl::e_x + win->x();
   // If there's an active grab() and the pointer is in a window other than the grab(),
   // make e_x_root too large to be in any window
   if (Fl::grab() && !Fl::grab()->menu_window() && Fl::grab() != win) {
     Fl::e_x_root = 1000000;
   }
-  Fl::e_y = wl_fixed_to_int(surface_y) / f;
-  Fl::e_y_root = Fl::e_y + win->y();
 //fprintf(stderr, "FL_MOVE on win=%p to x:%dx%d root:%dx%d\n", win, Fl::e_x, Fl::e_y, Fl::e_x_root, Fl::e_y_root);
   wld_event_time = time;
   set_event_xy(win);
@@ -323,6 +330,7 @@ static void pointer_button(void *data,
   int event = 0;
   Fl_Window *win = Fl_Wayland_Screen_Driver::surface_to_window(seat->pointer_focus);
   if (!win) return;
+  win = win->top_window();
   wld_event_time = time;
   if (button == BTN_LEFT && state == WL_POINTER_BUTTON_STATE_PRESSED && seat->pointer_focus == NULL &&
       fl_xid(win)->kind == Fl_Wayland_Window_Driver::DECORATED) {
@@ -997,7 +1005,7 @@ static void registry_handle_global(void *user_data, struct wl_registry *wl_regis
     wl_proxy_set_tag((struct wl_proxy *) output->wl_output, &proxy_tag);
     wl_output_add_listener(output->wl_output, &output_listener, output);
     wl_list_insert(&(scr_driver->outputs), &output->link);
-    scr_driver->screen_count( wl_list_length(&(scr_driver->outputs)) );
+    scr_driver->screen_count_set( wl_list_length(&(scr_driver->outputs)) );
 //fprintf(stderr, "wl_output: id=%d wl_output=%p screen_count()=%d\n", id, output->wl_output, Fl::screen_count());
 
   } else if (strcmp(interface, xdg_wm_base_interface.name) == 0) {
@@ -1041,7 +1049,7 @@ static void registry_handle_global_remove(void *data, struct wl_registry *regist
         xp = xp->next;
       }
       wl_list_remove(&output->link);
-      scr_driver->screen_count( wl_list_length(&(scr_driver->outputs)) );
+      scr_driver->screen_count_set( wl_list_length(&(scr_driver->outputs)) );
       wl_output_destroy(output->wl_output);
       free(output);
       break;
@@ -1056,8 +1064,13 @@ static const struct wl_registry_listener registry_listener = {
 };
 
 
-static void fd_callback(int unused, struct wl_display *display) {
-  wl_display_dispatch(display);
+static void fd_callback(int fd, struct wl_display *display) {
+  struct pollfd fds;
+  fds.fd = fd;
+  fds.events = POLLIN;
+  fds.revents = 0;
+  do wl_display_dispatch(display);
+  while (poll(&fds, 1, 0) > 0);
 }
 
 
@@ -1090,9 +1103,9 @@ void Fl_Wayland_Screen_Driver::open_display_platform() {
   if (!has_xrgb) {
     Fl::fatal("Error: no WL_SHM_FORMAT_ARGB8888 shm format\n");
   }
-  if (compositor == Fl_Wayland_Screen_Driver::unspecified) {
+  /*if (compositor == Fl_Wayland_Screen_Driver::unspecified) {
     Fl::warning("FLTK could not identify the type of the running Wayland compositor");
-  }
+  }*/
   Fl::add_fd(wl_display_get_fd(wl_display), FL_READ, (Fl_FD_Handler)fd_callback, wl_display);
   fl_create_print_window();
 }
@@ -1428,4 +1441,16 @@ int Fl_Wayland_Screen_Driver::get_mouse(int &xx, int &yy) {
   xx = xx/s;
   yy = yy/s;
   return snum;
+}
+
+
+void Fl_Wayland_Screen_Driver::set_spot(int font, int height, int x, int y, int w, int h, Fl_Window *win) {
+  Fl_Wayland_Screen_Driver::insertion_point_location(x, y, height);
+}
+
+
+void Fl_Wayland_Screen_Driver::reset_spot() {
+  Fl::compose_state = 0;
+  Fl_Wayland_Screen_Driver::next_marked_length = 0;
+  Fl_Wayland_Screen_Driver::insertion_point_location_is_valid = false;
 }

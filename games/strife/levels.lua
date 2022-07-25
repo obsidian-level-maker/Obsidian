@@ -125,14 +125,10 @@ function STRIFE.get_levels()
       game_along = game_along
     }
 
-    if OB_CONFIG.engine ~= "zdoom" then
-      if map == 1 then
-        LEV.name = "MAP02"
-      elseif map == 2 then
-        LEV.name = "MAP01"
-      else
-        LEV.name  = string.format("MAP%02d", map)
-      end
+    if map == 1 then
+      LEV.name = "MAP02"
+    elseif map == 2 then
+      LEV.name = "MAP01"
     else
       LEV.name  = string.format("MAP%02d", map)
     end
@@ -240,9 +236,16 @@ function STRIFE.get_levels()
       end
 
       -- nature mode
-      if PARAM.float_nature_mode and not LEV.has_streets then
+      if PARAM.float_nature_mode then
         if rand.odds(PARAM.float_nature_mode) then
-          LEV.is_nature = true
+          if LEV.has_streets then
+            if rand.odds(50) then
+              LEV.has_streets = false
+              LEV.is_nature = true
+            end
+          else
+            LEV.is_nature = true
+          end
         end
       end
 

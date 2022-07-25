@@ -153,10 +153,6 @@ Window fl_message_window = 0;
 int fl_screen;
 XVisualInfo *fl_visual;
 Colormap fl_colormap;
-static XIM fl_xim_im = 0;
-XIC fl_xim_ic = 0;
-Window fl_xim_win = 0;
-char fl_is_over_the_spot = 0;
 static XRectangle status_area;
 
 static Atom WM_DELETE_WINDOW;
@@ -321,7 +317,7 @@ extern "C" {
 
 extern char *fl_get_font_xfld(int fnum, int size);
 
-static void fl_new_ic()
+void Fl_X11_Screen_Driver::new_ic()
 {
   XVaNestedList preedit_attr = NULL;
   XVaNestedList status_attr = NULL;
@@ -366,7 +362,7 @@ static void fl_new_ic()
                                     XNAreaNeeded, &status_area,
                                     XNFontSet, fs, NULL);
 
-  if (!XGetIMValues(fl_xim_im, XNQueryInputStyle,
+  if (!XGetIMValues(xim_im, XNQueryInputStyle,
                     &xim_styles, NULL, NULL)) {
     int i;
     XIMStyle *style;
@@ -383,65 +379,66 @@ static void fl_new_ic()
   XFree(xim_styles);
 
   if (sarea) {
-    fl_xim_ic = XCreateIC(fl_xim_im,
+    xim_ic = XCreateIC(xim_im,
                           XNInputStyle, (XIMPreeditPosition | XIMStatusArea),
                           XNPreeditAttributes, preedit_attr,
                           XNStatusAttributes, status_attr,
                           NULL);
   }
 
-  if (!fl_xim_ic && predit) {
-    fl_xim_ic = XCreateIC(fl_xim_im,
+  if (!xim_ic && predit) {
+    xim_ic = XCreateIC(xim_im,
                           XNInputStyle, (XIMPreeditPosition | XIMStatusNothing),
                           XNPreeditAttributes, preedit_attr,
                           NULL);
   }
   XFree(preedit_attr);
   XFree(status_attr);
-  if (!fl_xim_ic) {
-    fl_is_over_the_spot = 0;
-    fl_xim_ic = XCreateIC(fl_xim_im,
+  if (!xim_ic) {
+    Fl_X11_Screen_Driver::fl_is_over_the_spot = 0;
+    xim_ic = XCreateIC(xim_im,
                           XNInputStyle, (XIMPreeditNothing | XIMStatusNothing),
                           NULL);
   } else {
-    fl_is_over_the_spot = 1;
+    Fl_X11_Screen_Driver::fl_is_over_the_spot = 1;
     status_attr = XVaCreateNestedList(0, XNAreaNeeded, &status_area, NULL);
 
-    XGetICValues(fl_xim_ic, XNStatusAttributes, status_attr, NULL);
+    XGetICValues(xim_ic, XNStatusAttributes, status_attr, NULL);
     XFree(status_attr);
   }
 }
 
 
-void Fl_Xlib_Graphics_Driver::set_status(int x, int y, int w, int h)
+void Fl_X11_Screen_Driver::set_status(int x, int y, int w, int h)
 {
   XVaNestedList status_attr;
   status_area.x = x;
   status_area.y = y;
   status_area.width = w;
   status_area.height = h;
-  if (!fl_xim_ic) return;
+  if (!xim_ic) return;
   status_attr = XVaCreateNestedList(0, XNArea, &status_area, NULL);
 
-  XSetICValues(fl_xim_ic, XNStatusAttributes, status_attr, NULL);
+  XSetICValues(xim_ic, XNStatusAttributes, status_attr, NULL);
   XFree(status_attr);
 }
 
-static void fl_init_xim() {
+
+void Fl_X11_Screen_Driver::init_xim() {
   static int xim_warning = 2;
   if (xim_warning > 0) xim_warning--;
 
   //XIMStyle *style;
   XIMStyles *xim_styles;
   if (!fl_display) return;
-  if (fl_xim_im) return;
+  if (xim_im) return;
 
-  fl_xim_im = XOpenIM(fl_display, NULL, NULL, NULL);
+  xim_im = XOpenIM(fl_display, NULL, NULL, NULL);
   xim_styles = NULL;
-  fl_xim_ic = NULL;
+  xim_ic = NULL;
 
-  if (fl_xim_im) {
-    XGetIMValues (fl_xim_im, XNQueryInputStyle,
+  if (xim_im) {
+    XGetIMValues (xim_im, XNQueryInputStyle,
                   &xim_styles, NULL, NULL);
   } else {
     if (xim_warning)
@@ -452,61 +449,57 @@ static void fl_init_xim() {
   }
 
   if (xim_styles && xim_styles->count_styles) {
-    fl_new_ic();
+    Fl_X11_Screen_Driver::new_ic();
    } else {
      if (xim_warning)
        Fl::warning("No XIM style found");
-     XCloseIM(fl_xim_im);
-     fl_xim_im = NULL;
+     XCloseIM(xim_im);
+     xim_im = NULL;
      // if xim_styles is allocated, free it now
      if (xim_styles) XFree(xim_styles);
      return;
   }
-  if (!fl_xim_ic) {
+  if (!xim_ic) {
     if (xim_warning)
       Fl::warning("XCreateIC() failed");
-    XCloseIM(fl_xim_im);
-    fl_xim_im = NULL;
+    XCloseIM(xim_im);
+    xim_im = NULL;
   }
   // if xim_styles is still allocated, free it now
   if(xim_styles) XFree(xim_styles);
 }
 
-void fl_xim_deactivate(void);
 
-extern XRectangle fl_spot;
-extern int fl_spotf;
-extern int fl_spots;
-
-void fl_xim_activate(Window xid) {
-  if (!fl_xim_im)
+void Fl_X11_Screen_Driver::xim_activate(Window xid) {
+  if (!xim_im)
     return;
 
   // If the focused window has changed, then use the brute force method
   // of completely recreating the input context.
-  if (fl_xim_win != xid) {
-    fl_xim_deactivate();
+  if (xim_win != xid) {
+    xim_deactivate();
 
-    fl_new_ic();
-    fl_xim_win = xid;
+    Fl_X11_Screen_Driver::new_ic();
+    xim_win = xid;
 
-    XSetICValues(fl_xim_ic,
-                 XNFocusWindow, fl_xim_win,
-                 XNClientWindow, fl_xim_win,
+    XSetICValues(xim_ic,
+                 XNFocusWindow, xim_win,
+                 XNClientWindow, xim_win,
                  NULL);
   }
 
-  fl_set_spot(fl_spotf, fl_spots, fl_spot.x, fl_spot.y, fl_spot.width, fl_spot.height);
+  Fl_X11_Screen_Driver *driver = (Fl_X11_Screen_Driver*)Fl::screen_driver();
+  driver->set_spot(fl_spotf, fl_spots, fl_spot.x, fl_spot.y, fl_spot.width, fl_spot.height, NULL);
 }
 
-void fl_xim_deactivate(void) {
-  if (!fl_xim_ic)
+void Fl_X11_Screen_Driver::xim_deactivate(void) {
+  if (!xim_ic)
     return;
 
-  XDestroyIC(fl_xim_ic);
-  fl_xim_ic = NULL;
+  XDestroyIC(xim_ic);
+  xim_ic = NULL;
 
-  fl_xim_win = 0;
+  xim_win = 0;
 }
 
 void Fl_X11_Screen_Driver::enable_im() {
@@ -514,15 +507,15 @@ void Fl_X11_Screen_Driver::enable_im() {
 
   win = Fl::first_window();
   if (win && win->shown()) {
-    fl_xim_activate(fl_xid(win));
-    XSetICFocus(fl_xim_ic);
+    xim_activate(fl_xid(win));
+    XSetICFocus(xim_ic);
   } else {
-    fl_new_ic();
+    new_ic();
   }
 }
 
 void Fl_X11_Screen_Driver::disable_im() {
-  fl_xim_deactivate();
+  xim_deactivate();
 }
 
 void Fl_X11_Screen_Driver::open_display_platform() {
@@ -607,7 +600,7 @@ void open_display_i(Display* d) {
   templt.visualid = XVisualIDFromVisual(DefaultVisual(d, fl_screen));
   fl_visual = XGetVisualInfo(d, VisualIDMask, &templt, &num);
   fl_colormap = DefaultColormap(d, fl_screen);
-  fl_init_xim();
+  Fl_X11_Screen_Driver::init_xim();
 
 #if !USE_COLORMAP
   Fl::visual(FL_RGB);
@@ -707,8 +700,7 @@ void Fl_X11_Screen_Driver::paste(Fl_Widget &receiver, int clipboard, const char 
                     fl_xid(Fl::first_window()), fl_event_time);
 }
 
-int Fl_X11_Screen_Driver::clipboard_contains(const char *type)
-{
+int Fl_X11_Screen_Driver::clipboard_contains(const char *type) {
   if (fl_i_own_selection[1]) {
     return fl_selection_type[1] == type;
   }
@@ -720,12 +712,12 @@ int Fl_X11_Screen_Driver::clipboard_contains(const char *type)
   win->wait_for_expose();
   XConvertSelection(fl_display, CLIPBOARD, TARGETS, CLIPBOARD, fl_xid(win), CurrentTime);
   XFlush(fl_display);
-  do  {
+  // FIXME: The following loop may ignore up to 20 events! (AlbrechtS)
+  do {
     XNextEvent(fl_display, &event);
     if (event.type == SelectionNotify && event.xselection.property == None) return 0;
     i++;
-  }
-  while (i < 20 && event.type != SelectionNotify);
+  } while (i < 20 && event.type != SelectionNotify);
   if (i >= 20) return 0;
   XGetWindowProperty(fl_display,
                      event.xselection.requestor,
@@ -1017,15 +1009,12 @@ static int wasXExceptionRaised() {
   return xerror;
 }
 
-}
+} // extern "C"
 
-static bool getNextEvent(XEvent *event_return)
-{
+static bool getNextEvent(XEvent *event_return) {
   time_t t = time(NULL);
-  while (!XPending(fl_display))
-  {
-    if(time(NULL) - t > 10.0)
-    {
+  while (!XPending(fl_display)) {
+    if (time(NULL) - t > 10.0) {
       // fprintf(stderr,"Error: The XNextEvent never came...\n");
       return false;
     }
@@ -1034,44 +1023,90 @@ static bool getNextEvent(XEvent *event_return)
   return true;
 }
 
-static long getIncrData(uchar* &data, const XSelectionEvent& selevent, long lower_bound)
-{
+static long getIncrData(uchar* &data, const XSelectionEvent& selevent, size_t lower_bound) {
   // fprintf(stderr,"Incremental transfer starting due to INCR property\n");
+  // fprintf(stderr, "[getIncrData:%d] lower_bound [in ] =%10ld\n", __LINE__, lower_bound);
+  const size_t alloc_min =   4 * 1024 * 1024; // min. initial allocation
+  const size_t alloc_max = 200 * 1024 * 1024; // max. initial allocation
+  const size_t alloc_inc =   4 * 1024 * 1024; // (min.) increase if necessary
   size_t total = 0;
+  size_t data_size = lower_bound + 1;
+  if (data_size < alloc_min) {
+    data_size = alloc_min;
+  } else if (data_size > alloc_max) {
+    data_size = alloc_max;
+  }
+  // fprintf(stderr, "[getIncrData:%d] initial alloc.    =%10ld\n", __LINE__, data_size);
+
   XEvent event;
   XDeleteProperty(fl_display, selevent.requestor, selevent.property);
-  data = (uchar*)realloc(data, lower_bound);
-  for (;;)
-  {
-    if (!getNextEvent(&event)) break;
-    if (event.type == PropertyNotify)
-    {
-      if (event.xproperty.state != PropertyNewValue) continue;
+  data = (uchar*)realloc(data, data_size);
+  if (!data) {
+    // fprintf(stderr, "[getIncrData:%d] realloc() FAILED, size = %ld\n", __LINE__, data_size);
+    Fl::fatal("Clipboard data transfer failed, size %ld is too large.", data_size);
+  }
+  for (;;) {
+    if (!getNextEvent(&event)) {
+      // This is unexpected but may happen if the sender (clipboard owner) no longer sends data
+      // fprintf(stderr, "[getIncrData:%d] Failed to get next event (timeout) *** break! ***\n", __LINE__);
+      break;
+    }
+    if (event.type == PropertyNotify) {
+      if (event.xproperty.state != PropertyNewValue) continue; // ignore PropertyDelete
       Atom actual_type;
       int actual_format;
       unsigned long nitems;
       unsigned long bytes_after;
       unsigned char* prop = 0;
       long offset = 0;
-      size_t num_bytes;
+      size_t num_bytes = 0;
       // size_t slice_size = 0;
-      do
-      {
+      do {
         XGetWindowProperty(fl_display, selevent.requestor, selevent.property, offset, 70000, True,
                            AnyPropertyType, &actual_type, &actual_format, &nitems, &bytes_after, &prop);
         num_bytes = nitems * (actual_format / 8);
         offset += num_bytes/4;
         // slice_size += num_bytes;
-        if (total + num_bytes > (size_t)lower_bound) data = (uchar*)realloc(data, total + num_bytes);
-        memcpy(data + total, prop, num_bytes); total += num_bytes;
+        if (total + num_bytes + bytes_after + 1 > data_size) {
+          data_size += alloc_inc;
+          if (total + num_bytes + bytes_after + 1 > data_size)
+            data_size = total + num_bytes + bytes_after + 1;
+          // printf(" -- realloc(%9ld), total=%10ld, num_bytes=%7ld, bytes_after=%7ld (%7ld), required=%10ld\n",
+          //        data_size, total, num_bytes, bytes_after, num_bytes + bytes_after, total + num_bytes + bytes_after + 1);
+          data = (uchar*)realloc(data, data_size);
+          if (!data) {
+            // fprintf(stderr, "[getIncrData():%d] realloc() FAILED, size = %ld\n", __LINE__, data_size);
+            Fl::fatal("Clipboard data transfer failed, size %ld is too large.", data_size);
+          }
+        }
+        memcpy(data + total, prop, num_bytes);
+        total += num_bytes;
         if (prop) XFree(prop);
       } while (bytes_after != 0);
       // fprintf(stderr,"INCR data size:%ld\n", slice_size);
       if (num_bytes == 0) break;
     }
-    else break;
+    else {
+      // Unexpected next event. At this point we're handling the INCR protocol and can't deal with
+      // *some* other events due to potential recursions. We *could* call fl_handle(event) to handle
+      // *selected* other events but for the time being we ignore all other events!
+      // Handling the INCR protocol for very large data may take some time and multiple events.
+      // Interleaving "other" events are possible, for instance the KeyRelease event of the
+      // ctrl/v key pressed to insert the clipboard. This solution is not perfect but it can
+      // handle the INCR protocol with very large selections in most cases, although with potential
+      // side effects because other events may be ignored.
+      // See GitHub Issue #451: "Segfault if using very large selections".
+      // Note: the "fix" for Issue #451 is basically to use 'continue' rather than 'break'
+      // Debug:
+      // fprintf(stderr,
+      //   "[getIncrData:%d] getNextEvent() returned %d, not PropertyNotify (%d). Event ignored.\n",
+      //   __LINE__, event.type, PropertyNotify);
+
+      continue;
+    }
   }
   XDeleteProperty(fl_display, selevent.requestor, selevent.property);
+  // fprintf(stderr, "[getIncrData:%d] total data  [out] =%10ld\n", __LINE__, (long)total);
   return (long)total;
 }
 
@@ -1186,26 +1221,26 @@ int fl_handle(const XEvent& thisevent)
   fl_xevent = &thisevent;
   Window xid = xevent.xany.window;
 
-  if (fl_xim_ic && xevent.type == DestroyNotify &&
-        xid != fl_xim_win && !fl_find(xid))
+  if (Fl_X11_Screen_Driver::xim_ic && xevent.type == DestroyNotify &&
+        xid != Fl_X11_Screen_Driver::xim_win && !fl_find(xid))
   {
     XIM xim_im;
     xim_im = XOpenIM(fl_display, NULL, NULL, NULL);
     if (!xim_im) {
       /*  XIM server has crashed */
       XSetLocaleModifiers("");
-      fl_xim_im = NULL;
-      fl_init_xim();
+      Fl_X11_Screen_Driver::xim_im = NULL;
+      Fl_X11_Screen_Driver::init_xim();
     } else {
       XCloseIM(xim_im); // see STR 2185 for comment
     }
     return 0;
   }
 
-  if (fl_xim_ic && (xevent.type == FocusIn))
-    fl_xim_activate(xid);
+  if (Fl_X11_Screen_Driver::xim_ic && (xevent.type == FocusIn))
+    Fl_X11_Screen_Driver::xim_activate(xid);
 
-  if (fl_xim_ic && XFilterEvent((XEvent *)&xevent, 0))
+  if (Fl_X11_Screen_Driver::xim_ic && XFilterEvent((XEvent *)&xevent, 0))
       return(1);
 
 #if USE_XRANDR
@@ -1236,7 +1271,9 @@ int fl_handle(const XEvent& thisevent)
 
   case SelectionNotify: {
     static unsigned char* sn_buffer = 0;
-    if (sn_buffer) {XFree(sn_buffer); sn_buffer = 0;}
+    if (sn_buffer) {
+      free(sn_buffer); sn_buffer = 0;
+    }
     long bytesread = 0;
     if (fl_xevent->xselection.property) for (;;) {
       // The Xdnd code pastes 64K chunks together, possibly to avoid
@@ -1260,7 +1297,7 @@ int fl_handle(const XEvent& thisevent)
           else
             handle_clipboard_timestamp(0, t);
         }
-        XFree(portion); portion = 0;
+        XFree(portion);
         return true;
       }
 
@@ -1272,7 +1309,7 @@ int fl_handle(const XEvent& thisevent)
         else { // searching for text data. *FIXME* - there may be other data types!
           type = find_target_text((Atom *)portion, count);
         }
-        XFree(portion); portion = 0;
+        XFree(portion);
 
         if (!type) { // not found
           if (Fl::e_clipboard_type == Fl::clipboard_image)
@@ -1297,18 +1334,38 @@ int fl_handle(const XEvent& thisevent)
         return true;
       }
       if (actual == fl_INCR) {
-        bytesread = getIncrData(sn_buffer, xevent.xselection, *(long*)portion);
+        // From ICCCM: "The contents of the INCR property will be an integer, which
+        // represents a lower bound on the number of bytes of data in the selection."
+        //
+        // However, some X clients don't set the integer ("lower bound") in the INCR
+        // property, hence 'count' below is zero and we must not access '*portion'.
+        // Debug:
+#if (0)
+        fprintf(stderr,
+                "[fl_handle(SelectionNotify/INCR):%d] actual=%ld (INCR), format=%d, count=%ld, remaining=%ld",
+                __LINE__, actual, format, count, remaining);
+        if (portion && count > 0) {
+          fprintf(stderr,
+                ", portion=%p (%ld)", portion, *(long*)portion);
+        }
+        fprintf(stderr, "\n");
+#endif
+        size_t lower_bound = 0;
+        if (portion && count > 0) {
+          lower_bound = *(unsigned long *)portion;
+        }
+        bytesread = getIncrData(sn_buffer, xevent.xselection, lower_bound);
         XFree(portion);
         break;
       }
       // Make sure we got something sane...
       if ((portion == NULL) || (format != 8) || (count == 0)) {
-        if (portion) { XFree(portion); portion = 0; }
+        if (portion) XFree(portion);
         return true;
       }
       sn_buffer = (unsigned char*)realloc(sn_buffer, bytesread+count+remaining+1);
-      memcpy(sn_buffer+bytesread, portion, count);
-      if (portion) { XFree(portion); portion = 0; }
+      memcpy(sn_buffer + bytesread, portion, count);
+      XFree(portion);
       bytesread += count;
       // Cannot trust data to be null terminated
       sn_buffer[bytesread] = '\0';
@@ -1616,7 +1673,7 @@ int fl_handle(const XEvent& thisevent)
     return 1;
 
   case FocusIn:
-    if (fl_xim_ic) XSetICFocus(fl_xim_ic);
+    if (Fl_X11_Screen_Driver::xim_ic) XSetICFocus(Fl_X11_Screen_Driver::xim_ic);
     event = FL_FOCUS;
     // If the user has toggled from another application to this one,
     // then it's a good time to check for clipboard changes.
@@ -1624,7 +1681,7 @@ int fl_handle(const XEvent& thisevent)
     break;
 
   case FocusOut:
-    if (fl_xim_ic) XUnsetICFocus(fl_xim_ic);
+    if (Fl_X11_Screen_Driver::xim_ic) XUnsetICFocus(Fl_X11_Screen_Driver::xim_ic);
     event = FL_UNFOCUS;
     break;
 
@@ -1644,15 +1701,15 @@ int fl_handle(const XEvent& thisevent)
       event = FL_KEYDOWN;
 
       int len;
-      if (fl_xim_ic) {
+      if (Fl_X11_Screen_Driver::xim_ic) {
         Status status;
-        len = XUtf8LookupString(fl_xim_ic, (XKeyPressedEvent *)&xevent.xkey,
+        len = XUtf8LookupString(Fl_X11_Screen_Driver::xim_ic, (XKeyPressedEvent *)&xevent.xkey,
                              kp_buffer, kp_buffer_len, &keysym, &status);
 
         while (status == XBufferOverflow && kp_buffer_len < 50000) {
           kp_buffer_len = kp_buffer_len * 5 + 1;
           kp_buffer = (char*)realloc(kp_buffer, kp_buffer_len);
-          len = XUtf8LookupString(fl_xim_ic, (XKeyPressedEvent *)&xevent.xkey,
+          len = XUtf8LookupString(Fl_X11_Screen_Driver::xim_ic, (XKeyPressedEvent *)&xevent.xkey,
                              kp_buffer, kp_buffer_len, &keysym, &status);
         }
         keysym = fl_KeycodeToKeysym(fl_display, keycode, 0);
@@ -1925,8 +1982,8 @@ int fl_handle(const XEvent& thisevent)
 #endif // FLTK_CONSOLIDATE_MOTION
     in_a_window = true;
     { XIMStyles *xim_styles = NULL;
-      if(!fl_xim_im || XGetIMValues(fl_xim_im, XNQueryInputStyle, &xim_styles, NULL, NULL)) {
-        fl_init_xim();
+      if(!Fl_X11_Screen_Driver::xim_im || XGetIMValues(Fl_X11_Screen_Driver::xim_im, XNQueryInputStyle, &xim_styles, NULL, NULL)) {
+        Fl_X11_Screen_Driver::init_xim();
       }
       if (xim_styles) XFree(xim_styles);
     }
@@ -2063,7 +2120,7 @@ void Fl_X11_Window_Driver::resize(int X,int Y,int W,int H) {
     if (shown()) {pWindow->redraw();}
   } else {
     x(X); y(Y);
-    if (fl_xim_win && Fl::focus()) {
+    if (Fl_X11_Screen_Driver::xim_win && Fl::focus()) {
       // Force the Input Method auxiliary window to move too.
       Fl::focus()->handle(FL_FOCUS);
       fl_set_spot(fl_font(), fl_size(), Fl::focus()->x(), Fl::focus()->y() + fl_size(), Fl::focus()->w(), Fl::focus()->h(), NULL);

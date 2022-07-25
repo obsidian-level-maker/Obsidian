@@ -1982,17 +1982,6 @@ function Room_border_up()
         else
           A.fence_up_type = "rail"
         end
-
-        if A.room 
-        and not A.room.fence_height_type
-        and A.room.is_outdoor then
-          if rand.odds(10) then
-            A.room.fence_height_type = "max_floor"
-          else
-            A.room.fence_height_type = "per_floor"
-          end
-        end
-
       end
     end
 
@@ -2134,6 +2123,10 @@ function Room_choose_kind(R, last_R)
 
   if not LEVEL.has_outdoors then
     out_prob = 0
+  end
+
+  if last_R and last_R.is_street then
+    out_prob = out_prob * 0.25
   end
 
   local is_outdoor = rand.odds(out_prob)
@@ -2326,8 +2319,8 @@ function Room_choose_size(R, not_big)
   end
 
   if R.is_street then
-    R.size_limit = (LEVEL.map_W*LEVEL.map_H)*1.3
-    R.floor_limit = EXTREME_H
+    R.size_limit = (LEVEL.map_W*LEVEL.map_H) * 1.3
+    R.floor_limit = tonumber((LEVEL.map_W*LEVEL.map_H) * 0.3) -- number to be recalculated
     R.is_big = true
     R.is_outdoor = true
   end

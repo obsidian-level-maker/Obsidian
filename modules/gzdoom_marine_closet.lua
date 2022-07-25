@@ -1549,8 +1549,7 @@ OB_MODULES["gzdoom_marine_closets"] =
     all_done = MARINE_CLOSET_TUNE.all_done
   },
 
-  tooltip=_(
-    "[WIP/Experimental]This module adds customizable closets to the map filled with friendly AI marines."),
+  tooltip=_("[WIP/Experimental]This module adds customizable closets to the map filled with friendly AI marines."),
 
   options =
   {
@@ -1565,8 +1564,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       max = 100,
       increment = 1,
       default = 100,
-      presets = "",
-      tooltip = "Chance per map of marine closets spawning at all. E.G. at 50% theres 50% chance of each map being empty of marine closets.",
+      tooltip = _("Chance per map of marine closets spawning at all. E.G. at 50% theres 50% chance of each map being empty of marine closets."),
       gap = 1,
       randomize_group = "monsters"
     },
@@ -1577,13 +1575,11 @@ OB_MODULES["gzdoom_marine_closets"] =
       label = _("Minimum closets"),
       priority = 156,
       valuator = "slider",
-      units = "",
       min = 1,
       max = 10,
       increment = 1,
       default = 1,
-      presets = "",
-      tooltip = "Sets least amount of closets that can spawn per map.",
+      tooltip = _("Sets least amount of closets that can spawn per map."),
       randomize_group = "monsters"
     },
 
@@ -1593,13 +1589,11 @@ OB_MODULES["gzdoom_marine_closets"] =
       label = _("Maximum closets"),
       priority = 155,
       valuator = "slider",
-      units = "",
       min = 1,
       max = 10,
       increment = 1,
       default = 2,
-      presets = "",
-      tooltip = "Sets most amount of closets that can spawn per map.",
+      tooltip = _("Sets most amount of closets that can spawn per map."),
       randomize_group = "monsters"
     },
 
@@ -1610,11 +1604,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       priority = 154,
       choices = MARINE_CLOSET_TUNE.SCALING,
       default = "default",
-      tooltip = "Affects how min and max work for closet count:\n\n" ..
-      "Random: Random range\n" ..
-      "Progressive: Goes from min to max through entire game\n" ..
-      "Episodic: Goes from min to max through episode\n" ..
-      "Regressive/Regressive episodic: Goes from max to min through game or episode" ,
+      tooltip = _("Affects how min and max work for closet count:\n\nRandom: Random range\nProgressive: Goes from min to max through entire game\nEpisodic: Goes from min to max through episode\nRegressive/Regressive episodic: Goes from max to min through game or episode"),
       gap = 1,
       randomize_group = "monsters"
     },
@@ -1625,13 +1615,11 @@ OB_MODULES["gzdoom_marine_closets"] =
       label = _("Minimum marines"),
       priority = 153,
       valuator = "slider",
-      units = "",
       min = 1,
       max = 10,
       increment = 1,
       default = 1,
-      presets = "",
-      tooltip = "Sets least amount of marines that can spawn per closet.",
+      tooltip = _("Sets least amount of marines that can spawn per closet."),
       randomize_group = "monsters"
     },
 
@@ -1641,13 +1629,11 @@ OB_MODULES["gzdoom_marine_closets"] =
       label = _("Maximum marines"),
       priority = 152,
       valuator = "slider",
-      units = "",
       min = 1,
       max = 10,
       increment = 1,
       default = 5,
-      presets = "",
-      tooltip = "Sets most amount of marines that can spawn per closet.",
+      tooltip = _("Sets most amount of marines that can spawn per closet."),
       randomize_group = "monsters"
     },
 
@@ -1657,13 +1643,11 @@ OB_MODULES["gzdoom_marine_closets"] =
       label = _("Marine Health"),
       priority = 151,
       valuator = "slider",
-      units = "",
       min = 25,
       max = 2000,
       increment = 25,
       default = 100,
-      presets = "",
-      tooltip = "Influences how much damage marines can take before dying.",
+      tooltip = _("Influences how much damage marines can take before dying."),
       randomize_group = "monsters"
     },
 
@@ -1674,11 +1658,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       priority = 150,
       choices = MARINE_CLOSET_TUNE.SCALING,
       default = "default",
-      tooltip = "Affects how min and max work for marine count:\n\n" ..
-      "Random: Random range\n" ..
-      "Progressive: Goes from min to max through entire game\n" ..
-      "Episodic: Goes from min to max through episode\n" ..
-      "Regressive/Regressive episodic: Goes from max to min through game or episode" ,
+      tooltip = _("Affects how min and max work for marine count:\n\nRandom: Random range\nProgressive: Goes from min to max through entire game\nEpisodic: Goes from min to max through episode\nRegressive/Regressive episodic: Goes from max to min through game or episode"),
       randomize_group = "monsters"
     },
 
@@ -1688,13 +1668,12 @@ OB_MODULES["gzdoom_marine_closets"] =
       label = _("Level Min Position"),
       priority = 93,
       valuator = "slider",
-      units = "",
       min = 0,
       max = 1,
       increment = 0.05,
-      default = 0.5,
-      presets = "0:0 (Start Room), " ..
-                "1:1 (Exit Room), ",
+      default = 0,
+      tooltip = _("Affects how early in the level a closet can be found."),
+      presets = _("0:0 (Start Room),1:1 (Exit Room)"),
       randomize_group = "monsters"
     },
 
@@ -1704,13 +1683,12 @@ OB_MODULES["gzdoom_marine_closets"] =
       label = _("Level Max Position"),
       priority = 92,
       valuator = "slider",
-      units = "",
       min = 0,
       max = 1,
       increment = 0.05,
-      default = 0.5,
-      presets = "0:0 (Start Room), " ..
-                "1:1 (Exit Room), ",
+      default = 1,
+      tooltip = _("Affects how late in the level a closet can be found."),
+      presets = _("0:0 (Start Room),1:1 (Exit Room)"),
       randomize_group = "monsters"
     },
 
@@ -1721,14 +1699,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       priority = 91,
       choices = MARINE_CLOSET_TUNE.TECH,
       default = "mid",
-      tooltip = "Influences weapons that marines spawn with:\n\n" ..
-      "Very Low tech: Clearing demonic invasion with nothing but pistols and harsh language\n" ..
-      "Low tech: Pistols, with some rare chainguns and shotguns\n" ..
-      "Mid tech: Shotguns/Chainguns with some rare pistols, super shotguns, rocket launchers and plasma rifles\n" ..
-      "High tech: Rocket launchers/Plasma rifles with some rare BFGs, super shotguns and chainguns\n" ..
-      "Mix it up: Any weapon goes, let the dice decide!\n" ..
-      "BFG Fiesta: BFG only, cyberdemons beware!\n" ..
-      "Progressive: Marines start with pistols and get more powerful weapons through episode/megawad",
+      tooltip = _("Influences weapons that marines spawn with:\n\nVery Low tech: Clearing demonic invasion with nothing but pistols and harsh language\nLow tech: Pistols, with some rare chainguns and shotguns\nMid tech: Shotguns/Chainguns with some rare pistols, super shotguns, rocket launchers and plasma rifles\nHigh tech: Rocket launchers/Plasma rifles with some rare BFGs, super shotguns and chainguns\nMix it up: Any weapon goes, let the dice decide!\nBFG Fiesta: BFG only, cyberdemons beware!\nProgressive: Marines start with pistols and get more powerful weapons through episode/megawad"),
       randomize_group = "monsters"
     },
 
@@ -1739,11 +1710,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       priority = 88,
       choices = MARINE_CLOSET_TUNE.WAKER,
       default = "sight",
-      tooltip = "Influences the trigger that activates marines.\n\n" ..
-      "Sight: Marine closet activates once it can 'see' the player.\n" ..
-      "Range: Closet activates when player is close enough, even if behind wall.\n" ..
-      "Close Range: same as range except requires player to be really really close.\n" ..
-      "Map Start: Closets are active on map start.",
+      tooltip = _("Influences the trigger that activates marines.\n\nSight: Marine closet activates once it can 'see' the player.\nRange: Closet activates when player is close enough, even if behind wall.\nClose Range: same as range except requires player to be really really close.\nMap Start: Closets are active on map start."),
       gap = 1,
       randomize_group = "monsters"
     },
@@ -1755,7 +1722,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       priority = 87,
       choices = MARINE_CLOSET_TUNE.COLORS,
       default = "MarAI1",
-      tooltip = "Lets you choose the color of marines, including option for random color per marine.",
+      tooltip = _("Lets you choose the color of marines, including option for random color per marine."),
       randomize_group = "monsters"
     },
 
@@ -1766,9 +1733,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       priority = 86,
       choices = MARINE_CLOSET_TUNE.FRIENDLYFIRE,
       default = "no",
-      tooltip = "By default marines do no damage to player. However that means their use their own version of puffs and projectiles.\n" ..
-      "If this is enabled marines can damage player and original puffs and projectiles are used making them affected by mods that replace those.\n"..
-      "Additionally if self damage variant is chosen marines can still get hurt by exploding barrels and such",
+      tooltip = _("By default marines do no damage to player. However that means their use their own version of puffs and projectiles.\nIf this is enabled marines can damage player and original puffs and projectiles are used making them affected by mods that replace those.\nAdditionally if self damage variant is chosen marines can still get hurt by exploding barrels and such"),
       randomize_group = "monsters"
     },
 
@@ -1779,7 +1744,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       priority = 85,
       valuator = "button",
       default = 0,
-      tooltip = "If enabled, marines will never take damage from player owned sources.",
+      tooltip = _("If enabled, marines will never take damage from player owned sources."),
     },
 
 
@@ -1789,9 +1754,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       priority = 84,
       choices = MARINE_CLOSET_TUNE.SPRITES,
       default = "no",
-      tooltip = "By default marines use default player sprite.\n" ..
-      "If this is enabled, marines will use special sprites according to weapon they carry.\n" ..
-      "With merge option sprites will be merged into oblige wad, otherwise they need to be loaded separately.",
+      tooltip = _("By default marines use default player sprite.\nIf this is enabled, marines will use special sprites according to weapon they carry.\nWith merge option sprites will be merged into oblige wad, otherwise they need to be loaded separately."),
       gap = 1
     },
 
@@ -1802,7 +1765,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       priority = 83,
       choices = MARINE_CLOSET_TUNE.QUANTITY,
       default = "default",
-      tooltip = "Influences amount of monsters in rooms with a marine closet.",
+      tooltip = _("Influences amount of monsters in rooms with a marine closet."),
       randomize_group = "monsters"
     },
 
@@ -1813,7 +1776,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       priority = 82,
       choices = MARINE_CLOSET_TUNE.STRENGTH,
       default = "default",
-      tooltip = "If set, this strength setting is used in the room with marine closet instead of normal one.",
+      tooltip = _("If set, this strength setting is used in the room with marine closet instead of normal one."),
       gap = 1,
       randomize_group = "monsters"
     },
@@ -1825,7 +1788,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       priority = 81,
       valuator = "button",
       default = 1,
-      tooltip = "Influences whether marines are as accurate and rapid firing as player, or are weaker.",
+      tooltip = _("Influences whether marines are as accurate and rapid firing as player, or are weaker."),
       randomize_group = "monsters"
     },
 
@@ -1836,8 +1799,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       priority = 80,
       valuator = "button",
       default = 0,
-      tooltip = "By default marines try to follow the player if they have nothing else to do but would otherwise prioritize chasing enemies, and are also unable to follow player through rough terrain.\n" ..
-      "If this is enabled marines will much harder prioritize following player and will teleport if they are too far away.",
+      tooltip = _("By default marines try to follow the player if they have nothing else to do but would otherwise prioritize chasing enemies, and are also unable to follow player through rough terrain.\nIf this is enabled marines will much harder prioritize following player and will teleport if they are too far away."),
     },
 
 
@@ -1846,12 +1808,11 @@ OB_MODULES["gzdoom_marine_closets"] =
       label = _("Follow Distance"),
       priority = 79,
       valuator = "slider",
-      units = "",
       min = 500,
       max = 5000,
       increment = 100,
       default = 2000,
-      tooltip = "If marines are followers, the maximum allowed distance they are allowed to stray before being teleported to the player.",
+      tooltip = _("If marines are followers, the maximum allowed distance they are allowed to stray before being teleported to the player."),
     },
 
 
@@ -1861,7 +1822,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       priority = 78,
       valuator = "button",
       default = 0,
-      tooltip = "Allows or disallows marine closets to spawn on gotchas and boss generator levels.",
+      tooltip = _("Allows or disallows marine closets to spawn on gotchas and boss generator levels."),
     },
 
 
@@ -1871,7 +1832,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       priority = 77,
       valuator = "button",
       default = 0,
-      tooltip = "If enabled, will print a message in message log whenever a marine dies.",
+      tooltip = _("If enabled, will print a message in message log whenever a marine dies."),
     },
 
 
@@ -1881,7 +1842,7 @@ OB_MODULES["gzdoom_marine_closets"] =
       priority = 76,
       valuator = "button",
       default = 0,
-      tooltip = "If enabled, allowed marine closets to be built in secret rooms."
+      tooltip = _("If enabled, allowed marine closets to be built in secret rooms.")
     }
   },
 }

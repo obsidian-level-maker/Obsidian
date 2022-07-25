@@ -655,10 +655,10 @@ actor AssIsHell : Inventory
 
 function ARMAETUS_EPIC_TEXTURES.setup(self)
 
-  ARMAETUS_EPIC_TEXTURES.put_new_materials()
   PARAM.obsidian_resource_pack_active = true
   module_param_up(self)
-  
+  ARMAETUS_EPIC_TEXTURES.put_new_materials()  
+
 end
 
 function ARMAETUS_EPIC_TEXTURES.get_levels_after_themes()
@@ -814,16 +814,20 @@ function ARMAETUS_EPIC_TEXTURES.generate_environment_themes()
 
   -- covers hallways only for now
   -- MSSP-TODO: revise this code to be more generic for future expansion
-  if LEVEL.theme_name == "hell" then
-    THEME.wide_halls.hellcata = 50 * style_sel("liquids", 0.3, 0.7, 1.2, 1.5)
-                                  * style_sel("traps", 0.3, 0.7, 1.2, 1.5)
-  elseif LEVEL.theme_name == "tech" or LEVEL.theme_name == "urban" then
-    THEME.wide_halls.sewers = 50 * style_sel("liquids", 0.3, 0.7, 1.2, 1.5)
+  if THEME.wide_halls then
+    if LEVEL.theme_name == "hell" then
+      THEME.wide_halls.hellcata = 50 * style_sel("liquids", 0.3, 0.7, 1.2, 1.5)
+                                    * style_sel("traps", 0.3, 0.7, 1.2, 1.5)
+    elseif LEVEL.theme_name == "tech" or LEVEL.theme_name == "urban" then
+      THEME.wide_halls.sewers = 50 * style_sel("liquids", 0.3, 0.7, 1.2, 1.5)
+    end
   end
 
   if PARAM.bool_jump_crouch == 0 then
-    GAME.THEMES["hell"].wide_halls.organs = 0
-    GAME.THEMES["hell"].wide_halls.conveyorh = 0
+    if THEME.wide_halls then
+      THEME.wide_halls.organs = 0
+      THEME.wide_halls.conveyorh = 0
+    end
   end
 
   -- initialize default tables
@@ -1087,7 +1091,7 @@ OB_MODULES["armaetus_epic_textures"] =
     all_done = ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in
   },
 
-  tooltip = "If enabled, adds textures and content from the Obsidian Epic Resource Pack, which also includes new exclusive prefabs.",
+  tooltip = _("If enabled, adds textures and content from the Obsidian Epic Resource Pack, which also includes new exclusive prefabs."),
 
   options =
   {
@@ -1097,7 +1101,7 @@ OB_MODULES["armaetus_epic_textures"] =
       label = _("Custom Liquids"),
       valuator = "button",
       default = 1,
-      tooltip = "Utilize custom liquid flats or not.",
+      tooltip = _("Utilize custom liquid flats or not."),
       priority=4
     },
 
@@ -1107,11 +1111,7 @@ OB_MODULES["armaetus_epic_textures"] =
       label = _("Custom Trees"),
       choices = ARMAETUS_EPIC_TEXTURES.SOUCEPORT_CHOICES,
       default = "zs",
-      tooltip =
-        "Adds custom flat-depedendent tree sprites into the game. Currently only replaces " ..
-        "trees on specific grass flats and will be expanded in the future to accomnodate " ..
-        "custom Textures and more. If you are playing a mod that already does its own trees, " ..
-        "it may be better to leave this off.",
+      tooltip = _("Adds custom flat-depedendent tree sprites into the game. Currently only replaces trees on specific grass flats and will be expanded in the future to accomnodate custom Textures and more. If you are playing a mod that already does its own trees, it may be better to leave this off."),
       priority=3
     },
 
@@ -1121,9 +1121,7 @@ OB_MODULES["armaetus_epic_textures"] =
       label = _("Environment Theme"),
       choices = ARMAETUS_EPIC_TEXTURES.ENVIRONMENT_THEME_CHOICES,
       default = "random",
-      tooltip =
-        "Influences outdoor environments with different textures such as " ..
-        "desert sand or icey snow.",
+      tooltip = _("Influences outdoor environments with different textures such as desert sand or icey snow."),
       priority=2,
     },
 
@@ -1133,10 +1131,7 @@ OB_MODULES["armaetus_epic_textures"] =
       label = _("Merge Textures WAD"),
       valuator = "button",
       default = 1,
-      tooltip =
-        "Allows the trimming down of resulting WAD by not merging the custom texture WAD.\n\n" ..
-        "This will require you to extract and load up the WAD manually in your preferred sourceport installation.\n\n" ..
-        "This is the preferrable option for multiplayer situations and server owners and have each client obtain a copy of the texture pack instead.\n",
+      tooltip = _("Allows the trimming down of resulting WAD by not merging the custom texture WAD.\n\nThis will require you to extract and load up the WAD manually in your preferred sourceport installation.\n\nThis is the preferrable option for multiplayer situations and server owners and have each client obtain a copy of the texture pack instead.\n"),
       priority=1
     },
 
@@ -1146,8 +1141,7 @@ OB_MODULES["armaetus_epic_textures"] =
       label = _("Include Brightmaps"),
       valuator = "button",
       default = 1,
-      tooltip = "Allows merging Obsidian Textures brightmaps into the WAD. Does not include brightmaps for" ..
-        " base resources from any of the games.",
+      tooltip = _("Allows merging Obsidian Textures brightmaps into the WAD. Does not include brightmaps for base resources from any of the games."),
       priority = 0
     },
 
@@ -1157,8 +1151,7 @@ OB_MODULES["armaetus_epic_textures"] =
       label = _("No Hell Environment Themes"),
       valuator = "button",
       default = 0,
-      tooltip = "Renders hell theme maps to never use snow or desert environment themes regardless" ..
-        " of theme assignment.",
+      tooltip = _("Renders hell theme maps to never use snow or desert environment themes regardless of theme assignment."),
       priority=-1
     }
   }

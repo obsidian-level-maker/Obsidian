@@ -2,8 +2,9 @@
 //  Game Panel
 //----------------------------------------------------------------
 //
-//  Oblige Level Maker
+//  OBSIDIAN Level Maker
 //
+//  Copyright (C) 2021-2022 The OBSIDIAN Team
 //  Copyright (C) 2006-2017 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
@@ -165,7 +166,7 @@ void UI_Game::callback_Theme(Fl_Widget *w, void *data) {
 
 void UI_Game::callback_GameHelp(Fl_Widget *w, void *data) {
     fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window *win = new Fl_Window(640, 480, "Engine");
+    Fl_Window *win = new Fl_Window(640, 480, _("Game"));
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
     disp->buffer(buff);
@@ -174,16 +175,12 @@ void UI_Game::callback_GameHelp(Fl_Widget *w, void *data) {
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-    buff->text(
-        "The following games will have gameplay that differs from the original IWADs:\n\n\
-Hexen: Game progression is linear and episodic. There are no hubs present. The Death Wyvern is not present in the \
-monster table due to the infeasibility of scripting and flight pathing.\n\n\
-Strife: Quests/multiple endings not yet implemented. Progression is linear and game will end on last level generated.");
+    buff->text(_("The following games will have gameplay that differs from the original IWADs:\n\nHexen: Game progression is linear and episodic. There are no hubs present. The Death Wyvern is not present in the monster table due to the infeasibility of scripting and flight pathing.\n\nStrife: Quests/multiple endings not yet implemented. Progression is linear and game will end on last level generated."));
 }
 
 void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
     fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window *win = new Fl_Window(640, 480, "Engine");
+    Fl_Window *win = new Fl_Window(640, 480, _("Engine"));
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
     disp->buffer(buff);
@@ -192,20 +189,12 @@ void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-    buff->text(
-        "Available Engines:\n\n\
-ZDoom Family: L/G/ZDoom, Zandronum, and similar engines that use ZDoom as a base.\n\n\
-Vanilla DOOM: Doom with its original engine limits. This option will use SLUMP as the map builder.\n\n\
-Limit Removing: Any engine that raises the limits of the original game to prevent crashes.\n\n\
-BOOM Compatible: Engines compatible with Boom that are able to use the entire suite of Boom types and features.\n\n\
-PrBoom Compatible: Boom-compatible, but also capable of using extended nodes.\n\n\
-EDGE-Classic: Boom compatible, plus additional specials and other advanced features.\n\n\
-Eternity: Software renderer only, but with advanced features such as UDMF. Support is currently experimental.");
+    buff->text(_("Available Engines:\n\nZDoom Family: L/G/ZDoom, Zandronum, and similar engines that use ZDoom as a base.\n\nVanilla DOOM: Doom with its original engine limits. This option will use SLUMP as the map builder.\n\nLimit Removing: Any engine that raises the limits of the original game to prevent crashes.\n\nBOOM Compatible: Engines compatible with Boom that are able to use the entire suite of Boom types and features.\n\nPrBoom Compatible: Boom-compatible, but also capable of using extended nodes.\n\nEDGE-Classic: Boom compatible, plus additional specials and other advanced features.\n\nEternity: Software renderer only, but with advanced features such as UDMF. Support is currently experimental."));
 }
 
 void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
     fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window *win = new Fl_Window(640, 480, "Length");
+    Fl_Window *win = new Fl_Window(640, 480, _("Length"));
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
     disp->buffer(buff);
@@ -214,17 +203,12 @@ void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-    buff->text(
-        "Available WAD Lengths:\n\n\
-Single Level: One map.\n\n\
-A Few Maps: Four maps.\n\n\
-One Episode: The length of an episode in the original IWAD. For Doom 2, which normally doesn't have episodes, this is 11 maps.\n\n\
-Full Game: The length of a full game in the original IWAD.");
+    buff->text(_("Available WAD Lengths:\n\nSingle Level: One map.\n\nA Few Maps: Four maps.\n\nOne Episode: The length of an episode in the original IWAD. For Doom 2, which normally doesn't have episodes, this is 11 maps.\n\nFull Game: The length of a full game in the original IWAD."));
 }
 
 void UI_Game::callback_ThemeHelp(Fl_Widget *w, void *data) {
     fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window *win = new Fl_Window(640, 480, "Theme");
+    Fl_Window *win = new Fl_Window(640, 480, _("Theme"));
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
     disp->buffer(buff);
@@ -233,14 +217,7 @@ void UI_Game::callback_ThemeHelp(Fl_Widget *w, void *data) {
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-    buff->text(
-        "Available Themes:\n\n\
-Original: Follows the theme progression of the original IWAD.\n\n\
-Episodic: Each episode follows a single randomly chose theme.\n\n\
-Bit Mixed: Theme will change every few levels.\n\n\
-Jumbled Up: Level themes are purely random.\n\n\
-Psychedelic: Trippy.\n\n\
-Other themes listed are game-specific.");
+    buff->text(_("Available Themes:\n\nOriginal: Follows the theme progression of the original IWAD.\n\nEpisodic: Each episode follows a single randomly chose theme.\n\nBit Mixed: Theme will change every few levels.\n\nJumbled Up: Level themes are purely random.\n\nPsychedelic: Trippy.\n\nOther themes listed are game-specific."));
 }
 
 void UI_Game::Locked(bool value) {

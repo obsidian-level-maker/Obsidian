@@ -74,19 +74,13 @@ OB_MODULES["hacx_mon_control"] =
       name = "float_thug",
       label = _("Thug"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Thugs."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -94,19 +88,13 @@ OB_MODULES["hacx_mon_control"] =
       name = "float_android",
       label = _("Android"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Androids."),  
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -114,19 +102,13 @@ OB_MODULES["hacx_mon_control"] =
       name = "float_stealth",
       label = _("Stealth Buzzer"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Stealth Buzzers."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -134,19 +116,13 @@ OB_MODULES["hacx_mon_control"] =
       name = "float_roam_mine",
       label = _("Roaming Mine"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Roaming Mines."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -154,19 +130,13 @@ OB_MODULES["hacx_mon_control"] =
       name = "float_phage",
       label = _("Phage"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Phages."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -174,19 +144,13 @@ OB_MODULES["hacx_mon_control"] =
       name = "float_buzzer",
       label = _("Buzzer"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Buzzers."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -194,19 +158,13 @@ OB_MODULES["hacx_mon_control"] =
       name = "float_i_c_e",
       label = _("ICE"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of ICEs."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -214,19 +172,13 @@ OB_MODULES["hacx_mon_control"] =
       name = "float_d_man",
       label = _("D-Man"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of D-Men."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 	 
@@ -234,19 +186,13 @@ OB_MODULES["hacx_mon_control"] =
       name = "float_monstruct",
       label = _("Monstruct"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Monstructs."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 	 
@@ -254,19 +200,13 @@ OB_MODULES["hacx_mon_control"] =
       name = "float_majong7",
       label = _("Majong 7"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Majong 7s."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 	 
@@ -274,19 +214,13 @@ OB_MODULES["hacx_mon_control"] =
       name = "float_terminatrix",
       label = _("Terminatrix"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Terminatrixes."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 	 
@@ -294,19 +228,13 @@ OB_MODULES["hacx_mon_control"] =
       name = "float_thorn",
       label = _("Thorn"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Thorns."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      },
 
@@ -314,19 +242,13 @@ OB_MODULES["hacx_mon_control"] =
       name = "float_mecha",
       label = _("Mecha Maniac"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 20,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None at all)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "20:20 (INSANE),",
+      nan = "Default",
+      tooltip = _("Control the amount of Mecha Maniacs."), 
+      presets = _("0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"),
       randomize_group = "monsters"
      }
   },
@@ -398,19 +320,13 @@ OB_MODULES["hacx_weapon_control"] =
       name = "float_reznator",
       label = _("Hoig Reznator"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the likelihood of finding the Hoig Reznator."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 
@@ -418,39 +334,27 @@ OB_MODULES["hacx_weapon_control"] =
       name = "float_tazer",
       label = _("Tazer"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default", 
+      tooltip = _("Control the amount of Tazers."),
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 
      {
-      name = "float_cyrogun",
-      label = _("Cyrogun"),
+      name = "float_cryogun",
+      label = _("Cryogun"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Cryoguns."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 
@@ -458,19 +362,13 @@ OB_MODULES["hacx_weapon_control"] =
       name = "float_fu2",
       label = _("Uzi"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Uzis."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 	 
@@ -478,39 +376,27 @@ OB_MODULES["hacx_weapon_control"] =
       name = "float_zooka",
       label = _("Photon 'Zooka"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Photon 'Zookas."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 	 
      {
       name = "float_antigun",
-      label = _("Anti-gun"),
+      label = _("Anti-Gun"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Anti-Guns."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 	 
@@ -518,19 +404,13 @@ OB_MODULES["hacx_weapon_control"] =
       name = "float_nuker",
       label = _("Nuker"),
       valuator = "slider",
-      units = "",
       min = 0,
       max = 10,
       increment = .02,
       default = "Default",
-      nan = "Default,", 
-      presets = "0:0 (None)," ..
-      ".02:0.02 (Scarce)," ..
-      ".14:0.14 (Less)," ..
-      ".5:0.5 (Plenty)," ..
-      "1.2:1.2 (More)," ..
-      "3:3 (Heaps)," ..
-      "10:10 (I LOVE IT),",
+      nan = "Default",
+      tooltip = _("Control the amount of Nukers."), 
+      presets = _("0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"),
       randomize_group = "pickups"
      },
 
@@ -538,10 +418,7 @@ OB_MODULES["hacx_weapon_control"] =
       name="weapon_prefs",
       label=_("Weapon Preferences"),
       choices=CTL_HACX.WEAPON_PREF_CHOICES,
-      tooltip="Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\n" ..
-      "Normal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\n" ..
-      "Vanilla: Vanilla Oblige-style preferences. Increases 'Zookas if the map has more ICEs, D-Mans, or roaming mines. \n\n" ..
-      "NONE: No preferences at all. For those who like to live life dangerously with ICEs and only 'Zookas.",
+      tooltip = _("Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\nNormal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\nVanilla: Vanilla Oblige-style preferences. Increases 'Zookas if the map has more ICEs, D-Mans, or roaming mines. \n\nNONE: No preferences at all. For those who like to live life dangerously with ICEs and only 'Zookas."),
       default="normal",
     },
   },

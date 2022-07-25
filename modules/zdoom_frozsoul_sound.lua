@@ -257,13 +257,10 @@ OB_MODULES["zdoom_ambient_sound"] =
       name = "snd_start_id",
       label=("DoomEdNum Offset"),
       choices=ZDOOM_SOUND.ACTOR_ID_OFFSET_CHOICES,
-      tooltip = "Selects the starting thing ID for generating ambient sound actors. Use only if " ..
-      "you are playing a mod using conflicting Editor Numbers. If you don't know what this is " ..
-      "this setting is best left as-is.",
+      tooltip = _("Selects the starting thing ID for generating ambient sound actors. Use only if you are playing a mod using conflicting Editor Numbers. If you don't know what this is this setting is best left as-is."),
       default = "20000",
     },
   },
 
-  tooltip = "Adds ambient sound things to fabs, room themes, and environments (WIP)." ..
-  "Needs an accompanying sound pack containing corresponding sound files to be included with your Doom launcher.",
+  tooltip = _("Adds ambient sound things to fabs, room themes, and environments (WIP). Needs an accompanying sound pack containing corresponding sound files to be included with your Doom launcher."),
 }
