@@ -31,6 +31,8 @@ void Trans_Init();
 
 void Trans_SetLanguage();
 
+void Trans_UnInit();
+
 // these are for the UI:
 std::string Trans_GetAvailCode(int idx);
 std::string Trans_GetAvailLanguage(int idx);

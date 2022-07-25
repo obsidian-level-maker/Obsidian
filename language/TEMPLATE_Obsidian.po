@@ -9042,7 +9042,7 @@ msgid "AUTO"
 msgstr ""
 
 #: source_files/obsidian_main/m_options.cc:299
-msgid "Obsidian will now close to apply language changes.\nObsidian will be in your selected language when you restart the program."
+msgid "Obsidian will now restart to apply language changes.\nObsidian will be in your selected language after restarting."
 msgstr ""
 
 #: source_files/obsidian_main/m_options.cc:324

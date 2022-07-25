@@ -296,9 +296,11 @@ class UI_OptionsWin : public Fl_Window {
                 t_language = "AUTO";
             }
         }
-        fl_alert("%s", _("Obsidian will now close to apply language changes.\nObsidian will be in your selected language when you restart the program."));
+        fl_alert("%s", _("Obsidian will now restart to apply language changes.\nObsidian will be in your selected language after restarting."));
 
-        main_action = MAIN_QUIT;
+        Trans_UnInit();
+
+        main_action = MAIN_RESTART;
 
         that->want_quit = true;
     }
