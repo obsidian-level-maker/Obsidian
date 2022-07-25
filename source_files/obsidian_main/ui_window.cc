@@ -75,15 +75,16 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     menu_bar->box(box_style);
     menu_bar->textfont(font_style);
     menu_bar->textsize(menu_bar->textsize() * .90);
-    menu_bar->add("File/Options", FL_F + 4, menu_do_options);
-    menu_bar->add("File/Theme", FL_F + 7, menu_do_theme);
-    menu_bar->add("File/Set Seed", FL_F + 5, menu_do_edit_seed);
-    menu_bar->add("File/Config Manager", FL_F + 9, menu_do_manage_config);
-    menu_bar->add("Help/About", FL_F + 1, menu_do_about);
-    menu_bar->add("Help/View Logs", FL_F + 6, menu_do_view_logs);
-    menu_bar->add("Help/ ", 0, 0, NULL, FL_MENU_INACTIVE);
-    menu_bar->add("Help/Tutorial", 0, menu_do_tutorial);
-    menu_bar->add("Surprise Me/Go", FL_F + 8, main_win_surprise_go_CB);
+    menu_bar->add(_("File/Options"), FL_F + 4, menu_do_options);
+    menu_bar->add(_("File/Theme"), FL_F + 7, menu_do_theme);
+    menu_bar->add(_("File/Set Seed"), FL_F + 5, menu_do_edit_seed);
+    menu_bar->add(_("File/Config Manager"), FL_F + 9, menu_do_manage_config);
+    menu_bar->add(_("Help/About"), FL_F + 1, menu_do_about);
+    menu_bar->add(_("Help/View Logs"), FL_F + 6, menu_do_view_logs);
+    menu_bar->add(_("Help/Glossary"), 0, menu_do_glossary);
+    menu_bar->add(_("Help/ "), 0, 0, NULL, FL_MENU_INACTIVE);
+    menu_bar->add(_("Help/Tutorial"), 0, menu_do_tutorial);
+    menu_bar->add(_("Surprise Me/Go"), FL_F + 8, main_win_surprise_go_CB);
     menu_bar->selection_color(SELECTION);
 
     sizing_group = new Fl_Group(0, kf_h(22), W, H - kf_h(22));
@@ -148,6 +149,8 @@ void UI_MainWin::menu_do_about(Fl_Widget *w, void *data) { DLG_AboutText(); }
 void UI_MainWin::menu_do_tutorial(Fl_Widget *w, void *data) { DLG_Tutorial(); }
 
 void UI_MainWin::menu_do_view_logs(Fl_Widget *w, void *data) { DLG_ViewLogs(); }
+
+void UI_MainWin::menu_do_glossary(Fl_Widget *w, void *data) { DLG_ViewGlossary(); }
 
 void UI_MainWin::menu_do_options(Fl_Widget *w, void *data) {
     DLG_OptionsEditor();

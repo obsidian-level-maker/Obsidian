@@ -711,5 +711,19 @@ void DLG_ViewLogs(void) {
     delete log_viewer;
 }
 
+void DLG_ViewGlossary(void) {
+    Fl_Window *win = new Fl_Window(640, 480, _("OBSIDIAN Glossary"));
+    Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+    Fl_Text_Display *disp =
+        new Fl_Text_Display(20, 20, 640 - 40, 480 - 40, NULL);
+    disp->buffer(buff);
+    disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+    win->resizable(*disp);
+    win->hotspot(0, 0, 0);
+    win->set_modal();
+    win->show();
+    buff->text(_("This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."));
+}
+
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

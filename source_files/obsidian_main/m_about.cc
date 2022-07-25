@@ -29,6 +29,7 @@
 class UI_About : public Fl_Window {
    public:
     bool want_quit;
+    const char *Text;
 
    public:
     UI_About(int W, int H, const char *label = NULL);
@@ -66,20 +67,8 @@ class UI_About : public Fl_Window {
         that->want_quit = true;
     }
 
-    static const char *Text;
     static const char *URL;
 };
-
-const char *UI_About::Text =
-    N_("OBSIDIAN is a random level generator\n"
-       "for classic FPS games like DOOM.\n"
-       "It is a continuation of the OBLIGE Level Maker\n"
-       "Copyright (C) 2006-2017 Andrew Apted, et al.\n"
-       "This program is free software, and may be\n"
-       "distributed and modified under the terms of\n"
-       "the GNU General Public License.\n"
-       "There is ABSOLUTELY NO WARRANTY!\n"
-       "Use at your OWN RISK!");
 
 const char *UI_About::URL = OBSIDIAN_WEBSITE;
 
@@ -96,7 +85,7 @@ UI_About::UI_About(int W, int H, const char *label)
     int cy = kf_h(6);
 
     Fl_Box *box = new Fl_Box(0, cy, W, kf_h(50), "");
-    box->copy_label(fmt::format("{} {}\n\"{}\" Build {}", _(OBSIDIAN_TITLE),
+    box->copy_label(fmt::format("{} {}\n\"{}\" Build {}", OBSIDIAN_TITLE,
                                 OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME,
                                 OBSIDIAN_VERSION)
                         .c_str());
@@ -112,7 +101,9 @@ UI_About::UI_About(int W, int H, const char *label)
 
     int text_h = H * 0.55;
 
-    box = new Fl_Box(pad, cy, W - pad - pad, text_h, _(Text));
+    Text = _("OBSIDIAN is a random level generator\nfor classic FPS games like DOOM.\nIt is a continuation of the OBLIGE Level Maker\nCopyright (C) 2006-2017 Andrew Apted, et al.\nThis program is free software, and may be\ndistributed and modified under the terms of\nthe GNU General Public License.\nThere is ABSOLUTELY NO WARRANTY!\nUse at your OWN RISK!");
+
+    box = new Fl_Box(pad, cy, W - pad - pad, text_h, Text);
     box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_CLIP);
     box->box(FL_UP_BOX);
     box->color(BUTTON_COLOR);

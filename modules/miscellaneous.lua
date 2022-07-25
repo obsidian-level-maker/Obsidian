@@ -325,10 +325,7 @@ OB_MODULES["misc"] =
       name="room_area_multiplier", label=_("Area Count Multiplier"),
       choices = MISC_STUFF.AREA_COUNT_MULTIPLIER_CHOICES,
       default = "mixed",
-      tooltip = _("Alters the amount of areas in a room. Influences the amount rooms are divided into different elevations or "..
-        "simply different ceilings if a level has no steepness.\n\n" ..
-        "Vanilla: No area quantity multipliers.\n\n" ..
-        "Mix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest."),
+      tooltip = _("Alters the amount of areas in a room. Influences the amount rooms are divided into different elevations or simply different ceilings if a level has no steepness.\n\nVanilla: No area quantity multipliers.\n\nMix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest."),
       priority = 93,
       randomize_group="architecture",
     },

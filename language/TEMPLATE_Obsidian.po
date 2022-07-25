@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Obsidian Level Maker\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-09 23:41+1000\n"
-"PO-Revision-Date: 2022-07-18 14:35-0600\n"
+"PO-Revision-Date: 2022-07-24 19:39-0600\n"
 "Last-Translator:  Dasho\n"
 "Language-Team: English\n"
 "Language: en_US\n"
@@ -15,10 +15,139 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-# ###################################################################################################################################################################################### #
-# Comments by Dashodanger: One can automate this process for each time the code is changed with the following nightmarish one-liner:                                                     #
-# grep -n -r -o "[_][(]\".*\"[)]" | sed -r {s/"^"/"#: "/} | sed -r {s/":_"/"\n"/} | sed -r {s/"\("/"msgid "/} | sed -r {s/"\)$"/"\nmsgstr \"\"\n"/} | sed -r {s/":$"/""/}                #
-# ###################################################################################################################################################################################### #
+# ################################################################################################################################################################################################## #
+# Comments by Dashodanger: One can automate this process for each time the code is changed with the following nightmarish one-liners:                                                                #        
+# grep -n -r -o "[_][(]\".*\"[)]" | sed -r {s/"^"/"#: "/} | sed -r {s/":_"/"\n"/} | sed -r {s/"\("/"msgid "/} | sed -r {s/"\)$"/"\nmsgstr \"\"\n"/} | sed -r {s/":$"/""/}                            #
+# grep -n -r -o "gui[.]gettext[(]\".*\"[)]" | sed -r {s/"^"/"#: "/} | sed -r {s/":_"/"\n"/} | sed -r {s/"\gui[.]gettext[(]"/"\nmsgid "/} | sed -r {s/"\)$"/"\nmsgstr \"\"\n"/} | sed -r {s/":$"/""/} #
+# ################################################################################################################################################################################################## #
+
+#: modules/chex3/ctl_chex.lua:31
+msgid "Default"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:223
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:30
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:345
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:361
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:530
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:31
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:276
+msgid "Default"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:31
+msgid "Default"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:207
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:29
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:295
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:31
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:319
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:341
+msgid "Default"
+msgstr ""
+
+#: modules/stealth_mons.lua:322
+msgid "Default"
+msgstr ""
+
+#: modules/zdoom_marines.lua:263
+msgid "Default"
+msgstr ""
+
+#: scripts/level.lua:176
+msgid "Episodic"
+msgstr ""
+
+#: scripts/level.lua:177
+msgid "Progressive"
+msgstr ""
+
+#: scripts/level.lua:186
+msgid "Mix It Up"
+msgstr ""
+
+#: scripts/level.lua:203
+msgid "Episodic"
+msgstr ""
+
+#: scripts/level.lua:204
+msgid "Progressive"
+msgstr ""
+
+#: scripts/level.lua:216
+msgid "Episodic"
+msgstr ""
+
+#: scripts/level.lua:239
+msgid "Progressive"
+msgstr ""
+
+#: scripts/level.lua:240
+msgid "Episodic"
+msgstr ""
+
+#: scripts/level.lua:242
+msgid "Mix It Up"
+msgstr ""
+
+#: scripts/level.lua:485
+msgid "Episodic"
+msgstr ""
+
+#: scripts/level.lua:509
+msgid "Episodic"
+msgstr ""
+
+#: scripts/monster.lua:848
+msgid "Mix It Up"
+msgstr ""
+
+#: scripts/monster.lua:850
+msgid "Progressive"
+msgstr ""
+
+#: scripts/monster.lua:903
+msgid "Mix It Up"
+msgstr ""
+
+#: scripts/monster.lua:909
+msgid "Progressive"
+msgstr ""
 
 #: engines/boom.lua:144
 msgid "BOOM Compat"
@@ -208,6 +337,14 @@ msgstr ""
 msgid "Commonus"
 msgstr ""
 
+#: modules/chex3/ctl_chex.lua:79
+msgid "Default"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:80
+msgid "Default"
+msgstr ""
+
 #: modules/chex3/ctl_chex.lua:81
 msgid "Control the amount of Commoni."
 msgstr ""
@@ -218,6 +355,14 @@ msgstr ""
 
 #: modules/chex3/ctl_chex.lua:88
 msgid "Bipedicus"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:93
+msgid "Default"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:94
+msgid "Default"
 msgstr ""
 
 #: modules/chex3/ctl_chex.lua:95
@@ -232,6 +377,14 @@ msgstr ""
 msgid "Armored Bipedicus"
 msgstr ""
 
+#: modules/chex3/ctl_chex.lua:107
+msgid "Default"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:108
+msgid "Default"
+msgstr ""
+
 #: modules/chex3/ctl_chex.lua:109
 msgid "Control the amount of Armored Bipedici."
 msgstr ""
@@ -242,6 +395,14 @@ msgstr ""
 
 #: modules/chex3/ctl_chex.lua:116
 msgid "Quadrumpus"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:121
+msgid "Default"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:122
+msgid "Default"
 msgstr ""
 
 #: modules/chex3/ctl_chex.lua:123
@@ -256,6 +417,14 @@ msgstr ""
 msgid "Cycloptis"
 msgstr ""
 
+#: modules/chex3/ctl_chex.lua:135
+msgid "Default"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:136
+msgid "Default"
+msgstr ""
+
 #: modules/chex3/ctl_chex.lua:137
 msgid "Control the amount of Cyclopti."
 msgstr ""
@@ -266,6 +435,14 @@ msgstr ""
 
 #: modules/chex3/ctl_chex.lua:145
 msgid "Larva"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:150
+msgid "Default"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:151
+msgid "Default"
 msgstr ""
 
 #: modules/chex3/ctl_chex.lua:152
@@ -280,6 +457,14 @@ msgstr ""
 msgid "Flem Mine"
 msgstr ""
 
+#: modules/chex3/ctl_chex.lua:165
+msgid "Default"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:166
+msgid "Default"
+msgstr ""
+
 #: modules/chex3/ctl_chex.lua:167
 msgid "Control the amount of Flem Mines."
 msgstr ""
@@ -292,6 +477,14 @@ msgstr ""
 msgid "Stridicus"
 msgstr ""
 
+#: modules/chex3/ctl_chex.lua:180
+msgid "Default"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:181
+msgid "Default"
+msgstr ""
+
 #: modules/chex3/ctl_chex.lua:182
 msgid "Control the amount of Stridici."
 msgstr ""
@@ -302,6 +495,14 @@ msgstr ""
 
 #: modules/chex3/ctl_chex.lua:190
 msgid "Super Cycloptis"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:195
+msgid "Default"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:196
+msgid "Default"
 msgstr ""
 
 #: modules/chex3/ctl_chex.lua:197
@@ -332,6 +533,14 @@ msgstr ""
 msgid "Super Bootspork"
 msgstr ""
 
+#: modules/chex3/ctl_chex.lua:271
+msgid "Default"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:272
+msgid "Default"
+msgstr ""
+
 #: modules/chex3/ctl_chex.lua:273
 msgid "Control the likelihood of finding the Super Bootspork."
 msgstr ""
@@ -342,6 +551,14 @@ msgstr ""
 
 #: modules/chex3/ctl_chex.lua:280
 msgid "Large Zorcher"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:285
+msgid "Default"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:286
+msgid "Default"
 msgstr ""
 
 #: modules/chex3/ctl_chex.lua:287
@@ -356,6 +573,14 @@ msgstr ""
 msgid "Rapid Zorcher"
 msgstr ""
 
+#: modules/chex3/ctl_chex.lua:299
+msgid "Default"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:300
+msgid "Default"
+msgstr ""
+
 #: modules/chex3/ctl_chex.lua:301
 msgid "Control the amount of Rapid Zorchers."
 msgstr ""
@@ -366,6 +591,14 @@ msgstr ""
 
 #: modules/chex3/ctl_chex.lua:308
 msgid "Zorch Propulsor"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:313
+msgid "Default"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:314
+msgid "Default"
 msgstr ""
 
 #: modules/chex3/ctl_chex.lua:315
@@ -380,6 +613,14 @@ msgstr ""
 msgid "Phasing Zorcher"
 msgstr ""
 
+#: modules/chex3/ctl_chex.lua:327
+msgid "Default"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:328
+msgid "Default"
+msgstr ""
+
 #: modules/chex3/ctl_chex.lua:329
 msgid "Control the amount of Phasing Zorchers."
 msgstr ""
@@ -390,6 +631,14 @@ msgstr ""
 
 #: modules/chex3/ctl_chex.lua:336
 msgid "LAZ Device"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:341
+msgid "Default"
+msgstr ""
+
+#: modules/chex3/ctl_chex.lua:342
+msgid "Default"
 msgstr ""
 
 #: modules/chex3/ctl_chex.lua:343
@@ -416,6 +665,14 @@ msgstr ""
 msgid "Zombieman"
 msgstr ""
 
+#: modules/ctl_doom.lua:80
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:81
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:82
 msgid "Control the amount of Zombiemen."
 msgstr ""
@@ -426,6 +683,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:89
 msgid "Shotgun Guy"
+msgstr ""
+
+#: modules/ctl_doom.lua:94
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:95
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:96
@@ -440,6 +705,14 @@ msgstr ""
 msgid "Chaingunner"
 msgstr ""
 
+#: modules/ctl_doom.lua:108
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:109
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:110
 msgid "Control the amount of Chaingunners."
 msgstr ""
@@ -450,6 +723,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:117
 msgid "SS Nazi"
+msgstr ""
+
+#: modules/ctl_doom.lua:122
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:123
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:124
@@ -464,6 +745,14 @@ msgstr ""
 msgid "Imp"
 msgstr ""
 
+#: modules/ctl_doom.lua:136
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:137
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:138
 msgid "Control the amount of Imps."
 msgstr ""
@@ -474,6 +763,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:145
 msgid "Lost Soul"
+msgstr ""
+
+#: modules/ctl_doom.lua:150
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:151
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:152
@@ -488,6 +785,14 @@ msgstr ""
 msgid "Demon"
 msgstr ""
 
+#: modules/ctl_doom.lua:164
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:165
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:166
 msgid "Control the amount of Pinkies."
 msgstr ""
@@ -498,6 +803,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:173
 msgid "Spectre"
+msgstr ""
+
+#: modules/ctl_doom.lua:178
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:179
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:180
@@ -512,6 +825,14 @@ msgstr ""
 msgid "Pain Elemental"
 msgstr ""
 
+#: modules/ctl_doom.lua:192
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:193
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:194
 msgid "Control the amount of Pain Elementals."
 msgstr ""
@@ -522,6 +843,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:201
 msgid "Cacodemon"
+msgstr ""
+
+#: modules/ctl_doom.lua:206
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:207
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:208
@@ -536,6 +865,14 @@ msgstr ""
 msgid "Hell Knight"
 msgstr ""
 
+#: modules/ctl_doom.lua:220
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:221
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:222
 msgid "Control the amount of Hell Knights."
 msgstr ""
@@ -546,6 +883,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:229
 msgid "Revenant"
+msgstr ""
+
+#: modules/ctl_doom.lua:234
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:235
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:236
@@ -560,6 +905,14 @@ msgstr ""
 msgid "Mancubus"
 msgstr ""
 
+#: modules/ctl_doom.lua:248
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:249
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:250
 msgid "Control the amount of Mancubi."
 msgstr ""
@@ -570,6 +923,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:257
 msgid "Arachnotron"
+msgstr ""
+
+#: modules/ctl_doom.lua:262
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:263
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:264
@@ -584,6 +945,14 @@ msgstr ""
 msgid "Arch-Vile"
 msgstr ""
 
+#: modules/ctl_doom.lua:276
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:277
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:278
 msgid "Control the amount of Arch-Viles."
 msgstr ""
@@ -594,6 +963,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:285
 msgid "Baron of Hell"
+msgstr ""
+
+#: modules/ctl_doom.lua:290
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:291
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:292
@@ -608,6 +985,14 @@ msgstr ""
 msgid "Cyberdemon"
 msgstr ""
 
+#: modules/ctl_doom.lua:304
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:305
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:306
 msgid "Control the amount of Cyberdemons."
 msgstr ""
@@ -618,6 +1003,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:313
 msgid "Spiderdemon"
+msgstr ""
+
+#: modules/ctl_doom.lua:318
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:319
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:320
@@ -648,6 +1041,14 @@ msgstr ""
 msgid "Chainsaw"
 msgstr ""
 
+#: modules/ctl_doom.lua:421
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:422
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:423
 msgid "Control the likelihood of finding a Chainsaw."
 msgstr ""
@@ -658,6 +1059,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:430
 msgid "Shotgun"
+msgstr ""
+
+#: modules/ctl_doom.lua:435
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:436
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:437
@@ -672,6 +1081,14 @@ msgstr ""
 msgid "Super Shotgun"
 msgstr ""
 
+#: modules/ctl_doom.lua:449
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:450
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:451
 msgid "Control the amount of Super Shotguns."
 msgstr ""
@@ -682,6 +1099,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:458
 msgid "Chaingun"
+msgstr ""
+
+#: modules/ctl_doom.lua:463
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:464
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:465
@@ -696,6 +1121,14 @@ msgstr ""
 msgid "Rocket Launcher"
 msgstr ""
 
+#: modules/ctl_doom.lua:477
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:478
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:479
 msgid "Control the amount of Rocket Launchers."
 msgstr ""
@@ -708,6 +1141,14 @@ msgstr ""
 msgid "Plasma Rifle"
 msgstr ""
 
+#: modules/ctl_doom.lua:491
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:492
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:493
 msgid "Control the amount of Plasma Rifles."
 msgstr ""
@@ -718,6 +1159,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:500
 msgid "BFG 9000"
+msgstr ""
+
+#: modules/ctl_doom.lua:505
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:506
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:507
@@ -744,6 +1193,14 @@ msgstr ""
 msgid "Health Bonus"
 msgstr ""
 
+#: modules/ctl_doom.lua:579
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:580
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:581
 msgid "Control the amount of Health Potions."
 msgstr ""
@@ -754,6 +1211,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:589
 msgid "Stimpack"
+msgstr ""
+
+#: modules/ctl_doom.lua:594
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:595
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:596
@@ -768,6 +1233,14 @@ msgstr ""
 msgid "Medikit"
 msgstr ""
 
+#: modules/ctl_doom.lua:609
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:610
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:611
 msgid "Control the amount of Medikits."
 msgstr ""
@@ -778,6 +1251,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:620
 msgid "Armor Bonus"
+msgstr ""
+
+#: modules/ctl_doom.lua:625
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:626
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:627
@@ -792,6 +1273,14 @@ msgstr ""
 msgid "Green Armor"
 msgstr ""
 
+#: modules/ctl_doom.lua:642
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:643
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:644
 msgid "Control the amount of Green Armor."
 msgstr ""
@@ -802,6 +1291,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:652
 msgid "Blue Armor"
+msgstr ""
+
+#: modules/ctl_doom.lua:657
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:658
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:659
@@ -816,6 +1313,14 @@ msgstr ""
 msgid "Soulsphere"
 msgstr ""
 
+#: modules/ctl_doom.lua:673
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:674
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:675
 msgid "Control the amount of Soulspheres."
 msgstr ""
@@ -826,6 +1331,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:682
 msgid "Backpack"
+msgstr ""
+
+#: modules/ctl_doom.lua:687
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:688
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:689
@@ -840,6 +1353,14 @@ msgstr ""
 msgid "Berserk Pack"
 msgstr ""
 
+#: modules/ctl_doom.lua:701
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:702
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:703
 msgid "Control the amount of Berserk Packs."
 msgstr ""
@@ -850,6 +1371,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:710
 msgid "Invisibility"
+msgstr ""
+
+#: modules/ctl_doom.lua:715
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:716
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:717
@@ -864,6 +1393,14 @@ msgstr ""
 msgid "Invulnerability"
 msgstr ""
 
+#: modules/ctl_doom.lua:729
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:730
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:731
 msgid "Control the amount of Invulnerability Spheres."
 msgstr ""
@@ -874,6 +1411,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:738
 msgid "Map Computer"
+msgstr ""
+
+#: modules/ctl_doom.lua:743
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:744
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:745
@@ -888,6 +1433,14 @@ msgstr ""
 msgid "Light Goggles"
 msgstr ""
 
+#: modules/ctl_doom.lua:757
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:758
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:759
 msgid "Control the amount of Light Goggles."
 msgstr ""
@@ -898,6 +1451,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:766
 msgid "Megasphere"
+msgstr ""
+
+#: modules/ctl_doom.lua:771
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:772
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:773
@@ -912,6 +1473,14 @@ msgstr ""
 msgid "Clips"
 msgstr ""
 
+#: modules/ctl_doom.lua:787
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:788
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:789
 msgid "Control the amount of Clips."
 msgstr ""
@@ -922,6 +1491,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:797
 msgid "Bullet Box"
+msgstr ""
+
+#: modules/ctl_doom.lua:802
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:803
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:804
@@ -936,6 +1513,14 @@ msgstr ""
 msgid "Shells"
 msgstr ""
 
+#: modules/ctl_doom.lua:817
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:818
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:819
 msgid "Control the amount of Shells."
 msgstr ""
@@ -946,6 +1531,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:827
 msgid "Shell Box"
+msgstr ""
+
+#: modules/ctl_doom.lua:832
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:833
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:834
@@ -960,6 +1553,14 @@ msgstr ""
 msgid "Rocket"
 msgstr ""
 
+#: modules/ctl_doom.lua:847
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:848
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:849
 msgid "Control the amount of Rockets."
 msgstr ""
@@ -970,6 +1571,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:857
 msgid "Rocket Box"
+msgstr ""
+
+#: modules/ctl_doom.lua:862
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:863
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:864
@@ -984,6 +1593,14 @@ msgstr ""
 msgid "Cell"
 msgstr ""
 
+#: modules/ctl_doom.lua:877
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:878
+msgid "Default"
+msgstr ""
+
 #: modules/ctl_doom.lua:879
 msgid "Control the amount of Cells."
 msgstr ""
@@ -994,6 +1611,14 @@ msgstr ""
 
 #: modules/ctl_doom.lua:887
 msgid "Cell Pack"
+msgstr ""
+
+#: modules/ctl_doom.lua:892
+msgid "Default"
+msgstr ""
+
+#: modules/ctl_doom.lua:893
+msgid "Default"
 msgstr ""
 
 #: modules/ctl_doom.lua:894
@@ -1620,6 +2245,14 @@ msgstr ""
 msgid "Thug"
 msgstr ""
 
+#: modules/hacx/ctl_hacx.lua:80
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:81
+msgid "Default"
+msgstr ""
+
 #: modules/hacx/ctl_hacx.lua:82
 msgid "Control the amount of Thugs."
 msgstr ""
@@ -1630,6 +2263,14 @@ msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:89
 msgid "Android"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:94
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:95
+msgid "Default"
 msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:96
@@ -1644,6 +2285,14 @@ msgstr ""
 msgid "Stealth Buzzer"
 msgstr ""
 
+#: modules/hacx/ctl_hacx.lua:108
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:109
+msgid "Default"
+msgstr ""
+
 #: modules/hacx/ctl_hacx.lua:110
 msgid "Control the amount of Stealth Buzzers."
 msgstr ""
@@ -1654,6 +2303,14 @@ msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:117
 msgid "Roaming Mine"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:122
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:123
+msgid "Default"
 msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:124
@@ -1668,6 +2325,14 @@ msgstr ""
 msgid "Phage"
 msgstr ""
 
+#: modules/hacx/ctl_hacx.lua:136
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:137
+msgid "Default"
+msgstr ""
+
 #: modules/hacx/ctl_hacx.lua:138
 msgid "Control the amount of Phages."
 msgstr ""
@@ -1678,6 +2343,14 @@ msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:145
 msgid "Buzzer"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:150
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:151
+msgid "Default"
 msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:152
@@ -1692,6 +2365,14 @@ msgstr ""
 msgid "ICE"
 msgstr ""
 
+#: modules/hacx/ctl_hacx.lua:164
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:165
+msgid "Default"
+msgstr ""
+
 #: modules/hacx/ctl_hacx.lua:166
 msgid "Control the amount of ICEs."
 msgstr ""
@@ -1702,6 +2383,14 @@ msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:173
 msgid "D-Man"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:178
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:179
+msgid "Default"
 msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:180
@@ -1716,6 +2405,14 @@ msgstr ""
 msgid "Monstruct"
 msgstr ""
 
+#: modules/hacx/ctl_hacx.lua:192
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:193
+msgid "Default"
+msgstr ""
+
 #: modules/hacx/ctl_hacx.lua:194
 msgid "Control the amount of Monstructs."
 msgstr ""
@@ -1726,6 +2423,14 @@ msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:201
 msgid "Majong 7"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:206
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:207
+msgid "Default"
 msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:208
@@ -1740,6 +2445,14 @@ msgstr ""
 msgid "Terminatrix"
 msgstr ""
 
+#: modules/hacx/ctl_hacx.lua:220
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:221
+msgid "Default"
+msgstr ""
+
 #: modules/hacx/ctl_hacx.lua:222
 msgid "Control the amount of Terminatrixes."
 msgstr ""
@@ -1752,6 +2465,14 @@ msgstr ""
 msgid "Thorn"
 msgstr ""
 
+#: modules/hacx/ctl_hacx.lua:234
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:235
+msgid "Default"
+msgstr ""
+
 #: modules/hacx/ctl_hacx.lua:236
 msgid "Control the amount of Thorns."
 msgstr ""
@@ -1762,6 +2483,14 @@ msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:243
 msgid "Mecha Maniac"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:248
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:249
+msgid "Default"
 msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:250
@@ -1792,6 +2521,14 @@ msgstr ""
 msgid "Hoig Reznator"
 msgstr ""
 
+#: modules/hacx/ctl_hacx.lua:326
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:327
+msgid "Default"
+msgstr ""
+
 #: modules/hacx/ctl_hacx.lua:328
 msgid "Control the likelihood of finding the Hoig Reznator."
 msgstr ""
@@ -1802,6 +2539,14 @@ msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:335
 msgid "Tazer"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:340
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:341
+msgid "Default"
 msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:342
@@ -1816,6 +2561,14 @@ msgstr ""
 msgid "Cryogun"
 msgstr ""
 
+#: modules/hacx/ctl_hacx.lua:354
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:355
+msgid "Default"
+msgstr ""
+
 #: modules/hacx/ctl_hacx.lua:356
 msgid "Control the amount of Cryoguns."
 msgstr ""
@@ -1826,6 +2579,14 @@ msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:363
 msgid "Uzi"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:368
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:369
+msgid "Default"
 msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:370
@@ -1840,6 +2601,14 @@ msgstr ""
 msgid "Photon 'Zooka"
 msgstr ""
 
+#: modules/hacx/ctl_hacx.lua:382
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:383
+msgid "Default"
+msgstr ""
+
 #: modules/hacx/ctl_hacx.lua:384
 msgid "Control the amount of Photon 'Zookas."
 msgstr ""
@@ -1852,6 +2621,14 @@ msgstr ""
 msgid "Anti-Gun"
 msgstr ""
 
+#: modules/hacx/ctl_hacx.lua:396
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:397
+msgid "Default"
+msgstr ""
+
 #: modules/hacx/ctl_hacx.lua:398
 msgid "Control the amount of Anti-Guns."
 msgstr ""
@@ -1862,6 +2639,14 @@ msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:405
 msgid "Nuker"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:410
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:411
+msgid "Default"
 msgstr ""
 
 #: modules/hacx/ctl_hacx.lua:412
@@ -1888,6 +2673,14 @@ msgstr ""
 msgid "Beastling"
 msgstr ""
 
+#: modules/harmony/ctl_harmony.lua:81
+msgid "Default"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:82
+msgid "Default"
+msgstr ""
+
 #: modules/harmony/ctl_harmony.lua:83
 msgid "Control the amount of Beastlings."
 msgstr ""
@@ -1898,6 +2691,14 @@ msgstr ""
 
 #: modules/harmony/ctl_harmony.lua:90
 msgid "Critter"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:95
+msgid "Default"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:96
+msgid "Default"
 msgstr ""
 
 #: modules/harmony/ctl_harmony.lua:97
@@ -1912,6 +2713,14 @@ msgstr ""
 msgid "Follower"
 msgstr ""
 
+#: modules/harmony/ctl_harmony.lua:109
+msgid "Default"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:110
+msgid "Default"
+msgstr ""
+
 #: modules/harmony/ctl_harmony.lua:111
 msgid "Control the amount of Followers."
 msgstr ""
@@ -1922,6 +2731,14 @@ msgstr ""
 
 #: modules/harmony/ctl_harmony.lua:118
 msgid "Predator"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:123
+msgid "Default"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:124
+msgid "Default"
 msgstr ""
 
 #: modules/harmony/ctl_harmony.lua:125
@@ -1936,6 +2753,14 @@ msgstr ""
 msgid "Centaur"
 msgstr ""
 
+#: modules/harmony/ctl_harmony.lua:137
+msgid "Default"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:138
+msgid "Default"
+msgstr ""
+
 #: modules/harmony/ctl_harmony.lua:139
 msgid "Control the amount of Centaurs."
 msgstr ""
@@ -1946,6 +2771,14 @@ msgstr ""
 
 #: modules/harmony/ctl_harmony.lua:146
 msgid "Mutant"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:151
+msgid "Default"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:152
+msgid "Default"
 msgstr ""
 
 #: modules/harmony/ctl_harmony.lua:153
@@ -1960,6 +2793,14 @@ msgstr ""
 msgid "Phage"
 msgstr ""
 
+#: modules/harmony/ctl_harmony.lua:165
+msgid "Default"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:166
+msgid "Default"
+msgstr ""
+
 #: modules/harmony/ctl_harmony.lua:167
 msgid "Control the amount of Phages."
 msgstr ""
@@ -1970,6 +2811,14 @@ msgstr ""
 
 #: modules/harmony/ctl_harmony.lua:174
 msgid "Echidna"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:179
+msgid "Default"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:180
+msgid "Default"
 msgstr ""
 
 #: modules/harmony/ctl_harmony.lua:181
@@ -2000,6 +2849,14 @@ msgstr ""
 msgid "Minigun"
 msgstr ""
 
+#: modules/harmony/ctl_harmony.lua:255
+msgid "Default"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:256
+msgid "Default"
+msgstr ""
+
 #: modules/harmony/ctl_harmony.lua:257
 msgid "Control the amount of Miniguns."
 msgstr ""
@@ -2010,6 +2867,14 @@ msgstr ""
 
 #: modules/harmony/ctl_harmony.lua:264
 msgid "Compensator"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:269
+msgid "Default"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:270
+msgid "Default"
 msgstr ""
 
 #: modules/harmony/ctl_harmony.lua:271
@@ -2024,6 +2889,14 @@ msgstr ""
 msgid "Grenade Launcher"
 msgstr ""
 
+#: modules/harmony/ctl_harmony.lua:283
+msgid "Default"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:284
+msgid "Default"
+msgstr ""
+
 #: modules/harmony/ctl_harmony.lua:285
 msgid "Control the amount of Grenade Launchers."
 msgstr ""
@@ -2034,6 +2907,14 @@ msgstr ""
 
 #: modules/harmony/ctl_harmony.lua:292
 msgid "Entropy Thrower"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:297
+msgid "Default"
+msgstr ""
+
+#: modules/harmony/ctl_harmony.lua:298
+msgid "Default"
 msgstr ""
 
 #: modules/harmony/ctl_harmony.lua:299
@@ -2060,6 +2941,14 @@ msgstr ""
 msgid "Gargoyle"
 msgstr ""
 
+#: modules/heretic/ctl_heretic.lua:79
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:80
+msgid "Default"
+msgstr ""
+
 #: modules/heretic/ctl_heretic.lua:81
 msgid "Control the amount of Gargoyles."
 msgstr ""
@@ -2070,6 +2959,14 @@ msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:88
 msgid "Fire Gargoyle"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:93
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:94
+msgid "Default"
 msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:95
@@ -2084,6 +2981,14 @@ msgstr ""
 msgid "Warrior"
 msgstr ""
 
+#: modules/heretic/ctl_heretic.lua:107
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:108
+msgid "Default"
+msgstr ""
+
 #: modules/heretic/ctl_heretic.lua:109
 msgid "Control the amount of Warriors."
 msgstr ""
@@ -2094,6 +2999,14 @@ msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:116
 msgid "Warrior Ghost"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:121
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:122
+msgid "Default"
 msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:123
@@ -2108,6 +3021,14 @@ msgstr ""
 msgid "Golem"
 msgstr ""
 
+#: modules/heretic/ctl_heretic.lua:135
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:136
+msgid "Default"
+msgstr ""
+
 #: modules/heretic/ctl_heretic.lua:137
 msgid "Control the amount of Golems."
 msgstr ""
@@ -2118,6 +3039,14 @@ msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:144
 msgid "Golem Ghost"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:149
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:150
+msgid "Default"
 msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:151
@@ -2132,6 +3061,14 @@ msgstr ""
 msgid "Nitro"
 msgstr ""
 
+#: modules/heretic/ctl_heretic.lua:163
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:164
+msgid "Default"
+msgstr ""
+
 #: modules/heretic/ctl_heretic.lua:165
 msgid "Control the amount of Nitrogolems."
 msgstr ""
@@ -2142,6 +3079,14 @@ msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:172
 msgid "Nitro Ghost"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:177
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:178
+msgid "Default"
 msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:179
@@ -2156,6 +3101,14 @@ msgstr ""
 msgid "Disciple"
 msgstr ""
 
+#: modules/heretic/ctl_heretic.lua:191
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:192
+msgid "Default"
+msgstr ""
+
 #: modules/heretic/ctl_heretic.lua:193
 msgid "Control the amount of Disciples."
 msgstr ""
@@ -2166,6 +3119,14 @@ msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:200
 msgid "Sabreclaw"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:205
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:206
+msgid "Default"
 msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:207
@@ -2180,6 +3141,14 @@ msgstr ""
 msgid "Weredragon"
 msgstr ""
 
+#: modules/heretic/ctl_heretic.lua:219
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:220
+msgid "Default"
+msgstr ""
+
 #: modules/heretic/ctl_heretic.lua:221
 msgid "Control the amount of Weredragons."
 msgstr ""
@@ -2190,6 +3159,14 @@ msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:228
 msgid "Ophidian"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:233
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:234
+msgid "Default"
 msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:235
@@ -2204,6 +3181,14 @@ msgstr ""
 msgid "Ironlich"
 msgstr ""
 
+#: modules/heretic/ctl_heretic.lua:247
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:248
+msgid "Default"
+msgstr ""
+
 #: modules/heretic/ctl_heretic.lua:249
 msgid "Control the amount of Ironliches."
 msgstr ""
@@ -2216,6 +3201,14 @@ msgstr ""
 msgid "Maulotaur"
 msgstr ""
 
+#: modules/heretic/ctl_heretic.lua:261
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:262
+msgid "Default"
+msgstr ""
+
 #: modules/heretic/ctl_heretic.lua:263
 msgid "Control the amount of Maulotaurs."
 msgstr ""
@@ -2226,6 +3219,14 @@ msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:270
 msgid "D'Sparil"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:275
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:276
+msgid "Default"
 msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:277
@@ -2244,6 +3245,14 @@ msgstr ""
 msgid "Gauntlets"
 msgstr ""
 
+#: modules/heretic/ctl_heretic.lua:331
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:332
+msgid "Default"
+msgstr ""
+
 #: modules/heretic/ctl_heretic.lua:333
 msgid "Control the likelihood of finding the Gauntlets of the Necromancer."
 msgstr ""
@@ -2254,6 +3263,14 @@ msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:340
 msgid "Crossbow"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:345
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:346
+msgid "Default"
 msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:347
@@ -2268,6 +3285,14 @@ msgstr ""
 msgid "Dragon Claw"
 msgstr ""
 
+#: modules/heretic/ctl_heretic.lua:359
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:360
+msgid "Default"
+msgstr ""
+
 #: modules/heretic/ctl_heretic.lua:361
 msgid "Control the amount of Dragon Claws."
 msgstr ""
@@ -2278,6 +3303,14 @@ msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:368
 msgid "Hellstaff"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:373
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:374
+msgid "Default"
 msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:375
@@ -2292,6 +3325,14 @@ msgstr ""
 msgid "Phoenix Rod"
 msgstr ""
 
+#: modules/heretic/ctl_heretic.lua:387
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:388
+msgid "Default"
+msgstr ""
+
 #: modules/heretic/ctl_heretic.lua:389
 msgid "Control the amount of Phoenix Rods."
 msgstr ""
@@ -2302,6 +3343,14 @@ msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:396
 msgid "Fire Mace"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:401
+msgid "Default"
+msgstr ""
+
+#: modules/heretic/ctl_heretic.lua:402
+msgid "Default"
 msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:403
@@ -2724,6 +3773,14 @@ msgstr ""
 msgid "Ettin"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:81
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:82
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:83
 msgid "Control the amount of Ettins."
 msgstr ""
@@ -2734,6 +3791,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:90
 msgid "Afrit"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:95
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:96
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:97
@@ -2748,6 +3813,14 @@ msgstr ""
 msgid "Centaur"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:109
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:110
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:111
 msgid "Control the amount of Centaurs."
 msgstr ""
@@ -2758,6 +3831,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:118
 msgid "Slaughtaur"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:123
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:124
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:125
@@ -2772,6 +3853,14 @@ msgstr ""
 msgid "Stalker"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:137
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:138
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:139
 msgid "Control the amount of Stalkers."
 msgstr ""
@@ -2782,6 +3871,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:146
 msgid "Stalker w/ projectile"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:151
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:152
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:153
@@ -2796,6 +3893,14 @@ msgstr ""
 msgid "Wendigo"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:165
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:166
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:167
 msgid "Control the amount of Wendigos."
 msgstr ""
@@ -2806,6 +3911,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:174
 msgid "Green Serpent"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:179
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:180
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:181
@@ -2820,6 +3933,14 @@ msgstr ""
 msgid "Brown Serpent"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:193
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:194
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:195
 msgid "Control the amount of Brown Serpents."
 msgstr ""
@@ -2830,6 +3951,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:202
 msgid "Bishop"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:207
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:208
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:209
@@ -2844,6 +3973,14 @@ msgstr ""
 msgid "Reiver"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:221
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:222
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:223
 msgid "Control the amount of Reivers."
 msgstr ""
@@ -2854,6 +3991,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:230
 msgid "Buried Reiver"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:235
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:236
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:237
@@ -2868,6 +4013,14 @@ msgstr ""
 msgid "Heresiarch"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:249
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:250
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:251
 msgid "Control the amount of Heresiarchs."
 msgstr ""
@@ -2878,6 +4031,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:258
 msgid "Zedek"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:263
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:264
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:265
@@ -2892,6 +4053,14 @@ msgstr ""
 msgid "Traductus"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:277
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:278
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:279
 msgid "Control the amount of Traducti."
 msgstr ""
@@ -2904,6 +4073,14 @@ msgstr ""
 msgid "Menelkir"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:291
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:292
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:293
 msgid "Control the amount of Menelkirs."
 msgstr ""
@@ -2914,6 +4091,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:300
 msgid "Korax"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:305
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:306
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:307
@@ -2932,6 +4117,14 @@ msgstr ""
 msgid "Crystal Vial"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:393
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:394
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:395
 msgid "Control the amount of Crystal Vials."
 msgstr ""
@@ -2942,6 +4135,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:403
 msgid "Quartz Flask"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:408
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:409
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:410
@@ -2956,6 +4157,14 @@ msgstr ""
 msgid "Mystic Urn"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:423
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:424
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:425
 msgid "Control the amount of Mystic Urns."
 msgstr ""
@@ -2966,6 +4175,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:434
 msgid "Blue Mana"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:439
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:440
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:441
@@ -2980,6 +4197,14 @@ msgstr ""
 msgid "Green Mana"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:454
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:455
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:456
 msgid "Control the amount of Green Mana."
 msgstr ""
@@ -2990,6 +4215,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:464
 msgid "Dual Mana"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:469
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:470
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:471
@@ -3004,6 +4237,14 @@ msgstr ""
 msgid "Platinum Helm"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:484
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:485
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:486
 msgid "Control the amount of Platinum Helms."
 msgstr ""
@@ -3014,6 +4255,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:494
 msgid "Mesh Armor"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:499
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:500
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:501
@@ -3028,6 +4277,14 @@ msgstr ""
 msgid "Falcon Shield"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:513
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:514
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:515
 msgid "Control the amount of Falcon Shields."
 msgstr ""
@@ -3038,6 +4295,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:522
 msgid "Amulet of Warding"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:527
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:528
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:529
@@ -3052,6 +4317,14 @@ msgstr ""
 msgid "Dragonskin Bracers"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:541
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:542
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:543
 msgid "Control the amount of Dragonskin Bracers."
 msgstr ""
@@ -3062,6 +4335,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:551
 msgid "Krater of Might"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:556
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:557
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:558
@@ -3076,6 +4357,14 @@ msgstr ""
 msgid "Banishment Device"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:570
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:571
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:572
 msgid "Control the amount of Banishment Devices."
 msgstr ""
@@ -3086,6 +4375,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:579
 msgid "Boots of Speed"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:584
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:585
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:586
@@ -3100,6 +4397,14 @@ msgstr ""
 msgid "Chaos Device"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:598
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:599
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:600
 msgid "Control the amount of Chaos Devices."
 msgstr ""
@@ -3110,6 +4415,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:608
 msgid "Dark Servant"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:613
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:614
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:615
@@ -3124,6 +4437,14 @@ msgstr ""
 msgid "Disc of Repulsion"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:628
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:629
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:630
 msgid "Control the amount of Discs of Repulsion."
 msgstr ""
@@ -3134,6 +4455,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:638
 msgid "Flechette"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:643
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:644
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:645
@@ -3148,6 +4477,14 @@ msgstr ""
 msgid "Icon of the Defender"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:658
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:659
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:660
 msgid "Control the amount of Icons of the Defender."
 msgstr ""
@@ -3158,6 +4495,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:668
 msgid "Mystic Ambit Incant"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:673
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:674
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:675
@@ -3172,6 +4517,14 @@ msgstr ""
 msgid "Porkalator"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:688
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:689
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:690
 msgid "Control the amount of Porkalators."
 msgstr ""
@@ -3182,6 +4535,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:698
 msgid "Torch"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:703
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:704
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:705
@@ -3196,6 +4557,14 @@ msgstr ""
 msgid "Wings of Wrath"
 msgstr ""
 
+#: modules/hexen/ctl_hexen.lua:718
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:719
+msgid "Default"
+msgstr ""
+
 #: modules/hexen/ctl_hexen.lua:720
 msgid "Control the amount of Wings of Wrath."
 msgstr ""
@@ -3206,6 +4575,14 @@ msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:728
 msgid "Ultimate Weapon Pieces"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:733
+msgid "Default"
+msgstr ""
+
+#: modules/hexen/ctl_hexen.lua:734
+msgid "Default"
 msgstr ""
 
 #: modules/hexen/ctl_hexen.lua:735
@@ -3656,307 +5033,311 @@ msgstr ""
 msgid "Area Count Multiplier"
 msgstr ""
 
-#: modules/miscellaneous.lua:337
+#: modules/miscellaneous.lua:328
+msgid "Alters the amount of areas in a room. Influences the amount rooms are divided into different elevations or simply different ceilings if a level has no steepness.\n\nVanilla: No area quantity multipliers.\n\nMix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest."
+msgstr ""
+
+#: modules/miscellaneous.lua:334
 msgid "Size Consistency"
 msgstr ""
 
-#: modules/miscellaneous.lua:340
+#: modules/miscellaneous.lua:337
 msgid "Changes whether rooms follow a strict single size or not. Can be paired with above choices for more enforced results.\n\nVanilla: Original behavior. Rooms in a level have vary in size from each other. Big Rooms options are respected.\n\nBounded: Rooms vary in size but not radically from each other.\n\nStrict: All rooms in the level have a single set size/coverage.\n\nMix It Up: A mixture of 75% Vanilla, 25% Strict."
 msgstr ""
 
-#: modules/miscellaneous.lua:346
+#: modules/miscellaneous.lua:343
 msgid "Room Size Mix Fine Tune"
 msgstr ""
 
-#: modules/miscellaneous.lua:349
+#: modules/miscellaneous.lua:346
 msgid "Alters the behavior of Mix It Up for Room Size Multiplier options.\n\nNormal: Mix it up uses a normal curve distribution. Traditional-sized rooms are common and smaller or larger sizes are slightly less so.\n\nSmall-ish: Only smaller room sizes, but biased towards normal sizes.\n\nSmall: Biased towards smaller room sizes with no larger room sizes.\n\nLarge: Biased towards large rooms sizes with no smaller room sizes..\n\nLarge-ish: Only larger room sizes, but biased towards normal sizes.\n\nConservative: Probability is biased more towards regular room sizes, making much smaller or much larger rooms significantly rarer.\n\nVery Conservative: Bias is even stronger towards regular and smaller rooms sizes, while larger rooms are very rare.\n\nRandom: No curve distribution - room sizes and room area counts are picked completely randomly."
 msgstr ""
 
-#: modules/miscellaneous.lua:355
+#: modules/miscellaneous.lua:352
 msgid "Room Area Mix Fine Tune"
 msgstr ""
 
-#: modules/miscellaneous.lua:358
+#: modules/miscellaneous.lua:355
 msgid "Alters the behavior of Mix It Up for Room Area Multiplier options.\n\nNormal: Mix it up uses a normal curve distribution.\n\nLess-ish: Only rooms with less floors and simple ceilings, but biased towards normal counts.\n\nLess: Biased towards rooms with less floors and simple ceilings.\n\nMore: Biased towards rooms with more floors and complex ceilings.\n\nMore-ish: Only rooms with more floors and complex ceilings, but biased towards normal counts.\n\nConservative: Biased towards normal area counts.\n\nVery Conservative: Further biased towards normal area counts.\n\nRandom: No curve distribution - room area counts are picked completely randomly."
 msgstr ""
 
-#: modules/miscellaneous.lua:365
+#: modules/miscellaneous.lua:362
 msgid "Big Rooms"
 msgstr ""
 
-#: modules/miscellaneous.lua:366
+#: modules/miscellaneous.lua:363
 msgid "Raises upper limits on individual room growth"
 msgstr ""
 
-#: modules/miscellaneous.lua:369
+#: modules/miscellaneous.lua:366
 msgid "Big Outdoors"
 msgstr ""
 
-#: modules/miscellaneous.lua:370
+#: modules/miscellaneous.lua:367
 msgid "Raises upper limits on outdoor area growth"
 msgstr ""
 
-#: modules/miscellaneous.lua:374
+#: modules/miscellaneous.lua:371
 msgid "Room Heights"
 msgstr ""
 
-#: modules/miscellaneous.lua:376
+#: modules/miscellaneous.lua:373
 msgid "Determines if rooms should have a height limit or should exaggerate their height. Short means room areas strictly have at most 128 units of height, tall means rooms immediately have doubled heights. Normal is the default Oblige behavior."
 msgstr ""
 
-#: modules/miscellaneous.lua:385
+#: modules/miscellaneous.lua:382
 msgid "Parks"
 msgstr ""
 
-#: modules/miscellaneous.lua:386
+#: modules/miscellaneous.lua:383
 msgid "Control the amount of parks."
 msgstr ""
 
-#: modules/miscellaneous.lua:390
+#: modules/miscellaneous.lua:387
 msgid "Natural Cliffs"
 msgstr ""
 
-#: modules/miscellaneous.lua:391
+#: modules/miscellaneous.lua:388
 msgid "Percentage of parks that use completely naturalistic walls."
 msgstr ""
 
-#: modules/miscellaneous.lua:398
+#: modules/miscellaneous.lua:395
 msgid "Park Detail"
 msgstr ""
 
-#: modules/miscellaneous.lua:399
+#: modules/miscellaneous.lua:396
 msgid "Reduces or increases the probability of park decorations such as trees on park rooms."
 msgstr ""
 
-#: modules/miscellaneous.lua:407
+#: modules/miscellaneous.lua:404
 msgid "Windows"
 msgstr ""
 
-#: modules/miscellaneous.lua:408
+#: modules/miscellaneous.lua:405
 msgid "Control the amount of windows."
 msgstr ""
 
-#: modules/miscellaneous.lua:412
+#: modules/miscellaneous.lua:409
 msgid "Passable Windows"
 msgstr ""
 
-#: modules/miscellaneous.lua:414
+#: modules/miscellaneous.lua:411
 msgid "Sets the preferences for passability on certain windows. On Vistas Only means only windows that look out to vistas/map border scenics have a blocking line."
 msgstr ""
 
-#: modules/miscellaneous.lua:420
+#: modules/miscellaneous.lua:417
 msgid "Passable Railings"
 msgstr ""
 
-#: modules/miscellaneous.lua:422
+#: modules/miscellaneous.lua:419
 msgid "Sets the passability of railing junctions between full impassability or the 3D midtex flag. Occasional means 3D midtex is only used on railings between areas the player is supposed to circumvent. Always means the inclusion of cages and scenic rails, allowing flying monsters to potentially escape.\n\nNote: 3D midtex lines currently *block* projectiles as well."
 msgstr ""
 
-#: modules/miscellaneous.lua:429
+#: modules/miscellaneous.lua:426
 msgid "Symmetry"
 msgstr ""
 
-#: modules/miscellaneous.lua:430
+#: modules/miscellaneous.lua:427
 msgid "Affects amount of symmetry when growing levels."
 msgstr ""
 
-#: modules/miscellaneous.lua:433
+#: modules/miscellaneous.lua:430
 msgid "Beams"
 msgstr ""
 
-#: modules/miscellaneous.lua:435
+#: modules/miscellaneous.lua:432
 msgid "Allows the appearance of thin pillars to appear between the borders of different elevations."
 msgstr ""
 
-#: modules/miscellaneous.lua:440
+#: modules/miscellaneous.lua:437
 msgid "Fences"
 msgstr ""
 
-#: modules/miscellaneous.lua:442
+#: modules/miscellaneous.lua:439
 msgid "Creates thick solid fences and fence posts between areas of varying height for outdoor rooms."
 msgstr ""
 
-#: modules/miscellaneous.lua:447
+#: modules/miscellaneous.lua:444
 msgid "Porches\\Gazebos"
 msgstr ""
 
-#: modules/miscellaneous.lua:449
+#: modules/miscellaneous.lua:446
 msgid "Occasional outdoor areas with a lowered indoor-ish ceiling."
 msgstr ""
 
-#: modules/miscellaneous.lua:454
+#: modules/miscellaneous.lua:451
 msgid "Pictures"
 msgstr ""
 
-#: modules/miscellaneous.lua:456
+#: modules/miscellaneous.lua:453
 msgid "Controls the large wall setpieces in a map. Works on a chance per room basis."
 msgstr ""
 
-#: modules/miscellaneous.lua:461
+#: modules/miscellaneous.lua:458
 msgid "Scenics"
 msgstr ""
 
-#: modules/miscellaneous.lua:463
+#: modules/miscellaneous.lua:460
 msgid "Controls the amount of fancy scenics visible at room bordering the maps."
 msgstr ""
 
-#: modules/miscellaneous.lua:470
+#: modules/miscellaneous.lua:467
 msgid "Sink Style"
 msgstr ""
 
-#: modules/miscellaneous.lua:472
+#: modules/miscellaneous.lua:469
 msgid "Determines the style for corners with sunken ceilings and floors. Curved makes sink corners soft, while Sharp leaves the corners angular. Per Theme means choice is controlled by theme profile instead. Tech-ish maps favor sharp corners while hell-ish favor curved."
 msgstr ""
 
-#: modules/miscellaneous.lua:479
+#: modules/miscellaneous.lua:476
 msgid "Liquid Sinks"
 msgstr ""
 
-#: modules/miscellaneous.lua:481
+#: modules/miscellaneous.lua:478
 msgid "Enables or disables liquid sinks. Liquid sinks are walkable floors that are often converted into depressions with the level's liquid. May greatly inconvenience the player but default Oblige behavior is 'Yes'."
 msgstr ""
 
-#: modules/miscellaneous.lua:488
+#: modules/miscellaneous.lua:485
 msgid "Dark Outdoors"
 msgstr ""
 
-#: modules/miscellaneous.lua:489
+#: modules/miscellaneous.lua:486
 msgid "Affects the chance of a level having darker skies."
 msgstr ""
 
-#: modules/miscellaneous.lua:494
+#: modules/miscellaneous.lua:491
 msgid "Outdoor Shadows"
 msgstr ""
 
-#: modules/miscellaneous.lua:497
+#: modules/miscellaneous.lua:494
 msgid "Adds shadows to outdoor structures."
 msgstr ""
 
-#: modules/miscellaneous.lua:503
+#: modules/miscellaneous.lua:500
 msgid "Minimum Brightness"
 msgstr ""
 
-#: modules/miscellaneous.lua:509
+#: modules/miscellaneous.lua:506
 msgid "Sets the minimum brightness for the map."
 msgstr ""
 
-#: modules/miscellaneous.lua:515
+#: modules/miscellaneous.lua:512
 msgid "Maximum Brightness"
 msgstr ""
 
-#: modules/miscellaneous.lua:521
+#: modules/miscellaneous.lua:518
 msgid "Sets the maximum brightness for the map."
 msgstr ""
 
-#: modules/miscellaneous.lua:526
+#: modules/miscellaneous.lua:523
 msgid "Explosive Decor"
 msgstr ""
 
-#: modules/miscellaneous.lua:528
+#: modules/miscellaneous.lua:525
 msgid "Controls the presence of barrels, pods, canisters, etc."
 msgstr ""
 
-#: modules/miscellaneous.lua:534
+#: modules/miscellaneous.lua:531
 msgid "Doors"
 msgstr ""
 
-#: modules/miscellaneous.lua:535
+#: modules/miscellaneous.lua:532
 msgid "Control the amount of doors."
 msgstr ""
 
-#: modules/miscellaneous.lua:538
+#: modules/miscellaneous.lua:535
 msgid "Keyed Doors"
 msgstr ""
 
-#: modules/miscellaneous.lua:539
+#: modules/miscellaneous.lua:536
 msgid "Control the amount of keyed doors."
 msgstr ""
 
-#: modules/miscellaneous.lua:542
+#: modules/miscellaneous.lua:539
 msgid "Triple-Keyed Doors"
 msgstr ""
 
-#: modules/miscellaneous.lua:544
+#: modules/miscellaneous.lua:541
 msgid "Controls the chance to get three key door whenever three keys are present."
 msgstr ""
 
-#: modules/miscellaneous.lua:548
+#: modules/miscellaneous.lua:545
 msgid "Switch Goals"
 msgstr ""
 
-#: modules/miscellaneous.lua:549
+#: modules/miscellaneous.lua:546
 msgid "Controls the chance for long-distance switch and lock quests."
 msgstr ""
 
-#: modules/miscellaneous.lua:553
+#: modules/miscellaneous.lua:550
 msgid "Switch Rooms"
 msgstr ""
 
-#: modules/miscellaneous.lua:554
+#: modules/miscellaneous.lua:551
 msgid "Controls the chance same-room switches and locks."
 msgstr ""
 
-#: modules/miscellaneous.lua:562
+#: modules/miscellaneous.lua:559
 msgid "Road Markings"
 msgstr ""
 
-#: modules/miscellaneous.lua:565
+#: modules/miscellaneous.lua:562
 msgid "Adds street markings to roads."
 msgstr ""
 
-#: modules/miscellaneous.lua:570
+#: modules/miscellaneous.lua:567
 msgid "Street Traffic"
 msgstr ""
 
-#: modules/miscellaneous.lua:572
+#: modules/miscellaneous.lua:569
 msgid "If Street Mode is enabled, changes the density of prefabs such as cars, barriers, crates, and relevant items on the roads."
 msgstr ""
 
-#: modules/miscellaneous.lua:580
+#: modules/miscellaneous.lua:577
 msgid "Exit Signs"
 msgstr ""
 
-#: modules/miscellaneous.lua:583
+#: modules/miscellaneous.lua:580
 msgid "Places exit signs by exiting room"
 msgstr ""
 
-#: modules/miscellaneous.lua:590
+#: modules/miscellaneous.lua:587
 msgid "Linear Start"
 msgstr ""
 
-#: modules/miscellaneous.lua:592
+#: modules/miscellaneous.lua:589
 msgid "Stops start rooms from having more than one external room connection. Can help reduce being overwhelmed by attacks from multiple directions when multiple neighboring rooms connect into the start room. Default means no control, and levels can have linear starts at random based on shape grammars as per original Oblige 7.7 behavior."
 msgstr ""
 
-#: modules/miscellaneous.lua:598
+#: modules/miscellaneous.lua:595
 msgid "Dead Ends"
 msgstr ""
 
-#: modules/miscellaneous.lua:600
+#: modules/miscellaneous.lua:597
 msgid "Cleans up and removes areas with staircases that lead to nowhere.\nNONE means all dead ends are removed.\nHeaps means all dead ends are preserved (Oblige default)."
 msgstr ""
 
-#: modules/miscellaneous.lua:610
+#: modules/miscellaneous.lua:607
 msgid "Lighting"
 msgstr ""
 
-#: modules/miscellaneous.lua:611
+#: modules/miscellaneous.lua:608
 msgid "Detail"
 msgstr ""
 
-#: modules/miscellaneous.lua:613
+#: modules/miscellaneous.lua:610
 msgid "Pictures"
 msgstr ""
 
-#: modules/miscellaneous.lua:614
+#: modules/miscellaneous.lua:611
 msgid "Multiple Paths"
 msgstr ""
 
-#: modules/miscellaneous.lua:615
+#: modules/miscellaneous.lua:612
 msgid "3D Floors"
 msgstr ""
 
-#: modules/miscellaneous.lua:617
+#: modules/miscellaneous.lua:614
 msgid "Lakes"
 msgstr ""
 
@@ -5400,6 +6781,14 @@ msgstr ""
 msgid "Zombieman"
 msgstr ""
 
+#: modules/stealth_mons.lua:376
+msgid "Default"
+msgstr ""
+
+#: modules/stealth_mons.lua:377
+msgid "Default"
+msgstr ""
+
 #: modules/stealth_mons.lua:378
 msgid "Control the amount of Stealth Zombiemen."
 msgstr ""
@@ -5410,6 +6799,14 @@ msgstr ""
 
 #: modules/stealth_mons.lua:385
 msgid "Shotgun Guy"
+msgstr ""
+
+#: modules/stealth_mons.lua:390
+msgid "Default"
+msgstr ""
+
+#: modules/stealth_mons.lua:391
+msgid "Default"
 msgstr ""
 
 #: modules/stealth_mons.lua:392
@@ -5424,6 +6821,14 @@ msgstr ""
 msgid "Imp"
 msgstr ""
 
+#: modules/stealth_mons.lua:404
+msgid "Default"
+msgstr ""
+
+#: modules/stealth_mons.lua:405
+msgid "Default"
+msgstr ""
+
 #: modules/stealth_mons.lua:406
 msgid "Control the amount of Stealth Imps."
 msgstr ""
@@ -5434,6 +6839,14 @@ msgstr ""
 
 #: modules/stealth_mons.lua:413
 msgid "Demon"
+msgstr ""
+
+#: modules/stealth_mons.lua:418
+msgid "Default"
+msgstr ""
+
+#: modules/stealth_mons.lua:419
+msgid "Default"
 msgstr ""
 
 #: modules/stealth_mons.lua:420
@@ -5448,6 +6861,14 @@ msgstr ""
 msgid "Cacodemon"
 msgstr ""
 
+#: modules/stealth_mons.lua:432
+msgid "Default"
+msgstr ""
+
+#: modules/stealth_mons.lua:433
+msgid "Default"
+msgstr ""
+
 #: modules/stealth_mons.lua:434
 msgid "Control the amount of Stealth Cacodemons."
 msgstr ""
@@ -5458,6 +6879,14 @@ msgstr ""
 
 #: modules/stealth_mons.lua:441
 msgid "Baron of Hell"
+msgstr ""
+
+#: modules/stealth_mons.lua:446
+msgid "Default"
+msgstr ""
+
+#: modules/stealth_mons.lua:447
+msgid "Default"
 msgstr ""
 
 #: modules/stealth_mons.lua:448
@@ -5472,6 +6901,14 @@ msgstr ""
 msgid "Chaingunner"
 msgstr ""
 
+#: modules/stealth_mons.lua:460
+msgid "Default"
+msgstr ""
+
+#: modules/stealth_mons.lua:461
+msgid "Default"
+msgstr ""
+
 #: modules/stealth_mons.lua:462
 msgid "Control the amount of Stealth Chaingunners."
 msgstr ""
@@ -5482,6 +6919,14 @@ msgstr ""
 
 #: modules/stealth_mons.lua:469
 msgid "Hell Knight"
+msgstr ""
+
+#: modules/stealth_mons.lua:474
+msgid "Default"
+msgstr ""
+
+#: modules/stealth_mons.lua:475
+msgid "Default"
 msgstr ""
 
 #: modules/stealth_mons.lua:476
@@ -5496,6 +6941,14 @@ msgstr ""
 msgid "Revenant"
 msgstr ""
 
+#: modules/stealth_mons.lua:488
+msgid "Default"
+msgstr ""
+
+#: modules/stealth_mons.lua:489
+msgid "Default"
+msgstr ""
+
 #: modules/stealth_mons.lua:490
 msgid "Control the amount of Stealth Revenants."
 msgstr ""
@@ -5506,6 +6959,14 @@ msgstr ""
 
 #: modules/stealth_mons.lua:497
 msgid "Mancubus"
+msgstr ""
+
+#: modules/stealth_mons.lua:502
+msgid "Default"
+msgstr ""
+
+#: modules/stealth_mons.lua:503
+msgid "Default"
 msgstr ""
 
 #: modules/stealth_mons.lua:504
@@ -5520,6 +6981,14 @@ msgstr ""
 msgid "Arachnotron"
 msgstr ""
 
+#: modules/stealth_mons.lua:516
+msgid "Default"
+msgstr ""
+
+#: modules/stealth_mons.lua:517
+msgid "Default"
+msgstr ""
+
 #: modules/stealth_mons.lua:518
 msgid "Control the amount of Stealth Arachnotrons."
 msgstr ""
@@ -5530,6 +6999,14 @@ msgstr ""
 
 #: modules/stealth_mons.lua:525
 msgid "Arch-Vile"
+msgstr ""
+
+#: modules/stealth_mons.lua:530
+msgid "Default"
+msgstr ""
+
+#: modules/stealth_mons.lua:531
+msgid "Default"
 msgstr ""
 
 #: modules/stealth_mons.lua:532
@@ -5762,6 +7239,10 @@ msgstr ""
 
 #: modules/ui_arch.lua:122
 msgid "Level Size"
+msgstr ""
+
+#: modules/ui_arch.lua:128
+msgid "Mix It Up,Episodic,Progressive"
 msgstr ""
 
 #: modules/ui_arch.lua:129
@@ -6068,6 +7549,10 @@ msgstr ""
 msgid "Monster Quantity"
 msgstr ""
 
+#: modules/ui_mons.lua:111
+msgid "Mix It Up,Progressive"
+msgstr ""
+
 #: modules/ui_mons.lua:112
 msgid "0:None,0.15:0.15 (Trivial),0.35:0.35 (Sporadic),0.7:0.7 (Meager),1.0:1.0 (Easy),1.3:1.3 (Modest),1.5:1.5 (Bearable),2.0:2.0 (Rough),2.5:2.5 (Strenuous),3.0:3.0 (Formidable),3.5:3.5 (Harsh),4.0:4.0 (Painful),4.5:4.5 (Ferocious),5.0:5.0 (Unforgiving),5.5:5.5 (Punishing),6.0:6.0 (Murderous),6.5:6.5 (Grueling),7.0:7.0 (Unrelenting),7.5:7.5 (Arduous),8.0:8.0 (Barbaric),8.5:8.5 (Savage),9.0:9.0 (Brutal),9.5:9.5 (Draconian),10.0:10.00 (Merciless)"
 msgstr ""
@@ -6126,6 +7611,10 @@ msgstr ""
 
 #: modules/ui_mons.lua:160
 msgid "Ramp Up"
+msgstr ""
+
+#: modules/ui_mons.lua:166
+msgid "Episodic"
 msgstr ""
 
 #: modules/ui_mons.lua:167
@@ -6476,6 +7965,10 @@ msgstr ""
 msgid "Level Size"
 msgstr ""
 
+#: modules/ui_slump.lua:64
+msgid "Mix It Up"
+msgstr ""
+
 #: modules/ui_slump.lua:65
 msgid "Minimum number of rooms per level."
 msgstr ""
@@ -6716,6 +8209,14 @@ msgstr ""
 msgid "Fist Marine"
 msgstr ""
 
+#: modules/zdoom_marines.lua:317
+msgid "Default"
+msgstr ""
+
+#: modules/zdoom_marines.lua:318
+msgid "Default"
+msgstr ""
+
 #: modules/zdoom_marines.lua:319
 msgid "Control the amount of Fist-wielding ZDoom Marines."
 msgstr ""
@@ -6726,6 +8227,14 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:326
 msgid "Berserk Marine"
+msgstr ""
+
+#: modules/zdoom_marines.lua:331
+msgid "Default"
+msgstr ""
+
+#: modules/zdoom_marines.lua:332
+msgid "Default"
 msgstr ""
 
 #: modules/zdoom_marines.lua:333
@@ -6740,6 +8249,14 @@ msgstr ""
 msgid "Chainsaw Marine"
 msgstr ""
 
+#: modules/zdoom_marines.lua:345
+msgid "Default"
+msgstr ""
+
+#: modules/zdoom_marines.lua:346
+msgid "Default"
+msgstr ""
+
 #: modules/zdoom_marines.lua:347
 msgid "Control the amount of Chainsaw-wielding ZDoom Marines."
 msgstr ""
@@ -6750,6 +8267,14 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:354
 msgid "Pistol Marine"
+msgstr ""
+
+#: modules/zdoom_marines.lua:359
+msgid "Default"
+msgstr ""
+
+#: modules/zdoom_marines.lua:360
+msgid "Default"
 msgstr ""
 
 #: modules/zdoom_marines.lua:361
@@ -6764,6 +8289,14 @@ msgstr ""
 msgid "Shotgun Marine"
 msgstr ""
 
+#: modules/zdoom_marines.lua:373
+msgid "Default"
+msgstr ""
+
+#: modules/zdoom_marines.lua:374
+msgid "Default"
+msgstr ""
+
 #: modules/zdoom_marines.lua:375
 msgid "Control the amount of Shotgun-wielding ZDoom Marines."
 msgstr ""
@@ -6774,6 +8307,14 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:382
 msgid "SSG Marine"
+msgstr ""
+
+#: modules/zdoom_marines.lua:387
+msgid "Default"
+msgstr ""
+
+#: modules/zdoom_marines.lua:388
+msgid "Default"
 msgstr ""
 
 #: modules/zdoom_marines.lua:389
@@ -6788,6 +8329,14 @@ msgstr ""
 msgid "Chaingun Marine"
 msgstr ""
 
+#: modules/zdoom_marines.lua:401
+msgid "Default"
+msgstr ""
+
+#: modules/zdoom_marines.lua:402
+msgid "Default"
+msgstr ""
+
 #: modules/zdoom_marines.lua:403
 msgid "Control the amount of Chaingun-wielding ZDoom Marines."
 msgstr ""
@@ -6798,6 +8347,14 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:410
 msgid "Rocket Marine"
+msgstr ""
+
+#: modules/zdoom_marines.lua:415
+msgid "Default"
+msgstr ""
+
+#: modules/zdoom_marines.lua:416
+msgid "Default"
 msgstr ""
 
 #: modules/zdoom_marines.lua:417
@@ -6812,6 +8369,14 @@ msgstr ""
 msgid "Plasma Marine"
 msgstr ""
 
+#: modules/zdoom_marines.lua:429
+msgid "Default"
+msgstr ""
+
+#: modules/zdoom_marines.lua:430
+msgid "Default"
+msgstr ""
+
 #: modules/zdoom_marines.lua:431
 msgid "Control the amount of Plasma Rifle-wielding ZDoom Marines."
 msgstr ""
@@ -6824,6 +8389,14 @@ msgstr ""
 msgid "Railgun Marine"
 msgstr ""
 
+#: modules/zdoom_marines.lua:443
+msgid "Default"
+msgstr ""
+
+#: modules/zdoom_marines.lua:444
+msgid "Default"
+msgstr ""
+
 #: modules/zdoom_marines.lua:445
 msgid "Control the amount of Railgun-wielding ZDoom Marines."
 msgstr ""
@@ -6834,6 +8407,14 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:452
 msgid "BFG Marine"
+msgstr ""
+
+#: modules/zdoom_marines.lua:457
+msgid "Default"
+msgstr ""
+
+#: modules/zdoom_marines.lua:458
+msgid "Default"
 msgstr ""
 
 #: modules/zdoom_marines.lua:459
@@ -7220,59 +8801,75 @@ msgstr ""
 msgid "Error (create file)"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:222
+#: source_files/obsidian_main/main.cc:214
+msgid "Addons/"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:225
 msgid "OBSIDIAN will now restart and apply changes to addons."
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:890
+#: source_files/obsidian_main/main.cc:893
 msgid "No"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:891
+#: source_files/obsidian_main/main.cc:894
 msgid "Yes"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:892
+#: source_files/obsidian_main/main.cc:895
 msgid "OK"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:893
+#: source_files/obsidian_main/main.cc:896
 msgid "Cancel"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:894
+#: source_files/obsidian_main/main.cc:897
 msgid "Close"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1054
+#: source_files/obsidian_main/main.cc:1057
 msgid "Preparing..."
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1074
+#: source_files/obsidian_main/main.cc:1077
 msgid "Success"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1110
+#: source_files/obsidian_main/main.cc:1113
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1341
+#: source_files/obsidian_main/main.cc:1271
+msgid "OBSIDIAN Level Maker"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1272
+msgid "Unstable"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1346
 msgid "No such config file: {}\n"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1400
+#: source_files/obsidian_main/main.cc:1405
 msgid "No such config file: {}\n"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1634
+#: source_files/obsidian_main/main.cc:1639
 msgid "Sorry, an internal error occurred:\n{}"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1637
+#: source_files/obsidian_main/main.cc:1642
 msgid "An exception occurred: \n{}"
 msgstr ""
 
-#: source_files/obsidian_main/m_about.cc:163
+#: source_files/obsidian_main/m_about.cc:104
+msgid "OBSIDIAN is a random level generator\nfor classic FPS games like DOOM.\nIt is a continuation of the OBLIGE Level Maker\nCopyright (C) 2006-2017 Andrew Apted, et al.\nThis program is free software, and may be\ndistributed and modified under the terms of\nthe GNU General Public License.\nThere is ABSOLUTELY NO WARRANTY!\nUse at your OWN RISK!"
+msgstr ""
+
+#: source_files/obsidian_main/m_about.cc:154
 msgid "About OBSIDIAN"
 msgstr ""
 
@@ -7326,6 +8923,18 @@ msgstr ""
 
 #: source_files/obsidian_main/m_dialog.cc:699
 msgid "OBSIDIAN Log Viewer"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:715
+msgid "OBSIDIAN Glossary"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:725
+msgid "This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."
+msgstr ""
+
+#: source_files/obsidian_main/m_lua.cc:964
+msgid "Making"
 msgstr ""
 
 #: source_files/obsidian_main/m_lua.cc:1419
@@ -7432,87 +9041,127 @@ msgstr ""
 msgid "AUTO"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:504
+#: source_files/obsidian_main/m_options.cc:299
+msgid "Obsidian will now close to apply language changes.\nObsidian will be in your selected language when you restart the program."
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:324
+msgid "Obsidian has migrated from Lua to LuaJIT. One side effect of this is that even with a fixed seed, subsequent runs with the same configuration will not guarantee the same result.\n\nRestarting the Lua VM between builds will improve the odds of being able to repeat the results of a prior seed/setting combination, with the downside of visibly restarting the program every time a map is generated (even unsuccessfully).\n\nIf you have no particular need to recreate the results of prior runs, this option can be safely left off."
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:375
+msgid "Will randomly pull 1 to 3 words from Obsidian's random word list (found in /scripts/random_words.lua) and use those as input for the map generation seed. Purely for cosmetic/entertainment value."
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:395
+msgid "Will produce a pseudo-random sequence of characters as input for the map generation seed. Random String Seeds must be enabled to use this option."
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:423
+msgid "File prefix changes require a restart.\nOBSIDIAN will now restart."
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:433
+msgid "WARNING! This option will allow you to manually enter values in excess of the \n(usually) stable slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this will not be addressed by the developers.\nYou must select Yes for this option to be applied."
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:434
+msgid "Cancel"
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:435
+msgid "Yes, break Obsidian"
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:445
+msgid "Restoring slider limits requires a restart.\nObsidian will now restart."
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:470
+msgid "Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n%year or %Y: The current year.\n\n%month or %M: The current month.\n\n%day or %D: The current day.\n\n%hour or %h: The current hour.\n\n%minute or %m: The current minute.\n\n%second or %s: The current second.\n\n%version or %v: The current Obsidian version.\n\n%game or %g: Which game the WAD is for.\n\n%engine or %e: Which engine the WAD is for.\n\n%theme or %t: Which theme was selected from the game's choices.\n\n%count or %c: The number of levels in the generated WAD."
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:476
 msgid "Enter Custom Prefix Format:"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:509
+#: source_files/obsidian_main/m_options.cc:481
 msgid "Custom prefix cannot be blank!"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:538
+#: source_files/obsidian_main/m_options.cc:510
 msgid "Language: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:552
+#: source_files/obsidian_main/m_options.cc:524
 msgid "Compress Output: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:555
+#: source_files/obsidian_main/m_options.cc:527
 msgid "OFF|ZIP|PK3"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:566
+#: source_files/obsidian_main/m_options.cc:538
 msgid "Filename Prefix: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:570
+#: source_files/obsidian_main/m_options.cc:542
 msgid "Date and Time|Number of Levels|Game|Engine|Theme|Version|Custom|Nothing"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:580
+#: source_files/obsidian_main/m_options.cc:552
 msgid "Set Custom Prefix..."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:598
+#: source_files/obsidian_main/m_options.cc:570
 msgid " Random String Seeds"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:614
+#: source_files/obsidian_main/m_options.cc:586
 msgid " Password Mode"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:632
+#: source_files/obsidian_main/m_options.cc:604
 msgid " Create Backups"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:642
+#: source_files/obsidian_main/m_options.cc:614
 msgid " Overwrite File Warning"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:652
+#: source_files/obsidian_main/m_options.cc:624
 msgid " Debugging Messages"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:662
+#: source_files/obsidian_main/m_options.cc:634
 msgid " Ignore Slider Limits"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:673
+#: source_files/obsidian_main/m_options.cc:645
 msgid " Preserve Failed Builds"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:683
+#: source_files/obsidian_main/m_options.cc:655
 msgid " Zip Logs When Saving"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:694
+#: source_files/obsidian_main/m_options.cc:666
 msgid " Preserve/Timestamp Previous Logs"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:705
+#: source_files/obsidian_main/m_options.cc:677
 msgid "# of Logs Preserved "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:722
+#: source_files/obsidian_main/m_options.cc:694
 msgid " Restart Lua VM Between Builds"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:760
+#: source_files/obsidian_main/m_options.cc:732
 msgid "Note: some options require a restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:797
+#: source_files/obsidian_main/m_options.cc:769
 msgid "OBSIDIAN Misc Options"
 msgstr ""
 
@@ -7884,6 +9533,50 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
+#: source_files/obsidian_main/ui_module.cc:307
+msgid "Use Slider Value"
+msgstr ""
+
 #: source_files/obsidian_main/ui_module.cc:902
 msgid "Enter Value:"
+msgstr ""
+
+#: source_files/obsidian_main/ui_window.cc:78
+msgid "File/Options"
+msgstr ""
+
+#: source_files/obsidian_main/ui_window.cc:79
+msgid "File/Theme"
+msgstr ""
+
+#: source_files/obsidian_main/ui_window.cc:80
+msgid "File/Set Seed"
+msgstr ""
+
+#: source_files/obsidian_main/ui_window.cc:81
+msgid "File/Config Manager"
+msgstr ""
+
+#: source_files/obsidian_main/ui_window.cc:82
+msgid "Help/About"
+msgstr ""
+
+#: source_files/obsidian_main/ui_window.cc:83
+msgid "Help/View Logs"
+msgstr ""
+
+#: source_files/obsidian_main/ui_window.cc:84
+msgid "Help/Glossary"
+msgstr ""
+
+#: source_files/obsidian_main/ui_window.cc:85
+msgid "Help/ "
+msgstr ""
+
+#: source_files/obsidian_main/ui_window.cc:86
+msgid "Help/Tutorial"
+msgstr ""
+
+#: source_files/obsidian_main/ui_window.cc:87
+msgid "Surprise Me/Go"
 msgstr ""
