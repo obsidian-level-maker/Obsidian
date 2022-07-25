@@ -5553,6 +5553,10 @@ msgstr ""
 msgid "Gets exit room theme to follow the theme of the next level, if different."
 msgstr ""
 
+#: modules/prefab_controller.lua:212
+msgid "Auto Detailing"
+msgstr ""
+
 #: modules/prefab_controller.lua:215
 msgid "Reduces the amount of complex architecture in a map based on its size. Default is on in binary map format, off in UDMF map format."
 msgstr ""
@@ -5681,6 +5685,10 @@ msgstr ""
 msgid "Changes probabilities for high-step ladders (stairs)."
 msgstr ""
 
+#: modules/prefab_controller.lua:397
+msgid "Jump/Crouch Fabs"
+msgstr ""
+
 #: modules/prefab_controller.lua:400
 msgid "Enables or disables prefabs that require jumping or crouching to navigate."
 msgstr ""
@@ -5691,6 +5699,10 @@ msgstr ""
 
 #: modules/prefab_controller.lua:412
 msgid "Changes the liquids on hallways with damaging floors to either be damaging (default) or non-damaging."
+msgstr ""
+
+#: modules/prefab_controller.lua:424
+msgid "Match Theme"
 msgstr ""
 
 #: modules/prefab_controller.lua:427
@@ -5749,6 +5761,10 @@ msgstr ""
 msgid "Advanced Level Control"
 msgstr ""
 
+#: modules/prefab_controller_generic.lua:95
+msgid "Auto Detailing"
+msgstr ""
+
 #: modules/prefab_controller_generic.lua:98
 msgid "Reduces the amount of complex architecture in a map based on its size. Default is on."
 msgstr ""
@@ -5767,6 +5783,10 @@ msgstr ""
 
 #: modules/prefab_controller_generic.lua:118
 msgid "Determines the amount plain wall prefabs. What it actually does is greatly increase the probability of Oblige's basic plain wall prefab, rather than reduce the probability of all the prefabs in the library."
+msgstr ""
+
+#: modules/prefab_controller_generic.lua:127
+msgid "Match Theme"
 msgstr ""
 
 #: modules/prefab_controller_generic.lua:130
@@ -8165,6 +8185,10 @@ msgstr ""
 msgid "ZDoom: Ambient Sounds"
 msgstr ""
 
+#: modules/zdoom_frozsoul_sound.lua:258
+msgid "DoomEdNum Offset"
+msgstr ""
+
 #: modules/zdoom_frozsoul_sound.lua:260
 msgid "Selects the starting thing ID for generating ambient sound actors. Use only if you are playing a mod using conflicting Editor Numbers. If you don't know what this is this setting is best left as-is."
 msgstr ""
@@ -9045,123 +9069,123 @@ msgstr ""
 msgid "Obsidian will now restart to apply language changes.\nObsidian will be in your selected language after restarting."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:324
+#: source_files/obsidian_main/m_options.cc:326
 msgid "Obsidian has migrated from Lua to LuaJIT. One side effect of this is that even with a fixed seed, subsequent runs with the same configuration will not guarantee the same result.\n\nRestarting the Lua VM between builds will improve the odds of being able to repeat the results of a prior seed/setting combination, with the downside of visibly restarting the program every time a map is generated (even unsuccessfully).\n\nIf you have no particular need to recreate the results of prior runs, this option can be safely left off."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:375
+#: source_files/obsidian_main/m_options.cc:377
 msgid "Will randomly pull 1 to 3 words from Obsidian's random word list (found in /scripts/random_words.lua) and use those as input for the map generation seed. Purely for cosmetic/entertainment value."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:395
+#: source_files/obsidian_main/m_options.cc:397
 msgid "Will produce a pseudo-random sequence of characters as input for the map generation seed. Random String Seeds must be enabled to use this option."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:423
+#: source_files/obsidian_main/m_options.cc:425
 msgid "File prefix changes require a restart.\nOBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:433
+#: source_files/obsidian_main/m_options.cc:435
 msgid "WARNING! This option will allow you to manually enter values in excess of the \n(usually) stable slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this will not be addressed by the developers.\nYou must select Yes for this option to be applied."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:434
+#: source_files/obsidian_main/m_options.cc:436
 msgid "Cancel"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:435
+#: source_files/obsidian_main/m_options.cc:437
 msgid "Yes, break Obsidian"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:445
+#: source_files/obsidian_main/m_options.cc:447
 msgid "Restoring slider limits requires a restart.\nObsidian will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:470
+#: source_files/obsidian_main/m_options.cc:472
 msgid "Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n%year or %Y: The current year.\n\n%month or %M: The current month.\n\n%day or %D: The current day.\n\n%hour or %h: The current hour.\n\n%minute or %m: The current minute.\n\n%second or %s: The current second.\n\n%version or %v: The current Obsidian version.\n\n%game or %g: Which game the WAD is for.\n\n%engine or %e: Which engine the WAD is for.\n\n%theme or %t: Which theme was selected from the game's choices.\n\n%count or %c: The number of levels in the generated WAD."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:476
+#: source_files/obsidian_main/m_options.cc:478
 msgid "Enter Custom Prefix Format:"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:481
+#: source_files/obsidian_main/m_options.cc:483
 msgid "Custom prefix cannot be blank!"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:510
+#: source_files/obsidian_main/m_options.cc:512
 msgid "Language: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:524
+#: source_files/obsidian_main/m_options.cc:526
 msgid "Compress Output: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:527
+#: source_files/obsidian_main/m_options.cc:529
 msgid "OFF|ZIP|PK3"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:538
+#: source_files/obsidian_main/m_options.cc:540
 msgid "Filename Prefix: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:542
+#: source_files/obsidian_main/m_options.cc:544
 msgid "Date and Time|Number of Levels|Game|Engine|Theme|Version|Custom|Nothing"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:552
+#: source_files/obsidian_main/m_options.cc:554
 msgid "Set Custom Prefix..."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:570
+#: source_files/obsidian_main/m_options.cc:572
 msgid " Random String Seeds"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:586
+#: source_files/obsidian_main/m_options.cc:588
 msgid " Password Mode"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:604
+#: source_files/obsidian_main/m_options.cc:606
 msgid " Create Backups"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:614
+#: source_files/obsidian_main/m_options.cc:616
 msgid " Overwrite File Warning"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:624
+#: source_files/obsidian_main/m_options.cc:626
 msgid " Debugging Messages"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:634
+#: source_files/obsidian_main/m_options.cc:636
 msgid " Ignore Slider Limits"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:645
+#: source_files/obsidian_main/m_options.cc:647
 msgid " Preserve Failed Builds"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:655
+#: source_files/obsidian_main/m_options.cc:657
 msgid " Zip Logs When Saving"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:666
+#: source_files/obsidian_main/m_options.cc:668
 msgid " Preserve/Timestamp Previous Logs"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:677
+#: source_files/obsidian_main/m_options.cc:679
 msgid "# of Logs Preserved "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:694
+#: source_files/obsidian_main/m_options.cc:696
 msgid " Restart Lua VM Between Builds"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:732
+#: source_files/obsidian_main/m_options.cc:734
 msgid "Note: some options require a restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:769
+#: source_files/obsidian_main/m_options.cc:771
 msgid "OBSIDIAN Misc Options"
 msgstr ""
 

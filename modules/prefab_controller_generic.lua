@@ -92,7 +92,7 @@ OB_MODULES["prefab_control_generic"] =
 
     {
       name = "bool_autodetail",
-      label=("Auto Detailing"),
+      label=_("Auto Detailing"),
       valuator = "button",
       default = 1,
       tooltip = _("Reduces the amount of complex architecture in a map based on its size. Default is on."),
@@ -124,7 +124,7 @@ OB_MODULES["prefab_control_generic"] =
 
     {
       name = "bool_fab_match_theme",
-      label=("Match Theme"),
+      label=_("Match Theme"),
       valuator = "button",
       default = 1,
       tooltip = _("Ensures that prefabs selected match their intended Theme."),
