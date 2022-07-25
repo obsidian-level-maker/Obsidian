@@ -17,10 +17,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-# ###################################################################################################################################################################################### #
-# Comments by Dashodanger: One can automate this process for each time the code is changed with the following nightmarish one-liner:                                                     #
-# grep -n -r -o "[_][(]\".*\"[)]" | sed -r {s/"^"/"#: "/} | sed -r {s/":_"/"\n"/} | sed -r {s/"\("/"msgid "/} | sed -r {s/"\)$"/"\nmsgstr \"\"\n"/} | sed -r {s/":$"/""/}                #
-# ###################################################################################################################################################################################### #
+# ################################################################################################################################################################################################## #
+# Comments by Dashodanger: One can automate this process for each time the code is changed with the following nightmarish one-liner:                                                                 #
+# grep -n -r -o "[_][(]\".*\"[)]" | sed -r {s/"^"/"#: "/} | sed -r {s/":_"/"\n"/} | sed -r {s/"\("/"msgid "/} | sed -r {s/"\)$"/"\nmsgstr \"\"\n"/} | sed -r {s/":$"/""/}                            #
+# grep -n -r -o "gui[.]gettext[(]\".*\"[)]" | sed -r {s/"^"/"#: "/} | sed -r {s/":_"/"\n"/} | sed -r {s/"\gui[.]gettext[(]"/"\nmsgid "/} | sed -r {s/"\)$"/"\nmsgstr \"\"\n"/} | sed -r {s/":$"/""/} #
+# ################################################################################################################################################################################################## #
+
+#: scripts/level.lua:176
+msgid "Episodic"
+msgstr "По эпизодам"
+
+#: scripts/level.lua:177
+msgid "Progressive"
+msgstr "Постепенно"
+
+#: scripts/level.lua:186
+msgid "Mix It Up"
+msgstr "Случайно"
 
 #: engines/boom.lua:144
 msgid "BOOM Compat"
@@ -1252,7 +1265,7 @@ msgstr "Всегда по-разному"
 
 #: modules/gzdoom_marine_closet.lua:23
 msgid "Progressive"
-msgstr "Усиливается по ходу игры"
+msgstr "Постепенно"
 
 #: modules/gzdoom_marine_closet.lua:24
 msgid "BFG Fiesta"
@@ -1312,11 +1325,11 @@ msgstr "Случайно"
 
 #: modules/gzdoom_marine_closet.lua:54
 msgid "Progressive"
-msgstr "Увеличивать"
+msgstr "Постепенно"
 
 #: modules/gzdoom_marine_closet.lua:55
 msgid "Regressive"
-msgstr "Уменьшать"
+msgstr "Регрессивно"
 
 #: modules/gzdoom_marine_closet.lua:56
 msgid "Episodic"
@@ -1324,7 +1337,7 @@ msgstr "По эпизодам"
 
 #: modules/gzdoom_marine_closet.lua:57
 msgid "Regressive Episodic"
-msgstr "Уменьшать по эпизодам"
+msgstr "Регрессивно по эпизодам"
 
 #: modules/gzdoom_marine_closet.lua:62
 msgid "No"
@@ -1420,7 +1433,7 @@ msgstr "Шанс на карту"
 
 #: modules/gzdoom_marine_closet.lua:1567
 msgid "Chance per map of marine closets spawning at all. E.G. at 50% theres 50% chance of each map being empty of marine closets."
-msgstr ""
+msgstr "Шанс того, что на карте вообще появится комната с дружественными морпехами. К примеру, шанс в 50% означает, что такие помещения будут существовать на половине ото всех уровней."
 
 #: modules/gzdoom_marine_closet.lua:1575
 msgid "Minimum closets"
@@ -1428,7 +1441,7 @@ msgstr "Мин. комнат с морпехами"
 
 #: modules/gzdoom_marine_closet.lua:1582
 msgid "Sets least amount of closets that can spawn per map."
-msgstr ""
+msgstr "Устанавливает минимальный предел количества комнат с морпехами на карту."
 
 #: modules/gzdoom_marine_closet.lua:1589
 msgid "Maximum closets"
@@ -1436,7 +1449,7 @@ msgstr "Макс. комнат с морпехами"
 
 #: modules/gzdoom_marine_closet.lua:1596
 msgid "Sets most amount of closets that can spawn per map."
-msgstr ""
+msgstr "Устанавливает максимальный предел количества комнат с морпехами на карту."
 
 #: modules/gzdoom_marine_closet.lua:1603
 msgid "Closet scaling type"
@@ -1444,7 +1457,7 @@ msgstr "Изменение количества по уровням"
 
 #: modules/gzdoom_marine_closet.lua:1607
 msgid "Affects how min and max work for closet count:\n\nRandom: Random range\nProgressive: Goes from min to max through entire game\nEpisodic: Goes from min to max through episode\nRegressive/Regressive episodic: Goes from max to min through game or episode"
-msgstr ""
+msgstr "Определяет, каким образом учитываются опции \"Макс. комнат и морпехами\" и \"Мин. комнат с морпехами\".\n\nСлучайно: значение выбирается случайным образом между минимумом и максимумом.\n\nПостепенно: количество комнат постепенно нарастает на протяжении всей игры.\n\nПо эпизодами: количество комнат постепенно нарастает, от минимума в первом эпизоде до максимума в последнем.\n\nРегрессивно [по эпизодам]: количество комнат постепенно уменьшается, от максимума в первом уровне/[эпизоде] до минимума в последнем."
 
 #: modules/gzdoom_marine_closet.lua:1615
 msgid "Minimum marines"
@@ -1452,7 +1465,7 @@ msgstr "Минимум морпехов"
 
 #: modules/gzdoom_marine_closet.lua:1622
 msgid "Sets least amount of marines that can spawn per closet."
-msgstr ""
+msgstr "Нижний предел количества морпехов на каждую комнату."
 
 #: modules/gzdoom_marine_closet.lua:1629
 msgid "Maximum marines"
@@ -1460,7 +1473,7 @@ msgstr "Максимум морпехов"
 
 #: modules/gzdoom_marine_closet.lua:1636
 msgid "Sets most amount of marines that can spawn per closet."
-msgstr ""
+msgstr "Верхний предел количества морпехов на каждую комнату."
 
 #: modules/gzdoom_marine_closet.lua:1643
 msgid "Marine Health"
@@ -1468,7 +1481,7 @@ msgstr "Здоровье морпехов"
 
 #: modules/gzdoom_marine_closet.lua:1650
 msgid "Influences how much damage marines can take before dying."
-msgstr ""
+msgstr "Насколько много урона могут принять на себя морпехи прежде чем умрут. По умолчанию — 100."
 
 #: modules/gzdoom_marine_closet.lua:1657
 msgid "Marine scaling type"
@@ -1476,15 +1489,15 @@ msgstr "Изменение числа морпехов по уровням"
 
 #: modules/gzdoom_marine_closet.lua:1661
 msgid "Affects how min and max work for marine count:\n\nRandom: Random range\nProgressive: Goes from min to max through entire game\nEpisodic: Goes from min to max through episode\nRegressive/Regressive episodic: Goes from max to min through game or episode"
-msgstr ""
+msgstr "Определяет, каким образом учитываются опции \"Максимум морпехов\" и \"Минимум морпехов\".\n\nСлучайно: значение выбирается случайным образом между минимумом и максимумом.\n\nПостепенно: количество нарастает от минимума до максимума на протяжении всей игры.\n\nПо эпизодами: количество морпехов постепенно нарастает, от минимума в первом эпизоде до максимума в последнем.\n\nРегрессивно [по эпизодам]: количество морпехов постепенно уменьшается, от максимума в первом уровне/[эпизоде] до минимума в последнем."
 
 #: modules/gzdoom_marine_closet.lua:1668
 msgid "Level Min Position"
-msgstr "Мин. позиция на уровне"
+msgstr "Близость к старту"
 
 #: modules/gzdoom_marine_closet.lua:1675
 msgid "Affects how early in the level a closet can be found."
-msgstr ""
+msgstr "Определяет, насколько скоро относительно первой (стартовой) локации могут начинать генерироваться комнаты с морпехами."
 
 #: modules/gzdoom_marine_closet.lua:1676
 msgid "0:0 (Start Room),1:1 (Exit Room)"
@@ -1492,11 +1505,11 @@ msgstr "0:0 (Начальная комната),1:1 (Комната выхода
 
 #: modules/gzdoom_marine_closet.lua:1683
 msgid "Level Max Position"
-msgstr "Макс. позиция на уровне"
+msgstr "Удалённость от старта"
 
 #: modules/gzdoom_marine_closet.lua:1690
 msgid "Affects how late in the level a closet can be found."
-msgstr ""
+msgstr "Определяет, после какого процента уровня относительно первой (стартовой) локации комнаты с морпехами уже не могут быть сгенерированы."
 
 #: modules/gzdoom_marine_closet.lua:1691
 msgid "0:0 (Start Room),1:1 (Exit Room)"
@@ -1508,7 +1521,7 @@ msgstr "Технический уровень оружия"
 
 #: modules/gzdoom_marine_closet.lua:1702
 msgid "Influences weapons that marines spawn with:\n\nVery Low tech: Clearing demonic invasion with nothing but pistols and harsh language\nLow tech: Pistols, with some rare chainguns and shotguns\nMid tech: Shotguns/Chainguns with some rare pistols, super shotguns, rocket launchers and plasma rifles\nHigh tech: Rocket launchers/Plasma rifles with some rare BFGs, super shotguns and chainguns\nMix it up: Any weapon goes, let the dice decide!\nBFG Fiesta: BFG only, cyberdemons beware!\nProgressive: Marines start with pistols and get more powerful weapons through episode/megawad"
-msgstr ""
+msgstr "Определяет, каким оружием будут владеть дружественные морпехи.\n\nПочти нулевой: зачистка вторжения демонов исключительно с помощью верного пистолета и крепкого словца.\n\nНизкий: в основном пистолеты, но уже попадаются и дробовики, и пулемёты.\n\nСредний: предпочтение отдаётся дробовикам и пулемётам с редким вкраплением двустволок, ракетниц и плазменных винтовок. Кто-то, однако, всё равно будет предпочитать пистолеты.\n\nВысокий: ракетницы и плазменные винтовки, реже — двустволки, пулемёты и BFG9000.\n\nСлучайно: против демонов всё подходит, так что пусть решит судьба...\n\nПостепенно: морпехи, начиная с пистолетов, повышают свой уровень оружия по ходу игры.\n\nBFG-вечеринка: кибердемоны... Бойтесь!"
 
 #: modules/gzdoom_marine_closet.lua:1709
 msgid "Trigger Type"
@@ -1516,7 +1529,7 @@ msgstr "Тип активации"
 
 #: modules/gzdoom_marine_closet.lua:1713
 msgid "Influences the trigger that activates marines.\n\nSight: Marine closet activates once it can 'see' the player.\nRange: Closet activates when player is close enough, even if behind wall.\nClose Range: same as range except requires player to be really really close.\nMap Start: Closets are active on map start."
-msgstr ""
+msgstr "Определяет момент активации комнаты морпехов.\n\nИгрок в зоне видимости: только когда кто-то из её квартирантов может \"увидеть\" игрока.\n\nИгрок рядом: если игрок подошёл на достаточно близкое расстояние к ней.\n\nИгрок совсем близко: то же, что и \"Игрок рядом\", но здесь для активации он должен подойти буквально вплотную.\n\nСо старта карты: все комнаты с морпехами активны с самого начала уровня."
 
 #: modules/gzdoom_marine_closet.lua:1721
 msgid "Marine Color"
@@ -1524,7 +1537,7 @@ msgstr "Цвет морпехов"
 
 #: modules/gzdoom_marine_closet.lua:1725
 msgid "Lets you choose the color of marines, including option for random color per marine."
-msgstr ""
+msgstr "Позволяет выбрать цвет цвет брони морпехов, в том числе и случайную окраску на каждого."
 
 #: modules/gzdoom_marine_closet.lua:1732
 msgid "Friendly Fire"
@@ -1532,7 +1545,7 @@ msgstr "Огонь по своим"
 
 #: modules/gzdoom_marine_closet.lua:1736
 msgid "By default marines do no damage to player. However that means their use their own version of puffs and projectiles.\nIf this is enabled marines can damage player and original puffs and projectiles are used making them affected by mods that replace those.\nAdditionally if self damage variant is chosen marines can still get hurt by exploding barrels and such"
-msgstr ""
+msgstr "По умолчанию морпехи не наносят урон игроку; это вытекает из того, что они используют собственные, новые вариации хитскан-оружия и снарядов.\nПри включённой настройке морпехи будут использовать обычные снаряды и хитскан-атаки из Doom, что позволяет использовать их в заменяющих их модификациях.\nТакже, если выбран вариант с уроном по себе, морпехи смогут получать урон от взрывающихся бочек и тому подобных вещей."
 
 #: modules/gzdoom_marine_closet.lua:1743
 msgid "Player Damage Immunity"
@@ -1540,7 +1553,7 @@ msgstr "Иммунитет к урону от игрока"
 
 #: modules/gzdoom_marine_closet.lua:1747
 msgid "If enabled, marines will never take damage from player owned sources."
-msgstr ""
+msgstr "Если включено, дружественные морпехи никогда не будут получать урон от игрока."
 
 #: modules/gzdoom_marine_closet.lua:1753
 msgid "Weapon Sprites"
@@ -1548,7 +1561,7 @@ msgstr "Спрайты оружия"
 
 #: modules/gzdoom_marine_closet.lua:1757
 msgid "By default marines use default player sprite.\nIf this is enabled, marines will use special sprites according to weapon they carry.\nWith merge option sprites will be merged into oblige wad, otherwise they need to be loaded separately."
-msgstr ""
+msgstr "По умолчанию морпехи используют обычные спрайты игрока. Эта настройка позволяет изменить их внешний вид в соответствии с оружием, которое они носят.\n\nЕсли выбран пункт с объединением, то спрайты будут вшиты в выходной *.WAD-файл, в противом случае их нужно будет подгружать отдельно."
 
 #: modules/gzdoom_marine_closet.lua:1764
 msgid "Monster Quantity Multiplier"
@@ -1556,7 +1569,7 @@ msgstr "Множитель количества монстров"
 
 #: modules/gzdoom_marine_closet.lua:1768
 msgid "Influences amount of monsters in rooms with a marine closet."
-msgstr ""
+msgstr "Влияет на количество монстров в комнатах с морпехами."
 
 #: modules/gzdoom_marine_closet.lua:1775
 msgid "Monster Strength Modifier"
@@ -1564,7 +1577,7 @@ msgstr "Множитель силы монстров"
 
 #: modules/gzdoom_marine_closet.lua:1779
 msgid "If set, this strength setting is used in the room with marine closet instead of normal one."
-msgstr ""
+msgstr "Если этот параметр силы установлен, то он будет использоваться в комнате с морпехами вместо обычного."
 
 #: modules/gzdoom_marine_closet.lua:1787
 msgid "Strong Marines"
@@ -1572,7 +1585,7 @@ msgstr "Сверхвысокая реакция морпехов"
 
 #: modules/gzdoom_marine_closet.lua:1791
 msgid "Influences whether marines are as accurate and rapid firing as player, or are weaker."
-msgstr ""
+msgstr "Влияет на то, стреляют ли пехотинцы так же точно и быстро, как игрок, или же они будут несколько слабее."
 
 #: modules/gzdoom_marine_closet.lua:1798
 msgid "Followers"
@@ -1580,7 +1593,7 @@ msgstr "Следуют за игроком"
 
 #: modules/gzdoom_marine_closet.lua:1802
 msgid "By default marines try to follow the player if they have nothing else to do but would otherwise prioritize chasing enemies, and are also unable to follow player through rough terrain.\nIf this is enabled marines will much harder prioritize following player and will teleport if they are too far away."
-msgstr ""
+msgstr "По умолчанию морпехи, если у них нет цели, пытаются следовать за игроком. Если эта функция включена, то на функцию следования за игроком у них будет выставлен минимальный приоритет. Однако же они будут телепортироваться к Вам, если окажутся слишком далеко."
 
 #: modules/gzdoom_marine_closet.lua:1808
 msgid "Follow Distance"
@@ -1588,15 +1601,15 @@ msgstr "Лимит расстояния следования"
 
 #: modules/gzdoom_marine_closet.lua:1815
 msgid "If marines are followers, the maximum allowed distance they are allowed to stray before being teleported to the player."
-msgstr ""
+msgstr "Максимально разрешённая дистанция, после которой морпехи будут телепортироваться к игроку вместо того, чтобы пытаться к нему подойти."
 
 #: modules/gzdoom_marine_closet.lua:1821
 msgid "Allow in Gotchas"
-msgstr "Разрешить на предсделанных картах"
+msgstr "Также на специальных картах"
 
 #: modules/gzdoom_marine_closet.lua:1825
 msgid "Allows or disallows marine closets to spawn on gotchas and boss generator levels."
-msgstr ""
+msgstr "Разрешает появляться комнатам с морпехами в предсделанных уровнях и картах с босс-аренами."
 
 #: modules/gzdoom_marine_closet.lua:1831
 msgid "Death Messages"
@@ -1604,7 +1617,7 @@ msgstr "Сообщения о смерти"
 
 #: modules/gzdoom_marine_closet.lua:1835
 msgid "If enabled, will print a message in message log whenever a marine dies."
-msgstr ""
+msgstr "Если опция включена, то в консоль будут выводиться сообщения о смерти дружественных морпехов."
 
 #: modules/gzdoom_marine_closet.lua:1841
 msgid "In Secret Rooms"
@@ -1612,7 +1625,7 @@ msgstr "Также создавать в секретках"
 
 #: modules/gzdoom_marine_closet.lua:1845
 msgid "If enabled, allowed marine closets to be built in secret rooms."
-msgstr ""
+msgstr "При включённой опции комнаты с морпехами будут генерироваться также и в секретных комнатах."
 
 #: modules/hacx/ctl_hacx.lua:61
 msgid "HacX 1.2 Monster Control"
@@ -2564,7 +2577,7 @@ msgstr "Нет"
 
 #: modules/heretic/zdoom_specials.lua:32
 msgid "Per Sky Generator"
-msgstr "Учитывать генератор неба"
+msgstr "Учитывать цвет неба"
 
 #: modules/heretic/zdoom_specials.lua:33
 msgid "Random"
@@ -2608,11 +2621,11 @@ msgstr "Всегда по-разному"
 
 #: modules/heretic/zdoom_specials.lua:55
 msgid "Generic"
-msgstr "Общий"
+msgstr "Универальный"
 
 #: modules/heretic/zdoom_specials.lua:56
 msgid "Generated"
-msgstr "Сгенерированный"
+msgstr "Случайно сгенерированный"
 
 #: modules/heretic/zdoom_specials.lua:57
 msgid "NONE"
@@ -2636,7 +2649,7 @@ msgstr "Генератор тумана"
 
 #: modules/heretic/zdoom_specials.lua:1165
 msgid "Generates fog colors based on the Sky Generator or generate completely randomly."
-msgstr ""
+msgstr "Если создавать туман — то определять ли его цвет на основе сгенерированного неба или же не зависеть от него и, как следствие, выбирать окрас случайным образом."
 
 #: modules/heretic/zdoom_specials.lua:1171
 msgid "Fog Environment"
@@ -2644,7 +2657,7 @@ msgstr "Локации с туманом"
 
 #: modules/heretic/zdoom_specials.lua:1175
 msgid "Limits fog to outdoors (sectors with exposed sky ceilings) or allows for all."
-msgstr ""
+msgstr "Ограничить распространение тумана только локациями под небом или же разрешить его для всех секторов."
 
 #: modules/heretic/zdoom_specials.lua:1181
 msgid "Fog Intensity"
@@ -2652,7 +2665,7 @@ msgstr "Плотность тумана"
 
 #: modules/heretic/zdoom_specials.lua:1185
 msgid "Determines thickness and intensity of fog, if the Fog Generator is enabled. Subtle or Misty is recommended."
-msgstr ""
+msgstr "Определяет плотность тумана, если он включён. Для большинства целей рекомендуется использовать слабые варианты — к примеру, \"Трудноразличимый\" или \"Неясный\"."
 
 #: modules/heretic/zdoom_specials.lua:1191
 msgid "Sky Fog"
@@ -2660,7 +2673,7 @@ msgstr "Туман в небе"
 
 #: modules/heretic/zdoom_specials.lua:1195
 msgid "Tints the sky texture with the fog color, intensity is based on the Fog Intensity selection."
-msgstr ""
+msgstr "Подстраивает цвет текстуры неба под цвет тумана. Сила заливки основана настройке плотности тумана."
 
 #: modules/heretic/zdoom_specials.lua:1202
 msgid "Dynamic Lights"
@@ -2668,7 +2681,7 @@ msgstr "Динамический свет"
 
 #: modules/heretic/zdoom_specials.lua:1206
 msgid "Generates dynamic point lights on ceiling light prefabs."
-msgstr ""
+msgstr "Генерирует динамический свет на префабах освещения."
 
 #: modules/heretic/zdoom_specials.lua:1211
 msgid "Glowing Flats"
@@ -2676,7 +2689,7 @@ msgstr "Мерцающие поверхности"
 
 #: modules/heretic/zdoom_specials.lua:1215
 msgid "Adds Doom-64 style lighting/glowing flats via GLDEFS lump. Visible on Zandronum ports as well."
-msgstr ""
+msgstr "Добавляет освещение и мерцающие поверхности в стиле Doom-64 с помощью lump GLDEFS. Zandronum также поддерживает эту функцию."
 
 #: modules/heretic/zdoom_specials.lua:1221
 msgid "Shuffle Music"
@@ -2692,15 +2705,15 @@ msgstr "Генератор историй"
 
 #: modules/heretic/zdoom_specials.lua:1234
 msgid "Adds cluster information with generic or randomized story text into the MAPINFO structure!"
-msgstr ""
+msgstr "Добавляет новые истории в MAPINFO на экраны межмиссионных текстов на основе универсальной (общей) или же случайной структуры."
 
 #: modules/heretic/zdoom_specials.lua:1239
 msgid "Quit Messages"
-msgstr "Подменить сообщения при выходе"
+msgstr "Изменить сообщения выхода"
 
 #: modules/heretic/zdoom_specials.lua:1243
 msgid "Adds custom quit messages into the MAPINFO game definition."
-msgstr ""
+msgstr "Изменяет в MAPINFO сообщения при выходе из игры на новые."
 
 #: modules/heretic/zdoom_specials.lua:1248
 msgid "Intermission Music"
@@ -2708,15 +2721,15 @@ msgstr "Музыка на интермиссиях"
 
 #: modules/heretic/zdoom_specials.lua:1252
 msgid "Changes the music playing during intermission screens."
-msgstr ""
+msgstr "Изменяет музыку, играющую на интермиссионных экранах."
 
 #: modules/heretic/zdoom_specials.lua:1257
 msgid "Disable Intermissions"
-msgstr "Убрать межмиссионный экран"
+msgstr "Убрать интермиссионные экраны"
 
 #: modules/heretic/zdoom_specials.lua:1261
 msgid "Removes end-level Intermission Screens (containing map completion data) but retains Text Screens with story."
-msgstr ""
+msgstr "Удаляет все интермиссионные экраны, содержащие статистику по пройденному уровню. Текстовые вставки (истории) остаются."
 
 #: modules/hexen/ctl_hexen.lua:61
 msgid "Hexen Monster Control"
