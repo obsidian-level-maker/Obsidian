@@ -255,7 +255,7 @@ OB_MODULES["zdoom_ambient_sound"] =
   {
     {
       name = "snd_start_id",
-      label=("DoomEdNum Offset"),
+      label=_("DoomEdNum Offset"),
       choices=ZDOOM_SOUND.ACTOR_ID_OFFSET_CHOICES,
       tooltip = _("Selects the starting thing ID for generating ambient sound actors. Use only if you are playing a mod using conflicting Editor Numbers. If you don't know what this is this setting is best left as-is."),
       default = "20000",

@@ -209,7 +209,7 @@ OB_MODULES["prefab_control"] =
 
     {
       name = "bool_autodetail",
-      label=("Auto Detailing"),
+      label=_("Auto Detailing"),
       valuator = "button",
       default = 1,
       tooltip = _("Reduces the amount of complex architecture in a map based on its size. Default is on in binary map format, off in UDMF map format."),
@@ -394,7 +394,7 @@ OB_MODULES["prefab_control"] =
 
     {
       name = "bool_jump_crouch",
-      label=("Jump/Crouch Fabs"),
+      label=_("Jump/Crouch Fabs"),
       valuator = "button",
       default = 1,
       tooltip = _("Enables or disables prefabs that require jumping or crouching to navigate."),
@@ -421,7 +421,7 @@ OB_MODULES["prefab_control"] =
 
     {
       name = "bool_fab_match_theme",
-      label=("Match Theme"),
+      label=_("Match Theme"),
       valuator = "button",
       default = 1,
       tooltip = _("Ensures that prefabs selected match their intended Theme."),
