@@ -3521,7 +3521,7 @@ msgstr ""
 
 #: modules/miscellaneous.lua:136
 msgid "Small-ish"
-msgstr ""
+msgstr "Уклон в небольшие"
 
 #: modules/miscellaneous.lua:137
 msgid "Small"
@@ -3533,7 +3533,7 @@ msgstr ""
 
 #: modules/miscellaneous.lua:139
 msgid "Large-ish"
-msgstr ""
+msgstr "Уклон в крупные"
 
 #: modules/miscellaneous.lua:140
 msgid "Normal"
@@ -3541,11 +3541,11 @@ msgstr ""
 
 #: modules/miscellaneous.lua:141
 msgid "Conservative"
-msgstr ""
+msgstr "Традиционно"
 
 #: modules/miscellaneous.lua:142
 msgid "Very Conservative"
-msgstr ""
+msgstr "Консервативно"
 
 #: modules/miscellaneous.lua:143
 msgid "Random"
@@ -3553,7 +3553,7 @@ msgstr ""
 
 #: modules/miscellaneous.lua:148
 msgid "Less-ish"
-msgstr ""
+msgstr "Уклон в меньшую сторону"
 
 #: modules/miscellaneous.lua:149
 msgid "Less"
@@ -3565,7 +3565,7 @@ msgstr ""
 
 #: modules/miscellaneous.lua:151
 msgid "More-ish"
-msgstr ""
+msgstr "Уклон в большую сторону"
 
 #: modules/miscellaneous.lua:152
 msgid "Normal"
@@ -3739,6 +3739,10 @@ msgstr "Процент парков, использующий полностью
 msgid "Park Detail"
 msgstr "Детализация парков"
 
+#: modules/prefab_controller.lua:212
+msgid "Auto Detailing"
+msgstr "Автоподгонка кол-ва деталей"
+
 #: modules/miscellaneous.lua:399
 msgid "Reduces or increases the probability of park decorations such as trees on park rooms."
 msgstr "Изменяет шанс появления декораций в парках, например, таких, как деревья."
@@ -3817,7 +3821,7 @@ msgstr "Контролирует количество красивых пейз�
 
 #: modules/miscellaneous.lua:470
 msgid "Sink Style"
-msgstr "Стиль акваторий"
+msgstr "Резкость границ акваторий"
 
 #: modules/miscellaneous.lua:472
 msgid "Determines the style for corners with sunken ceilings and floors. Curved makes sink corners soft, while Sharp leaves the corners angular. Per Theme means choice is controlled by theme profile instead. Tech-ish maps favor sharp corners while hell-ish favor curved."
@@ -3837,11 +3841,11 @@ msgstr "Тёмные пространства под небом"
 
 #: modules/miscellaneous.lua:489
 msgid "Affects the chance of a level having darker skies."
-msgstr ""
+msgstr "Влияет на шанс появления на уровне тёмного неба."
 
 #: modules/miscellaneous.lua:494
 msgid "Outdoor Shadows"
-msgstr "Тень геометрии под небом"
+msgstr "Тени геометрии под небом"
 
 #: modules/miscellaneous.lua:497
 msgid "Adds shadows to outdoor structures."
@@ -4234,7 +4238,7 @@ msgstr "Определяет вероятность того, что групп�
 
 #: modules/prefab_controller.lua:291
 msgid "Peered Starts/Exits"
-msgstr "Эквивалентные старт/выход"
+msgstr "Парный старт/выход"
 
 #: modules/prefab_controller.lua:295
 msgid "Attempt to use matched start and exit fabs for a level (if a matched set is possible)."
@@ -4316,6 +4320,10 @@ msgstr "Лестничные пролёты"
 msgid "Changes probabilities for high-step ladders (stairs)."
 msgstr "Изменяет вероятность появления лестничных пролётов."
 
+#: modules/prefab_controller.lua:397
+msgid "Jump/Crouch Fabs"
+msgstr "Префабы с прыжками/приседаниями"
+
 #: modules/prefab_controller.lua:400
 msgid "Enables or disables prefabs that require jumping or crouching to navigate."
 msgstr "Включает или отключает префабы, для которых необходимо использовать прыжки и/или приседания."
@@ -4327,6 +4335,10 @@ msgstr "Наносящие урон коридоры"
 #: modules/prefab_controller.lua:412
 msgid "Changes the liquids on hallways with damaging floors to either be damaging (default) or non-damaging."
 msgstr "Настройка, отвечающая за то, будут ли наносить урон жидкости, разлитые в коридорах. По умолчанию урон наносится."
+
+#: modules/prefab_controller.lua:424
+msgid "Match Theme"
+msgstr "Соответствовать теме"
 
 #: modules/prefab_controller.lua:427
 msgid "Ensures that prefabs selected match their intended Theme."
@@ -5730,7 +5742,7 @@ msgstr ""
 
 #: modules/ui_arch.lua:41
 msgid "Mostly"
-msgstr "В основном"
+msgstr "Преимущественно"
 
 #: modules/ui_arch.lua:42
 msgid "Normal"
@@ -5786,11 +5798,11 @@ msgstr "10:10 (Микроскопический),16:16 (Миниатюрный),
 
 #: modules/ui_arch.lua:130
 msgid "Determines size of map (Width x Height) in grid squares."
-msgstr "Определяет размер карты (длина и ширина) с одной ячейкой, равной квадрату BLOCKMAP-сетки."
+msgstr "Определяет размер карты (длина и ширина) со стороной ячейки, равной стороне квадрата BLOCKMAP-сетки."
 
 #: modules/ui_arch.lua:131
 msgid "FOR 32-BIT USERS: To prevent memory usage issues, the following maximum map size limits will be enforced regardless of slider setting:\n\nFull Game:\n-Fixed size: 30\n-Progressive: 48\n-Episodic: 48\n-Mix It Up: 42\n\nEpisode:\n-Fixed size: 58\n\nAll other combinations will honor the slider settings.\n\nIf you are planning to play on any choices that involve maps at sizes of 50 and above, Autodetailing will be enabled by default. The stability of maps with sizes 60 and beyond is not predictable."
-msgstr "ДЛЯ ПОЛЬЗОВАТЕЛЕЙ 32-БИТНЫХ СИСТЕМ: во избежание ошибок, связанных с использованием и выделением памяти, верхний предел карт будет жёстко ограничен следующими значениями:\n\nДля полной игры:\n ├ Фиксированный размер: 30;\n ├ Постепенно: 48;\n ├ По эпизодам: 48;\n └ Случайно: 42.\n\nОдин эпизод:\n ├ Фиксированный размер: 58;\n └ Другие комбинации будут использовать значение ползунка.\n\nЕсли вы планируете играть на любых вариантах, включающих карты размером 50 и выше, опция \"Автоподгонка количества деталей\" будет включена по умолчанию. Стабильность карт размером 60 и выше непредсказуема."
+msgstr "ДЛЯ ПОЛЬЗОВАТЕЛЕЙ 32-БИТНЫХ СИСТЕМ: во избежание ошибок, связанных с использованием и выделением памяти, верхний предел карт будет жёстко ограничен следующими значениями:\n\nДля полной игры:\n ├ Фиксированный размер: 30;\n ├ Постепенно: 48;\n ├ По эпизодам: 48;\n └ Случайно: 42.\n\nОдин эпизод:\n ├ Фиксированный размер: 58;\n └ Другие комбинации будут использовать значение слайдера.\n\nЕсли вы планируете играть на любых вариантах, включающих карты размером 50 и выше, опция \"Автоподгонка количества деталей\" будет включена по умолчанию. Стабильность карт размером 60 и выше непредсказуема."
 
 #: modules/ui_arch.lua:139
 msgid "Upper Bound"
@@ -5850,7 +5862,7 @@ msgstr "Позволяет с указанной частотой смешива
 
 #: modules/ui_arch.lua:194
 msgid "This replaces the -ish theme choices. By selecting Mostly, this means your selected theme is occasionally littered by other themes while setting it to Less means the original selected theme is what's littered in instead. Default behavior is Normal."
-msgstr "Периодически смешивает слабо выраженные темы с какими-либо другими. Пункт «В основном» означает, что выбранная слабая тема будет иногда \"замусорена\" другими темами; «Меньше» — что вместо этого будет смешана исходная тема."
+msgstr "Периодически смешивает слабо выраженные темы с какими-либо другими. Пункт «Преимущественно» означает, что выбранная слабая тема будет иногда \"замусорена\" другими темами; «Меньше» — что вместо этого будет смешана исходная тема."
 
 #: modules/ui_arch.lua:205
 msgid "Prebuilt Levels"
@@ -5858,19 +5870,19 @@ msgstr "Добавлять предсозданные карты"
 
 #: modules/ui_arch.lua:208
 msgid "Enable or disable prebuilt maps. When disabled, are replaced with generated maps instead."
-msgstr ""
+msgstr "Добавлять ли карты, сделанные заранее. Если опция отключена, будут использоваться сгенерированные уровни."
 
 #: modules/ui_arch.lua:209
 msgid "Prebuilt levels are useful when, for example, a boss encounter like the Icon of Sin is desired. This sort of level would be very difficult to generate procedurally, and thus a handmade map is used instead."
-msgstr ""
+msgstr "Готовые уровни обычно полезны тогда, когда требуется встреча с боссом — к примеру, Иконой Греха. Подобный уровень было бы очень сложно сгенерировать процедурно, поэтому вместо этого используется одна из подходящих карт, сделанных вручную заранее."
 
 #: modules/ui_arch.lua:216
 msgid "Lighting Multiplier"
-msgstr ""
+msgstr "Множитель света"
 
 #: modules/ui_arch.lua:225
 msgid "Adjust overall map lighting"
-msgstr ""
+msgstr "Подправить среднюю силу освещения карт"
 
 #: modules/ui_arch.lua:226
 msgid "This will apply a multiplier to the values in the default lighting tables when determining the brightness level of a room. If control over the minimum or maximum brightness values is desired, please use the Minimum/Maximum Brightness sliders in the Advanced Architecture module."
@@ -5878,59 +5890,59 @@ msgstr ""
 
 #: modules/ui_arch.lua:230
 msgid "Outdoors"
-msgstr ""
+msgstr "Пространство под небом"
 
 #: modules/ui_arch.lua:231
 msgid "Control the amount of outdoor areas."
-msgstr ""
+msgstr "Насколько много будет локаций на открытом воздухе (под текстурой \"F_SKY1\" или её заменителе)."
 
 #: modules/ui_arch.lua:234
 msgid "Caves"
-msgstr ""
+msgstr "Пещеры"
 
 #: modules/ui_arch.lua:235
 msgid "Control the amount of caves."
-msgstr ""
+msgstr "Насколько часто будут генерироваться пещеры."
 
 #: modules/ui_arch.lua:238
 msgid "Liquids"
-msgstr ""
+msgstr "Жидкости"
 
 #: modules/ui_arch.lua:239
 msgid "Control the amount of liquids."
-msgstr ""
+msgstr "Насколько часто будут генерироваться различные жидкости."
 
 #: modules/ui_arch.lua:242
 msgid "Hallways"
-msgstr ""
+msgstr "Коридоры"
 
 #: modules/ui_arch.lua:243
 msgid "Control the amount of hallways."
-msgstr ""
+msgstr "Насколько часто будут генерироваться коридоры."
 
 #: modules/ui_arch.lua:246
 msgid "Teleports"
-msgstr ""
+msgstr "Телепорты"
 
 #: modules/ui_arch.lua:247
 msgid "Control the amount of teleporters."
-msgstr ""
+msgstr "Насколько часто будут генерироваться телепортеры."
 
 #: modules/ui_arch.lua:250
 msgid "Steepness"
-msgstr ""
+msgstr "Крутизна рельефа"
 
 #: modules/ui_arch.lua:251
 msgid "Control the height difference of stairs, lifts, and joiners throughout levels."
-msgstr ""
+msgstr "Управление силой перепадов высот по всему уровню, в том числе на лестницах, в комнатах и на лифтах."
 
 #: modules/ui_arch.lua:257
 msgid "Bottomless Vistas"
-msgstr ""
+msgstr "Виды на бездонные пропасти"
 
 #: modules/ui_arch.lua:260
 msgid "This feature allows for vistas that show more of the skybox below the horizon. This does not prevent skybox tiling."
-msgstr ""
+msgstr "Позволяет использовать виды на пространства, захватывающие часть скайбокса ниже горизонта. Функция не предотвращает его тайлинг."
 
 #: modules/ui_arch.lua:261
 msgid "Enable - Bottomless vistas can always show. Pick this choice when using 3D Skyboxes.\n\nSky-gen Smart - Bottomless vistas appear only on episodes with no mountain backdrop based on the Sky Generator.\n\nDisable - Old Oblige behavior - no bottomless vistas."
@@ -5938,7 +5950,7 @@ msgstr ""
 
 #: modules/ui_arch.lua:268
 msgid "ZDoom 3D Skybox"
-msgstr ""
+msgstr "3D-скайбокс ZDoom"
 
 #: modules/ui_arch.lua:271
 msgid "Choose if 3D Skyboxes are rendered into levels and their style."
@@ -5970,35 +5982,35 @@ msgstr ""
 
 #: modules/ui_mons.lua:34
 msgid "Teleports Only"
-msgstr ""
+msgstr "Только телепортация"
 
 #: modules/ui_mons.lua:35
 msgid "Closets Only"
-msgstr ""
+msgstr "Только открытие дверей"
 
 #: modules/ui_mons.lua:36
 msgid "20% Closets - 80% Teleports"
-msgstr ""
+msgstr "20% дверей на 80% телепортов"
 
 #: modules/ui_mons.lua:37
 msgid "40% Closets - 60% Teleports"
-msgstr ""
+msgstr "40% дверей на 60% телепортов"
 
 #: modules/ui_mons.lua:38
 msgid "60% Closets - 40% Teleports"
-msgstr ""
+msgstr "60% дверей на 40% телепортов"
 
 #: modules/ui_mons.lua:39
 msgid "80% Closets - 20% Teleports"
-msgstr ""
+msgstr "80% дверей на 20% телепортов"
 
 #: modules/ui_mons.lua:44
 msgid "Weaker"
-msgstr ""
+msgstr "Элементарно"
 
 #: modules/ui_mons.lua:45
 msgid "Easier"
-msgstr ""
+msgstr "Проще"
 
 #: modules/ui_mons.lua:46
 msgid "Average"
@@ -6006,27 +6018,27 @@ msgstr "Средне"
 
 #: modules/ui_mons.lua:47
 msgid "Tricky"
-msgstr ""
+msgstr "Неприятно"
 
 #: modules/ui_mons.lua:48
 msgid "Treacherous"
-msgstr ""
+msgstr "Сложно"
 
 #: modules/ui_mons.lua:49
 msgid "Dangerous"
-msgstr ""
+msgstr "Опасно"
 
 #: modules/ui_mons.lua:50
 msgid "Deadly"
-msgstr ""
+msgstr "Смертельно"
 
 #: modules/ui_mons.lua:51
 msgid "Lethal"
-msgstr ""
+msgstr "Летально"
 
 #: modules/ui_mons.lua:52
 msgid "CRAZY"
-msgstr ""
+msgstr "БЕЗУМИЕ"
 
 #: modules/ui_mons.lua:57
 msgid "Yes - Full Strength"
@@ -6174,7 +6186,7 @@ msgstr ""
 
 #: modules/ui_mons.lua:192
 msgid "Affects how many different monster types can appear in each room.\nSetting this to NONE will make each level use a single monster type"
-msgstr "Определяет, как много разных видов монстров может быть сгенерировано в каждой комнате.\nЕсли выбран вариант \"ОТСУТСТВУЕТ\", все монстры на уровне будут одного вида."
+msgstr "Определяет, как много разных видов монстров может быть сгенерировано в каждой комнате.\nЕсли выбран вариант \"НЕТ\", все монстры на уровне будут одного вида."
 
 #: modules/ui_mons.lua:196
 msgid "Monster Variety Jumpstart"
@@ -6250,7 +6262,7 @@ msgstr "Создавать монстров в секретных комната
 
 #: modules/ui_pickups.lua:24
 msgid "NONE"
-msgstr "ОТСУТСТВУЕТ"
+msgstr "НЕТ"
 
 #: modules/ui_pickups.lua:25
 msgid "Scarce"
@@ -6258,7 +6270,7 @@ msgstr "Редко"
 
 #: modules/ui_pickups.lua:26
 msgid "Less"
-msgstr "Меньше среднего"
+msgstr "Меньше"
 
 #: modules/ui_pickups.lua:27
 msgid "Bit Less"
@@ -6282,7 +6294,7 @@ msgstr "Множество"
 
 #: modules/ui_pickups.lua:36
 msgid "NONE"
-msgstr "ОТСУТСТВУЕТ"
+msgstr "НЕТ"
 
 #: modules/ui_pickups.lua:37
 msgid "Very Soon"
@@ -6354,7 +6366,7 @@ msgstr "Предметы"
 
 #: modules/ui_pickups.lua:81
 msgid "Health"
-msgstr "Предметы злдоровья"
+msgstr "Предметы здоровья"
 
 #: modules/ui_pickups.lua:83
 msgid "Control the amount of health items."
@@ -6374,7 +6386,7 @@ msgstr "Оружие"
 
 #: modules/ui_pickups.lua:94
 msgid "Control the amount of weapons."
-msgstr "Управление общим количеством оружия — насколько скоро оно появляется."
+msgstr "Управление общим количеством оружия — насколько скоро оно будет появляться."
 
 #: modules/ui_pickups.lua:97
 msgid "Items"
@@ -6434,7 +6446,7 @@ msgstr "Формат карты"
 
 #: modules/ui_reject_options.lua:96
 msgid "Choose between UDMF and binary map format.\n\nBe advised that UDMF format can result in very large WAD files due to the size of its TEXTMAP lumps."
-msgstr ""
+msgstr "Выбор между двоичным (исходным) форматом карт и форматом UDMF.\n\nИмейте в виду, что использование UDMF может привести к невероятно крупным файлам *.WAD из-за размера lump TEXTMAP."
 
 #: modules/ui_reject_options.lua:111
 msgid "Binary"
@@ -7086,7 +7098,7 @@ msgstr "Полная игра"
 
 #: scripts/defs.lua:546
 msgid "NONE"
-msgstr "ОТСУТСТВУЕТ"
+msgstr "НЕТ"
 
 #: scripts/defs.lua:547
 msgid "Rare"
@@ -7098,7 +7110,7 @@ msgstr "Мало"
 
 #: scripts/defs.lua:549
 msgid "Less"
-msgstr "Меньше среднего"
+msgstr "Меньше"
 
 #: scripts/defs.lua:550
 msgid "Some"
@@ -7502,7 +7514,7 @@ msgstr "Сообщения отладки"
 
 #: source_files/obsidian_main/m_options.cc:662
 msgid " Ignore Slider Limits"
-msgstr "Игнорировать ограничения ползунка"
+msgstr "Игнорировать ограничения слайдеров"
 
 #: source_files/obsidian_main/m_options.cc:673
 msgid " Preserve Failed Builds"
@@ -7756,5 +7768,68 @@ msgstr "Выход"
 msgid "Enter Value:"
 msgstr "Введите значение:"
 
-msgid "Surprise Me/Go"
-msgstr "Тест..."
+#: source_files/obsidian_main/ui_module.cc:307
+msgid "Use Slider Value"
+msgstr "Использовать слайдер"
+
+#: source_files/obsidian_main/ui_module.cc:902
+msgid "Enter Value:"
+msgstr "Введите значение:"
+
+#: source_files/obsidian_main/ui_window.cc:78
+msgid "File/Options"
+msgstr "Файл/Опции"
+
+#: source_files/obsidian_main/ui_window.cc:79
+msgid "File/Theme"
+msgstr "Файл/Тема"
+
+#: source_files/obsidian_main/ui_window.cc:80
+msgid "File/Set Seed"
+msgstr "Файл/Ключ генерации"
+
+#: source_files/obsidian_main/ui_window.cc:81
+msgid "File/Config Manager"
+msgstr "Файл/Конфигурация"
+
+#: source_files/obsidian_main/ui_window.cc:82
+msgid "Help/About"
+msgstr "Помощь/О программе"
+
+#: source_files/obsidian_main/ui_window.cc:83
+msgid "Help/View Logs"
+msgstr "Помощь/Просмотр лога"
+
+#: source_files/obsidian_main/ui_window.cc:84
+msgid "Help/Glossary"
+msgstr "Помощь/Глоссарий"
+
+#: source_files/obsidian_main/ui_window.cc:85
+msgid "Help/ "
+msgstr "Помощь/ "
+
+#: source_files/obsidian_main/ui_window.cc:86
+msgid "Help/Tutorial"
+msgstr "Помощь/Руководство"
+
+#: source_files/obsidian_main/ui_window.cc:87
+#msgid "Surprise Me/Go"
+#msgstr "Удивите меня/Пуск"
+
+#msgid "Surprise Me/Preserve Old Config"
+#msgstr "Удивите меня/Сохранить старую конфигурацию"
+
+#msgid "Surprise Me/Randomize Architecture"
+#msgstr "Удивите меня/Случайная архитектура"
+
+#msgid "Surprise Me/Randomize Combat"
+#msgstr "Удивите меня/Случайный бой"
+
+#msgid "Surprise Me/Randomize Pickup"
+#msgstr "Удивите меня/Случайные предметы"
+
+#msgid "Surprise Me/Randomize Other"
+#msgstr "Удивите меня/Случайные иные настройки"
+
+msgid "This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."
+msgstr "══ Используемая терминология ══\n\nОт переводчика: часть слов, в основном укоренившиеся в широких кругах (с позволения сказать, имена собственные — имп, ревенант, ...) я просто транслитерировал, дословно переводя только в некоторых подсказках. Также: некоторые термины, хорошо звучащие в английском языке, при попытке локализации оказались слишком длинными для отведённого лимита символов. Поэтому некоторые слова пришлось заменить на более короткие варианты.\n\n\"Префаб\" — заготовка/составляющая уровня/примитив/кубик конструктора. От английского \"Pre-fabricated\" (дословно \"Предсобранный\")."

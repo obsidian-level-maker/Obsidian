@@ -27,6 +27,9 @@ build/
 .idea/
 cmake-build-*
 
+# Pure CMake (appeared from COMPILING.md)
+build/
+
 # User dirs
 addons/*.pk3
 
