@@ -133,3 +133,59 @@ PREFABS.Decor_deal =
 
   face_open = true,
 }
+
+PREFABS.Decor_guardhouse_secret =
+{
+  file   = "decor/dem_props.wad",
+  map    = "MAP11",
+
+  engine = "zdoom",
+
+  prob   = 3500,
+  theme  = "urban",
+  env    = "building",
+
+  texture_pack = "armaetus",
+
+  style = "secrets",
+
+  where  = "point",
+  size   = 64,
+  height = 128,
+
+  bound_z1 = 0,
+  bound_z2 = 128,
+
+  z_fit = "top",
+
+  sink_mode = "never_liquids",
+}
+
+PREFABS.Decor_urban_newsstand_secret =
+{
+  file   = "decor/dem_props.wad",
+  map    = "MAP12",
+
+  engine = "zdoom",
+
+  prob   = 3000,
+  theme  = "urban",
+  env    = "building",
+
+  texture_pack = "armaetus",
+
+  jump_crouch = true,
+
+  style = "secrets",
+
+  where  = "point",
+  size   = 64,
+  height = 128,
+
+  bound_z1 = 0,
+  bound_z2 = 128,
+
+  z_fit = "top",
+
+  sink_mode = "never_liquids",
+}
