@@ -10,6 +10,8 @@ PREFABS.Arch_gtd_beed28_door_crouch =
   prob = 150,
   theme = "!hell",
 
+  jump_crouch = true,
+
   kind = "arch",
   where = "edge",
 

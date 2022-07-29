@@ -71,6 +71,8 @@ PREFABS.Item_dem_campsiteC_secretcloset =
 
   where  = "seeds",
 
+  jump_crouch = true,
+
   seed_w = 3,
   seed_h = 2,
 
@@ -198,6 +200,8 @@ PREFABS.Item_dem_cavestal_secretcloset =
   env = "cave",
 
   where  = "seeds",
+
+  jump_crouch = true,
 
   seed_w = 3,
   seed_h = 2,
@@ -327,6 +331,8 @@ PREFABS.Pic_dem_jumpy1_secretcloset =
   height = 192,
 
   prob   = 100,
+
+  jump_crouch = true,
 
   key   = "secret",
 

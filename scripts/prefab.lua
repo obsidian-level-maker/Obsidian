@@ -2808,6 +2808,12 @@ function Fab_find_matches(reqs, match_state)
     -- type check
     local kind = assert(def.kind)
 
+    if def.jump_crouch and def.jump_crouch == true then
+      if PARAM.bool_jump_crouch and PARAM.bool_jump_crouch == 0 then
+        return 0
+      end
+    end
+
     if reqs.kind ~= kind then return 0 end
 
     -- placement check

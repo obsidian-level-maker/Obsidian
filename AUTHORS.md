@@ -122,6 +122,9 @@ Dan_The_Noob
 Il Str
   - Discord Dark/Discord Light themes
 
+VoidRunner
+  - Backrooms theme
+
 # OBLIGE
 
 ## DEVELOPER:

@@ -332,6 +332,8 @@ PREFABS.Decor_dem_ruinsjs1 =
 
   style = "secrets",
 
+  jump_crouch = true,
+
   env    = "nature",
 
   where  = "point",

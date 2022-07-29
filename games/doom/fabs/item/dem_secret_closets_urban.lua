@@ -14,6 +14,8 @@ PREFABS.Item_secret_garage_closet =
   env   = "outdoor",
   prob  = 100,
 
+  jump_crouch = true,
+
   key   = "secret",
 
   where  = "seeds",
