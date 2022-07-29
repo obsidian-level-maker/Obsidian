@@ -753,6 +753,7 @@ ULTDOOM.THEMES =
       gtd_generic_ceilwall_2 = 30,
       gtd_generic_ceilwall_3 = 30,
       gtd_generic_ceilwall_silver_frame = 30,
+      gtd_generic_ceilwall_double_silver_frame = 30,
       --
       gtd_generic_glow_wall = 50,
       gtd_generic_double_banded_ceil = 50,
@@ -1105,6 +1106,7 @@ ULTDOOM.THEMES =
       gtd_generic_ceilwall_2 = 30,
       gtd_generic_ceilwall_3 = 30,
       gtd_generic_ceilwall_silver_frame = 30,
+      gtd_generic_ceilwall_double_silver_frame = 30,
       --
       gtd_generic_glow_wall = 30,
       gtd_generic_double_banded_ceil = 30,
@@ -1533,6 +1535,7 @@ ULTDOOM.THEMES =
       gtd_generic_ceilwall_2 = 30,
       gtd_generic_ceilwall_3 = 30,
       gtd_generic_ceilwall_silver_frame = 30,
+      gtd_generic_ceilwall_double_silver_frame = 30,
       --
       gtd_generic_glow_wall = 30,
       gtd_generic_double_banded_ceil = 30,
@@ -1958,6 +1961,7 @@ ULTDOOM.THEMES =
       gtd_generic_ceilwall_2 = 30,
       gtd_generic_ceilwall_3 = 30,
       gtd_generic_ceilwall_silver_frame = 30,
+      gtd_generic_ceilwall_double_silver_frame = 30,
       --
       gtd_generic_glow_wall = 30,
       gtd_generic_double_banded_ceil = 30,
