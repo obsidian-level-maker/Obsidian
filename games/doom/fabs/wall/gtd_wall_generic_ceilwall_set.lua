@@ -246,3 +246,34 @@ PREFABS.Wall_generic_ceilwall_hell_3_diag =
   tex_TEKWALL6 = "SP_FACE2",
   tex_METAL7 = "BFALL1"
 }
+
+---
+-- variation 4
+---
+
+PREFABS.Wall_generic_ceilwall_silver_frame =
+{
+  template = "Wall_generic_ceilwall",
+  map = "MAP07",
+
+  height = 96,
+
+  group = "gtd_generic_ceilwall_silver_frame",
+
+  bound_z2 = 96,
+  z_fit = "bottom",
+}
+
+PREFABS.Wall_generic_ceilwall_silver_frame_diag =
+{
+  template = "Wall_generic_ceilwall",
+  map = "MAP08",
+
+  height = 96,
+  where = "diagonal",
+
+  group = "gtd_generic_ceilwall_silver_frame",
+
+  bound_z2 = 96,
+  z_fit = "bottom",
+}
