@@ -246,3 +246,143 @@ PREFABS.Wall_generic_ceilwall_hell_3_diag =
   tex_TEKWALL6 = "SP_FACE2",
   tex_METAL7 = "BFALL1"
 }
+
+---
+-- variation 4
+---
+
+PREFABS.Wall_generic_ceilwall_silver_frame =
+{
+  template = "Wall_generic_ceilwall",
+  map = "MAP07",
+
+  height = 96,
+  theme = "any",
+
+  group = "gtd_generic_ceilwall_silver_frame",
+
+  bound_z2 = 96,
+  z_fit = "bottom",
+}
+
+PREFABS.Wall_generic_ceilwall_silver_frame_diag =
+{
+  template = "Wall_generic_ceilwall",
+  map = "MAP08",
+
+  height = 96,
+  where = "diagonal",
+  theme = "any",
+
+  group = "gtd_generic_ceilwall_silver_frame",
+
+  bound_z2 = 96,
+  z_fit = "bottom",
+}
+
+PREFABS.Wall_generic_ceilwall_silver_frame_hell =
+{
+  template = "Wall_generic_ceilwall",
+  map = "MAP07",
+
+  height = 96,
+  theme = "hell",
+  rank = 1,
+
+  group = "gtd_generic_ceilwall_silver_frame",
+
+  bound_z2 = 96,
+  z_fit = "bottom",
+
+  tex_SHAWN2 = "METAL",
+  flat_FLAT23 = "CEIL5_2"
+}
+
+PREFABS.Wall_generic_ceilwall_silver_frame_diag_hell =
+{
+  template = "Wall_generic_ceilwall",
+  map = "MAP08",
+
+  height = 96,
+  where = "diagonal",
+  theme = "hell",
+  rank = 1,
+
+  group = "gtd_generic_ceilwall_silver_frame",
+
+  bound_z2 = 96,
+  z_fit = "bottom",
+
+  tex_SHAWN2 = "METAL",
+  flat_FLAT23 = "CEIL5_2"
+}
+
+---
+-- variation 5
+---
+
+PREFABS.Wall_generic_ceilwall_double_silver_frame =
+{
+  template = "Wall_generic_ceilwall",
+  map = "MAP08",
+
+  height = 96,
+  theme = "any",
+
+  group = "gtd_generic_ceilwall_double_silver_frame",
+
+  bound_z2 = 96,
+  z_fit = {36,38, 50,52 , 90,92}
+}
+
+PREFABS.Wall_generic_ceilwall_double_silver_frame_diag =
+{
+  template = "Wall_generic_ceilwall",
+  map = "MAP09",
+
+  height = 96,
+  where = "diagonal",
+  theme = "any",
+
+  group = "gtd_generic_ceilwall_double_silver_frame",
+
+  bound_z2 = 96,
+  z_fit = {36,38, 50,52 , 90,92},
+}
+
+PREFABS.Wall_generic_ceilwall_double_silver_frame_hell =
+{
+  template = "Wall_generic_ceilwall",
+  map = "MAP08",
+
+  height = 96,
+  theme = "hell",
+  rank = 1,
+
+  group = "gtd_generic_ceilwall_double_silver_frame",
+
+  bound_z2 = 96,
+  z_fit = {36,38, 50,52 , 90,92},
+
+  tex_SHAWN2 = "METAL",
+  flat_FLAT23 = "CEIL5_2"
+}
+
+PREFABS.Wall_generic_ceilwall_double_silver_frame_diag_hell =
+{
+  template = "Wall_generic_ceilwall",
+  map = "MAP09",
+
+  height = 96,
+  where = "diagonal",
+  theme = "hell",
+  rank = 1,
+
+  group = "gtd_generic_ceilwall_double_silver_frame",
+
+  bound_z2 = 96,
+  z_fit = {36,38, 50,52 , 90,92},
+
+  tex_SHAWN2 = "METAL",
+  flat_FLAT23 = "CEIL5_2"
+}
