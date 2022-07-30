@@ -296,6 +296,7 @@ DOOM.MATERIALS =
   SW1SLAD  = { t="SW1SLAD",  f="FLOOR7_1" },
   SW1STARG = { t="SW1STARG",   f="FLAT23" },
   SW1STON1 = { t="SW1STON1", f="MFLR8_1" },
+  SW1STON2 = { t="SW1STON2", f="MFLR8_1" },
   SW1STRTN = { t="SW1STRTN", f="FLOOR4_1" },
   SW1VINE  = { t="SW1VINE",  f="FLAT1" },
   SW1WOOD  = { t="SW1WOOD",  f="FLAT5_2" },

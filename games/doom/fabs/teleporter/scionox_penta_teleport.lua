@@ -30,7 +30,7 @@ PREFABS.Teleporter_scionox_penta_teleport_2 =
   template = "Teleporter_scionox_penta_teleport",
   theme  = "urban",
 
-  tex_COMPSTA1 = { SP_DUDE7=50, SP_DUDE8=50, WOODMET3=50, WOODMET4=50, PANBLACK=50, PANBLUE=50, PANRED=50, PANBOOK=50, WOOD4=50 },
+  tex_COMPSTA1 = { SP_DUDE7=50, WOODMET3=50, WOODMET4=50, PANBLACK=50, PANBLUE=50, PANRED=50, PANBOOK=50, WOOD4=50 },
   tex_SUPPORT2 = "SUPPORT3",
   tex_GRAY5 = "STEP2",
   flat_FLAT19 = "RROCK12",

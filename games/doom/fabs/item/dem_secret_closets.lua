@@ -182,7 +182,9 @@ PREFABS.Item_dem_nook_secretcloset =
     [54] = 50,
     [43] = 25,
     [0] = 50,
-  }
+  },
+
+  tex_BLAKMBGY = "MARBGRAY"
 
 }
 
