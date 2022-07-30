@@ -31,6 +31,7 @@ Craneo
   - Name generator contributions
   - Sprites
   - Improved Heretic support and additional content
+  - Heathen's Maze addon for Heretic
 
 Demios
   - Complex, sloped and 3D floor prefab creator
@@ -101,7 +102,7 @@ Cubebert
   - Heretic skyboxes
   - XBox Dashboard, ZDoom Forums, and ZDoom Forums Submerged program themes
 
-Morthimer McMare
+Morthimer McMare and ika707
   - Current Russian translation file updates
 
 hytalego
