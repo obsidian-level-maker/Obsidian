@@ -2178,6 +2178,9 @@ function Fab_replacements(fab)
       val = fab.fields[k]
     end
 
+
+    if LEVEL.liquid and val == "_LIQUID" then gui.printf(table.tostr(LEVEL.liquid).."troof\n") end
+
     -- give liquid brushes lighting and/or special type
     if val == "_LIQUID" and LEVEL.liquid then
       C.special   = C.special or LEVEL.liquid.special

@@ -930,8 +930,59 @@ function Grower_calc_rule_probs()
       end
     end
 
+    local function Grower_absurdify_rule(rule, qty)
+      
+      local high_ab_factor = rand.range( 100,1000000 )
+      local low_ab_factor = rand.range( 0.01,0.75 )
+      local new_factor
+  
+      if string.match(rule.name,"ROOT") then return end
+      if string.match(rule.name,"JOINER") then return end
+      if string.match(rule.name,"SPROUT") then return end
+      if string.match(rule.name,"EMERGENCY") then return end
+      if string.match(rule.name,"STREET") then return end
+      if string.match(rule.name,"SIDEWALK") then return end
+      if string.match(rule.name,"hall") then return end
+      if string.match(rule.name,"HALL") then return end
+      if string.match(rule.name,"START") then return end
+      if not rule.use_prob then return end
+      if table.has_elem(rule.styles, "liquids") 
+        and not LEVEL.liquid then return end
+
+      rule.original_use_prob = rule.use_prob
+
+      if rand.odds(75) then
+        new_factor = high_ab_factor * rand.range( 0.75,1.25 )
+        rule.use_prob = rule.use_prob * new_factor
+        if rule.new_area then
+          LEVEL.has_absurd_new_area_rules = true
+        end
+      else
+        new_factor = low_ab_factor * rand.range( 0.75,1.25 )
+        rule.use_prob = rule.use_prob * new_factor
+      end
+
+      -- diversify environments
+      local new_env
+      if rand.odds(50) and qty > 1 then
+        if rand.odds(style_sel("outdoors", 0, 30, 60, 100)) then
+          new_env = "outdoor"
+        else
+          new_env = "building"
+        end
+      end
+
+      rule.initial_env = rule.env or "none"
+      rule.env = new_env
+      rule.is_absurd = true
+
+      gui.debugf(rule.name .. " is now ABSURDIFIED! WOOO!!!\n")
+      gui.debugf("Factor: x" .. new_factor .. "\n")
+      if new_env then gui.debugf("New env: " .. new_env .. "\n") end
+    end
+
     Grower_reset_absurdities()
-    
+
     local rules_to_absurdify = rand.pick({1,2,2,2,3,3,3,4,4,5,6,7,8})
     local count = rules_to_absurdify
     gui.printf(rules_to_absurdify .. " rules will be absurd!\n\n")
@@ -941,59 +992,12 @@ function Grower_calc_rule_probs()
       table.insert(grammarset, rule.name)
     end
 
-    local high_ab_factor = rand.range( 100,1000000 )
-    local low_ab_factor = rand.range( 0.01,0.75 )
-
     while count > 0 do
       local absurded_rule = rand.pick(grammarset)
 
-      if not string.match(absurded_rule,"ROOT")
-      and not string.match(absurded_rule,"JOINER")
-      and not string.match(absurded_rule,"SPROUT")
-      and not string.match(absurded_rule,"EMERGENCY")
-      and not string.match(absurded_rule,"STREET")
-      and not string.match(absurded_rule,"SIDEWALK")
-      and not string.match(absurded_rule,"hall")
-      and not string.match(absurded_rule,"HALL")
-      and not string.match(absurded_rule,"START")
-      and SHAPE_GRAMMAR[absurded_rule].is_absurd ~= true
-      and SHAPE_GRAMMAR[absurded_rule].use_prob ~= 0 then
+      Grower_absurdify_rule(SHAPE_GRAMMAR[absurded_rule], rules_to_absurdify)
 
-        SHAPE_GRAMMAR[absurded_rule].original_use_prob = SHAPE_GRAMMAR[absurded_rule].use_prob
-
-        local new_factor
-
-        if rand.odds(75) then
-          new_factor = high_ab_factor * rand.range( 0.75,1.25 )
-          SHAPE_GRAMMAR[absurded_rule].use_prob = SHAPE_GRAMMAR[absurded_rule].use_prob * new_factor
-          if SHAPE_GRAMMAR[absurded_rule].new_area then
-            LEVEL.has_absurd_new_area_rules = true
-          end
-        else
-          new_factor = low_ab_factor * rand.range( 0.75,1.25 )
-          SHAPE_GRAMMAR[absurded_rule].use_prob = SHAPE_GRAMMAR[absurded_rule].use_prob * new_factor
-        end
-
-        -- diversify environments
-        local new_env
-        if rand.odds(50) and rules_to_absurdify > 1 then
-          if rand.odds(style_sel("outdoors", 0, 30, 60, 100)) then
-            new_env = "outdoor"
-          else
-            new_env = "building"
-          end
-        end
-
-        SHAPE_GRAMMAR[absurded_rule].initial_env = SHAPE_GRAMMAR[absurded_rule].env or "none"
-        SHAPE_GRAMMAR[absurded_rule].env = new_env
-        SHAPE_GRAMMAR[absurded_rule].is_absurd = true
-
-        gui.debugf(absurded_rule .. " is now ABSURDIFIED! WOOO!!!\n")
-        gui.debugf("Factor: x" .. new_factor .. "\n")
-        if new_env then gui.debugf("New env: " .. new_env .. "\n") end
-
-        count = count - 1
-      end
+      count = count - 1
     end
   end
 
