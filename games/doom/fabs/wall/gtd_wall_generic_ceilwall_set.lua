@@ -324,7 +324,7 @@ PREFABS.Wall_generic_ceilwall_silver_frame_diag_hell =
 PREFABS.Wall_generic_ceilwall_double_silver_frame =
 {
   template = "Wall_generic_ceilwall",
-  map = "MAP08",
+  map = "MAP09",
 
   height = 96,
   theme = "any",
@@ -338,7 +338,7 @@ PREFABS.Wall_generic_ceilwall_double_silver_frame =
 PREFABS.Wall_generic_ceilwall_double_silver_frame_diag =
 {
   template = "Wall_generic_ceilwall",
-  map = "MAP09",
+  map = "MAP10",
 
   height = 96,
   where = "diagonal",
@@ -353,7 +353,7 @@ PREFABS.Wall_generic_ceilwall_double_silver_frame_diag =
 PREFABS.Wall_generic_ceilwall_double_silver_frame_hell =
 {
   template = "Wall_generic_ceilwall",
-  map = "MAP08",
+  map = "MAP09",
 
   height = 96,
   theme = "hell",
@@ -371,7 +371,7 @@ PREFABS.Wall_generic_ceilwall_double_silver_frame_hell =
 PREFABS.Wall_generic_ceilwall_double_silver_frame_diag_hell =
 {
   template = "Wall_generic_ceilwall",
-  map = "MAP09",
+  map = "MAP10",
 
   height = 96,
   where = "diagonal",

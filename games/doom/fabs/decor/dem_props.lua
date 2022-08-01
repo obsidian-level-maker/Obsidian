@@ -141,7 +141,7 @@ PREFABS.Decor_guardhouse_secret =
 
   engine = "zdoom",
 
-  prob   = 3500,
+  prob   = 2000,
   theme  = "urban",
   env    = "building",
 
@@ -168,7 +168,7 @@ PREFABS.Decor_urban_newsstand_secret =
 
   engine = "zdoom",
 
-  prob   = 3000,
+  prob   = 2000,
   theme  = "urban",
   env    = "building",
 
