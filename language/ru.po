@@ -1,6 +1,12 @@
-# Russian Language Translation for Obsidian by hytalego, Morthimer McMare and ika707.
-# [McM]: due to hytalego's total inactivity (also after attempts to contact him), I'll take responsibility to change the translation leader.
-#   PREVIOUS TEXT: "If helping with Russian translation, please send content to hytalego in a separate file instead of attempting to merge against this one".
+# Russian Language Translation for Obsidian by:
+# ├─ Morthimer McMare  — current translator;
+# ├─ ika707            — mistakes reporting;
+# ├─ Chameleon_111     — mistakes reporting;
+# └─ hytalego          — initial translator (left).
+#
+# [McM]: due to hytalego's total inactivity, even after attempts to contact him, I'll take responsibility to change the translation leader.
+#        Previous message: "If helping with Russian translation, please send content to hytalego in a separate file instead of attempting to merge against this one".
+#
 # This file is put in the public domain.
 #
 msgid ""
@@ -8,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Obsidian Level Maker\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-09 23:41+1000\n"
-"PO-Revision-Date: 2022-07-28 13:06+0300\n"
+"PO-Revision-Date: 2022-08-01 19:18+0300\n"
 "Last-Translator:  Morthimer McMare\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -33,7 +39,7 @@ msgstr "Постепенно"
 
 #: scripts/level.lua:186
 msgid "Mix It Up"
-msgstr "(Случайно)"
+msgstr "Случайно"
 
 #: engines/boom.lua:144
 msgid "BOOM Compat"
@@ -145,23 +151,23 @@ msgstr ""
 
 #: games/heretic/themes.lua:3285
 msgid "City"
-msgstr "Город проклятых (эп. 1)"
+msgstr "Эп. 1: Город проклятых"
 
 #: games/heretic/themes.lua:3293
 msgid "Maw"
-msgstr "Утроба Ада (эп. 2)"
+msgstr "Эп. 2: Утроба Ада"
 
 #: games/heretic/themes.lua:3301
 msgid "Dome"
-msgstr "Купол Д'Спарила (эп. 3)"
+msgstr "Эп. 3: Купол Д'Спарила"
 
 #: games/heretic/themes.lua:3309
 msgid "Ossuary"
-msgstr "Склеп (эп. 4)"
+msgstr "Эп. 4: Склеп"
 
 #: games/heretic/themes.lua:3317
 msgid "Demense"
-msgstr "Безумие (эп. 5)"
+msgstr "Эп. 5: Безумие"
 
 #: games/hexen/base.lua:42
 msgid "Hexen"
@@ -2421,7 +2427,7 @@ msgstr "Зелёный"
 
 #: modules/heretic/sky_generator.lua:61
 msgid "Jade"
-msgstr "Нефритовый/желтовато-зелёный"
+msgstr "Нефритовый (желтовато-зелёный)"
 
 #: modules/heretic/sky_generator.lua:62
 msgid "Dark Red"
@@ -2477,7 +2483,7 @@ msgstr "Тёмно-коричневый"
 
 #: modules/heretic/sky_generator.lua:79
 msgid "Green-ish"
-msgstr "Зеленованый"
+msgstr "Зеленоватый"
 
 #: modules/heretic/sky_generator.lua:80
 msgid "Ice"
@@ -2517,7 +2523,7 @@ msgstr "Время дня"
 
 #: modules/heretic/sky_generator.lua:750
 msgid "This forces the sky background (behind the hills and clouds) to either be night or day. Default means vanilla Oblige behavior of picking one episode to be night. Random means 50% chance of night or day to be picked per episode."
-msgstr ""
+msgstr "Меняет фон неба (за рельефом и облаками) на ночное или дневное. \"По умолчанию\" означает, что лишь один эпизод будет ночным. \"Случайно\" — равная вероятность выбора ночного или дневного неба для каждого эпизода."
 
 #: modules/heretic/sky_generator.lua:757
 msgid "Terrain Foreground"
@@ -2525,7 +2531,7 @@ msgstr "Ближний план"
 
 #: modules/heretic/sky_generator.lua:760
 msgid "Influences whether the sky generator should generate terrain in the skybox."
-msgstr ""
+msgstr "Влияет на то, должен ли генератор неба добавлять ландшафт непосредственно в текстуру скайбокса."
 
 #: modules/heretic/sky_generator.lua:767
 msgid "Terrain Parameters"
@@ -2533,7 +2539,7 @@ msgstr "Параметры ближнего плана"
 
 #: modules/heretic/sky_generator.lua:770
 msgid "Changes the parameters of generated hills, if there are any. 'Cavernous' causes the terrain to nearly fill up most of the sky, making an impression of being inside a cave or crater."
-msgstr ""
+msgstr "Изменяет параметры генерируемого рельефа, если он есть. Вариант \"Пещеры\" заполняет рельефом большую часть скайбокса, создавая впечатление, что вы находитесь внутри ущелья или кратера."
 
 #: modules/heretic/sky_generator.lua:778
 msgid "Day Sky Color"
@@ -2541,7 +2547,7 @@ msgstr "Цвет дневного неба"
 
 #: modules/heretic/sky_generator.lua:781
 msgid "Picks the color of the sky if day. Default means random and theme-ish."
-msgstr ""
+msgstr "Влияет на цвет дневного неба. \"По умолчанию\" — случайно, но с учётом темы уровня."
 
 #: modules/heretic/sky_generator.lua:788
 msgid "Terrain Color"
@@ -2549,7 +2555,7 @@ msgstr "Цвет ближнего плана"
 
 #: modules/heretic/sky_generator.lua:791
 msgid "Picks the color of the terrain in the sky if available. Default means random and theme-ish."
-msgstr ""
+msgstr "Влияет на цвет ландшафта, если таковой существует. \"По умолчанию\" — случайно, но с учётом темы уровня."
 
 #: modules/heretic/sky_generator.lua:798
 msgid "Nebula Color"
@@ -2557,7 +2563,7 @@ msgstr "Цвет туманности"
 
 #: modules/heretic/sky_generator.lua:801
 msgid "Picks the color of nebula if sky is night. 'None' means just a plain starry night sky. Default means random and theme-ish."
-msgstr ""
+msgstr "Влияет на цвет туманности на ночном небе. При выборе \"Нет\" будет сгенерирован простой звёздный купол небосвода. \"По умолчанию\" — случайно, но с учётом темы уровня."
 
 #: modules/heretic/sky_generator.lua:809
 msgid "Sky Gen Lighting"
@@ -2681,7 +2687,7 @@ msgstr "Динамический свет"
 
 #: modules/heretic/zdoom_specials.lua:1206
 msgid "Generates dynamic point lights on ceiling light prefabs."
-msgstr "Генерирует динамический свет на префабах освещения."
+msgstr "Генерирует динамический свет на префабах потолочного освещения."
 
 #: modules/heretic/zdoom_specials.lua:1211
 msgid "Glowing Flats"
@@ -2701,7 +2707,7 @@ msgstr "Перемешать музыку в lump MAPINFO."
 
 #: modules/heretic/zdoom_specials.lua:1230
 msgid "Story Generator"
-msgstr "Генератор историй"
+msgstr "Новый текст повествования"
 
 #: modules/heretic/zdoom_specials.lua:1234
 msgid "Adds cluster information with generic or randomized story text into the MAPINFO structure!"
@@ -3325,11 +3331,11 @@ msgstr "По темам"
 
 #: modules/miscellaneous.lua:51
 msgid "Curved"
-msgstr "Искривлённый"
+msgstr "Скруглённые"
 
 #: modules/miscellaneous.lua:52
 msgid "Sharp"
-msgstr "Резкий"
+msgstr "Резкие"
 
 #: modules/miscellaneous.lua:53
 msgid "Random"
@@ -3641,7 +3647,7 @@ msgstr "Процент природных карт"
 
 #: modules/miscellaneous.lua:286
 msgid "Forces most of the map to be composed of naturalistic areas (parks and caves). The ratio is decided by Outdoors style setting while competing styles are ignored."
-msgstr "Заставляет большую часть карты состоять из естественных областей (парки и пещеры). Соотношение определяется настройкой стиля \"Пространства по небом\"; конфликтующие стили игнорируются."
+msgstr "Заставляет большую часть карты состоять из естественных областей (парки и пещеры). Соотношение определяется настройкой стиля \"Пространства под небом\"; конфликтующие стили игнорируются."
 
 #: modules/miscellaneous.lua:293
 msgid "Streets Mode"
@@ -3797,7 +3803,7 @@ msgstr "Заборы"
 
 #: modules/miscellaneous.lua:442
 msgid "Creates thick solid fences and fence posts between areas of varying height for outdoor rooms."
-msgstr "Создание толстых неплоходимых заборов и подобных ограждений между пространств разных высот под небом."
+msgstr "Создание толстых непроходимых заборов и им подобных ограждений между участками под небом."
 
 #: modules/miscellaneous.lua:447
 msgid "Porches\\Gazebos"
@@ -3829,15 +3835,15 @@ msgstr "Резкость границ акваторий"
 
 #: modules/miscellaneous.lua:472
 msgid "Determines the style for corners with sunken ceilings and floors. Curved makes sink corners soft, while Sharp leaves the corners angular. Per Theme means choice is controlled by theme profile instead. Tech-ish maps favor sharp corners while hell-ish favor curved."
-msgstr ""
+msgstr "Определяет вид углов акваторий. Вариант \"По темам\" означает, что выбор зависит от текущей темы: в картах с уклоном в технический стиль предпочитаются острые углы, в адских уровнях — скруглённые."
 
 #: modules/miscellaneous.lua:479
 msgid "Liquid Sinks"
-msgstr "Акватории с жидкостью"
+msgstr "Акватории"
 
 #: modules/miscellaneous.lua:481
 msgid "Enables or disables liquid sinks. Liquid sinks are walkable floors that are often converted into depressions with the level's liquid. May greatly inconvenience the player but default Oblige behavior is 'Yes'."
-msgstr ""
+msgstr "Управляет появлением акваторий — углублённых локаций с жидкостью, наиболее широко используемой на текущем уровне. Может доставлять много неудобств игроку, однако в Oblige по умолчанию стоит \"Да\" (создавать)."
 
 #: modules/miscellaneous.lua:488
 msgid "Dark Outdoors"
@@ -3933,7 +3939,7 @@ msgstr "Уличное движение"
 
 #: modules/miscellaneous.lua:572
 msgid "If Street Mode is enabled, changes the density of prefabs such as cars, barriers, crates, and relevant items on the roads."
-msgstr ""
+msgstr "Если \"Процент карт с улицами\" отличен от нуля, изменяет шанс появления префабов, связанных с ними: автомобили, барьеры, ящики и другие подобные встречающиеся на дорогах объекты."
 
 #: modules/miscellaneous.lua:580
 msgid "Exit Signs"
@@ -3949,7 +3955,7 @@ msgstr "Линейные старты"
 
 #: modules/miscellaneous.lua:592
 msgid "Stops start rooms from having more than one external room connection. Can help reduce being overwhelmed by attacks from multiple directions when multiple neighboring rooms connect into the start room. Default means no control, and levels can have linear starts at random based on shape grammars as per original Oblige 7.7 behavior."
-msgstr "Не позволяет создавать стартовые комнаты, имеющие более одного прохода в соседние локации, может помочь уменьшить количество атак с разных направлений. \"По умолчанию\" означает отсутствие подобных проверок, однако уровни всё равно могут случайно сгенерироваться с линейным началом — в соответствии с исходным поведением Oblige 7.7."
+msgstr "Не позволяет генератору создавать стартовые комнаты с более чем одним проходом в соседние локации, что может уменьшить в начале уровня количество атак с разных направлений. \"По умолчанию\" означает отсутствие подобных проверок, однако уровни всё равно могут случайно сгенерироваться с линейным началом — в соответствии с исходным поведением Oblige 7.7."
 
 #: modules/miscellaneous.lua:598
 msgid "Dead Ends"
@@ -3957,7 +3963,7 @@ msgstr "Тупики"
 
 #: modules/miscellaneous.lua:600
 msgid "Cleans up and removes areas with staircases that lead to nowhere.\nNONE means all dead ends are removed.\nHeaps means all dead ends are preserved (Oblige default)."
-msgstr "Уменьшает количество тупиков, а иакже лестниц, ведущих в никуда.\n\nНет: все тупики будут убраны.\n\nМножество: не уменьшать количество тупиков (обычное поведение Oblige)."
+msgstr "Уменьшает количество тупиков, а также лестниц, ведущих в никуда.\n\nНет: все тупики будут убраны.\n\nМножество: не уменьшать количество тупиков (обычное поведение Oblige)."
 
 #: modules/miscellaneous.lua:610
 msgid "Lighting"
@@ -4005,7 +4011,7 @@ msgstr "Имя для каждого врага"
 
 #: modules/modded_game_extras.lua:2245
 msgid "Renames tags of monsters with generated names. Humans recieve human names, demons recieve exotic names.\nBest used with TargetSpy or other healthbar mods to see the name.\nUses class inheritance and string comparisons to determine monster species (human or demon). Use compatibility options only when necessary, preferably use Universal option instead."
-msgstr "Переопределение тэгов монстров со сгенерированными именами. Люди получают человеческие имена, демоны — экзотические.\nЛучше всего использовать с TargetSpy или иной модификацией, отображающей полоску здоровья оппонента. Использует как проверку наследования от определённых классов, так и построковое сравнение для определения того, кто является человеком, кто — демоном.\n\nВыбирайте параметр совместимости только при необходимости; универсальный параметр практически всегда предпочтительнее [Прим. перев.: по-видимому, наследованная от предыдущих версий заметка, когда в этой настройке было больше вариантов]."
+msgstr "Переопределение тэгов монстров со сгенерированными именами. Люди получают человеческие имена, демоны — экзотические.\nЛучше всего использовать с TargetSpy или иной модификацией, отображающей полоску здоровья оппонента. Использует как проверку наследования от определённых классов, так и построковое сравнение для определения того, кто является человеком, кто — демоном.\n\nЕсли в модификации есть переключение между совместимостью имён и их универсальностью, практически всегда стоит выбирать второе."
 
 #: modules/modded_game_extras.lua:2252
 msgid "QC:DE Lootboxes"
@@ -4237,7 +4243,7 @@ msgstr "Лимит группировки стен"
 
 #: modules/prefab_controller.lua:280
 msgid "Determines the odds at which a level would use fewer wall group choices but at greater quantites for more consistent visuals. Default is 50%."
-msgstr "Определяет вероятность того, что группы стен на уровне будут менее вариантивны, однако визуально более согласованы. По умолчанию — 50%."
+msgstr "Определяет вероятность того, что группы стен на уровне будут менее разнообразными, однако визуально более согласованными. По умолчанию — 50%."
 
 #: modules/prefab_controller.lua:291
 msgid "Peered Starts/Exits"
@@ -5765,7 +5771,7 @@ msgstr "Быстро (за ⅓ от игры)"
 
 #: modules/ui_arch.lua:51
 msgid "Linear"
-msgstr "Линейно"
+msgstr "Линейно (на половине)"
 
 #: modules/ui_arch.lua:52
 msgid "Slow Curve"
@@ -5841,11 +5847,11 @@ msgstr "Скорость увеличения уровней"
 
 #: modules/ui_arch.lua:169
 msgid "Determines how fast or slow larger level sizes are reached in Progressive/Episodic mode."
-msgstr "Определяет, насколько скоро начинают генерироваться крупные уровни в режимах \"Увеличивать\" и \"По эпизодам\"."
+msgstr "Определяет вид кривой скорости увеличения: насколько скоро начинают генерироваться крупные уровни в режимах \"Постепенно\" и \"По эпизодам\"."
 
 #: modules/ui_arch.lua:170
 msgid "Very Fast Curve: Reach half-size at 1/4th of the game.\nFast Curve: Reach half-size at 1/3rds.\nLinear: Reach half-size at half the game.\nSlow Curve: Reach half-size at 2/3rds.\nVery Slow Curve: Reach half-size at 3/4ths.\n\nObsidian default is Fast Curve."
-msgstr ""
+msgstr "Очень быстро: размеры уровней достигают половины от своего верхнего предела за ¼ от игры, кривая примерно равна функции плавности \"easeOutQuint\";\n\nБыстро: размеры уровней достигают половины от своего верхнего предела за ⅓ от игры, примерно равно \"easeOutCubic\";\n\nЛинейно: размеры уровней плавно увеличиваются, максимум достигается ровно в конце сгенерированного сборника;\n\nМедленно: размеры уровней достигают половины от своего верхнего предела за ⅔ от игры, примерно равно \"easeInCubic\";\n\nОчень медленно: размеры уровней достигают половины от своего верхнего предела за ¾ от игры, примерно равно \"easeInQuint\".\n\nВсе определения и анимации функций плавности можно найти в Интернете — к примеру, на посвящённом этому сайте https://easings.net/ru."
 
 #: modules/ui_arch.lua:180
 msgid "Level Size Bias"
@@ -6109,11 +6115,11 @@ msgstr "0:Без монстров,0.15:0.15 (Исчезающе мало),0.35:0
 
 #: modules/ui_mons.lua:113
 msgid "Changes the amount of monsters placed in a map. Scales with level size."
-msgstr "Изменяет количество монстров на уровне. Автоматически подгоняется под размер уровня."
+msgstr "Изменяет количество монстров на уровне. Автоматически подгоняется под его размер."
 
 #: modules/ui_mons.lua:114
 msgid "For reference: Obsidian's default for normal is 1.0.\n\nMix It Up: Selects quantities specified between Upper and Lower Bound choices on a chosen by the user.\n\nProgressive: creates a curve of increasing monster population also based on the Fine Tune options below.\n\nIt does not matter if your Upper/Lower Bound selections are reversed. Progressive will pick the min VS max quantities selected.\n\nNone: No monsters. Why would you choose this option? \nTrivial: Very, very few monsters. Almost nothing to kill.\nSporadic: Very few monsters. Not many things to kill.\nMeager: Fewer monsters. Not challenging for the average player.\nEasy: Obsidian default quantity. Not too bad for casual players.\nModest: Slightly above default. Still pretty easy for most. \nBearable: Above average opposition. Getting warmer! \nRough: Slightly difficult. Equivalent to late 90s megawads. \nStrenuous: Baby steps into big boy difficulty. Lots to kill! \nFormidable/Harsh: 'Easy' level of difficult. Considerable opposition. \nPainful/Ferocious: Getting into slaughterwad territory. Difficult! \nUnforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \nMurderous/Grueling: Extremely high monster count. \nUnrelenting/Arduous: An uphill battle. Expect to reload saves often! \nBarbaric/Savage: Up into the hardest slaughterwads out there. \nBrutal/Draconian: Legions of demons await you on this setting. \nMerciless: Hell will throw everything at you at this setting, you masochist."
-msgstr "О связанных опциях \"Количество монстров\", \"Верхний предел\" и \"Нижний предел\".\n\nВарианты для значение количества монстров (по умолчанию для OBSIDIAN — 1.0):\nСлучайно: для каждого уровня выбирает новое значение между нижним и верхним пределами.\nПостепенно: сложность нарастает от нижнего предела до верхнего. Притом их порядок не имеет значения — если верхний предел окажется меньше нижнего, они поменяются местами."
+msgstr "О связанных опциях \"Количество монстров\", \"Верхний предел\" и \"Нижний предел\".\n\nВарианты из выпадающего списка для \"Количества монстров\":\nСлучайно: для каждого уровня выбирает новое значение между нижним и верхним пределами.\nПостепенно: сложность нарастает от нижнего предела до верхнего. Притом их порядок не имеет значения — если верхний предел окажется меньше нижнего, они поменяются местами."
 
 #: modules/ui_mons.lua:120
 msgid "Upper Bound"
@@ -6125,7 +6131,7 @@ msgstr ""
 
 #: modules/ui_mons.lua:127
 msgid "If you have Mix It Up or Progressive selected, you can define the upper bound here. Otherwise, this option is simply ignored."
-msgstr ""
+msgstr "Если в опции \"Количество монстров\" вы выбрали вариант \"Случайно\" или \"Постепенно\", то значение, указанное здесь, будет трактоваться как верхняя граница. В противном случае параметр просто игнорируется."
 
 #: modules/ui_mons.lua:128
 msgid "For reference: Obsidian's default for normal is 1.0.\n\nMix It Up: Selects quantities specified between Upper and Lower Bound choices on a chosen by the user.\n\nProgressive: creates a curve of increasing monster population also based on the Fine Tune options below.\n\nIt does not matter if your Upper/Lower Bound selections are reversed. Progressive will pick the min VS max quantities selected.\n\nNone: No monsters. Why would you choose this option? \nTrivial: Very, very few monsters. Almost nothing to kill.\nSporadic: Very few monsters. Not many things to kill.\nMeager: Fewer monsters. Not challenging for the average player.\nEasy: Obsidian default quantity. Not too bad for casual players.\nModest: Slightly above default. Still pretty easy for most. \nBearable: Above average opposition. Getting warmer! \nRough: Slightly difficult. Equivalent to late 90s megawads. \nStrenuous: Baby steps into big boy difficulty. Lots to kill! \nFormidable/Harsh: 'Easy' level of difficult. Considerable opposition. \nPainful/Ferocious: Getting into slaughterwad territory. Difficult! \nUnforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \nMurderous/Grueling: Extremely high monster count. \nUnrelenting/Arduous: An uphill battle. Expect to reload saves often! \nBarbaric/Savage: Up into the hardest slaughterwads out there. \nBrutal/Draconian: Legions of demons await you on this setting. \nMerciless: Hell will throw everything at you at this setting, you masochist."
@@ -6141,7 +6147,7 @@ msgstr ""
 
 #: modules/ui_mons.lua:140
 msgid "If you have Mix It Up or Progressive selected, you can define the lower bound here. Otherwise, this option is simply ignored."
-msgstr ""
+msgstr "Если в опции \"Количество монстров\" вы выбрали вариант \"Случайно\" или \"Постепенно\", то значение, указанное здесь, будет трактоваться как нижняя граница. В противном случае параметр просто игнорируется."
 
 #: modules/ui_mons.lua:141
 msgid "For reference: Obsidian's default for normal is 1.0.\n\nMix It Up: Selects quantities specified between Upper and Lower Bound choices on a chosen by the user.\n\nProgressive: creates a curve of increasing monster population also based on the Fine Tune options below.\n\nIt does not matter if your Upper/Lower Bound selections are reversed. Progressive will pick the min VS max quantities selected.\n\nNone: No monsters. Why would you choose this option? \nTrivial: Very, very few monsters. Almost nothing to kill.\nSporadic: Very few monsters. Not many things to kill.\nMeager: Fewer monsters. Not challenging for the average player.\nEasy: Obsidian default quantity. Not too bad for casual players.\nModest: Slightly above default. Still pretty easy for most. \nBearable: Above average opposition. Getting warmer! \nRough: Slightly difficult. Equivalent to late 90s megawads. \nStrenuous: Baby steps into big boy difficulty. Lots to kill! \nFormidable/Harsh: 'Easy' level of difficult. Considerable opposition. \nPainful/Ferocious: Getting into slaughterwad territory. Difficult! \nUnforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \nMurderous/Grueling: Extremely high monster count. \nUnrelenting/Arduous: An uphill battle. Expect to reload saves often! \nBarbaric/Savage: Up into the hardest slaughterwads out there. \nBrutal/Draconian: Legions of demons await you on this setting. \nMerciless: Hell will throw everything at you at this setting, you masochist."
@@ -6185,7 +6191,7 @@ msgstr "Тихий старт"
 
 #: modules/ui_mons.lua:186
 msgid "Makes start rooms mostly safe - no enemies and all outlooking windows are removed. (windows are retained on Procedural Gotchas) Default Obsidian behavior is 'no'."
-msgstr "Делает стартовые комнаты в большинстве своём безопасными, убирая всех монстров и не позволяя в ней создавать окна. Однако на босс-аренах пока что окна всё равно будут генерироваться."
+msgstr "Делает стартовые комнаты в большинстве своём безопасными, убирая из неё всех монстров и не позволяя создавать в ней окна. Однако на данный момент на босс-арены опция не действует, что значит, что там окна будут продолжать генерироваться."
 
 #: modules/ui_mons.lua:190
 msgid "Monster Variety"
@@ -6217,7 +6223,7 @@ msgstr "Боссы как обычные враги"
 
 #: modules/ui_mons.lua:212
 msgid "Normally Archviles/Barons/Cyberdemons and other big monsters are excluded from normal monster pool and only can appear as guard for important objective e.g. key. With this option enabled they are allowed to(rarely) spawn as a regular monster. \n\n WARNING: This CAN make maps much more difficult than normal."
-msgstr ""
+msgstr "Как правило, арч-вайлы, бароны, кибердемоны и другие сильные монстры не выступают в роли рядовых противников, появляясь лишь рядом со стратегически важными объектами — к примеру, перед выходом или недалеко от ключа. С данной опцией им будет позволено изредка генерироваться и в качестве обычных противников.\n\nПредупреждение: эта настройка может сделать карты гораздо, гораздо сложнее."
 
 #: modules/ui_mons.lua:217
 msgid "Traps"
@@ -6477,7 +6483,7 @@ msgstr "Поедсоздавать ли lump NODES с помощью OBSIDIAN."
 
 #: modules/ui_reject_options.lua:140
 msgid "ZDoom is capable of building its own nodes in either Binary or UDMF.\n\nObsidian uses the same internal nodebuilder as ZDoom, so maps should be compatible either way."
-msgstr ""
+msgstr "ZDoom может создавать свои собственные nodes и для бинарного формата, и для UDMF. Obsidian использует тот же nodebuilder, что и ZDoom."
 
 #: modules/ui_reject_options.lua:144
 msgid "Map Format"
@@ -6533,7 +6539,7 @@ msgstr "Вероятность того, что новая комната поп
 
 #: modules/ui_slump.lua:92
 msgid "0% should look like a bunch of murder hallways. Forking is not guaranteed to succeed, especially if the Room Bigification Chance is increased."
-msgstr ""
+msgstr "0% — линейный уровень, состоящий из последовательно соединённых друг с другом комнат.\n\nГарантии, что локация сможет разветвиться, нет — особенно если шанс увеличения комнаты выше нуля."
 
 #: modules/ui_slump.lua:98
 msgid "Deathmatch Spawns"
@@ -6581,11 +6587,11 @@ msgstr "Выбирает, какие виды монстров смогут бы
 
 #: modules/zdoom_armaetus_epic_textures.lua:35
 msgid "ZScript"
-msgstr ""
+msgstr "На ZScript"
 
 #: modules/zdoom_armaetus_epic_textures.lua:36
 msgid "ACS-Decorate"
-msgstr ""
+msgstr "На ACS + Decorate"
 
 #: modules/zdoom_armaetus_epic_textures.lua:37
 msgid "No"
@@ -6601,23 +6607,23 @@ msgstr ""
 
 #: modules/zdoom_armaetus_epic_textures.lua:44
 msgid "A Bit Mixed"
-msgstr ""
+msgstr "Немного смешать"
 
 #: modules/zdoom_armaetus_epic_textures.lua:45
 msgid "Snow-ish"
-msgstr ""
+msgstr "Больше снежных локаций"
 
 #: modules/zdoom_armaetus_epic_textures.lua:46
 msgid "Desert-ish"
-msgstr ""
+msgstr "Больше пустынных локаций"
 
 #: modules/zdoom_armaetus_epic_textures.lua:47
 msgid "Always Snow"
-msgstr ""
+msgstr "Только снег"
 
 #: modules/zdoom_armaetus_epic_textures.lua:48
 msgid "Always Desert"
-msgstr ""
+msgstr "Только пустыня"
 
 #: modules/zdoom_armaetus_epic_textures.lua:49
 msgid "No"
@@ -6629,55 +6635,55 @@ msgstr ""
 
 #: modules/zdoom_armaetus_epic_textures.lua:1094
 msgid "If enabled, adds textures and content from the Obsidian Epic Resource Pack, which also includes new exclusive prefabs."
-msgstr ""
+msgstr "Если включено, добавляет текстуры, акторы и новые эксклюзивные префабы из Obsidian Epic Resource Pack."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1101
 msgid "Custom Liquids"
-msgstr ""
+msgstr "Новые виды жидкостей"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1104
 msgid "Utilize custom liquid flats or not."
-msgstr ""
+msgstr "Будут ли использоваться новые виды жидкостей на поверхностях."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1111
 msgid "Custom Trees"
-msgstr ""
+msgstr "Новые деревья"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1114
 msgid "Adds custom flat-depedendent tree sprites into the game. Currently only replaces trees on specific grass flats and will be expanded in the future to accomnodate custom Textures and more. If you are playing a mod that already does its own trees, it may be better to leave this off."
-msgstr ""
+msgstr "Добавляет в игру спрайты деревьев, зависящие от поверхности, на которой стоят. В настоящее время заменяет только деревья на определенных участках травы, однако в будущем функционал будет расширен для размещения пользовательских текстур. Если вы играете в модификацию, в которой уже есть собственные виды деревьев, то, возможно, данную опцию лучше не включать."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1121
 msgid "Environment Theme"
-msgstr ""
+msgstr "Тема окружения"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1124
 msgid "Influences outdoor environments with different textures such as desert sand or icey snow."
-msgstr ""
+msgstr "Влияет на окружающую среду — заменяет необходимые участки на песок или снег."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1131
 msgid "Merge Textures WAD"
-msgstr ""
+msgstr "Присоединять ресурс-WAD"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1134
 msgid "Allows the trimming down of resulting WAD by not merging the custom texture WAD.\n\nThis will require you to extract and load up the WAD manually in your preferred sourceport installation.\n\nThis is the preferrable option for multiplayer situations and server owners and have each client obtain a copy of the texture pack instead.\n"
-msgstr ""
+msgstr "Отключение настройки позволяет уменьшить размер выходного файла с уровнями посредством исключения из него всех ресурсов, добавляемых этим модулем. Поэтому для корректного отображения на уровне Вам потребуется подключить файл с ресурсами вручную.\n\nОпция предпочтительна для мультиплеера с использованием клиент-серверной архитектуры."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1141
 msgid "Include Brightmaps"
-msgstr ""
+msgstr "Присоединять Brightmaps"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1144
 msgid "Allows merging Obsidian Textures brightmaps into the WAD. Does not include brightmaps for base resources from any of the games."
-msgstr ""
+msgstr "Позволяет включать в выходной файл карты яркоти (brightmaps) текстур Obsidian. Не включает их из любых других игр."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1151
 msgid "No Hell Environment Themes"
-msgstr ""
+msgstr "Отключить для адских тем"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1154
 msgid "Renders hell theme maps to never use snow or desert environment themes regardless of theme assignment."
-msgstr ""
+msgstr "Карты с темой ада никогда не будут использовать снежные или пустынные области."
 
 #: modules/zdoom_frozsoul_sound.lua:55
 msgid "20000"
@@ -6885,7 +6891,7 @@ msgstr ""
 
 #: modules/zdoom_specials.lua:26
 msgid "Merge Doom 1 and 2"
-msgstr ""
+msgstr "Объединить Doom 1 и 2"
 
 #: modules/zdoom_specials.lua:27
 msgid "No"
@@ -7021,7 +7027,7 @@ msgstr ""
 
 #: modules/zdoom_specials.lua:1242
 msgid "Shuffles music in the MAPINFO lump. Oblige's vanilla music shuffler uses a BEX lump and is therefore ignored when the ZDoom Addons module is active.\n\nWarning: the 'Merge Doom 1 and 2' option is for music packs that contain both Doom 1 and 2 direct patch replacements. Do not use unless you have such a pack."
-msgstr ""
+msgstr "Перемешивает музыку в MAPINFO. Оригинальный модуль Oblige использует lump BEX и потому игнорируется, когда активен ZDoom Addons.\n\nПункт меню \"Объединить из Doom 1 и 2\" предназначен для сборников музыки, которые напрямую заменяют композиции и из Doom 1, и из Doom 2. Не используйте, если у вас нет такого сборника."
 
 #: modules/zdoom_specials.lua:1247
 msgid "Story Generator"
@@ -7081,7 +7087,7 @@ msgstr "Сильно перемешать"
 
 #: scripts/defs.lua:93
 msgid "Bit Mixed"
-msgstr "Чуть перемешать"
+msgstr "Немного перемешать"
 
 #: scripts/defs.lua:100
 msgid "Psychedelic"
