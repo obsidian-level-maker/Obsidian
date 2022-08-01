@@ -2687,7 +2687,7 @@ msgstr "Динамический свет"
 
 #: modules/heretic/zdoom_specials.lua:1206
 msgid "Generates dynamic point lights on ceiling light prefabs."
-msgstr "Генерирует динамический свет на префабах освещения."
+msgstr "Генерирует динамический свет на префабах потолочного освещения."
 
 #: modules/heretic/zdoom_specials.lua:1211
 msgid "Glowing Flats"
@@ -6131,7 +6131,7 @@ msgstr ""
 
 #: modules/ui_mons.lua:127
 msgid "If you have Mix It Up or Progressive selected, you can define the upper bound here. Otherwise, this option is simply ignored."
-msgstr ""
+msgstr "Если в опции \"Количество монстров\" вы выбрали вариант \"Случайно\" или \"Постепенно\", то значение, указанное здесь, будет трактоваться как верхняя граница. В противном случае параметр просто игнорируется."
 
 #: modules/ui_mons.lua:128
 msgid "For reference: Obsidian's default for normal is 1.0.\n\nMix It Up: Selects quantities specified between Upper and Lower Bound choices on a chosen by the user.\n\nProgressive: creates a curve of increasing monster population also based on the Fine Tune options below.\n\nIt does not matter if your Upper/Lower Bound selections are reversed. Progressive will pick the min VS max quantities selected.\n\nNone: No monsters. Why would you choose this option? \nTrivial: Very, very few monsters. Almost nothing to kill.\nSporadic: Very few monsters. Not many things to kill.\nMeager: Fewer monsters. Not challenging for the average player.\nEasy: Obsidian default quantity. Not too bad for casual players.\nModest: Slightly above default. Still pretty easy for most. \nBearable: Above average opposition. Getting warmer! \nRough: Slightly difficult. Equivalent to late 90s megawads. \nStrenuous: Baby steps into big boy difficulty. Lots to kill! \nFormidable/Harsh: 'Easy' level of difficult. Considerable opposition. \nPainful/Ferocious: Getting into slaughterwad territory. Difficult! \nUnforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \nMurderous/Grueling: Extremely high monster count. \nUnrelenting/Arduous: An uphill battle. Expect to reload saves often! \nBarbaric/Savage: Up into the hardest slaughterwads out there. \nBrutal/Draconian: Legions of demons await you on this setting. \nMerciless: Hell will throw everything at you at this setting, you masochist."
@@ -6147,7 +6147,7 @@ msgstr ""
 
 #: modules/ui_mons.lua:140
 msgid "If you have Mix It Up or Progressive selected, you can define the lower bound here. Otherwise, this option is simply ignored."
-msgstr ""
+msgstr "Если в опции \"Количество монстров\" вы выбрали вариант \"Случайно\" или \"Постепенно\", то значение, указанное здесь, будет трактоваться как нижняя граница. В противном случае параметр просто игнорируется."
 
 #: modules/ui_mons.lua:141
 msgid "For reference: Obsidian's default for normal is 1.0.\n\nMix It Up: Selects quantities specified between Upper and Lower Bound choices on a chosen by the user.\n\nProgressive: creates a curve of increasing monster population also based on the Fine Tune options below.\n\nIt does not matter if your Upper/Lower Bound selections are reversed. Progressive will pick the min VS max quantities selected.\n\nNone: No monsters. Why would you choose this option? \nTrivial: Very, very few monsters. Almost nothing to kill.\nSporadic: Very few monsters. Not many things to kill.\nMeager: Fewer monsters. Not challenging for the average player.\nEasy: Obsidian default quantity. Not too bad for casual players.\nModest: Slightly above default. Still pretty easy for most. \nBearable: Above average opposition. Getting warmer! \nRough: Slightly difficult. Equivalent to late 90s megawads. \nStrenuous: Baby steps into big boy difficulty. Lots to kill! \nFormidable/Harsh: 'Easy' level of difficult. Considerable opposition. \nPainful/Ferocious: Getting into slaughterwad territory. Difficult! \nUnforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \nMurderous/Grueling: Extremely high monster count. \nUnrelenting/Arduous: An uphill battle. Expect to reload saves often! \nBarbaric/Savage: Up into the hardest slaughterwads out there. \nBrutal/Draconian: Legions of demons await you on this setting. \nMerciless: Hell will throw everything at you at this setting, you masochist."
@@ -6191,7 +6191,7 @@ msgstr "Тихий старт"
 
 #: modules/ui_mons.lua:186
 msgid "Makes start rooms mostly safe - no enemies and all outlooking windows are removed. (windows are retained on Procedural Gotchas) Default Obsidian behavior is 'no'."
-msgstr "Делает стартовые комнаты в большинстве своём безопасными, убирая всех монстров и не позволяя в ней создавать окна. Однако на босс-аренах пока что окна всё равно будут генерироваться."
+msgstr "Делает стартовые комнаты в большинстве своём безопасными, убирая из неё всех монстров и не позволяя создавать в ней окна. Однако на данный момент на босс-арены опция не действует, что значит, что там окна будут продолжать генерироваться."
 
 #: modules/ui_mons.lua:190
 msgid "Monster Variety"
@@ -6223,7 +6223,7 @@ msgstr "Боссы как обычные враги"
 
 #: modules/ui_mons.lua:212
 msgid "Normally Archviles/Barons/Cyberdemons and other big monsters are excluded from normal monster pool and only can appear as guard for important objective e.g. key. With this option enabled they are allowed to(rarely) spawn as a regular monster. \n\n WARNING: This CAN make maps much more difficult than normal."
-msgstr ""
+msgstr "Как правило, арч-вайлы, бароны, кибердемоны и другие сильные монстры не выступают в роли рядовых противников, появляясь лишь рядом со стратегически важными объектами — к примеру, перед выходом или недалеко от ключа. С данной опцией им будет позволено изредка генерироваться и в качестве обычных противников.\n\nПредупреждение: эта настройка может сделать карты гораздо, гораздо сложнее."
 
 #: modules/ui_mons.lua:217
 msgid "Traps"
@@ -6587,11 +6587,11 @@ msgstr "Выбирает, какие виды монстров смогут бы
 
 #: modules/zdoom_armaetus_epic_textures.lua:35
 msgid "ZScript"
-msgstr ""
+msgstr "На ZScript"
 
 #: modules/zdoom_armaetus_epic_textures.lua:36
 msgid "ACS-Decorate"
-msgstr ""
+msgstr "На ACS + Decorate"
 
 #: modules/zdoom_armaetus_epic_textures.lua:37
 msgid "No"
@@ -6607,23 +6607,23 @@ msgstr ""
 
 #: modules/zdoom_armaetus_epic_textures.lua:44
 msgid "A Bit Mixed"
-msgstr ""
+msgstr "Немного смешать"
 
 #: modules/zdoom_armaetus_epic_textures.lua:45
 msgid "Snow-ish"
-msgstr ""
+msgstr "Больше снежных локаций"
 
 #: modules/zdoom_armaetus_epic_textures.lua:46
 msgid "Desert-ish"
-msgstr ""
+msgstr "Больше пустынных локаций"
 
 #: modules/zdoom_armaetus_epic_textures.lua:47
 msgid "Always Snow"
-msgstr ""
+msgstr "Только снег"
 
 #: modules/zdoom_armaetus_epic_textures.lua:48
 msgid "Always Desert"
-msgstr ""
+msgstr "Только пустыня"
 
 #: modules/zdoom_armaetus_epic_textures.lua:49
 msgid "No"
@@ -6635,55 +6635,55 @@ msgstr ""
 
 #: modules/zdoom_armaetus_epic_textures.lua:1094
 msgid "If enabled, adds textures and content from the Obsidian Epic Resource Pack, which also includes new exclusive prefabs."
-msgstr ""
+msgstr "Если включено, добавляет текстуры, акторы и новые эксклюзивные префабы из Obsidian Epic Resource Pack."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1101
 msgid "Custom Liquids"
-msgstr ""
+msgstr "Новые виды жидкостей"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1104
 msgid "Utilize custom liquid flats or not."
-msgstr ""
+msgstr "Будут ли использоваться новые виды жидкостей на поверхностях."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1111
 msgid "Custom Trees"
-msgstr ""
+msgstr "Новые деревья"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1114
 msgid "Adds custom flat-depedendent tree sprites into the game. Currently only replaces trees on specific grass flats and will be expanded in the future to accomnodate custom Textures and more. If you are playing a mod that already does its own trees, it may be better to leave this off."
-msgstr ""
+msgstr "Добавляет в игру спрайты деревьев, зависящие от поверхности, на которой стоят. В настоящее время заменяет только деревья на определенных участках травы, однако в будущем функционал будет расширен для размещения пользовательских текстур. Если вы играете в модификацию, в которой уже есть собственные виды деревьев, то, возможно, данную опцию лучше не включать."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1121
 msgid "Environment Theme"
-msgstr ""
+msgstr "Тема окружения"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1124
 msgid "Influences outdoor environments with different textures such as desert sand or icey snow."
-msgstr ""
+msgstr "Влияет на окружающую среду — заменяет необходимые участки на песок или снег."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1131
 msgid "Merge Textures WAD"
-msgstr ""
+msgstr "Присоединять ресурс-WAD"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1134
 msgid "Allows the trimming down of resulting WAD by not merging the custom texture WAD.\n\nThis will require you to extract and load up the WAD manually in your preferred sourceport installation.\n\nThis is the preferrable option for multiplayer situations and server owners and have each client obtain a copy of the texture pack instead.\n"
-msgstr ""
+msgstr "Отключение настройки позволяет уменьшить размер выходного файла с уровнями посредством исключения из него всех ресурсов, добавляемых этим модулем. Поэтому для корректного отображения на уровне Вам потребуется подключить файл с ресурсами вручную.\n\nОпция предпочтительна для мультиплеера с использованием клиент-серверной архитектуры."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1141
 msgid "Include Brightmaps"
-msgstr ""
+msgstr "Присоединять Brightmaps"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1144
 msgid "Allows merging Obsidian Textures brightmaps into the WAD. Does not include brightmaps for base resources from any of the games."
-msgstr ""
+msgstr "Позволяет включать в выходной файл карты яркоти (brightmaps) текстур Obsidian. Не включает их из любых других игр."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1151
 msgid "No Hell Environment Themes"
-msgstr ""
+msgstr "Отключить для адских тем"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1154
 msgid "Renders hell theme maps to never use snow or desert environment themes regardless of theme assignment."
-msgstr ""
+msgstr "Карты с темой ада никогда не будут использовать снежные или пустынные области."
 
 #: modules/zdoom_frozsoul_sound.lua:55
 msgid "20000"
