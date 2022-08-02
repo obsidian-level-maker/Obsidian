@@ -161,3 +161,40 @@ PREFABS.Wall_gtd_ribbed_lights_tekmachine_alt_diag =
   flat_FLAT17 = "TLITE6_4",
   tex_LITEBLU1 = "LITE3"
 }
+
+--
+
+PREFABS.Wall_gtd_ribbed_lights_very_blue =
+{
+  template = "Wall_gtd_ribbed_lights",
+  map = "MAP11",
+
+  group = "gtd_ribbed_lights_very_blue",
+
+  height = 96,
+  bound_z2 = 96
+}
+
+PREFABS.Wall_gtd_ribbed_lights_very_blue_row =
+{
+  template = "Wall_gtd_ribbed_lights",
+  map = "MAP12",
+
+  prob = 10,
+  group = "gtd_ribbed_lights_very_blue",
+
+  height = 96,
+  bound_z2 = 96
+}
+
+PREFABS.Wall_gtd_ribbed_lights_blue_diag =
+{
+  template = "Wall_gtd_ribbed_lights",
+  map = "MAP13",
+
+  where = "diagonal",
+  group = "gtd_ribbed_lights_very_blue",
+
+  height = 96,
+  bound_z2 = 96
+}
