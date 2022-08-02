@@ -739,6 +739,7 @@ ULTDOOM.THEMES =
       gtd_ribbed_lights_slump_two_color = 18,
       gtd_ribbed_lights_tekmachine = 9,
       gtd_ribbed_lights_tekmachine_alt = 9,
+      gtd_ribbed_lights_very_blue = 18,
       --
       gtd_wall_high_gap_set = 25,
       gtd_wall_high_gap_alt_set = 25,
