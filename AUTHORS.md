@@ -12,6 +12,7 @@ MsrSgtShooterPerson
   - Modules
   - Textures
   - Documentation
+  - Delta Resource Pack and Doom Tournament addons for Doom 1/2
 
 Armaetus
   - Original base tweaks to Oblige v7.59
@@ -73,11 +74,11 @@ Tapwave
 ## GUI/MAIN PROGRAM DEVELOPERS
 
 Dashodanger
-  - 64-bit support and revamped RNG
   - ZDBSP and UDMF support
   - SLUMP integration for Vanilla Doom
   - GUI overhaul
   - Restoration of Hexen baseline functions
+  - Restoration of previously supported games
 
 Phytolizer
   - Created Filename Formatter to parse custom prefixes
@@ -102,8 +103,11 @@ Cubebert
   - Heretic skyboxes
   - XBox Dashboard, ZDoom Forums, and ZDoom Forums Submerged program themes
 
-Morthimer McMare and ika707
+Morthimer McMare
   - Current Russian translation file updates
+
+ika707 and Chameleon_111
+  - Current Russian translation file proofreading
 
 hytalego
   - Initial Russian translation file
@@ -235,7 +239,7 @@ The internal font loading code is derived from a post by Ian MacArthur
 in a Google Groups thread at the following link:
 https://groups.google.com/g/fltkgeneral/c/uAdg8wOLiMk
 
-OBSIDIAN uses Lua 5.4.x (http://www.lua.org)
+OBSIDIAN uses LuaJIT 2.1.x (https://luajit.org/)
 
-OBSIDIAN uses FLTK 1.3.x (http://www.fltk.org)
+OBSIDIAN uses FLTK 1.4.x (https://www.fltk.org)
 

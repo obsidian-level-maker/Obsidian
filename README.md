@@ -24,7 +24,7 @@ Features of OBSIDIAN include:
 
 First, unpack the zip somewhere (e.g. My Documents).  Make sure it is extracted with folders, and also make sure the OBSIDIAN.EXE file gets extracted too.
 
-Double click on the OBSIDIAN icon to run it.  Select the game in the top left panel, and any other options which take your fancy. Then click the BUILD button in the bottom left panel, and enter an output filename, for example "TEST" (without the quotes).
+Double click on the OBSIDIAN icon to run it.  Select the game in the top left panel, and any other options which take your fancy. Then click the BUILD button in the top left panel, and pick a location in which to save your file.
 
 OBSIDIAN will then build all the maps, showing a blueprint of each one as it goes, and if everything goes smoothly the output file (e.g. "TEST.WAD") will be created at the end.  Then you can play it using the normal method for playing mods with that game (e.g. for DOOM source ports: dragging-n-dropping the WAD file onto the source port's EXE is usually enough).
 
@@ -38,6 +38,10 @@ This is a community continuation of the OBLIGE Level Maker, originally created b
 
 A brief summary of changes:
 
+Improved internationalization support, including fixes for accented characters in Windows filepaths and an updated translation template
+
+Russian translation file provided for the RU locale
+
 Basic support added for Chex Quest 3, HacX 1.2, Harmony, Hexen, and Strife.
 
 Hexen map format is supported; in addition there is a translation layer to convert
@@ -49,7 +53,7 @@ Modified SLUMP level builder included for Vanilla Doom usage.
 
 ZDBSP as the internal nodebuilder, replacing GLBSP.
 
-UDMF map generation option for GZDoom and Eternity Engine.
+UDMF map generation option for GZDoom, Eternity Engine, and EDGE-Classic.
 
 64-bit seeds and random numbers.
 
