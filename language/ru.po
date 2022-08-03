@@ -6109,6 +6109,10 @@ msgstr "Бой"
 msgid "Monster Quantity"
 msgstr "Кол-во монстров"
 
+#: modules/ui_mons.lua:111
+msgid "Mix It Up,Progressive"
+msgstr "Случайно,Постепенно"
+
 #: modules/ui_mons.lua:112
 msgid "0:None,0.15:0.15 (Trivial),0.35:0.35 (Sporadic),0.7:0.7 (Meager),1.0:1.0 (Easy),1.3:1.3 (Modest),1.5:1.5 (Bearable),2.0:2.0 (Rough),2.5:2.5 (Strenuous),3.0:3.0 (Formidable),3.5:3.5 (Harsh),4.0:4.0 (Painful),4.5:4.5 (Ferocious),5.0:5.0 (Unforgiving),5.5:5.5 (Punishing),6.0:6.0 (Murderous),6.5:6.5 (Grueling),7.0:7.0 (Unrelenting),7.5:7.5 (Arduous),8.0:8.0 (Barbaric),8.5:8.5 (Savage),9.0:9.0 (Brutal),9.5:9.5 (Draconian),10.0:10.00 (Merciless)"
 msgstr "0:Без монстров,0.15:0.15 (Исчезающе мало),0.35:0.35 (Считанные единицы),0.7:0.7 (Редко),1.0:1.0 (Нечасто),1.3:1.3 (Скромно),1.5:1.5 (Терпимо),2.0:2.0 (Жестоковато),2.5:2.5 (Напряжённо),3.0:3.0 (Грозная сила),3.5:3.5 (Сурово),4.0:4.0 (Довольно больно),4.5:4.5 (Свирепо),5.0:5.0 (Изнуряюще),5.5:5.5 (Преступление и наказание),6.0:6.0 (Непрощающе),6.5:6.5 (Противоестественно),7.0:7.0 (Варварски),7.5:7.5 (Безжалостно),8.0:8.0 (Дико),8.5:8.5 (Беспощадно),9.0:9.0 (Истязающе),9.5:9.5 (Убийственно),10.0:10.00 (Удачи!)"
@@ -7305,6 +7309,38 @@ msgstr "Нет такого файла конфигурации: {}\n"
 msgid "No such config file: {}\n"
 msgstr "Нет такого файла конфигурации: {}\n"
 
+#: source_files/obsidian_main/main.cc:1418
+msgid "Surprise Me/Preserve Old Config"
+msgstr "Удивить/Сохранить старую конфигурацию"
+
+#: source_files/obsidian_main/main.cc:1422
+msgid "Surprise Me/Randomize Architecture"
+msgstr "Удивить/Случайная архитектура"
+
+#: source_files/obsidian_main/main.cc:1426
+msgid "Surprise Me/Randomize Combat"
+msgstr "Удивить/Случайный бой"
+
+#: source_files/obsidian_main/main.cc:1429
+msgid "Surprise Me/Randomize Pickups"
+msgstr "Удивить/Случайные предметы"
+
+#: source_files/obsidian_main/main.cc:1432
+msgid "Surprise Me/Randomize Other"
+msgstr "Удивить/Случайные иные настройки"
+
+#: source_files/obsidian_main/main.cc:1435
+msgid "Addons/No Addons Detected"
+msgstr "Аддоны/(Дополнений не найдено)"
+
+#: source_files/obsidian_main/main.cc:1438
+msgid "Addons/Restart and Apply Changes"
+msgstr "Аддоны/Принять и перезапустить"
+
+#: source_files/obsidian_main/main.cc:1441
+msgid "Addons/"
+msgstr "Аддоны/"
+
 #: source_files/obsidian_main/main.cc:1634
 msgid "Sorry, an internal error occurred:\n{}"
 msgstr "Внутренняя ошибка:\n{}"
@@ -7481,6 +7517,14 @@ msgstr "Введите формат префикса:"
 msgid "Custom prefix cannot be blank!"
 msgstr "Префикс пуст."
 
+#: source_files/obsidian_main/m_options.cc:463
+msgid "Custom Prefix"
+msgstr "Собственный префикс файла"
+
+#: source_files/obsidian_main/m_options.cc:472
+msgid "Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n%year or %Y: The current year.\n\n%month or %M: The current month.\n\n%day or %D: The current day.\n\n%hour or %h: The current hour.\n\n%minute or %m: The current minute.\n\n%second or %s: The current second.\n\n%version or %v: The current Obsidian version.\n\n%game or %g: Which game the WAD is for.\n\n%engine or %e: Which engine the WAD is for.\n\n%theme or %t: Which theme was selected from the game's choices.\n\n%count or %c: The number of levels in the generated WAD."
+msgstr "Большинство символов для собственного формата переносятся без изменений. Но также могут быть использованы следующие автозаменяющиеся значения:\n\n%year или %Y: текущий год.\n\n%month или %M: текущий месяц.\n\n%day или %D: текущий день.\n\n%hour или %h: текущий час.\n\n%minute или %m: текущая минута.\n\n%second или %s: текущая секунда.\n\n%version или %v: используемая версия OBSIDIAN.\n\n%game или %g: целевая игра (Doom, Heretic, ...).\n\n%engine или %e: целевой игровой движок.\n\n%theme или %t: выбранная тема.\n\n%count или %c: количество уровней в сгенерированном WAD."
+
 #: source_files/obsidian_main/m_options.cc:538
 msgid "Language: "
 msgstr "Язык: "
@@ -7491,7 +7535,7 @@ msgstr "Тип сжатия: "
 
 #: source_files/obsidian_main/m_options.cc:555
 msgid "OFF|ZIP|PK3"
-msgstr "OFF|ZIP|PK3"
+msgstr "Без сжатия|ZIP|PK3"
 
 #: source_files/obsidian_main/m_options.cc:566
 msgid "Filename Prefix: "
@@ -7499,7 +7543,7 @@ msgstr "Префикс файла: "
 
 #: source_files/obsidian_main/m_options.cc:570
 msgid "Date and Time|Number of Levels|Game|Engine|Theme|Version|Custom|Nothing"
-msgstr "Дата и время|Количество уровней|Игра|Тема|Версия|Пользовательский|Ничего"
+msgstr "Дата и время|Количество уровней|Игра|Тема|Версия OBSIDIAN|(Пользовательский)|(Отсутствует)"
 
 #: source_files/obsidian_main/m_options.cc:580
 msgid "Set Custom Prefix..."
@@ -7507,11 +7551,39 @@ msgstr "Ввести префикс..."
 
 #: source_files/obsidian_main/m_options.cc:598
 msgid " Random String Seeds"
-msgstr "Случайные строки сида"
+msgstr "Случайные слова для сида"
+
+#: source_files/obsidian_main/m_options.cc:377
+msgid "Will randomly pull 1 to 3 words from Obsidian's random word list (found in /scripts/random_words.lua) and use those as input for the map generation seed. Purely for cosmetic/entertainment value."
+msgstr "При включённой настройке будет случайно выбирать несколько слов из встроенной базы данных (находится в /scripts/random_words*.lua) и добавлять их к ключу генерации. Можно считать, что используется исключительно для развлечения."
 
 #: source_files/obsidian_main/m_options.cc:614
 msgid " Password Mode"
-msgstr "Режим пароля"
+msgstr "Режим \"пароля\""
+
+#: source_files/obsidian_main/m_options.cc:397
+msgid "Will produce a pseudo-random sequence of characters as input for the map generation seed. Random String Seeds must be enabled to use this option."
+msgstr "Создаёт псевдослучайную последовательность символов и использует её в качестве ключа генерации. Для работы требуется включённая опция \"Случайные слова для сида\"."
+
+#: source_files/obsidian_main/m_options.cc:425
+msgid "File prefix changes require a restart.\nOBSIDIAN will now restart."
+msgstr "Требуется перезапуск OBSIDIAN\nпосле изменения префикса файла."
+
+#: source_files/obsidian_main/m_options.cc:435
+msgid "WARNING! This option will allow you to manually enter values in excess of the \n(usually) stable slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this will not be addressed by the developers.\nYou must select Yes for this option to be applied."
+msgstr "ВНИМАНИЕ! Эта опция позволит вам вручную вводить значения, выходящие за \nстабильные/выверенные пределы слайдеров. Поэтому любые ошибки, \nвылеты и иные подобные вещи, порождённые нерегламентированным \nиспользованием программы, не будут направлены разработчикам."
+
+#: source_files/obsidian_main/m_options.cc:436
+msgid "Cancel"
+msgstr "Отмена"
+
+#: source_files/obsidian_main/m_options.cc:437
+msgid "Yes, break Obsidian"
+msgstr "Да, сломать всё"
+
+#: source_files/obsidian_main/m_options.cc:447
+msgid "Restoring slider limits requires a restart.\nObsidian will now restart."
+msgstr "Требуется перезапуск OBSIDIAN для восстановления пределов слайдеров."
 
 #: source_files/obsidian_main/m_options.cc:632
 msgid " Create Backups"
@@ -7545,9 +7617,17 @@ msgstr "Ставить временную метку логам"
 msgid "# of Logs Preserved "
 msgstr "К-во хранимых логов"
 
+#: source_files/obsidian_main/m_options.cc:299
+msgid "Obsidian will now restart to apply language changes.\nObsidian will be in your selected language after restarting."
+msgstr "Для того, чтобы изменение языка вступили в силу, OBSIDIAN необходимо перезапуститься.\nOBSIDIAN will now restart to apply language changes."
+
 #: source_files/obsidian_main/m_options.cc:722
 msgid " Restart Lua VM Between Builds"
-msgstr "Использовать старую версию LUA VM"
+msgstr "Перезапускать LUA VM"
+
+#: source_files/obsidian_main/m_options.cc:326
+msgid "Obsidian has migrated from Lua to LuaJIT. One side effect of this is that even with a fixed seed, subsequent runs with the same configuration will not guarantee the same result.\n\nRestarting the Lua VM between builds will improve the odds of being able to repeat the results of a prior seed/setting combination, with the downside of visibly restarting the program every time a map is generated (even unsuccessfully).\n\nIf you have no particular need to recreate the results of prior runs, this option can be safely left off."
+msgstr "OBSIDIAN перешёл с Lua на LuaJIT. Одним из последствий этого является то, что результаты генерации без перезахода в программу, даже при одинаковом ключе генерации, будут различаться.\n\nЭта опция позволяет перезагружать виртуальную машину LUA перед каждой новой сборкой, что практически всегда позволит получать одинаковые результаты на одном ключе генерации.\n\nЕсли Вам не требуется получать идентичные результаты — к примеру, для отладочных целей — настройку можно спокойно оставлять нетронутой."
 
 #: source_files/obsidian_main/m_options.cc:760
 msgid "Note: some options require a restart."
@@ -7689,6 +7769,18 @@ msgstr "АВТО"
 msgid "OBSIDIAN Tutorial"
 msgstr "Руководство OBSIDIAN"
 
+#: source_files/obsidian_main/ui_build.cc:32
+msgid "Progress and minimap display.\nMinimap Legend:\nWhite - Regular rooms\nBrown - Caves\nBlue - Outdoors\nGreen - Parks"
+msgstr "Ход генерации и область предпросмотра.\n\nРасшифровка цветов:\nБелый — обычные комнаты;\nКоричневый — пещеры;\nСиний — пространства под небом;\nЗелёный — парковые зоны."
+
+#: source_files/obsidian_main/ui_build.cc:53
+msgid "Seed: -"
+msgstr "Сид: -"
+
+#: source_files/obsidian_main/main.cc:1000
+msgid "Seed:"
+msgstr "Сид:"
+
 #: source_files/obsidian_main/ui_build.cc:67
 msgid "Ready to go!"
 msgstr "Готов!"
@@ -7828,21 +7920,6 @@ msgstr "Помощь/Руководство"
 #: source_files/obsidian_main/ui_window.cc:87
 #msgid "Surprise Me/Go"
 #msgstr "Удивите меня/Пуск"
-
-#msgid "Surprise Me/Preserve Old Config"
-#msgstr "Удивите меня/Сохранить старую конфигурацию"
-
-#msgid "Surprise Me/Randomize Architecture"
-#msgstr "Удивите меня/Случайная архитектура"
-
-#msgid "Surprise Me/Randomize Combat"
-#msgstr "Удивите меня/Случайный бой"
-
-#msgid "Surprise Me/Randomize Pickup"
-#msgstr "Удивите меня/Случайные предметы"
-
-#msgid "Surprise Me/Randomize Other"
-#msgstr "Удивите меня/Случайные иные настройки"
 
 msgid "This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."
 msgstr "══ Используемая терминология ══\n\nОт переводчика: часть слов, в основном укоренившиеся в широких кругах (с позволения сказать, имена собственные — имп, ревенант, ...) я просто транслитерировал, дословно переводя только в некоторых подсказках. Также: некоторые термины, хорошо звучащие в английском языке, при попытке локализации оказались слишком длинными для отведённого лимита символов. Поэтому некоторые слова пришлось заменить на более короткие варианты.\n\n\"Префаб\" — заготовка/составляющая уровня/примитив/кубик конструктора. От английского \"Pre-fabricated\" (дословно \"Предсобранный\")."
