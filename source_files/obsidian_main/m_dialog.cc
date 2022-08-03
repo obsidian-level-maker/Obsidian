@@ -222,7 +222,7 @@ void DLG_ShowError(const char *msg, ...) {
 //----------------------------------------------------------------------
 
 std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
-    std::string kind_buf = fmt::format("{} files\t*.{}", ext, ext);
+    std::string kind_buf = fmt::format("{} {}\t*.{}", ext, _("files"), ext);
 
     // uppercase the first word
     for (char *p = &kind_buf[0]; *p && *p != ' '; p++) {
@@ -262,7 +262,7 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
 
     switch (result) {
         case -1:
-            LogPrintf("Error choosing output file:\n");
+            LogPrintf(_("Error choosing output file:\n"));
             LogPrintf("   {}\n", chooser.errmsg());
 
             DLG_ShowError(_("Unable to create the file:\n\n%s"),
@@ -616,7 +616,8 @@ tryagain:;
     if (std::filesystem::exists(filename)) {
         switch (fl_choice(_("%s already exists.\nChoose Yes to overwrite or No "
                             "to choose a new filename."),
-                          _("Yes"), _("No"), 0,
+                          _("Yes"), 
+                          _("No"), 0,
                           filename.generic_string().c_str())) {
             case 0:
                 std::filesystem::remove(filename);
@@ -663,7 +664,8 @@ tryagain:;
                 switch (fl_choice(_("Log zipping is enabled, but %s already "
                                     "exists.\nOverwrite (original .txt file "
                                     "will still be kept) ?"),
-                                  _("Yes"), _("No"), 0,
+                                  _("Yes"), 
+                                  _("No"), 0,
                                   zip_filename.generic_string().c_str())) {
                     case 0:
                         std::filesystem::remove(zip_filename);
@@ -679,13 +681,11 @@ tryagain:;
                 std::filesystem::remove(filename);
                 delete[] zip_buf;
             } else {
-                DLG_ShowError(_("Zipping logs to %s failed! Retaining original "
-                                "logs.\n"),
+                DLG_ShowError(_("Zipping logs to %s failed! Retaining original logs.\n"),
                               filename.generic_string().c_str());
             }
         } else {
-            DLG_ShowError(_("Zipping logs to %s failed! Retaining original "
-                            "logs.\n"),
+            DLG_ShowError(_("Zipping logs to %s failed! Retaining original logs.\n"),
                           filename.generic_string().c_str());
         }
     }

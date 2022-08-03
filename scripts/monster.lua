@@ -1712,10 +1712,10 @@ function Monster_fill_room(R)
 
     local z = spot.z1
 
-    local dx
-    local dy
+    --local dx
+    --local dy
     -- move monster to random place within the box
-    if(spot.bossgen) then
+    --[[if(spot.bossgen) then
       dx = 0
       dy = 0
     else
@@ -1729,7 +1729,7 @@ function Monster_fill_room(R)
 
     if dy > 0 then
       y = y + rand.range(-dy, dy)
-    end
+    end--]]
 
     place_monster(mon, spot, x, y, z, all_skills)
 
@@ -1755,7 +1755,7 @@ function Monster_fill_room(R)
     local z = spot.z1
 
     -- move decoration entity to random place within the box
-    local dx = w / 2 - info.r
+    --[[local dx = w / 2 - info.r
     local dy = h / 2 - info.r
 
     if dx > 0 then
@@ -1764,7 +1764,7 @@ function Monster_fill_room(R)
 
     if dy > 0 then
       y = y + rand.range(-dy, dy)
-    end
+    end]]--
 
     local props = {}
 
