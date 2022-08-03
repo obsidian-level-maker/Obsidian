@@ -964,7 +964,7 @@ int Main_key_handler(int event) {
     return 0;
 }
 
-void Main_CalcNewSeed() { next_rand_seed = xoshiro_UInt(); LogPrintf("NEXT RAND SEED: {}\n", next_rand_seed);}
+void Main_CalcNewSeed() { next_rand_seed = xoshiro_UInt(); }
 
 void Main_SetSeed() {
     if (random_string_seeds && !did_specify_seed) {
