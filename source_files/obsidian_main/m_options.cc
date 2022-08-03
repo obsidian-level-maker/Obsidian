@@ -314,7 +314,7 @@ class UI_OptionsWin : public Fl_Window {
 
     static void callback_RestartAfterBuildsHelp(Fl_Widget *w, void *data) {
         fl_cursor(FL_CURSOR_DEFAULT);
-        Fl_Window *win = new Fl_Window(640, 480, "Restart Lua VM After Builds");
+        Fl_Window *win = new Fl_Window(640, 480, _("Restart Lua VM After Builds"));
         Fl_Text_Buffer *buff = new Fl_Text_Buffer();
         Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
         disp->buffer(buff);
@@ -365,7 +365,7 @@ class UI_OptionsWin : public Fl_Window {
 
     static void callback_RandomStringSeedsHelp(Fl_Widget *w, void *data) {
         fl_cursor(FL_CURSOR_DEFAULT);
-        Fl_Window *win = new Fl_Window(640, 480, "Random String Seeds");
+        Fl_Window *win = new Fl_Window(640, 480, _("Random String Seeds"));
         Fl_Text_Buffer *buff = new Fl_Text_Buffer();
         Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
         disp->buffer(buff);
@@ -385,7 +385,7 @@ class UI_OptionsWin : public Fl_Window {
 
     static void callback_PasswordModeHelp(Fl_Widget *w, void *data) {
         fl_cursor(FL_CURSOR_DEFAULT);
-        Fl_Window *win = new Fl_Window(640, 480, "Password Mode");
+        Fl_Window *win = new Fl_Window(640, 480, _("Password Mode"));
         Fl_Text_Buffer *buff = new Fl_Text_Buffer();
         Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
         disp->buffer(buff);
@@ -460,7 +460,7 @@ class UI_OptionsWin : public Fl_Window {
 
     static void callback_PrefixHelp(Fl_Widget *w, void *data) {
         fl_cursor(FL_CURSOR_DEFAULT);
-        Fl_Window *win = new Fl_Window(640, 480, "Custom Prefix");
+        Fl_Window *win = new Fl_Window(640, 480, _("Custom Prefix"));
         Fl_Text_Buffer *buff = new Fl_Text_Buffer();
         Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
         disp->buffer(buff);

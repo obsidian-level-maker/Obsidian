@@ -159,6 +159,8 @@ std::filesystem::path gif_filename = "gif_output.gif";
 
 std::string string_seed;
 
+std::string selected_lang = "en"; // Have a default just in case the translation stuff borks
+
 std::string log_timestamp;
 
 game_interface_c *game_object = NULL;
@@ -962,7 +964,7 @@ int Main_key_handler(int event) {
     return 0;
 }
 
-void Main_CalcNewSeed() { next_rand_seed = xoshiro_UInt(); }
+void Main_CalcNewSeed() { next_rand_seed = xoshiro_UInt(); LogPrintf("NEXT RAND SEED: {}\n", next_rand_seed);}
 
 void Main_SetSeed() {
     if (random_string_seeds && !did_specify_seed) {
@@ -982,9 +984,9 @@ void Main_SetSeed() {
                 char character = string_seed.at(i);
                 if (!std::iscntrl(character)) {
                     if (next_rand_seed < split_limit) {
-                        next_rand_seed *= int(character);
+                        next_rand_seed *= abs(int(character));
                     } else {
-                        next_rand_seed /= int(character);
+                        next_rand_seed /= abs(int(character));
                     }
                 }
             }
@@ -995,7 +997,7 @@ void Main_SetSeed() {
     ob_set_config("seed", seed.c_str());
     if (!batch_mode) {
         main_win->build_box->seed_disp->copy_label(
-            fmt::format("Seed: {}", seed).c_str());
+            fmt::format("{} {}", _("Seed:"), seed).c_str());
         main_win->build_box->seed_disp->redraw();
     }
 }
@@ -1046,11 +1048,11 @@ bool Build_Cool_Shit() {
         std::string seed = NumToString(next_rand_seed);
         if (!string_seed.empty()) {
             main_win->build_box->seed_disp->copy_label(
-                fmt::format("Seed: {}", string_seed).c_str());
+                fmt::format("{} {}", _("Seed:"), string_seed).c_str());
             main_win->build_box->seed_disp->redraw();
         } else {
             main_win->build_box->seed_disp->copy_label(
-                fmt::format("Seed: {}", seed).c_str());
+                fmt::format("{} {}", _("Seed:"), seed).c_str());
             main_win->build_box->seed_disp->redraw();
         }
         main_win->game_box->SetAbortButton(true);
@@ -1089,7 +1091,7 @@ bool Build_Cool_Shit() {
     } else {
         string_seed.clear();
         if (main_win) {
-            main_win->build_box->seed_disp->copy_label("Seed: -");
+            main_win->build_box->seed_disp->copy_label(_("Seed: -"));
             main_win->build_box->seed_disp->redraw();
             main_win->build_box->name_disp->copy_label("");
             main_win->build_box->name_disp->redraw();
@@ -1391,6 +1393,8 @@ skiprest:
     ob_set_config("cap_level_sizes", "yes");
 #endif
 
+    ob_set_config("locale", selected_lang.c_str());
+
     // enable certain modules by default
     Module_Defaults();
 
@@ -1411,30 +1415,30 @@ skiprest:
     // Have to add these after reading existing settings - Dasho
     if (main_win) {
         main_win->menu_bar->add(
-            "Surprise Me/Preserve Old Config", NULL,
+            _("Surprise Me/Preserve Old Config"), NULL,
             main_win_surprise_config_CB, 0,
             FL_MENU_TOGGLE | (preserve_old_config ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add(
-            "Surprise Me/Randomize Architecture", NULL,
+            _("Surprise Me/Randomize Architecture"), NULL,
             main_win_architecture_config_CB, 0,
             FL_MENU_TOGGLE | (randomize_architecture ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add(
-            "Surprise Me/Randomize Combat", NULL, main_win_monsters_config_CB,
+            _("Surprise Me/Randomize Combat"), NULL, main_win_monsters_config_CB,
             0, FL_MENU_TOGGLE | (randomize_monsters ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add(
-            "Surprise Me/Randomize Pickups", NULL, main_win_pickups_config_CB,
+            _("Surprise Me/Randomize Pickups"), NULL, main_win_pickups_config_CB,
             0, FL_MENU_TOGGLE | (randomize_pickups ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add(
-            "Surprise Me/Randomize Other", NULL, main_win_misc_config_CB, 0,
+            _("Surprise Me/Randomize Other"), NULL, main_win_misc_config_CB, 0,
             FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
         if (all_addons.size() == 0) {
-            main_win->menu_bar->add("Addons/No Addons Detected", 0, 0, 0,
+            main_win->menu_bar->add(_("Addons/No Addons Detected"), 0, 0, 0,
                                     FL_MENU_INACTIVE);
         } else {
-            main_win->menu_bar->add("Addons/Restart and Apply Changes", 0,
+            main_win->menu_bar->add(_("Addons/Restart and Apply Changes"), 0,
                                     main_win_apply_addon_CB, 0, 0);
             for (int i = 0; i < all_addons.size(); i++) {
-                std::string addon_entry = "Addons/";
+                std::string addon_entry = _("Addons/");
                 addon_entry.append(all_addons[i].name.filename().string());
                 main_win->menu_bar->add(
                     addon_entry.c_str(), 0, main_win_addon_CB,
@@ -1555,7 +1559,7 @@ skiprest:
 
     if (!old_seed.empty()) {
         main_win->build_box->seed_disp->copy_label(
-            fmt::format("Seed: {}", old_seed).c_str());
+            fmt::format("{} {}", _("Seed:"), old_seed).c_str());
         old_seed.clear();
     }
 

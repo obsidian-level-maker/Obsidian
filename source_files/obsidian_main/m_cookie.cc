@@ -85,9 +85,9 @@ static void Cookie_SetValue(std::string name, std::string value) {
                         char character = value.at(i);
                         if (!std::iscntrl(character)) {
                             if (next_rand_seed < split_limit) {
-                                next_rand_seed *= int(character);
+                                next_rand_seed *= abs(int(character));
                             } else {
-                                next_rand_seed /= int(character);
+                                next_rand_seed /= abs(int(character));
                             }
                         }
                     }

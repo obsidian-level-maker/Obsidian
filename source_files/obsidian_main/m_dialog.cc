@@ -348,9 +348,9 @@ void DLG_EditSeed(void) {
         char character = word.at(i);
         if (not std::iscntrl(character)) {
             if (next_rand_seed < split_limit) {
-                next_rand_seed *= int(character);
+                next_rand_seed *= abs(int(character));
             } else {
-                next_rand_seed /= int(character);
+                next_rand_seed /= abs(int(character));
             }
         }
     }

@@ -47,7 +47,8 @@ gui.import("level")
 
 gui.import("script_manager")
 
-gui.import("random_words.lua")
+gui.import("random_words_en.lua")
+gui.import("random_words_ru.lua")
 
 function ob_ref_table(op, t)
   if not gui.___REFS then
@@ -1344,7 +1345,14 @@ function ob_get_password()
 end
 
 function ob_get_random_words()
-  assert(RANDOM_WORDS)
+  
+  RANDOM_WORDS = {}
+
+  if OB_CONFIG.locale == "ru" then
+    RANDOM_WORDS = RANDOM_WORDS_RU
+  else 
+    RANDOM_WORDS = RANDOM_WORDS_EN -- As other translations happen, there will be more elses here - Dasho
+  end
 
   local function case_randomizer(random_word)
 

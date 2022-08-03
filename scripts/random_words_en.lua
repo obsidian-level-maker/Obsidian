@@ -3,7 +3,7 @@
 -- EDIT: Various words added to this -Armaetus, March 14th, 2021
 -- Things such as fantasy words from games, for example.
 
-RANDOM_WORDS = 
+RANDOM_WORDS_EN = 
 {
   "aa",
   "aardvark",

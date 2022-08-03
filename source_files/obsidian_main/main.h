@@ -192,6 +192,7 @@ std::filesystem::path DLG_OutputFilename(const char *ext,
 extern std::filesystem::path gif_filename;
 
 extern std::string string_seed;
+extern std::string selected_lang;
 
 // Tutorial stuff
 extern Fl_BMP_Image *tutorial1;

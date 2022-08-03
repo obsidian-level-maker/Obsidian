@@ -29,9 +29,7 @@
 UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     : Fl_Group(X, Y, W, H, label) {
     box(box_style);
-    tooltip(
-        "Progress and minimap display.\nMinimap Legend:\nWhite - Regular "
-        "rooms\nBrown - Caves\nBlue - Outdoors\nGreen - Parks");
+    tooltip(_("Progress and minimap display.\nMinimap Legend:\nWhite - Regular rooms\nBrown - Caves\nBlue - Outdoors\nGreen - Parks"));
 
     status_label = "0";
 
@@ -52,7 +50,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     seed_disp->labelcolor(FL_WHITE);
     seed_disp->labelsize(small_font_size);
     seed_disp->labelfont(font_style);
-    seed_disp->copy_label("Seed: -");
+    seed_disp->copy_label(_("Seed: -"));
 
     name_disp = new Fl_Box(X + (W * .10), cy, mini_w, mini_h);
     name_disp->box(FL_NO_BOX);
@@ -317,9 +315,9 @@ void UI_Build::ParseSteps(const char *names) {
     step_names.clear();
 
     // these three are done by Lua (no variation)
-    step_names.push_back(N_("Plan"));
-    step_names.push_back(N_("Rooms"));
-    step_names.push_back(N_("Mons"));
+    step_names.push_back(_("Plan"));
+    step_names.push_back(_("Rooms"));
+    step_names.push_back(_("Mons"));
 
     while (*names) {
         const char *comma = strchr(names, ',');

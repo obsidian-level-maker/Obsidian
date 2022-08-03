@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Obsidian Level Maker\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-09 23:41+1000\n"
-"PO-Revision-Date: 2022-07-24 19:39-0600\n"
+"PO-Revision-Date: 2022-08-02 21:00-0600\n"
 "Last-Translator:  Dasho\n"
 "Language-Team: English\n"
 "Language: en_US\n"
@@ -197,31 +197,31 @@ msgstr ""
 msgid "Doom 2"
 msgstr ""
 
-#: games/doom/themes.lua:5224
+#: games/doom/themes.lua:5232
 msgid "Tech"
 msgstr ""
 
-#: games/doom/themes.lua:5234
+#: games/doom/themes.lua:5242
 msgid "Urban"
 msgstr ""
 
-#: games/doom/themes.lua:5244
+#: games/doom/themes.lua:5252
 msgid "Hell"
 msgstr ""
 
-#: games/doom/x_doom1.lua:4457
+#: games/doom/x_doom1.lua:4466
 msgid "Doom 1"
 msgstr ""
 
-#: games/doom/x_doom1.lua:4483
+#: games/doom/x_doom1.lua:4492
 msgid "Ultimate Doom"
 msgstr ""
 
-#: games/doom/x_doom1.lua:4499
+#: games/doom/x_doom1.lua:4508
 msgid "Deimos"
 msgstr ""
 
-#: games/doom/x_doom1.lua:4509
+#: games/doom/x_doom1.lua:4518
 msgid "Thy Flesh"
 msgstr ""
 
@@ -5533,179 +5533,179 @@ msgstr ""
 msgid "I LOVE IT"
 msgstr ""
 
-#: modules/prefab_controller.lua:178
+#: modules/prefab_controller.lua:176
 msgid "Advanced Level Control"
 msgstr ""
 
-#: modules/prefab_controller.lua:196
+#: modules/prefab_controller.lua:194
 msgid "Alt-start Rooms"
 msgstr ""
 
-#: modules/prefab_controller.lua:199
+#: modules/prefab_controller.lua:197
 msgid "For Co-operative games, sometimes have players start in different rooms"
 msgstr ""
 
-#: modules/prefab_controller.lua:203
+#: modules/prefab_controller.lua:201
 msgid "Foreshadowing Exit"
 msgstr ""
 
-#: modules/prefab_controller.lua:206
+#: modules/prefab_controller.lua:204
 msgid "Gets exit room theme to follow the theme of the next level, if different."
 msgstr ""
 
-#: modules/prefab_controller.lua:212
+#: modules/prefab_controller.lua:210
 msgid "Auto Detailing"
 msgstr ""
 
-#: modules/prefab_controller.lua:215
+#: modules/prefab_controller.lua:213
 msgid "Reduces the amount of complex architecture in a map based on its size. Default is on in binary map format, off in UDMF map format."
 msgstr ""
 
-#: modules/prefab_controller.lua:222
+#: modules/prefab_controller.lua:220
 msgid "Point Decor"
 msgstr ""
 
-#: modules/prefab_controller.lua:224
+#: modules/prefab_controller.lua:222
 msgid "Decor prefabs are prefabs placed along the floors such as crates, pillars, and other decorative elements which aren't tied to walls. This directly modifies probabilities on a per-room basis, not the density for decor prefabs in any given room.\n\nNote: DEFAULT actually behaves like Mix-It-Up."
 msgstr ""
 
-#: modules/prefab_controller.lua:233
+#: modules/prefab_controller.lua:231
 msgid "Wall Decor"
 msgstr ""
 
-#: modules/prefab_controller.lua:235
+#: modules/prefab_controller.lua:233
 msgid "Determines the odds for decorated wall junctions in a map versus plain ones."
 msgstr ""
 
-#: modules/prefab_controller.lua:244
+#: modules/prefab_controller.lua:242
 msgid "Group Walls"
 msgstr ""
 
-#: modules/prefab_controller.lua:246
+#: modules/prefab_controller.lua:244
 msgid "Determines the percentage at which grouped walls are applied to rooms."
 msgstr ""
 
-#: modules/prefab_controller.lua:258
+#: modules/prefab_controller.lua:256
 msgid "Single Room Themes"
 msgstr ""
 
-#: modules/prefab_controller.lua:265
+#: modules/prefab_controller.lua:263
 msgid "Determines the odds at which a level would use a universal, single room theme for all indoors (buildings). Default is 50%."
 msgstr ""
 
-#: modules/prefab_controller.lua:273
+#: modules/prefab_controller.lua:271
 msgid "Limited Wall Groups"
 msgstr ""
 
-#: modules/prefab_controller.lua:280
+#: modules/prefab_controller.lua:278
 msgid "Determines the odds at which a level would use fewer wall group choices but at greater quantites for more consistent visuals. Default is 50%."
 msgstr ""
 
-#: modules/prefab_controller.lua:291
+#: modules/prefab_controller.lua:289
 msgid "Peered Starts/Exits"
 msgstr ""
 
-#: modules/prefab_controller.lua:295
+#: modules/prefab_controller.lua:293
 msgid "Attempt to use matched start and exit fabs for a level (if a matched set is possible)."
 msgstr ""
 
-#: modules/prefab_controller.lua:302
+#: modules/prefab_controller.lua:300
 msgid "Steppy Caves"
 msgstr ""
 
-#: modules/prefab_controller.lua:305
+#: modules/prefab_controller.lua:303
 msgid "Always"
 msgstr ""
 
-#: modules/prefab_controller.lua:306
+#: modules/prefab_controller.lua:304
 msgid "Yes"
 msgstr ""
 
-#: modules/prefab_controller.lua:307
+#: modules/prefab_controller.lua:305
 msgid "No"
 msgstr ""
 
-#: modules/prefab_controller.lua:309
+#: modules/prefab_controller.lua:307
 msgid "Disables or enables caves with height variations."
 msgstr ""
 
-#: modules/prefab_controller.lua:320
+#: modules/prefab_controller.lua:318
 msgid "Crushers"
 msgstr ""
 
-#: modules/prefab_controller.lua:322
+#: modules/prefab_controller.lua:320
 msgid "Changes probabilities for fabs with crushing sectors. Default is on."
 msgstr ""
 
-#: modules/prefab_controller.lua:331
+#: modules/prefab_controller.lua:329
 msgid "Dexterity Fabs"
 msgstr ""
 
-#: modules/prefab_controller.lua:333
+#: modules/prefab_controller.lua:331
 msgid "Changes probabilities for fabs featuring Chasm-ish navigation. Default is on."
 msgstr ""
 
-#: modules/prefab_controller.lua:341
+#: modules/prefab_controller.lua:339
 msgid "Gambling Fabs"
 msgstr ""
 
-#: modules/prefab_controller.lua:343
+#: modules/prefab_controller.lua:341
 msgid "Changes probabilities for fabs that may lockout a player on items. Default is on."
 msgstr ""
 
-#: modules/prefab_controller.lua:352
+#: modules/prefab_controller.lua:350
 msgid "Sight Ambush Cages"
 msgstr ""
 
-#: modules/prefab_controller.lua:354
+#: modules/prefab_controller.lua:352
 msgid "Changes probabilities for cages that unleash its monsters when player is in sight. Default is on."
 msgstr ""
 
-#: modules/prefab_controller.lua:363
+#: modules/prefab_controller.lua:361
 msgid "Mirror Mazes"
 msgstr ""
 
-#: modules/prefab_controller.lua:365
+#: modules/prefab_controller.lua:363
 msgid "Changes probabilities for hell mirror maze closets and joiners."
 msgstr ""
 
-#: modules/prefab_controller.lua:374
+#: modules/prefab_controller.lua:372
 msgid "Dark Mazes"
 msgstr ""
 
-#: modules/prefab_controller.lua:376
+#: modules/prefab_controller.lua:374
 msgid "Changes probabilities for dark/eye maze joiners in hell theme."
 msgstr ""
 
-#: modules/prefab_controller.lua:385
+#: modules/prefab_controller.lua:383
 msgid "Stair Ladders"
 msgstr ""
 
-#: modules/prefab_controller.lua:387
+#: modules/prefab_controller.lua:385
 msgid "Changes probabilities for high-step ladders (stairs)."
 msgstr ""
 
-#: modules/prefab_controller.lua:397
+#: modules/prefab_controller.lua:395
 msgid "Jump/Crouch Fabs"
 msgstr ""
 
-#: modules/prefab_controller.lua:400
+#: modules/prefab_controller.lua:398
 msgid "Enables or disables prefabs that require jumping or crouching to navigate."
 msgstr ""
 
-#: modules/prefab_controller.lua:410
+#: modules/prefab_controller.lua:408
 msgid "Damaging Hallways"
 msgstr ""
 
-#: modules/prefab_controller.lua:412
+#: modules/prefab_controller.lua:410
 msgid "Changes the liquids on hallways with damaging floors to either be damaging (default) or non-damaging."
 msgstr ""
 
-#: modules/prefab_controller.lua:424
+#: modules/prefab_controller.lua:422
 msgid "Match Theme"
 msgstr ""
 
-#: modules/prefab_controller.lua:427
+#: modules/prefab_controller.lua:425
 msgid "Ensures that prefabs selected match their intended Theme."
 msgstr ""
 
@@ -8825,67 +8825,119 @@ msgstr ""
 msgid "Error (create file)"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:214
+#: source_files/obsidian_main/main.cc:216
 msgid "Addons/"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:225
+#: source_files/obsidian_main/main.cc:227
 msgid "OBSIDIAN will now restart and apply changes to addons."
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:893
+#: source_files/obsidian_main/main.cc:895
 msgid "No"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:894
+#: source_files/obsidian_main/main.cc:896
 msgid "Yes"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:895
+#: source_files/obsidian_main/main.cc:897
 msgid "OK"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:896
+#: source_files/obsidian_main/main.cc:898
 msgid "Cancel"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:897
+#: source_files/obsidian_main/main.cc:899
 msgid "Close"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1057
+#: source_files/obsidian_main/main.cc:1000
+msgid "Seed:"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1051
+msgid "Seed:"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1055
+msgid "Seed:"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1059
 msgid "Preparing..."
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1077
+#: source_files/obsidian_main/main.cc:1079
 msgid "Success"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1113
+#: source_files/obsidian_main/main.cc:1094
+msgid "Seed: -"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1115
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1271
+#: source_files/obsidian_main/main.cc:1273
 msgid "OBSIDIAN Level Maker"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1272
+#: source_files/obsidian_main/main.cc:1274
 msgid "Unstable"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1346
+#: source_files/obsidian_main/main.cc:1348
 msgid "No such config file: {}\n"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1405
+#: source_files/obsidian_main/main.cc:1409
 msgid "No such config file: {}\n"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1639
+#: source_files/obsidian_main/main.cc:1418
+msgid "Surprise Me/Preserve Old Config"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1422
+msgid "Surprise Me/Randomize Architecture"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1426
+msgid "Surprise Me/Randomize Combat"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1429
+msgid "Surprise Me/Randomize Pickups"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1432
+msgid "Surprise Me/Randomize Other"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1435
+msgid "Addons/No Addons Detected"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1438
+msgid "Addons/Restart and Apply Changes"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1441
+msgid "Addons/"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1562
+msgid "Seed:"
+msgstr ""
+
+#: source_files/obsidian_main/main.cc:1643
 msgid "Sorry, an internal error occurred:\n{}"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1642
+#: source_files/obsidian_main/main.cc:1646
 msgid "An exception occurred: \n{}"
 msgstr ""
 
@@ -9069,12 +9121,24 @@ msgstr ""
 msgid "Obsidian will now restart to apply language changes.\nObsidian will be in your selected language after restarting."
 msgstr ""
 
+#: source_files/obsidian_main/m_options.cc:317
+msgid "Restart Lua VM After Builds"
+msgstr ""
+
 #: source_files/obsidian_main/m_options.cc:326
 msgid "Obsidian has migrated from Lua to LuaJIT. One side effect of this is that even with a fixed seed, subsequent runs with the same configuration will not guarantee the same result.\n\nRestarting the Lua VM between builds will improve the odds of being able to repeat the results of a prior seed/setting combination, with the downside of visibly restarting the program every time a map is generated (even unsuccessfully).\n\nIf you have no particular need to recreate the results of prior runs, this option can be safely left off."
 msgstr ""
 
+#: source_files/obsidian_main/m_options.cc:368
+msgid "Random String Seeds"
+msgstr ""
+
 #: source_files/obsidian_main/m_options.cc:377
 msgid "Will randomly pull 1 to 3 words from Obsidian's random word list (found in /scripts/random_words.lua) and use those as input for the map generation seed. Purely for cosmetic/entertainment value."
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:388
+msgid "Password Mode"
 msgstr ""
 
 #: source_files/obsidian_main/m_options.cc:397
@@ -9099,6 +9163,10 @@ msgstr ""
 
 #: source_files/obsidian_main/m_options.cc:447
 msgid "Restoring slider limits requires a restart.\nObsidian will now restart."
+msgstr ""
+
+#: source_files/obsidian_main/m_options.cc:463
+msgid "Custom Prefix"
 msgstr ""
 
 #: source_files/obsidian_main/m_options.cc:472
@@ -9205,111 +9273,111 @@ msgstr ""
 msgid "Unable to load the file:\n\n%s"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1500
+#: source_files/obsidian_main/m_theme.cc:1502
 msgid "Window Scaling: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1502
+#: source_files/obsidian_main/m_theme.cc:1504
 msgid "AUTO|Tiny|Small|Medium|Large|Huge"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1514
+#: source_files/obsidian_main/m_theme.cc:1516
 msgid "Font Size: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1531
+#: source_files/obsidian_main/m_theme.cc:1533
 msgid "Font: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1547
+#: source_files/obsidian_main/m_theme.cc:1549
 msgid "Widget Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1549
+#: source_files/obsidian_main/m_theme.cc:1551
 msgid "Default|Gleam|Win95|Plastic"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1561
+#: source_files/obsidian_main/m_theme.cc:1563
 msgid "Box Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1563
+#: source_files/obsidian_main/m_theme.cc:1565
 msgid "Default|Shadow|Embossed|Engraved|Inverted|Raised"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1575
+#: source_files/obsidian_main/m_theme.cc:1577
 msgid "Button Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1577
+#: source_files/obsidian_main/m_theme.cc:1579
 msgid "Default|Raised|Engraved|Embossed|Flat"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1589
+#: source_files/obsidian_main/m_theme.cc:1591
 msgid "Color Scheme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1591
+#: source_files/obsidian_main/m_theme.cc:1593
 msgid "Default|Custom"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1602
+#: source_files/obsidian_main/m_theme.cc:1604
 msgid "Panel Font"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1612
+#: source_files/obsidian_main/m_theme.cc:1614
 msgid "Button Font"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1622
+#: source_files/obsidian_main/m_theme.cc:1624
 msgid "Panels"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1632
+#: source_files/obsidian_main/m_theme.cc:1634
 msgid "Highlights"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1643
+#: source_files/obsidian_main/m_theme.cc:1645
 msgid "Buttons"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1654
+#: source_files/obsidian_main/m_theme.cc:1656
 msgid "Gradient"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1665
+#: source_files/obsidian_main/m_theme.cc:1667
 msgid "Borders"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1676
+#: source_files/obsidian_main/m_theme.cc:1678
 msgid "Gaps"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1689
+#: source_files/obsidian_main/m_theme.cc:1691
 msgid " Use System Fonts (disables bundled fonts)"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1699
+#: source_files/obsidian_main/m_theme.cc:1701
 msgid " Single Pane Mode"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1709
+#: source_files/obsidian_main/m_theme.cc:1711
 msgid "Load Defaults"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1719
+#: source_files/obsidian_main/m_theme.cc:1721
 msgid "Load Theme"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1730
+#: source_files/obsidian_main/m_theme.cc:1732
 msgid "Save Theme"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1766
+#: source_files/obsidian_main/m_theme.cc:1768
 msgid "Note: Some options require a restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1803
+#: source_files/obsidian_main/m_theme.cc:1805
 msgid "OBSIDIAN Theme Options"
 msgstr ""
 
@@ -9461,31 +9529,39 @@ msgstr ""
 msgid "OBSIDIAN Tutorial"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:67
+#: source_files/obsidian_main/ui_build.cc:32
+msgid "Progress and minimap display.\nMinimap Legend:\nWhite - Regular rooms\nBrown - Caves\nBlue - Outdoors\nGreen - Parks"
+msgstr ""
+
+#: source_files/obsidian_main/ui_build.cc:53
+msgid "Seed: -"
+msgstr ""
+
+#: source_files/obsidian_main/ui_build.cc:65
 msgid "Ready to go!"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:221
+#: source_files/obsidian_main/ui_build.cc:219
 msgid "Plan"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:269
+#: source_files/obsidian_main/ui_build.cc:267
 msgid "Building Nodes"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:306
+#: source_files/obsidian_main/ui_build.cc:304
 msgid "Success"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:320
+#: source_files/obsidian_main/ui_build.cc:318
 msgid "Plan"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:321
+#: source_files/obsidian_main/ui_build.cc:319
 msgid "Rooms"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:322
+#: source_files/obsidian_main/ui_build.cc:320
 msgid "Mons"
 msgstr ""
 

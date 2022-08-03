@@ -1069,6 +1069,7 @@ void Trans_SetLanguage() {
 
     if (lang_plain == "UNKNOWN" || lang_plain == "en") {
         LogPrintf("Using the default language (English)\n\n");
+        selected_lang = "en";
         return;
     }
 
@@ -1090,8 +1091,11 @@ void Trans_SetLanguage() {
             fmt::format("No translation file: language/{}.po\n", lang_plain)
                 .c_str());
         LogPrintf("Using the default language (English)\n\n");
+        selected_lang = "en";
         return;
     }
+
+    selected_lang = lang_plain;
 
     LogPrintf(fmt::format("Loading translation: {}\n", path).c_str());
 
