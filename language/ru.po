@@ -6651,7 +6651,7 @@ msgstr "Новые деревья"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1114
 msgid "Adds custom flat-depedendent tree sprites into the game. Currently only replaces trees on specific grass flats and will be expanded in the future to accomnodate custom Textures and more. If you are playing a mod that already does its own trees, it may be better to leave this off."
-msgstr "Добавляет в игру спрайты деревьев, зависящие от поверхности, на которой стоят. В настоящее время заменяет только деревья на определенных участках травы, однако в будущем функционал будет расширен для размещения пользовательских текстур. Если вы играете в модификацию, в которой уже есть собственные виды деревьев, то, возможно, данную опцию лучше не включать."
+msgstr "Добавляет в игру спрайты деревьев, зависящие от поверхности, на которой они стоят. В настоящее время заменяет только деревья на определенных участках травы, однако в будущем функционал обяательно будет расширен для добавления пользовательских текстур. Если Вы играете в модификацию, в которой уже есть собственные виды деревьев, то, возможно, данную опцию лучше не включать."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1121
 msgid "Environment Theme"
@@ -6675,7 +6675,7 @@ msgstr "Присоединять Brightmaps"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1144
 msgid "Allows merging Obsidian Textures brightmaps into the WAD. Does not include brightmaps for base resources from any of the games."
-msgstr "Позволяет включать в выходной файл карты яркоти (brightmaps) текстур Obsidian. Не включает их из любых других игр."
+msgstr "Позволяет включать в выходной файл карты яркости (brightmaps) текстур Obsidian. Не включает их из любых других игр."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1151
 msgid "No Hell Environment Themes"
