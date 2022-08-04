@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Obsidian Level Maker\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-09 23:41+1000\n"
-"PO-Revision-Date: 2022-08-02 21:00-0600\n"
+"PO-Revision-Date: 2022-08-03 13:10-0600\n"
 "Last-Translator:  Dasho\n"
 "Language-Team: English\n"
 "Language: en_US\n"
@@ -16,9 +16,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 # ################################################################################################################################################################################################## #
-# Comments by Dashodanger: One can automate this process for each time the code is changed with the following nightmarish one-liners:                                                                #        
+# Comments by Dashodanger: One can automate this process for each time the code is changed with the following nightmarish one-liners:                                                                #
+# grep -n -r -o "gui[.]gettext[(]\".*\"[)]" | sed -r {s/"^"/"#: "/} | sed -r {s/":_"/"\n"/} | sed -r {s/"\gui[.]gettext[(]"/"\nmsgid "/} | sed -r {s/"\)$"/"\nmsgstr \"\"\n"/} | sed -r {s/":$"/""/} #        
 # grep -n -r -o "[_][(]\".*\"[)]" | sed -r {s/"^"/"#: "/} | sed -r {s/":_"/"\n"/} | sed -r {s/"\("/"msgid "/} | sed -r {s/"\)$"/"\nmsgstr \"\"\n"/} | sed -r {s/":$"/""/}                            #
-# grep -n -r -o "gui[.]gettext[(]\".*\"[)]" | sed -r {s/"^"/"#: "/} | sed -r {s/":_"/"\n"/} | sed -r {s/"\gui[.]gettext[(]"/"\nmsgid "/} | sed -r {s/"\)$"/"\nmsgstr \"\"\n"/} | sed -r {s/":$"/""/} #
 # ################################################################################################################################################################################################## #
 
 #: modules/chex3/ctl_chex.lua:31
@@ -8713,42 +8713,6 @@ msgstr ""
 msgid "Attempts to mimic various architectural features seen in the Doom IWAD maps. Only Doom 2 is supported right now while Doom is in the works but not implemented yet.\nNOTE: This will override settings in other parts of the program such as Level Size, Room Size, etc!"
 msgstr ""
 
-#: source_files/hedley/include/hedley.h:1811
-msgid "hidden"
-msgstr ""
-
-#: source_files/hedley/include/hedley.h:1812
-msgid "default"
-msgstr ""
-
-#: source_files/lua/doc/ext_ffi_semantics.html:154
-msgid "symname"
-msgstr ""
-
-#: source_files/lua/src/host/buildvm_lib.c:337
-msgid ",	"
-msgstr ""
-
-#: source_files/lua/src/lib_io.c:308
-msgid "fseeko"
-msgstr ""
-
-#: source_files/lua/src/lib_io.c:309
-msgid "ftello"
-msgstr ""
-
-#: source_files/lua/src/lib_jit.c:716
-msgid "li $2, 1\n\t.long 0x00221042\n\tmove %0, $2" : "=r"(x) : : "$2"
-msgstr ""
-
-#: source_files/lua/src/lj_def.h:153
-msgid "bsrl %1, %0" : "=r" (r) : "rm" (x) : "cc"
-msgstr ""
-
-#: source_files/lua/src/lj_gdbjit.c:152
-msgid ""
-msgstr ""
-
 #: source_files/obsidian_main/g_doom.cc:226
 msgid "Unable to create wad file:\n\n%s"
 msgstr ""
@@ -8953,8 +8917,16 @@ msgstr ""
 msgid "OBSIDIAN - Error Message"
 msgstr ""
 
+#: source_files/obsidian_main/m_dialog.cc:225
+msgid "files"
+msgstr ""
+
 #: source_files/obsidian_main/m_dialog.cc:239
 msgid "Select output file"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:265
+msgid "Error choosing output file:\n"
 msgstr ""
 
 #: source_files/obsidian_main/m_dialog.cc:268
@@ -8982,19 +8954,35 @@ msgid "Unable to save the file:\n\n%s"
 msgstr ""
 
 #: source_files/obsidian_main/m_dialog.cc:619
-msgid "Yes"), _("No"
+msgid "Yes"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:631
+#: source_files/obsidian_main/m_dialog.cc:620
+msgid "No"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:632
 msgid "Please choose a filename ending in .txt"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:640
+#: source_files/obsidian_main/m_dialog.cc:641
 msgid "Unable to save the file:\n\n%s"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:666
-msgid "Yes"), _("No"
+#: source_files/obsidian_main/m_dialog.cc:667
+msgid "Yes"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:668
+msgid "No"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:684
+msgid "Zipping logs to %s failed! Retaining original logs.\n"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:688
+msgid "Zipping logs to %s failed! Retaining original logs.\n"
 msgstr ""
 
 #: source_files/obsidian_main/m_dialog.cc:699
