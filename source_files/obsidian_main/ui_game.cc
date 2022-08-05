@@ -149,13 +149,6 @@ void UI_Game::callback_Game(Fl_Widget *w, void *data) {
 void UI_Game::callback_Engine(Fl_Widget *w, void *data) {
     UI_Game *that = (UI_Game *)data;
 
-    if (StringCaseCmp(that->engine->GetID(), "nolimit") == 0 && 
-    (StringCaseCmp(that->game->GetID(), "doom2") == 0 || StringCaseCmp(that->game->GetID(), "doom1") == 0 || 
-    StringCaseCmp(that->game->GetID(), "ultdoom") == 0 || StringCaseCmp(that->game->GetID(), "tnt") == 0 || 
-    StringCaseCmp(that->game->GetID(), "plutonia") == 0)) {
-        fl_alert(_("Warning! Limit-Removing uses a very basic set of prefabs, and should only be used if your source port isn't compatible with any other choice!\nClick the help link next to this option for an explanation of the other choices."));
-    }
-
     ob_set_config("engine", that->engine->GetID());
 }
 
