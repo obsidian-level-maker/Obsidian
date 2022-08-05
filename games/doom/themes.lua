@@ -1632,11 +1632,15 @@ DOOM.THEMES =
     prefab_remap =
     {
       _STRUCT = "WOODVERT",
+      _SMLDOOR = "WOODMET1",
       _TALDOOR = "WOODMET1",
       _BIGDOOR = "BIGDOOR5",
       _KEYTRM1 = "DOORBLU2",
       _KEYTRM2 = "DOORYEL2",
       _KEYTRM3 = "DOORRED2",
+      _CRATE = "WOOD12",
+      _CRATE2 = "WOOD6",
+      _CRATWID = "WOOD8",
       SW1COMP  = "SW1PANEL",
     },
 
@@ -2115,11 +2119,18 @@ DOOM.THEMES =
       BIGDOOR4 = "BIGDOOR5",
 
       _STRUCT = "BROWNHUG",
+      _SMLDOOR = "WOODMET1",
       _TALDOOR = "WOODMET1",
       _BIGDOOR = "BIGDOOR7",
       _KEYTRM1 = "DOORBLU2",
       _KEYTRM2 = "DOORYEL2",
       _KEYTRM3 = "DOORRED2",
+      _NPIC = "SP_FACE2",
+      _MPIC = "SKSPINE1",
+      _WPIC = "SKINFACE",
+      _CRATE = "SKSNAKE2",
+      _CRATE2 = "SKSNAKE1",
+      _CRATWID = "SKSNAKE2",
 
       SW1COMP  = "SW1LION",
       SW1PIPE  = "SW1BROWN"
