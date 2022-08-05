@@ -150,5 +150,14 @@ HACX.NICE_ITEMS =
     give = { {health=90} }
   },
 
+  reznator =
+  {
+    id = 2005,
+    kind = "other",  -- really a weapon
+    add_prob = 5,
+    secret_prob = 10,
+    once_only = true
+  },
+
 }
 

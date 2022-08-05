@@ -17,17 +17,6 @@ HACX.WEAPONS =
     per = 1
   },
 
-  reznator =
-  {
-    id = 2005,
-    level = 1,
-    pref = 2,
-    add_prob = 2,
-    attack = "melee",
-    rate = 8.6,
-    damage = 10
-  },
-
   tazer =
   {
     id = 2001,

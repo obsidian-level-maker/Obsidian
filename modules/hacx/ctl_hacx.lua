@@ -271,6 +271,21 @@ function CTL_HACX.weapon_setup(self)
 
   for _,opt in pairs(self.options) do
 
+    if opt.name == "float_reznator" then 
+      if PARAM["float_reznator"] and PARAM["float_reznator"] ~= gui.gettext("Default") then
+        local info = GAME.NICE_ITEMS.reznator
+        local mult = PARAM["float_reznator"] or 0
+  
+        if info.add_prob then info.add_prob = info.add_prob * mult end
+        if info.start_prob then info.start_prob = info.start_prob * mult end
+        if info.crazy_prob then info.crazy_prob = info.crazy_prob * mult end
+        if info.closet_prob then info.closet_prob = info.closet_prob * mult end
+        if info.secret_prob then info.secret_prob = info.secret_prob * mult end
+        if info.storage_prob then info.storage_prob = info.storage_prob * mult end
+      end    
+      goto skip
+    end
+
     local W = GAME.WEAPONS[string.sub(opt.name, 7)] -- Strip the float_ prefix from the weapon name for table lookup
 
     if W and PARAM[opt.name] ~= gui.gettext("Default") then
@@ -280,6 +295,9 @@ function CTL_HACX.weapon_setup(self)
       -- loosen some of the normal restrictions
       W.level = 1
     end
+
+    ::skip::
+
   end -- for opt
 
   if PARAM.weapon_prefs == "vanilla"
