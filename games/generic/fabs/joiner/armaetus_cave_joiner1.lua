@@ -71,7 +71,5 @@ PREFABS.Joiner_armaetus_cave_to_cave_joiner_1x1_any_to_cave =
   seed_w = 1,
   seed_h = 1,
 
-  delta_h = 64,
-
-  y_fit = {24,136},
+  delta_h  = 32,
 }
