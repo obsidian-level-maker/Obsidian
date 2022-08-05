@@ -13,6 +13,10 @@ PREFABS.Exit_pillar2 =
   where = "point",
   forced_offsets = 
   {
+    [12] = { x=0, y=-1 },
+    [14] = { x=0, y=-1 },
+    [16] = { x=0, y=-1 },
+    [18] = { x=0, y=-1 },
     [26] = { x=0, y=16 },
     [34] = { x=0, y=16 },
     [44] = { x=0, y=16 },
@@ -168,6 +172,10 @@ PREFABS.Exit_pillar2_secret =
   kind = "secret_exit",
   forced_offsets = 
   {
+    [12] = { x=0, y=-1 },
+    [14] = { x=0, y=-1 },
+    [16] = { x=0, y=-1 },
+    [18] = { x=0, y=-1 },
     [26] = { x=0, y=16 },
     [34] = { x=0, y=16 },
     [44] = { x=0, y=16 },
