@@ -3069,21 +3069,14 @@ end
 
 function Render_all_street_markings()
 
-  -- MSSP-TODO: should probably be placed in themes.lua along with the sink info
-  local road_fab_list
-  if OB_CONFIG.game ~= "doom2" and OB_CONFIG.game ~= "doom1" then
-    road_fab_list =
-    {
-      Completely_nothing = 100
-    }
-  else
-    road_fab_list =
-    {
-      Road_lane_marker = 100,
-      Road_crosswalk = 5,
-      Road_lane_marker_with_stop = 5,
-    }
-  end
+  if not ob_match_game({game = "doomish"}) or OB_CONFIG.engine == "nolimit" then return end
+
+  local road_fab_list =
+  {
+    Road_lane_marker = 100,
+    Road_crosswalk = 5,
+    Road_lane_marker_with_stop = 5,
+  }
   local road_segments = 0
   local road_dead_ends = 0
   for name,info in pairs(LEVEL.road_marking_spots) do
