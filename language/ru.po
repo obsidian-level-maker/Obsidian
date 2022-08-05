@@ -7563,7 +7563,7 @@ msgstr "Префикс файла: "
 
 #: source_files/obsidian_main/m_options.cc:570
 msgid "Date and Time|Number of Levels|Game|Engine|Theme|Version|Custom|Nothing"
-msgstr "Дата и время|Количество уровней|Игра|Тема|Версия OBSIDIAN|(Пользовательский)|(Отсутствует)"
+msgstr "Дата и время|Количество уровней|Игра|Игровой движок|Тема|Версия OBSIDIAN|(Пользовательский)|(Отсутствует)"
 
 #: source_files/obsidian_main/m_options.cc:580
 msgid "Set Custom Prefix..."
