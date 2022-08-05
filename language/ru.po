@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Obsidian Level Maker\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-09 23:41+1000\n"
-"PO-Revision-Date: 2022-08-01 19:18+0300\n"
+"PO-Revision-Date: 2022-08-05 17:33+0300\n"
 "Last-Translator:  Morthimer McMare\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -40,6 +40,14 @@ msgstr "Постепенно"
 #: scripts/level.lua:186
 msgid "Mix It Up"
 msgstr "Случайно"
+
+#: scripts/level.lua:2739
+msgid "\nWarning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Experimental Games\" checkbox located in the Debug Control Module.\n\nThis message will change should development scope expand."
+msgstr "\nВнимание: выбранная Вами игра пока поддерживается в экспериментальном режиме. В префабах для неё и выходном сборнике уровней могут присутствовать критические ошибки, а некоторые функции игрового процесса, вероятнее всего, ещё даже не были реализованы. Чтобы проигнорировать предупреждение и продолжить генерацию для, установите флажок \"Экспериментальные игры\", расположенный в отладочных настройках.\n\nЭто сообщение будет меняться по ходу разработки."
+
+#: scripts/level.lua:2746
+msgid "\nWarning: Limit-Removing uses a very basic set of prefabs, and should only be used if your source port isn't compatible with any other choice!\nClick the help link next to the Engine setting for an explanation of the other choices. To disable this warning, check the \"Suppress NoLimit Warning\" checkbox located in the Debug Control Module."
+msgstr "\nПредупреждение: Limit-Removing использует базовый набор префабов. Его следует использовать только в том случае, если Ваш порт не совместим ни с каким другим пунктом меню.\n\nЧтобы узнать об альтернативах, можно нажать на знак справки рядом с настройкой \"Движок\". Чтобы отключить это предупреждение, установите флажок «Подавить предупреждение об отсутствии ограничений», расположенный в отладочных настройках."
 
 #: engines/boom.lua:144
 msgid "BOOM Compat"
@@ -1184,6 +1192,18 @@ msgstr "Сохр. GIF предпросмотра"
 #: modules/debugger.lua:208
 msgid "Save an animated GIF of the building process. Recommended in combination with the Live Growth Minimap."
 msgstr "Сохраняет анимированный *.GIF процесса создания. Для использования с настройкой \"Детальность предпросмотра\"."
+
+#: modules/debugger.lua:215
+msgid "Suppress NoLimit Warning"
+msgstr "Разрешить Limit-Removing"
+
+#: modules/debugger.lua:218
+msgid "Suppress warning dialog when using Limit-Removing with the Doom family of games."
+msgstr "Подавляет диалоговое окно предупреждения об использовании движка Limit-Removing для игр семейства Doom."
+
+#: modules/debugger.lua:219
+msgid "This warning only applies to the Doom series of games, as other supported games may only have Limit-Removing as a feasible choice."
+msgstr "Предупреждение будет относиться только к серии игр Doom, так как в других предлагаемых играх даже наиболее старый формат уже поддерживал Limit-Removing."
 
 #: modules/debugger.lua:216
 msgid "Experimental Games"
@@ -4011,7 +4031,7 @@ msgstr "Имя для каждого врага"
 
 #: modules/modded_game_extras.lua:2245
 msgid "Renames tags of monsters with generated names. Humans recieve human names, demons recieve exotic names.\nBest used with TargetSpy or other healthbar mods to see the name.\nUses class inheritance and string comparisons to determine monster species (human or demon). Use compatibility options only when necessary, preferably use Universal option instead."
-msgstr "Переопределение тэгов монстров со сгенерированными именами. Люди получают человеческие имена, демоны — экзотические.\nЛучше всего использовать с TargetSpy или иной модификацией, отображающей полоску здоровья оппонента. Использует как проверку наследования от определённых классов, так и построковое сравнение для определения того, кто является человеком, кто — демоном.\n\nЕсли в модификации есть переключение между совместимостью имён и их универсальностью, практически всегда стоит выбирать второе."
+msgstr "Переопределение тэгов монстров со сгенерированными именами. Люди получают человеческие имена, демоны — экзотические.\n\nЛучше всего использовать с TargetSpy или иной модификацией, отображающей полоску здоровья оппонента. Использует как проверку наследования от определённых классов, так и построковое сравнение для определения того, кто является человеком, кто — демоном."
 
 #: modules/modded_game_extras.lua:2252
 msgid "QC:DE Lootboxes"
@@ -7842,8 +7862,8 @@ msgid "Engine"
 msgstr "Движок"
 
 #: source_files/obsidian_main/ui_game.cc:192
-msgid "Available Engines:\n\nZDoom Family: L/G/ZDoom, Zandronum, and similar engines that use ZDoom as a base.\n\nVanilla DOOM: Doom with its original engine limits. This option will use SLUMP as the map builder.\n\nLimit Removing: Any engine that raises the limits of the original game to prevent crashes.\n\nBOOM Compatible: Engines compatible with Boom that are able to use the entire suite of Boom types and features.\n\nPrBoom Compatible: Boom-compatible, but also capable of using extended nodes.\n\nEDGE-Classic: Boom compatible, plus additional specials and other advanced features.\n\nEternity: Software renderer only, but with advanced features such as UDMF. Support is currently experimental."
-msgstr "Доступные игровые движки.\n\nСемейство ZDoom: (G-/L-/Q-)ZDoom, Zandronum, ZDaemon и другие, основанные на ZDoom.\n\nОригинальный Doom: движок Doom как таковой, с учётом его ограничений. При выборе этой опции будет использоваться генератор карт SLUMP.\n\nLimit Removing: любой игровой движок, расширяющий лимиты оригинала для предотвращения вылетов.\n\nСовместивый с BOOM: движки, совместимые с Boom, и позволяющие использовать все его возможности и расширения.\n\nСовместивый с PrBoom: то же, что выше, но также с расширенным использованием Map Nodes.\n\nКлассический EDGE: совместимый с BOOM, но с добавлениением некоторых специфичных для EDGE возможностей.\n\nEternity [экспериментальный]: для Software-рендерера, но с некоторыми улучшениями вроде UDMF."
+msgid "Available Engines:\n\nZDoom Family: Engines that use ZDoom as a base. Example ports: GZDoom, LZDoom\n\nVanilla DOOM: Doom with its original engine limits. Example ports: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nLimit Removing: Any engine that raises the limits of the original game to prevent crashes, but is not Boom-compatible. Example ports: Doom2-plus, Doomsday 1.x, Crispy Doom\n\nBoom-Compatible: Engines that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nPrBoom-Compatible: Boom-compatible, but also capable of using extended nodes. Example ports: DSDA-Doom, PrBoom+um\n\nEDGE-Classic: Boom-compatible, plus additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."
+msgstr "Доступные игровые движки.\n\nСемейство ZDoom: (G-/L-/Q-)ZDoom, Zandronum, ZDaemon и другие, основанные на ZDoom.\n\nОригинальный Doom: движок Doom как таковой, с учётом его ограничений. При выборе этой опции будет использоваться генератор карт SLUMP.\n\nLimit Removing: любой игровой движок, расширяющий лимиты оригинала для предотвращения вылетов. ВНИМАНИЕ: данный пункт использует довольно ограниченное количество префабов. Если Вы предполагаете проходить WAD на движке, поддерживающим формат Boom, лучше выбрать соответствующий пункт.\n\nСовместивый с BOOM: движки, совместимые с Boom, и позволяющие использовать все его возможности и расширения.\n\nСовместивый с PrBoom: то же, что выше, но также с расширенным использованием Map Nodes.\n\nКлассический EDGE: совместимый с BOOM, но с добавлениением некоторых специфичных для EDGE возможностей.\n\nEternity [экспериментальный]: для Software-рендерера, но с некоторыми улучшениями вроде UDMF."
 
 #: source_files/obsidian_main/ui_game.cc:197
 msgid "Length"
@@ -7918,8 +7938,8 @@ msgid "Help/Tutorial"
 msgstr "Помощь/Руководство"
 
 #: source_files/obsidian_main/ui_window.cc:87
-#msgid "Surprise Me/Go"
-#msgstr "Удивите меня/Пуск"
+msgid "Surprise Me/Go"
+msgstr "Удивить/Пуск"
 
 msgid "This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."
 msgstr "══ Используемая терминология ══\n\nОт переводчика: часть слов, в основном укоренившиеся в широких кругах (с позволения сказать, имена собственные — имп, ревенант, ...) я просто транслитерировал, дословно переводя только в некоторых подсказках. Также: некоторые термины, хорошо звучащие в английском языке, при попытке локализации оказались слишком длинными для отведённого лимита символов. Поэтому некоторые слова пришлось заменить на более короткие варианты.\n\n\"Префаб\" — заготовка/составляющая уровня/примитив/кубик конструктора. От английского \"Pre-fabricated\" (дословно \"Предсобранный\")."
