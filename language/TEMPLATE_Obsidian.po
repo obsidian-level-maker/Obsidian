@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Obsidian Level Maker\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-09 23:41+1000\n"
-"PO-Revision-Date: 2022-08-03 13:10-0600\n"
+"PO-Revision-Date: 2022-08-04 19:51-0600\n"
 "Last-Translator:  Dasho\n"
 "Language-Team: English\n"
 "Language: en_US\n"
@@ -131,6 +131,14 @@ msgstr ""
 
 #: scripts/level.lua:509
 msgid "Episodic"
+msgstr ""
+
+#: scripts/level.lua:2739
+msgid "\nWarning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Experimental Games\" checkbox located in the Debug Control Module.\n\nThis message will change should development scope expand."
+msgstr ""
+
+#: scripts/level.lua:2746
+msgid "\nWarning: Limit-Removing uses a very basic set of prefabs, and should only be used if your source port isn't compatible with any other choice!\nClick the help link next to the Engine setting for an explanation of the other choices. To disable this warning, check the \"Suppress NoLimit Warning\" checkbox located in the Debug Control Module."
 msgstr ""
 
 #: scripts/monster.lua:848
@@ -1789,43 +1797,55 @@ msgstr ""
 msgid "Save an animated GIF of the building process. Recommended in combination with the Live Growth Minimap."
 msgstr ""
 
-#: modules/debugger.lua:216
-msgid "Experimental Games"
+#: modules/debugger.lua:215
+msgid "Suppress NoLimit Warning"
+msgstr ""
+
+#: modules/debugger.lua:218
+msgid "Suppress warning dialog when using Limit-Removing with the Doom family of games."
 msgstr ""
 
 #: modules/debugger.lua:219
-msgid "Enables building of levels for experimental games."
+msgid "This warning only applies to the Doom series of games, as other supported games may only have Limit-Removing as a feasible choice."
 msgstr ""
 
-#: modules/debugger.lua:220
-msgid "The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n\nStrife"
+#: modules/debugger.lua:225
+msgid "Experimental Games"
 msgstr ""
 
 #: modules/debugger.lua:228
+msgid "Enables building of levels for experimental games."
+msgstr ""
+
+#: modules/debugger.lua:229
+msgid "The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n\nStrife"
+msgstr ""
+
+#: modules/debugger.lua:237
 msgid "Custom Error Texture"
 msgstr ""
 
-#: modules/debugger.lua:231
+#: modules/debugger.lua:240
 msgid "Replaces Obsidian's default texture with a high visibility version for easier detection of broken level geometry or missing textures."
 msgstr ""
 
-#: modules/debugger.lua:238
+#: modules/debugger.lua:247
 msgid "Live Growth Minimap"
 msgstr ""
 
-#: modules/debugger.lua:241
+#: modules/debugger.lua:250
 msgid "Controls the granularity of steps shown on the GUI minimap as a level is built."
 msgstr ""
 
-#: modules/debugger.lua:242
+#: modules/debugger.lua:251
 msgid "Higher levels of detail will increase the amount of time that it takes to generate a WAD. If saving an animated GIF of the build process, its animation speed will also be affected by this setting (less detail=slower, more detail=faster)."
 msgstr ""
 
-#: modules/debugger.lua:249
+#: modules/debugger.lua:258
 msgid "Attach DEBUG Info"
 msgstr ""
 
-#: modules/debugger.lua:252
+#: modules/debugger.lua:261
 msgid "Attaches certain debug info into an OBLOGS text lump in the generated WAD."
 msgstr ""
 
@@ -8821,87 +8841,87 @@ msgstr ""
 msgid "Seed:"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1051
+#: source_files/obsidian_main/main.cc:1053
 msgid "Seed:"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1055
+#: source_files/obsidian_main/main.cc:1057
 msgid "Seed:"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1059
+#: source_files/obsidian_main/main.cc:1061
 msgid "Preparing..."
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1079
+#: source_files/obsidian_main/main.cc:1081
 msgid "Success"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1094
+#: source_files/obsidian_main/main.cc:1096
 msgid "Seed: -"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1115
+#: source_files/obsidian_main/main.cc:1117
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1273
+#: source_files/obsidian_main/main.cc:1275
 msgid "OBSIDIAN Level Maker"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1274
+#: source_files/obsidian_main/main.cc:1276
 msgid "Unstable"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1348
+#: source_files/obsidian_main/main.cc:1350
 msgid "No such config file: {}\n"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1409
+#: source_files/obsidian_main/main.cc:1411
 msgid "No such config file: {}\n"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1418
+#: source_files/obsidian_main/main.cc:1420
 msgid "Surprise Me/Preserve Old Config"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1422
+#: source_files/obsidian_main/main.cc:1424
 msgid "Surprise Me/Randomize Architecture"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1426
+#: source_files/obsidian_main/main.cc:1428
 msgid "Surprise Me/Randomize Combat"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1429
+#: source_files/obsidian_main/main.cc:1431
 msgid "Surprise Me/Randomize Pickups"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1432
+#: source_files/obsidian_main/main.cc:1434
 msgid "Surprise Me/Randomize Other"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1435
+#: source_files/obsidian_main/main.cc:1437
 msgid "Addons/No Addons Detected"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1438
+#: source_files/obsidian_main/main.cc:1440
 msgid "Addons/Restart and Apply Changes"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1441
+#: source_files/obsidian_main/main.cc:1443
 msgid "Addons/"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1562
+#: source_files/obsidian_main/main.cc:1564
 msgid "Seed:"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1643
+#: source_files/obsidian_main/main.cc:1645
 msgid "Sorry, an internal error occurred:\n{}"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1646
+#: source_files/obsidian_main/main.cc:1648
 msgid "An exception occurred: \n{}"
 msgstr ""
 
@@ -9594,7 +9614,7 @@ msgid "Engine"
 msgstr ""
 
 #: source_files/obsidian_main/ui_game.cc:192
-msgid "Available Engines:\n\nZDoom Family: L/G/ZDoom, Zandronum, and similar engines that use ZDoom as a base.\n\nVanilla DOOM: Doom with its original engine limits. This option will use SLUMP as the map builder.\n\nLimit Removing: Any engine that raises the limits of the original game to prevent crashes.\n\nBOOM Compatible: Engines compatible with Boom that are able to use the entire suite of Boom types and features.\n\nPrBoom Compatible: Boom-compatible, but also capable of using extended nodes.\n\nEDGE-Classic: Boom compatible, plus additional specials and other advanced features.\n\nEternity: Software renderer only, but with advanced features such as UDMF. Support is currently experimental."
+msgid "Available Engines:\n\nZDoom Family: Engines that use ZDoom as a base. Example ports: GZDoom, LZDoom\n\nVanilla DOOM: Doom with its original engine limits. Example ports: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nLimit Removing: Any engine that raises the limits of the original game to prevent crashes, but is not Boom-compatible. Example ports: Doom2-plus, Doomsday 1.x, Crispy Doom\n\nBoom-Compatible: Engines that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nPrBoom-Compatible: Boom-compatible, but also capable of using extended nodes. Example ports: DSDA-Doom, PrBoom+um\n\nEDGE-Classic: Boom-compatible, plus additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."
 msgstr ""
 
 #: source_files/obsidian_main/ui_game.cc:197
