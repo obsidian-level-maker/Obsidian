@@ -149,6 +149,13 @@ void UI_Game::callback_Game(Fl_Widget *w, void *data) {
 void UI_Game::callback_Engine(Fl_Widget *w, void *data) {
     UI_Game *that = (UI_Game *)data;
 
+    if (StringCaseCmp(that->engine->GetID(), "nolimit") == 0 && 
+    (StringCaseCmp(that->game->GetID(), "doom2") == 0 || StringCaseCmp(that->game->GetID(), "doom1") == 0 || 
+    StringCaseCmp(that->game->GetID(), "ultdoom") == 0 || StringCaseCmp(that->game->GetID(), "tnt") == 0 || 
+    StringCaseCmp(that->game->GetID(), "plutonia") == 0)) {
+        fl_alert(_("Warning! Limit-Removing uses a very basic set of prefabs, and should only be used if your source port isn't compatible with any other choice!\nClick the help link next to this option for an explanation of the other choices."));
+    }
+
     ob_set_config("engine", that->engine->GetID());
 }
 
@@ -189,7 +196,7 @@ void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-    buff->text(_("Available Engines:\n\nZDoom Family: L/G/ZDoom, Zandronum, and similar engines that use ZDoom as a base.\n\nVanilla DOOM: Doom with its original engine limits. This option will use SLUMP as the map builder.\n\nLimit Removing: Any engine that raises the limits of the original game to prevent crashes.\n\nBOOM Compatible: Engines compatible with Boom that are able to use the entire suite of Boom types and features.\n\nPrBoom Compatible: Boom-compatible, but also capable of using extended nodes.\n\nEDGE-Classic: Boom compatible, plus additional specials and other advanced features.\n\nEternity: Software renderer only, but with advanced features such as UDMF. Support is currently experimental."));
+    buff->text(_("Available Engines:\n\nZDoom Family: Engines that use ZDoom as a base. Example ports: GZDoom, LZDoom\n\nVanilla DOOM: Doom with its original engine limits. Example ports: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nLimit Removing: Any engine that raises the limits of the original game to prevent crashes, but is not Boom-compatible. Example ports: Doom2-plus, Doomsday 1.x, Crispy Doom\n\nBoom-Compatible: Engines that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nPrBoom-Compatible: Boom-compatible, but also capable of using extended nodes. Example ports: DSDA-Doom, PrBoom+um\n\nEDGE-Classic: Boom-compatible, plus additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."));
 }
 
 void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
