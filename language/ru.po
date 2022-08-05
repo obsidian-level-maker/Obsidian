@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Obsidian Level Maker\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-09 23:41+1000\n"
-"PO-Revision-Date: 2022-08-01 19:18+0300\n"
+"PO-Revision-Date: 2022-08-05 17:33+0300\n"
 "Last-Translator:  Morthimer McMare\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -40,6 +40,14 @@ msgstr "Постепенно"
 #: scripts/level.lua:186
 msgid "Mix It Up"
 msgstr "Случайно"
+
+#: scripts/level.lua:2739
+msgid "\nWarning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Experimental Games\" checkbox located in the Debug Control Module.\n\nThis message will change should development scope expand."
+msgstr "\nВнимание: выбранная Вами игра пока поддерживается в экспериментальном режиме. В префабах для неё и выходном сборнике уровней могут присутствовать критические ошибки, а некоторые функции игрового процесса, вероятнее всего, ещё даже не были реализованы. Чтобы проигнорировать предупреждение и продолжить генерацию для, установите флажок \"Экспериментальные игры\", расположенный в отладочных настройках.\n\nЭто сообщение будет меняться по ходу разработки."
+
+#: scripts/level.lua:2746
+msgid "\nWarning: Limit-Removing uses a very basic set of prefabs, and should only be used if your source port isn't compatible with any other choice!\nClick the help link next to the Engine setting for an explanation of the other choices. To disable this warning, check the \"Suppress NoLimit Warning\" checkbox located in the Debug Control Module."
+msgstr "\nПредупреждение: Limit-Removing использует базовый набор префабов. Его следует использовать только в том случае, если Ваш порт не совместим ни с каким другим пунктом меню.\n\nЧтобы узнать об альтернативах, можно нажать на знак справки рядом с настройкой \"Движок\". Чтобы отключить это предупреждение, установите флажок «Подавить предупреждение об отсутствии ограничений», расположенный в отладочных настройках."
 
 #: engines/boom.lua:144
 msgid "BOOM Compat"
@@ -1184,6 +1192,18 @@ msgstr "Сохр. GIF предпросмотра"
 #: modules/debugger.lua:208
 msgid "Save an animated GIF of the building process. Recommended in combination with the Live Growth Minimap."
 msgstr "Сохраняет анимированный *.GIF процесса создания. Для использования с настройкой \"Детальность предпросмотра\"."
+
+#: modules/debugger.lua:215
+msgid "Suppress NoLimit Warning"
+msgstr "Разрешить Limit-Removing"
+
+#: modules/debugger.lua:218
+msgid "Suppress warning dialog when using Limit-Removing with the Doom family of games."
+msgstr "Подавляет диалоговое окно предупреждения об использовании движка Limit-Removing для игр семейства Doom."
+
+#: modules/debugger.lua:219
+msgid "This warning only applies to the Doom series of games, as other supported games may only have Limit-Removing as a feasible choice."
+msgstr "Предупреждение будет относиться только к серии игр Doom, так как в других предлагаемых играх даже наиболее старый формат уже поддерживал Limit-Removing."
 
 #: modules/debugger.lua:216
 msgid "Experimental Games"
@@ -4011,7 +4031,7 @@ msgstr "Имя для каждого врага"
 
 #: modules/modded_game_extras.lua:2245
 msgid "Renames tags of monsters with generated names. Humans recieve human names, demons recieve exotic names.\nBest used with TargetSpy or other healthbar mods to see the name.\nUses class inheritance and string comparisons to determine monster species (human or demon). Use compatibility options only when necessary, preferably use Universal option instead."
-msgstr "Переопределение тэгов монстров со сгенерированными именами. Люди получают человеческие имена, демоны — экзотические.\nЛучше всего использовать с TargetSpy или иной модификацией, отображающей полоску здоровья оппонента. Использует как проверку наследования от определённых классов, так и построковое сравнение для определения того, кто является человеком, кто — демоном.\n\nЕсли в модификации есть переключение между совместимостью имён и их универсальностью, практически всегда стоит выбирать второе."
+msgstr "Переопределение тэгов монстров со сгенерированными именами. Люди получают человеческие имена, демоны — экзотические.\n\nЛучше всего использовать с TargetSpy или иной модификацией, отображающей полоску здоровья оппонента. Использует как проверку наследования от определённых классов, так и построковое сравнение для определения того, кто является человеком, кто — демоном."
 
 #: modules/modded_game_extras.lua:2252
 msgid "QC:DE Lootboxes"
@@ -6109,6 +6129,10 @@ msgstr "Бой"
 msgid "Monster Quantity"
 msgstr "Кол-во монстров"
 
+#: modules/ui_mons.lua:111
+msgid "Mix It Up,Progressive"
+msgstr "Случайно,Постепенно"
+
 #: modules/ui_mons.lua:112
 msgid "0:None,0.15:0.15 (Trivial),0.35:0.35 (Sporadic),0.7:0.7 (Meager),1.0:1.0 (Easy),1.3:1.3 (Modest),1.5:1.5 (Bearable),2.0:2.0 (Rough),2.5:2.5 (Strenuous),3.0:3.0 (Formidable),3.5:3.5 (Harsh),4.0:4.0 (Painful),4.5:4.5 (Ferocious),5.0:5.0 (Unforgiving),5.5:5.5 (Punishing),6.0:6.0 (Murderous),6.5:6.5 (Grueling),7.0:7.0 (Unrelenting),7.5:7.5 (Arduous),8.0:8.0 (Barbaric),8.5:8.5 (Savage),9.0:9.0 (Brutal),9.5:9.5 (Draconian),10.0:10.00 (Merciless)"
 msgstr "0:Без монстров,0.15:0.15 (Исчезающе мало),0.35:0.35 (Считанные единицы),0.7:0.7 (Редко),1.0:1.0 (Нечасто),1.3:1.3 (Скромно),1.5:1.5 (Терпимо),2.0:2.0 (Жестоковато),2.5:2.5 (Напряжённо),3.0:3.0 (Грозная сила),3.5:3.5 (Сурово),4.0:4.0 (Довольно больно),4.5:4.5 (Свирепо),5.0:5.0 (Изнуряюще),5.5:5.5 (Преступление и наказание),6.0:6.0 (Непрощающе),6.5:6.5 (Противоестественно),7.0:7.0 (Варварски),7.5:7.5 (Безжалостно),8.0:8.0 (Дико),8.5:8.5 (Беспощадно),9.0:9.0 (Истязающе),9.5:9.5 (Убийственно),10.0:10.00 (Удачи!)"
@@ -6651,7 +6675,7 @@ msgstr "Новые деревья"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1114
 msgid "Adds custom flat-depedendent tree sprites into the game. Currently only replaces trees on specific grass flats and will be expanded in the future to accomnodate custom Textures and more. If you are playing a mod that already does its own trees, it may be better to leave this off."
-msgstr "Добавляет в игру спрайты деревьев, зависящие от поверхности, на которой стоят. В настоящее время заменяет только деревья на определенных участках травы, однако в будущем функционал будет расширен для размещения пользовательских текстур. Если вы играете в модификацию, в которой уже есть собственные виды деревьев, то, возможно, данную опцию лучше не включать."
+msgstr "Добавляет в игру спрайты деревьев, зависящие от поверхности, на которой они стоят. В настоящее время заменяет только деревья на определенных участках травы, однако в будущем функционал обяательно будет расширен для добавления пользовательских текстур. Если Вы играете в модификацию, в которой уже есть собственные виды деревьев, то, возможно, данную опцию лучше не включать."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1121
 msgid "Environment Theme"
@@ -6675,7 +6699,7 @@ msgstr "Присоединять Brightmaps"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1144
 msgid "Allows merging Obsidian Textures brightmaps into the WAD. Does not include brightmaps for base resources from any of the games."
-msgstr "Позволяет включать в выходной файл карты яркоти (brightmaps) текстур Obsidian. Не включает их из любых других игр."
+msgstr "Позволяет включать в выходной файл карты яркости (brightmaps) текстур Obsidian. Не включает их из любых других игр."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1151
 msgid "No Hell Environment Themes"
@@ -7305,6 +7329,38 @@ msgstr "Нет такого файла конфигурации: {}\n"
 msgid "No such config file: {}\n"
 msgstr "Нет такого файла конфигурации: {}\n"
 
+#: source_files/obsidian_main/main.cc:1418
+msgid "Surprise Me/Preserve Old Config"
+msgstr "Удивить/Сохранить старую конфигурацию"
+
+#: source_files/obsidian_main/main.cc:1422
+msgid "Surprise Me/Randomize Architecture"
+msgstr "Удивить/Случайная архитектура"
+
+#: source_files/obsidian_main/main.cc:1426
+msgid "Surprise Me/Randomize Combat"
+msgstr "Удивить/Случайный бой"
+
+#: source_files/obsidian_main/main.cc:1429
+msgid "Surprise Me/Randomize Pickups"
+msgstr "Удивить/Случайные предметы"
+
+#: source_files/obsidian_main/main.cc:1432
+msgid "Surprise Me/Randomize Other"
+msgstr "Удивить/Случайные иные настройки"
+
+#: source_files/obsidian_main/main.cc:1435
+msgid "Addons/No Addons Detected"
+msgstr "Аддоны/(Дополнений не найдено)"
+
+#: source_files/obsidian_main/main.cc:1438
+msgid "Addons/Restart and Apply Changes"
+msgstr "Аддоны/Принять и перезапустить"
+
+#: source_files/obsidian_main/main.cc:1441
+msgid "Addons/"
+msgstr "Аддоны/"
+
 #: source_files/obsidian_main/main.cc:1634
 msgid "Sorry, an internal error occurred:\n{}"
 msgstr "Внутренняя ошибка:\n{}"
@@ -7481,6 +7537,14 @@ msgstr "Введите формат префикса:"
 msgid "Custom prefix cannot be blank!"
 msgstr "Префикс пуст."
 
+#: source_files/obsidian_main/m_options.cc:463
+msgid "Custom Prefix"
+msgstr "Собственный префикс файла"
+
+#: source_files/obsidian_main/m_options.cc:472
+msgid "Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n%year or %Y: The current year.\n\n%month or %M: The current month.\n\n%day or %D: The current day.\n\n%hour or %h: The current hour.\n\n%minute or %m: The current minute.\n\n%second or %s: The current second.\n\n%version or %v: The current Obsidian version.\n\n%game or %g: Which game the WAD is for.\n\n%engine or %e: Which engine the WAD is for.\n\n%theme or %t: Which theme was selected from the game's choices.\n\n%count or %c: The number of levels in the generated WAD."
+msgstr "Большинство символов для собственного формата переносятся без изменений. Но также могут быть использованы следующие автозаменяющиеся значения:\n\n%year или %Y: текущий год.\n\n%month или %M: текущий месяц.\n\n%day или %D: текущий день.\n\n%hour или %h: текущий час.\n\n%minute или %m: текущая минута.\n\n%second или %s: текущая секунда.\n\n%version или %v: используемая версия OBSIDIAN.\n\n%game или %g: целевая игра (Doom, Heretic, ...).\n\n%engine или %e: целевой игровой движок.\n\n%theme или %t: выбранная тема.\n\n%count или %c: количество уровней в сгенерированном WAD."
+
 #: source_files/obsidian_main/m_options.cc:538
 msgid "Language: "
 msgstr "Язык: "
@@ -7491,7 +7555,7 @@ msgstr "Тип сжатия: "
 
 #: source_files/obsidian_main/m_options.cc:555
 msgid "OFF|ZIP|PK3"
-msgstr "OFF|ZIP|PK3"
+msgstr "Без сжатия|ZIP|PK3"
 
 #: source_files/obsidian_main/m_options.cc:566
 msgid "Filename Prefix: "
@@ -7499,7 +7563,7 @@ msgstr "Префикс файла: "
 
 #: source_files/obsidian_main/m_options.cc:570
 msgid "Date and Time|Number of Levels|Game|Engine|Theme|Version|Custom|Nothing"
-msgstr "Дата и время|Количество уровней|Игра|Тема|Версия|Пользовательский|Ничего"
+msgstr "Дата и время|Количество уровней|Игра|Игровой движок|Тема|Версия OBSIDIAN|(Пользовательский)|(Отсутствует)"
 
 #: source_files/obsidian_main/m_options.cc:580
 msgid "Set Custom Prefix..."
@@ -7507,11 +7571,39 @@ msgstr "Ввести префикс..."
 
 #: source_files/obsidian_main/m_options.cc:598
 msgid " Random String Seeds"
-msgstr "Случайные строки сида"
+msgstr "Случайные слова для сида"
+
+#: source_files/obsidian_main/m_options.cc:377
+msgid "Will randomly pull 1 to 3 words from Obsidian's random word list (found in /scripts/random_words.lua) and use those as input for the map generation seed. Purely for cosmetic/entertainment value."
+msgstr "При включённой настройке будет случайно выбирать несколько слов из встроенной базы данных (находится в /scripts/random_words*.lua) и добавлять их к ключу генерации. Можно считать, что используется исключительно для развлечения."
 
 #: source_files/obsidian_main/m_options.cc:614
 msgid " Password Mode"
-msgstr "Режим пароля"
+msgstr "Режим \"пароля\""
+
+#: source_files/obsidian_main/m_options.cc:397
+msgid "Will produce a pseudo-random sequence of characters as input for the map generation seed. Random String Seeds must be enabled to use this option."
+msgstr "Создаёт псевдослучайную последовательность символов и использует её в качестве ключа генерации. Для работы требуется включённая опция \"Случайные слова для сида\"."
+
+#: source_files/obsidian_main/m_options.cc:425
+msgid "File prefix changes require a restart.\nOBSIDIAN will now restart."
+msgstr "Требуется перезапуск OBSIDIAN\nпосле изменения префикса файла."
+
+#: source_files/obsidian_main/m_options.cc:435
+msgid "WARNING! This option will allow you to manually enter values in excess of the \n(usually) stable slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this will not be addressed by the developers.\nYou must select Yes for this option to be applied."
+msgstr "ВНИМАНИЕ! Эта опция позволит вам вручную вводить значения, выходящие за \nстабильные/выверенные пределы слайдеров. Поэтому любые ошибки, \nвылеты и иные подобные вещи, порождённые нерегламентированным \nиспользованием программы, не будут направлены разработчикам."
+
+#: source_files/obsidian_main/m_options.cc:436
+msgid "Cancel"
+msgstr "Отмена"
+
+#: source_files/obsidian_main/m_options.cc:437
+msgid "Yes, break Obsidian"
+msgstr "Да, сломать всё"
+
+#: source_files/obsidian_main/m_options.cc:447
+msgid "Restoring slider limits requires a restart.\nObsidian will now restart."
+msgstr "Требуется перезапуск OBSIDIAN для восстановления пределов слайдеров."
 
 #: source_files/obsidian_main/m_options.cc:632
 msgid " Create Backups"
@@ -7545,9 +7637,17 @@ msgstr "Ставить временную метку логам"
 msgid "# of Logs Preserved "
 msgstr "К-во хранимых логов"
 
+#: source_files/obsidian_main/m_options.cc:299
+msgid "Obsidian will now restart to apply language changes.\nObsidian will be in your selected language after restarting."
+msgstr "Для того, чтобы изменение языка вступили в силу, OBSIDIAN необходимо перезапуститься.\nOBSIDIAN will now restart to apply language changes."
+
 #: source_files/obsidian_main/m_options.cc:722
 msgid " Restart Lua VM Between Builds"
-msgstr "Использовать старую версию LUA VM"
+msgstr "Перезапускать LUA VM"
+
+#: source_files/obsidian_main/m_options.cc:326
+msgid "Obsidian has migrated from Lua to LuaJIT. One side effect of this is that even with a fixed seed, subsequent runs with the same configuration will not guarantee the same result.\n\nRestarting the Lua VM between builds will improve the odds of being able to repeat the results of a prior seed/setting combination, with the downside of visibly restarting the program every time a map is generated (even unsuccessfully).\n\nIf you have no particular need to recreate the results of prior runs, this option can be safely left off."
+msgstr "OBSIDIAN перешёл с Lua на LuaJIT. Одним из последствий этого является то, что результаты генерации без перезахода в программу, даже при одинаковом ключе генерации, будут различаться.\n\nЭта опция позволяет перезагружать виртуальную машину LUA перед каждой новой сборкой, что практически всегда позволит получать одинаковые результаты на одном ключе генерации.\n\nЕсли Вам не требуется получать идентичные результаты — к примеру, для отладочных целей — настройку можно спокойно оставлять нетронутой."
 
 #: source_files/obsidian_main/m_options.cc:760
 msgid "Note: some options require a restart."
@@ -7689,6 +7789,18 @@ msgstr "АВТО"
 msgid "OBSIDIAN Tutorial"
 msgstr "Руководство OBSIDIAN"
 
+#: source_files/obsidian_main/ui_build.cc:32
+msgid "Progress and minimap display.\nMinimap Legend:\nWhite - Regular rooms\nBrown - Caves\nBlue - Outdoors\nGreen - Parks"
+msgstr "Ход генерации и область предпросмотра.\n\nРасшифровка цветов:\nБелый — обычные комнаты;\nКоричневый — пещеры;\nСиний — пространства под небом;\nЗелёный — парковые зоны."
+
+#: source_files/obsidian_main/ui_build.cc:53
+msgid "Seed: -"
+msgstr "Сид: -"
+
+#: source_files/obsidian_main/main.cc:1000
+msgid "Seed:"
+msgstr "Сид:"
+
 #: source_files/obsidian_main/ui_build.cc:67
 msgid "Ready to go!"
 msgstr "Готов!"
@@ -7750,8 +7862,8 @@ msgid "Engine"
 msgstr "Движок"
 
 #: source_files/obsidian_main/ui_game.cc:192
-msgid "Available Engines:\n\nZDoom Family: L/G/ZDoom, Zandronum, and similar engines that use ZDoom as a base.\n\nVanilla DOOM: Doom with its original engine limits. This option will use SLUMP as the map builder.\n\nLimit Removing: Any engine that raises the limits of the original game to prevent crashes.\n\nBOOM Compatible: Engines compatible with Boom that are able to use the entire suite of Boom types and features.\n\nPrBoom Compatible: Boom-compatible, but also capable of using extended nodes.\n\nEDGE-Classic: Boom compatible, plus additional specials and other advanced features.\n\nEternity: Software renderer only, but with advanced features such as UDMF. Support is currently experimental."
-msgstr "Доступные игровые движки.\n\nСемейство ZDoom: (G-/L-/Q-)ZDoom, Zandronum, ZDaemon и другие, основанные на ZDoom.\n\nОригинальный Doom: движок Doom как таковой, с учётом его ограничений. При выборе этой опции будет использоваться генератор карт SLUMP.\n\nLimit Removing: любой игровой движок, расширяющий лимиты оригинала для предотвращения вылетов.\n\nСовместивый с BOOM: движки, совместимые с Boom, и позволяющие использовать все его возможности и расширения.\n\nСовместивый с PrBoom: то же, что выше, но также с расширенным использованием Map Nodes.\n\nКлассический EDGE: совместимый с BOOM, но с добавлениением некоторых специфичных для EDGE возможностей.\n\nEternity [экспериментальный]: для Software-рендерера, но с некоторыми улучшениями вроде UDMF."
+msgid "Available Engines:\n\nZDoom Family: Engines that use ZDoom as a base. Example ports: GZDoom, LZDoom\n\nVanilla DOOM: Doom with its original engine limits. Example ports: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nLimit Removing: Any engine that raises the limits of the original game to prevent crashes, but is not Boom-compatible. Example ports: Doom2-plus, Doomsday 1.x, Crispy Doom\n\nBoom-Compatible: Engines that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nPrBoom-Compatible: Boom-compatible, but also capable of using extended nodes. Example ports: DSDA-Doom, PrBoom+um\n\nEDGE-Classic: Boom-compatible, plus additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."
+msgstr "Доступные игровые движки.\n\nСемейство ZDoom: (G-/L-/Q-)ZDoom, Zandronum, ZDaemon и другие, основанные на ZDoom.\n\nОригинальный Doom: движок Doom как таковой, с учётом его ограничений. При выборе этой опции будет использоваться генератор карт SLUMP.\n\nLimit Removing: любой игровой движок, расширяющий лимиты оригинала для предотвращения вылетов. ВНИМАНИЕ: данный пункт использует довольно ограниченное количество префабов. Если Вы предполагаете проходить WAD на движке, поддерживающим формат Boom, лучше выбрать соответствующий пункт.\n\nСовместивый с BOOM: движки, совместимые с Boom, и позволяющие использовать все его возможности и расширения.\n\nСовместивый с PrBoom: то же, что выше, но также с расширенным использованием Map Nodes.\n\nКлассический EDGE: совместимый с BOOM, но с добавлениением некоторых специфичных для EDGE возможностей.\n\nEternity [экспериментальный]: для Software-рендерера, но с некоторыми улучшениями вроде UDMF."
 
 #: source_files/obsidian_main/ui_game.cc:197
 msgid "Length"
@@ -7826,23 +7938,8 @@ msgid "Help/Tutorial"
 msgstr "Помощь/Руководство"
 
 #: source_files/obsidian_main/ui_window.cc:87
-#msgid "Surprise Me/Go"
-#msgstr "Удивите меня/Пуск"
-
-#msgid "Surprise Me/Preserve Old Config"
-#msgstr "Удивите меня/Сохранить старую конфигурацию"
-
-#msgid "Surprise Me/Randomize Architecture"
-#msgstr "Удивите меня/Случайная архитектура"
-
-#msgid "Surprise Me/Randomize Combat"
-#msgstr "Удивите меня/Случайный бой"
-
-#msgid "Surprise Me/Randomize Pickup"
-#msgstr "Удивите меня/Случайные предметы"
-
-#msgid "Surprise Me/Randomize Other"
-#msgstr "Удивите меня/Случайные иные настройки"
+msgid "Surprise Me/Go"
+msgstr "Удивить/Пуск"
 
 msgid "This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."
 msgstr "══ Используемая терминология ══\n\nОт переводчика: часть слов, в основном укоренившиеся в широких кругах (с позволения сказать, имена собственные — имп, ревенант, ...) я просто транслитерировал, дословно переводя только в некоторых подсказках. Также: некоторые термины, хорошо звучащие в английском языке, при попытке локализации оказались слишком длинными для отведённого лимита символов. Поэтому некоторые слова пришлось заменить на более короткие варианты.\n\n\"Префаб\" — заготовка/составляющая уровня/примитив/кубик конструктора. От английского \"Pre-fabricated\" (дословно \"Предсобранный\")."
