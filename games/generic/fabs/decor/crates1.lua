@@ -10,6 +10,7 @@ PREFABS.Crate_small =
   file   = "decor/crates1.wad",
   map    = "MAP01",
   env    = "!cave",
+  theme = "!hell",
 
   prob   = 3500,
 
@@ -19,6 +20,23 @@ PREFABS.Crate_small =
   bound_z1 = 0,
 
   sink_mode = "never",
+}
+
+PREFABS.Crate_small_generic_hell =
+{
+  template   = "Crate_small",
+  game = "doomish",
+  theme = "hell",
+
+  tex__CRATE = "WOODMET4",
+  flat__CRATE = "FLAT5_2",
+  forced_offsets =
+  {
+    [0] = { x=0, y=64 },
+    [2] = { x=0, y=64 },
+    [4] = { x=0, y=64 },
+    [6] = { x=0, y=64 },
+  }
 }
 
 PREFABS.Crate_small_alt =
@@ -36,6 +54,7 @@ PREFABS.Crate_tall =
   file   = "decor/crates1.wad",
   map    = "MAP02",
   env    = "!cave",
+  theme = "!hell",
 
   prob   = 3500,
 
@@ -64,6 +83,7 @@ PREFABS.Crate_medium =
   map    = "MAP03",
   env    = "!cave",
   game   = "!harmony",
+  theme = "!hell",
 
   prob   = 3500,
 
@@ -82,6 +102,7 @@ PREFABS.Crate_group_medium =
   file   = "decor/crates1.wad",
   map    = "MAP04",
   env    = "!cave",
+  theme = "!hell",
 
   prob   = 3500,
 
@@ -109,6 +130,7 @@ PREFABS.Crate_group_mixed =
   file   = "decor/crates1.wad",
   map    = "MAP05",
   env    = "!cave",
+  theme = "!hell",
 
   prob   = 1000,
 
@@ -125,4 +147,22 @@ PREFABS.Crate_group_mixed_alt =
 {
   template = "Crate_group_mixed",
   map = "MAP06"
+}
+
+PREFABS.Crate_medium_generic_hell =
+{
+  file   = "decor/crates1.wad",
+  map    = "MAP07",
+  env    = "!cave",
+  game = "doomish",
+  theme = "hell",
+
+  prob   = 3500,
+
+  where  = "point",
+  size   = 72,
+
+  bound_z1 = 0,
+
+  sink_mode = "never",
 }

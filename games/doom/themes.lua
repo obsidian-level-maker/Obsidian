@@ -2128,9 +2128,6 @@ DOOM.THEMES =
       _NPIC = "SP_FACE2",
       _MPIC = "SKSPINE1",
       _WPIC = "SKINFACE",
-      _CRATE = "SKSNAKE2",
-      _CRATE2 = "SKSNAKE1",
-      _CRATWID = "SKSNAKE2",
 
       SW1COMP  = "SW1LION",
       SW1PIPE  = "SW1BROWN"

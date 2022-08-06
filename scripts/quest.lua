@@ -1545,7 +1545,7 @@ function Quest_start_room()
     set2 = { "player2", "player4" }
 
     LEVEL.start_room.player_set = set1
-    LEVEL.alt_start .player_set = set2
+    LEVEL.alt_start.player_set = set2
   end
 
 

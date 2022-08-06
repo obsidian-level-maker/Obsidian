@@ -1413,7 +1413,11 @@ function Fab_load_wad(def)
 
 
   local function decode_lighting(S, C)
-    if S.light < 80 then
+    if S.light == 0 then 
+      C.ambient = 0
+      C.light_add = 0
+      C.shadow = 255
+    elseif S.light < 80 then
       C.shadow = 64
     elseif S.light < 144 then
       C.shadow = 144 - S.light
