@@ -24,7 +24,8 @@ The C++ compiler/toolchain should already be present on a typical BSD install
    * package: `cmake`
 
 4. Development libraries
-   * packages: `libxft-dev` `libfontconfig1-dev`
+   * package: `libfontconfig1-dev`
+   * recommended if using X11 for better fonts: `libxft-dev`
 
 5. FLEX
    * package: `flex`

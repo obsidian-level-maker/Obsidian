@@ -25,14 +25,12 @@
 #include "xdg-shell-client-protocol.h"
 #include <pango/pangocairo.h>
 #include <FL/Fl_Overlay_Window.H>
-#include <FL/Fl_Menu_Window.H>
 #include <FL/Fl_Tooltip.H>
 #include <FL/fl_draw.H>
 #include <FL/fl_ask.H>
 #include <FL/Fl.H>
 #include <FL/Fl_Image_Surface.H>
 #include <string.h>
-#include <sys/mman.h>
 #include <math.h> // for ceil()
 #include <sys/types.h> // for pid_t
 #include <unistd.h> // for getpid()
@@ -67,6 +65,7 @@ Fl_Wayland_Window_Driver::Fl_Wayland_Window_Driver(Fl_Window *win) : Fl_Window_D
   cursor_ = NULL;
   in_handle_configure = false;
   screen_num_ = -1;
+  gl_start_support_ = NULL;
 }
 
 void Fl_Wayland_Window_Driver::delete_cursor_() {
@@ -98,6 +97,16 @@ Fl_Wayland_Window_Driver::~Fl_Wayland_Window_Driver()
     delete shape_data_;
   }
   delete_cursor_();
+  if (gl_start_support_) { // occurs only if gl_start/gl_finish was used
+    static Fl_Wayland_Plugin *plugin = NULL;
+    if (!plugin) {
+      Fl_Plugin_Manager pm("wayland.fltk.org");
+      plugin = (Fl_Wayland_Plugin*)pm.plugin("gl.wayland.fltk.org");
+    }
+    if (plugin) {
+      plugin->destroy(gl_start_support_);
+    }
+  }
 }
 
 
@@ -144,7 +153,6 @@ void Fl_Wayland_Window_Driver::take_focus()
 {
   Window w = fl_xid(pWindow);
   if (w) {
-    Fl_Widget *old_focus = Fl::focus();
     Fl_Window *old_first = Fl::first_window();
     Window first_xid = (old_first ? fl_xid(old_first->top_window()) : NULL);
     if (first_xid && first_xid != w && xdg_toplevel()) {
@@ -322,16 +330,13 @@ static const struct wl_callback_listener surface_frame_listener = {
 };
 
 static void surface_frame_done(void *data, struct wl_callback *cb, uint32_t time) {
-  Window window = (Window)data;
+  struct wld_window *window = (struct wld_window *)data;
 //fprintf(stderr,"surface_frame_done:  destroy cb=%p draw_buffer_needs_commit=%d\n", cb, window->buffer->draw_buffer_needs_commit);
   wl_callback_destroy(cb);
   window->buffer->cb = NULL;
   if (window->buffer->draw_buffer_needs_commit) {
-    wl_surface_damage_buffer(window->wl_surface, 0, 0, 1000000, 1000000);
-    window->buffer->cb = wl_surface_frame(window->wl_surface);
 //fprintf(stderr,"surface_frame_done: new cb=%p \n", window->buffer->cb);
-    wl_callback_add_listener(window->buffer->cb, &surface_frame_listener, window);
-    Fl_Wayland_Graphics_Driver::buffer_commit(window);
+    Fl_Wayland_Graphics_Driver::buffer_commit(window, &surface_frame_listener);
   }
 }
 
@@ -345,23 +350,20 @@ void Fl_Wayland_Window_Driver::make_current() {
   }
 
   struct wld_window *window = fl_xid(pWindow);
-  float scale = Fl::screen_scale(pWindow->screen_num()) * window->scale;
-  if (window && window->buffer) {
+  if (window->buffer) {
     ((Fl_Cairo_Graphics_Driver*)fl_graphics_driver)->needs_commit_tag(
                                             &window->buffer->draw_buffer_needs_commit);
   }
 
   // to support progressive drawing
-  if ( (!Fl_Wayland_Window_Driver::in_flush) && window && window->buffer && (!window->buffer->cb)) {
-    wl_surface_damage_buffer(window->wl_surface, 0, 0, pWindow->w() * scale, pWindow->h() * scale);
-    window->buffer->cb = wl_surface_frame(window->wl_surface);
+  if ( (!Fl_Wayland_Window_Driver::in_flush) && window->buffer && (!window->buffer->cb)) {
     //fprintf(stderr, "direct make_current: new cb=%p\n", window->buffer->cb);
-    wl_callback_add_listener(window->buffer->cb, &surface_frame_listener, window);
-    Fl_Wayland_Graphics_Driver::buffer_commit(window);
+    Fl_Wayland_Graphics_Driver::buffer_commit(window, &surface_frame_listener);
   }
 
   fl_graphics_driver->clip_region(0);
   fl_window = Fl_Wayland_Window_Driver::wld_window = window;
+  float scale = Fl::screen_scale(pWindow->screen_num()) * window->scale;
   if (!window->buffer) {
     window->buffer = Fl_Wayland_Graphics_Driver::create_shm_buffer(
            pWindow->w() * scale, pWindow->h() * scale);
@@ -422,8 +424,7 @@ void Fl_Wayland_Window_Driver::flush() {
   Fl_Window_Driver::flush();
   Fl_Wayland_Window_Driver::in_flush = false;
 
-  wl_surface_frame(window->wl_surface);
-  Fl_Wayland_Graphics_Driver::buffer_commit(window);
+  Fl_Wayland_Graphics_Driver::buffer_commit(window, NULL);
 }
 
 
@@ -1409,6 +1410,10 @@ static void delayed_minsize(Fl_Window *win) {
 
 
 void Fl_Wayland_Window_Driver::resize(int X, int Y, int W, int H) {
+  struct wld_window *fl_win = fl_xid(pWindow);
+  if (fl_win && fl_win->kind == DECORATED && !xdg_toplevel()) {
+    pWindow->wait_for_expose();
+  }
   int is_a_move = (X != x() || Y != y() || Fl_Window::is_a_rescale());
   int is_a_resize = (W != w() || H != h() || Fl_Window::is_a_rescale());
   if (is_a_move) force_position(1);
@@ -1428,7 +1433,6 @@ void Fl_Wayland_Window_Driver::resize(int X, int Y, int W, int H) {
   }
 
   if (shown()) {
-    struct wld_window *fl_win = fl_xid(pWindow);
     float f = Fl::screen_scale(pWindow->screen_num());
     if (is_a_resize) {
       if (fl_win->kind == DECORATED) { // a decorated window

@@ -367,7 +367,7 @@ public:
   virtual void overlay_rect(int x, int y, int w , int h);
   virtual float override_scale();
   virtual void restore_scale(float);
-  virtual PangoFontDescription* pango_font_description(Fl_Font) { return NULL; }
+  virtual PangoFontDescription* pango_font_description() { return NULL; }
   virtual void antialias(int state);
   virtual int antialias();
   virtual void delete_bitmask(fl_uintptr_t bm);
@@ -390,7 +390,7 @@ public:
   Fl_Fontsize size; /**< font size */
   Fl_Font_Descriptor(const char* fontname, Fl_Fontsize size);
   FL_EXPORT ~Fl_Font_Descriptor() {}
-  short ascent, descent, q_width;
+  short ascent, descent;
   unsigned int listbase;// base of display list, 0 = none
 };
 

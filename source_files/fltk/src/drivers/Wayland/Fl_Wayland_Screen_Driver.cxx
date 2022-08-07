@@ -40,6 +40,8 @@
 #include <assert.h>
 #include <sys/mman.h>
 #include <poll.h>
+#include <errno.h>
+#include <string.h> // for strerror()
 extern "C" {
   bool libdecor_get_cursor_settings(char **theme, int *size);
 }
@@ -1065,11 +1067,13 @@ static const struct wl_registry_listener registry_listener = {
 
 
 static void fd_callback(int fd, struct wl_display *display) {
-  struct pollfd fds;
-  fds.fd = fd;
-  fds.events = POLLIN;
-  fds.revents = 0;
-  do wl_display_dispatch(display);
+  struct pollfd fds = (struct pollfd) { fd, POLLIN, 0 };
+  do {
+    if (wl_display_dispatch(display) == -1) {
+      Fl::fatal("Fatal error while communicating with the Wayland server: %s",
+                strerror(errno));
+    }
+  }
   while (poll(&fds, 1, 0) > 0);
 }
 
