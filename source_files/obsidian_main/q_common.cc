@@ -787,7 +787,7 @@ qLump_c *BSP_CreateInfoLump() {
 
     L->Printf("\n");
     L->Printf("-- Levels created by OBSIDIAN %s \"%s\"\n",
-              OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME);
+              OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME.c_str());
     L->Printf("-- Build %s\n", OBSIDIAN_VERSION);
     L->Printf(
         "-- Based on the OBLIGE Level Maker (C) 2006-2017 Andrew Apted\n");
