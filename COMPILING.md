@@ -36,7 +36,7 @@ The C++ compiler/toolchain should already be present on a typical BSD install
    * package: `clang-tidy`
    * python package (install with pip): `cmakelang`
 
-## Linux Compilation
+## Linux/BSD Compilation
 
 Assuming all those dependencies are met, then the following steps
 will build the Obsidian binary.
