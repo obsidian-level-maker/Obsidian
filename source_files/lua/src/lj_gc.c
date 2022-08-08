@@ -1,6 +1,6 @@
 /*
 ** Garbage collector.
-** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2022 Mike Pall. See Copyright Notice in luajit.h
 **
 ** Major portions taken verbatim or adapted from the Lua interpreter.
 ** Copyright (C) 1994-2008 Lua.org, PUC-Rio. See Copyright Notice in lua.h
@@ -69,8 +69,10 @@ static void gc_mark(global_State *g, GCobj *o)
       SBufExt *sbx = (SBufExt *)uddata(gco2ud(o));
       if (sbufiscow(sbx) && gcref(sbx->cowref))
 	gc_markobj(g, gcref(sbx->cowref));
-      if (gcref(sbx->dict))
-	gc_markobj(g, gcref(sbx->dict));
+      if (gcref(sbx->dict_str))
+	gc_markobj(g, gcref(sbx->dict_str));
+      if (gcref(sbx->dict_mt))
+	gc_markobj(g, gcref(sbx->dict_mt));
     }
   } else if (LJ_UNLIKELY(gct == ~LJ_TUPVAL)) {
     GCupval *uv = gco2uv(o);
@@ -698,9 +700,12 @@ static size_t gc_onestep(lua_State *L)
     }
   case GCSfinalize:
     if (gcref(g->gc.mmudata) != NULL) {
+      GCSize old = g->gc.total;
       if (tvref(g->jit_base))  /* Don't call finalizers on trace. */
 	return LJ_MAX_MEM;
       gc_finalize(L);  /* Finalize one userdata object. */
+      if (old >= g->gc.total && g->gc.estimate > old - g->gc.total)
+	g->gc.estimate -= old - g->gc.total;
       if (g->gc.estimate > GCFINALIZECOST)
 	g->gc.estimate -= GCFINALIZECOST;
       return GCFINALIZECOST;

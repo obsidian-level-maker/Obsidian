@@ -1,6 +1,6 @@
 /*
 ** Buffer handling.
-** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2022 Mike Pall. See Copyright Notice in luajit.h
 */
 
 #define lj_buf_c
@@ -66,7 +66,7 @@ LJ_NOINLINE char *LJ_FASTCALL lj_buf_more2(SBuf *sb, MSize sz)
       lj_err_mem(sbufL(sbx));
     if (len + sz > sbufsz(sbx)) {  /* Must grow. */
       buf_grow((SBuf *)sbx, len + sz);
-    } else if (sbufxslack(sbx) < (sbufsz(sbx) >> 3)) {
+    } else if (sbufiscow(sb) || sbufxslack(sbx) < (sbufsz(sbx) >> 3)) {
       /* Also grow to avoid excessive compactions, if slack < size/8. */
       buf_grow((SBuf *)sbx, sbuflen(sbx) + sz);  /* Not sbufxlen! */
       return sbx->w;
@@ -108,6 +108,25 @@ char * LJ_FASTCALL lj_buf_tmp(lua_State *L, MSize sz)
   return lj_buf_need(sb, sz);
 }
 
+#if LJ_HASBUFFER && LJ_HASJIT
+void lj_bufx_set(SBufExt *sbx, const char *p, MSize len, GCobj *ref)
+{
+  lua_State *L = sbufL(sbx);
+  lj_bufx_free(L, sbx);
+  lj_bufx_set_cow(L, sbx, p, len);
+  setgcref(sbx->cowref, ref);
+  lj_gc_objbarrier(L, (GCudata *)sbx - 1, ref);
+}
+
+#if LJ_HASFFI
+MSize LJ_FASTCALL lj_bufx_more(SBufExt *sbx, MSize sz)
+{
+  lj_buf_more((SBuf *)sbx, sz);
+  return sbufleft(sbx);
+}
+#endif
+#endif
+
 /* -- Low-level buffer put operations ------------------------------------- */
 
 SBuf *lj_buf_putmem(SBuf *sb, const void *q, MSize len)
@@ -118,13 +137,26 @@ SBuf *lj_buf_putmem(SBuf *sb, const void *q, MSize len)
   return sb;
 }
 
-SBuf * LJ_FASTCALL lj_buf_putchar(SBuf *sb, int c)
+#if LJ_HASJIT || LJ_HASFFI
+static LJ_NOINLINE SBuf * LJ_FASTCALL lj_buf_putchar2(SBuf *sb, int c)
 {
-  char *w = lj_buf_more(sb, 1);
+  char *w = lj_buf_more2(sb, 1);
   *w++ = (char)c;
   sb->w = w;
   return sb;
 }
+
+SBuf * LJ_FASTCALL lj_buf_putchar(SBuf *sb, int c)
+{
+  char *w = sb->w;
+  if (LJ_LIKELY(w < sb->e)) {
+    *w++ = (char)c;
+    sb->w = w;
+    return sb;
+  }
+  return lj_buf_putchar2(sb, c);
+}
+#endif
 
 SBuf * LJ_FASTCALL lj_buf_putstr(SBuf *sb, GCstr *s)
 {

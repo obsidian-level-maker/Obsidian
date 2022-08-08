@@ -18,7 +18,6 @@ set(LUAJIT_NUMMODE 0 CACHE STRING
   2 - Dual number mode
 ")
 set(LUAJIT_USE_GDBJIT OFF CACHE BOOL "Enable the GDB JIT API")
-set(LUAJIT_FORCE_UTF8_FOPEN OFF CACHE BOOL "Enforce UTF8 paths charset in fopen()/freopen() calls, even on Windows")
 
 set(MINILUA_EXE minilua)
 if ("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Windows")
@@ -277,10 +276,6 @@ if(LUAJIT_USE_GDBJIT)
   set(LJ_DEFINITIONS ${LJ_DEFINITIONS} -DLUAJIT_USE_GDBJIT)
   set(TARGET_ARCH ${TARGET_ARCH} -DLUAJIT_USE_GDBJIT)
 endif()
-if(LUAJIT_FORCE_UTF8_FOPEN)
-  set(LJ_DEFINITIONS ${LJ_DEFINITIONS} -DLUAJIT_FORCE_UTF8_FOPEN)
-  set(TARGET_ARCH ${TARGET_ARCH} -DLUAJIT_FORCE_UTF8_FOPEN)
-endif()
 
 if(NOT LUAJIT_NO_UNWIND AND NOT IOS)
   set(LJ_DEFINITIONS ${LJ_DEFINITIONS} -DLUAJIT_UNWIND_EXTERNAL)
@@ -490,10 +485,6 @@ set(luajit_sources
 
 if(LUAJIT_USE_GDBJIT)
   list(APPEND luajit_sources lj_gdbjit.c)
-endif()
-
-if(WIN32 AND LUAJIT_FORCE_UTF8_FOPEN)
-  list(APPEND luajit_sources lj_fopen.c)
 endif()
 
 # Build the luajit static library

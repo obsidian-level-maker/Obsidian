@@ -1,7 +1,7 @@
 ----------------------------------------------------------------------------
 -- LuaJIT module to save/list bytecode.
 --
--- Copyright (C) 2005-2021 Mike Pall. All rights reserved.
+-- Copyright (C) 2005-2022 Mike Pall. All rights reserved.
 -- Released under the MIT license. See Copyright Notice in luajit.h
 ----------------------------------------------------------------------------
 --
@@ -58,6 +58,11 @@ end
 local function savefile(name, mode)
   if name == "-" then return io.stdout end
   return check(io.open(name, mode))
+end
+
+local function set_stdout_binary(ffi)
+  ffi.cdef[[int _setmode(int fd, int mode);]]
+  ffi.C._setmode(1, 0x8000)
 end
 
 ------------------------------------------------------------------------------
@@ -125,6 +130,11 @@ local function bcsave_tail(fp, output, s)
 end
 
 local function bcsave_raw(output, s)
+  if output == "-" and jit.os == "Windows" then
+    local ok, ffi = pcall(require, "ffi")
+    check(ok, "FFI library required to write binary file to stdout")
+    set_stdout_binary(ffi)
+  end
   local fp = savefile(output, "wb")
   bcsave_tail(fp, output, s)
 end
@@ -446,18 +456,18 @@ typedef struct {
   uint32_t value;
 } mach_nlist;
 typedef struct {
-  uint32_t strx;
+  int32_t strx;
   uint8_t type, sect;
   uint16_t desc;
   uint64_t value;
 } mach_nlist_64;
 typedef struct
 {
-  uint32_t magic, nfat_arch;
+  int32_t magic, nfat_arch;
 } mach_fat_header;
 typedef struct
 {
-  uint32_t cputype, cpusubtype, offset, size, align;
+  int32_t cputype, cpusubtype, offset, size, align;
 } mach_fat_arch;
 typedef struct {
   struct {
@@ -491,6 +501,18 @@ typedef struct {
   mach_nlist sym_entry;
   uint8_t space[4096];
 } mach_fat_obj;
+typedef struct {
+  mach_fat_header fat;
+  mach_fat_arch fat_arch[2];
+  struct {
+    mach_header_64 hdr;
+    mach_segment_command_64 seg;
+    mach_section_64 sec;
+    mach_symtab_command sym;
+  } arch[2];
+  mach_nlist_64 sym_entry;
+  uint8_t space[4096];
+} mach_fat_obj_64;
 ]]
   local symname = '_'..LJBC_PREFIX..ctx.modname
   local isfat, is64, align, mobj = false, false, 4, "mach_obj"
@@ -499,7 +521,7 @@ typedef struct {
   elseif ctx.arch == "arm" then
     isfat, mobj = true, "mach_fat_obj"
   elseif ctx.arch == "arm64" then
-    is64, align, isfat, mobj = true, 8, true, "mach_fat_obj"
+    is64, align, isfat, mobj = true, 8, true, "mach_fat_obj_64"
   else
     check(ctx.arch == "x86", "unsupported architecture for OSX")
   end
@@ -568,6 +590,9 @@ end
 local function bcsave_obj(ctx, output, s)
   local ok, ffi = pcall(require, "ffi")
   check(ok, "FFI library required to write this file type")
+  if output == "-" and jit.os == "Windows" then
+    set_stdout_binary(ffi)
+  end
   if ctx.os == "windows" then
     return bcsave_peobj(ctx, output, s, ffi)
   elseif ctx.os == "osx" then

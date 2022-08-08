@@ -1990,9 +1990,10 @@ end
 
 
 function Title_gen_cave_scene()
-  local sun_x = 2 / (6 ^ 0.5)
-  local sun_y = 1 / (6 ^ 0.5)
-  local sun_z = 1 / (6 ^ 0.5)
+  local factor = math.sqrt(6)
+  local sun_x = 2 / factor
+  local sun_y = 1 / factor
+  local sun_z = 1 / factor
 
   if rand.odds(50) then sun_x = - sun_x end
 

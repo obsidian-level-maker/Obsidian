@@ -1,6 +1,6 @@
 /*
 ** Package library.
-** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2022 Mike Pall. See Copyright Notice in luajit.h
 **
 ** Major portions taken verbatim or adapted from the Lua interpreter.
 ** Copyright (C) 1994-2012 Lua.org, PUC-Rio. See Copyright Notice in lua.h
@@ -16,7 +16,6 @@
 #include "lj_obj.h"
 #include "lj_err.h"
 #include "lj_lib.h"
-#include "lj_fopen.h"
 
 /* ------------------------------------------------------------------------ */
 
@@ -58,7 +57,7 @@ static lua_CFunction ll_sym(lua_State *L, void *lib, const char *sym)
 
 static const char *ll_bcsym(void *lib, const char *sym)
 {
-#if defined(RTLD_DEFAULT)
+#if defined(RTLD_DEFAULT) && !defined(NO_RTLD_DEFAULT)
   if (lib == NULL) lib = RTLD_DEFAULT;
 #elif LJ_TARGET_OSX || LJ_TARGET_BSD
   if (lib == NULL) lib = (void *)(intptr_t)-2;
@@ -297,7 +296,7 @@ static int lj_cf_package_unloadlib(lua_State *L)
 
 static int readable(const char *filename)
 {
-  FILE *f = _lua_fopen(filename, "r");  /* try to open file */
+  FILE *f = fopen(filename, "r");  /* try to open file */
   if (f == NULL) return 0;  /* open failed */
   fclose(f);
   return 1;

@@ -9,6 +9,3 @@
 *.dmp
 *.swp
 .tags
-
-#cmake
-/build/

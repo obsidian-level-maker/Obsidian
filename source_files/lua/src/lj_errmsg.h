@@ -1,6 +1,6 @@
 /*
 ** VM error messages.
-** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2022 Mike Pall. See Copyright Notice in luajit.h
 */
 
 /* This file may be included multiple times with different ERRDEF macros. */
@@ -182,6 +182,7 @@ ERRDEF(FFI_NYICALL,	"NYI: cannot call this C function (yet)")
 
 #if LJ_HASBUFFER
 /* String buffer errors. */
+ERRDEF(BUFFER_SELF,	"cannot put buffer into itself")
 ERRDEF(BUFFER_BADOPT,	"bad options table")
 ERRDEF(BUFFER_BADENC,	"cannot serialize " LUA_QS)
 ERRDEF(BUFFER_BADDEC,	"cannot deserialize tag 0x%02x")

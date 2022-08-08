@@ -1342,7 +1342,7 @@ function Monster_fill_room(R)
     d = d * (R.zone.mon_palette[mon] or 1)
 
     -- room size check
-    d = d * room_size_factor(mon) ^ 0.5
+    d = d * math.sqrt(room_size_factor(mon))
 
     -- would the monster take too long to kill?
     d = d * time_to_kill_factor(mon)

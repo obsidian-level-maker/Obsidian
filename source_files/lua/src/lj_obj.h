@@ -1,6 +1,6 @@
 /*
 ** LuaJIT VM tags, values and objects.
-** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2022 Mike Pall. See Copyright Notice in luajit.h
 **
 ** Portions taken verbatim or adapted from the Lua interpreter.
 ** Copyright (C) 1994-2008 Lua.org, PUC-Rio. See Copyright Notice in lua.h
@@ -284,6 +284,9 @@ typedef const TValue cTValue;
 #define LJ_TISGCV		(LJ_TSTR+1)
 #define LJ_TISTABUD		LJ_TTAB
 
+/* Type marker for slot holding a traversal index. Must be lightuserdata. */
+#define LJ_KEYINDEX		0xfffe7fffu
+
 #if LJ_GC64
 #define LJ_GCVMASK		(((uint64_t)1 << 47) - 1)
 #endif
@@ -323,9 +326,6 @@ typedef struct GCudata {
   uint8_t unused2;
   GCRef env;		/* Should be at same offset in GCfunc. */
   MSize len;		/* Size of payload. */
-#if LJ_GC64
-  uint32_t unused3;
-#endif
   GCRef metatable;	/* Must be at same offset in GCtab. */
   uint32_t align1;	/* To force 8 byte alignment of the payload. */
 } GCudata;
@@ -511,7 +511,7 @@ typedef struct GCtab {
 } GCtab;
 
 #define sizetabcolo(n)	((n)*sizeof(TValue) + sizeof(GCtab))
-#define tabref(r)	(&gcref((r))->tab)
+#define tabref(r)	((GCtab *)gcref((r)))
 #define noderef(r)	(mref((r), Node))
 #define nextnode(n)	(mref((n)->next, Node))
 #if LJ_GC64
@@ -845,6 +845,7 @@ static LJ_AINLINE void *lightudV(global_State *g, cTValue *o)
   uint64_t seg = lightudseg(u);
   uint32_t *segmap = mref(g->gc.lightudseg, uint32_t);
   lj_assertG(tvislightud(o), "lightuserdata expected");
+  if (seg == (1 << LJ_LIGHTUD_BITS_SEG)-1) return NULL;
   lj_assertG(seg <= g->gc.lightudnum, "bad lightuserdata segment %d", seg);
   return (void *)(((uint64_t)segmap[seg] << 32) | lightudlo(u));
 }

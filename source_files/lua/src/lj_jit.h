@@ -1,12 +1,13 @@
 /*
 ** Common definitions for the JIT compiler.
-** Copyright (C) 2005-2021 Mike Pall. See Copyright Notice in luajit.h
+** Copyright (C) 2005-2022 Mike Pall. See Copyright Notice in luajit.h
 */
 
 #ifndef _LJ_JIT_H
 #define _LJ_JIT_H
 
 #include "lj_obj.h"
+#if LJ_HASJIT
 #include "lj_ir.h"
 
 /* -- JIT engine flags ---------------------------------------------------- */
@@ -150,6 +151,7 @@ typedef enum {
   LJ_TRACE_IDLE,	/* Trace compiler idle. */
   LJ_TRACE_ACTIVE = 0x10,
   LJ_TRACE_RECORD,	/* Bytecode recording active. */
+  LJ_TRACE_RECORD_1ST,	/* Record 1st instruction, too. */
   LJ_TRACE_START,	/* New trace started. */
   LJ_TRACE_END,		/* End of trace. */
   LJ_TRACE_ASM,		/* Assemble trace. */
@@ -200,12 +202,15 @@ typedef uint32_t SnapEntry;
 #define SNAP_CONT		0x020000	/* Continuation slot. */
 #define SNAP_NORESTORE		0x040000	/* No need to restore slot. */
 #define SNAP_SOFTFPNUM		0x080000	/* Soft-float number. */
+#define SNAP_KEYINDEX		0x100000	/* Traversal key index. */
 LJ_STATIC_ASSERT(SNAP_FRAME == TREF_FRAME);
 LJ_STATIC_ASSERT(SNAP_CONT == TREF_CONT);
+LJ_STATIC_ASSERT(SNAP_KEYINDEX == TREF_KEYINDEX);
 
 #define SNAP(slot, flags, ref)	(((SnapEntry)(slot) << 24) + (flags) + (ref))
 #define SNAP_TR(slot, tr) \
-  (((SnapEntry)(slot) << 24) + ((tr) & (TREF_CONT|TREF_FRAME|TREF_REFMASK)))
+  (((SnapEntry)(slot) << 24) + \
+   ((tr) & (TREF_KEYINDEX|TREF_CONT|TREF_FRAME|TREF_REFMASK)))
 #if !LJ_FR2
 #define SNAP_MKPC(pc)		((SnapEntry)u32ptr(pc))
 #endif
@@ -367,6 +372,7 @@ enum {
 #endif
   LJ_K64__MAX,
 };
+#define LJ_K64__USED	(LJ_TARGET_X86ORX64 || LJ_TARGET_MIPS)
 
 enum {
 #if LJ_TARGET_X86ORX64
@@ -385,6 +391,7 @@ enum {
 #endif
   LJ_K32__MAX
 };
+#define LJ_K32__USED	(LJ_TARGET_X86ORX64 || LJ_TARGET_PPC || LJ_TARGET_MIPS)
 
 /* Get 16 byte aligned pointer to SIMD constant. */
 #define LJ_KSIMD(J, n) \
@@ -439,9 +446,13 @@ typedef struct jit_State {
   int32_t framedepth;	/* Current frame depth. */
   int32_t retdepth;	/* Return frame depth (count of RETF). */
 
+#if LJ_K32__USED
   uint32_t k32[LJ_K32__MAX];  /* Common 4 byte constants used by backends. */
+#endif
   TValue ksimd[LJ_KSIMD__MAX*2+1];  /* 16 byte aligned SIMD constants. */
+#if LJ_K64__USED
   TValue k64[LJ_K64__MAX];  /* Common 8 byte constants. */
+#endif
 
   IRIns *irbuf;		/* Temp. IR instruction buffer. Biased with REF_BIAS. */
   IRRef irtoplim;	/* Upper limit of instuction buffer (biased). */
@@ -511,6 +522,7 @@ typedef struct jit_State {
 #define lj_assertJ(c, ...)	lj_assertG_(J2G(J), (c), __VA_ARGS__)
 #else
 #define lj_assertJ(c, ...)	((void)J)
+#endif
 #endif
 
 #endif
