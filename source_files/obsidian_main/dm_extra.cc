@@ -44,7 +44,7 @@ static int sky_W;
 static int sky_H;
 static int sky_final_W;
 
-#define MAX_POST_LEN 128
+#define MAX_POST_LEN 200
 
 #define CUR_PIXEL(py) (pixels[((py) % H) * W])
 
