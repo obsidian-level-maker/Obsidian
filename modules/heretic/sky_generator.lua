@@ -585,7 +585,7 @@ function SKY_GEN_HERETIC.generate_skies()
     }
 
 
-    gui.fsky_create(256, 128, 0)
+    gui.fsky_create(256, 200, 0)
 
 
     --- Clouds ---
