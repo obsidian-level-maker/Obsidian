@@ -198,6 +198,7 @@ if(UNIX)
               obsidian_zdbsp
               obsidian_slump
               fontconfig
+              pthread
     )
   endif()
 else()
