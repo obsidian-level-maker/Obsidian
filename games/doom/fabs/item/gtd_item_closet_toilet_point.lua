@@ -5,6 +5,7 @@ PREFABS.Item_closet_toilet_point =
   map   = "MAP01",
 
   prob  = 20,
+  env = "!cave",
   theme = "!hell",
 
   where = "point",
