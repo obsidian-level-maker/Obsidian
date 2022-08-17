@@ -108,6 +108,8 @@ PREFABS.Item_dem_cavein_secretcloset =
 
   prob   = 100,
 
+  jump_crouch = true,
+
   key   = "secret",
 
   env = "cave",

@@ -166,6 +166,8 @@ PREFABS.Item_triple_glass_tube_i_dont_even_secret =
   map = "MAP07",
   theme = "tech",
   
+  jump_crouch = true,
+
   env = "!nature",
   
   sector_1 = 1,
