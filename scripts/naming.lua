@@ -543,8 +543,37 @@ namelib.NAMES =
         ["Just Another Day At the Office"]=10,
         ["Alive If Not Exactly Well"]=10,
         ["Ain't No Reprievement Found"]=10, -- Shortened because it is very long
-        ["One Card Left To Play"]=10 -- end marker
+        ["One Card Left To Play"]=10,
 
+        -- Mid 2022 stuff..
+        ["A World Long Dead"]=10,
+        ["Admiring One's Opponent"]=10,
+        ["Among the Endless Abysses"]=10,
+        ["Armageddon's Raid"]=10,
+        ["Baptism by ICBM"]=10,
+        ["Crosses, Death, Technology, Sin"]=10,
+        ["Deflier of Star Systems"]=10,
+        ["Destruction of Omniastic Society"]=10,
+        ["Doomed From the Beginning"]=10,
+        ["Dynasties from Ice"]=10,
+        ["Enigmatic Delights"]=10,
+        ["Erased and Forgotten"]=10,
+        ["Fate Forged in Name of Hate"]=10,
+        ["Fistfucking God's Planet"]=10,
+        ["Humanity is Broken"]=10,
+        ["Just A Little More Every Day"]=10,
+        ["Lunatic of God's Creation"]=10,
+        ["Misery Walks Among Thee"]=10,
+        ["Nuclear Death Terror"]=10,
+        ["Of Hideous Perspectives"]=10,
+        ["Severing Ties With This Earth"]=10,
+        ["Symmetry of Zero"]=10,
+        ["The Dying Lights of Umbrus"]=10,
+        ["Time's Edge"]=10,
+        ["To What Has Become of Us"]=10,
+        ["Unforgotten Treachery"]=10,
+        ["You Got It, I Want It"]=10,
+        ["Zealot"]=10 -- end marker
 
       },
 
