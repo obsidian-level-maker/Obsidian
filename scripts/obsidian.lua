@@ -431,7 +431,7 @@ function ob_update_engines()
   end
 
   if need_new then
-    OB_CONFIG.engine = "nolimit",
+    OB_CONFIG.engine = "nolimit"
     gui.set_button("engine", OB_CONFIG.engine)
   end
 end

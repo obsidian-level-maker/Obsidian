@@ -50,7 +50,7 @@
 static std::map<std::string, std::string> trans_store;
 
 // current Options setting
-std::string t_language = N_("AUTO");
+std::string t_language = _("AUTO");
 
 //----------------------------------------------------------------------
 

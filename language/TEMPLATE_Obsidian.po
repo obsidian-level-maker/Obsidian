@@ -49,7 +49,11 @@ msgstr ""
 msgid "Default"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:276
+#: modules/hacx/ctl_hacx.lua:275
+msgid "Default"
+msgstr ""
+
+#: modules/hacx/ctl_hacx.lua:291
 msgid "Default"
 msgstr ""
 
@@ -169,7 +173,7 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: engines/edge.lua:138
+#: engines/edge.lua:139
 msgid "EDGE-Classic"
 msgstr ""
 
@@ -205,15 +209,15 @@ msgstr ""
 msgid "Doom 2"
 msgstr ""
 
-#: games/doom/themes.lua:5232
+#: games/doom/themes.lua:5253
 msgid "Tech"
 msgstr ""
 
-#: games/doom/themes.lua:5242
+#: games/doom/themes.lua:5263
 msgid "Urban"
 msgstr ""
 
-#: games/doom/themes.lua:5252
+#: games/doom/themes.lua:5273
 msgid "Hell"
 msgstr ""
 
@@ -2533,155 +2537,155 @@ msgstr ""
 msgid "NONE"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:306
+#: modules/hacx/ctl_hacx.lua:324
 msgid "HacX 1.2 Weapon Control"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:321
+#: modules/hacx/ctl_hacx.lua:339
 msgid "Hoig Reznator"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:326
+#: modules/hacx/ctl_hacx.lua:344
 msgid "Default"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:327
+#: modules/hacx/ctl_hacx.lua:345
 msgid "Default"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:328
+#: modules/hacx/ctl_hacx.lua:346
 msgid "Control the likelihood of finding the Hoig Reznator."
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:329
+#: modules/hacx/ctl_hacx.lua:347
 msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:335
+#: modules/hacx/ctl_hacx.lua:353
 msgid "Tazer"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:340
+#: modules/hacx/ctl_hacx.lua:358
 msgid "Default"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:341
+#: modules/hacx/ctl_hacx.lua:359
 msgid "Default"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:342
+#: modules/hacx/ctl_hacx.lua:360
 msgid "Control the amount of Tazers."
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:343
+#: modules/hacx/ctl_hacx.lua:361
 msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:349
+#: modules/hacx/ctl_hacx.lua:367
 msgid "Cryogun"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:354
+#: modules/hacx/ctl_hacx.lua:372
 msgid "Default"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:355
+#: modules/hacx/ctl_hacx.lua:373
 msgid "Default"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:356
+#: modules/hacx/ctl_hacx.lua:374
 msgid "Control the amount of Cryoguns."
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:357
+#: modules/hacx/ctl_hacx.lua:375
 msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:363
+#: modules/hacx/ctl_hacx.lua:381
 msgid "Uzi"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:368
+#: modules/hacx/ctl_hacx.lua:386
 msgid "Default"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:369
+#: modules/hacx/ctl_hacx.lua:387
 msgid "Default"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:370
+#: modules/hacx/ctl_hacx.lua:388
 msgid "Control the amount of Uzis."
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:371
+#: modules/hacx/ctl_hacx.lua:389
 msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:377
+#: modules/hacx/ctl_hacx.lua:395
 msgid "Photon 'Zooka"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:382
+#: modules/hacx/ctl_hacx.lua:400
 msgid "Default"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:383
+#: modules/hacx/ctl_hacx.lua:401
 msgid "Default"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:384
+#: modules/hacx/ctl_hacx.lua:402
 msgid "Control the amount of Photon 'Zookas."
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:385
+#: modules/hacx/ctl_hacx.lua:403
 msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:391
+#: modules/hacx/ctl_hacx.lua:409
 msgid "Anti-Gun"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:396
+#: modules/hacx/ctl_hacx.lua:414
 msgid "Default"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:397
+#: modules/hacx/ctl_hacx.lua:415
 msgid "Default"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:398
+#: modules/hacx/ctl_hacx.lua:416
 msgid "Control the amount of Anti-Guns."
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:399
+#: modules/hacx/ctl_hacx.lua:417
 msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:405
+#: modules/hacx/ctl_hacx.lua:423
 msgid "Nuker"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:410
+#: modules/hacx/ctl_hacx.lua:428
 msgid "Default"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:411
+#: modules/hacx/ctl_hacx.lua:429
 msgid "Default"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:412
+#: modules/hacx/ctl_hacx.lua:430
 msgid "Control the amount of Nukers."
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:413
+#: modules/hacx/ctl_hacx.lua:431
 msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:419
+#: modules/hacx/ctl_hacx.lua:437
 msgid "Weapon Preferences"
 msgstr ""
 
-#: modules/hacx/ctl_hacx.lua:421
+#: modules/hacx/ctl_hacx.lua:439
 msgid "Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\nNormal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\nVanilla: Vanilla Oblige-style preferences. Increases 'Zookas if the map has more ICEs, D-Mans, or roaming mines. \n\nNONE: No preferences at all. For those who like to live life dangerously with ICEs and only 'Zookas."
 msgstr ""
 
@@ -8973,47 +8977,55 @@ msgstr ""
 msgid "Unable to save the file:\n\n%s"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:619
+#: source_files/obsidian_main/m_dialog.cc:617
+msgid "%s already exists.\nChoose Yes to overwrite or No to choose a new filename."
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:618
 msgid "Yes"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:620
+#: source_files/obsidian_main/m_dialog.cc:619
 msgid "No"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:632
+#: source_files/obsidian_main/m_dialog.cc:631
 msgid "Please choose a filename ending in .txt"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:641
+#: source_files/obsidian_main/m_dialog.cc:640
 msgid "Unable to save the file:\n\n%s"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:667
+#: source_files/obsidian_main/m_dialog.cc:663
+msgid "Log zipping is enabled, but %s already exists.\nOverwrite (original .txt file will still be kept) ?"
+msgstr ""
+
+#: source_files/obsidian_main/m_dialog.cc:664
 msgid "Yes"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:668
+#: source_files/obsidian_main/m_dialog.cc:665
 msgid "No"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:684
+#: source_files/obsidian_main/m_dialog.cc:681
 msgid "Zipping logs to %s failed! Retaining original logs.\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:688
+#: source_files/obsidian_main/m_dialog.cc:685
 msgid "Zipping logs to %s failed! Retaining original logs.\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:699
+#: source_files/obsidian_main/m_dialog.cc:696
 msgid "OBSIDIAN Log Viewer"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:715
+#: source_files/obsidian_main/m_dialog.cc:712
 msgid "OBSIDIAN Glossary"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:725
+#: source_files/obsidian_main/m_dialog.cc:722
 msgid "This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."
 msgstr ""
 
@@ -9021,8 +9033,12 @@ msgstr ""
 msgid "Making"
 msgstr ""
 
+#: source_files/obsidian_main/m_lua.cc:1416
+msgid "[ ERROR ]"
+msgstr ""
+
 #: source_files/obsidian_main/m_lua.cc:1419
-msgid "Script Error: %s"
+msgid "Script Error: "
 msgstr ""
 
 #: source_files/obsidian_main/m_lua.cc:1800
@@ -9045,6 +9061,10 @@ msgstr ""
 msgid "Pick file to save to"
 msgstr ""
 
+#: source_files/obsidian_main/m_manage.cc:326
+msgid "Error choosing save file:\n"
+msgstr ""
+
 #: source_files/obsidian_main/m_manage.cc:329
 msgid "Unable to save the file:\n\n%s"
 msgstr ""
@@ -9059,6 +9079,10 @@ msgstr ""
 
 #: source_files/obsidian_main/m_manage.cc:374
 msgid "Select file to load"
+msgstr ""
+
+#: source_files/obsidian_main/m_manage.cc:397
+msgid "Error choosing load file:\n"
 msgstr ""
 
 #: source_files/obsidian_main/m_manage.cc:400
@@ -9281,111 +9305,135 @@ msgstr ""
 msgid "Unable to load the file:\n\n%s"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1502
+#: source_files/obsidian_main/m_theme.cc:396
+msgid "Windows scaling changes require a restart.\nOBSIDIAN will now restart."
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:688
+msgid "Plastic widget theme requires a restart.\nOBSIDIAN will now restart."
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:840
+msgid "Switching pane modes requires a restart.\nOBSIDIAN will now restart."
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:854
+msgid "Switching font selection requires a restart.\nOBSIDIAN will now restart."
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1444
+msgid "Defaults loaded.\nOBSIDIAN will now restart."
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1456
+msgid "Theme loading requires a restart.\nOBSIDIAN will now restart."
+msgstr ""
+
+#: source_files/obsidian_main/m_theme.cc:1496
 msgid "Window Scaling: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1504
+#: source_files/obsidian_main/m_theme.cc:1498
 msgid "AUTO|Tiny|Small|Medium|Large|Huge"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1516
+#: source_files/obsidian_main/m_theme.cc:1510
 msgid "Font Size: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1533
+#: source_files/obsidian_main/m_theme.cc:1527
 msgid "Font: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1549
+#: source_files/obsidian_main/m_theme.cc:1543
 msgid "Widget Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1551
+#: source_files/obsidian_main/m_theme.cc:1545
 msgid "Default|Gleam|Win95|Plastic"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1563
+#: source_files/obsidian_main/m_theme.cc:1557
 msgid "Box Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1565
+#: source_files/obsidian_main/m_theme.cc:1559
 msgid "Default|Shadow|Embossed|Engraved|Inverted|Raised"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1577
+#: source_files/obsidian_main/m_theme.cc:1571
 msgid "Button Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1579
+#: source_files/obsidian_main/m_theme.cc:1573
 msgid "Default|Raised|Engraved|Embossed|Flat"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1591
+#: source_files/obsidian_main/m_theme.cc:1585
 msgid "Color Scheme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1593
+#: source_files/obsidian_main/m_theme.cc:1587
 msgid "Default|Custom"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1604
+#: source_files/obsidian_main/m_theme.cc:1598
 msgid "Panel Font"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1614
+#: source_files/obsidian_main/m_theme.cc:1608
 msgid "Button Font"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1624
+#: source_files/obsidian_main/m_theme.cc:1618
 msgid "Panels"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1634
+#: source_files/obsidian_main/m_theme.cc:1628
 msgid "Highlights"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1645
+#: source_files/obsidian_main/m_theme.cc:1639
 msgid "Buttons"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1656
+#: source_files/obsidian_main/m_theme.cc:1650
 msgid "Gradient"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1667
+#: source_files/obsidian_main/m_theme.cc:1661
 msgid "Borders"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1678
+#: source_files/obsidian_main/m_theme.cc:1672
 msgid "Gaps"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1691
+#: source_files/obsidian_main/m_theme.cc:1685
 msgid " Use System Fonts (disables bundled fonts)"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1701
+#: source_files/obsidian_main/m_theme.cc:1695
 msgid " Single Pane Mode"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1711
+#: source_files/obsidian_main/m_theme.cc:1705
 msgid "Load Defaults"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1721
+#: source_files/obsidian_main/m_theme.cc:1715
 msgid "Load Theme"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1732
+#: source_files/obsidian_main/m_theme.cc:1726
 msgid "Save Theme"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1768
+#: source_files/obsidian_main/m_theme.cc:1762
 msgid "Note: Some options require a restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1805
+#: source_files/obsidian_main/m_theme.cc:1799
 msgid "OBSIDIAN Theme Options"
 msgstr ""
 

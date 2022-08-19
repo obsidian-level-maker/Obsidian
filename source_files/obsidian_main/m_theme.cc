@@ -393,8 +393,7 @@ class UI_ThemeWin : public Fl_Window {
         window_scaling = that->opt_window_scaling->value();
 
         fl_alert("%s",
-                 _("Windows scaling changes require a restart.\nOBSIDIAN will "
-                   "now restart."));
+                 _("Windows scaling changes require a restart.\nOBSIDIAN will now restart."));
 
         main_action = MAIN_RESTART;
 
@@ -686,8 +685,7 @@ class UI_ThemeWin : public Fl_Window {
         if (widget_theme == 3) {
             fl_alert(
                 "%s",
-                _("Plastic widget theme requires a restart.\nOBSIDIAN will "
-                  "now restart."));
+                _("Plastic widget theme requires a restart.\nOBSIDIAN will now restart."));
 
             main_action = MAIN_RESTART;
 
@@ -839,8 +837,7 @@ class UI_ThemeWin : public Fl_Window {
         single_pane = that->opt_single_pane->value() ? true : false;
 
         fl_alert("%s",
-                 _("Switching pane modes requires a restart.\nOBSIDIAN will "
-                   "now restart."));
+                 _("Switching pane modes requires a restart.\nOBSIDIAN will now restart."));
 
         main_action = MAIN_RESTART;
 
@@ -854,8 +851,7 @@ class UI_ThemeWin : public Fl_Window {
 
         fl_alert(
             "%s",
-            _("Switching font selection requires a restart.\nOBSIDIAN will "
-              "now restart."));
+            _("Switching font selection requires a restart.\nOBSIDIAN will now restart."));
 
         font_menu_items.clear();
 
@@ -1445,8 +1441,7 @@ class UI_ThemeWin : public Fl_Window {
         gap_green = 35;
         gap_blue = 35;
 
-        fl_alert("%s", _("Defaults loaded.\nOBSIDIAN will "
-                         "now restart."));
+        fl_alert("%s", _("Defaults loaded.\nOBSIDIAN will now restart."));
         main_action = MAIN_RESTART;
         that->want_quit = true;
     }
@@ -1458,8 +1453,7 @@ class UI_ThemeWin : public Fl_Window {
         if (!theme_file.empty()) {
             Theme_Options_Load(theme_file);
 
-            fl_alert("%s", _("Theme loading requires a restart.\nOBSIDIAN will "
-                             "now restart."));
+            fl_alert("%s", _("Theme loading requires a restart.\nOBSIDIAN will now restart."));
 
             main_action = MAIN_RESTART;
 

@@ -614,8 +614,7 @@ tryagain:;
     }
 
     if (std::filesystem::exists(filename)) {
-        switch (fl_choice(_("%s already exists.\nChoose Yes to overwrite or No "
-                            "to choose a new filename."),
+        switch (fl_choice(_("%s already exists.\nChoose Yes to overwrite or No to choose a new filename."),
                           _("Yes"), 
                           _("No"), 0,
                           filename.generic_string().c_str())) {
@@ -661,9 +660,7 @@ tryagain:;
         }
         if (zip_buf) {
             if (std::filesystem::exists(zip_filename)) {
-                switch (fl_choice(_("Log zipping is enabled, but %s already "
-                                    "exists.\nOverwrite (original .txt file "
-                                    "will still be kept) ?"),
+                switch (fl_choice(_("Log zipping is enabled, but %s already exists.\nOverwrite (original .txt file will still be kept) ?"),
                                   _("Yes"), 
                                   _("No"), 0,
                                   zip_filename.generic_string().c_str())) {
