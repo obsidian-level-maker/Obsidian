@@ -130,6 +130,9 @@ Il Str
 VoidRunner
   - Backrooms theme
 
+4ffy
+  - Vanilla-compatible Heretic sky generator fix
+
 # OBLIGE
 
 ## DEVELOPER:

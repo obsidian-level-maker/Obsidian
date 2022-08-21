@@ -1810,11 +1810,11 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
       ::continue::
     end
 
-    if SHAPE_GRAMMAR == SHAPES.OBSIDIAN then
-      if table.empty(tab) then
-        error("No rules found for " .. tostring(want_pass) .. " pass")
-      end
-    end
+    --if SHAPE_GRAMMAR == SHAPES.OBSIDIAN then
+      --if table.empty(tab) then
+        --error("No rules found for " .. tostring(want_pass) .. " pass")
+      --end
+    --end
 
     if stop_prob > 0 then
       tab["STOP"] = stop_prob
@@ -3453,9 +3453,9 @@ end
   local function apply_a_rule()
     local rule_tab = collect_matching_rules(pass, stop_prob, hit_floor_limit)
 
-    if SHAPE_GRAMMAR ~= SHAPES.OBSIDIAN then
+    --if SHAPE_GRAMMAR ~= SHAPES.OBSIDIAN then
       if table.empty(rule_tab) then return end
-    end
+    --end
 
     local rules = table.copy(rule_tab)
 

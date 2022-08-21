@@ -4318,6 +4318,8 @@ function ULTDOOM.get_levels()
 
   -- create level info...
 
+  current_map = 1
+
   for ep_index = 1,EP_NUM do
     local EPI = GAME.episodes[ep_index]
 
@@ -4369,79 +4371,96 @@ function ULTDOOM.get_levels()
         --handling for the Final Only option
         if PARAM.gotcha_frequency == "final" then
           if OB_CONFIG.length == "single" then
-            if map == 1 then LEV.is_procedural_gotcha = true end
+            if current_map == 1 then LEV.is_procedural_gotcha = true end
           elseif OB_CONFIG.length == "few" then
-            if map == 4 then LEV.is_procedural_gotcha = true end
+            if current_map == 4 then LEV.is_procedural_gotcha = true end
           elseif OB_CONFIG.length == "episode" then
-            if map == 11 then LEV.is_procedural_gotcha = true end
+            if current_map == 8 then LEV.is_procedural_gotcha = true end
           elseif OB_CONFIG.length == "game" then
-            if map == 30 then LEV.is_procedural_gotcha = true end
+            if current_map == 35 then LEV.is_procedural_gotcha = true end
           end
         end
-
-        --every 10 maps
+  
         if PARAM.gotcha_frequency == "epi" then
-          if map == 11 or map == 21 or map == 30 then
+          if current_map == ep_index * 9 - 1 then
             LEV.is_procedural_gotcha = true
           end
         end
-
+        if PARAM.gotcha_frequency == "2epi" then
+          if current_map == ep_index * 9 - 1 or current_map == ep_index * 9 - 5 then
+            LEV.is_procedural_gotcha = true
+          end
+        end
+        if PARAM.gotcha_frequency == "3epi" then
+          if current_map == ep_index * 9 - 1 or current_map == ep_index * 9 - 4 or current_map == ep_index * 9 - 7 then
+            LEV.is_procedural_gotcha = true
+          end
+        end
+        if PARAM.gotcha_frequency == "4epi" then
+          if current_map == ep_index * 9 - 1 or current_map == ep_index * 9 - 3 or current_map == ep_index * 9 - 5 or current_map == ep_index * 9 - 7 then
+            LEV.is_procedural_gotcha = true
+          end
+        end
+  
         --5% of maps after map 4,
         if PARAM.gotcha_frequency == "5p" then
-          if map > 4 then
+          if current_map > 4 and current_map % 9 ~= 0 then
             if rand.odds(5) then LEV.is_procedural_gotcha = true end
           end
         end
-
+  
         -- 10% of maps after map 4,
         if PARAM.gotcha_frequency == "10p" then
-          if map > 4 then
+          if current_map > 4 and current_map % 9 ~= 0 then
             if rand.odds(10) then LEV.is_procedural_gotcha = true end
           end
         end
-
+  
         -- for masochists... or debug testing
         if PARAM.gotcha_frequency == "all" then
           LEV.is_procedural_gotcha = true
         end
       end
-
-    -- handling for street mode
-    -- actual handling for urban percentages are done
-    if PARAM.float_streets_mode then
-      if not LEV.is_procedural_gotcha or not LEV.prebuilt then
-        if rand.odds(PARAM.float_streets_mode) then
-          LEV.has_streets = true
-        end
-      end
-    end
-
-    if not LEV.prebuilt then
-      if PARAM.float_linear_mode then
-        if rand.odds(PARAM.float_linear_mode) then
-          LEV.is_linear = true
-        end
-      end
-
-      -- nature mode
-      if PARAM.float_nature_mode then
-        if rand.odds(PARAM.float_nature_mode) then
-          if LEV.has_streets then
-            if rand.odds(50) then
-              LEV.has_streets = false
-              LEV.is_nature = true
-            end
-          else
-            LEV.is_nature = true
+  
+      -- handling for street mode
+      -- actual handling for urban percentages are done
+      if PARAM.float_streets_mode then
+        if not LEV.is_procedural_gotcha or not LEV.prebuilt then
+          if rand.odds(PARAM.float_streets_mode) then
+            LEV.has_streets = true
           end
         end
       end
-
-    end
+  
+      if not LEV.prebuilt then
+        if PARAM.float_linear_mode then
+          if rand.odds(PARAM.float_linear_mode) then
+            LEV.is_linear = true
+          end
+        end
+  
+        -- nature mode
+        if PARAM.float_nature_mode then
+          if rand.odds(PARAM.float_nature_mode) then
+            if LEV.has_streets then
+              if rand.odds(50) then
+                LEV.has_streets = false
+                LEV.is_nature = true
+              end
+            else
+              LEV.is_nature = true
+            end
+          end
+        end
+  
+      end
 
       if MAP_NUM == 1 or map == 3 then
         LEV.demo_lump = string.format("DEMO%d", ep_index)
       end
+
+      current_map = current_map + 1
+
     end -- for map
 
     -- set "dist_to_end" value

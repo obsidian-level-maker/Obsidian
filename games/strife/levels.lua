@@ -172,42 +172,42 @@ function STRIFE.get_levels()
         elseif OB_CONFIG.length == "episode" then
           if map == 11 then LEV.is_procedural_gotcha = true end
         elseif OB_CONFIG.length == "game" then
-          if map == 32 then LEV.is_procedural_gotcha = true end
+          if map == 30 then LEV.is_procedural_gotcha = true end
         end
       end
 
       --every 10 maps
       if PARAM.gotcha_frequency == "epi" then
-        if map % 11 == 0 then
+        if map == 11 or map == 20 or map == 30 then
           LEV.is_procedural_gotcha = true
         end
       end
       if PARAM.gotcha_frequency == "2epi" then
-        if map == ep_index * 11 or map == ep_index * 11 - 5 then
+        if map == 5 or map == 11 or map == 16 or map == 20 or map == 25 or map == 30 then
           LEV.is_procedural_gotcha = true
         end
       end
       if PARAM.gotcha_frequency == "3epi" then
-        if map == ep_index * 11 or map == ep_index * 11 - 4 or map == ep_index * 11 - 8 then
+        if map == 3 or map == 7 or map == 11 or map == 14 or map == 17 or map == 20 or map == 23 or map == 27 or map == 30 then
           LEV.is_procedural_gotcha = true
         end
       end
       if PARAM.gotcha_frequency == "4epi" then
-        if map == ep_index * 11 or map == ep_index * 11 - 3 or map == ep_index * 11 - 6 or map == ep_index * 11 - 9 then
+        if map == 3 or map == 6 or map == 9 or map == 11 or map == 14 or map == 16 or map == 18 or map == 20 or map == 23 or map == 26 or map == 28 or map == 30 then
           LEV.is_procedural_gotcha = true
         end
       end
 
       --5% of maps after map 4,
       if PARAM.gotcha_frequency == "5p" then
-        if map > 4 then
+        if map > 4 and map ~= 15 and map ~= 31 then
           if rand.odds(5) then LEV.is_procedural_gotcha = true end
         end
       end
 
       -- 10% of maps after map 4,
       if PARAM.gotcha_frequency == "10p" then
-        if map > 4 then
+        if map > 4 and map ~= 15 and map ~= 31 then
           if rand.odds(10) then LEV.is_procedural_gotcha = true end
         end
       end

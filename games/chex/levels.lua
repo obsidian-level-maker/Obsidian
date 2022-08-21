@@ -89,6 +89,8 @@ function CHEX3.get_levels()
 
   -- create level info...
 
+  local current_map = 1
+
   for ep_index = 1,EP_NUM do
     local EPI = GAME.episodes[ep_index]
 
@@ -128,47 +130,47 @@ function CHEX3.get_levels()
       --handling for the Final Only option
       if PARAM.gotcha_frequency == "final" then
         if OB_CONFIG.length == "single" then
-          if map == 1 then LEV.is_procedural_gotcha = true end
+          if current_map == 1 then LEV.is_procedural_gotcha = true end
         elseif OB_CONFIG.length == "few" then
-          if map == 4 then LEV.is_procedural_gotcha = true end
+          if current_map == 4 then LEV.is_procedural_gotcha = true end
         elseif OB_CONFIG.length == "episode" then
-          if map == 5 then LEV.is_procedural_gotcha = true end
+          if current_map == 5 then LEV.is_procedural_gotcha = true end
         elseif OB_CONFIG.length == "game" then
-          if map == 15 then LEV.is_procedural_gotcha = true end
+          if current_map == 15 then LEV.is_procedural_gotcha = true end
         end
       end
 
       if PARAM.gotcha_frequency == "epi" then
-        if map % 5 == 0 then
+        if current_map % 5 == 0 then
           LEV.is_procedural_gotcha = true
         end
       end
       if PARAM.gotcha_frequency == "2epi" then
-        if map == ep_index * 5 or map == ep_index * 5 - 2 then
+        if current_map == ep_index * 5 or current_map == ep_index * 5 - 2 then
           LEV.is_procedural_gotcha = true
         end
       end
       if PARAM.gotcha_frequency == "3epi" then
-        if map == ep_index * 5 or map == ep_index * 5 - 2 or map == ep_index * 5 - 4 then
+        if current_map == ep_index * 5 or current_map == ep_index * 5 - 2 or current_map == ep_index * 5 - 4 then
           LEV.is_procedural_gotcha = true
         end
       end
       if PARAM.gotcha_frequency == "4epi" then -- Latter 4/5 of each episode? - Dasho
-        if map ~= 1 and map ~= 6 and map ~= 11 then
+        if current_map ~= 1 and current_map ~= 6 and current_map ~= 11 then
           LEV.is_procedural_gotcha = true
         end
       end
 
       --5% of maps after map 4
       if PARAM.gotcha_frequency == "5p" then
-        if map > 4 then
+        if current_map > 4 then
           if rand.odds(5) then LEV.is_procedural_gotcha = true end
         end
       end
 
       -- 10% of maps after map 4
       if PARAM.gotcha_frequency == "10p" then
-        if map > 4 then
+        if current_map > 4 then
           if rand.odds(10) then LEV.is_procedural_gotcha = true end
         end
       end
@@ -211,6 +213,8 @@ function CHEX3.get_levels()
       end
 
     end
+
+    current_map = current_map + 1
 
     end -- for map
 
