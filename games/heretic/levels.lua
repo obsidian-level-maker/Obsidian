@@ -117,6 +117,8 @@ function HERETIC.get_levels()
 
   -- create level info...
 
+  current_map = 1
+
   for ep_index = 1,EP_NUM do
     local EPI = GAME.episodes[ep_index]
 
@@ -157,47 +159,47 @@ function HERETIC.get_levels()
       --handling for the Final Only option
       if PARAM.gotcha_frequency == "final" then
         if OB_CONFIG.length == "single" then
-          if map == 1 then LEV.is_procedural_gotcha = true end
+          if current_map == 1 then LEV.is_procedural_gotcha = true end
         elseif OB_CONFIG.length == "few" then
-          if map == 4 then LEV.is_procedural_gotcha = true end
+          if current_map == 4 then LEV.is_procedural_gotcha = true end
         elseif OB_CONFIG.length == "episode" then
-          if map == 8 then LEV.is_procedural_gotcha = true end
+          if current_map == 8 then LEV.is_procedural_gotcha = true end
         elseif OB_CONFIG.length == "game" then
-          if map == 44 then LEV.is_procedural_gotcha = true end
+          if current_map == 44 then LEV.is_procedural_gotcha = true end
         end
       end
 
       if PARAM.gotcha_frequency == "epi" then
-        if map == ep_index * 9 - 1 then
+        if current_map == ep_index * 9 - 1 then
           LEV.is_procedural_gotcha = true
         end
       end
       if PARAM.gotcha_frequency == "2epi" then
-        if map == ep_index * 9 - 1 or map == ep_index * 9 - 5 then
+        if current_map == ep_index * 9 - 1 or current_map == ep_index * 9 - 5 then
           LEV.is_procedural_gotcha = true
         end
       end
       if PARAM.gotcha_frequency == "3epi" then
-        if map == ep_index * 9 - 1 or map == ep_index * 9 - 4 or map == ep_index * 9 - 7 then
+        if current_map == ep_index * 9 - 1 or current_map == ep_index * 9 - 4 or current_map == ep_index * 9 - 7 then
           LEV.is_procedural_gotcha = true
         end
       end
       if PARAM.gotcha_frequency == "4epi" then
-        if map == ep_index * 9 - 1 or map == ep_ined * 9 - 3 or map == ep_index * 9 - 5 or map == ep_index * 9 - 7 then
+        if current_map == ep_index * 9 - 1 or current_map == ep_index * 9 - 3 or current_map == ep_index * 9 - 5 or current_map == ep_index * 9 - 7 then
           LEV.is_procedural_gotcha = true
         end
       end
 
       --5% of maps after map 4,
       if PARAM.gotcha_frequency == "5p" then
-        if map > 4 and map % 9 ~= 0 then
+        if current_map > 4 and current_map % 9 ~= 0 then
           if rand.odds(5) then LEV.is_procedural_gotcha = true end
         end
       end
 
       -- 10% of maps after map 4,
       if PARAM.gotcha_frequency == "10p" then
-        if map > 4 and map % 9 ~= 0 then
+        if current_map > 4 and current_map % 9 ~= 0 then
           if rand.odds(10) then LEV.is_procedural_gotcha = true end
         end
       end
@@ -240,6 +242,8 @@ function HERETIC.get_levels()
       end
 
     end
+
+    current_map = current_map + 1
 
     end -- for map
 
