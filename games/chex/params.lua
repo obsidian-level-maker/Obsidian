@@ -24,6 +24,8 @@ CHEX3.PARAMETERS =
   titlepic_format = "patch",
 
   bex_map_prefix = "HUSTR_",
+
+  episode_length = 5
 }
 
 CHEX3.ACTIONS =

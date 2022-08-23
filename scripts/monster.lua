@@ -1501,7 +1501,20 @@ function Monster_fill_room(R)
         ang = geom.angle_add(ang, 180)
       end
       if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 and spot.bossgen then
-        return ang+LEVEL.id
+        if ob_match_game({game = {doom2=1, hacx=1, harmony=1, hexen=1, strife=1}}) then
+          if OB_CONFIG.game == "strife" then
+            if LEVEL.id == 1 then
+              return ang + 2
+            elseif LEVEL.id == 2 then
+              return ang + 1
+            end
+          elseif OB_CONFIG.game == "hexen" then
+            return ang + HEXEN.MAPINFO_MAPS[LEVEL.id]
+          end
+          return ang + LEVEL.id
+        else
+          return ang + (10 * (LEVEL.episode.ep_index - 1) + math.round(PARAM.episode_length * LEVEL.ep_along))
+        end
       else
         return ang
       end
@@ -1509,7 +1522,20 @@ function Monster_fill_room(R)
 
     -- fallback : purely random angle
     if LEVEL.is_procedural_gotcha and PARAM.bool_boss_gen == 1 and spot.bossgen then
-      return (rand.irange(0,7) * 45)+LEVEL.id
+      if ob_match_game({game = {doom2=1, hacx=1, harmony=1, hexen=1, strife=1}}) then
+        if OB_CONFIG.game == "strife" then
+          if LEVEL.id == 1 then
+            return (rand.irange(0,7) * 45) + 2
+          elseif LEVEL.id == 2 then
+            return (rand.irange(0,7) * 45) + 1
+          end
+        elseif OB_CONFIG.game == "hexen" then
+          return (rand.irange(0,7) * 45) + HEXEN.MAPINFO_MAPS[LEVEL.id]
+        end
+        return (rand.irange(0,7) * 45) + LEVEL.id
+      else
+        return (rand.irange(0,7) * 45) + (10 * (LEVEL.episode.ep_index - 1) + math.round(PARAM.episode_length * LEVEL.ep_along))
+      end
     else
       return rand.irange(0,7) * 45
     end

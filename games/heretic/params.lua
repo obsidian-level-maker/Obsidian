@@ -38,6 +38,8 @@ HERETIC.PARAMETERS =
   time_factor    = 1.0,
 
   mon_along_factor = 7.2,
+
+  episode_length = 9
 }
 
 

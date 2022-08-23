@@ -34,7 +34,8 @@ ULTDOOM.PARAMETERS =
 
   doom2_monsters = false,
   doom2_weapons  = false,
-  doom2_skies    = false
+  doom2_skies    = false,
+  episode_length = 9
 }
 
 
@@ -4324,13 +4325,7 @@ function ULTDOOM.get_levels()
     local EPI = GAME.episodes[ep_index]
 
     for map = 1,MAP_NUM do
-      local ep_along = map / LEV_MAX
-
-      if MAP_NUM == 1 then
-        ep_along = rand.range(0.3, 0.7);
-      elseif map == 9 then
-        ep_along = 0.5
-      end
+      local ep_along = map / MAP_NUM
 
       local LEV =
       {

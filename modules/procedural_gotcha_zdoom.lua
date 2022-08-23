@@ -1391,7 +1391,27 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.end_lvl()
   if LEVEL.is_procedural_gotcha then
     local scripty = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.TEMPLATES.LVL
 
-    scripty = string.gsub(scripty, "NUM", LEVEL.id)
+    local id
+
+    if ob_match_game({game = {doom2=1, hacx=1, harmony=1, hexen=1, strife=1}}) then
+      if OB_CONFIG.game == "strife" then
+        if LEVEL.id == 1 then
+          id = 2
+        elseif LEVEL.id == 2 then
+          id = 1
+        else
+          id = LEVEL.id
+        end
+      elseif OB_CONFIG.game == "hexen" then
+        id = HEXEN.MAPINFO_MAPS[LEVEL.id]
+      else
+        id = LEVEL.id
+      end
+    else
+      id = 10 * (LEVEL.episode.ep_index - 1) + math.round(PARAM.episode_length * LEVEL.ep_along)
+    end
+
+    scripty = string.gsub(scripty, "NUM", id)
     scripty = string.gsub(scripty, "CNT", PARAM.boss_count)
 
     PARAM.lvlstr = PARAM.lvlstr .. scripty .. "\n"
@@ -1672,7 +1692,6 @@ OB_MODULES["procedural_gotcha_zdoom"] =
   label = _("Procedural Gotchas"),
 
   engine = "zdoom",
-  game = "!strife",
   side = "right",
   priority = 92,
 

@@ -65,7 +65,7 @@ HARMONY.PREBUILT_LEVELS =
 --------------------------------------------------------------------
 
 function HARMONY.get_levels()
-  local MAP_LEN_TAB = { few=4, episode=11, game=32 }
+  local MAP_LEN_TAB = { few=4, episode=11, game=30 }
 
   local MAP_NUM = MAP_LEN_TAB[OB_CONFIG.length] or 1
 

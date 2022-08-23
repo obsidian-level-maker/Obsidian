@@ -226,7 +226,7 @@ OB_MODULES["debugger"] =
       valuator = "button",
       default = 0,
       tooltip = _("Enables building of levels for experimental games."),
-      longtip = _("The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n\nStrife"),
+      longtip = _("The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n\nDuke Nukem 3D (currently disabled)\n\nQuake (currently disabled)"),
       priority = 60,
       gap = 1,
     },
