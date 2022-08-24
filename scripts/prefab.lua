@@ -1414,9 +1414,7 @@ function Fab_load_wad(def)
 
   local function decode_lighting(S, C)
     if S.light == 0 then 
-      C.ambient = 0
-      C.light_add = 0
-      C.shadow = 255
+      C.shadow = 10000
     elseif S.light < 80 then
       C.shadow = 64
     elseif S.light < 144 then
@@ -2183,7 +2181,7 @@ function Fab_replacements(fab)
     end
 
 
-    if LEVEL.liquid and val == "_LIQUID" then gui.printf(table.tostr(LEVEL.liquid).."troof\n") end
+    --if LEVEL.liquid and val == "_LIQUID" then gui.printf(table.tostr(LEVEL.liquid).."troof\n") end
 
     -- give liquid brushes lighting and/or special type
     if val == "_LIQUID" and LEVEL.liquid then
