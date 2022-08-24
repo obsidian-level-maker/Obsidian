@@ -2795,7 +2795,7 @@ void CSG_DOOM_Write() {
 
     Doom::FreeStuff();
 
-    CSG_BSP(4.0);
+    CSG_BSP(1.0);
 
     CSG_Shade();
 
