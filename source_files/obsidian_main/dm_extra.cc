@@ -322,7 +322,13 @@ int fsky_write(lua_State *L) {
     qLump_c *lump =
         CreatePatch(sky_final_W, sky_H, 0, 0, sky_pixels, sky_W, sky_H);
 
-    AddSectionLump('P', patch, lump);
+    std::string current_engine = ob_get_param("engine");
+
+    if (StringCaseCmp(current_engine, "zdoom") == 0 || StringCaseCmp(current_engine, "eternity") == 0) {
+        AddSectionLump('T', patch, lump);
+    } else {
+        AddSectionLump('P', patch, lump);
+    }
 
     return 0;
 }

@@ -96,7 +96,21 @@ function ScriptMan_assemble_mapinfo_lump()
     -- rest of map info lump
     table.insert(mapinfo_lines, SCRIPTS.doomednums)
     table.insert(mapinfo_lines, SCRIPTS.mapinfolump)
-    if OB_CONFIG.game == "hexen" then
+    if OB_CONFIG.game == "heretic" and OB_CONFIG.length == "game" then
+      for _,lev in pairs(GAME.levels) do
+        if string.match(lev.name, "E4") then
+          mapline = "map " .. lev.name .. " \"" .. lev.description .. "\"\n{\n"
+          mapline = mapline .. "sky1 = SKY4\n"
+          mapline = mapline .. "}\n\n"
+          table.insert(mapinfo_lines, mapline)
+        elseif string.match(lev.name, "E5") then
+          mapline = "map " .. lev.name .. " \"" .. lev.description .. "\"\n{\n"
+          mapline = mapline .. "sky1 = SKY5\n"
+          mapline = mapline .. "}\n\n"
+          table.insert(mapinfo_lines, mapline)
+        end
+      end
+    elseif OB_CONFIG.game == "hexen" then
       for _,lev in pairs(GAME.levels) do
         local mapnum = tonumber(string.sub(lev.name, 4))
         mapline = "map " .. lev.name .. " \"" .. lev.description .. "\"\n{\n"
