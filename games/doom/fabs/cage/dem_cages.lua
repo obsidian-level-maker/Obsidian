@@ -9,6 +9,7 @@ PREFABS.Cage_dem_garage_ambush1 =
   map    = "MAP01",
 
   engine = "zdoom",
+  texture_pack = "armaetus",
 
   prob   = 700,
 
@@ -64,6 +65,7 @@ PREFABS.Cage_dem_garage_ambush2 =
   map    = "MAP02",
 
   engine = "zdoom",
+  texture_pack = "armaetus",
 
   prob   = 700,
 

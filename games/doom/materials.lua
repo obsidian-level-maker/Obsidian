@@ -296,7 +296,6 @@ DOOM.MATERIALS =
   SW1SLAD  = { t="SW1SLAD",  f="FLOOR7_1" },
   SW1STARG = { t="SW1STARG",   f="FLAT23" },
   SW1STON1 = { t="SW1STON1", f="MFLR8_1" },
-  SW1STON2 = { t="SW1STON2", f="MFLR8_1" },
   SW1STRTN = { t="SW1STRTN", f="FLOOR4_1" },
   SW1VINE  = { t="SW1VINE",  f="FLAT1" },
   SW1WOOD  = { t="SW1WOOD",  f="FLAT5_2" },
@@ -739,7 +738,9 @@ DOOM.MATERIALS =
   XGRAY1  = { t="GRAY1", f="GRAY1" },
   X_COMPBL  = { t="COMPBLUE", f="COMPBLUE" },
   X_ORANFL  = { t="ORANFLOR", f="ORANFLOR" },
-
+  X_BRICK4  = { t="BRICK4", f="BRICK4" },
+  X_FLOOR7  = { t="FLOOR7_3", f="FLOOR7_3" },
+  XCARPET5  = { t="CARPET5", f="CARPET5" },
 
   XFWATER = { t="FWATER1", f="FWATER1" },
   XNUKAGE = { t="NUKAGE1", f="NUKAGE1" },

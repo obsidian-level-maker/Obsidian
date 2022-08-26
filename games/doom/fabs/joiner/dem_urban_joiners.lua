@@ -63,7 +63,7 @@ PREFABS.Joiner_bedroom =
   template = "Joiner_living_room",
   map = "MAP03",
 
-  prob = 3000,
+  prob = 2500,
 
   env      = "outdoor",
   neighbor = "outdoor",
@@ -80,7 +80,7 @@ PREFABS.Joiner_bedroom_vanilla =
   template = "Joiner_living_room",
   map = "MAP03",
 
-  prob = 3000,
+  prob = 2500,
 
   env      = "outdoor",
   neighbor = "outdoor",
@@ -305,12 +305,7 @@ PREFABS.Joiner_waiting_room_vanilla =
   },
   tex_CPAQLRRE = {
     SKY1 = 50, SKY2 = 50, SKY3 = 50
-  },
-  flat_GRENFLOR = "GRASS1",
-  flat_SNOW5 = "FLAT19",
-  flat_FASHWITE = "FLAT5_4",
-  tex_TEKSHAW = "SILVER1",
-  tex_SHAWN01C = "SILVER1",
+  }
 }
 
 --a raided electronic store joiner
@@ -364,17 +359,14 @@ PREFABS.Joiner_electronic_store_vanilla =
     BRICK1=50, BRICK12=50, BRICK11=50,
     BRICK2=50, BRICK4=50,
     BRICK6=50, BRICK7=50, BRICK8=50,
-    STONE2=50,
+    STONE2=50, SHAWN4=50, SHAWN5=50,
     STUCCO=50,  STUCCO1=50, STUCCO3=50, STARGR1=50
   },
   tex_TVSNOW01 = "SPACEW3",
   flat_TILES4 = "FLOOR0_5",
 
   flat_GROUND04 = "GRASS1",
-  tex_GREEN01 = "ZIMMER1",
-  tex_FENCE6 = "MIDSPACE",
-  tex_COMPSA20 = "BLAKWAL1",
-  tex_GROUND04 = "ZIMMER7",
+  tex_GREEN01 = "ZIMMER1"
 }
 
 --a raided cornerstore
@@ -431,16 +423,15 @@ PREFABS.Joiner_cornerstore_vanilla =
     BRICK6=50, BRICK7=50, BRICK8=50,
     STONE2=50, STUCCO=50,  STUCCO1=50,
     STUCCO3=50, STARGR1=50,
-    PANEL6=50, BRICK9=50,
+    PANEL6=50, BRIKS40=50, BRIKS43=50,
+    GOTH31=50, BRICK9=50,
     BRICK10=50,TANROCK2=50, TANROCK3=50
   },
 
-  tex_DNSTOR02 = "STEP4",
   tex_DNSTOR05 = "STEP4",
   tex_DNSTOR06 = "STEP4",
   tex_DNSTOR09 = "STEP4",
-  tex_MIDSPAC5 = "MIDSPACE",
-  flat_TILES4 = "FLOOR0_5",
+  tex_MIDSPAC5 = "MIDSPACE"
 }
 
 --a fairly intact bookstore
@@ -501,7 +492,7 @@ PREFABS.Joiner_bookstore_vanilla =
     BRICK2=50, BRICK4=50,
     BRICK6=50, BRICK7=50, BRICK8=50,
     STUCCO=50, STUCCO1=50,
-    STUCCO3=50,
+    STUCCO3=50, BRIKS43=50,
     BRICK9=50, TANROCK2=50, TANROCK3=50
   },
 
@@ -727,3 +718,170 @@ rank = 1,
   deep = 16,
 
 }
+
+--a yard and house joiner
+PREFABS.Joiner_yard_joiner1 =
+{
+  template = "Joiner_living_room",
+  map    = "MAP17",
+
+  prob   = 3500,
+
+  neighbor = "outdoor",
+
+  z_fit  = "top",
+
+  seed_w = 2,
+  seed_h = 3,
+
+  can_flip = false,
+
+  texture_pack = "armaetus",
+
+  deep = 16,
+  over = 16,
+
+  tex_CITY01 =
+  {
+
+    CITY01 = 50,
+    CITY02 = 50,
+    CITY03 = 50,
+    CITY04 = 50,
+    CITY05 = 50,
+    CITY06 = 50,
+    CITY07 = 50,
+    CITY11 = 25,
+    CITY12 = 25,
+    CITY13 = 25,
+    CITY14 = 25,
+  },
+
+
+}
+
+--a yard and house joiner 2
+PREFABS.Joiner_yard_joiner2 =
+{
+  template = "Joiner_living_room",
+  map    = "MAP18",
+
+  prob   = 3500,
+
+  neighbor = "outdoor",
+
+  z_fit  = "top",
+
+  seed_w = 2,
+  seed_h = 3,
+
+  texture_pack = "armaetus",
+
+  deep = 16,
+  over = 16,
+
+  jump_crouch = true,
+
+
+  tex_CITY01 =
+  {
+
+    CITY01 = 50,
+    CITY02 = 50,
+    CITY03 = 50,
+    CITY04 = 50,
+    CITY05 = 50,
+    CITY06 = 50,
+    CITY07 = 50,
+    CITY11 = 25,
+    CITY12 = 25,
+    CITY13 = 25,
+    CITY14 = 25,
+  },
+
+}
+
+--a yard and house joiner 3
+PREFABS.Joiner_yard_joiner3 =
+{
+  template = "Joiner_living_room",
+  map    = "MAP19",
+
+
+rank = 1,
+
+  prob   = 3500,
+
+  neighbor = "outdoor",
+
+  z_fit  = "top",
+
+  seed_w = 2,
+  seed_h = 3,
+
+  texture_pack = "armaetus",
+
+  deep = 16,
+  over = 64,
+
+  delta = 64,
+
+  jump_crouch = true,
+
+  tex_CITY01 =
+  {
+
+    CITY01 = 50,
+    CITY02 = 50,
+    CITY03 = 50,
+    CITY04 = 50,
+    CITY05 = 50,
+    CITY06 = 50,
+    CITY07 = 50,
+    CITY11 = 25,
+    CITY12 = 25,
+    CITY13 = 25,
+    CITY14 = 25,
+  },
+
+}
+
+--destroyed yard and house joiner 4
+PREFABS.Joiner_yard_joiner4 =
+{
+  template = "Joiner_living_room",
+  map    = "MAP20",
+
+  prob   = 3500,
+
+  neighbor = "outdoor",
+
+  seed_w = 2,
+  seed_h = 3,
+
+  z_fit  = "top",
+
+  texture_pack = "armaetus",
+
+  deep = 16,
+  over = 16,
+
+  tex_CITY01 =
+  {
+
+    CITY01 = 50,
+    CITY02 = 50,
+    CITY03 = 50,
+    CITY04 = 50,
+    CITY05 = 50,
+    CITY06 = 50,
+    CITY07 = 50,
+    CITY11 = 25,
+    CITY12 = 25,
+    CITY13 = 25,
+    CITY14 = 25,
+  },
+
+}
+
+
