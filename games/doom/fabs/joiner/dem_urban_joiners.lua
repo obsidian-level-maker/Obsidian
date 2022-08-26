@@ -305,7 +305,12 @@ PREFABS.Joiner_waiting_room_vanilla =
   },
   tex_CPAQLRRE = {
     SKY1 = 50, SKY2 = 50, SKY3 = 50
-  }
+  },
+  flat_GRENFLOR = "GRASS1",
+  flat_SNOW5 = "FLAT19",
+  flat_FASHWITE = "FLAT5_4",
+  tex_TEKSHAW = "SILVER1",
+  tex_SHAWN01C = "SILVER1",
 }
 
 --a raided electronic store joiner
@@ -359,14 +364,17 @@ PREFABS.Joiner_electronic_store_vanilla =
     BRICK1=50, BRICK12=50, BRICK11=50,
     BRICK2=50, BRICK4=50,
     BRICK6=50, BRICK7=50, BRICK8=50,
-    STONE2=50, SHAWN4=50, SHAWN5=50,
+    STONE2=50,
     STUCCO=50,  STUCCO1=50, STUCCO3=50, STARGR1=50
   },
   tex_TVSNOW01 = "SPACEW3",
   flat_TILES4 = "FLOOR0_5",
 
   flat_GROUND04 = "GRASS1",
-  tex_GREEN01 = "ZIMMER1"
+  tex_GREEN01 = "ZIMMER1",
+  tex_FENCE6 = "MIDSPACE",
+  tex_COMPSA20 = "BLAKWAL1",
+  tex_GROUND04 = "ZIMMER7",
 }
 
 --a raided cornerstore
@@ -423,15 +431,16 @@ PREFABS.Joiner_cornerstore_vanilla =
     BRICK6=50, BRICK7=50, BRICK8=50,
     STONE2=50, STUCCO=50,  STUCCO1=50,
     STUCCO3=50, STARGR1=50,
-    PANEL6=50, BRIKS40=50, BRIKS43=50,
-    GOTH31=50, BRICK9=50,
+    PANEL6=50, BRICK9=50,
     BRICK10=50,TANROCK2=50, TANROCK3=50
   },
 
+  tex_DNSTOR02 = "STEP4",
   tex_DNSTOR05 = "STEP4",
   tex_DNSTOR06 = "STEP4",
   tex_DNSTOR09 = "STEP4",
-  tex_MIDSPAC5 = "MIDSPACE"
+  tex_MIDSPAC5 = "MIDSPACE",
+  flat_TILES4 = "FLOOR0_5",
 }
 
 --a fairly intact bookstore
@@ -492,7 +501,7 @@ PREFABS.Joiner_bookstore_vanilla =
     BRICK2=50, BRICK4=50,
     BRICK6=50, BRICK7=50, BRICK8=50,
     STUCCO=50, STUCCO1=50,
-    STUCCO3=50, BRIKS43=50,
+    STUCCO3=50,
     BRICK9=50, TANROCK2=50, TANROCK3=50
   },
 
