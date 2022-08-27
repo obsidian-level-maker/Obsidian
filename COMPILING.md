@@ -8,6 +8,10 @@
 2. Xorg:
    * package: `xorg` (`xorg-libraries` on its own doesn't seem sufficient)
 
+3. Wayland:
+   * Wayland support for FLTK 1.4 is in a state of flux; instructions and
+     dependencies can be found in the source_files/fltk/README.Wayland.txt file
+
 The C++ compiler/toolchain should already be present on a typical BSD install
 
 ## Linux Dependencies (MSYS has some differences; see MSYS Cross-Compilation section below)
@@ -26,6 +30,8 @@ The C++ compiler/toolchain should already be present on a typical BSD install
 4. Development libraries
    * package: `libfontconfig1-dev`
    * recommended if using X11 for better fonts: `libxft-dev`
+   * Wayland support for FLTK 1.4 is in a state of flux; instructions and
+     dependencies can be found in the source_files/fltk/README.Wayland.txt file
 
 5. FLEX
    * package: `flex`

@@ -159,6 +159,10 @@ if(OBSIDIAN_SANITIZE)
   target_link_options(obsidian PRIVATE -fsanitize=address,undefined)
 endif()
 
+if(UNIX)
+  find_package(Fontconfig REQUIRED)
+endif()
+
 target_link_libraries(obsidian PRIVATE fmt::fmt-header-only hedley::hedley)
 
 # Copies executables to local install directory after build
