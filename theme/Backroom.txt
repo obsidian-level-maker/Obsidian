@@ -5,11 +5,11 @@
 -- https://github.com/dashodanger/Obsidian/wiki
 
 window_scaling      = 0                                                 
-font_scaling      = 18                                                
-font_theme      = 7                                                 
-widget_theme      = 2                                                 
-box_theme      = 1                                                 
-button_theme      = 1                                                 
+font_scaling      = 22                                                
+font_theme      = 8                                                 
+widget_theme      = 3                                                 
+box_theme      = 0                                                 
+button_theme      = 0                                                 
 single_pane = 0                                                 
 use_system_fonts = 0                                                 
 color_scheme      = 1                                                 
@@ -28,14 +28,14 @@ bg2_blue      = 0
 button_red      = 121                                               
 button_green      = 142                                               
 button_blue      = 62                                                
-gradient_red      = 218                                               
-gradient_green      = 218                                               
-gradient_blue      = 218                                               
-border_red      = 202                                               
-border_green      = 202                                               
-border_blue      = 202                                               
-gap_red      = 37                                                
-gap_green      = 37                                                
-gap_blue      = 37                                                
+gradient_red      = 216                                               
+gradient_green      = 216                                               
+gradient_blue      = 216                                               
+border_red      = 216                                               
+border_green      = 216                                               
+border_blue      = 216                                               
+gap_red      = 146                                               
+gap_green      = 161                                               
+gap_blue      = 83                                                
 
 
