@@ -14,13 +14,13 @@ PREFABS.Item_secret_garage_closet =
   env   = "outdoor",
   prob  = 100,
 
-  jump_crouch = true,
-
   key   = "secret",
 
   where  = "seeds",
   seed_w = 3,
   seed_h = 2,
+
+  jump_crouch = true,
 
   deep = 16,
   over = -16,
@@ -178,4 +178,111 @@ PREFABS.Item_secret_store_closet_vanilla =
     hang_leg   = 50,
     hang_leg_gone = 50,
   }
+}
+
+--a secret aera in a burning down building 
+--Currently not working, 2 wide x3 long item closets are not allowed
+PREFABS.Item_secret_yard_closet1 =
+{
+  file  = "item/dem_secret_closets_urban.wad",
+  map   = "MAP03",
+
+  engine = "zdoom",
+
+  theme = "urban",
+  env   = "outdoor",
+
+
+  prob  = 1150,
+
+  key   = "secret",
+
+  where  = "seeds",
+  seed_w = 2,
+  seed_h = 3,
+
+  jump_crouch = true,
+
+  x_fit = "frame",
+  y_fit  = "frame",
+  z_fit  = "top",
+
+  can_flip = true,
+
+  tex_BRICK9 = {
+    BRICK1=50, BRICK10=50, BRICK11=50,
+    BRICK2=50, BRICK4=50,
+    BRICK6=50, BRICK7=50, BRICK8=50,
+    BIGBRIK1=50, BIGBRIK2=50, STONE2=50,
+    STONE3=50, BRICK12=50, BRICK5=50,
+    BRONZE1=50, BROWN1=50, BROWN96=50,
+    BROWNGRN=50, CEMENT7=50,
+    CEMENT9=50,
+    },
+
+  tex_BRICK9 = {
+	BRICK1=50,
+	BRICK10=50,
+	BRICK11=50,
+	BRICK2=50,
+	BRICK4=50,
+	BRICK6=50,
+	BRICK7=50,
+	BRICK8=50,
+	BIGBRIK1=50,
+	BIGBRIK2=50,
+	STONE2=50,
+	STONE3=50,
+	BRICK12=50,
+	BRICK5=50,
+	BRONZE1=50,
+	BROWN1=50,
+	BROWN96=50,
+	BROWNGRN=50,
+	CEMENT7=50,
+	CEMENT9=50,
+    }
+}
+--double porch Appartment secret
+--Currently not working, stairs actions are buggy
+--[[
+PREFABS.Item_secret_yard_closet2 =
+{
+  template = "Item_secret_yard_closet1",
+  map      = "MAP04",
+
+
+  prob  = 240,
+
+  seed_w = 4,
+  seed_h = 2,
+
+}
+]]--
+
+
+PREFABS.Item_secret_yard_closet3 =
+{
+  template = "Item_secret_yard_closet1",
+  map      = "MAP05",
+
+  prob  = 240,
+
+  seed_w = 4,
+  seed_h = 2,
+
+}
+
+PREFABS.Item_secret_yard_closet4 =
+{
+  template = "Item_secret_yard_closet1",
+  map      = "MAP06",
+
+
+  jump_crouch = false,
+
+  prob  = 50,
+
+  seed_h = 2,
+
 }

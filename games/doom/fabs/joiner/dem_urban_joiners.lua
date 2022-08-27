@@ -63,7 +63,7 @@ PREFABS.Joiner_bedroom =
   template = "Joiner_living_room",
   map = "MAP03",
 
-  prob = 3000,
+  prob = 2500,
 
   env      = "outdoor",
   neighbor = "outdoor",
@@ -80,7 +80,7 @@ PREFABS.Joiner_bedroom_vanilla =
   template = "Joiner_living_room",
   map = "MAP03",
 
-  prob = 3000,
+  prob = 2500,
 
   env      = "outdoor",
   neighbor = "outdoor",
@@ -727,3 +727,170 @@ rank = 1,
   deep = 16,
 
 }
+
+--a yard and house joiner
+PREFABS.Joiner_yard_joiner1 =
+{
+  template = "Joiner_living_room",
+  map    = "MAP17",
+
+  prob   = 3500,
+
+  neighbor = "outdoor",
+
+  z_fit  = "top",
+
+  seed_w = 2,
+  seed_h = 3,
+
+  can_flip = false,
+
+  texture_pack = "armaetus",
+
+  deep = 16,
+  over = 16,
+
+  tex_CITY01 =
+  {
+
+    CITY01 = 50,
+    CITY02 = 50,
+    CITY03 = 50,
+    CITY04 = 50,
+    CITY05 = 50,
+    CITY06 = 50,
+    CITY07 = 50,
+    CITY11 = 25,
+    CITY12 = 25,
+    CITY13 = 25,
+    CITY14 = 25,
+  },
+
+
+}
+
+--a yard and house joiner 2
+PREFABS.Joiner_yard_joiner2 =
+{
+  template = "Joiner_living_room",
+  map    = "MAP18",
+
+  prob   = 3500,
+
+  neighbor = "outdoor",
+
+  z_fit  = "top",
+
+  seed_w = 2,
+  seed_h = 3,
+
+  texture_pack = "armaetus",
+
+  deep = 16,
+  over = 16,
+
+  jump_crouch = true,
+
+
+  tex_CITY01 =
+  {
+
+    CITY01 = 50,
+    CITY02 = 50,
+    CITY03 = 50,
+    CITY04 = 50,
+    CITY05 = 50,
+    CITY06 = 50,
+    CITY07 = 50,
+    CITY11 = 25,
+    CITY12 = 25,
+    CITY13 = 25,
+    CITY14 = 25,
+  },
+
+}
+
+--a yard and house joiner 3
+PREFABS.Joiner_yard_joiner3 =
+{
+  template = "Joiner_living_room",
+  map    = "MAP19",
+
+
+rank = 1,
+
+  prob   = 3500,
+
+  neighbor = "outdoor",
+
+  z_fit  = "top",
+
+  seed_w = 2,
+  seed_h = 3,
+
+  texture_pack = "armaetus",
+
+  deep = 16,
+  over = 64,
+
+  delta = 64,
+
+  jump_crouch = true,
+
+  tex_CITY01 =
+  {
+
+    CITY01 = 50,
+    CITY02 = 50,
+    CITY03 = 50,
+    CITY04 = 50,
+    CITY05 = 50,
+    CITY06 = 50,
+    CITY07 = 50,
+    CITY11 = 25,
+    CITY12 = 25,
+    CITY13 = 25,
+    CITY14 = 25,
+  },
+
+}
+
+--destroyed yard and house joiner 4
+PREFABS.Joiner_yard_joiner4 =
+{
+  template = "Joiner_living_room",
+  map    = "MAP20",
+
+  prob   = 3500,
+
+  neighbor = "outdoor",
+
+  seed_w = 2,
+  seed_h = 3,
+
+  z_fit  = "top",
+
+  texture_pack = "armaetus",
+
+  deep = 16,
+  over = 16,
+
+  tex_CITY01 =
+  {
+
+    CITY01 = 50,
+    CITY02 = 50,
+    CITY03 = 50,
+    CITY04 = 50,
+    CITY05 = 50,
+    CITY06 = 50,
+    CITY07 = 50,
+    CITY11 = 25,
+    CITY12 = 25,
+    CITY13 = 25,
+    CITY14 = 25,
+  },
+
+}
+
+

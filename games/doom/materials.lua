@@ -739,7 +739,9 @@ DOOM.MATERIALS =
   XGRAY1  = { t="GRAY1", f="GRAY1" },
   X_COMPBL  = { t="COMPBLUE", f="COMPBLUE" },
   X_ORANFL  = { t="ORANFLOR", f="ORANFLOR" },
-
+  X_BRICK4  = { t="BRICK4", f="BRICK4" },
+  X_FLOOR7  = { t="FLOOR7_3", f="FLOOR7_3" },
+  XCARPET5  = { t="CARPET5", f="CARPET5" },
 
   XFWATER = { t="FWATER1", f="FWATER1" },
   XNUKAGE = { t="NUKAGE1", f="NUKAGE1" },

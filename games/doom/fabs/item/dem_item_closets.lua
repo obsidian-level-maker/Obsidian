@@ -915,3 +915,116 @@ PREFABS.Item_dem_bunker_closetN =
   env = "nature",
   group = "natural_walls",
 }
+
+----yards containg items ----
+
+PREFABS.Item_dem_yard_closet1 =
+{
+  file   = "item/dem_item_closets.wad",
+  map    = "MAP27",
+
+  engine = "zdoom",
+
+
+  prob   = 10000,
+
+  theme  = "urban",
+
+  env = "outdoor",
+
+  where  = "seeds",
+
+  seed_w = 3,
+  seed_h = 2,
+
+  deep   = 16,
+  over   = -16,
+
+  height = 256,
+
+  y_fit  = "top",
+  z_fit  = "top",
+
+  texture_pack = "armaetus",
+
+  tex_CITY01 =
+  {
+
+    CITY01 = 50,
+    CITY02 = 50,
+    CITY03 = 50,
+    CITY04 = 50,
+    CITY05 = 50,
+    CITY06 = 50,
+    CITY07 = 50,
+    CITY11 = 25,
+    CITY12 = 25,
+    CITY13 = 25,
+    CITY14 = 25,
+  },
+
+  can_flip = true,
+
+}
+
+PREFABS.Item_dem_yard_closet2 =
+{
+  template = "Item_dem_yard_closet1",
+
+  map = "MAP28",
+
+  jump_crouch = true,
+
+}
+
+PREFABS.Item_dem_yard_closet3 =
+{
+  template = "Item_dem_yard_closet1",
+
+  map = "MAP29",
+
+  prob   = 12000,
+
+  jump_crouch = true,
+
+  seed_w = 4,
+  seed_h = 2,
+
+}
+
+PREFABS.Item_dem_yard_closet4 =
+{
+  template = "Item_dem_yard_closet1",
+
+  map = "MAP30",
+
+  prob   = 12000,
+
+  seed_w = 4,
+  seed_h = 2,
+
+  tex_BRICK9 = {
+	BRICK1=50,
+	BRICK10=50,
+	BRICK11=50,
+	BRICK2=50,
+	BRICK4=50,
+	BRICK6=50,
+	BRICK7=50,
+	BRICK8=50,
+	BIGBRIK1=50,
+	BIGBRIK2=50,
+	STONE2=50,
+	STONE3=50,
+	BRICK12=50,
+	BRICK5=50,
+	BRONZE1=50,
+	BROWN1=50,
+	BROWN96=50,
+	BROWNGRN=50,
+	CEMENT7=50,
+	CEMENT9=50,
+    },
+
+}
+
