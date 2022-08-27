@@ -51,6 +51,7 @@
 #  include <FL/fl_draw.H>
 #  include <FL/platform.H>
 #  include <FL/Fl_Image_Surface.H>
+#  include <FL/Fl_Tiled_Image.H>
 #  include "../../Fl_Screen_Driver.H"
 #  include "../../Fl_XColor.H"
 #  include "../../flstring.h"
@@ -780,16 +781,9 @@ void Fl_Xlib_Graphics_Driver::draw_rgb(Fl_RGB_Image *rgb, int XP, int YP, int WP
   if (Wfull == 0 || Hfull == 0) return;
   bool need_clip = (cx || cy || WP < rgb->w() || HP < rgb->h());
   if (need_clip) push_clip(XP, YP, WP, HP);
-  int offset = 0;
-  if (Wfull > rgb->data_w() || Hfull > rgb->data_h()) {
-    // When enlarging while drawing with XRender, 1 pixel around target area seems unpainted,
-    // so we increase a bit the target area and move it 1 pixel to left and top.
-    Wfull = (rgb->w()+2)*scale(), Hfull = (rgb->h()+2)*scale();
-    offset = 1;
-  }
   scale_and_render_pixmap( *Fl_Graphics_Driver::id(rgb), rgb->d(),
                           rgb->data_w() / double(Wfull), rgb->data_h() / double(Hfull),
-                          Xs + this->floor(offset_x_) - offset, Ys + this->floor(offset_y_) - offset,
+                          Xs + this->floor(offset_x_), Ys + this->floor(offset_y_),
                           Wfull, Hfull);
   if (need_clip) pop_clip();
 }
@@ -799,6 +793,14 @@ void Fl_Xlib_Graphics_Driver::draw_rgb(Fl_RGB_Image *rgb, int XP, int YP, int WP
  */
 int Fl_Xlib_Graphics_Driver::scale_and_render_pixmap(Fl_Offscreen pixmap, int depth, double scale_x, double scale_y, int XP, int YP, int WP, int HP) {
   bool has_alpha = (depth == 2 || depth == 4);
+  if (!has_alpha && scale_x == 1 && scale_y == 1) {
+    // Fix for a problem visible under XQuartz with test/device and Fl_Image_Surface:
+    // the drawn image is fully black. The problem does not occur under linux.
+    // Why the problem occurs under XQuartz remains unknown.
+    // The fix is to use XCopyArea() when adequate, rather than using Xrender.
+    XCopyArea(fl_display, pixmap, fl_window, gc_, 0, 0, WP, HP, XP, YP);
+    return 1;
+  }
   XRenderPictureAttributes srcattr;
   memset(&srcattr, 0, sizeof(XRenderPictureAttributes));
   static XRenderPictFormat *fmt24 = XRenderFindStandardFormat(fl_display, PictStandardRGB24);
@@ -822,14 +824,17 @@ int Fl_Xlib_Graphics_Driver::scale_and_render_pixmap(Fl_Offscreen pixmap, int de
       { XDoubleToFixed( 0 ),       XDoubleToFixed( 0 ),       XDoubleToFixed( 1 ) }
     }};
     XRenderSetPictureTransform(fl_display, src, &mat);
-    if (Fl_Image::scaling_algorithm() == FL_RGB_SCALING_BILINEAR) {
+    if (Fl_Image::scaling_algorithm() == FL_RGB_SCALING_BILINEAR &&
+          !Fl_Tiled_Image::drawing_tiled_image()) {
+      // The filter is not used when drawing tiled images because drawn image edges
+      // become somewhat blurry.
       XRenderSetPictureFilter(fl_display, src, FilterBilinear, 0, 0);
       // A note at  https://www.talisman.org/~erlkonig/misc/x11-composite-tutorial/ :
       // "When you use a filter you'll probably want to use PictOpOver as the render op,
       // regardless of whether the source picture has an alpha channel or not, since
       // the edges may end up having alpha values after the filter has been applied."
-      // suggests this would be preferable :
-      // has_alpha = true;
+      // suggests this is necessary :
+      has_alpha = true;
     }
   }
   XRenderComposite(fl_display, (has_alpha ? PictOpOver : PictOpSrc), src, None, dst, 0, 0, 0, 0,

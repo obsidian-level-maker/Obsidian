@@ -51,7 +51,7 @@ class Fl_Input;
 
   Each supported platform implements several of the virtual methods of this class.
 */
-class FL_EXPORT Fl_Screen_Driver {
+class Fl_Screen_Driver {
 
 protected:
   Fl_Screen_Driver();
@@ -186,7 +186,8 @@ public:
 
   void rescale_all_windows_from_screen(int screen, float f);
   static void transient_scale_display(float f, int nscreen);
-  static int scale_handler(int event);
+  // need export to fltk_gl.so because used in glut_compatibility.cxx
+  static FL_EXPORT int scale_handler(int event);
   virtual void desktop_scale_factor() {}
   void use_startup_scale_factor();
   enum APP_SCALING_CAPABILITY {
