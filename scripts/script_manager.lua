@@ -97,17 +97,27 @@ function ScriptMan_assemble_mapinfo_lump()
     table.insert(mapinfo_lines, SCRIPTS.doomednums)
     table.insert(mapinfo_lines, SCRIPTS.mapinfolump)
     if OB_CONFIG.game == "heretic" and OB_CONFIG.length == "game" then
-      for _,lev in pairs(GAME.levels) do
-        if string.match(lev.name, "E4") then
-          mapline = "map " .. lev.name .. " \"" .. lev.description .. "\"\n{\n"
-          mapline = mapline .. "sky1 = SKY4\n"
-          mapline = mapline .. "}\n\n"
-          table.insert(mapinfo_lines, mapline)
-        elseif string.match(lev.name, "E5") then
-          mapline = "map " .. lev.name .. " \"" .. lev.description .. "\"\n{\n"
-          mapline = mapline .. "sky1 = SKY5\n"
-          mapline = mapline .. "}\n\n"
-          table.insert(mapinfo_lines, mapline)
+      if not SCRIPTS.mapinfolump then
+        for _,lev in pairs(GAME.levels) do
+          if string.match(lev.name, "E4") then
+            mapline = "map " .. lev.name .. " \"" .. lev.description .. "\"\n{\n"
+            mapline = mapline .. "sky1 = SKY4\n"
+            mapline = mapline .. "Music = " .. HERETIC.MUSIC[lev.id] .. "\n"
+            mapline = mapline .. "next = " .. GAME.levels[lev.id + 1].name .. "\n"
+            mapline = mapline .. "}\n\n"
+            table.insert(mapinfo_lines, mapline)
+          elseif string.match(lev.name, "E5") then
+            mapline = "map " .. lev.name .. " \"" .. lev.description .. "\"\n{\n"
+            mapline = mapline .. "sky1 = SKY5\n"
+            mapline = mapline .. "Music = " .. HERETIC.MUSIC[lev.id] .. "\n"
+            if lev.id == 45 then
+              mapline = mapline .. "next = EndPic, TITLE\n"
+            else
+              mapline = mapline .. "next = " .. GAME.levels[lev.id + 1].name .. "\n"
+            end
+            mapline = mapline .. "}\n\n"
+            table.insert(mapinfo_lines, mapline)
+          end
         end
       end
     elseif OB_CONFIG.game == "hexen" then
