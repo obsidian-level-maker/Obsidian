@@ -16,6 +16,7 @@ HACX.MATERIALS =
   _SKY   = { t="HW209", f="F_SKY1" },
   _DEFAULT = { t="HW209", f="RROCK03" },
   _LIQUID = { f="FWATER1", t="BLODRIP1" },
+  XEMPTY = { t="-", f="-" },
 
   -- materials for generic prefab set --
   _RUNIC = { t="STONE2", f="FLAT5_2" },

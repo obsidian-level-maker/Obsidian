@@ -24,6 +24,7 @@ STRIFE.MATERIALS =
   _DEFAULT = { t="CONCRT01", f="F_CONCRP" },
   _ERROR = { t="BIGSTN02", f="P_SPLATR" },
   _SKY   = { t="BIGSTN01", f="F_SKY001" },
+  XEMPTY = { t="-", f="-" },
 
  -- materials for generic prefab set --
  _LIFT = { t="ELEVTR03", f="F_ELTOP2" },

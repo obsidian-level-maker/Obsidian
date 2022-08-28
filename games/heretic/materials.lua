@@ -30,6 +30,7 @@ HERETIC.MATERIALS =
   _ERROR   = { t="WOODWL",  f="FLOOR10" },
   _DEFAULT = { t="GRSTNPB", f="FLOOR03" },
   _SKY     = { t="CHAINSD", f="F_SKY1"  },
+  XEMPTY = { t="-", f="-" },
   
   -- materials for generic prefab set --
   _LIFT = { t="SKULLSB1", f="FLOOR30" },

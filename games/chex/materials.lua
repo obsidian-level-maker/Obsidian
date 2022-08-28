@@ -13,6 +13,7 @@ CHEX3.MATERIALS =
   _ERROR = { t="COMPSPAN", f="CEIL5_1" },
   _SKY   = { t="COMPSPAN", f="F_SKY1" },
   _LIQUID = { t="GSTFONT1", f="FWATER1" },
+  XEMPTY = { t="-", f="-" },
 
   -- materials for generic prefab set --
 

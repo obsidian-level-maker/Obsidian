@@ -33,6 +33,7 @@ HEXEN.MATERIALS =
   _ERROR = { t="STEEL01", f="F_075" },
   _DEFAULT = { t="STEEL01",  f="F_074" },
   _SKY   = { t="STEEL01", f="F_SKY" },
+  XEMPTY = { t="-", f="-" },
 
   -- materials for generic prefab set --  
   _RUNIC = { t="X_FIRE01", f="X_001" },

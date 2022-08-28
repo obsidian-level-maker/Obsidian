@@ -18,6 +18,7 @@ HARMONY.MATERIALS =
   _DEFAULT = { t="METAL3",   f="DEM1_6" },
   _ERROR = { t="METAL3", f="DEM1_6" },
   _SKY   = { t="METAL3", f="F_SKY1" },
+  XEMPTY = { t="-", f="-" },
 
   -- materials for generic prefab set --
   _LIFT = { t="METAL2", f="SLIME15" },
