@@ -1408,7 +1408,11 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.end_lvl()
         id = LEVEL.id
       end
     else
-      id = 10 * (LEVEL.episode.ep_index - 1) + math.round(PARAM.episode_length * LEVEL.ep_along)
+      if OB_CONFIG.length == "single" or OB_CONFIG.length == "few" then
+        id = LEVEL.id
+      else
+        id = 10 * (LEVEL.episode.ep_index - 1) + math.round(PARAM.episode_length * LEVEL.ep_along)
+      end
     end
 
     scripty = string.gsub(scripty, "NUM", id)

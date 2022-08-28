@@ -1513,7 +1513,11 @@ function Monster_fill_room(R)
           end
           return ang + LEVEL.id
         else
-          return ang + (10 * (LEVEL.episode.ep_index - 1) + math.round(PARAM.episode_length * LEVEL.ep_along))
+          if OB_CONFIG.length == "single" or OB_CONFIG.length == "few" then
+            return ang + LEVEL.id
+          else
+            return ang + (10 * (LEVEL.episode.ep_index - 1) + math.round(PARAM.episode_length * LEVEL.ep_along))
+          end
         end
       else
         return ang
@@ -1534,7 +1538,11 @@ function Monster_fill_room(R)
         end
         return (rand.irange(0,7) * 45) + LEVEL.id
       else
-        return (rand.irange(0,7) * 45) + (10 * (LEVEL.episode.ep_index - 1) + math.round(PARAM.episode_length * LEVEL.ep_along))
+        if OB_CONFIG.length == "single" or OB_CONFIG.length == "few" then
+          return (rand.irange(0,7) * 45) + LEVEL.id
+        else
+          return (rand.irange(0,7) * 45) + (10 * (LEVEL.episode.ep_index - 1) + math.round(PARAM.episode_length * LEVEL.ep_along))
+        end
       end
     else
       return rand.irange(0,7) * 45
