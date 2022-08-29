@@ -2447,7 +2447,7 @@ msgstr "Зелёный"
 
 #: modules/heretic/sky_generator.lua:61
 msgid "Jade"
-msgstr "Нефритовый (желтовато-зелёный)"
+msgstr "Нефритовый, желтовато-зелёный"
 
 #: modules/heretic/sky_generator.lua:62
 msgid "Dark Red"
@@ -3691,7 +3691,7 @@ msgstr "Множитель размеров комнат"
 
 #: modules/miscellaneous.lua:320
 msgid "Alters the general size and ground coverage of rooms.\n\nVanilla: No room size multipliers.\n\nMix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest."
-msgstr "Изменяет общий размер комнат.\n\nКак в оригинале: множитель равен единице, то есть изменения нет.\n\nСлучайно: все диапазоны множителей используются случайным образом, притом вероятность выбора крайних значений резко снижается (по распределению Гаусса-Лапласа)."
+msgstr "Изменяет средний размер комнат в целом.\n\nКак в оригинале: множитель равен единице, то есть изменения нет.\n\nСлучайно: все диапазоны множителей используются случайным образом, притом вероятность выбора крайних значений резко снижается (по распределению Гаусса-Лапласа)."
 
 #: modules/miscellaneous.lua:325
 msgid "Area Count Multiplier"
@@ -3731,7 +3731,7 @@ msgstr "Обширные комнаты"
 
 #: modules/miscellaneous.lua:366
 msgid "Raises upper limits on individual room growth"
-msgstr "Повышает предел размеров каждой конкретной комнаты."
+msgstr "Повышает шанс того, что каждая конкретная комнаты будет увеличена в размерах."
 
 #: modules/miscellaneous.lua:369
 msgid "Big Outdoors"
@@ -3811,11 +3811,11 @@ msgstr "Влияет на количество симметричных дета
 
 #: modules/miscellaneous.lua:433
 msgid "Beams"
-msgstr "Балки"
+msgstr "Вертикальные балки"
 
 #: modules/miscellaneous.lua:435
 msgid "Allows the appearance of thin pillars to appear between the borders of different elevations."
-msgstr "Позволяет OBSIDIAN использовать тонкие колонны для поддержки потолков на границах разных высот."
+msgstr "Позволяет OBSIDIAN использовать тонкие колонны для \"поддержки\" потолков на границах разных высот."
 
 #: modules/miscellaneous.lua:440
 msgid "Fences"
@@ -3827,7 +3827,7 @@ msgstr "Создание толстых непроходимых заборов 
 
 #: modules/miscellaneous.lua:447
 msgid "Porches\\Gazebos"
-msgstr "Террасы/беседки"
+msgstr "Террасы и беседки"
 
 #: modules/miscellaneous.lua:449
 msgid "Occasional outdoor areas with a lowered indoor-ish ceiling."
@@ -3847,7 +3847,7 @@ msgstr "Красивые виды вне карты"
 
 #: modules/miscellaneous.lua:463
 msgid "Controls the amount of fancy scenics visible at room bordering the maps."
-msgstr "Контролирует количество красивых пейзажей во внеигровой зоне."
+msgstr "Управляет количеством красивых пейзажей во внеигровой зоне."
 
 #: modules/miscellaneous.lua:470
 msgid "Sink Style"
@@ -3859,7 +3859,7 @@ msgstr "Определяет вид углов акваторий. Вариан�
 
 #: modules/miscellaneous.lua:479
 msgid "Liquid Sinks"
-msgstr "Акватории"
+msgstr "Создание акваторий"
 
 #: modules/miscellaneous.lua:481
 msgid "Enables or disables liquid sinks. Liquid sinks are walkable floors that are often converted into depressions with the level's liquid. May greatly inconvenience the player but default Oblige behavior is 'Yes'."
@@ -3871,7 +3871,7 @@ msgstr "Тёмные пространства под небом"
 
 #: modules/miscellaneous.lua:489
 msgid "Affects the chance of a level having darker skies."
-msgstr "Влияет на шанс появления на уровне тёмного неба."
+msgstr "Влияет на шанс того, что на каждом отдельно взятом уровне пространство под небом будет тёмным."
 
 #: modules/miscellaneous.lua:494
 msgid "Outdoor Shadows"
@@ -4199,7 +4199,7 @@ msgstr ""
 
 #: modules/prefab_controller.lua:94
 msgid "I LOVE IT"
-msgstr ""
+msgstr "МАКСИМУМ"
 
 #: modules/prefab_controller.lua:178
 msgid "Advanced Level Control"
