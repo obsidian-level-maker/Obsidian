@@ -9396,6 +9396,42 @@ GROW_COLONNADE_3_PILLARS =
   },
 },
 
+GROW_COLONNADE_3_STAIRS =
+{
+  prob = 20,
+  skip_prob = 80,
+
+  structure =
+  {
+    "........","AAAAAAAA",
+    "........","AAAAAAAA",
+    "........","^^A^^A^^",
+    "........","^^A^^A^^",
+    "........","^^#^^#^^",
+    "........","11111111",
+    "........","11111111",
+    "11xxxxxx","11xxxxxx"
+  }
+},
+
+GROW_COLONNADE_3_STAIRS_PILLARLESS =
+{
+  prob = 20,
+  skip_prob = 80,
+
+  structure =
+  {
+    "........","AAAAAAAA",
+    "........","AAAAAAAA",
+    "........","^^A^^A^^",
+    "........","^^A^^A^^",
+    "........","^^A^^A^^",
+    "........","11111111",
+    "........","11111111",
+    "11xxxxxx","11xxxxxx"
+  }
+},
+
 GROW_TRIANGULAR_LOW_CEILING =
 {
   prob = 20,
@@ -9573,6 +9609,66 @@ GROW_PILLAR_GATE_LIQUID =
     "11xxxx","11xxxx",
   }
 },
+
+GROW_PILLAR_PLUS_SHAPED_CAGE =
+{
+  prob = 15,
+  skip_prob = 85,
+
+  structure =
+  {
+    ".....","11111",
+    ".....","11111",
+    ".....","1#C#1",
+    ".....","1CCC1",
+    ".....","1#C#1",
+    ".....","11111",
+    "11xxx","11xxx"
+  }
+},
+
+GROW_PILLAR_C_SHAPED_CAGE =
+{
+  prob = 15,
+  skip_prob = 85,
+
+  structure =
+  {
+    ".....","11111",
+    ".....","11111",
+    ".....","1#C%1",
+    ".....","11%C1",
+    ".....","111#1",
+    ".....","11111",
+    "11xxx","11xxx"
+  },
+
+  diagonals =
+  {
+    "C1",
+    "1C"
+  }
+},
+
+GROW_PILLAR_STUPID_BRIDGE_CAGE =
+{
+  prob = 15,
+  skip_prob = 85,
+
+  structure =
+  {
+    ".....","11111",
+    ".....","11111",
+    ".....","1#v#1",
+    ".....","1CAC1",
+    ".....","1CAC1",
+    ".....","1#^#1",
+    ".....","11111",
+    "11xxx","11xxx"
+  }
+},
+
+--
 
 GROW_CHAMFER_WIDE_ROOM_CORNER =
 {
