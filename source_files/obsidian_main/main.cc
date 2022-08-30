@@ -405,7 +405,7 @@ void Determine_InstallDir(const char *argv0) {
 #ifdef WIN32
     install_dir = home_dir;
 #else
-    constexpr std::array<const char *, 4> prefixes = {
+    constexpr const char * prefixes[] = {
         "/usr/local",
         "/usr",
         "/opt",
