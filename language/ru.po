@@ -2583,7 +2583,7 @@ msgstr "Цвет туманности"
 
 #: modules/heretic/sky_generator.lua:801
 msgid "Picks the color of nebula if sky is night. 'None' means just a plain starry night sky. Default means random and theme-ish."
-msgstr "Влияет на цвет туманности на ночном небе. При выборе \"Нет\" будет сгенерирован простой звёздный небосвод. \"По умолчанию\" — случайно, но с учётом темы уровня."
+msgstr "Влияет на цвет туманности на ночном небе. При выборе \"Нет\" будет сгенерирован простой звёздный купол небосвода. \"По умолчанию\" — случайно, но с учётом темы уровня."
 
 #: modules/heretic/sky_generator.lua:809
 msgid "Sky Gen Lighting"
@@ -3855,15 +3855,15 @@ msgstr "Очертания акваторий"
 
 #: modules/miscellaneous.lua:472
 msgid "Determines the style for corners with sunken ceilings and floors. Curved makes sink corners soft, while Sharp leaves the corners angular. Per Theme means choice is controlled by theme profile instead. Tech-ish maps favor sharp corners while hell-ish favor curved."
-msgstr "Определяет вид углов акватории. Вариант \"По темам\" означает, что выбор зависит от текущей темы: в картах с уклоном в технический стиль предпочитаются острые углы, в адских уровнях — скруглённые."
+msgstr "Определяет вид углов акваторий. Вариант \"По темам\" означает, что выбор зависит от текущей темы: в картах с уклоном в технический стиль предпочитаются острые углы, в адских уровнях — скруглённые."
 
 #: modules/miscellaneous.lua:479
 msgid "Liquid Sinks"
-msgstr "Акваторий"
+msgstr "Акватории"
 
 #: modules/miscellaneous.lua:481
 msgid "Enables or disables liquid sinks. Liquid sinks are walkable floors that are often converted into depressions with the level's liquid. May greatly inconvenience the player but default Oblige behavior is 'Yes'."
-msgstr "Управляет появлением луж с жидкостью — углублённых локаций с жидкостью, наиболее широко используемой на текущем уровне. Может доставлять много неудобств игроку, однако в Oblige по умолчанию стоит \"Да\" (создавать)."
+msgstr "Управляет появлением луж, стоков, шлюзов и других небольших углублённых локаций с жидкостью, наиболее широко используемой на текущем уровне. Может доставлять много неудобств игроку, однако в Oblige по умолчанию стоит \"Да\" (создавать)."
 
 #: modules/miscellaneous.lua:488
 msgid "Dark Outdoors"
@@ -3871,7 +3871,7 @@ msgstr "Тёмное пространство под небом"
 
 #: modules/miscellaneous.lua:489
 msgid "Affects the chance of a level having darker skies."
-msgstr "Влияет на интенсивность естественного света на откритых областях."
+msgstr "Влияет на интенсивность естественного света на открытых областях."
 
 #: modules/miscellaneous.lua:494
 msgid "Outdoor Shadows"
@@ -4359,7 +4359,7 @@ msgstr "Включает или отключает префабы, для кот
 
 #: modules/prefab_controller.lua:410
 msgid "Damaging Hallways"
-msgstr "Вредительные жидкости"
+msgstr "Наносящие урон жидкости"
 
 #: modules/prefab_controller.lua:412
 msgid "Changes the liquids on hallways with damaging floors to either be damaging (default) or non-damaging."
