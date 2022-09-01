@@ -1333,6 +1333,22 @@ ARMAETUS_MATERIALS = {
   CRGNRCK2 = { t="CRGNRCK2", f="FLAT19"}, -- wall of non-canonical weapons
   CRGNRCK3 = { t="CRGNRCK3", f="FLAT19"}, -- empty wall
 
+  -----------------------------------
+  -- Demiosis and Craneo's adverts --
+  -----------------------------------
+
+   -- Craneo's arcade machine screens
+  ADVCR1 = { t="ADVCR1", f="CEIL4_3"},
+  ADVCR2 = { t="ADVCR2", f="CEIL4_3"},
+  ADVCR3 = { t="ADVCR3", f="CEIL4_3"},
+  ADVCR4 = { t="ADVCR4", f="CEIL4_3"},
+  ADVCR5 = { t="ADVCR5", f="CEIL4_3"},
+  ADVDE1 = { t="ADVDE1", f="CEIL4_3"},
+  ADVDE2 = { t="ADVDE2", f="CEIL4_3"},
+  ADVDE3 = { t="ADVDE3", f="CEIL4_3"},
+  ADVDE4 = { t="ADVDE4", f="CEIL4_3"},
+  ADVDE5 = { t="ADVDE5", f="CEIL4_3"},
+
   ------------------------
   -- Composite textures --
   ------------------------

@@ -32,4 +32,24 @@ ORP_ENTITIES.DECORATE =
     Stop
   }
 }
+
+ACTOR burning_top 17001
+{
+  States
+  {
+  Spawn:
+    FTOP ABC 4 Bright
+    Loop
+  }
+}
+
+ACTOR burning_debris 17002
+{
+  States
+  {
+  Spawn:
+    FDEB ABC 4 Bright
+	Loop
+  }
+}
 ]]

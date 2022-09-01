@@ -189,3 +189,101 @@ PREFABS.Decor_urban_newsstand_secret =
 
   sink_mode = "never_liquids",
 }
+
+-- advert board
+PREFABS.Decor_advert_board1 =
+{
+  template = "Decor_basketball_hoop",
+  map    = "MAP13",
+
+  size   = 64,
+  height = 256,
+
+  sink_mode = "never_liquids",
+
+  tex_CRGNRCK2 =
+  {
+
+    RGNRCK2 = 50,
+    ADVCR1 = 50,
+    ADVCR2 = 50,
+    ADVCR4 = 50,
+    ADVDE1 = 50,
+    ADVDE2 = 50,
+    ADVDE3 = 50,
+    ADVDE5 = 50
+  }
+
+}
+
+-- ground advert board
+PREFABS.Decor_advert_board2 =
+{
+  template = "Decor_basketball_hoop",
+  map    = "MAP14",
+
+  size   = 256,
+  height = 128,
+
+  sink_mode = "never_liquids",
+
+  tex_SHAWN1 =
+  {
+
+    RGNRCK2 = 50,
+    ADVCR1 = 50,
+    ADVCR2 = 50,
+    ADVCR4 = 50,
+    ADVDE1 = 50,
+    ADVDE2 = 50,
+    ADVDE3 = 50,
+    ADVDE5 = 50
+  }
+
+}
+
+-- small advert board
+PREFABS.Decor_advert_board3 =
+{
+  template = "Decor_basketball_hoop",
+  map    = "MAP15",
+
+  size   = 64,
+  height = 256,
+
+  sink_mode = "never_liquids",
+
+  tex_CRGNRCK2 =
+  {
+
+    CRGNRCK2 = 50,
+    ADVCR3 = 50,
+    ADVCR5 = 50,
+    ADVDE4 = 50
+  }
+
+}
+
+-- small ground advert board
+PREFABS.Decor_advert_board4 =
+{
+  template = "Decor_basketball_hoop",
+  map    = "MAP16",
+
+  prob   = 1500,
+
+  size   = 128,
+  height = 128,
+
+  sink_mode = "never_liquids",
+
+  tex_COMPSC1 =
+  {
+
+    COMPSC1 = 50,
+    ADVCR3 = 50,
+    ADVCR5 = 50,
+    ADVDE4 = 50
+  }
+
+}
