@@ -19,6 +19,246 @@
 
 PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM = {}
 
+PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DROPS = 
+{
+  doomish = 
+  [[class BossExiter : CustomInventory
+  {
+      Default
+      {
+      Translation "168:191=250:254", "32:48=250:254", "192:207=32:47", "240:247=47:47";
+      Scale 2;
+      }
+      States
+      {
+      Spawn:
+          PINS ABCD 4 BRIGHT A_SpawnItemEx("BossExiterGlow");
+          Loop;
+      Pickup:
+          TNT1 A 1 Exit_Normal(0);
+          Stop;
+      }
+  }
+  class BossExiterGlow : Actor
+  {
+      Default
+      {
+      Translation "168:191=250:254", "32:48=250:254", "192:207=32:47", "240:247=47:47";
+      Scale 2;
+      +NOGRAVITY;
+      +NOINTERACTION;
+      }
+      States
+      {
+      Spawn:
+          PINS ABCD 4 BRIGHT;
+          Loop;
+      }
+      override void Tick()
+      {
+          super.Tick();
+          A_Fadeout(0.02);
+          scale *= 0.99;
+          SetZ(pos.z+2);
+      }
+  }]],
+  heretic =
+  [[class BossExiter : CustomInventory
+  {
+      Default
+      {
+      Translation "225:234=145:157", "235:240=247:242", "44:44=144:144";
+      }
+      States
+      {
+      Spawn:
+          INVS A 4 BRIGHT A_SpawnItemEx("BossExiterGlow");
+          Loop;
+      Pickup:
+          TNT1 A 1 Exit_Normal(0);
+          Stop;
+      }
+  }
+  class BossExiterGlow : Actor
+  {
+      Default
+      {
+      Translation "225:234=145:157", "235:240=247:242", "44:44=144:144";
+      +NOGRAVITY;
+      +NOINTERACTION;
+      }
+      States
+      {
+      Spawn:
+          INVS A 4 BRIGHT;
+          Loop;
+      }
+      override void Tick()
+      {
+          super.Tick();
+          A_Fadeout(0.02);
+          scale *= 0.99;
+          SetZ(pos.z+2);
+      }
+  }]],
+  hacx =
+  [[class BossExiter : CustomInventory
+  {
+      Default
+      {
+      Scale 2;
+      }
+      States
+      {
+      Spawn:
+          PINS A 4 BRIGHT A_SpawnItemEx("BossExiterGlow");
+          Loop;
+      Pickup:
+          TNT1 A 1 Exit_Normal(0);
+          Stop;
+      }
+  }
+  class BossExiterGlow : Actor
+  {
+      Default
+      {
+      Scale 2;
+      +NOGRAVITY;
+      +NOINTERACTION;
+      }
+      States
+      {
+      Spawn:
+          PINS A 4 BRIGHT;
+          Loop;
+      }
+      override void Tick()
+      {
+          super.Tick();
+          A_Fadeout(0.02);
+          scale *= 0.99;
+          SetZ(pos.z+2);
+      }
+  }]],
+  harmony =
+  [[class BossExiter : CustomInventory
+  {
+      Default
+      {
+      }
+      States
+      {
+      Spawn:
+          FBXP A 4 BRIGHT A_SpawnItemEx("BossExiterGlow");
+          Loop;
+      Pickup:
+          TNT1 A 1 Exit_Normal(0);
+          Stop;
+      }
+  }
+  class BossExiterGlow : Actor
+  {
+      Default
+      {
+      +NOGRAVITY;
+      +NOINTERACTION;
+      }
+      States
+      {
+      Spawn:
+          FBXP A 4 BRIGHT;
+          Loop;
+      }
+      override void Tick()
+      {
+          super.Tick();
+          A_Fadeout(0.02);
+          scale *= 0.99;
+          SetZ(pos.z+2);
+      }
+  }]],
+  strife =
+  [[class BossExiter : CustomInventory
+  {
+      Default
+      {
+      Translation 6;
+      Scale 2;
+      }
+      States
+      {
+      Spawn:
+          SIGL E 4 BRIGHT A_SpawnItemEx("BossExiterGlow");
+          Loop;
+      Pickup:
+          TNT1 A 1 Exit_Normal(0);
+          Stop;
+      }
+  }
+  class BossExiterGlow : Actor
+  {
+      Default
+      {
+      Translation 6;
+      Scale 2;
+      +NOGRAVITY;
+      +NOINTERACTION;
+      }
+      States
+      {
+      Spawn:
+          SIGL E 4 BRIGHT;
+          Loop;
+      }
+      override void Tick()
+      {
+          super.Tick();
+          A_Fadeout(0.02);
+          scale *= 0.99;
+          SetZ(pos.z+2);
+      }
+  }]],
+  hexen =
+  [[class BossExiter : CustomInventory
+  {
+      Default
+      {
+      Scale 2;
+      }
+      States
+      {
+      Spawn:
+          BPFX C 4 BRIGHT A_SpawnItemEx("BossExiterGlow");
+          Loop;
+      Pickup:
+          TNT1 A 1 Exit_Normal(0);
+          Stop;
+      }
+  }
+  class BossExiterGlow : Actor
+  {
+      Default
+      {
+      Scale 2;
+      +NOGRAVITY;
+      +NOINTERACTION;
+      }
+      States
+      {
+      Spawn:
+          BPFX C 4 BRIGHT;
+          Loop;
+      }
+      override void Tick()
+      {
+          super.Tick();
+          A_Fadeout(0.02);
+          scale *= 0.99;
+          SetZ(pos.z+2);
+      }
+  }]] 
+}
+
 PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DIFF_CHOICES =
 {
   "easier", _("Easier"),
@@ -879,46 +1119,7 @@ class BossSummonSpot : Actor
     }
 }
 
-class BossExiter : CustomInventory
-{
-    Default
-    {
-    Translation "168:191=250:254", "32:48=250:254", "192:207=32:47", "240:247=47:47";
-    Scale 2;
-    }
-    States
-    {
-    Spawn:
-        PINS ABCD 4 BRIGHT A_SpawnItemEx("BossExiterGlow");
-        Loop;
-    Pickup:
-        TNT1 A 1 Exit_Normal(0);
-        Stop;
-    }
-}
-class BossExiterGlow : Actor
-{
-    Default
-    {
-    Translation "168:191=250:254", "32:48=250:254", "192:207=32:47", "240:247=47:47";
-    Scale 2;
-    +NOGRAVITY;
-    +NOINTERACTION;
-    }
-    States
-    {
-    Spawn:
-        PINS ABCD 4 BRIGHT;
-        Loop;
-    }
-    override void Tick()
-    {
-        super.Tick();
-        A_Fadeout(0.02);
-        scale *= 0.99;
-        SetZ(pos.z+2);
-    }
-}
+BOSSDROP
 
 //special
 class bossabilitygiver_nothing : bossabilitygiver { }
@@ -1467,6 +1668,22 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.all_done()
   end
 
   scripty = string.gsub(scripty, "LEVELCODE", PARAM.lvlstr)
+
+  if ob_match_game({game = "doomish"}) then
+    scripty = string.gsub(scripty, "BOSSDROP", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DROPS.doomish)
+  elseif OB_CONFIG.game == "heretic" then
+    scripty = string.gsub(scripty, "BOSSDROP", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DROPS.heretic)
+  elseif OB_CONFIG.game == "hacx" then
+    scripty = string.gsub(scripty, "BOSSDROP", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DROPS.hacx)
+  elseif OB_CONFIG.game == "harmony" then
+    scripty = string.gsub(scripty, "BOSSDROP", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DROPS.harmony)
+  elseif OB_CONFIG.game == "strife" then
+    scripty = string.gsub(scripty, "BOSSDROP", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DROPS.strife)
+  elseif OB_CONFIG.game == "hexen" then
+    scripty = string.gsub(scripty, "BOSSDROP", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DROPS.hexen)
+  else
+    scripty = string.gsub(scripty, "BOSSDROP", PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DROPS.doomish)
+  end
 
   if PARAM.bool_boss_gen_hpbar == 1 then
     PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.game_specific_hpbar()
