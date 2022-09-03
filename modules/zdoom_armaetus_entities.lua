@@ -20,7 +20,7 @@
 ORP_ENTITIES = {}
 
 ORP_ENTITIES.DECORATE =
-[[Actor blood_pack 17000
+[[Actor blood_pack 27000
 {
   +FloorClip
   Radius 32
@@ -33,7 +33,7 @@ ORP_ENTITIES.DECORATE =
   }
 }
 
-ACTOR burning_top 17001
+ACTOR burning_top 27001
 {
   States
   {
@@ -43,7 +43,7 @@ ACTOR burning_top 17001
   }
 }
 
-ACTOR burning_debris 17002
+ACTOR burning_debris 27002
 {
   States
   {
