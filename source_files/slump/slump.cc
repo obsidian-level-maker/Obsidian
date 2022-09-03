@@ -7854,8 +7854,10 @@ genus *timely_monster_ex(haa *haa,config *c,int *levels,boolean biggest,
                         &monster_size_health,&monster_size_ammo,levels))
     return NULL;   /* Not enough excess health in any level */
 
-  /* Find a monster of that size */
-  return proper_monster(monster_size_health,monster_size_ammo,*levels,haa,mno,
+  if (c->required_monster_bits == SPECIAL) // Just return a Nazi
+    return find_monster(c,ID_NAZI);
+  else
+    return proper_monster(monster_size_health,monster_size_ammo,*levels,haa,mno,
                         c->required_monster_bits+req,
                         c->forbidden_monster_bits,
                         biggest,c);
