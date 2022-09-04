@@ -1767,6 +1767,21 @@ bool ob_hexen_ceiling_check(int thing_id) {
     return StringToInt(param);
 }
 
+bool ob_mod_enabled(std::string module_name) {
+    std::array<std::string, 2> params = {module_name, ""};
+
+    if (!Script_CallFunc("ob_mod_enabled", 1, params.data())) {
+        return false;
+    }
+
+    int param = luaL_optinteger(LUA_ST, -1, 0);
+
+    // remove result from lua stack
+    lua_pop(LUA_ST, 1);
+
+    return param;
+}
+
 std::string ob_default_filename() {
     if (!Script_CallFunc("ob_default_filename", 1)) {
         return NULL;
@@ -1805,7 +1820,7 @@ bool ob_build_cool_shit() {
     if (!Script_CallFunc("ob_build_cool_shit", 1)) {
         if (main_win) {
             main_win->label(
-                fmt::format("[ ERROR ] {} {} \"{}\"", OBSIDIAN_TITLE,
+                fmt::format("{} {} {} \"{}\"", _("[ ERROR ]"), OBSIDIAN_TITLE,
                             OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME)
                     .c_str());
         }

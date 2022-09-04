@@ -602,6 +602,16 @@ function ob_set_mod_option(name, option, value)
   -- (nothing ever depends on custom options)
 end
 
+function ob_mod_enabled(name)
+  local mod = OB_MODULES[name]
+  if not mod then
+    gui.printf("ob_mod_enabled: Ignoring unknown module: %s\n", name)
+    return false
+  else
+    if mod.enabled and mod.shown then return 1 else return 0 end
+  end
+end
+
 function ob_set_config(name, value)
   -- See the document 'doc/Config_Flow.txt' for a good
   -- description of the flow of configuration values
