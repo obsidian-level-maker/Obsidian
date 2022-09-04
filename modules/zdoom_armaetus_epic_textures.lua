@@ -1046,6 +1046,16 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
     gui.wad_insert_file(dir .. "OBVNMCH5.png", "OBVNMCH5")
     gui.wad_insert_file(dir .. "CRATJOKE.png", "CRATJOKE")
     gui.wad_insert_file(dir .. "G7DODSLS.png", "G7DODSLS")
+    gui.wad_insert_file(dir .. "ADVCR1.png", "ADVCR1")
+    gui.wad_insert_file(dir .. "ADVCR2.png", "ADVCR2")
+    gui.wad_insert_file(dir .. "ADVCR3.png", "ADVCR3")
+    gui.wad_insert_file(dir .. "ADVCR4.png", "ADVCR4")
+    gui.wad_insert_file(dir .. "ADVCR5.png", "ADVCR5")
+    gui.wad_insert_file(dir .. "ADVDE1.png", "ADVDE1")
+    gui.wad_insert_file(dir .. "ADVDE2.png", "ADVDE2")
+    gui.wad_insert_file(dir .. "ADVDE3.png", "ADVDE3")
+    gui.wad_insert_file(dir .. "ADVDE4.png", "ADVDE4")
+    gui.wad_insert_file(dir .. "ADVDE5.png", "ADVDE5")
     gui.wad_add_binary_lump("HI_END",{})
   end
 
@@ -1063,6 +1073,10 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
   --if PARAM.custom_decor ~= "no" then
     SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, ORP_ENTITIES.DECORATE)
     wad_file = "games/doom/data/blood_pack.wad"
+    gui.wad_merge_sections(wad_file)
+    wad_file = "games/doom/data/burning_top.wad"
+    gui.wad_merge_sections(wad_file)
+    wad_file = "games/doom/data/burning_debris.wad"
     gui.wad_merge_sections(wad_file)
   --end
 end

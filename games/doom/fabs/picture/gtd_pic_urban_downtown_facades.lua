@@ -587,3 +587,56 @@ PREFABS.Pic_urban_downtown_facade4_vanilla =
 
   seed_w = 3
 }
+
+PREFABS.Pic_urban_downtown_facade_advert =
+{
+  template = "Pic_urban_downtown_facade3_EPIC",
+  map = "MAP10",
+
+  height = 296,
+
+  in_porches = "never",
+
+  seed_h = 2,
+
+  prob = 200,
+
+  y_fit = { 64,80 },
+  z_fit = "top",
+
+  sector_17 = { [0]=50, [17]=50 },
+
+  tex_CITY01 =
+  {
+    MODWALL2 = 25,
+    MODWALL3 = 25,
+    MODWALL4 = 25,
+    BLAKWAL1 = 25,
+    BLAKWAL2 = 25,
+
+    CITY01 = 50,
+    CITY02 = 50,
+    CITY03 = 50,
+    CITY04 = 50,
+    CITY05 = 50,
+    CITY06 = 50,
+    CITY07 = 50,
+    CITY11 = 25,
+    CITY12 = 25,
+    CITY13 = 25,
+    CITY14 = 25
+  },
+
+  tex_WOOD8 =
+  {
+
+    RGNRCK2 = 50,
+    ADVCR1 = 50,
+    ADVCR2 = 50,
+    ADVCR4 = 50,
+    ADVDE1 = 50,
+    ADVDE2 = 50,
+    ADVDE3 = 50,
+    ADVDE5 = 50
+  }
+}

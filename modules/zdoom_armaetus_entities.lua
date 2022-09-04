@@ -20,7 +20,7 @@
 ORP_ENTITIES = {}
 
 ORP_ENTITIES.DECORATE =
-[[Actor blood_pack 17000
+[[Actor blood_pack 27000
 {
   +FloorClip
   Radius 32
@@ -30,6 +30,26 @@ ORP_ENTITIES.DECORATE =
   Spawn:
     BLDP A -1
     Stop
+  }
+}
+
+ACTOR burning_top 27001
+{
+  States
+  {
+  Spawn:
+    FTOP ABC 4 Bright
+    Loop
+  }
+}
+
+ACTOR burning_debris 27002
+{
+  States
+  {
+  Spawn:
+    FDEB ABC 4 Bright
+	Loop
   }
 }
 ]]
