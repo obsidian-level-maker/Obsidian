@@ -7753,6 +7753,62 @@ msgstr "АВТО"
 msgid "OBSIDIAN Tutorial"
 msgstr "Руководство OBSIDIAN"
 
+#: source_files/obsidian_main/m_tutorial.cc:107
+msgid "<center>Welcome to OBSIDIAN Level Maker! This quick tutorial will teach you the basics of navigating the user interface.</center>"
+msgstr ""
+
+#: source_files/obsidian_main/m_tutorial.cc:115
+msgid "Next"
+msgstr "Далее"
+
+#: source_files/obsidian_main/m_tutorial.cc:122
+msgid "Back"
+msgstr "Назад"
+
+#: source_files/obsidian_main/m_tutorial.cc:398
+msgid "Finish"
+msgstr "Закрыть"
+
+#: source_files/obsidian_main/m_tutorial.cc:137
+msgid "<center>Game Settings, in the upper left area of the program window, contains all you need to build your very first WAD. Select the Game you would like to build a WAD for, the Engine that it will be played on, the Length (number of maps) of the WAD, and the Theme that you would like it to have. Once you press 'Build', you will be prompted to choose a location and filename for your WAD. After that, your WAD will be generated and saved to the location that you specified.\n\nNOTE: If you select 'Vanilla Doom' for the engine, an alternate map generator will be used to create your WAD. Although this WAD will be compatible with all engines, it is much simpler in nature than the maps made by Obsidian's main generator.</center>"
+msgstr "<center>Общие настройки в левой-верхней части окна программы содержат всё, что нужно для быстрого создания файла уровней (*.WAD). Выберите игру, для которой вы хотите создать WAD, игровой движок, длину (количество карт) сборника, а также его общую тему. Как только Вы нажмете «Создать», Вам будет предложено выбрать место и имя файла для вашего WAD. После этого сборник будет сгенерирован и сохранен в указанном Вами месте.   ПРИМЕЧАНИЕ. Если Вы выберете «Ванильный Doom» в качестве движка, для создания Вашего WAD будет использоваться альтернативный генератор карт. Такой WAD будет совместим абсолютно со всеми движками, однако структура уровней в нём будет намного проще по сравнению с картами, созданными основным генератором Obsidian.</center>"
+
+#: source_files/obsidian_main/m_tutorial.cc:195
+msgid "<center>Some modules do not have any additional options to configure, and only need to be enabled or disabled. To enable them, simply click the checkbox to the left of their name. To disable them, clear the same checkbox by clicking it again.</center>"
+msgstr ""
+
+#: source_files/obsidian_main/m_tutorial.cc:224
+msgid "<center>Other modules will have options that you can adjust after you enable them. These modules will have a + symbol next to their name instead of a checkbox. To enable them, click the + symbol. The + will turn into a - and the module will expand to show its options. Once you have adjusted these options, you MUST LEAVE THE MODULE EXPANDED for them to take effect. To disable the module, click the - symbol. It will collapse and the - will turn back into a +</center>"
+msgstr ""
+
+#: source_files/obsidian_main/m_tutorial.cc:252
+msgid "<center>Module options come in three different flavors: Checkboxes, drop-down menus, and sliders. Checkboxes and drop-down menus are fairly self-explanatory, but we will cover some of the more advanced slider functions.</center>"
+msgstr ""
+
+#: source_files/obsidian_main/m_tutorial.cc:280
+msgid "<center>Some sliders will have an inverted triangle icon in the top right corner. Clicking this will show a menu with various choices. With the exception of 'Use Slider Value', these will ignore the number that the slider is set to in favor of a different means of determining the related value.</center>"
+msgstr ""
+
+#: source_files/obsidian_main/m_tutorial.cc:308
+msgid "<center>All sliders will have a pair of brackets in the top right corner. Clicking these will open a dialog box where you can enter a value manually instead of using the slider handle or arrow buttons.</center>"
+msgstr ""
+
+#: source_files/obsidian_main/m_tutorial.cc:336
+msgid "<center>At first, the amount of settings in Obsidian can seem daunting. To help with this, every option has several helper widgets. To reset any option to its default value, click the \"rollback\" icon in the upper right corner. For a brief explanation of an option, a tooltip can be shown by hovering your cursor over the option title. In addition, there is a question mark icon in the top right corner of each option that can be clicked to open a window with a more detailed explanation.</center>"
+msgstr ""
+
+#: source_files/obsidian_main/m_tutorial.cc:364
+msgid "<center>Addons are a way to enhance the Obsidian experience further by adding new content, modules, and options. They come in the form of *.pk3 files that must be placed in the /addons folder of your Obsidian install before starting the program. Once there, they can be viewed, enabled, or disabled by clicking the \"Addons\" menu located in the top bar of the program. Good sources for new addons are either<br /><A HREF='https://github.com/GTD-Carthage/Obsidian-Addons'>the public Obsidian-Addons repo</A> or the #addon-files channel of our Discord.</center>"
+msgstr ""
+
+#: source_files/obsidian_main/m_tutorial.cc:392
+msgid "<center>If, for whatever reason, you receive an error while building, you can view Obsidian's logs by pressing F6 or selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, there is a LOGS.txt file with the same information that is stored in the same folder as obsidian.exe. This file is overwritten each time you start the program, so be sure to save this information elsewhere or use the log preservation options from the File->Options menu if you need to refer to it later! These logs are extremely important when seeking help or filing bug reports!</center>"
+msgstr ""
+
+#: source_files/obsidian_main/m_tutorial.cc:416
+msgid "<center>There are more options to explore within Obsidian, but this should be enough to get you started. The tutorial can be viewed again at any time by choosing Help->Tutorial from the program menu.\n\nIf you need more help, please ask in our Discord (invite link <A HREF='https://discord.gg/dfqCt9v'>https://discord.gg/dfqCt9v</A>) or check our wiki at <A HREF='https://github.com/dashodanger/Obsidian/wiki'>https://github.com/dashodanger/Obsidian/wiki</A>.\n\nGood luck in the infinite Hells!</center>"
+msgstr ""
+
 #: source_files/obsidian_main/ui_build.cc:32
 msgid "Progress and minimap display.\nMinimap Legend:\nWhite - Regular rooms\nBrown - Caves\nBlue - Outdoors\nGreen - Parks"
 msgstr "Ход генерации и область предпросмотра.\n\nРасшифровка цветов:\nБелый — обычные комнаты;\nКоричневый — пещеры;\nСиний — пространства под небом;\nЗелёный — парковые зоны."
