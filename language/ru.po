@@ -7337,6 +7337,10 @@ msgstr "Исключение: \n{}"
 msgid "About OBSIDIAN"
 msgstr "Об OBSIDIAN"
 
+#: source_files/obsidian_main/m_about.cc:104
+msgid "OBSIDIAN is a random level generator\nfor classic FPS games like DOOM.\nIt is a continuation of the OBLIGE Level Maker\nCopyright (C) 2006-2017 Andrew Apted, et al.\nThis program is free software, and may be\ndistributed and modified under the terms of\nthe GNU General Public License.\nThere is ABSOLUTELY NO WARRANTY!\nUse at your OWN RISK!"
+msgstr ""
+
 #: source_files/obsidian_main/m_dialog.cc:217
 msgid "OBSIDIAN - Error Message"
 msgstr "OBSIDIAN — сообщение об ошибке"
@@ -7772,6 +7776,10 @@ msgstr "Закрыть"
 #: source_files/obsidian_main/m_tutorial.cc:137
 msgid "<center>Game Settings, in the upper left area of the program window, contains all you need to build your very first WAD. Select the Game you would like to build a WAD for, the Engine that it will be played on, the Length (number of maps) of the WAD, and the Theme that you would like it to have. Once you press 'Build', you will be prompted to choose a location and filename for your WAD. After that, your WAD will be generated and saved to the location that you specified.\n\nNOTE: If you select 'Vanilla Doom' for the engine, an alternate map generator will be used to create your WAD. Although this WAD will be compatible with all engines, it is much simpler in nature than the maps made by Obsidian's main generator.</center>"
 msgstr "<center>Общие настройки в левой-верхней части окна программы содержат всё, что нужно для быстрого создания файла уровней (*.WAD). Выберите игру, для которой вы хотите создать WAD, игровой движок, длину (количество карт) сборника, а также его общую тему. Как только Вы нажмете «Создать», Вам будет предложено выбрать место и имя файла для вашего WAD. После этого сборник будет сгенерирован и сохранен в указанном Вами месте.   ПРИМЕЧАНИЕ. Если Вы выберете «Ванильный Doom» в качестве движка, для создания Вашего WAD будет использоваться альтернативный генератор карт. Такой WAD будет совместим абсолютно со всеми движками, однако структура уровней в нём будет намного проще по сравнению с картами, созданными основным генератором Obsidian.</center>"
+
+#: source_files/obsidian_main/m_tutorial.cc:166
+msgid "<center>At some point, you will want to have more control over the contents of the WADs that you generate. This is where modules come into play. Modules are groups of options that can be changed to fine-tune your experience. Most modules are optional, and will need to be enabled or disabled accordingly.</center>"
+msgstr ""
 
 #: source_files/obsidian_main/m_tutorial.cc:195
 msgid "<center>Some modules do not have any additional options to configure, and only need to be enabled or disabled. To enable them, simply click the checkbox to the left of their name. To disable them, clear the same checkbox by clicking it again.</center>"
