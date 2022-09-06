@@ -178,7 +178,7 @@ OB_MODULES["prefab_control"] =
   side = "left",
   priority = 95,
 
-  game = "doomish",
+  game = { doom1=1, doom2=1, chex3=0, hacx=0, heretic=1, harmony=0, hexen=0, strife=0 },
   engine = "!vanilla",
 
   hooks =
