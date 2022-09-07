@@ -11323,6 +11323,93 @@ GROW_3x_I_LIQUID =
   },
 },
 
+GROW_3x_I_BULGE =
+{
+  prob = 20,
+  skip_prob = 80,
+
+  structure =
+  {
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "x....x","x/11%x",
+    "......","/A11A%",
+    "......","AA11AA",
+    "......","AA11AA",
+    "......","%A11A/",
+    "x....x","x%11/x",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "xx11xx","xx11xx"
+  },
+
+  diagonals =
+  {
+    ".A","A.",
+    ".A","A.",
+    ".A","A.",
+    ".A","A.",
+  }
+},
+
+GROW_3x_I_BULGE_LIQUID =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "x....x","x/11%x",
+    "......","/1111%",
+    "......","11~~11",
+    "......","11~~11",
+    "......","%1111/",
+    "x....x","x%11/x",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "xx11xx","xx11xx"
+  },
+
+  diagonals =
+  {
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+  }
+},
+
+GROW_3x_I_BULGE_ALT =
+{
+  prob = 20,
+  skip_prob = 80,
+
+  structure =
+  {
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "x....x","x/11%x",
+    "......","/1111%",
+    "......","AAAAAA",
+    "......","AAAAAA",
+    "......","%1111/",
+    "x....x","x%11/x",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "xx11xx","xx11xx"
+  },
+
+  diagonals =
+  {
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+  }
+},
+
 GROW_3x_J =
 {
   prob = 40,
@@ -12826,6 +12913,81 @@ GROW_ELEVATED_O_QUARTER =
   },
 },
 
+-- MSSP's keyboard symbols. I'm running out of ideas. [SYMBOLS]
+GROW_SHARP =
+{
+  prob = 15,
+  skip_prob = 75,
+
+  structure =
+  {
+    "xx..xx..xx","xx11xx11xx",
+    "xx..xx..xx","xx11xx11xx",
+    "..........","1111111111",
+    "..........","1111111111",
+    "xx..xx..xx","xx11xx11xx",
+    "xx..xx..xx","xx11xx11xx",
+    "..........","1111111111",
+    "..........","1111111111",
+    "xx..xx..xx","xx11xx11xx",
+    "xx..xx..xx","xx11xx11xx",
+    "xx11xxxxxx","xx11xxxxxx"
+  }
+},
+
+GROW_SHARP_NEW_AREA =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    "xx..xx..xx","xx11xx11xx",
+    "xx..xx..xx","xx11xx11xx",
+    "..........","1111AA1111",
+    "..........","111/AA%111",
+    "xx..xx..xx","xxAAxxAAxx",
+    "xx..xx..xx","xxAAxxAAxx",
+    "..........","111%AA/111",
+    "..........","1111AA1111",
+    "xx..xx..xx","xx11xx11xx",
+    "xx..xx..xx","xx11xx11xx",
+    "xx11xxxxxx","xx11xxxxxx"
+  },
+
+  diagonals =
+  {
+    "1A","A1",
+    "1A","A1"
+  }
+},
+
+GROW_SHARP_LIQUID =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    "xx..xx..xx","xx11xx11xx",
+    "xx..xx..xx","xx11xx11xx",
+    "..........","1111AA1111",
+    "..........","111/AA%111",
+    "xx......xx","xxAA~~AAxx",
+    "xx......xx","xxAA~~AAxx",
+    "..........","111%AA/111",
+    "..........","1111AA1111",
+    "xx..xx..xx","xx11xx11xx",
+    "xx..xx..xx","xx11xx11xx",
+    "xx11xxxxxx","xx11xxxxxx"
+  },
+
+  diagonals =
+  {
+    "1A","A1",
+    "1A","A1"
+  }
+},
 -- MSSP's huge-arse rooms. [HUGE]
 
 GROW_EXTRUSION_CORNER_4x4 =

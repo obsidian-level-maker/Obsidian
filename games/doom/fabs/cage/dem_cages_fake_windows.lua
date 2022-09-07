@@ -705,7 +705,7 @@ PREFABS.Cage_dem_windows_ambush13 =
 
   engine = "zdoom",
 
-  prob   = 0, --200,
+  prob   = 200,
 
   theme  = "hell",
 
@@ -739,7 +739,7 @@ PREFABS.Cage_dem_windows_ambush14 =
 
   map = "MAP41",
 
-  prob = 800,
+  prob = 200,
 
   height = 200,
 
@@ -753,7 +753,7 @@ PREFABS.Cage_dem_windows_ambush15 =
 
   map = "MAP42",
 
-  prob = 800,
+  prob = 200,
 
   height = 248,
 

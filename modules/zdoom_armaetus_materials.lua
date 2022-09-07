@@ -1337,7 +1337,6 @@ ARMAETUS_MATERIALS = {
   -- Demiosis and Craneo's adverts --
   -----------------------------------
 
-   -- Craneo's arcade machine screens
   ADVCR1 = { t="ADVCR1", f="CEIL4_3"},
   ADVCR2 = { t="ADVCR2", f="CEIL4_3"},
   ADVCR3 = { t="ADVCR3", f="CEIL4_3"},
@@ -1348,6 +1347,29 @@ ARMAETUS_MATERIALS = {
   ADVDE3 = { t="ADVDE3", f="CEIL4_3"},
   ADVDE4 = { t="ADVDE4", f="CEIL4_3"},
   ADVDE5 = { t="ADVDE5", f="CEIL4_3"},
+
+
+  ----------------------------------------------
+  -- Demiosis decorative tags/bloody writings --
+  ----------------------------------------------
+
+  TAG1 = { t="TAG1", f="CEIL4_3"},
+  TAG2 = { t="TAG2", f="CEIL4_3"},
+  TAG3 = { t="TAG3", f="CEIL4_3"},
+  TAG4 = { t="TAG4", f="CEIL4_3"},
+  TAG5 = { t="TAG5", f="CEIL4_3"},
+  TAG6 = { t="TAG6", f="CEIL4_3"},
+  TAG7 = { t="TAG7", f="CEIL4_3"},
+  TAG8 = { t="TAG8", f="CEIL4_3"},
+  TAG9 = { t="TAG9", f="CEIL4_3"},
+  TAG10 = { t="TAG10", f="CEIL4_3"},
+  TAG11 = { t="TAG11", f="CEIL4_3"},
+  TAG12 = { t="TAG12", f="CEIL4_3"},
+  TAGS1 = { t="TAGS1", f="CEIL4_3"},
+  TAGS2 = { t="TAGS2", f="CEIL4_3"},
+  TAGS3 = { t="TAGS3", f="CEIL4_3"},
+  TAGS4 = { t="TAGS4", f="CEIL4_3"},
+
 
   ------------------------
   -- Composite textures --
