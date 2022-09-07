@@ -11323,6 +11323,93 @@ GROW_3x_I_LIQUID =
   },
 },
 
+GROW_3x_I_BULGE =
+{
+  prob = 20,
+  skip_prob = 80,
+
+  structure =
+  {
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "x....x","x/11%x",
+    "......","/A11A%",
+    "......","AA11AA",
+    "......","AA11AA",
+    "......","%A11A/",
+    "x....x","x%11/x",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "xx11xx","xx11xx"
+  },
+
+  diagonals =
+  {
+    ".A","A.",
+    ".A","A.",
+    ".A","A.",
+    ".A","A.",
+  }
+},
+
+GROW_3x_I_BULGE_LIQUID =
+{
+  prob = 15,
+  skip_prob = 80,
+
+  structure =
+  {
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "x....x","x/11%x",
+    "......","/1111%",
+    "......","11~~11",
+    "......","11~~11",
+    "......","%1111/",
+    "x....x","x%11/x",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "xx11xx","xx11xx"
+  },
+
+  diagonals =
+  {
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+  }
+},
+
+GROW_3x_I_BULGE_ALT =
+{
+  prob = 20,
+  skip_prob = 80,
+
+  structure =
+  {
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "x....x","x/11%x",
+    "......","/1111%",
+    "......","AAAAAA",
+    "......","AAAAAA",
+    "......","%1111/",
+    "x....x","x%11/x",
+    "xx..xx","xx11xx",
+    "xx..xx","xx11xx",
+    "xx11xx","xx11xx"
+  },
+
+  diagonals =
+  {
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+    ".1","1.",
+  }
+},
+
 GROW_3x_J =
 {
   prob = 40,
