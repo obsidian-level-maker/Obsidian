@@ -204,7 +204,7 @@ PREFABS.Decor_advert_board1 =
   tex_CRGNRCK2 =
   {
 
-    RGNRCK2 = 50,
+    CRGNRCK2 = 50,
     ADVCR1 = 50,
     ADVCR2 = 50,
     ADVCR4 = 50,
@@ -230,7 +230,7 @@ PREFABS.Decor_advert_board2 =
   tex_SHAWN1 =
   {
 
-    RGNRCK2 = 50,
+    SHAWN1 = 50,
     ADVCR1 = 50,
     ADVCR2 = 50,
     ADVCR4 = 50,
