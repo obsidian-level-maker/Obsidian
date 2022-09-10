@@ -1425,6 +1425,13 @@ skiprest:
 
         Cookie_ParseArguments();
 
+        if (argv::Find('u', "update") >= 0) {
+            ob_set_config(update_kv.key, update_kv.value);
+            Cookie_Save(config_file);
+            Main::Detail::Shutdown(false);
+            return 0;
+        }
+
         Main_SetSeed();
         if (!Build_Cool_Shit()) {
             fmt::print(stderr, "FAILED!\n");
