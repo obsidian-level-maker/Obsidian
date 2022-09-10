@@ -61,6 +61,13 @@ std::filesystem::path theme_file;
 std::filesystem::path logging_file;
 std::filesystem::path reference_file;
 
+struct UpdateKv {
+    std::string key;
+    std::string value;
+};
+
+UpdateKv update_kv;
+
 std::string OBSIDIAN_TITLE = "OBSIDIAN Level Maker";
 std::string OBSIDIAN_CODE_NAME = "Unstable";
 
@@ -255,32 +262,34 @@ static void ShowInfo() {
         "Usage: Obsidian [options...] [key=value...]\n"
         "\n"
         "Available options:\n"
-        "     --home     <dir>      Home directory\n"
-        "     --install  <dir>      Installation directory\n"
+        "     --home     <dir>       Home directory\n"
+        "     --install  <dir>       Installation directory\n"
         "\n"
-        "     --config   <file>     Config file for GUI\n"
-        "     --options  <file>     Options file for GUI\n"
-        "     --log      <file>     Log file to create\n"
-        "     --ziplog              Zip log file after completion\n"
+        "     --config   <file>      Config file for GUI\n"
+        "     --options  <file>      Options file for GUI\n"
+        "     --log      <file>      Log file to create\n"
+        "     --ziplog               Zip log file after completion\n"
         "\n"
-        "  -b --batch    <output>   Batch mode (no GUI)\n"
-        "  -a --addon    <file>...  Addon(s) to use\n"
-        "  -l --load     <file>     Load settings from a file\n"
-        "  -k --keep                Keep SEED from loaded settings\n"
+        "  -b --batch    <output>    Batch mode (no GUI)\n"
+        "  -a --addon    <file>...   Addon(s) to use\n"
+        "  -l --load     <file>      Load settings from a file\n"
+        "  -k --keep                 Keep SEED from loaded settings\n"
         "\n"
-        "     --randomize-all       Randomize all options\n"
-        "     --randomize-arch      Randomize architecture settings\n"
-        "     --randomize-combat    Randomize combat-related settings\n"
-        "     --randomize-pickups   Randomize item/weapon settings\n"
-        "     --randomize-other     Randomize other settings\n"
+        "     --randomize-all        Randomize all options\n"
+        "     --randomize-arch       Randomize architecture settings\n"
+        "     --randomize-combat     Randomize combat-related settings\n"
+        "     --randomize-pickups    Randomize item/weapon settings\n"
+        "     --randomize-other      Randomize other settings\n"
         "\n"
-        "  -3 --pk3                 Compress output file to PK3\n"
-        "  -z --zip                 Compress output file to ZIP\n"
+        "  -3 --pk3                  Compress output file to PK3\n"
+        "  -z --zip                  Compress output file to ZIP\n"
         "\n"
-        "  -d --debug               Enable debugging\n"
-        "  -v --verbose             Print log messages to stdout\n"
-        "  -h --help                Show this help message\n"
-        "  -p --printref            Print reference of all keys and values to REFERENCE.txt\n"
+        "  -d --debug                Enable debugging\n"
+        "  -v --verbose              Print log messages to stdout\n"
+        "  -h --help                 Show this help message\n"
+        "  -p --printref             Print reference of all keys and values to REFERENCE.txt\n"
+        "     --printref-json        Print reference of all keys and values in JSON format\n"
+        "  -u --update <key> <value> Set a key in the config file\n"
         "\n");
 
     fmt::print(
@@ -1210,6 +1219,20 @@ restart:;
 #endif
     }
 
+    if (int update_arg = argv::Find('u', "update"); update_arg >= 0) {
+        batch_mode = true;
+        if (update_arg + 2 >= argv::list.size() || argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2)) {
+            fmt::print(stderr, "OBSIDIAN ERROR: missing key and/or value for --update\n");
+            exit(EXIT_FAILURE);
+        }
+        update_kv.key = argv::list[update_arg + 1];
+        update_kv.value = argv::list[update_arg + 2];
+    }
+
+    if (argv::Find(0, "printref-json") >= 0) {
+        batch_mode = true;
+    }
+
     if (argv::Find('z', "zip") >= 0) {
         zip_output = 1;
     }
@@ -1272,8 +1295,9 @@ skiprest:
 
     LogInit(logging_file);
 
-    if (argv::Find('p', "printref") >= 0)
+    if (argv::Find('p', "printref") >= 0) {
         RefInit(reference_file);
+    }
 
     // accept -t and --terminal for backwards compatibility
     if (argv::Find('v', "verbose") >= 0 || argv::Find('t', "terminal") >= 0) {
@@ -1385,6 +1409,12 @@ skiprest:
             return 0;       
         }
 
+        if (argv::Find(0, "printref-json") >= 0) {
+            ob_print_reference_json();
+            Main::Detail::Shutdown(false);
+            return 0;
+        }
+
         // batch mode never reads/writes the normal config file.
         // but we can load settings from a explicitly specified file...
         if (!load_file.empty()) {
@@ -1394,6 +1424,13 @@ skiprest:
         }
 
         Cookie_ParseArguments();
+
+        if (argv::Find('u', "update") >= 0) {
+            ob_set_config(update_kv.key, update_kv.value);
+            Cookie_Save(config_file);
+            Main::Detail::Shutdown(false);
+            return 0;
+        }
 
         Main_SetSeed();
         if (!Build_Cool_Shit()) {

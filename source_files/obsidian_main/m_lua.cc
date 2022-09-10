@@ -1861,6 +1861,17 @@ void ob_print_reference() {
 #endif
 }
 
+void ob_print_reference_json() {
+    if (!Script_CallFunc("ob_print_reference_json", 1)) {
+        fmt::print("ob_print_reference_json: Error printing json reference!\n");
+    }
+#ifdef WIN32
+    std::cout << '\n' << "Close window when finished...";
+    do {
+    } while (true);
+#endif
+}
+
 void ob_invoke_hook(std::string hookname) {
     std::array<std::string, 2> params = {hookname, ""};
 
