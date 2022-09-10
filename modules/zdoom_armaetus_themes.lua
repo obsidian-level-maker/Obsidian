@@ -1564,6 +1564,9 @@ ARMAETUS_ROOM_THEMES =
       GOTH47 = 15,
       GOTH48 = 15,
       GOTH49 = 15,
+      MMT208 = 15,
+      MMT209 = 15,
+      MMT210 = 15,
 
       --
       BRIC9GRN = 15,
@@ -2406,7 +2409,11 @@ ARMAETUS_ROOM_THEMES =
       WOOD15 = 7,
       WOOD16 = 7,
       WOOD17 = 7,
-      WOOD18 = 7
+      WOOD18 = 7,
+
+      MMT208 = 10,
+      MMT209 = 10,
+      MMT210 = 10,
     },
 
     floors =
@@ -2872,6 +2879,10 @@ ARMAETUS_ROOM_THEMES =
       OBTBSB5B = 10,
 
       OBTSBGRE = 8
+
+      MMT208 = 10,
+      MMT209 = 10,
+      MMT210 = 10,
     },
 
     floors =
@@ -3489,6 +3500,10 @@ ARMAETUS_ROOM_THEMES =
       G8_BRNW1 = 40,
       G8_BRNW2 = 40,
       G8_BRNW3 = 40,
+
+      MMT208 = 40,
+      MMT209 = 40,
+      MMT210 = 40
     },
 
     floors =
@@ -6061,7 +6076,9 @@ ARMAETUS_THEMES =
       MM205   = 15,
       MM206   = 10,
       MM207   = 10,
-      MM208   = 3,
+      MMT208  = 10,
+      MMT209  = 10,
+      MMT210  = 10,
 
       HELMET1 = 20,
       HELMET2 = 20,
@@ -6236,7 +6253,9 @@ ARMAETUS_THEMES =
       MM205 = 20,
       MM206 = 10,
       MM207 = 10,
-      MM208 = 10,
+      MMT208  = 10,
+      MMT209  = 10,
+      MMT210  = 10,
 
       REDMARB1 = 15,
       REDMARB2 = 15,

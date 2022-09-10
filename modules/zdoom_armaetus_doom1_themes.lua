@@ -1943,7 +1943,9 @@ ARMAETUS_DOOM1_THEMES =
       MM205   = 15,
       MM206   = 10,
       MM207   = 10,
-      MM208   = 5,
+      MMT208  = 10,
+      MMT209  = 10,
+      MMT210  = 10,
 
       HELMET1 = 20,
       HELMET2 = 20,
@@ -2093,7 +2095,9 @@ ARMAETUS_DOOM1_THEMES =
       MM205   = 15,
       MM206   = 10,
       MM207   = 10,
-      MM208   = 3,
+      MMT208  = 10,
+      MMT209  = 10,
+      MMT210  = 10,
 
       CATACMB3 = 10,
       CATACMB6 = 10,
