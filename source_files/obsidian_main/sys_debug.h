@@ -31,8 +31,11 @@
 extern bool terminal;
 extern bool debugging;
 extern std::fstream log_file;
+extern std::fstream ref_file;
 bool LogInit(const std::filesystem::path &filename);  // NULL for none
 void LogClose(void);
+bool RefInit(const std::filesystem::path &filename);  // NULL for none
+void RefClose(void);
 
 void LogEnableDebug(bool enable);
 void LogEnableTerminal(bool enable);
@@ -45,6 +48,10 @@ void LogPrintf(std::string_view str, Args &&...args) {
     if (terminal) {
         fmt::print(str, args...);
     }
+}
+template <typename... Args>
+void RefPrintf(std::string_view str, Args &&...args) {
+    fmt::print(ref_file, str, args...);
 }
 template <typename... Args>
 void DebugPrintf(std::string_view format, Args &&...args) {

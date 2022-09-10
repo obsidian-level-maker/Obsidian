@@ -167,7 +167,7 @@ QUAKE.MONSTERS =
     attack = "missile",
   },
 
-  Vore =
+  vore =
   {
     id = "monster_shalrath",
     r = 32,
@@ -181,7 +181,7 @@ QUAKE.MONSTERS =
     density  =  0.2,
   },
 
-  Shambler =
+  shambler =
   {
     id = "monster_shambler",
     r = 32,

@@ -105,6 +105,26 @@ int gui_console_print(lua_State *L) {
     return 0;
 }
 
+// LUA: ref_print(str)
+//
+int gui_ref_print(lua_State *L) {
+    int nargs = lua_gettop(L);
+
+    if (nargs >= 1) {
+        const char *res = luaL_checkstring(L, 1);
+        SYS_ASSERT(res);
+
+        // strip off colorizations
+        if (res[0] == '@' && isdigit(res[1])) {
+            res += 2;
+        }
+
+        RefPrintf("{}", res);
+    }
+
+    return 0;
+}
+
 // LUA: raw_log_print(str)
 //
 int gui_raw_log_print(lua_State *L) {
@@ -1250,6 +1270,7 @@ static const luaL_Reg gui_script_funcs[] = {
     {"format_prefix", gui_format_prefix},
 
     {"console_print", gui_console_print},
+    {"ref_print", gui_ref_print},
     {"raw_log_print", gui_raw_log_print},
     {"raw_debug_print", gui_raw_debug_print},
 
@@ -1829,16 +1850,9 @@ std::string ob_datetime_string() {
     return res;
 }
 
-void ob_list_keys() {
-#ifdef WIN32
-        if (AllocConsole()) {
-            freopen("CONOUT$", "r", stdin);
-            freopen("CONOUT$", "w", stdout);
-            freopen("CONOUT$", "w", stderr);
-        }
-#endif
-        if (!Script_CallFunc("ob_list_keys", 1)) {
-            fmt::print("ob_list_keys: Error listing keys!\n");
+void ob_print_reference() {
+        if (!Script_CallFunc("ob_print_reference", 1)) {
+            fmt::print("ob_print_reference: Error creating REFERENCE.txt!\n");
         }
 #ifdef WIN32
         std::cout << '\n' << "Close window when finished...";

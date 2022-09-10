@@ -1755,34 +1755,123 @@ function ob_clean_up()
   collectgarbage("collect")
 end
 
-function ob_list_keys()
-  local option_names = {}
+function ob_print_reference()
+  local option_refs = {}
   for _,v in pairs(OB_MODULES) do
-      --gui.console_print(table.tostr(v))
     for _,vv in pairs(v.options) do
-      gui.console_print("KEY: " .. vv.name)
-      gui.raw_log_print("KEY: " .. vv.name)
-      if not v.game then
-        gui.console_print("\nGAME: ALL\n\n")
-        gui.raw_log_print("\nGAME: ALL\n\n")
-      else
-        if type(v.game) == "string" then
-          gui.console_print("\nGAME: " .. v.game .. "\n\n")
-          gui.raw_log_print("\nGAME: " .. v.game .. "\n\n")
+      if not string.match(vv.name, "header_") then
+        option_refs[vv.name] = {}
+        if not vv.tooltip then
+          option_refs[vv.name].tooltip = "No help yet written for this option!"
         else
-          gui.console_print("\nGAME: ")
-          gui.raw_log_print("\nGAME: ")
-          for game,_ in pairs(v.game) do
-            gui.console_print(game .. " ")
-            gui.raw_log_print(game .. " ")
+          option_refs[vv.name].tooltip = gui.gettext(vv.tooltip)
+        end
+        if vv.randomize_group then option_refs[vv.name].random_group = vv.randomize_group end
+        if not v.game then
+          option_refs[vv.name].game = {}
+          table.add_unique(option_refs[vv.name].game, "ALL")
+        else
+          if type(v.game) == "string" then
+            option_refs[vv.name].game = {}
+            table.add_unique(option_refs[vv.name].game, v.game)
+          else
+            option_refs[vv.name].game = {}
+            for game,_ in pairs(v.game) do
+              table.add_unique(option_refs[vv.name].game, game)
+            end
           end
-          gui.console_print("\n\n")
-          gui.raw_log_print("\n\n")
+        end
+        if not v.engine then
+          option_refs[vv.name].engine = {}
+          table.add_unique(option_refs[vv.name].engine, "ALL")
+        else
+          if type(v.engine) == "string" then
+            option_refs[vv.name].engine = {}
+            table.add_unique(option_refs[vv.name].engine, v.engine)
+          else
+            option_refs[vv.name].engine = {}
+            for engine,_ in pairs(v.engine) do
+              table.add_unique(option_refs[vv.name].engine, engine)
+            end
+          end
+        end
+        if not vv.valuator then
+          option_refs[vv.name].choices = {}
+          for num,choice in pairs(vv.choices) do
+            if num % 2 == 1 then
+              table.add_unique(option_refs[vv.name].choices, choice)
+            end
+          end
+        else
+          if vv.valuator == "slider" then
+            option_refs[vv.name].slider = {}
+            option_refs[vv.name].slider.min = vv.min
+            option_refs[vv.name].slider.max = vv.max
+            option_refs[vv.name].slider.default = vv.default
+            if vv.nan then
+              option_refs[vv.name].slider.nan = vv.nan
+            end
+          else
+            option_refs[vv.name].button = {}
+            option_refs[vv.name].button.default = vv.default
+          end
         end
       end
     end
   end
-  gui.console_print("\nA printout of this list can be found in LOGS.txt\n")
+  local sorted_entries = table.keys_sorted(option_refs)
+  for _,option in ipairs(sorted_entries) do
+    gui.console_print("[ " .. option .. " ]\n")
+    gui.ref_print("[ " .. option .. " ]\n")
+    gui.console_print(option_refs[option].tooltip .. "\n")
+    gui.ref_print(option_refs[option].tooltip .. "\n")
+    gui.console_print("ENGINE: ")
+    gui.ref_print("ENGINE: ")
+    for _,engine in pairs(option_refs[option].engine) do
+      gui.console_print(engine .. " ")
+      gui.ref_print(engine .. " ")
+    end
+    gui.console_print("\n")
+    gui.ref_print("\n")
+    gui.console_print("GAME: ")
+    gui.ref_print("GAME: ")
+    for _,game in pairs(option_refs[option].game) do
+      gui.console_print(game .. " ")
+      gui.ref_print(game .. " ")
+    end
+    if (option_refs[option].slider) then
+      gui.console_print("\nVALUES: " .. option_refs[option].slider.min .. "-" .. option_refs[option].slider.max)
+      gui.ref_print("\nVALUES: " .. option_refs[option].slider.min .. "-" .. option_refs[option].slider.max)
+      if option_refs[option].slider.nan then
+        gui.console_print("," .. option_refs[option].slider.nan)
+        gui.ref_print("," .. option_refs[option].slider.nan)
+      end
+      gui.console_print("\nDEFAULT: " .. option_refs[option].slider.default)
+      gui.ref_print("\nDEFAULT: " .. option_refs[option].slider.default)
+    elseif (option_refs[option].button) then
+      gui.console_print("\nVALUES: " .. "0/1\nDEFAULT: " .. option_refs[option].button.default)
+      gui.ref_print("\nVALUES: " .. "0/1\nDEFAULT: " .. option_refs[option].button.default)
+    else
+      gui.console_print("\nVALUES: " )
+      gui.ref_print("\nVALUES: " )
+      for num,choice in ipairs(option_refs[option].choices) do
+        if num ~= #option_refs[option].choices then
+          gui.console_print(choice .. ",")
+          gui.ref_print(choice .. ",")
+        else
+          gui.console_print(choice)
+          gui.ref_print(choice)
+        end
+      end
+    end
+    if (option_refs[option].random_group) then
+      gui.console_print("\nRANDOMIZE_GROUP: " .. option_refs[option].random_group)
+      gui.ref_print("\nRANDOMIZE_GROUP: " .. option_refs[option].random_group)
+    end
+    gui.console_print("\n\n")
+    gui.ref_print("\n\n")
+  end
+  gui.console_print("\nA copy of this list can be found in REFERENCE.txt\n")
 end
 
 function ob_build_cool_shit()
