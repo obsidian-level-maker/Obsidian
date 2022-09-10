@@ -59,6 +59,7 @@ std::filesystem::path config_file;
 std::filesystem::path options_file;
 std::filesystem::path theme_file;
 std::filesystem::path logging_file;
+std::filesystem::path reference_file;
 
 std::string OBSIDIAN_TITLE = "OBSIDIAN Level Maker";
 std::string OBSIDIAN_CODE_NAME = "Unstable";
@@ -279,8 +280,7 @@ static void ShowInfo() {
         "  -d --debug               Enable debugging\n"
         "  -v --verbose             Print log messages to stdout\n"
         "  -h --help                Show this help message\n"
-        "     --keys                List available keys\n"
-        //"     --values    <key>     List possible values for <key>\n"
+        "  -p --printref            Print reference of all keys and values to REFERENCE.txt\n"
         "\n");
 
     fmt::print(
@@ -502,6 +502,18 @@ void Determine_LoggingFile() {
     } else {
         logging_file = std::filesystem::current_path();
         logging_file /= LOG_FILENAME;
+    }
+}
+
+void Determine_ReferenceFile() {
+    if (argv::Find('p', "printref") >= 0) {
+        if (!batch_mode) {
+            reference_file /= home_dir;
+            reference_file /= REF_FILENAME;
+        } else {
+            reference_file = std::filesystem::current_path();
+            reference_file /= REF_FILENAME;
+        }
     }
 }
 
@@ -1187,7 +1199,7 @@ restart:;
 #endif
     }
 
-    if (argv::Find(0, "keys") >= 0) {
+    if (argv::Find('p', "printref") >= 0) {
         batch_mode = true;
 #ifdef WIN32
         if (AllocConsole()) {
@@ -1256,8 +1268,12 @@ skiprest:
     Determine_OptionsFile();
     Determine_ThemeFile();
     Determine_LoggingFile();
+    Determine_ReferenceFile();
 
     LogInit(logging_file);
+
+    if (argv::Find('p', "printref") >= 0)
+        RefInit(reference_file);
 
     // accept -t and --terminal for backwards compatibility
     if (argv::Find('v', "verbose") >= 0 || argv::Find('t', "terminal") >= 0) {
@@ -1356,8 +1372,9 @@ skiprest:
 
         Module_Defaults();
 
-        if (argv::Find(0, "keys") >= 0) {
-            ob_list_keys();
+        if (argv::Find('p', "printref") >= 0) {
+            ob_print_reference();
+            RefClose();
 #ifdef WIN32
             std::cout << '\n' << "Close window when finished...";
 
