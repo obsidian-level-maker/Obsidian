@@ -2878,11 +2878,11 @@ ARMAETUS_ROOM_THEMES =
       OBTBSB4B = 10,
       OBTBSB5B = 10,
 
-      OBTSBGRE = 8
+      OBTSBGRE = 8,
 
       MMT208 = 10,
       MMT209 = 10,
-      MMT210 = 10,
+      MMT210 = 10
     },
 
     floors =
