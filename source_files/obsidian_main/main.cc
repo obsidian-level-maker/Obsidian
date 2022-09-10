@@ -279,6 +279,8 @@ static void ShowInfo() {
         "  -d --debug               Enable debugging\n"
         "  -v --verbose             Print log messages to stdout\n"
         "  -h --help                Show this help message\n"
+        "     --keys                List available keys\n"
+        //"     --values    <key>     List possible values for <key>\n"
         "\n");
 
     fmt::print(
@@ -1185,6 +1187,17 @@ restart:;
 #endif
     }
 
+    if (argv::Find(0, "keys") >= 0) {
+        batch_mode = true;
+#ifdef WIN32
+        if (AllocConsole()) {
+            freopen("CONOUT$", "r", stdin);
+            freopen("CONOUT$", "w", stdout);
+            freopen("CONOUT$", "w", stderr);
+        }
+#endif
+    }
+
     if (argv::Find('z', "zip") >= 0) {
         zip_output = 1;
     }
@@ -1342,6 +1355,18 @@ skiprest:
 #endif
 
         Module_Defaults();
+
+        if (argv::Find(0, "keys") >= 0) {
+            ob_list_keys();
+#ifdef WIN32
+            std::cout << '\n' << "Close window when finished...";
+
+            do {
+            } while (true);
+#endif
+            Main::Detail::Shutdown(false);
+            return 0;       
+        }
 
         // batch mode never reads/writes the normal config file.
         // but we can load settings from a explicitly specified file...

@@ -1755,7 +1755,35 @@ function ob_clean_up()
   collectgarbage("collect")
 end
 
-
+function ob_list_keys()
+  local option_names = {}
+  for _,v in pairs(OB_MODULES) do
+      --gui.console_print(table.tostr(v))
+    for _,vv in pairs(v.options) do
+      gui.console_print("KEY: " .. vv.name)
+      gui.raw_log_print("KEY: " .. vv.name)
+      if not v.game then
+        gui.console_print("\nGAME: ALL\n\n")
+        gui.raw_log_print("\nGAME: ALL\n\n")
+      else
+        if type(v.game) == "string" then
+          gui.console_print("\nGAME: " .. v.game .. "\n\n")
+          gui.raw_log_print("\nGAME: " .. v.game .. "\n\n")
+        else
+          gui.console_print("\nGAME: ")
+          gui.raw_log_print("\nGAME: ")
+          for game,_ in pairs(v.game) do
+            gui.console_print(game .. " ")
+            gui.raw_log_print(game .. " ")
+          end
+          gui.console_print("\n\n")
+          gui.raw_log_print("\n\n")
+        end
+      end
+    end
+  end
+  gui.console_print("\nA printout of this list can be found in LOGS.txt\n")
+end
 
 function ob_build_cool_shit()
   assert(OB_CONFIG)
