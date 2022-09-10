@@ -918,6 +918,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
     // Doom
     if (StringCaseCmp(current_engine, "vanilla") == 0) {
         build_reject = StringToInt(ob_get_param("bool_build_reject"));
+        build_nodes = true;
         return true;
     }
 

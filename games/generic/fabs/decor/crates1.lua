@@ -39,14 +39,6 @@ PREFABS.Crate_small_generic_hell =
   }
 }
 
-PREFABS.Crate_small_alt =
-{
-  template   = "Crate_small",
-
-  tex__CRATE = "_CRATE2",
-  flat__CRATE = "_CRATE2",
-}
-
 -- a tall narrow crate
 
 PREFABS.Crate_tall =
@@ -65,14 +57,6 @@ PREFABS.Crate_tall =
   bound_z1 = 0,
 
   sink_mode = "never",
-}
-
-PREFABS.Crate_tall_alt =
-{
-  template = "Crate_tall",
-
-  tex__CRATE = "_CRATE2",
-  flat__CRATE = "_CRATE2",
 }
 
 -- a medium-size crate (96x96)
@@ -115,14 +99,6 @@ PREFABS.Crate_group_medium =
   sink_mode = "never",
 }
 
-PREFABS.Crate_group_medium_alt =
-{
-  template = "Crate_group_medium",
-
-  tex__CRATE = "_CRATE2",
-  flat__CRATE = "_CRATE2",
-}
-
 -- Loosely arranged crates
 
 PREFABS.Crate_group_mixed =
@@ -161,6 +137,59 @@ PREFABS.Crate_medium_generic_hell =
 
   where  = "point",
   size   = 72,
+
+  bound_z1 = 0,
+
+  sink_mode = "never",
+}
+
+PREFABS.Crate_small_2 =
+{
+  file   = "decor/crates1.wad",
+  map    = "MAP08",
+  env    = "!cave",
+  theme = "!hell",
+
+  prob   = 3500,
+
+  where  = "point",
+  size   = 64,
+
+  bound_z1 = 0,
+
+  sink_mode = "never",
+}
+
+PREFABS.Crate_tall_2 =
+{
+  file   = "decor/crates1.wad",
+  map    = "MAP09",
+  env    = "!cave",
+  theme = "!hell",
+
+  prob   = 3500,
+
+  where  = "point",
+  size   = 64,
+  height = 160,
+
+  bound_z1 = 0,
+
+  sink_mode = "never",
+}
+
+PREFABS.Crate_group_medium_2 =
+{
+  file   = "decor/crates1.wad",
+  map    = "MAP10",
+  env    = "!cave",
+  theme = "!hell",
+
+  prob   = 3500,
+
+  where  = "point",
+  size   = 128,
+  height = 160,
 
   bound_z1 = 0,
 

@@ -1060,19 +1060,24 @@ config *get_config(std::filesystem::path filename) {
     answer->secret_themes = SLUMP_FALSE;
     answer->lock_themes = SLUMP_FALSE;
     answer->major_nukage = StringToInt(ob_get_param("bool_major_nukage_slump")) ? SLUMP_TRUE : SLUMP_FALSE;
-    std::string monvariety = ob_get_param("slump_mons");
-    if (StringCaseCmp(monvariety, "normal") == 0) {
-        answer->required_monster_bits = 0;
-        answer->forbidden_monster_bits = SPECIAL;
-    } else if (StringCaseCmp(monvariety, "shooters") == 0) {
-        answer->required_monster_bits = SHOOTS;
-        answer->forbidden_monster_bits = SPECIAL;
-    } else if (StringCaseCmp(monvariety, "noflyzone") == 0) {
-        answer->required_monster_bits = 0;
-        answer->forbidden_monster_bits = FLIES + SPECIAL;
+    if (ob_mod_enabled("slump_all_nazis")) {
+      answer->required_monster_bits = SPECIAL;
+      answer->forbidden_monster_bits = 0;
     } else {
-        answer->required_monster_bits = SPECIAL;  // All Nazis
-        answer->forbidden_monster_bits = 0;
+      std::string monvariety = ob_get_param("slump_mons");
+      if (StringCaseCmp(monvariety, "normal") == 0) {
+          answer->required_monster_bits = 0;
+          answer->forbidden_monster_bits = SPECIAL;
+      } else if (StringCaseCmp(monvariety, "shooters") == 0) {
+          answer->required_monster_bits = SHOOTS;
+          answer->forbidden_monster_bits = SPECIAL;
+      } else if (StringCaseCmp(monvariety, "noflyzone") == 0) {
+          answer->required_monster_bits = 0;
+          answer->forbidden_monster_bits = FLIES + SPECIAL;
+      } else { // Fallback
+          answer->required_monster_bits = 0;
+          answer->forbidden_monster_bits = SPECIAL;
+      }
     }
     std::string levelsize = ob_get_param("float_minrooms_slump");
     if (StringCaseCmp(levelsize, "Mix It Up") == 0) {
@@ -1102,17 +1107,17 @@ config *get_config(std::filesystem::path filename) {
         if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0) {
             answer->levelcount = 11;
         } else {
-            answer->levelcount = 9;
+            answer->levelcount = 8;
         }
     } else {
         if (StringCaseCmp(current_game, "doom2") == 0 || StringCaseCmp(current_game, "plutonia") == 0 || StringCaseCmp(current_game, "tnt") == 0) {
             answer->levelcount = 32;
         } else if (StringCaseCmp(current_game, "doom1") == 0) {
-            answer->levelcount = 27;
+            answer->levelcount = 24;
         } else if (StringCaseCmp(current_game, "ultdoom") == 0) {
-            answer->levelcount = 36;
+            answer->levelcount = 32;
         } else {
-            answer->levelcount = 45;
+            answer->levelcount = 32; // Fallback but it shouldn't get here until we add other games to SLUMP
         }
     }
     answer->force_arena = SLUMP_TRUE;
@@ -7854,8 +7859,10 @@ genus *timely_monster_ex(haa *haa,config *c,int *levels,boolean biggest,
                         &monster_size_health,&monster_size_ammo,levels))
     return NULL;   /* Not enough excess health in any level */
 
-  /* Find a monster of that size */
-  return proper_monster(monster_size_health,monster_size_ammo,*levels,haa,mno,
+  if (c->required_monster_bits == SPECIAL) // Just return a Nazi
+    return find_monster(c,ID_NAZI);
+  else
+    return proper_monster(monster_size_health,monster_size_ammo,*levels,haa,mno,
                         c->required_monster_bits+req,
                         c->forbidden_monster_bits,
                         biggest,c);

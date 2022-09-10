@@ -1046,6 +1046,32 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
     gui.wad_insert_file(dir .. "OBVNMCH5.png", "OBVNMCH5")
     gui.wad_insert_file(dir .. "CRATJOKE.png", "CRATJOKE")
     gui.wad_insert_file(dir .. "G7DODSLS.png", "G7DODSLS")
+    gui.wad_insert_file(dir .. "ADVCR1.png", "ADVCR1")
+    gui.wad_insert_file(dir .. "ADVCR2.png", "ADVCR2")
+    gui.wad_insert_file(dir .. "ADVCR3.png", "ADVCR3")
+    gui.wad_insert_file(dir .. "ADVCR4.png", "ADVCR4")
+    gui.wad_insert_file(dir .. "ADVCR5.png", "ADVCR5")
+    gui.wad_insert_file(dir .. "ADVDE1.png", "ADVDE1")
+    gui.wad_insert_file(dir .. "ADVDE2.png", "ADVDE2")
+    gui.wad_insert_file(dir .. "ADVDE3.png", "ADVDE3")
+    gui.wad_insert_file(dir .. "ADVDE4.png", "ADVDE4")
+    gui.wad_insert_file(dir .. "ADVDE5.png", "ADVDE5")
+    gui.wad_insert_file(dir .. "TAG1.png", "TAG1")
+    gui.wad_insert_file(dir .. "TAG2.png", "TAG2")
+    gui.wad_insert_file(dir .. "TAG3.png", "TAG3")
+    gui.wad_insert_file(dir .. "TAG4.png", "TAG4")
+    gui.wad_insert_file(dir .. "TAG5.png", "TAG5")
+    gui.wad_insert_file(dir .. "TAG6.png", "TAG6")
+    gui.wad_insert_file(dir .. "TAG7.png", "TAG7")
+    gui.wad_insert_file(dir .. "TAG8.png", "TAG8")
+    gui.wad_insert_file(dir .. "TAG9.png", "TAG9")
+    gui.wad_insert_file(dir .. "TAG10.png", "TAG10")
+    gui.wad_insert_file(dir .. "TAG11.png", "TAG11")
+    gui.wad_insert_file(dir .. "TAG12.png", "TAG12")
+    gui.wad_insert_file(dir .. "TAGS1.png", "TAGS1")
+    gui.wad_insert_file(dir .. "TAGS2.png", "TAGS2")
+    gui.wad_insert_file(dir .. "TAGS3.png", "TAGS3")
+    gui.wad_insert_file(dir .. "TAGS4.png", "TAGS4")
     gui.wad_add_binary_lump("HI_END",{})
   end
 
@@ -1063,6 +1089,10 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
   --if PARAM.custom_decor ~= "no" then
     SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, ORP_ENTITIES.DECORATE)
     wad_file = "games/doom/data/blood_pack.wad"
+    gui.wad_merge_sections(wad_file)
+    wad_file = "games/doom/data/burning_top.wad"
+    gui.wad_merge_sections(wad_file)
+    wad_file = "games/doom/data/burning_debris.wad"
     gui.wad_merge_sections(wad_file)
   --end
 end

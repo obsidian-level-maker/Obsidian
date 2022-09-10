@@ -621,11 +621,11 @@ function ZDOOM_SPECIALS.do_special_stuff()
 
     -- resolve proper episodic sky texture assignments
     if map_num <= 11 then
-      sky_tex = "SKY1"
+      sky_tex = "RSKY1"
     elseif map_num > 11 and map_num <= 20 then
-      sky_tex = "SKY2"
+      sky_tex = "RSKY2"
     elseif map_num > 20 then
-      sky_tex = "SKY3"
+      sky_tex = "RSKY3"
     end
 
     if PARAM.fireblu_mode == "enable" then
