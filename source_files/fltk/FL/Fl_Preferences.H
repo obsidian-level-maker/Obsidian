@@ -18,10 +18,10 @@
    Fl_Preferences class . */
 
 #ifndef Fl_Preferences_H
-#  define Fl_Preferences_H
+#define Fl_Preferences_H
 
-#  include <stdio.h>
-#  include "Fl_Export.H"
+#include <stdio.h>
+#include "Fl_Export.H"
 
 /**
  \brief Fl_Preferences store user settings between application starts.
@@ -122,20 +122,20 @@ public:
      Define the scope of the preferences.
    */
   enum Root {
-    UNKNOWN_ROOT_TYPE = -1,            ///< Returned if storage could not be determined.
-    SYSTEM            =  0,            ///< Preferences are used system-wide. Deprecated, see SYSTEM_L
-    USER,                              ///< Preferences apply only to the current user. Deprecated, see USER_L
-    MEMORY,                            ///< Returned if querying memory mapped preferences
-    ROOT_MASK     = 0x00FF,            ///< Mask for the values above
-    CORE          = 0x0100,            ///< OR'd by FLTK to read and write core library preferences and options
-    C_LOCALE      = 0x1000,            ///< This flag should always be set, it makes sure that floating point
-                                       ///< values are written correctly independently of the current locale
-    SYSTEM_L      = SYSTEM | C_LOCALE, ///< Preferences are used system-wide, locale independent
-    USER_L        = USER | C_LOCALE,   ///< Preferences apply only to the current user, locale independent
-    CORE_SYSTEM_L = CORE | SYSTEM_L,   ///< Same as CORE | SYSTEM | C_LOCALE
-    CORE_USER_L   = CORE | USER_L,     ///< Same as CORE | USER | C_LOCALE
-    CORE_SYSTEM   = CORE | SYSTEM,     ///< Deprecated, same as CORE | SYSTEM. Use CORE_SYSTEM_L instead.
-    CORE_USER     = CORE | USER,       ///< Deprecated, same as CORE | USER. Use CORE_USER_L instead.
+    UNKNOWN_ROOT_TYPE = -1, ///< Returned if storage could not be determined.
+    SYSTEM = 0,             ///< Preferences are used system-wide. Deprecated, see SYSTEM_L
+    USER,                   ///< Preferences apply only to the current user. Deprecated, see USER_L
+    MEMORY,                 ///< Returned if querying memory mapped preferences
+    ROOT_MASK = 0x00FF,     ///< Mask for the values above
+    CORE = 0x0100,          ///< OR'd by FLTK to read and write core library preferences and options
+    C_LOCALE = 0x1000,      ///< This flag should always be set, it makes sure that floating point
+                            ///< values are written correctly independently of the current locale
+    SYSTEM_L = SYSTEM | C_LOCALE, ///< Preferences are used system-wide, locale independent
+    USER_L = USER | C_LOCALE, ///< Preferences apply only to the current user, locale independent
+    CORE_SYSTEM_L = CORE | SYSTEM_L, ///< Same as CORE | SYSTEM | C_LOCALE
+    CORE_USER_L = CORE | USER_L,     ///< Same as CORE | USER | C_LOCALE
+    CORE_SYSTEM = CORE | SYSTEM, ///< Deprecated, same as CORE | SYSTEM. Use CORE_SYSTEM_L instead.
+    CORE_USER = CORE | USER,     ///< Deprecated, same as CORE | USER. Use CORE_USER_L instead.
   };
 
   /**
@@ -164,13 +164,17 @@ public:
   static const unsigned int SYSTEM_READ_OK = 0x0004;
   /** Set this if it is OK for applications to create and write system wide preference files. */
   static const unsigned int SYSTEM_WRITE_OK = 0x0008;
-  /** Set this if it is OK for applications to read, create, and write system wide preference files. */
+  /** Set this if it is OK for applications to read, create, and write system wide preference files.
+   */
   static const unsigned int SYSTEM_OK = SYSTEM_READ_OK | SYSTEM_WRITE_OK;
-  /** Set this if it is OK for applications to read, create, and write any kind of preference files. */
+  /** Set this if it is OK for applications to read, create, and write any kind of preference files.
+   */
   static const unsigned int APP_OK = SYSTEM_OK | USER_OK;
-  /** Set this if it is OK for FLTK to read preference files. USER_READ_OK and/or SYSTEM_READ_OK must also be set. */
+  /** Set this if it is OK for FLTK to read preference files. USER_READ_OK and/or SYSTEM_READ_OK
+   * must also be set. */
   static const unsigned int CORE_READ_OK = 0x0010;
-  /** Set this if it is OK for FLTK to create or write preference files. USER_WRITE_OK and/or SYSTEM_WRITE_OK must also be set. */
+  /** Set this if it is OK for FLTK to create or write preference files. USER_WRITE_OK and/or
+   * SYSTEM_WRITE_OK must also be set. */
   static const unsigned int CORE_WRITE_OK = 0x0020;
   /** Set this if it is OK for FLTK to read, create, or write preference files. */
   static const unsigned int CORE_OK = CORE_READ_OK | CORE_WRITE_OK;
@@ -178,24 +182,26 @@ public:
   static const unsigned int ALL_READ_OK = USER_READ_OK | SYSTEM_READ_OK | CORE_READ_OK;
   /** Set this to allow FLTK and applications to create and write preference files. */
   static const unsigned int ALL_WRITE_OK = USER_WRITE_OK | SYSTEM_WRITE_OK | CORE_WRITE_OK;
-  /** Set this to give FLTK and applications permission to read, write, and create preference files. */
+  /** Set this to give FLTK and applications permission to read, write, and create preference files.
+   */
   static const unsigned int ALL = ALL_READ_OK | ALL_WRITE_OK;
 
   static void file_access(unsigned int flags);
   static unsigned int file_access();
-  static Root filename( char *buffer, size_t buffer_size, Root root, const char *vendor, const char *application );
+  static Root filename(char *buffer, size_t buffer_size, Root root, const char *vendor,
+                       const char *application);
 
-  Fl_Preferences( Root root, const char *vendor, const char *application );
-  Fl_Preferences( const char *path, const char *vendor, const char *application );
-  Fl_Preferences( Fl_Preferences &parent, const char *group );
-  Fl_Preferences( Fl_Preferences *parent, const char *group );
-  Fl_Preferences( Fl_Preferences &parent, int groupIndex );
-  Fl_Preferences( Fl_Preferences *parent, int groupIndex );
-  Fl_Preferences(const Fl_Preferences&);
-  Fl_Preferences( ID id );
+  Fl_Preferences(Root root, const char *vendor, const char *application);
+  Fl_Preferences(const char *path, const char *vendor, const char *application);
+  Fl_Preferences(Fl_Preferences &parent, const char *group);
+  Fl_Preferences(Fl_Preferences *parent, const char *group);
+  Fl_Preferences(Fl_Preferences &parent, int groupIndex);
+  Fl_Preferences(Fl_Preferences *parent, int groupIndex);
+  Fl_Preferences(const Fl_Preferences &);
+  Fl_Preferences(ID id);
   virtual ~Fl_Preferences();
 
-  Root filename( char *buffer, size_t buffer_size);
+  Root filename(char *buffer, size_t buffer_size);
 
   /** Return an ID that can later be reused to open more references to this dataset.
    */
@@ -203,7 +209,7 @@ public:
 
   /** Remove the group with this ID from a database.
    */
-  static char remove(ID id_) { return ((Node*)id_)->remove(); }
+  static char remove(ID id_) { return ((Node *)id_)->remove(); }
 
   /** Return the name of this entry.
    */
@@ -214,39 +220,39 @@ public:
   const char *path() { return node->path(); }
 
   int groups();
-  const char *group( int num_group );
-  char group_exists( const char *key );
-  char delete_group( const char *group );
+  const char *group(int num_group);
+  char group_exists(const char *key);
+  char delete_group(const char *group);
   char delete_all_groups();
 
   int entries();
-  const char *entry( int index );
-  char entry_exists( const char *key );
-  char delete_entry( const char *entry );
+  const char *entry(int index);
+  char entry_exists(const char *key);
+  char delete_entry(const char *entry);
   char delete_all_entries();
 
   char clear();
 
-  char set( const char *entry, int value );
-  char set( const char *entry, float value );
-  char set( const char *entry, float value, int precision );
-  char set( const char *entry, double value );
-  char set( const char *entry, double value, int precision );
-  char set( const char *entry, const char *value );
-  char set( const char *entry, const void *value, int size );
+  char set(const char *entry, int value);
+  char set(const char *entry, float value);
+  char set(const char *entry, float value, int precision);
+  char set(const char *entry, double value);
+  char set(const char *entry, double value, int precision);
+  char set(const char *entry, const char *value);
+  char set(const char *entry, const void *value, int size);
 
-  char get( const char *entry, int &value, int defaultValue );
-  char get( const char *entry, float &value,  float defaultValue );
-  char get( const char *entry, double &value, double defaultValue );
-  char get( const char *entry, char *&value,  const char *defaultValue );
-  char get( const char *entry, char *value,   const char *defaultValue, int maxSize );
-  char get( const char *entry, void *&value,  const void *defaultValue, int defaultSize );
-  char get( const char *entry, void *value,   const void *defaultValue, int defaultSize, int maxSize );
-  char get( const char *entry, void *value,   const void *defaultValue, int defaultSize, int *size );
+  char get(const char *entry, int &value, int defaultValue);
+  char get(const char *entry, float &value, float defaultValue);
+  char get(const char *entry, double &value, double defaultValue);
+  char get(const char *entry, char *&value, const char *defaultValue);
+  char get(const char *entry, char *value, const char *defaultValue, int maxSize);
+  char get(const char *entry, void *&value, const void *defaultValue, int defaultSize);
+  char get(const char *entry, void *value, const void *defaultValue, int defaultSize, int maxSize);
+  char get(const char *entry, void *value, const void *defaultValue, int defaultSize, int *size);
 
-  int size( const char *entry );
+  int size(const char *entry);
 
-  char get_userdata_path( char *path, int pathlen );
+  char get_userdata_path(char *path, int pathlen);
 
   int flush();
 
@@ -254,13 +260,13 @@ public:
 
   /** \cond PRIVATE */
   static const char *newUUID() { return new_UUID(); }
-  char groupExists( const char *key ) { return group_exists(key); }
-  char deleteGroup( const char *group ) { return delete_group(group); }
+  char groupExists(const char *key) { return group_exists(key); }
+  char deleteGroup(const char *group) { return delete_group(group); }
   char deleteAllGroups() { return delete_all_groups(); }
-  char entryExists( const char *key ) { return entry_exists(key); }
-  char deleteEntry( const char *entry ) { return delete_entry(entry); }
+  char entryExists(const char *key) { return entry_exists(key); }
+  char deleteEntry(const char *entry) { return delete_entry(entry); }
   char deleteAllEntries() { return delete_all_entries(); }
-  char getUserdataPath( char *path, int pathlen ) { return get_userdata_path(path, pathlen); }
+  char getUserdataPath(char *path, int pathlen) { return get_userdata_path(path, pathlen); }
   /** \endcond */
 
   /**
@@ -280,8 +286,8 @@ public:
     char *data_;
 
   public:
-    Name( unsigned int n );
-    Name( const char *format, ... );
+    Name(unsigned int n);
+    Name(const char *format, ...);
 
     /**
        Return the Name as a "C" string.
@@ -297,52 +303,59 @@ public:
   };
 
 private:
-  Fl_Preferences() : node(0), rootNode(0) { }
-  Fl_Preferences &operator=(const Fl_Preferences&);
+  Fl_Preferences()
+    : node(0)
+    , rootNode(0) {}
+  Fl_Preferences &operator=(const Fl_Preferences &);
 
   static char nameBuffer[128];
   static char uuidBuffer[40];
   static Fl_Preferences *runtimePrefs;
   static unsigned int fileAccess_;
 
-public:  // older Sun compilers need this (public definition of the following classes)
+public: // older Sun compilers need this (public definition of the following classes)
   class RootNode;
 
-  class FL_EXPORT Node {        // a node contains a list to all its entries
-                                // and all means to manage the tree structure
+  class FL_EXPORT Node { // a node contains a list to all its entries
+                         // and all means to manage the tree structure
     Node *first_child_, *next_;
-    union {                     // these two are mutually exclusive
-      Node *parent_;            // top_ bit clear
-      RootNode *root_node_;     // top_ bit set
+    union {                 // these two are mutually exclusive
+      Node *parent_;        // top_ bit clear
+      RootNode *root_node_; // top_ bit set
     };
     char *path_;
     Entry *entry_;
     int nEntry_, NEntry_;
-    unsigned char dirty_:1;
-    unsigned char top_:1;
-    unsigned char indexed_:1;
+    unsigned char dirty_ : 1;
+    unsigned char top_ : 1;
+    unsigned char indexed_ : 1;
     // indexing routines
     Node **index_;
     int nIndex_, NIndex_;
     void createIndex();
     void updateIndex();
     void deleteIndex();
+
   public:
     static int lastEntrySet;
+
   public:
-    Node( const char *path );
+    Node(const char *path);
     ~Node();
     // node methods
-    int write( FILE *f );
+    int write(FILE *f);
     const char *name();
     const char *path() { return path_; }
-    Node *find( const char *path );
-    Node *search( const char *path, int offset=0 );
-    Node *childNode( int ix );
-    Node *addChild( const char *path );
-    void setParent( Node *parent );
-    Node *parent() { return top_?0L:parent_; }
-    void setRoot(RootNode *r) { root_node_ = r; top_ = 1; }
+    Node *find(const char *path);
+    Node *search(const char *path, int offset = 0);
+    Node *childNode(int ix);
+    Node *addChild(const char *path);
+    void setParent(Node *parent);
+    Node *parent() { return top_ ? 0L : parent_; }
+    void setRoot(RootNode *r) {
+      root_node_ = r;
+      top_ = 1;
+    }
     RootNode *findRoot();
     char remove();
     char dirty();
@@ -350,32 +363,33 @@ public:  // older Sun compilers need this (public definition of the following cl
     void deleteAllChildren();
     // entry methods
     int nChildren();
-    const char *child( int ix );
-    void set( const char *name, const char *value );
-    void set( const char *line );
-    void add( const char *line );
-    const char *get( const char *name );
-    int getEntry( const char *name );
-    char deleteEntry( const char *name );
+    const char *child(int ix);
+    void set(const char *name, const char *value);
+    void set(const char *line);
+    void add(const char *line);
+    const char *get(const char *name);
+    int getEntry(const char *name);
+    char deleteEntry(const char *name);
     void deleteAllEntries();
     int nEntry() { return nEntry_; }
     Entry &entry(int i) { return entry_[i]; }
   };
   friend class Node;
 
-  class FL_EXPORT RootNode {    // the root node manages file paths and basic reading and writing
+  class FL_EXPORT RootNode { // the root node manages file paths and basic reading and writing
     Fl_Preferences *prefs_;
     char *filename_;
     char *vendor_, *application_;
     Root root_type_;
+
   public:
-    RootNode( Fl_Preferences *, Root root, const char *vendor, const char *application );
-    RootNode( Fl_Preferences *, const char *path, const char *vendor, const char *application );
-    RootNode( Fl_Preferences * );
+    RootNode(Fl_Preferences *, Root root, const char *vendor, const char *application);
+    RootNode(Fl_Preferences *, const char *path, const char *vendor, const char *application);
+    RootNode(Fl_Preferences *);
     ~RootNode();
     int read();
     int write();
-    char getPath( char *path, int pathlen );
+    char getPath(char *path, int pathlen);
     char *filename() { return filename_; }
     Root root() { return root_type_; }
   };

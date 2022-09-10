@@ -24,17 +24,17 @@
 #include "Fl_Widget.H"
 #endif
 
-#define FL_NORMAL_INPUT         0
-#define FL_FLOAT_INPUT          1
-#define FL_INT_INPUT            2
-#define FL_HIDDEN_INPUT         3
-#define FL_MULTILINE_INPUT      4
-#define FL_SECRET_INPUT         5
-#define FL_INPUT_TYPE           7
-#define FL_INPUT_READONLY       8
-#define FL_NORMAL_OUTPUT        (FL_NORMAL_INPUT | FL_INPUT_READONLY)
-#define FL_MULTILINE_OUTPUT     (FL_MULTILINE_INPUT | FL_INPUT_READONLY)
-#define FL_INPUT_WRAP           16
+#define FL_NORMAL_INPUT 0
+#define FL_FLOAT_INPUT 1
+#define FL_INT_INPUT 2
+#define FL_HIDDEN_INPUT 3
+#define FL_MULTILINE_INPUT 4
+#define FL_SECRET_INPUT 5
+#define FL_INPUT_TYPE 7
+#define FL_INPUT_READONLY 8
+#define FL_NORMAL_OUTPUT (FL_NORMAL_INPUT | FL_INPUT_READONLY)
+#define FL_MULTILINE_OUTPUT (FL_MULTILINE_INPUT | FL_INPUT_READONLY)
+#define FL_INPUT_WRAP 16
 #define FL_MULTILINE_INPUT_WRAP (FL_MULTILINE_INPUT | FL_INPUT_WRAP)
 #define FL_MULTILINE_OUTPUT_WRAP (FL_MULTILINE_INPUT | FL_INPUT_READONLY | FL_INPUT_WRAP)
 
@@ -93,10 +93,10 @@
 class FL_EXPORT Fl_Input_ : public Fl_Widget {
 
   /** \internal Storage for the text field. */
-  const char* value_;
+  const char *value_;
 
   /** \internal Buffer memory for expanded text. \see expand() */
-  char* buffer;
+  char *buffer;
 
   /** \internal Size of text in bytes in the \p value_ field. */
   int size_;
@@ -151,10 +151,10 @@ class FL_EXPORT Fl_Input_ : public Fl_Widget {
   static int was_up_down;
 
   /* Convert a given text segment into the text that will be rendered on screen. */
-  const char* expand(const char*, char*) const;
+  const char *expand(const char *, char *) const;
 
   /* Calculates the width in pixels of part of a text buffer. */
-  double expandpos(const char*, const char*, const char*, int*) const;
+  double expandpos(const char *, const char *, const char *, int *) const;
 
   /* Mark a range of characters for update. */
   void minimal_update(int, int);
@@ -169,7 +169,6 @@ class FL_EXPORT Fl_Input_ : public Fl_Widget {
   void setfont() const;
 
 protected:
-
   /* Find the start of a word. */
   int word_start(int i) const;
 
@@ -186,10 +185,10 @@ protected:
   void drawtext(int, int, int, int);
 
   /* Move the cursor to the column given by up_down_pos. */
-  int up_down_position(int, int keepmark=0);
+  int up_down_position(int, int keepmark = 0);
 
   /* Handle mouse clicks and mouse moves. */
-  void handle_mouse(int, int, int, int, int keepmark=0);
+  void handle_mouse(int, int, int, int, int keepmark = 0);
 
   /* Handle all kinds of text field related events. */
   int handletext(int e, int, int, int, int);
@@ -198,37 +197,39 @@ protected:
   void maybe_do_callback();
 
   /** \internal Horizontal offset of text to left edge of widget. */
-  int xscroll() const {return xscroll_;}
+  int xscroll() const { return xscroll_; }
 
   /** \internal Vertical offset of text to top edge of widget. */
-  int yscroll() const {return yscroll_;}
-  void yscroll(int yOffset) { yscroll_ = yOffset; damage(FL_DAMAGE_EXPOSE);}
+  int yscroll() const { return yscroll_; }
+  void yscroll(int yOffset) {
+    yscroll_ = yOffset;
+    damage(FL_DAMAGE_EXPOSE);
+  }
 
   /* Return the number of lines displayed on a single page.  */
   int linesPerPage();
 
 public:
-
   /* Change the size of the widget. */
   void resize(int, int, int, int);
 
   /* Constructor */
-  Fl_Input_(int, int, int, int, const char* = 0);
+  Fl_Input_(int, int, int, int, const char * = 0);
 
   /* Destructor */
   ~Fl_Input_();
 
   /* Changes the widget text. */
-  int value(const char*);
+  int value(const char *);
 
   /* Changes the widget text. */
-  int value(const char*, int);
+  int value(const char *, int);
 
   /* Changes the widget text. */
-  int static_value(const char*);
+  int static_value(const char *);
 
   /* Changes the widget text. */
-  int static_value(const char*, int);
+  int static_value(const char *, int);
 
   /**
       Returns the text displayed in the widget.
@@ -240,7 +241,7 @@ public:
       \return pointer to an internal buffer - do not free() this
       \see Fl_Input_::value(const char*)
   */
-  const char* value() const {return value_;}
+  const char *value() const { return value_; }
 
   /* Returns the Unicode character at index \p i. */
   unsigned int index(int i) const;
@@ -253,7 +254,7 @@ public:
 
     \return number of bytes in the text
   */
-  int size() const {return size_;}
+  int size() const { return size_; }
 
   /** Sets the width and height of this widget.
     \param [in] W, H new width and height
@@ -262,7 +263,7 @@ public:
 
   /** Gets the maximum length of the input field in characters.
     \see maximum_size(int). */
-  int maximum_size() const {return maximum_size_;}
+  int maximum_size() const { return maximum_size_; }
 
   /** Sets the maximum length of the input field in characters.
 
@@ -273,17 +274,17 @@ public:
     character can be more than one byte in UTF-8 encoding. In FLTK 1.1
     this was the same (one byte = one character).
   */
-  void maximum_size(int m) {maximum_size_ = m;}
+  void maximum_size(int m) { maximum_size_ = m; }
 
   /** Gets the position of the text cursor.
     \return the cursor position as an index in the range 0..size()
     \see position(int, int)
   */
-  int position() const {return position_;}
+  int position() const { return position_; }
 
   /** Gets the current selection mark.
     \return index into the text */
-  int mark() const {return mark_;}
+  int mark() const { return mark_; }
 
   /* Sets the index for the cursor and mark. */
   int position(int p, int m);
@@ -294,17 +295,17 @@ public:
     \return 0 if no positions changed
     \see position(int, int), position(), mark(int)
   */
-  int position(int p) {return position(p, p);}
+  int position(int p) { return position(p, p); }
 
   /** Sets the current selection mark.
     mark(n) is the same as <tt>position(position(),n)</tt>.
     \param m new index of the mark
     \return 0 if the mark did not change
     \see position(), position(int, int) */
-  int mark(int m) {return position(position(), m);}
+  int mark(int m) { return position(position(), m); }
 
   /* Deletes text from \p b to \p e and inserts the new string \p text. */
-  int replace(int b, int e, const char *text, int ilen=0);
+  int replace(int b, int e, const char *text, int ilen = 0);
 
   /**
     Deletes the current selection.
@@ -316,7 +317,7 @@ public:
 
     \return 0 if no data was copied
   */
-  int cut() {return replace(position(), mark(), 0);}
+  int cut() { return replace(position(), mark(), 0); }
 
   /**
     Deletes the next \p n bytes rounded to characters before or after the cursor.
@@ -330,7 +331,7 @@ public:
            A negative number will cut characters to the left of the cursor.
     \return 0 if no data was copied
   */
-  int cut(int n) {return replace(position(), position()+n, 0);}
+  int cut(int n) { return replace(position(), position() + n, 0); }
 
   /**
     Deletes all characters between index \p a and \p b.
@@ -343,7 +344,7 @@ public:
     \param a, b range of bytes rounded to full characters and clamped to the buffer
     \return 0 if no data was copied
   */
-  int cut(int a, int b) {return replace(a, b, 0);}
+  int cut(int a, int b) { return replace(a, b, 0); }
 
   /**
     Inserts text at the cursor position.
@@ -356,10 +357,10 @@ public:
     \param [in] l length of text, or 0 if the string is terminated by \c nul.
     \return 0 if no text was inserted
   */
-  int insert(const char* t, int l=0){return replace(position_, mark_, t, l);}
+  int insert(const char *t, int l = 0) { return replace(position_, mark_, t, l); }
 
   /* Append text at the end. */
-  int append(const char* t, int l=0, char keep_selection=0);
+  int append(const char *t, int l = 0, char keep_selection = 0);
 
   /* Put the current selection into the clipboard. */
   int copy(int clipboard);
@@ -373,7 +374,7 @@ public:
   /** Return the shortcut key associated with this widget.
     \return shortcut keystroke
     \see Fl_Button::shortcut() */
-  int shortcut() const {return shortcut_;}
+  int shortcut() const { return shortcut_; }
 
   /**
     Sets the shortcut key associated with this widget.
@@ -381,49 +382,49 @@ public:
     \param [in] s new shortcut keystroke
     \see Fl_Button::shortcut()
   */
-  void shortcut(int s) {shortcut_ = s;}
+  void shortcut(int s) { shortcut_ = s; }
 
   /** Gets the font of the text in the input field.
     \return the current Fl_Font index */
-  Fl_Font textfont() const {return textfont_;}
+  Fl_Font textfont() const { return textfont_; }
 
   /** Sets the font of the text in the input field.
     The text font defaults to \c FL_HELVETICA.
     \param [in] s the new text font */
-  void textfont(Fl_Font s) {textfont_ = s;}
+  void textfont(Fl_Font s) { textfont_ = s; }
 
   /** Gets the size of the text in the input field.
     \return the text height in pixels */
-  Fl_Fontsize textsize() const {return textsize_;}
+  Fl_Fontsize textsize() const { return textsize_; }
 
   /** Sets the size of the text in the input field.
     The text height defaults to \c FL_NORMAL_SIZE.
     \param [in] s the new font height in pixel units */
-  void textsize(Fl_Fontsize s) {textsize_ = s;}
+  void textsize(Fl_Fontsize s) { textsize_ = s; }
 
   /** Gets the color of the text in the input field.
     \return the text color
     \see textcolor(Fl_Color) */
-  Fl_Color textcolor() const {return textcolor_;}
+  Fl_Color textcolor() const { return textcolor_; }
 
   /** Sets the color of the text in the input field.
     The text color defaults to \c FL_FOREGROUND_COLOR.
     \param [in] n new text color
     \see textcolor() */
-  void textcolor(Fl_Color n) {textcolor_ = n;}
+  void textcolor(Fl_Color n) { textcolor_ = n; }
 
   /** Gets the color of the cursor.
     \return the current cursor color */
-  Fl_Color cursor_color() const {return cursor_color_;}
+  Fl_Color cursor_color() const { return cursor_color_; }
 
   /** Sets the color of the cursor.
     The default color for the cursor is \c FL_BLACK.
     \param [in] n the new cursor color */
-  void cursor_color(Fl_Color n) {cursor_color_ = n;}
+  void cursor_color(Fl_Color n) { cursor_color_ = n; }
 
   /** Gets the input field type.
     \return the current input type */
-  int input_type() const {return type() & FL_INPUT_TYPE; }
+  int input_type() const { return type() & FL_INPUT_TYPE; }
 
   /** Sets the input field type.
     A redraw() is required to reformat the input field.
@@ -436,8 +437,12 @@ public:
 
   /** Sets the read-only state of the input field.
     \param [in] b if \p b is 0, the text in this widget can be edited by the user */
-  void readonly(int b) { if (b) type((uchar)(type() | FL_INPUT_READONLY));
-                         else type((uchar)(type() & ~FL_INPUT_READONLY)); }
+  void readonly(int b) {
+    if (b)
+      type((uchar)(type() | FL_INPUT_READONLY));
+    else
+      type((uchar)(type() & ~FL_INPUT_READONLY));
+  }
 
   /**
     Gets  the word wrapping state of the input field.
@@ -449,8 +454,12 @@ public:
     Sets the word wrapping state of the input field.
     Word wrap is only functional with multi-line input fields.
   */
-  void wrap(int b) { if (b) type((uchar)(type() | FL_INPUT_WRAP));
-                         else type((uchar)(type() & ~FL_INPUT_WRAP)); }
+  void wrap(int b) {
+    if (b)
+      type((uchar)(type() | FL_INPUT_WRAP));
+    else
+      type((uchar)(type() & ~FL_INPUT_WRAP));
+  }
 
   /**
     Sets whether the Tab key does focus navigation,
@@ -475,9 +484,7 @@ public:
 
     \see tab_nav(), Fl::OPTION_ARROW_FOCUS.
   */
-  void tab_nav(int val) {
-    tab_nav_ = val;
-  }
+  void tab_nav(int val) { tab_nav_ = val; }
 
   /**
     Gets whether the Tab key causes focus navigation in multiline input fields or not.
@@ -489,9 +496,7 @@ public:
 
     \see tab_nav(int), Fl::OPTION_ARROW_FOCUS.
   */
-  int tab_nav() const {
-    return tab_nav_;
-  }
+  int tab_nav() const { return tab_nav_; }
 };
 
 #endif

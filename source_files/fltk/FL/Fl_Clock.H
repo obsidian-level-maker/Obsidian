@@ -28,9 +28,9 @@
 // Please change doxygen documentation below (class Fl_Clock_Output)
 // accordingly as well when changing the following type values:
 
-#define FL_SQUARE_CLOCK         0       /**< type() of Square Clock variant */
-#define FL_ROUND_CLOCK          1       /**< type() of Round Clock variant */
-#define FL_ANALOG_CLOCK FL_SQUARE_CLOCK /**< An analog clock is square */
+#define FL_SQUARE_CLOCK 0                /**< type() of Square Clock variant */
+#define FL_ROUND_CLOCK 1                 /**< type() of Round Clock variant */
+#define FL_ANALOG_CLOCK FL_SQUARE_CLOCK  /**< An analog clock is square */
 #define FL_DIGITAL_CLOCK FL_SQUARE_CLOCK /**< Not yet implemented */
 
 // fabien: Please keep the horizontal formatting of both images in class desc,
@@ -65,16 +65,16 @@
 class FL_EXPORT Fl_Clock_Output : public Fl_Widget {
   int hour_, minute_, second_;
   ulong value_;
-  int shadow_; // draw shadows of hands
-  void drawhands(Fl_Color,Fl_Color); // part of draw
+  int shadow_;                        // draw shadows of hands
+  void drawhands(Fl_Color, Fl_Color); // part of draw
 protected:
   void draw();
   void draw(int X, int Y, int W, int H);
-public:
 
+public:
   Fl_Clock_Output(int X, int Y, int W, int H, const char *L = 0);
 
-  void value(ulong v);  // set to this Unix time
+  void value(ulong v); // set to this Unix time
 
   void value(int H, int m, int s);
 
@@ -83,25 +83,25 @@ public:
     Returns the time in seconds since the UNIX epoch (January 1, 1970).
     \see value(ulong)
    */
-  ulong value() const {return value_;}
+  ulong value() const { return value_; }
 
   /**
     Returns the displayed hour (0 to 23).
     \see value(), minute(), second()
    */
-  int hour() const {return hour_;}
+  int hour() const { return hour_; }
 
   /**
     Returns the displayed minute (0 to 59).
     \see value(), hour(), second()
    */
-  int minute() const {return minute_;}
+  int minute() const { return minute_; }
 
   /**
     Returns the displayed second (0 to 60, 60=leap second).
     \see value(), hour(), minute()
    */
-  int second() const {return second_;}
+  int second() const { return second_; }
 
   /**
     Returns the shadow drawing mode of the hands.
@@ -110,7 +110,7 @@ public:
     \retval 0   no shadows
     \retval 1   draw shadows of hands (default)
   */
-  int shadow() const {return shadow_;}
+  int shadow() const { return shadow_; }
 
   /**
     Sets the shadow drawing mode of the hands.
@@ -153,7 +153,7 @@ class FL_EXPORT Fl_Clock : public Fl_Clock_Output {
 public:
   int handle(int);
 
-  Fl_Clock(int X, int Y, int W, int H,  const char *L = 0);
+  Fl_Clock(int X, int Y, int W, int H, const char *L = 0);
 
   Fl_Clock(uchar t, int X, int Y, int W, int H, const char *L);
 

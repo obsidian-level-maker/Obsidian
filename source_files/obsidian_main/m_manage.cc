@@ -237,7 +237,9 @@ class UI_Manage_Config : public Fl_Double_Window {
     }
 
     void MarkSource_FILE(std::filesystem::path filename) {
-        conf_disp->copy_label(fmt::format("[ {} ]", filename.filename().generic_string()).c_str());
+        conf_disp->copy_label(
+            fmt::format("[ {} ]", filename.filename().generic_string())
+                .c_str());
 
         redraw();
     }
@@ -316,8 +318,7 @@ class UI_Manage_Config : public Fl_Double_Window {
 
         if (!last_directory.empty()) {
             chooser.directory(last_directory.generic_string().c_str());
-        }
-        else {
+        } else {
             chooser.directory(install_dir.generic_string().c_str());
         }
 
@@ -387,8 +388,7 @@ class UI_Manage_Config : public Fl_Double_Window {
 
         if (!last_directory.empty()) {
             chooser.directory(last_directory.generic_string().c_str());
-        }
-        else {
+        } else {
             chooser.directory(install_dir.generic_string().c_str());
         }
 
@@ -417,7 +417,9 @@ class UI_Manage_Config : public Fl_Double_Window {
         FILE *fp = fl_fopen(filename.generic_string().c_str(), "rb");
 
         if (!fp) {
-            DLG_ShowError(_("Cannot open: %s\n\n%s"), filename.filename().generic_string().c_str(), strerror(errno));
+            DLG_ShowError(_("Cannot open: %s\n\n%s"),
+                          filename.filename().generic_string().c_str(),
+                          strerror(errno));
             return false;
         }
 
@@ -458,7 +460,6 @@ class UI_Manage_Config : public Fl_Double_Window {
     }
 
    private:
-
     static void callback_Defaults(Fl_Widget *w, void *data) {
         UI_Manage_Config *that = (UI_Manage_Config *)data;
         if (std::filesystem::exists(config_file)) {
@@ -617,8 +618,8 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         Fl_Group *g = new Fl_Group(0, 0, conf_disp->x(), conf_disp->h());
         g->resizable(NULL);
 
-        load_but =
-            new Fl_Button(button_x, kf_h(25), button_w, button_h, _("Load WAD/TXT"));
+        load_but = new Fl_Button(button_x, kf_h(25), button_w, button_h,
+                                 _("Load WAD/TXT"));
         load_but->box(button_style);
         load_but->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
         load_but->visible_focus(0);
@@ -647,14 +648,16 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         use_but->labelfont(font_style);
         use_but->labelcolor(FONT2_COLOR);
 
-        use_warn = new Fl_Box(0, kf_h(165), kf_w(140), kf_h(50),
+        use_warn =
+            new Fl_Box(0, kf_h(165), kf_w(140), kf_h(50),
                        _("Note: This will replace\nall current settings!"));
-        use_warn->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
+        use_warn->align(
+            Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
         use_warn->labelsize(small_font_size);
         use_warn->labelfont(font_style);
 
-        defaults_but =
-            new Fl_Button(button_x, kf_h(200), button_w, button_h, _("Reset to Default"));
+        defaults_but = new Fl_Button(button_x, kf_h(200), button_w, button_h,
+                                     _("Reset to Default"));
         defaults_but->box(button_style);
         defaults_but->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
         defaults_but->visible_focus(0);
@@ -664,8 +667,10 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         defaults_but->labelcolor(FONT2_COLOR);
 
         defaults_warn = new Fl_Box(0, kf_h(240), kf_w(140), kf_h(50),
-                       _("Note: This will delete\nthe current CONFIG.txt\nand restart Obsidian!"));
-        defaults_warn->align(Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
+                                   _("Note: This will delete\nthe current "
+                                     "CONFIG.txt\nand restart Obsidian!"));
+        defaults_warn->align(
+            Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
         defaults_warn->labelsize(small_font_size);
         defaults_warn->labelfont(font_style);
 

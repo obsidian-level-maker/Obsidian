@@ -23,9 +23,9 @@ string(TIMESTAMP BUILD_TIMESTAMP "%Y.%m.%d" UTC)
 add_compile_definitions(OBSIDIAN_TIMESTAMP="${BUILD_TIMESTAMP}")
 
 # Add upper map limit bounds if on 32-bit to avoid exhausting process memory
-if (${CMAKE_SIZEOF_VOID_P} MATCHES 4)
+if(${CMAKE_SIZEOF_VOID_P} MATCHES 4)
   add_compile_definitions(OBSIDIAN_32BIT_MAP_SIZES)
-endif ()
+endif()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)

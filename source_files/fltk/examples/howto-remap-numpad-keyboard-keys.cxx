@@ -50,20 +50,21 @@ Fl_Check_Button *G_checkbut = 0;
 //
 int MyHandler(int e, Fl_Window *w) {
   // Remapping disabled? Early exit..
-  if ( G_checkbut->value() == 0 ) return Fl::handle_(e, w);
+  if (G_checkbut->value() == 0)
+    return Fl::handle_(e, w);
   // Keyboard key pressed? See if we should remap..
-  if ( e == FL_KEYDOWN || e == FL_KEYUP) {
+  if (e == FL_KEYDOWN || e == FL_KEYUP) {
     // Get FLTK keycode /before/ NumLock state is applied (see above DESCRIPTION)
-    int keycode = Fl::event_original_key();            // get keycode before FLTK applies NumLock
-    if ( keycode >= FL_KP && keycode <= FL_KP_Last ) { // keypad key pressed?
-      static char buf[2];                              // static: we don't want buffer to go out of scope
-      buf[0] = char(keycode - FL_KP);                  // convert keypad keycode -> ascii
-      buf[1] = 0;                                      // terminate string (for safety)
-      Fl::e_text   = buf;                              // point to our static buffer
-      Fl::e_length = 1;                                // only first char relevant
+    int keycode = Fl::event_original_key();          // get keycode before FLTK applies NumLock
+    if (keycode >= FL_KP && keycode <= FL_KP_Last) { // keypad key pressed?
+      static char buf[2];             // static: we don't want buffer to go out of scope
+      buf[0] = char(keycode - FL_KP); // convert keypad keycode -> ascii
+      buf[1] = 0;                     // terminate string (for safety)
+      Fl::e_text = buf;               // point to our static buffer
+      Fl::e_length = 1;               // only first char relevant
     }
   }
-  return Fl::handle_(e, w);                            // let FLTK deliver event to widgets
+  return Fl::handle_(e, w); // let FLTK deliver event to widgets
 }
 
 int main(int argc, char *argv[]) {
@@ -71,15 +72,16 @@ int main(int argc, char *argv[]) {
   win->begin();
   {
     new Fl_Input(100, 10, 200, 25, "Input:");
-    G_checkbut = new Fl_Check_Button(100,40,280,25," Force numeric keypad to type numbers");
+    G_checkbut = new Fl_Check_Button(100, 40, 280, 25, " Force numeric keypad to type numbers");
     G_checkbut->labelsize(12);
     G_checkbut->set();
   }
   win->end();
   win->resizable(win);
   win->show(argc, argv);
-  win->tooltip("Turn NumLock OFF, then type into Input:\nusing numeric keypadt to test translation");
+  win->tooltip(
+      "Turn NumLock OFF, then type into Input:\nusing numeric keypadt to test translation");
   // Set up our event handler to manage events
   Fl::event_dispatch(MyHandler);
-  return(Fl::run());
+  return (Fl::run());
 }

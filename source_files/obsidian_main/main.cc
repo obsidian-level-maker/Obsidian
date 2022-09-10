@@ -167,7 +167,8 @@ std::filesystem::path gif_filename = "gif_output.gif";
 
 std::string string_seed;
 
-std::string selected_lang = "en"; // Have a default just in case the translation stuff borks
+std::string selected_lang =
+    "en";  // Have a default just in case the translation stuff borks
 
 std::string log_timestamp;
 
@@ -287,8 +288,10 @@ static void ShowInfo() {
         "  -d --debug                Enable debugging\n"
         "  -v --verbose              Print log messages to stdout\n"
         "  -h --help                 Show this help message\n"
-        "  -p --printref             Print reference of all keys and values to REFERENCE.txt\n"
-        "     --printref-json        Print reference of all keys and values in JSON format\n"
+        "  -p --printref             Print reference of all keys and values to "
+        "REFERENCE.txt\n"
+        "     --printref-json        Print reference of all keys and values in "
+        "JSON format\n"
         "  -u --update <key> <value> Set a key in the config file\n"
         "\n");
 
@@ -1221,8 +1224,11 @@ restart:;
 
     if (int update_arg = argv::Find('u', "update"); update_arg >= 0) {
         batch_mode = true;
-        if (update_arg + 2 >= argv::list.size() || argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2)) {
-            fmt::print(stderr, "OBSIDIAN ERROR: missing key and/or value for --update\n");
+        if (update_arg + 2 >= argv::list.size() ||
+            argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2)) {
+            fmt::print(
+                stderr,
+                "OBSIDIAN ERROR: missing key and/or value for --update\n");
             exit(EXIT_FAILURE);
         }
         update_kv.key = argv::list[update_arg + 1];
@@ -1413,7 +1419,7 @@ skiprest:
             } while (true);
 #endif
             Main::Detail::Shutdown(false);
-            return 0;       
+            return 0;
         }
 
         if (argv::Find(0, "printref-json") >= 0) {
@@ -1517,11 +1523,13 @@ skiprest:
             main_win_architecture_config_CB, 0,
             FL_MENU_TOGGLE | (randomize_architecture ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add(
-            _("Surprise Me/Randomize Combat"), NULL, main_win_monsters_config_CB,
-            0, FL_MENU_TOGGLE | (randomize_monsters ? FL_MENU_VALUE : 0));
+            _("Surprise Me/Randomize Combat"), NULL,
+            main_win_monsters_config_CB, 0,
+            FL_MENU_TOGGLE | (randomize_monsters ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add(
-            _("Surprise Me/Randomize Pickups"), NULL, main_win_pickups_config_CB,
-            0, FL_MENU_TOGGLE | (randomize_pickups ? FL_MENU_VALUE : 0));
+            _("Surprise Me/Randomize Pickups"), NULL,
+            main_win_pickups_config_CB, 0,
+            FL_MENU_TOGGLE | (randomize_pickups ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add(
             _("Surprise Me/Randomize Other"), NULL, main_win_misc_config_CB, 0,
             FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));

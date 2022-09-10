@@ -37,8 +37,7 @@
 
  \see fl_latin1_to_local(const char *, int)
  */
-const char *Fl_System_Driver::latin1_to_local(const char *t, int)
-{
+const char *Fl_System_Driver::latin1_to_local(const char *t, int) {
   return t;
 }
 
@@ -51,8 +50,7 @@ const char *Fl_System_Driver::latin1_to_local(const char *t, int)
 
  \see fl_local_to_latin1(const char *, int)
  */
-const char *Fl_System_Driver::local_to_latin1(const char *t, int)
-{
+const char *Fl_System_Driver::local_to_latin1(const char *t, int) {
   return t;
 }
 
@@ -61,12 +59,10 @@ const char *Fl_System_Driver::local_to_latin1(const char *t, int)
  \endcond
  */
 
-const char *fl_latin1_to_local(const char *t, int n)
-{
+const char *fl_latin1_to_local(const char *t, int n) {
   return Fl::system_driver()->latin1_to_local(t, n);
 }
 
-const char *fl_local_to_latin1(const char *t, int n)
-{
+const char *fl_local_to_latin1(const char *t, int n) {
   return Fl::system_driver()->local_to_latin1(t, n);
 }

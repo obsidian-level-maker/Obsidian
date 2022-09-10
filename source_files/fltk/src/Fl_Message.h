@@ -139,20 +139,18 @@ public:
   /** Implements int fl_message_hotspot(). */
   static int message_hotspot() { return enable_hotspot_; }
 
-  int window_closed() const {
-    return window_closed_;
-  }
+  int window_closed() const { return window_closed_; }
 
   // member variables and methods
 
 private:
-  Fl_Window *window_;         ///< message window
-  Fl_Message_Box *message_;   ///< message text (handles ctrl-c)
-  Fl_Box *icon_;              ///< contains the icon
-  Fl_Button *button_[3];      ///< buttons used internally
-  Fl_Input *input_;           ///< normal text or secret input
-  int retval_;                ///< internally used to store the return value
-  int window_closed_;         ///< window close flag (-1 = Escape, -2 = close button)
+  Fl_Window *window_;       ///< message window
+  Fl_Message_Box *message_; ///< message text (handles ctrl-c)
+  Fl_Box *icon_;            ///< contains the icon
+  Fl_Button *button_[3];    ///< buttons used internally
+  Fl_Input *input_;         ///< normal text or secret input
+  int retval_;              ///< internally used to store the return value
+  int window_closed_;       ///< window close flag (-1 = Escape, -2 = close button)
 
   // static (private) variables
 
@@ -169,7 +167,8 @@ public:
 
   int innards(const char *fmt, va_list ap, const char *b0, const char *b1, const char *b2);
 
-  const char *input_innards(const char *fmt, va_list ap, const char *defstr, uchar type, int maxchar = -1);
+  const char *input_innards(const char *fmt, va_list ap, const char *defstr, uchar type,
+                            int maxchar = -1);
 };
 
 /**

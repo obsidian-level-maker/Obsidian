@@ -42,33 +42,32 @@ class Fl_Rect;
 class FL_EXPORT Fl_Group : public Fl_Widget {
 
   union {
-    Fl_Widget** array_; // used if group has two or more children or NULL
-    Fl_Widget* child1_; // used if group has one child or NULL
+    Fl_Widget **array_; // used if group has two or more children or NULL
+    Fl_Widget *child1_; // used if group has one child or NULL
   };
-  Fl_Widget* savedfocus_;
-  Fl_Widget* resizable_;
+  Fl_Widget *savedfocus_;
+  Fl_Widget *resizable_;
   int children_;
   Fl_Rect *bounds_; // remembered initial sizes of children
-  int *sizes_; // remembered initial sizes of children (FLTK 1.3 compat.)
+  int *sizes_;      // remembered initial sizes of children (FLTK 1.3 compat.)
 
   int navigation(int);
   static Fl_Group *current_;
 
   // unimplemented copy ctor and assignment operator
-  Fl_Group(const Fl_Group&);
-  Fl_Group& operator=(const Fl_Group&);
+  Fl_Group(const Fl_Group &);
+  Fl_Group &operator=(const Fl_Group &);
 
 protected:
   void draw();
-  void draw_child(Fl_Widget& widget) const;
+  void draw_child(Fl_Widget &widget) const;
   void draw_children();
-  void draw_outside_label(const Fl_Widget& widget) const ;
-  void update_child(Fl_Widget& widget) const;
+  void draw_outside_label(const Fl_Widget &widget) const;
+  void update_child(Fl_Widget &widget) const;
   Fl_Rect *bounds();
-  int  *sizes(); // FLTK 1.3 compatibility
+  int *sizes(); // FLTK 1.3 compatibility
 
 public:
-
   int handle(int);
   void begin();
   void end();
@@ -78,43 +77,43 @@ public:
   /**
     Returns how many child widgets the group has.
   */
-  int children() const {return children_;}
+  int children() const { return children_; }
   /**
     Returns array()[n].  <i>No range checking is done!</i>
   */
-  Fl_Widget* child(int n) const {return array()[n];}
-  int find(const Fl_Widget*) const;
+  Fl_Widget *child(int n) const { return array()[n]; }
+  int find(const Fl_Widget *) const;
   /**
     See int Fl_Group::find(const Fl_Widget *w) const
   */
-  int find(const Fl_Widget& o) const {return find(&o);}
-  Fl_Widget* const* array() const;
+  int find(const Fl_Widget &o) const { return find(&o); }
+  Fl_Widget *const *array() const;
 
-  void resize(int,int,int,int);
+  void resize(int, int, int, int);
   /**
     Creates a new Fl_Group widget using the given position, size,
     and label string. The default boxtype is FL_NO_BOX.
   */
-  Fl_Group(int,int,int,int, const char * = 0);
+  Fl_Group(int, int, int, int, const char * = 0);
   virtual ~Fl_Group();
-  void add(Fl_Widget&);
+  void add(Fl_Widget &);
   /**
     See void Fl_Group::add(Fl_Widget &w)
   */
-  void add(Fl_Widget* o) {add(*o);}
-  void insert(Fl_Widget&, int i);
+  void add(Fl_Widget *o) { add(*o); }
+  void insert(Fl_Widget &, int i);
   /**
     This does insert(w, find(before)).  This will append the
     widget if \p before is not in the group.
   */
-  void insert(Fl_Widget& o, Fl_Widget* before) {insert(o,find(before));}
+  void insert(Fl_Widget &o, Fl_Widget *before) { insert(o, find(before)); }
   void remove(int index);
-  void remove(Fl_Widget&);
+  void remove(Fl_Widget &);
   /**
     Removes the widget \p o from the group.
     \sa void remove(Fl_Widget&)
   */
-  void remove(Fl_Widget* o) {remove(*o);}
+  void remove(Fl_Widget *o) { remove(*o); }
   void clear();
 
   /* delete child n (by index) */
@@ -124,7 +123,7 @@ public:
     Sets the group's resizable widget.
     See void Fl_Group::resizable(Fl_Widget *o)
   */
-  void resizable(Fl_Widget& o) {resizable_ = &o;}
+  void resizable(Fl_Widget &o) { resizable_ = &o; }
   /**
     The resizable widget defines both the resizing box and the resizing
     behavior of the group and its children.
@@ -170,16 +169,19 @@ public:
     \see Fl_Window::size_range()
     \see Fl_Window::default_size_range()
   */
-  void resizable(Fl_Widget* o) {resizable_ = o;}
+  void resizable(Fl_Widget *o) { resizable_ = o; }
   /**
     Returns the group's resizable widget.
     See void Fl_Group::resizable(Fl_Widget *o)
   */
-  Fl_Widget* resizable() const {return resizable_;}
+  Fl_Widget *resizable() const { return resizable_; }
   /**
     Adds a widget to the group and makes it the resizable widget.
   */
-  void add_resizable(Fl_Widget& o) {resizable_ = &o; add(o);}
+  void add_resizable(Fl_Widget &o) {
+    resizable_ = &o;
+    add(o);
+  }
   void init_sizes();
 
   /**
@@ -191,7 +193,12 @@ public:
 
     The default is to not clip (0) the drawing of child widgets.
   */
-  void clip_children(int c) { if (c) set_flag(CLIP_CHILDREN); else clear_flag(CLIP_CHILDREN); }
+  void clip_children(int c) {
+    if (c)
+      set_flag(CLIP_CHILDREN);
+    else
+      clear_flag(CLIP_CHILDREN);
+  }
   /**
     Returns the current clipping mode.
 
@@ -202,7 +209,7 @@ public:
   unsigned int clip_children() { return (flags() & CLIP_CHILDREN) != 0; }
 
   // Note: Doxygen docs in Fl_Widget.H to avoid redundancy.
-  virtual Fl_Group* as_group() { return this; }
+  virtual Fl_Group *as_group() { return this; }
 
   // back compatibility functions:
 
@@ -211,10 +218,10 @@ public:
     \e W->%take_focus() instead.
     \sa Fl_Widget::take_focus();
   */
-  void focus(Fl_Widget* W) {W->take_focus();}
+  void focus(Fl_Widget *W) { W->take_focus(); }
 
   /** This is for forms compatibility only */
-  Fl_Widget* & _ddfdesign_kludge() {return resizable_;}
+  Fl_Widget *&_ddfdesign_kludge() { return resizable_; }
 
   /** This is for forms compatibility only */
   void forms_end();
@@ -245,7 +252,7 @@ public:
 class FL_EXPORT Fl_End {
 public:
   /** All it does is calling Fl_Group::current()->end() */
-  Fl_End() {Fl_Group::current()->end();}
+  Fl_End() { Fl_Group::current()->end(); }
 };
 
 #endif

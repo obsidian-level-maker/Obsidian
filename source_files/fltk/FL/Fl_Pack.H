@@ -69,12 +69,12 @@ public:
     Gets the number of extra pixels of blank space that are added
     between the children.
   */
-  int spacing() const {return spacing_;}
+  int spacing() const { return spacing_; }
   /**
     Sets the number of extra pixels of blank space that are added
     between the children.
   */
-  void spacing(int i) {spacing_ = i;}
+  void spacing(int i) { spacing_ = i; }
   /** Returns non-zero if Fl_Pack alignment is horizontal.
 
     \returns non-zero if Fl_Pack alignment is horizontal (Fl_Pack::HORIZONTAL)
@@ -87,7 +87,7 @@ public:
 
     See class Fl_Pack documentation for details.
   */
-  uchar horizontal() const {return type();}
+  uchar horizontal() const { return type(); }
 };
 
 #endif

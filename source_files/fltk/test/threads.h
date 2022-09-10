@@ -30,46 +30,46 @@
 // redraw them).
 
 #ifndef Threads_H
-#  define Threads_H
+#define Threads_H
 
-#  ifdef HAVE_PTHREAD_H
+#ifdef HAVE_PTHREAD_H
 // Use POSIX threading...
 
-#    include <pthread.h>
+#include <pthread.h>
 
 typedef pthread_t Fl_Thread;
 extern "C" {
-  typedef void *(Fl_Thread_Func)(void *);
+typedef void *(Fl_Thread_Func)(void *);
 }
 
-static int fl_create_thread(Fl_Thread& t, Fl_Thread_Func* f, void* p) {
-  return pthread_create((pthread_t*)&t, 0, f, p);
+static int fl_create_thread(Fl_Thread &t, Fl_Thread_Func *f, void *p) {
+  return pthread_create((pthread_t *)&t, 0, f, p);
 }
 
-#  elif defined(_WIN32) && !defined(__WATCOMC__) // Use Windows threading...
+#elif defined(_WIN32) && !defined(__WATCOMC__) // Use Windows threading...
 
-#    include <windows.h>
-#    include <process.h>
+#include <windows.h>
+#include <process.h>
 
 typedef unsigned long Fl_Thread;
 extern "C" {
-  typedef void *(__cdecl Fl_Thread_Func)(void *);
+typedef void *(__cdecl Fl_Thread_Func)(void *);
 }
 
-static int fl_create_thread(Fl_Thread& t, Fl_Thread_Func* f, void* p) {
-  return t = (Fl_Thread)_beginthread((void( __cdecl * )( void * ))f, 0, p);
+static int fl_create_thread(Fl_Thread &t, Fl_Thread_Func *f, void *p) {
+  return t = (Fl_Thread)_beginthread((void(__cdecl *)(void *))f, 0, p);
 }
 
-#  elif defined(__WATCOMC__)
-#    include <process.h>
+#elif defined(__WATCOMC__)
+#include <process.h>
 
 typedef unsigned long Fl_Thread;
 extern "C" {
-  typedef void *(__cdecl Fl_Thread_Func)(void *);
+typedef void *(__cdecl Fl_Thread_Func)(void *);
 }
 
-static int fl_create_thread(Fl_Thread& t, Fl_Thread_Func* f, void* p) {
-  return t = (Fl_Thread)_beginthread((void(* )( void * ))f, 32000, p);
+static int fl_create_thread(Fl_Thread &t, Fl_Thread_Func *f, void *p) {
+  return t = (Fl_Thread)_beginthread((void (*)(void *))f, 32000, p);
 }
-#  endif // !HAVE_PTHREAD_H
+#endif // !HAVE_PTHREAD_H
 #endif // !Threads_h

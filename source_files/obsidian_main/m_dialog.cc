@@ -247,8 +247,7 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
 
     if (!last_directory.empty()) {
         chooser.directory(last_directory.generic_string().c_str());
-    }
-    else {
+    } else {
         chooser.directory(install_dir.generic_string().c_str());
     }
 
@@ -298,7 +297,8 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
         }
     }
     src_name = ucs4_path(src_name.generic_string().c_str());
-    src_name.replace_extension(ext); // Ucs4 conversion sometimes goofs the extension
+    src_name.replace_extension(
+        ext);  // Ucs4 conversion sometimes goofs the extension
 #endif
     return src_name;
 }
@@ -614,9 +614,9 @@ tryagain:;
     }
 
     if (std::filesystem::exists(filename)) {
-        switch (fl_choice(_("%s already exists.\nChoose Yes to overwrite or No to choose a new filename."),
-                          _("Yes"), 
-                          _("No"), 0,
+        switch (fl_choice(_("%s already exists.\nChoose Yes to overwrite or No "
+                            "to choose a new filename."),
+                          _("Yes"), _("No"), 0,
                           filename.generic_string().c_str())) {
             case 0:
                 std::filesystem::remove(filename);
@@ -660,9 +660,10 @@ tryagain:;
         }
         if (zip_buf) {
             if (std::filesystem::exists(zip_filename)) {
-                switch (fl_choice(_("Log zipping is enabled, but %s already exists.\nOverwrite (original .txt file will still be kept) ?"),
-                                  _("Yes"), 
-                                  _("No"), 0,
+                switch (fl_choice(_("Log zipping is enabled, but %s already "
+                                    "exists.\nOverwrite (original .txt file "
+                                    "will still be kept) ?"),
+                                  _("Yes"), _("No"), 0,
                                   zip_filename.generic_string().c_str())) {
                     case 0:
                         std::filesystem::remove(zip_filename);
@@ -678,12 +679,14 @@ tryagain:;
                 std::filesystem::remove(filename);
                 delete[] zip_buf;
             } else {
-                DLG_ShowError(_("Zipping logs to %s failed! Retaining original logs.\n"),
-                              filename.generic_string().c_str());
+                DLG_ShowError(
+                    _("Zipping logs to %s failed! Retaining original logs.\n"),
+                    filename.generic_string().c_str());
             }
         } else {
-            DLG_ShowError(_("Zipping logs to %s failed! Retaining original logs.\n"),
-                          filename.generic_string().c_str());
+            DLG_ShowError(
+                _("Zipping logs to %s failed! Retaining original logs.\n"),
+                filename.generic_string().c_str());
         }
     }
 }
@@ -719,7 +722,11 @@ void DLG_ViewGlossary(void) {
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-    buff->text(_("This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."));
+    buff->text(
+        _("This glossary's main purpose is for translators to have a space to "
+          "provide longer definitions for terms that may not have a direct "
+          "equivalent to their English counterparts.\n\nIf there is a need for "
+          "an English version, this will be populated in the future."));
 }
 
 //--- editor settings ---

@@ -35,75 +35,76 @@
  * Microsoft(r) Windows(r) that allows for it.
  */
 
-#if defined(_WIN32) && !defined(FL_DLL) && !defined (__GNUC__)
+#if defined(_WIN32) && !defined(FL_DLL) && !defined(__GNUC__)
 
-#  include <windows.h>
-#  include <stdio.h>
-#  include <stdlib.h>
-#  include <FL/fl_utf8.h>
+#include <windows.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <FL/fl_utf8.h>
 
 extern int main(int, char *[]);
 
-#  ifdef BORLAND5
-#    define __argc _argc
-#    define __argv _argv
-#  endif /* BORLAND5 */
+#ifdef BORLAND5
+#define __argc _argc
+#define __argv _argv
+#endif /* BORLAND5 */
 
 /* static int mbcs2utf(const char *s, int l, char *dst, unsigned dstlen) */
-static int mbcs2utf(const char *s, int l, char *dst)
-{
+static int mbcs2utf(const char *s, int l, char *dst) {
   static wchar_t *mbwbuf;
   unsigned dstlen = 0;
-  if (!s) return 0;
+  if (!s)
+    return 0;
   dstlen = (l * 6) + 6;
-  mbwbuf = (wchar_t*)malloc(dstlen * sizeof(wchar_t));
-  l = (int) mbstowcs(mbwbuf, s, l);
-/* l = fl_unicode2utf(mbwbuf, l, dst); */
+  mbwbuf = (wchar_t *)malloc(dstlen * sizeof(wchar_t));
+  l = (int)mbstowcs(mbwbuf, s, l);
+  /* l = fl_unicode2utf(mbwbuf, l, dst); */
   l = fl_utf8fromwc(dst, dstlen, mbwbuf, l);
   dst[l] = 0;
   free(mbwbuf);
   return l;
 }
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
-                             LPSTR lpCmdLine, int nCmdShow) {
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
   int rc, i;
   char **ar;
 
-#  ifdef _DEBUG
- /*
-  * If we are using compiling in debug mode, open a console window so
-  * we can see any printf's, etc...
-  *
-  * While we can detect if the program was run from the command-line -
-  * look at the CMDLINE environment variable, it will be "WIN" for
-  * programs started from the GUI - the shell seems to run all Windows
-  * applications in the background anyways...
-  */
+#ifdef _DEBUG
+  /*
+   * If we are using compiling in debug mode, open a console window so
+   * we can see any printf's, etc...
+   *
+   * While we can detect if the program was run from the command-line -
+   * look at the CMDLINE environment variable, it will be "WIN" for
+   * programs started from the GUI - the shell seems to run all Windows
+   * applications in the background anyways...
+   */
 
   AllocConsole();
   freopen("conin$", "r", stdin);
   freopen("conout$", "w", stdout);
   freopen("conout$", "w", stderr);
-#  endif /* _DEBUG */
+#endif /* _DEBUG */
 
-  ar = (char**) malloc(sizeof(char*) * (__argc + 1));
+  ar = (char **)malloc(sizeof(char *) * (__argc + 1));
   i = 0;
   while (i < __argc) {
     int l;
     unsigned dstlen;
-    if (__wargv ) {
-      for (l = 0; __wargv[i] && __wargv[i][l]; l++) {}; /* is this just wstrlen??? */
+    if (__wargv) {
+      for (l = 0; __wargv[i] && __wargv[i][l]; l++) {
+      }; /* is this just wstrlen??? */
       dstlen = (l * 5) + 1;
-      ar[i] = (char*) malloc(dstlen);
-/*    ar[i][fl_unicode2utf(__wargv[i], l, ar[i])] = 0; */
+      ar[i] = (char *)malloc(dstlen);
+      /*    ar[i][fl_unicode2utf(__wargv[i], l, ar[i])] = 0; */
       dstlen = fl_utf8fromwc(ar[i], dstlen, __wargv[i], l);
       ar[i][dstlen] = 0;
     } else {
-      for (l = 0; __argv[i] && __argv[i][l]; l++) {};
+      for (l = 0; __argv[i] && __argv[i][l]; l++) {
+      };
       dstlen = (l * 5) + 1;
-      ar[i] = (char*) malloc(dstlen);
-/*      ar[i][mbcs2utf(__argv[i], l, ar[i], dstlen)] = 0; */
+      ar[i] = (char *)malloc(dstlen);
+      /*      ar[i][mbcs2utf(__argv[i], l, ar[i], dstlen)] = 0; */
       ar[i][mbcs2utf(__argv[i], l, ar[i])] = 0;
     }
     i++;
@@ -112,11 +113,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
   /* Run the standard main entry point function... */
   rc = main(__argc, ar);
 
-#  ifdef _DEBUG
+#ifdef _DEBUG
   fclose(stdin);
   fclose(stdout);
   fclose(stderr);
-#  endif /* _DEBUG */
+#endif /* _DEBUG */
 
   return rc;
 }
@@ -125,4 +126,3 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 /* STR# 2973: solves "empty translation unit" error (Sun, HP-UX..) */
 typedef int dummy;
 #endif /* _WIN32 && !FL_DLL && !__GNUC__ */
-

@@ -25,15 +25,17 @@
  class Fl_Native_File_Chooser_Driver   <== virtual API that a platform may implement
                                            this API has a do-nothing default implementation
 
-        class Fl_Native_File_Chooser_FLTK_Driver   <== this API implementation is the default FLTK file chooser
-                class Fl_GTK_Native_File_Chooser_Driver  <== this API implementation runs a GTK file chooser
-                class Fl_Kdialog_Native_File_Chooser_Driver  <== this API implementation runs a KDE file chooser
-                                        it is determined at run-time if the GTK dynamic libraries are available
-                                        and the KDE file chooser runs under the KDE desktop
+        class Fl_Native_File_Chooser_FLTK_Driver   <== this API implementation is the default FLTK
+ file chooser class Fl_GTK_Native_File_Chooser_Driver  <== this API implementation runs a GTK file
+ chooser class Fl_Kdialog_Native_File_Chooser_Driver  <== this API implementation runs a KDE file
+ chooser it is determined at run-time if the GTK dynamic libraries are available and the KDE file
+ chooser runs under the KDE desktop
 
-        class Fl_Quartz_Native_File_Chooser_Driver  <== this API implementation runs a Mac OS X file chooser
+        class Fl_Quartz_Native_File_Chooser_Driver  <== this API implementation runs a Mac OS X file
+ chooser
 
-        class Fl_WinAPI_Native_File_Chooser_Driver  <== this API implementation runs a Windows file chooser
+        class Fl_WinAPI_Native_File_Chooser_Driver  <== this API implementation runs a Windows file
+ chooser
 
 
  Each platform must implement the constructor of the Fl_Native_File_Chooser class.
@@ -44,8 +46,8 @@
  }
 
  can be used by any platform.
- No more code is required. The cross-platform Fl_Native_File_Chooser_FLTK.cxx file must be compiled in libfltk,
- and the default FLTK file chooser will be used.
+ No more code is required. The cross-platform Fl_Native_File_Chooser_FLTK.cxx file must be compiled
+ in libfltk, and the default FLTK file chooser will be used.
 
  This other implementation:
  Fl_Native_File_Chooser::Fl_Native_File_Chooser(int val) {
@@ -105,37 +107,38 @@ class Fl_Native_File_Chooser_Driver;
 
  - Under X windows, and if Fl::OPTION_FNFC_USES_GTK has not been switched off,
  the widget attempts to use standard GTK file chooser dialogs if they are
- available at run-time on the platform, and falls back to use FLTK's Fl_File_Chooser if they are not.
- In the first case, calling fl_register_images() adds  a "Preview" button to the GTK chooser dialog.
- In the latter case, it's best if you call Fl_File_Icon::load_system_icons()
- at the start of main(), to enable the nicer looking file browser widgets.
- Use the static public attributes of class Fl_File_Chooser to localize
- the browser.
+ available at run-time on the platform, and falls back to use FLTK's Fl_File_Chooser if they are
+ not. In the first case, calling fl_register_images() adds  a "Preview" button to the GTK chooser
+ dialog. In the latter case, it's best if you call Fl_File_Icon::load_system_icons() at the start of
+ main(), to enable the nicer looking file browser widgets. Use the static public attributes of class
+ Fl_File_Chooser to localize the browser.
  - Some operating systems support certain OS specific options; see
  Fl_Native_File_Chooser::options() for a list.
 
  \image html Fl_Native_File_Chooser.png "The Fl_Native_File_Chooser on different platforms."
- \image latex Fl_Native_File_Chooser.png "The Fl_Native_File_Chooser on different platforms" width=14cm
+ \image latex Fl_Native_File_Chooser.png "The Fl_Native_File_Chooser on different platforms"
+ width=14cm
 
  */
 class FL_EXPORT Fl_Native_File_Chooser {
 private:
   Fl_Native_File_Chooser_Driver *platform_fnfc;
+
 public:
   enum Type {
-    BROWSE_FILE = 0,                    ///< browse files (lets user choose one file)
-    BROWSE_DIRECTORY,                   ///< browse directories (lets user choose one directory)
-    BROWSE_MULTI_FILE,                  ///< browse files (lets user choose multiple files)
-    BROWSE_MULTI_DIRECTORY,             ///< browse directories (lets user choose multiple directories)
-    BROWSE_SAVE_FILE,                   ///< browse to save a file
-    BROWSE_SAVE_DIRECTORY               ///< browse to save a directory
+    BROWSE_FILE = 0,        ///< browse files (lets user choose one file)
+    BROWSE_DIRECTORY,       ///< browse directories (lets user choose one directory)
+    BROWSE_MULTI_FILE,      ///< browse files (lets user choose multiple files)
+    BROWSE_MULTI_DIRECTORY, ///< browse directories (lets user choose multiple directories)
+    BROWSE_SAVE_FILE,       ///< browse to save a file
+    BROWSE_SAVE_DIRECTORY   ///< browse to save a directory
   };
   enum Option {
-    NO_OPTIONS     = 0x0000,            ///< no options enabled
-    SAVEAS_CONFIRM = 0x0001,            ///< Show native 'Save As' overwrite confirm dialog
-    NEW_FOLDER     = 0x0002,            ///< Show 'New Folder' icon (if supported)
-    PREVIEW        = 0x0004,            ///< enable preview mode (if supported)
-    USE_FILTER_EXT = 0x0008             ///< Chooser filter pilots the output file extension (if supported)
+    NO_OPTIONS = 0x0000,     ///< no options enabled
+    SAVEAS_CONFIRM = 0x0001, ///< Show native 'Save As' overwrite confirm dialog
+    NEW_FOLDER = 0x0002,     ///< Show 'New Folder' icon (if supported)
+    PREVIEW = 0x0004,        ///< enable preview mode (if supported)
+    USE_FILTER_EXT = 0x0008  ///< Chooser filter pilots the output file extension (if supported)
   };
   static const char *file_exists_message;
 
@@ -147,26 +150,26 @@ public:
   Fl_Native_File_Chooser(int val = BROWSE_FILE); // each platorm implements it
   ~Fl_Native_File_Chooser();
   void type(int t);
-  int type() const ;
+  int type() const;
   void options(int o);
   int options() const;
   int count() const;
-  const char *filename() const ;
-  const char *filename(int i) const ;
-  void directory(const char *val) ;
+  const char *filename() const;
+  const char *filename(int i) const;
+  void directory(const char *val);
   const char *directory() const;
   void title(const char *t);
-  const char* title() const;
-  const char *filter() const ;
+  const char *title() const;
+  const char *filter() const;
   void filter(const char *f);
-  int filters() const ;
-  void filter_value(int i) ;
-  int filter_value() const ;
-  void preset_file(const char*f) ;
-  const char* preset_file() const;
-  const char *errmsg() const ;
-  int show() ;
-  };
+  int filters() const;
+  void filter_value(int i);
+  int filter_value() const;
+  void preset_file(const char *f);
+  const char *preset_file() const;
+  const char *errmsg() const;
+  int show();
+};
 
 /**
  \cond DriverDev
@@ -186,29 +189,30 @@ protected:
   static char *strapp(char *s, const char *val);
   static char *strfree(char *val);
   static char *strnew(const char *val);
+
 public:
   Fl_Native_File_Chooser_Driver(int) {}
   virtual ~Fl_Native_File_Chooser_Driver() {}
   virtual void type(int) {}
-  virtual int type() const  {return 0;}
+  virtual int type() const { return 0; }
   virtual void options(int) {}
-  virtual int options() const {return 0;}
-  virtual int count() const {return 0;}
-  virtual const char *filename() const  {return 0;}
-  virtual const char *filename(int) const  {return 0;}
-  virtual void directory(const char *)  {}
-  virtual const char *directory() const {return 0;}
+  virtual int options() const { return 0; }
+  virtual int count() const { return 0; }
+  virtual const char *filename() const { return 0; }
+  virtual const char *filename(int) const { return 0; }
+  virtual void directory(const char *) {}
+  virtual const char *directory() const { return 0; }
   virtual void title(const char *) {}
-  virtual const char* title() const {return 0;}
-  virtual const char *filter() const  {return 0;}
+  virtual const char *title() const { return 0; }
+  virtual const char *filter() const { return 0; }
   virtual void filter(const char *) {}
-  virtual int filters() const  {return 0;}
-  virtual void filter_value(int)  {}
-  virtual int filter_value() const  {return 0;}
-  virtual void preset_file(const char*)  {}
-  virtual const char* preset_file() const {return 0;}
-  virtual const char *errmsg() const  {return 0;}
-  virtual int show()  {return 1;}
+  virtual int filters() const { return 0; }
+  virtual void filter_value(int) {}
+  virtual int filter_value() const { return 0; }
+  virtual void preset_file(const char *) {}
+  virtual const char *preset_file() const { return 0; }
+  virtual const char *errmsg() const { return 0; }
+  virtual int show() { return 1; }
 };
 
 /** A cross-platform implementation of Fl_Native_File_Chooser_Driver.
@@ -228,41 +232,43 @@ private:
   int type_fl_file(int val);
   int exist_dialog();
   void parse_filter();
+
 protected:
-  int   _btype;                 // kind-of browser to show()
-  int   _options;               // general options
-  int   _nfilters;
-  char *_filter;                // user supplied filter
-  char *_parsedfilt;            // parsed filter
-  int   _filtvalue;             // selected filter
+  int _btype;   // kind-of browser to show()
+  int _options; // general options
+  int _nfilters;
+  char *_filter;     // user supplied filter
+  char *_parsedfilt; // parsed filter
+  int _filtvalue;    // selected filter
   char *_preset_file;
-  char *_prevvalue;             // Returned filename
+  char *_prevvalue; // Returned filename
   char *_directory;
-  char *_errmsg;                // error message
+  char *_errmsg; // error message
   Fl_File_Chooser *_file_chooser;
+
 public:
   Fl_Native_File_Chooser_FLTK_Driver(int val);
   virtual ~Fl_Native_File_Chooser_FLTK_Driver();
   virtual void type(int t);
-  virtual int type() const ;
+  virtual int type() const;
   virtual void options(int o);
   virtual int options() const;
   virtual int count() const;
-  virtual const char *filename() const ;
-  virtual const char *filename(int i) const ;
-  virtual void directory(const char *val) ;
+  virtual const char *filename() const;
+  virtual const char *filename(int i) const;
+  virtual void directory(const char *val);
   virtual const char *directory() const;
   virtual void title(const char *t);
-  virtual const char* title() const;
-  virtual const char *filter() const ;
+  virtual const char *title() const;
+  virtual const char *filter() const;
   virtual void filter(const char *f);
-  virtual int filters() const ;
-  virtual void filter_value(int i) ;
-  virtual int filter_value() const ;
-  virtual void preset_file(const char*f) ;
-  virtual const char* preset_file() const;
-  virtual const char *errmsg() const ;
-  virtual int show() ;
+  virtual int filters() const;
+  virtual void filter_value(int i);
+  virtual int filter_value() const;
+  virtual void preset_file(const char *f);
+  virtual const char *preset_file() const;
+  virtual const char *errmsg() const;
+  virtual int show();
 };
 
 /**

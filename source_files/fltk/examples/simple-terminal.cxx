@@ -15,7 +15,7 @@
 //     https://www.fltk.org/bugs.php
 //
 
-#include <time.h>               //START
+#include <time.h> //START
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Box.H>
 #include <FL/Fl_Simple_Terminal.H>
@@ -23,8 +23,8 @@
 #define TERMINAL_HEIGHT 120
 
 // Globals
-Fl_Double_Window   *G_win = 0;
-Fl_Box             *G_box = 0;
+Fl_Double_Window *G_win = 0;
+Fl_Box *G_box = 0;
 Fl_Simple_Terminal *G_tty = 0;
 
 // Append a date/time message to the terminal every 2 seconds
@@ -35,20 +35,20 @@ void tick_cb(void *data) {
 }
 
 int main(int argc, char **argv) {
-  G_win = new Fl_Double_Window(500, 200+TERMINAL_HEIGHT, "Your App");
+  G_win = new Fl_Double_Window(500, 200 + TERMINAL_HEIGHT, "Your App");
   G_win->begin();
 
-    G_box = new Fl_Box(0, 0, G_win->w(), 200,
-                       "Your app GUI in this area.\n\n"
-                       "Your app's debugging output in tty below");
+  G_box = new Fl_Box(0, 0, G_win->w(), 200,
+                     "Your app GUI in this area.\n\n"
+                     "Your app's debugging output in tty below");
 
-    // Add simple terminal to bottom of app window for scrolling history of status messages.
-    G_tty = new Fl_Simple_Terminal(0,200,G_win->w(),TERMINAL_HEIGHT);
-    G_tty->ansi(true);  // enable use of "\033[32m"
+  // Add simple terminal to bottom of app window for scrolling history of status messages.
+  G_tty = new Fl_Simple_Terminal(0, 200, G_win->w(), TERMINAL_HEIGHT);
+  G_tty->ansi(true); // enable use of "\033[32m"
 
   G_win->end();
   G_win->resizable(G_win);
   G_win->show();
   Fl::add_timeout(0.5, tick_cb);
   return Fl::run();
-}                               //END
+} // END

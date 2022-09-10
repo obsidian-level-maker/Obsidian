@@ -21,20 +21,20 @@
 #include <stdlib.h>
 
 #if defined(_WIN32) && !defined(__CYGWIN__)
-#  include <direct.h>
-#  include <windows.h>
-#  include <io.h>
-#  include <fcntl.h>
-#  include <commdlg.h>
-#  include <FL/platform.H>
+#include <direct.h>
+#include <windows.h>
+#include <io.h>
+#include <fcntl.h>
+#include <commdlg.h>
+#include <FL/platform.H>
 #else
-#  include <unistd.h>
+#include <unistd.h>
 #endif
 
 void show_shell_window();
 void update_shell_window();
 void apply_shell_window();
-void do_shell_command(class Fl_Return_Button*, void*);
+void do_shell_command(class Fl_Return_Button *, void *);
 
 typedef struct {
   char *command;
@@ -62,30 +62,30 @@ public:
   Fl_Process();
   ~Fl_Process();
 
-  FILE *popen(const char *cmd, const char *mode="r");
-  int  close();
+  FILE *popen(const char *cmd, const char *mode = "r");
+  int close();
 
-  FILE * desc() const;
-  char * get_line(char * line, size_t s) const;
+  FILE *desc() const;
+  char *get_line(char *line, size_t s) const;
 
   int get_fileno() const;
 
-#if defined(_WIN32)  && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
 protected:
   HANDLE pin[2], pout[2], perr[2];
   char ptmode;
   PROCESS_INFORMATION pi;
   STARTUPINFO si;
 
-  static bool createPipe(HANDLE * h, BOOL bInheritHnd=TRUE);
+  static bool createPipe(HANDLE *h, BOOL bInheritHnd = TRUE);
 
 private:
-  FILE * freeHandles();
-  static void clean_close(HANDLE& h);
+  FILE *freeHandles();
+  static void clean_close(HANDLE &h);
 #endif
 
 protected:
-  FILE * _fpt;
+  FILE *_fpt;
 };
 
 #endif // _FLUID_SHELL_COMMAND_H

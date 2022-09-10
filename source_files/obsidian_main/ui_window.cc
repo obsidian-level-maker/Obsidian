@@ -150,7 +150,9 @@ void UI_MainWin::menu_do_tutorial(Fl_Widget *w, void *data) { DLG_Tutorial(); }
 
 void UI_MainWin::menu_do_view_logs(Fl_Widget *w, void *data) { DLG_ViewLogs(); }
 
-void UI_MainWin::menu_do_glossary(Fl_Widget *w, void *data) { DLG_ViewGlossary(); }
+void UI_MainWin::menu_do_glossary(Fl_Widget *w, void *data) {
+    DLG_ViewGlossary();
+}
 
 void UI_MainWin::menu_do_options(Fl_Widget *w, void *data) {
     DLG_OptionsEditor();

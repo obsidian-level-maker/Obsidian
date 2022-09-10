@@ -67,16 +67,15 @@ int Fl::awake_ring_tail_;
 static const int AWAKE_RING_SIZE = 1024;
 
 /** Adds an awake handler for use in awake(). */
-int Fl::add_awake_handler_(Fl_Awake_Handler func, void *data)
-{
+int Fl::add_awake_handler_(Fl_Awake_Handler func, void *data) {
   int ret = 0;
   Fl::system_driver()->lock_ring();
   if (!awake_ring_) {
     awake_ring_size_ = AWAKE_RING_SIZE;
-    awake_ring_ = (Fl_Awake_Handler*)malloc(awake_ring_size_*sizeof(Fl_Awake_Handler));
-    awake_data_ = (void**)malloc(awake_ring_size_*sizeof(void*));
+    awake_ring_ = (Fl_Awake_Handler *)malloc(awake_ring_size_ * sizeof(Fl_Awake_Handler));
+    awake_data_ = (void **)malloc(awake_ring_size_ * sizeof(void *));
     // explicitly initialize the head and tail indices
-    awake_ring_head_= awake_ring_tail_ = 0;
+    awake_ring_head_ = awake_ring_tail_ = 0;
   }
   // The next head index we will want (not the current index):
   // We use this to check if the ring-buffer is full or not
@@ -99,8 +98,7 @@ int Fl::add_awake_handler_(Fl_Awake_Handler func, void *data)
 }
 
 /** Gets the last stored awake handler for use in awake(). */
-int Fl::get_awake_handler_(Fl_Awake_Handler &func, void *&data)
-{
+int Fl::get_awake_handler_(Fl_Awake_Handler &func, void *&data) {
   int ret = 0;
   Fl::system_driver()->lock_ring();
   if ((!awake_ring_) || (awake_ring_head_ == awake_ring_tail_)) {
@@ -187,7 +185,7 @@ void Fl::awake(void *v) {
   Fl::system_driver()->awake(v);
 }
 
-void* Fl::thread_message() {
+void *Fl::thread_message() {
   return Fl::system_driver()->thread_message();
 }
 

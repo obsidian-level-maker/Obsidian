@@ -27,7 +27,7 @@
 #define RS (Fl::box_border_radius_max())
 #define BW (Fl::box_shadow_width())
 
-static double offset[RN] = { 0.0, 0.07612, 0.29289, 0.61732, 1.0};
+static double offset[RN] = {0.0, 0.07612, 0.29289, 0.61732, 1.0};
 
 static inline void fl_vertex_r(double x, double y) {
   fl_vertex(x + 0.5, y + 0.5);
@@ -36,27 +36,39 @@ static inline void fl_vertex_r(double x, double y) {
 static void rbox(int fill, int x, int y, int w, int h) {
   int i;
   int rs, rsy;
-  rs = w*2/5; rsy = h*2/5;
-  if (rs > rsy) rs = rsy; // use smaller radius
-  if (rs > RS) rs = RS;
-  if (rs == 5) rs = 4;  // use only even sizes for small corners (STR #2943)
-  if (rs == 7) rs = 8;  // note: 8 is better than 6 (really)
+  rs = w * 2 / 5;
+  rsy = h * 2 / 5;
+  if (rs > rsy)
+    rs = rsy; // use smaller radius
+  if (rs > RS)
+    rs = RS;
+  if (rs == 5)
+    rs = 4; // use only even sizes for small corners (STR #2943)
+  if (rs == 7)
+    rs = 8; // note: 8 is better than 6 (really)
 
-  if (fill) fl_begin_polygon(); else fl_begin_loop();
-  for (i=0; i<RN; i++)
-    fl_vertex_r(x + offset[RN-i-1]*rs, y + offset[i] * rs);
-  for (i=0; i<RN; i++)
-    fl_vertex_r(x + offset[i]*rs, y + h-1 - offset[RN-i-1] * rs);
-  for (i=0; i<RN; i++)
-    fl_vertex_r(x + w-1 - offset[RN-i-1]*rs, y + h-1 - offset[i] * rs);
-  for (i=0; i<RN; i++)
-    fl_vertex_r(x + w-1 - offset[i]*rs, y + offset[RN-i-1] * rs);
-  if (fill) fl_end_polygon(); else fl_end_loop();
+  if (fill)
+    fl_begin_polygon();
+  else
+    fl_begin_loop();
+  for (i = 0; i < RN; i++)
+    fl_vertex_r(x + offset[RN - i - 1] * rs, y + offset[i] * rs);
+  for (i = 0; i < RN; i++)
+    fl_vertex_r(x + offset[i] * rs, y + h - 1 - offset[RN - i - 1] * rs);
+  for (i = 0; i < RN; i++)
+    fl_vertex_r(x + w - 1 - offset[RN - i - 1] * rs, y + h - 1 - offset[i] * rs);
+  for (i = 0; i < RN; i++)
+    fl_vertex_r(x + w - 1 - offset[i] * rs, y + offset[RN - i - 1] * rs);
+  if (fill)
+    fl_end_polygon();
+  else
+    fl_end_loop();
 }
 
 static void fl_rflat_box(int x, int y, int w, int h, Fl_Color c) {
   Fl::set_box_color(c);
-  rbox(1, x, y, w, h); rbox(0, x, y, w, h);
+  rbox(1, x, y, w, h);
+  rbox(0, x, y, w, h);
 }
 
 static void fl_rounded_frame(int x, int y, int w, int h, Fl_Color c) {
@@ -67,19 +79,20 @@ static void fl_rounded_frame(int x, int y, int w, int h, Fl_Color c) {
 static void fl_rounded_box(int x, int y, int w, int h, Fl_Color c) {
   Fl::set_box_color(c);
   rbox(1, x, y, w, h);
-  fl_color(FL_BLACK); rbox(0, x, y, w, h);
+  fl_color(FL_BLACK);
+  rbox(0, x, y, w, h);
 }
 
 static void fl_rshadow_box(int x, int y, int w, int h, Fl_Color c) {
   // draw shadow:
   fl_color(FL_DARK3);
-  rbox(1, x+BW, y+BW, w, h);
-  rbox(0, x+BW, y+BW, w, h);
+  rbox(1, x + BW, y + BW, w, h);
+  rbox(0, x + BW, y + BW, w, h);
   // draw the box:
   fl_rounded_box(x, y, w, h, c);
 }
 
-extern void fl_internal_boxtype(Fl_Boxtype, Fl_Box_Draw_F*);
+extern void fl_internal_boxtype(Fl_Boxtype, Fl_Box_Draw_F *);
 
 Fl_Boxtype fl_define_FL_ROUNDED_BOX() {
   fl_internal_boxtype(_FL_ROUNDED_FRAME, fl_rounded_frame);

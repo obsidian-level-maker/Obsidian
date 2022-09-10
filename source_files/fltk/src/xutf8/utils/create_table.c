@@ -31,10 +31,12 @@ int main(int argc, char **argv) {
 
   buffer[len] = '\0';
   ptr = (unsigned char *)buffer;
-  while (*ptr != '\n') ptr++;
+  while (*ptr != '\n')
+    ptr++;
   ptr++;
   while (*ptr != '\n') {
-    if (*ptr == ',') nbb++;
+    if (*ptr == ',')
+      nbb++;
     ptr++;
   }
   ptr = (unsigned char *)buffer;
@@ -45,11 +47,13 @@ int main(int argc, char **argv) {
     char pp[20];
     nb = 0;
     pp[0] = '\0';
-    while (*p != 'U') p++;
+    while (*p != 'U')
+      p++;
     strncat(pp, p, 6);
     *pp = '0';
-    *(pp+1) = 'x';
-    ucs = (unsigned int)strtoul(pp, NULL, 16);;
+    *(pp + 1) = 'x';
+    ucs = (unsigned int)strtoul(pp, NULL, 16);
+    ;
     if (ucs < 1) {
       printf("ERROR %d %d\n", len, ucs);
       abort();
@@ -61,14 +65,13 @@ int main(int argc, char **argv) {
           fprintf(stderr, "\t/* end: U+%04X */\n", i);
         }
         if (strcmp(argv[1], "spacing")) {
-          printf("\nstatic const char unicode_to_%s_%db_%04X[] = {\n",
-                 argv[1], nbb, ucs);
-          fprintf(stderr, "unicode_to_%s_%db_%04X[]; ",
-                  argv[1], nbb, ucs);
+          printf("\nstatic const char unicode_to_%s_%db_%04X[] = {\n", argv[1], nbb, ucs);
+          fprintf(stderr, "unicode_to_%s_%db_%04X[]; ", argv[1], nbb, ucs);
         } else {
           printf("\nstatic const unsigned short"
                  " ucs_table_%04X[]"
-                 " = {\n", ucs);
+                 " = {\n",
+                 ucs);
           fprintf(stderr, "ucs_table_%04X[]; ", ucs);
         }
       } else {

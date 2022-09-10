@@ -26,16 +26,18 @@
     Forms compatibility Bitmap Image Widget
 */
 class FL_EXPORT Fl_FormsBitmap : public Fl_Widget {
-    Fl_Bitmap *b;
+  Fl_Bitmap *b;
+
 protected:
-    void draw();
+  void draw();
+
 public:
-    Fl_FormsBitmap(Fl_Boxtype, int, int, int, int, const char * = 0);
-    void set(int W, int H, const uchar *bits);
-    /** Sets a new bitmap. */
-    void bitmap(Fl_Bitmap *B) {b = B;}
-    /** Gets a the current associated Fl_Bitmap objects. */
-    Fl_Bitmap *bitmap() const {return b;}
+  Fl_FormsBitmap(Fl_Boxtype, int, int, int, int, const char * = 0);
+  void set(int W, int H, const uchar *bits);
+  /** Sets a new bitmap. */
+  void bitmap(Fl_Bitmap *B) { b = B; }
+  /** Gets a the current associated Fl_Bitmap objects. */
+  Fl_Bitmap *bitmap() const { return b; }
 };
 
 #endif
