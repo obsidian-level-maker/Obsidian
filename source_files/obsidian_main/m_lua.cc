@@ -1854,22 +1854,13 @@ void ob_print_reference() {
         if (!Script_CallFunc("ob_print_reference", 1)) {
             fmt::print("ob_print_reference: Error creating REFERENCE.txt!\n");
         }
-#ifdef WIN32
-        std::cout << '\n' << "Close window when finished...";
-        do {
-        } while (true);
-#endif
+        fmt::print("A copy of this output can be found at {}\n", reference_file.generic_string());
 }
 
 void ob_print_reference_json() {
     if (!Script_CallFunc("ob_print_reference_json", 1)) {
         fmt::print("ob_print_reference_json: Error printing json reference!\n");
     }
-#ifdef WIN32
-    std::cout << '\n' << "Close window when finished...";
-    do {
-    } while (true);
-#endif
 }
 
 void ob_invoke_hook(std::string hookname) {

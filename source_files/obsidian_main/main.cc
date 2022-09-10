@@ -1231,6 +1231,13 @@ restart:;
 
     if (argv::Find(0, "printref-json") >= 0) {
         batch_mode = true;
+#ifdef WIN32
+        if (AllocConsole()) {
+            freopen("CONOUT$", "r", stdin);
+            freopen("CONOUT$", "w", stdout);
+            freopen("CONOUT$", "w", stderr);
+        }
+#endif
     }
 
     if (argv::Find('z', "zip") >= 0) {
@@ -1411,6 +1418,12 @@ skiprest:
 
         if (argv::Find(0, "printref-json") >= 0) {
             ob_print_reference_json();
+#ifdef WIN32
+            std::cout << '\n' << "Close window when finished...";
+
+            do {
+            } while (true);
+#endif
             Main::Detail::Shutdown(false);
             return 0;
         }
