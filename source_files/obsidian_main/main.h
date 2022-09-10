@@ -89,6 +89,7 @@ extern std::filesystem::path config_file;
 extern std::filesystem::path options_file;
 extern std::filesystem::path theme_file;
 extern std::filesystem::path logging_file;
+extern std::filesystem::path reference_file;
 
 extern bool batch_mode;
 

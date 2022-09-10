@@ -1876,7 +1876,6 @@ function ob_print_reference()
     gui.console_print("\n\n")
     gui.ref_print("\n\n")
   end
-  gui.console_print("\nA copy of this list can be found in REFERENCE.txt\n")
 end
 
 local function split_commas(inputstr)
