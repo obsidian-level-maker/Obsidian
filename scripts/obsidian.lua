@@ -1755,7 +1755,7 @@ function ob_clean_up()
   collectgarbage("collect")
 end
 
-function ob_print_reference()
+local function ob_get_option_refs()
   local option_refs = {}
   for _,v in pairs(OB_MODULES) do
     for _,vv in pairs(v.options) do
@@ -1819,6 +1819,11 @@ function ob_print_reference()
       end
     end
   end
+  return option_refs
+end
+
+function ob_print_reference()
+  local option_refs = ob_get_option_refs()
   local sorted_entries = table.keys_sorted(option_refs)
   for _,option in ipairs(sorted_entries) do
     gui.console_print("[ " .. option .. " ]\n")
@@ -1872,6 +1877,104 @@ function ob_print_reference()
     gui.ref_print("\n\n")
   end
   gui.console_print("\nA copy of this list can be found in REFERENCE.txt\n")
+end
+
+local function split_commas(inputstr)
+  local t = {}
+  for str in string.gmatch(inputstr, "([^,]+)") do
+    table.insert(t, str)
+  end
+  return t
+end
+
+function ob_print_reference_json()
+  local option_refs = ob_get_option_refs()
+  local sorted_entries = table.keys_sorted(option_refs)
+  gui.console_print("{\n")
+  for i,option in ipairs(sorted_entries) do
+    gui.console_print("  \"" .. option .. "\": {\n")
+    local tooltip = option_refs[option].tooltip
+    tooltip = tooltip:gsub("\n", "\\n")
+    gui.console_print("    \"tooltip\": \"" .. tooltip .. "\",\n")
+    gui.console_print("    \"engine\": ")
+    if #option_refs[option].engine == 1 and option_refs[option].engine[1] == "ALL" then
+      gui.console_print("\"ALL\",\n")
+    else
+      gui.console_print("[")
+      for j,engine in pairs(option_refs[option].engine) do
+        if j ~= #option_refs[option].engine then
+          gui.console_print("\"" .. engine .. "\", ")
+        else
+          gui.console_print("\"" .. engine .. "\"")
+        end
+      end
+      gui.console_print("],\n")
+    end
+    gui.console_print("    \"game\": ")
+    if #option_refs[option].game == 1 and option_refs[option].game[1] == "ALL" then
+      gui.console_print("\"ALL\",\n")
+    else
+      gui.console_print("[")
+      for j,game in pairs(option_refs[option].game) do
+        if j ~= #option_refs[option].game then
+          gui.console_print("\"" .. game .. "\", ")
+        else
+          gui.console_print("\"" .. game .. "\"")
+        end
+      end
+      gui.console_print("],\n")
+    end
+    if (option_refs[option].slider) then
+      gui.console_print("    \"type\": \"slider\",\n")
+      gui.console_print("    \"values\": {\n")
+      gui.console_print("      \"min\": " .. option_refs[option].slider.min .. ",\n")
+      gui.console_print("      \"max\": " .. option_refs[option].slider.max .. ",\n")
+      local default = option_refs[option].slider.default
+      if tonumber(default) == nil then
+        default = "\"" .. default .. "\""
+      end
+      gui.console_print("      \"default\": " .. default)
+      if option_refs[option].slider.nan then
+        local nans = split_commas(option_refs[option].slider.nan)
+        gui.console_print(",\n      \"nan\": [\n")
+        for i,nan in ipairs(nans) do
+          gui.console_print("        \"" .. nan .. "\"")
+          if i ~= #nans then
+            gui.console_print(",")
+          end
+          gui.console_print("\n")
+        end
+        gui.console_print("      ]")
+      end
+      gui.console_print("\n")
+      gui.console_print("    }")
+    elseif (option_refs[option].button) then
+      gui.console_print("    \"type\": \"boolean\",\n")
+      gui.console_print("    \"default\": " .. option_refs[option].button.default .. "\n")
+    else
+      gui.console_print("    \"type\": \"choice\",\n")
+      gui.console_print("    \"values\": [\n")
+      for num,choice in ipairs(option_refs[option].choices) do
+        gui.console_print("      \"" .. choice .. "\"")
+        if num ~= #option_refs[option].choices then
+          gui.console_print(",")
+        end
+        gui.console_print("\n")
+      end
+      gui.console_print("    ]")
+    end
+    if (option_refs[option].random_group) then
+      gui.console_print(",\n    \"randomize_group\": \"" .. option_refs[option].random_group .. "\"\n")
+    else
+      gui.console_print("\n")
+    end
+    gui.console_print("  }")
+    if i ~= #sorted_entries then
+      gui.console_print(",")
+    end
+    gui.console_print("\n")
+  end
+  gui.console_print("}\n")
 end
 
 function ob_build_cool_shit()

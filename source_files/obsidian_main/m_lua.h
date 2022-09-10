@@ -56,6 +56,7 @@ bool ob_mod_enabled(std::string module_name);
 bool ob_hexen_ceiling_check(int thing_id);
 void ob_invoke_hook(std::string hookname);
 void ob_print_reference();
+void ob_print_reference_json();
 
 std::string ob_game_format();
 std::string ob_default_filename();
