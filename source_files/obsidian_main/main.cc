@@ -1437,11 +1437,15 @@ skiprest:
             return 0;
         }
 
-        // batch mode never reads/writes the normal config file.
-        // but we can load settings from a explicitly specified file...
         if (!load_file.empty()) {
             if (!Cookie_Load(load_file)) {
                 Main::FatalError(_("No such config file: {}\n"), load_file);
+            }
+        } else {
+            if (!std::filesystem::exists(config_file))
+                Cookie_Save(config_file);
+            if (!Cookie_Load(config_file)) {
+                Main::FatalError(_("No such config file: {}\n"), config_file);
             }
         }
 
