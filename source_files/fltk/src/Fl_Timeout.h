@@ -20,7 +20,7 @@
 
 #include <FL/Fl.H>
 
-#define FL_TIMEOUT_DEBUG 0        // 1 = include debugging features, 0 = no
+#define FL_TIMEOUT_DEBUG 0 // 1 = include debugging features, 0 = no
 
 /** \file
   Fl_Timeout handling.
@@ -46,12 +46,11 @@
 class Fl_Timeout {
 
 protected:
-
-  Fl_Timeout *next;             // ** Link to next timeout
-  Fl_Timeout_Handler callback;  // the user's callback
-  void *data;                   // the user's callback data
-  double time;                  // delay until timeout
-  int skip;                     // skip "new" (inserted) timers (issue #450)
+  Fl_Timeout *next;            // ** Link to next timeout
+  Fl_Timeout_Handler callback; // the user's callback
+  void *data;                  // the user's callback data
+  double time;                 // delay until timeout
+  int skip;                    // skip "new" (inserted) timers (issue #450)
 
   // constructor
   Fl_Timeout() {
@@ -78,14 +77,10 @@ protected:
   void release();
 
   /** Get the timer's delay in seconds. */
-  double delay() {
-    return time;
-  }
+  double delay() { return time; }
 
   /** Set the timer's delay in seconds. */
-  void delay(double t) {
-    time = t;
-  }
+  void delay(double t) { time = t; }
 
 public:
   // Returns whether the given timeout is active.
@@ -113,7 +108,6 @@ public:
 #endif
 
 protected:
-
   static Fl_Timeout *current();
 
   /**
@@ -149,7 +143,7 @@ protected:
 
     \see Fl_Timeout::push()                 Member function (method)
   */
-  static Fl_Timeout *current_timeout;   // list of "current" timeouts
+  static Fl_Timeout *current_timeout; // list of "current" timeouts
 
 }; // class Fl_Timeout
 

@@ -43,8 +43,8 @@
   \param[in] X, Y, W, H position and size of the widget
   \param[in] L widget label, default is no label
 */
-Fl_Round_Button::Fl_Round_Button(int X,int Y,int W,int H, const char *L)
-: Fl_Light_Button(X,Y,W,H,L) {
+Fl_Round_Button::Fl_Round_Button(int X, int Y, int W, int H, const char *L)
+  : Fl_Light_Button(X, Y, W, H, L) {
   box(FL_NO_BOX);
   down_box(FL_ROUND_DOWN_BOX);
   selection_color(FL_FOREGROUND_COLOR);
@@ -59,8 +59,7 @@ Fl_Round_Button::Fl_Round_Button(int X,int Y,int W,int H, const char *L)
   \param[in] L widget label, default is no label
 */
 
-Fl_Radio_Round_Button::Fl_Radio_Round_Button(int X,int Y,int W,int H,const char *L)
-: Fl_Round_Button(X,Y,W,H,L)
-{
+Fl_Radio_Round_Button::Fl_Radio_Round_Button(int X, int Y, int W, int H, const char *L)
+  : Fl_Round_Button(X, Y, W, H, L) {
   type(FL_RADIO_BUTTON);
 }

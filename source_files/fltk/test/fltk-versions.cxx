@@ -21,53 +21,53 @@
 
 #include <stdio.h>
 
-static char version[8][80] = { "","","","","","","","" };
+static char version[8][80] = {"", "", "", "", "", "", "", ""};
 
 int main(int argc, char **argv) {
 
   int versions = 0;
 
-  sprintf(version[versions++],"FL_VERSION        = %6.4f",FL_VERSION);
-  sprintf(version[versions++],"Fl::version()     = %6.4f  %s",Fl::version(),
-    (FL_VERSION == Fl::version()) ? "" : "***");
+  sprintf(version[versions++], "FL_VERSION        = %6.4f", FL_VERSION);
+  sprintf(version[versions++], "Fl::version()     = %6.4f  %s", Fl::version(),
+          (FL_VERSION == Fl::version()) ? "" : "***");
 
 #ifdef FL_API_VERSION
-  sprintf(version[versions++],"FL_API_VERSION    = %6d",FL_API_VERSION);
-  sprintf(version[versions++],"Fl::api_version() = %6d  %s",Fl::api_version(),
-    (FL_API_VERSION == Fl::api_version()) ? "" : "***");
+  sprintf(version[versions++], "FL_API_VERSION    = %6d", FL_API_VERSION);
+  sprintf(version[versions++], "Fl::api_version() = %6d  %s", Fl::api_version(),
+          (FL_API_VERSION == Fl::api_version()) ? "" : "***");
 #endif
 
 #ifdef FL_ABI_VERSION
-  sprintf(version[versions++],"FL_ABI_VERSION    = %6d",FL_ABI_VERSION);
-  sprintf(version[versions++],"Fl::abi_version() = %6d  %s",Fl::abi_version(),
-    (FL_ABI_VERSION == Fl::abi_version()) ? "" : "***");
+  sprintf(version[versions++], "FL_ABI_VERSION    = %6d", FL_ABI_VERSION);
+  sprintf(version[versions++], "Fl::abi_version() = %6d  %s", Fl::abi_version(),
+          (FL_ABI_VERSION == Fl::abi_version()) ? "" : "***");
 #endif
 
-  for (int i=0; i<versions; i++) {
-    printf("%s\n",version[i]);
+  for (int i = 0; i < versions; i++) {
+    printf("%s\n", version[i]);
   }
   fflush(stdout);
 
 #ifdef FL_ABI_VERSION
   if (FL_ABI_VERSION != Fl::abi_version()) {
-    printf("*** FLTK ABI version mismatch: headers = %d, lib = %d ***\n",
-      FL_ABI_VERSION, Fl::abi_version());
+    printf("*** FLTK ABI version mismatch: headers = %d, lib = %d ***\n", FL_ABI_VERSION,
+           Fl::abi_version());
     fflush(stdout);
-    fl_message("*** FLTK ABI version mismatch: headers = %d, lib = %d ***",
-      FL_ABI_VERSION, Fl::abi_version());
+    fl_message("*** FLTK ABI version mismatch: headers = %d, lib = %d ***", FL_ABI_VERSION,
+               Fl::abi_version());
     // exit(1);
   }
 #endif
 
-  Fl_Window *window = new Fl_Window(670,300);
+  Fl_Window *window = new Fl_Window(670, 300);
 
   Fl_Box *box[8];
-  for (int i=0; i<4; i++) {
-    box[2*i]   = new Fl_Box( 10,40+40*i,320,30,version[2*i]);
-    box[2*i+1] = new Fl_Box(340,40+40*i,320,30,version[2*i+1]);
+  for (int i = 0; i < 4; i++) {
+    box[2 * i] = new Fl_Box(10, 40 + 40 * i, 320, 30, version[2 * i]);
+    box[2 * i + 1] = new Fl_Box(340, 40 + 40 * i, 320, 30, version[2 * i + 1]);
   }
 
-  for (int i=0; i<8; i++) {
+  for (int i = 0; i < 8; i++) {
     box[i]->labelfont(FL_COURIER);
     box[i]->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   }

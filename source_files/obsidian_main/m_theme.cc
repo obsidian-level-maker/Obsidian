@@ -84,9 +84,9 @@ std::filesystem::path Theme_OutputFilename() {
     // re-check for overwriting
     if (std::filesystem::exists(filename)) {
         if (!fl_choice("%s", fl_cancel, fl_ok, NULL,
-                           Fl_Native_File_Chooser::file_exists_message)) {
-                return "";  // cancelled
-            }
+                       Fl_Native_File_Chooser::file_exists_message)) {
+            return "";  // cancelled
+        }
     }
 
     return filename;
@@ -392,8 +392,8 @@ class UI_ThemeWin : public Fl_Window {
 
         window_scaling = that->opt_window_scaling->value();
 
-        fl_alert("%s",
-                 _("Windows scaling changes require a restart.\nOBSIDIAN will now restart."));
+        fl_alert("%s", _("Windows scaling changes require a restart.\nOBSIDIAN "
+                         "will now restart."));
 
         main_action = MAIN_RESTART;
 
@@ -683,9 +683,8 @@ class UI_ThemeWin : public Fl_Window {
                 break;
         }
         if (widget_theme == 3) {
-            fl_alert(
-                "%s",
-                _("Plastic widget theme requires a restart.\nOBSIDIAN will now restart."));
+            fl_alert("%s", _("Plastic widget theme requires a "
+                             "restart.\nOBSIDIAN will now restart."));
 
             main_action = MAIN_RESTART;
 
@@ -836,8 +835,8 @@ class UI_ThemeWin : public Fl_Window {
 
         single_pane = that->opt_single_pane->value() ? true : false;
 
-        fl_alert("%s",
-                 _("Switching pane modes requires a restart.\nOBSIDIAN will now restart."));
+        fl_alert("%s", _("Switching pane modes requires a restart.\nOBSIDIAN "
+                         "will now restart."));
 
         main_action = MAIN_RESTART;
 
@@ -849,9 +848,8 @@ class UI_ThemeWin : public Fl_Window {
 
         use_system_fonts = that->opt_system_fonts->value() ? true : false;
 
-        fl_alert(
-            "%s",
-            _("Switching font selection requires a restart.\nOBSIDIAN will now restart."));
+        fl_alert("%s", _("Switching font selection requires a "
+                         "restart.\nOBSIDIAN will now restart."));
 
         font_menu_items.clear();
 
@@ -1453,7 +1451,8 @@ class UI_ThemeWin : public Fl_Window {
         if (!theme_file.empty()) {
             Theme_Options_Load(theme_file);
 
-            fl_alert("%s", _("Theme loading requires a restart.\nOBSIDIAN will now restart."));
+            fl_alert("%s", _("Theme loading requires a restart.\nOBSIDIAN will "
+                             "now restart."));
 
             main_action = MAIN_RESTART;
 
@@ -1487,7 +1486,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
     int cx = x() + kf_w(24);
     int cy = y() + (y_step * 2);
 
-	int listwidth = kf_w(160); // [McM]: Some font names was shown truncated.
+    int listwidth = kf_w(160);  // [McM]: Some font names was shown truncated.
 
     Fl_Box *heading;
 
@@ -1691,7 +1690,8 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
 
     cy += opt_system_fonts->h() + y_step;
 
-    opt_single_pane = new UI_CustomCheckBox(cx + W * .05, cy, W - cx - pad, kf_h(24), "");
+    opt_single_pane =
+        new UI_CustomCheckBox(cx + W * .05, cy, W - cx - pad, kf_h(24), "");
     opt_single_pane->copy_label(_(" Single Pane Mode"));
     opt_single_pane->value(single_pane ? 1 : 0);
     opt_single_pane->callback(callback_SinglePane, this);

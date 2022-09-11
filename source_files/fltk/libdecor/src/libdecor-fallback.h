@@ -29,7 +29,6 @@
 #include "libdecor.h"
 #include "libdecor-plugin.h"
 
-struct libdecor_plugin *
-libdecor_fallback_plugin_new(struct libdecor *context);
+struct libdecor_plugin *libdecor_fallback_plugin_new(struct libdecor *context);
 
 #endif /* LIBDECOR_FALLBACK_H */

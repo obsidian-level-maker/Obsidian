@@ -127,7 +127,7 @@ void Fl_Check_Browser::item_swap(void *a, void *b) {
   cb_item *b_next = ib->next;
   cb_item *b_prev = ib->prev;
 
-  if (a_next == ib) {        // p - a - b - n  => p - b - a - n
+  if (a_next == ib) { // p - a - b - n  => p - b - a - n
     if (a_prev)
       a_prev->next = ib;
     if (b_next)
@@ -136,7 +136,7 @@ void Fl_Check_Browser::item_swap(void *a, void *b) {
     ib->next = ia;
     ia->prev = ib;
     ia->next = b_next;
-  } else if (a_prev == ib) {    // p - b - a - n  => p - a - b - n
+  } else if (a_prev == ib) { // p - b - a - n  => p - a - b - n
     if (b_prev)
       b_prev->next = ia;
     if (a_next)
@@ -145,7 +145,7 @@ void Fl_Check_Browser::item_swap(void *a, void *b) {
     ia->next = ib;
     ib->prev = ia;
     ib->next = a_next;
-  } else {            // x - a - y - b - z => x - b - y - a - z
+  } else { // x - a - y - b - z => x - b - y - a - z
     if (a_prev)
       a_prev->next = ib;
     if (a_next)
@@ -169,7 +169,7 @@ void Fl_Check_Browser::item_swap(void *a, void *b) {
   cache = 0L;
 }
 
-#define CHECK_SIZE (textsize()-2)
+#define CHECK_SIZE (textsize() - 2)
 
 int Fl_Check_Browser::item_width(void *v) const {
   fl_font(textfont(), textsize());
@@ -186,8 +186,7 @@ void Fl_Check_Browser::item_draw(void *v, int X, int Y, int, int) const {
 
   // draw the check mark box (always)
   fl_color(active_r() ? FL_FOREGROUND_COLOR : fl_inactive(FL_FOREGROUND_COLOR));
-  fl_loop(X, cy, X, cy + CHECK_SIZE,
-          X + CHECK_SIZE, cy + CHECK_SIZE, X + CHECK_SIZE, cy);
+  fl_loop(X, cy, X, cy + CHECK_SIZE, X + CHECK_SIZE, cy + CHECK_SIZE, X + CHECK_SIZE, cy);
 
   // draw the check mark
   if (i->checked) {
@@ -299,7 +298,8 @@ void Fl_Check_Browser::clear() {
   cb_item *p = first;
   cb_item *next;
 
-  if (!p) return;
+  if (!p)
+    return;
 
   new_list();
   do {
@@ -318,7 +318,8 @@ void Fl_Check_Browser::clear() {
 int Fl_Check_Browser::checked(int i) const {
   cb_item *p = find_item(i);
 
-  if (p) return p->checked;
+  if (p)
+    return p->checked;
   return 0;
 }
 
@@ -346,7 +347,8 @@ int Fl_Check_Browser::value() const {
 char *Fl_Check_Browser::text(int i) const {
   cb_item *p = find_item(i);
 
-  if (p) return p->text;
+  if (p)
+    return p->text;
   return 0;
 }
 

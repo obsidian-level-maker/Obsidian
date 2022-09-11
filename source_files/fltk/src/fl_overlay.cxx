@@ -30,7 +30,7 @@
 #include <config.h>
 #endif
 
-static int px,py,pw,ph;
+static int px, py, pw, ph;
 
 #ifndef USE_XOR
 #include <stdlib.h>
@@ -43,48 +43,62 @@ static int bgx, bgy, bgw, bgh;
 
 static void draw_current_rect() {
 #ifdef USE_XOR
-# if defined(FLTK_USE_X11)
+#if defined(FLTK_USE_X11)
   GC gc = (GC)fl_graphics_driver->gc();
   XSetFunction(fl_display, gc, GXxor);
   XSetForeground(fl_display, gc, 0xffffffff);
   XDrawRectangle(fl_display, fl_window, gc, px, py, pw, ph);
   XSetFunction(fl_display, gc, GXcopy);
-# elif defined(_WIN32)
+#elif defined(_WIN32)
   int old = SetROP2(fl_graphics_driver->gc(), R2_NOT);
   fl_rect(px, py, pw, ph);
   SetROP2(fl_graphics_driver->gc(), old);
-# elif defined(__APPLE__)
+#elif defined(__APPLE__)
   // warning: Quartz does not support xor drawing
   // Use the Fl_Overlay_Window instead.
   fl_color(FL_WHITE);
   fl_rect(px, py, pw, ph);
-# else
-#  error unsupported platform
-# endif
 #else
-  if (s_bgN) { delete s_bgN; s_bgN = 0; }
-  if (s_bgS) { delete s_bgS; s_bgS = 0; }
-  if (s_bgE) { delete s_bgE; s_bgE = 0; }
-  if (s_bgW) { delete s_bgW; s_bgW = 0; }
-  if (pw>0 && ph>0) {
-    s_bgE = Fl::screen_driver()->read_win_rectangle( px+pw-1, py, 1, ph, Fl_Window::current());
-    if(s_bgE && s_bgE->w() && s_bgE->h()) {
-      s_bgE->scale(1, ph,0,1);
+#error unsupported platform
+#endif
+#else
+  if (s_bgN) {
+    delete s_bgN;
+    s_bgN = 0;
+  }
+  if (s_bgS) {
+    delete s_bgS;
+    s_bgS = 0;
+  }
+  if (s_bgE) {
+    delete s_bgE;
+    s_bgE = 0;
+  }
+  if (s_bgW) {
+    delete s_bgW;
+    s_bgW = 0;
+  }
+  if (pw > 0 && ph > 0) {
+    s_bgE = Fl::screen_driver()->read_win_rectangle(px + pw - 1, py, 1, ph, Fl_Window::current());
+    if (s_bgE && s_bgE->w() && s_bgE->h()) {
+      s_bgE->scale(1, ph, 0, 1);
     }
-    s_bgW = Fl::screen_driver()->read_win_rectangle( px, py, 1, ph, Fl_Window::current());
-    if(s_bgW && s_bgW->w() && s_bgW->h()) {
-      s_bgW->scale(1, ph,0,1);
+    s_bgW = Fl::screen_driver()->read_win_rectangle(px, py, 1, ph, Fl_Window::current());
+    if (s_bgW && s_bgW->w() && s_bgW->h()) {
+      s_bgW->scale(1, ph, 0, 1);
     }
-    s_bgS = Fl::screen_driver()->read_win_rectangle( px, py+ph-1, pw, 1, Fl_Window::current());
-    if(s_bgS && s_bgS->w() && s_bgS->h()) {
-      s_bgS->scale(pw, 1,0,1);
+    s_bgS = Fl::screen_driver()->read_win_rectangle(px, py + ph - 1, pw, 1, Fl_Window::current());
+    if (s_bgS && s_bgS->w() && s_bgS->h()) {
+      s_bgS->scale(pw, 1, 0, 1);
     }
-    s_bgN = Fl::screen_driver()->read_win_rectangle( px, py, pw, 1, Fl_Window::current());
-    if(s_bgN && s_bgN->w() && s_bgN->h()) {
-      s_bgN->scale(pw, 1,0,1);
+    s_bgN = Fl::screen_driver()->read_win_rectangle(px, py, pw, 1, Fl_Window::current());
+    if (s_bgN && s_bgN->w() && s_bgN->h()) {
+      s_bgN->scale(pw, 1, 0, 1);
     }
-    bgx = px; bgy = py;
-    bgw = pw; bgh = ph;
+    bgx = px;
+    bgy = py;
+    bgw = pw;
+    bgh = ph;
   }
   fl_color(FL_WHITE);
   fl_line_style(FL_SOLID);
@@ -99,16 +113,20 @@ static void draw_current_rect() {
 
 static void erase_current_rect() {
 #ifdef USE_XOR
-# ifdef __APPLE_QUARTZ__ // PORTME: Fl_Window_Driver - platform overlay
+#ifdef __APPLE_QUARTZ__ // PORTME: Fl_Window_Driver - platform overlay
   fl_rect(px, py, pw, ph);
-# else
-  draw_current_rect();
-# endif
 #else
-  if (s_bgN) s_bgN->draw(bgx, bgy);
-  if (s_bgS) s_bgS->draw(bgx, (bgy+bgh-1));
-  if (s_bgW) s_bgW->draw(bgx, bgy);
-  if (s_bgE) s_bgE->draw((bgx+bgw-1), bgy);
+  draw_current_rect();
+#endif
+#else
+  if (s_bgN)
+    s_bgN->draw(bgx, bgy);
+  if (s_bgS)
+    s_bgS->draw(bgx, (bgy + bgh - 1));
+  if (s_bgW)
+    s_bgW->draw(bgx, bgy);
+  if (s_bgE)
+    s_bgE->draw((bgx + bgw - 1), bgy);
 #endif
 }
 
@@ -116,19 +134,34 @@ static void erase_current_rect() {
   Erase a selection rectangle without drawing a new one
   */
 void fl_overlay_clear() {
-  if (pw > 0) {erase_current_rect(); pw = 0;}
+  if (pw > 0) {
+    erase_current_rect();
+    pw = 0;
+  }
 }
 
 /**
   Draws a selection rectangle, erasing a previous one by XOR'ing it first.
   */
 void fl_overlay_rect(int x, int y, int w, int h) {
-  if (w < 0) {x += w; w = -w;} else if (!w) w = 1;
-  if (h < 0) {y += h; h = -h;} else if (!h) h = 1;
+  if (w < 0) {
+    x += w;
+    w = -w;
+  } else if (!w)
+    w = 1;
+  if (h < 0) {
+    y += h;
+    h = -h;
+  } else if (!h)
+    h = 1;
   if (pw > 0) {
-    if (x==px && y==py && w==pw && h==ph) return;
+    if (x == px && y == py && w == pw && h == ph)
+      return;
     erase_current_rect();
   }
-  px = x; py = y; pw = w; ph = h;
+  px = x;
+  py = y;
+  pw = w;
+  ph = h;
   draw_current_rect();
 }

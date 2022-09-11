@@ -19,7 +19,7 @@
 
 #ifndef Fl_XBM_Image_H
 #define Fl_XBM_Image_H
-#  include "Fl_Bitmap.H"
+#include "Fl_Bitmap.H"
 
 /**
   The Fl_XBM_Image class supports loading, caching,
@@ -27,9 +27,8 @@
 */
 class FL_EXPORT Fl_XBM_Image : public Fl_Bitmap {
 
-  public:
-
-  Fl_XBM_Image(const char* filename);
+public:
+  Fl_XBM_Image(const char *filename);
 };
 
 #endif // !Fl_XBM_Image_H

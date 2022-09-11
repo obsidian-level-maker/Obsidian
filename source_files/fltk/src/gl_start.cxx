@@ -48,22 +48,26 @@ GLContext Fl_Gl_Window_Driver::gl_start_context;
  \endcond
  */
 
-static int clip_state_number=-1;
+static int clip_state_number = -1;
 static int pw, ph;
 float gl_start_scale = 1;
 
-static Fl_Gl_Choice* gl_choice = NULL;
+static Fl_Gl_Choice *gl_choice = NULL;
 
 /** Creates an OpenGL context */
 void gl_start() {
   gl_start_scale = Fl_Display_Device::display_device()->driver()->scale();
   if (!Fl_Gl_Window_Driver::gl_start_context) {
-    if (!gl_choice) Fl::gl_visual(0);
-    Fl_Gl_Window_Driver::gl_start_context = Fl_Gl_Window_Driver::global()->create_gl_context(Fl_Window::current(), gl_choice);
+    if (!gl_choice)
+      Fl::gl_visual(0);
+    Fl_Gl_Window_Driver::gl_start_context =
+        Fl_Gl_Window_Driver::global()->create_gl_context(Fl_Window::current(), gl_choice);
   }
-  Fl_Gl_Window_Driver::global()->set_gl_context(Fl_Window::current(), Fl_Gl_Window_Driver::gl_start_context);
+  Fl_Gl_Window_Driver::global()->set_gl_context(Fl_Window::current(),
+                                                Fl_Gl_Window_Driver::gl_start_context);
   Fl_Gl_Window_Driver::global()->gl_start();
-  if (pw != int(Fl_Window::current()->w() * gl_start_scale) || ph != int(Fl_Window::current()->h() * gl_start_scale)) {
+  if (pw != int(Fl_Window::current()->w() * gl_start_scale) ||
+      ph != int(Fl_Window::current()->h() * gl_start_scale)) {
     pw = int(Fl_Window::current()->w() * gl_start_scale);
     ph = int(Fl_Window::current()->h() * gl_start_scale);
     glLoadIdentity();
@@ -74,10 +78,11 @@ void gl_start() {
   if (clip_state_number != fl_graphics_driver->fl_clip_state_number) {
     clip_state_number = fl_graphics_driver->fl_clip_state_number;
     int x = 0, y = 0, w = 0, h = 0;
-    if (fl_clip_box(0, 0, Fl_Window::current()->w(), Fl_Window::current()->h(),
-                    x, y, w, h)) {
-      fl_clip_region(Fl_Graphics_Driver::default_driver().XRectangleRegion(x,y,w,h));
-      glScissor(int(x*gl_start_scale), int((Fl_Window::current()->h()-(y+h))*gl_start_scale), int(w*gl_start_scale), int(h*gl_start_scale));
+    if (fl_clip_box(0, 0, Fl_Window::current()->w(), Fl_Window::current()->h(), x, y, w, h)) {
+      fl_clip_region(Fl_Graphics_Driver::default_driver().XRectangleRegion(x, y, w, h));
+      glScissor(int(x * gl_start_scale),
+                int((Fl_Window::current()->h() - (y + h)) * gl_start_scale),
+                int(w * gl_start_scale), int(h * gl_start_scale));
       glEnable(GL_SCISSOR_TEST);
     } else {
       glDisable(GL_SCISSOR_TEST);
@@ -105,8 +110,9 @@ void Fl_Gl_Window_Driver::gl_visual(Fl_Gl_Choice *c) {
 }
 
 int Fl::gl_visual(int mode, int *alist) {
-  Fl_Gl_Choice *c = Fl_Gl_Window_Driver::global()->find(mode,alist);
-  if (!c) return 0;
+  Fl_Gl_Choice *c = Fl_Gl_Window_Driver::global()->find(mode, alist);
+  if (!c)
+    return 0;
   Fl_Gl_Window_Driver::global()->gl_visual(c);
   return 1;
 }

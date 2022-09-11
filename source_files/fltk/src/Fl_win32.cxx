@@ -21,22 +21,22 @@
 #if defined(_WIN32) && !defined(FL_DOXYGEN)
 
 /* We require Windows 2000 features (e.g. VK definitions) */
-# if !defined(WINVER) || (WINVER < 0x0500)
-#  ifdef WINVER
-#   undef WINVER
-#  endif
-#  define WINVER 0x0500
-# endif
-# if !defined(_WIN32_WINNT) || (_WIN32_WINNT < 0x0500)
-#  ifdef _WIN32_WINNT
-#   undef _WIN32_WINNT
-#  endif
-#  define _WIN32_WINNT 0x0500
-# endif
+#if !defined(WINVER) || (WINVER < 0x0500)
+#ifdef WINVER
+#undef WINVER
+#endif
+#define WINVER 0x0500
+#endif
+#if !defined(_WIN32_WINNT) || (_WIN32_WINNT < 0x0500)
+#ifdef _WIN32_WINNT
+#undef _WIN32_WINNT
+#endif
+#define _WIN32_WINNT 0x0500
+#endif
 
 // recent versions of MinGW warn: "Please include winsock2.h before windows.h",
 #if !defined(__CYGWIN__)
-#  include <winsock2.h>
+#include <winsock2.h>
 #endif
 #include <windows.h>
 #include <ole2.h>
@@ -77,16 +77,16 @@ void fl_cleanup_dc_list(void);
 #include <time.h>
 #include <signal.h>
 #ifdef __CYGWIN__
-#  include <sys/time.h>
-#  include <unistd.h>
+#include <sys/time.h>
+#include <unistd.h>
 #endif
 
 #if !defined(NO_TRACK_MOUSE)
-#  include <commctrl.h> // TrackMouseEvent
+#include <commctrl.h> // TrackMouseEvent
 #endif
 
 #if defined(__GNUC__)
-# include <wchar.h>
+#include <wchar.h>
 #endif
 
 static bool is_dpi_aware = false;
@@ -140,7 +140,7 @@ static bool initial_clipboard = true;
 
 // dynamic wsock dll handling api:
 #if defined(__CYGWIN__) && !defined(SOCKET)
-# define SOCKET int
+#define SOCKET int
 #endif
 
 // Disable dynamic linking/loading of Winsock DLL (STR #3454)
@@ -163,7 +163,8 @@ static HMODULE get_wsock_mod() {
   if (!s_wsock_mod) {
     s_wsock_mod = LoadLibrary(WSCK_DLL_NAME);
     if (s_wsock_mod == NULL)
-      Fl::fatal("FLTK Lib Error: %s file not found! Please check your winsock dll accessibility.\n", WSCK_DLL_NAME);
+      Fl::fatal("FLTK Lib Error: %s file not found! Please check your winsock dll accessibility.\n",
+                WSCK_DLL_NAME);
     s_wsock_select = (fl_wsk_select_f)GetProcAddress(s_wsock_mod, "select");
     fl_wsk_fd_is_set = (fl_wsk_fd_is_set_f)GetProcAddress(s_wsock_mod, "__WSAFDIsSet");
   }
@@ -206,9 +207,11 @@ static void get_imm_module() {
   if (!s_imm_module)
     Fl::fatal("FLTK Lib Error: IMM32.DLL file not found!\n\n"
               "Please check your input method manager library accessibility.");
-  flImmAssociateContextEx = (flTypeImmAssociateContextEx)GetProcAddress(s_imm_module, "ImmAssociateContextEx");
+  flImmAssociateContextEx =
+      (flTypeImmAssociateContextEx)GetProcAddress(s_imm_module, "ImmAssociateContextEx");
   flImmGetContext = (flTypeImmGetContext)GetProcAddress(s_imm_module, "ImmGetContext");
-  flImmSetCompositionWindow = (flTypeImmSetCompositionWindow)GetProcAddress(s_imm_module, "ImmSetCompositionWindow");
+  flImmSetCompositionWindow =
+      (flTypeImmSetCompositionWindow)GetProcAddress(s_imm_module, "ImmSetCompositionWindow");
   flImmReleaseContext = (flTypeImmReleaseContext)GetProcAddress(s_imm_module, "ImmReleaseContext");
 }
 
@@ -236,7 +239,7 @@ static void get_imm_module() {
 // #define NO_TRACK_MOUSE
 
 #if !defined(NO_TRACK_MOUSE)
-# define USE_TRACK_MOUSE
+#define USE_TRACK_MOUSE
 #endif // NO_TRACK_MOUSE
 
 static Fl_Window *track_mouse_win = 0; // current TrackMouseEvent() window
@@ -259,33 +262,33 @@ static Fl_Window *track_mouse_win = 0; // current TrackMouseEvent() window
 //
 
 #ifndef WM_SYNCPAINT
-#  define WM_SYNCPAINT 0x0088
+#define WM_SYNCPAINT 0x0088
 #endif
 
 #ifndef WM_MOUSELEAVE
-#  define WM_MOUSELEAVE 0x02a3
+#define WM_MOUSELEAVE 0x02a3
 #endif
 
 #ifndef WM_MOUSEWHEEL
-#  define WM_MOUSEWHEEL 0x020a
+#define WM_MOUSEWHEEL 0x020a
 #endif
 
 #ifndef WHEEL_DELTA
-#  define WHEEL_DELTA 120       // according to MSDN.
+#define WHEEL_DELTA 120 // according to MSDN.
 #endif
 
 // This is only defined on Vista and upwards...
 #ifndef WM_MOUSEHWHEEL
-#  define WM_MOUSEHWHEEL 0x020E
+#define WM_MOUSEHWHEEL 0x020E
 #endif
 
 #ifndef SM_CXPADDEDBORDER
-#  define SM_CXPADDEDBORDER (92) // STR #3061
+#define SM_CXPADDEDBORDER (92) // STR #3061
 #endif
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/dn312083(v=vs.85).aspx
 #ifndef WM_DPICHANGED
-#  define WM_DPICHANGED 0x02E0
+#define WM_DPICHANGED 0x02E0
 #endif
 
 //
@@ -324,7 +327,8 @@ static int fd_array_size = 0;
 static struct FD {
   int fd;
   short events;
-  void (*cb)(FL_SOCKET, void *); // keep socket api opaque at this level to reduce multiplatform deps headaches
+  void (*cb)(FL_SOCKET,
+             void *); // keep socket api opaque at this level to reduce multiplatform deps headaches
   void *arg;
 } *fd = 0;
 
@@ -551,28 +555,35 @@ void Fl_WinAPI_Screen_Driver::open_display_platform() {
   };*/
   typedef HRESULT(WINAPI * GetProcessDpiAwareness_type)(HANDLE, int *);
   GetProcessDpiAwareness_type fl_GetProcessDpiAwareness =
-      (GetProcessDpiAwareness_type)GetProcAddress(LoadLibrary("Shcore.DLL"), "GetProcessDpiAwareness");
+      (GetProcessDpiAwareness_type)GetProcAddress(LoadLibrary("Shcore.DLL"),
+                                                  "GetProcessDpiAwareness");
   int awareness;
   if (!fl_GetProcessDpiAwareness || fl_GetProcessDpiAwareness(NULL, &awareness) != S_OK) {
-    awareness = 0; //corresponds to PROCESS_DPI_UNAWARE;
+    awareness = 0; // corresponds to PROCESS_DPI_UNAWARE;
   }
-  if (awareness == 2 /*PROCESS_PER_MONITOR_DPI_AWARE*/) is_dpi_aware = true;
+  if (awareness == 2 /*PROCESS_PER_MONITOR_DPI_AWARE*/)
+    is_dpi_aware = true;
   if (awareness == 0 /*PROCESS_DPI_UNAWARE*/) { // DpiAwareness has not been set via a manifest
     typedef void *fl_DPI_AWARENESS_CONTEXT;
     typedef BOOL(WINAPI * SetProcessDpiAwarenessContext_type)(fl_DPI_AWARENESS_CONTEXT);
     SetProcessDpiAwarenessContext_type fl_SetProcessDpiAwarenessContext =
-    (SetProcessDpiAwarenessContext_type)GetProcAddress(LoadLibrary("User32.DLL"), "SetProcessDpiAwarenessContext");
+        (SetProcessDpiAwarenessContext_type)GetProcAddress(LoadLibrary("User32.DLL"),
+                                                           "SetProcessDpiAwarenessContext");
     if (fl_SetProcessDpiAwarenessContext) {
-      const fl_DPI_AWARENESS_CONTEXT fl_DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 = (fl_DPI_AWARENESS_CONTEXT)(-4);
-      is_dpi_aware = fl_SetProcessDpiAwarenessContext(fl_DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+      const fl_DPI_AWARENESS_CONTEXT fl_DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 =
+          (fl_DPI_AWARENESS_CONTEXT)(-4);
+      is_dpi_aware =
+          fl_SetProcessDpiAwarenessContext(fl_DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
     }
     if (!is_dpi_aware) {
       typedef HRESULT(WINAPI * SetProcessDpiAwareness_type)(int);
       SetProcessDpiAwareness_type fl_SetProcessDpiAwareness =
-      (SetProcessDpiAwareness_type)GetProcAddress(LoadLibrary("Shcore.DLL"), "SetProcessDpiAwareness");
+          (SetProcessDpiAwareness_type)GetProcAddress(LoadLibrary("Shcore.DLL"),
+                                                      "SetProcessDpiAwareness");
       if (fl_SetProcessDpiAwareness) {
         const int fl_PROCESS_PER_MONITOR_DPI_AWARE = 2;
-        if (fl_SetProcessDpiAwareness(fl_PROCESS_PER_MONITOR_DPI_AWARE) == S_OK) is_dpi_aware = true;
+        if (fl_SetProcessDpiAwareness(fl_PROCESS_PER_MONITOR_DPI_AWARE) == S_OK)
+          is_dpi_aware = true;
       }
     }
   }
@@ -588,18 +599,22 @@ void Fl_WinAPI_Screen_Driver::desktop_scale_factor() {
   GetDpiForMonitor_type fl_GetDpiForMonitor = NULL;
   MonitorFromRect_type fl_MonitorFromRect = NULL;
   if (is_dpi_aware) {
-      fl_GetDpiForMonitor = (GetDpiForMonitor_type)GetProcAddress(LoadLibrary("Shcore.DLL"), "GetDpiForMonitor");
-      if (fl_GetDpiForMonitor)
-        fl_MonitorFromRect = (MonitorFromRect_type)GetProcAddress(LoadLibrary("User32.DLL"), "MonitorFromRect");
-    }
+    fl_GetDpiForMonitor =
+        (GetDpiForMonitor_type)GetProcAddress(LoadLibrary("Shcore.DLL"), "GetDpiForMonitor");
+    if (fl_GetDpiForMonitor)
+      fl_MonitorFromRect =
+          (MonitorFromRect_type)GetProcAddress(LoadLibrary("User32.DLL"), "MonitorFromRect");
+  }
   for (int ns = 0; ns < screen_count(); ns++) {
     UINT dpiX, dpiY;
     HRESULT r = E_INVALIDARG;
     if (fl_GetDpiForMonitor && fl_MonitorFromRect) {
-       HMONITOR hm = fl_MonitorFromRect(&screens[ns], MONITOR_DEFAULTTONEAREST);
-       r =  fl_GetDpiForMonitor(hm, 0, &dpiX, &dpiY);
+      HMONITOR hm = fl_MonitorFromRect(&screens[ns], MONITOR_DEFAULTTONEAREST);
+      r = fl_GetDpiForMonitor(hm, 0, &dpiX, &dpiY);
     }
-    if (r != S_OK) { dpiX = dpiY = 96; }
+    if (r != S_OK) {
+      dpiX = dpiY = 96;
+    }
     dpi[ns][0] = float(dpiX);
     dpi[ns][1] = float(dpiY);
     scale(ns, dpiX / 96.f);
@@ -615,7 +630,8 @@ public:
     fl_free_fonts(); // do some Windows cleanup
     fl_cleanup_pens();
     OleUninitialize();
-    if (fl_graphics_driver) fl_brush_action(1);
+    if (fl_graphics_driver)
+      fl_brush_action(1);
     fl_cleanup_dc_list();
     // This is actually too late in the cleanup process to remove the
     // clipboard notifications, but we have no earlier hook so we try
@@ -655,10 +671,11 @@ void Fl_WinAPI_Screen_Driver::disable_im() {
   im_enabled = 0;
 }
 
-void Fl_WinAPI_Screen_Driver::set_spot(int font, int size, int X, int Y, int W, int H, Fl_Window *win)
-{
-  if (!win) return;
-  Fl_Window* tw = win->top_window();
+void Fl_WinAPI_Screen_Driver::set_spot(int font, int size, int X, int Y, int W, int H,
+                                       Fl_Window *win) {
+  if (!win)
+    return;
+  Fl_Window *tw = win->top_window();
 
   if (!tw->shown())
     return;
@@ -673,8 +690,10 @@ void Fl_WinAPI_Screen_Driver::set_spot(int font, int size, int X, int Y, int W, 
     cfs.ptCurrentPos.y = int(Y * s) - int(tw->labelsize() * s);
     // Attempt to have temporary text entered by input method use scaled font.
     // Does good, but still not always effective.
-    Fl_GDI_Font_Descriptor *desc = (Fl_GDI_Font_Descriptor*)Fl_Graphics_Driver::default_driver().font_descriptor();
-    if (desc) SelectObject((HDC)Fl_Graphics_Driver::default_driver().gc(), desc->fid);
+    Fl_GDI_Font_Descriptor *desc =
+        (Fl_GDI_Font_Descriptor *)Fl_Graphics_Driver::default_driver().font_descriptor();
+    if (desc)
+      SelectObject((HDC)Fl_Graphics_Driver::default_driver().gc(), desc->fid);
     MapWindowPoints(fl_xid(win), fl_xid(tw), &cfs.ptCurrentPos, 1);
     flImmSetCompositionWindow(himc, &cfs);
     flImmReleaseContext(fl_xid(tw), himc);
@@ -757,9 +776,7 @@ public:
     }
     *o++ = 0;
   }
-  ~Lf2CrlfConvert() {
-    delete[] out;
-  }
+  ~Lf2CrlfConvert() { delete[] out; }
   int GetLength() const { return (outlen); }
   const char *GetValue() const { return (out); }
 };
@@ -781,7 +798,8 @@ void fl_update_clipboard(void) {
   HGLOBAL hMem = GlobalAlloc(GHND, utf16_len * 2 + 2); // moveable and zero'ed mem alloc.
   LPVOID memLock = GlobalLock(hMem);
 
-  fl_utf8toUtf16(fl_selection_buffer[1], fl_selection_length[1], (unsigned short *)memLock, utf16_len + 1);
+  fl_utf8toUtf16(fl_selection_buffer[1], fl_selection_length[1], (unsigned short *)memLock,
+                 utf16_len + 1);
 
   GlobalUnlock(hMem);
   SetClipboardData(CF_UNICODETEXT, hMem);
@@ -820,7 +838,8 @@ void Fl_WinAPI_Screen_Driver::copy(const char *stuff, int len, int clipboard, co
 
 // Call this when a "paste" operation happens:
 void Fl_WinAPI_Screen_Driver::paste(Fl_Widget &receiver, int clipboard, const char *type) {
-  if (!clipboard || (fl_i_own_selection[clipboard] && strcmp(type, Fl::clipboard_plain_text) == 0)) {
+  if (!clipboard ||
+      (fl_i_own_selection[clipboard] && strcmp(type, Fl::clipboard_plain_text) == 0)) {
     // We already have it, do it quickly without window server.
     // Notice that the text is clobbered if set_selection is
     // called in response to FL_PASTE!
@@ -853,7 +872,8 @@ void Fl_WinAPI_Screen_Driver::paste(Fl_Widget &receiver, int clipboard, const ch
         wchar_t *memLock = (wchar_t *)GlobalLock(h);
         size_t utf16_len = wcslen(memLock);
         char *clip_text = new char[utf16_len * 4 + 1];
-        unsigned utf8_len = fl_utf8fromwc(clip_text, (unsigned)(utf16_len * 4), memLock, (unsigned)utf16_len);
+        unsigned utf8_len =
+            fl_utf8fromwc(clip_text, (unsigned)(utf16_len * 4), memLock, (unsigned)utf16_len);
         *(clip_text + utf8_len) = 0;
         GlobalUnlock(h);
         LPSTR a, b;
@@ -867,8 +887,9 @@ void Fl_WinAPI_Screen_Driver::paste(Fl_Widget &receiver, int clipboard, const ch
         *b = 0;
         Fl::e_text = clip_text;
         Fl::e_length = (int)(b - Fl::e_text);
-        Fl::e_clipboard_type = Fl::clipboard_plain_text; // indicates that the paste event is for plain UTF8 text
-        receiver.handle(FL_PASTE);                       // send the FL_PASTE event to the widget. May change Fl::e_text
+        Fl::e_clipboard_type =
+            Fl::clipboard_plain_text; // indicates that the paste event is for plain UTF8 text
+        receiver.handle(FL_PASTE); // send the FL_PASTE event to the widget. May change Fl::e_text
         delete[] clip_text;
         Fl::e_text = 0;
       }
@@ -878,26 +899,30 @@ void Fl_WinAPI_Screen_Driver::paste(Fl_Widget &receiver, int clipboard, const ch
       int width = 0, height = 0, depth = 0;
       if ((h = GetClipboardData(CF_DIB))) { // if there's a DIB in clipboard
         LPBITMAPINFO lpBI = (LPBITMAPINFO)GlobalLock(h);
-        width = lpBI->bmiHeader.biWidth; // bitmap width & height
+        width = lpBI->bmiHeader.biWidth;   // bitmap width & height
         height = lpBI->bmiHeader.biHeight; // is < 0 for top-down DIB
         if ((lpBI->bmiHeader.biBitCount == 24 || lpBI->bmiHeader.biBitCount == 32) &&
             lpBI->bmiHeader.biCompression == BI_RGB &&
-            lpBI->bmiHeader.biClrUsed == 0) {      // direct use of the DIB data if it's RGB or RGBA
-          int linewidth;                           // row length
-          depth = lpBI->bmiHeader.biBitCount / 8;  // 3 or 4
+            lpBI->bmiHeader.biClrUsed == 0) {     // direct use of the DIB data if it's RGB or RGBA
+          int linewidth;                          // row length
+          depth = lpBI->bmiHeader.biBitCount / 8; // 3 or 4
           if (depth == 3)
-            linewidth = 4 * ((3 * width + 3) / 4); // row length: series of groups of 3 bytes, rounded to multiple of 4 bytes
+            linewidth =
+                4 * ((3 * width + 3) /
+                     4); // row length: series of groups of 3 bytes, rounded to multiple of 4 bytes
           else
             linewidth = 4 * width;
           rgb = new uchar[width * abs(height) * depth]; // will hold the image data
           uchar *p = rgb, *r, rr, gg, bb;
           int step = (height > 0 ? -1 : +1);
-          int from = (height > 0 ? height-1 : 0);
-          int to = (height > 0 ? 0 : -height-1);
-          for (int i = from; (height > 0 ? i>=to : i <=to); i += step) {// for each row, from last to first
-            r = (uchar *)(lpBI->bmiColors) + i * linewidth; // beginning of pixel data for the ith row
-            for (int j = 0; j < width; j++) {               // for each pixel in a row
-              bb = *r++;                                    // BGR is in DIB
+          int from = (height > 0 ? height - 1 : 0);
+          int to = (height > 0 ? 0 : -height - 1);
+          for (int i = from; (height > 0 ? i >= to : i <= to);
+               i += step) { // for each row, from last to first
+            r = (uchar *)(lpBI->bmiColors) +
+                i * linewidth;                // beginning of pixel data for the ith row
+            for (int j = 0; j < width; j++) { // for each pixel in a row
+              bb = *r++;                      // BGR is in DIB
               gg = *r++;
               rr = *r++;
               *p++ = rr; // we want RGB
@@ -915,50 +940,59 @@ void Fl_WinAPI_Screen_Driver::paste(Fl_Widget &receiver, int clipboard, const ch
             pDIBBits = (void *)(lpBI->bmiColors + lpBI->bmiHeader.biClrUsed);
           Fl_Image_Surface *surf = new Fl_Image_Surface(width, abs(height));
           Fl_Surface_Device::push_current(surf);
-          SetDIBitsToDevice((HDC)fl_graphics_driver->gc(), 0, 0, width, abs(height), 0, 0, 0, abs(height), pDIBBits, lpBI, DIB_RGB_COLORS);
+          SetDIBitsToDevice((HDC)fl_graphics_driver->gc(), 0, 0, width, abs(height), 0, 0, 0,
+                            abs(height), pDIBBits, lpBI, DIB_RGB_COLORS);
           rgb = fl_read_image(NULL, 0, 0, width, abs(height));
           depth = 3;
           Fl_Surface_Device::pop_current();
           delete surf;
         }
         GlobalUnlock(h);
-      } else if ((h = GetClipboardData(CF_ENHMETAFILE))) { // if there's an enhanced metafile in clipboard
+      } else if ((h = GetClipboardData(
+                      CF_ENHMETAFILE))) { // if there's an enhanced metafile in clipboard
         ENHMETAHEADER header;
-        GetEnhMetaFileHeader((HENHMETAFILE)h, sizeof(header), &header); // get structure containing metafile dimensions
-        width = (header.rclFrame.right - header.rclFrame.left + 1);     // in .01 mm units
+        GetEnhMetaFileHeader((HENHMETAFILE)h, sizeof(header),
+                             &header); // get structure containing metafile dimensions
+        width = (header.rclFrame.right - header.rclFrame.left + 1); // in .01 mm units
         height = (header.rclFrame.bottom - header.rclFrame.top + 1);
         HDC hdc = GetDC(NULL); // get unit correspondance between .01 mm and screen pixels
         int hmm = GetDeviceCaps(hdc, HORZSIZE);
         int hdots = GetDeviceCaps(hdc, HORZRES);
         ReleaseDC(NULL, hdc);
         float factor = (100.f * hmm) / hdots;
-        float scaling = Fl::screen_driver()->scale(Fl_Window_Driver::driver(receiver.top_window())->screen_num());
+        float scaling = Fl::screen_driver()->scale(
+            Fl_Window_Driver::driver(receiver.top_window())->screen_num());
         if (!Fl_Window::current()) {
-          Fl_GDI_Graphics_Driver *d = (Fl_GDI_Graphics_Driver*)&Fl_Graphics_Driver::default_driver();
-          d->scale(scaling);// may run early at app startup before Fl_Window::make_current() scales d
+          Fl_GDI_Graphics_Driver *d =
+              (Fl_GDI_Graphics_Driver *)&Fl_Graphics_Driver::default_driver();
+          d->scale(
+              scaling); // may run early at app startup before Fl_Window::make_current() scales d
         }
         width = int(width / (scaling * factor)); // convert to screen pixel unit
         height = int(height / (scaling * factor));
         RECT rect = {0, 0, width, height};
         Fl_Image_Surface *surf = new Fl_Image_Surface(width, height, 1);
         Fl_Surface_Device::push_current(surf);
-        fl_color(FL_WHITE);             // draw white background
+        fl_color(FL_WHITE); // draw white background
         fl_rectf(0, 0, width, height);
-        rect.right = LONG(rect.right * scaling);          // apply scaling to the metafile draw operation
+        rect.right = LONG(rect.right * scaling); // apply scaling to the metafile draw operation
         rect.bottom = LONG(rect.bottom * scaling);
-        PlayEnhMetaFile((HDC)fl_graphics_driver->gc(), (HENHMETAFILE)h, &rect); // draw metafile to offscreen buffer
+        PlayEnhMetaFile((HDC)fl_graphics_driver->gc(), (HENHMETAFILE)h,
+                        &rect); // draw metafile to offscreen buffer
         image = surf->image();
         Fl_Surface_Device::pop_current();
         delete surf;
       }
       if (rgb || image) {
         if (!image) {
-          image = new Fl_RGB_Image(rgb, width, abs(height), depth); // create new image from pixel data
+          image =
+              new Fl_RGB_Image(rgb, width, abs(height), depth); // create new image from pixel data
           image->alloc_array = 1;
         }
         Fl::e_clipboard_data = image;
-        Fl::e_clipboard_type = Fl::clipboard_image; // indicates that the paste event is for image data
-        int done = receiver.handle(FL_PASTE);       // send FL_PASTE event to widget
+        Fl::e_clipboard_type =
+            Fl::clipboard_image;              // indicates that the paste event is for image data
+        int done = receiver.handle(FL_PASTE); // send FL_PASTE event to widget
         Fl::e_clipboard_type = "";
         if (done == 0) { // if widget did not handle the event, delete the image
           Fl::e_clipboard_data = NULL;
@@ -1007,7 +1041,8 @@ static void fl_clipboard_notify_untarget(HWND wnd) {
   else {
     HWND tmp, head;
 
-    tmp = CreateWindow("STATIC", "Temporary FLTK Clipboard Window", 0, 0, 0, 0, 0, HWND_MESSAGE, NULL, NULL, NULL);
+    tmp = CreateWindow("STATIC", "Temporary FLTK Clipboard Window", 0, 0, 0, 0, 0, HWND_MESSAGE,
+                       NULL, NULL, NULL);
     if (tmp == NULL)
       return;
 
@@ -1063,8 +1098,7 @@ void fl_get_codepage() {
 
 HWND fl_capture;
 
-static int mouse_event(Fl_Window *window, int what, int button,
-                       WPARAM wParam, LPARAM lParam) {
+static int mouse_event(Fl_Window *window, int what, int button, WPARAM wParam, LPARAM lParam) {
   static int px, py, pmx, pmy;
   POINT pt;
   float scale = Fl::screen_driver()->scale(window->screen_num());
@@ -1090,9 +1124,12 @@ static int mouse_event(Fl_Window *window, int what, int button,
   if (wParam & MK_SHIFT) state |= FL_SHIFT;
   if (wParam & MK_CONTROL) state |= FL_CTRL;
 #endif
-  if (wParam & MK_LBUTTON) state |= FL_BUTTON1;
-  if (wParam & MK_MBUTTON) state |= FL_BUTTON2;
-  if (wParam & MK_RBUTTON) state |= FL_BUTTON3;
+  if (wParam & MK_LBUTTON)
+    state |= FL_BUTTON1;
+  if (wParam & MK_MBUTTON)
+    state |= FL_BUTTON2;
+  if (wParam & MK_RBUTTON)
+    state |= FL_BUTTON3;
   Fl::e_state = state;
 
   switch (what) {
@@ -1141,70 +1178,68 @@ static int mouse_event(Fl_Window *window, int what, int button,
 // This table is in numeric order by VK:
 static const struct {
   unsigned short vk, fltk, extended;
-} vktab[] = {
-  {VK_BACK,     FL_BackSpace},
-  {VK_TAB,      FL_Tab},
-  {VK_CLEAR,    FL_KP+'5',      0xff0b/*XK_Clear*/},
-  {VK_RETURN,   FL_Enter,       FL_KP_Enter},
-  {VK_SHIFT,    FL_Shift_L,     FL_Shift_R},
-  {VK_CONTROL,  FL_Control_L,   FL_Control_R},
-  {VK_MENU,     FL_Alt_L,       FL_Alt_R},
-  {VK_PAUSE,    FL_Pause},
-  {VK_CAPITAL,  FL_Caps_Lock},
-  {VK_ESCAPE,   FL_Escape},
-  {VK_SPACE,    ' '},
-  {VK_PRIOR,    FL_KP+'9',      FL_Page_Up},
-  {VK_NEXT,     FL_KP+'3',      FL_Page_Down},
-  {VK_END,      FL_KP+'1',      FL_End},
-  {VK_HOME,     FL_KP+'7',      FL_Home},
-  {VK_LEFT,     FL_KP+'4',      FL_Left},
-  {VK_UP,       FL_KP+'8',      FL_Up},
-  {VK_RIGHT,    FL_KP+'6',      FL_Right},
-  {VK_DOWN,     FL_KP+'2',      FL_Down},
-  {VK_SNAPSHOT, FL_Print},      // does not work on NT
-  {VK_INSERT,   FL_KP+'0',      FL_Insert},
-  {VK_DELETE,   FL_KP+'.',      FL_Delete},
-  {VK_LWIN,     FL_Meta_L},
-  {VK_RWIN,     FL_Meta_R},
-  {VK_APPS,     FL_Menu},
-  {VK_SLEEP, FL_Sleep},
-  {VK_MULTIPLY, FL_KP+'*'},
-  {VK_ADD,      FL_KP+'+'},
-  {VK_SUBTRACT, FL_KP+'-'},
-  {VK_DECIMAL,  FL_KP+'.'},
-  {VK_DIVIDE,   FL_KP+'/'},
-  {VK_NUMLOCK,  FL_Num_Lock},
-  {VK_SCROLL,   FL_Scroll_Lock},
+} vktab[] = {{VK_BACK, FL_BackSpace},
+             {VK_TAB, FL_Tab},
+             {VK_CLEAR, FL_KP + '5', 0xff0b /*XK_Clear*/},
+             {VK_RETURN, FL_Enter, FL_KP_Enter},
+             {VK_SHIFT, FL_Shift_L, FL_Shift_R},
+             {VK_CONTROL, FL_Control_L, FL_Control_R},
+             {VK_MENU, FL_Alt_L, FL_Alt_R},
+             {VK_PAUSE, FL_Pause},
+             {VK_CAPITAL, FL_Caps_Lock},
+             {VK_ESCAPE, FL_Escape},
+             {VK_SPACE, ' '},
+             {VK_PRIOR, FL_KP + '9', FL_Page_Up},
+             {VK_NEXT, FL_KP + '3', FL_Page_Down},
+             {VK_END, FL_KP + '1', FL_End},
+             {VK_HOME, FL_KP + '7', FL_Home},
+             {VK_LEFT, FL_KP + '4', FL_Left},
+             {VK_UP, FL_KP + '8', FL_Up},
+             {VK_RIGHT, FL_KP + '6', FL_Right},
+             {VK_DOWN, FL_KP + '2', FL_Down},
+             {VK_SNAPSHOT, FL_Print}, // does not work on NT
+             {VK_INSERT, FL_KP + '0', FL_Insert},
+             {VK_DELETE, FL_KP + '.', FL_Delete},
+             {VK_LWIN, FL_Meta_L},
+             {VK_RWIN, FL_Meta_R},
+             {VK_APPS, FL_Menu},
+             {VK_SLEEP, FL_Sleep},
+             {VK_MULTIPLY, FL_KP + '*'},
+             {VK_ADD, FL_KP + '+'},
+             {VK_SUBTRACT, FL_KP + '-'},
+             {VK_DECIMAL, FL_KP + '.'},
+             {VK_DIVIDE, FL_KP + '/'},
+             {VK_NUMLOCK, FL_Num_Lock},
+             {VK_SCROLL, FL_Scroll_Lock},
 #if defined(_WIN32_WINNT) && (_WIN32_WINNT >= 0x0500)
-  {VK_BROWSER_BACK,     FL_Back},
-  {VK_BROWSER_FORWARD,  FL_Forward},
-  {VK_BROWSER_REFRESH,  FL_Refresh},
-  {VK_BROWSER_STOP,     FL_Stop},
-  {VK_BROWSER_SEARCH,   FL_Search},
-  {VK_BROWSER_FAVORITES, FL_Favorites},
-  {VK_BROWSER_HOME,     FL_Home_Page},
-  {VK_VOLUME_MUTE,      FL_Volume_Mute},
-  {VK_VOLUME_DOWN,      FL_Volume_Down},
-  {VK_VOLUME_UP,        FL_Volume_Up},
-  {VK_MEDIA_NEXT_TRACK, FL_Media_Next},
-  {VK_MEDIA_PREV_TRACK, FL_Media_Prev},
-  {VK_MEDIA_STOP,       FL_Media_Stop},
-  {VK_MEDIA_PLAY_PAUSE, FL_Media_Play},
-  {VK_LAUNCH_MAIL,      FL_Mail},
+             {VK_BROWSER_BACK, FL_Back},
+             {VK_BROWSER_FORWARD, FL_Forward},
+             {VK_BROWSER_REFRESH, FL_Refresh},
+             {VK_BROWSER_STOP, FL_Stop},
+             {VK_BROWSER_SEARCH, FL_Search},
+             {VK_BROWSER_FAVORITES, FL_Favorites},
+             {VK_BROWSER_HOME, FL_Home_Page},
+             {VK_VOLUME_MUTE, FL_Volume_Mute},
+             {VK_VOLUME_DOWN, FL_Volume_Down},
+             {VK_VOLUME_UP, FL_Volume_Up},
+             {VK_MEDIA_NEXT_TRACK, FL_Media_Next},
+             {VK_MEDIA_PREV_TRACK, FL_Media_Prev},
+             {VK_MEDIA_STOP, FL_Media_Stop},
+             {VK_MEDIA_PLAY_PAUSE, FL_Media_Play},
+             {VK_LAUNCH_MAIL, FL_Mail},
 #endif
-  {0xba,        ';'},
-  {0xbb,        '='},
-  {0xbc,        ','},
-  {0xbd,        '-'},
-  {0xbe,        '.'},
-  {0xbf,        '/'},
-  {0xc0,        '`'},
-  {0xdb,        '['},
-  {0xdc,        '\\'},
-  {0xdd,        ']'},
-  {0xde,        '\''},
-  {VK_OEM_102,  FL_Iso_Key}
-};
+             {0xba, ';'},
+             {0xbb, '='},
+             {0xbc, ','},
+             {0xbd, '-'},
+             {0xbe, '.'},
+             {0xbf, '/'},
+             {0xc0, '`'},
+             {0xdb, '['},
+             {0xdc, '\\'},
+             {0xdd, ']'},
+             {0xde, '\''},
+             {VK_OEM_102, FL_Iso_Key}};
 static int ms2fltk(WPARAM vk, int extended) {
   static unsigned short vklut[256];
   static unsigned short extendedlut[256];
@@ -1252,15 +1287,17 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
   // fl_msg.lPrivate = ???
 
   Fl_Window *window = fl_find(hWnd);
-  float scale = (window ? Fl::screen_driver()->scale(Fl_Window_Driver::driver(window)->screen_num()) : 1);
+  float scale =
+      (window ? Fl::screen_driver()->scale(Fl_Window_Driver::driver(window)->screen_num()) : 1);
 
   if (window) {
     switch (uMsg) {
 
       case WM_DPICHANGED: { // 0x02E0
-        if (is_dpi_aware && !Fl_WinAPI_Window_Driver::data_for_resize_window_between_screens_.busy) {
+        if (is_dpi_aware &&
+            !Fl_WinAPI_Window_Driver::data_for_resize_window_between_screens_.busy) {
           RECT r;
-          Fl_WinAPI_Screen_Driver *sd = (Fl_WinAPI_Screen_Driver*)Fl::screen_driver();
+          Fl_WinAPI_Screen_Driver *sd = (Fl_WinAPI_Screen_Driver *)Fl::screen_driver();
           int ns = Fl_Window_Driver::driver(window)->screen_num();
           sd->dpi[ns][0] = sd->dpi[ns][1] = HIWORD(wParam);
           float f = HIWORD(wParam) / 96.f;
@@ -1317,7 +1354,8 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
           r_box.top = LONG(r_box.top / scale);
           r_box.bottom = LONG(r_box.bottom / scale);
           Fl_Region R3 = CreateRectRgn(r_box.left, r_box.top, r_box.right + 1, r_box.bottom + 1);
-          if (!i->region) i->region = R3;
+          if (!i->region)
+            i->region = R3;
           else {
             CombineRgn(i->region, i->region, R3, RGN_OR);
             DeleteObject(R3);
@@ -1336,7 +1374,8 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
           ValidateRgn(hWnd, R2);
         }
 
-        if (scale != 1) DeleteObject(R2);
+        if (scale != 1)
+          DeleteObject(R2);
 
         window->clear_damage((uchar)(window->damage() | FL_DAMAGE_EXPOSE));
         // These next two statements should not be here, so that all update
@@ -1383,13 +1422,13 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 #ifdef USE_TRACK_MOUSE
         if (track_mouse_win != window) {
           TRACKMOUSEEVENT tme;
-          tme.cbSize    = sizeof(TRACKMOUSEEVENT);
-          tme.dwFlags   = TME_LEAVE;
+          tme.cbSize = sizeof(TRACKMOUSEEVENT);
+          tme.dwFlags = TME_LEAVE;
           tme.hwndTrack = hWnd;
           _TrackMouseEvent(&tme);
           track_mouse_win = window;
         }
-#endif  // USE_TRACK_MOUSE
+#endif // USE_TRACK_MOUSE
         mouse_event(window, 3, 0, wParam, lParam);
         return 0;
 
@@ -1589,7 +1628,7 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
           return 0;
         }
         break; // WM_KEYDOWN ... WM_SYSKEYUP, WM_DEADCHAR ... WM_SYSCHAR
-      } // case WM_DEADCHAR ... WM_SYSCHAR
+      }        // case WM_DEADCHAR ... WM_SYSCHAR
 
       case WM_MOUSEWHEEL: {
         static int delta = 0; // running total of all motion
@@ -1639,14 +1678,17 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         resize_bug_fix = window;
         int nx = LOWORD(lParam);
         int ny = HIWORD(lParam);
-        if (nx & 0x8000) nx -= 65536;
-        if (ny & 0x8000) ny -= 65536;
+        if (nx & 0x8000)
+          nx -= 65536;
+        if (ny & 0x8000)
+          ny -= 65536;
         // fprintf(LOG,"WM_MOVE position(%d,%d) s=%.2f\n",int(nx/scale),int(ny/scale),scale);
         // detect when window centre changes screen
         Fl_WinAPI_Screen_Driver *sd = (Fl_WinAPI_Screen_Driver *)Fl::screen_driver();
         Fl_WinAPI_Window_Driver *wd = Fl_WinAPI_Window_Driver::driver(window);
         int olds = wd->screen_num();
-        int news = sd->screen_num_unscaled(nx + int(window->w() * scale / 2), ny + int(window->h() * scale / 2));
+        int news = sd->screen_num_unscaled(nx + int(window->w() * scale / 2),
+                                           ny + int(window->h() * scale / 2));
         if (news == -1)
           news = olds;
         float s = sd->scale(news);
@@ -1661,11 +1703,10 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
             Fl_WinAPI_Window_Driver::data_for_resize_window_between_screens_.busy = true;
             Fl_WinAPI_Window_Driver::data_for_resize_window_between_screens_.screen = news;
             Fl::add_timeout(1, Fl_WinAPI_Window_Driver::resize_after_screen_change, window);
-          }
-          else if (!Fl_WinAPI_Window_Driver::data_for_resize_window_between_screens_.busy)
+          } else if (!Fl_WinAPI_Window_Driver::data_for_resize_window_between_screens_.busy)
             wd->screen_num(news);
         }
-        window->position(int(round(nx/scale)), int(round(ny/scale)));
+        window->position(int(round(nx / scale)), int(round(ny / scale)));
         break;
       } // case WM_MOVE
 
@@ -1700,11 +1741,11 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
         fl_i_own_selection[1] = 0;
         return 1;
 
-      case WM_DISPLAYCHANGE: {// occurs when screen configuration (number, size, position) changes
+      case WM_DISPLAYCHANGE: { // occurs when screen configuration (number, size, position) changes
         Fl::call_screen_init();
-        Fl_WinAPI_Screen_Driver *sd = (Fl_WinAPI_Screen_Driver*)Fl::screen_driver();
+        Fl_WinAPI_Screen_Driver *sd = (Fl_WinAPI_Screen_Driver *)Fl::screen_driver();
         for (int ns = 0; ns < sd->screen_count(); ns++) {
-          sd->rescale_all_windows_from_screen(ns, sd->dpi[ns][0]/96);
+          sd->rescale_all_windows_from_screen(ns, sd->dpi[ns][0] / 96);
         }
         Fl::handle(FL_SCREEN_CONFIGURATION_CHANGED, NULL);
         return 0;
@@ -1734,7 +1775,7 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
           return 0;
         break;
     } // switch (uMsg)
-  } // if (window)
+  }   // if (window)
   return DefWindowProcW(hWnd, uMsg, wParam, lParam);
 }
 
@@ -1743,8 +1784,8 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
  Function fake_X_wm() below is used before calling CreateWindowExW() to create
  a window and before calling SetWindowPos(). Both of these Windows functions need the window size
  including borders and title bar. Function fake_X_wm() uses AdjustWindowRectExForDpi() or
- AdjustWindowRectEx() to get the sizes of borders and title bar. The gotten values don't always match
- what is seen on the display, but they are the **required** values so the subsequent calls to
+ AdjustWindowRectEx() to get the sizes of borders and title bar. The gotten values don't always
+ match what is seen on the display, but they are the **required** values so the subsequent calls to
  CreateWindowExW() or SetWindowPos() correctly size the window.
  The Windows doc of AdjustWindowRectExForDpi/AdjustWindowRectEx makes this very clear:
     Calculates the required size of the window rectangle, based on the desired size of the client
@@ -1767,7 +1808,8 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 //   1   |  fix   |   yes
 //   2   |  size  |   yes
 
-int Fl_WinAPI_Window_Driver::fake_X_wm(int &X, int &Y, int &bt, int &bx, int &by, DWORD style, DWORD styleEx) {
+int Fl_WinAPI_Window_Driver::fake_X_wm(int &X, int &Y, int &bt, int &bx, int &by, DWORD style,
+                                       DWORD styleEx) {
 
   const Fl_Window *w = pWindow;
 
@@ -1798,12 +1840,13 @@ int Fl_WinAPI_Window_Driver::fake_X_wm(int &X, int &Y, int &bt, int &bx, int &by
       r.bottom = drawingY + int(w->h() * s);
       // get the decoration rectangle for the desired client rectangle
 
-      typedef BOOL(WINAPI* AdjustWindowRectExForDpi_type)(LPRECT, DWORD, BOOL, DWORD, UINT);
+      typedef BOOL(WINAPI * AdjustWindowRectExForDpi_type)(LPRECT, DWORD, BOOL, DWORD, UINT);
       static AdjustWindowRectExForDpi_type fl_AdjustWindowRectExForDpi =
-        (AdjustWindowRectExForDpi_type)GetProcAddress(LoadLibrary("User32.DLL"), "AdjustWindowRectExForDpi");
+          (AdjustWindowRectExForDpi_type)GetProcAddress(LoadLibrary("User32.DLL"),
+                                                        "AdjustWindowRectExForDpi");
       BOOL ok;
       if (is_dpi_aware && fl_AdjustWindowRectExForDpi) {
-        Fl_WinAPI_Screen_Driver *sd = (Fl_WinAPI_Screen_Driver*)Fl::screen_driver();
+        Fl_WinAPI_Screen_Driver *sd = (Fl_WinAPI_Screen_Driver *)Fl::screen_driver();
         UINT dpi = UINT(sd->dpi[screen_num()][0]);
         ok = fl_AdjustWindowRectExForDpi(&r, style, FALSE, styleEx, dpi);
       } else
@@ -1862,7 +1905,8 @@ int Fl_WinAPI_Window_Driver::fake_X_wm(int &X, int &Y, int &bt, int &bx, int &by
   // FIXME: this ought to be the "work area" instead of the entire screen !
   int scr_x = 0, scr_y = 0, scr_w = 0, scr_h = 0;
   int ns = Fl::screen_num(int(round(X / s)), int(round(Y / s)), int(W / s), int(H / s));
-  ((Fl_WinAPI_Screen_Driver*)Fl::screen_driver())->screen_xywh_unscaled(scr_x, scr_y, scr_w, scr_h, ns);
+  ((Fl_WinAPI_Screen_Driver *)Fl::screen_driver())
+      ->screen_xywh_unscaled(scr_x, scr_y, scr_w, scr_h, ns);
   // Make border's lower right corner visible
   if (scr_x + scr_w < X + W)
     X = scr_x + scr_w - W;
@@ -1897,7 +1941,7 @@ int Fl_WinAPI_Window_Driver::fake_X_wm(int &X, int &Y, int &bt, int &bx, int &by
 ////////////////////////////////////////////////////////////////
 
 void Fl_WinAPI_Window_Driver::resize(int X, int Y, int W, int H) {
-//fprintf(stderr, "resize w()=%d W=%d h()=%d H=%d\n",pWindow->w(), W,pWindow->h(), H);
+  // fprintf(stderr, "resize w()=%d W=%d h()=%d H=%d\n",pWindow->w(), W,pWindow->h(), H);
   UINT flags = SWP_NOSENDCHANGING | SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOOWNERZORDER;
   int is_a_resize = (W != w() || H != h() || Fl_Window::is_a_rescale());
   int resize_from_program = (pWindow != resize_bug_fix);
@@ -1916,7 +1960,8 @@ void Fl_WinAPI_Window_Driver::resize(int X, int Y, int W, int H) {
       WINDOWPLACEMENT wplace;
       wplace.length = sizeof(WINDOWPLACEMENT);
       BOOL ok = GetWindowPlacement(fl_xid(pWindow), &wplace);
-      if (ok && wplace.showCmd == SW_SHOWMAXIMIZED) return;
+      if (ok && wplace.showCmd == SW_SHOWMAXIMIZED)
+        return;
     }
     pWindow->Fl_Group::resize(X, Y, W, H);
     if (visible_r()) {
@@ -1938,7 +1983,8 @@ void Fl_WinAPI_Window_Driver::resize(int X, int Y, int W, int H) {
     int dummy_x, dummy_y, bt, bx, by;
     // compute window position and size in scaled units
     float s = Fl::screen_driver()->scale(screen_num());
-    int scaledX = int(round(X * s)), scaledY = int(round(Y * s)), scaledW = int(W * s), scaledH = int(H * s);
+    int scaledX = int(round(X * s)), scaledY = int(round(Y * s)), scaledW = int(W * s),
+        scaledH = int(H * s);
     // Ignore window managing when resizing, so that windows (and more
     // specifically menus) can be moved offscreen.
     if (fake_X_wm(dummy_x, dummy_y, bt, bx, by)) {
@@ -2074,7 +2120,8 @@ Fl_X *Fl_WinAPI_Window_Driver::makeWindow() {
   int nscreen = 0;
   if (w->parent()) {
     nscreen = Fl_Window_Driver::driver(w->top_window())->screen_num();
-  } else if (Fl_Window_Driver::driver(w)->force_position() && Fl_WinAPI_Window_Driver::driver(w)->screen_num_ >= 0) {
+  } else if (Fl_Window_Driver::driver(w)->force_position() &&
+             Fl_WinAPI_Window_Driver::driver(w)->screen_num_ >= 0) {
     nscreen = Fl_Window_Driver::driver(w)->screen_num();
   } else {
     Fl_Window *hint = Fl::first_window();
@@ -2185,14 +2232,11 @@ Fl_X *Fl_WinAPI_Window_Driver::makeWindow() {
     wlen = fl_utf8toUtf16(w->label(), (unsigned)l, (unsigned short *)lab, wlen);
     lab[wlen] = 0;
   }
-  x->xid = CreateWindowExW(styleEx,
-                           class_namew, lab, style,
-                           xp, yp, wp, hp,
-                           parent,
+  x->xid = CreateWindowExW(styleEx, class_namew, lab, style, xp, yp, wp, hp, parent,
                            NULL, // menu
                            fl_display,
                            NULL // creation parameters
-                          );
+  );
   if (lab)
     free(lab);
 
@@ -2239,8 +2283,9 @@ Fl_X *Fl_WinAPI_Window_Driver::makeWindow() {
 
   // If we've captured the mouse, we dont want to activate any
   // other windows from the code, or we lose the capture.
-  ShowWindow(x->xid, !showit ? SW_SHOWMINNOACTIVE :
-             (Fl::grab() || (styleEx & WS_EX_TOOLWINDOW)) ? SW_SHOWNOACTIVATE : SW_SHOWNORMAL);
+  ShowWindow(x->xid, !showit                                        ? SW_SHOWMINNOACTIVE
+                     : (Fl::grab() || (styleEx & WS_EX_TOOLWINDOW)) ? SW_SHOWNOACTIVATE
+                                                                    : SW_SHOWNORMAL);
 
   // Register all windows for potential drag'n'drop operations
   RegisterDragDrop(x->xid, flIDropTarget);
@@ -2313,16 +2358,16 @@ static HICON image_to_icon(const Fl_RGB_Image *image, bool is_icon, int hotx, in
 
   memset(&bi, 0, sizeof(BITMAPV5HEADER));
 
-  bi.bV5Size        = sizeof(BITMAPV5HEADER);
-  bi.bV5Width       = image->w();
-  bi.bV5Height      = -image->h(); // Negative for top-down
-  bi.bV5Planes      = 1;
-  bi.bV5BitCount    = 32;
+  bi.bV5Size = sizeof(BITMAPV5HEADER);
+  bi.bV5Width = image->w();
+  bi.bV5Height = -image->h(); // Negative for top-down
+  bi.bV5Planes = 1;
+  bi.bV5BitCount = 32;
   bi.bV5Compression = BI_BITFIELDS;
-  bi.bV5RedMask     = 0x00FF0000;
-  bi.bV5GreenMask   = 0x0000FF00;
-  bi.bV5BlueMask    = 0x000000FF;
-  bi.bV5AlphaMask   = 0xFF000000;
+  bi.bV5RedMask = 0x00FF0000;
+  bi.bV5GreenMask = 0x0000FF00;
+  bi.bV5BlueMask = 0x000000FF;
+  bi.bV5AlphaMask = 0xFF000000;
 
   HDC hdc;
 
@@ -2367,10 +2412,10 @@ static HICON image_to_icon(const Fl_RGB_Image *image, bool is_icon, int hotx, in
 
   ICONINFO ii;
 
-  ii.fIcon    = is_icon;
+  ii.fIcon = is_icon;
   ii.xHotspot = hotx;
   ii.yHotspot = hoty;
-  ii.hbmMask  = mask;
+  ii.hbmMask = mask;
   ii.hbmColor = bitmap;
 
   icon = CreateIconIndirect(&ii);
@@ -2499,11 +2544,9 @@ void Fl_WinAPI_Window_Driver::set_icons() {
   if (icon_->count) {
     const Fl_RGB_Image *best_big, *best_small;
 
-    best_big = find_best_icon(GetSystemMetrics(SM_CXICON),
-                              (const Fl_RGB_Image **)icon_->icons,
+    best_big = find_best_icon(GetSystemMetrics(SM_CXICON), (const Fl_RGB_Image **)icon_->icons,
                               icon_->count);
-    best_small = find_best_icon(GetSystemMetrics(SM_CXSMICON),
-                                (const Fl_RGB_Image **)icon_->icons,
+    best_small = find_best_icon(GetSystemMetrics(SM_CXSMICON), (const Fl_RGB_Image **)icon_->icons,
                                 icon_->count);
 
     if (best_big != NULL)
@@ -2679,7 +2722,7 @@ void fl_free_fonts(void) {
     s = fl_fonts + i;
     for (f = s->first; f; f = ff) {
       ff = f->next;
-      delete (Fl_GDI_Font_Descriptor*)f;
+      delete (Fl_GDI_Font_Descriptor *)f;
       s->first = ff;
     }
   }
@@ -2761,12 +2804,13 @@ void fl_cleanup_dc_list(void) { // clean up the list
   } while (t);
 }
 
-/* Returns images of the captures of the window title-bar, and the left, bottom and right window borders.
- This function exploits a feature of Fl_WinAPI_Screen_Driver::read_win_rectangle() which,
+/* Returns images of the captures of the window title-bar, and the left, bottom and right window
+ borders. This function exploits a feature of Fl_WinAPI_Screen_Driver::read_win_rectangle() which,
  when fl_gc is set to the screen device context, captures the window decoration.
  */
 void Fl_WinAPI_Window_Driver::capture_titlebar_and_borders(Fl_RGB_Image *&top, Fl_RGB_Image *&left,
-                                                           Fl_RGB_Image *&bottom, Fl_RGB_Image *&right) {
+                                                           Fl_RGB_Image *&bottom,
+                                                           Fl_RGB_Image *&right) {
   top = left = bottom = right = NULL;
   if (!shown() || parent() || !border() || !visible())
     return;
@@ -2791,18 +2835,24 @@ void Fl_WinAPI_Window_Driver::capture_titlebar_and_borders(Fl_RGB_Image *&top, F
   int offset = r.left < 0 ? -r.left : 0;
   Fl_WinAPI_Screen_Driver *dr = (Fl_WinAPI_Screen_Driver *)Fl::screen_driver();
   if (htop && r.right - r.left > offset) {
-    top = dr->read_win_rectangle_unscaled(r.left+offset, r.top, r.right - r.left-offset, htop, 0);
+    top =
+        dr->read_win_rectangle_unscaled(r.left + offset, r.top, r.right - r.left - offset, htop, 0);
     if (scaling != 1 && top)
       top->scale(ww, int(htop / scaling), 0, 1);
   }
   if (wsides) {
-    left = dr->read_win_rectangle_unscaled(r.left + offset, r.top + htop, wsides, int(h() * scaling), 0);
-    right = dr->read_win_rectangle_unscaled(r.right - wsides, r.top + htop, wsides, int(h() * scaling), 0);
-    bottom = dr->read_win_rectangle_unscaled(r.left+offset, r.bottom - hbottom, ww, hbottom, 0);
+    left = dr->read_win_rectangle_unscaled(r.left + offset, r.top + htop, wsides,
+                                           int(h() * scaling), 0);
+    right = dr->read_win_rectangle_unscaled(r.right - wsides, r.top + htop, wsides,
+                                            int(h() * scaling), 0);
+    bottom = dr->read_win_rectangle_unscaled(r.left + offset, r.bottom - hbottom, ww, hbottom, 0);
     if (scaling != 1) {
-      if (left) left->scale(wsides, h(), 0, 1);
-      if (right) right->scale(wsides, h(), 0, 1);
-      if (bottom) bottom->scale(ww, hbottom, 0, 1);
+      if (left)
+        left->scale(wsides, h(), 0, 1);
+      if (right)
+        right->scale(wsides, h(), 0, 1);
+      if (bottom)
+        bottom->scale(ww, hbottom, 0, 1);
     }
   }
   ReleaseDC(NULL, (HDC)fl_graphics_driver->gc());

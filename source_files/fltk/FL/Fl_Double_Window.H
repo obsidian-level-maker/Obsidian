@@ -27,16 +27,15 @@
   It will draw the window data into an off-screen pixmap, and then
   copy it to the on-screen window.
 */
-class FL_EXPORT Fl_Double_Window : public Fl_Window
-{
+class FL_EXPORT Fl_Double_Window : public Fl_Window {
 public:
   /**
     Return non-null if this is an Fl_Overlay_Window object.
   */
-  virtual Fl_Double_Window *as_double_window() {return this; }
+  virtual Fl_Double_Window *as_double_window() { return this; }
   void show();
-  void show(int a, char **b) {Fl_Window::show(a,b);}
-  void resize(int,int,int,int);
+  void show(int a, char **b) { Fl_Window::show(a, b); }
+  void resize(int, int, int, int);
   void hide();
   void flush();
   ~Fl_Double_Window();
@@ -51,7 +50,6 @@ public:
    See  Fl_Double_Window::Fl_Double_Window(int w, int h, const char *label = 0)
   */
   Fl_Double_Window(int X, int Y, int W, int H, const char *l = 0);
-
 };
 
 #endif

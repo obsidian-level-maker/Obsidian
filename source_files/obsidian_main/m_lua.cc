@@ -724,7 +724,8 @@ int gui_add_module_button_option(lua_State *L) {
                                          gap, randomize_group, default_value);
     if (!single_pane) {
         main_win->right_mods->AddButtonOption(module, option, label, tip,
-                                              longtip, gap, randomize_group, default_value);
+                                              longtip, gap, randomize_group,
+                                              default_value);
     }
 
     return 0;
@@ -1454,10 +1455,10 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
 
         // this will appear in the log file too
         if (main_win) {
-            main_win->label(
-                fmt::format("{} {} {} \"{}\"", _("[ ERROR ]"),OBSIDIAN_TITLE,
-                            OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME)
-                    .c_str());
+            main_win->label(fmt::format("{} {} {} \"{}\"", _("[ ERROR ]"),
+                                        OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
+                                        OBSIDIAN_CODE_NAME)
+                                .c_str());
             DLG_ShowError("%s: %s", _("Script Error: "), err_msg);
             main_win->label(fmt::format("{} {} \"{}\"", OBSIDIAN_TITLE,
                                         OBSIDIAN_SHORT_VERSION,
@@ -1851,10 +1852,11 @@ std::string ob_datetime_string() {
 }
 
 void ob_print_reference() {
-        if (!Script_CallFunc("ob_print_reference", 1)) {
-            fmt::print("ob_print_reference: Error creating REFERENCE.txt!\n");
-        }
-        fmt::print("A copy of this output can be found at {}\n", reference_file.generic_string());
+    if (!Script_CallFunc("ob_print_reference", 1)) {
+        fmt::print("ob_print_reference: Error creating REFERENCE.txt!\n");
+    }
+    fmt::print("A copy of this output can be found at {}\n",
+               reference_file.generic_string());
 }
 
 void ob_print_reference_json() {
@@ -1874,10 +1876,10 @@ void ob_invoke_hook(std::string hookname) {
 bool ob_build_cool_shit() {
     if (!Script_CallFunc("ob_build_cool_shit", 1)) {
         if (main_win) {
-            main_win->label(
-                fmt::format("{} {} {} \"{}\"", _("[ ERROR ]"), OBSIDIAN_TITLE,
-                            OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME)
-                    .c_str());
+            main_win->label(fmt::format("{} {} {} \"{}\"", _("[ ERROR ]"),
+                                        OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
+                                        OBSIDIAN_CODE_NAME)
+                                .c_str());
         }
         Main::ProgStatus(_("Script Error"));
         if (main_win) {

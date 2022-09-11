@@ -49,17 +49,21 @@ int write_sourceview = 0;
  I needed this so it is not messed up by locale settings.
  */
 int is_id(char c) {
-  return (c>='a' && c<='z') || (c>='A' && c<='Z') || (c>='0' && c<='9') || c=='_';
+  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_';
 }
 
 ////////////////////////////////////////////////////////////////
 // Generate unique but human-readable identifiers:
 
 struct id {
-  char* text;
-  void* object;
+  char *text;
+  void *object;
   id *left, *right;
-  id (const char* t, void* o) : text(fl_strdup(t)), object(o) {left = right = 0;}
+  id(const char *t, void *o)
+    : text(fl_strdup(t))
+    , object(o) {
+    left = right = 0;
+  }
   ~id();
 };
 
@@ -69,35 +73,41 @@ id::~id() {
   delete right;
 }
 
-static id* id_root;
+static id *id_root;
 
 // TODO: document me
-const char* unique_id(void* o, const char* type, const char* name, const char* label) {
+const char *unique_id(void *o, const char *type, const char *name, const char *label) {
   char buffer[128];
-  char* q = buffer;
-  while (*type) *q++ = *type++;
+  char *q = buffer;
+  while (*type)
+    *q++ = *type++;
   *q++ = '_';
-  const char* n = name;
-  if (!n || !*n) n = label;
+  const char *n = name;
+  if (!n || !*n)
+    n = label;
   if (n && *n) {
-    while (*n && !is_id(*n)) n++;
-    while (is_id(*n)) *q++ = *n++;
+    while (*n && !is_id(*n))
+      n++;
+    while (is_id(*n))
+      *q++ = *n++;
   }
   *q = 0;
   // okay, search the tree and see if the name was already used:
-  id** p = &id_root;
+  id **p = &id_root;
   int which = 0;
   while (*p) {
     int i = strcmp(buffer, (*p)->text);
     if (!i) {
-      if ((*p)->object == o) return (*p)->text;
+      if ((*p)->object == o)
+        return (*p)->text;
       // already used, we need to pick a new name:
-      sprintf(q,"%x",++which);
+      sprintf(q, "%x", ++which);
       p = &id_root;
       continue;
-    }
-    else if (i < 0) p = &((*p)->left);
-    else p  = &((*p)->right);
+    } else if (i < 0)
+      p = &((*p)->left);
+    else
+      p = &((*p)->right);
   }
   *p = new id(buffer, o);
   return (*p)->text;
@@ -122,11 +132,13 @@ const char* unique_id(void* o, const char* type, const char* name, const char* l
  \return pointer to a static string
  */
 const char *indent(int set) {
-  static const char* spaces = "                                ";
+  static const char *spaces = "                                ";
   int i = set * 2;
-  if (i>32) i = 32;
-  if (i<0) i = 0;
-  return spaces+32-i;
+  if (i > 32)
+    i = 32;
+  if (i < 0)
+    i = 0;
+  return spaces + 32 - i;
 }
 
 /**
@@ -144,7 +156,7 @@ const char *indent() {
  \return pointer to a static string
  */
 const char *indent_plus(int offset) {
-  return indent(indentation+offset);
+  return indent(indentation + offset);
 }
 
 
@@ -183,12 +195,15 @@ int write_declare(const char *format, ...) {
   va_end(args);
   included **p = &included_root;
   while (*p) {
-    int i = strcmp(buf,(*p)->text);
-    if (!i) return 0;
-    else if (i < 0) p = &((*p)->left);
-    else p  = &((*p)->right);
+    int i = strcmp(buf, (*p)->text);
+    if (!i)
+      return 0;
+    else if (i < 0)
+      p = &((*p)->left);
+    else
+      p = &((*p)->right);
   }
-  fprintf(header_file,"%s\n",buf);
+  fprintf(header_file, "%s\n", buf);
   *p = new included(buf);
   return 1;
 }
@@ -224,88 +239,122 @@ void write_cstring(const char *s, int length) {
   }
   // if we are rendering to the source code preview window, and the text is
   // longer than four lines, we only render a placeholder.
-  if (write_sourceview && ((s==NULL) || (length>300))) {
-    if (length>=0)
+  if (write_sourceview && ((s == NULL) || (length > 300))) {
+    if (length >= 0)
       fprintf(code_file, "\" ... %d bytes of text... \"", length);
     else
       fprintf(code_file, "\" ... text... \"");
     return;
   }
-  if (length==-1 || s==0L) {
+  if (length == -1 || s == 0L) {
     fprintf(code_file, "\n#error  string not found\n");
     fprintf(code_file, "\" ... undefined size text... \"");
     return;
   }
 
   const char *p = s;
-  const char *e = s+length;
+  const char *e = s + length;
   int linelength = 1;
   putc('\"', code_file);
   for (; p < e;) {
     int c = *p++;
     switch (c) {
-    case '\b': c = 'b'; goto QUOTED;
-    case '\t': c = 't'; goto QUOTED;
-    case '\n': c = 'n'; goto QUOTED;
-    case '\f': c = 'f'; goto QUOTED;
-    case '\r': c = 'r'; goto QUOTED;
-    case '\"':
-    case '\'':
-    case '\\':
-    QUOTED:
-      if (linelength >= 77) {fputs("\\\n",code_file); linelength = 0;}
-      putc('\\', code_file);
-      putc(c, code_file);
-      linelength += 2;
-      break;
-    case '?': // prevent trigraphs by writing ?? as ?\?
-      if (p-2 >= s && *(p-2) == '?') goto QUOTED;
-      // else fall through:
-    default:
-      if (c >= ' ' && c < 127) {
-        // a legal ASCII character
-        if (linelength >= 78) {fputs("\\\n",code_file); linelength = 0;}
+      case '\b':
+        c = 'b';
+        goto QUOTED;
+      case '\t':
+        c = 't';
+        goto QUOTED;
+      case '\n':
+        c = 'n';
+        goto QUOTED;
+      case '\f':
+        c = 'f';
+        goto QUOTED;
+      case '\r':
+        c = 'r';
+        goto QUOTED;
+      case '\"':
+      case '\'':
+      case '\\':
+      QUOTED:
+        if (linelength >= 77) {
+          fputs("\\\n", code_file);
+          linelength = 0;
+        }
+        putc('\\', code_file);
         putc(c, code_file);
-        linelength++;
+        linelength += 2;
         break;
-      }
-      // if the UTF-8 option is checked, write unicode characters verbatim
-        if (utf8_in_src && (c&0x80)) {
-          if ((c&0x40)) {
-            // This is the first character in a utf-8 sequence (0b11......).
-            // A line break would be ok here. Do not put linebreak in front of
-            // following characters (0b10......)
-            if (linelength >= 78) {fputs("\\\n",code_file); linelength = 0;}
+      case '?': // prevent trigraphs by writing ?? as ?\?
+        if (p - 2 >= s && *(p - 2) == '?')
+          goto QUOTED;
+        // else fall through:
+      default:
+        if (c >= ' ' && c < 127) {
+          // a legal ASCII character
+          if (linelength >= 78) {
+            fputs("\\\n", code_file);
+            linelength = 0;
           }
           putc(c, code_file);
           linelength++;
           break;
         }
-      // otherwise we must print it as an octal constant:
-      c &= 255;
-      if (c < 8) {
-        if (linelength >= 76) {fputs("\\\n",code_file); linelength = 0;}
-        fprintf(code_file, "\\%o",c);
-        linelength += 2;
-      } else if (c < 64) {
-        if (linelength >= 75) {fputs("\\\n",code_file); linelength = 0;}
-        fprintf(code_file, "\\%o",c);
-        linelength += 3;
-      } else {
-        if (linelength >= 74) {fputs("\\\n",code_file); linelength = 0;}
-        fprintf(code_file, "\\%o",c);
-        linelength += 4;
-      }
-      // We must not put more numbers after it, because some C compilers
-      // consume them as part of the quoted sequence.  Use string constant
-      // pasting to avoid this:
-      c = *p;
-      if (p < e && ( (c>='0'&&c<='9') || (c>='a'&&c<='f') || (c>='A'&&c<='F') )) {
-        putc('\"', code_file); linelength++;
-        if (linelength >= 79) {fputs("\n",code_file); linelength = 0;}
-        putc('\"', code_file); linelength++;
-      }
-      break;
+        // if the UTF-8 option is checked, write unicode characters verbatim
+        if (utf8_in_src && (c & 0x80)) {
+          if ((c & 0x40)) {
+            // This is the first character in a utf-8 sequence (0b11......).
+            // A line break would be ok here. Do not put linebreak in front of
+            // following characters (0b10......)
+            if (linelength >= 78) {
+              fputs("\\\n", code_file);
+              linelength = 0;
+            }
+          }
+          putc(c, code_file);
+          linelength++;
+          break;
+        }
+        // otherwise we must print it as an octal constant:
+        c &= 255;
+        if (c < 8) {
+          if (linelength >= 76) {
+            fputs("\\\n", code_file);
+            linelength = 0;
+          }
+          fprintf(code_file, "\\%o", c);
+          linelength += 2;
+        } else if (c < 64) {
+          if (linelength >= 75) {
+            fputs("\\\n", code_file);
+            linelength = 0;
+          }
+          fprintf(code_file, "\\%o", c);
+          linelength += 3;
+        } else {
+          if (linelength >= 74) {
+            fputs("\\\n", code_file);
+            linelength = 0;
+          }
+          fprintf(code_file, "\\%o", c);
+          linelength += 4;
+        }
+        // We must not put more numbers after it, because some C compilers
+        // consume them as part of the quoted sequence.  Use string constant
+        // pasting to avoid this:
+        c = *p;
+        if (p < e && ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'))) {
+          putc('\"', code_file);
+          linelength++;
+          if (linelength >= 79) {
+            fputs("\n", code_file);
+            linelength = 0;
+          }
+          putc('\"', code_file);
+          linelength++;
+        }
+        break;
     }
   }
   putc('\"', code_file);
@@ -331,29 +380,36 @@ void write_cdata(const char *s, int length) {
     return;
   }
   if (write_sourceview) {
-    if (length>=0)
+    if (length >= 0)
       fprintf(code_file, "{ /* ... %d bytes of binary data... */ }", length);
     else
       fprintf(code_file, "{ /* ... binary data... */ }");
     return;
   }
-  if (length==-1) {
+  if (length == -1) {
     fprintf(code_file, "\n#error  data not found\n");
     fprintf(code_file, "{ /* ... undefined size binary data... */ }");
     return;
   }
   const unsigned char *w = (const unsigned char *)s;
-  const unsigned char *e = w+length;
+  const unsigned char *e = w + length;
   int linelength = 1;
   putc('{', code_file);
   for (; w < e;) {
     unsigned char c = *w++;
-    if (c>99) linelength += 4;
-    else if (c>9) linelength += 3;
-    else linelength += 2;
-    if (linelength >= 77) {fputs("\n",code_file); linelength = 0;}
+    if (c > 99)
+      linelength += 4;
+    else if (c > 9)
+      linelength += 3;
+    else
+      linelength += 2;
+    if (linelength >= 77) {
+      fputs("\n", code_file);
+      linelength = 0;
+    }
     fprintf(code_file, "%d", c);
-    if (w<e) putc(',', code_file);
+    if (w < e)
+      putc(',', code_file);
   }
   putc('}', code_file);
 }
@@ -363,7 +419,7 @@ void write_cdata(const char *s, int length) {
  \param[in] format printf-style formatting text
  \param[in] args list of arguments
  */
-void vwrite_c(const char* format, va_list args) {
+void vwrite_c(const char *format, va_list args) {
   if (varused_test) {
     varused = 1;
     return;
@@ -375,7 +431,7 @@ void vwrite_c(const char* format, va_list args) {
  Print a formatted line to the source file.
  \param[in] format printf-style formatting text, followed by a vararg list
  */
-void write_c(const char* format,...) {
+void write_c(const char *format, ...) {
   va_list args;
   va_start(args, format);
   vwrite_c(format, args);
@@ -392,8 +448,8 @@ void write_c(const char* format,...) {
  */
 void write_cc(const char *indent, int n, const char *c, const char *com) {
   write_c("%s%.*s", indent, n, c);
-  char cc = c[n-1];
-  if (cc!='}' && cc!=';')
+  char cc = c[n - 1];
+  if (cc != '}' && cc != ';')
     write_c(";");
   if (*com)
     write_c(" %s", com);
@@ -404,8 +460,9 @@ void write_cc(const char *indent, int n, const char *c, const char *com) {
  Print a formatted line to the header file.
  \param[in] format printf-style formatting text, followed by a vararg list
  */
-void write_h(const char* format,...) {
-  if (varused_test) return;
+void write_h(const char *format, ...) {
+  if (varused_test)
+    return;
   va_list args;
   va_start(args, format);
   vfprintf(header_file, format, args);
@@ -420,10 +477,10 @@ void write_h(const char* format,...) {
  \param[in] c line of code
  \param[in] com optional commentary
  */
-void write_hc(const char *indent, int n, const char* c, const char *com) {
+void write_hc(const char *indent, int n, const char *c, const char *com) {
   write_h("%s%.*s", indent, n, c);
-  char cc = c[n-1];
-  if (cc!='}' && cc!=';')
+  char cc = c[n - 1];
+  if (cc != '}' && cc != ';')
     write_h(";");
   if (*com)
     write_h(" %s", com);
@@ -441,12 +498,12 @@ void write_c_indented(const char *textlines, int inIndent, char inTrailwWith) {
       int line_len;
       const char *newline = strchr(textlines, '\n');
       if (newline)
-        line_len = (int)(newline-textlines);
+        line_len = (int)(newline - textlines);
       else
         line_len = (int)strlen(textlines);
-      if (textlines[0]=='\n') {
+      if (textlines[0] == '\n') {
         // avoid trailing spaces
-      } else if (textlines[0]=='#') {
+      } else if (textlines[0] == '#') {
         // don't indent preprocessor statments starting with '#'
         write_c("%.*s", line_len, textlines);
       } else {
@@ -460,7 +517,7 @@ void write_c_indented(const char *textlines, int inIndent, char inTrailwWith) {
           write_c("%c", inTrailwWith);
         break;
       }
-      textlines = newline+1;
+      textlines = newline + 1;
     }
     indentation -= inIndent;
   }
@@ -470,22 +527,23 @@ void write_c_indented(const char *textlines, int inIndent, char inTrailwWith) {
 /**
  Recursively dump code, putting children between the two parts of the parent code.
  */
-static Fl_Type* write_code(Fl_Type* p) {
+static Fl_Type *write_code(Fl_Type *p) {
   if (write_sourceview) {
     p->code_position = (int)ftell(code_file);
-    if (p->header_position_end==-1)
+    if (p->header_position_end == -1)
       p->header_position = (int)ftell(header_file);
   }
   // write all code that come before the children code
   // (but don't write the last comment until the very end)
-  if (!(p==Fl_Type::last && p->is_comment()))
+  if (!(p == Fl_Type::last && p->is_comment()))
     p->write_code1();
   // recursively write the code of all children
-  Fl_Type* q;
+  Fl_Type *q;
   if (p->is_widget() && p->is_class()) {
     // Handle widget classes specially
     for (q = p->next; q && q->level > p->level;) {
-      if (strcmp(q->type_name(), "Function")) q = write_code(q);
+      if (strcmp(q->type_name(), "Function"))
+        q = write_code(q);
       else {
         int level = q->level;
         do {
@@ -498,7 +556,8 @@ static Fl_Type* write_code(Fl_Type* p) {
     p->write_code2();
 
     for (q = p->next; q && q->level > p->level;) {
-      if (!strcmp(q->type_name(), "Function")) q = write_code(q);
+      if (!strcmp(q->type_name(), "Function"))
+        q = write_code(q);
       else {
         int level = q->level;
         do {
@@ -510,13 +569,14 @@ static Fl_Type* write_code(Fl_Type* p) {
     write_h("};\n");
     current_widget_class = 0L;
   } else {
-    for (q = p->next; q && q->level > p->level;) q = write_code(q);
+    for (q = p->next; q && q->level > p->level;)
+      q = write_code(q);
     // write all code that come after the children
     p->write_code2();
   }
   if (write_sourceview) {
     p->code_position_end = (int)ftell(code_file);
-    if (p->header_position_end==-1)
+    if (p->header_position_end == -1)
       p->header_position_end = (int)ftell(header_file);
   }
   return q;
@@ -536,25 +596,32 @@ int write_code(const char *s, const char *t) {
   if (write_sourceview)
     filemode = "wb";
   write_number++;
-  delete id_root; id_root = 0;
+  delete id_root;
+  id_root = 0;
   indentation = 0;
   current_class = 0L;
   current_widget_class = 0L;
-  if (!s) code_file = stdout;
+  if (!s)
+    code_file = stdout;
   else {
     FILE *f = fl_fopen(s, filemode);
-    if (!f) return 0;
+    if (!f)
+      return 0;
     code_file = f;
   }
-  if (!t) header_file = stdout;
+  if (!t)
+    header_file = stdout;
   else {
     FILE *f = fl_fopen(t, filemode);
-    if (!f) {fclose(code_file); return 0;}
+    if (!f) {
+      fclose(code_file);
+      return 0;
+    }
     header_file = f;
   }
   // if the first entry in the Type tree is a comment, then it is probably
   // a copyright notice. We print that before anything else in the file!
-  Fl_Type* first_type = Fl_Type::first;
+  Fl_Type *first_type = Fl_Type::first;
   if (first_type && first_type->is_comment()) {
     if (write_sourceview) {
       first_type->code_position = (int)ftell(code_file);
@@ -574,17 +641,23 @@ int write_code(const char *s, const char *t) {
   fprintf(header_file, hdr, FL_VERSION);
   fprintf(code_file, hdr, FL_VERSION);
 
-  {char define_name[102];
-  const char* a = fl_filename_name(t);
-  char* b = define_name;
-  if (!isalpha(*a)) {*b++ = '_';}
-  while (*a) {*b++ = isalnum(*a) ? *a : '_'; a++;}
-  *b = 0;
-  fprintf(header_file, "#ifndef %s\n", define_name);
-  fprintf(header_file, "#define %s\n", define_name);
+  {
+    char define_name[102];
+    const char *a = fl_filename_name(t);
+    char *b = define_name;
+    if (!isalpha(*a)) {
+      *b++ = '_';
+    }
+    while (*a) {
+      *b++ = isalnum(*a) ? *a : '_';
+      a++;
+    }
+    *b = 0;
+    fprintf(header_file, "#ifndef %s\n", define_name);
+    fprintf(header_file, "#define %s\n", define_name);
   }
 
-  if (avoid_early_includes==0) {
+  if (avoid_early_includes == 0) {
     write_declare("#include <FL/Fl.H>");
   }
   if (t && include_H_from_C) {
@@ -595,24 +668,23 @@ int write_code(const char *s, const char *t) {
     }
   }
   if (i18n_type && i18n_include[0]) {
-    int conditional = (i18n_conditional[0]!=0);
+    int conditional = (i18n_conditional[0] != 0);
     if (conditional) {
       write_c("#ifdef %s\n", i18n_conditional);
       indentation++;
     }
-    if (i18n_include[0] != '<' &&
-        i18n_include[0] != '\"')
+    if (i18n_include[0] != '<' && i18n_include[0] != '\"')
       write_c("#%sinclude \"%s\"\n", indent(), i18n_include);
     else
       write_c("#%sinclude %s\n", indent(), i18n_include);
     if (i18n_type == 2) {
-      if (i18n_file[0]) write_c("extern nl_catd %s;\n", i18n_file);
+      if (i18n_file[0])
+        write_c("extern nl_catd %s;\n", i18n_file);
       else {
         write_c("// Initialize I18N stuff now for menus...\n");
         write_c("#%sinclude <locale.h>\n", indent());
         write_c("static char *_locale = setlocale(LC_MESSAGES, \"\");\n");
-        write_c("static nl_catd _catalog = catopen(\"%s\", 0);\n",
-                   i18n_program);
+        write_c("static nl_catd _catalog = catopen(\"%s\", 0);\n", i18n_program);
       }
     }
     if (conditional) {
@@ -638,33 +710,39 @@ int write_code(const char *s, const char *t) {
       write_c("#endif\n");
     }
   }
-  for (Fl_Type* p = first_type; p;) {
+  for (Fl_Type *p = first_type; p;) {
     // write all static data for this & all children first
-    if (write_sourceview) p->header_position = (int)ftell(header_file);
+    if (write_sourceview)
+      p->header_position = (int)ftell(header_file);
     p->write_static();
     if (write_sourceview) {
       p->header_position_end = (int)ftell(header_file);
-      if (p->header_position==p->header_position_end) p->header_position_end = -1;
+      if (p->header_position == p->header_position_end)
+        p->header_position_end = -1;
     }
-    for (Fl_Type* q = p->next; q && q->level > p->level; q = q->next) {
-      if (write_sourceview) q->header_position = (int)ftell(header_file);
+    for (Fl_Type *q = p->next; q && q->level > p->level; q = q->next) {
+      if (write_sourceview)
+        q->header_position = (int)ftell(header_file);
       q->write_static();
       if (write_sourceview) {
         q->header_position_end = (int)ftell(header_file);
-        if (q->header_position==q->header_position_end) q->header_position_end = -1;
+        if (q->header_position == q->header_position_end)
+          q->header_position_end = -1;
       }
     }
     // then write the nested code:
     p = write_code(p);
   }
 
-  delete included_root; included_root = 0;
+  delete included_root;
+  included_root = 0;
 
-  if (!s) return 1;
+  if (!s)
+    return 1;
 
   fprintf(header_file, "#endif\n");
 
-  Fl_Type* last_type = Fl_Type::last;
+  Fl_Type *last_type = Fl_Type::last;
   if (last_type && last_type->is_comment()) {
     if (write_sourceview) {
       last_type->code_position = (int)ftell(code_file);
@@ -690,10 +768,11 @@ int write_strings(const char *sfile) {
   Fl_Widget_Type *w;
   int i;
 
-  if (!fp) return 1;
+  if (!fp)
+    return 1;
 
   switch (i18n_type) {
-  case 0 : /* None, just put static text out */
+    case 0: /* None, just put static text out */
       fprintf(fp, "# generated by Fast Light User Interface Designer (fluid) version %.4f\n",
               FL_VERSION);
       for (p = Fl_Type::first; p; p = p->next) {
@@ -701,7 +780,7 @@ int write_strings(const char *sfile) {
           w = (Fl_Widget_Type *)p;
 
           if (w->label()) {
-            for (const char *s = w->label(); *s; s ++)
+            for (const char *s = w->label(); *s; s++)
               if (*s < 32 || *s > 126 || *s == '\"')
                 fprintf(fp, "\\%03o", *s);
               else
@@ -710,7 +789,7 @@ int write_strings(const char *sfile) {
           }
 
           if (w->tooltip()) {
-            for (const char *s = w->tooltip(); *s; s ++)
+            for (const char *s = w->tooltip(); *s; s++)
               if (*s < 32 || *s > 126 || *s == '\"')
                 fprintf(fp, "\\%03o", *s);
               else
@@ -720,7 +799,7 @@ int write_strings(const char *sfile) {
         }
       }
       break;
-  case 1 : /* GNU gettext, put a .po file out */
+    case 1: /* GNU gettext, put a .po file out */
       fprintf(fp, "# generated by Fast Light User Interface Designer (fluid) version %.4f\n",
               FL_VERSION);
       for (p = Fl_Type::first; p; p = p->next) {
@@ -731,7 +810,7 @@ int write_strings(const char *sfile) {
             const char *s;
 
             fputs("msgid \"", fp);
-            for (s = w->label(); *s; s ++)
+            for (s = w->label(); *s; s++)
               if (*s < 32 || *s > 126 || *s == '\"')
                 fprintf(fp, "\\%03o", *s);
               else
@@ -739,7 +818,7 @@ int write_strings(const char *sfile) {
             fputs("\"\n", fp);
 
             fputs("msgstr \"", fp);
-            for (s = w->label(); *s; s ++)
+            for (s = w->label(); *s; s++)
               if (*s < 32 || *s > 126 || *s == '\"')
                 fprintf(fp, "\\%03o", *s);
               else
@@ -751,7 +830,7 @@ int write_strings(const char *sfile) {
             const char *s;
 
             fputs("msgid \"", fp);
-            for (s = w->tooltip(); *s; s ++)
+            for (s = w->tooltip(); *s; s++)
               if (*s < 32 || *s > 126 || *s == '\"')
                 fprintf(fp, "\\%03o", *s);
               else
@@ -759,7 +838,7 @@ int write_strings(const char *sfile) {
             fputs("\"\n", fp);
 
             fputs("msgstr \"", fp);
-            for (s = w->tooltip(); *s; s ++)
+            for (s = w->tooltip(); *s; s++)
               if (*s < 32 || *s > 126 || *s == '\"')
                 fprintf(fp, "\\%03o", *s);
               else
@@ -769,7 +848,7 @@ int write_strings(const char *sfile) {
         }
       }
       break;
-  case 2 : /* POSIX catgets, put a .msg file out */
+    case 2: /* POSIX catgets, put a .msg file out */
       fprintf(fp, "$ generated by Fast Light User Interface Designer (fluid) version %.4f\n",
               FL_VERSION);
       fprintf(fp, "$set %s\n", i18n_set);
@@ -780,8 +859,8 @@ int write_strings(const char *sfile) {
           w = (Fl_Widget_Type *)p;
 
           if (w->label()) {
-            fprintf(fp, "%d \"", i ++);
-            for (const char *s = w->label(); *s; s ++)
+            fprintf(fp, "%d \"", i++);
+            for (const char *s = w->label(); *s; s++)
               if (*s < 32 || *s > 126 || *s == '\"')
                 fprintf(fp, "\\%03o", *s);
               else
@@ -790,8 +869,8 @@ int write_strings(const char *sfile) {
           }
 
           if (w->tooltip()) {
-            fprintf(fp, "%d \"", i ++);
-            for (const char *s = w->tooltip(); *s; s ++)
+            fprintf(fp, "%d \"", i++);
+            for (const char *s = w->tooltip(); *s; s++)
               if (*s < 32 || *s > 126 || *s == '\"')
                 fprintf(fp, "\\%03o", *s);
               else
@@ -811,17 +890,27 @@ int write_strings(const char *sfile) {
  This avoids repeating these words if the mode is already set.
  */
 void write_public(int state) {
-  if (!current_class && !current_widget_class) return;
-  if (current_class && current_class->write_public_state == state) return;
-  if (current_widget_class && current_widget_class->write_public_state == state) return;
-  if (current_class) current_class->write_public_state = state;
-  if (current_widget_class) current_widget_class->write_public_state = state;
+  if (!current_class && !current_widget_class)
+    return;
+  if (current_class && current_class->write_public_state == state)
+    return;
+  if (current_widget_class && current_widget_class->write_public_state == state)
+    return;
+  if (current_class)
+    current_class->write_public_state = state;
+  if (current_widget_class)
+    current_widget_class->write_public_state = state;
   switch (state) {
-    case 0: write_h("private:\n"); break;
-    case 1: write_h("public:\n"); break;
-    case 2: write_h("protected:\n"); break;
+    case 0:
+      write_h("private:\n");
+      break;
+    case 1:
+      write_h("public:\n");
+      break;
+    case 2:
+      write_h("protected:\n");
+      break;
   }
 }
 
 /// \}
-

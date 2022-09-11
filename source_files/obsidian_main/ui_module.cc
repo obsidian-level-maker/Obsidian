@@ -138,7 +138,8 @@ void UI_Module::AddHeader(std::string opt, std::string label, int gap) {
 
 void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
                           std::string longtip, int gap,
-                          std::string randomize_group, std::string default_value) {
+                          std::string randomize_group,
+                          std::string default_value) {
     int nw = this->parent()->w();
     //    int nh = kf_h(30);
 
@@ -175,7 +176,7 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
     rch->mod_reset->box(FL_NO_BOX);
     rch->mod_reset->labelcolor(FONT_COLOR);
     rch->mod_reset->visible_focus(0);
-    
+
     rch->mod_help = new UI_HelpLink(
         rch->x() + (!single_pane ? (rch->w() * .9) : (rch->w() * .95)),
         rch->y(), rch->w() * .075, kf_h(24));
@@ -216,7 +217,8 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
                                 std::string tip, std::string longtip, int gap,
                                 double min, double max, double inc,
                                 std::string units, std::string presets,
-                                std::string nan, std::string randomize_group, std::string default_value) {
+                                std::string nan, std::string randomize_group,
+                                std::string default_value) {
     int nw = this->parent()->w();
     //    int nh = kf_h(30);
 
@@ -237,11 +239,14 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     std::string::size_type pos = 0;
     while (pos != std::string::npos) {
         pos = nan.find(',', oldpos);
-        std::string nan_string = nan.substr(oldpos, (pos == std::string::npos ? nan.size() : pos) - oldpos);
-        if (!nan_string.empty())
+        std::string nan_string = nan.substr(
+            oldpos, (pos == std::string::npos ? nan.size() : pos) - oldpos);
+        if (!nan_string.empty()) {
             rsl->nan_choices.push_back(nan_string);
-        if (pos != std::string::npos)
+        }
+        if (pos != std::string::npos) {
             oldpos = pos + 1;
+        }
     }
 
     rsl->mod_label = new Fl_Box(
@@ -325,7 +330,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     rsl->mod_reset->box(FL_NO_BOX);
     rsl->mod_reset->labelcolor(FONT_COLOR);
     rsl->mod_reset->visible_focus(0);
-    
+
     rsl->mod_help = new UI_HelpLink(
         rsl->x() + (!single_pane ? (rsl->w() * .9) : (rsl->w() * .95)),
         rsl->y(), rsl->w() * .075, kf_h(24));
@@ -344,21 +349,23 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     pos = 0;
 #ifdef __unix__
 #ifndef __linux__
-        setlocale(LC_NUMERIC, "C");
+    setlocale(LC_NUMERIC, "C");
 #else
-	std::setlocale(LC_NUMERIC, "C");
+    std::setlocale(LC_NUMERIC, "C");
 #endif
 #else
-	std::setlocale(LC_NUMERIC, "C");
+    std::setlocale(LC_NUMERIC, "C");
 #endif
 
     while (pos != std::string::npos) {
         pos = presets.find(',', oldpos);
-        std::string map_string = presets.substr(oldpos, (pos == std::string::npos ? nan.size() : pos) - oldpos);
+        std::string map_string = presets.substr(
+            oldpos, (pos == std::string::npos ? nan.size() : pos) - oldpos);
         if (!map_string.empty()) {
             std::string::size_type temp_pos = map_string.find(':');
-            if (temp_pos == std::string::npos)
+            if (temp_pos == std::string::npos) {
                 goto skippreset;
+            }
             double key;
             try {
                 key = std::stod(map_string.substr(0, temp_pos));
@@ -374,9 +381,10 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
                 std::cout << e.what();
             }
         }
-        skippreset:
-        if (pos != std::string::npos)
+    skippreset:
+        if (pos != std::string::npos) {
             oldpos = pos + 1;
+        }
     }
 #ifdef __unix__
 #ifndef __linux__
@@ -388,7 +396,8 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     std::setlocale(LC_NUMERIC, numeric_locale.c_str());
 #endif
 
-    opt_change_slider_callback_data_t *cb_data = new opt_change_slider_callback_data_t;
+    opt_change_slider_callback_data_t *cb_data =
+        new opt_change_slider_callback_data_t;
     cb_data->mod = rsl;
     cb_data->opt_name = opt;
 
@@ -415,7 +424,8 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
 
 void UI_Module::AddButtonOption(std::string opt, std::string label,
                                 std::string tip, std::string longtip, int gap,
-                                std::string randomize_group, std::string default_value) {
+                                std::string randomize_group,
+                                std::string default_value) {
     int nw = this->parent()->w();
     //    int nh = kf_h(30);
 
@@ -459,7 +469,8 @@ void UI_Module::AddButtonOption(std::string opt, std::string label,
     rbt->mod_help->help_title = label;
     rbt->mod_help->callback(callback_ShowHelp, NULL);
 
-    opt_change_button_callback_data_t *cb_data = new opt_change_button_callback_data_t;
+    opt_change_button_callback_data_t *cb_data =
+        new opt_change_button_callback_data_t;
     cb_data->mod = rbt;
     cb_data->opt_name = opt;
 
@@ -715,11 +726,13 @@ void UI_Module::callback_OptChangeDefault(Fl_Widget *w, void *data) {
 
     UI_Module *parent = (UI_Module *)M->parent();
 
-    ob_set_mod_option(parent->id_name, cb_data->opt_name, cb_data->mod->default_value);
+    ob_set_mod_option(parent->id_name, cb_data->opt_name,
+                      cb_data->mod->default_value);
 }
 
 void UI_Module::callback_OptButtonDefault(Fl_Widget *w, void *data) {
-    opt_change_button_callback_data_t *cb_data = (opt_change_button_callback_data_t *)data;
+    opt_change_button_callback_data_t *cb_data =
+        (opt_change_button_callback_data_t *)data;
 
     SYS_ASSERT(cb_data);
 
@@ -727,11 +740,13 @@ void UI_Module::callback_OptButtonDefault(Fl_Widget *w, void *data) {
 
     UI_Module *parent = (UI_Module *)M->parent();
 
-    ob_set_mod_option(parent->id_name, cb_data->opt_name, cb_data->mod->default_value);
+    ob_set_mod_option(parent->id_name, cb_data->opt_name,
+                      cb_data->mod->default_value);
 }
 
 void UI_Module::callback_OptSliderDefault(Fl_Widget *w, void *data) {
-    opt_change_slider_callback_data_t *cb_data = (opt_change_slider_callback_data_t *)data;
+    opt_change_slider_callback_data_t *cb_data =
+        (opt_change_slider_callback_data_t *)data;
 
     SYS_ASSERT(cb_data);
 
@@ -739,7 +754,8 @@ void UI_Module::callback_OptSliderDefault(Fl_Widget *w, void *data) {
 
     UI_Module *parent = (UI_Module *)M->parent();
 
-    ob_set_mod_option(parent->id_name, cb_data->opt_name, cb_data->mod->default_value);
+    ob_set_mod_option(parent->id_name, cb_data->opt_name,
+                      cb_data->mod->default_value);
 }
 
 void UI_Module::callback_PresetCheck(Fl_Widget *w, void *data) {
@@ -1051,14 +1067,16 @@ bool UI_CustomMods::AddHeader(std::string module, std::string option,
 bool UI_CustomMods::AddOption(std::string module, std::string option,
                               std::string label, std::string tip,
                               std::string longtip, int gap,
-                              std::string randomize_group, std::string default_value) {
+                              std::string randomize_group,
+                              std::string default_value) {
     UI_Module *M = FindID(module);
 
     if (!M) {
         return false;
     }
 
-    M->AddOption(option, label, tip, longtip, gap, randomize_group, default_value);
+    M->AddOption(option, label, tip, longtip, gap, randomize_group,
+                 default_value);
 
     PositionAll();
 
@@ -1070,7 +1088,8 @@ bool UI_CustomMods::AddSliderOption(std::string module, std::string option,
                                     std::string longtip, int gap, double min,
                                     double max, double inc, std::string units,
                                     std::string presets, std::string nan,
-                                    std::string randomize_group, std::string default_value) {
+                                    std::string randomize_group,
+                                    std::string default_value) {
     UI_Module *M = FindID(module);
 
     if (!M) {
@@ -1088,14 +1107,16 @@ bool UI_CustomMods::AddSliderOption(std::string module, std::string option,
 bool UI_CustomMods::AddButtonOption(std::string module, std::string option,
                                     std::string label, std::string tip,
                                     std::string longtip, int gap,
-                                    std::string randomize_group, std::string default_value) {
+                                    std::string randomize_group,
+                                    std::string default_value) {
     UI_Module *M = FindID(module);
 
     if (!M) {
         return false;
     }
 
-    M->AddButtonOption(option, label, tip, longtip, gap, randomize_group, default_value);
+    M->AddButtonOption(option, label, tip, longtip, gap, randomize_group,
+                       default_value);
 
     PositionAll();
 

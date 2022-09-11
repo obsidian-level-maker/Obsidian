@@ -26,7 +26,7 @@ extern int fdesign_flip;
 extern int fdesign_magic;
 
 void write_word(const char *);
-void write_string(const char *,...) __fl_attr((__format__ (__printf__, 1, 2)));
+void write_string(const char *, ...) __fl_attr((__format__(__printf__, 1, 2)));
 void write_indent(int n);
 void write_open(int);
 void write_close(int n);
@@ -36,7 +36,7 @@ const char *read_word(int wantbrace = 0);
 
 int write_file(const char *, int selected_only = 0);
 
-int read_file(const char *, int merge, Strategy strategy=kAddAsLastChild);
+int read_file(const char *, int merge, Strategy strategy = kAddAsLastChild);
 void read_fdesign();
 
 #endif // _FLUID_FILE_H

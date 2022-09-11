@@ -25,12 +25,12 @@
 #endif
 
 // values for type(), lowest bit indicate horizontal:
-#define FL_VERT_SLIDER          0
-#define FL_HOR_SLIDER           1
-#define FL_VERT_FILL_SLIDER     2
-#define FL_HOR_FILL_SLIDER      3
-#define FL_VERT_NICE_SLIDER     4
-#define FL_HOR_NICE_SLIDER      5
+#define FL_VERT_SLIDER 0
+#define FL_HOR_SLIDER 1
+#define FL_VERT_FILL_SLIDER 2
+#define FL_HOR_FILL_SLIDER 3
+#define FL_VERT_NICE_SLIDER 4
+#define FL_HOR_NICE_SLIDER 5
 
 /**
   The Fl_Slider widget contains a sliding knob inside a box. It is
@@ -64,25 +64,23 @@ class FL_EXPORT Fl_Slider : public Fl_Valuator {
   void draw_bg(int, int, int, int);
 
 protected:
-
   // these allow subclasses to put the slider in a smaller area:
   void draw(int, int, int, int);
   int handle(int, int, int, int, int);
   void draw();
 
 public:
-
   int handle(int);
-  Fl_Slider(int X,int Y,int W,int H, const char *L = 0);
-  Fl_Slider(uchar t,int X,int Y,int W,int H, const char *L);
+  Fl_Slider(int X, int Y, int W, int H, const char *L = 0);
+  Fl_Slider(uchar t, int X, int Y, int W, int H, const char *L);
 
-  int scrollvalue(int pos,int size,int first,int total);
+  int scrollvalue(int pos, int size, int first, int total);
   void bounds(double a, double b);
 
   /**
     Get the dimensions of the moving piece of slider.
   */
-  float slider_size() const {return slider_size_;}
+  float slider_size() const { return slider_size_; }
 
   /**
     Set the dimensions of the moving piece of slider. This is
@@ -96,10 +94,10 @@ public:
   void slider_size(double v);
 
   /** Gets the slider box type. */
-  Fl_Boxtype slider() const {return (Fl_Boxtype)slider_;}
+  Fl_Boxtype slider() const { return (Fl_Boxtype)slider_; }
 
   /** Sets the slider box type. */
-  void slider(Fl_Boxtype c) {slider_ = c;}
+  void slider(Fl_Boxtype c) { slider_ = c; }
 };
 
 #endif

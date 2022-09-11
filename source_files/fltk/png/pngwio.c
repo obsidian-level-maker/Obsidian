@@ -30,15 +30,13 @@
  */
 
 void /* PRIVATE */
-png_write_data(png_structrp png_ptr, png_const_bytep data, size_t length)
-{
-   /* NOTE: write_data_fn must not change the buffer! */
-   if (png_ptr->write_data_fn != NULL )
-      (*(png_ptr->write_data_fn))(png_ptr, png_constcast(png_bytep,data),
-          length);
+png_write_data(png_structrp png_ptr, png_const_bytep data, size_t length) {
+  /* NOTE: write_data_fn must not change the buffer! */
+  if (png_ptr->write_data_fn != NULL)
+    (*(png_ptr->write_data_fn))(png_ptr, png_constcast(png_bytep, data), length);
 
-   else
-      png_error(png_ptr, "Call to NULL write function");
+  else
+    png_error(png_ptr, "Call to NULL write function");
 }
 
 #ifdef PNG_STDIO_SUPPORTED
@@ -47,18 +45,16 @@ png_write_data(png_structrp png_ptr, png_const_bytep data, size_t length)
  * write_data function and use it at run time with png_set_write_fn(), rather
  * than changing the library.
  */
-void PNGCBAPI
-png_default_write_data(png_structp png_ptr, png_bytep data, size_t length)
-{
-   size_t check;
+void PNGCBAPI png_default_write_data(png_structp png_ptr, png_bytep data, size_t length) {
+  size_t check;
 
-   if (png_ptr == NULL)
-      return;
+  if (png_ptr == NULL)
+    return;
 
-   check = fwrite(data, 1, length, (png_FILE_p)(png_ptr->io_ptr));
+  check = fwrite(data, 1, length, (png_FILE_p)(png_ptr->io_ptr));
 
-   if (check != length)
-      png_error(png_ptr, "Write Error");
+  if (check != length)
+    png_error(png_ptr, "Write Error");
 }
 #endif
 
@@ -68,25 +64,22 @@ png_default_write_data(png_structp png_ptr, png_bytep data, size_t length)
  */
 #ifdef PNG_WRITE_FLUSH_SUPPORTED
 void /* PRIVATE */
-png_flush(png_structrp png_ptr)
-{
-   if (png_ptr->output_flush_fn != NULL)
-      (*(png_ptr->output_flush_fn))(png_ptr);
+png_flush(png_structrp png_ptr) {
+  if (png_ptr->output_flush_fn != NULL)
+    (*(png_ptr->output_flush_fn))(png_ptr);
 }
 
-#  ifdef PNG_STDIO_SUPPORTED
-void PNGCBAPI
-png_default_flush(png_structp png_ptr)
-{
-   png_FILE_p io_ptr;
+#ifdef PNG_STDIO_SUPPORTED
+void PNGCBAPI png_default_flush(png_structp png_ptr) {
+  png_FILE_p io_ptr;
 
-   if (png_ptr == NULL)
-      return;
+  if (png_ptr == NULL)
+    return;
 
-   io_ptr = png_voidcast(png_FILE_p, (png_ptr->io_ptr));
-   fflush(io_ptr);
+  io_ptr = png_voidcast(png_FILE_p, (png_ptr->io_ptr));
+  fflush(io_ptr);
 }
-#  endif
+#endif
 #endif
 
 /* This function allows the application to supply new output functions for
@@ -118,51 +111,47 @@ png_default_flush(png_structp png_ptr)
  *                 a good idea if io_ptr does not point to a standard
  *                 *FILE structure.
  */
-void PNGAPI
-png_set_write_fn(png_structrp png_ptr, png_voidp io_ptr,
-    png_rw_ptr write_data_fn, png_flush_ptr output_flush_fn)
-{
-   if (png_ptr == NULL)
-      return;
+void PNGAPI png_set_write_fn(png_structrp png_ptr, png_voidp io_ptr, png_rw_ptr write_data_fn,
+                             png_flush_ptr output_flush_fn) {
+  if (png_ptr == NULL)
+    return;
 
-   png_ptr->io_ptr = io_ptr;
+  png_ptr->io_ptr = io_ptr;
 
 #ifdef PNG_STDIO_SUPPORTED
-   if (write_data_fn != NULL)
-      png_ptr->write_data_fn = write_data_fn;
+  if (write_data_fn != NULL)
+    png_ptr->write_data_fn = write_data_fn;
 
-   else
-      png_ptr->write_data_fn = png_default_write_data;
+  else
+    png_ptr->write_data_fn = png_default_write_data;
 #else
-   png_ptr->write_data_fn = write_data_fn;
+  png_ptr->write_data_fn = write_data_fn;
 #endif
 
 #ifdef PNG_WRITE_FLUSH_SUPPORTED
-#  ifdef PNG_STDIO_SUPPORTED
+#ifdef PNG_STDIO_SUPPORTED
 
-   if (output_flush_fn != NULL)
-      png_ptr->output_flush_fn = output_flush_fn;
+  if (output_flush_fn != NULL)
+    png_ptr->output_flush_fn = output_flush_fn;
 
-   else
-      png_ptr->output_flush_fn = png_default_flush;
+  else
+    png_ptr->output_flush_fn = png_default_flush;
 
-#  else
-   png_ptr->output_flush_fn = output_flush_fn;
-#  endif
 #else
-   PNG_UNUSED(output_flush_fn)
+  png_ptr->output_flush_fn = output_flush_fn;
+#endif
+#else
+  PNG_UNUSED(output_flush_fn)
 #endif /* WRITE_FLUSH */
 
 #ifdef PNG_READ_SUPPORTED
-   /* It is an error to read while writing a png file */
-   if (png_ptr->read_data_fn != NULL)
-   {
-      png_ptr->read_data_fn = NULL;
+  /* It is an error to read while writing a png file */
+  if (png_ptr->read_data_fn != NULL) {
+    png_ptr->read_data_fn = NULL;
 
-      png_warning(png_ptr,
-          "Can't set both read_data_fn and write_data_fn in the"
-          " same structure");
-   }
+    png_warning(png_ptr, "Can't set both read_data_fn and write_data_fn in the"
+                         " same structure");
+  }
 #endif
 }
 #endif /* WRITE */
