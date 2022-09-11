@@ -2,7 +2,7 @@
 
 %{
 #include <stdio.h>
-#include "nodes.h"
+#include "ff.h"
 %}
 
 %%

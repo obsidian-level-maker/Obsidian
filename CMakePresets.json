@@ -98,7 +98,8 @@
   "buildPresets": [
     {
       "name": "dev",
-      "configurePreset": "dev"
+      "configurePreset": "dev",
+      "jobs": 8
     },
     {
       "name": "dist",
