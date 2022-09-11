@@ -29,8 +29,11 @@
 
 static int fl_match(const char *a, const char *s, int atleast = 1) {
   const char *b = s;
-  while (*a && (*a == *b || tolower(*a) == *b)) {a++; b++;}
-  return !*a && b >= s+atleast;
+  while (*a && (*a == *b || tolower(*a) == *b)) {
+    a++;
+    b++;
+  }
+  return !*a && b >= s + atleast;
 }
 
 // flags set by previously parsed arguments:
@@ -117,14 +120,20 @@ int Fl::arg(int argc, char **argv, int &i) {
   arg_called = 1;
   const char *s = argv[i];
 
-  if (!s) {i++; return 1;}      // something removed by calling program?
+  if (!s) {
+    i++;
+    return 1;
+  } // something removed by calling program?
 
   // a word that does not start with '-', or a word after a '--', or
   // the word '-' by itself all start the "non-switch arguments" to
   // a program.  Return 0 to indicate that we don't understand the
   // word, but set a flag (return_i) so that args() will return at
   // that point:
-  if (s[0] != '-' || s[1] == '-' || !s[1]) {return_i = 1; return 0;}
+  if (s[0] != '-' || s[1] == '-' || !s[1]) {
+    return_i = 1;
+    return 0;
+  }
   s++; // point after the dash
 
   if (fl_match(s, "iconic")) {
@@ -160,15 +169,17 @@ int Fl::arg(int argc, char **argv, int &i) {
     return 1;
   }
 
-  const char *v = argv[i+1];
-  if (i >= argc-1 || !v)
-    return 0;   // all the rest need an argument, so if missing it is an error
+  const char *v = argv[i + 1];
+  if (i >= argc - 1 || !v)
+    return 0; // all the rest need an argument, so if missing it is an error
 
   if (fl_match(s, "geometry")) {
 
-    int flags, gx, gy; unsigned int gw, gh;
+    int flags, gx, gy;
+    unsigned int gw, gh;
     flags = Fl::system_driver()->XParseGeometry(v, &gx, &gy, &gw, &gh);
-    if (!flags) return 0;
+    if (!flags)
+      return 0;
     geometry = v;
 
   } else if (fl_match(s, "display", 2)) {
@@ -259,19 +270,22 @@ int Fl::arg(int argc, char **argv, int &i) {
   does not have command line switches of its own.
 */
 
-int Fl::args(int argc, char** argv, int& i, Fl_Args_Handler cb) {
+int Fl::args(int argc, char **argv, int &i, Fl_Args_Handler cb) {
   arg_called = 1;
   i = 1; // skip argv[0]
   while (i < argc) {
-    if (cb && cb(argc,argv,i)) continue;
-    if (!arg(argc,argv,i)) return return_i ? i : 0;
+    if (cb && cb(argc, argv, i))
+      continue;
+    if (!arg(argc, argv, i))
+      return return_i ? i : 0;
   }
   return i;
 }
 
 // show a main window, use any parsed arguments
 void Fl_Window::show(int argc, char **argv) {
-  if (argc && !arg_called) Fl::args(argc,argv);
+  if (argc && !arg_called)
+    Fl::args(argc, argv);
 
   Fl::get_system_colors();
 
@@ -282,30 +296,40 @@ void Fl_Window::show(int argc, char **argv) {
   static char beenhere;
   if (!beenhere) {
     if (geometry) {
-      int fl = 0, gx = x(), gy = y(); unsigned int gw = w(), gh = h();
+      int fl = 0, gx = x(), gy = y();
+      unsigned int gw = w(), gh = h();
       fl = Fl::system_driver()->XParseGeometry(geometry, &gx, &gy, &gw, &gh);
-      if (fl & Fl_System_Driver::fl_XNegative) gx = Fl::w()-w()+gx;
-      if (fl & Fl_System_Driver::fl_YNegative) gy = Fl::h()-h()+gy;
+      if (fl & Fl_System_Driver::fl_XNegative)
+        gx = Fl::w() - w() + gx;
+      if (fl & Fl_System_Driver::fl_YNegative)
+        gy = Fl::h() - h() + gy;
       //  int mw,mh; minsize(mw,mh);
       //  if (mw > gw) gw = mw;
       //  if (mh > gh) gh = mh;
       Fl_Widget *r = resizable();
-      if (!r) resizable(this);
+      if (!r)
+        resizable(this);
       // for Windows we assume window is not mapped yet:
       if (fl & (Fl_System_Driver::fl_XValue | Fl_System_Driver::fl_YValue))
-        x(-1), resize(gx,gy,gw,gh);
+        x(-1), resize(gx, gy, gw, gh);
       else
-        size(gw,gh);
+        size(gw, gh);
       resizable(r);
     }
   }
 
   // set the class, which is used by X version of get_system_colors:
-  if (name) {xclass(name); name = 0;}
-  else if (!xclass()) xclass(fl_filename_name(argv[0]));
+  if (name) {
+    xclass(name);
+    name = 0;
+  } else if (!xclass())
+    xclass(fl_filename_name(argv[0]));
 
-  if (title) {label(title); title = 0;}
-  else if (!label()) label(xclass());
+  if (title) {
+    label(title);
+    title = 0;
+  } else if (!label())
+    label(xclass());
 
   if (!beenhere) {
     beenhere = 1;
@@ -320,25 +344,24 @@ void Fl_Window::show(int argc, char **argv) {
 
 // Calls useful for simple demo programs, with automatic help message:
 
-static const char * const helpmsg =
-"options are:\n"
-" -bg2 color\n"
-" -bg color\n"
-" -di[splay] host:n.n\n"
-" -dn[d]\n"
-" -fg color\n"
-" -g[eometry] WxH+X+Y\n"
-" -i[conic]\n"
-" -k[bd]\n"
-" -na[me] classname\n"
-" -nod[nd]\n"
-" -nok[bd]\n"
-" -not[ooltips]\n"
-" -s[cheme] scheme\n"
-" -ti[tle] windowtitle\n"
-" -to[oltips]";
+static const char *const helpmsg = "options are:\n"
+                                   " -bg2 color\n"
+                                   " -bg color\n"
+                                   " -di[splay] host:n.n\n"
+                                   " -dn[d]\n"
+                                   " -fg color\n"
+                                   " -g[eometry] WxH+X+Y\n"
+                                   " -i[conic]\n"
+                                   " -k[bd]\n"
+                                   " -na[me] classname\n"
+                                   " -nod[nd]\n"
+                                   " -nok[bd]\n"
+                                   " -not[ooltips]\n"
+                                   " -s[cheme] scheme\n"
+                                   " -ti[tle] windowtitle\n"
+                                   " -to[oltips]";
 
-const char * const Fl::help = helpmsg+13;
+const char *const Fl::help = helpmsg + 13;
 
 /**
  Parse all command line switches matching standard FLTK options only.
@@ -349,5 +372,7 @@ const char * const Fl::help = helpmsg+13;
 
  */
 void Fl::args(int argc, char **argv) {
-  int i; if (Fl::args(argc,argv,i) < argc) Fl::error(helpmsg);
+  int i;
+  if (Fl::args(argc, argv, i) < argc)
+    Fl::error(helpmsg);
 }

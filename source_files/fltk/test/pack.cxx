@@ -33,7 +33,7 @@
 //
 // Edit the following 2 #define's to modify the test scenario:
 
-#define USE_FLEX   0 // default 0 = use Fl_Pack, 1 = use Fl_Flex
+#define USE_FLEX 0   // default 0 = use Fl_Pack, 1 = use Fl_Flex
 #define USE_SCROLL 1 // default 1 = put Fl_Pack or Fl_Flex inside Fl_Scroll
 
 // Do not edit #define's below

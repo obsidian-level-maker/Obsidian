@@ -19,9 +19,9 @@
    Fl_File_Input widget . */
 
 #ifndef Fl_File_Input_H
-#  define Fl_File_Input_H
+#define Fl_File_Input_H
 
-#  include <FL/Fl_Input.H>
+#include <FL/Fl_Input.H>
 
 /**
   \class Fl_File_Input
@@ -44,18 +44,17 @@
 */
 class FL_EXPORT Fl_File_Input : public Fl_Input {
 
-  char          ok_entry_;
-  uchar         down_box_;
-  short         buttons_[200];
-  short         pressed_;
+  char ok_entry_;
+  uchar down_box_;
+  short buttons_[200];
+  short pressed_;
 
-  void          draw_buttons();
-  int           handle_button(int event);
-  void          update_buttons();
+  void draw_buttons();
+  int handle_button(int event);
+  void update_buttons();
 
 public:
-
-  Fl_File_Input(int X, int Y, int W, int H, const char *L=0);
+  Fl_File_Input(int X, int Y, int W, int H, const char *L = 0);
 
   virtual int handle(int event);
 
@@ -64,9 +63,9 @@ protected:
 
 public:
   /** Gets the box type used for the navigation bar. */
-  Fl_Boxtype    down_box() const { return (Fl_Boxtype)down_box_; }
+  Fl_Boxtype down_box() const { return (Fl_Boxtype)down_box_; }
   /** Sets the box type to use for the navigation bar.  */
-  void          down_box(Fl_Boxtype b) { down_box_ = b; }
+  void down_box(Fl_Boxtype b) { down_box_ = b; }
 
   /**
     Gets the current error color.
@@ -77,7 +76,7 @@ public:
     \deprecated Will be removed in FLTK 1.5.0 or higher.
     \todo Remove Fl_File_Input::errorcolor() in FLTK 1.5.0 or higher.
   */
-  Fl_Color      errorcolor() const { return FL_RED; }
+  Fl_Color errorcolor() const { return FL_RED; }
 
   /**
     Sets the current error color to \p c.
@@ -87,16 +86,16 @@ public:
     \deprecated Will be removed in FLTK 1.5.0 or higher.
     \todo Remove Fl_File_Input::errorcolor(Fl_Color) in FLTK 1.5.0 or higher.
     */
-  void          errorcolor(Fl_Color c) {(void)c;}
+  void errorcolor(Fl_Color c) { (void)c; }
 
-  int   value(const char *str);
-  int   value(const char *str, int len);
+  int value(const char *str);
+  int value(const char *str, int len);
 
   /**
     Returns the current value, which is a pointer to an internal buffer
     and is valid only until the next event is handled.
   */
-  const char    *value() { return Fl_Input_::value(); }
+  const char *value() { return Fl_Input_::value(); }
 };
 
 #endif // !Fl_File_Input_H

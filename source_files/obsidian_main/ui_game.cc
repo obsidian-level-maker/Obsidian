@@ -175,7 +175,13 @@ void UI_Game::callback_GameHelp(Fl_Widget *w, void *data) {
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-    buff->text(_("The following games will have gameplay that differs from the original IWADs:\n\nHexen: Game progression is linear and episodic. There are no hubs present. The Death Wyvern is not present in the monster table due to the infeasibility of scripting and flight pathing.\n\nStrife: Quests/multiple endings not yet implemented. Progression is linear and game will end on last level generated."));
+    buff->text(
+        _("The following games will have gameplay that differs from the "
+          "original IWADs:\n\nHexen: Game progression is linear and episodic. "
+          "There are no hubs present. The Death Wyvern is not present in the "
+          "monster table due to the infeasibility of scripting and flight "
+          "pathing.\n\nStrife: Quests/multiple endings not yet implemented. "
+          "Progression is linear and game will end on last level generated."));
 }
 
 void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
@@ -189,7 +195,21 @@ void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-    buff->text(_("Available Engines:\n\nZDoom Family: Engines that use ZDoom as a base. Example ports: GZDoom, LZDoom\n\nVanilla DOOM: Doom with its original engine limits. Example ports: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nLimit Removing: Any engine that raises the limits of the original game to prevent crashes, but is not Boom-compatible. Example ports: Doom2-plus, Doomsday 1.x, Crispy Doom\n\nBoom-Compatible: Engines that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nPrBoom-Compatible: Boom-compatible, but also capable of using extended nodes. Example ports: DSDA-Doom, PrBoom+um\n\nEDGE-Classic: Boom-compatible, plus additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."));
+    buff->text(_(
+        "Available Engines:\n\nZDoom Family: Engines that use ZDoom as a base. "
+        "Example ports: GZDoom, LZDoom\n\nVanilla DOOM: Doom with its original "
+        "engine limits. Example ports: Doom within DOSBox, Chocolate Doom. "
+        "NOTE: This option will use SLUMP as the map builder.\n\nLimit "
+        "Removing: Any engine that raises the limits of the original game to "
+        "prevent crashes, but is not Boom-compatible. Example ports: "
+        "Doom2-plus, Doomsday 1.x, Crispy Doom\n\nBoom-Compatible: Engines "
+        "that are able to use the entire suite of Boom types and features. "
+        "Most modern source ports fall into this category at a "
+        "minimum.\n\nPrBoom-Compatible: Boom-compatible, but also capable of "
+        "using extended nodes. Example ports: DSDA-Doom, "
+        "PrBoom+um\n\nEDGE-Classic: Boom-compatible, plus additional specials "
+        "and other advanced features.\n\nEternity: Boom-compatible, software "
+        "renderer only, but with advanced features such as UDMF."));
 }
 
 void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
@@ -203,7 +223,11 @@ void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-    buff->text(_("Available WAD Lengths:\n\nSingle Level: One map.\n\nA Few Maps: Four maps.\n\nOne Episode: The length of an episode in the original IWAD. For Doom 2, which normally doesn't have episodes, this is 11 maps.\n\nFull Game: The length of a full game in the original IWAD."));
+    buff->text(_(
+        "Available WAD Lengths:\n\nSingle Level: One map.\n\nA Few Maps: Four "
+        "maps.\n\nOne Episode: The length of an episode in the original IWAD. "
+        "For Doom 2, which normally doesn't have episodes, this is 11 "
+        "maps.\n\nFull Game: The length of a full game in the original IWAD."));
 }
 
 void UI_Game::callback_ThemeHelp(Fl_Widget *w, void *data) {
@@ -217,7 +241,13 @@ void UI_Game::callback_ThemeHelp(Fl_Widget *w, void *data) {
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-    buff->text(_("Available Themes:\n\nOriginal: Follows the theme progression of the original IWAD.\n\nEpisodic: Each episode follows a single randomly chose theme.\n\nBit Mixed: Theme will change every few levels.\n\nJumbled Up: Level themes are purely random.\n\nPsychedelic: Trippy.\n\nOther themes listed are game-specific."));
+    buff->text(
+        _("Available Themes:\n\nOriginal: Follows the theme progression of the "
+          "original IWAD.\n\nEpisodic: Each episode follows a single randomly "
+          "chose theme.\n\nBit Mixed: Theme will change every few "
+          "levels.\n\nJumbled Up: Level themes are purely "
+          "random.\n\nPsychedelic: Trippy.\n\nOther themes listed are "
+          "game-specific."));
 }
 
 void UI_Game::Locked(bool value) {

@@ -32,18 +32,19 @@
 #include <FL/fl_draw.H>
 #include <FL/Fl_Table.H>
 
-void button_cb(Fl_Widget *w, void*);
+void button_cb(Fl_Widget *w, void *);
 
 //
 // Simple demonstration class deriving from Fl_Table
 //
 class WidgetTable : public Fl_Table {
 protected:
-  void draw_cell(TableContext context,                  // table cell drawing
-                 int R=0, int C=0, int X=0, int Y=0, int W=0, int H=0);
+  void draw_cell(TableContext context, // table cell drawing
+                 int R = 0, int C = 0, int X = 0, int Y = 0, int W = 0, int H = 0);
 
 public:
-  WidgetTable(int x, int y, int w, int h, const char *l=0) : Fl_Table(x,y,w,h,l) {
+  WidgetTable(int x, int y, int w, int h, const char *l = 0)
+    : Fl_Table(x, y, w, h, l) {
     col_header(1);
     col_resize(1);
     col_header_height(25);
@@ -52,34 +53,34 @@ public:
     row_header_width(80);
     end();
   }
-  ~WidgetTable() { }
+  ~WidgetTable() {}
 
   void SetSize(int newrows, int newcols) {
-    clear();            // clear any previous widgets, if any
+    clear(); // clear any previous widgets, if any
     rows(newrows);
     cols(newcols);
 
-    begin();            // start adding widgets to group
+    begin(); // start adding widgets to group
     {
-      for ( int r = 0; r<newrows; r++ ) {
-        for ( int c = 0; c<newcols; c++ ) {
-          int X,Y,W,H;
+      for (int r = 0; r < newrows; r++) {
+        for (int c = 0; c < newcols; c++) {
+          int X, Y, W, H;
           find_cell(CONTEXT_TABLE, r, c, X, Y, W, H);
 
           char s[40];
-          if ( c & 1 ) {
+          if (c & 1) {
             // Create the input widgets
             sprintf(s, "%d.%d", r, c);
-            Fl_Input *in = new Fl_Input(X,Y,W,H);
+            Fl_Input *in = new Fl_Input(X, Y, W, H);
             in->value(s);
           } else {
             // Create the light buttons
             sprintf(s, "%d/%d ", r, c);
-            Fl_Light_Button *butt = new Fl_Light_Button(X,Y,W,H);
+            Fl_Light_Button *butt = new Fl_Light_Button(X, Y, W, H);
             butt->copy_label(s);
-            butt->align(FL_ALIGN_CENTER|FL_ALIGN_INSIDE);
-            butt->callback(button_cb, (void*)0);
-            butt->value( ((r+c*2) & 4 ) ? 1 : 0);
+            butt->align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE);
+            butt->callback(button_cb, (void *)0);
+            butt->value(((r + c * 2) & 4) ? 1 : 0);
           }
         }
       }
@@ -89,24 +90,24 @@ public:
 };
 
 // Handle drawing all cells in table
-void WidgetTable::draw_cell(TableContext context,
-                          int R, int C, int X, int Y, int W, int H) {
-  switch ( context ) {
+void WidgetTable::draw_cell(TableContext context, int R, int C, int X, int Y, int W, int H) {
+  switch (context) {
     case CONTEXT_STARTPAGE:
-      fl_font(FL_HELVETICA, 12);                // font used by all headers
+      fl_font(FL_HELVETICA, 12); // font used by all headers
       break;
 
     case CONTEXT_RC_RESIZE: {
       int X, Y, W, H;
       int index = 0;
-      for ( int r = 0; r<rows(); r++ ) {
-        for ( int c = 0; c<cols(); c++ ) {
-          if ( index >= children() ) break;
+      for (int r = 0; r < rows(); r++) {
+        for (int c = 0; c < cols(); c++) {
+          if (index >= children())
+            break;
           find_cell(CONTEXT_TABLE, r, c, X, Y, W, H);
-          child(index++)->resize(X,Y,W,H);
+          child(index++)->resize(X, Y, W, H);
         }
       }
-      init_sizes();                     // tell group children resized
+      init_sizes(); // tell group children resized
       return;
     }
 
@@ -135,23 +136,23 @@ void WidgetTable::draw_cell(TableContext context,
       return;
 
     case CONTEXT_CELL:
-      return;           // fltk handles drawing the widgets
+      return; // fltk handles drawing the widgets
 
     default:
       return;
   }
 }
 
-void button_cb(Fl_Widget *w, void*) {
-  fprintf(stderr, "BUTTON: %s\n", (const char*)w->label());
+void button_cb(Fl_Widget *w, void *) {
+  fprintf(stderr, "BUTTON: %s\n", (const char *)w->label());
 }
 
 int main() {
   Fl_Double_Window win(940, 500, "table as container");
-  WidgetTable table(20, 20, win.w()-40, win.h()-40, "FLTK widget table");
+  WidgetTable table(20, 20, win.w() - 40, win.h() - 40, "FLTK widget table");
   table.SetSize(50, 50);
   win.end();
   win.resizable(table);
   win.show();
-  return(Fl::run());
+  return (Fl::run());
 }

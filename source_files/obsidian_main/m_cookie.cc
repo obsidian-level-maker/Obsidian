@@ -163,12 +163,12 @@ bool Cookie_Load(std::filesystem::path filename) {
 
 #ifdef __unix__
 #ifndef __linux__
-        setlocale(LC_NUMERIC, "C");
+    setlocale(LC_NUMERIC, "C");
 #else
-	std::setlocale(LC_NUMERIC, "C");
+    std::setlocale(LC_NUMERIC, "C");
 #endif
 #else
-	std::setlocale(LC_NUMERIC, "C");
+    std::setlocale(LC_NUMERIC, "C");
 #endif
     std::ifstream cookie_fp(filename, std::ios::in);
 
@@ -229,12 +229,12 @@ bool Cookie_Save(std::filesystem::path filename) {
     context = cookie_context_e::Save;
 #ifdef __unix__
 #ifndef __linux__
-        setlocale(LC_NUMERIC, "C");
+    setlocale(LC_NUMERIC, "C");
 #else
-	std::setlocale(LC_NUMERIC, "C");
+    std::setlocale(LC_NUMERIC, "C");
 #endif
 #else
-	std::setlocale(LC_NUMERIC, "C");
+    std::setlocale(LC_NUMERIC, "C");
 #endif
     std::ofstream cookie_fp(filename, std::ios::out);
 

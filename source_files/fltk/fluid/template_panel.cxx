@@ -32,11 +32,12 @@
 #include <unistd.h>
 #endif // _WIN32 && !__CYGWIN__
 
-Fl_Double_Window *template_panel=(Fl_Double_Window *)0;
+Fl_Double_Window *template_panel = (Fl_Double_Window *)0;
 
-static void cb_template_panel(Fl_Double_Window*, void*) {
+static void cb_template_panel(Fl_Double_Window *, void *) {
   Fl_Shared_Image *img = (Fl_Shared_Image *)template_preview->image();
-  if (img) img->release();
+  if (img)
+    img->release();
   template_preview->image(0);
 
   template_browser->deselect();
@@ -45,22 +46,25 @@ static void cb_template_panel(Fl_Double_Window*, void*) {
   template_panel->hide();
 }
 
-Fl_Browser *template_browser=(Fl_Browser *)0;
+Fl_Browser *template_browser = (Fl_Browser *)0;
 
-static void cb_template_browser(Fl_Browser*, void*) {
+static void cb_template_browser(Fl_Browser *, void *) {
   if (Fl::event_clicks()) {
     template_panel->hide();
     return;
   }
   Fl_Shared_Image *img = (Fl_Shared_Image *)template_preview->image();
-  if (img) img->release();
+  if (img)
+    img->release();
   template_preview->image(0);
   template_preview->redraw();
 
   int item = template_browser->value();
 
-  if (item <= 1) template_instance->deactivate();
-  else template_instance->activate();
+  if (item <= 1)
+    template_instance->deactivate();
+  else
+    template_instance->activate();
 
   if (item < 1) {
     template_submit->deactivate();
@@ -83,7 +87,8 @@ static void cb_template_browser(Fl_Browser*, void*) {
   char pngfile[1024], *ext;
 
   strlcpy(pngfile, flfile, sizeof(pngfile));
-  if ((ext = strrchr(pngfile, '.')) == NULL) return;
+  if ((ext = strrchr(pngfile, '.')) == NULL)
+    return;
   strcpy(ext, ".png");
 
   img = Fl_Shared_Image::get(pngfile);
@@ -94,24 +99,27 @@ static void cb_template_browser(Fl_Browser*, void*) {
   }
 }
 
-Fl_Box *template_preview=(Fl_Box *)0;
+Fl_Box *template_preview = (Fl_Box *)0;
 
-Fl_Input *template_name=(Fl_Input *)0;
+Fl_Input *template_name = (Fl_Input *)0;
 
-static void cb_template_name(Fl_Input*, void*) {
+static void cb_template_name(Fl_Input *, void *) {
   if (strlen(template_name->value())) {
     template_submit->activate();
-    if (Fl::event_key() == FL_Enter) template_panel->hide();
-  } else template_submit->deactivate();
+    if (Fl::event_key() == FL_Enter)
+      template_panel->hide();
+  } else
+    template_submit->deactivate();
 }
 
-Fl_Input *template_instance=(Fl_Input *)0;
+Fl_Input *template_instance = (Fl_Input *)0;
 
-Fl_Button *template_delete=(Fl_Button *)0;
+Fl_Button *template_delete = (Fl_Button *)0;
 
-static void cb_Cancel(Fl_Button*, void*) {
+static void cb_Cancel(Fl_Button *, void *) {
   Fl_Shared_Image *img = (Fl_Shared_Image *)template_preview->image();
-  if (img) img->release();
+  if (img)
+    img->release();
   template_preview->image(0);
 
   template_browser->deselect();
@@ -120,54 +128,65 @@ static void cb_Cancel(Fl_Button*, void*) {
   template_panel->hide();
 }
 
-Fl_Return_Button *template_submit=(Fl_Return_Button *)0;
+Fl_Return_Button *template_submit = (Fl_Return_Button *)0;
 
-static void cb_template_submit(Fl_Return_Button*, void*) {
+static void cb_template_submit(Fl_Return_Button *, void *) {
   Fl_Shared_Image *img = (Fl_Shared_Image *)template_preview->image();
-  if (img) img->release();
+  if (img)
+    img->release();
   template_preview->image(0);
 
   template_panel->hide();
 }
 
-Fl_Double_Window* make_template_panel() {
-  { template_panel = new Fl_Double_Window(460, 355, "New/Save Template");
-    template_panel->callback((Fl_Callback*)cb_template_panel);
-    { template_browser = new Fl_Browser(10, 28, 180, 250, "Available Templates:");
+Fl_Double_Window *make_template_panel() {
+  {
+    template_panel = new Fl_Double_Window(460, 355, "New/Save Template");
+    template_panel->callback((Fl_Callback *)cb_template_panel);
+    {
+      template_browser = new Fl_Browser(10, 28, 180, 250, "Available Templates:");
       template_browser->type(2);
       template_browser->labelfont(1);
-      template_browser->callback((Fl_Callback*)cb_template_browser);
+      template_browser->callback((Fl_Callback *)cb_template_browser);
       template_browser->align(Fl_Align(FL_ALIGN_TOP_LEFT));
       template_browser->when(3);
     } // Fl_Browser* template_browser
-    { template_preview = new Fl_Box(200, 28, 250, 250);
+    {
+      template_preview = new Fl_Box(200, 28, 250, 250);
       template_preview->box(FL_THIN_DOWN_BOX);
-      template_preview->align(Fl_Align(69|FL_ALIGN_INSIDE));
+      template_preview->align(Fl_Align(69 | FL_ALIGN_INSIDE));
       Fl_Group::current()->resizable(template_preview);
     } // Fl_Box* template_preview
-    { template_name = new Fl_Input(198, 288, 252, 25, "Template Name:");
+    {
+      template_name = new Fl_Input(198, 288, 252, 25, "Template Name:");
       template_name->labelfont(1);
       template_name->textfont(4);
-      template_name->callback((Fl_Callback*)cb_template_name);
+      template_name->callback((Fl_Callback *)cb_template_name);
       template_name->when(3);
     } // Fl_Input* template_name
-    { template_instance = new Fl_Input(198, 288, 252, 25, "Instance Name:");
+    {
+      template_instance = new Fl_Input(198, 288, 252, 25, "Instance Name:");
       template_instance->labelfont(1);
       template_instance->textfont(4);
       template_instance->hide();
     } // Fl_Input* template_instance
-    { Fl_Group* o = new Fl_Group(10, 323, 440, 25);
-      { template_delete = new Fl_Button(10, 323, 143, 25, "Delete Template");
-        template_delete->callback((Fl_Callback*)template_delete_cb);
+    {
+      Fl_Group *o = new Fl_Group(10, 323, 440, 25);
+      {
+        template_delete = new Fl_Button(10, 323, 143, 25, "Delete Template");
+        template_delete->callback((Fl_Callback *)template_delete_cb);
       } // Fl_Button* template_delete
-      { Fl_Box* o = new Fl_Box(153, 323, 126, 25);
+      {
+        Fl_Box *o = new Fl_Box(153, 323, 126, 25);
         Fl_Group::current()->resizable(o);
       } // Fl_Box* o
-      { Fl_Button* o = new Fl_Button(289, 323, 72, 25, "Cancel");
-        o->callback((Fl_Callback*)cb_Cancel);
+      {
+        Fl_Button *o = new Fl_Button(289, 323, 72, 25, "Cancel");
+        o->callback((Fl_Callback *)cb_Cancel);
       } // Fl_Button* o
-      { template_submit = new Fl_Return_Button(371, 323, 79, 25, "Save");
-        template_submit->callback((Fl_Callback*)cb_template_submit);
+      {
+        template_submit = new Fl_Return_Button(371, 323, 79, 25, "Save");
+        template_submit->callback((Fl_Callback *)cb_template_submit);
       } // Fl_Return_Button* template_submit
       o->end();
     } // Fl_Group* o
@@ -181,8 +200,9 @@ void template_clear() {
   int i;
   void *filename;
 
-  for (i = 1; i <= template_browser->size(); i ++) {
-    if ((filename = template_browser->data(i)) != NULL) free(filename);
+  for (i = 1; i <= template_browser->size(); i++) {
+    if ((filename = template_browser->data(i)) != NULL)
+      free(filename);
   }
 
   template_browser->deselect();
@@ -191,14 +211,17 @@ void template_clear() {
 
 void template_delete_cb(Fl_Button *, void *) {
   int item = template_browser->value();
-  if (item < 1) return;
+  if (item < 1)
+    return;
 
   const char *name = template_browser->text(item);
   const char *flfile = (const char *)template_browser->data(item);
-  if (!flfile) return;
+  if (!flfile)
+    return;
 
-  if (!fl_choice("Are you sure you want to delete the template \"%s\"?",
-                 "Cancel", "Delete", 0, name)) return;
+  if (!fl_choice("Are you sure you want to delete the template \"%s\"?", "Cancel", "Delete", 0,
+                 name))
+    return;
 
   if (fl_unlink(flfile)) {
     fl_alert("Unable to delete template \"%s\":\n%s", name, strerror(errno));
@@ -226,15 +249,21 @@ void template_load() {
     strcat(filename, "/FLTK_License.fl");
     FILE *f = fopen(filename, "wb");
     if (f) {
-      fputs(
-  "# data file for the Fltk User Interface Designer (fluid)\nversion 1.0400\nheader_name {.h}\n"
-  "code_name {.cxx}\ncomment {//\n// @INSTANCE@ for the Fast Light Tool Kit (FLT"
-  "K).\n//\n// Copyright 1998-2020 by Bill Spitzak and others.\n//\n// This library is free sof"
-  "tware. Distribution and use rights are outlined in\n// the file \"COPYING\" which should have "
-  "been included with this file.  If this\n// file is missing or damaged, see the license at:\n"
-  "//\n//     https://www.fltk.org/COPYING.php\n//\n// Please see the following page on how to report "
-  "bugs and issues:\n//\n//     https://www.fltk.org/bugs.php\n//\n} {selected in_source in_head"
-  "er\n}\n", f);
+      fputs("# data file for the Fltk User Interface Designer (fluid)\nversion 1.0400\nheader_name "
+            "{.h}\n"
+            "code_name {.cxx}\ncomment {//\n// @INSTANCE@ for the Fast Light Tool Kit (FLT"
+            "K).\n//\n// Copyright 1998-2020 by Bill Spitzak and others.\n//\n// This library is "
+            "free sof"
+            "tware. Distribution and use rights are outlined in\n// the file \"COPYING\" which "
+            "should have "
+            "been included with this file.  If this\n// file is missing or damaged, see the "
+            "license at:\n"
+            "//\n//     https://www.fltk.org/COPYING.php\n//\n// Please see the following page on "
+            "how to report "
+            "bugs and issues:\n//\n//     https://www.fltk.org/bugs.php\n//\n} {selected in_source "
+            "in_head"
+            "er\n}\n",
+            f);
       fclose(f);
     }
     sample_templates_generated = 1;
@@ -244,15 +273,16 @@ void template_load() {
 
   num_files = fl_filename_list(path, &files);
 
-  for (i = 0; i < num_files; i ++) {
+  for (i = 0; i < num_files; i++) {
     if (fl_filename_match(files[i]->d_name, "*.fl")) {
       // Format the name as the filename with "_" replaced with " "
       // and without the trailing ".fl"...
       strlcpy(name, files[i]->d_name, sizeof(name));
       *strstr(name, ".fl") = '\0';
 
-      for (ptr = name; *ptr; ptr ++) {
-        if (*ptr == '_') *ptr = ' ';
+      for (ptr = name; *ptr; ptr++) {
+        if (*ptr == '_')
+          *ptr = ' ';
       }
 
       // Add the template to the browser...
@@ -263,5 +293,6 @@ void template_load() {
     free(files[i]);
   }
 
-  if (num_files > 0) free(files);
+  if (num_files > 0)
+    free(files);
 }

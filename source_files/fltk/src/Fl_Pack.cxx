@@ -44,29 +44,30 @@
 
 */
 Fl_Pack::Fl_Pack(int X, int Y, int W, int H, const char *L)
-: Fl_Group(X, Y, W, H, L) {
+  : Fl_Group(X, Y, W, H, L) {
   resizable(0);
   spacing_ = 0;
   // type(VERTICAL); // already set like this
 }
 
 void Fl_Pack::draw() {
-  int tx = x()+Fl::box_dx(box());
-  int ty = y()+Fl::box_dy(box());
-  int tw = w()-Fl::box_dw(box());
-  int th = h()-Fl::box_dh(box());
+  int tx = x() + Fl::box_dx(box());
+  int ty = y() + Fl::box_dy(box());
+  int tw = w() - Fl::box_dw(box());
+  int th = h() - Fl::box_dh(box());
   int rw, rh;
   int current_position = horizontal() ? tx : ty;
   int maximum_position = current_position;
   uchar d = damage();
-  Fl_Widget*const* a = array();
+  Fl_Widget *const *a = array();
   if (horizontal()) {
     rw = -spacing_;
     rh = th;
 
     for (int i = children(); i--;)
       if (child(i)->visible()) {
-        if (child(i) != this->resizable()) rw += child(i)->w();
+        if (child(i) != this->resizable())
+          rw += child(i)->w();
         rw += spacing_;
       }
   } else {
@@ -75,14 +76,15 @@ void Fl_Pack::draw() {
 
     for (int i = children(); i--;)
       if (child(i)->visible()) {
-        if (child(i) != this->resizable()) rh += child(i)->h();
+        if (child(i) != this->resizable())
+          rh += child(i)->h();
         rh += spacing_;
       }
   }
   for (int i = children(); i--;) {
-    Fl_Widget* o = *a++;
+    Fl_Widget *o = *a++;
     if (o->visible()) {
-      int X,Y,W,H;
+      int X, Y, W, H;
       if (horizontal()) {
         X = current_position;
         W = o->w();
@@ -95,14 +97,14 @@ void Fl_Pack::draw() {
         H = o->h();
       }
       // Last child, if resizable, takes all remaining room
-      if(i == 0 && o == this->resizable()) {
-        if(horizontal())
+      if (i == 0 && o == this->resizable()) {
+        if (horizontal())
           W = tw - rw;
         else
           H = th - rh;
       }
-      if (spacing_ && current_position>maximum_position && box() &&
-        (X != o->x() || Y != o->y() || d&FL_DAMAGE_ALL)) {
+      if (spacing_ && current_position > maximum_position && box() &&
+          (X != o->x() || Y != o->y() || d & FL_DAMAGE_ALL)) {
         fl_color(color());
         if (horizontal())
           fl_rectf(maximum_position, ty, spacing_, th);
@@ -110,13 +112,14 @@ void Fl_Pack::draw() {
           fl_rectf(tx, maximum_position, tw, spacing_);
       }
       if (X != o->x() || Y != o->y() || W != o->w() || H != o->h()) {
-        o->resize(X,Y,W,H);
+        o->resize(X, Y, W, H);
         o->clear_damage(FL_DAMAGE_ALL);
       }
-      if (d&FL_DAMAGE_ALL) {
+      if (d & FL_DAMAGE_ALL) {
         draw_child(*o);
         draw_outside_label(*o);
-      } else update_child(*o);
+      } else
+        update_child(*o);
       // child's draw() can change it's size, so use new size:
       current_position += (horizontal() ? o->w() : o->h());
       if (current_position > maximum_position)
@@ -126,28 +129,33 @@ void Fl_Pack::draw() {
   }
 
   if (horizontal()) {
-    if (maximum_position < tx+tw && box()) {
+    if (maximum_position < tx + tw && box()) {
       fl_color(color());
-      fl_rectf(maximum_position, ty, tx+tw-maximum_position, th);
+      fl_rectf(maximum_position, ty, tx + tw - maximum_position, th);
     }
-    tw = maximum_position-tx;
+    tw = maximum_position - tx;
   } else {
-    if (maximum_position < ty+th && box()) {
+    if (maximum_position < ty + th && box()) {
       fl_color(color());
-      fl_rectf(tx, maximum_position, tw, ty+th-maximum_position);
+      fl_rectf(tx, maximum_position, tw, ty + th - maximum_position);
     }
-    th = maximum_position-ty;
+    th = maximum_position - ty;
   }
 
-  tw += Fl::box_dw(box()); if (tw <= 0) tw = 1;
-  th += Fl::box_dh(box()); if (th <= 0) th = 1;
+  tw += Fl::box_dw(box());
+  if (tw <= 0)
+    tw = 1;
+  th += Fl::box_dh(box());
+  if (th <= 0)
+    th = 1;
   if (tw != w() || th != h()) {
-    Fl_Widget::resize(x(),y(),tw,th);
+    Fl_Widget::resize(x(), y(), tw, th);
     Fl_Group *parent = this->parent();
-    if (parent) parent->init_sizes();
+    if (parent)
+      parent->init_sizes();
     d = FL_DAMAGE_ALL;
   }
-  if (d&FL_DAMAGE_ALL) {
+  if (d & FL_DAMAGE_ALL) {
     draw_box();
     draw_label();
   }

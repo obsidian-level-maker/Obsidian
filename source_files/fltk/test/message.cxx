@@ -24,8 +24,8 @@ int main(int argc, char **argv) {
   Fl::args(argc, argv);
   Fl::get_system_colors();
 
-  fl_message("Spelling check sucessful, %d errors found with %g%% confidence",
-             1002, 100*(15/77.0));
+  fl_message("Spelling check sucessful, %d errors found with %g%% confidence", 1002,
+             100 * (15 / 77.0));
 
   fl_alert("Quantum fluctuations in the space-time continuum detected,\n"
            "you have %g seconds to comply.\n\n"
@@ -37,14 +37,13 @@ int main(int argc, char **argv) {
            10.0);
 
   printf("fl_choice returned %d\n",
-    fl_choice("Do you really want to %s?", "No", "Yes", 0L, "continue"));
+         fl_choice("Do you really want to %s?", "No", "Yes", 0L, "continue"));
 
   printf("fl_choice returned %d\n",
-    fl_choice("Choose one of the following:","choice0","choice1","choice2"));
+         fl_choice("Choose one of the following:", "choice0", "choice1", "choice2"));
   const char *r;
 
-  r = fl_input("Please enter a string for '%s':", "this is the default value",
-               "testing");
+  r = fl_input("Please enter a string for '%s':", "this is the default value", "testing");
   printf("fl_input returned \"%s\"\n", r ? r : "NULL");
 
   r = fl_password("Enter %s's password:", 0, "somebody");

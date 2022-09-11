@@ -124,12 +124,11 @@ class FL_EXPORT Fl_Flex : public Fl_Group {
   Fl_Widget **set_size_;
 
 public:
-
-  enum { // values for type(int)
-    VERTICAL   = 0,     ///< vertical layout (one column)
-    HORIZONTAL = 1,     ///< horizontal layout (one row)
-    COLUMN     = 0,     ///< alias for VERTICAL
-    ROW        = 1      ///< alias for HORIZONTAL
+  enum {            // values for type(int)
+    VERTICAL = 0,   ///< vertical layout (one column)
+    HORIZONTAL = 1, ///< horizontal layout (one row)
+    COLUMN = 0,     ///< alias for VERTICAL
+    ROW = 1         ///< alias for HORIZONTAL
   };
 
   // FLTK standard constructor
@@ -155,21 +154,17 @@ public:
 
     \see set_size(Fl_Widget *w, int size)
   */
-  void set_size(Fl_Widget &w, int size) {
-    set_size(&w, size);
-  }
+  void set_size(Fl_Widget &w, int size) { set_size(&w, size); }
 
   void set_size(Fl_Widget *w, int size);
   int set_size(Fl_Widget *w) const;
 
 protected:
-
   void init(int t = VERTICAL);
 
   virtual int alloc_size(int size) const;
 
 public:
-
   /** Returns the left margin size of the widget.
 
     This returns the \b left margin of the widget which is not necessarily
@@ -198,11 +193,16 @@ public:
     \retval  0  at least one margin has a different size
   */
   int margins(int *left, int *top, int *right, int *bottom) const {
-    if (left) *left = margin_left_;
-    if (top) *top = margin_top_;
-    if (right) *right = margin_right_;
-    if (bottom) *bottom = margin_bottom_;
-    if (margin_left_ == margin_top_ && margin_top_ == margin_right_ && margin_right_ == margin_bottom_)
+    if (left)
+      *left = margin_left_;
+    if (top)
+      *top = margin_top_;
+    if (right)
+      *right = margin_right_;
+    if (bottom)
+      *bottom = margin_bottom_;
+    if (margin_left_ == margin_top_ && margin_top_ == margin_right_ &&
+        margin_right_ == margin_bottom_)
       return 1;
     return 0;
   }
@@ -251,18 +251,16 @@ public:
   */
 
   void margin(int left, int top, int right, int bottom) {
-    margin_left_   = left < 0 ? 0 : left;
-    margin_top_    = top < 0 ? 0 : top;
-    margin_right_  = right < 0 ? 0 : right;
+    margin_left_ = left < 0 ? 0 : left;
+    margin_top_ = top < 0 ? 0 : top;
+    margin_right_ = right < 0 ? 0 : right;
     margin_bottom_ = bottom < 0 ? 0 : bottom;
   }
 
   /** Return the gap size of the widget.
     \return gap size between all child widgets.
   */
-  int gap() const {
-    return gap_;
-  }
+  int gap() const { return gap_; }
 
   /**
     Set the gap size of the widget.
@@ -272,9 +270,7 @@ public:
 
     \param[in]  g   gap size
   */
-  void gap(int g) {
-    gap_ = g < 0 ? 0 : g;
-  }
+  void gap(int g) { gap_ = g < 0 ? 0 : g; }
 
   /** Returns non-zero (true) if Fl_Flex alignment is horizontal (row mode).
 
@@ -284,9 +280,7 @@ public:
 
     See class Fl_Flex documentation for details.
   */
-  int horizontal() const {
-    return type() == Fl_Flex::HORIZONTAL ? 1 : 0;
-  }
+  int horizontal() const { return type() == Fl_Flex::HORIZONTAL ? 1 : 0; }
 
   /**
     Calculates the layout of the widget and redraws it.
@@ -311,9 +305,7 @@ public:
 
     \see int gap()
   */
-  int spacing() const {
-    return gap_;
-  }
+  int spacing() const { return gap_; }
 
   /**
     Sets the number of extra pixels of blank space that are added
@@ -324,9 +316,7 @@ public:
 
     \see void gap(int)
   */
-  void spacing(int i) {
-    gap(i);
-  }
+  void spacing(int i) { gap(i); }
 
 #if (1)
 
@@ -353,7 +343,6 @@ public:
   }
 
 #endif
-
 };
 
 #endif // Fl_Flex_H

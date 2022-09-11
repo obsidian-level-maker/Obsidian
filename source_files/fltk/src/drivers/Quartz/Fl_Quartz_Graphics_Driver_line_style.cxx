@@ -32,48 +32,67 @@ void Fl_Quartz_Graphics_Driver::quartz_restore_line_style() {
   CGContextSetLineDash(gc_, 0, quartz_line_pattern, quartz_line_pattern_size);
 }
 
-void Fl_Quartz_Graphics_Driver::line_style(int style, int width, char* dashes) {
+void Fl_Quartz_Graphics_Driver::line_style(int style, int width, char *dashes) {
 
-  static CGLineCap Cap[4] = { kCGLineCapButt, kCGLineCapButt,
-                                   kCGLineCapRound, kCGLineCapSquare };
-  static CGLineJoin Join[4] = { kCGLineJoinMiter, kCGLineJoinMiter,
-                                    kCGLineJoinRound, kCGLineJoinBevel };
-  if (width<1) width = 1;
+  static CGLineCap Cap[4] = {kCGLineCapButt, kCGLineCapButt, kCGLineCapRound, kCGLineCapSquare};
+  static CGLineJoin Join[4] = {kCGLineJoinMiter, kCGLineJoinMiter, kCGLineJoinRound,
+                               kCGLineJoinBevel};
+  if (width < 1)
+    width = 1;
   quartz_line_width_ = (float)width;
-  quartz_line_cap_ = Cap[(style>>8)&3];
+  quartz_line_cap_ = Cap[(style >> 8) & 3];
   // when printing kCGLineCapSquare seems better for solid lines
-  if ( Fl_Surface_Device::surface() != Fl_Display_Device::display_device()
-      && style == FL_SOLID && dashes == NULL )
-  {
+  if (Fl_Surface_Device::surface() != Fl_Display_Device::display_device() && style == FL_SOLID &&
+      dashes == NULL) {
     quartz_line_cap_ = kCGLineCapSquare;
   }
-  quartz_line_join_ = Join[(style>>12)&3];
+  quartz_line_join_ = Join[(style >> 12) & 3];
   char *d = dashes;
   static CGFloat pattern[16];
   if (d && *d) {
     CGFloat *pDst = pattern;
-    while (*d) { *pDst++ = (float)*d++; }
+    while (*d) {
+      *pDst++ = (float)*d++;
+    }
     quartz_line_pattern = pattern;
-    quartz_line_pattern_size = d-dashes;
+    quartz_line_pattern_size = d - dashes;
   } else if (style & 0xff) {
     char dash, dot, gap;
     // adjust lengths to account for cap:
     if (style & 0x200) {
-      dash = char(2*width);
+      dash = char(2 * width);
       dot = 1;
-      gap = char(2*width-1);
+      gap = char(2 * width - 1);
     } else {
-      dash = char(3*width);
+      dash = char(3 * width);
       dot = gap = char(width);
     }
     CGFloat *pDst = pattern;
     switch (style & 0xff) {
-    case FL_DASH:       *pDst++ = dash; *pDst++ = gap; break;
-    case FL_DOT:        *pDst++ = dot; *pDst++ = gap; break;
-    case FL_DASHDOT:    *pDst++ = dash; *pDst++ = gap; *pDst++ = dot; *pDst++ = gap; break;
-    case FL_DASHDOTDOT: *pDst++ = dash; *pDst++ = gap; *pDst++ = dot; *pDst++ = gap; *pDst++ = dot; *pDst++ = gap; break;
+      case FL_DASH:
+        *pDst++ = dash;
+        *pDst++ = gap;
+        break;
+      case FL_DOT:
+        *pDst++ = dot;
+        *pDst++ = gap;
+        break;
+      case FL_DASHDOT:
+        *pDst++ = dash;
+        *pDst++ = gap;
+        *pDst++ = dot;
+        *pDst++ = gap;
+        break;
+      case FL_DASHDOTDOT:
+        *pDst++ = dash;
+        *pDst++ = gap;
+        *pDst++ = dot;
+        *pDst++ = gap;
+        *pDst++ = dot;
+        *pDst++ = gap;
+        break;
     }
-    quartz_line_pattern_size = pDst-pattern;
+    quartz_line_pattern_size = pDst - pattern;
     quartz_line_pattern = pattern;
   } else {
     quartz_line_pattern = 0;

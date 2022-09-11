@@ -24,41 +24,49 @@
 // include bitmap
 #include "pixmaps/sorceress.xbm"
 
-Fl_Toggle_Button *leftb,*rightb,*topb,*bottomb,*insideb,*overb,*inactb;
+Fl_Toggle_Button *leftb, *rightb, *topb, *bottomb, *insideb, *overb, *inactb;
 Fl_Button *b;
 Fl_Double_Window *w;
 
-void button_cb(Fl_Widget *,void *) {
+void button_cb(Fl_Widget *, void *) {
   int i = 0;
-  if (leftb->value()) i |= FL_ALIGN_LEFT;
-  if (rightb->value()) i |= FL_ALIGN_RIGHT;
-  if (topb->value()) i |= FL_ALIGN_TOP;
-  if (bottomb->value()) i |= FL_ALIGN_BOTTOM;
-  if (insideb->value()) i |= FL_ALIGN_INSIDE;
-  if (overb->value()) i |= FL_ALIGN_TEXT_OVER_IMAGE;
+  if (leftb->value())
+    i |= FL_ALIGN_LEFT;
+  if (rightb->value())
+    i |= FL_ALIGN_RIGHT;
+  if (topb->value())
+    i |= FL_ALIGN_TOP;
+  if (bottomb->value())
+    i |= FL_ALIGN_BOTTOM;
+  if (insideb->value())
+    i |= FL_ALIGN_INSIDE;
+  if (overb->value())
+    i |= FL_ALIGN_TEXT_OVER_IMAGE;
   b->align(i);
-  if (inactb->value()) b->deactivate();
-  else b->activate();
+  if (inactb->value())
+    b->deactivate();
+  else
+    b->activate();
   w->redraw();
 }
 
 int main(int argc, char **argv) {
-  w = new Fl_Double_Window(400,400);
-  b = new Fl_Button(140,160,120,120,"Bitmap");
-  b->image(new Fl_Bitmap(sorceress_bits,sorceress_width,sorceress_height));
-  leftb = new Fl_Toggle_Button(25,50,50,25,"left");
+  w = new Fl_Double_Window(400, 400);
+  b = new Fl_Button(140, 160, 120, 120, "Bitmap");
+  b->image(new Fl_Bitmap(sorceress_bits, sorceress_width, sorceress_height));
+  leftb = new Fl_Toggle_Button(25, 50, 50, 25, "left");
   leftb->callback(button_cb);
-  rightb = new Fl_Toggle_Button(75,50,50,25,"right");
+  rightb = new Fl_Toggle_Button(75, 50, 50, 25, "right");
   rightb->callback(button_cb);
-  topb = new Fl_Toggle_Button(125,50,50,25,"top");
+  topb = new Fl_Toggle_Button(125, 50, 50, 25, "top");
   topb->callback(button_cb);
-  bottomb = new Fl_Toggle_Button(175,50,50,25,"bottom");
+  bottomb = new Fl_Toggle_Button(175, 50, 50, 25, "bottom");
   bottomb->callback(button_cb);
-  insideb = new Fl_Toggle_Button(225,50,50,25,"inside");
+  insideb = new Fl_Toggle_Button(225, 50, 50, 25, "inside");
   insideb->callback(button_cb);
-  overb = new Fl_Toggle_Button(25,75,100,25,"text over");
+  overb = new Fl_Toggle_Button(25, 75, 100, 25, "text over");
   overb->callback(button_cb);
-  inactb = new Fl_Toggle_Button(125,75,100,25,"inactive");
+  inactb = new Fl_Toggle_Button(125, 75, 100, 25, "inactive");
   inactb->callback(button_cb);
   w->resizable(w);
   w->end();

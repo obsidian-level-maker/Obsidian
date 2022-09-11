@@ -37,60 +37,65 @@ static const int max_line_width = 9;
 static const double delta_time = 0.1;
 
 /*****************************************************************************/
-class oscr_box : public Fl_Box
-{
+class oscr_box : public Fl_Box {
 public:
   oscr_box(int x, int y, int w, int h);
   void oscr_drawing(void);
-  bool has_oscr() const
-  {
-    if (oscr) return true;
+  bool has_oscr() const {
+    if (oscr)
+      return true;
     return false;
   }
+
 private:
   void draw();
   int handle(int event);
   // Generate "random" values for the line display
-  double random_val(int v) const
-  {
+  double random_val(int v) const {
     double dr = (double)(rand()) / (double)(RAND_MAX); // 0.0 to 1.0
-    dr = dr * (double)(v); // 0 to v
+    dr = dr * (double)(v);                             // 0 to v
     return dr;
   }
   // The offscreen surface
   Fl_Offscreen oscr;
   // variables used to handle "dragging" of the view within the box
-  int x1, y1;   // drag start positions
-  int xoff, yoff; // drag offsets
-  int drag_state; // non-zero if drag is in progress
+  int x1, y1;         // drag start positions
+  int xoff, yoff;     // drag offsets
+  int drag_state;     // non-zero if drag is in progress
   int page_x, page_y; // top left of view area
   // Width and height of the offscreen surface
   int offsc_w, offsc_h;
-  int iters; // Must be set on first pass!
+  int iters;   // Must be set on first pass!
   float scale; // current screen scaling factor value
 };
 
 /*****************************************************************************/
-oscr_box::oscr_box(int x, int y, int w, int h) :
-  Fl_Box(x, y, w, h), // base box
-  oscr(0), // offscreen is not set at start
-  x1(0), y1(0), drag_state(0), // not dragging view
-  page_x((offscreen_size - win_size) / 2), // roughly centred in view
-  page_y((offscreen_size - win_size) / 2),
-  offsc_w(0), offsc_h(0), // offscreen size - initially none
-  iters(num_iterations + 1)
-{ } // Constructor
+oscr_box::oscr_box(int x, int y, int w, int h)
+  : Fl_Box(x, y, w, h)
+  , // base box
+  oscr(0)
+  , // offscreen is not set at start
+  x1(0)
+  , y1(0)
+  , drag_state(0)
+  , // not dragging view
+  page_x((offscreen_size - win_size) / 2)
+  , // roughly centred in view
+  page_y((offscreen_size - win_size) / 2)
+  , offsc_w(0)
+  , offsc_h(0)
+  ,                            // offscreen size - initially none
+  iters(num_iterations + 1) {} // Constructor
 
 /*****************************************************************************/
-void oscr_box::draw()
-{
+void oscr_box::draw() {
   int wd = w();
   int ht = h();
   int xo = x();
   int yo = y();
 
   fl_color(fl_gray_ramp(19)); // a light grey background shade
-  fl_rectf(xo, yo, wd, ht); // fill the box with this colour
+  fl_rectf(xo, yo, wd, ht);   // fill the box with this colour
 
   // then add the offscreen on top of the grey background
   if (has_oscr()) // offscreen exists
@@ -101,8 +106,7 @@ void oscr_box::draw()
       scale = Fl_Graphics_Driver::default_driver().scale();
     }
     fl_copy_offscreen(xo, yo, wd, ht, oscr, page_x, page_y);
-  }
-  else  // create offscreen
+  } else // create offscreen
   {
     // some hosts may need a valid window context to base the offscreen on...
     main_window->make_current();
@@ -114,87 +118,76 @@ void oscr_box::draw()
 } // draw method
 
 /*****************************************************************************/
-int oscr_box::handle(int ev)
-{
+int oscr_box::handle(int ev) {
   int ret = Fl_Box::handle(ev);
 
   // handle dragging of visible page area - if a valid context exists
-  if (has_oscr())
-  {
-    switch (ev)
-    {
-    case FL_ENTER:
-      main_window->cursor(FL_CURSOR_MOVE);
-      ret = 1;
-      break;
+  if (has_oscr()) {
+    switch (ev) {
+      case FL_ENTER:
+        main_window->cursor(FL_CURSOR_MOVE);
+        ret = 1;
+        break;
 
-    case FL_LEAVE:
-      main_window->cursor(FL_CURSOR_DEFAULT);
-      ret = 1;
-      break;
+      case FL_LEAVE:
+        main_window->cursor(FL_CURSOR_DEFAULT);
+        ret = 1;
+        break;
 
-    case FL_PUSH:
-      x1 = Fl::event_x_root();
-      y1 = Fl::event_y_root();
-      drag_state = 1; // drag
-      ret = 1;
-      break;
+      case FL_PUSH:
+        x1 = Fl::event_x_root();
+        y1 = Fl::event_y_root();
+        drag_state = 1; // drag
+        ret = 1;
+        break;
 
-    case FL_DRAG:
-      if (drag_state == 1) // dragging page
-      {
-        int x2 = Fl::event_x_root();
-        int y2 = Fl::event_y_root();
-        xoff = x1 - x2;
-        yoff = y1 - y2;
-        x1 = x2;
-        y1 = y2;
-        page_x += xoff;
-        page_y += yoff;
-        // check the page bounds
-        if (page_x < -w())
+      case FL_DRAG:
+        if (drag_state == 1) // dragging page
         {
-          page_x = -w();
+          int x2 = Fl::event_x_root();
+          int y2 = Fl::event_y_root();
+          xoff = x1 - x2;
+          yoff = y1 - y2;
+          x1 = x2;
+          y1 = y2;
+          page_x += xoff;
+          page_y += yoff;
+          // check the page bounds
+          if (page_x < -w()) {
+            page_x = -w();
+          } else if (page_x > offsc_w) {
+            page_x = offsc_w;
+          }
+          if (page_y < -h()) {
+            page_y = -h();
+          } else if (page_y > offsc_h) {
+            page_y = offsc_h;
+          }
+          redraw();
         }
-        else if (page_x > offsc_w)
-        {
-          page_x = offsc_w;
-        }
-        if (page_y < -h())
-        {
-          page_y = -h();
-        }
-        else if (page_y > offsc_h)
-        {
-          page_y = offsc_h;
-        }
-        redraw();
-      }
-      ret = 1;
-      break;
+        ret = 1;
+        break;
 
-    case FL_RELEASE:
-      drag_state = 0;
-      ret = 1;
-      break;
+      case FL_RELEASE:
+        drag_state = 0;
+        ret = 1;
+        break;
 
-    default:
-      break;
+      default:
+        break;
     }
   }
   return ret;
 } // handle
 
 /*****************************************************************************/
-void oscr_box::oscr_drawing(void)
-{
+void oscr_box::oscr_drawing(void) {
   Fl_Color col;
   static int icol = first_useful_color;
   static int ox = (offscreen_size / 2);
   static int oy = (offscreen_size / 2);
 
-  if (!has_oscr())
-  {
+  if (!has_oscr()) {
     return; // no valid offscreen, nothing to do here
   }
 
@@ -209,8 +202,7 @@ void oscr_box::oscr_drawing(void)
     iters++;
 
     icol++;
-    if (icol > last_useful_color)
-    {
+    if (icol > last_useful_color) {
       icol = first_useful_color;
     }
     col = static_cast<Fl_Color>(icol);
@@ -236,15 +228,13 @@ void oscr_box::oscr_drawing(void)
 static oscr_box *os_box = 0; // a widget to view the offscreen with
 
 /*****************************************************************************/
-static void oscr_anim(void *)
-{
+static void oscr_anim(void *) {
   os_box->oscr_drawing(); // if the offscreen exists, draw something
   Fl::repeat_timeout(delta_time, oscr_anim);
 } // oscr_anim
 
 /*****************************************************************************/
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
   int dim1 = win_size;
   main_window = new Fl_Double_Window(dim1, dim1, "Offscreen demo");
   main_window->begin();

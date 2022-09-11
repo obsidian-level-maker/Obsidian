@@ -40,14 +40,13 @@ class CodeEditor : public Fl_Text_Editor {
 
   static Fl_Text_Display::Style_Table_Entry styletable[];
   static void style_parse(const char *tbuff, char *sbuff, int len, char style);
-  static void style_unfinished_cb(int, void*);
-  static void style_update(int pos, int nInserted, int nDeleted,
-                           int /*nRestyled*/, const char * /*deletedText*/,
-                           void *cbArg);
-  static int auto_indent(int, CodeEditor* e);
+  static void style_unfinished_cb(int, void *);
+  static void style_update(int pos, int nInserted, int nDeleted, int /*nRestyled*/,
+                           const char * /*deletedText*/, void *cbArg);
+  static int auto_indent(int, CodeEditor *e);
 
 public:
-  CodeEditor(int X, int Y, int W, int H, const char *L=0);
+  CodeEditor(int X, int Y, int W, int H, const char *L = 0);
   ~CodeEditor();
   int top_line() { return get_absolute_top_line_number(); }
   void textsize(Fl_Fontsize s);
@@ -59,7 +58,7 @@ public:
 
 class CodeViewer : public CodeEditor {
 public:
-  CodeViewer(int X, int Y, int W, int H, const char *L=0);
+  CodeViewer(int X, int Y, int W, int H, const char *L = 0);
 
 protected:
   int handle(int ev) { return Fl_Text_Display::handle(ev); }

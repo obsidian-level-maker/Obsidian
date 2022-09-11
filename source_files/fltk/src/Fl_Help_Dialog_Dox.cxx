@@ -106,7 +106,8 @@
 
 /** \fn void Fl_Help_Dialog::show(int argc, char **argv)
   Shows the main Help Dialog Window
-  Delegates call to encapsulated window_ void Fl_Window::show(int argc, char **argv) instance method */
+  Delegates call to encapsulated window_ void Fl_Window::show(int argc, char **argv) instance method
+*/
 
 /** \fn void Fl_Help_Dialog::textsize(Fl_Fontsize s)
   Sets the internal Fl_Help_View instance text size.

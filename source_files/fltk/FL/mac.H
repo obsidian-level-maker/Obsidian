@@ -20,7 +20,7 @@
 #ifndef FL_DOXYGEN
 
 #if !defined(FL_PLATFORM_H)
-#  error "Never use <FL/mac.H> directly; include <FL/platform.H> instead."
+#error "Never use <FL/mac.H> directly; include <FL/platform.H> instead."
 #endif // !FL_PLATFORM_H
 
 #ifdef __OBJC__
@@ -32,7 +32,8 @@ typedef class FLWindow *Window; // pointer to the FLWindow objective-c class
 
 #include <FL/Fl_Widget.H> // for Fl_Callback
 
-#if (defined(FL_LIBRARY) || defined(FL_INTERNALS)) // this part must be compiled when building the FLTK libraries
+#if (defined(FL_LIBRARY) || \
+     defined(FL_INTERNALS)) // this part must be compiled when building the FLTK libraries
 
 // Standard MacOS C/C++ includes...
 #include <ApplicationServices/ApplicationServices.h>
@@ -92,7 +93,7 @@ struct flCocoaRegion {
   CGRect *rects;
 }; // a region is the union of a series of rectangles
 
-#ifndef CGFLOAT_DEFINED //appears with 10.5 in CGBase.h
+#ifndef CGFLOAT_DEFINED // appears with 10.5 in CGBase.h
 #if defined(__LP64__) && __LP64__
 typedef double CGFloat;
 #else
@@ -102,7 +103,7 @@ typedef float CGFloat;
 
 #else
 
-typedef struct CGContext* CGContextRef;
+typedef struct CGContext *CGContextRef;
 
 #endif // FL_LIBRARY || FL_INTERNALS
 
@@ -159,12 +160,11 @@ public:
   /** Localizable text for the "Quit xxx" application menu item */
   static const char *quit;
   /** Adds custom menu item(s) to the application menu of the system menu bar.
-   They are positioned after the "Print Front Window / Toggle printing of titlebar" items, or at their place
-   if they were removed with <tt>Fl_Mac_App_Menu::print = ""</tt>.
-   \param m zero-ending array of Fl_Menu_Item 's.
+   They are positioned after the "Print Front Window / Toggle printing of titlebar" items, or at
+   their place if they were removed with <tt>Fl_Mac_App_Menu::print = ""</tt>. \param m zero-ending
+   array of Fl_Menu_Item 's.
    */
   static void custom_application_menu_items(const Fl_Menu_Item *m);
 };
 
 /** @} */
-

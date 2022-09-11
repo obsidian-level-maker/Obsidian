@@ -25,21 +25,21 @@ Fl_Sys_Menu_Bar *fl_sys_menu_bar = 0;
 
 /**
  The constructor.
- On Mac OS X, all arguments are unused. On other platforms they are used as by Fl_Menu_Bar::Fl_Menu_Bar().
+ On Mac OS X, all arguments are unused. On other platforms they are used as by
+ Fl_Menu_Bar::Fl_Menu_Bar().
  */
-Fl_Sys_Menu_Bar::Fl_Sys_Menu_Bar(int x,int y,int w,int h,const char *l)
-: Fl_Menu_Bar(x,y,w,h,l)
-{
+Fl_Sys_Menu_Bar::Fl_Sys_Menu_Bar(int x, int y, int w, int h, const char *l)
+  : Fl_Menu_Bar(x, y, w, h, l) {
   if (driver()) {
-    if (fl_sys_menu_bar) delete fl_sys_menu_bar;
+    if (fl_sys_menu_bar)
+      delete fl_sys_menu_bar;
     fl_sys_menu_bar = this;
     driver()->bar = this;
   }
 }
 
 /** The destructor */
-Fl_Sys_Menu_Bar::~Fl_Sys_Menu_Bar()
-{
+Fl_Sys_Menu_Bar::~Fl_Sys_Menu_Bar() {
   if (driver()) {
     fl_sys_menu_bar = 0;
     clear();
@@ -47,7 +47,8 @@ Fl_Sys_Menu_Bar::~Fl_Sys_Menu_Bar()
 }
 
 void Fl_Sys_Menu_Bar::update() {
-  if (driver()) driver()->update();
+  if (driver())
+    driver()->update();
 }
 
 /**
@@ -57,31 +58,38 @@ void Fl_Sys_Menu_Bar::update() {
 
  \param m Zero-ending list of Fl_Menu_Item's
  */
-void Fl_Sys_Menu_Bar::menu(const Fl_Menu_Item *m)
-{
-  if (driver()) driver()->menu(m);
-  else Fl_Menu_Bar::menu(m);
+void Fl_Sys_Menu_Bar::menu(const Fl_Menu_Item *m) {
+  if (driver())
+    driver()->menu(m);
+  else
+    Fl_Menu_Bar::menu(m);
 }
 
 /** Changes the shortcut of item i to n.
  */
-void Fl_Sys_Menu_Bar::shortcut (int i, int s) {
-  if (driver()) driver()->shortcut(i, s);
-  else Fl_Menu_Bar::shortcut(i, s);
+void Fl_Sys_Menu_Bar::shortcut(int i, int s) {
+  if (driver())
+    driver()->shortcut(i, s);
+  else
+    Fl_Menu_Bar::shortcut(i, s);
 }
 
-/** Turns the radio item "on" for the menu item and turns "off" adjacent radio items of the same group.*/
-void Fl_Sys_Menu_Bar::setonly (Fl_Menu_Item *item) {
-  if (driver()) driver()->setonly(item);
-  else Fl_Menu_Bar::setonly(item);
-
+/** Turns the radio item "on" for the menu item and turns "off" adjacent radio items of the same
+ * group.*/
+void Fl_Sys_Menu_Bar::setonly(Fl_Menu_Item *item) {
+  if (driver())
+    driver()->setonly(item);
+  else
+    Fl_Menu_Bar::setonly(item);
 }
 
 /** Sets the flags of item i
  \see Fl_Menu_::mode(int i, int fl) */
-void   Fl_Sys_Menu_Bar::mode (int i, int fl) {
-  if (driver()) driver()->mode(i, fl);
-  else Fl_Menu_Bar::mode(i, fl);
+void Fl_Sys_Menu_Bar::mode(int i, int fl) {
+  if (driver())
+    driver()->mode(i, fl);
+  else
+    Fl_Menu_Bar::mode(i, fl);
 }
 
 /**
@@ -92,18 +100,20 @@ void   Fl_Sys_Menu_Bar::mode (int i, int fl) {
 
  \param label     - new menu item's label
  \param shortcut  - new menu item's integer shortcut (can be 0 for none, or e.g. FL_ALT+'x')
- \param cb        - callback to be invoked when item selected (can be 0 for none, in which case the menubar's callback() can be used instead)
- \param user_data - argument to the callback
- \param flags     - item's flags, e.g. ::FL_MENU_TOGGLE, etc.
+ \param cb        - callback to be invoked when item selected (can be 0 for none, in which case the
+ menubar's callback() can be used instead) \param user_data - argument to the callback \param flags
+ - item's flags, e.g. ::FL_MENU_TOGGLE, etc.
 
  \returns the index into the menu() array, where the entry was added
 
  \see Fl_Menu_::add(const char* label, int shortcut, Fl_Callback *cb, void *user_data, int flags)
  */
-int Fl_Sys_Menu_Bar::add(const char* label, int shortcut, Fl_Callback *cb, void *user_data, int flags)
-{
-  if (driver()) return driver()->add(label, shortcut, cb, user_data, flags);
-  else return Fl_Menu_Bar::add(label, shortcut, cb, user_data, flags);
+int Fl_Sys_Menu_Bar::add(const char *label, int shortcut, Fl_Callback *cb, void *user_data,
+                         int flags) {
+  if (driver())
+    return driver()->add(label, shortcut, cb, user_data, flags);
+  else
+    return Fl_Menu_Bar::add(label, shortcut, cb, user_data, flags);
 }
 
 /**
@@ -112,8 +122,7 @@ int Fl_Sys_Menu_Bar::add(const char* label, int shortcut, Fl_Callback *cb, void 
  \returns the index into the menu() array, where the entry was added
  \see Fl_Menu_::add(const char* str)
  */
-int Fl_Sys_Menu_Bar::add(const char* str)
-{
+int Fl_Sys_Menu_Bar::add(const char *str) {
   return driver() ? driver()->add(str) : Fl_Menu_Bar::add(str);
 }
 
@@ -124,28 +133,29 @@ int Fl_Sys_Menu_Bar::add(const char* str)
  callback, argument to the callback, and flags.
 
  \returns the index into the menu() array, where the entry was inserted
- \see Fl_Menu_::insert(int index, const char* label, int shortcut, Fl_Callback *cb, void *user_data, int flags)
+ \see Fl_Menu_::insert(int index, const char* label, int shortcut, Fl_Callback *cb, void *user_data,
+ int flags)
  */
-int Fl_Sys_Menu_Bar::insert(int index, const char* label, int shortcut, Fl_Callback *cb, void *user_data, int flags)
-{
-  return driver() ? driver()->insert(index, label, shortcut, cb, user_data, flags) :
-  Fl_Menu_Bar::insert(index, label, shortcut, cb, user_data, flags);
+int Fl_Sys_Menu_Bar::insert(int index, const char *label, int shortcut, Fl_Callback *cb,
+                            void *user_data, int flags) {
+  return driver() ? driver()->insert(index, label, shortcut, cb, user_data, flags)
+                  : Fl_Menu_Bar::insert(index, label, shortcut, cb, user_data, flags);
 }
 
 /** Set the Fl_Menu_Item array pointer to null, indicating a zero-length menu.
  \see Fl_Menu_::clear()
  */
-void Fl_Sys_Menu_Bar::clear()
-{
-  if (driver()) driver()->clear();
-  else Fl_Menu_Bar::clear();
+void Fl_Sys_Menu_Bar::clear() {
+  if (driver())
+    driver()->clear();
+  else
+    Fl_Menu_Bar::clear();
 }
 
 /** Clears the specified submenu pointed to by index of all menu items.
  \see Fl_Menu_::clear_submenu(int index)
  */
-int Fl_Sys_Menu_Bar::clear_submenu(int index)
-{
+int Fl_Sys_Menu_Bar::clear_submenu(int index) {
   return driver() ? driver()->clear_submenu(index) : Fl_Menu_Bar::clear_submenu(index);
 }
 
@@ -154,10 +164,11 @@ int Fl_Sys_Menu_Bar::clear_submenu(int index)
 
  \param index    the index of the item to remove
  */
-void Fl_Sys_Menu_Bar::remove(int index)
-{
-  if (driver()) driver()->remove(index);
-  else Fl_Menu_Bar::remove(index);
+void Fl_Sys_Menu_Bar::remove(int index) {
+  if (driver())
+    driver()->remove(index);
+  else
+    Fl_Menu_Bar::remove(index);
 }
 
 /**
@@ -166,10 +177,11 @@ void Fl_Sys_Menu_Bar::remove(int index)
  \param index    the index of the item to rename
  \param name    the new item name as a UTF8 string
  */
-void Fl_Sys_Menu_Bar::replace(int index, const char *name)
-{
-  if (driver()) driver()->replace(index, name);
-  else Fl_Menu_Bar::replace(index, name);
+void Fl_Sys_Menu_Bar::replace(int index, const char *name) {
+  if (driver())
+    driver()->replace(index, name);
+  else
+    Fl_Menu_Bar::replace(index, name);
 }
 
 /**
@@ -187,10 +199,11 @@ void Fl_Sys_Menu_Bar::about(Fl_Callback *cb, void *data) {
 }
 
 void Fl_Sys_Menu_Bar::draw() {
-  if (driver()) driver()->draw();
-  else Fl_Menu_Bar::draw();
+  if (driver())
+    driver()->draw();
+  else
+    Fl_Menu_Bar::draw();
 }
-
 
 
 /** Get the style of the Window menu in the system menu bar */
@@ -216,7 +229,8 @@ Fl_Sys_Menu_Bar::window_menu_style_enum Fl_Sys_Menu_Bar::window_menu_style() {
  \version 1.4
  */
 void Fl_Sys_Menu_Bar::window_menu_style(Fl_Sys_Menu_Bar::window_menu_style_enum style) {
-  if (driver()) Fl_Sys_Menu_Bar_Driver::window_menu_style(style);
+  if (driver())
+    Fl_Sys_Menu_Bar_Driver::window_menu_style(style);
 }
 
 /** Adds a Window menu, to the end of the system menu bar.
@@ -245,9 +259,12 @@ Fl_Sys_Menu_Bar_Driver *Fl_Sys_Menu_Bar::driver() {
 
 Fl_Sys_Menu_Bar_Driver *Fl_Sys_Menu_Bar_Driver::driver_ = 0;
 
-Fl_Sys_Menu_Bar_Driver::Fl_Sys_Menu_Bar_Driver() {bar = NULL;}
+Fl_Sys_Menu_Bar_Driver::Fl_Sys_Menu_Bar_Driver() {
+  bar = NULL;
+}
 
 Fl_Sys_Menu_Bar_Driver::~Fl_Sys_Menu_Bar_Driver() {}
 
-Fl_Sys_Menu_Bar::window_menu_style_enum Fl_Sys_Menu_Bar_Driver::window_menu_style_ = Fl_Sys_Menu_Bar::tabbing_mode_automatic;
+Fl_Sys_Menu_Bar::window_menu_style_enum Fl_Sys_Menu_Bar_Driver::window_menu_style_ =
+    Fl_Sys_Menu_Bar::tabbing_mode_automatic;
 #endif // !defined(FL_DOXYGEN)

@@ -23,91 +23,142 @@
 
 char buffer[1000000];
 
-int JIS0208(unsigned char * ptr) {
+int JIS0208(unsigned char *ptr) {
   int i = 0;
   unsigned int fmap;
   unsigned int ucs;
-  while(*ptr != '\t') { ptr++; i++; }
-  ptr++; i++; *(ptr+6) = '\0';
+  while (*ptr != '\t') {
+    ptr++;
+    i++;
+  }
+  ptr++;
+  i++;
+  *(ptr + 6) = '\0';
   fmap = (unsigned int)strtoul(ptr, NULL, 16);
-  while(*ptr != '\0') { ptr++; i++; }
-  i++; ptr++; *(ptr+6) = '\0';
+  while (*ptr != '\0') {
+    ptr++;
+    i++;
+  }
+  i++;
+  ptr++;
+  *(ptr + 6) = '\0';
   ucs = (unsigned int)strtoul(ptr, NULL, 16);
   if (ucs)
-    printf("/* U+%04X */ 0x%02X, 0x%02X,\n", ucs,
-          (fmap & 0xFF00) >> 8, fmap & 0xFF);
-  while(*ptr != '\0') { ptr++; i++; }
-  i++; ptr++;
-  while(*ptr != '\n') { ptr++; i++; }
+    printf("/* U+%04X */ 0x%02X, 0x%02X,\n", ucs, (fmap & 0xFF00) >> 8, fmap & 0xFF);
+  while (*ptr != '\0') {
+    ptr++;
+    i++;
+  }
+  i++;
+  ptr++;
+  while (*ptr != '\n') {
+    ptr++;
+    i++;
+  }
   i++;
   return i;
 }
 
-int JIS0201(unsigned char * ptr) {
+int JIS0201(unsigned char *ptr) {
   int i = 0;
   unsigned int fmap;
   unsigned int ucs;
-  *(ptr+4) = '\0';
+  *(ptr + 4) = '\0';
   fmap = (unsigned int)strtoul(ptr, NULL, 16);
-  while(*ptr != '\0') { ptr++; i++; }
-  i++; ptr++; *(ptr+6) = '\0';
+  while (*ptr != '\0') {
+    ptr++;
+    i++;
+  }
+  i++;
+  ptr++;
+  *(ptr + 6) = '\0';
   ucs = (unsigned int)strtoul(ptr, NULL, 16);
   if (*(ptr + 1) != 'x') {
     printf("/* EOF */\n");
     abort();
   }
-  if (ucs) printf("/* U+%04X */ 0x%02X,\n", ucs, (unsigned char)fmap);
-  while(*ptr != '\0') { ptr++; i++; }
-  i++; ptr++;
-  while(*ptr != '\n') { ptr++; i++; }
+  if (ucs)
+    printf("/* U+%04X */ 0x%02X,\n", ucs, (unsigned char)fmap);
+  while (*ptr != '\0') {
+    ptr++;
+    i++;
+  }
+  i++;
+  ptr++;
+  while (*ptr != '\n') {
+    ptr++;
+    i++;
+  }
   i++;
   return i;
 }
 
-int ADOBE(unsigned char * ptr) {
+int ADOBE(unsigned char *ptr) {
   int i = 0;
   unsigned int fmap;
   unsigned int ucs;
-  *(ptr+4) = '\0';
+  *(ptr + 4) = '\0';
   ucs = (unsigned int)strtoul(ptr, NULL, 16);
-  while(*ptr != '\0') { ptr++; i++; }
-  i++; ptr++; *(ptr+2) = '\0';
+  while (*ptr != '\0') {
+    ptr++;
+    i++;
+  }
+  i++;
+  ptr++;
+  *(ptr + 2) = '\0';
   fmap = (unsigned int)strtoul(ptr, NULL, 16);
   if (fmap < 1) {
     printf("/* EOF */\n");
     abort();
   }
-  if (ucs) printf("/* U+%04X */ 0x%02X,\n", ucs, (unsigned char)fmap);
-  while(*ptr != '\0') { ptr++; i++; }
-  i++; ptr++;
-  while(*ptr != '\n') { ptr++; i++; }
+  if (ucs)
+    printf("/* U+%04X */ 0x%02X,\n", ucs, (unsigned char)fmap);
+  while (*ptr != '\0') {
+    ptr++;
+    i++;
+  }
+  i++;
+  ptr++;
+  while (*ptr != '\n') {
+    ptr++;
+    i++;
+  }
   i++;
   return i;
 }
 
 
-int JIS0212(unsigned char * ptr) {
+int JIS0212(unsigned char *ptr) {
   int i = 0;
   unsigned int fmap;
   unsigned int ucs;
-  *(ptr+6) = '\0';
+  *(ptr + 6) = '\0';
   fmap = (unsigned int)strtoul(ptr, NULL, 16);
   ptr += 7;
   i += 7;
-  while(*ptr == ' ') { ptr++; i++; }
+  while (*ptr == ' ') {
+    ptr++;
+    i++;
+  }
   /* i++; ptr++; */
-  *(ptr+6) = '\0';
+  *(ptr + 6) = '\0';
   ucs = (unsigned int)strtoul(ptr, NULL, 16);
   if (*(ptr + 1) != 'x') {
     printf("/* EOF */\n");
     abort();
   }
   if (ucs)
-    printf("/* U+%04X */ 0x%02X, 0x%02X,\n", ucs,
-          (fmap & 0xFF00) >> 8, fmap & 0xFF);
-  while(*ptr != '\0') { ptr++; i++; }
-  i++; ptr++;
-  while(*ptr != '\n') { ptr++; i++; }
+    printf("/* U+%04X */ 0x%02X, 0x%02X,\n", ucs, (fmap & 0xFF00) >> 8, fmap & 0xFF);
+  while (*ptr != '\0') {
+    ptr++;
+    i++;
+  }
+  i++;
+  ptr++;
+  while (*ptr != '\n') {
+    ptr++;
+    i++;
+  }
   i++;
   return i;
 }
@@ -122,10 +173,14 @@ int main(int argc, char **argv) {
 
   buffer[len] = '\0';
   ptr = (unsigned char *)buffer;
-  while (*ptr !='\n') {ptr++; len--;};
-  ptr++; len--;
+  while (*ptr != '\n') {
+    ptr++;
+    len--;
+  };
+  ptr++;
+  len--;
   while (*ptr == '#') {
-    while (*ptr !='\n') {
+    while (*ptr != '\n') {
       ptr++;
       len--;
     }
@@ -151,9 +206,7 @@ int main(int argc, char **argv) {
       nb = JIS0201(ptr);
     } else if (!strcmp("koi8-1", argv[1])) {
       nb = JIS0201(ptr);
-    } else if (!strcmp("dingbats", argv[1]) ||
-               !strcmp("symbol", argv[1]))
-    {
+    } else if (!strcmp("dingbats", argv[1]) || !strcmp("symbol", argv[1])) {
       nb = ADOBE(ptr);
     } else {
       len = 0;

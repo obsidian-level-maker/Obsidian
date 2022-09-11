@@ -365,9 +365,9 @@ void CSG_Shade() {
 
     //    SHADE_CollectLights();
 
-    //SHADE_GroupRegions();
+    // SHADE_GroupRegions();
     SHADE_LightWorld();
-    //SHADE_MergeResults();
+    // SHADE_MergeResults();
 }
 
 //--- editor settings ---

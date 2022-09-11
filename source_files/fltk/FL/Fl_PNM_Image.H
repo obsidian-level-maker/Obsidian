@@ -19,7 +19,7 @@
 
 #ifndef Fl_PNM_Image_H
 #define Fl_PNM_Image_H
-#  include "Fl_Image.H"
+#include "Fl_Image.H"
 
 /**
   The Fl_PNM_Image class supports loading, caching,
@@ -29,9 +29,8 @@
 */
 class FL_EXPORT Fl_PNM_Image : public Fl_RGB_Image {
 
-  public:
-
-  Fl_PNM_Image(const char* filename);
+public:
+  Fl_PNM_Image(const char *filename);
 };
 
 #endif

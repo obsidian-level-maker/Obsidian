@@ -24,6 +24,7 @@ class Fl_OpenGL_Graphics_Driver;
  */
 class Fl_OpenGL_Display_Device : public Fl_Surface_Device {
   Fl_OpenGL_Display_Device(Fl_OpenGL_Graphics_Driver *graphics_driver);
+
 public:
   static Fl_OpenGL_Display_Device *display_device();
 };

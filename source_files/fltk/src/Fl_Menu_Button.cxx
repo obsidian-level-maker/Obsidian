@@ -19,22 +19,24 @@
 #include <FL/fl_draw.H>
 
 
-static Fl_Menu_Button   *pressed_menu_button_ = 0;
+static Fl_Menu_Button *pressed_menu_button_ = 0;
 
 
 void Fl_Menu_Button::draw() {
-  if (!box() || type()) return;
-  int H = (labelsize()-3)&-2;
-  int X = x()+w()-H-Fl::box_dx(box())-Fl::box_dw(box())-1;
-  int Y = y()+(h()-H)/2;
+  if (!box() || type())
+    return;
+  int H = (labelsize() - 3) & -2;
+  int X = x() + w() - H - Fl::box_dx(box()) - Fl::box_dw(box()) - 1;
+  int Y = y() + (h() - H) / 2;
   draw_box(pressed_menu_button_ == this ? fl_down(box()) : box(), color());
-  draw_label(x()+Fl::box_dx(box()), y(), X-x()+2, h());
-  if (Fl::focus() == this) draw_focus();
+  draw_label(x() + Fl::box_dx(box()), y(), X - x() + 2, h());
+  if (Fl::focus() == this)
+    draw_focus();
   // ** if (box() == FL_FLAT_BOX) return; // for XForms compatibility
   fl_color(active_r() ? FL_DARK3 : fl_inactive(FL_DARK3));
-  fl_line(X+H/2, Y+H, X, Y, X+H, Y);
+  fl_line(X + H / 2, Y + H, X, Y, X + H, Y);
   fl_color(active_r() ? FL_LIGHT3 : fl_inactive(FL_LIGHT3));
-  fl_line(X+H, Y, X+H/2, Y+H);
+  fl_line(X + H, Y, X + H / 2, Y + H);
 }
 
 
@@ -50,9 +52,9 @@ void Fl_Menu_Button::draw() {
 
   \see Fl_Menu_::menu_end()
 */
-const Fl_Menu_Item* Fl_Menu_Button::popup() {
+const Fl_Menu_Item *Fl_Menu_Button::popup() {
   menu_end();
-  const Fl_Menu_Item* m;
+  const Fl_Menu_Item *m;
   pressed_menu_button_ = this;
   redraw();
   Fl_Widget_Tracker mb(this);
@@ -63,43 +65,53 @@ const Fl_Menu_Item* Fl_Menu_Button::popup() {
   }
   picked(m);
   pressed_menu_button_ = 0;
-  if (mb.exists()) redraw();
+  if (mb.exists())
+    redraw();
   return m;
 }
 
 int Fl_Menu_Button::handle(int e) {
-  if (!menu() || !menu()->text) return 0;
+  if (!menu() || !menu()->text)
+    return 0;
   switch (e) {
-  case FL_ENTER: /* FALLTHROUGH */
-  case FL_LEAVE:
-    return (box() && !type()) ? 1 : 0;
-  case FL_PUSH:
-    if (!box()) {
-      if (Fl::event_button() != 3) return 0;
-    } else if (type()) {
-      if (!(type() & (1 << (Fl::event_button()-1)))) return 0;
-    }
-    if (Fl::visible_focus()) Fl::focus(this);
-    popup();
-    return 1;
-  case FL_KEYBOARD:
-    if (!box()) return 0;
-    if (Fl::event_key() == ' ' &&
-        !(Fl::event_state() & (FL_SHIFT | FL_CTRL | FL_ALT | FL_META))) {
+    case FL_ENTER: /* FALLTHROUGH */
+    case FL_LEAVE:
+      return (box() && !type()) ? 1 : 0;
+    case FL_PUSH:
+      if (!box()) {
+        if (Fl::event_button() != 3)
+          return 0;
+      } else if (type()) {
+        if (!(type() & (1 << (Fl::event_button() - 1))))
+          return 0;
+      }
+      if (Fl::visible_focus())
+        Fl::focus(this);
       popup();
       return 1;
-    } else return 0;
-  case FL_SHORTCUT:
-    if (Fl_Widget::test_shortcut()) {popup(); return 1;}
-    return test_shortcut() != 0;
-  case FL_FOCUS: /* FALLTHROUGH */
-  case FL_UNFOCUS:
-    if (box() && Fl::visible_focus()) {
-      redraw();
-      return 1;
-    }
-  default:
-    return 0;
+    case FL_KEYBOARD:
+      if (!box())
+        return 0;
+      if (Fl::event_key() == ' ' &&
+          !(Fl::event_state() & (FL_SHIFT | FL_CTRL | FL_ALT | FL_META))) {
+        popup();
+        return 1;
+      } else
+        return 0;
+    case FL_SHORTCUT:
+      if (Fl_Widget::test_shortcut()) {
+        popup();
+        return 1;
+      }
+      return test_shortcut() != 0;
+    case FL_FOCUS: /* FALLTHROUGH */
+    case FL_UNFOCUS:
+      if (box() && Fl::visible_focus()) {
+        redraw();
+        return 1;
+      }
+    default:
+      return 0;
   }
 }
 
@@ -109,7 +121,7 @@ int Fl_Menu_Button::handle(int e) {
   <P>The constructor sets menu() to NULL.  See
   Fl_Menu_ for the methods to set or change the menu.
 */
-Fl_Menu_Button::Fl_Menu_Button(int X,int Y,int W,int H,const char *l)
-: Fl_Menu_(X,Y,W,H,l) {
+Fl_Menu_Button::Fl_Menu_Button(int X, int Y, int W, int H, const char *l)
+  : Fl_Menu_(X, Y, W, H, l) {
   down_box(FL_NO_BOX);
 }

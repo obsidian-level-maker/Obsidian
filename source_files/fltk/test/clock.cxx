@@ -19,7 +19,7 @@
 #include <FL/Fl_Clock.H>
 #include <FL/Fl_Round_Clock.H>
 
-const int dev_test = 0;  // 1 = enable non-standard colors and no-shadow tests
+const int dev_test = 0; // 1 = enable non-standard colors and no-shadow tests
 
 // close all windows when the user closes one of the windows
 
@@ -33,17 +33,17 @@ void close_cb(Fl_Widget *w, void *v) {
 }
 
 int main(int argc, char **argv) {
-  Fl_Double_Window window(220,220,"Fl_Clock");
+  Fl_Double_Window window(220, 220, "Fl_Clock");
   window.callback(close_cb);
-  Fl_Clock c1(0,0,220,220); // c1.color(2,1);
+  Fl_Clock c1(0, 0, 220, 220); // c1.color(2,1);
   window.resizable(c1);
   window.end();
-  Fl_Double_Window window2(220,220,"Fl_Round_Clock");
+  Fl_Double_Window window2(220, 220, "Fl_Round_Clock");
   window2.callback(close_cb);
-  Fl_Round_Clock c2(0,0,220,220);
+  Fl_Round_Clock c2(0, 0, 220, 220);
   if (dev_test) {
-    c2.color(FL_YELLOW,FL_RED); // set background and hands colors, resp.
-    c2.shadow(0); // disable shadows of the hands
+    c2.color(FL_YELLOW, FL_RED); // set background and hands colors, resp.
+    c2.shadow(0);                // disable shadows of the hands
   }
   window2.resizable(c2);
   window2.end();
@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
   // I don't want the class to be "clock":
   window.xclass("Fl_Clock");
   window2.xclass("Fl_Clock");
-  window.show(argc,argv);
+  window.show(argc, argv);
   window2.show();
   return Fl::run();
 }

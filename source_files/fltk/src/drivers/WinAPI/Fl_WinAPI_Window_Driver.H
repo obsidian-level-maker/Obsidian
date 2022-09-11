@@ -42,9 +42,7 @@
  */
 
 
-
-class Fl_WinAPI_Window_Driver : public Fl_Window_Driver
-{
+class Fl_WinAPI_Window_Driver : public Fl_Window_Driver {
   struct icon_data {
     const void *legacy_icon;
     Fl_RGB_Image **icons;
@@ -53,19 +51,23 @@ class Fl_WinAPI_Window_Driver : public Fl_Window_Driver
     HICON small_icon;
   };
   struct shape_data_type {
-    int lw_; ///<  width of shape image
-    int lh_; ///<  height of shape image
-    Fl_Image* shape_; ///<  shape image
+    int lw_;                      ///<  width of shape image
+    int lh_;                      ///<  height of shape image
+    Fl_Image *shape_;             ///<  shape image
     Fl_Bitmap *effective_bitmap_; ///<  auxiliary bitmap image
-  } *shape_data_;
+  } * shape_data_;
   int screen_num_;
+
 private:
-  void shape_bitmap_(Fl_Image* b);
-  void shape_alpha_(Fl_Image* img, int offset);
+  void shape_bitmap_(Fl_Image *b);
+  void shape_alpha_(Fl_Image *img, int offset);
+
 public:
-  Fl_WinAPI_Window_Driver(Fl_Window*);
+  Fl_WinAPI_Window_Driver(Fl_Window *);
   ~Fl_WinAPI_Window_Driver();
-  static inline Fl_WinAPI_Window_Driver* driver(const Fl_Window *w) {return (Fl_WinAPI_Window_Driver*)Fl_Window_Driver::driver(w);}
+  static inline Fl_WinAPI_Window_Driver *driver(const Fl_Window *w) {
+    return (Fl_WinAPI_Window_Driver *)Fl_Window_Driver::driver(w);
+  }
   HDC private_dc; // used for OpenGL
   RECT border_width_title_bar_height(int &bx, int &by, int &bt);
   virtual void screen_num(int n);
@@ -85,7 +87,7 @@ public:
   // --- window data
   virtual int decorated_w();
   virtual int decorated_h();
-  virtual const Fl_Image* shape();
+  virtual const Fl_Image *shape();
 
   // --- window management
   virtual Fl_X *makeWindow();
@@ -97,29 +99,30 @@ public:
   virtual void draw_begin();
   virtual void make_current();
   virtual void show();
-  virtual void label(const char *name,const char *iname);
-  virtual void resize(int X,int Y,int W,int H);
+  virtual void label(const char *name, const char *iname);
+  virtual void resize(int X, int Y, int W, int H);
   virtual void hide();
   virtual void map();
   virtual void unmap();
   virtual void fullscreen_on();
   virtual void fullscreen_off(int X, int Y, int W, int H);
   virtual void iconize();
-  virtual void decoration_sizes(int *top, int *left,  int *right, int *bottom);
+  virtual void decoration_sizes(int *top, int *left, int *right, int *bottom);
   // --- window cursor stuff
   virtual int set_cursor(Fl_Cursor);
-  virtual int set_cursor(const Fl_RGB_Image*, int, int);
+  virtual int set_cursor(const Fl_RGB_Image *, int, int);
 
-  virtual void shape(const Fl_Image* img);
+  virtual void shape(const Fl_Image *img);
   virtual void icons(const Fl_RGB_Image *icons[], int count);
   virtual const void *icon() const;
-  virtual void icon(const void * ic);
+  virtual void icon(const void *ic);
   virtual void free_icons();
   void set_icons(); // driver-internal support function
   // this one is implemented in Fl_win32.cxx
-  virtual void capture_titlebar_and_borders(Fl_RGB_Image*& top, Fl_RGB_Image*& left, Fl_RGB_Image*& bottom, Fl_RGB_Image*& right);
+  virtual void capture_titlebar_and_borders(Fl_RGB_Image *&top, Fl_RGB_Image *&left,
+                                            Fl_RGB_Image *&bottom, Fl_RGB_Image *&right);
   virtual int scroll(int src_x, int src_y, int src_w, int src_h, int dest_x, int dest_y,
-                     void (*draw_area)(void*, int,int,int,int), void* data);
+                     void (*draw_area)(void *, int, int, int, int), void *data);
   static void resize_after_screen_change(void *data);
 };
 

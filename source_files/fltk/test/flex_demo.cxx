@@ -29,8 +29,8 @@ void debug_group(Fl_Group *g) {
   printf("\nFl_Group (%p) has %d children:\n", g, g->children());
   for (int i = 0; i < g->children(); i++) {
     Fl_Widget *c = g->child(i);
-    printf("  child %2d: hidden = %-5s, (x,y,w,h) = (%3d, %3d, %3d, %3d), label = '%s'\n",
-           i, c->visible() ? "false" : "true", c->x(), c->y(), c->w(), c->h(),
+    printf("  child %2d: hidden = %-5s, (x,y,w,h) = (%3d, %3d, %3d, %3d), label = '%s'\n", i,
+           c->visible() ? "false" : "true", c->x(), c->y(), c->w(), c->h(),
            c->label() ? c->label() : "(null)");
   }
 #endif
@@ -49,11 +49,11 @@ void toggle_cb(Fl_Widget *w, void *v) {
   if (o->visible()) {
     o->hide();
     w->label("show OK button");
-    flex->child(1)->hide();         // hide Box
+    flex->child(1)->hide(); // hide Box
   } else {
     o->show();
     w->label("hide OK button");
-    flex->child(1)->show();         // show Box
+    flex->child(1)->show(); // show Box
   }
   flex->layout();
 
@@ -80,7 +80,7 @@ Fl_Flex *create_row() {
     Fl_Button *toggle = create_button("hide OK button");
     toggle->tooltip("hide() or show() OK button");
     Fl_Box *box2 = new Fl_Box(0, 0, 120, 10, "Box2");
-    Fl_Button * okay = create_button("OK");
+    Fl_Button *okay = create_button("OK");
     new Fl_Input(0, 0, 120, 10, "");
 
     toggle->callback(toggle_cb, okay);

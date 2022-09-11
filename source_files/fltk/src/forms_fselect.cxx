@@ -20,33 +20,45 @@
 #include "flstring.h"
 
 static char fl_directory[FL_PATH_MAX];
-static const char *fl_pattern;  // assumed passed value is static
+static const char *fl_pattern; // assumed passed value is static
 static char fl_filename[FL_PATH_MAX];
 
-char* fl_show_file_selector(const char *message,const char *dir,
-                            const char *pat,const char *fname) {
-  if (dir && dir[0]) strlcpy(fl_directory,dir,sizeof(fl_directory));
-  if (pat && pat[0]) fl_pattern = pat;
-  if (fname && fname[0]) strlcpy(fl_filename,fname,sizeof(fl_filename));
-  char *p = fl_directory+strlen(fl_directory);
-  if (p > fl_directory && *(p-1)!='/'
+char *fl_show_file_selector(const char *message, const char *dir, const char *pat,
+                            const char *fname) {
+  if (dir && dir[0])
+    strlcpy(fl_directory, dir, sizeof(fl_directory));
+  if (pat && pat[0])
+    fl_pattern = pat;
+  if (fname && fname[0])
+    strlcpy(fl_filename, fname, sizeof(fl_filename));
+  char *p = fl_directory + strlen(fl_directory);
+  if (p > fl_directory && *(p - 1) != '/'
 #ifdef _WIN32
-      && *(p-1)!='\\' && *(p-1)!=':'
+      && *(p - 1) != '\\' && *(p - 1) != ':'
 #endif
-      ) *p++ = '/';
-  strlcpy(p,fl_filename,sizeof(fl_directory) - (p - fl_directory));
-  const char *q = fl_file_chooser(message,fl_pattern,fl_directory);
-  if (!q) return 0;
+  )
+    *p++ = '/';
+  strlcpy(p, fl_filename, sizeof(fl_directory) - (p - fl_directory));
+  const char *q = fl_file_chooser(message, fl_pattern, fl_directory);
+  if (!q)
+    return 0;
   strlcpy(fl_directory, q, sizeof(fl_directory));
   p = (char *)fl_filename_name(fl_directory);
   strlcpy(fl_filename, p, sizeof(fl_filename));
-  if (p > fl_directory+1) p--;
+  if (p > fl_directory + 1)
+    p--;
   *p = 0;
   return (char *)q;
 }
 
-char*   fl_get_directory() {return fl_directory;}
+char *fl_get_directory() {
+  return fl_directory;
+}
 
-char*   fl_get_pattern() {return (char *)fl_pattern;}
+char *fl_get_pattern() {
+  return (char *)fl_pattern;
+}
 
-char*   fl_get_filename() {return fl_filename;}
+char *fl_get_filename() {
+  return fl_filename;
+}
