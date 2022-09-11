@@ -252,8 +252,7 @@ static void ShowInfo() {
     fmt::print(
         "\n"
         "** {} {} \"{}\"\n"
-        "** Build {}\n"
-        " **\n"
+        "** Build {} **\n"
         "** Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted **\n"
         "\n",
         OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME,
@@ -1159,7 +1158,7 @@ int main(int argc, char **argv) {
 restart:;
 
     if (argv::Find('?', NULL) >= 0 || argv::Find('h', "help") >= 0) {
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
         if (AllocConsole()) {
             freopen("CONOUT$", "r", stdin);
             freopen("CONOUT$", "w", stdout);
@@ -1167,14 +1166,14 @@ restart:;
         }
 #endif
         ShowInfo();
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
         std::cout << '\n' << "Close window when finished...";
         do {
         } while (true);
 #endif
         exit(EXIT_SUCCESS);
     } else if (argv::Find(0, "version") >= 0) {
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
         if (AllocConsole()) {
             freopen("CONOUT$", "r", stdin);
             freopen("CONOUT$", "w", stdout);
@@ -1182,7 +1181,7 @@ restart:;
         }
 #endif
         ShowVersion();
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
         std::cout << '\n' << "Close window when finished...";
         do {
         } while (true);
@@ -1190,6 +1189,10 @@ restart:;
 #endif
         exit(EXIT_SUCCESS);
     }
+
+#ifdef CONSOLE_ONLY
+    batch_mode = true;
+#endif
 
     int batch_arg = argv::Find('b', "batch");
     if (batch_arg >= 0) {
@@ -1202,7 +1205,7 @@ restart:;
 
         batch_mode = true;
         batch_output_file = argv::list[batch_arg + 1];
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
         if (AllocConsole()) {
             freopen("CONOUT$", "r", stdin);
             freopen("CONOUT$", "w", stdout);
@@ -1213,7 +1216,7 @@ restart:;
 
     if (argv::Find('p', "printref") >= 0) {
         batch_mode = true;
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
         if (AllocConsole()) {
             freopen("CONOUT$", "r", stdin);
             freopen("CONOUT$", "w", stdout);
@@ -1237,7 +1240,7 @@ restart:;
 
     if (argv::Find(0, "printref-json") >= 0) {
         batch_mode = true;
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
         if (AllocConsole()) {
             freopen("CONOUT$", "r", stdin);
             freopen("CONOUT$", "w", stdout);
@@ -1412,7 +1415,7 @@ skiprest:
         if (argv::Find('p', "printref") >= 0) {
             ob_print_reference();
             RefClose();
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
             std::cout << '\n' << "Close window when finished...";
 
             do {
@@ -1424,7 +1427,7 @@ skiprest:
 
         if (argv::Find(0, "printref-json") >= 0) {
             ob_print_reference_json();
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
             std::cout << '\n' << "Close window when finished...";
 
             do {
@@ -1457,7 +1460,7 @@ skiprest:
             LogPrintf("FAILED!\n");
 
             Main::Detail::Shutdown(false);
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
             std::cout << '\n' << "Close window when finished...";
             do {
             } while (true);
