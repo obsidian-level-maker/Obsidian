@@ -2742,6 +2742,20 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
   end
 
 
+  -- lighting --
+  -- FIX-ME: transfer dynamic lighting code from ceiling lights to here
+  -- this just disables dynamic light entities if they are used directly
+  -- when Dynamic Lights is off
+  if not PARAM.bool_dynamic_lights then
+    def.thing_14998 = 0
+    def.thing_14997 = 0
+    def.thing_14996 = 0
+    def.thing_14995 = 0
+    def.thing_14994 = 0
+    def.thing_14993 = 0
+    def.thing_14999 = 0
+  end
+
   -- texturing --
 
   if chunk.kind == "hallway" then
