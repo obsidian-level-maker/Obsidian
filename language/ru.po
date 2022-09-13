@@ -6779,11 +6779,11 @@ msgstr "Морпехи ZDoom, тонкая настройка"
 
 #: modules/zdoom_marines.lua:312
 msgid "Fist Marine"
-msgstr ""
+msgstr "Кулачник"
 
 #: modules/zdoom_marines.lua:319
 msgid "Control the amount of Fist-wielding ZDoom Marines."
-msgstr ""
+msgstr "Контролируйте количество морпехов-мастеров рукапашного боя"
 
 #: modules/zdoom_marines.lua:320
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6791,11 +6791,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:326
 msgid "Berserk Marine"
-msgstr ""
+msgstr "Неистовый"
 
 #: modules/zdoom_marines.lua:333
 msgid "Control the amount of Berserked ZDoom Marines."
-msgstr ""
+msgstr "Контролируйте количество морпехов-неистовых в бою"
 
 #: modules/zdoom_marines.lua:334
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6803,11 +6803,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:340
 msgid "Chainsaw Marine"
-msgstr ""
+msgstr "с Бензопилой"
 
 #: modules/zdoom_marines.lua:347
 msgid "Control the amount of Chainsaw-wielding ZDoom Marines."
-msgstr ""
+msgstr "Контролируйте количество морпехов вооруженным бензопилой"
 
 #: modules/zdoom_marines.lua:348
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6815,11 +6815,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:354
 msgid "Pistol Marine"
-msgstr ""
+msgstr "с Пистолетом"
 
 #: modules/zdoom_marines.lua:361
 msgid "Control the amount of Pistol-wielding ZDoom Marines."
-msgstr ""
+msgstr "Контролируйте количество морпехов вооруженным пистолетом"
 
 #: modules/zdoom_marines.lua:362
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6827,11 +6827,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:368
 msgid "Shotgun Marine"
-msgstr ""
+msgstr "с Дробовиком"
 
 #: modules/zdoom_marines.lua:375
 msgid "Control the amount of Shotgun-wielding ZDoom Marines."
-msgstr ""
+msgstr "Контролируйте количество морпехов вооруженным дробовиком"
 
 #: modules/zdoom_marines.lua:376
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6839,11 +6839,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:382
 msgid "SSG Marine"
-msgstr ""
+msgstr "с Двустволкой"
 
 #: modules/zdoom_marines.lua:389
 msgid "Control the amount of Super Shotgun-wielding ZDoom Marines."
-msgstr ""
+msgstr "Контролируйте количество морпехов вооруженным двуствольным дробовиком"
 
 #: modules/zdoom_marines.lua:390
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6851,11 +6851,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:396
 msgid "Chaingun Marine"
-msgstr ""
+msgstr "Пулеметчик"
 
 #: modules/zdoom_marines.lua:403
 msgid "Control the amount of Chaingun-wielding ZDoom Marines."
-msgstr ""
+msgstr "Контролируйте количество морпехов вооруженным пулеметом"
 
 #: modules/zdoom_marines.lua:404
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6863,11 +6863,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:410
 msgid "Rocket Marine"
-msgstr ""
+msgstr "с Ракетницей"
 
 #: modules/zdoom_marines.lua:417
 msgid "Control the amount of Rocket Launcher-wielding ZDoom Marines."
-msgstr ""
+msgstr "Контролируйте количество морпехов вооруженным ракетницей"
 
 #: modules/zdoom_marines.lua:418
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6875,11 +6875,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:424
 msgid "Plasma Marine"
-msgstr ""
+msgstr "Плазмаметчик"
 
 #: modules/zdoom_marines.lua:431
 msgid "Control the amount of Plasma Rifle-wielding ZDoom Marines."
-msgstr ""
+msgstr "Контролируйте количество морпехов вооруженным плазмаганом"
 
 #: modules/zdoom_marines.lua:432
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6887,11 +6887,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:438
 msgid "Railgun Marine"
-msgstr ""
+msgstr "с Рельсотроном"
 
 #: modules/zdoom_marines.lua:445
 msgid "Control the amount of Railgun-wielding ZDoom Marines."
-msgstr ""
+msgstr "Контролируйте количество морпехов вооруженным рельсотроном"
 
 #: modules/zdoom_marines.lua:446
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6899,11 +6899,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:452
 msgid "BFG Marine"
-msgstr ""
+msgstr "с BFG"
 
 #: modules/zdoom_marines.lua:459
 msgid "Control the amount of BFG 9000-wielding ZDoom Marines."
-msgstr ""
+msgstr "Контролируйте количество морпехов вооруженным BFG"
 
 #: modules/zdoom_marines.lua:460
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
