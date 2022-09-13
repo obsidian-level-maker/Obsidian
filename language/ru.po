@@ -243,7 +243,7 @@ msgstr ""
 
 #: modules/chex3/ctl_chex.lua:82
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr "0:0 (Отсутствует),.02:0.02 (Редко),.14:0.14 (Меньше),.5:0.5 (Средне),1.2:1.2 (Больше),3:3 (Много),20:20 (БЕЗУМИЕ)"
+msgstr "0:0 (Отсутствуют),.02:0.02 (Редко),.14:0.14 (Меньше),.5:0.5 (Средне),1.2:1.2 (Больше),3:3 (Много),20:20 (БЕЗУМИЕ)"
 
 #: modules/chex3/ctl_chex.lua:88
 msgid "Bipedicus"
@@ -1563,7 +1563,7 @@ msgstr "Цвет морпехов"
 
 #: modules/gzdoom_marine_closet.lua:1725
 msgid "Lets you choose the color of marines, including option for random color per marine."
-msgstr "Позволяет выбрать цвет цвет брони морпехов, в том числе и случайную окраску на каждого."
+msgstr "Позволяет выбрать цвет брони морпехов, в том числе и случайную окраску на каждого."
 
 #: modules/gzdoom_marine_closet.lua:1732
 msgid "Friendly Fire"
@@ -2195,11 +2195,11 @@ msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:186
 msgid "Disciple"
-msgstr ""
+msgstr "Адепт Д'Спарила"
 
 #: modules/heretic/ctl_heretic.lua:193
 msgid "Control the amount of Disciples."
-msgstr ""
+msgstr "Disciple of D'Sparil. Управление количеством магов-адептов Д'Спарила."
 
 #: modules/heretic/ctl_heretic.lua:194
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -2231,15 +2231,15 @@ msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:228
 msgid "Ophidian"
-msgstr "Офидиан"
+msgstr "Змееподобный"
 
 #: modules/heretic/ctl_heretic.lua:235
 msgid "Control the amount of Ophidians."
-msgstr "Ophidian. Управление количеством офидианов."
+msgstr "Ophidian. Управление количеством человекозмеев."
 
 #: modules/heretic/ctl_heretic.lua:236
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""Ophidian. Управление количеством офидианов.. Управление количеством .
+msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:242
 msgid "Ironlich"
@@ -2447,7 +2447,7 @@ msgstr "Зелёный"
 
 #: modules/heretic/sky_generator.lua:61
 msgid "Jade"
-msgstr "Нефритовый (желтовато-зелёный)"
+msgstr "Нефритовый, желтовато-зелёный"
 
 #: modules/heretic/sky_generator.lua:62
 msgid "Dark Red"
@@ -3691,7 +3691,7 @@ msgstr "Множитель размеров комнат"
 
 #: modules/miscellaneous.lua:320
 msgid "Alters the general size and ground coverage of rooms.\n\nVanilla: No room size multipliers.\n\nMix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest."
-msgstr "Изменяет общий размер комнат.\n\nКак в оригинале: множитель равен единице, то есть изменения нет.\n\nСлучайно: все диапазоны множителей используются случайным образом, притом вероятность выбора крайних значений резко снижается (по распределению Гаусса-Лапласа)."
+msgstr "Изменяет средний размер комнат в целом.\n\nКак в оригинале: множитель равен единице, то есть изменения нет.\n\nСлучайно: все диапазоны множителей используются случайным образом, притом вероятность выбора крайних значений резко снижается (по распределению Гаусса-Лапласа)."
 
 #: modules/miscellaneous.lua:325
 msgid "Area Count Multiplier"
@@ -3731,7 +3731,7 @@ msgstr "Обширные комнаты"
 
 #: modules/miscellaneous.lua:366
 msgid "Raises upper limits on individual room growth"
-msgstr "Повышает предел размеров каждой конкретной комнаты."
+msgstr "Повышает шанс того, что каждая конкретная комнаты будет увеличена в размерах."
 
 #: modules/miscellaneous.lua:369
 msgid "Big Outdoors"
@@ -3811,11 +3811,11 @@ msgstr "Влияет на количество симметричных дета
 
 #: modules/miscellaneous.lua:433
 msgid "Beams"
-msgstr "Балки"
+msgstr "Вертикальные балки"
 
 #: modules/miscellaneous.lua:435
 msgid "Allows the appearance of thin pillars to appear between the borders of different elevations."
-msgstr "Позволяет OBSIDIAN использовать тонкие колонны для поддержки потолков на границах разных высот."
+msgstr "Позволяет OBSIDIAN использовать тонкие колонны для \"поддержки\" потолков на границах разных высот."
 
 #: modules/miscellaneous.lua:440
 msgid "Fences"
@@ -3827,7 +3827,7 @@ msgstr "Создание толстых непроходимых заборов 
 
 #: modules/miscellaneous.lua:447
 msgid "Porches\\Gazebos"
-msgstr "Террасы/беседки"
+msgstr "Террасы и беседки"
 
 #: modules/miscellaneous.lua:449
 msgid "Occasional outdoor areas with a lowered indoor-ish ceiling."
@@ -3847,11 +3847,11 @@ msgstr "Красивые виды вне карты"
 
 #: modules/miscellaneous.lua:463
 msgid "Controls the amount of fancy scenics visible at room bordering the maps."
-msgstr "Контролирует количество красивых пейзажей во внеигровой зоне."
+msgstr "Управляет количеством красивых пейзажей во внеигровой зоне."
 
 #: modules/miscellaneous.lua:470
 msgid "Sink Style"
-msgstr "Резкость границ акваторий"
+msgstr "Очертания акваторий"
 
 #: modules/miscellaneous.lua:472
 msgid "Determines the style for corners with sunken ceilings and floors. Curved makes sink corners soft, while Sharp leaves the corners angular. Per Theme means choice is controlled by theme profile instead. Tech-ish maps favor sharp corners while hell-ish favor curved."
@@ -3863,15 +3863,15 @@ msgstr "Акватории"
 
 #: modules/miscellaneous.lua:481
 msgid "Enables or disables liquid sinks. Liquid sinks are walkable floors that are often converted into depressions with the level's liquid. May greatly inconvenience the player but default Oblige behavior is 'Yes'."
-msgstr "Управляет появлением акваторий — углублённых локаций с жидкостью, наиболее широко используемой на текущем уровне. Может доставлять много неудобств игроку, однако в Oblige по умолчанию стоит \"Да\" (создавать)."
+msgstr "Управляет появлением луж, стоков, шлюзов и других небольших углублённых локаций с жидкостью, наиболее широко используемой на текущем уровне. Может доставлять много неудобств игроку, однако в Oblige по умолчанию стоит \"Да\" (создавать)."
 
 #: modules/miscellaneous.lua:488
 msgid "Dark Outdoors"
-msgstr "Тёмные пространства под небом"
+msgstr "Тёмное пространство под небом"
 
 #: modules/miscellaneous.lua:489
 msgid "Affects the chance of a level having darker skies."
-msgstr "Влияет на шанс появления на уровне тёмного неба."
+msgstr "Влияет на интенсивность естественного света на открытых областях."
 
 #: modules/miscellaneous.lua:494
 msgid "Outdoor Shadows"
@@ -4199,7 +4199,7 @@ msgstr ""
 
 #: modules/prefab_controller.lua:94
 msgid "I LOVE IT"
-msgstr ""
+msgstr "МАКСИМУМ"
 
 #: modules/prefab_controller.lua:178
 msgid "Advanced Level Control"
@@ -4359,11 +4359,11 @@ msgstr "Включает или отключает префабы, для кот
 
 #: modules/prefab_controller.lua:410
 msgid "Damaging Hallways"
-msgstr "Наносящие урон коридоры"
+msgstr "Наносящие урон жидкости"
 
 #: modules/prefab_controller.lua:412
 msgid "Changes the liquids on hallways with damaging floors to either be damaging (default) or non-damaging."
-msgstr "Настройка, отвечающая за то, будут ли наносить урон жидкости, разлитые в коридорах. По умолчанию урон наносится."
+msgstr "Настройка, отвечающая за то, будут ли наносить урон жидкости, разлитые на локациях. По умолчанию урон наносится."
 
 #: modules/prefab_controller.lua:424
 msgid "Match Theme"
@@ -6779,11 +6779,11 @@ msgstr "Морпехи ZDoom, тонкая настройка"
 
 #: modules/zdoom_marines.lua:312
 msgid "Fist Marine"
-msgstr ""
+msgstr "Кулачники"
 
 #: modules/zdoom_marines.lua:319
 msgid "Control the amount of Fist-wielding ZDoom Marines."
-msgstr ""
+msgstr "Управление количеством морпехов-мастеров рукопашного боя."
 
 #: modules/zdoom_marines.lua:320
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6791,11 +6791,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:326
 msgid "Berserk Marine"
-msgstr ""
-
+msgstr "Под Берсерком"
+                	
 #: modules/zdoom_marines.lua:333
 msgid "Control the amount of Berserked ZDoom Marines."
-msgstr ""
+msgstr "Управление количеством морпехов под действием бонуса Берсерка."
 
 #: modules/zdoom_marines.lua:334
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6803,11 +6803,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:340
 msgid "Chainsaw Marine"
-msgstr ""
+msgstr "С бензопилой"
 
 #: modules/zdoom_marines.lua:347
 msgid "Control the amount of Chainsaw-wielding ZDoom Marines."
-msgstr ""
+msgstr "Управление количеством морпехов, вооружённых бензопилой."
 
 #: modules/zdoom_marines.lua:348
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6815,11 +6815,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:354
 msgid "Pistol Marine"
-msgstr ""
+msgstr "С пистолетом"
 
 #: modules/zdoom_marines.lua:361
 msgid "Control the amount of Pistol-wielding ZDoom Marines."
-msgstr ""
+msgstr "Управление количеством морпехов, вооружённых пистолетом."
 
 #: modules/zdoom_marines.lua:362
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6827,11 +6827,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:368
 msgid "Shotgun Marine"
-msgstr ""
+msgstr "С дробовиком"
 
 #: modules/zdoom_marines.lua:375
 msgid "Control the amount of Shotgun-wielding ZDoom Marines."
-msgstr ""
+msgstr "Управление количеством морпехов, вооружённых дробовиком."
 
 #: modules/zdoom_marines.lua:376
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6839,11 +6839,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:382
 msgid "SSG Marine"
-msgstr ""
+msgstr "С двустволкой"
 
 #: modules/zdoom_marines.lua:389
 msgid "Control the amount of Super Shotgun-wielding ZDoom Marines."
-msgstr ""
+msgstr "Управление количеством морпехов, вооружённых двуствольным дробовиком."
 
 #: modules/zdoom_marines.lua:390
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6851,11 +6851,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:396
 msgid "Chaingun Marine"
-msgstr ""
+msgstr "Пулемётчики"
 
 #: modules/zdoom_marines.lua:403
 msgid "Control the amount of Chaingun-wielding ZDoom Marines."
-msgstr ""
+msgstr "Управление количеством морпехов, вооружённых пулеметом."
 
 #: modules/zdoom_marines.lua:404
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6863,11 +6863,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:410
 msgid "Rocket Marine"
-msgstr ""
+msgstr "Ракетомётчики"
 
 #: modules/zdoom_marines.lua:417
 msgid "Control the amount of Rocket Launcher-wielding ZDoom Marines."
-msgstr ""
+msgstr "Управление количеством морпехов, вооружённых ракетницей."
 
 #: modules/zdoom_marines.lua:418
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6875,11 +6875,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:424
 msgid "Plasma Marine"
-msgstr ""
+msgstr "Плазмомётчик"
 
 #: modules/zdoom_marines.lua:431
 msgid "Control the amount of Plasma Rifle-wielding ZDoom Marines."
-msgstr ""
+msgstr "Управление количеством морпехов, вооружённых плазмаганом."
 
 #: modules/zdoom_marines.lua:432
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6887,11 +6887,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:438
 msgid "Railgun Marine"
-msgstr ""
+msgstr "С рельсотроном"
 
 #: modules/zdoom_marines.lua:445
 msgid "Control the amount of Railgun-wielding ZDoom Marines."
-msgstr ""
+msgstr "Управление количеством морпехов, вооружённых рельсотроном (рельсовой пушкой/рейлганом)."
 
 #: modules/zdoom_marines.lua:446
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -6899,11 +6899,11 @@ msgstr ""
 
 #: modules/zdoom_marines.lua:452
 msgid "BFG Marine"
-msgstr ""
+msgstr "С BFG9000"
 
 #: modules/zdoom_marines.lua:459
 msgid "Control the amount of BFG 9000-wielding ZDoom Marines."
-msgstr ""
+msgstr "Управление количеством морпехов, вооружённых BFG9000."
 
 #: modules/zdoom_marines.lua:460
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -7171,7 +7171,7 @@ msgstr "Имитировать стиль IWAD"
 
 #: scripts/iwad_mode.lua:1800
 msgid "Attempts to mimic various architectural features seen in the Doom IWAD maps. Only Doom 2 is supported right now while Doom is in the works but not implemented yet.\nNOTE: This will override settings in other parts of the program such as Level Size, Room Size, etc!"
-msgstr "OBSIDIAN будет пытатсья создавать уровни, подобные тем, что представлены в выбранном IWAD.\nПРИМЕЧАНИЕ: Эта опция переопределит абсолютное большинство остальных настроек уровней, монстров и предметов."
+msgstr "OBSIDIAN будет пытаться создавать уровни, подобные тем, что представлены в выбранном IWAD.\nПРИМЕЧАНИЕ: Эта опция переопределит абсолютное большинство остальных настроек уровней, монстров и предметов."
 
 #: source_files/obsidian_main/g_doom.cc:226
 msgid "Unable to create wad file:\n\n%s"
@@ -7336,6 +7336,10 @@ msgstr "Исключение: \n{}"
 #: source_files/obsidian_main/m_about.cc:163
 msgid "About OBSIDIAN"
 msgstr "Об OBSIDIAN"
+
+#: source_files/obsidian_main/m_about.cc:104
+msgid "OBSIDIAN is a random level generator\nfor classic FPS games like DOOM.\nIt is a continuation of the OBLIGE Level Maker\nCopyright (C) 2006-2017 Andrew Apted, et al.\nThis program is free software, and may be\ndistributed and modified under the terms of\nthe GNU General Public License.\nThere is ABSOLUTELY NO WARRANTY!\nUse at your OWN RISK!"
+msgstr ""
 
 #: source_files/obsidian_main/m_dialog.cc:217
 msgid "OBSIDIAN - Error Message"
@@ -7752,6 +7756,66 @@ msgstr "АВТО"
 #: source_files/obsidian_main/m_tutorial.cc:474
 msgid "OBSIDIAN Tutorial"
 msgstr "Руководство OBSIDIAN"
+
+#: source_files/obsidian_main/m_tutorial.cc:107
+msgid "<center>Welcome to OBSIDIAN Level Maker! This quick tutorial will teach you the basics of navigating the user interface.</center>"
+msgstr "<center>Добро пожаловать в генератор уровней OBSIDIAN! Это краткое руководство расскажет об основах интерфейса.</center>"
+
+#: source_files/obsidian_main/m_tutorial.cc:115
+msgid "Next"
+msgstr "Далее"
+
+#: source_files/obsidian_main/m_tutorial.cc:122
+msgid "Back"
+msgstr "Назад"
+
+#: source_files/obsidian_main/m_tutorial.cc:398
+msgid "Finish"
+msgstr "Закрыть"
+
+#: source_files/obsidian_main/m_tutorial.cc:137
+msgid "<center>Game Settings, in the upper left area of the program window, contains all you need to build your very first WAD. Select the Game you would like to build a WAD for, the Engine that it will be played on, the Length (number of maps) of the WAD, and the Theme that you would like it to have. Once you press 'Build', you will be prompted to choose a location and filename for your WAD. After that, your WAD will be generated and saved to the location that you specified.\n\nNOTE: If you select 'Vanilla Doom' for the engine, an alternate map generator will be used to create your WAD. Although this WAD will be compatible with all engines, it is much simpler in nature than the maps made by Obsidian's main generator.</center>"
+msgstr "<center>Общие настройки в левой-верхней части окна программы содержат всё, что нужно для быстрого создания файла уровней (*.WAD). Выберите игру, для которой вы хотите создать WAD, игровой движок, длину (количество карт) сборника, а также его общую тему. Как только Вы нажмете «Создать», Вам будет предложено выбрать место и имя файла для вашего WAD. После этого сборник будет сгенерирован и сохранен в указанном Вами месте.   ПРИМЕЧАНИЕ. Если Вы выберете «Ванильный Doom» в качестве движка, для создания Вашего WAD будет использоваться альтернативный генератор карт. Такой WAD будет совместим абсолютно со всеми движками, однако структура уровней в нём будет намного проще по сравнению с картами, созданными основным генератором Obsidian.</center>"
+
+#: source_files/obsidian_main/m_tutorial.cc:166
+msgid "<center>At some point, you will want to have more control over the contents of the WADs that you generate. This is where modules come into play. Modules are groups of options that can be changed to fine-tune your experience. Most modules are optional, and will need to be enabled or disabled accordingly.</center>"
+msgstr "<center>В какой-то момент Вы, вероятно, пожелаете управлять всем содержимым создаваемых Вами уровней. В этом случае Вам понадобятся разделы (модули) тонкого контроля; параметры для точной настройки, используемые в них, сгруппированы по смыслу. Большинство разделов являются необязательными и могут быть отключены (свёрнуты), и в этом случае настройки из них не будут применяться к генерации.</center>"
+
+#: source_files/obsidian_main/m_tutorial.cc:195
+msgid "<center>Some modules do not have any additional options to configure, and only need to be enabled or disabled. To enable them, simply click the checkbox to the left of their name. To disable them, clear the same checkbox by clicking it again.</center>"
+msgstr "<center>Некоторые разделы не имеют дополнительных параметров для настройки, их можно лишь включить или отключить. Чтобы включить их, просто установите флажок слева от их имени. Чтобы отключить их, снимите этот же флажок, нажав на него еще раз.</center>"
+
+#: source_files/obsidian_main/m_tutorial.cc:224
+msgid "<center>Other modules will have options that you can adjust after you enable them. These modules will have a + symbol next to their name instead of a checkbox. To enable them, click the + symbol. The + will turn into a - and the module will expand to show its options. Once you have adjusted these options, you MUST LEAVE THE MODULE EXPANDED for them to take effect. To disable the module, click the - symbol. It will collapse and the - will turn back into a +</center>"
+msgstr "<center>Другие разделы имеют параметры. Они вместо флажка будут иметь символ \"+\" рядом с их именем (в стандартной теме). Чтобы включить их, щёлкните символ \"+\", и тогда ниже развернётся список доступных параметров, а сам символ превратится в \"-\". После настройки параметров НЕОБХОДИМО ОСТАВИТЬ РАЗДЕЛ РАЗВЁРНУТЫМ для того, чтобы они вступили в силу. Вновь отключить раздел можно повторным нажатием на символ \"-\".</center>"
+
+#: source_files/obsidian_main/m_tutorial.cc:252
+msgid "<center>Module options come in three different flavors: Checkboxes, drop-down menus, and sliders. Checkboxes and drop-down menus are fairly self-explanatory, but we will cover some of the more advanced slider functions.</center>"
+msgstr "<center>Параметры раздела представлены в виде флажков, выпадающих меню и ползунков/слайдеров. Флажки и раскрывающиеся меню говорят сами за себя, но на следующей странице мы рассмотрим некоторые из сложных функций ползунка.</center>"
+
+#: source_files/obsidian_main/m_tutorial.cc:280
+msgid "<center>Some sliders will have an inverted triangle icon in the top right corner. Clicking this will show a menu with various choices. With the exception of 'Use Slider Value', these will ignore the number that the slider is set to in favor of a different means of determining the related value.</center>"
+msgstr "<center>Некоторые слайдеры имеют значок перёвернутого треугольника в правом-верхнем углу. Нажав на него, Вы увидите меню с различными вариантами. Практически все из них, за исключением пункта «Использовать слайдер», будут игнорировать установленное число, используя иной способ определения связанного значения.</center>"
+
+#: source_files/obsidian_main/m_tutorial.cc:308
+msgid "<center>All sliders will have a pair of brackets in the top right corner. Clicking these will open a dialog box where you can enter a value manually instead of using the slider handle or arrow buttons.</center>"
+msgstr "<center>Все слайдеры имеют пару квадратных скобок в правом верхнем углу. При нажатии на них откроется диалоговое окно, в котором Вы можете ввести значение вручную.</center>"
+
+#: source_files/obsidian_main/m_tutorial.cc:336
+msgid "<center>At first, the amount of settings in Obsidian can seem daunting. To help with this, every option has several helper widgets. To reset any option to its default value, click the \"rollback\" icon in the upper right corner. For a brief explanation of an option, a tooltip can be shown by hovering your cursor over the option title. In addition, there is a question mark icon in the top right corner of each option that can be clicked to open a window with a more detailed explanation.</center>"
+msgstr "<center>Поначалу количество настроек в Obsidian может выглядеть пугающим. Однако у каждой опции есть несколько облегчающих восприятие и работу функций. Во-первых, всплывающая подсказка при наведении курсора мыши на заглавие параметра. Во-вторых, сброс любого параметра до значения по умолчанию по нажатию на стрелочку справа от опции. В-третих, также справа от каждой настройки есть значок вопросительного знака, по которому можно щёлкнуть, чтобы открыть окно с (зачастую) более подробным объяснением.</center>"
+
+#: source_files/obsidian_main/m_tutorial.cc:364
+msgid "<center>Addons are a way to enhance the Obsidian experience further by adding new content, modules, and options. They come in the form of *.pk3 files that must be placed in the /addons folder of your Obsidian install before starting the program. Once there, they can be viewed, enabled, or disabled by clicking the \"Addons\" menu located in the top bar of the program. Good sources for new addons are either<br /><A HREF='https://github.com/GTD-Carthage/Obsidian-Addons'>the public Obsidian-Addons repo</A> or the #addon-files channel of our Discord.</center>"
+msgstr "<center>Аддоны — это способ ещё больше улучшить возможности Obsidian путём добавления нового контента, разделов и параметров. Они поставляются в виде файлов *.pk3, для подключения которых необходимо перед запуском программы поместить их в папку \"/addons\" внутри установочной директории Obsidian. После этого их можно просматривать, включать или отключать, нажав на пункт «Дополнения», расположенное в верхнем горизонтальном меню программы. Хорошие источники новых дополнений — <A HREF='https://github.com/GTD-Carthage/Obsidian-Addons'>общедоступный репозиторий Obsidian-Addons</A>, а также канал #addon-files нашего Discord-сервера.</center>"
+
+#: source_files/obsidian_main/m_tutorial.cc:392
+msgid "<center>If, for whatever reason, you receive an error while building, you can view Obsidian's logs by pressing F6 or selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, there is a LOGS.txt file with the same information that is stored in the same folder as obsidian.exe. This file is overwritten each time you start the program, so be sure to save this information elsewhere or use the log preservation options from the File->Options menu if you need to refer to it later! These logs are extremely important when seeking help or filing bug reports!</center>"
+msgstr "<center>Если Вы получите сообщение об ошибке во время сборки, можно просмотреть журнал Obsidian, нажав F6 или выбрав \"Помощь\"->\"Просмотр лога\" в меню программы. Там же можно сохранить содержимое журнала в отдельный файл. Кроме того, в каталоге с исполняемым файлом Obsidian существует файл LOGS.txt с аналогичной информацией. Этот файл перезаписывается при каждом запуске программы, поэтому обязательно сохраните информацию об ошибке в другом месте или используйте параметры сохранения журнала из меню \"Файл\"->\"Опции\"! Журналирование чрезвычайно важно при поиске ошибок!</center>"
+
+#: source_files/obsidian_main/m_tutorial.cc:416
+msgid "<center>There are more options to explore within Obsidian, but this should be enough to get you started. The tutorial can be viewed again at any time by choosing Help->Tutorial from the program menu.\n\nIf you need more help, please ask in our Discord (invite link <A HREF='https://discord.gg/dfqCt9v'>https://discord.gg/dfqCt9v</A>) or check our wiki at <A HREF='https://github.com/dashodanger/Obsidian/wiki'>https://github.com/dashodanger/Obsidian/wiki</A>.\n\nGood luck in the infinite Hells!</center>"
+msgstr "<center>Obsidian можно изучать гораздо дольше, но этой информации для начала должно быть более чем достаточно. Руководство можно снова просмотреть в любое время, выбрав пункт меню \"Помощь\"->\"Руководство\". Если нужна дополнительная помощь, Вы можете спросить в нашем Discord-сервере (ссылка-приглашение: <A HREF='https://discord.gg/dfqCt9v'>https://discord.gg/dfqCt9v</A>) или посетить Википедию Obsidian по адресу <A HREF='https://github.com/dashodanger/Obsidian/wiki'>https://github.com/dashodanger/Obsidian/wiki</A>. Удачи в бесконечных проявлениях Ада!</center>"
 
 #: source_files/obsidian_main/ui_build.cc:32
 msgid "Progress and minimap display.\nMinimap Legend:\nWhite - Regular rooms\nBrown - Caves\nBlue - Outdoors\nGreen - Parks"
