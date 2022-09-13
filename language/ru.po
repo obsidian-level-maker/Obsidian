@@ -2195,11 +2195,11 @@ msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:186
 msgid "Disciple"
-msgstr ""
+msgstr "Адепт Д'Спарила"
 
 #: modules/heretic/ctl_heretic.lua:193
 msgid "Control the amount of Disciples."
-msgstr ""
+msgstr "Disciple of D'Sparil. Управление количеством магов-адептов Д'Спарила."
 
 #: modules/heretic/ctl_heretic.lua:194
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
@@ -2231,15 +2231,15 @@ msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:228
 msgid "Ophidian"
-msgstr "Офидиан"
+msgstr "Змееподобный"
 
 #: modules/heretic/ctl_heretic.lua:235
 msgid "Control the amount of Ophidians."
-msgstr "Ophidian. Управление количеством офидианов."
+msgstr "Ophidian. Управление количеством человекозмеев."
 
 #: modules/heretic/ctl_heretic.lua:236
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""Ophidian. Управление количеством офидианов.. Управление количеством .
+msgstr ""
 
 #: modules/heretic/ctl_heretic.lua:242
 msgid "Ironlich"
