@@ -15,7 +15,7 @@
  *     https://www.fltk.org/bugs.php
  */
 
- /*
+/*
  * Important note: this header file includes '<config.h>' !
  *
  * This header MUST NOT be included in public headers (i.e. in 'FL/') and
@@ -24,17 +24,17 @@
  */
 
 #ifndef flstring_h
-#  define flstring_h
+#define flstring_h
 
-#  include <FL/Fl_Export.H>
-#  include <config.h>
-#  include <stdio.h>
-#  include <stdarg.h>
-#  include <string.h>
-#  ifdef HAVE_STRINGS_H
-#    include <strings.h>
-#  endif /* HAVE_STRINGS_H */
-#  include <ctype.h>
+#include <FL/Fl_Export.H>
+#include <config.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
+#ifdef HAVE_STRINGS_H
+#include <strings.h>
+#endif /* HAVE_STRINGS_H */
+#include <ctype.h>
 
 /*
  * Apparently Unixware defines "index" to strchr (!) rather than
@@ -42,9 +42,9 @@
  * BSD function.  Make sure index is not defined...
  */
 
-#  ifdef index
-#    undef index
-#  endif /* index */
+#ifdef index
+#undef index
+#endif /* index */
 
 /*
  * Visual C++ 2005 incorrectly displays a warning about the use of
@@ -52,24 +52,24 @@
  * Some of these functions are also defined in ISO C99...
  */
 
-#  if defined(_WIN32) && !defined(__CYGWIN__) && !defined(__MINGW32__)
-#    define strcasecmp(s,t)     _stricmp((s), (t))
-#    define strncasecmp(s,t,n)  _strnicmp((s), (t), (n))
-#  endif /* _WIN32 && ... */
+#if defined(_WIN32) && !defined(__CYGWIN__) && !defined(__MINGW32__)
+#define strcasecmp(s, t) _stricmp((s), (t))
+#define strncasecmp(s, t, n) _strnicmp((s), (t), (n))
+#endif /* _WIN32 && ... */
 
-#  ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
-#  endif /* __cplusplus */
+#endif /* __cplusplus */
 
 FL_EXPORT extern int fl_snprintf(char *, size_t, const char *, ...);
-#  ifndef HAVE_SNPRINTF
-#    define snprintf fl_snprintf
-#  endif /* !HAVE_SNPRINTF */
+#ifndef HAVE_SNPRINTF
+#define snprintf fl_snprintf
+#endif /* !HAVE_SNPRINTF */
 
 FL_EXPORT extern int fl_vsnprintf(char *, size_t, const char *, va_list ap);
-#  ifndef HAVE_VSNPRINTF
-#    define vsnprintf fl_vsnprintf
-#  endif /* !HAVE_VSNPRINTF */
+#ifndef HAVE_VSNPRINTF
+#define vsnprintf fl_vsnprintf
+#endif /* !HAVE_VSNPRINTF */
 
 /*
  * strlcpy() and strlcat() are some really useful BSD string functions
@@ -77,14 +77,14 @@ FL_EXPORT extern int fl_vsnprintf(char *, size_t, const char *, va_list ap);
  */
 
 FL_EXPORT extern size_t fl_strlcat(char *, const char *, size_t);
-#  ifndef HAVE_STRLCAT
-#    define strlcat fl_strlcat
-#  endif /* !HAVE_STRLCAT */
+#ifndef HAVE_STRLCAT
+#define strlcat fl_strlcat
+#endif /* !HAVE_STRLCAT */
 
 FL_EXPORT extern size_t fl_strlcpy(char *, const char *, size_t);
-#  ifndef HAVE_STRLCPY
-#    define strlcpy fl_strlcpy
-#  endif /* !HAVE_STRLCPY */
+#ifndef HAVE_STRLCPY
+#define strlcpy fl_strlcpy
+#endif /* !HAVE_STRLCPY */
 
 /*
  * Locale independent ASCII string compare function,
@@ -92,8 +92,8 @@ FL_EXPORT extern size_t fl_strlcpy(char *, const char *, size_t);
  */
 FL_EXPORT extern int fl_ascii_strcasecmp(const char *s, const char *t);
 
-#  ifdef __cplusplus
+#ifdef __cplusplus
 }
-#  endif /* __cplusplus */
+#endif /* __cplusplus */
 
 #endif /* !flstring_h */

@@ -25,17 +25,21 @@
 */
 
 void Fl_Xlib_Graphics_Driver::arc_unscaled(int x, int y, int w, int h, double a1, double a2) {
-  if (w <= 0 || h <= 0) return;
+  if (w <= 0 || h <= 0)
+    return;
   x += floor(offset_x_);
   y += floor(offset_y_);
-  XDrawArc(fl_display, fl_window, gc_, x, y, w, h, int(a1*64),int((a2-a1)*64));
+  XDrawArc(fl_display, fl_window, gc_, x, y, w, h, int(a1 * 64), int((a2 - a1) * 64));
 }
 
-void Fl_Xlib_Graphics_Driver::pie_unscaled(int x, int y, int w, int h, double a1,double a2) {
-  if (w <= 2 || h <= 2) return;
+void Fl_Xlib_Graphics_Driver::pie_unscaled(int x, int y, int w, int h, double a1, double a2) {
+  if (w <= 2 || h <= 2)
+    return;
   x += floor(offset_x_);
   y += floor(offset_y_);
   int extra = scale() >= 3 ? 1 : 0;
-  XDrawArc(fl_display, fl_window, gc_, x+1+extra, y+1+extra, w-2-2*extra, h-2-2*extra, int(a1*64), int((a2-a1)*64));
-  XFillArc(fl_display, fl_window, gc_, x+1, y+1, w-2, h-2, int(a1*64), int((a2-a1)*64));
+  XDrawArc(fl_display, fl_window, gc_, x + 1 + extra, y + 1 + extra, w - 2 - 2 * extra,
+           h - 2 - 2 * extra, int(a1 * 64), int((a2 - a1) * 64));
+  XFillArc(fl_display, fl_window, gc_, x + 1, y + 1, w - 2, h - 2, int(a1 * 64),
+           int((a2 - a1) * 64));
 }

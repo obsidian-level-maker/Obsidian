@@ -22,6 +22,7 @@
 
 class Fl_Quartz_Image_Surface_Driver : public Fl_Image_Surface_Driver {
   virtual void end_current();
+
 public:
   Window pre_window;
   Fl_Quartz_Image_Surface_Driver(int w, int h, int high_res, Fl_Offscreen off);

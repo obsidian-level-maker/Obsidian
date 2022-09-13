@@ -22,17 +22,21 @@
 #ifndef FL_TEXT_BUFFER_H
 #define FL_TEXT_BUFFER_H
 
-#include <stdarg.h>     /* va_list */
+#include <stdarg.h> /* va_list */
 
 #undef ASSERT_UTF8
 
 #ifdef ASSERT_UTF8
-# include <assert.h>
-# define IS_UTF8_ALIGNED(a) if (a && *a) assert(fl_utf8len(*(a))>0);
-# define IS_UTF8_ALIGNED2(a, b) if (b>=0 && b<a->length()) assert(fl_utf8len(a->byte_at(b))>0);
+#include <assert.h>
+#define IS_UTF8_ALIGNED(a) \
+  if (a && *a)             \
+    assert(fl_utf8len(*(a)) > 0);
+#define IS_UTF8_ALIGNED2(a, b)   \
+  if (b >= 0 && b < a->length()) \
+    assert(fl_utf8len(a->byte_at(b)) > 0);
 #else
-# define IS_UTF8_ALIGNED(a)
-# define IS_UTF8_ALIGNED2(a, b)
+#define IS_UTF8_ALIGNED(a)
+#define IS_UTF8_ALIGNED2(a, b)
 #endif
 
 
@@ -98,7 +102,6 @@ class FL_EXPORT Fl_Text_Selection {
   friend class Fl_Text_Buffer;
 
 public:
-
   // Sets the selection range and selected().
   void set(int startpos, int endpos);
 
@@ -166,19 +169,17 @@ public:
   int position(int *startpos, int *endpos) const;
 
 protected:
-
-  int mStart;         ///< byte offset to the first selected character
-  int mEnd;           ///< byte offset to the character after the last selected character
-  bool mSelected;     ///< this flag is set if any text is selected
+  int mStart;     ///< byte offset to the first selected character
+  int mEnd;       ///< byte offset to the character after the last selected character
+  bool mSelected; ///< this flag is set if any text is selected
 };
 
 
-typedef void (*Fl_Text_Modify_Cb)(int pos, int nInserted, int nDeleted,
-                                  int nRestyled, const char* deletedText,
-                                  void* cbArg);
+typedef void (*Fl_Text_Modify_Cb)(int pos, int nInserted, int nDeleted, int nRestyled,
+                                  const char *deletedText, void *cbArg);
 
 
-typedef void (*Fl_Text_Predelete_Cb)(int pos, int nDeleted, void* cbArg);
+typedef void (*Fl_Text_Predelete_Cb)(int pos, int nDeleted, void *cbArg);
 
 
 /**
@@ -195,7 +196,6 @@ typedef void (*Fl_Text_Predelete_Cb)(int pos, int nDeleted, void* cbArg);
  */
 class FL_EXPORT Fl_Text_Buffer {
 public:
-
   /**
    Create an empty text buffer of a pre-determined size.
    \param requestedSize use this to avoid unnecessary re-allocation
@@ -223,13 +223,13 @@ public:
    must free.
    \return newly allocated text buffer - must be free'd, text is UTF-8
    */
-  char* text() const;
+  char *text() const;
 
   /**
    Replaces the entire contents of the text buffer.
    \param text Text must be valid UTF-8. If null, an empty string is substituted.
    */
-  void text(const char* text);
+  void text(const char *text);
 
   /**
    \brief Get a copy of a part of the text buffer.
@@ -241,7 +241,7 @@ public:
    \param end byte offset after last character in range
    \return newly allocated text buffer - must be free'd, text is UTF-8
    */
-  char* text_range(int start, int end) const;
+  char *text_range(int start, int end) const;
 
   /**
    Returns the character at the specified position \p pos in the buffer.
@@ -264,32 +264,34 @@ public:
    \param pos byte offset into buffer
    \return byte offset converted to a memory address
    */
-  const char *address(int pos) const
-  { return (pos < mGapStart) ? mBuf+pos : mBuf+pos+mGapEnd-mGapStart; }
+  const char *address(int pos) const {
+    return (pos < mGapStart) ? mBuf + pos : mBuf + pos + mGapEnd - mGapStart;
+  }
 
   /**
    Convert a byte offset in buffer into a memory address.
    \param pos byte offset into buffer
    \return byte offset converted to a memory address
    */
-  char *address(int pos)
-  { return (pos < mGapStart) ? mBuf+pos : mBuf+pos+mGapEnd-mGapStart; }
+  char *address(int pos) {
+    return (pos < mGapStart) ? mBuf + pos : mBuf + pos + mGapEnd - mGapStart;
+  }
 
   /**
    Inserts null-terminated string \p text at position \p pos.
    \param pos insertion position as byte offset (must be UTF-8 character aligned)
    \param text UTF-8 encoded and nul terminated text
    */
-  void insert(int pos, const char* text);
+  void insert(int pos, const char *text);
 
   /**
    Appends the text string to the end of the buffer.
    \param t UTF-8 encoded and nul terminated text
    */
-  void append(const char* t) { insert(length(), t); }
+  void append(const char *t) { insert(length(), t); }
 
   void vprintf(const char *fmt, va_list ap);
-  void printf(const char* fmt, ...);
+  void printf(const char *fmt, ...);
 
   /**
    Deletes a range of characters in the buffer.
@@ -314,18 +316,18 @@ public:
    \param fromEnd byte offset into buffer
    \param toPos destination byte offset into buffer
    */
-  void copy(Fl_Text_Buffer* fromBuf, int fromStart, int fromEnd, int toPos);
+  void copy(Fl_Text_Buffer *fromBuf, int fromStart, int fromEnd, int toPos);
 
   /**
    Undo text modification according to the undo variables or insert text
    from the undo buffer
    */
-  int undo(int *cp=0);
+  int undo(int *cp = 0);
 
   /**
    Lets the undo system know if we can undo changes
    */
-  void canUndo(char flag=1);
+  void canUndo(char flag = 1);
 
   /**
    Inserts a file at the specified position.
@@ -342,19 +344,23 @@ public:
    will warn the user about this.
    \see input_file_was_transcoded and transcoding_warning_action.
    */
-  int insertfile(const char *file, int pos, int buflen = 128*1024);
+  int insertfile(const char *file, int pos, int buflen = 128 * 1024);
 
   /**
    Appends the named file to the end of the buffer. See also insertfile().
    */
-  int appendfile(const char *file, int buflen = 128*1024)
-  { return insertfile(file, length(), buflen); }
+  int appendfile(const char *file, int buflen = 128 * 1024) {
+    return insertfile(file, length(), buflen);
+  }
 
   /**
    Loads a text file into the buffer. See also insertfile().
    */
-  int loadfile(const char *file, int buflen = 128*1024)
-  { select(0, length()); remove_selection(); return appendfile(file, buflen); }
+  int loadfile(const char *file, int buflen = 128 * 1024) {
+    select(0, length());
+    remove_selection();
+    return appendfile(file, buflen);
+  }
 
   /**
    Writes the specified portions of the text buffer to a file.
@@ -366,7 +372,7 @@ public:
 
    \see savefile(const char *file, int buflen)
    */
-  int outputfile(const char *file, int start, int end, int buflen = 128*1024);
+  int outputfile(const char *file, int start, int end, int buflen = 128 * 1024);
 
   /**
    Saves a text file from the current buffer.
@@ -378,8 +384,9 @@ public:
 
    \see outputfile(const char *file, int start, int end, int buflen)
    */
-  int savefile(const char *file, int buflen = 128*1024)
-  { return outputfile(file, 0, length(), buflen); }
+  int savefile(const char *file, int buflen = 128 * 1024) {
+    return outputfile(file, 0, length(), buflen);
+  }
 
   /**
    Gets the tab width.
@@ -413,14 +420,14 @@ public:
   /**
    Gets the selection position.
    */
-  int selection_position(int* start, int* end);
+  int selection_position(int *start, int *end);
 
   /**
    Returns the currently selected text.
 
    When you are done with the text, free it using the free() function.
    */
-  char* selection_text();
+  char *selection_text();
 
   /**
    Removes the text in the primary selection.
@@ -430,7 +437,7 @@ public:
   /**
    Replaces the text in the primary selection.
    */
-  void replace_selection(const char* text);
+  void replace_selection(const char *text);
 
   /**
    Selects a range of characters in the secondary selection.
@@ -451,14 +458,14 @@ public:
   /**
    Returns the current selection in the secondary text selection object.
    */
-  int secondary_selection_position(int* start, int* end);
+  int secondary_selection_position(int *start, int *end);
 
   /**
    Returns the text in the secondary selection.
 
    When you are done with the text, free it using the free() function.
    */
-  char* secondary_selection_text();
+  char *secondary_selection_text();
 
   /**
    Removes the text from the buffer corresponding to the secondary text
@@ -470,7 +477,7 @@ public:
    Replaces the text from the buffer corresponding to the secondary
    text selection object with the new string \p text.
    */
-  void replace_secondary_selection(const char* text);
+  void replace_secondary_selection(const char *text);
 
   /**
    Highlights the specified text within the buffer.
@@ -490,14 +497,14 @@ public:
   /**
    Highlights the specified text between \p start and \p end within the buffer.
    */
-  int highlight_position(int* start, int* end);
+  int highlight_position(int *start, int *end);
 
   /**
    Returns the highlighted text.
 
    When you are done with the text, free it using the free() function.
    */
-  char* highlight_text();
+  char *highlight_text();
 
   /**
    Adds a callback function that is called whenever the text buffer is modified.
@@ -510,12 +517,12 @@ public:
       void* cbArg);
    \endcode
    */
-  void add_modify_callback(Fl_Text_Modify_Cb bufModifiedCB, void* cbArg);
+  void add_modify_callback(Fl_Text_Modify_Cb bufModifiedCB, void *cbArg);
 
   /**
    Removes a modify callback.
    */
-  void remove_modify_callback(Fl_Text_Modify_Cb bufModifiedCB, void* cbArg);
+  void remove_modify_callback(Fl_Text_Modify_Cb bufModifiedCB, void *cbArg);
 
   /**
    Calls all modify callbacks that have been registered using
@@ -526,13 +533,13 @@ public:
   /**
    Adds a callback routine to be called before text is deleted from the buffer.
    */
-  void add_predelete_callback(Fl_Text_Predelete_Cb bufPredelCB, void* cbArg);
+  void add_predelete_callback(Fl_Text_Predelete_Cb bufPredelCB, void *cbArg);
 
   /**
    Removes a callback routine \p bufPreDeleteCB associated with argument \p cbArg
    to be called before text is deleted from the buffer.
    */
-  void remove_predelete_callback(Fl_Text_Predelete_Cb predelCB, void* cbArg);
+  void remove_predelete_callback(Fl_Text_Predelete_Cb predelCB, void *cbArg);
 
   /**
    Calls the stored pre-delete callback procedure(s) for this buffer to update
@@ -548,7 +555,7 @@ public:
    \param pos byte index into buffer
    \return copy of UTF-8 text, must be free'd
    */
-  char* line_text(int pos) const;
+  char *line_text(int pos) const;
 
   /**
    Returns the position of the start of the line containing position \p pos.
@@ -634,7 +641,7 @@ public:
    \param foundPos byte offset where the character was found
    \return 1 if found, 0 if not
    */
-  int findchar_forward(int startPos, unsigned searchChar, int* foundPos) const;
+  int findchar_forward(int startPos, unsigned searchChar, int *foundPos) const;
 
   /**
    Search backwards in buffer \p buf for character \p searchChar, starting
@@ -649,7 +656,7 @@ public:
    \param foundPos byte offset where the character was found
    \return 1 if found, 0 if not
    */
-  int findchar_backward(int startPos, unsigned int searchChar, int* foundPos) const;
+  int findchar_backward(int startPos, unsigned int searchChar, int *foundPos) const;
 
   /**
    Search forwards in buffer for string \p searchString, starting with the
@@ -662,7 +669,7 @@ public:
    \param matchCase if set, match character case
    \return 1 if found, 0 if not
    */
-  int search_forward(int startPos, const char* searchString, int* foundPos,
+  int search_forward(int startPos, const char *searchString, int *foundPos,
                      int matchCase = 0) const;
 
   /**
@@ -676,28 +683,28 @@ public:
    \param matchCase if set, match character case
    \return 1 if found, 0 if not
    */
-  int search_backward(int startPos, const char* searchString, int* foundPos,
+  int search_backward(int startPos, const char *searchString, int *foundPos,
                       int matchCase = 0) const;
 
   /**
    Returns the primary selection.
    */
-  const Fl_Text_Selection* primary_selection() const { return &mPrimary; }
+  const Fl_Text_Selection *primary_selection() const { return &mPrimary; }
 
   /**
    Returns the primary selection.
    */
-  Fl_Text_Selection* primary_selection() { return &mPrimary; }
+  Fl_Text_Selection *primary_selection() { return &mPrimary; }
 
   /**
    Returns the secondary selection.
    */
-  const Fl_Text_Selection* secondary_selection() const { return &mSecondary; }
+  const Fl_Text_Selection *secondary_selection() const { return &mSecondary; }
 
   /**
    Returns the current highlight selection.
    */
-  const Fl_Text_Selection* highlight_selection() const { return &mHighlight; }
+  const Fl_Text_Selection *highlight_selection() const { return &mHighlight; }
 
   /**
    Returns the index of the previous character.
@@ -726,7 +733,7 @@ public:
   /** This message may be displayed using the fl_alert() function when a file
    which was not UTF-8 encoded is input.
    */
-  static const char* file_encoding_warning_message;
+  static const char *file_encoding_warning_message;
 
   /**
    \brief Pointer to a function called after reading a non UTF-8 encoded file.
@@ -737,17 +744,16 @@ public:
    displayed if this pointer is set to NULL. Use \ref input_file_was_transcoded
    to be informed if file input required transcoding to UTF-8.
    */
-  void (*transcoding_warning_action)(Fl_Text_Buffer*);
+  void (*transcoding_warning_action)(Fl_Text_Buffer *);
   bool is_word_separator(int pos) const;
 
 protected:
-
   /**
    Calls the stored modify callback procedure(s) for this buffer to update the
    changed area(s) on the screen and any other listeners.
    */
-  void call_modify_callbacks(int pos, int nDeleted, int nInserted,
-                             int nRestyled, const char* deletedText) const;
+  void call_modify_callbacks(int pos, int nDeleted, int nInserted, int nRestyled,
+                             const char *deletedText) const;
 
   /**
    Calls the stored pre-delete callback procedure(s) for this buffer to update
@@ -764,7 +770,7 @@ protected:
    with the existing text in the buffer (i.e. not past the end).
    \return the number of bytes inserted
    */
-  int insert_(int pos, const char* text);
+  int insert_(int pos, const char *text);
 
   /**
    Internal (non-redisplaying) version of remove().
@@ -778,8 +784,7 @@ protected:
    Calls the stored redisplay procedure(s) for this buffer to update the
    screen for a change in a selection.
    */
-  void redisplay_selection(Fl_Text_Selection* oldSelection,
-                           Fl_Text_Selection* newSelection) const;
+  void redisplay_selection(Fl_Text_Selection *oldSelection, Fl_Text_Selection *newSelection) const;
 
   /**
    Move the gap to start at a new position.
@@ -792,50 +797,50 @@ protected:
    */
   void reallocate_with_gap(int newGapStart, int newGapLen);
 
-  char* selection_text_(Fl_Text_Selection* sel) const;
+  char *selection_text_(Fl_Text_Selection *sel) const;
 
   /**
    Removes the text from the buffer corresponding to \p sel.
    */
-  void remove_selection_(Fl_Text_Selection* sel);
+  void remove_selection_(Fl_Text_Selection *sel);
 
   /**
    Replaces the \p text in selection \p sel.
    */
-  void replace_selection_(Fl_Text_Selection* sel, const char* text);
+  void replace_selection_(Fl_Text_Selection *sel, const char *text);
 
   /**
    Updates all of the selections in the buffer for changes in the buffer's text
    */
   void update_selections(int pos, int nDeleted, int nInserted);
 
-  Fl_Text_Selection mPrimary;     /**< highlighted areas */
-  Fl_Text_Selection mSecondary;   /**< highlighted areas */
-  Fl_Text_Selection mHighlight;   /**< highlighted areas */
-  int mLength;                    /**< length of the text in the buffer (the length
-                                       of the buffer itself must be calculated:
-                                       gapEnd - gapStart + length) */
-  char* mBuf;                     /**< allocated memory where the text is stored */
-  int mGapStart;                  /**< points to the first character of the gap */
-  int mGapEnd;                    /**< points to the first character after the gap */
+  Fl_Text_Selection mPrimary;   /**< highlighted areas */
+  Fl_Text_Selection mSecondary; /**< highlighted areas */
+  Fl_Text_Selection mHighlight; /**< highlighted areas */
+  int mLength;                  /**< length of the text in the buffer (the length
+                                     of the buffer itself must be calculated:
+                                     gapEnd - gapStart + length) */
+  char *mBuf;                   /**< allocated memory where the text is stored */
+  int mGapStart;                /**< points to the first character of the gap */
+  int mGapEnd;                  /**< points to the first character after the gap */
   // The hardware tab distance used by all displays for this buffer,
   // and used in computing offsets for rectangular selection operations.
-  int mTabDist;                   /**< equiv. number of characters in a tab */
-  int mNModifyProcs;              /**< number of modify-redisplay procs attached */
-  Fl_Text_Modify_Cb *mModifyProcs;/**< procedures to call when buffer is
-                                       modified to redisplay contents */
-  void** mCbArgs;                 /**< caller arguments for modifyProcs above */
-  int mNPredeleteProcs;           /**< number of pre-delete procs attached */
+  int mTabDist;                          /**< equiv. number of characters in a tab */
+  int mNModifyProcs;                     /**< number of modify-redisplay procs attached */
+  Fl_Text_Modify_Cb *mModifyProcs;       /**< procedures to call when buffer is
+                                              modified to redisplay contents */
+  void **mCbArgs;                        /**< caller arguments for modifyProcs above */
+  int mNPredeleteProcs;                  /**< number of pre-delete procs attached */
   Fl_Text_Predelete_Cb *mPredeleteProcs; /**< procedure to call before text is deleted
                                        from the buffer; at most one is supported. */
-  void **mPredeleteCbArgs;        /**< caller argument for pre-delete proc above */
-  int mCursorPosHint;             /**< hint for reasonable cursor position after
-                                       a buffer modification operation */
-  char mCanUndo;                  /**< if this buffer is used for attributes, it must
-                                       not do any undo calls */
-  int mPreferredGapSize;          /**< the default allocation for the text gap is 1024
-                                       bytes and should only be increased if frequent
-                                       and large changes in buffer size are expected */
+  void **mPredeleteCbArgs;               /**< caller argument for pre-delete proc above */
+  int mCursorPosHint;                    /**< hint for reasonable cursor position after
+                                              a buffer modification operation */
+  char mCanUndo;                         /**< if this buffer is used for attributes, it must
+                                              not do any undo calls */
+  int mPreferredGapSize;                 /**< the default allocation for the text gap is 1024
+                                              bytes and should only be increased if frequent
+                                              and large changes in buffer size are expected */
 };
 
 #endif

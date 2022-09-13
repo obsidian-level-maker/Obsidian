@@ -24,43 +24,45 @@
 // all driver code is now in drivers/XXX/Fl_XXX_Graphics_Driver_xyz.cxx
 // -----------------------------------------------------------------------------
 
-double fl_width(const char* c) {
-  if (c) return fl_width(c, (int) strlen(c));
-  else return 0.0f;
+double fl_width(const char *c) {
+  if (c)
+    return fl_width(c, (int)strlen(c));
+  else
+    return 0.0f;
 }
 
-void fl_draw(const char* str, int x, int y) {
-  fl_draw(str, (int) strlen(str), x, y);
+void fl_draw(const char *str, int x, int y) {
+  fl_draw(str, (int)strlen(str), x, y);
 }
 
-void fl_draw(int angle, const char* str, int x, int y) {
-  fl_draw(angle, str, (int) strlen(str), x, y);//must be fixed!
+void fl_draw(int angle, const char *str, int x, int y) {
+  fl_draw(angle, str, (int)strlen(str), x, y); // must be fixed!
 }
 
 void fl_text_extents(const char *c, int &dx, int &dy, int &w, int &h) {
-  if (c)  fl_text_extents(c, (int) strlen(c), dx, dy, w, h);
+  if (c)
+    fl_text_extents(c, (int)strlen(c), dx, dy, w, h);
   else {
-    w = 0; h = 0;
-    dx = 0; dy = 0;
+    w = 0;
+    h = 0;
+    dx = 0;
+    dy = 0;
   }
 } // fl_text_extents
 
 
-void fl_draw(const char* str, int l, float x, float y) {
+void fl_draw(const char *str, int l, float x, float y) {
   fl_graphics_driver->draw(str, l, x, y);
 }
 
-void fl_set_spot(int font, int size, int X, int Y, int W, int H, Fl_Window *win)
-{
+void fl_set_spot(int font, int size, int X, int Y, int W, int H, Fl_Window *win) {
   Fl::screen_driver()->set_spot(font, size, X, Y, W, H, win);
 }
 
-void fl_reset_spot()
-{
+void fl_reset_spot() {
   Fl::screen_driver()->reset_spot();
 }
 
-void fl_set_status(int X, int Y, int W, int H)
-{
+void fl_set_status(int X, int Y, int W, int H) {
   Fl::screen_driver()->set_status(X, Y, W, H);
 }

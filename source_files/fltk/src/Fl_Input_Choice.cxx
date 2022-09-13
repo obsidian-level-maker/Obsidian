@@ -101,11 +101,10 @@
 
   class MyInputChoice : public Fl_Input_Choice {
   protected:
-    virtual int inp_x()  const { return x() + Fl::box_dx(box()) + menu_w(); }  // override to reposition
-    virtual int menu_x() const { return x() + Fl::box_dx(box()); }             // override to reposition
-  public:
-    MyInputChoice(int X,int Y,int W,int H,const char*L=0) : Fl_Input_Choice(X,Y,W,H,L) {
-      resize(X,Y,W,H);  // necessary for ctor to trigger our overrides
+    virtual int inp_x()  const { return x() + Fl::box_dx(box()) + menu_w(); }  // override to
+ reposition virtual int menu_x() const { return x() + Fl::box_dx(box()); }             // override
+ to reposition public: MyInputChoice(int X,int Y,int W,int H,const char*L=0) :
+ Fl_Input_Choice(X,Y,W,H,L) { resize(X,Y,W,H);  // necessary for ctor to trigger our overrides
     }
   };
 
@@ -126,9 +125,8 @@
 
 /** Constructor for private menu button. */
 
-Fl_Input_Choice::InputMenuButton::InputMenuButton(int x,int y,int w,int h,const char*l)
-                                 :Fl_Menu_Button(x,y,w,h,l)
-{
+Fl_Input_Choice::InputMenuButton::InputMenuButton(int x, int y, int w, int h, const char *l)
+  : Fl_Menu_Button(x, y, w, h, l) {
   box(FL_UP_BOX);
 }
 
@@ -137,20 +135,22 @@ Fl_Input_Choice::InputMenuButton::InputMenuButton(int x,int y,int w,int h,const 
 void Fl_Input_Choice::InputMenuButton::draw() {
   draw_box();
   fl_color(active_r() ? labelcolor() : fl_inactive(labelcolor()));
-  int xc = x()+w()/2, yc=y()+h()/2;
-  fl_polygon(xc-5,yc-3,xc+5,yc-3,xc,yc+3);
-  if (Fl::focus() == this) draw_focus();
+  int xc = x() + w() / 2, yc = y() + h() / 2;
+  fl_polygon(xc - 5, yc - 3, xc + 5, yc - 3, xc, yc + 3);
+  if (Fl::focus() == this)
+    draw_focus();
 }
 
 // Make pulldown menu appear under entire width of widget
-const Fl_Menu_Item* Fl_Input_Choice::InputMenuButton::popup() {
+const Fl_Menu_Item *Fl_Input_Choice::InputMenuButton::popup() {
   menu_end();
   redraw();
   Fl_Widget_Tracker mb(this);
   // Make menu appear under entire width of Fl_Input_Choice parent group
   const Fl_Menu_Item *m = menu()->pulldown(parent()->x(), y(), parent()->w(), h(), 0, this);
   picked(m);
-  if (mb.exists()) redraw();
+  if (mb.exists())
+    redraw();
   return m;
 }
 
@@ -158,67 +158,74 @@ const Fl_Menu_Item* Fl_Input_Choice::InputMenuButton::popup() {
 //    (This is the same handle() code in Fl_Menu_Button and Fl_Choice)
 //
 int Fl_Input_Choice::InputMenuButton::handle(int e) {
-  if (!menu() || !menu()->text) return 0;
+  if (!menu() || !menu()->text)
+    return 0;
   switch (e) {
-  case FL_ENTER: /* FALLTHROUGH */
-  case FL_LEAVE:
-    return (box() && !type()) ? 1 : 0;
-  case FL_PUSH:
-    if (!box()) {
-      if (Fl::event_button() != 3) return 0;
-    } else if (type()) {
-      if (!(type() & (1 << (Fl::event_button()-1)))) return 0;
-    }
-    if (Fl::visible_focus()) Fl::focus(this);
-    popup();
-    return 1;
-  case FL_KEYBOARD:
-    if (!box()) return 0;
-    if (Fl::event_key() == ' ' &&
-        !(Fl::event_state() & (FL_SHIFT | FL_CTRL | FL_ALT | FL_META))) {
+    case FL_ENTER: /* FALLTHROUGH */
+    case FL_LEAVE:
+      return (box() && !type()) ? 1 : 0;
+    case FL_PUSH:
+      if (!box()) {
+        if (Fl::event_button() != 3)
+          return 0;
+      } else if (type()) {
+        if (!(type() & (1 << (Fl::event_button() - 1))))
+          return 0;
+      }
+      if (Fl::visible_focus())
+        Fl::focus(this);
       popup();
       return 1;
-    } else return 0;
-  case FL_SHORTCUT:
-    if (Fl_Widget::test_shortcut()) {popup(); return 1;}
-    return test_shortcut() != 0;
-  case FL_FOCUS: /* FALLTHROUGH */
-  case FL_UNFOCUS:
-    if (box() && Fl::visible_focus()) {
-      redraw();
-      return 1;
-    }
-  default:
-    return 0;
+    case FL_KEYBOARD:
+      if (!box())
+        return 0;
+      if (Fl::event_key() == ' ' &&
+          !(Fl::event_state() & (FL_SHIFT | FL_CTRL | FL_ALT | FL_META))) {
+        popup();
+        return 1;
+      } else
+        return 0;
+    case FL_SHORTCUT:
+      if (Fl_Widget::test_shortcut()) {
+        popup();
+        return 1;
+      }
+      return test_shortcut() != 0;
+    case FL_FOCUS: /* FALLTHROUGH */
+    case FL_UNFOCUS:
+      if (box() && Fl::visible_focus()) {
+        redraw();
+        return 1;
+      }
+    default:
+      return 0;
   }
 }
 
 /** Callback for the Fl_Input_Choice menu. */
 
-void Fl_Input_Choice::menu_cb(Fl_Widget*, void *data) {
-  Fl_Input_Choice *o=(Fl_Input_Choice *)data;
+void Fl_Input_Choice::menu_cb(Fl_Widget *, void *data) {
+  Fl_Input_Choice *o = (Fl_Input_Choice *)data;
   Fl_Widget_Tracker wp(o);
   const Fl_Menu_Item *item = o->menubutton()->mvalue();
-  if (item && item->flags & (FL_SUBMENU|FL_SUBMENU_POINTER)) return;    // ignore submenus
-  if (!strcmp(o->inp_->value(), o->menu_->text()))
-  {
+  if (item && item->flags & (FL_SUBMENU | FL_SUBMENU_POINTER))
+    return; // ignore submenus
+  if (!strcmp(o->inp_->value(), o->menu_->text())) {
     o->Fl_Widget::clear_changed();
     if (o->when() & FL_WHEN_NOT_CHANGED)
       o->do_callback();
-  }
-  else
-  {
+  } else {
     o->inp_->value(o->menu_->text());
     o->inp_->set_changed();
     o->Fl_Widget::set_changed();
-    if (o->when() & (FL_WHEN_CHANGED|FL_WHEN_RELEASE))
+    if (o->when() & (FL_WHEN_CHANGED | FL_WHEN_RELEASE))
       o->do_callback();
   }
 
-  if (wp.deleted()) return;
+  if (wp.deleted())
+    return;
 
-  if (o->callback() != default_callback)
-  {
+  if (o->callback() != default_callback) {
     o->Fl_Widget::clear_changed();
     o->inp_->clear_changed();
   }
@@ -226,12 +233,12 @@ void Fl_Input_Choice::menu_cb(Fl_Widget*, void *data) {
 
 /** Callback for the Fl_Input_Choice input field. */
 
-void Fl_Input_Choice::inp_cb(Fl_Widget*, void *data) {
-  Fl_Input_Choice *o=(Fl_Input_Choice *)data;
+void Fl_Input_Choice::inp_cb(Fl_Widget *, void *data) {
+  Fl_Input_Choice *o = (Fl_Input_Choice *)data;
   Fl_Widget_Tracker wp(o);
   if (o->inp_->changed()) {
     o->Fl_Widget::set_changed();
-    if (o->when() & (FL_WHEN_CHANGED|FL_WHEN_RELEASE))
+    if (o->when() & (FL_WHEN_CHANGED | FL_WHEN_RELEASE))
       o->do_callback();
   } else {
     o->Fl_Widget::clear_changed();
@@ -239,7 +246,8 @@ void Fl_Input_Choice::inp_cb(Fl_Widget*, void *data) {
       o->do_callback();
   }
 
-  if (wp.deleted()) return;
+  if (wp.deleted())
+    return;
 
   if (o->callback() != default_callback)
     o->Fl_Widget::clear_changed();
@@ -251,23 +259,23 @@ void Fl_Input_Choice::inp_cb(Fl_Widget*, void *data) {
 
   Inherited destructor destroys the widget and any values associated with it.
 */
-Fl_Input_Choice::Fl_Input_Choice (int X, int Y, int W, int H, const char *L)
-: Fl_Group(X,Y,W,H,L) {
+Fl_Input_Choice::Fl_Input_Choice(int X, int Y, int W, int H, const char *L)
+  : Fl_Group(X, Y, W, H, L) {
   Fl_Group::box(FL_DOWN_BOX);
-  align(FL_ALIGN_LEFT);                                 // default like Fl_Input
+  align(FL_ALIGN_LEFT); // default like Fl_Input
   inp_ = new Fl_Input(inp_x(), inp_y(), inp_w(), inp_h());
-  inp_->callback(inp_cb, (void*)this);
-  inp_->box(FL_FLAT_BOX);                               // cosmetic
-  inp_->when(FL_WHEN_CHANGED|FL_WHEN_NOT_CHANGED);
+  inp_->callback(inp_cb, (void *)this);
+  inp_->box(FL_FLAT_BOX); // cosmetic
+  inp_->when(FL_WHEN_CHANGED | FL_WHEN_NOT_CHANGED);
   menu_ = new InputMenuButton(menu_x(), menu_y(), menu_w(), menu_h());
-  menu_->callback(menu_cb, (void*)this);
+  menu_->callback(menu_cb, (void *)this);
   end();
 }
 
 /** Resizes the Fl_Input_Choice widget.
-*/
+ */
 void Fl_Input_Choice::resize(int X, int Y, int W, int H) {
-  Fl_Group::resize(X,Y,W,H);
+  Fl_Group::resize(X, Y, W, H);
   inp_->resize(inp_x(), inp_y(), inp_w(), inp_h());
   menu_->resize(menu_x(), menu_y(), menu_w(), menu_h());
 }
@@ -318,22 +326,23 @@ void Fl_Input_Choice::clear_changed() {
     // Verify menubutton()'s value.
     printf("menu button choice index=%d, value=%s\n",
                                 choice->menubutton()->value(),    // would be -1 if update not done
-                                choice->menubutton()->text());    // would be NULL if update not done
-    \endcode
+                                choice->menubutton()->text());    // would be NULL if update not
+   done \endcode
 
     \returns 1 if a matching menuitem was found and value set, 0 if not.
     \version 1.4.0
 */
 int Fl_Input_Choice::update_menubutton() {
   // Find item in menu
-  for ( int i=0; i<menu_->size(); i++ ) {
+  for (int i = 0; i < menu_->size(); i++) {
     const Fl_Menu_Item &item = menu_->menu()[i];
-    if (item.flags & (FL_SUBMENU|FL_SUBMENU_POINTER)) continue;   // ignore submenus
+    if (item.flags & (FL_SUBMENU | FL_SUBMENU_POINTER))
+      continue; // ignore submenus
     const char *name = menu_->text(i);
-    if ( name && strcmp(name, inp_->value()) == 0) {
+    if (name && strcmp(name, inp_->value()) == 0) {
       menu_->value(i);
       return 1;
     }
   }
-  return 0;             // not found
+  return 0; // not found
 }

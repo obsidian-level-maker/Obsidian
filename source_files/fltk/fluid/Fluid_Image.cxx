@@ -27,7 +27,7 @@
 #include <FL/Fl_Window.H>
 #include <FL/filename.H>
 #include <FL/fl_string_functions.h>
-#include <FL/fl_utf8.h>     // fl_fopen()
+#include <FL/fl_utf8.h> // fl_fopen()
 #include <FL/Fl_File_Chooser.H>
 #include "../src/flstring.h"
 
@@ -37,11 +37,13 @@
 #include <stdarg.h>
 
 void Fluid_Image::image(Fl_Widget *o) {
-  if (o->window() != o) o->image(img);
+  if (o->window() != o)
+    o->image(img);
 }
 
 void Fluid_Image::deimage(Fl_Widget *o) {
-  if (o->window() != o) o->deimage(img);
+  if (o->window() != o)
+    o->deimage(img);
 }
 
 static int pixmap_header_written = 0;
@@ -50,7 +52,8 @@ static int image_header_written = 0;
 static int jpeg_header_written = 0;
 
 void Fluid_Image::write_static() {
-  if (!img) return;
+  if (!img)
+    return;
   const char *idata_name = unique_id(this, "idata", fl_filename_name(name()), 0);
   function_name_ = unique_id(this, "image", fl_filename_name(name()), 0);
   if (img->count() > 1) {
@@ -72,12 +75,12 @@ void Fluid_Image::write_static() {
       write_cstring(img->data()[1], ncolors * -4);
       i = 2;
     } else {
-      for (i = 1; i <= ncolors; i ++) {
+      for (i = 1; i <= ncolors; i++) {
         write_c(",\n");
         write_cstring(img->data()[i], (int)strlen(img->data()[i]));
       }
     }
-    for (; i < img->count(); i ++) {
+    for (; i < img->count(); i++) {
       write_c(",\n");
       write_cstring(img->data()[i], img->w() * chars_per_color);
     }
@@ -93,8 +96,8 @@ void Fluid_Image::write_static() {
     write_c("static const unsigned char %s[] =\n", idata_name);
     write_cdata(img->data()[0], ((img->w() + 7) / 8) * img->h());
     write_c(";\n");
-    write_initializer( "Fl_Bitmap", "%s, %d, %d", idata_name, img->w(), img->h());
-  } else if (strcmp(fl_filename_ext(name()), ".jpg")==0) {
+    write_initializer("Fl_Bitmap", "%s, %d, %d", idata_name, img->w(), img->h());
+  } else if (strcmp(fl_filename_ext(name()), ".jpg") == 0) {
     // Write jpeg image data...
     write_c("\n");
     if (jpeg_header_written != write_number) {
@@ -111,8 +114,9 @@ void Fluid_Image::write_static() {
       size_t nData = ftell(f);
       fseek(f, 0, SEEK_SET);
       if (nData) {
-        char *data = (char*)calloc(nData, 1);
-        if (fread(data, nData, 1, f)==0) { /* ignore */ }
+        char *data = (char *)calloc(nData, 1);
+        if (fread(data, nData, 1, f) == 0) { /* ignore */
+        }
         write_cdata(data, (int)nData);
         free(data);
       }
@@ -129,10 +133,11 @@ void Fluid_Image::write_static() {
       image_header_written = write_number;
     }
     write_c("static const unsigned char %s[] =\n", idata_name);
-    const int extra_data = img->ld() ? (img->ld()-img->w()*img->d()) : 0;
+    const int extra_data = img->ld() ? (img->ld() - img->w() * img->d()) : 0;
     write_cdata(img->data()[0], (img->w() * img->d() + extra_data) * img->h());
     write_c(";\n");
-    write_initializer("Fl_RGB_Image", "%s, %d, %d, %d, %d", idata_name, img->w(), img->h(), img->d(), img->ld());
+    write_initializer("Fl_RGB_Image", "%s, %d, %d, %d, %d", idata_name, img->w(), img->h(),
+                      img->d(), img->ld());
   }
 }
 
@@ -144,8 +149,8 @@ void Fluid_Image::write_initializer(const char *type_name, const char *format, .
    } */
   va_list ap;
   va_start(ap, format);
-  write_c("static Fl_Image *%s() {\n%sstatic Fl_Image *image = new %s(",
-          function_name_, indent(1), type_name);
+  write_c("static Fl_Image *%s() {\n%sstatic Fl_Image *image = new %s(", function_name_, indent(1),
+          type_name);
   vwrite_c(format, ap);
   write_c(");\n%sreturn image;\n}\n", indent(1));
   va_end(ap);
@@ -154,7 +159,8 @@ void Fluid_Image::write_initializer(const char *type_name, const char *format, .
 void Fluid_Image::write_code(const char *var, int inactive) {
   /* Outputs code that attaches an image to an Fl_Widget or Fl_Menu_Item.
    This code calls a function output before by Fluid_Image::write_initializer() */
-  if (img) write_c("%s%s->%s( %s() );\n", indent(), var, inactive ? "deimage" : "image", function_name_);
+  if (img)
+    write_c("%s%s->%s( %s() );\n", indent(), var, inactive ? "deimage" : "image", function_name_);
 }
 
 void Fluid_Image::write_inline(int inactive) {
@@ -165,30 +171,34 @@ void Fluid_Image::write_inline(int inactive) {
 
 ////////////////////////////////////////////////////////////////
 
-static Fluid_Image** images = 0; // sorted list
+static Fluid_Image **images = 0; // sorted list
 static int numimages = 0;
 static int tablesize = 0;
 
-Fluid_Image* Fluid_Image::find(const char *iname) {
-  if (!iname || !*iname) return 0;
+Fluid_Image *Fluid_Image::find(const char *iname) {
+  if (!iname || !*iname)
+    return 0;
 
   // first search to see if it exists already:
   int a = 0;
   int b = numimages;
   while (a < b) {
-    int c = (a+b)/2;
-    int i = strcmp(iname,images[c]->name_);
-    if (i < 0) b = c;
-    else if (i > 0) a = c+1;
-    else return images[c];
+    int c = (a + b) / 2;
+    int i = strcmp(iname, images[c]->name_);
+    if (i < 0)
+      b = c;
+    else if (i > 0)
+      a = c + 1;
+    else
+      return images[c];
   }
 
   // no, so now see if the file exists:
 
   goto_source_dir();
-  FILE *f = fl_fopen(iname,"rb");
+  FILE *f = fl_fopen(iname, "rb");
   if (!f) {
-    read_error("%s : %s",iname,strerror(errno));
+    read_error("%s : %s", iname, strerror(errno));
     leave_source_dir();
     return 0;
   }
@@ -202,16 +212,20 @@ Fluid_Image* Fluid_Image::find(const char *iname) {
     read_error("%s : unrecognized image format", iname);
   }
   leave_source_dir();
-  if (!ret) return 0;
+  if (!ret)
+    return 0;
 
   // make a new entry in the table:
   numimages++;
   if (numimages > tablesize) {
-    tablesize = tablesize ? 2*tablesize : 16;
-    if (images) images = (Fluid_Image**)realloc(images, tablesize*sizeof(Fluid_Image*));
-    else images = (Fluid_Image**)malloc(tablesize*sizeof(Fluid_Image*));
+    tablesize = tablesize ? 2 * tablesize : 16;
+    if (images)
+      images = (Fluid_Image **)realloc(images, tablesize * sizeof(Fluid_Image *));
+    else
+      images = (Fluid_Image **)malloc(tablesize * sizeof(Fluid_Image *));
   }
-  for (b = numimages-1; b > a; b--) images[b] = images[b-1];
+  for (b = numimages - 1; b > a; b--)
+    images[b] = images[b - 1];
   images[a] = ret;
 
   return ret;
@@ -231,19 +245,24 @@ void Fluid_Image::increment() {
 
 void Fluid_Image::decrement() {
   --refcount;
-  if (refcount > 0) return;
+  if (refcount > 0)
+    return;
   delete this;
 }
 
 Fluid_Image::~Fluid_Image() {
   int a;
   if (images) {
-    for (a = 0;; a++) if (images[a] == this) break;
+    for (a = 0;; a++)
+      if (images[a] == this)
+        break;
     numimages--;
-    for (; a < numimages; a++) images[a] = images[a+1];
+    for (; a < numimages; a++)
+      images[a] = images[a + 1];
   }
-  if (img) img->release();
-  free((void*)name_);
+  if (img)
+    img->release();
+  free((void *)name_);
 }
 
 ////////////////////////////////////////////////////////////////
@@ -252,7 +271,8 @@ const char *ui_find_image_name;
 Fluid_Image *ui_find_image(const char *oldname) {
   goto_source_dir();
   fl_file_chooser_ok_label("Use Image");
-  const char *name = fl_file_chooser("Image?","Image Files (*.{bm,bmp,gif,jpg,pbm,pgm,png,ppm,xbm,xpm})",oldname,1);
+  const char *name = fl_file_chooser(
+      "Image?", "Image Files (*.{bm,bmp,gif,jpg,pbm,pgm,png,ppm,xbm,xpm})", oldname, 1);
   fl_file_chooser_ok_label(NULL);
   ui_find_image_name = name;
   Fluid_Image *ret = (name && *name) ? Fluid_Image::find(name) : 0;

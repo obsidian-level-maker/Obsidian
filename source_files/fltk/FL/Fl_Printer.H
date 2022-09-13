@@ -25,13 +25,12 @@
 
 /**
  \brief OS-independent print support.
- Fl_Printer allows to use all drawing, color, text, image, and clip FLTK functions, and to have them operate
- on printed page(s). There are two main, non exclusive, ways to use it.
- <ul><li>Print any widget (standard, custom, Fl_Window, Fl_Gl_Window) as it appears
- on screen, with optional translation, scaling and rotation. This is done by calling print_widget(),
- print_window() or print_window_part().
- <li>Use a series of FLTK graphics commands (e.g., font, text, lines, colors, clip, image) to
- compose a page appropriately shaped for printing.
+ Fl_Printer allows to use all drawing, color, text, image, and clip FLTK functions, and to have them
+ operate on printed page(s). There are two main, non exclusive, ways to use it. <ul><li>Print any
+ widget (standard, custom, Fl_Window, Fl_Gl_Window) as it appears on screen, with optional
+ translation, scaling and rotation. This is done by calling print_widget(), print_window() or
+ print_window_part(). <li>Use a series of FLTK graphics commands (e.g., font, text, lines, colors,
+ clip, image) to compose a page appropriately shaped for printing.
  </ul>
  In both cases, begin by begin_job(), begin_page(), printable_rect() and origin() calls
  and finish by end_page() and end_job() calls.
@@ -60,34 +59,28 @@
  <b>Platform specifics</b>
  <ul>
  <li>X11 and Wayland platforms:
- <ul><li>FLTK expresses all graphics data using (Level 2) PostScript and sends that to the selected printer.
- See class Fl_PostScript_File_Device for a description of how text and transparent images appear in print.
- <li>If the GTK library is available at run-time, class Fl_Printer runs GTK's printer dialog which allows to set
- printer, paper size and orientation.
- <li>Under the KDE desktop, Fl_Printer runs the <tt>kdialog</tt> command to create KDE-styled file dialogs if
- that command is available at run-time, unless FLTK was built with CMake and option OPTION_USE_KDIALOG turned off.
+ <ul><li>FLTK expresses all graphics data using (Level 2) PostScript and sends that to the selected
+ printer. See class Fl_PostScript_File_Device for a description of how text and transparent images
+ appear in print. <li>If the GTK library is available at run-time, class Fl_Printer runs GTK's
+ printer dialog which allows to set printer, paper size and orientation. <li>Under the KDE desktop,
+ Fl_Printer runs the <tt>kdialog</tt> command to create KDE-styled file dialogs if that command is
+ available at run-time, unless FLTK was built with CMake and option OPTION_USE_KDIALOG turned off.
  In that case, Fl_Printer attempts to run the GTK dialog.
- <li>If the GTK library is not available, or if Fl::option(Fl::OPTION_PRINTER_USES_GTK) has been turned off,
- class Fl_Printer runs FLTK's print dialog.
- <ul>
- <li>Unless it has been previously changed, the default paper size is A4.
- To change that, press the "Properties" button of the "Print" dialog window
- opened by an Fl_Printer::begin_job() call. This opens a "Printer Properties" window where it's
- possible to select the adequate paper size. Finally press the "Save" button therein to assign
- the chosen paper size to the chosen printer for this and all further print operations.
+ <li>If the GTK library is not available, or if Fl::option(Fl::OPTION_PRINTER_USES_GTK) has been
+ turned off, class Fl_Printer runs FLTK's print dialog. <ul> <li>Unless it has been previously
+ changed, the default paper size is A4. To change that, press the "Properties" button of the "Print"
+ dialog window opened by an Fl_Printer::begin_job() call. This opens a "Printer Properties" window
+ where it's possible to select the adequate paper size. Finally press the "Save" button therein to
+ assign the chosen paper size to the chosen printer for this and all further print operations.
  <li>Use the static public attributes of this class to set the print dialog to other languages
- than English. For example, the "Printer:" dialog item Fl_Printer::dialog_printer can be set to French with:
- \code
- Fl_Printer::dialog_printer = "Imprimante:";
- \endcode
- before creation of the Fl_Printer object.
- <li>Use Fl_PostScript_File_Device::file_chooser_title to customize the title of the file chooser dialog that opens
- when using the "Print To File" option of the print dialog.
+ than English. For example, the "Printer:" dialog item Fl_Printer::dialog_printer can be set to
+ French with: \code Fl_Printer::dialog_printer = "Imprimante:"; \endcode before creation of the
+ Fl_Printer object. <li>Use Fl_PostScript_File_Device::file_chooser_title to customize the title of
+ the file chooser dialog that opens when using the "Print To File" option of the print dialog.
  </ul>
  </ul>
- <li>Windows platform: Transparent Fl_RGB_Image 's don't print with exact transparency on most printers
- (a workaround is to use print_window_part() ).
- Fl_RGB_Image 's don't rotate() well.
+ <li>Windows platform: Transparent Fl_RGB_Image 's don't print with exact transparency on most
+ printers (a workaround is to use print_window_part() ). Fl_RGB_Image 's don't rotate() well.
  <li>Mac OS X platform: all graphics requests print as on display and accept rotation and scaling.
  </ul>
  */
@@ -95,11 +88,13 @@ class FL_EXPORT Fl_Printer : public Fl_Paged_Device {
 private:
   Fl_Paged_Device *printer;
   /** Each platform implements this function its own way */
-  static Fl_Paged_Device* newPrinterDriver(void);
+  static Fl_Paged_Device *newPrinterDriver(void);
+
 public:
   /** The constructor */
   Fl_Printer(void);
-  int begin_job(int pagecount = 0, int *frompage = NULL, int *topage = NULL, char **perr_message = NULL);
+  int begin_job(int pagecount = 0, int *frompage = NULL, int *topage = NULL,
+                char **perr_message = NULL);
   int begin_page(void);
   int printable_rect(int *w, int *h);
   void margins(int *left, int *top, int *right, int *bottom);
@@ -109,8 +104,8 @@ public:
   void rotate(float angle);
   void translate(int x, int y);
   void untranslate(void);
-  int end_page (void);
-  void end_job (void);
+  int end_page(void);
+  void end_job(void);
   void set_current(void);
   virtual bool is_current();
 

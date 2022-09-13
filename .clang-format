@@ -1,5 +1,3 @@
-BasedOnStyle: Google
-IndentWidth: 4
-DerivePointerAlignment: false
-PointerAlignment: Right
-SortIncludes: false
+# Lots of dependencies would look messy if they were formatted, so this is a blanket.
+# See [source_files/obsidian_main/.clang-format] for the actual rules for our code.
+DisableFormat: true

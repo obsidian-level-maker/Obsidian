@@ -1,4 +1,4 @@
-#include "nodes.h"
+#include "ff.h"
 #include <chrono>
 #include <cstdlib>
 #include <iostream>
@@ -42,8 +42,9 @@ void version() { result.append(versionValue); }
 
 void raw_append(const char *string) { result.append(string); }
 
-const char *ff_main(const char *levelcount, const char *game, const char *engine, const char *theme,
-                    const char *version, const char *format) {
+const char *ff_main(const char *levelcount, const char *game,
+                    const char *engine, const char *theme, const char *version,
+                    const char *format) {
     gameValue = game;
     engineValue = engine;
     themeValue = theme;
@@ -57,8 +58,7 @@ const char *ff_main(const char *levelcount, const char *game, const char *engine
 
     auto buffer_state = yy_scan_bytes(input.c_str(), input.size());
     yy_switch_to_buffer(buffer_state);
-    int t;
-    while ((t = yylex()) != TOK_EOF) {
+    while (yylex() != TOK_EOF) {
     }
 
     return result.c_str();

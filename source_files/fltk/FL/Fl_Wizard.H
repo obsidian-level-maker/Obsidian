@@ -42,11 +42,9 @@ class FL_EXPORT Fl_Wizard : public Fl_Group {
   Fl_Widget *value_;
 
 protected:
-
   virtual void draw();
 
 public:
-
   Fl_Wizard(int, int, int, int, const char * = 0);
 
   void next();

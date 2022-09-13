@@ -25,7 +25,6 @@ UI_SLUMP.MON_VARIETY =
   "normal", _("Normal"),
   "shooters", _("Ranged Only"),
   "noflyzone", _("No Fly Zone"),
-  "nazis", _("Oops! All Nazis!")
 }
 
 function UI_SLUMP.setup(self)
@@ -149,4 +148,23 @@ OB_MODULES["ui_slump_mons"] =
       randomize_group="monsters",
     },
   }
+}
+
+OB_MODULES["slump_all_nazis"] =
+{
+
+  name = "slump_all_nazis",
+
+  label = _("Oops! All Nazis!"),
+
+  side = "right",
+  priority = 102,
+  engine = "vanilla",
+  game = "doom2",
+  tooltip = _("Populates the level with only SS troopers. This may expand to include pinkies/the Cyberdemon."),
+
+  hooks = 
+  {
+    setup = UI_SLUMP.setup,
+  },
 }

@@ -19,11 +19,12 @@
 #include "Fl_Window_Driver.H"
 
 void Fl_Window::hotspot(int X, int Y, int offscreen) {
-  int mx,my;
+  int mx, my;
 
   // Update the screen position based on the mouse position.
-  Fl::get_mouse(mx,my);
-  X = mx-X; Y = my-Y;
+  Fl::get_mouse(mx, my);
+  X = mx - X;
+  Y = my - Y;
 
   // If offscreen is 0 (the default), make sure that the window
   // stays on the screen, if possible.
@@ -40,23 +41,29 @@ void Fl_Window::hotspot(int X, int Y, int offscreen) {
       pWindowDriver->decoration_sizes(&top, &left, &right, &bottom);
     }
     // now ensure contents are on-screen (more important than border):
-    if (X+w()+right > scr_w+scr_x) X = scr_w+scr_x-right-w();
-    if (X-left < scr_x) X = left + scr_x;
-    if (Y+h()+bottom > scr_h+scr_y) Y = scr_h+scr_y-bottom-h();
-    if (Y-top < scr_y) Y = top + scr_y;
+    if (X + w() + right > scr_w + scr_x)
+      X = scr_w + scr_x - right - w();
+    if (X - left < scr_x)
+      X = left + scr_x;
+    if (Y + h() + bottom > scr_h + scr_y)
+      Y = scr_h + scr_y - bottom - h();
+    if (Y - top < scr_y)
+      Y = top + scr_y;
     // make sure that we will force this position
-    if (X==x()) x(X-1);
+    if (X == x())
+      x(X - 1);
   }
 
-  position(X,Y);
+  position(X, Y);
 }
 
 void Fl_Window::hotspot(const Fl_Widget *o, int offscreen) {
-  int X = o->w()/2;
-  int Y = o->h()/2;
+  int X = o->w() / 2;
+  int Y = o->h() / 2;
   while (o != this && o) {
-    X += o->x(); Y += o->y();
+    X += o->x();
+    Y += o->y();
     o = o->window();
   }
-  hotspot(X,Y,offscreen);
+  hotspot(X, Y, offscreen);
 }

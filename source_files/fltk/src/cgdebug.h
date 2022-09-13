@@ -72,129 +72,128 @@
 //+StrokePath
 //+TranslateCTM
 
-inline OSStatus dbgLocation(const char *file, int line)
-{
+inline OSStatus dbgLocation(const char *file, int line) {
   fprintf(stderr, "%s:%d ", file, line);
   return 0;
 }
 
-inline OSStatus dbgEndl()
-{
+inline OSStatus dbgEndl() {
   fprintf(stderr, "\n");
   return 0;
 }
 
 
-inline void dbgCGContextClipToRect(CGContextRef a, CGRect b)
-{
+inline void dbgCGContextClipToRect(CGContextRef a, CGRect b) {
   CGContextClipToRect(a, b);
 }
 
-#define CGContextClipToRect(a, b) { \
-  fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
-  dbgCGContextClipToRect(a, b); \
-  fprintf(stderr, "\n"); }
+#define CGContextClipToRect(a, b)                  \
+  {                                                \
+    fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
+    dbgCGContextClipToRect(a, b);                  \
+    fprintf(stderr, "\n");                         \
+  }
 
-inline void dbgCGContextFillRect(CGContextRef a, CGRect b)
-{
+inline void dbgCGContextFillRect(CGContextRef a, CGRect b) {
   CGContextFillRect(a, b);
 }
 
-#define CGContextFillRect(a, b) { \
-  fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
-  dbgCGContextFillRect(a, b); \
-  fprintf(stderr, "\n"); }
+#define CGContextFillRect(a, b)                    \
+  {                                                \
+    fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
+    dbgCGContextFillRect(a, b);                    \
+    fprintf(stderr, "\n");                         \
+  }
 
-inline OSStatus dbgQDEndCGContext(CGrafPtr a, CGContextRef *b)
-{
+inline OSStatus dbgQDEndCGContext(CGrafPtr a, CGContextRef *b) {
   return QDEndCGContext(a, b);
 }
 
-#define QDEndCGContext(a, b) ( \
-  dbgLocation(__FILE__, __LINE__) + \
-  dbgQDEndCGContext(a, b) + \
-  dbgEndl() )
+#define QDEndCGContext(a, b) (dbgLocation(__FILE__, __LINE__) + dbgQDEndCGContext(a, b) + dbgEndl())
 
-inline OSStatus dbgQDBeginCGContext(CGrafPtr a, CGContextRef *b)
-{
+inline OSStatus dbgQDBeginCGContext(CGrafPtr a, CGContextRef *b) {
   return QDBeginCGContext(a, b);
 }
 
-#define QDBeginCGContext(a, b) ( \
-  dbgLocation(__FILE__, __LINE__) + \
-  dbgQDBeginCGContext(a, b) + \
-  dbgEndl() )
+#define QDBeginCGContext(a, b) \
+  (dbgLocation(__FILE__, __LINE__) + dbgQDBeginCGContext(a, b) + dbgEndl())
 
-inline void dbgClipCGContextToRegion(CGContextRef a, const Rect *b, RgnHandle c)
-{
+inline void dbgClipCGContextToRegion(CGContextRef a, const Rect *b, RgnHandle c) {
   ClipCGContextToRegion(a, b, c);
 }
 
-#define ClipCGContextToRegion(a, b, c) { \
-  fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
-  dbgClipCGContextToRegion(a, b, c); \
-  fprintf(stderr, "\n"); }
+#define ClipCGContextToRegion(a, b, c)             \
+  {                                                \
+    fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
+    dbgClipCGContextToRegion(a, b, c);             \
+    fprintf(stderr, "\n");                         \
+  }
 
-inline void dbgCGContextMoveToPoint(CGContextRef context, float x, float y)
-{
+inline void dbgCGContextMoveToPoint(CGContextRef context, float x, float y) {
   CGContextMoveToPoint(context, x, y);
 }
 
-#define CGContextMoveToPoint(a, b, c) { \
-  fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
-  dbgCGContextMoveToPoint(a, b, c); \
-  fprintf(stderr, "\n"); }
+#define CGContextMoveToPoint(a, b, c)              \
+  {                                                \
+    fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
+    dbgCGContextMoveToPoint(a, b, c);              \
+    fprintf(stderr, "\n");                         \
+  }
 
-inline void dbgCGContextFillPath(CGContextRef context)
-{
+inline void dbgCGContextFillPath(CGContextRef context) {
   CGContextFillPath(context);
 }
 
-#define CGContextFillPath(a) { \
-  fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
-  dbgCGContextFillPath(a); \
-  fprintf(stderr, "\n"); }
+#define CGContextFillPath(a)                       \
+  {                                                \
+    fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
+    dbgCGContextFillPath(a);                       \
+    fprintf(stderr, "\n");                         \
+  }
 
-inline void dbgCGContextClosePath(CGContextRef context)
-{
+inline void dbgCGContextClosePath(CGContextRef context) {
   CGContextClosePath(context);
 }
 
-#define CGContextClosePath(a) { \
-  fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
-  dbgCGContextClosePath(a); \
-  fprintf(stderr, "\n"); }
+#define CGContextClosePath(a)                      \
+  {                                                \
+    fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
+    dbgCGContextClosePath(a);                      \
+    fprintf(stderr, "\n");                         \
+  }
 
-inline void dbgCGContextFlush(CGContextRef context)
-{
+inline void dbgCGContextFlush(CGContextRef context) {
   CGContextFlush(context);
 }
 
-#define CGContextFlush(a) { \
-  fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
-  dbgCGContextFlush(a); \
-  fprintf(stderr, "\n"); }
+#define CGContextFlush(a)                          \
+  {                                                \
+    fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
+    dbgCGContextFlush(a);                          \
+    fprintf(stderr, "\n");                         \
+  }
 
-inline void dbgCGContextSaveGState(CGContextRef context)
-{
+inline void dbgCGContextSaveGState(CGContextRef context) {
   CGContextSaveGState(context);
 }
 
-#define CGContextSaveGState(a) { \
-  fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
-  dbgCGContextSaveGState(a); \
-  fprintf(stderr, "\n"); }
+#define CGContextSaveGState(a)                     \
+  {                                                \
+    fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
+    dbgCGContextSaveGState(a);                     \
+    fprintf(stderr, "\n");                         \
+  }
 
-inline void dbgCGContextRestoreGState(CGContextRef context)
-{
+inline void dbgCGContextRestoreGState(CGContextRef context) {
   CGContextRestoreGState(context);
 }
 
-#define CGContextRestoreGState(a) { \
-  fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
-  dbgCGContextRestoreGState(a); \
-  fprintf(stderr, "\n"); }
+#define CGContextRestoreGState(a)                  \
+  {                                                \
+    fprintf(stderr, "%s:%d ", __FILE__, __LINE__); \
+    dbgCGContextRestoreGState(a);                  \
+    fprintf(stderr, "\n");                         \
+  }
 
 
 #endif
-

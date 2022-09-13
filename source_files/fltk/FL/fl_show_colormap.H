@@ -23,7 +23,7 @@
 #define fl_show_colormap_H
 
 /* doxygen comment here to avoid exposing ColorMenu in fl_show_colormap.cxx
-*/
+ */
 
 /** \addtogroup  fl_attributes
     @{ */

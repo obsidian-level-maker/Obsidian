@@ -60,7 +60,7 @@ Fl_String::Fl_String(const Fl_String &in) {
 }
 
 // copy assignment operator
-Fl_String& Fl_String::operator=(const Fl_String &in) {
+Fl_String &Fl_String::operator=(const Fl_String &in) {
   if (this == &in)
     return *this;
   value(in.value(), in.size());
@@ -69,7 +69,7 @@ Fl_String& Fl_String::operator=(const Fl_String &in) {
 }
 
 // assignment operator for 'const char *'
-Fl_String& Fl_String::operator=(const char *in) {
+Fl_String &Fl_String::operator=(const char *in) {
   value(in);
   // debug("*STRING* assigned");
   return *this;
@@ -103,7 +103,8 @@ void Fl_String::value(const char *str) {
 }
 
 int Fl_String::slen() const {
-  if (!value_) return 0;
+  if (!value_)
+    return 0;
   return (int)strlen(value_);
 }
 
@@ -113,11 +114,11 @@ void Fl_String::value(const char *str, int len) {
     size_ = len;
     memcpy(value_, str, size_);
     value_[size_] = '\0';
-  } else {            // str == NULL
-    size_ = 0;        // ignore len !
-    delete[] value_;  // free buffer
-    value_ = NULL;    // set null pointer (!)
-    capacity_ = 0;    // reset capacity
+  } else {           // str == NULL
+    size_ = 0;       // ignore len !
+    delete[] value_; // free buffer
+    value_ = NULL;   // set null pointer (!)
+    capacity_ = 0;   // reset capacity
   }
 }
 
@@ -138,8 +139,8 @@ static const char fl_string_debug = 0;
 
 void Fl_String::debug(const char *info) const {
   if (fl_string_debug) {
-    printf("Fl_String[%2d] '%-20s': %p, value = %p (%d/%d): '%s'.\n",
-          string_count, info, this, value_, size_, capacity_, value_);
+    printf("Fl_String[%2d] '%-20s': %p, value = %p (%d/%d): '%s'.\n", string_count, info, this,
+           value_, size_, capacity_, value_);
   }
 }
 
@@ -148,7 +149,8 @@ void Fl_String::hexdump(const char *info) const {
     debug(info);
     for (int i = 0; i < size_; i++) {
       if ((i & 15) == 0) {
-        if (i > 0) printf("\n");
+        if (i > 0)
+          printf("\n");
         printf("  [%04x %4d] ", i, i);
       } else if ((i & 3) == 0)
         printf(" ");

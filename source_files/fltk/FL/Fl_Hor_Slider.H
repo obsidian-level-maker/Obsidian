@@ -28,12 +28,11 @@
 */
 class FL_EXPORT Fl_Hor_Slider : public Fl_Slider {
 public:
-
   /**
     Creates a new Fl_Hor_Slider widget using the given position,
     size, and label string.
   */
-  Fl_Hor_Slider(int X,int Y,int W,int H,const char *l=0);
+  Fl_Hor_Slider(int X, int Y, int W, int H, const char *l = 0);
 };
 
 #endif

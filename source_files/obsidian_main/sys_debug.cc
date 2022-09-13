@@ -30,7 +30,9 @@
 #define DEBUG_BUF_LEN 20000
 
 std::fstream log_file;
+std::fstream ref_file;
 std::filesystem::path log_filename;
+std::filesystem::path ref_filename;
 
 bool debugging = false;
 bool terminal = false;
@@ -47,6 +49,28 @@ bool LogInit(const std::filesystem::path &filename) {
     }
 
     LogPrintf("====== START OF OBSIDIAN LOGS ======\n");
+
+    return true;
+}
+
+bool RefInit(const std::filesystem::path &filename) {
+    if (!filename.empty()) {
+        ref_filename = filename;
+
+        // Clear previously generated reference if present
+        if (std::filesystem::exists(ref_filename)) {
+            std::filesystem::remove(ref_filename);
+        }
+
+        ref_file.open(ref_filename, std::ios::out);
+
+        if (!ref_file.is_open()) {
+            return false;
+        }
+    }
+
+    RefPrintf("====== OBSIDIAN REFERENCE for V{} BUILD {} ======\n\n",
+              OBSIDIAN_SHORT_VERSION, OBSIDIAN_VERSION);
 
     return true;
 }
@@ -76,13 +100,16 @@ void LogClose(void) {
     std::filesystem::path oldest_log;
     int numlogs = 0;
 
-    for (const std::filesystem::directory_entry& dir_entry : 
-        std::filesystem::directory_iterator{bare_log.remove_filename()}) 
-    {
+    for (const std::filesystem::directory_entry &dir_entry :
+         std::filesystem::directory_iterator{bare_log.remove_filename()}) {
         std::filesystem::path entry = dir_entry.path();
-        if ((StringCaseCmp(entry.extension().string(), ".txt") == 0 || StringCaseCmp(entry.extension().string(), ".zip") == 0) && StringCaseCmpPartial(entry.filename().string(), "LOGS") == 0) {
+        if ((StringCaseCmp(entry.extension().string(), ".txt") == 0 ||
+             StringCaseCmp(entry.extension().string(), ".zip") == 0) &&
+            StringCaseCmpPartial(entry.filename().string(), "LOGS") == 0) {
             numlogs++;
-            if (oldest_log.empty() || std::filesystem::last_write_time(entry) < std::filesystem::last_write_time(oldest_log)) {
+            if (oldest_log.empty() ||
+                std::filesystem::last_write_time(entry) <
+                    std::filesystem::last_write_time(oldest_log)) {
                 oldest_log = entry;
             }
         }
@@ -153,6 +180,14 @@ void LogClose(void) {
     }
 
     log_filename.clear();
+}
+
+void RefClose(void) {
+    RefPrintf("\n====== END OF REFERENCE ======\n\n");
+
+    ref_file.close();
+
+    ref_filename.clear();
 }
 
 void LogReadLines(log_display_func_t display_func, void *priv_data) {

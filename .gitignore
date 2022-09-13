@@ -9,6 +9,7 @@ OPTIONS.txt
 THEME.txt
 LOGS*.txt
 LOGS*.zip
+REFERENCE.txt
 
 *.o
 .f

@@ -60,8 +60,7 @@ protected:
   static const int MAX_SCREENS = 16;
 
   int num_screens;
-  static float fl_intersection(int x1, int y1, int w1, int h1,
-                               int x2, int y2, int w2, int h2);
+  static float fl_intersection(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int h2);
 
 public:
   static int keyboard_screen_scaling; // true means ctrl/+/-/0/ resize windows
@@ -104,7 +103,7 @@ public:
   // --- audible output
   virtual void beep(int) {}
   // --- global events
-  virtual void flush() {}                                  // must override
+  virtual void flush() {} // must override
   virtual void grab(Fl_Window *) {}
   // --- global colors
   /* the default implementation of parse_color() may be enough */
@@ -127,7 +126,10 @@ public:
   virtual void compose_reset();
   // implement to support drag-n-drop. use_selection = 1 means the GUI is welcome to display
   // the selected text during the D&D operation
-  virtual int dnd(int use_selection = 0) { (void)use_selection; return 0; }
+  virtual int dnd(int use_selection = 0) {
+    (void)use_selection;
+    return 0;
+  }
   // null means no platform-specific key bindings for Fl_Text_Editor
   Fl_Text_Editor::Key_Binding *text_editor_extra_key_bindings;
   // default implementation may be enough
@@ -171,7 +173,7 @@ public:
   // the default implementation may be enough
   virtual int input_widget_handle_key(int key, unsigned mods, unsigned shift, Fl_Input *input);
   // implement to support Fl::get_mouse()
-  virtual int get_mouse(int &/*x*/, int &/*y*/) { return 0; }
+  virtual int get_mouse(int & /*x*/, int & /*y*/) { return 0; }
   // optional methods to enable/disable input methods for complex scripts
   virtual void enable_im() {}
   virtual void disable_im() {}
@@ -182,7 +184,7 @@ public:
   // optional method to close display access
   virtual void close_display() {}
   // compute dimensions of an Fl_Offscreen
-  virtual void offscreen_size(Fl_Offscreen, int &/*width*/, int &/*height*/) {}
+  virtual void offscreen_size(Fl_Offscreen, int & /*width*/, int & /*height*/) {}
 
   void rescale_all_windows_from_screen(int screen, float f);
   static void transient_scale_display(float f, int nscreen);
@@ -192,7 +194,8 @@ public:
   void use_startup_scale_factor();
   enum APP_SCALING_CAPABILITY {
     NO_APP_SCALING = 0,     ///< The platform does not support rescaling.
-    SYSTEMWIDE_APP_SCALING, ///< The platform supports rescaling with the same factor for all screens.
+    SYSTEMWIDE_APP_SCALING, ///< The platform supports rescaling with the same factor for all
+                            ///< screens.
     PER_SCREEN_APP_SCALING  ///< The platform supports rescaling with one factor for each screen.
   };
   /** Returns the platform's support for rescaling the application with ctrl/+/-/0 keys.
@@ -201,11 +204,12 @@ public:
   // supports Fl_Window::default_icons()
   virtual void default_icons(const Fl_RGB_Image *icons[], int count);
   // implement to support copy-to-clipboard
-  virtual void copy(const char * /*stuff*/, int /*len*/, int /*clipboard*/, const char * /*type*/) {}
+  virtual void copy(const char * /*stuff*/, int /*len*/, int /*clipboard*/, const char * /*type*/) {
+  }
   // implement to support paste-from-clipboard
   virtual void paste(Fl_Widget &, int /*clipboard*/, const char * /*type*/) {}
   // implement to support paste-from-clipboard
-  virtual int clipboard_contains(const char * /*type*/) {return 0;}
+  virtual int clipboard_contains(const char * /*type*/) { return 0; }
   //  implement to support paste-from-clipboard
   virtual void clipboard_notify_change() {}
   // next 3 are related to Input Methods

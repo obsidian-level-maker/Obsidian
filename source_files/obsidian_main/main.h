@@ -53,6 +53,7 @@ constexpr const char *CONFIG_FILENAME = "CONFIG.txt";
 constexpr const char *OPTIONS_FILENAME = "OPTIONS.txt";
 constexpr const char *THEME_FILENAME = "THEME.txt";
 constexpr const char *LOG_FILENAME = "LOGS.txt";
+constexpr const char *REF_FILENAME = "REFERENCE.txt";
 
 #ifdef _WIN32
 HEDLEY_ALWAYS_INLINE
@@ -88,6 +89,7 @@ extern std::filesystem::path config_file;
 extern std::filesystem::path options_file;
 extern std::filesystem::path theme_file;
 extern std::filesystem::path logging_file;
+extern std::filesystem::path reference_file;
 
 extern bool batch_mode;
 

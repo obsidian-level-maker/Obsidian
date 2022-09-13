@@ -29,7 +29,9 @@
 UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     : Fl_Group(X, Y, W, H, label) {
     box(box_style);
-    tooltip(_("Progress and minimap display.\nMinimap Legend:\nWhite - Regular rooms\nBrown - Caves\nBlue - Outdoors\nGreen - Parks"));
+    tooltip(
+        _("Progress and minimap display.\nMinimap Legend:\nWhite - Regular "
+          "rooms\nBrown - Caves\nBlue - Outdoors\nGreen - Parks"));
 
     status_label = "0";
 
@@ -348,7 +350,7 @@ int UI_Build::FindStep(std::string name) {
 void UI_Build::AddStatusStep(std::string name) {
     // modifies the current status string to show the current step
     std::string blankout;
-    blankout.append(200 , ' ');
+    blankout.append(200, ' ');
     status->copy_label(blankout.c_str());
     status->copy_label(fmt::format("{} : {}", status_label, name).c_str());
     status->redraw();

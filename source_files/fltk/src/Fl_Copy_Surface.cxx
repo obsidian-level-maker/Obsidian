@@ -18,22 +18,30 @@
 
 /** the constructor
 \param w, h Width and height of the drawing surface in FLTK units */
-Fl_Copy_Surface::Fl_Copy_Surface(int w, int h) : Fl_Widget_Surface(NULL) {
+Fl_Copy_Surface::Fl_Copy_Surface(int w, int h)
+  : Fl_Widget_Surface(NULL) {
   platform_surface = Fl_Copy_Surface_Driver::newCopySurfaceDriver(w, h);
-  if (platform_surface) driver(platform_surface->driver());
+  if (platform_surface)
+    driver(platform_surface->driver());
 }
 
 /** the destructor */
-Fl_Copy_Surface::~Fl_Copy_Surface() { delete platform_surface; }
+Fl_Copy_Surface::~Fl_Copy_Surface() {
+  delete platform_surface;
+}
 
-void Fl_Copy_Surface::origin(int x, int y) {platform_surface->origin(x, y);}
+void Fl_Copy_Surface::origin(int x, int y) {
+  platform_surface->origin(x, y);
+}
 
 void Fl_Copy_Surface::origin(int *x, int *y) {
-  if (platform_surface) platform_surface->origin(x, y);
+  if (platform_surface)
+    platform_surface->origin(x, y);
 }
 
 void Fl_Copy_Surface::set_current() {
-  if (platform_surface) platform_surface->set_current();
+  if (platform_surface)
+    platform_surface->set_current();
 }
 
 bool Fl_Copy_Surface::is_current() {
@@ -41,22 +49,28 @@ bool Fl_Copy_Surface::is_current() {
 }
 
 void Fl_Copy_Surface::translate(int x, int y) {
-  if (platform_surface) platform_surface->translate(x, y);
+  if (platform_surface)
+    platform_surface->translate(x, y);
 }
 
 void Fl_Copy_Surface::untranslate() {
-  if (platform_surface) platform_surface->untranslate();
+  if (platform_surface)
+    platform_surface->untranslate();
 }
 
-int Fl_Copy_Surface::w() {return platform_surface ? platform_surface->width : 0;}
+int Fl_Copy_Surface::w() {
+  return platform_surface ? platform_surface->width : 0;
+}
 
-int Fl_Copy_Surface::h() {return platform_surface ? platform_surface->height : 0;}
+int Fl_Copy_Surface::h() {
+  return platform_surface ? platform_surface->height : 0;
+}
 
-int Fl_Copy_Surface::printable_rect(int *w, int *h)  {
+int Fl_Copy_Surface::printable_rect(int *w, int *h) {
   if (platform_surface)
     return platform_surface->printable_rect(w, h);
   else {
-    *w  = *h = 0;
+    *w = *h = 0;
   }
   return 1;
 }
@@ -67,7 +81,8 @@ int Fl_Copy_Surface::printable_rect(int *w, int *h)  {
  \{
  */
 int Fl_Copy_Surface_Driver::printable_rect(int *w, int *h) {
-  *w = width; *h = height;
+  *w = width;
+  *h = height;
   return 0;
 }
 

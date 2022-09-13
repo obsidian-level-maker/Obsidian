@@ -40,14 +40,13 @@
 // from Shane Hill seems to be a usable workaround...
 
 #if defined(__CYGWIN__)
-#  define XMD_H
+#define XMD_H
 #endif // __CYGWIN__
 
 
-extern "C"
-{
+extern "C" {
 #ifdef HAVE_LIBJPEG
-#  include <jpeglib.h>
+#include <jpeglib.h>
 #endif // HAVE_LIBJPEG
 }
 
@@ -58,8 +57,8 @@ extern "C"
 
 #ifdef HAVE_LIBJPEG
 struct fl_jpeg_error_mgr {
-  jpeg_error_mgr        pub_;           // Destination manager...
-  jmp_buf               errhand_;       // Error handler
+  jpeg_error_mgr pub_; // Destination manager...
+  jmp_buf errhand_;    // Error handler
 };
 #endif // HAVE_LIBJPEG
 
@@ -70,14 +69,12 @@ struct fl_jpeg_error_mgr {
 
 #ifdef HAVE_LIBJPEG
 extern "C" {
-  static void
-  fl_jpeg_error_handler(j_common_ptr dinfo) {   // I - Decompressor info
-    longjmp(((fl_jpeg_error_mgr *)(dinfo->err))->errhand_, 1);
-  }
+static void fl_jpeg_error_handler(j_common_ptr dinfo) { // I - Decompressor info
+  longjmp(((fl_jpeg_error_mgr *)(dinfo->err))->errhand_, 1);
+}
 
-  static void
-  fl_jpeg_output_handler(j_common_ptr) {        // I - Decompressor info (not used)
-  }
+static void fl_jpeg_output_handler(j_common_ptr) { // I - Decompressor info (not used)
+}
 }
 #endif // HAVE_LIBJPEG
 
@@ -99,8 +96,7 @@ extern "C" {
  \see Fl_JPEG_Image::Fl_JPEG_Image(const char *imagename, const unsigned char *data)
  */
 Fl_JPEG_Image::Fl_JPEG_Image(const char *filename)
-: Fl_RGB_Image(0,0,0)
-{
+  : Fl_RGB_Image(0, 0, 0) {
   load_jpg_(filename, 0L, 0L);
 }
 
@@ -128,8 +124,7 @@ Fl_JPEG_Image::Fl_JPEG_Image(const char *filename)
  \see Fl_Shared_Image
  */
 Fl_JPEG_Image::Fl_JPEG_Image(const char *name, const unsigned char *data)
-: Fl_RGB_Image(0,0,0)
-{
+  : Fl_RGB_Image(0, 0, 0) {
   load_jpg_(0L, name, data);
 }
 
@@ -156,48 +151,45 @@ typedef my_source_mgr *my_src_ptr;
 
 extern "C" {
 
-  static void init_source(j_decompress_ptr cinfo) {
-    my_src_ptr src = (my_src_ptr)cinfo->src;
-    src->s = src->data;
-  }
+static void init_source(j_decompress_ptr cinfo) {
+  my_src_ptr src = (my_src_ptr)cinfo->src;
+  src->s = src->data;
+}
 
-  static boolean fill_input_buffer(j_decompress_ptr cinfo) {
-    my_src_ptr src = (my_src_ptr)cinfo->src;
-    size_t nbytes = 4096;
-    src->pub.next_input_byte = src->s;
-    src->pub.bytes_in_buffer = nbytes;
-    src->s += nbytes;
-    return TRUE;
-  }
+static boolean fill_input_buffer(j_decompress_ptr cinfo) {
+  my_src_ptr src = (my_src_ptr)cinfo->src;
+  size_t nbytes = 4096;
+  src->pub.next_input_byte = src->s;
+  src->pub.bytes_in_buffer = nbytes;
+  src->s += nbytes;
+  return TRUE;
+}
 
-  static void term_source(j_decompress_ptr cinfo)
-  {
-  }
+static void term_source(j_decompress_ptr cinfo) {}
 
-  static void skip_input_data(j_decompress_ptr cinfo, long num_bytes) {
-    my_src_ptr src = (my_src_ptr)cinfo->src;
-    if (num_bytes > 0) {
-      while (num_bytes > (long)src->pub.bytes_in_buffer) {
-        num_bytes -= (long)src->pub.bytes_in_buffer;
-        fill_input_buffer(cinfo);
-      }
-      src->pub.next_input_byte += (size_t) num_bytes;
-      src->pub.bytes_in_buffer -= (size_t) num_bytes;
+static void skip_input_data(j_decompress_ptr cinfo, long num_bytes) {
+  my_src_ptr src = (my_src_ptr)cinfo->src;
+  if (num_bytes > 0) {
+    while (num_bytes > (long)src->pub.bytes_in_buffer) {
+      num_bytes -= (long)src->pub.bytes_in_buffer;
+      fill_input_buffer(cinfo);
     }
+    src->pub.next_input_byte += (size_t)num_bytes;
+    src->pub.bytes_in_buffer -= (size_t)num_bytes;
   }
+}
 
 } // extern "C"
 
-static void jpeg_mem_src(j_decompress_ptr cinfo, const unsigned char *data)
-{
-  my_src_ptr src = (my_source_mgr*)malloc(sizeof(my_source_mgr));
+static void jpeg_mem_src(j_decompress_ptr cinfo, const unsigned char *data) {
+  my_src_ptr src = (my_source_mgr *)malloc(sizeof(my_source_mgr));
   cinfo->src = &(src->pub);
   src->pub.init_source = init_source;
   src->pub.fill_input_buffer = fill_input_buffer;
   src->pub.skip_input_data = skip_input_data;
   src->pub.resync_to_restart = jpeg_resync_to_restart;
   src->pub.term_source = term_source;
-  src->pub.bytes_in_buffer = 0; /* forces fill_input_buffer on first read */
+  src->pub.bytes_in_buffer = 0;    /* forces fill_input_buffer on first read */
   src->pub.next_input_byte = NULL; /* until buffer loaded */
   src->data = data;
   src->s = data;
@@ -211,23 +203,23 @@ static void jpeg_mem_src(j_decompress_ptr cinfo, const unsigned char *data)
  data to read from memory instead. Sharename can be set if the image is
  supposed to be added to teh Fl_Shared_Image list.
  */
-void Fl_JPEG_Image::load_jpg_(const char *filename, const char *sharename, const unsigned char *data)
-{
+void Fl_JPEG_Image::load_jpg_(const char *filename, const char *sharename,
+                              const unsigned char *data) {
 #ifdef HAVE_LIBJPEG
-  jpeg_decompress_struct  dinfo;    // Decompressor info
-  fl_jpeg_error_mgr       jerr;     // Error handler info
-  JSAMPROW                row;      // Sample row pointer
+  jpeg_decompress_struct dinfo; // Decompressor info
+  fl_jpeg_error_mgr jerr;       // Error handler info
+  JSAMPROW row;                 // Sample row pointer
 
   // the following variables are pointers allocating some private space that
   // is not reset by 'setjmp()'
-  char* max_finish_decompress_err;      // count errors and give up after a while
-  char* max_destroy_decompress_err;     // to avoid recursion and deadlock
+  char *max_finish_decompress_err;  // count errors and give up after a while
+  char *max_destroy_decompress_err; // to avoid recursion and deadlock
 
   // Note: The file pointer fp must not be an automatic (stack) variable
   // to avoid potential clobbering by setjmp/longjmp (gcc: [-Wclobbered]).
   // Hence the actual 'fp' is allocated with operator new.
 
-  FILE** fp = new FILE*;   // always allocate file pointer
+  FILE **fp = new FILE *; // always allocate file pointer
   *fp = NULL;
 
   // Clear data...
@@ -242,7 +234,7 @@ void Fl_JPEG_Image::load_jpg_(const char *filename, const char *sharename, const
       return;
     }
   } else {
-    if (data==0L) {
+    if (data == 0L) {
       ld(ERR_FILE_ACCESS);
       delete fp;
       return;
@@ -250,28 +242,30 @@ void Fl_JPEG_Image::load_jpg_(const char *filename, const char *sharename, const
   }
 
   // Setup the decompressor info and read the header...
-  dinfo.err                = jpeg_std_error((jpeg_error_mgr *)&jerr);
-  jerr.pub_.error_exit     = fl_jpeg_error_handler;
+  dinfo.err = jpeg_std_error((jpeg_error_mgr *)&jerr);
+  jerr.pub_.error_exit = fl_jpeg_error_handler;
   jerr.pub_.output_message = fl_jpeg_output_handler;
 
   // Setup error loop variables
-  max_finish_decompress_err = (char*)malloc(1);   // allocate space on the frame for error counters
-  max_destroy_decompress_err = (char*)malloc(1);  // otherwise, the variables are reset on the longjmp
-  *max_finish_decompress_err=10;
-  *max_destroy_decompress_err=10;
+  max_finish_decompress_err = (char *)malloc(1); // allocate space on the frame for error counters
+  max_destroy_decompress_err =
+      (char *)malloc(1); // otherwise, the variables are reset on the longjmp
+  *max_finish_decompress_err = 10;
+  *max_destroy_decompress_err = 10;
 
-  if (setjmp(jerr.errhand_))
-  {
+  if (setjmp(jerr.errhand_)) {
     // JPEG error handling...
     const char *name = "<unnamed>";
-    if (filename) name = filename;
-    else if (sharename) name = sharename;
+    if (filename)
+      name = filename;
+    else if (sharename)
+      name = sharename;
     Fl::warning("JPEG file \"%s\" is too large or contains errors!\n", name);
     // if any of the cleanup routines hits another error, we would end up
     // in a loop. So instead, we decrement max_err for some upper cleanup limit.
-    if ( ((*max_finish_decompress_err)-- > 0) && array)
+    if (((*max_finish_decompress_err)-- > 0) && array)
       jpeg_finish_decompress(&dinfo);
-    if ( (*max_destroy_decompress_err)-- > 0)
+    if ((*max_destroy_decompress_err)-- > 0)
       jpeg_destroy_decompress(&dinfo);
 
     if (*fp)
@@ -282,7 +276,7 @@ void Fl_JPEG_Image::load_jpg_(const char *filename, const char *sharename, const
     d(0);
 
     if (array) {
-      delete[] (uchar *)array;
+      delete[](uchar *) array;
       array = 0;
       alloc_array = 0;
     }
@@ -303,10 +297,10 @@ void Fl_JPEG_Image::load_jpg_(const char *filename, const char *sharename, const
   }
   jpeg_read_header(&dinfo, TRUE);
 
-  dinfo.quantize_colors      = (boolean)FALSE;
-  dinfo.out_color_space      = JCS_RGB;
+  dinfo.quantize_colors = (boolean)FALSE;
+  dinfo.out_color_space = JCS_RGB;
   dinfo.out_color_components = 3;
-  dinfo.output_components    = 3;
+  dinfo.output_components = 3;
 
   jpeg_calc_output_dimensions(&dinfo);
 
@@ -314,16 +308,15 @@ void Fl_JPEG_Image::load_jpg_(const char *filename, const char *sharename, const
   h(dinfo.output_height);
   d(dinfo.output_components);
 
-  if (((size_t)w()) * h() * d() > max_size() ) longjmp(jerr.errhand_, 1);
+  if (((size_t)w()) * h() * d() > max_size())
+    longjmp(jerr.errhand_, 1);
   array = new uchar[w() * h() * d()];
   alloc_array = 1;
 
   jpeg_start_decompress(&dinfo);
 
   while (dinfo.output_scanline < dinfo.output_height) {
-    row = (JSAMPROW)(array +
-                     dinfo.output_scanline * dinfo.output_width *
-                     dinfo.output_components);
+    row = (JSAMPROW)(array + dinfo.output_scanline * dinfo.output_width * dinfo.output_components);
     jpeg_read_scanlines(&dinfo, &row, (JDIMENSION)1);
   }
 

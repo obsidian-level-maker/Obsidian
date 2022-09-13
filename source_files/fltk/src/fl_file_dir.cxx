@@ -20,13 +20,13 @@
 #include <FL/fl_ask.H>
 
 
-static Fl_File_Chooser  *fc = (Fl_File_Chooser *)0;
-static void             (*current_callback)(const char*) = 0;
-static const char       *current_label = fl_ok;
+static Fl_File_Chooser *fc = (Fl_File_Chooser *)0;
+static void (*current_callback)(const char *) = 0;
+static const char *current_label = fl_ok;
 
 
 // Do a file chooser callback...
-static void callback(Fl_File_Chooser *, void*) {
+static void callback(Fl_File_Chooser *, void *) {
   if (current_callback && fc->value())
     (*current_callback)(fc->value());
 }
@@ -36,8 +36,9 @@ static void popup(Fl_File_Chooser *filechooser) {
   filechooser->show();
 
   // deactivate Fl::grab(), because it is incompatible with modal windows
-  Fl_Window* g = Fl::grab();
-  if (g) Fl::grab(0);
+  Fl_Window *g = Fl::grab();
+  if (g)
+    Fl::grab(0);
 
   while (filechooser->shown())
     Fl::wait();
@@ -55,7 +56,7 @@ static void popup(Fl_File_Chooser *filechooser) {
     \note \#include <FL/Fl_File_Chooser.H>
     \relates Fl_File_Chooser
 */
-void fl_file_chooser_callback(void (*cb)(const char*)) {
+void fl_file_chooser_callback(void (*cb)(const char *)) {
   current_callback = cb;
 }
 
@@ -66,8 +67,10 @@ void fl_file_chooser_callback(void (*cb)(const char*)) {
     \relates Fl_File_Chooser
 */
 void fl_file_chooser_ok_label(const char *l) {
-  if (l) current_label = l;
-  else current_label = fl_ok;
+  if (l)
+    current_label = l;
+  else
+    current_label = fl_ok;
 }
 
 /**
@@ -85,18 +88,19 @@ void fl_file_chooser_ok_label(const char *l) {
             or NULL if user cancels
     \relates Fl_File_Chooser
 */
-char *                                  // O - Filename or NULL
-fl_file_chooser(const char *message,    // I - Message in titlebar
-                const char *pat,        // I - Filename pattern
-                const char *fname,      // I - Initial filename selection
-                int        relative) {  // I - 0 for absolute path
-  static char   retname[FL_PATH_MAX];           // Returned filename
+char *                               // O - Filename or NULL
+fl_file_chooser(const char *message, // I - Message in titlebar
+                const char *pat,     // I - Filename pattern
+                const char *fname,   // I - Initial filename selection
+                int relative) {      // I - 0 for absolute path
+  static char retname[FL_PATH_MAX];  // Returned filename
 
   if (!fc) {
     // first time, so create file chooser, remember pointer,
     // and if no filename given, set it to current directory
 
-    if (!fname || !*fname) fname = ".";
+    if (!fname || !*fname)
+      fname = ".";
 
     fc = new Fl_File_Chooser(fname, pat, Fl_File_Chooser::CREATE, message);
     fc->callback(callback, 0);
@@ -107,9 +111,9 @@ fl_file_chooser(const char *message,    // I - Message in titlebar
     // see, if we use the same pattern between calls
     char same_pattern = 0;
     const char *fcf = fc->filter();
-    if ( fcf && pat && strcmp(fcf, pat)==0)
+    if (fcf && pat && strcmp(fcf, pat) == 0)
       same_pattern = 1;
-    else if ( (fcf==0L || *fcf==0) && (pat==0L || *pat==0) )
+    else if ((fcf == 0L || *fcf == 0) && (pat == 0L || *pat == 0))
       same_pattern = 1;
     // now set the pattern to the new pattern (even if they are the same)
     fc->filter(pat);
@@ -144,7 +148,8 @@ fl_file_chooser(const char *message,    // I - Message in titlebar
       else
         *retname = 0;
       const char *n = fl_filename_name(retname);
-      if (n) *((char*)n) = 0;
+      if (n)
+        *((char *)n) = 0;
 
       // retname is either old directory, or empty if user cancelled
       if (*retname) {
@@ -157,7 +162,7 @@ fl_file_chooser(const char *message,    // I - Message in titlebar
         fc->directory(dirsave); // so reset directory back where we were
       }
     } else {
-       fc->value(fname);
+      fc->value(fname);
     }
   }
   // end [re]initialization
@@ -168,8 +173,10 @@ fl_file_chooser(const char *message,    // I - Message in titlebar
     fl_filename_relative(retname, sizeof(retname), fc->value());
 
     return retname;
-  } else if (fc->value()) return (char *)fc->value();
-  else return 0;
+  } else if (fc->value())
+    return (char *)fc->value();
+  else
+    return 0;
 }
 
 /** Shows a file chooser dialog and gets a directory.
@@ -180,23 +187,25 @@ fl_file_chooser(const char *message,    // I - Message in titlebar
     \return the directory path string chosen by the user or NULL if user cancels
     \relates Fl_File_Chooser
 */
-char *                                  // O - Directory or NULL
-fl_dir_chooser(const char *message,     // I - Message for titlebar
-               const char *fname,       // I - Initial directory name
-               int        relative)     // I - 0 for absolute
+char *                              // O - Directory or NULL
+fl_dir_chooser(const char *message, // I - Message for titlebar
+               const char *fname,   // I - Initial directory name
+               int relative)        // I - 0 for absolute
 {
-  static char   retname[FL_PATH_MAX];           // Returned directory name
+  static char retname[FL_PATH_MAX]; // Returned directory name
 
   if (!fc) {
-    if (!fname || !*fname) fname = ".";
+    if (!fname || !*fname)
+      fname = ".";
 
-    fc = new Fl_File_Chooser(fname, "*", Fl_File_Chooser::CREATE |
-                                         Fl_File_Chooser::DIRECTORY, message);
+    fc = new Fl_File_Chooser(fname, "*", Fl_File_Chooser::CREATE | Fl_File_Chooser::DIRECTORY,
+                             message);
     fc->callback(callback, 0);
   } else {
     fc->type(Fl_File_Chooser::CREATE | Fl_File_Chooser::DIRECTORY);
     fc->filter("*");
-    if (fname && *fname) fc->value(fname);
+    if (fname && *fname)
+      fc->value(fname);
     fc->label(message);
   }
 
@@ -206,7 +215,9 @@ fl_dir_chooser(const char *message,     // I - Message for titlebar
     fl_filename_relative(retname, sizeof(retname), fc->value());
 
     return retname;
-  } else if (fc->value()) return (char *)fc->value();
-  else return 0;
+  } else if (fc->value())
+    return (char *)fc->value();
+  else
+    return 0;
 }
 /** @} */

@@ -324,7 +324,8 @@ int fsky_write(lua_State *L) {
 
     std::string current_engine = ob_get_param("engine");
 
-    if (StringCaseCmp(current_engine, "zdoom") == 0 || StringCaseCmp(current_engine, "eternity") == 0) {
+    if (StringCaseCmp(current_engine, "zdoom") == 0 ||
+        StringCaseCmp(current_engine, "eternity") == 0) {
         AddSectionLump('T', patch, lump);
     } else {
         AddSectionLump('P', patch, lump);

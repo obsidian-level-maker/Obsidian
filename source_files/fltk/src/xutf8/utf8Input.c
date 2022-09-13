@@ -37,7 +37,7 @@
 #define RET_ILSEQ -1
 #define RET_TOOFEW(x) (-10 - x)
 #define RET_TOOSMALL -2
-#define conv_t void*
+#define conv_t void *
 #define ucs4_t unsigned int
 typedef struct {
   unsigned short indx;
@@ -45,7 +45,8 @@ typedef struct {
 } Summary16;
 
 #ifndef X_HAVE_UTF8_STRING
-#define NEED_TOWC /* indicates what part of these include files is needed here (avoid compilation warnings) */
+#define NEED_TOWC /* indicates what part of these include files is needed here (avoid compilation \
+                     warnings) */
 #include "lcUniConv/big5.h"
 #include "lcUniConv/gb2312.h"
 #include "lcUniConv/cp936ext.h"
@@ -54,8 +55,7 @@ typedef struct {
 #include "lcUniConv/jisx0212.h"
 #include "lcUniConv/ksc5601.h"
 
-static int
-XConvertEucTwToUtf8(char* buffer_return, int len) {
+static int XConvertEucTwToUtf8(char *buffer_return, int len) {
   /* FIXME */
 #ifdef HAVE_LIBC_ICONV
   iconv_t cd;
@@ -66,9 +66,10 @@ XConvertEucTwToUtf8(char* buffer_return, int len) {
   int l = 0;
   char *buf; /* , *b; */
 
-  if (len < 1) return 0;
-  /*b = */ buf = (char*) malloc((unsigned)len);
-  memcpy(buf, buffer_return, (unsigned) len);
+  if (len < 1)
+    return 0;
+  /*b = */ buf = (char *)malloc((unsigned)len);
+  memcpy(buf, buffer_return, (unsigned)len);
 
 #ifdef HAVE_LIBC_ICONV
   l = cdl = len;
@@ -80,22 +81,23 @@ XConvertEucTwToUtf8(char* buffer_return, int len) {
   while (i < len) {
     unsigned int ucs;
     unsigned char c;
-    c = (unsigned char) buf[i];
+    c = (unsigned char)buf[i];
     if (c < 0x80) {
       ucs = c;
       i++;
-    } else if (c >= 0xa1 && c < 0xff && len - i > 1 ) {
+    } else if (c >= 0xa1 && c < 0xff && len - i > 1) {
 
 #if 0
       unsigned char b[2];
       b[0] = (unsigned char) c - 0x80;
       b[1] = (unsigned char) buf[i + 1] - 0x80;
 #endif
-      ucs = ' '; i += 2;
-    } else if (c == 0x8e &&  len - i > 3) {
-      unsigned char c1 =  buf[i + 1];
-      unsigned char c2 =  buf[i + 2];
-      unsigned char c3 =  buf[i + 3];
+      ucs = ' ';
+      i += 2;
+    } else if (c == 0x8e && len - i > 3) {
+      unsigned char c1 = buf[i + 1];
+      unsigned char c2 = buf[i + 2];
+      unsigned char c3 = buf[i + 3];
 #if 0
       unsigned char b[2];
       b[0] = (unsigned char)  buf[i + 2] - 0x80;
@@ -103,12 +105,15 @@ XConvertEucTwToUtf8(char* buffer_return, int len) {
 #endif
       if (c1 >= 0xa1 && c1 <= 0xb0) {
         if (c2 >= 0xa1 && c2 < 0xff && c3 >= 0xa1 && c3 < 0xff) {
-          ucs = ' '; i += 4;
+          ucs = ' ';
+          i += 4;
         } else {
-          ucs = '?'; i++;
+          ucs = '?';
+          i++;
         }
       } else {
-        ucs = '?'; i++;
+        ucs = '?';
+        i++;
       }
     } else {
       ucs = '?';
@@ -121,25 +126,25 @@ XConvertEucTwToUtf8(char* buffer_return, int len) {
   return l;
 }
 
-static int
-XConvertEucKrToUtf8(char* buffer_return, int len) {
+static int XConvertEucKrToUtf8(char *buffer_return, int len) {
   int i = 0, l = 0;
   char *buf;
 
-  if (len < 1) return 0;
+  if (len < 1)
+    return 0;
 
-  buf = (char*) malloc((unsigned)len);
+  buf = (char *)malloc((unsigned)len);
   memcpy(buf, buffer_return, (unsigned)len);
 
   while (i < len) {
     unsigned int ucs;
     unsigned char c, c1;
-    c = (unsigned char) buf[i];
+    c = (unsigned char)buf[i];
     if (c < 0x80) {
       ucs = c;
       i++;
     } else if (c >= 0xA1 && c < 0xFF && len - i > 1) {
-      c1 = (unsigned char) buf[i + 1];
+      c1 = (unsigned char)buf[i + 1];
       if (c1 >= 0xa1 && c1 < 0xff) {
         unsigned char b[2];
         b[0] = c - 0x80;
@@ -161,13 +166,13 @@ XConvertEucKrToUtf8(char* buffer_return, int len) {
   return l;
 }
 
-static int
-XConvertBig5ToUtf8(char* buffer_return, int len) {
+static int XConvertBig5ToUtf8(char *buffer_return, int len) {
   int i = 0, l = 0;
   char *buf;
 
-  if (len < 1) return 0;
-  buf = (char*) malloc((unsigned)len);
+  if (len < 1)
+    return 0;
+  buf = (char *)malloc((unsigned)len);
   memcpy(buf, buffer_return, (unsigned)len);
 
   if (len == 1) {
@@ -176,8 +181,8 @@ XConvertBig5ToUtf8(char* buffer_return, int len) {
   while (i + 1 < len) {
     unsigned int ucs;
     unsigned char b[2];
-    b[0] = (unsigned char) buf[i];
-    b[1] = (unsigned char) buf[i + 1];
+    b[0] = (unsigned char)buf[i];
+    b[1] = (unsigned char)buf[i + 1];
     if (big5_mbtowc(NULL, &ucs, b, 2) == 2) {
       i += 2;
     } else {
@@ -190,50 +195,13 @@ XConvertBig5ToUtf8(char* buffer_return, int len) {
   return l;
 }
 
-static int
-XConvertCp936extToUtf8(char* buffer_return, int len)
-{
+static int XConvertCp936extToUtf8(char *buffer_return, int len) {
   int i = 0, l = 0;
   char *buf;
 
-  if (len < 1) return 0;
-  buf = (char*) malloc((unsigned)len);
-  memcpy(buf, buffer_return, (unsigned)len);
-
-  if (len == 1) {
-          l += XConvertUcsToUtf8((unsigned int)buf[i], buffer_return + l);
-  }
-  while (i + 1 < len) {
-          unsigned int ucs;
-          unsigned char b[2];
-          b[0] = (unsigned char) buf[i];
-          b[1] = (unsigned char) buf[i + 1];
-          if (cp936ext_mbtowc(NULL, &ucs, b, 2) == 2) {
-                  i += 2;
-          } else {
-              if ( b[0] < 0x80) {
-                    ucs = b[0];
-                }else{
-                              ucs = '?';
-                  }
-                          i++;
-                  }
-          l += XConvertUcsToUtf8(ucs, buffer_return + l);
-  }
-  if(i + 1 == len) {
-      l += XConvertUcsToUtf8((unsigned int)buf[i], buffer_return + l);
-  }
-  free(buf);
-  return l;
-}
-
-static int
-XConvertGb2312ToUtf8(char* buffer_return, int len) {
-  int i = 0, l = 0;
-  char *buf;
-
-  if (len < 1) return 0;
-  buf = (char*) malloc((unsigned)len);
+  if (len < 1)
+    return 0;
+  buf = (char *)malloc((unsigned)len);
   memcpy(buf, buffer_return, (unsigned)len);
 
   if (len == 1) {
@@ -242,9 +210,45 @@ XConvertGb2312ToUtf8(char* buffer_return, int len) {
   while (i + 1 < len) {
     unsigned int ucs;
     unsigned char b[2];
-    b[0] = (unsigned char) buf[i];
-    b[1] = (unsigned char) buf[i + 1];
-    if ( b[0] < 0x80 ) {
+    b[0] = (unsigned char)buf[i];
+    b[1] = (unsigned char)buf[i + 1];
+    if (cp936ext_mbtowc(NULL, &ucs, b, 2) == 2) {
+      i += 2;
+    } else {
+      if (b[0] < 0x80) {
+        ucs = b[0];
+      } else {
+        ucs = '?';
+      }
+      i++;
+    }
+    l += XConvertUcsToUtf8(ucs, buffer_return + l);
+  }
+  if (i + 1 == len) {
+    l += XConvertUcsToUtf8((unsigned int)buf[i], buffer_return + l);
+  }
+  free(buf);
+  return l;
+}
+
+static int XConvertGb2312ToUtf8(char *buffer_return, int len) {
+  int i = 0, l = 0;
+  char *buf;
+
+  if (len < 1)
+    return 0;
+  buf = (char *)malloc((unsigned)len);
+  memcpy(buf, buffer_return, (unsigned)len);
+
+  if (len == 1) {
+    l += XConvertUcsToUtf8((unsigned int)buf[i], buffer_return + l);
+  }
+  while (i + 1 < len) {
+    unsigned int ucs;
+    unsigned char b[2];
+    b[0] = (unsigned char)buf[i];
+    b[1] = (unsigned char)buf[i + 1];
+    if (b[0] < 0x80) {
       ucs = b[0];
       i++;
     } else if (gb2312_mbtowc(NULL, &ucs, b, 2) == 2) {
@@ -262,28 +266,28 @@ XConvertGb2312ToUtf8(char* buffer_return, int len) {
   return l;
 }
 
-static int
-XConvertEucCnToUtf8(char* buffer_return, int len) {
+static int XConvertEucCnToUtf8(char *buffer_return, int len) {
   int i = 0, l = 0;
   char *buf;
 
-  if (len < 1) return 0;
-  buf = (char*) malloc((unsigned)len);
+  if (len < 1)
+    return 0;
+  buf = (char *)malloc((unsigned)len);
   memcpy(buf, buffer_return, (unsigned)len);
 
   while (i < len) {
     unsigned int ucs;
     unsigned char c, c1;
-    c = (unsigned char) buf[i];
+    c = (unsigned char)buf[i];
     if (c < 0x80) {
       ucs = c;
       i++;
     } else if (c >= 0xA1 && c < 0xFF && len - i > 1) {
-      c1 = (unsigned char) buf[i + 1];
+      c1 = (unsigned char)buf[i + 1];
       if (c1 >= 0xa1 && c1 < 0xff) {
         unsigned char b[2];
-        b[0] = (unsigned char) c;
-        b[1] = (unsigned char) c1;
+        b[0] = (unsigned char)c;
+        b[1] = (unsigned char)c1;
         if (gb2312_mbtowc(NULL, &ucs, b, 2) < 1) {
           ucs = '?';
         }
@@ -301,24 +305,24 @@ XConvertEucCnToUtf8(char* buffer_return, int len) {
   return l;
 }
 
-static int
-XConvertEucJpToUtf8(char* buffer_return, int len) {
+static int XConvertEucJpToUtf8(char *buffer_return, int len) {
   int i = 0, l = 0;
   char *buf;
 
-  if (len < 1) return 0;
-  buf = (char*) malloc((unsigned)len);
+  if (len < 1)
+    return 0;
+  buf = (char *)malloc((unsigned)len);
   memcpy(buf, buffer_return, (unsigned)len);
 
   while (i < len) {
     unsigned int ucs;
     unsigned char c, c1;
-    c = (unsigned char) buf[i];
+    c = (unsigned char)buf[i];
     if (c < 0x80) {
       ucs = c;
       i++;
     } else if (c >= 0xA1 && c < 0xFF && len - i > 1) {
-      c1 = (unsigned char) buf[i + 1];
+      c1 = (unsigned char)buf[i + 1];
       if (c < 0xF5 && c1 >= 0xa1) {
         unsigned char b[2];
         b[0] = c - 0x80;
@@ -333,7 +337,7 @@ XConvertEucJpToUtf8(char* buffer_return, int len) {
       }
       i += 2;
     } else if (c == 0x8E && len - i > 1) {
-      c1 = (unsigned char) buf[i + 1];
+      c1 = (unsigned char)buf[i + 1];
       if (c1 >= 0xa1 && c1 <= 0xe0) {
         if (jisx0201_mbtowc(NULL, &ucs, &c1, 1) != 1) {
           ucs = '?';
@@ -343,8 +347,8 @@ XConvertEucJpToUtf8(char* buffer_return, int len) {
       }
       i += 2;
     } else if (c == 0x8F && len - i > 2) {
-      c = (unsigned char) buf[i + 1];
-      c1 = (unsigned char) buf[i + 2];
+      c = (unsigned char)buf[i + 1];
+      c1 = (unsigned char)buf[i + 2];
       if (c >= 0xa1 && c < 0xff) {
         if (c < 0xf5 && c1 >= 0xa1 && c1 < 0xff) {
           unsigned char b[2];
@@ -374,11 +378,7 @@ XConvertEucJpToUtf8(char* buffer_return, int len) {
   return l;
 }
 
-static int
-XConvertEucToUtf8(const char*   locale,
-                  char*         buffer_return,
-                  int           len,
-                  int           bytes_buffer) {
+static int XConvertEucToUtf8(const char *locale, char *buffer_return, int len, int bytes_buffer) {
 
   /* if (!locale) { */
   /* if (!locale || strstr(locale, "UTF") || strstr(locale, "utf")) { */
@@ -409,18 +409,12 @@ XConvertEucToUtf8(const char*   locale,
   return len;
 }
 
-int
-XUtf8LookupString(XIC                 ic,
-                  XKeyPressedEvent*   event,
-                  char*               buffer_return,
-                  int                 bytes_buffer,
-                  KeySym*             keysym,
-                  Status*             status_return) {
+int XUtf8LookupString(XIC ic, XKeyPressedEvent *event, char *buffer_return, int bytes_buffer,
+                      KeySym *keysym, Status *status_return) {
 
   long ucs = -1;
   int len;
-  len = XmbLookupString(ic, event, buffer_return, bytes_buffer / 5,
-                        keysym, status_return);
+  len = XmbLookupString(ic, event, buffer_return, bytes_buffer / 5, keysym, status_return);
   if (*status_return == XBufferOverflow) {
     return len * 5;
   }
@@ -430,9 +424,7 @@ XUtf8LookupString(XIC                 ic,
     } else {
       ucs = (long)*keysym;
     }
-  } else  if (((*keysym >= 0x100 && *keysym <= 0xf000) ||
-              (*keysym & 0xff000000U) == 0x01000000))
-  {
+  } else if (((*keysym >= 0x100 && *keysym <= 0xf000) || (*keysym & 0xff000000U) == 0x01000000)) {
     ucs = XKeysymToUcs(*keysym);
   } else {
     ucs = -2;
@@ -442,9 +434,11 @@ XUtf8LookupString(XIC                 ic,
     len = XConvertUcsToUtf8((unsigned)ucs, (char *)buffer_return);
   } else if (len > 0) {
     XIM im;
-    if (!ic) return 0;
+    if (!ic)
+      return 0;
     im = XIMOfIC(ic);
-    if (!im) return 0;
+    if (!im)
+      return 0;
     len = XConvertEucToUtf8(XLocaleOfIM(im), buffer_return, len, bytes_buffer);
   }
   return len;

@@ -602,6 +602,16 @@ function ob_set_mod_option(name, option, value)
   -- (nothing ever depends on custom options)
 end
 
+function ob_mod_enabled(name)
+  local mod = OB_MODULES[name]
+  if not mod then
+    gui.printf("ob_mod_enabled: Ignoring unknown module: %s\n", name)
+    return false
+  else
+    if mod.enabled and mod.shown then return 1 else return 0 end
+  end
+end
+
 function ob_set_config(name, value)
   -- See the document 'doc/Config_Flow.txt' for a good
   -- description of the flow of configuration values
@@ -1745,7 +1755,226 @@ function ob_clean_up()
   collectgarbage("collect")
 end
 
+local function ob_get_option_refs()
+  local option_refs = {}
+  for _,v in pairs(OB_MODULES) do
+    for _,vv in pairs(v.options) do
+      if not string.match(vv.name, "header_") then
+        option_refs[vv.name] = {}
+        if not vv.tooltip then
+          option_refs[vv.name].tooltip = "No help yet written for this option!"
+        else
+          option_refs[vv.name].tooltip = gui.gettext(vv.tooltip)
+        end
+        if vv.randomize_group then option_refs[vv.name].random_group = vv.randomize_group end
+        if not v.game then
+          option_refs[vv.name].game = {}
+          table.add_unique(option_refs[vv.name].game, "ALL")
+        else
+          if type(v.game) == "string" then
+            option_refs[vv.name].game = {}
+            table.add_unique(option_refs[vv.name].game, v.game)
+          else
+            option_refs[vv.name].game = {}
+            for game,_ in pairs(v.game) do
+              table.add_unique(option_refs[vv.name].game, game)
+            end
+          end
+        end
+        if not v.engine then
+          option_refs[vv.name].engine = {}
+          table.add_unique(option_refs[vv.name].engine, "ALL")
+        else
+          if type(v.engine) == "string" then
+            option_refs[vv.name].engine = {}
+            table.add_unique(option_refs[vv.name].engine, v.engine)
+          else
+            option_refs[vv.name].engine = {}
+            for engine,_ in pairs(v.engine) do
+              table.add_unique(option_refs[vv.name].engine, engine)
+            end
+          end
+        end
+        if not vv.valuator then
+          option_refs[vv.name].choices = {}
+          for num,choice in pairs(vv.choices) do
+            if num % 2 == 1 then
+              table.add_unique(option_refs[vv.name].choices, choice)
+            end
+          end
+        else
+          if vv.valuator == "slider" then
+            option_refs[vv.name].slider = {}
+            option_refs[vv.name].slider.min = vv.min
+            option_refs[vv.name].slider.max = vv.max
+            option_refs[vv.name].slider.default = vv.default
+            if vv.nan then
+              option_refs[vv.name].slider.nan = vv.nan
+            end
+          else
+            option_refs[vv.name].button = {}
+            option_refs[vv.name].button.default = vv.default
+          end
+        end
+      end
+    end
+  end
+  return option_refs
+end
 
+function ob_print_reference()
+  local option_refs = ob_get_option_refs()
+  local sorted_entries = table.keys_sorted(option_refs)
+  for _,option in ipairs(sorted_entries) do
+    gui.console_print("[ " .. option .. " ]\n")
+    gui.ref_print("[ " .. option .. " ]\n")
+    gui.console_print(option_refs[option].tooltip .. "\n")
+    gui.ref_print(option_refs[option].tooltip .. "\n")
+    gui.console_print("ENGINE: ")
+    gui.ref_print("ENGINE: ")
+    for _,engine in pairs(option_refs[option].engine) do
+      gui.console_print(engine .. " ")
+      gui.ref_print(engine .. " ")
+    end
+    gui.console_print("\n")
+    gui.ref_print("\n")
+    gui.console_print("GAME: ")
+    gui.ref_print("GAME: ")
+    for _,game in pairs(option_refs[option].game) do
+      gui.console_print(game .. " ")
+      gui.ref_print(game .. " ")
+    end
+    if (option_refs[option].slider) then
+      gui.console_print("\nVALUES: " .. option_refs[option].slider.min .. "-" .. option_refs[option].slider.max)
+      gui.ref_print("\nVALUES: " .. option_refs[option].slider.min .. "-" .. option_refs[option].slider.max)
+      if option_refs[option].slider.nan then
+        gui.console_print("," .. option_refs[option].slider.nan)
+        gui.ref_print("," .. option_refs[option].slider.nan)
+      end
+      gui.console_print("\nDEFAULT: " .. option_refs[option].slider.default)
+      gui.ref_print("\nDEFAULT: " .. option_refs[option].slider.default)
+    elseif (option_refs[option].button) then
+      gui.console_print("\nVALUES: " .. "0/1\nDEFAULT: " .. option_refs[option].button.default)
+      gui.ref_print("\nVALUES: " .. "0/1\nDEFAULT: " .. option_refs[option].button.default)
+    else
+      gui.console_print("\nVALUES: " )
+      gui.ref_print("\nVALUES: " )
+      for num,choice in ipairs(option_refs[option].choices) do
+        if num ~= #option_refs[option].choices then
+          gui.console_print(choice .. ",")
+          gui.ref_print(choice .. ",")
+        else
+          gui.console_print(choice)
+          gui.ref_print(choice)
+        end
+      end
+    end
+    if (option_refs[option].random_group) then
+      gui.console_print("\nRANDOMIZE_GROUP: " .. option_refs[option].random_group)
+      gui.ref_print("\nRANDOMIZE_GROUP: " .. option_refs[option].random_group)
+    end
+    gui.console_print("\n\n")
+    gui.ref_print("\n\n")
+  end
+end
+
+local function split_commas(inputstr)
+  local t = {}
+  for str in string.gmatch(inputstr, "([^,]+)") do
+    table.insert(t, str)
+  end
+  return t
+end
+
+function ob_print_reference_json()
+  local option_refs = ob_get_option_refs()
+  local sorted_entries = table.keys_sorted(option_refs)
+  gui.console_print("{\n")
+  for i,option in ipairs(sorted_entries) do
+    gui.console_print("  \"" .. option .. "\": {\n")
+    local tooltip = option_refs[option].tooltip
+    tooltip = tooltip:gsub("\n", "\\n")
+    gui.console_print("    \"tooltip\": \"" .. tooltip .. "\",\n")
+    gui.console_print("    \"engine\": ")
+    if #option_refs[option].engine == 1 and option_refs[option].engine[1] == "ALL" then
+      gui.console_print("\"ALL\",\n")
+    else
+      gui.console_print("[")
+      for j,engine in pairs(option_refs[option].engine) do
+        if j ~= #option_refs[option].engine then
+          gui.console_print("\"" .. engine .. "\", ")
+        else
+          gui.console_print("\"" .. engine .. "\"")
+        end
+      end
+      gui.console_print("],\n")
+    end
+    gui.console_print("    \"game\": ")
+    if #option_refs[option].game == 1 and option_refs[option].game[1] == "ALL" then
+      gui.console_print("\"ALL\",\n")
+    else
+      gui.console_print("[")
+      for j,game in pairs(option_refs[option].game) do
+        if j ~= #option_refs[option].game then
+          gui.console_print("\"" .. game .. "\", ")
+        else
+          gui.console_print("\"" .. game .. "\"")
+        end
+      end
+      gui.console_print("],\n")
+    end
+    if (option_refs[option].slider) then
+      gui.console_print("    \"type\": \"slider\",\n")
+      gui.console_print("    \"values\": {\n")
+      gui.console_print("      \"min\": " .. option_refs[option].slider.min .. ",\n")
+      gui.console_print("      \"max\": " .. option_refs[option].slider.max .. ",\n")
+      local default = option_refs[option].slider.default
+      if tonumber(default) == nil then
+        default = "\"" .. default .. "\""
+      end
+      gui.console_print("      \"default\": " .. default)
+      if option_refs[option].slider.nan then
+        local nans = split_commas(option_refs[option].slider.nan)
+        gui.console_print(",\n      \"nan\": [\n")
+        for i,nan in ipairs(nans) do
+          gui.console_print("        \"" .. nan .. "\"")
+          if i ~= #nans then
+            gui.console_print(",")
+          end
+          gui.console_print("\n")
+        end
+        gui.console_print("      ]")
+      end
+      gui.console_print("\n")
+      gui.console_print("    }")
+    elseif (option_refs[option].button) then
+      gui.console_print("    \"type\": \"boolean\",\n")
+      gui.console_print("    \"default\": " .. option_refs[option].button.default .. "\n")
+    else
+      gui.console_print("    \"type\": \"choice\",\n")
+      gui.console_print("    \"values\": [\n")
+      for num,choice in ipairs(option_refs[option].choices) do
+        gui.console_print("      \"" .. choice .. "\"")
+        if num ~= #option_refs[option].choices then
+          gui.console_print(",")
+        end
+        gui.console_print("\n")
+      end
+      gui.console_print("    ]")
+    end
+    if (option_refs[option].random_group) then
+      gui.console_print(",\n    \"randomize_group\": \"" .. option_refs[option].random_group .. "\"\n")
+    else
+      gui.console_print("\n")
+    end
+    gui.console_print("  }")
+    if i ~= #sorted_entries then
+      gui.console_print(",")
+    end
+    gui.console_print("\n")
+  end
+  gui.console_print("}\n")
+end
 
 function ob_build_cool_shit()
   assert(OB_CONFIG)

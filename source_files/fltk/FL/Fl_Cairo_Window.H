@@ -19,16 +19,16 @@
 */
 
 #ifndef FL_CAIRO_WINDOW_H
-# define FL_CAIRO_WINDOW_H
+#define FL_CAIRO_WINDOW_H
 
 #include <FL/fl_config.h>
 
-# ifdef FLTK_HAVE_CAIRO
+#ifdef FLTK_HAVE_CAIRO
 
 // Cairo is currently supported for the following platforms:
 // Win32, Apple Quartz, X11
-#  include <FL/Fl.H>
-#  include <FL/Fl_Double_Window.H>
+#include <FL/Fl.H>
+#include <FL/Fl_Double_Window.H>
 
 /**
    \addtogroup group_cairo
@@ -60,10 +60,10 @@
    \endcode
 
    The FLTK coordinate system differs from the default native cairo coordinate system
-   which uses normalized `(0.0&hellip;1.0)` values for x and y, e.g.: `(0&le;x&le;1.0),(0&le;y&le;1.0)`.
-   So beware of this when copy/pasting cairo example programs that assume normalized values.
-   If need be, you can revert to the cairo coordinate system by simply calling `cairo_scale()`
-   with the widget's `w()` and `h()` values. \b Example:
+   which uses normalized `(0.0&hellip;1.0)` values for x and y, e.g.:
+   `(0&le;x&le;1.0),(0&le;y&le;1.0)`. So beware of this when copy/pasting cairo example programs
+   that assume normalized values. If need be, you can revert to the cairo coordinate system by
+   simply calling `cairo_scale()` with the widget's `w()` and `h()` values. \b Example:
 
    \code
    static void my_cairo_draw_cb(Fl_Cairo_Window *window, cairo_t *cr) {
@@ -88,9 +88,11 @@ class FL_EXPORT Fl_Cairo_Window : public Fl_Double_Window {
 
 public:
   Fl_Cairo_Window(int W, int H, const char *L = 0)
-    : Fl_Double_Window(W, H, L), draw_cb_(0) {}
+    : Fl_Double_Window(W, H, L)
+    , draw_cb_(0) {}
   Fl_Cairo_Window(int X, int Y, int W, int H, const char *L = 0)
-    : Fl_Double_Window(X, Y, W, H, L), draw_cb_(0) {}
+    : Fl_Double_Window(X, Y, W, H, L)
+    , draw_cb_(0) {}
 
 protected:
   /** Overloaded to provide cairo callback support */
@@ -109,18 +111,19 @@ protected:
 
 public:
   /** This defines the cairo draw callback prototype that you must further */
-  typedef void (*cairo_draw_cb) (Fl_Cairo_Window* self, cairo_t* def);
+  typedef void (*cairo_draw_cb)(Fl_Cairo_Window *self, cairo_t *def);
   /**
     You must provide a draw callback which will implement your cairo rendering.
     This method will permit you to set your cairo callback to \p cb.
   */
   void set_draw_cb(cairo_draw_cb cb) { draw_cb_ = cb; }
+
 private:
-    cairo_draw_cb draw_cb_;
+  cairo_draw_cb draw_cb_;
 };
 
 
 /** @} */
 
-# endif // FLTK_HAVE_CAIRO
+#endif // FLTK_HAVE_CAIRO
 #endif // FL_CAIRO_WINDOW_H

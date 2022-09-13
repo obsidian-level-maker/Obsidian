@@ -1,5 +1,5 @@
-#ifndef FILENAME_FORMATTER_NODES_H
-#define FILENAME_FORMATTER_NODES_H
+#ifndef FILENAME_FORMATTER_FF_H
+#define FILENAME_FORMATTER_FF_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -7,7 +7,7 @@ extern "C" {
 
 #include <stdbool.h>
 
-#define TOK_EOF 1
+enum { TOK_EOF = 1 };
 
 extern void year(void);
 extern void month(void);
@@ -26,4 +26,4 @@ extern void raw_append(const char *string);
 }
 #endif
 
-#endif  // FILENAME_FORMATTER_NODES_H
+#endif  // FILENAME_FORMATTER_FF_H

@@ -42,14 +42,14 @@ class FL_EXPORT Fl_Scrollbar : public Fl_Slider {
 
   int linesize_;
   int pushed_;
-  static void timeout_cb(void*);
+  static void timeout_cb(void *);
   void increment_cb();
+
 protected:
   void draw();
 
 public:
-
-  Fl_Scrollbar(int X,int Y,int W,int H, const char *L = 0);
+  Fl_Scrollbar(int X, int Y, int W, int H, const char *L = 0);
   ~Fl_Scrollbar();
   int handle(int);
 
@@ -60,7 +60,7 @@ public:
     \see Fl_Scrollbar::value(int p)
     \see Fl_Scrollbar::value(int pos, int size, int first, int total)
   */
-  int value() const {return int(Fl_Slider::value());}
+  int value() const { return int(Fl_Slider::value()); }
 
   /**
     Sets the value (position) of the slider in the scrollbar.
@@ -68,7 +68,7 @@ public:
     \see Fl_Scrollbar::value()
     \see Fl_Scrollbar::value(int pos, int size, int first, int total)
   */
-  int value(int p) {return int(Fl_Slider::value((double)p));}
+  int value(int p) { return int(Fl_Slider::value((double)p)); }
 
   /**
     Sets the position, size and range of the slider in the scrollbar.
@@ -91,15 +91,14 @@ public:
   /**
     Get the size of step, in lines, that the arror keys move.
   */
-  int linesize() const {return linesize_;}
+  int linesize() const { return linesize_; }
 
   /**
     This number controls how big the steps are that the arrow keys do.
     In addition page up/down move by the size last sent to value()
     minus one linesize().  The default is 16.
   */
-  void linesize(int i) {linesize_ = i;}
-
+  void linesize(int i) { linesize_ = i; }
 };
 
 #endif
