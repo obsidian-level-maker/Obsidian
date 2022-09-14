@@ -995,7 +995,10 @@ void Main_SetSeed() {
     if (random_string_seeds && !did_specify_seed) {
         if (string_seed.empty()) {
             if (password_mode) {
-                string_seed = ob_get_password();
+                if (next_rand_seed % 2 == 1)
+                    string_seed = ob_get_password();
+                else
+                    string_seed = ob_get_random_words();
             } else {
                 string_seed = ob_get_random_words();
             }

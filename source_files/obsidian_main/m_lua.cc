@@ -1855,7 +1855,7 @@ void ob_print_reference() {
     if (!Script_CallFunc("ob_print_reference", 1)) {
         fmt::print("ob_print_reference: Error creating REFERENCE.txt!\n");
     }
-    fmt::print("A copy of this output can be found at {}\n",
+    fmt::print("\nA copy of this output can be found at {}\n",
                reference_file.generic_string());
 }
 

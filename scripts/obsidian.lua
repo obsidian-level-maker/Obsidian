@@ -1883,20 +1883,20 @@ function ob_print_reference()
   "  HacX: hacx_urban\n" ..
   "  Harmony: ndf_base\n" ..
   "  Heretic: city,maw,dome,ossuary,demense\n" ..
-  "  Hexen: forest,ice_caves,fire_steel,swamp,dungeon,town\n" ..
+  "  Hexen: forest,ice_caves,fire_steel,swamp,dungeon\n" ..
   "  Strife: town\n")
   gui.console_print("engine: ALL\n")
   gui.ref_print("engine: ALL\n")
   gui.console_print("game: ALL\n")
   gui.ref_print("game: ALL\n")
-  gui.console_print("values: original,epi,jumple,bit_mixed,psycho,bazoik,spaceport," ..
+  gui.console_print("values: original,epi,jumble,bit_mixed,psycho,bazoik,spaceport," ..
   "villa,tech,urban,hell,deimos,flesh,egypt,hacx_urban,ndf_base,city,maw,dome,ossuary," ..
   "demense,forest,ice_caves,fire_steel,swamp,dungeon,town\n")
-  gui.ref_print("values: original,epi,jumple,bit_mixed,psycho,bazoik,spaceport," ..
+  gui.ref_print("values: original,epi,jumble,bit_mixed,psycho,bazoik,spaceport," ..
   "villa,tech,urban,hell,deimos,flesh,egypt,hacx_urban,ndf_base,city,maw,dome,ossuary," ..
   "demense,forest,ice_caves,fire_steel,swamp,dungeon,town\n")
   gui.console_print("default: original\n")
-  gui.ref_print("default: original\n\n")
+  gui.ref_print("default: original\n")
   local module_refs = ob_get_module_refs()
   local sorted_entries = table.keys_sorted(module_refs)
   for _,module_entry in ipairs(sorted_entries) do
