@@ -383,7 +383,7 @@ void Determine_WorkingPath(const char *argv0) {
 
 std::filesystem::path Resolve_DefaultOutputPath() {
     if (default_output_path.empty()) {
-        default_output_path = install_dir;
+        default_output_path = install_dir.string();
     }
     if (default_output_path[0] == '$') {
         const char *var = getenv(default_output_path.c_str() + 1);
