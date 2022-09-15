@@ -19,7 +19,7 @@
 
 #ifndef Fl_JPEG_Image_H
 #define Fl_JPEG_Image_H
-#  include "Fl_Image.H"
+#include "Fl_Image.H"
 
 /**
  The Fl_JPEG_Image class supports loading, caching,
@@ -30,14 +30,11 @@
 class FL_EXPORT Fl_JPEG_Image : public Fl_RGB_Image {
 
 public:
-
   Fl_JPEG_Image(const char *filename);
   Fl_JPEG_Image(const char *name, const unsigned char *data);
 
 protected:
-
   void load_jpg_(const char *filename, const char *sharename, const unsigned char *data);
-
 };
 
 #endif

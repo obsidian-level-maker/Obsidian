@@ -28,9 +28,9 @@
 static Fl_Process s_proc;
 
 /// Shell settings in the .fl file
-Shell_Settings shell_settings_windows = { };
-Shell_Settings shell_settings_linux = { };
-Shell_Settings shell_settings_macos = { };
+Shell_Settings shell_settings_windows = {};
+Shell_Settings shell_settings_linux = {};
+Shell_Settings shell_settings_macos = {};
 
 /// Current shell command, stored in .fl file for each platform, and in app prefs
 char *g_shell_command = NULL;
@@ -50,8 +50,7 @@ int g_shell_use_fl_settings = 1;
 /**
  Read the default shell settings from the app preferences.
  */
-void shell_prefs_get()
-{
+void shell_prefs_get() {
   fluid_prefs.get("shell_command", g_shell_command, "echo \"Custom Shell Command\"");
   fluid_prefs.get("shell_savefl", g_shell_save_fl, 1);
   fluid_prefs.get("shell_writecode", g_shell_save_code, 1);
@@ -62,8 +61,7 @@ void shell_prefs_get()
 /**
  Write the current shell settings to the app preferences.
  */
-void shell_prefs_set()
-{
+void shell_prefs_set() {
   fluid_prefs.set("shell_command", g_shell_command);
   fluid_prefs.set("shell_savefl", g_shell_save_fl);
   fluid_prefs.set("shell_writecode", g_shell_save_code);
@@ -74,9 +72,8 @@ void shell_prefs_set()
 /**
  Copy shell settings from the .fl buffer if use_fl_settings is set.
  */
-void shell_settings_read()
-{
-  if (g_shell_use_fl_settings==0)
+void shell_settings_read() {
+  if (g_shell_use_fl_settings == 0)
     return;
 #if defined(_WIN32)
   Shell_Settings &shell_settings = shell_settings_windows;
@@ -86,21 +83,20 @@ void shell_settings_read()
   Shell_Settings &shell_settings = shell_settings_linux;
 #endif
   if (g_shell_command)
-    free((void*)g_shell_command);
+    free((void *)g_shell_command);
   g_shell_command = NULL;
   if (shell_settings.command)
     g_shell_command = fl_strdup(shell_settings.command);
-  g_shell_save_fl = ((shell_settings.flags&1)==1);
-  g_shell_save_code = ((shell_settings.flags&2)==2);
-  g_shell_save_strings = ((shell_settings.flags&4)==4);
+  g_shell_save_fl = ((shell_settings.flags & 1) == 1);
+  g_shell_save_code = ((shell_settings.flags & 2) == 2);
+  g_shell_save_strings = ((shell_settings.flags & 4) == 4);
 }
 
 /**
  Copy current shell settings to the .fl buffer if use_fl_settings is set.
  */
-void shell_settings_write()
-{
-  if (g_shell_use_fl_settings==0)
+void shell_settings_write() {
+  if (g_shell_use_fl_settings == 0)
     return;
 #if defined(_WIN32)
   Shell_Settings &shell_settings = shell_settings_windows;
@@ -110,7 +106,7 @@ void shell_settings_write()
   Shell_Settings &shell_settings = shell_settings_linux;
 #endif
   if (shell_settings.command)
-    free((void*)shell_settings.command);
+    free((void *)shell_settings.command);
   shell_settings.command = NULL;
   if (g_shell_command)
     shell_settings.command = fl_strdup(g_shell_command);
@@ -128,58 +124,63 @@ void shell_settings_write()
  */
 
 Fl_Process::Fl_Process() {
-  _fpt= NULL;
+  _fpt = NULL;
 }
 
 Fl_Process::~Fl_Process() {
-  if (_fpt) close();
+  if (_fpt)
+    close();
 }
 
 // FIXME: popen needs the UTF-8 equivalent fl_popen
 // portable open process:
-FILE * Fl_Process::popen(const char *cmd, const char *mode) {
-#if defined(_WIN32)  && !defined(__CYGWIN__)
+FILE *Fl_Process::popen(const char *cmd, const char *mode) {
+#if defined(_WIN32) && !defined(__CYGWIN__)
   // PRECONDITIONS
-  if (!mode || !*mode || (*mode!='r' && *mode!='w') ) return NULL;
-  if (_fpt) close(); // close first before reuse
+  if (!mode || !*mode || (*mode != 'r' && *mode != 'w'))
+    return NULL;
+  if (_fpt)
+    close(); // close first before reuse
 
   ptmode = *mode;
   pin[0] = pin[1] = pout[0] = pout[1] = perr[0] = perr[1] = INVALID_HANDLE_VALUE;
   // stderr to stdout wanted ?
-  int fusion = (strstr(cmd,"2>&1") !=NULL);
+  int fusion = (strstr(cmd, "2>&1") != NULL);
 
   // Create windows pipes
-  if (!createPipe(pin) || !createPipe(pout) || (!fusion && !createPipe(perr) ) )
+  if (!createPipe(pin) || !createPipe(pout) || (!fusion && !createPipe(perr)))
     return freeHandles(); // error
 
   // Initialize Startup Info
   ZeroMemory(&si, sizeof(STARTUPINFO));
-  si.cb           = sizeof(STARTUPINFO);
-  si.dwFlags    = STARTF_USESTDHANDLES;
-  si.hStdInput    = pin[0];
-  si.hStdOutput   = pout[1];
-  si.hStdError  = fusion ? pout[1] : perr [1];
+  si.cb = sizeof(STARTUPINFO);
+  si.dwFlags = STARTF_USESTDHANDLES;
+  si.hStdInput = pin[0];
+  si.hStdOutput = pout[1];
+  si.hStdError = fusion ? pout[1] : perr[1];
 
-  if ( CreateProcess(NULL, (LPTSTR) cmd,NULL,NULL,TRUE,
-                     DETACHED_PROCESS,NULL,NULL, &si, &pi)) {
+  if (CreateProcess(NULL, (LPTSTR)cmd, NULL, NULL, TRUE, DETACHED_PROCESS, NULL, NULL, &si, &pi)) {
     // don't need theses handles inherited by child process:
-    clean_close(pin[0]); clean_close(pout[1]); clean_close(perr[1]);
-    HANDLE & h = *mode == 'r' ? pout[0] : pin[1];
-    _fpt = _fdopen(_open_osfhandle((fl_intptr_t) h,_O_BINARY),mode);
-    h= INVALID_HANDLE_VALUE;  // reset the handle pointer that is shared
+    clean_close(pin[0]);
+    clean_close(pout[1]);
+    clean_close(perr[1]);
+    HANDLE &h = *mode == 'r' ? pout[0] : pin[1];
+    _fpt = _fdopen(_open_osfhandle((fl_intptr_t)h, _O_BINARY), mode);
+    h = INVALID_HANDLE_VALUE; // reset the handle pointer that is shared
     // with _fpt so we don't free it twice
   }
 
-  if (!_fpt)  freeHandles();
+  if (!_fpt)
+    freeHandles();
   return _fpt;
 #else
-  _fpt=::popen(cmd,mode);
+  _fpt = ::popen(cmd, mode);
   return _fpt;
 #endif
 }
 
 int Fl_Process::close() {
-#if defined(_WIN32)  && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
   if (_fpt) {
     fclose(_fpt);
     clean_close(perr[0]);
@@ -191,7 +192,7 @@ int Fl_Process::close() {
   return -1;
 #else
   int ret = ::pclose(_fpt);
-  _fpt=NULL;
+  _fpt = NULL;
   return ret;
 #endif
 }
@@ -201,7 +202,7 @@ FILE *Fl_Process::desc() const {
   return _fpt;
 }
 
-char *Fl_Process::get_line(char * line, size_t s) const {
+char *Fl_Process::get_line(char *line, size_t s) const {
   return _fpt ? fgets(line, (int)s, _fpt) : NULL;
 }
 
@@ -211,31 +212,35 @@ char *Fl_Process::get_line(char * line, size_t s) const {
 // non null if file is open
 int Fl_Process::get_fileno() const {
 #ifdef _MSC_VER
-    return _fileno(_fpt); // suppress MSVC warning
+  return _fileno(_fpt); // suppress MSVC warning
 #else
-    return fileno(_fpt);
+  return fileno(_fpt);
 #endif
 }
 
-#if defined(_WIN32)  && !defined(__CYGWIN__)
+#if defined(_WIN32) && !defined(__CYGWIN__)
 
-bool Fl_Process::createPipe(HANDLE * h, BOOL bInheritHnd) {
+bool Fl_Process::createPipe(HANDLE *h, BOOL bInheritHnd) {
   SECURITY_ATTRIBUTES sa;
   sa.nLength = sizeof(sa);
   sa.lpSecurityDescriptor = NULL;
   sa.bInheritHandle = bInheritHnd;
-  return CreatePipe (&h[0],&h[1],&sa,0) ? true : false;
+  return CreatePipe(&h[0], &h[1], &sa, 0) ? true : false;
 }
 
-FILE *Fl_Process::freeHandles()  {
-  clean_close(pin[0]);    clean_close(pin[1]);
-  clean_close(pout[0]);   clean_close(pout[1]);
-  clean_close(perr[0]);   clean_close(perr[1]);
+FILE *Fl_Process::freeHandles() {
+  clean_close(pin[0]);
+  clean_close(pin[1]);
+  clean_close(pout[0]);
+  clean_close(pout[1]);
+  clean_close(perr[0]);
+  clean_close(perr[1]);
   return NULL; // convenient for error management
 }
 
-void Fl_Process::clean_close(HANDLE& h) {
-  if (h!= INVALID_HANDLE_VALUE) CloseHandle(h);
+void Fl_Process::clean_close(HANDLE &h) {
+  if (h != INVALID_HANDLE_VALUE)
+    CloseHandle(h);
   h = INVALID_HANDLE_VALUE;
 }
 
@@ -244,7 +249,8 @@ void Fl_Process::clean_close(HANDLE& h) {
 
 // Shell command support...
 
-static bool prepare_shell_command(const char * &command)  { // common pre-shell command code all platforms
+static bool
+prepare_shell_command(const char *&command) { // common pre-shell command code all platforms
   shell_window->hide();
   if (s_proc.desc()) {
     fl_alert("Previous shell command still running!");
@@ -267,8 +273,8 @@ static bool prepare_shell_command(const char * &command)  { // common pre-shell 
 }
 
 // Support the full piped shell command...
-void shell_pipe_cb(FL_SOCKET, void*) {
-  char  line[1024]="";          // Line from command output...
+void shell_pipe_cb(FL_SOCKET, void *) {
+  char line[1024] = ""; // Line from command output...
 
   if (s_proc.get_line(line, sizeof(line)) != NULL) {
     // Add the line to the output list...
@@ -281,10 +287,11 @@ void shell_pipe_cb(FL_SOCKET, void*) {
   }
 }
 
-void do_shell_command(Fl_Return_Button*, void*) {
-  const char    *command=NULL;  // Command to run
+void do_shell_command(Fl_Return_Button *, void *) {
+  const char *command = NULL; // Command to run
 
-  if (!prepare_shell_command(command)) return;
+  if (!prepare_shell_command(command))
+    return;
 
   // Show the output window and clear things...
   shell_run_terminal->text("");
@@ -305,20 +312,22 @@ void do_shell_command(Fl_Return_Button*, void*) {
   pos.get("y", y, 0);
   pos.get("w", w, 640);
   pos.get("h", h, 480);
-  if (x!=-1) {
+  if (x != -1) {
     shell_run_window->resize(x, y, w, h);
   }
   shell_run_window->show();
 
   Fl::add_fd(s_proc.get_fileno(), shell_pipe_cb);
 
-  while (s_proc.desc()) Fl::wait();
+  while (s_proc.desc())
+    Fl::wait();
 
   shell_run_button->activate();
   shell_run_window->label("Shell Command Complete");
   fl_beep();
 
-  while (shell_run_window->shown()) Fl::wait();
+  while (shell_run_window->shown())
+    Fl::wait();
 }
 
 /**
@@ -364,10 +373,9 @@ void update_shell_window() {
  */
 void apply_shell_window() {
   if (g_shell_command)
-    free((void*)g_shell_command);
+    free((void *)g_shell_command);
   g_shell_command = fl_strdup(shell_command_input->value());
   g_shell_save_fl = shell_savefl_button->value();
   g_shell_save_code = shell_writecode_button->value();
   g_shell_save_strings = shell_writemsgs_button->value();
 }
-

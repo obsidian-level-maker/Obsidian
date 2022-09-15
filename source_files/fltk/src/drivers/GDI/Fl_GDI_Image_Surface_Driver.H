@@ -23,6 +23,7 @@
 
 class Fl_GDI_Image_Surface_Driver : public Fl_Image_Surface_Driver {
   virtual void end_current();
+
 public:
   Window pre_window;
   int _savedc;

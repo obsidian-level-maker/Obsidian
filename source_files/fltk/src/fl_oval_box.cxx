@@ -36,20 +36,20 @@ static void fl_oval_frame(int x, int y, int w, int h, Fl_Color c) {
 }
 
 static void fl_oval_box(int x, int y, int w, int h, Fl_Color c) {
-  fl_oval_flat_box(x,y,w,h,c);
-  fl_oval_frame(x,y,w,h,FL_BLACK);
+  fl_oval_flat_box(x, y, w, h, c);
+  fl_oval_frame(x, y, w, h, FL_BLACK);
 }
 
 static void fl_oval_shadow_box(int x, int y, int w, int h, Fl_Color c) {
-  fl_oval_flat_box(x+BW,y+BW,w,h,FL_DARK3);
-  fl_oval_box(x,y,w,h,c);
+  fl_oval_flat_box(x + BW, y + BW, w, h, FL_DARK3);
+  fl_oval_box(x, y, w, h, c);
 }
 
-extern void fl_internal_boxtype(Fl_Boxtype, Fl_Box_Draw_F*);
+extern void fl_internal_boxtype(Fl_Boxtype, Fl_Box_Draw_F *);
 Fl_Boxtype fl_define_FL_OVAL_BOX() {
-  fl_internal_boxtype(_FL_OSHADOW_BOX,fl_oval_shadow_box);
-  fl_internal_boxtype(_FL_OVAL_FRAME,fl_oval_frame);
-  fl_internal_boxtype(_FL_OFLAT_BOX,fl_oval_flat_box);
-  fl_internal_boxtype(_FL_OVAL_BOX,fl_oval_box);
+  fl_internal_boxtype(_FL_OSHADOW_BOX, fl_oval_shadow_box);
+  fl_internal_boxtype(_FL_OVAL_FRAME, fl_oval_frame);
+  fl_internal_boxtype(_FL_OFLAT_BOX, fl_oval_flat_box);
+  fl_internal_boxtype(_FL_OVAL_BOX, fl_oval_box);
   return _FL_OVAL_BOX;
 }

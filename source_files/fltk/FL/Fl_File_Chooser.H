@@ -43,9 +43,10 @@
 class FL_EXPORT Fl_File_Chooser {
 public:
   enum { SINGLE = 0, MULTI = 1, CREATE = 2, DIRECTORY = 4 };
+
 private:
   static Fl_Preferences *prefs_;
-  void (*callback_)(Fl_File_Chooser*, void *);
+  void (*callback_)(Fl_File_Chooser *, void *);
   void *data_;
   char directory_[FL_PATH_MAX];
   char pattern_[FL_PATH_MAX];
@@ -60,68 +61,77 @@ private:
   void showChoiceCB();
   void update_favorites();
   void update_preview();
+
 public:
   Fl_File_Chooser(const char *d, const char *p, int t, const char *title);
+
 private:
   Fl_Double_Window *window;
-  inline void cb_window_i(Fl_Double_Window*, void*);
-  static void cb_window(Fl_Double_Window*, void*);
+  inline void cb_window_i(Fl_Double_Window *, void *);
+  static void cb_window(Fl_Double_Window *, void *);
   Fl_Choice *showChoice;
-  inline void cb_showChoice_i(Fl_Choice*, void*);
-  static void cb_showChoice(Fl_Choice*, void*);
+  inline void cb_showChoice_i(Fl_Choice *, void *);
+  static void cb_showChoice(Fl_Choice *, void *);
   Fl_Menu_Button *favoritesButton;
-  inline void cb_favoritesButton_i(Fl_Menu_Button*, void*);
-  static void cb_favoritesButton(Fl_Menu_Button*, void*);
+  inline void cb_favoritesButton_i(Fl_Menu_Button *, void *);
+  static void cb_favoritesButton(Fl_Menu_Button *, void *);
+
 public:
   Fl_Button *newButton;
+
 private:
-  inline void cb_newButton_i(Fl_Button*, void*);
-  static void cb_newButton(Fl_Button*, void*);
-  inline void cb__i(Fl_Tile*, void*);
-  static void cb_(Fl_Tile*, void*);
+  inline void cb_newButton_i(Fl_Button *, void *);
+  static void cb_newButton(Fl_Button *, void *);
+  inline void cb__i(Fl_Tile *, void *);
+  static void cb_(Fl_Tile *, void *);
   Fl_File_Browser *fileList;
-  inline void cb_fileList_i(Fl_File_Browser*, void*);
-  static void cb_fileList(Fl_File_Browser*, void*);
+  inline void cb_fileList_i(Fl_File_Browser *, void *);
+  static void cb_fileList(Fl_File_Browser *, void *);
   Fl_Box *errorBox;
   Fl_Box *previewBox;
+
 public:
   Fl_Check_Button *previewButton;
+
 private:
-  inline void cb_previewButton_i(Fl_Check_Button*, void*);
-  static void cb_previewButton(Fl_Check_Button*, void*);
+  inline void cb_previewButton_i(Fl_Check_Button *, void *);
+  static void cb_previewButton(Fl_Check_Button *, void *);
+
 public:
   Fl_Check_Button *showHiddenButton;
+
 private:
-  inline void cb_showHiddenButton_i(Fl_Check_Button*, void*);
-  static void cb_showHiddenButton(Fl_Check_Button*, void*);
+  inline void cb_showHiddenButton_i(Fl_Check_Button *, void *);
+  static void cb_showHiddenButton(Fl_Check_Button *, void *);
   Fl_File_Input *fileName;
-  inline void cb_fileName_i(Fl_File_Input*, void*);
-  static void cb_fileName(Fl_File_Input*, void*);
+  inline void cb_fileName_i(Fl_File_Input *, void *);
+  static void cb_fileName(Fl_File_Input *, void *);
   Fl_Return_Button *okButton;
-  inline void cb_okButton_i(Fl_Return_Button*, void*);
-  static void cb_okButton(Fl_Return_Button*, void*);
+  inline void cb_okButton_i(Fl_Return_Button *, void *);
+  static void cb_okButton(Fl_Return_Button *, void *);
   Fl_Button *cancelButton;
-  inline void cb_cancelButton_i(Fl_Button*, void*);
-  static void cb_cancelButton(Fl_Button*, void*);
+  inline void cb_cancelButton_i(Fl_Button *, void *);
+  static void cb_cancelButton(Fl_Button *, void *);
   Fl_Double_Window *favWindow;
   Fl_File_Browser *favList;
-  inline void cb_favList_i(Fl_File_Browser*, void*);
-  static void cb_favList(Fl_File_Browser*, void*);
+  inline void cb_favList_i(Fl_File_Browser *, void *);
+  static void cb_favList(Fl_File_Browser *, void *);
   Fl_Button *favUpButton;
-  inline void cb_favUpButton_i(Fl_Button*, void*);
-  static void cb_favUpButton(Fl_Button*, void*);
+  inline void cb_favUpButton_i(Fl_Button *, void *);
+  static void cb_favUpButton(Fl_Button *, void *);
   Fl_Button *favDeleteButton;
-  inline void cb_favDeleteButton_i(Fl_Button*, void*);
-  static void cb_favDeleteButton(Fl_Button*, void*);
+  inline void cb_favDeleteButton_i(Fl_Button *, void *);
+  static void cb_favDeleteButton(Fl_Button *, void *);
   Fl_Button *favDownButton;
-  inline void cb_favDownButton_i(Fl_Button*, void*);
-  static void cb_favDownButton(Fl_Button*, void*);
+  inline void cb_favDownButton_i(Fl_Button *, void *);
+  static void cb_favDownButton(Fl_Button *, void *);
   Fl_Button *favCancelButton;
-  inline void cb_favCancelButton_i(Fl_Button*, void*);
-  static void cb_favCancelButton(Fl_Button*, void*);
+  inline void cb_favCancelButton_i(Fl_Button *, void *);
+  static void cb_favCancelButton(Fl_Button *, void *);
   Fl_Return_Button *favOkButton;
-  inline void cb_favOkButton_i(Fl_Return_Button*, void*);
-  static void cb_favOkButton(Fl_Return_Button*, void*);
+  inline void cb_favOkButton_i(Fl_Return_Button *, void *);
+  static void cb_favOkButton(Fl_Return_Button *, void *);
+
 public:
   ~Fl_File_Chooser();
   void callback(void (*cb)(Fl_File_Chooser *, void *), void *d = 0);
@@ -129,23 +139,25 @@ public:
   Fl_Color color();
   int count();
   void directory(const char *d);
-  char * directory();
+  char *directory();
   void filter(const char *p);
-  const char * filter();
+  const char *filter();
   int filter_value();
   void filter_value(int f);
   void hide();
   void iconsize(uchar s);
   uchar iconsize();
   void label(const char *l);
-  const char * label();
+  const char *label();
   void ok_label(const char *l);
-  const char * ok_label();
+  const char *ok_label();
   void preview(int e);
   int preview() const { return previewButton->value(); }
+
 private:
   void showHidden(int e);
   void remove_hidden_files();
+
 public:
   void rescan();
   void rescan_keep_filename();
@@ -159,7 +171,7 @@ public:
   Fl_Fontsize textsize();
   void type(int t);
   int type();
-  void * user_data() const;
+  void *user_data() const;
   void user_data(void *d);
   const char *value(int f = 1);
   void value(const char *filename);
@@ -232,15 +244,19 @@ public:
    the contents of a directory.
   */
   static Fl_File_Sort_F *sort;
+
 private:
-  Fl_Widget* ext_group;
+  Fl_Widget *ext_group;
+
 public:
-  Fl_Widget* add_extra(Fl_Widget* gr);
+  Fl_Widget *add_extra(Fl_Widget *gr);
+
 protected:
   void show_error_box(int val);
 };
-FL_EXPORT char *fl_dir_chooser(const char *message,const char *fname,int relative=0);
-FL_EXPORT char *fl_file_chooser(const char *message,const char *pat,const char *fname,int relative=0);
-FL_EXPORT void fl_file_chooser_callback(void (*cb)(const char*));
-FL_EXPORT void fl_file_chooser_ok_label(const char*l);
+FL_EXPORT char *fl_dir_chooser(const char *message, const char *fname, int relative = 0);
+FL_EXPORT char *fl_file_chooser(const char *message, const char *pat, const char *fname,
+                                int relative = 0);
+FL_EXPORT void fl_file_chooser_callback(void (*cb)(const char *));
+FL_EXPORT void fl_file_chooser_ok_label(const char *l);
 #endif

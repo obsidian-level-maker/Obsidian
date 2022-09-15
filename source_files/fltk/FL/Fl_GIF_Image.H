@@ -19,7 +19,7 @@
 
 #ifndef Fl_GIF_Image_H
 #define Fl_GIF_Image_H
-#  include "Fl_Pixmap.H"
+#include "Fl_Pixmap.H"
 
 /**
  The Fl_GIF_Image class supports loading, caching,
@@ -29,17 +29,14 @@
 class FL_EXPORT Fl_GIF_Image : public Fl_Pixmap {
 
 public:
-
-  Fl_GIF_Image(const char* filename);
+  Fl_GIF_Image(const char *filename);
   // deprecated constructor w/o length (for backwards compatibility)
-  Fl_GIF_Image(const char* imagename, const unsigned char *data);
+  Fl_GIF_Image(const char *imagename, const unsigned char *data);
   // constructor with length (since 1.4.0)
-  Fl_GIF_Image(const char* imagename, const unsigned char *data, const size_t length);
+  Fl_GIF_Image(const char *imagename, const unsigned char *data, const size_t length);
 
 protected:
-
   void load_gif_(class Fl_Image_Reader &rdr);
-
 };
 
 #endif

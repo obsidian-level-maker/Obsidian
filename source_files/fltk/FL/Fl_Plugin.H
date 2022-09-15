@@ -18,9 +18,9 @@
    Fl_Plugin class . */
 
 #ifndef Fl_Plugin_H
-#  define Fl_Plugin_H
+#define Fl_Plugin_H
 
-#  include "Fl_Preferences.H"
+#include "Fl_Preferences.H"
 
 
 /**
@@ -56,8 +56,9 @@
  }
  \endcode
  */
-class FL_EXPORT Fl_Plugin  {
+class FL_EXPORT Fl_Plugin {
   Fl_Preferences::ID id;
+
 public:
   Fl_Plugin(const char *klass, const char *name);
   virtual ~Fl_Plugin();
@@ -82,7 +83,7 @@ public:
 
   static void removePlugin(Fl_Preferences::ID id);
   static int load(const char *filename);
-  static int loadAll(const char *filepath, const char *pattern=0);
+  static int loadAll(const char *filepath, const char *pattern = 0);
 };
 
 

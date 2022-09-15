@@ -1240,7 +1240,11 @@ bool quake3_game_interface_c::Start(const char *preset) {
     }
 
     if (batch_mode) {
-        filename = batch_output_file;
+        if (batch_output_file.is_absolute()) {
+            filename = batch_output_file;
+        } else {
+            filename = Resolve_DefaultOutputPath() / batch_output_file;
+        }
     } else {
         filename = DLG_OutputFilename("pk3");
     }

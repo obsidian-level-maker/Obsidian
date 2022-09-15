@@ -19,18 +19,18 @@
 */
 
 #ifndef FL_CAIRO_H
-# define FL_CAIRO_H
+#define FL_CAIRO_H
 
-# include <FL/fl_config.h> // build configuration
+#include <FL/fl_config.h> // build configuration
 
-# ifdef FLTK_HAVE_CAIRO
+#ifdef FLTK_HAVE_CAIRO
 
 // Cairo is currently supported for the following platforms:
 // Win32, Apple Quartz, X11
 
-# include <FL/Fl_Export.H>
+#include <FL/Fl_Export.H>
 
-# include <cairo.h>
+#include <cairo.h>
 
 /**
    \addtogroup group_cairo
@@ -48,40 +48,49 @@
 */
 class FL_EXPORT Fl_Cairo_State {
 public:
-  Fl_Cairo_State() : cc_(0), own_cc_(false), autolink_(false), window_(0), gc_(0) {}
+  Fl_Cairo_State()
+    : cc_(0)
+    , own_cc_(false)
+    , autolink_(false)
+    , window_(0)
+    , gc_(0) {}
 
-    // access attributes
-    cairo_t* cc() const {return cc_;}            ///< Gets the current cairo context
-    bool autolink() const {return autolink_;}    ///< Gets the autolink option. See Fl::cairo_autolink_context(bool)
-    /** Sets the current cairo context.
+  // access attributes
+  cairo_t *cc() const { return cc_; } ///< Gets the current cairo context
+  bool autolink() const {
+    return autolink_;
+  } ///< Gets the autolink option. See Fl::cairo_autolink_context(bool)
+  /** Sets the current cairo context.
 
-        \p own == \e true (the default) indicates that the cairo context \p c
-        will be deleted by FLTK internally when another cc is set later.
+      \p own == \e true (the default) indicates that the cairo context \p c
+      will be deleted by FLTK internally when another cc is set later.
 
-        \p own == \e false indicates cc deletion is handled externally
-        by the user program.
-    */
-    void cc(cairo_t* c, bool own=true)  {
-        if (cc_ && own_cc_) cairo_destroy(cc_);
-        cc_=c;
-        if (!cc_) window_=0;
-        own_cc_=own;
-    }
-    void  autolink(bool b);                     ///< Sets the autolink option, only available with --enable-cairoext
-    void  window(void* w)  {window_=w;}         ///< Sets the window \p w to keep track on
-    void* window() const {return window_;}      ///< Gets the last window attached to a cc
-    void  gc(void* c)  {gc_=c;}                 ///< Sets the gc \p c to keep track on
-    void* gc() const {return gc_;}              ///< Gets the last gc attached to a cc
+      \p own == \e false indicates cc deletion is handled externally
+      by the user program.
+  */
+  void cc(cairo_t *c, bool own = true) {
+    if (cc_ && own_cc_)
+      cairo_destroy(cc_);
+    cc_ = c;
+    if (!cc_)
+      window_ = 0;
+    own_cc_ = own;
+  }
+  void autolink(bool b); ///< Sets the autolink option, only available with --enable-cairoext
+  void window(void *w) { window_ = w; }    ///< Sets the window \p w to keep track on
+  void *window() const { return window_; } ///< Gets the last window attached to a cc
+  void gc(void *c) { gc_ = c; }            ///< Sets the gc \p c to keep track on
+  void *gc() const { return gc_; }         ///< Gets the last gc attached to a cc
 
 private:
-    cairo_t * cc_;       // contains the unique autoupdated cairo context
-    bool own_cc_;        // indicates whether we must delete the cc, useful for internal cleanup
-    bool autolink_;      // false by default, prevents the automatic cairo mapping on fltk windows
-                         // for custom cairo implementations.
-    void* window_, *gc_; // for keeping track internally of last win+gc treated
+  cairo_t *cc_;        // contains the unique autoupdated cairo context
+  bool own_cc_;        // indicates whether we must delete the cc, useful for internal cleanup
+  bool autolink_;      // false by default, prevents the automatic cairo mapping on fltk windows
+                       // for custom cairo implementations.
+  void *window_, *gc_; // for keeping track internally of last win+gc treated
 };
 
 /** @} */
 
-# endif // FLTK_HAVE_CAIRO
+#endif // FLTK_HAVE_CAIRO
 #endif // FL_CAIRO_H

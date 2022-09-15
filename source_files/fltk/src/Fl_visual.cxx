@@ -46,7 +46,6 @@
     FLTK succeeded in turning them on.  Your program will still work even if
     this returns false (it just won't look as good).
 */
-int Fl::visual(int flags)
-{
+int Fl::visual(int flags) {
   return screen_driver()->visual(flags);
 }

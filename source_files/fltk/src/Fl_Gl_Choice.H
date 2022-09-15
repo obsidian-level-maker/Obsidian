@@ -46,8 +46,12 @@ class Fl_Gl_Choice {
   int mode;
   const int *alist;
   Fl_Gl_Choice *next;
+
 public:
-  Fl_Gl_Choice(int m, const int *alistp, Fl_Gl_Choice *n) : mode(m), alist(alistp), next(n) {}
+  Fl_Gl_Choice(int m, const int *alistp, Fl_Gl_Choice *n)
+    : mode(m)
+    , alist(alistp)
+    , next(n) {}
 };
 
 #endif // Fl_Gl_Choice_H

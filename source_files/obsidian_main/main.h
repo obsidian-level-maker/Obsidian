@@ -53,6 +53,7 @@ constexpr const char *CONFIG_FILENAME = "CONFIG.txt";
 constexpr const char *OPTIONS_FILENAME = "OPTIONS.txt";
 constexpr const char *THEME_FILENAME = "THEME.txt";
 constexpr const char *LOG_FILENAME = "LOGS.txt";
+constexpr const char *REF_FILENAME = "REFERENCE.txt";
 
 #ifdef _WIN32
 HEDLEY_ALWAYS_INLINE
@@ -88,6 +89,7 @@ extern std::filesystem::path config_file;
 extern std::filesystem::path options_file;
 extern std::filesystem::path theme_file;
 extern std::filesystem::path logging_file;
+extern std::filesystem::path reference_file;
 
 extern bool batch_mode;
 
@@ -185,6 +187,10 @@ extern std::vector<std::string> batch_randomize_groups;
 
 // Dialog Windows
 void DLG_ShowError(const char *msg, ...);
+
+extern std::string default_output_path;
+
+extern std::filesystem::path Resolve_DefaultOutputPath();
 
 std::filesystem::path DLG_OutputFilename(const char *ext,
                                          const char *preset = nullptr);

@@ -25,7 +25,7 @@
 #define BROWSERHEIGHT 500
 #define WINWIDTH 300
 #define MENUHEIGHT 25
-#define WINHEIGHT (BROWSERHEIGHT+MENUHEIGHT)
+#define WINHEIGHT (BROWSERHEIGHT + MENUHEIGHT)
 
 class Fl_Double_Window;
 class Fl_Window;
@@ -70,23 +70,24 @@ extern int modflag;
 extern void goto_source_dir();
 extern void leave_source_dir();
 
-extern int update_file;            // fluid -u
-extern int compile_file;           // fluid -c
-extern int compile_strings;        // fluic -cs
+extern int update_file;     // fluid -u
+extern int compile_file;    // fluid -c
+extern int compile_strings; // fluic -cs
 extern int batch_mode;
 
 extern int header_file_set;
 extern int code_file_set;
-extern const char* header_file_name;
-extern const char* code_file_name;
+extern const char *header_file_name;
+extern const char *code_file_name;
 
 extern int i18n_type;
-extern const char* i18n_include;
-extern const char* i18n_conditional;
-extern const char* i18n_function;
-extern const char* i18n_static_function;
-extern const char* i18n_file;
-extern const char* i18n_set;;
+extern const char *i18n_include;
+extern const char *i18n_conditional;
+extern const char *i18n_function;
+extern const char *i18n_static_function;
+extern const char *i18n_file;
+extern const char *i18n_set;
+;
 extern char i18n_program[FL_PATH_MAX];
 
 extern int pasteoffset;
@@ -94,14 +95,14 @@ extern int pasteoffset;
 // ---- public functions
 
 extern void set_filename(const char *c);
-extern void set_modflag(int mf, int mfc=-1);
+extern void set_modflag(int mf, int mfc = -1);
 
 // ---- public callback functions
 
 extern void save_cb(Fl_Widget *, void *v);
 extern void save_template_cb(Fl_Widget *, void *);
-extern void revert_cb(Fl_Widget *,void *);
-extern void exit_cb(Fl_Widget *,void *);
+extern void revert_cb(Fl_Widget *, void *);
+extern void exit_cb(Fl_Widget *, void *);
 
 #ifdef __APPLE__
 extern void apple_open_cb(const char *c);

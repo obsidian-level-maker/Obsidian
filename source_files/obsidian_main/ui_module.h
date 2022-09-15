@@ -62,18 +62,21 @@ class UI_Module : public Fl_Group {
     virtual ~UI_Module();
 
     void AddOption(std::string option, std::string label, std::string tip,
-                   std::string longtip, int gap, std::string randomize_group, std::string default_value);
+                   std::string longtip, int gap, std::string randomize_group,
+                   std::string default_value);
 
     void AddHeader(std::string option, std::string label, int gap);
 
     void AddSliderOption(std::string option, std::string label, std::string tip,
                          std::string longtip, int gap, double min, double max,
                          double inc, std::string units, std::string presets,
-                         std::string nan, std::string randomize_group, std::string default_value);
+                         std::string nan, std::string randomize_group,
+                         std::string default_value);
 
     void AddButtonOption(std::string opt, std::string label, std::string tip,
                          std::string longtip, int gap,
-                         std::string randomize_group, std::string default_value);
+                         std::string randomize_group,
+                         std::string default_value);
 
     void AddOptionChoice(std::string option, std::string id, std::string label);
 
@@ -158,12 +161,14 @@ class UI_CustomMods : public Fl_Group {
                          std::string label, std::string tip,
                          std::string longtip, int gap, double min, double max,
                          double inc, std::string units, std::string presets,
-                         std::string nan, std::string randomize_group, std::string default_value);
+                         std::string nan, std::string randomize_group,
+                         std::string default_value);
 
     bool AddButtonOption(std::string module, std::string option,
                          std::string label, std::string tip,
                          std::string longtip, int gap,
-                         std::string randomize_group, std::string default_value);
+                         std::string randomize_group,
+                         std::string default_value);
 
     void AddOptionChoice(std::string module, std::string option, std::string id,
                          std::string label);

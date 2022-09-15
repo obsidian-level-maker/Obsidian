@@ -44,28 +44,30 @@ typedef struct _cairo_pattern cairo_pattern_t;
 class Fl_Wayland_Plugin;
 
 
-class Fl_Wayland_Window_Driver : public Fl_Window_Driver
-{
+class Fl_Wayland_Window_Driver : public Fl_Window_Driver {
   friend class Fl_X;
   friend class Fl_Wayland_Gl_Window_Driver;
   friend class Fl_Wayland_Screen_Driver;
+
 private:
   struct shape_data_type {
-    int lw_; ///<  width of shape image
-    int lh_; ///<  height of shape image
-    Fl_Image* shape_; ///<  shape image
+    int lw_;          ///<  width of shape image
+    int lh_;          ///<  height of shape image
+    Fl_Image *shape_; ///<  shape image
     cairo_pattern_t *mask_pattern_;
-  } *shape_data_;
+  } * shape_data_;
   static bool in_flush; // useful for progressive window drawing
   static Fl_Wayland_Plugin *gl_plugin();
   struct wl_cursor *cursor_;
   void delete_cursor_();
   struct gl_start_support *gl_start_support_; // for support of gl_start/gl_finish
 public:
-  struct wl_cursor *cursor() { return cursor_; };
+  struct wl_cursor *cursor() {
+    return cursor_;
+  };
   bool in_handle_configure; // distinguish OS and user window resize
   struct window_output {
-    Fl_Wayland_Screen_Driver::output* output;
+    Fl_Wayland_Screen_Driver::output *output;
     struct wl_list link;
   };
   // --- support for screen-specific scaling factors
@@ -77,24 +79,26 @@ public:
   int screen_num_;
   void screen_num(int n) { screen_num_ = n; }
   void decorated_win_size(int &w, int &h);
-  void shape_bitmap_(Fl_Image* b);
-  void shape_alpha_(Fl_Image* img, int offset);
+  void shape_bitmap_(Fl_Image *b);
+  void shape_alpha_(Fl_Image *img, int offset);
   void update_scale();
-  enum kind {DECORATED, SUBWINDOW, POPUP, UNFRAMED};
+  enum kind { DECORATED, SUBWINDOW, POPUP, UNFRAMED };
   struct xdg_toplevel *xdg_toplevel();
-  Fl_Wayland_Window_Driver(Fl_Window*);
+  Fl_Wayland_Window_Driver(Fl_Window *);
   virtual ~Fl_Wayland_Window_Driver();
   static struct wld_window *wld_window;
   static void redraw(struct wld_window *window);
 
-  static inline Fl_Wayland_Window_Driver* driver(const Fl_Window *w) {return (Fl_Wayland_Window_Driver*)Fl_Window_Driver::driver(w);}
+  static inline Fl_Wayland_Window_Driver *driver(const Fl_Window *w) {
+    return (Fl_Wayland_Window_Driver *)Fl_Window_Driver::driver(w);
+  }
   virtual int screen_num();
   static void resize_after_screen_change(void *data);
 
   // --- window data
   virtual int decorated_w();
   virtual int decorated_h();
-  virtual const Fl_Image* shape();
+  virtual const Fl_Image *shape();
 
   // --- window management
   virtual Fl_X *makeWindow();
@@ -104,7 +108,7 @@ public:
   virtual void draw_end();
   virtual void make_current();
   virtual void show();
-  virtual void resize(int X,int Y,int W,int H);
+  virtual void resize(int X, int Y, int W, int H);
   virtual void label(const char *name, const char *mininame);
   virtual void destroy_double_buffer();
   virtual void hide();
@@ -115,14 +119,16 @@ public:
   virtual void use_border();
   virtual void size_range();
   virtual void iconize();
-  virtual void decoration_sizes(int *top, int *left,  int *right, int *bottom);
+  virtual void decoration_sizes(int *top, int *left, int *right, int *bottom);
   // --- window cursor stuff
   virtual int set_cursor(Fl_Cursor);
-  virtual int set_cursor(const Fl_RGB_Image*, int, int);
+  virtual int set_cursor(const Fl_RGB_Image *, int, int);
 
-  virtual void shape(const Fl_Image* img);
-  virtual void capture_titlebar_and_borders(Fl_RGB_Image*& top, Fl_RGB_Image*& left, Fl_RGB_Image*& bottom, Fl_RGB_Image*& right);
-  virtual int scroll(int src_x, int src_y, int src_w, int src_h, int dest_x, int dest_y, void (*draw_area)(void*, int,int,int,int), void* data);
+  virtual void shape(const Fl_Image *img);
+  virtual void capture_titlebar_and_borders(Fl_RGB_Image *&top, Fl_RGB_Image *&left,
+                                            Fl_RGB_Image *&bottom, Fl_RGB_Image *&right);
+  virtual int scroll(int src_x, int src_y, int src_w, int src_h, int dest_x, int dest_y,
+                     void (*draw_area)(void *, int, int, int, int), void *data);
   virtual void wait_for_expose();
   virtual void reposition_menu_window(int x, int y);
   virtual void menu_window_area(int &X, int &Y, int &W, int &H, int nscreen = -1);
@@ -153,11 +159,12 @@ struct wld_window {
 
 class Fl_Wayland_Plugin : public Fl_Plugin {
 public:
-  Fl_Wayland_Plugin(const char *pluginName)  : Fl_Plugin(klass(), pluginName) { }
+  Fl_Wayland_Plugin(const char *pluginName)
+    : Fl_Plugin(klass(), pluginName) {}
   virtual const char *klass() { return "wayland.fltk.org"; }
   virtual const char *name() = 0;
-  virtual void do_swap(Fl_Window*) = 0;
-  virtual void invalidate(Fl_Window*) = 0;
+  virtual void do_swap(Fl_Window *) = 0;
+  virtual void invalidate(Fl_Window *) = 0;
   virtual void terminate() = 0;
   virtual void destroy(struct gl_start_support *) = 0;
 };

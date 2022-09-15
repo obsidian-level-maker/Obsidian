@@ -21,18 +21,18 @@
 #ifndef FL_DOXYGEN
 
 #ifndef FL_PLATFORM_H
-#  error "Never use <FL/x11.H> directly; include <FL/platform.H> instead."
+#error "Never use <FL/x11.H> directly; include <FL/platform.H> instead."
 #endif // !FL_PLATFORM_H
 
 #include <FL/Enumerations.H>
 
 #if defined(_ABIN32) || defined(_ABI64) // fix for broken SGI Irix X .h files
-#  pragma set woff 3322
+#pragma set woff 3322
 #endif
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #if defined(_ABIN32) || defined(_ABI64)
-#  pragma reset woff 3322
+#pragma reset woff 3322
 #endif
 #include <X11/Xatom.h>
 
@@ -48,10 +48,10 @@ FL_EXPORT ulong fl_xpixel(Fl_Color i);
 FL_EXPORT ulong fl_xpixel(uchar r, uchar g, uchar b);
 
 // feed events into fltk:
-FL_EXPORT int fl_handle(const XEvent&);
+FL_EXPORT int fl_handle(const XEvent &);
 
 // you can use these in Fl::add_handler() to look at events:
-extern FL_EXPORT const XEvent* fl_xevent;
+extern FL_EXPORT const XEvent *fl_xevent;
 extern FL_EXPORT ulong fl_event_time;
 
 #if defined(FL_LIBRARY) || defined(FL_INTERNALS)
@@ -65,20 +65,25 @@ extern FL_EXPORT void *fl_xftfont;
 // With Xlib / X11 fonts, fl_xfont will return the current selected font.
 // With XFT / X11 fonts, fl_xfont will attempt to return the bitmap "core" font most
 // similar to (usually the same as) the current XFT font.
-class FL_EXPORT Fl_XFont_On_Demand
-{
+class FL_EXPORT Fl_XFont_On_Demand {
 public:
-  Fl_XFont_On_Demand(XFontStruct* p = NULL) : ptr(p) { }
-  Fl_XFont_On_Demand& operator=(const Fl_XFont_On_Demand& x)
-  { ptr = x.ptr;  return *this; }
-  Fl_XFont_On_Demand& operator=(XFontStruct* p)
-  { ptr = p;  return *this; }
-  XFontStruct* value();
-  operator XFontStruct*() { return value(); }
-  XFontStruct& operator*() { return *value(); }
-  XFontStruct* operator->() { return value(); }
-  bool operator==(const Fl_XFont_On_Demand& x) { return ptr == x.ptr; }
-  bool operator!=(const Fl_XFont_On_Demand& x) { return ptr != x.ptr; }
+  Fl_XFont_On_Demand(XFontStruct *p = NULL)
+    : ptr(p) {}
+  Fl_XFont_On_Demand &operator=(const Fl_XFont_On_Demand &x) {
+    ptr = x.ptr;
+    return *this;
+  }
+  Fl_XFont_On_Demand &operator=(XFontStruct *p) {
+    ptr = p;
+    return *this;
+  }
+  XFontStruct *value();
+  operator XFontStruct *() { return value(); }
+  XFontStruct &operator*() { return *value(); }
+  XFontStruct *operator->() { return value(); }
+  bool operator==(const Fl_XFont_On_Demand &x) { return ptr == x.ptr; }
+  bool operator!=(const Fl_XFont_On_Demand &x) { return ptr != x.ptr; }
+
 private:
   XFontStruct *ptr;
 };

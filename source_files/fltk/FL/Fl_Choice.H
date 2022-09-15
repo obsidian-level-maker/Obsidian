@@ -103,6 +103,7 @@
 class FL_EXPORT Fl_Choice : public Fl_Menu_ {
 protected:
   void draw();
+
 public:
   int handle(int);
 
@@ -112,11 +113,11 @@ public:
     Gets the index of the last item chosen by the user.
     The index is -1 initially.
    */
-  int value() const {return Fl_Menu_::value();}
+  int value() const { return Fl_Menu_::value(); }
 
   int value(int v);
 
-  int value(const Fl_Menu_Item* v);
+  int value(const Fl_Menu_Item *v);
 };
 
 #endif

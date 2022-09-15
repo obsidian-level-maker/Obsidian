@@ -59,6 +59,15 @@ std::filesystem::path config_file;
 std::filesystem::path options_file;
 std::filesystem::path theme_file;
 std::filesystem::path logging_file;
+std::filesystem::path reference_file;
+
+struct UpdateKv {
+    char section;
+    std::string key;
+    std::string value;
+};
+
+UpdateKv update_kv;
 
 std::string OBSIDIAN_TITLE = "OBSIDIAN Level Maker";
 std::string OBSIDIAN_CODE_NAME = "Unstable";
@@ -159,7 +168,8 @@ std::filesystem::path gif_filename = "gif_output.gif";
 
 std::string string_seed;
 
-std::string selected_lang = "en"; // Have a default just in case the translation stuff borks
+std::string selected_lang =
+    "en";  // Have a default just in case the translation stuff borks
 
 std::string log_timestamp;
 
@@ -243,8 +253,7 @@ static void ShowInfo() {
     fmt::print(
         "\n"
         "** {} {} \"{}\"\n"
-        "** Build {}\n"
-        " **\n"
+        "** Build {} **\n"
         "** Based on OBLIGE Level Maker (C) 2006-2017 Andrew Apted **\n"
         "\n",
         OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME,
@@ -254,31 +263,38 @@ static void ShowInfo() {
         "Usage: Obsidian [options...] [key=value...]\n"
         "\n"
         "Available options:\n"
-        "     --home     <dir>      Home directory\n"
-        "     --install  <dir>      Installation directory\n"
+        "     --home     <dir>       Home directory\n"
+        "     --install  <dir>       Installation directory\n"
         "\n"
-        "     --config   <file>     Config file for GUI\n"
-        "     --options  <file>     Options file for GUI\n"
-        "     --log      <file>     Log file to create\n"
-        "     --ziplog              Zip log file after completion\n"
+        "     --config   <file>      Config file for GUI\n"
+        "     --options  <file>      Options file for GUI\n"
+        "     --log      <file>      Log file to create\n"
+        "     --ziplog               Zip log file after completion\n"
         "\n"
-        "  -b --batch    <output>   Batch mode (no GUI)\n"
-        "  -a --addon    <file>...  Addon(s) to use\n"
-        "  -l --load     <file>     Load settings from a file\n"
-        "  -k --keep                Keep SEED from loaded settings\n"
+        "  -b --batch    <output>    Batch mode (no GUI)\n"
+        "  -a --addon    <file>...   Addon(s) to use\n"
+        "  -l --load     <file>      Load settings from a file\n"
+        "  -k --keep                 Keep SEED from loaded settings\n"
         "\n"
-        "     --randomize-all       Randomize all options\n"
-        "     --randomize-arch      Randomize architecture settings\n"
-        "     --randomize-combat    Randomize combat-related settings\n"
-        "     --randomize-pickups   Randomize item/weapon settings\n"
-        "     --randomize-other     Randomize other settings\n"
+        "     --randomize-all        Randomize all options\n"
+        "     --randomize-arch       Randomize architecture settings\n"
+        "     --randomize-combat     Randomize combat-related settings\n"
+        "     --randomize-pickups    Randomize item/weapon settings\n"
+        "     --randomize-other      Randomize other settings\n"
         "\n"
-        "  -3 --pk3                 Compress output file to PK3\n"
-        "  -z --zip                 Compress output file to ZIP\n"
+        "  -3 --pk3                  Compress output file to PK3\n"
+        "  -z --zip                  Compress output file to ZIP\n"
         "\n"
-        "  -d --debug               Enable debugging\n"
-        "  -v --verbose             Print log messages to stdout\n"
-        "  -h --help                Show this help message\n"
+        "  -d --debug                Enable debugging\n"
+        "  -v --verbose              Print log messages to stdout\n"
+        "  -h --help                 Show this help message\n"
+        "  -p --printref             Print reference of all keys and values to "
+        "REFERENCE.txt\n"
+        "     --printref-json        Print reference of all keys and values in "
+        "JSON format\n"
+        "  -u --update <section> <key> <value>\n"
+        "                            Set a key in the config file\n"
+        "                            (section should be 'c' or 'o')\n"
         "\n");
 
     fmt::print(
@@ -363,6 +379,19 @@ void Determine_WorkingPath(const char *argv0) {
     if (home_dir.empty()) {
         home_dir = ".";
     }
+}
+
+std::filesystem::path Resolve_DefaultOutputPath() {
+    if (default_output_path.empty()) {
+        default_output_path = install_dir.string();
+    }
+    if (default_output_path[0] == '$') {
+        const char *var = getenv(default_output_path.c_str() + 1);
+        if (var != nullptr) {
+            return var;
+        }
+    }
+    return default_output_path;
 }
 
 static bool Verify_InstallDir(const std::filesystem::path &path) {
@@ -500,6 +529,18 @@ void Determine_LoggingFile() {
     } else {
         logging_file = std::filesystem::current_path();
         logging_file /= LOG_FILENAME;
+    }
+}
+
+void Determine_ReferenceFile() {
+    if (argv::Find('p', "printref") >= 0) {
+        if (!batch_mode) {
+            reference_file /= home_dir;
+            reference_file /= REF_FILENAME;
+        } else {
+            reference_file = std::filesystem::current_path();
+            reference_file /= REF_FILENAME;
+        }
     }
 }
 
@@ -970,7 +1011,11 @@ void Main_SetSeed() {
     if (random_string_seeds && !did_specify_seed) {
         if (string_seed.empty()) {
             if (password_mode) {
-                string_seed = ob_get_password();
+                if (next_rand_seed % 2 == 1) {
+                    string_seed = ob_get_password();
+                } else {
+                    string_seed = ob_get_random_words();
+                }
             } else {
                 string_seed = ob_get_random_words();
             }
@@ -1128,12 +1173,20 @@ bool Build_Cool_Shit() {
 
 int main(int argc, char **argv) {
     // initialise argument parser (skipping program name)
+
+    // these flags take at least one argument
+    argv::short_flags.emplace('b');
+    argv::short_flags.emplace('a');
+    argv::short_flags.emplace('l');
+    argv::short_flags.emplace('u');
+
+    // parse the flags
     argv::Init(argc - 1, argv + 1);
 
 restart:;
 
     if (argv::Find('?', NULL) >= 0 || argv::Find('h', "help") >= 0) {
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
         if (AllocConsole()) {
             freopen("CONOUT$", "r", stdin);
             freopen("CONOUT$", "w", stdout);
@@ -1141,14 +1194,14 @@ restart:;
         }
 #endif
         ShowInfo();
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
         std::cout << '\n' << "Close window when finished...";
         do {
         } while (true);
 #endif
         exit(EXIT_SUCCESS);
     } else if (argv::Find(0, "version") >= 0) {
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
         if (AllocConsole()) {
             freopen("CONOUT$", "r", stdin);
             freopen("CONOUT$", "w", stdout);
@@ -1156,7 +1209,7 @@ restart:;
         }
 #endif
         ShowVersion();
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
         std::cout << '\n' << "Close window when finished...";
         do {
         } while (true);
@@ -1164,6 +1217,10 @@ restart:;
 #endif
         exit(EXIT_SUCCESS);
     }
+
+#ifdef CONSOLE_ONLY
+    batch_mode = true;
+#endif
 
     int batch_arg = argv::Find('b', "batch");
     if (batch_arg >= 0) {
@@ -1176,7 +1233,55 @@ restart:;
 
         batch_mode = true;
         batch_output_file = argv::list[batch_arg + 1];
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
+        if (AllocConsole()) {
+            freopen("CONOUT$", "r", stdin);
+            freopen("CONOUT$", "w", stdout);
+            freopen("CONOUT$", "w", stderr);
+        }
+#endif
+    }
+
+    if (argv::Find('p', "printref") >= 0) {
+        batch_mode = true;
+#if defined WIN32 && !defined CONSOLE_ONLY
+        if (AllocConsole()) {
+            freopen("CONOUT$", "r", stdin);
+            freopen("CONOUT$", "w", stdout);
+            freopen("CONOUT$", "w", stderr);
+        }
+#endif
+    }
+
+    if (int update_arg = argv::Find('u', "update"); update_arg >= 0) {
+        batch_mode = true;
+        if (update_arg + 3 >= argv::list.size() ||
+            argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2) ||
+            argv::IsOption(update_arg + 3)) {
+            fmt::print(stderr,
+                       "OBSIDIAN ERROR: missing one or more args for --update "
+                       "<section> <key> <value>\n");
+            exit(EXIT_FAILURE);
+        }
+        if (argv::list[update_arg + 1].length() > 1) {
+            fmt::print(stderr,
+                       "OBSIDIAN ERROR: section name must be one character\n");
+            exit(EXIT_FAILURE);
+        }
+        char section = argv::list[update_arg + 1][0];
+        if (section != 'c' && section != 'o') {
+            fmt::print(stderr,
+                       "OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
+            exit(EXIT_FAILURE);
+        }
+        update_kv.section = section;
+        update_kv.key = argv::list[update_arg + 2];
+        update_kv.value = argv::list[update_arg + 3];
+    }
+
+    if (argv::Find(0, "printref-json") >= 0) {
+        batch_mode = true;
+#if defined WIN32 && !defined CONSOLE_ONLY
         if (AllocConsole()) {
             freopen("CONOUT$", "r", stdin);
             freopen("CONOUT$", "w", stdout);
@@ -1243,8 +1348,13 @@ skiprest:
     Determine_OptionsFile();
     Determine_ThemeFile();
     Determine_LoggingFile();
+    Determine_ReferenceFile();
 
     LogInit(logging_file);
+
+    if (argv::Find('p', "printref") >= 0) {
+        RefInit(reference_file);
+    }
 
     // accept -t and --terminal for backwards compatibility
     if (argv::Find('v', "verbose") >= 0 || argv::Find('t', "terminal") >= 0) {
@@ -1268,8 +1378,9 @@ skiprest:
 
     Trans_Init();
 
+    Options_Load(options_file);
+
     if (!batch_mode) {
-        Options_Load(options_file);
         Theme_Options_Load(theme_file);
         Trans_SetLanguage();
         OBSIDIAN_TITLE = _("OBSIDIAN Level Maker");
@@ -1343,15 +1454,60 @@ skiprest:
 
         Module_Defaults();
 
-        // batch mode never reads/writes the normal config file.
-        // but we can load settings from a explicitly specified file...
+        if (argv::Find('p', "printref") >= 0) {
+            ob_print_reference();
+            RefClose();
+#if defined WIN32 && !defined CONSOLE_ONLY
+            std::cout << '\n' << "Close window when finished...";
+
+            do {
+            } while (true);
+#endif
+            Main::Detail::Shutdown(false);
+            return 0;
+        }
+
+        if (argv::Find(0, "printref-json") >= 0) {
+            ob_print_reference_json();
+#if defined WIN32 && !defined CONSOLE_ONLY
+            std::cout << '\n' << "Close window when finished...";
+
+            do {
+            } while (true);
+#endif
+            Main::Detail::Shutdown(false);
+            return 0;
+        }
+
         if (!load_file.empty()) {
             if (!Cookie_Load(load_file)) {
                 Main::FatalError(_("No such config file: {}\n"), load_file);
             }
+        } else {
+            if (!std::filesystem::exists(config_file)) {
+                Cookie_Save(config_file);
+            }
+            if (!Cookie_Load(config_file)) {
+                Main::FatalError(_("No such config file: {}\n"), config_file);
+            }
         }
 
         Cookie_ParseArguments();
+
+        if (argv::Find('u', "update") >= 0) {
+            switch (update_kv.section) {
+                case 'c':
+                    ob_set_config(update_kv.key, update_kv.value);
+                    break;
+                case 'o':
+                    Parse_Option(update_kv.key, update_kv.value);
+                    break;
+            }
+            Options_Save(options_file);
+            Cookie_Save(config_file);
+            Main::Detail::Shutdown(false);
+            return 0;
+        }
 
         Main_SetSeed();
         if (!Build_Cool_Shit()) {
@@ -1359,7 +1515,7 @@ skiprest:
             LogPrintf("FAILED!\n");
 
             Main::Detail::Shutdown(false);
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
             std::cout << '\n' << "Close window when finished...";
             do {
             } while (true);
@@ -1425,11 +1581,13 @@ skiprest:
             main_win_architecture_config_CB, 0,
             FL_MENU_TOGGLE | (randomize_architecture ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add(
-            _("Surprise Me/Randomize Combat"), NULL, main_win_monsters_config_CB,
-            0, FL_MENU_TOGGLE | (randomize_monsters ? FL_MENU_VALUE : 0));
+            _("Surprise Me/Randomize Combat"), NULL,
+            main_win_monsters_config_CB, 0,
+            FL_MENU_TOGGLE | (randomize_monsters ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add(
-            _("Surprise Me/Randomize Pickups"), NULL, main_win_pickups_config_CB,
-            0, FL_MENU_TOGGLE | (randomize_pickups ? FL_MENU_VALUE : 0));
+            _("Surprise Me/Randomize Pickups"), NULL,
+            main_win_pickups_config_CB, 0,
+            FL_MENU_TOGGLE | (randomize_pickups ? FL_MENU_VALUE : 0));
         main_win->menu_bar->add(
             _("Surprise Me/Randomize Other"), NULL, main_win_misc_config_CB, 0,
             FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));

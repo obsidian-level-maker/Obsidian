@@ -34,18 +34,18 @@
 #include "../../Fl_Timeout.h"
 
 #if HAVE_XINERAMA
-#  include <X11/extensions/Xinerama.h>
+#include <X11/extensions/Xinerama.h>
 #endif
 
-#  include <X11/Xutil.h>
-#  ifdef __sgi
-#    include <X11/extensions/readdisplay.h>
-#  else
-#    include <stdlib.h>
-#  endif // __sgi
+#include <X11/Xutil.h>
+#ifdef __sgi
+#include <X11/extensions/readdisplay.h>
+#else
+#include <stdlib.h>
+#endif // __sgi
 
 #ifdef DEBUG
-#  include <stdio.h>
+#include <stdio.h>
 #endif // DEBUG
 
 extern Atom fl_NET_WORKAREA;
@@ -72,61 +72,71 @@ char Fl_X11_Screen_Driver::fl_is_over_the_spot = 0;
 Window Fl_X11_Screen_Driver::xim_win = 0;
 
 
-void Fl_X11_Screen_Driver::display(const char *d)
-{
-  if (d) setenv("DISPLAY", d, 1);
+void Fl_X11_Screen_Driver::display(const char *d) {
+  if (d)
+    setenv("DISPLAY", d, 1);
 }
 
 
-static int test_visual(XVisualInfo& v, int flags) {
-  if (v.screen != fl_screen) return 0;
+static int test_visual(XVisualInfo &v, int flags) {
+  if (v.screen != fl_screen)
+    return 0;
 #if USE_COLORMAP
   if (!(flags & FL_INDEX)) {
-    if (v.c_class != StaticColor && v.c_class != TrueColor) return 0;
-    if (v.depth <= 8) return 0; // fltk will work better in colormap mode
+    if (v.c_class != StaticColor && v.c_class != TrueColor)
+      return 0;
+    if (v.depth <= 8)
+      return 0; // fltk will work better in colormap mode
   }
   if (flags & FL_RGB8) {
-    if (v.depth < 24) return 0;
+    if (v.depth < 24)
+      return 0;
   }
   // for now, fltk does not like colormaps of more than 8 bits:
-  if ((v.c_class&1) && v.depth > 8) return 0;
+  if ((v.c_class & 1) && v.depth > 8)
+    return 0;
 #else
   // simpler if we can't use colormapped visuals at all:
-  if (v.c_class != StaticColor && v.c_class != TrueColor) return 0;
+  if (v.c_class != StaticColor && v.c_class != TrueColor)
+    return 0;
 #endif
   return 1;
 }
 
 
-int Fl_X11_Screen_Driver::visual(int flags)
-{
-  if (flags & FL_DOUBLE) return 0;
+int Fl_X11_Screen_Driver::visual(int flags) {
+  if (flags & FL_DOUBLE)
+    return 0;
   open_display();
   // always use default if possible:
-  if (test_visual(*fl_visual, flags)) return 1;
+  if (test_visual(*fl_visual, flags))
+    return 1;
   // get all the visuals:
   XVisualInfo vTemplate;
   int num;
   XVisualInfo *visualList = XGetVisualInfo(fl_display, 0, &vTemplate, &num);
   // find all matches, use the one with greatest depth:
   XVisualInfo *found = 0;
-  for (int i=0; i<num; i++) if (test_visual(visualList[i], flags)) {
-    if (!found || found->depth < visualList[i].depth)
-      found = &visualList[i];
+  for (int i = 0; i < num; i++)
+    if (test_visual(visualList[i], flags)) {
+      if (!found || found->depth < visualList[i].depth)
+        found = &visualList[i];
+    }
+  if (!found) {
+    XFree((void *)visualList);
+    return 0;
   }
-  if (!found) {XFree((void*)visualList); return 0;}
   fl_visual = found;
-  fl_colormap = XCreateColormap(fl_display, RootWindow(fl_display,fl_screen),
-                                fl_visual->visual, AllocNone);
+  fl_colormap =
+      XCreateColormap(fl_display, RootWindow(fl_display, fl_screen), fl_visual->visual, AllocNone);
   return 1;
 }
 
 
-static int fl_workarea_xywh[4] = { -1, -1, -1, -1 };
+static int fl_workarea_xywh[4] = {-1, -1, -1, -1};
 
 
-void Fl_X11_Screen_Driver::init_workarea()
-{
+void Fl_X11_Screen_Driver::init_workarea() {
   Atom actual;
   unsigned long count, remaining;
   int format;
@@ -137,76 +147,81 @@ void Fl_X11_Screen_Driver::init_workarea()
    Therefore, we use this property only when there is a single screen,
    and fall back to the main screen full area when there are several screens.
    */
-  if (Fl::screen_count() > 1 || XGetWindowProperty(fl_display, RootWindow(fl_display, fl_screen),
-                         fl_NET_WORKAREA, 0, 4, False,
-                         XA_CARDINAL, &actual, &format, &count, &remaining,
-                         (unsigned char **)&xywh) || !xywh || !xywh[2] ||
-                         !xywh[3])
-  {
+  if (Fl::screen_count() > 1 ||
+      XGetWindowProperty(fl_display, RootWindow(fl_display, fl_screen), fl_NET_WORKAREA, 0, 4,
+                         False, XA_CARDINAL, &actual, &format, &count, &remaining,
+                         (unsigned char **)&xywh) ||
+      !xywh || !xywh[2] || !xywh[3]) {
     fl_workarea_xywh[0] = screens[0].x_org;
     fl_workarea_xywh[1] = screens[0].y_org;
     fl_workarea_xywh[2] = screens[0].width;
     fl_workarea_xywh[3] = screens[0].height;
-  }
-  else
-  {
+  } else {
     fl_workarea_xywh[0] = xywh[0];
     fl_workarea_xywh[1] = xywh[1];
     fl_workarea_xywh[2] = xywh[2];
     fl_workarea_xywh[3] = xywh[3];
   }
-  if ( xywh ) { XFree(xywh); xywh = 0; }
+  if (xywh) {
+    XFree(xywh);
+    xywh = 0;
+  }
 }
 
 
 int Fl_X11_Screen_Driver::x() {
-  if (!fl_display) open_display();
+  if (!fl_display)
+    open_display();
   return fl_workarea_xywh[0]
 #if USE_XFT
-  / screens[0].scale
+         / screens[0].scale
 #endif
-  ;
+      ;
 }
 
 int Fl_X11_Screen_Driver::y() {
-  if (!fl_display) open_display();
+  if (!fl_display)
+    open_display();
   return fl_workarea_xywh[1]
 #if USE_XFT
-  / screens[0].scale
+         / screens[0].scale
 #endif
-  ;
+      ;
 }
 
 int Fl_X11_Screen_Driver::w() {
-  if (!fl_display) open_display();
+  if (!fl_display)
+    open_display();
   return fl_workarea_xywh[2]
 #if USE_XFT
-      / screens[0].scale
+         / screens[0].scale
 #endif
-  ;
+      ;
 }
 
 int Fl_X11_Screen_Driver::h() {
-  if (!fl_display) open_display();
+  if (!fl_display)
+    open_display();
   return fl_workarea_xywh[3]
 #if USE_XFT
-  / screens[0].scale
+         / screens[0].scale
 #endif
-  ;
+      ;
 }
 
 #define USE_XRANDR (HAVE_DLSYM && HAVE_DLFCN_H) // means attempt to dynamically load libXrandr.so
 #if USE_XRANDR
 #include <dlfcn.h>
 typedef struct {
-  int    width, height;
-  int    mwidth, mheight;
+  int width, height;
+  int mwidth, mheight;
 } XRRScreenSize;
-typedef XRRScreenSize* (*XRRSizes_type)(Display *dpy, int screen, int *nsizes);
+typedef XRRScreenSize *(*XRRSizes_type)(Display *dpy, int screen, int *nsizes);
 #endif // USE_XRANDR
 
 void Fl_X11_Screen_Driver::init() {
-  if (!fl_display) open_display();
+  if (!fl_display)
+    open_display();
 
   int dpi_by_randr = 0;
   float dpih = 0.0f, dpiv = 0.0f;
@@ -221,15 +236,15 @@ void Fl_X11_Screen_Driver::init() {
     int nscreens;
     XRRScreenSize *ssize = XRRSizes_f(fl_display, fl_screen, &nscreens);
 
-    //for (int i=0; i<nscreens; i++)
-    //  printf("width=%d height=%d mwidth=%d mheight=%d\n",
-    //         ssize[i].width,ssize[i].height,ssize[i].mwidth,ssize[i].mheight);
+    // for (int i=0; i<nscreens; i++)
+    //   printf("width=%d height=%d mwidth=%d mheight=%d\n",
+    //          ssize[i].width,ssize[i].height,ssize[i].mwidth,ssize[i].mheight);
 
     if (nscreens > 0) { // Note: XRRSizes() *may* return nscreens == 0, see docs
       int mm = ssize[0].mwidth;
-      dpih = mm ? ssize[0].width*25.4f/mm : 0.0f;
+      dpih = mm ? ssize[0].width * 25.4f / mm : 0.0f;
       mm = ssize[0].mheight;
-      dpiv = mm ? ssize[0].height*25.4f/mm : 0.0f;
+      dpiv = mm ? ssize[0].height * 25.4f / mm : 0.0f;
       dpi_by_randr = 1;
     }
   }
@@ -240,10 +255,11 @@ void Fl_X11_Screen_Driver::init() {
 
   if (XineramaIsActive(fl_display)) {
     XineramaScreenInfo *xsi = XineramaQueryScreens(fl_display, &num_screens);
-    if (num_screens > MAX_SCREENS) num_screens = MAX_SCREENS;
+    if (num_screens > MAX_SCREENS)
+      num_screens = MAX_SCREENS;
 
     /* There's no way to use different DPI for different Xinerama screens. */
-    for (int i=0; i<num_screens; i++) {
+    for (int i = 0; i < num_screens; i++) {
       screens[i].x_org = xsi[i].x_org;
       screens[i].y_org = xsi[i].y_org;
       screens[i].width = xsi[i].width;
@@ -253,21 +269,23 @@ void Fl_X11_Screen_Driver::init() {
         dpi[i][1] = dpiv;
       } else {
         int mm = DisplayWidthMM(fl_display, fl_screen);
-        dpi[i][0] = mm ? screens[i].width*25.4f/mm : 0.0f;
+        dpi[i][0] = mm ? screens[i].width * 25.4f / mm : 0.0f;
         mm = DisplayHeightMM(fl_display, fl_screen);
-        dpi[i][1] = mm ? screens[i].height*25.4f/mm : 0.0f;
+        dpi[i][1] = mm ? screens[i].height * 25.4f / mm : 0.0f;
       }
     }
-    if (xsi) XFree(xsi);
+    if (xsi)
+      XFree(xsi);
   } else
 
 #endif // HAVE_XINERAMA
 
   { // ! HAVE_XINERAMA || ! XineramaIsActive()
     num_screens = ScreenCount(fl_display);
-    if (num_screens > MAX_SCREENS) num_screens = MAX_SCREENS;
+    if (num_screens > MAX_SCREENS)
+      num_screens = MAX_SCREENS;
 
-    for (int i=0; i<num_screens; i++) {
+    for (int i = 0; i < num_screens; i++) {
       screens[i].x_org = 0;
       screens[i].y_org = 0;
       screens[i].width = DisplayWidth(fl_display, i);
@@ -280,9 +298,9 @@ void Fl_X11_Screen_Driver::init() {
         dpi[i][1] = dpiv;
       } else {
         int mm = DisplayWidthMM(fl_display, i);
-        dpi[i][0] = mm ? screens[i].width*25.4f/mm : 0.0f;
+        dpi[i][0] = mm ? screens[i].width * 25.4f / mm : 0.0f;
         mm = DisplayHeightMM(fl_display, fl_screen);
-        dpi[i][1] = mm ? screens[i].height*25.4f/mm : 0.0f;
+        dpi[i][1] = mm ? screens[i].height * 25.4f / mm : 0.0f;
       }
     }
   }
@@ -290,10 +308,11 @@ void Fl_X11_Screen_Driver::init() {
 }
 
 
-void Fl_X11_Screen_Driver::screen_work_area(int &X, int &Y, int &W, int &H, int n)
-{
-  if (num_screens < 0) init();
-  if (n < 0 || n >= num_screens) n = 0;
+void Fl_X11_Screen_Driver::screen_work_area(int &X, int &Y, int &W, int &H, int n) {
+  if (num_screens < 0)
+    init();
+  if (n < 0 || n >= num_screens)
+    n = 0;
   if (n == 0) { // for the main screen, these return the work area
     X = Fl::x();
     Y = Fl::y();
@@ -305,9 +324,9 @@ void Fl_X11_Screen_Driver::screen_work_area(int &X, int &Y, int &W, int &H, int 
 }
 
 
-void Fl_X11_Screen_Driver::screen_xywh(int &X, int &Y, int &W, int &H, int n)
-{
-  if (num_screens < 0) init();
+void Fl_X11_Screen_Driver::screen_xywh(int &X, int &Y, int &W, int &H, int n) {
+  if (num_screens < 0)
+    init();
 
   if ((n < 0) || (n >= num_screens))
     n = 0;
@@ -326,9 +345,9 @@ void Fl_X11_Screen_Driver::screen_xywh(int &X, int &Y, int &W, int &H, int n)
 }
 
 
-void Fl_X11_Screen_Driver::screen_dpi(float &h, float &v, int n)
-{
-  if (num_screens < 0) init();
+void Fl_X11_Screen_Driver::screen_dpi(float &h, float &v, int n) {
+  if (num_screens < 0)
+    init();
   h = v = 0.0f;
 
   if (n >= 0 && n < num_screens) {
@@ -338,25 +357,24 @@ void Fl_X11_Screen_Driver::screen_dpi(float &h, float &v, int n)
 }
 
 
-void Fl_X11_Screen_Driver::beep(int type)
-{
+void Fl_X11_Screen_Driver::beep(int type) {
   int vol;
   switch (type) {
-    case FL_BEEP_ERROR :
+    case FL_BEEP_ERROR:
       vol = 100;
       break;
-    case FL_BEEP_DEFAULT :
-    default :
+    case FL_BEEP_DEFAULT:
+    default:
       vol = 0;
       break;
   }
-  if (!fl_display) open_display();
+  if (!fl_display)
+    open_display();
   XBell(fl_display, vol);
 }
 
 
-void Fl_X11_Screen_Driver::flush()
-{
+void Fl_X11_Screen_Driver::flush() {
   if (fl_display)
     XFlush(fl_display);
 }
@@ -365,8 +383,7 @@ void Fl_X11_Screen_Driver::flush()
 extern void fl_fix_focus(); // in Fl.cxx
 
 
-void Fl_X11_Screen_Driver::grab(Fl_Window* win)
-{
+void Fl_X11_Screen_Driver::grab(Fl_Window *win) {
   Fl_Window *fullscreen_win = NULL;
   for (Fl_Window *W = Fl::first_window(); W; W = Fl::next_window(W)) {
     if (W->fullscreen_active()) {
@@ -377,25 +394,13 @@ void Fl_X11_Screen_Driver::grab(Fl_Window* win)
   if (win) {
     if (!Fl::grab()) {
       Window xid = fullscreen_win ? fl_xid(fullscreen_win) : fl_xid(Fl::first_window());
-      XGrabPointer(fl_display,
-                   xid,
-                   1,
-                   ButtonPressMask|ButtonReleaseMask|
-                   ButtonMotionMask|PointerMotionMask,
-                   GrabModeAsync,
-                   GrabModeAsync,
-                   None,
-                   0,
-                   fl_event_time);
-      XGrabKeyboard(fl_display,
-                    xid,
-                    1,
-                    GrabModeAsync,
-                    GrabModeAsync,
-                    fl_event_time);
+      XGrabPointer(fl_display, xid, 1,
+                   ButtonPressMask | ButtonReleaseMask | ButtonMotionMask | PointerMotionMask,
+                   GrabModeAsync, GrabModeAsync, None, 0, fl_event_time);
+      XGrabKeyboard(fl_display, xid, 1, GrabModeAsync, GrabModeAsync, fl_event_time);
     }
-    Fl::grab_ = win;    // FIXME: Fl::grab_ "should be private", but we need
-                        // a way to *set* the variable from the driver!
+    Fl::grab_ = win; // FIXME: Fl::grab_ "should be private", but we need
+                     // a way to *set* the variable from the driver!
   } else {
     if (Fl::grab()) {
       // We must keep the grab in the non-EWMH fullscreen case
@@ -406,8 +411,8 @@ void Fl_X11_Screen_Driver::grab(Fl_Window* win)
       // this flush is done in case the picked menu item goes into
       // an infinite loop, so we don't leave the X server locked up:
       XFlush(fl_display);
-      Fl::grab_ = 0;    // FIXME: Fl::grab_ "should be private", but we need
-                        // a way to *set* the variable from the driver!
+      Fl::grab_ = 0; // FIXME: Fl::grab_ "should be private", but we need
+                     // a way to *set* the variable from the driver!
       fl_fix_focus();
     }
   }
@@ -415,16 +420,17 @@ void Fl_X11_Screen_Driver::grab(Fl_Window* win)
 
 
 // Wrapper around XParseColor...
-int Fl_X11_Screen_Driver::parse_color(const char* p, uchar& r, uchar& g, uchar& b)
-{
+int Fl_X11_Screen_Driver::parse_color(const char *p, uchar &r, uchar &g, uchar &b) {
   XColor x;
-  if (!fl_display) open_display();
+  if (!fl_display)
+    open_display();
   if (XParseColor(fl_display, fl_colormap, p, &x)) {
-    r = (uchar)(x.red>>8);
-    g = (uchar)(x.green>>8);
-    b = (uchar)(x.blue>>8);
+    r = (uchar)(x.red >> 8);
+    g = (uchar)(x.green >> 8);
+    b = (uchar)(x.blue >> 8);
     return 1;
-  } else return 0;
+  } else
+    return 0;
 }
 
 
@@ -437,48 +443,50 @@ int Fl_X11_Screen_Driver::parse_color(const char* p, uchar& r, uchar& g, uchar& 
 // entry, requiring users to put in both (unless they want the text fields
 // the same color as the windows).
 
-static void set_selection_color(uchar r, uchar g, uchar b)
-{
-  Fl::set_color(FL_SELECTION_COLOR,r,g,b);
+static void set_selection_color(uchar r, uchar g, uchar b) {
+  Fl::set_color(FL_SELECTION_COLOR, r, g, b);
 }
 
-static void getsyscolor(const char *key1, const char* key2, const char *arg, const char *defarg, void (*func)(uchar,uchar,uchar))
-{
+static void getsyscolor(const char *key1, const char *key2, const char *arg, const char *defarg,
+                        void (*func)(uchar, uchar, uchar)) {
   if (!arg) {
     arg = XGetDefault(fl_display, key1, key2);
-    if (!arg) arg = defarg;
+    if (!arg)
+      arg = defarg;
   }
   XColor x;
   if (!XParseColor(fl_display, fl_colormap, arg, &x))
     Fl::error("Unknown color: %s", arg);
   else
-    func(x.red>>8, x.green>>8, x.blue>>8);
+    func(x.red >> 8, x.green >> 8, x.blue >> 8);
 }
 
 
-void Fl_X11_Screen_Driver::get_system_colors()
-{
+void Fl_X11_Screen_Driver::get_system_colors() {
   open_display();
-  const char* key1 = 0;
-  if (Fl::first_window()) key1 = Fl::first_window()->xclass();
-  if (!key1) key1 = "fltk";
+  const char *key1 = 0;
+  if (Fl::first_window())
+    key1 = Fl::first_window()->xclass();
+  if (!key1)
+    key1 = "fltk";
   if (!bg2_set)
-    getsyscolor("Text","background",    fl_bg2, "#ffffff", Fl::background2);
+    getsyscolor("Text", "background", fl_bg2, "#ffffff", Fl::background2);
   if (!fg_set)
-    getsyscolor(key1,  "foreground",    fl_fg,  "#000000", Fl::foreground);
+    getsyscolor(key1, "foreground", fl_fg, "#000000", Fl::foreground);
   if (!bg_set)
-    getsyscolor(key1,  "background",    fl_bg,  "#c0c0c0", Fl::background);
+    getsyscolor(key1, "background", fl_bg, "#c0c0c0", Fl::background);
   getsyscolor("Text", "selectBackground", 0, "#000080", set_selection_color);
 }
 
 
-const char *Fl_X11_Screen_Driver::get_system_scheme()
-{
+const char *Fl_X11_Screen_Driver::get_system_scheme() {
   const char *s = 0L;
   if ((s = fl_getenv("FLTK_SCHEME")) == NULL) {
-    const char* key = 0;
-    if (Fl::first_window()) key = Fl::first_window()->xclass();
-    if (!key) key = "fltk";
+    const char *key = 0;
+    if (Fl::first_window())
+      key = Fl::first_window()->xclass();
+    if (!key)
+      key = "fltk";
     open_display();
     s = XGetDefault(fl_display, key, "scheme");
   }
@@ -486,22 +494,27 @@ const char *Fl_X11_Screen_Driver::get_system_scheme()
 }
 
 
-int Fl_X11_Screen_Driver::compose(int& del) {
+int Fl_X11_Screen_Driver::compose(int &del) {
   int condition;
   unsigned char ascii = (unsigned char)Fl::e_text[0];
-  condition = (Fl::e_state & (FL_ALT | FL_META | FL_CTRL)) && !(ascii & 128) ;
-  if (condition) { del = 0; return 0;} // this stuff is to be treated as a function key
+  condition = (Fl::e_state & (FL_ALT | FL_META | FL_CTRL)) && !(ascii & 128);
+  if (condition) {
+    del = 0;
+    return 0;
+  } // this stuff is to be treated as a function key
   del = Fl::compose_state;
   Fl::compose_state = 0;
   // Only insert non-control characters:
-  if ( (!Fl::compose_state) && ! (ascii & ~31 && ascii!=127)) { return 0; }
+  if ((!Fl::compose_state) && !(ascii & ~31 && ascii != 127)) {
+    return 0;
+  }
   return 1;
 }
 
-void Fl_X11_Screen_Driver::compose_reset()
-{
+void Fl_X11_Screen_Driver::compose_reset() {
   Fl::compose_state = 0;
-  if (xim_ic) XmbResetIC(xim_ic);
+  if (xim_ic)
+    XmbResetIC(xim_ic);
 }
 
 int Fl_X11_Screen_Driver::text_display_can_leak() const {
@@ -515,9 +528,7 @@ int Fl_X11_Screen_Driver::text_display_can_leak() const {
 
 //
 // 'fl_subimage_offsets()' - Calculate subimage offsets for an axis
-static inline int
-fl_subimage_offsets(int a, int aw, int b, int bw, int &obw)
-{
+static inline int fl_subimage_offsets(int a, int aw, int b, int bw, int &obw) {
   int off;
   int ob;
 
@@ -543,114 +554,118 @@ fl_subimage_offsets(int a, int aw, int b, int bw, int &obw)
 // this handler will catch and ignore exceptions during XGetImage
 // to avoid an application crash
 extern "C" {
-  static int xgetimageerrhandler(Display *display, XErrorEvent *error) {
-    return 0;
-  }
+static int xgetimageerrhandler(Display *display, XErrorEvent *error) {
+  return 0;
+}
 }
 
-Fl_RGB_Image *Fl_X11_Screen_Driver::read_win_rectangle(int X, int Y, int w, int h, Fl_Window *win, bool may_capture_subwins, bool *did_capture_subwins)
-{
-  XImage        *image;         // Captured image
-  int           i, maxindex;    // Looping vars
-  int           x, y;           // Current X & Y in image
+Fl_RGB_Image *Fl_X11_Screen_Driver::read_win_rectangle(int X, int Y, int w, int h, Fl_Window *win,
+                                                       bool may_capture_subwins,
+                                                       bool *did_capture_subwins) {
+  XImage *image;                // Captured image
+  int i, maxindex;              // Looping vars
+  int x, y;                     // Current X & Y in image
   unsigned char *line,          // Array to hold image row
-                *line_ptr;      // Pointer to current line image
+      *line_ptr;                // Pointer to current line image
   unsigned char *pixel;         // Current color value
-  XColor        colors[4096];   // Colors from the colormap...
+  XColor colors[4096];          // Colors from the colormap...
   unsigned char cvals[4096][3]; // Color values from the colormap...
-  unsigned      index_mask,
-                index_shift,
-                red_mask,
-                red_shift,
-                green_mask,
-                green_shift,
-                blue_mask,
-                blue_shift;
+  unsigned index_mask, index_shift, red_mask, red_shift, green_mask, green_shift, blue_mask,
+      blue_shift;
   //
   // Under X11 we have the option of the XGetImage() interface or SGI's
   // ReadDisplay extension which does all of the really hard work for
   // us...
   //
-  int allow_outside = w < 0;    // negative w allows negative X or Y, that is, window frame
-  if (w < 0) w = - w;
+  int allow_outside = w < 0; // negative w allows negative X or Y, that is, window frame
+  if (w < 0)
+    w = -w;
 
   Window xid = (win && !allow_outside ? fl_xid(win) : fl_window);
 
-  float s = allow_outside ? Fl::screen_driver()->scale(win->screen_num()) : Fl_Surface_Device::surface()->driver()->scale();
+  float s = allow_outside ? Fl::screen_driver()->scale(win->screen_num())
+                          : Fl_Surface_Device::surface()->driver()->scale();
   int Xs = Fl_Scalable_Graphics_Driver::floor(X, s);
   int Ys = Fl_Scalable_Graphics_Driver::floor(Y, s);
-  int ws = Fl_Scalable_Graphics_Driver::floor(X+w, s) - Xs;
-  int hs = Fl_Scalable_Graphics_Driver::floor(Y+h, s) - Ys;
+  int ws = Fl_Scalable_Graphics_Driver::floor(X + w, s) - Xs;
+  int hs = Fl_Scalable_Graphics_Driver::floor(Y + h, s) - Ys;
 
-#  ifdef __sgi
+#ifdef __sgi
   if (XReadDisplayQueryExtension(fl_display, &i, &i)) {
     image = XReadDisplay(fl_display, xid, Xs, Ys, ws, hs, 0, NULL);
   } else
-#  else
-    image = 0;
-#  endif // __sgi
+#else
+  image = 0;
+#endif // __sgi
 
-  if (!image) {
-    // fetch absolute coordinates
-    int dx = 0, dy = 0, sx = 0, sy = 0, sw = 0, sh = 0;
-    Window child_win;
+    if (!image) {
+      // fetch absolute coordinates
+      int dx = 0, dy = 0, sx = 0, sy = 0, sw = 0, sh = 0;
+      Window child_win;
 
-    if (win) {
-      XTranslateCoordinates(fl_display, xid,
-                            RootWindow(fl_display, fl_screen), Xs, Ys, &dx, &dy, &child_win);
-      // screen dimensions
-      int ns = Fl_Window_Driver::driver(win)->screen_num();
-      sx = screens[ns].x_org;
-      sy = screens[ns].y_org;
-      sw = screens[ns].width;
-      sh = screens[ns].height;
-    }
-#if ! HAVE_XRENDER
-    if (win && !allow_outside && int(s) != s) {
-      ws = (w+1) * s; // approximates what Fl_Graphics_Driver::cache_size() does
-      hs = (h+1) * s;
-     }
+      if (win) {
+        XTranslateCoordinates(fl_display, xid, RootWindow(fl_display, fl_screen), Xs, Ys, &dx, &dy,
+                              &child_win);
+        // screen dimensions
+        int ns = Fl_Window_Driver::driver(win)->screen_num();
+        sx = screens[ns].x_org;
+        sy = screens[ns].y_org;
+        sw = screens[ns].width;
+        sh = screens[ns].height;
+      }
+#if !HAVE_XRENDER
+      if (win && !allow_outside && int(s) != s) {
+        ws = (w + 1) * s; // approximates what Fl_Graphics_Driver::cache_size() does
+        hs = (h + 1) * s;
+      }
 #endif
-    if (win && Xs + ws >= int(win->w()*s)) ws = win->w()*s - Xs -1;
-    if (win && Ys + hs >= int(win->h()*s)) hs = win->h()*s - Ys -1;
-    if (ws < 1) ws = 1;
-    if (hs < 1) hs = 1;
-    if (!win || (dx >= sx && dy >= sy && dx + ws <= sx+sw && dy + hs <= sy+sh) ) {
-      // the image is fully contained, we can use the traditional method
-      // however, if the window is obscured etc. the function will still fail. Make sure we
-      // catch the error and continue, otherwise an exception will be thrown.
-      XErrorHandler old_handler = XSetErrorHandler(xgetimageerrhandler);
-      image = XGetImage(fl_display, xid, Xs, Ys, ws, hs, AllPlanes, ZPixmap);
-      XSetErrorHandler(old_handler);
-    } else {
-      // image is crossing borders, determine visible region
-      int nw, nh, noffx, noffy;
-      noffx = fl_subimage_offsets(sx, sw, dx, ws, nw);
-      noffy = fl_subimage_offsets(sy, sh, dy, hs, nh);
-      if (nw <= 0 || nh <= 0) return 0;
+      if (win && Xs + ws >= int(win->w() * s))
+        ws = win->w() * s - Xs - 1;
+      if (win && Ys + hs >= int(win->h() * s))
+        hs = win->h() * s - Ys - 1;
+      if (ws < 1)
+        ws = 1;
+      if (hs < 1)
+        hs = 1;
+      if (!win || (dx >= sx && dy >= sy && dx + ws <= sx + sw && dy + hs <= sy + sh)) {
+        // the image is fully contained, we can use the traditional method
+        // however, if the window is obscured etc. the function will still fail. Make sure we
+        // catch the error and continue, otherwise an exception will be thrown.
+        XErrorHandler old_handler = XSetErrorHandler(xgetimageerrhandler);
+        image = XGetImage(fl_display, xid, Xs, Ys, ws, hs, AllPlanes, ZPixmap);
+        XSetErrorHandler(old_handler);
+      } else {
+        // image is crossing borders, determine visible region
+        int nw, nh, noffx, noffy;
+        noffx = fl_subimage_offsets(sx, sw, dx, ws, nw);
+        noffy = fl_subimage_offsets(sy, sh, dy, hs, nh);
+        if (nw <= 0 || nh <= 0)
+          return 0;
 
-      // allocate the image
-      int bpp = fl_visual->depth + ((fl_visual->depth / 8) % 2) * 8;
-      char* buf = (char*)malloc((bpp / 8) * ws * hs);
-      image = XCreateImage(fl_display, fl_visual->visual,
-                           fl_visual->depth, ZPixmap, 0, buf, ws, hs, bpp, 0);
-      if (!image) {
-        if (buf) free(buf);
-        return 0;
-      }
+        // allocate the image
+        int bpp = fl_visual->depth + ((fl_visual->depth / 8) % 2) * 8;
+        char *buf = (char *)malloc((bpp / 8) * ws * hs);
+        image = XCreateImage(fl_display, fl_visual->visual, fl_visual->depth, ZPixmap, 0, buf, ws,
+                             hs, bpp, 0);
+        if (!image) {
+          if (buf)
+            free(buf);
+          return 0;
+        }
 
-      XErrorHandler old_handler = XSetErrorHandler(xgetimageerrhandler);
-      XImage *subimg = XGetSubImage(fl_display, xid, Xs + noffx, Ys + noffy,
-                                    nw, nh, AllPlanes, ZPixmap, image, noffx, noffy);
-      XSetErrorHandler(old_handler);
-      if (!subimg) {
-        XDestroyImage(image);
-        return 0;
+        XErrorHandler old_handler = XSetErrorHandler(xgetimageerrhandler);
+        XImage *subimg = XGetSubImage(fl_display, xid, Xs + noffx, Ys + noffy, nw, nh, AllPlanes,
+                                      ZPixmap, image, noffx, noffy);
+        XSetErrorHandler(old_handler);
+        if (!subimg) {
+          XDestroyImage(image);
+          return 0;
+        }
       }
     }
-  }
 
-  if (!image) return 0;
+  if (!image)
+    return 0;
   if (s != 1) {
     w = ws;
     h = hs;
@@ -686,9 +701,9 @@ Fl_RGB_Image *Fl_X11_Screen_Driver::read_win_rectangle(int X, int Y, int w, int 
   // Check that we have valid mask/shift values...
   if (!image->red_mask && image->bits_per_pixel > 12) {
     // Greater than 12 bits must be TrueColor...
-    image->red_mask   = fl_visual->visual->red_mask;
+    image->red_mask = fl_visual->visual->red_mask;
     image->green_mask = fl_visual->visual->green_mask;
-    image->blue_mask  = fl_visual->visual->blue_mask;
+    image->blue_mask = fl_visual->visual->blue_mask;
 
 #ifdef DEBUG
     // Defined in Fl_Xlib_Graphics_Driver_color.cxx
@@ -712,26 +727,25 @@ Fl_RGB_Image *Fl_X11_Screen_Driver::read_win_rectangle(int X, int Y, int w, int 
     // Get the colormap entries for this window...
     maxindex = fl_visual->visual->map_entries;
 
-    for (i = 0; i < maxindex; i ++) colors[i].pixel = i;
+    for (i = 0; i < maxindex; i++)
+      colors[i].pixel = i;
 
     XQueryColors(fl_display, fl_colormap, colors, maxindex);
 
-    for (i = 0; i < maxindex; i ++) {
+    for (i = 0; i < maxindex; i++) {
       cvals[i][0] = colors[i].red >> 8;
       cvals[i][1] = colors[i].green >> 8;
       cvals[i][2] = colors[i].blue >> 8;
     }
 
     // Read the pixels and output an RGB image...
-    for (y = 0; y < image->height; y ++) {
+    for (y = 0; y < image->height; y++) {
       pixel = (unsigned char *)(image->data + y * image->bytes_per_line);
-      line  = p + y * w * d;
+      line = p + y * w * d;
 
       switch (image->bits_per_pixel) {
-        case 1 :
-          for (x = image->width, line_ptr = line, index_mask = 128;
-               x > 0;
-               x --, line_ptr += d) {
+        case 1:
+          for (x = image->width, line_ptr = line, index_mask = 128; x > 0; x--, line_ptr += d) {
             if (*pixel & index_mask) {
               line_ptr[0] = cvals[1][0];
               line_ptr[1] = cvals[1][1];
@@ -746,15 +760,13 @@ Fl_RGB_Image *Fl_X11_Screen_Driver::read_win_rectangle(int X, int Y, int w, int 
               index_mask >>= 1;
             } else {
               index_mask = 128;
-              pixel ++;
+              pixel++;
             }
           }
           break;
 
-        case 2 :
-          for (x = image->width, line_ptr = line, index_shift = 6;
-               x > 0;
-               x --, line_ptr += d) {
+        case 2:
+          for (x = image->width, line_ptr = line, index_shift = 6; x > 0; x--, line_ptr += d) {
             i = (*pixel >> index_shift) & 3;
 
             line_ptr[0] = cvals[i][0];
@@ -765,17 +777,17 @@ Fl_RGB_Image *Fl_X11_Screen_Driver::read_win_rectangle(int X, int Y, int w, int 
               index_shift -= 2;
             } else {
               index_shift = 6;
-              pixel ++;
+              pixel++;
             }
           }
           break;
 
-        case 4 :
-          for (x = image->width, line_ptr = line, index_shift = 4;
-               x > 0;
-               x --, line_ptr += d) {
-            if (index_shift == 4) i = (*pixel >> 4) & 15;
-            else i = *pixel & 15;
+        case 4:
+          for (x = image->width, line_ptr = line, index_shift = 4; x > 0; x--, line_ptr += d) {
+            if (index_shift == 4)
+              i = (*pixel >> 4) & 15;
+            else
+              i = *pixel & 15;
 
             line_ptr[0] = cvals[i][0];
             line_ptr[1] = cvals[i][1];
@@ -785,25 +797,21 @@ Fl_RGB_Image *Fl_X11_Screen_Driver::read_win_rectangle(int X, int Y, int w, int 
               index_shift = 0;
             } else {
               index_shift = 4;
-              pixel ++;
+              pixel++;
             }
           }
           break;
 
-        case 8 :
-          for (x = image->width, line_ptr = line;
-               x > 0;
-               x --, line_ptr += d, pixel ++) {
+        case 8:
+          for (x = image->width, line_ptr = line; x > 0; x--, line_ptr += d, pixel++) {
             line_ptr[0] = cvals[*pixel][0];
             line_ptr[1] = cvals[*pixel][1];
             line_ptr[2] = cvals[*pixel][2];
           }
           break;
 
-        case 12 :
-          for (x = image->width, line_ptr = line, index_shift = 0;
-               x > 0;
-               x --, line_ptr += d) {
+        case 12:
+          for (x = image->width, line_ptr = line, index_shift = 0; x > 0; x--, line_ptr += d) {
             if (index_shift == 0) {
               i = ((pixel[0] << 4) | (pixel[1] >> 4)) & 4095;
             } else {
@@ -826,40 +834,38 @@ Fl_RGB_Image *Fl_X11_Screen_Driver::read_win_rectangle(int X, int Y, int w, int 
     }
   } else {
     // RGB(A) image, so figure out the shifts & masks...
-    red_mask  = image->red_mask;
+    red_mask = image->red_mask;
     red_shift = 0;
 
     while ((red_mask & 1) == 0) {
       red_mask >>= 1;
-      red_shift ++;
+      red_shift++;
     }
 
-    green_mask  = image->green_mask;
+    green_mask = image->green_mask;
     green_shift = 0;
 
     while ((green_mask & 1) == 0) {
       green_mask >>= 1;
-      green_shift ++;
+      green_shift++;
     }
 
-    blue_mask  = image->blue_mask;
+    blue_mask = image->blue_mask;
     blue_shift = 0;
 
     while ((blue_mask & 1) == 0) {
       blue_mask >>= 1;
-      blue_shift ++;
+      blue_shift++;
     }
 
     // Read the pixels and output an RGB image...
-    for (y = 0; y < image->height; y ++) {
+    for (y = 0; y < image->height; y++) {
       pixel = (unsigned char *)(image->data + y * image->bytes_per_line);
-      line  = p + y * w * d;
+      line = p + y * w * d;
 
       switch (image->bits_per_pixel) {
-        case 8 :
-          for (x = image->width, line_ptr = line;
-               x > 0;
-               x --, line_ptr += d, pixel ++) {
+        case 8:
+          for (x = image->width, line_ptr = line; x > 0; x--, line_ptr += d, pixel++) {
             i = *pixel;
 
             line_ptr[0] = 255 * ((i >> red_shift) & red_mask) / red_mask;
@@ -868,10 +874,8 @@ Fl_RGB_Image *Fl_X11_Screen_Driver::read_win_rectangle(int X, int Y, int w, int 
           }
           break;
 
-        case 12 :
-          for (x = image->width, line_ptr = line, index_shift = 0;
-               x > 0;
-               x --, line_ptr += d) {
+        case 12:
+          for (x = image->width, line_ptr = line, index_shift = 0; x > 0; x--, line_ptr += d) {
             if (index_shift == 0) {
               i = ((pixel[0] << 4) | (pixel[1] >> 4)) & 4095;
             } else {
@@ -891,12 +895,10 @@ Fl_RGB_Image *Fl_X11_Screen_Driver::read_win_rectangle(int X, int Y, int w, int 
           }
           break;
 
-        case 16 :
+        case 16:
           if (image->byte_order == LSBFirst) {
             // Little-endian...
-            for (x = image->width, line_ptr = line;
-                 x > 0;
-                 x --, line_ptr += d, pixel += 2) {
+            for (x = image->width, line_ptr = line; x > 0; x--, line_ptr += d, pixel += 2) {
               i = (pixel[1] << 8) | pixel[0];
 
               line_ptr[0] = 255 * ((i >> red_shift) & red_mask) / red_mask;
@@ -905,9 +907,7 @@ Fl_RGB_Image *Fl_X11_Screen_Driver::read_win_rectangle(int X, int Y, int w, int 
             }
           } else {
             // Big-endian...
-            for (x = image->width, line_ptr = line;
-                 x > 0;
-                 x --, line_ptr += d, pixel += 2) {
+            for (x = image->width, line_ptr = line; x > 0; x--, line_ptr += d, pixel += 2) {
               i = (pixel[0] << 8) | pixel[1];
 
               line_ptr[0] = 255 * ((i >> red_shift) & red_mask) / red_mask;
@@ -917,12 +917,10 @@ Fl_RGB_Image *Fl_X11_Screen_Driver::read_win_rectangle(int X, int Y, int w, int 
           }
           break;
 
-        case 24 :
+        case 24:
           if (image->byte_order == LSBFirst) {
             // Little-endian...
-            for (x = image->width, line_ptr = line;
-                 x > 0;
-                 x --, line_ptr += d, pixel += 3) {
+            for (x = image->width, line_ptr = line; x > 0; x--, line_ptr += d, pixel += 3) {
               i = (((pixel[2] << 8) | pixel[1]) << 8) | pixel[0];
 
               line_ptr[0] = 255 * ((i >> red_shift) & red_mask) / red_mask;
@@ -931,9 +929,7 @@ Fl_RGB_Image *Fl_X11_Screen_Driver::read_win_rectangle(int X, int Y, int w, int 
             }
           } else {
             // Big-endian...
-            for (x = image->width, line_ptr = line;
-                 x > 0;
-                 x --, line_ptr += d, pixel += 3) {
+            for (x = image->width, line_ptr = line; x > 0; x--, line_ptr += d, pixel += 3) {
               i = (((pixel[0] << 8) | pixel[1]) << 8) | pixel[2];
 
               line_ptr[0] = 255 * ((i >> red_shift) & red_mask) / red_mask;
@@ -943,12 +939,10 @@ Fl_RGB_Image *Fl_X11_Screen_Driver::read_win_rectangle(int X, int Y, int w, int 
           }
           break;
 
-        case 32 :
+        case 32:
           if (image->byte_order == LSBFirst) {
             // Little-endian...
-            for (x = image->width, line_ptr = line;
-                 x > 0;
-                 x --, line_ptr += d, pixel += 4) {
+            for (x = image->width, line_ptr = line; x > 0; x--, line_ptr += d, pixel += 4) {
               i = (((((pixel[3] << 8) | pixel[2]) << 8) | pixel[1]) << 8) | pixel[0];
 
               line_ptr[0] = 255 * ((i >> red_shift) & red_mask) / red_mask;
@@ -957,9 +951,7 @@ Fl_RGB_Image *Fl_X11_Screen_Driver::read_win_rectangle(int X, int Y, int w, int 
             }
           } else {
             // Big-endian...
-            for (x = image->width, line_ptr = line;
-                 x > 0;
-                 x --, line_ptr += d, pixel += 4) {
+            for (x = image->width, line_ptr = line; x > 0; x--, line_ptr += d, pixel += 4) {
               i = (((((pixel[0] << 8) | pixel[1]) << 8) | pixel[2]) << 8) | pixel[3];
 
               line_ptr[0] = 255 * ((i >> red_shift) & red_mask) / red_mask;
@@ -981,8 +973,7 @@ Fl_RGB_Image *Fl_X11_Screen_Driver::read_win_rectangle(int X, int Y, int w, int 
 }
 
 
-void Fl_X11_Screen_Driver::offscreen_size(Fl_Offscreen off, int &width, int &height)
-{
+void Fl_X11_Screen_Driver::offscreen_size(Fl_Offscreen off, int &width, int &height) {
   int px, py;
   unsigned w, h, b, d;
   Window root;
@@ -992,16 +983,15 @@ void Fl_X11_Screen_Driver::offscreen_size(Fl_Offscreen off, int &width, int &hei
 }
 
 
-void Fl_X11_Screen_Driver::reset_spot(void)
-{
+void Fl_X11_Screen_Driver::reset_spot(void) {
   fl_spot.x = -1;
   fl_spot.y = -1;
-  //if (xim_ic) XUnsetICFocus(xim_ic);
+  // if (xim_ic) XUnsetICFocus(xim_ic);
 }
 
 
-void Fl_X11_Screen_Driver::set_spot(int font, int size, int X, int Y, int W, int H, Fl_Window *win)
-{
+void Fl_X11_Screen_Driver::set_spot(int font, int size, int X, int Y, int W, int H,
+                                    Fl_Window *win) {
   int change = 0;
   XVaNestedList preedit_attr;
   static XFontSet fs = NULL;
@@ -1009,19 +999,21 @@ void Fl_X11_Screen_Driver::set_spot(int font, int size, int X, int Y, int W, int
   int missing_count;
   char *def_string;
   char *fnt = NULL;
-  bool must_free_fnt =true;
+  bool must_free_fnt = true;
 
   static XIC ic = NULL;
 
-  if (!xim_ic || !fl_is_over_the_spot) return;
+  if (!xim_ic || !fl_is_over_the_spot)
+    return;
   if (Fl::focus()) { // handle case when text widget is inside subwindow
     Fl_Window *focuswin = Fl::focus()->window();
     while (focuswin && focuswin->parent()) {
-      X += focuswin->x(); Y += focuswin->y();
+      X += focuswin->x();
+      Y += focuswin->y();
       focuswin = focuswin->window();
     }
   }
-  //XSetICFocus(xim_ic);
+  // XSetICFocus(xim_ic);
   if (X != fl_spot.x || Y != fl_spot.y) {
     fl_spot.x = X;
     fl_spot.y = Y;
@@ -1043,14 +1035,18 @@ void Fl_X11_Screen_Driver::set_spot(int font, int size, int X, int Y, int W, int
 #endif /*__GNUC__*/
 
     fnt = NULL; // fl_get_font_xfld(font, size);
-    if (!fnt) {fnt = (char*)"-misc-fixed-*";must_free_fnt=false;}
-    fs = XCreateFontSet(fl_display, fnt, &missing_list,
-                        &missing_count, &def_string);
+    if (!fnt) {
+      fnt = (char *)"-misc-fixed-*";
+      must_free_fnt = false;
+    }
+    fs = XCreateFontSet(fl_display, fnt, &missing_list, &missing_count, &def_string);
 #else
     fnt = fl_get_font_xfld(font, size);
-    if (!fnt) {fnt = (char*)"-misc-fixed-*";must_free_fnt=false;}
-    fs = XCreateFontSet(fl_display, fnt, &missing_list,
-                        &missing_count, &def_string);
+    if (!fnt) {
+      fnt = (char *)"-misc-fixed-*";
+      must_free_fnt = false;
+    }
+    fs = XCreateFontSet(fl_display, fnt, &missing_list, &missing_count, &def_string);
 #endif
   }
   if (xim_ic != ic) {
@@ -1058,30 +1054,31 @@ void Fl_X11_Screen_Driver::set_spot(int font, int size, int X, int Y, int W, int
     change = 1;
   }
 
-  if (fnt && must_free_fnt) free(fnt);
-  if (!change) return;
+  if (fnt && must_free_fnt)
+    free(fnt);
+  if (!change)
+    return;
 
   float s = Fl_Graphics_Driver::default_driver().scale();
-  XRectangle fl_spot_unscaled = { short(fl_spot.x * s), short(fl_spot.y * s),
-    (unsigned short)(fl_spot.width * s), (unsigned short)(fl_spot.height * s) };
-  preedit_attr = XVaCreateNestedList(0,
-                                     XNSpotLocation, &fl_spot_unscaled,
-                                     XNFontSet, fs, NULL);
+  XRectangle fl_spot_unscaled = {short(fl_spot.x * s), short(fl_spot.y * s),
+                                 (unsigned short)(fl_spot.width * s),
+                                 (unsigned short)(fl_spot.height * s)};
+  preedit_attr = XVaCreateNestedList(0, XNSpotLocation, &fl_spot_unscaled, XNFontSet, fs, NULL);
   XSetICValues(xim_ic, XNPreeditAttributes, preedit_attr, NULL);
   XFree(preedit_attr);
 }
 
 
 #if USE_XFT
-//NOTICE: returns -1 if x,y is not in any screen
-int Fl_X11_Screen_Driver::screen_num_unscaled(int x, int y)
-{
+// NOTICE: returns -1 if x,y is not in any screen
+int Fl_X11_Screen_Driver::screen_num_unscaled(int x, int y) {
   int screen = -1;
-  if (num_screens < 0) init();
+  if (num_screens < 0)
+    init();
 
-  for (int i = 0; i < num_screens; i ++) {
+  for (int i = 0; i < num_screens; i++) {
     int sx = screens[i].x_org, sy = screens[i].y_org, sw = screens[i].width, sh = screens[i].height;
-    if ((x >= sx) && (x < (sx+sw)) && (y >= sy) && (y < (sy+sh))) {
+    if ((x >= sx) && (x < (sx + sw)) && (y >= sy) && (y < (sy + sh))) {
       screen = i;
       break;
     }
@@ -1192,21 +1189,22 @@ static void* value_of_key_in_schema(const char **known, const char *schema, cons
   if (!glib || !gio || !gobj) return false;
 
   // define pters to used functions and variables
-  g_settings_list_schemas_ftype g_settings_list_schemas_f = (g_settings_list_schemas_ftype)dlsym(gio, "g_settings_list_schemas"); // 2.26
-  g_settings_new_f = (g_settings_new_ftype)dlsym(gio, "g_settings_new"); // 2.26
-  g_settings_get_value_f =
+  g_settings_list_schemas_ftype g_settings_list_schemas_f =
+(g_settings_list_schemas_ftype)dlsym(gio, "g_settings_list_schemas"); // 2.26 g_settings_new_f =
+(g_settings_new_ftype)dlsym(gio, "g_settings_new"); // 2.26 g_settings_get_value_f =
                 (g_settings_get_value_ftype)dlsym(gio, "g_settings_get_value"); // 2.26
   if (!g_settings_list_schemas_f || !g_settings_new_f || !g_settings_get_value_f) return false;
   g_variant_get_ftype g_variant_get_f = (g_variant_get_ftype)dlsym(glib, "g_variant_get"); //2.24
-  g_variant_iter_loop_ftype g_variant_iter_loop_f = (g_variant_iter_loop_ftype)dlsym(glib, "g_variant_iter_loop"); // 2.24
-  pter_ftype g_variant_iter_free_f = (pter_ftype)dlsym(glib, "g_variant_iter_free"); // 2.24
-  g_object_unref_f = (pter_ftype)dlsym(gobj, "g_object_unref");
+  g_variant_iter_loop_ftype g_variant_iter_loop_f = (g_variant_iter_loop_ftype)dlsym(glib,
+"g_variant_iter_loop"); // 2.24 pter_ftype g_variant_iter_free_f = (pter_ftype)dlsym(glib,
+"g_variant_iter_free"); // 2.24 g_object_unref_f = (pter_ftype)dlsym(gobj, "g_object_unref");
   pter_ftype g_variant_unref_f = (pter_ftype)dlsym(glib, "g_variant_unref"); // 2.24
   g_settings_list_keys_f = (g_settings_list_keys_ftype)dlsym(gio, "g_settings_list_keys");
   g_strfreev_f = (pter_ftype)dlsym(glib, "g_strfreev");
-  //g_variant_get_type_ftype g_variant_get_type_f = (g_variant_get_type_ftype)dlsym(glib, "g_variant_get_type"); // 2.24
-  const unsigned *glib_major_version = (const unsigned *)dlsym(glib, "glib_major_version");
-  const unsigned *glib_minor_version = (const unsigned *)dlsym(glib, "glib_minor_version");
+  //g_variant_get_type_ftype g_variant_get_type_f = (g_variant_get_type_ftype)dlsym(glib,
+"g_variant_get_type"); // 2.24 const unsigned *glib_major_version = (const unsigned *)dlsym(glib,
+"glib_major_version"); const unsigned *glib_minor_version = (const unsigned *)dlsym(glib,
+"glib_minor_version");
 
   // call dynamic lib functions
   if (*glib_major_version * 1000 + *glib_minor_version < 2036) {
@@ -1240,12 +1238,9 @@ static void* value_of_key_in_schema(const char **known, const char *schema, cons
         strcpy(str, str2);  v = v2;
       }
       ubuntu_f = v/8.;
-      // printf("com.ubuntu.user-interface  scale-factor name=%s value=%d factor=%g\n", str, v, ubuntu_f);
-      g_variant_iter_free_f(iter);
-      g_variant_unref_f(gvar);
-      if (ubuntu_f != 1) {
-        factor = ubuntu_f;
-        return true;
+      // printf("com.ubuntu.user-interface  scale-factor name=%s value=%d factor=%g\n", str, v,
+ubuntu_f); g_variant_iter_free_f(iter); g_variant_unref_f(gvar); if (ubuntu_f != 1) { factor =
+ubuntu_f; return true;
       }
     }
     gvar = value_of_key_in_schema(known, "org.gnome.desktop.interface", "scaling-factor");
@@ -1254,10 +1249,8 @@ static void* value_of_key_in_schema(const char **known, const char *schema, cons
       unsigned v;
       g_variant_get_f(gvar, "u", &v);
       ubuntu_desktop_f = v;
-      // printf("org.gnome.desktop.interface  scaling-factor value=%u factor=%g\n", v, ubuntu_desktop_f);
-      g_variant_unref_f(gvar);
-      if (ubuntu_desktop_f != 1) {
-        factor = ubuntu_desktop_f;
+      // printf("org.gnome.desktop.interface  scaling-factor value=%u factor=%g\n", v,
+ubuntu_desktop_f); g_variant_unref_f(gvar); if (ubuntu_desktop_f != 1) { factor = ubuntu_desktop_f;
         return true;
       }
     }
@@ -1276,9 +1269,8 @@ static void* value_of_key_in_schema(const char **known, const char *schema, cons
       //str = (char*)g_variant_get_type_f(gvar); // -> "i"
       g_variant_get_f(gvar, "i", &v);
       gnome_f = v;
-      // printf("org.gnome.settings-daemon.plugins.xsettings  overrides name=%s value=%d factor=%g\n", str, v, gnome_f);
-      free(str);
-      break;
+      // printf("org.gnome.settings-daemon.plugins.xsettings  overrides name=%s value=%d
+factor=%g\n", str, v, gnome_f); free(str); break;
     }
     g_variant_iter_free_f(iter);
     if (gvar) g_variant_unref_f(gvar);
@@ -1291,16 +1283,18 @@ static void* value_of_key_in_schema(const char **known, const char *schema, cons
 */
 
 // set the desktop's default scaling value
-void Fl_X11_Screen_Driver::desktop_scale_factor()
-{
+void Fl_X11_Screen_Driver::desktop_scale_factor() {
   if (this->current_xft_dpi == 0.) { // Try getting the Xft.dpi resource value
     char *s = XGetDefault(fl_display, "Xft", "dpi");
     if (s && sscanf(s, "%f", &(this->current_xft_dpi)) == 1) {
       float factor = this->current_xft_dpi / 96.;
       // checks to prevent potential crash (factor <= 0) or very large factors
-      if (factor < 0.25) factor = 0.25;
-      else if (factor > 10.0) factor = 10.0;
-      for (int i = 0; i < screen_count(); i++)  scale(i, factor);
+      if (factor < 0.25)
+        factor = 0.25;
+      else if (factor > 10.0)
+        factor = 10.0;
+      for (int i = 0; i < screen_count(); i++)
+        scale(i, factor);
     }
   }
 }

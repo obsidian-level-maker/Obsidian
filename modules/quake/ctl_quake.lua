@@ -137,11 +137,11 @@ OB_MODULES["quake_mon_control"] =
     label=_("Death Knight"), 
     tooltip=_("Control the amount of Death Knights."), 
     choices=CTL_QUAKE.MON_CHOICES, randomize_group = "monsters" },
-    { name = "Vore", 
+    { name = "vore", 
     label=_("Vore"), 
     tooltip=_("Control the amount of Vores."),      
     choices=CTL_QUAKE.MON_CHOICES, randomize_group = "monsters" },
-    { name = "Shambler", 
+    { name = "shambler", 
     label=_("Shambler"), 
     tooltip=_("Control the amount of Shamblers."), 
     choices=CTL_QUAKE.MON_CHOICES, randomize_group = "monsters" }

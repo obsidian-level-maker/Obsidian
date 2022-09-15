@@ -72,15 +72,10 @@ That was a blank line above this.
 #include <stdlib.h>
 
 Fl_Select_Browser *browser;
-Fl_Button       *top,
-                *bottom,
-                *middle,
-                *visible,
-                *swap,
-                *sort;
-Fl_Choice       *btype;
-Fl_Choice       *wtype;
-Fl_Int_Input    *field;
+Fl_Button *top, *bottom, *middle, *visible, *swap, *sort;
+Fl_Choice *btype;
+Fl_Choice *wtype;
+Fl_Int_Input *field;
 Fl_Simple_Terminal *tty = 0;
 
 typedef struct {
@@ -90,21 +85,22 @@ typedef struct {
 
 // FL_WHEN chooser..
 WhenItem when_items[] = {
-  { "FL_WHEN_NEVER",             FL_WHEN_NEVER },
-  { "FL_WHEN_CHANGED",           FL_WHEN_CHANGED },
-  { "FL_WHEN_NOT_CHANGED",       FL_WHEN_NOT_CHANGED },
-  { "FL_WHEN_RELEASE",           FL_WHEN_RELEASE },
-  { "FL_WHEN_RELEASE_ALWAYS",    FL_WHEN_RELEASE_ALWAYS },
-  { "FL_WHEN_ENTER_KEY",         FL_WHEN_ENTER_KEY },
-  { "FL_WHEN_ENTER_KEY_ALWAYS",  FL_WHEN_ENTER_KEY_ALWAYS },
-  { "FL_WHEN_ENTER_KEY_CHANGED", FL_WHEN_ENTER_KEY_CHANGED },
-  { "FL_WHEN_ENTER_KEY + FL_WHEN_RELEASE_ALWAYS", Fl_When(int(FL_WHEN_ENTER_KEY_CHANGED)+int(FL_WHEN_RELEASE_ALWAYS)) }
-  // TODO: Perhaps other FL_WHEN_* combos are relevant
+    {"FL_WHEN_NEVER", FL_WHEN_NEVER},
+    {"FL_WHEN_CHANGED", FL_WHEN_CHANGED},
+    {"FL_WHEN_NOT_CHANGED", FL_WHEN_NOT_CHANGED},
+    {"FL_WHEN_RELEASE", FL_WHEN_RELEASE},
+    {"FL_WHEN_RELEASE_ALWAYS", FL_WHEN_RELEASE_ALWAYS},
+    {"FL_WHEN_ENTER_KEY", FL_WHEN_ENTER_KEY},
+    {"FL_WHEN_ENTER_KEY_ALWAYS", FL_WHEN_ENTER_KEY_ALWAYS},
+    {"FL_WHEN_ENTER_KEY_CHANGED", FL_WHEN_ENTER_KEY_CHANGED},
+    {"FL_WHEN_ENTER_KEY + FL_WHEN_RELEASE_ALWAYS",
+     Fl_When(int(FL_WHEN_ENTER_KEY_CHANGED) + int(FL_WHEN_RELEASE_ALWAYS))}
+    // TODO: Perhaps other FL_WHEN_* combos are relevant
 };
 
-void b_cb(Fl_Widget* o, void*) {
+void b_cb(Fl_Widget *o, void *) {
   tty->printf("callback, selection = \033[31m%d\033[0m, event_clicks = \033[32m%d\033[0m\n",
-         ((Fl_Browser*)o)->value(), Fl::event_clicks());
+              ((Fl_Browser *)o)->value(), Fl::event_clicks());
 }
 
 void show_cb(Fl_Widget *o, void *) {
@@ -128,15 +124,17 @@ void show_cb(Fl_Widget *o, void *) {
 
 void swap_cb(Fl_Widget *, void *) {
   int a = -1, b = -1;
-  for ( int t=0; t<browser->size(); t++ ) {     // find two selected items
-    if ( browser->selected(t) ) {
-      if ( a < 0 )
-        { a = t; }
-      else
-        { b = t; break; }
+  for (int t = 0; t < browser->size(); t++) { // find two selected items
+    if (browser->selected(t)) {
+      if (a < 0) {
+        a = t;
+      } else {
+        b = t;
+        break;
+      }
     }
   }
-  browser->swap(a, b);                          // swap them
+  browser->swap(a, b); // swap them
 }
 
 void sort_cb(Fl_Widget *, void *) {
@@ -144,23 +142,30 @@ void sort_cb(Fl_Widget *, void *) {
 }
 
 void btype_cb(Fl_Widget *, void *) {
-  for ( int t=1; t<=browser->size(); t++ ) browser->select(t,0);
-  browser->select(1,0);         // leave focus box on first line
-       if ( strcmp(btype->text(),"Normal")==0) browser->type(FL_NORMAL_BROWSER);
-  else if ( strcmp(btype->text(),"Select")==0) browser->type(FL_SELECT_BROWSER);
-  else if ( strcmp(btype->text(),"Hold"  )==0) browser->type(FL_HOLD_BROWSER);
-  else if ( strcmp(btype->text(),"Multi" )==0) browser->type(FL_MULTI_BROWSER);
+  for (int t = 1; t <= browser->size(); t++)
+    browser->select(t, 0);
+  browser->select(1, 0); // leave focus box on first line
+  if (strcmp(btype->text(), "Normal") == 0)
+    browser->type(FL_NORMAL_BROWSER);
+  else if (strcmp(btype->text(), "Select") == 0)
+    browser->type(FL_SELECT_BROWSER);
+  else if (strcmp(btype->text(), "Hold") == 0)
+    browser->type(FL_HOLD_BROWSER);
+  else if (strcmp(btype->text(), "Multi") == 0)
+    browser->type(FL_MULTI_BROWSER);
   browser->redraw();
 }
 
 void wtype_cb(Fl_Widget *, void *) {
-  if ( wtype->value() < 0 ) return;
-  browser->when( when_items[wtype->value()].wvalue );   // when value based on array
+  if (wtype->value() < 0)
+    return;
+  browser->when(when_items[wtype->value()].wvalue); // when value based on array
 }
 
 int main(int argc, char **argv) {
   int i;
-  if (!Fl::args(argc, argv, i)) Fl::fatal(Fl::help);
+  if (!Fl::args(argc, argv, i))
+    Fl::fatal(Fl::help);
   const char *fname = (i < argc) ? argv[i] : "browser.cxx";
   Fl_Double_Window window(720, 520, fname);
   browser = new Fl_Select_Browser(0, 0, window.w(), 350, 0);
@@ -172,7 +177,7 @@ int main(int argc, char **argv) {
   }
   browser->position(0);
 
-  field = new Fl_Int_Input(55, 350, window.w()-55, 25, "Line #:");
+  field = new Fl_Int_Input(55, 350, window.w() - 55, 25, "Line #:");
   field->callback(show_cb);
 
   top = new Fl_Button(0, 375, 80, 25, "Top");
@@ -208,19 +213,18 @@ int main(int argc, char **argv) {
   // Append items from when_items[] array
   {
     int len = sizeof(when_items) / sizeof(WhenItem);
-    for ( int i=0; i<len; i++ )
+    for (int i = 0; i < len; i++)
       wtype->add(when_items[i].name);
   }
   wtype->callback(wtype_cb);
-  wtype->value(4);                          // FL_WHEN_RELEASE_ALWAYS is Fl_Browser's default
+  wtype->value(4); // FL_WHEN_RELEASE_ALWAYS is Fl_Browser's default
 
   // Small terminal window for callback messages
-  tty = new Fl_Simple_Terminal(0,400,720,120);
+  tty = new Fl_Simple_Terminal(0, 400, 720, 120);
   tty->history_lines(50);
   tty->ansi(true);
 
   window.resizable(browser);
-  window.show(argc,argv);
+  window.show(argc, argv);
   return Fl::run();
 }
-

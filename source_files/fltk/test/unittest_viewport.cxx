@@ -27,7 +27,8 @@ public:
   static Fl_Widget *create() {
     return new ViewportTest(TESTAREA_X, TESTAREA_Y, TESTAREA_W, TESTAREA_H);
   }
-  ViewportTest(int x, int y, int w, int h) : Fl_Box(x, y, w, h) {
+  ViewportTest(int x, int y, int w, int h)
+    : Fl_Box(x, y, w, h) {
     label("Testing Viewport Alignment\n\n"
           "Only green lines should be visible.\n"
           "If red lines are visible in the corners of this window,\n"
@@ -35,7 +36,7 @@ public:
           "If there is a space between the green lines and the window border,\n"
           "the viewport is off, but some clipping may be working.\n"
           "Also, your window size may be off to begin with.");
-    align(FL_ALIGN_INSIDE|FL_ALIGN_CENTER|FL_ALIGN_WRAP);
+    align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_WRAP);
     box(FL_BORDER_BOX);
   }
   void show() {

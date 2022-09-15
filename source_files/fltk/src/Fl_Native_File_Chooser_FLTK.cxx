@@ -28,35 +28,34 @@
 #include <string.h>
 
 
-
-Fl_Native_File_Chooser_FLTK_Driver::Fl_Native_File_Chooser_FLTK_Driver(int val) :
-  Fl_Native_File_Chooser_Driver(val) {
-  _btype       = 0;
-  _options     = 0;
-  _filter      = NULL;
-  _filtvalue   = 0;
-  _parsedfilt  = NULL;
+Fl_Native_File_Chooser_FLTK_Driver::Fl_Native_File_Chooser_FLTK_Driver(int val)
+  : Fl_Native_File_Chooser_Driver(val) {
+  _btype = 0;
+  _options = 0;
+  _filter = NULL;
+  _filtvalue = 0;
+  _parsedfilt = NULL;
   _preset_file = NULL;
-  _prevvalue   = NULL;
-  _directory   = NULL;
-  _errmsg      = NULL;
-  _file_chooser= NULL;
+  _prevvalue = NULL;
+  _directory = NULL;
+  _errmsg = NULL;
+  _file_chooser = NULL;
   if (val >= 0) {
     _file_chooser = new Fl_File_Chooser(NULL, NULL, 0, NULL);
-    type(val);                  // do this after _file_chooser created
-    }
-  _nfilters    = 0;
+    type(val); // do this after _file_chooser created
+  }
+  _nfilters = 0;
 }
 
 Fl_Native_File_Chooser_FLTK_Driver::~Fl_Native_File_Chooser_FLTK_Driver() {
   delete _file_chooser;
   _file_chooser = NULL;
-  _filter      = strfree(_filter);
-  _parsedfilt  = strfree(_parsedfilt);
+  _filter = strfree(_filter);
+  _parsedfilt = strfree(_parsedfilt);
   _preset_file = strfree(_preset_file);
-  _prevvalue   = strfree(_prevvalue);
-  _directory   = strfree(_directory);
-  _errmsg      = strfree(_errmsg);
+  _prevvalue = strfree(_prevvalue);
+  _directory = strfree(_directory);
+  _errmsg = strfree(_errmsg);
 }
 
 
@@ -70,19 +69,19 @@ void Fl_Native_File_Chooser_FLTK_Driver::errmsg(const char *msg) {
 int Fl_Native_File_Chooser_FLTK_Driver::type_fl_file(int val) {
   switch (val) {
     case Fl_Native_File_Chooser::BROWSE_FILE:
-      return(Fl_File_Chooser::SINGLE);
+      return (Fl_File_Chooser::SINGLE);
     case Fl_Native_File_Chooser::BROWSE_DIRECTORY:
-      return(Fl_File_Chooser::SINGLE | Fl_File_Chooser::DIRECTORY);
+      return (Fl_File_Chooser::SINGLE | Fl_File_Chooser::DIRECTORY);
     case Fl_Native_File_Chooser::BROWSE_MULTI_FILE:
-      return(Fl_File_Chooser::MULTI);
+      return (Fl_File_Chooser::MULTI);
     case Fl_Native_File_Chooser::BROWSE_MULTI_DIRECTORY:
-      return(Fl_File_Chooser::DIRECTORY | Fl_File_Chooser::MULTI);
+      return (Fl_File_Chooser::DIRECTORY | Fl_File_Chooser::MULTI);
     case Fl_Native_File_Chooser::BROWSE_SAVE_FILE:
-      return(Fl_File_Chooser::SINGLE | Fl_File_Chooser::CREATE);
+      return (Fl_File_Chooser::SINGLE | Fl_File_Chooser::CREATE);
     case Fl_Native_File_Chooser::BROWSE_SAVE_DIRECTORY:
-      return(Fl_File_Chooser::DIRECTORY | Fl_File_Chooser::MULTI | Fl_File_Chooser::CREATE);
+      return (Fl_File_Chooser::DIRECTORY | Fl_File_Chooser::MULTI | Fl_File_Chooser::CREATE);
     default:
-      return(Fl_File_Chooser::SINGLE);
+      return (Fl_File_Chooser::SINGLE);
   }
 }
 
@@ -92,7 +91,7 @@ void Fl_Native_File_Chooser_FLTK_Driver::type(int val) {
 }
 
 int Fl_Native_File_Chooser_FLTK_Driver::type() const {
-  return(_btype);
+  return (_btype);
 }
 
 void Fl_Native_File_Chooser_FLTK_Driver::options(int val) {
@@ -100,13 +99,13 @@ void Fl_Native_File_Chooser_FLTK_Driver::options(int val) {
 }
 
 int Fl_Native_File_Chooser_FLTK_Driver::options() const {
-  return(_options);
+  return (_options);
 }
 
 int Fl_Native_File_Chooser_FLTK_Driver::show() {
 
   // FILTER
-  if ( _parsedfilt ) {
+  if (_parsedfilt) {
     _file_chooser->filter(_parsedfilt);
   }
 
@@ -116,69 +115,72 @@ int Fl_Native_File_Chooser_FLTK_Driver::show() {
   _file_chooser->filter_value(_filtvalue);
 
   // DIRECTORY
-  if ( _directory && _directory[0] ) {
+  if (_directory && _directory[0]) {
     _file_chooser->directory(_directory);
   } else {
     _file_chooser->directory(_prevvalue);
   }
 
   // PRESET FILE
-  if ( _preset_file ) {
+  if (_preset_file) {
     _file_chooser->value(_preset_file);
   }
 
   // OPTIONS: PREVIEW
-  _file_chooser->preview( (options() & Fl_Native_File_Chooser::PREVIEW) ? 1 : 0);
+  _file_chooser->preview((options() & Fl_Native_File_Chooser::PREVIEW) ? 1 : 0);
 
   // OPTIONS: NEW FOLDER
-  if ( options() & Fl_Native_File_Chooser::NEW_FOLDER )
-    _file_chooser->type(_file_chooser->type() | Fl_File_Chooser::CREATE);       // on
+  if (options() & Fl_Native_File_Chooser::NEW_FOLDER)
+    _file_chooser->type(_file_chooser->type() | Fl_File_Chooser::CREATE); // on
 
   // SHOW
   _file_chooser->show();
 
   // BLOCK WHILE BROWSER SHOWN
-  while ( _file_chooser->shown() ) {
+  while (_file_chooser->shown()) {
     Fl::wait();
   }
 
-  if ( _file_chooser->value() && _file_chooser->value()[0] ) {
+  if (_file_chooser->value() && _file_chooser->value()[0]) {
     _prevvalue = strfree(_prevvalue);
     _prevvalue = strnew(_file_chooser->value());
     _filtvalue = _file_chooser->filter_value(); // update filter value
 
     // HANDLE SHOWING 'SaveAs' CONFIRM
-    if ( options() & Fl_Native_File_Chooser::SAVEAS_CONFIRM && type() == Fl_Native_File_Chooser::BROWSE_SAVE_FILE ) {
+    if (options() & Fl_Native_File_Chooser::SAVEAS_CONFIRM &&
+        type() == Fl_Native_File_Chooser::BROWSE_SAVE_FILE) {
       struct stat buf;
-      if ( fl_stat(_file_chooser->value(), &buf) != -1 ) {
-        if ( buf.st_mode & S_IFREG ) {    // Regular file + exists?
-          if ( exist_dialog() == 0 ) {
-            return(1);
+      if (fl_stat(_file_chooser->value(), &buf) != -1) {
+        if (buf.st_mode & S_IFREG) { // Regular file + exists?
+          if (exist_dialog() == 0) {
+            return (1);
           }
         }
       }
     }
   }
 
-  if ( _file_chooser->count() ) return(0);
-  else return(1);
+  if (_file_chooser->count())
+    return (0);
+  else
+    return (1);
 }
 
 const char *Fl_Native_File_Chooser_FLTK_Driver::errmsg() const {
-  return(_errmsg ? _errmsg : "No error");
+  return (_errmsg ? _errmsg : "No error");
 }
 
-const char* Fl_Native_File_Chooser_FLTK_Driver::filename() const {
-  if ( _file_chooser->count() > 0 ) {
-    return(_file_chooser->value());
+const char *Fl_Native_File_Chooser_FLTK_Driver::filename() const {
+  if (_file_chooser->count() > 0) {
+    return (_file_chooser->value());
   }
-  return("");
+  return ("");
 }
 
-const char* Fl_Native_File_Chooser_FLTK_Driver::filename(int i) const {
-  if ( i < _file_chooser->count() )
-    return(_file_chooser->value(i+1));  // convert fltk 1 based to our 0 based
-  return("");
+const char *Fl_Native_File_Chooser_FLTK_Driver::filename(int i) const {
+  if (i < _file_chooser->count())
+    return (_file_chooser->value(i + 1)); // convert fltk 1 based to our 0 based
+  return ("");
 }
 
 void Fl_Native_File_Chooser_FLTK_Driver::title(const char *val) {
@@ -186,7 +188,7 @@ void Fl_Native_File_Chooser_FLTK_Driver::title(const char *val) {
 }
 
 const char *Fl_Native_File_Chooser_FLTK_Driver::title() const {
-  return(_file_chooser->label());
+  return (_file_chooser->label());
 }
 
 void Fl_Native_File_Chooser_FLTK_Driver::filter(const char *val) {
@@ -196,11 +198,11 @@ void Fl_Native_File_Chooser_FLTK_Driver::filter(const char *val) {
 }
 
 const char *Fl_Native_File_Chooser_FLTK_Driver::filter() const {
-  return(_filter);
+  return (_filter);
 }
 
 int Fl_Native_File_Chooser_FLTK_Driver::filters() const {
-  return(_nfilters);
+  return (_nfilters);
 }
 
 void Fl_Native_File_Chooser_FLTK_Driver::filter_value(int val) {
@@ -235,19 +237,20 @@ const char *Fl_Native_File_Chooser_FLTK_Driver::directory() const {
 //     for freeing with strfree().
 //
 void Fl_Native_File_Chooser_FLTK_Driver::parse_filter() {
-  _parsedfilt = strfree(_parsedfilt);   // clear previous parsed filter (if any)
+  _parsedfilt = strfree(_parsedfilt); // clear previous parsed filter (if any)
   _nfilters = 0;
   char *in = _filter;
-  if ( !in ) return;
+  if (!in)
+    return;
 
   int has_name = strchr(in, '\t') ? 1 : 0;
 
-  char mode = has_name ? 'n' : 'w';     // parse mode: n=title, w=wildcard
-  char wildcard[1024] = "";             // parsed wildcard
+  char mode = has_name ? 'n' : 'w'; // parse mode: n=title, w=wildcard
+  char wildcard[1024] = "";         // parsed wildcard
   char name[1024] = "";
 
   // Parse filter user specified
-  for ( ; 1; in++ ) {
+  for (; 1; in++) {
     /*** DEBUG
     printf("WORKING ON '%c': mode=<%c> name=<%s> wildcard=<%s>\n",
                         *in, mode,     name,     wildcard);
@@ -256,7 +259,8 @@ void Fl_Native_File_Chooser_FLTK_Driver::parse_filter() {
     switch (*in) {
       // FINISHED PARSING NAME?
       case '\t':
-        if ( mode != 'n' ) goto regchar;
+        if (mode != 'n')
+          goto regchar;
         mode = 'w';
         break;
       // ESCAPE NEXT CHAR
@@ -268,41 +272,46 @@ void Fl_Native_File_Chooser_FLTK_Driver::parse_filter() {
       case '\n':
       case '\0':
         // APPEND NEW FILTER TO LIST
-        if ( wildcard[0] ) {
+        if (wildcard[0]) {
           // OUT: "name(wild)\tname(wild)"
           char comp[2048];
-          sprintf(comp, "%s%.511s(%.511s)", ((_parsedfilt)?"\t":""),
-                                            name, wildcard);
+          sprintf(comp, "%s%.511s(%.511s)", ((_parsedfilt) ? "\t" : ""), name, wildcard);
           _parsedfilt = strapp(_parsedfilt, comp);
           _nfilters++;
-          //DEBUG printf("DEBUG: PARSED FILT NOW <%s>\n", _parsedfilt);
+          // DEBUG printf("DEBUG: PARSED FILT NOW <%s>\n", _parsedfilt);
         }
         // RESET
         wildcard[0] = name[0] = '\0';
         mode = strchr(in, '\t') ? 'n' : 'w';
         // DONE?
-        if ( *in == '\0' ) return;      // done
-        else continue;                  // not done yet, more filters
+        if (*in == '\0')
+          return; // done
+        else
+          continue; // not done yet, more filters
 
       // Parse all other chars
-      default:                          // handle all non-special chars
-      regchar:                          // handle regular char
-        switch ( mode ) {
-          case 'n': chrcat(name, *in);     continue;
-          case 'w': chrcat(wildcard, *in); continue;
+      default: // handle all non-special chars
+      regchar: // handle regular char
+        switch (mode) {
+          case 'n':
+            chrcat(name, *in);
+            continue;
+          case 'w':
+            chrcat(wildcard, *in);
+            continue;
         }
         break;
     }
   }
-  //NOTREACHED
+  // NOTREACHED
 }
 
-void Fl_Native_File_Chooser_FLTK_Driver::preset_file(const char* val) {
+void Fl_Native_File_Chooser_FLTK_Driver::preset_file(const char *val) {
   _preset_file = strfree(_preset_file);
   _preset_file = strnew(val);
 }
 
-const char* Fl_Native_File_Chooser_FLTK_Driver::preset_file() const {
+const char *Fl_Native_File_Chooser_FLTK_Driver::preset_file() const {
   return _preset_file;
 }
 

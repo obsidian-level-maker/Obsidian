@@ -23,37 +23,32 @@
 #include "../Quartz/Fl_Quartz_Image_Surface_Driver.H"
 
 
-Fl_Copy_Surface_Driver *Fl_Copy_Surface_Driver::newCopySurfaceDriver(int w, int h)
-{
+Fl_Copy_Surface_Driver *Fl_Copy_Surface_Driver::newCopySurfaceDriver(int w, int h) {
   return new Fl_Quartz_Copy_Surface_Driver(w, h);
 }
 
 
-Fl_Graphics_Driver *Fl_Graphics_Driver::newMainGraphicsDriver()
-{
+Fl_Graphics_Driver *Fl_Graphics_Driver::newMainGraphicsDriver() {
   return new Fl_Quartz_Graphics_Driver();
 }
 
 
-Fl_Screen_Driver *Fl_Screen_Driver::newScreenDriver()
-{
+Fl_Screen_Driver *Fl_Screen_Driver::newScreenDriver() {
   return new Fl_Cocoa_Screen_Driver();
 }
 
 
-Fl_System_Driver *Fl_System_Driver::newSystemDriver()
-{
+Fl_System_Driver *Fl_System_Driver::newSystemDriver() {
   return new Fl_Darwin_System_Driver();
 }
 
 
-Fl_Window_Driver *Fl_Window_Driver::newWindowDriver(Fl_Window *w)
-{
+Fl_Window_Driver *Fl_Window_Driver::newWindowDriver(Fl_Window *w) {
   return new Fl_Cocoa_Window_Driver(w);
 }
 
 
-Fl_Image_Surface_Driver *Fl_Image_Surface_Driver::newImageSurfaceDriver(int w, int h, int high_res, Fl_Offscreen off)
-{
+Fl_Image_Surface_Driver *Fl_Image_Surface_Driver::newImageSurfaceDriver(int w, int h, int high_res,
+                                                                        Fl_Offscreen off) {
   return new Fl_Quartz_Image_Surface_Driver(w, h, high_res, off);
 }

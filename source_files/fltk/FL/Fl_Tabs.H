@@ -180,9 +180,12 @@
   As of FLTK 1.3.3, Fl_Tabs() supports the following flags for when():
 
     - \ref FL_WHEN_NEVER       -- callback never invoked (all flags off)
-    - \ref FL_WHEN_CHANGED     -- if flag set, invokes callback when a tab has been changed (on click or keyboard navigation)
-    - \ref FL_WHEN_NOT_CHANGED -- if flag set, invokes callback when the tabs remain unchanged (on click or keyboard navigation)
-    - \ref FL_WHEN_RELEASE     -- if flag set, invokes callback on RELEASE of mouse button or keyboard navigation
+    - \ref FL_WHEN_CHANGED     -- if flag set, invokes callback when a tab has been changed (on
+  click or keyboard navigation)
+    - \ref FL_WHEN_NOT_CHANGED -- if flag set, invokes callback when the tabs remain unchanged (on
+  click or keyboard navigation)
+    - \ref FL_WHEN_RELEASE     -- if flag set, invokes callback on RELEASE of mouse button or
+  keyboard navigation
 
   Notes:
 
@@ -203,22 +206,20 @@ class FL_EXPORT Fl_Tabs : public Fl_Group {
   Fl_Widget *push_;
 
 protected:
-
-  int *tab_pos;         // array of x-offsets of tabs per child + 1
-  int *tab_width;       // array of widths of tabs per child + 1
-  int tab_count;        // array size
-  Fl_Align tab_align_;  // tab label alignment
+  int *tab_pos;        // array of x-offsets of tabs per child + 1
+  int *tab_width;      // array of widths of tabs per child + 1
+  int tab_count;       // array size
+  Fl_Align tab_align_; // tab label alignment
 
   virtual void redraw_tabs();
-  virtual int tab_positions();  // allocate and calculate tab positions
+  virtual int tab_positions(); // allocate and calculate tab positions
   virtual void clear_tab_positions();
-  virtual void draw_tab(int x1, int x2, int W, int H, Fl_Widget* o, int sel=0);
+  virtual void draw_tab(int x1, int x2, int W, int H, Fl_Widget *o, int sel = 0);
   virtual int tab_height();
 
   void draw();
 
 public:
-
   Fl_Tabs(int X, int Y, int W, int H, const char *L = 0);
   virtual ~Fl_Tabs();
 
@@ -235,14 +236,14 @@ public:
 
     \see push(Fl_Widget*).
   */
-  Fl_Widget *push() const {return push_;}
+  Fl_Widget *push() const { return push_; }
   int push(Fl_Widget *);
 
   // Returns the widget of the tab the user clicked on at event_x/event_y.
   virtual Fl_Widget *which(int event_x, int event_y);
 
   // Returns the position and size available to be used by its children.
-  void client_area(int &rx, int &ry, int &rw, int &rh, int tabh=0);
+  void client_area(int &rx, int &ry, int &rw, int &rh, int tabh = 0);
 
   /**
     Sets the tab label alignment.
@@ -255,13 +256,13 @@ public:
     set a different label alignment. FL_ALIGN_IMAGE_NEXT_TO_TEXT is the
     recommended alignment to show the icon left of the text.
   */
-  void tab_align(Fl_Align a) {tab_align_ = a;}
+  void tab_align(Fl_Align a) { tab_align_ = a; }
   /**
     Gets the tab label alignment.
 
     \see tab_align(Fl_Align)
   */
-  Fl_Align tab_align() const {return tab_align_;}
+  Fl_Align tab_align() const { return tab_align_; }
 };
 
 #endif

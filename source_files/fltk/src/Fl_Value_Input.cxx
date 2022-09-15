@@ -25,23 +25,28 @@
 #include <FL/math.h>
 
 
-void Fl_Value_Input::input_cb(Fl_Widget*, void* v) {
-  Fl_Value_Input& t = *(Fl_Value_Input*)v;
+void Fl_Value_Input::input_cb(Fl_Widget *, void *v) {
+  Fl_Value_Input &t = *(Fl_Value_Input *)v;
   double nv;
-  if ((t.step() - floor(t.step()))>0.0 || t.step() == 0.0) nv = strtod(t.input.value(), 0);
-  else nv = strtol(t.input.value(), 0, 0);
+  if ((t.step() - floor(t.step())) > 0.0 || t.step() == 0.0)
+    nv = strtod(t.input.value(), 0);
+  else
+    nv = strtol(t.input.value(), 0, 0);
   if (nv != t.value() || t.when() & FL_WHEN_NOT_CHANGED) {
     t.set_value(nv);
     t.set_changed();
-    if (t.when()) t.do_callback();
+    if (t.when())
+      t.do_callback();
   }
 }
 
 void Fl_Value_Input::draw() {
-  if (damage()&~FL_DAMAGE_CHILD) input.clear_damage(FL_DAMAGE_ALL);
+  if (damage() & ~FL_DAMAGE_CHILD)
+    input.clear_damage(FL_DAMAGE_ALL);
   input.box(box());
   input.color(color(), selection_color());
-  Fl_Widget *i = &input; i->draw(); // calls protected input.draw()
+  Fl_Widget *i = &input;
+  i->draw(); // calls protected input.draw()
   input.clear_damage();
 }
 
@@ -64,45 +69,58 @@ int Fl_Value_Input::handle(int event) {
   static int ix, drag;
   input.when(when());
   switch (event) {
-  case FL_PUSH:
-    if (!step()) goto DEFAULT;
-    ix = mx;
-    drag = Fl::event_button();
-    handle_push();
-    return 1;
-  case FL_DRAG:
-    if (!step()) goto DEFAULT;
-    delta = mx-ix;
-    if (delta > 5) delta -= 5;
-    else if (delta < -5) delta += 5;
-    else delta = 0;
-    switch (drag) {
-    case 3: v = increment(previous_value(), delta*100); break;
-    case 2: v = increment(previous_value(), delta*10); break;
-    default:v = increment(previous_value(), delta); break;
-    }
-    v = round(v);
-    handle_drag(soft()?softclamp(v):clamp(v));;
-    return 1;
-  case FL_RELEASE:
-    if (!step()) goto DEFAULT;
-    if (value() != previous_value() || !Fl::event_is_click())
-      handle_release();
-    else {
-      Fl_Widget_Tracker wp(&input);
-      input.handle(FL_PUSH);
-      if (wp.exists())
-        input.handle(FL_RELEASE);
-    }
-    return 1;
-  case FL_FOCUS:
-    return input.take_focus();
-  case FL_SHORTCUT:
-    return input.handle(event);
-  default:
-  DEFAULT:
-    input.type(((step() - floor(step()))>0.0 || step() == 0.0) ? FL_FLOAT_INPUT : FL_INT_INPUT);
-    return input.handle(event);
+    case FL_PUSH:
+      if (!step())
+        goto DEFAULT;
+      ix = mx;
+      drag = Fl::event_button();
+      handle_push();
+      return 1;
+    case FL_DRAG:
+      if (!step())
+        goto DEFAULT;
+      delta = mx - ix;
+      if (delta > 5)
+        delta -= 5;
+      else if (delta < -5)
+        delta += 5;
+      else
+        delta = 0;
+      switch (drag) {
+        case 3:
+          v = increment(previous_value(), delta * 100);
+          break;
+        case 2:
+          v = increment(previous_value(), delta * 10);
+          break;
+        default:
+          v = increment(previous_value(), delta);
+          break;
+      }
+      v = round(v);
+      handle_drag(soft() ? softclamp(v) : clamp(v));
+      ;
+      return 1;
+    case FL_RELEASE:
+      if (!step())
+        goto DEFAULT;
+      if (value() != previous_value() || !Fl::event_is_click())
+        handle_release();
+      else {
+        Fl_Widget_Tracker wp(&input);
+        input.handle(FL_PUSH);
+        if (wp.exists())
+          input.handle(FL_RELEASE);
+      }
+      return 1;
+    case FL_FOCUS:
+      return input.take_focus();
+    case FL_SHORTCUT:
+      return input.handle(event);
+    default:
+    DEFAULT:
+      input.type(((step() - floor(step())) > 0.0 || step() == 0.0) ? FL_FLOAT_INPUT : FL_INT_INPUT);
+      return input.handle(event);
   }
 }
 
@@ -111,10 +129,11 @@ int Fl_Value_Input::handle(int event) {
   position, size, and label string. The default boxtype is
   FL_DOWN_BOX.
 */
-Fl_Value_Input::Fl_Value_Input(int X, int Y, int W, int H, const char* l)
-: Fl_Valuator(X, Y, W, H, l), input(X, Y, W, H, 0) {
+Fl_Value_Input::Fl_Value_Input(int X, int Y, int W, int H, const char *l)
+  : Fl_Valuator(X, Y, W, H, l)
+  , input(X, Y, W, H, 0) {
   soft_ = 0;
-  if (input.parent())  // defeat automatic-add
+  if (input.parent()) // defeat automatic-add
     input.parent()->remove(input);
   input.parent((Fl_Group *)this); // kludge!
   input.callback(input_cb, this);
@@ -130,5 +149,5 @@ Fl_Value_Input::Fl_Value_Input(int X, int Y, int W, int H, const char* l)
 Fl_Value_Input::~Fl_Value_Input() {
 
   if (input.parent() == (Fl_Group *)this)
-    input.parent(0);   // *revert* ctor kludge!
+    input.parent(0); // *revert* ctor kludge!
 }

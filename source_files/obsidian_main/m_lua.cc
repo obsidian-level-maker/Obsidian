@@ -85,6 +85,46 @@ int gui_format_prefix(lua_State *L) {
     return 0;
 }
 
+// LUA: console_print(str)
+//
+int gui_console_print(lua_State *L) {
+    int nargs = lua_gettop(L);
+
+    if (nargs >= 1) {
+        const char *res = luaL_checkstring(L, 1);
+        SYS_ASSERT(res);
+
+        // strip off colorizations
+        if (res[0] == '@' && isdigit(res[1])) {
+            res += 2;
+        }
+
+        fmt::print("{}", res);
+    }
+
+    return 0;
+}
+
+// LUA: ref_print(str)
+//
+int gui_ref_print(lua_State *L) {
+    int nargs = lua_gettop(L);
+
+    if (nargs >= 1) {
+        const char *res = luaL_checkstring(L, 1);
+        SYS_ASSERT(res);
+
+        // strip off colorizations
+        if (res[0] == '@' && isdigit(res[1])) {
+            res += 2;
+        }
+
+        RefPrintf("{}", res);
+    }
+
+    return 0;
+}
+
 // LUA: raw_log_print(str)
 //
 int gui_raw_log_print(lua_State *L) {
@@ -684,7 +724,8 @@ int gui_add_module_button_option(lua_State *L) {
                                          gap, randomize_group, default_value);
     if (!single_pane) {
         main_win->right_mods->AddButtonOption(module, option, label, tip,
-                                              longtip, gap, randomize_group, default_value);
+                                              longtip, gap, randomize_group,
+                                              default_value);
     }
 
     return 0;
@@ -1229,6 +1270,8 @@ static const luaL_Reg gui_script_funcs[] = {
 
     {"format_prefix", gui_format_prefix},
 
+    {"console_print", gui_console_print},
+    {"ref_print", gui_ref_print},
     {"raw_log_print", gui_raw_log_print},
     {"raw_debug_print", gui_raw_debug_print},
 
@@ -1412,10 +1455,10 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
 
         // this will appear in the log file too
         if (main_win) {
-            main_win->label(
-                fmt::format("{} {} {} \"{}\"", _("[ ERROR ]"),OBSIDIAN_TITLE,
-                            OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME)
-                    .c_str());
+            main_win->label(fmt::format("{} {} {} \"{}\"", _("[ ERROR ]"),
+                                        OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
+                                        OBSIDIAN_CODE_NAME)
+                                .c_str());
             DLG_ShowError("%s: %s", _("Script Error: "), err_msg);
             main_win->label(fmt::format("{} {} \"{}\"", OBSIDIAN_TITLE,
                                         OBSIDIAN_SHORT_VERSION,
@@ -1808,6 +1851,20 @@ std::string ob_datetime_string() {
     return res;
 }
 
+void ob_print_reference() {
+    if (!Script_CallFunc("ob_print_reference", 1)) {
+        fmt::print("ob_print_reference: Error creating REFERENCE.txt!\n");
+    }
+    fmt::print("\nA copy of this output can be found at {}\n",
+               reference_file.generic_string());
+}
+
+void ob_print_reference_json() {
+    if (!Script_CallFunc("ob_print_reference_json", 1)) {
+        fmt::print("ob_print_reference_json: Error printing json reference!\n");
+    }
+}
+
 void ob_invoke_hook(std::string hookname) {
     std::array<std::string, 2> params = {hookname, ""};
 
@@ -1819,10 +1876,10 @@ void ob_invoke_hook(std::string hookname) {
 bool ob_build_cool_shit() {
     if (!Script_CallFunc("ob_build_cool_shit", 1)) {
         if (main_win) {
-            main_win->label(
-                fmt::format("{} {} {} \"{}\"", _("[ ERROR ]"), OBSIDIAN_TITLE,
-                            OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME)
-                    .c_str());
+            main_win->label(fmt::format("{} {} {} \"{}\"", _("[ ERROR ]"),
+                                        OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
+                                        OBSIDIAN_CODE_NAME)
+                                .c_str());
         }
         Main::ProgStatus(_("Script Error"));
         if (main_win) {

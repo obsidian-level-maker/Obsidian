@@ -1128,9 +1128,7 @@ std::string Trans_GetAvailLanguage(int idx) {
     return available_langs[idx].fullname;
 }
 
-void Trans_UnInit() {
-   trans_store.clear();
-}
+void Trans_UnInit() { trans_store.clear(); }
 
 //----------------------------------------------------------------------
 
