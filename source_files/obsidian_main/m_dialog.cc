@@ -228,16 +228,7 @@ static std::filesystem::path BestDirectory() {
     if (!last_directory.empty()) {
         return last_directory;
     } else {
-        if (default_output_path.empty()) {
-            default_output_path = install_dir;
-        }
-        if (default_output_path[0] == '$') {
-            const char *var = getenv(default_output_path.c_str() + 1);
-            if (var != nullptr) {
-                return var;
-            }
-        }
-        return default_output_path;
+        return Resolve_DefaultOutputPath();
     }
 }
 

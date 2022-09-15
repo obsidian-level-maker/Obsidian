@@ -381,6 +381,19 @@ void Determine_WorkingPath(const char *argv0) {
     }
 }
 
+std::filesystem::path Resolve_DefaultOutputPath() {
+    if (default_output_path.empty()) {
+        default_output_path = install_dir;
+    }
+    if (default_output_path[0] == '$') {
+        const char *var = getenv(default_output_path.c_str() + 1);
+        if (var != nullptr) {
+            return var;
+        }
+    }
+    return default_output_path;
+}
+
 static bool Verify_InstallDir(const std::filesystem::path &path) {
     const std::filesystem::path filename = path / "scripts" / "obsidian.lua";
 

@@ -59,7 +59,9 @@ static void Parse_ShortArgs(std::string_view arg) {
                 it,
                 static_cast<std::size_t>(arg.end() - it),
             };
-            argv::list.emplace_back(argument);
+            if (!argument.empty()) {
+                argv::list.emplace_back(argument);
+            }
             // no more to parse
             break;
         } else {
