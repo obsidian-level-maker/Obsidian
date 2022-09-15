@@ -62,6 +62,7 @@ std::filesystem::path logging_file;
 std::filesystem::path reference_file;
 
 struct UpdateKv {
+    char section;
     std::string key;
     std::string value;
 };
@@ -291,7 +292,9 @@ static void ShowInfo() {
         "REFERENCE.txt\n"
         "     --printref-json        Print reference of all keys and values in "
         "JSON format\n"
-        "  -u --update <key> <value> Set a key in the config file\n"
+        "  -u --update <section> <key> <value>\n"
+        "                            Set a key in the config file\n"
+        "                            (section should be 'c' or 'o')\n"
         "\n");
 
     fmt::print(
@@ -376,6 +379,19 @@ void Determine_WorkingPath(const char *argv0) {
     if (home_dir.empty()) {
         home_dir = ".";
     }
+}
+
+std::filesystem::path Resolve_DefaultOutputPath() {
+    if (default_output_path.empty()) {
+        default_output_path = install_dir;
+    }
+    if (default_output_path[0] == '$') {
+        const char *var = getenv(default_output_path.c_str() + 1);
+        if (var != nullptr) {
+            return var;
+        }
+    }
+    return default_output_path;
 }
 
 static bool Verify_InstallDir(const std::filesystem::path &path) {
@@ -995,10 +1011,11 @@ void Main_SetSeed() {
     if (random_string_seeds && !did_specify_seed) {
         if (string_seed.empty()) {
             if (password_mode) {
-                if (next_rand_seed % 2 == 1)
+                if (next_rand_seed % 2 == 1) {
                     string_seed = ob_get_password();
-                else
+                } else {
                     string_seed = ob_get_random_words();
+                }
             } else {
                 string_seed = ob_get_random_words();
             }
@@ -1156,6 +1173,14 @@ bool Build_Cool_Shit() {
 
 int main(int argc, char **argv) {
     // initialise argument parser (skipping program name)
+
+    // these flags take at least one argument
+    argv::short_flags.emplace('b');
+    argv::short_flags.emplace('a');
+    argv::short_flags.emplace('l');
+    argv::short_flags.emplace('u');
+
+    // parse the flags
     argv::Init(argc - 1, argv + 1);
 
 restart:;
@@ -1230,15 +1255,28 @@ restart:;
 
     if (int update_arg = argv::Find('u', "update"); update_arg >= 0) {
         batch_mode = true;
-        if (update_arg + 2 >= argv::list.size() ||
-            argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2)) {
-            fmt::print(
-                stderr,
-                "OBSIDIAN ERROR: missing key and/or value for --update\n");
+        if (update_arg + 3 >= argv::list.size() ||
+            argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2) ||
+            argv::IsOption(update_arg + 3)) {
+            fmt::print(stderr,
+                       "OBSIDIAN ERROR: missing one or more args for --update "
+                       "<section> <key> <value>\n");
             exit(EXIT_FAILURE);
         }
-        update_kv.key = argv::list[update_arg + 1];
-        update_kv.value = argv::list[update_arg + 2];
+        if (argv::list[update_arg + 1].length() > 1) {
+            fmt::print(stderr,
+                       "OBSIDIAN ERROR: section name must be one character\n");
+            exit(EXIT_FAILURE);
+        }
+        char section = argv::list[update_arg + 1][0];
+        if (section != 'c' && section != 'o') {
+            fmt::print(stderr,
+                       "OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
+            exit(EXIT_FAILURE);
+        }
+        update_kv.section = section;
+        update_kv.key = argv::list[update_arg + 2];
+        update_kv.value = argv::list[update_arg + 3];
     }
 
     if (argv::Find(0, "printref-json") >= 0) {
@@ -1340,8 +1378,9 @@ skiprest:
 
     Trans_Init();
 
+    Options_Load(options_file);
+
     if (!batch_mode) {
-        Options_Load(options_file);
         Theme_Options_Load(theme_file);
         Trans_SetLanguage();
         OBSIDIAN_TITLE = _("OBSIDIAN Level Maker");
@@ -1445,8 +1484,9 @@ skiprest:
                 Main::FatalError(_("No such config file: {}\n"), load_file);
             }
         } else {
-            if (!std::filesystem::exists(config_file))
+            if (!std::filesystem::exists(config_file)) {
                 Cookie_Save(config_file);
+            }
             if (!Cookie_Load(config_file)) {
                 Main::FatalError(_("No such config file: {}\n"), config_file);
             }
@@ -1455,7 +1495,15 @@ skiprest:
         Cookie_ParseArguments();
 
         if (argv::Find('u', "update") >= 0) {
-            ob_set_config(update_kv.key, update_kv.value);
+            switch (update_kv.section) {
+                case 'c':
+                    ob_set_config(update_kv.key, update_kv.value);
+                    break;
+                case 'o':
+                    Parse_Option(update_kv.key, update_kv.value);
+                    break;
+            }
+            Options_Save(options_file);
             Cookie_Save(config_file);
             Main::Detail::Shutdown(false);
             return 0;

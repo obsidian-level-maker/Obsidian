@@ -896,7 +896,11 @@ bool Doom::game_interface_c::Start(const char *preset) {
     ob_invoke_hook("pre_setup");
 
     if (batch_mode) {
-        filename = batch_output_file;
+        if (batch_output_file.is_absolute()) {
+            filename = batch_output_file;
+        } else {
+            filename = Resolve_DefaultOutputPath() / batch_output_file;
+        }
     } else {
         filename = DLG_OutputFilename("wad", preset);
     }

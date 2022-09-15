@@ -188,6 +188,10 @@ extern std::vector<std::string> batch_randomize_groups;
 // Dialog Windows
 void DLG_ShowError(const char *msg, ...);
 
+extern std::string default_output_path;
+
+extern std::filesystem::path Resolve_DefaultOutputPath();
+
 std::filesystem::path DLG_OutputFilename(const char *ext,
                                          const char *preset = nullptr);
 
