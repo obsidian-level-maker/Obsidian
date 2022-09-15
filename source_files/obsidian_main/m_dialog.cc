@@ -43,6 +43,9 @@
 
 std::filesystem::path last_directory;
 
+// from main.h
+std::string default_output_path;
+
 static int dialog_result;
 
 static void dialog_close_CB(Fl_Widget *w, void *data) { dialog_result = 1; }
@@ -221,6 +224,23 @@ void DLG_ShowError(const char *msg, ...) {
 
 //----------------------------------------------------------------------
 
+static std::filesystem::path BestDirectory() {
+    if (!last_directory.empty()) {
+        return last_directory;
+    } else {
+        if (default_output_path.empty()) {
+            default_output_path = install_dir;
+        }
+        if (default_output_path[0] == '$') {
+            const char *var = getenv(default_output_path.c_str() + 1);
+            if (var != nullptr) {
+                return var;
+            }
+        }
+        return default_output_path;
+    }
+}
+
 std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
     std::string kind_buf = fmt::format("{} {}\t*.{}", ext, _("files"), ext);
 
@@ -245,14 +265,12 @@ std::filesystem::path DLG_OutputFilename(const char *ext, const char *preset) {
 
     chooser.filter(kind_buf.c_str());
 
-    if (!last_directory.empty()) {
-        chooser.directory(last_directory.generic_string().c_str());
-    } else {
-        chooser.directory(install_dir.generic_string().c_str());
-    }
+    auto best_dir = BestDirectory();
 
     if (preset) {
-        chooser.preset_file(preset);
+        chooser.preset_file((best_dir / preset).generic_string().c_str());
+    } else {
+        chooser.directory(best_dir.generic_string().c_str());
     }
 
     int result = chooser.show();

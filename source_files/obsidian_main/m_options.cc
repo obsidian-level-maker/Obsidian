@@ -30,7 +30,7 @@
 #include "m_trans.h"
 #include "main.h"
 
-static void Parse_Option(std::string name, std::string value) {
+void Parse_Option(const std::string &name, const std::string &value) {
     if (StringCaseCmpPartial(name, "recent") == 0) {
         Recent_Parse(name, value);
         return;
@@ -80,6 +80,8 @@ static void Parse_Option(std::string name, std::string value) {
         log_limit = StringToInt(value);
     } else if (StringCaseCmp(name, "restart_after_builds") == 0) {
         restart_after_builds = StringToInt(value) ? true : false;
+    } else if (StringCaseEquals(name, "default_output_path")) {
+        default_output_path = value;
     } else {
         LogPrintf("Unknown option: '{}'\n", name);
     }
@@ -191,6 +193,7 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "timestamp_logs = " << timestamp_logs << "\n";
     option_fp << "log_limit = " << log_limit << "\n";
     option_fp << "restart_after_builds = " << restart_after_builds << "\n";
+    option_fp << "default_output_path = " << default_output_path << "\n";
 
     if (!last_directory.empty()) {
         option_fp << "\n";
@@ -223,6 +226,7 @@ class UI_OptionsWin : public Fl_Window {
 
     Fl_Button *opt_custom_prefix;
     UI_HelpLink *custom_prefix_help;
+    Fl_Button *opt_default_output_path;
 
     UI_CustomCheckBox *opt_random_string_seeds;
     UI_HelpLink *random_string_seeds_help;
@@ -313,6 +317,13 @@ class UI_OptionsWin : public Fl_Window {
 
         restart_after_builds =
             that->opt_restart_after_builds->value() ? true : false;
+    }
+
+    static void callback_RespectDoomwadDir(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+        default_output_path =
+            that->opt_default_output_path->value() ? true : false;
     }
 
     static void callback_RestartAfterBuildsHelp(Fl_Widget *w, void *data) {
@@ -518,6 +529,15 @@ class UI_OptionsWin : public Fl_Window {
             }
         }
     }
+
+    static void callback_SetDefaultOutputPath(Fl_Widget *w, void *data) {
+        const char *user_buf = fl_input("%s", custom_prefix.c_str(),
+                                        _("Enter Default Output Path:"));
+
+        if (user_buf) {
+            default_output_path = user_buf;
+        }
+    }
 };
 
 //
@@ -600,6 +620,19 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     custom_prefix_help->callback(callback_PrefixHelp, this);
 
     cy += opt_custom_prefix->h() + y_step * 2;
+
+    opt_default_output_path =
+        new Fl_Button(136 + KF * 40, cy, kf_w(130), kf_h(24),
+                      _("Set Default Output Path..."));
+    opt_default_output_path->box(button_style);
+    opt_default_output_path->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+    opt_default_output_path->visible_focus(0);
+    opt_default_output_path->color(BUTTON_COLOR);
+    opt_default_output_path->callback(callback_SetDefaultOutputPath, this);
+    opt_default_output_path->labelfont(font_style);
+    opt_default_output_path->labelcolor(FONT2_COLOR);
+
+    cy += opt_default_output_path->h() + y_step * 2;
 
     opt_random_string_seeds =
         new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
