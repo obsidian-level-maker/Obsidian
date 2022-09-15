@@ -531,7 +531,7 @@ class UI_OptionsWin : public Fl_Window {
     }
 
     static void callback_SetDefaultOutputPath(Fl_Widget *w, void *data) {
-        const char *user_buf = fl_input("%s", custom_prefix.c_str(),
+        const char *user_buf = fl_input("%s", default_output_path.c_str(),
                                         _("Enter Default Output Path:"));
 
         if (user_buf) {
