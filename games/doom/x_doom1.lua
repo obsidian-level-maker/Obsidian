@@ -786,6 +786,7 @@ ULTDOOM.THEMES =
       gtd_generic_artsy_lite_box = 20,
       --
       gtd_ind_modwall_1 = 25,
+      gtd_ind_modwall_2 = 25,
       --
       gtd_modquake_set = 18,
       gtd_modquake_jawlike = 18,
@@ -1146,6 +1147,7 @@ ULTDOOM.THEMES =
       gtd_generic_artsy_lite_box = 20,
       --
       gtd_ind_modwall_1 = 25,
+      gtd_ind_modwall_2 = 25,
       --
       gtd_modquake_set = 11,
       gtd_modquake_jawlike = 11,
@@ -1579,6 +1581,7 @@ ULTDOOM.THEMES =
       gtd_generic_artsy_lite_box = 20,
       --
       gtd_ind_modwall_1 = 25,
+      gtd_ind_modwall_2 = 25,
       --
       gtd_modquake_set = 11,
       gtd_modquake_jawlike = 11,
@@ -2009,6 +2012,7 @@ ULTDOOM.THEMES =
       gtd_generic_artsy_lite_box = 20,
       --
       gtd_ind_modwall_1 = 25,
+      gtd_ind_modwall_2 = 25,
       --
       gtd_modquake_set = 11,
       gtd_modquake_jawlike = 11,
