@@ -64,8 +64,6 @@ void Parse_Option(const std::string &name, const std::string &value) {
         random_string_seeds = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "password_mode") == 0) {
         password_mode = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "last_directory") == 0) {
-        last_directory = value;
     } else if (StringCaseCmp(name, "filename_prefix") == 0) {
         filename_prefix = StringToInt(value);
     } else if (StringCaseCmp(name, "custom_prefix") == 0) {
@@ -194,11 +192,6 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "log_limit = " << log_limit << "\n";
     option_fp << "restart_after_builds = " << restart_after_builds << "\n";
     option_fp << "default_output_path = " << default_output_path << "\n";
-
-    if (!last_directory.empty()) {
-        option_fp << "\n";
-        option_fp << "last_directory = " << last_directory.string() << "\n";
-    }
 
     option_fp << "\n";
 
@@ -400,8 +393,7 @@ class UI_OptionsWin : public Fl_Window {
         win->show();
         buff->text(
             _("Will randomly pull 1 to 3 words from Obsidian's random word "
-              "list (found in /scripts/random_words.lua) and use those as "
-              "input for the map generation seed. Purely for "
+              "list and use those as input for the map generation seed. Purely for "
               "cosmetic/entertainment value."));
     }
 
@@ -531,12 +523,47 @@ class UI_OptionsWin : public Fl_Window {
     }
 
     static void callback_SetDefaultOutputPath(Fl_Widget *w, void *data) {
-        const char *user_buf = fl_input("%s", default_output_path.c_str(),
-                                        _("Enter Default Output Path:"));
 
-        if (user_buf) {
-            default_output_path = user_buf;
+        // save and restore the font height
+        // (because FLTK's own browser get totally borked)
+        int old_font_h = FL_NORMAL_SIZE;
+        FL_NORMAL_SIZE = 14 + KF;
+
+        Fl_Native_File_Chooser chooser;
+
+        chooser.title(_("Select default save directory"));
+        chooser.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
+
+        int result = chooser.show();
+
+        FL_NORMAL_SIZE = old_font_h;
+
+        switch (result) {
+            case -1:
+                LogPrintf(_("Error choosing directory:\n"));
+                LogPrintf("   {}\n", chooser.errmsg());
+
+                return;
+
+            case 1:  // cancelled
+                return;
+
+            default:
+                break;  // OK
         }
+
+        std::filesystem::path dir_name = chooser.filename();
+
+        if (dir_name.empty()) {
+            LogPrintf(_("Empty default directory provided???:\n"));
+            return;
+        }
+
+    #ifdef WIN32
+        dir_name = ucs4_path(dir_name.generic_string().c_str());
+    #endif
+
+        default_output_path = dir_name.generic_string();
     }
 };
 
@@ -623,7 +650,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     opt_default_output_path =
         new Fl_Button(136 + KF * 40, cy, kf_w(130), kf_h(24),
-                      _("Set Default Output Path..."));
+                      _("Set Default Output Path"));
     opt_default_output_path->box(button_style);
     opt_default_output_path->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     opt_default_output_path->visible_focus(0);
@@ -832,7 +859,7 @@ int UI_OptionsWin::handle(int event) {
 
 void DLG_OptionsEditor(void) {
     int opt_w = kf_w(350);
-    int opt_h = kf_h(525);
+    int opt_h = kf_h(575);
 
     UI_OptionsWin *option_window =
         new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));
