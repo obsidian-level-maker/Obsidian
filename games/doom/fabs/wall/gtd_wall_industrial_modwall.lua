@@ -18,7 +18,7 @@ PREFABS.Wall_industrial_modwall_1 =
 
 PREFABS.Wall_industrial_modwall_1a =
 {
-  template = "Wall_mining_dirt_fenced",
+  template = "Wall_industrial_modwall_1",
   map = "MAP02",
 
   prob = 120
@@ -26,7 +26,7 @@ PREFABS.Wall_industrial_modwall_1a =
 
 PREFABS.Wall_industrial_modwall_1b =
 {
-  template = "Wall_mining_dirt_fenced",
+  template = "Wall_industrial_modwall_1",
   map = "MAP03",
 
   where = "diagonal"
