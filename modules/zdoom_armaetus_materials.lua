@@ -505,7 +505,12 @@ ARMAETUS_MATERIALS = {
   MM205 = { t="MM205", f="MFLR8_4" }, --Rock with metal patterns
   MM206 = { t="MM206", f="G20" }, --Green rock
   MM207 = { t="MM207", f="G20" }, --Green brick
-  MM208 = { t="MM208", f="RROCK03" }, --Brown and black stripe wall
+
+  -- the following textures are original composites and don't actually have anything to do with
+  -- MM2 anymore
+  MMT208 = { t="MMT208", f="QFLAT02" }, --Brown and black stripe wall
+  MMT209 = { t="MMT209", f="QFLAT03" },
+  MMT210 = { t="MMT210", f="QFLAT09" },
 
   -- Egypt
   EGYPT01   = { t="EGYPT01",   f="FLAT1_1" }, --64x64,

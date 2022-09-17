@@ -46,8 +46,6 @@ PREFABS.dem_tags_logs =
 
   map = "MAP02",
 
-  prob = 5,
-
   on_liquids="never",
 
   height = 128,

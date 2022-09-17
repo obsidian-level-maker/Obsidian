@@ -782,6 +782,11 @@ ULTDOOM.THEMES =
       gtd_generic_artsy_slope_y_inset = 20,
       gtd_generic_artsy_base_braced = 20,
       gtd_generic_artsy_sloped_bump = 20,
+      gtd_generic_small_lite = 20,
+      gtd_generic_artsy_lite_box = 20,
+      --
+      gtd_ind_modwall_1 = 25,
+      gtd_ind_modwall_2 = 25,
       --
       gtd_modquake_set = 18,
       gtd_modquake_jawlike = 18,
@@ -1138,6 +1143,11 @@ ULTDOOM.THEMES =
       gtd_generic_artsy_slope_y_inset = 20,
       gtd_generic_artsy_base_braced = 20,
       gtd_generic_artsy_sloped_bump = 20,
+      gtd_generic_small_lite = 20,
+      gtd_generic_artsy_lite_box = 20,
+      --
+      gtd_ind_modwall_1 = 25,
+      gtd_ind_modwall_2 = 25,
       --
       gtd_modquake_set = 11,
       gtd_modquake_jawlike = 11,
@@ -1567,6 +1577,11 @@ ULTDOOM.THEMES =
       gtd_generic_artsy_slope_y_inset = 20,
       gtd_generic_artsy_base_braced = 20,
       gtd_generic_artsy_sloped_bump = 20,
+      gtd_generic_small_lite = 20,
+      gtd_generic_artsy_lite_box = 20,
+      --
+      gtd_ind_modwall_1 = 25,
+      gtd_ind_modwall_2 = 25,
       --
       gtd_modquake_set = 11,
       gtd_modquake_jawlike = 11,
@@ -1993,6 +2008,11 @@ ULTDOOM.THEMES =
       gtd_generic_artsy_slope_y_inset = 20,
       gtd_generic_artsy_base_braced = 20,
       gtd_generic_artsy_sloped_bump = 20,
+      gtd_generic_small_lite = 20,
+      gtd_generic_artsy_lite_box = 20,
+      --
+      gtd_ind_modwall_1 = 25,
+      gtd_ind_modwall_2 = 25,
       --
       gtd_modquake_set = 11,
       gtd_modquake_jawlike = 11,

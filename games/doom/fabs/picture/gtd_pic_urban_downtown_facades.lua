@@ -601,6 +601,7 @@ PREFABS.Pic_urban_downtown_facade_advert =
 
   prob = 200,
 
+  x_fit  = { 48,56 , 200,208 },
   y_fit = { 64,80 },
   z_fit = "top",
 
