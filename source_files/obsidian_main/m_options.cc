@@ -81,7 +81,7 @@ void Parse_Option(const std::string &name, const std::string &value) {
     } else if (StringCaseEquals(name, "default_output_path")) {
         default_output_path = value;
     } else {
-        LogPrintf("Unknown option: '{}'\n", name);
+        LogPrintf("{} '{}'\n", _("Unknown option: "), name);
     }
 }
 
@@ -102,7 +102,7 @@ static bool Options_ParseLine(std::string buf) {
     }*/
 
     if (!isalpha(buf.front())) {
-        LogPrintf("Weird option line: [{}]\n", buf);
+        LogPrintf("{} [{}]\n", _("Weird option line: "), buf);
         return false;
     }
 
@@ -111,7 +111,7 @@ static bool Options_ParseLine(std::string buf) {
     std::string value = buf.substr(pos + 2);
 
     if (name.empty() || value.empty()) {
-        LogPrintf("Name or value missing!\n");
+        LogPrintf(_("Name or value missing!\n"));
         return false;
     }
 
@@ -123,11 +123,11 @@ bool Options_Load(std::filesystem::path filename) {
     std::ifstream option_fp(filename, std::ios::in);
 
     if (!option_fp.is_open()) {
-        LogPrintf("Missing Options file -- using defaults.\n\n");
+        LogPrintf(_("Missing Options file -- using defaults.\n\n"));
         return false;
     }
 
-    LogPrintf("Loading options file: {}\n", filename.string());
+    LogPrintf("{} {}\n", _("Loading options file: "), filename.string());
 
     int error_count = 0;
 
@@ -293,10 +293,9 @@ class UI_OptionsWin : public Fl_Window {
                 t_language = "AUTO";
             }
         }
-        fl_alert(
-            "%s",
-            _("Obsidian will now restart to apply language changes.\nObsidian "
-              "will be in your selected language after restarting."));
+// clang-format off
+        fl_alert("%s", _("Obsidian will now restart to apply language changes.\nObsidian will be in your selected language after restarting."));
+// clang-format on
 
         Trans_UnInit();
 
@@ -331,16 +330,9 @@ class UI_OptionsWin : public Fl_Window {
         win->hotspot(0, 0, 0);
         win->set_modal();
         win->show();
-        buff->text(_(
-            "Obsidian has migrated from Lua to LuaJIT. One side effect of this "
-            "is that even with a fixed seed, subsequent runs with the same "
-            "configuration will not guarantee the same result.\n\nRestarting "
-            "the Lua VM between builds will improve the odds of being able to "
-            "repeat the results of a prior seed/setting combination, with the "
-            "downside of visibly restarting the program every time a map is "
-            "generated (even unsuccessfully).\n\nIf you have no particular "
-            "need to recreate the results of prior runs, this option can be "
-            "safely left off."));
+// clang-format off
+        buff->text(_("Obsidian has migrated from Lua to LuaJIT. One side effect of this is that even with a fixed seed, subsequent runs with the same configuration will not guarantee the same result.\n\nRestarting the Lua VM between builds will improve the odds of being able to repeat the results of a prior seed/setting combination, with the downside of visibly restarting the program every time a map is generated (even unsuccessfully).\n\nIf you have no particular need to recreate the results of prior runs, this option can be safely left off."));
+// clang-format on
     }
 
     static void callback_TimestampLogs(Fl_Widget *w, void *data) {
@@ -391,10 +383,9 @@ class UI_OptionsWin : public Fl_Window {
         win->hotspot(0, 0, 0);
         win->set_modal();
         win->show();
-        buff->text(
-            _("Will randomly pull 1 to 3 words from Obsidian's random word "
-              "list and use those as input for the map generation seed. Purely for "
-              "cosmetic/entertainment value."));
+// clang-format off
+        buff->text(_("Will randomly pull 1 to 3 words from Obsidian's random word list and use those as input for the map generation seed. Purely for cosmetic/entertainment value."));
+// clang-format on
     }
 
     static void callback_Password_Mode(Fl_Widget *w, void *data) {
@@ -414,10 +405,9 @@ class UI_OptionsWin : public Fl_Window {
         win->hotspot(0, 0, 0);
         win->set_modal();
         win->show();
-        buff->text(
-            _("Will produce a pseudo-random sequence of characters as input "
-              "for the map generation seed. Random String Seeds must be "
-              "enabled to use this option."));
+// clang-format off
+        buff->text(_("Will produce a pseudo-random sequence of characters as input for the map generation seed. Random String Seeds must be enabled to use this option."));
+// clang-format on
     }
 
     static void callback_Backups(Fl_Widget *w, void *data) {
@@ -443,9 +433,9 @@ class UI_OptionsWin : public Fl_Window {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         filename_prefix = that->opt_filename_prefix->value();
-
-        fl_alert("%s", _("File prefix changes require a restart.\nOBSIDIAN "
-                         "will now restart."));
+// clang-format off
+        fl_alert("%s", _("File prefix changes require a restart.\nOBSIDIAN will now restart."));
+// clang-format on
 
         main_action = MAIN_RESTART;
 
@@ -455,13 +445,11 @@ class UI_OptionsWin : public Fl_Window {
     static void callback_LimitBreak(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
         if (that->opt_limit_break->value()) {
-            if (fl_choice(_("WARNING! This option will allow you to manually "
-                            "enter values in excess of the \n(usually) stable "
-                            "slider limits for Obsidian.\nAny bugs, crashes, "
-                            "or errors as a result of this will not be "
-                            "addressed by the developers.\nYou must select Yes "
-                            "for this option to be applied."),
-                          _("Cancel"), _("Yes, break Obsidian"), 0)) {
+// clang-format off
+            if (fl_choice(_("WARNING! This option will allow you to manually enter values in excess of the \n(usually) stable slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this will not be addressed by the developers.\nYou must select Yes for this option to be applied."),
+                          _("Cancel"), 
+                          _("Yes, break Obsidian"), 0)) {
+// clang-format on
                 limit_break = true;
             } else {
                 limit_break = false;
@@ -469,8 +457,9 @@ class UI_OptionsWin : public Fl_Window {
             }
         } else {
             limit_break = false;
-            fl_alert("%s", _("Restoring slider limits requires a "
-                             "restart.\nObsidian will now restart."));
+// clang-format off
+            fl_alert("%s", _("Restoring slider limits requires a restart.\nObsidian will now restart."));
+// clang-format on
 
             main_action = MAIN_RESTART;
 
@@ -495,17 +484,9 @@ class UI_OptionsWin : public Fl_Window {
         win->hotspot(0, 0, 0);
         win->set_modal();
         win->show();
-        buff->text(
-            _("Custom prefixes can use any of the special format strings "
-              "listed below. Anything else is used as-is.\n\n%year or %Y: The "
-              "current year.\n\n%month or %M: The current month.\n\n%day or "
-              "%D: The current day.\n\n%hour or %h: The current "
-              "hour.\n\n%minute or %m: The current minute.\n\n%second or %s: "
-              "The current second.\n\n%version or %v: The current Obsidian "
-              "version.\n\n%game or %g: Which game the WAD is for.\n\n%engine "
-              "or %e: Which engine the WAD is for.\n\n%theme or %t: Which "
-              "theme was selected from the game's choices.\n\n%count or %c: "
-              "The number of levels in the generated WAD."));
+// clang-format off
+        buff->text(_("Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n%year or %Y: The current year.\n\n%month or %M: The current month.\n\n%day or %D: The current day.\n\n%hour or %h: The current hour.\n\n%minute or %m: The current minute.\n\n%second or %s: The current second.\n\n%version or %v: The current Obsidian version.\n\n%game or %g: Which game the WAD is for.\n\n%engine or %e: Which engine the WAD is for.\n\n%theme or %t: Which theme was selected from the game's choices.\n\n%count or %c: The number of levels in the generated WAD."));
+// clang-format on
     }
 
     static void callback_SetCustomPrefix(Fl_Widget *w, void *data) {

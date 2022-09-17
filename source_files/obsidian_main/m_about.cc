@@ -100,14 +100,9 @@ UI_About::UI_About(int W, int H, const char *label)
     int pad = kf_w(22);
 
     int text_h = H * 0.55;
-
-    Text =
-        _("OBSIDIAN is a random level generator\nfor classic FPS games like "
-          "DOOM.\nIt is a continuation of the OBLIGE Level Maker\nCopyright "
-          "(C) 2006-2017 Andrew Apted, et al.\nThis program is free software, "
-          "and may be\ndistributed and modified under the terms of\nthe GNU "
-          "General Public License.\nThere is ABSOLUTELY NO WARRANTY!\nUse at "
-          "your OWN RISK!");
+// clang-format off
+    Text =_("OBSIDIAN is a random level generator\nfor classic FPS games like DOOM.\nIt is a continuation of the OBLIGE Level Maker\nCopyright (C) 2006-2017 Andrew Apted, et al.\nThis program is free software, and may be\ndistributed and modified under the terms of\nthe GNU General Public License.\nThere is ABSOLUTELY NO WARRANTY!\nUse at your OWN RISK!");
+// clang-format on
 
     box = new Fl_Box(pad, cy, W - pad - pad, text_h, Text);
     box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_CLIP);
