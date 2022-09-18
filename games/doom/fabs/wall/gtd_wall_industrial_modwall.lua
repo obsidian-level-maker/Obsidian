@@ -24,13 +24,15 @@ PREFABS.Wall_industrial_modwall_1a =
   prob = 120
 }
 
-PREFABS.Wall_industrial_modwall_1b =
+PREFABS.Wall_industrial_modwall_1_diag =
 {
   template = "Wall_industrial_modwall_1",
   map = "MAP03",
 
   where = "diagonal"
 }
+
+--
 
 PREFABS.Wall_industrial_modwall_2 =
 {
@@ -46,4 +48,28 @@ PREFABS.Wall_industrial_modwall_2a =
   map = "MAP07",
 
   group = "gtd_ind_modwall_2"
+}
+
+--
+
+PREFABS.Wall_industrial_modwall_3 =
+{
+  template = "Wall_industrial_modwall_1",
+  map = "MAP11",
+
+  group = "gtd_ind_modwall_3",
+
+  z_fit = {48,56}
+}
+
+PREFABS.Wall_industrial_modwall_3_diag =
+{
+  template = "Wall_industrial_modwall_1",
+  map = "MAP13",
+
+  where = "diagonal",
+
+  group = "gtd_ind_modwall_3",
+
+  z_fit = {48,56}
 }
