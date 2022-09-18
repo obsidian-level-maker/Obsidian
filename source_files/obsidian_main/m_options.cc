@@ -78,7 +78,7 @@ void Parse_Option(const std::string &name, const std::string &value) {
         log_limit = StringToInt(value);
     } else if (StringCaseCmp(name, "restart_after_builds") == 0) {
         restart_after_builds = StringToInt(value) ? true : false;
-    } else if (StringCaseEquals(name, "default_output_path")) {
+    } else if (StringCaseCmp(name, "default_output_path") == 0) {
         default_output_path = value;
     } else {
         LogPrintf("{} '{}'\n", _("Unknown option: "), name);
@@ -540,11 +540,10 @@ class UI_OptionsWin : public Fl_Window {
             return;
         }
 
+        default_output_path = dir_name.generic_string();
     #ifdef WIN32
         dir_name = ucs4_path(dir_name.generic_string().c_str());
     #endif
-
-        default_output_path = dir_name.generic_string();
     }
 };
 
