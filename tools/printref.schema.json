@@ -5,57 +5,62 @@
   "patternProperties": {
     ".": {
       "type": "object",
-      "properties": {
-        "tooltip": {
-          "type": "string"
-        },
-        "engine": {
-          "type": ["string", "array"],
-          "items": {
-            "type": "string"
-          }
-        },
-        "game": {
-          "type": ["string", "array"],
-          "items": {
-            "type": "string"
-          }
-        },
-        "type": {
-          "enum": ["choice", "slider", "boolean"]
-        },
-        "values": {
-          "type": ["array", "object"],
+      "patternProperties": {
+        ".": {
+          "type": "object",
           "properties": {
-            "min": {
-              "type": "number"
+            "tooltip": {
+              "type": "string"
             },
-            "max": {
-              "type": "number"
-            },
-            "default": {
-              "type": ["number", "string"]
-            },
-            "nan": {
-              "type": "array",
+            "engine": {
+              "type": ["string", "array"],
               "items": {
                 "type": "string"
               }
+            },
+            "game": {
+              "type": ["string", "array"],
+              "items": {
+                "type": "string"
+              }
+            },
+            "type": {
+              "enum": ["choice", "slider", "boolean"]
+            },
+            "values": {
+              "type": ["array", "object"],
+              "properties": {
+                "min": {
+                  "type": "number"
+                },
+                "max": {
+                  "type": "number"
+                },
+                "default": {
+                  "type": ["number", "string"]
+                },
+                "nan": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "items": {
+                "type": "string"
+              },
+              "additionalProperties": false
+            },
+            "default": {
+              "type": "number"
+            },
+            "randomize_group": {
+              "type": "string"
             }
           },
-          "items": {
-            "type": "string"
-          },
           "additionalProperties": false
-        },
-        "default": {
-          "type": "number"
-        },
-        "randomize_group": {
-          "type": "string"
         }
-      },
-      "additionalProperties": false
+      }
     }
   }
 }

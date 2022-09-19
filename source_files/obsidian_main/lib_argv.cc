@@ -46,27 +46,14 @@ static void Parse_LongArg(std::string_view arg) {
     }
 }
 
-template <typename It>
-const char *IterToPtr(It it) {
-    return &*it;
-}
-
-template <>
-const char *IterToPtr(const char *it) {
-    return it;
-}
-
 static void Parse_ShortArgs(std::string_view arg) {
-    auto it = arg.begin() + 1;
-
-    while (it != arg.end()) {
-        char ch = *it++;
+    for (std::size_t i = 1; i < arg.size(); ++i) {
+        char ch = arg[i];
 
         if (argv::short_flags.find(ch) != argv::short_flags.end()) {
             // argument
             argv::list.emplace_back(std::string{"-"} + std::string{&ch, 1});
-            std::string_view argument(IterToPtr(it),
-                                      static_cast<std::size_t>(arg.end() - it));
+            std::string_view argument = arg.substr(i);
             if (!argument.empty()) {
                 argv::list.emplace_back(argument);
             }
