@@ -237,6 +237,7 @@ template <typename... Args>
     Detail::Shutdown(true);
 
     if (batch_mode) {
+        fmt::print(std::cerr, "{}\n", buffer);
         fmt::print(std::cerr, "ERROR!\n");
 #ifdef WIN32
         std::cout << '\n' << "Close window when finished...";
