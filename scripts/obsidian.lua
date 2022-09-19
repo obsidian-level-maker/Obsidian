@@ -1821,82 +1821,102 @@ local function ob_get_module_refs()
     end
     module_refs[v.name] = option_refs
   end
+  module_refs["main_build_settings"] = {
+    game = {
+      tooltip = "Choose which game to build a WAD for.",
+      engine = {"ALL"},
+      game = {"ALL"},
+      choices = {
+        "chex3",
+        "doom1",
+        "doom2",
+        "ultdoom",
+        "tnt",
+        "plutonia",
+        "hacx",
+        "harmony",
+        "heretic",
+        "hexen",
+        "strife",
+      },
+      default = "doom2",
+    },
+    engine = {
+      tooltip = "Choose which engine to build a WAD for.",
+      engine = {"ALL"},
+      game = {"ALL"},
+      choices = {
+        "vanilla",
+        "nolimit",
+        "boom",
+        "prboom",
+        "zdoom",
+        "edge",
+        "eternity",
+      },
+      default = "zdoom",
+    },
+    length = {
+      tooltip = "Choose how many levels to create.",
+      engine = {"ALL"},
+      game = {"ALL"},
+      choices = {
+        "single",
+        "few",
+        "episode",
+        "game",
+      },
+      default = "game",
+    },
+    theme = {
+      tooltip = "The following values are game-specific:\n" ..
+        "  Chex Quest 3: bazoik,spaceport,villa\n" ..
+        "  Ultimate Doom/Doom 1: deimos,flesh\n" ..
+        "  Ultimate Doom/Doom 1/Doom 2/TNT/Plutonia: tech,urban,hell\n" ..
+        "  TNT: egypt\n" ..
+        "  HacX: hacx_urban\n" ..
+        "  Harmony: ndf_base\n" ..
+        "  Heretic: city,maw,dome,ossuary,demense\n" ..
+        "  Hexen: forest,ice_caves,fire_steel,swamp,dungeon,town\n" ..
+        "  Strife: town\n",
+      engine = {"ALL"},
+      game = {"ALL"},
+      choices = {
+        "original",
+        "epi",
+        "jumble",
+        "bit_mixed",
+        "psycho",
+        "bazoik",
+        "spaceport",
+        "villa",
+        "tech",
+        "urban",
+        "hell",
+        "deimos",
+        "flesh",
+        "egypt",
+        "hacx_urban",
+        "ndf_base",
+        "city",
+        "maw",
+        "dome",
+        "ossuary",
+        "demense",
+        "forest",
+        "ice_caves",
+        "fire_steel",
+        "swamp",
+        "dungeon",
+        "town",
+      },
+      default = "original",
+    },
+  }
   return module_refs
 end
 
 function ob_print_reference()
-  gui.console_print("\n[[ main_build_settings ]]\n\n")
-  gui.ref_print("\n[[ main_build_settings ]]\n\n")
-  gui.console_print("option: game\n")
-  gui.ref_print("option: game\n")
-  gui.console_print("comment: Choose which game to build a WAD for.\n")
-  gui.ref_print("comment: Choose which game to build a WAD for.\n")
-  gui.console_print("engine: ALL\n")
-  gui.ref_print("engine: ALL\n")
-  gui.console_print("game: ALL\n")
-  gui.ref_print("game: ALL\n")
-  gui.console_print("values: chex3,doom1,doom2,ultdoom,tnt,plutonia,hacx,harmony,heretic,hexen,strife\n")
-  gui.ref_print("values: chex3,doom1,doom2,ultdoom,tnt,plutonia,hacx,harmony,heretic,hexen,strife\n")
-  gui.console_print("default: doom2\n")
-  gui.ref_print("default: doom2\n\n")
-  gui.console_print("option: engine\n")
-  gui.ref_print("option: engine\n")
-  gui.console_print("comment: Choose which engine to build a WAD for.\n")
-  gui.ref_print("comment: Choose which engine to build a WAD for.\n")
-  gui.console_print("engine: ALL\n")
-  gui.ref_print("engine: ALL\n")
-  gui.console_print("game: ALL\n")
-  gui.ref_print("game: ALL\n")
-  gui.console_print("values: vanilla,nolimit,boom,prboom,zdoom,edge,eternity\n")
-  gui.ref_print("values: vanilla,nolimit,boom,prboom,zdoom,edge,eternity\n")
-  gui.console_print("default: zdoom\n")
-  gui.ref_print("default: zdoom\n\n")
-  gui.console_print("option: length\n")
-  gui.ref_print("option: length\n")
-  gui.console_print("comment: Choose how many levels to create.\n")
-  gui.ref_print("comment: Choose how many levels to create.\n")
-  gui.console_print("engine: ALL\n")
-  gui.ref_print("engine: ALL\n")
-  gui.console_print("game: ALL\n")
-  gui.ref_print("game: ALL\n")
-  gui.console_print("values: single,few,episode,game\n")
-  gui.ref_print("values: single,few,episode,game\n")
-  gui.console_print("default: game\n")
-  gui.ref_print("default: game\n\n")
-  gui.console_print("option: theme\n")
-  gui.ref_print("option: theme\n")
-  gui.console_print("comment: The following values are game-specific:\n" ..
-  "  Chex Quest 3: bazoik,spaceport,villa\n" ..
-  "  Ultimate Doom/Doom 1: deimos,flesh\n" ..
-  "  Ultimate Doom/Doom 1/Doom 2/TNT/Plutonia: tech,urban,hell\n" ..
-  "  TNT: egypt\n" ..
-  "  HacX: hacx_urban\n" ..
-  "  Harmony: ndf_base\n" ..
-  "  Heretic: city,maw,dome,ossuary,demense\n" ..
-  "  Hexen: forest,ice_caves,fire_steel,swamp,dungeon,town\n" ..
-  "  Strife: town\n")
-  gui.ref_print("comment: The following values are game-specific:\n" ..
-  "  Chex Quest 3: bazoik,spaceport,villa\n" ..
-  "  Ultimate Doom/Doom 1: deimos,flesh\n" ..
-  "  Ultimate Doom/Doom 1/Doom 2/TNT/Plutonia: tech,urban,hell\n" ..
-  "  TNT: egypt\n" ..
-  "  HacX: hacx_urban\n" ..
-  "  Harmony: ndf_base\n" ..
-  "  Heretic: city,maw,dome,ossuary,demense\n" ..
-  "  Hexen: forest,ice_caves,fire_steel,swamp,dungeon\n" ..
-  "  Strife: town\n")
-  gui.console_print("engine: ALL\n")
-  gui.ref_print("engine: ALL\n")
-  gui.console_print("game: ALL\n")
-  gui.ref_print("game: ALL\n")
-  gui.console_print("values: original,epi,jumble,bit_mixed,psycho,bazoik,spaceport," ..
-  "villa,tech,urban,hell,deimos,flesh,egypt,hacx_urban,ndf_base,city,maw,dome,ossuary," ..
-  "demense,forest,ice_caves,fire_steel,swamp,dungeon,town\n")
-  gui.ref_print("values: original,epi,jumble,bit_mixed,psycho,bazoik,spaceport," ..
-  "villa,tech,urban,hell,deimos,flesh,egypt,hacx_urban,ndf_base,city,maw,dome,ossuary," ..
-  "demense,forest,ice_caves,fire_steel,swamp,dungeon,town\n")
-  gui.console_print("default: original\n")
-  gui.ref_print("default: original\n")
   local module_refs = ob_get_module_refs()
   local sorted_entries = table.keys_sorted(module_refs)
   for _,module_entry in ipairs(sorted_entries) do
