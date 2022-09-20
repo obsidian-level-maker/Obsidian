@@ -5959,7 +5959,7 @@ msgstr "Телепорты"
 
 #: modules/ui_arch.lua:247
 msgid "Control the amount of teleporters."
-msgstr "Насколько часто будут генерироваться телепортеры."
+msgstr "Насколько часто будут генерироваться телепорты."
 
 #: modules/ui_arch.lua:250
 msgid "Steepness"
@@ -5967,7 +5967,7 @@ msgstr "Крутизна рельефа"
 
 #: modules/ui_arch.lua:251
 msgid "Control the height difference of stairs, lifts, and joiners throughout levels."
-msgstr "Управление силой перепадов высот по всему уровню, в том числе на лестницах, в комнатах и на лифтах."
+msgstr "Управление перепадами высот по всему уровню, в том числе на лестницах, в комнатах и на лифтах."
 
 #: modules/ui_arch.lua:257
 msgid "Bottomless Vistas"
