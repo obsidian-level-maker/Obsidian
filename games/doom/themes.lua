@@ -1397,7 +1397,10 @@ DOOM.THEMES =
       tech_o_tall_light = 0.5,
       tech_o_tall_light_alt = 0.5,
       tech_o_hexagon_uac_spotlights = 1,
-      tech_o_orange_oct_white_binding = 1
+      tech_o_orange_oct_white_binding = 1,
+      tech_o_g_blakwall = 1,
+      tech_o_g_modwall1 = 1,
+      tech_o_g_modwall2 = 1
     },
 
     window_groups =
