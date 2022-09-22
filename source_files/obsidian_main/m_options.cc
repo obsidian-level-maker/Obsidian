@@ -76,8 +76,6 @@ void Parse_Option(const std::string &name, const std::string &value) {
         timestamp_logs = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "log_limit") == 0) {
         log_limit = StringToInt(value);
-    } else if (StringCaseCmp(name, "restart_after_builds") == 0) {
-        restart_after_builds = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "default_output_path") == 0) {
         default_output_path = value;
     } else {
@@ -190,7 +188,6 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "zip_logs = " << zip_logs << "\n";
     option_fp << "timestamp_logs = " << timestamp_logs << "\n";
     option_fp << "log_limit = " << log_limit << "\n";
-    option_fp << "restart_after_builds = " << restart_after_builds << "\n";
     option_fp << "default_output_path = " << default_output_path << "\n";
 
     option_fp << "\n";
@@ -233,8 +230,6 @@ class UI_OptionsWin : public Fl_Window {
     UI_CustomCheckBox *opt_zip_logs;
     UI_CustomCheckBox *opt_timestamp_logs;
     Fl_Simple_Counter *opt_log_limit;
-    UI_CustomCheckBox *opt_restart_after_builds;
-    UI_HelpLink *restart_after_builds_help;
 
    public:
     UI_OptionsWin(int W, int H, const char *label = NULL);
@@ -304,35 +299,11 @@ class UI_OptionsWin : public Fl_Window {
         that->want_quit = true;
     }
 
-    static void callback_RestartAfterBuilds(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        restart_after_builds =
-            that->opt_restart_after_builds->value() ? true : false;
-    }
-
     static void callback_RespectDoomwadDir(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         default_output_path =
             that->opt_default_output_path->value() ? true : false;
-    }
-
-    static void callback_RestartAfterBuildsHelp(Fl_Widget *w, void *data) {
-        fl_cursor(FL_CURSOR_DEFAULT);
-        Fl_Window *win =
-            new Fl_Window(640, 480, _("Restart Lua VM After Builds"));
-        Fl_Text_Buffer *buff = new Fl_Text_Buffer();
-        Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
-        disp->buffer(buff);
-        disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
-        win->resizable(*disp);
-        win->hotspot(0, 0, 0);
-        win->set_modal();
-        win->show();
-// clang-format off
-        buff->text(_("Obsidian has migrated from Lua to LuaJIT. One side effect of this is that even with a fixed seed, subsequent runs with the same configuration will not guarantee the same result.\n\nRestarting the Lua VM between builds will improve the odds of being able to repeat the results of a prior seed/setting combination, with the downside of visibly restarting the program every time a map is generated (even unsuccessfully).\n\nIf you have no particular need to recreate the results of prior runs, this option can be safely left off."));
-// clang-format on
     }
 
     static void callback_TimestampLogs(Fl_Widget *w, void *data) {
@@ -626,7 +597,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     custom_prefix_help->labelfont(font_style);
     custom_prefix_help->callback(callback_PrefixHelp, this);
 
-    cy += opt_custom_prefix->h() + y_step * 2;
+    cy += opt_custom_prefix->h() + y_step;
 
     opt_default_output_path =
         new Fl_Button(136 + KF * 40, cy, kf_w(130), kf_h(24),
@@ -763,22 +734,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_log_limit->visible_focus(0);
     opt_log_limit->color(BUTTON_COLOR);
 
-    cy += opt_log_limit->h() + y_step * .5;
-
-    opt_restart_after_builds =
-        new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
-    opt_restart_after_builds->copy_label(_(" Restart Lua VM Between Builds"));
-    opt_restart_after_builds->value(restart_after_builds ? 1 : 0);
-    opt_restart_after_builds->callback(callback_RestartAfterBuilds, this);
-    opt_restart_after_builds->labelfont(font_style);
-    opt_restart_after_builds->selection_color(SELECTION);
-    opt_restart_after_builds->down_box(button_style);
-
-    restart_after_builds_help = new UI_HelpLink(
-        136 + KF * 40 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
-    restart_after_builds_help->labelfont(font_style);
-    restart_after_builds_help->callback(callback_RestartAfterBuildsHelp, this);
-
     //----------------
 
     int dh = kf_h(60);
@@ -802,13 +757,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
         button->labelcolor(FONT2_COLOR);
     }
     darkish->end();
-
-    // restart needed warning
-    heading = new Fl_Box(FL_NO_BOX, x() + pad, H - dh - kf_h(3), W - pad * 2,
-                         kf_h(14), _("Note: some options require a restart."));
-    heading->align(FL_ALIGN_INSIDE);
-    heading->labelsize(small_font_size);
-    heading->labelfont(font_style);
 
     end();
 
@@ -839,7 +787,7 @@ int UI_OptionsWin::handle(int event) {
 
 void DLG_OptionsEditor(void) {
     int opt_w = kf_w(350);
-    int opt_h = kf_h(575);
+    int opt_h = kf_h(550);
 
     UI_OptionsWin *option_window =
         new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));
