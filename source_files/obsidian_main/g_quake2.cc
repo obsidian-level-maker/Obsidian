@@ -1028,7 +1028,7 @@ bool quake2_game_interface_c::Start(const char *preset) {
     }
 
     if (create_backups) {
-        Main::BackupFile(filename, "old");
+        Main::BackupFile(filename);
     }
 
     if (!PAK_OpenWrite(filename)) {

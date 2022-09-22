@@ -258,8 +258,7 @@ void ProgStatus(std::string_view msg, Args &&...args) {
         fmt::print(std::cerr, "{}\n", buffer);
     }
 }
-bool BackupFile(const std::filesystem::path &filename,
-                const std::filesystem::path &ext);
+bool BackupFile(const std::filesystem::path &filename);
 #ifdef WIN32
 void Blinker();
 #endif

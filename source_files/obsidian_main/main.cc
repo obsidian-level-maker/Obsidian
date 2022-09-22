@@ -535,11 +535,11 @@ void Determine_ReferenceFile() {
     }
 }
 
-bool Main::BackupFile(const std::filesystem::path &filename,
-                      const std::filesystem::path &ext) {
+bool Main::BackupFile(const std::filesystem::path &filename) {
     if (std::filesystem::exists(filename)) {
         std::filesystem::path backup_name = filename;
-        backup_name.replace_extension(ext);
+
+        backup_name.replace_filename(fmt::format("{}{}", "backup_", backup_name.filename().generic_string()));
 
         LogPrintf("Backing up existing file to: {}\n", backup_name.string());
 
