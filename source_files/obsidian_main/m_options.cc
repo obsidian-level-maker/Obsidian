@@ -48,8 +48,8 @@ void Parse_Option(const std::string &name, const std::string &value) {
         debug_messages = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "limit_break") == 0) {
         limit_break = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "preserve_failures") == 0) {
-        preserve_failures = StringToInt(value) ? true : false;
+    //} else if (StringCaseCmp(name, "preserve_failures") == 0) {
+        //preserve_failures = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "preserve_old_config") == 0) {
         preserve_old_config = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "randomize_architecture") == 0) {
@@ -170,7 +170,7 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "overwrite_warning = " << (overwrite_warning ? 1 : 0) << "\n";
     option_fp << "debug_messages = " << (debug_messages ? 1 : 0) << "\n";
     option_fp << "limit_break = " << (limit_break ? 1 : 0) << "\n";
-    option_fp << "preserve_failures = " << (preserve_failures ? 1 : 0) << "\n";
+    //option_fp << "preserve_failures = " << (preserve_failures ? 1 : 0) << "\n";
     option_fp << "preserve_old_config = " << (preserve_old_config ? 1 : 0)
               << "\n";
     option_fp << "randomize_architecture = " << (randomize_architecture ? 1 : 0)
@@ -226,7 +226,7 @@ class UI_OptionsWin : public Fl_Window {
     UI_CustomCheckBox *opt_overwrite;
     UI_CustomCheckBox *opt_debug;
     UI_CustomCheckBox *opt_limit_break;
-    UI_CustomCheckBox *opt_preserve_failures;
+    //UI_CustomCheckBox *opt_preserve_failures;
     UI_CustomCheckBox *opt_zip_logs;
     UI_CustomCheckBox *opt_timestamp_logs;
     Fl_Simple_Counter *opt_log_limit;
@@ -438,11 +438,11 @@ class UI_OptionsWin : public Fl_Window {
         }
     }
 
-    static void callback_PreserveFailures(Fl_Widget *w, void *data) {
+    /*static void callback_PreserveFailures(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         preserve_failures = that->opt_preserve_failures->value() ? true : false;
-    }
+    }*/
 
     static void callback_PrefixHelp(Fl_Widget *w, void *data) {
         fl_cursor(FL_CURSOR_DEFAULT);
@@ -687,7 +687,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_limit_break->h() + y_step * .5;
 
-    opt_preserve_failures =
+    /*opt_preserve_failures =
         new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
     opt_preserve_failures->copy_label(_(" Preserve Failed Builds"));
     opt_preserve_failures->value(preserve_failures ? 1 : 0);
@@ -696,7 +696,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_preserve_failures->selection_color(SELECTION);
     opt_preserve_failures->down_box(button_style);
 
-    cy += opt_preserve_failures->h() + y_step * .5;
+    cy += opt_preserve_failures->h() + y_step * .5;*/
 
     opt_zip_logs = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
     opt_zip_logs->copy_label(_(" Zip Logs When Saving"));
@@ -787,7 +787,7 @@ int UI_OptionsWin::handle(int event) {
 
 void DLG_OptionsEditor(void) {
     int opt_w = kf_w(350);
-    int opt_h = kf_h(550);
+    int opt_h = kf_h(525);
 
     UI_OptionsWin *option_window =
         new UI_OptionsWin(opt_w, opt_h, _("OBSIDIAN Misc Options"));
