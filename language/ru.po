@@ -239,111 +239,80 @@ msgstr "Настройка монстров Chex Quest 3"
 
 #: modules/chex3/ctl_chex.lua:74
 msgid "Commonus"
-msgstr ""
+msgstr "Флемоид"
 
 #: modules/chex3/ctl_chex.lua:81
 msgid "Control the amount of Commoni."
-msgstr ""
+msgstr "Commonus (Flemoid). Управление количеством флемоидов."
 
 #: modules/chex3/ctl_chex.lua:82
+# [McM]: The first place where this gradation found.
 msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
 msgstr "0:0 (Отсутствуют),.02:0.02 (Редко),.14:0.14 (Меньше),.5:0.5 (Средне),1.2:1.2 (Больше),3:3 (Много),20:20 (БЕЗУМИЕ)"
 
 #: modules/chex3/ctl_chex.lua:88
 msgid "Bipedicus"
-msgstr ""
+msgstr "Двуножка"
 
 #: modules/chex3/ctl_chex.lua:95
 msgid "Control the amount of Bipedici."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:96
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Bipedicus. Управление количеством двуножек."
 
 #: modules/chex3/ctl_chex.lua:102
 msgid "Armored Bipedicus"
-msgstr ""
+msgstr "Бронированная двуножка"
 
 #: modules/chex3/ctl_chex.lua:109
 msgid "Control the amount of Armored Bipedici."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:110
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Armored Bipedicus. Управление количеством бронированных двуножек."
 
 #: modules/chex3/ctl_chex.lua:116
 msgid "Quadrumpus"
-msgstr ""
+msgstr "Квадрумпус"
 
 #: modules/chex3/ctl_chex.lua:123
 msgid "Control the amount of Quadrumpi."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:124
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Quadrumpus. Управление количеством квадрумпусов."
 
 #: modules/chex3/ctl_chex.lua:130
 msgid "Cycloptis"
-msgstr ""
+msgstr "Циклоптис"
 
 #: modules/chex3/ctl_chex.lua:137
 msgid "Control the amount of Cyclopti."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:138
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Cycloptis. Управление количеством циклоптисов."
 
 #: modules/chex3/ctl_chex.lua:145
 msgid "Larva"
-msgstr ""
+msgstr "Личинка"
 
 #: modules/chex3/ctl_chex.lua:152
 msgid "Control the amount of Larvae."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:153
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Larva. Управление количеством флем-личинок."
 
 #: modules/chex3/ctl_chex.lua:160
 msgid "Flem Mine"
-msgstr ""
+msgstr "Флем-мина"
 
 #: modules/chex3/ctl_chex.lua:167
 msgid "Control the amount of Flem Mines."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:168
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Flem Mine. Управление количеством флем-мин."
 
 #: modules/chex3/ctl_chex.lua:175
 msgid "Stridicus"
-msgstr ""
+msgstr "Ложномерка"
 
 #: modules/chex3/ctl_chex.lua:182
 msgid "Control the amount of Stridici."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:183
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Stridicus. Управление количеством ложномерок."
 
 #: modules/chex3/ctl_chex.lua:190
 msgid "Super Cycloptis"
-msgstr ""
+msgstr "Сверхциклоптис"
 
 #: modules/chex3/ctl_chex.lua:197
 msgid "Control the amount of Super Cyclopti."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:198
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Ultricus (Super) Cycloptis. Управление количеством сверхциклоптисов."
 
 #: modules/chex3/ctl_chex.lua:209
 msgid "Normal"
@@ -355,7 +324,7 @@ msgstr "Оригинал"
 
 #: modules/chex3/ctl_chex.lua:211
 msgid "NONE"
-msgstr "[НЕТ]"
+msgstr "НЕТ"
 
 #: modules/chex3/ctl_chex.lua:251
 msgid "Chex Quest 3 Weapon Control"
@@ -363,75 +332,51 @@ msgstr "Настройка оружия Chex Quest 3"
 
 #: modules/chex3/ctl_chex.lua:266
 msgid "Super Bootspork"
-msgstr ""
+msgstr "Супер-ложковилка"
 
 #: modules/chex3/ctl_chex.lua:273
 msgid "Control the likelihood of finding the Super Bootspork."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:274
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Super Bootspork. Управление количеством супер-ложковилок."
 
 #: modules/chex3/ctl_chex.lua:280
 msgid "Large Zorcher"
-msgstr ""
+msgstr "Большой Зорчер"
 
 #: modules/chex3/ctl_chex.lua:287
 msgid "Control the amount of Large Zorchers."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:288
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Large Zorcher. Управление количеством больших Зорчеров."
 
 #: modules/chex3/ctl_chex.lua:294
 msgid "Rapid Zorcher"
-msgstr ""
+msgstr "Скоростной Зорчер"
 
 #: modules/chex3/ctl_chex.lua:301
 msgid "Control the amount of Rapid Zorchers."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:302
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Rapid Zorcher. Управление количеством скоростных Зорчеров."
 
 #: modules/chex3/ctl_chex.lua:308
 msgid "Zorch Propulsor"
-msgstr ""
+msgstr "Зорч-ускоритель"
 
 #: modules/chex3/ctl_chex.lua:315
 msgid "Control the amount of Zorch Propulsors."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:316
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Zorch Propulsor. Управление количеством Зорч-ускорителей."
 
 #: modules/chex3/ctl_chex.lua:322
 msgid "Phasing Zorcher"
-msgstr ""
+msgstr "Фазерный Зорчер"
 
 #: modules/chex3/ctl_chex.lua:329
 msgid "Control the amount of Phasing Zorchers."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:330
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Phasing Zorcher. Управление количеством фазерных Зорчеров."
 
 #: modules/chex3/ctl_chex.lua:336
 msgid "LAZ Device"
-msgstr ""
+msgstr "Устройство «ЗБР»"
 
 #: modules/chex3/ctl_chex.lua:343
 msgid "Control the amount of LAZ Devices."
-msgstr ""
-
-#: modules/chex3/ctl_chex.lua:344
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "LAZ Device. Управление количеством Устройств «ЗБР»."
 
 #: modules/chex3/ctl_chex.lua:350
 msgid "Weapon Preferences"
@@ -439,7 +384,7 @@ msgstr "Настройка оружия"
 
 #: modules/chex3/ctl_chex.lua:352
 msgid "Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\nNormal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\nVanilla: Vanilla Oblige-style preferences. Increases Zorch Propulsors if the map has more Flem Mines. \n\nNONE: No preferences at all. For those who like to live life dangerously with Super Cyclopti and only Super Bootsporks."
-msgstr ""
+msgstr "Изменяет логику размещения оружия в зависимости от типов монстров на карте.\n\nНормально: обычный учёт. Более сильные виды вооружения имеют повышенный шанс появиться перед сильными противниками.\n\nКак в оригинале: режим, наследованный от Oblige. Увеличивает шанс появления Зорч-ускорителей, если на уровне присутствует много флем-мин.\n\nНЕТ: Логика размещения отсутствует. Для тех, кто, к примеру, предпочитает иметь возможность противопоставить сверхциклоптисам только ложковилку."
 
 #: modules/ctl_doom.lua:60
 msgid "Doom Monster Control"
@@ -767,7 +712,7 @@ msgstr "Логика размещения оружия"
 
 #: modules/ctl_doom.lua:516
 msgid "Alters selection of weapons that are prefered to show up depending on enemy palette for a chosen map.\n\nNormal: Monsters have weapon preferences. Stronger weapons and ammo are more likely to appear directly with stronger enemies.\n\nVanilla: Vanilla Oblige-style preferences. Reduces rocket launchers if the map has more pain elementals, lost souls, demons/specters while increases BFG's for cyberdemons and spider masterminds. No other weapon preferences.\n\nNONE: No preferences at all. For those who like to live life dangerously with lost souls and only rockets."
-msgstr "Изменяет логику размещения оружия в зависимости от типов монстров на карте.\n\nНормально: обычный учёт. Более сильные виды вооружения имеют повышенный шанс появиться перед сильными противниками.\n\nКак в оригинале: режим, наследованный от Oblige. Прямая зависимость количества BFG9000 и энергоячеек к ним от количества кибердемонов и спайдердемонов, обратная зависимость количества ракет от частоты элементалей боли на уровне.\n\n(НЕТ): Логика размещения отсутствует. Для тех, кто, к примеру, предпочитает иметь возможность противопоставить потерянным душам только ракетницу."
+msgstr "Изменяет логику размещения оружия в зависимости от типов монстров на карте.\n\nНормально: обычный учёт. Более сильные виды вооружения имеют повышенный шанс появиться перед сильными противниками.\n\nКак в оригинале: режим, наследованный от Oblige. Прямая зависимость количества BFG9000 и энергоячеек к ним от количества кибердемонов и спайдердемонов, обратная зависимость количества ракет от частоты элементалей боли на уровне.\n\nНЕТ: Логика размещения отсутствует. Для тех, кто, к примеру, предпочитает иметь возможность противопоставить потерянным душам только ракетницу."
 
 #: modules/ctl_doom.lua:559
 msgid "Doom Item Control"
