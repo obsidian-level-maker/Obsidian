@@ -157,6 +157,10 @@ msgstr ""
 msgid "Heretic"
 msgstr ""
 
+#: modules/heretic/theme_control.lua:98
+msgid "[Exp] Heretic Theme Control"
+msgstr "[Эксп.] Управление темами Heretic"
+
 #: games/heretic/themes.lua:3285
 msgid "City"
 msgstr "Эп. 1: Город проклятых"
