@@ -62,6 +62,7 @@ std::filesystem::path logging_file;
 std::filesystem::path reference_file;
 
 struct UpdateKv {
+    char section;
     std::string key;
     std::string value;
 };
@@ -151,17 +152,8 @@ int zip_output = 0;
 bool zip_logs = false;
 bool timestamp_logs = false;
 int log_limit = 5;
-bool restart_after_builds = false;
 
 bool first_run = false;
-
-int old_x = 0;
-int old_y = 0;
-int old_w = 0;
-int old_h = 0;
-std::string old_seed;
-std::string old_name;
-u8_t *old_pixels;
 
 std::filesystem::path gif_filename = "gif_output.gif";
 
@@ -291,7 +283,9 @@ static void ShowInfo() {
         "REFERENCE.txt\n"
         "     --printref-json        Print reference of all keys and values in "
         "JSON format\n"
-        "  -u --update <key> <value> Set a key in the config file\n"
+        "  -u --update <section> <key> <value>\n"
+        "                            Set a key in the config file\n"
+        "                            (section should be 'c' or 'o')\n"
         "\n");
 
     fmt::print(
@@ -376,6 +370,19 @@ void Determine_WorkingPath(const char *argv0) {
     if (home_dir.empty()) {
         home_dir = ".";
     }
+}
+
+std::filesystem::path Resolve_DefaultOutputPath() {
+    if (default_output_path.empty()) {
+        default_output_path = install_dir.string();
+    }
+    if (default_output_path[0] == '$') {
+        const char *var = getenv(default_output_path.c_str() + 1);
+        if (var != nullptr) {
+            return var;
+        }
+    }
+    return default_output_path;
 }
 
 static bool Verify_InstallDir(const std::filesystem::path &path) {
@@ -528,11 +535,11 @@ void Determine_ReferenceFile() {
     }
 }
 
-bool Main::BackupFile(const std::filesystem::path &filename,
-                      const std::filesystem::path &ext) {
+bool Main::BackupFile(const std::filesystem::path &filename) {
     if (std::filesystem::exists(filename)) {
         std::filesystem::path backup_name = filename;
-        backup_name.replace_extension(ext);
+
+        backup_name.replace_filename(fmt::format("{}{}", "backup_", backup_name.filename().generic_string()));
 
         LogPrintf("Backing up existing file to: {}\n", backup_name.string());
 
@@ -995,10 +1002,11 @@ void Main_SetSeed() {
     if (random_string_seeds && !did_specify_seed) {
         if (string_seed.empty()) {
             if (password_mode) {
-                if (next_rand_seed % 2 == 1)
+                if (next_rand_seed % 2 == 1) {
                     string_seed = ob_get_password();
-                else
+                } else {
                     string_seed = ob_get_random_words();
+                }
             } else {
                 string_seed = ob_get_random_words();
             }
@@ -1156,6 +1164,14 @@ bool Build_Cool_Shit() {
 
 int main(int argc, char **argv) {
     // initialise argument parser (skipping program name)
+
+    // these flags take at least one argument
+    argv::short_flags.emplace('b');
+    argv::short_flags.emplace('a');
+    argv::short_flags.emplace('l');
+    argv::short_flags.emplace('u');
+
+    // parse the flags
     argv::Init(argc - 1, argv + 1);
 
 restart:;
@@ -1230,15 +1246,28 @@ restart:;
 
     if (int update_arg = argv::Find('u', "update"); update_arg >= 0) {
         batch_mode = true;
-        if (update_arg + 2 >= argv::list.size() ||
-            argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2)) {
-            fmt::print(
-                stderr,
-                "OBSIDIAN ERROR: missing key and/or value for --update\n");
+        if (update_arg + 3 >= argv::list.size() ||
+            argv::IsOption(update_arg + 1) || argv::IsOption(update_arg + 2) ||
+            argv::IsOption(update_arg + 3)) {
+            fmt::print(stderr,
+                       "OBSIDIAN ERROR: missing one or more args for --update "
+                       "<section> <key> <value>\n");
             exit(EXIT_FAILURE);
         }
-        update_kv.key = argv::list[update_arg + 1];
-        update_kv.value = argv::list[update_arg + 2];
+        if (argv::list[update_arg + 1].length() > 1) {
+            fmt::print(stderr,
+                       "OBSIDIAN ERROR: section name must be one character\n");
+            exit(EXIT_FAILURE);
+        }
+        char section = argv::list[update_arg + 1][0];
+        if (section != 'c' && section != 'o') {
+            fmt::print(stderr,
+                       "OBSIDIAN ERROR: section name must be 'c' or 'o'\n");
+            exit(EXIT_FAILURE);
+        }
+        update_kv.section = section;
+        update_kv.key = argv::list[update_arg + 2];
+        update_kv.value = argv::list[update_arg + 3];
     }
 
     if (argv::Find(0, "printref-json") >= 0) {
@@ -1340,8 +1369,9 @@ skiprest:
 
     Trans_Init();
 
+    Options_Load(options_file);
+
     if (!batch_mode) {
-        Options_Load(options_file);
         Theme_Options_Load(theme_file);
         Trans_SetLanguage();
         OBSIDIAN_TITLE = _("OBSIDIAN Level Maker");
@@ -1445,8 +1475,9 @@ skiprest:
                 Main::FatalError(_("No such config file: {}\n"), load_file);
             }
         } else {
-            if (!std::filesystem::exists(config_file))
+            if (!std::filesystem::exists(config_file)) {
                 Cookie_Save(config_file);
+            }
             if (!Cookie_Load(config_file)) {
                 Main::FatalError(_("No such config file: {}\n"), config_file);
             }
@@ -1455,7 +1486,15 @@ skiprest:
         Cookie_ParseArguments();
 
         if (argv::Find('u', "update") >= 0) {
-            ob_set_config(update_kv.key, update_kv.value);
+            switch (update_kv.section) {
+                case 'c':
+                    ob_set_config(update_kv.key, update_kv.value);
+                    break;
+                case 'o':
+                    Parse_Option(update_kv.key, update_kv.value);
+                    break;
+            }
+            Options_Save(options_file);
             Cookie_Save(config_file);
             Main::Detail::Shutdown(false);
             return 0;
@@ -1602,10 +1641,7 @@ skiprest:
         fake_argv[0] = strdup("Obsidian.exe");
         fake_argv[1] = NULL;
         main_win->show(1 /* argc */, fake_argv);
-        if (old_w > 0 && old_h > 0) {
-            main_win->resize(old_x, old_y, old_w, old_h);
-        }
-        if (first_run && !restart_after_builds) {
+        if (first_run) {
             DLG_Tutorial();
         }
     }
@@ -1621,7 +1657,6 @@ skiprest:
         blinker->uCount = 0;
     } else {
         blinker->hwnd = fl_xid(main_win);
-        if (!old_seed.empty() && !old_name.empty()) Main::Blinker();
     }
 #endif
 
@@ -1669,30 +1704,6 @@ skiprest:
     // shown() because that is when FLTK finalises the colors).
     main_win->build_box->mini_map->EmptyMap();
 
-    if (!old_seed.empty()) {
-        main_win->build_box->seed_disp->copy_label(
-            fmt::format("{} {}", _("Seed:"), old_seed).c_str());
-        old_seed.clear();
-    }
-
-    if (!old_name.empty()) {
-        main_win->build_box->name_disp->copy_label(old_name.c_str());
-        old_name.clear();
-    }
-
-    if (old_pixels) {
-        if (main_win->build_box->mini_map->pixels) {
-            delete[] main_win->build_box->mini_map->pixels;
-        }
-        int map_size = main_win->build_box->mini_map->map_W *
-                       main_win->build_box->mini_map->map_H * 3;
-        main_win->build_box->mini_map->pixels = new u8_t[map_size];
-        memcpy(main_win->build_box->mini_map->pixels, old_pixels, map_size);
-        delete[] old_pixels;
-        old_pixels = NULL;
-        main_win->build_box->mini_map->MapFinish();
-    }
-
     try {
         // run the GUI until the user quits
         for (;;) {
@@ -1720,35 +1731,8 @@ skiprest:
 
                 did_specify_seed = false;
 
-                if (restart_after_builds) {
-                    if (result) {
-                        old_seed = string_seed.empty()
-                                       ? NumToString(next_rand_seed)
-                                       : string_seed;
-                        if (main_win->build_box->name_disp->label()) {
-                            old_name = main_win->build_box->name_disp->label();
-                        }
-                        if (main_win->build_box->mini_map->pixels) {
-                            int map_size =
-                                main_win->build_box->mini_map->map_W *
-                                main_win->build_box->mini_map->map_H * 3;
-                            old_pixels = new u8_t[map_size];
-                            memcpy(old_pixels,
-                                   main_win->build_box->mini_map->pixels,
-                                   map_size);
-                        }
-                    } else {
-                        old_seed.clear();
-                        old_name.clear();
-                    }
-                }
-
                 // regardless of success or fail, compute a new seed
                 Main_CalcNewSeed();
-
-                if (restart_after_builds) {
-                    main_action = MAIN_RESTART;
-                }
             }
         }
     } catch (const assert_fail_c &err) {
@@ -1776,10 +1760,6 @@ skiprest:
                     Cookie_Save(config_file);
                 }
             }
-            old_x = main_win->x();
-            old_y = main_win->y();
-            old_w = main_win->w();
-            old_h = main_win->h();
             delete main_win;
             main_win = nullptr;
         }

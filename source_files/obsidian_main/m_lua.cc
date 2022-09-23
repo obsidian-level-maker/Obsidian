@@ -1853,7 +1853,9 @@ std::string ob_datetime_string() {
 
 void ob_print_reference() {
     if (!Script_CallFunc("ob_print_reference", 1)) {
-        fmt::print("ob_print_reference: Error creating REFERENCE.txt!\n");
+// clang-format off
+        fmt::print(_("ob_print_reference: Error creating REFERENCE.txt!\n"));
+// clang-format on
     }
     fmt::print("\nA copy of this output can be found at {}\n",
                reference_file.generic_string());
@@ -1861,7 +1863,9 @@ void ob_print_reference() {
 
 void ob_print_reference_json() {
     if (!Script_CallFunc("ob_print_reference_json", 1)) {
-        fmt::print("ob_print_reference_json: Error printing json reference!\n");
+// clang-format off
+        fmt::print(_("ob_print_reference_json: Error printing json reference!\n"));
+// clang-format on
     }
 }
 

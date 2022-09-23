@@ -896,7 +896,11 @@ bool Doom::game_interface_c::Start(const char *preset) {
     ob_invoke_hook("pre_setup");
 
     if (batch_mode) {
-        filename = batch_output_file;
+        if (batch_output_file.is_absolute()) {
+            filename = batch_output_file;
+        } else {
+            filename = Resolve_DefaultOutputPath() / batch_output_file;
+        }
     } else {
         filename = DLG_OutputFilename("wad", preset);
     }
@@ -911,7 +915,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
     gif_filename.replace_extension("gif");
 
     if (create_backups) {
-        Main::BackupFile(filename, "old");
+        Main::BackupFile(filename);
     }
 
     current_engine = ob_get_param("engine");
@@ -1008,7 +1012,7 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
             zip_filename.replace_extension(zip_output == 1 ? "zip" : "pk3");
             if (std::filesystem::exists(zip_filename)) {
                 if (create_backups) {
-                    Main::BackupFile(zip_filename, ".old");
+                    Main::BackupFile(zip_filename);
                 }
                 std::filesystem::remove(zip_filename);
             }

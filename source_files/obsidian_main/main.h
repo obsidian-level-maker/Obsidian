@@ -176,7 +176,6 @@ extern int zip_output;
 extern bool zip_logs;
 extern bool timestamp_logs;
 extern int log_limit;
-extern bool restart_after_builds;
 
 extern std::string def_filename;
 extern std::string log_timestamp;
@@ -187,6 +186,10 @@ extern std::vector<std::string> batch_randomize_groups;
 
 // Dialog Windows
 void DLG_ShowError(const char *msg, ...);
+
+extern std::string default_output_path;
+
+extern std::filesystem::path Resolve_DefaultOutputPath();
 
 std::filesystem::path DLG_OutputFilename(const char *ext,
                                          const char *preset = nullptr);
@@ -233,6 +236,7 @@ template <typename... Args>
     Detail::Shutdown(true);
 
     if (batch_mode) {
+        fmt::print(std::cerr, "{}\n", buffer);
         fmt::print(std::cerr, "ERROR!\n");
 #ifdef WIN32
         std::cout << '\n' << "Close window when finished...";
@@ -254,8 +258,7 @@ void ProgStatus(std::string_view msg, Args &&...args) {
         fmt::print(std::cerr, "{}\n", buffer);
     }
 }
-bool BackupFile(const std::filesystem::path &filename,
-                const std::filesystem::path &ext);
+bool BackupFile(const std::filesystem::path &filename);
 #ifdef WIN32
 void Blinker();
 #endif

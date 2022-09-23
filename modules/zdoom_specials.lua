@@ -1220,7 +1220,7 @@ OB_MODULES["zdoom_specials"] =
       valuator = "button",
       priority = 8,
       default = 1,
-      tooltip = _("Generates dynamic point lights on ceiling light prefabs."),
+      tooltip = _("Generates dynamic point lights on prefabs if available."),
     },
 
     {

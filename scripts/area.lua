@@ -1478,7 +1478,40 @@ function Area_locate_chunks()
     local R = assert(A.room)
 
     local kind = "floor"
-    if A.mode == "liquid" then kind = "liquid" end
+    if A.mode == "liquid" then
+      kind = "liquid" 
+
+      -- run the liquid pick code again, *sigh*
+      if not LEVEL.liquid then
+        gui.printf("\nLiquid chunk found in map with no liquid style! " .. table.tostr(LEVEL.liquid, 3) .. "\n")
+        local liq_tab = THEME.liquids
+
+        -- exclude liquids from certain environment themes
+        if LEVEL.outdoor_theme then
+          local exclusions
+          if ARMAETUS_LIQUIDS then
+            exclusions = ARMAETUS_LIQUIDS.exclusions[LEVEL.outdoor_theme]
+            if exclusions then
+              for _,L in pairs(exclusions) do
+                liq_tab[L] = 0
+              end
+            end
+          end
+        end
+      
+        local name = rand.key_by_probs(liq_tab)
+        local liquid = GAME.LIQUIDS[name]
+      
+        if not liquid then
+          error("No such liquid: " .. name)
+        end
+      
+        LEVEL.liquid = liquid
+        gui.printf("New liquid is " .. name .. ".\n")
+      end
+
+      print_area(A)
+    end
 
     local CK = make_chunk(kind, A, sx1,sy1, sx2,sy2)
 

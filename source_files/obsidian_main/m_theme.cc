@@ -391,9 +391,9 @@ class UI_ThemeWin : public Fl_Window {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         window_scaling = that->opt_window_scaling->value();
-
-        fl_alert("%s", _("Windows scaling changes require a restart.\nOBSIDIAN "
-                         "will now restart."));
+// clang-format off
+        fl_alert("%s", _("Windows scaling changes require a restart.\nOBSIDIAN will now restart."));
+// clang-format on
 
         main_action = MAIN_RESTART;
 
@@ -682,9 +682,10 @@ class UI_ThemeWin : public Fl_Window {
                 Fl::scheme("gtk+");
                 break;
         }
+// clang-format off
         if (widget_theme == 3) {
-            fl_alert("%s", _("Plastic widget theme requires a "
-                             "restart.\nOBSIDIAN will now restart."));
+            fl_alert("%s", _("Plastic widget theme requires a restart.\nOBSIDIAN will now restart."));
+// clang-format on
 
             main_action = MAIN_RESTART;
 
@@ -834,9 +835,9 @@ class UI_ThemeWin : public Fl_Window {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         single_pane = that->opt_single_pane->value() ? true : false;
-
-        fl_alert("%s", _("Switching pane modes requires a restart.\nOBSIDIAN "
-                         "will now restart."));
+// clang-format off
+        fl_alert("%s", _("Switching pane modes requires a restart.\nOBSIDIAN will now restart."));
+// clang-format on
 
         main_action = MAIN_RESTART;
 
@@ -847,9 +848,9 @@ class UI_ThemeWin : public Fl_Window {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         use_system_fonts = that->opt_system_fonts->value() ? true : false;
-
-        fl_alert("%s", _("Switching font selection requires a "
-                         "restart.\nOBSIDIAN will now restart."));
+// clang-format off
+        fl_alert("%s", _("Switching font selection requires a restart.\nOBSIDIAN will now restart."));
+// clang-format on
 
         font_menu_items.clear();
 
@@ -903,7 +904,7 @@ class UI_ThemeWin : public Fl_Window {
     static void callback_TextColor(Fl_Widget *w, void *data) {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
         if (!skip_color_picker) {
-            if (fl_color_chooser((const char *)"Select Panel Text Color",
+            if (fl_color_chooser((const char *)_("Select Panel Text Color"),
                                  text_red, text_green, text_blue, 1)) {
                 that->opt_text_color->color(
                     fl_rgb_color(text_red, text_green, text_blue));
@@ -1020,7 +1021,7 @@ class UI_ThemeWin : public Fl_Window {
     static void callback_Text2Color(Fl_Widget *w, void *data) {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
         if (!skip_color_picker) {
-            if (fl_color_chooser((const char *)"Select Button Text Color",
+            if (fl_color_chooser((const char *)_("Select Button Text Color"),
                                  text2_red, text2_green, text2_blue, 1)) {
                 that->opt_text2_color->color(
                     fl_rgb_color(text2_red, text2_green, text2_blue));
@@ -1085,7 +1086,7 @@ class UI_ThemeWin : public Fl_Window {
     static void callback_BgColor(Fl_Widget *w, void *data) {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
         if (!skip_color_picker) {
-            if (fl_color_chooser((const char *)"Select Panel Color", bg_red,
+            if (fl_color_chooser((const char *)_("Select Panel Color"), bg_red,
                                  bg_green, bg_blue, 1)) {
                 that->opt_bg_color->color(
                     fl_rgb_color(bg_red, bg_green, bg_blue));
@@ -1148,7 +1149,7 @@ class UI_ThemeWin : public Fl_Window {
     static void callback_Bg2Color(Fl_Widget *w, void *data) {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
         if (!skip_color_picker) {
-            if (fl_color_chooser((const char *)"Select Highlight Color",
+            if (fl_color_chooser((const char *)_("Select Highlight Color"),
                                  bg2_red, bg2_green, bg2_blue, 1)) {
                 that->opt_bg2_color->color(
                     fl_rgb_color(bg2_red, bg2_green, bg2_blue));
@@ -1235,7 +1236,7 @@ class UI_ThemeWin : public Fl_Window {
     static void callback_ButtonColor(Fl_Widget *w, void *data) {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
         if (!skip_color_picker) {
-            if (fl_color_chooser((const char *)"Select Button Color",
+            if (fl_color_chooser((const char *)_("Select Button Color"),
                                  button_red, button_green, button_blue, 1)) {
                 that->opt_button_color->color(
                     fl_rgb_color(button_red, button_green, button_blue));
@@ -1298,7 +1299,7 @@ class UI_ThemeWin : public Fl_Window {
     static void callback_GradientColor(Fl_Widget *w, void *data) {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
         if (!skip_color_picker) {
-            if (fl_color_chooser((const char *)"Select Gradient Color",
+            if (fl_color_chooser((const char *)_("Select Gradient Color"),
                                  gradient_red, gradient_green, gradient_blue,
                                  1)) {
                 that->opt_gradient_color->color(
@@ -1336,7 +1337,7 @@ class UI_ThemeWin : public Fl_Window {
     static void callback_BorderColor(Fl_Widget *w, void *data) {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
         if (!skip_color_picker) {
-            if (fl_color_chooser((const char *)"Select Border Color",
+            if (fl_color_chooser((const char *)_("Select Border Color"),
                                  border_red, border_green, border_blue, 1)) {
                 that->opt_border_color->color(
                     fl_rgb_color(border_red, border_green, border_blue));
@@ -1372,7 +1373,7 @@ class UI_ThemeWin : public Fl_Window {
     static void callback_GapColor(Fl_Widget *w, void *data) {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
         if (!skip_color_picker) {
-            if (fl_color_chooser((const char *)"Select Gap Color", gap_red,
+            if (fl_color_chooser((const char *)_("Select Gap Color"), gap_red,
                                  gap_green, gap_blue, 1)) {
                 that->opt_gap_color->color(
                     fl_rgb_color(gap_red, gap_green, gap_blue));
@@ -1450,9 +1451,9 @@ class UI_ThemeWin : public Fl_Window {
         std::filesystem::path theme_file = Theme_AskLoadFilename();
         if (!theme_file.empty()) {
             Theme_Options_Load(theme_file);
-
-            fl_alert("%s", _("Theme loading requires a restart.\nOBSIDIAN will "
-                             "now restart."));
+// clang-format off
+            fl_alert("%s", _("Theme loading requires a restart.\nOBSIDIAN will now restart."));
+// clang-format on
 
             main_action = MAIN_RESTART;
 

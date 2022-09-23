@@ -665,10 +665,10 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         defaults_but->callback(callback_Defaults, this);
         defaults_but->labelfont(font_style);
         defaults_but->labelcolor(FONT2_COLOR);
-
+// clang-format off
         defaults_warn = new Fl_Box(0, kf_h(240), kf_w(140), kf_h(50),
-                                   _("Note: This will delete\nthe current "
-                                     "CONFIG.txt\nand restart Obsidian!"));
+                                   _("Note: This will delete\nthe current CONFIG.txt\nand restart Obsidian!"));
+// clang-format on
         defaults_warn->align(
             Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
         defaults_warn->labelsize(small_font_size);

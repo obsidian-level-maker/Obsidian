@@ -35,6 +35,7 @@ void Cookie_ParseArguments(void);
 
 /* option stuff */
 
+void Parse_Option(const std::string &name, const std::string &value);
 bool Options_Load(std::filesystem::path filename);
 bool Options_Save(std::filesystem::path filename);
 bool Theme_Options_Load(std::filesystem::path filename);

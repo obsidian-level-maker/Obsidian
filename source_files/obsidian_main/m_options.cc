@@ -30,7 +30,7 @@
 #include "m_trans.h"
 #include "main.h"
 
-static void Parse_Option(std::string name, std::string value) {
+void Parse_Option(const std::string &name, const std::string &value) {
     if (StringCaseCmpPartial(name, "recent") == 0) {
         Recent_Parse(name, value);
         return;
@@ -48,8 +48,8 @@ static void Parse_Option(std::string name, std::string value) {
         debug_messages = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "limit_break") == 0) {
         limit_break = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "preserve_failures") == 0) {
-        preserve_failures = StringToInt(value) ? true : false;
+    //} else if (StringCaseCmp(name, "preserve_failures") == 0) {
+        //preserve_failures = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "preserve_old_config") == 0) {
         preserve_old_config = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "randomize_architecture") == 0) {
@@ -64,8 +64,6 @@ static void Parse_Option(std::string name, std::string value) {
         random_string_seeds = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "password_mode") == 0) {
         password_mode = StringToInt(value) ? true : false;
-    } else if (StringCaseCmp(name, "last_directory") == 0) {
-        last_directory = value;
     } else if (StringCaseCmp(name, "filename_prefix") == 0) {
         filename_prefix = StringToInt(value);
     } else if (StringCaseCmp(name, "custom_prefix") == 0) {
@@ -78,10 +76,10 @@ static void Parse_Option(std::string name, std::string value) {
         timestamp_logs = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "log_limit") == 0) {
         log_limit = StringToInt(value);
-    } else if (StringCaseCmp(name, "restart_after_builds") == 0) {
-        restart_after_builds = StringToInt(value) ? true : false;
+    } else if (StringCaseCmp(name, "default_output_path") == 0) {
+        default_output_path = value;
     } else {
-        LogPrintf("Unknown option: '{}'\n", name);
+        LogPrintf("{} '{}'\n", _("Unknown option: "), name);
     }
 }
 
@@ -102,7 +100,7 @@ static bool Options_ParseLine(std::string buf) {
     }*/
 
     if (!isalpha(buf.front())) {
-        LogPrintf("Weird option line: [{}]\n", buf);
+        LogPrintf("{} [{}]\n", _("Weird option line: "), buf);
         return false;
     }
 
@@ -111,7 +109,7 @@ static bool Options_ParseLine(std::string buf) {
     std::string value = buf.substr(pos + 2);
 
     if (name.empty() || value.empty()) {
-        LogPrintf("Name or value missing!\n");
+        LogPrintf(_("Name or value missing!\n"));
         return false;
     }
 
@@ -123,11 +121,11 @@ bool Options_Load(std::filesystem::path filename) {
     std::ifstream option_fp(filename, std::ios::in);
 
     if (!option_fp.is_open()) {
-        LogPrintf("Missing Options file -- using defaults.\n\n");
+        LogPrintf(_("Missing Options file -- using defaults.\n\n"));
         return false;
     }
 
-    LogPrintf("Loading options file: {}\n", filename.string());
+    LogPrintf("{} {}\n", _("Loading options file: "), filename.string());
 
     int error_count = 0;
 
@@ -172,7 +170,7 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "overwrite_warning = " << (overwrite_warning ? 1 : 0) << "\n";
     option_fp << "debug_messages = " << (debug_messages ? 1 : 0) << "\n";
     option_fp << "limit_break = " << (limit_break ? 1 : 0) << "\n";
-    option_fp << "preserve_failures = " << (preserve_failures ? 1 : 0) << "\n";
+    //option_fp << "preserve_failures = " << (preserve_failures ? 1 : 0) << "\n";
     option_fp << "preserve_old_config = " << (preserve_old_config ? 1 : 0)
               << "\n";
     option_fp << "randomize_architecture = " << (randomize_architecture ? 1 : 0)
@@ -190,12 +188,7 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "zip_logs = " << zip_logs << "\n";
     option_fp << "timestamp_logs = " << timestamp_logs << "\n";
     option_fp << "log_limit = " << log_limit << "\n";
-    option_fp << "restart_after_builds = " << restart_after_builds << "\n";
-
-    if (!last_directory.empty()) {
-        option_fp << "\n";
-        option_fp << "last_directory = " << last_directory.string() << "\n";
-    }
+    option_fp << "default_output_path = " << default_output_path << "\n";
 
     option_fp << "\n";
 
@@ -223,6 +216,7 @@ class UI_OptionsWin : public Fl_Window {
 
     Fl_Button *opt_custom_prefix;
     UI_HelpLink *custom_prefix_help;
+    Fl_Button *opt_default_output_path;
 
     UI_CustomCheckBox *opt_random_string_seeds;
     UI_HelpLink *random_string_seeds_help;
@@ -232,12 +226,10 @@ class UI_OptionsWin : public Fl_Window {
     UI_CustomCheckBox *opt_overwrite;
     UI_CustomCheckBox *opt_debug;
     UI_CustomCheckBox *opt_limit_break;
-    UI_CustomCheckBox *opt_preserve_failures;
+    //UI_CustomCheckBox *opt_preserve_failures;
     UI_CustomCheckBox *opt_zip_logs;
     UI_CustomCheckBox *opt_timestamp_logs;
     Fl_Simple_Counter *opt_log_limit;
-    UI_CustomCheckBox *opt_restart_after_builds;
-    UI_HelpLink *restart_after_builds_help;
 
    public:
     UI_OptionsWin(int W, int H, const char *label = NULL);
@@ -296,10 +288,9 @@ class UI_OptionsWin : public Fl_Window {
                 t_language = "AUTO";
             }
         }
-        fl_alert(
-            "%s",
-            _("Obsidian will now restart to apply language changes.\nObsidian "
-              "will be in your selected language after restarting."));
+// clang-format off
+        fl_alert("%s", _("Obsidian will now restart to apply language changes.\nObsidian will be in your selected language after restarting."));
+// clang-format on
 
         Trans_UnInit();
 
@@ -308,35 +299,11 @@ class UI_OptionsWin : public Fl_Window {
         that->want_quit = true;
     }
 
-    static void callback_RestartAfterBuilds(Fl_Widget *w, void *data) {
+    static void callback_RespectDoomwadDir(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
-        restart_after_builds =
-            that->opt_restart_after_builds->value() ? true : false;
-    }
-
-    static void callback_RestartAfterBuildsHelp(Fl_Widget *w, void *data) {
-        fl_cursor(FL_CURSOR_DEFAULT);
-        Fl_Window *win =
-            new Fl_Window(640, 480, _("Restart Lua VM After Builds"));
-        Fl_Text_Buffer *buff = new Fl_Text_Buffer();
-        Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
-        disp->buffer(buff);
-        disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
-        win->resizable(*disp);
-        win->hotspot(0, 0, 0);
-        win->set_modal();
-        win->show();
-        buff->text(_(
-            "Obsidian has migrated from Lua to LuaJIT. One side effect of this "
-            "is that even with a fixed seed, subsequent runs with the same "
-            "configuration will not guarantee the same result.\n\nRestarting "
-            "the Lua VM between builds will improve the odds of being able to "
-            "repeat the results of a prior seed/setting combination, with the "
-            "downside of visibly restarting the program every time a map is "
-            "generated (even unsuccessfully).\n\nIf you have no particular "
-            "need to recreate the results of prior runs, this option can be "
-            "safely left off."));
+        default_output_path =
+            that->opt_default_output_path->value() ? true : false;
     }
 
     static void callback_TimestampLogs(Fl_Widget *w, void *data) {
@@ -387,11 +354,9 @@ class UI_OptionsWin : public Fl_Window {
         win->hotspot(0, 0, 0);
         win->set_modal();
         win->show();
-        buff->text(
-            _("Will randomly pull 1 to 3 words from Obsidian's random word "
-              "list (found in /scripts/random_words.lua) and use those as "
-              "input for the map generation seed. Purely for "
-              "cosmetic/entertainment value."));
+// clang-format off
+        buff->text(_("Will randomly pull 1 to 3 words from Obsidian's random word list and use those as input for the map generation seed. Purely for cosmetic/entertainment value."));
+// clang-format on
     }
 
     static void callback_Password_Mode(Fl_Widget *w, void *data) {
@@ -411,10 +376,9 @@ class UI_OptionsWin : public Fl_Window {
         win->hotspot(0, 0, 0);
         win->set_modal();
         win->show();
-        buff->text(
-            _("Will produce a pseudo-random sequence of characters as input "
-              "for the map generation seed. Random String Seeds must be "
-              "enabled to use this option."));
+// clang-format off
+        buff->text(_("Will produce a pseudo-random sequence of characters as input for the map generation seed. Random String Seeds must be enabled to use this option."));
+// clang-format on
     }
 
     static void callback_Backups(Fl_Widget *w, void *data) {
@@ -440,9 +404,9 @@ class UI_OptionsWin : public Fl_Window {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         filename_prefix = that->opt_filename_prefix->value();
-
-        fl_alert("%s", _("File prefix changes require a restart.\nOBSIDIAN "
-                         "will now restart."));
+// clang-format off
+        fl_alert("%s", _("File prefix changes require a restart.\nOBSIDIAN will now restart."));
+// clang-format on
 
         main_action = MAIN_RESTART;
 
@@ -452,13 +416,11 @@ class UI_OptionsWin : public Fl_Window {
     static void callback_LimitBreak(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
         if (that->opt_limit_break->value()) {
-            if (fl_choice(_("WARNING! This option will allow you to manually "
-                            "enter values in excess of the \n(usually) stable "
-                            "slider limits for Obsidian.\nAny bugs, crashes, "
-                            "or errors as a result of this will not be "
-                            "addressed by the developers.\nYou must select Yes "
-                            "for this option to be applied."),
-                          _("Cancel"), _("Yes, break Obsidian"), 0)) {
+// clang-format off
+            if (fl_choice(_("WARNING! This option will allow you to manually enter values in excess of the \n(usually) stable slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this will not be addressed by the developers.\nYou must select Yes for this option to be applied."),
+                          _("Cancel"), 
+                          _("Yes, break Obsidian"), 0)) {
+// clang-format on
                 limit_break = true;
             } else {
                 limit_break = false;
@@ -466,8 +428,9 @@ class UI_OptionsWin : public Fl_Window {
             }
         } else {
             limit_break = false;
-            fl_alert("%s", _("Restoring slider limits requires a "
-                             "restart.\nObsidian will now restart."));
+// clang-format off
+            fl_alert("%s", _("Restoring slider limits requires a restart.\nObsidian will now restart."));
+// clang-format on
 
             main_action = MAIN_RESTART;
 
@@ -475,11 +438,11 @@ class UI_OptionsWin : public Fl_Window {
         }
     }
 
-    static void callback_PreserveFailures(Fl_Widget *w, void *data) {
+    /*static void callback_PreserveFailures(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         preserve_failures = that->opt_preserve_failures->value() ? true : false;
-    }
+    }*/
 
     static void callback_PrefixHelp(Fl_Widget *w, void *data) {
         fl_cursor(FL_CURSOR_DEFAULT);
@@ -492,17 +455,9 @@ class UI_OptionsWin : public Fl_Window {
         win->hotspot(0, 0, 0);
         win->set_modal();
         win->show();
-        buff->text(
-            _("Custom prefixes can use any of the special format strings "
-              "listed below. Anything else is used as-is.\n\n%year or %Y: The "
-              "current year.\n\n%month or %M: The current month.\n\n%day or "
-              "%D: The current day.\n\n%hour or %h: The current "
-              "hour.\n\n%minute or %m: The current minute.\n\n%second or %s: "
-              "The current second.\n\n%version or %v: The current Obsidian "
-              "version.\n\n%game or %g: Which game the WAD is for.\n\n%engine "
-              "or %e: Which engine the WAD is for.\n\n%theme or %t: Which "
-              "theme was selected from the game's choices.\n\n%count or %c: "
-              "The number of levels in the generated WAD."));
+// clang-format off
+        buff->text(_("Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n%year or %Y: The current year.\n\n%month or %M: The current month.\n\n%day or %D: The current day.\n\n%hour or %h: The current hour.\n\n%minute or %m: The current minute.\n\n%second or %s: The current second.\n\n%version or %v: The current Obsidian version.\n\n%game or %g: Which game the WAD is for.\n\n%engine or %e: Which engine the WAD is for.\n\n%theme or %t: Which theme was selected from the game's choices.\n\n%count or %c: The number of levels in the generated WAD."));
+// clang-format on
     }
 
     static void callback_SetCustomPrefix(Fl_Widget *w, void *data) {
@@ -517,6 +472,49 @@ class UI_OptionsWin : public Fl_Window {
                 goto tryagain;
             }
         }
+    }
+
+    static void callback_SetDefaultOutputPath(Fl_Widget *w, void *data) {
+
+        // save and restore the font height
+        // (because FLTK's own browser get totally borked)
+        int old_font_h = FL_NORMAL_SIZE;
+        FL_NORMAL_SIZE = 14 + KF;
+
+        Fl_Native_File_Chooser chooser;
+
+        chooser.title(_("Select default save directory"));
+        chooser.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
+
+        int result = chooser.show();
+
+        FL_NORMAL_SIZE = old_font_h;
+
+        switch (result) {
+            case -1:
+                LogPrintf(_("Error choosing directory:\n"));
+                LogPrintf("   {}\n", chooser.errmsg());
+
+                return;
+
+            case 1:  // cancelled
+                return;
+
+            default:
+                break;  // OK
+        }
+
+        std::filesystem::path dir_name = chooser.filename();
+
+        if (dir_name.empty()) {
+            LogPrintf(_("Empty default directory provided???:\n"));
+            return;
+        }
+
+        default_output_path = dir_name.generic_string();
+    #ifdef WIN32
+        dir_name = ucs4_path(dir_name.generic_string().c_str());
+    #endif
     }
 };
 
@@ -599,7 +597,20 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     custom_prefix_help->labelfont(font_style);
     custom_prefix_help->callback(callback_PrefixHelp, this);
 
-    cy += opt_custom_prefix->h() + y_step * 2;
+    cy += opt_custom_prefix->h() + y_step;
+
+    opt_default_output_path =
+        new Fl_Button(136 + KF * 40, cy, kf_w(130), kf_h(24),
+                      _("Set Default Output Path"));
+    opt_default_output_path->box(button_style);
+    opt_default_output_path->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+    opt_default_output_path->visible_focus(0);
+    opt_default_output_path->color(BUTTON_COLOR);
+    opt_default_output_path->callback(callback_SetDefaultOutputPath, this);
+    opt_default_output_path->labelfont(font_style);
+    opt_default_output_path->labelcolor(FONT2_COLOR);
+
+    cy += opt_default_output_path->h() + y_step * 2;
 
     opt_random_string_seeds =
         new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
@@ -676,7 +687,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_limit_break->h() + y_step * .5;
 
-    opt_preserve_failures =
+    /*opt_preserve_failures =
         new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
     opt_preserve_failures->copy_label(_(" Preserve Failed Builds"));
     opt_preserve_failures->value(preserve_failures ? 1 : 0);
@@ -685,7 +696,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_preserve_failures->selection_color(SELECTION);
     opt_preserve_failures->down_box(button_style);
 
-    cy += opt_preserve_failures->h() + y_step * .5;
+    cy += opt_preserve_failures->h() + y_step * .5;*/
 
     opt_zip_logs = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
     opt_zip_logs->copy_label(_(" Zip Logs When Saving"));
@@ -723,22 +734,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_log_limit->visible_focus(0);
     opt_log_limit->color(BUTTON_COLOR);
 
-    cy += opt_log_limit->h() + y_step * .5;
-
-    opt_restart_after_builds =
-        new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
-    opt_restart_after_builds->copy_label(_(" Restart Lua VM Between Builds"));
-    opt_restart_after_builds->value(restart_after_builds ? 1 : 0);
-    opt_restart_after_builds->callback(callback_RestartAfterBuilds, this);
-    opt_restart_after_builds->labelfont(font_style);
-    opt_restart_after_builds->selection_color(SELECTION);
-    opt_restart_after_builds->down_box(button_style);
-
-    restart_after_builds_help = new UI_HelpLink(
-        136 + KF * 40 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
-    restart_after_builds_help->labelfont(font_style);
-    restart_after_builds_help->callback(callback_RestartAfterBuildsHelp, this);
-
     //----------------
 
     int dh = kf_h(60);
@@ -762,13 +757,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
         button->labelcolor(FONT2_COLOR);
     }
     darkish->end();
-
-    // restart needed warning
-    heading = new Fl_Box(FL_NO_BOX, x() + pad, H - dh - kf_h(3), W - pad * 2,
-                         kf_h(14), _("Note: some options require a restart."));
-    heading->align(FL_ALIGN_INSIDE);
-    heading->labelsize(small_font_size);
-    heading->labelfont(font_style);
 
     end();
 
