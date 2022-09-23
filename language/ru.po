@@ -1,6 +1,6 @@
 # Russian Language Translation for Obsidian by:
 # ├─ Morthimer McMare  — current translator;
-# ├─ ika707            — mistakes reporting;
+# ├─ ika707            — minor translations, mistakes reporting;
 # ├─ Chameleon_111     — mistakes reporting;
 # └─ hytalego          — initial translator (left).
 #
@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Obsidian Level Maker\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-05-09 23:41+1000\n"
-"PO-Revision-Date: 2022-08-05 17:33+0300\n"
+"PO-Revision-Date: 2022-09-23 14:03+0300\n"
 "Last-Translator:  Morthimer McMare\n"
 "Language-Team: Russian\n"
 "Language: ru_RU\n"
@@ -3655,7 +3655,7 @@ msgstr "Процент линейных карт"
 
 #: modules/miscellaneous.lua:271
 msgid "Creates linear levels, where rooms are connected along a linear layout from start to exit."
-msgstr "Процент создания линейных карт: комнаты последовательно и без развилок соединяются друг с другом от старта до самого выхода (в т. ч. через телепортеры)."
+msgstr "Процент создания линейных карт: комнаты последовательно и без развилок соединяются друг с другом от старта до самого выхода (в т. ч. через телепорты)."
 
 #: modules/miscellaneous.lua:272
 msgid "Due to the nature of linear levels, you may encounter teleports even if you have teleports off. This is necessary in order for linear levels not to prematuraly terminate and therefore become stunted i.e. only have 2-5 rooms."
@@ -3887,7 +3887,7 @@ msgstr "Минимальная яркость"
 
 #: modules/miscellaneous.lua:509
 msgid "Sets the minimum brightness for the map."
-msgstr "Устанавливает нижний предел яркости на карты."
+msgstr "Устанавливает нижний предел яркости для всех карт."
 
 #: modules/miscellaneous.lua:515
 msgid "Maximum Brightness"
@@ -3895,7 +3895,7 @@ msgstr "Максимальная яркость"
 
 #: modules/miscellaneous.lua:521
 msgid "Sets the maximum brightness for the map."
-msgstr "Устанавливает верхний предел яркости на карты."
+msgstr "Устанавливает верхний предел яркости для всех карт."
 
 #: modules/miscellaneous.lua:526
 msgid "Explosive Decor"
@@ -3927,7 +3927,7 @@ msgstr "Двери, запертые на три ключа"
 
 #: modules/miscellaneous.lua:544
 msgid "Controls the chance to get three key door whenever three keys are present."
-msgstr "Управляет шансом появления дверей, запертых на все три ключа, если те есть на уровне."
+msgstr "Управляет шансом появления двери, запертой на все три ключа, если те есть на уровне."
 
 #: modules/miscellaneous.lua:548
 msgid "Switch Goals"
@@ -7970,4 +7970,4 @@ msgid "Surprise Me/Go"
 msgstr "Удивить/Пуск"
 
 msgid "This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."
-msgstr "══ Используемая терминология ══\n\nОт переводчика: часть слов, в основном укоренившиеся в широких кругах (с позволения сказать, имена собственные — имп, ревенант, ...) я просто транслитерировал, дословно переводя только в некоторых подсказках. Также: некоторые термины, хорошо звучащие в английском языке, при попытке локализации оказались слишком длинными для отведённого лимита символов. Поэтому некоторые слова пришлось заменить на более короткие варианты.\n\n\"Префаб\" — заготовка/составляющая уровня/примитив/кубик конструктора. От английского \"Pre-fabricated\" (дословно \"Предсобранный\")."
+msgstr "══ От переводчиков ══\n\nЧасть слов, в основном укоренившиеся в широких кругах (с позволения сказать, имена собственные — имп, ревенант, ...) я просто транслитерировал, дословно переводя только в некоторых подсказках.\n\nНекоторые термины, хорошо звучащие в английском языке, при попытке локализации оказались слишком длинными для отведённого лимита символов. Поэтому некоторые слова пришлось заменить на более короткие варианты; к таким можно отнести слово \"Префаб\" — заготовка/составляющая уровня/примитив/кубик конструктора, происходящее от английского \"Pre-fabricated\" (дословно \"Предсобранный\")."
