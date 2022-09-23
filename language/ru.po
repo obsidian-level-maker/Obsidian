@@ -2759,503 +2759,339 @@ msgstr "Удаляет все интермиссионные экраны, со�
 
 #: modules/hexen/ctl_hexen.lua:61
 msgid "Hexen Monster Control"
-msgstr ""
+msgstr "Настройка монстров Hexen"
 
 #: modules/hexen/ctl_hexen.lua:76
 msgid "Ettin"
-msgstr ""
+msgstr "Эттин"
 
 #: modules/hexen/ctl_hexen.lua:83
 msgid "Control the amount of Ettins."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:84
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Ettin. Управление количеством эттинов."
 
 #: modules/hexen/ctl_hexen.lua:90
 msgid "Afrit"
-msgstr ""
+msgstr "Африт"
 
 #: modules/hexen/ctl_hexen.lua:97
 msgid "Control the amount of Afrits."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:98
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Afrit. Управление количеством афритов."
 
 #: modules/hexen/ctl_hexen.lua:104
 msgid "Centaur"
-msgstr ""
+msgstr "Кентавр"
 
 #: modules/hexen/ctl_hexen.lua:111
 msgid "Control the amount of Centaurs."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:112
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Centaur. Управление количеством кентавров."
 
 #: modules/hexen/ctl_hexen.lua:118
 msgid "Slaughtaur"
-msgstr ""
+msgstr "Старший кентавр"
 
 #: modules/hexen/ctl_hexen.lua:125
 msgid "Control the amount of Slaughtaurs."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:126
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Slaughtaur. Управление количеством Старших кентавров (кентавров-убийц)."
 
 #: modules/hexen/ctl_hexen.lua:132
 msgid "Stalker"
-msgstr ""
+msgstr "Сталкер"
 
 #: modules/hexen/ctl_hexen.lua:139
 msgid "Control the amount of Stalkers."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:140
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Stalker. Управление количеством сталкеров."
 
 #: modules/hexen/ctl_hexen.lua:146
 msgid "Stalker w/ projectile"
-msgstr ""
+msgstr "Дальнобойный сталкер"
 
 #: modules/hexen/ctl_hexen.lua:153
 msgid "Control the amount of Projectile Stalkers."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:154
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Stalker with projectile. Управление количеством дальнобойных сталкеров."
 
 #: modules/hexen/ctl_hexen.lua:160
 msgid "Wendigo"
-msgstr ""
+msgstr "Вендиго"
 
 #: modules/hexen/ctl_hexen.lua:167
 msgid "Control the amount of Wendigos."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:168
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Wendigo. Управление количеством Вендиго."
 
 #: modules/hexen/ctl_hexen.lua:174
 msgid "Green Serpent"
-msgstr ""
+msgstr "Зелёный змей Хаоса"
 
 #: modules/hexen/ctl_hexen.lua:181
 msgid "Control the amount of Green Serpents."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:182
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Green Serpent. Управление количеством зелёных змеев Хаоса."
 
 #: modules/hexen/ctl_hexen.lua:188
 msgid "Brown Serpent"
-msgstr ""
+msgstr "Бурый змей Хаоса"
 
 #: modules/hexen/ctl_hexen.lua:195
 msgid "Control the amount of Brown Serpents."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:196
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Brown Serpent. Управление количеством бурых змеев Хаоса."
 
 #: modules/hexen/ctl_hexen.lua:202
 msgid "Bishop"
-msgstr ""
+msgstr "Епископ"
 
 #: modules/hexen/ctl_hexen.lua:209
 msgid "Control the amount of Bishops."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:210
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Bishop. Управление количеством епископов."
 
 #: modules/hexen/ctl_hexen.lua:216
 msgid "Reiver"
-msgstr ""
+msgstr "Дух-разбойник"
 
 #: modules/hexen/ctl_hexen.lua:223
 msgid "Control the amount of Reivers."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:224
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Reiver. Управление количеством духов (грабителей)."
 
 #: modules/hexen/ctl_hexen.lua:230
 msgid "Buried Reiver"
-msgstr ""
+msgstr "Похороненный дух"
 
 #: modules/hexen/ctl_hexen.lua:237
 msgid "Control the amount of Buried Reivers."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:238
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Buried Reiver. Управление количеством похороненных духов (грабителей)."
 
 #: modules/hexen/ctl_hexen.lua:244
 msgid "Heresiarch"
-msgstr ""
+msgstr "Ересиарх"
 
 #: modules/hexen/ctl_hexen.lua:251
 msgid "Control the amount of Heresiarchs."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:252
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Heresiarch. Управление количеством Ересиархов."
 
 #: modules/hexen/ctl_hexen.lua:258
 msgid "Zedek"
-msgstr ""
+msgstr "Цедек"
 
 #: modules/hexen/ctl_hexen.lua:265
 msgid "Control the amount of Zedeks."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:266
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Zedek. Управление количеством Цедеков, воинов-ренегатов."
 
 #: modules/hexen/ctl_hexen.lua:272
 msgid "Traductus"
-msgstr ""
+msgstr "Традуктус"
 
 #: modules/hexen/ctl_hexen.lua:279
 msgid "Control the amount of Traducti."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:280
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Traductus. Управление количеством Традуктусов, клериков-ренегатов."
 
 #: modules/hexen/ctl_hexen.lua:286
 msgid "Menelkir"
-msgstr ""
+msgstr "Менелкир"
 
 #: modules/hexen/ctl_hexen.lua:293
 msgid "Control the amount of Menelkirs."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:294
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Menelkir. Управление количеством Менелкиров, магов-ренегатов."
 
 #: modules/hexen/ctl_hexen.lua:300
 msgid "Korax"
-msgstr ""
+msgstr "Коракс"
 
 #: modules/hexen/ctl_hexen.lua:307
 msgid "Control the amount of Koraxes."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:308
-msgid "0:0 (None at all),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),20:20 (INSANE)"
-msgstr ""
+msgstr "Korax. Управление количеством Кораксов, Средних Змеиных Всадников."
 
 #: modules/hexen/ctl_hexen.lua:373
 msgid "Hexen Item Control"
-msgstr ""
+msgstr "Настройка предметов Hexen"
 
 #: modules/hexen/ctl_hexen.lua:388
 msgid "Crystal Vial"
-msgstr ""
+msgstr "Кристальный флакон"
 
 #: modules/hexen/ctl_hexen.lua:395
 msgid "Control the amount of Crystal Vials."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:396
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Crystal Vial. Управление количеством кристальных флаконов."
 
 #: modules/hexen/ctl_hexen.lua:403
 msgid "Quartz Flask"
-msgstr ""
+msgstr "Кварцевый флакон"
 
 #: modules/hexen/ctl_hexen.lua:410
 msgid "Control the amount of Quartz Flasks."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:411
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Quartz Flask. Управление количеством кварцевых флаконов."
 
 #: modules/hexen/ctl_hexen.lua:418
 msgid "Mystic Urn"
-msgstr ""
+msgstr "Мистическая урна"
 
 #: modules/hexen/ctl_hexen.lua:425
 msgid "Control the amount of Mystic Urns."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:426
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Mystic Urn. Управление количеством мистических урн."
 
 #: modules/hexen/ctl_hexen.lua:434
 msgid "Blue Mana"
-msgstr ""
+msgstr "Синяя мана"
 
 #: modules/hexen/ctl_hexen.lua:441
 msgid "Control the amount of Blue Mana."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:442
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Blue Mana. Управление количеством синей маны."
 
 #: modules/hexen/ctl_hexen.lua:449
 msgid "Green Mana"
-msgstr ""
+msgstr "Зелёная мана"
 
 #: modules/hexen/ctl_hexen.lua:456
 msgid "Control the amount of Green Mana."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:457
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Green Mana. Управление количеством зелёной маны."
 
 #: modules/hexen/ctl_hexen.lua:464
 msgid "Dual Mana"
-msgstr ""
+msgstr "Комбинированная мана"
 
 #: modules/hexen/ctl_hexen.lua:471
 msgid "Control the amount of Dual Mana."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:472
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Combined (dual) Mana. Управление количеством комбинированной маны."
 
 #: modules/hexen/ctl_hexen.lua:479
 msgid "Platinum Helm"
-msgstr ""
+msgstr "Платиновый шлем"
 
 #: modules/hexen/ctl_hexen.lua:486
 msgid "Control the amount of Platinum Helms."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:487
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Platinum Helm. Управление количеством платиновых шлемов."
 
 #: modules/hexen/ctl_hexen.lua:494
 msgid "Mesh Armor"
-msgstr ""
+msgstr "Кольчуга"
 
 #: modules/hexen/ctl_hexen.lua:501
 msgid "Control the amount of Mesh Armors."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:502
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Mesh Armor. Управление количеством кольчуг."
 
 #: modules/hexen/ctl_hexen.lua:508
 msgid "Falcon Shield"
-msgstr ""
+msgstr "Щит сокола"
 
 #: modules/hexen/ctl_hexen.lua:515
 msgid "Control the amount of Falcon Shields."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:516
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Falcon Shield. Управление количеством щитов сокола."
 
 #: modules/hexen/ctl_hexen.lua:522
 msgid "Amulet of Warding"
-msgstr ""
+msgstr "Амулет стража"
 
 #: modules/hexen/ctl_hexen.lua:529
 msgid "Control the amount of Amulets of Warding."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:530
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Amulet of Warding. Управление количеством амулетов стража."
 
 #: modules/hexen/ctl_hexen.lua:536
 msgid "Dragonskin Bracers"
-msgstr ""
+msgstr "Наручи из драконьей кожи"
 
 #: modules/hexen/ctl_hexen.lua:543
 msgid "Control the amount of Dragonskin Bracers."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:544
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Dragonskin Bracers. Управление количеством наручей из драконьей кожи."
 
 #: modules/hexen/ctl_hexen.lua:551
 msgid "Krater of Might"
-msgstr ""
+msgstr "Чаша могущества"
 
 #: modules/hexen/ctl_hexen.lua:558
 msgid "Control the amount of Kraters of Might."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:559
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Krater of Might. Управление количеством чаш могущества."
 
 #: modules/hexen/ctl_hexen.lua:565
 msgid "Banishment Device"
-msgstr ""
+msgstr "Эмблема изгнания"
 
 #: modules/hexen/ctl_hexen.lua:572
 msgid "Control the amount of Banishment Devices."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:573
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Banishment Device. Управление количеством эмблем изгнания."
 
 #: modules/hexen/ctl_hexen.lua:579
 msgid "Boots of Speed"
-msgstr ""
+msgstr "Сапоги-скороходы"
 
 #: modules/hexen/ctl_hexen.lua:586
 msgid "Control the amount of Boots of Speed."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:587
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Boots of Speed. Управление количеством сапогов-скороходов."
 
 #: modules/hexen/ctl_hexen.lua:593
 msgid "Chaos Device"
-msgstr ""
+msgstr "Устройство Хаоса"
 
 #: modules/hexen/ctl_hexen.lua:600
 msgid "Control the amount of Chaos Devices."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:601
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Chaos Device. Управление количеством устройств Хаоса."
 
 #: modules/hexen/ctl_hexen.lua:608
 msgid "Dark Servant"
-msgstr ""
+msgstr "Статуэтка слуги"
 
 #: modules/hexen/ctl_hexen.lua:615
 msgid "Control the amount of Dark Servants."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:616
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Dark Servant. Управление количеством статуэток тёмных слуг."
 
 #: modules/hexen/ctl_hexen.lua:623
 msgid "Disc of Repulsion"
-msgstr ""
+msgstr "Диск отторжения"
 
 #: modules/hexen/ctl_hexen.lua:630
 msgid "Control the amount of Discs of Repulsion."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:631
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Disc of Repulsion. Управление количеством дисков отторжения."
 
 #: modules/hexen/ctl_hexen.lua:638
 msgid "Flechette"
-msgstr ""
+msgstr "Зелье (флешетте)"
 
 #: modules/hexen/ctl_hexen.lua:645
 msgid "Control the amount of Flechettes."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:646
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Flechette. Управление количеством флешетте."
 
 #: modules/hexen/ctl_hexen.lua:653
 msgid "Icon of the Defender"
-msgstr ""
+msgstr "Символ Защитника"
 
 #: modules/hexen/ctl_hexen.lua:660
 msgid "Control the amount of Icons of the Defender."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:661
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Icon of the Defender. Управление количеством символов Защитника."
 
 #: modules/hexen/ctl_hexen.lua:668
 msgid "Mystic Ambit Incant"
-msgstr ""
+msgstr "Свиток чар единства"
 
 #: modules/hexen/ctl_hexen.lua:675
 msgid "Control the amount of Mystic Ambit Incants."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:676
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Mystic Ambit Incant. Управление количеством свитков с чарами магического единства."
 
 #: modules/hexen/ctl_hexen.lua:683
 msgid "Porkalator"
-msgstr ""
+msgstr "Свиноморфер"
 
 #: modules/hexen/ctl_hexen.lua:690
 msgid "Control the amount of Porkalators."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:691
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Porkalator. Управление количеством свиноморферов (хрякинаторов)."
 
 #: modules/hexen/ctl_hexen.lua:698
 msgid "Torch"
-msgstr ""
+msgstr "Факел"
 
 #: modules/hexen/ctl_hexen.lua:705
 msgid "Control the amount of Torches."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:706
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Torch. Управление количеством факелов."
 
 #: modules/hexen/ctl_hexen.lua:713
 msgid "Wings of Wrath"
-msgstr ""
+msgstr "Крылья гнева"
 
 #: modules/hexen/ctl_hexen.lua:720
 msgid "Control the amount of Wings of Wrath."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:721
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Wings of Wrath. Управление количеством крыльев гнева."
 
 #: modules/hexen/ctl_hexen.lua:728
 msgid "Ultimate Weapon Pieces"
-msgstr ""
+msgstr "Части Высшего оружия"
 
 #: modules/hexen/ctl_hexen.lua:735
 msgid "Control the likelihood of finding Ultimate Weapon Pieces."
-msgstr ""
-
-#: modules/hexen/ctl_hexen.lua:736
-msgid "0:0 (None),.02:0.02 (Scarce),.14:0.14 (Less),.5:0.5 (Plenty),1.2:1.2 (More),3:3 (Heaps),10:10 (I LOVE IT)"
-msgstr ""
+msgstr "Ultimate Weapon Pieces. Управление количеством собираемых частей Окончательного (Высшего) оружия."
 
 #: modules/iwad_mode.lua:1170
 msgid "IWAD Style Mode"
