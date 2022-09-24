@@ -22,6 +22,8 @@ PREFABS.Pic_dem_tags_regulars =
   x_fit = "frame",
   y_fit = "top",
 
+  texture_pack = "armaetus",
+
   tex_TAG1 =
   {
     TAG1 = 50,
