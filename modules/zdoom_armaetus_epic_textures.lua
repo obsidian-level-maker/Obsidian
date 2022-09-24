@@ -1094,6 +1094,7 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
     gui.wad_merge_sections(wad_file)
     wad_file = "games/doom/data/burning_debris.wad"
     gui.wad_merge_sections(wad_file)
+    SCRIPTS.gldefs = ScriptMan_combine_script(SCRIPTS.gldefs, ORP_ENTITIES.GLDEFS)
   --end
 end
 ----------------------------------------------------------------
