@@ -24,9 +24,7 @@
 GAME   = {}
 PARAM  = {}
 STYLE  = {}
-LEVEL  = {}
 THEME  = {}
-SEEDS  = {}
 
 SCRIPTS = {}
 

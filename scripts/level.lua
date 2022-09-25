@@ -2229,7 +2229,7 @@ end
 
 
 
-function Level_do_styles()
+function Level_do_styles(LEVEL)
   local style_tab
 
   style_tab = table.copy(GLOBAL_STYLE_LIST)
@@ -2307,7 +2307,7 @@ function Level_do_styles()
 end
 
 
-function Level_choose_liquid()
+function Level_choose_liquid(LEVEL)
   -- always have a '_LIQUID' material.
   -- this is the default, it usually gets set to a proper material
   GAME.MATERIALS["_LIQUID"] = GAME.MATERIALS["_ERROR"]
@@ -2365,7 +2365,7 @@ function Level_choose_liquid()
 end
 
 
-function Level_choose_darkness()
+function Level_choose_darkness(LEVEL)
   local prob = EPISODE.dark_prob or 0
 
   -- NOTE: this style is only set via the Level Control module
@@ -2406,7 +2406,7 @@ function Level_choose_darkness()
 end
 
 
-function Level_choose_misc()
+function Level_choose_misc(LEVEL)
   LEVEL.squareishness = rand.pick({ 0,25,50,75,90 })
 
   LEVEL.room_height_style = PARAM.room_heights or "mixed"
@@ -2557,7 +2557,7 @@ function Level_choose_skybox()
 end
 
 
-function Level_init()
+function Level_init(LEVEL)
   LEVEL.ids = {}
 
   LEVEL.areas = {}
@@ -2569,9 +2569,9 @@ function Level_init()
 
   LEVEL.unplaced_weapons = {}
 
-  Level_choose_liquid()
-  Level_choose_darkness()
-  Level_choose_misc()
+  Level_choose_liquid(LEVEL)
+  Level_choose_darkness(LEVEL)
+  Level_choose_misc(LEVEL)
 
   Level_choose_skybox()
 
@@ -2579,10 +2579,8 @@ function Level_init()
 end
 
 
-function Level_build_it()
-  Level_init()
-
-  Seed_init()
+function Level_build_it(LEVEL, SEEDS)
+  Level_init(LEVEL)
 
   if PARAM.float_build_levels then
     if PARAM.float_build_levels ~= 0 then
@@ -2590,19 +2588,19 @@ function Level_build_it()
     end
   end
 
-  Area_create_rooms()
+  Area_create_rooms(LEVEL, SEEDS)
     if gui.abort() then return "abort" end
 
-  Quest_make_quests()
+  Quest_make_quests(LEVEL)
     if gui.abort() then return "abort" end
 
-  Room_build_all()
+  Room_build_all(LEVEL, SEEDS)
     if gui.abort() then return "abort" end
 
-  Monster_make_battles()
+  Monster_make_battles(LEVEL, SEEDS)
     if gui.abort() then return "abort" end
 
-  Item_add_pickups()
+  Item_add_pickups(LEVEL)
     if gui.abort() then return "abort" end
 
   return "ok"
@@ -2630,6 +2628,15 @@ function Level_handle_prebuilt()
   end
 
   return "ok"
+end
+
+function Level_between_clean(LEVEL, SEEDS)
+
+  while #LEVEL ~= 0 do rawset(LEVEL, #LEVEL, nil) end
+
+  while #SEEDS ~= 0 do rawset(SEEDS, #SEEDS, nil) end
+
+  collectgarbage("collect")
 end
 
 function Level_make_level(LEV)
@@ -2660,7 +2667,13 @@ function Level_make_level(LEV)
     gui.printf("Level " .. LEV.id .. " title: " .. LEV.description)
   end
 
-  LEVEL = LEV
+  -- copy level info, so that all new information added into the LEVEL
+  -- object by the generator can be garbage collected once this level is
+  -- finished.
+
+  local LEVEL = table.copy(LEV)
+  local SEEDS = Seed_init(LEVEL)
+  
 
   gui.at_level(LEVEL.name, index, total)
 
@@ -2668,7 +2681,7 @@ function Level_make_level(LEV)
 
   LEVEL.ids  = {}
 
-  THEME = assert(LEVEL.theme)
+  THEME = table.copy(assert(LEVEL.theme))
 
   if GAME.THEMES.DEFAULTS then
     table.merge_missing(THEME, GAME.THEMES.DEFAULTS)
@@ -2694,12 +2707,12 @@ function Level_make_level(LEV)
   gui.begin_level()
   gui.property("level_name", LEVEL.name);
 
-  Level_do_styles()
+  Level_do_styles(LEVEL)
 
   -- skip_probs for fabs are now evaluated on a per-level basis.
   Fab_update_skip_prob()
 
-  ob_invoke_hook("begin_level")
+  ob_invoke_hook_with_table("begin_level", LEVEL)
 
   gui.printf("\nStyles = \n%s\n\n", table.tostr(STYLE, 1))
 
@@ -2715,14 +2728,36 @@ function Level_make_level(LEV)
     end
   end
 
-  local res = Level_build_it()
+  local res = Level_build_it(LEVEL, SEEDS)
   if res ~= "ok" then
+    for _,k in pairs (LEVEL) do
+      LEVEL[k] = nil
+    end
+    for _,k in pairs (SEEDS) do
+      SEEDS[k] = nil
+    end
+    LEVEL = nil
+    SEEDS = nil
+    collectgarbage("collect")
+    collectgarbage("collect")
     return res
   end
 
-  ob_invoke_hook("end_level")
+  ob_invoke_hook_with_table("end_level", LEVEL)
 
   gui.end_level()
+
+  for _,k in pairs (LEVEL) do
+    LEVEL[k] = nil
+  end
+  for _,k in pairs (SEEDS) do
+    SEEDS[k] = nil
+  end
+  LEVEL = nil
+  SEEDS = nil
+
+  collectgarbage("collect")
+  collectgarbage("collect")
 
   if gui.abort() then return "abort" end
 

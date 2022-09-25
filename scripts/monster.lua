@@ -20,7 +20,7 @@
 ------------------------------------------------------------------------
 
 
-function Monster_init()
+function Monster_init(LEVEL)
   LEVEL.mon_stats = {}
   LEVEL.mon_count = 0
 
@@ -56,16 +56,16 @@ end
 
 
 
-function Monster_prepare()
+function Monster_prepare(LEVEL)
 
   ---| Monster_prepare |---
 
-  Monster_init()
+  Monster_init(LEVEL)
 end
 
 
 
-function Monster_pacing()
+function Monster_pacing(LEVEL)
   --
   -- Give each room a "pressure" value (low / medium / high) which
   -- controls the quantity of monsters in that room, including mons
@@ -302,7 +302,7 @@ end
 
 
 
-function Monster_assign_bosses()
+function Monster_assign_bosses(LEVEL)
   --
   -- Distribute the planned boss fights to specific rooms.
   --
@@ -398,7 +398,7 @@ end
 
 
 
-function Monster_zone_palettes()
+function Monster_zone_palettes(LEVEL)
 
   local function palettes_are_same(A, B)
     if table.size(A) ~= table.size(B) then
@@ -809,7 +809,7 @@ end
 
 
 
-function Monster_fill_room(R)
+function Monster_fill_room(LEVEL, R, SEEDS)
   --
   -- Decides what monsters to put in a room or hallway, and places them.
   -- Handles cages and traps too.
@@ -1257,11 +1257,11 @@ function Monster_fill_room(R)
       return 0
     end
 
-    if info.weap_min_damage and info.weap_min_damage > Player_max_damage() then
+    if info.weap_min_damage and info.weap_min_damage > Player_max_damage(LEVEL) then
       return 0
     end
 
-    if info.weap_needed and not Player_has_weapon(info.weap_needed) then
+    if info.weap_needed and not Player_has_weapon(LEVEL, info.weap_needed) then
       return 0
     end
 
@@ -1553,7 +1553,7 @@ function Monster_fill_room(R)
   local function calc_min_skill(all_skills)
     if all_skills then return 1 end
 
-    local dither = alloc_id("mon_dither")
+    local dither = alloc_id(LEVEL, "mon_dither")
 
     -- skill 3 (hard) is always added
     -- skill 2 (medium) alternates between 100% and 60% chance
@@ -2527,7 +2527,7 @@ gui.debugf("FILLING TRAP in %s\n", R.name)
   local function prepare_room()
     R.monster_list = {}
 
-    R.firepower = Player_firepower()
+    R.firepower = Player_firepower(LEVEL)
 
     categorize_room_size()
 
@@ -2577,7 +2577,7 @@ end
 
 
 
-function Monster_show_stats()
+function Monster_show_stats(LEVEL)
   local total = 0
 
   for _,count in pairs(LEVEL.mon_stats) do
@@ -2606,34 +2606,34 @@ end
 
 
 
-function Monster_make_battles()
+function Monster_make_battles(LEVEL, SEEDS)
 
   gui.printf("\n--==| Make Battles |==--\n\n")
 
   gui.at_level(LEVEL.name, LEVEL.id, #GAME.levels)
   gui.prog_step("Mons")
 
-  Player_init()
+  Player_init(LEVEL)
 
-  Player_give_map_stuff()
-  Player_weapon_palettes()
+  Player_give_map_stuff(LEVEL)
+  Player_weapon_palettes(LEVEL)
 
-  Monster_zone_palettes()
+  Monster_zone_palettes(LEVEL)
 
   -- Rooms have been sorted into a visitation order, so we just
   -- insert some monsters into each one and simulate each battle.
 
   for _,R in pairs(LEVEL.rooms) do
-    Player_give_room_stuff(R)
+    Player_give_room_stuff(LEVEL, R)
 
     Monster_collect_big_spots(R)
     Monster_visibility(R)
-    Monster_fill_room(R)
+    Monster_fill_room(LEVEL, R, SEEDS)
 
-    Item_simulate_battle(R)
+    Item_simulate_battle(LEVEL, R)
 
     gui.ticker()
   end
 
-  Monster_show_stats()
+  Monster_show_stats(LEVEL)
 end

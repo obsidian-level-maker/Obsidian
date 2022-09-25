@@ -39,7 +39,7 @@ LEVEL_PERIMETER_COUNT_KICKIN = 1800
 UNGROUPED_WALL_TONE_DOWN_EXP = 2
 
 
-function Autodetail_get_level_svolume()
+function Autodetail_get_level_svolume(LEVEL)
   LEVEL.autodetail_group_walls_factor = 1
 
   if PARAM.bool_autodetail == 0 then return end
@@ -62,7 +62,7 @@ function Autodetail_get_level_svolume()
 end
 
 
-function Autodetail_plain_walls()
+function Autodetail_plain_walls(LEVEL)
   LEVEL.autodetail_plain_walls_factor = 0
 
   if PARAM.bool_autodetail == 0 then return end
@@ -104,7 +104,7 @@ function Autodetail_plain_walls()
 end
 
 
-function Autodetail_report()
+function Autodetail_report(LEVEL)
   if PARAM.bool_autodetail == 0 then return end
   if not PARAM.bool_autodetail
   and OB_CONFIG.map_format

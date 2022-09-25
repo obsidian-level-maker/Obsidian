@@ -126,7 +126,7 @@ end
 
 
 
-function Cave_setup_stuff(area)
+function Cave_setup_stuff(area, SEEDS)
   assert(area)
 
   -- determine extent of cells
@@ -370,7 +370,7 @@ end
 
 
 
-function Cave_cell_touches_map_edge(area, cx, cy)
+function Cave_cell_touches_map_edge(LEVEL, area, cx, cy)
   local sx = area.base_sx + int((cx - 1) / 2)
   local sy = area.base_sy + int((cy - 1) / 2)
 
@@ -391,7 +391,7 @@ end
 
 
 
-function Cave_cell_touches_room(area, cx, cy, R)
+function Cave_cell_touches_room(area, cx, cy, R, SEEDS)
   -- checks diagonal directions too (i.e. corner touches)
 
   for _,dir in pairs(geom.ALL_DIRS) do
@@ -2764,13 +2764,13 @@ end
 
 
 
-function Cave_build_a_cave(R, entry_h)
+function Cave_build_a_cave(R, entry_h, SEEDS)
 
   local area = Cave_find_area_for_room(R)
 
   R.cave_area = area
 
-  Cave_setup_stuff(area)
+  Cave_setup_stuff(area, SEEDS)
 
   Cave_collect_walk_rects(R, area)
 
@@ -2887,7 +2887,7 @@ end
 
 
 
-function Cave_build_a_park(R, entry_h)
+function Cave_build_a_park(LEVEL, R, entry_h, SEEDS)
 
   local area = Cave_find_area_for_room(R)
 
@@ -4718,7 +4718,7 @@ gui.debugf("BUILD PARK IN %s\n", R.name)
 
   R.cave_area = area
 
-  Cave_setup_stuff(area)
+  Cave_setup_stuff(area, SEEDS)
 
   Cave_collect_walk_rects(R, area)
 
@@ -4777,7 +4777,7 @@ end
 
 
 
-function Cave_prepare_scenic_vista(area)
+function Cave_prepare_scenic_vista(LEVEL, area)
 
   local room = assert(area.face_room)
 
@@ -4879,7 +4879,7 @@ end
 
 
 
-function Cave_build_a_scenic_vista(area)
+function Cave_build_a_scenic_vista(LEVEL, area, SEEDS)
 
   local room = assert(area.face_room)
 
@@ -4937,7 +4937,7 @@ function Cave_build_a_scenic_vista(area)
       local reg = blob_map.regions[id]
       if reg.room_dist then goto continue end
 
-      if Cave_cell_touches_room(area, cx, cy, room) then
+      if Cave_cell_touches_room(area, cx, cy, room, SEEDS) then
         reg.room_dist = 0
       end
       ::continue::
@@ -4957,7 +4957,7 @@ function Cave_build_a_scenic_vista(area)
       local reg = blob_map.regions[id]
       if reg.mapedge_dist then goto continue end
 
-      if Cave_cell_touches_map_edge(area, cx, cy) then
+      if Cave_cell_touches_map_edge(LEVEL, area, cx, cy) then
         reg.mapedge_dist = 0
       end
       ::continue::
@@ -5392,7 +5392,7 @@ function Cave_build_a_scenic_vista(area)
 
   assert(area.mode == "scenic")
 
-  Cave_setup_stuff(area)
+  Cave_setup_stuff(area, SEEDS)
 
   area.external_sky = true
 

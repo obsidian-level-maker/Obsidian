@@ -2107,7 +2107,7 @@ end
 
 
 
-function Fab_replacements(fab)
+function Fab_replacements(LEVEL, fab)
   --
   -- Replaces textures (etc) in the brushes of the prefab with
   -- stuff from the skin.
@@ -2167,7 +2167,7 @@ function Fab_replacements(fab)
       val = THEME.prefab_remap[val] or val
     end
 
-    local mat = Mat_lookup_tex(val, missing_mats)
+    local mat = Mat_lookup_tex(LEVEL, val, missing_mats)
 
     return assert(mat.t)
   end
@@ -2193,7 +2193,7 @@ function Fab_replacements(fab)
       val = THEME.prefab_remap[val] or val
     end
 
-    local mat = Mat_lookup_flat(val, missing_mats)
+    local mat = Mat_lookup_flat(LEVEL, val, missing_mats)
 
     return assert(mat.f or mat.t)
   end
@@ -2205,7 +2205,7 @@ function Fab_replacements(fab)
     -- if it is not already specified, allocate a new tag
 
     if not fab.fields[k] then
-      fab.fields[k] = alloc_id("tag")
+      fab.fields[k] = alloc_id(LEVEL, "tag")
     end
 
     return fab.fields[k]
@@ -2596,7 +2596,7 @@ end
 
 
 
-function Fabricate(room, def, T, skins)
+function Fabricate(LEVEL, room, def, T, skins)
   -- room can be NIL
 
   if not def.file then
@@ -2650,7 +2650,7 @@ function Fabricate(room, def, T, skins)
     if def.native_hexen then fab.native_hexen = true end
   end
 
-  Fab_replacements (fab)
+  Fab_replacements (LEVEL, fab)
 
   if PARAM.marine_gen and PARAM.level_has_marine_closets and fab.group == "marine_closet" then
     MARINE_CLOSET_TUNE.randomize_count()
@@ -2708,7 +2708,7 @@ PREFAB SIZE MATCHING
 --]]
 
 
-function Fab_find_matches(reqs, match_state)
+function Fab_find_matches(LEVEL, reqs, match_state)
 
   local function match_size(def)
     -- "point" prefabs match the real size (a square)
@@ -2976,7 +2976,7 @@ function Fab_find_matches(reqs, match_state)
 
     if prob <= 0 then return 0 end
 
-    if not ob_match_level_theme(def, theme_override) then return 0 end
+    if not ob_match_level_theme(LEVEL, def, theme_override) then return 0 end
     if not ob_match_feature(def) then return 0 end
     if not ob_match_game(def) then return 0 end
 
@@ -3016,7 +3016,7 @@ end
 
 
 
-function Fab_pick(reqs, allow_none)
+function Fab_pick(LEVEL, reqs, allow_none)
   local tab = {}
 
   local match_state = { rank=0 }
@@ -3028,7 +3028,7 @@ function Fab_pick(reqs, allow_none)
   while cur_req do
 
       -- keep the earliest matches (they override later matches)
-    table.merge_missing(tab, Fab_find_matches(cur_req, match_state))
+    table.merge_missing(tab, Fab_find_matches(LEVEL, cur_req, match_state))
   
     if cur_req.key then
       if GAME.GENERIC_REQS then
@@ -3040,7 +3040,7 @@ function Fab_pick(reqs, allow_none)
           end      
         end  
         ::continue::
-        table.merge_missing(tab, Fab_find_matches(cur_req, match_state))      
+        table.merge_missing(tab, Fab_find_matches(LEVEL, cur_req, match_state))      
       end
     end
   

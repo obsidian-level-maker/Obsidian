@@ -257,7 +257,7 @@ end
 
 
 -- NOTE: this is "raw" and does not handle diagonal seeds
-function SEED_CLASS.raw_neighbor(S, dir, dist)
+function SEED_CLASS.raw_neighbor(S, dir, dist, SEEDS)
   local nx, ny = geom.nudge(S.sx, S.sy, dir, dist)
 
   if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
@@ -277,7 +277,7 @@ end
 --
 -- Returns NIL for edge of map (like the raw_neighbor method).
 --
-function SEED_CLASS.neighbor(S, dir, nodir)
+function SEED_CLASS.neighbor(S, dir, nodir, SEEDS)
   local N
 
   -- handle square seeds
@@ -287,7 +287,7 @@ function SEED_CLASS.neighbor(S, dir, nodir)
       return nodir
     end
 
-    N = S:raw_neighbor(dir)
+    N = S:raw_neighbor(dir, nil, SEEDS)
 
     if N then
       if dir == 2 and N.diagonal then return N.top end
@@ -302,23 +302,23 @@ function SEED_CLASS.neighbor(S, dir, nodir)
   -- handle diagonal seeds
 
   if (S.diagonal == 7 or S.diagonal == 9) and dir == 8 then
-    return S:raw_neighbor(dir)
+    return S:raw_neighbor(dir, nil, SEEDS)
   end
 
   if (S.diagonal == 1 or S.diagonal == 3) and dir == 2 then
-    N = S:raw_neighbor(dir)
+    N = S:raw_neighbor(dir, nil, SEEDS)
     if N and N.diagonal then return N.top end
     return N
   end
 
   if (S.diagonal == 1 or S.diagonal == 7) and dir == 4 then
-    N = S:raw_neighbor(dir)
+    N = S:raw_neighbor(dir, nil, SEEDS)
     if N and N.diagonal == 1 then return N.top end
     return N
   end
 
   if (S.diagonal == 3 or S.diagonal == 9) and dir == 6 then
-    N = S:raw_neighbor(dir)
+    N = S:raw_neighbor(dir, nil, SEEDS)
     if N and N.diagonal == 3 then return N.top end
     return N
   end
@@ -431,7 +431,7 @@ function SEED_CLASS.edge_mid_coord(S, dir)
 end
 
 
-function SEED_CLASS.raw_corner(S, dir)
+function SEED_CLASS.raw_corner(S, LEVEL, dir)
   -- this method is RAW: it does not care about diagonals
 
   local cx = S.sx
@@ -440,17 +440,17 @@ function SEED_CLASS.raw_corner(S, dir)
   if dir == 3 or dir == 9 then cx = cx + 1 end
   if dir == 7 or dir == 9 then cy = cy + 1 end
 
-  return Corner_lookup(cx, cy)
+  return Corner_lookup(LEVEL, cx, cy)
 end
 
 
-function SEED_CLASS.get_corner(S, dir)
+function SEED_CLASS.get_corner(S, LEVEL, dir)
   -- check for invalid dir (e.g. when looping over all corners)
   if S.diagonal == (10 - dir) then
     return nil
   end
 
-  return S:raw_corner(dir)
+  return S:raw_corner(LEVEL, dir)
 end
 
 
@@ -554,8 +554,8 @@ function Seed_create(sx, sy, x1, y1)
 end
 
 
-function Seed_init()
-  SEEDS = table.array_2D(SEED_W, SEED_H)
+function Seed_init(LEVEL)
+  local SEEDS = table.array_2D(SEED_W, SEED_H)
 
   -- offset the map in DOOM for flat alignment
   BASE_X = 32
@@ -588,6 +588,7 @@ function Seed_init()
     table.insert(LEVEL.depot_locs, { x=x, y=y })
   end
   end
+  return SEEDS
 end
 
 
@@ -638,7 +639,7 @@ function Seed_block_valid_and_free(x1,y1, x2,y2)
 end
 
 
-function Seed_squarify()
+function Seed_squarify(LEVEL, SEEDS)
   -- detects when a diagonal seed has same area on each half, and
   -- merges the two halves into a full seed
 
@@ -669,7 +670,7 @@ function Seed_coord_range(sx1, sy1, sx2, sy2)
 end
 
 
-function Seed_from_coord(x, y)
+function Seed_from_coord(x, y, SEEDS)
   local sx = 1 + math.floor((x - BASE_X) / SEED_SIZE)
   local sy = 1 + math.floor((y - BASE_Y) / SEED_SIZE)
 
@@ -699,7 +700,7 @@ function Seed_from_loc(loc)
 end
 
 
-function Seed_inside_sprout_box(sx, sy)
+function Seed_inside_sprout_box(LEVEL, sx, sy)
   if sx < LEVEL.sprout_x1 or sx > LEVEL.sprout_x2 then return false end
   if sy < LEVEL.sprout_y1 or sy > LEVEL.sprout_y2 then return false end
 
@@ -707,7 +708,7 @@ function Seed_inside_sprout_box(sx, sy)
 end
 
 
-function Seed_inside_boundary(sx, sy)
+function Seed_inside_boundary(LEVEL, sx, sy)
   if sx < LEVEL.walkable_x1 or sx > LEVEL.walkable_x2 then return false end
   if sy < LEVEL.walkable_y1 or sy > LEVEL.walkable_y2 then return false end
 
@@ -723,7 +724,7 @@ function Seed_inside_abs_limit(sx, sy)
 end
 
 
-function Seed_alloc_depot(room)
+function Seed_alloc_depot(LEVEL, room)
   -- returns NIL if no more are possible
 
   if table.empty(LEVEL.depot_locs) then
@@ -749,7 +750,7 @@ end
 
 
 
-function Seed_dump_rooms()
+function Seed_dump_rooms(SEEDS)
   local function seed_to_char(S)
     if not S then return "!" end
     if S.custom then return S.custom end
@@ -953,7 +954,7 @@ end
 
 
 
-function Seed_draw_minimap()
+function Seed_draw_minimap(SEEDS, LEVEL)
   local map_W  -- size in the GUI
   local map_H  --
 
@@ -989,7 +990,7 @@ function Seed_draw_minimap()
 
 
   local function visit_seed(S1, dir)
-    local S2 = S1:neighbor(dir, "NODIR")
+    local S2 = S1:neighbor(dir, "NODIR", SEEDS)
 
     if S2 == "NODIR" then return end
 
@@ -1061,7 +1062,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Edge_new(kind, S, dir, long)
+function Edge_new(kind, S, dir, long, LEVEL, SEEDS)
   -- Note: 'S' must be the left-most seed of a long edge
 
   local EDGE =
@@ -1103,7 +1104,7 @@ function Edge_new(kind, S, dir, long)
 
     S.edge[dir] = EDGE
 
-    S = S:neighbor(geom.RIGHT[dir])
+    S = S:neighbor(geom.RIGHT[dir], nil, SEEDS)
   end
 
   -- add it to area list
@@ -1113,18 +1114,18 @@ function Edge_new(kind, S, dir, long)
   end
 
   -- add it to corners
-  Corner_add_edge(EDGE)
+  Corner_add_edge(EDGE, LEVEL)
 
   return EDGE
 end
 
 
-function Edge_new_opposite(kind, S, dir, long)
-  local N = S:neighbor(dir)
+function Edge_new_opposite(kind, S, dir, long, LEVEL, SEEDS)
+  local N = S:neighbor(dir, nil, SEEDS)
   assert(N)
 
   for k = 1, long-1 do
-    N = N:neighbor(geom.RIGHT[dir])
+    N = N:neighbor(geom.RIGHT[dir], nil, SEEDS)
     if not N then
       S.error = true
       gui.printf(table.tostr(S) .. "\n")
@@ -1133,13 +1134,13 @@ function Edge_new_opposite(kind, S, dir, long)
     assert(N)
   end
 
-  return Edge_new(kind, N, 10-dir, long)
+  return Edge_new(kind, N, 10-dir, long, LEVEL, SEEDS)
 end
 
 
-function Edge_new_pair(kind1, kind2, S, dir, long)
-  local E1 = Edge_new         (kind1, S, dir, long)
-  local E2 = Edge_new_opposite(kind2, S, dir, long)
+function Edge_new_pair(kind1, kind2, S, dir, long, LEVEL, SEEDS)
+  local E1 = Edge_new         (kind1, S, dir, long, LEVEL, SEEDS)
+  local E2 = Edge_new_opposite(kind2, S, dir, long, LEVEL, SEEDS)
 
   E1.peer = E2
   E2.peer = E1
@@ -1148,7 +1149,7 @@ function Edge_new_pair(kind1, kind2, S, dir, long)
 end
 
 
-function Edge_mark_walk(E)
+function Edge_mark_walk(E, SEEDS)
   local S = E.S
 
   for i = 1, E.long do
@@ -1156,12 +1157,12 @@ function Edge_mark_walk(E)
 
     S.must_walk = true
 
-    S = S:neighbor(geom.RIGHT[E.dir])
+    S = S:neighbor(geom.RIGHT[E.dir], nil, SEEDS)
   end
 end
 
 
-function Edge_line_coords(E)
+function Edge_line_coords(E, SEEDS)
   local x1, y1 = E.S:left_corner_coord(E.dir)
 
   -- determine seed at other end of edge
@@ -1169,7 +1170,7 @@ function Edge_line_coords(E)
 
   if E.long >= 2 then
     if N.bottom then N = N.bottom end
-    N = N:raw_neighbor(geom.RIGHT[E.dir], E.long - 1)
+    N = N:raw_neighbor(geom.RIGHT[E.dir], E.long - 1, SEEDS)
     assert(N)
   end
 
@@ -1179,8 +1180,8 @@ function Edge_line_coords(E)
 end
 
 
-function Edge_mid_point(E)
-  local x1,y1, x2,y2 = Edge_line_coords(E)
+function Edge_mid_point(E, SEEDS)
+  local x1,y1, x2,y2 = Edge_line_coords(E, SEEDS)
 
   x1 = (x1 + x2) / 2
   y1 = (y1 + y2) / 2
@@ -1247,10 +1248,10 @@ end
 CHUNK_CLASS = {}
 
 
-function CHUNK_CLASS.new(kind, sx1,sy1, sx2,sy2)
+function CHUNK_CLASS.new(SEEDS, LEVEL, kind, sx1,sy1, sx2,sy2)
   local CK =
   {
-    id = alloc_id("chunk"),
+    id = alloc_id(LEVEL, "chunk"),
 
     kind = kind,
 
@@ -1280,7 +1281,7 @@ function CHUNK_CLASS.new(kind, sx1,sy1, sx2,sy2)
 end
 
 
-function CHUNK_CLASS.kill_it(CK)
+function CHUNK_CLASS.kill_it(CK, SEEDS)
   assert(not CK.is_dead)
 
   for sx = CK.sx1, CK.sx2 do
@@ -1347,7 +1348,7 @@ function CHUNK_CLASS.is_slave(chunk)
 end
 
 
-function CHUNK_CLASS.is_must_walk(chunk)
+function CHUNK_CLASS.is_must_walk(chunk, SEEDS)
   for sx = chunk.sx1, chunk.sx2 do
   for sy = chunk.sy1, chunk.sy2 do
     local S = SEEDS[sx][sy]
@@ -1360,7 +1361,7 @@ function CHUNK_CLASS.is_must_walk(chunk)
 end
 
 
-function CHUNK_CLASS.is_open_to_sky(chunk, R)
+function CHUNK_CLASS.is_open_to_sky(chunk, R, SEEDS)
   -- are all neighbors of the chunk going to be a sky ceiling?
 
   if not R.is_outdoor then return false end
@@ -1446,7 +1447,7 @@ function CHUNK_CLASS.is_open_to_room(chunk, R)
 end
 
 
-function CHUNK_CLASS.create_edge(chunk, kind, side)
+function CHUNK_CLASS.create_edge(chunk, LEVEL, kind, side, SEEDS)
   -- the edge faces *into* the chunk (on the given side)
 
   local sx, sy
@@ -1466,7 +1467,7 @@ function CHUNK_CLASS.create_edge(chunk, kind, side)
   local E
 
   if S then
-    E = Edge_new(kind, S, 10-side, long)
+    E = Edge_new(kind, S, 10-side, long, LEVEL, SEEDS)
   else
     return nil
   end
@@ -1477,10 +1478,10 @@ function CHUNK_CLASS.create_edge(chunk, kind, side)
 end
 
 
-function CHUNK_CLASS.create_edge_pair(chunk, kind1, side)
-  local E1 = chunk:create_edge(kind1, side)
+function CHUNK_CLASS.create_edge_pair(chunk, LEVEL, kind1, side, SEEDS)
+  local E1 = chunk:create_edge(LEVEL, kind1, side, SEEDS)
 
-  local E2 = Edge_new_opposite("nothing", E1.S, E1.dir, E1.long)
+  local E2 = Edge_new_opposite("nothing", E1.S, E1.dir, E1.long, LEVEL, SEEDS)
 
   return E1, E2
 end

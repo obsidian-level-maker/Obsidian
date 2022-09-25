@@ -544,7 +544,7 @@ function Mat_prepare_trip()
   end
 end
 
-function Mat_lookup_tex(name, missing_mats)
+function Mat_lookup_tex(LEVEL, name, missing_mats)
   if not name or name == "" or name == "-" then
     name = "_ERROR"
   end
@@ -578,7 +578,7 @@ function Mat_lookup_tex(name, missing_mats)
 end
 
 
-function Mat_lookup_flat(name, missing_mats)
+function Mat_lookup_flat(LEVEL, name, missing_mats)
   if not name or name == "" or name == "-" then
     name = "_ERROR"
   end
@@ -861,9 +861,9 @@ function brushlib.set_tex(brush, wall, flat)
 end
 
 
-function brushlib.set_mat(brush, wall, flat)
+function brushlib.set_mat(LEVEL, brush, wall, flat)
   if wall then
-    wall = Mat_lookup_tex(wall)
+    wall = Mat_lookup_tex(LEVEL, wall)
     wall = assert(wall.t)
   end
 
@@ -883,7 +883,7 @@ function brushlib.set_mat(brush, wall, flat)
       brushlib.set_kind(brush, "sky")
     end
 
-    flat = Mat_lookup_flat(flat)
+    flat = Mat_lookup_flat(LEVEL, flat)
     flat = assert(flat.f or flat.t)
   end
 

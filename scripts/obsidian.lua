@@ -263,7 +263,7 @@ function ob_match_playmode(T)
 end
 
 
-function ob_match_level_theme(T, override)
+function ob_match_level_theme(LEVEL, T, override)
   if not T.theme then return true end
   if T.theme == "any" then return true end
 
@@ -1638,12 +1638,11 @@ function ob_invoke_hook(name, ...)
   end
 end
 
---[[function ob_invoke_hook_with_table(name, local_table, qualifier)
-  -- experiment - Dasho
+function ob_invoke_hook_with_table(name, local_table)
   for _,mod in pairs(GAME.modules) do
     local func = mod.hooks and mod.hooks[name]
     if func then
-      func(mod, local_table, qualifier)
+      func(mod, local_table)
     end
   end
   
@@ -1651,11 +1650,11 @@ end
     if ob_check_ui_module(mod) then
       local func = mod.hooks and mod.hooks[name]
       if func then
-        func(mod, local_table, qualifier)
+        func(mod, local_table)
       end
     end
   end
-end]]
+end
 
 
 function ob_transfer_ui_options()
@@ -1737,22 +1736,46 @@ end
 
 
 function ob_clean_up()
-  GAME   = {}
-  THEME  = {}
-  PARAM  = {}
-  STYLE  = {}
-  SCRIPTS = {}
-
-  LEVEL   = nil
+  for _,k in pairs (GAME) do
+    GAME[k] = nil
+  end
+  for _,k in pairs (THEME) do
+    THEME[k] = nil
+  end
+  for _,k in pairs (PARAM) do
+    PARAM[k] = nil
+  end
+  for _,k in pairs (STYLE) do
+    STYLE[k] = nil
+  end
+  for _,k in pairs (SCRIPTS) do
+    SCRIPTS[k] = nil
+  end
+  for _,k in pairs (EPISODE) do
+    EPISODE[k] = nil
+  end
+  for _,k in pairs (PREFABS) do
+    PREFABS[k] = nil
+  end
+  GAME   = nil
+  THEME  = nil
+  PARAM  = nil
+  STYLE  = nil
+  SCRIPTS = nil
   EPISODE = nil
   PREFABS = nil
-  SEEDS   = nil
 
   if OB_CONFIG.string_seed then
     table.remove(OB_CONFIG, string_seed)
   end
 
   collectgarbage("collect")
+  collectgarbage("collect")
+  GAME   = {}
+  THEME  = {}
+  PARAM  = {}
+  STYLE  = {}
+  SCRIPTS = {}
 end
 
 local function ob_get_module_refs()

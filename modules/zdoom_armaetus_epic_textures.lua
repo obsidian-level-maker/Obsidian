@@ -665,7 +665,7 @@ function ARMAETUS_EPIC_TEXTURES.get_levels_after_themes()
   ARMAETUS_EPIC_TEXTURES.decide_environment_themes()
 end
 
-function ARMAETUS_EPIC_TEXTURES.decide_night_replacement_textures()
+function ARMAETUS_EPIC_TEXTURES.decide_night_replacement_textures(LEVEL)
   if LEVEL.episode and LEVEL.episode.dark_prob == 100 then
     GAME.MATERIALS["CITY04"].t = "CITY04N"
     GAME.MATERIALS["CITY05"].t = "CITY05N"
@@ -807,7 +807,7 @@ function ARMAETUS_EPIC_TEXTURES.decide_environment_themes()
   end
 end
 
-function ARMAETUS_EPIC_TEXTURES.generate_environment_themes()
+function ARMAETUS_EPIC_TEXTURES.generate_environment_themes(LEVEL)
   --------------------------------------
   -- Style Update for Custom Elements --
   --------------------------------------
@@ -934,7 +934,7 @@ function ARMAETUS_EPIC_TEXTURES.generate_environment_themes()
     end
   end
 
-  ARMAETUS_EPIC_TEXTURES.decide_night_replacement_textures()
+  ARMAETUS_EPIC_TEXTURES.decide_night_replacement_textures(LEVEL)
 end
 
 function ARMAETUS_EPIC_TEXTURES.table_insert(table1, table2)
