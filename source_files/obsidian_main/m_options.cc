@@ -48,8 +48,8 @@ void Parse_Option(const std::string &name, const std::string &value) {
         debug_messages = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "limit_break") == 0) {
         limit_break = StringToInt(value) ? true : false;
-    //} else if (StringCaseCmp(name, "preserve_failures") == 0) {
-        //preserve_failures = StringToInt(value) ? true : false;
+        //} else if (StringCaseCmp(name, "preserve_failures") == 0) {
+        // preserve_failures = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "preserve_old_config") == 0) {
         preserve_old_config = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "randomize_architecture") == 0) {
@@ -170,7 +170,8 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "overwrite_warning = " << (overwrite_warning ? 1 : 0) << "\n";
     option_fp << "debug_messages = " << (debug_messages ? 1 : 0) << "\n";
     option_fp << "limit_break = " << (limit_break ? 1 : 0) << "\n";
-    //option_fp << "preserve_failures = " << (preserve_failures ? 1 : 0) << "\n";
+    // option_fp << "preserve_failures = " << (preserve_failures ? 1 : 0) <<
+    // "\n";
     option_fp << "preserve_old_config = " << (preserve_old_config ? 1 : 0)
               << "\n";
     option_fp << "randomize_architecture = " << (randomize_architecture ? 1 : 0)
@@ -226,7 +227,7 @@ class UI_OptionsWin : public Fl_Window {
     UI_CustomCheckBox *opt_overwrite;
     UI_CustomCheckBox *opt_debug;
     UI_CustomCheckBox *opt_limit_break;
-    //UI_CustomCheckBox *opt_preserve_failures;
+    // UI_CustomCheckBox *opt_preserve_failures;
     UI_CustomCheckBox *opt_zip_logs;
     UI_CustomCheckBox *opt_timestamp_logs;
     Fl_Simple_Counter *opt_log_limit;
@@ -288,9 +289,9 @@ class UI_OptionsWin : public Fl_Window {
                 t_language = "AUTO";
             }
         }
-// clang-format off
+        // clang-format off
         fl_alert("%s", _("Obsidian will now restart to apply language changes.\nObsidian will be in your selected language after restarting."));
-// clang-format on
+        // clang-format on
 
         Trans_UnInit();
 
@@ -354,9 +355,9 @@ class UI_OptionsWin : public Fl_Window {
         win->hotspot(0, 0, 0);
         win->set_modal();
         win->show();
-// clang-format off
+        // clang-format off
         buff->text(_("Will randomly pull 1 to 3 words from Obsidian's random word list and use those as input for the map generation seed. Purely for cosmetic/entertainment value."));
-// clang-format on
+        // clang-format on
     }
 
     static void callback_Password_Mode(Fl_Widget *w, void *data) {
@@ -376,9 +377,9 @@ class UI_OptionsWin : public Fl_Window {
         win->hotspot(0, 0, 0);
         win->set_modal();
         win->show();
-// clang-format off
+        // clang-format off
         buff->text(_("Will produce a pseudo-random sequence of characters as input for the map generation seed. Random String Seeds must be enabled to use this option."));
-// clang-format on
+        // clang-format on
     }
 
     static void callback_Backups(Fl_Widget *w, void *data) {
@@ -404,9 +405,9 @@ class UI_OptionsWin : public Fl_Window {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         filename_prefix = that->opt_filename_prefix->value();
-// clang-format off
+        // clang-format off
         fl_alert("%s", _("File prefix changes require a restart.\nOBSIDIAN will now restart."));
-// clang-format on
+        // clang-format on
 
         main_action = MAIN_RESTART;
 
@@ -416,11 +417,11 @@ class UI_OptionsWin : public Fl_Window {
     static void callback_LimitBreak(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
         if (that->opt_limit_break->value()) {
-// clang-format off
+            // clang-format off
             if (fl_choice(_("WARNING! This option will allow you to manually enter values in excess of the \n(usually) stable slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this will not be addressed by the developers.\nYou must select Yes for this option to be applied."),
                           _("Cancel"), 
                           _("Yes, break Obsidian"), 0)) {
-// clang-format on
+                // clang-format on
                 limit_break = true;
             } else {
                 limit_break = false;
@@ -428,9 +429,9 @@ class UI_OptionsWin : public Fl_Window {
             }
         } else {
             limit_break = false;
-// clang-format off
+            // clang-format off
             fl_alert("%s", _("Restoring slider limits requires a restart.\nObsidian will now restart."));
-// clang-format on
+            // clang-format on
 
             main_action = MAIN_RESTART;
 
@@ -455,9 +456,9 @@ class UI_OptionsWin : public Fl_Window {
         win->hotspot(0, 0, 0);
         win->set_modal();
         win->show();
-// clang-format off
+        // clang-format off
         buff->text(_("Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n%year or %Y: The current year.\n\n%month or %M: The current month.\n\n%day or %D: The current day.\n\n%hour or %h: The current hour.\n\n%minute or %m: The current minute.\n\n%second or %s: The current second.\n\n%version or %v: The current Obsidian version.\n\n%game or %g: Which game the WAD is for.\n\n%engine or %e: Which engine the WAD is for.\n\n%theme or %t: Which theme was selected from the game's choices.\n\n%count or %c: The number of levels in the generated WAD."));
-// clang-format on
+        // clang-format on
     }
 
     static void callback_SetCustomPrefix(Fl_Widget *w, void *data) {
@@ -475,7 +476,6 @@ class UI_OptionsWin : public Fl_Window {
     }
 
     static void callback_SetDefaultOutputPath(Fl_Widget *w, void *data) {
-
         // save and restore the font height
         // (because FLTK's own browser get totally borked)
         int old_font_h = FL_NORMAL_SIZE;
@@ -512,9 +512,9 @@ class UI_OptionsWin : public Fl_Window {
         }
 
         default_output_path = dir_name.generic_string();
-    #ifdef WIN32
+#ifdef WIN32
         dir_name = ucs4_path(dir_name.generic_string().c_str());
-    #endif
+#endif
     }
 };
 
@@ -599,9 +599,8 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_custom_prefix->h() + y_step;
 
-    opt_default_output_path =
-        new Fl_Button(136 + KF * 40, cy, kf_w(130), kf_h(24),
-                      _("Set Default Output Path"));
+    opt_default_output_path = new Fl_Button(
+        136 + KF * 40, cy, kf_w(130), kf_h(24), _("Set Default Output Path"));
     opt_default_output_path->box(button_style);
     opt_default_output_path->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     opt_default_output_path->visible_focus(0);

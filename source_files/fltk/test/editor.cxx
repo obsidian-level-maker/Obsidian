@@ -56,7 +56,7 @@ const int line_num_width = 75;
 #define TS 14 // default editor textsize
 Fl_Text_Buffer *stylebuf = 0;
 Fl_Text_Display::Style_Table_Entry styletable[] = {
-    // Style table
+// Style table
 #ifdef TESTING_ATTRIBUTES
     {FL_BLACK, FL_COURIER, TS}, // A - Plain
     {FL_DARK_GREEN, FL_HELVETICA_ITALIC, TS, Fl_Text_Display::ATTR_BGCOLOR,

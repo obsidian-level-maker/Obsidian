@@ -992,8 +992,8 @@ jpeg_write_raw_data JPP((j_compress_ptr cinfo, JSAMPIMAGE data, JDIMENSION num_l
 
 /* Write a special marker.  See libjpeg.txt concerning safe usage. */
 EXTERN(void)
-jpeg_write_marker
-    JPP((j_compress_ptr cinfo, int marker, const JOCTET *dataptr, unsigned int datalen));
+jpeg_write_marker JPP((j_compress_ptr cinfo, int marker, const JOCTET *dataptr,
+                       unsigned int datalen));
 /* Same, but piecemeal. */
 EXTERN(void) jpeg_write_m_header JPP((j_compress_ptr cinfo, int marker, unsigned int datalen));
 EXTERN(void) jpeg_write_m_byte JPP((j_compress_ptr cinfo, int val));
@@ -1047,8 +1047,8 @@ jpeg_save_markers JPP((j_decompress_ptr cinfo, int marker_code, unsigned int len
 
 /* Install a special processing method for COM or APPn markers. */
 EXTERN(void)
-jpeg_set_marker_processor
-    JPP((j_decompress_ptr cinfo, int marker_code, jpeg_marker_parser_method routine));
+jpeg_set_marker_processor JPP((j_decompress_ptr cinfo, int marker_code,
+                               jpeg_marker_parser_method routine));
 
 /* Read or write raw DCT coefficients --- useful for lossless transcoding. */
 EXTERN(jvirt_barray_ptr *) jpeg_read_coefficients JPP((j_decompress_ptr cinfo));

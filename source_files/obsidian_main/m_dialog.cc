@@ -333,9 +333,9 @@ void DLG_EditSeed(void) {
             char character = word.at(i);
             if (not std::isdigit(character)) {
                 throw std::runtime_error(
-// clang-format off
+                    // clang-format off
                     _("String contains non-digits. Will process as string\n"));
-// clang-format on
+                // clang-format on
             }
         }
         did_specify_seed = true;
@@ -344,9 +344,9 @@ void DLG_EditSeed(void) {
     } catch (std::invalid_argument &e) {
         std::cout << _("Invalid argument. Will process as string.\n");
     } catch (std::out_of_range &e) {
-// clang-format off
+        // clang-format off
         std::cout << _("Resulting number would be out of range. Will process as string.\n");
-// clang-format on
+        // clang-format on
     } catch (std::exception &e) {
         std::cout << e.what();
     }
@@ -626,11 +626,11 @@ tryagain:;
     }
 
     if (std::filesystem::exists(filename)) {
-// clang-format off
+        // clang-format off
         switch (fl_choice(_("%s already exists.\nChoose Yes to overwrite or No to choose a new filename."),
                           _("Yes"), 
                           _("No"), 0,
-// clang-format on
+                          // clang-format on
                           filename.generic_string().c_str())) {
             case 0:
                 std::filesystem::remove(filename);
@@ -674,11 +674,11 @@ tryagain:;
         }
         if (zip_buf) {
             if (std::filesystem::exists(zip_filename)) {
-// clang-format off
+                // clang-format off
                 switch (fl_choice(_("Log zipping is enabled, but %s already exists.\nOverwrite (original .txt file will still be kept) ?"),
                                   _("Yes"), 
                                   _("No"), 0,
-// clang-format on
+                                  // clang-format on
                                   zip_filename.generic_string().c_str())) {
                     case 0:
                         std::filesystem::remove(zip_filename);
@@ -737,9 +737,9 @@ void DLG_ViewGlossary(void) {
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-// clang-format off
+    // clang-format off
     buff->text(_("This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."));
-// clang-format on
+    // clang-format on
 }
 
 //--- editor settings ---
