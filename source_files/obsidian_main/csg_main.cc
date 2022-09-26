@@ -149,8 +149,9 @@ brush_plane_c::brush_plane_c(const brush_plane_c& other) :
 #endif
 
 brush_plane_c::~brush_plane_c() {
-    if (slope)
+    if (slope) {
         delete slope;
+    }
 
     if (uv_mat) {
         delete uv_mat;
@@ -188,16 +189,19 @@ csg_brush_c::csg_brush_c(const csg_brush_c *other)
 }
 
 csg_brush_c::~csg_brush_c() {
-    for (int i=0; i < verts.size(); i++)
-    {
-        if (verts[i]) delete verts[i];
+    for (int i = 0; i < verts.size(); i++) {
+        if (verts[i]) {
+            delete verts[i];
+        }
     }
 
-    if (b.slope)
+    if (b.slope) {
         delete b.slope;
+    }
 
-    if (t.slope)
+    if (t.slope) {
         delete t.slope;
+    }
 }
 
 const char *csg_brush_c::Validate() {
