@@ -87,8 +87,8 @@ end
 
 
 
-function Cave_is_edge(S, dir)
-  local N = S:raw_neighbor(dir)
+function Cave_is_edge(S, dir, SEEDS)
+  local N = S:raw_neighbor(dir, nil, SEEDS)
 
   if not N then return true end
 
@@ -437,7 +437,7 @@ end
 
 
 
-function Cave_generate_cave(R, area)
+function Cave_generate_cave(R, area, SEEDS)
 
   local is_lake = (area.liquid_mode == "lake")
 
@@ -482,7 +482,7 @@ function Cave_generate_cave(R, area)
 
     for _,S in pairs(area.seeds) do
       for dir = 2,8,2 do
-        if Cave_is_edge(S, dir) then
+        if Cave_is_edge(S, dir, SEEDS) then
           set_side(S, dir, sel(is_lake, -1, 1))
         end
 
@@ -494,7 +494,7 @@ function Cave_generate_cave(R, area)
       end
 
       for _,dir in pairs(geom.CORNERS) do
-        if Cave_is_edge(S, dir) then
+        if Cave_is_edge(S, dir, SEEDS) then
           -- lakes require whole seed to be cleared (esp. at "innie corners")
           if is_lake then
             set_whole(S, -1)
@@ -535,7 +535,7 @@ function Cave_generate_cave(R, area)
 
   local function is_fully_interior(S)
     for _,dir in pairs(geom.ALL_DIRS) do
-      if Cave_is_edge(S, dir) then return false end
+      if Cave_is_edge(S, dir, SEEDS) then return false end
     end
 
     return true
@@ -811,7 +811,7 @@ end
 
 
 
-function Cave_create_areas(R, area)
+function Cave_create_areas(R, area, LEVEL)
   --
   -- Sub-divide the floor of the cave into areas of differing heights.
   --
@@ -1376,7 +1376,7 @@ end
 
 
 
-function Cave_bunch_areas(R, mode)
+function Cave_bunch_areas(R, mode, LEVEL)
   --
   -- This picks a bunch of step areas which will become either liquid
   -- or sky (depending on 'mode' parameter).
@@ -2082,7 +2082,7 @@ function Cave_lake_fences(R)
       cy1 = (y - area.base_sy) * 2 + 1
 
       for _,dir in pairs(geom.CORNERS) do
-        if not Cave_is_edge(S, dir) then goto continue end
+        if not Cave_is_edge(S, dir, SEEDS) then goto continue end
 
         local A_dir = geom. LEFT_45[dir]
         local B_dir = geom.RIGHT_45[dir]
@@ -2661,7 +2661,7 @@ end
 
 
 
-function Cave_decide_properties(R, area)
+function Cave_decide_properties(R, area, LEVEL)
   --
   --  V7 NOTES
   -- ==========
@@ -2764,7 +2764,7 @@ end
 
 
 
-function Cave_build_a_cave(R, entry_h, SEEDS)
+function Cave_build_a_cave(R, entry_h, SEEDS, LEVEL)
 
   local area = Cave_find_area_for_room(R)
 
@@ -2774,19 +2774,19 @@ function Cave_build_a_cave(R, entry_h, SEEDS)
 
   Cave_collect_walk_rects(R, area)
 
-  Cave_decide_properties(R, area)
+  Cave_decide_properties(R, area, LEVEL)
 
   Cave_map_usable_area(area)
 
-  Cave_generate_cave(R, area)
+  Cave_generate_cave(R, area, SEEDS)
 
   Cave_lake_fences(R)
   Cave_fill_lakes(R)
 
-  Cave_create_areas(R, area)
+  Cave_create_areas(R, area, LEVEL)
 
-  Cave_bunch_areas(R, "liquid")
-  Cave_bunch_areas(R, "sky")
+  Cave_bunch_areas(R, "liquid", LEVEL)
+  Cave_bunch_areas(R, "sky", LEVEL)
 
   Cave_floor_heights(R, entry_h)
 

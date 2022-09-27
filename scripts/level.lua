@@ -2613,15 +2613,6 @@ function Level_handle_prebuilt()
   return "ok"
 end
 
-function Level_between_clean(LEVEL, SEEDS)
-
-  while #LEVEL ~= 0 do rawset(LEVEL, #LEVEL, nil) end
-
-  while #SEEDS ~= 0 do rawset(SEEDS, #SEEDS, nil) end
-
-  collectgarbage("collect")
-end
-
 function Level_make_level(LEV)
   assert(LEV)
   assert(LEV.name)
@@ -2683,7 +2674,6 @@ function Level_make_level(LEV)
     ob_invoke_hook("end_level")
     return "ok"
   end
-
 
   LEVEL.secondary_importants = {}
 

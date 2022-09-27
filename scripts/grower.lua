@@ -3490,7 +3490,7 @@ end
     GROWER_DEBUG_INFO[cur_rule.name].applied = GROWER_DEBUG_INFO[cur_rule.name].applied + 1
 
     if PARAM["live_minimap"] == "step" then
-      Seed_draw_minimap()
+      Seed_draw_minimap(SEEDS, LEVEL)
     end
 
     update_aversions(cur_rule)
@@ -3538,7 +3538,7 @@ end
     end
 
     -- exit rooms must have only a single entrance
-    if pass == "sprout" and R.is_exit and R:prelim_conn_num() >= 1 then
+    if pass == "sprout" and R.is_exit and R:prelim_conn_num(LEVEL) >= 1 then
       break;
     end
 
@@ -3547,11 +3547,11 @@ end
 
       if pass == "sprout" then
 
-        if R:prelim_conn_num() >= 2 then
+        if R:prelim_conn_num(LEVEL) >= 2 then
           break;
         end
 
-        if R.is_start and R:prelim_conn_num() >= 1 then
+        if R.is_start and R:prelim_conn_num(LEVEL) >= 1 then
           break;
         end
 
@@ -3560,7 +3560,7 @@ end
 
     if LEVEL.has_linear_start then
       if pass == "sprout" then
-        if not R.is_street and R:prelim_conn_num() >= 1 and R.is_start then
+        if not R.is_street and R:prelim_conn_num(LEVEL) >= 1 and R.is_start then
           break;
         end
       end
@@ -3850,7 +3850,7 @@ function Grower_grow_room(SEEDS, LEVEL, R)
   -- Linear Mode, kill mirrored sprouts of symmetric rooms
   if LEVEL.is_linear then
     if R.grow_parent then
-      if R.grow_parent:prelim_conn_num() > 2 then
+      if R.grow_parent:prelim_conn_num(LEVEL) > 2 then
         gui.debugf("Linear mode: ROOM_" .. R.id .. " culled.\n")
         Grower_kill_room(SEEDS, LEVEL, R)
         return
@@ -3860,7 +3860,7 @@ function Grower_grow_room(SEEDS, LEVEL, R)
 
   if LEVEL.is_linear or LEVEL.is_procedural_gotcha then
     if R.grow_parent and R.grow_parent.is_start then
-      if R.grow_parent:prelim_conn_num() > 1 then
+      if R.grow_parent:prelim_conn_num(LEVEL) > 1 then
         gui.debugf("Linear mode: ROOM " .. R.id .. " culled.\n")
         Grower_kill_room(SEEDS, LEVEL, R)
       end
@@ -3876,7 +3876,7 @@ function Grower_grow_room(SEEDS, LEVEL, R)
   end
 
   if PARAM["live_minimap"] == "room" then
-    Seed_draw_minimap()
+    Seed_draw_minimap(SEEDS, LEVEL)
   end
 
   R.is_grown = true
@@ -3917,7 +3917,7 @@ end
 
 
 
-function Grower_make_street(R)
+function Grower_make_street(R, SEEDS, LEVEL)
   if R.is_streeted then return end
 
   R.areas[1]:calc_volume()
@@ -4002,7 +4002,7 @@ function Grower_create_and_grow_room(SEEDS, LEVEL, trunk, mode, info)
 
   -- if it's a street, street it
   if R.is_street then
-    Grower_make_street(R)
+    Grower_make_street(R, SEEDS, LEVEL)
   end
 
   -- grow it now
@@ -4202,7 +4202,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
           local other = sel(PC.R1 == R, PC.R2, PC.R1)
 
           if other.is_street then
-            Grower_make_street(R)
+            Grower_make_street(R, SEEDS, LEVEL)
           end
 
           Grower_grow_room(SEEDS, LEVEL, other)
@@ -4231,7 +4231,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
 
       -- if it's a street, street it
       if R.is_street then
-        Grower_make_street(R)
+        Grower_make_street(R, SEEDS, LEVEL)
       end
 
       if not R.is_grown then
@@ -4318,7 +4318,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
       MAX_RETRIES = MAX_RETRIES - 1
       rand.shuffle(LEVEL.shape_transform_possiblities)
       if MAX_RETRIES == 0 then
-        Seed_draw_minimap()
+        Seed_draw_minimap(SEEDS, LEVEL)
         error("Unable to sprout more rooms.")
       end
     end
@@ -4368,7 +4368,7 @@ function Grower_decorate_rooms(SEEDS, LEVEL)
     if not R.is_hallway and not R.is_street then
       Grower_grammatical_room(SEEDS, LEVEL, R, "decorate")
       if PARAM["live_minimap"] == "room" then
-        Seed_draw_minimap()
+        Seed_draw_minimap(SEEDS, LEVEL)
       end
     end
   end
@@ -4397,7 +4397,7 @@ function Grower_expand_parks(SEEDS, LEVEL)
       Grower_grammatical_room(SEEDS, LEVEL, R, "smoother")
     end
     if PARAM["live_minimap"] == "room" then
-    Seed_draw_minimap()
+    Seed_draw_minimap(SEEDS, LEVEL)
     end
   end
 

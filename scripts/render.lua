@@ -3067,10 +3067,10 @@ function Render_all_areas(LEVEL, SEEDS)
   Render_skybox(LEVEL)
 
   if LEVEL.has_streets and PARAM.bool_road_markings == 1 then
-    Render_find_street_markings(LEVEL)
-    Render_all_street_markings(LEVEL)
-    Render_establish_street_lanes(LEVEL)
-    Render_all_street_traffic(LEVEL)
+    Render_find_street_markings(LEVEL, SEEDS)
+    Render_all_street_markings(LEVEL, SEEDS)
+    Render_establish_street_lanes(LEVEL, SEEDS)
+    Render_all_street_traffic(LEVEL, SEEDS)
   end
 
   Render_scenic_fabs(LEVEL, SEEDS)
@@ -3124,7 +3124,7 @@ end
 
 
 
-function Render_all_street_traffic(LEVEL)
+function Render_all_street_traffic(LEVEL, SEEDS)
   LEVEL.street_traffic = {}
 
   local function get_parking_distance(pos)
@@ -3267,7 +3267,7 @@ end
 
 
 
-function Render_find_street_markings(LEVEL)
+function Render_find_street_markings(LEVEL, SEEDS)
 
   -- Render street markings
   --
@@ -3505,7 +3505,7 @@ end
 
 
 
-function Render_establish_street_lanes(LEVEL)
+function Render_establish_street_lanes(LEVEL, SEEDS)
 
   -- Render_establish_street_lanes
   --
