@@ -879,6 +879,8 @@ class UI_ThemeWin : public Fl_Window {
             v_unload_private_font("./theme/fonts/SamIAm/MiniSmallCaps.ttf");
         }
 
+        font_theme = 0;
+
         main_action = MAIN_RESTART;
 
         that->want_quit = true;
