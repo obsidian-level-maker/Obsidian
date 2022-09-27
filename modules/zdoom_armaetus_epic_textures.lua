@@ -1086,7 +1086,7 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
   end
 
   -- TO-DO: Create UI switch for this
-  --if PARAM.custom_decor ~= "no" then
+  if PARAM.bool_include_custom_actors == 1 then
     SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, ORP_ENTITIES.DECORATE)
     wad_file = "games/doom/data/blood_pack.wad"
     gui.wad_merge_sections(wad_file)
@@ -1094,7 +1094,8 @@ function ARMAETUS_EPIC_TEXTURES.put_the_texture_wad_in()
     gui.wad_merge_sections(wad_file)
     wad_file = "games/doom/data/burning_debris.wad"
     gui.wad_merge_sections(wad_file)
-  --end
+    SCRIPTS.gldefs = ScriptMan_combine_script(SCRIPTS.gldefs, ORP_ENTITIES.GLDEFS)
+  end
 end
 ----------------------------------------------------------------
 
@@ -1172,6 +1173,16 @@ OB_MODULES["armaetus_epic_textures"] =
       valuator = "button",
       default = 1,
       tooltip = _("Allows merging Obsidian Textures brightmaps into the WAD. Does not include brightmaps for base resources from any of the games."),
+      priority = 0
+    },
+
+
+    {
+      name = "bool_include_custom_actors",
+      label = _("Custom Actors"),
+      valuator = "button",
+      default = 1,
+      tooltip = _("Merges some custom sprites and replacers for various decorations."),
       priority = 0
     },
 

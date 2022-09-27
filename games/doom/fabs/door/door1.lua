@@ -7,7 +7,7 @@ PREFABS.Door_plain2 =
   file   = "door/door1.wad",
   map    = "MAP02",
 
-  prob   = 150,
+  prob   = 80,
 
   kind   = "arch",
   style  = "doors",
@@ -33,7 +33,7 @@ PREFABS.Door_plain3 =
   template   = "Door_plain2",
   map    = "MAP02",
 
-  prob   = 150,
+  prob   = 80,
 
   tex_BIGDOOR4 = "BIGDOOR3",
   flat_CEIL5_2 = "FLOOR7_2",
@@ -49,7 +49,7 @@ PREFABS.Door_plain4 =
   template   = "Door_plain2",
   map    = "MAP02",
 
-  prob   = 150,
+  prob   = 80,
 
   tex_BIGDOOR4 = "BIGDOOR2",
   flat_CEIL5_2 = "FLAT20",
@@ -145,7 +145,7 @@ PREFABS.Door_plain2_hell =
   template = "Door_plain2",
 
   theme  = "hell",
-  prob   = 100,
+  prob   = 65,
 
   flat_TLITE6_6 = "TLITE6_5",
   tex_BIGDOOR4 = { BIGDOOR7=50, BIGDOOR6=50, BIGDOOR5=50 },
@@ -161,7 +161,7 @@ PREFABS.Door_plain3_hell =
   template   = "Door_plain2",
   map    = "MAP02",
 
-  prob   = 100,
+  prob   = 65,
   theme  = "hell",
 
   tex_BIGDOOR4 = { MARBFACE=50, MARBFAC3=50, MARBFAC2=20 },
@@ -179,7 +179,7 @@ PREFABS.Door_plain_tech =
   file   = "door/door1.wad",
   map    = "MAP04",
 
-  prob   = 400,
+  prob   = 225,
   theme  = "tech",
 
   where  = "edge",

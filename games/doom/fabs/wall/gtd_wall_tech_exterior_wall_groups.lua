@@ -557,3 +557,51 @@ PREFABS.Wall_tech_outdoor_orange_oct_white_binding_vanilla =
   tex_GRAYMET3 = "SHAWN2",
   tex_GRAY6 = "GRAY7"
 }
+
+PREFABS.Wall_tech_outdoor_blakwall = --#
+{
+  template = "Wall_tech_outdoor_caution_strip",
+  map = "MAP24",
+
+  height = 104,
+  bound_z2 = 104,
+  group = "tech_o_g_blakwall",
+
+  z_fit = { 
+    7,8, 
+    15,16, 
+    96,98 
+  }
+}
+
+PREFABS.Wall_tech_outdoor_modwall1 = --#
+{
+  template = "Wall_tech_outdoor_caution_strip",
+  map = "MAP25",
+
+  height = 104,
+  bound_z2 = 104,
+  group = "tech_o_g_modwall1",
+
+  z_fit = { 
+    7,8, 
+    23,24, 
+    96,98
+  }
+}
+
+PREFABS.Wall_tech_outdoor_modwall2 = --#
+{
+  template = "Wall_tech_outdoor_caution_strip",
+  map = "MAP26",
+
+  height = 96,
+  bound_z2 = 96,
+  group = "tech_o_g_modwall2",
+
+  z_fit = { 
+    15,16, 
+    80,81,
+    88,90
+  }
+}

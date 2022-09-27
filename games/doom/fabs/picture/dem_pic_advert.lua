@@ -29,7 +29,7 @@ PREFABS.Pic_dem_advert =
   tex_SHAWN1 =
   {
 
-    RGNRCK2 = 50,
+    SHAWN1 = 50,
     ADVCR1 = 50,
     ADVCR2 = 50,
     ADVCR4 = 50,

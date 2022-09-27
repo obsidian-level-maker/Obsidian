@@ -26,7 +26,7 @@ ARMAETUS_LIQUID_DEFS =
   hotlava  = { mat="XLAV1", special=5, light_add=56, damage=10 },
   magma  = { mat="MAGMA1",  special=5, light_add=56, damage=10 },
   qlava  = { mat="QLAVA1", special=5, light_add=56, damage=10 },
-  sludge = { mat="OSLIME01", special=0 },
+  bsludge = { mat="OSLIME01", special=0 },
   gwater   = { mat="SLUDGE01", special=0 },
   ice   = { mat="SNOW9", special=0 }, --Looks best when outdoor environment is snow only
   ice2   = { mat="SNOW2", special=0 }, --Looks best when outdoor environment is snow only

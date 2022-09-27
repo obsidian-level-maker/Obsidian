@@ -199,6 +199,8 @@ PREFABS.Decor_advert_board1 =
   size   = 64,
   height = 256,
 
+  texture_pack = "armaetus",
+
   sink_mode = "never_liquids",
 
   tex_CRGNRCK2 =
@@ -224,6 +226,8 @@ PREFABS.Decor_advert_board2 =
 
   size   = 256,
   height = 128,
+
+  texture_pack = "armaetus",
 
   sink_mode = "never_liquids",
 
@@ -251,6 +255,8 @@ PREFABS.Decor_advert_board3 =
   size   = 64,
   height = 256,
 
+  texture_pack = "armaetus",
+
   sink_mode = "never_liquids",
 
   tex_CRGNRCK2 =
@@ -274,6 +280,8 @@ PREFABS.Decor_advert_board4 =
 
   size   = 128,
   height = 128,
+
+  texture_pack = "armaetus",
 
   sink_mode = "never_liquids",
 
