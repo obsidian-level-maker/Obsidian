@@ -128,7 +128,7 @@ OB_MODULES["ui_arch"] =
       nan = _("Mix It Up,Episodic,Progressive"),
       presets = _("10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"),
       tooltip = _("Determines size of map (Width x Height) in grid squares."),
-      longtip = _("FOR 32-BIT USERS: To prevent memory usage issues, the following maximum map size limits will be enforced regardless of slider setting:\n\nFull Game:\n-Fixed size: 30\n-Progressive: 48\n-Episodic: 48\n-Mix It Up: 42\n\nEpisode:\n-Fixed size: 58\n\nAll other combinations will honor the slider settings.\n\nIf you are planning to play on any choices that involve maps at sizes of 50 and above, Autodetailing will be enabled by default. The stability of maps with sizes 60 and beyond is not predictable."),
+      longtip = _("If you are planning to generate Binary format maps at sizes of 50 and above, Autodetailing will be enabled by default. The stability of maps with sizes 60 and beyond is not predictable unless using UDMF map format (supported engines only)."),
       priority = 100,
       randomize_group="architecture"
     },

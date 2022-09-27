@@ -1439,10 +1439,6 @@ skiprest:
         // inform Lua code about batch mode (the value doesn't matter)
         ob_set_config("batch", "yes");
 
-#ifdef OBSIDIAN_32BIT_MAP_SIZES
-        ob_set_config("cap_level_sizes", "yes");
-#endif
-
         Module_Defaults();
 
         if (argv::Find('p', "printref") >= 0) {
@@ -1537,10 +1533,6 @@ skiprest:
     //???    Default_Location();
 
     Script_Open();
-
-#ifdef OBSIDIAN_32BIT_MAP_SIZES
-    ob_set_config("cap_level_sizes", "yes");
-#endif
 
     ob_set_config("locale", selected_lang.c_str());
 

@@ -20,7 +20,7 @@
 ------------------------------------------------------------------------
 
 
-function Render_add_exit_sign(E, z)
+function Render_add_exit_sign(E, z, SEEDS, LEVEL)
 
   if not PARAM.bool_exit_signs then return end
 
@@ -1030,7 +1030,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
          E = E.peer
       end
 
-      Render_add_exit_sign(E, E.area.floor_h) --z
+      Render_add_exit_sign(E, E.area.floor_h, SEEDS, LEVEL) --z
     end
   end
 
@@ -2479,7 +2479,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
       end
 
       if E and not E.area.room.is_hallway then
-        Render_add_exit_sign(E, E.area.floor_h) --z1
+        Render_add_exit_sign(E, E.area.floor_h, SEEDS, LEVEL) --z1
       end
     end
   end

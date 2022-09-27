@@ -109,8 +109,8 @@ void Appl_Printf(const char *str, ...) {
 
 int wadfab_free(lua_State *L) {
     ajpoly::CloseMap();
+    ajpoly::FreeMap();
     ajpoly::FreeWAD();
-
     return 0;
 }
 

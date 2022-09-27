@@ -31,12 +31,22 @@ std::vector<linedef_c *> all_linedefs;
 std::vector<sidedef_c *> all_sidedefs;
 std::vector<sector_c *> all_sectors;
 std::vector<thing_c *> all_things;
-
 std::vector<vertex_c *> all_splits;
 std::vector<edge_c *> all_edges;
 std::vector<polygon_c *> all_polygons;
 std::vector<wall_tip_c *> all_wall_tips;
 std::vector<linedef_c *> all_ex_floors;
+
+std::vector<vertex_c *> doomed_vertices;
+std::vector<linedef_c *> doomed_linedefs;
+std::vector<sidedef_c *> doomed_sidedefs;
+std::vector<sector_c *> doomed_sectors;
+std::vector<thing_c *> doomed_things;
+std::vector<vertex_c *> doomed_splits;
+std::vector<edge_c *> doomed_edges;
+std::vector<polygon_c *> doomed_polygons;
+std::vector<wall_tip_c *> doomed_wall_tips;
+std::vector<linedef_c *> doomed_ex_floors;
 
 int num_vertices;
 int num_linedefs;
@@ -1171,12 +1181,52 @@ bool OpenMap(const char *level_name) {
 }
 
 void CloseMap() {
+    int i;
+    for (i=0; i < all_vertices.size(); i++)
+    {
+        doomed_vertices.push_back(all_vertices[i]);
+    }
+    for (i=0; i < all_linedefs.size(); i++)
+    {
+        doomed_linedefs.push_back(all_linedefs[i]);
+    }
+    for (i=0; i < all_sidedefs.size(); i++)
+    {
+        doomed_sidedefs.push_back(all_sidedefs[i]);
+    }
+    for (i=0; i < all_sectors.size(); i++)
+    {
+        doomed_sectors.push_back(all_sectors[i]);
+    }
+    for (i=0; i < all_things.size(); i++)
+    {
+        doomed_things.push_back(all_things[i]);
+    }
+    for (i=0; i < all_splits.size(); i++)
+    {
+        doomed_splits.push_back(all_splits[i]);
+    }
+    for (i=0; i < all_edges.size(); i++)
+    {
+        doomed_edges.push_back(all_edges[i]);
+    }
+    for (i=0; i < all_polygons.size(); i++)
+    {
+        doomed_polygons.push_back(all_polygons[i]);
+    }
+    for (i=0; i < all_wall_tips.size(); i++)
+    {
+        doomed_wall_tips.push_back(all_wall_tips[i]);
+    }
+    for (i=0; i < all_ex_floors.size(); i++)
+    {
+        doomed_ex_floors.push_back(all_ex_floors[i]);
+    }
     all_vertices.clear();
     all_linedefs.clear();
     all_sidedefs.clear();
     all_sectors.clear();
     all_things.clear();
-
     all_splits.clear();
     all_edges.clear();
     all_polygons.clear();
@@ -1188,11 +1238,85 @@ void CloseMap() {
     num_sidedefs = 0;
     num_sectors = 0;
     num_things = 0;
-
     num_splits = 0;
     num_edges = 0;
     num_polygons = 0;
     num_wall_tips = 0;
+}
+
+void FreeMap()
+{
+    int i;
+    for (int i=0; i < doomed_vertices.size(); i++)
+    {
+        if (doomed_vertices[i]) {
+            delete doomed_vertices[i];
+        }
+    }
+    doomed_vertices.clear();
+    for (int i=0; i < doomed_linedefs.size(); i++)
+    {
+        if (doomed_linedefs[i]) {
+            delete doomed_linedefs[i];
+        }
+    }
+    doomed_linedefs.clear();
+    for (int i=0; i < doomed_sidedefs.size(); i++)
+    {
+        if (doomed_sidedefs[i]) {
+            delete doomed_sidedefs[i];
+        }
+    }
+    doomed_sidedefs.clear();
+    for (int i=0; i < doomed_sectors.size(); i++)
+    {
+        if (doomed_sectors[i]) {
+            delete doomed_sectors[i];
+        }
+    }
+    doomed_sectors.clear();
+    for (int i=0; i < doomed_things.size(); i++)
+    {
+        if (doomed_things[i]) {
+            delete doomed_things[i];
+        }
+    }
+    doomed_things.clear();
+    for (int i=0; i < doomed_splits.size(); i++)
+    {
+        if (doomed_splits[i]) {
+            delete doomed_splits[i];
+        }
+    }
+    doomed_splits.clear();
+    for (int i=0; i < doomed_edges.size(); i++)
+    {
+        if (doomed_edges[i]) {
+            delete doomed_edges[i];
+        }
+    }
+    doomed_edges.clear();
+    for (int i=0; i < doomed_polygons.size(); i++)
+    {
+        if (doomed_polygons[i]) {
+            delete doomed_polygons[i];
+        }
+    }
+    doomed_polygons.clear();
+    for (int i=0; i < doomed_wall_tips.size(); i++)
+    {
+        if (doomed_wall_tips[i]) {
+            delete doomed_wall_tips[i];
+        }
+    }
+    doomed_wall_tips.clear();
+    for (int i=0; i < doomed_ex_floors.size(); i++)
+    {
+        if (doomed_ex_floors[i]) {
+            delete doomed_ex_floors[i];
+        }
+    }
+    doomed_ex_floors.clear();
 }
 
 }  // namespace ajpoly

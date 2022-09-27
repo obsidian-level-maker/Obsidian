@@ -314,6 +314,8 @@ bool OpenMap(const char *map_name);
 // can be safely called without any opened map
 void CloseMap();
 
+void FreeMap();
+
 // attempt to polygonize each sector in the map.
 // when 'require_border' is true, map must be bounded by a linedef
 // on all four sides (north, south, east and west).
