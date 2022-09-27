@@ -1234,6 +1234,7 @@ extern int wad_read_text_lump(lua_State *L);
 
 extern int fsky_create(lua_State *L);
 extern int fsky_write(lua_State *L);
+extern int fsky_free(lua_State *L);
 extern int fsky_solid_box(lua_State *L);
 extern int fsky_add_stars(lua_State *L);
 extern int fsky_add_clouds(lua_State *L);
@@ -1346,6 +1347,7 @@ static const luaL_Reg gui_script_funcs[] = {
 
     {"fsky_create", Doom::fsky_create},
     {"fsky_write", Doom::fsky_write},
+    {"fsky_free", Doom::fsky_free},
     {"fsky_solid_box", Doom::fsky_solid_box},
     {"fsky_add_stars", Doom::fsky_add_stars},
     {"fsky_add_clouds", Doom::fsky_add_clouds},

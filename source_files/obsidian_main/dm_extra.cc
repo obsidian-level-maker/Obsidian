@@ -334,6 +334,16 @@ int fsky_write(lua_State *L) {
     return 0;
 }
 
+int fsky_free(lua_State *L) {
+    // LUA: fsky_free()
+
+    if (sky_pixels) {
+        delete[] sky_pixels;
+    }
+
+    return 0;
+}
+
 int fsky_solid_box(lua_State *L) {
     // LUA: fsky_solid_box(x, y, w, h, col)
 
