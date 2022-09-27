@@ -188,6 +188,7 @@ PREFABS.Item_secret_yard_closet1 =
   map   = "MAP03",
 
   engine = "zdoom",
+  texture_pack = "armaetus",
 
   theme = "urban",
   env   = "outdoor",

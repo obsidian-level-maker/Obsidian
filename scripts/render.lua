@@ -20,7 +20,7 @@
 ------------------------------------------------------------------------
 
 
-function Render_add_exit_sign(E, z)
+function Render_add_exit_sign(E, z, SEEDS, LEVEL)
 
   if not PARAM.bool_exit_signs then return end
 
@@ -1030,7 +1030,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
          E = E.peer
       end
 
-      Render_add_exit_sign(E, E.area.floor_h) --z
+      Render_add_exit_sign(E, E.area.floor_h, SEEDS, LEVEL) --z
     end
   end
 
@@ -2479,7 +2479,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
       end
 
       if E and not E.area.room.is_hallway then
-        Render_add_exit_sign(E, E.area.floor_h) --z1
+        Render_add_exit_sign(E, E.area.floor_h, SEEDS, LEVEL) --z1
       end
     end
   end
@@ -3067,10 +3067,10 @@ function Render_all_areas(LEVEL, SEEDS)
   Render_skybox(LEVEL)
 
   if LEVEL.has_streets and PARAM.bool_road_markings == 1 then
-    Render_find_street_markings(LEVEL)
-    Render_all_street_markings(LEVEL)
-    Render_establish_street_lanes(LEVEL)
-    Render_all_street_traffic(LEVEL)
+    Render_find_street_markings(LEVEL, SEEDS)
+    Render_all_street_markings(LEVEL, SEEDS)
+    Render_establish_street_lanes(LEVEL, SEEDS)
+    Render_all_street_traffic(LEVEL, SEEDS)
   end
 
   Render_scenic_fabs(LEVEL, SEEDS)
@@ -3124,7 +3124,7 @@ end
 
 
 
-function Render_all_street_traffic(LEVEL)
+function Render_all_street_traffic(LEVEL, SEEDS)
   LEVEL.street_traffic = {}
 
   local function get_parking_distance(pos)
@@ -3267,7 +3267,7 @@ end
 
 
 
-function Render_find_street_markings(LEVEL)
+function Render_find_street_markings(LEVEL, SEEDS)
 
   -- Render street markings
   --
@@ -3505,7 +3505,7 @@ end
 
 
 
-function Render_establish_street_lanes(LEVEL)
+function Render_establish_street_lanes(LEVEL, SEEDS)
 
   -- Render_establish_street_lanes
   --

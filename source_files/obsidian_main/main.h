@@ -176,6 +176,7 @@ extern int zip_output;
 extern bool zip_logs;
 extern bool timestamp_logs;
 extern int log_limit;
+extern bool first_run;
 
 extern std::string def_filename;
 extern std::string log_timestamp;

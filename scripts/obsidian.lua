@@ -1751,12 +1751,6 @@ function ob_clean_up()
   for _,k in pairs (SCRIPTS) do
     SCRIPTS[k] = nil
   end
-  for _,k in pairs (EPISODE) do
-    EPISODE[k] = nil
-  end
-  for _,k in pairs (PREFABS) do
-    PREFABS[k] = nil
-  end
   GAME   = nil
   THEME  = nil
   PARAM  = nil

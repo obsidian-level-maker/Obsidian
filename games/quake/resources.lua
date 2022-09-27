@@ -76,7 +76,7 @@ QUAKE.PALETTES =
 -- TODO : create logos (etc)
 
 
-function QUAKE.begin_level()
+function QUAKE.begin_level(LEVEL)
 
   local tex_wad_add = gui.q1_add_tex_wad("games/quake/data/quake_tex.wd2")
 

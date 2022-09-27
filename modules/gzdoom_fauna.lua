@@ -334,21 +334,21 @@ function FAUNA_MODULE.get_levels(self)
 
 end
 
-function FAUNA_MODULE.end_level()
+function FAUNA_MODULE.end_level(self, LEVEL)
 
   if LEVEL.prebuilt then return end
 
   if PARAM.bool_flies == 1 then
-    FAUNA_MODULE.add_flies()
+    FAUNA_MODULE.add_flies(LEVEL)
   end
 
   if PARAM.bool_rats == 1 then
-    FAUNA_MODULE.add_rats()
+    FAUNA_MODULE.add_rats(LEVEL)
   end
 
 end
 
-function FAUNA_MODULE.add_flies()
+function FAUNA_MODULE.add_flies(LEVEL)
 
   for _,A in pairs(LEVEL.areas) do
 
@@ -408,7 +408,7 @@ function FAUNA_MODULE.add_flies()
   end
 end
 
-function FAUNA_MODULE.add_rats()
+function FAUNA_MODULE.add_rats(LEVEL)
 
   for _,A in pairs(LEVEL.areas) do
     if (A.mode and A.mode == "floor") then

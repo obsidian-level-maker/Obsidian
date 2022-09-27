@@ -205,7 +205,7 @@ function EXPORT_MAP.setup()
 end
 
 
-function EXPORT_MAP.begin_level()
+function EXPORT_MAP.begin_level(self, LEVEL)
   -- pre-built levels cannot be exported
   if LEVEL.prebuilt then return end
 

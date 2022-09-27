@@ -234,23 +234,6 @@ function Level_determine_map_size(LEV)
 
   ::customsize::
 
-  if OB_CONFIG.cap_level_sizes == "yes" then
-    if OB_CONFIG.length == "game" then
-      if OB_CONFIG.float_size == gui.gettext("Progressive") or 
-      OB_CONFIG.float_size == gui.gettext("Episodic") then
-        W = math.min(48, W)
-      elseif OB_CONFIG.float_size == gui.gettext("Mix It Up") then
-        W = math.min(42, W)
-      else
-        W = math.min(30, W)
-      end
-    elseif OB_CONFIG.length == "episode" then
-      if tonumber(OB_CONFIG.float_size) then
-        W = math.min(58, W)
-      end
-    end
-  end
-
   if not W then
     error("Invalid value for size : " .. tostring(ob_size))
   end
@@ -2460,10 +2443,10 @@ function Level_choose_misc(LEVEL)
 end
 
 
-function Level_choose_skybox()
+function Level_choose_skybox(LEVEL)
   local skyfab
 
-  local function Choose_episodic_skybox(force_pick)
+  local function Choose_episodic_skybox(LEVEL, force_pick)
     if not LEVEL.episode.skybox or force_pick then
       return PREFABS[rand.key_by_probs(THEME.skyboxes)]
     else
@@ -2504,7 +2487,7 @@ function Level_choose_skybox()
   local same_skyfab = "yes"
 
   if OB_CONFIG.zdoom_skybox == "episodic" then
-    LEVEL.episode.skybox = Choose_episodic_skybox()
+    LEVEL.episode.skybox = Choose_episodic_skybox(LEVEL)
     skyfab = LEVEL.episode.skybox
   else
     LEVEL.skybox = Choose_skybox(OB_CONFIG.zdoom_skybox)
@@ -2573,7 +2556,7 @@ function Level_init(LEVEL)
   Level_choose_darkness(LEVEL)
   Level_choose_misc(LEVEL)
 
-  Level_choose_skybox()
+  Level_choose_skybox(LEVEL)
 
   Ambient_reset()
 end
@@ -2607,7 +2590,7 @@ function Level_build_it(LEVEL, SEEDS)
 end
 
 
-function Level_handle_prebuilt()
+function Level_handle_prebuilt(LEVEL)
   -- randomly pick one
   local probs = {}
 
@@ -2628,15 +2611,6 @@ function Level_handle_prebuilt()
   end
 
   return "ok"
-end
-
-function Level_between_clean(LEVEL, SEEDS)
-
-  while #LEVEL ~= 0 do rawset(LEVEL, #LEVEL, nil) end
-
-  while #SEEDS ~= 0 do rawset(SEEDS, #SEEDS, nil) end
-
-  collectgarbage("collect")
 end
 
 function Level_make_level(LEV)
@@ -2692,15 +2666,33 @@ function Level_make_level(LEV)
   if LEVEL.prebuilt then
     ob_invoke_hook("begin_level")
 
-    local res = Level_handle_prebuilt()
+    local res = Level_handle_prebuilt(LEVEL)
     if res ~= "ok" then
+      for _,k in pairs (LEVEL) do
+        LEVEL[k] = nil
+      end
+      for _,k in pairs (SEEDS) do
+        SEEDS[k] = nil
+      end
+      LEVEL = nil
+      SEEDS = nil
+      collectgarbage("collect")
+      collectgarbage("collect")
       return res
     end
-
     ob_invoke_hook("end_level")
+    for _,k in pairs (LEVEL) do
+      LEVEL[k] = nil
+    end
+    for _,k in pairs (SEEDS) do
+      SEEDS[k] = nil
+    end
+    LEVEL = nil
+    SEEDS = nil
+    collectgarbage("collect")
+    collectgarbage("collect")
     return "ok"
   end
-
 
   LEVEL.secondary_importants = {}
 

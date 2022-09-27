@@ -6165,11 +6165,17 @@ namelib.NAMES =
         -- MSSP adds names
         ["Always Has Been"] = 20,
         ["Hell is Infinite"] = 50,
+        ["Hell Aims To Please No One"] = 20,
         ["Nobody Knows About Legacy 3D Lines"] = 20,
         ["Live! Work! SLAY!"] = 20,
         ["Invest in ObCoin Now!"] = 20,
         ["Too Much Fabs, Too Few Fabs"] = 20,
+        ["Apparently Samey Yet Chaotic"] = 20,
         ["The Category is... DOOM!"] = 20,
+        ["Too Many Features, They Said"] = 20,
+        ["Not Replacing Mappers, Devs Are Too"] = 20,
+        ["Obsidian is not an AI."] = 20,
+        ["Not an AI Until it Can Do Taxes"] = 20,
 
         -- based on popular movie/TV slogans
         ["A Minute in Hell"] = 20,

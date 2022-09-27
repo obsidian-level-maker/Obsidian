@@ -2827,7 +2827,7 @@ function Room_floor_ceil_heights(LEVEL, SEEDS)
 
 
   local function process_cave(R)
-    Cave_build_a_cave(R, R.entry_h, SEEDS)
+    Cave_build_a_cave(R, R.entry_h, SEEDS, LEVEL)
   end
 
 
