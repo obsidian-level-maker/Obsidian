@@ -2443,10 +2443,10 @@ function Level_choose_misc(LEVEL)
 end
 
 
-function Level_choose_skybox()
+function Level_choose_skybox(LEVEL)
   local skyfab
 
-  local function Choose_episodic_skybox(force_pick)
+  local function Choose_episodic_skybox(LEVEL, force_pick)
     if not LEVEL.episode.skybox or force_pick then
       return PREFABS[rand.key_by_probs(THEME.skyboxes)]
     else
@@ -2487,7 +2487,7 @@ function Level_choose_skybox()
   local same_skyfab = "yes"
 
   if OB_CONFIG.zdoom_skybox == "episodic" then
-    LEVEL.episode.skybox = Choose_episodic_skybox()
+    LEVEL.episode.skybox = Choose_episodic_skybox(LEVEL)
     skyfab = LEVEL.episode.skybox
   else
     LEVEL.skybox = Choose_skybox(OB_CONFIG.zdoom_skybox)
@@ -2556,7 +2556,7 @@ function Level_init(LEVEL)
   Level_choose_darkness(LEVEL)
   Level_choose_misc(LEVEL)
 
-  Level_choose_skybox()
+  Level_choose_skybox(LEVEL)
 
   Ambient_reset()
 end
