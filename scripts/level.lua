@@ -2590,7 +2590,7 @@ function Level_build_it(LEVEL, SEEDS)
 end
 
 
-function Level_handle_prebuilt()
+function Level_handle_prebuilt(LEVEL)
   -- randomly pick one
   local probs = {}
 
@@ -2666,12 +2666,31 @@ function Level_make_level(LEV)
   if LEVEL.prebuilt then
     ob_invoke_hook("begin_level")
 
-    local res = Level_handle_prebuilt()
+    local res = Level_handle_prebuilt(LEVEL)
     if res ~= "ok" then
+      for _,k in pairs (LEVEL) do
+        LEVEL[k] = nil
+      end
+      for _,k in pairs (SEEDS) do
+        SEEDS[k] = nil
+      end
+      LEVEL = nil
+      SEEDS = nil
+      collectgarbage("collect")
+      collectgarbage("collect")
       return res
     end
-
     ob_invoke_hook("end_level")
+    for _,k in pairs (LEVEL) do
+      LEVEL[k] = nil
+    end
+    for _,k in pairs (SEEDS) do
+      SEEDS[k] = nil
+    end
+    LEVEL = nil
+    SEEDS = nil
+    collectgarbage("collect")
+    collectgarbage("collect")
     return "ok"
   end
 
