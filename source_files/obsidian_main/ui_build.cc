@@ -29,9 +29,9 @@
 UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     : Fl_Group(X, Y, W, H, label) {
     box(box_style);
-// clang-format off
+    // clang-format off
     tooltip(_("Progress and minimap display.\nMinimap Legend:\nWhite - Regular rooms\nBrown - Caves\nBlue - Outdoors\nGreen - Parks"));
-// clang-format on
+    // clang-format on
 
     status_label = "0";
 
