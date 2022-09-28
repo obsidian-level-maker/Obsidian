@@ -821,7 +821,7 @@ function Grower_calc_rule_probs(LEVEL)
   end
 
 
-  local function calc_prob(rule)
+  local function calc_prob(rule, LEVEL)
     if rule.skip_prob then
       if rand.odds(rule.skip_prob) then return 0 end
     end
@@ -868,7 +868,7 @@ function Grower_calc_rule_probs(LEVEL)
   PARAM.skipped_rules = 0
 
   for name,rule in pairs(SHAPE_GRAMMAR) do
-    rule.use_prob = calc_prob(rule)
+    rule.use_prob = calc_prob(rule, LEVEL)
     if rule.use_prob == 0 then
       PARAM.skipped_rules = PARAM.skipped_rules + 1
     end
@@ -976,7 +976,7 @@ function Grower_calc_rule_probs(LEVEL)
       rule.env = new_env
       rule.is_absurd = true
 
-      gui.debugf(rule.name .. " is now ABSURDIFIED! WOOO!!!\n")
+      gui.printf(rule.name .. "\n")
       gui.debugf("Factor: x" .. new_factor .. "\n")
       if new_env then gui.debugf("New env: " .. new_env .. "\n") end
     end
@@ -3154,8 +3154,8 @@ end
 
     best = { score=-1, areas={} }
 
-    gui.debugf("CURRENT ROOM: " .. table.tostr(R, 2))
-    gui.debugf("CURRENT RULE: " .. table.tostr(cur_rule))
+    gui.debugf("CURRENT ROOM: " .. R.id .. "\n")
+    gui.debugf("CURRENT RULE: " .. cur_rule.name .. "\n")
 
     local T
     local x1, y1, x2, y2
@@ -3296,7 +3296,7 @@ end
     end
 
 
-    local function calc_prob(rule, x_prob, mode)
+    local function calc_prob(rule, x_prob, mode, LEVEL)
       -- MSSP: this is a modification of calc_prob function.
       -- x_prob is used for absurdity and shape groupings,
       -- such that absurdification still runs through all
@@ -3329,11 +3329,13 @@ end
       prob = prob *  style_factor(rule)
       prob = prob * random_factor(rule)
 
-      if x_prob then
-        if mode == "multiply" or not mode then
-          prob = prob * x_prob
-        elseif mode == "divide" then
-          prob = prob / x_prob
+      if mode ~= "reset" then
+        if x_prob then
+          if mode == "multiply" or not mode then
+            prob = prob * x_prob
+          elseif mode == "divide" then
+            prob = prob / x_prob
+          end
         end
       end
 
@@ -3346,11 +3348,11 @@ end
         if rule.group == cur_def.group
         and rule.group_pos ~= "entry" then
           if mode == "highlight" then
-            calc_prob(cur_def, 1000000, "multiply")
+            calc_prob(cur_def, 1000000, "multiply", LEVEL)
           elseif mode == "reduce" then
-            calc_prob(cur_def, 1.2, "divide")
+            calc_prob(cur_def, 1.2, "divide", LEVEL)
           elseif mode == "reset" then
-            calc_prob(cur_def)
+            calc_prob(cur_def, 0, "reset", LEVEL)
           end
         end
       end
