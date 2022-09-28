@@ -4107,7 +4107,7 @@ function Grower_begin_trunks(LEVEL, SEEDS)
 
   local R = Grower_create_and_grow_room(SEEDS, LEVEL, trunk, nil, info)
 
-  assert(not R.is_dead)
+  assert(R) -- test - Dasho
 
   -- ensure the first floor of an exit room is kept usable for bosses
   if R.is_exit then

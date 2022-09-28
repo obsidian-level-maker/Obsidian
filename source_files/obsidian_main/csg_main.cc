@@ -1356,22 +1356,26 @@ void CSG_LinkBrushToEntity(csg_brush_c *B, std::string link_key) {
 }
 
 void CSG_Main_Free() {
+    CSG_DeleteQuadTree();
+
     unsigned int k;
 
     for (k = 0; k < all_brushes.size(); k++) {
-        delete all_brushes[k];
+        if (all_brushes[k]) {
+            delete all_brushes[k];
+        }
     }
 
     for (k = 0; k < all_entities.size(); k++) {
-        delete all_entities[k];
+        if (all_entities[k]) {
+            delete all_entities[k];
+        }
     }
 
     all_brushes.clear();
     all_entities.clear();
 
     CSG_FreeTexProps();
-
-    CSG_DeleteQuadTree();
 
     dummy_wall_tex.clear();
     dummy_plane_tex.clear();
