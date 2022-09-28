@@ -559,7 +559,7 @@ end
 
 
 
-function Layout_place_hub_gates(LEVEL)
+function Layout_place_hub_gates(LEVEL, SEEDS)
   -- this also does secret exit closets
 
   local function num_free_chunks(list)
@@ -717,7 +717,7 @@ function Layout_place_all_importants(LEVEL, SEEDS)
   -- do hub gates and secret exit closets
   -- [ do this first, since these require closets, whereas normal
   --   starts and exits and goals can be placed without closets ]
-  Layout_place_hub_gates(LEVEL)
+  Layout_place_hub_gates(LEVEL, SEEDS)
 
   for _,R in pairs(LEVEL.rooms) do
     Layout_place_importants(LEVEL, R, 1, SEEDS)
