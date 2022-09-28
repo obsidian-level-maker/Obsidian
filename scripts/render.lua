@@ -588,7 +588,7 @@ function Render_edge(LEVEL, E, SEEDS)
 
 
   local function straddle_railing()
-    local mat = Mat_lookup_tex(assert(E.rail_mat))
+    local mat = Mat_lookup_tex(LEVEL, assert(E.rail_mat))
     assert(mat.t)
 
     local side_props =
