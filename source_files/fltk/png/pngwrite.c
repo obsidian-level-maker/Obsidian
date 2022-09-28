@@ -915,7 +915,7 @@ void PNGAPI png_set_filter(png_structrp png_ptr, int method, int filters) {
       case 6:
       case 7:
         png_app_error(png_ptr, "Unknown row filter for method 0");
-#endif  /* WRITE_FILTER */
+#endif /* WRITE_FILTER */
         /* FALLTHROUGH */
       case PNG_FILTER_VALUE_NONE:
         png_ptr->do_filter = PNG_FILTER_NONE;

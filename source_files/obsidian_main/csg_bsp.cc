@@ -516,7 +516,9 @@ void region_c::ClockwiseSnags() {
         }
     }
 
-    if (angles) delete[] angles;
+    if (angles) {
+        delete[] angles;
+    }
 }
 
 struct csg_brush_ptr_Compare {
