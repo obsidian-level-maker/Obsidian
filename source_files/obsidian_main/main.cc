@@ -151,7 +151,7 @@ bool password_mode = false;
 bool did_specify_seed = false;
 int zip_output = 0;
 bool zip_logs = false;
-bool timestamp_logs = false;
+bool timestamp_logs = true;
 int log_limit = 5;
 
 int old_x = 0;

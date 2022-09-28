@@ -3466,7 +3466,7 @@ end
 
     local tries = 5 -- Maybe tune this parameter to test build speed? - Dasho
 
-    if tries > table.size(rules) then tries = table.size(rules) end
+    if tries > #rules then tries = #rules end
 
     for x = tries,0,-1 do
       if table.empty(rules) then return end
