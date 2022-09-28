@@ -132,6 +132,10 @@ int FWadReader::FindMapLump(const char *name, int map) const {
 bool FWadReader::isUDMF(int index) const {
     index++;
 
+    if (index >= Header.NumLumps) {
+        return false;
+    }
+
     if (strncasecmp(Lumps[index].Name, "TEXTMAP", 8) == 0) {
         // UDMF map
         return true;
@@ -145,6 +149,10 @@ bool FWadReader::IsMap(int index) const {
     if (isUDMF(index)) return true;
 
     index++;
+
+    if (index + 11 >= Header.NumLumps) {
+        return false;
+    }
 
     for (i = j = 0; i < 12; ++i) {
         if (strncasecmp(Lumps[index + j].Name, MapLumpNames[i], 8) != 0) {

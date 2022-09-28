@@ -893,6 +893,10 @@ void FProcessor::WriteSegs(FWadWriter &out) {
             "   SEGS is too big for vanilla Doom and some ports. (%d segs)\n",
             Level.NumSegs);
     }
+
+    if (segdata) {
+        delete[] segdata;
+    }
 }
 
 void FProcessor::WriteSSectors(FWadWriter &out) const {
