@@ -1014,9 +1014,12 @@ function Grower_decide_extents(LEVEL)
   -- decides how much of the map we can use for growing rooms.
   --
 
-  if LEVEL.has_streets == true then
-    if PARAM.bool_appropriate_street_themes and PARAM.bool_appropriate_street_themes == 1 and LEVEL.theme.streets_friendly == false then
-      LEVEL.has_streets = false
+
+  if LEVEL.has_streets then
+    if PARAM.bool_appropriate_street_themes 
+    and PARAM.bool_appropriate_street_themes == 1 
+    and not LEVEL.theme.streets_friendly then
+      LEVEL.has_streets = nil
     end
   end
 
