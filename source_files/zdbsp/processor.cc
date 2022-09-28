@@ -230,6 +230,9 @@ void FProcessor::LoadSectors() {
     for (int i = 0; i < NumSectors; ++i) {
         Level.Sectors[i].data = Sectors[i];
     }
+    if (Sectors) {
+        delete[] Sectors;
+    }
 }
 
 void FLevel::FindMapBounds() {
@@ -866,6 +869,10 @@ void FProcessor::WriteSectors(FWadWriter &out) {
     }
 
     out.WriteLump("SECTORS", Sectors, Level.NumSectors() * sizeof(*Sectors));
+
+    if (Sectors) {
+        delete[] Sectors;
+    }
 }
 
 void FProcessor::WriteSegs(FWadWriter &out) {

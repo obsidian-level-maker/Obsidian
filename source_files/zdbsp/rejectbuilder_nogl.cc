@@ -154,6 +154,15 @@ void FRejectBuilderNoGL::FindBlockChains() {
         chain->Next = BlockChains;
         BlockChains = chain;
     }
+    if (marked) {
+        delete[] marked;
+    }
+    if (nextForVert) {
+        delete[] nextForVert;
+    }
+    if (firstLine) {
+        delete[] firstLine;
+    }
 }
 
 void FRejectBuilderNoGL::HullSides(const BBox &box1, const BBox &box2,
