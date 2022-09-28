@@ -298,5 +298,8 @@ void FRejectBuilderNoGL::BuildReject() {
             Reject[pos >> 3] |= 1 << (pos & 7);
         }
     }
+    if (SectorBounds) {
+        delete[] SectorBounds;
+    }
     printf("   Reject: 100%%\n");
 }

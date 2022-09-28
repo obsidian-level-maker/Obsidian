@@ -198,6 +198,9 @@ void FProcessor::LoadVertices() {
         Level.Vertices[i].index =
             0;  // we don't need this value for non-UDMF maps
     }
+    if (verts) {
+        delete[] verts;
+    }
 }
 
 void FProcessor::LoadSides() {
