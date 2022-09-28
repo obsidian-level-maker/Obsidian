@@ -17,7 +17,6 @@ PREFABS.Pic_dem_tags_regulars =
   bound_z2 = 64,
 
   deep =  16,
-  over = -16,
 
   x_fit = "frame",
   y_fit = "top",
@@ -57,7 +56,6 @@ PREFABS.dem_tags_logs =
   bound_z2 = 128,
 
   deep =  64,
-  over = -16,
 }
 
 PREFABS.Pic_dem_tags_regulars_right_align =

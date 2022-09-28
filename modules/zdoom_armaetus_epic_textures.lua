@@ -807,7 +807,7 @@ function ARMAETUS_EPIC_TEXTURES.decide_environment_themes()
   end
 end
 
-function ARMAETUS_EPIC_TEXTURES.generate_environment_themes(LEVEL)
+function ARMAETUS_EPIC_TEXTURES.generate_environment_themes(self, LEVEL)
   --------------------------------------
   -- Style Update for Custom Elements --
   --------------------------------------
