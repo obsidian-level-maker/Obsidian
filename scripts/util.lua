@@ -672,7 +672,8 @@ end
 
 function rand.pick(list)
   if #list > 0 then
-    return list[rand.irange(1, #list)]
+    local sorted_entries = table.keys_sorted(list)
+    return list[sorted_entries[rand.irange(1, #sorted_entries)]]
   else
     return nil
   end
@@ -680,12 +681,13 @@ end
 
 function rand.shuffle(t)
   -- implements Knuth's random shuffle algorithm.
+  local sorted_entries = table.keys_sorted(t)
 
-  if #t > 1 then
-    for i = 1,(#t-1) do
-      local k = rand.irange(i,#t)
+  if #sorted_entries > 1 then
+    for i = 1,(#sorted_entries-1) do
+      local k = rand.irange(i,#sorted_entries)
       -- swap the pair of values
-      t[i], t[k] = t[k], t[i]
+      t[sorted_entries[i]], t[sorted_entries[k]] = t[sorted_entries[k]], t[sorted_entries[i]]
     end
   end
 
@@ -722,14 +724,16 @@ function rand.key_by_probs(tab)
   local key_list  = {}
   local prob_list = {}
 
-  for key,prob in pairs(tab) do
-    table.insert(key_list,  key)
-    table.insert(prob_list, prob)
+  local sorted_entries = table.keys_sorted(tab)
+
+  for _,key in ipairs(sorted_entries) do
+    key_list[tab[key]] = key
+    table.insert(prob_list, tab[key])
   end
 
   local idx = rand.index_by_probs(prob_list)
 
-  return key_list[idx]
+  return key_list[prob_list[idx]]
 end
 
 
