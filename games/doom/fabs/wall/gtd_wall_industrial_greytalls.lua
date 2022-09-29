@@ -23,3 +23,23 @@ PREFABS.Wall_gtd_greywall_1_diag =
 
   where = "diagonal"
 }
+
+--
+
+PREFABS.Wall_gtd_greytall_trim =
+{
+  template = "Wall_gtd_greywall_1",
+  map = "MAP06",
+
+  group = "gtd_greytall_trim"
+}
+
+PREFABS.Wall_gtd_greytall_trim_diag =
+{
+  template = "Wall_gtd_greywall_1",
+  map = "MAP07",
+
+  where = "diagonal",
+
+  group = "gtd_greytall_trim"
+}
