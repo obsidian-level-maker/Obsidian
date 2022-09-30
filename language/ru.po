@@ -5400,7 +5400,7 @@ msgstr "Адская"
 
 #: modules/theme_control.lua:30
 msgid "Egypt (TNT)"
-msgstr "Египт (TNT)"
+msgstr "Египет (TNT)"
 
 #: modules/theme_control.lua:31
 msgid "Psychedelic"
@@ -7322,13 +7322,17 @@ msgstr "Дата и время|Количество уровней|Игра|Иг
 msgid "Set Custom Prefix..."
 msgstr "Ввести префикс..."
 
+#: source_files/obsidian_main/m_options.cc:634
+msgid "Set Default Output Path"
+msgstr "Путь сохранения..."
+
 #: source_files/obsidian_main/m_options.cc:598
 msgid " Random String Seeds"
 msgstr "Случайные слова для сида"
 
 #: source_files/obsidian_main/m_options.cc:377
-msgid "Will randomly pull 1 to 3 words from Obsidian's random word list (found in /scripts/random_words.lua) and use those as input for the map generation seed. Purely for cosmetic/entertainment value."
-msgstr "При включённой настройке будет случайно выбирать несколько слов из встроенной базы данных (находится в /scripts/random_words*.lua) и добавлять их к ключу генерации. Можно считать, что используется исключительно для развлечения."
+msgid "Will randomly pull 1 to 3 words from Obsidian's random word list and use those as input for the map generation seed. Purely for cosmetic/entertainment value."
+msgstr "При включённой настройке будет случайно выбирать несколько слов из встроенной базы данных, добавляя их к ключу генерации. Можно считать, что используется исключительно для развлечения."
 
 #: source_files/obsidian_main/m_options.cc:614
 msgid " Password Mode"
@@ -7392,7 +7396,7 @@ msgstr "К-во хранимых логов"
 
 #: source_files/obsidian_main/m_options.cc:299
 msgid "Obsidian will now restart to apply language changes.\nObsidian will be in your selected language after restarting."
-msgstr "Для того, чтобы изменение языка вступили в силу, OBSIDIAN необходимо перезапуститься.\nOBSIDIAN will now restart to apply language changes."
+msgstr "Для того, чтобы изменение языка вступило в силу, OBSIDIAN необходимо перезапуститься.\nOBSIDIAN will now restart to apply language changes."
 
 #: source_files/obsidian_main/m_options.cc:722
 msgid " Restart Lua VM Between Builds"
@@ -7426,6 +7430,62 @@ msgstr "Выберите файл темы для загрузки"
 msgid "Unable to load the file:\n\n%s"
 msgstr "Невозможно загрузить файл:\n\n%s"
 
+#: source_files/obsidian_main/m_theme.cc:395
+msgid "Windows scaling changes require a restart.\nOBSIDIAN will now restart."
+msgstr "Для того, чтобы изменение масштаба окон вступило в силу,\nOBSIDIAN необходимо перезапуститься."
+
+#: source_files/obsidian_main/m_theme.cc:687
+msgid "Plastic widget theme requires a restart.\nOBSIDIAN will now restart."
+msgstr "Для того, чтобы изменение на пластиковую тему вступило\nв силу, OBSIDIAN необходимо перезапуститься."
+
+#: source_files/obsidian_main/m_theme.cc:839
+msgid "Switching pane modes requires a restart.\nOBSIDIAN will now restart."
+msgstr "Для того, чтобы изменение режима панели вступило в силу,\nOBSIDIAN необходимо перезапуститься."
+
+#: source_files/obsidian_main/m_theme.cc:852
+msgid "Switching font selection requires a restart.\nOBSIDIAN will now restart."
+msgstr "Для того, чтобы изменение шрифта вступило в силу,\nOBSIDIAN необходимо перезапуститься."
+
+#: source_files/obsidian_main/m_theme.cc:907
+msgid "Select Panel Text Color"
+msgstr "Цвет основного шрифта"
+
+#: source_files/obsidian_main/m_theme.cc:1024
+msgid "Select Button Text Color"
+msgstr "Цвет шрифта кнопок"
+
+#: source_files/obsidian_main/m_theme.cc:1089
+msgid "Select Panel Color"
+msgstr "Цвет фона панелей"
+
+#: source_files/obsidian_main/m_theme.cc:1152
+msgid "Select Highlight Color"
+msgstr "Цвет подсветки"
+
+#: source_files/obsidian_main/m_theme.cc:1239
+msgid "Select Button Color"
+msgstr "Цвет кнопок"
+
+#: source_files/obsidian_main/m_theme.cc:1302
+msgid "Select Gradient Color"
+msgstr "Цвет объектов с градиентом"
+
+#: source_files/obsidian_main/m_theme.cc:1340
+msgid "Select Border Color"
+msgstr "Цвет границ"
+
+#: source_files/obsidian_main/m_theme.cc:1376
+msgid "Select Gap Color"
+msgstr "Цвет пустых мест"
+
+#: source_files/obsidian_main/m_theme.cc:1443
+msgid "Defaults loaded.\nOBSIDIAN will now restart."
+msgstr "Восстановлена тема по умолчанию.\nOBSIDIAN сейчас перезапустится."
+
+#: source_files/obsidian_main/m_theme.cc:1455
+msgid "Theme loading requires a restart.\nOBSIDIAN will now restart."
+msgstr "Для того, чтобы новая тема вступила в силу,\nOBSIDIAN необходимо перезапуститься."
+
 #: source_files/obsidian_main/m_theme.cc:1500
 msgid "Window Scaling: "
 msgstr "Масштаб окон: "
@@ -7456,7 +7516,7 @@ msgstr "Стиль групп: "
 
 #: source_files/obsidian_main/m_theme.cc:1563
 msgid "Default|Shadow|Embossed|Engraved|Inverted|Raised"
-msgstr "Стандарт|Тень|Тиснёный|Гравированный|Перевернутый|Поднятый"
+msgstr "Стандарт|Тень|Тиснёный|Гравированный|Перевёрнутый|Поднятый"
 
 #: source_files/obsidian_main/m_theme.cc:1575
 msgid "Button Theme: "
@@ -7752,7 +7812,7 @@ msgstr "Помощь/Руководство"
 
 #: source_files/obsidian_main/ui_window.cc:87
 msgid "Surprise Me/Go"
-msgstr "Удивить/Пуск"
+msgstr "Удивить/Перегенерировать выбранное"
 
 msgid "This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."
 msgstr "══ От переводчиков ══\n\nЧасть слов, в основном укоренившиеся в широких кругах (с позволения сказать, имена собственные — имп, ревенант, ...) я просто транслитерировал, дословно переводя только в некоторых подсказках.\n\nНекоторые термины, хорошо звучащие в английском языке, при попытке локализации оказались слишком длинными для отведённого лимита символов. Поэтому некоторые слова пришлось заменить на более короткие варианты; к таким можно отнести слово \"Префаб\" — заготовка/составляющая уровня/примитив/кубик конструктора, происходящее от английского \"Pre-fabricated\" (дословно \"Предсобранный\").\n\nВ HaxC и Harmony никто из переводчиков не играл и в русскоязычном сегменте Интернета эти игры неизвестны, поэтому названия предметов и противников из них пока что не переведены; если Вы разбираетесь в этой теме и хотите помочь, есть прекрасная возможность дополнить файл русского языка. Примерно та же ситуация с Chex Quest, но для него хотя бы существует частичный перевод в GZDoom от Kostov (Undead)."
