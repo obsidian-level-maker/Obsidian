@@ -4308,7 +4308,7 @@ msgstr "Доп. монстры"
 
 #: modules/procedural_gotcha.lua:90
 msgid "Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting)."
-msgstr ""
+msgstr "Изменение количества монстров вдобавок к их обычному числу. Снизу эта настройка ограничена значением 0.1 (аналогична варианту «Редко»)."
 
 #: modules/procedural_gotcha.lua:97
 msgid "Extra Strength"
