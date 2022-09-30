@@ -1474,7 +1474,7 @@ function Area_locate_chunks(LEVEL, SEEDS)
   end
 
 
-  local function create_chunk(A, sx1,sy1, sx2,sy2)
+  local function create_chunk(A, sx1,sy1, sx2,sy2, LEVEL)
     local R = assert(A.room)
 
     local kind = "floor"
@@ -1507,10 +1507,13 @@ function Area_locate_chunks(LEVEL, SEEDS)
         end
       
         LEVEL.liquid = liquid
-        gui.printf("New liquid is " .. name .. ".\n")
-      end
+        LEVEL.liquid_name = name
+        LEVEL.liquid_usage = 1
+        LEVEL.late_liquid = true
 
-      print_area(A)
+        LEVEL.description = LEVEL.description .. "New: " .. LEVEL.liquid_name .. " [LATE]"
+        gui.printf("New liquid is " .. name .. ".\n")
+      end  
     end
 
     local CK = make_chunk(kind, A, sx1,sy1, sx2,sy2)
@@ -1566,8 +1569,8 @@ function Area_locate_chunks(LEVEL, SEEDS)
   end
 
 
-  local function install_chunk_at_seed(A, sx1,sy1, sx2,sy2)
-    local CK = create_chunk(A, sx1,sy1, sx2,sy2)
+  local function install_chunk_at_seed(A, sx1,sy1, sx2,sy2, LEVEL)
+    local CK = create_chunk(A, sx1,sy1, sx2,sy2, LEVEL)
 
     for x = sx1, sx2 do
     for y = sy1, sy2 do
@@ -1585,13 +1588,13 @@ function Area_locate_chunks(LEVEL, SEEDS)
   end
 
 
-  local function try_chunk_at_seed(A, sx1,sy1, sx2,sy2)
+  local function try_chunk_at_seed(A, sx1,sy1, sx2,sy2, LEVEL)
     if not raw_test_chunk(A, sx1,sy1, sx2,sy2) then
       return false
     end
 
     if not (A.room and A.room.symmetry) then
-      install_chunk_at_seed(A, sx1,sy1, sx2,sy2)
+      install_chunk_at_seed(A, sx1,sy1, sx2,sy2, LEVEL)
       return true
     end
 
@@ -1620,7 +1623,7 @@ function Area_locate_chunks(LEVEL, SEEDS)
     if sym_pass ~= 1 and     is_straddler then return false end
 
     if is_straddler then
-      local CHUNK = install_chunk_at_seed(A, sx1,sy1, sx2,sy2)
+      local CHUNK = install_chunk_at_seed(A, sx1,sy1, sx2,sy2, LEVEL)
       CHUNK.is_straddler = true
       return true
     end
@@ -1636,8 +1639,8 @@ function Area_locate_chunks(LEVEL, SEEDS)
       return false
     end
 
-    local CHUNK1 = install_chunk_at_seed(A, sx1,sy1, sx2,sy2)
-    local CHUNK2 = install_chunk_at_seed(A, nx1,ny1, nx2,ny2)
+    local CHUNK1 = install_chunk_at_seed(A, sx1,sy1, sx2,sy2, LEVEL)
+    local CHUNK2 = install_chunk_at_seed(A, nx1,ny1, nx2,ny2, LEVEL)
 
     CHUNK1.peer = CHUNK2
     CHUNK2.peer = CHUNK1
@@ -1674,7 +1677,7 @@ function Area_locate_chunks(LEVEL, SEEDS)
   end
 
 
-  local function find_sized_chunks(A, seed_list, pass)
+  local function find_sized_chunks(A, seed_list, pass, LEVEL)
     local dx = int(pass / 10) - 1
     local dy = (pass % 10) - 1
 
@@ -1692,27 +1695,27 @@ function Area_locate_chunks(LEVEL, SEEDS)
       -- save time by checking the usage prob *first*
       if pass ~= 11 and not rand.odds(use_prob) then goto continue end
 
-      try_chunk_at_seed(A, sx1,sy1, sx2,sy2)
+      try_chunk_at_seed(A, sx1,sy1, sx2,sy2, LEVEL)
       ::continue::
     end
   end
 
 
-  local function find_chunks_in_area(A)
+  local function find_chunks_in_area(A, LEVEL)
     local seed_list = table.copy(A.seeds)
 
     for _,pass in pairs(PASSES) do
       rand.shuffle(seed_list)
 
-      find_sized_chunks(A, seed_list, pass)
+      find_sized_chunks(A, seed_list, pass, LEVEL)
     end
   end
 
 
-  local function visit_room(R)
+  local function visit_room(R, LEVEL)
     for _,A in pairs(R.areas) do
       if A.mode == "floor" or A.mode == "nature" or A.mode == "liquid" then
-        find_chunks_in_area(A)
+        find_chunks_in_area(A, LEVEL)
       end
     end
   end
@@ -1736,7 +1739,7 @@ function Area_locate_chunks(LEVEL, SEEDS)
 
     for pass = sel(R.symmetry, 1, 2), 2 do
       sym_pass = pass
-      visit_room(R)
+      visit_room(R, LEVEL)
     end
   end
 end
