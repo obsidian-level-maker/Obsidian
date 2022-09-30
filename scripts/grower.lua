@@ -1910,21 +1910,30 @@ function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
   local function transform_symmetry(T)
     if not cur_rule.new_room then return nil end
 
-    local all_symmetries = {}
+    local symmetry_choices = {}
+    local symmetry_table = cur_rule.new_room
+    table.name_up(symmetry_table)
 
-    for i = 1,9 do
+    for _,SYM in pairs(symmetry_table) do
+      if string.gmatch(SYM.name, "symmetry") then
+        table.insert(symmetry_choices, SYM.name)
+      end
+    end
+
+    --[[for i = 1,9 do
       local name = "symmetry"
       if i > 1 then name = name .. i end
 
       local info = cur_rule.new_room[name]
+
       if info and (info.kind ~= "rotate" or rand.odds(20)) then
         table.insert(all_symmetries, cur_rule.new_room[name])
       end
-    end
+    end]]
 
-    if table.empty(all_symmetries) then return end
+    if table.empty(symmetry_choices) then return end
 
-    local info = rand.pick(all_symmetries)
+    local info = symmetry_table[rand.pick(symmetry_choices)]
 
     local sym = Symmetry_new(info.kind or "mirror")
 
@@ -3144,7 +3153,7 @@ end
   end
 
 
-  local function try_apply_a_rule()
+  local function try_apply_a_rule(LEVEL)
     --
     -- Test all eight possible transforms (four rotations + mirroring)
     -- in all possible locations in the room.  If at least one is
@@ -3455,7 +3464,7 @@ end
   end
 
 
-  local function apply_a_rule()
+  local function apply_a_rule(LEVEL)
     local rule_tab = collect_matching_rules(pass, stop_prob, hit_floor_limit)
 
     --if SHAPE_GRAMMAR ~= SHAPES.OBSIDIAN then
@@ -3480,7 +3489,7 @@ end
       -- don't try this rule again
       rules[name] = nil
 
-      if try_apply_a_rule() then goto success end
+      if try_apply_a_rule(LEVEL) then goto success end
 
       if x == 0 then return end
     end
@@ -3572,7 +3581,7 @@ end
     end
 
     -- stderrf("LOOP %d\n", loop)
-    apply_a_rule(rule_tab)
+    apply_a_rule(LEVEL)
 
     -- if we surpass the floor limit, remove rules which add new areas
     if pass == "grow" and not hit_floor_limit and R:num_floors() >= R.floor_limit then
@@ -4327,6 +4336,9 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
         error("Unable to sprout more rooms.")
       end
     end
+
+    gui.debugf("shape transform matrix: \n" .. 
+      table.tostr(LEVEL.shape_transform_possiblities, 2))
 
     repeat
       kw = handle_next_room()
