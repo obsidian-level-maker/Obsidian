@@ -3321,7 +3321,7 @@ function Cave_build_a_park(LEVEL, R, entry_h, SEEDS)
   end
 
 
-  local function add_the_bridge(RIVER, bx, by)
+  local function add_the_bridge(RIVER, bx, by, LEVEL)
     -- this tells the Render_cell() code to not move cell corners,
     -- so the floor adjoining the bridge will be aligned properly.
     local BRIDGE = table.copy(RIVER)
@@ -3340,7 +3340,7 @@ function Cave_build_a_park(LEVEL, R, entry_h, SEEDS)
       where = "point",
     }
 
-    local def = Fab_pick(reqs)
+    local def = Fab_pick(LEVEL, reqs)
 
     local mx = area.base_x + (bx - 1) * 64 + 64
     local my = area.base_y + (by - 1) * 64 + 32
@@ -3351,7 +3351,7 @@ function Cave_build_a_park(LEVEL, R, entry_h, SEEDS)
   end
 
 
-  local function install_river(points, RIVER)
+  local function install_river(points, RIVER, LEVEL)
     R.has_river = true
 
     -- bridge cell coords
@@ -3378,7 +3378,7 @@ function Cave_build_a_park(LEVEL, R, entry_h, SEEDS)
       -- make it very shallow, disable the bridge
       RIVER.floor_h = entry_h - 24
     else
-      add_the_bridge(RIVER, bx, by)
+      add_the_bridge(RIVER, bx, by, LEVEL)
     end
   end
 
@@ -3429,7 +3429,7 @@ function Cave_build_a_park(LEVEL, R, entry_h, SEEDS)
   end
 
 
-  local function make_a_river()
+  local function make_a_river(LEVEL)
     local RIVER =
     {
       neighbors = {},
@@ -3454,7 +3454,7 @@ function Cave_build_a_park(LEVEL, R, entry_h, SEEDS)
     end
 
     if best then
-      install_river(best, RIVER)
+      install_river(best, RIVER, LEVEL)
     end
 
     --[[for _,B in pairs(RIVER) do
@@ -4749,7 +4749,7 @@ gui.debugf("BUILD PARK IN %s\n", R.name)
   if R.park_type == "hills" then
     make_a_hillside()
   elseif R.park_type == "river" then
-    make_a_river()
+    make_a_river(LEVEL)
   end
 
   -- fallback if in case hillside function

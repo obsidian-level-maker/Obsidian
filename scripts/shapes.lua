@@ -14137,6 +14137,79 @@ GROW_SEWER_CURVED =
   },
 },]]
 
+GROW_SEWER_CROSSING_CIRCLE_NEW_AREA =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    "11xxx","11xxx",
+    ".....","11~11",
+    ".....","1/A%1",
+    ".....","~AAA~",
+    ".....","1%A/1",
+    ".....","11~11"
+  },
+
+  diagonals =
+  {
+    "1A","A1",
+    "1A","A1"
+  }
+},
+
+GROW_SEWER_CROSSING_CIRCLE_NEW_AREA_BIG =
+{
+  prob = 17,
+  skip_prob = 80,
+
+  structure =
+  {
+    "11xxxx","11xxxx",
+    "......","11~~11",
+    "......","1/AA%1",
+    "......","~AAAA~",
+    "......","~AAAA~",
+    "......","1%AA/1",
+    "......","11~~11"
+  },
+
+  diagonals =
+  {
+    "1A","A1",
+    "1A","A1"
+  }
+},
+
+GROW_SEWER_CROSSING_CIRCLE_NEW_AREA_BIG =
+{
+  prob = 17,
+  skip_prob = 80,
+
+  structure =
+  {
+    "11xxxxx","11xxxxx",
+    ".......","11~~~11",
+    ".......","1/A~A%1",
+    ".......","~AA~AA~",
+    ".......","~%AAA/~",
+    ".......","~/AAA%~",
+    ".......","~AA~AA~",
+    ".......","1%A~A/1",
+    ".......","11~~~11",
+    ".......","11~~~11"
+  },
+
+  diagonals =
+  {
+    "1A","A1",
+    "~A","A~",
+    "~A","A~",
+    "1A","A1"
+  }
+},
+
 GROW_SEWER_STAIRS_SIDE_EXIT_NEW_AREA =
 {
   prob = 35,
