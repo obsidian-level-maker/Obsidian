@@ -2251,7 +2251,7 @@ function Level_do_styles(LEVEL)
   end
 
   if LEVEL.psychedelic then
-    Mat_prepare_trip()
+    Mat_prepare_trip(LEVEL)
   end
 
   if LEVEL.is_procedural_gotcha then

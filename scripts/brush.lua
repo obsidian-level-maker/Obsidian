@@ -517,7 +517,7 @@ end
 --  Material  System
 ------------------------------------------------------------------------
 
-function Mat_prepare_trip()
+function Mat_prepare_trip(LEVEL)
 
   -- build the psychedelic mapping
   local m_before = {}
