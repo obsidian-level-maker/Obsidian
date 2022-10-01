@@ -562,7 +562,7 @@ SPROUT_DIRECT_1_SYMM =
 {
   prob = 3,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -614,7 +614,7 @@ SPROUT_DIRECT_2_SYMM =
 {
   prob = 100,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -800,7 +800,7 @@ SPROUT_DIRECT_3_SYMM =
 {
   prob = 400,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -853,7 +853,7 @@ SPROUT_DIRECT_4_SYMM =
 {
   prob = 4000,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -987,7 +987,7 @@ SPROUT_JOINER_2x1_SYMM =
 {
   prob = 350,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -1044,7 +1044,7 @@ SPROUT_JOINER_3x1_SYMM =
 {
   prob = 1500,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -1103,7 +1103,7 @@ SPROUT_JOINER_4x1_SYMM =
 {
   prob = 3000,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -1165,7 +1165,7 @@ SPROUT_JOINER_2x2_SYMM =
 {
   prob = 2000,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -1226,7 +1226,7 @@ SPROUT_JOINER_3x2_SYMM =
 {
   prob = 3000,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -1289,7 +1289,7 @@ SPROUT_JOINER_4x2_SYMM =
 {
   prob = 2500,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -1353,7 +1353,7 @@ SPROUT_JOINER_2x3_SYMM =
 {
   prob = 200,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
