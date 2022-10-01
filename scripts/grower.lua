@@ -830,7 +830,6 @@ function Grower_calc_rule_probs(LEVEL)
     -- [ I doubt these are useful, but do it for completeness ]
     if not ob_match_game(rule)     then return 0 end
     if not ob_match_engine(rule)   then return 0 end
-    if not ob_match_playmode(rule) then return 0 end
 
     -- liquid check
     if not LEVEL.liquid and rule.styles and
@@ -3316,7 +3315,6 @@ end
 
       if not ob_match_game(rule)     then return 0 end
       if not ob_match_engine(rule)   then return 0 end
-      if not ob_match_playmode(rule) then return 0 end
 
       if not LEVEL.liquid and rule.styles and
          table.has_elem(rule.styles, "liquids")
