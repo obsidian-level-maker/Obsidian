@@ -866,9 +866,10 @@ function Grower_calc_rule_probs(LEVEL)
 
   PARAM.skipped_rules = 0
 
-  for name,rule in pairs(SHAPE_GRAMMAR) do
-    rule.use_prob = calc_prob(rule, LEVEL)
-    if rule.use_prob == 0 then
+  for _,rule in pairs(SHAPE_GRAMMAR) do
+    local new_prob = calc_prob(rule, LEVEL)
+    rule.use_prob = new_prob
+    if new_prob == 0 then
       PARAM.skipped_rules = PARAM.skipped_rules + 1
     end
 
@@ -877,7 +878,7 @@ function Grower_calc_rule_probs(LEVEL)
       if rule.new_room 
       and rule.new_room.env
       and rule.new_room.env == "hallway" then
-        rule.use_prob = 0
+        new_prob = 0
       end
     end
   end
@@ -914,11 +915,11 @@ function Grower_calc_rule_probs(LEVEL)
     local function Grower_reset_absurdities()
       for _,rule in pairs(SHAPE_GRAMMAR) do
 
-        rule.is_absurd = false
+        rule.is_absurd = nil
 
-        if rule.prob then
+        --[[if rule.prob then
           rule.use_prob = rule.prob
-        end
+        end]]
 
         if not rule.initial_env then goto continue end
 
@@ -978,7 +979,7 @@ function Grower_calc_rule_probs(LEVEL)
 
       if new_env then gui.debugf("New env: " .. new_env .. "\n") end
     end
-
+  
     Grower_reset_absurdities()
 
     local rules_to_absurdify = rand.pick({1,1,1,2,2,2,3,3,4})
@@ -1572,9 +1573,7 @@ function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
   -- Creates rooms using Shape Grammars.
   --
 
-  -- Trying to force liquid-bordered outdoors if parks haven't shown up yet.
-
-  grammar = SHAPE_GRAMMAR
+  local grammar = SHAPE_GRAMMAR
 
   --
 
@@ -3158,7 +3157,7 @@ end
     -- successful, pick it and apply the substitution.
     --
 
-      gui.printf("  Trying rule '" .. cur_rule.name .. "' in ROOM_" .. R.id .. "\n")
+    gui.printf("  Trying rule '" .. cur_rule.name .. "' in ROOM_" .. R.id .. "\n")
 
     GROWER_DEBUG_INFO[cur_rule.name].trials = GROWER_DEBUG_INFO[cur_rule.name].trials + 1
 
