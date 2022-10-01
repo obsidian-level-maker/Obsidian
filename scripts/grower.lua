@@ -3157,7 +3157,7 @@ end
     -- successful, pick it and apply the substitution.
     --
 
-    gui.printf("  Trying rule '" .. cur_rule.name .. "' in ROOM_" .. R.id .. "\n")
+    gui.debugf("  Trying rule '" .. cur_rule.name .. "' in ROOM_" .. R.id .. "\n")
 
     GROWER_DEBUG_INFO[cur_rule.name].trials = GROWER_DEBUG_INFO[cur_rule.name].trials + 1
 
@@ -3491,7 +3491,7 @@ end
 
     -- SUCCESS --
 
-    gui.printf("APPLIED rule: " .. cur_rule.name .. " in ROOM_" .. R.id.. "\n")
+    gui.debugf("APPLIED rule: " .. cur_rule.name .. " in ROOM_" .. R.id.. "\n")
 
     -- debug statistics
     GROWER_DEBUG_INFO[cur_rule.name].applied = GROWER_DEBUG_INFO[cur_rule.name].applied + 1
