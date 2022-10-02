@@ -878,7 +878,7 @@ function Grower_calc_rule_probs(LEVEL)
       if rule.new_room 
       and rule.new_room.env
       and rule.new_room.env == "hallway" then
-        new_prob = 0
+        rule.use_prob = 0
       end
     end
   end
@@ -909,6 +909,7 @@ function Grower_calc_rule_probs(LEVEL)
     gui.printf("This level is absurd!\n\n")
   end
 
+  LEVEL.absurd_grammar_rules = {}
 
   local function Grower_absurdify()
     
@@ -950,7 +951,7 @@ function Grower_calc_rule_probs(LEVEL)
 
       if rand.odds(75) then
         new_factor = high_ab_factor * rand.range( 0.75,1.25 )
-        rule.use_prob = rule.prob * new_factor
+        rule.use_prob = math.round(rule.prob * new_factor)
         if rule.new_area then
           LEVEL.has_absurd_new_area_rules = true
         end
@@ -976,6 +977,13 @@ function Grower_calc_rule_probs(LEVEL)
       gui.printf(rule.name .. ": " .. rule.prob 
         .. "->" .. math.round(rule.use_prob) .. " \n")
       gui.debugf("Factor: x" .. math.round(new_factor) .. "\n")
+
+      local info =
+      {
+        name = rule.name,
+        prob = rule.use_prob
+      }
+      table.insert(LEVEL.absurd_grammar_rules, info)
 
       if new_env then gui.debugf("New env: " .. new_env .. "\n") end
     end
@@ -1575,6 +1583,11 @@ function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
 
   local grammar = SHAPE_GRAMMAR
 
+  -- reset absurdified rules
+  for _,R in pairs(LEVEL.absurd_grammar_rules) do
+    grammar[R.name].use_prob = R.prob
+  end
+
   --
 
   local cur_rule
@@ -1913,7 +1926,9 @@ function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
 
     for _,SYM in pairs(symmetry_table) do
       if string.gmatch(SYM.name, "symmetry") then
-        table.insert(symmetry_choices, SYM.name)
+        if SYM.kind and (SYM.kind ~= "rotate" or rand.odds(20)) then
+          table.insert(symmetry_choices, SYM.name)
+        end
       end
     end
 
@@ -3159,6 +3174,12 @@ end
 
     gui.debugf("  Trying rule '" .. cur_rule.name .. "' in ROOM_" .. R.id .. "\n")
 
+    if R.shapes_tried then
+      R.shapes_tried = R.shapes_tried + 1
+    else
+      R.shapes_tried = 1
+    end
+  
     GROWER_DEBUG_INFO[cur_rule.name].trials = GROWER_DEBUG_INFO[cur_rule.name].trials + 1
 
     best = { score=-1, areas={} }
@@ -3484,6 +3505,11 @@ end
 
       if try_apply_a_rule(LEVEL) then goto success end
 
+      -- normalize absurd rule probability for each unsuccesful attempt
+      if grammar[name].is_absurd then
+        grammar[name].use_prob = grammar[name].use_prob / 4
+      end
+
       if x == 0 then return end
     end
 
@@ -3493,6 +3519,12 @@ end
 
     gui.debugf("APPLIED rule: " .. cur_rule.name .. " in ROOM_" .. R.id.. "\n")
 
+    if R.shapes_applied then
+      R.shapes_applied = R.shapes_applied + 1
+    else
+      R.shapes_applied = 1
+    end
+    
     -- debug statistics
     GROWER_DEBUG_INFO[cur_rule.name].applied = GROWER_DEBUG_INFO[cur_rule.name].applied + 1
 
