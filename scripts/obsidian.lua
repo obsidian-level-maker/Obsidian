@@ -256,13 +256,6 @@ function ob_match_engine2(T)
 end
 
 
-function ob_match_playmode(T)
-  -- TODO : remove this function
-
-  return true
-end
-
-
 function ob_match_level_theme(LEVEL, T, override)
   if not T.theme then return true end
   if T.theme == "any" then return true end

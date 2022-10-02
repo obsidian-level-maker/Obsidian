@@ -830,7 +830,6 @@ function Grower_calc_rule_probs(LEVEL)
     -- [ I doubt these are useful, but do it for completeness ]
     if not ob_match_game(rule)     then return 0 end
     if not ob_match_engine(rule)   then return 0 end
-    if not ob_match_playmode(rule) then return 0 end
 
     -- liquid check
     if not LEVEL.liquid and rule.styles and
@@ -867,9 +866,10 @@ function Grower_calc_rule_probs(LEVEL)
 
   PARAM.skipped_rules = 0
 
-  for name,rule in pairs(SHAPE_GRAMMAR) do
-    rule.use_prob = calc_prob(rule, LEVEL)
-    if rule.use_prob == 0 then
+  for _,rule in pairs(SHAPE_GRAMMAR) do
+    local new_prob = calc_prob(rule, LEVEL)
+    rule.use_prob = new_prob
+    if new_prob == 0 then
       PARAM.skipped_rules = PARAM.skipped_rules + 1
     end
 
@@ -878,7 +878,7 @@ function Grower_calc_rule_probs(LEVEL)
       if rule.new_room 
       and rule.new_room.env
       and rule.new_room.env == "hallway" then
-        rule.use_prob = 0
+        new_prob = 0
       end
     end
   end
@@ -915,11 +915,11 @@ function Grower_calc_rule_probs(LEVEL)
     local function Grower_reset_absurdities()
       for _,rule in pairs(SHAPE_GRAMMAR) do
 
-        rule.is_absurd = false
+        rule.is_absurd = nil
 
-        if rule.original_use_prob then
-          rule.use_prob = rule.original_use_prob
-        end
+        --[[if rule.prob then
+          rule.use_prob = rule.prob
+        end]]
 
         if not rule.initial_env then goto continue end
 
@@ -945,21 +945,18 @@ function Grower_calc_rule_probs(LEVEL)
       if string.match(rule.name,"hall") then return end
       if string.match(rule.name,"HALL") then return end
       if string.match(rule.name,"START") then return end
-      if not rule.use_prob then return end
       if table.has_elem(rule.styles, "liquids") 
         and not LEVEL.liquid then return end
 
-      rule.original_use_prob = rule.use_prob
-
       if rand.odds(75) then
         new_factor = high_ab_factor * rand.range( 0.75,1.25 )
-        rule.use_prob = rule.use_prob * new_factor
+        rule.use_prob = rule.prob * new_factor
         if rule.new_area then
           LEVEL.has_absurd_new_area_rules = true
         end
       else
         new_factor = low_ab_factor * rand.range( 0.75,1.25 )
-        rule.use_prob = rule.use_prob * new_factor
+        rule.use_prob = rule.prob * new_factor
       end
 
       -- diversify environments
@@ -976,14 +973,16 @@ function Grower_calc_rule_probs(LEVEL)
       rule.env = new_env
       rule.is_absurd = true
 
-      gui.printf(rule.name .. "\n")
-      gui.debugf("Factor: x" .. new_factor .. "\n")
+      gui.printf(rule.name .. ": " .. rule.prob 
+        .. "->" .. math.round(rule.use_prob) .. " \n")
+      gui.debugf("Factor: x" .. math.round(new_factor) .. "\n")
+
       if new_env then gui.debugf("New env: " .. new_env .. "\n") end
     end
-
+  
     Grower_reset_absurdities()
 
-    local rules_to_absurdify = rand.pick({1,2,2,2,3,3,3,4,4,5,6,7,8})
+    local rules_to_absurdify = rand.pick({1,1,1,2,2,2,3,3,4})
     local count = rules_to_absurdify
     gui.printf(rules_to_absurdify .. " rules will be absurd!\n\n")
 
@@ -1574,9 +1573,7 @@ function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
   -- Creates rooms using Shape Grammars.
   --
 
-  -- Trying to force liquid-bordered outdoors if parks haven't shown up yet.
-
-  grammar = SHAPE_GRAMMAR
+  local grammar = SHAPE_GRAMMAR
 
   --
 
@@ -3160,14 +3157,11 @@ end
     -- successful, pick it and apply the substitution.
     --
 
-      gui.debugf("  Trying rule '%s'...\n", cur_rule.name)
+    gui.debugf("  Trying rule '" .. cur_rule.name .. "' in ROOM_" .. R.id .. "\n")
 
     GROWER_DEBUG_INFO[cur_rule.name].trials = GROWER_DEBUG_INFO[cur_rule.name].trials + 1
 
     best = { score=-1, areas={} }
-
-    gui.debugf("CURRENT ROOM: " .. R.id .. "\n")
-    gui.debugf("CURRENT RULE: " .. cur_rule.name .. "\n")
 
     local T
     local x1, y1, x2, y2
@@ -3278,7 +3272,7 @@ end
 
 
   -- MSSP: update smart groupings
-  local function update_shape_groupings(rule)
+  local function update_shape_groupings(rule, LEVEL)
 
 
     local function style_factor(rule)
@@ -3308,7 +3302,7 @@ end
     end
 
 
-    local function calc_prob(rule, x_prob, mode, LEVEL)
+    local function calc_prob_absurdity(rule, x_prob, mode, LEVEL)
       -- MSSP: this is a modification of calc_prob function.
       -- x_prob is used for absurdity and shape groupings,
       -- such that absurdification still runs through all
@@ -3320,7 +3314,6 @@ end
 
       if not ob_match_game(rule)     then return 0 end
       if not ob_match_engine(rule)   then return 0 end
-      if not ob_match_playmode(rule) then return 0 end
 
       if not LEVEL.liquid and rule.styles and
          table.has_elem(rule.styles, "liquids")
@@ -3355,16 +3348,16 @@ end
     end
 
 
-    local function change_group_probs(mode)
+    local function change_group_probs(mode, LEVEL)
       for name,cur_def in pairs(grammar) do
         if rule.group == cur_def.group
         and rule.group_pos ~= "entry" then
           if mode == "highlight" then
-            calc_prob(cur_def, 1000000, "multiply", LEVEL)
+            calc_prob_absurdity(cur_def, 1000000, "multiply", LEVEL)
           elseif mode == "reduce" then
-            calc_prob(cur_def, 1.2, "divide", LEVEL)
+            calc_prob_absurdity(cur_def, 1.2, "divide", LEVEL)
           elseif mode == "reset" then
-            calc_prob(cur_def, 0, "reset", LEVEL)
+            calc_prob_absurdity(cur_def, 0, "reset", LEVEL)
           end
         end
       end
@@ -3379,7 +3372,7 @@ end
     -- reset when rooms have changed
     if PARAM.operated_room ~= R.id and PARAM.cur_shape_group then
       PARAM.operated_room = R.id
-      change_group_probs("reset")
+      change_group_probs("reset", LEVEL)
       PARAM.cur_shape_groop = ""
       PARAM.cur_shape_group_apply_count = 0
     end
@@ -3399,7 +3392,7 @@ end
     and rand.odds(50) then
       PARAM.cur_shape_group = rule.group
 
-      change_group_probs("highlight")
+      change_group_probs("highlight", LEVEL)
 
       PARAM.cur_shape_group_apply_count = rand.irange(6,15)
     end
@@ -3411,12 +3404,12 @@ end
       -- decrease probability for rules as each rule in the same
       -- 'smart group' is applied
       if PARAM.cur_shape_group_apply_count > 0 then
-        change_group_probs("reduce")
+        change_group_probs("reduce", LEVEL)
 
       -- reset the probabilities of all rules in the smart group
       -- once the apply count has reached count
       elseif PARAM.cur_shape_group_apply_count <= 0 then
-        change_group_probs("reset")
+        change_group_probs("reset", LEVEL)
 
         PARAM.cur_shape_group = ""
       end
@@ -3509,7 +3502,7 @@ end
 
     update_aversions(cur_rule)
 
-    update_shape_groupings(cur_rule)
+    update_shape_groupings(cur_rule, LEVEL)
 
     -- apply any auxiliary rules
     if cur_rule.auxiliary then
@@ -4759,27 +4752,30 @@ function Grower_create_rooms(LEVEL, SEEDS)
 
     gui.printf("\n--==| Shape Rule Statistics |==--\n" ..
     "NAME: APPLY COUNT / TRIAL COUNT : USE PROBABILITY\n")
-    for rule, info in pairs(GROWER_DEBUG_INFO) do
+    for _,rule in pairs(GROWER_DEBUG_INFO) do
 
-      local cur_prob = SHAPE_GRAMMAR[info.name].use_prob
+      local cur_prob = 0
+      if SHAPE_GRAMMAR[rule.name] then 
+        cur_prob = SHAPE_GRAMMAR[rule.name].use_prob
 
-      gui.printf(info.name .. ": ")
-      if info.trials > 0 then
-        gui.printf(info.applied .. " / " .. info.trials)
-        gui.printf(" : " .. cur_prob)
-      elseif info.trials == 0 then
-        gui.printf(cur_prob .. " ***UNUSED***")
+        gui.printf(rule.name .. ": ")
+        if rule.trials > 0 then
+          gui.printf(rule.applied .. " / " .. rule.trials)
+          gui.printf(" : " .. cur_prob)
+        elseif rule.trials == 0 then
+          gui.printf(cur_prob .. " ***UNUSED***")
+        end
+
+        if SHAPE_GRAMMAR[rule.name].is_absurd then
+          gui.printf(" (ABSURD)")
+        end
+
+        if rule.trials > 0 then
+          local perc = math.floor((rule.applied / rule.trials) * 10000) / 100
+          gui.printf(" (" .. perc .. "%% success)")
+        end     
       end
 
-
-      if SHAPE_GRAMMAR[info.name].is_absurd then
-        gui.printf(" (ABSURD)")
-      end
-
-      if info.trials > 0 then
-        local perc = math.floor((info.applied / info.trials) * 10000) / 100
-        gui.printf(" (" .. perc .. "%% success)")
-      end
 
       gui.printf("\n")
     end

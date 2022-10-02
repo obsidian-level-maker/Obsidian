@@ -220,7 +220,6 @@ function Fab_load_all_definitions()
     -- check against current game, engine, theme (etc...)
     if not ob_match_game(def)     then return 0 end
     if not ob_match_engine(def)   then return 0 end
-    if not ob_match_playmode(def) then return 0 end
 
     -- normal logic --
 

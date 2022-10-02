@@ -2514,7 +2514,7 @@ function Level_choose_skybox(LEVEL)
 
       if same_skyfab == "yes" then
         if OB_CONFIG.zdoom_skybox == "episodic" then
-          LEVEL.episode.skybox = Choose_episodic_skybox("force_it")
+          LEVEL.episode.skybox = Choose_episodic_skybox(LEVEL, "force_it")
           skyfab = LEVEL.episode.skybox
         else
           LEVEL.skybox = Choose_skybox(OB_CONFIG.zdoom_skybox)
