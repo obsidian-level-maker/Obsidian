@@ -103,7 +103,8 @@ enum main_action_kind_e {
     MAIN_BUILD,
     MAIN_CANCEL,
     MAIN_QUIT,
-    MAIN_RESTART
+    MAIN_HARD_RESTART,
+    MAIN_SOFT_RESTART
 };
 
 extern int main_action;

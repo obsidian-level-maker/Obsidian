@@ -244,7 +244,7 @@ static void main_win_apply_addon_CB(Fl_Widget *w, void *data) {
         }
     }
 
-    main_action = MAIN_RESTART;
+    main_action = MAIN_HARD_RESTART;
 }
 
 /* ----- user information ----------------------------- */
@@ -1185,7 +1185,7 @@ int main(int argc, char **argv) {
     // parse the flags
     argv::Init(argc - 1, argv + 1);
 
-restart:;
+hardrestart:;
 
     if (argv::Find('?', NULL) >= 0 || argv::Find('h', "help") >= 0) {
 #if defined WIN32 && !defined CONSOLE_ONLY
@@ -1408,21 +1408,25 @@ skiprest:
 
     LogEnableDebug(debug_messages);
 
+    softrestart:;
+
     Main_CalcNewSeed();
-
-    //    TX_TestSynth(next_rand_seed); - Fractal testing stuff
-
-    VFS_InitAddons(argv[0]);
 
     std::string load_file;
 
-    if (const int load_arg = argv::Find('l', "load"); load_arg >= 0) {
-        if (load_arg + 1 >= argv::list.size() || argv::IsOption(load_arg + 1)) {
-            fmt::print(stderr, "OBSIDIAN ERROR: missing filename for --load\n");
-            exit(EXIT_FAILURE);
-        }
+    //    TX_TestSynth(next_rand_seed); - Fractal testing stuff
 
-        load_file = argv::list[load_arg + 1];
+    if (main_action != MAIN_SOFT_RESTART) {
+        VFS_InitAddons(argv[0]);
+
+        if (const int load_arg = argv::Find('l', "load"); load_arg >= 0) {
+            if (load_arg + 1 >= argv::list.size() || argv::IsOption(load_arg + 1)) {
+                fmt::print(stderr, "OBSIDIAN ERROR: missing filename for --load\n");
+                exit(EXIT_FAILURE);
+            }
+
+            load_file = argv::list[load_arg + 1];
+        }
     }
 
     // Dumb ad-hoc function for if I need to update the images.h arrays - Dasho
@@ -1526,20 +1530,22 @@ skiprest:
 
     /* ---- normal GUI mode ---- */
 
-    // this not only finds PK3 files, but also activates the ones specified in
-    // OPTIONS.txt
-    VFS_ScanForAddons();
+    if (main_action != MAIN_SOFT_RESTART) {
+        // this not only finds PK3 files, but also activates the ones specified in
+        // OPTIONS.txt
+        VFS_ScanForAddons();
 
-    VFS_ParseCommandLine();
+        VFS_ParseCommandLine();
 
-    // create the main window
-    int main_w, main_h;
-    UI_MainWin::CalcWindowSize(&main_w, &main_h);
+        // create the main window
+        int main_w, main_h;
+        UI_MainWin::CalcWindowSize(&main_w, &main_h);
 
-    std::string main_title =
-        fmt::format("{} {} \"{}\"", OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
-                    OBSIDIAN_CODE_NAME);
-    main_win = new UI_MainWin(main_w, main_h, main_title.c_str());
+        std::string main_title =
+            fmt::format("{} {} \"{}\"", OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
+                        OBSIDIAN_CODE_NAME);
+        main_win = new UI_MainWin(main_w, main_h, main_title.c_str());
+    }
 
     //???    Default_Location();
 
@@ -1564,138 +1570,140 @@ skiprest:
 
     Cookie_ParseArguments();
 
-    // Have to add these after reading existing settings - Dasho
-    if (main_win) {
-        main_win->menu_bar->add(
-            _("Surprise Me/Preserve Old Config"), NULL,
-            main_win_surprise_config_CB, 0,
-            FL_MENU_TOGGLE | (preserve_old_config ? FL_MENU_VALUE : 0));
-        main_win->menu_bar->add(
-            _("Surprise Me/Randomize Architecture"), NULL,
-            main_win_architecture_config_CB, 0,
-            FL_MENU_TOGGLE | (randomize_architecture ? FL_MENU_VALUE : 0));
-        main_win->menu_bar->add(
-            _("Surprise Me/Randomize Combat"), NULL,
-            main_win_monsters_config_CB, 0,
-            FL_MENU_TOGGLE | (randomize_monsters ? FL_MENU_VALUE : 0));
-        main_win->menu_bar->add(
-            _("Surprise Me/Randomize Pickups"), NULL,
-            main_win_pickups_config_CB, 0,
-            FL_MENU_TOGGLE | (randomize_pickups ? FL_MENU_VALUE : 0));
-        main_win->menu_bar->add(
-            _("Surprise Me/Randomize Other"), NULL, main_win_misc_config_CB, 0,
-            FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
-        if (all_addons.size() == 0) {
-            main_win->menu_bar->add(_("Addons/No Addons Detected"), 0, 0, 0,
-                                    FL_MENU_INACTIVE);
-        } else {
-            main_win->menu_bar->add(_("Addons/Restart and Apply Changes"), 0,
-                                    main_win_apply_addon_CB, 0, 0);
-            for (int i = 0; i < all_addons.size(); i++) {
-                std::string addon_entry = _("Addons/");
-                addon_entry.append(all_addons[i].name.filename().string());
-                main_win->menu_bar->add(
-                    addon_entry.c_str(), 0, main_win_addon_CB,
-                    (void *)&all_addons[i],
-                    FL_MENU_TOGGLE |
-                        (all_addons[i].enabled ? FL_MENU_VALUE : 0));
+    if (main_action != MAIN_SOFT_RESTART) {
+        // Have to add these after reading existing settings - Dasho
+        if (main_win) {
+            main_win->menu_bar->add(
+                _("Surprise Me/Preserve Old Config"), NULL,
+                main_win_surprise_config_CB, 0,
+                FL_MENU_TOGGLE | (preserve_old_config ? FL_MENU_VALUE : 0));
+            main_win->menu_bar->add(
+                _("Surprise Me/Randomize Architecture"), NULL,
+                main_win_architecture_config_CB, 0,
+                FL_MENU_TOGGLE | (randomize_architecture ? FL_MENU_VALUE : 0));
+            main_win->menu_bar->add(
+                _("Surprise Me/Randomize Combat"), NULL,
+                main_win_monsters_config_CB, 0,
+                FL_MENU_TOGGLE | (randomize_monsters ? FL_MENU_VALUE : 0));
+            main_win->menu_bar->add(
+                _("Surprise Me/Randomize Pickups"), NULL,
+                main_win_pickups_config_CB, 0,
+                FL_MENU_TOGGLE | (randomize_pickups ? FL_MENU_VALUE : 0));
+            main_win->menu_bar->add(
+                _("Surprise Me/Randomize Other"), NULL, main_win_misc_config_CB, 0,
+                FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
+            if (all_addons.size() == 0) {
+                main_win->menu_bar->add(_("Addons/No Addons Detected"), 0, 0, 0,
+                                        FL_MENU_INACTIVE);
+            } else {
+                main_win->menu_bar->add(_("Addons/Restart and Apply Changes"), 0,
+                                        main_win_apply_addon_CB, 0, 0);
+                for (int i = 0; i < all_addons.size(); i++) {
+                    std::string addon_entry = _("Addons/");
+                    addon_entry.append(all_addons[i].name.filename().string());
+                    main_win->menu_bar->add(
+                        addon_entry.c_str(), 0, main_win_addon_CB,
+                        (void *)&all_addons[i],
+                        FL_MENU_TOGGLE |
+                            (all_addons[i].enabled ? FL_MENU_VALUE : 0));
+                }
             }
         }
-    }
 
-    fl_register_images();  // Needed for Unix window icon and tutorial windows
+        fl_register_images();  // Needed for Unix window icon and tutorial windows
 
-    // Load tutorial images
-    std::filesystem::path image_loc = install_dir;
-    image_loc.append("data").append("tutorial").append("tutorial1.bmp");
-    if (!tutorial1) {
-        tutorial1 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-    }
-    image_loc.replace_filename("tutorial2.bmp");
-    if (!tutorial2) {
-        tutorial2 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-    }
-    image_loc.replace_filename("tutorial3.bmp");
-    if (!tutorial3) {
-        tutorial3 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-    }
-    image_loc.replace_filename("tutorial4.bmp");
-    if (!tutorial4) {
-        tutorial4 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-    }
-    image_loc.replace_filename("tutorial5.bmp");
-    if (!tutorial5) {
-        tutorial5 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-    }
-    image_loc.replace_filename("tutorial6.bmp");
-    if (!tutorial6) {
-        tutorial6 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-    }
-    image_loc.replace_filename("tutorial7.bmp");
-    if (!tutorial7) {
-        tutorial7 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-    }
-    image_loc.replace_filename("tutorial8.bmp");
-    if (!tutorial8) {
-        tutorial8 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-    }
-    image_loc.replace_filename("tutorial9.bmp");
-    if (!tutorial9) {
-        tutorial9 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-    }
-    image_loc.replace_filename("tutorial10.bmp");
-    if (!tutorial10) {
-        tutorial10 = new Fl_BMP_Image(image_loc.generic_string().c_str());
-    }
-
-#ifdef WIN32
-    main_win->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(1)));
-#else
-#ifdef UNIX
-    Fl_Pixmap program_icon(obsidian_icon);
-    Fl_RGB_Image rgb_icon(&program_icon, FL_BLACK);
-    UI_MainWin::default_icon(&rgb_icon);
-#endif
-#endif
-
-    // show window (pass some dummy arguments)
-    {
-        char *fake_argv[2];
-        fake_argv[0] = strdup("Obsidian.exe");
-        fake_argv[1] = NULL;
-        main_win->show(1 /* argc */, fake_argv);
-        if (old_w > 0 && old_h > 0) {
-            main_win->resize(old_x, old_y, old_w, old_h);
+        // Load tutorial images
+        std::filesystem::path image_loc = install_dir;
+        image_loc.append("data").append("tutorial").append("tutorial1.bmp");
+        if (!tutorial1) {
+            tutorial1 = new Fl_BMP_Image(image_loc.generic_string().c_str());
         }
-        if (first_run) {
-            DLG_Tutorial();
+        image_loc.replace_filename("tutorial2.bmp");
+        if (!tutorial2) {
+            tutorial2 = new Fl_BMP_Image(image_loc.generic_string().c_str());
         }
+        image_loc.replace_filename("tutorial3.bmp");
+        if (!tutorial3) {
+            tutorial3 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial4.bmp");
+        if (!tutorial4) {
+            tutorial4 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial5.bmp");
+        if (!tutorial5) {
+            tutorial5 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial6.bmp");
+        if (!tutorial6) {
+            tutorial6 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial7.bmp");
+        if (!tutorial7) {
+            tutorial7 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial8.bmp");
+        if (!tutorial8) {
+            tutorial8 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial9.bmp");
+        if (!tutorial9) {
+            tutorial9 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+        image_loc.replace_filename("tutorial10.bmp");
+        if (!tutorial10) {
+            tutorial10 = new Fl_BMP_Image(image_loc.generic_string().c_str());
+        }
+
+    #ifdef WIN32
+        main_win->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(1)));
+    #else
+    #ifdef UNIX
+        Fl_Pixmap program_icon(obsidian_icon);
+        Fl_RGB_Image rgb_icon(&program_icon, FL_BLACK);
+        UI_MainWin::default_icon(&rgb_icon);
+    #endif
+    #endif
+
+        // show window (pass some dummy arguments)
+        {
+            char *fake_argv[2];
+            fake_argv[0] = strdup("Obsidian.exe");
+            fake_argv[1] = NULL;
+            main_win->show(1 /* argc */, fake_argv);
+            if (old_w > 0 && old_h > 0) {
+                main_win->resize(old_x, old_y, old_w, old_h);
+            }
+            if (first_run) {
+                DLG_Tutorial();
+            }
+        }
+
+    #ifdef WIN32  // Populate structure for taskbar/window flash. Must be done after
+                // main_win->show() function - Dasho
+        if (!blinker) {
+            blinker = new FLASHWINFO;
+            blinker->cbSize = sizeof(FLASHWINFO);
+            blinker->hwnd = fl_xid(main_win);
+            blinker->dwFlags = FLASHW_ALL | FLASHW_TIMERNOFG;
+            blinker->dwTimeout = 0;
+            blinker->uCount = 0;
+        } else {
+            blinker->hwnd = fl_xid(main_win);
+            if (!old_seed.empty() && !old_name.empty()) Main::Blinker();
+        }
+    #endif
+
+        // kill the stupid bright background of the "plastic" scheme
+        if (widget_theme == 3) {
+            delete Fl::scheme_bg_;
+            Fl::scheme_bg_ = NULL;
+
+            main_win->image(NULL);
+        }
+
+        Fl::add_handler(Main_key_handler);
     }
-
-#ifdef WIN32  // Populate structure for taskbar/window flash. Must be done after
-              // main_win->show() function - Dasho
-    if (!blinker) {
-        blinker = new FLASHWINFO;
-        blinker->cbSize = sizeof(FLASHWINFO);
-        blinker->hwnd = fl_xid(main_win);
-        blinker->dwFlags = FLASHW_ALL | FLASHW_TIMERNOFG;
-        blinker->dwTimeout = 0;
-        blinker->uCount = 0;
-    } else {
-        blinker->hwnd = fl_xid(main_win);
-        if (!old_seed.empty() && !old_name.empty()) Main::Blinker();
-    }
-#endif
-
-    // kill the stupid bright background of the "plastic" scheme
-    if (widget_theme == 3) {
-        delete Fl::scheme_bg_;
-        Fl::scheme_bg_ = NULL;
-
-        main_win->image(NULL);
-    }
-
-    Fl::add_handler(Main_key_handler);
 
     switch (filename_prefix) {
         case 0:
@@ -1727,40 +1735,44 @@ skiprest:
             break;
     }
 
-    // draw an empty map (must be done after main window is
-    // shown() because that is when FLTK finalises the colors).
-    main_win->build_box->mini_map->EmptyMap();
+    if (main_action != MAIN_SOFT_RESTART) {
+        // draw an empty map (must be done after main window is
+        // shown() because that is when FLTK finalises the colors).
+        main_win->build_box->mini_map->EmptyMap();
 
-    if (!old_seed.empty()) {
-        main_win->build_box->seed_disp->copy_label(
-            fmt::format("{} {}", _("Seed:"), old_seed).c_str());
-        old_seed.clear();
-    }
-
-    if (!old_name.empty()) {
-        main_win->build_box->name_disp->copy_label(old_name.c_str());
-        old_name.clear();
-    }
-
-    if (old_pixels) {
-        if (main_win->build_box->mini_map->pixels) {
-            delete[] main_win->build_box->mini_map->pixels;
+        if (!old_seed.empty()) {
+            main_win->build_box->seed_disp->copy_label(
+                fmt::format("{} {}", _("Seed:"), old_seed).c_str());
+            old_seed.clear();
         }
-        int map_size = main_win->build_box->mini_map->map_W *
-                       main_win->build_box->mini_map->map_H * 3;
-        main_win->build_box->mini_map->pixels = new u8_t[map_size];
-        memcpy(main_win->build_box->mini_map->pixels, old_pixels, map_size);
-        delete[] old_pixels;
-        old_pixels = NULL;
-        main_win->build_box->mini_map->MapFinish();
+
+        if (!old_name.empty()) {
+            main_win->build_box->name_disp->copy_label(old_name.c_str());
+            old_name.clear();
+        }
+
+        if (old_pixels) {
+            if (main_win->build_box->mini_map->pixels) {
+                delete[] main_win->build_box->mini_map->pixels;
+            }
+            int map_size = main_win->build_box->mini_map->map_W *
+                        main_win->build_box->mini_map->map_H * 3;
+            main_win->build_box->mini_map->pixels = new u8_t[map_size];
+            memcpy(main_win->build_box->mini_map->pixels, old_pixels, map_size);
+            delete[] old_pixels;
+            old_pixels = NULL;
+            main_win->build_box->mini_map->MapFinish();
+        }
     }
+
+    main_action = MAIN_NONE;
 
     try {
         // run the GUI until the user quits
         for (;;) {
             Fl::wait(0.2);
 
-            if (main_action == MAIN_QUIT || main_action == MAIN_RESTART) {
+            if (main_action == MAIN_QUIT || main_action == MAIN_HARD_RESTART || main_action == MAIN_SOFT_RESTART) {
                 break;
             }
 
@@ -1806,7 +1818,7 @@ skiprest:
                 // regardless of success or fail, compute a new seed
                 Main_CalcNewSeed();
 
-                main_action = MAIN_RESTART;
+                main_action = MAIN_SOFT_RESTART;
             }
         }
     } catch (const assert_fail_c &err) {
@@ -1816,12 +1828,14 @@ skiprest:
         Main::FatalError(_("An exception occurred: \n{}"), e.what());
     }
 
-    LogPrintf("\nQuit......\n\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("\nQuit......\n\n");
+    }
 
     Theme_Options_Save(theme_file);
     Options_Save(options_file);
 
-    if (main_action == MAIN_RESTART) {
+    if (main_action == MAIN_HARD_RESTART || main_action == MAIN_SOFT_RESTART) {
         if (main_win) {
             // on fatal error we cannot risk calling into the Lua runtime
             // (it's state may be compromised by a script error).
@@ -1834,18 +1848,24 @@ skiprest:
                     Cookie_Save(config_file);
                 }
             }
-            old_x = main_win->x();
-            old_y = main_win->y();
-            old_w = main_win->w();
-            old_h = main_win->h();
-            delete main_win;
-            main_win = nullptr;
+            if (main_action == MAIN_HARD_RESTART) {
+                old_x = main_win->x();
+                old_y = main_win->y();
+                old_w = main_win->w();
+                old_h = main_win->h();
+                delete main_win;
+                main_win = nullptr;
+            }
         }
         Script_Close();
-        LogClose();
-        PHYSFS_deinit();
-        main_action = MAIN_NONE;
-        goto restart;
+        if (main_action == MAIN_SOFT_RESTART) {
+            goto softrestart;
+        }
+        if (main_action == MAIN_HARD_RESTART) {
+            LogClose();
+            PHYSFS_deinit();
+            goto hardrestart;
+        }
     }
 
     Main::Detail::Shutdown(false);

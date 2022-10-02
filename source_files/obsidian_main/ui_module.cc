@@ -682,6 +682,14 @@ UI_RButton *UI_Module::FindButtonOpt(std::string option) {
     return choice_map_button[option];
 }
 
+UI_RHeader *UI_Module::FindHeaderOpt(std::string option) {
+    if (choice_map_header.find(option) == choice_map_header.end()) {
+        return NULL;
+    }
+
+    return choice_map_header[option];
+}
+
 void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
     UI_RChoiceMenu *rch = (UI_RChoiceMenu *)w;
 
@@ -1194,7 +1202,7 @@ bool UI_CustomMods::EnableMod(std::string id, bool enable) {
 
     // no options => no height change => no need to reposition
     if (M->choice_map.size() > 0 || M->choice_map_slider.size() > 0 ||
-        M->choice_map_button.size() > 0) {
+        M->choice_map_button.size() > 0 || M->choice_map_header.size() > 0) {
         PositionAll();
     }
 

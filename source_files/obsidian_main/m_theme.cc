@@ -274,7 +274,9 @@ bool Theme_Options_Save(std::filesystem::path filename) {
         return false;
     }
 
-    LogPrintf("Saving theme file...\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("Saving theme file...\n");
+    }
 
     option_fp << "-- THEME FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION << " \""
               << OBSIDIAN_CODE_NAME << "\"\n";
@@ -322,7 +324,9 @@ bool Theme_Options_Save(std::filesystem::path filename) {
 
     option_fp.close();
 
-    LogPrintf("DONE.\n\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("DONE.\n\n");
+    }
 
     return true;
 }
@@ -395,7 +399,7 @@ class UI_ThemeWin : public Fl_Window {
         fl_alert("%s", _("Windows scaling changes require a restart.\nOBSIDIAN will now restart."));
         // clang-format on
 
-        main_action = MAIN_RESTART;
+        main_action = MAIN_HARD_RESTART;
 
         that->want_quit = true;
     }
@@ -687,7 +691,7 @@ class UI_ThemeWin : public Fl_Window {
             fl_alert("%s", _("Plastic widget theme requires a restart.\nOBSIDIAN will now restart."));
             // clang-format on
 
-            main_action = MAIN_RESTART;
+            main_action = MAIN_HARD_RESTART;
 
             that->want_quit = true;
         }
@@ -839,7 +843,7 @@ class UI_ThemeWin : public Fl_Window {
         fl_alert("%s", _("Switching pane modes requires a restart.\nOBSIDIAN will now restart."));
         // clang-format on
 
-        main_action = MAIN_RESTART;
+        main_action = MAIN_HARD_RESTART;
 
         that->want_quit = true;
     }
@@ -881,7 +885,7 @@ class UI_ThemeWin : public Fl_Window {
 
         font_theme = 0;
 
-        main_action = MAIN_RESTART;
+        main_action = MAIN_HARD_RESTART;
 
         that->want_quit = true;
     }
@@ -1443,7 +1447,7 @@ class UI_ThemeWin : public Fl_Window {
         gap_blue = 35;
 
         fl_alert("%s", _("Defaults loaded.\nOBSIDIAN will now restart."));
-        main_action = MAIN_RESTART;
+        main_action = MAIN_HARD_RESTART;
         that->want_quit = true;
     }
 
@@ -1457,7 +1461,7 @@ class UI_ThemeWin : public Fl_Window {
             fl_alert("%s", _("Theme loading requires a restart.\nOBSIDIAN will now restart."));
             // clang-format on
 
-            main_action = MAIN_RESTART;
+            main_action = MAIN_HARD_RESTART;
 
             that->want_quit = true;
         }

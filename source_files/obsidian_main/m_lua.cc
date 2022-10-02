@@ -495,19 +495,21 @@ int gui_add_module(lua_State *L) {
         Main::FatalError("Script problem: gui.add_module called late.\n");
     }
 
-    if (single_pane) {
-        main_win->left_mods->AddModule(id, label, tip, red, green, blue,
-                                       suboptions);
-    } else {
-        if (!StringCaseCmp(where, "left")) {
+    if (!main_win->left_mods->FindID(id) && !(main_win->right_mods && main_win->right_mods->FindID(id))) {
+        if (single_pane) {
             main_win->left_mods->AddModule(id, label, tip, red, green, blue,
-                                           suboptions);
-        } else if (!StringCaseCmp(where, "right")) {
-            main_win->right_mods->AddModule(id, label, tip, red, green, blue,
-                                            suboptions);
+                                        suboptions);
         } else {
-            return luaL_error(L, "add_module: unknown where value '%s'\n",
-                              where.c_str());
+            if (!StringCaseCmp(where, "left")) {
+                main_win->left_mods->AddModule(id, label, tip, red, green, blue,
+                                            suboptions);
+            } else if (!StringCaseCmp(where, "right")) {
+                main_win->right_mods->AddModule(id, label, tip, red, green, blue,
+                                                suboptions);
+            } else {
+                return luaL_error(L, "add_module: unknown where value '%s'\n",
+                                where.c_str());
+            }
         }
     }
 
@@ -589,12 +591,24 @@ int gui_add_module_header(lua_State *L) {
             "Script problem: gui.add_module_header called late.\n");
     }
 
-    // FIXME : error if module is unknown
+    UI_Module *mod = main_win->left_mods->FindID(module);
+    if (!mod) {
+        if (!single_pane) {
+            mod = main_win->right_mods->FindID(module);
+        }
+    }
 
-    main_win->left_mods->AddHeader(module, option, label, gap);
+    if (!mod) {
+        Main::FatalError(
+            "Script problem: gui.add_module_slider_option called for non-existent module!\n");
+    }
 
-    if (!single_pane) {
-        main_win->right_mods->AddHeader(module, option, label, gap);
+    if (!mod->FindHeaderOpt(option)) {
+        main_win->left_mods->AddHeader(module, option, label, gap);
+
+        if (!single_pane) {
+            main_win->right_mods->AddHeader(module, option, label, gap);
+        }
     }
 
     return 0;
@@ -628,13 +642,25 @@ int gui_add_module_option(lua_State *L) {
             "Script problem: gui.add_module_option called late.\n");
     }
 
-    // FIXME : error if module is unknown
+    UI_Module *mod = main_win->left_mods->FindID(module);
+    if (!mod) {
+        if (!single_pane) {
+            mod = main_win->right_mods->FindID(module);
+        }
+    }
 
-    main_win->left_mods->AddOption(module, option, label, tip, longtip, gap,
-                                   randomize_group, default_value);
-    if (!single_pane) {
-        main_win->right_mods->AddOption(module, option, label, tip, longtip,
-                                        gap, randomize_group, default_value);
+    if (!mod) {
+        Main::FatalError(
+            "Script problem: gui.add_module_slider_option called for non-existent module!\n");
+    }
+
+    if (!mod->FindOpt(option)) {
+        main_win->left_mods->AddOption(module, option, label, tip, longtip, gap,
+                                    randomize_group, default_value);
+        if (!single_pane) {
+            main_win->right_mods->AddOption(module, option, label, tip, longtip,
+                                            gap, randomize_group, default_value);
+        }
     }
 
     return 0;
@@ -676,15 +702,27 @@ int gui_add_module_slider_option(lua_State *L) {
             "Script problem: gui.add_module_option called late.\n");
     }
 
-    // FIXME : error if module is unknown
+    UI_Module *mod = main_win->left_mods->FindID(module);
+    if (!mod) {
+        if (!single_pane) {
+            mod = main_win->right_mods->FindID(module);
+        }
+    }
 
-    main_win->left_mods->AddSliderOption(module, option, label, tip, longtip,
-                                         gap, min, max, inc, units, presets,
-                                         nan, randomize_group, default_value);
-    if (!single_pane) {
-        main_win->right_mods->AddSliderOption(
-            module, option, label, tip, longtip, gap, min, max, inc, units,
-            presets, nan, randomize_group, default_value);
+    if (!mod) {
+        Main::FatalError(
+            "Script problem: gui.add_module_slider_option called for non-existent module!\n");
+    }
+
+    if (!mod->FindSliderOpt(option)) {
+        main_win->left_mods->AddSliderOption(module, option, label, tip, longtip,
+                                            gap, min, max, inc, units, presets,
+                                            nan, randomize_group, default_value);
+        if (!single_pane) {
+            main_win->right_mods->AddSliderOption(
+                module, option, label, tip, longtip, gap, min, max, inc, units,
+                presets, nan, randomize_group, default_value);
+        }
     }
 
     return 0;
@@ -718,14 +756,26 @@ int gui_add_module_button_option(lua_State *L) {
             "Script problem: gui.add_module_option called late.\n");
     }
 
-    // FIXME : error if module is unknown
+    UI_Module *mod = main_win->left_mods->FindID(module);
+    if (!mod) {
+        if (!single_pane) {
+            mod = main_win->right_mods->FindID(module);
+        }
+    }
 
-    main_win->left_mods->AddButtonOption(module, option, label, tip, longtip,
-                                         gap, randomize_group, default_value);
-    if (!single_pane) {
-        main_win->right_mods->AddButtonOption(module, option, label, tip,
-                                              longtip, gap, randomize_group,
-                                              default_value);
+    if (!mod) {
+        Main::FatalError(
+            "Script problem: gui.add_module_button_option called for non-existent module!\n");
+    }
+
+    if (!mod->FindButtonOpt(option)) {
+        main_win->left_mods->AddButtonOption(module, option, label, tip, longtip,
+                                            gap, randomize_group, default_value);
+        if (!single_pane) {
+            main_win->right_mods->AddButtonOption(module, option, label, tip,
+                                                longtip, gap, randomize_group,
+                                                default_value);
+        }
     }
 
     return 0;
@@ -1634,7 +1684,9 @@ void Script_Load(std::filesystem::path script_name) {
 }
 
 void Script_Open() {
-    LogPrintf("\n--- OPENING LUA VM ---\n\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("\n--- OPENING LUA VM ---\n\n");
+    }
 
     // create Lua state
 
@@ -1653,22 +1705,34 @@ void Script_Open() {
 
     import_dir = "scripts";
 
-    LogPrintf("Loading initial script: init.lua\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("Loading initial script: init.lua\n");
+    }
 
     Script_Load("init.lua");
 
-    LogPrintf("Loading main script: obsidian.lua\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("Loading main script: obsidian.lua\n");
+    }
 
     Script_Load("obsidian.lua");
 
     has_loaded = true;
-    LogPrintf("DONE.\n\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("DONE.\n\n");
+    }
 
     // ob_init() will load all the game-specific scripts, engine scripts, and
     // module scripts.
 
-    if (!Script_CallFunc("ob_init")) {
-        Main::FatalError("The ob_init script failed.\n");
+    if (main_action == MAIN_SOFT_RESTART) {
+        if (!Script_CallFunc("ob_restart")) {
+            Main::FatalError("The ob_init script failed.\n");
+        }
+    } else {
+        if (!Script_CallFunc("ob_init")) {
+            Main::FatalError("The ob_init script failed.\n");
+        }
     }
 
     has_added_buttons = true;
@@ -1681,7 +1745,9 @@ void Script_Close() {
         lua_close(LUA_ST);
     }
 
-    LogPrintf("\n--- CLOSED LUA VM ---\n\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("\n--- CLOSED LUA VM ---\n\n");
+    }
 
     LUA_ST = NULL;
 

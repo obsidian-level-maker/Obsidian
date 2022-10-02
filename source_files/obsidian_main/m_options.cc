@@ -155,7 +155,9 @@ bool Options_Save(std::filesystem::path filename) {
         return false;
     }
 
-    LogPrintf("Saving options file...\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("Saving options file...\n");
+    }
 
     option_fp << "-- OPTIONS FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION
               << " \"" << OBSIDIAN_CODE_NAME << "\"\n";
@@ -199,7 +201,9 @@ bool Options_Save(std::filesystem::path filename) {
 
     option_fp.close();
 
-    LogPrintf("DONE.\n\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("DONE.\n\n");
+    }
 
     return true;
 }
@@ -295,7 +299,7 @@ class UI_OptionsWin : public Fl_Window {
 
         Trans_UnInit();
 
-        main_action = MAIN_RESTART;
+        main_action = MAIN_HARD_RESTART;
 
         that->want_quit = true;
     }
@@ -409,7 +413,7 @@ class UI_OptionsWin : public Fl_Window {
         fl_alert("%s", _("File prefix changes require a restart.\nOBSIDIAN will now restart."));
         // clang-format on
 
-        main_action = MAIN_RESTART;
+        main_action = MAIN_HARD_RESTART;
 
         that->want_quit = true;
     }
@@ -433,7 +437,7 @@ class UI_OptionsWin : public Fl_Window {
             fl_alert("%s", _("Restoring slider limits requires a restart.\nObsidian will now restart."));
             // clang-format on
 
-            main_action = MAIN_RESTART;
+            main_action = MAIN_HARD_RESTART;
 
             that->want_quit = true;
         }
