@@ -1530,6 +1530,10 @@ skiprest:
 
     /* ---- normal GUI mode ---- */
 
+    std::string main_title =
+        fmt::format("{} {} \"{}\"", OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
+                    OBSIDIAN_CODE_NAME);
+
     if (main_action != MAIN_SOFT_RESTART) {
         // this not only finds PK3 files, but also activates the ones specified in
         // OPTIONS.txt
@@ -1541,9 +1545,6 @@ skiprest:
         int main_w, main_h;
         UI_MainWin::CalcWindowSize(&main_w, &main_h);
 
-        std::string main_title =
-            fmt::format("{} {} \"{}\"", OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
-                        OBSIDIAN_CODE_NAME);
         main_win = new UI_MainWin(main_w, main_h, main_title.c_str());
     }
 
