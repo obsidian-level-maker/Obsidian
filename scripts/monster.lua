@@ -2381,6 +2381,7 @@ gui.debugf("   doing spot : Mon=%s\n", tostring(mon))
         btype.health = info.health
 
         table.insert(PARAM.boss_types, btype)
+        gui.printf("Proc boss for " .. LEVEL.name .. ":" .. table.tostr(PARAM.boss_types))
       end
 
       -- look toward the important spot
