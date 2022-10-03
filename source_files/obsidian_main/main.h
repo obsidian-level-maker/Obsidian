@@ -280,6 +280,9 @@ void ProgStatus(std::string_view msg, Args &&...args) {
 bool BackupFile(const std::filesystem::path &filename);
 #if defined WIN32 && !defined CONSOLE_ONLY
 void Blinker();
+#endif
+
+#ifndef CONSOLE_ONLY
 bool LoadInternalFont(const char *fontpath, int fontnum, const char *fontname);
 void PopulateFontMap();
 void Ticker();
