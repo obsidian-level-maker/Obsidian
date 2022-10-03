@@ -123,20 +123,12 @@ bool Options_Load(std::filesystem::path filename) {
         return false;
     }
 
-    fmt::print("{} {}\n", _("Loading options file: "), filename.string());
-
     int error_count = 0;
 
     for (std::string line; std::getline(option_fp, line);) {
         if (!Options_ParseLine(line)) {
             error_count += 1;
         }
-    }
-
-    if (error_count > 0) {
-        fmt::print("DONE (found {} parse errors)\n\n", error_count);
-    } else {
-        fmt::print("DONE.\n\n");
     }
 
     option_fp.close();

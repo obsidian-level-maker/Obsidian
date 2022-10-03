@@ -1439,6 +1439,7 @@ skiprest:
     }*/
 
     if (batch_mode) {
+
         VFS_ParseCommandLine();
 
         Script_Open();
@@ -1501,6 +1502,19 @@ skiprest:
             Cookie_Save(config_file);
             Main::Detail::Shutdown(false);
             return 0;
+        }
+
+        if (batch_output_file.empty()) {
+            fmt::print(stderr, "\nNo output filename given! Did you forget the --batch parameter?\n");
+            LogPrintf("\nNo output filename given! Did you forget the --batch parameter?\n");
+
+            Main::Detail::Shutdown(false);
+#if defined WIN32 && !defined CONSOLE_ONLY
+            std::cout << '\n' << "Close window when finished...";
+            do {
+            } while (true);
+#endif
+            return EXIT_FAILURE;  
         }
 
         Main_SetSeed();
