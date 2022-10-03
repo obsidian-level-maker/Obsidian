@@ -3347,7 +3347,7 @@ function Cave_build_a_park(LEVEL, R, entry_h, SEEDS)
 
     local T = Trans.spot_transform(mx, my, entry_h, 2)
 
-    Fabricate(R, def, T, {})
+    Fabricate(LEVEL, R, def, T, {})
   end
 
 
