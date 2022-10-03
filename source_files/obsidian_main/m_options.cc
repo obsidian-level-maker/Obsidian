@@ -70,8 +70,6 @@ void Parse_Option(const std::string &name, const std::string &value) {
         custom_prefix = value;
     } else if (StringCaseCmp(name, "zip_output") == 0) {
         zip_output = StringToInt(value);
-    } else if (StringCaseCmp(name, "zip_logs") == 0) {
-        zip_logs = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "timestamp_logs") == 0) {
         timestamp_logs = StringToInt(value) ? true : false;
     } else if (StringCaseCmp(name, "log_limit") == 0) {
@@ -188,7 +186,6 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "filename_prefix = " << filename_prefix << "\n";
     option_fp << "custom_prefix = " << custom_prefix << "\n";
     option_fp << "zip_output = " << zip_output << "\n";
-    option_fp << "zip_logs = " << zip_logs << "\n";
     option_fp << "timestamp_logs = " << timestamp_logs << "\n";
     option_fp << "log_limit = " << log_limit << "\n";
     option_fp << "default_output_path = " << default_output_path << "\n";
@@ -232,7 +229,6 @@ class UI_OptionsWin : public Fl_Window {
     UI_CustomCheckBox *opt_debug;
     UI_CustomCheckBox *opt_limit_break;
     // UI_CustomCheckBox *opt_preserve_failures;
-    UI_CustomCheckBox *opt_zip_logs;
     UI_CustomCheckBox *opt_timestamp_logs;
     Fl_Simple_Counter *opt_log_limit;
 
@@ -321,12 +317,6 @@ class UI_OptionsWin : public Fl_Window {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
         log_limit = that->opt_log_limit->value();
-    }
-
-    static void callback_ZipLogs(Fl_Widget *w, void *data) {
-        UI_OptionsWin *that = (UI_OptionsWin *)data;
-
-        zip_logs = that->opt_zip_logs->value() ? true : false;
     }
 
     static void callback_ZipOutput(Fl_Widget *w, void *data) {
@@ -700,16 +690,6 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_preserve_failures->down_box(button_style);
 
     cy += opt_preserve_failures->h() + y_step * .5;*/
-
-    opt_zip_logs = new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
-    opt_zip_logs->copy_label(_(" Zip Logs When Saving"));
-    opt_zip_logs->value(zip_logs ? 1 : 0);
-    opt_zip_logs->callback(callback_ZipLogs, this);
-    opt_zip_logs->labelfont(font_style);
-    opt_zip_logs->selection_color(SELECTION);
-    opt_zip_logs->down_box(button_style);
-
-    cy += opt_zip_logs->h() + y_step * .5;
 
     opt_timestamp_logs =
         new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");

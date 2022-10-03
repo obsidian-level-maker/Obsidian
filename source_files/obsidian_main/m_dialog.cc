@@ -658,52 +658,6 @@ tryagain:;
     that->WriteLogs(fp);
 
     fp.close();
-
-    if (zip_logs) {
-        std::filesystem::path zip_filename = filename;
-        zip_filename.replace_extension("zip");
-        FILE *zip_file = fopen(filename.string().c_str(), "rb");
-        int zip_length = std::filesystem::file_size(filename);
-        byte *zip_buf = new byte[zip_length];
-        if (zip_buf && zip_file) {
-            memset(zip_buf, 0, zip_length);
-            fread(zip_buf, 1, zip_length, zip_file);
-        }
-        if (zip_file) {
-            fclose(zip_file);
-        }
-        if (zip_buf) {
-            if (std::filesystem::exists(zip_filename)) {
-                // clang-format off
-                switch (fl_choice(_("Log zipping is enabled, but %s already exists.\nOverwrite (original .txt file will still be kept) ?"),
-                                  _("Yes"), 
-                                  _("No"), 0,
-                                  // clang-format on
-                                  zip_filename.generic_string().c_str())) {
-                    case 0:
-                        std::filesystem::remove(zip_filename);
-                        break;
-                    case 1:
-                        return;
-                }
-            }
-            if (mz_zip_add_mem_to_archive_file_in_place(
-                    zip_filename.string().c_str(),
-                    filename.filename().string().c_str(), zip_buf, zip_length,
-                    NULL, 0, MZ_DEFAULT_COMPRESSION)) {
-                std::filesystem::remove(filename);
-                delete[] zip_buf;
-            } else {
-                DLG_ShowError(
-                    _("Zipping logs to %s failed! Retaining original logs.\n"),
-                    filename.generic_string().c_str());
-            }
-        } else {
-            DLG_ShowError(
-                _("Zipping logs to %s failed! Retaining original logs.\n"),
-                filename.generic_string().c_str());
-        }
-    }
 }
 
 void DLG_ViewLogs(void) {

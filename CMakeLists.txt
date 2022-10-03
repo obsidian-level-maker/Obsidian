@@ -11,6 +11,7 @@ add_subdirectory(source_files/miniz EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/physfs EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/qsavetex EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/slump EXCLUDE_FROM_ALL)
+add_subdirectory(source_files/spdlog EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/zdbsp EXCLUDE_FROM_ALL)
 
 project(
@@ -151,6 +152,7 @@ target_include_directories(obsidian PRIVATE source_files/lua/src)
 target_include_directories(obsidian PRIVATE source_files/miniz)
 target_include_directories(obsidian PRIVATE source_files/physfs/src)
 target_include_directories(obsidian PRIVATE source_files/slump)
+target_include_directories(obsidian PRIVATE source_files/spdlog/include/spdlog)
 target_include_directories(obsidian PRIVATE source_files/zdbsp)
 
 if(MINGW
@@ -198,6 +200,7 @@ if(UNIX)
               physfs-static
               obsidian_zdbsp
               obsidian_slump
+              spdlog
     )
   else()
     target_link_libraries(
@@ -212,6 +215,7 @@ if(UNIX)
               obsidian_slump
               fontconfig
               pthread
+              spdlog
     )
   endif()
 else()
@@ -225,6 +229,7 @@ else()
             physfs-static
             obsidian_zdbsp
             obsidian_slump
+            spdlog
   )
 endif()
 
