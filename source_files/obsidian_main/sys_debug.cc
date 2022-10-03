@@ -42,11 +42,14 @@ bool LogInit(const std::filesystem::path &filename) {
     if (!filename.empty()) {
         log_filename = filename;
 
+        spdlog::set_pattern("%v");
+
         log_file = spdlog::basic_logger_mt("basic_logger", log_filename.generic_string().c_str());
 
         if (log_file == nullptr) {
             return false;
         }
+        spdlog::flush_every(std::chrono::seconds(1));
         spdlog::set_default_logger(log_file);
     }
 
@@ -167,8 +170,8 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
     // this is very unlikely to happen, but check anyway
     if (!log_stream.is_open()) {
         log_file = spdlog::basic_logger_mt("basic_logger", log_filename.generic_string().c_str());
-        spdlog::set_default_logger(log_file);
         if (log_file != nullptr) {
+            spdlog::flush_every(std::chrono::seconds(1));
             spdlog::set_default_logger(log_file);
         }
         return;
@@ -193,6 +196,7 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
     // open the log file for writing again
     log_file = spdlog::basic_logger_mt("basic_logger", log_filename.generic_string().c_str());
     if (log_file != nullptr) {
+        spdlog::flush_every(std::chrono::seconds(1));
         spdlog::set_default_logger(log_file);
     }
 }
