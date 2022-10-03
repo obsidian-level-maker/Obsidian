@@ -630,10 +630,6 @@ function SKY_GEN.generate_skies()
   gui.printf("\n")
 end
 
-function SKY_GEN.free_up()
-  gui.fsky_free()
-end
-
 ----------------------------------------------------------------
 
 OB_MODULES["sky_generator"] =
@@ -650,7 +646,6 @@ OB_MODULES["sky_generator"] =
   {
     setup = SKY_GEN.setup,
     get_levels_after_themes = SKY_GEN.generate_skies,
-    all_done = SKY_GEN.free_up
   },
 
   options =

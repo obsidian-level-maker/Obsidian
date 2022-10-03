@@ -9,7 +9,9 @@ if(WIN32
    AND NOT MINGW
    AND NOT MSYS
 )
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHa")
+  if(OBSIDIAN_MSVC_DEBUG)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MDd /EHa")
+  endif()
 endif()
 
 add_library(

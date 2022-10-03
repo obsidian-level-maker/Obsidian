@@ -67,6 +67,16 @@
       }
     },
     {
+      "name": "vscode+msvc2019+debug",
+      "description": "Compile natively on Windows (Dasho)",
+      "binaryDir": "build/vscode",
+      "generator": "Visual Studio 16 2019",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "OBSIDIAN_MSVC_DEBUG": "ON"
+      }
+    },
+    {
       "name": "vscode+msvc2019+win32",
       "description": "Compile natively on Windows (32-bit) (Dasho)",
       "binaryDir": "build/vscode",
@@ -143,6 +153,11 @@
       "name": "vscode+msvc2019",
       "configuration": "Release",
       "configurePreset": "vscode+msvc2019"
+    },
+    {
+      "name": "vscode+msvc2019+debug",
+      "configuration": "Debug",
+      "configurePreset": "vscode+msvc2019+debug"
     },
     {
       "name": "vscode+msvc2019+win32",

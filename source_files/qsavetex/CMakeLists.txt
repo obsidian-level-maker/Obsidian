@@ -5,6 +5,11 @@ project(
   VERSION 0.1.0
   LANGUAGES CXX
 )
+
+if(OBSIDIAN_MSVC_DEBUG)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MDd /EHa")
+endif()
+
 add_executable(
   ${PROJECT_NAME} ${SOURCES} main.cc im_tex.cc pakfile.cc u_file.cc u_util.cc
 )

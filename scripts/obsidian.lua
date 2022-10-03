@@ -1984,6 +1984,9 @@ function ob_clean_up()
   PARAM  = {}
   STYLE  = {}
   SCRIPTS = {}
+  if OB_MODULES["sky_generator"].enabled and OB_MODULES["sky_generator"].visible then
+    gui.fsky_free()
+  end
 end
 
 local function ob_get_module_refs()
