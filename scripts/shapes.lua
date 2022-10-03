@@ -14226,6 +14226,58 @@ GROW_SEWER_STAIRS_SIDE_EXIT_NEW_AREA =
   },
 },
 
+-- new stuff, organize later?
+
+GROW_PLUS_SINGLE_STAIR =
+{
+  prob = 40,
+  skip_prob = 80,
+
+  structure =
+  {
+    "..........","AAAAAAAAAA",
+    "..........","AAAAAAAAAA",
+    "..........","AA/#11#%AA",
+    "..........","AA##11##AA",
+    "..........","AA<11111AA",
+    "..........","AA<11111AA",
+    "..........","AA##11##AA",
+    "..........","AA##11##AA",
+    "xxxx11xxxx","xxxx11xxxx"
+  },
+
+  diagonals =
+  {
+    "A.",".A"
+  }
+},
+
+GROW_PLUS_SINGLE_STAIR_OPPOSITE =
+{
+  prob = 40,
+  skip_prob = 80,
+
+  structure =
+  {
+    "..........x","1111111111x",
+    "..........x","1111111111x",
+    "..........x","11/#AA#%11x",
+    "..........x","11##AA##11x",
+    "..........x","11>AAAAA11x",
+    "..........x","11>AAAAA11x",
+    "..........1","11##AA##111",
+    "..........1","11##AA##111",
+    "xxxx..xxxxx","xxxxAAxxxxx"
+  },
+
+  diagonals =
+  {
+    "1.",".1"
+  }
+},
+
+-- END OF GROW RULES
+
 -- FORGET IT LMAO IT DOESN'T WORK
 -- It works now. Cheer up, buddy. -- March, 2019,
 -- MSSP's city streets. ExperiMENTAL. [STREETS]

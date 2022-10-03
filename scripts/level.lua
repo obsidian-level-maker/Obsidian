@@ -2394,7 +2394,7 @@ function Level_choose_misc(LEVEL)
 
   LEVEL.room_height_style = PARAM.room_heights or "mixed"
 
-  if rand.odds(style_sel("outdoors", 0, 50, 50, 100)) then
+  if rand.odds(style_sel("outdoors", 0, 33, 66, 100)) then
     LEVEL.has_outdoors = true
 
     if rand.odds(style_sel("outdoors", 0, 15, 25, 0)) then
