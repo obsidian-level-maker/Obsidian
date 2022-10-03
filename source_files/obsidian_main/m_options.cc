@@ -79,7 +79,7 @@ void Parse_Option(const std::string &name, const std::string &value) {
     } else if (StringCaseCmp(name, "default_output_path") == 0) {
         default_output_path = value;
     } else {
-        LogPrintf("{} '{}'\n", _("Unknown option: "), name);
+        fmt::print("{} '{}'\n", _("Unknown option: "), name);
     }
 }
 
@@ -100,7 +100,7 @@ static bool Options_ParseLine(std::string buf) {
     }*/
 
     if (!isalpha(buf.front())) {
-        LogPrintf("{} [{}]\n", _("Weird option line: "), buf);
+        fmt::print("{} [{}]\n", _("Weird option line: "), buf);
         return false;
     }
 
@@ -109,7 +109,7 @@ static bool Options_ParseLine(std::string buf) {
     std::string value = buf.substr(pos + 2);
 
     if (name.empty() || value.empty()) {
-        LogPrintf(_("Name or value missing!\n"));
+        fmt::print(_("Name or value missing!\n"));
         return false;
     }
 
