@@ -43,9 +43,6 @@
 
 std::filesystem::path last_directory;
 
-// from main.h
-std::string default_output_path;
-
 static int dialog_result;
 
 static void dialog_close_CB(Fl_Widget *w, void *data) { dialog_result = 1; }

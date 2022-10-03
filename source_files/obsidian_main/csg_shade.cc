@@ -23,9 +23,11 @@
 
 #include "csg_local.h"
 #include "csg_main.h"
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
-#include "hdr_lua.h"
 #include "hdr_ui.h"
+#endif
+#include "hdr_lua.h"
 #include "headers.h"
 #include "lib_argv.h"
 #include "lib_util.h"

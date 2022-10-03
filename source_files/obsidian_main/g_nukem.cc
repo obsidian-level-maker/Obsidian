@@ -26,9 +26,11 @@
 
 #include "csg_main.h"
 #include "fmt/format.h"
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
-#include "hdr_lua.h"
 #include "hdr_ui.h"  // ui_build.h
+#endif
+#include "hdr_lua.h"
 #include "images.h"
 #include "lib_file.h"
 #include "lib_grp.h"
@@ -428,7 +430,9 @@ bool nukem_game_interface_c::Start(const char *preset) {
             filename = Resolve_DefaultOutputPath() / batch_output_file;
         }
     } else {
+        #ifndef CONSOLE_ONLY
         filename = DLG_OutputFilename("grp");
+        #endif
     }
 
     if (filename.empty()) {
@@ -445,9 +449,11 @@ bool nukem_game_interface_c::Start(const char *preset) {
         return false;
     }
 
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Init(0, N_("CSG"));
     }
+    #endif
 
     return true;
 }
@@ -485,9 +491,11 @@ void nukem_game_interface_c::EndLevel() {
 
     NK_BeginLevel(level_name.c_str());
 
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Step("CSG");
     }
+    #endif
 
     CSG_NUKEM_Write();
 

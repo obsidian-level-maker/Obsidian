@@ -20,8 +20,10 @@
 //----------------------------------------------------------------------
 
 #include "fmt/core.h"
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
+#endif
 #include "headers.h"
 #include "lib_argv.h"
 #include "lib_util.h"
@@ -198,7 +200,7 @@ bool Options_Save(std::filesystem::path filename) {
 }
 
 //----------------------------------------------------------------------
-
+#ifndef CONSOLE_ONLY
 class UI_OptionsWin : public Fl_Window {
    public:
     bool want_quit;
@@ -787,6 +789,6 @@ void DLG_OptionsEditor(void) {
 
     delete option_window;
 }
-
+#endif
 //--- editor settings ---
 // vi:ts=4:sw=4:noexpandtab

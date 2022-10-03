@@ -23,9 +23,11 @@
 #include "csg_local.h"
 #include "csg_main.h"
 #include "csg_quake.h"
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
-#include "hdr_lua.h"
 #include "hdr_ui.h"
+#endif
+#include "hdr_lua.h"
 #include "headers.h"
 #include "lib_file.h"
 #include "lib_util.h"
@@ -1169,9 +1171,11 @@ void Q1_ClippingHull(int hull) {
 
     LogPrintf("\nClipping Hull {}...\n", hull);
 
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Step("Hull");
     }
+    #endif
 
     ///???  FreeAll();
 

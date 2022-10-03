@@ -26,7 +26,9 @@
 #include "csg_local.h"
 #include "csg_quake.h"  // for quake_plane_c
 #include "fmt/core.h"
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
+#endif
 #include "hdr_lua.h"
 #include "headers.h"
 #include "lib_util.h"

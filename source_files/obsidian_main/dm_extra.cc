@@ -23,9 +23,11 @@
 
 #include "csg_main.h"
 #include "g_doom.h"
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
-#include "hdr_lua.h"
 #include "hdr_ui.h"
+#endif
+#include "hdr_lua.h"
 #include "headers.h"
 #include "images.h"
 #include "lib_file.h"
@@ -1256,7 +1258,7 @@ static rgb_color_t Grab_Color(lua_State *L, int stack_idx) {
     }
 
     luaL_error(L, "bad color value (not a string or table)");
-    return FL_BLACK; /* NOT REACHED */
+    return MAKE_RGBA(0, 0, 0, 255); /* NOT REACHED */
 }
 
 static byte PaletteLookup(rgb_color_t col, const rgb_color_t *palette) {

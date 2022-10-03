@@ -3,7 +3,9 @@ cmake_minimum_required(VERSION 3.12..3.20)
 include(cmake/CPM.cmake)
 
 add_subdirectory(source_files/filename_formatter EXCLUDE_FROM_ALL)
-add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
+if (NOT CONSOLE_ONLY)
+  add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
+endif()
 add_subdirectory(source_files/fmt EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/hedley EXCLUDE_FROM_ALL)
 add_subdirectory(source_files/lua EXCLUDE_FROM_ALL)
@@ -78,75 +80,130 @@ cpmaddpackage(
   "CMAKE_FORMAT_EXCLUDE cmake/CPM.cmake"
 )
 
+if (NOT CONSOLE_ONLY)
+  add_executable(
+    obsidian
+    source_files/obsidian_main/aj_map.cc
+    source_files/obsidian_main/aj_poly.cc
+    source_files/obsidian_main/aj_util.cc
+    source_files/obsidian_main/aj_wad.cc
+    source_files/obsidian_main/csg_bsp.cc
+    source_files/obsidian_main/csg_clip.cc
+    source_files/obsidian_main/csg_doom.cc
+    source_files/obsidian_main/csg_main.cc
+    source_files/obsidian_main/csg_nukem.cc
+    source_files/obsidian_main/csg_quake.cc
+    source_files/obsidian_main/csg_shade.cc
+    source_files/obsidian_main/csg_spots.cc
+    source_files/obsidian_main/dm_extra.cc
+    source_files/obsidian_main/dm_prefab.cc
+    source_files/obsidian_main/g_doom.cc
+    source_files/obsidian_main/g_nukem.cc
+    source_files/obsidian_main/g_quake.cc
+    source_files/obsidian_main/g_quake2.cc
+    source_files/obsidian_main/g_quake3.cc
+    source_files/obsidian_main/lib_argv.cc
+    source_files/obsidian_main/lib_crc.cc
+    source_files/obsidian_main/lib_file.cc
+    source_files/obsidian_main/lib_grp.cc
+    source_files/obsidian_main/lib_pak.cc
+    source_files/obsidian_main/lib_signal.cc
+    source_files/obsidian_main/lib_tga.cc
+    source_files/obsidian_main/lib_util.cc
+    source_files/obsidian_main/lib_wad.cc
+    source_files/obsidian_main/lib_zip.cc
+    source_files/obsidian_main/m_about.cc
+    source_files/obsidian_main/m_addons.cc
+    source_files/obsidian_main/m_cookie.cc
+    source_files/obsidian_main/m_dialog.cc
+    source_files/obsidian_main/m_lua.cc
+    source_files/obsidian_main/m_manage.cc
+    source_files/obsidian_main/m_options.cc
+    source_files/obsidian_main/m_theme.cc
+    source_files/obsidian_main/m_trans.cc
+    source_files/obsidian_main/m_tutorial.cc
+    source_files/obsidian_main/main.cc
+    source_files/obsidian_main/obsidian.rc
+    source_files/obsidian_main/q_common.cc
+    source_files/obsidian_main/q_light.cc
+    source_files/obsidian_main/q_tjuncs.cc
+    source_files/obsidian_main/q_vis.cc
+    source_files/obsidian_main/sys_assert.cc
+    source_files/obsidian_main/sys_debug.cc
+    source_files/obsidian_main/sys_xoshiro.cc
+    source_files/obsidian_main/tx_forge.cc
+    source_files/obsidian_main/tx_skies.cc
+    source_files/obsidian_main/ui_boxes.cc
+    source_files/obsidian_main/ui_build.cc
+    source_files/obsidian_main/ui_game.cc
+    source_files/obsidian_main/ui_hyper.cc
+    source_files/obsidian_main/ui_map.cc
+    source_files/obsidian_main/ui_module.cc
+    source_files/obsidian_main/ui_widgets.cc
+    source_files/obsidian_main/ui_window.cc
+    source_files/obsidian_main/vis_buffer.cc
+    source_files/obsidian_main/vis_occlude.cc
+  )
+else()
 add_executable(
-  obsidian
-  source_files/obsidian_main/aj_map.cc
-  source_files/obsidian_main/aj_poly.cc
-  source_files/obsidian_main/aj_util.cc
-  source_files/obsidian_main/aj_wad.cc
-  source_files/obsidian_main/csg_bsp.cc
-  source_files/obsidian_main/csg_clip.cc
-  source_files/obsidian_main/csg_doom.cc
-  source_files/obsidian_main/csg_main.cc
-  source_files/obsidian_main/csg_nukem.cc
-  source_files/obsidian_main/csg_quake.cc
-  source_files/obsidian_main/csg_shade.cc
-  source_files/obsidian_main/csg_spots.cc
-  source_files/obsidian_main/dm_extra.cc
-  source_files/obsidian_main/dm_prefab.cc
-  source_files/obsidian_main/g_doom.cc
-  source_files/obsidian_main/g_nukem.cc
-  source_files/obsidian_main/g_quake.cc
-  source_files/obsidian_main/g_quake2.cc
-  source_files/obsidian_main/g_quake3.cc
-  source_files/obsidian_main/lib_argv.cc
-  source_files/obsidian_main/lib_crc.cc
-  source_files/obsidian_main/lib_file.cc
-  source_files/obsidian_main/lib_grp.cc
-  source_files/obsidian_main/lib_pak.cc
-  source_files/obsidian_main/lib_signal.cc
-  source_files/obsidian_main/lib_tga.cc
-  source_files/obsidian_main/lib_util.cc
-  source_files/obsidian_main/lib_wad.cc
-  source_files/obsidian_main/lib_zip.cc
-  source_files/obsidian_main/m_about.cc
-  source_files/obsidian_main/m_addons.cc
-  source_files/obsidian_main/m_cookie.cc
-  source_files/obsidian_main/m_dialog.cc
-  source_files/obsidian_main/m_lua.cc
-  source_files/obsidian_main/m_manage.cc
-  source_files/obsidian_main/m_options.cc
-  source_files/obsidian_main/m_theme.cc
-  source_files/obsidian_main/m_trans.cc
-  source_files/obsidian_main/m_tutorial.cc
-  source_files/obsidian_main/main.cc
-  source_files/obsidian_main/obsidian.rc
-  source_files/obsidian_main/q_common.cc
-  source_files/obsidian_main/q_light.cc
-  source_files/obsidian_main/q_tjuncs.cc
-  source_files/obsidian_main/q_vis.cc
-  source_files/obsidian_main/sys_assert.cc
-  source_files/obsidian_main/sys_debug.cc
-  source_files/obsidian_main/sys_xoshiro.cc
-  source_files/obsidian_main/tx_forge.cc
-  source_files/obsidian_main/tx_skies.cc
-  source_files/obsidian_main/ui_boxes.cc
-  source_files/obsidian_main/ui_build.cc
-  source_files/obsidian_main/ui_game.cc
-  source_files/obsidian_main/ui_hyper.cc
-  source_files/obsidian_main/ui_map.cc
-  source_files/obsidian_main/ui_module.cc
-  source_files/obsidian_main/ui_widgets.cc
-  source_files/obsidian_main/ui_window.cc
-  source_files/obsidian_main/vis_buffer.cc
-  source_files/obsidian_main/vis_occlude.cc
-)
+    obsidian
+    source_files/obsidian_main/aj_map.cc
+    source_files/obsidian_main/aj_poly.cc
+    source_files/obsidian_main/aj_util.cc
+    source_files/obsidian_main/aj_wad.cc
+    source_files/obsidian_main/csg_bsp.cc
+    source_files/obsidian_main/csg_clip.cc
+    source_files/obsidian_main/csg_doom.cc
+    source_files/obsidian_main/csg_main.cc
+    source_files/obsidian_main/csg_nukem.cc
+    source_files/obsidian_main/csg_quake.cc
+    source_files/obsidian_main/csg_shade.cc
+    source_files/obsidian_main/csg_spots.cc
+    source_files/obsidian_main/dm_extra.cc
+    source_files/obsidian_main/dm_prefab.cc
+    source_files/obsidian_main/g_doom.cc
+    source_files/obsidian_main/g_nukem.cc
+    source_files/obsidian_main/g_quake.cc
+    source_files/obsidian_main/g_quake2.cc
+    source_files/obsidian_main/g_quake3.cc
+    source_files/obsidian_main/lib_argv.cc
+    source_files/obsidian_main/lib_crc.cc
+    source_files/obsidian_main/lib_file.cc
+    source_files/obsidian_main/lib_grp.cc
+    source_files/obsidian_main/lib_pak.cc
+    source_files/obsidian_main/lib_signal.cc
+    source_files/obsidian_main/lib_tga.cc
+    source_files/obsidian_main/lib_util.cc
+    source_files/obsidian_main/lib_wad.cc
+    source_files/obsidian_main/lib_zip.cc
+    source_files/obsidian_main/m_addons.cc
+    source_files/obsidian_main/m_cookie.cc
+    source_files/obsidian_main/m_lua.cc
+    source_files/obsidian_main/m_options.cc
+    source_files/obsidian_main/m_trans.cc
+    source_files/obsidian_main/main.cc
+    source_files/obsidian_main/obsidian.rc
+    source_files/obsidian_main/q_common.cc
+    source_files/obsidian_main/q_light.cc
+    source_files/obsidian_main/q_tjuncs.cc
+    source_files/obsidian_main/q_vis.cc
+    source_files/obsidian_main/sys_assert.cc
+    source_files/obsidian_main/sys_debug.cc
+    source_files/obsidian_main/sys_xoshiro.cc
+    source_files/obsidian_main/tx_forge.cc
+    source_files/obsidian_main/tx_skies.cc
+    source_files/obsidian_main/vis_buffer.cc
+    source_files/obsidian_main/vis_occlude.cc
+  )
+endif()
 
 target_include_directories(obsidian PRIVATE source_files/filename_formatter)
-target_include_directories(obsidian PRIVATE source_files/fltk)
-target_include_directories(
-  obsidian PRIVATE "${PROJECT_BINARY_DIR}/source_files/fltk"
-) # Hack for FLTK 1.4 (for now)
+if (NOT CONSOLE_ONLY)
+  target_include_directories(obsidian PRIVATE source_files/fltk)
+  target_include_directories(
+    obsidian PRIVATE "${PROJECT_BINARY_DIR}/source_files/fltk"
+  ) # Hack for FLTK 1.4 (for now)
+endif()
 target_include_directories(obsidian PRIVATE source_files/gif-h)
 target_include_directories(obsidian PRIVATE source_files/lua/src)
 target_include_directories(obsidian PRIVATE source_files/miniz)
@@ -171,7 +228,9 @@ if(OBSIDIAN_SANITIZE)
 endif()
 
 if(UNIX)
-  find_package(Fontconfig REQUIRED)
+  if(NOT CONSOLE_ONLY)
+    find_package(Fontconfig REQUIRED)
+  endif()
 endif()
 
 target_link_libraries(obsidian PRIVATE fmt::fmt-header-only hedley::hedley)
@@ -190,6 +249,63 @@ add_dependencies(obsidian qsavetex)
 
 if(UNIX)
   if(${CMAKE_SYSTEM} MATCHES "BSD")
+    if (NOT CONSOLE_ONLY)
+      target_link_libraries(
+        obsidian
+        PRIVATE filename_formatter
+                fltk
+                fltk_images
+                miniz
+                libluajit
+                physfs-static
+                obsidian_zdbsp
+                obsidian_slump
+                spdlog
+      )
+    else()
+      target_link_libraries(
+        obsidian
+        PRIVATE filename_formatter
+                miniz
+                libluajit
+                physfs-static
+                obsidian_zdbsp
+                obsidian_slump
+                spdlog
+      )
+    endif()
+  else()
+    if(NOT CONSOLE_ONLY)
+      target_link_libraries(
+        obsidian
+        PRIVATE filename_formatter
+                fltk
+                fltk_images
+                miniz
+                libluajit
+                physfs-static
+                obsidian_zdbsp
+                obsidian_slump
+                fontconfig
+                pthread
+                spdlog
+      )
+    else()
+      target_link_libraries(
+        obsidian
+        PRIVATE filename_formatter
+                miniz
+                libluajit
+                physfs-static
+                obsidian_zdbsp
+                obsidian_slump
+                pthread
+                spdlog
+      )
+    endif()
+  endif()
+else()
+  if (NOT CONSOLE_ONLY)
     target_link_libraries(
       obsidian
       PRIVATE filename_formatter
@@ -206,31 +322,14 @@ if(UNIX)
     target_link_libraries(
       obsidian
       PRIVATE filename_formatter
-              fltk
-              fltk_images
               miniz
               libluajit
               physfs-static
               obsidian_zdbsp
               obsidian_slump
-              fontconfig
-              pthread
               spdlog
     )
   endif()
-else()
-  target_link_libraries(
-    obsidian
-    PRIVATE filename_formatter
-            fltk
-            fltk_images
-            miniz
-            libluajit
-            physfs-static
-            obsidian_zdbsp
-            obsidian_slump
-            spdlog
-  )
 endif()
 
 install(TARGETS obsidian RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}

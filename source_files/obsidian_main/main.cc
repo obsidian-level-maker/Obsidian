@@ -26,8 +26,10 @@
 
 #include "csg_main.h"
 #include "g_nukem.h"
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
+#endif
 #include "headers.h"
 #include "lib_argv.h"
 #include "lib_file.h"
@@ -38,7 +40,9 @@
 #include "m_trans.h"
 #include "physfs.h"
 #include "sys_xoshiro.h"
+#ifndef CONSOLE_ONLY
 #include "ui_window.h"
+#endif
 
 #ifdef WIN32
 #include "winuser.h"
@@ -85,6 +89,7 @@ std::string numeric_locale;
 std::vector<std::string> batch_randomize_groups;
 
 // options
+#ifndef CONSOLE_ONLY
 uchar text_red = 225;
 uchar text_green = 225;
 uchar text_blue = 225;
@@ -117,13 +122,14 @@ Fl_Color GAP_COLOR;
 Fl_Color GRADIENT_COLOR;
 Fl_Color BUTTON_COLOR;
 Fl_Color BORDER_COLOR;
+Fl_Font font_style = 0;
+Fl_Boxtype box_style = FL_FLAT_BOX;
+Fl_Boxtype button_style = FL_DOWN_BOX;
+#endif
 int color_scheme = 0;
 int font_theme = 0;
-Fl_Font font_style = 0;
 int box_theme = 0;
-Fl_Boxtype box_style = FL_FLAT_BOX;
 int button_theme = 0;
-Fl_Boxtype button_style = FL_DOWN_BOX;
 int widget_theme = 0;
 bool single_pane = false;
 bool use_system_fonts = false;
@@ -164,6 +170,7 @@ u8_t *old_pixels;
 bool first_run = false;
 
 std::filesystem::path gif_filename = "gif_output.gif";
+std::string default_output_path;
 
 std::string string_seed;
 
@@ -172,6 +179,7 @@ std::string selected_lang =
 
 game_interface_c *game_object = NULL;
 
+#ifndef CONSOLE_ONLY
 // Tutorial stuff
 Fl_BMP_Image *tutorial1;
 Fl_BMP_Image *tutorial2;
@@ -243,7 +251,7 @@ static void main_win_apply_addon_CB(Fl_Widget *w, void *data) {
 
     main_action = MAIN_HARD_RESTART;
 }
-
+#endif
 /* ----- user information ----------------------------- */
 
 static void ShowInfo() {
@@ -486,6 +494,7 @@ void Determine_OptionsFile() {
     }
 }
 
+#ifndef CONSOLE_ONLY
 void Determine_ThemeFile() {
     if (const int themef_arg = argv::Find(0, "theme"); themef_arg >= 0) {
         if (themef_arg + 1 >= argv::list.size() ||
@@ -500,6 +509,7 @@ void Determine_ThemeFile() {
         theme_file /= THEME_FILENAME;
     }
 }
+#endif
 
 void Determine_LoggingFile() {
     if (const int logf_arg = argv::Find(0, "log"); logf_arg >= 0) {
@@ -597,6 +607,7 @@ static int DetermineScaling() {
 }
 }  // namespace Main
 
+#ifndef CONSOLE_ONLY
 bool Main::LoadInternalFont(const char *fontpath, const int fontnum,
                             const char *fontname) {
     /* set the extra font */
@@ -942,7 +953,6 @@ void SetupFltk() {
 #ifdef WIN32
 void Main::Blinker() { FlashWindowEx(blinker); }
 #endif
-
 void Main::Ticker() {
     // This function is called very frequently.
     // To prevent a slow-down, we only call Fl::check()
@@ -957,8 +967,10 @@ void Main::Ticker() {
         last_millis = cur_millis;
     }
 }
+#endif
 
 void Main::Detail::Shutdown(const bool error) {
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         // on fatal error we cannot risk calling into the Lua runtime
         // (it's state may be compromised by a script error).
@@ -975,10 +987,12 @@ void Main::Detail::Shutdown(const bool error) {
         delete main_win;
         main_win = nullptr;
     }
+    #endif
     Script_Close();
     LogClose();
 }
 
+#ifndef CONSOLE_ONLY
 int Main_key_handler(int event) {
     if (event != FL_SHORTCUT) {
         return 0;
@@ -1002,6 +1016,7 @@ int Main_key_handler(int event) {
 
     return 0;
 }
+#endif
 
 void Main_CalcNewSeed() { next_rand_seed = xoshiro_UInt(); }
 
@@ -1038,11 +1053,13 @@ void Main_SetSeed() {
     xoshiro_Reseed(next_rand_seed);
     std::string seed = NumToString(next_rand_seed);
     ob_set_config("seed", seed.c_str());
+    #ifndef CONSOLE_ONLY
     if (!batch_mode) {
         main_win->build_box->seed_disp->copy_label(
             fmt::format("{} {}", _("Seed:"), seed).c_str());
         main_win->build_box->seed_disp->redraw();
     }
+    #endif
 }
 
 static void Module_Defaults() {
@@ -1055,10 +1072,12 @@ static void Module_Defaults() {
 //------------------------------------------------------------------------
 
 bool Build_Cool_Shit() {
+    #ifndef CONSOLE_ONLY
     // clear the map
     if (main_win) {
         main_win->build_box->mini_map->EmptyMap();
     }
+    #endif
 
     const std::string format = ob_game_format();
 
@@ -1088,6 +1107,7 @@ bool Build_Cool_Shit() {
 
     const std::string def_filename = ob_default_filename();
 
+    #ifndef CONSOLE_ONLY
     // lock most widgets of user interface
     if (main_win) {
         std::string seed = NumToString(next_rand_seed);
@@ -1104,15 +1124,18 @@ bool Build_Cool_Shit() {
         main_win->build_box->SetStatus(_("Preparing..."));
         main_win->Locked(true);
     }
+    #endif
 
     const u32_t start_time = TimeGetMillies();
     // this will ask for output filename (among other things)
     bool was_ok = game_object->Start(def_filename.c_str());
 
+    #ifndef CONSOLE_ONLY
     // coerce FLTK to redraw the main window
     for (int r_loop = 0; r_loop < 6; r_loop++) {
         Fl::wait(0.06);
     }
+    #endif
 
     if (was_ok) {
         // run the scripts Scotty!
@@ -1131,32 +1154,40 @@ bool Build_Cool_Shit() {
         string_seed.clear();
 
 #ifdef WIN32
+#ifndef CONSOLE_ONLY
         if (main_win) Main::Blinker();
+#endif
 #endif
     } else {
         string_seed.clear();
+        #ifndef CONSOLE_ONLY
         if (main_win) {
             main_win->build_box->seed_disp->copy_label(_("Seed: -"));
             main_win->build_box->seed_disp->redraw();
             main_win->build_box->name_disp->copy_label("");
             main_win->build_box->name_disp->redraw();
         }
+        #endif
     }
 
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Finish();
         main_win->game_box->SetAbortButton(false);
         main_win->Locked(false);
     }
+    #endif
 
     if (main_action == MAIN_CANCEL) {
         main_action = 0;
+        #ifndef CONSOLE_ONLY
         if (main_win) {
             main_win->label(fmt::format("{} {} \"{}\"", OBSIDIAN_TITLE,
                                         OBSIDIAN_SHORT_VERSION,
                                         OBSIDIAN_CODE_NAME)
                                 .c_str());
         }
+        #endif
         Main::ProgStatus(_("Cancelled"));
     }
 
@@ -1340,7 +1371,9 @@ skiprest:
 
     Determine_ConfigFile();
     Determine_OptionsFile();
+    #ifndef CONSOLE_ONLY
     Determine_ThemeFile();
+    #endif
     Determine_LoggingFile();
     Determine_ReferenceFile();
 
@@ -1365,8 +1398,10 @@ skiprest:
     LogPrintf("********************************************************\n");
     LogPrintf("\n");
 
+    #ifndef CONSOLE_ONLY
     LogPrintf("Library versions: FLTK {}.{}.{}\n\n", FL_MAJOR_VERSION,
               FL_MINOR_VERSION, FL_PATCH_VERSION);
+    #endif
 
     LogPrintf("home_dir: {}\n", home_dir.string());
     LogPrintf("install_dir: {}\n", install_dir.string());
@@ -1375,11 +1410,15 @@ skiprest:
     Trans_Init();
 
     if (!batch_mode) {
+        #ifndef CONSOLE_ONLY
         Theme_Options_Load(theme_file);
+        #endif
         Trans_SetLanguage();
         OBSIDIAN_TITLE = _("OBSIDIAN Level Maker");
         OBSIDIAN_CODE_NAME = _("Unstable");
+        #ifndef CONSOLE_ONLY
         Main::SetupFltk();
+        #endif
     }
 
     if (argv::Find('d', "debug") >= 0) {
@@ -1548,10 +1587,12 @@ skiprest:
         VFS_ParseCommandLine();
 
         // create the main window
+        #ifndef CONSOLE_ONLY
         int main_w, main_h;
         UI_MainWin::CalcWindowSize(&main_w, &main_h);
 
         main_win = new UI_MainWin(main_w, main_h, main_title.c_str());
+        #endif
     }
 
     //???    Default_Location();
@@ -1578,6 +1619,7 @@ skiprest:
     Cookie_ParseArguments();
 
     if (main_action != MAIN_SOFT_RESTART) {
+    #ifndef CONSOLE_ONLY
         // Have to add these after reading existing settings - Dasho
         if (main_win) {
             main_win->menu_bar->add(
@@ -1710,6 +1752,7 @@ skiprest:
         }
 
         Fl::add_handler(Main_key_handler);
+    #endif
     }
 
     switch (filename_prefix) {
@@ -1743,6 +1786,7 @@ skiprest:
     }
 
     if (main_action != MAIN_SOFT_RESTART) {
+        #ifndef CONSOLE_ONLY
         // draw an empty map (must be done after main window is
         // shown() because that is when FLTK finalises the colors).
         main_win->build_box->mini_map->EmptyMap();
@@ -1770,6 +1814,7 @@ skiprest:
             old_pixels = NULL;
             main_win->build_box->mini_map->MapFinish();
         }
+        #endif
     }
 
     main_action = MAIN_NONE;
@@ -1777,7 +1822,9 @@ skiprest:
     try {
         // run the GUI until the user quits
         for (;;) {
+            #ifndef CONSOLE_ONLY
             Fl::wait(0.2);
+            #endif
 
             if (main_action == MAIN_QUIT || main_action == MAIN_HARD_RESTART || main_action == MAIN_SOFT_RESTART) {
                 break;
@@ -1805,6 +1852,7 @@ skiprest:
                     old_seed = string_seed.empty()
                                     ? NumToString(next_rand_seed)
                                     : string_seed;
+                    #ifndef CONSOLE_ONLY
                     if (main_win->build_box->name_disp->label()) {
                         old_name = main_win->build_box->name_disp->label();
                     }
@@ -1817,6 +1865,7 @@ skiprest:
                                 main_win->build_box->mini_map->pixels,
                                 map_size);
                     }
+                    #endif
                 } else {
                     old_seed.clear();
                     old_name.clear();
@@ -1838,11 +1887,13 @@ skiprest:
     if (main_action != MAIN_SOFT_RESTART) {
         LogPrintf("\nQuit......\n\n");
     }
-
+    #ifndef CONSOLE_ONLY
     Theme_Options_Save(theme_file);
+    #endif
     Options_Save(options_file);
 
     if (main_action == MAIN_HARD_RESTART || main_action == MAIN_SOFT_RESTART) {
+        #ifndef CONSOLE_ONLY
         if (main_win) {
             // on fatal error we cannot risk calling into the Lua runtime
             // (it's state may be compromised by a script error).
@@ -1864,6 +1915,7 @@ skiprest:
                 main_win = nullptr;
             }
         }
+        #endif
         Script_Close();
         if (main_action == MAIN_SOFT_RESTART) {
             goto softrestart;
