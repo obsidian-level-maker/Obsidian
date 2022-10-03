@@ -150,7 +150,7 @@ bool random_string_seeds = false;
 bool password_mode = false;
 bool did_specify_seed = false;
 int zip_output = 0;
-bool timestamp_logs = true;
+int log_size = 1; // Without debugging info on, this should handle a full size 75 megawad with some room to spare
 int log_limit = 5;
 
 int old_x = 0;
@@ -169,8 +169,6 @@ std::string string_seed;
 
 std::string selected_lang =
     "en";  // Have a default just in case the translation stuff borks
-
-std::string log_timestamp;
 
 game_interface_c *game_object = NULL;
 
@@ -1346,6 +1344,8 @@ skiprest:
     Determine_LoggingFile();
     Determine_ReferenceFile();
 
+    Options_Load(options_file);
+
     LogInit(logging_file);
 
     if (argv::Find('p', "printref") >= 0) {
@@ -1373,8 +1373,6 @@ skiprest:
     LogPrintf("config_file: {}\n\n", config_file.string());
 
     Trans_Init();
-
-    Options_Load(options_file);
 
     if (!batch_mode) {
         Theme_Options_Load(theme_file);

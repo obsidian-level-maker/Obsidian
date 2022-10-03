@@ -174,12 +174,11 @@ extern bool random_string_seeds;
 extern bool password_mode;
 extern bool did_specify_seed;
 extern int zip_output;
-extern bool timestamp_logs;
+extern int log_size;
 extern int log_limit;
 extern bool first_run;
 
 extern std::string def_filename;
-extern std::string log_timestamp;
 
 extern std::filesystem::path last_directory;
 extern std::string numeric_locale;

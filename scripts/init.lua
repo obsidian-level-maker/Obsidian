@@ -70,36 +70,3 @@ function ob_traceback(msg)
   
     return msg
   end
-
-  function ob_datetime_string()
-    local current_date = os.date("*t")
-  
-    local formatstring
-  
-    if current_date.month < 10 then
-      formatstring = "0" .. current_date.month
-    else
-      formatstring = current_date.month
-    end
-    if current_date.day < 10 then
-      formatstring = formatstring .. "-0" .. current_date.day
-    else
-      formatstring = formatstring .. "-" .. current_date.day
-    end
-    
-    formatstring = current_date.year .. "-" .. formatstring .. "-"
-  
-    if current_date.hour < 10 then
-      formatstring = formatstring .. "0" .. current_date.hour
-    else
-      formatstring = formatstring .. current_date.hour
-    end
-  
-    if current_date.min < 10 then
-      formatstring = formatstring .. "0" .. current_date.min
-    else
-      formatstring = formatstring .. current_date.min
-    end
-  
-    return formatstring
-  end

@@ -70,8 +70,8 @@ void Parse_Option(const std::string &name, const std::string &value) {
         custom_prefix = value;
     } else if (StringCaseCmp(name, "zip_output") == 0) {
         zip_output = StringToInt(value);
-    } else if (StringCaseCmp(name, "timestamp_logs") == 0) {
-        timestamp_logs = StringToInt(value) ? true : false;
+    } else if (StringCaseCmp(name, "log_size") == 0) {
+        log_size = StringToInt(value);
     } else if (StringCaseCmp(name, "log_limit") == 0) {
         log_limit = StringToInt(value);
     } else if (StringCaseCmp(name, "default_output_path") == 0) {
@@ -119,11 +119,11 @@ bool Options_Load(std::filesystem::path filename) {
     std::ifstream option_fp(filename, std::ios::in);
 
     if (!option_fp.is_open()) {
-        LogPrintf(_("Missing Options file -- using defaults.\n\n"));
+        fmt::print(_("Missing Options file -- using defaults.\n\n"));
         return false;
     }
 
-    LogPrintf("{} {}\n", _("Loading options file: "), filename.string());
+    fmt::print("{} {}\n", _("Loading options file: "), filename.string());
 
     int error_count = 0;
 
@@ -134,9 +134,9 @@ bool Options_Load(std::filesystem::path filename) {
     }
 
     if (error_count > 0) {
-        LogPrintf("DONE (found {} parse errors)\n\n", error_count);
+        fmt::print("DONE (found {} parse errors)\n\n", error_count);
     } else {
-        LogPrintf("DONE.\n\n");
+        fmt::print("DONE.\n\n");
     }
 
     option_fp.close();
@@ -186,7 +186,7 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "filename_prefix = " << filename_prefix << "\n";
     option_fp << "custom_prefix = " << custom_prefix << "\n";
     option_fp << "zip_output = " << zip_output << "\n";
-    option_fp << "timestamp_logs = " << timestamp_logs << "\n";
+    option_fp << "log_size = " << log_size << "\n";
     option_fp << "log_limit = " << log_limit << "\n";
     option_fp << "default_output_path = " << default_output_path << "\n";
 
@@ -229,7 +229,7 @@ class UI_OptionsWin : public Fl_Window {
     UI_CustomCheckBox *opt_debug;
     UI_CustomCheckBox *opt_limit_break;
     // UI_CustomCheckBox *opt_preserve_failures;
-    UI_CustomCheckBox *opt_timestamp_logs;
+    Fl_Simple_Counter *opt_log_size;
     Fl_Simple_Counter *opt_log_limit;
 
    public:
@@ -307,10 +307,10 @@ class UI_OptionsWin : public Fl_Window {
             that->opt_default_output_path->value() ? true : false;
     }
 
-    static void callback_TimestampLogs(Fl_Widget *w, void *data) {
+    static void callback_LogSize(Fl_Widget *w, void *data) {
         UI_OptionsWin *that = (UI_OptionsWin *)data;
 
-        timestamp_logs = that->opt_timestamp_logs->value() ? true : false;
+        log_size = that->opt_log_size->value();
     }
 
     static void callback_LogLimit(Fl_Widget *w, void *data) {
@@ -691,16 +691,22 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_preserve_failures->h() + y_step * .5;*/
 
-    opt_timestamp_logs =
-        new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
-    opt_timestamp_logs->copy_label(_(" Preserve/Timestamp Previous Logs"));
-    opt_timestamp_logs->value(timestamp_logs ? 1 : 0);
-    opt_timestamp_logs->callback(callback_TimestampLogs, this);
-    opt_timestamp_logs->labelfont(font_style);
-    opt_timestamp_logs->selection_color(SELECTION);
-    opt_timestamp_logs->down_box(button_style);
+    opt_log_size =
+        new Fl_Simple_Counter(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+    opt_log_size->copy_label(_("Max Log Size (MB) "));
+    opt_log_size->align(FL_ALIGN_LEFT);
+    opt_log_size->step(1);
+    opt_log_size->bounds(1, 25);
+    opt_log_size->callback(callback_LogSize, this);
+    opt_log_size->value(log_size);
+    opt_log_size->labelfont(font_style);
+    opt_log_size->textfont(font_style);
+    opt_log_size->textcolor(FONT2_COLOR);
+    opt_log_size->selection_color(SELECTION);
+    opt_log_size->visible_focus(0);
+    opt_log_size->color(BUTTON_COLOR);
 
-    cy += opt_timestamp_logs->h() + y_step * .5;
+    cy += opt_log_size->h() + y_step * .5;
 
     opt_log_limit =
         new Fl_Simple_Counter(136 + KF * 40, cy, kf_w(130), kf_h(24), "");

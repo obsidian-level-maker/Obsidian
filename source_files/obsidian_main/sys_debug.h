@@ -56,7 +56,7 @@ void RefPrintf(std::string_view str, Args &&...args) {
 template <typename... Args>
 void DebugPrintf(std::string_view format, Args &&...args) {
     if (debugging) {
-        spdlog::debug(format, args...);
+        spdlog::info(format, args...);
         // show on the Linux terminal too
         if (terminal) {
             fmt::print(format, args...);

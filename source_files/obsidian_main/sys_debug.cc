@@ -26,7 +26,7 @@
 #include "main.h"
 #include "miniz.h"
 #include "m_lua.h"
-#include "sinks/basic_file_sink.h"
+#include "sinks/rotating_file_sink.h"
 
 #define DEBUG_BUF_LEN 20000
 
@@ -44,7 +44,8 @@ bool LogInit(const std::filesystem::path &filename) {
 
         spdlog::set_pattern("%v");
 
-        log_file = spdlog::basic_logger_mt("basic_logger", log_filename.generic_string().c_str());
+        log_file = spdlog::rotating_logger_mt("ob_logger", log_filename.generic_string().c_str(),
+            1048576 * log_size, log_limit);
 
         if (log_file == nullptr) {
             return false;
@@ -101,43 +102,6 @@ void LogClose(void) {
 
     spdlog::shutdown();
 
-    std::filesystem::path bare_log = log_filename;
-    std::filesystem::path oldest_log;
-    int numlogs = 0;
-
-    for (const std::filesystem::directory_entry &dir_entry :
-         std::filesystem::directory_iterator{bare_log.remove_filename()}) {
-        std::filesystem::path entry = dir_entry.path();
-        if ((StringCaseCmp(entry.extension().string(), ".txt") == 0 ||
-             StringCaseCmp(entry.extension().string(), ".zip") == 0) &&
-            StringCaseCmpPartial(entry.filename().string(), "LOGS") == 0) {
-            numlogs++;
-            if (oldest_log.empty() ||
-                std::filesystem::last_write_time(entry) <
-                    std::filesystem::last_write_time(oldest_log)) {
-                oldest_log = entry;
-            }
-        }
-    }
-
-    if (numlogs > log_limit) {
-        std::filesystem::remove(oldest_log);
-    }
-
-    std::filesystem::path new_logpath;
-    std::string new_filename;
-
-    if (timestamp_logs) {
-        new_logpath = log_filename;
-        new_logpath.remove_filename();
-        new_filename = "LOGS_";
-        new_filename.append(log_timestamp);
-        new_logpath.append(new_filename);
-        if (std::filesystem::exists(new_logpath)) {
-            std::filesystem::remove(new_logpath);
-        }
-        std::filesystem::rename(log_filename, new_logpath);
-    }
 
     log_filename.clear();
 }
@@ -169,7 +133,8 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
 
     // this is very unlikely to happen, but check anyway
     if (!log_stream.is_open()) {
-        log_file = spdlog::basic_logger_mt("basic_logger", log_filename.generic_string().c_str());
+        log_file = spdlog::rotating_logger_mt("ob_logger", log_filename.generic_string().c_str(),
+            1048576 * log_size, log_limit);
         if (log_file != nullptr) {
             spdlog::flush_every(std::chrono::seconds(1));
             spdlog::set_default_logger(log_file);
@@ -194,7 +159,8 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
     log_stream.close();
 
     // open the log file for writing again
-    log_file = spdlog::basic_logger_mt("basic_logger", log_filename.generic_string().c_str());
+    log_file = spdlog::rotating_logger_mt("ob_logger", log_filename.generic_string().c_str(),
+            1048576 * log_size, log_limit);
     if (log_file != nullptr) {
         spdlog::flush_every(std::chrono::seconds(1));
         spdlog::set_default_logger(log_file);

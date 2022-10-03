@@ -545,6 +545,7 @@ static void logviewer_display_func(std::string_view line, void *priv_data) {
 
 void UI_LogViewer::ReadLogs() {
     LogReadLines(logviewer_display_func, (void *)this);
+    JumpEnd();
 }
 
 void UI_LogViewer::WriteLogs(std::ofstream &fp) {

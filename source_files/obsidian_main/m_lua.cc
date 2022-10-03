@@ -1739,7 +1739,6 @@ void Script_Open() {
 }
 
 void Script_Close() {
-    log_timestamp = ob_datetime_string().append(".txt");
 
     if (LUA_ST) {
         lua_close(LUA_ST);
@@ -1895,19 +1894,6 @@ bool ob_mod_enabled(std::string module_name) {
 
 std::string ob_default_filename() {
     if (!Script_CallFunc("ob_default_filename", 1)) {
-        return NULL;
-    }
-
-    std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
-
-    // remove result from lua stack
-    lua_pop(LUA_ST, 1);
-
-    return res;
-}
-
-std::string ob_datetime_string() {
-    if (!Script_CallFunc("ob_datetime_string", 1)) {
         return NULL;
     }
 

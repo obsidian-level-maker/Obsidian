@@ -249,7 +249,6 @@ bool Cookie_Save(std::filesystem::path filename) {
     }
 
     if (main_action == MAIN_HARD_RESTART || main_action == MAIN_QUIT) {
-        LogPrintf("ACTION: {}\n", main_action);
         LogPrintf("Saving config file...\n");
     }
 
