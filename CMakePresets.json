@@ -9,6 +9,13 @@
       }
     },
     {
+      "name": "sanitize",
+      "hidden": true,
+      "cacheVariables": {
+        "OBSIDIAN_SANITIZE": "ON"
+      }
+    },
+    {
       "name": "dev",
       "binaryDir": "build",
       "generator": "Ninja",
@@ -20,11 +27,16 @@
       }
     },
     {
-      "name": "sanitize",
-      "binaryDir": "build/sanitize",
-      "inherits": "dev",
+      "name": "dev-sanitize",
+      "inherits": ["dev", "sanitize"],
+      "binaryDir": "build/sanitize"
+    },
+    {
+      "name": "dev-console",
+      "inherits": ["dev"],
+      "binaryDir": "build/dev-console",
       "cacheVariables": {
-        "OBSIDIAN_SANITIZE": "ON"
+        "CONSOLE_ONLY": "ON"
       }
     },
     {
@@ -130,6 +142,16 @@
     {
       "name": "dev",
       "configurePreset": "dev",
+      "jobs": 8
+    },
+    {
+      "name": "dev-sanitize",
+      "configurePreset": "dev-sanitize",
+      "jobs": 8
+    },
+    {
+      "name": "dev-console",
+      "configurePreset": "dev-console",
       "jobs": 8
     },
     {
