@@ -987,6 +987,10 @@ void Main::Detail::Shutdown(const bool error) {
         delete main_win;
         main_win = nullptr;
     }
+    #else
+    if (!std::filesystem::exists(options_file)) {
+        Options_Save(options_file);
+    }
     #endif
     Script_Close();
     LogClose();

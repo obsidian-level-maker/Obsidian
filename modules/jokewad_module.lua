@@ -227,10 +227,10 @@ function JOKEWAD_MODULE.get_levels(self)
 
 end
 
-function JOKEWAD_MODULE.end_level()
+function JOKEWAD_MODULE.end_level(self, LEVEL)
 
   if PARAM.bool_pandemic_mode == 1 then
-    JOKEWAD_MODULE.add_tissues()
+    JOKEWAD_MODULE.add_tissues(LEVEL)
   end
 
 end
@@ -253,7 +253,7 @@ function JOKEWAD_MODULE.go_fireblue()
 
 end
 
-function JOKEWAD_MODULE.populate_level(stuff)
+function JOKEWAD_MODULE.populate_level(stuff, LEVEL)
 
   local function place_items(h, mid_x, mid_y, offset)
 
@@ -378,11 +378,11 @@ function JOKEWAD_MODULE.populate_level(stuff)
 
 end
 
-function JOKEWAD_MODULE.add_tissues()
+function JOKEWAD_MODULE.add_tissues(LEVEL)
 
   if LEVEL.is_procedural_gotcha then return end
 
-  if LEVEL.prebuilt then return end
+  if not LEVEL then return end
 
   local item_params = {}
 
@@ -402,7 +402,7 @@ function JOKEWAD_MODULE.add_tissues()
     templates = JOKEWAD_MODULE.TISSUES
   }
 
-  JOKEWAD_MODULE.populate_level(item_params)
+  JOKEWAD_MODULE.populate_level(item_params, LEVEL)
 end
 
 function JOKEWAD_MODULE.all_done()
