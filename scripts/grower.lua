@@ -3507,7 +3507,17 @@ end
 
       -- normalize absurd rule probability for each unsuccesful attempt
       if grammar[name].is_absurd then
-        grammar[name].use_prob = grammar[name].use_prob / 4
+        grammar[name].use_prob = grammar[name].use_prob / 5
+
+        if tries%2 == 0 then
+          rand.shuffle(LEVEL.shape_transform_possiblities)
+
+          if R.transform_changes then
+            R.transform_changes = R.transform_changes + 1
+          else
+            R.transform_changes = 1
+          end
+        end
       end
 
       if x == 0 then return end
@@ -3519,10 +3529,12 @@ end
 
     gui.debugf("APPLIED rule: " .. cur_rule.name .. " in ROOM_" .. R.id.. "\n")
 
-    if R.shapes_applied then
-      R.shapes_applied = R.shapes_applied + 1
-    else
-      R.shapes_applied = 1
+    if pass == "grow" then
+      if R.shapes_applied then
+        R.shapes_applied = R.shapes_applied + 1
+      else
+        R.shapes_applied = 1
+      end
     end
     
     -- debug statistics
