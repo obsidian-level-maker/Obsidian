@@ -1348,7 +1348,7 @@ end
 
 function MARINE_CLOSET_TUNE.calc_closets(self, LEVEL)
   if rand.odds(PARAM.float_m_c_chance)
-  and not LEVEL.prebuilt
+  and LEVEL
   and not (PARAM.bool_m_c_boss == 0 and LEVEL.is_procedural_gotcha) then
     local rngmin
     local rngmax

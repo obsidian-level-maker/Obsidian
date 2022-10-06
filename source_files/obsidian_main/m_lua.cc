@@ -497,11 +497,13 @@ int gui_add_module(lua_State *L) {
         Main::FatalError("Script problem: gui.add_module called late.\n");
     }
 
-    if (!main_win->left_mods->FindID(id) && !(main_win->right_mods && main_win->right_mods->FindID(id))) {
-        if (single_pane) {
+    if (single_pane) {
+        if (!main_win->left_mods->FindID(id)) {
             main_win->left_mods->AddModule(id, label, tip, red, green, blue,
                                         suboptions);
-        } else {
+        }
+    } else {
+        if (!main_win->left_mods->FindID(id) && !main_win->right_mods->FindID(id)) {
             if (!StringCaseCmp(where, "left")) {
                 main_win->left_mods->AddModule(id, label, tip, red, green, blue,
                                             suboptions);
@@ -514,6 +516,7 @@ int gui_add_module(lua_State *L) {
             }
         }
     }
+
 #endif
     return 0;
 }

@@ -134,7 +134,7 @@ function ZDOOM_SOUND.populate_level_ambience(self, LEVEL)
     return
   end
 
-  if LEVEL.prebuilt then
+  if not LEVEL then
     return
   end
 
