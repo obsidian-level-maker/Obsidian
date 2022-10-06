@@ -65,11 +65,13 @@ std::string StringUpper(std::string_view name) {
 }
 
 void StringRemoveCRLF(std::string *str) {
-    if (str->back() == '\n') {
-        str->pop_back();
-    }
-    if (str->back() == '\r') {
-        str->pop_back();
+    if (!str->empty()) {
+        if (str->back() == '\n') {
+            str->pop_back();
+        }
+        if (str->back() == '\r') {
+            str->pop_back();
+        }
     }
 }
 
