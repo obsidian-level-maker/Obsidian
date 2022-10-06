@@ -268,6 +268,7 @@ static void ShowInfo() {
         "Usage: Obsidian [options...] [key=value...]\n"
         "\n"
         "Available options:\n"
+        "     --version              Display build information\n"
         "     --home     <dir>       Home directory\n"
         "     --install  <dir>       Installation directory\n"
         "\n"
@@ -319,7 +320,7 @@ static void ShowInfo() {
 }
 
 static void ShowVersion() {
-    fmt::print("Obsidian version {} {} \"{}\" Build {}\n", OBSIDIAN_TITLE,
+    fmt::print("{} {} \"{}\" Build {}\n", OBSIDIAN_TITLE,
                OBSIDIAN_SHORT_VERSION, OBSIDIAN_CODE_NAME, OBSIDIAN_VERSION);
 
     fflush(stdout);
@@ -1202,6 +1203,52 @@ bool Build_Cool_Shit() {
     return was_ok;
 }
 
+void Options_ParseArguments() {
+    if (argv::Find('z', "zip") >= 0) {
+        zip_output = 1;
+    }
+
+    if (argv::Find('3', "pk3") >= 0) {
+        zip_output = 2;
+    }
+
+    if (argv::Find(0, "randomize-all") >= 0) {
+        if (batch_mode) {
+            batch_randomize_groups.push_back("architecture");
+            batch_randomize_groups.push_back("monsters");
+            batch_randomize_groups.push_back("pickups");
+            batch_randomize_groups.push_back("misc");
+        }
+        goto skiprest;
+    }
+
+    if (argv::Find(0, "randomize-arch") >= 0) {
+        if (batch_mode) {
+            batch_randomize_groups.push_back("architecture");
+        }
+    }
+
+    if (argv::Find(0, "randomize-monsters") >= 0) {
+        if (batch_mode) {
+            batch_randomize_groups.push_back("monsters");
+        }
+    }
+
+    if (argv::Find(0, "randomize-pickups") >= 0) {
+        if (batch_mode) {
+            batch_randomize_groups.push_back("pickups");
+        }
+    }
+
+    if (argv::Find(0, "randomize-other") >= 0) {
+        if (batch_mode) {
+            batch_randomize_groups.push_back("misc");
+        }
+    }
+
+    skiprest:;
+}
+
 /* ----- main program ----------------------------- */
 
 int main(int argc, char **argv) {
@@ -1323,53 +1370,6 @@ hardrestart:;
 #endif
     }
 
-    if (argv::Find('z', "zip") >= 0) {
-        zip_output = 1;
-    }
-
-    if (argv::Find('3', "pk3") >= 0) {
-        zip_output = 2;
-    }
-
-    // These switches will only apply in batch mode, as the GUI has its own
-    // mechanism for randomization of options - Dasho
-
-    if (argv::Find(0, "randomize-all") >= 0) {
-        if (batch_mode) {
-            batch_randomize_groups.push_back("architecture");
-            batch_randomize_groups.push_back("monsters");
-            batch_randomize_groups.push_back("pickups");
-            batch_randomize_groups.push_back("misc");
-        }
-        goto skiprest;
-    }
-
-    if (argv::Find(0, "randomize-arch") >= 0) {
-        if (batch_mode) {
-            batch_randomize_groups.push_back("architecture");
-        }
-    }
-
-    if (argv::Find(0, "randomize-monsters") >= 0) {
-        if (batch_mode) {
-            batch_randomize_groups.push_back("monsters");
-        }
-    }
-
-    if (argv::Find(0, "randomize-pickups") >= 0) {
-        if (batch_mode) {
-            batch_randomize_groups.push_back("pickups");
-        }
-    }
-
-    if (argv::Find(0, "randomize-other") >= 0) {
-        if (batch_mode) {
-            batch_randomize_groups.push_back("misc");
-        }
-    }
-
-skiprest:
-
     Determine_WorkingPath(argv[0]);
     Determine_InstallDir(argv[0]);
 
@@ -1382,6 +1382,8 @@ skiprest:
     Determine_ReferenceFile();
 
     Options_Load(options_file);
+
+    Options_ParseArguments();
 
     LogInit(logging_file);
 
