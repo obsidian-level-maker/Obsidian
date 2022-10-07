@@ -910,6 +910,7 @@ function Grower_calc_rule_probs(LEVEL)
   end
 
   LEVEL.absurd_grammar_rules = {}
+  LEVEL.base_set_rules = {}
 
   local function Grower_absurdify()
     
@@ -955,9 +956,11 @@ function Grower_calc_rule_probs(LEVEL)
         if rule.new_area then
           LEVEL.has_absurd_new_area_rules = true
         end
+        rule.positive_absurdity = true
       else
         new_factor = low_ab_factor * rand.range( 0.75,1.25 )
         rule.use_prob = rule.prob * new_factor
+        rule.negative_absurdity = true
       end
 
       -- diversify environments
@@ -1006,6 +1009,19 @@ function Grower_calc_rule_probs(LEVEL)
 
       count = count - 1
     end
+
+    -- collect base set rules and preserve them
+    for _,rule in pairs(SHAPE_GRAMMAR) do
+      if rule.base_set and not rule.is_absurd then
+        local info =
+        {
+          name = rule.name,
+          prob = rule.use_prob
+        }
+        table.insert(LEVEL.base_set_rules, info)
+      end
+    end
+
   end
 
   if LEVEL.is_absurd then
@@ -1587,6 +1603,9 @@ function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
   for _,R in pairs(LEVEL.absurd_grammar_rules) do
     grammar[R.name].use_prob = R.prob
   end
+  for _,rule in pairs(LEVEL.base_set_rules) do
+    grammar[rule.name].use_prob = rule.prob
+  end
 
   --
 
@@ -1922,6 +1941,9 @@ function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
 
     local symmetry_choices = {}
     local symmetry_table = cur_rule.new_room
+    if type(symmetry_table) ~= "table" then
+      error("Weird symmetry table entry!!!\n" .. table.tostr(cur_rule, 2))
+    end
     table.name_up(symmetry_table)
 
     for _,SYM in pairs(symmetry_table) do
@@ -3217,7 +3239,7 @@ end
       end
     else
       if LEVEL.shape_transform_mode == "random" then
-        rand.shuffle(LEVEL.shape_transform_possiblities)
+        LEVEL.shape_transform_possibilities = rand.shuffle(LEVEL.shape_transform_possiblities)
       end
       for _,transform in pairs(LEVEL.shape_transform_possiblities) do
         T = calc_transform(transform[1], transform[2], transform[3])
@@ -3509,13 +3531,29 @@ end
       if grammar[name].is_absurd then
         grammar[name].use_prob = grammar[name].use_prob / 5
 
+        -- if normalized absurd rules still don't work...
         if tries%2 == 0 then
-          rand.shuffle(LEVEL.shape_transform_possiblities)
+          if rand.odds(50) then
+  
+            -- 50% chance of shuffling transform matrix
+            LEVEL.shape_transform_possibilities = rand.shuffle(LEVEL.shape_transform_possiblities)
 
-          if R.transform_changes then
-            R.transform_changes = R.transform_changes + 1
+            if R.transform_changes then
+              R.transform_changes = R.transform_changes + 1
+            else
+              R.transform_changes = 1
+            end
           else
-            R.transform_changes = 1
+
+            -- 50% chance of boosting probs for base set by a whole lot
+            if R.base_set_increase then
+              R.base_set_increase = R.base_set_increase + 1
+            else
+              R.base_set_increase = 1
+            end
+            for _,rule in pairs(LEVEL.base_set_rules) do
+              grammar[rule.name].use_prob = grammar[rule.name].use_prob * 10
+            end
           end
         end
       end
