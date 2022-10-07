@@ -2265,8 +2265,10 @@ HALL_2_SPROUT_B =
 
 GROW_2 =
 {
-  prob = 400, --Non-MSSP default: 100,
+  prob = 100, --Non-MSSP default: 100, Obsidian default: 400
   prob_skew = 2,
+
+  base_set = true,
 
   structure =
   {
@@ -2278,8 +2280,10 @@ GROW_2 =
 
 GROW_3 =
 {
-  prob = 250, --Non-MSSP default: 50,
+  prob = 50, --Non-MSSP default: 50, Obsidian default: 250
   prob_skew = 2,
+
+  base_set = true,
 
   structure =
   {
@@ -2291,9 +2295,11 @@ GROW_3 =
 
 GROW_4 =
 {
-  prob = 250, --Non-MSSP default: 50,
+  prob = 50, --Non-MSSP default: 50, Obsidian default: 250
   prob_skew = 2,
   skip_prob = 25, --50,
+
+  base_set = true,
 
   structure =
   {
@@ -2305,7 +2311,9 @@ GROW_4 =
 
 GROW_BLOB_1 =
 {
-  prob = 200, --Non-MSSP default: 25,
+  prob = 25, --Non-MSSP default: 25, Obsidian default: 200
+
+  base_set = true,
 
   structure =
   {
@@ -2320,6 +2328,8 @@ GROW_BLOB_1 =
 GROW_DIAG_BLOB1 =
 {
   prob = 45,
+
+  base_set = true,
 
   structure =
   {
@@ -2341,6 +2351,8 @@ GROW_DIAG_BLOB1 =
 GROW_DIAG_BLOB2 =
 {
   prob = 65, --45,
+
+  base_set = true,
 
   structure =
   {
@@ -2371,6 +2383,8 @@ GROW_FUNNEL_2 =
   prob = 25, --5,
   skip_prob = 15, --50,
 
+  base_set = true,
+
   structure =
   {
     "....", "#11#",
@@ -2388,6 +2402,8 @@ GROW_CURVE_1 =
   prob_skew = 3,
   skip_prob = 5, --25,
 
+  base_set = true,
+
   structure =
   {
     "1.", "1%",
@@ -2404,6 +2420,8 @@ GROW_AREA_1 =
 {
   prob = 200, --40,
 
+  base_set = true,
+
   structure =
   {
     "....", ".AA.",
@@ -2416,6 +2434,8 @@ GROW_AREA_2 =
 {
   prob = 50, --6,
   skip_prob = 30, --50,
+
+  base_set = true,
 
   structure =
   {
@@ -2431,6 +2451,8 @@ GROW_DIAG_WING =
   prob = 70, --40,
   prob_skew = 2,
   skip_prob = 5, --35,
+
+  base_set = true,
 
   structure =
   {
@@ -2454,6 +2476,8 @@ GROW_BIG_CAGE =
   skip_prob = 30,
   aversion = 10,
 
+  base_set = true,
+
   structure =
   {
     "....", "1111",
@@ -2472,6 +2496,8 @@ GROW_CAGEPAIR_1 =
   prob = 8,
   skip_prob = 30,
 
+  base_set = true,
+
   structure =
   {
     "....", "AAAA",
@@ -2489,6 +2515,8 @@ GROW_CAGEPAIR_2 =
   prob = 8,
   skip_prob = 75, --30,
   aversion = 5,
+
+  base_set = true,
 
   structure =
   {
@@ -2535,6 +2563,8 @@ GROW_STAIR_2 =
   prob_skew = 3,
   skip_prob = 45, --35,
 
+  base_set = true,
+
   structure =
   {
     "..", "AA",
@@ -2550,6 +2580,8 @@ GROW_STAIR_3 =
   prob_skew = 3,
   skip_prob = 45, --35,
 
+  base_set = true,
+
   structure =
   {
     "...", "AAA",
@@ -2564,6 +2596,8 @@ GROW_NARROWSTAIR_1 =
   prob = 25, --10,
   prob_skew = 3,
   skip_prob = 7, --25,
+
+  base_set = true,
 
   structure =
   {
@@ -2582,6 +2616,8 @@ GROW_NARROWSTAIR_2 =
 
   z_dir = "up",
 
+  base_set = true,
+
   structure =
   {
     "...", "AAA",
@@ -2597,6 +2633,8 @@ GROW_CAGESTAIR_1 =
   prob = 8,
   skip_prob = 50,
   aversion = 5,
+
+  base_set = true,
 
   structure =
   {
@@ -2615,6 +2653,8 @@ GROW_CAGESTAIR_2 =
   skip_prob = 70,
   aversion = 5,
 
+  base_set = true,
+
   structure =
   {
     "....", "AAAA",
@@ -2631,6 +2671,8 @@ GROW_CAGESTAIR_3 =
   prob = 8,
   skip_prob = 70,
   aversion = 5,
+
+  base_set = true,
 
   structure =
   {
@@ -2650,6 +2692,8 @@ GROW_STAIRPAIR_4 =
   skip_prob = 40, --60,
   aversion = 3,
 
+  base_set = true,
+
   structure =
   {
     ".......", "AAAAAAA",
@@ -2665,6 +2709,8 @@ GROW_STAIRPAIR_4B =
   skip_prob = 40, --60,
   aversion = 3,
 
+  base_set = true,
+
   structure =
   {
     ".......", "AAAAAAA",
@@ -2679,6 +2725,8 @@ GROW_STAIRPAIR_4C =
 {
   prob = 40, --50,
   skip_prob = 40, --60,
+
+  base_set = true,
 
   structure =
   {
@@ -2698,6 +2746,8 @@ GROW_STAIRPAIR_5 =
 
   z_dir = "up",
 
+  base_set = true,
+
   structure =
   {
     ".....", "AAAAA",
@@ -2716,7 +2766,9 @@ GROW_STAIRPAIR_5E =
   skip_prob = 33,
   aversion = 4,
 
-  z_dir = "up",
+  base_set = true,
+
+  --z_dir = "up",
 
   structure =
   {
@@ -2735,7 +2787,9 @@ GROW_STAIRPAIR_5F =
   skip_prob = 50,
   aversion = 4,
 
-  z_dir = "up",
+  base_set = true,
+
+  --z_dir = "up",
 
   structure =
   {
@@ -2754,7 +2808,9 @@ GROW_STAIRPAIR_5G =
   skip_prob = 50,
   aversion = 4,
 
-  z_dir = "up",
+  base_set = true,
+
+  --z_dir = "up",
 
   structure =
   {
@@ -2773,7 +2829,9 @@ GROW_STAIRPAIR_5D =
   skip_prob = 50,
   aversion = 4,
 
-  z_dir = "down",
+  base_set = true,
+
+  --z_dir = "down",
 
   structure =
   {
@@ -2793,6 +2851,8 @@ GROW_STAIR_POOL2 =
   prob = 5, --7,
   skip_prob = 85, --75,
   aversion = 15,
+
+  base_set = true,
 
   structure =
   {
@@ -2819,7 +2879,9 @@ GROW_STAIR_SIDE2 =
   prob_skew = 3,
   skip_prob = 30, --30,
 
-  z_dir = "up",
+  base_set = true,
+
+  --z_dir = "up",
 
   structure =
   {
@@ -2839,6 +2901,8 @@ GROW_STAIR_SIDE3 =
   skip_prob = 70, --50,
   aversion  = 7,
 
+  base_set = true,
+
   structure =
   {
     "..","AA",
@@ -2856,6 +2920,8 @@ GROW_STAIR_HUGE =
   prob = 8, --8,
   skip_prob = 65, --80,
   aversion  = 15, --20,
+
+  base_set = true,
 
   structure =
   {
@@ -15381,8 +15447,10 @@ ROOT_4 =
 
 GROW_1 =
 {
-  prob = 10000, --Non-MSSP default: 100,
+  prob = 10000, --Non-MSSP default: 100, Obsidian default: 10000
   prob_skew = 2,
+
+  base_set = true,
 
   structure =
   {
@@ -15393,8 +15461,10 @@ GROW_1 =
 
 GROW_2 =
 {
-  prob = 10000, --Non-MSSP default: 100,
+  prob = 10000, --Non-MSSP default: 100,, Obsidian default: 10000
   prob_skew = 2,
+
+  base_set = true,
 
   structure =
   {
@@ -15405,8 +15475,10 @@ GROW_2 =
 
 GROW_3 =
 {
-  prob = 1, --Non-MSSP default: 100,
+  prob = 1, --Non-MSSP default: 100, Obsidian default: 1
   prob_skew = 2,
+
+  base_set = true,
 
   structure =
   {
@@ -15417,8 +15489,10 @@ GROW_3 =
 
 GROW_4 =
 {
-  prob = 1, --Non-MSSP default: 100,
+  prob = 1, --Non-MSSP default: 100, Obsidian default: 1
   prob_skew = 2,
+
+  base_set = true,
 
   structure =
   {
@@ -18438,6 +18512,8 @@ ROOT_1 =
 GROW_1 =
 {
   prob = 20000, --Non-MSSP default: 100,
+
+  base_set = true,
 
   structure =
   {

@@ -61,7 +61,6 @@ ORP_ENTITIES.GLDEFS =
     secondarySize 81
     interval 0.1
     offset 0 32 0
-	attenuate 1
 	}
 
 object burning_debris {
@@ -74,7 +73,6 @@ flickerlight2 FIRETOP2{
     secondarySize 81
     interval 0.1
     offset 0 32 0
-	attenuate 1
 	}
 
 object burning_top {
