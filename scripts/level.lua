@@ -2664,7 +2664,7 @@ function Level_make_level(LEV)
   -- use a pre-built level ?
 
   if LEVEL.prebuilt then
-    ob_invoke_hook("begin_level")
+    ob_invoke_hook_with_table("begin_level", LEVEL)
 
     local res = Level_handle_prebuilt(LEVEL)
     if res ~= "ok" then
@@ -2680,7 +2680,7 @@ function Level_make_level(LEV)
       collectgarbage("collect")
       return res
     end
-    ob_invoke_hook("end_level")
+    ob_invoke_hook_with_table("end_level", LEVEL)
     for _,k in pairs (LEVEL) do
       LEVEL[k] = nil
     end

@@ -336,7 +336,7 @@ end
 
 function FAUNA_MODULE.end_level(self, LEVEL)
 
-  if not LEVEL then return end
+  if LEVEL.prebuilt then return end
 
   if PARAM.bool_flies == 1 then
     FAUNA_MODULE.add_flies(LEVEL)

@@ -382,7 +382,7 @@ function JOKEWAD_MODULE.add_tissues(LEVEL)
 
   if LEVEL.is_procedural_gotcha then return end
 
-  if not LEVEL then return end
+  if LEVEL.prebuilt then return end
 
   local item_params = {}
 
