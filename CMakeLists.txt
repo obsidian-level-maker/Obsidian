@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.12..3.20)
 include(cmake/CPM.cmake)
 
 add_subdirectory(source_files/filename_formatter EXCLUDE_FROM_ALL)
-if (NOT CONSOLE_ONLY)
+if (NOT CONSOLE_ONLY AND NOT HAIKU)
   add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
 endif()
 add_subdirectory(source_files/fmt EXCLUDE_FROM_ALL)
@@ -25,7 +25,7 @@ project(
 string(TIMESTAMP BUILD_TIMESTAMP "%Y.%m.%d" UTC)
 add_compile_definitions(OBSIDIAN_TIMESTAMP="${BUILD_TIMESTAMP}")
 
-if(CONSOLE_ONLY)
+if(CONSOLE_ONLY OR HAIKU)
   add_compile_definitions(CONSOLE_ONLY=1)
 endif()
 
@@ -80,7 +80,7 @@ cpmaddpackage(
   "CMAKE_FORMAT_EXCLUDE cmake/CPM.cmake"
 )
 
-if (NOT CONSOLE_ONLY)
+if (NOT CONSOLE_ONLY AND NOT HAIKU)
   add_executable(
     obsidian
     source_files/obsidian_main/aj_map.cc
@@ -198,7 +198,7 @@ add_executable(
 endif()
 
 target_include_directories(obsidian PRIVATE source_files/filename_formatter)
-if (NOT CONSOLE_ONLY)
+if (NOT CONSOLE_ONLY AND NOT HAIKU)
   target_include_directories(obsidian PRIVATE source_files/fltk)
   target_include_directories(
     obsidian PRIVATE "${PROJECT_BINARY_DIR}/source_files/fltk"
@@ -228,7 +228,7 @@ if(OBSIDIAN_SANITIZE)
 endif()
 
 if(UNIX)
-  if(NOT CONSOLE_ONLY)
+  if(NOT CONSOLE_ONLY AND NOT HAIKU)
     find_package(Fontconfig REQUIRED)
   endif()
 endif()
@@ -274,6 +274,20 @@ if(UNIX)
                 spdlog
       )
     endif()
+  elseif(HAIKU)
+    target_link_libraries(
+      obsidian
+      PRIVATE filename_formatter
+              miniz
+              libluajit
+              physfs-static
+              obsidian_zdbsp
+              obsidian_slump
+              pthread
+              spdlog
+              be
+              root
+    )
   else()
     if(NOT CONSOLE_ONLY)
       target_link_libraries(

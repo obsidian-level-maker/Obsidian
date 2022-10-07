@@ -1,6 +1,10 @@
 
 # COMPILING Obsidian
 
+## Haiku OS Dependencies (Builds in console-only mode, tested with R1/Beta 3)
+1. CMake
+   * HaikuDepot package: `cmake`
+
 ## BSD Dependencies
 1. CMake Utilities:
    * package: `cmake`
@@ -42,7 +46,7 @@ The C++ compiler/toolchain should already be present on a typical BSD install
    * package: `clang-tidy`
    * python package (install with pip): `cmakelang`
 
-## Linux/BSD Compilation
+## Linux/BSD/Haiku OS Compilation
 
 Assuming all those dependencies are met, then the following steps
 will build the Obsidian binary.
@@ -66,6 +70,7 @@ command. (The '>' is just the prompt)
 ```
 > cmake -B build -DCMAKE_BUILD_TYPE=Release
 > cmake --build build (-j# optional, with # being the number of cores you'd like to use)
+> strip ./obsidian (if desired)
 ```
 
 Then, Obsidian can be launched with:
