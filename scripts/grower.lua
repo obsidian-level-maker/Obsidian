@@ -3509,7 +3509,8 @@ end
 
     local rules = table.copy(rule_tab)
 
-    local tries = 5 -- Maybe tune this parameter to test build speed? - Dasho
+    -- original qty is around 20, Obsidian base is 5
+    local tries = 20 -- Maybe tune this parameter to test build speed? - Dasho
 
     if tries > #rules then tries = #rules end
 
