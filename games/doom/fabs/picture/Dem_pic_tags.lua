@@ -55,7 +55,9 @@ PREFABS.dem_tags_logs =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  deep =  64,
+  x_fit = {4,8},
+
+  deep = 64
 }
 
 PREFABS.Pic_dem_tags_regulars_right_align =
@@ -78,5 +80,7 @@ PREFABS.Pic_dem_logs_logs_right_align =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  x_fit = {120,124}
+  x_fit = {120,124},
+
+  deep = 64
 }
