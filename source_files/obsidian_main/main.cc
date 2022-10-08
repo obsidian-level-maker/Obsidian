@@ -158,6 +158,8 @@ bool did_specify_seed = false;
 int zip_output = 0;
 int log_size = 1; // Without debugging info on, this should handle a full size 75 megawad with some room to spare
 int log_limit = 5;
+bool mid_batch = false;
+int builds_per_run = 1;
 
 int old_x = 0;
 int old_y = 0;
@@ -1825,6 +1827,8 @@ hardrestart:;
 
     main_action = MAIN_NONE;
 
+    int runs_left = builds_per_run;
+
     try {
         // run the GUI until the user quits
         for (;;) {
@@ -1837,6 +1841,11 @@ hardrestart:;
             }
 
             if (main_action == MAIN_BUILD) {
+
+                if (!mid_batch) {
+                    runs_left = builds_per_run;
+                }
+
                 main_action = 0;
 
                 Main_SetSeed();
@@ -1880,7 +1889,14 @@ hardrestart:;
                 // regardless of success or fail, compute a new seed
                 Main_CalcNewSeed();
 
-                main_action = MAIN_SOFT_RESTART;
+                runs_left--;
+                if (runs_left > 0) {
+                    mid_batch = true;
+                    main_action = MAIN_BUILD;
+                } else {
+                    mid_batch = false;
+                    main_action = MAIN_SOFT_RESTART;
+                }
             }
         }
     } catch (const assert_fail_c &err) {

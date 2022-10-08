@@ -78,6 +78,8 @@ void Parse_Option(const std::string &name, const std::string &value) {
         log_limit = StringToInt(value);
     } else if (StringCaseCmp(name, "default_output_path") == 0) {
         default_output_path = value;
+    } else if (StringCaseCmp(name, "builds_per_run") == 0) {
+        builds_per_run = StringToInt(value);
     } else {
         fmt::print("{} '{}'\n", _("Unknown option: "), name);
     }
@@ -183,6 +185,7 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "log_size = " << log_size << "\n";
     option_fp << "log_limit = " << log_limit << "\n";
     option_fp << "default_output_path = " << default_output_path << "\n";
+    option_fp << "builds_per_run = " << builds_per_run << "\n";
 
     option_fp << "\n";
 
@@ -222,6 +225,7 @@ class UI_OptionsWin : public Fl_Window {
     UI_CustomCheckBox *opt_overwrite;
     UI_CustomCheckBox *opt_debug;
     UI_CustomCheckBox *opt_limit_break;
+    Fl_Simple_Counter *opt_builds_per_run;
     // UI_CustomCheckBox *opt_preserve_failures;
     Fl_Simple_Counter *opt_log_size;
     Fl_Simple_Counter *opt_log_limit;
@@ -299,6 +303,12 @@ class UI_OptionsWin : public Fl_Window {
 
         default_output_path =
             that->opt_default_output_path->value() ? true : false;
+    }
+
+    static void callback_BuildsPerRun(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+        builds_per_run = that->opt_builds_per_run->value();
     }
 
     static void callback_LogSize(Fl_Widget *w, void *data) {
@@ -673,6 +683,23 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_limit_break->down_box(button_style);
 
     cy += opt_limit_break->h() + y_step * .5;
+
+    opt_builds_per_run =
+        new Fl_Simple_Counter(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+    opt_builds_per_run->copy_label(_("Builds Per Run "));
+    opt_builds_per_run->align(FL_ALIGN_LEFT);
+    opt_builds_per_run->step(1);
+    opt_builds_per_run->bounds(1, 25);
+    opt_builds_per_run->callback(callback_BuildsPerRun, this);
+    opt_builds_per_run->value(builds_per_run);
+    opt_builds_per_run->labelfont(font_style);
+    opt_builds_per_run->textfont(font_style);
+    opt_builds_per_run->textcolor(FONT2_COLOR);
+    opt_builds_per_run->selection_color(SELECTION);
+    opt_builds_per_run->visible_focus(0);
+    opt_builds_per_run->color(BUTTON_COLOR);
+
+    cy += opt_builds_per_run->h() + y_step * .5;  
 
     /*opt_preserve_failures =
         new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");

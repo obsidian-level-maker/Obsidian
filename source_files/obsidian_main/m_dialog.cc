@@ -221,7 +221,7 @@ void DLG_ShowError(const char *msg, ...) {
 
 //----------------------------------------------------------------------
 
-static std::filesystem::path BestDirectory() {
+std::filesystem::path BestDirectory() {
     if (!last_directory.empty()) {
         return last_directory;
     } else {

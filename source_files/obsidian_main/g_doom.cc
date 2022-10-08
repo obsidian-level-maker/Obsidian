@@ -47,6 +47,7 @@
 #include "slump_main.h"
 
 extern void CSG_DOOM_Write();
+extern std::filesystem::path BestDirectory();
 
 // extern void CSG_TestRegions_Doom();
 
@@ -913,7 +914,10 @@ bool Doom::game_interface_c::Start(const char *preset) {
         }
     } else {
         #ifndef CONSOLE_ONLY
-        filename = DLG_OutputFilename("wad", preset);
+        if (!mid_batch)
+            filename = DLG_OutputFilename("wad", preset);
+        else
+            filename = BestDirectory() / preset;
         #endif
     }
 
