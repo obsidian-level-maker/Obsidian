@@ -128,7 +128,7 @@
 --------------------------------------------------------------]]
 
 
-function Quest_new()
+function Quest_new(LEVEL)
   local id = 1 + #LEVEL.quests
 
   local QUEST =
@@ -146,17 +146,17 @@ function Quest_new()
 end
 
 
-function QuestNode_new()
+function QuestNode_new(LEVEL)
   local NODE =
   {
-    node_id = alloc_id("quest_node")
+    node_id = alloc_id(LEVEL, "quest_node")
   }
 
   return NODE
 end
 
 
-function Zone_new()
+function Zone_new(LEVEL)
   local id = 1 + #LEVEL.zones
 
   local ZONE =
@@ -173,8 +173,8 @@ function Zone_new()
 end
 
 
-function Goal_new(kind)
-  local id = alloc_id("goal")
+function Goal_new(LEVEL, kind)
+  local id = alloc_id(LEVEL, "goal")
 
   local GOAL =
   {
@@ -200,7 +200,7 @@ end
 
 
 
-function Quest_create_initial_quest()
+function Quest_create_initial_quest(LEVEL)
   --
   -- Turns the whole map into a single QUEST object, and the exit
   -- room is the goal of the quest.
@@ -325,7 +325,7 @@ function Quest_create_initial_quest()
     end
 
     -- create the goal for the entire map
-    local GOAL = Goal_new("EXIT")
+    local GOAL = Goal_new(LEVEL, "EXIT")
 
     GOAL.room = R
 
@@ -356,7 +356,7 @@ function Quest_create_initial_quest()
 
     Quest_make_room_secret(R)
 
-    local GOAL = Goal_new("SECRET_EXIT")
+    local GOAL = Goal_new(LEVEL, "SECRET_EXIT")
 
     table.insert(R.goals, GOAL)
     R.used_chunks = R.used_chunks + 1
@@ -365,7 +365,7 @@ function Quest_create_initial_quest()
 
   ---| Quest_create_initial_quest |---
 
-  local Q = Quest_new()
+  local Q = Quest_new(LEVEL)
 
   -- this quest becomes head of the quest tree
   LEVEL.quest_root = Q
@@ -613,7 +613,7 @@ gui.debugf("--> possible @ %s : score %1.1f\n", C.name, score)
 end
 
 
-function Quest_perform_division(info)
+function Quest_perform_division(LEVEL, info)
   --
   -- Splits the current quest into two, adding the new quest into the
   -- binary tree.  Also marks the connection as locked.
@@ -706,7 +706,7 @@ gui.debugf("   %s\n", targ.name)
       goal.tag = assert(info.new_goals[1].tag)
 
     elseif goal.kind == "SWITCH" then
-      goal.tag = alloc_id("tag")
+      goal.tag = alloc_id(LEVEL, "tag")
     end
   end
 
@@ -731,14 +731,14 @@ gui.debugf("  %s @ %s in %s\n", goal.name, R.name, Q1.name)
   ---| Quest_perform_division |---
 
   -- create the node
-  local node = QuestNode_new()
+  local node = QuestNode_new(LEVEL)
 
   local Q2 = assert(info.quest)
 
   -- create the new quest
   -- (for the first half, existing quest becomes second half)
 
-  local Q1 = Quest_new()
+  local Q1 = Quest_new(LEVEL)
 
 gui.debugf("Dividing %s,  first half is %s\n", Q2.name, Q1.name)
 
@@ -781,14 +781,14 @@ gui.debugf("Dividing %s,  first half is %s\n", Q2.name, Q1.name)
 
 
   -- lock the connection
-  local lock = Lock_new("quest", info.conn)
+  local lock = Lock_new(LEVEL, "quest", info.conn)
 
   lock.goals = info.new_goals
 end
 
 
 
-function Quest_scan_all_conns(new_goals, do_quest)
+function Quest_scan_all_conns(LEVEL, new_goals, do_quest)
   -- do_quest can be NIL, or a particular quest to try dividing
 
   gui.debugf("Quest_scan_all_conns.....\n")
@@ -841,13 +841,13 @@ gui.debugf("---> NOTHING POSSIBLE\n")
 gui.debugf("   VIA: %s (x%d)\n", info.new_goals[1].item or "???", #info.new_goals)
 gui.debugf("   Entry: %s\n", (info.quest.entry and info.quest.entry.name) or "--")
 
-  Quest_perform_division(info)
+  Quest_perform_division(LEVEL, info)
   return true
 end
 
 
 
-function Quest_add_major_quests()
+function Quest_add_major_quests(LEVEL)
   --
   -- Divides the map into major quests, typically requiring a key to
   -- progress between the quests.
@@ -876,7 +876,7 @@ function Quest_add_major_quests()
 
     for name,_ in pairs(key_tab) do
       if rand.odds(each_prob) then
-        local GOAL = Goal_new("KEY")
+        local GOAL = Goal_new(LEVEL, "KEY")
 
         GOAL.item = name
         GOAL.prob = 50
@@ -902,7 +902,7 @@ function Quest_add_major_quests()
 
     for i = 1, max_num do
       if rand.odds(each_prob) then
-        local GOAL = Goal_new("SWITCH")
+        local GOAL = Goal_new(LEVEL, "SWITCH")
 
         GOAL.item = "sw_metal"
         GOAL.prob = 50
@@ -951,7 +951,7 @@ function Quest_add_major_quests()
     assert(K1 and K2 and K3)
     assert(K1.kind == "KEY")
 
-    if not Quest_scan_all_conns({ K1, K2, K3 }) then
+    if not Quest_scan_all_conns(LEVEL, { K1, K2, K3 }) then
       return false
     end
 
@@ -984,8 +984,8 @@ do return false end
     local fab_def = PREFABS["Locked_double"]
     assert(fab_def)
 
-    local GOAL1 = Goal_new("SWITCH")
-    local GOAL2 = Goal_new("SWITCH")
+    local GOAL1 = Goal_new(LEVEL, "SWITCH")
+    local GOAL2 = Goal_new(LEVEL, "SWITCH")
 
     GOAL1.item = "sw_metal"
     GOAL2.item = "sw_metal"
@@ -994,7 +994,7 @@ do return false end
 --FIXME    GOAL1.action = fab_def.action1,
 --FIXME    GOAL2.action = fab_def.action2,
 
-    if not Quest_scan_all_conns({ GOAL1, GOAL2 }, quest) then
+    if not Quest_scan_all_conns(LEVEL, { GOAL1, GOAL2 }, quest) then
       return false
     end
 
@@ -1041,7 +1041,7 @@ do return false end
     local goal = pick_goal(goal_list)
 
     if goal then
-      Quest_scan_all_conns({ goal }, quest)
+      Quest_scan_all_conns(LEVEL, { goal }, quest)
     end
   end
 
@@ -1108,7 +1108,7 @@ end
 
 
 
-function Quest_create_zones()
+function Quest_create_zones(LEVEL)
   --
   -- Divides the map into a few distinct sections.
   --
@@ -1260,7 +1260,7 @@ function Quest_create_zones()
 
 
   -- handle exit room first
-  local exit_zone = Zone_new()
+  local exit_zone = Zone_new(LEVEL)
 
   assign_room(LEVEL.exit_room, exit_zone)
 
@@ -1269,7 +1269,7 @@ function Quest_create_zones()
   local start_zone = exit_zone
 
   if quota >= 2 then
-    start_zone = Zone_new()
+    start_zone = Zone_new(LEVEL)
   end
 
   for _,R in pairs(LEVEL.rooms) do
@@ -1296,7 +1296,7 @@ function Quest_create_zones()
       goto continue
     end
 
-    assign_room(R, Zone_new())
+    assign_room(R, Zone_new(LEVEL))
     ::continue::
   end
 
@@ -1316,7 +1316,7 @@ function Quest_create_zones()
 
   sort_zones()
 
-  Area_spread_zones()
+  Area_spread_zones(LEVEL)
 
   dump_zones()
 end
@@ -1325,7 +1325,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Quest_calc_exit_dists()
+function Quest_calc_exit_dists(LEVEL)
   --
   -- For each room, determine a distance metric for the room to the
   -- nearest exit of the quest, which may be the level's exit room.
@@ -1416,7 +1416,7 @@ end
 
 
 
-function Quest_start_room()
+function Quest_start_room(LEVEL)
 
   local start_quest
 
@@ -1521,7 +1521,7 @@ function Quest_start_room()
 
     start_quest.entry = R
 
-    local GOAL = Goal_new("START")
+    local GOAL = Goal_new(LEVEL, "START")
 
     table.insert(R.goals, GOAL)
     R.used_chunks = R.used_chunks + 1
@@ -1562,7 +1562,7 @@ function Quest_start_room()
 
     LEVEL.alt_start = R
 
-    local GOAL = Goal_new("START")
+    local GOAL = Goal_new(LEVEL, "START")
 
     GOAL.alt_start = true
 
@@ -1575,7 +1575,7 @@ function Quest_start_room()
 
   ---| Quest_start_room |---
 
-  Quest_calc_exit_dists()
+  Quest_calc_exit_dists(LEVEL)
 
   if not LEVEL.start_room then
     find_start_quest()
@@ -1590,7 +1590,7 @@ end
 
 
 
-function Quest_order_by_visit()
+function Quest_order_by_visit(LEVEL)
   --
   -- Put all rooms in the level into the order the player will most
   -- likely visit them.  When there are choices or secrets, then the
@@ -1756,7 +1756,7 @@ end
 
 
 
-function Quest_find_backtracks()
+function Quest_find_backtracks(LEVEL)
 
   local function get_locked_conn(goal)
     for _,C in pairs(LEVEL.conns) do
@@ -1853,7 +1853,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Quest_add_weapons()
+function Quest_add_weapons(LEVEL)
   --
   -- The weapons to use on the level are already decided, this function
   -- just decides in which rooms to place them.
@@ -2099,7 +2099,7 @@ function Quest_add_weapons()
   dump_weapons()
 end
 
-function Quest_nice_items()
+function Quest_nice_items(LEVEL)
   --
   -- Decides which nice items, including powerups, to use on this level,
   -- especially for secrets but also the start room, unused leaf rooms,
@@ -2728,7 +2728,7 @@ end
 
 
 
-function Quest_big_secrets()
+function Quest_big_secrets(LEVEL)
   --
   -- Finds unused leaf rooms and turns some of them into secrets.
   -- These are "big" secrets, but we also create small ("closet")
@@ -2843,7 +2843,7 @@ end
 
 
 
-function Quest_room_themes()
+function Quest_room_themes(LEVEL)
   --
   -- This decides the room themes to use in each room, and also
   -- various textures (e.g. the fence material for each zone).
@@ -3294,7 +3294,7 @@ function Quest_room_themes()
         size = 128,
       }
 
-      local def = Fab_pick(reqs)
+      local def = Fab_pick(LEVEL, reqs)
 
       R.pillar_def = def
     end
@@ -3396,36 +3396,36 @@ end
 
 
 
-function Quest_make_quests()
+function Quest_make_quests(LEVEL)
 
   gui.printf("\n--==| Make Quests |==--\n\n")
 
   gui.at_level(LEVEL.name .. " (Quests)", LEVEL.id, #GAME.levels)
 
-  Monster_prepare()
+  Monster_prepare(LEVEL)
 
   LEVEL.quests = {}
   LEVEL.zones  = {}
 
-  Quest_create_initial_quest()
+  Quest_create_initial_quest(LEVEL)
 
-  Quest_add_major_quests()
+  Quest_add_major_quests(LEVEL)
 
-  Quest_start_room()
-  Quest_order_by_visit()
-  Quest_find_backtracks()
+  Quest_start_room(LEVEL)
+  Quest_order_by_visit(LEVEL)
+  Quest_find_backtracks(LEVEL)
 
   -- this must be after quests have been ordered
-  Quest_create_zones()
+  Quest_create_zones(LEVEL)
 
-  Quest_big_secrets()
+  Quest_big_secrets(LEVEL)
 
-  Quest_room_themes()
+  Quest_room_themes(LEVEL)
 
-  Quest_add_weapons()
+  Quest_add_weapons(LEVEL)
 
-  Quest_nice_items()
+  Quest_nice_items(LEVEL)
 
-  Monster_pacing()
-  Monster_assign_bosses()
+  Monster_pacing(LEVEL)
+  Monster_assign_bosses(LEVEL)
 end

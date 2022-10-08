@@ -26,10 +26,11 @@
 #include "main.h"
 #include "miniz.h"
 #include "m_lua.h"
+#include "sinks/rotating_file_sink.h"
 
 #define DEBUG_BUF_LEN 20000
 
-std::fstream log_file;
+std::shared_ptr<spdlog::logger> log_file;
 std::fstream ref_file;
 std::filesystem::path log_filename;
 std::filesystem::path ref_filename;
@@ -41,11 +42,16 @@ bool LogInit(const std::filesystem::path &filename) {
     if (!filename.empty()) {
         log_filename = filename;
 
-        log_file.open(log_filename, std::ios::out);
+        spdlog::set_pattern("%v");
 
-        if (!log_file.is_open()) {
+        log_file = spdlog::rotating_logger_mt("ob_logger", log_filename.generic_string().c_str(),
+            1048576 * log_size, log_limit);
+
+        if (log_file == nullptr) {
             return false;
         }
+        spdlog::flush_every(std::chrono::seconds(1));
+        spdlog::set_default_logger(log_file);
     }
 
     LogPrintf("====== START OF OBSIDIAN LOGS ======\n");
@@ -94,90 +100,8 @@ void LogEnableTerminal(bool enable) { terminal = enable; }
 void LogClose(void) {
     LogPrintf("\n====== END OF OBSIDIAN LOGS ======\n\n");
 
-    log_file.close();
+    spdlog::shutdown();
 
-    std::filesystem::path bare_log = log_filename;
-    std::filesystem::path oldest_log;
-    int numlogs = 0;
-
-    for (const std::filesystem::directory_entry &dir_entry :
-         std::filesystem::directory_iterator{bare_log.remove_filename()}) {
-        std::filesystem::path entry = dir_entry.path();
-        if ((StringCaseCmp(entry.extension().string(), ".txt") == 0 ||
-             StringCaseCmp(entry.extension().string(), ".zip") == 0) &&
-            StringCaseCmpPartial(entry.filename().string(), "LOGS") == 0) {
-            numlogs++;
-            if (oldest_log.empty() ||
-                std::filesystem::last_write_time(entry) <
-                    std::filesystem::last_write_time(oldest_log)) {
-                oldest_log = entry;
-            }
-        }
-    }
-
-    if (numlogs > log_limit) {
-        std::filesystem::remove(oldest_log);
-    }
-
-    std::filesystem::path new_logpath;
-    std::string new_filename;
-
-    if (timestamp_logs) {
-        new_logpath = log_filename;
-        new_logpath.remove_filename();
-        new_filename = "LOGS_";
-        new_filename.append(log_timestamp);
-        new_logpath.append(new_filename);
-        if (std::filesystem::exists(new_logpath)) {
-            std::filesystem::remove(new_logpath);
-        }
-        std::filesystem::rename(log_filename, new_logpath);
-    }
-
-    if (zip_logs) {
-        std::filesystem::path txt_filename;
-        std::filesystem::path zip_filename;
-        if (timestamp_logs) {
-            txt_filename = new_logpath;
-            zip_filename = new_logpath;
-        } else {
-            txt_filename = log_filename;
-            zip_filename = log_filename;
-        }
-        zip_filename.replace_extension("zip");
-        if (std::filesystem::exists(zip_filename)) {
-            std::filesystem::remove(zip_filename);
-        }
-        FILE *zip_file = fopen(txt_filename.string().c_str(), "rb");
-        int zip_length = std::filesystem::file_size(txt_filename);
-        byte *zip_buf = new byte[zip_length];
-        if (zip_buf && zip_file) {
-            memset(zip_buf, 0, zip_length);
-            fread(zip_buf, 1, zip_length, zip_file);
-        }
-        if (zip_file) {
-            fclose(zip_file);
-        }
-        if (zip_buf) {
-            if (mz_zip_add_mem_to_archive_file_in_place(
-                    zip_filename.string().c_str(),
-                    txt_filename.filename().string().c_str(), zip_buf,
-                    zip_length, NULL, 0, MZ_DEFAULT_COMPRESSION)) {
-                std::filesystem::remove(txt_filename);
-                delete[] zip_buf;
-            } else {
-                fmt::print(
-                    "Zipping logs to {} failed! Retaining original "
-                    "logs.\n",
-                    txt_filename.generic_string());
-            }
-        } else {
-            fmt::print(
-                "Zipping logs to {} failed! Retaining original "
-                "logs.\n",
-                txt_filename.generic_string());
-        }
-    }
 
     log_filename.clear();
 }
@@ -191,7 +115,8 @@ void RefClose(void) {
 }
 
 void LogReadLines(log_display_func_t display_func, void *priv_data) {
-    if (!log_file) {
+
+    if (log_file == nullptr) {
         return;
     }
 
@@ -200,17 +125,25 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
     // fussy about opening already open files (in Linux it would
     // not be an issue).
 
-    log_file.close();
+    spdlog::shutdown();
 
-    log_file.open(log_filename, std::ios::in);
+    std::fstream log_stream;
+
+    log_stream.open(log_filename, std::ios::in);
 
     // this is very unlikely to happen, but check anyway
-    if (!log_file.is_open()) {
+    if (!log_stream.is_open()) {
+        log_file = spdlog::rotating_logger_mt("ob_logger", log_filename.generic_string().c_str(),
+            1048576 * log_size, log_limit);
+        if (log_file != nullptr) {
+            spdlog::flush_every(std::chrono::seconds(1));
+            spdlog::set_default_logger(log_file);
+        }
         return;
     }
 
     std::string buffer;
-    while (std::getline(log_file, buffer)) {
+    while (std::getline(log_stream, buffer)) {
         // remove any newline at the end (LF or CR/LF)
         StringRemoveCRLF(&buffer);
 
@@ -223,11 +156,15 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
     }
 
     // close the log file after current contents are read
-    log_file.close();
+    log_stream.close();
 
     // open the log file for writing again
-    // [ it is unlikely to fail, but if it does then no biggie ]
-    log_file.open(log_filename, std::ios::app);
+    log_file = spdlog::rotating_logger_mt("ob_logger", log_filename.generic_string().c_str(),
+            1048576 * log_size, log_limit);
+    if (log_file != nullptr) {
+        spdlog::flush_every(std::chrono::seconds(1));
+        spdlog::set_default_logger(log_file);
+    }
 }
 
 //--- editor settings ---

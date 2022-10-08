@@ -234,23 +234,6 @@ function Level_determine_map_size(LEV)
 
   ::customsize::
 
-  if OB_CONFIG.cap_level_sizes == "yes" then
-    if OB_CONFIG.length == "game" then
-      if OB_CONFIG.float_size == gui.gettext("Progressive") or 
-      OB_CONFIG.float_size == gui.gettext("Episodic") then
-        W = math.min(48, W)
-      elseif OB_CONFIG.float_size == gui.gettext("Mix It Up") then
-        W = math.min(42, W)
-      else
-        W = math.min(30, W)
-      end
-    elseif OB_CONFIG.length == "episode" then
-      if tonumber(OB_CONFIG.float_size) then
-        W = math.min(58, W)
-      end
-    end
-  end
-
   if not W then
     error("Invalid value for size : " .. tostring(ob_size))
   end
@@ -2229,7 +2212,7 @@ end
 
 
 
-function Level_do_styles()
+function Level_do_styles(LEVEL)
   local style_tab
 
   style_tab = table.copy(GLOBAL_STYLE_LIST)
@@ -2268,7 +2251,7 @@ function Level_do_styles()
   end
 
   if LEVEL.psychedelic then
-    Mat_prepare_trip()
+    Mat_prepare_trip(LEVEL)
   end
 
   if LEVEL.is_procedural_gotcha then
@@ -2307,7 +2290,7 @@ function Level_do_styles()
 end
 
 
-function Level_choose_liquid()
+function Level_choose_liquid(LEVEL)
   -- always have a '_LIQUID' material.
   -- this is the default, it usually gets set to a proper material
   GAME.MATERIALS["_LIQUID"] = GAME.MATERIALS["_ERROR"]
@@ -2365,7 +2348,7 @@ function Level_choose_liquid()
 end
 
 
-function Level_choose_darkness()
+function Level_choose_darkness(LEVEL)
   local prob = EPISODE.dark_prob or 0
 
   -- NOTE: this style is only set via the Level Control module
@@ -2406,12 +2389,12 @@ function Level_choose_darkness()
 end
 
 
-function Level_choose_misc()
+function Level_choose_misc(LEVEL)
   LEVEL.squareishness = rand.pick({ 0,25,50,75,90 })
 
   LEVEL.room_height_style = PARAM.room_heights or "mixed"
 
-  if rand.odds(style_sel("outdoors", 0, 50, 50, 100)) then
+  if rand.odds(style_sel("outdoors", 0, 33, 66, 100)) then
     LEVEL.has_outdoors = true
 
     if rand.odds(style_sel("outdoors", 0, 15, 25, 0)) then
@@ -2460,10 +2443,10 @@ function Level_choose_misc()
 end
 
 
-function Level_choose_skybox()
+function Level_choose_skybox(LEVEL)
   local skyfab
 
-  local function Choose_episodic_skybox(force_pick)
+  local function Choose_episodic_skybox(LEVEL, force_pick)
     if not LEVEL.episode.skybox or force_pick then
       return PREFABS[rand.key_by_probs(THEME.skyboxes)]
     else
@@ -2479,7 +2462,7 @@ function Level_choose_skybox()
         where = "point",
         size = 1,
       }
-      local def = Fab_pick(reqs)
+      local def = Fab_pick(LEVEL, reqs)
       return assert(def)
 
     elseif mode == "themed" then
@@ -2504,7 +2487,7 @@ function Level_choose_skybox()
   local same_skyfab = "yes"
 
   if OB_CONFIG.zdoom_skybox == "episodic" then
-    LEVEL.episode.skybox = Choose_episodic_skybox()
+    LEVEL.episode.skybox = Choose_episodic_skybox(LEVEL)
     skyfab = LEVEL.episode.skybox
   else
     LEVEL.skybox = Choose_skybox(OB_CONFIG.zdoom_skybox)
@@ -2531,7 +2514,7 @@ function Level_choose_skybox()
 
       if same_skyfab == "yes" then
         if OB_CONFIG.zdoom_skybox == "episodic" then
-          LEVEL.episode.skybox = Choose_episodic_skybox("force_it")
+          LEVEL.episode.skybox = Choose_episodic_skybox(LEVEL, "force_it")
           skyfab = LEVEL.episode.skybox
         else
           LEVEL.skybox = Choose_skybox(OB_CONFIG.zdoom_skybox)
@@ -2557,7 +2540,7 @@ function Level_choose_skybox()
 end
 
 
-function Level_init()
+function Level_init(LEVEL)
   LEVEL.ids = {}
 
   LEVEL.areas = {}
@@ -2569,20 +2552,18 @@ function Level_init()
 
   LEVEL.unplaced_weapons = {}
 
-  Level_choose_liquid()
-  Level_choose_darkness()
-  Level_choose_misc()
+  Level_choose_liquid(LEVEL)
+  Level_choose_darkness(LEVEL)
+  Level_choose_misc(LEVEL)
 
-  Level_choose_skybox()
+  Level_choose_skybox(LEVEL)
 
   Ambient_reset()
 end
 
 
-function Level_build_it()
-  Level_init()
-
-  Seed_init()
+function Level_build_it(LEVEL, SEEDS)
+  Level_init(LEVEL)
 
   if PARAM.float_build_levels then
     if PARAM.float_build_levels ~= 0 then
@@ -2590,26 +2571,26 @@ function Level_build_it()
     end
   end
 
-  Area_create_rooms()
+  Area_create_rooms(LEVEL, SEEDS)
     if gui.abort() then return "abort" end
 
-  Quest_make_quests()
+  Quest_make_quests(LEVEL)
     if gui.abort() then return "abort" end
 
-  Room_build_all()
+  Room_build_all(LEVEL, SEEDS)
     if gui.abort() then return "abort" end
 
-  Monster_make_battles()
+  Monster_make_battles(LEVEL, SEEDS)
     if gui.abort() then return "abort" end
 
-  Item_add_pickups()
+  Item_add_pickups(LEVEL)
     if gui.abort() then return "abort" end
 
   return "ok"
 end
 
 
-function Level_handle_prebuilt()
+function Level_handle_prebuilt(LEVEL)
   -- randomly pick one
   local probs = {}
 
@@ -2660,7 +2641,13 @@ function Level_make_level(LEV)
     gui.printf("Level " .. LEV.id .. " title: " .. LEV.description)
   end
 
-  LEVEL = LEV
+  -- copy level info, so that all new information added into the LEVEL
+  -- object by the generator can be garbage collected once this level is
+  -- finished.
+
+  local LEVEL = table.copy(LEV)
+  local SEEDS = Seed_init(LEVEL)
+  
 
   gui.at_level(LEVEL.name, index, total)
 
@@ -2668,7 +2655,7 @@ function Level_make_level(LEV)
 
   LEVEL.ids  = {}
 
-  THEME = assert(LEVEL.theme)
+  THEME = table.copy(assert(LEVEL.theme))
 
   if GAME.THEMES.DEFAULTS then
     table.merge_missing(THEME, GAME.THEMES.DEFAULTS)
@@ -2677,29 +2664,47 @@ function Level_make_level(LEV)
   -- use a pre-built level ?
 
   if LEVEL.prebuilt then
-    ob_invoke_hook("begin_level")
+    ob_invoke_hook_with_table("begin_level", LEVEL)
 
-    local res = Level_handle_prebuilt()
+    local res = Level_handle_prebuilt(LEVEL)
     if res ~= "ok" then
+      for _,k in pairs (LEVEL) do
+        LEVEL[k] = nil
+      end
+      for _,k in pairs (SEEDS) do
+        SEEDS[k] = nil
+      end
+      LEVEL = nil
+      SEEDS = nil
+      collectgarbage("collect")
+      collectgarbage("collect")
       return res
     end
-
-    ob_invoke_hook("end_level")
+    ob_invoke_hook_with_table("end_level", LEVEL)
+    for _,k in pairs (LEVEL) do
+      LEVEL[k] = nil
+    end
+    for _,k in pairs (SEEDS) do
+      SEEDS[k] = nil
+    end
+    LEVEL = nil
+    SEEDS = nil
+    collectgarbage("collect")
+    collectgarbage("collect")
     return "ok"
   end
-
 
   LEVEL.secondary_importants = {}
 
   gui.begin_level()
   gui.property("level_name", LEVEL.name);
 
-  Level_do_styles()
+  Level_do_styles(LEVEL)
 
   -- skip_probs for fabs are now evaluated on a per-level basis.
   Fab_update_skip_prob()
 
-  ob_invoke_hook("begin_level")
+  ob_invoke_hook_with_table("begin_level", LEVEL)
 
   gui.printf("\nStyles = \n%s\n\n", table.tostr(STYLE, 1))
 
@@ -2715,14 +2720,36 @@ function Level_make_level(LEV)
     end
   end
 
-  local res = Level_build_it()
+  local res = Level_build_it(LEVEL, SEEDS)
   if res ~= "ok" then
+    for _,k in pairs (LEVEL) do
+      LEVEL[k] = nil
+    end
+    for _,k in pairs (SEEDS) do
+      SEEDS[k] = nil
+    end
+    LEVEL = nil
+    SEEDS = nil
+    collectgarbage("collect")
+    collectgarbage("collect")
     return res
   end
 
-  ob_invoke_hook("end_level")
+  ob_invoke_hook_with_table("end_level", LEVEL)
 
   gui.end_level()
+
+  for _,k in pairs (LEVEL) do
+    LEVEL[k] = nil
+  end
+  for _,k in pairs (SEEDS) do
+    SEEDS[k] = nil
+  end
+  LEVEL = nil
+  SEEDS = nil
+
+  collectgarbage("collect")
+  collectgarbage("collect")
 
   if gui.abort() then return "abort" end
 

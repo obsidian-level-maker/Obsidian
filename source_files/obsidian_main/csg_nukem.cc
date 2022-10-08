@@ -24,8 +24,10 @@
 #include "csg_local.h"
 #include "csg_main.h"
 #include "g_nukem.h"
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"  // ui_build.h
+#endif
 #include "headers.h"
 #include "lib_file.h"
 #include "lib_util.h"

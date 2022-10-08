@@ -20,7 +20,7 @@
 ------------------------------------------------------------------------
 
 
-function Render_add_exit_sign(E, z)
+function Render_add_exit_sign(E, z, SEEDS, LEVEL)
 
   if not PARAM.bool_exit_signs then return end
 
@@ -47,7 +47,7 @@ function Render_add_exit_sign(E, z)
 
   assert(z)
 
-  local x1,y1, x2,y2 = Edge_line_coords(E)
+  local x1,y1, x2,y2 = Edge_line_coords(E, SEEDS)
 
   local len = geom.dist(x1,y1, x2,y2)
 
@@ -76,20 +76,20 @@ function Render_add_exit_sign(E, z)
   local T1 = Trans.spot_transform(ax, ay, z, dir)
   local T2 = Trans.spot_transform(bx, by, z, dir)
 
-  Fabricate(nil, def, T1, {})
-  Fabricate(nil, def, T2, {})
+  Fabricate(LEVEL, nil, def, T1, {})
+  Fabricate(LEVEL, nil, def, T2, {})
 end
 
 
 
-function Render_edge(E)
+function Render_edge(LEVEL, E, SEEDS)
   assert(E)
   assert(E.kind)
 
   if Edge_is_wallish(E) then
-    Corner_mark_walls(E)
+    Corner_mark_walls(LEVEL, E)
   elseif Edge_is_fencish(E) then
-    Corner_mark_fences(E)
+    Corner_mark_fences(LEVEL, E)
   end
 
   if E.kind == "nothing" or E.kind == "ignore" then
@@ -184,7 +184,7 @@ function Render_edge(E)
       reqs.where = "edge"
     end
 
-    local def = Fab_pick(reqs)
+    local def = Fab_pick(LEVEL, reqs)
 
     return def
   end
@@ -318,19 +318,19 @@ function Render_edge(E)
 
       -- use only flat walls if in a corner
       tx, ty = geom.nudge(S1.mid_x, S1.mid_y, 10-dir, SEED_SIZE)
-      S2 = Seed_from_coord(tx, ty)
+      S2 = Seed_from_coord(tx, ty, SEEDS)
       if check_area_state(S1, S2) then
         reqs.deep = 16
       end
 
       -- use only flat walls if in a corner
       tx, ty = geom.nudge(S1.mid_x, S1.mid_y, geom.LEFT[dir], SEED_SIZE)
-      S2 = Seed_from_coord(tx, ty)
+      S2 = Seed_from_coord(tx, ty, SEEDS)
       if check_area_state(S1, S2) then
         reqs.deep = 16
       end
       tx, ty = geom.nudge(S1.mid_x, S1.mid_y, geom.RIGHT[dir], SEED_SIZE)
-      S2 = Seed_from_coord(tx, ty)
+      S2 = Seed_from_coord(tx, ty, SEEDS)
       if check_area_state(S1, S2) then
         reqs.deep = 16
       end
@@ -363,9 +363,9 @@ function Render_edge(E)
       -- check for wall pieces that require solid depth behind
       -- i.e. fake doors and windows
       tx, ty = geom.nudge(S1.mid_x, S1.mid_y, dir, SEED_SIZE)
-      S2 = Seed_from_coord(tx, ty)
+      S2 = Seed_from_coord(tx, ty, SEEDS)
       tx, ty = geom.nudge(S1.mid_x, S1.mid_y, dir, SEED_SIZE * 2)
-      S3 = Seed_from_coord(tx, ty)
+      S3 = Seed_from_coord(tx, ty, SEEDS)
 
 --gui.printf(dir.." DIRECTION\n")
 --gui.printf(S1.mid_x .. ", " .. S1.mid_y .. " -> " .. S2.mid_x .. ", " .. S2.mid_y .. "\n")
@@ -388,7 +388,7 @@ function Render_edge(E)
       reqs.theme_override = A.room.theme.theme_override
     end
 
-    local def = Fab_pick(reqs, sel(reqs.group, "none_ok", nil))
+    local def = Fab_pick(LEVEL, reqs, sel(reqs.group, "none_ok", nil))
 
     -- autodetail and prefab control override
     if E.plain then
@@ -399,7 +399,7 @@ function Render_edge(E)
     -- when a wall group is not selected, use the ungrouped walls
     if not def or (def and def.stop_group) then
       reqs.group = nil
-      def = Fab_pick(reqs)
+      def = Fab_pick(LEVEL, reqs)
     end
 
     return def
@@ -428,7 +428,7 @@ function Render_edge(E)
       reqs.where = "edge"
     end
 
-    local def = Fab_pick(reqs)
+    local def = Fab_pick(LEVEL, reqs)
 
     return def
   end
@@ -451,7 +451,7 @@ function Render_edge(E)
       reqs.where = "edge"
     end
 
-    local def = Fab_pick(reqs)
+    local def = Fab_pick(LEVEL, reqs)
 
     return def
   end
@@ -484,8 +484,8 @@ function Render_edge(E)
     table.insert(f_brush, { t=A.floor_h - 8192, reachable=false })
     table.insert(c_brush, { b=A.floor_h - 8192 + 16, delta_z = -8192 - 16 })
 
-    brushlib.set_mat(f_brush, "_SKY", "_SKY")
-    brushlib.set_mat(c_brush, "_SKY", "_SKY")
+    brushlib.set_mat(LEVEL, f_brush, "_SKY", "_SKY")
+    brushlib.set_mat(LEVEL, c_brush, "_SKY", "_SKY")
 
     Trans.brush(f_brush)
     Trans.brush(c_brush)
@@ -504,7 +504,7 @@ function Render_edge(E)
       blocked = 1,
     }
 
-    local x1,y1, x2,y2 = Edge_line_coords(edge)
+    local x1,y1, x2,y2 = Edge_line_coords(edge, SEEDS)
 
     local z
     local z1 = (E.area.ceil_h or -EXTREME_H)
@@ -583,12 +583,12 @@ function Render_edge(E)
 
     Trans.set_fitted_z(T, z1, z2)
 
-    Fabricate(A.room, def, T, { skin })
+    Fabricate(LEVEL, A.room, def, T, { skin })
   end
 
 
   local function straddle_railing()
-    local mat = Mat_lookup_tex(assert(E.rail_mat))
+    local mat = Mat_lookup_tex(LEVEL, assert(E.rail_mat))
     assert(mat.t)
 
     local side_props =
@@ -600,7 +600,7 @@ function Render_edge(E)
       tridee_midtex = E.rail_3dmidtex
     }
 
-    local x1,y1, x2,y2 = Edge_line_coords(E)
+    local x1,y1, x2,y2 = Edge_line_coords(E, SEEDS)
 
     local z = assert(E.rail_z)
 
@@ -662,7 +662,7 @@ function Render_edge(E)
       end
     end
 
-    Fabricate(A.room, def, T, { skin })
+    Fabricate(LEVEL, A.room, def, T, { skin })
 
     Ambient_pop()
   end
@@ -704,7 +704,7 @@ function Render_edge(E)
     -- choose lighting to be the minimum of each side
     Ambient_push(math.min(E.area.lighting, E.peer.area.lighting))
 
-    Fabricate(A.room, def, T, { skin })
+    Fabricate(LEVEL, A.room, def, T, { skin })
 
     Ambient_pop()
   end
@@ -913,7 +913,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
 
       table.insert(brush, { t=z })
 
-      brushlib.set_mat(brush, mat, mat)
+      brushlib.set_mat(LEVEL, brush, mat, mat)
 
       Trans.brush(brush)
     end
@@ -1006,7 +1006,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
     -- choose lighting to be the minimum of each side
     Ambient_push(math.min(E.area.lighting, E.peer.area.lighting))
 
-    Fabricate(A.room, def, T, { skin })
+    Fabricate(LEVEL, A.room, def, T, { skin })
 
     Ambient_pop()
 
@@ -1030,7 +1030,7 @@ stderrf("dA = (%1.1f %1.1f)  dB = (%1.1f %1.1f)\n", adx, ady, bdx, bdy)
          E = E.peer
       end
 
-      Render_add_exit_sign(E, E.area.floor_h) --z
+      Render_add_exit_sign(E, E.area.floor_h, SEEDS, LEVEL) --z
     end
   end
 
@@ -1066,10 +1066,10 @@ end
 
 
 
-function Render_junction(A, S, dir)
+function Render_junction(LEVEL, A, S, dir, SEEDS)
   -- this actually only does ONE side of the junction
 
-  local N = S:neighbor(dir, "NODIR")
+  local N = S:neighbor(dir, "NODIR", SEEDS)
 
   if N == "NODIR" then return end
 
@@ -1093,9 +1093,9 @@ function Render_junction(A, S, dir)
   local junc
 
   if N and N.area then
-    junc = Junction_lookup(A, N.area)
+    junc = Junction_lookup(LEVEL, A, N.area)
   else
-    junc = Junction_lookup(A, "map_edge")
+    junc = Junction_lookup(LEVEL, A, "map_edge")
   end
 
   if not junc then return end
@@ -1111,12 +1111,12 @@ function Render_junction(A, S, dir)
   E.long = 1
   E.deep = 16
 
-  Render_edge(E)
+  Render_edge(LEVEL, E, SEEDS)
 end
 
 
 
-function Render_corner(cx, cy)
+function Render_corner(LEVEL, cx, cy)
 
   local corner
 
@@ -1139,7 +1139,7 @@ function Render_corner(cx, cy)
         brushlib.add_top(brush, corner.post_top_h)
       end
 
-      brushlib.set_mat(brush, mat, mat)
+      brushlib.set_mat(LEVEL, brush, mat, mat)
 
       Trans.brush(brush)
 
@@ -1164,7 +1164,7 @@ function Render_corner(cx, cy)
         floor = mat
       }
 
-      Fabricate(corner.areas[1].room, def, T, {skins})
+      Fabricate(LEVEL, corner.areas[1].room, def, T, {skins})
     end
   end
 
@@ -1179,7 +1179,7 @@ function Render_corner(cx, cy)
 
     local skin = {wall=mat}
 
-    Fabricate(nil, def, T, {skin})
+    Fabricate(LEVEL, nil, def, T, {skin})
   end
 
 
@@ -1228,7 +1228,7 @@ function Render_corner(cx, cy)
       brushlib.set_y_offset(brush, 0)
     end
 
-    brushlib.set_mat(brush, L_tex, L_tex)
+    brushlib.set_mat(LEVEL, brush, L_tex, L_tex)
 
     Trans.brush(brush)
   end
@@ -1258,7 +1258,7 @@ function Render_corner(cx, cy)
       brushlib.set_y_offset(brush, 0)
     end
 
-    brushlib.set_mat(brush, L_tex, L_tex)
+    brushlib.set_mat(LEVEL, brush, L_tex, L_tex)
 
     Trans.brush(brush)
   end
@@ -1377,7 +1377,7 @@ function Render_corner(cx, cy)
 
   ---| Render_corner |---
 
-  corner = Corner_lookup(cx, cy)
+  corner = Corner_lookup(LEVEL, cx, cy)
 
   -- TODO: fix this
   Ambient_push(LEVEL.sky_light)
@@ -1401,14 +1401,14 @@ end
 
 
 
-function Render_sink_part(A, S, where, sink)
+function Render_sink_part(LEVEL, A, S, where, sink)
 
   local corner_field = where .. "_inner"
 
   local c_style = assert(A.room.corner_style or "curved")
 
   local function check_inner_point(cx, cy)
-    local corner = Corner_lookup(cx, cy)
+    local corner = Corner_lookup(LEVEL, cx, cy)
 
     if corner and corner[corner_field] then
       return true
@@ -1458,7 +1458,7 @@ function Render_sink_part(A, S, where, sink)
         trim_mat = assert(A.room.ceil_sink_mat or "_ERROR")
       else trim_mat = sink.trim_mat end
 
-      brushlib.set_mat(brush, trim_mat, trim_mat)
+      brushlib.set_mat(LEVEL, brush, trim_mat, trim_mat)
 
       -- ensure trim is unpeg (especially for trims like COMPTALL)
       if where == "ceil" then
@@ -1481,7 +1481,7 @@ function Render_sink_part(A, S, where, sink)
         sink_mat = assert(A.room.ceil_sink_mat or "_ERROR")
       else sink_mat = sink.mat end
 
-      brushlib.set_mat(brush, sink_mat, sink_mat)
+      brushlib.set_mat(LEVEL, brush, sink_mat, sink_mat)
     end
 
     Trans.brush(brush)
@@ -1741,11 +1741,11 @@ end
 
 
 
-function Render_void_area(A, S)
+function Render_void_area(LEVEL, A, S)
   for _,S in pairs(A.seeds) do
     local w_brush = S:make_brush()
 
-    brushlib.set_mat(w_brush, "_DEFAULT")
+    brushlib.set_mat(LEVEL, w_brush, "_DEFAULT")
 
     Trans.brush(w_brush)
   end
@@ -1753,7 +1753,7 @@ end
 
 
 
-function Render_floor(A)
+function Render_floor(LEVEL, A)
 
   local function should_do_seed(S)
     assert(not S.is_dead)
@@ -1786,7 +1786,7 @@ function Render_floor(A)
 
     if A.sector_fx then f_brush[#f_brush].special = A.sector_fx end
 
-    brushlib.set_mat(f_brush, f_side, f_mat)
+    brushlib.set_mat(LEVEL, f_brush, f_side, f_mat)
 
     -- remember floor brush for the spot logic
     table.insert(A.floor_brushes, f_brush)
@@ -1802,7 +1802,7 @@ function Render_floor(A)
       render_seed(S)
 
       if A.floor_group and A.floor_group.sink then
-        Render_sink_part(A, S, "floor",   A.floor_group.sink)
+        Render_sink_part(LEVEL, A, S, "floor",   A.floor_group.sink)
       end
     end
   end
@@ -1810,7 +1810,7 @@ end
 
 
 
-function Render_ceiling(A)
+function Render_ceiling(LEVEL, A)
 
   local function should_do_seed(S)
     assert(not S.is_dead)
@@ -1843,7 +1843,7 @@ function Render_ceiling(A)
 
     table.insert(c_brush, { b=c_h })
 
-    brushlib.set_mat(c_brush, c_side, c_mat)
+    brushlib.set_mat(LEVEL, c_brush, c_side, c_mat)
 
     Trans.brush(c_brush)
   end
@@ -1856,7 +1856,7 @@ function Render_ceiling(A)
       render_seed(S)
 
       if A.ceil_group and A.ceil_group.sink then
-        Render_sink_part(A, S, "ceil", A.ceil_group.sink)
+        Render_sink_part(LEVEL, A, S, "ceil", A.ceil_group.sink)
       end
     end
   end
@@ -1864,7 +1864,7 @@ end
 
 
 
-function Render_chunk(chunk)
+function Render_chunk(LEVEL, chunk, SEEDS)
   --
   -- this handles prefabs which occupy a seed rectangle (chunk) and
   -- are responsible for making the whole floor and/or ceiling.
@@ -2027,11 +2027,11 @@ function Render_chunk(chunk)
       skin.door_tag = assert(goal.tag)
     end
 
-    local def = Fab_pick(reqs)
+    local def = Fab_pick(LEVEL, reqs)
 
     local T = Trans.spot_transform(chunk.mx, chunk.my, z1, dir)
 
-    Fabricate(R, def, T, { skin })
+    Fabricate(LEVEL, R, def, T, { skin })
 
     if goal and (goal.kind == "SWITCH" or goal.kind == "LOCAL_SWITCH") then
       goal.action = assert(def.door_action)
@@ -2049,11 +2049,11 @@ function Render_chunk(chunk)
       height = z2 - z1,
     }
 
-    local def = Fab_pick(reqs)
+    local def = Fab_pick(LEVEL, reqs)
 
     local T = Trans.spot_transform(chunk.mx, chunk.my, z1, dir)
 
-    Fabricate(R, def, T, { })
+    Fabricate(LEVEL, R, def, T, { })
   end
 
 
@@ -2104,13 +2104,13 @@ function Render_chunk(chunk)
       reqs.kind = "secret_exit"
     end
 
-    local def = Fab_pick(reqs)
+    local def = Fab_pick(LEVEL, reqs)
 
     local skin1 = { }
 
     local T = Trans.spot_transform(chunk.mx, chunk.my, z1, dir)
 
-    Fabricate(R, def, T, { skin1 })
+    Fabricate(LEVEL, R, def, T, { skin1 })
   end
 
 
@@ -2129,7 +2129,7 @@ function Render_chunk(chunk)
     reqs.key = "sw_metal"  -- FIXME GET IT PROPERLY
 chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS RENDERED
 
-    local def = Fab_pick(reqs)
+    local def = Fab_pick(LEVEL, reqs)
 
     local skin1 = { }
 
@@ -2181,7 +2181,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
     local T = Trans.spot_transform(chunk.mx, chunk.my, z1, dir)
 
-    Fabricate(R, def, T, { skin1 })
+    Fabricate(LEVEL, R, def, T, { skin1 })
   end
 
 
@@ -2208,7 +2208,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
       height = z2 - z1,
     }
 
-    local def = Fab_pick(reqs)
+    local def = Fab_pick(LEVEL, reqs)
 
     local skin1 = {}
 
@@ -2227,7 +2227,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
     local T = Trans.spot_transform(chunk.mx, chunk.my, z1, dir)
 
-    Fabricate(R, def, T, { skin1 })
+    Fabricate(LEVEL, R, def, T, { skin1 })
   end
 
 
@@ -2258,7 +2258,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
     table.insert(brush, top)
 
-    brushlib.set_mat(brush, floor_mat, floor_mat)
+    brushlib.set_mat(LEVEL, brush, floor_mat, floor_mat)
 
     Trans.brush(brush)
 
@@ -2290,7 +2290,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
       Trans.set_fitted_z(T, floor_h, ceil_h)
     end
 
-    Fabricate(A.room, def, T, { skin })
+    Fabricate(LEVEL, A.room, def, T, { skin })
   end
 
 
@@ -2382,7 +2382,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
     assert(def.z_fit == nil)
 
-    Fabricate(A.room, def, T, { skin })
+    Fabricate(LEVEL, A.room, def, T, { skin })
 
     Ambient_pop()
   end
@@ -2479,7 +2479,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
       end
 
       if E and not E.area.room.is_hallway then
-        Render_add_exit_sign(E, E.area.floor_h) --z1
+        Render_add_exit_sign(E, E.area.floor_h, SEEDS, LEVEL) --z1
       end
     end
   end
@@ -2629,7 +2629,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
   -- handle a ceiling paired with a floor  [ NOT USED ATM ]
   if chunk.next_highest then
-    Render_chunk(chunk.next_highest)
+    Render_chunk(LEVEL, chunk.next_highest, SEEDS)
   end
 
 
@@ -2734,11 +2734,11 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
   --- pick the prefab ---
 
-  local def = chunk.prefab_def or Fab_pick(reqs, "none_ok")
+  local def = chunk.prefab_def or Fab_pick(LEVEL, reqs, "none_ok")
 
   if not def then
     reqs.group = nil
-    def = Fab_pick(reqs)
+    def = Fab_pick(LEVEL, reqs)
   end
 
 
@@ -2796,7 +2796,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
 
     -- disable walls around/inside this chunk
     for _,N in pairs(A.neighbors) do
-      Junction_make_empty(Junction_lookup(A, N))
+      Junction_make_empty(Junction_lookup(LEVEL, A, N))
     end
   end
 
@@ -2868,7 +2868,7 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
     end
   end
 
-  Fabricate(A.room, def, T, { skin })
+  Fabricate(LEVEL, A.room, def, T, { skin })
 
   Ambient_pop()
 
@@ -2879,9 +2879,9 @@ end
 
 
 
-function Render_area(A)
+function Render_area(LEVEL, A, SEEDS)
   if A.mode == "void" then
-    Render_void_area(A)
+    Render_void_area(LEVEL, A)
     return
   end
 
@@ -2890,13 +2890,13 @@ function Render_area(A)
   do
     -- handle caves, parks and landscapes
     if A.mode == "nature" or A.mode == "scenic" then
-      Render_cells(A)
+      Render_cells(LEVEL, A)
     else
-      Render_floor(A)
+      Render_floor(LEVEL, A)
     end
 
     if not (A.mode == "nature" or A.mode == "scenic") or A.external_sky then
-      Render_ceiling(A)
+      Render_ceiling(LEVEL, A)
     end
   end
 
@@ -2907,12 +2907,12 @@ function Render_area(A)
   else
     for _,E in pairs(A.edges) do
       assert(E.area == A)
-      Render_edge(E)
+      Render_edge(LEVEL, E, SEEDS)
     end
 
     for _,S in pairs(A.seeds) do
       for _,dir in pairs(geom.ALL_DIRS) do
-        Render_junction(A, S, dir)
+        Render_junction(LEVEL, A, S, dir, SEEDS)
       end
     end
   end
@@ -2922,7 +2922,7 @@ end
 
 
 
-function Render_all_chunks()
+function Render_all_chunks(LEVEL, SEEDS)
 
   local SWITCHES_ONLY
 
@@ -2946,7 +2946,7 @@ function Render_all_chunks()
       seed_h = chunk.sh
     }
 
-    local def = Fab_pick(reqs)
+    local def = Fab_pick(LEVEL, reqs)
     local skin1 = { floor=floor_mat }
 
     local S1 = SEEDS[chunk.sx1][chunk.sy1]
@@ -2954,7 +2954,7 @@ function Render_all_chunks()
 
     local T = Trans.box_transform(S1.x1, S1.y1, S2.x2, S2.y2, chunk.area.floor_h, 2)
 
-    Fabricate(chunk.area.room, def, T, { skin1 })
+    Fabricate(LEVEL, chunk.area.room, def, T, { skin1 })
 
     chunk.occupy = "floor"
   end
@@ -2967,7 +2967,7 @@ function Render_all_chunks()
       return
     end
 
-    Render_chunk(chunk)
+    Render_chunk(LEVEL, chunk, SEEDS)
   end
 
 
@@ -2992,7 +2992,7 @@ end
 
 
 
-function Render_depot(depot)
+function Render_depot(LEVEL, depot)
   -- dest_R is the room which gets the trap spots
   local dest_R = assert(depot.room)
 
@@ -3014,7 +3014,7 @@ function Render_depot(depot)
 
   Ambient_push(96)
 
-  Fabricate(dest_R, def, T, { depot.skin })
+  Fabricate(LEVEL, dest_R, def, T, { depot.skin })
 
   Ambient_pop()
 
@@ -3036,7 +3036,7 @@ end
 
 
 
-function Render_skybox()
+function Render_skybox(LEVEL)
   local skybox = LEVEL.skybox or LEVEL.episode.skybox
   if not skybox then return end
 
@@ -3044,36 +3044,36 @@ function Render_skybox()
   local y = SEED_H * SEED_SIZE + 1024 -- should probably the actual prefab bbox size
 
   local T = Trans.spot_transform(x, y, 0, 0)
-  Fabricate(nil, skybox, T, {})
+  Fabricate(LEVEL, nil, skybox, T, {})
 end
 
 
 
-function Render_all_areas()
+function Render_all_areas(LEVEL, SEEDS)
   for _,A in pairs(LEVEL.areas) do
-    Render_area(A)
+    Render_area(LEVEL, A, SEEDS)
   end
 
   for cx = 1, SEED_W + 1 do
   for cy = 1, SEED_H + 1 do
-    Render_corner(cx, cy)
+    Render_corner(LEVEL, cx, cy)
   end
   end
 
   for _,depot in pairs(LEVEL.depots) do
-    Render_depot(depot)
+    Render_depot(LEVEL, depot)
   end
 
-  Render_skybox()
+  Render_skybox(LEVEL)
 
   if LEVEL.has_streets and PARAM.bool_road_markings == 1 then
-    Render_find_street_markings()
-    Render_all_street_markings()
-    Render_establish_street_lanes()
-    Render_all_street_traffic()
+    Render_find_street_markings(LEVEL, SEEDS)
+    Render_all_street_markings(LEVEL, SEEDS)
+    Render_establish_street_lanes(LEVEL, SEEDS)
+    Render_all_street_traffic(LEVEL, SEEDS)
   end
 
-  Render_scenic_fabs()
+  Render_scenic_fabs(LEVEL, SEEDS)
 
 end
 
@@ -3081,7 +3081,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Render_all_street_markings()
+function Render_all_street_markings(LEVEL)
 
   if not ob_match_game({game = "doomish"}) or OB_CONFIG.engine == "nolimit" then return end
 
@@ -3112,7 +3112,7 @@ function Render_all_street_markings()
       end
 
       local T = Trans.spot_transform(x, y, z, dir)
-      Fabricate(nil, PREFABS[name], T, {})
+      Fabricate(LEVEL, nil, PREFABS[name], T, {})
       road_segments = road_segments + 1
     elseif kind == "dead_end" then
       road_dead_ends = road_dead_ends + 1
@@ -3124,7 +3124,7 @@ end
 
 
 
-function Render_all_street_traffic()
+function Render_all_street_traffic(LEVEL, SEEDS)
   LEVEL.street_traffic = {}
 
   local function get_parking_distance(pos)
@@ -3237,7 +3237,7 @@ function Render_all_street_traffic()
     local prob = style_sel("street_traffic", 0, 13, 27, 40)
 
     if rand.odds(prob) then
-      def = Fab_pick(reqs, "is_ok_man")
+      def = Fab_pick(LEVEL, reqs, "is_ok_man")
     end
 
     local skin =
@@ -3246,7 +3246,7 @@ function Render_all_street_traffic()
     }
 
     if def then
-      Fabricate(nil, def, T, {skin})
+      Fabricate(LEVEL, nil, def, T, {skin})
 
       local street_traffic_spot =
       {
@@ -3267,7 +3267,7 @@ end
 
 
 
-function Render_find_street_markings()
+function Render_find_street_markings(LEVEL, SEEDS)
 
   -- Render street markings
   --
@@ -3505,7 +3505,7 @@ end
 
 
 
-function Render_establish_street_lanes()
+function Render_establish_street_lanes(LEVEL, SEEDS)
 
   -- Render_establish_street_lanes
   --
@@ -3604,7 +3604,7 @@ end
 
 
 
-function Render_scenic_fabs()
+function Render_scenic_fabs(LEVEL, SEEDS)
 
   local function place_scenic_fabs(area)
     local function try_decor_here(area)
@@ -3660,7 +3660,7 @@ function Render_scenic_fabs()
         bb_x = bb_x + 1
       end
 
-      local def = Fab_pick(reqs, "none_ok")
+      local def = Fab_pick(LEVEL, reqs, "none_ok")
 
       if def then
         local fx = pick.mid_x + (SEED_SIZE/2)
@@ -3696,7 +3696,7 @@ function Render_scenic_fabs()
         Trans.set_fitted_z(T, info.z1, info.z2)
       end
 
-      Fabricate(nil, def, T, {skin})
+      Fabricate(LEVEL, nil, def, T, {skin})
     end
   end
 
@@ -3713,7 +3713,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Render_properties_for_area(A)
+function Render_properties_for_area(LEVEL, A)
   --
   -- FIXME : decide all this elsewhere!
   --
@@ -3787,9 +3787,9 @@ end
 
 
 
-function Render_set_all_properties()
+function Render_set_all_properties(LEVEL)
   for _,A in pairs(LEVEL.areas) do
-    Render_properties_for_area(A)
+    Render_properties_for_area(LEVEL, A)
   end
 end
 
@@ -3798,7 +3798,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Render_triggers()
+function Render_triggers(LEVEL)
 
   local function setup_coord(C, trig)
     C.special = Action_lookup(trig.action)
@@ -4037,7 +4037,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Render_determine_spots()
+function Render_determine_spots(LEVEL, SEEDS)
   --
   -- ALGORITHM:
   --
@@ -4060,7 +4060,7 @@ function Render_determine_spots()
     if not mode then mode = A.mode end
 
     -- get bbox of room
-    local rx1, ry1, rx2, ry2 = A:calc_real_bbox()
+    local rx1, ry1, rx2, ry2 = A:calc_real_bbox(SEEDS)
 
     -- initialize grid to "ledge",
     local floor_height = A.floor_h
@@ -4297,7 +4297,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Render_cells(area)
+function Render_cells(LEVEL, area)
 
   -- the delta map specifies how to move each corner of the 64x64 cells
   -- (where the cells form a continuous mesh).
@@ -4554,7 +4554,7 @@ function Render_cells(area)
       end
     end
 
-    brushlib.set_mat(f_brush, f_mat, f_mat)
+    brushlib.set_mat(LEVEL, f_brush, f_mat, f_mat)
 
     if B.floor_y_offset then
       brushlib.set_y_offset(f_brush, B.floor_y_offset)
@@ -4584,7 +4584,7 @@ function Render_cells(area)
       c_mat = B.ceil_mat or "_ERROR"
     end
 
-    brushlib.set_mat(c_brush, c_mat, c_mat)
+    brushlib.set_mat(LEVEL, c_brush, c_mat, c_mat)
 
     if B.ceil_y_offset then
       brushlib.set_y_offset(c_brush, B.ceil_y_offset)

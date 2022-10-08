@@ -788,7 +788,9 @@ ULTDOOM.THEMES =
       gtd_ind_modwall_1 = 20,
       gtd_ind_modwall_2 = 20,
       gtd_ind_modwall_3 = 20,
-
+      --
+      gtd_greywall_1 = 25,
+      gtd_greytall_trim = 25,
       --
       gtd_modquake_set = 18,
       gtd_modquake_jawlike = 18,
@@ -841,7 +843,10 @@ ULTDOOM.THEMES =
       tech_o_tall_light = 0.5,
       tech_o_tall_light_alt = 0.5,
       tech_o_hexagon_uac_spotlights = 1,
-      tech_o_orange_oct_white_binding = 1
+      tech_o_orange_oct_white_binding = 1,
+      tech_o_g_blakwall = 1,
+      tech_o_g_modwall1 = 1,
+      tech_o_g_modwall2 = 1
     },
 
     fence_groups =
@@ -1151,7 +1156,9 @@ ULTDOOM.THEMES =
       gtd_ind_modwall_1 = 20,
       gtd_ind_modwall_2 = 20,
       gtd_ind_modwall_3 = 20,
-
+      --
+      gtd_greywall_1 = 25,
+      gtd_greytall_trim = 25,
       --
       gtd_modquake_set = 11,
       gtd_modquake_jawlike = 11,
@@ -1587,7 +1594,9 @@ ULTDOOM.THEMES =
       gtd_ind_modwall_1 = 20,
       gtd_ind_modwall_2 = 20,
       gtd_ind_modwall_3 = 20,
-
+      --
+      gtd_greywall_1 = 25,
+      gtd_greytall_trim = 25,
       --
       gtd_modquake_set = 11,
       gtd_modquake_jawlike = 11,
@@ -2020,6 +2029,9 @@ ULTDOOM.THEMES =
       gtd_ind_modwall_1 = 20,
       gtd_ind_modwall_2 = 20,
       gtd_ind_modwall_3 = 20,
+      --
+      gtd_greywall_1 = 25,
+      gtd_greytall_trim = 25,
       --
       gtd_modquake_set = 11,
       gtd_modquake_jawlike = 11,

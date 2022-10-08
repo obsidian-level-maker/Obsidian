@@ -29,8 +29,10 @@
 #include "csg_main.h"
 #include "csg_quake.h"
 #include "fmt/core.h"
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
+#endif
 #include "headers.h"
 #include "lib_file.h"
 #include "lib_util.h"
@@ -1760,7 +1762,9 @@ void QLIT_LightAllFaces() {
         lit_luxels += F->lmap->width * F->lmap->height;
 
         if (lit_faces % 400 == 0) {
+            #ifndef CONSOLE_ONLY
             Main::Ticker();
+            #endif
 
             if (main_action >= MAIN_CANCEL) {
                 break;

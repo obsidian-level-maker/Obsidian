@@ -119,8 +119,8 @@
 
 ROOM_CLASS = {}
 
-function ROOM_CLASS.new()
-  local id = alloc_id("room")
+function ROOM_CLASS.new(LEVEL)
+  local id = alloc_id(LEVEL, "room")
 
   local R =
   {
@@ -237,7 +237,7 @@ function ROOM_CLASS.num_floors(R)
 end
 
 
-function ROOM_CLASS.kill_it(R)
+function ROOM_CLASS.kill_it(R, LEVEL, SEEDS)
   gui.debugf("Killing %s\n", R.name)
   assert(not R.is_dead)
 
@@ -255,7 +255,7 @@ function ROOM_CLASS.kill_it(R)
 
   for _,A in pairs(R.areas) do
     gui.debugf("   kill %s\n", A.name)
-    A:kill_it()
+    A:kill_it(LEVEL, nil, SEEDS)
   end
 
   R.name = "DEAD_" .. R.name
@@ -286,7 +286,7 @@ function ROOM_CLASS.try_collect_seed(R, S)
 end
 
 
-function ROOM_CLASS.collect_seeds(R)
+function ROOM_CLASS.collect_seeds(R, SEEDS)
   for sx = 1, SEED_W do
   for sy = 1, SEED_H do
     local S  = SEEDS[sx][sy]
@@ -356,7 +356,7 @@ function ROOM_CLASS.has_teleporter(R)
 end
 
 
-function ROOM_CLASS.prelim_conn_num(R)
+function ROOM_CLASS.prelim_conn_num(R, LEVEL)
   local count = 0
 
   for _,PC in pairs(LEVEL.prelim_conns) do
@@ -708,7 +708,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Room_prepare_skies()
+function Room_prepare_skies(LEVEL)
   --
   -- Each zone gets a rough sky height (dist from floors).
   -- The final sky height of each zone is determined later.
@@ -731,7 +731,7 @@ end
 
 
 
-function Room_reckon_door_tex()
+function Room_reckon_door_tex(LEVEL)
 
   local function visit_conn(C, E1, E2)
     if E1 == nil then return end
@@ -761,7 +761,7 @@ end
 
 
 
-function Room_pick_joiner_prefab(C, chunk)
+function Room_pick_joiner_prefab(LEVEL, C, chunk)
   -- Note: this also used for hallway terminators
 
   assert(chunk)
@@ -797,10 +797,10 @@ function Room_pick_joiner_prefab(C, chunk)
     none_ok = nil
   end
 
-  chunk.prefab_def = Fab_pick(reqs, none_ok)
+  chunk.prefab_def = Fab_pick(LEVEL, reqs, none_ok)
   if not chunk.prefab_def then
     reqs.group = nil
-    chunk.prefab_def = Fab_pick(reqs)
+    chunk.prefab_def = Fab_pick(LEVEL, reqs)
   end
 
   -- should we flip the joiner?
@@ -837,7 +837,7 @@ end
 
 
 
-function Room_pick_edge_prefab(C)
+function Room_pick_edge_prefab(LEVEL, C)
 
   local function make_fence(E)
     E.kind = "fence"
@@ -953,7 +953,7 @@ function Room_pick_edge_prefab(C)
 
   -- Ok, select it --
 
-  E.prefab_def = Fab_pick(reqs)
+  E.prefab_def = Fab_pick(LEVEL, reqs)
 
   if goal then
     goal.action = E.prefab_def.door_action
@@ -962,20 +962,20 @@ end
 
 
 
-function Room_reckon_doors()
+function Room_reckon_doors(LEVEL)
   for _,C in pairs(LEVEL.conns) do
     if C.kind == "edge" then
-      Room_pick_edge_prefab(C)
+      Room_pick_edge_prefab(LEVEL, C)
 
     elseif C.kind == "joiner" then
-      Room_pick_joiner_prefab(C, C.joiner_chunk)
+      Room_pick_joiner_prefab(LEVEL, C, C.joiner_chunk)
     end
   end
 end
 
 
 
-function Room_detect_porches(R)
+function Room_detect_porches(LEVEL, R)
   --
   -- A "porch" is typically an area of an outdoor room that neighbors a
   -- building and will be given a solid low ceiling and some pillars to
@@ -1023,7 +1023,7 @@ function Room_detect_porches(R)
     local HA = R.areas[1]
 
     for _,edge in pairs(HA.edge_loops[1]) do
-      local N = edge.S:neighbor(edge.dir)
+      local N = edge.S:neighbor(edge.dir, nil, SEEDS)
 
       if not (N and N.area) then return false end
 
@@ -1154,7 +1154,7 @@ end
 
 
 
-function Room_make_windows(A1, A2)
+function Room_make_windows(LEVEL, A1, A2, SEEDS)
 
   local edge_list = {}
   local total_len = 0
@@ -1252,7 +1252,7 @@ function Room_make_windows(A1, A2)
 
     if S.area ~= A1 then return false end
 
-    local N = S:neighbor(dir)
+    local N = S:neighbor(dir, nil, SEEDS)
 
     if not N then return false end
 
@@ -1301,7 +1301,7 @@ function Room_make_windows(A1, A2)
     local long = 1
 
     for pass = 1, 9 do
-      RS = RS:neighbor(R_dir)
+      RS = RS:neighbor(R_dir, nil, SEEDS)
 
       if not is_possible_at_seed(RS, dir) then
         break;
@@ -1313,7 +1313,7 @@ function Room_make_windows(A1, A2)
     end
 
     for pass = 1, 9 do
-      LS = LS:neighbor(L_dir)
+      LS = LS:neighbor(L_dir, nil, SEEDS)
 
       if not is_possible_at_seed(LS, dir) then
         break;
@@ -1328,7 +1328,7 @@ function Room_make_windows(A1, A2)
     -- limit width of window
     -- [ currently windows this wide *never* occur ]
     while long >= 9 do
-      S = S:neighbor(R_dir)
+      S = S:neighbor(R_dir, nil, SEEDS)
       long = long - 2
     end
 
@@ -1344,7 +1344,7 @@ function Room_make_windows(A1, A2)
       local ch = string.sub(pattern, i, i)
 
       if ch == '-' then
-        S = S:neighbor(R_dir)
+        S = S:neighbor(R_dir, nil, SEEDS)
         goto continue
       end
 
@@ -1354,7 +1354,7 @@ function Room_make_windows(A1, A2)
       add_piece(S, dir, want_len)
 
       for i = 1, want_len do
-        S = S:neighbor(R_dir)
+        S = S:neighbor(R_dir, nil, SEEDS)
       end
       ::continue::
     end
@@ -1392,7 +1392,7 @@ function Room_make_windows(A1, A2)
          (A2.room and A2.room.force_windows) or
          rand.odds(prob)
       then
-        local E1, E2 = Edge_new_pair("window", "nothing", E.S, E.dir, E.long)
+        local E1, E2 = Edge_new_pair("window", "nothing", E.S, E.dir, E.long, LEVEL, SEEDS)
 
         E1.window_z = z
         E1.window_group  = group
@@ -1469,7 +1469,7 @@ end
 
 
 
-function Room_border_up()
+function Room_border_up(LEVEL, SEEDS)
   --
   -- Decide the default bordering between any two adjacent areas.
   -- This default can be overridden by EDGE objects, e.g. for doors.
@@ -1636,7 +1636,7 @@ function Room_border_up()
     -- zones : gotta keep 'em separated
 
     if A1.zone ~= A2.zone then
-      Room_make_windows(A1, A2)
+      Room_make_windows(LEVEL, A1, A2, SEEDS)
       Junction_make_wall(junc)
       return
     end
@@ -1718,7 +1718,7 @@ function Room_border_up()
         if A2.border_type ~= "simple_fence"
         or A1.border_type ~= "no_vista"
         or A2.border_type == nil then
-          Room_make_windows(A1, A2)
+          Room_make_windows(LEVEL, A1, A2, SEEDS)
         end
         Junction_make_wall(junc)
 
@@ -1727,9 +1727,9 @@ function Room_border_up()
           if A2.fence_type == "fence" then
             Junction_make_fence(junc)
           elseif A2.fence_type == "railing" then
-            Junction_make_railing(junc, "FENCE_MAT_FROM_THEME", "block")
+            Junction_make_railing(LEVEL, junc, "FENCE_MAT_FROM_THEME", "block")
           elseif A2.fence_type == "wall" then
-            Room_make_windows(A1, A2)
+            Room_make_windows(LEVEL, A1, A2, SEEDS)
             Junction_make_wall(junc)
           end
         end
@@ -1753,7 +1753,7 @@ function Room_border_up()
       if A1.mode == "cage" and A2.mode == "cage"
       and ((not A1.cage_mode and A2.cage_mode)
       or (A1.cage_mode and not A2.cage_mode)) then
-        Junction_make_railing(junc, "FENCE_MAT_FROM_THEME", "block")
+        Junction_make_railing(LEVEL, junc, "FENCE_MAT_FROM_THEME", "block")
       end
 
       -- walls on areas where ceilings and floors meet --
@@ -1785,7 +1785,7 @@ function Room_border_up()
             if fence_up_type == "fence" then
               Junction_make_fence(junc)
             elseif fence_up_type == "rail" then
-              Junction_make_railing(junc, "FENCE_MAT_FROM_THEME", "block")
+              Junction_make_railing(LEVEL, junc, "FENCE_MAT_FROM_THEME", "block")
             end
           end
         end
@@ -1822,7 +1822,7 @@ function Room_border_up()
 
         if A1.mode == "cage" or A2.mode == "cage" then
           if A1.cage_mode == "fancy" or A2.cage_mode == "fancy" then
-            Junction_make_railing(junc, "FENCE_MAT_FROM_THEME", "block")
+            Junction_make_railing(LEVEL, junc, "FENCE_MAT_FROM_THEME", "block")
           else
             Junction_make_empty(junc)
           end
@@ -1839,7 +1839,7 @@ function Room_border_up()
           return
         else
           if A1.is_outdoor then
-            Room_make_windows(A1, A2)
+            Room_make_windows(LEVEL, A1, A2, SEEDS)
             if can_porch_wall(A1, A2) then
               Junction_make_wall(junc)
             end
@@ -1848,9 +1848,9 @@ function Room_border_up()
               if A1.room.porch_fence_type == "fence" then
                 Junction_make_fence(junc)
               elseif A1.room.porch_fence_type == "railing" then
-                Junction_make_railing(junc, "FENCE_MAT_FROM_THEME", "block")
+                Junction_make_railing(LEVEL, junc, "FENCE_MAT_FROM_THEME", "block")
               elseif A1.room.porch_fence_type == "wall" then
-                Room_make_windows(A1, A2)
+                Room_make_windows(LEVEL, A1, A2, SEEDS)
                 Junction_make_wall(junc)
               end
             end
@@ -1873,11 +1873,11 @@ function Room_border_up()
 
       if A1.mode == "cage" or A2.mode == "cage"
       and A1.room == A2.room then
-        Junction_make_railing(junc, "FENCE_MAT_FROM_THEME", "block")
+        Junction_make_railing(LEVEL, junc, "FENCE_MAT_FROM_THEME", "block")
       end
 
       if A1.room ~= A2.room then
-        Room_make_windows(A1, A2)
+        Room_make_windows(LEVEL, A1, A2, SEEDS)
         Junction_make_wall(junc)
       end
       return
@@ -1889,7 +1889,7 @@ function Room_border_up()
       -- occasionally omit it when big height difference
       -- MSSP: New behavior, make a railing instead
       if can_omit_fence(A1, A2) and rand.odds(omit_fence_prob) then
-        Junction_make_railing(junc, "FENCE_MAT_FROM_THEME", "block")
+        Junction_make_railing(LEVEL, junc, "FENCE_MAT_FROM_THEME", "block")
       else
         Junction_make_fence(junc)
       end
@@ -1900,7 +1900,7 @@ function Room_border_up()
 
     -- windows --
 
-    Room_make_windows(A1, A2)
+    Room_make_windows(LEVEL, A1, A2, SEEDS)
 
 
     -- when in doubt, block it out!
@@ -2017,7 +2017,7 @@ function Room_border_up()
       local T = A.chunk
       if T.kind ~= "closet" then goto continue end
 
-      if T:is_open_to_sky(A.room) then
+      if T:is_open_to_sky(A.room, SEEDS) then
         T.open_to_sky = true
       end
       ::continue::
@@ -2047,7 +2047,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Room_set_kind(R, is_hallway, is_outdoor, is_cave)
+function Room_set_kind(R, is_hallway, is_outdoor, is_cave, LEVEL)
   R.is_hallway = is_hallway
   R.is_outdoor = is_outdoor
   R.is_cave    = is_cave
@@ -2094,7 +2094,7 @@ end
 
 
 
-function Room_choose_kind(R, last_R)
+function Room_choose_kind(R, last_R, LEVEL)
   -- these outdoor probs carefully chosen so that:
   --    few   is about 15%
   --    some  is about 35%
@@ -2141,7 +2141,7 @@ end
 -- Room size testing
 -- Edit by Armaetus
 
-function Room_choose_size(R, not_big)
+function Room_choose_size(LEVEL, R, not_big)
   -- decides whether room will be "big" or not.
   -- room kind (building, cave, etc) should have been set already.
 
@@ -2338,7 +2338,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Room_prepare_hallways()
+function Room_prepare_hallways(LEVEL)
   --
   -- Collects all the pieces of each hallway, and determines the
   -- shape and orientation of each piece.
@@ -2356,7 +2356,7 @@ function Room_prepare_hallways()
     reqs.shape = chunk.shape
     reqs.group = assert(chunk.area.room.hall_group)
 
-    local def = Fab_pick(reqs)
+    local def = Fab_pick(LEVEL, reqs)
 
     chunk.prefab_def = def
   end
@@ -2409,7 +2409,7 @@ function Room_prepare_hallways()
     end
 
     if piece.is_terminator then
-      Room_pick_joiner_prefab(assert(piece.conn), piece)
+      Room_pick_joiner_prefab(LEVEL, assert(piece.conn), piece)
     else
       pick_hallway_fab(R, piece)
 
@@ -2472,7 +2472,7 @@ end
 
 
 
-function Room_floor_ceil_heights()
+function Room_floor_ceil_heights(LEVEL, SEEDS)
   --
   -- Computes the floor and ceiling heights of all the areas of
   -- each room, including liquids and closets.
@@ -2515,7 +2515,7 @@ function Room_floor_ceil_heights()
 
   local function visit_floor_area(R, A, grp)
     if grp == "new" then
-      grp = { id=alloc_id("floor_group") }
+      grp = { id=alloc_id(LEVEL, "floor_group") }
     end
 
     A.floor_group = grp
@@ -2630,7 +2630,7 @@ function Room_floor_ceil_heights()
     end
 
     for _,group in pairs(R.floor_groups) do
-      Area_inner_points_for_group(R, group, "floor")
+      Area_inner_points_for_group(LEVEL, R, group, "floor", SEEDS)
     end
   end
 
@@ -2739,7 +2739,7 @@ function Room_floor_ceil_heights()
 
     for _,A in pairs(R.areas) do
       if A.mode == "floor" then
-        A.ceil_group = { id=alloc_id("ceil_group") }
+        A.ceil_group = { id=alloc_id(LEVEL, "ceil_group") }
       end
     end
 
@@ -2779,7 +2779,7 @@ function Room_floor_ceil_heights()
     end
 
     for _,group in pairs(R.ceil_groups) do
-      Area_inner_points_for_group(R, group, "ceil")
+      Area_inner_points_for_group(LEVEL, R, group, "ceil", SEEDS)
     end
   end
 
@@ -2827,7 +2827,7 @@ function Room_floor_ceil_heights()
 
 
   local function process_cave(R)
-    Cave_build_a_cave(R, R.entry_h)
+    Cave_build_a_cave(R, R.entry_h, SEEDS, LEVEL)
   end
 
 
@@ -2835,7 +2835,7 @@ function Room_floor_ceil_heights()
     R.walkway_height = 256
     R.areas[1].base_light = 144
 
-    Cave_build_a_park(R, R.entry_h)
+    Cave_build_a_park(LEVEL, R, R.entry_h, SEEDS)
   end
 
 
@@ -3005,7 +3005,7 @@ function Room_floor_ceil_heights()
 
       select_floor_mats(R, via_conn)
 
-      Room_detect_porches(R)
+      Room_detect_porches(LEVEL, R)
     end
 
     -- recurse to neighbors
@@ -3400,7 +3400,7 @@ function Room_floor_ceil_heights()
     group.min_h = 96
 
     for _,A in pairs(R.areas) do
-      if A.ceil_group == group and A:has_conn() then
+      if A.ceil_group == group and A:has_conn(LEVEL) then
         -- TODO : get nearby_h from arch/door prefab  [ but it aint picked yet... ]
         local min_h = A.floor_h + 128 - group.max_floor_h
         group.min_h = math.max(group.min_h, min_h)
@@ -3750,7 +3750,7 @@ end
 
 
 
-function Room_add_cage_rails()
+function Room_add_cage_rails(LEVEL)
   -- this must be called AFTER scenic borders are finished, since
   -- otherwise we won't know the floor_h of border areas.
 
@@ -3758,7 +3758,7 @@ function Room_add_cage_rails()
     for _,N in pairs(A.neighbors) do
       if N.zone ~= A.zone then goto continue end
 
-      local junc = Junction_lookup(A, N)
+      local junc = Junction_lookup(LEVEL, A, N)
 
       if junc.E1 and junc.E1.kind ~= "nothing" then goto continue end
       if junc.E2 and junc.E2.kind ~= "nothing" then goto continue end
@@ -3766,7 +3766,7 @@ function Room_add_cage_rails()
       -- don't place railings on higher floors (it looks silly)
       if N.floor_h and N.floor_h > A.floor_h then goto continue end
 
-      Junction_make_railing(junc, "FENCE_MAT_FROM_THEME", "block")
+      Junction_make_railing(LEVEL, junc, "FENCE_MAT_FROM_THEME", "block")
       ::continue::
     end
   end
@@ -3785,7 +3785,7 @@ end
 
 
 
-function Room_set_sky_heights()
+function Room_set_sky_heights(LEVEL)
 
   local function do_area(A)
     local sky_h = (A.max_floor_h or A.floor_h) + A.zone.sky_add_h
@@ -4228,58 +4228,58 @@ end
 ------------------------------------------------------------------------
 
 
-function Room_build_all()
+function Room_build_all(LEVEL, SEEDS)
 
   gui.printf("\n--==|  Build Rooms |==--\n\n")
 
-  Area_building_facades()
+  Area_building_facades(LEVEL)
 
   -- place importants early as traps need to know where they are.
-  Layout_place_all_importants()
+  Layout_place_all_importants(LEVEL, SEEDS)
 
-  Layout_indoor_lighting()
+  Layout_indoor_lighting(LEVEL)
 
-  Autodetail_get_level_svolume()
+  Autodetail_get_level_svolume(LEVEL)
 
   -- this does traps, and may add switches which lock a door / joiner
-  Layout_add_traps()
-  Layout_decorate_rooms(1)
+  Layout_add_traps(LEVEL)
+  Layout_decorate_rooms(LEVEL, 1, SEEDS)
 
   -- do doors before floor heights, they may have a delta_h (esp. joiners)
-  Room_reckon_door_tex()
-  Room_prepare_skies()
+  Room_reckon_door_tex(LEVEL)
+  Room_prepare_skies(LEVEL)
 
-  Room_reckon_doors()
-  Room_prepare_hallways()
+  Room_reckon_doors(LEVEL)
+  Room_prepare_hallways(LEVEL)
 
-  Room_floor_ceil_heights()
-  Room_set_sky_heights()
+  Room_floor_ceil_heights(LEVEL, SEEDS)
+  Room_set_sky_heights(LEVEL)
 
 
   -- this does other stuff (crates, free-standing cages, etc..)
-  Layout_decorate_rooms(2)
-  Layout_scenic_vistas()
+  Layout_decorate_rooms(LEVEL, 2, SEEDS)
+  Layout_scenic_vistas(LEVEL, SEEDS)
 
-  Room_border_up()
+  Room_border_up(LEVEL, SEEDS)
 
-  Autodetail_plain_walls()
-  Autodetail_report()
+  Autodetail_plain_walls(LEVEL)
+  Autodetail_report(LEVEL)
 
-  Room_add_cage_rails()
+  Room_add_cage_rails(LEVEL)
 
-  Layout_handle_corners()
-  Layout_outdoor_shadows()
+  Layout_handle_corners(LEVEL)
+  Layout_outdoor_shadows(LEVEL, SEEDS)
 
-  ob_invoke_hook("level_layout_finished") --MSSP
+  ob_invoke_hook_with_table("level_layout_finished", LEVEL) --MSSP
 
   gui.at_level(LEVEL.name .. " (Fabs)", LEVEL.id, #GAME.levels)
-  Render_set_all_properties()
+  Render_set_all_properties(LEVEL)
 
-  Render_all_chunks()
-  Render_all_areas()
+  Render_all_chunks(LEVEL, SEEDS)
+  Render_all_areas(LEVEL, SEEDS)
 
-  Render_triggers()
-  Render_determine_spots()
+  Render_triggers(LEVEL)
+  Render_determine_spots(LEVEL, SEEDS)
 
   Room_add_sun()
   Room_add_camera()

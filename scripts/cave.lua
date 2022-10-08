@@ -87,8 +87,8 @@ end
 
 
 
-function Cave_is_edge(S, dir)
-  local N = S:raw_neighbor(dir)
+function Cave_is_edge(S, dir, SEEDS)
+  local N = S:raw_neighbor(dir, nil, SEEDS)
 
   if not N then return true end
 
@@ -126,7 +126,7 @@ end
 
 
 
-function Cave_setup_stuff(area)
+function Cave_setup_stuff(area, SEEDS)
   assert(area)
 
   -- determine extent of cells
@@ -370,7 +370,7 @@ end
 
 
 
-function Cave_cell_touches_map_edge(area, cx, cy)
+function Cave_cell_touches_map_edge(LEVEL, area, cx, cy)
   local sx = area.base_sx + int((cx - 1) / 2)
   local sy = area.base_sy + int((cy - 1) / 2)
 
@@ -391,7 +391,7 @@ end
 
 
 
-function Cave_cell_touches_room(area, cx, cy, R)
+function Cave_cell_touches_room(area, cx, cy, R, SEEDS)
   -- checks diagonal directions too (i.e. corner touches)
 
   for _,dir in pairs(geom.ALL_DIRS) do
@@ -437,7 +437,7 @@ end
 
 
 
-function Cave_generate_cave(R, area)
+function Cave_generate_cave(R, area, SEEDS)
 
   local is_lake = (area.liquid_mode == "lake")
 
@@ -482,7 +482,7 @@ function Cave_generate_cave(R, area)
 
     for _,S in pairs(area.seeds) do
       for dir = 2,8,2 do
-        if Cave_is_edge(S, dir) then
+        if Cave_is_edge(S, dir, SEEDS) then
           set_side(S, dir, sel(is_lake, -1, 1))
         end
 
@@ -494,7 +494,7 @@ function Cave_generate_cave(R, area)
       end
 
       for _,dir in pairs(geom.CORNERS) do
-        if Cave_is_edge(S, dir) then
+        if Cave_is_edge(S, dir, SEEDS) then
           -- lakes require whole seed to be cleared (esp. at "innie corners")
           if is_lake then
             set_whole(S, -1)
@@ -535,7 +535,7 @@ function Cave_generate_cave(R, area)
 
   local function is_fully_interior(S)
     for _,dir in pairs(geom.ALL_DIRS) do
-      if Cave_is_edge(S, dir) then return false end
+      if Cave_is_edge(S, dir, SEEDS) then return false end
     end
 
     return true
@@ -811,7 +811,7 @@ end
 
 
 
-function Cave_create_areas(R, area)
+function Cave_create_areas(R, area, LEVEL)
   --
   -- Sub-divide the floor of the cave into areas of differing heights.
   --
@@ -1376,7 +1376,7 @@ end
 
 
 
-function Cave_bunch_areas(R, mode)
+function Cave_bunch_areas(R, mode, LEVEL)
   --
   -- This picks a bunch of step areas which will become either liquid
   -- or sky (depending on 'mode' parameter).
@@ -2082,7 +2082,7 @@ function Cave_lake_fences(R)
       cy1 = (y - area.base_sy) * 2 + 1
 
       for _,dir in pairs(geom.CORNERS) do
-        if not Cave_is_edge(S, dir) then goto continue end
+        if not Cave_is_edge(S, dir, SEEDS) then goto continue end
 
         local A_dir = geom. LEFT_45[dir]
         local B_dir = geom.RIGHT_45[dir]
@@ -2661,7 +2661,7 @@ end
 
 
 
-function Cave_decide_properties(R, area)
+function Cave_decide_properties(R, area, LEVEL)
   --
   --  V7 NOTES
   -- ==========
@@ -2764,29 +2764,29 @@ end
 
 
 
-function Cave_build_a_cave(R, entry_h)
+function Cave_build_a_cave(R, entry_h, SEEDS, LEVEL)
 
   local area = Cave_find_area_for_room(R)
 
   R.cave_area = area
 
-  Cave_setup_stuff(area)
+  Cave_setup_stuff(area, SEEDS)
 
   Cave_collect_walk_rects(R, area)
 
-  Cave_decide_properties(R, area)
+  Cave_decide_properties(R, area, LEVEL)
 
   Cave_map_usable_area(area)
 
-  Cave_generate_cave(R, area)
+  Cave_generate_cave(R, area, SEEDS)
 
   Cave_lake_fences(R)
   Cave_fill_lakes(R)
 
-  Cave_create_areas(R, area)
+  Cave_create_areas(R, area, LEVEL)
 
-  Cave_bunch_areas(R, "liquid")
-  Cave_bunch_areas(R, "sky")
+  Cave_bunch_areas(R, "liquid", LEVEL)
+  Cave_bunch_areas(R, "sky", LEVEL)
 
   Cave_floor_heights(R, entry_h)
 
@@ -2887,7 +2887,7 @@ end
 
 
 
-function Cave_build_a_park(R, entry_h)
+function Cave_build_a_park(LEVEL, R, entry_h, SEEDS)
 
   local area = Cave_find_area_for_room(R)
 
@@ -3321,7 +3321,7 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function add_the_bridge(RIVER, bx, by)
+  local function add_the_bridge(RIVER, bx, by, LEVEL)
     -- this tells the Render_cell() code to not move cell corners,
     -- so the floor adjoining the bridge will be aligned properly.
     local BRIDGE = table.copy(RIVER)
@@ -3340,18 +3340,18 @@ function Cave_build_a_park(R, entry_h)
       where = "point",
     }
 
-    local def = Fab_pick(reqs)
+    local def = Fab_pick(LEVEL, reqs)
 
     local mx = area.base_x + (bx - 1) * 64 + 64
     local my = area.base_y + (by - 1) * 64 + 32
 
     local T = Trans.spot_transform(mx, my, entry_h, 2)
 
-    Fabricate(R, def, T, {})
+    Fabricate(LEVEL, R, def, T, {})
   end
 
 
-  local function install_river(points, RIVER)
+  local function install_river(points, RIVER, LEVEL)
     R.has_river = true
 
     -- bridge cell coords
@@ -3378,7 +3378,7 @@ function Cave_build_a_park(R, entry_h)
       -- make it very shallow, disable the bridge
       RIVER.floor_h = entry_h - 24
     else
-      add_the_bridge(RIVER, bx, by)
+      add_the_bridge(RIVER, bx, by, LEVEL)
     end
   end
 
@@ -3429,7 +3429,7 @@ function Cave_build_a_park(R, entry_h)
   end
 
 
-  local function make_a_river()
+  local function make_a_river(LEVEL)
     local RIVER =
     {
       neighbors = {},
@@ -3454,7 +3454,7 @@ function Cave_build_a_park(R, entry_h)
     end
 
     if best then
-      install_river(best, RIVER)
+      install_river(best, RIVER, LEVEL)
     end
 
     --[[for _,B in pairs(RIVER) do
@@ -4718,7 +4718,7 @@ gui.debugf("BUILD PARK IN %s\n", R.name)
 
   R.cave_area = area
 
-  Cave_setup_stuff(area)
+  Cave_setup_stuff(area, SEEDS)
 
   Cave_collect_walk_rects(R, area)
 
@@ -4749,7 +4749,7 @@ gui.debugf("BUILD PARK IN %s\n", R.name)
   if R.park_type == "hills" then
     make_a_hillside()
   elseif R.park_type == "river" then
-    make_a_river()
+    make_a_river(LEVEL)
   end
 
   -- fallback if in case hillside function
@@ -4777,7 +4777,7 @@ end
 
 
 
-function Cave_prepare_scenic_vista(area)
+function Cave_prepare_scenic_vista(LEVEL, area)
 
   local room = assert(area.face_room)
 
@@ -4879,7 +4879,7 @@ end
 
 
 
-function Cave_build_a_scenic_vista(area)
+function Cave_build_a_scenic_vista(LEVEL, area, SEEDS)
 
   local room = assert(area.face_room)
 
@@ -4937,7 +4937,7 @@ function Cave_build_a_scenic_vista(area)
       local reg = blob_map.regions[id]
       if reg.room_dist then goto continue end
 
-      if Cave_cell_touches_room(area, cx, cy, room) then
+      if Cave_cell_touches_room(area, cx, cy, room, SEEDS) then
         reg.room_dist = 0
       end
       ::continue::
@@ -4957,7 +4957,7 @@ function Cave_build_a_scenic_vista(area)
       local reg = blob_map.regions[id]
       if reg.mapedge_dist then goto continue end
 
-      if Cave_cell_touches_map_edge(area, cx, cy) then
+      if Cave_cell_touches_map_edge(LEVEL, area, cx, cy) then
         reg.mapedge_dist = 0
       end
       ::continue::
@@ -5392,7 +5392,7 @@ function Cave_build_a_scenic_vista(area)
 
   assert(area.mode == "scenic")
 
-  Cave_setup_stuff(area)
+  Cave_setup_stuff(area, SEEDS)
 
   area.external_sky = true
 

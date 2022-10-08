@@ -53,3 +53,29 @@ ACTOR burning_debris 27002
   }
 }
 ]]
+
+ORP_ENTITIES.GLDEFS =
+[[flickerlight2 FIRETOP{
+    color 1.0 0.9 0.4
+    size 72
+    secondarySize 81
+    interval 0.1
+    offset 0 32 0
+	}
+
+object burning_debris {
+    frame FDEB { light FIRETOP }
+	}
+
+flickerlight2 FIRETOP2{
+    color 1.0 0.9 0.4
+    size 72
+    secondarySize 81
+    interval 0.1
+    offset 0 32 0
+	}
+
+object burning_top {
+    frame FDEB { light FIRETOP2 }
+	}
+]]

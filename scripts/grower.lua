@@ -787,7 +787,7 @@ end
 
 
 
-function Grower_calc_rule_probs()
+function Grower_calc_rule_probs(LEVEL)
   --
   -- Modify the probability of all rules, based on current game and
   -- theme, the chosen styles for the level, and a random factor.
@@ -821,7 +821,7 @@ function Grower_calc_rule_probs()
   end
 
 
-  local function calc_prob(rule)
+  local function calc_prob(rule, LEVEL)
     if rule.skip_prob then
       if rand.odds(rule.skip_prob) then return 0 end
     end
@@ -830,7 +830,6 @@ function Grower_calc_rule_probs()
     -- [ I doubt these are useful, but do it for completeness ]
     if not ob_match_game(rule)     then return 0 end
     if not ob_match_engine(rule)   then return 0 end
-    if not ob_match_playmode(rule) then return 0 end
 
     -- liquid check
     if not LEVEL.liquid and rule.styles and
@@ -867,9 +866,10 @@ function Grower_calc_rule_probs()
 
   PARAM.skipped_rules = 0
 
-  for name,rule in pairs(SHAPE_GRAMMAR) do
-    rule.use_prob = calc_prob(rule)
-    if rule.use_prob == 0 then
+  for _,rule in pairs(SHAPE_GRAMMAR) do
+    local new_prob = calc_prob(rule, LEVEL)
+    rule.use_prob = new_prob
+    if new_prob == 0 then
       PARAM.skipped_rules = PARAM.skipped_rules + 1
     end
 
@@ -909,17 +909,19 @@ function Grower_calc_rule_probs()
     gui.printf("This level is absurd!\n\n")
   end
 
+  LEVEL.absurd_grammar_rules = {}
+  LEVEL.base_set_rules = {}
 
   local function Grower_absurdify()
     
     local function Grower_reset_absurdities()
       for _,rule in pairs(SHAPE_GRAMMAR) do
 
-        rule.is_absurd = false
+        rule.is_absurd = nil
 
-        if rule.original_use_prob then
-          rule.use_prob = rule.original_use_prob
-        end
+        --[[if rule.prob then
+          rule.use_prob = rule.prob
+        end]]
 
         if not rule.initial_env then goto continue end
 
@@ -945,21 +947,20 @@ function Grower_calc_rule_probs()
       if string.match(rule.name,"hall") then return end
       if string.match(rule.name,"HALL") then return end
       if string.match(rule.name,"START") then return end
-      if not rule.use_prob then return end
       if table.has_elem(rule.styles, "liquids") 
         and not LEVEL.liquid then return end
 
-      rule.original_use_prob = rule.use_prob
-
       if rand.odds(75) then
         new_factor = high_ab_factor * rand.range( 0.75,1.25 )
-        rule.use_prob = rule.use_prob * new_factor
+        rule.use_prob = math.round(rule.prob * new_factor)
         if rule.new_area then
           LEVEL.has_absurd_new_area_rules = true
         end
+        rule.positive_absurdity = true
       else
         new_factor = low_ab_factor * rand.range( 0.75,1.25 )
-        rule.use_prob = rule.use_prob * new_factor
+        rule.use_prob = rule.prob * new_factor
+        rule.negative_absurdity = true
       end
 
       -- diversify environments
@@ -976,14 +977,23 @@ function Grower_calc_rule_probs()
       rule.env = new_env
       rule.is_absurd = true
 
-      gui.debugf(rule.name .. " is now ABSURDIFIED! WOOO!!!\n")
-      gui.debugf("Factor: x" .. new_factor .. "\n")
+      gui.printf(rule.name .. ": " .. rule.prob 
+        .. "->" .. math.round(rule.use_prob) .. " \n")
+      gui.debugf("Factor: x" .. math.round(new_factor) .. "\n")
+
+      local info =
+      {
+        name = rule.name,
+        prob = rule.use_prob
+      }
+      table.insert(LEVEL.absurd_grammar_rules, info)
+
       if new_env then gui.debugf("New env: " .. new_env .. "\n") end
     end
-
+  
     Grower_reset_absurdities()
 
-    local rules_to_absurdify = rand.pick({1,2,2,2,3,3,3,4,4,5,6,7,8})
+    local rules_to_absurdify = rand.pick({1,1,1,2,2,2,3,3,4})
     local count = rules_to_absurdify
     gui.printf(rules_to_absurdify .. " rules will be absurd!\n\n")
 
@@ -999,6 +1009,19 @@ function Grower_calc_rule_probs()
 
       count = count - 1
     end
+
+    -- collect base set rules and preserve them
+    for _,rule in pairs(SHAPE_GRAMMAR) do
+      if rule.base_set and not rule.is_absurd then
+        local info =
+        {
+          name = rule.name,
+          prob = rule.use_prob
+        }
+        table.insert(LEVEL.base_set_rules, info)
+      end
+    end
+
   end
 
   if LEVEL.is_absurd then
@@ -1009,14 +1032,17 @@ end
 
 
 
-function Grower_decide_extents()
+function Grower_decide_extents(LEVEL)
   --
   -- decides how much of the map we can use for growing rooms.
   --
 
-  if LEVEL.has_streets == true then
-    if PARAM.bool_appropriate_street_themes and PARAM.bool_appropriate_street_themes == 1 and LEVEL.theme.streets_friendly == false then
-      LEVEL.has_streets = false
+
+  if LEVEL.has_streets then
+    if PARAM.bool_appropriate_street_themes 
+    and PARAM.bool_appropriate_street_themes == 1 
+    and not LEVEL.theme.streets_friendly then
+      LEVEL.has_streets = nil
     end
   end
 
@@ -1142,7 +1168,7 @@ end
 
 
 
-function Grower_determine_coverage()
+function Grower_determine_coverage(SEEDS, LEVEL)
   local seed_count = 0
   local room_count = 0
 
@@ -1168,7 +1194,7 @@ end
 
 
 
-function Grower_split_liquids()
+function Grower_split_liquids(SEEDS, LEVEL)
   --
   -- Checks the liquid areas in a room are contiguous.
   -- When the area has separate pieces, make new areas for them.
@@ -1185,7 +1211,7 @@ function Grower_split_liquids()
     table.insert(list, S)
 
     for _,dir in pairs(geom.ALL_DIRS) do
-      local N = S:neighbor(dir)
+      local N = S:neighbor(dir, nil, SEEDS)
 
       if N and N.area == S.area and not N.mark_contiguous then
         grow_contiguous_area(N, list)
@@ -1195,7 +1221,7 @@ function Grower_split_liquids()
 
 
   local function split_area(A, mode, seed_list)
-    local A2 = AREA_CLASS.new(mode)
+    local A2 = AREA_CLASS.new(LEVEL, mode)
 
     A2.room = A.room
     A2.room:add_area(A2)
@@ -1278,7 +1304,7 @@ function Grower_split_liquids()
         assert(S)
         assert(S.area == A)
 
-        local T = R.symmetry:transform(S)
+        local T = R.symmetry:transform(S, SEEDS)
 
         if T and T.area and T.area.room == R and T.area.mode == A.mode then
           A.peer = T.area
@@ -1305,7 +1331,7 @@ end
 
 
 
-function Grower_new_prelim_conn(R1, R2, kind)
+function Grower_new_prelim_conn(LEVEL, R1, R2, kind)
   local PC =
   {
     R1 = R1,
@@ -1319,7 +1345,7 @@ function Grower_new_prelim_conn(R1, R2, kind)
 end
 
 
-function Grower_kill_prelim_conn(PC)
+function Grower_kill_prelim_conn(LEVEL, PC)
   PC.kind  = "DEAD"
   PC.is_dead = true
 
@@ -1332,9 +1358,9 @@ end
 
 
 
-function Grower_add_room(parent_R, info, trunk)
+function Grower_add_room(LEVEL, parent_R, info, trunk)
 
-  local R = ROOM_CLASS.new()
+  local R = ROOM_CLASS.new(LEVEL)
 
 gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env), tostring(parent_R and parent_R.name))
 
@@ -1390,10 +1416,10 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env),
   elseif info.env == "cave" then
     is_cave = true
   else
-    is_outdoor = Room_choose_kind(R, parent_R)
+    is_outdoor = Room_choose_kind(R, parent_R, LEVEL)
   end
 
-  Room_set_kind(R, is_hallway, is_outdoor, is_cave)
+  Room_set_kind(R, is_hallway, is_outdoor, is_cave, LEVEL)
 
   if info.force_no_hallway then
     R.is_hallway = false
@@ -1405,7 +1431,7 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env),
     is_cave = false
   end
 
-  Room_choose_size(R)
+  Room_choose_size(LEVEL, R)
 
   -- always need at least one floor area
   -- [ except for hallways, every piece is an area ]
@@ -1429,7 +1455,7 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env),
     end
 
   else
-    local A = AREA_CLASS.new("floor")
+    local A = AREA_CLASS.new(LEVEL, "floor")
     R:add_area(A)
 
     A.prelim_h = 0
@@ -1462,7 +1488,7 @@ end
 
 
 
-function Grower_kill_room(R)
+function Grower_kill_room(SEEDS, LEVEL, R)
 
   local hallway_neighbor
 
@@ -1501,7 +1527,7 @@ function Grower_kill_room(R)
       return
     end
 
-    A2:kill_it("remove_from_room")
+    A2:kill_it(LEVEL, "remove_from_room", SEEDS)
   end
 
 
@@ -1527,7 +1553,7 @@ function Grower_kill_room(R)
           kill_joiner(PC.chunk)
         end
 
-        Grower_kill_prelim_conn(PC)
+        Grower_kill_prelim_conn(LEVEL, PC)
         break;
       end
     end
@@ -1548,12 +1574,12 @@ function Grower_kill_room(R)
 
   handle_conn()
 
-  R:kill_it()
+  R:kill_it(LEVEL, SEEDS)
 
   -- if this room was connected to a hallway, we should prune it too
   -- (which may end up recursing into this function)
   if hallway_neighbor then
-    Grower_prune_hallway(hallway_neighbor)
+    Grower_prune_hallway(SEEDS, LEVEL, hallway_neighbor)
   end
 
   -- sanity check
@@ -1562,18 +1588,24 @@ function Grower_kill_room(R)
   end
 
   -- make any split diagonals seeds whole again
-  Seed_squarify()
+  Seed_squarify(LEVEL, SEEDS)
 end
 
-function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
+function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
                                  parent_rule, is_create, is_emergency)
   --
   -- Creates rooms using Shape Grammars.
   --
 
-  -- Trying to force liquid-bordered outdoors if parks haven't shown up yet.
+  local grammar = SHAPE_GRAMMAR
 
-  grammar = SHAPE_GRAMMAR
+  -- reset absurdified rules
+  for _,R in pairs(LEVEL.absurd_grammar_rules) do
+    grammar[R.name].use_prob = R.prob
+  end
+  for _,rule in pairs(LEVEL.base_set_rules) do
+    grammar[rule.name].use_prob = rule.prob
+  end
 
   --
 
@@ -1658,7 +1690,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
 
   local function set_liquid(S)
     if not R.dummy_liquid then
-       R.dummy_liquid = AREA_CLASS.new("liquid")
+       R.dummy_liquid = AREA_CLASS.new(LEVEL, "liquid")
        R:add_area(R.dummy_liquid)
     end
 
@@ -1668,7 +1700,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
 
   local function set_cage(S)
     if not R.dummy_cage then
-       R.dummy_cage = AREA_CLASS.new("cage")
+       R.dummy_cage = AREA_CLASS.new(LEVEL, "cage")
        R:add_area(R.dummy_cage)
     end
 
@@ -1678,7 +1710,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
 
   local function set_cage_fancy(S)
     if not R.fancy_cage then
-       R.fancy_cage = AREA_CLASS.new("cage")
+       R.fancy_cage = AREA_CLASS.new(LEVEL, "cage")
        R.fancy_cage.cage_mode = "fancy",
 
        R:add_area(R.fancy_cage)
@@ -1705,7 +1737,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
       if string.match(rule.name, "hallway") then return 0 end
     end
 
-    if not ob_match_level_theme(rule) then return 0 end
+    if not ob_match_level_theme(LEVEL, rule) then return 0 end
     if not ob_match_feature(rule)     then return 0 end
 
     -- aversion check (less chance if used before)
@@ -1907,21 +1939,35 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
   local function transform_symmetry(T)
     if not cur_rule.new_room then return nil end
 
-    local all_symmetries = {}
+    local symmetry_choices = {}
+    local symmetry_table = cur_rule.new_room
+    if type(symmetry_table) ~= "table" then
+      error("Weird symmetry table entry!!!\n" .. table.tostr(cur_rule, 2))
+    end
+    table.name_up(symmetry_table)
 
-    for i = 1,9 do
+    for _,SYM in pairs(symmetry_table) do
+      if string.gmatch(SYM.name, "symmetry") then
+        if SYM.kind and (SYM.kind ~= "rotate" or rand.odds(20)) then
+          table.insert(symmetry_choices, SYM.name)
+        end
+      end
+    end
+
+    --[[for i = 1,9 do
       local name = "symmetry"
       if i > 1 then name = name .. i end
 
       local info = cur_rule.new_room[name]
+
       if info and (info.kind ~= "rotate" or rand.odds(20)) then
         table.insert(all_symmetries, cur_rule.new_room[name])
       end
-    end
+    end]]
 
-    if table.empty(all_symmetries) then return end
+    if table.empty(symmetry_choices) then return end
 
-    local info = rand.pick(all_symmetries)
+    local info = symmetry_table[rand.pick(symmetry_choices)]
 
     local sym = Symmetry_new(info.kind or "mirror")
 
@@ -1970,7 +2016,7 @@ function Grower_grammatical_pass(R, pass, apply_num, stop_prob,
 
     if long > 1 and geom.is_straight(info.dir) and transform_is_flippy(T) then
       local across_dir = transform_dir(T, geom.RIGHT[info.dir])
-      S = S:raw_neighbor(across_dir, long - 1)
+      S = S:raw_neighbor(across_dir, long - 1, SEEDS)
     end
 
     c_out.S = S
@@ -1991,14 +2037,14 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     if not S then return end
 
     for i = 1, conn.long do
-      local N = S:neighbor(conn.dir)
+      local N = S:neighbor(conn.dir, nil, SEEDS)
       assert(N)
 
       S.no_assignment = true
       N.no_assignment = true
 
       if geom.is_straight(conn.dir) then
-        S = S:raw_neighbor(geom.RIGHT[conn.dir])
+        S = S:raw_neighbor(geom.RIGHT[conn.dir], nil, SEEDS)
         assert(S)
       end
     end
@@ -2234,7 +2280,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
 
     -- new rooms must not be placed in boundary spaces
     if (E2.kind == "new_room" or E2.kind == "hallway") and
-       not Seed_inside_sprout_box(S.sx, S.sy)
+       not Seed_inside_sprout_box(LEVEL, S.sx, S.sy)
     then
       return false
     end
@@ -2270,7 +2316,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       if S.area then return false end
       if S.disabled_R == R then return false end
 
-      if not Seed_inside_boundary(S.sx, S.sy) then
+      if not Seed_inside_boundary(LEVEL, S.sx, S.sy) then
         return false
       end
 
@@ -2680,7 +2726,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       end
     end
 
-    local def = Fab_pick(reqs)
+    local def = Fab_pick(LEVEL, reqs)
 
     return def
   end
@@ -2719,7 +2765,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       table.kill_elem(R.all_links, link_chunk)
 
       -- this kills the chunk too
-      link_chunk.area:kill_it("remove_from_room")
+      link_chunk.area:kill_it(LEVEL, "remove_from_room", SEEDS)
       link_chunk = nil
     end
 
@@ -2727,7 +2773,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       local x1,y1, x2,y2 = transform_rect(T, r)
 
       assert(r.kind)
-      local chunk = CHUNK_CLASS.new(r.kind, x1,y1, x2,y2)
+      local chunk = CHUNK_CLASS.new(SEEDS, LEVEL, r.kind, x1,y1, x2,y2)
 
       if r.from_dir then chunk.from_dir = transform_dir(T, r.from_dir) end
       if r.dest_dir then chunk.dest_dir = transform_dir(T, r.dest_dir) end
@@ -2759,7 +2805,7 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
       end
 
       do
-        A = AREA_CLASS.new("chunk")
+        A = AREA_CLASS.new(LEVEL, "chunk")
         R2:add_area(A)
 
         chunk.area = A
@@ -2911,11 +2957,11 @@ stderrf("Link pieces: %s dir:%d <--> %s dir:%d\n",
     elseif cur_rule.new_room then
       local info = cur_rule.new_room
 
-      new_room = Grower_add_room(R, info)
+      new_room = Grower_add_room(LEVEL, R, info)
 
       -- create a preliminary connection (last room to this one).
       -- the seed and direction are determined later.
-      new_conn = Grower_new_prelim_conn(R, new_room, "edge")
+      new_conn = Grower_new_prelim_conn(LEVEL, R, new_room, "edge")
 --stderrf("prelim_conn %s --> %s\n", new_conn.R1.name, new_conn.R2.name)
 
       if not new_room.is_hallway then
@@ -2932,7 +2978,7 @@ stderrf("Link pieces: %s dir:%d <--> %s dir:%d\n",
     if cur_rule.new_area and not new_area then
       local info = cur_rule.new_area
 
-      new_area = AREA_CLASS.new("floor")
+      new_area = AREA_CLASS.new(LEVEL, "floor")
 
       -- max size of new area
       new_area.max_size = rand.pick({ 16, 24, 32 })
@@ -2957,7 +3003,7 @@ stderrf("Link pieces: %s dir:%d <--> %s dir:%d\n",
 
 
   local function post_install(T)
-    Seed_squarify()
+    Seed_squarify(LEVEL, SEEDS)
 
     if cur_rule.teleporter then
       R.need_teleports = R.need_teleports + 1
@@ -3109,7 +3155,7 @@ end
 --stderrf("T2 = \n%s\n", table.tostr(T2))
 
       if what == "TEST" then
-        sym_token = alloc_id("sym_token")
+        sym_token = alloc_id(LEVEL, "sym_token")
       end
 
       -- an exit room should only have a single connection, so
@@ -3141,21 +3187,24 @@ end
   end
 
 
-  local function try_apply_a_rule()
+  local function try_apply_a_rule(LEVEL)
     --
     -- Test all eight possible transforms (four rotations + mirroring)
     -- in all possible locations in the room.  If at least one is
     -- successful, pick it and apply the substitution.
     --
 
-      gui.debugf("  Trying rule '%s'...\n", cur_rule.name)
+    gui.debugf("  Trying rule '" .. cur_rule.name .. "' in ROOM_" .. R.id .. "\n")
 
+    if R.shapes_tried then
+      R.shapes_tried = R.shapes_tried + 1
+    else
+      R.shapes_tried = 1
+    end
+  
     GROWER_DEBUG_INFO[cur_rule.name].trials = GROWER_DEBUG_INFO[cur_rule.name].trials + 1
 
     best = { score=-1, areas={} }
-
-    gui.debugf("CURRENT ROOM: " .. table.tostr(R, 2))
-    gui.debugf("CURRENT RULE: " .. table.tostr(cur_rule))
 
     local T
     local x1, y1, x2, y2
@@ -3190,7 +3239,7 @@ end
       end
     else
       if LEVEL.shape_transform_mode == "random" then
-        rand.shuffle(LEVEL.shape_transform_possiblities)
+        LEVEL.shape_transform_possibilities = rand.shuffle(LEVEL.shape_transform_possiblities)
       end
       for _,transform in pairs(LEVEL.shape_transform_possiblities) do
         T = calc_transform(transform[1], transform[2], transform[3])
@@ -3266,7 +3315,7 @@ end
 
 
   -- MSSP: update smart groupings
-  local function update_shape_groupings(rule)
+  local function update_shape_groupings(rule, LEVEL)
 
 
     local function style_factor(rule)
@@ -3296,7 +3345,7 @@ end
     end
 
 
-    local function calc_prob(rule, x_prob, mode)
+    local function calc_prob_absurdity(rule, x_prob, mode, LEVEL)
       -- MSSP: this is a modification of calc_prob function.
       -- x_prob is used for absurdity and shape groupings,
       -- such that absurdification still runs through all
@@ -3308,7 +3357,6 @@ end
 
       if not ob_match_game(rule)     then return 0 end
       if not ob_match_engine(rule)   then return 0 end
-      if not ob_match_playmode(rule) then return 0 end
 
       if not LEVEL.liquid and rule.styles and
          table.has_elem(rule.styles, "liquids")
@@ -3329,11 +3377,13 @@ end
       prob = prob *  style_factor(rule)
       prob = prob * random_factor(rule)
 
-      if x_prob then
-        if mode == "multiply" or not mode then
-          prob = prob * x_prob
-        elseif mode == "divide" then
-          prob = prob / x_prob
+      if mode ~= "reset" then
+        if x_prob then
+          if mode == "multiply" or not mode then
+            prob = prob * x_prob
+          elseif mode == "divide" then
+            prob = prob / x_prob
+          end
         end
       end
 
@@ -3341,16 +3391,16 @@ end
     end
 
 
-    local function change_group_probs(mode)
+    local function change_group_probs(mode, LEVEL)
       for name,cur_def in pairs(grammar) do
         if rule.group == cur_def.group
         and rule.group_pos ~= "entry" then
           if mode == "highlight" then
-            calc_prob(cur_def, 1000000, "multiply")
+            calc_prob_absurdity(cur_def, 1000000, "multiply", LEVEL)
           elseif mode == "reduce" then
-            calc_prob(cur_def, 1.2, "divide")
+            calc_prob_absurdity(cur_def, 1.2, "divide", LEVEL)
           elseif mode == "reset" then
-            calc_prob(cur_def)
+            calc_prob_absurdity(cur_def, 0, "reset", LEVEL)
           end
         end
       end
@@ -3365,7 +3415,7 @@ end
     -- reset when rooms have changed
     if PARAM.operated_room ~= R.id and PARAM.cur_shape_group then
       PARAM.operated_room = R.id
-      change_group_probs("reset")
+      change_group_probs("reset", LEVEL)
       PARAM.cur_shape_groop = ""
       PARAM.cur_shape_group_apply_count = 0
     end
@@ -3385,7 +3435,7 @@ end
     and rand.odds(50) then
       PARAM.cur_shape_group = rule.group
 
-      change_group_probs("highlight")
+      change_group_probs("highlight", LEVEL)
 
       PARAM.cur_shape_group_apply_count = rand.irange(6,15)
     end
@@ -3397,12 +3447,12 @@ end
       -- decrease probability for rules as each rule in the same
       -- 'smart group' is applied
       if PARAM.cur_shape_group_apply_count > 0 then
-        change_group_probs("reduce")
+        change_group_probs("reduce", LEVEL)
 
       -- reset the probabilities of all rules in the smart group
       -- once the apply count has reached count
       elseif PARAM.cur_shape_group_apply_count <= 0 then
-        change_group_probs("reset")
+        change_group_probs("reset", LEVEL)
 
         PARAM.cur_shape_group = ""
       end
@@ -3444,13 +3494,13 @@ end
         num = rand.irange(num[1], num[2])
       end
 
-      Grower_grammatical_pass(R, aux.pass, num, aux.stop_prob or 0, cur_rule, false, is_emergency)
+      Grower_grammatical_pass(SEEDS, LEVEL, R, aux.pass, num, aux.stop_prob or 0, cur_rule, false, is_emergency)
       ::continue::
     end
   end
 
 
-  local function apply_a_rule()
+  local function apply_a_rule(LEVEL)
     local rule_tab = collect_matching_rules(pass, stop_prob, hit_floor_limit)
 
     --if SHAPE_GRAMMAR ~= SHAPES.OBSIDIAN then
@@ -3461,7 +3511,7 @@ end
 
     local tries = 5 -- Maybe tune this parameter to test build speed? - Dasho
 
-    if tries > table.size(rules) then tries = table.size(rules) end
+    if tries > #rules then tries = #rules end
 
     for x = tries,0,-1 do
       if table.empty(rules) then return end
@@ -3475,7 +3525,38 @@ end
       -- don't try this rule again
       rules[name] = nil
 
-      if try_apply_a_rule() then goto success end
+      if try_apply_a_rule(LEVEL) then goto success end
+
+      -- normalize absurd rule probability for each unsuccesful attempt
+      if grammar[name].is_absurd then
+        grammar[name].use_prob = grammar[name].use_prob / 5
+
+        -- if normalized absurd rules still don't work...
+        if tries%2 == 0 then
+          if rand.odds(50) then
+  
+            -- 50% chance of shuffling transform matrix
+            LEVEL.shape_transform_possibilities = rand.shuffle(LEVEL.shape_transform_possiblities)
+
+            if R.transform_changes then
+              R.transform_changes = R.transform_changes + 1
+            else
+              R.transform_changes = 1
+            end
+          else
+
+            -- 50% chance of boosting probs for base set by a whole lot
+            if R.base_set_increase then
+              R.base_set_increase = R.base_set_increase + 1
+            else
+              R.base_set_increase = 1
+            end
+            for _,rule in pairs(LEVEL.base_set_rules) do
+              grammar[rule.name].use_prob = grammar[rule.name].use_prob * 10
+            end
+          end
+        end
+      end
 
       if x == 0 then return end
     end
@@ -3486,16 +3567,24 @@ end
 
     gui.debugf("APPLIED rule: " .. cur_rule.name .. " in ROOM_" .. R.id.. "\n")
 
+    if pass == "grow" then
+      if R.shapes_applied then
+        R.shapes_applied = R.shapes_applied + 1
+      else
+        R.shapes_applied = 1
+      end
+    end
+    
     -- debug statistics
     GROWER_DEBUG_INFO[cur_rule.name].applied = GROWER_DEBUG_INFO[cur_rule.name].applied + 1
 
     if PARAM["live_minimap"] == "step" then
-      Seed_draw_minimap()
+      Seed_draw_minimap(SEEDS, LEVEL)
     end
 
     update_aversions(cur_rule)
 
-    update_shape_groupings(cur_rule)
+    update_shape_groupings(cur_rule, LEVEL)
 
     -- apply any auxiliary rules
     if cur_rule.auxiliary then
@@ -3538,7 +3627,7 @@ end
     end
 
     -- exit rooms must have only a single entrance
-    if pass == "sprout" and R.is_exit and R:prelim_conn_num() >= 1 then
+    if pass == "sprout" and R.is_exit and R:prelim_conn_num(LEVEL) >= 1 then
       break;
     end
 
@@ -3547,11 +3636,11 @@ end
 
       if pass == "sprout" then
 
-        if R:prelim_conn_num() >= 2 then
+        if R:prelim_conn_num(LEVEL) >= 2 then
           break;
         end
 
-        if R.is_start and R:prelim_conn_num() >= 1 then
+        if R.is_start and R:prelim_conn_num(LEVEL) >= 1 then
           break;
         end
 
@@ -3560,14 +3649,14 @@ end
 
     if LEVEL.has_linear_start then
       if pass == "sprout" then
-        if not R.is_street and R:prelim_conn_num() >= 1 and R.is_start then
+        if not R.is_street and R:prelim_conn_num(LEVEL) >= 1 and R.is_start then
           break;
         end
       end
     end
 
     -- stderrf("LOOP %d\n", loop)
-    apply_a_rule(rule_tab)
+    apply_a_rule(LEVEL)
 
     -- if we surpass the floor limit, remove rules which add new areas
     if pass == "grow" and not hit_floor_limit and R:num_floors() >= R.floor_limit then
@@ -3578,7 +3667,7 @@ end
 
 
 
-function Grower_grammatical_room(R, pass, is_emergency)
+function Grower_grammatical_room(SEEDS, LEVEL, R, pass, is_emergency)
   local apply_num
 
   if pass == "grow" then
@@ -3678,13 +3767,13 @@ function Grower_grammatical_room(R, pass, is_emergency)
     end
   end
 
-  Grower_grammatical_pass(R, pass, apply_num, stop_prob, nil, nil, is_emergency)
+  Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob, nil, nil, is_emergency)
 
 end
 
 
 
-function Grower_clean_up_links(R, do_all)
+function Grower_clean_up_links(SEEDS, LEVEL, R, do_all)
   if not do_all then
     rand.shuffle(R.all_links)
   end
@@ -3693,7 +3782,7 @@ function Grower_clean_up_links(R, do_all)
     local chunk = table.remove(R.all_links, i)
 
     if not chunk.is_dead then
-      chunk.area:kill_it("remove_from_room")
+      chunk.area:kill_it(LEVEL, "remove_from_room", SEEDS)
     end
   end
 
@@ -3713,7 +3802,7 @@ end
 
 
 
-function Grower_prune_hallway(R)
+function Grower_prune_hallway(SEEDS, LEVEL, R)
   --
   -- Prune the dead ends of the grown hallway.
   -- The whole room is killed when there is nowhere left to go.
@@ -3729,7 +3818,7 @@ function Grower_prune_hallway(R)
       end
     end
 
-    piece.area:kill_it("remove_from_room")
+    piece.area:kill_it(LEVEL, "remove_from_room", SEEDS)
   end
 
 
@@ -3788,10 +3877,10 @@ function Grower_prune_hallway(R)
 
   ---| Grower_prune_hallway |---
 
-  Grower_clean_up_links(R, "do_all")
+  Grower_clean_up_links(SEEDS, LEVEL, R, "do_all")
 
-  if R:prelim_conn_num() < 2 then
-    Grower_kill_room(R)
+  if R:prelim_conn_num(LEVEL) < 2 then
+    Grower_kill_room(SEEDS, LEVEL, R)
     return
   end
 
@@ -3800,7 +3889,7 @@ end
 
 
 
-function Grower_grow_room(R)
+function Grower_grow_room(SEEDS, LEVEL, R)
   gui.ticker()
 
   if R.is_street then
@@ -3830,19 +3919,19 @@ function Grower_grow_room(R)
   ---| Grower_grow_room |---
 
 
-  Grower_grammatical_room(R, "grow")
+  Grower_grammatical_room(SEEDS, LEVEL, R, "grow")
 
   -- if room too small, try another grow pass, then kill it
 
   if not R.is_hallway and is_too_small(R) then
-    Grower_grammatical_room(R, "grow")
+    Grower_grammatical_room(SEEDS, LEVEL, R, "grow")
 
     if is_too_small(R) and not LEVEL.is_linear then
       if R.grow_parent and R.grow_parent.is_start 
       and R.small_room then
         return 
       end
-      Grower_kill_room(R)
+      Grower_kill_room(SEEDS, LEVEL, R)
       return
     end
   end
@@ -3850,9 +3939,9 @@ function Grower_grow_room(R)
   -- Linear Mode, kill mirrored sprouts of symmetric rooms
   if LEVEL.is_linear then
     if R.grow_parent then
-      if R.grow_parent:prelim_conn_num() > 2 then
+      if R.grow_parent:prelim_conn_num(LEVEL) > 2 then
         gui.debugf("Linear mode: ROOM_" .. R.id .. " culled.\n")
-        Grower_kill_room(R)
+        Grower_kill_room(SEEDS, LEVEL, R)
         return
       end
     end
@@ -3860,9 +3949,9 @@ function Grower_grow_room(R)
 
   if LEVEL.is_linear or LEVEL.is_procedural_gotcha then
     if R.grow_parent and R.grow_parent.is_start then
-      if R.grow_parent:prelim_conn_num() > 1 then
+      if R.grow_parent:prelim_conn_num(LEVEL) > 1 then
         gui.debugf("Linear mode: ROOM " .. R.id .. " culled.\n")
-        Grower_kill_room(R)
+        Grower_kill_room(SEEDS, LEVEL, R)
       end
     end
   end
@@ -3870,13 +3959,13 @@ function Grower_grow_room(R)
   if LEVEL.has_linear_start and #LEVEL.rooms == 4 then
     for _,R2 in pairs(LEVEL.rooms) do
       if #R2.conns == 1 and R2.grow_parent.is_start then
-        Grower_kill_room(R2)
+        Grower_kill_room(SEEDS, LEVEL, R2)
       end
     end
   end
 
   if PARAM["live_minimap"] == "room" then
-    Seed_draw_minimap()
+    Seed_draw_minimap(SEEDS, LEVEL)
   end
 
   R.is_grown = true
@@ -3884,7 +3973,7 @@ end
 
 
 
-function Grower_sprout_room(R)
+function Grower_sprout_room(SEEDS, LEVEL, R)
   if R.is_dead then return end
 
   if rand.odds(LEVEL.squareishness) and not R.is_cave and not R.is_park
@@ -3892,45 +3981,45 @@ function Grower_sprout_room(R)
 
     -- square_out pass - makes rooms a bit more buff and square
     -- to distort the layout a bit more
-    Grower_grammatical_room(R, "square_out")
+    Grower_grammatical_room(SEEDS, LEVEL, R, "square_out")
     R.is_squarified = true
   end
 
-  Grower_grammatical_room(R, "sprout")
+  Grower_grammatical_room(SEEDS, LEVEL, R, "sprout")
 
   -- if hallway did not sprout, try again
-  if R.is_hallway and R:prelim_conn_num() < 2 then
-    Grower_clean_up_links(R)
-    Grower_grammatical_room(R, "sprout")
+  if R.is_hallway and R:prelim_conn_num(LEVEL) < 2 then
+    Grower_clean_up_links(SEEDS, LEVEL, R)
+    Grower_grammatical_room(SEEDS, LEVEL, R, "sprout")
   end
 
-  if R.is_street and R:prelim_conn_num() < math.clamp(1, int(R.svolume/64), 10) then
-    Grower_grammatical_room(R, "sprout")
+  if R.is_street and R:prelim_conn_num(LEVEL) < math.clamp(1, int(R.svolume/64), 10) then
+    Grower_grammatical_room(SEEDS, LEVEL, R, "sprout")
   end
 
   R.is_sprouted = true
 
   if R.is_hallway then
-    Grower_prune_hallway(R)
+    Grower_prune_hallway(SEEDS, LEVEL, R)
   end
 end
 
 
 
-function Grower_make_street(R)
+function Grower_make_street(R, SEEDS, LEVEL)
   if R.is_streeted then return end
 
   R.areas[1]:calc_volume()
   R.svolume = R.areas[1].svolume
   if R.svolume == 4 then
-    Grower_grammatical_room(R, "streets_entry_4")
+    Grower_grammatical_room(SEEDS, LEVEL, R, "streets_entry_4")
   elseif R.svolume == 6 then
-    Grower_grammatical_room(R, "streets_entry_6")
+    Grower_grammatical_room(SEEDS, LEVEL, R, "streets_entry_6")
   elseif R.svolume == 8 then
-    Grower_grammatical_room(R, "streets_entry_8")
+    Grower_grammatical_room(SEEDS, LEVEL, R, "streets_entry_8")
   end
 
-  Grower_grammatical_room(R, "streets")
+  Grower_grammatical_room(SEEDS, LEVEL, R, "streets")
 
   -- sanity check: failed street rooms shall now become just
   -- regular rooms
@@ -3940,7 +4029,7 @@ function Grower_make_street(R)
     return
   end
 
-  Grower_grammatical_room(R, "street_fixer")
+  Grower_grammatical_room(SEEDS, LEVEL, R, "street_fixer")
 
   for _,A in pairs(R.areas) do
     if not A.is_sidewalk then
@@ -3950,7 +4039,7 @@ function Grower_make_street(R)
 
   R.floor_limit = math.clamp(5,R.areas[1].svolume/16,100)
 
-  Grower_grammatical_room(R, "sidewalk")
+  Grower_grammatical_room(SEEDS, LEVEL, R, "sidewalk")
 
   --[[if not R.is_start then
     Grower_grammatical_room(R, "building_entrance")
@@ -3967,9 +4056,9 @@ end
 
 
 
-function Grower_create_and_grow_room(trunk, mode, info)
+function Grower_create_and_grow_room(SEEDS, LEVEL, trunk, mode, info)
   -- create the ROOM object
-  local R = Grower_add_room(nil, info, trunk)
+  local R = Grower_add_room(LEVEL, nil, info, trunk)
   assert(R)
 
   R.is_root = true
@@ -3982,7 +4071,7 @@ function Grower_create_and_grow_room(trunk, mode, info)
     pass = "exit"
   end
 
-  Grower_grammatical_pass(R, pass, 1, 0, nil, "is_create", nil)
+  Grower_grammatical_pass(SEEDS, LEVEL, R, pass, 1, 0, nil, "is_create", nil)
 
 
   -- if a root failed to establish itself, kill the room
@@ -3993,31 +4082,31 @@ function Grower_create_and_grow_room(trunk, mode, info)
 
     gui.debugf("%s could not establish a root, killing it\n", R.name)
 
-    R:kill_it()
+    R:kill_it(LEVEL)
 
-    Grower_kill_a_trunk(trunk)
+    Grower_kill_a_trunk(LEVEL, trunk)
 
     return R
   end
 
   -- if it's a street, street it
   if R.is_street then
-    Grower_make_street(R)
+    Grower_make_street(R, SEEDS, LEVEL)
   end
 
   -- grow it now
-  Grower_grow_room(R)
-  Grower_sprout_room(R)
+  Grower_grow_room(SEEDS, LEVEL, R)
+  Grower_sprout_room(SEEDS, LEVEL, R)
 
   return R
 end
 
 
 
-function Grower_add_a_trunk()
+function Grower_add_a_trunk(LEVEL)
   local trunk =
   {
-    id = alloc_id("trunk"),
+    id = alloc_id(LEVEL, "trunk"),
     rooms = {},
   }
 
@@ -4034,7 +4123,7 @@ function Grower_add_a_trunk()
 end
 
 
-function Grower_kill_a_trunk(TR)
+function Grower_kill_a_trunk(LEVEL, TR)
   TR.name = "DEAD_" .. TR.name
   TR.is_dead = true
 
@@ -4048,7 +4137,7 @@ end
 
 
 
-function Grower_begin_trunks()
+function Grower_begin_trunks(LEVEL, SEEDS)
   --
   -- Trunks are parts of the map grown separately, and will be
   -- connected via teleporters (only).
@@ -4091,7 +4180,7 @@ function Grower_begin_trunks()
 
   -- create first trunk and the exit room
 
-  local trunk = Grower_add_a_trunk()
+  local trunk = Grower_add_a_trunk(LEVEL)
   local info  = {}
 
   -- TODO : if we have big boss (esp. Mastermind) then
@@ -4100,9 +4189,16 @@ function Grower_begin_trunks()
   info.force_start = true
   info.force_exit  = false
 
-  local R = Grower_create_and_grow_room(trunk, nil, info)
+  local R = Grower_create_and_grow_room(SEEDS, LEVEL, trunk, nil, info)
 
-  assert(not R.is_dead)
+  -- Last ditch to save the level
+  if R.is_dead then
+    LEVEL.max_trunks = 9
+    trunk = Grower_add_a_trunk(LEVEL)
+    R = Grower_create_and_grow_room(SEEDS, LEVEL, trunk, nil, info)
+  end
+
+  assert(not R.is_dead)  
 
   -- ensure the first floor of an exit room is kept usable for bosses
   if R.is_exit then
@@ -4117,9 +4213,9 @@ end
 
 
 
-function Grower_add_teleporter_trunk(parent_R, is_emergency)
+function Grower_add_teleporter_trunk(SEEDS, LEVEL, parent_R, is_emergency)
 
-  local trunk = Grower_add_a_trunk()
+  local trunk = Grower_add_a_trunk(LEVEL)
   local info  = {}
 
 --[[ FIXME
@@ -4131,19 +4227,19 @@ function Grower_add_teleporter_trunk(parent_R, is_emergency)
     info.force_no_street = true
   end
 
-  local R = Grower_create_and_grow_room(trunk, "normal", info)
+  local R = Grower_create_and_grow_room(SEEDS, LEVEL, trunk, "normal", info)
 
   if R.is_dead then
     -- trunk should be dead too
     return
   end
 
-  Grower_new_prelim_conn(parent_R, R, "teleporter")
+  Grower_new_prelim_conn(LEVEL, parent_R, R, "teleporter")
 end
 
 
 
-function Grower_grow_all_rooms()
+function Grower_grow_all_rooms(SEEDS, LEVEL)
 
   local coverage
   local cov_rooms
@@ -4163,7 +4259,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
     for _,R in pairs(LEVEL.rooms) do
       if R.need_teleports > 0 then
         R.need_teleports = R.need_teleports - 1
-        Grower_add_teleporter_trunk(R)
+        Grower_add_teleporter_trunk(SEEDS, LEVEL, R)
         return true
       end
     end
@@ -4183,7 +4279,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
       -- hallways cannot be regrown or resprouted
       if R.is_hallway then goto continue end
 
-      Grower_grammatical_room(R, "sprout", "is_emergency")
+      Grower_grammatical_room(SEEDS, LEVEL, R, "sprout", "is_emergency")
       ::continue::
     end
   end
@@ -4194,19 +4290,19 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
 
     if not R then return true end
 
-    if R:prelim_conn_num() == 0 then
-      Grower_sprout_room(R)
+    if R:prelim_conn_num(LEVEL) == 0 then
+      Grower_sprout_room(SEEDS, LEVEL, R)
 
       for _,PC in pairs(LEVEL.prelim_conns) do
         if PC.R1 == R or PC.R2 == R then
           local other = sel(PC.R1 == R, PC.R2, PC.R1)
 
           if other.is_street then
-            Grower_make_street(R)
+            Grower_make_street(R, SEEDS, LEVEL)
           end
 
-          Grower_grow_room(other)
-          Grower_sprout_room(other)
+          Grower_grow_room(SEEDS, LEVEL, other)
+          Grower_sprout_room(SEEDS, LEVEL, other)
           break;
         end
       end
@@ -4219,7 +4315,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
 
 
   local function handle_next_room()
-    coverage, cov_rooms = Grower_determine_coverage()
+    coverage, cov_rooms = Grower_determine_coverage(SEEDS, LEVEL)
 
     if reached_coverage() then return "reached" end
 
@@ -4231,12 +4327,12 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
 
       -- if it's a street, street it
       if R.is_street then
-        Grower_make_street(R)
+        Grower_make_street(R, SEEDS, LEVEL)
       end
 
       if not R.is_grown then
-        Grower_grow_room(R)
-        Grower_sprout_room(R)
+        Grower_grow_room(SEEDS, LEVEL, R)
+        Grower_sprout_room(SEEDS, LEVEL, R)
         return "ok"
       end
     end
@@ -4252,7 +4348,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
 
     for _,R in pairs(list) do
       if not R.is_grown then
-        Grower_kill_room(R)
+        Grower_kill_room(SEEDS, LEVEL, R)
       end
     end
   end
@@ -4276,7 +4372,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
 
     gui.printf("ROOM_" .. final_R.id .. " in critical condition! " ..
     "GET THE TELEPORNEPHERINE!\n")
-    Grower_add_teleporter_trunk(final_R, true)
+    Grower_add_teleporter_trunk(SEEDS, LEVEL, final_R, true)
   end
 
 
@@ -4289,7 +4385,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
       if R.is_hallway then return end
 
       gui.printf("Oh noes! Attempting emergency sprout in ROOM_" .. R.id .. "!!!\n")
-      Grower_grammatical_room(R, "sprout", "is_emergency")
+      Grower_grammatical_room(SEEDS, LEVEL, R, "sprout", "is_emergency")
     end
 
     if not R.emergency_sprout_attempts then
@@ -4318,10 +4414,13 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
       MAX_RETRIES = MAX_RETRIES - 1
       rand.shuffle(LEVEL.shape_transform_possiblities)
       if MAX_RETRIES == 0 then
-        Seed_draw_minimap()
+        Seed_draw_minimap(SEEDS, LEVEL)
         error("Unable to sprout more rooms.")
       end
     end
+
+    gui.debugf("shape transform matrix: \n" .. 
+      table.tostr(LEVEL.shape_transform_possiblities, 2))
 
     repeat
       kw = handle_next_room()
@@ -4355,7 +4454,7 @@ end
 
 
 
-function Grower_decorate_rooms()
+function Grower_decorate_rooms(SEEDS, LEVEL)
   local room_list = table.copy(LEVEL.rooms)
 
   -- TODO : do buildings before outdoor/cave
@@ -4366,9 +4465,9 @@ function Grower_decorate_rooms()
 
   for _,R in pairs(room_list) do
     if not R.is_hallway and not R.is_street then
-      Grower_grammatical_room(R, "decorate")
+      Grower_grammatical_room(SEEDS, LEVEL, R, "decorate")
       if PARAM["live_minimap"] == "room" then
-        Seed_draw_minimap()
+        Seed_draw_minimap(SEEDS, LEVEL)
       end
     end
   end
@@ -4376,7 +4475,7 @@ end
 
 
 
-function Grower_expand_parks()
+function Grower_expand_parks(SEEDS, LEVEL)
   local room_list = table.copy(LEVEL.rooms)
 
   rand.shuffle(room_list)
@@ -4388,16 +4487,16 @@ function Grower_expand_parks()
         if A.max_size then A.max_size = 999 end
       end
 
-      Grower_grammatical_room(R, "filler")
+      Grower_grammatical_room(SEEDS, LEVEL, R, "filler")
     end
   end
 
   for _,R in pairs(room_list) do
     if R.is_outdoor and not R.is_street then
-      Grower_grammatical_room(R, "smoother")
+      Grower_grammatical_room(SEEDS, LEVEL, R, "smoother")
     end
     if PARAM["live_minimap"] == "room" then
-    Seed_draw_minimap()
+    Seed_draw_minimap(SEEDS, LEVEL)
     end
   end
 
@@ -4437,7 +4536,7 @@ function Grower_flatten_outdoor_fences()
 
   local function set_liquid(R, S)
     if not R.dummy_liquid then
-       R.dummy_liquid = AREA_CLASS.new("liquid")
+       R.dummy_liquid = AREA_CLASS.new(LEVEL, "liquid")
        R:add_area(R.dummy_liquid)
     end
 
@@ -4666,7 +4765,7 @@ end
 
 
 
-function Grower_setup_caves()
+function Grower_setup_caves(LEVEL)
   -- the chance that any ROOT pattern will be a cave
   LEVEL.cave_trunk_prob = style_sel("caves", 0, 10, 35, 90)
 
@@ -4680,7 +4779,7 @@ end
 
 
 
-function Grower_cave_stats()
+function Grower_cave_stats(LEVEL)
   local rooms = 0
 
   -- seed counts
@@ -4711,25 +4810,25 @@ end
 
 
 
-function Grower_create_rooms()
+function Grower_create_rooms(LEVEL, SEEDS)
   -- we don't make real connections until later (Connect_stuff)
   LEVEL.prelim_conns = {}
 
-  Grower_setup_caves()
-  Grower_calc_rule_probs()
+  Grower_setup_caves(LEVEL)
+  Grower_calc_rule_probs(LEVEL)
 
-  Grower_decide_extents()
+  Grower_decide_extents(LEVEL)
 
-  Grower_begin_trunks()
-  Grower_grow_all_rooms()
-  Grower_cave_stats()
+  Grower_begin_trunks(LEVEL, SEEDS)
+  Grower_grow_all_rooms(SEEDS, LEVEL)
+  Grower_cave_stats(LEVEL)
 
-  Grower_decorate_rooms()
-  Grower_expand_parks()
+  Grower_decorate_rooms(SEEDS, LEVEL)
+  Grower_expand_parks(SEEDS, LEVEL)
 
-  Grower_split_liquids()
+  Grower_split_liquids(SEEDS, LEVEL)
 
-  Seed_squarify()
+  Seed_squarify(LEVEL, SEEDS)
 
   -- debugging aid
   if OB_CONFIG.svg or (PARAM.bool_save_svg and PARAM.bool_save_svg == 1) then
@@ -4742,39 +4841,42 @@ function Grower_create_rooms()
 
     gui.printf("\n--==| Shape Rule Statistics |==--\n" ..
     "NAME: APPLY COUNT / TRIAL COUNT : USE PROBABILITY\n")
-    for rule, info in pairs(GROWER_DEBUG_INFO) do
+    for _,rule in pairs(GROWER_DEBUG_INFO) do
 
-      local cur_prob = SHAPE_GRAMMAR[info.name].use_prob
+      local cur_prob = 0
+      if SHAPE_GRAMMAR[rule.name] then 
+        cur_prob = SHAPE_GRAMMAR[rule.name].use_prob
 
-      gui.printf(info.name .. ": ")
-      if info.trials > 0 then
-        gui.printf(info.applied .. " / " .. info.trials)
-        gui.printf(" : " .. cur_prob)
-      elseif info.trials == 0 then
-        gui.printf(cur_prob .. " ***UNUSED***")
+        gui.printf(rule.name .. ": ")
+        if rule.trials > 0 then
+          gui.printf(rule.applied .. " / " .. rule.trials)
+          gui.printf(" : " .. cur_prob)
+        elseif rule.trials == 0 then
+          gui.printf(cur_prob .. " ***UNUSED***")
+        end
+
+        if SHAPE_GRAMMAR[rule.name].is_absurd then
+          gui.printf(" (ABSURD)")
+        end
+
+        if rule.trials > 0 then
+          local perc = math.floor((rule.applied / rule.trials) * 10000) / 100
+          gui.printf(" (" .. perc .. "%% success)")
+        end     
       end
 
-
-      if SHAPE_GRAMMAR[info.name].is_absurd then
-        gui.printf(" (ABSURD)")
-      end
-
-      if info.trials > 0 then
-        local perc = math.floor((info.applied / info.trials) * 10000) / 100
-        gui.printf(" (" .. perc .. "%% success)")
-      end
 
       gui.printf("\n")
     end
   end
 
-  Seed_draw_minimap()
+  Seed_draw_minimap(SEEDS, LEVEL)
 
 -- FIXME : VALIDATION CRUD
-    for sx = 1, SEED_W do
-    for sy = 1, SEED_H do
-      local K = SEEDS[sx][sy].chunk
+    --for sx = 1, SEED_W do
+    --for sy = 1, SEED_H do
+      --local K = SEEDS[sx][sy].chunk
       --if K then assert(K.kind ~= "link") end
-    end
-    end
+    --end
+    --end
 end

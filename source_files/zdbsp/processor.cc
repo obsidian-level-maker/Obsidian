@@ -198,6 +198,9 @@ void FProcessor::LoadVertices() {
         Level.Vertices[i].index =
             0;  // we don't need this value for non-UDMF maps
     }
+    if (verts) {
+        delete[] verts;
+    }
 }
 
 void FProcessor::LoadSides() {
@@ -229,6 +232,9 @@ void FProcessor::LoadSectors() {
 
     for (int i = 0; i < NumSectors; ++i) {
         Level.Sectors[i].data = Sectors[i];
+    }
+    if (Sectors) {
+        delete[] Sectors;
     }
 }
 
@@ -866,6 +872,10 @@ void FProcessor::WriteSectors(FWadWriter &out) {
     }
 
     out.WriteLump("SECTORS", Sectors, Level.NumSectors() * sizeof(*Sectors));
+
+    if (Sectors) {
+        delete[] Sectors;
+    }
 }
 
 void FProcessor::WriteSegs(FWadWriter &out) {
@@ -892,6 +902,10 @@ void FProcessor::WriteSegs(FWadWriter &out) {
         printf(
             "   SEGS is too big for vanilla Doom and some ports. (%d segs)\n",
             Level.NumSegs);
+    }
+
+    if (segdata) {
+        delete[] segdata;
     }
 }
 

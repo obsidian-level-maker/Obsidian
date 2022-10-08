@@ -20,7 +20,7 @@
 ------------------------------------------------------------------------
 
 
-function Layout_compute_dists(R)
+function Layout_compute_dists(R, SEEDS)
   --
   -- Compute various distances in a room:
   --
@@ -88,7 +88,7 @@ function Layout_compute_dists(R)
       if S.sig_dist then goto continue end
 
       for _,dir in pairs(geom.ALL_DIRS) do
-        local N = S:neighbor(dir)
+        local N = S:neighbor(dir, nil, SEEDS)
 
         if N and N.room == R and N.sig_dist and can_traverse(S, N) then
           table.insert(list, S)
@@ -111,7 +111,7 @@ function Layout_compute_dists(R)
 
     for _,S in pairs(list) do
       for _,dir in pairs(geom.ALL_DIRS) do
-        local N = S:neighbor(dir)
+        local N = S:neighbor(dir, nil, SEEDS)
 
         if N and N.room == R and N.sig_dist and can_traverse(S, N) then
           S.sig_dist = math.min(N.sig_dist + 1, S.sig_dist or 999)
@@ -216,7 +216,7 @@ end
 
 
 
-function Layout_spot_for_wotsit(R, kind, required)
+function Layout_spot_for_wotsit(LEVEL, R, kind, required, SEEDS)
   --
   -- Find a free chunk in the room for a certain thing
   -- (like a key, switch, weapon, starting spot, etc....).
@@ -261,7 +261,7 @@ function Layout_spot_for_wotsit(R, kind, required)
     end
 
     -- avoid using chunks right next to a connection or closet entrance
-    if chunk.kind == "floor" and chunk:is_must_walk() then
+    if chunk.kind == "floor" and chunk:is_must_walk(SEEDS) then
       return 1.0 + gui.random()
     end
 
@@ -332,7 +332,7 @@ function Layout_spot_for_wotsit(R, kind, required)
 
   ---| Layout_spot_for_wotsit |---
 
-  Layout_compute_dists(R)
+  Layout_compute_dists(R, SEEDS)
 
   local best
   local best_score = 0
@@ -372,7 +372,7 @@ function Layout_spot_for_wotsit(R, kind, required)
     -- leave room for player to enter a closet
     if best.kind == "closet" then
       for _,E in pairs(best.edges) do
-        Edge_mark_walk(E)
+        Edge_mark_walk(E, SEEDS)
       end
     end
 
@@ -387,7 +387,7 @@ end
 
 
 
-function Layout_place_importants(R, imp_pass)
+function Layout_place_importants(LEVEL, R, imp_pass, SEEDS)
   --
   -- imp_pass is '1' for vital stuff (goals and teleporters)
   -- imp_pass is '2' for less vital stuff (weapons and items)
@@ -407,7 +407,7 @@ function Layout_place_importants(R, imp_pass)
 
 
   local function add_goal(goal)
-    local chunk = Layout_spot_for_wotsit(R, goal.kind, "required")
+    local chunk = Layout_spot_for_wotsit(LEVEL, R, goal.kind, "required", SEEDS)
 
     if not chunk then
       error("No spot in room for " .. goal.kind .. " in "
@@ -449,7 +449,7 @@ function Layout_place_importants(R, imp_pass)
 
 
   local function add_teleporter(conn)
-    local chunk = Layout_spot_for_wotsit(R, "TELEPORTER", "required")
+    local chunk = Layout_spot_for_wotsit(LEVEL, R, "TELEPORTER", "required", SEEDS)
 
     if not chunk then
       gui.printf("Ouch oof owiee b0rkity b0rk:\n")
@@ -474,7 +474,7 @@ function Layout_place_importants(R, imp_pass)
 
 
   local function add_weapon(weapon)
-    local chunk = Layout_spot_for_wotsit(R, "WEAPON")
+    local chunk = Layout_spot_for_wotsit(LEVEL, R, "WEAPON", nil, SEEDS)
 
     if not chunk then
       -- try to place it in a future room
@@ -491,7 +491,7 @@ function Layout_place_importants(R, imp_pass)
 
 
   local function add_item(item)
-    local chunk = Layout_spot_for_wotsit(R, "ITEM")
+    local chunk = Layout_spot_for_wotsit(LEVEL, R, "ITEM", nil, SEEDS)
 
     if not chunk then
       warning("unable to place nice item: %s\n", item)
@@ -559,7 +559,7 @@ end
 
 
 
-function Layout_place_hub_gates()
+function Layout_place_hub_gates(LEVEL, SEEDS)
   -- this also does secret exit closets
 
   local function num_free_chunks(list)
@@ -648,7 +648,7 @@ function Layout_place_hub_gates()
     gui.printf("Secret Exit: %s (in a closet)\n", R.name)
 
     -- should not fail, as our eval function detects free spots
-    local chunk = Layout_spot_for_wotsit(R, "SECRET_EXIT", "required")
+    local chunk = Layout_spot_for_wotsit(LEVEL, R, "SECRET_EXIT", "required", SEEDS)
 
     chunk.content = "SECRET_EXIT"
 
@@ -713,18 +713,18 @@ end
 
 
 
-function Layout_place_all_importants()
+function Layout_place_all_importants(LEVEL, SEEDS)
   -- do hub gates and secret exit closets
   -- [ do this first, since these require closets, whereas normal
   --   starts and exits and goals can be placed without closets ]
-  Layout_place_hub_gates()
+  Layout_place_hub_gates(LEVEL, SEEDS)
 
   for _,R in pairs(LEVEL.rooms) do
-    Layout_place_importants(R, 1)
+    Layout_place_importants(LEVEL, R, 1, SEEDS)
   end
 
   for _,R in pairs(LEVEL.rooms) do
-    Layout_place_importants(R, 2)
+    Layout_place_importants(LEVEL, R, 2, SEEDS)
   end
 
   -- warn about weapons that could not be placed anywhere
@@ -754,7 +754,7 @@ function Layout_choose_face_area(A)
 
     -- ok --
 
-    local junc = Junction_lookup(A, N)
+    local junc = Junction_lookup(LEVEL, A, N)
 
     local score = junc.perimeter + 2.2 * gui.random() ^ 3
 
@@ -770,7 +770,7 @@ end
 
 
 
-function Layout_add_traps()
+function Layout_add_traps(LEVEL)
   --
   -- Add traps to rooms, especially monster closets.
   --
@@ -1034,7 +1034,7 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
   local function make_teleport_trap(chunk, trig)
     chunk.content = "MON_TELEPORT"
     chunk.trigger = trig
-    chunk.out_tag = alloc_id("tag")
+    chunk.out_tag = alloc_id(LEVEL, "tag")
   end
 
 
@@ -1085,7 +1085,7 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
     local R    = info.room
     local locs = info.locs
 
-    local DEPOT = Seed_alloc_depot(R)
+    local DEPOT = Seed_alloc_depot(LEVEL, R)
 
     if not DEPOT then
       gui.debugf("Cannot make teleportation trap: out of depots\n")
@@ -1159,7 +1159,7 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
 
   local function install_a_trap(places, trig)
     trig.action = "W1_OpenDoorFast"
-    trig.tag = alloc_id("tag")
+    trig.tag = alloc_id(LEVEL, "tag")
 
     for _,info in pairs(places) do
       if info.kind == "teleport" then
@@ -1338,7 +1338,7 @@ end
 
 
 
-function Layout_decorate_rooms(pass)
+function Layout_decorate_rooms(LEVEL, pass, SEEDS)
   --
   -- Decorate the rooms with crates, pillars, etc....
   --
@@ -1390,7 +1390,7 @@ function Layout_decorate_rooms(pass)
       end
     end
 
-    local prefab_def = Fab_pick(reqs, "allow_none")
+    local prefab_def = Fab_pick(LEVEL, reqs, "allow_none")
 
     -- nothing matched?
     if not prefab_def then return end
@@ -1490,7 +1490,7 @@ function Layout_decorate_rooms(pass)
 
     if table.empty(conn_list) then return end
 
-    local chunk = Layout_spot_for_wotsit(R, "LOCAL_SWITCH")
+    local chunk = Layout_spot_for_wotsit(LEVEL, R, "LOCAL_SWITCH", nil, SEEDS)
 
     if not chunk then return end
 
@@ -1498,15 +1498,15 @@ function Layout_decorate_rooms(pass)
 
     local C = rand.pick(conn_list)
 
-    local goal = Goal_new("LOCAL_SWITCH")
+    local goal = Goal_new(LEVEL, "LOCAL_SWITCH")
 
     goal.item = "sw_metal"
     goal.room = R
-    goal.tag  = alloc_id("tag")
+    goal.tag  = alloc_id(LEVEL, "tag")
 
     chunk.goal = goal
 
-    local lock = Lock_new("intraroom", C)
+    local lock = Lock_new(LEVEL, "intraroom", C)
 
     lock.conn  = C
     lock.goals = { goal }
@@ -1529,22 +1529,22 @@ function Layout_decorate_rooms(pass)
     if not item then return end
 
     -- see if we can place a switch
-    local chunk = Layout_spot_for_wotsit(R, "LOCAL_SWITCH")
+    local chunk = Layout_spot_for_wotsit(LEVEL, R, "LOCAL_SWITCH", nil, SEEDS)
 
     if not chunk then return end
 
     -- OK --
 
-    local goal = Goal_new("LOCAL_SWITCH")
+    local goal = Goal_new(LEVEL, "LOCAL_SWITCH")
 
     goal.item = "sw_metal"
     goal.room = R
 
-    goal.tag = alloc_id("tag")
+    goal.tag = alloc_id(LEVEL, "tag")
 
     chunk.goal = goal
 
-    local lock = Lock_new("itemlock")
+    local lock = Lock_new(LEVEL, "itemlock")
 
     lock.goals = { goal }
     lock.item  = item
@@ -1584,7 +1584,7 @@ function Layout_decorate_rooms(pass)
 
     for cx = cx1, cx2 do
     for cy = cy1, cy2 do
-      local corner = Corner_lookup(cx, cy)
+      local corner = Corner_lookup(LEVEL, cx, cy)
       assert(corner)
 
       local A = corner[corner_field]
@@ -1628,8 +1628,8 @@ function Layout_decorate_rooms(pass)
     if chunk:is_slave() then return end
 
     -- don't put bloody shit in the player's way
-    if chunk:is_must_walk() then return end
-    if chunk.peer and chunk.peer:is_must_walk() then return end
+    if chunk:is_must_walk(SEEDS) then return end
+    if chunk.peer and chunk.peer:is_must_walk(SEEDS) then return end
 
     local A = chunk.area
 
@@ -1720,12 +1720,12 @@ function Layout_decorate_rooms(pass)
       reqs.group = A.floor_group.wall_group
     end
 
-    local def = Fab_pick(reqs, "none_ok")
+    local def = Fab_pick(LEVEL, reqs, "none_ok")
 
     -- remove group requirement if no fab was found and try again
     if not def then
       reqs.group = nil
-      def = Fab_pick(reqs, "none_ok")
+      def = Fab_pick(LEVEL, reqs, "none_ok")
     end
 
     -- GIVE IT UP, MAN, JUST GIVE THE F UP!
@@ -1867,8 +1867,8 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
       if not chunk.content and not chunk.is_bossy and
          not chunk:is_slave() and
-         not chunk:is_must_walk() and
-         (not chunk.peer or not chunk.peer:is_must_walk()) and
+         not chunk:is_must_walk(SEEDS) and
+         (not chunk.peer or not chunk.peer:is_must_walk(SEEDS)) and
          chunk.sw >= 2 and chunk.sh >= 2 and
          not chunk.content and
          not (A.floor_group and A.floor_group.sink) and
@@ -1958,11 +1958,11 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       end
     end
 
-    chunk.prefab_def = Fab_pick(reqs, "none_ok")
+    chunk.prefab_def = Fab_pick(LEVEL, reqs, "none_ok")
 
     if not chunk.prefab_def then
       reqs.group = nil
-      chunk.prefab_def = Fab_pick(reqs, "none_ok")
+      chunk.prefab_def = Fab_pick(LEVEL, reqs, "none_ok")
     end
 
     if not chunk.prefab_def then
@@ -2047,7 +2047,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
     reqs.group = R.secondary_important.kind
     reqs.shape = "U"
 
-    def = Fab_pick(reqs)
+    def = Fab_pick(LEVEL, reqs)
 
     if def then preferred_chunk.prefab_def = def end
   end
@@ -2250,11 +2250,11 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       reqs.theme_override = R.theme.theme_override
     end
 
-    local def = Fab_pick(reqs, "none_ok")
+    local def = Fab_pick(LEVEL, reqs, "none_ok")
 
     if not def then
       reqs.light_color = nil
-      def = Fab_pick(reqs, "none_ok")
+      def = Fab_pick(LEVEL, reqs, "none_ok")
     end
 
     return def
@@ -2281,14 +2281,14 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
       reqs.theme_override = A.room.theme.theme_override
     end
 
-    local def = Fab_pick(reqs, "none_ok")
+    local def = Fab_pick(LEVEL, reqs, "none_ok")
 
     if not def then
       reqs.light_color = nil
-      def = Fab_pick(reqs, "none_ok")
+      def = Fab_pick(LEVEL, reqs, "none_ok")
     end
 
-    return Fab_pick(reqs, "none_ok")
+    return Fab_pick(LEVEL, reqs, "none_ok")
   end
 
 
@@ -2410,7 +2410,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
     for cx = cx1, cx2 do
     for cy = cy1, cy2 do
-      local corner = Corner_lookup(cx, cy)
+      local corner = Corner_lookup(LEVEL, cx, cy)
       assert(corner)
 
       corner[corner_field] = nil
@@ -2528,27 +2528,27 @@ end
 ------------------------------------------------------------------------
 
 
-function Layout_scenic_vistas()
-  Area_pick_facing_rooms()
+function Layout_scenic_vistas(LEVEL, SEEDS)
+  Area_pick_facing_rooms(LEVEL, SEEDS)
 
   LEVEL.scenic_fabs = {}
 
   for _,A in pairs(LEVEL.areas) do
     if A.mode == "scenic" then
-      Cave_prepare_scenic_vista(A)
+      Cave_prepare_scenic_vista(LEVEL, A)
     end
   end
 
   for _,A in pairs(LEVEL.areas) do
     if A.mode == "scenic" then
-      Cave_build_a_scenic_vista(A)
+      Cave_build_a_scenic_vista(LEVEL, A, SEEDS)
     end
   end
 end
 
 
 
-function Layout_handle_corners()
+function Layout_handle_corners(LEVEL)
 
 
   local function fencepost_base_z(corner)
@@ -2734,7 +2734,7 @@ function Layout_handle_corners()
 
 
   local function check_corner(cx, cy)
-    local corner = Corner_lookup(cx, cy)
+    local corner = Corner_lookup(LEVEL, cx, cy)
 
     check_need_fencepost(corner)
     check_need_pillar(corner)
@@ -2753,7 +2753,7 @@ end
 
 
 
-function Layout_indoor_lighting()
+function Layout_indoor_lighting(LEVEL)
   --
   -- Give each indoor/cave room a lighting keyword:
   --    "bright"   (160 units)
@@ -2894,7 +2894,7 @@ end
 
 
 
-function Layout_outdoor_shadows()
+function Layout_outdoor_shadows(LEVEL, SEEDS)
 
   local function need_shadow(S, dir)
 
@@ -2902,7 +2902,7 @@ function Layout_outdoor_shadows()
 
     if not S.area then return false end
 
-    local N = S:neighbor(dir)
+    local N = S:neighbor(dir, nil, SEEDS)
 
     if not (N and N.area) then return false end
 
@@ -2917,7 +2917,7 @@ function Layout_outdoor_shadows()
     local E1 = S.edge[dir]
     local E2 = N.edge[10 - dir]
 
-    local junc = Junction_lookup(SA, NA)
+    local junc = Junction_lookup(LEVEL, SA, NA)
 
     if not E1 then E1 = junc.E1 end
     if not E2 then E2 = junc.E2 end

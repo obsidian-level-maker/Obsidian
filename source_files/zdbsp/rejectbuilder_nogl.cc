@@ -154,6 +154,15 @@ void FRejectBuilderNoGL::FindBlockChains() {
         chain->Next = BlockChains;
         BlockChains = chain;
     }
+    if (marked) {
+        delete[] marked;
+    }
+    if (nextForVert) {
+        delete[] nextForVert;
+    }
+    if (firstLine) {
+        delete[] firstLine;
+    }
 }
 
 void FRejectBuilderNoGL::HullSides(const BBox &box1, const BBox &box2,
@@ -288,6 +297,9 @@ void FRejectBuilderNoGL::BuildReject() {
             pos = s2 * Level.NumSectors() + s1;
             Reject[pos >> 3] |= 1 << (pos & 7);
         }
+    }
+    if (SectorBounds) {
+        delete[] SectorBounds;
     }
     printf("   Reject: 100%%\n");
 }

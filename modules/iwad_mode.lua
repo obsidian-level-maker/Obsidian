@@ -884,7 +884,7 @@ MAP32 =
 }
 
 -- translate changes to here instead
-function IWAD_MODE.begin_level()
+function IWAD_MODE.begin_level(self, LEVEL)
 
   local nt = assert(namelib.NAMES)
 

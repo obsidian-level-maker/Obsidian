@@ -104,6 +104,8 @@ class UI_Module : public Fl_Group {
 
     UI_RButton *FindButtonOpt(std::string opt);  // const;
 
+    UI_RHeader *FindHeaderOpt(std::string opt);  // const;
+
    protected:
    private:
     void resize(int X, int Y, int W, int H);

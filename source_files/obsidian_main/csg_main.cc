@@ -26,7 +26,9 @@
 #include "csg_local.h"
 #include "csg_quake.h"  // for quake_plane_c
 #include "fmt/core.h"
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
+#endif
 #include "hdr_lua.h"
 #include "headers.h"
 #include "lib_util.h"
@@ -149,9 +151,9 @@ brush_plane_c::brush_plane_c(const brush_plane_c& other) :
 #endif
 
 brush_plane_c::~brush_plane_c() {
-    // free slope ??   (or keep all slopes in big list)
-
-    // free face ??  (or keep all faces in big list)
+    if (slope) {
+        delete slope;
+    }
 
     if (uv_mat) {
         delete uv_mat;
@@ -189,9 +191,19 @@ csg_brush_c::csg_brush_c(const csg_brush_c *other)
 }
 
 csg_brush_c::~csg_brush_c() {
-    // FIXME: free verts
+    for (int i = 0; i < verts.size(); i++) {
+        if (verts[i]) {
+            delete verts[i];
+        }
+    }
 
-    // FIXME: free slopes
+    if (b.slope) {
+        delete b.slope;
+    }
+
+    if (t.slope) {
+        delete t.slope;
+    }
 }
 
 const char *csg_brush_c::Validate() {
@@ -481,6 +493,7 @@ class brush_quad_node_c {
     }
 
     ~brush_quad_node_c() {
+        brushes.clear();
         delete children[0][0];
         delete children[0][1];
         delete children[1][0];
@@ -1345,22 +1358,26 @@ void CSG_LinkBrushToEntity(csg_brush_c *B, std::string link_key) {
 }
 
 void CSG_Main_Free() {
+    CSG_DeleteQuadTree();
+
     unsigned int k;
 
     for (k = 0; k < all_brushes.size(); k++) {
-        delete all_brushes[k];
+        if (all_brushes[k]) {
+            delete all_brushes[k];
+        }
     }
 
     for (k = 0; k < all_entities.size(); k++) {
-        delete all_entities[k];
+        if (all_entities[k]) {
+            delete all_entities[k];
+        }
     }
 
     all_brushes.clear();
     all_entities.clear();
 
     CSG_FreeTexProps();
-
-    CSG_DeleteQuadTree();
 
     dummy_wall_tex.clear();
     dummy_plane_tex.clear();

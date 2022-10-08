@@ -53,7 +53,7 @@ static void Parse_ShortArgs(std::string_view arg) {
         if (argv::short_flags.find(ch) != argv::short_flags.end()) {
             // argument
             argv::list.emplace_back(std::string{"-"} + std::string{&ch, 1});
-            std::string_view argument = arg.substr(i);
+            std::string_view argument = arg.substr(i + 1);
             if (!argument.empty()) {
                 argv::list.emplace_back(argument);
             }

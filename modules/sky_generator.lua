@@ -624,11 +624,11 @@ function SKY_GEN.generate_skies()
     if EPI.sky_patch2 then gui.fsky_write(EPI.sky_patch2) end
     if EPI.sky_patch3 then gui.fsky_write(EPI.sky_patch3) end
     if EPI.sky_patch4 then gui.fsky_write(EPI.sky_patch4) end
+
   end
 
   gui.printf("\n")
 end
-
 
 ----------------------------------------------------------------
 
@@ -645,7 +645,7 @@ OB_MODULES["sky_generator"] =
   hooks =
   {
     setup = SKY_GEN.setup,
-    get_levels_after_themes = SKY_GEN.generate_skies
+    get_levels_after_themes = SKY_GEN.generate_skies,
   },
 
   options =

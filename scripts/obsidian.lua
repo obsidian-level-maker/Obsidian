@@ -256,14 +256,7 @@ function ob_match_engine2(T)
 end
 
 
-function ob_match_playmode(T)
-  -- TODO : remove this function
-
-  return true
-end
-
-
-function ob_match_level_theme(T, override)
+function ob_match_level_theme(LEVEL, T, override)
   if not T.theme then return true end
   if T.theme == "any" then return true end
 
@@ -932,7 +925,6 @@ end
 
 
 function ob_load_all_games()
-  gui.printf("Loading all games...\n")
 
   local list = gui.scan_directory("games", "DIRS")
 
@@ -956,7 +948,6 @@ end
 
 
 function ob_load_all_engines()
-  gui.printf("Loading all engines...\n")
 
   local list = gui.scan_directory("engines", "*.lua")
 
@@ -977,7 +968,6 @@ end
 
 
 function ob_load_all_modules()
-  gui.printf("Loading all modules...\n")
 
   local list = gui.scan_directory("modules", "*.lua")
   local subdirs = gui.scan_directory("modules", "DIRS")
@@ -1012,7 +1002,228 @@ function ob_load_all_modules()
   gui.set_import_dir("")
 end
 
+function ob_restart()
 
+  -- the missing print functions
+  gui.printf = function (fmt, ...)
+    if fmt then gui.raw_log_print(string.format(fmt, ...)) end
+  end
+
+  gui.debugf = function (fmt, ...)
+    if fmt then gui.raw_debug_print(string.format(fmt, ...)) end
+  end
+
+  -- load definitions for all games
+
+  ob_load_all_games()
+  ob_load_all_engines()
+  ob_load_all_modules()
+
+  table.name_up(OB_GAMES)
+  table.name_up(OB_THEMES)
+  table.name_up(OB_ENGINES)
+  table.name_up(OB_MODULES)
+
+
+  local function preinit_all(DEFS)
+    local removed = {}
+
+    for name,def in pairs(DEFS) do
+      if def.preinit_func then
+        if def.preinit_func(def) == REMOVE_ME then
+          table.insert(removed, name)
+        end
+      end
+    end
+
+    for _,name in pairs(removed) do
+      DEFS[name] = nil
+    end
+  end
+
+  preinit_all(OB_GAMES)
+  preinit_all(OB_THEMES)
+  preinit_all(OB_ENGINES)
+  preinit_all(OB_MODULES)
+
+
+  local function button_sorter(A, B)
+    if A.priority or B.priority then
+      return (A.priority or 50) > (B.priority or 50)
+    end
+
+    return A.label < B.label
+  end
+
+
+  local function create_buttons(what, DEFS)
+    assert(DEFS)
+
+    local list = {}
+
+    local min_priority = 999
+
+    for name,def in pairs(DEFS) do
+      assert(def.name and def.label)
+      table.insert(list, def)
+      min_priority = math.min(min_priority, def.priority or 50)
+    end
+
+    -- add separators for the Game, Engine and Theme menus
+    if what == "game" and min_priority < 49 then
+      table.insert(list, { priority=49, name="_", label="_" })
+    end
+
+    if what == "engine" and min_priority < 92 then
+      table.insert(list, { priority=92, name="_", label="_" })
+    end
+
+    if what == "theme" and min_priority < 79 then
+      table.insert(list, { priority=79, name="_", label="_" })
+    end
+
+    table.sort(list, button_sorter)
+
+    for _,def in pairs(list) do
+      if what == "module" then
+        local where = def.side or "right"
+        local suboptions
+        if def.options then
+          suboptions = 0
+        else
+          suboptions = 1
+        end
+        if def.color then
+          gui.add_module(where, def.name, def.label, def.tooltip, def.color["red"], def.color["green"], def.color["blue"], suboptions)
+        else
+          gui.add_module(where, def.name, def.label, def.tooltip, nil, nil, nil, suboptions)
+        end
+      else
+        gui.add_choice(what, def.name, def.label)
+      end
+
+      -- TODO : review this, does it belong HERE ?
+      if what == "game" then
+        gui.enable_choice("game", def.name, true)
+      end
+    end
+
+    -- set the current value
+    if what ~= "module" then
+      local default = list[1] and list[1].name
+
+      OB_CONFIG[what] = default
+    end
+  end
+
+
+  local function simple_buttons(what, choices, default)
+    for i = 1,#choices,2 do
+      local id    = choices[i]
+      local label = choices[i+1]
+
+      gui.   add_choice(what, id, label)
+      gui.enable_choice(what, id, true)
+    end
+
+    OB_CONFIG[what] = default
+  end
+
+
+  local function create_mod_options()
+
+    for _,mod in pairs(OB_MODULES) do
+      if not mod.options then
+        mod.options = {}
+      else
+        local list = mod.options
+
+        -- handle lists (for UI modules) different from key/value tables
+        if list[1] == nil then
+          list = {}
+
+          for name,opt in pairs(mod.options) do
+            opt.name = name
+            table.insert(list, opt)
+          end
+
+          table.sort(list, button_sorter)
+        end
+
+        for _,opt in pairs(list) do
+          assert(opt.label)
+          if string.match(opt.name, "header_") then
+            gui.add_module_header(mod.name, opt.name, opt.label, opt.gap)
+            goto justaheader
+          end
+          if not opt.valuator then
+            assert(opt.choices)
+          end
+                  
+          if opt.valuator then
+            if opt.valuator == "slider" then
+              if not opt.default then
+                opt.default = (opt.min + opt.max) / 2
+              end
+              gui.add_module_slider_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.min, opt.max, opt.increment, opt.units or "", opt.presets or "", opt.nan or "", opt.randomize_group or "", tostring(opt.default))
+              opt.value = opt.default
+              gui.set_module_slider_option(mod.name, opt.name, opt.value)
+            elseif opt.valuator == "button" then
+              if not opt.default then
+                opt.default = 0
+              end
+              gui.add_module_button_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.randomize_group or "", tostring(opt.default))
+              opt.value = opt.default
+              gui.set_module_button_option(mod.name, opt.name, opt.value)
+            end
+          else
+            -- select a default value
+            if not opt.default then
+              if table.has_elem(opt.choices, "default") then opt.default = "default"
+              elseif table.has_elem(opt.choices, "normal")  then opt.default = "normal"
+              elseif table.has_elem(opt.choices, "medium")  then opt.default = "medium"
+              elseif table.has_elem(opt.choices, "mixed")   then opt.default = "mixed"
+              else   opt.default = opt.choices[1]
+              end
+            end
+            gui.add_module_option(mod.name, opt.name, opt.label, opt.tooltip, opt.longtip, opt.gap, opt.randomize_group or "", opt.default)
+            opt.avail_choices = {}
+
+            for i = 1,#opt.choices,2 do
+              local id    = opt.choices[i]
+              local label = opt.choices[i+1]
+
+              gui.add_option_choice(mod.name, opt.name, id, label)
+              opt.avail_choices[id] = 1
+            end
+            opt.value = opt.default
+            gui.set_module_option(mod.name, opt.name, opt.value)
+          end
+          ::justaheader::
+        end -- for opt
+      end
+    end -- for mod
+  end
+
+
+  OB_CONFIG.seed = 0,
+
+  create_buttons("game",   OB_GAMES)
+  create_buttons("engine", OB_ENGINES)
+  create_buttons("theme",  OB_THEMES)
+
+  simple_buttons("length",   LENGTH_CHOICES,   "game")
+
+  create_buttons("module", OB_MODULES)
+  create_mod_options()
+
+  ob_update_all()
+
+  gui.set_button("game",     OB_CONFIG.game)
+  gui.set_button("engine",   OB_CONFIG.engine)
+  gui.set_button("length",   OB_CONFIG.length)
+  gui.set_button("theme",    OB_CONFIG.theme)
+end
 
 function ob_init()
 
@@ -1058,8 +1269,11 @@ function ob_init()
 
   -- load definitions for all games
 
+  gui.printf("Loading all games...\n")
   ob_load_all_games()
+  gui.printf("Loading all engines...\n")
   ob_load_all_engines()
+  gui.printf("Loading all modules...\n")
   ob_load_all_modules()
 
 
@@ -1638,12 +1852,11 @@ function ob_invoke_hook(name, ...)
   end
 end
 
---[[function ob_invoke_hook_with_table(name, local_table, qualifier)
-  -- experiment - Dasho
+function ob_invoke_hook_with_table(name, local_table)
   for _,mod in pairs(GAME.modules) do
     local func = mod.hooks and mod.hooks[name]
     if func then
-      func(mod, local_table, qualifier)
+      func(mod, local_table)
     end
   end
   
@@ -1651,11 +1864,11 @@ end
     if ob_check_ui_module(mod) then
       local func = mod.hooks and mod.hooks[name]
       if func then
-        func(mod, local_table, qualifier)
+        func(mod, local_table)
       end
     end
   end
-end]]
+end
 
 
 function ob_transfer_ui_options()
@@ -1737,22 +1950,43 @@ end
 
 
 function ob_clean_up()
-  GAME   = {}
-  THEME  = {}
-  PARAM  = {}
-  STYLE  = {}
-  SCRIPTS = {}
-
-  LEVEL   = nil
+  for _,k in pairs (GAME) do
+    GAME[k] = nil
+  end
+  for _,k in pairs (THEME) do
+    THEME[k] = nil
+  end
+  for _,k in pairs (PARAM) do
+    PARAM[k] = nil
+  end
+  for _,k in pairs (STYLE) do
+    STYLE[k] = nil
+  end
+  for _,k in pairs (SCRIPTS) do
+    SCRIPTS[k] = nil
+  end
+  GAME   = nil
+  THEME  = nil
+  PARAM  = nil
+  STYLE  = nil
+  SCRIPTS = nil
   EPISODE = nil
   PREFABS = nil
-  SEEDS   = nil
 
   if OB_CONFIG.string_seed then
     table.remove(OB_CONFIG, string_seed)
   end
 
   collectgarbage("collect")
+  collectgarbage("collect")
+  GAME   = {}
+  THEME  = {}
+  PARAM  = {}
+  STYLE  = {}
+  SCRIPTS = {}
+  if OB_MODULES["sky_generator"].enabled and OB_MODULES["sky_generator"].visible then
+    gui.fsky_free()
+  end
 end
 
 local function ob_get_module_refs()

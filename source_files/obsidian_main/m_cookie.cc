@@ -25,9 +25,11 @@
 #include <iostream>
 
 #include "fmt/core.h"
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
-#include "hdr_lua.h"
 #include "hdr_ui.h"
+#endif
+#include "hdr_lua.h"
 #include "headers.h"
 #include "lib_argv.h"
 #include "lib_util.h"
@@ -176,7 +178,9 @@ bool Cookie_Load(std::filesystem::path filename) {
         return false;
     }
 
-    LogPrintf("Loading config file: {}\n", filename.string());
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("Loading config file: {}\n", filename.string());
+    }
 
     int error_count = 0;
 
@@ -186,10 +190,12 @@ bool Cookie_Load(std::filesystem::path filename) {
         }
     }
 
-    if (error_count > 0) {
-        LogPrintf("DONE (found {} parse errors)\n\n", error_count);
-    } else {
-        LogPrintf("DONE.\n\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        if (error_count > 0) {
+            LogPrintf("DONE (found {} parse errors)\n\n", error_count);
+        } else {
+            LogPrintf("DONE.\n\n");
+        }
     }
 #ifdef __unix__
 #ifndef __linux__
@@ -244,7 +250,9 @@ bool Cookie_Save(std::filesystem::path filename) {
         return false;
     }
 
-    LogPrintf("Saving config file...\n");
+    if (main_action == MAIN_HARD_RESTART || main_action == MAIN_QUIT) {
+        LogPrintf("Saving config file...\n");
+    }
 
     // header...
     cookie_fp << "-- CONFIG FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION << " \""
@@ -262,7 +270,9 @@ bool Cookie_Save(std::filesystem::path filename) {
         cookie_fp << lines[i] << "\n";
     }
 
-    LogPrintf("DONE.\n\n");
+    if (main_action == MAIN_HARD_RESTART || main_action == MAIN_QUIT) {
+        LogPrintf("DONE.\n\n");
+    }
 
     cookie_fp.close();
 #ifdef __unix__

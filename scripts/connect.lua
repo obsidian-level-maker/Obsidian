@@ -81,11 +81,11 @@
 CONN_CLASS = {}
 
 
-function CONN_CLASS.new(kind, R1, R2)
+function CONN_CLASS.new(LEVEL, kind, R1, R2)
   local C =
   {
     kind = kind,
-    id   = alloc_id("conn"),
+    id   = alloc_id(LEVEL, "conn"),
     R1   = R1,
     R2   = R2,
   }
@@ -100,7 +100,7 @@ function CONN_CLASS.new(kind, R1, R2)
 end
 
 
-function CONN_CLASS.kill_it(C)
+function CONN_CLASS.kill_it(LEVEL, C)
   table.remove(LEVEL.conns, C)
 
   C.name = "DEAD_" .. C.name
@@ -185,10 +185,10 @@ end
 ------------------------------------------------------------------------
 
 
-function Lock_new(kind, conn)
+function Lock_new(LEVEL, kind, conn)
   local LOCK =
   {
-    id   = alloc_id("lock"),
+    id   = alloc_id(LEVEL, "lock"),
     kind = kind,
     conn = conn
   }
@@ -206,12 +206,12 @@ end
 ------------------------------------------------------------------------
 
 
-function Connect_directly(P)
+function Connect_directly(P, LEVEL, SEEDS)
   local kind = P.kind
 
   gui.debugf("Connection: %s --> %s (via %s)\n", P.R1.name, P.R2.name, kind)
 
-  local C = CONN_CLASS.new(kind, P.R1, P.R2)
+  local C = CONN_CLASS.new(LEVEL, kind, P.R1, P.R2)
 
   table.insert(C.R1.conns, C)
   table.insert(C.R2.conns, C)
@@ -224,7 +224,7 @@ function Connect_directly(P)
 
   if kind == "edge" then
 
-    E1, E2 = Edge_new_pair("doorway", "nothing",  P.S, P.dir, long)
+    E1, E2 = Edge_new_pair("doorway", "nothing",  P.S, P.dir, long, LEVEL, SEEDS)
 
   elseif kind == "joiner" then
 
@@ -234,8 +234,8 @@ function Connect_directly(P)
     local dir1 = assert(P.chunk.from_dir)
     local dir2 = assert(P.chunk.dest_dir)
 
-    E1 = P.chunk:create_edge("nothing", dir1)
-    E2 = P.chunk:create_edge("nothing", dir2)
+    E1 = P.chunk:create_edge(LEVEL, "nothing", dir1, SEEDS)
+    E2 = P.chunk:create_edge(LEVEL, "nothing", dir2, SEEDS)
 
     -- TODO : this shape check is hacky, REVIEW THIS
     if P.chunk.shape == "I" then
@@ -256,7 +256,7 @@ function Connect_directly(P)
     local dir1 = assert(P.chunk.from_dir)
     local dir2 = 10 - dir1  -- terminators are always "I" shape
 
-    E1, E2 = P.chunk:create_edge_pair("nothing", dir1)
+    E1, E2 = P.chunk:create_edge_pair(LEVEL, "nothing", dir1, SEEDS)
 
     if C.R1.is_hallway then
       E1, E2 = E2, E1
@@ -285,8 +285,8 @@ function Connect_directly(P)
   assert(C.A1.room == C.R1)
   assert(C.A2.room == C.R2)
 
-  Edge_mark_walk(E1)
-  Edge_mark_walk(E2)
+  Edge_mark_walk(E1, SEEDS)
+  Edge_mark_walk(E2, SEEDS)
 
 --[[
 gui.debugf("E1.S = %s  dir = %d  area = %s\n", E1.S.name, E1.dir, E1.S.area.name)
@@ -304,13 +304,13 @@ end
 
 
 
-function Connect_teleporter_rooms(P)
+function Connect_teleporter_rooms(P, LEVEL, SEEDS)
   local R1 = P.R1
   local R2 = P.R2
 
   gui.printf("Teleporter connection: %s --> %s\n", R1.name, R2.name)
 
-  local C = CONN_CLASS.new("teleporter", R1, R2)
+  local C = CONN_CLASS.new(LEVEL, "teleporter", R1, R2)
 
   table.insert(C.R1.conns, C)
   table.insert(C.R2.conns, C)
@@ -319,8 +319,8 @@ function Connect_teleporter_rooms(P)
   table.insert(C.R2.teleporters, C)
 
   -- setup tag information
-  C.tele_tag1 = alloc_id("tag")
-  C.tele_tag2 = alloc_id("tag")
+  C.tele_tag1 = alloc_id(LEVEL, "tag")
+  C.tele_tag2 = alloc_id(LEVEL, "tag")
 
   R1.used_chunks = R1.used_chunks + 1
   R2.used_chunks = R2.used_chunks + 1
@@ -328,14 +328,14 @@ end
 
 
 
-function Connect_finalize()
+function Connect_finalize(LEVEL, SEEDS)
   for _,P in pairs(LEVEL.prelim_conns) do
     assert(P.kind)
 
     if P.kind == "teleporter" then
-      Connect_teleporter_rooms(P)
+      Connect_teleporter_rooms(P, LEVEL, SEEDS)
     else
-      Connect_directly(P)
+      Connect_directly(P, LEVEL, SEEDS)
     end
   end
 end

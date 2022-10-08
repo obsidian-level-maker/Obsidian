@@ -232,7 +232,11 @@ UI_RChoice::UI_RChoice(int x, int y, int w, int h) : Fl_Group(x, y, w, h) {
     labelfont(font_style);
 }
 
-UI_RChoice::~UI_RChoice() {}
+UI_RChoice::~UI_RChoice() {
+    if (cb_data) {
+        delete cb_data;
+    }
+}
 
 //----------------------------------------------------------------
 
@@ -241,7 +245,11 @@ UI_RSlide::UI_RSlide(int x, int y, int w, int h) : Fl_Group(x, y, w, h) {
     labelfont(font_style);
 }
 
-UI_RSlide::~UI_RSlide() {}
+UI_RSlide::~UI_RSlide() {
+    if (cb_data) {
+        delete cb_data;
+    }
+}
 
 //----------------------------------------------------------------
 
@@ -250,7 +258,11 @@ UI_RButton::UI_RButton(int x, int y, int w, int h) : Fl_Group(x, y, w, h) {
     box(FL_NO_BOX);
 }
 
-UI_RButton::~UI_RButton() {}
+UI_RButton::~UI_RButton() {
+    if (cb_data) {
+        delete cb_data;
+    }
+}
 
 //----------------------------------------------------------------
 

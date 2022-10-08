@@ -1585,7 +1585,7 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.check_monsters_enabled()
   end
 end
 
-function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.end_lvl()
+function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.end_lvl(self, LEVEL)
 
   if PARAM.bool_boss_gen == 1 then
 

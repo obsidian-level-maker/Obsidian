@@ -33,8 +33,10 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #else
+#ifndef CONSOLE_ONLY
 #include <fontconfig/fontconfig.h>
 #define USE_XFT 1
+#endif
 #endif
 
 /* C library */

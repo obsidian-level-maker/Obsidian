@@ -562,7 +562,7 @@ SPROUT_DIRECT_1_SYMM =
 {
   prob = 3,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -614,7 +614,7 @@ SPROUT_DIRECT_2_SYMM =
 {
   prob = 100,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -800,7 +800,7 @@ SPROUT_DIRECT_3_SYMM =
 {
   prob = 400,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -853,7 +853,7 @@ SPROUT_DIRECT_4_SYMM =
 {
   prob = 4000,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -987,7 +987,7 @@ SPROUT_JOINER_2x1_SYMM =
 {
   prob = 350,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -1044,7 +1044,7 @@ SPROUT_JOINER_3x1_SYMM =
 {
   prob = 1500,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -1103,7 +1103,7 @@ SPROUT_JOINER_4x1_SYMM =
 {
   prob = 3000,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -1165,7 +1165,7 @@ SPROUT_JOINER_2x2_SYMM =
 {
   prob = 2000,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -1226,7 +1226,7 @@ SPROUT_JOINER_3x2_SYMM =
 {
   prob = 3000,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -1289,7 +1289,7 @@ SPROUT_JOINER_4x2_SYMM =
 {
   prob = 2500,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -1353,7 +1353,7 @@ SPROUT_JOINER_2x3_SYMM =
 {
   prob = 200,
 
-  style = "symmetry",
+  styles = {"symmetry"},
 
   structure =
   {
@@ -2265,8 +2265,10 @@ HALL_2_SPROUT_B =
 
 GROW_2 =
 {
-  prob = 400, --Non-MSSP default: 100,
+  prob = 100, --Non-MSSP default: 100, Obsidian default: 400
   prob_skew = 2,
+
+  base_set = true,
 
   structure =
   {
@@ -2278,8 +2280,10 @@ GROW_2 =
 
 GROW_3 =
 {
-  prob = 250, --Non-MSSP default: 50,
+  prob = 50, --Non-MSSP default: 50, Obsidian default: 250
   prob_skew = 2,
+
+  base_set = true,
 
   structure =
   {
@@ -2291,9 +2295,11 @@ GROW_3 =
 
 GROW_4 =
 {
-  prob = 250, --Non-MSSP default: 50,
+  prob = 50, --Non-MSSP default: 50, Obsidian default: 250
   prob_skew = 2,
   skip_prob = 25, --50,
+
+  base_set = true,
 
   structure =
   {
@@ -2305,7 +2311,9 @@ GROW_4 =
 
 GROW_BLOB_1 =
 {
-  prob = 200, --Non-MSSP default: 25,
+  prob = 25, --Non-MSSP default: 25, Obsidian default: 200
+
+  base_set = true,
 
   structure =
   {
@@ -2320,6 +2328,8 @@ GROW_BLOB_1 =
 GROW_DIAG_BLOB1 =
 {
   prob = 45,
+
+  base_set = true,
 
   structure =
   {
@@ -2341,6 +2351,8 @@ GROW_DIAG_BLOB1 =
 GROW_DIAG_BLOB2 =
 {
   prob = 65, --45,
+
+  base_set = true,
 
   structure =
   {
@@ -2371,6 +2383,8 @@ GROW_FUNNEL_2 =
   prob = 25, --5,
   skip_prob = 15, --50,
 
+  base_set = true,
+
   structure =
   {
     "....", "#11#",
@@ -2388,6 +2402,8 @@ GROW_CURVE_1 =
   prob_skew = 3,
   skip_prob = 5, --25,
 
+  base_set = true,
+
   structure =
   {
     "1.", "1%",
@@ -2404,6 +2420,8 @@ GROW_AREA_1 =
 {
   prob = 200, --40,
 
+  base_set = true,
+
   structure =
   {
     "....", ".AA.",
@@ -2416,6 +2434,8 @@ GROW_AREA_2 =
 {
   prob = 50, --6,
   skip_prob = 30, --50,
+
+  base_set = true,
 
   structure =
   {
@@ -2431,6 +2451,8 @@ GROW_DIAG_WING =
   prob = 70, --40,
   prob_skew = 2,
   skip_prob = 5, --35,
+
+  base_set = true,
 
   structure =
   {
@@ -2454,6 +2476,8 @@ GROW_BIG_CAGE =
   skip_prob = 30,
   aversion = 10,
 
+  base_set = true,
+
   structure =
   {
     "....", "1111",
@@ -2472,6 +2496,8 @@ GROW_CAGEPAIR_1 =
   prob = 8,
   skip_prob = 30,
 
+  base_set = true,
+
   structure =
   {
     "....", "AAAA",
@@ -2489,6 +2515,8 @@ GROW_CAGEPAIR_2 =
   prob = 8,
   skip_prob = 75, --30,
   aversion = 5,
+
+  base_set = true,
 
   structure =
   {
@@ -2535,6 +2563,8 @@ GROW_STAIR_2 =
   prob_skew = 3,
   skip_prob = 45, --35,
 
+  base_set = true,
+
   structure =
   {
     "..", "AA",
@@ -2550,6 +2580,8 @@ GROW_STAIR_3 =
   prob_skew = 3,
   skip_prob = 45, --35,
 
+  base_set = true,
+
   structure =
   {
     "...", "AAA",
@@ -2564,6 +2596,8 @@ GROW_NARROWSTAIR_1 =
   prob = 25, --10,
   prob_skew = 3,
   skip_prob = 7, --25,
+
+  base_set = true,
 
   structure =
   {
@@ -2582,6 +2616,8 @@ GROW_NARROWSTAIR_2 =
 
   z_dir = "up",
 
+  base_set = true,
+
   structure =
   {
     "...", "AAA",
@@ -2597,6 +2633,8 @@ GROW_CAGESTAIR_1 =
   prob = 8,
   skip_prob = 50,
   aversion = 5,
+
+  base_set = true,
 
   structure =
   {
@@ -2615,6 +2653,8 @@ GROW_CAGESTAIR_2 =
   skip_prob = 70,
   aversion = 5,
 
+  base_set = true,
+
   structure =
   {
     "....", "AAAA",
@@ -2631,6 +2671,8 @@ GROW_CAGESTAIR_3 =
   prob = 8,
   skip_prob = 70,
   aversion = 5,
+
+  base_set = true,
 
   structure =
   {
@@ -2650,6 +2692,8 @@ GROW_STAIRPAIR_4 =
   skip_prob = 40, --60,
   aversion = 3,
 
+  base_set = true,
+
   structure =
   {
     ".......", "AAAAAAA",
@@ -2665,6 +2709,8 @@ GROW_STAIRPAIR_4B =
   skip_prob = 40, --60,
   aversion = 3,
 
+  base_set = true,
+
   structure =
   {
     ".......", "AAAAAAA",
@@ -2679,6 +2725,8 @@ GROW_STAIRPAIR_4C =
 {
   prob = 40, --50,
   skip_prob = 40, --60,
+
+  base_set = true,
 
   structure =
   {
@@ -2698,6 +2746,8 @@ GROW_STAIRPAIR_5 =
 
   z_dir = "up",
 
+  base_set = true,
+
   structure =
   {
     ".....", "AAAAA",
@@ -2716,7 +2766,9 @@ GROW_STAIRPAIR_5E =
   skip_prob = 33,
   aversion = 4,
 
-  z_dir = "up",
+  base_set = true,
+
+  --z_dir = "up",
 
   structure =
   {
@@ -2735,7 +2787,9 @@ GROW_STAIRPAIR_5F =
   skip_prob = 50,
   aversion = 4,
 
-  z_dir = "up",
+  base_set = true,
+
+  --z_dir = "up",
 
   structure =
   {
@@ -2754,7 +2808,9 @@ GROW_STAIRPAIR_5G =
   skip_prob = 50,
   aversion = 4,
 
-  z_dir = "up",
+  base_set = true,
+
+  --z_dir = "up",
 
   structure =
   {
@@ -2773,7 +2829,9 @@ GROW_STAIRPAIR_5D =
   skip_prob = 50,
   aversion = 4,
 
-  z_dir = "down",
+  base_set = true,
+
+  --z_dir = "down",
 
   structure =
   {
@@ -2793,6 +2851,8 @@ GROW_STAIR_POOL2 =
   prob = 5, --7,
   skip_prob = 85, --75,
   aversion = 15,
+
+  base_set = true,
 
   structure =
   {
@@ -2819,7 +2879,9 @@ GROW_STAIR_SIDE2 =
   prob_skew = 3,
   skip_prob = 30, --30,
 
-  z_dir = "up",
+  base_set = true,
+
+  --z_dir = "up",
 
   structure =
   {
@@ -2839,6 +2901,8 @@ GROW_STAIR_SIDE3 =
   skip_prob = 70, --50,
   aversion  = 7,
 
+  base_set = true,
+
   structure =
   {
     "..","AA",
@@ -2856,6 +2920,8 @@ GROW_STAIR_HUGE =
   prob = 8, --8,
   skip_prob = 65, --80,
   aversion  = 15, --20,
+
+  base_set = true,
 
   structure =
   {
@@ -4155,13 +4221,13 @@ GROW_357_ROUND_ARCH_ALT =
 
   structure =
   { 
-    "11xxxxx","11xxxxx",
-    ".......","1111111",
-    ".......","1/AAA%1",
-    ".......","AA#A#AA",
-    ".......","1%AAA/1",
-    ".......","1111111",
-    ".......","1111111",
+    "11xxxxxxx","11xxxxxxx",
+    ".........","111111111",
+    ".........","1/AAAAA%1",
+    ".........","AA#AAA#AA",
+    ".........","1%AAAAA/1",
+    ".........","111111111",
+    ".........","111111111",
   },
 
   diagonals =
@@ -4201,13 +4267,13 @@ GROW_357_ROUND_ARCH_ALT_STAIRS =
 
   structure =
   { 
-    "11xxxxx","11xxxxx",
-    ".......","1111111",
-    ".......","v/AAA%v",
-    ".......","AA#A#AA",
-    ".......","^%AAA/^",
-    ".......","1111111",
-    ".......","1111111",
+    "11xxxxxxx","11xxxxxxx",
+    ".........","111111111",
+    ".........","v/AAAAA%v",
+    ".........","AAA#A#AAA",
+    ".........","^%AAAAA/^",
+    ".........","111111111",
+    ".........","111111111",
   },
 
   diagonals =
@@ -4224,13 +4290,13 @@ GROW_357_ROUND_ARCH_DOUBLE_STAIRS =
 
   structure =
   { 
-    "11xxxxxxxx","11xxxxxxxx",
-    "..........","1111111111",
-    "..........","v/AAAAAA%v",
-    "..........","AA##AA##AA",
-    "..........","^%AAAAAA/^",
-    "..........","1111111111",
-    "..........","1111111111",
+    "11xxxxxxxxxx","11xxxxxxxxxx",
+    "............","111111111111",
+    "............","v/AAAAAAAA%v",
+    "............","AAA##AA##AAA",
+    "............","^%AAAAAAAA/^",
+    "............","111111111111",
+    "............","111111111111",
   },
 
   diagonals =
@@ -5814,8 +5880,8 @@ GROW_CAUSEWAY_WATERLOCKED_CROSSED_OUT =
 
   diagonals =
   {
-    "1~","~1",
-    "1~","~1",
+    "A~","~A",
+    "A~","~A",
   }
 },
 
@@ -14137,6 +14203,79 @@ GROW_SEWER_CURVED =
   },
 },]]
 
+GROW_SEWER_CROSSING_CIRCLE_NEW_AREA =
+{
+  prob = 20,
+  skip_prob = 75,
+
+  structure =
+  {
+    "11xxx","11xxx",
+    ".....","11~11",
+    ".....","1/A%1",
+    ".....","~AAA~",
+    ".....","1%A/1",
+    ".....","11~11"
+  },
+
+  diagonals =
+  {
+    "1A","A1",
+    "1A","A1"
+  }
+},
+
+GROW_SEWER_CROSSING_CIRCLE_NEW_AREA_BIG =
+{
+  prob = 17,
+  skip_prob = 80,
+
+  structure =
+  {
+    "11xxxx","11xxxx",
+    "......","11~~11",
+    "......","1/AA%1",
+    "......","~AAAA~",
+    "......","~AAAA~",
+    "......","1%AA/1",
+    "......","11~~11"
+  },
+
+  diagonals =
+  {
+    "1A","A1",
+    "1A","A1"
+  }
+},
+
+GROW_SEWER_CROSSING_CIRCLE_NEW_AREA_BIG =
+{
+  prob = 17,
+  skip_prob = 80,
+
+  structure =
+  {
+    "11xxxxx","11xxxxx",
+    ".......","11~~~11",
+    ".......","1/A~A%1",
+    ".......","~AA~AA~",
+    ".......","~%AAA/~",
+    ".......","~/AAA%~",
+    ".......","~AA~AA~",
+    ".......","1%A~A/1",
+    ".......","11~~~11",
+    ".......","11~~~11"
+  },
+
+  diagonals =
+  {
+    "1A","A1",
+    "~A","A~",
+    "~A","A~",
+    "1A","A1"
+  }
+},
+
 GROW_SEWER_STAIRS_SIDE_EXIT_NEW_AREA =
 {
   prob = 35,
@@ -14152,6 +14291,58 @@ GROW_SEWER_STAIRS_SIDE_EXIT_NEW_AREA =
     ".......","1111111",
   },
 },
+
+-- new stuff, organize later?
+
+GROW_PLUS_SINGLE_STAIR =
+{
+  prob = 40,
+  skip_prob = 80,
+
+  structure =
+  {
+    "..........","AAAAAAAAAA",
+    "..........","AAAAAAAAAA",
+    "..........","AA/#11#%AA",
+    "..........","AA##11##AA",
+    "..........","AA<11111AA",
+    "..........","AA<11111AA",
+    "..........","AA##11##AA",
+    "..........","AA##11##AA",
+    "xxxx11xxxx","xxxx11xxxx"
+  },
+
+  diagonals =
+  {
+    "A.",".A"
+  }
+},
+
+GROW_PLUS_SINGLE_STAIR_OPPOSITE =
+{
+  prob = 40,
+  skip_prob = 80,
+
+  structure =
+  {
+    "..........x","1111111111x",
+    "..........x","1111111111x",
+    "..........x","11/#AA#%11x",
+    "..........x","11##AA##11x",
+    "..........x","11>AAAAA11x",
+    "..........x","11>AAAAA11x",
+    "..........1","11##AA##111",
+    "..........1","11##AA##111",
+    "xxxx..xxxxx","xxxxAAxxxxx"
+  },
+
+  diagonals =
+  {
+    "1.",".1"
+  }
+},
+
+-- END OF GROW RULES
 
 -- FORGET IT LMAO IT DOESN'T WORK
 -- It works now. Cheer up, buddy. -- March, 2019,
@@ -15256,8 +15447,10 @@ ROOT_4 =
 
 GROW_1 =
 {
-  prob = 10000, --Non-MSSP default: 100,
+  prob = 10000, --Non-MSSP default: 100, Obsidian default: 10000
   prob_skew = 2,
+
+  base_set = true,
 
   structure =
   {
@@ -15268,8 +15461,10 @@ GROW_1 =
 
 GROW_2 =
 {
-  prob = 10000, --Non-MSSP default: 100,
+  prob = 10000, --Non-MSSP default: 100,, Obsidian default: 10000
   prob_skew = 2,
+
+  base_set = true,
 
   structure =
   {
@@ -15280,8 +15475,10 @@ GROW_2 =
 
 GROW_3 =
 {
-  prob = 1, --Non-MSSP default: 100,
+  prob = 1, --Non-MSSP default: 100, Obsidian default: 1
   prob_skew = 2,
+
+  base_set = true,
 
   structure =
   {
@@ -15292,8 +15489,10 @@ GROW_3 =
 
 GROW_4 =
 {
-  prob = 1, --Non-MSSP default: 100,
+  prob = 1, --Non-MSSP default: 100, Obsidian default: 1
   prob_skew = 2,
+
+  base_set = true,
 
   structure =
   {
@@ -18313,6 +18512,8 @@ ROOT_1 =
 GROW_1 =
 {
   prob = 20000, --Non-MSSP default: 100,
+
+  base_set = true,
 
   structure =
   {

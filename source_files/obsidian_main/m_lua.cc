@@ -28,9 +28,11 @@
 #include <array>
 
 #include "fmt/format.h"
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
-#include "hdr_lua.h"
 #include "hdr_ui.h"
+#endif
+#include "hdr_lua.h"
 #include "headers.h"
 #include "lib_file.h"
 #include "lib_signal.h"
@@ -405,7 +407,7 @@ int gui_add_choice(lua_State *L) {
     SYS_ASSERT(!button.empty() && !id.empty() && !label.empty());
 
     //    DebugPrintf("  add_choice: {} id:{}\n", button, id);
-
+#ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
     }
@@ -419,7 +421,7 @@ int gui_add_choice(lua_State *L) {
         return luaL_error(L, "add_choice: unknown button '%s'\n",
                           button.c_str());
     }
-
+#endif
     return 0;
 }
 
@@ -435,7 +437,7 @@ int gui_enable_choice(lua_State *L) {
 
     //    DebugPrintf("  enable_choice: {} id:{} {}\n", button, id, enable ?
     //"enable" : "DISABLE");
-
+#ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
     }
@@ -444,7 +446,7 @@ int gui_enable_choice(lua_State *L) {
         return luaL_error(L, "enable_choice: unknown button '%s'\n",
                           button.c_str());
     }
-
+#endif
     return 0;
 }
 
@@ -457,7 +459,7 @@ int gui_set_button(lua_State *L) {
     SYS_ASSERT(!button.empty() && !id.empty());
 
     //    DebugPrintf("  change_button: {} --> {}\n", button, id);
-
+#ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
     }
@@ -466,7 +468,7 @@ int gui_set_button(lua_State *L) {
         return luaL_error(L, "set_button: unknown button '%s'\n",
                           button.c_str());
     }
-
+#endif
     return 0;
 }
 
@@ -485,7 +487,7 @@ int gui_add_module(lua_State *L) {
     SYS_ASSERT(!where.empty() && !id.empty() && !label.empty());
 
     //    DebugPrintf("  add_module: {} id:{}\n", where, id);
-
+#ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
     }
@@ -496,21 +498,26 @@ int gui_add_module(lua_State *L) {
     }
 
     if (single_pane) {
-        main_win->left_mods->AddModule(id, label, tip, red, green, blue,
-                                       suboptions);
-    } else {
-        if (!StringCaseCmp(where, "left")) {
+        if (!main_win->left_mods->FindID(id)) {
             main_win->left_mods->AddModule(id, label, tip, red, green, blue,
-                                           suboptions);
-        } else if (!StringCaseCmp(where, "right")) {
-            main_win->right_mods->AddModule(id, label, tip, red, green, blue,
+                                        suboptions);
+        }
+    } else {
+        if (!main_win->left_mods->FindID(id) && !main_win->right_mods->FindID(id)) {
+            if (!StringCaseCmp(where, "left")) {
+                main_win->left_mods->AddModule(id, label, tip, red, green, blue,
                                             suboptions);
-        } else {
-            return luaL_error(L, "add_module: unknown where value '%s'\n",
-                              where.c_str());
+            } else if (!StringCaseCmp(where, "right")) {
+                main_win->right_mods->AddModule(id, label, tip, red, green, blue,
+                                                suboptions);
+            } else {
+                return luaL_error(L, "add_module: unknown where value '%s'\n",
+                                where.c_str());
+            }
         }
     }
 
+#endif
     return 0;
 }
 
@@ -524,7 +531,7 @@ int gui_set_module(lua_State *L) {
     SYS_ASSERT(!module.empty());
 
     //    DebugPrintf("  set_module: {} --> {}\n", module, opt_val);
-
+#ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
     }
@@ -536,7 +543,7 @@ int gui_set_module(lua_State *L) {
     if (!single_pane) {
         main_win->right_mods->EnableMod(module, opt_val);
     }
-
+#endif
     return 0;
 }
 
@@ -552,7 +559,7 @@ int gui_show_module(lua_State *L) {
     //    DebugPrintf("  show_module: {} --> {}\n", what, module, shown ? "show"
     //    :
     //"HIDE");
-
+#ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
     }
@@ -563,7 +570,7 @@ int gui_show_module(lua_State *L) {
     if (!single_pane) {
         main_win->right_mods->ShowModule(module, shown);
     }
-
+#endif
     return 0;
 }
 
@@ -578,7 +585,7 @@ int gui_add_module_header(lua_State *L) {
     int gap = luaL_optinteger(L, 4, 0);
 
     SYS_ASSERT(!module.empty() && !option.empty());
-
+#ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
     }
@@ -589,14 +596,26 @@ int gui_add_module_header(lua_State *L) {
             "Script problem: gui.add_module_header called late.\n");
     }
 
-    // FIXME : error if module is unknown
-
-    main_win->left_mods->AddHeader(module, option, label, gap);
-
-    if (!single_pane) {
-        main_win->right_mods->AddHeader(module, option, label, gap);
+    UI_Module *mod = main_win->left_mods->FindID(module);
+    if (!mod) {
+        if (!single_pane) {
+            mod = main_win->right_mods->FindID(module);
+        }
     }
 
+    if (!mod) {
+        Main::FatalError(
+            "Script problem: gui.add_module_slider_option called for non-existent module!\n");
+    }
+
+    if (!mod->FindHeaderOpt(option)) {
+        main_win->left_mods->AddHeader(module, option, label, gap);
+
+        if (!single_pane) {
+            main_win->right_mods->AddHeader(module, option, label, gap);
+        }
+    }
+#endif
     return 0;
 }
 
@@ -617,7 +636,7 @@ int gui_add_module_option(lua_State *L) {
     std::string default_value = luaL_checkstring(L, 8);
 
     SYS_ASSERT(!module.empty() && !option.empty() && !default_value.empty());
-
+#ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
     }
@@ -628,15 +647,27 @@ int gui_add_module_option(lua_State *L) {
             "Script problem: gui.add_module_option called late.\n");
     }
 
-    // FIXME : error if module is unknown
-
-    main_win->left_mods->AddOption(module, option, label, tip, longtip, gap,
-                                   randomize_group, default_value);
-    if (!single_pane) {
-        main_win->right_mods->AddOption(module, option, label, tip, longtip,
-                                        gap, randomize_group, default_value);
+    UI_Module *mod = main_win->left_mods->FindID(module);
+    if (!mod) {
+        if (!single_pane) {
+            mod = main_win->right_mods->FindID(module);
+        }
     }
 
+    if (!mod) {
+        Main::FatalError(
+            "Script problem: gui.add_module_slider_option called for non-existent module!\n");
+    }
+
+    if (!mod->FindOpt(option)) {
+        main_win->left_mods->AddOption(module, option, label, tip, longtip, gap,
+                                    randomize_group, default_value);
+        if (!single_pane) {
+            main_win->right_mods->AddOption(module, option, label, tip, longtip,
+                                            gap, randomize_group, default_value);
+        }
+    }
+#endif
     return 0;
 }
 
@@ -665,7 +696,7 @@ int gui_add_module_slider_option(lua_State *L) {
     std::string default_value = luaL_checkstring(L, 14);
 
     SYS_ASSERT(!module.empty() && !option.empty() && !default_value.empty());
-
+#ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
     }
@@ -676,17 +707,29 @@ int gui_add_module_slider_option(lua_State *L) {
             "Script problem: gui.add_module_option called late.\n");
     }
 
-    // FIXME : error if module is unknown
-
-    main_win->left_mods->AddSliderOption(module, option, label, tip, longtip,
-                                         gap, min, max, inc, units, presets,
-                                         nan, randomize_group, default_value);
-    if (!single_pane) {
-        main_win->right_mods->AddSliderOption(
-            module, option, label, tip, longtip, gap, min, max, inc, units,
-            presets, nan, randomize_group, default_value);
+    UI_Module *mod = main_win->left_mods->FindID(module);
+    if (!mod) {
+        if (!single_pane) {
+            mod = main_win->right_mods->FindID(module);
+        }
     }
 
+    if (!mod) {
+        Main::FatalError(
+            "Script problem: gui.add_module_slider_option called for non-existent module!\n");
+    }
+
+    if (!mod->FindSliderOpt(option)) {
+        main_win->left_mods->AddSliderOption(module, option, label, tip, longtip,
+                                            gap, min, max, inc, units, presets,
+                                            nan, randomize_group, default_value);
+        if (!single_pane) {
+            main_win->right_mods->AddSliderOption(
+                module, option, label, tip, longtip, gap, min, max, inc, units,
+                presets, nan, randomize_group, default_value);
+        }
+    }
+#endif
     return 0;
 }
 
@@ -707,7 +750,7 @@ int gui_add_module_button_option(lua_State *L) {
     std::string default_value = luaL_checkstring(L, 8);
 
     SYS_ASSERT(!module.empty() && !option.empty() && !default_value.empty());
-
+#ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
     }
@@ -718,16 +761,28 @@ int gui_add_module_button_option(lua_State *L) {
             "Script problem: gui.add_module_option called late.\n");
     }
 
-    // FIXME : error if module is unknown
-
-    main_win->left_mods->AddButtonOption(module, option, label, tip, longtip,
-                                         gap, randomize_group, default_value);
-    if (!single_pane) {
-        main_win->right_mods->AddButtonOption(module, option, label, tip,
-                                              longtip, gap, randomize_group,
-                                              default_value);
+    UI_Module *mod = main_win->left_mods->FindID(module);
+    if (!mod) {
+        if (!single_pane) {
+            mod = main_win->right_mods->FindID(module);
+        }
     }
 
+    if (!mod) {
+        Main::FatalError(
+            "Script problem: gui.add_module_button_option called for non-existent module!\n");
+    }
+
+    if (!mod->FindButtonOpt(option)) {
+        main_win->left_mods->AddButtonOption(module, option, label, tip, longtip,
+                                            gap, randomize_group, default_value);
+        if (!single_pane) {
+            main_win->right_mods->AddButtonOption(module, option, label, tip,
+                                                longtip, gap, randomize_group,
+                                                default_value);
+        }
+    }
+#endif
     return 0;
 }
 
@@ -743,7 +798,7 @@ int gui_add_option_choice(lua_State *L) {
     SYS_ASSERT(!module.empty() && !option.empty());
 
     //    DebugPrintf("  add_option_choice: {}.{}\n", module, option);
-
+#ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
     }
@@ -760,7 +815,7 @@ int gui_add_option_choice(lua_State *L) {
     if (!single_pane) {
         main_win->right_mods->AddOptionChoice(module, option, id, label);
     }
-
+#endif
     return 0;
 }
 
@@ -775,7 +830,7 @@ int gui_set_module_option(lua_State *L) {
 
     //    DebugPrintf("  set_module_option: {}.{} --> {}\n", module, option,
     // value);
-
+#ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
     }
@@ -797,7 +852,7 @@ int gui_set_module_option(lua_State *L) {
                               module.c_str(), option.c_str());
         }
     }
-
+#endif
     return 0;
 }
 
@@ -809,7 +864,7 @@ int gui_set_module_slider_option(lua_State *L) {
     std::string value = luaL_optstring(L, 3, "");
 
     SYS_ASSERT(!module.empty() && !option.empty() && !value.empty());
-
+#ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
     }
@@ -831,7 +886,7 @@ int gui_set_module_slider_option(lua_State *L) {
                               module.c_str(), option.c_str());
         }
     }
-
+#endif
     return 0;
 }
 
@@ -843,7 +898,7 @@ int gui_set_module_button_option(lua_State *L) {
     int value = luaL_checkinteger(L, 3);
 
     SYS_ASSERT(!module.empty() && !option.empty());
-
+#ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
     }
@@ -865,7 +920,7 @@ int gui_set_module_button_option(lua_State *L) {
                               module.c_str(), option.c_str());
         }
     }
-
+#endif
     return 0;
 }
 
@@ -878,7 +933,7 @@ int gui_get_module_slider_value(lua_State *L) {
 
     //    DebugPrintf("  set_module_option: {}.{} --> {}\n", module, option,
     // value);
-
+#ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
     }
@@ -951,6 +1006,9 @@ int gui_get_module_slider_value(lua_State *L) {
     }
 
     return 1;
+#else
+    return 0;
+#endif
 }
 
 // LUA: get_module_button_value(module, option)
@@ -962,7 +1020,7 @@ int gui_get_module_button_value(lua_State *L) {
 
     //    DebugPrintf("  set_module_option: {}.{} --> {}\n", module, option,
     // value);
-
+#ifndef CONSOLE_ONLY
     if (!main_win) {
         return 0;
     }
@@ -992,6 +1050,9 @@ int gui_get_module_button_value(lua_State *L) {
     }
 
     return 1;
+#else
+    return 0;
+#endif
 }
 
 // LUA: at_level(name, idx, total)
@@ -1003,11 +1064,11 @@ int gui_at_level(lua_State *L) {
     int total = luaL_checkinteger(L, 3);
 
     Main::ProgStatus(fmt::format("{} {}", _("Making"), name).c_str());
-
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_AtLevel(index, total);
     }
-
+#endif
     return 0;
 }
 
@@ -1015,19 +1076,20 @@ int gui_at_level(lua_State *L) {
 //
 int gui_prog_step(lua_State *L) {
     const char *name = luaL_checkstring(L, 1);
-
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Step(name);
     }
-
+#endif
     return 0;
 }
 
 // LUA: ticker()
 //
 int gui_ticker(lua_State * /*L*/) {
+    #ifndef CONSOLE_ONLY
     Main::Ticker();
-
+    #endif
     return 0;
 }
 
@@ -1035,9 +1097,9 @@ int gui_ticker(lua_State * /*L*/) {
 //
 int gui_abort(lua_State *L) {
     int value = (main_action >= MAIN_CANCEL) ? 1 : 0;
-
+    #ifndef CONSOLE_ONLY
     Main::Ticker();
-
+    #endif
     lua_pushboolean(L, value);
     return 1;
 }
@@ -1110,14 +1172,14 @@ int gui_minimap_begin(lua_State *L) {
     // dummy size when running in batch mode
     int map_W = 50;
     int map_H = 50;
-
+#ifndef CONSOLE_ONLY
     if (main_win) {
         map_W = main_win->build_box->mini_map->GetWidth();
         map_H = main_win->build_box->mini_map->GetHeight();
 
         main_win->build_box->mini_map->MapBegin();
     }
-
+#endif
     lua_pushinteger(L, map_W);
     lua_pushinteger(L, map_H);
 
@@ -1125,32 +1187,39 @@ int gui_minimap_begin(lua_State *L) {
 }
 
 int gui_minimap_finish(lua_State *L) {
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->mini_map->MapFinish();
     }
-
+    #endif
     return 0;
 }
 
 int gui_minimap_gif_start(lua_State *L) {
     int delay = luaL_optinteger(L, 1, 10);
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->mini_map->GifStart(gif_filename, delay);
     }
+    #endif
     return 0;
 }
 
 int gui_minimap_gif_frame(lua_State *L) {
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->mini_map->GifFrame();
     }
+    #endif
     return 0;
 }
 
 int gui_minimap_gif_finish(lua_State *L) {
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->mini_map->GifFinish();
     }
+    #endif
     return 0;
 }
 
@@ -1169,10 +1238,12 @@ int gui_minimap_draw_line(lua_State *L) {
 
     sscanf(color_str, "#%2x%2x%2x", &r, &g, &b);
 
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->mini_map->DrawLine(x1, y1, x2, y2, (u8_t)r,
                                                 (u8_t)g, (u8_t)b);
     }
+    #endif
 
     return 0;
 }
@@ -1192,10 +1263,12 @@ int gui_minimap_fill_box(lua_State *L) {
 
     sscanf(color_str, "#%2x%2x%2x", &r, &g, &b);
 
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->mini_map->DrawBox(x1, y1, x2, y2, (u8_t)r, (u8_t)g,
                                                (u8_t)b);
     }
+    #endif
 
     return 0;
 }
@@ -1234,6 +1307,7 @@ extern int wad_read_text_lump(lua_State *L);
 
 extern int fsky_create(lua_State *L);
 extern int fsky_write(lua_State *L);
+extern int fsky_free(lua_State *L);
 extern int fsky_solid_box(lua_State *L);
 extern int fsky_add_stars(lua_State *L);
 extern int fsky_add_clouds(lua_State *L);
@@ -1346,6 +1420,7 @@ static const luaL_Reg gui_script_funcs[] = {
 
     {"fsky_create", Doom::fsky_create},
     {"fsky_write", Doom::fsky_write},
+    {"fsky_free", Doom::fsky_free},
     {"fsky_solid_box", Doom::fsky_solid_box},
     {"fsky_add_stars", Doom::fsky_add_stars},
     {"fsky_add_clouds", Doom::fsky_add_clouds},
@@ -1454,6 +1529,7 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
         }
 
         // this will appear in the log file too
+        #ifndef CONSOLE_ONLY
         if (main_win) {
             main_win->label(fmt::format("{} {} {} \"{}\"", _("[ ERROR ]"),
                                         OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
@@ -1465,6 +1541,7 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
                                         OBSIDIAN_CODE_NAME)
                                 .c_str());
         }
+        #endif
         lua_pop(LUA_ST, 2);  // ob_traceback, message
         return false;
     }
@@ -1632,7 +1709,9 @@ void Script_Load(std::filesystem::path script_name) {
 }
 
 void Script_Open() {
-    LogPrintf("\n--- OPENING LUA VM ---\n\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("\n--- OPENING LUA VM ---\n\n");
+    }
 
     // create Lua state
 
@@ -1651,35 +1730,48 @@ void Script_Open() {
 
     import_dir = "scripts";
 
-    LogPrintf("Loading initial script: init.lua\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("Loading initial script: init.lua\n");
+    }
 
     Script_Load("init.lua");
 
-    LogPrintf("Loading main script: obsidian.lua\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("Loading main script: obsidian.lua\n");
+    }
 
     Script_Load("obsidian.lua");
 
     has_loaded = true;
-    LogPrintf("DONE.\n\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("DONE.\n\n");
+    }
 
     // ob_init() will load all the game-specific scripts, engine scripts, and
     // module scripts.
 
-    if (!Script_CallFunc("ob_init")) {
-        Main::FatalError("The ob_init script failed.\n");
+    if (main_action == MAIN_SOFT_RESTART) {
+        if (!Script_CallFunc("ob_restart")) {
+            Main::FatalError("The ob_init script failed.\n");
+        }
+    } else {
+        if (!Script_CallFunc("ob_init")) {
+            Main::FatalError("The ob_init script failed.\n");
+        }
     }
 
     has_added_buttons = true;
 }
 
 void Script_Close() {
-    log_timestamp = ob_datetime_string().append(".txt");
 
     if (LUA_ST) {
         lua_close(LUA_ST);
     }
 
-    LogPrintf("\n--- CLOSED LUA VM ---\n\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("\n--- CLOSED LUA VM ---\n\n");
+    }
 
     LUA_ST = NULL;
 
@@ -1838,24 +1930,11 @@ std::string ob_default_filename() {
     return res;
 }
 
-std::string ob_datetime_string() {
-    if (!Script_CallFunc("ob_datetime_string", 1)) {
-        return NULL;
-    }
-
-    std::string res = luaL_optlstring(LUA_ST, -1, "", NULL);
-
-    // remove result from lua stack
-    lua_pop(LUA_ST, 1);
-
-    return res;
-}
-
 void ob_print_reference() {
     if (!Script_CallFunc("ob_print_reference", 1)) {
-// clang-format off
+        // clang-format off
         fmt::print(_("ob_print_reference: Error creating REFERENCE.txt!\n"));
-// clang-format on
+        // clang-format on
     }
     fmt::print("\nA copy of this output can be found at {}\n",
                reference_file.generic_string());
@@ -1863,9 +1942,9 @@ void ob_print_reference() {
 
 void ob_print_reference_json() {
     if (!Script_CallFunc("ob_print_reference_json", 1)) {
-// clang-format off
+        // clang-format off
         fmt::print(_("ob_print_reference_json: Error printing json reference!\n"));
-// clang-format on
+        // clang-format on
     }
 }
 
@@ -1879,13 +1958,16 @@ void ob_invoke_hook(std::string hookname) {
 
 bool ob_build_cool_shit() {
     if (!Script_CallFunc("ob_build_cool_shit", 1)) {
+        #ifndef CONSOLE_ONLY
         if (main_win) {
             main_win->label(fmt::format("{} {} {} \"{}\"", _("[ ERROR ]"),
                                         OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
                                         OBSIDIAN_CODE_NAME)
                                 .c_str());
         }
+        #endif
         Main::ProgStatus(_("Script Error"));
+        #ifndef CONSOLE_ONLY
         if (main_win) {
             main_win->label(fmt::format("{} {} \"{}\"", OBSIDIAN_TITLE,
                                         OBSIDIAN_SHORT_VERSION,
@@ -1895,6 +1977,7 @@ bool ob_build_cool_shit() {
             Main::Blinker();
 #endif
         }
+        #endif
         return false;
     }
 

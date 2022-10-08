@@ -23,9 +23,11 @@
 #include "csg_main.h"
 #include "csg_quake.h"
 #include "fmt/format.h"
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
-#include "hdr_lua.h"
 #include "hdr_ui.h"
+#endif
+#include "hdr_lua.h"
 #include "headers.h"
 #include "lib_file.h"
 #include "lib_pak.h"
@@ -1065,9 +1067,11 @@ static void Q3_SetGridLights() {
 }
 
 static void Q3_LightWorld() {
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Step("Light");
     }
+    #endif
 
     QLIT_LightAllFaces();
 
@@ -1077,9 +1081,11 @@ static void Q3_LightWorld() {
 }
 
 static void Q3_VisWorld() {
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Step("Vis");
     }
+    #endif
 
     // Quake 3 uses clusters directly
 
@@ -1246,7 +1252,9 @@ bool quake3_game_interface_c::Start(const char *preset) {
             filename = Resolve_DefaultOutputPath() / batch_output_file;
         }
     } else {
+        #ifndef CONSOLE_ONLY
         filename = DLG_OutputFilename("pk3");
+        #endif
     }
 
     if (filename.empty()) {
@@ -1265,9 +1273,11 @@ bool quake3_game_interface_c::Start(const char *preset) {
 
     BSP_AddInfoFile();
 
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Init(0, "CSG,BSP,Vis,Light");
     }
+    #endif
 
     return true;
 }

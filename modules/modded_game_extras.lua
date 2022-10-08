@@ -1486,11 +1486,11 @@ function MODDED_GAME_EXTRAS.init_hn_info()
   PARAM.hn_thing_start_offset = 15000
 end
 
-function MODDED_GAME_EXTRAS.create_hn_info()
+function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
 
   -- skip Hellscape Navigator stuff on prebuilt levels (no info to draw from)
   -- and procedural gotchas (what the heck are you gonna navigate in two rooms?)
-  if LEVEL.prebuilt then return end
+  if not LEVEL then return end
   if LEVEL.is_procedural_gotcha then return end
 
   if PARAM.bool_hn_markers == 0 then

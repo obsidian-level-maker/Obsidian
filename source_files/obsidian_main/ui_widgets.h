@@ -62,6 +62,11 @@ class choice_data_c {
     ~choice_data_c();
 };
 
+typedef struct {
+    void *mod;
+    std::string opt_name;
+} opt_change_callback_data_t;
+
 class UI_ResetOption : public Fl_Button {
    private:
     // true when mouse is over this widget
@@ -222,6 +227,8 @@ class UI_RChoice : public Fl_Group {
 
     std::string default_value;
 
+    opt_change_callback_data_t *cb_data;
+
    private:
 };
 
@@ -292,6 +299,8 @@ class UI_RSlide : public Fl_Group {
 
     std::string default_value;
 
+    opt_change_callback_data_t *cb_data;
+
    public:
 };
 
@@ -322,6 +331,8 @@ class UI_RButton : public Fl_Group {
     std::string randomize_group;
 
     std::string default_value;
+
+    opt_change_callback_data_t *cb_data;
 
    private:
 };

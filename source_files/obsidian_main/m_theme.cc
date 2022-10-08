@@ -274,7 +274,9 @@ bool Theme_Options_Save(std::filesystem::path filename) {
         return false;
     }
 
-    LogPrintf("Saving theme file...\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("Saving theme file...\n");
+    }
 
     option_fp << "-- THEME FILE : OBSIDIAN " << OBSIDIAN_SHORT_VERSION << " \""
               << OBSIDIAN_CODE_NAME << "\"\n";
@@ -322,7 +324,9 @@ bool Theme_Options_Save(std::filesystem::path filename) {
 
     option_fp.close();
 
-    LogPrintf("DONE.\n\n");
+    if (main_action != MAIN_SOFT_RESTART) {
+        LogPrintf("DONE.\n\n");
+    }
 
     return true;
 }
@@ -391,11 +395,11 @@ class UI_ThemeWin : public Fl_Window {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         window_scaling = that->opt_window_scaling->value();
-// clang-format off
+        // clang-format off
         fl_alert("%s", _("Windows scaling changes require a restart.\nOBSIDIAN will now restart."));
-// clang-format on
+        // clang-format on
 
-        main_action = MAIN_RESTART;
+        main_action = MAIN_HARD_RESTART;
 
         that->want_quit = true;
     }
@@ -682,12 +686,12 @@ class UI_ThemeWin : public Fl_Window {
                 Fl::scheme("gtk+");
                 break;
         }
-// clang-format off
+        // clang-format off
         if (widget_theme == 3) {
             fl_alert("%s", _("Plastic widget theme requires a restart.\nOBSIDIAN will now restart."));
-// clang-format on
+            // clang-format on
 
-            main_action = MAIN_RESTART;
+            main_action = MAIN_HARD_RESTART;
 
             that->want_quit = true;
         }
@@ -835,11 +839,11 @@ class UI_ThemeWin : public Fl_Window {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         single_pane = that->opt_single_pane->value() ? true : false;
-// clang-format off
+        // clang-format off
         fl_alert("%s", _("Switching pane modes requires a restart.\nOBSIDIAN will now restart."));
-// clang-format on
+        // clang-format on
 
-        main_action = MAIN_RESTART;
+        main_action = MAIN_HARD_RESTART;
 
         that->want_quit = true;
     }
@@ -848,9 +852,9 @@ class UI_ThemeWin : public Fl_Window {
         UI_ThemeWin *that = (UI_ThemeWin *)data;
 
         use_system_fonts = that->opt_system_fonts->value() ? true : false;
-// clang-format off
+        // clang-format off
         fl_alert("%s", _("Switching font selection requires a restart.\nOBSIDIAN will now restart."));
-// clang-format on
+        // clang-format on
 
         font_menu_items.clear();
 
@@ -879,7 +883,9 @@ class UI_ThemeWin : public Fl_Window {
             v_unload_private_font("./theme/fonts/SamIAm/MiniSmallCaps.ttf");
         }
 
-        main_action = MAIN_RESTART;
+        font_theme = 0;
+
+        main_action = MAIN_HARD_RESTART;
 
         that->want_quit = true;
     }
@@ -1441,7 +1447,7 @@ class UI_ThemeWin : public Fl_Window {
         gap_blue = 35;
 
         fl_alert("%s", _("Defaults loaded.\nOBSIDIAN will now restart."));
-        main_action = MAIN_RESTART;
+        main_action = MAIN_HARD_RESTART;
         that->want_quit = true;
     }
 
@@ -1451,11 +1457,11 @@ class UI_ThemeWin : public Fl_Window {
         std::filesystem::path theme_file = Theme_AskLoadFilename();
         if (!theme_file.empty()) {
             Theme_Options_Load(theme_file);
-// clang-format off
+            // clang-format off
             fl_alert("%s", _("Theme loading requires a restart.\nOBSIDIAN will now restart."));
-// clang-format on
+            // clang-format on
 
-            main_action = MAIN_RESTART;
+            main_action = MAIN_HARD_RESTART;
 
             that->want_quit = true;
         }

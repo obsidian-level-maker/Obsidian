@@ -133,7 +133,7 @@ function CHEX3.make_cool_gfx()
 end
 
 
-function CHEX3.make_level_gfx()
+function CHEX3.make_level_gfx(LEVEL)
   -- decide color set
   if not GAME.level_gfx_colors then
     local kind = rand.key_by_probs(
@@ -168,8 +168,8 @@ function CHEX3.make_episode_gfx()
 end
 
 
-function CHEX3.end_level()
-  CHEX3.make_level_gfx()
+function CHEX3.end_level(LEVEL)
+  CHEX3.make_level_gfx(LEVEL)
 end
 
 

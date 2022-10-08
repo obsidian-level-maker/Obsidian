@@ -128,7 +128,7 @@ function ZDOOM_SOUND.build_lumps()
   SCRIPTS.decorate = ScriptMan_combine_script(SCRIPTS.decorate, dec_lump)
 end
 
-function ZDOOM_SOUND.populate_level_ambience()
+function ZDOOM_SOUND.populate_level_ambience(self, LEVEL)
 
   if not PARAM.ambient_sounds then
     return

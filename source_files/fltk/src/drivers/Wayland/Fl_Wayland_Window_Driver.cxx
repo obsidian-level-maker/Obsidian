@@ -1518,7 +1518,7 @@ void Fl_Wayland_Window_Driver::resize(int X, int Y, int W, int H) {
       // fprintf(stderr, "move menuwin=%p x()=%d\n", pWindow, X);
     } else {
       //"a deliberate design trait of Wayland makes application windows ignorant of their exact
-      //placement on screen"
+      // placement on screen"
       x(0);
       y(0);
     }

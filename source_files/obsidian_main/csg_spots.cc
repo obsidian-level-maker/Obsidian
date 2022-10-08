@@ -102,6 +102,13 @@ void SPOT_FreeGrid() {
 
         spot_grid = NULL;
     }
+
+    if (grid_lefties) {
+        delete[] grid_lefties;
+    }
+    if (grid_righties) {
+        delete[] grid_righties;
+    }
 }
 
 void SPOT_DumpGrid(const char *info) {

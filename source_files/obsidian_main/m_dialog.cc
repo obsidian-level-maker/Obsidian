@@ -43,9 +43,6 @@
 
 std::filesystem::path last_directory;
 
-// from main.h
-std::string default_output_path;
-
 static int dialog_result;
 
 static void dialog_close_CB(Fl_Widget *w, void *data) { dialog_result = 1; }
@@ -333,9 +330,9 @@ void DLG_EditSeed(void) {
             char character = word.at(i);
             if (not std::isdigit(character)) {
                 throw std::runtime_error(
-// clang-format off
+                    // clang-format off
                     _("String contains non-digits. Will process as string\n"));
-// clang-format on
+                // clang-format on
             }
         }
         did_specify_seed = true;
@@ -344,9 +341,9 @@ void DLG_EditSeed(void) {
     } catch (std::invalid_argument &e) {
         std::cout << _("Invalid argument. Will process as string.\n");
     } catch (std::out_of_range &e) {
-// clang-format off
+        // clang-format off
         std::cout << _("Resulting number would be out of range. Will process as string.\n");
-// clang-format on
+        // clang-format on
     } catch (std::exception &e) {
         std::cout << e.what();
     }
@@ -545,6 +542,7 @@ static void logviewer_display_func(std::string_view line, void *priv_data) {
 
 void UI_LogViewer::ReadLogs() {
     LogReadLines(logviewer_display_func, (void *)this);
+    JumpEnd();
 }
 
 void UI_LogViewer::WriteLogs(std::ofstream &fp) {
@@ -626,11 +624,11 @@ tryagain:;
     }
 
     if (std::filesystem::exists(filename)) {
-// clang-format off
+        // clang-format off
         switch (fl_choice(_("%s already exists.\nChoose Yes to overwrite or No to choose a new filename."),
                           _("Yes"), 
                           _("No"), 0,
-// clang-format on
+                          // clang-format on
                           filename.generic_string().c_str())) {
             case 0:
                 std::filesystem::remove(filename);
@@ -658,52 +656,6 @@ tryagain:;
     that->WriteLogs(fp);
 
     fp.close();
-
-    if (zip_logs) {
-        std::filesystem::path zip_filename = filename;
-        zip_filename.replace_extension("zip");
-        FILE *zip_file = fopen(filename.string().c_str(), "rb");
-        int zip_length = std::filesystem::file_size(filename);
-        byte *zip_buf = new byte[zip_length];
-        if (zip_buf && zip_file) {
-            memset(zip_buf, 0, zip_length);
-            fread(zip_buf, 1, zip_length, zip_file);
-        }
-        if (zip_file) {
-            fclose(zip_file);
-        }
-        if (zip_buf) {
-            if (std::filesystem::exists(zip_filename)) {
-// clang-format off
-                switch (fl_choice(_("Log zipping is enabled, but %s already exists.\nOverwrite (original .txt file will still be kept) ?"),
-                                  _("Yes"), 
-                                  _("No"), 0,
-// clang-format on
-                                  zip_filename.generic_string().c_str())) {
-                    case 0:
-                        std::filesystem::remove(zip_filename);
-                        break;
-                    case 1:
-                        return;
-                }
-            }
-            if (mz_zip_add_mem_to_archive_file_in_place(
-                    zip_filename.string().c_str(),
-                    filename.filename().string().c_str(), zip_buf, zip_length,
-                    NULL, 0, MZ_DEFAULT_COMPRESSION)) {
-                std::filesystem::remove(filename);
-                delete[] zip_buf;
-            } else {
-                DLG_ShowError(
-                    _("Zipping logs to %s failed! Retaining original logs.\n"),
-                    filename.generic_string().c_str());
-            }
-        } else {
-            DLG_ShowError(
-                _("Zipping logs to %s failed! Retaining original logs.\n"),
-                filename.generic_string().c_str());
-        }
-    }
 }
 
 void DLG_ViewLogs(void) {
@@ -737,9 +689,9 @@ void DLG_ViewGlossary(void) {
     win->hotspot(0, 0, 0);
     win->set_modal();
     win->show();
-// clang-format off
+    // clang-format off
     buff->text(_("This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."));
-// clang-format on
+    // clang-format on
 }
 
 //--- editor settings ---

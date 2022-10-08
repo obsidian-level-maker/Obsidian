@@ -466,7 +466,7 @@ class UI_Manage_Config : public Fl_Double_Window {
             std::filesystem::remove(config_file);
         }
         config_file.clear();
-        main_action = MAIN_RESTART;
+        main_action = MAIN_HARD_RESTART; // MAIN_SOFT_RESTART???
         that->want_quit = true;
     }
 
@@ -665,10 +665,10 @@ UI_Manage_Config::UI_Manage_Config(int W, int H, const char *label)
         defaults_but->callback(callback_Defaults, this);
         defaults_but->labelfont(font_style);
         defaults_but->labelcolor(FONT2_COLOR);
-// clang-format off
+        // clang-format off
         defaults_warn = new Fl_Box(0, kf_h(240), kf_w(140), kf_h(50),
                                    _("Note: This will delete\nthe current CONFIG.txt\nand restart Obsidian!"));
-// clang-format on
+        // clang-format on
         defaults_warn->align(
             Fl_Align(FL_ALIGN_TOP | FL_ALIGN_INSIDE | FL_ALIGN_CLIP));
         defaults_warn->labelsize(small_font_size);

@@ -18,7 +18,7 @@ PREFABS.Switch_Dem_closet1 =
   tag_1 = "?switch_tag",
 
 
-  x_fit  = "frame",
+  x_fit = "frame",
   y_fit = "top",
 
 
@@ -29,8 +29,7 @@ PREFABS.Switch_Dem_closet1 =
   bound_z1 = 0,
   bound_z2 = 128,
 
-  deep   = 16,
-
+  deep = 16,
 }
 
 -- Electric boxes
@@ -41,7 +40,6 @@ PREFABS.Switch_Dem_closet2 =
   map    = "MAP02",
 
   sound = "Electric_Sparks",
-
 }
 
 -- Server room
@@ -50,7 +48,6 @@ PREFABS.Switch_Dem_closet3 =
 {
   template  = "Switch_Dem_closet1",
   map    = "MAP03",
-
 }
 
 -- A closet with a pump and a main power switch
@@ -63,7 +60,6 @@ PREFABS.Switch_Dem_closet4 =
   map    = "MAP04",
 
   sound = "Electric_Sparks",
-
 }
 
 -- Boiler and pump station ambush
@@ -76,7 +72,6 @@ PREFABS.Switch_Dem_closetamb1 =
   sound = "Water_Tank",
 
   seed_w = 3,
-
 }
 
 -- Electric boxes ambush
@@ -89,7 +84,6 @@ PREFABS.Switch_Dem_closetamb2 =
   seed_w = 3,
 
   sound = "Electric_Sparks",
-
 }
 
 -- Server room ambush
@@ -100,7 +94,6 @@ PREFABS.Switch_Dem_closetamb3 =
   map    = "MAP07",
 
   seed_w = 3,
-
 }
 
 -- A closet with a pump and a main power switch ambush
@@ -111,6 +104,4 @@ PREFABS.Switch_Dem_closetamb4 =
   map    = "MAP08",
 
   sound = "Electric_Sparks",
-
 }
-

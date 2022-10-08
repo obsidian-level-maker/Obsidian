@@ -87,21 +87,6 @@ bool UI_Module::Is_UI() const {
     return (!StringCaseCmp(id_name.substr(0, 3), "ui_"));
 }
 
-typedef struct {
-    UI_RChoice *mod;
-    std::string opt_name;
-} opt_change_callback_data_t;
-
-typedef struct {
-    UI_RButton *mod;
-    std::string opt_name;
-} opt_change_button_callback_data_t;
-
-typedef struct {
-    UI_RSlide *mod;
-    std::string opt_name;
-} opt_change_slider_callback_data_t;
-
 void UI_Module::AddHeader(std::string opt, std::string label, int gap) {
     int nw = this->parent()->w();
 
@@ -187,12 +172,12 @@ void UI_Module::AddOption(std::string opt, std::string label, std::string tip,
     rch->mod_help->help_title = label;
     rch->mod_help->callback(callback_ShowHelp, NULL);
 
-    opt_change_callback_data_t *cb_data = new opt_change_callback_data_t;
-    cb_data->mod = rch;
-    cb_data->opt_name = opt;
+    rch->cb_data = new opt_change_callback_data_t;
+    rch->cb_data->mod = rch;
+    rch->cb_data->opt_name = opt;
 
-    rch->mod_reset->callback(callback_OptChangeDefault, cb_data);
-    rch->mod_menu->callback(callback_OptChange, cb_data);
+    rch->mod_reset->callback(callback_OptChangeDefault, rch->cb_data);
+    rch->mod_menu->callback(callback_OptChange, rch->cb_data);
 
     rch->randomize_group = randomize_group;
 
@@ -396,12 +381,11 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     std::setlocale(LC_NUMERIC, numeric_locale.c_str());
 #endif
 
-    opt_change_slider_callback_data_t *cb_data =
-        new opt_change_slider_callback_data_t;
-    cb_data->mod = rsl;
-    cb_data->opt_name = opt;
+    rsl->cb_data = new opt_change_callback_data_t;
+    rsl->cb_data->mod = rsl;
+    rsl->cb_data->opt_name = opt;
 
-    rsl->mod_reset->callback(callback_OptSliderDefault, cb_data);
+    rsl->mod_reset->callback(callback_OptSliderDefault, rsl->cb_data);
 
     rsl->randomize_group = randomize_group;
 
@@ -469,12 +453,11 @@ void UI_Module::AddButtonOption(std::string opt, std::string label,
     rbt->mod_help->help_title = label;
     rbt->mod_help->callback(callback_ShowHelp, NULL);
 
-    opt_change_button_callback_data_t *cb_data =
-        new opt_change_button_callback_data_t;
-    cb_data->mod = rbt;
-    cb_data->opt_name = opt;
+    rbt->cb_data = new opt_change_callback_data_t;
+    rbt->cb_data->mod = rbt;
+    rbt->cb_data->opt_name = opt;
 
-    rbt->mod_reset->callback(callback_OptButtonDefault, cb_data);
+    rbt->mod_reset->callback(callback_OptButtonDefault, rbt->cb_data);
 
     rbt->randomize_group = randomize_group;
 
@@ -699,6 +682,14 @@ UI_RButton *UI_Module::FindButtonOpt(std::string option) {
     return choice_map_button[option];
 }
 
+UI_RHeader *UI_Module::FindHeaderOpt(std::string option) {
+    if (choice_map_header.find(option) == choice_map_header.end()) {
+        return NULL;
+    }
+
+    return choice_map_header[option];
+}
+
 void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
     UI_RChoiceMenu *rch = (UI_RChoiceMenu *)w;
 
@@ -707,7 +698,7 @@ void UI_Module::callback_OptChange(Fl_Widget *w, void *data) {
     SYS_ASSERT(rch);
     SYS_ASSERT(cb_data);
 
-    UI_RChoice *M = cb_data->mod;
+    UI_RChoice *M = (UI_RChoice *)cb_data->mod;
 
     UI_Module *parent = (UI_Module *)M->parent();
 
@@ -722,40 +713,40 @@ void UI_Module::callback_OptChangeDefault(Fl_Widget *w, void *data) {
     SYS_ASSERT(rch);
     SYS_ASSERT(cb_data);
 
-    UI_RChoice *M = cb_data->mod;
+    UI_RChoice *M = (UI_RChoice *)cb_data->mod;
 
     UI_Module *parent = (UI_Module *)M->parent();
 
     ob_set_mod_option(parent->id_name, cb_data->opt_name,
-                      cb_data->mod->default_value);
+                      M->default_value);
 }
 
 void UI_Module::callback_OptButtonDefault(Fl_Widget *w, void *data) {
-    opt_change_button_callback_data_t *cb_data =
-        (opt_change_button_callback_data_t *)data;
+    opt_change_callback_data_t *cb_data =
+        (opt_change_callback_data_t *)data;
 
     SYS_ASSERT(cb_data);
 
-    UI_RButton *M = cb_data->mod;
+    UI_RButton *M = (UI_RButton *)cb_data->mod;
 
     UI_Module *parent = (UI_Module *)M->parent();
 
     ob_set_mod_option(parent->id_name, cb_data->opt_name,
-                      cb_data->mod->default_value);
+                      M->default_value);
 }
 
 void UI_Module::callback_OptSliderDefault(Fl_Widget *w, void *data) {
-    opt_change_slider_callback_data_t *cb_data =
-        (opt_change_slider_callback_data_t *)data;
+    opt_change_callback_data_t *cb_data =
+        (opt_change_callback_data_t *)data;
 
     SYS_ASSERT(cb_data);
 
-    UI_RSlide *M = cb_data->mod;
+    UI_RSlide *M = (UI_RSlide *)cb_data->mod;
 
     UI_Module *parent = (UI_Module *)M->parent();
 
     ob_set_mod_option(parent->id_name, cb_data->opt_name,
-                      cb_data->mod->default_value);
+                      M->default_value);
 }
 
 void UI_Module::callback_PresetCheck(Fl_Widget *w, void *data) {
@@ -1211,7 +1202,7 @@ bool UI_CustomMods::EnableMod(std::string id, bool enable) {
 
     // no options => no height change => no need to reposition
     if (M->choice_map.size() > 0 || M->choice_map_slider.size() > 0 ||
-        M->choice_map_button.size() > 0) {
+        M->choice_map_button.size() > 0 || M->choice_map_header.size() > 0) {
         PositionAll();
     }
 

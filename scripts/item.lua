@@ -85,7 +85,7 @@ HEXEN2_FLAGS =
 }
 
 
-function Player_init()
+function Player_init(LEVEL)
   LEVEL.hmodels = table.deep_copy(GAME.PLAYER_MODEL)
 
   for CL,hmodel in pairs(LEVEL.hmodels) do
@@ -94,7 +94,7 @@ function Player_init()
 end
 
 
-function Player_give_weapon(weapon, only_CL)
+function Player_give_weapon(LEVEL, weapon, only_CL)
   gui.printf("Giving weapon: %s\n", weapon)
 
   for CL,hmodel in pairs(LEVEL.hmodels) do
@@ -116,7 +116,7 @@ function Player_give_class_weapon(slot)
 end
 
 
-function Player_give_map_stuff()
+function Player_give_map_stuff(LEVEL)
   if LEVEL.assume_weapons then
     for name,_ in pairs(LEVEL.assume_weapons) do
           if name == "weapon2" then Player_give_class_weapon(2)
@@ -130,10 +130,10 @@ function Player_give_map_stuff()
 end
 
 
-function Player_give_room_stuff(R)
+function Player_give_room_stuff(LEVEL, R)
   -- give weapons, plus any ammo they come with
     for _,name in pairs(R.weapons) do
-      Player_give_weapon(name)
+      Player_give_weapon(LEVEL, name)
 
       local weap = GAME.WEAPONS[name]
       if weap and weap.give then
@@ -196,7 +196,7 @@ function Player_give_stuff(hmodel, give_list)
 end
 
 
-function Player_firepower()
+function Player_firepower(LEVEL)
   -- The 'firepower' is (roughly) how much damage per second
   -- the player would normally do using their current set of
   -- weapons.
@@ -258,7 +258,7 @@ function Player_firepower()
 end
 
 
-function Player_has_weapon(weap_needed)
+function Player_has_weapon(LEVEL, weap_needed)
 
   local function class_has_one(hmodel)
     for name,_ in pairs(hmodel.weapons) do
@@ -283,13 +283,13 @@ function Player_has_weapon(weap_needed)
 end
 
 
-function Player_max_damage()
+function Player_max_damage(LEVEL)
   local result = 5
 
   for name,info in pairs(GAME.WEAPONS) do
     local W_damage = info.rate * info.damage
 
-    if W_damage > result and Player_has_weapon({ [name]=1 }) then
+    if W_damage > result and Player_has_weapon(LEVEL, { [name]=1 }) then
       result = W_damage
     end
   end
@@ -298,7 +298,7 @@ function Player_max_damage()
 end
 
 
-function Player_find_initial_weapons()
+function Player_find_initial_weapons(LEVEL)
   -- find with weapons the player always owns
   local list = {}
 
@@ -323,7 +323,7 @@ end
 
 
 
-function Player_weapon_palettes()
+function Player_weapon_palettes(LEVEL)
 
   local Middle  = 1.00
   local High    = 2.20
@@ -440,7 +440,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Item_simulate_battle(R)
+function Item_simulate_battle(LEVEL, R)
 
 
   local function make_empty_stats()
@@ -613,7 +613,7 @@ end
 
 
 
-function Item_distribute_stats()
+function Item_distribute_stats(LEVEL)
   --
   -- This distributes the item statistics (how much health and ammo to
   -- give to the player) into earlier rooms.
@@ -738,7 +738,7 @@ end
 
 
 
-function Item_pickups_for_class(CL)
+function Item_pickups_for_class(LEVEL, CL)
   --
   -- Once all monsters have been placed and all battles simulated
   -- (including cages and traps), then we can decide *what* pickups to add
@@ -1078,11 +1078,11 @@ end
 
 
 
-function Item_add_pickups()
+function Item_add_pickups(LEVEL)
 
   gui.printf("\n--==| Item Pickups |==--\n\n")
 
-  Item_distribute_stats()
+  Item_distribute_stats(LEVEL)
 
   -- FIXME:
   -- 1. when no big item spots, convert important spots
@@ -1094,6 +1094,6 @@ function Item_add_pickups()
   end
 
   for CL,_ in pairs(LEVEL.hmodels) do
-    Item_pickups_for_class(CL)
+    Item_pickups_for_class(LEVEL, CL)
   end
 end

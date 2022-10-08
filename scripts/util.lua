@@ -38,7 +38,7 @@ function sel(cond, yes_val, no_val)
 end
 
 -- utilitity to allocate room numbers, tag numbers, etc...
-function alloc_id(kind)
+function alloc_id(LEVEL, kind)
   local result = (LEVEL.ids[kind] or 0) + 1
   LEVEL.ids[kind] = result
   return result
@@ -683,7 +683,7 @@ function rand.shuffle(t)
 
   if #t > 1 then
     for i = 1,(#t-1) do
-      local k = rand.irange(i,#t)
+      local k = rand.irange(i, #t)
       -- swap the pair of values
       t[i], t[k] = t[k], t[i]
     end
@@ -723,7 +723,7 @@ function rand.key_by_probs(tab)
   local prob_list = {}
 
   for key,prob in pairs(tab) do
-    table.insert(key_list,  key)
+    table.insert(key_list, key)
     table.insert(prob_list, prob)
   end
 

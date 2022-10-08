@@ -31,8 +31,10 @@
 #include <string>
 #include <map>
 #include <filesystem>
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
 #include "ui_window.h"
+#endif
 extern std::string OBSIDIAN_TITLE;
 
 #ifdef OBSIDIAN_TIMESTAMP
@@ -56,6 +58,7 @@ constexpr const char *LOG_FILENAME = "LOGS.txt";
 constexpr const char *REF_FILENAME = "REFERENCE.txt";
 
 #ifdef _WIN32
+#ifndef CONSOLE_ONLY
 HEDLEY_ALWAYS_INLINE
 int i_load_private_font(const char *path) {
     return AddFontResourceEx(path, FR_PRIVATE, nullptr);
@@ -64,7 +67,9 @@ HEDLEY_ALWAYS_INLINE
 int v_unload_private_font(const char *path) {
     return RemoveFontResourceEx(path, FR_PRIVATE, nullptr);
 }
+#endif
 #else
+#ifndef CONSOLE_ONLY
 #include <fontconfig/fontconfig.h>
 HEDLEY_ALWAYS_INLINE
 int i_load_private_font(const char *path) {
@@ -76,6 +81,7 @@ int v_unload_private_font(const char *path) {
     FcConfigAppFontClear(nullptr);
     return 0;
 }
+#endif
 #endif
 
 extern std::filesystem::path home_dir;
@@ -103,12 +109,14 @@ enum main_action_kind_e {
     MAIN_BUILD,
     MAIN_CANCEL,
     MAIN_QUIT,
-    MAIN_RESTART
+    MAIN_HARD_RESTART,
+    MAIN_SOFT_RESTART
 };
 
 extern int main_action;
 
 // Misc Options
+#ifndef CONSOLE_ONLY
 extern uchar text_red;
 extern uchar text_green;
 extern uchar text_blue;
@@ -144,6 +152,7 @@ extern Fl_Color GAP_COLOR;
 extern Fl_Color GRADIENT_COLOR;
 extern Fl_Color BUTTON_COLOR;
 extern Fl_Color BORDER_COLOR;
+#endif
 extern int color_scheme;
 extern int font_theme;
 extern int box_theme;
@@ -173,26 +182,28 @@ extern bool random_string_seeds;
 extern bool password_mode;
 extern bool did_specify_seed;
 extern int zip_output;
-extern bool zip_logs;
-extern bool timestamp_logs;
+extern int log_size;
 extern int log_limit;
+extern bool first_run;
 
 extern std::string def_filename;
-extern std::string log_timestamp;
 
 extern std::filesystem::path last_directory;
 extern std::string numeric_locale;
 extern std::vector<std::string> batch_randomize_groups;
 
+#ifndef CONSOLE_ONLY
 // Dialog Windows
 void DLG_ShowError(const char *msg, ...);
+
+
+std::filesystem::path DLG_OutputFilename(const char *ext,
+                                         const char *preset = nullptr);
+#endif
 
 extern std::string default_output_path;
 
 extern std::filesystem::path Resolve_DefaultOutputPath();
-
-std::filesystem::path DLG_OutputFilename(const char *ext,
-                                         const char *preset = nullptr);
 
 extern std::filesystem::path gif_filename;
 
@@ -200,6 +211,7 @@ extern std::string string_seed;
 extern std::string selected_lang;
 
 // Tutorial stuff
+#ifndef CONSOLE_ONLY
 extern Fl_BMP_Image *tutorial1;
 extern Fl_BMP_Image *tutorial2;
 extern Fl_BMP_Image *tutorial3;
@@ -222,6 +234,7 @@ void DLG_ViewGlossary();
 void DLG_ManageConfig();
 
 void DLG_Tutorial();
+#endif
 
 namespace Main {
 
@@ -232,7 +245,9 @@ void Shutdown(bool error);
 template <typename... Args>
 [[noreturn]] void FatalError(std::string_view msg, Args &&...args) {
     auto buffer = fmt::format(msg, std::forward<Args>(args)...);
+    #ifndef CONSOLE_ONLY
     DLG_ShowError("%s", buffer.c_str());
+    #endif
     Detail::Shutdown(true);
 
     if (batch_mode) {
@@ -252,19 +267,26 @@ template <typename... Args>
 void ProgStatus(std::string_view msg, Args &&...args) {
     const auto buffer = fmt::format(msg, std::forward<Args>(args)...);
 
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->SetStatus(buffer);
     } else if (batch_mode) {
         fmt::print(std::cerr, "{}\n", buffer);
     }
+#else
+    fmt::print(std::cerr, "{}\n", buffer);
+#endif
 }
 bool BackupFile(const std::filesystem::path &filename);
-#ifdef WIN32
+#if defined WIN32 && !defined CONSOLE_ONLY
 void Blinker();
 #endif
-void Ticker();
+
+#ifndef CONSOLE_ONLY
 bool LoadInternalFont(const char *fontpath, int fontnum, const char *fontname);
 void PopulateFontMap();
+void Ticker();
+#endif
 
 }  // namespace Main
 

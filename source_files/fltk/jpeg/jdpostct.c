@@ -49,10 +49,10 @@ post_process_1pass JPP((j_decompress_ptr cinfo, JSAMPIMAGE input_buf, JDIMENSION
                         JDIMENSION *out_row_ctr, JDIMENSION out_rows_avail));
 #ifdef QUANT_2PASS_SUPPORTED
 METHODDEF(void)
-post_process_prepass
-    JPP((j_decompress_ptr cinfo, JSAMPIMAGE input_buf, JDIMENSION *in_row_group_ctr,
-         JDIMENSION in_row_groups_avail, JSAMPARRAY output_buf, JDIMENSION *out_row_ctr,
-         JDIMENSION out_rows_avail));
+post_process_prepass JPP((j_decompress_ptr cinfo, JSAMPIMAGE input_buf,
+                          JDIMENSION *in_row_group_ctr, JDIMENSION in_row_groups_avail,
+                          JSAMPARRAY output_buf, JDIMENSION *out_row_ctr,
+                          JDIMENSION out_rows_avail));
 METHODDEF(void)
 post_process_2pass JPP((j_decompress_ptr cinfo, JSAMPIMAGE input_buf, JDIMENSION *in_row_group_ctr,
                         JDIMENSION in_row_groups_avail, JSAMPARRAY output_buf,

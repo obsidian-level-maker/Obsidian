@@ -25,7 +25,9 @@
 #include "csg_main.h"
 #include "g_doom.h"  // for MLF_DontDraw
 #include "fmt/core.h"
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
+#endif
 #include "hdr_lua.h"
 #include "headers.h"
 #include "lib_util.h"
@@ -514,6 +516,10 @@ void region_c::ClockwiseSnags() {
             // bubble up
             i++;
         }
+    }
+
+    if (angles) {
+        delete[] angles;
     }
 }
 

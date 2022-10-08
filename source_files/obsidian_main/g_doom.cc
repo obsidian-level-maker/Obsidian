@@ -26,7 +26,9 @@
 #include <bitset>
 #include <string>
 
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
+#endif
 #include "lib_file.h"
 #include "lib_util.h"
 #include "lib_wad.h"
@@ -225,7 +227,11 @@ void Doom::AddSectionLump(char ch, std::string name, qLump_c *lump) {
 
 bool Doom::StartWAD(std::filesystem::path filename) {
     if (!WAD_OpenWrite(filename)) {
+        #ifndef CONSOLE_ONLY
         DLG_ShowError(_("Unable to create wad file:\n\n%s"), strerror(errno));
+        #else
+        fmt::print(_("Unable to create wad file:\n\n%s"), strerror(errno));
+        #endif
         return false;
     }
 
@@ -794,15 +800,19 @@ int Doom::NumThings() {
 namespace Doom {
 
 void Send_Prog_Nodes(int progress, int num_maps) {
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Nodes(progress, num_maps);
     }
+    #endif
 }
 
 void Send_Prog_Step(const char *step_name) {
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->AddStatusStep(step_name);
     }
+    #endif
 }
 
 static bool BuildNodes(std::filesystem::path filename) {
@@ -902,7 +912,9 @@ bool Doom::game_interface_c::Start(const char *preset) {
             filename = Resolve_DefaultOutputPath() / batch_output_file;
         }
     } else {
+        #ifndef CONSOLE_ONLY
         filename = DLG_OutputFilename("wad", preset);
+        #endif
     }
 
     if (filename.empty()) {
@@ -933,9 +945,11 @@ bool Doom::game_interface_c::Start(const char *preset) {
         return false;
     }
 
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Init(20, N_("CSG"));
     }
+    #endif
 
     if (StringCaseCmp(current_engine, "zdoom") == 0) {
         build_reject = false;
@@ -1065,9 +1079,11 @@ void Doom::game_interface_c::BeginLevel() {
 void Doom::game_interface_c::Property(std::string key, std::string value) {
     if (StringCaseCmp(key, "level_name") == 0) {
         level_name = value.c_str();
+    #ifndef CONSOLE_ONLY
     } else if (StringCaseCmp(key, "description") == 0 && main_win) {
         main_win->build_box->name_disp->copy_label(value.c_str());
         main_win->build_box->name_disp->redraw();
+    #endif
     } else if (StringCaseCmp(key, "sub_format") == 0) {
         if (StringCaseCmp(value, "doom") == 0) {
             sub_format = 0;
@@ -1096,9 +1112,11 @@ void Doom::game_interface_c::EndLevel() {
         Main::FatalError("Script problem: did not set level name!\n");
     }
 
+    #ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Step("CSG");
     }
+    #endif
 
     CSG_DOOM_Write();
 #if 0

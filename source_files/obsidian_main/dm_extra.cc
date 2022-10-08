@@ -23,9 +23,11 @@
 
 #include "csg_main.h"
 #include "g_doom.h"
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
-#include "hdr_lua.h"
 #include "hdr_ui.h"
+#endif
+#include "hdr_lua.h"
 #include "headers.h"
 #include "images.h"
 #include "lib_file.h"
@@ -329,6 +331,16 @@ int fsky_write(lua_State *L) {
         AddSectionLump('T', patch, lump);
     } else {
         AddSectionLump('P', patch, lump);
+    }
+
+    return 0;
+}
+
+int fsky_free(lua_State *L) {
+    // LUA: fsky_free()
+
+    if (sky_pixels) {
+        delete[] sky_pixels;
     }
 
     return 0;
@@ -1246,7 +1258,7 @@ static rgb_color_t Grab_Color(lua_State *L, int stack_idx) {
     }
 
     luaL_error(L, "bad color value (not a string or table)");
-    return FL_BLACK; /* NOT REACHED */
+    return MAKE_RGBA(0, 0, 0, 255); /* NOT REACHED */
 }
 
 static byte PaletteLookup(rgb_color_t col, const rgb_color_t *palette) {
