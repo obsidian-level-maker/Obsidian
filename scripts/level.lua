@@ -2462,7 +2462,7 @@ function Level_choose_skybox(LEVEL)
         where = "point",
         size = 1,
       }
-      local def = Fab_pick(reqs)
+      local def = Fab_pick(LEVEL, reqs)
       return assert(def)
 
     elseif mode == "themed" then
