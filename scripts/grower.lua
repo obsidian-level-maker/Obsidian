@@ -1958,16 +1958,11 @@ function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
     if not cur_rule.new_room then return nil end
 
     local symmetry_choices = {}
-    local symmetry_table = cur_rule.new_room
-    if type(symmetry_table) ~= "table" then
-      error("Weird symmetry table entry!!!\n" .. table.tostr(cur_rule, 2))
-    end
-    table.name_up(symmetry_table)
 
-    for _,SYM in pairs(symmetry_table) do
-      if string.gmatch(SYM.name, "symmetry") then
+    for key,SYM in pairs(cur_rule.new_room) do
+      if string.gmatch(key, "symmetry") then
         if SYM.kind and (SYM.kind ~= "rotate" or rand.odds(20)) then
-          table.insert(symmetry_choices, SYM.name)
+          table.insert(symmetry_choices, key)
         end
       end
     end
@@ -1984,8 +1979,9 @@ function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
     end]]
 
     if table.empty(symmetry_choices) then return end
+    gui.printf(table.tostr(symmetry_choices,2).."\n")
 
-    local info = symmetry_table[rand.pick(symmetry_choices)]
+    local info = cur_rule.new_room[rand.pick(symmetry_choices)]
 
     local sym = Symmetry_new(info.kind or "mirror")
 
