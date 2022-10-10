@@ -283,6 +283,11 @@ TNT.THEMES =
     {
       Skybox_generic = 50,
     },
+
+    wall_groups =
+    {
+      PLAIN = 100,
+    },
   },
 }
 
