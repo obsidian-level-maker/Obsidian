@@ -995,7 +995,7 @@ function Grower_calc_rule_probs(LEVEL)
 
     Grower_reset_absurdities()
 
-    local rules_to_absurdify = rand.pick({1,1,1,2,2,2,3,3,4,5})
+    local rules_to_absurdify = rand.pick({1,1,2,2,2,3,3,4,5})
     local count = rules_to_absurdify
     gui.printf(rules_to_absurdify .. " rules will be absurd!\n\n")
 
@@ -1979,7 +1979,6 @@ function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
     end]]
 
     if table.empty(symmetry_choices) then return end
-    gui.printf(table.tostr(symmetry_choices,2).."\n")
 
     local info = cur_rule.new_room[rand.pick(symmetry_choices)]
 
@@ -3590,6 +3589,10 @@ end
       end
     end
 
+    if pass == "sprout" then
+      R.sprout_succesful = true
+    end
+
     -- round robin absurdity settings
     if LEVEL.absurdity_round_robin then
       local tab = {}
@@ -4468,14 +4471,14 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
 
     expand_limits()
 
-    if LEVEL.is_linear then
+    if LEVEL.is_linear and not LEVEL.is_procedural_gotcha
+    and (#LEVEL.rooms < ((LEVEL.min_rooms + LEVEL.max_rooms) / 2)) then
       if emergency_linear_sprouts() == "oof" then
         emergency_teleport_break()
       end
     else
       emergency_sprouts()
     end
-
   end
 end
 
