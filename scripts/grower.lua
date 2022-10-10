@@ -911,6 +911,7 @@ function Grower_calc_rule_probs(LEVEL)
 
   LEVEL.absurd_grammar_rules = {}
   LEVEL.base_set_rules = {}
+  local shape_order = {}
 
   local function Grower_absurdify()
     
@@ -933,9 +934,7 @@ function Grower_calc_rule_probs(LEVEL)
     end
 
     local function Grower_absurdify_rule(rule, qty)
-      
-      local high_ab_factor = rand.range( 100,1000000 )
-      local low_ab_factor = rand.range( 0.01,0.75 )
+
       local new_factor
   
       if string.match(rule.name,"ROOT") then return end
@@ -947,21 +946,22 @@ function Grower_calc_rule_probs(LEVEL)
       if string.match(rule.name,"hall") then return end
       if string.match(rule.name,"HALL") then return end
       if string.match(rule.name,"START") then return end
+      if string.match(rule.name,"PARK") then return end
+      if string.match(rule.name,"DECORATE") then return end
       if table.has_elem(rule.styles, "liquids") 
         and not LEVEL.liquid then return end
 
-      if rand.odds(75) then
-        new_factor = high_ab_factor * rand.range( 0.75,1.25 )
-        rule.use_prob = math.round(rule.prob * new_factor)
-        if rule.new_area then
-          LEVEL.has_absurd_new_area_rules = true
-        end
-        rule.positive_absurdity = true
-      else
+      --if rand.odds(75) then
+      new_factor = rand.range( 100,1000000 ) * rand.range( 0.75,1.25 )
+      rule.use_prob = math.round(rule.prob * new_factor)
+      if rule.new_area then
+        LEVEL.has_absurd_new_area_rules = true
+      end
+      --[[else
         new_factor = low_ab_factor * rand.range( 0.75,1.25 )
         rule.use_prob = rule.prob * new_factor
         rule.negative_absurdity = true
-      end
+      end]]
 
       -- diversify environments
       local new_env
@@ -984,16 +984,18 @@ function Grower_calc_rule_probs(LEVEL)
       local info =
       {
         name = rule.name,
-        prob = rule.use_prob
+        prob = rule.use_prob,
+        env = rule.env,
+        order = (#LEVEL.absurd_grammar_rules or 0) + 1
       }
       table.insert(LEVEL.absurd_grammar_rules, info)
 
       if new_env then gui.debugf("New env: " .. new_env .. "\n") end
     end
-  
+
     Grower_reset_absurdities()
 
-    local rules_to_absurdify = rand.pick({1,1,1,2,2,2,3,3,4})
+    local rules_to_absurdify = rand.pick({1,1,1,2,2,2,3,3,4,5})
     local count = rules_to_absurdify
     gui.printf(rules_to_absurdify .. " rules will be absurd!\n\n")
 
@@ -1002,12 +1004,15 @@ function Grower_calc_rule_probs(LEVEL)
       table.insert(grammarset, rule.name)
     end
 
-    while count > 0 do
+    -- pick rules to make absurd
+    while #LEVEL.absurd_grammar_rules < rules_to_absurdify do
       local absurded_rule = rand.pick(grammarset)
 
       Grower_absurdify_rule(SHAPE_GRAMMAR[absurded_rule], rules_to_absurdify)
+    end
 
-      count = count - 1
+    for _,rule in pairs(LEVEL.absurd_grammar_rules) do
+      shape_order[rule.order] = rule.name
     end
 
     -- collect base set rules and preserve them
@@ -1019,6 +1024,19 @@ function Grower_calc_rule_probs(LEVEL)
           prob = rule.use_prob
         }
         table.insert(LEVEL.base_set_rules, info)
+      end
+    end
+
+    -- extra absurdity logic
+    if #LEVEL.absurd_grammar_rules > 1 then
+      if rand.odds(75) then
+        LEVEL.absurdity_round_robin = true
+
+        local stack_start = shape_order[1]
+        for i = 1, #LEVEL.absurd_grammar_rules - 1 do
+          LEVEL.absurd_grammar_rules[i].next = shape_order[i+1]
+        end
+        LEVEL.absurd_grammar_rules[#LEVEL.absurd_grammar_rules].next = stack_start
       end
     end
 
@@ -1940,16 +1958,11 @@ function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
     if not cur_rule.new_room then return nil end
 
     local symmetry_choices = {}
-    local symmetry_table = cur_rule.new_room
-    if type(symmetry_table) ~= "table" then
-      error("Weird symmetry table entry!!!\n" .. table.tostr(cur_rule, 2))
-    end
-    table.name_up(symmetry_table)
 
-    for _,SYM in pairs(symmetry_table) do
-      if string.gmatch(SYM.name, "symmetry") then
+    for key,SYM in pairs(cur_rule.new_room) do
+      if string.gmatch(key, "symmetry") then
         if SYM.kind and (SYM.kind ~= "rotate" or rand.odds(20)) then
-          table.insert(symmetry_choices, SYM.name)
+          table.insert(symmetry_choices, key)
         end
       end
     end
@@ -1966,8 +1979,9 @@ function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
     end]]
 
     if table.empty(symmetry_choices) then return end
+    gui.printf(table.tostr(symmetry_choices,2).."\n")
 
-    local info = symmetry_table[rand.pick(symmetry_choices)]
+    local info = cur_rule.new_room[rand.pick(symmetry_choices)]
 
     local sym = Symmetry_new(info.kind or "mirror")
 
@@ -3509,7 +3523,8 @@ end
 
     local rules = table.copy(rule_tab)
 
-    local tries = 5 -- Maybe tune this parameter to test build speed? - Dasho
+    -- original qty is around 20, Obsidian base is 5
+    local tries = 20 -- Maybe tune this parameter to test build speed? - Dasho
 
     if tries > #rules then tries = #rules end
 
@@ -3572,6 +3587,18 @@ end
         R.shapes_applied = R.shapes_applied + 1
       else
         R.shapes_applied = 1
+      end
+    end
+
+    -- round robin absurdity settings
+    if LEVEL.absurdity_round_robin then
+      local tab = {}
+      for _,rule in pairs(LEVEL.absurd_grammar_rules) do
+        tab[rule.name] = rule.prob
+      end
+
+      for _,rule in pairs(LEVEL.absurd_grammar_rules) do
+        rule.prob = tab[rule.next]
       end
     end
     

@@ -273,6 +273,12 @@ TNT.THEMES =
       MIDBARS3 = 50,
     },
 
+    sink_style =
+    {
+      sharp = 1,
+      curved = 1,
+    },
+
     skyboxes =
     {
       Skybox_generic = 50,

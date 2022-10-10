@@ -68,6 +68,7 @@ static std::string slime_shader;
 static std::string lava_shader;
 
 extern double q3_default_tex_scale;
+extern std::filesystem::path BestDirectory();
 
 //------------------------------------------------------------------------
 
@@ -1253,7 +1254,10 @@ bool quake3_game_interface_c::Start(const char *preset) {
         }
     } else {
         #ifndef CONSOLE_ONLY
-        filename = DLG_OutputFilename("pk3");
+        if (!mid_batch)
+            filename = DLG_OutputFilename("pk3", preset);
+        else
+            filename = BestDirectory() / preset;
         #endif
     }
 

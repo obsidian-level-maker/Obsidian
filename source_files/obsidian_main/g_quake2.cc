@@ -44,6 +44,8 @@
 
 #define MODEL_LIGHT 64
 
+extern std::filesystem::path BestDirectory();
+
 static std::string level_name;
 static std::string description;
 
@@ -1026,7 +1028,10 @@ bool quake2_game_interface_c::Start(const char *preset) {
         }
     } else {
         #ifndef CONSOLE_ONLY
-        filename = DLG_OutputFilename("pak");
+        if (!mid_batch)
+            filename = DLG_OutputFilename("pak", preset);
+        else
+            filename = BestDirectory() / preset;
         #endif
     }
 

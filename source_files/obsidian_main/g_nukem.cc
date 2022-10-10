@@ -41,6 +41,7 @@
 #include "q_common.h"  // qLump_c
 
 extern void CSG_NUKEM_Write();
+extern std::filesystem::path BestDirectory();
 
 // Properties
 static std::string level_name;
@@ -431,7 +432,10 @@ bool nukem_game_interface_c::Start(const char *preset) {
         }
     } else {
         #ifndef CONSOLE_ONLY
-        filename = DLG_OutputFilename("grp");
+        if (!mid_batch)
+            filename = DLG_OutputFilename("grp", preset);
+        else
+            filename = BestDirectory() / preset;
         #endif
     }
 

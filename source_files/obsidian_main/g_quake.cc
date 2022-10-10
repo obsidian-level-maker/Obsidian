@@ -64,6 +64,7 @@
 #define MODEL_PADDING 1.0
 
 extern void Q1_ClippingHull(int hull);
+extern std::filesystem::path BestDirectory();
 
 static std::string level_name;
 static std::string description;
@@ -1318,7 +1319,10 @@ bool quake1_game_interface_c::Start(const char *preset) {
         }
     } else {
         #ifndef CONSOLE_ONLY
-        filename = DLG_OutputFilename("pak");
+        if (!mid_batch)
+            filename = DLG_OutputFilename("pak", preset);
+        else
+            filename = BestDirectory() / preset;
         #endif
     }
 

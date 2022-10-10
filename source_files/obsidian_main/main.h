@@ -185,6 +185,8 @@ extern int zip_output;
 extern int log_size;
 extern int log_limit;
 extern bool first_run;
+extern bool mid_batch;
+extern int builds_per_run;
 
 extern std::string def_filename;
 
