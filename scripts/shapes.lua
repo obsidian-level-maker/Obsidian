@@ -14342,6 +14342,100 @@ GROW_PLUS_SINGLE_STAIR_OPPOSITE =
   }
 },
 
+GROW_SPIRAL_STAIR =
+{
+  prob = 40,
+  skip_prob = 50,
+
+  structure =
+  {
+    "1.....","11>>A%",
+    "1.....","11>>AA",
+    "x...xx","x111xx",
+    "x...xx","x111xx"
+  },
+
+  diagonals =
+  {
+    "A."
+  },
+
+  auxiliary =
+  {
+    pass = "grow_spiral_stair_2",
+  }
+},
+
+GROW_SPIRAL_STAIR_DOUBLE =
+{
+  prob = 40,
+  skip_prob = 50,
+
+  structure =
+  {
+    "x...xx","x111xx",
+    "x...xx","x111xx",
+    "1.....","11>>AA",
+    "1.....","11>>AA",
+    "x...xx","x111xx",
+    "x...xx","x111xx"
+  },
+
+  diagonals =
+  {
+    "A."
+  },
+
+  auxiliary =
+  {
+    pass = "grow_spiral_stair_2",
+
+    count = {1,2}
+  }
+},
+
+GROW_SPIRAL_STAIR_STEP_2 =
+{
+  prob = 40,
+
+  pass = "grow_spiral_stair_2",
+
+  structure =
+  {
+    "xx1x","xx1x",
+    "xx11","xx11",
+    "22..","22vv",
+    "22..","22vv",
+    "xx..","xxAA",
+    "xx..","xxA/"
+  },
+
+  diagonals =
+  {
+    "A."
+  },
+
+  auxiliary =
+  {
+    pass = "grow_spiral_stair_3",
+  }
+},
+
+GROW_SPIRAL_STAIR_STEP_3 =
+{
+  prob = 40,
+
+  pass = "grow_spiral_stair_3",
+
+  structure =
+  {
+    "xx22xx","xx22xx",
+    "xx22xx","xx22xx",
+    "....11","AA<<11",
+    "....1x","AA<<1x"
+  },
+},
+
 -- END OF GROW RULES
 
 -- FORGET IT LMAO IT DOESN'T WORK
