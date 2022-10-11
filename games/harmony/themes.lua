@@ -259,28 +259,6 @@ HARMONY.ROOM_THEMES =
     },
   },
 
-  any_v2_Hallway =
-  {
-    env  = "hallway",
-    group = "oblige_v2",
-    prob = 1,
-
-    walls =
-    {
-      GRAY1  = 60,
-    },
-
-    floors =
-    {
-      FLOOR4_8 = 50,
-    },
-
-    ceilings =
-    {
-      FLOOR4_8 = 50,
-    },
-  },
-
   any_Hallway_curve =
   {
     env  = "hallway",

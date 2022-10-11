@@ -2237,28 +2237,6 @@ ULTDOOM.ROOM_THEMES =
 
 -----  GENERIC STUFF  ------------------------------
 
-  any_v2_Hallway =
-  {
-    env   = "hallway",
-    group = "oblige_v2",
-    prob  = 50,
-
-    walls =
-    {
-      GRAY1 = 50,
-    },
-
-    floors =
-    {
-      FLAT1 = 30,
-    },
-
-    ceilings =
-    {
-      CEIL3_5 = 30,
-    },
-  },
-
   any_vent_Hallway =
   {
     env   = "hallway",
@@ -2512,64 +2490,6 @@ ULTDOOM.ROOM_THEMES =
       FLAT4  = 20,
       FLAT23 = 10,
       FLAT1 = 10,
-    },
-  },
-
-  tech_v2_Hallway =
-  {
-    env   = "hallway",
-    group = "oblige_v2",
-    prob  = 25,
-
-    walls =
-    {
-      BROWN1 = 50,
-      SHAWN2 = 50,
-      STARTAN3 = 50,
-      STARG3 = 50,
-      BROWNGRN = 50,
-      BROWN96 = 50,
-      GSTONE1 = 50,
-      SP_HOT = 50,
-    },
-
-    floors =
-    {
-      FLAT1 = 50,
-      FLAT4 = 50,
-      FLAT19 = 50,
-      FLAT20 = 50,
-      FLAT3 = 50,
-      FLAT5 = 50,
-      FLOOR0_1 = 50,
-      FLOOR0_2 = 50,
-      FLOOR0_3 = 50,
-      FLOOR1_1 = 50,
-      FLOOR1_6 = 50,
-      FLOOR3_3 = 50,
-      FLOOR4_1 = 50,
-      FLOOR4_5 = 50,
-      FLOOR4_6 = 50,
-      FLOOR4_8 = 50,
-      FLOOR5_3 = 50,
-    },
-
-    ceilings =
-    {
-      CEIL3_2 = 50,
-      CEIL3_3 = 50,
-      CEIL3_5 = 50,
-      FLAT1 = 50,
-      FLAT18 = 50,
-      FLAT19 = 50,
-      FLAT20 = 50,
-      FLAT3 = 50,
-      FLOOR3_3 = 50,
-      FLOOR4_1 = 50,
-      FLOOR4_6 = 50,
-      FLOOR4_8 = 50,
-      FLOOR5_3 = 50,
-      FLOOR5_4 = 50,
     },
   },
 
@@ -2907,70 +2827,6 @@ ULTDOOM.ROOM_THEMES =
     },
   },
 
-  deimos_v2_Hallway =
-  {
-    env   = "hallway",
-    group = "oblige_v2",
-    prob  = 50,
-
-    walls =
-    {
-      BROWN1 = 33,
-      BROWNGRN = 50,
-      BROVINE = 20,
-      BROVINE2 = 15,
-      GRAY1 = 50,
-      GRAY5 = 33,
-      ICKWALL1 = 30,
-      ICKWALL3 = 30,
-      STONE2 = 40,
-      STONE3 = 50,
-      METAL1 = 30,
-    },
-
-    floors =
-    {
-      FLAT4 = 30,
-      CEIL4_1 = 15,
-      CEIL4_2 = 15,
-      CEIL5_1 = 30,
-      FLAT14 = 20,
-      FLAT5_4 = 20,
-      FLOOR3_3 = 30,
-      FLOOR4_8 = 40,
-      FLOOR5_1 = 25,
-      FLOOR5_2 = 10,
-      FLAT5 = 20,
-      FLOOR1_6 = 4,
-      FLOOR7_2 = 3,
-      FLAT5_1 = 3,
-      FLAT5_2 = 3,
-      DEM1_5 = 3,
-      DEM1_6 = 3,
-    },
-
-    ceilings =
-    {
-      FLAT4 = 20,
-      CEIL4_1 = 15,
-      CEIL4_2 = 15,
-      CEIL5_1 = 30,
-      CEIL3_5 = 25,
-      CEIL3_3 = 50,
-      FLAT18 = 15,
-      FLAT19 = 20,
-      FLAT5_4 = 10,
-      FLOOR4_8 = 25,
-      FLOOR5_1 = 20,
-      FLOOR7_1 = 15,
-      FLOOR7_2 = 2,
-      FLAT5_1 = 2,
-      FLAT5_2 = 2,
-      DEM1_5 = 2,
-      DEM1_6 = 2,
-    },
-  },
-
   deimos_Hallway =
   {
     env   = "hallway",
@@ -3032,65 +2888,6 @@ ULTDOOM.ROOM_THEMES =
       FLAT5_2 = 2,
       DEM1_5 = 2,
       DEM1_6 = 2,
-    },
-  },
-
-  deimos_v2_Hallway_hell =
-  {
-    env   = "hallway",
-    group = "oblige_v2",
-    prob  = 50,
-
-    walls =
-    {
-      MARBLE1 = 20,
-      MARBLE2 = 20,
-      MARBLE3 = 20,
-      GSTONE1 = 20,
-      BROVINE = 20,
-      COMPTILE = 20,
-    },
-
-    floors =
-    {
-      FLAT4 = 30,
-      CEIL4_1 = 15,
-      CEIL4_2 = 15,
-      CEIL5_1 = 30,
-      FLAT14 = 20,
-      FLAT5_4 = 20,
-      FLOOR3_3 = 30,
-      FLOOR4_8 = 40,
-      FLOOR5_1 = 25,
-      FLOOR5_2 = 10,
-      FLAT5 = 20,
-      FLOOR1_6 = 4,
-      FLOOR7_2 = 15,
-      FLAT5_1 = 15,
-      FLAT5_2 = 15,
-      DEM1_5 = 15,
-      DEM1_6 = 15,
-    },
-
-    ceilings =
-    {
-      FLAT4 = 20,
-      CEIL4_1 = 15,
-      CEIL4_2 = 15,
-      CEIL5_1 = 30,
-      CEIL3_5 = 25,
-      CEIL3_3 = 20,
-      FLAT18 = 15,
-      FLAT19 = 20,
-      FLAT5_4 = 10,
-      FLOOR4_8 = 15,
-      FLOOR5_1 = 20,
-      FLOOR7_1 = 15,
-      FLOOR7_2 = 15,
-      FLAT5_1 = 15,
-      FLAT5_2 = 15,
-      DEM1_5 = 15,
-      DEM1_6 = 15,
     },
   },
 
@@ -3441,61 +3238,6 @@ ULTDOOM.ROOM_THEMES =
       FLAT5_1 = 5,
       FLAT5_2 = 5,
       CEIL1_1 = 5,
-    },
-  },
-
-  hell_v2_Hallway =
-  {
-    env   = "hallway",
-    group = "oblige_v2",
-    prob  = 50,
-
-    walls =
-    {
-      FIREBLU1 = 50,
-      FIREWALL = 50,
-      SKSPINE2 = 50,
-      SKIN2    = 50,
-      SKINSYMB = 50,
-      MARBGRAY = 50,
-    },
-
-    floors =
-    {
-      BLOOD1 = 50,
-      FLAT4 = 30,
-      CEIL4_1 = 15,
-      CEIL5_1 = 30,
-      FLAT14 = 20,
-      FLAT5_4 = 20,
-      FLOOR5_2 = 10,
-      FLAT5 = 20,
-      FLOOR7_2 = 3,
-      FLAT5_2 = 3,
-      DEM1_5 = 3,
-      DEM1_6 = 3,
-    },
-
-    ceilings =
-    {
-      BLOOD1 = 50,
-      LAVA1 = 20,
-      FLAT4 = 20,
-      CEIL4_2 = 15,
-      CEIL5_1 = 30,
-      CEIL3_3 = 50,
-      FLAT19 = 20,
-      FLAT5_4 = 10,
-      FLOOR7_1 = 2,
-      FLAT5_1 = 2,
-      DEM1_6 = 2,
-    },
-
-    y_offsets =
-    {
-      SKSPINE2 = 13,
-      SKINSYMB = 30,
-      MARBGRAY = 24,
     },
   },
 
@@ -3862,65 +3604,6 @@ ULTDOOM.ROOM_THEMES =
 
 
   -- andrewj: this is a straight copy of deimos_Hallway_hell
-
-  flesh_v2_Hallway_hell =
-  {
-    env   = "hallway",
-    group = "oblige_v2",
-    prob  = 50,
-
-    walls =
-    {
-      MARBLE1 = 20,
-      MARBLE2 = 20,
-      MARBLE3 = 20,
-      GSTONE1 = 20,
-      BROVINE = 20,
-      COMPTILE = 20,
-    },
-
-    floors =
-    {
-      FLAT4 = 30,
-      CEIL4_1 = 15,
-      CEIL4_2 = 15,
-      CEIL5_1 = 30,
-      FLAT14 = 20,
-      FLAT5_4 = 20,
-      FLOOR3_3 = 30,
-      FLOOR4_8 = 40,
-      FLOOR5_1 = 25,
-      FLOOR5_2 = 10,
-      FLAT5 = 20,
-      FLOOR1_6 = 4,
-      FLOOR7_2 = 15,
-      FLAT5_1 = 15,
-      FLAT5_2 = 15,
-      DEM1_5 = 15,
-      DEM1_6 = 15,
-    },
-
-    ceilings =
-    {
-      FLAT4 = 20,
-      CEIL4_1 = 15,
-      CEIL4_2 = 15,
-      CEIL5_1 = 30,
-      CEIL3_5 = 25,
-      CEIL3_3 = 20,
-      FLAT18 = 15,
-      FLAT19 = 20,
-      FLAT5_4 = 10,
-      FLOOR4_8 = 15,
-      FLOOR5_1 = 20,
-      FLOOR7_1 = 15,
-      FLOOR7_2 = 15,
-      FLAT5_1 = 15,
-      FLAT5_2 = 15,
-      DEM1_5 = 15,
-      DEM1_6 = 15,
-    },
-  },
 
   flesh_Hallway_hell =
   {
@@ -4510,6 +4193,414 @@ function ULTDOOM.get_levels()
 
   end -- for episode
   ULTDOOM.nolimit_themes()
+end
+
+ULTDOOM.FACTORY = {}
+
+ULTDOOM.FACTORY.D1_QUESTS =
+{
+  key =
+  {
+    k_blue=50, k_red=50, k_yellow=50
+  },
+
+  switch =
+  {
+    sw_blue=50, sw_hot=30,
+    sw_vine=10, sw_skin=40,
+    sw_metl=50, sw_gray=20,
+  },
+
+  weapon =
+  {
+    saw=10, launch=80, plasma=60, bfg=5
+  },
+
+  item =
+  {
+    blue_armor=40, invis=40, backpack=25,
+    berserk=20, goggle=5, invul=2, map=3
+  },
+}
+
+ULTDOOM.FACTORY.D1_COMBOS =
+{
+  ---- TECH ------------
+
+  TECH_TRON =
+  {
+    theme_probs = { TECH=20 },
+    mat_pri = 12,
+
+    wall  = "COMPOHSO",
+    floor = "CEIL3_2",
+    ceil  = "CEIL5_2",
+
+    lift = "PLAT1",
+    step = "STEP1",
+    step_floor = "STEP1",
+  },
+
+  ---- CAVE ---------------
+
+  CAVE_ASH =
+  {
+    theme_probs = { CAVE=30 },
+    mat_pri = 2,
+
+    wall  = "ASHWALL",
+    floor = "FLAT5_8", -- FLOOR6_2
+    ceil  = "FLAT5_8",
+
+    arch  = "arch_russian_WOOD",
+
+    sc_fabs = { stalagmite_MED=40, other=10 },
+  },
+
+}
+
+ULTDOOM.FACTORY.D1_EXITS =
+{
+}
+
+ULTDOOM.FACTORY.D1_HALLWAYS =
+{
+}
+
+ULTDOOM.FACTORY.D1_CRATES =
+{
+  COMPUTER =
+  {
+    wall = "COMPUTE1", h=128, floor = "FLAT23",
+    side_x_offset=67
+  },
+
+  PLANET1 =
+  {
+    wall = "PLANET1", h=128, floor = "FLAT23",
+    side_x_offset=64
+  },
+ 
+  PLANET2 =
+  {
+    wall = "PLANET1", h=64, floor = "FLAT23",
+    x_offset=128, side_y_offset=64
+  },
+ 
+  SKIN =
+  {
+    wall = "SKINBORD", h=64, floor = "CEIL3_3", can_rotate=true
+  },
+}
+
+ULTDOOM.FACTORY.D1_RAILS =
+{
+  r_1 = { wall="BRNSMALC", w=128, h=64  },
+  r_2 = { wall="MIDGRATE", w=128, h=128 },
+}
+
+ULTDOOM.FACTORY.D1_WALL_PREFABS =
+{
+  wall_pic_COMP2 =
+  {
+    prefab = "WALL_PIC",
+    min_height = 160,
+    theme_probs = { TECH=90, INDUSTRIAL=30 },
+    skin = { pic_w="COMP2", lite_w="SUPPORT2", pic_h=128 },
+  },
+
+  wall_pic_TEKWALL2 =
+  {
+    prefab = "WALL_PIC_SHALLOW",
+    min_height = 144,
+    skin = { pic_w="TEKWALL2", lite_w="METAL", pic_h=128 },
+    theme_probs = { TECH=10 },
+  },
+
+  wall_pic_TEKWALL3 =
+  {
+    prefab = "WALL_PIC_SHALLOW",
+    min_height = 144,
+    skin = { pic_w="TEKWALL3", lite_w="METAL", pic_h=128 },
+    theme_probs = { TECH=10 },
+  },
+
+  wall_pic_TEKWALL5 =
+  {
+    prefab = "WALL_PIC_SHALLOW",
+    min_height = 144,
+    skin = { pic_w="TEKWALL5", lite_w="METAL", pic_h=128 },
+    theme_probs = { TECH=10 },
+  },
+
+  lights_thin_LITERED =
+  {
+    prefab = "WALL_LIGHTS_THIN",
+    min_height = 128,
+    theme_probs = { TECH=90, HELL=2 },
+    skin =
+    {
+      lite_w="LITERED", lite_side="LITERED",
+      frame_f="FLOOR1_6",
+      wall_lt=255, kind=8,
+    },
+  },
+
+}
+
+ULTDOOM.FACTORY.D1_ROOMS =
+{
+  PLANT =
+  {
+    wall_fabs =
+    {
+      wall_pic_COMP2 = 30, 
+      other = 100
+    },
+  },
+
+  COMPUTER =
+  {
+    wall_fabs =
+    {
+      wall_pic_COMP2 = 30, 
+      other = 100
+    },
+  },
+
+  TORTURE =
+  {
+    space_range = { 60, 90 },
+
+    sc_count = { 6,16 },
+
+    scenery =
+    {
+      impaled_human  = 40, impaled_twitch = 40,
+
+      hang_arm_pair  = 40, hang_leg_pair  = 40,
+      hang_leg_gone  = 40, hang_leg       = 40,
+      hang_twitching = 40,
+
+      other = 50
+    },
+
+    sc_fabs =
+    {
+      pillar_SPDUDE5=30, other=50
+    },
+
+    wall_fabs =
+    {
+      wall_pic_SPDUDE1 = 20, wall_pic_SPDUDE2 = 20,
+
+      other = 50
+    },
+  },
+
+  PRISON =
+  {
+  },
+}
+
+------------------------------------------------------------
+
+ULTDOOM.FACTORY.D1_EPISODE_THEMES =
+{
+  { URBAN=5, INDUSTRIAL=5, TECH=9, CAVE=2, HELL=2 },
+  { URBAN=9, INDUSTRIAL=5, TECH=4, CAVE=2, HELL=4 },
+  { URBAN=1, INDUSTRIAL=1, TECH=1, CAVE=5, HELL=9 },
+  { URBAN=4, INDUSTRIAL=2, TECH=2, CAVE=4, HELL=7 },
+
+  -- this entry used for a single episode or level
+  { URBAN=5, INDUSTRIAL=4, TECH=6, CAVE=4, HELL=6 },
+}
+
+ULTDOOM.FACTORY.D1_SECRET_EXITS =
+{
+  E1M3 = true,
+  E2M5 = true,
+  E3M6 = true,
+  E4M2 = true,
+}
+
+ULTDOOM.FACTORY.D1_EPISODE_BOSSES =
+{
+  "baron", -- the Bruiser Brothers
+  "cyber",
+  "spider",
+  "spider",
+}
+
+ULTDOOM.FACTORY.D1_SKY_INFO =
+{
+  { color="white",  light=192 },
+  { color="red",    light=176 },
+  { color="red",    light=192 },
+  { color="orange", light=192 },
+}
+
+function doom1_get_levels(episode)
+
+  local level_list = {}
+
+  local theme_probs = ULTDOOM.FACTORY.D1_EPISODE_THEMES[episode]
+  if SETTINGS.length ~= "full" then
+    theme_probs = ULTDOOM.FACTORY.D1_EPISODE_THEMES[5]
+  end
+
+  for map = 1,9 do
+    local Level =
+    {
+      name = string.format("E%dM%d", episode, map),
+
+      episode   = episode,
+      ep_along  = map,
+      ep_length = 9,
+
+      theme_probs = theme_probs,
+      sky_info = ULTDOOM.FACTORY.D1_SKY_INFO[episode],
+
+      boss_kind   = (map == 8) and ULTDOOM.FACTORY.D1_EPISODE_BOSSES[episode],
+      secret_kind = (map == 9) and "plain",
+
+      toughness_factor = sel(map==9, 1.2, 1 + (map-1) / 5),
+    }
+
+    if ULTDOOM.FACTORY.D1_SECRET_EXITS[Level.name] then
+      Level.secret_exit = true
+    end
+
+    std_decide_quests(Level, ULTDOOM.FACTORY.D1_QUESTS, DM_QUEST_LEN_PROBS)
+
+    table.insert(level_list, Level)
+  end
+
+  return level_list
+end
+
+
+------------------------------------------------------------
+
+function doom_common_factory()
+
+  return
+  {
+    doom_format = true,
+
+    plan_size = 10,
+    cell_size = 9,
+    cell_min_size = 6,
+
+    caps = { heights=true, sky=true, 
+             fragments=true, move_frag=true, rails=true,
+             closets=true,   depots=true,
+             switches=true,  liquids=true,
+             teleporters=true,
+           },
+
+    SKY_TEX    = "F_SKY1",
+    ERROR_TEX  = "FIREBLU1",
+    ERROR_FLAT = "SFLR6_4",
+
+    classes  = { "doomguy" },
+
+    monsters = DM_MONSTERS,
+    bosses   = DM_BOSSES,
+    weapons  = DM_WEAPONS,
+
+    things = DM_THINGS,
+
+    mon_give       = DM_MONSTER_GIVE,
+    mon_weap_prefs = DM_MONSTER_WEAPON_PREFS,
+    initial_model  = DM_INITIAL_MODEL,
+
+    pickups = DM_PICKUPS,
+    pickup_stats = { "health", "bullet", "shell", "rocket", "cell" },
+    niceness = DM_NICENESS,
+
+    dm = DM_DEATHMATCH,
+    dm_exits = DM_DEATHMATCH_EXITS,
+
+    combos    = DM_COMBOS,
+    exits     = DM_EXITS,
+    hallways  = DM_HALLWAYS,
+
+    hangs     = DM_OVERHANGS,
+    pedestals = DM_PEDESTALS,
+    mats      = DM_MATS,
+    crates    = DM_CRATES,
+
+    liquids   = DM_LIQUIDS,
+    switches  = DM_SWITCHES,
+    doors     = DM_DOORS,
+    key_doors = DM_KEY_DOORS,
+    lifts     = DM_LIFTS,
+
+    images    = DM_IMAGES,
+    lights    = DM_LIGHTS,
+
+    rooms     = DM_ROOMS,
+    themes    = DM_THEMES,
+
+    sc_fabs   = DM_SCENERY_PREFABS,
+    feat_fabs = DM_FEATURE_PREFABS,
+    wall_fabs = DM_WALL_PREFABS,
+
+    door_fabs = DM_DOOR_PREFABS,
+    arch_fabs = DM_ARCH_PREFABS,
+    win_fabs  = DM_WINDOW_PREFABS,
+    misc_fabs = DM_MISC_PREFABS,
+
+    toughness_factor = 1.00,
+    
+    depot_info = { teleport_kind=97 },
+
+    room_heights = { [96]=5, [128]=25, [192]=70, [256]=70, [320]=12 },
+    space_range  = { 20, 90 },
+
+    diff_probs = { [0]=20, [16]=20, [32]=80, [64]=60, [96]=20 },
+    bump_probs = { [0]=40, [16]=20, [32]=20, [64]=10 },
+
+    door_probs   = { out_diff=75, combo_diff=50, normal=15 },
+    window_probs = { out_diff=75, combo_diff=60, normal=35 },
+
+    hallway_probs = { 20, 30, 41, 53, 66 },
+    shack_prob    = 25,
+  }
+end
+
+
+GAME_FACTORIES["doom1"] = function()
+
+  local T = doom_common_factory()
+
+  T.episodes   = 4
+  T.level_func = doom1_get_levels
+
+  T.quests   = ULTDOOM.FACTORY.D1_QUESTS
+
+  T.rooms    = copy_and_merge(T.rooms,    ULTDOOM.FACTORY.D1_ROOMS)
+  T.combos   = copy_and_merge(T.combos,   ULTDOOM.FACTORY.D1_COMBOS)
+  T.exits    = copy_and_merge(T.exits,    ULTDOOM.FACTORY.D1_EXITS)
+  T.hallways = copy_and_merge(T.hallways, ULTDOOM.FACTORY.D1_HALLWAYS)
+  T.crates   = copy_and_merge(T.crates,   ULTDOOM.FACTORY.D1_CRATES)
+
+  T.sc_fabs   = copy_and_merge(T.sc_fabs,   ULTDOOM.FACTORY.D1_SCENERY_PREFABS)
+  T.wall_fabs = copy_and_merge(T.wall_fabs, ULTDOOM.FACTORY.D1_WALL_PREFABS)
+
+  T.rails = ULTDOOM.FACTORY.D1_RAILS
+
+  -- remove DOOM2-only weapons and items --
+
+  T.weapons = copy_table(T.weapons)
+  T.weapons["super"] = nil
+
+  T.dm = copy_table(T.dm)
+  T.dm.weapons = copy_table(T.dm.weapons)
+  T.dm.weapons["super"] = nil
+
+  return T
 end
 
 --------------------------------------------------------------------

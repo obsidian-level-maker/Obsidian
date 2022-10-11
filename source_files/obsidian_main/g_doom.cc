@@ -304,6 +304,11 @@ void Doom::BeginLevel() {
     }
 }
 
+int Doom::v094_begin_level(lua_State *L) {
+    BeginLevel();
+    return 0;
+}
+
 void Doom::EndLevel(std::string_view level_name) {
     // terminate header lump with trailing NUL
     if (header_lump->GetSize() > 0) {
@@ -338,6 +343,12 @@ void Doom::EndLevel(std::string_view level_name) {
     }
 
     FreeLumps();
+}
+
+int Doom::v094_end_level(lua_State *L) {
+    const char *levelname = luaL_checkstring(L, 1);
+    EndLevel(levelname);
+    return 0;
 }
 
 //------------------------------------------------------------------------
@@ -377,6 +388,13 @@ void Doom::AddVertex(int x, int y) {
     }
 }
 
+int Doom::v094_add_vertex(lua_State *L) {
+    int x = luaL_checkinteger(L, 1);
+    int y = luaL_checkinteger(L, 2);
+    AddVertex(x, y);
+    return 0;
+}
+
 void Doom::AddSector(int f_h, std::string f_tex, int c_h, std::string c_tex,
                      int light, int special, int tag) {
     if (not UDMF_mode) {
@@ -406,6 +424,18 @@ void Doom::AddSector(int f_h, std::string f_tex, int c_h, std::string c_tex,
     }
 }
 
+int Doom::v094_add_sector(lua_State *L) {
+    int f_h = luaL_checkinteger(L, 1);
+    int c_h = luaL_checkinteger(L, 2);
+    const char* f_tex = luaL_checkstring(L, 3);
+    const char* c_tex = luaL_checkstring(L, 4);
+    int light = luaL_checkinteger(L, 5);
+    int special = luaL_checkinteger(L, 6);
+    int tag = luaL_checkinteger(L, 7);
+    AddSector(f_h, f_tex, c_h, c_tex, light, special, tag);
+    return 0;
+}
+
 void Doom::AddSidedef(int sector, std::string l_tex, std::string m_tex,
                       std::string u_tex, int x_offset, int y_offset) {
     if (not UDMF_mode) {
@@ -431,6 +461,17 @@ void Doom::AddSidedef(int sector, std::string l_tex, std::string m_tex,
         textmap_lump->Printf("}\n");
         udmf_sidedefs += 1;
     }
+}
+
+int Doom::v094_add_sidedef(lua_State *L) {
+    int sector = luaL_checkinteger(L, 1);
+    const char *l_tex = luaL_checkstring(L, 2);
+    const char *m_tex = luaL_checkstring(L, 3);
+    const char *u_tex = luaL_checkstring(L, 4);
+    int x_offset = luaL_checkinteger(L, 5);
+    int y_offset = luaL_checkinteger(L, 6);
+    AddSidedef(sector, l_tex, m_tex, u_tex, x_offset, y_offset);
+    return 0;
 }
 
 void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
@@ -594,6 +635,48 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
     }
 }
 
+int v094_grab_args(lua_State *L, byte *args, int stack_pos)
+{
+  memset(args, 0, 5);
+
+  int what = lua_type(L, stack_pos);
+
+  if (what == LUA_TNONE || what == LUA_TNIL)
+    return 0;
+
+  if (what != LUA_TTABLE)
+    return luaL_argerror(L, stack_pos, "expected a table");
+
+  for (int i = 0; i < 5; i++)
+  {
+    lua_pushinteger(L, i+1);
+    lua_gettable(L, stack_pos);
+
+    if (lua_isnumber(L, -1))
+    {
+      args[i] = lua_tointeger(L, -1);
+    }
+
+    lua_pop(L, 1);
+  }
+
+  return 0;
+}
+
+int Doom::v094_add_linedef(lua_State *L) {
+    int vert1 = luaL_checkinteger(L, 1);
+    int vert2 = luaL_checkinteger(L, 2);
+    int side1 = luaL_checkinteger(L, 3);
+    int side2 = luaL_checkinteger(L, 4);
+    int type = luaL_checkinteger(L, 5);
+    int flags = luaL_checkinteger(L, 6);
+    int tag = luaL_checkinteger(L, 7);
+    //byte *args = NULL;
+    //v094_grab_args(L, args, 8);
+    AddLinedef(vert1, vert2, side1, side2, type, flags, tag, NULL);
+    return 0;
+}
+
 void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
                     int tid, byte special, const byte *args) {
     if (dm_offset_map) {
@@ -747,6 +830,21 @@ void Doom::AddThing(int x, int y, int h, int type, int angle, int options,
             udmf_things += 1;
         }
     }
+}
+
+int Doom::v094_add_thing(lua_State *L) {
+    int x = luaL_checkinteger(L, 1);
+    int y = luaL_checkinteger(L, 2);
+    int h = luaL_checkinteger(L, 3);
+    int type = luaL_checkinteger(L, 4);
+    int angle = luaL_checkinteger(L, 5);
+    int options = luaL_checkinteger(L, 6);
+    int tid = luaL_checkinteger(L, 7);
+    byte special = luaL_checkinteger(L, 8);
+    //byte *args = NULL;
+    //v094_grab_args(L, args, 9);
+    AddThing(x, y, h, type, angle, options, tid, special, NULL);
+    return 0;
 }
 
 int Doom::NumVertexes() {

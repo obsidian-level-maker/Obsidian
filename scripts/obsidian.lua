@@ -50,6 +50,8 @@ gui.import("script_manager")
 gui.import("random_words_en.lua")
 gui.import("random_words_ru.lua")
 
+gui.import("094/oblige.lua")
+
 function ob_ref_table(op, t)
   if not gui.___REFS then
     gui.___REFS = {}
@@ -2320,8 +2322,17 @@ function ob_print_reference_json()
 end
 
 function ob_build_cool_shit()
+
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
+
+  --[[ob_build_setup()
+
+  v094_build_cool_shit()
+  
+  local status
+  
+  goto done]]--
 
   if OB_CONFIG.engine == "vanilla" then
     ob_invoke_hook("setup")
@@ -2336,8 +2347,6 @@ function ob_build_cool_shit()
 
   gui.ticker()
   
-  local status
-
   ob_build_setup()
 
   if PARAM["bool_save_gif"] == 1 then
@@ -2369,6 +2378,8 @@ function ob_build_cool_shit()
 
   gui.printf("\n")
   gui.printf("~~~~~~ Finished Making Levels ~~~~~~\n\n")
+
+  --::done::
 
   return "ok"
 end

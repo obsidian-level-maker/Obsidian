@@ -26,6 +26,7 @@ HEXEN = { }
 gui.import("params")
 
 gui.import("entities")
+gui.import("factory")
 gui.import("monsters")
 gui.import("pickups")
 gui.import("weapons")

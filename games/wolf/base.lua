@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
---  BASE FILE for HERETIC
+--  Dummy Base File for Wolf 3D/SoD
 ------------------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -19,53 +19,12 @@
 --
 ------------------------------------------------------------------------
 
-HERETIC = { }
-
-
-gui.import("params")
-
-gui.import("entities")
-gui.import("factory")
-gui.import("monsters")
-gui.import("pickups")
-gui.import("weapons")
-gui.import("materials")
-gui.import("themes")
-gui.import("levels")
-gui.import("resources")
-gui.import("vanilla_mats")
+WOLF = { }
 
 ------------------------------------------------------------
 
-function HERETIC.all_done()
-  if ob_match_engine("advanced") then
-	  local wad_file = "games/heretic/data/HER_EXIT.wad"
-	  gui.wad_merge_sections(wad_file)
-  end
-  gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDTEXT")
-end
-
-OB_GAMES["heretic"] =
+UNFINISHED["wolf"] =
 {
-  label = _("Heretic"),
 
-  priority = 94,
-
-  format = "doom",
-  game_dir = "heretic",
-  iwad_name = "heretic.wad",
-
-  use_generics = true,
-
-  tables =
-  {
-    HERETIC
-  },
-
-  hooks =
-  {
-    get_levels = HERETIC.get_levels,
-    all_done   = HERETIC.all_done
-  },
 }
 
