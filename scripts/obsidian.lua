@@ -50,7 +50,7 @@ gui.import("script_manager")
 gui.import("random_words_en.lua")
 gui.import("random_words_ru.lua")
 
-gui.import("094/oblige.lua")
+gui.import("094/oblige_v094.lua")
 
 function ob_ref_table(op, t)
   if not gui.___REFS then
@@ -1930,6 +1930,7 @@ function ob_build_setup()
   end
 
   ob_invoke_hook("setup")
+  ob_invoke_hook("factory_setup") -- Some historical versions of Oblige use this
 
   Fab_load_all_definitions()
 
@@ -2326,14 +2327,6 @@ function ob_build_cool_shit()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
 
-  --[[ob_build_setup()
-
-  v094_build_cool_shit()
-  
-  local status
-  
-  goto done]]--
-
   if OB_CONFIG.engine == "vanilla" then
     ob_invoke_hook("setup")
     return "ok" 
@@ -2378,8 +2371,6 @@ function ob_build_cool_shit()
 
   gui.printf("\n")
   gui.printf("~~~~~~ Finished Making Levels ~~~~~~\n\n")
-
-  --::done::
 
   return "ok"
 end

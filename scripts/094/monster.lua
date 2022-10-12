@@ -40,7 +40,7 @@ zdump_table = do_nothing
 
 function add_thing(c, bx,by, name, blocking, angle, options, classes)
 
-  local kind = GAME.factory.things[name]
+  local kind = GAME.FACTORY.things[name]
   if not kind then
     error("Unknown thing kind: " .. name)
     return
@@ -206,7 +206,7 @@ end
 
 function hm_give_weapon(HM, weapon, ammo_mul)
 
-  if GAME.factory.hexen_format then
+  if GAME.FACTORY.hexen_format then
 
     -- weapon not for our class?
     if string.sub(HM.class, 1,1) ~= string.sub(weapon,1,1) then
@@ -232,7 +232,7 @@ function hm_give_weapon(HM, weapon, ammo_mul)
         return hm_give_weapon(HM, name)
       end
 
-      -- the pieces are not in the GAME.factory.weapons table, so return now
+      -- the pieces are not in the GAME.FACTORY.weapons table, so return now
       return
     end
 
@@ -241,7 +241,7 @@ function hm_give_weapon(HM, weapon, ammo_mul)
 
   HM[weapon] = true
 
-  local info = GAME.factory.weapons[weapon]
+  local info = GAME.FACTORY.weapons[weapon]
   if not info then
     error("No such weapon: " .. tostring(weapon))
   end
@@ -288,7 +288,7 @@ function give_assumed_stuff(list)
 
   for zzz,def in ipairs(list) do
 gui.printf("&&&&& give_assumed_stuff: weap=%s &&&&&\n", def.weapon or "-")
-    for xxx,CL in ipairs(GAME.factory.classes) do
+    for xxx,CL in ipairs(GAME.FACTORY.classes) do
       for yyy,SK in ipairs(SKILLS) do
         local HM = PLAN.hmodels[CL][SK]
     
@@ -306,11 +306,11 @@ end
 function initial_hmodels()
   local MODELS = {}
 
-  for xxx,CL in ipairs(GAME.factory.classes) do
+  for xxx,CL in ipairs(GAME.FACTORY.classes) do
     MODELS[CL] = { }
 
     for zzz,SK in ipairs(SKILLS) do
-      MODELS[CL][SK] = table.copy(non_nil(GAME.factory.initial_model[CL]))
+      MODELS[CL][SK] = table.copy(non_nil(GAME.FACTORY.initial_model[CL]))
 
       MODELS[CL][SK].class = CL
       MODELS[CL][SK].skill = SK
@@ -344,7 +344,7 @@ function determine_face_dir(c, x, y, last_dir)
 
       if not valid_block(nx,ny) then
         probs[dir] = 0
-      elseif GAME.factory.caps.four_dirs and ((dir%2) == 1) then
+      elseif GAME.FACTORY.caps.four_dirs and ((dir%2) == 1) then
         probs[dir] = 0
       else
         local B = PLAN.blocks[nx][ny]
@@ -426,10 +426,10 @@ function simulate_battle(HM, mon_set, quest)
   end
 
   local function give_monster_stuff(AC)
-    if not GAME.factory.mon_give then return end
+    if not GAME.FACTORY.mon_give then return end
     if AC.caged then return end
 
-    local stuff = GAME.factory.mon_give[AC.name]
+    local stuff = GAME.FACTORY.mon_give[AC.name]
     if not stuff then return end
 
     for zzz,item in ipairs(stuff) do
@@ -500,12 +500,12 @@ function simulate_battle(HM, mon_set, quest)
 
       -- preferred weapon based on monster
       local MW_prefs
-      if GAME.factory.mon_weap_prefs then MW_prefs = GAME.factory.mon_weap_prefs[first_mon] end
+      if GAME.FACTORY.mon_weap_prefs then MW_prefs = GAME.FACTORY.mon_weap_prefs[first_mon] end
 
       local names = {}
       local probs = {}
       
-      for name,info in pairs(GAME.factory.weapons) do
+      for name,info in pairs(GAME.FACTORY.weapons) do
         if HM[name] then
           local freq = info.freq
           freq = freq * (MW_prefs and MW_prefs[name] or 1.0)
@@ -521,7 +521,7 @@ function simulate_battle(HM, mon_set, quest)
       local idx = rand.index_by_probs(probs)
 
       local wp = names[idx]
-      local info = GAME.factory.weapons[wp]
+      local info = GAME.FACTORY.weapons[wp]
       assert(info)
 
       remain_shots = 1 + gui.random() + gui.random()
@@ -580,7 +580,7 @@ zprint(active_mon, #active_mon, active_mon[1])
 
     cur_weap = select_weapon()
 
-    local info = GAME.factory.weapons[cur_weap]
+    local info = GAME.FACTORY.weapons[cur_weap]
     assert(info)
 
     shoot_weapon(cur_weap, info)
@@ -593,7 +593,7 @@ zprint(active_mon, #active_mon, active_mon[1])
 
     local function mon_hurts_mon(m1, m2)
       if m1 == m2 then
-        return GAME.factory.monsters[m1].hitscan and (m1 ~= "vile")
+        return GAME.FACTORY.monsters[m1].hitscan and (m1 ~= "vile")
       end
 
       if (m1 == "knight" and m2 == "baron") or
@@ -821,7 +821,7 @@ function distribute_pickups(c, HM, backtrack)
 
     if not c.pickup_set then
       c.pickup_set = { }
-      for xxx,CL in ipairs(GAME.factory.classes) do
+      for xxx,CL in ipairs(GAME.FACTORY.classes) do
         c.pickup_set[CL] = { easy={}, medium={}, hard={} }
       end
     end
@@ -832,9 +832,9 @@ function distribute_pickups(c, HM, backtrack)
 
   local function be_nice_to_player()
 
-    if not GAME.factory.niceness then return end
+    if not GAME.FACTORY.niceness then return end
 
-    for zzz,ndef in pairs(GAME.factory.niceness) do
+    for zzz,ndef in pairs(GAME.FACTORY.niceness) do
       local prob = ndef.prob
 
       if ndef.always and c == c.quest.path[#c.quest.path - 1] then prob=99 end
@@ -843,7 +843,7 @@ function distribute_pickups(c, HM, backtrack)
 
       if rand.odds(prob) then
         if ndef.weapon then
-          local info = GAME.factory.weapons[ndef.weapon]
+          local info = GAME.FACTORY.weapons[ndef.weapon]
           assert(info)
 
           add_pickup(c, ndef.weapon, info)
@@ -851,7 +851,7 @@ function distribute_pickups(c, HM, backtrack)
           return;
 
         elseif ndef.pickup then
-          local info = GAME.factory.pickups[ndef.pickup]  -- may be nil
+          local info = GAME.FACTORY.pickups[ndef.pickup]  -- may be nil
 
           add_pickup(c, ndef.pickup, info)
 
@@ -899,7 +899,7 @@ function distribute_pickups(c, HM, backtrack)
     local health_mul = HEALTH_ADJUSTS[OB_CONFIG.health]
     local   ammo_mul =   AMMO_ADJUSTS[OB_CONFIG.ammo]
 
-    for zzz,stat in ipairs(GAME.factory.pickup_stats) do
+    for zzz,stat in ipairs(GAME.FACTORY.pickup_stats) do
       if stat == "health" then
         if HM.health < 70 then
           HM.health = (HM.health-70) * health_mul + 70
@@ -920,7 +920,7 @@ function distribute_pickups(c, HM, backtrack)
     local probs = {}
     local names = {}
 
-    for name,info in pairs(GAME.factory.pickups) do
+    for name,info in pairs(GAME.FACTORY.pickups) do
       if info.stat == stat then
         if info.give <= R * 2 then
           local prob = info.prob or 50
@@ -940,7 +940,7 @@ function distribute_pickups(c, HM, backtrack)
     local th_info = infos[idx]
 
     local count = 1 + int(R / th_info.give)
-    if GAME.factory.caps.blocky_items then count = 1 end
+    if GAME.FACTORY.caps.blocky_items then count = 1 end
 
     if th_info.clu_max then count = math.min(count, th_info.clu_max) end
 
@@ -996,7 +996,7 @@ function distribute_pickups(c, HM, backtrack)
 
   adjust_hmodel(HM)
 
-  for zzz,stat in ipairs(GAME.factory.pickup_stats) do
+  for zzz,stat in ipairs(GAME.FACTORY.pickup_stats) do
 
     local want = compute_want(stat, HM)
 
@@ -1221,7 +1221,7 @@ function place_battle_stuff(c, stats)
     -- perform two passes, place big monsters first
     for pass = 1,2 do
       for zzz, dat in ipairs(mons) do
-        local info = GAME.factory.monsters[dat.name]
+        local info = GAME.FACTORY.monsters[dat.name]
         if (pass==1) == (info.r >= 32) then
           place_monster(spots, dat)
         end
@@ -1234,12 +1234,12 @@ function place_battle_stuff(c, stats)
 
   --- place_battle_stuff ---
 
-  if GAME.factory.caps.elevator_exits and c.is_exit then return end
+  if GAME.FACTORY.caps.elevator_exits and c.is_exit then return end
 
   for zzz,skill in ipairs(SKILLS) do
     SK = skill
 
-    for xxx,clazz in ipairs(GAME.factory.classes) do
+    for xxx,clazz in ipairs(GAME.FACTORY.classes) do
       CL = clazz
       if c.pickup_set then
         place_pickup_list(c.pickup_set[CL][SK])
@@ -1288,8 +1288,8 @@ function battle_in_cell(c)
     -- because the quest structure means every class gets
     -- weapon #2 (for example) at the same time.
 
-    for name,info in pairs(GAME.factory.weapons) do
-      for xxx,CL in ipairs(GAME.factory.classes) do
+    for name,info in pairs(GAME.FACTORY.weapons) do
+      for xxx,CL in ipairs(GAME.FACTORY.classes) do
         local HM = PLAN.hmodels[CL][skill]
         if HM[name] and info.fp > fp then
           fp = info.fp
@@ -1305,7 +1305,7 @@ function battle_in_cell(c)
     local names = { "none" }
     local probs = { 30     }
 
-    for name,info in pairs(GAME.factory.monsters) do
+    for name,info in pairs(GAME.FACTORY.monsters) do
       if (info.pow < T*2) and (fp >= int(info.fp)) then
 
         local prob = info.prob * (c.mon_prefs[name] or 1)
@@ -1329,7 +1329,7 @@ function battle_in_cell(c)
 
     if name == "none" then return name, 0 end
 
-    local info = GAME.factory.monsters[name]
+    local info = GAME.FACTORY.monsters[name]
     assert(info)
 
     return name, info
@@ -1348,7 +1348,7 @@ function battle_in_cell(c)
   local function determine_mon_prefs(c)
     if c.mon_prefs then return end
 
-    c.mon_prefs = table.copy(GAME.factory.monster_prefs or {})
+    c.mon_prefs = table.copy(GAME.FACTORY.monster_prefs or {})
 
     local function merge_prefs(tab)
       if tab then
@@ -1389,7 +1389,7 @@ function battle_in_cell(c)
     local names = {}
     local probs = {}
 
-    for name,info in pairs(GAME.factory.monsters) do
+    for name,info in pairs(GAME.FACTORY.monsters) do
       if (info.cage_fallback) or 
          ((info.pow < T*2/x_horde) and (fp >= int(info.fp)))
       then
@@ -1412,7 +1412,7 @@ function battle_in_cell(c)
     assert(#probs > 0)
 
     local idx = rand.index_by_probs(probs)
-    local info = GAME.factory.monsters[names[idx]]
+    local info = GAME.FACTORY.monsters[names[idx]]
     assert(info)
 
     return names[idx], info
@@ -1449,7 +1449,7 @@ function battle_in_cell(c)
         name = sel(spot.double, big, small)
       end
 
-      local info = GAME.factory.monsters[name]
+      local info = GAME.FACTORY.monsters[name]
       assert(info)
 
       local horde = decide_cage_horde(spot, info)
@@ -1539,7 +1539,7 @@ function battle_in_cell(c)
 
   ---=== battle_in_cell ===---
 
-  if GAME.factory.caps.elevator_exits and c.is_exit then return end
+  if GAME.FACTORY.caps.elevator_exits and c.is_exit then return end
 
 zprint("BATTLE IN", c.x, c.y)
 
@@ -1574,7 +1574,7 @@ zprint("BATTLE IN", c.x, c.y)
     T = T + PLAN.left_overs[SK]
     U = 0
 
-    if GAME.factory.caps.tiered_skills then
+    if GAME.FACTORY.caps.tiered_skills then
       T, last_T = T - last_T, T
     end
 
@@ -1590,7 +1590,7 @@ zprint("BATTLE IN", c.x, c.y)
 
 zprint("SIMULATE in CELL", c.x, c.y, SK)
 
-    for xxx,CL in ipairs(GAME.factory.classes) do
+    for xxx,CL in ipairs(GAME.FACTORY.classes) do
 
       simulate_battle(PLAN.hmodels[CL][SK], c.mon_set[SK], quest)
 
@@ -1605,7 +1605,7 @@ function backtrack_to_cell(c)
   local function surprise_me(surprise)
     for zzz,place in ipairs(surprise.places) do
       if c == place.c then
-        for xxx,CL in ipairs(GAME.factory.classes) do
+        for xxx,CL in ipairs(GAME.FACTORY.classes) do
           for zzz,SK in ipairs(SKILLS) do
             simulate_battle(PLAN.hmodels[CL][SK], place.mon_set[SK]) 
             distribute_pickups(c, PLAN.hmodels[CL][SK], "backtrack")
@@ -1615,7 +1615,7 @@ function backtrack_to_cell(c)
     end
   end
 
-  if GAME.factory.caps.elevator_exits and c.is_exit then return end
+  if GAME.FACTORY.caps.elevator_exits and c.is_exit then return end
 
   if c.quest.closet then
     surprise_me(c.quest.closet)
@@ -1741,18 +1741,18 @@ function deathmatch_in_cell(c)
     local min_cluster = 1
     local max_cluster = 1
 
-    if GAME.factory.dm.min_clu then min_cluster = GAME.factory.dm.min_clu[name] or 1 end
-    if GAME.factory.dm.max_clu then max_cluster = GAME.factory.dm.max_clu[name] or 1 end
+    if GAME.FACTORY.dm.min_clu then min_cluster = GAME.FACTORY.dm.min_clu[name] or 1 end
+    if GAME.FACTORY.dm.max_clu then max_cluster = GAME.FACTORY.dm.max_clu[name] or 1 end
 
     local count = rand.irange(min_cluster, max_cluster)
     local cluster = select_cluster_pattern(count, max_cluster)
 
 --gui.printf("DM PICKUP '%s' @ (%d,%d) skill:%s\n", name, c.x, c.y, SK)
 
-    local info = GAME.factory.pickups[name] -- may be nil
+    local info = GAME.FACTORY.pickups[name] -- may be nil
 
     -- FIXME: this stinks
-    for xxx,CL in ipairs(GAME.factory.classes) do
+    for xxx,CL in ipairs(GAME.FACTORY.classes) do
       table.insert(c.pickup_set[CL][SK], { name=name, info=info, cluster=cluster })
     end
   end
@@ -1760,7 +1760,7 @@ function deathmatch_in_cell(c)
   --== deathmatch_in_cell ==--
 
   c.pickup_set = {}
-  for xxx,CL in ipairs(GAME.factory.classes) do
+  for xxx,CL in ipairs(GAME.FACTORY.classes) do
     c.pickup_set[CL] = { easy={}, medium={}, hard={} }
   end
 
@@ -1777,33 +1777,33 @@ function deathmatch_in_cell(c)
 
     -- health, ammo and items
     if rand.odds(HEALTH_PROBS_1[OB_CONFIG.health]) then
-      local what = choose_dm_thing(GAME.factory.dm.health, false)
+      local what = choose_dm_thing(GAME.FACTORY.dm.health, false)
       add_dm_pickup( what )
     end
 
     if rand.odds(AMMO_PROBS_1[OB_CONFIG.ammo]) then
-      local what = choose_dm_thing(GAME.factory.dm.ammo, false)
+      local what = choose_dm_thing(GAME.FACTORY.dm.ammo, false)
       add_dm_pickup( what )
     end
 
     if rand.odds(ITEM_PROB) then
-      local what = choose_dm_thing(GAME.factory.dm.items, true)
+      local what = choose_dm_thing(GAME.FACTORY.dm.items, true)
       add_dm_pickup( what )
     end
 
     -- secondary health and ammo
     if rand.odds(HEALTH_PROBS_2[OB_CONFIG.health]) then
-      local what = choose_dm_thing(GAME.factory.dm.health, false)
+      local what = choose_dm_thing(GAME.FACTORY.dm.health, false)
       add_dm_pickup( what )
     end
     if rand.odds(AMMO_PROBS_2[OB_CONFIG.ammo]) then
-      local what = choose_dm_thing(GAME.factory.dm.ammo, false)
+      local what = choose_dm_thing(GAME.FACTORY.dm.ammo, false)
       add_dm_pickup( what )
     end
 
     -- tertiary ammo
     if rand.odds(AMMO_PROBS_2[OB_CONFIG.ammo]) then
-      local what = choose_dm_thing(GAME.factory.dm.ammo, true)
+      local what = choose_dm_thing(GAME.FACTORY.dm.ammo, true)
       add_dm_pickup( what )
     end
   end

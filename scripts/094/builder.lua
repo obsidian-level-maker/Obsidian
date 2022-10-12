@@ -71,7 +71,7 @@ function random_where(link, border)
 
   local LINK_WHERES = { 3, 3, 9, 3, 3 }
 
-  if GAME.factory.caps.blocky_doors or
+  if GAME.FACTORY.caps.blocky_doors or
      (link.quest and link.quest.kind == "key") or
      link.cells[1].is_exit or link.cells[2].is_exit
   then
@@ -423,7 +423,7 @@ function B_prefab(c, fab,skin,parm, model,combo, x,y, dir,mirror_x,mirror_y)
     if parm[key] then return parm[key] end
     if skin[key] then return skin[key] end
 
-    if key == "sky" and combo.outdoor then return GAME.factory.SKY_TEX end
+    if key == "sky" and combo.outdoor then return GAME.FACTORY.SKY_TEX end
 
     if parm[base]  then return parm[base] end
     if skin[base]  then return skin[base] end
@@ -696,11 +696,11 @@ end
 --
 function B_lift(c, rmodel, bx,by, z1,z2, dir, long, deep)
 
-  assert(GAME.factory.lifts)
+  assert(GAME.FACTORY.lifts)
 
-  local lift_def = GAME.factory.lifts["fast"]
+  local lift_def = GAME.FACTORY.lifts["fast"]
   if not lift_def or rand.odds(20) then
-    lift_def = non_nil(GAME.factory.lifts["slow"])
+    lift_def = non_nil(GAME.FACTORY.lifts["slow"])
   end
 
   local dx, dy = dir_to_delta(dir)
@@ -715,8 +715,8 @@ function B_lift(c, rmodel, bx,by, z1,z2, dir, long, deep)
     rmodel = rmodel,
 
     f_h = z2,
-    f_tex = c.combo.lift_floor or GAME.factory.mats.LIFT.floor,
-    l_tex = c.combo.lift or GAME.factory.mats.LIFT.wall,
+    f_tex = c.combo.lift_floor or GAME.FACTORY.mats.LIFT.floor,
+    l_tex = c.combo.lift or GAME.FACTORY.mats.LIFT.wall,
 
     lift_kind = lift_def.kind,
     lift_walk = lift_def.walk,
@@ -770,7 +770,7 @@ function B_pillar_cage(c, combo, kx,ky, bx,by)
 
   local rail
   if K.rmodel.c_h < K.rmodel.f_h+192 then
-    rail = GAME.factory.rails["r_1"]  -- FIXME: want "short" rail
+    rail = GAME.FACTORY.rails["r_1"]  -- FIXME: want "short" rail
   else
     rail = get_rand_rail()
   end
@@ -1034,8 +1034,8 @@ end
 
 function B_exit_elevator(c, x, y, side)
 
-  local def = non_nil(GAME.factory.misc_fabs["elevator"])
-  local fab = non_nil(v094_PREFABS[def.prefab])
+  local def = non_nil(GAME.FACTORY.misc_fabs["elevator"])
+  local fab = non_nil(GAME.FACTORY.PREFABS[def.prefab])
 
   local parm =
   {
@@ -1214,7 +1214,7 @@ function setup_rmodel(c)
   }
 
   if c.combo.outdoor then
-    c.rmodel.c_tex = GAME.factory.SKY_TEX
+    c.rmodel.c_tex = GAME.FACTORY.SKY_TEX
   end
 
   if not c.rmodel.light then
@@ -1237,7 +1237,7 @@ function make_chunks()
       c.room_type.space_range or
       c.combo.space_range or
       (not PLAN.deathmatch and c.quest.theme.space_range) or
-      GAME.factory.space_range
+      GAME.FACTORY.space_range
 
     assert(range)
 
@@ -1288,8 +1288,8 @@ function make_chunks()
   end
 
   local function setup_chunk_sizes(c)
-    assert(c.bw >= GAME.factory.cell_min_size)
-    assert(c.bh >= GAME.factory.cell_min_size)
+    assert(c.bw >= GAME.FACTORY.cell_min_size)
+    assert(c.bh >= GAME.FACTORY.cell_min_size)
 
     -- decide depths of each side
     local L, M, R = decide_chunk_sizes(c.bw, c.q_spot and c.q_spot.kx)
@@ -1838,7 +1838,7 @@ gui.debugf("GROWING AT RANDOM [%d,%d] -> [%d,%d]\n", K1.kx,K1.ky, K2.kx,K2.ky)
 --
 --    -- TODO: more cage themes...
 --    if kind == "cage" then
---      if not GAME.factory.mats.CAGE then return end
+--      if not GAME.FACTORY.mats.CAGE then return end
 --      if c.scenic then return end
 --    end
 --
@@ -2549,7 +2549,7 @@ c.x,c.y, c.q_spot.kx,c.q_spot.ky, purpose)
         end
       end
 
-      if GAME.factory.caps.elevator_exits and c.is_exit then
+      if GAME.FACTORY.caps.elevator_exits and c.is_exit then
         K.kind = "room"
         K.rmodel = c.rmodel
         return
@@ -2728,7 +2728,7 @@ function setup_borders_and_corners()
   local function border_kind(c1, c2, side, link)
 
     if not c2 or c2.is_depot then
-      if c1.combo.outdoor and GAME.factory.caps.sky then return "sky" end
+      if c1.combo.outdoor and GAME.FACTORY.caps.sky then return "sky" end
       return "solid"
     end
 
@@ -2742,7 +2742,7 @@ function setup_borders_and_corners()
     -- TODO: sometimes allow windows
     if c1.is_exit or c2.is_exit then return "solid" end
 
-    if not GAME.factory.caps.heights then return "solid" end
+    if not GAME.FACTORY.caps.heights then return "solid" end
 
     -- fencing anyone?   (move tests into Planner???)
     local diff_h = math.min(c1.ceil_h, c2.ceil_h) - math.max(c1.f_max, c2.f_max)
@@ -2791,7 +2791,7 @@ function setup_borders_and_corners()
       D.fence_h = math.max(c.f_max, other.f_max)
 
       -- Wire fences
-      if GAME.factory.misc_fabs and GAME.factory.misc_fabs["fence_wire_STD"] and
+      if GAME.FACTORY.misc_fabs and GAME.FACTORY.misc_fabs["fence_wire_STD"] and
          rand.odds(33) and (side%2)==0
       then
         D.kind = "wire"
@@ -2953,14 +2953,14 @@ function build_borders()
 
     if link.long == 3 then
       if c.combo.arch then
-        return non_nil(GAME.factory.misc_fabs[c.combo.arch])
+        return non_nil(GAME.FACTORY.misc_fabs[c.combo.arch])
       end
       if c.quest.theme.arch and rand.odds(50) then
-        return non_nil(GAME.factory.misc_fabs[c.quest.theme.arch])
+        return non_nil(GAME.FACTORY.misc_fabs[c.quest.theme.arch])
       end
     end
 
-    -- !!! FIXME: use GAME.factory.arch_fabs[]
+    -- !!! FIXME: use GAME.FACTORY.arch_fabs[]
     local name
 
     if D.kind == "fence" then
@@ -2996,7 +2996,7 @@ function build_borders()
 
     local arch_def = link.arch_def
 
-    local fab = v094_PREFABS[arch_def.prefab]
+    local fab = GAME.FACTORY.PREFABS[arch_def.prefab]
     if not fab then error("Missing arch prefab: " .. arch_def.prefab) end
 
     local parm =
@@ -3025,19 +3025,19 @@ function build_borders()
 
     if link.quest and link.quest.kind == "key" then
 
-      return GAME.factory.key_doors[link.quest.item]
+      return GAME.FACTORY.key_doors[link.quest.item]
 
     elseif link.quest and link.quest.kind == "switch" then
 
-      return GAME.factory.switches[link.quest.item].door
+      return GAME.FACTORY.switches[link.quest.item].door
 
     elseif link.is_secret then
 
-      return GAME.factory.misc_fabs["secret_DOOR"]
+      return GAME.FACTORY.misc_fabs["secret_DOOR"]
 
     elseif link.is_exit then
 
-      return GAME.factory.misc_fabs["exit_DOOR"]
+      return GAME.FACTORY.misc_fabs["exit_DOOR"]
 
     end
 
@@ -3067,7 +3067,7 @@ function build_borders()
 --    door_kind = 1, tag = 0,
     }
 
-    if GAME.factory.doom_format and not link.is_exit and
+    if GAME.FACTORY.doom_format and not link.is_exit and
        rand.dual_odds(PLAN.deathmatch, 80, 15) and
        door_def.skin.door_kind == 1
     then
@@ -3088,7 +3088,7 @@ function build_borders()
     if not door_info.prefab then print(table_to_str(door_info)) end
     assert(door_info.prefab)
 
-    local fab = v094_PREFABS[door_info.prefab]
+    local fab = GAME.FACTORY.PREFABS[door_info.prefab]
     assert(fab)
 
     B_prefab(c, fab, door_info.skin, parm, rmodel,D.combo, link.x1, link.y1, side)
@@ -3116,7 +3116,7 @@ function build_borders()
 
     local def
     if link.quest and link.quest.kind == "key" then
-      def = GAME.factory.key_doors[link.quest.item]
+      def = GAME.FACTORY.key_doors[link.quest.item]
       assert(def)
       assert(def.door_kind)
     end
@@ -3153,7 +3153,7 @@ function build_borders()
     local D = c.border[side]
     assert(D)
 
-    if GAME.factory.wolf_format then
+    if GAME.FACTORY.wolf_format then
 
       if link.kind == "door" then
         blocky_door(link, side, double_who)
@@ -3269,13 +3269,13 @@ end
 --
 --      local special_arch
 --
---      if link.where == "wide" and GAME.factory.mats.ARCH and rand.odds(70) then
+--      if link.where == "wide" and GAME.FACTORY.mats.ARCH and rand.odds(70) then
 --        special_arch = true
 --
 --        arch.c_h = math.max(arch.c_h, c.ceil_h - 48)
---        arch.c_tex = GAME.factory.mats.ARCH.ceil
+--        arch.c_tex = GAME.FACTORY.mats.ARCH.ceil
 --
---        tex = GAME.factory.mats.ARCH.wall
+--        tex = GAME.FACTORY.mats.ARCH.wall
 --
 --        fill(c, x, y, ex+ax, ey+ay, { solid=tex })
 --      end
@@ -3306,9 +3306,9 @@ end
 --      B_exit_door(c, c.combo, link, x, y, c.floor_h, dir)
 --
 --    elseif link.kind == "door" and link.quest and link.quest.kind == "switch" and
---       GAME.factory.switches[link.quest.item].bars
+--       GAME.FACTORY.switches[link.quest.item].bars
 --    then
---      local info = GAME.factory.switches[link.quest.item]
+--      local info = GAME.FACTORY.switches[link.quest.item]
 --      local sec = copy_block_with_new(c.rmodel,
 --      {
 --        f_tex = b_combo.floor,
@@ -3338,7 +3338,7 @@ end
 --        kind = link.narrow_door
 --      end
 --
---      local info = GAME.factory.doors[kind]
+--      local info = GAME.FACTORY.doors[kind]
 --      assert(info)
 --
 --      local door_kind = 1
@@ -3456,15 +3456,15 @@ end
     local D = c.border[side]
     assert(D.wire_h)
 
-    local def = GAME.factory.misc_fabs["fence_wire_STD"]
+    local def = GAME.FACTORY.misc_fabs["fence_wire_STD"]
     assert(def)
 
-    local fab = non_nil(v094_PREFABS[def.prefab])
+    local fab = non_nil(GAME.FACTORY.PREFABS[def.prefab])
     local parm = { low_h = D.wire_h }
 
     -- Experimental shite
-    local def2 = GAME.factory.misc_fabs["fence_beam_BLUETORCH"]
-    local fab2 = def2 and non_nil(v094_PREFABS[def2.prefab])
+    local def2 = GAME.FACTORY.misc_fabs["fence_beam_BLUETORCH"]
+    local fab2 = def2 and non_nil(GAME.FACTORY.PREFABS[def2.prefab])
 
     for x = x1,x2 do for y = y1,y2 do
       local B = PLAN.blocks[x][y]
@@ -3575,9 +3575,9 @@ end
         local DEFS = { "window_narrow", "window_rail_nar_MIDGRATE", "window_cross_big" } ---!!!! FIXME: not hard coded
         local def_name = non_nil(DEFS[spot.long])
 
-        local def = GAME.factory.win_fabs and GAME.factory.win_fabs[def_name]
+        local def = GAME.FACTORY.win_fabs and GAME.FACTORY.win_fabs[def_name]
         if def then
-          local fab = non_nil(v094_PREFABS[def.prefab])
+          local fab = non_nil(GAME.FACTORY.PREFABS[def.prefab])
           B_prefab(c, fab,def.skin,parm, c.rmodel,D.combo, spot.x,spot.y,10-dir)
         end
       end
@@ -3639,7 +3639,7 @@ end
     end
 
     if not bar and D.kind ~= "fence" then
-      sec[side] = { rail = GAME.factory.rails["r_2"].wall }
+      sec[side] = { rail = GAME.FACTORY.rails["r_2"].wall }
     end
 
     for d_pos = first, BW-long, step do
@@ -3647,7 +3647,7 @@ end
 
       if (d_pos+1) >= min_x and (d_pos+long) <= max_x then
         if bar then
-          B_bars(c, wx,wy, math.min(side,10-side),long, bar,bar_step, GAME.factory.mats.METAL, sec,b_combo.wall)
+          B_bars(c, wx,wy, math.min(side,10-side),long, bar,bar_step, GAME.FACTORY.mats.METAL, sec,b_combo.wall)
         else
           gap_fill(c, wx,wy, wx+ax*(long-1),wy+ay*(long-1), sec)
         end
@@ -3767,26 +3767,26 @@ function build_pacman_level(c)
   local PACMAN_MID_FABS  = { "WOLF_PACMAN_MID_1", "WOLF_PACMAN_MID_2", "WOLF_PACMAN_MID_3" }
   local PACMAN_CORN_FABS = { "WOLF_PACMAN_CORN_1", "WOLF_PACMAN_CORN_2", "WOLF_PACMAN_CORN_3" }
  
-  local mid_fab = v094_PREFABS[rand.pick(PACMAN_MID_FABS)]
+  local mid_fab = GAME.FACTORY.PREFABS[rand.pick(PACMAN_MID_FABS)]
   assert(mid_fab)
 
   local mid_x = 32 - int(mid_fab.long/2)
   local mid_y = 30 - int(mid_fab.deep/2)
 
-  local top_fab = v094_PREFABS[rand.pick(PACMAN_CORN_FABS)]
-  local bot_fab = v094_PREFABS[rand.pick(PACMAN_CORN_FABS)]
+  local top_fab = GAME.FACTORY.PREFABS[rand.pick(PACMAN_CORN_FABS)]
+  local bot_fab = GAME.FACTORY.PREFABS[rand.pick(PACMAN_CORN_FABS)]
   assert(top_fab and bot_fab)
 
   local top_flip = rand.odds(50)
   local bot_flip = not top_flip
 
   -- !!!! FIXME: move skin into x_wolf.lua
-  local combo = GAME.factory.combos[rand.sel(50,"BLUE_STONE","BLUE_BRICK")]
+  local combo = GAME.FACTORY.combos[rand.sel(50,"BLUE_STONE","BLUE_BRICK")]
   assert(combo)
 
   local skin =
   {
-    ghost_w = GAME.factory.combos[rand.sel(50,"RED_BRICK","GRAY_STONE")].wall,
+    ghost_w = GAME.FACTORY.combos[rand.sel(50,"RED_BRICK","GRAY_STONE")].wall,
 
     dot_t = rand.sel(50,"chalice","cross"),
 
@@ -3954,7 +3954,7 @@ function layout_cell(c)
 --       elseif K.dm_exit then
 --         B_deathmatch_exit(c, K,kx,ky,K.dir)
 -- 
---       elseif GAME.factory.pics and not c.small_exit
+--       elseif GAME.FACTORY.pics and not c.small_exit
 --           and rand.odds(sel(c.combo.outdoor, 10, sel(c.hallway,20, 50)))
 --       then
 --         if not c.void_pic then decide_void_pic(c) end
@@ -3963,7 +3963,7 @@ function layout_cell(c)
 --         if not c.quest.image and (PLAN.deathmatch or
 --              (c.quest.parent and rand.odds(33)))
 --         then
---           pic = GAME.factory.images[1]
+--           pic = GAME.FACTORY.images[1]
 --           cut = 1
 --           c.quest.image = "pic"
 --         end
@@ -3977,7 +3977,7 @@ function layout_cell(c)
 --     end -- K.void
 -- 
 --     if K.cage then
---       B_big_cage(c, GAME.factory.mats.CAGE, K,kx,ky)
+--       B_big_cage(c, GAME.FACTORY.mats.CAGE, K,kx,ky)
 --       return
 --     end
 -- 
@@ -3993,18 +3993,18 @@ function layout_cell(c)
 --         for i = 1,4 do
 --           local dx,dy = dir_to_delta(offsets[i])
 --           if SETTINGS.game == "plutonia" then
---             B_double_pedestal(c, bx+dx,by+dy, K.rmodel, GAME.factory.special_ped)
+--             B_double_pedestal(c, bx+dx,by+dy, K.rmodel, GAME.FACTORY.special_ped)
 --           else
---             B_pedestal(c, bx+dx, by+dy, K.rmodel, GAME.factory.pedestals.PLAYER)
+--             B_pedestal(c, bx+dx, by+dy, K.rmodel, GAME.FACTORY.pedestals.PLAYER)
 --           end
 --           add_thing(c, bx+dx, by+dy, "player" .. tostring(i), true, angle)
 --           c.player_pos = {x=bx+dx, y=by+dy}
 --         end
 --       else
 --         if SETTINGS.game == "plutonia" then
---           B_double_pedestal(c, bx,by, K.rmodel, GAME.factory.special_ped)
+--           B_double_pedestal(c, bx,by, K.rmodel, GAME.FACTORY.special_ped)
 --         else
---           B_pedestal(c, bx, by, K.rmodel, GAME.factory.pedestals.PLAYER)
+--           B_pedestal(c, bx, by, K.rmodel, GAME.FACTORY.pedestals.PLAYER)
 --         end
 --         add_thing(c, bx, by, sel(PLAN.deathmatch, "dm_player", "player1"), true, angle)
 --         c.player_pos = {x=bx, y=by}
@@ -4012,13 +4012,13 @@ function layout_cell(c)
 --       end
 -- 
 --     elseif K.dm_weapon then
---       B_pedestal(c, bx, by, K.rmodel, GAME.factory.pedestals.WEAPON)
+--       B_pedestal(c, bx, by, K.rmodel, GAME.FACTORY.pedestals.WEAPON)
 --       add_thing(c, bx, by, K.dm_weapon, true)
 -- 
 --     elseif K.quest then
 -- 
 --       if c.quest.kind == "key" or c.quest.kind == "weapon" or c.quest.kind == "item" then
---         B_pedestal(c, bx, by, K.rmodel, GAME.factory.pedestals.QUEST)
+--         B_pedestal(c, bx, by, K.rmodel, GAME.FACTORY.pedestals.QUEST)
 -- 
 --         -- weapon and keys are non-blocking, but we don't want
 --         -- a monster sitting on top of our quest item (especially
@@ -4026,7 +4026,7 @@ function layout_cell(c)
 --         add_thing(c, bx, by, c.quest.item, true)
 -- 
 --       elseif c.quest.kind == "switch" then
---         local info = GAME.factory.switches[c.quest.item]
+--         local info = GAME.FACTORY.switches[c.quest.item]
 --         assert(info.switch)
 --         local kind = 103; if info.bars then kind = 23 end
 --         if rand.odds(40) then
@@ -4042,7 +4042,7 @@ function layout_cell(c)
 --         local side = wall_switch_dir(kx, ky, c.entry_dir)
 -- 
 --         if SETTINGS.game == "plutonia" then
---           B_double_pedestal(c, bx,by, K.rmodel, GAME.factory.special_ped,
+--           B_double_pedestal(c, bx,by, K.rmodel, GAME.FACTORY.special_ped,
 --             { walk_kind = 52 }) -- FIXME "exit_W1"
 -- 
 --         elseif c.small_exit and not c.smex_cage and rand.odds(80) then
@@ -4101,7 +4101,7 @@ function layout_cell(c)
 --       end
 -- 
 --       if SETTINGS.mode == "coop" and SETTINGS.game == "plutonia" then
---         sec.light = GAME.factory.special_ped.coop_light
+--         sec.light = GAME.FACTORY.special_ped.coop_light
 --       end
 --     end
 -- 
@@ -4116,7 +4116,7 @@ function layout_cell(c)
 -- 
 --       if not c.overhang then
 --         local name
---         name, c.overhang = rand_table_pair(GAME.factory.hangs)
+--         name, c.overhang = rand_table_pair(GAME.FACTORY.hangs)
 --       end
 --       local overhang = c.overhang
 -- 
@@ -4131,7 +4131,7 @@ function layout_cell(c)
 -- 
 --     -- TEST CRUD : crates
 --     if not c.scenic and not K.stair_dir
---       and GAME.factory.crates
+--       and GAME.FACTORY.crates
 --       and rand.dual_odds(c.combo.outdoor, 20, 33)
 --       and (not c.hallway or rand.odds(25))
 --       and (not c.exit or rand.odds(50))
@@ -4165,7 +4165,7 @@ function layout_cell(c)
 -- 
 --       K.sky_light_sec = copy_block(sec)
 --       K.sky_light_sec.c_h   = sel(c.sky_light.is_sky, c.sky_h, sec.c_h + c.sky_light.h)
---       K.sky_light_sec.c_tex = sel(c.sky_light.is_sky, GAME.factory.SKY_TEX, c.sky_light.light_info.floor)
+--       K.sky_light_sec.c_tex = sel(c.sky_light.is_sky, GAME.FACTORY.SKY_TEX, c.sky_light.light_info.floor)
 --       K.sky_light_sec.light = 176
 --       K.sky_light_utex = c.sky_light.light_info.side
 -- 
@@ -4214,7 +4214,7 @@ function layout_cell(c)
 --         if not c.quest.image and not c.quest.parent and
 --            (not PLAN.image or rand.odds(11))
 --         then
---           combo = GAME.factory.images[2]
+--           combo = GAME.FACTORY.images[2]
 --           c.quest.image = "crate"
 --           PLAN.image = true
 --         end
@@ -4225,10 +4225,10 @@ function layout_cell(c)
 --       if K.pillar and not blocked then
 -- 
 --         -- TEST CRUD
---         if rand.odds(22) and GAME.factory.mats.CAGE and not PLAN.deathmatch
+--         if rand.odds(22) and GAME.FACTORY.mats.CAGE and not PLAN.deathmatch
 --           and K.rmodel.c_h >= K.rmodel.f_h + 128
 --         then
---           B_pillar_cage(c, GAME.factory.mats.CAGE, kx,ky, K.x1+1,K.y1+1)
+--           B_pillar_cage(c, GAME.FACTORY.mats.CAGE, kx,ky, K.x1+1,K.y1+1)
 --         else
 --           B_pillar(c, c.combo, kx,ky, K.x1+1,K.y1+1)
 --         end
@@ -4254,7 +4254,7 @@ function layout_cell(c)
 
   local function decide_sky_lights(c)
     if not c.combo.outdoor and not c.is_exit and not c.hallway
-       and GAME.factory.lights and rand.odds(70)
+       and GAME.FACTORY.lights and rand.odds(70)
     then
       c.sky_light =
       {
@@ -4980,7 +4980,7 @@ gui.debugf("  CELL:   (%d,%d) .. (%d,%d)\n", c.bx1,c.by1, c.bx2,c.by2)
   local function mark_secret(c, x1,y1, x2,y2)
     assert(x2 >= x1 and y2 >= y1)
 
-    if not GAME.factory.doom_format then return end
+    if not GAME.FACTORY.doom_format then return end
 
     for x = x1,x2 do for y = y1,y2 do
       local B = PLAN.blocks[x][y]
@@ -5386,9 +5386,9 @@ gui.debugf("  EDGE1:%s  EDGE2:%s\n", edge1 or "OK", edge2 or "OK")
 
     local prefer_stairs = c.room_type.prefer_stairs or
        (not PLAN.deathmatch and c.quest.theme.prefer_stairs) or
-       GAME.factory.caps.prefer_stairs
+       GAME.FACTORY.caps.prefer_stairs
 
-    local max_step = sel(GAME.factory.caps.prefer_stairs, 24, 16) --????
+    local max_step = sel(GAME.FACTORY.caps.prefer_stairs, 24, 16) --????
 
     -- decide whether to make a staircase or a lowering platform
     local mode = "lift"
@@ -5656,7 +5656,7 @@ gui.debugf("  EDGE1:%s  EDGE2:%s\n", edge1 or "OK", edge2 or "OK")
   end
 
   -- elevator exits are handled specially
-  if GAME.factory.caps.elevator_exits and c.is_exit then return end
+  if GAME.FACTORY.caps.elevator_exits and c.is_exit then return end
 
   decide_sky_lights(c)
 
@@ -6390,7 +6390,7 @@ function tizzy_up_room(c)
         c.room_type.liquid_prob or
         c.combo.liquid_prob or
         (not PLAN.deathmatch and c.quest.theme.liquid_prob) or
-        GAME.factory.liquid_prob or 40
+        GAME.FACTORY.liquid_prob or 40
 
       return rand.odds(chance)
     end
@@ -6495,11 +6495,11 @@ function tizzy_up_room(c)
         (spot.vista_side and dir_to_angle(spot.vista_side)) or angle or 0)
     end
 
-    local info = GAME.factory.things[name] or {}
+    local info = GAME.FACTORY.things[name] or {}
 
-    local def = (GAME.factory.misc_fabs and GAME.factory.misc_fabs[ped]) or {}
+    local def = (GAME.FACTORY.misc_fabs and GAME.FACTORY.misc_fabs[ped]) or {}
 
-    local fab = v094_PREFABS[def.prefab or "PLAIN"]
+    local fab = GAME.FACTORY.PREFABS[def.prefab or "PLAIN"]
     assert(fab)
 
     if c.q_spot and must_put then
@@ -6513,7 +6513,7 @@ function tizzy_up_room(c)
     if not x and must_put then
       x,y,dir = find_emergency_loc(c)
       def = {}
-      fab = v094_PREFABS["PLAIN"]
+      fab = GAME.FACTORY.PREFABS["PLAIN"]
       assert(fab)
     end
     if not x then
@@ -6545,7 +6545,7 @@ gui.debugf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
       local dir2 = c.exit_dir or c.entry_dir
 
       -- look diagonally sometimes
-      if not GAME.factory.caps.four_dirs then
+      if not GAME.FACTORY.caps.four_dirs then
         if dir2 and dir2 ~= dir and rand.odds(75) then
           if dir2 == rotate_cw90(dir) then
             dir = rotate_cw45(dir)
@@ -6590,7 +6590,7 @@ gui.debugf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
     -- FIXME!!! boss_brain levels
     if name == "boss_brain" then return end
 
-    local info = GAME.factory.bosses[name] or GAME.factory.monsters[name]
+    local info = GAME.FACTORY.bosses[name] or GAME.FACTORY.monsters[name]
     if not info then error("Unknown boss: " .. name) end
 
     local count = 1
@@ -6608,7 +6608,7 @@ gui.debugf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
     local function do_add_weap(x, y)
       for idx,SK in ipairs(SKILLS) do
 
-        local name = choose_dm_thing(GAME.factory.dm.weapons, true)
+        local name = choose_dm_thing(GAME.FACTORY.dm.weapons, true)
         local angle = 0
         local options = { [SK]=true }
 
@@ -6625,9 +6625,9 @@ gui.debugf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
 
     local ped = "pedestal_ITEM"
 
-    local def = (GAME.factory.misc_fabs and GAME.factory.misc_fabs[ped]) or {}
+    local def = (GAME.FACTORY.misc_fabs and GAME.FACTORY.misc_fabs[ped]) or {}
 
-    local fab = v094_PREFABS[def.prefab or "PLAIN"]
+    local fab = GAME.FACTORY.PREFABS[def.prefab or "PLAIN"]
     assert(fab)
 
     sort_fab_locs(c, "random");
@@ -6672,7 +6672,7 @@ gui.debugf("add_quest_object: %s @ (%d,%d)\n", name, x, y)
   end
 
   local function try_add_wall_prefab(c, def)
-    local fab = v094_PREFABS[def.prefab]
+    local fab = GAME.FACTORY.PREFABS[def.prefab]
     assert(fab)
     assert(def.skin)
 
@@ -6694,14 +6694,14 @@ gui.debugf("add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
 
   local function add_deathmatch_exit(c)
 
-    if not GAME.factory.dm_exits then return end
+    if not GAME.FACTORY.dm_exits then return end
 
     local K = c.q_spot
 
-    local def = get_rand_fab(GAME.factory.dm_exits)
+    local def = get_rand_fab(GAME.FACTORY.dm_exits)
     assert(def)
 
-    local fab = v094_PREFABS[def.prefab]
+    local fab = GAME.FACTORY.PREFABS[def.prefab]
     assert(fab)
 
     assert(def.skin)
@@ -6715,12 +6715,12 @@ gui.debugf("add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
   end
 
   local function add_hexen_gate(c)
-    assert(GAME.factory.misc_fabs)
+    assert(GAME.FACTORY.misc_fabs)
 
-    local def = GAME.factory.misc_fabs[sel(c.quest.return_args, "gate_FORWARD", "gate_BACK")]
+    local def = GAME.FACTORY.misc_fabs[sel(c.quest.return_args, "gate_FORWARD", "gate_BACK")]
     assert(def)
 
-    local fab = non_nil(v094_PREFABS[def.prefab])
+    local fab = non_nil(GAME.FACTORY.PREFABS[def.prefab])
 
     local K = c.q_spot
     assert(K)
@@ -6753,10 +6753,10 @@ gui.debugf("add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
   end
 
   local function add_special_item(c)
-    local def = GAME.factory.item_fabs[c.quest.item]
+    local def = GAME.FACTORY.item_fabs[c.quest.item]
     assert(def)
 
-    local fab = non_nil(v094_PREFABS[def.prefab])
+    local fab = non_nil(GAME.FACTORY.PREFABS[def.prefab])
 
     local K = c.q_spot
     assert(K)
@@ -6777,7 +6777,7 @@ gui.debugf("add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
       if c.is_exit then
         def = non_nil(c.combo.switch)
       else
-        local info = GAME.factory.switches[c.quest.item]
+        local info = GAME.FACTORY.switches[c.quest.item]
         if not info then
           error("Missing switch: " .. tostring(c.quest.item))
         end
@@ -6794,7 +6794,7 @@ gui.debugf("add_wall_stuff: %s @ (%d,%d) block:(%d,%d) dir:%d\n",
       end
     end
 
-    local fab = v094_PREFABS[def.prefab]
+    local fab = GAME.FACTORY.PREFABS[def.prefab]
     if not fab then
       error("Unknown switch prefab: " .. tostring(def.prefab))
     end
@@ -6851,8 +6851,8 @@ fab.name, c.x,c.y, x,y,dir)
   end
 
   local function add_exit_elevator(c)
-    local def = non_nil(GAME.factory.misc_fabs["elevator"])
-    local fab = non_nil(v094_PREFABS[def.prefab])
+    local def = non_nil(GAME.FACTORY.misc_fabs["elevator"])
+    local fab = non_nil(GAME.FACTORY.PREFABS[def.prefab])
 
     local want_dir = 4
     if (c.entry_dir == 6) then want_dir = 6 end
@@ -6878,7 +6878,7 @@ fab.name, c.x,c.y, x,y,dir)
       
       local prob = def.prob
 
-      local fab = v094_PREFABS[def.prefab]
+      local fab = GAME.FACTORY.PREFABS[def.prefab]
       if not fab then error("Missing prefab: " .. tostring(def.prefab)) end
 
       if def.environment then
@@ -6911,28 +6911,28 @@ fab.name, c.x,c.y, x,y,dir)
 
   local function add_wall_stuff(c)
 
-    if not GAME.factory.wall_fabs then return end
+    if not GAME.FACTORY.wall_fabs then return end
 
     local def
 
     if not def and c.room_type and c.room_type.wall_fabs then
       local name = rand.key_by_probs(c.room_type.wall_fabs)
       if name ~= "other" then
-        def = non_nil(GAME.factory.wall_fabs[name])
+        def = non_nil(GAME.FACTORY.wall_fabs[name])
       end
     end
 
     if not def and c.combo.wall_fabs then
       local name = rand.key_by_probs(c.combo.wall_fabs)
       if name ~= "other" then
-        def = non_nil(GAME.factory.wall_fabs[name])
+        def = non_nil(GAME.FACTORY.wall_fabs[name])
       end
     end
 
     if not def and c.quest.theme.wall_fabs then
       local name = rand.key_by_probs(c.quest.theme.wall_fabs)
       if name ~= "other" then
-        def = non_nil(GAME.factory.wall_fabs[name])
+        def = non_nil(GAME.FACTORY.wall_fabs[name])
       end
     end
 
@@ -6941,7 +6941,7 @@ fab.name, c.x,c.y, x,y,dir)
     end
 
     if not def then
-      def = select_nice_fab(c, GAME.factory.wall_fabs)
+      def = select_nice_fab(c, GAME.FACTORY.wall_fabs)
     end
 
     if def then
@@ -6955,7 +6955,7 @@ fab.name, c.x,c.y, x,y,dir)
 
   local function try_add_prefab(c, def, is_feature)
 
-    local fab = non_nil(v094_PREFABS[def.prefab])
+    local fab = non_nil(GAME.FACTORY.PREFABS[def.prefab])
 
     assert(def.skin)
 
@@ -7001,17 +7001,17 @@ gui.debugf("add_prefab: %s  dir:%d\n", def.name, dir)
 
   local function add_prefab(c, is_feature)
 
-    if not GAME.factory.sc_fabs then return end
+    if not GAME.FACTORY.sc_fabs then return end
 
     local def
 
     if is_feature then
-      def = select_nice_fab(c, GAME.factory.feat_fabs)
+      def = select_nice_fab(c, GAME.FACTORY.feat_fabs)
     else
       if not def and c.room_type and c.room_type.sc_fabs then
         local name = rand.key_by_probs(c.room_type.sc_fabs)
         if name ~= "other" then
-          def = GAME.factory.sc_fabs[name]
+          def = GAME.FACTORY.sc_fabs[name]
           if not def then error("No such sc_fab: " .. tostring(name)) end
         end
       end
@@ -7019,7 +7019,7 @@ gui.debugf("add_prefab: %s  dir:%d\n", def.name, dir)
       if not def and c.combo.sc_fabs then
         local name = rand.key_by_probs(c.combo.sc_fabs)
         if name ~= "other" then
-          def = GAME.factory.sc_fabs[name]
+          def = GAME.FACTORY.sc_fabs[name]
           if not def then error("No such sc_fab: " .. tostring(name)) end
         end
       end
@@ -7027,7 +7027,7 @@ gui.debugf("add_prefab: %s  dir:%d\n", def.name, dir)
       if not def and c.quest.theme.sc_fabs then
         local name = rand.key_by_probs(c.quest.theme.sc_fabs)
         if name ~= "other" then
-          def = GAME.factory.sc_fabs[name]
+          def = GAME.FACTORY.sc_fabs[name]
           if not def then error("No such sc_fab: " .. tostring(name)) end
         end
       end
@@ -7037,7 +7037,7 @@ gui.debugf("add_prefab: %s  dir:%d\n", def.name, dir)
       end
 
       if not def then
-        def = select_nice_fab(c, GAME.factory.sc_fabs)
+        def = select_nice_fab(c, GAME.FACTORY.sc_fabs)
       end
     end
 
@@ -7045,10 +7045,10 @@ gui.debugf("add_prefab: %s  dir:%d\n", def.name, dir)
   end
 
   local function add_image(c, what)
-    if GAME.factory.wolf_format then return end
-    if not GAME.factory.misc_fabs then return end
+    if GAME.FACTORY.wolf_format then return end
+    if not GAME.FACTORY.misc_fabs then return end
 
-    local def = GAME.factory.misc_fabs["image_" .. tostring(what)]
+    local def = GAME.FACTORY.misc_fabs["image_" .. tostring(what)]
     assert(def)
 
     if OB_CONFIG.mode == "dm" then
@@ -7109,10 +7109,10 @@ gui.debugf("add_prefab: %s  dir:%d\n", def.name, dir)
 
     if not item then return end
 
-    local info = GAME.factory.things[item]
+    local info = GAME.FACTORY.things[item]
     if not info then error("Missing info for item: " .. item) end
 
-    local fab = v094_PREFABS[info.prefab or "PLAIN"]
+    local fab = GAME.FACTORY.PREFABS[info.prefab or "PLAIN"]
     assert(fab)
 
     while true do
@@ -7173,7 +7173,7 @@ gui.debugf("add_scenery : %s\n", item)
 
   -- WALL SWITCHES
   if not PLAN.deathmatch and c == c.quest.last then
-    if GAME.factory.caps.elevator_exits and c.quest.kind == "exit" then
+    if GAME.FACTORY.caps.elevator_exits and c.quest.kind == "exit" then
       add_exit_elevator(c)
     elseif (c.quest.kind == "switch") or (c.quest.kind == "exit") then
       add_switch(c, true)
@@ -7217,7 +7217,7 @@ gui.debugf("add_scenery : %s\n", item)
 
   -- NORMAL SWITCHES
   if not PLAN.deathmatch and c == c.quest.last then
-    if (c.quest.kind == "switch") or (c.quest.kind == "exit" and not GAME.factory.caps.elevator_exits) then
+    if (c.quest.kind == "switch") or (c.quest.kind == "exit" and not GAME.FACTORY.caps.elevator_exits) then
       add_switch(c, false)
     end
   end
@@ -7228,7 +7228,7 @@ gui.debugf("add_scenery : %s\n", item)
        (c.quest.kind == "weapon") or
        (c.quest.kind == "item")
     then
-      if GAME.factory.item_fabs and GAME.factory.item_fabs[c.quest.item] then
+      if GAME.FACTORY.item_fabs and GAME.FACTORY.item_fabs[c.quest.item] then
         add_special_item(c)
       elseif c.quest.item == "treasure" then
         -- FIXME: room full of treasure (USE ROOM_TYPE INSTEAD)
@@ -7252,7 +7252,7 @@ gui.debugf("add_scenery : %s\n", item)
 
   add_image(c, 1)
 
-  if GAME.factory.feat_fabs then
+  if GAME.FACTORY.feat_fabs then
     add_prefab(c, "feature")
   end
 
@@ -7415,10 +7415,10 @@ function build_depots()
     door_sec.c_h = door_sec.f_h
     door_sec.tag = depot.door_tag
 
-    assert(GAME.factory.depot_info)
+    assert(GAME.FACTORY.depot_info)
 
     tele_sec = copy_block(sec)
-    tele_sec.walk_kind = non_nil(GAME.factory.depot_info.teleport_kind)
+    tele_sec.walk_kind = non_nil(GAME.FACTORY.depot_info.teleport_kind)
 
     local m1,m2 = 1,4
     local t1,t2 = 6,BW

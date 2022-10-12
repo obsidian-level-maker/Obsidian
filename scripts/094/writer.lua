@@ -112,7 +112,7 @@ function write_level(lev_name)
 
   local tx_file  -- text mode output
 
-  local DUMMY_BLOCK = { solid=GAME.factory.ERROR_TEX }
+  local DUMMY_BLOCK = { solid=GAME.FACTORY.ERROR_TEX }
 
 
   local function FRAGMENT_X(x) return (x-1-BORDER_BLK*FW)*16 end
@@ -142,7 +142,7 @@ function write_level(lev_name)
         th.flags = th.flags + MTF_EASY + MTF_MEDIUM + MTF_HARD
       end
 
-      if GAME.factory.hexen_format then
+      if GAME.FACTORY.hexen_format then
         if th.classes then
           if th.classes.fighter then th.flags = th.flags + XTF_FIGHTER end
           if th.classes.cleric  then th.flags = th.flags + XTF_CLERIC  end
@@ -238,8 +238,8 @@ function write_level(lev_name)
       if b.solid then
         SIDE.mid = b_over.l_tex or b.solid
       else
-        SIDE.upper = b_over.u_tex or b.u_tex or GAME.factory.ERROR_TEX
-        SIDE.lower = b_over.l_tex or b.l_tex or GAME.factory.ERROR_TEX
+        SIDE.upper = b_over.u_tex or b.u_tex or GAME.FACTORY.ERROR_TEX
+        SIDE.lower = b_over.l_tex or b.l_tex or GAME.FACTORY.ERROR_TEX
 
         if f_over.rail and not b_over.rail then
           SIDE.mid = f_over.rail
@@ -764,8 +764,8 @@ function write_level(lev_name)
     total_sec = total_sec + 1
 
     gui.v094_add_sector(NORMALIZE(sec.f_h), NORMALIZE(sec.c_h),
-      sec.f_tex or GAME.factory.ERROR_FLAT,
-      sec.c_tex or GAME.factory.ERROR_FLAT,
+      sec.f_tex or GAME.FACTORY.ERROR_FLAT,
+      sec.c_tex or GAME.FACTORY.ERROR_FLAT,
       sec.light or 0, sec.kind or 0, sec.tag or 0)
   end
   
@@ -863,8 +863,8 @@ function write_level(lev_name)
         string.format("S%d : %d %d %s %s %d %d %d\n",
           sec.T_index,
           NORMALIZE(sec.f_h), NORMALIZE(sec.c_h),
-          sec.f_tex or GAME.factory.ERROR_FLAT,
-          sec.c_tex or GAME.factory.ERROR_FLAT,
+          sec.f_tex or GAME.FACTORY.ERROR_FLAT,
+          sec.c_tex or GAME.FACTORY.ERROR_FLAT,
           sec.light or 0, sec.kind or 0, sec.tag or 0))
     end
 
@@ -976,7 +976,7 @@ function make_mini_map()
       if not B then gui.map_pixel(0)
       elseif B.solid then gui.map_pixel(1)
 --    elseif B.kind or B.fragments then gui.map_pixel(4)
-      elseif B.c_tex == GAME.factory.SKY_TEX then gui.map_pixel(3)
+      elseif B.c_tex == GAME.FACTORY.SKY_TEX then gui.map_pixel(3)
       else gui.map_pixel(2)
       end
     end

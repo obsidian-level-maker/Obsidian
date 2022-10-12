@@ -20,7 +20,6 @@ gui.import("094/defs.lua")
 gui.import("util.lua")
 gui.import("094/a_star.lua")
 
-gui.import("094/prefab")
 gui.import("094/theme")
 
 gui.import("094/planner")
@@ -31,7 +30,7 @@ gui.import("094/builder")
 gui.import("094/writer")
 
 
-function create_LEVEL(level, index, total)
+function v094_create_LEVEL(level, index, total)
 
   gui.at_level(level.name, index, total)
 
@@ -56,7 +55,7 @@ function create_LEVEL(level, index, total)
 
   if gui.abort() then return "abort" end
 
-  if GAME.factory.wolf_format then
+  if GAME.FACTORY.wolf_format then
     write_wolf_level()
   else
     write_level(level.name)
@@ -69,20 +68,15 @@ function create_LEVEL(level, index, total)
   PLAN = nil
 
   collectgarbage("collect");
+
+  return "ok"
 end
 
 
-function v094_build_cool_shit()
- 
-  gui.printf("\n\n~~~~~~~ Making Levels ~~~~~~~\n\n")
+--[[function v094_build_cool_shit()
 
-  gui.printf("SEED = %d\n\n", OB_CONFIG.seed)
-  gui.printf("Settings =\n%s\n", table.tostr(OB_CONFIG))
-
-  create_GAME()
-
-  assert(GAME.factory)
-  assert(GAME.factory.level_func)
+  assert(GAME.FACTORY)
+  assert(GAME.FACTORY.level_func)
 
   local aborted = false
   local episode_num
@@ -115,7 +109,7 @@ function v094_build_cool_shit()
 
   for index = 1,total do
 
-    local result = create_LEVEL(all_levels[index], index, total)
+    local result = v094_create_LEVEL(all_levels[index], index, total)
 
     if result == "abort" then
       aborted = true
@@ -131,5 +125,5 @@ function v094_build_cool_shit()
   gui.printf("\n~~~~~~ Finished Making Levels ~~~~~~\n\n")
 
   return "ok"
-end
+end]]--
 

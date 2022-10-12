@@ -488,7 +488,7 @@ function create_link(c, other, dir)
     cells = { c, other },
     kind = "arch",  -- updated later
     build = c,    -- updated later
-    long = sel(GAME.factory.caps.blocky_doors, 1, 3),
+    long = sel(GAME.FACTORY.caps.blocky_doors, 1, 3),
     deep = 1,
   }
 
@@ -581,7 +581,7 @@ function get_door_chance(c, other)
     other.room_type.door_probs or
     c.combo.door_probs or
     c.quest.theme.door_probs or
-    GAME.factory.door_probs
+    GAME.FACTORY.door_probs
 
   assert(probs)
 
@@ -603,7 +603,7 @@ function get_window_chance(c, other)
     other.room_type.door_probs or
     c.combo.window_probs or
     c.quest.theme.window_probs or
-    GAME.factory.window_probs
+    GAME.FACTORY.window_probs
 
   assert(probs)
 
@@ -749,7 +749,7 @@ function resize_rooms()
     local shrinker = sel(dir < 0, c, other)
     if shrinker then
       local new_w, new_h = shrinker.bw - mv_x, shrinker.bh - mv_y
-      local min_size = GAME.factory.cell_min_size
+      local min_size = GAME.FACTORY.cell_min_size
 
       if new_w < min_size or new_h < min_size then return end
     end
@@ -1050,7 +1050,7 @@ end
 
 function plan_sp_level(level, is_coop)
 
-  PLAN = get_base_plan(level, GAME.factory.plan_size, GAME.factory.cell_size)
+  PLAN = get_base_plan(level, GAME.FACTORY.plan_size, GAME.FACTORY.cell_size)
 
   PLAN.coop = is_coop
 
@@ -1235,7 +1235,7 @@ function plan_sp_level(level, is_coop)
     local h_probs =
       Q.combo.hallway_probs or
       Q.theme.hallway_probs or
-      GAME.factory.hallway_probs
+      GAME.FACTORY.hallway_probs
 
     if not h_probs then return end
 
@@ -1285,7 +1285,7 @@ function plan_sp_level(level, is_coop)
     if start == 2 and Q.first.hallway then
       -- extend the hallway in the previous quest
       combo = Q.first.combo
-    elseif not GAME.factory.hallways then
+    elseif not GAME.FACTORY.hallways then
       combo = Q.first.combo
     else
       combo = get_rand_hallway(Q.theme)
@@ -1299,7 +1299,7 @@ function plan_sp_level(level, is_coop)
       local c = Q.path[idx]
       c.hallway = true
       c.combo = combo
-      c.room_type = non_nil(GAME.factory.rooms["HALLWAY"])
+      c.room_type = non_nil(GAME.FACTORY.rooms["HALLWAY"])
       if combo.well_lit then
         c.light = 176
       else
@@ -1360,7 +1360,7 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
     -- use PLAIN type of every other cell
     for zzz, c in ipairs(Q.path) do
       if not c.room_type then
-        c.room_type = non_nil(GAME.factory.rooms["PLAIN"])
+        c.room_type = non_nil(GAME.FACTORY.rooms["PLAIN"])
       end
     end
   end
@@ -1370,7 +1370,7 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
     assert(Q.combo)
 
     -- decide liquid
-    if GAME.factory.caps.liquids then
+    if GAME.FACTORY.caps.liquids then
       Q.liquid = liquid_for_quest(Q)
     end
 
@@ -1384,7 +1384,7 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
       c.is_start = true
       c.no_shrink = true
       c.no_monsters = true
----#  if GAME.factory.wolf_format then c.no_monsters=true end
+---#  if GAME.FACTORY.wolf_format then c.no_monsters=true end
     end
 
 
@@ -1440,15 +1440,15 @@ gui.printf("\nADJUSTED SECRET COMBO NEAR CELL (%d,%d)\n", cur.x,cur.y)
 
     make_hallways(Q)
 
-    if GAME.factory.shack_prob and Q.combo.outdoor and not Q.has_hallway then
+    if GAME.FACTORY.shack_prob and Q.combo.outdoor and not Q.has_hallway then
       -- Experimental: start cell is a building
-      if #Q.path >= 3 and Q == PLAN.quests[1] and rand.odds(GAME.factory.shack_prob) then
+      if #Q.path >= 3 and Q == PLAN.quests[1] and rand.odds(GAME.FACTORY.shack_prob) then
         Q.first.combo = get_rand_indoor_combo(Q.theme)
 gui.printf("\nCHANGED INITIAL ROOM @ (%d,%d)\n", Q.first.x,Q.first.y)
       end
 
       -- Experimental: quest cell is a building
-      if #Q.path >= 4 and rand.dual_odds(Q.parent, GAME.factory.shack_prob/4, GAME.factory.shack_prob) then
+      if #Q.path >= 4 and rand.dual_odds(Q.parent, GAME.FACTORY.shack_prob/4, GAME.FACTORY.shack_prob) then
 gui.printf("\nCHANGED QUEST ROOM @ (%d,%d)\n", Q.last.x,Q.last.y)
         Q.last.combo = get_rand_indoor_combo(Q.theme)
       end
@@ -1499,7 +1499,7 @@ gui.printf("\nCHANGED QUEST ROOM @ (%d,%d)\n", Q.last.x,Q.last.y)
     end
 
     -- for Wolfenstein3D, first room should have a door
-    if GAME.factory.caps.sealed_start then
+    if GAME.FACTORY.caps.sealed_start then
       local c = PLAN.quests[1].first
 
       for side=2,8,2 do
@@ -1521,10 +1521,10 @@ gui.printf("\nCHANGED QUEST ROOM @ (%d,%d)\n", Q.last.x,Q.last.y)
     local function quest_heights(Q)
 
       local diff_probs = Q.combo.diff_probs or
-          Q.theme.diff_probs or GAME.factory.diff_probs
+          Q.theme.diff_probs or GAME.FACTORY.diff_probs
 
       local bump_probs = Q.combo.bump_probs or
-          Q.theme.bump_probs or GAME.factory.bump_probs
+          Q.theme.bump_probs or GAME.FACTORY.bump_probs
 
       assert(diff_probs)
       assert(bump_probs)
@@ -1618,7 +1618,7 @@ gui.printf("\nCHANGED QUEST ROOM @ (%d,%d)\n", Q.last.x,Q.last.y)
 
     ---| select_floor_heights |---
 
-    if not GAME.factory.caps.heights then return end
+    if not GAME.FACTORY.caps.heights then return end
 
     PLAN.quests[1].path[1].floor_h = start_height()
 
@@ -1636,7 +1636,7 @@ gui.printf("\nCHANGED QUEST ROOM @ (%d,%d)\n", Q.last.x,Q.last.y)
 
   local function select_ceiling_heights()
 
-    if not GAME.factory.caps.heights then return end
+    if not GAME.FACTORY.caps.heights then return end
 
     local function initial_height(c)
 
@@ -1647,7 +1647,7 @@ gui.printf("\nCHANGED QUEST ROOM @ (%d,%d)\n", Q.last.x,Q.last.y)
           c.room_type.room_heights or
           c.combo.room_heights or
           c.quest.theme.room_heights or
-          GAME.factory.room_heights
+          GAME.FACTORY.room_heights
 
         assert(height_list)
 
@@ -1739,7 +1739,7 @@ gui.printf("\nCHANGED QUEST ROOM @ (%d,%d)\n", Q.last.x,Q.last.y)
   end
 
   local function assign_floor_codes()
-    if GAME.factory.caps.heights then return end -- not needed (yet??)
+    if GAME.FACTORY.caps.heights then return end -- not needed (yet??)
 
     local function should_connect(c, other, link)
       if link.kind == "arch" then return true end
@@ -1983,8 +1983,8 @@ gui.debugf("qlist now:\n%s\n\n", table.tostr(qlist,2))
 
     if T1 == T2 then T2 = get_rand_theme() end
 
---T1 = GAME.factory.themes["CAVE"]
---T2 = GAME.factory.themes["CAVE"]
+--T1 = GAME.FACTORY.themes["CAVE"]
+--T2 = GAME.FACTORY.themes["CAVE"]
 
     -- choose change-over point
     local mid_q = int(#PLAN.quests / 2 + gui.random())
@@ -2017,7 +2017,7 @@ Q.theme.name, Q.combo.name)
     peak = peak + 20 * Q.sub_level
     peak = peak * (Q.level ^ 0.7) * (1 + rand.skew()/5)
 
-    peak = peak * GAME.factory.toughness_factor
+    peak = peak * GAME.FACTORY.toughness_factor
     peak = peak * (PLAN.level.toughness_factor or 1)
 
     if Q.is_secret then
@@ -2035,9 +2035,9 @@ Q.theme.name, Q.combo.name)
 
     local function setup_one_exit(c)
 
-      if not GAME.factory.caps.elevator_exits then
-        if c.quest.is_secret and GAME.factory.exits["BLOODY"] then
-          c.combo = GAME.factory.exits["BLOODY"] --FIXME
+      if not GAME.FACTORY.caps.elevator_exits then
+        if c.quest.is_secret and GAME.FACTORY.exits["BLOODY"] then
+          c.combo = GAME.FACTORY.exits["BLOODY"] --FIXME
         else
           c.combo = get_rand_exit_combo()
         end
@@ -2057,7 +2057,7 @@ Q.theme.name, Q.combo.name)
             link.kind = "door"
             link.build = c
             link.is_exit = true
-            link.long = sel(GAME.factory.caps.blocky_doors, 1,
+            link.long = sel(GAME.FACTORY.caps.blocky_doors, 1,
                  sel(c.combo.front_mark or c.small_exit, 3, 2))
           end
         end
@@ -2111,7 +2111,7 @@ Q.theme.name, Q.combo.name)
         outies[1].quest, outies[1].along, outies[1].combo)
 
       c.scenic = "outdoor"
-      c.room_type = non_nil(GAME.factory.rooms["SCENIC"])
+      c.room_type = non_nil(GAME.FACTORY.rooms["SCENIC"])
 
       -- Experimental "SOLID SCENIC" cells
       if #innies >= 1 and rand.odds(66) and
@@ -2316,7 +2316,7 @@ gui.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
     local function add_closet(Q)
 
-      if not GAME.factory.caps.closets then return end
+      if not GAME.FACTORY.caps.closets then return end
 
       local locs  = {}
       local SIDES = { 2,4,6,8 }
@@ -2396,9 +2396,9 @@ gui.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
     local function add_depot(Q)
 
-      if not GAME.factory.caps.depots then return end
-      assert(GAME.factory.depot_info)
-      assert(GAME.factory.depot_info.teleport_kind)
+      if not GAME.FACTORY.caps.depots then return end
+      assert(GAME.FACTORY.depot_info)
+      assert(GAME.FACTORY.depot_info.teleport_kind)
 
       local function valid_depot_spot(x, y)
         if PLAN.cells[x][y] then return false end
@@ -2544,7 +2544,7 @@ gui.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
 
   p.hmodels = initial_hmodels()
 
-  if GAME.factory.caps.liquids then
+  if GAME.FACTORY.caps.liquids then
     p.liquid = choose_liquid()
 
     if (p.liquid) then

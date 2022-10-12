@@ -2888,11 +2888,11 @@ function Area_create_rooms(LEVEL, SEEDS)
 
   local level_grammar = {}
 
-  if PARAM.float_oblige_v2_grammar and rand.odds(PARAM.float_oblige_v2_grammar) then
-    table.add_unique(level_grammar, SHAPES.OBLIGE_V2)
+  if PARAM.float_grammar_boxes_of_death and rand.odds(PARAM.float_grammar_boxes_of_death) then
+    table.add_unique(level_grammar, SHAPES.BOXES_OF_DEATH)
   end
 
-  if PARAM.float_oblige_v5_grammar and rand.odds(PARAM.float_oblige_v5_grammar) then
+  if PARAM.float_grammar_oblige_v5 and rand.odds(PARAM.float_grammar_oblige_v5) then
     table.add_unique(level_grammar, SHAPES.OBLIGE_V5)
   end
   
