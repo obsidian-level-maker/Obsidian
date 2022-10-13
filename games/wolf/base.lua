@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
---  Dummy Base File for Wolf 3D/SoD
+--  Base File for Wolf 3D/SoD
 ------------------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -21,10 +21,37 @@
 
 WOLF = { }
 
+gui.import("factory")
+
+-- These empty tables are needed not to throw errors in obsidian.lua
+
+WOLF.PARAMETERS = { }
+
+WOLF.THEMES = { }
+
+WOLF.ROOM_THEMES = { }
+
+WOLF.ROOMS = { }
+
 ------------------------------------------------------------
 
-UNFINISHED["wolf"] =
+OB_GAMES["wolf"] =
 {
-
+	label = _("Wolfenstein 3D"),
+	priority = 20,
+	
+	format = "wolf3d",
+	
+	game_dir = "wolf",
+	
+	tables =
+	{
+	  WOLF
+	},
+	
+	hooks =
+	{
+      factory_setup = WOLF.factory_setup,
+	},
 }
 

@@ -102,6 +102,7 @@ if (NOT CONSOLE_ONLY AND NOT HAIKU)
     source_files/obsidian_main/g_quake.cc
     source_files/obsidian_main/g_quake2.cc
     source_files/obsidian_main/g_quake3.cc
+    source_files/obsidian_main/g_wolf.cc
     source_files/obsidian_main/lib_argv.cc
     source_files/obsidian_main/lib_crc.cc
     source_files/obsidian_main/lib_file.cc
@@ -166,6 +167,7 @@ add_executable(
     source_files/obsidian_main/g_quake.cc
     source_files/obsidian_main/g_quake2.cc
     source_files/obsidian_main/g_quake3.cc
+    source_files/obsidian_main/g_wolf.cc
     source_files/obsidian_main/lib_argv.cc
     source_files/obsidian_main/lib_crc.cc
     source_files/obsidian_main/lib_file.cc

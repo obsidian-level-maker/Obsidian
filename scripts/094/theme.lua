@@ -24,6 +24,8 @@ function get_rand_theme()
   local info = GAME.FACTORY.themes[name]
   assert(info)
 
+  info.name = name
+
   return info
 end
 

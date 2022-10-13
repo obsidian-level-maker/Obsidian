@@ -60,6 +60,7 @@ function _(s) return gui.gettext(s) end
 OB_ENGINES["nolimit"] =
 {
   label = _("Limit Removing"),
+  game = {chex3=1,doom1=1,doom2=1,ultdoom=1,heretic=1,hexen=1,strife=1,hacx=1,harmony=1,nukem=0,quake=0,wolf=0},
   priority = 99
 }
 

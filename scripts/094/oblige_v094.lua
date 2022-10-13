@@ -73,7 +73,7 @@ function v094_create_LEVEL(level, index, total)
 end
 
 
---[[function v094_build_cool_shit()
+function v094_build_wolf3d_shit()
 
   assert(GAME.FACTORY)
   assert(GAME.FACTORY.level_func)
@@ -84,16 +84,16 @@ end
   if OB_CONFIG.length == "single" then
     episode_num = 1
   elseif OB_CONFIG.length == "episode" then
-    episode_num = GAME.factory.min_episodes or 1
+    episode_num = GAME.FACTORY.min_episodes or 1
   else
-    episode_num = GAME.factory.episodes
+    episode_num = GAME.FACTORY.episodes
   end
 
   -- build episode/level lists
   local all_levels = {}
 
   for epi = 1,episode_num do
-    local levels = GAME.factory.level_func(epi)
+    local levels = GAME.FACTORY.level_func(epi)
     for zzz, L in ipairs(levels) do
       table.insert(all_levels, L)
     end
@@ -125,5 +125,5 @@ end
   gui.printf("\n~~~~~~ Finished Making Levels ~~~~~~\n\n")
 
   return "ok"
-end]]--
+end
 

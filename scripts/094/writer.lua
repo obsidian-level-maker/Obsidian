@@ -893,14 +893,14 @@ function write_wolf_level()
     local B = PLAN.blocks[x][y]
     if not B then return end
 
-    local tile = WF_NO_TILE
-    local obj  = WF_NO_OBJ
+    local tile = WOLF.FACTORY.NO_TILE
+    local obj  = WOLF.FACTORY.NO_OBJ
 
     if B.solid then
       assert(type(B.solid) == "number")
       tile = B.solid
     elseif B.door_kind then
-      tile = WF_TILE_NUMS[B.door_kind]
+      tile = WOLF.FACTORY.TILE_NUMS[B.door_kind]
       if not tile then
         error("Unknown door_kind: " .. tostring(B.door_kind))
       end
@@ -910,10 +910,10 @@ function write_wolf_level()
       end
     else
       -- when we run out of floor codes (unlikely!) then reuse them
-      local avail = WF_TILE_NUMS.area_max - WF_TILE_NUMS.area_min + 1
+      local avail = WOLF.FACTORY.TILE_NUMS.area_max - WOLF.FACTORY.TILE_NUMS.area_min + 1
       local floor = B.floor_code or 0
 
-      tile = WF_TILE_NUMS.area_min + (floor % avail)
+      tile = WOLF.FACTORY.TILE_NUMS.area_min + (floor % avail)
     end
 
     if B.things and B.things[1] then
@@ -965,16 +965,16 @@ function write_wolf_level()
       gui.printf("HOLO BLOCK @ (%d,%d) -- tile:%d obj:%d\n", x, y, tile,obj)
     end
 
-    wolf.add_block(x, y, tile, obj)
+    gui.wolf_block(x, y, tile, obj)
   end
 
   if gui.abort() then return end
 
-  wolf.begin_level(lev_name);
+  gui.v094_begin_wolf_level(lev_name);
 
   for y = 1,64 do for x = 1,64 do
     handle_block(x, y)
   end end
 
-  wolf.end_level()
+  gui.v094_end_wolf_level()
 end
