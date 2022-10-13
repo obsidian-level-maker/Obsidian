@@ -53,6 +53,8 @@ static std::string level_name;
 
 #define PL_START 2
 
+extern std::filesystem::path BestDirectory();
+
 //------------------------------------------------------------------------
 //  WOLF OUTPUT
 //------------------------------------------------------------------------
@@ -403,8 +405,8 @@ bool wolf_game_interface_c::Finish(bool build_ok) {
 }
 
 void wolf_game_interface_c::Rename() {
-    std::filesystem::path gamemaps = fmt::format("GAMEMAPS.{}", file_ext);
-    std::filesystem::path maphead = fmt::format("MAPHEAD.{}", file_ext);
+    std::filesystem::path gamemaps = BestDirectory() / fmt::format("GAMEMAPS.{}", file_ext);
+    std::filesystem::path maphead = BestDirectory() / fmt::format("MAPHEAD.{}", file_ext);
 
     std::filesystem::remove(gamemaps);
     std::filesystem::remove(maphead);

@@ -40,7 +40,7 @@ VANILLA.PARAMETERS = -- These probably aren't required - Dasho
 
 OB_ENGINES["vanilla"] =
 {
-  label = _("Vanilla DOOM"),
+  label = _("Vanilla"),
 
   priority = 100,
 

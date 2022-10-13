@@ -39,7 +39,7 @@ WOLF_3D.PARAMETERS =
 
 OB_ENGINES["wolf_3d"] =
 {
-  label = _("Wolfenstein 3D"),
+  label = _("Vanilla"),
 
   priority = 100,
 
