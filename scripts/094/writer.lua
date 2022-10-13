@@ -835,93 +835,6 @@ function write_level(lev_name)
     end
   end
 
-  ---- TEXT MODE ---------------
-
-  local function T_write_vertexes()
-    tx_file:write("VERTEXES_START\n")
-
-    for IDX,vert in pairs(vert_list) do
-      if vert.dx then vert.x = vert.x + vert.dx end
-      if vert.dy then vert.y = vert.y + vert.dy end
-
-      vert.index = IDX-1
-      tx_file:write(
-        string.format("V%d : %d %d\n", vert.index,
-          NORMALIZE(vert.x), NORMALIZE(vert.y)))
-    end
-
-    tx_file:write("VERTEXES_END\n")
-  end
-  
-  local function T_write_sectors()
-    tx_file:write("SECTORS_START\n")
-
-    for IDX,sec in ipairs(sec_list) do
-
-      sec.index = IDX-1
-      tx_file:write(
-        string.format("S%d : %d %d %s %s %d %d %d\n",
-          sec.T_index,
-          NORMALIZE(sec.f_h), NORMALIZE(sec.c_h),
-          sec.f_tex or GAME.FACTORY.ERROR_FLAT,
-          sec.c_tex or GAME.FACTORY.ERROR_FLAT,
-          sec.light or 0, sec.kind or 0, sec.tag or 0))
-    end
-
-    tx_file:write("SECTORS_END\n")
-  end
-  
-    local function T_write_sidedef(sd)
-      if sd then
-        tx_file:write(
-          string.format("   S%d %d %d %s %s %s\n",
-            sd.sector.index,
-            sd.x_offset or 0,
-            sd.y_offset or 0,
-            sd.upper or "-",
-            sd.lower or "-",
-            sd.mid   or "-"))
-      else
-        tx_file:write("   -\n")
-      end
-    end
-
-  local function T_write_linedefs()
-
-    tx_file:write("LINEDEFS_START\n")
-
-    for zzz,L in ipairs(line_list) do
-      if not L.deleted then
-        tx_file:write(
-          string.format("V%d V%d : %d %d %d\n",
-            L.v1.index, L.v2.index,
-            L.flags or 0, L.kind or 0, L.tag or 0))
-
-        assert(L.front)
-
-        T_write_sidedef(L.front)
-        T_write_sidedef(L.back)
-      end
-    end
-    
-    tx_file:write("LINEDEFS_END\n")
-  end
-  
-  local function T_write_things()
-    tx_file:write("THINGS_START\n")
-    
-    for zzz,th in pairs(thing_list) do
-      tx_file:write(
-        string.format("%d : %d %d %d %d\n",
-          th.kind.id, NORMALIZE(th.x), NORMALIZE(th.y),
-          th.angle or 0, non_nil(th.flags)))
-    end
-
-    tx_file:write("THINGS_END\n")
-  end
---]
---]]
-
   ---- BEGIN write_level ----
 
   construct_things()
@@ -934,31 +847,14 @@ function write_level(lev_name)
   adjust_vertices()
   delete_linedefs()
 
-  --[[ Save for UDMF? - Dasho
-  if not wad then
-    tx_file = io.open("TEMP.txt", "w")
-    if not tx_file then error("Unable to create file: TEMP.txt") end
-    
-    tx_file:write("LEVEL_START 0 1 0 Doom2\n")
+  if gui.abort() then return end
 
-    T_write_vertexes()
-    T_write_sectors()
-    T_write_linedefs()
-    T_write_things()
+  gui.v094_begin_level()
 
-    tx_file:write("LEVEL_END\n")
-    tx_file:close()
+  write_things()
+  write_linedefs()  -- does vert/side/secs along the way
 
-  else--]]
-    if gui.abort() then return end
-
-    gui.v094_begin_level()
-
-    write_things()
-    write_linedefs()  -- does vert/side/secs along the way
-
-    gui.v094_end_level(lev_name)
-  --end
+  gui.v094_end_level(lev_name)
 end
 
 

@@ -331,23 +331,75 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
 
   -- decide how many keys, switches, weapons & items
 
-  -- Size test - Dasho
-  if not PARAM.v094_float_size then
-    local u_bound = PARAM.float_level_upper_bound
-    local l_bound = PARAM.float_level_lower_bound
-    if PARAM.float_size == gui.gettext("Episodic") then
-      PARAM.v094_float_size = rand.irange(l_bound, u_bound) -- Fix - Dasho
-    elseif PARAM.float_size == gui.gettext("Progressive") then
-      PARAM.v094_float_size = rand.irange(l_bound, u_bound) -- Fix - Dasho
-    elseif PARAM.float_size == gui.gettext("Mix It Up") then
-      PARAM.v094_float_size = rand.irange(l_bound, u_bound)
-    else
-      PARAM.v094_float_size = PARAM.float_size
+  local ob_size = PARAM.float_size
+
+  if OB_CONFIG.length == "single" then
+    if ob_size == gui.gettext("Episodic") or 
+    ob_size == gui.gettext("Progressive") then
+      ob_size = 36
+      goto foundsize
     end
   end
 
-  local tot_min = math.round(PARAM.v094_float_size / 10)
-  local tot_max = math.round(PARAM.v094_float_size / 5)
+  if ob_size == gui.gettext("Mix It Up") then
+
+    local result_skew = 1.0
+    local low = PARAM.float_level_lower_bound or 10
+    local high = PARAM.float_level_upper_bound or 75
+
+    if OB_CONFIG.level_size_bias then
+      if OB_CONFIG.level_size_bias == "small" then
+        result_skew = .80
+      elseif OB_CONFIG.level_size_bias == "large" then
+        result_skew = 1.20
+      end
+    end
+    
+    ob_size = math.clamp(low, int(rand.irange(low, high) * result_skew), high)
+    goto foundsize
+  end
+
+  if ob_size == gui.gettext("Episodic") or 
+  ob_size == gui.gettext("Progressive") then
+
+    -- Progressive --
+
+    local ramp_factor = 0.66
+
+    if OB_CONFIG.level_size_ramp_factor then
+      ramp_factor = tonumber(OB_CONFIG.level_size_ramp_factor)
+    end
+
+    local along
+
+    if OB_CONFIG.length == "few" then
+      along = level.ep_along / 4
+    elseif OB_CONFIG.length == "episode" then
+      along = level.ep_along / level.ep_length
+    else
+      along = ((level.ep_length * (GAME.FACTORY.episodes - 1)) + level.ep_along) / (level.ep_length * GAME.FACTORY.episodes)
+    end
+
+    along = along ^ ramp_factor
+
+    if ob_size == gui.gettext("Episodic") then along = level.ep_along / level.ep_length end
+
+    along = math.clamp(0, along, 1)
+
+    -- Level Control fine tune for Prog/Epi
+
+    -- default when Level Control is off: ramp from "small" --> "large",
+    local def_small = PARAM.float_level_lower_bound or 30
+    local def_large = PARAM.float_level_upper_bound - def_small or 42
+
+    -- this basically ramps up
+    ob_size = int(def_small + along * def_large)
+  end
+
+  ::foundsize::
+
+  local tot_min = math.round(ob_size / 10)
+  local tot_max = math.round(ob_size / 5)
 
   assert(tot_min and tot_max)
   assert(tot_min <= tot_max)
@@ -406,6 +458,7 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
       kind = kind,
       item = item,
       want_len = 1 + rand.index_by_probs(len_probs),
+      ob_size = ob_size
     }
     if (item == "secret") or
        (kind == "weapon" and rand.odds(2)) or
@@ -1399,9 +1452,9 @@ c.along, Q.level, Q.sub_level, c.room_type.name)
 
     -- adjust wanted length based on size adjustment
     local want_len = Q.want_len
-    if want_len >= 4 and PARAM.v094_float_size < 25 then
+    if want_len >= 4 and Q.ob_size < 25 then
       want_len = int(want_len * 0.85 - gui.random())
-    elseif PARAM.v094_float_size > 50 then
+    elseif Q.ob_size > 50 then
       want_len = int(want_len * 1.35 + gui.random())
     end
 
@@ -2493,21 +2546,26 @@ gui.debugf("WINDOW @ (%d,%d):%d\n", c.x,c.y,side)
       
       local peak = peak_toughness(Q)
       local skip = 0
-
-      if not PARAM.v094_float_mons then
-        local u_factor = PARAM.float_mix_it_up_upper_range
-        local l_factor = PARAM.float_mix_it_up_lower_range
-        if PARAM.float_mons == gui.gettext("Mix It Up") then
-          PARAM.v094_float_mons = rand.range(l_factor, u_factor)
-        elseif PARAM.float_mons == gui.gettext("Progressive") then -- fix this - Dasho
-          PARAM.v094_float_mons = rand.range(l_factor, u_factor)
+  
+      local factor = PARAM.float_mons
+      local u_factor = PARAM.float_mix_it_up_upper_range
+      local l_factor = PARAM.float_mix_it_up_lower_range
+      if PARAM.float_mons == gui.gettext("Mix It Up") then
+        factor = rand.range(l_factor, u_factor)
+      elseif PARAM.float_mons == gui.gettext("Progressive") then
+        if OB_CONFIG.length == "single" then
+          factor = l_factor + u_factor
+        elseif OB_CONFIG.length == "few" then
+          factor = l_factor + (u_factor * (level.ep_along / 4))
+        elseif OB_CONFIG.length == "episode" then
+          factor = l_factor + (u_factor * (level.ep_along / level.ep_length))
         else
-          PARAM.v094_float_mons = PARAM.float_mons
+          game_along = ((level.ep_length * (GAME.FACTORY.episodes - 1)) + level.ep_along) / (level.ep_length * GAME.FACTORY.episodes)
+          factor = l_factor + (u_factor * game_along)
         end
       end
 
-      if PARAM.v094_float_mons < 1.0 then peak = peak/1.8 end
-      if PARAM.v094_float_mons > 1.0 then peak = peak*1.8 end
+      peak = peak * factor
 
       -- go backwards from quest cell to start cell
       for i = #Q.path,1,-1 do
