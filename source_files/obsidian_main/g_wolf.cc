@@ -53,6 +53,7 @@ static std::string level_name;
 
 #define PL_START 2
 
+std::filesystem::path wolf_output_dir;
 extern std::filesystem::path BestDirectory();
 
 //------------------------------------------------------------------------
@@ -338,6 +339,50 @@ bool wolf_game_interface_c::Start(const char *preset) {
 
     write_errors_seen = 0;
 
+    if (batch_mode) {
+        if (batch_output_file.is_absolute()) {
+            wolf_output_dir = batch_output_file.remove_filename();
+        } else {
+            wolf_output_dir = Resolve_DefaultOutputPath();
+        }
+    } else {
+        #ifndef CONSOLE_ONLY
+        if (!mid_batch) {
+            int old_font_h = FL_NORMAL_SIZE;
+            FL_NORMAL_SIZE = 14 + KF;
+
+            Fl_Native_File_Chooser chooser;
+
+            chooser.title(_("Select *.WL6 output directory"));
+            chooser.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
+
+            int result = chooser.show();
+
+            FL_NORMAL_SIZE = old_font_h;
+
+            switch (result) {
+                case -1:
+                    LogPrintf(_("Error choosing directory:\n"));
+                    LogPrintf("   {}\n", chooser.errmsg());
+
+                default:
+                    break;  // OK
+            }
+
+            std::filesystem::path dir_name = chooser.filename();
+
+            if (dir_name.empty()) {
+                LogPrintf(_("Empty *.WL6 directory provided???:\n"));
+                dir_name = Resolve_DefaultOutputPath();
+            }
+
+            wolf_output_dir = dir_name;
+        } else {
+            wolf_output_dir = BestDirectory();
+        }
+        #endif
+    }
+
     map_fp = fopen(TEMP_GAMEFILE, "wb");
 
     if (!map_fp) {
@@ -405,8 +450,8 @@ bool wolf_game_interface_c::Finish(bool build_ok) {
 }
 
 void wolf_game_interface_c::Rename() {
-    std::filesystem::path gamemaps = BestDirectory() / fmt::format("GAMEMAPS.{}", file_ext);
-    std::filesystem::path maphead = BestDirectory() / fmt::format("MAPHEAD.{}", file_ext);
+    std::filesystem::path gamemaps = wolf_output_dir / fmt::format("GAMEMAPS.{}", file_ext);
+    std::filesystem::path maphead = wolf_output_dir / fmt::format("MAPHEAD.{}", file_ext);
 
     std::filesystem::remove(gamemaps);
     std::filesystem::remove(maphead);
