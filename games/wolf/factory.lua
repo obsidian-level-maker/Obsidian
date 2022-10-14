@@ -5470,7 +5470,7 @@ function WOLF.decide_quests(level_list, is_spear)
   for zzz,Level in ipairs(level_list) do
 
     -- weapons and keys
-    local ob_size = PARAM.float_size
+    local ob_size = PARAM.float_size_wolf_3d
 
     if OB_CONFIG.length == "single" then
       if ob_size == gui.gettext("Episodic") or 
@@ -5483,13 +5483,13 @@ function WOLF.decide_quests(level_list, is_spear)
     if ob_size == gui.gettext("Mix It Up") then
   
       local result_skew = 1.0
-      local low = PARAM.float_level_lower_bound or 10
-      local high = PARAM.float_level_upper_bound or 75
+      local low = PARAM.float_level_lower_bound_wolf_3d or 10
+      local high = PARAM.float_level_upper_bound_wolf_3d or 75
   
-      if OB_CONFIG.level_size_bias then
-        if OB_CONFIG.level_size_bias == "small" then
+      if OB_CONFIG.level_size_bias_wolf_3d then
+        if OB_CONFIG.level_size_bias_wolf_3d == "small" then
           result_skew = .80
-        elseif OB_CONFIG.level_size_bias == "large" then
+        elseif OB_CONFIG.level_size_bias_wolf_3d == "large" then
           result_skew = 1.20
         end
       end
@@ -5505,8 +5505,8 @@ function WOLF.decide_quests(level_list, is_spear)
   
       local ramp_factor = 0.66
   
-      if OB_CONFIG.level_size_ramp_factor then
-        ramp_factor = tonumber(OB_CONFIG.level_size_ramp_factor)
+      if OB_CONFIG.level_size_ramp_factor_wolf_3d then
+        ramp_factor = tonumber(OB_CONFIG.level_size_ramp_factor_wolf_3d)
       end
   
       local along
@@ -5528,8 +5528,8 @@ function WOLF.decide_quests(level_list, is_spear)
       -- Level Control fine tune for Prog/Epi
   
       -- default when Level Control is off: ramp from "small" --> "large",
-      local def_small = PARAM.float_level_lower_bound or 30
-      local def_large = PARAM.float_level_upper_bound - def_small or 42
+      local def_small = PARAM.float_level_lower_bound_wolf_3d or 30
+      local def_large = PARAM.float_level_upper_bound_wolf_3d - def_small or 42
   
       -- this basically ramps up
       ob_size = int(def_small + along * def_large)
