@@ -4780,7 +4780,7 @@ NOAH.FACTORY.COMBOS =
   {
     mat_pri = 5,
     wall = 5, void = 12, floor=0, ceil=0,
-    decorate = 38, door_side = 1,
+    decorate = 38, door_side = 5,
 
     theme_probs = { ARK=50  },
   },
@@ -4798,8 +4798,8 @@ NOAH.FACTORY.EXITS =
 
 NOAH.FACTORY.KEY_DOORS =
 {
-  k_yellow = { door_kind="door_yellow", door_side=8 },
-  k_blue   = { door_kind="door_blue",   door_side=8 },
+  k_yellow = { door_kind="door_yellow", door_side=5 },
+  k_blue   = { door_kind="door_blue",   door_side=5 },
 }
 
 NOAH.FACTORY.MISC_PREFABS =
