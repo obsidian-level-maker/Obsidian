@@ -5440,9 +5440,7 @@ WOLF.FACTORY.QUEST_LEN_PROBS =
 
 function WOLF.decide_quests(level_list, is_spear)
 
-  local ob_size = PARAM.float_size
-
-  local function add_quest(L, kind, item, secret_prob)
+  local function add_quest(L, kind, item, secret_prob, ob_size)
     secret_prob = 0 --FIXME !!!!
 
     local len_probs = non_nil(WOLF.FACTORY.QUEST_LEN_PROBS[kind])
@@ -5472,14 +5470,7 @@ function WOLF.decide_quests(level_list, is_spear)
   for zzz,Level in ipairs(level_list) do
 
     -- weapons and keys
-
-    if rand.odds(90 - 40 * ((Level.ep_along-1) % 3)) then
-      add_quest(Level, "weapon", "machine_gun", 35)
-    end
-
-    if gatling_maps[Level.ep_along] then
-      add_quest(Level, "weapon", "gatling_gun", 50)
-    end
+    local ob_size = PARAM.float_size
 
     if OB_CONFIG.length == "single" then
       if ob_size == gui.gettext("Episodic") or 
@@ -5521,16 +5512,16 @@ function WOLF.decide_quests(level_list, is_spear)
       local along
   
       if OB_CONFIG.length == "few" then
-        along = level.ep_along / 4
+        along = Level.ep_along / 4
       elseif OB_CONFIG.length == "episode" then
-        along = level.ep_along / level.ep_length
+        along = Level.ep_along / Level.ep_length
       else
-        along = ((level.ep_length * (GAME.FACTORY.episodes - 1)) + level.ep_along) / (level.ep_length * GAME.FACTORY.episodes)
+        along = ((Level.ep_length * (GAME.FACTORY.episodes - 1)) + Level.ep_along) / (Level.ep_length * GAME.FACTORY.episodes)
       end
   
       along = along ^ ramp_factor
   
-      if ob_size == gui.gettext("Episodic") then along = level.ep_along / level.ep_length end
+      if ob_size == gui.gettext("Episodic") then along = Level.ep_along / Level.ep_length end
   
       along = math.clamp(0, along, 1)
   
@@ -5546,39 +5537,47 @@ function WOLF.decide_quests(level_list, is_spear)
 
     ::foundsize::
 
+    if rand.odds(90 - 40 * ((Level.ep_along-1) % 3)) then
+      add_quest(Level, "weapon", "machine_gun", 35, ob_size)
+    end
+
+    if gatling_maps[Level.ep_along] then
+      add_quest(Level, "weapon", "gatling_gun", 50, ob_size)
+    end
+
     local keys = math.round(ob_size / 25)
 
     if keys >= 1 then
-      add_quest(Level, "key", "k_silver")
+      add_quest(Level, "key", "k_silver", 0, ob_size)
     end
 
     -- treasure
 
     for i = 1,sel(is_spear,4,6) do
       if rand.odds(ob_size) then
-        add_quest(Level, "item", "treasure", 50)
+        add_quest(Level, "item", "treasure", 50, ob_size)
       end
     end
 
     if is_spear and rand.odds(60) then
-      add_quest(Level, "item", "clip_25", 50)
+      add_quest(Level, "item", "clip_25", 50, ob_size)
     end
 
     -- bosses and exits
 
     if Level.boss_kind then
-      local Q = add_quest(Level, "boss", Level.boss_kind)
+      local Q = add_quest(Level, "boss", Level.boss_kind, 0, ob_size)
       Q.give_key = "k_gold"
 
     elseif keys == 2 then
-      add_quest(Level, "key", "k_gold")
+      add_quest(Level, "key", "k_gold", 0, ob_size)
     end
 
     if Level.secret_exit then
 --FIXME  add_quest(Level, "exit", "secret")
     end
 
-    add_quest(Level, "exit", "normal")
+    add_quest(Level, "exit", "normal", 0, ob_size)
   end
 end
 
