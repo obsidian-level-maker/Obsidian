@@ -1371,7 +1371,7 @@ function Monster_fill_room(LEVEL, R, SEEDS)
 
       if not LEVEL.global_pal[mon] then prob = 0 end
 
-      if info.weap_needed and not Player_has_weapon(info.weap_needed) then
+      if info.weap_needed and not Player_has_weapon(LEVEL, info.weap_needed) then
         prob = 0
       end
 
