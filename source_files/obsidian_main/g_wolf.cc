@@ -318,7 +318,7 @@ class wolf_game_interface_c : public game_interface_c {
     std::string file_ext;
 
    public:
-    wolf_game_interface_c() : file_ext("WL6") {}
+    wolf_game_interface_c() { file_ext.clear(); }
 
     ~wolf_game_interface_c() {}
 
@@ -334,7 +334,7 @@ class wolf_game_interface_c : public game_interface_c {
     void Tidy();
 };
 
-bool wolf_game_interface_c::Start(const char *preset) {
+bool wolf_game_interface_c::Start(const char *ext) {
     WF_FreeStuff();
 
     write_errors_seen = 0;
@@ -353,7 +353,7 @@ bool wolf_game_interface_c::Start(const char *preset) {
 
             Fl_Native_File_Chooser chooser;
 
-            chooser.title(_("Select *.WL6 output directory"));
+            chooser.title(_("Select output directory"));
             chooser.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
 
             int result = chooser.show();
@@ -372,7 +372,7 @@ bool wolf_game_interface_c::Start(const char *preset) {
             std::filesystem::path dir_name = chooser.filename();
 
             if (dir_name.empty()) {
-                LogPrintf(_("Empty *.WL6 directory provided???:\n"));
+                LogPrintf(_("Empty directory provided???:\n"));
                 dir_name = Resolve_DefaultOutputPath();
             }
 
@@ -381,6 +381,10 @@ bool wolf_game_interface_c::Start(const char *preset) {
             wolf_output_dir = BestDirectory();
         }
         #endif
+    }
+
+    if (ext) {
+        file_ext = ext;
     }
 
     map_fp = fopen(TEMP_GAMEFILE, "wb");
@@ -452,6 +456,11 @@ bool wolf_game_interface_c::Finish(bool build_ok) {
 void wolf_game_interface_c::Rename() {
     std::filesystem::path gamemaps = wolf_output_dir / fmt::format("GAMEMAPS.{}", file_ext);
     std::filesystem::path maphead = wolf_output_dir / fmt::format("MAPHEAD.{}", file_ext);
+
+    if (create_backups) {
+        Main::BackupFile(gamemaps);
+        Main::BackupFile(maphead);
+    }
 
     std::filesystem::remove(gamemaps);
     std::filesystem::remove(maphead);

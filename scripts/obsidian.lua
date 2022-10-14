@@ -510,7 +510,7 @@ function ob_update_engines()
   end
 
   if need_new then
-    if OB_CONFIG.game == "wolf" then
+    if OB_CONFIG.game == "wolf" or OB_CONFIG.game == "spear" then
       OB_CONFIG.engine = "wolf_3d"
     elseif OB_CONFIG.game == "nukem" then
       OB_CONFIG.engine = "build"
@@ -2434,7 +2434,7 @@ function ob_build_cool_shit()
 
   -- Hijack here if Wolf3D is selected
 
-  if OB_CONFIG.game == "wolf" then
+  if OB_CONFIG.engine == "wolf_3d" then
     local result = v094_build_wolf3d_shit()
     ob_clean_up()
     return result

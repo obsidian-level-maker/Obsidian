@@ -16,7 +16,16 @@
 --
 ----------------------------------------------------------------
 
-SP_COMBOS =
+SPEAR = { }
+
+SPEAR.FACTORY = { }
+
+SPEAR.FACTORY.THINGS =
+{
+  clip_25 = { kind="pickup", id=72, r=30, h=60, pass=true },
+}
+
+SPEAR.FACTORY.COMBOS =
 {
   CONCRETE =
   {
@@ -46,7 +55,7 @@ SP_COMBOS =
 
 ----------------------------------------------------------------
 
-SP_BOSSES =
+SPEAR.FACTORY.BOSSES =
 {
   -- FIXME: dm values were pulled straight out of my arse
 
@@ -61,7 +70,7 @@ SP_BOSSES =
 }
 
 
-SP_PICKUPS =
+SPEAR.FACTORY.PICKUPS =
 {
   clip_25 = { stat="bullet", give=25 },
 }
@@ -69,7 +78,7 @@ SP_PICKUPS =
 ----------------------------------------------------------------
 
 
-SP_ROOM_TYPES =
+SPEAR.FACTORY.ROOMS =
 {
   HALLWAY =
   {
@@ -89,7 +98,7 @@ SP_ROOM_TYPES =
 
 }
 
-SP_THEMES =
+SPEAR.FACTORY.THEMES =
 {
   CELLS =
   {
@@ -215,7 +224,7 @@ SP_THEMES =
 
 ----------------------------------------------------------------
 
-SP_EPISODE_THEMES =
+SPEAR.FACTORY.EPISODE_THEMES =
 {
   -- FIXME: proper themes for Spear episodes
   { CELLS=3, BUNKER=5, CAVE=4 },  -- Tunnels
@@ -226,7 +235,7 @@ SP_EPISODE_THEMES =
   { CELLS=3, BUNKER=5, CAVE=4 },  -- Finale
 }
 
-SP_EPISODE_BOSSES =
+SPEAR.FACTORY.EPISODE_BOSSES =
 {
   "trans_grosse",
   "wilhelm",
@@ -236,7 +245,7 @@ SP_EPISODE_BOSSES =
   "angel_of_death",
 }
 
-SP_EPISODE_INFO =
+SPEAR.FACTORY.EPISODE_INFO =
 {
   { start=1,  len=5 },
   { start=6,  len=5 },
@@ -246,17 +255,17 @@ SP_EPISODE_INFO =
   { start=21, len=1 },
 }
 
-function spear_get_levels(episode)
+function SPEAR.get_factory_levels(episode)
 
   local level_list = {}
 
-  local theme_probs = SP_EPISODE_THEMES[episode]
-  if SETTINGS.length ~= "full" then
-    theme_probs = SP_EPISODE_THEMES[rand_irange(1,4)]
+  local theme_probs = SPEAR.FACTORY.EPISODE_THEMES[episode]
+  if OB_CONFIG.length ~= "full" then
+    theme_probs = SPEAR.FACTORY.EPISODE_THEMES[rand.irange(1,4)]
   end
 
-  local ep_start  = SP_EPISODE_INFO[episode].start
-  local ep_length = SP_EPISODE_INFO[episode].len
+  local ep_start  = SPEAR.FACTORY.EPISODE_INFO[episode].start
+  local ep_length = SPEAR.FACTORY.EPISODE_INFO[episode].len
 
   for map = 1,ep_length do
     local Level =
@@ -274,11 +283,11 @@ function spear_get_levels(episode)
     }
 
     if (map == ep_length) and episode ~= 5 then
-      Level.boss_kind = SP_EPISODE_BOSSES[episode]
+      Level.boss_kind = SPEAR.FACTORY.EPISODE_BOSSES[episode]
     end
 
     -- add secret levels
-    if SETTINGS.length == "full" then
+    if OB_CONFIG.length == "full" then
       if episode == 5 then
         Level.secret_kind = "spear"
       end
@@ -291,7 +300,7 @@ function spear_get_levels(episode)
     table.insert(level_list, Level)
   end
 
-  wolfy_decide_quests(level_list, "spear")
+  WOLF.decide_quests(level_list, "spear")
 
   return level_list
 end
@@ -299,21 +308,40 @@ end
 
 ----------------------------------------------------------------
 
-GAME_FACTORIES["spear"] = function()
+function SPEAR.factory_setup()
 
-  local T = GAME_FACTORIES.wolf3d()
+  WOLF.factory_setup()
 
-  T.episodes   = 6
-  T.level_func = spear_get_levels
+  GAME.FACTORY.episodes   = 6
+  GAME.FACTORY.level_func = SPEAR.get_factory_levels
 
-  T.bosses   = SP_BOSSES
+  GAME.FACTORY.bosses   = SPEAR.FACTORY.BOSSES
 
-  T.combos   = copy_and_merge(T.combos,   SP_COMBOS)
-  T.pickups  = copy_and_merge(T.pickups,  SP_PICKUPS)
+  GAME.FACTORY.combos   = table.merge_w_copy(GAME.FACTORY.combos,   SPEAR.FACTORY.COMBOS)
+  GAME.FACTORY.pickups  = table.merge_w_copy(GAME.FACTORY.pickups,  SPEAR.FACTORY.PICKUPS)
 
-  T.themes   = SP_THEMES
-  T.rooms    = copy_and_merge(T.rooms,    SP_ROOMS)
+  GAME.FACTORY.themes   = SPEAR.FACTORY.THEMES
+  GAME.FACTORY.rooms    = table.merge_w_copy(GAME.FACTORY.rooms,    SPEAR.FACTORY.ROOMS)
+  GAME.FACTORY.things    = table.merge_w_copy(GAME.FACTORY.things,    SPEAR.FACTORY.THINGS)
 
-  return T
 end
 
+OB_GAMES["spear"] =
+{
+	label = _("Spear of Destiny"),
+	priority = 20,
+	
+	format = "wolf3d",
+	
+	extends = "wolf",
+	
+	tables =
+	{
+	  SPEAR
+	},
+	
+	hooks =
+	{
+      factory_setup = SPEAR.factory_setup,
+	},
+}
