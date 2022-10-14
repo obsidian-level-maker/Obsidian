@@ -893,14 +893,14 @@ function write_wolf_level()
     local B = PLAN.blocks[x][y]
     if not B then return end
 
-    local tile = WOLF.FACTORY.NO_TILE
-    local obj  = WOLF.FACTORY.NO_OBJ
+    local tile = GAME.FACTORY.NO_TILE
+    local obj  = GAME.FACTORY.NO_OBJ
 
     if B.solid then
       assert(type(B.solid) == "number")
       tile = B.solid
     elseif B.door_kind then
-      tile = WOLF.FACTORY.TILE_NUMS[B.door_kind]
+      tile = GAME.FACTORY.TILE_NUMS[B.door_kind]
       if not tile then
         error("Unknown door_kind: " .. tostring(B.door_kind))
       end
@@ -910,10 +910,10 @@ function write_wolf_level()
       end
     else
       -- when we run out of floor codes (unlikely!) then reuse them
-      local avail = WOLF.FACTORY.TILE_NUMS.area_max - WOLF.FACTORY.TILE_NUMS.area_min + 1
+      local avail = GAME.FACTORY.TILE_NUMS.area_max - GAME.FACTORY.TILE_NUMS.area_min + 1
       local floor = B.floor_code or 0
 
-      tile = WOLF.FACTORY.TILE_NUMS.area_min + (floor % avail)
+      tile = GAME.FACTORY.TILE_NUMS.area_min + (floor % avail)
     end
 
     if B.things and B.things[1] then

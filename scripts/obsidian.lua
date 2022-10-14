@@ -510,7 +510,7 @@ function ob_update_engines()
   end
 
   if need_new then
-    if OB_CONFIG.game == "wolf" or OB_CONFIG.game == "spear" then
+    if OB_CONFIG.game == "wolf" or OB_CONFIG.game == "spear" or OB_CONFIG.game == "noah" then
       OB_CONFIG.engine = "wolf_3d"
     elseif OB_CONFIG.game == "nukem" then
       OB_CONFIG.engine = "build"

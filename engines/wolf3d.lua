@@ -43,7 +43,7 @@ OB_ENGINES["wolf_3d"] =
 
   priority = 100,
 
-  game = "wolf",
+  game = {wolf=1, noah=1},
 
   tables =
   {

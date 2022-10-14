@@ -1139,8 +1139,10 @@ bool Build_Cool_Shit() {
         std::string current_game = ob_get_param("game");
         if (StringCaseCmp(current_game, "wolf") == 0) {
             was_ok = game_object->Start("WL6");
-        } else {
+        } else if (StringCaseCmp(current_game, "spear") == 0) {
             was_ok = game_object->Start("SOD");
+        } else {
+            was_ok = game_object->Start("N3D");
         }
     } else {
         was_ok = game_object->Start(def_filename.c_str());
