@@ -329,7 +329,7 @@ end
 OB_GAMES["spear"] =
 {
 	label = _("Spear of Destiny"),
-	priority = 20,
+	priority = 47,
 	
 	format = "wolf3d",
 	

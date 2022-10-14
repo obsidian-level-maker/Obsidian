@@ -81,6 +81,7 @@ OB_MODULES["debugger"] =
 
   side = "left",
   engine = "!vanilla",
+  engine2 = "!wolf_3d",
   priority = 50,
 
   tooltip = _("Provides options for printing out more verbose log information. Advanced, highly experimental features can also be found here."),

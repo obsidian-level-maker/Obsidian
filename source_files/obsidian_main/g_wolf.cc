@@ -364,6 +364,11 @@ bool wolf_game_interface_c::Start(const char *ext) {
                 case -1:
                     LogPrintf(_("Error choosing directory:\n"));
                     LogPrintf("   {}\n", chooser.errmsg());
+                    break;
+
+                case 1:
+                    Main::ProgStatus(_("Cancelled"));
+                    return false;
 
                 default:
                     break;  // OK

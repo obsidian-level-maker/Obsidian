@@ -269,6 +269,7 @@ OB_MODULES["export_map"] =
   side = "left",
   priority = -75,
   engine = "!vanilla",
+  engine2 = "!wolf_3d",
 
   tables =
   {

@@ -39,7 +39,7 @@ WOLF.ROOMS = { }
 OB_GAMES["wolf"] =
 {
 	label = _("Wolfenstein 3D"),
-	priority = 20,
+	priority = 48,
 	
 	format = "wolf3d",
 	
