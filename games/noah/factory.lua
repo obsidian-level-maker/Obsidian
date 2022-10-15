@@ -5238,7 +5238,7 @@ function NOAH.factory_setup()
 
     plan_size = 7,
     cell_size = 7,
-    cell_min_size = 3,
+    cell_min_size = 7,
 
     caps = { blocky_items=true, blocky_doors=true,
              tiered_skills=true, elevator_exits=true,
