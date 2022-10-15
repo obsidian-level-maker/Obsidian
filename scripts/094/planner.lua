@@ -373,16 +373,16 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
     local along
 
     if OB_CONFIG.length == "few" then
-      along = level.ep_along / 4
+      along = Level.ep_along / 4
     elseif OB_CONFIG.length == "episode" then
-      along = level.ep_along / level.ep_length
+      along = Level.ep_along / level.ep_length
     else
-      along = ((level.ep_length * (GAME.FACTORY.episodes - 1)) + level.ep_along) / (level.ep_length * GAME.FACTORY.episodes)
+      along = ((Level.ep_length * (GAME.FACTORY.episodes - 1)) + Level.ep_along) / (Level.ep_length * GAME.FACTORY.episodes)
     end
 
     along = along ^ ramp_factor
 
-    if ob_size == gui.gettext("Episodic") then along = level.ep_along / level.ep_length end
+    if ob_size == gui.gettext("Episodic") then along = Level.ep_along / Level.ep_length end
 
     along = math.clamp(0, along, 1)
 
