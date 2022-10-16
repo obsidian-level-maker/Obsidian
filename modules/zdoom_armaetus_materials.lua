@@ -1223,7 +1223,7 @@ ARMAETUS_MATERIALS = {
   ROAD4 = { f="ROAD4", t="BRIKS05" },
 
   -- Miscellaneous
-  REVAPPEA = { t="REVAPPEA". f="CEIL5_1" }, -- Spooky! Meant for walls and such
+  REVAPPEA = { t="REVAPPEA", f="CEIL5_1" }, -- Spooky! Meant for walls and such
 
 ---------------------------------------------------------------
 -- Overwriting existing flats to use new patches for textures
