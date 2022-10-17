@@ -32,6 +32,7 @@ OB_MODULES["ui_reject_options"] =
   label = _("Map Build Options"),
   
   engine = "!advanced",
+  engine2 = "!wolf_3d",
 
   side = "left",
   priority = 105,

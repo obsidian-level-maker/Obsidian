@@ -1,11 +1,8 @@
 ----------------------------------------------------------------
---  Engine: Vanilla DOOM/DOOM2.EXE
+-- BASIC DEFINITIONS
 ----------------------------------------------------------------
 --
---  Obsidian Level Maker
---
---  Copyright (C) 2021-2022 Dashodanger (?)
---  Copyright (C) 2021-2022 MsrSgtShooterPerson (?)
+--  Oblige Level Maker (C) 2006,2007 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -19,40 +16,19 @@
 --
 ----------------------------------------------------------------
 
-VANILLA = {}
+BW = 9; BH = BW  -- blocks in a cell
+FW = 4; FH = FW  -- fragments in a block
 
+BORDER_BLK = 3  -- number of spare blocks around plan
 
-VANILLA.ENTITIES =
-{
+MIN_FLOOR = 0
+MAX_CEIL  = 640
 
-}
+MAX_STEP = 16
 
+SKILLS = { "easy", "medium", "hard" }
 
-VANILLA.PARAMETERS = -- These probably aren't required - Dasho
-{
-  boom_lines = false,
-  boom_sectors = false
-}
+GAME_FACTORIES = {}
 
-
-----------------------------------------------------------------
-
-
-OB_ENGINES["vanilla"] =
-{
-  label = _("Vanilla"),
-
-  priority = 100,
-
-  game = "doomish",
-
-  tables =
-  {
-    VANILLA
-  },
-
-  hooks =
-  {
-  
-  }
-}
+PLAN = {}
+GAME = {}

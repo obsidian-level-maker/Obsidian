@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  Engine: Vanilla DOOM/DOOM2.EXE
+--  Engine: Build
 ----------------------------------------------------------------
 --
 --  Obsidian Level Maker
@@ -19,36 +19,35 @@
 --
 ----------------------------------------------------------------
 
-VANILLA = {}
+BUILD = {}
 
 
-VANILLA.ENTITIES =
+BUILD.ENTITIES =
 {
 
 }
 
 
-VANILLA.PARAMETERS = -- These probably aren't required - Dasho
+BUILD.PARAMETERS =
 {
-  boom_lines = false,
-  boom_sectors = false
+
 }
 
 
 ----------------------------------------------------------------
 
 
-OB_ENGINES["vanilla"] =
+OB_ENGINES["build"] =
 {
-  label = _("Vanilla"),
+  label = _("Build Engine"),
 
   priority = 100,
 
-  game = "doomish",
+  game = "nukem",
 
   tables =
   {
-    VANILLA
+    BUILD
   },
 
   hooks =

@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------
---  BASE FILE for HERETIC
+--  Base File for Super Noah's Ark 3D
 ------------------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -19,54 +19,39 @@
 --
 ------------------------------------------------------------------------
 
-HERETIC = { }
+NOAH = { }
 
-
-gui.import("params")
-
-gui.import("entities")
 gui.import("factory")
-gui.import("monsters")
-gui.import("pickups")
-gui.import("weapons")
-gui.import("materials")
-gui.import("themes")
-gui.import("levels")
-gui.import("resources")
-gui.import("vanilla_mats")
+
+-- These empty tables are needed not to throw errors in obsidian.lua
+
+NOAH.PARAMETERS = { }
+
+NOAH.THEMES = { }
+
+NOAH.ROOM_THEMES = { }
+
+NOAH.ROOMS = { }
 
 ------------------------------------------------------------
 
-function HERETIC.all_done()
-  if ob_match_engine("advanced") then
-	  local wad_file = "games/heretic/data/HER_EXIT.wad"
-	  gui.wad_merge_sections(wad_file)
-  end
-  gui.wad_insert_file("data/endoom/ENDOOM.bin", "ENDTEXT")
-end
-
-OB_GAMES["heretic"] =
+OB_GAMES["noah"] =
 {
-  label = _("Heretic"),
-
-  priority = 94,
-
-  format = "doom",
-  game_dir = "heretic",
-  iwad_name = "heretic.wad",
-
-  use_generics = true,
-
-  tables =
-  {
-    HERETIC
-  },
-
-  hooks =
-  {
-    factory_setup = HERETIC.factory_setup,
-    get_levels = HERETIC.get_levels,
-    all_done   = HERETIC.all_done
-  },
+	label = _("Noah's Ark 3D"),
+	priority = 46,
+	
+	format = "wolf3d",
+	
+	game_dir = "noah",
+	
+	tables =
+	{
+	  NOAH
+	},
+	
+	hooks =
+	{
+      factory_setup = NOAH.factory_setup,
+	},
 }
 

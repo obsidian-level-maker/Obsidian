@@ -1466,11 +1466,8 @@ gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env),
     assert(kind_tab and not table.empty(kind_tab))
 
     R.hall_type  = info.hall_type
-    if SHAPE_GRAMMAR == SHAPES.OBLIGE_V2 then
-      R.hall_group = "oblige_v2"
-    else
-      R.hall_group = rand.key_by_probs(kind_tab)
-    end
+
+    R.hall_group = rand.key_by_probs(kind_tab)
 
   else
     local A = AREA_CLASS.new(LEVEL, "floor")

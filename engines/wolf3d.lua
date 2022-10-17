@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  Engine: Vanilla DOOM/DOOM2.EXE
+--  Engine: Wolfenstein 3D
 ----------------------------------------------------------------
 --
 --  Obsidian Level Maker
@@ -19,36 +19,35 @@
 --
 ----------------------------------------------------------------
 
-VANILLA = {}
+WOLF_3D = {}
 
 
-VANILLA.ENTITIES =
+WOLF_3D.ENTITIES =
 {
 
 }
 
 
-VANILLA.PARAMETERS = -- These probably aren't required - Dasho
+WOLF_3D.PARAMETERS =
 {
-  boom_lines = false,
-  boom_sectors = false
+
 }
 
 
 ----------------------------------------------------------------
 
 
-OB_ENGINES["vanilla"] =
+OB_ENGINES["wolf_3d"] =
 {
   label = _("Vanilla"),
 
   priority = 100,
 
-  game = "doomish",
+  game = {wolf=1, noah=1},
 
   tables =
   {
-    VANILLA
+    WOLF_3D
   },
 
   hooks =

@@ -25,6 +25,7 @@ DOOM = { }
 gui.import("params")
 
 gui.import("entities")
+gui.import("factory") -- For earlier Oblige versions
 gui.import("monsters")
 gui.import("pickups")
 gui.import("weapons")
@@ -34,6 +35,12 @@ gui.import("themes")
 gui.import("levels")
 gui.import("resources")
 gui.import("vanilla_mats")
+
+-- pull in the other Doom games...
+
+gui.import("x_doom1")
+gui.import("x_tnt")
+gui.import("x_plutonia")
 
 ------------------------------------------------------------------------
 
@@ -56,18 +63,9 @@ OB_GAMES["doom2"] =
 
   hooks =
   {
+    factory_setup = DOOM.factory_setup,
     get_levels = DOOM.get_levels,
     end_level  = DOOM.end_level,
     all_done   = DOOM.all_done
   },
 }
-
-
-------------------------------------------------------------------------
-
--- pull in the other Doom games...
-
-gui.import("x_doom1")
-gui.import("x_tnt")
-gui.import("x_plutonia")
-

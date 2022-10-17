@@ -1098,13 +1098,12 @@ bool Build_Cool_Shit() {
             game_object = Doom_GameObject();
         } else if (StringCaseCmp(format, "nukem") == 0) {
             game_object = Nukem_GameObject();
-
+        } else if (StringCaseCmp(format, "wolf3d") == 0) {
+            game_object = Wolf_GameObject();
         } else if (StringCaseCmp(format, "quake") == 0) {
             game_object = Quake1_GameObject();
-
         } else if (StringCaseCmp(format, "quake2") == 0) {
             game_object = Quake2_GameObject();
-
         } else if (StringCaseCmp(format, "quake3") == 0) {
             game_object = Quake3_GameObject();
         } else {
@@ -1134,8 +1133,20 @@ bool Build_Cool_Shit() {
     #endif
 
     const u32_t start_time = TimeGetMillies();
+    bool was_ok = false;
     // this will ask for output filename (among other things)
-    bool was_ok = game_object->Start(def_filename.c_str());
+    if (StringCaseCmp(format, "wolf3d") == 0) {
+        std::string current_game = ob_get_param("game");
+        if (StringCaseCmp(current_game, "wolf") == 0) {
+            was_ok = game_object->Start("WL6");
+        } else if (StringCaseCmp(current_game, "spear") == 0) {
+            was_ok = game_object->Start("SOD");
+        } else {
+            was_ok = game_object->Start("N3D");
+        }
+    } else {
+        was_ok = game_object->Start(def_filename.c_str());
+    }
 
     #ifndef CONSOLE_ONLY
     // coerce FLTK to redraw the main window

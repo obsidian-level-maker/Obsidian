@@ -1555,42 +1555,6 @@ HEXEN.ROOM_THEMES =
 
   },
 
-  dungeon_v2_Hallway_Monktan =
-  {
-    env   = "hallway",
-    group = "oblige_v2",
-    prob  = 50,
-
-    walls =
-    {
-      MONK02=40,
-      MONK03=15,
-      MONK16=15,
-    },
-
-    floors =
-    {
-      F_011=20,
-      F_014=8,
-      F_025=15,
-      F_028=10,
-      F_029=10,
-      F_077=10,
-      F_089=12,
-    },
-
-    ceilings =
-    {
-      F_011=20,
-      F_014=8,
-      F_025=15,
-      F_028=10,
-      F_029=10,
-      F_092=5,
-    },
-
-  },
-
   dungeon_deuce_Hallway_Monktan =
   {
     env   = "hallway",
@@ -1805,41 +1769,6 @@ HEXEN.ROOM_THEMES =
 
   },
 
-  fire_steel_Hallway_v2_room1 =
-  {
-    env   = "hallway",
-    group = "oblige_v2",
-    prob  = 50,
-    walls =
-    {
-      FIRE06=15,
-      FIRE07=15,
-      FIRE08=10,
-      FIRE09=10,
-      FIRE10=10,
-      FIRE11=10,
-      FIRE12=10,
-    },
-
-    floors =
-    {
-      F_013=25,
-      F_032=5,
-      F_040=4,
-      F_044=1,
-      F_082=5,
-    },
-
-    ceilings =
-    {
-      F_013=25,
-      F_032=5,
-      F_040=4,
-      F_044=1,
-      F_082=5,
-    },
-  },
-
   fire_steel_Hallway_vent_room1 =
   {
     env   = "hallway",
@@ -1971,33 +1900,6 @@ HEXEN.ROOM_THEMES =
 
   },
 
-  fire_steel_Hallway_v2_room2 =
-  {
-    env   = "hallway",
-    group = "oblige_v2",
-    prob  = 50,
-    walls =
-    {
-      FIRE01=30,
-      FIRE05=10,
-    },
-
-    floors =
-    {
-      F_032=25,
-      F_040=5,
-      F_082=5,
-    },
-
-    ceilings =
-    {
-      F_032=25,
-      F_040=5,
-      F_082=5,
-    },
-
-  },
-
   fire_steel_Hallway_vent_room2 =
   {
     env   = "hallway",
@@ -2083,49 +1985,6 @@ HEXEN.ROOM_THEMES =
   fire_steel_room_mix =
   { -- Not technically right, but works for what it does ;-) JB
     env = "building",
-    prob = 50,
-    walls =
-    {
-      STEEL01=40,
-      STEEL02=10,
-      STEEL05=1,  -- This one should be rare, since also the door texture, JB
-      STEEL06=15,
-      STEEL07=5,
-      STEEL08=5,
-    },
-
-    floors =
-    {
-      F_065=10,
-      F_066=10,
-      F_067=10,
-      F_068=10,
-      F_069=15,
-      F_070=15,
-      F_074=40,
-      F_075=15,
-      F_078=10,
-    },
-
-    ceilings =
-    {
-      F_065=10,
-      F_066=10,
-      F_067=10,
-      F_068=10,
-      F_069=15,
-      F_070=15,
-      F_074=40,
-      F_075=15,
-      F_078=10,
-    },
-
-  },
-
-  fire_steel_Hallway_v2_room_mix =
-  { -- Not technically right, but works for what it does ;-) JB
-    env = "hallway",
-    group = "oblige_v2",
     prob = 50,
     walls =
     {
@@ -2367,32 +2226,6 @@ HEXEN.ROOM_THEMES =
 
   },
 
-  ice_caves_Hallway_v2_room1 =
-  {
-    env  = "hallway",
-    group = "oblige_v2",
-    prob = 50,
-    walls =
-    {
-      ICE02=30,
-      ICE03=5,
-      ICE06=25,
-    },
-
-    floors =
-    {
-      F_013=40,
-      F_040=30,
-    },
-
-    ceilings =
-    {
-      F_013=40,
-      F_040=30,
-    },
-
-  },
-
   ice_caves_Hallway_vent_room1 =
   {
     env  = "hallway",
@@ -2499,35 +2332,6 @@ HEXEN.ROOM_THEMES =
 
   },
   
-  ice_caves_Hallway_v2_room2 =
-  { -- Not technically right, but works for what it does ;-) JB
-    env  = "hallway",
-    group = "oblige_v2",
-    prob = 50,
-    walls =
-    {
-      ICE01=15,
-      ICE02=30,
-      ICE03=5,
-      ICE06=25,
-    },
-
-    floors =
-    {
-      F_013=20,
-      F_033=25,
-      F_040=15,
-    },
-
-    ceilings =
-    {
-      F_013=40,
-      F_033=15,
-      F_040=30,
-    },
-
-  },
-
   ice_caves_Hallway_vent_room2 =
   { -- Not technically right, but works for what it does ;-) JB
     env  = "hallway",
@@ -2618,36 +2422,6 @@ HEXEN.ROOM_THEMES =
   ice_caves_room =
   { -- These are built rooms for the cave level (the rest are naturals of some kind)
     env = "building",
-    prob = 50,
-    walls =
-    {
-      CAVE01=30,
-      CAVE02=30,
-      CAVE07=25,
-    },
-
-    floors =
-    {
-      F_039=75,
-      F_040=40,
-      F_073=10,
-      F_076=15,
-    },
-
-    ceilings =
-    {
-      F_039=75,
-      F_040=40,
-      F_073=10,
-      F_076=15,
-    },
-
-  },
-
-  ice_caves_Hallway_v2_room =
-  { -- These are built rooms for the cave level (the rest are naturals of some kind)
-    env = "hallway",
-    group = "oblige_v2",
     prob = 50,
     walls =
     {
@@ -2854,44 +2628,6 @@ HEXEN.ROOM_THEMES =
   swamp_castle =
   {
     env = "building",
-    prob = 50,
-    walls =
-    {
-      SWAMP01=30,
-      SWAMP03=30,
-      SWAMP04=30,
-      -- This should probably be a separate theme, but seems to work best this way, JB
-      FOREST07=10,
-    },
-
-    floors =
-    {
-      F_017=10,
-      F_018=10,
-      F_019=20,
-      F_020=15,
-      F_054=5,
-      F_055=5,
-      F_092=5,
-    },
-
-    ceilings =
-    {
-      F_017=10,
-      F_018=10,
-      F_019=20,
-      F_020=15,
-      F_054=5,
-      F_055=5,
-      F_092=5,
-    },
-
-  },
-
-  swamp_Hallway_v2_castle =
-  {
-    env = "hallway",
-    group = "oblige_v2",
     prob = 50,
     walls =
     {
@@ -3172,32 +2908,6 @@ HEXEN.ROOM_THEMES =
 
   },
 
-  forest_Hallway_v2_room2 =
-  {
-    env = "hallway",
-    group = "oblige_v2",
-    prob = 50,
-    walls =
-    {
-      FOREST02=40,
-      FOREST03=10,
-      FOREST04=10,
-    },
-
-    floors =
-    {
-      F_038=25,
-      F_048=25,
-      F_089=25,
-    },
-
-    ceilings =
-    {
-      F_038=25,
-    },
-
-  },
-
   forest_Hallway_vent_room2 =
   {
     env = "hallway",
@@ -3333,41 +3043,6 @@ HEXEN.ROOM_THEMES =
   forest_room =
   {
     env = "building",
-    prob = 50,
-    walls =
-    {
-      WOOD01=5,
-      VILL04=10,
-      VILL05=10,
-    },
-
-    floors =
-    {
-      F_002=10,
-      F_003=10,
-      F_004=5,
-      F_037=10,
-      F_028=20,
-      F_029=20,
-      F_054=20,
-      F_055=20,
-    },
-
-    ceilings =
-    {
-      F_037=10,
-      F_028=20,
-      F_029=20,
-      F_054=20,
-      F_055=20,
-    },
-
-  },
-
-  forest_Hallway_v2_room =
-  {
-    env = "hallway",
-    group = "oblige_v2",
     prob = 50,
     walls =
     {

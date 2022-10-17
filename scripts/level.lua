@@ -2807,8 +2807,14 @@ function Level_make_all()
     for _,LEV in pairs(EPI.levels) do
       LEV.allowances = {}
 
-      if Level_make_level(LEV) == "abort" then
-        return "abort"
+      if PARAM.float_historical_oblige_v2 and rand.odds(PARAM.float_historical_oblige_v2) then
+        if v094_create_LEVEL(GAME.FACTORY.all_levels[LEV.id], LEV.id, #GAME.levels) == "abort" then
+          return "abort"
+        end
+      else
+        if Level_make_level(LEV) == "abort" then
+          return "abort"
+        end
       end
     end
   end

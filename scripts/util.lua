@@ -25,6 +25,15 @@
 -- this function is now deprecated
 --require = function() error("require() is deprecated") end
 
+function do_nothing()
+end
+
+function non_nil(val)
+  if val == nil then
+    error("Illegal NIL value found.")
+  end
+  return val
+end
 
 function int(val)
   return math.floor(val)
@@ -565,6 +574,39 @@ function table.index_up(t)
   end
 end
 
+function table.expand_copies(LIST)
+
+  local function expand_it(name, sub)
+    if not sub.copy then return end
+
+    if sub._expanding then
+      error("Cyclic copy refs: " .. name)
+    end
+
+    sub._expanding = true
+
+    local orig = LIST[sub.copy]
+
+    if not orig then
+      error("Unknown copy ref: " .. name .. " -> " .. tostring(sub.copy))
+    end
+
+    -- recursively expand the original
+    expand_it(sub.copy, orig)
+
+    table.merge_missing(sub, orig)
+
+    sub._expanding = nil
+    sub.copy = nil
+  end
+
+  -- expand_copies --
+
+  for name,sub in pairs(LIST) do
+    expand_it(name, sub)
+  end
+end
+
 function table.expand_templates(t)
   for name,sub in pairs(t) do
     if sub.template then
@@ -629,6 +671,14 @@ rand = {}
 
 function rand.odds(chance)
   return (gui.random() * 100) <= chance
+end
+
+function rand.dual_odds(test,t_chance,f_chance)
+  if test then
+    return rand.odds(t_chance)
+  else
+    return rand.odds(f_chance)
+  end
 end
 
 function rand.range(L,H)
@@ -732,7 +782,206 @@ function rand.key_by_probs(tab)
   return key_list[idx]
 end
 
+function rand.table_pair(tab)
+  local count = 0
+  for k,v in pairs(tab) do count = count+1 end
 
+  if count == 0 then return nil, nil end
+  local index = rand.irange(1,count)
+
+  for k,v in pairs(tab) do
+    if index==1 then return k,v end
+    index = index-1
+  end
+
+  error("rand_table_kv: miscounted!")
+end
+
+----====| CELL/BLOCK UTILITIES |====----
+
+function valid_cell(cx, cy)
+  return not (cx < 1 or cy < 1 or cx > PLAN.w or cy > PLAN.h)
+end
+
+function valid_block(bx, by)
+  return not (bx < 1 or by < 1 or bx > PLAN.blk_w or by > PLAN.blk_h)
+end
+
+function valid_cell_block(c, x, y)
+  return
+    (c.bx1 <= x and x <= c.bx2) and
+    (c.by1 <= y and y <= c.by2)
+end
+
+function valid_chunk(kx,ky)
+  return 1 <= kx and kx <= 3 and
+         1 <= ky and ky <= 3
+end
+
+function valid_chunk_block(K, x, y)
+  return
+    (K.x1 <= x and x <= K.x2) and
+    (K.y1 <= y and y <= K.y2)
+end
+
+-- convert position into block/sub-block pair,
+-- where all the index values start at 1
+function div_mod(x, mod)
+  x = x - 1
+  return 1 + int(x / mod), 1 + (x % mod)
+end
+
+function dir_to_delta(dir)
+  if dir == 1 then return -1, -1 end
+  if dir == 2 then return  0, -1 end
+  if dir == 3 then return  1, -1 end
+
+  if dir == 4 then return -1, 0 end
+  if dir == 5 then return  0, 0 end
+  if dir == 6 then return  1, 0 end
+
+  if dir == 7 then return -1, 1 end
+  if dir == 8 then return  0, 1 end
+  if dir == 9 then return  1, 1 end
+
+  error ("dir_to_delta: bad dir " .. dir)
+end
+
+function delta_to_dir(dx, dy)
+  if math.abs(dx) > math.abs(dy) then
+    if dx > 0 then return 6 else return 4 end
+  else
+    if dy > 0 then return 8 else return 2 end
+  end
+end
+
+function dir_to_across(dir)
+  if dir == 2 then return 1, 0 end
+  if dir == 4 then return 0, 1 end
+  if dir == 6 then return 0, 1 end
+  if dir == 8 then return 1, 0 end
+
+  error ("dir_to_across: bad dir " .. dir)
+end
+
+function is_parallel(dir1, dir2)
+  return (dir1 == 2 or dir1 == 8) == (dir2 == 2 or dir2 == 8)
+end
+
+function is_perpendicular(dir1, dir2)
+  return (dir1 == 2 or dir1 == 8) == (dir2 == 4 or dir2 == 6)
+end
+
+CW_45_ROTATES  = { 4, 1, 2,  7, 5, 3,  8, 9, 6 }
+CCW_45_ROTATES = { 2, 3, 6,  1, 5, 9,  4, 7, 8 }
+
+CW_90_ROTATES  = { 7, 4, 1,  8, 5, 2,  9, 6, 3 }
+CCW_90_ROTATES = { 3, 6, 9,  2, 5, 8,  1, 4, 7 }
+
+function rotate_cw45(dir)
+  return CW_45_ROTATES[dir]
+end
+
+function rotate_ccw45(dir)
+  return CCW_45_ROTATES[dir]
+end
+
+function rotate_cw90(dir)
+  return CW_90_ROTATES[dir]
+end
+
+function rotate_ccw90(dir)
+  return CCW_90_ROTATES[dir]
+end
+
+DIR_ANGLES = { 225,270,315, 180,0,0, 135,90,45 }
+
+function dir_to_angle(dir)
+  assert(1 <= dir and dir <= 9)
+  return DIR_ANGLES[dir]
+end
+
+function delta_to_angle(dx,dy)
+  if math.abs(dy) < math.abs(dx)/2 then
+    return sel(dx < 0, 180, 0)
+  end
+  if math.abs(dx) < math.abs(dy)/2 then
+    return sel(dy < 0, 270, 90)
+  end
+  if dy > 0 then
+    return sel(dx < 0, 135, 45)
+  else
+    return sel(dx < 0, 225, 315)
+  end
+end
+
+function box_size(x1, y1, x2, y2)
+  return (x2-x1+1), (y2-y1+1)
+end
+
+function boxes_overlap(x1,y1,x2,y2,  x3,y3,x4,y4)
+  assert(x2 >= x1 and y2 >= y1)
+  assert(x4 >= x3 and y4 >= y3)
+
+  if x3 > x2 or x4 < x1 then return false end
+  if y3 > y2 or y4 < y1 then return false end
+
+  return true
+end
+
+function boxes_touch_sides(x1,y1,x2,y2,  x3,y3,x4,y4)
+
+  if x3 > x2+1 or x4 < x1-1 then return false end
+  if y3 > y2+1 or y4 < y1-1 then return false end
+
+  if not (x3 > x2+1 or x4 < x1-1) and not (y3 > y2 or y4 < y1)
+  then return true end
+
+  if not (y3 > y2+1 or y4 < y1-1) and not (x3 > x2 or x4 < x1)
+  then return true end
+
+  return false
+end
+
+function get_long_deep(dir, w, h)
+  if (dir == 2) or (dir == 8) then
+    return w, h
+  else
+    return h, w
+  end
+end
+
+function side_coords(side, x1,y1, x2,y2)
+  if side == 2 then return x1,y1, x2,y1 end
+  if side == 4 then return x1,y1, x1,y2 end
+  if side == 6 then return x2,y1, x2,y2 end
+  if side == 8 then return x1,y2, x2,y2 end
+
+  error ("side_coords: bad side " .. side)
+end
+
+function corner_coords(side, x1,y1, x2,y2)
+  if side == 1 then return x1,y1 end
+  if side == 3 then return x2,y1 end
+  if side == 7 then return x1,y2 end
+  if side == 9 then return x2,y2 end
+
+  error ("corner_coords: bad side " .. side)
+end
+
+function neighbour_by_side(c, dir)
+  local dx, dy = dir_to_delta(dir)
+  if valid_cell(c.x + dx, c.y + dy) then
+    return PLAN.cells[c.x + dx][c.y + dy]
+  end
+end
+
+function chunk_neighbour(c, K, dir)
+  local dx, dy = dir_to_delta(dir)
+  if valid_chunk(K.kx + dx, K.ky + dy) then
+    return c.chunks[K.kx+dx][K.ky+dy]
+  end
+end
 
 --------========|  GEOMETRY UTILITIES  |========--------
 

@@ -54,6 +54,8 @@ OB_MODULES["procedural_gotcha"] =
 
   engine = "!vanilla",
   engine2 = "!zdoom",
+  engine3 = "!wolf_3d",
+  engine4 = "!build",
   side = "right",
   priority = 92,
 

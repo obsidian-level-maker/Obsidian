@@ -1293,6 +1293,11 @@ extern int CSG_add_brush(lua_State *L);
 extern int CSG_add_entity(lua_State *L);
 extern int CSG_trace_ray(lua_State *L);
 
+extern int WF_wolf_block(lua_State *L);
+extern int WF_wolf_read(lua_State *L);
+extern int v094_begin_wolf_level(lua_State *L);
+extern int v094_end_wolf_level(lua_State *L);
+
 namespace Doom {
 extern int wad_name_gfx(lua_State *L);
 extern int wad_logo_gfx(lua_State *L);
@@ -1324,6 +1329,13 @@ extern int title_draw_disc(lua_State *L);
 extern int title_draw_clouds(lua_State *L);
 extern int title_draw_planet(lua_State *L);
 extern int title_load_image(lua_State *L);
+extern int v094_begin_level(lua_State *L);
+extern int v094_end_level(lua_State *L);
+extern int v094_add_thing(lua_State *L);
+extern int v094_add_vertex(lua_State *L);
+extern int v094_add_linedef(lua_State *L);
+extern int v094_add_sidedef(lua_State *L);
+extern int v094_add_sector(lua_State *L);
 }  // namespace Doom
 
 extern int wadfab_load(lua_State *L);
@@ -1406,6 +1418,12 @@ static const luaL_Reg gui_script_funcs[] = {
     {"minimap_gif_frame", gui_minimap_gif_frame},
     {"minimap_gif_finish", gui_minimap_gif_finish},
 
+    // Wolf-3D functions
+    {"wolf_block", WF_wolf_block},
+    {"wolf_read", WF_wolf_read},
+    {"v094_begin_wolf_level", v094_begin_wolf_level},
+    {"v094_end_wolf_level", v094_end_wolf_level},
+
     // Doom/Heretic/Hexen functions
     {"wad_name_gfx", Doom::wad_name_gfx},
     {"wad_logo_gfx", Doom::wad_logo_gfx},
@@ -1463,6 +1481,15 @@ static const luaL_Reg gui_script_funcs[] = {
     {"spots_get_mons", SPOT_get_mons},
     {"spots_get_items", SPOT_get_items},
     {"spots_end", SPOT_end},
+
+    // v094 functions
+    {"v094_begin_level", Doom::v094_begin_level},
+    {"v094_end_level", Doom::v094_end_level},
+    {"v094_add_thing", Doom::v094_add_thing},
+    {"v094_add_vertex", Doom::v094_add_vertex},
+    {"v094_add_linedef", Doom::v094_add_linedef},
+    {"v094_add_sidedef", Doom::v094_add_sidedef},
+    {"v094_add_sector", Doom::v094_add_sector},
 
     {NULL, NULL}  // the end
 };

@@ -199,6 +199,7 @@ OB_MODULES["misc"] =
   label = _("Advanced Architecture"),
 
   engine = "!vanilla",
+  engine2 = "!wolf_3d",
 
   side = "left",
   priority = 101,
@@ -211,37 +212,6 @@ OB_MODULES["misc"] =
 
   options =
   {
-
-    {
-      name = "float_oblige_v2_grammar",
-      label = _("Oblige v2 Grammar"),
-      valuator = "slider",
-      units = "% of Levels",
-      min = 0,
-      max = 100,
-      increment = 1,
-      default = 0,
-      tooltip = _("Sets chance of levels using the Oblige v2 shape grammar."),
-      longtip = _("Gives levels a chance of being generated using the Oblige v2 shape grammar. With this grammar, rooms are always square-shaped, even in parks or caves, with the occasional chunk taken out of one of the corners or sides. Hallways are limited to the dedicated v2 hallway set. Room sizes are very consistent."),
-      priority = 102,
-      randomize_group = "architecture",
-    },
-
-    {
-      name = "float_oblige_v5_grammar",
-      label = _("Oblige v5 Grammar"),
-      valuator = "slider",
-      units = "% of Levels",
-      min = 0,
-      max = 100,
-      increment = 1,
-      default = 0,
-      tooltip = _("Sets chance of levels using the Oblige v5 shape grammar."),
-      longtip = _("Gives levels a chance of being generated using the Oblige v5 shape grammar. With this grammar, indoor rooms are usually square or diamond-shaped. Parks are larger than the indoor areas, but still more or less rectangular in nature. Caves retain their organic layouts. Hallways and joiners are still used as normal. Room sizes are fairly consistent."),
-      priority = 101,
-      randomize_group = "architecture",
-      gap = 1
-    },
 
     {
       name = "float_layout_absurdity",

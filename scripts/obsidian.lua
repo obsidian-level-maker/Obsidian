@@ -50,6 +50,8 @@ gui.import("script_manager")
 gui.import("random_words_en.lua")
 gui.import("random_words_ru.lua")
 
+gui.import("094/oblige_v094.lua")
+
 function ob_ref_table(op, t)
   if not gui.___REFS then
     gui.___REFS = {}
@@ -255,6 +257,88 @@ function ob_match_engine2(T)
   return not result
 end
 
+function ob_match_engine3(T)
+  if not T.engine3 then return true end
+  if T.engine3 == "any" then return true end
+
+  local engine = T.engine3
+  local result = true
+
+  -- Compatibility stub for old "gzdoom" selection
+  if engine == "gzdoom" then engine = "zdoom" end
+
+  -- negated check?
+  if type(engine) == "string" and string.sub(engine, 1, 1) == '!' then
+    engine = string.sub(engine, 2)
+    result = not result
+  end
+
+  -- normal check
+  if ob_match_word_or_table(engine, OB_CONFIG.engine) then
+    return result
+  end
+
+
+  -- handle extended engines
+
+  local engine_def = OB_ENGINES[OB_CONFIG.engine]
+
+  while engine_def do
+    if not engine_def.extends then
+      break;
+    end
+
+    if ob_match_word_or_table(engine, engine_def.extends) then
+      return result
+    end
+
+    engine_def = OB_ENGINES[engine_def.extends]
+  end
+
+  return not result
+end
+
+function ob_match_engine4(T)
+  if not T.engine4 then return true end
+  if T.engine4 == "any" then return true end
+
+  local engine = T.engine4
+  local result = true
+
+  -- Compatibility stub for old "gzdoom" selection
+  if engine == "gzdoom" then engine = "zdoom" end
+
+  -- negated check?
+  if type(engine) == "string" and string.sub(engine, 1, 1) == '!' then
+    engine = string.sub(engine, 2)
+    result = not result
+  end
+
+  -- normal check
+  if ob_match_word_or_table(engine, OB_CONFIG.engine) then
+    return result
+  end
+  
+  
+
+  -- handle extended engines
+
+  local engine_def = OB_ENGINES[OB_CONFIG.engine]
+
+  while engine_def do
+    if not engine_def.extends then
+      break;
+    end
+
+    if ob_match_word_or_table(engine, engine_def.extends) then
+      return result
+    end
+
+    engine_def = OB_ENGINES[engine_def.extends]
+  end
+
+  return not result
+end
 
 function ob_match_level_theme(LEVEL, T, override)
   if not T.theme then return true end
@@ -371,6 +455,8 @@ function ob_match_conf(T)
   if not ob_match_game(T)     then return false end
   if not ob_match_engine(T)   then return false end
   if not ob_match_engine2(T)  then return false end
+  if not ob_match_engine3(T)  then return false end
+  if not ob_match_engine4(T)  then return false end
   if not ob_match_module(T)   then return false end
 
   return true --OK--
@@ -424,7 +510,13 @@ function ob_update_engines()
   end
 
   if need_new then
-    OB_CONFIG.engine = "nolimit"
+    if OB_CONFIG.game == "wolf" or OB_CONFIG.game == "spear" or OB_CONFIG.game == "noah" then
+      OB_CONFIG.engine = "wolf_3d"
+    elseif OB_CONFIG.game == "nukem" then
+      OB_CONFIG.engine = "build"
+    else
+      OB_CONFIG.engine = "nolimit"
+    end
     gui.set_button("engine", OB_CONFIG.engine)
   end
 end
@@ -1928,6 +2020,7 @@ function ob_build_setup()
   end
 
   ob_invoke_hook("setup")
+  ob_invoke_hook("factory_setup") -- Some historical versions of Oblige use this
 
   Fab_load_all_definitions()
 
@@ -2320,6 +2413,7 @@ function ob_print_reference_json()
 end
 
 function ob_build_cool_shit()
+
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
 
@@ -2336,9 +2430,15 @@ function ob_build_cool_shit()
 
   gui.ticker()
   
-  local status
-
   ob_build_setup()
+
+  -- Hijack here if Wolf3D is selected
+
+  if OB_CONFIG.engine == "wolf_3d" then
+    local result = v094_build_wolf3d_shit()
+    ob_clean_up()
+    return result
+  end
 
   if PARAM["bool_save_gif"] == 1 then
     -- Set frame delay based on how detailed the live minimap is - Dasho
