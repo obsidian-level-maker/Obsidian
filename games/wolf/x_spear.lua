@@ -282,6 +282,98 @@ function SPEAR.get_factory_levels(episode)
       quests = {},
     }
 
+    local ob_size = PARAM.float_size_wolf_3d
+
+    if OB_CONFIG.length == "single" then
+      if ob_size == gui.gettext("Episodic") or 
+      ob_size == gui.gettext("Progressive") then
+        ob_size = 36
+        goto foundsize
+      end
+    end
+  
+    if ob_size == gui.gettext("Mix It Up") then
+  
+      local result_skew = 1.0
+      local low = PARAM.float_level_lower_bound_wolf_3d or 10
+      local high = PARAM.float_level_upper_bound_wolf_3d or 75
+  
+      if OB_CONFIG.level_size_bias_wolf_3d then
+        if OB_CONFIG.level_size_bias_wolf_3d == "small" then
+          result_skew = .80
+        elseif OB_CONFIG.level_size_bias_wolf_3d == "large" then
+          result_skew = 1.20
+        end
+      end
+  
+      ob_size = math.clamp(low, int(rand.irange(low, high) * result_skew), high)
+      goto foundsize
+    end
+  
+    if ob_size == gui.gettext("Episodic") or 
+    ob_size == gui.gettext("Progressive") then
+  
+      -- Progressive --
+  
+      local ramp_factor = 0.66
+  
+      if OB_CONFIG.level_size_ramp_factor_wolf_3d then
+        ramp_factor = tonumber(OB_CONFIG.level_size_ramp_factor_wolf_3d)
+      end
+  
+      local along
+  
+      if OB_CONFIG.length == "few" then
+        along = Level.ep_along / 4
+      elseif OB_CONFIG.length == "episode" then
+        along = Level.ep_along / Level.ep_length
+      else
+        along = ((Level.ep_length * (GAME.FACTORY.episodes - 1)) + Level.ep_along) / (Level.ep_length * GAME.FACTORY.episodes)
+      end
+  
+      along = along ^ ramp_factor
+  
+      if ob_size == gui.gettext("Episodic") then along = Level.ep_along / Level.ep_length end
+  
+      along = math.clamp(0, along, 1)
+  
+      -- Level Control fine tune for Prog/Epi
+  
+      -- default when Level Control is off: ramp from "small" --> "large",
+      local def_small = PARAM.float_level_lower_bound_wolf_3d or 30
+      local def_large = PARAM.float_level_upper_bound_wolf_3d - def_small or 42
+  
+      -- this basically ramps up
+      ob_size = int(def_small + along * def_large)
+    end
+
+    ::foundsize::
+
+    --plan_size = 7,
+    --cell_size = 12,
+
+    if ob_size <= 22 then
+      Level.plan_size = 4
+    elseif ob_size <= 48 then
+      Level.plan_size = 5
+    elseif ob_size <= 58 then
+      Level.plan_size = 6
+    else
+      Level.plan_size = 7
+    end
+
+    Level.ob_size = ob_size
+
+    if not PARAM.room_size_multiplier_wolf_3d then
+      Level.cell_size = 12
+    else
+      if PARAM.room_size_multiplier_wolf_3d == "mixed" then
+        Level.cell_size = 7 + math.round(3 * rand.pick({0.33,0.66,1,1.33,1.66}))
+      else
+        Level.cell_size = 7 + math.round(3 * tonumber(PARAM.room_size_multiplier_wolf_3d))
+      end
+    end
+
     if (map == ep_length) and episode ~= 5 then
       Level.boss_kind = SPEAR.FACTORY.EPISODE_BOSSES[episode]
     end
