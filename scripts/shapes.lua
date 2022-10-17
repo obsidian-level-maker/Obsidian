@@ -6768,11 +6768,59 @@ GROW_CAGE_AROUND_PILLAR =
     ".....","1CCC1",
     ".....","1C#C1",
     ".....","1CCC1",
-    "11111","11111",
+    ".....","11111",
     "x111x","x111x",
   },
 
   cage_mode = "fancy",
+},
+
+GROW_CAGE_AROUND_PILLAR_ALTERNATING =
+{
+  prob = 25,
+  skip_prob = 65,
+
+  structure =
+  {
+    ".....","11111",
+    ".....","11111",
+    ".....","11C11",
+    ".....","1C#C1",
+    ".....","11C11",
+    ".....","11111",
+    "x111x","x111x",
+  },
+
+  cage_mode = "fancy",
+},
+
+GROW_CAGE_AROUND_PILLAR_DIAGONAL =
+{
+  prob = 25,
+  skip_prob = 65,
+
+  structure =
+  {
+    "x....","x/111",
+    ".....","/1111",
+    ".....","1%CC1",
+    ".....","1C#C1",
+    ".....","1CC/1",
+    ".....","1111/",
+    "111.x","111/x",
+  },
+
+  cage_mode = "fancy",
+
+  diagonals =
+  {
+    ".1",
+    ".1",
+    "1C",
+    "C1",
+    "1.",
+    "1."
+  }
 },
 
 GROW_CAGE_Z =
