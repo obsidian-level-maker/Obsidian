@@ -1145,8 +1145,10 @@ bool Build_Cool_Shit() {
             was_ok = game_object->Start("WL6");
         } else if (StringCaseCmp(current_game, "spear") == 0) {
             was_ok = game_object->Start("SOD");
-        } else {
+        } else if (StringCaseCmp(current_game, "noah") == 0) {
             was_ok = game_object->Start("N3D");
+        } else {
+            was_ok = game_object->Start("BC"); // Operation Body Count
         }
     } else {
         was_ok = game_object->Start(def_filename.c_str());
