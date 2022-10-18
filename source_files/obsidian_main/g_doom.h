@@ -75,11 +75,11 @@ void AddThing(int x, int y, int h, int type, int angle, int options, int tid,
 // v094 stuff (Duh)
 int v094_begin_level(lua_State *L);
 int v094_end_level(lua_State *L);
-int v094_add_thing(lua_State*L);
-int v094_add_vertex(lua_State*L);
-int v094_add_sidedef(lua_State*L);
-int v094_add_sector(lua_State*L);
-int v094_add_linedef(lua_State*L);
+int v094_add_thing(lua_State *L);
+int v094_add_vertex(lua_State *L);
+int v094_add_sidedef(lua_State *L);
+int v094_add_sector(lua_State *L);
+int v094_add_linedef(lua_State *L);
 
 int NumVertexes();
 int NumSectors();
