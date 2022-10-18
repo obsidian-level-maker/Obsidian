@@ -7,7 +7,7 @@ PREFABS.Item_closet_toilet_drown =
   file   = "item/gtd_item_closet_toilet_drown.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   rank = 2,
   prob = 100,

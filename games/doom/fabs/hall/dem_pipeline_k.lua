@@ -73,7 +73,7 @@ PREFABS.Hallway_pipeline_locked_red2 =
   y_fit = "top",
   deep   = 16,
 
-  engine = "zdoom",
+  port = "zdoom",
 
   sound = "Pipeline",
 
@@ -130,7 +130,7 @@ PREFABS.Hallway_pipeline_barred1 =
 
   deep   = 16,
 
-  engine = "zdoom",
+  port = "zdoom",
 
   sound = "Pipeline",
 

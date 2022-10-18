@@ -423,6 +423,7 @@ OB_GAMES["spear"] =
 	label = _("Spear of Destiny"),
 	priority = 47,
 	
+  engine = "idtech_0",
 	format = "wolf3d",
 	
 	extends = "wolf",

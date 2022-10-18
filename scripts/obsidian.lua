@@ -215,126 +215,168 @@ function ob_match_engine(T)
   return not result
 end
 
-function ob_match_engine2(T)
-  if not T.engine2 then return true end
-  if T.engine2 == "any" then return true end
+function ob_match_port(T)
+  if not T.port then return true end
+  if T.port == "any" then return true end
 
-  local engine = T.engine2
+  local port = T.port
   local result = true
 
   -- Compatibility stub for old "gzdoom" selection
-  if engine == "gzdoom" then engine = "zdoom" end
+  if port == "gzdoom" then port = "zdoom" end
 
   -- negated check?
-  if type(engine) == "string" and string.sub(engine, 1, 1) == '!' then
-    engine = string.sub(engine, 2)
+  if type(port) == "string" and string.sub(port, 1, 1) == '!' then
+    port = string.sub(port, 2)
     result = not result
   end
 
   -- normal check
-  if ob_match_word_or_table(engine, OB_CONFIG.engine) then
+  if ob_match_word_or_table(port, OB_CONFIG.port) then
     return result
   end
   
   
 
-  -- handle extended engines
+  -- handle extended ports
 
-  local engine_def = OB_ENGINES[OB_CONFIG.engine]
+  local port_def = OB_PORTS[OB_CONFIG.port]
 
-  while engine_def do
-    if not engine_def.extends then
+  while port_def do
+    if not port_def.extends then
       break;
     end
 
-    if ob_match_word_or_table(engine, engine_def.extends) then
+    if ob_match_word_or_table(port, port_def.extends) then
       return result
     end
 
-    engine_def = OB_ENGINES[engine_def.extends]
+    port_def = OB_PORTS[port_def.extends]
   end
 
   return not result
 end
 
-function ob_match_engine3(T)
-  if not T.engine3 then return true end
-  if T.engine3 == "any" then return true end
+function ob_match_port2(T)
+  if not T.port2 then return true end
+  if T.port2 == "any" then return true end
 
-  local engine = T.engine3
+  local port = T.port2
   local result = true
 
   -- Compatibility stub for old "gzdoom" selection
-  if engine == "gzdoom" then engine = "zdoom" end
+  if port == "gzdoom" then port = "zdoom" end
 
   -- negated check?
-  if type(engine) == "string" and string.sub(engine, 1, 1) == '!' then
-    engine = string.sub(engine, 2)
+  if type(port) == "string" and string.sub(port, 1, 1) == '!' then
+    port = string.sub(port, 2)
     result = not result
   end
 
   -- normal check
-  if ob_match_word_or_table(engine, OB_CONFIG.engine) then
+  if ob_match_word_or_table(port, OB_CONFIG.port) then
     return result
   end
+  
+  
 
+  -- handle extended ports
 
-  -- handle extended engines
+  local port_def = OB_PORTS[OB_CONFIG.port]
 
-  local engine_def = OB_ENGINES[OB_CONFIG.engine]
-
-  while engine_def do
-    if not engine_def.extends then
+  while port_def do
+    if not port_def.extends then
       break;
     end
 
-    if ob_match_word_or_table(engine, engine_def.extends) then
+    if ob_match_word_or_table(port, port_def.extends) then
       return result
     end
 
-    engine_def = OB_ENGINES[engine_def.extends]
+    port_def = OB_PORTS[port_def.extends]
   end
 
   return not result
 end
 
-function ob_match_engine4(T)
-  if not T.engine4 then return true end
-  if T.engine4 == "any" then return true end
+function ob_match_port3(T)
+  if not T.port3 then return true end
+  if T.port3 == "any" then return true end
 
-  local engine = T.engine4
+  local port = T.port3
   local result = true
 
   -- Compatibility stub for old "gzdoom" selection
-  if engine == "gzdoom" then engine = "zdoom" end
+  if port == "gzdoom" then port = "zdoom" end
 
   -- negated check?
-  if type(engine) == "string" and string.sub(engine, 1, 1) == '!' then
-    engine = string.sub(engine, 2)
+  if type(port) == "string" and string.sub(port, 1, 1) == '!' then
+    port = string.sub(port, 2)
     result = not result
   end
 
   -- normal check
-  if ob_match_word_or_table(engine, OB_CONFIG.engine) then
+  if ob_match_word_or_table(port, OB_CONFIG.port) then
+    return result
+  end
+
+
+  -- handle extended ports
+
+  local port_def = OB_PORTS[OB_CONFIG.port]
+
+  while port_def do
+    if not port_def.extends then
+      break;
+    end
+
+    if ob_match_word_or_table(port, port_def.extends) then
+      return result
+    end
+
+    port_def = OB_PORTS[port_def.extends]
+  end
+
+  return not result
+end
+
+function ob_match_port4(T)
+  if not T.port4 then return true end
+  if T.port4 == "any" then return true end
+
+  local port = T.port4
+  local result = true
+
+  -- Compatibility stub for old "gzdoom" selection
+  if port == "gzdoom" then port = "zdoom" end
+
+  -- negated check?
+  if type(port) == "string" and string.sub(port, 1, 1) == '!' then
+    port = string.sub(port, 2)
+    result = not result
+  end
+
+  -- normal check
+  if ob_match_word_or_table(port, OB_CONFIG.port) then
     return result
   end
   
   
 
-  -- handle extended engines
+  -- handle extended ports
 
-  local engine_def = OB_ENGINES[OB_CONFIG.engine]
+  local port_def = OB_PORTS[OB_CONFIG.port]
 
-  while engine_def do
-    if not engine_def.extends then
+  while port_def do
+    if not port_def.extends then
       break;
     end
 
-    if ob_match_word_or_table(engine, engine_def.extends) then
+    if ob_match_word_or_table(port, port_def.extends) then
       return result
     end
 
-    engine_def = OB_ENGINES[engine_def.extends]
+    port_def = OB_PORTS[port_def.extends]
   end
 
   return not result
@@ -449,14 +491,16 @@ end
 
 
 function ob_match_conf(T)
-  assert(OB_CONFIG.game)
   assert(OB_CONFIG.engine)
+  assert(OB_CONFIG.game)
+  assert(OB_CONFIG.port)
 
+  if not ob_match_engine(T)     then return false end
   if not ob_match_game(T)     then return false end
-  if not ob_match_engine(T)   then return false end
-  if not ob_match_engine2(T)  then return false end
-  if not ob_match_engine3(T)  then return false end
-  if not ob_match_engine4(T)  then return false end
+  if not ob_match_port(T)   then return false end
+  if not ob_match_port2(T)  then return false end
+  if not ob_match_port3(T)  then return false end
+  if not ob_match_port4(T)  then return false end
   if not ob_match_module(T)   then return false end
 
   return true --OK--
@@ -496,32 +540,59 @@ end
 
 
 
-function ob_update_engines()
+function ob_update_games()
   local need_new = false
 
-  for name,def in pairs(OB_ENGINES) do
+  for name,def in pairs(OB_GAMES) do
     local shown = ob_match_conf(def)
 
-    if not shown and (OB_CONFIG.engine == name) then
+    if not shown and (OB_CONFIG.game == name) then
       need_new = true
     end
 
-    gui.enable_choice("engine", name, shown)
+    gui.enable_choice("game", name, shown)
   end
 
   if need_new then
-    if OB_CONFIG.game == "wolf" or OB_CONFIG.game == "spear" or OB_CONFIG.game == "noah" then
-      OB_CONFIG.engine = "wolf_3d"
-    elseif OB_CONFIG.game == "nukem" then
-      OB_CONFIG.engine = "build"
+    if OB_CONFIG.engine == "idtech_0" then
+      OB_CONFIG.game = "wolf"
+    elseif OB_CONFIG.engine == "idtech_1" then
+      OB_CONFIG.game = "doom2"
+    elseif OB_CONFIG.engine == "idtech_2" then
+      OB_CONFIG.game = "quake"
     else
-      OB_CONFIG.engine = "nolimit"
+      OB_CONFIG.game = "nukem"
     end
-    gui.set_button("engine", OB_CONFIG.engine)
+    gui.set_button("game", OB_CONFIG.game)
   end
 end
 
+function ob_update_ports()
+  local need_new = false
 
+  for name,def in pairs(OB_PORTS) do
+    local shown = ob_match_conf(def)
+
+    if not shown and (OB_CONFIG.port == name) then
+      need_new = true
+    end
+
+    gui.enable_choice("port", name, shown)
+  end
+
+  if need_new then
+    if OB_CONFIG.engine == "idtech_0" then
+      OB_CONFIG.port = "vanilla"
+    elseif OB_CONFIG.engine == "idtech_1" then
+      OB_CONFIG.port = "zdoom"
+    elseif OB_CONFIG.engine == "idtech_2" then
+      OB_CONFIG.port = "vanilla"
+    else
+      OB_CONFIG.port = "vanilla"
+    end
+    gui.set_button("port", OB_CONFIG.port)
+  end
+end
 
 function ob_update_themes()
   local new_label
@@ -583,7 +654,8 @@ end
 
 
 function ob_update_all()
-  ob_update_engines()
+  ob_update_games()
+  ob_update_ports()
   ob_update_modules()
   ob_update_themes()
 end
@@ -742,16 +814,22 @@ function ob_set_config(name, value)
 
 
   -- validate some important variables
-  if name == "game" then
-    assert(OB_CONFIG.game)
-    if not OB_GAMES[value] then
-      gui.printf("Ignoring unknown game: %s\n", value)
-      return
-    end
-  elseif name == "engine" then
+  if name == "engine" then
     assert(OB_CONFIG.engine)
     if not OB_ENGINES[value] then
       gui.printf("Ignoring unknown engine: %s\n", value)
+      return
+    end
+  elseif name == "game" then
+      assert(OB_CONFIG.game)
+      if not OB_GAMES[value] then
+        gui.printf("Ignoring unknown game: %s\n", value)
+        return
+      end
+  elseif name == "port" then
+    assert(OB_CONFIG.port)
+    if not OB_PORTS[value] then
+      gui.printf("Ignoring unknown port: %s\n", value)
       return
     end
   elseif name == "theme" then
@@ -764,14 +842,14 @@ function ob_set_config(name, value)
 
   OB_CONFIG[name] = value
 
-  if name == "game" or name == "engine" then
+  if name == "engine" or name == "game" or name == "port" then
     ob_update_all()
   end
 
   -- this is required for parsing the CONFIG.TXT file
   -- [ but redundant when the user merely changed the widget ]
-  if name == "game"  or name == "engine" or
-     name == "theme" or name == "length"
+  if name == "game"  or name == "engine" or name == "port"
+     or name == "theme" or name == "length"
   then
     gui.set_button(name, OB_CONFIG[name])
   end
@@ -837,8 +915,9 @@ function ob_read_all_config(need_full, log_only)
   do_line("---- Game Settings ----")
   do_line("")
 
-  do_value("game",     OB_CONFIG.game)
   do_value("engine",   OB_CONFIG.engine)
+  do_value("game",     OB_CONFIG.game)
+  do_value("port",     OB_CONFIG.port)
   do_value("length",   OB_CONFIG.length)
   do_value("theme",    OB_CONFIG.theme)
 
@@ -1058,6 +1137,24 @@ function ob_load_all_engines()
   gui.set_import_dir("")
 end
 
+function ob_load_all_ports()
+
+  local list = gui.scan_directory("ports", "*.lua")
+
+  if not list then
+    gui.printf("FAILED: scan 'ports' directory\n")
+    return
+  end
+
+  gui.set_import_dir("ports")
+
+  for _,filename in pairs(list) do
+    gui.debugf("  %s\n", filename)
+    gui.import(filename)
+  end
+
+  gui.set_import_dir("")
+end
 
 function ob_load_all_modules()
 
@@ -1106,14 +1203,16 @@ function ob_restart()
   end
 
   -- load definitions for all games
-
-  ob_load_all_games()
+  
   ob_load_all_engines()
+  ob_load_all_games()
+  ob_load_all_ports()
   ob_load_all_modules()
 
-  table.name_up(OB_GAMES)
-  table.name_up(OB_THEMES)
   table.name_up(OB_ENGINES)
+  table.name_up(OB_GAMES)
+  table.name_up(OB_PORTS)
+  table.name_up(OB_THEMES)
   table.name_up(OB_MODULES)
 
 
@@ -1133,9 +1232,10 @@ function ob_restart()
     end
   end
 
-  preinit_all(OB_GAMES)
-  preinit_all(OB_THEMES)
   preinit_all(OB_ENGINES)
+  preinit_all(OB_GAMES)
+  preinit_all(OB_PORTS)
+  preinit_all(OB_THEMES)
   preinit_all(OB_MODULES)
 
 
@@ -1161,15 +1261,7 @@ function ob_restart()
       min_priority = math.min(min_priority, def.priority or 50)
     end
 
-    -- add separators for the Game, Engine and Theme menus
-    if what == "game" and min_priority < 49 then
-      table.insert(list, { priority=49, name="_", label="_" })
-    end
-
-    if what == "engine" and min_priority < 92 then
-      table.insert(list, { priority=92, name="_", label="_" })
-    end
-
+    -- add separators for the Theme menus
     if what == "theme" and min_priority < 79 then
       table.insert(list, { priority=79, name="_", label="_" })
     end
@@ -1195,8 +1287,8 @@ function ob_restart()
       end
 
       -- TODO : review this, does it belong HERE ?
-      if what == "game" then
-        gui.enable_choice("game", def.name, true)
+      if what == "engine" then
+        gui.enable_choice("engine", def.name, true)
       end
     end
 
@@ -1300,8 +1392,9 @@ function ob_restart()
 
   OB_CONFIG.seed = 0,
 
+  create_buttons("engine",   OB_ENGINES)
   create_buttons("game",   OB_GAMES)
-  create_buttons("engine", OB_ENGINES)
+  create_buttons("port", OB_PORTS)
   create_buttons("theme",  OB_THEMES)
 
   simple_buttons("length",   LENGTH_CHOICES,   "game")
@@ -1311,8 +1404,9 @@ function ob_restart()
 
   ob_update_all()
 
-  gui.set_button("game",     OB_CONFIG.game)
   gui.set_button("engine",   OB_CONFIG.engine)
+  gui.set_button("game",     OB_CONFIG.game)
+  gui.set_button("port",   OB_CONFIG.port)
   gui.set_button("length",   OB_CONFIG.length)
   gui.set_button("theme",    OB_CONFIG.theme)
 end
@@ -1361,17 +1455,19 @@ function ob_init()
 
   -- load definitions for all games
 
-  gui.printf("Loading all games...\n")
-  ob_load_all_games()
   gui.printf("Loading all engines...\n")
   ob_load_all_engines()
+  gui.printf("Loading all games...\n")
+  ob_load_all_games()
+  gui.printf("Loading all ports...\n")
+  ob_load_all_ports()
   gui.printf("Loading all modules...\n")
   ob_load_all_modules()
 
-
-  table.name_up(OB_GAMES)
-  table.name_up(OB_THEMES)
   table.name_up(OB_ENGINES)
+  table.name_up(OB_GAMES)
+  table.name_up(OB_PORTS)
+  table.name_up(OB_THEMES)
   table.name_up(OB_MODULES)
 
 
@@ -1391,9 +1487,10 @@ function ob_init()
     end
   end
 
-  preinit_all(OB_GAMES)
-  preinit_all(OB_THEMES)
   preinit_all(OB_ENGINES)
+  preinit_all(OB_GAMES)
+  preinit_all(OB_PORTS)
+  preinit_all(OB_THEMES)
   preinit_all(OB_MODULES)
 
 
@@ -1420,15 +1517,7 @@ function ob_init()
       min_priority = math.min(min_priority, def.priority or 50)
     end
 
-    -- add separators for the Game, Engine and Theme menus
-    if what == "game" and min_priority < 49 then
-      table.insert(list, { priority=49, name="_", label="_" })
-    end
-
-    if what == "engine" and min_priority < 92 then
-      table.insert(list, { priority=92, name="_", label="_" })
-    end
-
+    -- add separators for the Theme menus
     if what == "theme" and min_priority < 79 then
       table.insert(list, { priority=79, name="_", label="_" })
     end
@@ -1454,8 +1543,8 @@ function ob_init()
       end
 
       -- TODO : review this, does it belong HERE ?
-      if what == "game" then
-        gui.enable_choice("game", def.name, true)
+      if what == "engine" then
+        gui.enable_choice("engine", def.name, true)
       end
     end
 
@@ -1560,8 +1649,9 @@ function ob_init()
 
   OB_CONFIG.seed = 0,
 
-  create_buttons("game",   OB_GAMES)
   create_buttons("engine", OB_ENGINES)
+  create_buttons("game",   OB_GAMES)
+  create_buttons("port", OB_PORTS)
   create_buttons("theme",  OB_THEMES)
 
   simple_buttons("length",   LENGTH_CHOICES,   "game")
@@ -1571,8 +1661,9 @@ function ob_init()
 
   ob_update_all()
 
-  gui.set_button("game",     OB_CONFIG.game)
   gui.set_button("engine",   OB_CONFIG.engine)
+  gui.set_button("game",     OB_CONFIG.game)
+  gui.set_button("port",   OB_CONFIG.port)
   gui.set_button("length",   OB_CONFIG.length)
   gui.set_button("theme",    OB_CONFIG.theme)
 
@@ -1765,8 +1856,8 @@ function ob_default_filename()
       formatstring = "ob" .. levelcount .. "_"
     elseif OB_CONFIG.filename_prefix == "game" then
       formatstring = OB_CONFIG.game .. "_"
-    elseif OB_CONFIG.filename_prefix == "engine" then
-      formatstring = OB_CONFIG.engine .. "_"
+    elseif OB_CONFIG.filename_prefix == "port" then
+      formatstring = OB_CONFIG.port .. "_"
     elseif OB_CONFIG.filename_prefix == "theme" then
       formatstring = OB_CONFIG.theme .. "_"   
     elseif OB_CONFIG.filename_prefix == "version" then
@@ -1775,7 +1866,7 @@ function ob_default_filename()
       formatstring = "custom"
    end
    
-   return gui.format_prefix(levelcount, OB_CONFIG.game, OB_CONFIG.engine, OB_CONFIG.theme, formatstring) .. str .. ".wad"
+   return gui.format_prefix(levelcount, OB_CONFIG.game, OB_CONFIG.port, OB_CONFIG.theme, formatstring) .. str .. ".wad"
    
  end
  
@@ -1861,12 +1952,12 @@ end
 
 
 
-function ob_add_current_engine()
+function ob_add_current_port()
   local function recurse(name, child)
-    local def = OB_ENGINES[name]
+    local def = OB_PORTS[name]
 
     if not def then
-      error("UNKNOWN ENGINE: " .. name)
+      error("UNKNOWN PORT: " .. name)
     end
 
     if def.extends then
@@ -1884,7 +1975,7 @@ function ob_add_current_engine()
     return def
   end
 
-  table.insert(GAME.modules, 2, recurse(OB_CONFIG.engine))
+  table.insert(GAME.modules, 2, recurse(OB_CONFIG.port))
 end
 
 
@@ -1922,7 +2013,7 @@ end
 function ob_invoke_hook(name, ...)
   -- two passes, for example: setup and setup2,
   for pass = 1,2 do
-    if OB_CONFIG.engine == "vanilla" or string.match(name, "^pre_setup") then goto skip end
+    if (OB_CONFIG.engine == "idtech_1" and OB_CONFIG.port == "limit_enforcing") or string.match(name, "^pre_setup") then goto skip end
     for _,mod in pairs(GAME.modules) do
       local func = mod.hooks and mod.hooks[name]
 
@@ -1998,7 +2089,7 @@ function ob_build_setup()
   -- first entry in module list *must* be the game def, and second entry
   -- must be the engine definition.  NOTE: neither are real modules!
   ob_add_current_game()
-  ob_add_current_engine()
+  ob_add_current_port()
 
   -- merge tables from each module
   -- [ but skip GAME and ENGINE, which are already merged ]
@@ -2109,17 +2200,17 @@ local function ob_get_module_refs()
             end
           end
         end
-        if not v.engine then
-          option_refs[vv.name].engine = {}
-          table.add_unique(option_refs[vv.name].engine, "ALL")
+        if not v.port then
+          option_refs[vv.name].port = {}
+          table.add_unique(option_refs[vv.name].port, "ALL")
         else
-          if type(v.engine) == "string" then
-            option_refs[vv.name].engine = {}
-            table.add_unique(option_refs[vv.name].engine, v.engine)
+          if type(v.port) == "string" then
+            option_refs[vv.name].port = {}
+            table.add_unique(option_refs[vv.name].port, v.port)
           else
-            option_refs[vv.name].engine = {}
-            for engine,_ in pairs(v.engine) do
-              table.add_unique(option_refs[vv.name].engine, engine)
+            option_refs[vv.name].port = {}
+            for port,_ in pairs(v.port) do
+              table.add_unique(option_refs[vv.name].port, port)
             end
           end
         end
@@ -2417,7 +2508,7 @@ function ob_build_cool_shit()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
 
-  if OB_CONFIG.engine == "vanilla" then
+  if OB_CONFIG.engine == "idtech_1" and OB_CONFIG.port == "limit_enforcing" then
     ob_invoke_hook("setup")
     return "ok" 
   end -- Skip the rest if using Vanilla Doom/SLUMP
@@ -2434,7 +2525,7 @@ function ob_build_cool_shit()
 
   -- Hijack here if Wolf3D is selected
 
-  if OB_CONFIG.engine == "wolf_3d" then
+  if OB_CONFIG.engine == "idtech_0" then
     local result = v094_build_wolf3d_shit()
     ob_clean_up()
     return result

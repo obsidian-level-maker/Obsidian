@@ -11,7 +11,7 @@ PREFABS.Decor_Dem_Grave1 =
 
   -- group = "dem_wall_graveyard", --MSSP-TODO: Re-add later
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 15000, --100
   skip_prob = 85,

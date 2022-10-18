@@ -7,7 +7,7 @@ PREFABS.Lift_gtd_slumpish_64 =
   prob_skew = 2.5,
   style = "steepness",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   where = "seeds",
   shape = "I",
@@ -36,7 +36,7 @@ PREFABS.Lift_gtd_slumpish_64_limit =
 {
   template = "Lift_gtd_slumpish_64",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   line_261 = 0
 }
@@ -45,7 +45,7 @@ PREFABS.Lift_gtd_slumpish_64_framelimit =
 {
   template = "Lift_gtd_slumpish_64",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   line_261 = 0,
 

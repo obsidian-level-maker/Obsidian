@@ -97,7 +97,7 @@ PREFABS.Door_armaetus_door_KEYALL =
   texture_pack = "armaetus",
 
   prob   = 20,
-  engine = "zdoom",
+  port = "zdoom",
   theme  = "!hell",
 
   where  = "edge",

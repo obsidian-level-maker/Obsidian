@@ -732,6 +732,7 @@ OB_MODULES["sky_generator_heretic"] =
   priority = 93,
 
   game = "heretic",
+  engine = "idtech_1",
 
   hooks =
   {

@@ -283,7 +283,7 @@ OB_MODULES["stealth_mons"] =
 
   game = "doomish",
 
-  engine = {zdoom=1, edge=1},
+  port = {zdoom=1, edge=1},
 
   tables =
   {
@@ -356,7 +356,7 @@ OB_MODULES["stealth_mon_control"] =
 
   game = "doomish",
 
-  engine = {zdoom=1, edge=1},
+  port = {zdoom=1, edge=1},
 	  
   hooks =
   {

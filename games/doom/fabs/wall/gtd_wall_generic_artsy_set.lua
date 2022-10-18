@@ -195,7 +195,7 @@ PREFABS.Wall_generic_artsy_slope_y_inset =
   template = "Wall_generic_artsy_bedazzled",
   map = "MAP09",
 
-  engine = "zdoom",
+  port = "zdoom",
   rank = 2,
 
   group = "gtd_generic_artsy_slope_y_inset"
@@ -206,7 +206,7 @@ PREFABS.Wall_generic_artsy_slope_y_inset_diag =
   template = "Wall_generic_artsy_bedazzled",
   map = "MAP19",
 
-  engine = "zdoom",
+  port = "zdoom",
   rank = 2,
 
   group = "gtd_generic_artsy_slope_y_inset",
@@ -221,7 +221,7 @@ PREFABS.Wall_generic_artsy_slope_y_inset_limit =
   template = "Wall_generic_artsy_bedazzled",
   map = "MAP09",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   group = "gtd_generic_artsy_slope_y_inset",
 
@@ -233,7 +233,7 @@ PREFABS.Wall_generic_artsy_slope_y_inset_diag_limit =
   template = "Wall_generic_artsy_bedazzled",
   map = "MAP19",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   group = "gtd_generic_artsy_slope_y_inset",
 
@@ -317,7 +317,7 @@ PREFABS.Wall_generic_artsy_sloped_bump_slope =
   template = "Wall_generic_artsy_bedazzled",
   map = "MAP31",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   group = "gtd_generic_artsy_sloped_bump",
 }

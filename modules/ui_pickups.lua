@@ -73,8 +73,8 @@ OB_MODULES["ui_pickups"] =
 
   side = "right",
   priority = 102,
-  engine = "!vanilla",
-  engine2 = "!wolf_3d",
+  engine = "!idtech_0",
+  port = "!limit_enforcing",
 
   hooks =
   {

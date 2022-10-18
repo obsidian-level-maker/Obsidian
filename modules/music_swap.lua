@@ -119,8 +119,8 @@ OB_MODULES["music_swapper"] =
 
   game = "doomish",
 
-  engine = "!zdoom",
-  engine2 = "!vanilla",
+  port = "!zdoom",
+  port2 = "!limit_enforcing",
 
   tooltip = _("Performs swapping of built-in music tracks via Dehacked."),
 

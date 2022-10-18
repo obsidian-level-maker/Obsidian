@@ -17,7 +17,7 @@ PREFABS.Hallway_hellcata_t1 =
   seed_w = 2,
   seed_h = 2,
 
-  engine = "zdoom",
+  port = "zdoom",
 
   tex_CATACMB2 = {
     CATACMB1=50, CATACMB2=50,

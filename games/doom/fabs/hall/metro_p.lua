@@ -3,7 +3,7 @@ PREFABS.Hallway_metro_p =
   file   = "hall/metro_p.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   group  = "metro",
   prob   = 50,
@@ -15,14 +15,14 @@ PREFABS.Hallway_metro_p =
   seed_h = 2,
 }
 
--- slopeless engine fallback
+-- slopeless port fallback
 
 PREFABS.Hallway_metro_p_boxy =
 {
   template = "Hallway_metro_p",
   map = "MAP10",
 
-  engine = "any",
+  port = "any",
 
   prob = 20,
 }

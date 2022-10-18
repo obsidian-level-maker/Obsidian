@@ -127,7 +127,7 @@ function PREFAB_CONTROL.fine_tune_filters()
 
   end
 
-  if PARAM.bool_jump_crouch == 0 and OB_CONFIG.engine ~= "nolimit" then
+  if PARAM.bool_jump_crouch == 0 and OB_CONFIG.port ~= "limit_removing" then
     if PARAM.obsidian_resource_pack_active then
       if GAME.THEMES.hell and GAME.THEMES.hell.wide_halls then
         GAME.THEMES.hell.wide_halls.organs = 0
@@ -179,7 +179,7 @@ OB_MODULES["prefab_control"] =
   priority = 95,
 
   game = { doom1=1, doom2=1, chex3=0, hacx=0, heretic=1, harmony=0, hexen=0, strife=0 },
-  engine = "!vanilla",
+  port = "!limit_enforcing",
 
   hooks =
   {

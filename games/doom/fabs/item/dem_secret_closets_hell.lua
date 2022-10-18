@@ -134,7 +134,7 @@ PREFABS.Item_secret_hellmachine1V1_closet =
 {
   file  = "item/dem_secret_closets_hell.wad",
   map   = "MAP07",
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "hell",
   env = "!nature",
@@ -163,7 +163,7 @@ PREFABS.Item_secret_hellmachine1V2_closet =
 {
   file  = "item/dem_secret_closets_hell.wad",
   map   = "MAP08",
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "hell",
   env = "!nature",
@@ -271,7 +271,7 @@ PREFABS.Item_dem_gtd_alcove_secret =
   file   = "item/dem_secret_closets_hell.wad",
   map    = "MAP28",
 
-  engine = "zdoom",
+  port = "zdoom",
   theme  = "hell",
   env    = "building",
   prob   = 100,
@@ -305,7 +305,7 @@ PREFABS.Item_secret_hellmachine2_closet =
 {
   file  = "item/dem_secret_closets_hell.wad",
   map   = "MAP31",
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "hell",
   env = "!nature",
@@ -335,7 +335,7 @@ PREFABS.Item_secret_dem_rift_closet =
   file  = "item/dem_secret_closets_hell.wad",
   map   = "MAP32",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "hell",
   prob  = 100,

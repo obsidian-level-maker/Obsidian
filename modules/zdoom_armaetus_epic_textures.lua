@@ -1109,7 +1109,7 @@ OB_MODULES["armaetus_epic_textures"] =
   side = "left",
   priority = 75,
 
-  engine = "zdoom",
+  port = "zdoom",
 
   game = "doomish",
 

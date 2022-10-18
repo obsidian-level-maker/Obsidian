@@ -3,7 +3,7 @@ PREFABS.Hallway_metro_locked_red =
   file   = "hall/metro_k.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   kind   = "terminator",
   group  = "metro",
@@ -53,7 +53,7 @@ PREFABS.Hallway_metro_barred =
   group  = "metro",
   key    = "barred",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 50,
 
@@ -71,14 +71,14 @@ PREFABS.Hallway_metro_barred =
   sector_1  = { [0]=90, [1]=15 }
 }
 
--- slopeless engine fallbacks
+-- slopeless port fallbacks
 
 PREFABS.Hallway_metro_barred_boxy =
 {
   template = "Hallway_metro_barred",
   map = "MAP10",
 
-  engine = "any",
+  port = "any",
   theme = "!hell",
 
   prob = 10,
@@ -91,7 +91,7 @@ PREFABS.Hallway_metro_barred_boxy_hell =
   template = "Hallway_metro_barred",
   map = "MAP10",
 
-  engine = "any",
+  port = "any",
   theme = "hell",
 
   prob = 10,
@@ -107,7 +107,7 @@ PREFABS.Hallway_metro_locked_red_boxy =
   template = "Hallway_metro_locked_red",
   map = "MAP11",
 
-  engine = "any",
+  port = "any",
   theme = "!hell",
 
   prob = 10,
@@ -118,7 +118,7 @@ PREFABS.Hallway_metro_locked_blue_boxy =
   template = "Hallway_metro_locked_red",
   map = "MAP11",
 
-  engine = "any",
+  port = "any",
   theme = "!hell",
 
   key = "k_blue",
@@ -134,7 +134,7 @@ PREFABS.Hallway_metro_locked_yellow_boxy =
   template = "Hallway_metro_locked_red",
   map = "MAP11",
 
-  engine = "any",
+  port = "any",
   theme = "!hell",
 
   key = "k_yellow",
@@ -152,7 +152,7 @@ PREFABS.Hallway_metro_locked_red_boxy_hell =
   template = "Hallway_metro_locked_red",
   map = "MAP11",
 
-  engine = "any",
+  port = "any",
   theme = "hell",
 
   tex_BIGDOOR1 = "BIGDOOR6",
@@ -167,7 +167,7 @@ PREFABS.Hallway_metro_locked_blue_boxy_hell =
   template = "Hallway_metro_locked_red",
   map = "MAP11",
 
-  engine = "any",
+  port = "any",
   theme = "hell",
 
   key = "k_blue",
@@ -185,7 +185,7 @@ PREFABS.Hallway_metro_locked_yellow_boxy_hell =
   template = "Hallway_metro_locked_red",
   map = "MAP11",
 
-  engine = "any",
+  port = "any",
   theme = "hell",
 
   key = "k_yellow",

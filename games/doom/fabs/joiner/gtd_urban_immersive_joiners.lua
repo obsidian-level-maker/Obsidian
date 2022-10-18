@@ -3,7 +3,7 @@ PREFABS.Joiner_public_toilet_room =
   file   = "joiner/gtd_urban_immersive_joiners.wad",
   map    = "MAP01",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   prob   = 650,
 
@@ -30,7 +30,7 @@ PREFABS.Joiner_gtd_stairwell_up =
 
   style = "steepness",
 
-  engine = "any",
+  port = "any",
 
   prob = 850,
 
@@ -55,7 +55,7 @@ PREFABS.Joiner_gtd_stairwell_flat =
   template = "Joiner_public_toilet_room",
   map = "MAP03",
 
-  engine = "any",
+  port = "any",
 
   prob = 1000,
 

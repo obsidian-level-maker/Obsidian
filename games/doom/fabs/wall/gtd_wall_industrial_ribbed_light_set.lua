@@ -3,7 +3,7 @@ PREFABS.Wall_gtd_ribbed_lights =
   file   = "wall/gtd_wall_industrial_ribbed_light_set.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 50,
   group  = "gtd_ribbed_lights",
@@ -37,7 +37,7 @@ PREFABS.Wall_gtd_ribbed_lights_fallback =
 
   map = "MAP03",
 
-  engine = "!zdoom"
+  port = "!zdoom"
 }
 
 PREFABS.Wall_gtd_ribbed_lights_diag_fallback =
@@ -46,7 +46,7 @@ PREFABS.Wall_gtd_ribbed_lights_diag_fallback =
 
   map = "MAP04",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   where = "diagonal"
 }

@@ -30,7 +30,7 @@ PREFABS.Item_rooftop_secret_2 =
 {
   template = "Item_rooftop_secret",
   map      = "MAP01",
-  engine   = "zdoom",
+  port   = "zdoom",
   seed_h = 1,
 
   sound = "Machine_Ventilation",

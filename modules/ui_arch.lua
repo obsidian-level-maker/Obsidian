@@ -64,7 +64,7 @@ function UI_ARCH.setup(self)
 
   module_param_up(self)
 
-  if OB_CONFIG.engine ~= "vanilla" then -- Do I actually need this check? I forget - Dasho
+  if OB_CONFIG.engine ~= "limit_enforcing" then -- Do I actually need this check? I forget - Dasho
     if OB_CONFIG.batch == "yes" and type(PARAM.float_size) ~= "string" then
       SEED_W = 90
       SEED_H = 90
@@ -107,8 +107,8 @@ OB_MODULES["ui_arch"] =
 
   side = "left",
   priority = 104,
-  engine = "!vanilla",
-  engine2 = "!wolf_3d", 
+  engine = "!idtech_0",
+  port = "!limit_enforcing",
 
   hooks = 
   {
@@ -336,7 +336,7 @@ OB_MODULES["ui_arch_wolf_3d"] =
 
   side = "left",
   priority = 104,
-  engine = "wolf_3d",
+  engine = "idtech_0",
 
   hooks = 
   {

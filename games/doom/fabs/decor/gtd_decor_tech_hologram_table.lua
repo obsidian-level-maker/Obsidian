@@ -3,7 +3,7 @@ PREFABS.Decor_tech_hologram_table =
   file   = "decor/gtd_decor_tech_hologram_table.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   where  = "point",
 

@@ -20,7 +20,7 @@
 
 ETERNITY = { }
 
-OB_ENGINES["eternity"] =
+OB_PORTS["eternity"] =
 {
   label = _("Eternity (Experimental)"),
 

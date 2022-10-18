@@ -163,7 +163,7 @@ PREFABS.Fence_tech_sloped_silver = --#
 
   group = "fence_sloped_silver",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   where  = "edge",
 
@@ -181,7 +181,7 @@ PREFABS.Fence_tech_sloped_silver_diag =
   template = "Fence_tech_sloped_silver",
   map = "MAP06",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   passable = true,
 
@@ -199,7 +199,7 @@ PREFABS.Fence_sloped_silver_fallback =
 
   prob   = 50,
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   group  = "fence_sloped_silver",
 
@@ -219,7 +219,7 @@ PREFABS.Fence_sloped_silver_fallback_diag =
 
   prob   = 50,
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   group  = "fence_sloped_silver",
 

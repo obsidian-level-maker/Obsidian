@@ -9,7 +9,7 @@ PREFABS.Item_dem_shrine_secretclosetC =
   file   = "item/dem_secret_closets.wad",
   map    = "MAP11",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 100,
 
@@ -59,7 +59,7 @@ PREFABS.Item_dem_campsiteC_secretcloset =
   file   = "item/dem_secret_closets.wad",
   map    = "MAP13",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "!hell",
 
@@ -104,7 +104,7 @@ PREFABS.Item_dem_cavein_secretcloset =
   file   = "item/dem_secret_closets.wad",
   map    = "MAP15",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 100,
 
@@ -146,7 +146,7 @@ PREFABS.Item_dem_nook_secretcloset =
   file   = "item/dem_secret_closets.wad",
   map    = "MAP16",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "!hell",
 
@@ -195,7 +195,7 @@ PREFABS.Item_dem_cavestal_secretcloset =
   file   = "item/dem_secret_closets.wad",
   map    = "MAP17",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 100,
 
@@ -235,7 +235,7 @@ PREFABS.Pic_dem_waterfallC1_secretcloset =
   file   = "item/dem_secret_closets.wad",
   map    = "MAP18",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "!hell",
 
@@ -281,7 +281,7 @@ PREFABS.Pic_dem_waterfallN1_secretcloset =
   file   = "item/dem_secret_closets.wad",
   map    = "MAP20",
 
-  engine = "zdoom",
+  port = "zdoom",
 
 
   theme = "!hell",
@@ -329,7 +329,7 @@ PREFABS.Pic_dem_jumpy1_secretcloset =
   file   = "item/dem_secret_closets.wad",
   map    = "MAP22",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "!hell",
   height = 192,
@@ -392,7 +392,7 @@ PREFABS.Item_dem_cavein7_secret =
   key = "secret",
   env = "cave",
 
-  engine = "!limit",
+  port = "!limit",
   where = "seeds",
   height = 128,
 

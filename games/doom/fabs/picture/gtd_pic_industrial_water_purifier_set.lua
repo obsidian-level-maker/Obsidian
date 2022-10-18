@@ -4,7 +4,7 @@ PREFABS.Pic_gtd_water_purifier =
   map = "MAP01",
 
   prob = 100,
-  engine = "zdoom",
+  port = "zdoom",
 
   group = "gtd_water_purifier",
 
@@ -27,7 +27,7 @@ PREFABS.Pic_gtd_water_purifier_limit =
 {
   template = "Pic_gtd_water_purifier",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   line_300 = 0,
 

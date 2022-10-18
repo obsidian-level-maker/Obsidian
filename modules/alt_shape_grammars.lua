@@ -34,8 +34,8 @@ OB_MODULES["alt_shape_grammars"] =
     
   side = "left",
   priority = 102,
-  engine = "!vanilla",
-  engine2 = "!wolf_3d",
+  engine = "!idtech_0",
+  port = "!limit_enforcing",
 
   tooltip = _("Options for alternate means of determining the layout of a level."),
 

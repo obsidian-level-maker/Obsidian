@@ -5,7 +5,7 @@ PREFABS.Decor_point_bunkbed_2x =
 
   prob = 5000,
   where = "point",
-  engine = "zdoom",
+  port = "zdoom",
 
   group = "cran_bunkbeds",
 

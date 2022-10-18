@@ -57,7 +57,7 @@ function ZDOOM.setup()
   gui.property("ef_thing_mode", 1)
 end
 
-OB_ENGINES["zdoom"] =
+OB_PORTS["zdoom"] =
 {
   label = _("ZDoom Family"),
   priority = 101,

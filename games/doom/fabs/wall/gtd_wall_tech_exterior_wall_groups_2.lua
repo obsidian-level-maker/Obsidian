@@ -6,7 +6,7 @@ PREFABS.Wall_tech_outdoor_hex_inset = --#
   prob   = 15,
 
   group = "tech_o_hex_inset",
-  engine = "zdoom",
+  port = "zdoom",
 
   where  = "edge",
   height = 128,
@@ -23,7 +23,7 @@ PREFABS.Wall_tech_outdoor_grated_greenwall = --#
   template = "Wall_tech_outdoor_hex_inset",
   map = "MAP02",
 
-  engine = "any",
+  port = "any",
 
   group = "tech_o_grated_greenwall",
 
@@ -39,7 +39,7 @@ PREFABS.Wall_tech_outdoor_sewer_hatches = --#
   template = "Wall_tech_outdoor_hex_inset",
   map = "MAP03",
 
-  engine = "any",
+  port = "any",
 
   group = "tech_o_everyone_likes_sewers",
 
@@ -89,7 +89,7 @@ PREFABS.Wall_tech_outdoor_lots_of_cement = --#
   template = "Wall_tech_outdoor_hex_inset",
   map = "MAP05",
 
-  engine = "any",
+  port = "any",
 
   group = "tech_o_lots_of_cement"
 }

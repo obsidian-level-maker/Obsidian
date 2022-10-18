@@ -40,7 +40,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     int mini_w = W * .80;
     int mini_h = mini_w;
 
-    int cy = Y + kf_h(12);
+    int cy = Y + kf_h(6);
 
     /* --- Status Area --- */
 
@@ -61,7 +61,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     name_disp->labelfont(font_style);
     name_disp->labelsize(small_font_size);
 
-    cy += mini_map->h() + kf_h(6);
+    cy += mini_map->h() + kf_h(4);
 
     status = new Fl_Box(FL_FLAT_BOX, X + pad, cy, W - pad * 2, kf_h(26),
                         _("Ready to go!"));
@@ -69,7 +69,7 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     status->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
     status->labelfont(font_style);
 
-    cy += status->h() + kf_h(6);
+    cy += status->h() + kf_h(4);
 
     progress = new Fl_Progress(X + pad, cy, W - pad * 2, kf_h(26));
     progress->align(FL_ALIGN_INSIDE);
@@ -78,8 +78,6 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     progress->value(0.0);
     progress->labelsize(header_font_size);
     progress->labelfont(font_style);
-
-    cy = cy + progress->h() + kf_h(4);
 
     resizable(mini_map);
 

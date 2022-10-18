@@ -104,7 +104,7 @@ PREFABS.Joiner_commercial_frontage_secret_2 =
 
   prob   = 25,
   theme = "urban",
-  engine = "zdoom",
+  port = "zdoom",
 
   env = "!cave",
 

@@ -3880,7 +3880,7 @@ ULTDOOM.PREBUILT_LEVELS =
 }
 
 function ULTDOOM.nolimit_themes()
-  if OB_CONFIG.engine == "nolimit" then
+  if OB_CONFIG.port == "limit_removing" then
     GAME.THEMES.DEFAULTS.narrow_halls = { vent = 50 }
     GAME.THEMES.DEFAULTS.wide_halls = { curve = 50, deuce = 50 }
     GAME.THEMES.tech.narrow_halls = { vent = 50 }
@@ -9511,6 +9511,7 @@ OB_GAMES["doom1"] =
 
   priority = 98,  -- keep at second spot
 
+  engine = "idtech_1",
   format = "doom",
   game_dir = "doom",
   iwad_name = "doom.wad",
@@ -9536,6 +9537,7 @@ OB_GAMES["ultdoom"] =
 {
   label = _("Ultimate Doom"),
 
+  engine = "idtech_1",
   extends = "doom1",
 
   priority = 97  -- keep at third spot

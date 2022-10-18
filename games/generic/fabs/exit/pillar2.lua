@@ -28,7 +28,7 @@ PREFABS.Exit_pillar2_chex3 =
 {
   template = "Exit_pillar2",
   game = "chex3",
-  engine = "advanced",
+  port = "advanced",
   forced_offsets = 
   {
     [26] = { x=47, y=11 },
@@ -42,7 +42,7 @@ PREFABS.Exit_pillar2_chex3_nosign =
 {
   template = "Exit_pillar2",
   game = "chex3",
-  engine = "!advanced",
+  port = "!advanced",
   map = "MAP02",
   forced_offsets = 
   {
@@ -57,7 +57,7 @@ PREFABS.Exit_pillar2_hacx =
 {
   template = "Exit_pillar2",
   game = "hacx",
-  engine = "advanced",
+  port = "advanced",
   forced_offsets = 
   {
     [26] = { x=0, y=96 },
@@ -71,7 +71,7 @@ PREFABS.Exit_pillar2_hacx_nosign =
 {
   template = "Exit_pillar2",
   game = "hacx",
-  engine = "!advanced",
+  port = "!advanced",
   map = "MAP02",
   forced_offsets = 
   {
@@ -99,7 +99,7 @@ PREFABS.Exit_pillar2_heretic =
 {
   template = "Exit_pillar2",
   game = "heretic",
-  engine = "advanced",
+  port = "advanced",
   forced_offsets = 
   {
     [12] = { x=0, y=-1 },
@@ -117,7 +117,7 @@ PREFABS.Exit_pillar2_heretic_nosign =
 {
   template = "Exit_pillar2",
   game = "heretic",
-  engine = "!advanced",
+  port = "!advanced",
   map = "MAP02",
   forced_offsets = 
   {
@@ -132,7 +132,7 @@ PREFABS.Exit_pillar2_hexen_nosign =
 {
   template = "Exit_pillar2",
   game = "hexen",
-  --engine = "!advanced",
+  --port = "!advanced",
   map = "MAP02",
   forced_offsets = 
   {
@@ -187,7 +187,7 @@ PREFABS.Exit_pillar2_secret_chex3 =
 {
   template = "Exit_pillar2_secret",
   game = "chex3",
-  engine = "advanced",
+  port = "advanced",
   map = "MAP04",
   forced_offsets = 
   {
@@ -202,7 +202,7 @@ PREFABS.Exit_pillar2_secret_chex3_nosign =
 {
   template = "Exit_pillar2_secret",
   game = "chex3",
-  engine = "!advanced",
+  port = "!advanced",
   forced_offsets = 
   {
     [26] = { x=47, y=11 },
@@ -216,7 +216,7 @@ PREFABS.Exit_pillar2_secret_hacx =
 {
   template = "Exit_pillar2_secret",
   game = "hacx",
-  engine = "advanced",
+  port = "advanced",
   map = "MAP04",
   forced_offsets = 
   {
@@ -231,7 +231,7 @@ PREFABS.Exit_pillar2_secret_hacx_nosign =
 {
   template = "Exit_pillar2_secret",
   game = "hacx",
-  engine = "!advanced",
+  port = "!advanced",
   forced_offsets = 
   {
     [26] = { x=0, y=96 },
@@ -258,7 +258,7 @@ PREFABS.Exit_pillar2_secret_heretic =
 {
   template = "Exit_pillar2_secret",
   game = "heretic",
-  engine = "advanced",
+  port = "advanced",
   map = "MAP04",
   forced_offsets = 
   {
@@ -273,7 +273,7 @@ PREFABS.Exit_pillar2_secret_heretic_nosign =
 {
   template = "Exit_pillar2_secret",
   game = "heretic",
-  engine = "!advanced",
+  port = "!advanced",
   forced_offsets = 
   {
     [26] = { x=16, y=50 },
@@ -287,7 +287,7 @@ PREFABS.Exit_pillar2_secret_hexen_nosign =
 {
   template = "Exit_pillar2_secret",
   game = "hexen",
-  --engine = "!advanced",
+  --port = "!advanced",
   forced_offsets = 
   {
     [26] = { x=0, y=0 },

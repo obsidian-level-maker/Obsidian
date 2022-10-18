@@ -2213,7 +2213,7 @@ OB_MODULES["modded_game_extras"] =
   priority = 70,
 
   game = "doomish",
-  engine = "!vanilla",
+  port = "!limit_enforcing",
 
   hooks =
   {

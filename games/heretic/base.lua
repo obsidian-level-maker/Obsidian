@@ -38,7 +38,7 @@ gui.import("vanilla_mats")
 ------------------------------------------------------------
 
 function HERETIC.all_done()
-  if ob_match_engine("advanced") then
+  if ob_match_port("advanced") then
 	  local wad_file = "games/heretic/data/HER_EXIT.wad"
 	  gui.wad_merge_sections(wad_file)
   end
@@ -51,6 +51,7 @@ OB_GAMES["heretic"] =
 
   priority = 94,
 
+  engine = "idtech_1",
   format = "doom",
   game_dir = "heretic",
   iwad_name = "heretic.wad",

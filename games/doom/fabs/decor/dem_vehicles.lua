@@ -7,7 +7,7 @@ PREFABS.Decor_apc =
   file   = "decor/dem_vehicles.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 4500,
   theme  = "!hell",
@@ -33,7 +33,7 @@ PREFABS.Decor_forklift1T =
   file   = "decor/dem_vehicles.wad",
   map    = "MAP02",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1500,
   theme  = "tech",
@@ -57,7 +57,7 @@ PREFABS.Decor_forklift2T =
   file   = "decor/dem_vehicles.wad",
   map    = "MAP03",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1500,
   theme  = "tech",
@@ -81,7 +81,7 @@ PREFABS.Decor_forklift3T =
   file   = "decor/dem_vehicles.wad",
   map    = "MAP04",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1500,
   theme  = "tech",
@@ -105,7 +105,7 @@ PREFABS.Decor_forklift4T =
   file   = "decor/dem_vehicles.wad",
   map    = "MAP05",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1500,
   theme  = "tech",
@@ -129,7 +129,7 @@ PREFABS.Decor_forklift5T =
   file   = "decor/dem_vehicles.wad",
   map    = "MAP06",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1500,
   theme  = "tech",
@@ -166,7 +166,7 @@ PREFABS.Decor_forklift1U =
   file   = "decor/dem_vehicles.wad",
   map    = "MAP02",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 500,
   theme  = "urban",
@@ -188,7 +188,7 @@ PREFABS.Decor_forklift2U =
   file   = "decor/dem_vehicles.wad",
   map    = "MAP03",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 500,
   theme  = "urban",
@@ -212,7 +212,7 @@ PREFABS.Decor_forklift3U =
   file   = "decor/dem_vehicles.wad",
   map    = "MAP04",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 500,
   theme  = "urban",
@@ -236,7 +236,7 @@ PREFABS.Decor_forklift4U =
   file   = "decor/dem_vehicles.wad",
   map    = "MAP05",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 500,
   theme  = "urban",
@@ -260,7 +260,7 @@ PREFABS.Decor_forklift5U =
   file   = "decor/dem_vehicles.wad",
   map    = "MAP06",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 500,
   theme  = "urban",

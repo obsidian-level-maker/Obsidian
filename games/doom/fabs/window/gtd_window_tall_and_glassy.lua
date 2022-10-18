@@ -4,7 +4,7 @@ PREFABS.Window_tall_and_glassy_1 =
   map    = "MAP01",
 
   group  = "gtd_window_tall_and_glassy",
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 50,
 

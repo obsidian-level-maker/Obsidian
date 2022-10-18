@@ -5,7 +5,7 @@ PREFABS.Joiner_quakeish =
 
   prob   = 300,
 
-  engine = "zdoom",
+  port = "zdoom",
 
   where  = "seeds",
   shape  = "I",

@@ -5,7 +5,7 @@ PREFABS.Arch_gtd_beed28_door_crouch =
 
   style = "doors",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 150,
   theme = "!hell",
@@ -55,7 +55,7 @@ PREFABS.Arch_gtd_beed28_door_usable =
 
   style = "doors",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 150,
   theme = "!hell",

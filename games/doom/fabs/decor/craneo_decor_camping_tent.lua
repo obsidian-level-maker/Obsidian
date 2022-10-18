@@ -5,7 +5,7 @@
   file   = "decor/craneo_decor_camping_tent.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 4500,
   theme  = "urban",

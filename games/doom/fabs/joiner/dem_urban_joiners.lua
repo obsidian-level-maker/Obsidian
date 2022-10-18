@@ -8,7 +8,7 @@ PREFABS.Joiner_living_room =
   file   = "joiner/dem_urban_joiners.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 3500,
 
@@ -106,7 +106,7 @@ PREFABS.Joiner_bedroom2 =
 
   theme = "urban",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   env      = "outdoor",
   neighbor = "outdoor",
@@ -135,7 +135,7 @@ PREFABS.Joiner_bedroom2_vanilla =
 
   theme = "urban",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   env      = "outdoor",
   neighbor = "outdoor",
@@ -167,7 +167,7 @@ PREFABS.Joiner_stairwell =
 
   prob = 5000,
 
-  engine = "zdoom",
+  port = "zdoom",
 
   env      = "outdoor",
   neighbor = "outdoor",
@@ -187,7 +187,7 @@ PREFABS.Joiner_bar =
   template = "Joiner_living_room",
   map = "MAP06",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 3500,
 
@@ -218,7 +218,7 @@ PREFABS.Joiner_bar_vanilla =
   template = "Joiner_living_room",
   map = "MAP06",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 3500,
 
@@ -247,7 +247,7 @@ PREFABS.Joiner_waiting_room =
   template = "Joiner_living_room",
   map = "MAP07",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 2500,
 
@@ -281,7 +281,7 @@ PREFABS.Joiner_waiting_room_vanilla =
   template = "Joiner_living_room",
   map = "MAP07",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 2500,
 
@@ -315,7 +315,7 @@ PREFABS.Joiner_electronic_store =
   template = "Joiner_living_room",
   map = "MAP08",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 2500,
 
@@ -345,7 +345,7 @@ PREFABS.Joiner_electronic_store_vanilla =
   template = "Joiner_living_room",
   map = "MAP08",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 2500,
 
@@ -379,7 +379,7 @@ PREFABS.Joiner_cornerstore =
   template = "Joiner_living_room",
   map = "MAP09",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 4500,
 
@@ -410,7 +410,7 @@ PREFABS.Joiner_cornerstore_vanilla =
   template = "Joiner_living_room",
   map = "MAP09",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 4500,
 
@@ -445,7 +445,7 @@ PREFABS.Joiner_bookstore =
   template = "Joiner_living_room",
   map = "MAP10",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 4500,
 
@@ -478,7 +478,7 @@ PREFABS.Joiner_bookstore_vanilla =
   template = "Joiner_living_room",
   map = "MAP10",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 4500,
 
@@ -522,7 +522,7 @@ PREFABS.Joiner_elevatorshaft =
   template = "Joiner_living_room",
   map    = "MAP11",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1000,
   skip_prob = 50,
@@ -559,7 +559,7 @@ PREFABS.Joiner_elevatorshaftcorr =
   template = "Joiner_living_room",
   map    = "MAP12",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1000,
   skip_prob = 50,
@@ -596,7 +596,7 @@ PREFABS.Joiner_commmercial_joiner =
   template = "Joiner_living_room",
   map    = "MAP13",
 
-  engine = "zdoom",
+  port = "zdoom",
 
 rank = 1,
 
@@ -625,7 +625,7 @@ PREFABS.Joiner_hospital_joiner =
   template = "Joiner_living_room",
   map    = "MAP14",
 
-  engine = "zdoom",
+  port = "zdoom",
 
 
 rank = 1,
@@ -657,7 +657,7 @@ PREFABS.Joiner_hospital_room_joiner =
   template = "Joiner_living_room",
   map    = "MAP15",
 
-  engine = "zdoom",
+  port = "zdoom",
 
 rank = 1,
 
@@ -699,7 +699,7 @@ PREFABS.Joiner_hospital_joiner2 =
   template = "Joiner_living_room",
   map    = "MAP16",
 
-  engine = "zdoom",
+  port = "zdoom",
 
 
 rank = 1,

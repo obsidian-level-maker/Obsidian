@@ -275,7 +275,7 @@ PREFABS.Pic_dem_windows_deco7 =
   file   = "picture/dem_pic_fake_windows.wad",
   map    = "MAP07",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 30,
   skip_prob = 50,
@@ -342,7 +342,7 @@ PREFABS.Pic_dem_windows_deco10 =
   file   = "picture/dem_pic_fake_windows.wad",
   map    = "MAP10",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 30,
   skip_prob = 50,
@@ -408,7 +408,7 @@ PREFABS.Pic_dem_windows_deco13 =
   file   = "picture/dem_pic_fake_windows.wad",
   map    = "MAP13",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 30,
   skip_prob = 50,
@@ -474,7 +474,7 @@ PREFABS.Pic_dem_windows_deco16 =
   file   = "picture/dem_pic_fake_windows.wad",
   map    = "MAP16",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 30,
   skip_prob = 50,
@@ -541,7 +541,7 @@ PREFABS.Pic_dem_windows_deco19 =
   file   = "picture/dem_pic_fake_windows.wad",
   map    = "MAP19",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 0, --40,
 
@@ -605,7 +605,7 @@ PREFABS.Pic_dem_windows_deco22 =
   file   = "picture/dem_pic_fake_windows.wad",
   map    = "MAP22",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 40,
 

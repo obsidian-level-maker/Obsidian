@@ -324,7 +324,7 @@ PREFABS.Decor_dem_ruinsjs1 =
 {
   file   = "decor/dem_props_nature.wad",
   map    = "MAP27",
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "!hell",
 
@@ -390,7 +390,7 @@ PREFABS.Decor_dem_radium_ore2 =
   template  = "Decor_dem_radium_ore1",
   map    = "MAP30",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   z_fit = { 26,60 },
 
@@ -434,7 +434,7 @@ PREFABS.Decor_dem_radium_ore7 =
   template  = "Decor_dem_radium_ore1",
   map    = "MAP35",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   z_fit = "bottom",
 
@@ -454,7 +454,7 @@ PREFABS.Decor_dem_radium_ore9 =
   template  = "Decor_dem_radium_ore1",
   map    = "MAP37",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   z_fit = { 80,88 },
 
@@ -465,7 +465,7 @@ PREFABS.Decor_dem_radium_ore10 =
   template  = "Decor_dem_radium_ore1",
   map    = "MAP38",
 
-  engine = "zdoom",
+  port = "zdoom",
 
 }
 

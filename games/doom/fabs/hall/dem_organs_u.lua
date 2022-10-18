@@ -17,7 +17,7 @@ PREFABS.Hallway_organs_u1 =
   seed_w = 2,
   seed_h = 2,
 
-  engine = "zdoom",
+  port = "zdoom",
 
 tex_FIREBLU1 = {
     SP_FACE1=50, FIREBLU1=50, FIREBLU2=50, BFALL1=50, BODIESB=50, SKSPINE1=50,

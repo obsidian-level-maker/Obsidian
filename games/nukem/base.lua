@@ -38,6 +38,7 @@ UNFINISHED["nukem"] =
 	label = _("Duke Nukem 3D (Exp)"),
 	priority = 30,
 	
+	engine = "build",
 	format = "nukem",
 	
 	game_dir = "nukem",

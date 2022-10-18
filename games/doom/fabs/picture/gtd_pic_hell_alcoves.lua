@@ -89,5 +89,5 @@ PREFABS.Pic_hell_alcove_tomb_4x =
   template = "Pic_hell_alcove_tomb",
   map = "MAP06",
 
-  engine  = "zdoom",
+  port  = "zdoom",
 }

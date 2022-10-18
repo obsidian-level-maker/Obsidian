@@ -7,7 +7,7 @@ PREFABS.Hallway_conveyor_term1 =
   file   = "hall/dem_conveyor_j.wad",
   map    = "MAP01",
   kind   = "terminator",
-  engine = "zdoom",
+  port = "zdoom",
 
   theme  = "tech",
 

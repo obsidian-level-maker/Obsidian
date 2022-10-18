@@ -455,7 +455,7 @@ class UI_OptionsWin : public Fl_Window {
         win->set_modal();
         win->show();
         // clang-format off
-        buff->text(_("Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n%year or %Y: The current year.\n\n%month or %M: The current month.\n\n%day or %D: The current day.\n\n%hour or %h: The current hour.\n\n%minute or %m: The current minute.\n\n%second or %s: The current second.\n\n%version or %v: The current Obsidian version.\n\n%game or %g: Which game the WAD is for.\n\n%engine or %e: Which engine the WAD is for.\n\n%theme or %t: Which theme was selected from the game's choices.\n\n%count or %c: The number of levels in the generated WAD."));
+        buff->text(_("Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n%year or %Y: The current year.\n\n%month or %M: The current month.\n\n%day or %D: The current day.\n\n%hour or %h: The current hour.\n\n%minute or %m: The current minute.\n\n%second or %s: The current second.\n\n%version or %v: The current Obsidian version.\n\n%game or %g: Which game the WAD is for.\n\n%port or %p: Which port the WAD is for.\n\n%theme or %t: Which theme was selected from the game's choices.\n\n%count or %c: The number of levels in the generated WAD."));
         // clang-format on
     }
 
@@ -571,7 +571,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_filename_prefix->callback(callback_FilenamePrefix, this);
     opt_filename_prefix->add(
         _("Date and Time|Number of "
-          "Levels|Game|Engine|Theme|Version|Custom|Nothing"));
+          "Levels|Game|Port|Theme|Version|Custom|Nothing"));
     opt_filename_prefix->labelfont(font_style);
     opt_filename_prefix->textfont(font_style);
     opt_filename_prefix->textcolor(FONT2_COLOR);

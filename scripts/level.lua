@@ -2369,7 +2369,7 @@ function Level_choose_darkness(LEVEL)
     LEVEL.sky_shadow = 32
   end
 
-  if OB_CONFIG.engine ~= "zdoom" and OB_CONFIG.engine ~= "edge" then
+  if OB_CONFIG.port ~= "zdoom" and OB_CONFIG.port ~= "edge" then
     local rounder = LEVEL.sky_light % 16
     if rounder ~= 0 then
       if rounder > 8 then
@@ -2768,7 +2768,7 @@ function Level_make_all()
   end
 
   -- limit-removing engine warning
-  if OB_CONFIG.engine == "nolimit" and ob_match_game({ game = "doomish" }) then
+  if OB_CONFIG.port == "limit_removing" and ob_match_game({ game = "doomish" }) then
     if not PARAM.bool_suppress_nolimit_warning or PARAM.bool_suppress_nolimit_warning == 0 then
       error(gui.gettext("\nWarning: Limit-Removing uses a very basic set of prefabs, and should only be used if your source port isn't compatible with any other choice!\nClick the help link next to the Engine setting for an explanation of the other choices. To disable this warning, check the \"Suppress NoLimit Warning\" checkbox located in the Debug Control Module."))
     end

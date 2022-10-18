@@ -5,7 +5,7 @@ PREFABS.Beam_quakeish =
 
   group = "beam_quakeish",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   kind   = "beam",
 
@@ -30,7 +30,7 @@ PREFABS.Beam_quakeish_diagonal =
 
   group = "beam_quakeish",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   kind   = "beam",
 
@@ -45,7 +45,7 @@ PREFABS.Beam_quakeish_diagonal =
   bound_z2 = 96,
 }
 
--- fallbacks for non ZDoom-slope supporting engines
+-- fallbacks for non ZDoom-slope supporting ports
 
 PREFABS.Beam_quakeish_fallback =
 {

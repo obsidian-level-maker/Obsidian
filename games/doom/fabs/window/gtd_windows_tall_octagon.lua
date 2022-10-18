@@ -4,7 +4,7 @@ PREFABS.Window_tall_octagon_1 =
   map    = "MAP01",
 
   group  = "gtd_window_tall_octagon",
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 50,
 
@@ -46,7 +46,7 @@ PREFABS.Window_tall_octagon_1_limit =
   template = "Window_tall_octagon_1",
   map = "MAP01",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   seed_w = 1,
 
@@ -58,7 +58,7 @@ PREFABS.Window_tall_octagon_2_limit =
   template = "Window_tall_octagon_1",
   map = "MAP02",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   seed_w = 2,
 
@@ -70,7 +70,7 @@ PREFABS.Window_tall_octagon_3_limit =
   template = "Window_tall_octagon_1",
   map = "MAP03",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   seed_w = 3,
 

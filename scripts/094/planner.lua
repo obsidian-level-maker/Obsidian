@@ -1103,7 +1103,7 @@ end
 
 function plan_sp_level(level, is_coop)
 
-  if OB_CONFIG.engine == "wolf_3d" then
+  if OB_CONFIG.engine == "idtech_0" then
     PLAN = get_base_plan(level, level.plan_size, level.cell_size)
   else
     PLAN = get_base_plan(level, GAME.FACTORY.plan_size, GAME.FACTORY.cell_size)

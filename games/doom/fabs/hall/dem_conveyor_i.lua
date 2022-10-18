@@ -6,7 +6,7 @@ PREFABS.Hallway_conveyor_i1 =
 {
   file   = "hall/dem_conveyor_i.wad",
   map    = "MAP01",
-  engine = "zdoom",
+  port = "zdoom",
 
   theme  = "tech",
 

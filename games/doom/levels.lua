@@ -76,7 +76,7 @@ DOOM.PREBUILT_LEVELS =
 --------------------------------------------------------------------
 
 function DOOM.themes_alts()
-  if OB_CONFIG.engine == "nolimit" then
+  if OB_CONFIG.port == "limit_removing" then
     GAME.THEMES.DEFAULTS.narrow_halls = { vent = 50 }
     GAME.THEMES.DEFAULTS.wide_halls = { curve = 50, deuce = 50 }
     GAME.THEMES.DEFAULTS.has_triple_key_door = false
@@ -179,7 +179,7 @@ function DOOM.themes_alts()
     GAME.THEMES.hell.fence_posts = { Post = 50 }
   end
 
-  if OB_CONFIG.engine == "zdoom" or OB_CONFIG.engine == "gzdoom" then
+  if OB_CONFIG.port == "zdoom" or OB_CONFIG.port == "gzdoom" then
     local tab =
     {
       tech =

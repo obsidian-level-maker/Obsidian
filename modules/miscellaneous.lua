@@ -198,8 +198,8 @@ OB_MODULES["misc"] =
 
   label = _("Advanced Architecture"),
 
-  engine = "!vanilla",
-  engine2 = "!wolf_3d",
+  engine = "!idtech_0",
+  port = "!limit_enforcing",
 
   side = "left",
   priority = 101,

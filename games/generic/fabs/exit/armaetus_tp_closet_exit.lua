@@ -21,14 +21,14 @@ PREFABS.Exit_tp_closet_chex3 =
 {
   template = "Exit_tp_closet",
   game = "chex3",
-  engine = "advanced"
+  port = "advanced"
 }
 
 PREFABS.Exit_tp_closet_chex3_nosign =
 {
   template = "Exit_tp_closet",
   game = "chex3",
-  engine = "!advanced",
+  port = "!advanced",
   map = "MAP02"
 }
 
@@ -36,14 +36,14 @@ PREFABS.Exit_tp_closet_hacx =
 {
   template = "Exit_tp_closet",
   game = "hacx",
-  engine = "advanced"
+  port = "advanced"
 }
 
 PREFABS.Exit_tp_closet_hacx_nosign =
 {
   template = "Exit_tp_closet",
   game = "hacx",
-  engine = "!advanced",
+  port = "!advanced",
   map = "MAP02"
 }
 
@@ -51,14 +51,14 @@ PREFABS.Exit_tp_closet_heretic =
 {
   template = "Exit_tp_closet",
   game = "heretic",
-  engine = "advanced"
+  port = "advanced"
 }
 
 PREFABS.Exit_tp_closet_heretic_nosign =
 {
   template = "Exit_tp_closet",
   game = "heretic",
-  engine = "!advanced",
+  port = "!advanced",
   map = "MAP02"
 }
 
@@ -66,7 +66,7 @@ PREFABS.Exit_tp_closet_hexen_nosign =
 {
   template = "Exit_tp_closet",
   game = "heretic",
-  --engine = "!advanced",
+  --port = "!advanced",
   map = "MAP02"
 }
 
@@ -109,14 +109,14 @@ PREFABS.Exit_tp_closet_secret_chex3 =
 {
   template = "Exit_tp_closet_secret",
   game = "chex3",
-  engine = "advanced"
+  port = "advanced"
 }
 
 PREFABS.Exit_tp_closet_secret_chex3_nosign =
 {
   template = "Exit_tp_closet_secret",
   game = "chex3",
-  engine = "!advanced",
+  port = "!advanced",
   map = "MAP02"
 }
 
@@ -124,14 +124,14 @@ PREFABS.Exit_tp_closet_secret_hacx =
 {
   template = "Exit_tp_closet_secret",
   game = "hacx",
-  engine = "advanced"
+  port = "advanced"
 }
 
 PREFABS.Exit_tp_closet_secret_hacx_nosign =
 {
   template = "Exit_tp_closet_secret",
   game = "hacx",
-  engine = "!advanced",
+  port = "!advanced",
   map = "MAP02"
 }
 
@@ -139,14 +139,14 @@ PREFABS.Exit_tp_closet_secret_heretic =
 {
   template = "Exit_tp_closet_secret",
   game = "heretic",
-  engine = "advanced"
+  port = "advanced"
 }
 
 PREFABS.Exit_tp_closet_secret_heretic_nosign =
 {
   template = "Exit_tp_closet_secret",
   game = "heretic",
-  engine = "!advanced",
+  port = "!advanced",
   map = "MAP02"
 }
 
@@ -154,7 +154,7 @@ PREFABS.Exit_tp_closet_secret_hexen_nosign =
 {
   template = "Exit_tp_closet_secret",
   game = "heretic",
-  --engine = "!advanced",
+  --port = "!advanced",
   map = "MAP02"
 }
 

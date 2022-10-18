@@ -72,7 +72,7 @@ static qLump_c *endmap_lump;
 
 static int errors_seen;
 
-std::string current_engine;
+std::string current_port;
 std::string map_format;
 bool build_nodes;
 bool build_reject;
@@ -296,7 +296,7 @@ void Doom::BeginLevel() {
             textmap_lump->Printf("namespace = \"Hexen\";\n\n");
         } else {
             textmap_lump->Printf("namespace = \"ZDoomTranslated\";\n\n");
-            if (current_engine == "eternity") {
+            if (current_port == "eternity") {
                 textmap_lump->Printf("ee_compat = true;\n\n");
             }
         }
@@ -965,7 +965,7 @@ static bool BuildNodes(std::filesystem::path filename) {
             map_nums = 45;
         }
     }
-    if (zdmain(filename, current_engine, UDMF_mode, build_reject, map_nums) !=
+    if (zdmain(filename, current_port, UDMF_mode, build_reject, map_nums) !=
         0) {
         Main::ProgStatus(_("ZDBSP Error!"));
         return false;
@@ -1032,11 +1032,11 @@ bool Doom::game_interface_c::Start(const char *preset) {
         Main::BackupFile(filename);
     }
 
-    current_engine = ob_get_param("engine");
+    current_port = ob_get_param("port");
 
     // Need to preempt the rest of this process for now if we are using Vanilla
     // Doom
-    if (StringCaseCmp(current_engine, "vanilla") == 0) {
+    if (StringCaseCmp(current_port, "vanilla") == 0) {
         build_reject = StringToInt(ob_get_param("bool_build_reject"));
         build_nodes = true;
         return true;
@@ -1053,15 +1053,15 @@ bool Doom::game_interface_c::Start(const char *preset) {
     }
     #endif
 
-    if (StringCaseCmp(current_engine, "zdoom") == 0) {
+    if (StringCaseCmp(current_port, "zdoom") == 0) {
         build_reject = false;
         map_format = ob_get_param("map_format_zdoom");
         build_nodes = StringToInt(ob_get_param("bool_build_nodes_zdoom"));
-    } else if (StringCaseCmp(current_engine, "eternity") == 0) {
+    } else if (StringCaseCmp(current_port, "eternity") == 0) {
         build_reject = false;
         map_format = ob_get_param("map_format");
         build_nodes = true;
-    } else if (StringCaseCmp(current_engine, "edge") == 0) {
+    } else if (StringCaseCmp(current_port, "edge") == 0) {
         build_reject = false;
         map_format = ob_get_param("map_format");
         build_nodes = false;  // EDGE-Classic has its own internal nodebuilder
@@ -1090,7 +1090,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
 
 bool Doom::game_interface_c::Finish(bool build_ok) {
     // Skip DM_EndWAD if using Vanilla Doom
-    if (StringCaseCmp(current_engine, "vanilla") != 0) {
+    if (StringCaseCmp(current_port, "vanilla") != 0) {
         // TODO: handle write errors
         EndWAD();
     } else {

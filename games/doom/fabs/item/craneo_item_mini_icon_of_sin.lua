@@ -7,7 +7,7 @@ PREFABS.Item_craneo_mini_icon_of_sin =
   prob  = 50,
   skip_prob = 50,
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "hell",
 

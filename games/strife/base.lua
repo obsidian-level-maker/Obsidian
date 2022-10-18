@@ -51,6 +51,7 @@ OB_GAMES["strife"] =
   label = _("Strife"),
   priority = 89,
 
+  engine = "idtech_1",
   format = "doom",
   --sub_format = "strife",
 

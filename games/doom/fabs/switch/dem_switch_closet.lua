@@ -6,7 +6,7 @@ PREFABS.Switch_Dem_closet1 =
   map    = "MAP01",
 
   prob   = 50,
-  engine = "zdoom",
+  port = "zdoom",
   theme  = "!hell",
   env = "building",
 

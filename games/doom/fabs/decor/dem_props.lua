@@ -115,7 +115,7 @@ PREFABS.Decor_deal =
   file   = "decor/dem_props.wad",
   map    = "MAP10",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 3500,
   theme  = "urban",
@@ -139,7 +139,7 @@ PREFABS.Decor_guardhouse_secret =
   file   = "decor/dem_props.wad",
   map    = "MAP11",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 2000,
   theme  = "urban",
@@ -166,7 +166,7 @@ PREFABS.Decor_urban_newsstand_secret =
   file   = "decor/dem_props.wad",
   map    = "MAP12",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 2000,
   theme  = "urban",
