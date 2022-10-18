@@ -699,7 +699,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_builds_per_run->visible_focus(0);
     opt_builds_per_run->color(BUTTON_COLOR);
 
-    cy += opt_builds_per_run->h() + y_step * .5;  
+    cy += opt_builds_per_run->h() + y_step * .5;
 
     /*opt_preserve_failures =
         new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");

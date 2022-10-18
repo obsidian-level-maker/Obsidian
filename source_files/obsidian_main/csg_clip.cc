@@ -1171,11 +1171,11 @@ void Q1_ClippingHull(int hull) {
 
     LogPrintf("\nClipping Hull {}...\n", hull);
 
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Step("Hull");
     }
-    #endif
+#endif
 
     ///???  FreeAll();
 
