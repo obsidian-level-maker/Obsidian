@@ -198,7 +198,6 @@ extern std::vector<std::string> batch_randomize_groups;
 // Dialog Windows
 void DLG_ShowError(const char *msg, ...);
 
-
 std::filesystem::path DLG_OutputFilename(const char *ext,
                                          const char *preset = nullptr);
 #endif
@@ -247,9 +246,9 @@ void Shutdown(bool error);
 template <typename... Args>
 [[noreturn]] void FatalError(std::string_view msg, Args &&...args) {
     auto buffer = fmt::format(msg, std::forward<Args>(args)...);
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     DLG_ShowError("%s", buffer.c_str());
-    #endif
+#endif
     Detail::Shutdown(true);
 
     if (batch_mode) {

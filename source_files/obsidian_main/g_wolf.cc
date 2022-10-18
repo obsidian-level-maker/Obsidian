@@ -198,21 +198,21 @@ static void WF_WriteHead(void) {
 // LUA: wolf_block(x, y, plane, value)
 //
 int WF_wolf_block(lua_State *L) {
-    int x = luaL_checkint(L,1);
-    int y = luaL_checkint(L,2);
+    int x = luaL_checkint(L, 1);
+    int y = luaL_checkint(L, 2);
 
-    int tile = luaL_checkint(L,3);
-    int obj  = luaL_checkint(L,4);
+    int tile = luaL_checkint(L, 3);
+    int obj = luaL_checkint(L, 4);
 
     // adjust and validate coords
-    x = x-1;
-    y = 64-y;
+    x = x - 1;
+    y = 64 - y;
 
     SYS_ASSERT(0 <= x && x <= 63);
     SYS_ASSERT(0 <= y && y <= 63);
 
-    solid_plane[PL_START+y*64+x] = tile;
-    thing_plane[PL_START+y*64+x] = obj;
+    solid_plane[PL_START + y * 64 + x] = tile;
+    thing_plane[PL_START + y * 64 + x] = obj;
 
     return 0;
 }
@@ -346,7 +346,7 @@ bool wolf_game_interface_c::Start(const char *ext) {
             wolf_output_dir = Resolve_DefaultOutputPath();
         }
     } else {
-        #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
         if (!mid_batch) {
             int old_font_h = FL_NORMAL_SIZE;
             FL_NORMAL_SIZE = 14 + KF;
@@ -385,7 +385,7 @@ bool wolf_game_interface_c::Start(const char *ext) {
         } else {
             wolf_output_dir = BestDirectory();
         }
-        #endif
+#endif
     }
 
     if (ext) {
@@ -459,8 +459,10 @@ bool wolf_game_interface_c::Finish(bool build_ok) {
 }
 
 void wolf_game_interface_c::Rename() {
-    std::filesystem::path gamemaps = wolf_output_dir / fmt::format("GAMEMAPS.{}", file_ext);
-    std::filesystem::path maphead = wolf_output_dir / fmt::format("MAPHEAD.{}", file_ext);
+    std::filesystem::path gamemaps =
+        wolf_output_dir / fmt::format("GAMEMAPS.{}", file_ext);
+    std::filesystem::path maphead =
+        wolf_output_dir / fmt::format("MAPHEAD.{}", file_ext);
 
     if (create_backups) {
         Main::BackupFile(gamemaps);

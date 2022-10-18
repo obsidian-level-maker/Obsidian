@@ -44,7 +44,8 @@ bool LogInit(const std::filesystem::path &filename) {
 
         spdlog::set_pattern("%v");
 
-        log_file = spdlog::rotating_logger_mt("ob_logger", log_filename.generic_string().c_str(),
+        log_file = spdlog::rotating_logger_mt(
+            "ob_logger", log_filename.generic_string().c_str(),
             1048576 * log_size, log_limit);
 
         if (log_file == nullptr) {
@@ -102,7 +103,6 @@ void LogClose(void) {
 
     spdlog::shutdown();
 
-
     log_filename.clear();
 }
 
@@ -115,7 +115,6 @@ void RefClose(void) {
 }
 
 void LogReadLines(log_display_func_t display_func, void *priv_data) {
-
     if (log_file == nullptr) {
         return;
     }
@@ -133,7 +132,8 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
 
     // this is very unlikely to happen, but check anyway
     if (!log_stream.is_open()) {
-        log_file = spdlog::rotating_logger_mt("ob_logger", log_filename.generic_string().c_str(),
+        log_file = spdlog::rotating_logger_mt(
+            "ob_logger", log_filename.generic_string().c_str(),
             1048576 * log_size, log_limit);
         if (log_file != nullptr) {
             spdlog::flush_every(std::chrono::seconds(1));
@@ -159,8 +159,9 @@ void LogReadLines(log_display_func_t display_func, void *priv_data) {
     log_stream.close();
 
     // open the log file for writing again
-    log_file = spdlog::rotating_logger_mt("ob_logger", log_filename.generic_string().c_str(),
-            1048576 * log_size, log_limit);
+    log_file = spdlog::rotating_logger_mt("ob_logger",
+                                          log_filename.generic_string().c_str(),
+                                          1048576 * log_size, log_limit);
     if (log_file != nullptr) {
         spdlog::flush_every(std::chrono::seconds(1));
         spdlog::set_default_logger(log_file);

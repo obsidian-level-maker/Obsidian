@@ -933,11 +933,11 @@ static void Q2_WriteModels() {
 //------------------------------------------------------------------------
 
 static void Q2_LightWorld() {
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Step("Light");
     }
-    #endif
+#endif
 
     QLIT_LightAllFaces();
 
@@ -945,11 +945,11 @@ static void Q2_LightWorld() {
 }
 
 static void Q2_VisWorld() {
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Step("Vis");
     }
-    #endif
+#endif
 
     // no need for numleafs, as Quake II uses clusters directly
 
@@ -1027,12 +1027,13 @@ bool quake2_game_interface_c::Start(const char *preset) {
             filename = Resolve_DefaultOutputPath() / batch_output_file;
         }
     } else {
-        #ifndef CONSOLE_ONLY
-        if (!mid_batch)
+#ifndef CONSOLE_ONLY
+        if (!mid_batch) {
             filename = DLG_OutputFilename("pak", preset);
-        else
+        } else {
             filename = BestDirectory() / preset;
-        #endif
+        }
+#endif
     }
 
     if (filename.empty()) {
@@ -1051,11 +1052,11 @@ bool quake2_game_interface_c::Start(const char *preset) {
 
     BSP_AddInfoFile();
 
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Init(0, "CSG,BSP,Vis,Light");
     }
-    #endif
+#endif
 
     return true;
 }

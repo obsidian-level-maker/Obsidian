@@ -228,11 +228,11 @@ void Doom::AddSectionLump(char ch, std::string name, qLump_c *lump) {
 
 bool Doom::StartWAD(std::filesystem::path filename) {
     if (!WAD_OpenWrite(filename)) {
-        #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
         DLG_ShowError(_("Unable to create wad file:\n\n%s"), strerror(errno));
-        #else
+#else
         fmt::print(_("Unable to create wad file:\n\n%s"), strerror(errno));
-        #endif
+#endif
         return false;
     }
 
@@ -427,8 +427,8 @@ void Doom::AddSector(int f_h, std::string f_tex, int c_h, std::string c_tex,
 int Doom::v094_add_sector(lua_State *L) {
     int f_h = luaL_checkinteger(L, 1);
     int c_h = luaL_checkinteger(L, 2);
-    const char* f_tex = luaL_checkstring(L, 3);
-    const char* c_tex = luaL_checkstring(L, 4);
+    const char *f_tex = luaL_checkstring(L, 3);
+    const char *c_tex = luaL_checkstring(L, 4);
     int light = luaL_checkinteger(L, 5);
     int special = luaL_checkinteger(L, 6);
     int tag = luaL_checkinteger(L, 7);
@@ -635,32 +635,31 @@ void Doom::AddLinedef(int vert1, int vert2, int side1, int side2, int type,
     }
 }
 
-int v094_grab_args(lua_State *L, byte *args, int stack_pos)
-{
-  memset(args, 0, 5);
+int v094_grab_args(lua_State *L, byte *args, int stack_pos) {
+    memset(args, 0, 5);
 
-  int what = lua_type(L, stack_pos);
+    int what = lua_type(L, stack_pos);
 
-  if (what == LUA_TNONE || what == LUA_TNIL)
-    return 0;
-
-  if (what != LUA_TTABLE)
-    return luaL_argerror(L, stack_pos, "expected a table");
-
-  for (int i = 0; i < 5; i++)
-  {
-    lua_pushinteger(L, i+1);
-    lua_gettable(L, stack_pos);
-
-    if (lua_isnumber(L, -1))
-    {
-      args[i] = lua_tointeger(L, -1);
+    if (what == LUA_TNONE || what == LUA_TNIL) {
+        return 0;
     }
 
-    lua_pop(L, 1);
-  }
+    if (what != LUA_TTABLE) {
+        return luaL_argerror(L, stack_pos, "expected a table");
+    }
 
-  return 0;
+    for (int i = 0; i < 5; i++) {
+        lua_pushinteger(L, i + 1);
+        lua_gettable(L, stack_pos);
+
+        if (lua_isnumber(L, -1)) {
+            args[i] = lua_tointeger(L, -1);
+        }
+
+        lua_pop(L, 1);
+    }
+
+    return 0;
 }
 
 int Doom::v094_add_linedef(lua_State *L) {
@@ -671,8 +670,8 @@ int Doom::v094_add_linedef(lua_State *L) {
     int type = luaL_checkinteger(L, 5);
     int flags = luaL_checkinteger(L, 6);
     int tag = luaL_checkinteger(L, 7);
-    //byte *args = NULL;
-    //v094_grab_args(L, args, 8);
+    // byte *args = NULL;
+    // v094_grab_args(L, args, 8);
     AddLinedef(vert1, vert2, side1, side2, type, flags, tag, NULL);
     return 0;
 }
@@ -841,8 +840,8 @@ int Doom::v094_add_thing(lua_State *L) {
     int options = luaL_checkinteger(L, 6);
     int tid = luaL_checkinteger(L, 7);
     byte special = luaL_checkinteger(L, 8);
-    //byte *args = NULL;
-    //v094_grab_args(L, args, 9);
+    // byte *args = NULL;
+    // v094_grab_args(L, args, 9);
     AddThing(x, y, h, type, angle, options, tid, special, NULL);
     return 0;
 }
@@ -899,19 +898,19 @@ int Doom::NumThings() {
 namespace Doom {
 
 void Send_Prog_Nodes(int progress, int num_maps) {
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Nodes(progress, num_maps);
     }
-    #endif
+#endif
 }
 
 void Send_Prog_Step(const char *step_name) {
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->AddStatusStep(step_name);
     }
-    #endif
+#endif
 }
 
 static bool BuildNodes(std::filesystem::path filename) {
@@ -1011,12 +1010,13 @@ bool Doom::game_interface_c::Start(const char *preset) {
             filename = Resolve_DefaultOutputPath() / batch_output_file;
         }
     } else {
-        #ifndef CONSOLE_ONLY
-        if (!mid_batch)
+#ifndef CONSOLE_ONLY
+        if (!mid_batch) {
             filename = DLG_OutputFilename("wad", preset);
-        else
+        } else {
             filename = BestDirectory() / preset;
-        #endif
+        }
+#endif
     }
 
     if (filename.empty()) {
@@ -1047,11 +1047,11 @@ bool Doom::game_interface_c::Start(const char *preset) {
         return false;
     }
 
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Init(20, N_("CSG"));
     }
-    #endif
+#endif
 
     if (StringCaseCmp(current_engine, "zdoom") == 0) {
         build_reject = false;
@@ -1181,11 +1181,11 @@ void Doom::game_interface_c::BeginLevel() {
 void Doom::game_interface_c::Property(std::string key, std::string value) {
     if (StringCaseCmp(key, "level_name") == 0) {
         level_name = value.c_str();
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     } else if (StringCaseCmp(key, "description") == 0 && main_win) {
         main_win->build_box->name_disp->copy_label(value.c_str());
         main_win->build_box->name_disp->redraw();
-    #endif
+#endif
     } else if (StringCaseCmp(key, "sub_format") == 0) {
         if (StringCaseCmp(value, "doom") == 0) {
             sub_format = 0;
@@ -1214,11 +1214,11 @@ void Doom::game_interface_c::EndLevel() {
         Main::FatalError("Script problem: did not set level name!\n");
     }
 
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Step("CSG");
     }
-    #endif
+#endif
 
     CSG_DOOM_Write();
 #if 0
