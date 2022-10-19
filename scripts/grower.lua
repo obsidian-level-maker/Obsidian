@@ -938,16 +938,7 @@ function Grower_calc_rule_probs(LEVEL)
       local new_factor
   
       if string.match(rule.name,"ROOT") then return end
-      if string.match(rule.name,"JOINER") then return end
-      if string.match(rule.name,"SPROUT") then return end
-      if string.match(rule.name,"EMERGENCY") then return end
-      if string.match(rule.name,"STREET") then return end
-      if string.match(rule.name,"SIDEWALK") then return end
-      if string.match(rule.name,"hall") then return end
-      if string.match(rule.name,"HALL") then return end
-      if string.match(rule.name,"START") then return end
-      if string.match(rule.name,"PARK") then return end
-      if string.match(rule.name,"DECORATE") then return end
+      if rule.pass and rule.pass ~= "grow" then return end
       if table.has_elem(rule.styles, "liquids") 
         and not LEVEL.liquid then return end
 
@@ -995,7 +986,14 @@ function Grower_calc_rule_probs(LEVEL)
 
     Grower_reset_absurdities()
 
-    local rules_to_absurdify = rand.pick({1,1,2,2,2,3,3,4,5})
+    local rules_to_absurdify = rand.pick({1,1,2,2,2,3,3,4})
+
+    -- double the amount of absurd rules if it's closer to a balance of
+    -- outdoor/interior environments based on level style
+    if rand.odds(style_sel("outdoors", 0, 30, 45, 0)) then
+      rules_to_absurdify = rules_to_absurdify * 2
+    end
+
     local count = rules_to_absurdify
     gui.printf(rules_to_absurdify .. " rules will be absurd!\n\n")
 
@@ -3584,6 +3582,14 @@ end
       else
         R.shapes_applied = 1
       end
+
+      if cur_rule.is_absurd then
+        if R.absurd_shapes then
+          table.add_unique(R.absurd_shapes, cur_rule.name)
+        else
+          R.absurd_shapes = {}
+        end
+      end
     end
 
     if pass == "sprout" then
@@ -4089,7 +4095,7 @@ function Grower_create_and_grow_room(SEEDS, LEVEL, trunk, mode, info)
   assert(R)
 
   R.is_root = true
-
+  R.sprout_rule = info.name
 
   -- apply a root rule for it
   local pass = "root"
@@ -4467,14 +4473,13 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
     end
 
     expand_limits()
+    emergency_sprouts()
 
     if LEVEL.is_linear and not LEVEL.is_procedural_gotcha
     and (#LEVEL.rooms < ((LEVEL.min_rooms + LEVEL.max_rooms) / 2)) then
       if emergency_linear_sprouts() == "oof" then
         emergency_teleport_break()
       end
-    else
-      emergency_sprouts()
     end
   end
 end
