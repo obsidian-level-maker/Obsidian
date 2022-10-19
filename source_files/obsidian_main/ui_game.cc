@@ -195,7 +195,7 @@ void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
     win->set_modal();
     win->show();
     // clang-format off
-    buff->text(_("id Tech 0: Powers Wolfenstein-3D and similar games\n\nid Tech 1: Powers Doom and similar games\n\nid Tech 2 (DISABLED): Powers Quake and similar games\n\nBuild (DISABLED): Powers Duke Nukem 3D and similar games"));
+    buff->text(_("id Tech 0: Powered Wolfenstein-3D and similar games\n\nid Tech 1: Powered Doom, Doom 2, Heretic, etc"));
     // clang-format on
 }
 
@@ -227,8 +227,7 @@ void UI_Game::callback_PortHelp(Fl_Widget *w, void *data) {
     win->set_modal();
     win->show();
     // clang-format off
-    // Slop - Dasho
-    buff->text(_("Available Engines:\n\nZDoom Family: Engines that use ZDoom as a base. Example ports: GZDoom, LZDoom\n\nVanilla DOOM: Doom with its original engine limits. Example ports: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nLimit Removing: Any engine that raises the limits of the original game to prevent crashes, but is not Boom-compatible. Example ports: Doom2-plus, Doomsday 1.x, Crispy Doom\n\nBoom-Compatible: Engines that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nPrBoom-Compatible: Boom-compatible, but also capable of using extended nodes. Example ports: DSDA-Doom, PrBoom+um\n\nEDGE-Classic: Boom-compatible, plus additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."));
+    buff->text(_("Available Ports:\n\nid Tech 0:\n\nVanilla: Works with the original executables\n\nid Tech 1:\n\nZDoom Family: Ports that use ZDoom as a base. Example ports: GZDoom, LZDoom\n\nVanilla: Works with the original program or ports that enforce the original limits. Examples: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nLimit Removing: Any port that raises the limits of the original game to prevent crashes, but is not Boom-compatible. Example ports: Doom2-plus, Doomsday 1.x, Crispy Doom\n\nBoom-Compatible: Ports that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nPrBoom-Compatible: Boom-compatible, but also capable of using extended nodes. Example ports: DSDA-Doom, PrBoom+um\n\nEDGE-Classic: Boom-compatible, plus additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."));
     // clang-format on
 }
 
@@ -244,7 +243,7 @@ void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
     win->set_modal();
     win->show();
     // clang-format off
-    buff->text(_("Available WAD Lengths:\n\nSingle Level: One map.\n\nA Few Maps: Four maps.\n\nOne Episode: The length of an episode in the original IWAD. For Doom 2 and other games which normally doesn't have episodes, this is 11 maps.\n\nFull Game: The length of a full game in the original IWAD."));
+    buff->text(_("Available Game Lengths:\n\nSingle Level: One map.\n\nA Few Maps: Four maps.\n\nOne Episode: The length of an episode in the original game. For Doom 2 and other games which normally doesn't have episodes, this number is determined by Obsidian.\n\nFull Game: The length of a full game in the original program."));
     // clang-format on
 }
 
@@ -261,7 +260,7 @@ void UI_Game::callback_ThemeHelp(Fl_Widget *w, void *data) {
     win->show();
     // clang-format off
     buff->text(
-        _("Available Themes:\n\nOriginal: Follows the theme progression of the original IWAD.\n\nEpisodic: Each episode follows a single randomly chose theme.\n\nBit Mixed: Theme will change every few levels.\n\nJumbled Up: Level themes are purely random.\n\nPsychedelic: Trippy.\n\nOther themes listed are game-specific."));
+        _("Available Themes:\n\nOriginal: Follows the theme progression of the original game.\n\nEpisodic: Each episode follows a single randomly chosen theme.\n\nBit Mixed: Theme will change every few levels.\n\nJumbled Up: Level themes are purely random.\n\nPsychedelic: Trippy.\n\nOther themes listed are game-specific."));
     // clang-format on
 }
 

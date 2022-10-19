@@ -1909,6 +1909,12 @@ softrestart:;
                 // regardless of success or fail, compute a new seed
                 Main_CalcNewSeed();
 
+                if (!result) {
+                    mid_batch = false;
+                    main_action = MAIN_SOFT_RESTART;
+                    break;
+                }
+
                 runs_left--;
                 if (runs_left > 0) {
                     mid_batch = true;
