@@ -1659,6 +1659,8 @@ function ob_init()
   create_buttons("module", OB_MODULES)
   create_mod_options()
 
+  OB_CONFIG.engine = "idtech_1"
+
   ob_update_all()
 
   gui.set_button("engine",   OB_CONFIG.engine)
