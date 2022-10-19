@@ -3,7 +3,7 @@
 --
 
 -- Fixed by Chris, allows most monsters (except Demons/Spectres) to traverse
--- without piling on top or bottom of staircase edges. Silly Doom engine!
+-- without piling on top or bottom of staircase edges. Silly Doom port!
 
 -- For AJ, see comments below.
 

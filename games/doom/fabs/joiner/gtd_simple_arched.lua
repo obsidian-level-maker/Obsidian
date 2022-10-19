@@ -8,7 +8,7 @@ PREFABS.Joiner_simple_arched =
   map    = "MAP01",
 
   prob   = 1000,
-  engine = "zdoom",
+  port = "zdoom",
   theme  = "hell",
   env = "!outdoor",
   neighbor = "!outdoor",
@@ -42,7 +42,7 @@ PREFABS.Joiner_simple_arched_urban = {
 PREFABS.Joiner_simple_arched_notzdoom = {
   template = "Joiner_simple_arched",
 
-  engine = "!zdoom",
+  port = "!zdoom",
   theme = "hell",
 
   line_341 = 0,
@@ -51,7 +51,7 @@ PREFABS.Joiner_simple_arched_notzdoom = {
 PREFABS.Joiner_simple_arched_urban_notzdoom = {
   template = "Joiner_simple_arched",
 
-  engine = "!zdoom",
+  port = "!zdoom",
   theme = "urban",
 
   thing_46 = 85,
@@ -66,7 +66,7 @@ PREFABS.Joiner_simple_arched_2 =
   map    = "MAP02",
 
   prob   = 750,
-  engine = "zdoom",
+  port = "zdoom",
   theme = "!hell",
 
   where  = "seeds",
@@ -103,7 +103,7 @@ PREFABS.Joiner_simple_arched_2_limit =
 {
   template = "Joiner_simple_arched_2",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   tex_SUPPORT3 = "GRAY7",
 
@@ -114,7 +114,7 @@ PREFABS.Joiner_simple_arched_2_hell_limit =
 {
   template = "Joiner_simple_arched_2",
 
-  engine = "!zdoom",
+  port = "!zdoom",
   theme = "hell",
 
   tex_SUPPORT3 = "SUPPORT3",
@@ -133,7 +133,7 @@ PREFABS.Joiner_simple_arched_3 =
   map    = "MAP03",
 
   prob   = 750,
-  engine = "zdoom",
+  port = "zdoom",
 
   where  = "seeds",
   shape  = "I",
@@ -155,7 +155,7 @@ PREFABS.Joiner_simple_arched_3_limit =
 {
   template = "Joiner_simple_arched_3",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   line_344 = 0
 }

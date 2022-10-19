@@ -21,7 +21,7 @@ PREFABS.Hallway_sewers_locked_red1 =
 
   deep   = 16,
 
-  engine = "zdoom",
+  port = "zdoom",
 }
 
 

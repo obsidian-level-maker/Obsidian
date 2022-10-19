@@ -61,7 +61,8 @@ OB_MODULES["hexen_mon_control"] =
   label = _("Hexen Monster Control"),
 
   game = "hexen",
-  engine = "!vanilla",
+  engine = "idtech_1",
+  port = "!limit_enforcing",
 
   hooks =
   {
@@ -373,7 +374,8 @@ OB_MODULES["hexen_item_control"] =
   label = _("Hexen Item Control"),
 
   game = "hexen",
-  engine = "!vanilla",
+  engine = "idtech_1",
+  port = "!limit_enforcing",
 
   hooks =
   {

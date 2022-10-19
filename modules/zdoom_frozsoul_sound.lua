@@ -243,7 +243,7 @@ OB_MODULES["zdoom_ambient_sound"] =
 
   priority = 69,
 
-  engine = "zdoom",
+  port = "zdoom",
 
   hooks =
   {

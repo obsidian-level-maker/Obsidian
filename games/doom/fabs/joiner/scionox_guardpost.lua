@@ -84,7 +84,7 @@ PREFABS.Joiner_scionox_guardpost_all =
   template = "Joiner_scionox_guardpost",
   map    = "MAP04",
 
-  engine = "!limit", -- TIL there's a lot of missing all-key lines for traditional Doom...
+  port = "!limit", -- TIL there's a lot of missing all-key lines for traditional Doom...
 
   key    = "k_ALL",
 

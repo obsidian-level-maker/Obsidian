@@ -21,7 +21,7 @@ PREFABS.Fence_tech_cover_high =
   template = "Fence_tech_cover_low",
   map = "MAP02",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 15
 }
@@ -31,7 +31,7 @@ PREFABS.Fence_tech_cover_high_limit =
   template = "Fence_tech_cover_low",
   map = "MAP02",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   prob = 15,
 

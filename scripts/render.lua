@@ -32,7 +32,7 @@ function Render_add_exit_sign(E, z, SEEDS, LEVEL)
 
   -- These games need an engine that supports TX_START/TX_END merging
   if ob_match_game({ game = { chex3=1, hacx=1, heretic=1} }) then
-     if not ob_match_engine({ engine = { edge=1, eternity=1, zdoom=1 } }) then return end
+     if not ob_match_port({ port = { edge=1, eternity=1, zdoom=1 } }) then return end
   end
 
   local def
@@ -3083,7 +3083,7 @@ end
 
 function Render_all_street_markings(LEVEL)
 
-  if not ob_match_game({game = "doomish"}) or OB_CONFIG.engine == "nolimit" then return end
+  if not ob_match_game({game = "doomish"}) or OB_CONFIG.port == "limit_removing" then return end
 
   local road_fab_list =
   {

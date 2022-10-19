@@ -16,7 +16,7 @@ PREFABS.Hallway_sewers_u1 =
   seed_w = 2,
   seed_h = 2,
 
-  engine = "zdoom",
+  port = "zdoom",
 
 }
 

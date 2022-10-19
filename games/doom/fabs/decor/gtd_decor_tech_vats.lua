@@ -9,7 +9,7 @@ PREFABS.Decor_tech_vats =
   theme = "tech",
   env = "building",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   where = "point",
   size = 96,

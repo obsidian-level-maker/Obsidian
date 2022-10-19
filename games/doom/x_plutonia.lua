@@ -1195,6 +1195,7 @@ OB_GAMES["plutonia"] =
 {
   label = _("Plutonia"),
 
+  engine = "idtech_1",
   extends = "doom2",
   
   priority = 96,

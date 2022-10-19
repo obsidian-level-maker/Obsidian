@@ -8,7 +8,7 @@ PREFABS.Exit_scionox_quakeish_portal_exit =
   prob   = 200,
 
   theme = "urban",
-  engine  = "zdoom",
+  port  = "zdoom",
 
   where  = "seeds",
 

@@ -3,7 +3,7 @@ PREFABS.Item_secret_techmachine1V1_closet =
 {
   file  = "item/dem_secret_closets_tech.wad",
   map   = "MAP09",
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "tech",
   env = "!nature",

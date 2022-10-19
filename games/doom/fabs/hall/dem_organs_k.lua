@@ -22,7 +22,7 @@ PREFABS.Hallway_organs_locked_red1 =
   y_fit = "top",
   deep   = 16,
 
-  engine = "zdoom",
+  port = "zdoom",
 
 }
 

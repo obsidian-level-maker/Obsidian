@@ -21,25 +21,11 @@
 
 BUILD = {}
 
-
-BUILD.ENTITIES =
-{
-
-}
-
-
-BUILD.PARAMETERS =
-{
-
-}
-
-
 ----------------------------------------------------------------
 
-
-OB_ENGINES["build"] =
+UNFINISHED["build"] =
 {
-  label = _("Build Engine"),
+  label = _("Build"),
 
   priority = 100,
 

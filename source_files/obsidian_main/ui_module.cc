@@ -717,13 +717,11 @@ void UI_Module::callback_OptChangeDefault(Fl_Widget *w, void *data) {
 
     UI_Module *parent = (UI_Module *)M->parent();
 
-    ob_set_mod_option(parent->id_name, cb_data->opt_name,
-                      M->default_value);
+    ob_set_mod_option(parent->id_name, cb_data->opt_name, M->default_value);
 }
 
 void UI_Module::callback_OptButtonDefault(Fl_Widget *w, void *data) {
-    opt_change_callback_data_t *cb_data =
-        (opt_change_callback_data_t *)data;
+    opt_change_callback_data_t *cb_data = (opt_change_callback_data_t *)data;
 
     SYS_ASSERT(cb_data);
 
@@ -731,13 +729,11 @@ void UI_Module::callback_OptButtonDefault(Fl_Widget *w, void *data) {
 
     UI_Module *parent = (UI_Module *)M->parent();
 
-    ob_set_mod_option(parent->id_name, cb_data->opt_name,
-                      M->default_value);
+    ob_set_mod_option(parent->id_name, cb_data->opt_name, M->default_value);
 }
 
 void UI_Module::callback_OptSliderDefault(Fl_Widget *w, void *data) {
-    opt_change_callback_data_t *cb_data =
-        (opt_change_callback_data_t *)data;
+    opt_change_callback_data_t *cb_data = (opt_change_callback_data_t *)data;
 
     SYS_ASSERT(cb_data);
 
@@ -745,8 +741,7 @@ void UI_Module::callback_OptSliderDefault(Fl_Widget *w, void *data) {
 
     UI_Module *parent = (UI_Module *)M->parent();
 
-    ob_set_mod_option(parent->id_name, cb_data->opt_name,
-                      M->default_value);
+    ob_set_mod_option(parent->id_name, cb_data->opt_name, M->default_value);
 }
 
 void UI_Module::callback_PresetCheck(Fl_Widget *w, void *data) {

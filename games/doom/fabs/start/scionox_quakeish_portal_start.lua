@@ -8,7 +8,7 @@ PREFABS.Start_scionox_quakeish_portal_start =
   prob   = 250,
 
   theme = "urban",
-  engine  = "zdoom",
+  port  = "zdoom",
 
   where  = "seeds",
 

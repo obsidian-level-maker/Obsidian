@@ -1168,11 +1168,11 @@ static void Q1_WriteModels() {
 //------------------------------------------------------------------------
 
 static void Q1_LightWorld() {
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Step("Light");
     }
-    #endif
+#endif
 
     QLIT_LightAllFaces();
 
@@ -1186,11 +1186,11 @@ static void Q1_LightWorld() {
 }
 
 static void Q1_VisWorld(int base_leafs) {
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Step("Vis");
     }
-    #endif
+#endif
 
     // take the solid leaf into account
     int numleafs = 1 + base_leafs;
@@ -1318,12 +1318,13 @@ bool quake1_game_interface_c::Start(const char *preset) {
             filename = Resolve_DefaultOutputPath() / batch_output_file;
         }
     } else {
-        #ifndef CONSOLE_ONLY
-        if (!mid_batch)
+#ifndef CONSOLE_ONLY
+        if (!mid_batch) {
             filename = DLG_OutputFilename("pak", preset);
-        else
+        } else {
             filename = BestDirectory() / preset;
-        #endif
+        }
+#endif
     }
 
     if (filename.empty()) {
@@ -1342,11 +1343,11 @@ bool quake1_game_interface_c::Start(const char *preset) {
 
     BSP_AddInfoFile();
 
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Init(0, StepsForGame(0));
     }
-    #endif
+#endif
 
     return true;
 }
@@ -1390,12 +1391,12 @@ void quake1_game_interface_c::Property(std::string key, std::string value) {
             LogPrintf("WARNING: unknown QUAKE1 sub_format '{}'\n", value);
         }
 
-        #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
         // this assumes the sub_format is only set once at the start
         if (main_win) {
             main_win->build_box->Prog_Init(0, StepsForGame(qk_sub_format));
         }
-        #endif
+#endif
     } else if (StringCaseCmp(key, "worldtype") == 0) {
         qk_worldtype = StringToInt(value);
     } else {

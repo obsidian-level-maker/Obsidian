@@ -373,16 +373,16 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
     local along
 
     if OB_CONFIG.length == "few" then
-      along = level.ep_along / 4
+      along = Level.ep_along / 4
     elseif OB_CONFIG.length == "episode" then
-      along = level.ep_along / level.ep_length
+      along = Level.ep_along / level.ep_length
     else
-      along = ((level.ep_length * (GAME.FACTORY.episodes - 1)) + level.ep_along) / (level.ep_length * GAME.FACTORY.episodes)
+      along = ((Level.ep_length * (GAME.FACTORY.episodes - 1)) + Level.ep_along) / (Level.ep_length * GAME.FACTORY.episodes)
     end
 
     along = along ^ ramp_factor
 
-    if ob_size == gui.gettext("Episodic") then along = level.ep_along / level.ep_length end
+    if ob_size == gui.gettext("Episodic") then along = Level.ep_along / Level.ep_length end
 
     along = math.clamp(0, along, 1)
 
@@ -1103,7 +1103,11 @@ end
 
 function plan_sp_level(level, is_coop)
 
-  PLAN = get_base_plan(level, GAME.FACTORY.plan_size, GAME.FACTORY.cell_size)
+  if OB_CONFIG.engine == "idtech_0" then
+    PLAN = get_base_plan(level, level.plan_size, level.cell_size)
+  else
+    PLAN = get_base_plan(level, GAME.FACTORY.plan_size, GAME.FACTORY.cell_size)
+  end
 
   PLAN.coop = is_coop
 

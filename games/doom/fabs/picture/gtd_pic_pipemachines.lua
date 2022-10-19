@@ -7,7 +7,7 @@ PREFABS.Pic_heatant_coolant_1 =
   prob_skew = 2,
   theme = "!hell",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   where  = "seeds",
   height = 128,
@@ -30,7 +30,7 @@ PREFABS.Pic_heatant_coolant_2 =
   template = "Pic_heatant_coolant_1",
   map = "MAP02",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 25,
 
@@ -43,7 +43,7 @@ PREFABS.Pic_wire_spools =
   template = "Pic_heatant_coolant_1",
   map = "MAP03",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 25,
 

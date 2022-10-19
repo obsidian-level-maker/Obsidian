@@ -4,7 +4,7 @@ PREFABS.Fence_jurassic_park_straight =
   map = "MAP01",
 
   prob = 50,
-  engine = "zdoom",
+  port = "zdoom",
 
   rank = 2,
 

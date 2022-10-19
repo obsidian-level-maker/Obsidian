@@ -61,7 +61,8 @@ OB_MODULES["harmony_mon_control"] =
   label = _("Harmony Monster Control"),
 
   game = "harmony",
-  engine = "!vanilla",
+  engine = "idtech_1",
+  port = "!limit_enforcing",
 
   hooks =
   {
@@ -235,7 +236,8 @@ OB_MODULES["harmony_weapon_control"] =
   label = _("Harmony Weapon Control"),
 
   game = "harmony",
-  engine = "!vanilla",
+  engine = "idtech_1",
+  port = "!limit_enforcing",
 
   hooks =
   {

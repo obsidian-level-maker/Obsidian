@@ -762,7 +762,7 @@ YY_DECL {
                     YY_RULE_SETUP
 #line 18 "filename.l"
                     {
-                        engine();
+                        port();
                         return 0;
                     }
                     YY_BREAK
@@ -850,7 +850,7 @@ YY_DECL {
                     YY_RULE_SETUP
 #line 29 "filename.l"
                     {
-                        engine();
+                        port();
                         return 0;
                     }
                     YY_BREAK

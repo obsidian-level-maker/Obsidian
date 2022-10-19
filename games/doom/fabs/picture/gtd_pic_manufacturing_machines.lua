@@ -5,7 +5,7 @@ PREFABS.Pic_industrial_ssg_assembler =
 
   game = "doom2",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 5, -- very rare
   theme = "!hell",

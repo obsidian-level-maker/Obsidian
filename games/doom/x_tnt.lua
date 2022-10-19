@@ -722,6 +722,7 @@ OB_GAMES["tnt"] =
 {
   label = _("TNT Evilution"),
 
+  engine = "idtech_1",
   extends = "doom2",
 
   priority = 95,

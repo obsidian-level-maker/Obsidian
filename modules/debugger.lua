@@ -80,8 +80,8 @@ OB_MODULES["debugger"] =
   label = _("Debug Control"),
 
   side = "left",
-  engine = "!vanilla",
-  engine2 = "!wolf_3d",
+  engine = "!idtech_0",
+  port = "!limit_enforcing",
   priority = 50,
 
   tooltip = _("Provides options for printing out more verbose log information. Advanced, highly experimental features can also be found here."),

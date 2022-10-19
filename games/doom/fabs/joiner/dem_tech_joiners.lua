@@ -10,7 +10,7 @@ PREFABS.Joiner_dem_overbridge =
   map    = "MAP01",
 
   prob   = 100,
-  engine = "zdoom",
+  port = "zdoom",
   theme  = "tech",
   env = "!outdoor",
   neighbor = "!outdoor",

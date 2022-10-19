@@ -5470,6 +5470,87 @@ function WOLF.decide_quests(level_list, is_spear)
   for zzz,Level in ipairs(level_list) do
 
     -- weapons and keys
+    
+    local ob_size = Level.ob_size
+
+    if rand.odds(90 - 40 * ((Level.ep_along-1) % 3)) then
+      add_quest(Level, "weapon", "machine_gun", 35, ob_size)
+    end
+
+    if gatling_maps[Level.ep_along] then
+      add_quest(Level, "weapon", "gatling_gun", 50, ob_size)
+    end
+
+    local keys = math.round(ob_size / 25)
+
+    if keys >= 1 then
+      add_quest(Level, "key", "k_silver", 0, ob_size)
+    end
+
+    -- treasure
+
+    for i = 1,sel(is_spear,4,6) do
+      if rand.odds(ob_size) then
+        add_quest(Level, "item", "treasure", 50, ob_size)
+      end
+    end
+
+    if is_spear and rand.odds(60) then
+      add_quest(Level, "item", "clip_25", 50, ob_size)
+    end
+
+    -- bosses and exits
+
+    if Level.boss_kind then
+      local Q = add_quest(Level, "boss", Level.boss_kind, 0, ob_size)
+      Q.give_key = "k_gold"
+
+    elseif keys == 2 then
+      add_quest(Level, "key", "k_gold", 0, ob_size)
+    end
+
+    if Level.secret_exit then
+--FIXME  add_quest(Level, "exit", "secret")
+    end
+
+    add_quest(Level, "exit", "normal", 0, ob_size)
+  end
+end
+
+function WOLF.get_factory_levels(episode)
+
+  local level_list = {}
+
+  local theme_probs = WOLF.FACTORY.EPISODE_THEMES[episode]
+
+  local boss_kind = WOLF.FACTORY.EPISODE_BOSSES[episode]
+  if OB_CONFIG.length ~= "full" then
+    boss_kind = WOLF.FACTORY.EPISODE_BOSSES[rand.irange(1,6)]
+  end
+
+  local secret_kind = "pacman"
+
+  for map = 1,10 do
+
+    local Level =
+    {
+      name = string.format("E%dL%d", episode, map),
+
+      episode   = episode,
+      ep_along  = map,
+      ep_length = 10,
+
+      theme_probs = theme_probs,
+      sky_info = { color="blue", light=192 }, -- dummy
+
+      boss_kind   = (map == 9)  and boss_kind,
+      secret_kind = (map == 10) and secret_kind,
+
+      quests = {},
+
+      toughness_factor = sel(map==10, 1.1, 1 + (map-1) / 5),
+    }
+
     local ob_size = PARAM.float_size_wolf_3d
 
     if OB_CONFIG.length == "single" then
@@ -5537,82 +5618,27 @@ function WOLF.decide_quests(level_list, is_spear)
 
     ::foundsize::
 
-    if rand.odds(90 - 40 * ((Level.ep_along-1) % 3)) then
-      add_quest(Level, "weapon", "machine_gun", 35, ob_size)
+    if ob_size <= 22 then
+      Level.plan_size = 4
+    elseif ob_size <= 48 then
+      Level.plan_size = 5
+    elseif ob_size <= 58 then
+      Level.plan_size = 6
+    else
+      Level.plan_size = 7
     end
 
-    if gatling_maps[Level.ep_along] then
-      add_quest(Level, "weapon", "gatling_gun", 50, ob_size)
-    end
+    Level.ob_size = ob_size
 
-    local keys = math.round(ob_size / 25)
-
-    if keys >= 1 then
-      add_quest(Level, "key", "k_silver", 0, ob_size)
-    end
-
-    -- treasure
-
-    for i = 1,sel(is_spear,4,6) do
-      if rand.odds(ob_size) then
-        add_quest(Level, "item", "treasure", 50, ob_size)
+    if not PARAM.room_size_multiplier_wolf_3d then
+      Level.cell_size = 12
+    else
+      if PARAM.room_size_multiplier_wolf_3d == "mixed" then
+        Level.cell_size = 7 + math.round(3 * rand.pick({0.33,0.66,1,1.33,1.66}))
+      else
+        Level.cell_size = 7 + math.round(3 * tonumber(PARAM.room_size_multiplier_wolf_3d))
       end
     end
-
-    if is_spear and rand.odds(60) then
-      add_quest(Level, "item", "clip_25", 50, ob_size)
-    end
-
-    -- bosses and exits
-
-    if Level.boss_kind then
-      local Q = add_quest(Level, "boss", Level.boss_kind, 0, ob_size)
-      Q.give_key = "k_gold"
-
-    elseif keys == 2 then
-      add_quest(Level, "key", "k_gold", 0, ob_size)
-    end
-
-    if Level.secret_exit then
---FIXME  add_quest(Level, "exit", "secret")
-    end
-
-    add_quest(Level, "exit", "normal", 0, ob_size)
-  end
-end
-
-function WOLF.get_factory_levels(episode)
-
-  local level_list = {}
-
-  local theme_probs = WOLF.FACTORY.EPISODE_THEMES[episode]
-
-  local boss_kind = WOLF.FACTORY.EPISODE_BOSSES[episode]
-  if OB_CONFIG.length ~= "full" then
-    boss_kind = WOLF.FACTORY.EPISODE_BOSSES[rand.irange(1,6)]
-  end
-
-  local secret_kind = "pacman"
-
-  for map = 1,10 do
-    local Level =
-    {
-      name = string.format("E%dL%d", episode, map),
-
-      episode   = episode,
-      ep_along  = map,
-      ep_length = 10,
-
-      theme_probs = theme_probs,
-      sky_info = { color="blue", light=192 }, -- dummy
-
-      boss_kind   = (map == 9)  and boss_kind,
-      secret_kind = (map == 10) and secret_kind,
-
-      quests = {},
-
-      toughness_factor = sel(map==10, 1.1, 1 + (map-1) / 5),
-    }
 
     if WOLF.FACTORY.SECRET_EXITS[Level.name] then
       Level.secret_exit = true
@@ -5645,8 +5671,6 @@ function WOLF.factory_setup()
   {
     wolf_format = true,
 
-    plan_size = 7,
-    cell_size = 7,
     cell_min_size = 7,
 
     caps = { blocky_items=true, blocky_doors=true,

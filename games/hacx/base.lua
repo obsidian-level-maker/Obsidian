@@ -35,7 +35,7 @@ gui.import("vanilla_mats")
 ----------------------------------------------------------------
 
 function HACX.all_done()
-	if ob_match_engine("advanced") then
+	if ob_match_port("advanced") then
 	  local wad_file = "games/hacx/data/HAC_EXIT.wad"
 	  gui.wad_merge_sections(wad_file)
 	end
@@ -47,6 +47,7 @@ OB_GAMES["hacx"] =
 	label = _("HacX 1.2"),
 	priority = 92,
 	
+	engine = "idtech_1",
 	format = "doom",
 
 	game_dir = "hacx",

@@ -31,8 +31,8 @@ OB_MODULES["ui_reject_options"] =
 
   label = _("Map Build Options"),
   
-  engine = "!advanced",
-  engine2 = "!wolf_3d",
+  engine = "!idtech_0",
+  port = "!advanced",
 
   side = "left",
   priority = 105,
@@ -76,8 +76,8 @@ OB_MODULES["ui_udmf_map_options"] =
 
   label = _("Map Build Options"),
   
-  engine = "advanced",
-  engine2 = "!zdoom",
+  port = "advanced",
+  port2 = "!zdoom",
 
   side = "left",
   priority = 105,
@@ -120,7 +120,7 @@ OB_MODULES["ui_zdoom_map_options"] =
 
   label = _("Map Build Options"),
   
-  engine = "zdoom",
+  port = "zdoom",
 
   side = "left",
   priority = 105,

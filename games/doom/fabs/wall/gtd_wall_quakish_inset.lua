@@ -33,7 +33,7 @@ PREFABS.Wall_quakish_insets_2 =
   template = "Wall_quakish_insets_1",
   map = "MAP03",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   group = "gtd_wall_quakish_insets_2"
 }
@@ -43,7 +43,7 @@ PREFABS.Wall_quakish_insets_2_limit =
   template = "Wall_quakish_insets_1",
   map = "MAP03",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   group = "gtd_wall_quakish_insets_2",
 
@@ -57,7 +57,7 @@ PREFABS.Wall_quakish_insets_2_diag =
 
   where = "diagonal",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   group = "gtd_wall_quakish_insets_2"
 }
@@ -67,7 +67,7 @@ PREFABS.Wall_quakish_insets_2_diag_limit =
   template = "Wall_quakish_insets_1",
   map = "MAP04",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   where = "diagonal",
 

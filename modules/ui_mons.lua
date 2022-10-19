@@ -96,8 +96,8 @@ OB_MODULES["ui_mons"] =
 
   side = "right",
   priority = 103,
-  engine = "!vanilla",
-  engine2 = "!wolf_3d",
+  engine = "!idtech_0",
+  port = "!limit_enforcing",
   options =
   {
     {
@@ -287,7 +287,7 @@ OB_MODULES["ui_mons_wolf_3d"] =
 
   side = "right",
   priority = 103,
-  engine = "wolf_3d",
+  engine = "idtech_0",
   options =
   {
     {

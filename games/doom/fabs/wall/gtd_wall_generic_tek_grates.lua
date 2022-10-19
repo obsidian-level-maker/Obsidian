@@ -62,7 +62,7 @@ PREFABS.Wall_generic_tek_grate_bottom_slope_tech =
   template = "Wall_generic_tek_grate_tech",
   map = "MAP03",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   rank = 2,
   group = "gtd_generic_tek_grate_bottom_slope",
@@ -75,7 +75,7 @@ PREFABS.Wall_generic_tek_grate_bottom_slope_hell =
   template = "Wall_generic_tek_grate_tech",
   map = "MAP03",
 
-  engine = "zdoom",
+  port = "zdoom",
   theme = "hell",
 
   rank = 2,
@@ -94,7 +94,7 @@ PREFABS.Wall_generic_tek_grate_bottom_slope_tech_limit =
   template = "Wall_generic_tek_grate_tech",
   map = "MAP03",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   rank = 1,
   group = "gtd_generic_tek_grate_bottom_slope",
@@ -109,7 +109,7 @@ PREFABS.Wall_generic_tek_grate_bottom_slope_hell_limit =
   template = "Wall_generic_tek_grate_tech",
   map = "MAP03",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   rank = 1,
   group = "gtd_generic_tek_grate_bottom_slope",

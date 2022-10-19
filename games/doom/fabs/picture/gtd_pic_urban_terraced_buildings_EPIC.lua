@@ -5,7 +5,7 @@ PREFABS.Pic_urban_terraced_building_2x =
 
   prob = 150,
   theme = "urban",
-  engine = "zdoom",
+  port = "zdoom",
 
   env = "outdoor",
 

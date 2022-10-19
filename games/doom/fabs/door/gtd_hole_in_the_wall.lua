@@ -53,7 +53,7 @@ PREFABS.Arch_hole_in_the_wall_red_key =
   prob = 35,
   where = "edge",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   texture_pack = "armaetus",
 

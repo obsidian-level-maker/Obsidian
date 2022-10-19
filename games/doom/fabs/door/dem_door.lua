@@ -8,7 +8,7 @@ PREFABS.Door_Dem_fancy1 =
   map = "MAP01",
 
   prob = 200,
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "tech",
   env = "!outdoor",

@@ -8,7 +8,7 @@ PREFABS.Joiner_mirrors1 =
   file   = "joiner/dem_hell_joiners.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1000,
 
@@ -49,7 +49,7 @@ PREFABS.Joiner_rift1 =
   file   = "joiner/dem_hell_joiners.wad",
   map    = "MAP03",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1250,
 
@@ -78,7 +78,7 @@ PREFABS.Joiner_rift2 =
   file   = "joiner/dem_hell_joiners.wad",
   map    = "MAP04",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1250,
 
@@ -108,7 +108,7 @@ PREFABS.Joiner_rift3 =
   file   = "joiner/dem_hell_joiners.wad",
   map    = "MAP05",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1250,
 
@@ -137,7 +137,7 @@ PREFABS.Joiner_rift4 =
   file   = "joiner/dem_hell_joiners.wad",
   map    = "MAP06",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1250,
 
@@ -166,7 +166,7 @@ PREFABS.Joiner_mirrors1V2 =
   file   = "joiner/dem_hell_joiners.wad",
   map    = "MAP07",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1000,
 
@@ -236,7 +236,7 @@ PREFABS.Joiner_rift1trap =
   file   = "joiner/dem_hell_joiners.wad",
   map    = "MAP13",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1250,
 
@@ -267,7 +267,7 @@ PREFABS.Joiner_rift4trap =
   file   = "joiner/dem_hell_joiners.wad",
   map    = "MAP14",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1250,
 
@@ -298,7 +298,7 @@ PREFABS.Joiner_mirrors1S =
   file   = "joiner/dem_hell_joiners.wad",
   map    = "MAP15",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 550,
 
@@ -345,7 +345,7 @@ PREFABS.Joiner_eyes1 =
   file   = "joiner/dem_hell_joiners.wad",
   map    = "MAP17",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1250,
 
@@ -401,7 +401,7 @@ PREFABS.Joiner_eyes1s =
   file   = "joiner/dem_hell_joiners.wad",
   map    = "MAP21",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 550,
 

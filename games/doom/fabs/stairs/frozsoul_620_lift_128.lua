@@ -5,7 +5,7 @@ PREFABS.Lift_620_128 =
   prob   = 10,
   prob_skew = 1.5,
 
-  engine = "!limit",
+  port = "!limit",
 
   theme  = "!hell",
   style  = "steepness",
@@ -29,7 +29,7 @@ PREFABS.Lift_620_128_limit =
 {
   template = "Lift_620_128",
 
-  engine = "limit",
+  port = "limit",
 
   line_13369 = 120,
   line_13371 = 123

@@ -3,7 +3,7 @@ PREFABS.Hallway_metro_i =
   file   = "hall/metro_i.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   group  = "metro",
   prob   = 50,
@@ -22,7 +22,7 @@ PREFABS.Hallway_metro_i_rise =
   template = "Hallway_metro_i",
   map = "MAP02",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 15,
 
@@ -39,7 +39,7 @@ PREFABS.Hallway_metro_i_boxy =
   template = "Hallway_metro_i",
   map = "MAP10",
 
-  engine = "any",
+  port = "any",
 
   prob = 4,
 
@@ -51,7 +51,7 @@ PREFABS.Hallway_metro_i_boxy_with_door =
   template = "Hallway_metro_i",
   map = "MAP11",
 
-  engine = "any",
+  port = "any",
 
   prob = 4,
 
@@ -65,7 +65,7 @@ PREFABS.Hallway_metro_i_boxy_train_crossing =
 
   theme = "!hell",
 
-  engine = "any",
+  port = "any",
 
   prob = 2,
 
@@ -79,7 +79,7 @@ PREFABS.Hallway_metro_i_boxy_ticketing_office =
 
   theme = "!hell",
 
-  engine = "any",
+  port = "any",
 
   prob = 2,
 

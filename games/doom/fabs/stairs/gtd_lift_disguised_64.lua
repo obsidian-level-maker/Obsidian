@@ -3,7 +3,7 @@ PREFABS.Lift_gtd_disguised_64 =
   file = "stairs/gtd_lift_disguised_64.wad",
   map = "MAP01",
 
-  engine = "!limit",
+  port = "!limit",
 
   prob = 10,
   prob_skew = 5,
@@ -30,7 +30,7 @@ PREFABS.Lift_gtd_disguised_64_limit =
 {
   template = "Lift_gtd_disguised_64",
 
-  engine = "limit",
+  port = "limit",
 
   line_13364 = 123
 }

@@ -123,7 +123,7 @@ PREFABS.Wall_hell_outdoor_rising_spfaces = --#
   template = "Wall_hell_stone_brace",
   map = "MAP05",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   group = "hell_o_rising_spfaces",
 

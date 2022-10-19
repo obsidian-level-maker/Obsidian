@@ -52,10 +52,9 @@ OB_MODULES["procedural_gotcha"] =
 
   label = _("Procedural Gotchas"),
 
-  engine = "!vanilla",
-  engine2 = "!zdoom",
-  engine3 = "!wolf_3d",
-  engine4 = "!build",
+  engine = "!idtech_0",
+  port = "!limit_enforcing",
+  port2 = "!zdoom",
   side = "right",
   priority = 92,
 

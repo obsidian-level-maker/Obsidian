@@ -80,7 +80,7 @@ OB_MODULES["prefab_control_generic"] =
   priority = 93,
 
   game = { doom1=0, doom2=0, chex3=1, hacx=1, heretic=0, harmony=1, hexen=1, strife=1 },
-  engine = "!vanilla",
+  port = "!limit_enforcing",
 
   hooks =
   {

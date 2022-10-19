@@ -4,7 +4,7 @@ PREFABS.Window_quakeish_1 =
   map    = "MAP01",
 
   group  = "gtd_window_quakeish",
-  engine = "zdoom",
+  port = "zdoom",
 
   rank   = 2,
   prob   = 50,

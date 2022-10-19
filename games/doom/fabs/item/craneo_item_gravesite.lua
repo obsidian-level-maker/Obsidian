@@ -3,7 +3,7 @@ PREFABS.Item_craneo_gravesite =
   file  = "item/craneo_item_gravesite.wad",
 
   map   = "MAP01",
-  engine = "zdoom",
+  port = "zdoom",
 
   rank  = 2,
   prob  = 400,

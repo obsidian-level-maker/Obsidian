@@ -50,6 +50,7 @@ OB_GAMES["doom2"] =
 
   priority = 99,  -- keep at top
 
+  engine = "idtech_1",
   format = "doom",
   game_dir = "doom",
   iwad_name = "doom2.wad",

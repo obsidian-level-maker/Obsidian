@@ -40,6 +40,7 @@ OB_GAMES["noah"] =
 	label = _("Noah's Ark 3D"),
 	priority = 46,
 	
+	engine = "idtech_0",
 	format = "wolf3d",
 	
 	game_dir = "noah",

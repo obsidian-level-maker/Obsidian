@@ -90,7 +90,7 @@ PREFABS.Arch_bare_sloped =
   template = "Arch_bare",
   map = "MAP04",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "any",
 

@@ -41,6 +41,6 @@ PREFABS.Teleporter_scionox_big_teleport_4 =
 {
   template = "Teleporter_scionox_big_teleport",
   map    = "MAP03",
-  engine = "zdoom",
+  port = "zdoom",
   theme  = "hell",
 }

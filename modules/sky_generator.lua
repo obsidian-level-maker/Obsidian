@@ -640,7 +640,7 @@ OB_MODULES["sky_generator"] =
   priority = 93,
 
   game = "doomish",
-  engine = "!vanilla",
+  port = "!limit_enforcing",
 
   hooks =
   {

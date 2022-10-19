@@ -5,7 +5,7 @@ PREFABS.Decor_gtd_water_purifier =
 
   prob = 5000,
   group = "gtd_water_purifier",
-  engine = "zdoom",
+  port = "zdoom",
 
   where = "point",
   size = 80,
@@ -21,7 +21,7 @@ PREFABS.Decor_gtd_water_purifier_limit =
 {
   template = "Decor_gtd_water_purifier",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   line_424 = 0,
   line_426 = 0,
@@ -48,7 +48,7 @@ PREFABS.Decor_gtd_water_purifier_tank_limit =
   template = "Decor_gtd_water_purifier",
   map = "MAP02",
 
-  engine = "!zdoom",
+  port = "!zdoom",
   size = 36,
 
   z_fit = "top",

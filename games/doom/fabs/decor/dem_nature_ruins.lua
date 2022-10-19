@@ -11,7 +11,7 @@ PREFABS.Decor_dem_nature_ruins1 =
   map    = "MAP01",
 
   prob   = 75000,
-  engine = "zdoom",
+  port = "zdoom",
   theme  = "!hell",
   env    = "park",
 

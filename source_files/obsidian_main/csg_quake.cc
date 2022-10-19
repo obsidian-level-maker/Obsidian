@@ -2562,19 +2562,19 @@ static void ProcessDetailModels() {
 void CSG_QUAKE_Build() {
     LogPrintf("QUAKE CSG...\n");
 
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Step("CSG");
     }
-    #endif
+#endif
 
     CSG_BSP(1.0);
 
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Step("BSP");
     }
-    #endif
+#endif
 
     quake_group_c GROUP;
 

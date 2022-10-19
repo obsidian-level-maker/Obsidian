@@ -3,7 +3,7 @@ PREFABS.Pic_craneo_testtube_industrial =
   file = "picture/craneo_pic_bloodtubes_set.wad",
   map = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
   texture_pack = "armaetus",
 
   theme = "!hell",

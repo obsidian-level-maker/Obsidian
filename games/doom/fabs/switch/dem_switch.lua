@@ -2,7 +2,7 @@ PREFABS.Switch_military_radio =
 {
   file   = "switch/dem_switch.wad",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   env    = "outdoor",
 

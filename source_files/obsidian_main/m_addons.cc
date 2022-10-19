@@ -111,6 +111,7 @@ void VFS_InitAddons(const char *argv0) {
     VFS_AddFolder("engines");
     VFS_AddFolder("modules");
     VFS_AddFolder("data");
+    VFS_AddFolder("ports");
 
     LogPrintf("DONE.\n\n");
 }

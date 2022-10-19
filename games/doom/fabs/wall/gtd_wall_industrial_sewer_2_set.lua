@@ -3,7 +3,7 @@ PREFABS.Wall_gtd_sewer_set_2_low_opening =
   file   = "wall/gtd_wall_industrial_sewer_2_set.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 50,
   group  = "gtd_sewer_set_2",

@@ -8,7 +8,7 @@ PREFABS.Joiner_simple_sloped =
   map    = "MAP01",
 
   prob   = 1000,
-  engine = "zdoom",
+  port = "zdoom",
   theme  = "!hell",
   env    = "!outdoor",
   neighbor = "!outdoor",

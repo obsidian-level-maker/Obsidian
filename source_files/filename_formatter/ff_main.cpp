@@ -12,7 +12,7 @@ extern "C" {
 std::time_t now_;
 std::tm now;
 std::string gameValue;
-std::string engineValue;
+std::string portValue;
 std::string themeValue;
 std::string countValue;
 std::string versionValue;
@@ -32,7 +32,7 @@ void second() { result.append(std::to_string(now.tm_sec)); }
 
 void game() { result.append(gameValue); }
 
-void engine() { result.append(engineValue); }
+void port() { result.append(portValue); }
 
 void theme() { result.append(themeValue); }
 
@@ -43,10 +43,10 @@ void version() { result.append(versionValue); }
 void raw_append(const char *string) { result.append(string); }
 
 const char *ff_main(const char *levelcount, const char *game,
-                    const char *engine, const char *theme, const char *version,
+                    const char *port, const char *theme, const char *version,
                     const char *format) {
     gameValue = game;
-    engineValue = engine;
+    portValue = port;
     themeValue = theme;
     countValue = levelcount;
     versionValue = version;

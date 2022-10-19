@@ -32,7 +32,7 @@ PREFABS.Hallway_ducts_i3 =
 {
   template = "Hallway_ducts_i1",
   map    = "MAP03",
-  engine = "zdoom",
+  port = "zdoom",
 }
 
 PREFABS.Hallway_ducts_i4 =

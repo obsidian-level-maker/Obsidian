@@ -156,7 +156,8 @@ bool random_string_seeds = false;
 bool password_mode = false;
 bool did_specify_seed = false;
 int zip_output = 0;
-int log_size = 1; // Without debugging info on, this should handle a full size 75 megawad with some room to spare
+int log_size = 1;  // Without debugging info on, this should handle a full size
+                   // 75 megawad with some room to spare
 int log_limit = 5;
 bool mid_batch = false;
 int builds_per_run = 1;
@@ -637,7 +638,7 @@ void Main::PopulateFontMap() {
             num_fonts = Fl::set_fonts(NULL);
 
             for (int x = 16; x < num_fonts;
-                x++) {  // Starting at 16 skips the FLTK default enumerations
+                 x++) {  // Starting at 16 skips the FLTK default enumerations
                 if (std::string fontname = Fl::get_font_name(x);
                     std::isalpha(fontname.at(0))) {
                     std::map<std::string, int> temp_map{{fontname, x}};
@@ -654,9 +655,9 @@ void Main::PopulateFontMap() {
             // accidentally change fonts
 
             // Some custom fonts will have a different display name than that of
-            // their TTF fontname. This is because these fonts have been modified in
-            // some fashion, and the OFL 1.1 license dictates that modified
-            // versions cannot display their Reserved Name to users
+            // their TTF fontname. This is because these fonts have been
+            // modified in some fashion, and the OFL 1.1 license dictates that
+            // modified versions cannot display their Reserved Name to users
 
             int current_free_font = 16;
 
@@ -682,43 +683,43 @@ void Main::PopulateFontMap() {
                 std::map<std::string, int>{{"Screen <Internal>", 13}});
 
             if (LoadInternalFont("./theme/fonts/Avenixel/Avenixel-Regular.ttf",
-                                current_free_font, "Avenixel")) {
+                                 current_free_font, "Avenixel")) {
                 Fl::set_font(current_free_font + 1, "Avenixel");
-                font_menu_items.push_back(
-                    std::map<std::string, int>{{"Avenixel", current_free_font}});
+                font_menu_items.push_back(std::map<std::string, int>{
+                    {"Avenixel", current_free_font}});
                 current_free_font += 2;
             }
 
             if (LoadInternalFont("./theme/fonts/TheNeueBlack/TheNeue-Black.ttf",
-                                current_free_font, "The Neue Black")) {
+                                 current_free_font, "The Neue Black")) {
                 Fl::set_font(current_free_font + 1, "The Neue Black");
-                font_menu_items.push_back(
-                    std::map<std::string, int>{{"New Black", current_free_font}});
+                font_menu_items.push_back(std::map<std::string, int>{
+                    {"New Black", current_free_font}});
                 current_free_font += 2;
             }
 
             if (LoadInternalFont("./theme/fonts/Teko/Teko-Regular.ttf",
-                                current_free_font, "Teko")) {
+                                 current_free_font, "Teko")) {
                 if (LoadInternalFont("./theme/fonts/Teko/Teko-Bold.ttf",
-                                    current_free_font + 1, "Teko Bold")) {
-                    font_menu_items.push_back(
-                        std::map<std::string, int>{{"Teko", current_free_font}});
+                                     current_free_font + 1, "Teko Bold")) {
+                    font_menu_items.push_back(std::map<std::string, int>{
+                        {"Teko", current_free_font}});
                     current_free_font += 2;
                 }
             }
 
             if (LoadInternalFont("./theme/fonts/Kalam/Kalam-Regular.ttf",
-                                current_free_font, "Kalam")) {
+                                 current_free_font, "Kalam")) {
                 if (LoadInternalFont("./theme/fonts/Kalam/Kalam-Bold.ttf",
-                                    current_free_font + 1, "Kalam Bold")) {
-                    font_menu_items.push_back(
-                        std::map<std::string, int>{{"Kalam", current_free_font}});
+                                     current_free_font + 1, "Kalam Bold")) {
+                    font_menu_items.push_back(std::map<std::string, int>{
+                        {"Kalam", current_free_font}});
                     current_free_font += 2;
                 }
             }
 
-            if (LoadInternalFont("./theme/fonts/3270/3270.ttf", current_free_font,
-                                "3270 Condensed")) {
+            if (LoadInternalFont("./theme/fonts/3270/3270.ttf",
+                                 current_free_font, "3270 Condensed")) {
                 Fl::set_font(current_free_font + 1, "3270 Condensed");
                 font_menu_items.push_back(
                     std::map<std::string, int>{{"3270", current_free_font}});
@@ -726,17 +727,20 @@ void Main::PopulateFontMap() {
             }
 
             if (LoadInternalFont("./theme/fonts/Workbench/Workbench.ttf",
-                                current_free_font, "Workbench Light Regular")) {
+                                 current_free_font,
+                                 "Workbench Light Regular")) {
                 if (LoadInternalFont("./theme/fonts/Workbench/Workbench.ttf",
-                                    current_free_font + 1, "Workbench Regular")) {
+                                     current_free_font + 1,
+                                     "Workbench Regular")) {
                     font_menu_items.push_back(std::map<std::string, int>{
                         {"Workbench", current_free_font}});
                     current_free_font += 2;
                 }
             }
 
-            if (LoadInternalFont("./theme/fonts/FPD-Pressure/FPDPressure-Light.otf",
-                                current_free_font, "FPD Pressure Light")) {
+            if (LoadInternalFont(
+                    "./theme/fonts/FPD-Pressure/FPDPressure-Light.otf",
+                    current_free_font, "FPD Pressure Light")) {
                 if (LoadInternalFont(
                         "./theme/fonts/FPD-Pressure/FPDPressure-Regular.otf",
                         current_free_font + 1, "FPD Pressure")) {
@@ -747,18 +751,18 @@ void Main::PopulateFontMap() {
             }
 
             if (LoadInternalFont("./theme/fonts/DramaSans/DramaSans.ttf",
-                                current_free_font, "Drama Sans")) {
+                                 current_free_font, "Drama Sans")) {
                 Fl::set_font(current_free_font + 1, "Drama Sans");
-                font_menu_items.push_back(
-                    std::map<std::string, int>{{"Drama Sans", current_free_font}});
+                font_menu_items.push_back(std::map<std::string, int>{
+                    {"Drama Sans", current_free_font}});
                 current_free_font += 2;
             }
 
             if (LoadInternalFont("./theme/fonts/SamIAm/MiniSmallCaps.ttf",
-                                current_free_font, "MiniSmallCaps")) {
+                                 current_free_font, "MiniSmallCaps")) {
                 Fl::set_font(current_free_font + 1, "MiniSmallCaps");
-                font_menu_items.push_back(
-                    std::map<std::string, int>{{"Sam I Am", current_free_font}});
+                font_menu_items.push_back(std::map<std::string, int>{
+                    {"Sam I Am", current_free_font}});
                 current_free_font += 2;
             }
         }
@@ -973,7 +977,7 @@ void Main::Ticker() {
 #endif
 
 void Main::Detail::Shutdown(const bool error) {
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         // on fatal error we cannot risk calling into the Lua runtime
         // (it's state may be compromised by a script error).
@@ -990,11 +994,11 @@ void Main::Detail::Shutdown(const bool error) {
         delete main_win;
         main_win = nullptr;
     }
-    #else
+#else
     if (!std::filesystem::exists(options_file)) {
         Options_Save(options_file);
     }
-    #endif
+#endif
     Script_Close();
     LogClose();
 }
@@ -1060,13 +1064,13 @@ void Main_SetSeed() {
     xoshiro_Reseed(next_rand_seed);
     std::string seed = NumToString(next_rand_seed);
     ob_set_config("seed", seed.c_str());
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (!batch_mode) {
         main_win->build_box->seed_disp->copy_label(
             fmt::format("{} {}", _("Seed:"), seed).c_str());
         main_win->build_box->seed_disp->redraw();
     }
-    #endif
+#endif
 }
 
 static void Module_Defaults() {
@@ -1079,12 +1083,12 @@ static void Module_Defaults() {
 //------------------------------------------------------------------------
 
 bool Build_Cool_Shit() {
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     // clear the map
     if (main_win) {
         main_win->build_box->mini_map->EmptyMap();
     }
-    #endif
+#endif
 
     const std::string format = ob_game_format();
 
@@ -1113,7 +1117,7 @@ bool Build_Cool_Shit() {
 
     const std::string def_filename = ob_default_filename();
 
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     // lock most widgets of user interface
     if (main_win) {
         std::string seed = NumToString(next_rand_seed);
@@ -1130,7 +1134,7 @@ bool Build_Cool_Shit() {
         main_win->build_box->SetStatus(_("Preparing..."));
         main_win->Locked(true);
     }
-    #endif
+#endif
 
     const u32_t start_time = TimeGetMillies();
     bool was_ok = false;
@@ -1141,19 +1145,21 @@ bool Build_Cool_Shit() {
             was_ok = game_object->Start("WL6");
         } else if (StringCaseCmp(current_game, "spear") == 0) {
             was_ok = game_object->Start("SOD");
-        } else {
+        } else if (StringCaseCmp(current_game, "noah") == 0) {
             was_ok = game_object->Start("N3D");
+        } else {
+            was_ok = game_object->Start("BC"); // Operation Body Count
         }
     } else {
         was_ok = game_object->Start(def_filename.c_str());
     }
 
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     // coerce FLTK to redraw the main window
     for (int r_loop = 0; r_loop < 6; r_loop++) {
         Fl::wait(0.06);
     }
-    #endif
+#endif
 
     if (was_ok) {
         // run the scripts Scotty!
@@ -1178,34 +1184,34 @@ bool Build_Cool_Shit() {
 #endif
     } else {
         string_seed.clear();
-        #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
         if (main_win) {
             main_win->build_box->seed_disp->copy_label(_("Seed: -"));
             main_win->build_box->seed_disp->redraw();
             main_win->build_box->name_disp->copy_label("");
             main_win->build_box->name_disp->redraw();
         }
-        #endif
+#endif
     }
 
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Finish();
         main_win->game_box->SetAbortButton(false);
         main_win->Locked(false);
     }
-    #endif
+#endif
 
     if (main_action == MAIN_CANCEL) {
         main_action = 0;
-        #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
         if (main_win) {
             main_win->label(fmt::format("{} {} \"{}\"", OBSIDIAN_TITLE,
                                         OBSIDIAN_SHORT_VERSION,
                                         OBSIDIAN_CODE_NAME)
                                 .c_str());
         }
-        #endif
+#endif
         Main::ProgStatus(_("Cancelled"));
     }
 
@@ -1259,7 +1265,7 @@ void Options_ParseArguments() {
         }
     }
 
-    skiprest:;
+skiprest:;
 }
 
 /* ----- main program ----------------------------- */
@@ -1388,9 +1394,9 @@ hardrestart:;
 
     Determine_ConfigFile();
     Determine_OptionsFile();
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     Determine_ThemeFile();
-    #endif
+#endif
     Determine_LoggingFile();
     Determine_ReferenceFile();
 
@@ -1417,10 +1423,10 @@ hardrestart:;
     LogPrintf("********************************************************\n");
     LogPrintf("\n");
 
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     LogPrintf("Library versions: FLTK {}.{}.{}\n\n", FL_MAJOR_VERSION,
               FL_MINOR_VERSION, FL_PATCH_VERSION);
-    #endif
+#endif
 
     LogPrintf("home_dir: {}\n", home_dir.string());
     LogPrintf("install_dir: {}\n", install_dir.string());
@@ -1429,15 +1435,15 @@ hardrestart:;
     Trans_Init();
 
     if (!batch_mode) {
-        #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
         Theme_Options_Load(theme_file);
-        #endif
+#endif
         Trans_SetLanguage();
         OBSIDIAN_TITLE = _("OBSIDIAN Level Maker");
         OBSIDIAN_CODE_NAME = _("Unstable");
-        #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
         Main::SetupFltk();
-        #endif
+#endif
     }
 
     if (argv::Find('d', "debug") >= 0) {
@@ -1458,7 +1464,7 @@ hardrestart:;
 
     LogEnableDebug(debug_messages);
 
-    softrestart:;
+softrestart:;
 
     Main_CalcNewSeed();
 
@@ -1470,8 +1476,10 @@ hardrestart:;
         VFS_InitAddons(argv[0]);
 
         if (const int load_arg = argv::Find('l', "load"); load_arg >= 0) {
-            if (load_arg + 1 >= argv::list.size() || argv::IsOption(load_arg + 1)) {
-                fmt::print(stderr, "OBSIDIAN ERROR: missing filename for --load\n");
+            if (load_arg + 1 >= argv::list.size() ||
+                argv::IsOption(load_arg + 1)) {
+                fmt::print(stderr,
+                           "OBSIDIAN ERROR: missing filename for --load\n");
                 exit(EXIT_FAILURE);
             }
 
@@ -1497,7 +1505,6 @@ hardrestart:;
     }*/
 
     if (batch_mode) {
-
         VFS_ParseCommandLine();
 
         Script_Open();
@@ -1563,8 +1570,12 @@ hardrestart:;
         }
 
         if (batch_output_file.empty()) {
-            fmt::print(stderr, "\nNo output filename given! Did you forget the --batch parameter?\n");
-            LogPrintf("\nNo output filename given! Did you forget the --batch parameter?\n");
+            fmt::print(stderr,
+                       "\nNo output filename given! Did you forget the --batch "
+                       "parameter?\n");
+            LogPrintf(
+                "\nNo output filename given! Did you forget the --batch "
+                "parameter?\n");
 
             Main::Detail::Shutdown(false);
 #if defined WIN32 && !defined CONSOLE_ONLY
@@ -1572,7 +1583,7 @@ hardrestart:;
             do {
             } while (true);
 #endif
-            return EXIT_FAILURE;  
+            return EXIT_FAILURE;
         }
 
         Main_SetSeed();
@@ -1599,19 +1610,19 @@ hardrestart:;
                     OBSIDIAN_CODE_NAME);
 
     if (main_action != MAIN_SOFT_RESTART) {
-        // this not only finds PK3 files, but also activates the ones specified in
-        // OPTIONS.txt
+        // this not only finds PK3 files, but also activates the ones specified
+        // in OPTIONS.txt
         VFS_ScanForAddons();
 
         VFS_ParseCommandLine();
 
-        // create the main window
-        #ifndef CONSOLE_ONLY
+// create the main window
+#ifndef CONSOLE_ONLY
         int main_w, main_h;
         UI_MainWin::CalcWindowSize(&main_w, &main_h);
 
         main_win = new UI_MainWin(main_w, main_h, main_title.c_str());
-        #endif
+#endif
     }
 
     //???    Default_Location();
@@ -1638,7 +1649,7 @@ hardrestart:;
     Cookie_ParseArguments();
 
     if (main_action != MAIN_SOFT_RESTART) {
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
         // Have to add these after reading existing settings - Dasho
         if (main_win) {
             main_win->menu_bar->add(
@@ -1658,14 +1669,14 @@ hardrestart:;
                 main_win_pickups_config_CB, 0,
                 FL_MENU_TOGGLE | (randomize_pickups ? FL_MENU_VALUE : 0));
             main_win->menu_bar->add(
-                _("Surprise Me/Randomize Other"), NULL, main_win_misc_config_CB, 0,
-                FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
+                _("Surprise Me/Randomize Other"), NULL, main_win_misc_config_CB,
+                0, FL_MENU_TOGGLE | (randomize_misc ? FL_MENU_VALUE : 0));
             if (all_addons.size() == 0) {
                 main_win->menu_bar->add(_("Addons/No Addons Detected"), 0, 0, 0,
                                         FL_MENU_INACTIVE);
             } else {
-                main_win->menu_bar->add(_("Addons/Restart and Apply Changes"), 0,
-                                        main_win_apply_addon_CB, 0, 0);
+                main_win->menu_bar->add(_("Addons/Restart and Apply Changes"),
+                                        0, main_win_apply_addon_CB, 0, 0);
                 for (int i = 0; i < all_addons.size(); i++) {
                     std::string addon_entry = _("Addons/");
                     addon_entry.append(all_addons[i].name.filename().string());
@@ -1678,7 +1689,8 @@ hardrestart:;
             }
         }
 
-        fl_register_images();  // Needed for Unix window icon and tutorial windows
+        fl_register_images();  // Needed for Unix window icon and tutorial
+                               // windows
 
         // Load tutorial images
         std::filesystem::path image_loc = install_dir;
@@ -1723,15 +1735,15 @@ hardrestart:;
             tutorial10 = new Fl_BMP_Image(image_loc.generic_string().c_str());
         }
 
-    #ifdef WIN32
+#ifdef WIN32
         main_win->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(1)));
-    #else
-    #ifdef UNIX
+#else
+#ifdef UNIX
         Fl_Pixmap program_icon(obsidian_icon);
         Fl_RGB_Image rgb_icon(&program_icon, FL_BLACK);
         UI_MainWin::default_icon(&rgb_icon);
-    #endif
-    #endif
+#endif
+#endif
 
         // show window (pass some dummy arguments)
         {
@@ -1747,8 +1759,8 @@ hardrestart:;
             }
         }
 
-    #ifdef WIN32  // Populate structure for taskbar/window flash. Must be done after
-                // main_win->show() function - Dasho
+#ifdef WIN32  // Populate structure for taskbar/window flash. Must be done after
+              // main_win->show() function - Dasho
         if (!blinker) {
             blinker = new FLASHWINFO;
             blinker->cbSize = sizeof(FLASHWINFO);
@@ -1760,7 +1772,7 @@ hardrestart:;
             blinker->hwnd = fl_xid(main_win);
             if (!old_seed.empty() && !old_name.empty()) Main::Blinker();
         }
-    #endif
+#endif
 
         // kill the stupid bright background of the "plastic" scheme
         if (widget_theme == 3) {
@@ -1771,7 +1783,7 @@ hardrestart:;
         }
 
         Fl::add_handler(Main_key_handler);
-    #endif
+#endif
     }
 
     switch (filename_prefix) {
@@ -1785,7 +1797,7 @@ hardrestart:;
             ob_set_config("filename_prefix", "game");
             break;
         case 3:
-            ob_set_config("filename_prefix", "engine");
+            ob_set_config("filename_prefix", "port");
             break;
         case 4:
             ob_set_config("filename_prefix", "theme");
@@ -1805,7 +1817,7 @@ hardrestart:;
     }
 
     if (main_action != MAIN_SOFT_RESTART) {
-        #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
         // draw an empty map (must be done after main window is
         // shown() because that is when FLTK finalises the colors).
         main_win->build_box->mini_map->EmptyMap();
@@ -1826,14 +1838,14 @@ hardrestart:;
                 delete[] main_win->build_box->mini_map->pixels;
             }
             int map_size = main_win->build_box->mini_map->map_W *
-                        main_win->build_box->mini_map->map_H * 3;
+                           main_win->build_box->mini_map->map_H * 3;
             main_win->build_box->mini_map->pixels = new u8_t[map_size];
             memcpy(main_win->build_box->mini_map->pixels, old_pixels, map_size);
             delete[] old_pixels;
             old_pixels = NULL;
             main_win->build_box->mini_map->MapFinish();
         }
-        #endif
+#endif
     }
 
     main_action = MAIN_NONE;
@@ -1843,16 +1855,16 @@ hardrestart:;
     try {
         // run the GUI until the user quits
         for (;;) {
-            #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
             Fl::wait(0.2);
-            #endif
+#endif
 
-            if (main_action == MAIN_QUIT || main_action == MAIN_HARD_RESTART || main_action == MAIN_SOFT_RESTART) {
+            if (main_action == MAIN_QUIT || main_action == MAIN_HARD_RESTART ||
+                main_action == MAIN_SOFT_RESTART) {
                 break;
             }
 
             if (main_action == MAIN_BUILD) {
-
                 if (!mid_batch) {
                     runs_left = builds_per_run;
                 }
@@ -1875,23 +1887,20 @@ hardrestart:;
                 did_specify_seed = false;
 
                 if (result) {
-                    old_seed = string_seed.empty()
-                                    ? NumToString(next_rand_seed)
-                                    : string_seed;
-                    #ifndef CONSOLE_ONLY
+                    old_seed = string_seed.empty() ? NumToString(next_rand_seed)
+                                                   : string_seed;
+#ifndef CONSOLE_ONLY
                     if (main_win->build_box->name_disp->label()) {
                         old_name = main_win->build_box->name_disp->label();
                     }
                     if (main_win->build_box->mini_map->pixels) {
-                        int map_size =
-                            main_win->build_box->mini_map->map_W *
-                            main_win->build_box->mini_map->map_H * 3;
+                        int map_size = main_win->build_box->mini_map->map_W *
+                                       main_win->build_box->mini_map->map_H * 3;
                         old_pixels = new u8_t[map_size];
                         memcpy(old_pixels,
-                                main_win->build_box->mini_map->pixels,
-                                map_size);
+                               main_win->build_box->mini_map->pixels, map_size);
                     }
-                    #endif
+#endif
                 } else {
                     old_seed.clear();
                     old_name.clear();
@@ -1920,13 +1929,13 @@ hardrestart:;
     if (main_action != MAIN_SOFT_RESTART) {
         LogPrintf("\nQuit......\n\n");
     }
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     Theme_Options_Save(theme_file);
-    #endif
+#endif
     Options_Save(options_file);
 
     if (main_action == MAIN_HARD_RESTART || main_action == MAIN_SOFT_RESTART) {
-        #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
         if (main_win) {
             // on fatal error we cannot risk calling into the Lua runtime
             // (it's state may be compromised by a script error).
@@ -1948,7 +1957,7 @@ hardrestart:;
                 main_win = nullptr;
             }
         }
-        #endif
+#endif
         Script_Close();
         if (main_action == MAIN_SOFT_RESTART) {
             goto softrestart;

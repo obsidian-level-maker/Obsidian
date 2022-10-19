@@ -303,7 +303,7 @@ PREFABS.Wall_holo_marquee =
   template = "Wall_double_dark_windows",
   map = "MAP10",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   texture_pack = "armaetus",
 

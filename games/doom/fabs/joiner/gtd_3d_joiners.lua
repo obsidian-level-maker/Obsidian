@@ -6,7 +6,7 @@ PREFABS.Joiner_gtd_3D_joiner_center =
   prob   = 150,
   style  = "steepness",
 
-  engine   = "zdoom",
+  port   = "zdoom",
 
   where  = "seeds",
   shape  = "I",

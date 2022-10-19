@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  Engine: Wolfenstein 3D
+--  Engine: idTech
 ----------------------------------------------------------------
 --
 --  Obsidian Level Maker
@@ -19,35 +19,65 @@
 --
 ----------------------------------------------------------------
 
-WOLF_3D = {}
+IDTECH_0 = {}
 
-
-WOLF_3D.ENTITIES =
+OB_ENGINES["idtech_0"] =
 {
-
-}
-
-
-WOLF_3D.PARAMETERS =
-{
-
-}
-
-
-----------------------------------------------------------------
-
-
-OB_ENGINES["wolf_3d"] =
-{
-  label = _("Vanilla"),
+  label = _("id Tech 0"),
 
   priority = 100,
 
-  game = {wolf=1, noah=1},
+  game = {wolf=1, noah=1, obc=1},
 
   tables =
   {
-    WOLF_3D
+    IDTECH_0
+  },
+
+  hooks =
+  {
+  
+  }
+}
+
+----------------------------------------------------------------
+
+IDTECH_1 = {}
+
+OB_ENGINES["idtech_1"] =
+{
+  label = _("id Tech 1"),
+
+  priority = 100,
+
+  game = { chex3=1, doom1=1, doom2=1, hacx=1, harmony=1, heretic=1, hexen=1, strife=1 },
+
+  tables =
+  {
+    IDTECH_1
+  },
+
+  hooks =
+  {
+  
+  }
+}
+
+----------------------------------------------------------------
+
+IDTECH_2 = {}
+
+UNFINISHED["idtech_2"] =
+{
+  label = _("id Tech 2"),
+
+  priority = 100,
+
+  game = { quake=1 },
+
+  tables =
+  {
+    IDTECH_2
   },
 
   hooks =

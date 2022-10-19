@@ -22,7 +22,7 @@ PREFABS.Hallway_hellcata_term =
   y_fit = "top",
   deep   = 16,
 
-  engine = "zdoom",
+  port = "zdoom",
 
 }
 

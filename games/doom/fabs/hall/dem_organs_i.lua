@@ -17,7 +17,7 @@ PREFABS.Hallway_organs_i1 =
   seed_w = 2,
   seed_h = 2,
 
-  engine = "zdoom",
+  port = "zdoom",
   can_flip = true,
 
   thing_24 =

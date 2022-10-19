@@ -139,7 +139,7 @@ end
 ----------------------------------------------------------------
 
 
-OB_ENGINES["boom"] =
+OB_PORTS["boom"] =
 {
   label = _("BOOM Compat"),
 
@@ -174,7 +174,7 @@ PRBOOM.PARAMETERS =
 
 }
 
-OB_ENGINES["prboom"] =
+OB_PORTS["prboom"] =
 {
   label = _("PrBoom Compat"),
   priority = 97,
@@ -214,7 +214,7 @@ ADVANCED.PARAMETERS =
 }
 
 
-OB_ENGINES["advanced"] =
+OB_PORTS["advanced"] =
 {
   label = _("Advanced"),
   priority = 95,

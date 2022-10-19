@@ -2,7 +2,7 @@ PREFABS.Pic_dem_hell_flesh_conveyors_quality_control =
 {
   file = "picture/dem_pic_hell_wallmachines.wad",
   map = "MAP01",
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 15,
   prob_skew = 2,

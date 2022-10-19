@@ -8,7 +8,7 @@ PREFABS.Item_secret_garage_closet =
   file  = "item/dem_secret_closets_urban.wad",
   map   = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "urban",
   env   = "outdoor",
@@ -48,7 +48,7 @@ PREFABS.Item_secret_store_closet =
   file  = "item/dem_secret_closets_urban.wad",
   map   = "MAP02",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "urban",
   env   = "outdoor",
@@ -116,7 +116,7 @@ PREFABS.Item_secret_store_closet_vanilla =
   file  = "item/dem_secret_closets_urban.wad",
   map   = "MAP02",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "urban",
   env   = "outdoor",
@@ -187,7 +187,7 @@ PREFABS.Item_secret_yard_closet1 =
   file  = "item/dem_secret_closets_urban.wad",
   map   = "MAP03",
 
-  engine = "zdoom",
+  port = "zdoom",
   texture_pack = "armaetus",
 
   theme = "urban",
