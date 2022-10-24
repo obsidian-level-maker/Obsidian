@@ -991,6 +991,7 @@ class game_interface_c : public ::game_interface_c {
     void BeginLevel();
     void EndLevel();
     void Property(std::string key, std::string value);
+    std::filesystem::path Filename();
 };
 }  // namespace Doom
 
@@ -1207,6 +1208,10 @@ void Doom::game_interface_c::Property(std::string key, std::string value) {
     } else {
         LogPrintf("WARNING: unknown DOOM property: {}={}\n", key, value);
     }
+}
+
+std::filesystem::path Doom::game_interface_c::Filename() {
+    return filename;
 }
 
 void Doom::game_interface_c::EndLevel() {

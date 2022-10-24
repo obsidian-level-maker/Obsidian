@@ -419,6 +419,7 @@ class nukem_game_interface_c : public game_interface_c {
     void BeginLevel();
     void EndLevel();
     void Property(std::string key, std::string value);
+    std::filesystem::path Filename();
 
    private:
 };
@@ -487,6 +488,10 @@ void nukem_game_interface_c::Property(std::string key, std::string value) {
     } else {
         LogPrintf("WARNING: unknown NUKEM property: {}={}\n", key, value);
     }
+}
+
+std::filesystem::path nukem_game_interface_c::Filename() {
+    return filename;
 }
 
 void nukem_game_interface_c::EndLevel() {

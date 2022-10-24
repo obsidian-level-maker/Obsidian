@@ -1221,6 +1221,7 @@ class quake3_game_interface_c : public game_interface_c {
     void BeginLevel();
     void EndLevel();
     void Property(std::string key, std::string value);
+    std::filesystem::path Filename();
 };
 
 bool quake3_game_interface_c::Start(const char *preset) {
@@ -1325,6 +1326,10 @@ void quake3_game_interface_c::Property(std::string key, std::string value) {
     } else {
         LogPrintf("WARNING: unknown QUAKE3 property: {}={}\n", key, value);
     }
+}
+
+std::filesystem::path quake3_game_interface_c::Filename() {
+    return filename;
 }
 
 void quake3_game_interface_c::EndLevel() {

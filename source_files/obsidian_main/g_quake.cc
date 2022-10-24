@@ -1287,6 +1287,7 @@ class quake1_game_interface_c : public game_interface_c {
     void BeginLevel();
     void EndLevel();
     void Property(std::string key, std::string value);
+    std::filesystem::path Filename();
 
    private:
     const char *StepsForGame(int sub) {
@@ -1402,6 +1403,10 @@ void quake1_game_interface_c::Property(std::string key, std::string value) {
     } else {
         LogPrintf("WARNING: unknown QUAKE1 property: {}={}\n", key, value);
     }
+}
+
+std::filesystem::path quake1_game_interface_c::Filename() {
+    return filename;
 }
 
 void quake1_game_interface_c::EndLevel() {

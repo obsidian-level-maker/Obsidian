@@ -194,6 +194,14 @@ int gui_mkdir(lua_State *L) {
     return 1;
 }
 
+// LUA: get_filename_base()
+//
+int gui_get_filename_base(lua_State *L) {
+    std::filesystem::path base = game_object->Filename();
+    lua_pushstring(L, base.stem().generic_string().c_str());
+    return 1;
+}
+
 // LUA: set_colormap(map, colors)
 //
 int gui_set_colormap(lua_State *L) {
@@ -1406,6 +1414,7 @@ static const luaL_Reg gui_script_funcs[] = {
     {"get_install_dir", gui_get_install_dir},
     {"scan_directory", gui_scan_directory},
     {"mkdir", gui_mkdir},
+    {"get_filename_base", gui_get_filename_base},
 
     // CSG functions
     {"begin_level", CSG_begin_level},

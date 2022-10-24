@@ -329,6 +329,8 @@ class wolf_game_interface_c : public game_interface_c {
     void BeginLevel();
     void EndLevel();
     void Property(std::string key, std::string value);
+    // Don't really need this, but whatever
+    std::filesystem::path Filename();
 
    private:
     void Rename();
@@ -529,6 +531,10 @@ void wolf_game_interface_c::Property(std::string key, std::string value) {
     } else {
         LogPrintf("WARNING: unknown WOLF3D property: {}={}\n", key, value);
     }
+}
+
+std::filesystem::path wolf_game_interface_c::Filename() {
+    return file_ext;
 }
 
 game_interface_c *Wolf_GameObject() { return new wolf_game_interface_c(); }

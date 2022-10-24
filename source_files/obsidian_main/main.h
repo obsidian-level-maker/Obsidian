@@ -342,6 +342,8 @@ class game_interface_c {
     // required by most games (like DOOM and QUAKE).  Unknown
     // properties are ignored.  May be called during startup too.
     virtual void Property(std::string key, std::string value) = 0;
+
+    virtual std::filesystem::path Filename() = 0;
 };
 
 extern game_interface_c *game_object;

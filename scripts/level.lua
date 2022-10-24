@@ -2796,6 +2796,18 @@ function Level_make_all()
   end
 
   Episode_plan_game()
+ 
+  local str = string.lower(OB_CONFIG.title)
+
+  str = string.gsub(str, "%p", "")
+  str = string.gsub(str, " ", "_")
+  str = string.gsub(str, ":", "")
+  str = string.gsub(str, "'", "")
+  str = string.gsub(str, ",", "")
+
+  if not string.match(gui.get_filename_base(), str) then
+    GAME.title = gui.get_filename_base()
+  end
 
   Title_generate()
 
