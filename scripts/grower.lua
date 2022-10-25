@@ -938,6 +938,7 @@ function Grower_calc_rule_probs(LEVEL)
       local new_factor
   
       if string.match(rule.name,"ROOT") then return end
+      if string.match(rule.name,"CAVE") then return end
       if rule.pass and rule.pass ~= "grow" then return end
       if table.has_elem(rule.styles, "liquids") 
         and not LEVEL.liquid then return end
@@ -1374,9 +1375,13 @@ end
 
 
 
-function Grower_add_room(LEVEL, parent_R, info, trunk)
+function Grower_add_room(LEVEL, parent_R, info, trunk, rule)
 
   local R = ROOM_CLASS.new(LEVEL)
+
+  if rule then
+    R.sprout_rule = rule.name
+  end
 
 gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env), tostring(parent_R and parent_R.name))
 
@@ -2965,7 +2970,7 @@ stderrf("Link pieces: %s dir:%d <--> %s dir:%d\n",
     elseif cur_rule.new_room then
       local info = cur_rule.new_room
 
-      new_room = Grower_add_room(LEVEL, R, info)
+      new_room = Grower_add_room(LEVEL, R, info, nil, cur_rule)
 
       -- create a preliminary connection (last room to this one).
       -- the seed and direction are determined later.
@@ -4095,7 +4100,6 @@ function Grower_create_and_grow_room(SEEDS, LEVEL, trunk, mode, info)
   assert(R)
 
   R.is_root = true
-  R.sprout_rule = info.name
 
   -- apply a root rule for it
   local pass = "root"
