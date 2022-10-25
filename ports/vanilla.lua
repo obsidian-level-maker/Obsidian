@@ -45,7 +45,7 @@ OB_PORTS["vanilla"] =
 
   engine = {idtech_0=1,idtech_1=0,idtech_2=1,build=1},
 
-  game = {chex3=0,doom1=0,doom2=0,hacx=0,harmony=0,heretic=0,hexen=0,noah=1,nukem=1,quake=1,strife=0,wolf=1,obc=1},
+  game = {chex3=0,doom1=0,doom2=0,hacx=0,harmony=0,heretic=0,hexen=0,noah=1,nukem=1,quake=1,strife=0,wolf=1},
 
   tables =
   {

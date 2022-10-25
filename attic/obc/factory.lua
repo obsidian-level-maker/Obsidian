@@ -4666,7 +4666,7 @@ OBC_ELEVATOR =
   {
     "#####",
     "##E##",
-    "#E.E#",
+    "##.##",
     "#FdF#",
   },
 
@@ -4677,168 +4677,12 @@ OBC_ELEVATOR =
 
     d = { kind="door_kind" },
   },
-},
 
-OBC_PACMAN_BASE =
-{
-  scale=64,
-
-  structure = { "#" }, -- dummy
-
-  elements =
+  things =
   {
-    G = { solid="ghost_w" },
-
-    B = { thing="blinky", angle=90  },
-    C = { thing="clyde",  angle=90  },
-    I = { thing="inky",   angle=270 },
-    P = { thing="pinky",  angle=270 },
-
-    d = { thing="dot_t" },
-    t = { thing="treasure1" },
-    u = { thing="treasure2" },
-    m = { thing="first_aid" },
+    { kind="exit", x=160,  y=128 },
   },
 },
-
-OBC_PACMAN_MID_1 =
-{
-  copy="OBC_PACMAN_BASE",
-
-  structure =
-  {
-    "##B.####.######.####C.##",
-    "##d.####.######.####d.##",
-    "##..##..d.d.d.d.d.##..##",
-    "##d.##............##d.##",
-    "##..##.dGGG..GGGd.##..##",
-    "##d.##.dGGG..GGGd.##d.##",
-    "#...##.dGG.tt.GGd.##...#",
-    "d.G....dG.tttt.Gd....G.d",
-    "..G.d..dGttttttGd..d.G..",
-    "#...##.dGGttttGGd.##...#",
-    "##d.##.dGGGuuGGGd.##d.##",
-    "##..##.dGGGGGGGGd.##..##",
-    "##d.##............##d.##",
-    "##..##.d.d.d.d.d..##..##",
-    "##d.####.######.####d.##",
-    "##I.####.######.####P.##",
-  },
-},
-
-OBC_PACMAN_MID_2 =
-{
-  copy="OBC_PACMAN_BASE",
-
-  structure =
-  {
-    "##B.#######..#######.C##",
-    "##d.#######.d#######.d##",
-    "##d.###..........###.d##",
-    "##d.##...d..d..d..##.d##",
-    "##d.##d.GGGGGGGG.d##.d##",
-    "###ddd..GGtt.GGG..ddd###",
-    "######d.GGttt.GG.d######",
-    "######..GGtutt....######",
-    "######d.GGtutt...d######",
-    "######..GGttt.GG..######",
-    "###dddd.GGtt.GGG.dddd###",
-    "##d.##..GGGGGGGG..##.d##",
-    "##d.##.d..d..d..d.##.d##",
-    "##d.###..........###.d##",
-    "##d.#######d.#######.d##",
-    "##I.#######..#######.P##",
-  },
-},
-
-OBC_PACMAN_MID_3 =
-{
-  copy="OBC_PACMAN_BASE",
-
-  structure =
-  {
-    "##B.####.######.####C.##",
-    "##d.####d######.####d.##",
-    "##..d.d.........d.d...##",
-    "######..d.d.d.d...######",
-    "dddddd..GGGGGGGGd.dddddd",
-    "d#####.dGGtuutGG..#####d",
-    "d#####..GttttttGd.#####d",
-    "d#####.dG.tttt.G..#####d",
-    "dddddd..GGGttGGGd.dddddd",
-    "######.dGGGttGGG..######",
-    "##...d..G......Gd.d.d.##",
-    "##.d##.dG.GGGG.G..##..##",
-    "##..##...d.d.d.d..##.d##",
-    "##.d##............##..##",
-    "##..#######d.#######.d##",
-    "##Id#######..#######P.##",
-  },
-},
-
-OBC_PACMAN_CORN_1 =
-{
-  copy="OBC_PACMAN_BASE",
-
-  structure =
-  {
-    "#########...........",
-    "#########d.d.d.d.d..",
-    "#########.########.#",
-    "####.d...d########d#",
-    "####...d....##m.....",
-    ".d.d.d####d.##..d.d.",
-    ".........#..d.d.####",
-    "d.#####..#####..d.d.",
-    "..###..d..d.##......",
-    "m.###d.###..###d####",
-    ".......###..###.####",
-    ".d.d.d.###d.d.d.d.d.",
-  },
-},
-
-OBC_PACMAN_CORN_2 =
-{
-  copy="OBC_PACMAN_BASE",
-
-  structure =
-  {
-    "##########..####....",
-    "..d.d...d.d.####.d..",
-    "..###.d#########..##",
-    "d.###..#####.d.d.d##",
-    "..###d.d.d.d..######",
-    "m.######..#####md.d.",
-    "..######..d.###d####",
-    "d.#########.###.####",
-    "..d.d.d.###d.d.d..##",
-    "######..###.####..##",
-    "######d.d.d.####.d..",
-    "##########..####....",
-  },
-},
-
-OBC_PACMAN_CORN_3 =
-{
-  copy="OBC_PACMAN_BASE",
-
-  structure =
-  {
-    "##########..####.##.",
-    "#####..d.d.d.d..d##d",
-    "#####.........d#.##.",
-    "#####.d######..#.d.d",
-    "#d.##....d.m#.d#..##",
-    "...d...####.#....d##",
-    ".....d.####.#.d#####",
-    "#d.##....d.m#...d.d.",
-    "#####.d######.d####d",
-    "#####............##.",
-    "#####..d.d.d.d.d.##d",
-    "##########..####....",
-  },
-},
-
 
 } -- OBC.FACTORY.PREFABS
 
@@ -4903,6 +4747,8 @@ OBC.FACTORY.THINGS =
   turn_SW = { kind="other", id=95, r=30,h=60, pass=true },
   turn_S  = { kind="other", id=96, r=30,h=60, pass=true },
   turn_SE = { kind="other", id=97, r=30,h=60, pass=true },
+
+  sewer_exit  = { kind="other", id=103, r=30,h=60, pass=true },
 }
 
 OBC.FACTORY.TILE_NUMS =
@@ -4962,7 +4808,7 @@ OBC.FACTORY.MISC_PREFABS =
     prefab = "OBC_ELEVATOR",
     add_mode = "extend",
 
-    skin = { elevator=53, front=53, }
+    skin = { elevator=113, front=53, exit="sewer_exit"}
   },
 }
 
@@ -5123,9 +4969,12 @@ OBC.FACTORY.INITIAL_MODEL =
 OBC.FACTORY.EPISODE_THEMES =
 {
   { SEWER=5 },
-  { SKYSCRAPER=5 },
-  { SKYSCRAPER=5 },
-  { SKYSCRAPER=5 },
+  { SEWER=5 },
+  { SEWER=5 },
+  { SEWER=5 },
+  --{ SKYSCRAPER=5 },
+  --{ SKYSCRAPER=5 },
+  --{ SKYSCRAPER=5 },
 }
 
 OBC.FACTORY.SECRET_EXITS =

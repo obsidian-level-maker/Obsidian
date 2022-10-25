@@ -357,6 +357,9 @@ bool wolf_game_interface_c::Start(const char *ext) {
             Fl_Native_File_Chooser chooser;
 
             chooser.title(_("Select output directory"));
+
+            chooser.directory(BestDirectory().generic_string().c_str());
+
             chooser.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
 
             int result = chooser.show();
@@ -395,7 +398,7 @@ bool wolf_game_interface_c::Start(const char *ext) {
         file_ext = ext;
     }
 
-    if (StringCaseCmp(file_ext, "BC") == 0) {
+    if (StringCaseCmp(file_ext, "BS6") == 0) {
         map_fp = fopen(TEMP_MAPTEMP, "wb");
     } else {
         map_fp = fopen(TEMP_GAMEFILE, "wb");
@@ -467,7 +470,7 @@ bool wolf_game_interface_c::Finish(bool build_ok) {
 
 void wolf_game_interface_c::Rename() {
     std::filesystem::path gamemaps =
-        wolf_output_dir / (StringCaseCmp(file_ext, "BC") == 0 ? fmt::format("MAPTEMP.{}", file_ext) : fmt::format("GAMEMAPS.{}", file_ext));
+        wolf_output_dir / (StringCaseCmp(file_ext, "BS6") == 0 ? fmt::format("MAPTEMP.{}", file_ext) : fmt::format("GAMEMAPS.{}", file_ext));
     std::filesystem::path maphead =
         wolf_output_dir / fmt::format("MAPHEAD.{}", file_ext);
 
@@ -479,7 +482,7 @@ void wolf_game_interface_c::Rename() {
     std::filesystem::remove(gamemaps);
     std::filesystem::remove(maphead);
 
-    if (StringCaseCmp(file_ext, "BC") == 0) {
+    if (StringCaseCmp(file_ext, "BS6") == 0) {
         std::filesystem::rename(TEMP_MAPTEMP, gamemaps);
     } else {
         std::filesystem::rename(TEMP_GAMEFILE, gamemaps);

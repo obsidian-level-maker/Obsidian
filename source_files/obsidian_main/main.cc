@@ -1148,7 +1148,7 @@ bool Build_Cool_Shit() {
         } else if (StringCaseCmp(current_game, "noah") == 0) {
             was_ok = game_object->Start("N3D");
         } else {
-            was_ok = game_object->Start("BC"); // Operation Body Count
+            was_ok = game_object->Start("BS6"); // Blake Stone: Aliens of Gold
         }
     } else {
         was_ok = game_object->Start(def_filename.c_str());

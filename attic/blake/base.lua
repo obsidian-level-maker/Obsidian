@@ -22,7 +22,6 @@
 BLAKE = { }
 
 gui.import("factory")
-gui.import("x_strike")
 
 -- These empty tables are needed not to throw errors in obsidian.lua
 
@@ -36,10 +35,10 @@ BLAKE.ROOMS = { }
 
 ------------------------------------------------------------
 
-UNFINISHED["blake"] =
+OB_GAMES["blake"] =
 {
 	label = _("Blake Stone 1"),
-	priority = 48,
+	priority = 25,
 	
 	engine = "idtech_0",
 	format = "wolf3d",
