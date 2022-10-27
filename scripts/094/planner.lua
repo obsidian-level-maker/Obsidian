@@ -375,7 +375,7 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
     if OB_CONFIG.length == "few" then
       along = Level.ep_along / 4
     elseif OB_CONFIG.length == "episode" then
-      along = Level.ep_along / level.ep_length
+      along = Level.ep_along / Level.ep_length
     else
       along = ((Level.ep_length * (GAME.FACTORY.episodes - 1)) + Level.ep_along) / (Level.ep_length * GAME.FACTORY.episodes)
     end
