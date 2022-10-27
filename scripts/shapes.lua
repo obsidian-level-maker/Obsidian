@@ -14223,6 +14223,30 @@ GROW_TRENCH_CURVE_INNER_SOLID_RING =
   },
 },
 
+GROW_TRENCH_CURVE_INNER_SOLID_RING_LIQUID =
+{
+  prob = 30,
+  skip_prob = 80,
+
+  structure =
+  {
+    "x.......","x~~~~~AA",
+    "x.......","x~~/AAAA",
+    "x.......","x~~A/#A~",
+    "x.......","x~~A#/A~",
+    "1.......","11>AAA/~",
+    "1.......","11~~~~~~",
+  },
+
+  diagonals =
+  {
+    "~A",
+    "A.",
+         ".A",
+    "A~",
+  },
+},
+
 GROW_TRENCH_CURVE_OUTER_SOLID =
 {
   prob = 15,
@@ -14250,6 +14274,33 @@ GROW_TRENCH_CURVE_OUTER_SOLID =
   },
 },
 
+GROW_TRENCH_CURVE_OUTER_SOLID_LIQUID =
+{
+  prob = 25,
+  skip_prob = 80,
+
+  aversion = 6,
+
+  structure =
+  {
+    "xxxx..","xxxxAA",
+    "x.....","x/~~~A",
+    "x.....","x~/#~A",
+    "x.....","x~#/~A",
+    "1.....","1~~~/A",
+    "1.....","1>AAA/",
+  },
+
+  diagonals =
+  {
+    ".~",
+    "~.",
+         ".~",
+    "~A",
+    "A.",
+  },
+},
+
 GROW_TRENCH_CURVE_OUTER_SOLID_RING =
 {
   prob = 20,
@@ -14268,6 +14319,28 @@ GROW_TRENCH_CURVE_OUTER_SOLID_RING =
   {
     "1A",
     "A.",
+  },
+},
+
+GROW_TRENCH_CURVE_OUTER_SOLID_RING_LIQUID =
+{
+  prob = 30,
+  skip_prob = 80,
+
+  structure =
+  {
+    "x....","x~~AA",
+    "x....","x~~AA",
+    "x....","x~%1A",
+    "1....","111/A",
+    "1....","1>AA/",
+  },
+
+  diagonals =
+  {
+    "~1",
+    "1A",
+    "A."
   },
 },
 

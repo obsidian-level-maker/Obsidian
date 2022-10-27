@@ -5,6 +5,7 @@ PREFABS.Window_tall_and_glassy_1 =
 
   group  = "gtd_window_tall_and_glassy",
   port = "zdoom",
+  rank = 1,
 
   prob   = 50,
 

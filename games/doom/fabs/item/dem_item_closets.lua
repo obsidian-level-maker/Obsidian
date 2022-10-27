@@ -921,6 +921,8 @@ PREFABS.Item_dem_yard_closet1 =
 
   port = "zdoom",
 
+  style = "traps",
+  filter = "crushers",
 
   prob   = 10000,
 
