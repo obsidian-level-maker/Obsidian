@@ -30,6 +30,7 @@
 #include "m_addons.h"
 #include "m_cookie.h"
 #include "m_trans.h"
+#include "m_lua.h"
 #include "main.h"
 
 void Parse_Option(const std::string &name, const std::string &value) {
@@ -80,6 +81,8 @@ void Parse_Option(const std::string &name, const std::string &value) {
         default_output_path = value;
     } else if (StringCaseCmp(name, "builds_per_run") == 0) {
         builds_per_run = StringToInt(value);
+    } else if (StringCaseCmp(name, "filename_titles") == 0) {
+        filename_titles = StringToInt(value) ? true : false;
     } else {
         fmt::print("{} '{}'\n", _("Unknown option: "), name);
     }
@@ -186,6 +189,7 @@ bool Options_Save(std::filesystem::path filename) {
     option_fp << "log_limit = " << log_limit << "\n";
     option_fp << "default_output_path = " << default_output_path << "\n";
     option_fp << "builds_per_run = " << builds_per_run << "\n";
+    option_fp << "filename_titles = " << filename_titles << "\n";
 
     option_fp << "\n";
 
@@ -217,6 +221,8 @@ class UI_OptionsWin : public Fl_Window {
     UI_HelpLink *custom_prefix_help;
     Fl_Button *opt_default_output_path;
 
+    UI_CustomCheckBox *opt_filename_titles;
+    UI_HelpLink *filename_titles_help;
     UI_CustomCheckBox *opt_random_string_seeds;
     UI_HelpLink *random_string_seeds_help;
     UI_CustomCheckBox *opt_password_mode;
@@ -340,6 +346,35 @@ class UI_OptionsWin : public Fl_Window {
         } else {
             that->opt_password_mode->activate();
         }
+    }
+
+    static void callback_Filename_Titles(Fl_Widget *w, void *data) {
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+        filename_titles =
+            that->opt_filename_titles->value() ? true : false;
+
+        if (filename_titles) {
+            ob_set_config("filename_titles", "yes");
+        } else {
+            ob_set_config("filename_titles", "no");
+        }
+    }
+
+    static void callback_FilenameTitlesHelp(Fl_Widget *w, void *data) {
+        fl_cursor(FL_CURSOR_DEFAULT);
+        Fl_Window *win = new Fl_Window(640, 480, _("Filename Title Screens"));
+        Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+        Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
+        disp->buffer(buff);
+        disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+        win->resizable(*disp);
+        win->hotspot(0, 0, 0);
+        win->set_modal();
+        win->show();
+        // clang-format off
+        buff->text(_("Will use the filename for the WAD titles screen text instead of Obsidian's internal tables."));
+        // clang-format on
     }
 
     static void callback_RandomStringSeedsHelp(Fl_Widget *w, void *data) {
@@ -608,6 +643,22 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_default_output_path->labelcolor(FONT2_COLOR);
 
     cy += opt_default_output_path->h() + y_step * 2;
+
+    opt_filename_titles =
+        new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
+    opt_filename_titles->copy_label(_(" Filename Title Screens"));
+    opt_filename_titles->value(filename_titles ? 1 : 0);
+    opt_filename_titles->callback(callback_Filename_Titles, this);
+    opt_filename_titles->labelfont(font_style);
+    opt_filename_titles->selection_color(SELECTION);
+    opt_filename_titles->down_box(button_style);
+
+    filename_titles_help = new UI_HelpLink(
+        136 + KF * 40 + this->opt_custom_prefix->w(), cy, W * 0.10, kf_h(24));
+    filename_titles_help->labelfont(font_style);
+    filename_titles_help->callback(callback_FilenameTitlesHelp, this);
+
+    cy += opt_filename_titles->h() + y_step * .5;
 
     opt_random_string_seeds =
         new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");

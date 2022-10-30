@@ -2805,7 +2805,7 @@ function Level_make_all()
   str = string.gsub(str, "'", "")
   str = string.gsub(str, ",", "")
 
-  if not string.match(gui.get_filename_base(), str) then
+  if OB_CONFIG.filename_titles == "yes" and not string.match(gui.get_filename_base(), str) then
     GAME.title = gui.get_filename_base()
   end
 

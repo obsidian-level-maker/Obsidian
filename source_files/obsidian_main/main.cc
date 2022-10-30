@@ -161,6 +161,7 @@ int log_size = 1;  // Without debugging info on, this should handle a full size
 int log_limit = 5;
 bool mid_batch = false;
 int builds_per_run = 1;
+bool filename_titles = false;
 
 int old_x = 0;
 int old_y = 0;
@@ -1511,6 +1512,11 @@ softrestart:;
 
         // inform Lua code about batch mode (the value doesn't matter)
         ob_set_config("batch", "yes");
+        if (filename_titles) {
+            ob_set_config("filename_titles", "yes");
+        } else {
+            ob_set_config("filename_titles", "no");
+        }
 
         Module_Defaults();
 
@@ -1630,6 +1636,12 @@ softrestart:;
     Script_Open();
 
     ob_set_config("locale", selected_lang.c_str());
+
+    if (filename_titles) {
+            ob_set_config("filename_titles", "yes");
+    } else {
+            ob_set_config("filename_titles", "no");
+    }
 
     // enable certain modules by default
     Module_Defaults();

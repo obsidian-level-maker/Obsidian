@@ -187,6 +187,7 @@ extern int log_limit;
 extern bool first_run;
 extern bool mid_batch;
 extern int builds_per_run;
+extern bool filename_titles;
 
 extern std::string def_filename;
 
