@@ -1323,7 +1323,7 @@ ULTDOOM.THEMES =
       Post_gothic_red_2 = 10,
     },
 
-    -- Copied from the Tech theme and altered a biGAME.FACTORY.
+    -- Copied from the Tech theme and altered a bit.
     window_groups =
     {
       square = 70,
@@ -4075,7 +4075,7 @@ function ULTDOOM.get_levels()
       end
 
       if LEV.prebuilt then
-        LEV.name_class = LEV.prebuilGAME.FACTORY.name_class or "BOSS"
+        LEV.name_class = LEV.prebuilt.name_class or "BOSS"
       end
 
       -- procedural gotcha management code
@@ -9291,7 +9291,7 @@ function ULTDOOM.get_factory_levels(episode)
       Level.secret_exit = true
     end
 
-    std_decide_quests(Level, ULTDOOM.FACTORY.D1_QUESTS, ULTDOOM.FACTORY.DM_QUEST_LEN_PROBS)
+    std_decide_quests(Level, ULTDOOM.FACTORY.D1_QUESTS, DOOM.FACTORY.DM_QUEST_LEN_PROBS)
 
     table.insert(level_list, Level)
   end
@@ -9398,18 +9398,14 @@ function ULTDOOM.factory_setup()
   GAME.FACTORY.hallways = table.merge_w_copy(GAME.FACTORY.hallways, ULTDOOM.FACTORY.D1_HALLWAYS)
   GAME.FACTORY.crates   = table.merge_w_copy(GAME.FACTORY.crates,   ULTDOOM.FACTORY.D1_CRATES)
 
-  GAME.FACTORY.sc_fabs   = table.merge_w_copy(GAME.FACTORY.sc_fabs,   ULTDOOM.FACTORY.D1_SCENERY_PREFABS)
   GAME.FACTORY.wall_fabs = table.merge_w_copy(GAME.FACTORY.wall_fabs, ULTDOOM.FACTORY.D1_WALL_PREFABS)
 
   GAME.FACTORY.rails = ULTDOOM.FACTORY.D1_RAILS
 
   -- remove DOOM2-only weapons and items --
 
-  GAME.FACTORY.weapons = copy_table(GAME.FACTORY.weapons)
   GAME.FACTORY.weapons["super"] = nil
 
-  GAME.FACTORY.dm = copy_table(GAME.FACTORY.dm)
-  GAME.FACTORY.dm.weapons = copy_table(GAME.FACTORY.dm.weapons)
   GAME.FACTORY.dm.weapons["super"] = nil
 
   local SUB_LISTS =
