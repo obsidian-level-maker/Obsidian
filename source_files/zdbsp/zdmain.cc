@@ -108,13 +108,13 @@ bool V5GLNodes = false;
 
 // CODE --------------------------------------------------------------------
 
-int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF_mode, bool build_reject, int num_maps) {
+int zdmain(std::filesystem::path filename, std::string current_port, bool UDMF_mode, bool build_reject, int num_maps) {
 
     int node_progress = 0;
     Doom::Send_Prog_Nodes(node_progress, num_maps);
 
-    if (StringCaseCmp(current_engine, "vanilla") == 0 || StringCaseCmp(current_engine, "nolimit") == 0 ||
-            StringCaseCmp(current_engine, "boom") == 0) {
+    if (StringCaseCmp(current_port, "limit_enforcing") == 0 || StringCaseCmp(current_port, "limit_removing") == 0 ||
+            StringCaseCmp(current_port, "boom") == 0) {
             BuildGLNodes = false;
             GLOnly = false;
             if (build_reject) {
@@ -126,7 +126,7 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
             CompressNodes = false;
             CompressGLNodes = false;
             ForceCompression = false;
-        } else if (StringCaseCmp(current_engine, "prboom") == 0) {
+        } else if (StringCaseCmp(current_port, "prboom") == 0) {
             BuildGLNodes = false;
             GLOnly = false;
             if (build_reject) {
@@ -138,7 +138,7 @@ int zdmain(std::filesystem::path filename, std::string current_engine, bool UDMF
             CompressNodes = true;
             CompressGLNodes = false;
             ForceCompression = false;
-        } else if (StringCaseCmp(current_engine, "eternity") == 0) {
+        } else if (StringCaseCmp(current_port, "eternity") == 0) {
             if (UDMF_mode) {
                 BuildGLNodes = true;
                 GLOnly = true;

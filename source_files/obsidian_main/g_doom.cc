@@ -1037,7 +1037,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
 
     // Need to preempt the rest of this process for now if we are using Vanilla
     // Doom
-    if (StringCaseCmp(current_port, "vanilla") == 0) {
+    if (StringCaseCmp(current_port, "limit_enforcing") == 0) {
         build_reject = StringToInt(ob_get_param("bool_build_reject"));
         build_nodes = true;
         return true;
@@ -1091,7 +1091,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
 
 bool Doom::game_interface_c::Finish(bool build_ok) {
     // Skip DM_EndWAD if using Vanilla Doom
-    if (StringCaseCmp(current_port, "vanilla") != 0) {
+    if (StringCaseCmp(current_port, "limit_enforcing") != 0) {
         // TODO: handle write errors
         EndWAD();
     } else {
