@@ -805,7 +805,9 @@ ULTDOOM.THEMES =
       gtd_wall_lamp_thicc = 16,
       --
       gtd_sunderfall = 13,
-      gtd_sunderfall_barred = 13
+      gtd_sunderfall_barred = 13,
+      --
+      gtd_door_storage = 20
     },
 
     outdoor_wall_groups =
@@ -1184,6 +1186,8 @@ ULTDOOM.THEMES =
       --
       gtd_sunderfall = 25,
       gtd_sunderfall_barred = 25,
+      --
+      gtd_door_storage = 15
     },
 
     outdoor_wall_groups =

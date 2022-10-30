@@ -132,7 +132,7 @@ PREFABS.Joiner_simple_arched_3 =
   file   = "joiner/gtd_simple_arched.wad",
   map    = "MAP03",
 
-  prob   = 750,
+  prob   = 500,
   port = "zdoom",
 
   where  = "seeds",
@@ -156,6 +156,8 @@ PREFABS.Joiner_simple_arched_3_limit =
   template = "Joiner_simple_arched_3",
 
   port = "!zdoom",
+
+  prob = 125,
 
   line_344 = 0
 }
