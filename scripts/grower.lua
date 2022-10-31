@@ -4464,7 +4464,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
     until kw ~= "ok"
 
     if kw == "reached" then
-      kill_surplus_rooms()
+      --kill_surplus_rooms()
 
       -- go around again if the initial room resprouted
       if check_initial_room() ~= "resprout" then

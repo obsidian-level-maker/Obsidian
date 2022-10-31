@@ -957,10 +957,10 @@ function Layout_add_traps(LEVEL)
       local prob_tab =
       {
         closets = 0,
-        [80] = 20,
-        [60] = 40,
-        [40] = 60,
-        [20] = 80,
+        ["80"] = 20,
+        ["60"] = 40,
+        ["40"] = 60,
+        ["20"] = 80,
         teleports = 100
       }
 

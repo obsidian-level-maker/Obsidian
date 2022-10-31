@@ -267,6 +267,8 @@ function Quest_create_initial_quest(LEVEL)
     local best
     local best_score = 0
 
+    if #LEVEL.rooms == 1 then return LEVEL.rooms[1] end
+
     for _,R in pairs(LEVEL.rooms) do
       local score = eval_exit_room(R, secret_mode)
 
