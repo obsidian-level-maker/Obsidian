@@ -25,6 +25,13 @@ DEBUG_CONTROL.MISSING_MAT_CHOICES =
   "abort", _("Abort"),
 }
 
+DEBUG_CONTROL.TITLE_SCREEN_CHOICES =
+{
+  "titlegen",  _("Default"),
+  "filename",  _("Filename"),
+  "randomwords", _("Random Word List"),
+}
+
 DEBUG_CONTROL.NAME_GEN_CHOICES =
 {
   "32l",  _("Test Level Names"),
@@ -77,14 +84,14 @@ OB_MODULES["debugger"] =
 
   name = "debugger",
 
-  label = _("Debug Control"),
+  label = _("Miscellaneous Options"),
 
   side = "left",
   engine = "!idtech_0",
   port = "!limit_enforcing",
-  priority = 50,
+  priority = 5,
 
-  tooltip = _("Provides options for printing out more verbose log information. Advanced, highly experimental features can also be found here."),
+  tooltip = _("Provides options for printing out more verbose log information. Unusual or experimental features can also be found here."),
 
   hooks =
   {
@@ -94,6 +101,25 @@ OB_MODULES["debugger"] =
 
   options =
   {
+
+    {
+      name = "title_screen_source",
+      label=_("Title Screen Source"),
+      choices=DEBUG_CONTROL.TITLE_SCREEN_CHOICES,
+      default = "titlegen",
+      tooltip = _("Choose how the WAD title is determined"),
+      longtip = _("Default: Will use Obsidian's regular naming tables.\n\nFilename: Will use the filename provided for the WAD (minus file extension).\n\nRandom Word List: Will randomly pick from the internal random word list.\n\nNOTE: Only EN locale characters are supported at this time, other languages may result in a blank title!"),
+      priority=107,
+    },
+
+    {
+      name = "bool_sub_titles",
+      label=_("Disable Sub-Titles"),
+      valuator = "button",
+      default = 0,
+      tooltip = _("Disable sub-titles on the Title Screen."),
+      priority=106,
+    },
 
     {
       name = "bool_scale_items_with_map_size",
@@ -144,41 +170,6 @@ OB_MODULES["debugger"] =
       longtip = _("Uses name generator names that are already complete phrases/sentences \ninstead of trying to procedurally generate them."),
       priority=101,
     },
-
-    {
-      name = "name_gen_test",
-      label=_("Name Generator"),
-      choices=DEBUG_CONTROL.NAME_GEN_CHOICES,
-      tooltip = _("Prints a demonstration sample of 32 names per category.\nLevel Names = TECH, GOTHIC, URBAN, and BOSS level names\nTitle Names = TITLE, SUB_TITLE, and EPISODE names\n"),
-      default="none",
-      priority=100,
-    },
-
-
-    {
-      name = "bool_print_story_strings",
-      label=_("Print ZDoom Strings"),
-      valuator = "button",
-      default = 0,
-      tooltip = _("Displays the story generator and custom quit message strings added by the ZDoom Special Addons: Story Generator."),
-      priority=97,
-    },
-
-
-    {
-      name = "float_build_levels",
-      label = _("Build Level"),
-      valuator = "slider",
-      units = " only",
-      min = 0,
-      max = 45,
-      increment = 1,
-      default = 0,
-      presets = "0:All",
-      tooltip = _("Allows the skipping of level construction along the WAD for debugging purposes."),
-      priority=96,
-    },
-
 
     {
       name = "bool_shape_rule_stats",
@@ -252,16 +243,5 @@ OB_MODULES["debugger"] =
       longtip= _("Higher levels of detail will increase the amount of time that it takes to generate a WAD. If saving an animated GIF of the build process, its animation speed will also be affected by this setting (less detail=slower, more detail=faster).")
     },
 
---[[
-    bool_attach_debug_info =
-    {
-      name = "bool_attach_debug_info",
-      label = _("Attach DEBUG Info")
-      valuator = "button",
-      default = 0,
-      tooltip = _("Attaches certain debug info into an OBLOGS text lump in the generated WAD."),
-      priority = 91,
-    }
-]]
   },
 }

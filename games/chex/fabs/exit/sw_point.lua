@@ -6,7 +6,7 @@ PREFABS.Exit_point =
 {
   file   = "exit/sw_point.wad",
   map    = "MAP01",
-  theme  = "sewer",
+  theme  = "bazoik",
   prob   = 5,
   where  = "point",
 }

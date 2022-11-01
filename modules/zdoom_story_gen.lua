@@ -62,9 +62,6 @@ function ZStoryGen_format_story_chunk(story_strings, info, store)
 
   -- remove the spaces left behind by Lua's square bracket stuff.
   story_strings = string.gsub(story_strings, "  ", "")
-  if PARAM.bool_print_story_strings == 1 then
-    gui.printf(story_strings .. "\n\n")
-  end
   story_strings = string.gsub(story_strings, "\n", " ")
 
   -- ensure words are always within the width of Doom's intermission screens
