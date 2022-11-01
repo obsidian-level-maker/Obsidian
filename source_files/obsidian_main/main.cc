@@ -559,8 +559,8 @@ bool Main::BackupFile(const std::filesystem::path &filename) {
     if (std::filesystem::exists(filename)) {
         std::filesystem::path backup_name = filename;
 
-        backup_name.replace_filename(fmt::format(
-            "{}{}", "backup_", backup_name.filename().generic_string()));
+        backup_name.replace_extension(fmt::format(
+            "{}.{}", backup_name.filename().extension().generic_string(), "bak"));
 
         LogPrintf("Backing up existing file to: {}\n", backup_name.string());
 
