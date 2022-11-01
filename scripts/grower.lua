@@ -4384,7 +4384,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
     local list = table.copy(LEVEL.rooms)
 
     for _,R in pairs(list) do
-      if not R.is_grown then
+      if not R.is_grown and R.is_hallway then
         Grower_kill_room(SEEDS, LEVEL, R)
       end
     end
@@ -4464,7 +4464,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
     until kw ~= "ok"
 
     if kw == "reached" then
-      --kill_surplus_rooms()
+      kill_surplus_rooms()
 
       -- go around again if the initial room resprouted
       if check_initial_room() ~= "resprout" then
