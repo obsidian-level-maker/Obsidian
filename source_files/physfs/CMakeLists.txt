@@ -294,7 +294,7 @@ if(PHYSFS_BUILD_DOCS)
     endif()
 endif()
 
-if(UNIX)
+if(UNIX AND NOT PHYSFS_DISABLE_INSTALL)
     set(PHYSFS_TARBALL "${CMAKE_CURRENT_SOURCE_DIR}/../physfs-${PHYSFS_VERSION}.tar.gz")
 
     set(PHYSFS_TARGETNAME_DIST "dist" CACHE STRING "Name of 'dist' build target")
