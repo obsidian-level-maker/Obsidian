@@ -7970,50 +7970,55 @@ GROW_NARROW_CANAL_OUTER_CURVE =
 -- MSSP's maze parts. [MAZE]
 GROW_MAZE_STRAIGHT =
 {
-  prob = 2,
+  prob = 10,
   skip_prob = 85,
 
   structure =
   {
-    "x.x","x1x",
-    "x.x","x1x",
-    "...","#1#",
-    "...","#1#",
-    "x1x","x1x",
-    "x1x","x1x",
+    "x..x","x11x",
+    "x..x","x11x",
+    "....","#1##",
+    "....","#1##",
+    "x..x","x11x",
+    "x11x","x11x",
   }
 },
 
 GROW_MAZE_ZIGZAG =
 {
-  prob = 2,
+  prob = 10,
   skip_prob = 80,
 
   structure =
   {
-    "xx.x","xx1x",
+    "x..x","x11x",
+    "x..x","x%1x",
     "x..x","x#1x",
     "....","#/1#",
     "....","#1/#",
-    "x1.x","x1#x",
-    "x1xx","x1xx",
+    "x..x","x1#x",
+    "x..x","x1%x",
+    "x11x","x11x",
   },
 
   diagonals =
   {
     ".1",
+    ".1",
     "1.",
+    "1."
   }
 },
 
 GROW_MAZE_ZIGZAG_DOUBLE =
 {
-  prob = 1,
+  prob = 8,
   skip_prob = 80,
 
   structure =
   {
-    "xx.x","xx1x",
+    "x..x","x11x",
+    "x..x","x%1x",
     "x..x","x#1x",
     "...x","#/1x",
     "x...","x1/#",
@@ -8021,65 +8026,62 @@ GROW_MAZE_ZIGZAG_DOUBLE =
     "x..x","x1#x",
     "x...","x1%#",
     "...x","#%1x",
-    "x.1x","x#1x",
-    "xx1x","xx1x",
+    "x..x","x#1x",
+    "x..x","x/1x",
+    "x11x","x11x",
   },
 
   diagonals =
   {
+    "1.",
     ".1",
     "1.",
     "1.",
     ".1",
+    ".1"
   }
 },
 
 GROW_MAZE_STRAIGHT_NEW_AREA =
 {
-  prob = 1,
+  prob = 8,
   skip_prob = 75,
 
   structure =
   {
-    "x.x","xAx",
-    "x.x","xAx",
+    "x..","xAA",
     "...","#1#",
-    "x1x","x1x",
-    "x1x","x1x",
+    "x11","x11",
   }
 },
 
 GROW_MAZE_STRAIGHT_STAIRED =
 {
-  prob = 2,
+  prob = 10,
   skip_prob = 35,
 
   structure =
   {
-    "x.x","xAx",
-    "x.x","xAx",
+    "x..","xAA",
     "...","#^#",
     "...","#1#",
-    "x1x","x1x",
-    "x1x","x1x",
+    "x11","x11",
   }
 },
 
 GROW_MAZE_STRAIGHT_LONG =
 {
-  prob = 1,
+  prob = 8,
   skip_prob = 35,
 
   structure =
   {
-    "x.x","x1x",
-    "x.x","x1x",
+    "x..","x11",
     "...","#1#",
     "...","#1#",
     "...","#1#",
     "...","#1#",
-    "x1x","x1x",
-    "x1x","x1x",
+    "x11","x11",
   }
 },
 
@@ -8090,45 +8092,41 @@ GROW_MAZE_STRAIGHT_STAIRED_LONG =
 
   structure =
   {
-    "x.x","xAx",
-    "x.x","xAx",
+    "x..","xAA",
     "...","#^#",
     "...","#^#",
     "...","#^#",
-    "x1x","x1x",
-    "x1x","x1x",
+    "x11","x11",
   }
 },
 
 GROW_MAZE_L =
 {
-  prob = 3,
+  prob = 12,
   skip_prob = 35,
 
   structure =
   {
-    "...xx","###xx",
+    "...x.","###x1",
     ".....","#1111",
     "...xx","#1#xx",
     "...xx","#1#xx",
-    "x1xxx","x1xxx",
-    "x1xxx","x1xxx",
+    "11xxx","11xxx",
   }
 },
 
 GROW_MAZE_L_DIAG =
 {
-  prob = 2,
+  prob = 10,
   skip_prob = 35,
 
   structure =
   {
-    "xx.xxx","xx#xxx",
+    "xx.xx.","xx#xx1",
     "x.....","x#/111",
     "....xx","#/1/xx",
     "....xx","#1/#xx",
-    "x1xxxx","x1xxxx",
-    "x1xxxx","x1xxxx",
+    "11xxxx","11xxxx",
   },
 
   diagonals =
@@ -8141,23 +8139,22 @@ GROW_MAZE_L_DIAG =
 
 GROW_MAZE_T =
 {
-  prob = 2,
+  prob = 8,
   skip_prob = 35,
 
   structure =
   {
-    "xx...xx","xx###xx",
+    ".x...x.","1x###x1",
     ".......","1111111",
     "xx...xx","xx#1#xx",
     "xx...xx","xx#1#xx",
-    "xxx1xxx","xxx1xxx",
-    "xxx1xxx","xxx1xxx",
+    "xxx11xx","xxx11xx",
   }
 },
 
 GROW_MAZE_X =
 {
-  prob = 2,
+  prob = 5,
   skip_prob = 50,
 
   structure =
@@ -8188,12 +8185,12 @@ GROW_MAZE_T_DIAG =
 
   structure =
   {
-    "xx..x..xx","xx##x##xx",
+    ".x..x..x.","1x##x##x1",
     ".........","111%#/111",
     "xx.....xx","xx%111/xx",
     "xx.....xx","xx#%1/#xx",
-    "xxxx1xxxx","xxxx1xxxx",
-    "xxxx1xxxx","xxxx1xxxx",
+    "xxxx.xxxx","xxxx1xxxx",
+    "xxxx11xxx","xxxx11xxx",
   },
 
   diagonals =
@@ -8206,24 +8203,22 @@ GROW_MAZE_T_DIAG =
 
 GROW_MAZE_CROSS =
 {
-  prob = 4,
+  prob = 8,
   skip_prob = 45,
 
   structure =
   {
-    "xxx.xxx","xxx1xxx",
-    "xxx.xxx","xxx1xxx",
+    "xxx..xx","xxx11xx",
     "xx...xx","xx#1#xx",
     ".......","1111111",
-    "xx...xx","xx#1#xx",
-    "xxx1xxx","xxx1xxx",
-    "xxx1xxx","xxx1xxx",
+    ".x...x.","1x#1#x1",
+    "xxx11xx","xxx11xx",
   }
 },
 
 GROW_MAZE_U =
 {
-  prob = 5,
+  prob = 8,
   skip_prob = 45,
 
   structure =
@@ -8232,25 +8227,24 @@ GROW_MAZE_U =
     "x.x.x","x1x1x",
     ".....","#1#1#",
     ".....","#1#1#",
-    "x1x.x","x1x1x",
-    "x1x.x","x1x1x",
+    "11...","11#11",
   }
 },
 
 GROW_MAZE_ =
 {
-  prob = 5,
+  prob = 8,
   skip_prob = 50,
 
   structure =
   {
-    "xxx.xxx","xxx1xxx",
+    "xxx..xx","xxx11xx",
     "xxx.xxx","xxx1xxx",
     "xx...xx","xx/1%xx",
     ".......","1111111",
-    "xx...xx","xx%1/xx",
-    "xxx1xxx","xxx1xxx",
-    "xxx1xxx","xxx1xxx",
+    ".x...x.","1x%1/x1",
+    "xxx.xxx","xxx1xxx",
+    "xxx11xx","xxx11xx",
   },
 
   diagonals =
@@ -8260,7 +8254,7 @@ GROW_MAZE_ =
   }
 },
 
-GROW_MAZE_SQUARE =
+--[[GROW_MAZE_SQUARE =
 {
   prob = 5,
   skip_prob = 50,
@@ -8274,21 +8268,21 @@ GROW_MAZE_SQUARE =
     "x1...x","x1111x",
     "x1..xx","x1##xx",
   }
-},
+},]]
 
 GROW_MAZE_STRAIGHT_CAGE =
 {
-  prob = 2,
+  prob = 8,
   skip_prob = 35,
 
   structure =
   {
-    "x.x","x1x",
+    "x..","x11",
     "x.x","x1x",
     "...","#1C",
     "...","#1C",
-    "x1x","x1x",
-    "x1x","x1x",
+    "x.x","x1x",
+    "x11","x11",
   }
 },
 
@@ -8299,13 +8293,13 @@ GROW_MAZE_STRAIGHT_CAGE_ALT =
 
   structure =
   {
-    "x.x","x1x",
+    "x..","x11",
     "x.x","x1x",
     "...","#1C",
     "...","#1#",
     "...","#1C",
-    "x1x","x1x",
-    "x1x","x1x",
+    "x.x","x1x",
+    "x11","x11",
   }
 },
 
