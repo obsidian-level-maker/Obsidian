@@ -123,13 +123,12 @@ static inline HANDLE winCreateFileW(const WCHAR *wfname, const DWORD mode,
                                     const DWORD creation)
 {
     const DWORD share = FILE_SHARE_READ | FILE_SHARE_WRITE;
-    // Commented out for Obsidian to avoid the need to compile Win < 8 and Win >= 8 versions separately
-    //#if defined(PHYSFS_PLATFORM_WINRT) || (_WIN32_WINNT >= 0x0602) // Windows 8+
-    //return CreateFile2(wfname, mode, share, creation, NULL);
-    //#else
+    #if defined(PHYSFS_PLATFORM_WINRT) || (_WIN32_WINNT >= 0x0602) // Windows 8+
+    return CreateFile2(wfname, mode, share, creation, NULL);
+    #else
     return CreateFileW(wfname, mode, share, NULL, creation,
                        FILE_ATTRIBUTE_NORMAL, NULL);
-    //#endif
+    #endif
 } /* winCreateFileW */
 
 static BOOL winSetFilePointer(HANDLE h, const PHYSFS_sint64 pos,
