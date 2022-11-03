@@ -8162,7 +8162,7 @@ GROW_MAZE_X =
 
   structure =
   {
-    "1...xxxx..","1111xxxx11"
+    "1...xxxx..","1111xxxx11",
     "1....xx...","1111%xx/11",
     "xxx......x","xxx%1%/1/x",
     "xxxx....xx","xxxx%11/xx",
