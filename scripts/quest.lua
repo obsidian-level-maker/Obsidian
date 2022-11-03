@@ -211,6 +211,7 @@ function Quest_create_initial_quest(LEVEL)
   local function eval_exit_room(R, secret_mode)
     if R.is_exit    then return -1 end
     if R.is_hallway then return -1 end
+    if R.is_sub_room and not secret_mode then return -1 end
 
     -- must be a leaf room
     if R:total_conns() > 1 then return -1 end

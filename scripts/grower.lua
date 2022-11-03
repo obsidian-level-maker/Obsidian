@@ -4385,7 +4385,6 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
 
     for _,R in pairs(list) do
       if not R.is_grown and R.is_hallway then
-        Grower_kill_room(SEEDS, LEVEL, R)
         if R.is_hallway then
           Grower_kill_room(SEEDS, LEVEL, R)
         else
