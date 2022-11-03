@@ -406,8 +406,8 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
 
   assert(#ky_list + #sw_list + #wp_list + #it_list >= tot_min)
 
-  local RATIO_MINIMUMS = { none=0.0, rare=0.1, few=0.2, less=0.3, normal=0.4, more=1.0, heaps=1.5 }
-  local RATIO_MAXIMUMS = { none=0.0, rare=0.2, few=0.4, less=0.6, normal=1.2, more=2.5, heaps=3.5 }
+  local RATIO_MINIMUMS = { none=0.0, rare=0.1, few=0.2, less=0.3, some=0.4, more=1.0, heaps=1.5 }
+  local RATIO_MAXIMUMS = { none=0.0, rare=0.2, few=0.4, less=0.6, some=1.2, more=2.5, heaps=3.5 }
 
   local ratio_min
   local ratio_max
