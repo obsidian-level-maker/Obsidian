@@ -7979,7 +7979,6 @@ GROW_MAZE_STRAIGHT =
     "x..x","x11x",
     "....","#1##",
     "....","#1##",
-    "x..x","x11x",
     "x11x","x11x",
   }
 },
@@ -8050,6 +8049,7 @@ GROW_MAZE_STRAIGHT_NEW_AREA =
   structure =
   {
     "x..","xAA",
+    "x..","xAA",
     "...","#1#",
     "x11","x11",
   }
@@ -8062,6 +8062,7 @@ GROW_MAZE_STRAIGHT_STAIRED =
 
   structure =
   {
+    "x..","xAA",
     "x..","xAA",
     "...","#^#",
     "...","#1#",
@@ -8076,6 +8077,7 @@ GROW_MAZE_STRAIGHT_LONG =
 
   structure =
   {
+    "x..","x11",
     "x..","x11",
     "...","#1#",
     "...","#1#",
@@ -8093,6 +8095,7 @@ GROW_MAZE_STRAIGHT_STAIRED_LONG =
   structure =
   {
     "x..","xAA",
+    "x..","xAA",
     "...","#^#",
     "...","#^#",
     "...","#^#",
@@ -8107,11 +8110,11 @@ GROW_MAZE_L =
 
   structure =
   {
-    "...x.","###x1",
-    ".....","#1111",
-    "...xx","#1#xx",
-    "...xx","#1#xx",
-    "11xxx","11xxx",
+    "...x..","###x11",
+    "......","#11111",
+    "...xxx","#1#xxx",
+    "...xxx","#1#xxx",
+    "11xxxx","11xxxx",
   }
 },
 
@@ -8122,7 +8125,7 @@ GROW_MAZE_L_DIAG =
 
   structure =
   {
-    "xx.xx.","xx#xx1",
+    "xx.x..","xx#x11",
     "x.....","x#/111",
     "....xx","#/1/xx",
     "....xx","#1/#xx",
@@ -8144,7 +8147,7 @@ GROW_MAZE_T =
 
   structure =
   {
-    ".x...x.","1x###x1",
+    ".......","11###11",
     ".......","1111111",
     "xx...xx","xx#1#xx",
     "xx...xx","xx#1#xx",
@@ -8159,12 +8162,14 @@ GROW_MAZE_X =
 
   structure =
   {
-    "11...xx...","1111%xx/11",
+    "1...xxxx..","1111xxxx11"
+    "1....xx...","1111%xx/11",
     "xxx......x","xxx%1%/1/x",
     "xxxx....xx","xxxx%11/xx",
     "xxxx....xx","xxxx/11%xx",
     "xxx......x","xxx/1/%1%x",
     "xx...xx...","xx11/xx%11",
+    "xx..xxxx..","xx11xxxx11",
   },
 
   diagonals =
@@ -8185,7 +8190,7 @@ GROW_MAZE_T_DIAG =
 
   structure =
   {
-    ".x..x..x.","1x##x##x1",
+    "....x....","11##x##11",
     ".........","111%#/111",
     "xx.....xx","xx%111/xx",
     "xx.....xx","xx#%1/#xx",
@@ -8208,11 +8213,12 @@ GROW_MAZE_CROSS =
 
   structure =
   {
-    "xxx..xx","xxx11xx",
-    "xx...xx","xx#1#xx",
-    ".......","1111111",
-    ".x...x.","1x#1#x1",
-    "xxx11xx","xxx11xx",
+    "xxxx..xxx","xxxx11xxx",
+    "xxxx..xxx","xxxx11xxx",
+    "xxx...xxx","xxx#1#xxx",
+    ".........","111111111",
+    "..x...x..","11x#1#x11",
+    "xxxx11xxx","xxxx11xxx",
   }
 },
 
@@ -8227,6 +8233,7 @@ GROW_MAZE_U =
     "x.x.x","x1x1x",
     ".....","#1#1#",
     ".....","#1#1#",
+    ".....","11#11",
     "11...","11#11",
   }
 },
@@ -8238,13 +8245,14 @@ GROW_MAZE_ =
 
   structure =
   {
-    "xxx..xx","xxx11xx",
-    "xxx.xxx","xxx1xxx",
-    "xx...xx","xx/1%xx",
-    ".......","1111111",
-    ".x...x.","1x%1/x1",
-    "xxx.xxx","xxx1xxx",
-    "xxx11xx","xxx11xx",
+    "xxxx..xxx","xxxx11xxx",
+    "xxxx..xxx","xxxx11xxx",
+    "xxxx.xxxx","xxxx1xxxx",
+    "xxx...xxx","xxx/1%xxx",
+    ".........","111111111",
+    "..x...x..","11x%1/x11",
+    "xxxx.xxxx","xxxx1xxxx",
+    "xxxx11xxx","xxxx11xxx",
   },
 
   diagonals =
@@ -8278,6 +8286,7 @@ GROW_MAZE_STRAIGHT_CAGE =
   structure =
   {
     "x..","x11",
+    "x..","x11",
     "x.x","x1x",
     "...","#1C",
     "...","#1C",
@@ -8293,6 +8302,7 @@ GROW_MAZE_STRAIGHT_CAGE_ALT =
 
   structure =
   {
+    "x..","x11",
     "x..","x11",
     "x.x","x1x",
     "...","#1C",
