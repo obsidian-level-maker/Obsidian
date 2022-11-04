@@ -83,7 +83,7 @@ PREFABS.Exit_sky_floor_exit_hexen_nosign =
 PREFABS.Exit_sky_floor_exit_secret =
 {
   file   = "exit/armaetus_sky_floor_exit.wad",
-  map    = "MAP01",
+  map    = "MAP03",
   game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=1, heretic=0, nukem=1, quake=1, strife=0 },
 
   prob   = 300,
@@ -98,11 +98,8 @@ PREFABS.Exit_sky_floor_exit_secret =
   x_fit  = "frame",
   y_fit  = "top",
 
-    -- this kind means "an exit to a secret level"
-    kind = "secret_exit",
-
-    -- replace normal exit special with "exit to secret" special
-    line_706 = 707
+  -- this kind means "an exit to a secret level"
+  kind = "secret_exit",
 }
 
 PREFABS.Exit_sky_floor_exit_secret_strife =
@@ -127,7 +124,7 @@ PREFABS.Exit_sky_floor_exit_secret_chex3_nosign =
   template = "Exit_sky_floor_exit_secret",
   game = "chex3",
   port = "!advanced",
-  map = "MAP02"
+  map = "MAP04"
 }
 
 PREFABS.Exit_sky_floor_exit_secret_hacx = 
@@ -142,7 +139,7 @@ PREFABS.Exit_sky_floor_exit_secret_hacx_nosign =
   template = "Exit_sky_floor_exit_secret",
   game = "hacx",
   port = "!advanced",
-  map = "MAP02"
+  map = "MAP04"
 }
 
 PREFABS.Exit_sky_floor_exit_secret_heretic = 
@@ -157,7 +154,7 @@ PREFABS.Exit_sky_floor_exit_secret_heretic_nosign =
   template = "Exit_sky_floor_exit_secret",
   game = "heretic",
   port = "!advanced",
-  map = "MAP02"
+  map = "MAP04"
 }
 
 PREFABS.Exit_sky_floor_exit_secret_hexen_nosign = 
@@ -165,5 +162,5 @@ PREFABS.Exit_sky_floor_exit_secret_hexen_nosign =
   template = "Exit_sky_floor_exit_secret",
   game = "hexen",
   --port = "!advanced",
-  map = "MAP02"
+  map = "MAP04"
 }
