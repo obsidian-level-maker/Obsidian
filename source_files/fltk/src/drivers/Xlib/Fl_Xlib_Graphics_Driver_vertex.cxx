@@ -29,8 +29,7 @@
 
 
 void Fl_Xlib_Graphics_Driver::end_points() {
-  if (n > 1)
-    XDrawPoints(fl_display, fl_window, gc_, short_point, n, 0);
+  if (n>1) XDrawPoints(fl_display, fl_window, gc_, short_point, n, 0);
 }
 
 void Fl_Xlib_Graphics_Driver::end_line() {
@@ -38,14 +37,13 @@ void Fl_Xlib_Graphics_Driver::end_line() {
     end_points();
     return;
   }
-  if (n > 1)
-    XDrawLines(fl_display, fl_window, gc_, short_point, n, 0);
+  if (n>1) XDrawLines(fl_display, fl_window, gc_, short_point, n, 0);
 }
 
 void Fl_Xlib_Graphics_Driver::end_loop() {
   fixloop();
-  if (n > 2) {
-    transformed_vertex0(short_point[0].x, short_point[0].y);
+  if (n>2) {
+    transformed_vertex0(short_point[0].x , short_point[0].y );
   }
   end_line();
 }
@@ -56,15 +54,12 @@ void Fl_Xlib_Graphics_Driver::end_polygon() {
     end_line();
     return;
   }
-  if (n > 2)
-    XFillPolygon(fl_display, fl_window, gc_, short_point, n, Convex, 0);
+  if (n>2) XFillPolygon(fl_display, fl_window, gc_, short_point, n, Convex, 0);
 }
 
 void Fl_Xlib_Graphics_Driver::gap() {
-  while (n > gap_ + 2 && short_point[n - 1].x == short_point[gap_].x &&
-         short_point[n - 1].y == short_point[gap_].y)
-    n--;
-  if (n > gap_ + 2) {
+  while (n>gap_+2 && short_point[n-1].x == short_point[gap_].x && short_point[n-1].y == short_point[gap_].y) n--;
+  if (n > gap_+2) {
     transformed_vertex0(short_point[gap_].x, short_point[gap_].y);
     gap_ = n;
   } else {
@@ -78,18 +73,18 @@ void Fl_Xlib_Graphics_Driver::end_complex_polygon() {
     end_line();
     return;
   }
-  if (n > 2)
-    XFillPolygon(fl_display, fl_window, gc_, short_point, n, 0, 0);
+  if (n>2) XFillPolygon(fl_display, fl_window, gc_, short_point, n, 0, 0);
 }
 
 // shortcut the closed circles so they use XDrawArc:
 // warning: these do not draw rotated ellipses correctly!
 // See fl_arc.c for portable version.
 void Fl_Xlib_Graphics_Driver::ellipse_unscaled(double xt, double yt, double rx, double ry) {
-  int llx = (int)rint(xt - rx);
-  int w = (int)rint(xt + rx) - llx;
-  int lly = (int)rint(yt - ry);
-  int h = (int)rint(yt + ry) - lly;
+  int llx = (int)rint(xt-rx);
+  int w = (int)rint(xt+rx)-llx;
+  int lly = (int)rint(yt-ry);
+  int h = (int)rint(yt+ry)-lly;
 
-  (what == POLYGON ? XFillArc : XDrawArc)(fl_display, fl_window, gc_, llx, lly, w, h, 0, 360 * 64);
+  (what == POLYGON ? XFillArc : XDrawArc)
+    (fl_display, fl_window, gc_, llx, lly, w, h, 0, 360*64);
 }

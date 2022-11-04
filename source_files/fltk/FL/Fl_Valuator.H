@@ -1,7 +1,7 @@
 //
 // Valuator header file for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2016 by Bill Spitzak and others.
+// Copyright 1998-2022 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -25,8 +25,8 @@
 #endif
 
 // shared type() values for classes that work in both directions:
-#define FL_VERTICAL 0   ///< The valuator can work vertically
-#define FL_HORIZONTAL 1 ///< The valuator can work horizontally
+#define FL_VERTICAL             0 ///< The valuator can work vertically
+#define FL_HORIZONTAL           1 ///< The valuator can work horizontally
 
 /**
   The Fl_Valuator class controls a single floating-point value
@@ -35,7 +35,7 @@
 
   There are probably more of these classes in FLTK than any others:
 
-  <P ALIGN=CENTER>\image html valuators.png</P>
+  \image html  valuators.png
   \image latex valuators.png "Valuators derived from Fl_Valuators" width=10cm
 
   In the above diagram each box surrounds an actual subclass.  These
@@ -49,39 +49,36 @@ class FL_EXPORT Fl_Valuator : public Fl_Widget {
   double value_;
   double previous_value_;
   double min, max; // truncates to this range *after* rounding
-  double A;
-  int B; // rounds to multiples of A/B, or no rounding if A is zero
+  double A; int B; // rounds to multiples of A/B, or no rounding if A is zero
 
 protected:
   /** Tells if the valuator is an FL_HORIZONTAL one */
-  int horizontal() const { return type() & FL_HORIZONTAL; }
-  Fl_Valuator(int X, int Y, int W, int H, const char *L);
+  int horizontal() const {return type()& FL_HORIZONTAL;}
+  Fl_Valuator(int X, int Y, int W, int H, const char* L);
 
   /** Gets the previous floating point value before an event changed it */
-  double previous_value() const { return previous_value_; }
+  double previous_value() const {return previous_value_;}
   /** Stores the current value in the previous value */
-  void handle_push() { previous_value_ = value_; }
+  void handle_push() {previous_value_ = value_;}
   double softclamp(double);
   void handle_drag(double newvalue);
-  void handle_release();       // use drag() value
+  void handle_release(); // use drag() value
   virtual void value_damage(); // cause damage() due to value() changing
   /** Sets the current floating point value. */
-  void set_value(double v) { value_ = v; }
+  void set_value(double v) {value_ = v;}
 
 public:
-  /**    Sets the minimum (a) and maximum (b) values for the valuator widget. */
-  void bounds(double a, double b) {
-    min = a;
-    max = b;
-  }
-  /**    Gets the minimum value for the valuator.  */
-  double minimum() const { return min; }
-  /**    Sets the minimum value for the valuator.  */
-  void minimum(double a) { min = a; }
-  /**    Gets the maximum value for the valuator.  */
-  double maximum() const { return max; }
-  /**    Sets the maximum value for the valuator.  */
-  void maximum(double a) { max = a; }
+
+    /**    Sets the minimum (a) and maximum (b) values for the valuator widget. */
+    void bounds(double a, double b) {min=a; max=b;}
+    /**    Gets the minimum value for the valuator.  */
+    double minimum() const {return min;}
+    /**    Sets the minimum value for the valuator.  */
+    void minimum(double a) {min = a;}
+    /**    Gets the maximum value for the valuator.  */
+    double maximum() const {return max;}
+    /**    Sets the maximum value for the valuator.  */
+    void maximum(double a) {max = a;}
   /**
     Sets the minimum and maximum values for the valuator. When
     the user manipulates the widget, the value is limited to this
@@ -102,20 +99,11 @@ public:
     The range may affect the display. You must redraw()
     the widget after changing the range.
   */
-  void range(double a, double b) {
-    min = a;
-    max = b;
-  }
+  void range(double a, double b) {min = a; max = b;}
   /**    See double Fl_Valuator::step() const   */
-  void step(int a) {
-    A = a;
-    B = 1;
-  }
+  void step(int a) {A = a; B = 1;}
   /**    See double Fl_Valuator::step() const   */
-  void step(double a, int b) {
-    A = a;
-    B = b;
-  }
+  void step(double a, int b) {A = a; B = b;}
   void step(double s);
   /**
     Gets or sets the step value. As the user moves the mouse the
@@ -128,16 +116,16 @@ public:
     setting a floating point value sets the nearest A/1 or 1/B value
     possible.
   */
-  double step() const { return A / B; }
+  double step() const {return A/B;}
   void precision(int digits);
 
   /** Gets the floating point(double) value. See int value(double) */
-  double value() const { return value_; }
+  double value() const {return value_;}
   int value(double);
 
-  virtual int format(char *);
-  double round(double);          // round to nearest multiple of step
-  double clamp(double);          // keep in range
+  virtual int format(char*);
+  double round(double); // round to nearest multiple of step
+  double clamp(double); // keep in range
   double increment(double, int); // add n*step to value
 };
 

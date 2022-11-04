@@ -28,23 +28,19 @@
 extern char fl_key_vector[32]; // in Fl_x.cxx
 
 int Fl_X11_System_Driver::event_key(int k) {
-  if (k > FL_Button && k <= FL_Button + 8)
-    return Fl::event_state(8 << (k - FL_Button));
+  if (k > FL_Button && k <= FL_Button+8)
+    return Fl::event_state(8<<(k-FL_Button));
   int i;
-#ifdef __sgi
+#  ifdef __sgi
   // get some missing PC keyboard keys:
-  if (k == FL_Meta_L)
-    i = 147;
-  else if (k == FL_Meta_R)
-    i = 148;
-  else if (k == FL_Menu)
-    i = 149;
+  if (k == FL_Meta_L) i = 147;
+  else if (k == FL_Meta_R) i = 148;
+  else if (k == FL_Menu) i = 149;
   else
-#endif
+#  endif
     i = XKeysymToKeycode(fl_display, k);
-  if (i == 0)
-    return 0;
-  return fl_key_vector[i / 8] & (1 << (i % 8));
+  if (i==0) return 0;
+  return fl_key_vector[i/8] & (1 << (i%8));
 }
 
 int Fl_X11_System_Driver::get_key(int k) {

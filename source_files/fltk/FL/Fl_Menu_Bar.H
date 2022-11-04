@@ -64,12 +64,10 @@
 */
 class FL_EXPORT Fl_Menu_Bar : public Fl_Menu_ {
   friend class Fl_Sys_Menu_Bar_Driver;
-
 protected:
-  void draw();
-
+    void draw();
 public:
-  int handle(int);
+    int handle(int);
   /**
     Creates a new Fl_Menu_Bar widget using the given position,
     size, and label string. The default boxtype is FL_UP_BOX.
@@ -88,7 +86,7 @@ public:
     The destructor removes the Fl_Menu_Bar widget and all of its
     menu items.
   */
-  Fl_Menu_Bar(int X, int Y, int W, int H, const char *l = 0);
+  Fl_Menu_Bar(int X, int Y, int W, int H, const char *l=0);
   /** Updates the menu bar after any change to its items.
    This is useful when the menu bar can be an Fl_Sys_Menu_Bar object.
    */

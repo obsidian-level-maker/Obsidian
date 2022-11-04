@@ -32,8 +32,7 @@ void cb(Fl_Widget *w, void *) {
 
 class dragbox : public Fl_Box {
 public:
-  dragbox(int x, int y, int w, int h, const char *t = 0)
-    : Fl_Box(x, y, w, h, t) {}
+  dragbox(int x, int y, int w, int h, const char *t=0) : Fl_Box(x,y,w,h,t) {}
   int handle(int event) {
     static int fromx, fromy, winx, winy;
     if (event == FL_PUSH) {
@@ -42,7 +41,8 @@ public:
       winx = window()->x_root();
       winy = window()->y_root();
       return 1;
-    } else if (event == FL_DRAG) {
+    }
+    else if (event == FL_DRAG) {
       int deltax = Fl::event_x_root() - fromx;
       int deltay = Fl::event_y_root() - fromy;
       window()->position(winx + deltax, winy + deltay);
@@ -54,32 +54,34 @@ public:
 
 const float factor = 1.3f;
 
-void shrink(Fl_Widget *wdgt, void *data) {
+void shrink(Fl_Widget *wdgt, void *data)
+{
   Fl_Window *win = wdgt->window();
   int old = win->w();
-  win->size(int(old / factor), int(old / factor));
-  if (win->w() <= *(int *)data)
-    wdgt->deactivate();
+  win->size(int(old/factor), int(old/factor));
+  if (win->w() <= *(int*)data) wdgt->deactivate();
 }
 
-void enlarge(Fl_Widget *wdgt, void *data) {
+void enlarge(Fl_Widget *wdgt, void *data)
+{
   Fl_Window *win = wdgt->window();
   int old = win->w();
-  win->size(int(old * factor), int(old * factor));
-  ((Fl_Widget *)data)->activate();
+  win->size(int(old*factor), int(old*factor));
+  ((Fl_Widget*)data)->activate();
 }
 
-Fl_RGB_Image *prepare_shape(int w) {
+Fl_RGB_Image* prepare_shape(int w)
+{
   // draw a white circle with a hole in it on black background
   Fl_Image_Surface *surf = new Fl_Image_Surface(w, w);
   Fl_Surface_Device::push_current(surf);
   fl_color(FL_BLACK);
-  fl_rectf(-1, -1, w + 2, w + 2);
+  fl_rectf(-1, -1, w+2, w+2);
   fl_color(FL_WHITE);
-  fl_pie(2, 2, w - 4, w - 4, 0, 360);
+  fl_pie(2,2,w-4,w-4,0,360);
   fl_color(FL_BLACK);
-  fl_pie(int(0.7 * w), w / 2, w / 4, w / 4, 0, 360);
-  Fl_RGB_Image *img = surf->image();
+  fl_pie(int(0.7*w),w/2,w/4,w/4,0,360);
+  Fl_RGB_Image* img = surf->image();
   delete surf;
   Fl_Surface_Device::pop_current();
   return img; // return white image on black background
@@ -91,7 +93,7 @@ int main(int argc, char **argv) {
   Fl_RGB_Image *img = prepare_shape(dim);
   win->shape(img);
   dragbox *box = new dragbox(0, 0, win->w(), win->h());
-  box->image(new Fl_Tiled_Image(new Fl_Pixmap((const char *const *)tile_xpm)));
+  box->image(new Fl_Tiled_Image(new Fl_Pixmap((const char * const *)tile_xpm)));
   Fl_Group *g = new Fl_Group(10, 20, 80, 20);
   g->box(FL_NO_BOX);
   Fl_Button *b = new Fl_Button(10, 20, 80, 20, "Close");

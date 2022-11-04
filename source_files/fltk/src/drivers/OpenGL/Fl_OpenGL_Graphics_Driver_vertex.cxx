@@ -33,12 +33,12 @@
 
 // void Fl_OpenGL_Graphics_Driver::push_matrix()
 // void Fl_OpenGL_Graphics_Driver::pop_matrix()
-// void Fl_OpenGL_Graphics_Driver::mult_matrix(double a, double b, double c, double d, double x,
-// double y) void Fl_OpenGL_Graphics_Driver::rotate(double d) double
-// Fl_OpenGL_Graphics_Driver::transform_x(double x, double y) double
-// Fl_OpenGL_Graphics_Driver::transform_y(double x, double y) double
-// Fl_OpenGL_Graphics_Driver::transform_dx(double x, double y) double
-// Fl_OpenGL_Graphics_Driver::transform_dy(double x, double y)
+// void Fl_OpenGL_Graphics_Driver::mult_matrix(double a, double b, double c, double d, double x, double y)
+// void Fl_OpenGL_Graphics_Driver::rotate(double d)
+// double Fl_OpenGL_Graphics_Driver::transform_x(double x, double y)
+// double Fl_OpenGL_Graphics_Driver::transform_y(double x, double y)
+// double Fl_OpenGL_Graphics_Driver::transform_dx(double x, double y)
+// double Fl_OpenGL_Graphics_Driver::transform_dy(double x, double y)
 
 void Fl_OpenGL_Graphics_Driver::begin_points() {
   glBegin(GL_POINTS);
@@ -88,31 +88,28 @@ void Fl_OpenGL_Graphics_Driver::end_complex_polygon() {
 }
 
 // remove equal points from closed path
-void Fl_OpenGL_Graphics_Driver::fixloop() {}
+void Fl_OpenGL_Graphics_Driver::fixloop() { }
 
 void Fl_OpenGL_Graphics_Driver::transformed_vertex(double xf, double yf) {
   glVertex2d(xf, yf);
 }
 
 void Fl_OpenGL_Graphics_Driver::circle(double cx, double cy, double r) {
-  double rx = r * (m.c ? sqrt(m.a * m.a + m.c * m.c) : fabs(m.a));
-  double ry = r * (m.b ? sqrt(m.b * m.b + m.d * m.d) : fabs(m.d));
+  double rx = r * (m.c ? sqrt(m.a*m.a+m.c*m.c) : fabs(m.a));
+  double ry = r * (m.b ? sqrt(m.b*m.b+m.d*m.d) : fabs(m.d));
   double rMax;
-  if (ry > rx)
-    rMax = ry;
-  else
-    rMax = rx;
+  if (ry>rx) rMax = ry; else rMax = rx;
 
   // from http://slabode.exofire.net/circle_draw.shtml and many other places
-  int num_segments = (int)(10 * sqrt(rMax)) + 1;
+  int num_segments = (int)(10 * sqrt(rMax))+1;
   double theta = 2 * M_PI / float(num_segments);
   double tangetial_factor = tan(theta);
-  double radial_factor = cos(theta); // calculate the radial factor
-  double x = r;                      // we start at angle = 0
+  double radial_factor = cos(theta);//calculate the radial factor
+  double x = r; //we start at angle = 0
   double y = 0;
 
   glBegin(GL_LINE_LOOP);
-  for (int ii = 0; ii < num_segments; ii++) {
+  for(int ii = 0; ii < num_segments; ii++) {
     vertex(x + cx, y + cy); // output vertex
     double tx = -y;
     double ty = x;
@@ -122,4 +119,5 @@ void Fl_OpenGL_Graphics_Driver::circle(double cx, double cy, double r) {
     y *= radial_factor;
   }
   glEnd();
+
 }

@@ -23,16 +23,14 @@
 //    Invoked whenever an item's state changes.
 //
 void TreeCallback(Fl_Widget *w, void *data) {
-  Fl_Tree *tree = (Fl_Tree *)w;
-  Fl_Tree_Item *item = (Fl_Tree_Item *)tree->callback_item();
-  if (!item)
-    return;
-  switch (tree->callback_reason()) {
+  Fl_Tree *tree = (Fl_Tree*)w;
+  Fl_Tree_Item *item = (Fl_Tree_Item*)tree->callback_item();
+  if ( ! item ) return;
+  switch ( tree->callback_reason() ) {
     case FL_TREE_REASON_SELECTED: {
       char pathname[256];
       tree->item_pathname(pathname, sizeof(pathname), item);
-      fprintf(stderr, "TreeCallback: Item selected='%s', Full pathname='%s'\n", item->label(),
-              pathname);
+      fprintf(stderr, "TreeCallback: Item selected='%s', Full pathname='%s'\n", item->label(), pathname);
       break;
     }
     case FL_TREE_REASON_DESELECTED:
@@ -59,9 +57,9 @@ int main(int argc, char *argv[]) {
   win->begin();
   {
     // Create the tree
-    Fl_Tree *tree = new Fl_Tree(10, 10, win->w() - 20, win->h() - 20);
-    tree->showroot(0);            // don't show root of tree
-    tree->callback(TreeCallback); // setup a callback for the tree
+    Fl_Tree *tree = new Fl_Tree(10, 10, win->w()-20, win->h()-20);
+    tree->showroot(0);                          // don't show root of tree
+    tree->callback(TreeCallback);               // setup a callback for the tree
 
     // Add some items
     tree->add("Flintstones/Fred");
@@ -71,7 +69,7 @@ int main(int argc, char *argv[]) {
     tree->add("Simpsons/Marge");
     tree->add("Simpsons/Bart");
     tree->add("Simpsons/Lisa");
-    tree->add("Pathnames/\\/bin"); // front slashes
+    tree->add("Pathnames/\\/bin");              // front slashes
     tree->add("Pathnames/\\/usr\\/sbin");
     tree->add("Pathnames/C:\\\\Program Files"); // backslashes
     tree->add("Pathnames/C:\\\\Documents and Settings");
@@ -83,5 +81,5 @@ int main(int argc, char *argv[]) {
   win->end();
   win->resizable(win);
   win->show(argc, argv);
-  return (Fl::run());
+  return(Fl::run());
 }

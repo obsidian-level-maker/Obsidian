@@ -30,60 +30,96 @@
 
 // Document icon
 static const char *L_document_xpm[] = {
-    "13 11 3 1",     "   c None",     "x  c #d8d8f8",  "@  c #202060",  " @@@@@@@@@   ",
-    " @xxxxxxx@   ", " @xxxxxxx@   ", " @xxxxxxx@   ", " @xxxxxxx@   ", " @xxxxxxx@   ",
-    " @xxxxxxx@   ", " @xxxxxxx@   ", " @xxxxxxx@   ", " @xxxxxxx@   ", " @@@@@@@@@   "};
+  "13 11 3 1",
+  "   c None",
+  "x  c #d8d8f8",
+  "@  c #202060",
+  " @@@@@@@@@   ",
+  " @xxxxxxx@   ",
+  " @xxxxxxx@   ",
+  " @xxxxxxx@   ",
+  " @xxxxxxx@   ",
+  " @xxxxxxx@   ",
+  " @xxxxxxx@   ",
+  " @xxxxxxx@   ",
+  " @xxxxxxx@   ",
+  " @xxxxxxx@   ",
+  " @@@@@@@@@   "};
 static Fl_Pixmap L_document_pixmap(L_document_xpm);
 
 // Folder icon
 static const char *L_folder_xpm[] = {
-    "13 11 3 1",     "   c None",     "x  c #d8d833",  "@  c #808011",  "             ",
-    "     @@@@    ", "    @xxxx@   ", "@@@@@xxxx@@  ", "@xxxxxxxxx@  ", "@xxxxxxxxx@  ",
-    "@xxxxxxxxx@  ", "@xxxxxxxxx@  ", "@xxxxxxxxx@  ", "@xxxxxxxxx@  ", "@@@@@@@@@@@  "};
+  "13 11 3 1",
+  "   c None",
+  "x  c #d8d833",
+  "@  c #808011",
+  "             ",
+  "     @@@@    ",
+  "    @xxxx@   ",
+  "@@@@@xxxx@@  ",
+  "@xxxxxxxxx@  ",
+  "@xxxxxxxxx@  ",
+  "@xxxxxxxxx@  ",
+  "@xxxxxxxxx@  ",
+  "@xxxxxxxxx@  ",
+  "@xxxxxxxxx@  ",
+  "@@@@@@@@@@@  "};
 static Fl_Pixmap L_folder_pixmap(L_folder_xpm);
 
 // Red "X"
 static const char *L_redx_xpm[] = {
-    "13 11 5 1",     "   c None",     "+  c #222222",  "x  c #555555",  "-  c #882222",
-    "@  c #ffffff",  "   x+++x     ", "  ++---++    ", " ++-----++   ", "++-@@-@@-++  ",
-    "++--@@@--++  ", "++---@---++  ", "++--@@@--++  ", "++-@@-@@-++  ", " ++-----++   ",
-    "  ++---++    ", "   x+++x     "};
+  "13 11 5 1",
+  "   c None",
+  "+  c #222222",
+  "x  c #555555",
+  "-  c #882222",
+  "@  c #ffffff",
+  "   x+++x     ",
+  "  ++---++    ",
+  " ++-----++   ",
+  "++-@@-@@-++  ",
+  "++--@@@--++  ",
+  "++---@---++  ",
+  "++--@@@--++  ",
+  "++-@@-@@-++  ",
+  " ++-----++   ",
+  "  ++---++    ",
+  "   x+++x     "};
 static Fl_Pixmap L_redx_pixmap(L_redx_xpm);
 
 // Handle the different menu items..
-void Menu_CB(Fl_Widget *w, void *data) {
-  const char *itemname = (const char *)data; // "New", "Open", etc
-  if (strcmp(itemname, "Quit") == 0) {       // handle Quit
+void Menu_CB(Fl_Widget *w, void* data) {
+  const char *itemname = (const char*)data;   // "New", "Open", etc
+  if ( strcmp(itemname, "Quit") == 0 ) {      // handle Quit
     w->window()->hide();
-  } else { // just show a message for other items
+  } else {                                    // just show a message for other items
     fl_message("'%s' would happen here", itemname);
   }
 }
 
 // Add an image in front of item's text
-int AddItemToMenu(Fl_Menu_ *menu,        // menu to add item to
-                  const char *labeltext, // label text
-                  int shortcut,          // shortcut (e.g. FL_COMMAND+'a')
-                  Fl_Callback *cb,       // callback to invoke
-                  void *userdata,        // userdata for callback
-                  Fl_Pixmap *pixmap,     // image (if any) to add to item
-                  int flags = 0) {       // menu flags (e.g. FL_MENU_DIVIDER..)
+int AddItemToMenu(Fl_Menu_   *menu,                   // menu to add item to
+                 const char  *labeltext,              // label text
+                 int         shortcut,                // shortcut (e.g. FL_COMMAND+'a')
+                 Fl_Callback *cb,                     // callback to invoke
+                 void        *userdata,               // userdata for callback
+                 Fl_Pixmap*  pixmap,                  // image (if any) to add to item
+                 int         flags=0) {               // menu flags (e.g. FL_MENU_DIVIDER..)
   // Add a new menu item
   int i = menu->add(labeltext, shortcut, cb, userdata, flags);
 
-  if (!pixmap)
-    return i;
-  Fl_Menu_Item *item = (Fl_Menu_Item *)&(menu->menu()[i]);
+  if ( !pixmap ) return i;
+  Fl_Menu_Item *item = (Fl_Menu_Item*)&(menu->menu()[i]);
 
   // Create a multi label, assign it an image + text
   Fl_Multi_Label *ml = new Fl_Multi_Label;
 
   // Left side of label is image
-  ml->typea = FL_IMAGE_LABEL;
-  ml->labela = (const char *)pixmap;
+  ml->typea  = FL_IMAGE_LABEL;
+  ml->labela = (const char*)pixmap;
 
   // Right side of label is text
-  ml->typeb = FL_NORMAL_LABEL;
+  ml->typeb  = FL_NORMAL_LABEL;
   ml->labelb = item->label();
 
   // Assign multilabel to item.
@@ -100,17 +136,16 @@ int AddItemToMenu(Fl_Menu_ *menu,        // menu to add item to
 //    This same technique works for Fl_Menu_ derived widgets,
 //    e.g. Fl_Menu_Bar, Fl_Menu_Button, Fl_Choice..
 //
-void CreateMenuItems(Fl_Menu_ *menu) {
+void CreateMenuItems(Fl_Menu_* menu) {
 
   // Add items with LABELS AND IMAGES using Fl_Multi_Label..
-  AddItemToMenu(menu, "File/New", FL_COMMAND + 'n', Menu_CB, (void *)"New", &L_document_pixmap);
-  AddItemToMenu(menu, "File/Open", FL_COMMAND + 'o', Menu_CB, (void *)"Open", &L_folder_pixmap,
-                FL_MENU_DIVIDER);
-  AddItemToMenu(menu, "File/Quit", FL_COMMAND + 'q', Menu_CB, (void *)"Quit", &L_redx_pixmap);
+  AddItemToMenu(menu, "File/New",  FL_COMMAND+'n', Menu_CB, (void*)"New",  &L_document_pixmap);
+  AddItemToMenu(menu, "File/Open", FL_COMMAND+'o', Menu_CB, (void*)"Open", &L_folder_pixmap, FL_MENU_DIVIDER);
+  AddItemToMenu(menu, "File/Quit", FL_COMMAND+'q', Menu_CB, (void*)"Quit", &L_redx_pixmap);
 
   // Create menu bar items with JUST LABELS
-  menu->add("Edit/Copy", FL_COMMAND + 'c', Menu_CB, (void *)"Copy");
-  menu->add("Edit/Paste", FL_COMMAND + 'v', Menu_CB, (void *)"Paste");
+  menu->add("Edit/Copy",  FL_COMMAND+'c', Menu_CB, (void*)"Copy");
+  menu->add("Edit/Paste", FL_COMMAND+'v', Menu_CB, (void*)"Paste");
 
   // Create menu bar items with JUST IMAGES (no labels)
   //    This shows why you need Fl_Multi_Label; the item->label()
@@ -119,16 +154,16 @@ void CreateMenuItems(Fl_Menu_ *menu) {
   int i;
   Fl_Menu_Item *item;
 
-  i = menu->add("Images/One", 0, Menu_CB, (void *)"One");
-  item = (Fl_Menu_Item *)&(menu->menu()[i]);
-  item->image(L_document_pixmap); // note: this clobbers the item's label()
+  i = menu->add("Images/One", 0, Menu_CB, (void*)"One");
+  item = (Fl_Menu_Item*)&(menu->menu()[i]);
+  item->image(L_document_pixmap);   // note: this clobbers the item's label()
 
-  i = menu->add("Images/Two", 0, Menu_CB, (void *)"Two");
-  item = (Fl_Menu_Item *)&(menu->menu()[i]);
+  i = menu->add("Images/Two", 0, Menu_CB, (void*)"Two");
+  item = (Fl_Menu_Item*)&(menu->menu()[i]);
   item->image(L_folder_pixmap);
 
-  i = menu->add("Images/Three", 0, Menu_CB, (void *)"Three");
-  item = (Fl_Menu_Item *)&(menu->menu()[i]);
+  i = menu->add("Images/Three", 0, Menu_CB, (void*)"Three");
+  item = (Fl_Menu_Item*)&(menu->menu()[i]);
   item->image(L_redx_pixmap);
 }
 
@@ -137,21 +172,21 @@ int main() {
   win->tooltip("Right click on window background\nfor popup menu");
 
   // Help message
-  Fl_Box *box = new Fl_Box(100, 100, 200, 200);
+  Fl_Box *box = new Fl_Box(100,100,200,200);
   box->copy_label(win->tooltip());
-  box->align(FL_ALIGN_CENTER | FL_ALIGN_INSIDE);
+  box->align(FL_ALIGN_CENTER|FL_ALIGN_INSIDE);
 
   // Menu bar
-  Fl_Menu_Bar *menubar = new Fl_Menu_Bar(0, 0, win->w(), 25);
+  Fl_Menu_Bar *menubar = new Fl_Menu_Bar(0,0,win->w(), 25);
   CreateMenuItems(menubar);
 
   // Right click context menu
-  Fl_Menu_Button *menubutt = new Fl_Menu_Button(0, 25, win->w(), win->h() - 25);
+  Fl_Menu_Button *menubutt = new Fl_Menu_Button(0,25,win->w(), win->h()-25);
   CreateMenuItems(menubutt);
   menubutt->type(Fl_Menu_Button::POPUP3);
 
   // Chooser menu
-  Fl_Choice *choice = new Fl_Choice(140, 50, 200, 25, "Choice");
+  Fl_Choice *choice = new Fl_Choice(140,50,200,25,"Choice");
   CreateMenuItems(choice);
   choice->value(1);
 

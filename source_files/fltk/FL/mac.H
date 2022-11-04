@@ -20,8 +20,15 @@
 #ifndef FL_DOXYGEN
 
 #if !defined(FL_PLATFORM_H)
-#error "Never use <FL/mac.H> directly; include <FL/platform.H> instead."
+#  error "Never use <FL/mac.H> directly; include <FL/platform.H> instead."
 #endif // !FL_PLATFORM_H
+
+#ifdef __OBJC__
+  @class NSOpenGLContext;
+#elif defined(__cplusplus)
+  class NSOpenGLContext;
+#endif /* __OBJC__ */
+extern NSOpenGLContext *fl_mac_glcontext(GLContext rc);
 
 #ifdef __OBJC__
 @class FLWindow; // a subclass of the NSWindow Cocoa class
@@ -32,8 +39,7 @@ typedef class FLWindow *Window; // pointer to the FLWindow objective-c class
 
 #include <FL/Fl_Widget.H> // for Fl_Callback
 
-#if (defined(FL_LIBRARY) || \
-     defined(FL_INTERNALS)) // this part must be compiled when building the FLTK libraries
+#if (defined(FL_LIBRARY) || defined(FL_INTERNALS)) // this part must be compiled when building the FLTK libraries
 
 // Standard MacOS C/C++ includes...
 #include <ApplicationServices/ApplicationServices.h>
@@ -72,6 +78,21 @@ typedef class FLWindow *Window; // pointer to the FLWindow objective-c class
 #ifndef MAC_OS_X_VERSION_10_14
 #define MAC_OS_X_VERSION_10_14 101400
 #endif
+#ifndef MAC_OS_X_VERSION_10_15
+#define MAC_OS_X_VERSION_10_15 101500
+#endif
+#ifndef MAC_OS_X_VERSION_10_16
+#define MAC_OS_X_VERSION_10_16 101600
+#endif
+#ifndef MAC_OS_VERSION_11_0
+#define MAC_OS_VERSION_11_0 110000
+#endif
+#ifndef MAC_OS_VERSION_12_0
+#define MAC_OS_VERSION_12_0 120000
+#endif
+#ifndef MAC_OS_VERSION_13_0
+#define MAC_OS_VERSION_13_0 130000
+#endif
 
 
 #ifndef NSINTEGER_DEFINED // appears with 10.5 in NSObjCRuntime.h
@@ -93,7 +114,7 @@ struct flCocoaRegion {
   CGRect *rects;
 }; // a region is the union of a series of rectangles
 
-#ifndef CGFLOAT_DEFINED // appears with 10.5 in CGBase.h
+#ifndef CGFLOAT_DEFINED //appears with 10.5 in CGBase.h
 #if defined(__LP64__) && __LP64__
 typedef double CGFloat;
 #else
@@ -103,7 +124,7 @@ typedef float CGFloat;
 
 #else
 
-typedef struct CGContext *CGContextRef;
+typedef struct CGContext* CGContextRef;
 
 #endif // FL_LIBRARY || FL_INTERNALS
 
@@ -126,6 +147,13 @@ extern CGContextRef fl_gc;
  */
 void fl_mac_set_about(Fl_Callback *cb, void *user_data, int shortcut = 0);
 
+/** Returns the macOS-specific graphics context for the current window */
+extern CGContextRef fl_mac_gc();
+/** Returns the macOS-specific window reference corresponding to the given Fl_Window object */
+extern FLWindow *fl_mac_xid(const Fl_Window *win);
+/** Returns the Fl_Window corresponding to the given macOS-specific window reference */
+extern Fl_Window *fl_mac_find(FLWindow *);
+class Fl_Gl_Window;
 
 /** The version number of the running Mac OS X (e.g., 100604 for 10.6.4, 101300 for 10.13).
  FLTK initializes this global variable before main() begins running. If
@@ -160,11 +188,12 @@ public:
   /** Localizable text for the "Quit xxx" application menu item */
   static const char *quit;
   /** Adds custom menu item(s) to the application menu of the system menu bar.
-   They are positioned after the "Print Front Window / Toggle printing of titlebar" items, or at
-   their place if they were removed with <tt>Fl_Mac_App_Menu::print = ""</tt>. \param m zero-ending
-   array of Fl_Menu_Item 's.
+   They are positioned after the "Print Front Window / Toggle printing of titlebar" items, or at their place
+   if they were removed with <tt>Fl_Mac_App_Menu::print = ""</tt>.
+   \param m zero-ending array of Fl_Menu_Item 's.
    */
   static void custom_application_menu_items(const Fl_Menu_Item *m);
 };
 
 /** @} */
+

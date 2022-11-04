@@ -61,17 +61,16 @@ int Fl::compose_state = 0;
  text input will work, but will not signal to the user what text is marked.
 
  <p>Finally, text editing widgets should call <tt>set_flag(MAC_USE_ACCENTS_MENU);</tt>
- in their constructor if they want to use, on the macOS platform, the feature introduced with Mac
- OS 10.7 "Lion" where pressing and holding certain keys on the keyboard opens a diacritic marks
- popup window.
+ in their constructor if they want to use, on the macOS platform, the feature introduced with Mac OS 10.7 "Lion"
+ where pressing and holding certain keys on the keyboard opens a diacritic marks popup window.
 
  \note For compatibility with FLTK 1.3, text editing widgets can call
- <tt>Fl::insertion_point_location(int x, int y, int height)</tt> and
- <tt>Fl::reset_marked_text()</tt> <u>only under the macOS platform</u>  to indicate/reset the
- coordinates of the current insertion point. This is deprecated in version 1.4 because redundant
- with the platform-independent fl_set_spot() and fl_reset_spot() functions.
+ <tt>Fl::insertion_point_location(int x, int y, int height)</tt> and <tt>Fl::reset_marked_text()</tt>
+ <u>only under the macOS platform</u>  to indicate/reset the coordinates of the current insertion point.
+ This is deprecated in version 1.4 because redundant with the platform-independent
+ fl_set_spot() and fl_reset_spot() functions.
  */
-int Fl::compose(int &del) {
+int Fl::compose(int& del) {
   return Fl::screen_driver()->compose(del);
 }
 
@@ -81,6 +80,8 @@ int Fl::compose(int &del) {
  particular it will not set "del" to non-zero. This call is very fast
  so it is ok to call it many times and in many places.
  */
-void Fl::compose_reset() {
+void Fl::compose_reset()
+{
   Fl::screen_driver()->compose_reset();
 }
+

@@ -20,8 +20,9 @@
 char linebuf[1024];
 
 
+
 int main(int argc, char **argv) {
-  if (argc != 1) {
+  if (argc!=1) {
     puts("Add stars (*) in front of multi-line doxygen comments");
     puts("to protect comment indentation from code beautifiers.");
     puts("usage: cat file | doxystar");
@@ -32,15 +33,14 @@ int main(int argc, char **argv) {
   char *commentStart;
   int i, commentCol;
   for (;;) {
-    if (!fgets(linebuf, 1020, stdin))
-      break; // EOF or error
+    if (!fgets(linebuf, 1020, stdin)) break; // EOF or error
     switch (state) {
       case 0: // line start is source code
         commentStart = strstr(linebuf, "/*");
         if (commentStart) {
           // check if this comment spans multiple lines
-          if (strstr(commentStart, "*/") == 0) {
-            if ((commentStart[2] == '*' || commentStart[2] == '!') && commentStart[3] != '*') {
+          if (strstr(commentStart, "*/")==0) {
+            if ((commentStart[2]=='*' || commentStart[2]=='!') && commentStart[3]!='*') {
               state = 2; // Doxygen multiline comment
               commentCol = commentStart - linebuf;
             } else {
@@ -61,25 +61,24 @@ int main(int argc, char **argv) {
         fputs(linebuf, stdout);
         break;
       case 2: // line start is inside a doxygen  multiline comment
-        for (i = 0; i < commentCol; i++)
-          fputc(' ', stdout);
+        for (i=0; i<commentCol; i++) fputc(' ', stdout);
         fputs(" *", stdout);
         if (strstr(linebuf, "*/")) {
           state = 0;
         } else {
           // still inside comment
         }
-        for (i = 0; i < commentCol + 1; i++)
-          if (linebuf[i] != ' ')
+        for (i=0; i<commentCol+1; i++)
+          if (linebuf[i]!=' ')
             break;
-        if (linebuf[i] == '*') {
-          if (linebuf[i + 1] == ' ') {
-            i += 2;
+        if (linebuf[i]=='*') {
+          if (linebuf[i+1]==' ') {
+            i+=2;
           } else {
-            i += 1;
+            i+=1;
           }
         }
-        fputs(linebuf + i, stdout);
+        fputs(linebuf+i, stdout);
         break;
     }
   }

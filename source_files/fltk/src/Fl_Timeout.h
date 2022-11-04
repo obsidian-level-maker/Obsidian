@@ -20,7 +20,7 @@
 
 #include <FL/Fl.H>
 
-#define FL_TIMEOUT_DEBUG 0 // 1 = include debugging features, 0 = no
+#define FL_TIMEOUT_DEBUG 0        // 1 = include debugging features, 0 = no
 
 /** \file
   Fl_Timeout handling.
@@ -29,28 +29,37 @@
 
   - Fl::add_timeout()
   - Fl::repeat_timeout()
-  - Fl::remove_timeout()
   - Fl::has_timeout()
+  - Fl::remove_timeout()
 
   and related methods of class Fl_Timeout.
 */
 
 /**
-  Class Fl_Timeout handles all timeout related functions.
+  The internal class Fl_Timeout handles all timeout related functions.
 
-  All code is platform independent except retrieving a timestamp
-  which requires calling a system driver function and potentially
-  results in different timer resolutions (from milliseconds to
-  microseconds).
+  All code is platform independent except retrieving a timestamp which
+  requires calling a system driver function and potentially results in
+  different timer resolutions (from milliseconds to microseconds).
+
+  Related user documentation:
+
+  - \ref Fl_Timeout_Handler
+  - Fl::add_timeout(double time, Fl_Timeout_Handler cb, void *data)
+  - Fl::repeat_timeout(double time, Fl_Timeout_Handler cb, void *data)
+  - Fl::has_timeout(Fl_Timeout_Handler cb, void *data)
+  - Fl::remove_timeout(Fl_Timeout_Handler cb, void *data)
+
 */
 class Fl_Timeout {
 
 protected:
-  Fl_Timeout *next;            // ** Link to next timeout
-  Fl_Timeout_Handler callback; // the user's callback
-  void *data;                  // the user's callback data
-  double time;                 // delay until timeout
-  int skip;                    // skip "new" (inserted) timers (issue #450)
+
+  Fl_Timeout *next;             // ** Link to next timeout
+  Fl_Timeout_Handler callback;  // the user's callback
+  void *data;                   // the user's callback data
+  double time;                  // delay until timeout
+  int skip;                     // skip "new" (inserted) timers (issue #450)
 
   // constructor
   Fl_Timeout() {
@@ -61,8 +70,10 @@ protected:
     skip = 0;
   }
 
+  // destructor
   ~Fl_Timeout() {}
 
+  // get a new timer entry from the pool or allocate a new one
   static Fl_Timeout *get(double time, Fl_Timeout_Handler cb, void *data);
 
   // insert this timer into the active timer queue, sorted by expiration time
@@ -77,10 +88,14 @@ protected:
   void release();
 
   /** Get the timer's delay in seconds. */
-  double delay() { return time; }
+  double delay() {
+    return time;
+  }
 
   /** Set the timer's delay in seconds. */
-  void delay(double t) { time = t; }
+  void delay(double t) {
+    time = t;
+  }
 
 public:
   // Returns whether the given timeout is active.
@@ -108,6 +123,7 @@ public:
 #endif
 
 protected:
+
   static Fl_Timeout *current();
 
   /**
@@ -143,7 +159,7 @@ protected:
 
     \see Fl_Timeout::push()                 Member function (method)
   */
-  static Fl_Timeout *current_timeout; // list of "current" timeouts
+  static Fl_Timeout *current_timeout;   // list of "current" timeouts
 
 }; // class Fl_Timeout
 

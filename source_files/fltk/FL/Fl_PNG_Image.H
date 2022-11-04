@@ -19,7 +19,7 @@
 
 #ifndef Fl_PNG_Image_H
 #define Fl_PNG_Image_H
-#include "Fl_Image.H"
+#  include "Fl_Image.H"
 
 /**
   The Fl_PNG_Image class supports loading, caching,
@@ -30,9 +30,9 @@
 class FL_EXPORT Fl_PNG_Image : public Fl_RGB_Image {
 
 public:
-  Fl_PNG_Image(const char *filename);
-  Fl_PNG_Image(const char *name_png, const unsigned char *buffer, int datasize);
 
+  Fl_PNG_Image(const char* filename);
+  Fl_PNG_Image (const char *name_png, const unsigned char *buffer, int datasize);
 private:
   void load_png_(const char *name_png, const unsigned char *buffer_png, int datasize);
 };
@@ -40,9 +40,7 @@ private:
 // Support functions to write PNG image files (since 1.4.0)
 
 FL_EXPORT int fl_write_png(const char *filename, Fl_RGB_Image *img);
-FL_EXPORT int fl_write_png(const char *filename, const char *pixels, int w, int h, int d = 3,
-                           int ld = 0);
-FL_EXPORT int fl_write_png(const char *filename, const unsigned char *pixels, int w, int h,
-                           int d = 3, int ld = 0);
+FL_EXPORT int fl_write_png(const char *filename, const char *pixels, int w, int h, int d=3, int ld=0);
+FL_EXPORT int fl_write_png(const char *filename, const unsigned char *pixels, int w, int h, int d=3, int ld=0);
 
 #endif

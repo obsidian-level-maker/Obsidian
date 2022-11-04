@@ -14,9 +14,9 @@
 //     https://www.fltk.org/bugs.php
 //
 
-#include <FL/Fl.H> // includes <FL/fl_config.h>
+#include <FL/Fl.H>      // includes <FL/fl_config.h>
 
-#ifdef FLTK_HAVE_CAIRO // defined in <FL/fl_config.h> since FLTK 1.4.0
+#ifdef FLTK_HAVE_CAIRO  // defined in <FL/fl_config.h> since FLTK 1.4.0
 
 #include <FL/Fl_Cairo_Window.H>
 #include <FL/Fl_Box.H>
@@ -51,8 +51,7 @@
 
 // draw centered text
 
-static void centered_text(cairo_t *cr, double x0, double y0, double w0, double h0,
-                          const char *my_text) {
+static void centered_text(cairo_t *cr, double x0, double y0, double w0, double h0, const char *my_text) {
   cairo_select_font_face(cr, "Sans", CAIRO_FONT_SLANT_OBLIQUE, CAIRO_FONT_WEIGHT_BOLD);
   cairo_set_source_rgba(cr, 0.9, 0.9, 0.4, 0.6);
   cairo_text_extents_t extents;
@@ -70,8 +69,9 @@ static void centered_text(cairo_t *cr, double x0, double y0, double w0, double h
 
 // draw a button object with rounded corners and a label
 
-static void round_button(cairo_t *cr, double x0, double y0, double rect_width, double rect_height,
-                         double radius, double r, double g, double b) {
+static void round_button(cairo_t *cr, double x0, double y0,
+                         double rect_width, double rect_height, double radius,
+                         double r, double g, double b) {
   double x1, y1;
   x1 = x0 + rect_width;
   y1 = y0 + rect_height;
@@ -115,8 +115,8 @@ static void round_button(cairo_t *cr, double x0, double y0, double rect_width, d
   cairo_close_path(cr);
 
   cairo_pattern_t *pat =
-      // cairo_pattern_create_linear (0.0, 0.0,  0.0, 1.0);
-      cairo_pattern_create_radial(0.25, 0.24, 0.11, 0.24, 0.14, 0.35);
+    // cairo_pattern_create_linear (0.0, 0.0,  0.0, 1.0);
+    cairo_pattern_create_radial(0.25, 0.24, 0.11, 0.24, 0.14, 0.35);
   cairo_pattern_set_extend(pat, CAIRO_EXTEND_REFLECT);
 
   cairo_pattern_add_color_stop_rgba(pat, 1.0, r, g, b, 1);
@@ -154,26 +154,24 @@ typedef Fl_Cairo_Window cairo_using_window;
 #else // !USE_FL_CAIRO_WINDOW
 
 class cairo_using_window : public Fl_Double_Window {
-  void (*draw_with_cairo_)(cairo_using_window *, cairo_t *);
-
+  void (*draw_with_cairo_)(cairo_using_window*, cairo_t*);
 public:
-  cairo_using_window(int w, int h, const char *title)
-    : Fl_Double_Window(w, h, title) {
-    Fl_Box *box =
-        new Fl_Box(FL_NO_BOX, 0, 0, w, 25, "use Cairo and the FLTK API in Fl_Double_Window");
+  cairo_using_window(int w, int h, const char *title) : Fl_Double_Window(w, h, title) {
+    Fl_Box *box = new Fl_Box(FL_NO_BOX, 0, 0, w, 25,
+                             "use Cairo and the FLTK API in Fl_Double_Window");
     box->labelfont(FL_TIMES_BOLD);
     box->labelsize(12);
     box->labelcolor(FL_BLUE);
   }
   void draw() {
-    Fl_Window::draw();            // perform drawings with the FLTK API
+    Fl_Window::draw(); // perform drawings with the FLTK API
 #ifndef FLTK_HAVE_CAIROEXT
     Fl::cairo_make_current(this); // announce Cairo will be used in this window
 #endif
     cairo_t *cc = Fl::cairo_cc(); // get the adequate Cairo context
-    draw_with_cairo_(this, cc);   // draw in this window using Cairo
+    draw_with_cairo_(this, cc); // draw in this window using Cairo
   }
-  void set_draw_cb(void (*cb)(cairo_using_window *, cairo_t *)) {
+  void set_draw_cb( void (*cb)(cairo_using_window*, cairo_t*)) {
     draw_with_cairo_ = cb;
   }
 };
@@ -206,8 +204,10 @@ int main(int argc, char **argv) {
 
 int main(int argc, char **argv) {
   fl_message_title("This program needs a Cairo enabled FLTK library");
-  fl_message("Please configure FLTK with Cairo enabled (--enable-cairo or --enable-cairoext)\n"
-             "or one of the CMake options OPTION_CAIRO or OPTION_CAIROEXT, respectively.");
+  fl_message(
+    "Please configure FLTK with Cairo enabled (--enable-cairo or --enable-cairoext)\n"
+    "or one of the CMake options OPTION_CAIRO or OPTION_CAIROEXT, respectively.");
   return 0;
 }
 #endif // (FLTK_HAVE_CAIRO)
+

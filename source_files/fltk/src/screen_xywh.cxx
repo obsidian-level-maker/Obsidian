@@ -21,31 +21,36 @@
 
 
 #ifndef FL_DOXYGEN
-void Fl::call_screen_init() {
+void Fl::call_screen_init()
+{
   screen_driver()->init();
 }
 #endif
 
 /** Returns the leftmost x coordinate of the main screen work area. */
-int Fl::x() {
+int Fl::x()
+{
   return screen_driver()->x();
 }
 
 
 /** Returns the topmost y coordinate of the main screen work area. */
-int Fl::y() {
+int Fl::y()
+{
   return screen_driver()->y();
 }
 
 
 /** Returns the width in pixels of the main screen work area. */
-int Fl::w() {
+int Fl::w()
+{
   return screen_driver()->w();
 }
 
 
 /** Returns the height in pixels of the main screen work area. */
-int Fl::h() {
+int Fl::h()
+{
   return screen_driver()->h();
 }
 
@@ -53,7 +58,8 @@ int Fl::h() {
 /**
   Gets the number of available screens.
 */
-int Fl::screen_count() {
+int Fl::screen_count()
+{
   return screen_driver()->screen_count();
 }
 
@@ -64,7 +70,8 @@ int Fl::screen_count() {
   \param[out]  X,Y,W,H the corresponding screen bounding box
   \param[in] mx, my the absolute screen position
 */
-void Fl::screen_xywh(int &X, int &Y, int &W, int &H, int mx, int my) {
+void Fl::screen_xywh(int &X, int &Y, int &W, int &H, int mx, int my)
+{
   screen_driver()->screen_xywh(X, Y, W, H, mx, my);
 }
 
@@ -75,7 +82,8 @@ void Fl::screen_xywh(int &X, int &Y, int &W, int &H, int mx, int my) {
  \param[out]  X,Y,W,H the work area bounding box
  \param[in] mx, my the absolute screen position
  */
-void Fl::screen_work_area(int &X, int &Y, int &W, int &H, int mx, int my) {
+void Fl::screen_work_area(int &X, int &Y, int &W, int &H, int mx, int my)
+{
   screen_driver()->screen_work_area(X, Y, W, H, mx, my);
 }
 
@@ -86,7 +94,8 @@ void Fl::screen_work_area(int &X, int &Y, int &W, int &H, int mx, int my) {
  \param[in] n the screen number (0 to Fl::screen_count() - 1)
  \see void screen_xywh(int &x, int &y, int &w, int &h, int mx, int my)
 */
-void Fl::screen_work_area(int &X, int &Y, int &W, int &H, int n) {
+void Fl::screen_work_area(int &X, int &Y, int &W, int &H, int n)
+{
   screen_driver()->screen_work_area(X, Y, W, H, n);
 }
 
@@ -98,7 +107,8 @@ void Fl::screen_work_area(int &X, int &Y, int &W, int &H, int n) {
   \param[in] n the screen number (0 to Fl::screen_count() - 1)
   \see void screen_xywh(int &x, int &y, int &w, int &h, int mx, int my)
 */
-void Fl::screen_xywh(int &X, int &Y, int &W, int &H, int n) {
+void Fl::screen_xywh(int &X, int &Y, int &W, int &H, int n)
+{
   screen_driver()->screen_xywh(X, Y, W, H, n);
 }
 
@@ -111,7 +121,8 @@ void Fl::screen_xywh(int &X, int &Y, int &W, int &H, int n) {
   \param[in] mx, my, mw, mh the rectangle to search for intersection with
   \see void screen_xywh(int &X, int &Y, int &W, int &H, int n)
   */
-void Fl::screen_xywh(int &X, int &Y, int &W, int &H, int mx, int my, int mw, int mh) {
+void Fl::screen_xywh(int &X, int &Y, int &W, int &H, int mx, int my, int mw, int mh)
+{
   screen_driver()->screen_xywh(X, Y, W, H, mx, my, mw, mh);
 }
 
@@ -121,7 +132,8 @@ void Fl::screen_xywh(int &X, int &Y, int &W, int &H, int mx, int my, int mw, int
   that contains the specified screen position \p x, \p y
   \param[in] x, y the absolute screen position
 */
-int Fl::screen_num(int x, int y) {
+int Fl::screen_num(int x, int y)
+{
   return screen_driver()->screen_num(x, y);
 }
 
@@ -132,7 +144,8 @@ int Fl::screen_num(int x, int y) {
   defined by \p x, \p y, \p w, \p h.
   \param[in] x, y, w, h the rectangle to search for intersection with
   */
-int Fl::screen_num(int x, int y, int w, int h) {
+int Fl::screen_num(int x, int y, int w, int h)
+{
   return screen_driver()->screen_num(x, y, w, h);
 }
 
@@ -143,7 +156,8 @@ int Fl::screen_num(int x, int y, int w, int h) {
  \param[in]   n     the screen number (0 to Fl::screen_count() - 1)
  \see void screen_xywh(int &x, int &y, int &w, int &h, int mx, int my)
  */
-void Fl::screen_dpi(float &h, float &v, int n) {
+void Fl::screen_dpi(float &h, float &v, int n)
+{
   screen_driver()->screen_dpi(h, v, n);
 }
 
@@ -153,7 +167,8 @@ void Fl::screen_dpi(float &h, float &v, int n) {
  \param[out]  X,Y,W,H the corresponding screen bounding box
  \see void screen_xywh(int &x, int &y, int &w, int &h, int mx, int my)
  */
-void Fl::screen_xywh(int &X, int &Y, int &W, int &H) {
+void Fl::screen_xywh(int &X, int &Y, int &W, int &H)
+{
   int mx, my;
   int nscreen = Fl::screen_driver()->get_mouse(mx, my);
   Fl::screen_driver()->screen_xywh(X, Y, W, H, nscreen);
@@ -165,7 +180,8 @@ void Fl::screen_xywh(int &X, int &Y, int &W, int &H) {
  \param[out]  X,Y,W,H the work area bounding box
  \see void screen_work_area(int &x, int &y, int &w, int &h, int mx, int my)
  */
-void Fl::screen_work_area(int &X, int &Y, int &W, int &H) {
+void Fl::screen_work_area(int &X, int &Y, int &W, int &H)
+{
   int mx, my;
   int nscreen = Fl::screen_driver()->get_mouse(mx, my);
   Fl::screen_driver()->screen_work_area(X, Y, W, H, nscreen);

@@ -25,17 +25,15 @@
 #endif
 
 // values for type()
-#define FL_NORMAL_BUTTON                                                                    \
-  0                        /**< value() will be set to 1 during the press of the button and \
-                                reverts back to 0 when the button is released */
-#define FL_TOGGLE_BUTTON 1 ///< value() toggles between 0 and 1 at every click of the button
-#define FL_RADIO_BUTTON                                                          \
-  (FL_RESERVED_TYPE + 2)   /**< is set to 1 at button press, and all other       \
-               buttons in the same group with <tt>type() == FL_RADIO_BUTTON</tt> \
-               are set to zero.*/
-#define FL_HIDDEN_BUTTON 3 ///< for Forms compatibility
+#define FL_NORMAL_BUTTON        0   /**< value() will be set to 1 during the press of the button and
+                                         reverts back to 0 when the button is released */
+#define FL_TOGGLE_BUTTON        1   ///< value() toggles between 0 and 1 at every click of the button
+#define FL_RADIO_BUTTON         (FL_RESERVED_TYPE+2) /**< is set to 1 at button press, and all other
+                                         buttons in the same group with <tt>type() == FL_RADIO_BUTTON</tt>
+                                         are set to zero.*/
+#define FL_HIDDEN_BUTTON        3   ///< for Forms compatibility
 
-extern FL_EXPORT Fl_Shortcut fl_old_shortcut(const char *);
+extern FL_EXPORT Fl_Shortcut fl_old_shortcut(const char*);
 
 class Fl_Widget_Tracker;
 
@@ -81,13 +79,15 @@ class FL_EXPORT Fl_Button : public Fl_Widget {
   uchar down_box_;
 
 protected:
+
   static Fl_Widget_Tracker *key_release_tracker;
-  static void key_release_timeout(void *);
+  static void key_release_timeout(void*);
   void simulate_key_action();
 
   virtual void draw();
 
 public:
+
   virtual int handle(int);
 
   Fl_Button(int X, int Y, int W, int H, const char *L = 0);
@@ -97,19 +97,19 @@ public:
   /**
     Returns the current value of the button (0 or 1).
    */
-  char value() const { return value_; }
+  char value() const {return value_;}
 
   /**
     Same as \c value(1).
     \see value(int v)
    */
-  int set() { return value(1); }
+  int set() {return value(1);}
 
   /**
     Same as \c value(0).
     \see value(int v)
    */
-  int clear() { return value(0); }
+  int clear() {return value(0);}
 
   void setonly(); // this should only be called on FL_RADIO_BUTTONs
 
@@ -117,7 +117,7 @@ public:
     Returns the current shortcut key for the button.
     \retval int
    */
-  int shortcut() const { return shortcut_; }
+  int shortcut() const {return shortcut_;}
 
   /**
     Sets the shortcut key to \c s.
@@ -138,13 +138,13 @@ public:
     bits indicates a "don't care" setting).
     \param[in] s bitwise OR of key and shift flags
    */
-  void shortcut(int s) { shortcut_ = s; }
+  void shortcut(int s) {shortcut_ = s;}
 
   /**
     Returns the current down box type, which is drawn when value() is non-zero.
     \retval Fl_Boxtype
    */
-  Fl_Boxtype down_box() const { return (Fl_Boxtype)down_box_; }
+  Fl_Boxtype down_box() const {return (Fl_Boxtype)down_box_;}
 
   /**
     Sets the down box type. The default value of 0 causes FLTK to figure out
@@ -155,16 +155,16 @@ public:
 
     \param[in] b down box type
    */
-  void down_box(Fl_Boxtype b) { down_box_ = b; }
+  void down_box(Fl_Boxtype b) {down_box_ = b;}
 
   /// (for backwards compatibility)
-  void shortcut(const char *s) { shortcut(fl_old_shortcut(s)); }
+  void shortcut(const char *s) {shortcut(fl_old_shortcut(s));}
 
   /// (for backwards compatibility)
-  Fl_Color down_color() const { return selection_color(); }
+  Fl_Color down_color() const {return selection_color();}
 
   /// (for backwards compatibility)
-  void down_color(unsigned c) { selection_color(c); }
+  void down_color(unsigned c) {selection_color(c);}
 };
 
 #endif

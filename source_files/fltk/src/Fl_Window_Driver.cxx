@@ -41,6 +41,7 @@ Fl_Window_Driver::Fl_Window_Driver(Fl_Window *win)
   : pWindow(win) {
   wait_for_expose_value = 0;
   other_xid = 0;
+  screen_num_ = 0;
 }
 
 
@@ -50,85 +51,47 @@ Fl_Window_Driver::~Fl_Window_Driver() {
 
 // accessors to Fl_Window's size_range stuff
 
-int Fl_Window_Driver::minw() {
-  return pWindow->minw_;
-}
-int Fl_Window_Driver::minh() {
-  return pWindow->minh_;
-}
-int Fl_Window_Driver::maxw() {
-  return pWindow->maxw_;
-}
-int Fl_Window_Driver::maxh() {
-  return pWindow->maxh_;
-}
-int Fl_Window_Driver::dw() {
-  return pWindow->dw_;
-}
-int Fl_Window_Driver::dh() {
-  return pWindow->dh_;
-}
-int Fl_Window_Driver::aspect() {
-  return pWindow->aspect_;
-}
-unsigned char Fl_Window_Driver::size_range_set() {
-  return pWindow->size_range_set_;
-}
+int Fl_Window_Driver::minw() {return pWindow->minw_;}
+int Fl_Window_Driver::minh() {return pWindow->minh_;}
+int Fl_Window_Driver::maxw() {return pWindow->maxw_;}
+int Fl_Window_Driver::maxh() {return pWindow->maxh_;}
+int Fl_Window_Driver::dw() {return pWindow->dw_;}
+int Fl_Window_Driver::dh() {return pWindow->dh_;}
+int Fl_Window_Driver::aspect() {return pWindow->aspect_;}
+unsigned char Fl_Window_Driver::size_range_set() {return pWindow->size_range_set_;}
 
 // other Fl_Window accessors
 
-int Fl_Window_Driver::force_position() {
-  return pWindow->force_position();
-}
-void Fl_Window_Driver::force_position(int c) {
-  pWindow->force_position(c);
-}
-void Fl_Window_Driver::x(int X) {
-  pWindow->x(X);
-}
-void Fl_Window_Driver::y(int Y) {
-  pWindow->y(Y);
-}
-int Fl_Window_Driver::fullscreen_screen_top() {
-  return pWindow->fullscreen_screen_top;
-}
-int Fl_Window_Driver::fullscreen_screen_bottom() {
-  return pWindow->fullscreen_screen_bottom;
-}
-int Fl_Window_Driver::fullscreen_screen_left() {
-  return pWindow->fullscreen_screen_left;
-}
-int Fl_Window_Driver::fullscreen_screen_right() {
-  return pWindow->fullscreen_screen_right;
-}
-void Fl_Window_Driver::current(Fl_Window *c) {
-  pWindow->current_ = c;
-}
+int Fl_Window_Driver::force_position() {return pWindow->force_position(); }
+void Fl_Window_Driver::force_position(int c) { pWindow->force_position(c); }
+void Fl_Window_Driver::x(int X) {pWindow->x(X); }
+void Fl_Window_Driver::y(int Y) {pWindow->y(Y); }
+int Fl_Window_Driver::fullscreen_screen_top() {return pWindow->fullscreen_screen_top;}
+int Fl_Window_Driver::fullscreen_screen_bottom() {return pWindow->fullscreen_screen_bottom;}
+int Fl_Window_Driver::fullscreen_screen_left() {return pWindow->fullscreen_screen_left;}
+int Fl_Window_Driver::fullscreen_screen_right() {return pWindow->fullscreen_screen_right;}
+void Fl_Window_Driver::current(Fl_Window *c) {pWindow->current_ = c;}
 
-void Fl_Window_Driver::flush_Fl_Window() {
-  pWindow->Fl_Window::flush();
-}
+void Fl_Window_Driver::flush_Fl_Window() { pWindow->Fl_Window::flush(); }
 
 
 /**
  Draw the window content.
  A new driver can add code before or after drawing an individual window.
  */
-void Fl_Window_Driver::draw() {
-  pWindow->draw();
-}
+void Fl_Window_Driver::draw() { pWindow->draw(); }
 
 /**
  Prepare this window for rendering.
  A new driver may prepare bitmaps and clipping areas for calls to the
  graphics driver.
  */
-void Fl_Window_Driver::make_current() {}
+void Fl_Window_Driver::make_current() { }
 
 /**
  Make the window visible and raise it to the top.
  */
-void Fl_Window_Driver::show() {}
+void Fl_Window_Driver::show() { }
 
 
 /**
@@ -163,14 +126,13 @@ void Fl_Window_Driver::destroy_double_buffer() {
   other_xid = 0;
 }
 
-void Fl_Window_Driver::shape_pixmap_(Fl_Image *pixmap) {
-  Fl_RGB_Image *rgba = new Fl_RGB_Image((Fl_Pixmap *)pixmap);
+void Fl_Window_Driver::shape_pixmap_(Fl_Image* pixmap) {
+  Fl_RGB_Image* rgba = new Fl_RGB_Image((Fl_Pixmap*)pixmap);
   shape_alpha_(rgba, 3);
   delete rgba;
 }
 
-void Fl_Window_Driver::capture_titlebar_and_borders(Fl_RGB_Image *&top, Fl_RGB_Image *&left,
-                                                    Fl_RGB_Image *&bottom, Fl_RGB_Image *&right) {
+void Fl_Window_Driver::capture_titlebar_and_borders(Fl_RGB_Image*& top, Fl_RGB_Image*& left, Fl_RGB_Image*& bottom, Fl_RGB_Image*& right) {
   top = left = bottom = right = NULL;
 }
 
@@ -179,35 +141,30 @@ void Fl_Window_Driver::capture_titlebar_and_borders(Fl_RGB_Image *&top, Fl_RGB_I
 int Fl_Window_Driver::hide_common() {
   pWindow->clear_visible();
 
-  if (!shown())
-    return 1;
+  if (!shown()) return 1;
 
   // remove from the list of windows:
-  Fl_X *ip = Fl_X::i(pWindow);
-  Fl_X **pp = &Fl_X::first;
-  for (; *pp != ip; pp = &(*pp)->next)
-    if (!*pp)
-      return 1;
+  Fl_X* ip = Fl_X::i(pWindow);
+  Fl_X** pp = &Fl_X::first;
+  for (; *pp != ip; pp = &(*pp)->next) if (!*pp) return 1;
   *pp = ip->next;
 
   pWindow->i = 0;
 
   // recursively remove any subwindows:
   for (Fl_X *wi = Fl_X::first; wi;) {
-    Fl_Window *W = wi->w;
+    Fl_Window* W = wi->w;
     if (W->window() == pWindow) {
       W->hide();
       W->set_visible();
       wi = Fl_X::first;
-    } else
-      wi = wi->next;
+    } else wi = wi->next;
   }
 
   if (pWindow == Fl::modal_) { // we are closing the modal window, find next one:
-    Fl_Window *W;
+    Fl_Window* W;
     for (W = Fl::first_window(); W; W = Fl::next_window(W))
-      if (W->modal())
-        break;
+      if (W->modal()) break;
     Fl::modal_ = W;
   }
 
@@ -236,12 +193,13 @@ int Fl_Window_Driver::can_do_overlay() {
 }
 
 void Fl_Window_Driver::redraw_overlay() {
-  ((Fl_Overlay_Window *)pWindow)->overlay_ = pWindow;
-  pWindow->clear_damage((uchar)(pWindow->damage() | FL_DAMAGE_OVERLAY));
+  ((Fl_Overlay_Window*)pWindow)->overlay_ = pWindow;
+  pWindow->clear_damage((uchar)(pWindow->damage()|FL_DAMAGE_OVERLAY));
   Fl::damage(FL_DAMAGE_CHILD);
 }
 
-void Fl_Window_Driver::flush() {
+void Fl_Window_Driver::flush()
+{
   pWindow->flush();
 }
 
@@ -249,13 +207,12 @@ int Fl_Window_Driver::set_cursor(Fl_Cursor) {
   return 0;
 }
 
-int Fl_Window_Driver::set_cursor(const Fl_RGB_Image *, int, int) {
+int Fl_Window_Driver::set_cursor(const Fl_RGB_Image*, int, int) {
   return 0;
 }
 
 void Fl_Window_Driver::wait_for_expose() {
-  if (!shown())
-    return;
+  if (!shown()) return;
   Fl_X *i = Fl_X::i(pWindow);
   while (!i || wait_for_expose_value) {
     Fl::wait();
@@ -263,9 +220,10 @@ void Fl_Window_Driver::wait_for_expose() {
 }
 
 int Fl_Window_Driver::screen_num() {
-  if (pWindow->parent())
-    return Fl_Window_Driver::driver(pWindow->top_window())->screen_num();
-  return Fl::screen_num(x(), y(), w(), h());
+  if (pWindow->parent()) {
+    screen_num_ = Fl_Window_Driver::driver(pWindow->top_window())->screen_num();
+  }
+  return screen_num_ >= 0 ? screen_num_ : 0;
 }
 
 bool Fl_Window_Driver::is_a_rescale_ = false;
@@ -276,22 +234,16 @@ void Fl_Window_Driver::resize_after_scale_change(int ns, float old_f, float new_
   int X = int(pWindow->x() * old_f / new_f), Y = int(pWindow->y() * old_f / new_f);
   int W, H;
   if (pWindow->fullscreen_active()) {
-    W = int(pWindow->w() * old_f / new_f);
-    H = int(pWindow->h() * old_f / new_f);
+    W = int(pWindow->w() * old_f / new_f); H = int(pWindow->h() * old_f / new_f);
   } else {
-    W = pWindow->w();
-    H = pWindow->h();
+    W = pWindow->w(); H = pWindow->h();
     int sX, sY, sW, sH;
     Fl::screen_xywh(sX, sY, sW, sH, ns); // bounding box of new screen
-    const int d = 5;                     // make sure new window centre is located in new screen
-    if (X + W / 2 < sX)
-      X = sX - W / 2 + d;
-    else if (X + W / 2 > sX + sW - 1)
-      X = sX + sW - 1 - W / 2 - d;
-    if (Y + H / 2 < sY)
-      Y = sY - H / 2 + d;
-    else if (Y + H / 2 > sY + sH - 1)
-      Y = sY + sH - 1 - H / 2 - d;
+    const int d = 5; // make sure new window centre is located in new screen
+    if (X+W/2 < sX) X = sX-W/2+d;
+    else if (X+W/2 > sX+sW-1) X = sX+sW-1-W/2-d;
+    if (Y+H/2 < sY) Y = sY-H/2+d;
+    else if (Y+H/2 > sY+sH-1) Y = sY+sH-1-H/2-d;
   }
   is_a_rescale_ = true;
   pWindow->resize(X, Y, W, H);
@@ -299,16 +251,40 @@ void Fl_Window_Driver::resize_after_scale_change(int ns, float old_f, float new_
 }
 
 void Fl_Window_Driver::reposition_menu_window(int x, int y) {
-  if (y != pWindow->y() || x != pWindow->x())
-    pWindow->Fl_Widget::position(x, y);
+  if (y != pWindow->y() || x != pWindow->x()) pWindow->Fl_Widget::position(x, y);
 }
 
 void Fl_Window_Driver::menu_window_area(int &X, int &Y, int &W, int &H, int nscreen) {
   int mx, my;
   Fl_Screen_Driver *scr_driver = Fl::screen_driver();
-  if (nscreen < 0)
-    nscreen = scr_driver->get_mouse(mx, my);
+  if (nscreen < 0) nscreen = scr_driver->get_mouse(mx, my);
   scr_driver->screen_work_area(X, Y, W, H, nscreen);
+}
+
+/** Returns  the platform-specific reference of the given window, or NULL if that window isn't shown.
+ \version 1.4.0 */
+fl_uintptr_t Fl_Window_Driver::xid(const Fl_Window *win) {
+  Fl_X *flx = win->i;
+  return flx ? flx->xid : 0;
+}
+
+/** Returns a pointer to the Fl_Window corresponding to the platform-specific reference \p xid of a shown window.
+ \version 1.4.0 */
+Fl_Window *Fl_Window_Driver::find(fl_uintptr_t xid) {
+  Fl_X *window;
+  for (Fl_X **pp = &Fl_X::first; (window = *pp); pp = &window->next) {
+    if (window->xid == xid) {
+      if (window != Fl_X::first && !Fl::modal()) {
+        // make this window be first to speed up searches
+        // this is not done if modal is true to avoid messing up modal stack
+        *pp = window->next;
+        window->next = Fl_X::first;
+        Fl_X::first = window;
+      }
+      return window->w;
+    }
+  }
+  return 0;
 }
 
 /**

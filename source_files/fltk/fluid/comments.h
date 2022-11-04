@@ -1,6 +1,6 @@
 
-static const char *const comment_text[] = {
-    // GNU Public License/GPL Header
+static const char * const comment_text[] = {
+  // GNU Public License/GPL Header
     "//\n"
     "// NameOfProgram, ShortDescription\n"
     "// Copyright (C) YYYY  NameOfAuthor\n"
@@ -19,12 +19,12 @@ static const char *const comment_text[] = {
     "// along with this program; if not, write to the Free Software\n"
     "// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n"
     "//\n",
-    // GNU Public License/GPL Footer
+  // GNU Public License/GPL Footer
     "\n//\n"
     "// NameOfProgram, ShortDescription\n"
     "// Copyright (C) YYYY  NameOfAuthor\n"
     "//",
-    // GNU Public License/LGPL Header
+  // GNU Public License/LGPL Header
     "//\n"
     "// NameOfLibrary, ShortDescription\n"
     "// Copyright (C) YYYY  NameOfAuthor\n"
@@ -43,12 +43,12 @@ static const char *const comment_text[] = {
     "// License along with this program; if not, write to the Free Software\n"
     "// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n"
     "//\n",
-    // GNU Public License/LGPL Footer
+  // GNU Public License/LGPL Footer
     "\n//\n"
     "// NameOfLibrary, ShortDescription\n"
     "// Copyright (C) YYYY  NameOfAuthor\n"
     "//",
-    // FLTK/Header
+  // FLTK/Header
     "//\n"
     "// ... for the Fast Light Tool Kit (FLTK).\n"
     "//\n"
@@ -63,4 +63,5 @@ static const char *const comment_text[] = {
     "// Please see the following page on how to report bugs and issues:\n"
     "//\n"
     "//     https://www.fltk.org/bugs.php\n"
-    "//\n"};
+    "//\n"
+  };

@@ -24,21 +24,20 @@
 //
 
 #include <FL/Fl_Help_Dialog.H>
-#include <FL/filename.H> /* FL_PATH_MAX */
-#include <string.h>      /* strcpy(), etc */
+#include <FL/filename.H>        /* FL_PATH_MAX */
+#include <string.h>             /* strcpy(), etc */
 
 //
 // 'main()' - Display the help GUI...
 //
 
-int                // O - Exit status
-main(int argc,     // I - Number of command-line arguments
-     char *argv[]) // I - Command-line arguments
+int                             // O - Exit status
+main(int  argc,                 // I - Number of command-line arguments
+     char *argv[])              // I - Command-line arguments
 {
   Fl_Help_Dialog *help = new Fl_Help_Dialog;
   int i;
-  if (!Fl::args(argc, argv, i))
-    Fl::fatal(Fl::help);
+  if (!Fl::args(argc, argv, i)) Fl::fatal(Fl::help);
   const char *fname = (i < argc) ? argv[i] : "help_dialog.html";
 
   help->load(fname); // TODO: add error check (when load() returns int instead of void)

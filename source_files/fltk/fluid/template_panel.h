@@ -33,7 +33,7 @@ extern Fl_Input *template_instance;
 extern Fl_Button *template_delete;
 #include <FL/Fl_Return_Button.H>
 extern Fl_Return_Button *template_submit;
-Fl_Double_Window *make_template_panel();
+Fl_Double_Window* make_template_panel();
 void template_clear();
 void template_delete_cb(Fl_Button *, void *);
 void template_load();

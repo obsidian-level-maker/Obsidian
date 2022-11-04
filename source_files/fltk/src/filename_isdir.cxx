@@ -20,6 +20,7 @@
 #include "Fl_System_Driver.H"
 #include <FL/filename.H>
 #include <FL/Fl.H>
+#include <sys/stat.h>
 
 /**
    Determines if a file exists and is a directory from its filename.
@@ -32,7 +33,7 @@
    \param[in] n the filename to parse
    \return non zero if file exists and is a directory, zero otherwise
 */
-int fl_filename_isdir(const char *n) {
+int fl_filename_isdir(const char* n) {
   return Fl::system_driver()->filename_isdir(n);
 }
 
@@ -50,25 +51,24 @@ int fl_filename_isdir(const char *n) {
  Fl_File_Chooser to avoid extra stat() calls, but is not supported
  outside of FLTK...
  */
-int Fl_System_Driver::filename_isdir_quick(const char *n) {
-  // Do a quick optimization for filenames with a trailing slash...
-  if (*n && n[strlen(n) - 1] == '/')
-    return 1;
-  return filename_isdir(n);
+int Fl_System_Driver::filename_isdir_quick(const char* n) {
+    // Do a quick optimization for filenames with a trailing slash...
+    if (*n && n[strlen(n) - 1] == '/') return 1;
+    return filename_isdir(n);
 }
 
 
 // TODO: This should probably handle errors better (like permission denied) -erco
-int Fl_System_Driver::filename_isdir(const char *n) {
-  struct stat s;
-  char fn[FL_PATH_MAX];
-  int length;
-  length = (int)strlen(n);
+int Fl_System_Driver::filename_isdir(const char* n) {
+  struct stat   s;
+  char          fn[FL_PATH_MAX];
+  int           length;
+  length = (int) strlen(n);
   // Matt: Just in case, we strip the slash for other operating
   // systems as well, avoid bugs by sloppy implementations
   // of "stat".
   if (length > 1 && n[length - 1] == '/') {
-    length--;
+    length --;
     memcpy(fn, n, length);
     fn[length] = '\0';
     n = fn;

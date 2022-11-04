@@ -29,13 +29,13 @@ class Fl_Group;
 class Fl_Image;
 
 /** Default callback type definition for all fltk widgets (by far the most used) */
-typedef void(Fl_Callback)(Fl_Widget *, void *);
+typedef void (Fl_Callback )(Fl_Widget*, void*);
 /** Default callback type pointer definition for all fltk widgets */
-typedef Fl_Callback *Fl_Callback_p; // needed for BORLAND
+typedef Fl_Callback* Fl_Callback_p; // needed for BORLAND
 /** One parameter callback type definition passing only the widget */
-typedef void(Fl_Callback0)(Fl_Widget *);
+typedef void (Fl_Callback0)(Fl_Widget*);
 /** Callback type definition passing the widget and a long data value */
-typedef void(Fl_Callback1)(Fl_Widget *, long);
+typedef void (Fl_Callback1)(Fl_Widget*, long);
 
 /** This struct stores all information for a text or mixed graphics label.
 
@@ -47,11 +47,11 @@ typedef void(Fl_Callback1)(Fl_Widget *, long);
  */
 struct FL_EXPORT Fl_Label {
   /** label text */
-  const char *value;
+  const char* value;
   /** optional image for an active label */
-  Fl_Image *image;
+  Fl_Image* image;
   /** optional image for a deactivated label */
-  Fl_Image *deimage;
+  Fl_Image* deimage;
   /** label font used in text */
   Fl_Font font;
   /** size of label font */
@@ -64,9 +64,10 @@ struct FL_EXPORT Fl_Label {
   uchar type;
 
   /** Draws the label aligned to the given box */
-  void draw(int, int, int, int, Fl_Align) const;
-  void measure(int &w, int &h) const;
+  void draw(int,int,int,int, Fl_Align) const ;
+  void measure(int &w, int &h) const ;
 };
+
 
 
 /** Fl_Widget is the base class for all widgets in FLTK.
@@ -83,12 +84,12 @@ struct FL_EXPORT Fl_Label {
  */
 class FL_EXPORT Fl_Widget {
   friend class Fl_Group;
-  friend void Fl::focus(Fl_Widget *);
+  friend void Fl::focus(Fl_Widget*);
 
-  Fl_Group *parent_;
-  Fl_Callback *callback_;
-  void *user_data_;
-  int x_, y_, w_, h_;
+  Fl_Group* parent_;
+  Fl_Callback* callback_;
+  void* user_data_;
+  int x_,y_,w_,h_;
   Fl_Label label_;
   unsigned int flags_;
   Fl_Color color_;
@@ -103,9 +104,10 @@ class FL_EXPORT Fl_Widget {
   /** unimplemented copy ctor */
   Fl_Widget(const Fl_Widget &);
   /** unimplemented assignment operator */
-  Fl_Widget &operator=(const Fl_Widget &);
+  Fl_Widget& operator=(const Fl_Widget &);
 
 protected:
+
   /** Creates a widget at the given position and size.
 
       The Fl_Widget is a protected constructor, but all derived widgets have a
@@ -116,63 +118,56 @@ protected:
       \param[in] w, h size of the widget in pixels
       \param[in] label optional text for the widget label
    */
-  Fl_Widget(int x, int y, int w, int h, const char *label = 0L);
+  Fl_Widget(int x, int y, int w, int h, const char *label=0L);
 
   /** Internal use only. Use position(int,int), size(int,int) or resize(int,int,int,int) instead. */
-  void x(int v) { x_ = v; }
+  void x(int v) {x_ = v;}
   /** Internal use only. Use position(int,int), size(int,int) or resize(int,int,int,int) instead. */
-  void y(int v) { y_ = v; }
+  void y(int v) {y_ = v;}
   /** Internal use only. Use position(int,int), size(int,int) or resize(int,int,int,int) instead. */
-  void w(int v) { w_ = v; }
+  void w(int v) {w_ = v;}
   /** Internal use only. Use position(int,int), size(int,int) or resize(int,int,int,int) instead. */
-  void h(int v) { h_ = v; }
+  void h(int v) {h_ = v;}
   /** Gets the widget flags mask */
-  unsigned int flags() const { return flags_; }
+  unsigned int flags() const {return flags_;}
   /** Sets a flag in the flags mask */
-  void set_flag(unsigned int c) { flags_ |= c; }
+  void set_flag(unsigned int c) {flags_ |= c;}
   /** Clears a flag in the flags mask */
-  void clear_flag(unsigned int c) { flags_ &= ~c; }
+  void clear_flag(unsigned int c) {flags_ &= ~c;}
   /** flags possible values enumeration.
       See activate(), output(), visible(), changed(), set_visible_focus()
   */
   enum {
-    INACTIVE = 1 << 0,  ///< the widget can't receive focus, and is disabled but potentially visible
-    INVISIBLE = 1 << 1, ///< the widget is not drawn, but can receive a few special events
-    OUTPUT = 1 << 2,    ///< for output only
-    NOBORDER = 1 << 3,  ///< don't draw a decoration (Fl_Window)
-    FORCE_POSITION = 1 << 4, ///< don't let the window manager position the window (Fl_Window)
-    NON_MODAL = 1 << 5,      ///< this is a hovering toolbar window (Fl_Window)
-    SHORTCUT_LABEL = 1 << 6, ///< the label contains a shortcut we need to draw
-    CHANGED = 1 << 7,        ///< the widget value changed
-    OVERRIDE = 1 << 8,       ///< position window on top (Fl_Window)
-    VISIBLE_FOCUS = 1 << 9,  ///< accepts keyboard focus navigation if the widget can have the focus
-    COPIED_LABEL =
-        1
-        << 10, ///< the widget label is internally copied, its destruction is handled by the widget
-    CLIP_CHILDREN = 1 << 11, ///< all drawing within this widget will be clipped (Fl_Group)
-    MENU_WINDOW = 1 << 12, ///< a temporary popup window, dismissed by clicking outside (Fl_Window)
-    TOOLTIP_WINDOW =
-        1 << 13,     ///< a temporary popup, transparent to events, and dismissed easily (Fl_Window)
-    MODAL = 1 << 14, ///< a window blocking input to all other winows (Fl_Window)
-    NO_OVERLAY = 1 << 15,     ///< window not using a hardware overlay plane (Fl_Menu_Window)
-    GROUP_RELATIVE = 1 << 16, ///< Reserved, not implemented. DO NOT USE.
-    COPIED_TOOLTIP = 1 << 17, ///< the widget tooltip is internally copied, its destruction is
-                              ///< handled by the widget
-    FULLSCREEN = 1 << 18,     ///< a fullscreen window (Fl_Window)
-    MAC_USE_ACCENTS_MENU =
-        1 << 19, ///< On the Mac OS platform, pressing and holding a key on the keyboard opens an
-                 ///< accented-character menu window (Fl_Input_, Fl_Text_Editor)
-    // (space for more flags)
-    NEEDS_KEYBOARD = 1 << 20, ///< set this on touch screen devices if a widget needs a keyboard
-                              ///< when it gets Focus. @see Fl_Screen_Driver::request_keyboard()
-    // a tiny bit more space for new flags...
-    USERFLAG3 = 1 << 29, ///< reserved for 3rd party extensions
-    USERFLAG2 = 1 << 30, ///< reserved for 3rd party extensions
-    USERFLAG1 = 1 << 31  ///< reserved for 3rd party extensions
+        INACTIVE        = 1<<0,   ///< the widget can't receive focus, and is disabled but potentially visible
+        INVISIBLE       = 1<<1,   ///< the widget is not drawn, but can receive a few special events
+        OUTPUT          = 1<<2,   ///< for output only
+        NOBORDER        = 1<<3,   ///< don't draw a decoration (Fl_Window)
+        FORCE_POSITION  = 1<<4,   ///< don't let the window manager position the window (Fl_Window)
+        NON_MODAL       = 1<<5,   ///< this is a hovering toolbar window (Fl_Window)
+        SHORTCUT_LABEL  = 1<<6,   ///< the label contains a shortcut we need to draw
+        CHANGED         = 1<<7,   ///< the widget value changed
+        OVERRIDE        = 1<<8,   ///< position window on top (Fl_Window)
+        VISIBLE_FOCUS   = 1<<9,   ///< accepts keyboard focus navigation if the widget can have the focus
+        COPIED_LABEL    = 1<<10,  ///< the widget label is internally copied, its destruction is handled by the widget
+        CLIP_CHILDREN   = 1<<11,  ///< all drawing within this widget will be clipped (Fl_Group)
+        MENU_WINDOW     = 1<<12,  ///< a temporary popup window, dismissed by clicking outside (Fl_Window)
+        TOOLTIP_WINDOW  = 1<<13,  ///< a temporary popup, transparent to events, and dismissed easily (Fl_Window)
+        MODAL           = 1<<14,  ///< a window blocking input to all other winows (Fl_Window)
+        NO_OVERLAY      = 1<<15,  ///< window not using a hardware overlay plane (Fl_Menu_Window)
+        GROUP_RELATIVE  = 1<<16,  ///< Reserved, not implemented. DO NOT USE.
+        COPIED_TOOLTIP  = 1<<17,  ///< the widget tooltip is internally copied, its destruction is handled by the widget
+        FULLSCREEN      = 1<<18,  ///< a fullscreen window (Fl_Window)
+        MAC_USE_ACCENTS_MENU = 1<<19, ///< On the Mac OS platform, pressing and holding a key on the keyboard opens an accented-character menu window (Fl_Input_, Fl_Text_Editor)
+        // (space for more flags)
+        NEEDS_KEYBOARD  = 1<<20,  ///< set this on touch screen devices if a widget needs a keyboard when it gets Focus. @see Fl_Screen_Driver::request_keyboard()
+        // a tiny bit more space for new flags...
+        USERFLAG3       = 1<<29,  ///< reserved for 3rd party extensions
+        USERFLAG2       = 1<<30,  ///< reserved for 3rd party extensions
+        USERFLAG1       = 1<<31   ///< reserved for 3rd party extensions
   };
   void draw_box() const;
   void draw_box(Fl_Boxtype t, Fl_Color c) const;
-  void draw_box(Fl_Boxtype t, int x, int y, int w, int h, Fl_Color c) const;
+  void draw_box(Fl_Boxtype t, int x,int y,int w,int h, Fl_Color c) const;
   void draw_backdrop() const;
 
   /** Draws a focus rectangle around the widget.
@@ -180,7 +175,9 @@ protected:
     background color color().
     \see Fl_Widget::draw_focus(Fl_Boxtype, int, int, int, int, Fl_Color) const
   */
-  void draw_focus() const { draw_focus(box(), x(), y(), w(), h(), color()); }
+  void draw_focus() const {
+    draw_focus(box(), x(), y(), w(), h(), color());
+  }
 
   /** Draws a focus rectangle around the widget.
     This method uses the given boxtype and coordinates and the widget's
@@ -189,6 +186,7 @@ protected:
   */
   void draw_focus(Fl_Boxtype t, int X, int Y, int W, int H) const {
     draw_focus(t, X, Y, W, H, color());
+
   }
   // See documentation in Fl_Widget.cxx
   void draw_focus(Fl_Boxtype t, int x, int y, int w, int h, Fl_Color bg) const;
@@ -197,6 +195,7 @@ protected:
   void draw_label(int, int, int, int) const;
 
 public:
+
   /** Destroys the widget.
       Destroying single widgets is not very common. You almost always want to
       destroy the parent group instead, which will destroy all of the child widgets
@@ -251,14 +250,14 @@ public:
       \retval 0 current label was assigned with label().
       \retval 1 current label was assigned with copy_label().
   */
-  int is_label_copied() const { return ((flags_ & COPIED_LABEL) ? 1 : 0); }
+  int is_label_copied() const {return ((flags_ & COPIED_LABEL) ? 1 : 0);}
 
   /** Returns a pointer to the parent widget.
       Usually this is a Fl_Group or Fl_Window.
       \retval NULL if the widget has no parent
       \see Fl_Group::add(Fl_Widget*)
    */
-  Fl_Group *parent() const { return parent_; }
+  Fl_Group* parent() const {return parent_;}
 
   /** Internal use only - "for hacks only".
 
@@ -268,7 +267,7 @@ public:
 
       Use Fl_Group::add(Fl_Widget*) and/or Fl_Group::remove(Fl_Widget*) instead.
   */
-  void parent(Fl_Group *p) { parent_ = p; } // for hacks only, use Fl_Group::add()
+  void parent(Fl_Group* p) {parent_ = p;} // for hacks only, use Fl_Group::add()
 
   /** Gets the widget type.
       Returns the widget type value, which is used for Forms compatibility
@@ -278,32 +277,32 @@ public:
       is a window, i.e. type()>=FL_WINDOW ?). Is type() really used in a way
       that ensures "Forms compatibility" ?
    */
-  uchar type() const { return type_; }
+  uchar type() const {return type_;}
 
   /** Sets the widget type.
       This is used for Forms compatibility.
    */
-  void type(uchar t) { type_ = t; }
+  void type(uchar t) {type_ = t;}
 
   /** Gets the widget position in its window.
       \return the x position relative to the window
    */
-  int x() const { return x_; }
+  int x() const {return x_;}
 
   /** Gets the widget position in its window.
       \return the y position relative to the window
    */
-  int y() const { return y_; }
+  int y() const {return y_;}
 
   /** Gets the widget width.
       \return the width of the widget in pixels.
    */
-  int w() const { return w_; }
+  int w() const {return w_;}
 
   /** Gets the widget height.
       \return the height of the widget in pixels.
    */
-  int h() const { return h_; }
+  int h() const {return h_;}
 
   /** Changes the size or position of the widget.
 
@@ -327,7 +326,7 @@ public:
   virtual void resize(int x, int y, int w, int h);
 
   /** Internal use only. */
-  int damage_resize(int, int, int, int);
+  int damage_resize(int,int,int,int);
 
   /** Repositions the window or widget.
 
@@ -336,7 +335,7 @@ public:
       \param[in] X, Y new position relative to the parent window
       \see resize(int,int,int,int), size(int,int)
    */
-  void position(int X, int Y) { resize(X, Y, w_, h_); }
+  void position(int X,int Y) {resize(X,Y,w_,h_);}
 
   /** Changes the size of the widget.
 
@@ -345,14 +344,14 @@ public:
       \param[in] W, H new size
       \see position(int,int), resize(int,int,int,int)
    */
-  void size(int W, int H) { resize(x_, y_, W, H); }
+  void size(int W,int H) {resize(x_,y_,W,H);}
 
   /** Gets the label alignment.
 
       \return label alignment
       \see label(), align(Fl_Align), Fl_Align
    */
-  Fl_Align align() const { return label_.align_; }
+  Fl_Align align() const {return label_.align_;}
 
   /** Sets the label alignment.
       This controls how the label is displayed next to or inside the widget.
@@ -361,13 +360,13 @@ public:
       \param[in] alignment new label alignment
       \see align(), Fl_Align
    */
-  void align(Fl_Align alignment) { label_.align_ = alignment; }
+  void align(Fl_Align alignment) {label_.align_ = alignment;}
 
   /** Gets the box type of the widget.
       \return the current box type
       \see box(Fl_Boxtype), Fl_Boxtype
    */
-  Fl_Boxtype box() const { return (Fl_Boxtype)box_; }
+  Fl_Boxtype box() const {return (Fl_Boxtype)box_;}
 
   /** Sets the box type for the widget.
       This identifies a routine that draws the background of the widget.
@@ -376,13 +375,13 @@ public:
       \param[in] new_box the new box type
       \see box(), Fl_Boxtype
    */
-  void box(Fl_Boxtype new_box) { box_ = new_box; }
+  void box(Fl_Boxtype new_box) {box_ = new_box;}
 
   /** Gets the background color of the widget.
       \return current background color
       \see color(Fl_Color), color(Fl_Color, Fl_Color)
    */
-  Fl_Color color() const { return color_; }
+  Fl_Color color() const {return color_;}
 
   /** Sets the background color of the widget.
       The color is passed to the box routine. The color is either an index into
@@ -394,13 +393,13 @@ public:
       \param[in] bg background color
       \see color(), color(Fl_Color, Fl_Color), selection_color(Fl_Color)
    */
-  void color(Fl_Color bg) { color_ = bg; }
+  void color(Fl_Color bg) {color_ = bg;}
 
   /** Gets the selection color.
       \return the current selection color
       \see selection_color(Fl_Color), color(Fl_Color, Fl_Color)
    */
-  Fl_Color selection_color() const { return color2_; }
+  Fl_Color selection_color() const {return color2_;}
 
   /** Sets the selection color.
       The selection color is defined for Forms compatibility and is usually
@@ -410,7 +409,7 @@ public:
       \param[in] a the new selection color
       \see selection_color(), color(Fl_Color, Fl_Color)
    */
-  void selection_color(Fl_Color a) { color2_ = a; }
+  void selection_color(Fl_Color a) {color2_ = a;}
 
   /** Sets the background and selection color of the widget.
 
@@ -419,16 +418,13 @@ public:
       \param[in] sel selection color
       \see color(unsigned), selection_color(unsigned)
    */
-  void color(Fl_Color bg, Fl_Color sel) {
-    color_ = bg;
-    color2_ = sel;
-  }
+  void color(Fl_Color bg, Fl_Color sel) {color_=bg; color2_=sel;}
 
   /** Gets the current label text.
       \return a pointer to the current label text
       \see label(const char *), copy_label(const char *)
    */
-  const char *label() const { return label_.value; }
+  const char* label() const {return label_.value;}
 
   /** Sets the current label pointer.
 
@@ -441,7 +437,7 @@ public:
       \param[in] text pointer to new label text
       \see copy_label()
    */
-  void label(const char *text);
+  void label(const char* text);
 
   /** Sets the current label.
       Unlike label(), this method allocates a copy of the label
@@ -458,16 +454,13 @@ public:
   /** Shortcut to set the label text and type in one call.
       \see label(const char *), labeltype(Fl_Labeltype)
    */
-  void label(Fl_Labeltype a, const char *b) {
-    label_.type = a;
-    label_.value = b;
-  }
+  void label(Fl_Labeltype a, const char* b) {label_.type = a; label_.value = b;}
 
   /** Gets the label type.
       \return the current label type.
       \see Fl_Labeltype
    */
-  Fl_Labeltype labeltype() const { return (Fl_Labeltype)label_.type; }
+  Fl_Labeltype labeltype() const {return (Fl_Labeltype)label_.type;}
 
   /** Sets the label type.
       The label type identifies the function that draws the label of the widget.
@@ -477,19 +470,19 @@ public:
       \param[in] a new label type
       \see Fl_Labeltype
    */
-  void labeltype(Fl_Labeltype a) { label_.type = a; }
+  void labeltype(Fl_Labeltype a) {label_.type = a;}
 
   /** Gets the label color.
       The default color is FL_FOREGROUND_COLOR.
       \return the current label color
    */
-  Fl_Color labelcolor() const { return label_.color; }
+  Fl_Color labelcolor() const {return label_.color;}
 
   /** Sets the label color.
       The default color is FL_FOREGROUND_COLOR.
       \param[in] c the new label color
    */
-  void labelcolor(Fl_Color c) { label_.color = c; }
+  void labelcolor(Fl_Color c) {label_.color=c;}
 
   /** Gets the font to use.
       Fonts are identified by indexes into a table. The default value
@@ -498,7 +491,7 @@ public:
       \return current font used by the label
       \see Fl_Font
    */
-  Fl_Font labelfont() const { return label_.font; }
+  Fl_Font labelfont() const {return label_.font;}
 
   /** Sets the font to use.
       Fonts are identified by indexes into a table. The default value
@@ -507,122 +500,119 @@ public:
       \param[in] f the new font for the label
       \see Fl_Font
    */
-  void labelfont(Fl_Font f) { label_.font = f; }
+  void labelfont(Fl_Font f) {label_.font=f;}
 
   /** Gets the font size in pixels.
       The default size is 14 pixels.
       \return the current font size
    */
-  Fl_Fontsize labelsize() const { return label_.size; }
+  Fl_Fontsize labelsize() const {return label_.size;}
 
   /** Sets the font size in pixels.
       \param[in] pix the new font size
       \see Fl_Fontsize labelsize()
    */
-  void labelsize(Fl_Fontsize pix) { label_.size = pix; }
+  void labelsize(Fl_Fontsize pix) {label_.size=pix;}
 
   /** Gets the image that is used as part of the widget label when in the active state.
       \return the current image
    */
-  Fl_Image *image() { return label_.image; }
+  Fl_Image* image() {return label_.image;}
   /** Gets the image that is used as part of the widget label when in the active state.
       \return the current image
    */
-  const Fl_Image *image() const { return label_.image; }
+  const Fl_Image* image() const {return label_.image;}
 
   /** Sets the image to use as part of the widget label when in the active state.
       \param[in] img the new image for the label
-      \note The caller is responsible for making sure \p img is not deleted  while it's used by the
-   widget, and, if appropriate, for deleting it after the widget's deletion.
+      \note The caller is responsible for making sure \p img is not deleted  while it's used by the widget,
+   and, if appropriate, for deleting it after the widget's deletion.
    */
-  void image(Fl_Image *img) { label_.image = img; }
+  void image(Fl_Image* img) {label_.image=img;}
 
   /** Sets the image to use as part of the widget label when in the active state.
       \param[in] img the new image for the label
    \see void image(Fl_Image* img)
    */
-  void image(Fl_Image &img) { label_.image = &img; }
+  void image(Fl_Image& img) {label_.image=&img;}
 
   /** Gets the image that is used as part of the widget label when in the inactive state.
       \return the current image for the deactivated widget
    */
-  Fl_Image *deimage() { return label_.deimage; }
+  Fl_Image* deimage() {return label_.deimage;}
   /** Gets the image that is used as part of the widget label when in the inactive state.
       \return the current image for the deactivated widget
    */
-  const Fl_Image *deimage() const { return label_.deimage; }
+  const Fl_Image* deimage() const {return label_.deimage;}
 
   /** Sets the image to use as part of the widget label when in the inactive state.
       \param[in] img the new image for the deactivated widget
-      \note The caller is responsible for making sure \p img is not deleted  while it's used by the
-   widget, and, if appropriate, for deleting it after the widget's deletion.
+      \note The caller is responsible for making sure \p img is not deleted  while it's used by the widget,
+   and, if appropriate, for deleting it after the widget's deletion.
    */
-  void deimage(Fl_Image *img) { label_.deimage = img; }
+  void deimage(Fl_Image* img) {label_.deimage=img;}
 
   /** Sets the image to use as part of the widget label when in the inactive state.
       \param[in] img the new image for the deactivated widget
    \see void deimage(Fl_Image* img)
    */
-  void deimage(Fl_Image &img) { label_.deimage = &img; }
+  void deimage(Fl_Image& img) {label_.deimage=&img;}
 
   /** Gets the current tooltip text.
       \return a pointer to the tooltip text or NULL
       \see tooltip(const char*), copy_tooltip(const char*)
    */
-  const char *tooltip() const { return tooltip_; }
+  const char *tooltip() const {return tooltip_;}
 
-  void tooltip(const char *text);      // see Fl_Tooltip
-  void copy_tooltip(const char *text); // see Fl_Tooltip
+  void tooltip(const char *text);               // see Fl_Tooltip
+  void copy_tooltip(const char *text);          // see Fl_Tooltip
 
   /** Gets the current callback function for the widget.
       Each widget has a single callback.
       \return current callback
    */
-  Fl_Callback_p callback() const { return callback_; }
+  Fl_Callback_p callback() const {return callback_;}
 
   /** Sets the current callback function for the widget.
       Each widget has a single callback.
       \param[in] cb new callback
       \param[in] p user data
    */
-  void callback(Fl_Callback *cb, void *p) {
-    callback_ = cb;
-    user_data_ = p;
-  }
+  void callback(Fl_Callback* cb, void* p) {callback_ = cb; user_data_ = p;}
 
   /** Sets the current callback function for the widget.
       Each widget has a single callback.
       \param[in] cb new callback
    */
-  void callback(Fl_Callback *cb) { callback_ = cb; }
+  void callback(Fl_Callback* cb) {callback_ = cb;}
 
   /** Sets the current callback function for the widget.
       Each widget has a single callback.
       \param[in] cb new callback
    */
-  void callback(Fl_Callback0 *cb) { callback_ = (Fl_Callback *)cb; }
+  void callback(Fl_Callback0* cb) {callback_ = (Fl_Callback*)cb;}
 
   /** Sets the current callback function for the widget.
       Each widget has a single callback.
       \param[in] cb new callback
       \param[in] p user data
    */
-  void callback(Fl_Callback1 *cb, long p = 0) {
-    callback_ = (Fl_Callback *)cb;
-    user_data_ = (void *)(fl_intptr_t)p;
+  void callback(Fl_Callback1* cb, long p = 0) {
+    callback_ = (Fl_Callback*)cb;
+    user_data_ = (void*)(fl_intptr_t)p;
   }
 
   /** Gets the user data for this widget.
       Gets the current user data (void *) argument that is passed to the callback function.
       \return user data as a pointer
    */
-  void *user_data() const { return user_data_; }
+  void* user_data() const {return user_data_;}
 
   /** Sets the user data for this widget.
       Sets the new user data (void *) argument that is passed to the callback function.
       \param[in] v new user data
    */
-  void user_data(void *v) { user_data_ = v; }
+  void user_data(void* v) {user_data_ = v;}
 
   /** Gets the current user data (long) argument that is passed to the callback function.
 
@@ -638,13 +628,13 @@ public:
     \todo [Internal] The user_data value must be implemented using
           \p fl_intptr_t or similar to avoid 64-bit platform incompatibilities.
   */
-  long argument() const { return (long)(fl_intptr_t)user_data_; }
+  long argument() const {return (long)(fl_intptr_t)user_data_;}
 
   /** Sets the current user data (long) argument that is passed to the callback function.
 
     \see argument()
    */
-  void argument(long v) { user_data_ = (void *)(fl_intptr_t)v; }
+  void argument(long v) {user_data_ = (void*)(fl_intptr_t)v;}
 
   /** Returns the conditions under which the callback is called.
 
@@ -654,7 +644,7 @@ public:
       \return set of flags
       \see when(uchar)
    */
-  Fl_When when() const { return (Fl_When)when_; }
+  Fl_When when() const {return (Fl_When)when_;}
 
   /** Sets the flags used to decide when a callback is called.
 
@@ -687,13 +677,13 @@ public:
       that don't do their own callbacks in response to an "OK" button.
       \param[in] i set of flags
    */
-  void when(uchar i) { when_ = i; }
+  void when(uchar i) {when_ = i;}
 
   /** Returns whether a widget is visible.
       \retval 0 if the widget is not drawn and hence invisible.
       \see show(), hide(), visible_r()
    */
-  unsigned int visible() const { return !(flags_ & INVISIBLE); }
+  unsigned int visible() const {return !(flags_&INVISIBLE);}
 
   /** Returns whether a widget and all its parents are visible.
       \retval 0 if the widget or any of its parents are invisible.
@@ -729,19 +719,19 @@ public:
       You must still redraw the parent widget to see a change in the
       window. Normally you want to use the show() method instead.
    */
-  void set_visible() { flags_ &= ~INVISIBLE; }
+  void set_visible() {flags_ &= ~INVISIBLE;}
 
   /** Hides the widget.
       You must still redraw the parent to see a change in the window.
       Normally you want to use the hide() method instead.
    */
-  void clear_visible() { flags_ |= INVISIBLE; }
+  void clear_visible() {flags_ |= INVISIBLE;}
 
   /** Returns whether the widget is active.
       \retval 0 if the widget is inactive
       \see active_r(), activate(), deactivate()
    */
-  unsigned int active() const { return !(flags_ & INACTIVE); }
+  unsigned int active() const {return !(flags_&INACTIVE);}
 
   /** Returns whether the widget and all of its parents are active.
       \retval 0 if this or any of the parent widgets are inactive
@@ -780,24 +770,24 @@ public:
       \retval 0 if the widget is used for input and output
       \see set_output(), clear_output()
    */
-  unsigned int output() const { return (flags_ & OUTPUT); }
+  unsigned int output() const {return (flags_&OUTPUT);}
 
   /** Sets a widget to output only.
       \see output(), clear_output()
    */
-  void set_output() { flags_ |= OUTPUT; }
+  void set_output() {flags_ |= OUTPUT;}
 
   /** Sets a widget to accept input.
       \see set_output(), output()
    */
-  void clear_output() { flags_ &= ~OUTPUT; }
+  void clear_output() {flags_ &= ~OUTPUT;}
 
   /** Returns if the widget is able to take events.
       This is the same as (active() && !output() && visible())
       but is faster.
       \retval 0 if the widget takes no events
    */
-  unsigned int takesevents() const { return !(flags_ & (INACTIVE | INVISIBLE | OUTPUT)); }
+  unsigned int takesevents() const {return !(flags_&(INACTIVE|INVISIBLE|OUTPUT));}
 
   /**
       Checks if the widget value changed since the last callback.
@@ -817,29 +807,29 @@ public:
       \see set_changed(), clear_changed()
       \see do_callback(Fl_Widget *widget, void *data)
    */
-  unsigned int changed() const { return flags_ & CHANGED; }
+  unsigned int changed() const {return flags_ & CHANGED;}
 
   /** Marks the value of the widget as changed.
       \see changed(), clear_changed()
    */
-  void set_changed() { flags_ |= CHANGED; }
+  void set_changed() {flags_ |= CHANGED;}
 
   /** Marks the value of the widget as unchanged.
       \see changed(), set_changed()
    */
-  void clear_changed() { flags_ &= ~CHANGED; }
+  void clear_changed() {flags_ &= ~CHANGED;}
 
   /** Marks the widget as inactive without sending events or changing focus.
       This is mainly for specialized use, for normal cases you want deactivate().
       \see deactivate()
    */
-  void clear_active() { flags_ |= INACTIVE; }
+  void clear_active() {flags_ |= INACTIVE;}
 
   /** Marks the widget as active without sending events or changing focus.
       This is mainly for specialized use, for normal cases you want activate().
       \see activate()
    */
-  void set_active() { flags_ &= ~INACTIVE; }
+  void set_active() {flags_ &= ~INACTIVE;}
 
   /** Gives the widget the keyboard focus.
       Tries to make this widget be the Fl::focus() widget, by first sending
@@ -868,12 +858,7 @@ public:
       \param[in] v set or clear visible focus
       \see set_visible_focus(), clear_visible_focus(), visible_focus()
    */
-  void visible_focus(int v) {
-    if (v)
-      set_visible_focus();
-    else
-      clear_visible_focus();
-  }
+  void visible_focus(int v) { if (v) set_visible_focus(); else clear_visible_focus(); }
 
   /** Checks whether this widget has a visible focus.
       \retval 0 if this widget has no visible focus.
@@ -912,7 +897,7 @@ public:
     \see callback()
     \see do_callback(Fl_Widget *widget, void *data)
   */
-  void do_callback() { do_callback(this, user_data_); }
+  void do_callback() {do_callback(this, user_data_);}
 
   /** Calls the widget callback function with arbitrary arguments.
     \param[in] widget call the callback with \p widget as the first argument
@@ -920,7 +905,9 @@ public:
     \see callback()
     \see do_callback(Fl_Widget *widget, void *data)
   */
-  void do_callback(Fl_Widget *widget, long arg) { do_callback(widget, (void *)(fl_intptr_t)arg); }
+  void do_callback(Fl_Widget *widget, long arg) {
+    do_callback(widget, (void*)(fl_intptr_t)arg);
+  }
 
   // Causes a widget to invoke its callback function with arbitrary arguments.
   // Documentation and implementation in Fl_Widget.cxx
@@ -931,17 +918,17 @@ public:
   /* Internal use only. */
   static unsigned int label_shortcut(const char *t);
   /* Internal use only. */
-  static int test_shortcut(const char *, const bool require_alt = false);
+  static int test_shortcut(const char*, const bool require_alt = false);
   /* Internal use only. */
-  void _set_fullscreen() { flags_ |= FULLSCREEN; }
-  void _clear_fullscreen() { flags_ &= ~FULLSCREEN; }
+  void _set_fullscreen() {flags_ |= FULLSCREEN;}
+  void _clear_fullscreen() {flags_ &= ~FULLSCREEN;}
 
   /** Checks if w is a child of this widget.
       \param[in] w potential child widget
       \return Returns 1 if \p w is a child of this widget, or is
       equal to this widget. Returns 0 if \p w is NULL.
    */
-  int contains(const Fl_Widget *w) const;
+  int contains(const Fl_Widget *w) const ;
 
   /** Checks if this widget is a child of \p wgt.
       Returns 1 if this widget is a child of \p wgt, or is
@@ -949,7 +936,7 @@ public:
       \param[in] wgt the possible parent widget.
       \see contains()
    */
-  int inside(const Fl_Widget *wgt) const { return wgt ? wgt->contains(this) : 0; }
+  int inside(const Fl_Widget *wgt) const {return wgt ? wgt->contains(this) : 0;}
 
   /** Schedules the drawing of the widget.
       Marks the widget as needing its draw() routine called.
@@ -968,7 +955,7 @@ public:
       \return a bitmap of flags describing the kind of damage to the widget
       \see damage(uchar), clear_damage(uchar)
    */
-  uchar damage() const { return damage_; }
+  uchar damage() const {return damage_;}
 
   /** Clears or sets the damage flags.
       Damage flags are cleared when parts of the widget drawing is repaired.
@@ -982,7 +969,7 @@ public:
       \param[in] c new bitmask of damage flags (default: 0)
       \see damage(uchar), damage()
    */
-  void clear_damage(uchar c = 0) { damage_ = c; }
+  void clear_damage(uchar c = 0) {damage_ = c;}
 
   /** Sets the damage bits for the widget.
       Setting damage bits will schedule the widget for the next redraw.
@@ -1008,11 +995,11 @@ public:
       the arguments \p ww and \p hh and word wrapping
       \see fl_measure(const char*, int&, int&, int)
    */
-  void measure_label(int &ww, int &hh) const { label_.measure(ww, hh); }
+  void measure_label(int& ww, int& hh) const {label_.measure(ww, hh);}
 
-  Fl_Window *window() const;
-  Fl_Window *top_window() const;
-  Fl_Window *top_window_offset(int &xoff, int &yoff) const;
+  Fl_Window* window() const ;
+  Fl_Window* top_window() const;
+  Fl_Window* top_window_offset(int& xoff, int& yoff) const;
 
   /** Returns an Fl_Group pointer if this widget is an Fl_Group.
 
@@ -1037,7 +1024,7 @@ public:
       \note This method is provided to avoid dynamic_cast.
       \see Fl_Widget::as_window(), Fl_Widget::as_gl_window()
    */
-  virtual Fl_Group *as_group() { return 0; }
+  virtual Fl_Group* as_group() {return 0;}
 
   /** Returns an Fl_Window pointer if this widget is an Fl_Window.
 
@@ -1051,7 +1038,7 @@ public:
       \note This method is provided to avoid dynamic_cast.
       \see Fl_Widget::as_group(), Fl_Widget::as_gl_window()
    */
-  virtual Fl_Window *as_window() { return 0; }
+  virtual Fl_Window* as_window() {return 0;}
 
   /** Returns an Fl_Gl_Window pointer if this widget is an Fl_Gl_Window.
 
@@ -1063,7 +1050,7 @@ public:
       \note This method is provided to avoid dynamic_cast.
       \see Fl_Widget::as_group(), Fl_Widget::as_window()
    */
-  virtual class Fl_Gl_Window *as_gl_window() { return 0; }
+  virtual class Fl_Gl_Window* as_gl_window() {return 0;}
 
   /** Returns non zero if MAC_USE_ACCENTS_MENU flag is set, 0 otherwise.
    */
@@ -1072,12 +1059,12 @@ public:
   /** For back compatibility only.
       \deprecated Use selection_color() instead.
   */
-  Fl_Color color2() const { return (Fl_Color)color2_; }
+  Fl_Color color2() const {return (Fl_Color)color2_;}
 
   /** For back compatibility only.
       \deprecated Use selection_color(unsigned) instead.
   */
-  void color2(unsigned a) { color2_ = a; }
+  void color2(unsigned a) {color2_ = a;}
 
   /** Sets whether the widget's label uses '&' to indicate shortcuts.
    By default, all objects of classes Fl_Menu_ (and derivatives), Fl_Button (and derivatives),
@@ -1085,10 +1072,9 @@ public:
    use character '&' in their label, unless '&' is repeated,
    to indicate shortcuts: '&' does not appear in the drawn label,
    the next character after '&' in the label is drawn underlined, and typing this character
-   triggers the corresponding menu window, button, or other widget. If the label contains 2
-   consecutive '&', only one is drawn and the next character is not underlined and not used as a
-   shortcut. If \p value is set to 0, all these labels don't process character '&' as indicating a
-   shortcut:
+   triggers the corresponding menu window, button, or other widget. If the label contains 2 consecutive '&',
+   only one is drawn and the next character is not underlined and not used as a shortcut.
+   If \p value is set to 0, all these labels don't process character '&' as indicating a shortcut:
    '&' is drawn in the label, the next character is not underlined and does not define a shortcut.
    */
   void shortcut_label(int value) {

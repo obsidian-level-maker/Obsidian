@@ -38,7 +38,8 @@
  - multithreading
  */
 
-class Fl_Darwin_System_Driver : public Fl_Posix_System_Driver {
+class Fl_Darwin_System_Driver : public Fl_Posix_System_Driver
+{
 public:
   Fl_Darwin_System_Driver();
   virtual int single_arg(const char *arg);
@@ -54,27 +55,26 @@ public:
   virtual int event_key(int k);
   virtual int get_key(int k);
   virtual int filename_list(const char *d, dirent ***list,
-                            int (*sort)(struct dirent **, struct dirent **), char *errmsg = NULL,
-                            int errmsg_sz = 0);
+                            int (*sort)(struct dirent **, struct dirent **),
+                            char *errmsg=NULL, int errmsg_sz=0);
   virtual int open_uri(const char *uri, char *msg, int msglen);
-  virtual int need_test_shortcut_extra() { return 1; }
-  virtual int file_browser_load_filesystem(Fl_File_Browser *browser, char *filename, int lname,
-                                           Fl_File_Icon *icon);
+  virtual int need_test_shortcut_extra() {return 1;}
+  virtual int file_browser_load_filesystem(Fl_File_Browser *browser, char *filename, int lname, Fl_File_Icon *icon);
   virtual void newUUID(char *uuidBuffer);
-  virtual char *preference_rootnode(Fl_Preferences *prefs, Fl_Preferences::Root root,
-                                    const char *vendor, const char *application);
+  virtual char *preference_rootnode(Fl_Preferences *prefs, Fl_Preferences::Root root, const char *vendor,
+                                   const char *application);
   virtual const char *local_to_latin1(const char *t, int n);
   virtual const char *latin1_to_local(const char *t, int n);
   virtual const char *local_to_mac_roman(const char *t, int n);
   virtual const char *mac_roman_to_local(const char *t, int n);
   virtual Fl_Pixmap *tree_openpixmap();
-  static const char *const tree_open_xpm_darwin[]; // used by tree_openpixmap()
+  static const char * const tree_open_xpm_darwin[]; // used by tree_openpixmap()
   virtual Fl_Pixmap *tree_closepixmap();
-  static const char *const tree_close_xpm_darwin[]; // used by tree_closepixmap()
+  static const char * const tree_close_xpm_darwin[]; // used by tree_closepixmap()
   virtual int tree_connector_style();
   virtual const char *filename_name(const char *buf);
-  virtual void add_fd(int fd, int when, Fl_FD_Handler cb, void * = 0);
-  virtual void add_fd(int fd, Fl_FD_Handler cb, void * = 0);
+  virtual void add_fd(int fd, int when, Fl_FD_Handler cb, void* = 0);
+  virtual void add_fd(int fd, Fl_FD_Handler cb, void* = 0);
   virtual void remove_fd(int, int when);
   virtual void remove_fd(int);
   virtual void open_callback(void (*)(const char *));

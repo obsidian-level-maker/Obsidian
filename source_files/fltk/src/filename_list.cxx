@@ -53,13 +53,12 @@ int fl_casealphasort(struct dirent **a, struct dirent **b) {
   \param[out] list table containing the resulting directory listing
   \param[in] sort sorting functor:
   - fl_alphasort: The files are sorted in ascending alphabetical order;
-      upper and lowercase letters are compared according to their ASCII ordering  uppercase before
-  lowercase.
+      upper and lowercase letters are compared according to their ASCII ordering  uppercase before lowercase.
   - fl_casealphasort: The files are sorted in ascending alphabetical order;
       upper and lowercase letters are compared equally case is not significant.
-  - fl_casenumericsort: The files are sorted in ascending "alphanumeric" order, where an attempt is
-  made to put unpadded numbers in consecutive order; upper and lowercase letters are compared
-  equally case is not significant.
+  - fl_casenumericsort: The files are sorted in ascending "alphanumeric" order, where an attempt is made
+      to put unpadded numbers in consecutive order; upper and lowercase letters
+      are compared equally case is not significant.
   - fl_numericsort: The files are sorted in ascending "alphanumeric" order, where an attempt is made
       to put unpadded numbers in consecutive order; upper and lowercase letters are compared
       according to their ASCII ordering - uppercase before lowercase.
@@ -79,12 +78,12 @@ int fl_filename_list(const char *d, dirent ***list, Fl_File_Sort_F *sort) {
  \param[in,out] list table containing the resulting directory listing
  \param[in] n number of entries in the list
  */
-void fl_filename_free_list(struct dirent ***list, int n) {
-  if (n < 0)
-    return;
+void fl_filename_free_list(struct dirent ***list, int n)
+{
+  if (n<0) return;
 
   int i;
-  for (i = 0; i < n; i++) {
+  for (i = 0; i < n; i ++) {
     if ((*list)[i])
       free((*list)[i]);
   }

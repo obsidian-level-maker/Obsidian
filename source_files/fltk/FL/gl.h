@@ -40,62 +40,59 @@
  */
 
 #ifndef FL_gl_H
-#define FL_gl_H
+#  define FL_gl_H
 
-#include "Enumerations.H" // for color names
-#ifdef _WIN32
-#include <windows.h>
-#endif
-#ifndef APIENTRY
-#if defined(__CYGWIN__)
-#define APIENTRY __attribute__((__stdcall__))
-#else
-#define APIENTRY
-#endif
-#endif
+#  include "Enumerations.H" // for color names
+#  ifdef _WIN32
+#    include <windows.h>
+#  endif
+#  ifndef APIENTRY
+#    if defined(__CYGWIN__)
+#      define APIENTRY __attribute__ ((__stdcall__))
+#    else
+#      define APIENTRY
+#    endif
+#  endif
 
-#ifdef __APPLE__ // PORTME: OpenGL path abstraction
-#include <OpenGL/gl.h>
-#else
-#include <GL/gl.h>
-#endif // __APPLE__ // PORTME: OpenGL Path abstraction
+#  ifdef __APPLE__ // PORTME: OpenGL path abstraction
+#    include <OpenGL/gl.h>
+#  else
+#    include <GL/gl.h>
+#  endif  // __APPLE__ // PORTME: OpenGL Path abstraction
 
 FL_EXPORT void gl_start();
 FL_EXPORT void gl_finish();
 
 FL_EXPORT void gl_color(Fl_Color i);
 /** back compatibility */
-inline void gl_color(int c) {
-  gl_color((Fl_Color)c);
-}
+inline void gl_color(int c) {gl_color((Fl_Color)c);}
 
-FL_EXPORT void gl_rect(int x, int y, int w, int h);
+FL_EXPORT void gl_rect(int x,int y,int w,int h);
 /**
   Fills the given rectangle with the current color.
   \see gl_rect(int x, int y, int w, int h)
   */
-inline void gl_rectf(int x, int y, int w, int h) {
-  glRecti(x, y, x + w, y + h);
-}
+inline void gl_rectf(int x,int y,int w,int h) {glRecti(x,y,x+w,y+h);}
 
 FL_EXPORT void gl_font(int fontid, int size);
-FL_EXPORT int gl_height();
-FL_EXPORT int gl_descent();
+FL_EXPORT int  gl_height();
+FL_EXPORT int  gl_descent();
 FL_EXPORT double gl_width(const char *);
 FL_EXPORT double gl_width(const char *, int n);
 FL_EXPORT double gl_width(uchar);
 
-FL_EXPORT void gl_draw(const char *);
-FL_EXPORT void gl_draw(const char *, int n);
-FL_EXPORT void gl_draw(const char *, int x, int y);
-FL_EXPORT void gl_draw(const char *, float x, float y);
-FL_EXPORT void gl_draw(const char *, int n, int x, int y);
-FL_EXPORT void gl_draw(const char *, int n, float x, float y);
-FL_EXPORT void gl_draw(const char *, int x, int y, int w, int h, Fl_Align);
-FL_EXPORT void gl_measure(const char *, int &x, int &y);
+FL_EXPORT void gl_draw(const char*);
+FL_EXPORT void gl_draw(const char*, int n);
+FL_EXPORT void gl_draw(const char*, int x, int y);
+FL_EXPORT void gl_draw(const char*, float x, float y);
+FL_EXPORT void gl_draw(const char*, int n, int x, int y);
+FL_EXPORT void gl_draw(const char*, int n, float x, float y);
+FL_EXPORT void gl_draw(const char*, int x, int y, int w, int h, Fl_Align);
+FL_EXPORT void gl_measure(const char*, int& x, int& y);
 FL_EXPORT void gl_texture_pile_height(int max);
-FL_EXPORT int gl_texture_pile_height();
+FL_EXPORT int  gl_texture_pile_height();
+FL_EXPORT void gl_texture_reset();
 
-FL_EXPORT void gl_draw_image(const uchar *, int x, int y, int w, int h, int d = 3, int ld = 0);
+FL_EXPORT void gl_draw_image(const uchar *, int x,int y,int w,int h, int d=3, int ld=0);
 
 #endif // !FL_gl_H

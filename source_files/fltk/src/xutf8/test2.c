@@ -44,9 +44,7 @@ export LANG=zh_TW; export XMODIFIERS="@im=xcin-zh_TW"
 export LANG=zh_TW; export XMODIFIERS="@im=xcin-zh_CN"
 export LANG=fr_FR.UTF-8; export XMODIFIERS="@im=interxim"
 
-export LD_PRELOAD="/usr/src/x11/xc/exports/lib/libX11.so /usr/src/x11/xc/exports/lib/libxlcDef.so.2
-/usr/src/x11/xc/exports/lib/libxlibi18n.so.2 /usr/src/x11/xc/exports/lib/libxlocale.so.2
-/usr/src/x11/xc/exports/lib/libxomGeneric.so.2 /usr/src/x11/xc/exports/lib/libximcp.so.2"
+export LD_PRELOAD="/usr/src/x11/xc/exports/lib/libX11.so /usr/src/x11/xc/exports/lib/libxlcDef.so.2 /usr/src/x11/xc/exports/lib/libxlibi18n.so.2 /usr/src/x11/xc/exports/lib/libxlocale.so.2 /usr/src/x11/xc/exports/lib/libxomGeneric.so.2 /usr/src/x11/xc/exports/lib/libximcp.so.2"
 
 */
 
@@ -70,18 +68,18 @@ char *rtl_txt = "->e\xCC\x82=\xC3\xAA";
 
 XIM xim_im = NULL;
 XIC xim_ic = NULL;
-static XIMStyles *xim_styles = NULL;
+static XIMStyles* xim_styles = NULL;
 XFontSet fontset;
 GC gc;
 int x = 2;
 int y = 40;
 
-int main(int argc, char **argv) {
+int main(int argc, char**argv) {
   char **missing_charset_list;
   int missing_charset_count;
   XGCValues xgcv;
   unsigned long mask;
-  Display *dpy;
+  Display* dpy;
   int scr;
   Window w, root;
   XSetWindowAttributes set_attr;
@@ -113,10 +111,11 @@ int main(int argc, char **argv) {
   dpy = XOpenDisplay(0);
   scr = DefaultScreen(dpy);
   root = RootWindow(dpy, scr);
-  set_attr.event_mask = KeyPressMask | FocusChangeMask;
+  set_attr.event_mask = KeyPressMask|FocusChangeMask;
   set_attr.background_pixel = WhitePixel(dpy, DefaultScreen(dpy));
   set_attr.border_pixel = BlackPixel(dpy, DefaultScreen(dpy));
-  w = XCreateWindow(dpy, root, 10, 10, 200, 100, 0, DefaultDepth(dpy, DefaultScreen(dpy)),
+  w = XCreateWindow(dpy, root, 10,10,200,100,0,
+                    DefaultDepth(dpy, DefaultScreen(dpy)),
                     InputOutput, DefaultVisual(dpy, DefaultScreen(dpy)),
                     CWEventMask | CWBackPixel | CWBorderPixel, &set_attr);
 
@@ -125,13 +124,15 @@ int main(int argc, char **argv) {
   wm_hints.input = True;
   wm_hints.flags = InputHint;
 
-  XmbSetWMProperties(dpy, w, "test", "test", NULL, 0, NULL, &wm_hints, &class_hints);
+  XmbSetWMProperties(dpy, w, "test", "test", NULL, 0,
+                     NULL, &wm_hints, &class_hints);
 
   XMapWindow(dpy, w);
   xim_im = XOpenIM(dpy, NULL, "test", "Test");
   XGetIMValues(xim_im, XNQueryInputStyle, &xim_styles, NULL, NULL);
-  for (i = 0, style = xim_styles->supported_styles; i < xim_styles->count_styles; i++, style++) {
-    if (*style == (XIMStatusNone | XIMPreeditNone)) {
+  for (i = 0, style = xim_styles->supported_styles;
+       i < xim_styles->count_styles; i++, style++) {
+    if (*style == (XIMStatusNone|XIMPreeditNone)) {
       printf("this is not a XIM server !!!\n");
       no_xim = 1;
     }
@@ -139,8 +140,11 @@ int main(int argc, char **argv) {
   }
   XFree(xim_styles);
 
-  xim_ic = XCreateIC(xim_im, XNInputStyle, (XIMPreeditNothing | XIMStatusNothing), XNClientWindow,
-                     w, XNFocusWindow, w, NULL);
+  xim_ic = XCreateIC(xim_im,
+                     XNInputStyle, (XIMPreeditNothing | XIMStatusNothing),
+                     XNClientWindow, w,
+                     XNFocusWindow, w,
+                     NULL);
   XSetICFocus(xim_ic);
 
   /***************************************************************
@@ -148,21 +152,22 @@ int main(int argc, char **argv) {
    *  to the following one in a real application ;-)
    ***************************************************************/
   fontset = XCreateFontSet(dpy,
-                           "-*-*-*-*-*-*-*-*-*-*-*-*-iso8858-3," /* not valid */
-                           "-*-*-medium-r-*-*-*-*-*-*-*-*-iso8859-1,"
-                           "-*-*-*-*-*-*-*-*-*-*-*-*-iso8859-6,"
-                           "-*-*-*-*-*-*-*-*-*-*-*-*-iso8859-8,"
-                           "-*-symbol-*-*-*-*-*-*-*-*-*-*-adobe-fontspecific,"
-                           "-*-*-*-*-*-*-*-*-*-*-*-*-iso8859-2,"
-                           "-*-*-*-*-*-*-*-*-*-*-*-*-koi8-1,"
-                           "-*-*-*-*-*-*-*-*-*-*-*-*-jisx0208.1983-0,"
-                           "-*-*-*-*-*-*-*-*-*-*-*-*-jisx0212.1990-0,"
-                           "-*-*-*-*-*-*-*-*-*-*-*-*-big5-0,"
-                           "-*-*-*-*-*-*-*-*-*-*-*-*-jisx0201.1976-0,"
-                           "-*-unifont-*-*-*-*-*-*-*-*-*-*-iso10646-1[0x300 0x400_0x500],"
-                           "-*-*-*-*-*-*-*-*-*-*-*-*-*-*",
-                           &missing_charset_list_return, &missing_charset_count_return,
-                           &def_string_return);
+          "-*-*-*-*-*-*-*-*-*-*-*-*-iso8858-3," /* not valid */
+          "-*-*-medium-r-*-*-*-*-*-*-*-*-iso8859-1,"
+          "-*-*-*-*-*-*-*-*-*-*-*-*-iso8859-6,"
+          "-*-*-*-*-*-*-*-*-*-*-*-*-iso8859-8,"
+          "-*-symbol-*-*-*-*-*-*-*-*-*-*-adobe-fontspecific,"
+          "-*-*-*-*-*-*-*-*-*-*-*-*-iso8859-2,"
+          "-*-*-*-*-*-*-*-*-*-*-*-*-koi8-1,"
+          "-*-*-*-*-*-*-*-*-*-*-*-*-jisx0208.1983-0,"
+          "-*-*-*-*-*-*-*-*-*-*-*-*-jisx0212.1990-0,"
+          "-*-*-*-*-*-*-*-*-*-*-*-*-big5-0,"
+          "-*-*-*-*-*-*-*-*-*-*-*-*-jisx0201.1976-0,"
+          "-*-unifont-*-*-*-*-*-*-*-*-*-*-iso10646-1[0x300 0x400_0x500],"
+          "-*-*-*-*-*-*-*-*-*-*-*-*-*-*",
+          &missing_charset_list_return,
+          &missing_charset_count_return,
+          &def_string_return);
   mask = (GCForeground | GCBackground);
   xgcv.foreground = BlackPixel(dpy, DefaultScreen(dpy));
   xgcv.background = WhitePixel(dpy, DefaultScreen(dpy));
@@ -178,14 +183,12 @@ int main(int argc, char **argv) {
 
     XNextEvent(dpy, &xevent);
     if (xevent.type == KeyPress) {
-      XKeyEvent *e = (XKeyEvent *)&xevent;
-      printf("0x%X %d\n", e->state, e->keycode);
+      XKeyEvent *e = (XKeyEvent*) &xevent;
+      printf ("0x%X %d\n", e->state, e->keycode);
     }
     filtered = XFilterEvent(&xevent, w);
-    if (xevent.type == FocusOut)
-      XUnsetICFocus(xim_ic);
-    if (xevent.type == FocusIn)
-      XSetICFocus(xim_ic);
+    if (xevent.type == FocusOut) XUnsetICFocus(xim_ic);
+    if (xevent.type == FocusIn) XSetICFocus(xim_ic);
 
     if (xevent.type == KeyPress && !filtered) {
       len = Xutf8LookupString(xim_ic, &xevent.xkey, buf, 127, &keysym, &status);

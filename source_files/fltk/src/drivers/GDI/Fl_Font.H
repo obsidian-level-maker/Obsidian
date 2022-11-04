@@ -30,11 +30,11 @@ public:
   int *width[64];
   TEXTMETRIC metr;
   int angle;
-  FL_EXPORT Fl_GDI_Font_Descriptor(const char *fontname, Fl_Fontsize size);
-#if HAVE_GL
+  FL_EXPORT Fl_GDI_Font_Descriptor(const char* fontname, Fl_Fontsize size);
+#  if HAVE_GL
   char glok[64];
-#endif // HAVE_GL
-  FL_EXPORT ~Fl_GDI_Font_Descriptor();
+#  endif // HAVE_GL
+  virtual FL_EXPORT ~Fl_GDI_Font_Descriptor();
 };
 
 extern FL_EXPORT Fl_Fontdesc *fl_fonts; // the table

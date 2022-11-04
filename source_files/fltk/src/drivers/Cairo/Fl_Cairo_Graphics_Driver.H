@@ -19,20 +19,26 @@
 */
 
 #ifndef FL_CAIRO_GRAPHICS_DRIVER_H
-#define FL_CAIRO_GRAPHICS_DRIVER_H
+# define FL_CAIRO_GRAPHICS_DRIVER_H
 
 #include <FL/Fl_Graphics_Driver.H>
 #include <cairo/cairo.h>
 
-typedef struct _PangoLayout PangoLayout;
+typedef struct _PangoLayout  PangoLayout;
 typedef struct _PangoContext PangoContext;
 typedef struct _PangoFontDescription PangoFontDescription;
 
+#if USE_PANGO
+  struct flCairoRegion {
+    int count;
+    struct _cairo_rectangle *rects;
+  }; // a region is the union of a series of rectangles
+#endif
 
 class Fl_Cairo_Font_Descriptor : public Fl_Font_Descriptor {
 public:
-  Fl_Cairo_Font_Descriptor(const char *fontname, Fl_Fontsize size, PangoContext *context);
-  FL_EXPORT ~Fl_Cairo_Font_Descriptor();
+  Fl_Cairo_Font_Descriptor(const char* fontname, Fl_Fontsize size, PangoContext *context);
+  virtual FL_EXPORT ~Fl_Cairo_Font_Descriptor();
   PangoFontDescription *fontref;
   int **width; // array of arrays of character widths
   int line_height;
@@ -42,40 +48,36 @@ public:
 class FL_EXPORT Fl_Cairo_Graphics_Driver : public Fl_Graphics_Driver {
 private:
   bool *needs_commit_tag_; // NULL or points to whether cairo surface was drawn to
-  cairo_t *dummy_cairo_;   // used to measure text width before showing a window
+  cairo_t *dummy_cairo_; // used to measure text width before showing a window
   int linestyle_;
   int width_unscaled_(unsigned int c);
-
 protected:
   cairo_t *cairo_;
   PangoContext *pango_context_;
   PangoLayout *pango_layout_;
-
 public:
   Fl_Cairo_Graphics_Driver();
   virtual ~Fl_Cairo_Graphics_Driver();
-  enum SHAPE { NONE = 0, LINE, LOOP, POLYGON, POINTS };
 
   class Clip {
   public:
     int x, y, w, h;
     Clip *prev;
   };
-  Clip *clip_;
+  Clip * clip_;
 
   int gap_;
   cairo_t *cr() { return cairo_; }
-  PangoLayout *pango_layout() { return pango_layout_; }
+  PangoLayout *pango_layout() {return pango_layout_;}
   void set_cairo(cairo_t *c, float f = 0);
 
   void check_status(void);
 
-  enum SHAPE shape_;
-  unsigned char cr_, cg_, cb_;
-  char linedash_[256]; // should be enough
-  void concat();       // transform ror scalable dradings...
-  void reconcat();     // invert
-  void recover();      // recovers the state after grestore (such as line styles...)
+  unsigned char cr_,cg_,cb_;
+  char  linedash_[256];//should be enough
+  void concat();  // transform ror scalable dradings...
+  void reconcat(); //invert
+  void recover(); //recovers the state after grestore (such as line styles...)
   void reset();
 
   float scale_x;
@@ -86,8 +88,7 @@ public:
   static const cairo_format_t cairo_format;
 
   void surface_needs_commit() {
-    if (needs_commit_tag_)
-      *needs_commit_tag_ = true;
+    if (needs_commit_tag_) *needs_commit_tag_ = true;
   }
   void needs_commit_tag(bool *tag) { needs_commit_tag_ = tag; }
 
@@ -100,7 +101,7 @@ public:
   void push_no_clip();
   void pop_clip();
 
-  void line_style(int style, int width = 0, char *dashes = 0);
+  void line_style(int style, int width=0, char* dashes=0);
 
   void rect(int x, int y, int w, int h);
   void rectf(int x, int y, int w, int h);
@@ -121,7 +122,7 @@ public:
   void polygon(int x0, int y0, int x1, int y1, int x2, int y2);
   void polygon(int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3);
   void point(int x, int y);
-  void overlay_rect(int x, int y, int w, int h);
+  void overlay_rect(int x, int y, int w , int h);
   int clip_box(int x, int y, int w, int h, int &X, int &Y, int &W, int &H);
   void restore_clip();
   int not_clipped(int x, int y, int w, int h);
@@ -145,50 +146,48 @@ public:
   void end_complex_polygon() { end_polygon(); }
   void transformed_vertex(double x, double y);
 
-  void draw_image_mono(const uchar *d, int x, int y, int w, int h, int delta = 1, int ld = 0);
-  void draw_image(Fl_Draw_Image_Cb call, void *data, int x, int y, int w, int h, int delta = 3);
-  void draw_image_mono(Fl_Draw_Image_Cb call, void *data, int x, int y, int w, int h,
-                       int delta = 1);
+  void draw_image_mono(const uchar* d, int x,int y,int w,int h, int delta=1, int ld=0);
+  void draw_image(Fl_Draw_Image_Cb call, void* data, int x,int y, int w, int h, int delta=3);
+  void draw_image_mono(Fl_Draw_Image_Cb call, void* data, int x,int y, int w, int h, int delta=1);
 
   void ps_origin(int x, int y);
   void ps_translate(int, int);
   void ps_untranslate();
 
-  void draw_cached_pattern_(Fl_Image *img, cairo_pattern_t *pat, int X, int Y, int W, int H, int cx,
-                            int cy);
+  void draw_cached_pattern_(Fl_Image *img, cairo_pattern_t *pat, int X, int Y, int W, int H, int cx, int cy);
   void draw_image(const uchar *data, int ix, int iy, int iw, int ih, int D, int LD);
-  void draw_rgb(Fl_RGB_Image *rgb, int XP, int YP, int WP, int HP, int cx, int cy);
+  void draw_rgb(Fl_RGB_Image *rgb,int XP, int YP, int WP, int HP, int cx, int cy);
   void cache(Fl_RGB_Image *rgb);
   void uncache(Fl_RGB_Image *img, fl_uintptr_t &id_, fl_uintptr_t &mask_);
-  void draw_bitmap(Fl_Bitmap *bm, int XP, int YP, int WP, int HP, int cx, int cy);
+  void draw_bitmap(Fl_Bitmap *bm,int XP, int YP, int WP, int HP, int cx, int cy);
   static cairo_pattern_t *bitmap_to_pattern(Fl_Bitmap *bm, bool complement,
                                             cairo_surface_t **p_surface);
   void cache(Fl_Bitmap *img);
   virtual void delete_bitmask(fl_uintptr_t bm);
   void cache(Fl_Pixmap *pxm);
-  void draw_pixmap(Fl_Pixmap *rgb, int XP, int YP, int WP, int HP, int cx, int cy);
+  void draw_pixmap(Fl_Pixmap *rgb,int XP, int YP, int WP, int HP, int cx, int cy);
   void uncache_pixmap(fl_uintptr_t p);
 
   void font(Fl_Font fnum, Fl_Fontsize s);
   Fl_Font font() { return Fl_Graphics_Driver::font(); }
-  void draw(const char *s, int nBytes, int x, int y) { draw(s, nBytes, float(x), float(y)); }
-  void draw(const char *s, int nBytes, float x, float y);
+  void draw(const char* s, int nBytes, int x, int y) { draw(s, nBytes, float(x), float(y)); }
+  void draw(const char* s, int nBytes, float x, float y);
   void draw(int angle, const char *str, int n, int x, int y);
-  void rtl_draw(const char *str, int n, int x, int y);
+  void rtl_draw(const char* str, int n, int x, int y);
   int height();
   int descent();
   double width(const char *str, int n);
   double width(unsigned c);
-  void text_extents(const char *txt, int n, int &dx, int &dy, int &w, int &h);
-  virtual PangoFontDescription *pango_font_description() {
-    return ((Fl_Cairo_Font_Descriptor *)font_descriptor())->fontref;
+  void text_extents(const char* txt, int n, int& dx, int& dy, int& w, int& h);
+  virtual PangoFontDescription* pango_font_description() {
+    return ((Fl_Cairo_Font_Descriptor*)font_descriptor())->fontref;
   }
   static void init_built_in_fonts();
-  virtual Fl_Font set_fonts(const char *pattern_name);
+  virtual Fl_Font set_fonts(const char* pattern_name);
   virtual const char *font_name(int num);
   virtual void font_name(int num, const char *name);
-  virtual const char *get_font_name(Fl_Font fnum, int *ap);
-  virtual int get_font_sizes(Fl_Font fnum, int *&sizep);
+  virtual const char* get_font_name(Fl_Font fnum, int* ap);
+  virtual int get_font_sizes(Fl_Font fnum, int*& sizep);
   virtual Fl_Region XRectangleRegion(int x, int y, int w, int h);
   virtual void XDestroyRegion(Fl_Region r);
   virtual void add_rectangle_to_region(Fl_Region r, int X, int Y, int W, int H);

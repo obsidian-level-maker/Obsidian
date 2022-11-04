@@ -24,18 +24,12 @@
 Fl_Printer::Fl_Printer(void) {
   printer = NULL;
 }
-Fl_Paged_Device *Fl_Printer::newPrinterDriver(void) {
+Fl_Paged_Device* Fl_Printer::newPrinterDriver(void) {
   return NULL;
 }
-int Fl_Printer::begin_job(int pagecount, int *frompage, int *topage, char **perr_message) {
-  return 2;
-}
-int Fl_Printer::begin_page(void) {
-  return 1;
-}
-int Fl_Printer::printable_rect(int *w, int *h) {
-  return 1;
-}
+int Fl_Printer::begin_job(int pagecount, int *frompage, int *topage, char **perr_message) {return 2;}
+int Fl_Printer::begin_page(void) {return 1;}
+int Fl_Printer::printable_rect(int *w, int *h) {return 1;}
 void Fl_Printer::margins(int *left, int *top, int *right, int *bottom) {}
 void Fl_Printer::origin(int *x, int *y) {}
 void Fl_Printer::origin(int x, int y) {}
@@ -43,14 +37,10 @@ void Fl_Printer::scale(float scale_x, float scale_y) {}
 void Fl_Printer::rotate(float angle) {}
 void Fl_Printer::translate(int x, int y) {}
 void Fl_Printer::untranslate(void) {}
-int Fl_Printer::end_page(void) {
-  return 1;
-}
-void Fl_Printer::end_job(void) {}
+int Fl_Printer::end_page (void) {return 1;}
+void Fl_Printer::end_job (void) {}
 void Fl_Printer::set_current(void) {}
-bool Fl_Printer::is_current(void) {
-  return false;
-}
+bool Fl_Printer::is_current(void) {return false;}
 Fl_Printer::~Fl_Printer(void) {}
 
 const char *Fl_Printer::dialog_title = NULL;
@@ -74,58 +64,36 @@ const char *Fl_Printer::property_save = NULL;
 const char *Fl_Printer::property_cancel = NULL;
 
 Fl_PostScript_File_Device::Fl_PostScript_File_Device(void) {}
-int Fl_PostScript_File_Device::begin_job(int pagecount, int *from, int *to, char **perr_message) {
-  return 2;
-}
+int Fl_PostScript_File_Device::begin_job(int pagecount, int* from, int* to, char **perr_message) {return 2;}
 int Fl_PostScript_File_Device::begin_job(int pagecount, enum Fl_Paged_Device::Page_Format format,
-                                         enum Fl_Paged_Device::Page_Layout layout) {
-  return 1;
-}
-int Fl_PostScript_File_Device::begin_job(FILE *ps_output, int pagecount,
-                                         enum Fl_Paged_Device::Page_Format format,
-                                         enum Fl_Paged_Device::Page_Layout layout) {
-  return 1;
-}
-int Fl_PostScript_File_Device::begin_page(void) {
-  return 1;
-}
-int Fl_PostScript_File_Device::printable_rect(int *w, int *h) {
-  return 1;
-}
+                                          enum Fl_Paged_Device::Page_Layout layout) {return 1;}
+int Fl_PostScript_File_Device::begin_job(FILE *ps_output, int pagecount, enum Fl_Paged_Device::Page_Format format,
+              enum Fl_Paged_Device::Page_Layout layout) {return 1;}
+int Fl_PostScript_File_Device::begin_page (void) {return 1;}
+int Fl_PostScript_File_Device::printable_rect(int *w, int *h) {return 1;}
 void Fl_PostScript_File_Device::margins(int *left, int *top, int *right, int *bottom) {}
 void Fl_PostScript_File_Device::origin(int *x, int *y) {}
 void Fl_PostScript_File_Device::origin(int x, int y) {}
-void Fl_PostScript_File_Device::scale(float scale_x, float scale_y) {}
+void Fl_PostScript_File_Device::scale (float scale_x, float scale_y) {}
 void Fl_PostScript_File_Device::rotate(float angle) {}
 void Fl_PostScript_File_Device::translate(int x, int y) {}
 void Fl_PostScript_File_Device::untranslate(void) {}
-int Fl_PostScript_File_Device::end_page(void) {
-  return 1;
-}
+int Fl_PostScript_File_Device::end_page (void) {return 1;}
 void Fl_PostScript_File_Device::end_job(void) {}
-FILE *Fl_PostScript_File_Device::file() {
-  return NULL;
-}
+FILE* Fl_PostScript_File_Device::file() {return NULL;}
 void Fl_PostScript_File_Device::close_command(Fl_PostScript_Close_Command cmd) {}
 Fl_PostScript_File_Device::~Fl_PostScript_File_Device(void) {}
 
 Fl_EPS_File_Surface::Fl_EPS_File_Surface(int width, int height, FILE *eps_output,
-                                         Fl_Color background, Fl_PostScript_Close_Command closef)
-  : Fl_Widget_Surface(NULL) {}
+                                         Fl_Color background, Fl_PostScript_Close_Command closef) : Fl_Widget_Surface(NULL) {}
 Fl_EPS_File_Surface::~Fl_EPS_File_Surface() {}
 void Fl_EPS_File_Surface::origin(int, int) {}
-void Fl_EPS_File_Surface::origin(int *, int *) {}
-int Fl_EPS_File_Surface::printable_rect(int *, int *) {
-  return 1;
-}
+void Fl_EPS_File_Surface::origin(int*, int*) {}
+int Fl_EPS_File_Surface::printable_rect(int*, int*) {return 1;}
 void Fl_EPS_File_Surface::translate(int, int) {}
 void Fl_EPS_File_Surface::untranslate() {}
-FILE *Fl_EPS_File_Surface::file() {
-  return NULL;
-}
-int Fl_EPS_File_Surface::close() {
-  return 1;
-}
+FILE* Fl_EPS_File_Surface::file() {return NULL;}
+int Fl_EPS_File_Surface::close() {return 1;}
 
 #else
 
@@ -175,55 +143,68 @@ Fl_Printer::Fl_Printer(void) {
   driver(printer->driver());
 }
 
-int Fl_Printer::begin_job(int pagecount, int *frompage, int *topage, char **perr_message) {
+int Fl_Printer::begin_job(int pagecount, int *frompage, int *topage, char **perr_message)
+{
   return printer->begin_job(pagecount, frompage, topage, perr_message);
 }
 
-int Fl_Printer::begin_page(void) {
+int Fl_Printer::begin_page(void)
+{
   return printer->begin_page();
 }
 
-int Fl_Printer::printable_rect(int *w, int *h) {
+int Fl_Printer::printable_rect(int *w, int *h)
+{
   return printer->printable_rect(w, h);
 }
 
-void Fl_Printer::margins(int *left, int *top, int *right, int *bottom) {
+void Fl_Printer::margins(int *left, int *top, int *right, int *bottom)
+{
   printer->margins(left, top, right, bottom);
 }
 
-void Fl_Printer::origin(int *x, int *y) {
+void Fl_Printer::origin(int *x, int *y)
+{
   printer->origin(x, y);
 }
 
-void Fl_Printer::origin(int x, int y) {
+void Fl_Printer::origin(int x, int y)
+{
   printer->origin(x, y);
 }
 
-void Fl_Printer::scale(float scale_x, float scale_y) {
+void Fl_Printer::scale(float scale_x, float scale_y)
+{
   printer->scale(scale_x, scale_y);
 }
 
-void Fl_Printer::rotate(float angle) {
+void Fl_Printer::rotate(float angle)
+{
   printer->rotate(angle);
 }
 
-void Fl_Printer::translate(int x, int y) {
+void Fl_Printer::translate(int x, int y)
+{
   printer->translate(x, y);
 }
 
-void Fl_Printer::untranslate(void) {
+void Fl_Printer::untranslate(void)
+{
   printer->untranslate();
 }
 
-int Fl_Printer::end_page(void) {
+int Fl_Printer::end_page (void)
+{
   return printer->end_page();
 }
 
-void Fl_Printer::end_job(void) {
+void Fl_Printer::end_job (void)
+{
   printer->end_job();
 }
 
-void Fl_Printer::set_current(void) {
+void Fl_Printer::set_current(void)
+{
   printer->set_current();
 }
 
@@ -231,7 +212,8 @@ bool Fl_Printer::is_current() {
   return surface() == printer;
 }
 
-Fl_Printer::~Fl_Printer(void) {
+Fl_Printer::~Fl_Printer(void)
+{
   delete printer;
 }
 

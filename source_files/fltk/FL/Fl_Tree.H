@@ -143,17 +143,17 @@
  \par
  - Fl_Tree::item_labelfont() -- The default item label font (default: FL_HELVETICA)
  - Fl_Tree::item_labelsize() -- The default item label size (default: FL_NORMAL_SIZE)
- - Fl_Tree::item_labelfgcolor() -- The default item label foreground color (default:
- FL_FOREGROUND_COLOR)
- - Fl_Tree::item_labelbgcolor() -- The default item label background color (default: 0xffffffff,
- which tree uses as 'transparent') \par Each item (Fl_Tree_Item) inherits a copy of these font/color
- attributes when created, and each item has its own methods to let the app change these values on a
- per-item basis using methods of the same name: \par
+ - Fl_Tree::item_labelfgcolor() -- The default item label foreground color (default: FL_FOREGROUND_COLOR)
+ - Fl_Tree::item_labelbgcolor() -- The default item label background color (default: 0xffffffff, which tree uses as 'transparent')
+ \par
+ Each item (Fl_Tree_Item) inherits a copy of these font/color attributes when created,
+ and each item has its own methods to let the app change these values on a per-item basis
+ using methods of the same name:
+ \par
  - Fl_Tree_Item::labelfont() -- The item's label font (default: FL_HELVETICA)
  - Fl_Tree_Item::labelsize() -- The item's label size (default: FL_NORMAL_SIZE)
  - Fl_Tree_Item::labelfgcolor() -- The item's label foreground color (default: FL_FOREGROUND_COLOR)
- - Fl_Tree_Item::labelbgcolor() -- The item's label background color (default: 0xffffffff, which
- uses the tree's own bg color)
+ - Fl_Tree_Item::labelbgcolor() -- The item's label background color (default: 0xffffffff, which uses the tree's own bg color)
 
  \par CALLBACKS
  The tree's callback() will be invoked when items change state or are open/closed.
@@ -251,23 +251,21 @@
  \par KEYBOARD BINDINGS
  The following table lists keyboard bindings for navigating the tree:
  \par
- Keyboard                | FL_TREE_SELECT_MULTI        | FL_TREE_SELECT_SINGLE       |
- FL_TREE_SELECT_NONE         |
+ Keyboard                | FL_TREE_SELECT_MULTI        | FL_TREE_SELECT_SINGLE       | FL_TREE_SELECT_NONE         |
  ------------------------|-----------------------------|-----------------------------|-----------------------------|
- Ctrl-A (Linux/Windows)  | Select all items            | N/A                         | N/A |
- Command-A (Mac)         | Select all items            | N/A                         | N/A | Space
- | Selects item                | Selects item                | N/A                         |
- Ctrl-Space              | Toggle item                 | Toggle item                 | N/A |
- Shift-Space             | Extends selection           | Selects item                | N/A | Enter
- | Toggles open/close          | Toggles open/close          | Toggles open/close          |
- Ctrl-Enter              | Toggles open/close          | Toggles open/close          | Toggles
- open/close          | Shift-Enter             | Toggles open/close          | Toggles open/close |
- Toggles open/close          | Right / Left            | Open/Close item             | Open/Close
- item             | Open/Close item             | Up / Down               | Move focus box up/down
- | Move focus box up/down      | N/A                         | Shift-Up / Shift-Down   | Extend
- selection up/down    | Move focus up/down          | N/A                         | Home / End |
- Move to top/bottom of tree  | Move to top/bottom of tree  | Move to top/bottom of tree  | PageUp /
- PageDown       | Page up/down                | Page up/down                | Page up/down |
+ Ctrl-A (Linux/Windows)  | Select all items            | N/A                         | N/A                         |
+ Command-A (Mac)         | Select all items            | N/A                         | N/A                         |
+ Space                   | Selects item                | Selects item                | N/A                         |
+ Ctrl-Space              | Toggle item                 | Toggle item                 | N/A                         |
+ Shift-Space             | Extends selection           | Selects item                | N/A                         |
+ Enter                   | Toggles open/close          | Toggles open/close          | Toggles open/close          |
+ Ctrl-Enter              | Toggles open/close          | Toggles open/close          | Toggles open/close          |
+ Shift-Enter             | Toggles open/close          | Toggles open/close          | Toggles open/close          |
+ Right / Left            | Open/Close item             | Open/Close item             | Open/Close item             |
+ Up / Down               | Move focus box up/down      | Move focus box up/down      | N/A                         |
+ Shift-Up / Shift-Down   | Extend selection up/down    | Move focus up/down          | N/A                         |
+ Home / End              | Move to top/bottom of tree  | Move to top/bottom of tree  | Move to top/bottom of tree  |
+ PageUp / PageDown       | Page up/down                | Page up/down                | Page up/down                |
 
 */
 
@@ -275,41 +273,40 @@
 /// The reason the callback was invoked.
 ///
 enum Fl_Tree_Reason {
-  FL_TREE_REASON_NONE = 0,   ///< unknown reason
-  FL_TREE_REASON_SELECTED,   ///< an item was selected
-  FL_TREE_REASON_DESELECTED, ///< an item was de-selected
-  FL_TREE_REASON_RESELECTED, ///< an item was re-selected (double-clicked).
-                             ///< See ::Fl_Tree_Item_Reselect_Mode to enable this.
-  FL_TREE_REASON_OPENED,     ///< an item was opened
-  FL_TREE_REASON_CLOSED,     ///< an item was closed
-  FL_TREE_REASON_DRAGGED     ///< an item was dragged into a new place
+  FL_TREE_REASON_NONE=0,        ///< unknown reason
+  FL_TREE_REASON_SELECTED,      ///< an item was selected
+  FL_TREE_REASON_DESELECTED,    ///< an item was de-selected
+  FL_TREE_REASON_RESELECTED,    ///< an item was re-selected (double-clicked).
+                                ///< See ::Fl_Tree_Item_Reselect_Mode to enable this.
+  FL_TREE_REASON_OPENED,        ///< an item was opened
+  FL_TREE_REASON_CLOSED,        ///< an item was closed
+  FL_TREE_REASON_DRAGGED        ///< an item was dragged into a new place
 };
 
 class FL_EXPORT Fl_Tree : public Fl_Group {
   friend class Fl_Tree_Item;
-  Fl_Tree_Item *_root;             // can be null!
-  Fl_Tree_Item *_item_focus;       // item that has focus box
-  Fl_Tree_Item *_callback_item;    // item invoked during callback (can be NULL)
-  Fl_Tree_Reason _callback_reason; // reason for the callback
-  Fl_Tree_Prefs _prefs;            // all the tree's settings
-  int _scrollbar_size;             // size of scrollbar trough
-  Fl_Tree_Item *_lastselect;       // last selected item
-  char _lastpushed; // FL_PUSH occurred on: 0=nothing, 1=open/close, 2=usericon, 3=label
+  Fl_Tree_Item  *_root;                         // can be null!
+  Fl_Tree_Item  *_item_focus;                   // item that has focus box
+  Fl_Tree_Item  *_callback_item;                // item invoked during callback (can be NULL)
+  Fl_Tree_Reason _callback_reason;              // reason for the callback
+  Fl_Tree_Prefs  _prefs;                        // all the tree's settings
+  int            _scrollbar_size;               // size of scrollbar trough
+  Fl_Tree_Item  *_lastselect;                   // last selected item
+  char           _lastpushed;                   // FL_PUSH occurred on: 0=nothing, 1=open/close, 2=usericon, 3=label
   void fix_scrollbar_order();
 
 protected:
-  Fl_Scrollbar *_vscroll; ///< Vertical scrollbar
-  Fl_Scrollbar *_hscroll; ///< Horizontal scrollbar
-  int _tox, _toy, _tow,
-      _toh; ///< Tree widget outer xywh dimension: outside scrollbars, inside widget border
-  int _tix, _tiy, _tiw, _tih; ///< Tree widget inner xywh dimension: inside borders + scrollbars
+  Fl_Scrollbar *_vscroll;       ///< Vertical scrollbar
+  Fl_Scrollbar *_hscroll;       ///< Horizontal scrollbar
+  int _tox,_toy,_tow,_toh;      ///< Tree widget outer xywh dimension: outside scrollbars, inside widget border
+  int _tix,_tiy,_tiw,_tih;      ///< Tree widget inner xywh dimension: inside borders + scrollbars
 
   /// the calculated width of the entire tree hierarchy. See calc_tree()
   int _tree_w;
   /// the calculated height of the entire tree hierarchy. See calc_tree()
   int _tree_h;
-  void item_clicked(Fl_Tree_Item *val);
-  void do_callback_for_item(Fl_Tree_Item *item, Fl_Tree_Reason reason);
+  void item_clicked(Fl_Tree_Item* val);
+  void do_callback_for_item(Fl_Tree_Item* item, Fl_Tree_Reason reason);
 
   // next_visible_item() and extend_selection() moved to 'public' in ABI 1.3.3
   // undocmented draw_tree() dropped -- draw() does all the work now
@@ -318,27 +315,27 @@ protected:
   void draw();
 
 public:
-  Fl_Tree(int X, int Y, int W, int H, const char *L = 0);
+  Fl_Tree(int X, int Y, int W, int H, const char *L=0);
   ~Fl_Tree();
   int handle(int e);
   void show_self();
-  void resize(int, int, int, int);
+  void resize(int,int,int,int);
 
   ///////////////////////
   // root methods
   ///////////////////////
   void root_label(const char *new_label);
-  Fl_Tree_Item *root();
+  Fl_Tree_Item* root();
   void root(Fl_Tree_Item *newitem);
-  const Fl_Tree_Prefs &prefs() const { return _prefs; }
+  const Fl_Tree_Prefs& prefs() const { return _prefs; }
 
   ////////////////////////////////
   // Item creation/removal methods
   ////////////////////////////////
-  Fl_Tree_Item *add(const char *path, Fl_Tree_Item *newitem = 0);
-  Fl_Tree_Item *add(Fl_Tree_Item *parent_item, const char *name);
+  Fl_Tree_Item *add(const char *path, Fl_Tree_Item *newitem=0);
+  Fl_Tree_Item* add(Fl_Tree_Item *parent_item, const char *name);
   Fl_Tree_Item *insert_above(Fl_Tree_Item *above, const char *name);
-  Fl_Tree_Item *insert(Fl_Tree_Item *item, const char *name, int pos);
+  Fl_Tree_Item* insert(Fl_Tree_Item *item, const char *name, int pos);
   int remove(Fl_Tree_Item *item);
   void clear();
   void clear_children(Fl_Tree_Item *item);
@@ -349,32 +346,32 @@ public:
   Fl_Tree_Item *find_item(const char *path);
   const Fl_Tree_Item *find_item(const char *path) const;
   int item_pathname(char *pathname, int pathnamelen, const Fl_Tree_Item *item) const;
-  const Fl_Tree_Item *find_clicked(int yonly = 0) const;
-  Fl_Tree_Item *find_clicked(int yonly = 0);
+  const Fl_Tree_Item* find_clicked(int yonly=0) const;
+  Fl_Tree_Item* find_clicked(int yonly=0);
   Fl_Tree_Item *item_clicked();
   Fl_Tree_Item *first();
-  Fl_Tree_Item *first_visible(); // deprecated in ABI 10303
+  Fl_Tree_Item *first_visible();                // deprecated in ABI 10303
   Fl_Tree_Item *first_visible_item();
-  Fl_Tree_Item *next(Fl_Tree_Item *item = 0);
-  Fl_Tree_Item *prev(Fl_Tree_Item *item = 0);
+  Fl_Tree_Item *next(Fl_Tree_Item *item=0);
+  Fl_Tree_Item *prev(Fl_Tree_Item *item=0);
   Fl_Tree_Item *last();
-  Fl_Tree_Item *last_visible(); // deprecated in ABI 10303
+  Fl_Tree_Item *last_visible();                 // deprecated in ABI 10303
   Fl_Tree_Item *last_visible_item();
-  Fl_Tree_Item *next_visible_item(Fl_Tree_Item *start, int dir); // made public in 1.3.3 ABI
+  Fl_Tree_Item *next_visible_item(Fl_Tree_Item *start, int dir);        // made public in 1.3.3 ABI
   Fl_Tree_Item *first_selected_item();
   Fl_Tree_Item *last_selected_item();
-  Fl_Tree_Item *next_item(Fl_Tree_Item *item, int dir = FL_Down, bool visible = false);
-  Fl_Tree_Item *next_selected_item(Fl_Tree_Item *item = 0, int dir = FL_Down);
+  Fl_Tree_Item *next_item(Fl_Tree_Item *item, int dir=FL_Down, bool visible=false);
+  Fl_Tree_Item *next_selected_item(Fl_Tree_Item *item=0, int dir=FL_Down);
   int get_selected_items(Fl_Tree_Item_Array &items);
 
   //////////////////////////
   // Item open/close methods
   //////////////////////////
-  int open(Fl_Tree_Item *item, int docallback = 1);
-  int open(const char *path, int docallback = 1);
-  void open_toggle(Fl_Tree_Item *item, int docallback = 1);
-  int close(Fl_Tree_Item *item, int docallback = 1);
-  int close(const char *path, int docallback = 1);
+  int open(Fl_Tree_Item *item, int docallback=1);
+  int open(const char *path, int docallback=1);
+  void open_toggle(Fl_Tree_Item *item, int docallback=1);
+  int close(Fl_Tree_Item *item, int docallback=1);
+  int close(const char *path, int docallback=1);
   int is_open(Fl_Tree_Item *item) const;
   int is_open(const char *path) const;
   int is_close(Fl_Tree_Item *item) const;
@@ -383,16 +380,23 @@ public:
   /////////////////////////
   // Item selection methods
   /////////////////////////
-  int select(Fl_Tree_Item *item, int docallback = 1);
-  int select(const char *path, int docallback = 1);
-  void select_toggle(Fl_Tree_Item *item, int docallback = 1);
-  int deselect(Fl_Tree_Item *item, int docallback = 1);
-  int deselect(const char *path, int docallback = 1);
-  int deselect_all(Fl_Tree_Item *item = 0, int docallback = 1);
-  int select_only(Fl_Tree_Item *selitem, int docallback = 1);
-  int select_all(Fl_Tree_Item *item = 0, int docallback = 1);
-  int extend_selection_dir(Fl_Tree_Item *from, Fl_Tree_Item *to, int dir, int val, bool visible);
-  int extend_selection(Fl_Tree_Item *from, Fl_Tree_Item *to, int val = 1, bool visible = false);
+  int select(Fl_Tree_Item *item, int docallback=1);
+  int select(const char *path, int docallback=1);
+  void select_toggle(Fl_Tree_Item *item, int docallback=1);
+  int deselect(Fl_Tree_Item *item, int docallback=1);
+  int deselect(const char *path, int docallback=1);
+  int deselect_all(Fl_Tree_Item *item=0, int docallback=1);
+  int select_only(Fl_Tree_Item *selitem, int docallback=1);
+  int select_all(Fl_Tree_Item *item=0, int docallback=1);
+  int extend_selection_dir(Fl_Tree_Item *from,
+                           Fl_Tree_Item *to,
+                           int dir,
+                           int val,
+                           bool visible);
+  int extend_selection(Fl_Tree_Item *from,
+                       Fl_Tree_Item *to,
+                       int val=1,
+                       bool visible=false);
   void set_item_focus(Fl_Tree_Item *item);
   Fl_Tree_Item *get_item_focus() const;
   int is_selected(Fl_Tree_Item *item) const;
@@ -401,14 +405,14 @@ public:
   /////////////////////////////////
   // Item attribute related methods
   /////////////////////////////////
-  Fl_Font item_labelfont() const;
-  void item_labelfont(Fl_Font val);
+  Fl_Font     item_labelfont() const;
+  void        item_labelfont(Fl_Font val);
   Fl_Fontsize item_labelsize() const;
-  void item_labelsize(Fl_Fontsize val);
-  Fl_Color item_labelfgcolor(void) const;
-  void item_labelfgcolor(Fl_Color val);
-  Fl_Color item_labelbgcolor(void) const;
-  void item_labelbgcolor(Fl_Color val);
+  void        item_labelsize(Fl_Fontsize val);
+  Fl_Color    item_labelfgcolor(void) const;
+  void        item_labelfgcolor(Fl_Color val);
+  Fl_Color    item_labelbgcolor(void) const;
+  void        item_labelbgcolor(Fl_Color val);
   Fl_Color connectorcolor() const;
   void connectorcolor(Fl_Color val);
   int marginleft() const;
@@ -429,11 +433,11 @@ public:
   void widgetmarginleft(int val);
   int connectorwidth() const;
   void connectorwidth(int val);
-  Fl_Image *usericon() const;
+  Fl_Image* usericon() const;
   void usericon(Fl_Image *val);
-  Fl_Image *openicon() const;
+  Fl_Image* openicon() const;
   void openicon(Fl_Image *val);
-  Fl_Image *closeicon() const;
+  Fl_Image* closeicon() const;
   void closeicon(Fl_Image *val);
   int showcollapse() const;
   void showcollapse(int val);
@@ -462,9 +466,9 @@ public:
   void show_item_middle(Fl_Tree_Item *item);
   void show_item_bottom(Fl_Tree_Item *item);
   void display(Fl_Tree_Item *item);
-  int vposition() const;
+  int  vposition() const;
   void vposition(int pos);
-  int hposition() const;
+  int  hposition() const;
   void hposition(int pos);
 
   int is_scrollbar(Fl_Widget *w);
@@ -476,13 +480,13 @@ public:
   ///////////////////////
   // callback related
   ///////////////////////
-  void callback_item(Fl_Tree_Item *item);
-  Fl_Tree_Item *callback_item();
+  void callback_item(Fl_Tree_Item* item);
+  Fl_Tree_Item* callback_item();
   void callback_reason(Fl_Tree_Reason reason);
   Fl_Tree_Reason callback_reason() const;
 
   /// Load FLTK preferences
-  void load(class Fl_Preferences &);
+  void load(class Fl_Preferences&);
 };
 
 #endif /*FL_TREE_H*/

@@ -44,8 +44,7 @@ struct Fl_Menu_Item;
     Example Use: Fl_Menu_Bar
     \code
       Fl_Pixmap *image = new Fl_Pixmap(..);     // image for menu item; any Fl_Image based widget
-      Fl_Menu_Bar *menu = new Fl_Menu_Bar(..);  // can be any Fl_Menu_ oriented widget (Fl_Choice,
-   Fl_Menu_Button..)
+      Fl_Menu_Bar *menu = new Fl_Menu_Bar(..);  // can be any Fl_Menu_ oriented widget (Fl_Choice, Fl_Menu_Button..)
 
       // Create a menu item
       int i = menu->add("File/New", ..);
@@ -56,8 +55,7 @@ struct Fl_Menu_Item;
 
       // Left side of label is an image
       ml->typea  = FL_IMAGE_LABEL;
-      ml->labela = (const char*)image;           // any Fl_Image widget: Fl_Pixmap, Fl_PNG_Image,
-   etc..
+      ml->labela = (const char*)image;           // any Fl_Image widget: Fl_Pixmap, Fl_PNG_Image, etc..
 
       // Right side of label is label text
       ml->typeb  = FL_NORMAL_LABEL;
@@ -73,11 +71,11 @@ struct FL_EXPORT Fl_Multi_Label {
   /** Holds the "leftmost" of the two elements in the composite label.
       Typically this would be assigned either a text string (const char*),
       a (Fl_Image*) or a (Fl_Multi_Label*). */
-  const char *labela;
+  const char* labela;
   /** Holds the "rightmost" of the two elements in the composite label.
       Typically this would be assigned either a text string (const char*),
       a (Fl_Image*) or a (Fl_Multi_Label*). */
-  const char *labelb;
+  const char* labelb;
   /** Holds the "type" of labela.
     Typically this is set to FL_NORMAL_LABEL for a text label,
     FL_IMAGE_LABEL for an image (based on Fl_image) or FL_MULTI_LABEL
@@ -90,9 +88,9 @@ struct FL_EXPORT Fl_Multi_Label {
   uchar typeb;
 
   /** This method is used to associate a Fl_Multi_Label with a Fl_Widget. */
-  void label(Fl_Widget *);
+  void label(Fl_Widget*);
   /** This method is used to associate a Fl_Multi_Label with a Fl_Menu_Item. */
-  void label(Fl_Menu_Item *);
+  void label(Fl_Menu_Item*);
 };
 
 #endif

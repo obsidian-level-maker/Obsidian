@@ -581,8 +581,7 @@ inline void fl_vertex(double x, double y) {
   \param[in] X2,Y2 curve control point
   \param[in] X3,Y3 curve end point
 */
-inline void fl_curve(double X0, double Y0, double X1, double Y1, double X2, double Y2, double X3,
-                     double Y3) {
+inline void fl_curve(double X0, double Y0, double X1, double Y1, double X2, double Y2, double X3, double Y3) {
   fl_graphics_driver->curve(X0, Y0, X1, Y1, X2, Y2, X3, Y3);
 }
 /**
@@ -619,10 +618,15 @@ inline void fl_arc(double x, double y, double r, double start, double end) {
 }
 /**
   fl_circle(x,y,r) is equivalent to fl_arc(x,y,r,0,360), but may be faster.
+ \param[in] x,y,r center and radius of circle
 
-  It must be the \e only thing in the path: if you want a circle as part of
-  a complex polygon you must use fl_arc().
-  \param[in] x,y,r center and radius of circle
+ \note fl_circle() is best used as part of the \ref drawing_complex  API, that is,
+ flanked by fl_begin_XXX() and fl_end_XXX() calls where XXX can be 'loop' or 'polygon'
+ to draw, respectively a circle or a disk. Transformation functions (e.g., fl_scale(double, double))
+ can be also used for fl_circle() to draw empty of filled ellipses.
+ It must be the \e only thing in the path: if you want a circle as part of
+ a complex polygon you must use fl_arc().
+ <br>Nevertheless, fl_circle() can also be used by itself to draw circles.
 */
 inline void fl_circle(double x, double y, double r) {
   fl_graphics_driver->circle(x, y, r);
@@ -919,11 +923,10 @@ inline void fl_rtl_draw(const char *str, int n, int x, int y) {
   fl_graphics_driver->rtl_draw(str, n, x, y);
 }
 FL_EXPORT void fl_measure(const char *str, int &x, int &y, int draw_symbols = 1);
-FL_EXPORT void fl_draw(const char *str, int x, int y, int w, int h, Fl_Align align,
-                       Fl_Image *img = 0, int draw_symbols = 1);
-FL_EXPORT void fl_draw(const char *str, int x, int y, int w, int h, Fl_Align align,
-                       void (*callthis)(const char *, int, int, int), Fl_Image *img = 0,
+FL_EXPORT void fl_draw(const char *str, int x, int y, int w, int h, Fl_Align align, Fl_Image *img = 0,
                        int draw_symbols = 1);
+FL_EXPORT void fl_draw(const char *str, int x, int y, int w, int h, Fl_Align align,
+                       void (*callthis)(const char *, int, int, int), Fl_Image *img = 0, int draw_symbols = 1);
 
 // boxtypes:
 
@@ -1028,8 +1031,7 @@ inline void fl_draw_image(Fl_Draw_Image_Cb cb, void *data, int X, int Y, int W, 
   Draw a gray-scale image using a callback function to generate image data.
   \see fl_draw_image(Fl_Draw_Image_Cb cb, void* data, int X,int Y,int W,int H, int D)
 */
-inline void fl_draw_image_mono(Fl_Draw_Image_Cb cb, void *data, int X, int Y, int W, int H,
-                               int D = 1) {
+inline void fl_draw_image_mono(Fl_Draw_Image_Cb cb, void *data, int X, int Y, int W, int H, int D = 1) {
   fl_graphics_driver->draw_image_mono(cb, data, X, Y, W, H, D);
 }
 
@@ -1078,8 +1080,8 @@ FL_EXPORT void fl_overlay_rect(int x, int y, int w, int h);
 FL_EXPORT void fl_overlay_clear();
 FL_EXPORT void fl_cursor(Fl_Cursor);
 FL_EXPORT void fl_cursor(Fl_Cursor, Fl_Color fg, Fl_Color bg = FL_WHITE);
-FL_EXPORT const char *fl_expand_text(const char *from, char *buf, int maxbuf, double maxw, int &n,
-                                     double &width, int wrap, int draw_symbols = 0);
+FL_EXPORT const char *fl_expand_text(const char *from, char *buf, int maxbuf, double maxw,
+                                     int &n, double &width, int wrap, int draw_symbols = 0);
 
 // XIM:
 /** \todo provide user documentation for fl_set_status function */

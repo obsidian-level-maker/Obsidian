@@ -76,38 +76,39 @@ void fl_register_images() {
 //   check function because subsequently called check functions need
 //   the original image header data. <header> should be const!
 
-Fl_Image *                        // O - Image, if found
-fl_check_images(const char *name, // I - Filename
-                uchar *header,    // I - Header data from file
-                int headerlen) {  // I - Amount of data in header
+Fl_Image *                                      // O - Image, if found
+fl_check_images(const char *name,               // I - Filename
+                uchar      *header,             // I - Header data from file
+                int         headerlen) {        // I - Amount of data in header
 
   if (headerlen < 6) // not a valid image
     return 0;
 
   // GIF
 
-  if (memcmp(header, "GIF87a", 6) == 0 || memcmp(header, "GIF89a", 6) == 0) // GIF file
+  if (memcmp(header, "GIF87a", 6) == 0 ||
+      memcmp(header, "GIF89a", 6) == 0) // GIF file
     return new Fl_GIF_Image(name);
 
   // BMP
 
-  if (memcmp(header, "BM", 2) == 0) // BMP file
+  if (memcmp(header, "BM", 2) == 0)     // BMP file
     return new Fl_BMP_Image(name);
 
   // PNM
 
   if (header[0] == 'P' && header[1] >= '1' && header[1] <= '7')
-    // Portable anymap
+                                        // Portable anymap
     return new Fl_PNM_Image(name);
 
-    // PNG
+  // PNG
 
 #ifdef HAVE_LIBPNG
-  if (memcmp(header, "\211PNG", 4) == 0) // PNG file
+  if (memcmp(header, "\211PNG", 4) == 0)// PNG file
     return new Fl_PNG_Image(name);
 #endif // HAVE_LIBPNG
 
-    // JPEG
+  // JPEG
 
 #ifdef HAVE_LIBJPEG
   if (memcmp(header, "\377\330\377", 3) == 0 && // Start-of-Image
@@ -115,36 +116,35 @@ fl_check_images(const char *name, // I - Filename
     return new Fl_JPEG_Image(name);
 #endif // HAVE_LIBJPEG
 
-    // SVG or SVGZ (gzip'ed SVG)
+  // SVG or SVGZ (gzip'ed SVG)
 
 #ifdef FLTK_USE_SVG
-  uchar header2[64];     // buffer for decompression
-  uchar *buf = header;   // original header data
-  int count = headerlen; // original header data size
+  uchar header2[64];      // buffer for decompression
+  uchar *buf = header;    // original header data
+  int count = headerlen;  // original header data size
 
   // Note: variables 'buf' and 'count' may be overwritten subsequently
   // if the image data is gzip'ed *and* we can decompress the data
 
-#if defined(HAVE_LIBZ)
+# if defined(HAVE_LIBZ)
   if (header[0] == 0x1f && header[1] == 0x8b) { // gzip'ed data
     int fd = fl_open_ext(name, 1, 0);
-    if (fd < 0)
-      return NULL;
+    if (fd < 0) return NULL;
     gzFile gzf = gzdopen(fd, "r");
     if (gzf) {
       count = gzread(gzf, header2, (int)sizeof(header2));
       gzclose(gzf);
       buf = header2; // decompressed data
     }
-  }    // gzip'ed data
-#endif // HAVE_LIBZ
+  } // gzip'ed data
+# endif // HAVE_LIBZ
 
   // Check if we have a UTF-8 BOM in the first three bytes (issue #247).
   // If yes we need at least 5 more bytes to recognize the signature.
   // Note: BOM (Byte Order Mark) in UTF-8 is not recommended but allowed.
 
   if (count >= 8) {
-    const uchar bom[3] = {0xef, 0xbb, 0xbf};
+    const uchar bom[3] = { 0xef, 0xbb, 0xbf };
     if (memcmp(buf, bom, 3) == 0) {
       buf += 3;
       count -= 3;
@@ -153,7 +153,9 @@ fl_check_images(const char *name, // I - Filename
 
   // Check svg or xml signature
 
-  if ((count >= 5 && (memcmp(buf, "<?xml", 5) == 0 || memcmp(buf, "<svg", 4) == 0)))
+  if ((count >= 5 &&
+       (memcmp(buf, "<?xml", 5) == 0 ||
+        memcmp(buf, "<svg", 4) == 0)))
     return new Fl_SVG_Image(name);
 #endif // FLTK_USE_SVG
 

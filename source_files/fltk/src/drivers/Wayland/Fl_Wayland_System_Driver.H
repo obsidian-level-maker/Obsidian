@@ -22,10 +22,12 @@
 
 class Fl_Wayland_System_Driver : public Fl_Unix_System_Driver {
 public:
-  virtual int need_menu_handle_part2() { return 0; }
+  virtual int need_menu_handle_part2() {return 0;}
   int event_key(int k);
   int get_key(int k);
   virtual void *control_maximize_button(void *data);
+  virtual void disable_wayland();
+  static bool too_late_to_disable;
 };
 
 #endif /* FL_WAYLAND_SYSTEM_DRIVER_H */

@@ -21,16 +21,16 @@
 
 /** Supports copying of graphical data to the clipboard.
 
- <br> After creation of an Fl_Copy_Surface object, make it the current drawing surface calling
- Fl_Surface_Device::push_current(), and all subsequent graphics requests will be recorded in the
- clipboard. It's possible to draw widgets (using Fl_Copy_Surface::draw() ) or to use any of the \ref
- fl_drawings or the \ref fl_attributes. Finally, delete the Fl_Copy_Surface object to load the
- clipboard with the graphical data. <br> Fl_Gl_Window 's can be copied to the clipboard as well.
+ <br> After creation of an Fl_Copy_Surface object, make it the current drawing surface calling Fl_Surface_Device::push_current(), and all subsequent graphics requests
+ will be recorded in the clipboard. It's possible to draw widgets (using Fl_Copy_Surface::draw()
+ ) or to use any of the \ref fl_drawings or the \ref fl_attributes.
+ Finally, delete the Fl_Copy_Surface object to load the clipboard with the graphical data.
+ <br> Fl_Gl_Window 's can be copied to the clipboard as well.
  <br> Usage example:
  \code
  Fl_Widget *g = ...; // a widget you want to copy to the clipboard
- Fl_Copy_Surface *copy_surf = new Fl_Copy_Surface(g->w(), g->h()); // create an Fl_Copy_Surface
- object Fl_Surface_Device::push_current(copy_surf); // direct graphics requests to the clipboard
+ Fl_Copy_Surface *copy_surf = new Fl_Copy_Surface(g->w(), g->h()); // create an Fl_Copy_Surface object
+ Fl_Surface_Device::push_current(copy_surf); // direct graphics requests to the clipboard
  fl_color(FL_WHITE); fl_rectf(0, 0, g->w(), g->h()); // draw a white background
  copy_surf->draw(g); // draw the g widget in the clipboard
  Fl_Surface_Device::pop_current();  // direct graphics requests back to their previous destination
@@ -44,16 +44,14 @@
  \li Mac OS: The graphical data are copied to the clipboard (a.k.a. pasteboard) in two 'flavors':
  1) in vectorial form as PDF data; 2) in bitmap form as a TIFF image.
  Applications to which the clipboard content is pasted can use the flavor that suits them best.
- \li X11: the graphical data are copied to the clipboard as an image in BMP format.
+ \li X11 and Wayland: the graphical data are copied to the clipboard as an image in BMP format.
 */
 class FL_EXPORT Fl_Copy_Surface : public Fl_Widget_Surface {
 private:
   class Fl_Copy_Surface_Driver *platform_surface;
-
 protected:
   void translate(int x, int y);
   void untranslate();
-
 public:
   Fl_Copy_Surface(int w, int h);
   ~Fl_Copy_Surface();
@@ -85,14 +83,10 @@ public:
  */
 class Fl_Copy_Surface_Driver : public Fl_Widget_Surface {
   friend class Fl_Copy_Surface;
-
 protected:
   int width;
   int height;
-  Fl_Copy_Surface_Driver(int w, int h)
-    : Fl_Widget_Surface(NULL)
-    , width(w)
-    , height(h) {}
+  Fl_Copy_Surface_Driver(int w, int h) : Fl_Widget_Surface(NULL), width(w), height(h) {}
   virtual ~Fl_Copy_Surface_Driver() {}
   virtual void set_current() = 0;
   virtual void translate(int x, int y) = 0;

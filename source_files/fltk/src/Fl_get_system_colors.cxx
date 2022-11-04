@@ -39,25 +39,18 @@ void Fl::background(uchar r, uchar g, uchar b) {
   Fl_Screen_Driver::bg_set = 1;
 
   // replace the gray ramp so that FL_GRAY is this color
-  if (!r)
-    r = 1;
-  else if (r == 255)
-    r = 254;
-  double powr = log(r / 255.0) / log((FL_GRAY - FL_GRAY_RAMP) / (FL_NUM_GRAY - 1.0));
-  if (!g)
-    g = 1;
-  else if (g == 255)
-    g = 254;
-  double powg = log(g / 255.0) / log((FL_GRAY - FL_GRAY_RAMP) / (FL_NUM_GRAY - 1.0));
-  if (!b)
-    b = 1;
-  else if (b == 255)
-    b = 254;
-  double powb = log(b / 255.0) / log((FL_GRAY - FL_GRAY_RAMP) / (FL_NUM_GRAY - 1.0));
+  if (!r) r = 1; else if (r==255) r = 254;
+  double powr = log(r/255.0)/log((FL_GRAY-FL_GRAY_RAMP)/(FL_NUM_GRAY-1.0));
+  if (!g) g = 1; else if (g==255) g = 254;
+  double powg = log(g/255.0)/log((FL_GRAY-FL_GRAY_RAMP)/(FL_NUM_GRAY-1.0));
+  if (!b) b = 1; else if (b==255) b = 254;
+  double powb = log(b/255.0)/log((FL_GRAY-FL_GRAY_RAMP)/(FL_NUM_GRAY-1.0));
   for (int i = 0; i < FL_NUM_GRAY; i++) {
-    double gray = i / (FL_NUM_GRAY - 1.0);
-    Fl::set_color(fl_gray_ramp(i), uchar(pow(gray, powr) * 255 + .5),
-                  uchar(pow(gray, powg) * 255 + .5), uchar(pow(gray, powb) * 255 + .5));
+    double gray = i/(FL_NUM_GRAY-1.0);
+    Fl::set_color(fl_gray_ramp(i),
+                  uchar(pow(gray,powr)*255+.5),
+                  uchar(pow(gray,powg)*255+.5),
+                  uchar(pow(gray,powb)*255+.5));
   }
 }
 
@@ -66,7 +59,7 @@ void Fl::background(uchar r, uchar g, uchar b) {
 void Fl::foreground(uchar r, uchar g, uchar b) {
   Fl_Screen_Driver::fg_set = 1;
 
-  Fl::set_color(FL_FOREGROUND_COLOR, r, g, b);
+  Fl::set_color(FL_FOREGROUND_COLOR,r,g,b);
 }
 
 
@@ -79,9 +72,9 @@ void Fl::foreground(uchar r, uchar g, uchar b) {
 void Fl::background2(uchar r, uchar g, uchar b) {
   Fl_Screen_Driver::bg2_set = 1;
 
-  Fl::set_color(FL_BACKGROUND2_COLOR, r, g, b);
+  Fl::set_color(FL_BACKGROUND2_COLOR,r,g,b);
   Fl::set_color(FL_FOREGROUND_COLOR,
-                get_color(fl_contrast(FL_FOREGROUND_COLOR, FL_BACKGROUND2_COLOR)));
+                get_color(fl_contrast(FL_FOREGROUND_COLOR,FL_BACKGROUND2_COLOR)));
 }
 
 
@@ -91,7 +84,7 @@ const char *fl_bg = NULL;
 const char *fl_bg2 = NULL;
 
 
-int fl_parse_color(const char *p, uchar &r, uchar &g, uchar &b) {
+int fl_parse_color(const char* p, uchar& r, uchar& g, uchar& b) {
   return Fl::screen_driver()->parse_color(p, r, g, b);
 }
 
@@ -108,33 +101,34 @@ int fl_parse_color(const char *p, uchar &r, uchar &g, uchar &b) {
     newer versions of KDE set this automatically if you check the "apply
     style to other X programs" switch in their control panel.
 */
-void Fl::get_system_colors() {
+void Fl::get_system_colors()
+{
   Fl::screen_driver()->get_system_colors();
 }
 
 
 //// Simple implementation of 2.0 Fl::scheme() interface...
 #define D1 BORDER_WIDTH
-#define D2 (BORDER_WIDTH + BORDER_WIDTH)
+#define D2 (BORDER_WIDTH+BORDER_WIDTH)
 
-extern void fl_up_box(int, int, int, int, Fl_Color);
-extern void fl_down_box(int, int, int, int, Fl_Color);
-extern void fl_thin_up_box(int, int, int, int, Fl_Color);
-extern void fl_thin_down_box(int, int, int, int, Fl_Color);
-extern void fl_round_up_box(int, int, int, int, Fl_Color);
-extern void fl_round_down_box(int, int, int, int, Fl_Color);
+extern void     fl_up_box(int, int, int, int, Fl_Color);
+extern void     fl_down_box(int, int, int, int, Fl_Color);
+extern void     fl_thin_up_box(int, int, int, int, Fl_Color);
+extern void     fl_thin_down_box(int, int, int, int, Fl_Color);
+extern void     fl_round_up_box(int, int, int, int, Fl_Color);
+extern void     fl_round_down_box(int, int, int, int, Fl_Color);
 
-extern void fl_up_frame(int, int, int, int, Fl_Color);
-extern void fl_down_frame(int, int, int, int, Fl_Color);
-extern void fl_thin_up_frame(int, int, int, int, Fl_Color);
-extern void fl_thin_down_frame(int, int, int, int, Fl_Color);
+extern void     fl_up_frame(int, int, int, int, Fl_Color);
+extern void     fl_down_frame(int, int, int, int, Fl_Color);
+extern void     fl_thin_up_frame(int, int, int, int, Fl_Color);
+extern void     fl_thin_down_frame(int, int, int, int, Fl_Color);
 
 #ifndef FL_DOXYGEN
-const char *Fl::scheme_ = (const char *)0; // current scheme
-Fl_Image *Fl::scheme_bg_ = (Fl_Image *)0;  // current background image for the scheme
+const char      *Fl::scheme_ = (const char *)0;     // current scheme
+Fl_Image        *Fl::scheme_bg_ = (Fl_Image *)0;    // current background image for the scheme
 #endif
 
-static Fl_Pixmap tile(tile_xpm);
+static Fl_Pixmap        tile(tile_xpm);
 
 
 /**
@@ -169,27 +163,20 @@ int Fl::scheme(const char *s) {
   }
 
   if (s) {
-    if (!fl_ascii_strcasecmp(s, "none") || !fl_ascii_strcasecmp(s, "base") || !*s)
-      s = 0;
-    else if (!fl_ascii_strcasecmp(s, "gtk+"))
-      s = fl_strdup("gtk+");
-    else if (!fl_ascii_strcasecmp(s, "plastic"))
-      s = fl_strdup("plastic");
-    else if (!fl_ascii_strcasecmp(s, "gleam"))
-      s = fl_strdup("gleam");
-    else
-      s = 0;
+    if (!fl_ascii_strcasecmp(s, "none") || !fl_ascii_strcasecmp(s, "base") || !*s) s = 0;
+    else if (!fl_ascii_strcasecmp(s, "gtk+")) s = fl_strdup("gtk+");
+    else if (!fl_ascii_strcasecmp(s, "plastic")) s = fl_strdup("plastic");
+    else if (!fl_ascii_strcasecmp(s, "gleam")) s = fl_strdup("gleam");
+    else s = 0;
   }
-  if (scheme_)
-    free((void *)scheme_);
+  if (scheme_) free((void*)scheme_);
   scheme_ = s;
 
   // Save the new scheme in the FLTK_SCHEME env var so that child processes
   // inherit it...
   static char e[1024];
-  strcpy(e, "FLTK_SCHEME=");
-  if (s)
-    strlcat(e, s, sizeof(e));
+  strcpy(e,"FLTK_SCHEME=");
+  if (s) strlcat(e,s,sizeof(e));
   Fl::system_driver()->putenv(e);
 
   // Load the scheme...
@@ -205,47 +192,43 @@ int Fl::reload_scheme() {
     uchar r, g, b;
     int nr, ng, nb;
     int i;
-    //    static uchar levels[3] = { 0xff, 0xef, 0xe8 };
+//    static uchar levels[3] = { 0xff, 0xef, 0xe8 };
     // OSX 10.3 and higher use a background with less contrast...
-    static uchar levels[3] = {0xff, 0xf8, 0xf4};
+    static uchar levels[3] = { 0xff, 0xf8, 0xf4 };
 
     get_color(FL_GRAY, r, g, b);
 
-    //    printf("FL_GRAY = 0x%02x 0x%02x 0x%02x\n", r, g, b);
+//    printf("FL_GRAY = 0x%02x 0x%02x 0x%02x\n", r, g, b);
 
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < 3; i ++) {
       nr = levels[i] * r / 0xe8;
-      if (nr > 255)
-        nr = 255;
+      if (nr > 255) nr = 255;
 
       ng = levels[i] * g / 0xe8;
-      if (ng > 255)
-        ng = 255;
+      if (ng > 255) ng = 255;
 
       nb = levels[i] * b / 0xe8;
-      if (nb > 255)
-        nb = 255;
+      if (nb > 255) nb = 255;
 
-      sprintf(tile_cmap[i], "%c c #%02x%02x%02x", "Oo."[i], nr, ng, nb);
-      //      puts(tile_cmap[i]);
+      snprintf(tile_cmap[i], sizeof(tile_cmap[0]), "%c c #%02x%02x%02x", "Oo."[i], nr, ng, nb);
+//      puts(tile_cmap[i]);
     }
 
     tile.uncache();
 
-    if (!scheme_bg_)
-      scheme_bg_ = new Fl_Tiled_Image(&tile, 0, 0);
+    if (!scheme_bg_) scheme_bg_ = new Fl_Tiled_Image(&tile, 0, 0);
 
     // Load plastic buttons, etc...
-    set_boxtype(FL_UP_FRAME, FL_PLASTIC_UP_FRAME);
-    set_boxtype(FL_DOWN_FRAME, FL_PLASTIC_DOWN_FRAME);
-    set_boxtype(FL_THIN_UP_FRAME, FL_PLASTIC_UP_FRAME);
+    set_boxtype(FL_UP_FRAME,        FL_PLASTIC_UP_FRAME);
+    set_boxtype(FL_DOWN_FRAME,      FL_PLASTIC_DOWN_FRAME);
+    set_boxtype(FL_THIN_UP_FRAME,   FL_PLASTIC_UP_FRAME);
     set_boxtype(FL_THIN_DOWN_FRAME, FL_PLASTIC_DOWN_FRAME);
 
-    set_boxtype(FL_UP_BOX, FL_PLASTIC_UP_BOX);
-    set_boxtype(FL_DOWN_BOX, FL_PLASTIC_DOWN_BOX);
-    set_boxtype(FL_THIN_UP_BOX, FL_PLASTIC_THIN_UP_BOX);
-    set_boxtype(FL_THIN_DOWN_BOX, FL_PLASTIC_THIN_DOWN_BOX);
-    set_boxtype(_FL_ROUND_UP_BOX, FL_PLASTIC_ROUND_UP_BOX);
+    set_boxtype(FL_UP_BOX,          FL_PLASTIC_UP_BOX);
+    set_boxtype(FL_DOWN_BOX,        FL_PLASTIC_DOWN_BOX);
+    set_boxtype(FL_THIN_UP_BOX,     FL_PLASTIC_THIN_UP_BOX);
+    set_boxtype(FL_THIN_DOWN_BOX,   FL_PLASTIC_THIN_DOWN_BOX);
+    set_boxtype(_FL_ROUND_UP_BOX,   FL_PLASTIC_ROUND_UP_BOX);
     set_boxtype(_FL_ROUND_DOWN_BOX, FL_PLASTIC_ROUND_DOWN_BOX);
 
     // Use standard size scrollbars...
@@ -257,16 +240,16 @@ int Fl::reload_scheme() {
       scheme_bg_ = (Fl_Image *)0;
     }
 
-    set_boxtype(FL_UP_FRAME, FL_GTK_UP_FRAME);
-    set_boxtype(FL_DOWN_FRAME, FL_GTK_DOWN_FRAME);
-    set_boxtype(FL_THIN_UP_FRAME, FL_GTK_THIN_UP_FRAME);
+    set_boxtype(FL_UP_FRAME,        FL_GTK_UP_FRAME);
+    set_boxtype(FL_DOWN_FRAME,      FL_GTK_DOWN_FRAME);
+    set_boxtype(FL_THIN_UP_FRAME,   FL_GTK_THIN_UP_FRAME);
     set_boxtype(FL_THIN_DOWN_FRAME, FL_GTK_THIN_DOWN_FRAME);
 
-    set_boxtype(FL_UP_BOX, FL_GTK_UP_BOX);
-    set_boxtype(FL_DOWN_BOX, FL_GTK_DOWN_BOX);
-    set_boxtype(FL_THIN_UP_BOX, FL_GTK_THIN_UP_BOX);
-    set_boxtype(FL_THIN_DOWN_BOX, FL_GTK_THIN_DOWN_BOX);
-    set_boxtype(_FL_ROUND_UP_BOX, FL_GTK_ROUND_UP_BOX);
+    set_boxtype(FL_UP_BOX,          FL_GTK_UP_BOX);
+    set_boxtype(FL_DOWN_BOX,        FL_GTK_DOWN_BOX);
+    set_boxtype(FL_THIN_UP_BOX,     FL_GTK_THIN_UP_BOX);
+    set_boxtype(FL_THIN_DOWN_BOX,   FL_GTK_THIN_DOWN_BOX);
+    set_boxtype(_FL_ROUND_UP_BOX,   FL_GTK_ROUND_UP_BOX);
     set_boxtype(_FL_ROUND_DOWN_BOX, FL_GTK_ROUND_DOWN_BOX);
 
     // Use slightly thinner scrollbars...
@@ -278,16 +261,16 @@ int Fl::reload_scheme() {
       scheme_bg_ = (Fl_Image *)0;
     }
 
-    set_boxtype(FL_UP_FRAME, FL_GLEAM_UP_FRAME);
-    set_boxtype(FL_DOWN_FRAME, FL_GLEAM_DOWN_FRAME);
-    set_boxtype(FL_THIN_UP_FRAME, FL_GLEAM_UP_FRAME);
+    set_boxtype(FL_UP_FRAME,        FL_GLEAM_UP_FRAME);
+    set_boxtype(FL_DOWN_FRAME,      FL_GLEAM_DOWN_FRAME);
+    set_boxtype(FL_THIN_UP_FRAME,   FL_GLEAM_UP_FRAME);
     set_boxtype(FL_THIN_DOWN_FRAME, FL_GLEAM_DOWN_FRAME);
 
-    set_boxtype(FL_UP_BOX, FL_GLEAM_UP_BOX);
-    set_boxtype(FL_DOWN_BOX, FL_GLEAM_DOWN_BOX);
-    set_boxtype(FL_THIN_UP_BOX, FL_GLEAM_THIN_UP_BOX);
-    set_boxtype(FL_THIN_DOWN_BOX, FL_GLEAM_THIN_DOWN_BOX);
-    set_boxtype(_FL_ROUND_UP_BOX, FL_GLEAM_ROUND_UP_BOX);
+    set_boxtype(FL_UP_BOX,          FL_GLEAM_UP_BOX);
+    set_boxtype(FL_DOWN_BOX,        FL_GLEAM_DOWN_BOX);
+    set_boxtype(FL_THIN_UP_BOX,     FL_GLEAM_THIN_UP_BOX);
+    set_boxtype(FL_THIN_DOWN_BOX,   FL_GLEAM_THIN_DOWN_BOX);
+    set_boxtype(_FL_ROUND_UP_BOX,   FL_GLEAM_ROUND_UP_BOX);
     set_boxtype(_FL_ROUND_DOWN_BOX, FL_GLEAM_ROUND_DOWN_BOX);
 
     // Use slightly thinner scrollbars...
@@ -299,16 +282,16 @@ int Fl::reload_scheme() {
       scheme_bg_ = (Fl_Image *)0;
     }
 
-    set_boxtype(FL_UP_FRAME, fl_up_frame, D1, D1, D2, D2);
-    set_boxtype(FL_DOWN_FRAME, fl_down_frame, D1, D1, D2, D2);
-    set_boxtype(FL_THIN_UP_FRAME, fl_thin_up_frame, 1, 1, 2, 2);
+    set_boxtype(FL_UP_FRAME,        fl_up_frame, D1, D1, D2, D2);
+    set_boxtype(FL_DOWN_FRAME,      fl_down_frame, D1, D1, D2, D2);
+    set_boxtype(FL_THIN_UP_FRAME,   fl_thin_up_frame, 1, 1, 2, 2);
     set_boxtype(FL_THIN_DOWN_FRAME, fl_thin_down_frame, 1, 1, 2, 2);
 
-    set_boxtype(FL_UP_BOX, fl_up_box, D1, D1, D2, D2);
-    set_boxtype(FL_DOWN_BOX, fl_down_box, D1, D1, D2, D2);
-    set_boxtype(FL_THIN_UP_BOX, fl_thin_up_box, 1, 1, 2, 2);
-    set_boxtype(FL_THIN_DOWN_BOX, fl_thin_down_box, 1, 1, 2, 2);
-    set_boxtype(_FL_ROUND_UP_BOX, fl_round_up_box, 3, 3, 6, 6);
+    set_boxtype(FL_UP_BOX,          fl_up_box, D1, D1, D2, D2);
+    set_boxtype(FL_DOWN_BOX,        fl_down_box, D1, D1, D2, D2);
+    set_boxtype(FL_THIN_UP_BOX,     fl_thin_up_box, 1, 1, 2, 2);
+    set_boxtype(FL_THIN_DOWN_BOX,   fl_thin_down_box, 1, 1, 2, 2);
+    set_boxtype(_FL_ROUND_UP_BOX,   fl_round_up_box, 3, 3, 6, 6);
     set_boxtype(_FL_ROUND_DOWN_BOX, fl_round_down_box, 3, 3, 6, 6);
 
     // Use standard size scrollbars...

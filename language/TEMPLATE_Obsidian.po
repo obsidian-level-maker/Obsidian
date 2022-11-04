@@ -21,99 +21,27 @@ msgstr ""
 # grep -n -r -o "[_][(]\".*\"[)]" | sed -r {s/"^"/"#: "/} | sed -r {s/":_"/"\n"/} | sed -r {s/"\("/"msgid "/} | sed -r {s/"\)$"/"\nmsgstr \"\"\n"/} | sed -r {s/":$"/""/}                            #
 # ################################################################################################################################################################################################## #
 
-#: games/blake/factory.lua:5367
-msgid "Episodic"
-msgstr ""
-
-#: games/blake/factory.lua:5368
-msgid "Progressive"
-msgstr ""
-
-#: games/blake/factory.lua:5374
-msgid "Mix It Up"
-msgstr ""
-
-#: games/blake/factory.lua:5392
-msgid "Episodic"
-msgstr ""
-
-#: games/blake/factory.lua:5393
-msgid "Progressive"
-msgstr ""
-
-#: games/blake/factory.lua:5415
-msgid "Episodic"
-msgstr ""
-
-#: games/blake/x_strike.lua:288
-msgid "Episodic"
-msgstr ""
-
-#: games/blake/x_strike.lua:289
-msgid "Progressive"
-msgstr ""
-
-#: games/blake/x_strike.lua:295
-msgid "Mix It Up"
-msgstr ""
-
-#: games/blake/x_strike.lua:313
-msgid "Episodic"
-msgstr ""
-
-#: games/blake/x_strike.lua:314
-msgid "Progressive"
-msgstr ""
-
-#: games/blake/x_strike.lua:336
-msgid "Episodic"
-msgstr ""
-
-#: games/noah/factory.lua:5146
-msgid "Episodic"
-msgstr ""
-
-#: games/noah/factory.lua:5147
-msgid "Progressive"
-msgstr ""
-
 #: games/noah/factory.lua:5153
+msgid "Episodic"
+msgstr ""
+
+#: games/noah/factory.lua:5154
+msgid "Progressive"
+msgstr ""
+
+#: games/noah/factory.lua:5160
 msgid "Mix It Up"
 msgstr ""
 
-#: games/noah/factory.lua:5171
+#: games/noah/factory.lua:5178
 msgid "Episodic"
 msgstr ""
 
-#: games/noah/factory.lua:5172
+#: games/noah/factory.lua:5179
 msgid "Progressive"
 msgstr ""
 
-#: games/noah/factory.lua:5194
-msgid "Episodic"
-msgstr ""
-
-#: games/obc/factory.lua:5261
-msgid "Episodic"
-msgstr ""
-
-#: games/obc/factory.lua:5262
-msgid "Progressive"
-msgstr ""
-
-#: games/obc/factory.lua:5268
-msgid "Mix It Up"
-msgstr ""
-
-#: games/obc/factory.lua:5286
-msgid "Episodic"
-msgstr ""
-
-#: games/obc/factory.lua:5287
-msgid "Progressive"
-msgstr ""
-
-#: games/obc/factory.lua:5309
+#: games/noah/factory.lua:5201
 msgid "Episodic"
 msgstr ""
 
@@ -293,19 +221,19 @@ msgstr ""
 msgid "Episodic"
 msgstr ""
 
-#: scripts/level.lua:468
+#: scripts/level.lua:439
 msgid "Episodic"
 msgstr ""
 
-#: scripts/level.lua:492
+#: scripts/level.lua:463
 msgid "Episodic"
 msgstr ""
 
-#: scripts/level.lua:2766
+#: scripts/level.lua:2739
 msgid "\nWarning: The game that you have selected is in an experimental state. WADs may not build successfully and certain gameplay features may not be implemented yet! To ignore this warning and continue generation for these games, check the \"Experimental Games\" checkbox located in the Debug Control Module.\n\nThis message will change should development scope expand."
 msgstr ""
 
-#: scripts/level.lua:2773
+#: scripts/level.lua:2746
 msgid "\nWarning: Limit-Removing uses a very basic set of prefabs, and should only be used if your source port isn't compatible with any other choice!\nClick the help link next to the Engine setting for an explanation of the other choices. To disable this warning, check the \"Suppress NoLimit Warning\" checkbox located in the Debug Control Module."
 msgstr ""
 
@@ -341,14 +269,6 @@ msgstr ""
 msgid "id Tech 2"
 msgstr ""
 
-#: games/blake/base.lua:41
-msgid "Blake Stone 1"
-msgstr ""
-
-#: games/blake/x_strike.lua:422
-msgid "Blake Stone 2"
-msgstr ""
-
 #: games/chex/base.lua:47
 msgid "Chex Quest 3"
 msgstr ""
@@ -369,15 +289,15 @@ msgstr ""
 msgid "Doom 2"
 msgstr ""
 
-#: games/doom/themes.lua:5085
+#: games/doom/themes.lua:5089
 msgid "Tech"
 msgstr ""
 
-#: games/doom/themes.lua:5095
+#: games/doom/themes.lua:5099
 msgid "Urban"
 msgstr ""
 
-#: games/doom/themes.lua:5105
+#: games/doom/themes.lua:5109
 msgid "Hell"
 msgstr ""
 
@@ -483,10 +403,6 @@ msgstr ""
 
 #: games/nukem/themes.lua:432
 msgid "Nukem City"
-msgstr ""
-
-#: games/obc/base.lua:40
-msgid "Op. Body Count"
 msgstr ""
 
 #: games/quake/base.lua:41
@@ -1862,203 +1778,203 @@ msgid "Abort"
 msgstr ""
 
 #: modules/debugger.lua:30
-msgid "Test Level Names"
+msgid "Default"
 msgstr ""
 
 #: modules/debugger.lua:31
-msgid "Test Title Names"
+msgid "Filename"
 msgstr ""
 
 #: modules/debugger.lua:32
-msgid "None"
+msgid "Random Word List"
 msgstr ""
 
 #: modules/debugger.lua:37
-msgid "Show All Steps"
+msgid "Test Level Names"
 msgstr ""
 
 #: modules/debugger.lua:38
-msgid "Show Successful Steps Only"
+msgid "Test Title Names"
 msgstr ""
 
 #: modules/debugger.lua:39
-msgid "No"
+msgid "None"
 msgstr ""
 
 #: modules/debugger.lua:44
-msgid "Per Step (Very Slow)"
+msgid "Show All Steps"
 msgstr ""
 
 #: modules/debugger.lua:45
-msgid "Per Room (Slightly Slow)"
+msgid "Show Successful Steps Only"
 msgstr ""
 
 #: modules/debugger.lua:46
+msgid "No"
+msgstr ""
+
+#: modules/debugger.lua:51
+msgid "Per Step (Very Slow)"
+msgstr ""
+
+#: modules/debugger.lua:52
+msgid "Per Room (Slightly Slow)"
+msgstr ""
+
+#: modules/debugger.lua:53
 msgid "No Live Minimap"
 msgstr ""
 
-#: modules/debugger.lua:80
-msgid "Debug Control"
-msgstr ""
-
 #: modules/debugger.lua:87
-msgid "Provides options for printing out more verbose log information. Advanced, highly experimental features can also be found here."
+msgid "Miscellaneous Options"
 msgstr ""
 
-#: modules/debugger.lua:100
+#: modules/debugger.lua:94
+msgid "Provides options for printing out more verbose log information. Unusual or experimental features can also be found here."
+msgstr ""
+
+#: modules/debugger.lua:107
+msgid "Title Screen Source"
+msgstr ""
+
+#: modules/debugger.lua:110
+msgid "Choose how the WAD title is determined"
+msgstr ""
+
+#: modules/debugger.lua:111
+msgid "Default: Will use Obsidian's regular naming tables.\n\nFilename: Will use the filename provided for the WAD (minus file extension).\n\nRandom Word List: Will randomly pick from the internal random word list.\n\nNOTE: Only EN locale characters are supported at this time, other languages may result in a blank title!"
+msgstr ""
+
+#: modules/debugger.lua:117
+msgid "Disable Sub-Titles"
+msgstr ""
+
+#: modules/debugger.lua:120
+msgid "Disable sub-titles on the Title Screen."
+msgstr ""
+
+#: modules/debugger.lua:126
 msgid "Alternate Item Quantities"
 msgstr ""
 
-#: modules/debugger.lua:103
+#: modules/debugger.lua:129
 msgid "Scales item distribution with map size (Experimental)"
 msgstr ""
 
-#: modules/debugger.lua:109
+#: modules/debugger.lua:135
 msgid "Print Fab Materials"
 msgstr ""
 
-#: modules/debugger.lua:112
+#: modules/debugger.lua:138
 msgid "Print list of textures/flats present in each fab"
 msgstr ""
 
-#: modules/debugger.lua:113
+#: modules/debugger.lua:139
 msgid "Print the names of all textures/flats preset in a prefab WAD. This will also list values like _FLOOR, _WALL, etc, prior to their conversion."
 msgstr ""
 
-#: modules/debugger.lua:119
+#: modules/debugger.lua:145
 msgid "Missing Fab Material Behavior"
 msgstr ""
 
-#: modules/debugger.lua:122
+#: modules/debugger.lua:148
 msgid "Choose what to do when encountering a missing material"
 msgstr ""
 
-#: modules/debugger.lua:123
+#: modules/debugger.lua:149
 msgid "Provides the following options if a material definition isn't present in a game's MATERIALS table: \n\nIgnore: Silently continue; missing materials are usually replaced by an _ERROR or _DEFAULT texture.\n\nWarn: Continue, but write the name of the fab and the missing material to the logfile.\n\nAbort: Throw an error and halt generation, with an error message explaining which fab and material are causing the issue. Will also write this information to the logfile."
 msgstr ""
 
-#: modules/debugger.lua:129
+#: modules/debugger.lua:155
 msgid "Check For Non-Vanilla Materials"
 msgstr ""
 
-#: modules/debugger.lua:132
+#: modules/debugger.lua:158
 msgid "Choose what to do when encountering a non-vanilla material"
 msgstr ""
 
-#: modules/debugger.lua:133
+#: modules/debugger.lua:159
 msgid "If checked, will compare all flats/textures used against a list of vanilla materials for that IWAD, and treat non-vanilla materials as missing for the purposes of logging and throwing errors."
 msgstr ""
 
-#: modules/debugger.lua:140
+#: modules/debugger.lua:166
 msgid "Whole Name Gen Names Only"
 msgstr ""
 
-#: modules/debugger.lua:143
+#: modules/debugger.lua:169
 msgid "Use only complete names from the Name Generator"
 msgstr ""
 
-#: modules/debugger.lua:144
+#: modules/debugger.lua:170
 msgid "Uses name generator names that are already complete phrases/sentences \ninstead of trying to procedurally generate them."
 msgstr ""
 
-#: modules/debugger.lua:150
-msgid "Name Generator"
-msgstr ""
-
-#: modules/debugger.lua:152
-msgid "Prints a demonstration sample of 32 names per category.\nLevel Names = TECH, GOTHIC, URBAN, and BOSS level names\nTitle Names = TITLE, SUB_TITLE, and EPISODE names\n"
-msgstr ""
-
-#: modules/debugger.lua:160
-msgid "Print ZDoom Strings"
-msgstr ""
-
-#: modules/debugger.lua:163
-msgid "Displays the story generator and custom quit message strings added by the ZDoom Special Addons: Story Generator."
-msgstr ""
-
-#: modules/debugger.lua:170
-msgid "Build Level"
-msgstr ""
-
-#: modules/debugger.lua:178
-msgid "Allows the skipping of level construction along the WAD for debugging purposes."
-msgstr ""
-
-#: modules/debugger.lua:185
+#: modules/debugger.lua:176
 msgid "Shape Rule Stats"
 msgstr ""
 
-#: modules/debugger.lua:188
+#: modules/debugger.lua:179
 msgid "Displays usage statistics for shape grammar rules."
 msgstr ""
 
-#: modules/debugger.lua:195
+#: modules/debugger.lua:186
 msgid "Save Map Previews"
 msgstr ""
 
-#: modules/debugger.lua:198
+#: modules/debugger.lua:189
 msgid "Saves SVG format images of generated map thumbnails."
 msgstr ""
 
-#: modules/debugger.lua:206
+#: modules/debugger.lua:197
 msgid "Save Minimap GIF"
 msgstr ""
 
-#: modules/debugger.lua:209
+#: modules/debugger.lua:200
 msgid "Save an animated GIF of the building process. Recommended in combination with the Live Growth Minimap."
 msgstr ""
 
-#: modules/debugger.lua:216
+#: modules/debugger.lua:207
 msgid "Suppress NoLimit Warning"
 msgstr ""
 
-#: modules/debugger.lua:219
+#: modules/debugger.lua:210
 msgid "Suppress warning dialog when using Limit-Removing with the Doom family of games."
 msgstr ""
 
-#: modules/debugger.lua:220
+#: modules/debugger.lua:211
 msgid "This warning only applies to the Doom series of games, as other supported games may only have Limit-Removing as a feasible choice."
 msgstr ""
 
-#: modules/debugger.lua:226
+#: modules/debugger.lua:217
 msgid "Experimental Games"
 msgstr ""
 
-#: modules/debugger.lua:229
+#: modules/debugger.lua:220
 msgid "Enables building of levels for experimental games."
 msgstr ""
 
-#: modules/debugger.lua:230
+#: modules/debugger.lua:221
 msgid "The following games are in an experimental status, meaning that they may have errors when building levels, or support for certain gameplay features has not been implemented yet:\n\nDuke Nukem 3D (currently disabled)\n\nQuake (currently disabled)"
 msgstr ""
 
-#: modules/debugger.lua:238
+#: modules/debugger.lua:229
 msgid "Custom Error Texture"
 msgstr ""
 
-#: modules/debugger.lua:241
+#: modules/debugger.lua:232
 msgid "Replaces Obsidian's default texture with a high visibility version for easier detection of broken level geometry or missing textures."
 msgstr ""
 
-#: modules/debugger.lua:248
+#: modules/debugger.lua:239
 msgid "Live Growth Minimap"
 msgstr ""
 
-#: modules/debugger.lua:251
+#: modules/debugger.lua:242
 msgid "Controls the granularity of steps shown on the GUI minimap as a level is built."
 msgstr ""
 
-#: modules/debugger.lua:252
+#: modules/debugger.lua:243
 msgid "Higher levels of detail will increase the amount of time that it takes to generate a WAD. If saving an animated GIF of the build process, its animation speed will also be affected by this setting (less detail=slower, more detail=faster)."
-msgstr ""
-
-#: modules/debugger.lua:259
-msgid "Attach DEBUG Info"
-msgstr ""
-
-#: modules/debugger.lua:262
-msgid "Attaches certain debug info into an OBLOGS text lump in the generated WAD."
 msgstr ""
 
 #: modules/export_map.lua:267
@@ -7582,7 +7498,7 @@ msgid "Mix It Up,Episodic,Progressive"
 msgstr ""
 
 #: modules/ui_arch.lua:130
-msgid "16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"
+msgid "10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"
 msgstr ""
 
 #: modules/ui_arch.lua:131
@@ -7598,7 +7514,7 @@ msgid "Upper Bound"
 msgstr ""
 
 #: modules/ui_arch.lua:146
-msgid "16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"
+msgid "10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"
 msgstr ""
 
 #: modules/ui_arch.lua:147
@@ -7610,7 +7526,7 @@ msgid "Lower Bound"
 msgstr ""
 
 #: modules/ui_arch.lua:160
-msgid "16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"
+msgid "10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"
 msgstr ""
 
 #: modules/ui_arch.lua:161
@@ -8661,67 +8577,67 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: modules/zdoom_armaetus_epic_textures.lua:1107
+#: modules/zdoom_armaetus_epic_textures.lua:1108
 msgid "Obsidian Epic Resource Pack"
 msgstr ""
 
-#: modules/zdoom_armaetus_epic_textures.lua:1125
+#: modules/zdoom_armaetus_epic_textures.lua:1126
 msgid "If enabled, adds textures and content from the Obsidian Epic Resource Pack, which also includes new exclusive prefabs."
 msgstr ""
 
-#: modules/zdoom_armaetus_epic_textures.lua:1132
+#: modules/zdoom_armaetus_epic_textures.lua:1133
 msgid "Custom Liquids"
 msgstr ""
 
-#: modules/zdoom_armaetus_epic_textures.lua:1135
+#: modules/zdoom_armaetus_epic_textures.lua:1136
 msgid "Utilize custom liquid flats or not."
 msgstr ""
 
-#: modules/zdoom_armaetus_epic_textures.lua:1142
+#: modules/zdoom_armaetus_epic_textures.lua:1143
 msgid "Custom Trees"
 msgstr ""
 
-#: modules/zdoom_armaetus_epic_textures.lua:1145
+#: modules/zdoom_armaetus_epic_textures.lua:1146
 msgid "Adds custom flat-depedendent tree sprites into the game. Currently only replaces trees on specific grass flats and will be expanded in the future to accomnodate custom Textures and more. If you are playing a mod that already does its own trees, it may be better to leave this off."
 msgstr ""
 
-#: modules/zdoom_armaetus_epic_textures.lua:1152
+#: modules/zdoom_armaetus_epic_textures.lua:1153
 msgid "Environment Theme"
 msgstr ""
 
-#: modules/zdoom_armaetus_epic_textures.lua:1155
+#: modules/zdoom_armaetus_epic_textures.lua:1156
 msgid "Influences outdoor environments with different textures such as desert sand or icey snow."
 msgstr ""
 
-#: modules/zdoom_armaetus_epic_textures.lua:1162
+#: modules/zdoom_armaetus_epic_textures.lua:1163
 msgid "Merge Textures WAD"
 msgstr ""
 
-#: modules/zdoom_armaetus_epic_textures.lua:1165
+#: modules/zdoom_armaetus_epic_textures.lua:1166
 msgid "Allows the trimming down of resulting WAD by not merging the custom texture WAD.\n\nThis will require you to extract and load up the WAD manually in your preferred sourceport installation.\n\nThis is the preferrable option for multiplayer situations and server owners and have each client obtain a copy of the texture pack instead.\n"
 msgstr ""
 
-#: modules/zdoom_armaetus_epic_textures.lua:1172
+#: modules/zdoom_armaetus_epic_textures.lua:1173
 msgid "Include Brightmaps"
 msgstr ""
 
-#: modules/zdoom_armaetus_epic_textures.lua:1175
+#: modules/zdoom_armaetus_epic_textures.lua:1176
 msgid "Allows merging Obsidian Textures brightmaps into the WAD. Does not include brightmaps for base resources from any of the games."
 msgstr ""
 
-#: modules/zdoom_armaetus_epic_textures.lua:1182
+#: modules/zdoom_armaetus_epic_textures.lua:1183
 msgid "Custom Actors"
 msgstr ""
 
-#: modules/zdoom_armaetus_epic_textures.lua:1185
+#: modules/zdoom_armaetus_epic_textures.lua:1186
 msgid "Merges some custom sprites and replacers for various decorations."
 msgstr ""
 
-#: modules/zdoom_armaetus_epic_textures.lua:1192
+#: modules/zdoom_armaetus_epic_textures.lua:1193
 msgid "No Hell Environment Themes"
 msgstr ""
 
-#: modules/zdoom_armaetus_epic_textures.lua:1195
+#: modules/zdoom_armaetus_epic_textures.lua:1196
 msgid "Renders hell theme maps to never use snow or desert environment themes regardless of theme assignment."
 msgstr ""
 
@@ -9317,27 +9233,27 @@ msgstr ""
 msgid "ZDBSP Error!"
 msgstr ""
 
-#: source_files/obsidian_main/g_doom.cc:1023
+#: source_files/obsidian_main/g_doom.cc:1024
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/g_doom.cc:1046
+#: source_files/obsidian_main/g_doom.cc:1047
 msgid "Error (create file)"
 msgstr ""
 
-#: source_files/obsidian_main/g_doom.cc:1052
+#: source_files/obsidian_main/g_doom.cc:1053
 msgid "CSG"
 msgstr ""
 
-#: source_files/obsidian_main/g_nukem.cc:444
+#: source_files/obsidian_main/g_nukem.cc:445
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/g_nukem.cc:453
+#: source_files/obsidian_main/g_nukem.cc:454
 msgid "Error (create file)"
 msgstr ""
 
-#: source_files/obsidian_main/g_nukem.cc:459
+#: source_files/obsidian_main/g_nukem.cc:460
 msgid "CSG"
 msgstr ""
 
@@ -9361,55 +9277,55 @@ msgstr ""
 msgid "Hull"
 msgstr ""
 
-#: source_files/obsidian_main/g_quake.cc:1331
+#: source_files/obsidian_main/g_quake.cc:1332
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/g_quake.cc:1340
+#: source_files/obsidian_main/g_quake.cc:1341
 msgid "Error (create file)"
 msgstr ""
 
-#: source_files/obsidian_main/g_quake2.cc:1040
+#: source_files/obsidian_main/g_quake2.cc:1041
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/g_quake2.cc:1049
+#: source_files/obsidian_main/g_quake2.cc:1050
 msgid "Error (create file)"
 msgstr ""
 
-#: source_files/obsidian_main/g_quake3.cc:1266
+#: source_files/obsidian_main/g_quake3.cc:1267
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/g_quake3.cc:1275
+#: source_files/obsidian_main/g_quake3.cc:1276
 msgid "Error (create file)"
 msgstr ""
 
-#: source_files/obsidian_main/g_wolf.cc:357
+#: source_files/obsidian_main/g_wolf.cc:359
 msgid "Select output directory"
 msgstr ""
 
-#: source_files/obsidian_main/g_wolf.cc:366
+#: source_files/obsidian_main/g_wolf.cc:371
 msgid "Error choosing directory:\n"
 msgstr ""
 
-#: source_files/obsidian_main/g_wolf.cc:371
+#: source_files/obsidian_main/g_wolf.cc:376
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/g_wolf.cc:381
+#: source_files/obsidian_main/g_wolf.cc:386
 msgid "Empty directory provided???:\n"
 msgstr ""
 
-#: source_files/obsidian_main/g_wolf.cc:405
+#: source_files/obsidian_main/g_wolf.cc:410
 msgid "Error (create file)"
 msgstr ""
 
-#: source_files/obsidian_main/g_wolf.cc:416
+#: source_files/obsidian_main/g_wolf.cc:421
 msgid "Error (create file)"
 msgstr ""
 
-#: source_files/obsidian_main/g_wolf.cc:456
+#: source_files/obsidian_main/g_wolf.cc:461
 msgid "Error (write file)"
 msgstr ""
 
@@ -9625,39 +9541,39 @@ msgstr ""
 msgid "This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1073
+#: source_files/obsidian_main/m_lua.cc:1081
 msgid "Making"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1568
+#: source_files/obsidian_main/m_lua.cc:1577
 msgid "[ ERROR ]"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1572
+#: source_files/obsidian_main/m_lua.cc:1581
 msgid "Script Error: "
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1969
+#: source_files/obsidian_main/m_lua.cc:1978
 msgid "ob_print_reference: Error creating REFERENCE.txt!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1979
+#: source_files/obsidian_main/m_lua.cc:1988
 msgid "ob_print_reference_json: Error printing json reference!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1988
+#: source_files/obsidian_main/m_lua.cc:1997
 msgid "Script Error"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1996
+#: source_files/obsidian_main/m_lua.cc:2005
 msgid "[ ERROR ]"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2002
+#: source_files/obsidian_main/m_lua.cc:2011
 msgid "Script Error"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2026
+#: source_files/obsidian_main/m_lua.cc:2035
 msgid "Cancelled"
 msgstr ""
 
@@ -9753,159 +9669,159 @@ msgstr ""
 msgid "OBSIDIAN Config Manager"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:84
+#: source_files/obsidian_main/m_options.cc:85
 msgid "Unknown option: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:105
+#: source_files/obsidian_main/m_options.cc:106
 msgid "Weird option line: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:114
+#: source_files/obsidian_main/m_options.cc:115
 msgid "Name or value missing!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:126
+#: source_files/obsidian_main/m_options.cc:127
 msgid "Missing Options file -- using defaults.\n\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:247
+#: source_files/obsidian_main/m_options.cc:248
 msgid "AUTO"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:291
+#: source_files/obsidian_main/m_options.cc:292
 msgid "Obsidian will now restart to apply language changes.\nObsidian will be in your selected language after restarting."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:347
+#: source_files/obsidian_main/m_options.cc:348
 msgid "Random String Seeds"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:357
+#: source_files/obsidian_main/m_options.cc:358
 msgid "Will randomly pull 1 to 3 words from Obsidian's random word list and use those as input for the map generation seed. Purely for cosmetic/entertainment value."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:369
+#: source_files/obsidian_main/m_options.cc:370
 msgid "Password Mode"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:379
+#: source_files/obsidian_main/m_options.cc:380
 msgid "Will produce a pseudo-random sequence of characters as input for the map generation seed. Random String Seeds must be enabled to use this option."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:407
+#: source_files/obsidian_main/m_options.cc:408
 msgid "File prefix changes require a restart.\nOBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:419
+#: source_files/obsidian_main/m_options.cc:420
 msgid "WARNING! This option will allow you to manually enter values in excess of the \n(usually) stable slider limits for Obsidian.\nAny bugs, crashes, or errors as a result of this will not be addressed by the developers.\nYou must select Yes for this option to be applied."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:420
+#: source_files/obsidian_main/m_options.cc:421
 msgid "Cancel"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:421
+#: source_files/obsidian_main/m_options.cc:422
 msgid "Yes, break Obsidian"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:431
+#: source_files/obsidian_main/m_options.cc:432
 msgid "Restoring slider limits requires a restart.\nObsidian will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:448
+#: source_files/obsidian_main/m_options.cc:449
 msgid "Custom Prefix"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:458
+#: source_files/obsidian_main/m_options.cc:459
 msgid "Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n%year or %Y: The current year.\n\n%month or %M: The current month.\n\n%day or %D: The current day.\n\n%hour or %h: The current hour.\n\n%minute or %m: The current minute.\n\n%second or %s: The current second.\n\n%version or %v: The current Obsidian version.\n\n%game or %g: Which game the WAD is for.\n\n%port or %p: Which port the WAD is for.\n\n%theme or %t: Which theme was selected from the game's choices.\n\n%count or %c: The number of levels in the generated WAD."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:465
+#: source_files/obsidian_main/m_options.cc:466
 msgid "Enter Custom Prefix Format:"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:470
+#: source_files/obsidian_main/m_options.cc:471
 msgid "Custom prefix cannot be blank!"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:484
+#: source_files/obsidian_main/m_options.cc:485
 msgid "Select default save directory"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:493
+#: source_files/obsidian_main/m_options.cc:494
 msgid "Error choosing directory:\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:508
+#: source_files/obsidian_main/m_options.cc:509
 msgid "Empty default directory provided???:\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:541
+#: source_files/obsidian_main/m_options.cc:542
 msgid "Language: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:555
+#: source_files/obsidian_main/m_options.cc:556
 msgid "Compress Output: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:558
+#: source_files/obsidian_main/m_options.cc:559
 msgid "OFF|ZIP|PK3"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:569
+#: source_files/obsidian_main/m_options.cc:570
 msgid "Filename Prefix: "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:584
+#: source_files/obsidian_main/m_options.cc:585
 msgid "Set Custom Prefix..."
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:601
+#: source_files/obsidian_main/m_options.cc:602
 msgid "Set Default Output Path"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:614
+#: source_files/obsidian_main/m_options.cc:615
 msgid " Random String Seeds"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:630
+#: source_files/obsidian_main/m_options.cc:631
 msgid " Password Mode"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:648
+#: source_files/obsidian_main/m_options.cc:649
 msgid " Create Backups"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:658
+#: source_files/obsidian_main/m_options.cc:659
 msgid " Overwrite File Warning"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:668
+#: source_files/obsidian_main/m_options.cc:669
 msgid " Debugging Messages"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:678
+#: source_files/obsidian_main/m_options.cc:679
 msgid " Ignore Slider Limits"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:689
+#: source_files/obsidian_main/m_options.cc:690
 msgid "Builds Per Run "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:706
+#: source_files/obsidian_main/m_options.cc:707
 msgid " Preserve Failed Builds"
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:717
+#: source_files/obsidian_main/m_options.cc:718
 msgid "Max Log Size (MB) "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:734
+#: source_files/obsidian_main/m_options.cc:735
 msgid "# of Logs Preserved "
 msgstr ""
 
-#: source_files/obsidian_main/m_options.cc:803
+#: source_files/obsidian_main/m_options.cc:804
 msgid "OBSIDIAN Misc Options"
 msgstr ""
 

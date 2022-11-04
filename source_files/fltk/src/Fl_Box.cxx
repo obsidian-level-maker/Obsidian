@@ -19,10 +19,13 @@
 
 
 Fl_Box::Fl_Box(int X, int Y, int W, int H, const char *l)
-  : Fl_Widget(X, Y, W, H, l) {}
+: Fl_Widget(X,Y,W,H,l)
+{
+}
 
 Fl_Box::Fl_Box(Fl_Boxtype b, int X, int Y, int W, int H, const char *l)
-  : Fl_Widget(X, Y, W, H, l) {
+: Fl_Widget(X,Y,W,H,l)
+{
   box(b);
 }
 
@@ -32,8 +35,6 @@ void Fl_Box::draw() {
 }
 
 int Fl_Box::handle(int event) {
-  if (event == FL_ENTER || event == FL_LEAVE)
-    return 1;
-  else
-    return 0;
+  if (event == FL_ENTER || event == FL_LEAVE) return 1;
+  else return 0;
 }

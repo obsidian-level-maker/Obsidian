@@ -43,7 +43,7 @@ const char *c_check(const char *c, int type = 0);
 // ---- Fl_Function_Type declaration
 
 class Fl_Function_Type : public Fl_Type {
-  const char *return_type;
+  const char* return_type;
   char public_, cdecl_, constructor, havewidgets;
 
 public:
@@ -53,16 +53,18 @@ public:
   void write_code1();
   void write_code2();
   void open();
-  int ismain() { return name_ == 0; }
-  virtual const char *type_name() { return "Function"; }
-  virtual const char *title() { return name() ? name() : "main()"; }
-  int is_parent() const { return 1; }
-  int is_code_block() const { return 1; }
+  int ismain() {return name_ == 0;}
+  virtual const char *type_name() {return "Function";}
+  virtual const char *title() {
+    return name() ? name() : "main()";
+  }
+  int is_parent() const {return 1;}
+  int is_code_block() const {return 1;}
   virtual int is_public() const;
   int pixmapID() { return 7; }
   void write_properties();
   void read_property(const char *);
-  int has_signature(const char *, const char *) const;
+  int has_signature(const char *, const char*) const;
 };
 
 // ---- Fl_Code_Type declaration
@@ -78,11 +80,11 @@ public:
   Fl_Type *make(Strategy strategy);
   void write();
   void write_code1();
-  void write_code2() {}
+  void write_code2() { }
   void open();
-  virtual const char *type_name() { return "code"; }
-  int is_code_block() const { return 0; }
-  int is_code() const { return 1; }
+  virtual const char *type_name() {return "code";}
+  int is_code_block() const {return 0;}
+  int is_code() const {return 1;}
   int pixmapID() { return 8; }
   virtual int is_public() const { return -1; }
   int is_editing();
@@ -93,7 +95,7 @@ public:
 // ---- Fl_CodeBlock_Type declaration
 
 class Fl_CodeBlock_Type : public Fl_Type {
-  const char *after;
+  const char* after;
 
 public:
   Fl_CodeBlock_Type();
@@ -102,9 +104,9 @@ public:
   void write_code1();
   void write_code2();
   void open();
-  virtual const char *type_name() { return "codeblock"; }
-  int is_code_block() const { return 1; }
-  int is_parent() const { return 1; }
+  virtual const char *type_name() {return "codeblock";}
+  int is_code_block() const {return 1;}
+  int is_parent() const {return 1;}
   virtual int is_public() const { return -1; }
   int pixmapID() { return 9; }
   void write_properties();
@@ -123,9 +125,9 @@ public:
   Fl_Decl_Type();
   Fl_Type *make(Strategy strategy);
   void write_code1();
-  void write_code2() {}
+  void write_code2() { }
   void open();
-  virtual const char *type_name() { return "decl"; }
+  virtual const char *type_name() {return "decl";}
   void write_properties();
   void read_property(const char *);
   virtual int is_public() const;
@@ -145,7 +147,7 @@ public:
   void write_code1();
   void write_code2() {}
   void open();
-  virtual const char *type_name() { return "data"; }
+  virtual const char *type_name() {return "data";}
   void write_properties();
   void read_property(const char *);
   int pixmapID() { return 49; }
@@ -154,7 +156,7 @@ public:
 // ---- Fl_DeclBlock_Type declaration
 
 class Fl_DeclBlock_Type : public Fl_Type {
-  const char *after;
+  const char* after;
   char public_;
 
 public:
@@ -164,11 +166,11 @@ public:
   void write_code1();
   void write_code2();
   void open();
-  virtual const char *type_name() { return "declblock"; }
+  virtual const char *type_name() {return "declblock";}
   void write_properties();
   void read_property(const char *);
-  int is_parent() const { return 1; }
-  int is_decl_block() const { return 1; }
+  int is_parent() const {return 1;}
+  int is_decl_block() const {return 1;}
   virtual int is_public() const;
   int pixmapID() { return 11; }
 };
@@ -183,9 +185,9 @@ public:
   Fl_Comment_Type();
   Fl_Type *make(Strategy strategy);
   void write_code1();
-  void write_code2() {}
+  void write_code2() { }
   void open();
-  virtual const char *type_name() { return "comment"; }
+  virtual const char *type_name() {return "comment";}
   virtual const char *title(); // string for browser
   void write_properties();
   void read_property(const char *);
@@ -197,34 +199,34 @@ public:
 // ---- Fl_Class_Type declaration
 
 class Fl_Class_Type : public Fl_Type {
-  const char *subclass_of;
+  const char* subclass_of;
   char public_;
-  const char *class_prefix;
+  const char* class_prefix;
 
 public:
   Fl_Class_Type();
   ~Fl_Class_Type();
   // state variables for output:
-  char write_public_state;     // true when public: has been printed
-  Fl_Class_Type *parent_class; // save class if nested
-                               //
+  char write_public_state; // true when public: has been printed
+  Fl_Class_Type* parent_class; // save class if nested
+//
   Fl_Type *make(Strategy strategy);
   void write_code1();
   void write_code2();
   void open();
-  virtual const char *type_name() { return "class"; }
-  int is_parent() const { return 1; }
-  int is_decl_block() const { return 1; }
-  int is_class() const { return 1; }
+  virtual const char *type_name() {return "class";}
+  int is_parent() const {return 1;}
+  int is_decl_block() const {return 1;}
+  int is_class() const {return 1;}
   virtual int is_public() const;
   int pixmapID() { return 12; }
   void write_properties();
   void read_property(const char *);
 
   // class prefix attribute access
-  void prefix(const char *p);
-  const char *prefix() const { return class_prefix; }
-  int has_function(const char *, const char *) const;
+  void prefix(const char* p);
+  const char*  prefix() const {return class_prefix;}
+  int has_function(const char*, const char*) const;
 };
 
 #endif // _FLUID_FL_FUNCTION_TYPE_H

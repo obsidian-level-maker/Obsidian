@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
   win2->label("window2");
   win2->end();
 
-  win1->show(argc, argv);
+  win1->show(argc,argv);
 
   return Fl::run();
 }

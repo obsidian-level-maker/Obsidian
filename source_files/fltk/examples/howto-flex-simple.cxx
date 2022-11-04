@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
   Fl_Button b1(0, 0, 0, 0, "File");
   Fl_Button b2(0, 0, 0, 0, "New");
   Fl_Button b3(0, 0, 0, 0, "Save");
-  Fl_Box bx(0, 0, 0, 0); // empty space
+  Fl_Box    bx(0, 0, 0, 0); // empty space
   Fl_Button eb(0, 0, 0, 0, "Exit");
 
   // assign callbacks to buttons

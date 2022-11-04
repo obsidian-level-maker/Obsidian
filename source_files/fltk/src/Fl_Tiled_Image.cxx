@@ -54,12 +54,11 @@ bool Fl_Tiled_Image::drawing_tiled_image_ = false;
   \todo Fix Fl_Tiled_Image as background image for widgets and windows
     and fix the implementation of Fl::scheme(const char *).
 */
-Fl_Tiled_Image::Fl_Tiled_Image(Fl_Image *i, // I - Image to tile
-                               int W,       // I - Width of tiled area
-                               int H)
-  : // I - Height of tiled area
-  Fl_Image(W, H, 0) {
-  image_ = i;
+Fl_Tiled_Image::Fl_Tiled_Image(Fl_Image *i,     // I - Image to tile
+                               int      W,      // I - Width of tiled area
+                               int      H) :    // I - Height of tiled area
+  Fl_Image(W,H,0) {
+  image_       = i;
   alloc_image_ = 0;
 
   // giving to the tiled image the screen size may fail with multiscreen
@@ -71,9 +70,8 @@ Fl_Tiled_Image::Fl_Tiled_Image(Fl_Image *i, // I - Image to tile
   The destructor frees all memory and server resources that are used by
   the tiled image.
 */
-Fl_Tiled_Image::~Fl_Tiled_Image() {
-  if (alloc_image_)
-    delete image_;
+  Fl_Tiled_Image::~Fl_Tiled_Image() {
+  if (alloc_image_) delete image_;
 }
 
 
@@ -81,9 +79,9 @@ Fl_Tiled_Image::~Fl_Tiled_Image() {
 // 'Fl_Tiled_Image::copy()' - Copy and resize a tiled image...
 //
 
-Fl_Image *                          // O - New image
-Fl_Tiled_Image::copy(int W,         // I - New width
-                     int H) const { // I - New height
+Fl_Image *                            // O - New image
+Fl_Tiled_Image::copy(int W,           // I - New width
+                     int H) const {   // I - New height
   return new Fl_Tiled_Image(image_, W, H);
 }
 
@@ -92,11 +90,12 @@ Fl_Tiled_Image::copy(int W,         // I - New width
 // 'Fl_Tiled_Image::color_average()' - Blend colors...
 //
 
-void Fl_Tiled_Image::color_average(Fl_Color c, // I - Color to blend with
-                                   float i) {  // I - Blend fraction
+void
+Fl_Tiled_Image::color_average(Fl_Color c,       // I - Color to blend with
+                              float    i) {     // I - Blend fraction
   if (!alloc_image_) {
     int W = image_->w(), H = image_->h();
-    image_ = image_->copy(image_->data_w(), image_->data_h());
+    image_       = image_->copy(image_->data_w(), image_->data_h());
     image_->scale(W, H, 0, 1);
     alloc_image_ = 1;
   }
@@ -109,10 +108,11 @@ void Fl_Tiled_Image::color_average(Fl_Color c, // I - Color to blend with
 // 'Fl_Tiled_Image::desaturate()' - Convert the image to grayscale...
 //
 
-void Fl_Tiled_Image::desaturate() {
+void
+Fl_Tiled_Image::desaturate() {
   if (!alloc_image_) {
     int W = image_->w(), H = image_->h();
-    image_ = image_->copy(image_->data_w(), image_->data_h());
+    image_       = image_->copy(image_->data_w(), image_->data_h());
     image_->scale(W, H, 0, 1);
     alloc_image_ = 1;
   }
@@ -152,25 +152,22 @@ void Fl_Tiled_Image::desaturate() {
 
   This may be improved in a later version of the library.
 */
-void Fl_Tiled_Image::draw(int X,    // I - Starting X position
-                          int Y,    // I - Starting Y position
-                          int W,    // I - Width of area to be filled
-                          int H,    // I - Height of area to be filled
-                          int cx,   // I - "Source" X position
-                          int cy) { // I - "Source" Y position
+void
+Fl_Tiled_Image::draw(int X,     // I - Starting X position
+                     int Y,     // I - Starting Y position
+                     int W,     // I - Width of area to be filled
+                     int H,     // I - Height of area to be filled
+                     int cx,    // I - "Source" X position
+                     int cy) {  // I - "Source" Y position
 
-  int iw = image_->w(); // effective image width
-  int ih = image_->h(); // effective image height
+  int iw = image_->w();         // effective image width
+  int ih = image_->h();         // effective image height
 
-  if (!iw || !ih)
-    return;
-  if (cx >= iw || cy >= ih)
-    return;
+  if (!iw || !ih) return;
+  if (cx >= iw || cy >= ih) return;
 
-  if (cx < 0)
-    cx = 0; // ignore negative values
-  if (cy < 0)
-    cy = 0;
+  if (cx < 0) cx = 0;           // ignore negative values
+  if (cy < 0) cy = 0;
 
   // W and H null means the image is potentially as large as the current window
   // or widget. The latter can not be checked here, hence we use the whole
@@ -183,22 +180,19 @@ void Fl_Tiled_Image::draw(int X,    // I - Starting X position
     X = Y = 0;
   }
 
-  if (W == 0 || H == 0)
-    return;
+  if (W == 0 || H == 0) return;
 
   fl_push_clip(X, Y, W, H);
   drawing_tiled_image_ = true;
 
-  if (cx > 0)
-    iw -= cx; // crop image
-  if (cy > 0)
-    ih -= cy;
+  if (cx > 0) iw -= cx;         // crop image
+  if (cy > 0) ih -= cy;
 
-  for (int yy = Y; yy < Y + H; yy += ih) {
-    if (fl_not_clipped(X, yy, W, ih)) {
-      for (int xx = X; xx < X + W; xx += iw) {
-        if (fl_not_clipped(xx, yy, iw, ih)) {
-          image_->draw(xx, yy, iw, ih, cx, cy);
+  for (int yy = Y; yy < Y+H; yy += ih) {
+    if (fl_not_clipped(X,yy,W,ih)) {
+      for (int xx = X; xx < X+W; xx += iw) {
+        if (fl_not_clipped(xx,yy,iw,ih)) {
+          image_->draw(xx,yy,iw,ih,cx,cy);
         }
       }
     }

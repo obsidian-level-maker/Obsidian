@@ -24,25 +24,22 @@
 // button: it draws the text of the current pick and a down-arrow.
 
 void Fl_Choice::draw() {
-  Fl_Boxtype btype = Fl::scheme() ? FL_UP_BOX    // non-default uses up box
-                                  : FL_DOWN_BOX; // default scheme uses down box
+  Fl_Boxtype btype = Fl::scheme() ? FL_UP_BOX           // non-default uses up box
+                                  : FL_DOWN_BOX;        // default scheme uses down box
   int dx = Fl::box_dx(btype);
   int dy = Fl::box_dy(btype);
 
   // Arrow area
   int H = h() - 2 * dy;
-  int W = Fl::is_scheme("gtk+") ? 20 : // gtk+  -- fixed size
-              Fl::is_scheme("gleam") ? 20
-                                     :                        // gleam -- fixed size
-              Fl::is_scheme("plastic") ? ((H > 20) ? 20 : H)  // plastic: shrink if H<20
-                                       : ((H > 20) ? 20 : H); // default: shrink if H<20
+  int W = Fl::is_scheme("gtk+")    ? 20 :                       // gtk+  -- fixed size
+          Fl::is_scheme("gleam")   ? 20 :                       // gleam -- fixed size
+          Fl::is_scheme("plastic") ? ((H > 20) ? 20 : H)        // plastic: shrink if H<20
+                                   : ((H > 20) ? 20 : H);       // default: shrink if H<20
   int X = x() + w() - W - dx;
   int Y = y() + dy;
 
   // Arrow object
-  int w1 = (W - 4) / 3;
-  if (w1 < 1)
-    w1 = 1;
+  int w1 = (W - 4) / 3; if (w1 < 1) w1 = 1;
   int x1 = X + (W - 2 * w1 - 1) / 2;
   int y1 = Y + (H - w1 - 1) / 2;
 
@@ -82,7 +79,7 @@ void Fl_Choice::draw() {
     }
 
     // Draw arrow area
-    draw_box(FL_UP_BOX, X, Y, W, H, color());
+    draw_box(FL_UP_BOX,X,Y,W,H,color());
     fl_color(active_r() ? labelcolor() : fl_inactive(labelcolor()));
     fl_polygon(x1, y1, x1 + w1, y1 + w1, x1 + 2 * w1, y1);
   }
@@ -92,16 +89,13 @@ void Fl_Choice::draw() {
   // Draw menu item's label
   if (mvalue()) {
     Fl_Menu_Item m = *mvalue();
-    if (active_r())
-      m.activate();
-    else
-      m.deactivate();
+    if (active_r()) m.activate(); else m.deactivate();
 
     // Clip
     int xx = x() + dx, yy = y() + dy + 1, ww = w() - W, hh = H - 2;
     fl_push_clip(xx, yy, ww, hh);
 
-    if (Fl::scheme()) {
+    if ( Fl::scheme()) {
       Fl_Label l;
       l.value = m.text;
       l.image = 0;
@@ -109,15 +103,14 @@ void Fl_Choice::draw() {
       l.type = m.labeltype_;
       l.font = m.labelsize_ || m.labelfont_ ? m.labelfont_ : textfont();
       l.size = m.labelsize_ ? m.labelsize_ : textsize();
-      l.color = m.labelcolor_ ? m.labelcolor_ : textcolor();
-      if (!m.active())
-        l.color = fl_inactive((Fl_Color)l.color);
+      l.color= m.labelcolor_ ? m.labelcolor_ : textcolor();
+      if (!m.active()) l.color = fl_inactive((Fl_Color)l.color);
       fl_draw_shortcut = 2; // hack value to make '&' disappear
-      l.draw(xx + 3, yy, ww > 6 ? ww - 6 : 0, hh, FL_ALIGN_LEFT);
+      l.draw(xx+3, yy, ww>6 ? ww-6 : 0, hh, FL_ALIGN_LEFT);
       fl_draw_shortcut = 0;
-      if (Fl::focus() == this)
-        draw_focus(box(), xx, yy, ww, hh);
-    } else {
+      if ( Fl::focus() == this ) draw_focus(box(), xx, yy, ww, hh);
+    }
+    else {
       fl_draw_shortcut = 2; // hack value to make '&' disappear
       m.draw(xx, yy, ww, hh, this, Fl::focus() == this);
       fl_draw_shortcut = 0;
@@ -141,7 +134,7 @@ void Fl_Choice::draw() {
   \param[in] L widget label, default is no label
  */
 Fl_Choice::Fl_Choice(int X, int Y, int W, int H, const char *L)
-  : Fl_Menu_(X, Y, W, H, L) {
+: Fl_Menu_(X,Y,W,H,L) {
   align(FL_ALIGN_LEFT);
   when(FL_WHEN_RELEASE);
   textfont(FL_HELVETICA);
@@ -156,8 +149,7 @@ Fl_Choice::Fl_Choice(int X, int Y, int W, int H, const char *L)
   \returns non-zero if the new value is different to the old one.
  */
 int Fl_Choice::value(const Fl_Menu_Item *v) {
-  if (!Fl_Menu_::value(v))
-    return 0;
+  if (!Fl_Menu_::value(v)) return 0;
   redraw();
   return 1;
 }
@@ -169,71 +161,59 @@ int Fl_Choice::value(const Fl_Menu_Item *v) {
   \returns non-zero if the new value is different to the old one.
  */
 int Fl_Choice::value(int v) {
-  if (v == -1)
-    return value((const Fl_Menu_Item *)0);
-  if (v < 0 || v >= (size() - 1))
-    return 0;
-  if (!Fl_Menu_::value(v))
-    return 0;
+  if (v == -1) return value((const Fl_Menu_Item *)0);
+  if (v < 0 || v >= (size() - 1)) return 0;
+  if (!Fl_Menu_::value(v)) return 0;
   redraw();
   return 1;
 }
 
 int Fl_Choice::handle(int e) {
-  if (!menu() || !menu()->text)
-    return 0;
-  const Fl_Menu_Item *v;
+  if (!menu() || !menu()->text) return 0;
+  const Fl_Menu_Item* v;
   Fl_Widget_Tracker wp(this);
   switch (e) {
-    case FL_ENTER:
-    case FL_LEAVE:
-      return 1;
+  case FL_ENTER:
+  case FL_LEAVE:
+    return 1;
 
-    case FL_KEYBOARD:
-      if (Fl::event_key() != ' ' || (Fl::event_state() & (FL_SHIFT | FL_CTRL | FL_ALT | FL_META)))
-        return 0;
-    case FL_PUSH:
-      if (Fl::visible_focus())
-        Fl::focus(this);
-    J1:
-      if (Fl::scheme() || fl_contrast(textcolor(), FL_BACKGROUND2_COLOR) != textcolor()) {
-        v = menu()->pulldown(x(), y(), w(), h(), mvalue(), this);
-        if (wp.deleted())
-          return 1;
-      } else {
-        // In order to preserve the old look-n-feel of "white" menus,
-        // temporarily override the color() of this widget...
-        Fl_Color c = color();
-        color(FL_BACKGROUND2_COLOR);
-        v = menu()->pulldown(x(), y(), w(), h(), mvalue(), this);
-        if (wp.deleted())
-          return 1;
-        color(c);
-      }
-      if (!v || v->submenu())
-        return 1;
-      if (v != mvalue())
-        redraw();
-      picked(v);
+  case FL_KEYBOARD:
+    if (Fl::event_key() != ' ' ||
+        (Fl::event_state() & (FL_SHIFT | FL_CTRL | FL_ALT | FL_META))) return 0;
+  case FL_PUSH:
+    if (Fl::visible_focus()) Fl::focus(this);
+  J1:
+    if (Fl::scheme()
+        || fl_contrast(textcolor(), FL_BACKGROUND2_COLOR) != textcolor()) {
+      v = menu()->pulldown(x(), y(), w(), h(), mvalue(), this);
+      if (wp.deleted()) return 1;
+    } else {
+      // In order to preserve the old look-n-feel of "white" menus,
+      // temporarily override the color() of this widget...
+      Fl_Color c = color();
+      color(FL_BACKGROUND2_COLOR);
+      v = menu()->pulldown(x(), y(), w(), h(), mvalue(), this);
+      if (wp.deleted()) return 1;
+      color(c);
+    }
+    if (!v || v->submenu()) return 1;
+    if (v != mvalue()) redraw();
+    picked(v);
+    return 1;
+  case FL_SHORTCUT:
+    if (Fl_Widget::test_shortcut()) goto J1;
+    v = menu()->test_shortcut();
+    if (!v) return 0;
+    if (v != mvalue()) redraw();
+    picked(v);
+    return 1;
+  case FL_FOCUS:
+  case FL_UNFOCUS:
+    if (Fl::visible_focus()) {
+      redraw();
       return 1;
-    case FL_SHORTCUT:
-      if (Fl_Widget::test_shortcut())
-        goto J1;
-      v = menu()->test_shortcut();
-      if (!v)
-        return 0;
-      if (v != mvalue())
-        redraw();
-      picked(v);
-      return 1;
-    case FL_FOCUS:
-    case FL_UNFOCUS:
-      if (Fl::visible_focus()) {
-        redraw();
-        return 1;
-      } else
-        return 0;
-    default:
-      return 0;
+    } else return 0;
+  default:
+    return 0;
   }
 }

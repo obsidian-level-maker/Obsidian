@@ -25,35 +25,36 @@
 
 
 Fl_Overlay_Window::Fl_Overlay_Window(int W, int H, const char *l)
-  : Fl_Double_Window(W, H, l) {
+: Fl_Double_Window(W,H,l)
+{
   overlay_ = 0;
   image(0);
 }
 
 Fl_Overlay_Window::Fl_Overlay_Window(int X, int Y, int W, int H, const char *l)
-  : Fl_Double_Window(X, Y, W, H, l) {
+: Fl_Double_Window(X,Y,W,H,l)
+{
   overlay_ = 0;
   image(0);
 }
 
 void Fl_Overlay_Window::show() {
   Fl_Double_Window::show();
-  if (overlay_ && overlay_ != this)
-    overlay_->show();
+  if (overlay_ && overlay_ != this) overlay_->show();
 }
 
 void Fl_Overlay_Window::hide() {
   Fl_Double_Window::hide();
 }
 
-void Fl_Overlay_Window::flush() {
+void Fl_Overlay_Window::flush()
+{
   Fl_Window_Driver::driver(this)->flush_overlay();
 }
 
 void Fl_Overlay_Window::resize(int X, int Y, int W, int H) {
-  Fl_Double_Window::resize(X, Y, W, H);
-  if (overlay_ && overlay_ != this)
-    overlay_->resize(0, 0, w(), h());
+  Fl_Double_Window::resize(X,Y,W,H);
+  if (overlay_ && overlay_!=this) overlay_->resize(0,0,w(),h());
 }
 
 /**
@@ -61,7 +62,7 @@ void Fl_Overlay_Window::resize(int X, int Y, int W, int H) {
 */
 Fl_Overlay_Window::~Fl_Overlay_Window() {
   hide();
-  //  delete overlay; this is done by ~Fl_Group
+//  delete overlay; this is done by ~Fl_Group
 }
 
 int Fl_Overlay_Window::can_do_overlay() {

@@ -26,30 +26,28 @@ public:
   int svalue;
   int handle(int);
   void draw();
-  Shortcut_Button(int X, int Y, int W, int H, const char *l = 0)
-    : Fl_Button(X, Y, W, H, l) {
-    svalue = 0;
-  }
+  Shortcut_Button(int X,int Y,int W,int H, const char* l = 0) :
+    Fl_Button(X,Y,W,H,l) {svalue = 0;}
 };
 
 // Adding drag and drop for dragging widgets into windows.
 class Widget_Bin_Button : public Fl_Button {
 public:
   int handle(int);
-  Widget_Bin_Button(int X, int Y, int W, int H, const char *l = 0)
-    : Fl_Button(X, Y, W, H, l) {}
+  Widget_Bin_Button(int X,int Y,int W,int H, const char* l = 0) :
+  Fl_Button(X,Y,W,H,l) { }
 };
 
 // Adding drag and drop functionality to drag window prototypes onto the desktop.
 class Widget_Bin_Window_Button : public Fl_Button {
 public:
   int handle(int);
-  Widget_Bin_Window_Button(int X, int Y, int W, int H, const char *l = 0)
-    : Fl_Button(X, Y, W, H, l) {}
+  Widget_Bin_Window_Button(int X,int Y,int W,int H, const char* l = 0) :
+  Fl_Button(X,Y,W,H,l) { }
 };
 
 // Callback signature for function returning the value of a variable.
-typedef int(Fluid_Coord_Callback)(class Fluid_Coord_Input const *, void *);
+typedef int (Fluid_Coord_Callback)(class Fluid_Coord_Input const *, void*);
 
 // Entry for a list of variables available to an input field.
 // Fluid_Coord_Input::variables() expects an array of Fluid_Coord_Input_Vars
@@ -60,7 +58,8 @@ typedef struct Fluid_Coord_Input_Vars {
 } Fluid_Coord_Input_Vars;
 
 // A text input widget that understands simple math.
-class Fluid_Coord_Input : public Fl_Input {
+class Fluid_Coord_Input : public Fl_Input
+{
   Fl_Callback *user_callback_;
   Fluid_Coord_Input_Vars *vars_;
   void *vars_user_data_;
@@ -71,7 +70,7 @@ class Fluid_Coord_Input : public Fl_Input {
   int eval(const char *s) const;
 
 public:
-  Fluid_Coord_Input(int x, int y, int w, int h, const char *l = 0L);
+  Fluid_Coord_Input(int x, int y, int w, int h, const char *l=0L);
 
   /** Return the text in the widget text field. */
   const char *text() const { return Fl_Input::value(); }
@@ -83,7 +82,9 @@ public:
   void value(int v);
 
   /** Set the general callback for this widget. */
-  void callback(Fl_Callback *cb) { user_callback_ = cb; }
+  void callback(Fl_Callback *cb) {
+    user_callback_ = cb;
+  }
 
   /** Set the list of the available variables
    \param vars array of variables, last entry `has name_` set to `NULL`
@@ -95,3 +96,4 @@ public:
 };
 
 #endif
+

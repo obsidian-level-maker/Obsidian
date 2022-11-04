@@ -41,18 +41,15 @@
  Draw the textual representation of the shortcut.
  */
 void Shortcut_Button::draw() {
-  if (value())
-    draw_box(FL_DOWN_BOX, (Fl_Color)9);
-  else
-    draw_box(FL_UP_BOX, FL_WHITE);
-  fl_font(FL_HELVETICA, 14);
-  fl_color(FL_FOREGROUND_COLOR);
-  if (use_FL_COMMAND && (svalue & (FL_CTRL | FL_META))) {
+  if (value()) draw_box(FL_DOWN_BOX, (Fl_Color)9);
+  else draw_box(FL_UP_BOX, FL_WHITE);
+  fl_font(FL_HELVETICA,14); fl_color(FL_FOREGROUND_COLOR);
+  if (use_FL_COMMAND && (svalue & (FL_CTRL|FL_META))) {
     char buf[1024];
-    fl_snprintf(buf, 1023, "Command+%s", fl_shortcut_label(svalue & ~(FL_CTRL | FL_META)));
-    fl_draw(buf, x() + 6, y(), w(), h(), FL_ALIGN_LEFT);
+    fl_snprintf(buf, 1023, "Command+%s", fl_shortcut_label(svalue&~(FL_CTRL|FL_META)));
+    fl_draw(buf,x()+6,y(),w(),h(),FL_ALIGN_LEFT);
   } else {
-    fl_draw(fl_shortcut_label(svalue), x() + 6, y(), w(), h(), FL_ALIGN_LEFT);
+    fl_draw(fl_shortcut_label(svalue),x()+6,y(),w(),h(),FL_ALIGN_LEFT);
   }
 }
 
@@ -60,42 +57,30 @@ void Shortcut_Button::draw() {
  Handle keystrokes to catch the user's shortcut.
  */
 int Shortcut_Button::handle(int e) {
-  when(0);
-  type(FL_TOGGLE_BUTTON);
+  when(0); type(FL_TOGGLE_BUTTON);
   if (e == FL_KEYBOARD) {
-    if (!value())
-      return 0;
+    if (!value()) return 0;
     int v = Fl::event_text()[0];
-    if ((v > 32 && v < 0x7f) || (v > 0xa0 && v <= 0xff)) {
+    if ( (v > 32 && v < 0x7f) || (v > 0xa0 && v <= 0xff) ) {
       if (isupper(v)) {
         v = tolower(v);
         v |= FL_SHIFT;
       }
-      v = v | (Fl::event_state() & (FL_META | FL_ALT | FL_CTRL));
+      v = v | (Fl::event_state()&(FL_META|FL_ALT|FL_CTRL));
     } else {
-      v = (Fl::event_state() & (FL_META | FL_ALT | FL_CTRL | FL_SHIFT)) | Fl::event_key();
-      if (v == FL_BackSpace && svalue)
-        v = 0;
+      v = (Fl::event_state()&(FL_META|FL_ALT|FL_CTRL|FL_SHIFT)) | Fl::event_key();
+      if (v == FL_BackSpace && svalue) v = 0;
     }
-    if (v != svalue) {
-      svalue = v;
-      set_changed();
-      redraw();
-      do_callback();
-    }
+    if (v != svalue) {svalue = v; set_changed(); redraw(); do_callback(); }
     return 1;
   } else if (e == FL_UNFOCUS) {
-    int c = changed();
-    value(0);
-    if (c)
-      set_changed();
+    int c = changed(); value(0); if (c) set_changed();
     return 1;
   } else if (e == FL_FOCUS) {
     return value();
   } else {
     int r = Fl_Button::handle(e);
-    if (e == FL_RELEASE && value() && Fl::focus() != this)
-      take_focus();
+    if (e == FL_RELEASE && value() && Fl::focus() != this) take_focus();
     return r;
   }
 }
@@ -109,7 +94,8 @@ int Shortcut_Button::handle(int e) {
 /**
  Convert mouse dragging into a drag and drop event.
  */
-int Widget_Bin_Button::handle(int inEvent) {
+int Widget_Bin_Button::handle(int inEvent)
+{
   int ret = 0;
   switch (inEvent) {
     case FL_PUSH:
@@ -121,14 +107,14 @@ int Widget_Bin_Button::handle(int inEvent) {
         return ret;
       if (!Fl::event_is_click()) { // make it a dnd event
         // fake a drag outside of the widget
-        Fl::e_x = x() - 1;
+        Fl::e_x = x()-1;
         Fl_Button::handle(inEvent);
         // fake a buttton release
         Fl_Button::handle(FL_RELEASE);
         // make it into a dnd event
-        const char *type_name = (const char *)user_data();
+        const char *type_name = (const char*)user_data();
         Fl_Type::current_dnd = Fl_Type::current;
-        Fl::copy(type_name, (int)strlen(type_name) + 1, 0);
+        Fl::copy(type_name, (int)strlen(type_name)+1, 0);
         Fl::dnd();
         return 1;
       }
@@ -145,7 +131,8 @@ int Widget_Bin_Button::handle(int inEvent) {
 /**
  Convert mouse dragging into a drag and drop event.
  */
-int Widget_Bin_Window_Button::handle(int inEvent) {
+int Widget_Bin_Window_Button::handle(int inEvent)
+{
   static Fl_Window *drag_win = NULL;
   int ret = 0;
   switch (inEvent) {
@@ -163,7 +150,7 @@ int Widget_Bin_Window_Button::handle(int inEvent) {
           drag_win->set_non_modal();
         }
         if (drag_win) {
-          drag_win->position(Fl::event_x_root() + 1, Fl::event_y_root() + 1);
+          drag_win->position(Fl::event_x_root()+1, Fl::event_y_root()+1);
           drag_win->show();
         }
         // Does not work outside window: fl_cursor(FL_CURSOR_HAND);
@@ -174,11 +161,11 @@ int Widget_Bin_Window_Button::handle(int inEvent) {
         Fl::delete_widget(drag_win);
         drag_win = NULL;
         // create a new window here
-        Fl_Type *prototype = typename_to_prototype((char *)user_data());
+        Fl_Type *prototype = typename_to_prototype((char*)user_data());
         if (prototype) {
           Fl_Type *new_type = add_new_widget_from_user(prototype, kAddAfterCurrent);
           if (new_type && new_type->is_window()) {
-            Fl_Window_Type *new_window = (Fl_Window_Type *)new_type;
+            Fl_Window_Type *new_window = (Fl_Window_Type*)new_type;
             Fl_Window *w = (Fl_Window *)new_window->o;
             w->position(Fl::event_x_root(), Fl::event_y_root());
           }
@@ -200,12 +187,13 @@ int Widget_Bin_Window_Button::handle(int inEvent) {
 /**
  Create an input field.
  */
-Fluid_Coord_Input::Fluid_Coord_Input(int x, int y, int w, int h, const char *l)
-  : Fl_Input(x, y, w, h, l)
-  , user_callback_(0L)
-  , vars_(0L)
-  , vars_user_data_(0L) {
-  Fl_Input::callback((Fl_Callback *)callback_handler_cb);
+Fluid_Coord_Input::Fluid_Coord_Input(int x, int y, int w, int h, const char *l) :
+Fl_Input(x, y, w, h, l),
+user_callback_(0L),
+vars_(0L),
+vars_user_data_(0L)
+{
+  Fl_Input::callback((Fl_Callback*)callback_handler_cb);
 }
 
 void Fluid_Coord_Input::callback_handler_cb(Fluid_Coord_Input *This, void *v) {
@@ -215,7 +203,7 @@ void Fluid_Coord_Input::callback_handler_cb(Fluid_Coord_Input *This, void *v) {
 void Fluid_Coord_Input::callback_handler(void *v) {
   if (user_callback_)
     (*user_callback_)(this, v);
-  value(value());
+  value( value() );
 }
 
 /**
@@ -232,12 +220,11 @@ int Fluid_Coord_Input::eval_var(uchar *&s) const {
     return 0;
   // find the end of the variable name
   uchar *v = s;
-  while (isalpha(*s))
-    s++;
-  int n = (int)(s - v);
+  while (isalpha(*s)) s++;
+  int n = (int)(s-v);
   // find the variable in the list
   for (Fluid_Coord_Input_Vars *vars = vars_; vars->name_; vars++) {
-    if (strncmp((char *)v, vars->name_, n) == 0 && vars->name_[n] == 0)
+    if (strncmp((char*)v, vars->name_, n)==0 && vars->name_[n]==0)
       return vars->callback_(this, vars_user_data_);
   }
   return 0;
@@ -251,63 +238,47 @@ int Fluid_Coord_Input::eval_var(uchar *&s) const {
  \return the value so far
  */
 int Fluid_Coord_Input::eval(uchar *&s, int prio) const {
-  int v = 0, sgn = 1;
+  int v =0, sgn = 1;
   uchar c = *s++;
 
   // check for unary operator
-  if (c == '-') {
-    sgn = -1;
-    c = *s++;
-  } else if (c == '+') {
-    sgn = 1;
-    c = *s++;
-  }
+  if (c=='-') { sgn = -1; c = *s++; }
+  else if (c=='+') { sgn = 1; c = *s++; }
 
-  if (c >= '0' && c <= '9') {
+  if (c>='0' && c<='9') {
     // numeric value
-    while (c >= '0' && c <= '9') {
-      v = v * 10 + (c - '0');
+    while (c>='0' && c<='9') {
+      v = v*10 + (c-'0');
       c = *s++;
     }
   } else if (isalpha(c)) {
     v = eval_var(--s);
     c = *s++;
-  } else if (c == '(') {
+  } else if (c=='(') {
     // opening bracket
     v = eval(s, 5);
   } else {
-    return sgn * v; // syntax error
+    return sgn*v; // syntax error
   }
-  if (sgn == -1)
-    v = -v;
+  if (sgn==-1) v = -v;
 
   // Now evaluate all following binary operators
   for (;;) {
-    if (c == 0) {
+    if (c==0) {
       return v;
-    } else if (c == '+' || c == '-') {
-      if (prio <= 4) {
-        s--;
-        return v;
-      }
-      if (c == '+') {
-        v += eval(s, 4);
-      } else if (c == '-') {
-        v -= eval(s, 4);
-      }
-    } else if (c == '*' || c == '/') {
-      if (prio <= 3) {
-        s--;
-        return v;
-      }
-      if (c == '*') {
-        v *= eval(s, 3);
-      } else if (c == '/') {
+    } else if (c=='+' || c=='-') {
+      if (prio<=4) { s--; return v; }
+      if (c=='+') { v += eval(s, 4); }
+      else if (c=='-') { v -= eval(s, 4); }
+    } else if (c=='*' || c=='/') {
+      if (prio<=3) { s--; return v; }
+      if (c=='*') { v *= eval(s, 3); }
+      else if (c=='/') {
         int x = eval(s, 3);
-        if (x != 0) // if x is zero, don't divide
+        if (x!=0) // if x is zero, don't divide
           v /= x;
       }
-    } else if (c == ')') {
+    } else if (c==')') {
       return v;
     } else {
       return v; // syntax error
@@ -326,18 +297,17 @@ int Fluid_Coord_Input::eval(uchar *&s, int prio) const {
  \param s formula as a C string
  \return the calculated value
  */
-int Fluid_Coord_Input::eval(const char *s) const {
+int Fluid_Coord_Input::eval(const char *s) const
+{
   // duplicate the text, so we can modify it
-  uchar *buf = (uchar *)fl_strdup(s);
+  uchar *buf = (uchar*)fl_strdup(s);
   uchar *src = buf, *dst = buf;
   // remove all whitespace to make the parser easier
   for (;;) {
     uchar c = *src++;
-    if (c == ' ' || c == '\t')
-      continue;
+    if (c==' ' || c=='\t') continue;
     *dst++ = c;
-    if (c == 0)
-      break;
+    if (c==0) break;
   }
   src = buf;
   // now jump into the recursion

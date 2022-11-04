@@ -21,14 +21,14 @@
 #include "Fl_Screen_Driver.H"
 
 /**
- \brief Sets the X display to use for all windows.
+ Sets the X or Wayland display to use for all windows.
 
- Actually this just sets the environment variable $DISPLAY to the passed string,
- so this only works before you show() the first window or otherwise open the
- display.
+ This sets the environment variable $DISPLAY or $WAYLAND_DISPLAY to the passed string,
+ so this only works before you show() the first window or otherwise open the display.
 
  This does nothing on other platforms.
 */
-void Fl::display(const char *d) {
+void Fl::display(const char *d)
+{
   screen_driver()->display(d);
 }
