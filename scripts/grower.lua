@@ -2994,7 +2994,10 @@ stderrf("Link pieces: %s dir:%d <--> %s dir:%d\n",
       new_area = AREA_CLASS.new(LEVEL, "floor")
 
       -- max size of new area
-      new_area.max_size = rand.pick({ 16, 24, 32 })
+      --new_area.max_size = rand.pick({ 16, 24, 32, 128, 256, 512 })
+      if R.svolume then
+        new_area.max_size = (R.size_limit - R.svolume) * 1.25
+      end
 
       new_area.no_grow   = info.no_grow
       new_area.no_sprout = info.no_sprout
