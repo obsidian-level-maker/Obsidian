@@ -143,8 +143,10 @@ public:
   FILE *file();
   /** Sets the function end_job() calls to close the file() */
   void close_command(Fl_PostScript_Close_Command cmd);
+#ifdef _MSC_VER
   virtual void set_current();
   virtual void end_current();
+#endif
 };
 
 /** Encapsulated PostScript drawing surface.
