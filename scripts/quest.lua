@@ -211,7 +211,7 @@ function Quest_create_initial_quest(LEVEL)
   local function eval_exit_room(R, secret_mode)
     if R.is_exit    then return -1 end
     if R.is_hallway then return -1 end
-    if R.is_sub_room and not secret_mode then return -1 end
+    if R.is_sub_room or not R.is_grown and not secret_mode then return -1 end
 
     -- must be a leaf room
     if R:total_conns() > 1 then return -1 end
@@ -251,7 +251,7 @@ function Quest_create_initial_quest(LEVEL)
     local score = R.svolume
 
     -- HACKY AF - give a bigger score to rooms grown much later 
-    score = score * (R.id * 0.25)
+    score = score + (R.id)
 
     -- caves are not ideal
     if R.is_cave then score = score / 4 end
