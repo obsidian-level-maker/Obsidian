@@ -2188,6 +2188,20 @@ local function ob_get_module_refs()
           option_refs[vv.name].tooltip = gui.gettext(vv.tooltip)
         end
         if vv.randomize_group then option_refs[vv.name].random_group = vv.randomize_group end
+        if not v.engine then
+          option_refs[vv.name].engine = {}
+          table.add_unique(option_refs[vv.name].engine, "ALL")
+        else
+          if type(v.engine) == "string" then
+            option_refs[vv.name].engine = {}
+            table.add_unique(option_refs[vv.name].engine, v.engine)
+          else
+            option_refs[vv.name].engine = {}
+            for engine,_ in pairs(v.engine) do
+              table.add_unique(option_refs[vv.name].engine, engine)
+            end
+          end
+        end
         if not v.game then
           option_refs[vv.name].game = {}
           table.add_unique(option_refs[vv.name].game, "ALL")
@@ -2242,10 +2256,24 @@ local function ob_get_module_refs()
     module_refs[v.name] = option_refs
   end
   module_refs["main_build_settings"] = {
-    game = {
-      tooltip = "Choose which game to build a WAD for.",
+    engine = {
+      tooltip = "Choose which engine to build maps for:\n" ..
+        "  id Tech 0: Wolfenstein 3D and similar games\n" ..
+        "  id Tech 1: Doom and similar games\n",
       engine = {"ALL"},
       game = {"ALL"},
+      port = {"ALL"},
+      choices = {
+        "idtech_0",
+        "idtech_1",
+      },
+      default = "idtech_1",
+    },
+    game = {
+      tooltip = "Choose which game to build maps for.",
+      engine = {"ALL"},
+      game = {"ALL"},
+      port = {"ALL"},
       choices = {
         "chex3",
         "doom1",
@@ -2258,16 +2286,22 @@ local function ob_get_module_refs()
         "heretic",
         "hexen",
         "strife",
+        "wolf3d",
+        "spear",
+        "noah",
       },
       default = "doom2",
     },
-    engine = {
-      tooltip = "Choose which engine to build a WAD for.",
+    port = {
+      tooltip = "Choose which port to build maps for.\n" ..
+        "  Vanilla is the only option for id Tech 0; the remaining options are for id Tech 1.\n",
       engine = {"ALL"},
       game = {"ALL"},
+      port = {"ALL"},
       choices = {
         "vanilla",
-        "nolimit",
+        "limit_enforcing",
+        "limit_removing",
         "boom",
         "prboom",
         "zdoom",
@@ -2280,6 +2314,7 @@ local function ob_get_module_refs()
       tooltip = "Choose how many levels to create.",
       engine = {"ALL"},
       game = {"ALL"},
+      port = {"ALL"},
       choices = {
         "single",
         "few",
@@ -2298,9 +2333,11 @@ local function ob_get_module_refs()
         "  Harmony: ndf_base\n" ..
         "  Heretic: city,maw,dome,ossuary,demense\n" ..
         "  Hexen: forest,ice_caves,fire_steel,swamp,dungeon,town\n" ..
-        "  Strife: town\n",
+        "  Strife: town\n\n",
+        "  Note: This setting currently does nothing for id Tech 0 games!\n",
       engine = {"ALL"},
       game = {"ALL"},
+      port = {"ALL"},
       choices = {
         "original",
         "epi",
@@ -2360,6 +2397,14 @@ function ob_print_reference()
       for _,game in pairs(option.game) do
         gui.console_print(game .. " ")
         gui.ref_print(game .. " ")
+      end
+      gui.console_print("\n")
+      gui.ref_print("\n")
+      gui.console_print("port: ")
+      gui.ref_print("port: ")
+      for _,port in pairs(option.port) do
+        gui.console_print(port .. " ")
+        gui.ref_print(port .. " ")
       end
       if (option.slider) then
         gui.console_print("\nvalues: " .. option.slider.min .. "-" .. option.slider.max)
@@ -2446,6 +2491,20 @@ function ob_print_reference_json()
             gui.console_print("\"" .. game .. "\", ")
           else
             gui.console_print("\"" .. game .. "\"")
+          end
+        end
+        gui.console_print("],\n")
+      end
+      gui.console_print("    \"port\": ")
+      if #option.port == 1 and option.port[1] == "ALL" then
+        gui.console_print("\"ALL\",\n")
+      else
+        gui.console_print("[")
+        for j,port in pairs(option.port) do
+          if j ~= #option.port then
+            gui.console_print("\"" .. port .. "\", ")
+          else
+            gui.console_print("\"" .. port .. "\"")
           end
         end
         gui.console_print("],\n")
