@@ -202,6 +202,14 @@ int gui_get_filename_base(lua_State *L) {
     return 1;
 }
 
+// LUA: get_save_path()
+//
+int gui_get_save_path(lua_State *L) {
+    std::filesystem::path path = game_object->Filename();
+    lua_pushstring(L, path.remove_filename().generic_string().c_str());
+    return 1;
+}
+
 // LUA: set_colormap(map, colors)
 //
 int gui_set_colormap(lua_State *L) {
@@ -1415,6 +1423,7 @@ static const luaL_Reg gui_script_funcs[] = {
     {"scan_directory", gui_scan_directory},
     {"mkdir", gui_mkdir},
     {"get_filename_base", gui_get_filename_base},
+    {"get_save_path", gui_get_save_path},
 
     // CSG functions
     {"begin_level", CSG_begin_level},

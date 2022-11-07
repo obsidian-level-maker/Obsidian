@@ -4875,7 +4875,7 @@ function Grower_create_rooms(LEVEL, SEEDS)
 
   -- debugging aid
   if OB_CONFIG.svg or (PARAM.bool_save_svg and PARAM.bool_save_svg == 1) then
-    Seed_save_svg_image(OB_CONFIG.title .. "_" .. LEVEL.name .. ".svg")
+    Seed_save_svg_image(OB_CONFIG.title .. "_" .. LEVEL.name .. ".svg", SEEDS)
   end
 
   if PARAM.bool_shape_rule_stats == 1 then
