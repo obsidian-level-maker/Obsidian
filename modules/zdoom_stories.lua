@@ -2707,7 +2707,6 @@ ZDOOM_STORIES.QUIT_MESSAGES =
   [[If you're quitting because something might be broken, please supply screenshots and preferably your LOG file when reporting.]],
   [[Obsidian is for the adventurous. Are you? Join us and contribute ideas and works! Obsidian is a community project!]],
   [[Was this not big enough? Try jacking up the Max Level Size or Upper Bound in settings to Colossal, Gargantuan or Transcendent.]],
-  [[If you are reporting an error and already closed Obsidian, do NOT reopen the program as it will wipe the LOGS.TXT file clean! Open it via a text editor.]],
   [[Map sizes too big? Reduce the Map Size or Upper Bound size if using Mix It Up.]],
   [[Gargantuan or Transcendent maps looking like Minecraft Far Lands? Please keep Auto Detail on if you're using binary format, otherwise use UDMF format which allows unlimited detail.]],
   [[Too hard? Turn down Quantity and/or Strength. Same applies to too easy: Turn Quantity up.]],
@@ -2722,6 +2721,7 @@ ZDOOM_STORIES.QUIT_MESSAGES =
   [[Having a boyfriend or girlfriend is important, but killings demons is importanter.]], -- Monika
   [[To not die, keep your health points above zero.]], --Monika
   [[Having trouble with some of the maps of mapset as a whole? Git gud.]],
+  [[Bungee Gum possesses the properties of both rubber AND gum.]],
 
   -- other important facts, just facts no silly stuff
   [[Did you know Carmack and Hall in Sept 1990, produced a replica of Super Mario Bros 3's first level and using Romero's Dangerous Dave character in place of Mario?]],
