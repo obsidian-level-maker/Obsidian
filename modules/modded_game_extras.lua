@@ -43,6 +43,12 @@ MODDED_GAME_EXTRAS.HELLSCAPE_NAVIGATOR_TEMPLATE =
 
 }
 
+MODDED_GAME_EXTRAS.HN_INFO_TYPE_CHOICES =
+{
+  "hn_info_quest",  _("Quest Info"),
+  "hn_info_shapes", _("Shape Debug"),
+}
+
 MODDED_GAME_EXTRAS.QCDE_LOOTBOX_NICE_ITEMS =
 {
   lb_backpack =
@@ -1670,7 +1676,7 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
 
     if R.lev_along and not R.is_start and #LEVEL.rooms > 2 then
       goal_string = goal_string .. " (" .. int(R.lev_along * 100) .. "%%)"
-    end
+    end      
 
     return goal_string
   end
@@ -1683,6 +1689,83 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
 
     -- attach goal information
     info.name = "Location: " .. info.name .. fetch_room_goal(R)
+
+    if PARAM.hn_info_type == "hn_info_type" then
+      info.name = ""
+
+      -- specilized debug info
+      if R.id then
+        info.name = " ROOM_" .. R.id .. " "
+      end
+
+      if R.symmetry and R.symmetry.kind then
+        info.name = info.name .. "[" .. R.symmetry.kind
+        if R.symmetry.dir then
+          info.name = info.name .. ":" .. R.symmetry.dir
+        end
+        info.name = info.name .. "] "
+      else
+        info.name = info.name .. "[no symm] "
+      end
+
+      info.name = info.name ..
+        "(SZE " .. R.svolume .. "/" .. math.round(R.size_limit) .. ") "
+
+      info.name = info.name .. "[GROW "
+      if R.shapes_applied then
+        info.name = info.name .. R.shapes_applied
+      else
+        info.name = info.name .. "0"
+      end
+
+      info.name = info.name .. "/"
+      if R.shapes_tried then
+        info.name = info.name .. R.shapes_tried
+      else
+        info.name = info.name .. "0"
+      end
+      info.name = info.name .. "] "
+
+      if R.transform_changes then
+        info.name = info.name .. "(TSRL " .. R.transform_changes .. ", "
+      else
+        info.name = info.name .. "(TSRL 0, "
+      end
+      if R.base_set_increase then
+        info.name = info.name .. "BASE " .. R.base_set_increase .. ") "
+      else
+        info.name = info.name .. "BASE 0) "
+      end
+    
+      info.name = info.name .. "(STAT " ..
+        LEVEL.size_multiplier .. "x, " ..
+        LEVEL.area_multiplier .. "x, " ..
+        LEVEL.size_consistency .. ") "
+
+      if LEVEL.is_absurd then
+        info.name = info.name .. "(ARUL: "
+        if R.absurd_shapes and not table.empty(R.absurd_shapes) then
+          for idx,shape in ipairs(R.absurd_shapes) do
+            info.name = info.name .. shape .. " " 
+          end
+        end
+        info.name = info.name .. ") "
+
+        if LEVEL.absurdity_round_robin then
+          info.name = info.name .. "[RRBN] "
+        end
+      else
+        info.name = info.name .. "(NRML SHPS) "
+      end
+
+      if R.has_auxiliary then
+        info.name = info.name .. "(AUX) "
+      end
+
+      if R.sprout_rule then
+        info.name = info.name .. "(SPR: " .. R.sprout_rule .. ") "
+      end
+    end
 
     info.editor_num = PARAM.hn_thing_start_offset
 
@@ -2233,7 +2316,18 @@ OB_MODULES["modded_game_extras"] =
       valuator = "button",
       default = 0,
       tooltip = _("Adds support for m8f's Hellscape Navigator by generating name markers in the map per room."),
-      priority = 5,
+      priority = 5
+    },
+    {
+      name = "hn_info_type",
+      label = _("HN Info Type"),
+      choices = MODDED_GAME_EXTRAS.HN_INFO_TYPE_CHOICES,
+      tooltip = _("Pick which information type to place into Hellscape Navigator markers.\n\n" ..
+                  "Quest Info - (DEFAULT) Places traversal progress per room and key quest info into the markers.\n" ..
+                  "Shapes Debug - Prints verbose information about shape grammar growth status per room."),
+      default = "hn_info_quest",
+      priority = 4.9,
+      gap = 1,
     },
 
 
