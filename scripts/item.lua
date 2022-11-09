@@ -890,7 +890,8 @@ function Item_pickups_for_class(LEVEL, CL)
     end
 
     if table.empty(item_tab) then
-      error("Missing linked item for " .. stat .. "!")
+      --error("Missing linked item for " .. stat .. "!") -- Test for when a user purposefully sets pickups to 0 for a category - Dasho
+      return nil, 0
     end
 
     local name = rand.key_by_probs(item_tab)
@@ -965,13 +966,23 @@ function Item_pickups_for_class(LEVEL, CL)
 
     while qty > 0 do
       local item, count = decide_pickup(R, stat, qty)
-      table.insert(item_list, { item=item, count=count, random=gui.random() })
+      if item then
+        table.insert(item_list, { item=item, count=count, random=gui.random() })
+      end
 
       if stat == "health" then
-        qty = qty - item.give[1].health * count
+        if item then
+          qty = qty - item.give[1].health * count
+        else
+          qty = 0
+        end
       else
-        assert(item.give[1].ammo)
-        qty = qty - item.give[1].count * count
+        if item then
+          assert(item.give[1].ammo)
+          qty = qty - item.give[1].count * count
+        else
+          qty = 0
+        end
       end
     end
 
