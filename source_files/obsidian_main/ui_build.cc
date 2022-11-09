@@ -61,6 +61,13 @@ UI_Build::UI_Build(int X, int Y, int W, int H, const char *label)
     name_disp->labelfont(font_style);
     name_disp->labelsize(small_font_size);
 
+    alt_disp = new Fl_Box(X + (W * .10), cy, mini_w, mini_h);
+    alt_disp->box(FL_NO_BOX);
+    alt_disp->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER | FL_ALIGN_CLIP | FL_ALIGN_WRAP);
+    alt_disp->labelcolor(FL_WHITE);
+    alt_disp->labelsize(header_font_size);
+    alt_disp->labelfont(font_style);
+
     cy += mini_map->h() + kf_h(4);
 
     status = new Fl_Box(FL_FLAT_BOX, X + pad, cy, W - pad * 2, kf_h(26),

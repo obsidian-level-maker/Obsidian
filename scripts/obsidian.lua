@@ -2571,6 +2571,7 @@ function ob_build_cool_shit()
 
   if OB_CONFIG.engine == "idtech_1" and OB_CONFIG.port == "limit_enforcing" then
     ob_invoke_hook("setup")
+    gui.minimap_disable(gui.gettext("SLUMP"))
     return "ok" 
   end -- Skip the rest if using Vanilla Doom/SLUMP
 
@@ -2587,6 +2588,7 @@ function ob_build_cool_shit()
   -- Hijack here if Wolf3D is selected
 
   if OB_CONFIG.engine == "idtech_0" then
+    gui.minimap_disable(gui.gettext("id Tech 0"))
     local result = v094_build_wolf3d_shit()
     ob_clean_up()
     return result

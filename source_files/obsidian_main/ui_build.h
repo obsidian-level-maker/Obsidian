@@ -35,6 +35,7 @@ class UI_Build : public Fl_Group {
     UI_MiniMap *mini_map;
     Fl_Box *seed_disp;
     Fl_Box *name_disp;
+    Fl_Box *alt_disp;
     Fl_Box *status;
     Fl_Progress *progress;
 

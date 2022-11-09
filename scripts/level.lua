@@ -2841,10 +2841,12 @@ function Level_make_all()
       LEV.allowances = {}
 
       if PARAM.float_historical_oblige_v2 and rand.odds(PARAM.float_historical_oblige_v2) then
+        gui.minimap_disable(gui.gettext("Oblige V2"))
         if v094_create_LEVEL(GAME.FACTORY.all_levels[LEV.id], LEV.id, #GAME.levels) == "abort" then
           return "abort"
         end
       else
+        gui.minimap_enable()
         if Level_make_level(LEV) == "abort" then
           return "abort"
         end

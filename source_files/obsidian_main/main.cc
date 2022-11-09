@@ -1876,6 +1876,7 @@ softrestart:;
             }
 
             if (main_action == MAIN_BUILD) {
+
                 if (!mid_batch) {
                     runs_left = builds_per_run;
                 }
@@ -1917,6 +1918,7 @@ softrestart:;
                     old_name.clear();
                 }
 
+                main_win->build_box->alt_disp->label("");
                 // regardless of success or fail, compute a new seed
                 Main_CalcNewSeed();
 

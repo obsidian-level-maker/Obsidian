@@ -1191,6 +1191,30 @@ int gui_bit_not(lua_State *L) {
     return 1;
 }
 
+int gui_minimap_enable(lua_State *L) {
+#ifndef CONSOLE_ONLY
+    if (main_win) {
+        main_win->build_box->alt_disp->label("");
+    }
+#endif
+    return 0;
+}
+
+int gui_minimap_disable(lua_State *L) {
+#ifndef CONSOLE_ONLY
+    if (main_win) {
+        main_win->build_box->mini_map->EmptyMap();
+        std::string genny = luaL_checkstring(L, 1);
+        // clang-format off
+        main_win->build_box->alt_disp->copy_label(fmt::format("{} {} -\n{}", 
+            _("Using"),
+            genny, _("Preview Not Available")).c_str());
+        // clang-format on
+    }
+#endif
+    return 0;
+}
+
 int gui_minimap_begin(lua_State *L) {
     // dummy size when running in batch mode
     int map_W = 50;
@@ -1435,6 +1459,8 @@ static const luaL_Reg gui_script_funcs[] = {
     {"trace_ray", CSG_trace_ray},
 
     // Mini-Map functions
+    {"minimap_disable", gui_minimap_disable},
+    {"minimap_enable", gui_minimap_enable},
     {"minimap_begin", gui_minimap_begin},
     {"minimap_finish", gui_minimap_finish},
     {"minimap_draw_line", gui_minimap_draw_line},
