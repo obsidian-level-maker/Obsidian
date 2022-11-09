@@ -4387,7 +4387,7 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
     local list = table.copy(LEVEL.rooms)
 
     for _,R in pairs(list) do
-      if not R.is_grown and R.is_hallway then
+      if not R.is_grown then
         if R.is_hallway then
           Grower_kill_room(SEEDS, LEVEL, R)
         else
