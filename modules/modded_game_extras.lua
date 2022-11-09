@@ -1690,7 +1690,7 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
     -- attach goal information
     info.name = "Location: " .. info.name .. fetch_room_goal(R)
 
-    if PARAM.hn_info_type == "hn_info_type" then
+    if PARAM.hn_info_type == "hn_info_shapes" then
       info.name = ""
 
       -- specilized debug info
