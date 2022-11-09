@@ -1648,6 +1648,17 @@ softrestart:;
 
     Cookie_ParseArguments();
 
+#ifndef CONSOLE_ONLY
+    if (main_win) {
+        if (StringCaseCmp(main_win->game_box->engine->GetID(), "idtech_0") == 0 ||
+            StringCaseCmp(main_win->game_box->port->GetID(), "limit_enforcing") == 0) {
+            main_win->game_box->theme->deactivate();
+        } else {
+            main_win->game_box->theme->activate();
+        }
+    }
+#endif
+
     if (main_action != MAIN_SOFT_RESTART) {
 #ifndef CONSOLE_ONLY
         // Have to add these after reading existing settings - Dasho
