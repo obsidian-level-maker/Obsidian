@@ -3499,6 +3499,7 @@ end
       local aux_name = auxiliary_name(idx)
 
       local aux = cur_rule[aux_name]
+      cur_rule.is_auxiliary = true
       if aux == nil then goto continue end
 
       assert(aux.pass)
@@ -3602,6 +3603,10 @@ end
 
     if pass == "sprout" then
       R.sprout_succesful = true
+    end
+
+    if cur_rule.is_auxiliary then
+      R.has_auxiliary = true
     end
 
     -- round robin absurdity settings
@@ -4389,6 +4394,8 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
     for _,R in pairs(list) do
       if not R.is_grown then
         if R.is_hallway then
+          Grower_kill_room(SEEDS, LEVEL, R)
+        elseif not R.is_hallway and rand.odds(style_sel("sub_rooms", 100, 66, 33, 0)) then
           Grower_kill_room(SEEDS, LEVEL, R)
         else
           R.is_sub_room = true
