@@ -26,15 +26,15 @@
 #include "Fl_Group.H"
 #endif
 #include "Fl_Scrollbar.H"
-#include <FL/Fl.H> // Fl::scrollbar_size()
+#include <FL/Fl.H>              // Fl::scrollbar_size()
 
-#define FL_NORMAL_BROWSER 0 /**< type() of Fl_Browser */
-#define FL_SELECT_BROWSER 1 /**< type() of FL_Select_Browser */
-#define FL_HOLD_BROWSER 2   /**< type() of Fl_Hold_Browser */
-#define FL_MULTI_BROWSER 3  /**< type() of Fl_Multi_Browser */
+#define FL_NORMAL_BROWSER       0       /**< type() of Fl_Browser */
+#define FL_SELECT_BROWSER       1       /**< type() of FL_Select_Browser */
+#define FL_HOLD_BROWSER         2       /**< type() of Fl_Hold_Browser */
+#define FL_MULTI_BROWSER        3       /**< type() of Fl_Multi_Browser */
 
-#define FL_SORT_ASCENDING 0  /**< sort browser items in ascending alphabetic order. */
-#define FL_SORT_DESCENDING 1 /**< sort in descending order */
+#define FL_SORT_ASCENDING       0       /**< sort browser items in ascending alphabetic order. */
+#define FL_SORT_DESCENDING      1       /**< sort in descending order */
 
 /**
   This is the base class for browsers.  To be useful it must be
@@ -84,15 +84,16 @@ class FL_EXPORT Fl_Browser_ : public Fl_Group {
   Fl_Font textfont_;
   Fl_Fontsize textsize_;
   Fl_Color textcolor_;
-  void *top_;              // which item scrolling position is in
-  void *selection_;        // which is selected (except for FL_MULTI_BROWSER)
-  void *redraw1, *redraw2; // minimal update pointers
-  void *max_width_item;    // which item has max_width_
-  int scrollbar_size_;     // size of scrollbar trough
+  void* top_;           // which item scrolling position is in
+  void* selection_;     // which is selected (except for FL_MULTI_BROWSER)
+  void *redraw1,*redraw2; // minimal update pointers
+  void* max_width_item; // which item has max_width_
+  int scrollbar_size_;  // size of scrollbar trough
 
   void update_top();
 
 protected:
+
   // All of the following must be supplied by the subclass:
   /**
     This method must be provided by the subclass
@@ -135,47 +136,38 @@ protected:
     \returns The width of the item in pixels.
   */
   virtual int item_width(void *item) const = 0;
-  virtual int item_quick_height(void *item) const;
+  virtual int item_quick_height(void *item) const ;
   /**
     This method must be provided by the subclass to draw the \p item
     in the area indicated by \p X, \p Y, \p W, \p H.
   */
-  virtual void item_draw(void *item, int X, int Y, int W, int H) const = 0;
+  virtual void item_draw(void *item,int X,int Y,int W,int H) const = 0;
   /**
     This optional method returns a string (label) that may be used for sorting.
     \param[in] item The item whose label text is returned.
     \returns The item's text label. (Can be NULL if blank)
    */
-  virtual const char *item_text(void *item) const {
-    (void)item;
-    return 0L;
-  }
+  virtual const char *item_text(void *item) const { (void)item; return 0L; }
   /**
     This optional method should be provided by the subclass
     to efficiently swap browser items \p a and \p b, such as for sorting.
     \param[in] a,b The two items to be swapped.
    */
-  virtual void item_swap(void *a, void *b) {
-    (void)a;
-    (void)b;
-  }
+  virtual void item_swap(void *a,void *b) { (void)a; (void)b; }
   /**
     This method must be provided by the subclass
     to return the item for the specified \p index.
     \param[in] index The \p index of the item to be returned
     \returns The item at the specified \p index.
    */
-  virtual void *item_at(int index) const {
-    (void)index;
-    return 0L;
-  }
+  virtual void *item_at(int index) const { (void)index; return 0L; }
   // you don't have to provide these but it may help speed it up:
-  virtual int full_width() const;  // current width of all items
-  virtual int full_height() const; // current height of all items
-  virtual int incr_height() const; // average height of an item
+  virtual int full_width() const ;      // current width of all items
+  virtual int full_height() const ;     // current height of all items
+  virtual int incr_height() const ;     // average height of an item
   // These only need to be done by subclass if you want a multi-browser:
-  virtual void item_select(void *item, int val = 1);
-  virtual int item_selected(void *item) const;
+  virtual void item_select(void *item,int val=1);
+  virtual int item_selected(void *item) const ;
 
   // things the subclass may want to call:
   /**
@@ -190,26 +182,27 @@ protected:
     Fl_Multi_Browser::selected() for every item in question.
   */
   void *selection() const { return selection_; }
-  void new_list();                  // completely clobber all data, as though list replaced
-  void deleting(void *item);        // get rid of any pointers to item
-  void replacing(void *a, void *b); // change a pointers to b
-  void swapping(void *a, void *b);  // exchange pointers a and b
-  void inserting(void *a, void *b); // insert b near a
-  int displayed(void *item) const;  // true if this item is visible
-  void redraw_line(void *item);     // minimal update, no change in size
+  void new_list(); // completely clobber all data, as though list replaced
+  void deleting(void *item); // get rid of any pointers to item
+  void replacing(void *a,void *b); // change a pointers to b
+  void swapping(void *a,void *b); // exchange pointers a and b
+  void inserting(void *a,void *b); // insert b near a
+  int displayed(void *item) const ; // true if this item is visible
+  void redraw_line(void *item); // minimal update, no change in size
   /**
     This method will cause the entire list to be redrawn.
     \see redraw_lines(), redraw_line()
    */
   void redraw_lines() { damage(FL_DAMAGE_SCROLL); } // redraw all of them
-  void bbox(int &X, int &Y, int &W, int &H) const;
-  int leftedge() const;      // x position after scrollbar & border
+  void bbox(int &X,int &Y,int &W,int &H) const;
+  int leftedge() const; // x position after scrollbar & border
   void *find_item(int ypos); // item under mouse
 
   void draw();
-  Fl_Browser_(int X, int Y, int W, int H, const char *L = 0);
+  Fl_Browser_(int X,int Y,int W,int H,const char *L=0);
 
 public:
+
   /**
     Vertical scrollbar. Public, so that it can be accessed directly.
 
@@ -232,11 +225,11 @@ public:
   Fl_Scrollbar hscrollbar;
 
   int handle(int event);
-  void resize(int X, int Y, int W, int H);
+  void resize(int X,int Y,int W,int H);
 
-  int select(void *item, int val = 1, int docallbacks = 0);
-  int select_only(void *item, int docallbacks = 0);
-  int deselect(int docallbacks = 0);
+  int select(void *item,int val=1,int docallbacks=0);
+  int select_only(void *item,int docallbacks=0);
+  int deselect(int docallbacks=0);
   /**
     Gets the vertical scroll position of the list as a pixel position \p pos.
     The position returned is how many pixels of the list are scrolled off the top edge
@@ -254,7 +247,7 @@ public:
     \see position(), hposition()
   */
   int hposition() const { return hposition_; }
-  void hposition(int);      // pan to here
+  void hposition(int); // pan to here
   void display(void *item); // scroll so this item is shown
 
   /**
@@ -266,15 +259,14 @@ public:
      -  bit 2: 'always' (to be combined with bits 0 and 1)
      -  bit 3-31: reserved for future use
    */
-  enum {                   // values for has_scrollbar()
-    HORIZONTAL = 1,        ///< Only show horizontal scrollbar.
-    VERTICAL = 2,          ///< Only show vertical scrollbar.
-    BOTH = 3,              ///< Show both scrollbars. (default)
-    ALWAYS_ON = 4,         ///< Specified scrollbar(s) should 'always' be shown (to be used with
-                           ///< HORIZONTAL/VERTICAL)
-    HORIZONTAL_ALWAYS = 5, ///< Horizontal scrollbar always on.
-    VERTICAL_ALWAYS = 6,   ///< Vertical scrollbar always on.
-    BOTH_ALWAYS = 7        ///< Both scrollbars always on.
+  enum { // values for has_scrollbar()
+    HORIZONTAL = 1,             ///< Only show horizontal scrollbar.
+    VERTICAL = 2,               ///< Only show vertical scrollbar.
+    BOTH = 3,                   ///< Show both scrollbars. (default)
+    ALWAYS_ON = 4,              ///< Specified scrollbar(s) should 'always' be shown (to be used with HORIZONTAL/VERTICAL)
+    HORIZONTAL_ALWAYS = 5,      ///< Horizontal scrollbar always on.
+    VERTICAL_ALWAYS = 6,        ///< Vertical scrollbar always on.
+    BOTH_ALWAYS = 7             ///< Both scrollbars always on.
   };
   /**
     Returns the current scrollbar mode, see Fl_Browser_::has_scrollbar(uchar)
@@ -341,7 +333,9 @@ public:
     \returns Scrollbar size in pixels, or 0 if the global Fl::scrollbar_size() is being used.
     \see Fl::scrollbar_size(int)
   */
-  int scrollbar_size() const { return (scrollbar_size_); }
+  int scrollbar_size() const {
+      return(scrollbar_size_);
+  }
   /**
     Sets the pixel size of the scrollbars' troughs to \p newSize, in pixels.
 
@@ -361,21 +355,25 @@ public:
                     If 0 (default), scrollbar size tracks the global Fl::scrollbar_size()
     \see Fl::scrollbar_size()
   */
-  void scrollbar_size(int newSize) { scrollbar_size_ = newSize; }
+  void scrollbar_size(int newSize) {
+      scrollbar_size_ = newSize;
+  }
   /**
     Returns the global value Fl::scrollbar_size().
    \deprecated Use scrollbar_size() instead.
     \todo This method should eventually be removed in 1.4+
   */
-  int scrollbar_width() const { return (Fl::scrollbar_size()); }
+  int scrollbar_width() const {
+      return(Fl::scrollbar_size());
+  }
   /**
     Sets the global Fl::scrollbar_size(), and forces this instance of the widget to use it.
    \deprecated Use scrollbar_size() instead.
     \todo This method should eventually be removed in 1.4+
   */
   void scrollbar_width(int width) {
-    Fl::scrollbar_size(width);
-    scrollbar_size_ = 0;
+      Fl::scrollbar_size(width);
+      scrollbar_size_ = 0;
   }
   /**
     Moves the vertical scrollbar to the righthand side of the list.
@@ -387,7 +385,7 @@ public:
     For back compatibility.
   */
   void scrollbar_left() { scrollbar.align(FL_ALIGN_LEFT); }
-  void sort(int flags = 0);
+  void sort(int flags=0);
 };
 
 #endif

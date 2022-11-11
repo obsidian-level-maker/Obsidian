@@ -9,7 +9,7 @@ PREFABS.Decor_Dem_Deformation1 =
   file   = "decor/dem_terrain_deformation.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1000,
   env    = "outdoor",
@@ -210,7 +210,7 @@ PREFABS.Decor_Dem_Deformation18 =
   template = "Decor_Dem_Deformation1",
   map = "MAP18",
 
-  engine = "any",
+  port = "any",
 
   env    = "any",
 
@@ -225,7 +225,7 @@ PREFABS.Decor_Dem_Deformation19 =
   template = "Decor_Dem_Deformation1",
   map = "MAP19",
 
-  engine = "any",
+  port = "any",
 
   env    = "any",
 
@@ -240,7 +240,7 @@ PREFABS.Decor_Dem_Deformation20 =
   template = "Decor_Dem_Deformation1",
   map = "MAP20",
 
-  engine = "any",
+  port = "any",
 
   env    = "any",
 
@@ -255,7 +255,7 @@ PREFABS.Decor_Dem_Deformation21 =
   template = "Decor_Dem_Deformation1",
   map = "MAP21",
 
-  engine = "any",
+  port = "any",
 
   env    = "any",
 
@@ -273,7 +273,7 @@ PREFABS.Decor_Dem_Deformation22 =
   template = "Decor_Dem_Deformation1",
   map = "MAP22",
 
-  engine = "any",
+  port = "any",
 
   env    = "any",
 
@@ -291,7 +291,7 @@ PREFABS.Decor_Dem_Deformation23 =
   template = "Decor_Dem_Deformation1",
   map = "MAP23",
 
-  engine = "any",
+  port = "any",
 
   env    = "any",
 
@@ -308,7 +308,7 @@ PREFABS.Decor_Dem_Deformation24 =
   template = "Decor_Dem_Deformation1",
   map = "MAP24",
 
-  engine = "any",
+  port = "any",
 
   env    = "any",
 
@@ -322,7 +322,7 @@ PREFABS.Decor_Dem_Deformation25 =
   template = "Decor_Dem_Deformation1",
   map = "MAP25",
 
-  engine = "any",
+  port = "any",
 
   env    = "any",
 
@@ -336,7 +336,7 @@ PREFABS.Decor_Dem_Deformation26 =
   template = "Decor_Dem_Deformation1",
   map = "MAP26",
 
-  engine = "any",
+  port = "any",
 
   env    = "any",
 
@@ -349,7 +349,7 @@ PREFABS.Decor_Dem_Deformation27 =
   template = "Decor_Dem_Deformation1",
   map = "MAP27",
 
-  engine = "any",
+  port = "any",
 
   env    = "any",
 
@@ -364,7 +364,7 @@ PREFABS.Decor_Dem_Deformation28 =
   template = "Decor_Dem_Deformation1",
   map = "MAP28",
 
-  engine = "any",
+  port = "any",
 
   env    = "any",
 
@@ -380,7 +380,7 @@ PREFABS.Decor_Dem_Deformation29 =
   template = "Decor_Dem_Deformation1",
   map = "MAP29",
 
-  engine = "any",
+  port = "any",
 
   env    = "any",
 

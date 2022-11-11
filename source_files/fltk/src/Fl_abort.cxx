@@ -20,6 +20,6 @@
 #include "Fl_System_Driver.H"
 #include <stdarg.h>
 
-void (*Fl::warning)(const char *format, ...) = Fl_System_Driver::warning;
-void (*Fl::error)(const char *format, ...) = Fl_System_Driver::error;
-void (*Fl::fatal)(const char *format, ...) = Fl_System_Driver::fatal;
+void (*Fl::warning)(const char* format, ...) = Fl_System_Driver::warning;
+void (*Fl::error)(const char* format, ...) = Fl_System_Driver::error;
+void (*Fl::fatal)(const char* format, ...) = Fl_System_Driver::fatal;

@@ -42,7 +42,7 @@ OB_MODULES["ui_slump_arch"] =
 
   side = "left",
   priority = 104,
-  engine = "vanilla",
+  port = "limit_enforcing",
 
   hooks = 
   {
@@ -130,7 +130,7 @@ OB_MODULES["ui_slump_mons"] =
 
   side = "right",
   priority = 103,
-  engine = "vanilla",
+  port = "limit_enforcing",
 
   hooks = 
   {
@@ -159,7 +159,7 @@ OB_MODULES["slump_all_nazis"] =
 
   side = "right",
   priority = 102,
-  engine = "vanilla",
+  port = "limit_enforcing",
   game = "doom2",
   tooltip = _("Populates the level with only SS troopers. This may expand to include pinkies/the Cyberdemon."),
 

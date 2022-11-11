@@ -954,31 +954,24 @@ function Layout_add_traps(LEVEL)
 
       --selecting based on ratio
 
-      local closet_prob = rand.range(0,100)
-      local teleport_prob
-
-      if OB_CONFIG.trap_style == "closets" then
-        teleport_prob = 0
-      elseif OB_CONFIG.trap_style == "80" then
-        teleport_prob = 20
-      elseif OB_CONFIG.trap_style == "60" then
-        teleport_prob = 40
-      elseif OB_CONFIG.trap_style == "40" then
-        teleport_prob = 60
-      elseif OB_CONFIG.trap_style == "20" then
-        teleport_prob = 80
-      elseif OB_CONFIG.trap_style == "teleports" then
-        teleport_prob = 100
-      end
+      local prob_tab =
+      {
+        closets = 0,
+        ["80"] = 20,
+        ["60"] = 40,
+        ["40"] = 60,
+        ["20"] = 80,
+        teleports = 100
+      }
 
       if OB_CONFIG.trap_style ~= "default" then
-        if teleport_prob <= closet_prob then
-          if closet_dice(info.room, is_same) then
-            closet_locs = locs_for_room(info.room, "closet")
-          end
-        else
+        if rand.odds(prob_tab[OB_CONFIG.trap_style]) then
           if teleport_dice(info.room, is_same) then
             telep_locs = locs_for_room(info.room, "teleport")
+          end
+        else
+          if closet_dice(info.room, is_same) then
+            closet_locs = locs_for_room(info.room, "closet")
           end
         end
       end
@@ -2806,7 +2799,7 @@ function Layout_indoor_lighting(LEVEL)
 
     assert(base_light)
 
-    if OB_CONFIG.engine ~= "zdoom" and OB_CONFIG.engine ~= "edge" then
+    if OB_CONFIG.port ~= "zdoom" and OB_CONFIG.port ~= "edge" then
       local rounder = base_light % 16
       if rounder ~= 0 then
         if rounder > 8 then

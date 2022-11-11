@@ -22,7 +22,6 @@
 
 class Fl_GDI_Copy_Surface_Driver : public Fl_Copy_Surface_Driver {
   friend class Fl_Copy_Surface_Driver;
-
 protected:
   HDC oldgc;
   HDC gc;

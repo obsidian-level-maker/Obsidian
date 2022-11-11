@@ -34,7 +34,8 @@ char Fl_Preferences::uuidBuffer[40];
 Fl_Preferences *Fl_Preferences::runtimePrefs = 0;
 unsigned int Fl_Preferences::fileAccess_ = Fl_Preferences::ALL;
 
-static int clocale_snprintf(char *buffer, size_t buffer_size, const char *format, ...) {
+static int clocale_snprintf(char *buffer, size_t buffer_size, const char *format, ...)
+{
   va_list args;
   va_start(args, format);
   int retval = Fl::system_driver()->clocale_vsnprintf(buffer, buffer_size, format, args);
@@ -42,7 +43,8 @@ static int clocale_snprintf(char *buffer, size_t buffer_size, const char *format
   return retval;
 }
 
-static int clocale_sscanf(const char *input, const char *format, ...) {
+static int clocale_sscanf(const char *input, const char *format, ...)
+{
   va_list args;
   va_start(args, format);
   int retval = Fl::system_driver()->clocale_vsscanf(input, format, args);
@@ -101,7 +103,8 @@ const char *Fl_Preferences::new_UUID() {
  \see Fl_Preferences::NONE and others for a list of flags.
  \see Fl_Preferences::file_access()
  */
-void Fl_Preferences::file_access(unsigned int flags) {
+void Fl_Preferences::file_access(unsigned int flags)
+{
   fileAccess_ = flags;
 }
 
@@ -110,8 +113,9 @@ void Fl_Preferences::file_access(unsigned int flags) {
 
  \see Fl_Preferences::file_access(unsigned int)
  */
-unsigned int Fl_Preferences::file_access() {
-  return fileAccess_;
+unsigned int Fl_Preferences::file_access()
+{
+    return fileAccess_;
 }
 
 /**
@@ -134,20 +138,15 @@ unsigned int Fl_Preferences::file_access() {
     could not be determined.
  \see Fl_Preferences( Root root, const char *vendor, const char *application )
  */
-Fl_Preferences::Root Fl_Preferences::filename(char *buffer, size_t buffer_size, Root root,
-                                              const char *vendor, const char *application) {
+Fl_Preferences::Root Fl_Preferences::filename( char *buffer, size_t buffer_size, Root root, const char *vendor, const char *application )
+{
   Root ret = UNKNOWN_ROOT_TYPE;
-  if (buffer && buffer_size > 0) {
+  if (buffer && buffer_size>0) {
     char *fn = Fl::system_driver()->preference_rootnode(NULL, root, vendor, application);
     if (fn) {
       fl_strlcpy(buffer, fn, buffer_size);
       // FLTK always returns forward slashes in paths
-      {
-        char *s;
-        for (s = buffer; *s; s++)
-          if (*s == '\\')
-            *s = '/';
-      }
+      { char *s; for ( s = buffer; *s; s++ ) if ( *s == '\\' ) *s = '/'; }
       ret = root;
     } else {
       buffer[0] = 0;
@@ -234,15 +233,14 @@ Fl_Preferences::Root Fl_Preferences::filename(char *buffer, size_t buffer_size, 
  which would silently fail to create a preference file.
 
  \param[in] root can be \c USER_L or \c SYSTEM_L for user specific or system wide preferences
- \param[in] vendor unique text describing the company or author of this file, must be a valid
- filepath segment \param[in] application unique text describing the application, must be a valid
- filepath segment
+ \param[in] vendor unique text describing the company or author of this file, must be a valid filepath segment
+ \param[in] application unique text describing the application, must be a valid filepath segment
 
  \see Fl_Preferences(Fl_Preferences *parent, const char *group) with parent set to NULL
  */
-Fl_Preferences::Fl_Preferences(Root root, const char *vendor, const char *application) {
-  node = new Node(".");
-  rootNode = new RootNode(this, root, vendor, application);
+Fl_Preferences::Fl_Preferences( Root root, const char *vendor, const char *application ) {
+  node = new Node( "." );
+  rootNode = new RootNode( this, root, vendor, application );
   node->setRoot(rootNode);
 }
 
@@ -254,13 +252,12 @@ Fl_Preferences::Fl_Preferences(Root root, const char *vendor, const char *applic
    If \p application is \c NULL, \p path is taken literally as the file path and name.
 
    \param[in] path path to the directory that contains the preference file
-   \param[in] vendor unique text describing the company or author of this file, must be a valid
-   filepath segment \param[in] application unique text describing the application, must be a valid
-   filepath segment
+   \param[in] vendor unique text describing the company or author of this file, must be a valid filepath segment
+   \param[in] application unique text describing the application, must be a valid filepath segment
  */
-Fl_Preferences::Fl_Preferences(const char *path, const char *vendor, const char *application) {
-  node = new Node(".");
-  rootNode = new RootNode(this, path, vendor, application);
+Fl_Preferences::Fl_Preferences( const char *path, const char *vendor, const char *application ) {
+  node = new Node( "." );
+  rootNode = new RootNode( this, path, vendor, application );
   node->setRoot(rootNode);
 }
 
@@ -274,9 +271,9 @@ Fl_Preferences::Fl_Preferences(const char *path, const char *vendor, const char 
    \param[in] parent reference object for the new group
    \param[in] group name of the group to access (may contain '/'s)
  */
-Fl_Preferences::Fl_Preferences(Fl_Preferences &parent, const char *group) {
+Fl_Preferences::Fl_Preferences( Fl_Preferences &parent, const char *group ) {
   rootNode = parent.rootNode;
-  node = parent.node->addChild(group);
+  node = parent.node->addChild( group );
 }
 
 /**
@@ -316,18 +313,18 @@ Fl_Preferences::Fl_Preferences(Fl_Preferences &parent, const char *group) {
    \param[in] group a group name that is used as a key into the database
    \see Fl_Preferences( Fl_Preferences&, const char *group )
  */
-Fl_Preferences::Fl_Preferences(Fl_Preferences *parent, const char *group) {
-  if (parent == NULL) {
+Fl_Preferences::Fl_Preferences( Fl_Preferences *parent, const char *group ) {
+  if (parent==NULL) {
     if (!runtimePrefs) {
       runtimePrefs = new Fl_Preferences();
-      runtimePrefs->node = new Node(".");
-      runtimePrefs->rootNode = new RootNode(runtimePrefs);
+      runtimePrefs->node = new Node( "." );
+      runtimePrefs->rootNode = new RootNode( runtimePrefs );
       runtimePrefs->node->setRoot(runtimePrefs->rootNode);
     }
     parent = runtimePrefs;
   }
   rootNode = parent->rootNode;
-  node = parent->node->addChild(group);
+  node = parent->node->addChild( group );
 }
 
 /**
@@ -343,24 +340,24 @@ Fl_Preferences::Fl_Preferences(Fl_Preferences *parent, const char *group) {
  \param[in] parent reference object for the new group
  \param[in] groupIndex zero based index into child groups
  */
-Fl_Preferences::Fl_Preferences(Fl_Preferences &parent, int groupIndex) {
+Fl_Preferences::Fl_Preferences( Fl_Preferences &parent, int groupIndex ) {
   rootNode = parent.rootNode;
-  if (groupIndex < 0 || groupIndex >= parent.groups()) {
-    node = parent.node->addChild(newUUID());
+  if (groupIndex<0 || groupIndex>=parent.groups()) {
+    node = parent.node->addChild( newUUID() );
   } else {
-    node = parent.node->childNode(groupIndex);
+    node = parent.node->childNode( groupIndex );
   }
 }
 
 /**
  \see Fl_Preferences( Fl_Preferences&, int groupIndex )
  */
-Fl_Preferences::Fl_Preferences(Fl_Preferences *parent, int groupIndex) {
+Fl_Preferences::Fl_Preferences( Fl_Preferences *parent, int groupIndex ) {
   rootNode = parent->rootNode;
-  if (groupIndex < 0 || groupIndex >= parent->groups()) {
-    node = parent->node->addChild(newUUID());
+  if (groupIndex<0 || groupIndex>=parent->groups()) {
+    node = parent->node->addChild( newUUID() );
   } else {
-    node = parent->node->childNode(groupIndex);
+    node = parent->node->childNode( groupIndex );
   }
 }
 
@@ -375,8 +372,8 @@ Fl_Preferences::Fl_Preferences(Fl_Preferences *parent, int groupIndex) {
  ID's can be very helpful when put into the <tt>user_data()</tt> field of
  widget callbacks.
  */
-Fl_Preferences::Fl_Preferences(Fl_Preferences::ID id) {
-  node = (Node *)id;
+Fl_Preferences::Fl_Preferences( Fl_Preferences::ID id ) {
+  node = (Node*)id;
   rootNode = node->findRoot();
 }
 
@@ -384,8 +381,9 @@ Fl_Preferences::Fl_Preferences(Fl_Preferences::ID id) {
  Create another reference to a Preferences group.
  */
 Fl_Preferences::Fl_Preferences(const Fl_Preferences &rhs)
-  : node(rhs.node)
-  , rootNode(rhs.rootNode) {}
+: node(rhs.node),
+  rootNode(rhs.rootNode)
+{ }
 
 /**
  Assign another reference to a preference group.
@@ -407,8 +405,7 @@ Fl_Preferences &Fl_Preferences::operator=(const Fl_Preferences &rhs) {
    deletes your reference to the database.
  */
 Fl_Preferences::~Fl_Preferences() {
-  if (node && !node->parent())
-    delete rootNode;
+  if (node && !node->parent()) delete rootNode;
   // DO NOT delete nodes! The root node will do that after writing the preferences.
   // Zero all pointer to avoid memory errors, even though
   // Valgrind does not complain (Cygwin does though)
@@ -427,19 +424,20 @@ Fl_Preferences::~Fl_Preferences() {
  \return the root type at creation type, or MEMORY for runtime prefs, it does
     not return CORE or LOCALE flags.
  */
-Fl_Preferences::Root Fl_Preferences::filename(char *buffer, size_t buffer_size) {
-  if (!buffer || buffer_size == 0)
+Fl_Preferences::Root Fl_Preferences::filename( char *buffer, size_t buffer_size)
+{
+  if (!buffer || buffer_size==0)
     return UNKNOWN_ROOT_TYPE;
   RootNode *rn = rootNode;
   if (!rn)
     return UNKNOWN_ROOT_TYPE;
-  if (rn->root() == MEMORY)
+  if (rn->root()==MEMORY)
     return MEMORY;
   char *fn = rn->filename();
   if (!fn)
     return UNKNOWN_ROOT_TYPE;
   fl_strlcpy(buffer, fn, buffer_size);
-  if (buffer[0] == 0)
+  if (buffer[0]==0)
     return UNKNOWN_ROOT_TYPE;
   return (Root)(rn->root() & ROOT_MASK);
 }
@@ -461,8 +459,8 @@ int Fl_Preferences::groups() {
    \param[in] num_group number indexing the requested group
    \return 'C' string pointer to the group name
  */
-const char *Fl_Preferences::group(int num_group) {
-  return node->child(num_group);
+const char *Fl_Preferences::group( int num_group ) {
+  return node->child( num_group );
 }
 
 /**
@@ -474,8 +472,8 @@ const char *Fl_Preferences::group(int num_group) {
    \param[in] key name of group that is searched for
    \return 0 if no group by that name was found
  */
-char Fl_Preferences::group_exists(const char *key) {
-  return node->search(key) ? 1 : 0;
+char Fl_Preferences::group_exists( const char *key ) {
+  return node->search( key ) ? 1 : 0 ;
 }
 
 /**
@@ -487,10 +485,9 @@ char Fl_Preferences::group_exists(const char *key) {
    \param[in] group name of the group to delete
    \return 0 if call failed
  */
-char Fl_Preferences::delete_group(const char *group) {
-  Node *nd = node->search(group);
-  if (nd)
-    return nd->remove();
+char Fl_Preferences::delete_group( const char *group ) {
+  Node *nd = node->search( group );
+  if ( nd ) return nd->remove();
   return 0;
 }
 
@@ -518,7 +515,7 @@ int Fl_Preferences::entries() {
    \param[in] index number indexing the requested entry
    \return pointer to value cstring
  */
-const char *Fl_Preferences::entry(int index) {
+const char *Fl_Preferences::entry( int index ) {
   return node->entry(index).name;
 }
 
@@ -528,8 +525,8 @@ const char *Fl_Preferences::entry(int index) {
    \param[in] key name of entry that is searched for
    \return 0 if entry was not found
  */
-char Fl_Preferences::entry_exists(const char *key) {
-  return node->getEntry(key) >= 0 ? 1 : 0;
+char Fl_Preferences::entry_exists( const char *key ) {
+  return node->getEntry( key )>=0 ? 1 : 0 ;
 }
 
 /**
@@ -540,8 +537,8 @@ char Fl_Preferences::entry_exists(const char *key) {
    \param[in] key name of entry to delete
    \return 0 if deleting the entry failed
  */
-char Fl_Preferences::delete_entry(const char *key) {
-  return node->deleteEntry(key);
+char Fl_Preferences::delete_entry( const char *key ) {
+  return node->deleteEntry( key );
 }
 
 /**
@@ -571,10 +568,10 @@ char Fl_Preferences::clear() {
  \param[in] defaultValue default value to be used if no preference was set
  \return 0 if the default value was used
  */
-char Fl_Preferences::get(const char *key, int &value, int defaultValue) {
-  const char *v = node->get(key);
-  value = v ? atoi(v) : defaultValue;
-  return (v != 0);
+char Fl_Preferences::get( const char *key, int &value, int defaultValue ) {
+  const char *v = node->get( key );
+  value = v ? atoi( v ) : defaultValue;
+  return ( v != 0 );
 }
 
 /**
@@ -586,9 +583,9 @@ char Fl_Preferences::get(const char *key, int &value, int defaultValue) {
  \param[in] value set this entry to \p value
  \return 0 if setting the value failed
  */
-char Fl_Preferences::set(const char *key, int value) {
-  sprintf(nameBuffer, "%d", value);
-  node->set(key, nameBuffer);
+char Fl_Preferences::set( const char *key, int value ) {
+  snprintf( nameBuffer, sizeof(nameBuffer), "%d", value );
+  node->set( key, nameBuffer );
   return 1;
 }
 
@@ -602,8 +599,8 @@ char Fl_Preferences::set(const char *key, int value) {
  \param[in] defaultValue default value to be used if no preference was set
  \return 0 if the default value was used
  */
-char Fl_Preferences::get(const char *key, float &value, float defaultValue) {
-  const char *v = node->get(key);
+char Fl_Preferences::get( const char *key, float &value, float defaultValue ) {
+  const char *v = node->get( key );
   if (v) {
     if (rootNode->root() & C_LOCALE) {
       clocale_sscanf(v, "%g", &value);
@@ -613,7 +610,7 @@ char Fl_Preferences::get(const char *key, float &value, float defaultValue) {
   } else {
     value = defaultValue;
   }
-  return (v != NULL);
+  return ( v != NULL );
 }
 
 /**
@@ -625,13 +622,13 @@ char Fl_Preferences::get(const char *key, float &value, float defaultValue) {
  \param[in] value set this entry to \p value
  \return 0 if setting the value failed
  */
-char Fl_Preferences::set(const char *key, float value) {
+char Fl_Preferences::set( const char *key, float value ) {
   if (rootNode->root() & C_LOCALE) {
-    clocale_snprintf(nameBuffer, sizeof(nameBuffer), "%g", value);
+    clocale_snprintf( nameBuffer, sizeof(nameBuffer), "%g", value );
   } else {
-    snprintf(nameBuffer, sizeof(nameBuffer), "%g", value);
+    snprintf( nameBuffer, sizeof(nameBuffer), "%g", value );
   }
-  node->set(key, nameBuffer);
+  node->set( key, nameBuffer );
   return 1;
 }
 
@@ -645,13 +642,13 @@ char Fl_Preferences::set(const char *key, float value) {
  \param[in] precision number of decimal digits to represent value
  \return 0 if setting the value failed
  */
-char Fl_Preferences::set(const char *key, float value, int precision) {
+char Fl_Preferences::set( const char *key, float value, int precision ) {
   if (rootNode->root() & C_LOCALE) {
-    clocale_snprintf(nameBuffer, sizeof(nameBuffer), "%.*g", precision, value);
+    clocale_snprintf( nameBuffer, sizeof(nameBuffer), "%.*g", precision, value );
   } else {
-    snprintf(nameBuffer, sizeof(nameBuffer), "%.*g", precision, value);
+    snprintf( nameBuffer, sizeof(nameBuffer), "%.*g", precision, value );
   }
-  node->set(key, nameBuffer);
+  node->set( key, nameBuffer );
   return 1;
 }
 
@@ -665,8 +662,8 @@ char Fl_Preferences::set(const char *key, float value, int precision) {
  \param[in] defaultValue default value to be used if no preference was set
  \return 0 if the default value was used
  */
-char Fl_Preferences::get(const char *key, double &value, double defaultValue) {
-  const char *v = node->get(key);
+char Fl_Preferences::get( const char *key, double &value, double defaultValue ) {
+  const char *v = node->get( key );
   if (v) {
     if (rootNode->root() & C_LOCALE) {
       clocale_sscanf(v, "%lg", &value);
@@ -676,7 +673,7 @@ char Fl_Preferences::get(const char *key, double &value, double defaultValue) {
   } else {
     value = defaultValue;
   }
-  return (v != NULL);
+  return ( v != NULL );
 }
 
 /**
@@ -688,13 +685,13 @@ char Fl_Preferences::get(const char *key, double &value, double defaultValue) {
  \param[in] value set this entry to \p value
  \return 0 if setting the value failed
  */
-char Fl_Preferences::set(const char *key, double value) {
+char Fl_Preferences::set( const char *key, double value ) {
   if (rootNode->root() & C_LOCALE) {
-    clocale_snprintf(nameBuffer, sizeof(nameBuffer), "%lg", value);
+    clocale_snprintf( nameBuffer, sizeof(nameBuffer), "%lg", value );
   } else {
-    snprintf(nameBuffer, sizeof(nameBuffer), "%lg", value);
+    snprintf( nameBuffer, sizeof(nameBuffer), "%lg", value );
   }
-  node->set(key, nameBuffer);
+  node->set( key, nameBuffer );
   return 1;
 }
 
@@ -708,48 +705,40 @@ char Fl_Preferences::set(const char *key, double value) {
  \param[in] precision number of decimal digits to represent value
  \return 0 if setting the value failed
  */
-char Fl_Preferences::set(const char *key, double value, int precision) {
+char Fl_Preferences::set( const char *key, double value, int precision ) {
   if (rootNode->root() & C_LOCALE) {
-    clocale_snprintf(nameBuffer, sizeof(nameBuffer), "%.*lg", precision, value);
+    clocale_snprintf( nameBuffer, sizeof(nameBuffer), "%.*lg", precision, value );
   } else {
-    snprintf(nameBuffer, sizeof(nameBuffer), "%.*lg", precision, value);
+    snprintf( nameBuffer, sizeof(nameBuffer), "%.*lg", precision, value );
   }
-  node->set(key, nameBuffer);
+  node->set( key, nameBuffer );
   return 1;
 }
 
 // remove control sequences from a string
-static char *decodeText(const char *src) {
+static char *decodeText( const char *src ) {
   int len = 0;
   const char *s = src;
-  for (; *s; s++, len++) {
-    if (*s == '\\') {
-      if (isdigit(s[1])) {
-        s += 3;
+  for ( ; *s; s++, len++ ) {
+    if ( *s == '\\' ) {
+      if ( isdigit( s[1] ) ) {
+        s+=3;
       } else {
-        s += 1;
+        s+=1;
       }
     }
   }
-  char *dst = (char *)malloc(len + 1), *d = dst;
-  for (s = src; *s; s++) {
+  char *dst = (char*)malloc( len+1 ), *d = dst;
+  for ( s = src; *s; s++ ) {
     char c = *s;
-    if (c == '\\') {
-      if (s[1] == '\\') {
-        *d++ = c;
-        s++;
-      } else if (s[1] == 'n') {
-        *d++ = '\n';
-        s++;
-      } else if (s[1] == 'r') {
-        *d++ = '\r';
-        s++;
-      } else if (isdigit(s[1])) {
-        *d++ = ((s[1] - '0') << 6) + ((s[2] - '0') << 3) + (s[3] - '0');
-        s += 3;
-      } else
-        s++; // error
-    } else
+    if ( c == '\\' ) {
+      if ( s[1] == '\\' ) { *d++ = c; s++; }
+      else if ( s[1] == 'n' ) { *d++ = '\n'; s++; }
+      else if ( s[1] == 'r' ) { *d++ = '\r'; s++; }
+      else if ( isdigit( s[1] ) ) { *d++ = ((s[1]-'0')<<6) + ((s[2]-'0')<<3) + (s[3]-'0'); s+=3; }
+      else s++; // error
+    }
+    else
       *d++ = c;
   }
   *d = 0;
@@ -769,21 +758,18 @@ static char *decodeText(const char *src) {
  \param[in] maxSize maximum length of value plus one byte for a trailing zero
  \return 0 if the default value was used
  */
-char Fl_Preferences::get(const char *key, char *text, const char *defaultValue, int maxSize) {
-  const char *v = node->get(key);
-  if (v && strchr(v, '\\')) {
-    char *w = decodeText(v);
+char Fl_Preferences::get( const char *key, char *text, const char *defaultValue, int maxSize ) {
+  const char *v = node->get( key );
+  if ( v && strchr( v, '\\' ) ) {
+    char *w = decodeText( v );
     strlcpy(text, w, maxSize);
-    free(w);
+    free( w );
     return 1;
   }
-  if (!v)
-    v = defaultValue;
-  if (v)
-    strlcpy(text, v, maxSize);
-  else
-    *text = 0;
-  return (v != defaultValue);
+  if ( !v ) v = defaultValue;
+  if ( v ) strlcpy(text, v, maxSize);
+  else *text = 0;
+  return ( v != defaultValue );
 }
 
 /**
@@ -798,19 +784,18 @@ char Fl_Preferences::get(const char *key, char *text, const char *defaultValue, 
  \param[in] defaultValue default value to be used if no preference was set
  \return 0 if the default value was used
  */
-char Fl_Preferences::get(const char *key, char *&text, const char *defaultValue) {
-  const char *v = node->get(key);
-  if (v && strchr(v, '\\')) {
-    text = decodeText(v);
+char Fl_Preferences::get( const char *key, char *&text, const char *defaultValue ) {
+  const char *v = node->get( key );
+  if ( v && strchr( v, '\\' ) ) {
+    text = decodeText( v );
     return 1;
   }
-  if (!v)
-    v = defaultValue;
-  if (v)
-    text = fl_strdup(v);
+  if ( !v ) v = defaultValue;
+  if ( v )
+    text = fl_strdup( v );
   else
     text = 0;
-  return (v != defaultValue);
+  return ( v != defaultValue );
 }
 
 /**
@@ -822,68 +807,45 @@ char Fl_Preferences::get(const char *key, char *&text, const char *defaultValue)
  \param[in] text set this entry to \p value
  \return 0 if setting the value failed
  */
-char Fl_Preferences::set(const char *key, const char *text) {
+char Fl_Preferences::set( const char *key, const char *text ) {
   const char *s = text ? text : "";
-  int n = 0, ns = 0;
-  for (; *s; s++) {
-    n++;
-    if (*s < 32 || *s == '\\' || *s == 0x7f)
-      ns += 4;
-  }
-  if (ns) {
-    char *buffer = (char *)malloc(n + ns + 1), *d = buffer;
-    for (s = text; *s;) {
+  int n=0, ns=0;
+  for ( ; *s; s++ ) { n++; if ( *s<32 || *s=='\\' || *s==0x7f ) ns+=4; }
+  if ( ns ) {
+    char *buffer = (char*)malloc( n+ns+1 ), *d = buffer;
+    for ( s=text; *s; ) {
       char c = *s;
-      if (c == '\\') {
-        *d++ = '\\';
-        *d++ = '\\';
-        s++;
-      } else if (c == '\n') {
-        *d++ = '\\';
-        *d++ = 'n';
-        s++;
-      } else if (c == '\r') {
-        *d++ = '\\';
-        *d++ = 'r';
-        s++;
-      } else if (c < 32 || c == 0x7f) {
-        *d++ = '\\';
-        *d++ = '0' + ((c >> 6) & 3);
-        *d++ = '0' + ((c >> 3) & 7);
-        *d++ = '0' + (c & 7);
-        s++;
-      } else
-        *d++ = *s++;
+      if ( c=='\\' ) { *d++ = '\\'; *d++ = '\\'; s++; }
+      else if ( c=='\n' ) { *d++ = '\\'; *d++ = 'n'; s++; }
+      else if ( c=='\r' ) { *d++ = '\\'; *d++ = 'r'; s++; }
+      else if ( c<32 || c==0x7f )
+        { *d++ = '\\'; *d++ = '0'+((c>>6)&3); *d++ = '0'+((c>>3)&7); *d++ = '0'+(c&7);  s++; }
+      else *d++ = *s++;
     }
     *d = 0;
-    node->set(key, buffer);
-    free(buffer);
-  } else
-    node->set(key, text);
+    node->set( key, buffer );
+    free( buffer );
+  }
+  else
+    node->set( key, text );
   return 1;
 }
 
 // convert a hex string to binary data
-static void *decodeHex(const char *src, int &size) {
-  size = (int)strlen(src) / 2;
-  unsigned char *data = (unsigned char *)malloc(size), *d = data;
+static void *decodeHex( const char *src, int &size ) {
+  size = (int) strlen( src )/2;
+  unsigned char *data = (unsigned char*)malloc( size ), *d = data;
   const char *s = src;
-  for (int i = size; i > 0; i--) {
+  for ( int i=size; i>0; i-- ) {
     int v;
     char x = tolower(*s++);
-    if (x >= 'a')
-      v = x - 'a' + 10;
-    else
-      v = x - '0';
-    v = v << 4;
+    if ( x >= 'a' ) v = x-'a'+10; else v = x-'0';
+    v = v<<4;
     x = tolower(*s++);
-    if (x >= 'a')
-      v += x - 'a' + 10;
-    else
-      v += x - '0';
+    if ( x >= 'a' ) v += x-'a'+10; else v += x-'0';
     *d++ = (uchar)v;
   }
-  return (void *)data;
+  return (void*)data;
 }
 
 /**
@@ -897,21 +859,19 @@ static void *decodeHex(const char *src, int &size) {
     read, use the function below instead.
  \return 0 if the default value was used
 
- \see Fl_Preferences::get( const char *key, void *data, const void *defaultValue, int defaultSize,
- int *maxSize )
+ \see Fl_Preferences::get( const char *key, void *data, const void *defaultValue, int defaultSize, int *maxSize )
  */
-char Fl_Preferences::get(const char *key, void *data, const void *defaultValue, int defaultSize,
-                         int maxSize) {
-  const char *v = node->get(key);
-  if (v) {
+char Fl_Preferences::get( const char *key, void *data, const void *defaultValue, int defaultSize, int maxSize ) {
+  const char *v = node->get( key );
+  if ( v ) {
     int dsize;
-    void *w = decodeHex(v, dsize);
-    memmove(data, w, dsize > maxSize ? maxSize : dsize);
-    free(w);
+    void *w = decodeHex( v, dsize );
+    memmove( data, w, dsize>maxSize?maxSize:dsize );
+    free( w );
     return 1;
   }
-  if (defaultValue)
-    memmove(data, defaultValue, defaultSize > maxSize ? maxSize : defaultSize);
+  if ( defaultValue )
+    memmove( data, defaultValue, defaultSize>maxSize?maxSize:defaultSize );
   return 0;
 }
 
@@ -930,24 +890,23 @@ char Fl_Preferences::get(const char *key, void *data, const void *defaultValue, 
  \param[inout] maxSize maximum length of value and actual number of bytes set
  \return 0 if the default value was used
  */
-char Fl_Preferences::get(const char *key, void *data, const void *defaultValue, int defaultSize,
-                         int *maxSize) {
+char Fl_Preferences::get( const char *key, void *data, const void *defaultValue, int defaultSize, int *maxSize ) {
   if (!maxSize || !data)
     return -1;
   int capacity = *maxSize;
-  const char *v = node->get(key);
-  if (v) {
+  const char *v = node->get( key );
+  if ( v ) {
     int nFound;
-    void *w = decodeHex(v, nFound);
-    int nWrite = (nFound > capacity) ? capacity : nFound;
-    memmove(data, w, nWrite);
-    free(w);
+    void *w = decodeHex( v, nFound );
+    int nWrite = (nFound>capacity) ? capacity : nFound;
+    memmove( data, w,  nWrite);
+    free( w );
     *maxSize = nWrite;
     return 1;
   }
-  if (defaultValue) {
-    int nWrite = (defaultSize > capacity) ? capacity : defaultSize;
-    memmove(data, defaultValue, nWrite);
+  if ( defaultValue ) {
+    int nWrite = (defaultSize>capacity) ? capacity : defaultSize;
+    memmove( data, defaultValue, nWrite );
     *maxSize = nWrite;
   } else {
     *maxSize = 0;
@@ -968,17 +927,18 @@ char Fl_Preferences::get(const char *key, void *data, const void *defaultValue, 
  \param[in] defaultSize size of default value array
  \return 0 if the default value was used
  */
-char Fl_Preferences::get(const char *key, void *&data, const void *defaultValue, int defaultSize) {
-  const char *v = node->get(key);
-  if (v) {
+char Fl_Preferences::get( const char *key, void *&data, const void *defaultValue, int defaultSize ) {
+  const char *v = node->get( key );
+  if ( v ) {
     int dsize;
-    data = decodeHex(v, dsize);
+    data = decodeHex( v, dsize );
     return 1;
   }
-  if (defaultValue) {
-    data = (void *)malloc(defaultSize);
-    memmove(data, defaultValue, defaultSize);
-  } else
+  if ( defaultValue ) {
+    data = (void*)malloc( defaultSize );
+    memmove( data, defaultValue, defaultSize );
+  }
+  else
     data = 0;
   return 0;
 }
@@ -993,19 +953,18 @@ char Fl_Preferences::get(const char *key, void *&data, const void *defaultValue,
  \param[in] dsize size of data array
  \return 0 if setting the value failed
  */
-char Fl_Preferences::set(const char *key, const void *data, int dsize) {
-  char *buffer = (char *)malloc(dsize * 2 + 1), *d = buffer;
-  ;
-  unsigned char *s = (unsigned char *)data;
-  for (; dsize > 0; dsize--) {
+char Fl_Preferences::set( const char *key, const void *data, int dsize ) {
+  char *buffer = (char*)malloc( dsize*2+1 ), *d = buffer;;
+  unsigned char *s = (unsigned char*)data;
+  for ( ; dsize>0; dsize-- ) {
     static char lu[] = "0123456789abcdef";
     unsigned char v = *s++;
-    *d++ = lu[v >> 4];
-    *d++ = lu[v & 0xf];
+    *d++ = lu[v>>4];
+    *d++ = lu[v&0xf];
   }
   *d = 0;
-  node->set(key, buffer);
-  free(buffer);
+  node->set( key, buffer );
+  free( buffer );
   return 1;
 }
 
@@ -1015,9 +974,9 @@ char Fl_Preferences::set(const char *key, const void *data, int dsize) {
  \param[in] key name of entry
  \return size of value
  */
-int Fl_Preferences::size(const char *key) {
-  const char *v = node->get(key);
-  return (int)(v ? strlen(v) : 0);
+int Fl_Preferences::size( const char *key ) {
+  const char *v = node->get( key );
+  return (int) (v ? strlen( v ) : 0);
 }
 
 /**
@@ -1056,14 +1015,13 @@ int Fl_Preferences::size(const char *key) {
  \return 1 if there is no filename (\a path will be unmodified)
  \return 1 if \a pathlen is 0 (\a path will be unmodified)
  \return 1 if a path was created successfully, \a path will contain the path name ending in a '/'
- \return 0 if path was not created for some reason;  \a path will contain the pathname that could
- not be created
+ \return 0 if path was not created for some reason;  \a path will contain the pathname that could not be created
 
  \see Fl_Preferences::Fl_Preferences(Root, const char*, const char*)
  */
-char Fl_Preferences::get_userdata_path(char *path, int pathlen) {
-  if (rootNode)
-    return rootNode->getPath(path, pathlen);
+char Fl_Preferences::get_userdata_path( char *path, int pathlen ) {
+  if ( rootNode )
+    return rootNode->getPath( path, pathlen );
   return 0;
 }
 
@@ -1121,9 +1079,9 @@ int Fl_Preferences::dirty() {
        prev.get( Fl_Preferences::Name(i), prevFile[i], "" );
    \endcode
  */
-Fl_Preferences::Name::Name(unsigned int n) {
-  data_ = (char *)malloc(20);
-  sprintf(data_, "%u", n);
+Fl_Preferences::Name::Name( unsigned int n ) {
+  data_ = (char*)malloc(20);
+  snprintf(data_, 20, "%u", n);
 }
 
 /**
@@ -1139,8 +1097,8 @@ Fl_Preferences::Name::Name(unsigned int n) {
        prev.get( Fl_Preferences::Name( "File%d", i ), prevFile[i], "" );
     \endcode
  */
-Fl_Preferences::Name::Name(const char *format, ...) {
-  data_ = (char *)malloc(1024);
+Fl_Preferences::Name::Name( const char *format, ... ) {
+  data_ = (char*)malloc(1024);
   va_list args;
   va_start(args, format);
   vsnprintf(data_, 1024, format, args);
@@ -1163,29 +1121,29 @@ int Fl_Preferences::Node::lastEntrySet = -1;
 
 // create the root node
 // - construct the name of the file that will hold our preferences
-Fl_Preferences::RootNode::RootNode(Fl_Preferences *prefs, Root root, const char *vendor,
-                                   const char *application)
-  : prefs_(prefs)
-  , filename_(0L)
-  , vendor_(0L)
-  , application_(0L)
-  , root_type_(root) {
+Fl_Preferences::RootNode::RootNode( Fl_Preferences *prefs, Root root, const char *vendor, const char *application )
+: prefs_(prefs),
+  filename_(0L),
+  vendor_(0L),
+  application_(0L),
+  root_type_(root)
+{
   char *filename = Fl::system_driver()->preference_rootnode(prefs, root, vendor, application);
-  filename_ = filename ? fl_strdup(filename) : 0L;
-  vendor_ = fl_strdup(vendor);
+  filename_    = filename ? fl_strdup(filename) : 0L;
+  vendor_      = fl_strdup(vendor);
   application_ = fl_strdup(application);
   read();
 }
 
 // create the root node
 // - construct the name of the file that will hold our preferences
-Fl_Preferences::RootNode::RootNode(Fl_Preferences *prefs, const char *path, const char *vendor,
-                                   const char *application)
-  : prefs_(prefs)
-  , filename_(0L)
-  , vendor_(0L)
-  , application_(0L)
-  , root_type_(Fl_Preferences::USER) {
+Fl_Preferences::RootNode::RootNode( Fl_Preferences *prefs, const char *path, const char *vendor, const char *application )
+: prefs_(prefs),
+  filename_(0L),
+  vendor_(0L),
+  application_(0L),
+  root_type_(Fl_Preferences::USER)
+{
 
   if (!vendor)
     vendor = "unknown";
@@ -1193,39 +1151,40 @@ Fl_Preferences::RootNode::RootNode(Fl_Preferences *prefs, const char *path, cons
     application = "unknown";
     filename_ = fl_strdup(path);
   } else {
-    char filename[FL_PATH_MAX];
-    filename[0] = 0;
+    char filename[ FL_PATH_MAX ]; filename[0] = 0;
     snprintf(filename, sizeof(filename), "%s/%s.prefs", path, application);
-    filename_ = fl_strdup(filename);
+    filename_  = fl_strdup(filename);
   }
-  vendor_ = fl_strdup(vendor);
+  vendor_      = fl_strdup(vendor);
   application_ = fl_strdup(application);
   read();
 }
 
 // create a root node that exists only on RAM and can not be read or written to
 // a file
-Fl_Preferences::RootNode::RootNode(Fl_Preferences *prefs)
-  : prefs_(prefs)
-  , filename_(0L)
-  , vendor_(0L)
-  , application_(0L)
-  , root_type_(Fl_Preferences::MEMORY) {}
+Fl_Preferences::RootNode::RootNode( Fl_Preferences *prefs )
+: prefs_(prefs),
+  filename_(0L),
+  vendor_(0L),
+  application_(0L),
+  root_type_(Fl_Preferences::MEMORY)
+{
+}
 
 // destroy the root node and all depending nodes
 Fl_Preferences::RootNode::~RootNode() {
-  if (prefs_->node->dirty())
+  if ( prefs_->node->dirty() )
     write();
-  if (filename_) {
-    free(filename_);
+  if ( filename_ ) {
+    free( filename_ );
     filename_ = 0L;
   }
-  if (vendor_) {
-    free(vendor_);
+  if ( vendor_ ) {
+    free( vendor_ );
     vendor_ = 0L;
   }
-  if (application_) {
-    free(application_);
+  if ( application_ ) {
+    free( application_ );
     application_ = 0L;
   }
   delete prefs_->node;
@@ -1234,92 +1193,84 @@ Fl_Preferences::RootNode::~RootNode() {
 
 // read a preference file and construct the group tree and all entry leaves
 int Fl_Preferences::RootNode::read() {
-  if (!filename_) // RUNTIME preferences, or filename could not be created
+  if (!filename_)   // RUNTIME preferences, or filename could not be created
     return -1;
-  if ((root_type_ & Fl_Preferences::CORE) && !(fileAccess_ & Fl_Preferences::CORE_READ_OK)) {
+  if ( (root_type_ & Fl_Preferences::CORE) && !(fileAccess_ & Fl_Preferences::CORE_READ_OK) ) {
     prefs_->node->clearDirtyFlags();
     return -1;
   }
-  if (((root_type_ & Fl_Preferences::ROOT_MASK) == Fl_Preferences::USER) &&
-      !(fileAccess_ & Fl_Preferences::USER_READ_OK)) {
+  if ( ((root_type_&Fl_Preferences::ROOT_MASK)==Fl_Preferences::USER) && !(fileAccess_ & Fl_Preferences::USER_READ_OK) ) {
     prefs_->node->clearDirtyFlags();
     return -1;
   }
-  if (((root_type_ & Fl_Preferences::ROOT_MASK) == Fl_Preferences::SYSTEM) &&
-      !(fileAccess_ & Fl_Preferences::SYSTEM_READ_OK)) {
+  if ( ((root_type_&Fl_Preferences::ROOT_MASK)==Fl_Preferences::SYSTEM) && !(fileAccess_ & Fl_Preferences::SYSTEM_READ_OK) ) {
     prefs_->node->clearDirtyFlags();
     return -1;
   }
   char buf[1024];
-  FILE *f = fl_fopen(filename_, "rb");
-  if (!f)
+  FILE *f = fl_fopen( filename_, "rb" );
+  if ( !f )
     return -1;
-  if (fgets(buf, 1024, f) == 0) { /* ignore */
-  }
-  if (fgets(buf, 1024, f) == 0) { /* ignore */
-  }
-  if (fgets(buf, 1024, f) == 0) { /* ignore */
-  }
+  if (fgets( buf, 1024, f )==0) { /* ignore */ }
+  if (fgets( buf, 1024, f )==0) { /* ignore */ }
+  if (fgets( buf, 1024, f )==0) { /* ignore */ }
   Node *nd = prefs_->node;
   for (;;) {
-    if (!fgets(buf, 1024, f))
-      break;             // EOF or Error
-    if (buf[0] == '[') { // read a new group
-      size_t end = strcspn(buf + 1, "]\n\r");
-      buf[end + 1] = 0;
-      nd = prefs_->node->find(buf + 1);
-    } else if (buf[0] == '+') { // value of previous name/value pair spans multiple lines
-      size_t end = strcspn(buf + 1, "\n\r");
-      if (end != 0) { // if entry is not empty
-        buf[end + 1] = 0;
-        nd->add(buf + 1);
+    if ( !fgets( buf, 1024, f ) ) break;        // EOF or Error
+    if ( buf[0]=='[' ) {                        // read a new group
+      size_t end = strcspn( buf+1, "]\n\r" );
+      buf[ end+1 ] = 0;
+      nd = prefs_->node->find( buf+1 );
+    } else if ( buf[0]=='+' ) {                 // value of previous name/value pair spans multiple lines
+      size_t end = strcspn( buf+1, "\n\r" );
+      if ( end != 0 ) {                         // if entry is not empty
+        buf[ end+1 ] = 0;
+        nd->add( buf+1 );
       }
-    } else { // read a name/value pair
-      size_t end = strcspn(buf, "\n\r");
-      if (end != 0) { // if entry is not empty
-        buf[end] = 0;
-        nd->set(buf);
+    } else {                                     // read a name/value pair
+      size_t end = strcspn( buf, "\n\r" );
+      if ( end != 0 ) {                         // if entry is not empty
+        buf[ end ] = 0;
+        nd->set( buf );
       }
     }
   }
-  fclose(f);
+  fclose( f );
   prefs_->node->clearDirtyFlags();
   return 0;
 }
 
 // write the group tree and all entry leaves
 int Fl_Preferences::RootNode::write() {
-  if (!filename_) // RUNTIME preferences, or filename could not be created
+  if (!filename_)   // RUNTIME preferences, or filename could not be created
     return -1;
-  if ((root_type_ & Fl_Preferences::CORE) && !(fileAccess_ & Fl_Preferences::CORE_WRITE_OK))
+  if ( (root_type_ & Fl_Preferences::CORE) && !(fileAccess_ & Fl_Preferences::CORE_WRITE_OK) )
     return -1;
-  if (((root_type_ & Fl_Preferences::ROOT_MASK) == Fl_Preferences::USER) &&
-      !(fileAccess_ & Fl_Preferences::USER_WRITE_OK))
+  if ( ((root_type_&Fl_Preferences::ROOT_MASK)==Fl_Preferences::USER) && !(fileAccess_ & Fl_Preferences::USER_WRITE_OK) )
     return -1;
-  if (((root_type_ & Fl_Preferences::ROOT_MASK) == Fl_Preferences::SYSTEM) &&
-      !(fileAccess_ & Fl_Preferences::SYSTEM_WRITE_OK))
+  if ( ((root_type_&Fl_Preferences::ROOT_MASK)==Fl_Preferences::SYSTEM) && !(fileAccess_ & Fl_Preferences::SYSTEM_WRITE_OK) )
     return -1;
   fl_make_path_for_file(filename_);
-  FILE *f = fl_fopen(filename_, "wb");
-  if (!f)
+  FILE *f = fl_fopen( filename_, "wb" );
+  if ( !f )
     return -1;
-  fprintf(f, "; FLTK preferences file format 1.0\n");
-  fprintf(f, "; vendor: %s\n", vendor_);
-  fprintf(f, "; application: %s\n", application_);
-  prefs_->node->write(f);
-  fclose(f);
+  fprintf( f, "; FLTK preferences file format 1.0\n" );
+  fprintf( f, "; vendor: %s\n", vendor_ );
+  fprintf( f, "; application: %s\n", application_ );
+  prefs_->node->write( f );
+  fclose( f );
   if (Fl::system_driver()->preferences_need_protection_check()) {
     // unix: make sure that system prefs are user-readable
     if (strncmp(filename_, "/etc/fltk/", 10) == 0) {
       char *p;
       p = filename_ + 9;
-      do { // for each directory to the pref file
+      do {                       // for each directory to the pref file
         *p = 0;
         fl_chmod(filename_, 0755); // rwxr-xr-x
         *p = '/';
-        p = strchr(p + 1, '/');
+        p = strchr(p+1, '/');
       } while (p);
-      fl_chmod(filename_, 0644); // rw-r--r--
+      fl_chmod(filename_, 0644);   // rw-r--r--
     }
   }
   return 0;
@@ -1328,28 +1279,23 @@ int Fl_Preferences::RootNode::write() {
 // get the path to the preferences directory
 // - copy the path into the buffer at "path"
 // - if the resulting path is longer than "pathlen", it will be cropped
-char Fl_Preferences::RootNode::getPath(char *path, int pathlen) {
-  if (!filename_) // RUNTIME preferences. or filename could not be created
-    return 1;     // return 1 (not -1) to be consistent with fl_make_path()
+char Fl_Preferences::RootNode::getPath( char *path, int pathlen ) {
+  if (!filename_)   // RUNTIME preferences. or filename could not be created
+    return 1; // return 1 (not -1) to be consistent with fl_make_path()
 
-  if (pathlen <= 0)
+  if (pathlen<=0)
     return 1;
 
   // copy the root filepath into the provided buffer
-  strlcpy(path, filename_, pathlen);
+  strlcpy( path, filename_, pathlen);
 
   char *name = 0L, *ext = 0L;
 
   // use Unix style separators
-  {
-    char *s;
-    for (s = path; *s; s++)
-      if (*s == '\\')
-        *s = '/';
-  }
+  { char *s; for ( s = path; *s; s++ ) if ( *s == '\\' ) *s = '/'; }
 
   // find the start of the filename inside the path
-  name = strrchr(path, '/');
+  name = strrchr( path, '/' );
   // this is a safety measure. The root path should be absolute and contain '/'s
   if (name)
     name++; // point right after the '/' character
@@ -1357,41 +1303,35 @@ char Fl_Preferences::RootNode::getPath(char *path, int pathlen) {
     name = path; // point at the first character of a filename-only path
 
   // find the last '.' which may be the start of a file extension
-  ext = strrchr(path, '.');
+  ext = strrchr( path, '.' );
 
-  if ((ext == 0L) || (ext < name)) {
-    if (strlen(name) == 0) {
+  if ( (ext==0L) || (ext<name) ) {
+    if (strlen(name)==0) {
       // empty filenames will create a path with "data/" as a directory name
-      strlcat(path, "data", pathlen);
+      strlcat( path, "data", pathlen );
     } else {
       // filenames without extension will create a path with a ".data" extension
-      strlcat(path, ".data", pathlen);
+      strlcat( path, ".data", pathlen );
     }
   } else {
     // filenames with an existing extension will create a path without it
     *ext = 0; // end the string right here
   }
 
-  char ret = fl_make_path(path);
+  char ret = fl_make_path( path );
   // unix: make sure that system prefs dir. is user-readable
-  if (Fl::system_driver()->preferences_need_protection_check() &&
-      strncmp(path, "/etc/fltk/", 10) == 0) {
+  if (Fl::system_driver()->preferences_need_protection_check() && strncmp(path, "/etc/fltk/", 10) == 0) {
     fl_chmod(path, 0755); // rwxr-xr-x
   }
-  strlcat(path, "/", pathlen);
+  strlcat( path, "/", pathlen );
   return ret;
 }
 
 // create a node that represents a group
 // - path must be a single word, preferable alnum(), dot and underscore only. Space is ok.
-Fl_Preferences::Node::Node(const char *path) {
-  if (path)
-    path_ = fl_strdup(path);
-  else
-    path_ = 0;
-  first_child_ = 0;
-  next_ = 0;
-  parent_ = 0;
+Fl_Preferences::Node::Node( const char *path ) {
+  if ( path ) path_ = fl_strdup( path ); else path_ = 0;
+  first_child_ = 0; next_ = 0; parent_ = 0;
   entry_ = 0;
   nEntry_ = NEntry_ = 0;
   dirty_ = 0;
@@ -1403,7 +1343,7 @@ Fl_Preferences::Node::Node(const char *path) {
 
 void Fl_Preferences::Node::deleteAllChildren() {
   Node *next_node = NULL;
-  for (Node *current_node = first_child_; current_node; current_node = next_node) {
+  for ( Node *current_node = first_child_; current_node; current_node = next_node ) {
     next_node = current_node->next_;
     delete current_node;
   }
@@ -1413,18 +1353,18 @@ void Fl_Preferences::Node::deleteAllChildren() {
 }
 
 void Fl_Preferences::Node::deleteAllEntries() {
-  if (entry_) {
-    for (int i = 0; i < nEntry_; i++) {
-      if (entry_[i].name) {
-        ::free(entry_[i].name);
+  if ( entry_ ) {
+    for ( int i = 0; i < nEntry_; i++ ) {
+      if ( entry_[i].name ) {
+        ::free( entry_[i].name );
         entry_[i].name = NULL;
       }
-      if (entry_[i].value) {
-        ::free(entry_[i].value);
+      if ( entry_[i].value ) {
+        ::free( entry_[i].value );
         entry_[i].value = NULL;
       }
     }
-    free(entry_);
+    free( entry_ );
     entry_ = NULL;
     nEntry_ = 0;
     NEntry_ = 0;
@@ -1439,20 +1379,17 @@ Fl_Preferences::Node::~Node() {
   deleteAllChildren();
   deleteAllEntries();
   deleteIndex();
-  if (path_) {
-    ::free(path_);
+  if ( path_ ) {
+    ::free( path_ );
     path_ = NULL;
   }
 }
 
 // recursively check if any entry is dirty (was changed after loading a fresh prefs file)
 char Fl_Preferences::Node::dirty() {
-  if (dirty_)
-    return 1;
-  if (next_ && next_->dirty())
-    return 1;
-  if (first_child_ && first_child_->dirty())
-    return 1;
+  if ( dirty_ ) return 1;
+  if ( next_ && next_->dirty() ) return 1;
+  if ( first_child_ && first_child_->dirty() ) return 1;
   return 0;
 }
 
@@ -1461,8 +1398,7 @@ void Fl_Preferences::Node::clearDirtyFlags() {
   Fl_Preferences::Node *nd = this;
   while (nd) {
     nd->dirty_ = 0;
-    if (nd->first_child_)
-      nd->first_child_->clearDirtyFlags();
+    if ( nd->first_child_ ) nd->first_child_->clearDirtyFlags();
     nd = nd->next_;
   }
 }
@@ -1470,48 +1406,45 @@ void Fl_Preferences::Node::clearDirtyFlags() {
 // write this node (recursively from the last neighbor back to this)
 // write all entries
 // write all children
-int Fl_Preferences::Node::write(FILE *f) {
-  if (next_)
-    next_->write(f);
-  fprintf(f, "\n[%s]\n\n", path_);
-  for (int i = 0; i < nEntry_; i++) {
+int Fl_Preferences::Node::write( FILE *f ) {
+  if ( next_ ) next_->write( f );
+  fprintf( f, "\n[%s]\n\n", path_ );
+  for ( int i = 0; i < nEntry_; i++ ) {
     char *src = entry_[i].value;
-    if (src) { // hack it into smaller pieces if needed
-      fprintf(f, "%s:", entry_[i].name);
+    if ( src ) {                // hack it into smaller pieces if needed
+      fprintf( f, "%s:", entry_[i].name );
       size_t cnt, written = 0;
-      for (cnt = 0; cnt < 60; cnt++)
-        if (src[cnt] == 0)
-          break;
-      written += fwrite(src, cnt, 1, f);
-      fprintf(f, "\n");
+      for ( cnt = 0; cnt < 60; cnt++ )
+        if ( src[cnt]==0 ) break;
+      written += fwrite( src, cnt, 1, f );
+      fprintf( f, "\n" );
       src += cnt;
-      for (; *src;) {
-        for (cnt = 0; cnt < 80; cnt++)
-          if (src[cnt] == 0)
-            break;
-        fputc('+', f);
-        written += fwrite(src, cnt, 1, f);
-        fputc('\n', f);
+      for (;*src;) {
+        for ( cnt = 0; cnt < 80; cnt++ )
+          if ( src[cnt]==0 ) break;
+        fputc( '+', f );
+        written += fwrite( src, cnt, 1, f );
+        fputc( '\n', f );
         src += cnt;
       }
       (void)written; // silence warning
-    } else
-      fprintf(f, "%s\n", entry_[i].name);
+    }
+    else
+      fprintf( f, "%s\n", entry_[i].name );
   }
-  if (first_child_)
-    first_child_->write(f);
+  if ( first_child_ ) first_child_->write( f );
   dirty_ = 0;
   return 0;
 }
 
 // set the parent node and create the full path
-void Fl_Preferences::Node::setParent(Node *pn) {
+void Fl_Preferences::Node::setParent( Node *pn ) {
   parent_ = pn;
   next_ = pn->first_child_;
   pn->first_child_ = this;
-  sprintf(nameBuffer, "%s/%s", pn->path_, path_);
-  free(path_);
-  path_ = fl_strdup(nameBuffer);
+  snprintf( nameBuffer, sizeof(nameBuffer), "%s/%s", pn->path_, path_ );
+  free( path_ );
+  path_ = fl_strdup( nameBuffer );
 }
 
 // find the corresponding root node
@@ -1526,59 +1459,59 @@ Fl_Preferences::RootNode *Fl_Preferences::Node::findRoot() {
 }
 
 // add a child to this node and set its path (try to find it first...)
-Fl_Preferences::Node *Fl_Preferences::Node::addChild(const char *path) {
-  sprintf(nameBuffer, "%s/%s", path_, path);
-  char *name = fl_strdup(nameBuffer);
-  Node *nd = find(name);
-  free(name);
+Fl_Preferences::Node *Fl_Preferences::Node::addChild( const char *path ) {
+  snprintf( nameBuffer, sizeof(nameBuffer), "%s/%s", path_, path );
+  char *name = fl_strdup( nameBuffer );
+  Node *nd = find( name );
+  free( name );
   updateIndex();
   return nd;
 }
 
 // create and set, or change an entry within this node
-void Fl_Preferences::Node::set(const char *name, const char *value) {
-  for (int i = 0; i < nEntry_; i++) {
-    if (strcmp(name, entry_[i].name) == 0) {
-      if (!value)
-        return; // annotation
-      if (strcmp(value, entry_[i].value) != 0) {
-        if (entry_[i].value)
-          free(entry_[i].value);
-        entry_[i].value = fl_strdup(value);
+void Fl_Preferences::Node::set( const char *name, const char *value )
+{
+  for ( int i=0; i<nEntry_; i++ ) {
+    if ( strcmp( name, entry_[i].name ) == 0 ) {
+      if ( !value ) return; // annotation
+      if ( strcmp( value, entry_[i].value ) != 0 ) {
+        if ( entry_[i].value )
+          free( entry_[i].value );
+        entry_[i].value = fl_strdup( value );
         dirty_ = 1;
       }
       lastEntrySet = i;
       return;
     }
   }
-  if (NEntry_ == nEntry_) {
-    NEntry_ = NEntry_ ? NEntry_ * 2 : 10;
-    entry_ = (Entry *)realloc(entry_, NEntry_ * sizeof(Entry));
+  if ( NEntry_==nEntry_ ) {
+    NEntry_ = NEntry_ ? NEntry_*2 : 10;
+    entry_ = (Entry*)realloc( entry_, NEntry_ * sizeof(Entry) );
   }
-  entry_[nEntry_].name = fl_strdup(name);
-  entry_[nEntry_].value = value ? fl_strdup(value) : 0;
+  entry_[ nEntry_ ].name = fl_strdup( name );
+  entry_[ nEntry_ ].value = value?fl_strdup(value):0;
   lastEntrySet = nEntry_;
   nEntry_++;
   dirty_ = 1;
 }
 
 // create or set a value (or annotation) from a single line in the file buffer
-void Fl_Preferences::Node::set(const char *line) {
+void Fl_Preferences::Node::set( const char *line ) {
   // hmm. If we assume that we always read this file in the beginning,
   // we can handle the dirty flag 'quick and dirty'
   char dirt = dirty_;
-  if (line[0] == ';' || line[0] == 0 || line[0] == '#') {
-    set(line, 0);
+  if ( line[0]==';' || line[0]==0 || line[0]=='#' ) {
+    set( line, 0 );
   } else {
-    const char *c = strchr(line, ':');
-    if (c) {
-      size_t len = c - line + 1;
-      if (len >= sizeof(nameBuffer))
-        len = sizeof(nameBuffer);
-      strlcpy(nameBuffer, line, len);
-      set(nameBuffer, c + 1);
+    const char *c = strchr( line, ':' );
+    if ( c ) {
+      size_t len = c-line+1;
+      if ( len >= sizeof( nameBuffer ) )
+        len = sizeof( nameBuffer );
+      strlcpy( nameBuffer, line, len );
+      set( nameBuffer, c+1 );
     } else {
-      set(line, "");
+      set( line, "" );
     }
   }
   dirty_ = dirt;
@@ -1586,26 +1519,25 @@ void Fl_Preferences::Node::set(const char *line) {
 
 // Append data to an existing node. This is only used in read operations when
 // a single entry stretches over multiple lines in the prefs file.
-void Fl_Preferences::Node::add(const char *line) {
-  if (lastEntrySet < 0 || lastEntrySet >= nEntry_)
-    return;
-  char *&dst = entry_[lastEntrySet].value;
-  size_t a = strlen(dst);
-  size_t b = strlen(line);
-  dst = (char *)realloc(dst, a + b + 1);
-  memcpy(dst + a, line, b + 1);
+void Fl_Preferences::Node::add( const char *line ) {
+  if ( lastEntrySet<0 || lastEntrySet>=nEntry_ ) return;
+  char *&dst = entry_[ lastEntrySet ].value;
+  size_t a = strlen( dst );
+  size_t b = strlen( line );
+  dst = (char*)realloc( dst, a+b+1 );
+  memcpy( dst+a, line, b+1 );
 }
 
 // get the value for a name, returns 0 if no such name
-const char *Fl_Preferences::Node::get(const char *name) {
-  int i = getEntry(name);
-  return i >= 0 ? entry_[i].value : 0;
+const char *Fl_Preferences::Node::get( const char *name ) {
+  int i = getEntry( name );
+  return i>=0 ? entry_[i].value : 0 ;
 }
 
 // find the index of an entry, returns -1 if no such entry
-int Fl_Preferences::Node::getEntry(const char *name) {
-  for (int i = 0; i < nEntry_; i++) {
-    if (strcmp(name, entry_[i].name) == 0) {
+int Fl_Preferences::Node::getEntry( const char *name ) {
+  for ( int i=0; i<nEntry_; i++ ) {
+    if ( strcmp( name, entry_[i].name ) == 0 ) {
       return i;
     }
   }
@@ -1613,11 +1545,10 @@ int Fl_Preferences::Node::getEntry(const char *name) {
 }
 
 // remove one entry form this group
-char Fl_Preferences::Node::deleteEntry(const char *name) {
-  int ix = getEntry(name);
-  if (ix == -1)
-    return 0;
-  memmove(entry_ + ix, entry_ + ix + 1, (nEntry_ - ix - 1) * sizeof(Entry));
+char Fl_Preferences::Node::deleteEntry( const char *name ) {
+  int ix = getEntry( name );
+  if ( ix == -1 ) return 0;
+  memmove( entry_+ix, entry_+ix+1, (nEntry_-ix-1) * sizeof(Entry) );
   nEntry_--;
   dirty_ = 1;
   return 1;
@@ -1626,28 +1557,25 @@ char Fl_Preferences::Node::deleteEntry(const char *name) {
 // find a group somewhere in the tree starting here
 // - this method will always return a valid node (except for memory allocation problems)
 // - if the node was not found, 'find' will create the required branch
-Fl_Preferences::Node *Fl_Preferences::Node::find(const char *path) {
-  int len = (int)strlen(path_);
-  if (strncmp(path, path_, len) == 0) {
-    if (path[len] == 0)
+Fl_Preferences::Node *Fl_Preferences::Node::find( const char *path ) {
+  int len = (int) strlen( path_ );
+  if ( strncmp( path, path_, len ) == 0 ) {
+    if ( path[ len ] == 0 )
       return this;
-    if (path[len] == '/') {
+    if ( path[ len ] == '/' ) {
       Node *nd;
-      for (nd = first_child_; nd; nd = nd->next_) {
-        Node *nn = nd->find(path);
-        if (nn)
-          return nn;
+      for ( nd = first_child_; nd; nd = nd->next_ ) {
+        Node *nn = nd->find( path );
+        if ( nn ) return nn;
       }
-      const char *s = path + len + 1;
-      const char *e = strchr(s, '/');
-      if (e)
-        strlcpy(nameBuffer, s, e - s + 1);
-      else
-        strlcpy(nameBuffer, s, sizeof(nameBuffer));
-      nd = new Node(nameBuffer);
-      nd->setParent(this);
+      const char *s = path+len+1;
+      const char *e = strchr( s, '/' );
+      if (e) strlcpy( nameBuffer, s, e-s+1 );
+      else strlcpy( nameBuffer, s, sizeof(nameBuffer));
+      nd = new Node( nameBuffer );
+      nd->setParent( this );
       dirty_ = 1;
-      return nd->find(path);
+      return nd->find( path );
     }
   }
   return 0;
@@ -1659,35 +1587,32 @@ Fl_Preferences::Node *Fl_Preferences::Node::find(const char *path) {
 // - if the pathname is "." (current node) return this node
 // - if the pathname is "./" (root node) return the topmost node
 // - if the pathname starts with "./", start the search at the root node instead
-Fl_Preferences::Node *Fl_Preferences::Node::search(const char *path, int offset) {
-  if (offset == 0) {
-    if (path[0] == '.') {
-      if (path[1] == 0) {
+Fl_Preferences::Node *Fl_Preferences::Node::search( const char *path, int offset ) {
+  if ( offset == 0 ) {
+    if ( path[0] == '.' ) {
+      if ( path[1] == 0 ) {
         return this; // user was searching for current node
-      } else if (path[1] == '/') {
+      } else if ( path[1] == '/' ) {
         Node *nn = this;
-        while (nn->parent())
-          nn = nn->parent();
-        if (path[2] == 0) { // user is searching for root ( "./" )
+        while ( nn->parent() ) nn = nn->parent();
+        if ( path[2]==0 ) {             // user is searching for root ( "./" )
           return nn;
         }
-        return nn->search(path + 2, 2); // do a relative search on the root node
+        return nn->search( path+2, 2 ); // do a relative search on the root node
       }
     }
-    offset = (int)strlen(path_) + 1;
+    offset = (int) strlen( path_ ) + 1;
   }
-  int len = (int)strlen(path_);
-  if (len < offset - 1)
-    return 0;
+  int len = (int) strlen( path_ );
+  if ( len < offset-1 ) return 0;
   len -= offset;
-  if ((len <= 0) || (strncmp(path, path_ + offset, len) == 0)) {
-    if (len > 0 && path[len] == 0)
+  if ( ( len <= 0 ) || ( strncmp( path, path_+offset, len ) == 0 ) ) {
+    if ( len > 0 && path[ len ] == 0 )
       return this;
-    if (len <= 0 || path[len] == '/') {
-      for (Node *nd = first_child_; nd; nd = nd->next_) {
-        Node *nn = nd->search(path, offset);
-        if (nn)
-          return nn;
+    if ( len <= 0 || path[ len ] == '/' ) {
+      for ( Node *nd = first_child_; nd; nd = nd->next_ ) {
+        Node *nn = nd->search( path, offset );
+        if ( nn ) return nn;
       }
       return 0;
     }
@@ -1701,7 +1626,7 @@ int Fl_Preferences::Node::nChildren() {
     return nIndex_;
   } else {
     int cnt = 0;
-    for (Node *nd = first_child_; nd; nd = nd->next_)
+    for ( Node *nd = first_child_; nd; nd = nd->next_ )
       cnt++;
     return cnt;
   }
@@ -1709,25 +1634,25 @@ int Fl_Preferences::Node::nChildren() {
 
 // return the node name
 const char *Fl_Preferences::Node::name() {
-  if (path_) {
-    char *r = strrchr(path_, '/');
-    return r ? r + 1 : path_;
+  if ( path_ ) {
+    char *r = strrchr( path_, '/' );
+    return r ? r+1 : path_ ;
   } else {
-    return 0L;
+    return 0L ;
   }
 }
 
 // return the n'th child node's name
-const char *Fl_Preferences::Node::child(int ix) {
-  Node *nd = childNode(ix);
-  if (nd)
+const char *Fl_Preferences::Node::child( int ix ) {
+  Node *nd = childNode( ix );
+  if ( nd )
     return nd->name();
   else
-    return 0L;
+    return 0L ;
 }
 
 // return the n'th child node
-Fl_Preferences::Node *Fl_Preferences::Node::childNode(int ix) {
+Fl_Preferences::Node *Fl_Preferences::Node::childNode( int ix ) {
   createIndex();
   if (indexed_) {
     // usually faster access in correct order, but needing more memory
@@ -1735,13 +1660,11 @@ Fl_Preferences::Node *Fl_Preferences::Node::childNode(int ix) {
   } else {
     // slow access and reverse order
     int n = nChildren();
-    ix = n - ix - 1;
+    ix = n - ix -1;
     Node *nd;
-    for (nd = first_child_; nd; nd = nd->next_) {
-      if (!ix--)
-        break;
-      if (!nd)
-        break;
+    for ( nd = first_child_; nd; nd = nd->next_ ) {
+      if ( !ix-- ) break;
+      if ( !nd ) break;
     }
     return nd;
   }
@@ -1751,12 +1674,11 @@ Fl_Preferences::Node *Fl_Preferences::Node::childNode(int ix) {
 char Fl_Preferences::Node::remove() {
   Node *nd = NULL, *np = NULL;
   Node *parent_node = parent();
-  if (parent_node) {
-    nd = parent_node->first_child_;
-    np = NULL;
-    for (; nd; np = nd, nd = nd->next_) {
-      if (nd == this) {
-        if (np)
+  if ( parent_node ) {
+    nd = parent_node->first_child_; np = NULL;
+    for ( ; nd; np = nd, nd = nd->next_ ) {
+      if ( nd == this ) {
+        if ( np )
           np->next_ = next_;
         else
           parent_node->first_child_ = next_;
@@ -1768,21 +1690,20 @@ char Fl_Preferences::Node::remove() {
     parent_node->updateIndex();
   }
   delete this;
-  return (nd != NULL);
+  return ( nd != NULL );
 }
 
 void Fl_Preferences::Node::createIndex() {
-  if (indexed_)
-    return;
+  if (indexed_) return;
   int n = nChildren();
-  if (n > NIndex_) {
+  if (n>NIndex_) {
     NIndex_ = n + 16;
-    index_ = (Node **)realloc(index_, NIndex_ * sizeof(Node *));
+    index_ = (Node**)realloc(index_, NIndex_*sizeof(Node*));
   }
   Node *nd;
   int i = 0;
   for (nd = first_child_; nd; nd = nd->next_, i++) {
-    index_[n - i - 1] = nd;
+    index_[n-i-1] = nd;
   }
   nIndex_ = n;
   indexed_ = 1;
@@ -1807,9 +1728,10 @@ void Fl_Preferences::Node::deleteIndex() {
  \param[in] name every plugin should have a unique name
  */
 Fl_Plugin::Fl_Plugin(const char *klass, const char *name)
-  : id(0) {
+: id(0) {
 #ifdef FL_PLUGIN_VERBOSE
-  printf("Fl_Plugin: creating a plugin, class \"%s\", name \"%s\"\n", klass, name);
+  printf("Fl_Plugin: creating a plugin, class \"%s\", name \"%s\"\n",
+         klass, name);
 #endif
   Fl_Plugin_Manager pm(klass);
   id = pm.addPlugin(name, this);
@@ -1830,7 +1752,7 @@ Fl_Plugin::~Fl_Plugin() {
  \brief Manage all plugins belonging to one class.
  */
 Fl_Plugin_Manager::Fl_Plugin_Manager(const char *klass)
-  : Fl_Preferences(0, Fl_Preferences::Name("%s/%s", "plugins", klass)) {
+: Fl_Preferences(0, Fl_Preferences::Name("%s/%s", "plugins", klass)) {
 #ifdef FL_PLUGIN_VERBOSE
   printf("Fl_Plugin: creating a plugin manager for class \"%s\"\n", klass);
 #endif
@@ -1849,38 +1771,31 @@ Fl_Plugin_Manager::~Fl_Plugin_Manager() {
 }
 
 static unsigned char x2i(char hi, char lo) {
-  return ((hi - 'A') << 4) | (lo - 'A');
+  return ((hi-'A')<<4) | (lo-'A');
 }
 
 static void i2x(unsigned char v, char *d) {
-  d[0] = ((v >> 4) & 0x0f) + 'A';
-  d[1] = (v & 0x0f) + 'A';
+  d[0] = ((v>>4)&0x0f)+'A'; d[1] = (v&0x0f)+'A';
 }
 
 static void *a2p(const char *s) {
-  union {
-    void *ret;
-    unsigned char d[sizeof(void *)];
-  } v;
+  union { void *ret; unsigned char d[sizeof(void*)]; } v;
   v.ret = 0L;
-  int i = 0, n = sizeof(void *);
-  for (i = 0; i < n; i++) {
-    v.d[i] = x2i(s[2 * i], s[2 * i + 1]);
+  int i=0, n=sizeof(void*);
+  for (i=0; i<n; i++) {
+    v.d[i] = x2i(s[2*i], s[2*i+1]);
   }
   return v.ret;
 }
 
 static void p2a(void *vp, char *d) {
-  union {
-    void *vp;
-    unsigned char s[sizeof(void *)];
-  } v;
+  union { void *vp; unsigned char s[sizeof(void*)]; } v;
   v.vp = vp;
-  int i = 0, n = sizeof(void *);
-  for (i = 0; i < n; i++) {
-    i2x(v.s[i], d + i * 2);
+  int i=0, n=sizeof(void*);
+  for (i=0; i<n; i++) {
+    i2x(v.s[i], d+i*2);
   }
-  d[2 * i] = 0;
+  d[2*i] = 0;
 }
 
 /**
@@ -1891,8 +1806,7 @@ Fl_Plugin *Fl_Plugin_Manager::plugin(int index) {
   Fl_Plugin *ret = 0;
   Fl_Preferences pin(this, index);
   pin.get("address", buf, "", 34);
-  if (buf[0] == '@')
-    ret = (Fl_Plugin *)a2p(buf + 1);
+  if (buf[0]=='@') ret = (Fl_Plugin*)a2p(buf+1);
 #ifdef FL_PLUGIN_VERBOSE
   printf("Fl_Plugin: returning plugin at index %d: (%s) %p\n", index, buf, ret);
 #endif
@@ -1908,8 +1822,7 @@ Fl_Plugin *Fl_Plugin_Manager::plugin(const char *name) {
   if (groupExists(name)) {
     Fl_Preferences pin(this, name);
     pin.get("address", buf, "", 34);
-    if (buf[0] == '@')
-      ret = (Fl_Plugin *)a2p(buf + 1);
+    if (buf[0]=='@') ret = (Fl_Plugin*)a2p(buf+1);
 #ifdef FL_PLUGIN_VERBOSE
     printf("Fl_Plugin: returning plugin named \"%s\": (%s) %p\n", name, buf, ret);
 #endif
@@ -1934,8 +1847,7 @@ Fl_Preferences::ID Fl_Plugin_Manager::addPlugin(const char *name, Fl_Plugin *plu
   printf("Fl_Plugin: adding plugin named \"%s\" at 0x%p\n", name, plugin);
 #endif
   Fl_Preferences pin(this, name);
-  buf[0] = '@';
-  p2a(plugin, buf + 1);
+  buf[0] = '@'; p2a(plugin, buf+1);
   pin.set("address", buf);
   return pin.id();
 }
@@ -1972,9 +1884,9 @@ int Fl_Plugin_Manager::load(const char *filename) {
 int Fl_Plugin_Manager::loadAll(const char *filepath, const char *pattern) {
   struct dirent **dir;
   int i, n = fl_filename_list(filepath, &dir);
-  for (i = 0; i < n; i++) {
+  for (i=0; i<n; i++) {
     struct dirent *e = dir[i];
-    if (pattern == 0 || fl_filename_match(e->d_name, pattern)) {
+    if (pattern==0 || fl_filename_match(e->d_name, pattern)) {
       load(Fl_Preferences::Name("%s%s", filepath, e->d_name));
     }
     free(e);

@@ -58,6 +58,19 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
     int cw = W * 0.50;
     int ch = kf_h(22);
 
+    engine = new UI_RChoiceMenu(cx, cy, cw, ch, "");
+    engine->copy_label(_("Engine: "));
+    engine->align(FL_ALIGN_LEFT);
+    engine->labelfont(font_style);
+    engine->textcolor(FONT2_COLOR);
+    engine->selection_color(SELECTION);
+    engine->callback(callback_Engine, this);
+    engine_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch);
+    engine_help->labelfont(font_style);
+    engine_help->callback(callback_EngineHelp, this);
+
+    cy += y_step;
+
     game = new UI_RChoiceMenu(cx, cy, cw, ch, "");
     game->copy_label(_("Game: "));
     game->align(FL_ALIGN_LEFT);
@@ -71,16 +84,16 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
 
     cy += y_step;
 
-    engine = new UI_RChoiceMenu(cx, cy, cw, ch, "");
-    engine->copy_label(_("Engine: "));
-    engine->align(FL_ALIGN_LEFT);
-    engine->labelfont(font_style);
-    engine->textcolor(FONT2_COLOR);
-    engine->selection_color(SELECTION);
-    engine->callback(callback_Engine, this);
-    engine_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch);
-    engine_help->labelfont(font_style);
-    engine_help->callback(callback_EngineHelp, this);
+    port = new UI_RChoiceMenu(cx, cy, cw, ch, "");
+    port->copy_label(_("Port: "));
+    port->align(FL_ALIGN_LEFT);
+    port->labelfont(font_style);
+    port->textcolor(FONT2_COLOR);
+    port->selection_color(SELECTION);
+    port->callback(callback_Port, this);
+    port_help = new UI_HelpLink(cx + cw, cy, W * 0.10, ch);
+    port_help->labelfont(font_style);
+    port_help->callback(callback_PortHelp, this);
 
     cy += y_step;
 
@@ -108,7 +121,7 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
     theme_help->labelfont(font_style);
     theme_help->callback(callback_ThemeHelp, this);
 
-    cy += y_step + kf_h(10);
+    cy += y_step;
 
     build = new Fl_Button(button_x, cy, button_w, button_h, _("Build"));
     build->visible_focus(0);
@@ -140,16 +153,36 @@ UI_Game::UI_Game(int X, int Y, int W, int H) : Fl_Group(X, Y, W, H) {
 //
 UI_Game::~UI_Game() {}
 
+void UI_Game::callback_Engine(Fl_Widget *w, void *data) {
+    UI_Game *that = (UI_Game *)data;
+
+    ob_set_config("engine", that->engine->GetID());
+
+    if (StringCaseCmp(that->engine->GetID(), "idtech_0") == 0 ||
+        StringCaseCmp(that->port->GetID(), "limit_enforcing") == 0) {
+        that->theme->deactivate();
+    } else {
+        that->theme->activate();
+    }
+}
+
 void UI_Game::callback_Game(Fl_Widget *w, void *data) {
     UI_Game *that = (UI_Game *)data;
 
     ob_set_config("game", that->game->GetID());
 }
 
-void UI_Game::callback_Engine(Fl_Widget *w, void *data) {
+void UI_Game::callback_Port(Fl_Widget *w, void *data) {
     UI_Game *that = (UI_Game *)data;
 
-    ob_set_config("engine", that->engine->GetID());
+    ob_set_config("port", that->port->GetID());
+
+    if (StringCaseCmp(that->engine->GetID(), "idtech_0") == 0 ||
+        StringCaseCmp(that->port->GetID(), "limit_enforcing") == 0) {
+        that->theme->deactivate();
+    } else {
+        that->theme->activate();
+    }
 }
 
 void UI_Game::callback_Length(Fl_Widget *w, void *data) {
@@ -162,6 +195,22 @@ void UI_Game::callback_Theme(Fl_Widget *w, void *data) {
     UI_Game *that = (UI_Game *)data;
 
     ob_set_config("theme", that->theme->GetID());
+}
+
+void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
+    fl_cursor(FL_CURSOR_DEFAULT);
+    Fl_Window *win = new Fl_Window(640, 480, _("Engine"));
+    Fl_Text_Buffer *buff = new Fl_Text_Buffer();
+    Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
+    disp->buffer(buff);
+    disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+    win->resizable(*disp);
+    win->hotspot(0, 0, 0);
+    win->set_modal();
+    win->show();
+    // clang-format off
+    buff->text(_("id Tech 0: Powered Wolfenstein-3D and similar games\n\nid Tech 1: Powered Doom, Doom 2, Heretic, etc"));
+    // clang-format on
 }
 
 void UI_Game::callback_GameHelp(Fl_Widget *w, void *data) {
@@ -180,9 +229,9 @@ void UI_Game::callback_GameHelp(Fl_Widget *w, void *data) {
     // clang-format on
 }
 
-void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
+void UI_Game::callback_PortHelp(Fl_Widget *w, void *data) {
     fl_cursor(FL_CURSOR_DEFAULT);
-    Fl_Window *win = new Fl_Window(640, 480, _("Engine"));
+    Fl_Window *win = new Fl_Window(640, 480, _("Port"));
     Fl_Text_Buffer *buff = new Fl_Text_Buffer();
     Fl_Text_Display *disp = new Fl_Text_Display(20, 20, 640 - 40, 480 - 40);
     disp->buffer(buff);
@@ -192,7 +241,7 @@ void UI_Game::callback_EngineHelp(Fl_Widget *w, void *data) {
     win->set_modal();
     win->show();
     // clang-format off
-    buff->text(_("Available Engines:\n\nZDoom Family: Engines that use ZDoom as a base. Example ports: GZDoom, LZDoom\n\nVanilla DOOM: Doom with its original engine limits. Example ports: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nLimit Removing: Any engine that raises the limits of the original game to prevent crashes, but is not Boom-compatible. Example ports: Doom2-plus, Doomsday 1.x, Crispy Doom\n\nBoom-Compatible: Engines that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nPrBoom-Compatible: Boom-compatible, but also capable of using extended nodes. Example ports: DSDA-Doom, PrBoom+um\n\nEDGE-Classic: Boom-compatible, plus additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."));
+    buff->text(_("Available Ports:\n\nid Tech 0:\n\nVanilla: Works with the original executables\n\nid Tech 1:\n\nZDoom Family: Ports that use ZDoom as a base. Example ports: GZDoom, LZDoom\n\nVanilla: Works with the original program or ports that enforce the original limits. Examples: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nLimit Removing: Any port that raises the limits of the original game to prevent crashes, but is not Boom-compatible. Example ports: Doom2-plus, Doomsday 1.x, Crispy Doom\n\nBoom-Compatible: Ports that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nPrBoom-Compatible: Boom-compatible, but also capable of using extended nodes. Example ports: DSDA-Doom, PrBoom+um\n\nEDGE-Classic: Boom-compatible, plus additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."));
     // clang-format on
 }
 
@@ -208,7 +257,7 @@ void UI_Game::callback_LengthHelp(Fl_Widget *w, void *data) {
     win->set_modal();
     win->show();
     // clang-format off
-    buff->text(_("Available WAD Lengths:\n\nSingle Level: One map.\n\nA Few Maps: Four maps.\n\nOne Episode: The length of an episode in the original IWAD. For Doom 2, which normally doesn't have episodes, this is 11 maps.\n\nFull Game: The length of a full game in the original IWAD."));
+    buff->text(_("Available Game Lengths:\n\nSingle Level: One map.\n\nA Few Maps: Four maps.\n\nOne Episode: The length of an episode in the original game. For Doom 2 and other games which normally doesn't have episodes, this number is determined by Obsidian.\n\nFull Game: The length of a full game in the original program."));
     // clang-format on
 }
 
@@ -225,20 +274,22 @@ void UI_Game::callback_ThemeHelp(Fl_Widget *w, void *data) {
     win->show();
     // clang-format off
     buff->text(
-        _("Available Themes:\n\nOriginal: Follows the theme progression of the original IWAD.\n\nEpisodic: Each episode follows a single randomly chose theme.\n\nBit Mixed: Theme will change every few levels.\n\nJumbled Up: Level themes are purely random.\n\nPsychedelic: Trippy.\n\nOther themes listed are game-specific."));
+        _("Available Themes:\n\nOriginal: Follows the theme progression of the original game.\n\nEpisodic: Each episode follows a single randomly chosen theme.\n\nBit Mixed: Theme will change every few levels.\n\nJumbled Up: Level themes are purely random.\n\nPsychedelic: Trippy.\n\nOther themes listed are game-specific."));
     // clang-format on
 }
 
 void UI_Game::Locked(bool value) {
     if (value) {
-        game->deactivate();
         engine->deactivate();
+        game->deactivate();
+        port->deactivate();
         length->deactivate();
         theme->deactivate();
         build->deactivate();
     } else {
-        game->activate();
         engine->activate();
+        game->activate();
+        port->activate();
         length->activate();
         theme->activate();
         build->activate();
@@ -246,13 +297,17 @@ void UI_Game::Locked(bool value) {
 }
 
 bool UI_Game::AddChoice(std::string button, std::string id, std::string label) {
+    if (!StringCaseCmp(button, "engine")) {
+        engine->AddChoice(id, label);
+        return true;
+    }
     if (!StringCaseCmp(button, "game")) {
         game->AddChoice(id, label);
         return true;
     }
-    if (!StringCaseCmp(button, "engine")) {
+    if (!StringCaseCmp(button, "port")) {
         if (StringCaseCmp(id, "advanced")) {
-            engine->AddChoice(id, label);
+            port->AddChoice(id, label);
         }
         return true;
     }
@@ -269,12 +324,16 @@ bool UI_Game::AddChoice(std::string button, std::string id, std::string label) {
 }
 
 bool UI_Game::EnableChoice(std::string button, std::string id, bool enable_it) {
+    if (!StringCaseCmp(button, "engine")) {
+        engine->EnableChoice(id, enable_it);
+        return true;
+    }
     if (!StringCaseCmp(button, "game")) {
         game->EnableChoice(id, enable_it);
         return true;
     }
-    if (!StringCaseCmp(button, "engine")) {
-        engine->EnableChoice(id, enable_it);
+    if (!StringCaseCmp(button, "port")) {
+        port->EnableChoice(id, enable_it);
         return true;
     }
     if (!StringCaseCmp(button, "length")) {
@@ -290,12 +349,16 @@ bool UI_Game::EnableChoice(std::string button, std::string id, bool enable_it) {
 }
 
 bool UI_Game::SetButton(std::string button, std::string id) {
+    if (!StringCaseCmp(button, "engine")) {
+        engine->ChangeTo(id);
+        return true;
+    }
     if (!StringCaseCmp(button, "game")) {
         game->ChangeTo(id);
         return true;
     }
-    if (!StringCaseCmp(button, "engine")) {
-        engine->ChangeTo(id);
+    if (!StringCaseCmp(button, "port")) {
+        port->ChangeTo(id);
         return true;
     }
     if (!StringCaseCmp(button, "length")) {

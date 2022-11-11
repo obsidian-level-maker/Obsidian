@@ -31,14 +31,14 @@ PREFABS.Exit_sky_floor_exit_chex3 =
 {
   template = "Exit_sky_floor_exit",
   game = "chex3",
-  engine = "advanced"
+  port = "advanced"
 }
 
 PREFABS.Exit_sky_floor_exit_chex3_nosign = 
 {
   template = "Exit_sky_floor_exit",
   game = "chex3",
-  engine = "!advanced",
+  port = "!advanced",
   map = "MAP02"
 }
 
@@ -46,14 +46,14 @@ PREFABS.Exit_sky_floor_exit_hacx =
 {
   template = "Exit_sky_floor_exit",
   game = "hacx",
-  engine = "advanced"
+  port = "advanced"
 }
 
 PREFABS.Exit_sky_floor_exit_hacx_nosign = 
 {
   template = "Exit_sky_floor_exit",
   game = "hacx",
-  engine = "!advanced",
+  port = "!advanced",
   map = "MAP02"
 }
 
@@ -61,14 +61,14 @@ PREFABS.Exit_sky_floor_exit_heretic =
 {
   template = "Exit_sky_floor_exit",
   game = "heretic",
-  engine = "advanced"
+  port = "advanced"
 }
 
 PREFABS.Exit_sky_floor_exit_heretic_nosign = 
 {
   template = "Exit_sky_floor_exit",
   game = "heretic",
-  engine = "!advanced",
+  port = "!advanced",
   map = "MAP02"
 }
 
@@ -76,14 +76,14 @@ PREFABS.Exit_sky_floor_exit_hexen_nosign =
 {
   template = "Exit_sky_floor_exit",
   game = "hexen",
-  --engine = "!advanced",
+  --port = "!advanced",
   map = "MAP02"
 }
 
 PREFABS.Exit_sky_floor_exit_secret =
 {
   file   = "exit/armaetus_sky_floor_exit.wad",
-  map    = "MAP01",
+  map    = "MAP03",
   game   = { chex3=0, doom1=1, doom2=1, hacx=0, harmony=1, heretic=0, nukem=1, quake=1, strife=0 },
 
   prob   = 300,
@@ -98,11 +98,8 @@ PREFABS.Exit_sky_floor_exit_secret =
   x_fit  = "frame",
   y_fit  = "top",
 
-    -- this kind means "an exit to a secret level"
-    kind = "secret_exit",
-
-    -- replace normal exit special with "exit to secret" special
-    line_706 = 707
+  -- this kind means "an exit to a secret level"
+  kind = "secret_exit",
 }
 
 PREFABS.Exit_sky_floor_exit_secret_strife =
@@ -119,51 +116,51 @@ PREFABS.Exit_sky_floor_exit_secret_chex3 =
 {
   template = "Exit_sky_floor_exit_secret",
   game = "chex3",
-  engine = "advanced"
+  port = "advanced"
 }
 
 PREFABS.Exit_sky_floor_exit_secret_chex3_nosign = 
 {
   template = "Exit_sky_floor_exit_secret",
   game = "chex3",
-  engine = "!advanced",
-  map = "MAP02"
+  port = "!advanced",
+  map = "MAP04"
 }
 
 PREFABS.Exit_sky_floor_exit_secret_hacx = 
 {
   template = "Exit_sky_floor_exit_secret",
   game = "hacx",
-  engine = "advanced"
+  port = "advanced"
 }
 
 PREFABS.Exit_sky_floor_exit_secret_hacx_nosign = 
 {
   template = "Exit_sky_floor_exit_secret",
   game = "hacx",
-  engine = "!advanced",
-  map = "MAP02"
+  port = "!advanced",
+  map = "MAP04"
 }
 
 PREFABS.Exit_sky_floor_exit_secret_heretic = 
 {
   template = "Exit_sky_floor_exit_secret",
   game = "heretic",
-  engine = "advanced"
+  port = "advanced"
 }
 
 PREFABS.Exit_sky_floor_exit_secret_heretic_nosign = 
 {
   template = "Exit_sky_floor_exit_secret",
   game = "heretic",
-  engine = "!advanced",
-  map = "MAP02"
+  port = "!advanced",
+  map = "MAP04"
 }
 
 PREFABS.Exit_sky_floor_exit_secret_hexen_nosign = 
 {
   template = "Exit_sky_floor_exit_secret",
   game = "hexen",
-  --engine = "!advanced",
-  map = "MAP02"
+  --port = "!advanced",
+  map = "MAP04"
 }

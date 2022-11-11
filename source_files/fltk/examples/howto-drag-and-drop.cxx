@@ -32,8 +32,7 @@
 class Sender : public Fl_Box {
 public:
   // Ctor
-  Sender(int x, int y, int w, int h)
-    : Fl_Box(x, y, w, h) {
+  Sender(int x,int y,int w,int h) : Fl_Box(x,y,w,h) {
     box(FL_FLAT_BOX);
     color(9);
     label("Drag\nfrom\nhere..");
@@ -41,8 +40,8 @@ public:
   // Sender event handler
   int handle(int event) {
     int ret = Fl_Box::handle(event);
-    switch (event) {
-      case FL_PUSH: { // do 'copy/dnd' when someone clicks on box
+    switch ( event ) {
+      case FL_PUSH: {             // do 'copy/dnd' when someone clicks on box
         const char *msg = "It works!";
         Fl::copy(msg, (int)strlen(msg), 0);
         Fl::dnd();
@@ -50,21 +49,17 @@ public:
         break;
       }
     }
-    return (ret);
+    return(ret);
   }
 };
 // SIMPLE RECEIVER CLASS
 class Receiver : public Fl_Box {
   int dnd_inside;
   char *dnd_text;
-
 public:
   // Ctor
-  Receiver(int x, int y, int w, int h)
-    : Fl_Box(x, y, w, h) {
-    box(FL_FLAT_BOX);
-    color(10);
-    label("..to\nhere");
+  Receiver(int x,int y,int w,int h) : Fl_Box(x,y,w,h) {
+    box(FL_FLAT_BOX); color(10); label("..to\nhere");
     dnd_inside = 0;
     dnd_text = 0;
   }
@@ -72,29 +67,29 @@ public:
   int handle(int event) {
     int ret = Fl_Box::handle(event);
     int len;
-    switch (event) {
-      case FL_DND_ENTER: // return(1) for this event to 'accept' dnd
-        label("ENTER");  // visible only if you stop the mouse at the widget's border
+    switch ( event ) {
+      case FL_DND_ENTER:        // return(1) for this event to 'accept' dnd
+        label("ENTER");         // visible only if you stop the mouse at the widget's border
         fprintf(stderr, "FL_DND_ENTER\n");
-        dnd_inside = 1; // status: inside the widget, accept drop
+        dnd_inside = 1;         // status: inside the widget, accept drop
         ret = 1;
         break;
-      case FL_DND_DRAG: // return(1) for this event to 'accept' dnd
+      case FL_DND_DRAG:         // return(1) for this event to 'accept' dnd
         label("drop\nhere");
         fprintf(stderr, "FL_DND_DRAG\n");
         ret = 1;
         break;
-      case FL_DND_RELEASE: // return(1) for this event to 'accept' the payload (drop)
+      case FL_DND_RELEASE:      // return(1) for this event to 'accept' the payload (drop)
         fprintf(stderr, "FL_DND_RELEASE\n");
         if (dnd_inside) {
-          ret = 1; // return(1) and expect FL_PASTE event to follow
+          ret = 1;              // return(1) and expect FL_PASTE event to follow
           label("RELEASE");
         } else {
-          ret = 0; // return(0) to reject the DND payload (drop)
+          ret = 0;              // return(0) to reject the DND payload (drop)
           label("DND\nREJECTED!");
         }
         break;
-      case FL_PASTE: // handle actual drop (paste) operation
+      case FL_PASTE:              // handle actual drop (paste) operation
         fprintf(stderr, "FL_PASTE\n");
         copy_label(Fl::event_text());
         fprintf(stderr, "Pasted '%s'\n", Fl::event_text());
@@ -104,7 +99,7 @@ public:
         // application on *some* platforms. Use a short timer to delay the
         // message display after the event processing is completed.
 
-        delete[] dnd_text; // don't leak (just in case)
+        delete[] dnd_text;      // don't leak (just in case)
         dnd_text = 0;
 
         len = Fl::event_length();
@@ -116,14 +111,14 @@ public:
         }
         ret = 1;
         break;
-      case FL_DND_LEAVE:     // not strictly necessary to return(1) for this event
-        label("..to\nhere"); // reset label
+      case FL_DND_LEAVE:        // not strictly necessary to return(1) for this event
+        label("..to\nhere");    // reset label
         fprintf(stderr, "FL_DND_LEAVE\n");
-        dnd_inside = 0; // status: mouse is outside, don't accept drop
-        ret = 1;        // return(1) anyway..
+        dnd_inside = 0;         // status: mouse is outside, don't accept drop
+        ret = 1;                // return(1) anyway..
         break;
     }
-    return (ret);
+    return(ret);
   }
 
   // static timer callback
@@ -144,14 +139,14 @@ public:
 
 int main(int argc, char **argv) {
   // Create sender window and widget
-  Fl_Window win_a(0, 0, 200, 100, "Sender");
-  Sender a(0, 0, 100, 100);
+  Fl_Window win_a(0,0,200,100,"Sender");
+  Sender a(0,0,100,100);
   win_a.end();
   win_a.show();
   // Create receiver window and widget
-  Fl_Window win_b(400, 0, 200, 100, "Receiver");
-  Receiver b(100, 0, 100, 100);
+  Fl_Window win_b(400,0,200,100,"Receiver");
+  Receiver b(100,0,100,100);
   win_b.end();
   win_b.show();
-  return (Fl::run());
+  return(Fl::run());
 }

@@ -47,6 +47,11 @@ class Fl_Gl_Window_Driver;
   to add a selection of widgets to an OpenGL window. The widgets will draw on top
   of any OpenGL rendering. The number of supported widgets will increase as the
   driver development improves. Program test/cube.cxx illustrates how to do that.
+
+  \note FLTK expects that when an Fl_Gl_Window is a child of a parent Fl_Window,
+  the child window lies entirely inside its parent window. If that's not the case, what
+  happens to the part of the GL subwindow which leaks outside its parent is undefined
+  and susceptible to be platform-specific.
 */
 class FL_EXPORT Fl_Gl_Window : public Fl_Window {
   friend class Fl_Gl_Window_Driver;
@@ -66,7 +71,6 @@ class FL_EXPORT Fl_Gl_Window : public Fl_Window {
   static int can_do(int, const int *);
   int mode(int, const int *);
   static int gl_plugin_linkage();
-
 protected:
   void draw_begin();
   virtual void draw();
@@ -75,10 +79,10 @@ protected:
 public:
   void show();
   /** Same as Fl_Window::show(int a, char **b) */
-  void show(int a, char **b) { Fl_Window::show(a, b); }
+  void show(int a, char **b) {Fl_Window::show(a,b);}
   void flush();
   void hide();
-  void resize(int, int, int, int);
+  void resize(int,int,int,int);
   int handle(int);
 
   /**
@@ -105,16 +109,11 @@ public:
     or after make_current().  This is done automatically after
     draw() returns.
   */
-  char valid() const { return valid_f_ & 1; }
+  char valid() const {return valid_f_ & 1;}
   /**
     See char Fl_Gl_Window::valid() const
   */
-  void valid(char v) {
-    if (v)
-      valid_f_ |= 1;
-    else
-      valid_f_ &= 0xfe;
-  }
+  void valid(char v) {if (v) valid_f_ |= 1; else valid_f_ &= 0xfe;}
   void invalidate();
 
   /**
@@ -123,28 +122,23 @@ public:
     Fl_Gl_Window::valid() which is also set whenever the context
     changes size.
   */
-  char context_valid() const { return valid_f_ & 2; }
+  char context_valid() const {return valid_f_ & 2;}
   /**
     See char Fl_Gl_Window::context_valid() const
   */
-  void context_valid(char v) {
-    if (v)
-      valid_f_ |= 2;
-    else
-      valid_f_ &= 0xfd;
-  }
+  void context_valid(char v) {if (v) valid_f_ |= 2; else valid_f_ &= 0xfd;}
 
   /**  Returns non-zero if the hardware supports the given OpenGL mode. */
-  static int can_do(int m) { return can_do(m, 0); }
+  static int can_do(int m) {return can_do(m,0);}
   /**  Returns non-zero if the hardware supports the given OpenGL mode.
    \see Fl_Gl_Window::mode(const int *a) */
-  static int can_do(const int *m) { return can_do(0, m); }
+  static int can_do(const int *m) {return can_do(0, m);}
   /**  Returns non-zero if the hardware supports the current OpenGL mode. */
-  int can_do() { return can_do(mode_, alist); }
+  int can_do() {return can_do(mode_,alist);}
   /** Returns the current OpenGL capabilites of the window.
    Don't use this if capabilities were set through Fl_Gl_Window::mode(const int *a).
    */
-  Fl_Mode mode() const { return (Fl_Mode)mode_; }
+  Fl_Mode mode() const {return (Fl_Mode)mode_;}
   /**
    Set or change the OpenGL capabilites of the window.  The value can be
    any of the following OR'd together:
@@ -185,21 +179,23 @@ public:
 
    \version the <tt>FL_OPENGL3</tt> flag appeared in version 1.3.4
    */
-  int mode(int a) { return mode(a, 0); }
+  int mode(int a) {return mode(a,0);}
   /** Set the OpenGL capabilites of the window using platform-specific data.
    \param a zero-ending array of platform-specific attributes and attribute values
    <p><b>Unix/Linux platform</b>: attributes are GLX attributes adequate for the 3rd argument of
-   the <tt>glXChooseVisual()</tt> function (e.g., <tt>GLX_DOUBLEBUFFER</tt>, defined by including
-   <GL/glx.h>). \note What attributes are adequate here is subject to change. The preferred, stable
-   public API is Fl_Gl_Window::mode(int a). <p><b>Windows platform</b>: this member function is of
-   no use. <p><b>Mac OS X platform</b>: attributes belong to the <tt>CGLPixelFormatAttribute</tt>
-   enumeration (defined by including <tt><OpenGL/OpenGL.h></tt>, e.g., <tt>kCGLPFADoubleBuffer</tt>)
+   the <tt>glXChooseVisual()</tt> function (e.g., <tt>GLX_DOUBLEBUFFER</tt>, defined by including <GL/glx.h>).
+   \note What attributes are adequate here is subject to change.
+   The preferred, stable public API is Fl_Gl_Window::mode(int a).
+   <p><b>Windows platform</b>: this member function is of no use.
+   <p><b>Mac OS X platform</b>: attributes belong to the <tt>CGLPixelFormatAttribute</tt> enumeration
+   (defined by including <tt><OpenGL/OpenGL.h></tt>, e.g., <tt>kCGLPFADoubleBuffer</tt>)
    and may be followed by adequate attribute values.
    */
-  int mode(const int *a) { return mode(0, a); }
-  /** Returns a pointer to the GLContext that this window is using.
-   \see void context(GLContext c, int destroy_flag) */
-  GLContext context() const { return context_; }
+  int mode(const int *a) {return mode(0, a);}
+  /** Returns a pointer to the window's OpenGL rendering context.
+   \see void context(GLContext c, int destroy_flag)
+  */
+  GLContext context() const {return context_;}
   void context(GLContext, int destroy_flag = 0);
   void make_current();
   void swap_buffers();
@@ -211,7 +207,7 @@ public:
   void make_overlay_current();
 
   // Note: Doxygen docs in Fl_Widget.H to avoid redundancy.
-  virtual Fl_Gl_Window *as_gl_window() { return this; }
+  virtual Fl_Gl_Window* as_gl_window() {return this;}
 
   float pixels_per_unit();
   /** Gives the window width in OpenGL pixels.
@@ -240,20 +236,15 @@ public:
     Creates a new Fl_Gl_Window widget using the given size, and label string.
     The default boxtype is FL_NO_BOX. The default mode is FL_RGB|FL_DOUBLE|FL_DEPTH.
   */
-  Fl_Gl_Window(int W, int H, const char *l = 0)
-    : Fl_Window(W, H, l) {
-    init();
-  }
+  Fl_Gl_Window(int W, int H, const char *l=0) : Fl_Window(W,H,l) {init();}
   /**
     Creates a new Fl_Gl_Window widget using the given position,
     size, and label string. The default boxtype is FL_NO_BOX. The
     default mode is FL_RGB|FL_DOUBLE|FL_DEPTH.
   */
 
-  Fl_Gl_Window(int X, int Y, int W, int H, const char *l = 0)
-    : Fl_Window(X, Y, W, H, l) {
-    init();
-  }
+  Fl_Gl_Window(int X, int Y, int W, int H, const char *l=0)
+    : Fl_Window(X,Y,W,H,l) {init();}
 };
 
 #endif // Fl_Gl_Window_H

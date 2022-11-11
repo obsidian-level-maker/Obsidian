@@ -25,7 +25,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-enum { FRAMES = 48, DIM = 256 };
+enum {
+  FRAMES = 48,
+  DIM = 256
+};
 
 static Fl_RGB_Image *img[FRAMES];
 static uchar curframe;
@@ -50,9 +53,9 @@ static void make_images() {
     // A fading sphere
     uchar alpha = 255;
     if (i < FRAMES / 2)
-      alpha = uchar(255 * (i / ((float)FRAMES / 2)));
+      alpha = uchar(255 * (i / ((float) FRAMES / 2)));
     else
-      alpha = uchar(255 * (((FRAMES / 2) - (i - FRAMES / 2)) / ((float)FRAMES / 2)));
+      alpha = uchar(255 * (((FRAMES / 2) - (i - FRAMES / 2)) / ((float) FRAMES / 2)));
 
     const int spherew = 60;
     const int spherex = (DIM - spherew) / 2;
@@ -60,8 +63,8 @@ static void make_images() {
     for (x = spherex; x < spherex + spherew; x++) {
       for (y = 20; y < 20 + spherew; y++) {
 
-        float distx = x - (spherex + (float)spherew / 2);
-        float disty = y - (20 + (float)spherew / 2);
+        float distx = x - (spherex + (float) spherew / 2);
+        float disty = y - (20 + (float) spherew / 2);
         float dist = distx * distx + disty * disty;
 
         if (dist > maxdist)
@@ -82,7 +85,7 @@ static void make_images() {
     }
 
     // A moving blob
-    const float pos = (i / (float)FRAMES) * 2 - 0.5f;
+    const float pos = (i / (float) FRAMES) * 2 - 0.5f;
 
     const int xoffset = int(pos * DIM);
     const int yoffset = 2 * DIM / 3;
@@ -93,8 +96,8 @@ static void make_images() {
         continue;
       for (y = yoffset - w; y < yoffset + w; y++) {
         const uchar grey = abs(y - yoffset);
-        //        data[y * DIM * 4 + (x + xoffset) * 4 + 0] = grey;
-        //        data[y * DIM * 4 + (x + xoffset) * 4 + 1] = grey;
+//        data[y * DIM * 4 + (x + xoffset) * 4 + 0] = grey;
+//        data[y * DIM * 4 + (x + xoffset) * 4 + 1] = grey;
         data[y * DIM * 4 + (x + xoffset) * 4 + 2] = grey;
         data[y * DIM * 4 + (x + xoffset) * 4 + 3] = 127;
       }
@@ -104,10 +107,9 @@ static void make_images() {
   }
 }
 
-class window : public Fl_Double_Window {
+class window: public Fl_Double_Window {
 public:
-  window(int X, int Y, const char *lbl)
-    : Fl_Double_Window(X, Y, lbl) {}
+  window(int X, int Y, const char *lbl): Fl_Double_Window(X, Y, lbl) {}
 
   void draw() {
     Fl_Double_Window::draw();

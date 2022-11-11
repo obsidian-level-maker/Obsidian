@@ -3,7 +3,7 @@ PREFABS.Joiner_public_toilet_room_gz =
   file   = "joiner/gtd_urban_immersive_joiners_gz.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 650,
 

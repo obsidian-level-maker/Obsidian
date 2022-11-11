@@ -8,7 +8,7 @@ PREFABS.Item_dem_mirrormaze_closet =
   file  = "item/dem_item_closets_hell.wad",
   map   = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   filter = "mirror_maze",
 
@@ -42,7 +42,7 @@ PREFABS.Item_dem_rift_closet =
   file  = "item/dem_item_closets_hell.wad",
   map   = "MAP03",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "hell",
   prob  = 100,
@@ -100,7 +100,7 @@ PREFABS.Item_dem_scrying1_closet =
   file  = "item/dem_item_closets_hell.wad",
   map   = "MAP16",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "hell",
   prob  = 250,
@@ -124,7 +124,7 @@ PREFABS.Item_dem_scrying1_closet_vanilla =
   file  = "item/dem_item_closets_hell.wad",
   map   = "MAP16",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "hell",
   prob  = 250,
@@ -149,7 +149,7 @@ PREFABS.Item_dem_scrying2_closet =
   file  = "item/dem_item_closets_hell.wad",
   map   = "MAP17",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "hell",
   prob  = 100,
@@ -172,7 +172,7 @@ PREFABS.Item_dem_scrying2_closet_vanilla =
   file  = "item/dem_item_closets_hell.wad",
   map   = "MAP17",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "hell",
   prob  = 100,

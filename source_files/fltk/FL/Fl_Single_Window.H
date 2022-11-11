@@ -32,21 +32,20 @@
 class FL_EXPORT Fl_Single_Window : public Fl_Window {
 public:
   void show();
-  void show(int a, char **b) { Fl_Window::show(a, b); }
+  /** Same as Fl_Window::show(int a, char **b) */
+  void show(int a, char **b) {Fl_Window::show(a,b);}
 
-  /**
-   Creates a new Fl_Single_Window widget using the given
-   size, and label (title) string.
- */
-  Fl_Single_Window(int W, int H, const char *l = 0);
+   /**
+    Creates a new Fl_Single_Window widget using the given
+    size, and label (title) string.
+  */
+  Fl_Single_Window(int W, int H, const char *l=0);
 
   /**
     Creates a new Fl_Single_Window widget using the given
     position, size, and label (title) string.
   */
-  Fl_Single_Window(int X, int Y, int W, int H, const char *l = 0);
-
-  int make_current();
+  Fl_Single_Window(int X, int Y, int W, int H, const char *l=0);
 };
 
 #endif

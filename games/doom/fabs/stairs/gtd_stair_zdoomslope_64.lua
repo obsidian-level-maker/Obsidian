@@ -8,7 +8,7 @@ PREFABS.Stair_slope =
 
   style  = "steepness",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   where  = "seeds",
   shape  = "I",

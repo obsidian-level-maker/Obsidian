@@ -125,7 +125,7 @@ PREFABS.Item_wallmachines_secret_5 =
   prob   = 7,
   skip_prob = 50,
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   theme = "!hell",
   env = "!nature",
@@ -163,7 +163,7 @@ PREFABS.Item_wallmachines_secret_5_fast =
 {
   template = "Item_wallmachines_secret_5",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   line_23 = 24722,
 }
@@ -172,7 +172,7 @@ PREFABS.Item_wallmachines_secret_6_fast =
 {
   template = "Item_wallmachines_secret_5",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   tex_COMPBLUE = "REDWALL",
   tex_REDWALL = "COMPBLUE",

@@ -7,10 +7,9 @@ https://discord.gg/dfqCt9v
 # OBSIDIAN
 by the ObAddon Community.
 
-
 ## INTRODUCTION
 
-OBSIDIAN is a random level generator for the classic FPS 'DOOM'.
+OBSIDIAN is a random level generator for classic FPS titles.
 The goal is to produce good levels which are fun to play.
 
 Features of OBSIDIAN include:
@@ -20,9 +19,39 @@ Features of OBSIDIAN include:
 * built-in node builder, so the levels are ready to play
 * uses the LUA scripting language for easy customisation
 
+## COMPATIBLE GAMES
+
+* Doom 1 / The Ultimate Doom / Doom 2 / Final Doom  
+  These are the primary target for Obsidian and have the highest level of support, with the most prefabs, modules, and available addons.
+  New features are most likely to be implemented for these games first.
+    
+* Heretic  
+  Moderate level of support, with some advanced modules and a handful of addons available.
+  
+* Chex Quest 3 (Unstable branch only)  
+  Basic level of support, with a handful of unique prefabs.
+  
+* HacX 1.2 (Unstable branch only)  
+  Basic level of support.
+  
+* Harmony (Unstable branch only)  
+  Basic level of support.
+  
+* Hexen (Unstable branch only)  
+  Basic level of support. Game progression is linear and episodic, with no hubs present. The game will end after the last level generated. The Death Wyvern is absent from the monster table due to the    infeasibility of scripting and flight pathing with randomly generated layouts.
+  
+* Strife (Unstable branch only)  
+  Basic level of support. Quests/multiple endings not yet implemented. Progression is linear and game will end after the last level generated.
+  
+* Wolfenstein 3D / Spear of Destiny (Unstable branch only)  
+  Moderate level of support.
+  
+* Super Noah's Ark 3D (Unstable branch only)  
+  Basic level of support. 
+
 ## QUICK START GUIDE (Windows)
 
-First, unpack the zip somewhere (e.g. My Documents).  Make sure it is extracted with folders, and also make sure the OBSIDIAN.EXE file gets extracted too.
+First, unpack the zip somewhere .  Make sure it is extracted with folders, and also make sure the OBSIDIAN.EXE file gets extracted too.
 
 Double click on the OBSIDIAN icon to run it.  Select the game in the top left panel, and any other options which take your fancy. Then click the BUILD button in the top left panel, and pick a location in which to save your file.
 
@@ -42,23 +71,17 @@ Improved internationalization support, including fixes for accented characters i
 
 Russian translation file provided for the RU locale
 
-Basic support added for Chex Quest 3, HacX 1.2, Harmony, Hexen, and Strife.
-
-Hexen map format is supported; in addition there is a translation layer to convert
-Doom-formatted generic prefabs to Hexen format.
-
 GUI Customization and Theming added
 
 Modified SLUMP level builder included for Vanilla Doom usage.
 
 ZDBSP as the internal nodebuilder, replacing GLBSP.
 
-UDMF map generation option for GZDoom, Eternity Engine, and EDGE-Classic.
+UDMF map output for compatible engines.
 
 64-bit seeds and random numbers.
 
 Migrated from Lua to LuaJIT for improved build speeds.
-(Note: JIT currently disabled for 32-bit ARM builds; program will still function but at vanilla Lua speeds)
 
 Patch by Simon-v for searching for .pk3 addons in both the install and user's home directories (https://github.com/dashodanger/Oblige/pull/1)
 

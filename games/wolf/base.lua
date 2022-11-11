@@ -41,6 +41,7 @@ OB_GAMES["wolf"] =
 	label = _("Wolfenstein 3D"),
 	priority = 48,
 	
+	engine = "idtech_0",
 	format = "wolf3d",
 	
 	game_dir = "wolf",

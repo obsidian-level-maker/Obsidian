@@ -35,7 +35,7 @@ gui.import("vanilla_mats")
 ----------------------------------------------------------------
 
 function CHEX3.all_done()
-	if ob_match_engine("advanced") then
+	if ob_match_port("advanced") then
 	  local wad_file = "games/chex/data/CQ3_EXIT.wad"
 	  gui.wad_merge_sections(wad_file)
 	end
@@ -47,6 +47,8 @@ OB_GAMES["chex3"] =
 	label = _("Chex Quest 3"),
 	priority = 93,
 	
+	engine = "idtech_1",
+
 	format = "doom",
 	--sub_format = "hexen",
 	

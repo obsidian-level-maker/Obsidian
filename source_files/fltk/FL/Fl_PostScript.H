@@ -30,7 +30,7 @@
  \see Fl_PostScript_File_Device::close_command() and Fl_EPS_File_Surface::Fl_EPS_File_Surface().
  */
 extern "C" {
-typedef int (*Fl_PostScript_Close_Command)(FILE *);
+  typedef int (*Fl_PostScript_Close_Command)(FILE *);
 }
 
 class Fl_PostScript_Graphics_Driver;
@@ -40,18 +40,20 @@ class Fl_PostScript_Graphics_Driver;
  This class is used exactly as the Fl_Printer class except for the begin_job() call,
  two variants of which are usable and allow to specify what page format and layout are desired.
 
- <b>Processing of text</b>: Text uses vectorial fonts under the X11 + Pango and the Wayland
- platforms. With other platforms, only text restricted to the Latin alphabet (and a few other
- characters listed in the table below) and to FLTK standard fonts is vectorized.  All other unicode
- characters or all other fonts (FL_FREE_FONT and above) are output as a bitmap. FLTK standard fonts
- are output using the corresponding PostScript standard fonts. The latin alphabet means all unicode
- characters between U+0020 and U+017F, or, in other words, the ASCII, Latin-1 Supplement and Latin
- Extended-A charts. <br><b>Processing of transparent Fl_RGB_Image objects</b>: Under the X11 + Pango
- and the Wayland platforms, these objects are output with their exact transparency. With other
- platforms, these objects are drawn blended to white color. Class Fl_EPS_File_Surface 's constructor
- allows to set another background color for blending. <center>Extra characters supported by standard
- PostScript fonts</center> <table> <tr> <th>Char</th><th>Codepoint</th><th>Name</th>
- <th>Char</th><th>Codepoint</th><th>Name</th> <th>Char</th><th>Codepoint</th><th>Name</th></tr>
+ <b>Processing of text</b>: Text uses vectorial fonts under the X11 + Pango and the Wayland platforms.
+ With other platforms, only text restricted to the Latin alphabet (and a few other characters
+ listed in the table below) and to FLTK standard fonts is vectorized.  All other unicode characters
+ or all other fonts (FL_FREE_FONT and above) are output as a bitmap.
+ FLTK standard fonts are output using the corresponding PostScript standard fonts.
+ The latin alphabet means all unicode characters between U+0020 and U+017F, or, in other words,
+ the ASCII, Latin-1 Supplement and Latin Extended-A charts.
+ <br><b>Processing of transparent Fl_RGB_Image objects</b>: Under the X11 + Pango and the Wayland platforms,
+ these objects are output with their exact transparency. With other platforms, these objects
+ are drawn blended to white color. Class Fl_EPS_File_Surface 's constructor allows to set another
+ background color for blending.
+ <center>Extra characters supported by standard PostScript fonts</center>
+ <table>
+ <tr> <th>Char</th><th>Codepoint</th><th>Name</th>  <th>Char</th><th>Codepoint</th><th>Name</th> <th>Char</th><th>Codepoint</th><th>Name</th></tr>
  <tr><td>ƒ</td><td>U+0192</td><td>florin</td><td>‚</td><td>U+201A</td><td>quotesinglbase</td><td>™</td><td>U+2122</td><td>trademark</td></tr>
  <tr><td>ˆ</td><td>U+02C6</td><td>circumflex</td><td>“</td><td>U+201C</td><td>quotedblleft</td><td>∂</td><td>U+2202</td><td>partialdiff</td></tr>
  <tr><td>ˇ</td><td>U+02C7</td><td>caron</td><td>”</td><td>U+201D</td><td>quotedblright</td><td>Δ</td><td>U+2206</td><td>Delta</td></tr>
@@ -64,8 +66,7 @@ class Fl_PostScript_Graphics_Driver;
  <tr><td>–</td><td>U+2013</td><td>endash</td><td>‹</td><td>U+2039</td><td>guilsinglleft</td><td>◊</td><td>U+25CA</td><td>lozenge</td></tr>
  <tr><td>—</td><td>U+2014</td><td>emdash</td><td>›</td><td>U+203A</td><td>guilsinglright</td><td>ﬁ</td><td>U+FB01</td><td>fi</td></tr>
  <tr><td>‘</td><td>U+2018</td><td>quoteleft</td><td>/</td><td>U+2044</td><td>fraction</td><td>ﬂ</td><td>U+FB02</td><td>fl</td></tr>
- <tr><td>’</td><td>U+2019</td><td>quoteright</td><td>€</td><td>U+20AC</td><td>Euro</td><td></td><td>U+F8FF</td><td>apple
- (Mac OS only)</td></tr>
+ <tr><td>’</td><td>U+2019</td><td>quoteright</td><td>€</td><td>U+20AC</td><td>Euro</td><td></td><td>U+F8FF</td><td>apple (Mac OS only)</td></tr>
  </table>
 
  */
@@ -74,34 +75,28 @@ private:
   // memorize the display's current font to restore it when the object ceases being current
   Fl_Font display_font_;
   Fl_Fontsize display_size_;
-
 protected:
   /**
    \brief Returns the PostScript driver of this drawing surface.
    */
-  inline Fl_PostScript_Graphics_Driver *driver() {
-    return (Fl_PostScript_Graphics_Driver *)Fl_Surface_Device::driver();
-  }
-
+  inline Fl_PostScript_Graphics_Driver *driver() { return (Fl_PostScript_Graphics_Driver*)Fl_Surface_Device::driver(); }
 public:
   /** The constructor. */
-  Fl_PostScript_File_Device();
+    Fl_PostScript_File_Device();
   /** The destructor. */
   ~Fl_PostScript_File_Device();
   /** Don't use with this class. */
-  int begin_job(int pagecount, int *from, int *to, char **perr_message);
+  int begin_job(int pagecount, int* from, int* to, char **perr_message);
   /** Begins the session where all graphics requests will go to a local PostScript file.
    Opens a file dialog to select an output PostScript file.
    This member function makes end_job() close the resulting PostScript file and display an
    alert message with fl_alert() in case of any output error.
-   @param pagecount The total number of pages to be created. Use 0 if this number is unknown when
-   this function is called.
+   @param pagecount The total number of pages to be created. Use 0 if this number is unknown when this function is called.
    @param format Desired page format.
    @param layout Desired page layout.
-   @return 0 if OK, 1 if user cancelled the file dialog, 2 if fopen failed on user-selected output
-   file.
+   @return 0 if OK, 1 if user cancelled the file dialog, 2 if fopen failed on user-selected output file.
    */
-  int begin_job(int pagecount = 0, enum Fl_Paged_Device::Page_Format format = Fl_Paged_Device::A4,
+ int begin_job(int pagecount = 0, enum Fl_Paged_Device::Page_Format format = Fl_Paged_Device::A4,
                 enum Fl_Paged_Device::Page_Layout layout = Fl_Paged_Device::PORTRAIT);
   /** Synonym of begin_job().
    For API compatibility with FLTK 1.3.x */
@@ -110,40 +105,36 @@ public:
     return begin_job(pagecount, format, layout);
   }
   /** Begins the session where all graphics requests will go to FILE pointer.
-   This member function prevents end_job() from closing \p ps_output, so the user can check with \p
-   ferror(ps_output) for output errors.
-   @param ps_output A writable FILE pointer that will receive PostScript output and that should not
-   be closed until after end_job() has been called.
-   @param pagecount The total number of pages to be created. Use 0 if this number is unknown when
-   this function is called.
+   This member function prevents end_job() from closing \p ps_output, so the user can check with \p ferror(ps_output)
+   for output errors.
+   @param ps_output A writable FILE pointer that will receive PostScript output and that should not be closed
+   until after end_job() has been called.
+   @param pagecount The total number of pages to be created. Use 0 if this number is unknown when this function is called.
    @param format Desired page format.
    @param layout Desired page layout.
    @return always 0.
    */
-  int begin_job(FILE *ps_output, int pagecount = 0,
-                enum Fl_Paged_Device::Page_Format format = Fl_Paged_Device::A4,
+  int begin_job(FILE *ps_output, int pagecount = 0, enum Fl_Paged_Device::Page_Format format = Fl_Paged_Device::A4,
                 enum Fl_Paged_Device::Page_Layout layout = Fl_Paged_Device::PORTRAIT);
   /** Synonym of begin_job().
    For API compatibility with FLTK 1.3.x */
-  int start_job(FILE *ps_output, int pagecount = 0,
-                enum Fl_Paged_Device::Page_Format format = Fl_Paged_Device::A4,
+  int start_job(FILE *ps_output, int pagecount = 0, enum Fl_Paged_Device::Page_Format format = Fl_Paged_Device::A4,
                 enum Fl_Paged_Device::Page_Layout layout = Fl_Paged_Device::PORTRAIT) {
     return begin_job(ps_output, pagecount, format, layout);
   }
 
-  int begin_page(void);
+  int begin_page (void);
   int printable_rect(int *w, int *h);
   void margins(int *left, int *top, int *right, int *bottom);
   void origin(int *x, int *y);
   void origin(int x, int y);
-  void scale(float scale_x, float scale_y = 0.);
+  void scale (float scale_x, float scale_y = 0.);
   void rotate(float angle);
   void translate(int x, int y);
   void untranslate(void);
-  int end_page(void);
+  int end_page (void);
   /** Completes all PostScript output.
-   This also closes with \p fclose() the underlying file() unless close_command() was used to set
-   another function.
+   This also closes with \p fclose() the underlying file() unless close_command() was used to set another function.
    */
   void end_job(void);
   /** Label of the PostScript file chooser window */
@@ -159,10 +150,15 @@ public:
 };
 
 /** Encapsulated PostScript drawing surface.
- This drawing surface allows to store any FLTK graphics in vectorial form in an "Encapsulated
- PostScript" file. \n Usage example: \code Fl_Window *win = ...// Window to draw to an .eps file int
- ww = win->decorated_w(); int wh = win->decorated_h(); FILE *eps = fl_fopen("/path/to/mywindow.eps",
- "w"); if (eps) { Fl_EPS_File_Surface *surface = new Fl_EPS_File_Surface(ww, wh, eps, win->color());
+ This drawing surface allows to store any FLTK graphics in vectorial form in an "Encapsulated PostScript" file.
+ \n Usage example:
+ \code
+   Fl_Window *win = ...// Window to draw to an .eps file
+   int ww = win->decorated_w();
+   int wh = win->decorated_h();
+   FILE *eps = fl_fopen("/path/to/mywindow.eps", "w");
+   if (eps) {
+     Fl_EPS_File_Surface *surface = new Fl_EPS_File_Surface(ww, wh, eps, win->color());
      Fl_Surface_Device::push_current(surface);
      surface->draw_decorated_window(win);
      Fl_Surface_Device::pop_current();
@@ -173,10 +169,7 @@ public:
 class FL_EXPORT Fl_EPS_File_Surface : public Fl_Widget_Surface {
 protected:
   /** Returns the PostScript driver of this drawing surface. */
-  inline Fl_PostScript_Graphics_Driver *driver() {
-    return (Fl_PostScript_Graphics_Driver *)Fl_Surface_Device::driver();
-  }
-
+  inline Fl_PostScript_Graphics_Driver *driver() { return (Fl_PostScript_Graphics_Driver*)Fl_Surface_Device::driver(); }
 public:
   /**
   Constructor.
@@ -188,19 +181,18 @@ public:
    Under the X11 + pango platform, transparent RGB images are correctly blended to their background,
    thus this parameter has no effect.
    \param closef If not NULL, the destructor or close() will call \p closef(eps_output) after all
-    EPS data has been sent. If NULL, \p fclose(eps_output) is called instead. This allows to close
-  the FILE pointer by, e.g., \p pclose, or, using a function such as \p "int keep_open(FILE*){return
-  0;}", to keep it open after completion of all output to \p eps_output. Function \p closef should
-  return non zero to indicate an error.
+    EPS data has been sent. If NULL, \p fclose(eps_output) is called instead. This allows to close the FILE
+    pointer by, e.g., \p pclose, or, using a function such as \p "int keep_open(FILE*){return 0;}", to keep it open after
+    completion of all output to \p eps_output. Function \p closef should return non zero to indicate an error.
   */
-  Fl_EPS_File_Surface(int width, int height, FILE *eps_output, Fl_Color background = FL_WHITE,
-                      Fl_PostScript_Close_Command closef = NULL);
+  Fl_EPS_File_Surface(int width, int height, FILE *eps_output,
+                      Fl_Color background = FL_WHITE, Fl_PostScript_Close_Command closef = NULL);
   /**
    Destructor.
-   By default, the destructor closes with function \p fclose() the underlying FILE. See the
-   constructor for how to close it differently or to keep it open. Use close() before object
-   destruction to receive the status code of output operations. If close() is not used and if EPS
-   output results in error, the destructor displays an alert message with fl_alert().
+   By default, the destructor closes with function \p fclose() the underlying FILE. See the constructor for how
+   to close it differently or to keep it open. Use close() before object destruction to receive the status code
+   of output operations. If close() is not used and if EPS output results in error, the destructor displays an alert message
+   with fl_alert().
    */
   ~Fl_EPS_File_Surface();
   virtual int printable_rect(int *w, int *h);
@@ -211,9 +203,8 @@ public:
   virtual void translate(int x, int y);
   virtual void untranslate();
   /** Completes all EPS output.
-   The only operation possible with the Fl_EPS_File_Surface object after calling close() is its
-   destruction. \return The status code of output operations to the FILE object. 0 indicates
-   success. */
+   The only operation possible with the Fl_EPS_File_Surface object after calling close() is its destruction.
+   \return The status code of output operations to the FILE object. 0 indicates success. */
   int close();
 };
 

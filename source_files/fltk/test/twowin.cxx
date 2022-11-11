@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
   win1->position(200, 200);
   win2->position(400, 200);
 
-  win1->show(argc, argv);
+  win1->show(argc,argv);
   win2->show();
   return Fl::run();
 }

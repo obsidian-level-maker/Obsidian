@@ -88,6 +88,8 @@ Window fl_xid(const Fl_Window *)
 
 \par
 Returns the XID for a window, or zero if not \c shown().
+\deprecated Kept for compatibility with FLTK versions before 1.4.
+Use preferentially fl_x11_xid(const Fl_Window *) with versions 1.4 and above.
 
 Fl_Window *fl_find(ulong xid)
 
@@ -96,6 +98,8 @@ Returns the Fl_Window that corresponds to the given
 XID, or \c NULL if not found. This function uses a cache
 so it is slightly faster than iterating through the windows
 yourself.
+\deprecated Kept for compatibility with FLTK versions before 1.4.
+Use preferentially fl_x11_find(Window) with versions 1.4 and above.
 
 int fl_handle(const XEvent &)
 
@@ -124,9 +128,11 @@ The following global variables are set before
 Fl_Widget::draw() is called, or by Fl_Window::make_current():
 
 \code
-extern Display *fl_display;
+extern Display *fl_display; // for compatibility with previous FLTK versions
+extern Display *fl_x11_display(); // preferred access starting with FLTK 1.4
 extern Window fl_window;
-extern GC fl_gc;
+extern GC fl_gc; // for compatibility with previous FLTK versions
+extern GC fl_x11_gc(); // preferred access starting with FLTK 1.4
 extern int fl_screen;
 extern XVisualInfo *fl_visual;
 extern Colormap fl_colormap;
@@ -384,12 +390,14 @@ before compilation.
 
 \subsection osissues_x_icon Setting the Icon of a Window
 
-FLTK currently supports setting a window's icon \b before it
-is shown using the Fl_Window::icon() method.
+FLTK recommends to set window icons using these platform-independent methods:
+Fl_Window::icon(const Fl_RGB_Image *) and Fl_Window::icons(const Fl_RGB_Image *[], int).
+See also methods setting default window icons Fl_Window::default_icon(const Fl_RGB_Image *)
+and Fl_Window::default_icons(const Fl_RGB_Image *[], int).
 
-void Fl_Window::icon(const void *)
-
-\par
+FLTK on X11 also supports, for backward compatibility, use of the deprecated method
+Fl_Window::icon(const void *) as follows :
+<br>
 Sets the icon for the window to the passed pointer. You will
 need to cast the icon \c Pixmap to a \c char* when
 calling this method. To set a monochrome icon using a bitmap compiled
@@ -405,7 +413,6 @@ Pixmap p = XCreateBitmapFromData(fl_display, DefaultRootWindow(fl_display),
 window->icon((const void*)p);
 \endcode
 
-\par
 To use a multi-colored icon, the XPM format and library
 should be used as follows:
 \code
@@ -422,7 +429,6 @@ XpmCreatePixmapFromData(fl_display, DefaultRootWindow(fl_display),
 window->icon((const void *)p);
 \endcode
 
-\par
 When using the Xpm library, be sure to include it in the list
 of libraries that are used to link the application (usually "-lXpm").
 
@@ -439,6 +445,8 @@ of libraries that are used to link the application (usually "-lXpm").
 </TR>
 </TABLE>
 </CENTER>
+
+Any window icon must be set with the above methods before the window is shown.
 
 \subsection osissues_xresources X Resources
 
@@ -559,9 +567,11 @@ called, FLTK stores all the extra arguments you need to
 make a proper GDI call in some global variables:
 
 \code
-extern HINSTANCE fl_display;
+extern HINSTANCE fl_display; // for compatibility with previous FLTK versions
+extern HINSTANCE fl_win32_display(); // preferred access starting with FLTK 1.4
 extern HWND fl_window;
-extern HDC fl_gc;
+extern HDC fl_gc;  // for compatibility with previous FLTK versions
+extern HDC fl_win32_gc(); // preferred access starting with FLTK 1.4
 COLORREF fl_RGB();
 HPEN fl_pen();
 HBRUSH fl_brush();
@@ -605,13 +615,14 @@ This matches the value of
 
 \subsection osissues_icon_windows Setting the Icon of a Window
 
-FLTK currently supports setting a window's icon *before* it
-is shown using the Fl_Window::icon() method.
+FLTK recommends to set window icons using these platform-independent methods:
+Fl_Window::icon(const Fl_RGB_Image *) and Fl_Window::icons(const Fl_RGB_Image *[], int).
+See also methods setting default window icons Fl_Window::default_icon(const Fl_RGB_Image *)
+and Fl_Window::default_icons(const Fl_RGB_Image *[], int).
 
-void Fl_Window::icon(const void *)
-
-\par
-Sets the icon for the window to the passed pointer. You will
+FLTK on Windows also supports, for backward compatibility, use of the deprecated method
+Fl_Window::icon(const void *) as follows :
+<br>Set the icon for the window to the passed pointer. You will
 need to cast the \c HICON handle to a \c char* when
 calling this method. To set the icon using an icon resource
 compiled with your application use:
@@ -619,7 +630,6 @@ compiled with your application use:
 window->icon((const void *)LoadIcon(fl_display, MAKEINTRESOURCE(IDI_ICON)));
 \endcode
 
-\par
 You can also use the \c LoadImage() and related
 functions to load specific resolutions or create the icon from
 bitmap data.
@@ -637,6 +647,8 @@ bitmap data.
 </TR>
 </TABLE>
 </CENTER>
+
+Any window icon must be set with the above methods before the window is shown.
 
 \subsection osissues_msdos_console How to Not Get a MSDOS Console Window
 
@@ -931,17 +943,8 @@ FLTK uses UTF-8-encoded UNIX-style filenames and paths.
 
 \section osissues_wayland The Wayland Interface
 
-Wayland-specific source code can be organized as follows to be distinguished
-from X11-specific source code :
-\code
-#include <FL/platform.H> // defines FLTK_USE_WAYLAND or FLTK_USE_X11 as appropriate
-
-#if defined(FLTK_USE_WAYLAND)
-… Wayland-specific source code …
-#elif defined(FLTK_USE_X11)
-… X11-specific source code …
-#endif
-\endcode
+See file README.Wayland.txt for details about how to organize platform-specific
+source code for the Wayland platform.
 
 extern struct wl_display *fl_wl_display();
 \par
@@ -950,16 +953,16 @@ struct wl_display representing the connection between the application and Waylan
 For example, \c wl_display_get_fd(fl_wl_display()) gives the file descriptor one can
 use to communicate with the Wayland compositor according to the Wayland protocol.
 
-Window fl_xid(const Fl_Window *)
+struct wld_window *fl_wl_xid(const Fl_Window *)
 \par
 Returns a pointer to an <u>FLTK-defined</u> structure holding Wayland-related
 data created when a window gets show()'n, or NULL if not show()'n.
 
-Fl_Window *fl_find(Window wld_win)
+Fl_Window *fl_wl_find(struct wld_window * wld_win)
 \par
 Returns the Fl_Window that corresponds to the given Window, or NULL if not found.
 
-struct wl_surface *fl_wl_surface(Window wld_win)
+struct wl_surface *fl_wl_surface(struct wld_window *wld_win)
 \par
 Returns a pointer to the struct wl_surface corresponding to a show()'n
 top-level window or subwindow.

@@ -25,73 +25,81 @@
  */
 
 
-/*
- * Call agvInit() with glut's current window set to the window in
- * which you want to run the viewer. Right after creating it is fine.  It
- * will remember that window for possible later use (see below) and
- * registers mouse, motion, and keyboard handlers for that window (see below).
- *
- * allowidle is 1 or 0 depnding on whether you will let AGV install
- * and uninstall an idle function.  0 means you will not let it (because
- * you will be having your own idle function). In this case it is your
- * responsibility to put a statement like:
- *
- *     if (agvMoving)
- *       agvMove();
- *
- * at the end of your idle function, to let AGV update the viewpoint if it
- * is moving.
- *
- * If allowidle is 1 it means AGV will install its own idle which
- * will update the viewpoint as needed and send glutPostRedisplay() to the
- * window which was current when agvInit() was called.
- *
- * agvSetIdleAllow changes this value so you can let AGV install its idle
- * when your idle isn't installed.
- *
- */
+ /*
+  * Call agvInit() with glut's current window set to the window in
+  * which you want to run the viewer. Right after creating it is fine.  It
+  * will remember that window for possible later use (see below) and
+  * registers mouse, motion, and keyboard handlers for that window (see below).
+  *
+  * allowidle is 1 or 0 depnding on whether you will let AGV install
+  * and uninstall an idle function.  0 means you will not let it (because
+  * you will be having your own idle function). In this case it is your
+  * responsibility to put a statement like:
+  *
+  *     if (agvMoving)
+  *       agvMove();
+  *
+  * at the end of your idle function, to let AGV update the viewpoint if it
+  * is moving.
+  *
+  * If allowidle is 1 it means AGV will install its own idle which
+  * will update the viewpoint as needed and send glutPostRedisplay() to the
+  * window which was current when agvInit() was called.
+  *
+  * agvSetIdleAllow changes this value so you can let AGV install its idle
+  * when your idle isn't installed.
+  *
+  */
 void agvInit(int allowidle);
 void agvSetAllowIdle(int allowidle);
 
 
-/*
- * Set which movement mode you are in.
- */
+ /*
+  * Set which movement mode you are in.
+  */
 typedef enum { FLYING, POLAR } MovementType;
 void agvSwitchMoveMode(int move);
 
-/*
- * agvViewTransform basically does the appropriate gluLookAt() for the
- * current position.  So call it in your display on the projection matrix
- */
+ /*
+  * agvViewTransform basically does the appropriate gluLookAt() for the
+  * current position.  So call it in your display on the projection matrix
+  */
 void agvViewTransform(void);
 
-/*
- * agvMoving will be set by AGV according to whether it needs you to call
- * agvMove() at the end of your idle function.  You only need these if
- * you aren't allowing AGV to do its own idle.
- * (Don't change the value of agvMoving)
- */
+ /*
+  * agvMoving will be set by AGV according to whether it needs you to call
+  * agvMove() at the end of your idle function.  You only need these if
+  * you aren't allowing AGV to do its own idle.
+  * (Don't change the value of agvMoving)
+  */
 extern int agvMoving;
 void agvMove(void);
 
-/*
- * These are the routines AGV registers to deal with mouse and keyboard input.
- * Keyboard input only matters in flying mode, and then only to set speed.
- * Mouse input only uses left two buttons in both modes.
- * These are all registered with agvInit(), but you could register
- * something else which called these, or reregister these as needed
- */
+ /*
+  * These are the routines AGV registers to deal with mouse and keyboard input.
+  * Keyboard input only matters in flying mode, and then only to set speed.
+  * Mouse input only uses left two buttons in both modes.
+  * These are all registered with agvInit(), but you could register
+  * something else which called these, or reregister these as needed
+  */
 void agvHandleButton(int button, int state, int x, int y);
 void agvHandleMotion(int x, int y);
 void agvHandleKeys(unsigned char key, int x, int y);
 
-/*
- * Just an extra routine which makes an x-y-z axes (about 10x10x10)
- * which is nice for aligning things and debugging.  Pass it an available
- * displaylist number.
- */
+ /*
+  * Just an extra routine which makes an x-y-z axes (about 10x10x10)
+  * which is nice for aligning things and debugging.  Pass it an available
+  * displaylist number.
+  */
 void agvMakeAxesList(int displaylist);
 
 
+
 void ncrossprod(float v1[3], float v2[3], float cp[3]);
+
+
+
+
+
+
+

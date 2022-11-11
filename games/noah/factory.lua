@@ -4674,8 +4674,12 @@ WOLF_ELEVATOR =
   {
     E = { solid="elevator" },
     F = { solid="front"    },
-
     d = { kind="door_kind" },
+  },
+
+  things =
+  {
+    { kind="exit", x=160,  y=64 },
   },
 },
 
@@ -4755,6 +4759,9 @@ NOAH.FACTORY.THINGS =
 
   -- special
   secret  = { kind="other", id=98, r=30,h=60, pass=true },
+
+  -- exits
+  normal_exit = { kind="other", id=100, r=30, h=60, pass=true }
 }
 
 NOAH.FACTORY.TILE_NUMS =
@@ -4809,7 +4816,7 @@ NOAH.FACTORY.MISC_PREFABS =
     prefab = "WOLF_ELEVATOR",
     add_mode = "extend",
 
-    skin = { elevator=21, front=14, }
+    skin = { elevator=15, front=5, exit="normal_exit" }
   },
 }
 

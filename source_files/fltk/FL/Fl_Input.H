@@ -222,7 +222,7 @@ class FL_EXPORT Fl_Input : public Fl_Input_ {
   friend class Fl_Cocoa_Screen_Driver; // Not ideal, but probably no other platform will use it
   int shift_position(int p);
   int shift_up_down_position(int p);
-  void handle_mouse(int keepmark = 0);
+  void handle_mouse(int keepmark=0);
 
   // Private keyboard functions
   int kf_lines_up(int repeat_num);
@@ -260,7 +260,7 @@ protected:
 
 public:
   int handle(int);
-  Fl_Input(int, int, int, int, const char * = 0);
+  Fl_Input(int,int,int,int,const char * = 0);
 };
 
 #endif

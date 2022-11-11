@@ -19,8 +19,7 @@
 #include <FL/Fl_Native_File_Chooser.H>
 
 /** Localizable message */
-const char *Fl_Native_File_Chooser::file_exists_message =
-    "File exists. Are you sure you want to overwrite?";
+const char *Fl_Native_File_Chooser::file_exists_message = "File exists. Are you sure you want to overwrite?";
 
 /**
  Destructor.
@@ -34,8 +33,7 @@ Fl_Native_File_Chooser::~Fl_Native_File_Chooser() {
  Sets the current Fl_Native_File_Chooser::Type of browser.
  */
 void Fl_Native_File_Chooser::type(int t) {
-  if (platform_fnfc)
-    platform_fnfc->type(t);
+  if (platform_fnfc) platform_fnfc->type(t);
 }
 
 /**
@@ -60,8 +58,7 @@ int Fl_Native_File_Chooser::type() const {
  \endcode
  */
 void Fl_Native_File_Chooser::options(int o) {
-  if (platform_fnfc)
-    platform_fnfc->options(o);
+  if (platform_fnfc) platform_fnfc->options(o);
 }
 
 /**
@@ -122,8 +119,7 @@ const char *Fl_Native_File_Chooser::filename(int i) const {
  to use the last non-cancelled folder.
  */
 void Fl_Native_File_Chooser::directory(const char *val) {
-  if (platform_fnfc)
-    platform_fnfc->directory(val);
+  if (platform_fnfc) platform_fnfc->directory(val);
 }
 
 /**
@@ -139,15 +135,14 @@ const char *Fl_Native_File_Chooser::directory() const {
  The default title varies according to the platform, so you are advised to set the title explicitly.
  */
 void Fl_Native_File_Chooser::title(const char *t) {
-  if (platform_fnfc)
-    platform_fnfc->title(t);
+  if (platform_fnfc) platform_fnfc->title(t);
 }
 
 /**
  Get the title of the file chooser's dialog window.
  Return value may be NULL if no title was set.
  */
-const char *Fl_Native_File_Chooser::title() const {
+const char* Fl_Native_File_Chooser::title() const {
   return platform_fnfc->title();
 }
 
@@ -178,8 +173,7 @@ const char *Fl_Native_File_Chooser::filter() const {
  in the file chooser. The 'All Files' option is always available to the user.
  */
 void Fl_Native_File_Chooser::filter(const char *f) {
-  if (platform_fnfc)
-    platform_fnfc->filter(f);
+  if (platform_fnfc) platform_fnfc->filter(f);
 }
 
 /**
@@ -214,15 +208,14 @@ int Fl_Native_File_Chooser::filter_value() const {
  Mainly used to preset the filename for save dialogs,
  and on most platforms can be used for opening files as well.
  */
-void Fl_Native_File_Chooser::preset_file(const char *f) {
-  if (platform_fnfc)
-    platform_fnfc->preset_file(f);
+void Fl_Native_File_Chooser::preset_file(const char*f) {
+  if (platform_fnfc) platform_fnfc->preset_file(f);
 }
 
 /**
  Get the preset filename.
  */
-const char *Fl_Native_File_Chooser::preset_file() const {
+const char* Fl_Native_File_Chooser::preset_file() const {
   return platform_fnfc->preset_file();
 }
 
@@ -256,20 +249,18 @@ int Fl_Native_File_Chooser::show() {
 //    Value can be NULL
 //
 char *Fl_Native_File_Chooser_Driver::strnew(const char *val) {
-  if (val == NULL)
-    return (NULL);
-  char *s = new char[strlen(val) + 1];
+  if ( val == NULL ) return(NULL);
+  char *s = new char[strlen(val)+1];
   strcpy(s, val);
-  return (s);
+  return(s);
 }
 
 // FREE STRING CREATED WITH strnew(), NULLS OUT STRING
 //    Value can be NULL
 //
 char *Fl_Native_File_Chooser_Driver::strfree(char *val) {
-  if (val)
-    delete[] val;
-  return (NULL);
+  if ( val ) delete [] val;
+  return(NULL);
 }
 
 // 'DYNAMICALLY' APPEND ONE STRING TO ANOTHER
@@ -283,24 +274,24 @@ char *Fl_Native_File_Chooser_Driver::strfree(char *val) {
 //      s = strapp(s, "bar");           // s = "foobar"
 //
 char *Fl_Native_File_Chooser_Driver::strapp(char *s, const char *val) {
-  if (!val) {
-    return (s); // Nothing to append? return s
+  if ( ! val ) {
+    return(s);                  // Nothing to append? return s
   }
-  if (!s) {
-    return (strnew(val)); // New string? return copy of val
+  if ( ! s ) {
+    return(strnew(val));        // New string? return copy of val
   }
-  char *news = new char[strlen(s) + strlen(val) + 1];
+  char *news = new char[strlen(s)+strlen(val)+1];
   strcpy(news, s);
   strcat(news, val);
-  delete[] s;    // delete old string
-  return (news); // return new copy
+  delete [] s;                  // delete old string
+  return(news);                 // return new copy
 }
 
 // APPEND A CHARACTER TO A STRING
 //     This does NOT allocate space for the new character.
 //
 void Fl_Native_File_Chooser_Driver::chrcat(char *s, char c) {
-  char tmp[2] = {c, '\0'};
+  char tmp[2] = { c, '\0' };
   strcat(s, tmp);
 }
 

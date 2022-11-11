@@ -23,7 +23,7 @@
 //
 
 #ifndef Fl_H
-#define NEED_MAIN 1 // when not included by another FLTK program
+#  define NEED_MAIN 1 // when not included by another FLTK program
 #endif
 
 #include <FL/platform.H> // for FLTK_USE_X11
@@ -48,7 +48,7 @@ const char *dname;
 void fl_open_display() {
   fl_display = XOpenDisplay(dname);
   if (!fl_display) {
-    fprintf(stderr, "Can't open display: %s\n", XDisplayName(dname));
+    fprintf(stderr,"Can't open display: %s\n",XDisplayName(dname));
     exit(1);
   }
   fl_screen = DefaultScreen(fl_display);
@@ -56,8 +56,14 @@ void fl_open_display() {
 
 #endif // NEED_MAIN
 
-const char *ClassNames[] = {"StaticGray ", "GrayScale  ", "StaticColor",
-                            "PseudoColor", "TrueColor  ", "DirectColor"};
+const char *ClassNames[] = {
+  "StaticGray ",
+  "GrayScale  ",
+  "StaticColor",
+  "PseudoColor",
+  "TrueColor  ",
+  "DirectColor"
+};
 
 // SERVER_OVERLAY_VISUALS property element:
 typedef struct _OverlayInfo {
@@ -71,28 +77,22 @@ typedef struct _OverlayInfo {
 #include <X11/extensions/multibuf.h>
 #endif
 
-static void print_mask(XVisualInfo *p) {
+static void print_mask(XVisualInfo* p) {
   int n = 0;
   int what = 0;
   int print_anything = 0;
   char buf[20];
   char *q = buf;
   *q = 0;
-  int b;
-  unsigned int m;
-  for (b = 32, m = 0x80000000;; b--, m >>= 1) {
+  int b; unsigned int m; for (b=32,m=0x80000000; ; b--,m>>=1) {
     int new_what = 0;
-    if (p->red_mask & m)
-      new_what = 'r';
-    else if (p->green_mask & m)
-      new_what = 'g';
-    else if (p->blue_mask & m)
-      new_what = 'b';
-    else
-      new_what = '?';
+    if (p->red_mask&m) new_what = 'r';
+    else if (p->green_mask&m) new_what = 'g';
+    else if (p->blue_mask&m) new_what = 'b';
+    else new_what = '?';
     if (new_what != what) {
       if (what && (what != '?' || print_anything)) {
-        q += sprintf(q, "%d%c", n, what);
+        q += snprintf(q, sizeof(buf) - (q-buf), "%d%c", n, what);
         print_anything = 1;
       }
       what = new_what;
@@ -100,8 +100,7 @@ static void print_mask(XVisualInfo *p) {
     } else {
       n++;
     }
-    if (!b)
-      break;
+    if (!b) break;
   }
   printf("%7s", buf);
 }
@@ -110,7 +109,7 @@ void list_visuals() {
   fl_open_display();
   XVisualInfo vTemplate;
   int num;
-  XVisualInfo *visualList = XGetVisualInfo(fl_display, 0, &vTemplate, &num);
+  XVisualInfo *visualList = XGetVisualInfo(fl_display,0,&vTemplate,&num);
 
   XPixmapFormatValues *pfvlist;
   static int numpfv;
@@ -118,108 +117,96 @@ void list_visuals() {
 
   OverlayInfo *overlayInfo = 0;
   int numoverlayinfo = 0;
-  Atom overlayVisualsAtom = XInternAtom(fl_display, "SERVER_OVERLAY_VISUALS", 1);
+  Atom overlayVisualsAtom = XInternAtom(fl_display,"SERVER_OVERLAY_VISUALS",1);
   if (overlayVisualsAtom) {
     unsigned long sizeData, bytesLeft;
     Atom actualType;
     int actualFormat;
-    if (!XGetWindowProperty(fl_display, RootWindow(fl_display, fl_screen), overlayVisualsAtom, 0L,
-                            10000L, False, overlayVisualsAtom, &actualType, &actualFormat,
-                            &sizeData, &bytesLeft, (unsigned char **)&overlayInfo))
-      numoverlayinfo = int(sizeData / 4);
+    if (!XGetWindowProperty(fl_display, RootWindow(fl_display, fl_screen),
+                           overlayVisualsAtom, 0L, 10000L, False,
+                           overlayVisualsAtom, &actualType, &actualFormat,
+                           &sizeData, &bytesLeft,
+                           (unsigned char **) &overlayInfo))
+      numoverlayinfo = int(sizeData/4);
   }
 
 #if HAVE_MULTIBUF
   int event_base, error_base;
   XmbufBufferInfo *mbuf, *sbuf;
   int nmbuf = 0, nsbuf = 0;
-  if (XmbufQueryExtension(fl_display, &event_base, &error_base)) {
-    XmbufGetScreenInfo(fl_display, RootWindow(fl_display, fl_screen), &nmbuf, &mbuf, &nsbuf, &sbuf);
+  if (XmbufQueryExtension(fl_display,&event_base, &error_base)) {
+    XmbufGetScreenInfo(fl_display,RootWindow(fl_display,fl_screen),
+                       &nmbuf, &mbuf, &nsbuf, &sbuf);
   }
 #endif
 
-  for (int i = 0; i < num; i++) {
-    XVisualInfo *p = visualList + i;
+  for (int i=0; i<num; i++) {
+    XVisualInfo *p = visualList+i;
 
     XPixmapFormatValues *pfv;
-    for (pfv = pfvlist;; pfv++) {
-      if (pfv >= pfvlist + numpfv) {
-        pfv = 0;
-        break;
-      } // should not happen!
-      if (pfv->depth == p->depth)
-        break;
+    for (pfv = pfvlist; ; pfv++) {
+      if (pfv >= pfvlist+numpfv) {pfv = 0; break;} // should not happen!
+      if (pfv->depth == p->depth) break;
     }
 
     int j = pfv ? pfv->bits_per_pixel : 0;
-    printf(" %2ld: %s %2d/%d", p->visualid, ClassNames[p->c_class], p->depth, j);
-    if (j < 10)
-      putchar(' ');
+    printf(" %2ld: %s %2d/%d", p->visualid, ClassNames[p->c_class],
+           p->depth, j);
+    if (j < 10) putchar(' ');
 
     print_mask(p);
 
-    for (j = 0; j < numoverlayinfo; j++) {
+    for (j=0; j<numoverlayinfo; j++) {
       OverlayInfo *o = &overlayInfo[j];
       if (o->overlay_visual == long(p->visualid)) {
         printf(" overlay(");
-        if (o->transparent_type == 1)
-          printf("transparent pixel %ld, ", o->value);
-        else if (o->transparent_type == 2)
-          printf("transparent mask %ld, ", o->value);
-        else
-          printf("opaque, ");
+        if (o->transparent_type==1) printf("transparent pixel %ld, ",o->value);
+        else if (o->transparent_type==2) printf("transparent mask %ld, ",o->value);
+        else printf("opaque, ");
         printf("layer %ld)", o->layer);
       }
     }
 
 #if HAVE_MULTIBUF
-    for (j = 0; j < nmbuf; j++) {
+    for (j=0; j<nmbuf; j++) {
       XmbufBufferInfo *m = &mbuf[j];
       if (m->visualid == p->visualid)
         printf(" multibuffer(%d)", m->max_buffers);
     }
-    for (j = 0; j < nsbuf; j++) {
+    for (j=0; j<nsbuf; j++) {
       XmbufBufferInfo *m = &sbuf[j];
       if (m->visualid == p->visualid)
         printf(" stereo multibuffer(%d)", m->max_buffers);
     }
 #endif
 
-    if (p->visualid == XVisualIDFromVisual(DefaultVisual(fl_display, fl_screen)))
+    if (p->visualid==XVisualIDFromVisual(DefaultVisual(fl_display,fl_screen)))
       printf(" (default visual)");
 
     putchar('\n');
   }
-  if (overlayInfo) {
-    XFree(overlayInfo);
-    overlayInfo = 0;
-  }
+  if ( overlayInfo ) { XFree(overlayInfo); overlayInfo = 0; }
 }
 
 #endif // FLTK_USE_X11
 
 #ifdef NEED_MAIN
 
-#ifndef FLTK_USE_X11
-#include <FL/fl_ask.H>
-#endif
+#  ifndef FLTK_USE_X11
+#    include <FL/fl_ask.H>
+#  endif
 
-int main(int argc, char **argv) {
-#ifdef FLTK_USE_X11
-  if (argc == 1)
-    ;
-  else if (argc == 2 && argv[1][0] != '-')
-    dname = argv[1];
-  else {
-    fprintf(stderr, "usage: %s <display>\n", argv[0]);
-    exit(1);
-  }
+int main(int argc, char** argv) {
+#  ifdef FLTK_USE_X11
+  if (argc == 1);
+  else if (argc == 2 && argv[1][0]!='-') dname = argv[1];
+  else {fprintf(stderr,"usage: %s <display>\n",argv[0]); exit(1);}
   list_visuals();
   return 0;
-#else
+#  else
   fl_alert("Currently, this program works only under X.");
   return 1;
-#endif // FLTK_USE_X11
+#  endif // FLTK_USE_X11
 }
 
 #endif // NEED_MAIN

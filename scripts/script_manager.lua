@@ -54,7 +54,7 @@ function ScriptMan_assemble_mapinfo_lump()
 
   local mapinfo_lines
 
-  if OB_CONFIG.engine == "zdoom" then
+  if OB_CONFIG.port == "zdoom" then
     -- GAMEINFO stuff
     mapinfo_lines = {
         "gameinfo\n",
@@ -213,7 +213,7 @@ function ScriptMan_assemble_mapinfo_lump()
       end
     end
   end
-  if mapinfo_lines and (#mapinfo_lines > 2  or (OB_CONFIG.engine ~= "zdoom" and #mapinfo_lines > 0)) then
+  if mapinfo_lines and (#mapinfo_lines > 2  or (OB_CONFIG.port ~= "zdoom" and #mapinfo_lines > 0)) then
     gui.wad_add_text_lump("MAPINFO", mapinfo_lines)
   end
 end

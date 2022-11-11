@@ -8,7 +8,7 @@ PREFABS.Window_octo_glass_1 =
 
   rank = 2,
 
-  engine = "zdoom",
+  port = "zdoom",
 
   where  = "edge",
   seed_w = 1,
@@ -45,7 +45,7 @@ PREFABS.Window_octo_glass_alt_1 =
 {
   template = "Window_gtd_window_hexagon_1",
 
-  engine = "!zdoom",
+  port = "!zdoom",
   group = "gtd_window_octo_glass",
 
   rank = 1,
@@ -58,7 +58,7 @@ PREFABS.Window_octo_glass_alt_2 =
 
   seed_w = 2,
 
-  engine = "!zdoom",
+  port = "!zdoom",
   group = "gtd_window_octo_glass",
 
   rank = 1,
@@ -71,7 +71,7 @@ PREFABS.Window_octo_glass_alt_3 =
 
   seed_w = 3,
 
-  engine = "!zdoom",
+  port = "!zdoom",
   group = "gtd_window_octo_glass",
 
   rank = 1,

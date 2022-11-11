@@ -1793,7 +1793,7 @@ end
 OB_MODULES["iwad_mode"] =
 {
   label = _("IWAD Style Mode"),
-  engine = "!vanilla",
+  port = "!limit_enforcing",
   game = "doom2", -- Only one supported for now
   side = "left",
   priority = 60,

@@ -8,7 +8,7 @@ PREFABS.Item_dem_grocerystore_closet =
   file  = "item/dem_item_closets.wad",
   map   = "MAP04",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "urban",
   env   = "outdoor",
@@ -66,7 +66,7 @@ PREFABS.Item_dem_grocerystore_closet_vanilla =
   file  = "item/dem_item_closets.wad",
   map   = "MAP04",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "urban",
   env   = "outdoor",
@@ -126,7 +126,7 @@ PREFABS.Item_dem_elevatorshaft_closet =
   file   = "item/dem_item_closets.wad",
   map    = "MAP05",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 50,
   skip_prob = 50,
@@ -164,7 +164,7 @@ PREFABS.Item_dem_elevatorshaftcorr_closet =
   file   = "item/dem_item_closets.wad",
   map    = "MAP06",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 50,
   skip_prob = 50,
@@ -201,7 +201,7 @@ PREFABS.Item_dem_living_room_closet =
   file   = "item/dem_item_closets.wad",
   map    = "MAP07",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 2000,
 
@@ -271,7 +271,7 @@ PREFABS.Item_dem_bedroom_closet =
   texture_pack = "armaetus",
   replaces = "Item_dem_bedroom_closet_vanilla",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   env      = "outdoor",
 
@@ -303,7 +303,7 @@ PREFABS.Item_dem_bedroom_closet_vanilla =
 
   theme = "urban",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   env      = "outdoor",
 
@@ -345,7 +345,7 @@ PREFABS.Item_dem_stairwell_closet =
 
   theme = "urban",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   env      = "outdoor",
 
@@ -374,7 +374,7 @@ PREFABS.Item_dem_bar_closets =
   file = "item/dem_item_closets.wad",
   map = "MAP11",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 2000,
 
@@ -410,7 +410,7 @@ PREFABS.Item_dem_bar_closets_vanilla =
   file = "item/dem_item_closets.wad",
   map = "MAP11",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 2000,
 
@@ -444,7 +444,7 @@ PREFABS.Item_dem_waiting_room_closets =
   file = "item/dem_item_closets.wad",
   map = "MAP12",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 2000,
 
@@ -485,7 +485,7 @@ PREFABS.Item_dem_waiting_room_closets_vanilla =
   file = "item/dem_item_closets.wad",
   map = "MAP12",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 2000,
 
@@ -524,7 +524,7 @@ PREFABS.Item_dem_electronic_store_closets =
   file = "item/dem_item_closets.wad",
   map    = "MAP13",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 2000,
   theme  = "urban",
@@ -559,7 +559,7 @@ PREFABS.Item_dem_cornerstore_closets =
   file = "item/dem_item_closets.wad",
   map = "MAP14",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 10000,
 
@@ -597,7 +597,7 @@ PREFABS.Item_dem_cornerstore_closets_vanilla =
   file = "item/dem_item_closets.wad",
   map = "MAP14",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 10000,
 
@@ -637,7 +637,7 @@ PREFABS.Item_dem_bookstore_closets =
   file = "item/dem_item_closets.wad",
   map = "MAP15",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 10000,
 
@@ -674,7 +674,7 @@ PREFABS.Item_dem_bookstore_closets_vanilla =
   file = "item/dem_item_closets.wad",
   map = "MAP15",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob = 10000,
 
@@ -716,7 +716,7 @@ PREFABS.Item_dem_shrine_closetC =
   file   = "item/dem_item_closets.wad",
   map    = "MAP18",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 100,
 
@@ -761,7 +761,7 @@ PREFABS.Item_dem_cabin_closet =
   file   = "item/dem_item_closets.wad",
   map    = "MAP20",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "!hell",
 
@@ -807,7 +807,7 @@ PREFABS.Item_dem_campsiteC_closet =
   file   = "item/dem_item_closets.wad",
   map    = "MAP21",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "!hell",
 
@@ -854,7 +854,7 @@ PREFABS.Item_dem_bunker_closetP =
   file   = "item/dem_item_closets.wad",
   map    = "MAP24",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   game = "doom2",
 
@@ -919,8 +919,10 @@ PREFABS.Item_dem_yard_closet1 =
   file   = "item/dem_item_closets.wad",
   map    = "MAP27",
 
-  engine = "zdoom",
+  port = "zdoom",
 
+  style = "traps",
+  filter = "crushers",
 
   prob   = 10000,
 

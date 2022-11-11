@@ -3,7 +3,7 @@ PREFABS.Item_tech_window =
   file   = "item/gtd_item_tech_window.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
   game   = "doom2",
 
   prob   = 50,

@@ -134,7 +134,7 @@ function EDGE.all_done()
 end
 
 
-OB_ENGINES["edge"] =
+OB_PORTS["edge"] =
 {
   label = _("EDGE-Classic"),
 

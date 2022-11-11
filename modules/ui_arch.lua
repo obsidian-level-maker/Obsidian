@@ -64,7 +64,7 @@ function UI_ARCH.setup(self)
 
   module_param_up(self)
 
-  if OB_CONFIG.engine ~= "vanilla" then -- Do I actually need this check? I forget - Dasho
+  if OB_CONFIG.engine ~= "limit_enforcing" then -- Do I actually need this check? I forget - Dasho
     if OB_CONFIG.batch == "yes" and type(PARAM.float_size) ~= "string" then
       SEED_W = 90
       SEED_H = 90
@@ -107,8 +107,8 @@ OB_MODULES["ui_arch"] =
 
   side = "left",
   priority = 104,
-  engine = "!vanilla",
-  engine2 = "!wolf_3d", 
+  engine = "!idtech_0",
+  port = "!limit_enforcing",
 
   hooks = 
   {
@@ -122,12 +122,12 @@ OB_MODULES["ui_arch"] =
       name="float_size", 
       label=_("Level Size"),
       valuator = "slider",
-      min = 16,
+      min = 10,
       max = 75,
       increment = 1,
       default = 36,
       nan = _("Mix It Up,Episodic,Progressive"),
-      presets = _("16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"),
+      presets = _("10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"),
       tooltip = _("Determines size of map (Width x Height) in grid squares."),
       longtip = _("If you are planning to generate Binary format maps at sizes of 50 and above, Autodetailing will be enabled by default. The stability of maps with sizes 60 and beyond is not predictable unless using UDMF map format (supported engines only)."),
       priority = 100,
@@ -139,11 +139,11 @@ OB_MODULES["ui_arch"] =
       name = "float_level_upper_bound",
       label = _("Upper Bound"),
       valuator = "slider",
-      min = 16,
+      min = 10,
       max = 75,
       increment = 1,
       default = 75,
-      presets = _("16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"),
+      presets = _("10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"),
       tooltip = _("Fine tune upper limit when Level Size is set to Episodic, Progressive or Mixed."),
       priority = 99,
     },
@@ -153,11 +153,11 @@ OB_MODULES["ui_arch"] =
       name = "float_level_lower_bound",
       label = _("Lower Bound"),
       valuator = "slider",
-      min = 16,
+      min = 10,
       max = 75,
       increment = 1,
       default = 10,
-      presets = _("16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"),
+      presets = _("10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"),
       tooltip = _("Fine tune lower limit when Level Size is set to Episodic, Progressive or Mixed."),
       priority = 98,
       gap = 1,
@@ -336,7 +336,7 @@ OB_MODULES["ui_arch_wolf_3d"] =
 
   side = "left",
   priority = 104,
-  engine = "wolf_3d",
+  engine = "idtech_0",
 
   hooks = 
   {

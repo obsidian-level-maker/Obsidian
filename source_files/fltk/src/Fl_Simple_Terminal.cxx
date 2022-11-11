@@ -15,9 +15,9 @@
 //     https://www.fltk.org/bugs.php
 //
 
-#include <ctype.h>  /* isdigit */
-#include <string.h> /* memset */
-#include <stdlib.h> /* strtol */
+#include <ctype.h>      /* isdigit */
+#include <string.h>     /* memset */
+#include <stdlib.h>     /* strtol */
 #include <FL/Fl_Simple_Terminal.H>
 #include <FL/Fl.H>
 #include <stdarg.h>
@@ -31,89 +31,85 @@
 //    and the second 10 map to 30.
 //
 static const Fl_Text_Display::Style_Table_Entry builtin_stable[] = {
-    // FONT COLOR FONT FACE       SIZE   INDEX  COLOR NAME     ANSI     ANSI MODULO INDEX
-    // ---------- --------------- ------ ------ -------------- -------- -----------------
-    {0x80808000, FL_COURIER, 14}, // 0  - Bright Black   \033[40m 0,20,40,..
-    {0xff000000, FL_COURIER, 14}, // 1  - Bright Red     \033[41m      ^^
-    {0x00ff0000, FL_COURIER, 14}, // 2  - Bright Green   \033[42m
-    {0xffff0000, FL_COURIER, 14}, // 3  - Bright Yellow  \033[43m
-    {0x0000ff00, FL_COURIER, 14}, // 4  - Bright Blue    \033[44m
-    {0xff00ff00, FL_COURIER, 14}, // 5  - Bright Magenta \033[45m
-    {0x00ffff00, FL_COURIER, 14}, // 6  - Bright Cyan    \033[46m
-    {0xffffff00, FL_COURIER, 14}, // 7  - Bright White   \033[47m
-    {0x00000000, FL_COURIER, 14}, // 8  - x
-    {0x00000000, FL_COURIER, 14}, // 9  - x
-    {0x00000000, FL_COURIER, 14}, // 10 - Medium Black   \033[30m 10,30,50,..
-    {0xbb000000, FL_COURIER, 14}, // 11 - Medium Red     \033[31m    ^^
-    {0x00bb0000, FL_COURIER, 14}, // 12 - Medium Green   \033[32m
-    {0xbbbb0000, FL_COURIER, 14}, // 13 - Medium Yellow  \033[33m
-    {0x0000cc00, FL_COURIER, 14}, // 14 - Medium Blue    \033[34m
-    {0xbb00bb00, FL_COURIER, 14}, // 15 - Medium Magenta \033[35m
-    {0x00bbbb00, FL_COURIER, 14}, // 16 - Medium Cyan    \033[36m
-    {0xbbbbbb00, FL_COURIER, 14}, // 17 - Medium White   \033[37m  (also "\033[0m" reset)
-    {0x00000000, FL_COURIER, 14}, // 18 - x
-    {0x00000000, FL_COURIER, 14}  // 19 - x
+  // FONT COLOR FONT FACE       SIZE   INDEX  COLOR NAME     ANSI     ANSI MODULO INDEX
+  // ---------- --------------- ------ ------ -------------- -------- -----------------
+  { 0x80808000, FL_COURIER,      14 }, // 0  - Bright Black   \033[40m 0,20,40,..
+  { 0xff000000, FL_COURIER,      14 }, // 1  - Bright Red     \033[41m      ^^
+  { 0x00ff0000, FL_COURIER,      14 }, // 2  - Bright Green   \033[42m
+  { 0xffff0000, FL_COURIER,      14 }, // 3  - Bright Yellow  \033[43m
+  { 0x0000ff00, FL_COURIER,      14 }, // 4  - Bright Blue    \033[44m
+  { 0xff00ff00, FL_COURIER,      14 }, // 5  - Bright Magenta \033[45m
+  { 0x00ffff00, FL_COURIER,      14 }, // 6  - Bright Cyan    \033[46m
+  { 0xffffff00, FL_COURIER,      14 }, // 7  - Bright White   \033[47m
+  { 0x00000000, FL_COURIER,      14 }, // 8  - x
+  { 0x00000000, FL_COURIER,      14 }, // 9  - x
+  { 0x00000000, FL_COURIER,      14 }, // 10 - Medium Black   \033[30m 10,30,50,..
+  { 0xbb000000, FL_COURIER,      14 }, // 11 - Medium Red     \033[31m    ^^
+  { 0x00bb0000, FL_COURIER,      14 }, // 12 - Medium Green   \033[32m
+  { 0xbbbb0000, FL_COURIER,      14 }, // 13 - Medium Yellow  \033[33m
+  { 0x0000cc00, FL_COURIER,      14 }, // 14 - Medium Blue    \033[34m
+  { 0xbb00bb00, FL_COURIER,      14 }, // 15 - Medium Magenta \033[35m
+  { 0x00bbbb00, FL_COURIER,      14 }, // 16 - Medium Cyan    \033[36m
+  { 0xbbbbbb00, FL_COURIER,      14 }, // 17 - Medium White   \033[37m  (also "\033[0m" reset)
+  { 0x00000000, FL_COURIER,      14 }, // 18 - x
+  { 0x00000000, FL_COURIER,      14 }  // 19 - x
 };
-static const int builtin_stable_size = sizeof(builtin_stable);
-static const char builtin_normal_index = 17; // the reset style index used by \033[0m
+static const int  builtin_stable_size = sizeof(builtin_stable);
+static const char builtin_normal_index = 17;        // the reset style index used by \033[0m
 
 // Count how many times character 'c' appears in string 's'
 static int strcnt(const char *s, char c) {
   int count = 0;
-  while (*s) {
-    if (*s++ == c)
-      ++count;
-  }
+  while ( *s ) { if ( *s++ == c ) ++count; }
   return count;
 }
 
 // Vertical scrollbar callback intercept
-void Fl_Simple_Terminal::vscroll_cb2(Fl_Widget *w, void *) {
+void Fl_Simple_Terminal::vscroll_cb2(Fl_Widget *w, void*) {
   scrolling = 1;
   orig_vscroll_cb(w, orig_vscroll_data);
   scrollaway = (mVScrollBar->value() != mVScrollBar->maximum());
   scrolling = 0;
 }
 void Fl_Simple_Terminal::vscroll_cb(Fl_Widget *w, void *data) {
-  Fl_Simple_Terminal *o = (Fl_Simple_Terminal *)data;
-  o->vscroll_cb2(w, (void *)0);
+  Fl_Simple_Terminal *o = (Fl_Simple_Terminal*)data;
+  o->vscroll_cb2(w,(void*)0);
 }
 
 /**
  Creates a new Fl_Simple_Terminal widget that can be a child of other FLTK widgets.
 */
-Fl_Simple_Terminal::Fl_Simple_Terminal(int X, int Y, int W, int H, const char *l)
-  : Fl_Text_Display(X, Y, W, H, l) {
-  history_lines_ = 500; // something 'reasonable'
+Fl_Simple_Terminal::Fl_Simple_Terminal(int X,int Y,int W,int H,const char *l) : Fl_Text_Display(X,Y,W,H,l) {
+  history_lines_ = 500;         // something 'reasonable'
   stay_at_bottom_ = true;
   ansi_ = false;
-  lines = 0; // note: lines!=mNBufferLines when lines are wrapping
+  lines = 0;                    // note: lines!=mNBufferLines when lines are wrapping
   scrollaway = false;
   scrolling = false;
   // These defaults similar to typical DOS/unix terminals
   textfont(FL_COURIER);
   color(FL_BLACK);
   textcolor(FL_WHITE);
-  selection_color(FL_YELLOW); // default dark blue looks bad for black background
+  selection_color(FL_YELLOW);   // default dark blue looks bad for black background
   show_cursor(true);
   cursor_color(FL_GREEN);
   cursor_style(Fl_Text_Display::BLOCK_CURSOR);
   // Setup text buffer
   buf = new Fl_Text_Buffer();
   buffer(buf);
-  sbuf = new Fl_Text_Buffer(); // allocate whether we use it or not
+  sbuf = new Fl_Text_Buffer();  // allocate whether we use it or not
   // XXX: We use WRAP_AT_BOUNDS to prevent the hscrollbar from /always/
   //      being present, an annoying UI bug in Fl_Text_Display.
   wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
   // Style table
   stable_ = &builtin_stable[0];
   stable_size_ = builtin_stable_size;
-  normal_style_index_ = builtin_normal_index;
+  normal_style_index_  = builtin_normal_index;
   current_style_index_ = builtin_normal_index;
   // Intercept vertical scrolling
   orig_vscroll_cb = mVScrollBar->callback();
   orig_vscroll_data = mVScrollBar->user_data();
-  mVScrollBar->callback(vscroll_cb, (void *)this);
+  mVScrollBar->callback(vscroll_cb, (void*)this);
 }
 
 /**
@@ -121,15 +117,9 @@ Fl_Simple_Terminal::Fl_Simple_Terminal(int X, int Y, int W, int H, const char *l
  for the terminal, including text buffer, style buffer, etc.
 */
 Fl_Simple_Terminal::~Fl_Simple_Terminal() {
-  buffer(0); // disassociate buffer /before/ we delete it
-  if (buf) {
-    delete buf;
-    buf = 0;
-  }
-  if (sbuf) {
-    delete sbuf;
-    sbuf = 0;
-  }
+  buffer(0);    // disassociate buffer /before/ we delete it
+  if ( buf  ) { delete buf;  buf  = 0; }
+  if ( sbuf ) { delete sbuf; sbuf = 0; }
 }
 
 /**
@@ -160,11 +150,9 @@ bool Fl_Simple_Terminal::stay_at_bottom() const {
  The default is 'true'.
 */
 void Fl_Simple_Terminal::stay_at_bottom(bool val) {
-  if (stay_at_bottom_ == val)
-    return; // no change
+  if ( stay_at_bottom_ == val ) return; // no change
   stay_at_bottom_ = val;
-  if (stay_at_bottom_)
-    enforce_stay_at_bottom();
+  if ( stay_at_bottom_ ) enforce_stay_at_bottom();
 }
 
 /**
@@ -253,8 +241,7 @@ bool Fl_Simple_Terminal::ansi() const {
  the built-in colors, and how it looks in the terminal:
 
  \image html simple-terminal-default-ansi.png "Fl_Simple_Terminal built-in ANSI sequences"
- \image latex simple-terminal-default-ansi.png "Fl_Simple_Terminal built-in ANSI sequences"
- width=4cm
+ \image latex simple-terminal-default-ansi.png "Fl_Simple_Terminal built-in ANSI sequences" width=4cm
 
  \note Changing the ansi(bool) value clears the buffer and forces a redraw().
  \note Enabling ANSI mode overrides textfont(), textsize(), textcolor()
@@ -267,8 +254,8 @@ bool Fl_Simple_Terminal::ansi() const {
 void Fl_Simple_Terminal::ansi(bool val) {
   ansi_ = val;
   clear();
-  if (ansi_) {
-    highlight_data(sbuf, stable_, stable_size_ / STE_SIZE, 'A', 0, 0);
+  if ( ansi_ ) {
+    highlight_data(sbuf, stable_, stable_size_/STE_SIZE, 'A', 0, 0);
   } else {
     // XXX: highlight_data(0,0,0,'A',0,0) can crash, so to disable
     //      we use sbuf + builtin_stable but /set nitems to 0/.
@@ -457,26 +444,26 @@ int Fl_Simple_Terminal::current_style_index() const {
                              modulus operation. This value is ignored
                              if stable is NULL.
 */
-void Fl_Simple_Terminal::style_table(Fl_Text_Display::Style_Table_Entry *stable, int stable_size,
-                                     int normal_style_index) {
+void Fl_Simple_Terminal::style_table(Fl_Text_Display::Style_Table_Entry *stable,
+                                     int stable_size, int normal_style_index) {
   // Wrap index to ensure it's never larger than table
-  normal_style_index = abs(normal_style_index) % (stable_size / STE_SIZE);
+  normal_style_index = abs(normal_style_index) % (stable_size/STE_SIZE);
 
-  if (stable_ == 0) {
+  if ( stable_ == 0 ) {
     // User wants built-in style table?
     stable_ = &builtin_stable[0];
     stable_size_ = builtin_stable_size;
-    normal_style_index_ = builtin_normal_index;  // set the index used by \033[0m
-    current_style_index_ = builtin_normal_index; // set the index used for drawing new text
+    normal_style_index_  = builtin_normal_index;  // set the index used by \033[0m
+    current_style_index_ = builtin_normal_index;  // set the index used for drawing new text
   } else {
     // User supplying custom style table
     stable_ = stable;
     stable_size_ = stable_size;
-    normal_style_index_ = normal_style_index;  // set the index used by \033[0m
-    current_style_index_ = normal_style_index; // set the index used for drawing new text
+    normal_style_index_  = normal_style_index;    // set the index used by \033[0m
+    current_style_index_ = normal_style_index;    // set the index used for drawing new text
   }
-  clear(); // don't take any chances with old style info
-  highlight_data(sbuf, stable_, stable_size / STE_SIZE, 'A', 0, 0);
+  clear();            // don't take any chances with old style info
+  highlight_data(sbuf, stable_, stable_size/STE_SIZE, 'A', 0, 0);
 }
 
 /**
@@ -488,7 +475,7 @@ void Fl_Simple_Terminal::style_table(Fl_Text_Display::Style_Table_Entry *stable,
  should need to call this.
 */
 void Fl_Simple_Terminal::enforce_stay_at_bottom() {
-  if (stay_at_bottom_ && buffer() && !scrollaway) {
+  if ( stay_at_bottom_ && buffer() && !scrollaway ) {
     scroll(mNBufferLines, 0);
   }
 }
@@ -502,9 +489,9 @@ void Fl_Simple_Terminal::enforce_stay_at_bottom() {
  should need to call this.
 */
 void Fl_Simple_Terminal::enforce_history_lines() {
-  if (history_lines() > -1 && lines > history_lines()) {
+  if ( history_lines() > -1 && lines > history_lines() ) {
     int trimlines = lines - history_lines();
-    remove_lines(0, trimlines); // remove lines from top
+    remove_lines(0, trimlines);                         // remove lines from top
   }
 }
 
@@ -523,107 +510,99 @@ void Fl_Simple_Terminal::enforce_history_lines() {
 */
 void Fl_Simple_Terminal::append(const char *s, int len) {
   // Remove ansi codes and adjust style buffer accordingly.
-  if (ansi()) {
+  if ( ansi() ) {
     int nstyles = stable_size_ / STE_SIZE;
-    if (len < 0)
-      len = (int)strlen(s);
+    if ( len < 0 ) len = (int)strlen(s);
     // New text buffer (after ansi codes parsed+removed)
-    char *ntm = (char *)malloc(len + 1); // new text memory
+    char *ntm = (char*)malloc(len+1);       // new text memory
     char *ntp = ntm;
-    char *nsm = (char *)malloc(len + 1); // new style memory
+    char *nsm = (char*)malloc(len+1);       // new style memory
     char *nsp = nsm;
     // ANSI values
-    char astyle = 'A' + current_style_index_; // the running style index
+    char astyle = 'A'+current_style_index_; // the running style index
     const char *esc = 0;
     const char *sp = s;
     // Walk user's string looking for codes, modify new text/style text as needed
-    while (*sp) {
-      if (*sp == 033) { // "\033.."
+    while ( *sp ) {
+      if ( *sp == 033 ) {        // "\033.."
         esc = sp++;
         switch (*sp) {
-          case 0: // "\033<NUL>"? stop
+          case 0:                // "\033<NUL>"? stop
             continue;
-          case '[': { // "\033[.."
+          case '[': {            // "\033[.."
             ++sp;
-            int vals[4], tv = 0, seqdone = 0;
-            while (*sp && !seqdone && isdigit(*sp)) { // "\033[#;#.."
+            int vals[4], tv=0, seqdone=0;
+            while ( *sp && !seqdone && isdigit(*sp) ) { // "\033[#;#.."
               char *newsp;
               long a = strtol(sp, &newsp, 10);
               sp = newsp;
-              vals[tv++] = (a < 0) ? 0 : a; // prevent negative values
-              if (tv >= 4)                  // too many #'s specified? abort sequence
-              {
-                seqdone = 1;
-                sp = esc + 1;
-                continue;
-              }
-              switch (*sp) {
-                case ';': // numeric separator
+              vals[tv++] = (a<0) ? 0 : a;       // prevent negative values
+              if ( tv >= 4 )      // too many #'s specified? abort sequence
+                { seqdone = 1; sp = esc+1; continue; }
+              switch(*sp) {
+                case ';':         // numeric separator
                   ++sp;
                   continue;
-                case 'J': // erase in display
+                case 'J':         // erase in display
                   switch (vals[0]) {
-                    case 0: // \033[0J -- clear to eol
+                    case 0:       // \033[0J -- clear to eol
                       // unsupported
                       break;
-                    case 1: // \033[1J -- clear to sol
+                    case 1:       // \033[1J -- clear to sol
                       // unsupported
                       break;
-                    case 2:      // \033[2J -- clear entire screen
-                      clear();   // clear text buffer
-                      ntp = ntm; // clear text contents accumulated so far
-                      nsp = nsm; // clear style contents ""
+                    case 2:       // \033[2J -- clear entire screen
+                      clear();    // clear text buffer
+                      ntp = ntm;  // clear text contents accumulated so far
+                      nsp = nsm;  // clear style contents ""
                       break;
                   }
                   ++sp;
                   seqdone = 1;
                   continue;
-                case 'm':       // set color
-                  if (tv > 0) { // at least one value parsed?
-                    current_style_index_ =
-                        (vals[0] == 0)             // "reset"?
-                            ? normal_style_index_  // use normal color for "reset"
-                            : (vals[0] % nstyles); // use user's value, wrapped to ensure not larger
-                                                   // than table
-                    astyle = 'A' + current_style_index_; // convert index -> style buffer char
+                case 'm':         // set color
+                  if ( tv > 0 ) { // at least one value parsed?
+                    current_style_index_ = (vals[0] == 0)            // "reset"?
+                                             ? normal_style_index_   // use normal color for "reset"
+                                             : (vals[0] % nstyles);  // use user's value, wrapped to ensure not larger than table
+                    astyle = 'A' + current_style_index_;             // convert index -> style buffer char
                   }
                   ++sp;
                   seqdone = 1;
                   continue;
-                case '\0':  // EOS in middle of sequence?
-                  *ntp = 0; // end of text
-                  *nsp = 0; // end of style
+                case '\0':        // EOS in middle of sequence?
+                  *ntp = 0;       // end of text
+                  *nsp = 0;       // end of style
                   seqdone = 1;
                   continue;
-                default: // un-supported cmd?
+                default:          // un-supported cmd?
                   seqdone = 1;
-                  sp = esc + 1; // continue parsing just past esc
+                  sp = esc+1;     // continue parsing just past esc
                   break;
-              } // switch
-            }   // while
-          }     // case '['
-        }       // switch
-      }         // \033
+              }   // switch
+            }     // while
+          }       // case '['
+        }         // switch
+      }           // \033
       else {
         // Non-ANSI character?
-        if (*sp == '\n')
-          ++lines;       // keep track of #lines
-        *ntp++ = *sp++;  // pass char thru
-        *nsp++ = astyle; // use current style
+        if ( *sp == '\n' ) ++lines; // keep track of #lines
+        *ntp++ = *sp++;             // pass char thru
+        *nsp++ = astyle;            // use current style
       }
     } // while
     *ntp = 0;
     *nsp = 0;
     //::printf("  RESULT: ntm='%s'\n", ntm);
     //::printf("  RESULT: nsm='%s'\n", nsm);
-    buf->append(ntm);  // new text memory
-    sbuf->append(nsm); // new style memory
+    buf->append(ntm);           // new text memory
+    sbuf->append(nsm);          // new style memory
     free(ntm);
     free(nsm);
   } else {
     // non-ansi buffer
     buf->append(s);
-    lines += ::strcnt(s, '\n'); // count total line feeds in string added
+    lines += ::strcnt(s, '\n');  // count total line feeds in string added
   }
   enforce_history_lines();
   enforce_stay_at_bottom();
@@ -656,7 +635,7 @@ void Fl_Simple_Terminal::text(const char *s, int len) {
  This includes the screen history, as well as the visible
  onscreen content.
 */
-const char *Fl_Simple_Terminal::text() const {
+const char* Fl_Simple_Terminal::text() const {
   return buf->text();
 }
 
@@ -704,9 +683,9 @@ void Fl_Simple_Terminal::printf(const char *fmt, ...) {
            which the caller is responsible for handling.
 */
 void Fl_Simple_Terminal::vprintf(const char *fmt, va_list ap) {
-  char buffer[1024]; // XXX: should be user configurable..
+  char buffer[1024];    // XXX: should be user configurable..
   ::vsnprintf(buffer, 1024, fmt, ap);
-  buffer[1024 - 1] = 0; // XXX: MICROSOFT
+  buffer[1024-1] = 0;   // XXX: MICROSOFT
   append(buffer);
   enforce_history_lines();
 }
@@ -732,15 +711,14 @@ void Fl_Simple_Terminal::clear() {
 void Fl_Simple_Terminal::remove_lines(int start, int count) {
   int spos = skip_lines(0, start, true);
   int epos = skip_lines(spos, count, true);
-  if (ansi()) {
+  if ( ansi() ) {
     buf->remove(spos, epos);
     sbuf->remove(spos, epos);
   } else {
     buf->remove(spos, epos);
   }
   lines -= count;
-  if (lines < 0)
-    lines = 0;
+  if ( lines < 0 ) lines = 0;
 }
 
 /**
@@ -760,10 +738,11 @@ void Fl_Simple_Terminal::draw() {
   // Let widget draw itself
   Fl_Text_Display::draw();
   // Now draw cursor at the end of the buffer
-  fl_push_clip(text_area.x - LEFT_MARGIN, text_area.y, text_area.w + LEFT_MARGIN + RIGHT_MARGIN,
-               text_area.h);
+  fl_push_clip(text_area.x-LEFT_MARGIN,
+         text_area.y,
+         text_area.w+LEFT_MARGIN+RIGHT_MARGIN,
+         text_area.h);
   int X = 0, Y = 0;
-  if (position_to_xy(buflen, &X, &Y))
-    draw_cursor(X, Y);
+  if (position_to_xy(buflen, &X, &Y)) draw_cursor(X, Y);
   fl_pop_clip();
 }

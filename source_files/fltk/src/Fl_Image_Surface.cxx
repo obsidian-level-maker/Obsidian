@@ -18,7 +18,7 @@
 
 #include <FL/fl_draw.H> // necessary for FL_EXPORT fl_*_offscreen()
 
-#include <stdlib.h> // realloc()
+#include <stdlib.h>     // realloc()
 
 /** Constructor with optional high resolution.
  \param w,h Width and height of the resulting image. The value of the \p high_res
@@ -31,37 +31,31 @@
  \p w x \p h expressed in FLTK units.
 
  \param off If not null, the image surface is constructed around a pre-existing
- Fl_Offscreen. The caller is responsible for both construction and destruction of this Fl_Offscreen
- object. Is mostly intended for internal use by FLTK. \version 1.3.4 (1.3.3 without the \p highres
- parameter)
+ Fl_Offscreen. The caller is responsible for both construction and destruction of this Fl_Offscreen object.
+ Is mostly intended for internal use by FLTK.
+ \version 1.3.4 (1.3.3 without the \p highres parameter)
  */
-Fl_Image_Surface::Fl_Image_Surface(int w, int h, int high_res, Fl_Offscreen off)
-  : Fl_Widget_Surface(NULL) {
+Fl_Image_Surface::Fl_Image_Surface(int w, int h, int high_res, Fl_Offscreen off) : Fl_Widget_Surface(NULL) {
   platform_surface = Fl_Image_Surface_Driver::newImageSurfaceDriver(w, h, high_res, off);
-  if (platform_surface)
-    driver(platform_surface->driver());
+  platform_surface->image_surface_ = this;
+  if (platform_surface) driver(platform_surface->driver());
 }
 
 
 /** The destructor. */
 Fl_Image_Surface::~Fl_Image_Surface() {
-  if (is_current())
-    platform_surface->end_current();
+  if (is_current()) platform_surface->end_current();
   delete platform_surface;
 }
 
-void Fl_Image_Surface::origin(int x, int y) {
-  platform_surface->origin(x, y);
-}
+void Fl_Image_Surface::origin(int x, int y) {platform_surface->origin(x, y);}
 
 void Fl_Image_Surface::origin(int *x, int *y) {
-  if (platform_surface)
-    platform_surface->origin(x, y);
+  if (platform_surface) platform_surface->origin(x, y);
 }
 
 void Fl_Image_Surface::set_current() {
-  if (platform_surface)
-    platform_surface->set_current();
+  if (platform_surface) platform_surface->set_current();
 }
 
 bool Fl_Image_Surface::is_current() {
@@ -69,13 +63,11 @@ bool Fl_Image_Surface::is_current() {
 }
 
 void Fl_Image_Surface::translate(int x, int y) {
-  if (platform_surface)
-    platform_surface->translate(x, y);
+  if (platform_surface) platform_surface->translate(x, y);
 }
 
 void Fl_Image_Surface::untranslate() {
-  if (platform_surface)
-    platform_surface->untranslate();
+  if (platform_surface) platform_surface->untranslate();
 }
 
 /** Returns the Fl_Offscreen object associated to the image surface.
@@ -86,9 +78,7 @@ Fl_Offscreen Fl_Image_Surface::offscreen() {
   return platform_surface ? platform_surface->offscreen : (Fl_Offscreen)0;
 }
 
-int Fl_Image_Surface::printable_rect(int *w, int *h) {
-  return platform_surface->printable_rect(w, h);
-}
+int Fl_Image_Surface::printable_rect(int *w, int *h)  {return platform_surface->printable_rect(w, h);}
 
 /**
  \cond DriverDev
@@ -96,10 +86,10 @@ int Fl_Image_Surface::printable_rect(int *w, int *h) {
  \{
  */
 int Fl_Image_Surface_Driver::printable_rect(int *w, int *h) {
-  *w = width;
-  *h = height;
+  *w = width; *h = height;
   return 0;
 }
+
 /**
  \}
  \endcond
@@ -112,26 +102,24 @@ int Fl_Image_Surface_Driver::printable_rect(int *w, int *h) {
  */
 Fl_RGB_Image *Fl_Image_Surface::image() {
   bool need_push = (Fl_Surface_Device::surface() != platform_surface);
-  if (need_push)
-    Fl_Surface_Device::push_current(platform_surface);
+  if (need_push) Fl_Surface_Device::push_current(platform_surface);
   Fl_RGB_Image *img = platform_surface->image();
-  if (need_push)
-    Fl_Surface_Device::pop_current();
+  if (need_push) Fl_Surface_Device::pop_current();
   img->scale(platform_surface->width, platform_surface->height, 1, 1);
   return img;
 }
 
-/** Returns a possibly high resolution image made of all drawings sent to the Fl_Image_Surface
- object. The Fl_Image_Surface object should have been constructed with Fl_Image_Surface(W, H, 1).
+/** Returns a possibly high resolution image made of all drawings sent to the Fl_Image_Surface object.
+ The Fl_Image_Surface object should have been constructed with Fl_Image_Surface(W, H, 1).
  The returned Fl_Shared_Image object is scaled to a size of WxH FLTK units and may have a
  pixel size larger than these values.
  The returned object should be deallocated with Fl_Shared_Image::release() after use.
  \deprecated Use image() instead.
  \version 1.4 (1.3.4 for MacOS platform only)
  */
-Fl_Shared_Image *Fl_Image_Surface::highres_image() {
-  if (!platform_surface)
-    return NULL;
+Fl_Shared_Image* Fl_Image_Surface::highres_image()
+{
+  if (!platform_surface) return NULL;
   Fl_Shared_Image *s_img = Fl_Shared_Image::get(image());
   int width, height;
   platform_surface->printable_rect(&width, &height);
@@ -158,10 +146,11 @@ void Fl_Image_Surface::rescale() {
   delete platform_surface;
   platform_surface = Fl_Image_Surface_Driver::newImageSurfaceDriver(w, h, 1, 0);
   Fl_Surface_Device::push_current(this);
-  rgb->draw(0, 0);
+  rgb->draw(0,0);
   Fl_Surface_Device::pop_current();
   delete rgb;
 }
+
 
 // implementation of the fl_XXX_offscreen() functions
 
@@ -171,13 +160,11 @@ static int count_offscreens = 0;
 static int find_slot(void) { // return an available slot to memorize an Fl_Image_Surface object
   static int max = 0;
   for (int num = 0; num < count_offscreens; num++) {
-    if (!offscreen_api_surface[num])
-      return num;
+    if (!offscreen_api_surface[num]) return num;
   }
   if (count_offscreens >= max) {
     max += 20;
-    offscreen_api_surface =
-        (Fl_Image_Surface **)realloc(offscreen_api_surface, max * sizeof(void *));
+    offscreen_api_surface = (Fl_Image_Surface**)realloc(offscreen_api_surface, max * sizeof(void *));
   }
   return count_offscreens++;
 }
@@ -198,18 +185,17 @@ static int find_slot(void) { // return an available slot to memorize an Fl_Image
  an Fl_Image_Surface object, as follows :
  <table>
  <tr> <th>Fl_Offscreen-based approach</th><th>Fl_Image_Surface-based approach</th> </tr>
- <tr> <td>Fl_Offscreen off = fl_create_offscreen(w, h)</td><td>Fl_Image_Surface *surface = new
- Fl_Image_Surface(w, h, 1)</td> </tr> <tr>
- <td>fl_begin_offscreen(off)</td><td>Fl_Surface_Device::push_current(surface)</td> </tr> <tr>
- <td>fl_end_offscreen()</td><td>Fl_Surface_Device::pop_current()</td> </tr> <tr>
- <td>fl_copy_offscreen(x,y,w,h, off, sx,sy)</td><td>fl_copy_offscreen(x,y,w,h, surface->offscreen(),
- sx,sy)</td> </tr> <tr> <td>fl_rescale_offscreen(off)</td><td>surface->rescale()</td> </tr> <tr>
- <td>fl_delete_offscreen(off)</td><td>delete surface</td> </tr>
+ <tr> <td>Fl_Offscreen off = fl_create_offscreen(w, h)</td><td>Fl_Image_Surface *surface = new Fl_Image_Surface(w, h, 1)</td> </tr>
+ <tr> <td>fl_begin_offscreen(off)</td><td>Fl_Surface_Device::push_current(surface)</td> </tr>
+ <tr> <td>fl_end_offscreen()</td><td>Fl_Surface_Device::pop_current()</td> </tr>
+ <tr> <td>fl_copy_offscreen(x,y,w,h, off, sx,sy)</td><td>fl_copy_offscreen(x,y,w,h, surface->offscreen(), sx,sy)</td> </tr>
+ <tr> <td>fl_rescale_offscreen(off)</td><td>surface->rescale()</td> </tr>
+ <tr> <td>fl_delete_offscreen(off)</td><td>delete surface</td> </tr>
  </table>
    */
 Fl_Offscreen fl_create_offscreen(int w, int h) {
   int rank = find_slot();
-  offscreen_api_surface[rank] = new Fl_Image_Surface(w, h, 1 /*high_res*/);
+  offscreen_api_surface[rank] = new Fl_Image_Surface(w, h, 1/*high_res*/);
   return offscreen_api_surface[rank]->offscreen();
 }
 
@@ -218,8 +204,7 @@ Fl_Offscreen fl_create_offscreen(int w, int h) {
    \note The \p ctx argument must have been created by fl_create_offscreen().
    */
 void fl_delete_offscreen(Fl_Offscreen ctx) {
-  if (!ctx)
-    return;
+  if (!ctx) return;
   for (int i = 0; i < count_offscreens; i++) {
     if (offscreen_api_surface[i] && offscreen_api_surface[i]->offscreen() == ctx) {
       delete offscreen_api_surface[i];
@@ -243,7 +228,7 @@ void fl_begin_offscreen(Fl_Offscreen ctx) {
 }
 
 /** Quit sending drawing commands to the current offscreen buffer.
- */
+   */
 void fl_end_offscreen() {
   Fl_Surface_Device::pop_current();
 }
@@ -262,8 +247,7 @@ void fl_rescale_offscreen(Fl_Offscreen &ctx) {
       break;
     }
   }
-  if (i >= count_offscreens)
-    return;
+  if (i >= count_offscreens) return;
   offscreen_api_surface[i]->rescale();
   ctx = offscreen_api_surface[i]->offscreen();
 }

@@ -20,7 +20,7 @@ PREFABS.Item_realrexen_office =
   x_fit  = "frame",
   y_fit  = "top",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   thing_10 =
    {

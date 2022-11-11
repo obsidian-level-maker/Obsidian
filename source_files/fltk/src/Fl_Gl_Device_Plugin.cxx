@@ -27,24 +27,20 @@
  */
 class Fl_Gl_Device_Plugin : public Fl_Device_Plugin {
 public:
-  Fl_Gl_Device_Plugin()
-    : Fl_Device_Plugin(name()) {}
+  Fl_Gl_Device_Plugin() : Fl_Device_Plugin(name()) { }
   virtual const char *name() { return "opengl.device.fltk.org"; }
   virtual int print(Fl_Widget *w) {
     Fl_Gl_Window *glw = w->as_gl_window();
-    if (!glw)
-      return 0;
-    Fl_RGB_Image *img =
-        Fl_Gl_Window_Driver::driver(glw)->capture_gl_rectangle(0, 0, glw->w(), glw->h());
+    if (!glw) return 0;
+    Fl_RGB_Image *img =  Fl_Gl_Window_Driver::driver(glw)->capture_gl_rectangle(0, 0, glw->w(), glw->h());
     img->scale(glw->w(), glw->h());
     img->draw(0, 0);
     delete img;
     return 1;
   }
-  virtual Fl_RGB_Image *rectangle_capture(Fl_Widget *widget, int x, int y, int w, int h) {
+  virtual Fl_RGB_Image* rectangle_capture(Fl_Widget *widget, int x, int y, int w, int h) {
     Fl_Gl_Window *glw = widget->as_gl_window();
-    if (!glw)
-      return NULL;
+    if (!glw) return NULL;
     return Fl_Gl_Window_Driver::driver(glw)->capture_gl_rectangle(x, y, w, h);
   }
 };

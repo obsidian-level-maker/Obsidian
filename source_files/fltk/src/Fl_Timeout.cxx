@@ -31,7 +31,7 @@ Fl_Timeout *Fl_Timeout::first_timeout = 0;
 Fl_Timeout *Fl_Timeout::current_timeout = 0;
 
 #if FL_TIMEOUT_DEBUG
-static int num_timers = 0; // DEBUG
+static int num_timers = 0;    // DEBUG
 #endif
 
 // Internal timestamp, used for delta time calculation.
@@ -82,9 +82,9 @@ static void get_timestamp(FlTimeStamp_t *ts) {
   Return:  double  Elapsed time since the last call
 */
 static double elapsed_time() {
-  static int first = 1;      // initialization
-  static FlTimeStamp_t prev; // previous timestamp
-  FlTimeStamp_t now;         // current timestamp
+  static int first = 1;                 // initialization
+  static FlTimeStamp_t prev;            // previous timestamp
+  FlTimeStamp_t now;                    // current timestamp
   double elapsed = 0.0;
   get_timestamp(&now);
   if (first) {
@@ -97,17 +97,10 @@ static double elapsed_time() {
 }
 
 /**
-  Insert a timer entry into the active timer queue.
+  Insert this timer entry into the active timer queue.
 
-  The base class Fl_Timeout inserts the timer as the first entry in
-  the queue of active timers. The default implementation is sufficient
-  for macOS and Windows.
-
-  Derived classes (e.g. Fl_Timeout) can override this method.
-  Currently the Posix timeout handling (Unix, Linux) does this so
-  the timer queue entries are ordered by due time.
-
-  \param[in]  t  Timer to be inserted (Fl_Timeout or derived class)
+  The timer is inserted at the required position so the timer queue
+  is always ordered by due time.
 */
 void Fl_Timeout::insert() {
   Fl_Timeout **p = (Fl_Timeout **)&first_timeout;
@@ -119,29 +112,19 @@ void Fl_Timeout::insert() {
 }
 
 /**
-  Returns whether the given timeout is active.
-
-  This returns whether a timeout handler already exists in the queue
-  of active timers.
-
-  If \p data == NULL only the Fl_Timeout_Handler \p cb must match to return
-  true, otherwise \p data must also match.
-
-  \note It is a restriction that there is no way to look for a timeout whose
-    \p data is NULL (zero). Therefore using 0 (zero, NULL) as the timeout
-    \p data value is discouraged, unless you're sure that you will never
-    need to use <kbd>Fl::has_timeout(callback, (void *)0);</kbd>.
-
-  Implements Fl::has_timeout(Fl_Timeout_Handler cb, void *data)
+  Returns true if the timeout exists and has not been called yet.
 
   \param[in]  cb    Timer callback (must match)
-  \param[in]  data  Wildcard if NULL, must match otherwise
+  \param[in]  data  Callback user data (must match)
 
   \returns      whether the timer was found in the queue
   \retval   0   not found
   \retval   1   found
-*/
 
+  Implements Fl::has_timeout(Fl_Timeout_Handler cb, void *data)
+
+  \see Fl::has_timeout(Fl_Timeout_Handler cb, void *data)
+*/
 int Fl_Timeout::has_timeout(Fl_Timeout_Handler cb, void *data) {
   for (Fl_Timeout *t = first_timeout; t; t = t->next) {
     if (t->callback == cb && t->data == data)
@@ -150,36 +133,67 @@ int Fl_Timeout::has_timeout(Fl_Timeout_Handler cb, void *data) {
   return 0;
 }
 
+/**
+  Adds a one-shot timeout callback.
+
+  The callback function \p cb will be called by Fl::wait() at \p time seconds
+  after this function is called.
+
+  \param[in]  time    delta time in seconds until the timer expires
+  \param[in]  cb      callback function
+  \param[in]  data    optional user data (default: \p NULL)
+
+  Implements Fl::add_timeout(double time, Fl_Timeout_Handler cb, void *data)
+
+  \see Fl::add_timeout(double time, Fl_Timeout_Handler cb, void *data)
+*/
 void Fl_Timeout::add_timeout(double time, Fl_Timeout_Handler cb, void *data) {
   elapse_timeouts();
   Fl_Timeout *t = get(time, cb, data);
-  t->Fl_Timeout::insert();
+  t->insert();
 }
+
+/**
+  Repeats a timeout callback from the expiration of the previous timeout,
+  allowing for more accurate timing.
+
+  \param[in]  time    delta time in seconds until the timer expires
+  \param[in]  cb      callback function
+  \param[in]  data    optional user data (default: \p NULL)
+
+  Implements Fl::repeat_timeout(double time, Fl_Timeout_Handler cb, void *data)
+
+  \see Fl::repeat_timeout(double time, Fl_Timeout_Handler cb, void *data)
+*/
 
 void Fl_Timeout::repeat_timeout(double time, Fl_Timeout_Handler cb, void *data) {
   elapse_timeouts();
   Fl_Timeout *t = (Fl_Timeout *)get(time, cb, data);
   Fl_Timeout *cur = current_timeout;
   if (cur) {
-    t->time += cur->time; // was: missed_timeout_by (always <= 0.0)
+    t->time += cur->time;   // was: missed_timeout_by (always <= 0.0)
     if (t->time < 0.0)
-      t->time = 0.001; // at least 1 ms
+      t->time = 0.001;      // at least 1 ms
   }
   t->insert();
 }
 
 /**
-  Remove a timeout callback. It is harmless to remove a timeout
-  callback that no longer exists.
+  Remove a timeout callback.
 
-  \note This version removes all matching timeouts, not just the first one.
-    This may change in the future.
+  This method removes all matching timeouts, not just the first one.
+  This may change in the future.
+
+  \param[in]  cb    Timer callback to be removed (must match)
+  \param[in]  data  Wildcard if NULL, must match otherwise
 
   Implements Fl::remove_timeout(Fl_Timeout_Handler cb, void *data)
+
+  \see Fl::remove_timeout(Fl_Timeout_Handler cb, void *data)
 */
 void Fl_Timeout::remove_timeout(Fl_Timeout_Handler cb, void *data) {
-  for (Fl_Timeout **p = &first_timeout; *p;) {
-    Fl_Timeout *t = *p;
+  for (Fl_Timeout** p = &first_timeout; *p;) {
+    Fl_Timeout* t = *p;
     if (t->callback == cb && (t->data == data || !data)) {
       *p = t->next;
       t->next = free_timeout;
@@ -202,8 +216,8 @@ void Fl_Timeout::remove_timeout(Fl_Timeout_Handler cb, void *data) {
 void Fl_Timeout::make_current() {
   // printf("[%4d] Fl_Timeout::make_current(%p)\n", __LINE__, this);
   // remove the timer entry from the active timer queue
-  for (Fl_Timeout **p = &first_timeout; *p;) {
-    Fl_Timeout *t = *p;
+  for (Fl_Timeout** p = &first_timeout; *p;) {
+    Fl_Timeout* t = *p;
     if (t == this) {
       *p = t->next;
       // push it to the current timer stack
@@ -312,12 +326,12 @@ Fl_Timeout *Fl_Timeout::get(double time, Fl_Timeout_Handler cb, void *data) {
   } else {
     t = new Fl_Timeout;
 #if FL_TIMEOUT_DEBUG
-    num_timers++; // DEBUG: count allocated timers
+    num_timers++;                 // DEBUG: count allocated timers
 #endif
   }
 
   t->next = 0;
-  t->skip = 1; // see do_timeouts() (issue #450)
+  t->skip = 1;          // see do_timeouts() (issue #450)
   t->delay(time);
   t->callback = cb;
   t->data = data;
@@ -343,13 +357,13 @@ void Fl_Timeout::elapse_timeouts() {
 
     // active timers
 
-    for (Fl_Timeout *t = first_timeout; t; t = t->next) {
+    for (Fl_Timeout* t = first_timeout; t; t = t->next) {
       t->time -= elapsed;
     }
 
     // "current" timers, i.e. timers being serviced
 
-    for (Fl_Timeout *t = current_timeout; t; t = t->next) {
+    for (Fl_Timeout* t = current_timeout; t; t = t->next) {
       t->time -= elapsed;
     }
   }
@@ -372,14 +386,12 @@ void Fl_Timeout::do_timeouts() {
   if (first_timeout) {
     Fl_Timeout::elapse_timeouts();
     while ((t = first_timeout)) {
-      if (t->time > 0)
-        break;
+      if (t->time > 0) break;
 
       // skip timers inserted during timeout handling (issue #450)
       while (t && t->skip)
         t = t->next;
-      if (!t || t->time > 0)
-        break;
+      if (!t || t->time > 0) break;
 
       // make this timeout the "current" timeout
       t->make_current();
@@ -418,10 +430,9 @@ void Fl_Timeout::do_timeouts() {
 */
 double Fl_Timeout::time_to_wait(double ttw) {
   Fl_Timeout *t = first_timeout;
-  if (!t)
-    return ttw;
+  if (!t) return ttw;
   double tdelay = t->delay();
-  if (tdelay < 0.0)
+if (tdelay < 0.0)
     return 0.0;
   if (tdelay < ttw)
     return tdelay;
@@ -463,7 +474,7 @@ void Fl_Timeout::debug(int level) {
   t = first_timeout;
   int n = 0;
   while (t) {
-    printf("Active timer %3d: time = %10.6f sec\n", n + 1, t->delay());
+    printf("Active timer %3d: time = %10.6f sec\n", n+1, t->delay());
     t = t->next;
     n++;
   }

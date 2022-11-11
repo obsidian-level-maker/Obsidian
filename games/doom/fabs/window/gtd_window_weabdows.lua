@@ -4,7 +4,7 @@ PREFABS.Window_weabdows_1 =
   map    = "MAP01",
 
   group  = "gtd_window_weabdows",
-  engine = "zdoom",
+  port = "zdoom",
 
   rank   = 2,
   prob   = 50,

@@ -1,7 +1,7 @@
 //
 // Value input header file for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2010 by Bill Spitzak and others.
+// Copyright 1998-2022 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -44,12 +44,13 @@
   is therefore impossible to select text by dragging across it,
   although clicking can still move the insertion cursor.</P>
 
-  <P>If step() is non-zero and integral, then the range
+  If step() is non-zero and integral, then the range
   of numbers are limited to integers instead of floating point
   values.
 
-  <P ALIGN="CENTER">\image html Fl_Value_Input.png
+  \image html Fl_Value_Input.png
   \image latex  Fl_Value_Input.png "Fl_Value_Input" width=4cm
+
   \see Fl_Widget::shortcut_label(int)
 */
 class FL_EXPORT Fl_Value_Input : public Fl_Valuator {
@@ -57,36 +58,33 @@ public:
   /* This is the encapsulated Fl_input attribute to which
   this class delegates the value font, color and shortcut */
   Fl_Input input;
-
 private:
   char soft_;
-  static void input_cb(Fl_Widget *, void *);
+  static void input_cb(Fl_Widget*,void*);
   virtual void value_damage(); // cause damage() due to value() changing
 public:
   int handle(int);
-
 protected:
   void draw();
-
 public:
-  void resize(int, int, int, int);
-  Fl_Value_Input(int x, int y, int w, int h, const char *l = 0);
+  void resize(int,int,int,int);
+  Fl_Value_Input(int x,int y,int w,int h,const char *l=0);
   ~Fl_Value_Input();
 
   /** See void Fl_Value_Input::soft(char s) */
-  void soft(char s) { soft_ = s; }
+  void soft(char s) {soft_ = s;}
   /**
     If "soft" is turned on, the user is allowed to drag
     the value outside the range. If they drag the value to one of
     the ends, let go, then grab again and continue to drag, they can
     get to any value. The default is true.
   */
-  char soft() const { return soft_; }
+  char soft() const {return soft_;}
   /**
    Returns the current shortcut key for the Input.
    \see Fl_Value_Input::shortcut(int)
   */
-  int shortcut() const { return input.shortcut(); }
+  int shortcut() const {return input.shortcut();}
   /**
    Sets the shortcut key to \p s. Setting this
    overrides the use of '&' in the label().  The value is a bitwise
@@ -104,24 +102,25 @@ public:
    the shift flags (zero for the other bits indicates a "don't care"
    setting).
    */
-  void shortcut(int s) { input.shortcut(s); }
+  void shortcut(int s) {input.shortcut(s);}
 
   /** Gets the typeface of the text in the value box.  */
-  Fl_Font textfont() const { return input.textfont(); }
+  Fl_Font textfont() const {return input.textfont();}
   /** Sets the typeface of the text in the value box.  */
-  void textfont(Fl_Font s) { input.textfont(s); }
+  void textfont(Fl_Font s) {input.textfont(s);}
   /** Gets the size of the text in the value box.  */
-  Fl_Fontsize textsize() const { return input.textsize(); }
+  Fl_Fontsize textsize() const {return input.textsize();}
   /** Sets the size of the text in the value box.  */
-  void textsize(Fl_Fontsize s) { input.textsize(s); }
+  void textsize(Fl_Fontsize s) {input.textsize(s);}
   /** Gets the color of the text in the value box.  */
-  Fl_Color textcolor() const { return input.textcolor(); }
+  Fl_Color textcolor() const {return input.textcolor();}
   /** Sets the color of the text in the value box.*/
-  void textcolor(Fl_Color n) { input.textcolor(n); }
+  void textcolor(Fl_Color n) {input.textcolor(n);}
   /** Gets the color of the text cursor. The text cursor is black by default. */
-  Fl_Color cursor_color() const { return input.cursor_color(); }
+  Fl_Color cursor_color() const {return input.cursor_color();}
   /** Sets the color of the text cursor. The text cursor is black by default. */
-  void cursor_color(Fl_Color n) { input.cursor_color(n); }
+  void cursor_color(Fl_Color n) {input.cursor_color(n);}
+
 };
 
 #endif

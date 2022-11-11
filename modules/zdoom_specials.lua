@@ -1160,7 +1160,7 @@ OB_MODULES["zdoom_specials"] =
 
   priority = 68,
 
-  engine = "zdoom",
+  port = "zdoom",
 
   hooks =
   {

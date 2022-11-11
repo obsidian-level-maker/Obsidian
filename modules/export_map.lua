@@ -189,8 +189,6 @@ end
 
 
 function EXPORT_MAP.setup()
-  gui.mkdir("debug")
-
   -- clean up any previous run which got cancelled or aborted
   if EXPORT_MAP.file then
     EXPORT_MAP.file:close()
@@ -209,7 +207,7 @@ function EXPORT_MAP.begin_level(self, LEVEL)
   -- pre-built levels cannot be exported
   if LEVEL.prebuilt then return end
 
-  local filename = string.format("debug/%s.map", LEVEL.name)
+  local filename = gui.get_save_path() .. "/" .. LEVEL.name .. ".map"
 
   local file, error_msg = io.open(filename, "w")
 
@@ -268,8 +266,7 @@ OB_MODULES["export_map"] =
 
   side = "left",
   priority = -75,
-  engine = "!vanilla",
-  engine2 = "!wolf_3d",
+  engine = "idtech_2",
 
   tables =
   {

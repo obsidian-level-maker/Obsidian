@@ -45,10 +45,9 @@ class FL_EXPORT Fl_Input_Choice : public Fl_Group {
   // Private class to handle slightly 'special' behavior of menu button
   class InputMenuButton : public Fl_Menu_Button {
     void draw();
-    const Fl_Menu_Item *popup();
-
+    const Fl_Menu_Item* popup();
   public:
-    InputMenuButton(int X, int Y, int W, int H, const char *L = 0);
+    InputMenuButton(int X, int Y, int W, int H, const char *L=0);
     int handle(int e);
   };
 
@@ -56,10 +55,10 @@ class FL_EXPORT Fl_Input_Choice : public Fl_Group {
   InputMenuButton *menu_;
 
   // note: this is used by the Fl_Input_Choice ctor.
-  static void menu_cb(Fl_Widget *, void *data);
+  static void menu_cb(Fl_Widget*, void *data);
 
   // note: this is used by the Fl_Input_Choice ctor.
-  static void inp_cb(Fl_Widget *, void *data);
+  static void inp_cb(Fl_Widget*, void *data);
 
 protected:
   // Custom resize behavior -- input stretches, menu button doesn't
@@ -69,29 +68,30 @@ protected:
       These can be overridden by a subclass to redefine positioning.
       See code example in the Description for subclassing details.
   */
-  virtual int inp_x() const { return (x() + Fl::box_dx(box())); }
+  virtual int inp_x() const { return(x() + Fl::box_dx(box())); }
   /** See inp_x() for info. */
-  virtual int inp_y() const { return (y() + Fl::box_dy(box())); }
+  virtual int inp_y() const { return(y() + Fl::box_dy(box())); }
   /** See inp_x() for info. */
-  virtual int inp_w() const { return (w() - Fl::box_dw(box()) - 20); }
+  virtual int inp_w() const { return(w() - Fl::box_dw(box()) - 20); }
   /** See inp_x() for info. */
-  virtual int inp_h() const { return (h() - Fl::box_dh(box())); }
+  virtual int inp_h() const { return(h() - Fl::box_dh(box())); }
 
   /** The methods menu_x(), menu_y(), menu_w() and menu_h() return the
       desired position and size of the internal Fl_Menu_Button widget.
       These can be overridden by a subclass to redefine positioning.
       See code example in the Description for subclassing details.
   */
-  virtual int menu_x() const { return (x() + w() - 20 - Fl::box_dx(box())); }
+  virtual int menu_x() const { return(x() + w() - 20 - Fl::box_dx(box())); }
   /** See menu_x() for info. */
-  virtual int menu_y() const { return (y() + Fl::box_dy(box())); }
+  virtual int menu_y() const { return(y() + Fl::box_dy(box())); }
   /** See menu_x() for info. */
-  virtual int menu_w() const { return (20); }
+  virtual int menu_w() const { return(20); }
   /** See menu_x() for info. */
-  virtual int menu_h() const { return (h() - Fl::box_dh(box())); }
+  virtual int menu_h() const { return(h() - Fl::box_dh(box())); }
 
 public:
-  Fl_Input_Choice(int X, int Y, int W, int H, const char *L = 0);
+
+  Fl_Input_Choice(int X, int Y, int W, int H, const char *L=0);
 
   void resize(int X, int Y, int W, int H);
 
@@ -136,16 +136,16 @@ public:
   void menu(const Fl_Menu_Item *m) { menu_->menu(m); }
 
   /// Gets the Fl_Input text field's text color.
-  Fl_Color textcolor() const { return (inp_->textcolor()); }
+  Fl_Color textcolor() const { return (inp_->textcolor());}
 
   /// Sets the Fl_Input text field's text color to \p c.
-  void textcolor(Fl_Color c) { inp_->textcolor(c); }
+  void textcolor(Fl_Color c) { inp_->textcolor(c);}
 
   /// Gets the Fl_Input text field's font style.
-  Fl_Font textfont() const { return (inp_->textfont()); }
+  Fl_Font textfont() const { return (inp_->textfont());}
 
   /// Sets the Fl_Input text field's font style to \p f.
-  void textfont(Fl_Font f) { inp_->textfont(f); }
+  void textfont(Fl_Font f) { inp_->textfont(f);}
 
   /// Gets the Fl_Input text field's font size
   Fl_Fontsize textsize() const { return (inp_->textsize()); }
@@ -154,7 +154,7 @@ public:
   void textsize(Fl_Fontsize s) { inp_->textsize(s); }
 
   /// Returns the Fl_Input text field's current contents.
-  const char *value() const { return (inp_->value()); }
+  const char* value() const { return (inp_->value()); }
 
   /** Sets the Fl_Input text field's contents to \p val.
 

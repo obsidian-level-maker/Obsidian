@@ -31,10 +31,10 @@
 
 #include <config.h>
 #include "Fl_Xlib_Graphics_Driver.H"
-#include "../../Fl_XColor.H"
-#include <FL/Fl.H>
-#include <FL/platform.H>
-#include <FL/fl_draw.H>
+#  include "../../Fl_XColor.H"
+#  include <FL/Fl.H>
+#  include <FL/platform.H>
+#  include <FL/fl_draw.H>
 
 extern unsigned fl_cmap[256]; // defined in fl_color.cxx
 
@@ -42,70 +42,55 @@ extern unsigned fl_cmap[256]; // defined in fl_color.cxx
 // figure_out_visual() calculates masks & shifts for generating
 // pixels in true-color visuals:
 
-uchar fl_redmask;   /**< color mask used in current color map handling */
-uchar fl_greenmask; /**< color mask used in current color map handling */
-uchar fl_bluemask;  /**< color mask used in current color map handling */
+uchar fl_redmask;       /**< color mask used in current color map handling */
+uchar fl_greenmask;     /**< color mask used in current color map handling */
+uchar fl_bluemask;      /**< color mask used in current color map handling */
 
-int fl_redshift;   /**< color shift used in current color map handling */
-int fl_greenshift; /**< color shift used in current color map handling */
-int fl_blueshift;  /**< color shift used in current color map handling */
-int fl_extrashift; /**< color shift used in current color map handling */
+int fl_redshift;        /**< color shift used in current color map handling */
+int fl_greenshift;      /**< color shift used in current color map handling */
+int fl_blueshift;       /**< color shift used in current color map handling */
+int fl_extrashift;      /**< color shift used in current color map handling */
 
 static uchar beenhere;
 
 static void figure_out_visual() {
   beenhere = 1;
-  if (!fl_visual->red_mask || !fl_visual->green_mask || !fl_visual->blue_mask) {
-#if USE_COLORMAP
+  if (!fl_visual->red_mask || !fl_visual->green_mask || !fl_visual->blue_mask){
+#  if USE_COLORMAP
     fl_redmask = 0;
     return;
-#else
+#  else
     Fl::fatal("Requires true color visual");
-#endif
+#  endif
   }
 
   // get the bit masks into a more useful form:
-  int i, j, m;
+  int i,j,m;
 
-  for (i = 0, m = 1; m; i++, m <<= 1)
-    if (fl_visual->red_mask & m)
-      break;
-  for (j = i; m; j++, m <<= 1)
-    if (!(fl_visual->red_mask & m))
-      break;
-  fl_redshift = j - 8;
-  fl_redmask = (j - i >= 8) ? 0xFF : 0xFF - (255 >> (j - i));
+  for (i = 0, m = 1; m; i++, m<<=1) if (fl_visual->red_mask & m) break;
+  for (j = i; m; j++, m<<=1) if (!(fl_visual->red_mask & m)) break;
+  fl_redshift = j-8;
+  fl_redmask = (j-i >= 8) ? 0xFF : 0xFF-(255>>(j-i));
 
-  for (i = 0, m = 1; m; i++, m <<= 1)
-    if (fl_visual->green_mask & m)
-      break;
-  for (j = i; m; j++, m <<= 1)
-    if (!(fl_visual->green_mask & m))
-      break;
-  fl_greenshift = j - 8;
-  fl_greenmask = (j - i >= 8) ? 0xFF : 0xFF - (255 >> (j - i));
+  for (i = 0, m = 1; m; i++, m<<=1) if (fl_visual->green_mask & m) break;
+  for (j = i; m; j++, m<<=1) if (!(fl_visual->green_mask & m)) break;
+  fl_greenshift = j-8;
+  fl_greenmask = (j-i >= 8) ? 0xFF : 0xFF-(255>>(j-i));
 
-  for (i = 0, m = 1; m; i++, m <<= 1)
-    if (fl_visual->blue_mask & m)
-      break;
-  for (j = i; m; j++, m <<= 1)
-    if (!(fl_visual->blue_mask & m))
-      break;
-  fl_blueshift = j - 8;
-  fl_bluemask = (j - i >= 8) ? 0xFF : 0xFF - (255 >> (j - i));
+  for (i = 0, m = 1; m; i++, m<<=1) if (fl_visual->blue_mask & m) break;
+  for (j = i; m; j++, m<<=1) if (!(fl_visual->blue_mask & m)) break;
+  fl_blueshift = j-8;
+  fl_bluemask = (j-i >= 8) ? 0xFF : 0xFF-(255>>(j-i));
 
   i = fl_redshift;
-  if (fl_greenshift < i)
-    i = fl_greenshift;
-  if (fl_blueshift < i)
-    i = fl_blueshift;
+  if (fl_greenshift < i) i = fl_greenshift;
+  if (fl_blueshift < i) i = fl_blueshift;
   if (i < 0) {
     fl_extrashift = -i;
-    fl_redshift -= i;
-    fl_greenshift -= i;
-    fl_blueshift -= i;
+    fl_redshift -= i; fl_greenshift -= i; fl_blueshift -= i;
   } else
     fl_extrashift = 0;
+
 }
 
 Fl_XColor fl_xmap[1][256];
@@ -116,17 +101,15 @@ void Fl_Xlib_Graphics_Driver::color(Fl_Color i) {
     color((uchar)(rgb >> 24), (uchar)(rgb >> 16), (uchar)(rgb >> 8));
   } else {
     Fl_Graphics_Driver::color(i);
-    if (!gc_)
-      return; // don't get a default gc if current window is not yet created/valid
+    if(!gc_) return; // don't get a default gc if current window is not yet created/valid
     XSetForeground(fl_display, gc_, fl_xpixel(i));
   }
 }
 
-void Fl_Xlib_Graphics_Driver::color(uchar r, uchar g, uchar b) {
-  Fl_Graphics_Driver::color(fl_rgb_color(r, g, b));
-  if (!gc_)
-    return; // don't get a default gc if current window is not yet created/valid
-  XSetForeground(fl_display, gc_, fl_xpixel(r, g, b));
+void Fl_Xlib_Graphics_Driver::color(uchar r,uchar g,uchar b) {
+  Fl_Graphics_Driver::color( fl_rgb_color(r, g, b) );
+  if(!gc_) return; // don't get a default gc if current window is not yet created/valid
+  XSetForeground(fl_display, gc_, fl_xpixel(r,g,b));
 }
 
 /** \addtogroup  fl_attributes
@@ -144,25 +127,26 @@ void Fl_Xlib_Graphics_Driver::color(uchar r, uchar g, uchar b) {
   \param[in] r,g,b color components
   \return X pixel number
 */
-ulong fl_xpixel(uchar r, uchar g, uchar b) {
-  if (!beenhere)
-    figure_out_visual();
-#if USE_COLORMAP
+ulong fl_xpixel(uchar r,uchar g,uchar b) {
+  if (!beenhere) figure_out_visual();
+#  if USE_COLORMAP
   if (!fl_redmask) {
     // find closest entry in the colormap:
-    Fl_Color i = fl_color_cube(r * FL_NUM_RED / 256, g * FL_NUM_GREEN / 256, b * FL_NUM_BLUE / 256);
+    Fl_Color i =
+      fl_color_cube(r*FL_NUM_RED/256,g*FL_NUM_GREEN/256,b*FL_NUM_BLUE/256);
     Fl_XColor &xmap = fl_xmap[Fl_Xlib_Graphics_Driver::fl_overlay][i];
-    if (xmap.mapped)
-      return xmap.pixel;
+    if (xmap.mapped) return xmap.pixel;
     // if not black or white, change the entry to be an exact match:
     if (i != FL_COLOR_CUBE && i != 0xFF)
-      fl_cmap[i] = (r << 24) | (g << 16) | (b << 8);
+      fl_cmap[i] = (r<<24)|(g<<16)|(b<<8);
     return fl_xpixel(i); // allocate an X color
   }
-#endif
-  return (((r & fl_redmask) << fl_redshift) + ((g & fl_greenmask) << fl_greenshift) +
-          ((b & fl_bluemask) << fl_blueshift)) >>
-         fl_extrashift;
+#  endif
+  return
+    (((r&fl_redmask) << fl_redshift)+
+     ((g&fl_greenmask)<<fl_greenshift)+
+     ((b&fl_bluemask)<< fl_blueshift)
+     ) >> fl_extrashift;
 }
 
 ////////////////////////////////////////////////////////////////
@@ -173,7 +157,7 @@ ulong fl_xpixel(uchar r, uchar g, uchar b) {
 
 // calculate what color is actually on the screen for a mask:
 static inline uchar realcolor(uchar color, uchar mask) {
-#if 0
+#  if 0
   // accurate version if the display has linear gamma, but fl_draw_image
   // works better with the simpler version on most screens...
   uchar m = mask;
@@ -185,9 +169,9 @@ static inline uchar realcolor(uchar color, uchar mask) {
     result |= color&m;
   }
   return result;
-#else
-  return (color & mask) | ((~mask) & (mask >> 1));
-#endif
+#  else
+  return (color&mask) | ( (~mask)&(mask>>1) );
+#  endif
 }
 
 /**
@@ -202,33 +186,28 @@ ulong fl_xpixel(Fl_Color i) {
   }
 
   Fl_XColor &xmap = fl_xmap[Fl_Xlib_Graphics_Driver::fl_overlay][i];
-  if (xmap.mapped)
-    return xmap.pixel;
+  if (xmap.mapped) return xmap.pixel;
 
-  if (!beenhere)
-    figure_out_visual();
+  if (!beenhere) figure_out_visual();
 
-  uchar r, g, b;
-  {
-    unsigned c = fl_cmap[i];
-    r = uchar(c >> 24);
-    g = uchar(c >> 16);
-    b = uchar(c >> 8);
-  }
+  uchar r,g,b;
+  {unsigned c = fl_cmap[i]; r=uchar(c>>24); g=uchar(c>>16); b=uchar(c>>8);}
 
-#if USE_COLORMAP
+#  if USE_COLORMAP
   Colormap colormap = fl_colormap;
   if (fl_redmask) {
-#endif
+#  endif
     // return color for a truecolor visual:
     xmap.mapped = 2; // 2 prevents XFreeColor from being called
     xmap.r = realcolor(r, fl_redmask);
     xmap.g = realcolor(g, fl_greenmask);
     xmap.b = realcolor(b, fl_bluemask);
-    return xmap.pixel = (((r & fl_redmask) << fl_redshift) + ((g & fl_greenmask) << fl_greenshift) +
-                         ((b & fl_bluemask) << fl_blueshift)) >>
-                        fl_extrashift;
-#if USE_COLORMAP
+    return xmap.pixel =
+      (((r&fl_redmask) << fl_redshift)+
+       ((g&fl_greenmask)<<fl_greenshift)+
+       ((b&fl_bluemask)<< fl_blueshift)
+       ) >> fl_extrashift;
+#  if USE_COLORMAP
   }
   static XColor *allcolors;
   static int numcolors;
@@ -239,14 +218,12 @@ ulong fl_xpixel(Fl_Color i) {
   // avoids one round trip:
   if (!numcolors) { // don't try after a failure
     XColor xcol;
-    xcol.red = r << 8;
-    xcol.green = g << 8;
-    xcol.blue = b << 8;
+    xcol.red = r<<8; xcol.green = g<<8; xcol.blue = b<<8;
     if (XAllocColor(fl_display, colormap, &xcol)) {
       xmap.mapped = 1;
-      xmap.r = xcol.red >> 8;
-      xmap.g = xcol.green >> 8;
-      xmap.b = xcol.blue >> 8;
+      xmap.r = xcol.red>>8;
+      xmap.g = xcol.green>>8;
+      xmap.b = xcol.blue>>8;
       return xmap.pixel = xcol.pixel;
     }
 
@@ -254,10 +231,8 @@ ulong fl_xpixel(Fl_Color i) {
     // of round-trips to the X server, even though other programs may alter
     // the colormap after this and make decisions here wrong.
     numcolors = fl_visual->colormap_size;
-    if (!allcolors)
-      allcolors = new XColor[numcolors];
-    for (int p = numcolors; p--;)
-      allcolors[p].pixel = p;
+    if (!allcolors) allcolors = new XColor[numcolors];
+    for (int p = numcolors; p--;) allcolors[p].pixel = p;
     XQueryColors(fl_display, colormap, allcolors, numcolors);
   }
 
@@ -267,16 +242,10 @@ ulong fl_xpixel(Fl_Color i) {
   for (unsigned int n = numcolors; n--;) {
     XColor &a = allcolors[n];
     int d, t;
-    t = int(r) - int(a.red >> 8);
-    d = t * t;
-    t = int(g) - int(a.green >> 8);
-    d += t * t;
-    t = int(b) - int(a.blue >> 8);
-    d += t * t;
-    if (d <= mindist) {
-      bestmatch = n;
-      mindist = d;
-    }
+    t = int(r)-int(a.red>>8); d = t*t;
+    t = int(g)-int(a.green>>8); d += t*t;
+    t = int(b)-int(a.blue>>8); d += t*t;
+    if (d <= mindist) {bestmatch = n; mindist = d;}
   }
   XColor &p = allcolors[bestmatch];
 
@@ -296,11 +265,11 @@ ulong fl_xpixel(Fl_Color i) {
     xmap.mapped = 2; // 2 prevents XFreeColor from being called
     xmap.pixel = bestmatch;
   }
-  xmap.r = p.red >> 8;
-  xmap.g = p.green >> 8;
-  xmap.b = p.blue >> 8;
+  xmap.r = p.red>>8;
+  xmap.g = p.green>>8;
+  xmap.b = p.blue>>8;
   return xmap.pixel;
-#endif
+#  endif
 }
 
 /**
@@ -309,14 +278,13 @@ ulong fl_xpixel(Fl_Color i) {
   \param[in] overlay 0 for normal, 1 for overlay color
 */
 void Fl_Xlib_Graphics_Driver::free_color(Fl_Color i, int overlay) {
-  if (overlay)
-    return;
+  if (overlay) return;
   if (fl_xmap[overlay][i].mapped) {
-#if USE_COLORMAP
+#  if USE_COLORMAP
     Colormap colormap = fl_colormap;
     if (fl_xmap[overlay][i].mapped == 1)
       XFreeColors(fl_display, colormap, &(fl_xmap[overlay][i].pixel), 1, 0);
-#endif
+#  endif
     fl_xmap[overlay][i].mapped = 0;
   }
 }
@@ -328,7 +296,7 @@ void Fl_Xlib_Graphics_Driver::free_color(Fl_Color i, int overlay) {
 */
 void Fl_Xlib_Graphics_Driver::set_color(Fl_Color i, unsigned c) {
   if (fl_cmap[i] != c) {
-    free_color(i, 0);
+    free_color(i,0);
     fl_cmap[i] = c;
   }
 }

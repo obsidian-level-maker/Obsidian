@@ -62,7 +62,7 @@ color_mapping_t color_mappings[MAX_COLOR_MAPS];
 int gui_format_prefix(lua_State *L) {
     const char *levelcount = luaL_checkstring(L, 1);
     const char *game = luaL_checkstring(L, 2);
-    const char *engine = luaL_checkstring(L, 3);
+    const char *port = luaL_checkstring(L, 3);
     const char *theme = luaL_checkstring(L, 4);
     std::string format = luaL_checkstring(L, 5);
 
@@ -72,7 +72,7 @@ int gui_format_prefix(lua_State *L) {
         format = custom_prefix.c_str();
     }
 
-    const char *result = ff_main(levelcount, game, engine, theme,
+    const char *result = ff_main(levelcount, game, port, theme,
                                  OBSIDIAN_SHORT_VERSION, format.c_str());
 
     if (!result) {
@@ -191,6 +191,22 @@ int gui_mkdir(lua_State *L) {
     bool result = std::filesystem::create_directory(name);
 
     lua_pushboolean(L, result ? 1 : 0);
+    return 1;
+}
+
+// LUA: get_filename_base()
+//
+int gui_get_filename_base(lua_State *L) {
+    std::filesystem::path base = game_object->Filename();
+    lua_pushstring(L, base.stem().generic_string().c_str());
+    return 1;
+}
+
+// LUA: get_save_path()
+//
+int gui_get_save_path(lua_State *L) {
+    std::filesystem::path path = game_object->Filename();
+    lua_pushstring(L, path.remove_filename().generic_string().c_str());
     return 1;
 }
 
@@ -500,19 +516,20 @@ int gui_add_module(lua_State *L) {
     if (single_pane) {
         if (!main_win->left_mods->FindID(id)) {
             main_win->left_mods->AddModule(id, label, tip, red, green, blue,
-                                        suboptions);
+                                           suboptions);
         }
     } else {
-        if (!main_win->left_mods->FindID(id) && !main_win->right_mods->FindID(id)) {
+        if (!main_win->left_mods->FindID(id) &&
+            !main_win->right_mods->FindID(id)) {
             if (!StringCaseCmp(where, "left")) {
                 main_win->left_mods->AddModule(id, label, tip, red, green, blue,
-                                            suboptions);
+                                               suboptions);
             } else if (!StringCaseCmp(where, "right")) {
-                main_win->right_mods->AddModule(id, label, tip, red, green, blue,
-                                                suboptions);
+                main_win->right_mods->AddModule(id, label, tip, red, green,
+                                                blue, suboptions);
             } else {
                 return luaL_error(L, "add_module: unknown where value '%s'\n",
-                                where.c_str());
+                                  where.c_str());
             }
         }
     }
@@ -605,7 +622,8 @@ int gui_add_module_header(lua_State *L) {
 
     if (!mod) {
         Main::FatalError(
-            "Script problem: gui.add_module_slider_option called for non-existent module!\n");
+            "Script problem: gui.add_module_slider_option called for "
+            "non-existent module!\n");
     }
 
     if (!mod->FindHeaderOpt(option)) {
@@ -656,15 +674,17 @@ int gui_add_module_option(lua_State *L) {
 
     if (!mod) {
         Main::FatalError(
-            "Script problem: gui.add_module_slider_option called for non-existent module!\n");
+            "Script problem: gui.add_module_slider_option called for "
+            "non-existent module!\n");
     }
 
     if (!mod->FindOpt(option)) {
         main_win->left_mods->AddOption(module, option, label, tip, longtip, gap,
-                                    randomize_group, default_value);
+                                       randomize_group, default_value);
         if (!single_pane) {
             main_win->right_mods->AddOption(module, option, label, tip, longtip,
-                                            gap, randomize_group, default_value);
+                                            gap, randomize_group,
+                                            default_value);
         }
     }
 #endif
@@ -716,13 +736,14 @@ int gui_add_module_slider_option(lua_State *L) {
 
     if (!mod) {
         Main::FatalError(
-            "Script problem: gui.add_module_slider_option called for non-existent module!\n");
+            "Script problem: gui.add_module_slider_option called for "
+            "non-existent module!\n");
     }
 
     if (!mod->FindSliderOpt(option)) {
-        main_win->left_mods->AddSliderOption(module, option, label, tip, longtip,
-                                            gap, min, max, inc, units, presets,
-                                            nan, randomize_group, default_value);
+        main_win->left_mods->AddSliderOption(
+            module, option, label, tip, longtip, gap, min, max, inc, units,
+            presets, nan, randomize_group, default_value);
         if (!single_pane) {
             main_win->right_mods->AddSliderOption(
                 module, option, label, tip, longtip, gap, min, max, inc, units,
@@ -770,16 +791,18 @@ int gui_add_module_button_option(lua_State *L) {
 
     if (!mod) {
         Main::FatalError(
-            "Script problem: gui.add_module_button_option called for non-existent module!\n");
+            "Script problem: gui.add_module_button_option called for "
+            "non-existent module!\n");
     }
 
     if (!mod->FindButtonOpt(option)) {
-        main_win->left_mods->AddButtonOption(module, option, label, tip, longtip,
-                                            gap, randomize_group, default_value);
+        main_win->left_mods->AddButtonOption(module, option, label, tip,
+                                             longtip, gap, randomize_group,
+                                             default_value);
         if (!single_pane) {
             main_win->right_mods->AddButtonOption(module, option, label, tip,
-                                                longtip, gap, randomize_group,
-                                                default_value);
+                                                  longtip, gap, randomize_group,
+                                                  default_value);
         }
     }
 #endif
@@ -1087,9 +1110,9 @@ int gui_prog_step(lua_State *L) {
 // LUA: ticker()
 //
 int gui_ticker(lua_State * /*L*/) {
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     Main::Ticker();
-    #endif
+#endif
     return 0;
 }
 
@@ -1097,9 +1120,9 @@ int gui_ticker(lua_State * /*L*/) {
 //
 int gui_abort(lua_State *L) {
     int value = (main_action >= MAIN_CANCEL) ? 1 : 0;
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     Main::Ticker();
-    #endif
+#endif
     lua_pushboolean(L, value);
     return 1;
 }
@@ -1168,6 +1191,30 @@ int gui_bit_not(lua_State *L) {
     return 1;
 }
 
+int gui_minimap_enable(lua_State *L) {
+#ifndef CONSOLE_ONLY
+    if (main_win) {
+        main_win->build_box->alt_disp->label("");
+    }
+#endif
+    return 0;
+}
+
+int gui_minimap_disable(lua_State *L) {
+#ifndef CONSOLE_ONLY
+    if (main_win) {
+        main_win->build_box->mini_map->EmptyMap();
+        std::string genny = luaL_checkstring(L, 1);
+        // clang-format off
+        main_win->build_box->alt_disp->copy_label(fmt::format("{} {} -\n{}", 
+            _("Using"),
+            genny, _("Preview Not Available")).c_str());
+        // clang-format on
+    }
+#endif
+    return 0;
+}
+
 int gui_minimap_begin(lua_State *L) {
     // dummy size when running in batch mode
     int map_W = 50;
@@ -1187,39 +1234,39 @@ int gui_minimap_begin(lua_State *L) {
 }
 
 int gui_minimap_finish(lua_State *L) {
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->mini_map->MapFinish();
     }
-    #endif
+#endif
     return 0;
 }
 
 int gui_minimap_gif_start(lua_State *L) {
     int delay = luaL_optinteger(L, 1, 10);
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->mini_map->GifStart(gif_filename, delay);
     }
-    #endif
+#endif
     return 0;
 }
 
 int gui_minimap_gif_frame(lua_State *L) {
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->mini_map->GifFrame();
     }
-    #endif
+#endif
     return 0;
 }
 
 int gui_minimap_gif_finish(lua_State *L) {
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->mini_map->GifFinish();
     }
-    #endif
+#endif
     return 0;
 }
 
@@ -1238,12 +1285,12 @@ int gui_minimap_draw_line(lua_State *L) {
 
     sscanf(color_str, "#%2x%2x%2x", &r, &g, &b);
 
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->mini_map->DrawLine(x1, y1, x2, y2, (u8_t)r,
                                                 (u8_t)g, (u8_t)b);
     }
-    #endif
+#endif
 
     return 0;
 }
@@ -1263,12 +1310,12 @@ int gui_minimap_fill_box(lua_State *L) {
 
     sscanf(color_str, "#%2x%2x%2x", &r, &g, &b);
 
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->mini_map->DrawBox(x1, y1, x2, y2, (u8_t)r, (u8_t)g,
                                                (u8_t)b);
     }
-    #endif
+#endif
 
     return 0;
 }
@@ -1399,6 +1446,8 @@ static const luaL_Reg gui_script_funcs[] = {
     {"get_install_dir", gui_get_install_dir},
     {"scan_directory", gui_scan_directory},
     {"mkdir", gui_mkdir},
+    {"get_filename_base", gui_get_filename_base},
+    {"get_save_path", gui_get_save_path},
 
     // CSG functions
     {"begin_level", CSG_begin_level},
@@ -1410,6 +1459,8 @@ static const luaL_Reg gui_script_funcs[] = {
     {"trace_ray", CSG_trace_ray},
 
     // Mini-Map functions
+    {"minimap_disable", gui_minimap_disable},
+    {"minimap_enable", gui_minimap_enable},
     {"minimap_begin", gui_minimap_begin},
     {"minimap_finish", gui_minimap_finish},
     {"minimap_draw_line", gui_minimap_draw_line},
@@ -1555,8 +1606,8 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
             LogPrintf("ERROR MESSAGE: {}\n", err_msg);
         }
 
-        // this will appear in the log file too
-        #ifndef CONSOLE_ONLY
+// this will appear in the log file too
+#ifndef CONSOLE_ONLY
         if (main_win) {
             main_win->label(fmt::format("{} {} {} \"{}\"", _("[ ERROR ]"),
                                         OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
@@ -1568,7 +1619,7 @@ static bool Script_CallFunc(std::string func_name, int nresult = 0,
                                         OBSIDIAN_CODE_NAME)
                                 .c_str());
         }
-        #endif
+#endif
         lua_pop(LUA_ST, 2);  // ob_traceback, message
         return false;
     }
@@ -1791,7 +1842,6 @@ void Script_Open() {
 }
 
 void Script_Close() {
-
     if (LUA_ST) {
         lua_close(LUA_ST);
     }
@@ -1985,16 +2035,16 @@ void ob_invoke_hook(std::string hookname) {
 
 bool ob_build_cool_shit() {
     if (!Script_CallFunc("ob_build_cool_shit", 1)) {
-        #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
         if (main_win) {
             main_win->label(fmt::format("{} {} {} \"{}\"", _("[ ERROR ]"),
                                         OBSIDIAN_TITLE, OBSIDIAN_SHORT_VERSION,
                                         OBSIDIAN_CODE_NAME)
                                 .c_str());
         }
-        #endif
+#endif
         Main::ProgStatus(_("Script Error"));
-        #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
         if (main_win) {
             main_win->label(fmt::format("{} {} \"{}\"", OBSIDIAN_TITLE,
                                         OBSIDIAN_SHORT_VERSION,
@@ -2004,7 +2054,7 @@ bool ob_build_cool_shit() {
             Main::Blinker();
 #endif
         }
-        #endif
+#endif
         return false;
     }
 

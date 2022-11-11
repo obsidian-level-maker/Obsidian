@@ -223,7 +223,7 @@ OB_MODULES["zdoom_marines"] =
 
   game = "doomish",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   tables =
   {
@@ -293,7 +293,7 @@ OB_MODULES["zdoom_marine_control"] =
 
   game = "doomish",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   tables =
   {

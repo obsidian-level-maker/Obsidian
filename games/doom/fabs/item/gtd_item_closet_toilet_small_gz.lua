@@ -7,7 +7,7 @@ PREFABS.Item_closet_toilet_room_small_gz =
   file   = "item/gtd_item_closet_toilet_small_gz.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 10,
   theme  = "!hell",

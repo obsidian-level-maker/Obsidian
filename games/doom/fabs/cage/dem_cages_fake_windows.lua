@@ -285,7 +285,7 @@ PREFABS.Cage_dem_windows_ambusho1 =
   file   = "cage/dem_cages.wad",
   map    = "MAP25",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 800,
 
@@ -427,7 +427,7 @@ PREFABS.Cage_dem_windows_ambush7 =
   file   = "cage/dem_cages.wad",
   map    = "MAP28",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 800,
 
@@ -496,7 +496,7 @@ PREFABS.Cage_dem_windows_ambusho7 =
   file   = "cage/dem_cages.wad",
   map    = "MAP31",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 800,
 
@@ -565,7 +565,7 @@ PREFABS.Cage_dem_windows_ambush10 =
   file   = "cage/dem_cages.wad",
   map    = "MAP34",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 800,
 
@@ -634,7 +634,7 @@ PREFABS.Cage_dem_windows_ambusho10 =
   file   = "cage/dem_cages.wad",
   map    = "MAP37",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 800,
 
@@ -703,7 +703,7 @@ PREFABS.Cage_dem_windows_ambush13 =
   file   = "cage/dem_cages.wad",
   map    = "MAP40",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 200,
 
@@ -768,7 +768,7 @@ PREFABS.Cage_dem_windows_ambush16 =
   file   = "cage/dem_cages.wad",
   map    = "MAP43",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 800,
 
@@ -835,7 +835,7 @@ PREFABS.Cage_dem_windows_ambushd7 =
   file   = "cage/dem_cages.wad",
   map    = "MAP46",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 800,
 

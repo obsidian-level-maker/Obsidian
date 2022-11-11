@@ -419,6 +419,7 @@ class nukem_game_interface_c : public game_interface_c {
     void BeginLevel();
     void EndLevel();
     void Property(std::string key, std::string value);
+    std::filesystem::path Filename();
 
    private:
 };
@@ -431,12 +432,13 @@ bool nukem_game_interface_c::Start(const char *preset) {
             filename = Resolve_DefaultOutputPath() / batch_output_file;
         }
     } else {
-        #ifndef CONSOLE_ONLY
-        if (!mid_batch)
+#ifndef CONSOLE_ONLY
+        if (!mid_batch) {
             filename = DLG_OutputFilename("grp", preset);
-        else
+        } else {
             filename = BestDirectory() / preset;
-        #endif
+        }
+#endif
     }
 
     if (filename.empty()) {
@@ -453,11 +455,11 @@ bool nukem_game_interface_c::Start(const char *preset) {
         return false;
     }
 
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Init(0, N_("CSG"));
     }
-    #endif
+#endif
 
     return true;
 }
@@ -488,6 +490,10 @@ void nukem_game_interface_c::Property(std::string key, std::string value) {
     }
 }
 
+std::filesystem::path nukem_game_interface_c::Filename() {
+    return filename;
+}
+
 void nukem_game_interface_c::EndLevel() {
     if (level_name.empty()) {
         Main::FatalError("Script problem: did not set level name!\n");
@@ -495,11 +501,11 @@ void nukem_game_interface_c::EndLevel() {
 
     NK_BeginLevel(level_name.c_str());
 
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Step("CSG");
     }
-    #endif
+#endif
 
     CSG_NUKEM_Write();
 

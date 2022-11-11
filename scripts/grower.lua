@@ -938,16 +938,8 @@ function Grower_calc_rule_probs(LEVEL)
       local new_factor
   
       if string.match(rule.name,"ROOT") then return end
-      if string.match(rule.name,"JOINER") then return end
-      if string.match(rule.name,"SPROUT") then return end
-      if string.match(rule.name,"EMERGENCY") then return end
-      if string.match(rule.name,"STREET") then return end
-      if string.match(rule.name,"SIDEWALK") then return end
-      if string.match(rule.name,"hall") then return end
-      if string.match(rule.name,"HALL") then return end
-      if string.match(rule.name,"START") then return end
-      if string.match(rule.name,"PARK") then return end
-      if string.match(rule.name,"DECORATE") then return end
+      if string.match(rule.name,"CAVE") then return end
+      if rule.pass and rule.pass ~= "grow" then return end
       if table.has_elem(rule.styles, "liquids") 
         and not LEVEL.liquid then return end
 
@@ -995,7 +987,14 @@ function Grower_calc_rule_probs(LEVEL)
 
     Grower_reset_absurdities()
 
-    local rules_to_absurdify = rand.pick({1,1,2,2,2,3,3,4,5})
+    local rules_to_absurdify = rand.pick({1,1,2,2,2,3,3,4})
+
+    -- double the amount of absurd rules if it's closer to a balance of
+    -- outdoor/interior environments based on level style
+    if rand.odds(style_sel("outdoors", 0, 30, 45, 0)) then
+      rules_to_absurdify = rules_to_absurdify * 2
+    end
+
     local count = rules_to_absurdify
     gui.printf(rules_to_absurdify .. " rules will be absurd!\n\n")
 
@@ -1376,9 +1375,13 @@ end
 
 
 
-function Grower_add_room(LEVEL, parent_R, info, trunk)
+function Grower_add_room(LEVEL, parent_R, info, trunk, rule)
 
   local R = ROOM_CLASS.new(LEVEL)
+
+  if rule then
+    R.sprout_rule = rule.name
+  end
 
 gui.debugf("new room %s : env = %s : parent = %s\n", R.name, tostring(info.env), tostring(parent_R and parent_R.name))
 
@@ -2967,7 +2970,7 @@ stderrf("Link pieces: %s dir:%d <--> %s dir:%d\n",
     elseif cur_rule.new_room then
       local info = cur_rule.new_room
 
-      new_room = Grower_add_room(LEVEL, R, info)
+      new_room = Grower_add_room(LEVEL, R, info, nil, cur_rule)
 
       -- create a preliminary connection (last room to this one).
       -- the seed and direction are determined later.
@@ -2991,7 +2994,10 @@ stderrf("Link pieces: %s dir:%d <--> %s dir:%d\n",
       new_area = AREA_CLASS.new(LEVEL, "floor")
 
       -- max size of new area
-      new_area.max_size = rand.pick({ 16, 24, 32 })
+      --new_area.max_size = rand.pick({ 16, 24, 32, 128, 256, 512 })
+      if R.svolume then
+        new_area.max_size = (R.size_limit - R.svolume) * 1.25
+      end
 
       new_area.no_grow   = info.no_grow
       new_area.no_sprout = info.no_sprout
@@ -3493,6 +3499,7 @@ end
       local aux_name = auxiliary_name(idx)
 
       local aux = cur_rule[aux_name]
+      cur_rule.is_auxiliary = true
       if aux == nil then goto continue end
 
       assert(aux.pass)
@@ -3584,10 +3591,22 @@ end
       else
         R.shapes_applied = 1
       end
+
+      if cur_rule.is_absurd then
+        if R.absurd_shapes then
+          table.add_unique(R.absurd_shapes, cur_rule.name)
+        else
+          R.absurd_shapes = {}
+        end
+      end
     end
 
     if pass == "sprout" then
       R.sprout_succesful = true
+    end
+
+    if cur_rule.is_auxiliary then
+      R.has_auxiliary = true
     end
 
     -- round robin absurdity settings
@@ -4090,7 +4109,6 @@ function Grower_create_and_grow_room(SEEDS, LEVEL, trunk, mode, info)
 
   R.is_root = true
 
-
   -- apply a root rule for it
   local pass = "root"
 
@@ -4375,7 +4393,13 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
 
     for _,R in pairs(list) do
       if not R.is_grown then
-        Grower_kill_room(SEEDS, LEVEL, R)
+        if R.is_hallway then
+          Grower_kill_room(SEEDS, LEVEL, R)
+        elseif not R.is_hallway and rand.odds(style_sel("sub_rooms", 100, 66, 33, 0)) then
+          Grower_kill_room(SEEDS, LEVEL, R)
+        else
+          R.is_sub_room = true
+        end
       end
     end
   end
@@ -4467,14 +4491,13 @@ gui.debugf("=== Coverage seeds: %d/%d  rooms: %d/%d\n",
     end
 
     expand_limits()
+    emergency_sprouts()
 
     if LEVEL.is_linear and not LEVEL.is_procedural_gotcha
     and (#LEVEL.rooms < ((LEVEL.min_rooms + LEVEL.max_rooms) / 2)) then
       if emergency_linear_sprouts() == "oof" then
         emergency_teleport_break()
       end
-    else
-      emergency_sprouts()
     end
   end
 end
@@ -4859,7 +4882,7 @@ function Grower_create_rooms(LEVEL, SEEDS)
 
   -- debugging aid
   if OB_CONFIG.svg or (PARAM.bool_save_svg and PARAM.bool_save_svg == 1) then
-    Seed_save_svg_image(OB_CONFIG.title .. "_" .. LEVEL.name .. ".svg")
+    Seed_save_svg_image(OB_CONFIG.title .. "_" .. LEVEL.name .. ".svg", SEEDS)
   end
 
   if PARAM.bool_shape_rule_stats == 1 then

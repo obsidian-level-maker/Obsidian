@@ -38,8 +38,7 @@
 char *fl_filename_setext(char *buf, int buflen, const char *ext) {
   char *q = (char *)fl_filename_ext(buf);
   if (ext) {
-    strlcpy(q, ext, buflen - (q - buf));
-  } else
-    *q = 0;
-  return (buf);
+    strlcpy(q,ext,buflen - (q - buf));
+  } else *q = 0;
+  return(buf);
 }

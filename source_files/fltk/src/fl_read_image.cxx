@@ -40,7 +40,12 @@
 uchar *fl_read_image(uchar *p, int X, int Y, int w, int h, int alpha) {
   uchar *image_data = NULL;
   Fl_RGB_Image *img;
-  if (fl_find(fl_window) == 0) { // read from off_screen buffer
+  // Under macOS and Wayland, fl_window == 0 when an Fl_Image_Surface is the current drawing
+  // surface. Otherwise, fl_window corresponds to a mapped Fl_Window.
+  // Under X11 and windows, fl_window is an offscreen buffer when an Fl_Image_Surface
+  // is the current drawing or when fl_read_image() is called inside the draw() of
+  // an Fl_Double_Window.
+  if (fl_find(fl_window) == 0) { // read from offscreen buffer or buffer of an Fl_Double_Window
     img = Fl::screen_driver()->read_win_rectangle(X, Y, w, h, 0);
     if (!img) {
       return NULL;
@@ -52,8 +57,7 @@ uchar *fl_read_image(uchar *p, int X, int Y, int w, int h, int alpha) {
   int depth = alpha ? 4 : 3;
   if (img && img->d() != depth) {
     uchar *data = new uchar[img->w() * img->h() * depth];
-    if (depth == 4)
-      memset(data, alpha, img->w() * img->h() * depth);
+    if (depth == 4) memset(data, alpha, img->w() * img->h() * depth);
     uchar *d = data;
     const uchar *q;
     int ld = img->ld() ? img->ld() : img->w() * img->d();
@@ -63,8 +67,7 @@ uchar *fl_read_image(uchar *p, int X, int Y, int w, int h, int alpha) {
         d[0] = q[0];
         d[1] = q[1];
         d[2] = q[2];
-        d += depth;
-        q += img->d();
+        d += depth; q += img->d();
       }
     }
     Fl_RGB_Image *img2 = new Fl_RGB_Image(data, img->w(), img->h(), depth);
@@ -74,12 +77,12 @@ uchar *fl_read_image(uchar *p, int X, int Y, int w, int h, int alpha) {
   }
   if (img) {
     if (img->w() != w || img->h() != h) {
-      Fl_RGB_Image *img2 = (Fl_RGB_Image *)img->copy(w, h);
+      Fl_RGB_Image *img2 = (Fl_RGB_Image*)img->copy(w, h);
       delete img;
       img = img2;
     }
     img->alloc_array = 0;
-    image_data = (uchar *)img->array;
+    image_data = (uchar*)img->array;
     delete img;
   }
   if (p && image_data) {
@@ -98,12 +101,12 @@ uchar *fl_read_image(uchar *p, int X, int Y, int w, int h, int alpha) {
  The image depth may differ between platforms.
  \version 1.4
 */
-Fl_RGB_Image *fl_capture_window(Fl_Window *win, int x, int y, int w, int h) {
+Fl_RGB_Image *fl_capture_window(Fl_Window *win, int x, int y, int w, int h)
+{
   Fl_RGB_Image *rgb = NULL;
   if (win->shown()) {
     rgb = Fl_Screen_Driver::traverse_to_gl_subwindows(win, x, y, w, h, NULL);
-    if (rgb)
-      rgb->scale(w, h, 0, 1);
+    if (rgb) rgb->scale(w, h, 0, 1);
   }
   return rgb;
 }

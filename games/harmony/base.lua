@@ -22,6 +22,7 @@ OB_GAMES["harmony"] =
 	label = _("Harmony"),
 	priority = 91,
 	
+	engine = "idtech_1",
 	format = "doom",
 	--sub_format = "harmony",
 	

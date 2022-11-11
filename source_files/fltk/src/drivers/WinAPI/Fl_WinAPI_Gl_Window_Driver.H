@@ -32,31 +32,34 @@ Consequently, FL_DOUBLE is enforced in all Fl_Gl_Window::mode_ values under Wayl
 */
 
 class Fl_WinAPI_Gl_Window_Driver : public Fl_Gl_Window_Driver {
-  friend Fl_Gl_Window_Driver *Fl_Gl_Window_Driver::newGlWindowDriver(Fl_Gl_Window *);
-  Fl_WinAPI_Gl_Window_Driver(Fl_Gl_Window *win)
-    : Fl_Gl_Window_Driver(win) {}
+  friend Fl_Gl_Window_Driver* Fl_Gl_Window_Driver::newGlWindowDriver(Fl_Gl_Window *);
+  Fl_WinAPI_Gl_Window_Driver(Fl_Gl_Window *win) : Fl_Gl_Window_Driver(win) {}
   virtual float pixels_per_unit();
   virtual int mode_(int m, const int *a);
   virtual void make_current_after();
   virtual void swap_buffers();
   virtual void invalidate() {}
-  virtual int flush_begin(char &valid_f);
+  virtual int flush_begin(char& valid_f);
   virtual Fl_Gl_Choice *find(int m, const int *alistp);
-  virtual GLContext create_gl_context(Fl_Window *window, const Fl_Gl_Choice *g, int layer = 0);
-  virtual void set_gl_context(Fl_Window *w, GLContext context);
+  virtual GLContext create_gl_context(Fl_Window* window, const Fl_Gl_Choice* g);
+  GLContext do_create_gl_context(Fl_Window* window, const Fl_Gl_Choice* g,
+                                 int layer);
+  virtual void set_gl_context(Fl_Window* w, GLContext context);
   virtual void delete_gl_context(GLContext);
   virtual void make_overlay_current();
   virtual void redraw_overlay();
-  virtual void *GetProcAddress(const char *procName);
-  virtual void draw_string_legacy(const char *str, int n);
+  virtual void* GetProcAddress(const char *procName);
+  virtual void draw_string_legacy(const char* str, int n);
   virtual void gl_bitmap_font(Fl_Font_Descriptor *fl_fontsize);
   virtual void get_list(Fl_Font_Descriptor *fd, int r);
   virtual int genlistsize();
+  virtual void switch_to_GL1();
+  virtual void switch_back();
 #if HAVE_GL_OVERLAY
-  virtual void gl_hide_before(void *&overlay);
+  virtual void gl_hide_before(void *& overlay);
   virtual int can_do_overlay();
   virtual int overlay_color(Fl_Color i);
-  void make_overlay(void *&overlay);
+  void make_overlay(void*&overlay);
 #endif
 };
 

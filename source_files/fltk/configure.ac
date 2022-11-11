@@ -85,7 +85,7 @@ AC_SUBST(OPTIM)
 
 
 dnl Other options
-AC_ARG_ENABLE([cairo], AS_HELP_STRING([--enable-cairo], [use Cairo library]))
+AC_ARG_ENABLE([cairo], AS_HELP_STRING([--enable-cairo], [add support for Fl_Cairo_Window]))
 AC_ARG_ENABLE([cairoext], AS_HELP_STRING([--enable-cairoext], [use FLTK code instrumentation for cairo extended use]))
 
 AC_ARG_ENABLE([cp936], AS_HELP_STRING([--enable-cp936], [turn on CP936]))
@@ -110,7 +110,9 @@ AC_ARG_ENABLE([localzlib], AS_HELP_STRING([--enable-localzlib], [use local ZLIB 
 
 AC_ARG_ENABLE([pango], AS_HELP_STRING([--enable-pango], [turn on Pango support]))
 
-AC_ARG_ENABLE([wayland], AS_HELP_STRING([--enable-wayland], [turn on Wayland support]))
+AC_ARG_ENABLE([wayland], AS_HELP_STRING([--enable-wayland], [turn on hybrid Wayland/X11 support]))
+
+AC_ARG_ENABLE([usecairo], AS_HELP_STRING([--enable-usecairo], [all drawing to X11 windows uses Cairo]))
 
 AC_ARG_ENABLE([print], AS_HELP_STRING([--disable-print], [turn off print support (X11)]))
 AS_IF([test x$enable_print = xno], [
@@ -985,12 +987,22 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
           AC_MSG_ERROR([Aborting.])
       ])
 
+      dnl Turn option usecairo ON
+      AC_DEFINE([FLTK_USE_CAIRO])
+      AC_MSG_NOTICE([Turning on the usecairo option])
+
       BUILD="WAYLAND"
       AC_DEFINE([FLTK_USE_WAYLAND])
+      graphics="Wayland"
+      AS_IF([test x$enable_x11 != xno], [
+       AC_DEFINE([FLTK_USE_X11]) # to build a hybrid Wayland/X11 library
+       BUILD="WAYLANDX11"
+       graphics="Wayland or X11 with cairo"
+       ])
       CFLAGS="$CFLAGS -DUSE_SYSTEM_LIBDECOR=0"
       CXXFLAGS="$CXXFLAGS -DUSE_SYSTEM_LIBDECOR=0"
-      graphics="Wayland"
-      LIBS="$LIBS $($PKGCONFIG --libs wayland-cursor) $($PKGCONFIG --libs wayland-client) $($PKGCONFIG --libs xkbcommon)"
+      LIBS="$LIBS $($PKGCONFIG --libs wayland-cursor) $($PKGCONFIG --libs wayland-client) $($PKGCONFIG --libs xkbcommon) $($PKGCONFIG --libs pangoxft) "
+      AS_IF([test x$enable_x11 != xno], [LIBS="$LIBS $($PKGCONFIG --libs x11)"] )
       LIBS="$LIBS $($PKGCONFIG --libs dbus-1) -ldl"
       CXXFLAGS="$CXXFLAGS -I../libdecor/src"
       DSOFLAGS="$LIBS $DSOFLAGS"
@@ -1067,6 +1079,9 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
     LIBS="$LIBS -lX11 $X_EXTRA_LIBS"
     CFLAGS="$CFLAGS $X_CFLAGS"
     CXXFLAGS="$CXXFLAGS $X_CFLAGS"
+    AS_CASE([$host_os], [darwin*], [
+      DARWIN_LDFLAGS="$LDFLAGS"
+    ])
     LDFLAGS="$X_LIBS $LDFLAGS"
     DSOFLAGS="$X_LIBS $DSOFLAGS"
     AC_DEFINE([FLTK_USE_X11])
@@ -1174,6 +1189,15 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
         ])
     ])
 
+    dnl Option usecairo
+    AS_IF([test x$enable_usecairo = xyes], [
+      enable_pango=yes
+      BUILD="CAIRO"
+      AC_DEFINE([FLTK_USE_CAIRO])
+      AC_MSG_NOTICE([Processing usecairo option])
+      ]
+    )
+
     dnl test if Pango is asked but xft was not found
     AS_IF([test x$enable_pango = xyes -a x$xft_found = xno], [
         AC_MSG_WARN([could not find the Xft headers and/or libraries required for Pango.])
@@ -1187,21 +1211,40 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
         AS_IF([test x$PKGCONFIG != x], [
             dnl pkg-config is available, use it...
             dnl AC_MSG_NOTICE([--enable-pango: using pkg-config ...])
-            CXXFLAGS="$($PKGCONFIG --cflags pangoxft pangocairo) $CXXFLAGS"
-            LIBS="$($PKGCONFIG --libs pangoxft pangocairo) $LIBS"
+            CXXFLAGS="$($PKGCONFIG --cflags pangocairo) $CXXFLAGS"
+            AS_CASE([$host_os], [darwin*], [], [*], [
+              CXXFLAGS="$($PKGCONFIG --cflags pangoxft) $CXXFLAGS"
+            ])
+            AS_CASE([$host_os], [darwin*], [
+              DARWIN_SAVE_LIBS=$LIBS
+              DARWIN_PANGO_LIBS="$($PKGCONFIG --libs pangocairo)"
+              LIBS="$($PKGCONFIG --libs pangocairo) $LIBS"
+            ], [*], [
+              LIBS="$($PKGCONFIG --libs pangocairo --libs pangoxft) $LIBS"
+            ])
         ], [
             dnl pkg-config is not available, issue warning and continue...
             AC_MSG_WARN([--enable-pango: please install pkg-config. Continuing anyway.])
         ])
 
         CPPFLAGS="$CXXFLAGS"
-        AC_CHECK_HEADERS([pango/pango.h pango/pangoxft.h], [
+        AS_CASE([$host_os], [darwin*],
+          [AC_CHECK_HEADERS([pango/pango.h], [
+            AC_CHECK_LIB([pango-1.0], [pango_layout_new], [
+              AC_DEFINE([USE_PANGO])
+              pango_found=yes
+              LIBS=$DARWIN_SAVE_LIBS
+              ])
+          ])
+        ],[*], [
+          AC_CHECK_HEADERS([pango/pango.h pango/pangoxft.h], [
             AC_CHECK_LIB([pango-1.0], [pango_layout_new], [
                 AC_CHECK_LIB([pangoxft-1.0], [pango_xft_render_layout], [
                     AC_DEFINE([USE_PANGO])
                     pango_found=yes
                 ])
             ])
+          ])
         ])
 
         dnl Early abort if --enable-pango was requested but Pango could not be found
@@ -1245,6 +1288,15 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
                 xrender_found=yes
             ])
         ], [], [#include <X11/Xlib.h>])
+    ])
+
+    AS_CASE([$host_os], [darwin*], [
+      AS_IF([test x$pango_found = xyes], [
+        #place X_LIBS after homebrew's pango libs
+        LIBS="$DARWIN_PANGO_LIBS $X_LIBS $LIBS"
+        #remove X_LIBS from LDFLAGS while keeping its initial content
+        LDFLAGS="$DARWIN_LDFLAGS"
+      ])
     ])
 
     dnl Check for the X11/Xregion.h header file...
@@ -1608,6 +1660,9 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
     ])
     AS_IF([test x$xrender_found = xyes], [
         graphics="$graphics + Xrender"
+    ])
+    AS_IF([test x$enable_usecairo = xyes], [
+        graphics="$graphics + Cairo"
     ])
     AS_IF([test x$pango_found = xyes], [
         graphics="$graphics + Pango"

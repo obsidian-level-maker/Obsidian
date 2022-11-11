@@ -81,8 +81,8 @@ void timer_cb(void *) {
 
   static int stop = 0;
   static int n = 0;
-  const double delta = 5.0; // delay of popups
-  const int nmax = 10;      // limit no. of popups
+  const double delta = 5.0;   // delay of popups
+  const int nmax = 10;        // limit no. of popups
 
   n++;
   if (n >= nmax)
@@ -106,19 +106,20 @@ void timer_cb(void *) {
   // test message title assignment with a local buffer
   {                                 // local scope for buf
     char buf[40];                   // test: use local variable
-    sprintf(buf, "Message #%d", n); // fill message title
+    snprintf(buf, 40, "Message #%d", n); // fill message title
     fl_message_title(buf);          // set message title
     strcpy(buf, "** void **");      // overwrite buffer to be sure
   }                                 // buf goes out of scope here
 
   // pop up a message:
-  stop |= fl_choice("Timeout. Click the 'Close' button or press Escape.\n"
-                    "Note: this message had been blocked in FLTK 1.3.x\n"
-                    "and earlier if another message window was open.\n"
-                    "This message should pop up every 5 seconds (max. 10 times)\n"
-                    "in FLTK 1.4.0 and later until stopped by clicking the button\n"
-                    "below or by pressing the Enter (Return) key.\n",
-                    "Close", "Stop these funny popups", NULL);
+  stop |= fl_choice(
+          "Timeout. Click the 'Close' button or press Escape.\n"
+          "Note: this message had been blocked in FLTK 1.3.x\n"
+          "and earlier if another message window was open.\n"
+          "This message should pop up every 5 seconds (max. 10 times)\n"
+          "in FLTK 1.4.0 and later until stopped by clicking the button\n"
+          "below or by pressing the Enter (Return) key.\n",
+          "Close", "Stop these funny popups", NULL);
 }
 
 int main(int argc, char **argv) {

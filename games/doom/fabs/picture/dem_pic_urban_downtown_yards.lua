@@ -74,14 +74,14 @@ PREFABS.Pic_urban_downtown_yards3 =
 {
   template = "Pic_urban_downtown_yards1",
   map      = "MAP03",
-  engine = "zdoom",
+  port = "zdoom",
 }
 
 PREFABS.Pic_urban_downtown_yards4 =
 {
   template = "Pic_urban_downtown_yards1",
   map      = "MAP04",
-  engine = "zdoom",
+  port = "zdoom",
 
   seed_w = 3,
 
@@ -92,7 +92,7 @@ PREFABS.Pic_urban_downtown_yards5 =
 {
   template = "Pic_urban_downtown_yards1",
   map      = "MAP05",
-  engine = "zdoom",
+  port = "zdoom",
 
   height = 257,
 
@@ -105,7 +105,7 @@ PREFABS.Pic_urban_downtown_yards6 =
 {
   template = "Pic_urban_downtown_yards1",
   map      = "MAP06",
-  engine = "zdoom",
+  port = "zdoom",
 
   seed_w = 4,
 
@@ -130,7 +130,7 @@ PREFABS.Pic_urban_downtown_yards9 =
 {
   template = "Pic_urban_downtown_yards1",
   map      = "MAP09",
-  engine = "zdoom",
+  port = "zdoom",
 
 }
 
@@ -138,7 +138,7 @@ PREFABS.Pic_urban_downtown_yards10 =
 {
   template = "Pic_urban_downtown_yards1",
   map      = "MAP10",
-  engine = "zdoom",
+  port = "zdoom",
 
   seed_w = 3,
 
@@ -149,7 +149,7 @@ PREFABS.Pic_urban_downtown_yards11 =
 {
   template = "Pic_urban_downtown_yards1",
   map      = "MAP11",
-  engine = "zdoom",
+  port = "zdoom",
 
   height = 257,
 
@@ -162,7 +162,7 @@ PREFABS.Pic_urban_downtown_yards12 =
 {
   template = "Pic_urban_downtown_yards1",
   map      = "MAP12",
-  engine = "zdoom",
+  port = "zdoom",
 
   seed_w = 4,
 

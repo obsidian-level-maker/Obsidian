@@ -25,9 +25,9 @@
 #include "Fl_System_Driver.H"
 #include <stdio.h>
 
-#define FL_TIMER_BLINKRATE 0.2
+#define FL_TIMER_BLINKRATE      0.2
 
-void fl_gettime(long *sec, long *usec) {
+void fl_gettime(long* sec, long* usec) {
   time_t tt_sec;
   int i_usec;
   Fl::system_driver()->gettime(&tt_sec, &i_usec);
@@ -39,20 +39,20 @@ void Fl_Timer::draw() {
   int tt;
   Fl_Color col;
   char str[32];
-  if (!on || delay > 0.0)
+  if (!on || delay>0.0)
     col = color();
-  else if ((int)(delay / FL_TIMER_BLINKRATE) % 2)
+  else if ((int) (delay / FL_TIMER_BLINKRATE) % 2)
     col = color();
   else
     col = selection_color();
   draw_box(box(), col);
-  if (type() == FL_VALUE_TIMER && delay > 0.0) {
-    double d = direction_ ? total - delay : delay;
+  if (type() == FL_VALUE_TIMER && delay>0.0) {
+    double d = direction_ ? total-delay : delay;
     if (d < 60.0)
-      sprintf(str, "%.1f", d);
+      snprintf(str, 32, "%.1f", d);
     else {
-      tt = (int)((d + 0.05) / 60.0);
-      sprintf(str, "%d:%04.1f", tt, d - 60.0 * tt);
+      tt = (int) ((d+0.05) / 60.0);
+      snprintf(str, 32, "%d:%04.1f", tt, d - 60.0 * tt);
     }
     fl_font(labelfont(), labelsize());
     fl_color(labelcolor());
@@ -61,19 +61,16 @@ void Fl_Timer::draw() {
     draw_label();
 }
 
-void Fl_Timer::stepcb(void *v) {
-  ((Fl_Timer *)v)->step();
+void Fl_Timer::stepcb(void* v) {
+  ((Fl_Timer*)v)->step();
 }
 
 void Fl_Timer::step() {
-  if (!on)
-    return;
+  if (!on) return;
   double lastdelay = delay;
-  long sec, usec;
-  fl_gettime(&sec, &usec);
-  delay -= (double)(sec - lastsec) + (double)(usec - lastusec) / 1000000.0;
-  lastsec = sec;
-  lastusec = usec;
+  long sec, usec; fl_gettime(&sec, &usec);
+  delay -= (double) (sec - lastsec) + (double) (usec - lastusec) / 1000000.0;
+  lastsec = sec; lastusec = usec;
   if (lastdelay > 0.0 && delay <= 0.0) {
     if (type() == FL_HIDDEN_TIMER) {
       on = 0;
@@ -85,15 +82,13 @@ void Fl_Timer::step() {
     set_changed();
     do_callback();
   } else {
-    if (type() == FL_VALUE_TIMER)
-      redraw();
+    if (type() == FL_VALUE_TIMER) redraw();
     Fl::add_timeout(FL_TIMER_BLINKRATE, stepcb, this);
   }
 }
 
 int Fl_Timer::handle(int event) {
-  if (event == FL_RELEASE && delay <= 0)
-    value(0.0);
+  if (event == FL_RELEASE && delay <= 0) value(0.0);
   return 0;
 }
 
@@ -116,44 +111,37 @@ Fl_Timer::~Fl_Timer() {
   \li   FL_HIDDEN_TIMER - The timer just does the callback and
         does not display anything.
 */
-Fl_Timer::Fl_Timer(uchar t, int X, int Y, int W, int H, const char *l)
+Fl_Timer::Fl_Timer(uchar t, int X, int Y, int W, int H, const char* l)
 
-  : Fl_Widget(X, Y, W, H, l) {
+: Fl_Widget(X, Y, W, H, l) {
   box(FL_DOWN_BOX);
   selection_color(FL_RED);
   delay = 0;
   on = 0;
   direction_ = 0;
   type(t);
-  if (t == FL_HIDDEN_TIMER)
-    clear_visible();
-  if (t == FL_VALUE_TIMER)
-    align(FL_ALIGN_LEFT);
+  if (t == FL_HIDDEN_TIMER) clear_visible();
+  if (t == FL_VALUE_TIMER) align(FL_ALIGN_LEFT);
 }
 /** Sets the current timer value */
 void Fl_Timer::value(double d) {
   delay = total = d;
   on = (d > 0.0);
   fl_gettime(&(lastsec), &(lastusec));
-  if (type() != FL_HIDDEN_TIMER)
-    redraw();
+  if (type() != FL_HIDDEN_TIMER) redraw();
   Fl::remove_timeout(stepcb, this);
-  if (on)
-    Fl::add_timeout(FL_TIMER_BLINKRATE, stepcb, this);
+  if (on) Fl::add_timeout(FL_TIMER_BLINKRATE, stepcb, this);
 }
 
 /** Gets or sets whether the timer is suspended.*/
 void Fl_Timer::suspended(char d) {
   if (!d) {
-    if (on)
-      return;
+    if (on) return;
     on = (delay > 0.0);
     fl_gettime(&(lastsec), &(lastusec));
-    if (on)
-      Fl::add_timeout(FL_TIMER_BLINKRATE, stepcb, this);
+    if (on) Fl::add_timeout(FL_TIMER_BLINKRATE, stepcb, this);
   } else {
-    if (!on)
-      return;
+    if (!on) return;
     on = 0;
     Fl::remove_timeout(stepcb, this);
   }

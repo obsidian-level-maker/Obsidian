@@ -42,6 +42,7 @@ struct seat {
   struct wl_surface *pointer_focus;
   int pointer_scale;
   uint32_t serial;
+  uint32_t pointer_enter_serial;
   struct wl_data_device_manager *data_device_manager;
   struct wl_data_device *data_device;
   struct wl_data_source *data_source;
@@ -53,7 +54,8 @@ struct seat {
   struct zwp_text_input_v3 *text_input;
 };
 
-class Fl_Wayland_Screen_Driver : public Fl_Screen_Driver {
+class Fl_Wayland_Screen_Driver : public Fl_Screen_Driver
+{
   friend class Fl_Screen_Driver;
   friend class Fl_Wayland_Graphics_Driver;
   static int insertion_point_x;
@@ -61,13 +63,14 @@ class Fl_Wayland_Screen_Driver : public Fl_Screen_Driver {
   static int insertion_point_width;
   static int insertion_point_height;
   static bool insertion_point_location_is_valid;
-
 public:
-  static struct wl_display *wl_display;
+  static FL_EXPORT struct wl_display *wl_display;
+  // use it to make sure the Wayland leg was selected and fl_open_display() has run
+  static struct wl_registry *wl_registry;
   static void insertion_point_location(int x, int y, int height);
   static bool insertion_point_location(int *px, int *py, int *pwidth, int *pheight);
   int get_mouse_unscaled(int &xx, int &yy);
-  void screen_count_set(int count) { num_screens = count; }
+  void screen_count_set(int count) {num_screens = count;}
 
   void reset_cursor();
   struct wl_cursor *xc_arrow;
@@ -98,15 +101,15 @@ public:
   struct wl_list seats;
   struct seat *seat;
   struct wl_list outputs; // linked list of all screens in system
-  struct output {         // one record for each screen
+  struct output { // one record for each screen
     uint32_t id;
     short x_org;
     short y_org;
-    short width;  // in pixels
+    short width; // in pixels
     short height; // in pixels
     float dpi;
     struct wl_output *wl_output;
-    int wld_scale;   // Wayland scale factor
+    int wld_scale; // Wayland scale factor
     float gui_scale; // FLTK scale factor
     struct wl_list link;
   };
@@ -120,7 +123,7 @@ public:
   virtual void scale(int n, float f);
   int screen_num_unscaled(int x, int y);
 
-  void copy_image(const unsigned char *data, int W, int H);
+  void copy_image(const unsigned char* data, int W, int H);
   // --- screen configuration
   void init_workarea();
   virtual void init();
@@ -129,29 +132,28 @@ public:
   virtual int w();
   virtual int h();
   virtual void screen_xywh(int &X, int &Y, int &W, int &H, int n);
-  virtual void screen_dpi(float &h, float &v, int n = 0);
+  virtual void screen_dpi(float &h, float &v, int n=0);
   virtual void screen_work_area(int &X, int &Y, int &W, int &H, int n);
   // --- audible output
   virtual void beep(int type);
   // --- global events
   virtual void flush();
-  virtual void grab(Fl_Window *win);
+  virtual void grab(Fl_Window* win);
   // --- global colors
   virtual void get_system_colors();
   virtual const char *get_system_scheme();
   virtual int dnd(int unused);
   virtual int compose(int &del);
   virtual void compose_reset();
-  virtual Fl_RGB_Image *read_win_rectangle(int X, int Y, int w, int h, Fl_Window *win,
-                                           bool may_capture_subwins, bool *did_capture_subwins);
+  virtual Fl_RGB_Image *read_win_rectangle(int X, int Y, int w, int h, Fl_Window *win, bool may_capture_subwins, bool *did_capture_subwins);
   virtual int get_mouse(int &x, int &y);
   virtual void open_display_platform();
   virtual void close_display();
+  virtual void display(const char *d);
   // --- compute dimensions of an Fl_Offscreen
   virtual void offscreen_size(Fl_Offscreen o, int &width, int &height);
   virtual int has_marked_text() const;
-  static int next_marked_length; // next length of marked text after current marked text will have
-                                 // been replaced
+  static int next_marked_length; // next length of marked text after current marked text will have been replaced
   // --- clipboard operations
   // this one is in fl_wayland_clipboard_dnd.cxx
   virtual void copy(const char *stuff, int len, int clipboard, const char *type);
@@ -167,13 +169,16 @@ public:
   static Fl_Window *surface_to_window(struct wl_surface *);
   uint32_t get_serial();
   struct wl_seat *get_wl_seat();
-  char *get_seat_name();
+  char  *get_seat_name();
   struct xkb_keymap *get_xkb_keymap();
   static bool own_output(struct wl_output *output);
-  typedef enum { unspecified, MUTTER, WESTON, KDE } compositor_name;
+  typedef enum {unspecified, MUTTER, WESTON, KDE} compositor_name;
   static compositor_name compositor; // identifies the used Wayland compositor
   void set_spot(int font, int height, int x, int y, int w, int h, Fl_Window *win);
   void reset_spot();
+#if FLTK_USE_X11
+  static bool undo_wayland_backend_if_needed(const char *backend = NULL);
+#endif
 };
 
 

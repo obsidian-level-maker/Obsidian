@@ -1068,11 +1068,11 @@ static void Q3_SetGridLights() {
 }
 
 static void Q3_LightWorld() {
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Step("Light");
     }
-    #endif
+#endif
 
     QLIT_LightAllFaces();
 
@@ -1082,11 +1082,11 @@ static void Q3_LightWorld() {
 }
 
 static void Q3_VisWorld() {
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Step("Vis");
     }
-    #endif
+#endif
 
     // Quake 3 uses clusters directly
 
@@ -1221,6 +1221,7 @@ class quake3_game_interface_c : public game_interface_c {
     void BeginLevel();
     void EndLevel();
     void Property(std::string key, std::string value);
+    std::filesystem::path Filename();
 };
 
 bool quake3_game_interface_c::Start(const char *preset) {
@@ -1253,12 +1254,13 @@ bool quake3_game_interface_c::Start(const char *preset) {
             filename = Resolve_DefaultOutputPath() / batch_output_file;
         }
     } else {
-        #ifndef CONSOLE_ONLY
-        if (!mid_batch)
+#ifndef CONSOLE_ONLY
+        if (!mid_batch) {
             filename = DLG_OutputFilename("pk3", preset);
-        else
+        } else {
             filename = BestDirectory() / preset;
-        #endif
+        }
+#endif
     }
 
     if (filename.empty()) {
@@ -1277,11 +1279,11 @@ bool quake3_game_interface_c::Start(const char *preset) {
 
     BSP_AddInfoFile();
 
-    #ifndef CONSOLE_ONLY
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Init(0, "CSG,BSP,Vis,Light");
     }
-    #endif
+#endif
 
     return true;
 }
@@ -1324,6 +1326,10 @@ void quake3_game_interface_c::Property(std::string key, std::string value) {
     } else {
         LogPrintf("WARNING: unknown QUAKE3 property: {}={}\n", key, value);
     }
+}
+
+std::filesystem::path quake3_game_interface_c::Filename() {
+    return filename;
 }
 
 void quake3_game_interface_c::EndLevel() {

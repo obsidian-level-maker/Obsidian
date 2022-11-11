@@ -805,7 +805,7 @@ end
 
 
 
-function Seed_save_svg_image(filename)
+function Seed_save_svg_image(filename, SEEDS)
 
   -- grid size
   local SIZE = 10
@@ -836,7 +836,7 @@ function Seed_save_svg_image(filename)
 
 
   local function visit_seed(S1, dir)
-    local S2 = S1:neighbor(dir, "NODIR")
+    local S2 = S1:neighbor(dir, "NODIR", SEEDS)
 
     if S2 == "NODIR" then return end
 
@@ -902,7 +902,7 @@ function Seed_save_svg_image(filename)
 
   ---| Seed_save_svg_image |---
 
-  fp = io.open(filename, "w")
+  fp = io.open(gui.get_save_path() .. "/" .. filename, "w")
 
   if not fp then error("Cannot create file") end
 

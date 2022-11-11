@@ -666,7 +666,8 @@ function ARMAETUS_EPIC_TEXTURES.get_levels_after_themes()
 end
 
 function ARMAETUS_EPIC_TEXTURES.decide_night_replacement_textures(LEVEL)
-  if LEVEL.episode and LEVEL.episode.dark_prob == 100 then
+  if LEVEL.episode and LEVEL.episode.dark_prob == 100
+  or LEVEL.is_dark then
     GAME.MATERIALS["CITY04"].t = "CITY04N"
     GAME.MATERIALS["CITY05"].t = "CITY05N"
     GAME.MATERIALS["CITY06"].t = "CITY06N"
@@ -807,7 +808,7 @@ function ARMAETUS_EPIC_TEXTURES.decide_environment_themes()
   end
 end
 
-function ARMAETUS_EPIC_TEXTURES.generate_environment_themes(LEVEL)
+function ARMAETUS_EPIC_TEXTURES.generate_environment_themes(self, LEVEL)
   --------------------------------------
   -- Style Update for Custom Elements --
   --------------------------------------
@@ -1109,7 +1110,7 @@ OB_MODULES["armaetus_epic_textures"] =
   side = "left",
   priority = 75,
 
-  engine = "zdoom",
+  port = "zdoom",
 
   game = "doomish",
 

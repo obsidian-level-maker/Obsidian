@@ -3,7 +3,7 @@ PREFABS.Wall_gtd_water_purifier_water_wall =
   file = "wall/gtd_wall_industrial_water_purifier_set.wad",
   map = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
   prob = 50,
 
   group = "gtd_water_purifier",
@@ -47,7 +47,7 @@ PREFABS.Wall_gtd_water_purifier_water_wall_limit =
   template = "Wall_gtd_water_purifier_water_wall",
   map = "MAP01",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   prob = 10,
 
@@ -62,7 +62,7 @@ PREFABS.Wall_gtd_water_purifier_water_comp_wall_limit =
   template = "Wall_gtd_water_purifier_water_wall",
   map = "MAP02",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   line_300 = 0,
 
@@ -81,7 +81,7 @@ PREFABS.Wall_gtd_water_purifier_water_wall_diag_limit =
   template = "Wall_gtd_water_purifier_water_wall",
   map = "MAP03",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   line_300 = 0,
 

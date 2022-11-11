@@ -8,7 +8,7 @@ PREFABS.Teleporter_scionox_quakeish_portal =
 
   theme  = "tech",
   where  = "seeds",
-  engine = "zdoom",
+  port = "zdoom",
   texture_pack = "armaetus",
 
   seed_w = 2,

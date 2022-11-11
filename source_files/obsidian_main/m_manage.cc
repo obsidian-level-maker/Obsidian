@@ -466,7 +466,7 @@ class UI_Manage_Config : public Fl_Double_Window {
             std::filesystem::remove(config_file);
         }
         config_file.clear();
-        main_action = MAIN_HARD_RESTART; // MAIN_SOFT_RESTART???
+        main_action = MAIN_HARD_RESTART;  // MAIN_SOFT_RESTART???
         that->want_quit = true;
     }
 

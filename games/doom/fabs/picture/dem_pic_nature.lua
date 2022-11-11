@@ -828,7 +828,7 @@ PREFABS.Pic_dem_campsiteC =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP52",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "!hell",
 
@@ -878,7 +878,7 @@ PREFABS.Pic_dem_cabin =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP55",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "!hell",
 
@@ -922,7 +922,7 @@ PREFABS.Pic_dem_waterfallC1 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP56",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "!hell",
 
@@ -961,7 +961,7 @@ PREFABS.Pic_dem_waterfallN1 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP58",
 
-  engine = "zdoom",
+  port = "zdoom",
 
 
   theme = "!hell",
@@ -1001,7 +1001,7 @@ PREFABS.Pic_dem_waterfallC2 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP60",
 
-  engine = "zdoom",
+  port = "zdoom",
 
 
   theme = "!hell",
@@ -1041,7 +1041,7 @@ PREFABS.Pic_dem_waterfallN2 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP62",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "!hell",
 
@@ -1082,7 +1082,7 @@ PREFABS.Pic_dem_waterfallC3 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP64",
 
-  engine = "zdoom",
+  port = "zdoom",
 
 
   theme = "hell",
@@ -1122,7 +1122,7 @@ PREFABS.Pic_dem_waterfallN3 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP66",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "hell",
 
@@ -1166,7 +1166,7 @@ PREFABS.Pic_dem_ruinsN1 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP68",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 100,
 
@@ -1203,7 +1203,7 @@ PREFABS.Pic_dem_ruinsC1 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP70",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 100,
   env = "cave",
@@ -1306,7 +1306,7 @@ PREFABS.Pic_dem_caveirr5 =
   file   = "picture/dem_pic_nature.wad",
   map    = "MAP76",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 100,
   env = "cave",

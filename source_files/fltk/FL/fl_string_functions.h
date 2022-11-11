@@ -33,7 +33,7 @@ extern "C" {
     @{
 */
 
-FL_EXPORT char *fl_strdup(const char *s);
+FL_EXPORT char* fl_strdup(const char *s);
 
 /** @} */
 

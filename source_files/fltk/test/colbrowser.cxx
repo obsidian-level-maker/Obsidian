@@ -34,8 +34,8 @@
 
 #define MAX_RGB 3000
 
-#define FL_FREE_COL4 ((Fl_Color)(FL_FREE_COLOR + 3))
-#define FL_INDIANRED ((Fl_Color)(164))
+#define FL_FREE_COL4    ((Fl_Color)(FL_FREE_COLOR+3))
+#define FL_INDIANRED    ((Fl_Color)(164))
 
 
 static Fl_Double_Window *cl;
@@ -49,17 +49,14 @@ static char dbname[FL_PATH_MAX];
 static void create_form_cl(void);
 static int load_browser(const char *);
 
-typedef struct {
-  int r, g, b;
-} RGBdb;
+typedef struct { int r, g, b; } RGBdb;
 
 static RGBdb rgbdb[MAX_RGB];
 
 
 int main(int argc, char *argv[]) {
   int i;
-  if (!Fl::args(argc, argv, i))
-    Fl::fatal(Fl::help);
+  if (!Fl::args(argc, argv, i)) Fl::fatal(Fl::help);
   const char *dbname = (i < argc) ? argv[i] : "rgb.txt";
 
   create_form_cl();
@@ -70,17 +67,18 @@ int main(int argc, char *argv[]) {
     dbobj->label("None");
   dbobj->redraw();
 
-  cl->size_range(cl->w(), cl->h(), 2 * cl->w(), 2 * cl->h());
+  cl->size_range(cl->w(),cl->h(),2*cl->w(),2*cl->h());
 
   cl->label("RGB Browser");
   cl->free_position();
-  cl->show(argc, argv);
+  cl->show(argc,argv);
 
   return Fl::run();
 }
 
 
-static void set_entry(int i) {
+static void set_entry(int i)
+{
   RGBdb *db = rgbdb + i;
   Fl::set_color(FL_FREE_COL4, db->r, db->g, db->b);
   rs->value(db->r);
@@ -90,7 +88,8 @@ static void set_entry(int i) {
 }
 
 
-static void br_cb(Fl_Widget *ob, long) {
+static void br_cb(Fl_Widget *ob, long)
+{
   int r = ((Fl_Browser *)ob)->value();
 
   if (r <= 0)
@@ -99,26 +98,28 @@ static void br_cb(Fl_Widget *ob, long) {
 }
 
 
-static int read_entry(FILE *fp, int *r, int *g, int *b, char *name) {
-  int n;
+static int read_entry(FILE * fp, int *r, int *g, int *b, char *name)
+{
+  int  n;
   char buf[512], *p;
 
   if (!fgets(buf, sizeof(buf) - 1, fp))
     return 0;
 
-  if (buf[0] == '!') {
-    if (fgets(buf, sizeof(buf) - 1, fp) == 0) {
+  if(buf[0] == '!') {
+    if (fgets(buf,sizeof(buf)-1,fp)==0) {
       /* ignore */
     }
   }
 
-  if (sscanf(buf, " %d %d %d %n", r, g, b, &n) < 3)
+  if(sscanf(buf, " %d %d %d %n", r, g, b, &n) < 3)
     return 0;
 
   p = buf + n;
 
   /* squeeze out all spaces */
-  while (*p) {
+  while (*p)
+  {
     if (*p != ' ' && *p != '\n')
       *name++ = *p;
     p++;
@@ -129,10 +130,11 @@ static int read_entry(FILE *fp, int *r, int *g, int *b, char *name) {
 }
 
 
-static int load_browser(const char *fname) {
+static int load_browser(const char *fname)
+{
   FILE *fp;
   RGBdb *db = rgbdb, *dbs = db + MAX_RGB;
-  int r, g, b, lr = -1, lg = -1, lb = -1;
+  int r, g, b,  lr  = -1 , lg = -1, lb = -1;
   char name[256], buf[300];
 
   if (!(fp = fl_fopen(fname, "r"))) {
@@ -142,57 +144,66 @@ static int load_browser(const char *fname) {
 
   /* read the items */
 
-  for (; db < dbs && read_entry(fp, &r, &g, &b, name);) {
+  for (; db < dbs && read_entry(fp, &r, &g, &b, name);)
+  {
     db->r = r;
     db->g = g;
     db->b = b;
 
     /* unique the entries on the fly */
-    if (lr != r || lg != g || lb != b) {
+    if (lr != r || lg != g || lb != b)
+    {
       db++;
       lr = r;
       lg = g;
       lb = b;
-      sprintf(buf, "(%3d %3d %3d) %s", r, g, b, name);
+      snprintf(buf, sizeof(buf), "(%3d %3d %3d) %s", r, g, b, name);
       colbr->add(buf);
     }
   }
   fclose(fp);
 
   if (db < dbs)
-    db->r = 1000; /* sentinel */
-  else {
+    db->r = 1000;               /* sentinel */
+  else
+  {
     db--;
     db->r = 1000;
   }
 
   colbr->topline(1);
-  colbr->select(1, 1);
+  colbr->select(1,1);
   set_entry(0);
 
   return 1;
 }
 
 
-static int search_entry(int r, int g, int b) {
+static int search_entry(int r, int g, int b)
+{
   RGBdb *db = rgbdb;
   int i, j, diffr, diffg, diffb;
   unsigned int diff, mindiff;
 
   mindiff = (unsigned int)~0;
-  for (i = j = 0; db->r < 256; db++, i++) {
+  for (i = j = 0; db->r < 256; db++, i++)
+  {
     diffr = r - db->r;
     diffg = g - db->g;
     diffb = b - db->b;
 
 #ifdef FL_LINEAR
-    diff = unsigned(3.0 * (FL_abs(r - db->r)) + (5.9 * FL_abs(g - db->g)) +
+    diff = unsigned(3.0 * (FL_abs(r - db->r)) +
+                    (5.9 * FL_abs(g - db->g)) +
                     (1.1 * (FL_abs(b - db->b))));
 #else
-    diff = unsigned(3.0 * (diffr * diffr) + 5.9 * (diffg * diffg) + 1.1 * (diffb * diffb));
+    diff = unsigned(3.0 * (diffr *diffr) +
+                    5.9 * (diffg *diffg) +
+                    1.1 * (diffb *diffb));
 #endif
 
-    if (mindiff > diff) {
+    if (mindiff > diff)
+    {
       mindiff = diff;
       j = i;
     }
@@ -202,9 +213,10 @@ static int search_entry(int r, int g, int b) {
 }
 
 
-static void search_rgb(Fl_Widget *, long) {
+static void search_rgb(Fl_Widget *, long)
+{
   int r, g, b, i;
-  int top = colbr->topline();
+  int top  = colbr->topline();
 
   r = int(rs->value());
   g = int(gs->value());
@@ -215,15 +227,16 @@ static void search_rgb(Fl_Widget *, long) {
   rescol->redraw();
   i = search_entry(r, g, b);
   /* change topline only if necessary */
-  if (i < top || i > (top + 15))
-    colbr->topline(i - 8);
-  colbr->select(i + 1, 1);
+  if(i < top || i > (top+15))
+    colbr->topline(i-8);
+  colbr->select(i+1, 1);
   // fl_unfreeze_form(cl);
 }
 
 
 /* change database */
-static void db_cb(Fl_Widget *ob, long) {
+static void db_cb(Fl_Widget * ob, long)
+{
   const char *p = fl_input("Enter New Database Name", dbname);
   char buf[512];
 
@@ -238,16 +251,18 @@ static void db_cb(Fl_Widget *ob, long) {
 }
 
 
-static void done_cb(Fl_Widget *, long) {
+static void done_cb(Fl_Widget *, long)
+{
   exit(0);
 }
 
 
-static void create_form_cl(void) {
+static void create_form_cl(void)
+{
   if (cl)
     return;
 
-  cl = new Fl_Double_Window(400, 385);
+  cl = new Fl_Double_Window(400,385);
   cl->box(FL_UP_BOX);
   cl->color(FL_INDIANRED, FL_GRAY);
 
@@ -261,7 +276,7 @@ static void create_form_cl(void) {
   dbobj = new Fl_Button(40, 50, 300, 25, "");
   dbobj->type(FL_NORMAL_BUTTON);
   dbobj->box(FL_BORDER_BOX);
-  dbobj->color(FL_INDIANRED, FL_INDIANRED);
+  dbobj->color(FL_INDIANRED,FL_INDIANRED);
   dbobj->callback(db_cb, 0);
 
   colbr = new Fl_Hold_Browser(10, 90, 280, 240, "");

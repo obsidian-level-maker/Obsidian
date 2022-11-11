@@ -375,7 +375,7 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
     if OB_CONFIG.length == "few" then
       along = Level.ep_along / 4
     elseif OB_CONFIG.length == "episode" then
-      along = Level.ep_along / level.ep_length
+      along = Level.ep_along / Level.ep_length
     else
       along = ((Level.ep_length * (GAME.FACTORY.episodes - 1)) + Level.ep_along) / (Level.ep_length * GAME.FACTORY.episodes)
     end
@@ -406,8 +406,8 @@ function std_decide_quests(Level, QUEST_TAB, LEN_PROBS)
 
   assert(#ky_list + #sw_list + #wp_list + #it_list >= tot_min)
 
-  local RATIO_MINIMUMS = { none=0.0, rare=0.1, few=0.2, less=0.3, normal=0.4, more=1.0, heaps=1.5 }
-  local RATIO_MAXIMUMS = { none=0.0, rare=0.2, few=0.4, less=0.6, normal=1.2, more=2.5, heaps=3.5 }
+  local RATIO_MINIMUMS = { none=0.0, rare=0.1, few=0.2, less=0.3, some=0.4, more=1.0, heaps=1.5 }
+  local RATIO_MAXIMUMS = { none=0.0, rare=0.2, few=0.4, less=0.6, some=1.2, more=2.5, heaps=3.5 }
 
   local ratio_min
   local ratio_max
@@ -1103,7 +1103,7 @@ end
 
 function plan_sp_level(level, is_coop)
 
-  if OB_CONFIG.engine == "wolf_3d" then
+  if OB_CONFIG.engine == "idtech_0" then
     PLAN = get_base_plan(level, level.plan_size, level.cell_size)
   else
     PLAN = get_base_plan(level, GAME.FACTORY.plan_size, GAME.FACTORY.cell_size)

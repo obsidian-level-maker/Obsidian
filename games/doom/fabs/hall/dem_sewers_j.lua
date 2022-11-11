@@ -20,7 +20,7 @@ PREFABS.Hallway_sewers_term =
 
   deep   = 16,
 
-  engine = "zdoom",
+  port = "zdoom",
 }
 
 PREFABS.Hallway_sewers_term2 =

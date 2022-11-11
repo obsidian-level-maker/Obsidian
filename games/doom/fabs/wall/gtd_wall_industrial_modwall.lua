@@ -32,6 +32,37 @@ PREFABS.Wall_industrial_modwall_1_diag =
   where = "diagonal"
 }
 
+PREFABS.Wall_industrial_modwall_1_hell =
+{
+  template = "Wall_industrial_modwall_1",
+  map = "MAP51",
+
+  theme = "hell",
+  rank = 1,
+}
+
+PREFABS.Wall_industrial_modwall_1a_hell =
+{
+  template = "Wall_industrial_modwall_1",
+  map = "MAP52",
+
+  theme = "hell",
+  rank = 1,
+
+  prob = 120
+}
+
+PREFABS.Wall_industrial_modwall_1a_hell_diag =
+{
+  template = "Wall_industrial_modwall_1",
+  map = "MAP53",
+
+  theme = "hell",
+  rank = 1,
+
+  where = "diagonal"
+}
+
 --
 
 PREFABS.Wall_industrial_modwall_2 =

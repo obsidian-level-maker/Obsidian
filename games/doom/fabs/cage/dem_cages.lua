@@ -8,7 +8,7 @@ PREFABS.Cage_dem_garage_ambush1 =
   file   = "cage/dem_cages.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
   texture_pack = "armaetus",
 
   prob   = 700,
@@ -64,7 +64,7 @@ PREFABS.Cage_dem_garage_ambush2 =
   file   = "cage/dem_cages.wad",
   map    = "MAP02",
 
-  engine = "zdoom",
+  port = "zdoom",
   texture_pack = "armaetus",
 
   prob   = 700,
@@ -102,7 +102,7 @@ PREFABS.Cage_dem_store_ambush =
   file  = "cage/dem_cages.wad",
   map   = "MAP03",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "urban",
   env   = "outdoor",
@@ -162,7 +162,7 @@ PREFABS.Cage_dem_store_ambush_vanilla =
   file  = "cage/dem_cages.wad",
   map   = "MAP03",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "urban",
   env   = "outdoor",
@@ -228,7 +228,7 @@ PREFABS.Cage_dem_bunker_ambush1 =
   file   = "cage/dem_cages.wad",
   map    = "MAP04",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   game = "doom2",
 
@@ -374,7 +374,7 @@ PREFABS.Cage_dem_shrineC =
   file   = "cage/dem_cages.wad",
   map    = "MAP10",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 700,
 
@@ -414,7 +414,7 @@ PREFABS.Cage_dem_ruinsN1amb =
   file   = "cage/dem_cages.wad",
   map    = "MAP12",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 100,
 
@@ -450,7 +450,7 @@ PREFABS.Cage_dem_ruinsC1amb =
   file   = "cage/dem_cages.wad",
   map    = "MAP14",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 100,
 
@@ -487,7 +487,7 @@ PREFABS.Cage_dem_cabinamb =
   file   = "cage/dem_cages.wad",
   map    = "MAP16",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme = "!hell",
 
@@ -533,7 +533,7 @@ PREFABS.Decor_Dem_Graveamb1 =
 
   group = "dem_wall_graveyard",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 100,
   theme  = "!tech",

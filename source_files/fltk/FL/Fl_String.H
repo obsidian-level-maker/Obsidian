@@ -82,10 +82,10 @@ public:
   Fl_String(const Fl_String &in);
 
   // copy assignment operator
-  Fl_String &operator=(const Fl_String &in);
+  Fl_String& operator=(const Fl_String &in);
 
   // assignment operator for 'const char *'
-  Fl_String &operator=(const char *in);
+  Fl_String& operator=(const char *in);
 
   virtual ~Fl_String();
 
@@ -106,8 +106,8 @@ public:
 
   // ==================================  DEBUG  ==================================
 
-  void debug(const char *info) const;   // output string info
-  void hexdump(const char *info) const; // output info + hexdump
+  void debug(const char *info) const;           // output string info
+  void hexdump(const char *info) const;         // output info + hexdump
 
 }; // class Fl_String
 

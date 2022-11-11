@@ -48,7 +48,7 @@ PREFABS.Item_generic_frontage_secret_2 =
   prob = 15,
   theme = "urban",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   env = "!nature",
 
@@ -160,7 +160,7 @@ PREFABS.Item_commercial_frontage_secret_5 =
 
   prob = 40,
 
-  engine = "zdoom",
+  port = "zdoom",
   seed_w = 3,
 }
 
@@ -182,7 +182,7 @@ PREFABS.Item_commercial_frontage_secret_7 =
 
   prob = 40,
 
-  engine = "zdoom",
+  port = "zdoom",
   seed_w = 3,
 
 }

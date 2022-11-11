@@ -5,7 +5,7 @@ PREFABS.Item_dem_gamble_closet1 =
   file  = "item/dem_item_gamble.wad",
   map   = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob  = 80,
 

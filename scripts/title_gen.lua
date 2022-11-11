@@ -55,6 +55,16 @@ TITLE_LETTER_SHAPES =
     },
   },
 
+  ["_"] =
+  {
+    width = 0.5000,
+    points =
+    {
+      { x=0.00000, y=0.00000 },
+      { x=0.50000, y=0.00000 },
+    },
+  },
+
   ["."] =
   {
     width = 0.2000,
@@ -2304,7 +2314,7 @@ function Title_add_title()
 
   local bottom_line
 
-  if rand.odds(50) then
+  if rand.odds(50) and GAME.sub_title then
     if #GAME.sub_title <= 4 and string.upper(GAME.sub_title) == GAME.sub_title then
       -- this will be part of main title (a "version" string)
       bottom_line = GAME.sub_title

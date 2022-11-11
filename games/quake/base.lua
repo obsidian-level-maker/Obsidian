@@ -41,6 +41,7 @@ UNFINISHED["quake"] =
   label = _("Quake"),
   priority = 27,
 
+  engine = "idtech_2",
   format = "quake",
   game_dir = "quake",
 

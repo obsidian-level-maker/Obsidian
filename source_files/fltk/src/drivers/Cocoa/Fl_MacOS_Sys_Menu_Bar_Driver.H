@@ -26,13 +26,12 @@ public:
   virtual void update();
   virtual void draw();
   virtual void about(Fl_Callback *cb, void *data);
-  virtual int add(const char *label, int shortcut, Fl_Callback *cb, void *user_data, int flags);
-  virtual int add(const char *str);
-  virtual int insert(int index, const char *label, int shortcut, Fl_Callback *cb, void *user_data,
-                     int flags);
+  virtual int add(const char* label, int shortcut, Fl_Callback *cb, void *user_data, int flags);
+  virtual int add(const char* str);
+  virtual int insert(int index, const char* label, int shortcut, Fl_Callback *cb, void *user_data, int flags);
   virtual void menu(const Fl_Menu_Item *m);
-  virtual void shortcut(int i, int s);
-  virtual void setonly(Fl_Menu_Item *item);
+  virtual void shortcut (int i, int s);
+  virtual void setonly (Fl_Menu_Item *item);
   virtual void clear();
   virtual int clear_submenu(int index);
   virtual void remove(int index);
@@ -43,7 +42,7 @@ public:
   void new_window(Fl_Window *win);
   void remove_window(Fl_Window *win);
   void rename_window(Fl_Window *win);
-  static Fl_MacOS_Sys_Menu_Bar_Driver *driver();
+  static Fl_MacOS_Sys_Menu_Bar_Driver* driver();
 };
 
 

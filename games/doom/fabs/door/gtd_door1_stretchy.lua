@@ -72,7 +72,7 @@ PREFABS.Door_plain_tech_stretchy_k_ALL =
   template = "Door_plain_tech_stretchy_silver",
   map = "MAP02",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   key = "k_ALL"
 }
@@ -82,7 +82,7 @@ PREFABS.Door_plain_hell_stretchy_k_ALL =
   template = "Door_plain_tech_stretchy_silver",
   map = "MAP02",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   key = "k_ALL",
 

@@ -7,7 +7,7 @@
 
   prob = 50,
 
-  engine = "zdoom",
+  port = "zdoom",
   theme = "tech",
   env = "building",
 

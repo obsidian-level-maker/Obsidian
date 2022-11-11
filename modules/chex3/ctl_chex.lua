@@ -60,7 +60,8 @@ OB_MODULES["chex3_mon_control"] =
   label = _("Chex Quest 3 Monster Control"),
 
   game = "chex3",
-  engine = "!vanilla",
+  engine = "idtech_1",
+  port = "!limit_enforcing",
 
   hooks =
   {
@@ -251,7 +252,8 @@ OB_MODULES["chex3_weapon_control"] =
   label = _("Chex Quest 3 Weapon Control"),
 
   game = "chex3",
-  engine = "!vanilla",
+  engine = "idtech_1",
+  port = "!limit_enforcing",
 
   hooks =
   {

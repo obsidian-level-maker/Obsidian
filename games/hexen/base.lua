@@ -45,6 +45,7 @@ OB_GAMES["hexen"] =
   priority = 90,
   use_generics = true,
 
+  engine = "idtech_1",
   -- Hexen map format is a minor variation on the DOOM format
   format = "doom",
   sub_format = "hexen",

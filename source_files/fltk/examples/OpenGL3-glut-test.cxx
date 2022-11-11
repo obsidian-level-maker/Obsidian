@@ -14,15 +14,15 @@
 //     https://www.fltk.org/bugs.php
 //
 
-#include <FL/Fl.H> // includes <FL/fl_config.h>
+#include <FL/platform.H>
 #if defined(__APPLE__)
-#define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED 1
-#include <OpenGL/gl3.h> // defines OpenGL 3.0+ functions
+#  define GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED 1
+#  include <OpenGL/gl3.h> // defines OpenGL 3.0+ functions
 #else
-#if defined(_WIN32)
-#define GLEW_STATIC 1
-#endif
-#include <GL/glew.h>
+#  if defined(_WIN32)
+#    define GLEW_STATIC 1
+#  endif
+#  include <GL/glew.h>
 #endif
 #include <FL/glut.H>
 #include <stdio.h>
@@ -31,9 +31,15 @@
 // Globals
 // Real programs don't use globals :-D
 // Data would normally be read from files
-GLfloat vertices[] = {-1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-GLfloat colours[] = {1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f};
-GLfloat vertices2[] = {0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f, 0.0f};
+GLfloat vertices[] = {  -1.0f,0.0f,0.0f,
+  0.0f,1.0f,0.0f,
+  0.0f,0.0f,0.0f };
+GLfloat colours[] = {   1.0f, 0.0f, 0.0f,
+  0.0f, 1.0f, 0.0f,
+  0.0f, 0.0f, 1.0f };
+GLfloat vertices2[] = { 0.0f,0.0f,0.0f,
+  0.0f,-1.0f,0.0f,
+  1.0f,0.0f,0.0f };
 
 // two vertex array objects, one for each object drawn
 unsigned int vertexArrayObjID[2];
@@ -41,22 +47,25 @@ unsigned int vertexArrayObjID[2];
 unsigned int vertexBufferObjID[3];
 
 
-void printShaderInfoLog(GLint shader) {
+void printShaderInfoLog(GLint shader)
+{
   int infoLogLen = 0;
   GLchar *infoLog;
 
   glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLen);
-  if (infoLogLen > 0) {
+  if (infoLogLen > 0)
+  {
     infoLog = new GLchar[infoLogLen];
     // error check for fail to allocate memory omitted
-    glGetShaderInfoLog(shader, infoLogLen, NULL, infoLog);
+    glGetShaderInfoLog(shader,infoLogLen, NULL, infoLog);
     fprintf(stderr, "InfoLog:\n%s\n", infoLog);
-    delete[] infoLog;
+    delete [] infoLog;
   }
 }
 
 
-void init(void) {
+void init(void)
+{
   // Would load objects from file here - but using globals in this example
 
   // Allocate Vertex Array Objects
@@ -67,13 +76,13 @@ void init(void) {
 
   // VBO for vertex data
   glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObjID[0]);
-  glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, 9*sizeof(GLfloat), vertices, GL_STATIC_DRAW);
   glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0);
   glEnableVertexAttribArray(0);
 
   // VBO for colour data
   glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObjID[1]);
-  glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), colours, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, 9*sizeof(GLfloat), colours, GL_STATIC_DRAW);
   glVertexAttribPointer((GLuint)1, 3, GL_FLOAT, GL_FALSE, 0, 0);
   glEnableVertexAttribArray(1);
 
@@ -83,7 +92,7 @@ void init(void) {
 
   // VBO for vertex data
   glBindBuffer(GL_ARRAY_BUFFER, vertexBufferObjID[2]);
-  glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), vertices2, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, 9*sizeof(GLfloat), vertices2, GL_STATIC_DRAW);
   glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0);
   glEnableVertexAttribArray(0);
 
@@ -91,9 +100,10 @@ void init(void) {
 }
 
 
-void initShaders(void) {
+void initShaders(void)
+{
   GLuint p, f, v;
-  glClearColor(1.0, 1.0, 1.0, 0.0);
+  glClearColor (1.0, 1.0, 1.0, 0.0);
 
   v = glCreateShader(GL_VERTEX_SHADER);
   f = glCreateShader(GL_FRAGMENT_SHADER);
@@ -123,37 +133,38 @@ void initShaders(void) {
     out_Color = vec4(ex_Color,1.0);\
   }";
 
-  glShaderSource(v, 1, &vv, NULL);
-  glShaderSource(f, 1, &ff, NULL);
+  glShaderSource(v, 1, &vv,NULL);
+  glShaderSource(f, 1, &ff,NULL);
 
   GLint compiled;
 
   glCompileShader(v);
   glGetShaderiv(v, GL_COMPILE_STATUS, &compiled);
-  if (!compiled) {
+  if (!compiled)
+  {
     fprintf(stderr, "Vertex shader not compiled.\n");
     printShaderInfoLog(v);
   }
 
   glCompileShader(f);
   glGetShaderiv(f, GL_COMPILE_STATUS, &compiled);
-  if (!compiled) {
+  if (!compiled)
+  {
     fprintf(stderr, "Fragment shader not compiled.\n");
     printShaderInfoLog(f);
   }
 
   p = glCreateProgram();
 
-  glAttachShader(p, v);
-  glAttachShader(p, f);
-  glBindAttribLocation(p, 0, "in_Position");
-  glBindAttribLocation(p, 1, "in_Color");
+  glAttachShader(p,v);
+  glAttachShader(p,f);
+  glBindAttribLocation(p,0, "in_Position");
+  glBindAttribLocation(p,1, "in_Color");
 
   glLinkProgram(p);
   glGetProgramiv(p, GL_LINK_STATUS, &compiled);
   if (compiled != GL_TRUE) {
-    GLchar *infoLog;
-    GLint length;
+    GLchar *infoLog; GLint length;
     glGetProgramiv(p, GL_INFO_LOG_LENGTH, &length);
     infoLog = new GLchar[length];
     glGetProgramInfoLog(p, length, NULL, infoLog);
@@ -164,21 +175,23 @@ void initShaders(void) {
 }
 
 
-void display(void) {
+void display(void)
+{
   // clear the screen
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  glBindVertexArray(vertexArrayObjID[0]); // First VAO
-  glDrawArrays(GL_TRIANGLES, 0, 3);       // draw first object
+  glBindVertexArray(vertexArrayObjID[0]);       // First VAO
+  glDrawArrays(GL_TRIANGLES, 0, 3);     // draw first object
 
-  glBindVertexArray(vertexArrayObjID[1]);     // select second VAO
+  glBindVertexArray(vertexArrayObjID[1]);               // select second VAO
   glVertexAttrib3f((GLuint)1, 1.0, 0.0, 0.0); // set constant color attribute
-  glDrawArrays(GL_TRIANGLES, 0, 3);           // draw second object
-}
+  glDrawArrays(GL_TRIANGLES, 0, 3);     // draw second object
+ }
 
 int fullscreen = 0;
 
-int main(int argc, char *argv[]) {
+int main (int argc, char* argv[])
+{
   Fl::use_high_res_GL(true);
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | FL_OPENGL3);
@@ -187,15 +200,13 @@ int main(int argc, char *argv[]) {
 #ifndef __APPLE__
   GLenum err = glewInit(); // defines pters to functions of OpenGL V 1.2 and above
 #ifdef FLTK_USE_WAYLAND
-  if (err == GLEW_ERROR_NO_GLX_DISPLAY)
-    err = GLEW_OK;
+  if (fl_wl_display() && err == GLEW_ERROR_NO_GLX_DISPLAY) err = GLEW_OK;
 #endif
-  if (err != GLEW_OK)
-    Fl::error("glewInit() failed returning %u", err);
+  if (err != GLEW_OK) Fl::error("glewInit() failed returning %u", err);
   fprintf(stderr, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 #endif
   int gl_version_major;
-  const char *glv = (const char *)glGetString(GL_VERSION);
+  const char *glv = (const char*)glGetString(GL_VERSION);
   fprintf(stderr, "OpenGL version %s supported\n", glv);
   sscanf(glv, "%d", &gl_version_major);
   if (gl_version_major < 3) {
@@ -205,8 +216,7 @@ int main(int argc, char *argv[]) {
   initShaders();
   init();
   glutDisplayFunc(display);
-  if (fullscreen)
-    Fl::first_window()->fullscreen();
+  if (fullscreen) Fl::first_window()->fullscreen();
   glutMainLoop();
   return 0;
 }

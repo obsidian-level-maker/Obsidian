@@ -289,11 +289,11 @@ function Fab_load_all_definitions()
   assert(GAME.game_dir)
 
   if GAME.use_generics and GAME.use_generics == true then
-    if not ob_match_game({game = "doomish"}) or OB_CONFIG.engine == "nolimit" then
+    if not ob_match_game({game = "doomish"}) or OB_CONFIG.port == "limit_removing" then
       visit_dir("games/generic/fabs", "*.lua")
     end
   end
-  if not ob_match_game({game = "doomish"}) or OB_CONFIG.engine ~= "nolimit" then
+  if not ob_match_game({game = "doomish"}) or OB_CONFIG.port ~= "limit_removing" then
     visit_dir("games/" .. GAME.game_dir .. "/fabs", "*.lua")
   end
   ob_invoke_hook("addon_fabs")
@@ -2414,7 +2414,7 @@ function Fab_replacements(LEVEL, fab)
           if OB_CONFIG.length == "single" or LEVEL.game_along == 1.0 then
             C.special = 51
           else
-            if OB_CONFIG.engine ~= "zdoom" then
+            if OB_CONFIG.port ~= "zdoom" then
               if LEVEL.name == "MAP02" then
                 C.tag = 1
               elseif LEVEL.name == "MAP01" then
@@ -2426,7 +2426,7 @@ function Fab_replacements(LEVEL, fab)
           if OB_CONFIG.length == "single" or LEVEL.game_along == 1.0 then
             C.special = 124
           else
-            if OB_CONFIG.engine ~= "zdoom" then
+            if OB_CONFIG.port ~= "zdoom" then
               if LEVEL.name == "MAP02" then
                 C.tag = 100
               elseif LEVEL.name == "MAP01" then

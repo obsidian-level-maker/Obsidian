@@ -91,11 +91,11 @@ public:
     if (event != FL_PASTE)
       return Fl_Tabs::handle(event);
     if (strcmp(Fl::event_clipboard_type(), Fl::clipboard_image) == 0) { // an image is being pasted
-      cl_img = (Fl_RGB_Image *)Fl::event_clipboard(); // get it as an Fl_RGB_Image object
+      cl_img = (Fl_RGB_Image *)Fl::event_clipboard();                   // get it as an Fl_RGB_Image object
       if (!cl_img)
         return 1;
       char title[300];
-      sprintf(title, "%dx%d", cl_img->w(), cl_img->h()); // display the image original size
+      snprintf(title, 300, "%dx%d", cl_img->w(), cl_img->h()); // display the image original size
 
       // optional: display extra technical info about clipboard content
 
@@ -105,21 +105,23 @@ public:
       char *p = title + strlen(title);
       int format = EnumClipboardFormats(0);
       if (format && format < CF_MAX) {
-        sprintf(p, " %d", format);
+        snprintf(p, sizeof(title) - strlen(title), " %d", format);
         p += strlen(p);
       }
       while (format) {
         format = EnumClipboardFormats(format);
         if (format && format < CF_MAX) {
-          sprintf(p, " %d", format);
+          snprintf(p, sizeof(title) - strlen(title), " %d", format);
           p += strlen(p);
         }
       }
       HANDLE h;
       if ((h = GetClipboardData(CF_DIB))) {
         LPBITMAPINFO lpBI = (LPBITMAPINFO)GlobalLock(h);
-        sprintf(p, " biBitCount=%d biCompression=%d biClrUsed=%d", lpBI->bmiHeader.biBitCount,
-                (int)lpBI->bmiHeader.biCompression, (int)lpBI->bmiHeader.biClrUsed);
+        snprintf(p, sizeof(title) - strlen(title), " biBitCount=%d biCompression=%d biClrUsed=%d",
+                lpBI->bmiHeader.biBitCount,
+                (int)lpBI->bmiHeader.biCompression,
+                (int)lpBI->bmiHeader.biClrUsed);
       }
       CloseClipboard();
 
@@ -190,8 +192,7 @@ int main(int argc, char **argv) {
   g->selection_color(TAB_COLOR);
 
   Fl_Text_Buffer *buffer = new Fl_Text_Buffer();
-  display =
-      new Fl_Text_Display(5, 30, 490, 460, Fl::clipboard_plain_text); // will display the text form
+  display = new Fl_Text_Display(5, 30, 490, 460, Fl::clipboard_plain_text); // will display the text form
   display->buffer(buffer);
   display->selection_color(TAB_COLOR);
   tabs->end();

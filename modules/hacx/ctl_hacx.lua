@@ -61,7 +61,8 @@ OB_MODULES["hacx_mon_control"] =
   label = _("HacX 1.2 Monster Control"),
 
   game = "hacx",
-  engine = "!vanilla",
+  engine = "idtech_1",
+  port = "!limit_enforcing",
 
   hooks =
   {
@@ -324,7 +325,8 @@ OB_MODULES["hacx_weapon_control"] =
   label = _("HacX 1.2 Weapon Control"),
 
   game = "hacx",
-  engine = "!vanilla",
+  engine = "idtech_1",
+  port = "!limit_enforcing",
 
   hooks =
   {

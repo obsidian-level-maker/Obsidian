@@ -33,7 +33,7 @@
 //
 // Edit the following 2 #define's to modify the test scenario:
 
-#define USE_FLEX 0   // default 0 = use Fl_Pack, 1 = use Fl_Flex
+#define USE_FLEX   0 // default 0 = use Fl_Pack, 1 = use Fl_Flex
 #define USE_SCROLL 1 // default 1 = put Fl_Pack or Fl_Flex inside Fl_Scroll
 
 // Do not edit #define's below
@@ -104,7 +104,7 @@ int main(int argc, char **argv) {
   int xx = 35;
   for (int i = 0; i < nbuttons; i++) {
     char ltxt[8];
-    sprintf(ltxt, "b%d", i + 1);
+    snprintf(ltxt, 8, "b%d", i + 1);
     Fl_Button *b = new Fl_Button(xx, xx, 25, 25);
     b->copy_label(ltxt);
     xx += 10;

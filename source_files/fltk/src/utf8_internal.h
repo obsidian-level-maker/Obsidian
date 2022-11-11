@@ -27,22 +27,30 @@
 #ifndef _SRC__FL_UTF8_H
 #define _SRC__FL_UTF8_H
 
-#ifdef __cplusplus
+#  ifdef __cplusplus
 extern "C" {
-#endif
+#  endif
 
-unsigned short XUtf8IsNonSpacing(unsigned int ucs);
+unsigned short
+XUtf8IsNonSpacing(
+        unsigned int ucs);
 
-unsigned short XUtf8IsRightToLeft(unsigned int ucs);
+unsigned short
+XUtf8IsRightToLeft(
+        unsigned int ucs);
 
 
-int XUtf8Tolower(int ucs);
+int
+XUtf8Tolower(
+        int ucs);
 
-int XUtf8Toupper(int ucs);
+int
+XUtf8Toupper(
+        int ucs);
 
 
-#ifdef __cplusplus
+#  ifdef __cplusplus
 }
-#endif
+#  endif
 
 #endif /* _SRC__FL_UTF8_H */

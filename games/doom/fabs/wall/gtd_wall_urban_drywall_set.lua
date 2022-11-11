@@ -23,7 +23,7 @@ PREFABS.Wall_gtd_drywall_wall_2 =
   template = "Wall_gtd_drywall_1",
   map      = "MAP02",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   z_fit = { 56,72 }
 }

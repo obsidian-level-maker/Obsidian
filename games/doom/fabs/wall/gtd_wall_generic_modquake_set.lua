@@ -6,7 +6,7 @@ PREFABS.Wall_modquake_set_industrial =
   file   = "wall/gtd_wall_generic_modquake_set.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   theme  = "!hell",
 
@@ -43,7 +43,7 @@ PREFABS.Wall_modquake_set_industrial_boom =
 {
   template = "Wall_modquake_set_industrial",
 
-  engine = "nolimit",
+  port = "limit_removing",
 
   rank = 2,
 
@@ -56,7 +56,7 @@ PREFABS.Wall_modquake_set_hell_boom =
 
   theme = "hell",
 
-  engine = "nolimit",
+  port = "limit_removing",
   rank = 1,
 
   line_342 = 0,
@@ -86,7 +86,7 @@ PREFABS.Wall_modquake_set_jawlike_boom =
   template = "Wall_modquake_set_industrial",
   map = "MAP02",
 
-  engine = "nolimit",
+  port = "limit_removing",
 
   theme = "any",
   rank = 1,
@@ -119,7 +119,7 @@ PREFABS.Wall_modquake_top_heavy_brace_set_limit =
   template = "Wall_modquake_set_industrial",
   map = "MAP03",
 
-  engine = "nolimit",
+  port = "limit_removing",
 
   rank = 1,
 
@@ -152,7 +152,7 @@ PREFABS.Wall_modquake_tek_slope_brace_limit =
   template = "Wall_modquake_set_industrial",
   map = "MAP04",
 
-  engine = "nolimit",
+  port = "limit_removing",
 
   rank = 1,
 
@@ -185,7 +185,7 @@ PREFABS.Wall_modquake_ex_light_slope_brace_limit =
   template = "Wall_modquake_set_industrial",
   map = "MAP05",
 
-  engine = "nolimit",
+  port = "limit_removing",
 
   rank = 1,
 
@@ -292,7 +292,7 @@ PREFABS.Wall_modquake_hexagon_inset_braced_industrial_limit =
 
   theme = "!hell",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   rank = 2,
 
@@ -309,7 +309,7 @@ PREFABS.Wall_modquake_hexagon_inset_braced_hell_limit =
 
   theme = "hell",
 
-  engine = "!zdoom",
+  port = "!zdoom",
 
   rank = 1,
 

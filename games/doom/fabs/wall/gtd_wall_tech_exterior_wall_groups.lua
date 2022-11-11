@@ -201,7 +201,7 @@ PREFABS.Wall_tech_hadleys_hope_sort_of_wall = --#
 
   deep = 64,
 
-  engine = "zdoom",
+  port = "zdoom",
 
   z_fit = "bottom",
 
@@ -218,7 +218,7 @@ PREFABS.Wall_tech_overhanging_lights = --#
 
   deep = 64,
 
-  engine = "zdoom",
+  port = "zdoom",
 
   z_fit = "top"
 }
@@ -312,7 +312,7 @@ PREFABS.Wall_tech_outdoor_concrete_brace = --#
 
   map = "MAP15",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   group = "tech_o_concrete_base",
 
@@ -386,7 +386,7 @@ PREFABS.Wall_tech_outdoor_black_mesa_overlook = -- #
   map = "MAP18",
 
   rank = 2,
-  engine = "zdoom",
+  port = "zdoom",
 
   height = 192,
 
@@ -405,7 +405,7 @@ PREFABS.Wall_tech_outdoor_black_mesa_overlook_EPIC =
   map = "MAP18",
 
   rank = 2,
-  engine = "zdoom",
+  port = "zdoom",
   texture_pack = "armaetus",
   replaces = "Wall_tech_outdoor_black_mesa_overlook",
 
@@ -453,7 +453,7 @@ PREFABS.Wall_tech_outdoor_grey_metal_sloped_EPIC = --#
   template = "Wall_tech_outdoor_caution_strip",
   map = "MAP20",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   texture_pack = "armaetus",
 
@@ -469,7 +469,7 @@ PREFABS.Wall_tech_outdoor_grey_metal_sloped =
   template = "Wall_tech_outdoor_caution_strip",
   map = "MAP20",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   group = "tech_o_grey_metal_sloped",
 

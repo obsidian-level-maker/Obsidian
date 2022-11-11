@@ -5,7 +5,7 @@ PREFABS.Pic_craneo_bunkbed_2x1 =
 
   prob = 12,
   group = "cran_bunkbeds",
-  engine = "zdoom",
+  port = "zdoom",
   
   where = "seeds",
   height = 128,

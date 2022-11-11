@@ -3,7 +3,7 @@ PREFABS.Decor_garrett_rotten_flesh =
   file   = "decor/garrett_decor_rotten_flesh.wad",
   map    = "MAP01",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   prob   = 1500,
   env    = "!outdoor",

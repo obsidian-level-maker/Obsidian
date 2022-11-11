@@ -3624,6 +3624,29 @@ GROW_COLONNADE_VAULT_THICK_PILLARS_NEW_AREA =
     "..........","AA##11##AA",
     "..........","AAA1111AAA",
     "xxxx11xxxx","xxxx11xxxx",
+  },
+
+  auxiliary =
+  {
+    pass = "GROW_COLONNADE_VAULT_THICK_PILLARS_NEW_AREA_aux"
+  }
+},
+
+GROW_COLONNADE_VAULT_THICK_PILLARS_NEW_AREA_aux =
+{
+  prob = 25,
+  skip_prob = 50,
+
+  pass = "GROW_COLONNADE_VAULT_THICK_PILLARS_NEW_AREA_aux",
+
+  structure =
+  {
+    "xx22xx","xx22xx",
+    "xx11xx","xxAAxx",
+    "211112","2A11A2",
+    "211112","2A11A2",
+    "xx11xx","xxAAxx",
+    "xx22xx","xx22xx"
   }
 },
 
@@ -3644,6 +3667,31 @@ GROW_COLONNADE_VAULT_ALTERNATING =
     "........","AA#11#AA",
     "........","11111111",
     "xxxxxx11","xxxxxx11",
+  },
+
+  auxiliary = 
+  {
+    pass = "GROW_COLONNADE_VAULT_ALTERNATING_aux"
+  }
+},
+
+GROW_COLONNADE_VAULT_ALTERNATING_aux =
+{
+  prob = 50,
+  skip_prob = 50,
+
+  pass = "GROW_COLONNADE_VAULT_ALTERNATING_aux",
+
+  structure =
+  {
+    "11111111","AAAAAAAA",
+    "22x11x22","22xAAx22",
+    "22x11x22","22xAAx22",
+    "11111111","111AA111",
+    "11111111","111AA111",
+    "22x11x22","22xAAx22",
+    "22x11x22","22xAAx22",
+    "11111111","AAAAAAAA"
   }
 },
 
@@ -3663,6 +3711,30 @@ GROW_COLONNADE_VAULT_ALTERNATING_THIN =
     "........","AAA11AAA",
     "........","11111111",
     "xxxxxx11","xxxxxx11",
+  },
+
+  auxiliary =
+  {
+    pass = "GROW_COLONNADE_VAULT_ALTERNATING_THIN_aux"
+  }
+},
+
+GROW_COLONNADE_VAULT_ALTERNATING_THIN_aux =
+{
+  prob = 50,
+  skip_prob = 50,
+
+  pass = "GROW_COLONNADE_VAULT_ALTERNATING_THIN_aux",
+
+  structure =
+  {
+    "11111111","11111111",
+    "22211222","222AA222",
+    "11111111","AAA11AAA",
+    "22211222","222AA222",
+    "11111111","AAA11AAA",
+    "22211222","222AA222",
+    "11111111","11111111"
   }
 },
 
@@ -6768,11 +6840,59 @@ GROW_CAGE_AROUND_PILLAR =
     ".....","1CCC1",
     ".....","1C#C1",
     ".....","1CCC1",
-    "11111","11111",
+    ".....","11111",
     "x111x","x111x",
   },
 
   cage_mode = "fancy",
+},
+
+GROW_CAGE_AROUND_PILLAR_ALTERNATING =
+{
+  prob = 25,
+  skip_prob = 65,
+
+  structure =
+  {
+    ".....","11111",
+    ".....","11111",
+    ".....","11C11",
+    ".....","1C#C1",
+    ".....","11C11",
+    ".....","11111",
+    "x111x","x111x",
+  },
+
+  cage_mode = "fancy",
+},
+
+GROW_CAGE_AROUND_PILLAR_DIAGONAL =
+{
+  prob = 25,
+  skip_prob = 65,
+
+  structure =
+  {
+    "x....","x/111",
+    ".....","/1111",
+    ".....","1/CC1",
+    ".....","1C#C1",
+    ".....","1CC/1",
+    ".....","1111/",
+    "111.x","111/x",
+  },
+
+  cage_mode = "fancy",
+
+  diagonals =
+  {
+    ".1",
+    ".1",
+    "1C",
+    "C1",
+    "1.",
+    "1."
+  }
 },
 
 GROW_CAGE_Z =
@@ -7922,50 +8042,54 @@ GROW_NARROW_CANAL_OUTER_CURVE =
 -- MSSP's maze parts. [MAZE]
 GROW_MAZE_STRAIGHT =
 {
-  prob = 2,
+  prob = 10,
   skip_prob = 85,
 
   structure =
   {
-    "x.x","x1x",
-    "x.x","x1x",
-    "...","#1#",
-    "...","#1#",
-    "x1x","x1x",
-    "x1x","x1x",
+    "x..x","x11x",
+    "x..x","x11x",
+    "....","#1##",
+    "....","#1##",
+    "x11x","x11x",
   }
 },
 
 GROW_MAZE_ZIGZAG =
 {
-  prob = 2,
+  prob = 10,
   skip_prob = 80,
 
   structure =
   {
-    "xx.x","xx1x",
+    "x..x","x11x",
+    "x..x","x%1x",
     "x..x","x#1x",
     "....","#/1#",
     "....","#1/#",
-    "x1.x","x1#x",
-    "x1xx","x1xx",
+    "x..x","x1#x",
+    "x..x","x1%x",
+    "x11x","x11x",
   },
 
   diagonals =
   {
     ".1",
+    ".1",
     "1.",
+    "1."
   }
 },
 
 GROW_MAZE_ZIGZAG_DOUBLE =
 {
-  prob = 1,
+  prob = 8,
   skip_prob = 80,
 
   structure =
   {
-    "xx.x","xx1x",
+    "x..x","x11x",
+    "x..x","x%1x",
     "x..x","x#1x",
     "...x","#/1x",
     "x...","x1/#",
@@ -7973,65 +8097,65 @@ GROW_MAZE_ZIGZAG_DOUBLE =
     "x..x","x1#x",
     "x...","x1%#",
     "...x","#%1x",
-    "x.1x","x#1x",
-    "xx1x","xx1x",
+    "x..x","x#1x",
+    "x..x","x/1x",
+    "x11x","x11x",
   },
 
   diagonals =
   {
+    "1.",
     ".1",
     "1.",
     "1.",
     ".1",
+    ".1"
   }
 },
 
 GROW_MAZE_STRAIGHT_NEW_AREA =
 {
-  prob = 1,
+  prob = 8,
   skip_prob = 75,
 
   structure =
   {
-    "x.x","xAx",
-    "x.x","xAx",
+    "x..","xAA",
+    "x..","xAA",
     "...","#1#",
-    "x1x","x1x",
-    "x1x","x1x",
+    "x11","x11",
   }
 },
 
 GROW_MAZE_STRAIGHT_STAIRED =
 {
-  prob = 2,
+  prob = 10,
   skip_prob = 35,
 
   structure =
   {
-    "x.x","xAx",
-    "x.x","xAx",
+    "x..","xAA",
+    "x..","xAA",
     "...","#^#",
     "...","#1#",
-    "x1x","x1x",
-    "x1x","x1x",
+    "x11","x11",
   }
 },
 
 GROW_MAZE_STRAIGHT_LONG =
 {
-  prob = 1,
+  prob = 8,
   skip_prob = 35,
 
   structure =
   {
-    "x.x","x1x",
-    "x.x","x1x",
+    "x..","x11",
+    "x..","x11",
     "...","#1#",
     "...","#1#",
     "...","#1#",
     "...","#1#",
-    "x1x","x1x",
-    "x1x","x1x",
+    "x11","x11",
   }
 },
 
@@ -8042,45 +8166,42 @@ GROW_MAZE_STRAIGHT_STAIRED_LONG =
 
   structure =
   {
-    "x.x","xAx",
-    "x.x","xAx",
+    "x..","xAA",
+    "x..","xAA",
     "...","#^#",
     "...","#^#",
     "...","#^#",
-    "x1x","x1x",
-    "x1x","x1x",
+    "x11","x11",
   }
 },
 
 GROW_MAZE_L =
 {
-  prob = 3,
+  prob = 12,
   skip_prob = 35,
 
   structure =
   {
-    "...xx","###xx",
-    ".....","#1111",
-    "...xx","#1#xx",
-    "...xx","#1#xx",
-    "x1xxx","x1xxx",
-    "x1xxx","x1xxx",
+    "...x..","###x11",
+    "......","#11111",
+    "...xxx","#1#xxx",
+    "...xxx","#1#xxx",
+    "11xxxx","11xxxx",
   }
 },
 
 GROW_MAZE_L_DIAG =
 {
-  prob = 2,
+  prob = 10,
   skip_prob = 35,
 
   structure =
   {
-    "xx.xxx","xx#xxx",
+    "xx.x..","xx#x11",
     "x.....","x#/111",
     "....xx","#/1/xx",
     "....xx","#1/#xx",
-    "x1xxxx","x1xxxx",
-    "x1xxxx","x1xxxx",
+    "11xxxx","11xxxx",
   },
 
   diagonals =
@@ -8093,33 +8214,34 @@ GROW_MAZE_L_DIAG =
 
 GROW_MAZE_T =
 {
-  prob = 2,
+  prob = 8,
   skip_prob = 35,
 
   structure =
   {
-    "xx...xx","xx###xx",
+    ".......","11###11",
     ".......","1111111",
     "xx...xx","xx#1#xx",
     "xx...xx","xx#1#xx",
-    "xxx1xxx","xxx1xxx",
-    "xxx1xxx","xxx1xxx",
+    "xxx11xx","xxx11xx",
   }
 },
 
 GROW_MAZE_X =
 {
-  prob = 2,
+  prob = 5,
   skip_prob = 50,
 
   structure =
   {
-    "11...xx...","1111%xx/11",
+    "1...xxxx..","1111xxxx11",
+    "1....xx...","1111%xx/11",
     "xxx......x","xxx%1%/1/x",
     "xxxx....xx","xxxx%11/xx",
     "xxxx....xx","xxxx/11%xx",
     "xxx......x","xxx/1/%1%x",
     "xx...xx...","xx11/xx%11",
+    "xx..xxxx..","xx11xxxx11",
   },
 
   diagonals =
@@ -8140,12 +8262,12 @@ GROW_MAZE_T_DIAG =
 
   structure =
   {
-    "xx..x..xx","xx##x##xx",
+    "....x....","11##x##11",
     ".........","111%#/111",
     "xx.....xx","xx%111/xx",
     "xx.....xx","xx#%1/#xx",
-    "xxxx1xxxx","xxxx1xxxx",
-    "xxxx1xxxx","xxxx1xxxx",
+    "xxxx.xxxx","xxxx1xxxx",
+    "xxxx11xxx","xxxx11xxx",
   },
 
   diagonals =
@@ -8158,24 +8280,23 @@ GROW_MAZE_T_DIAG =
 
 GROW_MAZE_CROSS =
 {
-  prob = 4,
+  prob = 8,
   skip_prob = 45,
 
   structure =
   {
-    "xxx.xxx","xxx1xxx",
-    "xxx.xxx","xxx1xxx",
-    "xx...xx","xx#1#xx",
-    ".......","1111111",
-    "xx...xx","xx#1#xx",
-    "xxx1xxx","xxx1xxx",
-    "xxx1xxx","xxx1xxx",
+    "xxxx..xxx","xxxx11xxx",
+    "xxxx..xxx","xxxx11xxx",
+    "xxx...xxx","xxx#1#xxx",
+    ".........","111111111",
+    "..x...x..","11x#1#x11",
+    "xxxx11xxx","xxxx11xxx",
   }
 },
 
 GROW_MAZE_U =
 {
-  prob = 5,
+  prob = 8,
   skip_prob = 45,
 
   structure =
@@ -8184,25 +8305,26 @@ GROW_MAZE_U =
     "x.x.x","x1x1x",
     ".....","#1#1#",
     ".....","#1#1#",
-    "x1x.x","x1x1x",
-    "x1x.x","x1x1x",
+    ".....","11#11",
+    "11...","11#11",
   }
 },
 
 GROW_MAZE_ =
 {
-  prob = 5,
+  prob = 8,
   skip_prob = 50,
 
   structure =
   {
-    "xxx.xxx","xxx1xxx",
-    "xxx.xxx","xxx1xxx",
-    "xx...xx","xx/1%xx",
-    ".......","1111111",
-    "xx...xx","xx%1/xx",
-    "xxx1xxx","xxx1xxx",
-    "xxx1xxx","xxx1xxx",
+    "xxxx..xxx","xxxx11xxx",
+    "xxxx..xxx","xxxx11xxx",
+    "xxxx.xxxx","xxxx1xxxx",
+    "xxx...xxx","xxx/1%xxx",
+    ".........","111111111",
+    "..x...x..","11x%1/x11",
+    "xxxx.xxxx","xxxx1xxxx",
+    "xxxx11xxx","xxxx11xxx",
   },
 
   diagonals =
@@ -8212,7 +8334,7 @@ GROW_MAZE_ =
   }
 },
 
-GROW_MAZE_SQUARE =
+--[[GROW_MAZE_SQUARE =
 {
   prob = 5,
   skip_prob = 50,
@@ -8226,21 +8348,22 @@ GROW_MAZE_SQUARE =
     "x1...x","x1111x",
     "x1..xx","x1##xx",
   }
-},
+},]]
 
 GROW_MAZE_STRAIGHT_CAGE =
 {
-  prob = 2,
+  prob = 8,
   skip_prob = 35,
 
   structure =
   {
-    "x.x","x1x",
+    "x..","x11",
+    "x..","x11",
     "x.x","x1x",
     "...","#1C",
     "...","#1C",
-    "x1x","x1x",
-    "x1x","x1x",
+    "x.x","x1x",
+    "x11","x11",
   }
 },
 
@@ -8251,13 +8374,14 @@ GROW_MAZE_STRAIGHT_CAGE_ALT =
 
   structure =
   {
-    "x.x","x1x",
+    "x..","x11",
+    "x..","x11",
     "x.x","x1x",
     "...","#1C",
     "...","#1#",
     "...","#1C",
-    "x1x","x1x",
-    "x1x","x1x",
+    "x.x","x1x",
+    "x11","x11",
   }
 },
 
@@ -14175,6 +14299,30 @@ GROW_TRENCH_CURVE_INNER_SOLID_RING =
   },
 },
 
+GROW_TRENCH_CURVE_INNER_SOLID_RING_LIQUID =
+{
+  prob = 30,
+  skip_prob = 80,
+
+  structure =
+  {
+    "x.......","x~~~~~AA",
+    "x.......","x~~/AAAA",
+    "x.......","x~~A/#A~",
+    "x.......","x~~A#/A~",
+    "1.......","11>AAA/~",
+    "1.......","11~~~~~~",
+  },
+
+  diagonals =
+  {
+    "~A",
+    "A.",
+         ".A",
+    "A~",
+  },
+},
+
 GROW_TRENCH_CURVE_OUTER_SOLID =
 {
   prob = 15,
@@ -14202,6 +14350,33 @@ GROW_TRENCH_CURVE_OUTER_SOLID =
   },
 },
 
+GROW_TRENCH_CURVE_OUTER_SOLID_LIQUID =
+{
+  prob = 25,
+  skip_prob = 80,
+
+  aversion = 6,
+
+  structure =
+  {
+    "xxxx..","xxxxAA",
+    "x.....","x/~~~A",
+    "x.....","x~/#~A",
+    "x.....","x~#/~A",
+    "1.....","1~~~/A",
+    "1.....","1>AAA/",
+  },
+
+  diagonals =
+  {
+    ".~",
+    "~.",
+         ".~",
+    "~A",
+    "A.",
+  },
+},
+
 GROW_TRENCH_CURVE_OUTER_SOLID_RING =
 {
   prob = 20,
@@ -14220,6 +14395,28 @@ GROW_TRENCH_CURVE_OUTER_SOLID_RING =
   {
     "1A",
     "A.",
+  },
+},
+
+GROW_TRENCH_CURVE_OUTER_SOLID_RING_LIQUID =
+{
+  prob = 30,
+  skip_prob = 80,
+
+  structure =
+  {
+    "x....","x~~AA",
+    "x....","x~~AA",
+    "x....","x~%1A",
+    "1....","111/A",
+    "1....","1>AA/",
+  },
+
+  diagonals =
+  {
+    "~1",
+    "1A",
+    "A."
   },
 },
 

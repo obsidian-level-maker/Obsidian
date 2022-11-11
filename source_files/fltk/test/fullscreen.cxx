@@ -66,14 +66,13 @@
 
 class shape_window : public Fl_Gl_Window {
   void draw();
-
 public:
   int sides;
-  shape_window(int x, int y, int w, int h, const char *l = 0);
+  shape_window(int x,int y,int w,int h,const char *l=0);
 };
 
-shape_window::shape_window(int x, int y, int w, int h, const char *l)
-  : Fl_Gl_Window(x, y, w, h, l) {
+shape_window::shape_window(int x,int y,int w,int h,const char *l) :
+Fl_Gl_Window(x,y,w,h,l) {
   sides = 3;
 }
 
@@ -83,13 +82,13 @@ void shape_window::draw() {
     valid(1);
     // fprintf(stderr, "init\n");
     glLoadIdentity();
-    glViewport(0, 0, pixel_w(), pixel_h());
+    glViewport(0,0,pixel_w(),pixel_h());
   }
   glClear(GL_COLOR_BUFFER_BIT);
   glColor3f(.5f, .6f, .7f);
   glBegin(GL_POLYGON);
-  for (int j = 0; j < sides; j++) {
-    double ang = j * 2 * M_PI / sides;
+  for (int j = 0; j < sides; j ++) {
+    double ang = j*2*M_PI/sides;
     glVertex3f((GLfloat)cos(ang), (GLfloat)sin(ang), 0);
   }
   glEnd();
@@ -101,45 +100,44 @@ void shape_window::draw() {
 
 class shape_window : public Fl_Window {
   void draw();
-
 public:
   int sides;
-  shape_window(int x, int y, int w, int h, const char *l = 0);
+  shape_window(int x,int y,int w,int h,const char *l=0);
 };
 
-shape_window::shape_window(int x, int y, int w, int h, const char *l)
-  : Fl_Window(x, y, w, h, l) {
+shape_window::shape_window(int x,int y,int w,int h,const char *l) :
+Fl_Window(x,y,w,h,l) {
   sides = 3;
 }
 
 void shape_window::draw() {
   fl_color(0);
-  fl_rectf(0, 0, w(), h());
-  fl_font(0, 20);
+  fl_rectf(0,0,w(),h());
+  fl_font(0,20);
   fl_color(7);
-  fl_draw("This requires GL", 0, 0, w(), h(), FL_ALIGN_CENTER);
+  fl_draw("This requires GL",0,0,w(),h(),FL_ALIGN_CENTER);
 }
 
 #endif
 
 class fullscreen_window : public Fl_Single_Window {
-public:
-  fullscreen_window(int W, int H, const char *t = 0);
-  int handle(int e);
+  public:
+  fullscreen_window(int W, int H, const char *t=0);
+  int handle (int e);
   Fl_Toggle_Light_Button *b3;
   Fl_Toggle_Light_Button *b4;
 };
 
-fullscreen_window::fullscreen_window(int W, int H, const char *t)
-  : Fl_Single_Window(W, H, t) {}
+fullscreen_window::fullscreen_window(int W, int H, const char *t) : Fl_Single_Window(W, H, t) {
+
+}
 
 int fullscreen_window::handle(int e) {
   if (e == FL_FULLSCREEN) {
     // fprintf(stderr, "Received FL_FULLSCREEN event\n");
     b3->value(fullscreen_active());
   }
-  if (Fl_Single_Window::handle(e))
-    return 1;
+  if (Fl_Single_Window::handle(e)) return 1;
   return 0;
 }
 
@@ -153,7 +151,7 @@ void sides_cb(Fl_Widget *o, void *p) {
 void double_cb(Fl_Widget *o, void *p) {
   shape_window *sw = (shape_window *)p;
   int d = ((Fl_Button *)o)->value();
-  sw->mode(d ? Fl_Mode(FL_DOUBLE | FL_RGB) : FL_RGB);
+  sw->mode(d ? Fl_Mode(FL_DOUBLE|FL_RGB) : FL_RGB);
 }
 #else
 void double_cb(Fl_Widget *, void *) {}
@@ -196,7 +194,7 @@ void allscreens_cb(Fl_Widget *o, void *p) {
     left_x = sx;
     right_x = sx + sw;
 
-    for (int i = 1; i < Fl::screen_count(); i++) {
+    for (int i = 1;i < Fl::screen_count();i++) {
       Fl::screen_xywh(sx, sy, sw, sh, i);
       if (sy < top_y) {
         top = i;
@@ -223,28 +221,27 @@ void allscreens_cb(Fl_Widget *o, void *p) {
 }
 
 void update_screeninfo(Fl_Widget *b, void *p) {
-  Fl_Browser *browser = (Fl_Browser *)p;
-  int x, y, w, h;
-  char line[128];
-  browser->clear();
-
-  sprintf(line, "Main screen work area: %dx%d@%d,%d", Fl::w(), Fl::h(), Fl::x(), Fl::y());
-  browser->add(line);
-  Fl::screen_work_area(x, y, w, h);
-  sprintf(line, "Mouse screen work area: %dx%d@%d,%d", w, h, x, y);
-  browser->add(line);
-  for (int n = 0; n < Fl::screen_count(); n++) {
+    Fl_Browser *browser = (Fl_Browser *)p;
     int x, y, w, h;
-    float dpih, dpiv;
-    Fl::screen_xywh(x, y, w, h, n);
-    Fl::screen_dpi(dpih, dpiv, n);
-    sprintf(line, "Screen %d: %dx%d@%d,%d DPI:%.1fx%.1f scale:%.2f", n, w, h, x, y, dpih, dpiv,
-            Fl::screen_scale(n));
+    char line[128];
+    browser->clear();
+
+    snprintf(line, sizeof(line), "Main screen work area: %dx%d@%d,%d", Fl::w(), Fl::h(), Fl::x(), Fl::y());
     browser->add(line);
-    Fl::screen_work_area(x, y, w, h, n);
-    sprintf(line, "Work area %d: %dx%d@%d,%d", n, w, h, x, y);
+    Fl::screen_work_area(x, y, w, h);
+    snprintf(line, sizeof(line), "Mouse screen work area: %dx%d@%d,%d", w, h, x, y);
     browser->add(line);
-  }
+    for (int n = 0; n < Fl::screen_count(); n++) {
+        int x, y, w, h;
+        float dpih, dpiv;
+        Fl::screen_xywh(x, y, w, h, n);
+        Fl::screen_dpi(dpih, dpiv, n);
+        snprintf(line, sizeof(line), "Screen %d: %dx%d@%d,%d DPI:%.1fx%.1f scale:%.2f", n, w, h, x, y, dpih, dpiv, Fl::screen_scale(n));
+        browser->add(line);
+        Fl::screen_work_area(x, y, w, h, n);
+        snprintf(line, sizeof(line), "Work area %d: %dx%d@%d,%d", n, w, h, x, y);
+        browser->add(line);
+    }
 }
 
 #include <stdlib.h>
@@ -258,43 +255,34 @@ void exit_cb(Fl_Widget *, void *) {
 int twowindow = 0;
 int initfull = 0;
 int arg(int, char **argv, int &i) {
-  if (argv[i][1] == '2') {
-    twowindow = 1;
-    i++;
-    return 1;
-  }
-  if (argv[i][1] == 'f') {
-    initfull = 1;
-    i++;
-    return 1;
-  }
+  if (argv[i][1] == '2') {twowindow = 1; i++; return 1;}
+  if (argv[i][1] == 'f') {initfull = 1; i++; return 1;}
   return 0;
 }
 
 int main(int argc, char **argv) {
 
   Fl::use_high_res_GL(1);
-  int i = 0;
-  if (Fl::args(argc, argv, i, arg) < argc)
-    Fl::fatal("Options are:\n -2 = 2 windows\n -f = startup fullscreen\n%s", Fl::help);
+  int i=0;
+  if (Fl::args(argc,argv,i,arg) < argc)
+    Fl::fatal("Options are:\n -2 = 2 windows\n -f = startup fullscreen\n%s",Fl::help);
 
-  fullscreen_window window(460, 400 + 30 * NUMB);
-  window.end();
+  fullscreen_window window(460,400+30*NUMB); window.end();
 
-  shape_window sw(10, 10, window.w() - 20, window.h() - 30 * NUMB - 120);
+  shape_window sw(10,10,window.w()-20,window.h()-30*NUMB-120);
   sw.set_visible(); // necessary because sw is not a child of window
 #if HAVE_GL
   sw.mode(FL_RGB);
 #endif
 
   Fl_Window *w;
-  if (twowindow) { // make it's own window
+  if (twowindow) {      // make it's own window
     sw.resizable(&sw);
     w = &sw;
     window.set_modal(); // makes controls stay on top when fullscreen pushed
     argc--;
     sw.show();
-  } else { // otherwise make a subwindow
+  } else {              // otherwise make a subwindow
     window.add(sw);
     window.resizable(&sw);
     w = &window;
@@ -302,55 +290,52 @@ int main(int argc, char **argv) {
 
   window.begin();
 
-  int y = window.h() - 30 * NUMB - 105;
-  Fl_Hor_Slider slider(50, y, window.w() - 60, 30, "Sides:");
+  int y = window.h()-30*NUMB-105;
+  Fl_Hor_Slider slider(50,y,window.w()-60,30,"Sides:");
   slider.align(FL_ALIGN_LEFT);
-  slider.callback(sides_cb, &sw);
+  slider.callback(sides_cb,&sw);
   slider.value(sw.sides);
   slider.step(1);
-  slider.bounds(3, 40);
-  y += 30;
+  slider.bounds(3,40);
+  y+=30;
 
-  Fl_Toggle_Light_Button b1(50, y, window.w() - 60, 30, "Double Buffered");
-  b1.callback(double_cb, &sw);
-  y += 30;
+  Fl_Toggle_Light_Button b1(50,y,window.w()-60,30,"Double Buffered");
+  b1.callback(double_cb,&sw);
+  y+=30;
 
-  Fl_Input i1(50, y, window.w() - 60, 30, "Input");
-  y += 30;
+  Fl_Input i1(50,y,window.w()-60,30, "Input");
+  y+=30;
 
-  Fl_Toggle_Light_Button b2(50, y, window.w() - 60, 30, "Border");
-  b2.callback(border_cb, w);
+  Fl_Toggle_Light_Button b2(50,y,window.w()-60,30,"Border");
+  b2.callback(border_cb,w);
   b2.set();
   border_button = &b2;
-  y += 30;
+  y+=30;
 
-  window.b3 = new Fl_Toggle_Light_Button(50, y, window.w() - 60, 30, "FullScreen");
-  window.b3->callback(fullscreen_cb, w);
-  y += 30;
+  window.b3 = new Fl_Toggle_Light_Button(50,y,window.w()-60,30,"FullScreen");
+  window.b3->callback(fullscreen_cb,w);
+  y+=30;
 
-  window.b4 = new Fl_Toggle_Light_Button(50, y, window.w() - 60, 30, "All Screens");
-  window.b4->callback(allscreens_cb, w);
-  y += 30;
+  window.b4 = new Fl_Toggle_Light_Button(50,y,window.w()-60,30,"All Screens");
+  window.b4->callback(allscreens_cb,w);
+  y+=30;
 
-  Fl_Button eb(50, y, window.w() - 60, 30, "Exit");
+  Fl_Button eb(50,y,window.w()-60,30,"Exit");
   eb.callback(exit_cb);
-  y += 30;
+  y+=30;
 
-  Fl_Browser *browser = new Fl_Browser(50, y, window.w() - 60, 100);
+  Fl_Browser *browser = new Fl_Browser(50,y,window.w()-60,100);
   update_screeninfo(0, browser);
-  y += 100;
+  y+=100;
 
-  Fl_Button update(50, y, window.w() - 60, 30, "Update");
+  Fl_Button update(50,y,window.w()-60,30,"Update");
   update.callback(update_screeninfo, browser);
-  y += 30;
+  y+=30;
 
-  if (initfull) {
-    window.b3->set();
-    window.b3->do_callback();
-  }
+  if (initfull) {window.b3->set(); window.b3->do_callback();}
 
   window.end();
-  window.show(argc, argv);
+  window.show(argc,argv);
 
   return Fl::run();
 }

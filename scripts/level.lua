@@ -238,6 +238,11 @@ function Level_determine_map_size(LEV)
     error("Invalid value for size : " .. tostring(ob_size))
   end
 
+  -- Try to prevent grower failures with Micro levels
+  if LEV.is_nature then
+    W = math.clamp(16, W, PARAM.float_level_upper_bound or 75)
+  end
+
   gui.printf("Initial size for " .. LEV.name .. ": " .. W .. "\n")
 
   local H = 1 + int(W * 0.8)
@@ -315,46 +320,12 @@ end
 function Episode_pick_names()
 --== Name Generator Test ==-- MSSP
 
--- If you want to add new names into the title generator
--- and test a mass of outputs without having to generate
--- entire WAD's just to see names, uncomment
--- the code block below. You can replace the
--- parameter in Naming_grab_one with any of the themes
--- i.e. TITLE, SUB_TITLE, EPISODE, TECH, URBAN, GOTHIC
--- and so on...
-
---
-function grab_many_and_test(num,category)
-  local i = 1
-  gui.printf("\nGenerator Test: (Category: " .. category .. ")\n\n")
-  while i <= num do
-    episode_test_name = Naming_grab_one(category)
-    gui.printf(episode_test_name .. " | ")
-    if i%4 == 0 then
-      gui.printf("\n")
-    end
-    i = i + 1
-  end
-  gui.printf("\n")
-end
-
-if PARAM.name_gen_test == "32l" then
-  grab_many_and_test(32,"TECH")
-  grab_many_and_test(32,"URBAN")
-  grab_many_and_test(32,"GOTHIC")
-  grab_many_and_test(32,"BOSS")
-elseif PARAM.name_gen_test == "32t" then
-  grab_many_and_test(32,"TITLE")
-  grab_many_and_test(32,"SUB_TITLE")
-  grab_many_and_test(32,"EPISODE")
-end
-
   -- game name (for title screen)
   if not GAME.title then
     GAME.title = Naming_grab_one("TITLE")
   end
 
-  if not GAME.sub_itle then
+  if not GAME.sub_title then
     GAME.sub_title = Naming_grab_one("SUB_TITLE")
   end
 
@@ -2369,7 +2340,7 @@ function Level_choose_darkness(LEVEL)
     LEVEL.sky_shadow = 32
   end
 
-  if OB_CONFIG.engine ~= "zdoom" and OB_CONFIG.engine ~= "edge" then
+  if OB_CONFIG.port ~= "zdoom" and OB_CONFIG.port ~= "edge" then
     local rounder = LEVEL.sky_light % 16
     if rounder ~= 0 then
       if rounder > 8 then
@@ -2565,11 +2536,13 @@ end
 function Level_build_it(LEVEL, SEEDS)
   Level_init(LEVEL)
 
-  if PARAM.float_build_levels then
+  -- Can just uncomment and manuall set an ID to match if we really need this - Dasho
+
+  --[[if PARAM.float_build_levels then
     if PARAM.float_build_levels ~= 0 then
       if LEVEL.id ~= PARAM.float_build_levels then return "nope" end
     end
-  end
+  end]]--
 
   Area_create_rooms(LEVEL, SEEDS)
     if gui.abort() then return "abort" end
@@ -2768,7 +2741,7 @@ function Level_make_all()
   end
 
   -- limit-removing engine warning
-  if OB_CONFIG.engine == "nolimit" and ob_match_game({ game = "doomish" }) then
+  if OB_CONFIG.port == "limit_removing" and ob_match_game({ game = "doomish" }) then
     if not PARAM.bool_suppress_nolimit_warning or PARAM.bool_suppress_nolimit_warning == 0 then
       error(gui.gettext("\nWarning: Limit-Removing uses a very basic set of prefabs, and should only be used if your source port isn't compatible with any other choice!\nClick the help link next to the Engine setting for an explanation of the other choices. To disable this warning, check the \"Suppress NoLimit Warning\" checkbox located in the Debug Control Module."))
     end
@@ -2796,6 +2769,66 @@ function Level_make_all()
   end
 
   Episode_plan_game()
+ 
+  if PARAM.title_screen_source then
+    if PARAM.title_screen_source == "filename" then
+      local str = string.lower(OB_CONFIG.title)
+      str = string.gsub(str, "%p", "")
+      str = string.gsub(str, " ", "_")
+      str = string.gsub(str, ":", "")
+      str = string.gsub(str, "'", "")
+      str = string.gsub(str, ",", "")
+      if not string.match(gui.get_filename_base(), str) then
+        GAME.title = gui.get_filename_base()
+      end
+    elseif PARAM.title_screen_source == "randomwords" then
+      local function case_randomizer(random_word)
+
+        local case_odds =
+        {
+          default = 40,
+          capitalized = 30,
+          all_caps = 15,
+          alternating = 5
+        }
+        
+        local case_pick = rand.key_by_probs(case_odds)
+
+        if case_pick == "default" then
+          return random_word
+        elseif case_pick == "capitalized" then
+          return string.upper(string.sub(random_word, 1, 1)) .. string.sub(random_word, 2)
+        elseif case_pick == "all_caps" then
+          return string.upper(random_word)
+        else
+          local alt_string = ""
+          for i = 1, #random_word do
+            local c = string.sub(random_word, i,i)
+            if i % 2 == 0 then
+              alt_string = alt_string .. string.upper(c)
+            else
+              alt_string = alt_string .. c
+            end
+          end
+          return alt_string
+        end 
+      end
+
+      local numwords = rand.irange(1, 3)
+
+      if numwords == 1 then
+        GAME.title = case_randomizer(rand.pick(RANDOM_WORDS_EN))
+      elseif numwords == 2 then
+        GAME.title = case_randomizer(rand.pick(RANDOM_WORDS_EN)) .. " " .. case_randomizer(rand.pick(RANDOM_WORDS_EN))
+      else
+        GAME.title = case_randomizer(rand.pick(RANDOM_WORDS_EN)) .. " " .. case_randomizer(rand.pick(RANDOM_WORDS_EN)) .. " " .. case_randomizer(rand.pick(RANDOM_WORDS_EN))
+      end
+    end
+  end
+
+  if PARAM.bool_sub_titles and PARAM.bool_sub_titles == 1 then
+    GAME.sub_title = nil
+  end
 
   Title_generate()
 
@@ -2808,10 +2841,12 @@ function Level_make_all()
       LEV.allowances = {}
 
       if PARAM.float_historical_oblige_v2 and rand.odds(PARAM.float_historical_oblige_v2) then
+        gui.minimap_disable(gui.gettext("Oblige V2"))
         if v094_create_LEVEL(GAME.FACTORY.all_levels[LEV.id], LEV.id, #GAME.levels) == "abort" then
           return "abort"
         end
       else
+        gui.minimap_enable()
         if Level_make_level(LEV) == "abort" then
           return "abort"
         end

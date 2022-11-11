@@ -1,7 +1,7 @@
 //
-// Scroll header file for the Fast Light Tool Kit (FLTK).
+// Fl_Scroll header file for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2021 by Bill Spitzak and others.
+// Copyright 1998-2022 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -100,31 +100,30 @@ class FL_EXPORT Fl_Scroll : public Fl_Group {
   int xposition_, yposition_;
   int oldx, oldy;
   int scrollbar_size_;
-  static void hscrollbar_cb(Fl_Widget *, void *);
-  static void scrollbar_cb(Fl_Widget *, void *);
-  static void draw_clip(void *, int, int, int, int);
+  static void hscrollbar_cb(Fl_Widget*, void*);
+  static void scrollbar_cb(Fl_Widget*, void*);
+  static void draw_clip(void*,int,int,int,int);
 
-protected: //  (STR#1895)
+protected:      //  (STR#1895)
+
   /// A local struct to manage a region defined by xywh
-  typedef struct {
-    int x, y, w, h;
-  } Fl_Region_XYWH;
+  typedef struct { int x,y,w,h; } Fl_Region_XYWH;
 
   /// A local struct to manage a region defined by left/right/top/bottom
   typedef struct {
-    int l; ///< (l)eft "x" position, aka x1
-    int r; ///< (r)ight "x" position, aka x2
-    int t; ///< (t)op "y" position, aka y1
-    int b; ///< (b)ottom "y" position, aka y2
+    int l;              ///< (l)eft "x" position, aka x1
+    int r;              ///< (r)ight "x" position, aka x2
+    int t;              ///< (t)op "y" position, aka y1
+    int b;              ///< (b)ottom "y" position, aka y2
   } Fl_Region_LRTB;
 
   /// A local struct to manage a scrollbar's xywh region and tab values
   typedef struct {
-    int x, y, w, h;
-    int pos;   ///< scrollbar tab's "position of first line displayed"
-    int size;  ///< scrollbar tab's "size of window in lines"
-    int first; ///< scrollbar tab's "number of first line"
-    int total; ///< scrollbar tab's "total number of lines"
+    int x,y,w,h;
+    int pos;            ///< scrollbar tab's "position of first line displayed"
+    int size;           ///< scrollbar tab's "size of window in lines"
+    int first;          ///< scrollbar tab's "number of first line"
+    int total;          ///< scrollbar tab's "total number of lines"
   } Fl_Scrollbar_Data;
 
   /**
@@ -134,30 +133,35 @@ protected: //  (STR#1895)
     \version 1.3.3
   */
   typedef struct {
-    int scrollsize;            ///< the effective scrollbar thickness (local or global)
-    Fl_Region_XYWH innerbox;   ///< widget's inner box, excluding scrollbars
-    Fl_Region_XYWH innerchild; ///< widget's inner box, including scrollbars
-    Fl_Region_LRTB child;      ///< child bounding box: left/right/top/bottom
-    int hneeded;               ///< horizontal scrollbar visibility
-    int vneeded;               ///< vertical scrollbar visibility
-    Fl_Scrollbar_Data hscroll; ///< horizontal scrollbar region + values
-    Fl_Scrollbar_Data vscroll; ///< vertical scrollbar region + values
+    int scrollsize;             ///< the effective scrollbar thickness (local or global)
+    Fl_Region_XYWH innerbox;    ///< widget's inner box, excluding scrollbars
+    Fl_Region_XYWH innerchild;  ///< widget's inner box, including scrollbars
+    Fl_Region_LRTB child;       ///< child bounding box: left/right/top/bottom
+    int hneeded;                ///< horizontal scrollbar visibility
+    int vneeded;                ///< vertical scrollbar visibility
+    Fl_Scrollbar_Data hscroll;  ///< horizontal scrollbar region + values
+    Fl_Scrollbar_Data vscroll;  ///< vertical scrollbar region + values
   } ScrollInfo;
   void recalc_scrollbars(ScrollInfo &si) const;
 
 protected:
+
+  virtual int on_insert(Fl_Widget*, int);
+  // virtual int on_move(int, int);         // Not (yet) implemented. Do we need this?
   void fix_scrollbar_order();
-  void bbox(int &, int &, int &, int &) const;
+  void bbox(int&,int&,int&,int&) const;
   void draw();
 
 public:
+
   Fl_Scrollbar scrollbar;
   Fl_Scrollbar hscrollbar;
 
   void resize(int X, int Y, int W, int H);
   int handle(int);
 
-  Fl_Scroll(int X, int Y, int W, int H, const char *l = 0);
+  Fl_Scroll(int X, int Y, int W, int H, const char *L = 0);
+  virtual ~Fl_Scroll();
 
   enum { // values for type()
     HORIZONTAL = 1,
@@ -170,9 +174,9 @@ public:
   };
 
   /**    Gets the current horizontal scrolling position.  */
-  int xposition() const { return xposition_; }
+  int xposition() const {return xposition_;}
   /**    Gets the current vertical scrolling position.  */
-  int yposition() const { return yposition_; }
+  int yposition() const {return yposition_;}
   void scroll_to(int, int);
   void clear();
 
@@ -188,7 +192,9 @@ public:
     \returns Scrollbar size in pixels, or 0 if the global Fl::scrollbar_size() is being used.
     \see Fl::scrollbar_size(int)
   */
-  int scrollbar_size() const { return (scrollbar_size_); }
+  int scrollbar_size() const {
+      return(scrollbar_size_);
+  }
   /**
     Sets the pixel size of the scrollbars' troughs to \p newSize, in pixels.
 
@@ -209,9 +215,8 @@ public:
     \see Fl::scrollbar_size()
   */
   void scrollbar_size(int newSize) {
-    if (newSize != scrollbar_size_)
-      redraw();
-    scrollbar_size_ = newSize;
+      if ( newSize != scrollbar_size_ ) redraw();
+      scrollbar_size_ = newSize;
   }
 };
 

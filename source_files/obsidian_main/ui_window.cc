@@ -68,7 +68,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title)
     int LEFT_W = kf_w(232);
     int MOD_W = (W - LEFT_W) / 2 - kf_h(4);
 
-    int TOP_H = kf_h(228);
+    int TOP_H = kf_h(240);
     int BOT_H = H - TOP_H - kf_h(4);
 
     menu_bar = new Fl_Menu_Bar(0, 0, W, kf_h(20));

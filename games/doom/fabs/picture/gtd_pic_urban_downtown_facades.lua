@@ -631,7 +631,7 @@ PREFABS.Pic_urban_downtown_facade_advert =
   tex_WOOD8 =
   {
 
-    RGNRCK2 = 50,
+    CRGNRCK2 = 50,
     ADVCR1 = 50,
     ADVCR2 = 50,
     ADVCR4 = 50,

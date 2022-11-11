@@ -8,7 +8,7 @@ PREFABS.Decor_crap_house_1 =
   where  = "point",
   theme  = "urban",
 
-  engine = "zdoom",
+  port = "zdoom",
 
   env    = "outdoor",
   size   = 144,
