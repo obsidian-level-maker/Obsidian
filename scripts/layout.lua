@@ -813,9 +813,6 @@ function Layout_add_traps(LEVEL)
 
     elseif kind == "teleport" then
 
-      -- MSSP: don't place in tiny rooms, not even remotely fair
-      if R.svolume < 24 then return nil end
-
       -- large chunks are better, so place them first in the list
       local locs2 = {}
 
@@ -1077,6 +1074,7 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
   local function install_a_teleport_trap(info, trig)
     local R    = info.room
     local locs = info.locs
+    local total_exits = rand.pick({2,3,4})
 
     local DEPOT = Seed_alloc_depot(LEVEL, R)
 
@@ -1096,7 +1094,7 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
           local o = 1
           while locs[o] do
 
-            if #locs < 2 then break end
+            if #locs < total_exits then break end
 
             local spot_dist = get_chunk_distance(R.triggers[n].spot, locs[o])
 
@@ -1124,7 +1122,8 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
 
     local chunk1 = table.remove(locs, 1)
     local chunk2 = table.remove(locs, 1)
-    local chunk3 = table.remove(locs, 1)
+    local chunk3 = table.remove(locs, 1)    
+    local chunk4 = table.remove(locs, 1)
 
     -- in a symmetrical room, try to use a peered chunk
     if chunk1.peer and not chunk1.peer.content then
@@ -1133,20 +1132,25 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
       chunk3 = chunk2.peer
     elseif chunk3.peer and not chunk3.peer.content then
       chunk2 = chunk3.peer
+    elseif chunk4 and chunk4.peer and not chunk4.peer.content then
+      chunk3 = chunk4.peer
     end
 
     make_teleport_trap(chunk1, trig)
     make_teleport_trap(chunk2, trig)
     make_teleport_trap(chunk3, trig)
+    if chunk4 then make_teleport_trap(chunk4, trig) end
 
     DEPOT.skin.out_tag1 = chunk1.out_tag
     DEPOT.skin.out_tag2 = chunk2.out_tag
     DEPOT.skin.out_tag3 = chunk3.out_tag
+    if chunk4 then DEPOT.skin.out_tag4 = chunk4.out_tag end
 
     -- this is to prevent non-symmetrical sinks or decor prefabs
     fix_mirrored_trap(chunk1, trig)
     fix_mirrored_trap(chunk2, trig)
     fix_mirrored_trap(chunk3, trig)
+    if chunk4 then fix_mirrored_trap(chunk4, trig) end
   end
 
 

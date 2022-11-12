@@ -2067,7 +2067,11 @@ function Fab_substitutions(fab, SKIN)
       local new_val = Fab_apply_substitute(value, SKIN)
 
       if new_val == nil then
-        error("unknown substitution ref: " .. tostring(value))
+        if type(value) == "string" and string.match(value, "out_tag") then
+          new_value = nil
+        else
+          error("unknown substitution ref: " .. tostring(value))
+        end
       end
 
       value = new_val
@@ -2384,7 +2388,12 @@ function Fab_replacements(LEVEL, fab)
             C.arg1 = current_tag
           elseif C.special == 70 then
             if fab.out_tag1 then -- Handle monster depots
-              rand_tag = rand.pick( { fab.out_tag1, fab.out_tag2, fab.out_tag3 })
+              local tag_table
+              if fab.out_tag1 then table.insert(tag_table, fab.out_tag1) end
+              if fab.out_tag2 then table.insert(tag_table, fab.out_tag2) end
+              if fab.out_tag3 then table.insert(tag_table, fab.out_tag3) end
+              if fab.out_tag4 then table.insert(tag_table, fab.out_tag4) end
+              rand_tag = rand.pick(tag_table)
               C.arg1 = rand_tag
               C.arg2 = rand_tag
             else
@@ -2646,6 +2655,7 @@ function Fabricate(LEVEL, room, def, T, skins)
     if SKIN.out_tag1 then fab.out_tag1 = SKIN.out_tag1 end
     if SKIN.out_tag2 then fab.out_tag2 = SKIN.out_tag2 end
     if SKIN.out_tag3 then fab.out_tag3 = SKIN.out_tag3 end
+    if SKIN.out_tag4 then fab.out_tag4 = SKIN.out_tag4 end
     if def.native_hexen then fab.native_hexen = true end
   end
 
@@ -2978,6 +2988,7 @@ function Fab_find_matches(LEVEL, reqs, match_state)
     if not ob_match_level_theme(LEVEL, def, theme_override) then return 0 end
     if not ob_match_feature(def) then return 0 end
     if not ob_match_game(def) then return 0 end
+    if not ob_match_port(def) then return 0 end
 
     if (def.rank or 0) < match_state.rank then return 0 end
 
