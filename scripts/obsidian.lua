@@ -222,9 +222,6 @@ function ob_match_port(T)
   local port = T.port
   local result = true
 
-  -- Compatibility stub for old "gzdoom" selection
-  if port == "gzdoom" then port = "zdoom" end
-
   -- negated check?
   if type(port) == "string" and string.sub(port, 1, 1) == '!' then
     port = string.sub(port, 2)
@@ -263,9 +260,6 @@ function ob_match_port2(T)
 
   local port = T.port2
   local result = true
-
-  -- Compatibility stub for old "gzdoom" selection
-  if port == "gzdoom" then port = "zdoom" end
 
   -- negated check?
   if type(port) == "string" and string.sub(port, 1, 1) == '!' then
@@ -306,9 +300,6 @@ function ob_match_port3(T)
   local port = T.port3
   local result = true
 
-  -- Compatibility stub for old "gzdoom" selection
-  if port == "gzdoom" then port = "zdoom" end
-
   -- negated check?
   if type(port) == "string" and string.sub(port, 1, 1) == '!' then
     port = string.sub(port, 2)
@@ -346,9 +337,6 @@ function ob_match_port4(T)
 
   local port = T.port4
   local result = true
-
-  -- Compatibility stub for old "gzdoom" selection
-  if port == "gzdoom" then port = "zdoom" end
 
   -- negated check?
   if type(port) == "string" and string.sub(port, 1, 1) == '!' then
