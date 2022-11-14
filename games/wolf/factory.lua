@@ -5489,7 +5489,7 @@ function WOLF.decide_quests(level_list, is_spear)
 
     -- treasure
 
-    for i = 1,sel(is_spear,4,6) do
+    for i = 1,sel(is_spear,2,3) do
       if rand.odds(ob_size) then
         add_quest(Level, "item", "treasure", 50, ob_size)
       end
@@ -5561,6 +5561,11 @@ function WOLF.get_factory_levels(episode)
       end
     end
   
+    if map == 10 then -- Pacman
+      ob_size = 75
+      goto foundsize
+    end
+
     if ob_size == gui.gettext("Mix It Up") then
   
       local result_skew = 1.0

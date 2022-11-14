@@ -5088,13 +5088,13 @@ function NOAH.decide_quests(level_list, is_spear)
 
     -- treasure
 
-    for i = 1,sel(is_spear,4,6) do
+    for i = 1,2 do
       if rand.odds(ob_size) then
         add_quest(Level, "item", "treasure", 50, ob_size)
       end
     end
 
-    if is_spear and rand.odds(60) then
+    if rand.odds(60) then
       add_quest(Level, "item", "feed", 50, ob_size)
     end
 
