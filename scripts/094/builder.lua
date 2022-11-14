@@ -7464,7 +7464,7 @@ function build_level()
     setup_rmodel(cell)
   end
 
-if string.find(PLAN.level.name, "L10") and (OB_CONFIG.game == "wolf" or OB_CONFIG.game == "spear") then
+if string.find(PLAN.level.name, "L10") and (OB_CONFIG.game == "wolf") then
 build_pacman_level(PLAN.quests[1].first)
 return
 end
