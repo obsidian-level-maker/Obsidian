@@ -7,7 +7,7 @@ on:
     branches: [ obsidian ]
 
 jobs:
-  build:
+  build-linux:
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
@@ -38,47 +38,33 @@ jobs:
       with:
         name: linux-x64
         path: install
-  #build-msys:
-  #  runs-on: windows-latest
-  #  defaults:
-  #    run:
-  #      shell: msys2 {0}
-  #  steps:
-  #    - uses: actions/checkout@v2
-  #    - name: Setup MSYS2
-  #      uses: msys2/setup-msys2@v2
-  #      with:
-  #        update: true
-  #        msystem: mingw64
-  #        install: >-
-  #          git
-  #          make
-  #        pacboy: >-
-  #          toolchain:p
-  #          cmake:p
-  #    - name: Configure CMake
-  #      run: cmake -DCMAKE_INSTALL_PREFIX=$PWD/install --preset msys
-  #    - name: Build
-  #      run: cmake --build --preset msys
-  #    - name: Install
-  #      run: cmake --install build/msys
-  #    - name: Upload artifacts
-  #      uses: actions/upload-artifact@v2.3.1
-  #      with:
-  #        name: windows-x64
-  #        path: install
-  build-msvc:
-    runs-on: windows-latest
+  build-macos:
+    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
+    # You can convert this to a matrix build if you need cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: macos-latest
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Configure CMake
-        run: cmake -DCMAKE_INSTALL_PREFIX=install --preset msvc
-      - name: Build
-        run: cmake --build --preset msvc
-      - name: Install
-        run: cmake --install build/msvc
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: windows-x64-msvc
-          path: install
+    - uses: actions/checkout@v3
+    
+    - name: Install dependencies
+      run: |
+        brew install fontconfig
+
+    - name: Configure CMake
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: cmake --preset dist
+
+    - name: Build
+      # Build your program with the given configuration
+      run: cmake --build --preset dist
+    
+    - name: Install
+      run: cmake --install build/dist
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: obsidian-macos
+        path: install
