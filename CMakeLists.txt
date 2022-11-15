@@ -18,7 +18,7 @@ add_subdirectory(source_files/zdbsp EXCLUDE_FROM_ALL)
 
 project(
   obsidian
-  LANGUAGES CXX
+  LANGUAGES C CXX
   VERSION 0.1.0
 )
 
@@ -230,7 +230,7 @@ if(OBSIDIAN_SANITIZE)
 endif()
 
 if(UNIX)
-  if(NOT CONSOLE_ONLY AND NOT HAIKU)
+  if(NOT CONSOLE_ONLY AND NOT HAIKU AND NOT APPLE)
     find_package(Fontconfig REQUIRED)
   endif()
 endif()
