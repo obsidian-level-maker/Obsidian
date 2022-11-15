@@ -55,7 +55,12 @@ bool LogInit(const std::filesystem::path &filename) {
         spdlog::set_default_logger(log_file);
     }
 
-    LogPrintf("====== START OF OBSIDIAN LOGS ======\n");
+    std::time_t result = std::time(nullptr);
+
+    LogPrintf("====== START OF OBSIDIAN LOGS ======\n\n");
+
+    LogPrintf("Initialized on {}", 
+        std::ctime(&result));
 
     return true;
 }

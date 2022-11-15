@@ -18,7 +18,7 @@ add_subdirectory(source_files/zdbsp EXCLUDE_FROM_ALL)
 
 project(
   obsidian
-  LANGUAGES CXX
+  LANGUAGES C CXX
   VERSION 0.1.0
 )
 
@@ -51,7 +51,7 @@ if(MSYS)
     set(CMAKE_EXE_LINKER_FLAGS "-static")
   endif()
 endif()
-if(${CMAKE_SYSTEM} MATCHES "BSD")
+if(APPLE OR ${CMAKE_SYSTEM} MATCHES "BSD")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I /usr/local/include")
 endif()
 
@@ -230,7 +230,7 @@ if(OBSIDIAN_SANITIZE)
 endif()
 
 if(UNIX)
-  if(NOT CONSOLE_ONLY AND NOT HAIKU)
+  if(NOT CONSOLE_ONLY AND NOT HAIKU AND NOT APPLE)
     find_package(Fontconfig REQUIRED)
   endif()
 endif()
@@ -250,7 +250,7 @@ add_custom_command(
 add_dependencies(obsidian qsavetex)
 
 if(UNIX)
-  if(${CMAKE_SYSTEM} MATCHES "BSD")
+  if(APPLE OR ${CMAKE_SYSTEM} MATCHES "BSD")
     if (NOT CONSOLE_ONLY)
       target_link_libraries(
         obsidian

@@ -625,6 +625,29 @@ bool Main::LoadInternalFont(const char *fontpath, const int fontnum,
 
 void Main::PopulateFontMap() {
     if (font_menu_items.size() == 0) {
+
+#ifdef __APPLE__
+        font_menu_items.push_back(
+            std::map<std::string, int>{{"Sans <Default>", 0}});
+        font_menu_items.push_back(
+            std::map<std::string, int>{{"Courier <Internal>", 4}});
+        font_menu_items.push_back(
+            std::map<std::string, int>{{"Times <Internal>", 8}});
+        font_menu_items.push_back(
+            std::map<std::string, int>{{"Screen <Internal>", 13}});
+
+        num_fonts = Fl::set_fonts(NULL);
+
+        for (int x = 16; x < num_fonts; x++) {  // Starting at 16 skips the FLTK default enumerations
+            if (std::string fontname = Fl::get_font_name(x);
+                std::isalpha(fontname.at(0))) {
+                std::map<std::string, int> temp_map{{fontname, x}};
+                font_menu_items.push_back(temp_map);
+            }
+        }
+
+#else
+
         if (use_system_fonts) {
             font_menu_items.push_back(
                 std::map<std::string, int>{{"Sans <Default>", 0}});
@@ -767,6 +790,7 @@ void Main::PopulateFontMap() {
             }
         }
     }
+#endif
     // lossy conversion, size_t?
     num_fonts = static_cast<int>(font_menu_items.size());
 }

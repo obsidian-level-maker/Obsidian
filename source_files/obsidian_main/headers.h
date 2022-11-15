@@ -34,8 +34,10 @@
 #include <windows.h>
 #else
 #ifndef CONSOLE_ONLY
+#ifndef __APPLE__
 #include <fontconfig/fontconfig.h>
 #define USE_XFT 1
+#endif
 #endif
 #endif
 

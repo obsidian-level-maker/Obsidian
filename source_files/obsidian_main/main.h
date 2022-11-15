@@ -70,6 +70,7 @@ int v_unload_private_font(const char *path) {
 #endif
 #else
 #ifndef CONSOLE_ONLY
+#ifndef __APPLE__
 #include <fontconfig/fontconfig.h>
 HEDLEY_ALWAYS_INLINE
 int i_load_private_font(const char *path) {
@@ -81,6 +82,7 @@ int v_unload_private_font(const char *path) {
     FcConfigAppFontClear(nullptr);
     return 0;
 }
+#endif
 #endif
 #endif
 
