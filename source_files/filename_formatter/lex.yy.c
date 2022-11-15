@@ -422,7 +422,9 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "filename.l"
 #define YY_NO_INPUT 1
+#ifndef __APPLE__
 #define YY_NO_UNISTD_H 1
+#endif
 #line 4 "filename.l"
 #include <stdio.h>
 #include "ff.h"
