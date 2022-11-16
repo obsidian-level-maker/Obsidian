@@ -233,6 +233,42 @@ msgstr "Strife (экспериментальный)"
 msgid "Town"
 msgstr "Город"
 
+#: games/wolf/base.lua:41
+msgid "Wolfenstein 3D"
+msgstr ""
+
+#: games/wolf/x_spear.lua:423
+msgid "Spear of Destiny"
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:33
+msgid "Alternate Shape Grammars"
+msgstr "Альтернативные наборы форм"
+
+#: modules/alt_shape_grammars.lua:40
+msgid "Options for alternate means of determining the layout of a level."
+msgstr "Варианты альтернативных способов определения макета уровня."
+
+#: modules/alt_shape_grammars.lua:52
+msgid "Boxes of Death"
+msgstr "\"Коробки смерти\""
+
+#: modules/alt_shape_grammars.lua:59
+msgid "Sets chance of levels using the Boxes of Death shape grammar."
+msgstr "Устанавливает шанс того, что каждый конкретный уровень будет сгенерирован с использованием набора правил \"Коробок смерти\"."
+
+#: modules/alt_shape_grammars.lua:60
+msgid "Gives levels a chance of being generated using Boxes of Death shape grammar. With this grammar, rooms are square shaped, with the occasional chunk taken out of one of the corners or sides. Room sizes are very consistent."
+msgstr "С данным набором правил комнаты будут квадратными, со случайно вырезанной частью в одном из углов или на одной из стен. Размеры комнат практически одинаковы."
+
+#: modules/alt_shape_grammars.lua:67
+msgid "Oblige v5"
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:74
+msgid "Sets chance of levels using the Oblige v5 shape grammar."
+msgstr "Устанавливает шанс создания уровня с помощью набора правил Oblige v5."
+
 #: modules/chex3/ctl_chex.lua:60
 msgid "Chex Quest 3 Monster Control"
 msgstr "Настройка монстров Chex Quest 3"
@@ -1030,12 +1066,12 @@ msgstr "По комнатам (чуть медленнее)"
 msgid "No Live Minimap"
 msgstr "Только контуры (быстро)"
 
-#: modules/debugger.lua:80
-msgid "Debug Control"
-msgstr "Отладочные настройки"
+#: modules/debugger.lua:87
+msgid "Miscellaneous Options"
+msgstr "Разное"
 
-#: modules/debugger.lua:86
-msgid "Provides options for printing out more verbose log information. Advanced, highly experimental features can also be found here."
+#: modules/debugger.lua:94
+msgid "Provides options for printing out more verbose log information. Unusual or experimental features can also be found here."
 msgstr "Опции, связанные с отладкой, дополнительным журналированием и тому подобными вещами. Также здесь находятся некоторые экспериментальные и расширенные настройки."
 
 #: modules/debugger.lua:99
@@ -3042,6 +3078,26 @@ msgstr "Части Высшего оружия"
 msgid "Control the likelihood of finding Ultimate Weapon Pieces."
 msgstr "Ultimate Weapon Pieces. Управление количеством собираемых частей Окончательного (Высшего) оружия."
 
+#: modules/historical_versions.lua:33
+msgid "Historical Versions"
+msgstr "Архивные версии"
+
+#: modules/historical_versions.lua:40
+msgid "Options to generate levels using past releases of Oblige, Obsidian's predecessor."
+msgstr "Опции, позволяющие генерировать уровни с использованием старых релизов Oblige (предшественника Obsidian)."
+
+#: modules/historical_versions.lua:52
+msgid "Oblige v2"
+msgstr ""
+
+#: modules/historical_versions.lua:59
+msgid "Sets chance of levels being generated using Oblige v2"
+msgstr "Устанавливает шанс создания уровня с помощью набора правил Oblige v2."
+
+#: modules/historical_versions.lua:60
+msgid "Gives levels a chance of being generated using an internal version of Oblige version 2.x. NOTE: Not all module settings will affect levels generated in this manner."
+msgstr "Даёт шанс каждому конкретному уровню быть сгенерированным с использованием логики генератора карт Oblige v2.x. Обратите внимание, что далеко не все другие опции смогут повлиять на такое создание."
+
 #: modules/iwad_mode.lua:1170
 msgid "IWAD Style Mode"
 msgstr "Имитировать стиль IWAD"
@@ -3420,7 +3476,7 @@ msgstr "Устанавливает шанс того, что уровень бу
 
 #: modules/miscellaneous.lua:240
 msgid "Gives levels a chance of being generated using the Oblige v5 shape grammar. With this grammar, indoor rooms are usually square or diamond-shaped. Parks are larger than the indoor areas, but still more or less rectangular in nature. Caves retain their organic layouts. Hallways and joiners are still used as normal. Room sizes are fairly consistent."
-msgstr "Устанавливает шанс того, что уровень будет сгенерирован с использованием правил Oblige v5.x. С ними внутренние помещения обычно квадратные или ромбовидные. Парки крупнее помещений, однако всё равно ещё в целом близки к прямоугольным формам. Пещеры сохраняют свою планировку. Коридоры и соединительные помещения используются наравне с обычными комнатами. Размеры комнат отличаются не очень сильно."
+msgstr "Устанавливает шанс того, что каждый конкретный уроветь будет сгенерирован с использованием правил Oblige v5.x. При этом внутренние помещения обычно будут иметь форму квадрата или параллелограмма; парки, несмотря на свой превосходящий внутренние помещения размер, также будут в основном прямоугольными, однако пещеры сохранят свою особую планировку. Коридоры и соединительные области будут использоваться как обычно. Размеры комнат довольно стабильны."
 
 #: modules/miscellaneous.lua:248
 msgid "Layout Consistency"
@@ -5619,8 +5675,10 @@ msgid "Determines size of map (Width x Height) in grid squares."
 msgstr "Определяет размер карты (длина и ширина) со стороной ячейки, равной стороне квадрата BLOCKMAP-сетки."
 
 #: modules/ui_arch.lua:131
-msgid "FOR 32-BIT USERS: To prevent memory usage issues, the following maximum map size limits will be enforced regardless of slider setting:\n\nFull Game:\n-Fixed size: 30\n-Progressive: 48\n-Episodic: 48\n-Mix It Up: 42\n\nEpisode:\n-Fixed size: 58\n\nAll other combinations will honor the slider settings.\n\nIf you are planning to play on any choices that involve maps at sizes of 50 and above, Autodetailing will be enabled by default. The stability of maps with sizes 60 and beyond is not predictable."
-msgstr "ДЛЯ ПОЛЬЗОВАТЕЛЕЙ 32-БИТНЫХ СИСТЕМ: во избежание ошибок, связанных с использованием и выделением памяти, верхний предел карт будет жёстко ограничен следующими значениями:\n\nДля полной игры:\n ├ Фиксированный размер: 30;\n ├ Постепенно: 48;\n ├ По эпизодам: 48;\n └ Случайно: 42.\n\nОдин эпизод:\n ├ Фиксированный размер: 58;\n └ Другие комбинации будут использовать значение слайдера.\n\nЕсли вы планируете играть на любых вариантах, включающих карты размером 50 и выше, опция \"Автоподгонка количества деталей\" будет включена по умолчанию. Стабильность карт размером 60 и выше непредсказуема."
+msgid "If you are planning to generate Binary format maps at sizes of 50 and above, Autodetailing will be enabled by default. The stability of maps with sizes 60 and beyond is not predictable unless using UDMF map format (supported engines only)."
+msgstr "Если Вы планируете создавать карты в двоичном формате размером от 50 и выше, опция \"Автоподгонка количества деталей\" будет включена по умолчанию. Стабильность карт размером 60 и выше непредсказуема, если не используется формат карты UDMF (естественно, только для поддерживаемых движков)."
+#msgid "FOR 32-BIT USERS: To prevent memory usage issues, the following maximum map size limits will be enforced regardless of slider setting:\n\nFull Game:\n-Fixed size: 30\n-Progressive: 48\n-Episodic: 48\n-Mix It Up: 42\n\nEpisode:\n-Fixed size: 58\n\nAll other combinations will honor the slider settings.\n\nIf you are planning to play on any choices that involve maps at sizes of 50 and above, Autodetailing will be enabled by default. The stability of maps with sizes 60 and beyond is not predictable."
+#msgstr "ДЛЯ ПОЛЬЗОВАТЕЛЕЙ 32-БИТНЫХ СИСТЕМ: во избежание ошибок, связанных с использованием и выделением памяти, верхний предел карт будет жёстко ограничен следующими значениями:\n\nДля полной игры:\n ├ Фиксированный размер: 30;\n ├ Постепенно: 48;\n ├ По эпизодам: 48;\n └ Случайно: 42.\n\nОдин эпизод:\n ├ Фиксированный размер: 58;\n └ Другие комбинации будут использовать значение слайдера.\n\nЕсли вы планируете играть на любых вариантах, включающих карты размером 50 и выше, опция \"Автоподгонка количества деталей\" будет включена по умолчанию. Стабильность карт размером 60 и выше непредсказуема."
 
 #: modules/ui_arch.lua:139
 msgid "Upper Bound"
@@ -6460,7 +6518,7 @@ msgstr "Новые деревья"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1114
 msgid "Adds custom flat-depedendent tree sprites into the game. Currently only replaces trees on specific grass flats and will be expanded in the future to accomnodate custom Textures and more. If you are playing a mod that already does its own trees, it may be better to leave this off."
-msgstr "Добавляет в игру спрайты деревьев, зависящие от поверхности, на которой они стоят. В настоящее время заменяет только деревья на определенных участках травы, однако в будущем функционал обяательно будет расширен для добавления пользовательских текстур. Если Вы играете в модификацию, в которой уже есть собственные виды деревьев, то, возможно, данную опцию лучше не включать."
+msgstr "Добавляет в игру спрайты деревьев, зависящие от поверхности, на которой они стоят. В настоящее время заменяет только деревья на определенных участках травы, однако в будущем функционал обязательно будет расширен для добавления пользовательских текстур. Если Вы играете в модификацию, в которой уже есть собственные виды деревьев, то, возможно, данную опцию лучше не включать."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1121
 msgid "Environment Theme"
@@ -6485,6 +6543,14 @@ msgstr "Присоединять Brightmaps"
 #: modules/zdoom_armaetus_epic_textures.lua:1144
 msgid "Allows merging Obsidian Textures brightmaps into the WAD. Does not include brightmaps for base resources from any of the games."
 msgstr "Позволяет включать в выходной файл карты яркости (brightmaps) текстур Obsidian. Не включает их из любых других игр."
+
+#: modules/zdoom_armaetus_epic_textures.lua:1183
+msgid "Custom Actors"
+msgstr "Без замены акторов"
+
+#: modules/zdoom_armaetus_epic_textures.lua:1186
+msgid "Merges some custom sprites and replacers for various decorations."
+msgstr "Позволяет включать в выходной файл код новых акторов, без замены существующих в оригинальной игре."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1151
 msgid "No Hell Environment Themes"
@@ -6890,13 +6956,13 @@ msgstr "Как в оригинале"
 msgid "Episodic"
 msgstr "По эпизодам"
 
-#: scripts/defs.lua:86
-msgid "Jumbled Up"
-msgstr "Сильно перемешать"
-
 #: scripts/defs.lua:93
 msgid "Bit Mixed"
-msgstr "Немного перемешать"
+msgstr "Сокращённой длины"
+
+#: scripts/defs.lua:86
+msgid "Jumbled Up"
+msgstr "Дискретно"
 
 #: scripts/defs.lua:100
 msgid "Psychedelic"
@@ -7707,6 +7773,10 @@ msgid "Engine: "
 msgstr "Движок: "
 
 #: source_files/obsidian_main/ui_game.cc:88
+msgid "Port: "
+msgstr "Порт: "
+
+#: source_files/obsidian_main/ui_game.cc:88
 msgid "Length: "
 msgstr "Длина: "
 
@@ -7730,29 +7800,37 @@ msgstr "Игра"
 msgid "The following games will have gameplay that differs from the original IWADs:\n\nHexen: Game progression is linear and episodic. There are no hubs present. The Death Wyvern is not present in the monster table due to the infeasibility of scripting and flight pathing.\n\nStrife: Quests/multiple endings not yet implemented. Progression is linear and game will end on last level generated."
 msgstr "Следующие игры имеют изменения в геймплее относительно оригинальных IWAD:\n\nHexen: игра будет линейной и эпизодической, без хаб-уровней. Из-за практически невозможной сложности автоматического написания сценариев и маршрутов полёта Виверн Смерти (Death Wyvern) не будет присутствовать ни на одном уровне.\n\nStife: квесты и различающиеся концовки пока что не добавлены. Прогрессия линейна, и игра закончится на последнем сгенеррованном уровне."
 
+#: source_files/obsidian_main/ui_game.cc:220
+msgid "Port"
+msgstr "Порт"
+
+#: source_files/obsidian_main/ui_game.cc:230
+msgid "Available Ports:\n\nid Tech 0:\n\nVanilla: Works with the original executables\n\nid Tech 1:\n\nZDoom Family: Ports that use ZDoom as a base. Example ports: GZDoom, LZDoom\n\nVanilla: Works with the original program or ports that enforce the original limits. Examples: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nLimit Removing: Any port that raises the limits of the original game to prevent crashes, but is not Boom-compatible. Example ports: Doom2-plus, Doomsday 1.x, Crispy Doom\n\nBoom-Compatible: Ports that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nPrBoom-Compatible: Boom-compatible, but also capable of using extended nodes. Example ports: DSDA-Doom, PrBoom+um\n\nEDGE-Classic: Boom-compatible, plus additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."
+msgstr "Доступные игровые движки.\n\nid Tech 0:\n\n- Как в оригинале: карты создаются под оригинальные игры.\n\nid Tech 1:\n\n- Семейство ZDoom: (G-/L-/Q-)ZDoom, Zandronum, ZDaemon и другие, основанные на ZDoom.\n\n- Оригинальный Doom: движок Doom как таковой, с учётом его ограничений. При выборе этой опции будет использоваться генератор карт SLUMP.\n\n- Limit Removing: любой игровой движок, расширяющий лимиты оригинала для предотвращения вылетов. ВНИМАНИЕ: данный пункт использует довольно ограниченное количество префабов. Если Вы предполагаете проходить WAD на движке, поддерживающим формат Boom, лучше выбрать соответствующий пункт.\n\n- Совместивый с BOOM: движки, совместимые с Boom, и позволяющие использовать все его возможности и расширения.\n\n- Совместивый с PrBoom: то же, что выше, но также с расширенным использованием Map Nodes.\n\n- Классический EDGE: совместимый с BOOM, но с добавлениением некоторых специфичных для EDGE возможностей.\n\n- Eternity [экспериментальный]: для Software-рендерера, но с некоторыми улучшениями вроде UDMF."
+
 #: source_files/obsidian_main/ui_game.cc:183
 msgid "Engine"
 msgstr "Движок"
 
-#: source_files/obsidian_main/ui_game.cc:192
-msgid "Available Engines:\n\nZDoom Family: Engines that use ZDoom as a base. Example ports: GZDoom, LZDoom\n\nVanilla DOOM: Doom with its original engine limits. Example ports: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nLimit Removing: Any engine that raises the limits of the original game to prevent crashes, but is not Boom-compatible. Example ports: Doom2-plus, Doomsday 1.x, Crispy Doom\n\nBoom-Compatible: Engines that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nPrBoom-Compatible: Boom-compatible, but also capable of using extended nodes. Example ports: DSDA-Doom, PrBoom+um\n\nEDGE-Classic: Boom-compatible, plus additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."
-msgstr "Доступные игровые движки.\n\nСемейство ZDoom: (G-/L-/Q-)ZDoom, Zandronum, ZDaemon и другие, основанные на ZDoom.\n\nОригинальный Doom: движок Doom как таковой, с учётом его ограничений. При выборе этой опции будет использоваться генератор карт SLUMP.\n\nLimit Removing: любой игровой движок, расширяющий лимиты оригинала для предотвращения вылетов. ВНИМАНИЕ: данный пункт использует довольно ограниченное количество префабов. Если Вы предполагаете проходить WAD на движке, поддерживающим формат Boom, лучше выбрать соответствующий пункт.\n\nСовместивый с BOOM: движки, совместимые с Boom, и позволяющие использовать все его возможности и расширения.\n\nСовместивый с PrBoom: то же, что выше, но также с расширенным использованием Map Nodes.\n\nКлассический EDGE: совместимый с BOOM, но с добавлениением некоторых специфичных для EDGE возможностей.\n\nEternity [экспериментальный]: для Software-рендерера, но с некоторыми улучшениями вроде UDMF."
+#: source_files/obsidian_main/ui_game.cc:198
+msgid "id Tech 0: Powered Wolfenstein-3D and similar games\n\nid Tech 1: Powered Doom, Doom 2, Heretic, etc"
+msgstr "id Tech 0: Wolfenstein-3D и подобные ему игры.\n\nid Tech 1: Doom, Doom 2, Heretic и так далее."
 
 #: source_files/obsidian_main/ui_game.cc:197
 msgid "Length"
 msgstr "Длина"
 
-#: source_files/obsidian_main/ui_game.cc:206
-msgid "Available WAD Lengths:\n\nSingle Level: One map.\n\nA Few Maps: Four maps.\n\nOne Episode: The length of an episode in the original IWAD. For Doom 2, which normally doesn't have episodes, this is 11 maps.\n\nFull Game: The length of a full game in the original IWAD."
-msgstr "Доступная продолжительность сгенерированного сборника.\n\nУровень: одна карта.\n\nНесколько уровней: четыре карты.\n\nОдин эпизод: ориентироваться по длине эпизода выбранного IWAD. Если чётко выраженного деления нет (например, Doom 2), создаётся одиннадцать карт.\n\nПолная игра: по количеству уровней в выбранном IWAD."
+#: source_files/obsidian_main/ui_game.cc:246
+msgid "Available Game Lengths:\n\nSingle Level: One map.\n\nA Few Maps: Four maps.\n\nOne Episode: The length of an episode in the original game. For Doom 2 and other games which normally doesn't have episodes, this number is determined by Obsidian.\n\nFull Game: The length of a full game in the original program."
+msgstr "Доступная продолжительность сгенерированного сборника.\n\nУровень: одна карта.\n\nНесколько уровней: четыре карты.\n\nОдин эпизод: ориентироваться по длине эпизода выбранного IWAD/выбранной игры. Если чётко выраженного деления не окажется, Obsidian постарается найти ближайшее подходящее (например, для Doom 2 создастся одиннадцать карт).\n\nПолная игра: по количеству уровней в выбранной игре."
 
 #: source_files/obsidian_main/ui_game.cc:211
 msgid "Theme"
 msgstr "Тема"
 
-#: source_files/obsidian_main/ui_game.cc:220
-msgid "Available Themes:\n\nOriginal: Follows the theme progression of the original IWAD.\n\nEpisodic: Each episode follows a single randomly chose theme.\n\nBit Mixed: Theme will change every few levels.\n\nJumbled Up: Level themes are purely random.\n\nPsychedelic: Trippy.\n\nOther themes listed are game-specific."
-msgstr "Доступные темы:\n\nКак в оригинале: следовать изменению тем выбранного IWAD.\n\nПо эпизодам: каждый эпизод имеет собственную одну тему. Если не указана соответствующая настройка, то тема выбирается случайно.\n\nНемного перемешать: темы будут меняться каждые несколько уровней.\n\nСильно перемешать: для каждого уровня выбирается собственная тема.\n\nПсиходелия: тема не выбирается. Полный хаос на соседних текстурах.\n\nОстальные темы специфичны для каждой отдельно взятой игры."
+#: source_files/obsidian_main/ui_game.cc:263
+msgid "Available Themes:\n\nOriginal: Follows the theme progression of the original game.\n\nEpisodic: Each episode follows a single randomly chosen theme.\n\nBit Mixed: Theme will change every few levels.\n\nJumbled Up: Level themes are purely random.\n\nPsychedelic: Trippy.\n\nOther themes listed are game-specific."
+msgstr "Доступные варианты смены тем.\n\nКак в оригинале: следовать изменению стандартных тем выбранной игры.\n\nПо эпизодам: каждый эпизод имеет собственную одну тему. Если не указана соответствующая настройка, то тема выбирается случайно.\n\nСокращённой длины: темы будут меняться каждые несколько уровней.\n\nДискретно: для каждого уровня выбирается собственная тема.\n\nПсиходелия: тема не выбирается. Полный хаос на соседних текстурах.\n\nОстальные темы специфичны для каждой отдельно взятой игры."
 
 #: source_files/obsidian_main/ui_game.cc:306
 msgid "Cancel"
