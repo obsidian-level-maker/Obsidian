@@ -285,8 +285,10 @@ bool BackupFile(const std::filesystem::path &filename);
 void Blinker();
 #endif
 
-#ifndef CONSOLE_ONLY
+#if !defined(CONSOLE_ONLY) && !defined(__APPLE__)
 bool LoadInternalFont(const char *fontpath, int fontnum, const char *fontname);
+#endif
+#ifndef CONSOLE_ONLY
 void PopulateFontMap();
 void Ticker();
 #endif

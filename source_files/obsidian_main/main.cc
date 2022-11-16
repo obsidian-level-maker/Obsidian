@@ -611,7 +611,7 @@ static int DetermineScaling() {
 }
 }  // namespace Main
 
-#ifndef CONSOLE_ONLY
+#if !defined(CONSOLE_ONLY) && !defined(__APPLE__)
 bool Main::LoadInternalFont(const char *fontpath, const int fontnum,
                             const char *fontname) {
     /* set the extra font */
@@ -619,10 +619,11 @@ bool Main::LoadInternalFont(const char *fontpath, const int fontnum,
         Fl::set_font(fontnum, fontname);
         return true;
     }
-
     return false;
 }
+#endif
 
+#ifndef CONSOLE_ONLY
 void Main::PopulateFontMap() {
     if (font_menu_items.size() == 0) {
 
@@ -645,9 +646,7 @@ void Main::PopulateFontMap() {
                 font_menu_items.push_back(temp_map);
             }
         }
-
 #else
-
         if (use_system_fonts) {
             font_menu_items.push_back(
                 std::map<std::string, int>{{"Sans <Default>", 0}});
