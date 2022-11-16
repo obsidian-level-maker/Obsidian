@@ -46,7 +46,7 @@ MODDED_GAME_EXTRAS.HELLSCAPE_NAVIGATOR_TEMPLATE =
 MODDED_GAME_EXTRAS.HN_INFO_TYPE_CHOICES =
 {
   "hn_info_quest",  _("Quest Info"),
-  "hn_info_shapes", _("Shape Debug"),
+  "hn_info_debug", _("Debug Info"),
 }
 
 MODDED_GAME_EXTRAS.QCDE_LOOTBOX_NICE_ITEMS =
@@ -1451,6 +1451,8 @@ function MODDED_GAME_EXTRAS.setup(self)
   
   module_param_up(self)
 
+  SCRIPTS.hn_id_table = {}
+
   if PARAM.bool_hn_markers == 1 then
     MODDED_GAME_EXTRAS.init_hn_info()
   end
@@ -1682,90 +1684,241 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
     return goal_string
   end
 
+  local function fetch_room_shapes(R)
+    local shapes_string = ""
+
+    -- specilized debug info
+    if R.id then
+      shapes_string = " ROOM_" .. R.id .. " "
+    end
+
+    if R.symmetry and R.symmetry.kind then
+      shapes_string = shapes_string .. "[" .. R.symmetry.kind
+      if R.symmetry.dir then
+        shapes_string = shapes_string .. ":" .. R.symmetry.dir
+      end
+      shapes_string = shapes_string .. "] "
+    else
+      shapes_string = shapes_string .. "[no symm] "
+    end
+
+    shapes_string = shapes_string ..
+      "(SZE " .. R.svolume .. "/" .. math.round(R.size_limit) .. ") "
+
+    shapes_string = shapes_string .. "[GROW "
+    if R.shapes_applied then
+      shapes_string = shapes_string .. R.shapes_applied
+    else
+      shapes_string = shapes_string .. "0"
+    end
+
+    shapes_string = shapes_string .. "/"
+    if R.shapes_tried then
+      shapes_string = shapes_string .. R.shapes_tried
+    else
+      shapes_string = shapes_string .. "0"
+    end
+    shapes_string = shapes_string .. "] "
+
+    if R.transform_changes then
+      shapes_string = shapes_string .. "(TSRL " .. R.transform_changes .. ", "
+    else
+      shapes_string = shapes_string .. "(TSRL 0, "
+    end
+    if R.base_set_increase then
+      shapes_string = shapes_string .. "BASE " .. R.base_set_increase .. ") "
+    else
+      shapes_string = shapes_string .. "BASE 0) "
+    end
+  
+    shapes_string = shapes_string .. "(STAT " ..
+      LEVEL.size_multiplier .. "x, " ..
+      LEVEL.area_multiplier .. "x, " ..
+      LEVEL.size_consistency .. ") "
+
+    if LEVEL.is_absurd then
+      shapes_string = shapes_string .. "(ARUL: "
+      if R.absurd_shapes and not table.empty(R.absurd_shapes) then
+        for idx,shape in ipairs(R.absurd_shapes) do
+          shapes_string = shapes_string .. shape .. " " 
+        end
+      end
+      shapes_string = shapes_string .. ") "
+
+      if LEVEL.absurdity_round_robin then
+        shapes_string = shapes_string .. "[RRBN] "
+      end
+    else
+      shapes_string = shapes_string .. "(NRML SHPS) "
+    end
+
+    if R.has_auxiliary then
+      shapes_string = shapes_string .. "(AUX) "
+    end
+
+    if R.sprout_rule then
+      shapes_string = shapes_string .. "(SPR: " .. R.sprout_rule .. ") "
+    end
+
+    return shapes_string
+  end
+
+  local function make_prefab_info(R)
+
+    local function hn_add_entity(info, x, y, z)
+      hn_marker = {}
+      hn_marker.x = x
+      hn_marker.y = y
+      hn_marker.z = z
+      hn_marker.id = info.editor_num
+
+      raw_add_entity(hn_marker)
+    end
+
+    local info = {}
+    info.editor_num = PARAM.hn_thing_start_offset
+
+    for _,chunk in pairs(R.floor_chunks) do
+      if chunk.prefab_def then
+        info.name = "Point: " .. chunk.prefab_def.name
+        info.editor_num = PARAM.hn_thing_start_offset
+
+        if chunk.area.floor_group and chunk.area.floor_group.wall_group then
+          info.name = info.name .. " (Wall Group: " .. chunk.area.floor_group.wall_group .. " )"
+        end
+
+        if SCRIPTS.hn_id_table[info.name] then
+          info.editor_num = SCRIPTS.hn_id_table[info.name].id
+        elseif not SCRIPTS.hn_id_table[info.name] then
+          SCRIPTS.hn_id_table[info.name] = {}
+          SCRIPTS.hn_id_table[info.name].id = info.editor_num
+          SCRIPTS.hn_id_table[info.name].name = info.name
+          info.editor_num = PARAM.hn_thing_start_offset
+          PARAM.hn_thing_start_offset = PARAM.hn_thing_start_offset + 1
+        end
+
+        local x = chunk.mx
+        local y = chunk.my
+        local z = chunk.area.floor_h
+
+        local offset = ((chunk.sh * SEED_SIZE) / 2) - 64
+
+        gui.printf(table.tostr(chunk).."\n")
+        gui.printf(offset .. "\n")
+
+        hn_add_entity(info, x, y - offset + 24, z + 1)
+        hn_add_entity(info, x, y + offset - 24, z + 1)
+        hn_add_entity(info, x - offset + 24, y, z + 1)
+        hn_add_entity(info, x + offset - 24, y, z + 1)
+      end
+    end
+    --for _,chunk in pairs(R.ceil_chunks ) do visit_chunk(chunk) end
+
+    info.editor_num = PARAM.hn_thing_start_offset
+    for _,chunk in pairs(R.closets) do
+      if chunk.prefab_def then
+        info.name = "Closet: " .. chunk.prefab_def.name
+        info.editor_num = PARAM.hn_thing_start_offset
+
+        if chunk.from_area.floor_group and chunk.from_area.floor_group.wall_group then
+          info.name = info.name .. " (Wall Group: " .. chunk.from_area.floor_group.wall_group .. " )"
+        end
+
+        local x = chunk.mx
+        local y = chunk.my
+        local z = chunk.from_area.floor_h
+        local sh = math.clamp(1.5, chunk.sh, 16)
+        local sw = math.clamp(1.5, chunk.sw, 16)
+
+        if SCRIPTS.hn_id_table[info.name] then
+          info.editor_num = SCRIPTS.hn_id_table[info.name].id
+        elseif not SCRIPTS.hn_id_table[info.name] then
+          SCRIPTS.hn_id_table[info.name] = {}
+          SCRIPTS.hn_id_table[info.name].id = info.editor_num
+          SCRIPTS.hn_id_table[info.name].name = info.name
+          info.editor_num = PARAM.hn_thing_start_offset
+          PARAM.hn_thing_start_offset = PARAM.hn_thing_start_offset + 1
+        end
+
+        if chunk.from_dir == 8 then
+          hn_add_entity(info, x, y + (sh * SEED_SIZE) - 64, z + 1)
+        elseif chunk.from_dir == 2 then
+          hn_add_entity(info, x, y - (sh * SEED_SIZE) + 64, z + 1)
+        elseif chunk.from_dir == 6 then
+          hn_add_entity(info, x + (sw * SEED_SIZE) - 64, y, z + 1)
+        else --4
+          hn_add_entity(info, x - (sw * SEED_SIZE) + 64, y, z + 1)
+        end
+      end
+    end
+
+    info.editor_num = PARAM.hn_thing_start_offset
+    for _,chunk in pairs(R.joiners) do
+      info.name = "Joiner: " .. chunk.prefab_def.name
+      info.editor_num = PARAM.hn_thing_start_offset
+
+      if SCRIPTS.hn_id_table[info.name] then
+        info.editor_num = SCRIPTS.hn_id_table[info.name].id
+      elseif not SCRIPTS.hn_id_table[info.name] then
+        SCRIPTS.hn_id_table[info.name] = {}
+        SCRIPTS.hn_id_table[info.name].id = info.editor_num
+        SCRIPTS.hn_id_table[info.name].name = info.name
+        info.editor_num = PARAM.hn_thing_start_offset
+        PARAM.hn_thing_start_offset = PARAM.hn_thing_start_offset + 1
+      end
+
+      if chunk.from_dir == 2 or chunk.from_dir == 8 then
+        local x = (chunk.x1 + chunk.x2) / 2
+        local y = (chunk.y1 + chunk.y2) / 2
+        local z1 = chunk.floor_h
+        local z2 = z1
+  
+        if chunk.from_dir == 2 then
+          z1 = chunk.from_area.floor_h
+          z2 = chunk.dest_area.floor_h
+        else
+          z1 = chunk.dest_area.floor_h
+          z2 = chunk.from_area.floor_h
+        end
+  
+        hn_add_entity(info, x, y + (chunk.sh * SEED_SIZE) - 64, z1 + 1)
+        hn_add_entity(info, x, y - (chunk.sh * SEED_SIZE) + 64, z2 + 1)
+      end
+
+      if chunk.from_dir == 4 or chunk.from_dir == 6 then
+        local x = (chunk.x1 + chunk.x2) / 2
+        local y = (chunk.y1 + chunk.y2) / 2
+        local z1 = chunk.floor_h
+        local z2 = z1
+
+        if chunk.from_dir == 6 then
+          z1 = chunk.from_area.floor_h
+          z2 = chunk.dest_area.floor_h
+        else
+          z1 = chunk.dest_area.floor_h
+          z2 = chunk.from_area.floor_h
+        end
+
+        hn_add_entity(info, x + (chunk.sw * SEED_SIZE) - 64, y, z1 + 1)
+        hn_add_entity(info, x - (chunk.sw * SEED_SIZE) + 64, y, z2 + 1)
+      end
+    end
+    info.editor_num = PARAM.hn_thing_start_offset
+    --for _,chunk in pairs(R.pieces ) do visit_chunk(chunk) end
+  end
+
   -- generate information for the HN marker
   local function make_room_info(R)
     local info = {}
 
-    info.name = R.zone.hn_name
+    -- pick different info classes
+    if PARAM.hn_info_type == "hn_info_debug" then
+      info.name = fetch_room_shapes(R)
+    else
+      info.name = R.zone.hn_name
 
-    -- attach goal information
-    info.name = "Location: " .. info.name .. fetch_room_goal(R)
-
-    if PARAM.hn_info_type == "hn_info_shapes" then
-      info.name = ""
-
-      -- specilized debug info
-      if R.id then
-        info.name = " ROOM_" .. R.id .. " "
-      end
-
-      if R.symmetry and R.symmetry.kind then
-        info.name = info.name .. "[" .. R.symmetry.kind
-        if R.symmetry.dir then
-          info.name = info.name .. ":" .. R.symmetry.dir
-        end
-        info.name = info.name .. "] "
-      else
-        info.name = info.name .. "[no symm] "
-      end
-
-      info.name = info.name ..
-        "(SZE " .. R.svolume .. "/" .. math.round(R.size_limit) .. ") "
-
-      info.name = info.name .. "[GROW "
-      if R.shapes_applied then
-        info.name = info.name .. R.shapes_applied
-      else
-        info.name = info.name .. "0"
-      end
-
-      info.name = info.name .. "/"
-      if R.shapes_tried then
-        info.name = info.name .. R.shapes_tried
-      else
-        info.name = info.name .. "0"
-      end
-      info.name = info.name .. "] "
-
-      if R.transform_changes then
-        info.name = info.name .. "(TSRL " .. R.transform_changes .. ", "
-      else
-        info.name = info.name .. "(TSRL 0, "
-      end
-      if R.base_set_increase then
-        info.name = info.name .. "BASE " .. R.base_set_increase .. ") "
-      else
-        info.name = info.name .. "BASE 0) "
-      end
-    
-      info.name = info.name .. "(STAT " ..
-        LEVEL.size_multiplier .. "x, " ..
-        LEVEL.area_multiplier .. "x, " ..
-        LEVEL.size_consistency .. ") "
-
-      if LEVEL.is_absurd then
-        info.name = info.name .. "(ARUL: "
-        if R.absurd_shapes and not table.empty(R.absurd_shapes) then
-          for idx,shape in ipairs(R.absurd_shapes) do
-            info.name = info.name .. shape .. " " 
-          end
-        end
-        info.name = info.name .. ") "
-
-        if LEVEL.absurdity_round_robin then
-          info.name = info.name .. "[RRBN] "
-        end
-      else
-        info.name = info.name .. "(NRML SHPS) "
-      end
-
-      if R.has_auxiliary then
-        info.name = info.name .. "(AUX) "
-      end
-
-      if R.sprout_rule then
-        info.name = info.name .. "(SPR: " .. R.sprout_rule .. ") "
-      end
+      -- collect information for room quests and goals
+      info.name = "Location: " .. info.name .. fetch_room_goal(R)
     end
 
     info.editor_num = PARAM.hn_thing_start_offset
@@ -1779,11 +1932,7 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
     PARAM.hn_thing_start_offset = PARAM.hn_thing_start_offset + 1
 
     local prefered_S = find_closest_seed_to_center(R)
-    if not prefered_S then
-      gui.printf("WTF man where do I put the HN marker here??!?!! " ..
-      "WHERE MAN?!?! WHGEREREE???!!!! OH GOD HELP ME I CAN'T COMPUTER\n")
-      return
-    end
+    if not prefered_S then return end
 
     table.insert(HN_INFO_TABLE, info)
 
@@ -1805,10 +1954,21 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
   PARAM.hn_secret_count = 1
   for _,R in pairs(LEVEL.rooms) do
     make_room_info(R)
+    if PARAM.hn_info_type == "hn_info_debug" then
+      make_prefab_info(R)
+    end
   end
 end
 
 function MODDED_GAME_EXTRAS.generate_hn_decorate()
+  for _,E in pairs(SCRIPTS.hn_id_table) do
+    local s_tab = {
+      name = E.name,
+      radius = 256,
+      editor_num = E.id
+    }
+    table.add_unique(HN_INFO_TABLE, s_tab)
+  end
 
   if PARAM.bool_hn_markers == 0 then
     return
@@ -2325,7 +2485,7 @@ OB_MODULES["modded_game_extras"] =
       choices = MODDED_GAME_EXTRAS.HN_INFO_TYPE_CHOICES,
       tooltip = _("Pick which information type to place into Hellscape Navigator markers.\n\n" ..
                   "Quest Info - (DEFAULT) Places traversal progress per room and key quest info into the markers.\n" ..
-                  "Shapes Debug - Prints verbose information about shape grammar growth status per room."),
+                  "Debug Info - Prints verbose information about shape grammar growth status per room and prefabs."),
       default = "hn_info_quest",
       priority = 4.9,
       gap = 1,
