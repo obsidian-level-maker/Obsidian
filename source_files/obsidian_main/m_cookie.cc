@@ -165,7 +165,7 @@ bool Cookie_Load(std::filesystem::path filename) {
 
 #ifdef __APPLE__
         setlocale(LC_NUMERIC, "C");
-#elseif __unix__
+#elif __unix__
 #ifndef __linux__
         setlocale(LC_NUMERIC, "C");
 #else
@@ -201,7 +201,7 @@ bool Cookie_Load(std::filesystem::path filename) {
     }
 #ifdef __APPLE__
         setlocale(LC_NUMERIC, numeric_locale.c_str());
-#elseif __unix__
+#elif __unix__
 #ifndef __linux__
         setlocale(LC_NUMERIC, numeric_locale.c_str());
 #else
@@ -239,7 +239,7 @@ bool Cookie_Save(std::filesystem::path filename) {
     context = cookie_context_e::Save;
 #ifdef __APPLE__
         setlocale(LC_NUMERIC, "C");
-#elseif __unix__
+#elif __unix__
 #ifndef __linux__
         setlocale(LC_NUMERIC, "C");
 #else
@@ -283,7 +283,7 @@ bool Cookie_Save(std::filesystem::path filename) {
     cookie_fp.close();
 #ifdef __APPLE__
         setlocale(LC_NUMERIC, numeric_locale.c_str());
-#elseif __unix__
+#elif __unix__
 #ifndef __linux__
         setlocale(LC_NUMERIC, numeric_locale.c_str());
 #else

@@ -334,7 +334,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     pos = 0;
 #ifdef __APPLE__
         setlocale(LC_NUMERIC, "C");
-#elseif __unix__
+#elif __unix__
 #ifndef __linux__
         setlocale(LC_NUMERIC, "C");
 #else
@@ -375,7 +375,7 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     }
 #ifdef __APPLE__
         setlocale(LC_NUMERIC, numeric_locale.c_str());
-#elseif __unix__
+#elif __unix__
 #ifndef __linux__
         setlocale(LC_NUMERIC, numeric_locale.c_str());
 #else

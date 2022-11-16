@@ -1477,7 +1477,7 @@ hardrestart:;
 #ifdef __APPLE__
     numeric_locale =
         setlocale(LC_NUMERIC, NULL);
-#elseif __unix__
+#elif __unix__
 #ifndef __linux__
     numeric_locale =
         setlocale(LC_NUMERIC, NULL);

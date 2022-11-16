@@ -1076,7 +1076,7 @@ bool Doom::game_interface_c::Start(const char *preset) {
         UDMF_mode = true;
 #ifdef __APPLE__
         setlocale(LC_NUMERIC, "C");
-#elseif __unix__
+#elif __unix__
 #ifndef __linux__
         setlocale(LC_NUMERIC, "C");
 #else
@@ -1103,7 +1103,7 @@ bool Doom::game_interface_c::Finish(bool build_ok) {
     if (UDMF_mode) {
 #ifdef __APPLE__
         setlocale(LC_NUMERIC, numeric_locale.c_str());
-#elseif __unix__
+#elif __unix__
 #ifndef __linux__
         setlocale(LC_NUMERIC, numeric_locale.c_str());
 #else
