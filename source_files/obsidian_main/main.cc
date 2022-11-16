@@ -570,8 +570,7 @@ bool Main::BackupFile(const std::filesystem::path &filename) {
     return true;
 }
 
-namespace Main {
-static int DetermineScaling() {
+int Main::DetermineScaling() {
     /* computation of the Kromulent factor */
 
     // command-line overrides
@@ -609,7 +608,6 @@ static int DetermineScaling() {
 
     return 0;
 }
-}  // namespace Main
 
 #if !defined(CONSOLE_ONLY) && !defined(__APPLE__)
 bool Main::LoadInternalFont(const char *fontpath, const int fontnum,
@@ -794,9 +792,9 @@ void Main::PopulateFontMap() {
     num_fonts = static_cast<int>(font_menu_items.size());
 }
 
-namespace Main {
-void SetupFltk() {
-    PopulateFontMap();
+void Main::SetupFLTK() {
+
+    Main::PopulateFontMap();
 
     Fl::visual(FL_DOUBLE | FL_RGB);
     if (color_scheme ==
@@ -965,7 +963,7 @@ void SetupFltk() {
     fmt::print(stderr, "Screen dimensions = {}x{}\n", screen_w, screen_h);
 #endif
 
-    KF = DetermineScaling();
+    KF = Main::DetermineScaling();
     // load icons for file chooser
 #ifndef WIN32
     Fl_File_Icon::load_system_icons();
@@ -978,7 +976,6 @@ void SetupFltk() {
     fl_cancel = _("Cancel");
     fl_close = _("Close");
 }
-}  // namespace Main
 
 #ifdef WIN32
 void Main::Blinker() { FlashWindowEx(blinker); }
@@ -1465,7 +1462,7 @@ hardrestart:;
         OBSIDIAN_TITLE = _("OBSIDIAN Level Maker");
         OBSIDIAN_CODE_NAME = _("Unstable");
 #ifndef CONSOLE_ONLY
-        Main::SetupFltk();
+        Main::SetupFLTK();
 #endif
     }
 

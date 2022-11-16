@@ -289,6 +289,8 @@ void Blinker();
 bool LoadInternalFont(const char *fontpath, int fontnum, const char *fontname);
 #endif
 #ifndef CONSOLE_ONLY
+void SetupFLTK();
+int  DetermineScaling();
 void PopulateFontMap();
 void Ticker();
 #endif
