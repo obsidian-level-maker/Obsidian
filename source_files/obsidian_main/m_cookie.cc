@@ -163,14 +163,16 @@ bool Cookie_Load(std::filesystem::path filename) {
 
     active_module.clear();
 
-#ifdef __unix__
+#ifdef __APPLE__
+        setlocale(LC_NUMERIC, "C");
+#elseif __unix__
 #ifndef __linux__
-    setlocale(LC_NUMERIC, "C");
+        setlocale(LC_NUMERIC, "C");
 #else
-    std::setlocale(LC_NUMERIC, "C");
+        std::setlocale(LC_NUMERIC, "C");
 #endif
 #else
-    std::setlocale(LC_NUMERIC, "C");
+        std::setlocale(LC_NUMERIC, "C");
 #endif
     std::ifstream cookie_fp(filename, std::ios::in);
 
@@ -197,14 +199,16 @@ bool Cookie_Load(std::filesystem::path filename) {
             LogPrintf("DONE.\n\n");
         }
     }
-#ifdef __unix__
+#ifdef __APPLE__
+        setlocale(LC_NUMERIC, numeric_locale.c_str());
+#elseif __unix__
 #ifndef __linux__
-    setlocale(LC_NUMERIC, numeric_locale.c_str());
+        setlocale(LC_NUMERIC, numeric_locale.c_str());
 #else
-    std::setlocale(LC_NUMERIC, numeric_locale.c_str());
+        std::setlocale(LC_NUMERIC, numeric_locale.c_str());
 #endif
 #else
-    std::setlocale(LC_NUMERIC, numeric_locale.c_str());
+        std::setlocale(LC_NUMERIC, numeric_locale.c_str());
 #endif
     return true;
 }
@@ -233,14 +237,16 @@ bool Cookie_LoadString(std::string str, bool _keep_seed) {
 
 bool Cookie_Save(std::filesystem::path filename) {
     context = cookie_context_e::Save;
-#ifdef __unix__
+#ifdef __APPLE__
+        setlocale(LC_NUMERIC, "C");
+#elseif __unix__
 #ifndef __linux__
-    setlocale(LC_NUMERIC, "C");
+        setlocale(LC_NUMERIC, "C");
 #else
-    std::setlocale(LC_NUMERIC, "C");
+        std::setlocale(LC_NUMERIC, "C");
 #endif
 #else
-    std::setlocale(LC_NUMERIC, "C");
+        std::setlocale(LC_NUMERIC, "C");
 #endif
     std::ofstream cookie_fp(filename, std::ios::out);
 
@@ -275,14 +281,16 @@ bool Cookie_Save(std::filesystem::path filename) {
     }
 
     cookie_fp.close();
-#ifdef __unix__
+#ifdef __APPLE__
+        setlocale(LC_NUMERIC, numeric_locale.c_str());
+#elseif __unix__
 #ifndef __linux__
-    setlocale(LC_NUMERIC, numeric_locale.c_str());
+        setlocale(LC_NUMERIC, numeric_locale.c_str());
 #else
-    std::setlocale(LC_NUMERIC, numeric_locale.c_str());
+        std::setlocale(LC_NUMERIC, numeric_locale.c_str());
 #endif
 #else
-    std::setlocale(LC_NUMERIC, numeric_locale.c_str());
+        std::setlocale(LC_NUMERIC, numeric_locale.c_str());
 #endif
     return true;
 }

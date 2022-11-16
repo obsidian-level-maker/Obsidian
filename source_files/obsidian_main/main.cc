@@ -1473,17 +1473,21 @@ hardrestart:;
     if (argv::Find('d', "debug") >= 0) {
         debug_messages = true;
     }
-#ifdef __unix__
+// Grab current numeric locale
+#ifdef __APPLE__
+    numeric_locale =
+        setlocale(LC_NUMERIC, NULL);
+#elseif __unix__
 #ifndef __linux__
     numeric_locale =
-        setlocale(LC_NUMERIC, NULL);  // Grab current numeric locale
+        setlocale(LC_NUMERIC, NULL);
 #else
     numeric_locale =
-        std::setlocale(LC_NUMERIC, NULL);  // Grab current numeric locale
+        std::setlocale(LC_NUMERIC, NULL);
 #endif
 #else
     numeric_locale =
-        std::setlocale(LC_NUMERIC, NULL);  // Grab current numeric locale
+        std::setlocale(LC_NUMERIC, NULL); 
 #endif
 
     LogEnableDebug(debug_messages);
