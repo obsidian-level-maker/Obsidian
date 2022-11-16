@@ -876,6 +876,7 @@ class UI_ThemeWin : public Fl_Window {
 
         font_menu_items.clear();
 
+#ifndef __APPLE__
         if (use_system_fonts) {
             // If we get enough of these, probably store a vector of font paths
             // on program start and iterate through it instead
@@ -900,6 +901,7 @@ class UI_ThemeWin : public Fl_Window {
             v_unload_private_font("./theme/fonts/DramaSans/DramaSans.ttf");
             v_unload_private_font("./theme/fonts/SamIAm/MiniSmallCaps.ttf");
         }
+#endif
 
         font_theme = 0;
 
