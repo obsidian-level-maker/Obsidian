@@ -786,8 +786,8 @@ void Main::PopulateFontMap() {
                 current_free_font += 2;
             }
         }
-    }
 #endif
+    }
     // lossy conversion, size_t?
     num_fonts = static_cast<int>(font_menu_items.size());
 }
