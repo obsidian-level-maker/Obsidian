@@ -2823,7 +2823,10 @@ function Fab_find_matches(LEVEL, reqs, match_state)
     local kind = assert(def.kind)
 
     if def.jump_crouch and def.jump_crouch == true then
-      if PARAM.bool_jump_crouch and PARAM.bool_jump_crouch == 0 then
+      if not PARAM.bool_jump_crouch then 
+        return 0 
+      end
+      if PARAM.bool_jump_crouch == 0 then
         return 0
       end
     end
