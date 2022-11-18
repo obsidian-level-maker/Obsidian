@@ -133,6 +133,9 @@ VoidRunner
 4ffy
   - Vanilla-compatible Heretic sky generator fix
 
+DasCake
+  - ZDoom boss generator script improvement
+
 # OBLIGE
 
 ## DEVELOPER:
