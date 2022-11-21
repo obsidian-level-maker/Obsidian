@@ -695,9 +695,17 @@ class bossController : thinker
         {
             ending++;
         }
-        if(ending>50)
+        if(ending==50||ending==85)
         {
-            Thing_Destroy(0);
+            ThinkerIterator MobFinder = ThinkerIterator.Create("Actor");
+            Actor mo;
+            while (mo = Actor(MobFinder.Next()))
+            {
+                if(mo.bISMONSTER && !mo.bFRIENDLY)
+                {
+                    mo.A_Die();
+                }
+            }
         }
         BEXIT
         if(boss)

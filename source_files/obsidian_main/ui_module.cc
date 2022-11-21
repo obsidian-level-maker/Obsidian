@@ -332,14 +332,16 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
     // Populate the preset_choices map
     oldpos = 0;
     pos = 0;
-#ifdef __unix__
+#ifdef __APPLE__
+        setlocale(LC_NUMERIC, "C");
+#elif __unix__
 #ifndef __linux__
-    setlocale(LC_NUMERIC, "C");
+        setlocale(LC_NUMERIC, "C");
 #else
-    std::setlocale(LC_NUMERIC, "C");
+        std::setlocale(LC_NUMERIC, "C");
 #endif
 #else
-    std::setlocale(LC_NUMERIC, "C");
+        std::setlocale(LC_NUMERIC, "C");
 #endif
 
     while (pos != std::string::npos) {
@@ -371,14 +373,16 @@ void UI_Module::AddSliderOption(std::string opt, std::string label,
             oldpos = pos + 1;
         }
     }
-#ifdef __unix__
+#ifdef __APPLE__
+        setlocale(LC_NUMERIC, numeric_locale.c_str());
+#elif __unix__
 #ifndef __linux__
-    setlocale(LC_NUMERIC, numeric_locale.c_str());
+        setlocale(LC_NUMERIC, numeric_locale.c_str());
 #else
-    std::setlocale(LC_NUMERIC, numeric_locale.c_str());
+        std::setlocale(LC_NUMERIC, numeric_locale.c_str());
 #endif
 #else
-    std::setlocale(LC_NUMERIC, numeric_locale.c_str());
+        std::setlocale(LC_NUMERIC, numeric_locale.c_str());
 #endif
 
     rsl->cb_data = new opt_change_callback_data_t;

@@ -1059,7 +1059,9 @@ config *get_config(std::filesystem::path filename) {
     answer->sthemecount = 0;
     answer->secret_themes = SLUMP_FALSE;
     answer->lock_themes = SLUMP_FALSE;
-    answer->major_nukage = StringToInt(ob_get_param("bool_major_nukage_slump")) ? SLUMP_TRUE : SLUMP_FALSE;
+    std::string nukage = ob_get_param("bool_major_nukage_slump");
+    if (nukage.empty()) nukage = "0";
+    answer->major_nukage = StringToInt(nukage) ? SLUMP_TRUE : SLUMP_FALSE;
     if (ob_mod_enabled("slump_all_nazis")) {
       answer->required_monster_bits = SPECIAL;
       answer->forbidden_monster_bits = 0;
@@ -1124,14 +1126,18 @@ config *get_config(std::filesystem::path filename) {
     answer->force_biggest = SLUMP_FALSE;
     answer->do_music = 0;
     answer->secret_monsters = SLUMP_FALSE;
-    answer->do_dm = StringToInt(ob_get_param("bool_dm_starts_slump"));
+    std::string dm_starts = ob_get_param("bool_dm_starts_slump");
+    if (dm_starts.empty()) dm_starts = "0";
+    answer->do_dm = StringToInt(dm_starts);
     answer->do_slinfo = SLUMP_TRUE;
     answer->produce_null_lmps = SLUMP_FALSE;
     answer->do_seclevels = SLUMP_TRUE;
     answer->force_secret = SLUMP_FALSE;
     answer->minlight = 115;
     /* Is this the right place for all these? */
-    answer->immediate_monsters = StringToInt(ob_get_param("bool_immediate_monsters_slump")) ? rollpercent(20) : SLUMP_FALSE;
+    std::string quiet_start = ob_get_param("bool_quiet_start_slump");
+    if (quiet_start.empty()) quiet_start = "1";
+    answer->immediate_monsters = StringToInt(quiet_start) ? SLUMP_FALSE : rollpercent(20);
     answer->p_hole_ends_level = 0;
     if (rollpercent(8)) answer->p_hole_ends_level = 100;
     if (rollpercent(3)) answer->p_hole_ends_level = roll(100);
@@ -1189,7 +1195,9 @@ config *get_config(std::filesystem::path filename) {
     answer->clights = rollpercent(50);
     answer->machoh = (float)1;
     answer->machou = (float)1;
-    answer->p_bigify = StringToInt(ob_get_param("float_bigify_slump"));
+    std::string bigify = ob_get_param("float_bigify_slump");
+    if (bigify.empty()) bigify = "50";
+    answer->p_bigify = StringToInt(bigify);
 
     /* Initial defaults; at each level, some chance of turning on */
     answer->big_weapons = rollpercent(50);
@@ -1235,7 +1243,9 @@ config *get_config(std::filesystem::path filename) {
 
     if (answer->force_secret) secretize_config(answer);
 
-    answer->forkiness = StringToInt(ob_get_param("float_forkiness_slump"));
+    std::string forky = ob_get_param("float_forkiness_slump");
+    if (forky.empty()) forky = "75";
+    answer->forkiness = StringToInt(forky);
 
     /* And finally compact out any unneeded/dangerous stuff */
     compact_config(answer);

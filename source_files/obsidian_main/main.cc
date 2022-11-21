@@ -570,8 +570,7 @@ bool Main::BackupFile(const std::filesystem::path &filename) {
     return true;
 }
 
-namespace Main {
-static int DetermineScaling() {
+int Main::DetermineScaling() {
     /* computation of the Kromulent factor */
 
     // command-line overrides
@@ -609,9 +608,8 @@ static int DetermineScaling() {
 
     return 0;
 }
-}  // namespace Main
 
-#ifndef CONSOLE_ONLY
+#if !defined(CONSOLE_ONLY) && !defined(__APPLE__)
 bool Main::LoadInternalFont(const char *fontpath, const int fontnum,
                             const char *fontname) {
     /* set the extra font */
@@ -619,10 +617,11 @@ bool Main::LoadInternalFont(const char *fontpath, const int fontnum,
         Fl::set_font(fontnum, fontname);
         return true;
     }
-
     return false;
 }
+#endif
 
+#ifndef CONSOLE_ONLY
 void Main::PopulateFontMap() {
     if (font_menu_items.size() == 0) {
 
@@ -645,9 +644,7 @@ void Main::PopulateFontMap() {
                 font_menu_items.push_back(temp_map);
             }
         }
-
 #else
-
         if (use_system_fonts) {
             font_menu_items.push_back(
                 std::map<std::string, int>{{"Sans <Default>", 0}});
@@ -789,15 +786,15 @@ void Main::PopulateFontMap() {
                 current_free_font += 2;
             }
         }
-    }
 #endif
+    }
     // lossy conversion, size_t?
     num_fonts = static_cast<int>(font_menu_items.size());
 }
 
-namespace Main {
-void SetupFltk() {
-    PopulateFontMap();
+void Main::SetupFLTK() {
+
+    Main::PopulateFontMap();
 
     Fl::visual(FL_DOUBLE | FL_RGB);
     if (color_scheme ==
@@ -966,7 +963,7 @@ void SetupFltk() {
     fmt::print(stderr, "Screen dimensions = {}x{}\n", screen_w, screen_h);
 #endif
 
-    KF = DetermineScaling();
+    KF = Main::DetermineScaling();
     // load icons for file chooser
 #ifndef WIN32
     Fl_File_Icon::load_system_icons();
@@ -979,7 +976,6 @@ void SetupFltk() {
     fl_cancel = _("Cancel");
     fl_close = _("Close");
 }
-}  // namespace Main
 
 #ifdef WIN32
 void Main::Blinker() { FlashWindowEx(blinker); }
@@ -1466,24 +1462,28 @@ hardrestart:;
         OBSIDIAN_TITLE = _("OBSIDIAN Level Maker");
         OBSIDIAN_CODE_NAME = _("Unstable");
 #ifndef CONSOLE_ONLY
-        Main::SetupFltk();
+        Main::SetupFLTK();
 #endif
     }
 
     if (argv::Find('d', "debug") >= 0) {
         debug_messages = true;
     }
-#ifdef __unix__
+// Grab current numeric locale
+#ifdef __APPLE__
+    numeric_locale =
+        setlocale(LC_NUMERIC, NULL);
+#elif __unix__
 #ifndef __linux__
     numeric_locale =
-        setlocale(LC_NUMERIC, NULL);  // Grab current numeric locale
+        setlocale(LC_NUMERIC, NULL);
 #else
     numeric_locale =
-        std::setlocale(LC_NUMERIC, NULL);  // Grab current numeric locale
+        std::setlocale(LC_NUMERIC, NULL);
 #endif
 #else
     numeric_locale =
-        std::setlocale(LC_NUMERIC, NULL);  // Grab current numeric locale
+        std::setlocale(LC_NUMERIC, NULL); 
 #endif
 
     LogEnableDebug(debug_messages);

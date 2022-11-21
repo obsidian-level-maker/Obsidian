@@ -1691,7 +1691,8 @@ function ob_get_param(parameter)
     if OB_CONFIG.batch == "yes" then
       print("MISSING PARAMETER: " .. parameter)
     else
-      error("ERROR! " .. parameter .. " not found in config!")
+      print("WARNING! " .. parameter .. " not found in config!")
+      return ""
     end
   end
   
@@ -2003,7 +2004,7 @@ end
 function ob_invoke_hook(name, ...)
   -- two passes, for example: setup and setup2,
   for pass = 1,2 do
-    if (OB_CONFIG.engine == "idtech_1" and OB_CONFIG.port == "limit_enforcing") or string.match(name, "^pre_setup") then goto skip end
+    if string.match(name, "^pre_setup") then goto skip end
     for _,mod in pairs(GAME.modules) do
       local func = mod.hooks and mod.hooks[name]
 
@@ -2082,7 +2083,7 @@ function ob_build_setup()
   ob_add_current_port()
 
   -- merge tables from each module
-  -- [ but skip GAME and ENGINE, which are already merged ]
+  -- [ but skip GAME and PORT, which are already merged ]
 
   for index,mod in pairs(GAME.modules) do
     if index > 2 and mod.tables then
@@ -2557,17 +2558,27 @@ function ob_build_cool_shit()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
 
-  if OB_CONFIG.engine == "idtech_1" and OB_CONFIG.port == "limit_enforcing" then
-    ob_invoke_hook("setup")
-    gui.minimap_disable(gui.gettext("SLUMP"))
-    return "ok" 
-  end -- Skip the rest if using Vanilla Doom/SLUMP
-
   gui.printf("\n\n")
   gui.printf("~~~~~~~ Making Levels ~~~~~~~\n\n")
   gui.printf("-- CONFIG FILE : OBSIDIAN Beta\n\n")
     
   ob_read_all_config(false, "log_only")
+
+  if OB_CONFIG.engine == "idtech_1" and OB_CONFIG.port == "limit_enforcing" then
+    ob_clean_up()
+    ob_transfer_ui_options()
+    ob_sort_modules()
+    ob_add_current_game()
+    ob_add_current_port()
+    for index,mod in pairs(GAME.modules) do
+      if index > 2 and mod.tables then
+        ob_merge_table_list(mod.tables)
+      end
+    end
+    ob_invoke_hook("setup")
+    gui.minimap_disable(gui.gettext("SLUMP"))
+    return "ok" 
+  end -- Skip the rest if using Vanilla Doom/SLUMP
 
   gui.ticker()
   

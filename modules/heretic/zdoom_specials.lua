@@ -31,6 +31,7 @@ ZDOOM_SPECIALS_HERETIC.FOG_GEN_CHOICES =
 {
   "per_sky_gen",    _("Per Sky Generator"),
   "random", _("Random"),
+  "natural", _("Natural"),
   "no",     _("No"),
 }
 
@@ -1058,6 +1059,16 @@ function ZDOOM_SPECIALS_HERETIC.do_special_stuff()
       end
     elseif PARAM.fog_generator == "random" then
       info.fog_color = pick_random_fog_color()
+    elseif PARAM.fog_generator == "natural" then
+      local shades = 
+      {
+        "ff ff ff",
+        "ea ea ea",
+        "da da da",
+        "bb bb bb",
+        "a1 a1 a1",
+      }
+      info.fog_color = rand.pick(shades)
     else
       info.fog_color = ""
     end

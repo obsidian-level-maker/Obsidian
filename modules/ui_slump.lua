@@ -38,7 +38,7 @@ OB_MODULES["ui_slump_arch"] =
 
   name = "ui_slump_arch",
 
-  label = _("SLUMP Architecture"),
+  label = _("Architecture"),
 
   side = "left",
   priority = 104,
@@ -55,15 +55,37 @@ OB_MODULES["ui_slump_arch"] =
       name="float_minrooms_slump",
       label=_("Level Size"),
       valuator = "slider",
-      units = " Rooms",
-      min = 1,
-      max = 37,
+      min = 10,
+      max = 75,
       increment = 1,
-      default = 15,
-      nan = _("Mix It Up"),
-      tooltip = _("Minimum number of rooms per level."),
-      randomize_group="architecture",
-    },
+      default = 22,
+      nan = _("Mix It Up,Episodic,Progressive"),
+      presets = _("10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"),
+      tooltip = _("Determines size of map in rooms."),
+      priority = 100,
+      randomize_group="architecture"
+    }
+  }
+}
+
+OB_MODULES["misc_slump"] =
+{
+  name = "misc_slump",
+
+  label = _("Advanced Architecture"),
+
+  port = "limit_enforcing",
+
+  side = "left",
+  priority = 101,
+
+  hooks =
+  {
+    setup = UI_SLUMP.setup,
+  },
+
+  options =
+  {
 
     {
       name = "float_bigify_slump",
@@ -86,7 +108,7 @@ OB_MODULES["ui_slump_arch"] =
       min = 0,
       max = 100,
       increment = 1,
-      default = 50,
+      default = 75,
       tooltip = _("% chance that a room will attempt to fork as the level grows."),
       longtip = _("0% should look like a bunch of murder hallways. Forking is not guaranteed to succeed, especially if the Room Bigification Chance is increased."),
       randomize_group="architecture",
@@ -109,24 +131,17 @@ OB_MODULES["ui_slump_arch"] =
       longtip = _("Will fill most rooms with damaging liquids."),
       randomize_group="architecture",
     },
-    
-    {
-      name = "bool_immediate_monsters_slump",
-      label = _("Quiet Start"),
-      valuator = "button",
-      default = 1,
-      tooltip = _("Prevents monsters from spawning in the starting room."),
-      longtip = _("Monsters in other rooms may still have a line of sight to you, so be careful!"),
-    }
-  }
+  
+  },
 }
+
 
 OB_MODULES["ui_slump_mons"] =
 {
 
   name = "ui_slump_mons",
 
-  label = _("SLUMP Monsters"),
+  label = _("Combat"),
 
   side = "right",
   priority = 103,
@@ -147,12 +162,23 @@ OB_MODULES["ui_slump_mons"] =
       tooltip = _("Control what types of monsters are available"),
       randomize_group="monsters",
     },
+
+    {
+      name = "bool_quiet_start_slump",
+      label = _("Quiet Start"),
+      valuator = "button",
+      default = 1,
+      tooltip = _("Prevents monsters from spawning in the starting room."),
+      longtip = _("Monsters in other rooms may still have a line of sight to you, so be careful!"),
+    }
+
   }
 }
 
+
+
 OB_MODULES["slump_all_nazis"] =
 {
-
   name = "slump_all_nazis",
 
   label = _("Oops! All Nazis!"),
@@ -162,9 +188,4 @@ OB_MODULES["slump_all_nazis"] =
   port = "limit_enforcing",
   game = "doom2",
   tooltip = _("Populates the level with only SS troopers. This may expand to include pinkies/the Cyberdemon."),
-
-  hooks = 
-  {
-    setup = UI_SLUMP.setup,
-  },
 }
