@@ -1030,6 +1030,14 @@ msgstr "Предупреждать"
 msgid "Abort"
 msgstr "Прерывать"
 
+#: modules/debugger.lua:31
+msgid "Filename"
+msgstr "По названию файла"
+
+#: modules/debugger.lua:32
+msgid "Random Word List"
+msgstr "Случайный набор слов"
+
 #: modules/debugger.lua:30
 msgid "Test Level Names"
 msgstr "Тест названий уровней"
@@ -1073,6 +1081,26 @@ msgstr "Разное"
 #: modules/debugger.lua:94
 msgid "Provides options for printing out more verbose log information. Unusual or experimental features can also be found here."
 msgstr "Опции, связанные с отладкой, дополнительным журналированием и тому подобными вещами. Также здесь находятся некоторые экспериментальные и расширенные настройки."
+
+#: modules/debugger.lua:107
+msgid "Title Screen Source"
+msgstr "Название на начальном экране"
+
+#: modules/debugger.lua:110
+msgid "Choose how the WAD title is determined"
+msgstr "[В разработке] Откуда будет браться название сборника уровней, отображаемое на начальном экране."
+
+#: modules/debugger.lua:111
+msgid "Default: Will use Obsidian's regular naming tables.\n\nFilename: Will use the filename provided for the WAD (minus file extension).\n\nRandom Word List: Will randomly pick from the internal random word list.\n\nNOTE: Only EN locale characters are supported at this time, other languages may result in a blank title!"
+msgstr "Откуда будет браться название сборника уровней, отображаемое на начальном экране.\n\nПо умолчанию: использование стандартного набора наименований Obsidian.\n\nПо названию файла: брать название файла (за исключением расширения).\n\nСлучайный набор слов: порождать откровенную абракадабру из случайных слов.\n\nВНИМАНИЕ: в данный момент поддерживается только локаль EN! При использовании других языков некоторые символы могут отсутствовать (вплоть до пустой строки)."
+
+#: modules/debugger.lua:117
+msgid "Disable Sub-Titles"
+msgstr "Убрать подзаголовок"
+
+#: modules/debugger.lua:120
+msgid "Disable sub-titles on the Title Screen."
+msgstr "Отключает генерацию подзаголовка (по умолчанию пишется малым размером шрифта под самим названием)."
 
 #: modules/debugger.lua:99
 msgid "Alternate Item Quantities"
@@ -2576,7 +2604,7 @@ msgstr "Освещение мест под небом"
 
 #: modules/heretic/sky_generator.lua:813
 msgid "Overrides (and ignores) Dark Outdoors setting in Miscellaneous tab. If the sky generator creates night skies for an episode, episode's map outdoors is also dark but bright if day-ish."
-msgstr "Переопределяет и, как следствие, игнорирует настройку \"Тёмные пространства под небом\". Если генератор неба создал ночные виды, то всё пространство под ним будет затемнённым, и наоборот — для дневного времени суток локации под небом будут ярко освещёнными."
+msgstr "Переопределяет и, как следствие, игнорирует настройку \"Тёмные пространства под небом\". Если генератор неба создал ночное, то все локации под ним будет затемнённым, и наоборот — для дневного времени суток локации под небом будут ярко освещены."
 
 #: modules/heretic/zdoom_specials.lua:26
 msgid "Yes"
@@ -3866,13 +3894,25 @@ msgstr "Метки Hellscape Navigator"
 msgid "Adds support for m8f's Hellscape Navigator by generating name markers in the map per room."
 msgstr "Встроенная поддержка модификации \"Hellscape Navigator\" за авторством m8f с помощью генерации названий комнат."
 
+msgid "HN Info Type"
+msgstr "Тип меток Hellscape Navigator"
+
+msgid "Pick which information type to place into Hellscape Navigator markers.\n\nQuest Info - (DEFAULT) Places traversal progress per room and key quest info into the markers.\nDebug Info - Prints verbose information about shape grammar growth status per room and prefabs. Reveals secret prefabs - which is obviously cheating."
+msgstr "Какой тип информации выводить для модификации \"Hellscape Navigator\".\n\nПо умолчанию: стандартные метки, передают название каждой комнаты.\n\nОтладка: подробная информация о том, каким образом Obsidian строил уровень. При обычном прохождении имеет полное право считаться читерством, так как раскрывает в том числе и местонахождение секретов."
+
+msgid "Quest Info"
+msgstr "По умолчанию"
+
+msgid "Debug Info"
+msgstr "Отладка"
+
 #: modules/modded_game_extras.lua:2242
 msgid "Custom Actor Names"
 msgstr "Имя для каждого врага"
 
 #: modules/modded_game_extras.lua:2245
 msgid "Renames tags of monsters with generated names. Humans recieve human names, demons recieve exotic names.\nBest used with TargetSpy or other healthbar mods to see the name.\nUses class inheritance and string comparisons to determine monster species (human or demon). Use compatibility options only when necessary, preferably use Universal option instead."
-msgstr "Переопределение тэгов монстров со сгенерированными именами. Люди получают человеческие имена, демоны — экзотические.\n\nЛучше всего использовать с TargetSpy или иной модификацией, отображающей полоску здоровья оппонента. Использует как проверку наследования от определённых классов, так и построковое сравнение для определения того, кто является человеком, кто — демоном."
+msgstr "Переопределение тэгов монстров сгенерированными именами. Люди получают человеческие имена, демоны — экзотические.\n\nЛучше всего использовать с TargetSpy или иной модификацией, отображающей полоску здоровья оппонента. Использует как проверку наследования от определённых классов, так и построковое сравнение для определения того, кто является человеком, кто — демоном."
 
 #: modules/modded_game_extras.lua:2252
 msgid "QC:DE Lootboxes"
@@ -6452,6 +6492,10 @@ msgstr "Вариативность монстров"
 msgid "Control what types of monsters are available"
 msgstr "Выбирает, какие виды монстров смогут быть сгенерированными."
 
+#: modules/wolf/miscellaneous.lua:65
+msgid "Alters the general size and ground coverage of rooms.\n\nMix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest."
+msgstr "Изменяет средний размер комнат в целом.\n\nСлучайно: все диапазоны множителей используются случайным образом, притом вероятность выбора крайних значений резко снижается (по распределению Гаусса-Лапласа)."
+
 #: modules/zdoom_armaetus_epic_textures.lua:35
 msgid "ZScript"
 msgstr "На ZScript"
@@ -6474,7 +6518,7 @@ msgstr ""
 
 #: modules/zdoom_armaetus_epic_textures.lua:44
 msgid "A Bit Mixed"
-msgstr "Немного смешать"
+msgstr "Смешанно"
 
 #: modules/zdoom_armaetus_epic_textures.lua:45
 msgid "Snow-ish"
@@ -6588,9 +6632,13 @@ msgstr ""
 msgid "ZDoom: Ambient Sounds"
 msgstr "ZDoom: звуки окружения"
 
+#: modules/zdoom_frozsoul_sound.lua:258
+msgid "DoomEdNum Offset"
+msgstr "Начальный DoomEdNum"
+
 #: modules/zdoom_frozsoul_sound.lua:260
 msgid "Selects the starting thing ID for generating ambient sound actors. Use only if you are playing a mod using conflicting Editor Numbers. If you don't know what this is this setting is best left as-is."
-msgstr "Выбирает стартовый Thing ID для создания акторов звуков окружения. Изменяйте этот параметр только в случае, если Вы используете модификацию, DoomEdNums в которой конфликтуют со стандартным значением."
+msgstr "Выбирает начальный DoomEdNum для создания акторов звуков окружения. Изменяйте этот параметр только в случае, если Вы используете модификацию, в которой существуют DoomEdNum, конфликтующие со стандартным значением."
 
 #: modules/zdoom_frozsoul_sound.lua:265
 msgid "Adds ambient sound things to fabs, room themes, and environments (WIP). Needs an accompanying sound pack containing corresponding sound files to be included with your Doom launcher."
@@ -6885,8 +6933,8 @@ msgid "Dynamic Lights"
 msgstr ""
 
 #: modules/zdoom_specials.lua:1223
-msgid "Generates dynamic point lights on ceiling light prefabs."
-msgstr ""
+msgid "Generates dynamic point lights on prefabs if available."
+msgstr "Генерирует динамический свет на префабах, если это возможно."
 
 #: modules/zdoom_specials.lua:1228
 msgid "Glowing Flats"
@@ -7242,7 +7290,7 @@ msgstr "Файл журналирования OBSIDIAN"
 
 #: source_files/obsidian_main/m_dialog.cc:730
 msgid "OBSIDIAN Glossary"
-msgstr "Глоссарий перевода OBSIDIAN"
+msgstr "От переводчиков"
 
 #: source_files/obsidian_main/m_lua.cc:1419
 msgid "Script Error: %s"
@@ -7670,7 +7718,7 @@ msgstr "Руководство OBSIDIAN"
 
 #: source_files/obsidian_main/m_tutorial.cc:107
 msgid "<center>Welcome to OBSIDIAN Level Maker! This quick tutorial will teach you the basics of navigating the user interface.</center>"
-msgstr "<center>Добро пожаловать в генератор уровней OBSIDIAN! Это краткое руководство расскажет об основах интерфейса.</center>"
+msgstr "<center>Добро пожаловать в генератор уровней OBSIDIAN! Это краткое руководство расскажет об основах интерфейса. Некоторую дополнительную информацию также можно найти в разделе меню \"Помощь\"->\"От переводчиков\".</center>"
 
 #: source_files/obsidian_main/m_tutorial.cc:115
 msgid "Next"
@@ -7806,7 +7854,7 @@ msgstr "Порт"
 
 #: source_files/obsidian_main/ui_game.cc:230
 msgid "Available Ports:\n\nid Tech 0:\n\nVanilla: Works with the original executables\n\nid Tech 1:\n\nZDoom Family: Ports that use ZDoom as a base. Example ports: GZDoom, LZDoom\n\nVanilla: Works with the original program or ports that enforce the original limits. Examples: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nLimit Removing: Any port that raises the limits of the original game to prevent crashes, but is not Boom-compatible. Example ports: Doom2-plus, Doomsday 1.x, Crispy Doom\n\nBoom-Compatible: Ports that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nPrBoom-Compatible: Boom-compatible, but also capable of using extended nodes. Example ports: DSDA-Doom, PrBoom+um\n\nEDGE-Classic: Boom-compatible, plus additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."
-msgstr "Доступные игровые движки.\n\nid Tech 0:\n\n- Как в оригинале: карты создаются под оригинальные игры.\n\nid Tech 1:\n\n- Семейство ZDoom: (G-/L-/Q-)ZDoom, Zandronum, ZDaemon и другие, основанные на ZDoom.\n\n- Оригинальный Doom: движок Doom как таковой, с учётом его ограничений. При выборе этой опции будет использоваться генератор карт SLUMP.\n\n- Limit Removing: любой игровой движок, расширяющий лимиты оригинала для предотвращения вылетов. ВНИМАНИЕ: данный пункт использует довольно ограниченное количество префабов. Если Вы предполагаете проходить WAD на движке, поддерживающим формат Boom, лучше выбрать соответствующий пункт.\n\n- Совместивый с BOOM: движки, совместимые с Boom, и позволяющие использовать все его возможности и расширения.\n\n- Совместивый с PrBoom: то же, что выше, но также с расширенным использованием Map Nodes.\n\n- Классический EDGE: совместимый с BOOM, но с добавлениением некоторых специфичных для EDGE возможностей.\n\n- Eternity [экспериментальный]: для Software-рендерера, но с некоторыми улучшениями вроде UDMF."
+msgstr "Доступные игровые движки.\n\nid Tech 0:\n\n- Как в оригинале: карты создаются под оригинальные игры.\n\nid Tech 1:\n\n- Семейство ZDoom: (G-/L-/Q-)ZDoom, Zandronum, ZDaemon и другие, основанные на ZDoom.\n\n- Как в оригинале: движок Doom как таковой, с учётом его ограничений. При выборе этой опции будет использоваться генератор карт SLUMP.\n\n- Limit Removing: любой игровой движок, расширяющий лимиты оригинала для предотвращения вылетов. ВНИМАНИЕ: данный пункт использует довольно ограниченное количество префабов. Если Вы предполагаете проходить WAD на движке, поддерживающим формат Boom, лучше выбрать соответствующий пункт.\n\n- Совместивый с BOOM: движки, совместимые с Boom, и позволяющие использовать все его возможности и расширения.\n\n- Совместивый с PrBoom: то же, что выше, но также с расширенным использованием Map Nodes.\n\n- Классический EDGE: совместимый с BOOM, но с добавлениением некоторых специфичных для EDGE возможностей.\n\n- Eternity [экспериментальный]: для Software-рендерера, но с некоторыми улучшениями вроде UDMF."
 
 #: source_files/obsidian_main/ui_game.cc:183
 msgid "Engine"
@@ -7878,7 +7926,7 @@ msgstr "Помощь/Просмотр лога"
 
 #: source_files/obsidian_main/ui_window.cc:84
 msgid "Help/Glossary"
-msgstr "Помощь/Глоссарий"
+msgstr "Помощь/От переводчиков"
 
 #: source_files/obsidian_main/ui_window.cc:85
 msgid "Help/ "
@@ -7893,4 +7941,4 @@ msgid "Surprise Me/Go"
 msgstr "Удивить/Перегенерировать выбранное"
 
 msgid "This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."
-msgstr "══ От переводчиков ══\n\nЧасть слов, в основном укоренившиеся в широких кругах (с позволения сказать, имена собственные — имп, ревенант, ...) я просто транслитерировал, дословно переводя только в некоторых подсказках.\n\nНекоторые термины, хорошо звучащие в английском языке, при попытке локализации оказались слишком длинными для отведённого лимита символов. Поэтому некоторые слова пришлось заменить на более короткие варианты; к таким можно отнести слово \"Префаб\" — заготовка/составляющая уровня/примитив/кубик конструктора, происходящее от английского \"Pre-fabricated\" (дословно \"Предсобранный\").\n\nВ HaxC и Harmony никто из переводчиков не играл и в русскоязычном сегменте Интернета эти игры неизвестны, поэтому названия предметов и противников из них пока что не переведены; если Вы разбираетесь в этой теме и хотите помочь, есть прекрасная возможность дополнить файл русского языка. Примерно та же ситуация с Chex Quest, но для него хотя бы существует частичный перевод в GZDoom от Kostov (Undead)."
+msgstr "══ От переводчиков ══\n\nЧасть слов, в основном укоренившиеся в широких кругах (с позволения сказать, имена собственные — имп, ревенант, ...) просто транслитерированы, с дословным переводом только в некоторых подсказках.\n\nВо время исследования настроек Вы можете наткнуться на непереведённые части. Скорее всего, это значит, что с последней итерации нашего перевода добавилась какая-либо опиця. О подобном можно сообщать в основной репозиторий перевода: https://github.com/LLDM-Doom-Modding/Obsidian.\n\nНекоторые термины, хорошо звучащие в оригинале, при локализации перестали вмещаться в лимит символов. Поэтому часть слов пришлось заменить на укороченные варианты; к таким можно отнести слово \"Префаб\" — заготовка/составляющая уровня/примитив/кубик конструктора, происходящее от английского \"Pre-fabricated\" (дословно \"Предсобранный\").\n\nВ HaxC и Harmony никто из переводчиков не играл и в русскоязычном сегменте Интернета эти игры неизвестны, поэтому названия предметов и противников из них пока что не переведены; если Вы разбираетесь в этой теме, есть прекрасная возможность дополнить файл русского языка.               \nПримерно та же ситуация с Chex Quest, но для него хотя бы существует частичный перевод в GZDoom от Kostov (Undead)."
