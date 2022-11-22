@@ -2483,10 +2483,7 @@ OB_MODULES["modded_game_extras"] =
       name = "hn_info_type",
       label = _("HN Info Type"),
       choices = MODDED_GAME_EXTRAS.HN_INFO_TYPE_CHOICES,
-      tooltip = _("Pick which information type to place into Hellscape Navigator markers.\n\n" ..
-                  "Quest Info - (DEFAULT) Places traversal progress per room and key quest info into the markers.\n" ..
-                  "Debug Info - Prints verbose information about shape grammar growth status per room and prefabs. " .. 
-                  "Reveals secret prefabs - which is obviously cheating."),
+      tooltip = _("Pick which information type to place into Hellscape Navigator markers.\n\nQuest Info - (DEFAULT) Places traversal progress per room and key quest info into the markers.\nDebug Info - Prints verbose information about shape grammar growth status per room and prefabs. Reveals secret prefabs - which is obviously cheating."),
       default = "hn_info_quest",
       priority = 4.9,
       gap = 1,

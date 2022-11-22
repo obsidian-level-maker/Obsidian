@@ -53,19 +53,19 @@ msgstr ""
 msgid "Progressive"
 msgstr ""
 
-#: games/wolf/factory.lua:5564
+#: games/wolf/factory.lua:5569
 msgid "Mix It Up"
 msgstr ""
 
-#: games/wolf/factory.lua:5582
+#: games/wolf/factory.lua:5587
 msgid "Episodic"
 msgstr ""
 
-#: games/wolf/factory.lua:5583
+#: games/wolf/factory.lua:5588
 msgid "Progressive"
 msgstr ""
 
-#: games/wolf/factory.lua:5605
+#: games/wolf/factory.lua:5610
 msgid "Episodic"
 msgstr ""
 
@@ -237,6 +237,10 @@ msgstr ""
 msgid "\nWarning: Limit-Removing uses a very basic set of prefabs, and should only be used if your source port isn't compatible with any other choice!\nClick the help link next to the Engine setting for an explanation of the other choices. To disable this warning, check the \"Suppress NoLimit Warning\" checkbox located in the Debug Control Module."
 msgstr ""
 
+#: scripts/level.lua:2844
+msgid "Oblige V2"
+msgstr ""
+
 #: scripts/monster.lua:848
 msgid "Mix It Up"
 msgstr ""
@@ -251,6 +255,14 @@ msgstr ""
 
 #: scripts/monster.lua:909
 msgid "Progressive"
+msgstr ""
+
+#: scripts/obsidian.lua:2579
+msgid "SLUMP"
+msgstr ""
+
+#: scripts/obsidian.lua:2590
+msgid "id Tech 0"
 msgstr ""
 
 #: engines/build.lua:28
@@ -445,6 +457,10 @@ msgstr ""
 msgid "Boxes of Death"
 msgstr ""
 
+#: modules/alt_shape_grammars.lua:54
+msgid "% of Levels"
+msgstr ""
+
 #: modules/alt_shape_grammars.lua:59
 msgid "Sets chance of levels using the Boxes of Death shape grammar."
 msgstr ""
@@ -455,6 +471,10 @@ msgstr ""
 
 #: modules/alt_shape_grammars.lua:67
 msgid "Oblige v5"
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:69
+msgid "% of Levels"
 msgstr ""
 
 #: modules/alt_shape_grammars.lua:74
@@ -1977,7 +1997,7 @@ msgstr ""
 msgid "Higher levels of detail will increase the amount of time that it takes to generate a WAD. If saving an animated GIF of the build process, its animation speed will also be affected by this setting (less detail=slower, more detail=faster)."
 msgstr ""
 
-#: modules/export_map.lua:267
+#: modules/export_map.lua:265
 msgid "Export .MAP files"
 msgstr ""
 
@@ -2187,6 +2207,10 @@ msgstr ""
 
 #: modules/gzdoom_marine_closet.lua:1559
 msgid "Chance per map"
+msgstr ""
+
+#: modules/gzdoom_marine_closet.lua:1562
+msgid "%"
 msgstr ""
 
 #: modules/gzdoom_marine_closet.lua:1567
@@ -3854,150 +3878,154 @@ msgid "Random"
 msgstr ""
 
 #: modules/heretic/zdoom_specials.lua:34
+msgid "Natural"
+msgstr ""
+
+#: modules/heretic/zdoom_specials.lua:35
 msgid "No"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:39
+#: modules/heretic/zdoom_specials.lua:40
 msgid "All"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:40
+#: modules/heretic/zdoom_specials.lua:41
 msgid "Outdoors Only"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:45
+#: modules/heretic/zdoom_specials.lua:46
 msgid "Subtle"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:46
+#: modules/heretic/zdoom_specials.lua:47
 msgid "Misty"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:47
+#: modules/heretic/zdoom_specials.lua:48
 msgid "Smoky"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:48
+#: modules/heretic/zdoom_specials.lua:49
 msgid "Foggy"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:49
+#: modules/heretic/zdoom_specials.lua:50
 msgid "Dense"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:50
+#: modules/heretic/zdoom_specials.lua:51
 msgid "Mix It Up"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:55
+#: modules/heretic/zdoom_specials.lua:56
 msgid "Generic"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:56
+#: modules/heretic/zdoom_specials.lua:57
 msgid "Generated"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:57
+#: modules/heretic/zdoom_specials.lua:58
 msgid "NONE"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:186
+#: modules/heretic/zdoom_specials.lua:187
 msgid "Universal Intermission"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1138
+#: modules/heretic/zdoom_specials.lua:1149
 msgid "ZDoom Special Addons"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1156
+#: modules/heretic/zdoom_specials.lua:1167
 msgid "This module adds new ZDoom-exclusive features such as fog. More ZDoom-specific features will be included soon."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1162
+#: modules/heretic/zdoom_specials.lua:1173
 msgid "Fog Generator"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1166
+#: modules/heretic/zdoom_specials.lua:1177
 msgid "Generates fog colors based on the Sky Generator or generate completely randomly."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1172
+#: modules/heretic/zdoom_specials.lua:1183
 msgid "Fog Environment"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1176
+#: modules/heretic/zdoom_specials.lua:1187
 msgid "Limits fog to outdoors (sectors with exposed sky ceilings) or allows for all."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1182
+#: modules/heretic/zdoom_specials.lua:1193
 msgid "Fog Intensity"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1186
+#: modules/heretic/zdoom_specials.lua:1197
 msgid "Determines thickness and intensity of fog, if the Fog Generator is enabled. Subtle or Misty is recommended."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1192
+#: modules/heretic/zdoom_specials.lua:1203
 msgid "Sky Fog"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1196
+#: modules/heretic/zdoom_specials.lua:1207
 msgid "Tints the sky texture with the fog color, intensity is based on the Fog Intensity selection."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1203
+#: modules/heretic/zdoom_specials.lua:1214
 msgid "Dynamic Lights"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1207
+#: modules/heretic/zdoom_specials.lua:1218
 msgid "Generates dynamic point lights on ceiling light prefabs."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1212
+#: modules/heretic/zdoom_specials.lua:1223
 msgid "Glowing Flats"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1216
+#: modules/heretic/zdoom_specials.lua:1227
 msgid "Adds Doom-64 style lighting/glowing flats via GLDEFS lump. Visible on Zandronum ports as well."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1222
+#: modules/heretic/zdoom_specials.lua:1233
 msgid "Shuffle Music"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1226
+#: modules/heretic/zdoom_specials.lua:1237
 msgid "Shuffles music in the MAPINFO lump."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1231
+#: modules/heretic/zdoom_specials.lua:1242
 msgid "Story Generator"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1235
+#: modules/heretic/zdoom_specials.lua:1246
 msgid "Adds cluster information with generic or randomized story text into the MAPINFO structure!"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1240
+#: modules/heretic/zdoom_specials.lua:1251
 msgid "Quit Messages"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1244
+#: modules/heretic/zdoom_specials.lua:1255
 msgid "Adds custom quit messages into the MAPINFO game definition."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1249
+#: modules/heretic/zdoom_specials.lua:1260
 msgid "Intermission Music"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1253
+#: modules/heretic/zdoom_specials.lua:1264
 msgid "Changes the music playing during intermission screens."
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1258
+#: modules/heretic/zdoom_specials.lua:1269
 msgid "Disable Intermissions"
 msgstr ""
 
-#: modules/heretic/zdoom_specials.lua:1262
+#: modules/heretic/zdoom_specials.lua:1273
 msgid "Removes end-level Intermission Screens (containing map completion data) but retains Text Screens with story."
 msgstr ""
 
@@ -4841,6 +4869,10 @@ msgstr ""
 msgid "Oblige v2"
 msgstr ""
 
+#: modules/historical_versions.lua:54
+msgid "% of Levels"
+msgstr ""
+
 #: modules/historical_versions.lua:59
 msgid "Sets chance of levels being generated using Oblige v2"
 msgstr ""
@@ -5209,6 +5241,10 @@ msgstr ""
 msgid "Layout Consistency"
 msgstr ""
 
+#: modules/miscellaneous.lua:220
+msgid "% of Levels"
+msgstr ""
+
 #: modules/miscellaneous.lua:225
 msgid "Chance that a level will be built with a layout from random set of prefered shape rules."
 msgstr ""
@@ -5219,6 +5255,10 @@ msgstr ""
 
 #: modules/miscellaneous.lua:234
 msgid "Linear Mode"
+msgstr ""
+
+#: modules/miscellaneous.lua:236
+msgid "% of Levels"
 msgstr ""
 
 #: modules/miscellaneous.lua:241
@@ -5233,12 +5273,20 @@ msgstr ""
 msgid "Nature Mode"
 msgstr ""
 
+#: modules/miscellaneous.lua:251
+msgid "% of Levels"
+msgstr ""
+
 #: modules/miscellaneous.lua:256
 msgid "Forces most of the map to be composed of naturalistic areas (parks and caves). The ratio is decided by Outdoors style setting while competing styles are ignored."
 msgstr ""
 
 #: modules/miscellaneous.lua:263
 msgid "Streets Mode"
+msgstr ""
+
+#: modules/miscellaneous.lua:265
+msgid "% of Levels"
 msgstr ""
 
 #: modules/miscellaneous.lua:270
@@ -5301,331 +5349,355 @@ msgstr ""
 msgid "Raises upper limits on individual room growth"
 msgstr ""
 
-#: modules/miscellaneous.lua:336
+#: modules/miscellaneous.lua:337
 msgid "Big Outdoors"
 msgstr ""
 
-#: modules/miscellaneous.lua:337
+#: modules/miscellaneous.lua:338
 msgid "Raises upper limits on outdoor area growth"
 msgstr ""
 
-#: modules/miscellaneous.lua:341
-msgid "Room Heights"
+#: modules/miscellaneous.lua:342
+msgid "Sub Rooms"
 msgstr ""
 
 #: modules/miscellaneous.lua:343
+msgid "Controls amount of small sub rooms. Actually controls the degree at which ungrown rooms are left instead of culled."
+msgstr ""
+
+#: modules/miscellaneous.lua:348
+msgid "Room Heights"
+msgstr ""
+
+#: modules/miscellaneous.lua:350
 msgid "Determines if rooms should have a height limit or should exaggerate their height. Short means room areas strictly have at most 128 units of height, tall means rooms immediately have doubled heights. Normal is the default Oblige behavior."
 msgstr ""
 
-#: modules/miscellaneous.lua:352
+#: modules/miscellaneous.lua:359
 msgid "Parks"
 msgstr ""
 
-#: modules/miscellaneous.lua:353
+#: modules/miscellaneous.lua:360
 msgid "Control the amount of parks."
 msgstr ""
 
-#: modules/miscellaneous.lua:357
+#: modules/miscellaneous.lua:364
 msgid "Natural Cliffs"
 msgstr ""
 
-#: modules/miscellaneous.lua:358
+#: modules/miscellaneous.lua:365
 msgid "Percentage of parks that use completely naturalistic walls."
 msgstr ""
 
-#: modules/miscellaneous.lua:365
+#: modules/miscellaneous.lua:372
 msgid "Park Detail"
 msgstr ""
 
-#: modules/miscellaneous.lua:366
+#: modules/miscellaneous.lua:373
 msgid "Reduces or increases the probability of park decorations such as trees on park rooms."
 msgstr ""
 
-#: modules/miscellaneous.lua:374
+#: modules/miscellaneous.lua:381
 msgid "Windows"
 msgstr ""
 
-#: modules/miscellaneous.lua:375
+#: modules/miscellaneous.lua:382
 msgid "Control the amount of windows."
 msgstr ""
 
-#: modules/miscellaneous.lua:379
+#: modules/miscellaneous.lua:386
 msgid "Passable Windows"
 msgstr ""
 
-#: modules/miscellaneous.lua:381
+#: modules/miscellaneous.lua:388
 msgid "Sets the preferences for passability on certain windows. On Vistas Only means only windows that look out to vistas/map border scenics have a blocking line."
 msgstr ""
 
-#: modules/miscellaneous.lua:387
+#: modules/miscellaneous.lua:394
 msgid "Passable Railings"
 msgstr ""
 
-#: modules/miscellaneous.lua:389
+#: modules/miscellaneous.lua:396
 msgid "Sets the passability of railing junctions between full impassability or the 3D midtex flag. Occasional means 3D midtex is only used on railings between areas the player is supposed to circumvent. Always means the inclusion of cages and scenic rails, allowing flying monsters to potentially escape.\n\nNote: 3D midtex lines currently *block* projectiles as well."
 msgstr ""
 
-#: modules/miscellaneous.lua:396
+#: modules/miscellaneous.lua:403
 msgid "Symmetry"
 msgstr ""
 
-#: modules/miscellaneous.lua:397
+#: modules/miscellaneous.lua:404
 msgid "Affects amount of symmetry when growing levels."
 msgstr ""
 
-#: modules/miscellaneous.lua:400
+#: modules/miscellaneous.lua:407
 msgid "Beams"
 msgstr ""
 
-#: modules/miscellaneous.lua:402
+#: modules/miscellaneous.lua:409
 msgid "Allows the appearance of thin pillars to appear between the borders of different elevations."
 msgstr ""
 
-#: modules/miscellaneous.lua:407
+#: modules/miscellaneous.lua:414
 msgid "Fences"
 msgstr ""
 
-#: modules/miscellaneous.lua:409
+#: modules/miscellaneous.lua:416
 msgid "Creates thick solid fences and fence posts between areas of varying height for outdoor rooms."
 msgstr ""
 
-#: modules/miscellaneous.lua:414
+#: modules/miscellaneous.lua:421
 msgid "Porches\\Gazebos"
 msgstr ""
 
-#: modules/miscellaneous.lua:416
+#: modules/miscellaneous.lua:423
 msgid "Occasional outdoor areas with a lowered indoor-ish ceiling."
 msgstr ""
 
-#: modules/miscellaneous.lua:421
-msgid "Pictures"
-msgstr ""
-
-#: modules/miscellaneous.lua:423
-msgid "Controls the large wall setpieces in a map. Works on a chance per room basis."
-msgstr ""
-
 #: modules/miscellaneous.lua:428
-msgid "Scenics"
+msgid "Pictures"
 msgstr ""
 
 #: modules/miscellaneous.lua:430
-msgid "Controls the amount of fancy scenics visible at room bordering the maps."
+msgid "Controls the large wall setpieces in a map. Works on a chance per room basis."
+msgstr ""
+
+#: modules/miscellaneous.lua:435
+msgid "Scenics"
 msgstr ""
 
 #: modules/miscellaneous.lua:437
+msgid "Controls the amount of fancy scenics visible at room bordering the maps."
+msgstr ""
+
+#: modules/miscellaneous.lua:444
 msgid "Sink Style"
 msgstr ""
 
-#: modules/miscellaneous.lua:439
+#: modules/miscellaneous.lua:446
 msgid "Determines the style for corners with sunken ceilings and floors. Curved makes sink corners soft, while Sharp leaves the corners angular. Per Theme means choice is controlled by theme profile instead. Tech-ish maps favor sharp corners while hell-ish favor curved."
 msgstr ""
 
-#: modules/miscellaneous.lua:446
+#: modules/miscellaneous.lua:453
 msgid "Liquid Sinks"
 msgstr ""
 
-#: modules/miscellaneous.lua:448
+#: modules/miscellaneous.lua:455
 msgid "Enables or disables liquid sinks. Liquid sinks are walkable floors that are often converted into depressions with the level's liquid. May greatly inconvenience the player but default Oblige behavior is 'Yes'."
 msgstr ""
 
-#: modules/miscellaneous.lua:455
+#: modules/miscellaneous.lua:462
 msgid "Dark Outdoors"
 msgstr ""
 
-#: modules/miscellaneous.lua:456
+#: modules/miscellaneous.lua:463
 msgid "Affects the chance of a level having darker skies."
 msgstr ""
 
-#: modules/miscellaneous.lua:461
+#: modules/miscellaneous.lua:468
 msgid "Outdoor Shadows"
 msgstr ""
 
-#: modules/miscellaneous.lua:464
+#: modules/miscellaneous.lua:471
 msgid "Adds shadows to outdoor structures."
 msgstr ""
 
-#: modules/miscellaneous.lua:470
+#: modules/miscellaneous.lua:477
 msgid "Minimum Brightness"
 msgstr ""
 
-#: modules/miscellaneous.lua:476
+#: modules/miscellaneous.lua:483
 msgid "Sets the minimum brightness for the map."
 msgstr ""
 
-#: modules/miscellaneous.lua:482
+#: modules/miscellaneous.lua:489
 msgid "Maximum Brightness"
 msgstr ""
 
-#: modules/miscellaneous.lua:488
+#: modules/miscellaneous.lua:495
 msgid "Sets the maximum brightness for the map."
 msgstr ""
 
-#: modules/miscellaneous.lua:493
+#: modules/miscellaneous.lua:500
 msgid "Explosive Decor"
 msgstr ""
 
-#: modules/miscellaneous.lua:495
+#: modules/miscellaneous.lua:502
 msgid "Controls the presence of barrels, pods, canisters, etc."
 msgstr ""
 
-#: modules/miscellaneous.lua:501
+#: modules/miscellaneous.lua:508
 msgid "Doors"
 msgstr ""
 
-#: modules/miscellaneous.lua:502
+#: modules/miscellaneous.lua:509
 msgid "Control the amount of doors."
 msgstr ""
 
-#: modules/miscellaneous.lua:505
+#: modules/miscellaneous.lua:512
 msgid "Keyed Doors"
 msgstr ""
 
-#: modules/miscellaneous.lua:506
+#: modules/miscellaneous.lua:513
 msgid "Control the amount of keyed doors."
 msgstr ""
 
-#: modules/miscellaneous.lua:509
+#: modules/miscellaneous.lua:516
 msgid "Triple-Keyed Doors"
 msgstr ""
 
-#: modules/miscellaneous.lua:511
+#: modules/miscellaneous.lua:518
 msgid "Controls the chance to get three key door whenever three keys are present."
 msgstr ""
 
-#: modules/miscellaneous.lua:515
+#: modules/miscellaneous.lua:522
 msgid "Switch Goals"
 msgstr ""
 
-#: modules/miscellaneous.lua:516
+#: modules/miscellaneous.lua:523
 msgid "Controls the chance for long-distance switch and lock quests."
 msgstr ""
 
-#: modules/miscellaneous.lua:520
+#: modules/miscellaneous.lua:527
 msgid "Switch Rooms"
 msgstr ""
 
-#: modules/miscellaneous.lua:521
+#: modules/miscellaneous.lua:528
 msgid "Controls the chance same-room switches and locks."
 msgstr ""
 
-#: modules/miscellaneous.lua:529
+#: modules/miscellaneous.lua:536
 msgid "Road Markings"
 msgstr ""
 
-#: modules/miscellaneous.lua:532
+#: modules/miscellaneous.lua:539
 msgid "Adds street markings to roads."
 msgstr ""
 
-#: modules/miscellaneous.lua:537
+#: modules/miscellaneous.lua:544
 msgid "Street Traffic"
 msgstr ""
 
-#: modules/miscellaneous.lua:539
+#: modules/miscellaneous.lua:546
 msgid "If Street Mode is enabled, changes the density of prefabs such as cars, barriers, crates, and relevant items on the roads."
 msgstr ""
 
-#: modules/miscellaneous.lua:547
+#: modules/miscellaneous.lua:554
 msgid "Exit Signs"
 msgstr ""
 
-#: modules/miscellaneous.lua:550
+#: modules/miscellaneous.lua:557
 msgid "Places exit signs by exiting room"
 msgstr ""
 
-#: modules/miscellaneous.lua:557
+#: modules/miscellaneous.lua:564
 msgid "Linear Start"
 msgstr ""
 
-#: modules/miscellaneous.lua:559
+#: modules/miscellaneous.lua:566
 msgid "Stops start rooms from having more than one external room connection. Can help reduce being overwhelmed by attacks from multiple directions when multiple neighboring rooms connect into the start room. Default means no control, and levels can have linear starts at random based on shape grammars as per original Oblige 7.7 behavior."
 msgstr ""
 
-#: modules/miscellaneous.lua:565
+#: modules/miscellaneous.lua:572
 msgid "Dead Ends"
 msgstr ""
 
-#: modules/miscellaneous.lua:567
+#: modules/miscellaneous.lua:574
 msgid "Cleans up and removes areas with staircases that lead to nowhere.\nNONE means all dead ends are removed.\nHeaps means all dead ends are preserved (Oblige default)."
 msgstr ""
 
-#: modules/miscellaneous.lua:577
+#: modules/miscellaneous.lua:584
 msgid "Lighting"
 msgstr ""
 
-#: modules/miscellaneous.lua:578
+#: modules/miscellaneous.lua:585
 msgid "Detail"
 msgstr ""
 
-#: modules/miscellaneous.lua:580
+#: modules/miscellaneous.lua:587
 msgid "Pictures"
 msgstr ""
 
-#: modules/miscellaneous.lua:581
+#: modules/miscellaneous.lua:588
 msgid "Multiple Paths"
 msgstr ""
 
-#: modules/miscellaneous.lua:582
+#: modules/miscellaneous.lua:589
 msgid "3D Floors"
 msgstr ""
 
-#: modules/miscellaneous.lua:584
+#: modules/miscellaneous.lua:591
 msgid "Lakes"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2210
+#: modules/modded_game_extras.lua:48
+msgid "Quest Info"
+msgstr ""
+
+#: modules/modded_game_extras.lua:49
+msgid "Debug Info"
+msgstr ""
+
+#: modules/modded_game_extras.lua:2454
 msgid "Modded Game Extras"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2225
+#: modules/modded_game_extras.lua:2469
 msgid "Offers extra features and expanded support for various mods."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2232
+#: modules/modded_game_extras.lua:2476
 msgid "HN Markers"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2235
+#: modules/modded_game_extras.lua:2479
 msgid "Adds support for m8f's Hellscape Navigator by generating name markers in the map per room."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2242
+#: modules/modded_game_extras.lua:2484
+msgid "HN Info Type"
+msgstr ""
+
+#: modules/modded_game_extras.lua:2486
+msgid "Pick which information type to place into Hellscape Navigator markers.\n\nQuest Info - (DEFAULT) Places traversal progress per room and key quest info into the markers.\nDebug Info - Prints verbose information about shape grammar growth status per room and prefabs. Reveals secret prefabs - which is obviously cheating."
+msgstr ""
+
+#: modules/modded_game_extras.lua:2495
 msgid "Custom Actor Names"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2245
+#: modules/modded_game_extras.lua:2498
 msgid "Renames tags of monsters with generated names. Humans recieve human names, demons recieve exotic names.\nBest used with TargetSpy or other healthbar mods to see the name.\nUses class inheritance and string comparisons to determine monster species (human or demon). Use compatibility options only when necessary, preferably use Universal option instead."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2252
+#: modules/modded_game_extras.lua:2505
 msgid "QC:DE Lootboxes"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2255
+#: modules/modded_game_extras.lua:2508
 msgid "Adds Quake Champions: Doom Edition Lootboxes as nice item pickups."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2262
+#: modules/modded_game_extras.lua:2515
 msgid "D4T Entities"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2265
+#: modules/modded_game_extras.lua:2518
 msgid "Adds Death Foretold field drones into items table and gore nests as potential minor boss monsters."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2272
+#: modules/modded_game_extras.lua:2525
 msgid "Trailblazer Upgrades"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2275
+#: modules/modded_game_extras.lua:2528
 msgid "Adds Trailblazer's upgrade blueprints as separate pickups that can be found in the map."
 msgstr ""
 
-#: modules/modded_game_extras.lua:2282
+#: modules/modded_game_extras.lua:2535
 msgid "Complex Doom Modifications"
 msgstr ""
 
-#: modules/modded_game_extras.lua:2285
+#: modules/modded_game_extras.lua:2538
 msgid "Modifies general gameplay settings to balance generated maps more for use with Complex Doom due to its difficulty spike."
 msgstr ""
 
@@ -5821,12 +5893,20 @@ msgstr ""
 msgid "Single Room Themes"
 msgstr ""
 
+#: modules/prefab_controller.lua:258
+msgid "%"
+msgstr ""
+
 #: modules/prefab_controller.lua:263
 msgid "Determines the odds at which a level would use a universal, single room theme for all indoors (buildings). Default is 50%."
 msgstr ""
 
 #: modules/prefab_controller.lua:271
 msgid "Limited Wall Groups"
+msgstr ""
+
+#: modules/prefab_controller.lua:273
+msgid "%"
 msgstr ""
 
 #: modules/prefab_controller.lua:278
@@ -6097,6 +6177,10 @@ msgstr ""
 msgid "Extra Quantity"
 msgstr ""
 
+#: modules/procedural_gotcha.lua:86
+msgid "x Monsters"
+msgstr ""
+
 #: modules/procedural_gotcha.lua:91
 msgid "Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting)."
 msgstr ""
@@ -6281,235 +6365,247 @@ msgstr ""
 msgid "No Limit"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1832
+#: modules/procedural_gotcha_zdoom.lua:1840
 msgid "Large"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1833
+#: modules/procedural_gotcha_zdoom.lua:1841
 msgid "Regular"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1834
+#: modules/procedural_gotcha_zdoom.lua:1842
 msgid "Small"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1835
+#: modules/procedural_gotcha_zdoom.lua:1843
 msgid "Tiny"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1840
+#: modules/procedural_gotcha_zdoom.lua:1848
 msgid "Final Map Only"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1841
+#: modules/procedural_gotcha_zdoom.lua:1849
 msgid "Last Level of Episode"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1842
+#: modules/procedural_gotcha_zdoom.lua:1850
 msgid "Two per Episode"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1843
+#: modules/procedural_gotcha_zdoom.lua:1851
 msgid "Three per Episode"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1844
+#: modules/procedural_gotcha_zdoom.lua:1852
 msgid "Four per Episode"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1845
+#: modules/procedural_gotcha_zdoom.lua:1853
 msgid "_"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1846
+#: modules/procedural_gotcha_zdoom.lua:1854
 msgid "5% Chance, Any Map After Map 4"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1847
+#: modules/procedural_gotcha_zdoom.lua:1855
 msgid "10% Chance, Any Map After Map 4"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1848
+#: modules/procedural_gotcha_zdoom.lua:1856
 msgid "Everything"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1913
+#: modules/procedural_gotcha_zdoom.lua:1921
 msgid "Procedural Gotchas"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1927
+#: modules/procedural_gotcha_zdoom.lua:1935
 msgid "This module allows you to fine tune the Procedural Gotcha experience if you have Procedural Gotchas enabled. Does not affect prebuilts. It is recommended to pick higher scales on one of the two options, but not both at once for a balanced challenge."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1934
+#: modules/procedural_gotcha_zdoom.lua:1942
 msgid "Regular Gotcha Options"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1939
+#: modules/procedural_gotcha_zdoom.lua:1947
 msgid "Gotcha Frequency"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1942
+#: modules/procedural_gotcha_zdoom.lua:1950
 msgid "Procedural Gotchas are two room maps, where the second is an immediate but immensely-sized exit room with gratitiously intensified monster strength. Essentially an arena - prepare for a tough, tough fight!\n\nNotes:\n\n5% of levels may create at least 1 or 2 gotcha maps in a standard full game."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1950
+#: modules/procedural_gotcha_zdoom.lua:1958
 msgid "Force Big-Boss Fight"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1953
+#: modules/procedural_gotcha_zdoom.lua:1961
 msgid "Attempts to guarantee a fight against a boss-type (nasty tier) monster in the procedural gotcha."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1961
+#: modules/procedural_gotcha_zdoom.lua:1969
 msgid "Extra Quantity"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1968
+#: modules/procedural_gotcha_zdoom.lua:1971
+msgid "x Monsters"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:1976
 msgid "Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting)."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1975
+#: modules/procedural_gotcha_zdoom.lua:1983
 msgid "Extra Strength"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1981
+#: modules/procedural_gotcha_zdoom.lua:1989
 msgid "0:NONE,2:2 (Stronger),4:4 (Harder),6:6 (Tougher),8:8 (CRAZIER),16:16 (NIGHTMARISH)"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1982
+#: modules/procedural_gotcha_zdoom.lua:1990
 msgid "Offset monster quantity from your default strength of choice plus the increasing level ramp."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1990
+#: modules/procedural_gotcha_zdoom.lua:1998
 msgid "Map Size"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:1993
+#: modules/procedural_gotcha_zdoom.lua:2001
 msgid "Size of the procedural gotcha. Start and arena room sizes are relative to map size as well."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2001
+#: modules/procedural_gotcha_zdoom.lua:2009
 msgid "ZScript Generated Boss Options"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2006
+#: modules/procedural_gotcha_zdoom.lua:2014
 msgid "Enable Procedural Bosses"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2009
+#: modules/procedural_gotcha_zdoom.lua:2017
 msgid "Toggles Boss Monster generation with special traits for Gotchas."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2015
+#: modules/procedural_gotcha_zdoom.lua:2023
 msgid "Arena Steepness"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2018
+#: modules/procedural_gotcha_zdoom.lua:2026
 msgid "Influences steepness settings for boss arenas. Boss arena steepness is capped to be less intrusive to boss movement."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2026
+#: modules/procedural_gotcha_zdoom.lua:2034
 msgid "Boss Difficulty"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2029
+#: modules/procedural_gotcha_zdoom.lua:2037
 msgid "Increases or reduces chances of boss being based off more powerful monster and getting more powerful traits."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2037
+#: modules/procedural_gotcha_zdoom.lua:2045
 msgid "Boss Health Modifier"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2040
+#: modules/procedural_gotcha_zdoom.lua:2048
 msgid "Makes boss health higher or lower than default, useful when playing with mods that have different average power level of weapons."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2048
+#: modules/procedural_gotcha_zdoom.lua:2056
 msgid "Hitscan Bosses"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2051
+#: modules/procedural_gotcha_zdoom.lua:2059
 msgid "Reduces chance of hitscan bosses spawning."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2059
+#: modules/procedural_gotcha_zdoom.lua:2067
 msgid "Visible Health Bar"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2062
+#: modules/procedural_gotcha_zdoom.lua:2070
 msgid "If enabled, an hp bar will appear on UI while boss is active."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2069
+#: modules/procedural_gotcha_zdoom.lua:2077
 msgid "Enable Boss Music"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2072
+#: modules/procedural_gotcha_zdoom.lua:2080
 msgid "If enabled, encountering a boss will start boss theme music. (For now you have to have your own music files with lumps named D_BOSSx where x is boss number)"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2079
+#: modules/procedural_gotcha_zdoom.lua:2087
 msgid "Reinforcement Strength"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2082
+#: modules/procedural_gotcha_zdoom.lua:2090
 msgid "Influences the strength of reinforcements summoned by bosses"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2090
+#: modules/procedural_gotcha_zdoom.lua:2098
 msgid "Reinforcement Rate"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2093
+#: modules/procedural_gotcha_zdoom.lua:2101
 msgid "Influences the spawn rate of reinforcements summoned by bosses"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2101
+#: modules/procedural_gotcha_zdoom.lua:2109
 msgid "Respect zero prob"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2105
+#: modules/procedural_gotcha_zdoom.lua:2113
 msgid "If enabled, monsters disabled in monster control module cant be chosen as a boss."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2114
+#: modules/procedural_gotcha_zdoom.lua:2122
 msgid "Monster limit type"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2117
+#: modules/procedural_gotcha_zdoom.lua:2125
 msgid "Influences how boss difficulty and megawad progression affects the monster type of boss.\n\nHard Limit: Doesn't allow monster types outside of range to ever spawn.\n\nSoft Limit: Reduces the probability of spawning of monster types outside of range.\n\nNo Limit: Difficulty doesn't have effect on monster type selection."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2125
+#: modules/procedural_gotcha_zdoom.lua:2133
 msgid "Weapon placement"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2128
+#: modules/procedural_gotcha_zdoom.lua:2136
 msgid "Influences weapon placement in boss arena."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2137
+#: modules/procedural_gotcha_zdoom.lua:2145
 msgid "Exit type"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2140
+#: modules/procedural_gotcha_zdoom.lua:2148
 msgid "Changes exit type after boss has been destroyed."
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2147
+#: modules/procedural_gotcha_zdoom.lua:2155
 msgid "Ammo supplies mult"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2154
-msgid "Changes multiplier of ammunition items on the boss arena(This is also affected by boss health multiplier)."
+#: modules/procedural_gotcha_zdoom.lua:2157
+msgid "x"
 msgstr ""
 
 #: modules/procedural_gotcha_zdoom.lua:2162
+msgid "Changes multiplier of ammunition items on the boss arena(This is also affected by boss health multiplier)."
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:2170
 msgid "Healing supplies mult"
 msgstr ""
 
-#: modules/procedural_gotcha_zdoom.lua:2169
+#: modules/procedural_gotcha_zdoom.lua:2172
+msgid "x"
+msgstr ""
+
+#: modules/procedural_gotcha_zdoom.lua:2177
 msgid "Changes multiplier of healing items on the boss arena."
 msgstr ""
 
@@ -7585,6 +7681,10 @@ msgstr ""
 msgid "Lighting Multiplier"
 msgstr ""
 
+#: modules/ui_arch.lua:219
+msgid "x"
+msgstr ""
+
 #: modules/ui_arch.lua:226
 msgid "Adjust overall map lighting"
 msgstr ""
@@ -7949,231 +8049,231 @@ msgstr ""
 msgid "Monster Quantity"
 msgstr ""
 
-#: modules/ui_mons.lua:112
+#: modules/ui_mons.lua:111
 msgid "Mix It Up,Progressive"
+msgstr ""
+
+#: modules/ui_mons.lua:112
+msgid "0:None,0.15:0.15 (Trivial),0.35:0.35 (Sporadic),0.7:0.7 (Meager),1.0:1.0 (Easy),1.3:1.3 (Modest),1.5:1.5 (Bearable),2.0:2.0 (Rough),2.5:2.5 (Strenuous),3.0:3.0 (Formidable),3.5:3.5 (Harsh),4.0:4.0 (Painful),4.5:4.5 (Ferocious),5.0:5.0 (Unforgiving),5.5:5.5 (Punishing),6.0:6.0 (Murderous),6.5:6.5 (Grueling),7.0:7.0 (Unrelenting),7.5:7.5 (Arduous),8.0:8.0 (Barbaric),8.5:8.5 (Savage),9.0:9.0 (Brutal),9.5:9.5 (Draconian),10.0:10.00 (Merciless)"
 msgstr ""
 
 #: modules/ui_mons.lua:113
-msgid "0:None,0.15:0.15 (Trivial),0.35:0.35 (Sporadic),0.7:0.7 (Meager),1.0:1.0 (Easy),1.3:1.3 (Modest),1.5:1.5 (Bearable),2.0:2.0 (Rough),2.5:2.5 (Strenuous),3.0:3.0 (Formidable),3.5:3.5 (Harsh),4.0:4.0 (Painful),4.5:4.5 (Ferocious),5.0:5.0 (Unforgiving),5.5:5.5 (Punishing),6.0:6.0 (Murderous),6.5:6.5 (Grueling),7.0:7.0 (Unrelenting),7.5:7.5 (Arduous),8.0:8.0 (Barbaric),8.5:8.5 (Savage),9.0:9.0 (Brutal),9.5:9.5 (Draconian),10.0:10.00 (Merciless)"
+msgid "Changes the amount of monsters placed in a map. Scales with level size."
 msgstr ""
 
 #: modules/ui_mons.lua:114
-msgid "Changes the amount of monsters placed in a map. Scales with level size."
-msgstr ""
-
-#: modules/ui_mons.lua:115
 msgid "For reference: Obsidian's default for normal is 1.0.\n\nMix It Up: Selects quantities specified between Upper and Lower Bound choices on a chosen by the user.\n\nProgressive: creates a curve of increasing monster population also based on the Fine Tune options below.\n\nIt does not matter if your Upper/Lower Bound selections are reversed. Progressive will pick the min VS max quantities selected.\n\nNone: No monsters. Why would you choose this option? \nTrivial: Very, very few monsters. Almost nothing to kill.\nSporadic: Very few monsters. Not many things to kill.\nMeager: Fewer monsters. Not challenging for the average player.\nEasy: Obsidian default quantity. Not too bad for casual players.\nModest: Slightly above default. Still pretty easy for most. \nBearable: Above average opposition. Getting warmer! \nRough: Slightly difficult. Equivalent to late 90s megawads. \nStrenuous: Baby steps into big boy difficulty. Lots to kill! \nFormidable/Harsh: 'Easy' level of difficult. Considerable opposition. \nPainful/Ferocious: Getting into slaughterwad territory. Difficult! \nUnforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \nMurderous/Grueling: Extremely high monster count. \nUnrelenting/Arduous: An uphill battle. Expect to reload saves often! \nBarbaric/Savage: Up into the hardest slaughterwads out there. \nBrutal/Draconian: Legions of demons await you on this setting. \nMerciless: Hell will throw everything at you at this setting, you masochist."
 msgstr ""
 
-#: modules/ui_mons.lua:121
+#: modules/ui_mons.lua:120
 msgid "Upper Bound"
+msgstr ""
+
+#: modules/ui_mons.lua:126
+msgid "0:None,0.15:0.15 (Trivial),0.35:0.35 (Sporadic),0.7:0.7 (Meager),1.0:1.0 (Easy),1.3:1.3 (Modest),1.5:1.5 (Bearable),2.0:2.0 (Rough),2.5:2.5 (Strenuous),3.0:3.0 (Formidable),3.5:3.5 (Harsh),4.0:4.0 (Painful),4.5:4.5 (Ferocious),5.0:5.0 (Unforgiving),5.5:5.5 (Punishing),6.0:6.0 (Murderous),6.5:6.5 (Grueling),7.0:7.0 (Unrelenting),7.5:7.5 (Arduous),8.0:8.0 (Barbaric),8.5:8.5 (Savage),9.0:9.0 (Brutal),9.5:9.5 (Draconian),10.0:10.00 (Merciless)"
 msgstr ""
 
 #: modules/ui_mons.lua:127
-msgid "0:None,0.15:0.15 (Trivial),0.35:0.35 (Sporadic),0.7:0.7 (Meager),1.0:1.0 (Easy),1.3:1.3 (Modest),1.5:1.5 (Bearable),2.0:2.0 (Rough),2.5:2.5 (Strenuous),3.0:3.0 (Formidable),3.5:3.5 (Harsh),4.0:4.0 (Painful),4.5:4.5 (Ferocious),5.0:5.0 (Unforgiving),5.5:5.5 (Punishing),6.0:6.0 (Murderous),6.5:6.5 (Grueling),7.0:7.0 (Unrelenting),7.5:7.5 (Arduous),8.0:8.0 (Barbaric),8.5:8.5 (Savage),9.0:9.0 (Brutal),9.5:9.5 (Draconian),10.0:10.00 (Merciless)"
+msgid "If you have Mix It Up or Progressive selected, you can define the upper bound here. Otherwise, this option is simply ignored."
 msgstr ""
 
 #: modules/ui_mons.lua:128
-msgid "If you have Mix It Up or Progressive selected, you can define the upper bound here. Otherwise, this option is simply ignored."
-msgstr ""
-
-#: modules/ui_mons.lua:129
 msgid "For reference: Obsidian's default for normal is 1.0.\n\nMix It Up: Selects quantities specified between Upper and Lower Bound choices on a chosen by the user.\n\nProgressive: creates a curve of increasing monster population also based on the Fine Tune options below.\n\nIt does not matter if your Upper/Lower Bound selections are reversed. Progressive will pick the min VS max quantities selected.\n\nNone: No monsters. Why would you choose this option? \nTrivial: Very, very few monsters. Almost nothing to kill.\nSporadic: Very few monsters. Not many things to kill.\nMeager: Fewer monsters. Not challenging for the average player.\nEasy: Obsidian default quantity. Not too bad for casual players.\nModest: Slightly above default. Still pretty easy for most. \nBearable: Above average opposition. Getting warmer! \nRough: Slightly difficult. Equivalent to late 90s megawads. \nStrenuous: Baby steps into big boy difficulty. Lots to kill! \nFormidable/Harsh: 'Easy' level of difficult. Considerable opposition. \nPainful/Ferocious: Getting into slaughterwad territory. Difficult! \nUnforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \nMurderous/Grueling: Extremely high monster count. \nUnrelenting/Arduous: An uphill battle. Expect to reload saves often! \nBarbaric/Savage: Up into the hardest slaughterwads out there. \nBrutal/Draconian: Legions of demons await you on this setting. \nMerciless: Hell will throw everything at you at this setting, you masochist."
 msgstr ""
 
-#: modules/ui_mons.lua:134
+#: modules/ui_mons.lua:133
 msgid "Lower Bound"
+msgstr ""
+
+#: modules/ui_mons.lua:139
+msgid "0:None,0.15:0.15 (Trivial),0.35:0.35 (Sporadic),0.7:0.7 (Meager),1.0:1.0 (Easy),1.3:1.3 (Modest),1.5:1.5 (Bearable),2.0:2.0 (Rough),2.5:2.5 (Strenuous),3.0:3.0 (Formidable),3.5:3.5 (Harsh),4.0:4.0 (Painful),4.5:4.5 (Ferocious),5.0:5.0 (Unforgiving),5.5:5.5 (Punishing),6.0:6.0 (Murderous),6.5:6.5 (Grueling),7.0:7.0 (Unrelenting),7.5:7.5 (Arduous),8.0:8.0 (Barbaric),8.5:8.5 (Savage),9.0:9.0 (Brutal),9.5:9.5 (Draconian),10.0:10.00 (Merciless)"
 msgstr ""
 
 #: modules/ui_mons.lua:140
-msgid "0:None,0.15:0.15 (Trivial),0.35:0.35 (Sporadic),0.7:0.7 (Meager),1.0:1.0 (Easy),1.3:1.3 (Modest),1.5:1.5 (Bearable),2.0:2.0 (Rough),2.5:2.5 (Strenuous),3.0:3.0 (Formidable),3.5:3.5 (Harsh),4.0:4.0 (Painful),4.5:4.5 (Ferocious),5.0:5.0 (Unforgiving),5.5:5.5 (Punishing),6.0:6.0 (Murderous),6.5:6.5 (Grueling),7.0:7.0 (Unrelenting),7.5:7.5 (Arduous),8.0:8.0 (Barbaric),8.5:8.5 (Savage),9.0:9.0 (Brutal),9.5:9.5 (Draconian),10.0:10.00 (Merciless)"
+msgid "If you have Mix It Up or Progressive selected, you can define the lower bound here. Otherwise, this option is simply ignored."
 msgstr ""
 
 #: modules/ui_mons.lua:141
-msgid "If you have Mix It Up or Progressive selected, you can define the lower bound here. Otherwise, this option is simply ignored."
-msgstr ""
-
-#: modules/ui_mons.lua:142
 msgid "For reference: Obsidian's default for normal is 1.0.\n\nMix It Up: Selects quantities specified between Upper and Lower Bound choices on a chosen by the user.\n\nProgressive: creates a curve of increasing monster population also based on the Fine Tune options below.\n\nIt does not matter if your Upper/Lower Bound selections are reversed. Progressive will pick the min VS max quantities selected.\n\nNone: No monsters. Why would you choose this option? \nTrivial: Very, very few monsters. Almost nothing to kill.\nSporadic: Very few monsters. Not many things to kill.\nMeager: Fewer monsters. Not challenging for the average player.\nEasy: Obsidian default quantity. Not too bad for casual players.\nModest: Slightly above default. Still pretty easy for most. \nBearable: Above average opposition. Getting warmer! \nRough: Slightly difficult. Equivalent to late 90s megawads. \nStrenuous: Baby steps into big boy difficulty. Lots to kill! \nFormidable/Harsh: 'Easy' level of difficult. Considerable opposition. \nPainful/Ferocious: Getting into slaughterwad territory. Difficult! \nUnforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \nMurderous/Grueling: Extremely high monster count. \nUnrelenting/Arduous: An uphill battle. Expect to reload saves often! \nBarbaric/Savage: Up into the hardest slaughterwads out there. \nBrutal/Draconian: Legions of demons await you on this setting. \nMerciless: Hell will throw everything at you at this setting, you masochist."
 msgstr ""
 
-#: modules/ui_mons.lua:148
+#: modules/ui_mons.lua:147
 msgid "Monster Strength"
 msgstr ""
 
-#: modules/ui_mons.lua:154
+#: modules/ui_mons.lua:153
 msgid "Affects level of selected monsters for a level's monster palette."
 msgstr ""
 
-#: modules/ui_mons.lua:155
+#: modules/ui_mons.lua:154
 msgid "0.55:0.55 (Weak),0.75:0.75 (Easier),1:1 (Average),1.3:1.3 (Harder),1.7:1.7 (Tough),2.5:2.5 (Fierce),12:12 (CRAZY)"
 msgstr ""
 
-#: modules/ui_mons.lua:161
+#: modules/ui_mons.lua:160
 msgid "Ramp Up"
 msgstr ""
 
-#: modules/ui_mons.lua:167
+#: modules/ui_mons.lua:166
 msgid "Episodic"
 msgstr ""
 
-#: modules/ui_mons.lua:168
+#: modules/ui_mons.lua:167
 msgid "0.5:0.5 (Very Slow),0.75:0.75 (Slow),1:1 (Average),1.5:1.5 (Fast),2:2 (Very Fast),3:3 (Extra Fast)"
 msgstr ""
 
-#: modules/ui_mons.lua:169
+#: modules/ui_mons.lua:168
 msgid "Rate at which monster strength increases as you progress through levels."
 msgstr ""
 
-#: modules/ui_mons.lua:176
+#: modules/ui_mons.lua:175
 msgid "Default Weapon Starts"
 msgstr ""
 
-#: modules/ui_mons.lua:179
+#: modules/ui_mons.lua:178
 msgid "Ensure every map can be completed with only the default weapon (ignore weapons obtained from earlier maps)"
 msgstr ""
 
-#: modules/ui_mons.lua:184
+#: modules/ui_mons.lua:183
 msgid "Quiet Start"
 msgstr ""
 
-#: modules/ui_mons.lua:187
+#: modules/ui_mons.lua:186
 msgid "Makes start rooms mostly safe - no enemies and all outlooking windows are removed. (windows are retained on Procedural Gotchas) Default Obsidian behavior is 'no'."
 msgstr ""
 
-#: modules/ui_mons.lua:191
+#: modules/ui_mons.lua:190
 msgid "Monster Variety"
 msgstr ""
 
-#: modules/ui_mons.lua:193
+#: modules/ui_mons.lua:192
 msgid "Affects how many different monster types can appear in each room.\nSetting this to NONE will make each level use a single monster type"
 msgstr ""
 
-#: modules/ui_mons.lua:197
+#: modules/ui_mons.lua:196
 msgid "Monster Variety Jumpstart"
 msgstr ""
 
-#: modules/ui_mons.lua:200
+#: modules/ui_mons.lua:199
 msgid "Affects how many monster variations initially appear at the very first map."
 msgstr ""
 
-#: modules/ui_mons.lua:205
+#: modules/ui_mons.lua:204
 msgid "Bosses"
 msgstr ""
 
-#: modules/ui_mons.lua:206
+#: modules/ui_mons.lua:205
 msgid "Affects likelihood and difficulty of boss encounters."
 msgstr ""
 
-#: modules/ui_mons.lua:210
+#: modules/ui_mons.lua:209
 msgid "Bosses As Regulars"
 msgstr ""
 
-#: modules/ui_mons.lua:213
+#: modules/ui_mons.lua:212
 msgid "Normally Archviles/Barons/Cyberdemons and other big monsters are excluded from normal monster pool and only can appear as guard for important objective e.g. key. With this option enabled they are allowed to(rarely) spawn as a regular monster. \n\n WARNING: This CAN make maps much more difficult than normal."
 msgstr ""
 
-#: modules/ui_mons.lua:218
+#: modules/ui_mons.lua:217
 msgid "Traps"
 msgstr ""
 
-#: modules/ui_mons.lua:219
+#: modules/ui_mons.lua:218
 msgid "Control the amount of traps."
 msgstr ""
 
-#: modules/ui_mons.lua:223
+#: modules/ui_mons.lua:222
 msgid "Trap Style"
 msgstr ""
 
-#: modules/ui_mons.lua:226
+#: modules/ui_mons.lua:225
 msgid "This option selects between using only teleport or closet traps. DEFAULT means both are used."
 msgstr ""
 
-#: modules/ui_mons.lua:231
+#: modules/ui_mons.lua:230
 msgid "Trap Monsters"
 msgstr ""
 
-#: modules/ui_mons.lua:234
+#: modules/ui_mons.lua:233
 msgid "Changes the quantity of ambushing monsters from traps."
 msgstr ""
 
-#: modules/ui_mons.lua:240
+#: modules/ui_mons.lua:239
 msgid "Cages"
 msgstr ""
 
-#: modules/ui_mons.lua:241
+#: modules/ui_mons.lua:240
 msgid "Control the amount of cages."
 msgstr ""
 
-#: modules/ui_mons.lua:246
+#: modules/ui_mons.lua:245
 msgid "Cage Monsters"
 msgstr ""
 
-#: modules/ui_mons.lua:249
+#: modules/ui_mons.lua:248
 msgid "Changes the quantity of monsters in cages."
 msgstr ""
 
-#: modules/ui_mons.lua:256
+#: modules/ui_mons.lua:255
 msgid "Monsters in Secrets"
 msgstr ""
 
-#: modules/ui_mons.lua:258
+#: modules/ui_mons.lua:257
 msgid "I'm in your secret rooms, placing some monsters. Note: default is none."
 msgstr ""
 
-#: modules/ui_mons.lua:281
+#: modules/ui_mons.lua:280
 msgid "Combat"
 msgstr ""
 
-#: modules/ui_mons.lua:295
+#: modules/ui_mons.lua:294
 msgid "Monster Quantity"
 msgstr ""
 
-#: modules/ui_mons.lua:302
+#: modules/ui_mons.lua:300
 msgid "Mix It Up,Progressive"
 msgstr ""
 
-#: modules/ui_mons.lua:303
+#: modules/ui_mons.lua:301
 msgid "0:None,0.15:0.15 (Trivial),0.35:0.35 (Sporadic),0.7:0.7 (Meager),1.0:1.0 (Easy),1.3:1.3 (Modest),1.5:1.5 (Bearable),2.0:2.0 (Rough),2.5:2.5 (Strenuous),3.0:3.0 (Formidable),3.5:3.5 (Harsh),4.0:4.0 (Painful),4.5:4.5 (Ferocious),5.0:5.0 (Unforgiving),5.5:5.5 (Punishing),6.0:6.0 (Murderous),6.5:6.5 (Grueling),7.0:7.0 (Unrelenting),7.5:7.5 (Arduous),8.0:8.0 (Barbaric),8.5:8.5 (Savage),9.0:9.0 (Brutal),9.5:9.5 (Draconian),10.0:10.00 (Merciless)"
 msgstr ""
 
-#: modules/ui_mons.lua:304
+#: modules/ui_mons.lua:302
 msgid "Changes the amount of monsters placed in a map. Scales with level size."
 msgstr ""
 
-#: modules/ui_mons.lua:305
+#: modules/ui_mons.lua:303
 msgid "For reference: Obsidian's default for normal is 1.0.\n\nMix It Up: Selects quantities specified between Upper and Lower Bound choices on a chosen by the user.\n\nProgressive: creates a curve of increasing monster population also based on the Fine Tune options below.\n\nIt does not matter if your Upper/Lower Bound selections are reversed. Progressive will pick the min VS max quantities selected.\n\nNone: No monsters. Why would you choose this option? \nTrivial: Very, very few monsters. Almost nothing to kill.\nSporadic: Very few monsters. Not many things to kill.\nMeager: Fewer monsters. Not challenging for the average player.\nEasy: Obsidian default quantity. Not too bad for casual players.\nModest: Slightly above default. Still pretty easy for most. \nBearable: Above average opposition. Getting warmer! \nRough: Slightly difficult. Equivalent to late 90s megawads. \nStrenuous: Baby steps into big boy difficulty. Lots to kill! \nFormidable/Harsh: 'Easy' level of difficult. Considerable opposition. \nPainful/Ferocious: Getting into slaughterwad territory. Difficult! \nUnforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \nMurderous/Grueling: Extremely high monster count. \nUnrelenting/Arduous: An uphill battle. Expect to reload saves often! \nBarbaric/Savage: Up into the hardest slaughterwads out there. \nBrutal/Draconian: Legions of demons await you on this setting. \nMerciless: Hell will throw everything at you at this setting, you masochist."
 msgstr ""
 
-#: modules/ui_mons.lua:311
+#: modules/ui_mons.lua:309
 msgid "Upper Bound"
 msgstr ""
 
-#: modules/ui_mons.lua:317
+#: modules/ui_mons.lua:315
 msgid "0:None,0.15:0.15 (Trivial),0.35:0.35 (Sporadic),0.7:0.7 (Meager),1.0:1.0 (Easy),1.3:1.3 (Modest),1.5:1.5 (Bearable),2.0:2.0 (Rough),2.5:2.5 (Strenuous),3.0:3.0 (Formidable),3.5:3.5 (Harsh),4.0:4.0 (Painful),4.5:4.5 (Ferocious),5.0:5.0 (Unforgiving),5.5:5.5 (Punishing),6.0:6.0 (Murderous),6.5:6.5 (Grueling),7.0:7.0 (Unrelenting),7.5:7.5 (Arduous),8.0:8.0 (Barbaric),8.5:8.5 (Savage),9.0:9.0 (Brutal),9.5:9.5 (Draconian),10.0:10.00 (Merciless)"
 msgstr ""
 
-#: modules/ui_mons.lua:318
+#: modules/ui_mons.lua:316
 msgid "If you have Mix It Up or Progressive selected, you can define the upper bound here. Otherwise, this option is simply ignored."
 msgstr ""
 
-#: modules/ui_mons.lua:319
+#: modules/ui_mons.lua:317
 msgid "For reference: Obsidian's default for normal is 1.0.\n\nMix It Up: Selects quantities specified between Upper and Lower Bound choices on a chosen by the user.\n\nProgressive: creates a curve of increasing monster population also based on the Fine Tune options below.\n\nIt does not matter if your Upper/Lower Bound selections are reversed. Progressive will pick the min VS max quantities selected.\n\nNone: No monsters. Why would you choose this option? \nTrivial: Very, very few monsters. Almost nothing to kill.\nSporadic: Very few monsters. Not many things to kill.\nMeager: Fewer monsters. Not challenging for the average player.\nEasy: Obsidian default quantity. Not too bad for casual players.\nModest: Slightly above default. Still pretty easy for most. \nBearable: Above average opposition. Getting warmer! \nRough: Slightly difficult. Equivalent to late 90s megawads. \nStrenuous: Baby steps into big boy difficulty. Lots to kill! \nFormidable/Harsh: 'Easy' level of difficult. Considerable opposition. \nPainful/Ferocious: Getting into slaughterwad territory. Difficult! \nUnforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \nMurderous/Grueling: Extremely high monster count. \nUnrelenting/Arduous: An uphill battle. Expect to reload saves often! \nBarbaric/Savage: Up into the hardest slaughterwads out there. \nBrutal/Draconian: Legions of demons await you on this setting. \nMerciless: Hell will throw everything at you at this setting, you masochist."
 msgstr ""
 
-#: modules/ui_mons.lua:324
+#: modules/ui_mons.lua:322
 msgid "Lower Bound"
 msgstr ""
 
-#: modules/ui_mons.lua:330
+#: modules/ui_mons.lua:328
 msgid "0:None,0.15:0.15 (Trivial),0.35:0.35 (Sporadic),0.7:0.7 (Meager),1.0:1.0 (Easy),1.3:1.3 (Modest),1.5:1.5 (Bearable),2.0:2.0 (Rough),2.5:2.5 (Strenuous),3.0:3.0 (Formidable),3.5:3.5 (Harsh),4.0:4.0 (Painful),4.5:4.5 (Ferocious),5.0:5.0 (Unforgiving),5.5:5.5 (Punishing),6.0:6.0 (Murderous),6.5:6.5 (Grueling),7.0:7.0 (Unrelenting),7.5:7.5 (Arduous),8.0:8.0 (Barbaric),8.5:8.5 (Savage),9.0:9.0 (Brutal),9.5:9.5 (Draconian),10.0:10.00 (Merciless)"
 msgstr ""
 
-#: modules/ui_mons.lua:331
+#: modules/ui_mons.lua:329
 msgid "If you have Mix It Up or Progressive selected, you can define the lower bound here. Otherwise, this option is simply ignored."
 msgstr ""
 
-#: modules/ui_mons.lua:332
+#: modules/ui_mons.lua:330
 msgid "For reference: Obsidian's default for normal is 1.0.\n\nMix It Up: Selects quantities specified between Upper and Lower Bound choices on a chosen by the user.\n\nProgressive: creates a curve of increasing monster population also based on the Fine Tune options below.\n\nIt does not matter if your Upper/Lower Bound selections are reversed. Progressive will pick the min VS max quantities selected.\n\nNone: No monsters. Why would you choose this option? \nTrivial: Very, very few monsters. Almost nothing to kill.\nSporadic: Very few monsters. Not many things to kill.\nMeager: Fewer monsters. Not challenging for the average player.\nEasy: Obsidian default quantity. Not too bad for casual players.\nModest: Slightly above default. Still pretty easy for most. \nBearable: Above average opposition. Getting warmer! \nRough: Slightly difficult. Equivalent to late 90s megawads. \nStrenuous: Baby steps into big boy difficulty. Lots to kill! \nFormidable/Harsh: 'Easy' level of difficult. Considerable opposition. \nPainful/Ferocious: Getting into slaughterwad territory. Difficult! \nUnforgiving/Punishing: Slaughterwad level difficulty. Skill needed. \nMurderous/Grueling: Extremely high monster count. \nUnrelenting/Arduous: An uphill battle. Expect to reload saves often! \nBarbaric/Savage: Up into the hardest slaughterwads out there. \nBrutal/Draconian: Legions of demons await you on this setting. \nMerciless: Hell will throw everything at you at this setting, you masochist."
 msgstr ""
 
@@ -8410,90 +8510,106 @@ msgid "No Fly Zone"
 msgstr ""
 
 #: modules/ui_slump.lua:41
-msgid "SLUMP Architecture"
+msgid "Architecture"
 msgstr ""
 
 #: modules/ui_slump.lua:56
 msgid "Level Size"
 msgstr ""
 
+#: modules/ui_slump.lua:62
+msgid "Mix It Up,Episodic,Progressive"
+msgstr ""
+
 #: modules/ui_slump.lua:63
-msgid "Mix It Up"
+msgid "10:10 (Microscopic),16:16 (Miniature),22:22 (Tiny),30:30 (Small),36:36 (Average),42:42 (Large),48:48 (Huge),58:58 (Colossal),66:66 (Gargantuan),75:75 (Transcendent)"
 msgstr ""
 
 #: modules/ui_slump.lua:64
-msgid "Minimum number of rooms per level."
+msgid "Determines size of map in rooms."
 msgstr ""
 
-#: modules/ui_slump.lua:70
+#: modules/ui_slump.lua:75
+msgid "Advanced Architecture"
+msgstr ""
+
+#: modules/ui_slump.lua:92
 msgid "Room Bigification Chance"
 msgstr ""
 
-#: modules/ui_slump.lua:77
+#: modules/ui_slump.lua:94
+msgid "%"
+msgstr ""
+
+#: modules/ui_slump.lua:99
 msgid "% chance that SLUMP will attempt to increase a room's size."
 msgstr ""
 
-#: modules/ui_slump.lua:83
+#: modules/ui_slump.lua:105
 msgid "Forkiness"
 msgstr ""
 
-#: modules/ui_slump.lua:90
+#: modules/ui_slump.lua:107
+msgid "%"
+msgstr ""
+
+#: modules/ui_slump.lua:112
 msgid "% chance that a room will attempt to fork as the level grows."
 msgstr ""
 
-#: modules/ui_slump.lua:91
+#: modules/ui_slump.lua:113
 msgid "0% should look like a bunch of murder hallways. Forking is not guaranteed to succeed, especially if the Room Bigification Chance is increased."
 msgstr ""
 
-#: modules/ui_slump.lua:97
+#: modules/ui_slump.lua:119
 msgid "Deathmatch Spawns"
 msgstr ""
 
-#: modules/ui_slump.lua:100
+#: modules/ui_slump.lua:122
 msgid "Add Deathmatch starts to generated levels."
 msgstr ""
 
-#: modules/ui_slump.lua:105
+#: modules/ui_slump.lua:127
 msgid "Major Nukage Mode"
 msgstr ""
 
-#: modules/ui_slump.lua:108
+#: modules/ui_slump.lua:130
 msgid "Watch your step!"
 msgstr ""
 
-#: modules/ui_slump.lua:109
+#: modules/ui_slump.lua:131
 msgid "Will fill most rooms with damaging liquids."
 msgstr ""
 
-#: modules/ui_slump.lua:115
-msgid "Quiet Start"
-msgstr ""
-
-#: modules/ui_slump.lua:118
-msgid "Prevents monsters from spawning in the starting room."
-msgstr ""
-
-#: modules/ui_slump.lua:119
-msgid "Monsters in other rooms may still have a line of sight to you, so be careful!"
-msgstr ""
-
-#: modules/ui_slump.lua:129
-msgid "SLUMP Monsters"
-msgstr ""
-
 #: modules/ui_slump.lua:144
+msgid "Combat"
+msgstr ""
+
+#: modules/ui_slump.lua:159
 msgid "Monster Variety"
 msgstr ""
 
-#: modules/ui_slump.lua:147
+#: modules/ui_slump.lua:162
 msgid "Control what types of monsters are available"
 msgstr ""
 
-#: modules/ui_slump.lua:158
+#: modules/ui_slump.lua:168
+msgid "Quiet Start"
+msgstr ""
+
+#: modules/ui_slump.lua:171
+msgid "Prevents monsters from spawning in the starting room."
+msgstr ""
+
+#: modules/ui_slump.lua:172
+msgid "Monsters in other rooms may still have a line of sight to you, so be careful!"
+msgstr ""
+
+#: modules/ui_slump.lua:184
 msgid "Oops! All Nazis!"
 msgstr ""
 
-#: modules/ui_slump.lua:164
+#: modules/ui_slump.lua:190
 msgid "Populates the level with only SS troopers. This may expand to include pinkies/the Cyberdemon."
 msgstr ""
 
@@ -8954,166 +9070,170 @@ msgid "Random"
 msgstr ""
 
 #: modules/zdoom_specials.lua:34
+msgid "Natural"
+msgstr ""
+
+#: modules/zdoom_specials.lua:35
 msgid "No"
 msgstr ""
 
-#: modules/zdoom_specials.lua:39
+#: modules/zdoom_specials.lua:40
 msgid "All"
 msgstr ""
 
-#: modules/zdoom_specials.lua:40
+#: modules/zdoom_specials.lua:41
 msgid "Outdoors Only"
 msgstr ""
 
-#: modules/zdoom_specials.lua:45
+#: modules/zdoom_specials.lua:46
 msgid "Subtle"
 msgstr ""
 
-#: modules/zdoom_specials.lua:46
+#: modules/zdoom_specials.lua:47
 msgid "Misty"
 msgstr ""
 
-#: modules/zdoom_specials.lua:47
+#: modules/zdoom_specials.lua:48
 msgid "Smoky"
 msgstr ""
 
-#: modules/zdoom_specials.lua:48
+#: modules/zdoom_specials.lua:49
 msgid "Foggy"
 msgstr ""
 
-#: modules/zdoom_specials.lua:49
+#: modules/zdoom_specials.lua:50
 msgid "Dense"
 msgstr ""
 
-#: modules/zdoom_specials.lua:50
+#: modules/zdoom_specials.lua:51
 msgid "Mix It Up"
 msgstr ""
 
-#: modules/zdoom_specials.lua:55
+#: modules/zdoom_specials.lua:56
 msgid "Generic"
 msgstr ""
 
-#: modules/zdoom_specials.lua:56
+#: modules/zdoom_specials.lua:57
 msgid "Generated"
 msgstr ""
 
-#: modules/zdoom_specials.lua:57
+#: modules/zdoom_specials.lua:58
 msgid "NONE"
 msgstr ""
 
-#: modules/zdoom_specials.lua:193
+#: modules/zdoom_specials.lua:194
 msgid "Universal Intermission"
 msgstr ""
 
-#: modules/zdoom_specials.lua:194
+#: modules/zdoom_specials.lua:195
 msgid "Doom 2 Vanilla"
 msgstr ""
 
-#: modules/zdoom_specials.lua:195
+#: modules/zdoom_specials.lua:196
 msgid "Doom 1 Vanilla"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1155
+#: modules/zdoom_specials.lua:1166
 msgid "ZDoom Special Addons"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1172
+#: modules/zdoom_specials.lua:1183
 msgid "This module adds new ZDoom-exclusive features such as fog. More ZDoom-specific features will be included soon."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1178
+#: modules/zdoom_specials.lua:1189
 msgid "Fog Generator"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1182
+#: modules/zdoom_specials.lua:1193
 msgid "Generates fog colors based on the Sky Generator or generate completely randomly."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1188
+#: modules/zdoom_specials.lua:1199
 msgid "Fog Environment"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1192
+#: modules/zdoom_specials.lua:1203
 msgid "Limits fog to outdoors (sectors with exposed sky ceilings) or allows for all."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1198
+#: modules/zdoom_specials.lua:1209
 msgid "Fog Intensity"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1202
+#: modules/zdoom_specials.lua:1213
 msgid "Determines thickness and intensity of fog, if the Fog Generator is enabled. Subtle or Misty is recommended."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1208
+#: modules/zdoom_specials.lua:1219
 msgid "Sky Fog"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1212
+#: modules/zdoom_specials.lua:1223
 msgid "Tints the sky texture with the fog color, intensity is based on the Fog Intensity selection."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1219
+#: modules/zdoom_specials.lua:1230
 msgid "Dynamic Lights"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1223
+#: modules/zdoom_specials.lua:1234
 msgid "Generates dynamic point lights on prefabs if available."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1228
+#: modules/zdoom_specials.lua:1239
 msgid "Glowing Flats"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1232
+#: modules/zdoom_specials.lua:1243
 msgid "Adds Doom-64 style lighting/glowing flats via GLDEFS lump. Visible on Zandronum ports as well."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1238
+#: modules/zdoom_specials.lua:1249
 msgid "Shuffle Music"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1242
+#: modules/zdoom_specials.lua:1253
 msgid "Shuffles music in the MAPINFO lump. Oblige's vanilla music shuffler uses a BEX lump and is therefore ignored when the ZDoom Addons module is active.\n\nWarning: the 'Merge Doom 1 and 2' option is for music packs that contain both Doom 1 and 2 direct patch replacements. Do not use unless you have such a pack."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1247
+#: modules/zdoom_specials.lua:1258
 msgid "Story Generator"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1251
+#: modules/zdoom_specials.lua:1262
 msgid "Adds cluster information with generic or randomized story text into the MAPINFO structure!"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1256
+#: modules/zdoom_specials.lua:1267
 msgid "Quit Messages"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1260
+#: modules/zdoom_specials.lua:1271
 msgid "Adds custom quit messages into the MAPINFO game definition."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1265
+#: modules/zdoom_specials.lua:1276
 msgid "Intermission Music"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1269
+#: modules/zdoom_specials.lua:1280
 msgid "Changes the music playing during intermission screens."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1274
+#: modules/zdoom_specials.lua:1285
 msgid "Episode Selection"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1278
+#: modules/zdoom_specials.lua:1289
 msgid "Creates a classic Doom/Ultimate Doom style episode selection."
 msgstr ""
 
-#: modules/zdoom_specials.lua:1284
+#: modules/zdoom_specials.lua:1295
 msgid "Disable Intermissions"
 msgstr ""
 
-#: modules/zdoom_specials.lua:1288
+#: modules/zdoom_specials.lua:1299
 msgid "Removes end-level Intermission Screens (containing map completion data) but retains Text Screens with story."
 msgstr ""
 
@@ -9337,115 +9457,115 @@ msgstr ""
 msgid "OBSIDIAN will now restart and apply changes to addons."
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:952
+#: source_files/obsidian_main/main.cc:973
 msgid "No"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:953
+#: source_files/obsidian_main/main.cc:974
 msgid "Yes"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:954
+#: source_files/obsidian_main/main.cc:975
 msgid "OK"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:955
+#: source_files/obsidian_main/main.cc:976
 msgid "Cancel"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:956
+#: source_files/obsidian_main/main.cc:977
 msgid "Close"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1070
+#: source_files/obsidian_main/main.cc:1090
 msgid "Seed:"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1126
+#: source_files/obsidian_main/main.cc:1146
 msgid "Seed:"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1130
+#: source_files/obsidian_main/main.cc:1150
 msgid "Seed:"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1134
+#: source_files/obsidian_main/main.cc:1154
 msgid "Preparing..."
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1171
+#: source_files/obsidian_main/main.cc:1191
 msgid "Success"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1189
+#: source_files/obsidian_main/main.cc:1209
 msgid "Seed: -"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1215
+#: source_files/obsidian_main/main.cc:1235
 msgid "Cancelled"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1442
+#: source_files/obsidian_main/main.cc:1462
 msgid "OBSIDIAN Level Maker"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1443
+#: source_files/obsidian_main/main.cc:1463
 msgid "Unstable"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1544
+#: source_files/obsidian_main/main.cc:1568
 msgid "No such config file: {}\n"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1551
+#: source_files/obsidian_main/main.cc:1575
 msgid "No such config file: {}\n"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1645
+#: source_files/obsidian_main/main.cc:1669
 msgid "No such config file: {}\n"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1656
+#: source_files/obsidian_main/main.cc:1691
 msgid "Surprise Me/Preserve Old Config"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1660
+#: source_files/obsidian_main/main.cc:1695
 msgid "Surprise Me/Randomize Architecture"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1664
+#: source_files/obsidian_main/main.cc:1699
 msgid "Surprise Me/Randomize Combat"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1668
+#: source_files/obsidian_main/main.cc:1703
 msgid "Surprise Me/Randomize Pickups"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1672
+#: source_files/obsidian_main/main.cc:1707
 msgid "Surprise Me/Randomize Other"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1675
+#: source_files/obsidian_main/main.cc:1710
 msgid "Addons/No Addons Detected"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1678
+#: source_files/obsidian_main/main.cc:1713
 msgid "Addons/Restart and Apply Changes"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1681
+#: source_files/obsidian_main/main.cc:1716
 msgid "Addons/"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1827
+#: source_files/obsidian_main/main.cc:1862
 msgid "Seed:"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1929
+#: source_files/obsidian_main/main.cc:1966
 msgid "Sorry, an internal error occurred:\n{}"
 msgstr ""
 
-#: source_files/obsidian_main/main.cc:1932
+#: source_files/obsidian_main/main.cc:1969
 msgid "An exception occurred: \n{}"
 msgstr ""
 
@@ -9541,39 +9661,47 @@ msgstr ""
 msgid "This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1081
+#: source_files/obsidian_main/m_lua.cc:1089
 msgid "Making"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1577
+#: source_files/obsidian_main/m_lua.cc:1210
+msgid "Using"
+msgstr ""
+
+#: source_files/obsidian_main/m_lua.cc:1211
+msgid "Preview Not Available"
+msgstr ""
+
+#: source_files/obsidian_main/m_lua.cc:1612
 msgid "[ ERROR ]"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1581
+#: source_files/obsidian_main/m_lua.cc:1616
 msgid "Script Error: "
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1978
+#: source_files/obsidian_main/m_lua.cc:2013
 msgid "ob_print_reference: Error creating REFERENCE.txt!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1988
+#: source_files/obsidian_main/m_lua.cc:2023
 msgid "ob_print_reference_json: Error printing json reference!\n"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:1997
+#: source_files/obsidian_main/m_lua.cc:2032
 msgid "Script Error"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2005
+#: source_files/obsidian_main/m_lua.cc:2040
 msgid "[ ERROR ]"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2011
+#: source_files/obsidian_main/m_lua.cc:2046
 msgid "Script Error"
 msgstr ""
 
-#: source_files/obsidian_main/m_lua.cc:2035
+#: source_files/obsidian_main/m_lua.cc:2070
 msgid "Cancelled"
 msgstr ""
 
@@ -9857,151 +9985,151 @@ msgstr ""
 msgid "Switching font selection requires a restart.\nOBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:931
+#: source_files/obsidian_main/m_theme.cc:933
 msgid "Select Panel Text Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1050
+#: source_files/obsidian_main/m_theme.cc:1052
 msgid "Select Button Text Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1116
+#: source_files/obsidian_main/m_theme.cc:1118
 msgid "Select Panel Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1179
+#: source_files/obsidian_main/m_theme.cc:1181
 msgid "Select Highlight Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1267
+#: source_files/obsidian_main/m_theme.cc:1269
 msgid "Select Button Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1330
+#: source_files/obsidian_main/m_theme.cc:1332
 msgid "Select Gradient Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1368
+#: source_files/obsidian_main/m_theme.cc:1370
 msgid "Select Border Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1404
+#: source_files/obsidian_main/m_theme.cc:1406
 msgid "Select Gap Color"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1471
+#: source_files/obsidian_main/m_theme.cc:1473
 msgid "Defaults loaded.\nOBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1483
+#: source_files/obsidian_main/m_theme.cc:1485
 msgid "Theme loading requires a restart.\nOBSIDIAN will now restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1524
+#: source_files/obsidian_main/m_theme.cc:1526
 msgid "Window Scaling: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1526
+#: source_files/obsidian_main/m_theme.cc:1528
 msgid "AUTO|Tiny|Small|Medium|Large|Huge"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1538
+#: source_files/obsidian_main/m_theme.cc:1540
 msgid "Font Size: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1555
+#: source_files/obsidian_main/m_theme.cc:1557
 msgid "Font: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1571
+#: source_files/obsidian_main/m_theme.cc:1573
 msgid "Widget Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1573
+#: source_files/obsidian_main/m_theme.cc:1575
 msgid "Default|Gleam|Win95|Plastic"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1585
+#: source_files/obsidian_main/m_theme.cc:1587
 msgid "Box Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1587
+#: source_files/obsidian_main/m_theme.cc:1589
 msgid "Default|Shadow|Embossed|Engraved|Inverted|Raised"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1599
+#: source_files/obsidian_main/m_theme.cc:1601
 msgid "Button Theme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1601
+#: source_files/obsidian_main/m_theme.cc:1603
 msgid "Default|Raised|Engraved|Embossed|Flat"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1613
+#: source_files/obsidian_main/m_theme.cc:1615
 msgid "Color Scheme: "
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1615
+#: source_files/obsidian_main/m_theme.cc:1617
 msgid "Default|Custom"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1626
+#: source_files/obsidian_main/m_theme.cc:1628
 msgid "Panel Font"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1636
+#: source_files/obsidian_main/m_theme.cc:1638
 msgid "Button Font"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1646
+#: source_files/obsidian_main/m_theme.cc:1648
 msgid "Panels"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1656
+#: source_files/obsidian_main/m_theme.cc:1658
 msgid "Highlights"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1667
+#: source_files/obsidian_main/m_theme.cc:1669
 msgid "Buttons"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1678
+#: source_files/obsidian_main/m_theme.cc:1680
 msgid "Gradient"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1689
+#: source_files/obsidian_main/m_theme.cc:1691
 msgid "Borders"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1700
+#: source_files/obsidian_main/m_theme.cc:1702
 msgid "Gaps"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1713
+#: source_files/obsidian_main/m_theme.cc:1715
 msgid " Use System Fonts (disables bundled fonts)"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1724
+#: source_files/obsidian_main/m_theme.cc:1726
 msgid " Single Pane Mode"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1734
+#: source_files/obsidian_main/m_theme.cc:1736
 msgid "Load Defaults"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1744
+#: source_files/obsidian_main/m_theme.cc:1746
 msgid "Load Theme"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1755
+#: source_files/obsidian_main/m_theme.cc:1757
 msgid "Save Theme"
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1791
+#: source_files/obsidian_main/m_theme.cc:1793
 msgid "Note: Some options require a restart."
 msgstr ""
 
-#: source_files/obsidian_main/m_theme.cc:1828
+#: source_files/obsidian_main/m_theme.cc:1830
 msgid "OBSIDIAN Theme Options"
 msgstr ""
 
@@ -10161,31 +10289,31 @@ msgstr ""
 msgid "Seed: -"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:67
+#: source_files/obsidian_main/ui_build.cc:74
 msgid "Ready to go!"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:219
+#: source_files/obsidian_main/ui_build.cc:226
 msgid "Plan"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:267
+#: source_files/obsidian_main/ui_build.cc:274
 msgid "Building Nodes"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:304
+#: source_files/obsidian_main/ui_build.cc:311
 msgid "Success"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:318
+#: source_files/obsidian_main/ui_build.cc:325
 msgid "Plan"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:319
+#: source_files/obsidian_main/ui_build.cc:326
 msgid "Rooms"
 msgstr ""
 
-#: source_files/obsidian_main/ui_build.cc:320
+#: source_files/obsidian_main/ui_build.cc:327
 msgid "Mons"
 msgstr ""
 
@@ -10221,51 +10349,51 @@ msgstr ""
 msgid "Quit"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:188
+#: source_files/obsidian_main/ui_game.cc:202
 msgid "Engine"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:198
+#: source_files/obsidian_main/ui_game.cc:212
 msgid "id Tech 0: Powered Wolfenstein-3D and similar games\n\nid Tech 1: Powered Doom, Doom 2, Heretic, etc"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:204
+#: source_files/obsidian_main/ui_game.cc:218
 msgid "Game"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:214
+#: source_files/obsidian_main/ui_game.cc:228
 msgid "The following games will have gameplay that differs from the original IWADs:\n\nHexen: Game progression is linear and episodic. There are no hubs present. The Death Wyvern is not present in the monster table due to the infeasibility of scripting and flight pathing.\n\nStrife: Quests/multiple endings not yet implemented. Progression is linear and game will end on last level generated."
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:220
+#: source_files/obsidian_main/ui_game.cc:234
 msgid "Port"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:230
+#: source_files/obsidian_main/ui_game.cc:244
 msgid "Available Ports:\n\nid Tech 0:\n\nVanilla: Works with the original executables\n\nid Tech 1:\n\nZDoom Family: Ports that use ZDoom as a base. Example ports: GZDoom, LZDoom\n\nVanilla: Works with the original program or ports that enforce the original limits. Examples: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nLimit Removing: Any port that raises the limits of the original game to prevent crashes, but is not Boom-compatible. Example ports: Doom2-plus, Doomsday 1.x, Crispy Doom\n\nBoom-Compatible: Ports that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nPrBoom-Compatible: Boom-compatible, but also capable of using extended nodes. Example ports: DSDA-Doom, PrBoom+um\n\nEDGE-Classic: Boom-compatible, plus additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:236
+#: source_files/obsidian_main/ui_game.cc:250
 msgid "Length"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:246
+#: source_files/obsidian_main/ui_game.cc:260
 msgid "Available Game Lengths:\n\nSingle Level: One map.\n\nA Few Maps: Four maps.\n\nOne Episode: The length of an episode in the original game. For Doom 2 and other games which normally doesn't have episodes, this number is determined by Obsidian.\n\nFull Game: The length of a full game in the original program."
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:252
+#: source_files/obsidian_main/ui_game.cc:266
 msgid "Theme"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:263
+#: source_files/obsidian_main/ui_game.cc:277
 msgid "Available Themes:\n\nOriginal: Follows the theme progression of the original game.\n\nEpisodic: Each episode follows a single randomly chosen theme.\n\nBit Mixed: Theme will change every few levels.\n\nJumbled Up: Level themes are purely random.\n\nPsychedelic: Trippy.\n\nOther themes listed are game-specific."
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:364
+#: source_files/obsidian_main/ui_game.cc:378
 msgid "Cancel"
 msgstr ""
 
-#: source_files/obsidian_main/ui_game.cc:372
+#: source_files/obsidian_main/ui_game.cc:386
 msgid "Quit"
 msgstr ""
 
@@ -10273,7 +10401,7 @@ msgstr ""
 msgid "Use Slider Value"
 msgstr ""
 
-#: source_files/obsidian_main/ui_module.cc:904
+#: source_files/obsidian_main/ui_module.cc:908
 msgid "Enter Value:"
 msgstr ""
 

@@ -136,6 +136,9 @@ VoidRunner
 DasCake
   - ZDoom boss generator script improvement
 
+Baysha
+  - Hot Dog theme
+
 # OBLIGE
 
 ## DEVELOPER:
