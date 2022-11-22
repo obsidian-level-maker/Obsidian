@@ -897,7 +897,7 @@ function Grower_calc_rule_probs(LEVEL)
     gui.printf("\n--== Layout Absurdity Module ==--\n\n")
   end
 
-  if not LEVEL.is_procedural_gotcha then
+  if not LEVEL.is_procedural_gotcha and not LEVEL.is_nature and not LEVEL.has_streets then
     if PARAM.float_layout_absurdity then
       if rand.odds(PARAM.float_layout_absurdity) then
         LEVEL.is_absurd = true

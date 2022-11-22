@@ -384,7 +384,7 @@ function DOOM.get_levels()
     -- handling for street mode
     -- actual handling for urban percentages are done
     if PARAM.float_streets_mode then
-      if not LEV.is_procedural_gotcha or not LEV.prebuilt then
+      if not LEV.is_procedural_gotcha and not LEV.prebuilt then
         if OB_CONFIG.batch == "yes" then
           if rand.odds(tonumber(OB_CONFIG.float_streets_mode)) then
             LEV.has_streets = true
@@ -398,7 +398,7 @@ function DOOM.get_levels()
     end
 
     if not LEV.prebuilt then
-      if PARAM.float_linear_mode then
+      if PARAM.float_linear_mode and not LEV.has_streets then
         if rand.odds(PARAM.float_linear_mode) then
           LEV.is_linear = true
         end
@@ -411,9 +411,11 @@ function DOOM.get_levels()
             if rand.odds(50) then
               LEV.has_streets = false
               LEV.is_nature = true
+              LEV.is_linear = false
             end
           else
             LEV.is_nature = true
+            LEV.is_linear = false
           end
         end
       end
