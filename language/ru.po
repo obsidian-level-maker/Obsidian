@@ -233,6 +233,42 @@ msgstr "Strife (экспериментальный)"
 msgid "Town"
 msgstr "Город"
 
+#: games/wolf/base.lua:41
+msgid "Wolfenstein 3D"
+msgstr ""
+
+#: games/wolf/x_spear.lua:423
+msgid "Spear of Destiny"
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:33
+msgid "Alternate Shape Grammars"
+msgstr "Альтернативные наборы форм"
+
+#: modules/alt_shape_grammars.lua:40
+msgid "Options for alternate means of determining the layout of a level."
+msgstr "Варианты альтернативных способов определения макета уровня."
+
+#: modules/alt_shape_grammars.lua:52
+msgid "Boxes of Death"
+msgstr "\"Коробки смерти\""
+
+#: modules/alt_shape_grammars.lua:59
+msgid "Sets chance of levels using the Boxes of Death shape grammar."
+msgstr "Устанавливает шанс того, что каждый конкретный уровень будет сгенерирован с использованием набора правил \"Коробок смерти\"."
+
+#: modules/alt_shape_grammars.lua:60
+msgid "Gives levels a chance of being generated using Boxes of Death shape grammar. With this grammar, rooms are square shaped, with the occasional chunk taken out of one of the corners or sides. Room sizes are very consistent."
+msgstr "С данным набором правил комнаты будут квадратными, со случайно вырезанной частью в одном из углов или на одной из стен. Размеры комнат практически одинаковы."
+
+#: modules/alt_shape_grammars.lua:67
+msgid "Oblige v5"
+msgstr ""
+
+#: modules/alt_shape_grammars.lua:74
+msgid "Sets chance of levels using the Oblige v5 shape grammar."
+msgstr "Устанавливает шанс создания уровня с помощью набора правил Oblige v5."
+
 #: modules/chex3/ctl_chex.lua:60
 msgid "Chex Quest 3 Monster Control"
 msgstr "Настройка монстров Chex Quest 3"
@@ -994,6 +1030,14 @@ msgstr "Предупреждать"
 msgid "Abort"
 msgstr "Прерывать"
 
+#: modules/debugger.lua:31
+msgid "Filename"
+msgstr "По названию файла"
+
+#: modules/debugger.lua:32
+msgid "Random Word List"
+msgstr "Случайный набор слов"
+
 #: modules/debugger.lua:30
 msgid "Test Level Names"
 msgstr "Тест названий уровней"
@@ -1030,13 +1074,33 @@ msgstr "По комнатам (чуть медленнее)"
 msgid "No Live Minimap"
 msgstr "Только контуры (быстро)"
 
-#: modules/debugger.lua:80
-msgid "Debug Control"
-msgstr "Отладочные настройки"
+#: modules/debugger.lua:87
+msgid "Miscellaneous Options"
+msgstr "Разное"
 
-#: modules/debugger.lua:86
-msgid "Provides options for printing out more verbose log information. Advanced, highly experimental features can also be found here."
+#: modules/debugger.lua:94
+msgid "Provides options for printing out more verbose log information. Unusual or experimental features can also be found here."
 msgstr "Опции, связанные с отладкой, дополнительным журналированием и тому подобными вещами. Также здесь находятся некоторые экспериментальные и расширенные настройки."
+
+#: modules/debugger.lua:107
+msgid "Title Screen Source"
+msgstr "Название на начальном экране"
+
+#: modules/debugger.lua:110
+msgid "Choose how the WAD title is determined"
+msgstr "[В разработке] Откуда будет браться название сборника уровней, отображаемое на начальном экране."
+
+#: modules/debugger.lua:111
+msgid "Default: Will use Obsidian's regular naming tables.\n\nFilename: Will use the filename provided for the WAD (minus file extension).\n\nRandom Word List: Will randomly pick from the internal random word list.\n\nNOTE: Only EN locale characters are supported at this time, other languages may result in a blank title!"
+msgstr "Откуда будет браться название сборника уровней, отображаемое на начальном экране.\n\nПо умолчанию: использование стандартного набора наименований Obsidian.\n\nПо названию файла: брать название файла (за исключением расширения).\n\nСлучайный набор слов: порождать откровенную абракадабру из случайных слов.\n\nВНИМАНИЕ: в данный момент поддерживается только локаль EN! При использовании других языков некоторые символы могут отсутствовать (вплоть до пустой строки)."
+
+#: modules/debugger.lua:117
+msgid "Disable Sub-Titles"
+msgstr "Убрать подзаголовок"
+
+#: modules/debugger.lua:120
+msgid "Disable sub-titles on the Title Screen."
+msgstr "Отключает генерацию подзаголовка (по умолчанию пишется малым размером шрифта под самим названием)."
 
 #: modules/debugger.lua:99
 msgid "Alternate Item Quantities"
@@ -2540,7 +2604,7 @@ msgstr "Освещение мест под небом"
 
 #: modules/heretic/sky_generator.lua:813
 msgid "Overrides (and ignores) Dark Outdoors setting in Miscellaneous tab. If the sky generator creates night skies for an episode, episode's map outdoors is also dark but bright if day-ish."
-msgstr "Переопределяет и, как следствие, игнорирует настройку \"Тёмные пространства под небом\". Если генератор неба создал ночные виды, то всё пространство под ним будет затемнённым, и наоборот — для дневного времени суток локации под небом будут ярко освещёнными."
+msgstr "Переопределяет и, как следствие, игнорирует настройку \"Тёмные пространства под небом\". Если генератор неба создал ночное, то все локации под ним будет затемнённым, и наоборот — для дневного времени суток локации под небом будут ярко освещены."
 
 #: modules/heretic/zdoom_specials.lua:26
 msgid "Yes"
@@ -3042,6 +3106,26 @@ msgstr "Части Высшего оружия"
 msgid "Control the likelihood of finding Ultimate Weapon Pieces."
 msgstr "Ultimate Weapon Pieces. Управление количеством собираемых частей Окончательного (Высшего) оружия."
 
+#: modules/historical_versions.lua:33
+msgid "Historical Versions"
+msgstr "Архивные версии"
+
+#: modules/historical_versions.lua:40
+msgid "Options to generate levels using past releases of Oblige, Obsidian's predecessor."
+msgstr "Опции, позволяющие генерировать уровни с использованием старых релизов Oblige (предшественника Obsidian)."
+
+#: modules/historical_versions.lua:52
+msgid "Oblige v2"
+msgstr ""
+
+#: modules/historical_versions.lua:59
+msgid "Sets chance of levels being generated using Oblige v2"
+msgstr "Устанавливает шанс создания уровня с помощью набора правил Oblige v2."
+
+#: modules/historical_versions.lua:60
+msgid "Gives levels a chance of being generated using an internal version of Oblige version 2.x. NOTE: Not all module settings will affect levels generated in this manner."
+msgstr "Даёт шанс каждому конкретному уровню быть сгенерированным с использованием логики генератора карт Oblige v2.x. Обратите внимание, что далеко не все другие опции смогут повлиять на такое создание."
+
 #: modules/iwad_mode.lua:1170
 msgid "IWAD Style Mode"
 msgstr "Имитировать стиль IWAD"
@@ -3420,7 +3504,7 @@ msgstr "Устанавливает шанс того, что уровень бу
 
 #: modules/miscellaneous.lua:240
 msgid "Gives levels a chance of being generated using the Oblige v5 shape grammar. With this grammar, indoor rooms are usually square or diamond-shaped. Parks are larger than the indoor areas, but still more or less rectangular in nature. Caves retain their organic layouts. Hallways and joiners are still used as normal. Room sizes are fairly consistent."
-msgstr "Устанавливает шанс того, что уровень будет сгенерирован с использованием правил Oblige v5.x. С ними внутренние помещения обычно квадратные или ромбовидные. Парки крупнее помещений, однако всё равно ещё в целом близки к прямоугольным формам. Пещеры сохраняют свою планировку. Коридоры и соединительные помещения используются наравне с обычными комнатами. Размеры комнат отличаются не очень сильно."
+msgstr "Устанавливает шанс того, что каждый конкретный уроветь будет сгенерирован с использованием правил Oblige v5.x. При этом внутренние помещения обычно будут иметь форму квадрата или параллелограмма; парки, несмотря на свой превосходящий внутренние помещения размер, также будут в основном прямоугольными, однако пещеры сохранят свою особую планировку. Коридоры и соединительные области будут использоваться как обычно. Размеры комнат довольно стабильны."
 
 #: modules/miscellaneous.lua:248
 msgid "Layout Consistency"
@@ -3810,13 +3894,25 @@ msgstr "Метки Hellscape Navigator"
 msgid "Adds support for m8f's Hellscape Navigator by generating name markers in the map per room."
 msgstr "Встроенная поддержка модификации \"Hellscape Navigator\" за авторством m8f с помощью генерации названий комнат."
 
+msgid "HN Info Type"
+msgstr "Тип меток Hellscape Navigator"
+
+msgid "Pick which information type to place into Hellscape Navigator markers.\n\nQuest Info - (DEFAULT) Places traversal progress per room and key quest info into the markers.\nDebug Info - Prints verbose information about shape grammar growth status per room and prefabs. Reveals secret prefabs - which is obviously cheating."
+msgstr "Какой тип информации выводить для модификации \"Hellscape Navigator\".\n\nПо умолчанию: стандартные метки, передают название каждой комнаты.\n\nОтладка: подробная информация о том, каким образом Obsidian строил уровень. При обычном прохождении имеет полное право считаться читерством, так как раскрывает в том числе и местонахождение секретов."
+
+msgid "Quest Info"
+msgstr "По умолчанию"
+
+msgid "Debug Info"
+msgstr "Отладка"
+
 #: modules/modded_game_extras.lua:2242
 msgid "Custom Actor Names"
 msgstr "Имя для каждого врага"
 
 #: modules/modded_game_extras.lua:2245
 msgid "Renames tags of monsters with generated names. Humans recieve human names, demons recieve exotic names.\nBest used with TargetSpy or other healthbar mods to see the name.\nUses class inheritance and string comparisons to determine monster species (human or demon). Use compatibility options only when necessary, preferably use Universal option instead."
-msgstr "Переопределение тэгов монстров со сгенерированными именами. Люди получают человеческие имена, демоны — экзотические.\n\nЛучше всего использовать с TargetSpy или иной модификацией, отображающей полоску здоровья оппонента. Использует как проверку наследования от определённых классов, так и построковое сравнение для определения того, кто является человеком, кто — демоном."
+msgstr "Переопределение тэгов монстров сгенерированными именами. Люди получают человеческие имена, демоны — экзотические.\n\nЛучше всего использовать с TargetSpy или иной модификацией, отображающей полоску здоровья оппонента. Использует как проверку наследования от определённых классов, так и построковое сравнение для определения того, кто является человеком, кто — демоном."
 
 #: modules/modded_game_extras.lua:2252
 msgid "QC:DE Lootboxes"
@@ -4308,7 +4404,7 @@ msgstr "Доп. монстры"
 
 #: modules/procedural_gotcha.lua:90
 msgid "Offset monster strength from your default quantity of choice plus the increasing level ramp. If your quantity choice is to reduce the monsters, the monster quantity will cap at a minimum of 0.1 (Scarce quantity setting)."
-msgstr ""
+msgstr "Изменение количества монстров вдобавок к их обычному числу. Снизу эта настройка ограничена значением 0.1 (аналогична варианту «Редко»)."
 
 #: modules/procedural_gotcha.lua:97
 msgid "Extra Strength"
@@ -5400,7 +5496,7 @@ msgstr "Адская"
 
 #: modules/theme_control.lua:30
 msgid "Egypt (TNT)"
-msgstr "Египт (TNT)"
+msgstr "Египет (TNT)"
 
 #: modules/theme_control.lua:31
 msgid "Psychedelic"
@@ -5619,8 +5715,10 @@ msgid "Determines size of map (Width x Height) in grid squares."
 msgstr "Определяет размер карты (длина и ширина) со стороной ячейки, равной стороне квадрата BLOCKMAP-сетки."
 
 #: modules/ui_arch.lua:131
-msgid "FOR 32-BIT USERS: To prevent memory usage issues, the following maximum map size limits will be enforced regardless of slider setting:\n\nFull Game:\n-Fixed size: 30\n-Progressive: 48\n-Episodic: 48\n-Mix It Up: 42\n\nEpisode:\n-Fixed size: 58\n\nAll other combinations will honor the slider settings.\n\nIf you are planning to play on any choices that involve maps at sizes of 50 and above, Autodetailing will be enabled by default. The stability of maps with sizes 60 and beyond is not predictable."
-msgstr "ДЛЯ ПОЛЬЗОВАТЕЛЕЙ 32-БИТНЫХ СИСТЕМ: во избежание ошибок, связанных с использованием и выделением памяти, верхний предел карт будет жёстко ограничен следующими значениями:\n\nДля полной игры:\n ├ Фиксированный размер: 30;\n ├ Постепенно: 48;\n ├ По эпизодам: 48;\n └ Случайно: 42.\n\nОдин эпизод:\n ├ Фиксированный размер: 58;\n └ Другие комбинации будут использовать значение слайдера.\n\nЕсли вы планируете играть на любых вариантах, включающих карты размером 50 и выше, опция \"Автоподгонка количества деталей\" будет включена по умолчанию. Стабильность карт размером 60 и выше непредсказуема."
+msgid "If you are planning to generate Binary format maps at sizes of 50 and above, Autodetailing will be enabled by default. The stability of maps with sizes 60 and beyond is not predictable unless using UDMF map format (supported engines only)."
+msgstr "Если Вы планируете создавать карты в двоичном формате размером от 50 и выше, опция \"Автоподгонка количества деталей\" будет включена по умолчанию. Стабильность карт размером 60 и выше непредсказуема, если не используется формат карты UDMF (естественно, только для поддерживаемых движков)."
+#msgid "FOR 32-BIT USERS: To prevent memory usage issues, the following maximum map size limits will be enforced regardless of slider setting:\n\nFull Game:\n-Fixed size: 30\n-Progressive: 48\n-Episodic: 48\n-Mix It Up: 42\n\nEpisode:\n-Fixed size: 58\n\nAll other combinations will honor the slider settings.\n\nIf you are planning to play on any choices that involve maps at sizes of 50 and above, Autodetailing will be enabled by default. The stability of maps with sizes 60 and beyond is not predictable."
+#msgstr "ДЛЯ ПОЛЬЗОВАТЕЛЕЙ 32-БИТНЫХ СИСТЕМ: во избежание ошибок, связанных с использованием и выделением памяти, верхний предел карт будет жёстко ограничен следующими значениями:\n\nДля полной игры:\n ├ Фиксированный размер: 30;\n ├ Постепенно: 48;\n ├ По эпизодам: 48;\n └ Случайно: 42.\n\nОдин эпизод:\n ├ Фиксированный размер: 58;\n └ Другие комбинации будут использовать значение слайдера.\n\nЕсли вы планируете играть на любых вариантах, включающих карты размером 50 и выше, опция \"Автоподгонка количества деталей\" будет включена по умолчанию. Стабильность карт размером 60 и выше непредсказуема."
 
 #: modules/ui_arch.lua:139
 msgid "Upper Bound"
@@ -6394,6 +6492,10 @@ msgstr "Вариативность монстров"
 msgid "Control what types of monsters are available"
 msgstr "Выбирает, какие виды монстров смогут быть сгенерированными."
 
+#: modules/wolf/miscellaneous.lua:65
+msgid "Alters the general size and ground coverage of rooms.\n\nMix It Up: All multiplier ranges are randomly used with highest and lowest multipliers being rarest."
+msgstr "Изменяет средний размер комнат в целом.\n\nСлучайно: все диапазоны множителей используются случайным образом, притом вероятность выбора крайних значений резко снижается (по распределению Гаусса-Лапласа)."
+
 #: modules/zdoom_armaetus_epic_textures.lua:35
 msgid "ZScript"
 msgstr "На ZScript"
@@ -6416,7 +6518,7 @@ msgstr ""
 
 #: modules/zdoom_armaetus_epic_textures.lua:44
 msgid "A Bit Mixed"
-msgstr "Немного смешать"
+msgstr "Смешанно"
 
 #: modules/zdoom_armaetus_epic_textures.lua:45
 msgid "Snow-ish"
@@ -6460,7 +6562,7 @@ msgstr "Новые деревья"
 
 #: modules/zdoom_armaetus_epic_textures.lua:1114
 msgid "Adds custom flat-depedendent tree sprites into the game. Currently only replaces trees on specific grass flats and will be expanded in the future to accomnodate custom Textures and more. If you are playing a mod that already does its own trees, it may be better to leave this off."
-msgstr "Добавляет в игру спрайты деревьев, зависящие от поверхности, на которой они стоят. В настоящее время заменяет только деревья на определенных участках травы, однако в будущем функционал обяательно будет расширен для добавления пользовательских текстур. Если Вы играете в модификацию, в которой уже есть собственные виды деревьев, то, возможно, данную опцию лучше не включать."
+msgstr "Добавляет в игру спрайты деревьев, зависящие от поверхности, на которой они стоят. В настоящее время заменяет только деревья на определенных участках травы, однако в будущем функционал обязательно будет расширен для добавления пользовательских текстур. Если Вы играете в модификацию, в которой уже есть собственные виды деревьев, то, возможно, данную опцию лучше не включать."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1121
 msgid "Environment Theme"
@@ -6485,6 +6587,14 @@ msgstr "Присоединять Brightmaps"
 #: modules/zdoom_armaetus_epic_textures.lua:1144
 msgid "Allows merging Obsidian Textures brightmaps into the WAD. Does not include brightmaps for base resources from any of the games."
 msgstr "Позволяет включать в выходной файл карты яркости (brightmaps) текстур Obsidian. Не включает их из любых других игр."
+
+#: modules/zdoom_armaetus_epic_textures.lua:1183
+msgid "Custom Actors"
+msgstr "Без замены акторов"
+
+#: modules/zdoom_armaetus_epic_textures.lua:1186
+msgid "Merges some custom sprites and replacers for various decorations."
+msgstr "Позволяет включать в выходной файл код новых акторов, без замены существующих в оригинальной игре."
 
 #: modules/zdoom_armaetus_epic_textures.lua:1151
 msgid "No Hell Environment Themes"
@@ -6522,9 +6632,13 @@ msgstr ""
 msgid "ZDoom: Ambient Sounds"
 msgstr "ZDoom: звуки окружения"
 
+#: modules/zdoom_frozsoul_sound.lua:258
+msgid "DoomEdNum Offset"
+msgstr "Начальный DoomEdNum"
+
 #: modules/zdoom_frozsoul_sound.lua:260
 msgid "Selects the starting thing ID for generating ambient sound actors. Use only if you are playing a mod using conflicting Editor Numbers. If you don't know what this is this setting is best left as-is."
-msgstr "Выбирает стартовый Thing ID для создания акторов звуков окружения. Изменяйте этот параметр только в случае, если Вы используете модификацию, DoomEdNums в которой конфликтуют со стандартным значением."
+msgstr "Выбирает начальный DoomEdNum для создания акторов звуков окружения. Изменяйте этот параметр только в случае, если Вы используете модификацию, в которой существуют DoomEdNum, конфликтующие со стандартным значением."
 
 #: modules/zdoom_frozsoul_sound.lua:265
 msgid "Adds ambient sound things to fabs, room themes, and environments (WIP). Needs an accompanying sound pack containing corresponding sound files to be included with your Doom launcher."
@@ -6819,8 +6933,8 @@ msgid "Dynamic Lights"
 msgstr ""
 
 #: modules/zdoom_specials.lua:1223
-msgid "Generates dynamic point lights on ceiling light prefabs."
-msgstr ""
+msgid "Generates dynamic point lights on prefabs if available."
+msgstr "Генерирует динамический свет на префабах, если это возможно."
 
 #: modules/zdoom_specials.lua:1228
 msgid "Glowing Flats"
@@ -6890,13 +7004,13 @@ msgstr "Как в оригинале"
 msgid "Episodic"
 msgstr "По эпизодам"
 
-#: scripts/defs.lua:86
-msgid "Jumbled Up"
-msgstr "Сильно перемешать"
-
 #: scripts/defs.lua:93
 msgid "Bit Mixed"
-msgstr "Немного перемешать"
+msgstr "Сокращённой длины"
+
+#: scripts/defs.lua:86
+msgid "Jumbled Up"
+msgstr "Дискретно"
 
 #: scripts/defs.lua:100
 msgid "Psychedelic"
@@ -7176,7 +7290,7 @@ msgstr "Файл журналирования OBSIDIAN"
 
 #: source_files/obsidian_main/m_dialog.cc:730
 msgid "OBSIDIAN Glossary"
-msgstr "Глоссарий перевода OBSIDIAN"
+msgstr "От переводчиков"
 
 #: source_files/obsidian_main/m_lua.cc:1419
 msgid "Script Error: %s"
@@ -7322,13 +7436,17 @@ msgstr "Дата и время|Количество уровней|Игра|Иг
 msgid "Set Custom Prefix..."
 msgstr "Ввести префикс..."
 
+#: source_files/obsidian_main/m_options.cc:634
+msgid "Set Default Output Path"
+msgstr "Путь сохранения..."
+
 #: source_files/obsidian_main/m_options.cc:598
 msgid " Random String Seeds"
 msgstr "Случайные слова для сида"
 
 #: source_files/obsidian_main/m_options.cc:377
-msgid "Will randomly pull 1 to 3 words from Obsidian's random word list (found in /scripts/random_words.lua) and use those as input for the map generation seed. Purely for cosmetic/entertainment value."
-msgstr "При включённой настройке будет случайно выбирать несколько слов из встроенной базы данных (находится в /scripts/random_words*.lua) и добавлять их к ключу генерации. Можно считать, что используется исключительно для развлечения."
+msgid "Will randomly pull 1 to 3 words from Obsidian's random word list and use those as input for the map generation seed. Purely for cosmetic/entertainment value."
+msgstr "При включённой настройке будет случайно выбирать несколько слов из встроенной базы данных, добавляя их к ключу генерации. Можно считать, что используется исключительно для развлечения."
 
 #: source_files/obsidian_main/m_options.cc:614
 msgid " Password Mode"
@@ -7392,7 +7510,7 @@ msgstr "К-во хранимых логов"
 
 #: source_files/obsidian_main/m_options.cc:299
 msgid "Obsidian will now restart to apply language changes.\nObsidian will be in your selected language after restarting."
-msgstr "Для того, чтобы изменение языка вступили в силу, OBSIDIAN необходимо перезапуститься.\nOBSIDIAN will now restart to apply language changes."
+msgstr "Для того, чтобы изменение языка вступило в силу, OBSIDIAN необходимо перезапуститься.\nOBSIDIAN will now restart to apply language changes."
 
 #: source_files/obsidian_main/m_options.cc:722
 msgid " Restart Lua VM Between Builds"
@@ -7426,6 +7544,62 @@ msgstr "Выберите файл темы для загрузки"
 msgid "Unable to load the file:\n\n%s"
 msgstr "Невозможно загрузить файл:\n\n%s"
 
+#: source_files/obsidian_main/m_theme.cc:395
+msgid "Windows scaling changes require a restart.\nOBSIDIAN will now restart."
+msgstr "Для того, чтобы изменение масштаба окон вступило в силу,\nOBSIDIAN необходимо перезапуститься."
+
+#: source_files/obsidian_main/m_theme.cc:687
+msgid "Plastic widget theme requires a restart.\nOBSIDIAN will now restart."
+msgstr "Для того, чтобы изменение на пластиковую тему вступило\nв силу, OBSIDIAN необходимо перезапуститься."
+
+#: source_files/obsidian_main/m_theme.cc:839
+msgid "Switching pane modes requires a restart.\nOBSIDIAN will now restart."
+msgstr "Для того, чтобы изменение режима панели вступило в силу,\nOBSIDIAN необходимо перезапуститься."
+
+#: source_files/obsidian_main/m_theme.cc:852
+msgid "Switching font selection requires a restart.\nOBSIDIAN will now restart."
+msgstr "Для того, чтобы изменение шрифта вступило в силу,\nOBSIDIAN необходимо перезапуститься."
+
+#: source_files/obsidian_main/m_theme.cc:907
+msgid "Select Panel Text Color"
+msgstr "Цвет основного шрифта"
+
+#: source_files/obsidian_main/m_theme.cc:1024
+msgid "Select Button Text Color"
+msgstr "Цвет шрифта кнопок"
+
+#: source_files/obsidian_main/m_theme.cc:1089
+msgid "Select Panel Color"
+msgstr "Цвет фона панелей"
+
+#: source_files/obsidian_main/m_theme.cc:1152
+msgid "Select Highlight Color"
+msgstr "Цвет подсветки"
+
+#: source_files/obsidian_main/m_theme.cc:1239
+msgid "Select Button Color"
+msgstr "Цвет кнопок"
+
+#: source_files/obsidian_main/m_theme.cc:1302
+msgid "Select Gradient Color"
+msgstr "Цвет объектов с градиентом"
+
+#: source_files/obsidian_main/m_theme.cc:1340
+msgid "Select Border Color"
+msgstr "Цвет границ"
+
+#: source_files/obsidian_main/m_theme.cc:1376
+msgid "Select Gap Color"
+msgstr "Цвет пустых мест"
+
+#: source_files/obsidian_main/m_theme.cc:1443
+msgid "Defaults loaded.\nOBSIDIAN will now restart."
+msgstr "Восстановлена тема по умолчанию.\nOBSIDIAN сейчас перезапустится."
+
+#: source_files/obsidian_main/m_theme.cc:1455
+msgid "Theme loading requires a restart.\nOBSIDIAN will now restart."
+msgstr "Для того, чтобы новая тема вступила в силу,\nOBSIDIAN необходимо перезапуститься."
+
 #: source_files/obsidian_main/m_theme.cc:1500
 msgid "Window Scaling: "
 msgstr "Масштаб окон: "
@@ -7456,7 +7630,7 @@ msgstr "Стиль групп: "
 
 #: source_files/obsidian_main/m_theme.cc:1563
 msgid "Default|Shadow|Embossed|Engraved|Inverted|Raised"
-msgstr "Стандарт|Тень|Тиснёный|Гравированный|Перевернутый|Поднятый"
+msgstr "Стандарт|Тень|Тиснёный|Гравированный|Перевёрнутый|Поднятый"
 
 #: source_files/obsidian_main/m_theme.cc:1575
 msgid "Button Theme: "
@@ -7544,7 +7718,7 @@ msgstr "Руководство OBSIDIAN"
 
 #: source_files/obsidian_main/m_tutorial.cc:107
 msgid "<center>Welcome to OBSIDIAN Level Maker! This quick tutorial will teach you the basics of navigating the user interface.</center>"
-msgstr "<center>Добро пожаловать в генератор уровней OBSIDIAN! Это краткое руководство расскажет об основах интерфейса.</center>"
+msgstr "<center>Добро пожаловать в генератор уровней OBSIDIAN! Это краткое руководство расскажет об основах интерфейса. Некоторую дополнительную информацию также можно найти в разделе меню \"Помощь\"->\"От переводчиков\".</center>"
 
 #: source_files/obsidian_main/m_tutorial.cc:115
 msgid "Next"
@@ -7647,6 +7821,10 @@ msgid "Engine: "
 msgstr "Движок: "
 
 #: source_files/obsidian_main/ui_game.cc:88
+msgid "Port: "
+msgstr "Порт: "
+
+#: source_files/obsidian_main/ui_game.cc:88
 msgid "Length: "
 msgstr "Длина: "
 
@@ -7670,29 +7848,37 @@ msgstr "Игра"
 msgid "The following games will have gameplay that differs from the original IWADs:\n\nHexen: Game progression is linear and episodic. There are no hubs present. The Death Wyvern is not present in the monster table due to the infeasibility of scripting and flight pathing.\n\nStrife: Quests/multiple endings not yet implemented. Progression is linear and game will end on last level generated."
 msgstr "Следующие игры имеют изменения в геймплее относительно оригинальных IWAD:\n\nHexen: игра будет линейной и эпизодической, без хаб-уровней. Из-за практически невозможной сложности автоматического написания сценариев и маршрутов полёта Виверн Смерти (Death Wyvern) не будет присутствовать ни на одном уровне.\n\nStife: квесты и различающиеся концовки пока что не добавлены. Прогрессия линейна, и игра закончится на последнем сгенеррованном уровне."
 
+#: source_files/obsidian_main/ui_game.cc:220
+msgid "Port"
+msgstr "Порт"
+
+#: source_files/obsidian_main/ui_game.cc:230
+msgid "Available Ports:\n\nid Tech 0:\n\nVanilla: Works with the original executables\n\nid Tech 1:\n\nZDoom Family: Ports that use ZDoom as a base. Example ports: GZDoom, LZDoom\n\nVanilla: Works with the original program or ports that enforce the original limits. Examples: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nLimit Removing: Any port that raises the limits of the original game to prevent crashes, but is not Boom-compatible. Example ports: Doom2-plus, Doomsday 1.x, Crispy Doom\n\nBoom-Compatible: Ports that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nPrBoom-Compatible: Boom-compatible, but also capable of using extended nodes. Example ports: DSDA-Doom, PrBoom+um\n\nEDGE-Classic: Boom-compatible, plus additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."
+msgstr "Доступные игровые движки.\n\nid Tech 0:\n\n- Как в оригинале: карты создаются под оригинальные игры.\n\nid Tech 1:\n\n- Семейство ZDoom: (G-/L-/Q-)ZDoom, Zandronum, ZDaemon и другие, основанные на ZDoom.\n\n- Как в оригинале: движок Doom как таковой, с учётом его ограничений. При выборе этой опции будет использоваться генератор карт SLUMP.\n\n- Limit Removing: любой игровой движок, расширяющий лимиты оригинала для предотвращения вылетов. ВНИМАНИЕ: данный пункт использует довольно ограниченное количество префабов. Если Вы предполагаете проходить WAD на движке, поддерживающим формат Boom, лучше выбрать соответствующий пункт.\n\n- Совместивый с BOOM: движки, совместимые с Boom, и позволяющие использовать все его возможности и расширения.\n\n- Совместивый с PrBoom: то же, что выше, но также с расширенным использованием Map Nodes.\n\n- Классический EDGE: совместимый с BOOM, но с добавлениением некоторых специфичных для EDGE возможностей.\n\n- Eternity [экспериментальный]: для Software-рендерера, но с некоторыми улучшениями вроде UDMF."
+
 #: source_files/obsidian_main/ui_game.cc:183
 msgid "Engine"
 msgstr "Движок"
 
-#: source_files/obsidian_main/ui_game.cc:192
-msgid "Available Engines:\n\nZDoom Family: Engines that use ZDoom as a base. Example ports: GZDoom, LZDoom\n\nVanilla DOOM: Doom with its original engine limits. Example ports: Doom within DOSBox, Chocolate Doom. NOTE: This option will use SLUMP as the map builder.\n\nLimit Removing: Any engine that raises the limits of the original game to prevent crashes, but is not Boom-compatible. Example ports: Doom2-plus, Doomsday 1.x, Crispy Doom\n\nBoom-Compatible: Engines that are able to use the entire suite of Boom types and features. Most modern source ports fall into this category at a minimum.\n\nPrBoom-Compatible: Boom-compatible, but also capable of using extended nodes. Example ports: DSDA-Doom, PrBoom+um\n\nEDGE-Classic: Boom-compatible, plus additional specials and other advanced features.\n\nEternity: Boom-compatible, software renderer only, but with advanced features such as UDMF."
-msgstr "Доступные игровые движки.\n\nСемейство ZDoom: (G-/L-/Q-)ZDoom, Zandronum, ZDaemon и другие, основанные на ZDoom.\n\nОригинальный Doom: движок Doom как таковой, с учётом его ограничений. При выборе этой опции будет использоваться генератор карт SLUMP.\n\nLimit Removing: любой игровой движок, расширяющий лимиты оригинала для предотвращения вылетов. ВНИМАНИЕ: данный пункт использует довольно ограниченное количество префабов. Если Вы предполагаете проходить WAD на движке, поддерживающим формат Boom, лучше выбрать соответствующий пункт.\n\nСовместивый с BOOM: движки, совместимые с Boom, и позволяющие использовать все его возможности и расширения.\n\nСовместивый с PrBoom: то же, что выше, но также с расширенным использованием Map Nodes.\n\nКлассический EDGE: совместимый с BOOM, но с добавлениением некоторых специфичных для EDGE возможностей.\n\nEternity [экспериментальный]: для Software-рендерера, но с некоторыми улучшениями вроде UDMF."
+#: source_files/obsidian_main/ui_game.cc:198
+msgid "id Tech 0: Powered Wolfenstein-3D and similar games\n\nid Tech 1: Powered Doom, Doom 2, Heretic, etc"
+msgstr "id Tech 0: Wolfenstein-3D и подобные ему игры.\n\nid Tech 1: Doom, Doom 2, Heretic и так далее."
 
 #: source_files/obsidian_main/ui_game.cc:197
 msgid "Length"
 msgstr "Длина"
 
-#: source_files/obsidian_main/ui_game.cc:206
-msgid "Available WAD Lengths:\n\nSingle Level: One map.\n\nA Few Maps: Four maps.\n\nOne Episode: The length of an episode in the original IWAD. For Doom 2, which normally doesn't have episodes, this is 11 maps.\n\nFull Game: The length of a full game in the original IWAD."
-msgstr "Доступная продолжительность сгенерированного сборника.\n\nУровень: одна карта.\n\nНесколько уровней: четыре карты.\n\nОдин эпизод: ориентироваться по длине эпизода выбранного IWAD. Если чётко выраженного деления нет (например, Doom 2), создаётся одиннадцать карт.\n\nПолная игра: по количеству уровней в выбранном IWAD."
+#: source_files/obsidian_main/ui_game.cc:246
+msgid "Available Game Lengths:\n\nSingle Level: One map.\n\nA Few Maps: Four maps.\n\nOne Episode: The length of an episode in the original game. For Doom 2 and other games which normally doesn't have episodes, this number is determined by Obsidian.\n\nFull Game: The length of a full game in the original program."
+msgstr "Доступная продолжительность сгенерированного сборника.\n\nУровень: одна карта.\n\nНесколько уровней: четыре карты.\n\nОдин эпизод: ориентироваться по длине эпизода выбранного IWAD/выбранной игры. Если чётко выраженного деления не окажется, Obsidian постарается найти ближайшее подходящее (например, для Doom 2 создастся одиннадцать карт).\n\nПолная игра: по количеству уровней в выбранной игре."
 
 #: source_files/obsidian_main/ui_game.cc:211
 msgid "Theme"
 msgstr "Тема"
 
-#: source_files/obsidian_main/ui_game.cc:220
-msgid "Available Themes:\n\nOriginal: Follows the theme progression of the original IWAD.\n\nEpisodic: Each episode follows a single randomly chose theme.\n\nBit Mixed: Theme will change every few levels.\n\nJumbled Up: Level themes are purely random.\n\nPsychedelic: Trippy.\n\nOther themes listed are game-specific."
-msgstr "Доступные темы:\n\nКак в оригинале: следовать изменению тем выбранного IWAD.\n\nПо эпизодам: каждый эпизод имеет собственную одну тему. Если не указана соответствующая настройка, то тема выбирается случайно.\n\nНемного перемешать: темы будут меняться каждые несколько уровней.\n\nСильно перемешать: для каждого уровня выбирается собственная тема.\n\nПсиходелия: тема не выбирается. Полный хаос на соседних текстурах.\n\nОстальные темы специфичны для каждой отдельно взятой игры."
+#: source_files/obsidian_main/ui_game.cc:263
+msgid "Available Themes:\n\nOriginal: Follows the theme progression of the original game.\n\nEpisodic: Each episode follows a single randomly chosen theme.\n\nBit Mixed: Theme will change every few levels.\n\nJumbled Up: Level themes are purely random.\n\nPsychedelic: Trippy.\n\nOther themes listed are game-specific."
+msgstr "Доступные варианты смены тем.\n\nКак в оригинале: следовать изменению стандартных тем выбранной игры.\n\nПо эпизодам: каждый эпизод имеет собственную одну тему. Если не указана соответствующая настройка, то тема выбирается случайно.\n\nСокращённой длины: темы будут меняться каждые несколько уровней.\n\nДискретно: для каждого уровня выбирается собственная тема.\n\nПсиходелия: тема не выбирается. Полный хаос на соседних текстурах.\n\nОстальные темы специфичны для каждой отдельно взятой игры."
 
 #: source_files/obsidian_main/ui_game.cc:306
 msgid "Cancel"
@@ -7740,7 +7926,7 @@ msgstr "Помощь/Просмотр лога"
 
 #: source_files/obsidian_main/ui_window.cc:84
 msgid "Help/Glossary"
-msgstr "Помощь/Глоссарий"
+msgstr "Помощь/От переводчиков"
 
 #: source_files/obsidian_main/ui_window.cc:85
 msgid "Help/ "
@@ -7752,7 +7938,7 @@ msgstr "Помощь/Руководство"
 
 #: source_files/obsidian_main/ui_window.cc:87
 msgid "Surprise Me/Go"
-msgstr "Удивить/Пуск"
+msgstr "Удивить/Перегенерировать выбранное"
 
 msgid "This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."
-msgstr "══ От переводчиков ══\n\nЧасть слов, в основном укоренившиеся в широких кругах (с позволения сказать, имена собственные — имп, ревенант, ...) я просто транслитерировал, дословно переводя только в некоторых подсказках.\n\nНекоторые термины, хорошо звучащие в английском языке, при попытке локализации оказались слишком длинными для отведённого лимита символов. Поэтому некоторые слова пришлось заменить на более короткие варианты; к таким можно отнести слово \"Префаб\" — заготовка/составляющая уровня/примитив/кубик конструктора, происходящее от английского \"Pre-fabricated\" (дословно \"Предсобранный\").\n\nВ HaxC и Harmony никто из переводчиков не играл и в русскоязычном сегменте Интернета эти игры неизвестны, поэтому названия предметов и противников из них пока что не переведены; если Вы разбираетесь в этой теме и хотите помочь, есть прекрасная возможность дополнить файл русского языка. Примерно та же ситуация с Chex Quest, но для него хотя бы существует частичный перевод в GZDoom от Kostov (Undead)."
+msgstr "══ От переводчиков ══\n\nЧасть слов, в основном укоренившиеся в широких кругах (с позволения сказать, имена собственные — имп, ревенант, ...) просто транслитерированы, с дословным переводом только в некоторых подсказках.\n\nВо время исследования настроек Вы можете наткнуться на непереведённые части. Скорее всего, это значит, что с последней итерации нашего перевода добавилась какая-либо опиця. О подобном можно сообщать в основной репозиторий перевода: https://github.com/LLDM-Doom-Modding/Obsidian.\n\nНекоторые термины, хорошо звучащие в оригинале, при локализации перестали вмещаться в лимит символов. Поэтому часть слов пришлось заменить на укороченные варианты; к таким можно отнести слово \"Префаб\" — заготовка/составляющая уровня/примитив/кубик конструктора, происходящее от английского \"Pre-fabricated\" (дословно \"Предсобранный\").\n\nВ HaxC и Harmony никто из переводчиков не играл и в русскоязычном сегменте Интернета эти игры неизвестны, поэтому названия предметов и противников из них пока что не переведены; если Вы разбираетесь в этой теме, есть прекрасная возможность дополнить файл русского языка.               \nПримерно та же ситуация с Chex Quest, но для него хотя бы существует частичный перевод в GZDoom от Kostov (Undead)."
