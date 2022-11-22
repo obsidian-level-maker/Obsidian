@@ -9649,16 +9649,12 @@ msgstr ""
 msgid "Unable to save the file:\n\n%s"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:666
+#: source_files/obsidian_main/m_dialog.cc:782
 msgid "OBSIDIAN Log Viewer"
 msgstr ""
 
-#: source_files/obsidian_main/m_dialog.cc:682
-msgid "OBSIDIAN Glossary"
-msgstr ""
-
-#: source_files/obsidian_main/m_dialog.cc:693
-msgid "This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."
+#: source_files/obsidian_main/m_dialog.cc:802
+msgid "OBSIDIAN Glossary Viewer"
 msgstr ""
 
 #: source_files/obsidian_main/m_lua.cc:1089

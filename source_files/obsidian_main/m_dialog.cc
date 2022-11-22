@@ -658,6 +658,122 @@ tryagain:;
     fp.close();
 }
 
+//----------------------------------------------------------------------
+
+class UI_GlossaryViewer : public Fl_Double_Window {
+   private:
+    bool want_quit;
+
+    Fl_Browser *browser;
+
+   public:
+    UI_GlossaryViewer(int W, int H, const char *l);
+    virtual ~UI_GlossaryViewer();
+
+    bool WantQuit() const { return want_quit; }
+
+    void ReadGlossary();
+
+   private:
+    static void quit_callback(Fl_Widget *, void *);
+};
+
+UI_GlossaryViewer::UI_GlossaryViewer(int W, int H, const char *l)
+    : Fl_Double_Window(W, H, l), want_quit(false) {
+    box(FL_NO_BOX);
+
+    size_range(W * 3 / 4, H * 3 / 4);
+
+    callback(quit_callback, this);
+
+    int ey = h() - kf_h(65);
+
+    browser = new Fl_Browser(0, 0, w(), ey);
+    browser->color(WINDOW_BG);
+    browser->scrollbar.slider(button_style);
+    browser->scrollbar.color(GAP_COLOR, BUTTON_COLOR);
+    browser->box(button_style);
+    browser->textcolor(FONT_COLOR);
+    browser->textfont(font_style);
+    browser->textsize(small_font_size);
+
+    resizable(browser);
+
+    int button_w = kf_w(80);
+    int button_h = kf_h(35);
+
+    int button_y = ey + (kf_h(65) - button_h) / 2;
+
+    {
+        Fl_Group *o = new Fl_Group(0, ey, w(), h() - ey);
+        o->box(FL_FLAT_BOX);
+
+        int bx = w() - button_w - kf_w(25);
+        int bx2 = bx;
+        {
+            Fl_Button *but =
+                new Fl_Button(bx, button_y, button_w, button_h, fl_close);
+            but->box(button_style);
+            but->visible_focus(0);
+            but->color(BUTTON_COLOR);
+            but->labelfont(use_system_fonts ? font_style
+                                            : font_style | FL_BOLD);
+            but->labelcolor(FONT2_COLOR);
+            but->callback(quit_callback, this);
+        }
+
+        bx += button_w + 10;
+
+        Fl_Group *resize_box =
+            new Fl_Group(bx + 10, ey + 2, bx2 - bx - 20, h() - ey - 4);
+        resize_box->box(FL_NO_BOX);
+
+        o->resizable(resize_box);
+
+        o->end();
+    }
+
+    end();
+}
+
+UI_GlossaryViewer::~UI_GlossaryViewer() {}
+
+void UI_GlossaryViewer::ReadGlossary() {
+
+    std::string glossary =
+        fmt::format("{}/language/{}.txt", install_dir.string(), selected_lang);
+
+    if (!std::filesystem::exists(glossary)) {
+        return;
+    }
+
+    std::fstream gloss_stream;
+
+    gloss_stream.open(glossary, std::ios::in);
+
+    std::string buffer;
+    while (std::getline(gloss_stream, buffer)) {
+        // remove any newline at the end (LF or CR/LF)
+        StringRemoveCRLF(&buffer);
+
+        // remove any DEL characters (mainly to workaround an FLTK bug)
+        StringReplaceChar(&buffer, 0x7f, 0);
+
+        std::cout << buffer << std::endl;
+
+        browser->add(buffer.data());
+    }
+
+    // close the log file after current contents are read
+    gloss_stream.close();
+}
+
+void UI_GlossaryViewer::quit_callback(Fl_Widget *w, void *data) {
+    UI_GlossaryViewer *that = (UI_GlossaryViewer *)data;
+
+    that->want_quit = true;
+}
+
 void DLG_ViewLogs(void) {
     int log_w = kf_w(560);
     int log_h = kf_h(380);
@@ -679,19 +795,23 @@ void DLG_ViewLogs(void) {
 }
 
 void DLG_ViewGlossary(void) {
-    Fl_Window *win = new Fl_Window(640, 480, _("OBSIDIAN Glossary"));
-    Fl_Text_Buffer *buff = new Fl_Text_Buffer();
-    Fl_Text_Display *disp =
-        new Fl_Text_Display(20, 20, 640 - 40, 480 - 40, NULL);
-    disp->buffer(buff);
-    disp->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
-    win->resizable(*disp);
-    win->hotspot(0, 0, 0);
-    win->set_modal();
-    win->show();
-    // clang-format off
-    buff->text(_("This glossary's main purpose is for translators to have a space to provide longer definitions for terms that may not have a direct equivalent to their English counterparts.\n\nIf there is a need for an English version, this will be populated in the future."));
-    // clang-format on
+    int gloss_w = kf_w(640);
+    int gloss_h = kf_h(480);
+
+    UI_GlossaryViewer *gloss_viewer =
+        new UI_GlossaryViewer(gloss_w, gloss_h, _("OBSIDIAN Glossary Viewer"));
+
+    gloss_viewer->ReadGlossary();
+
+    gloss_viewer->set_modal();
+    gloss_viewer->show();
+
+    // run the dialog until the user closes it
+    while (!gloss_viewer->WantQuit()) {
+        Fl::wait();
+    }
+
+    delete gloss_viewer;
 }
 
 //--- editor settings ---

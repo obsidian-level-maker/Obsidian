@@ -1,0 +1,3 @@
+The English version of the glossary is currently a placeholder. 
+
+This widget mostly exists for translators to provide a document describing definitions that are too long to put in the usual tooltip windows.
