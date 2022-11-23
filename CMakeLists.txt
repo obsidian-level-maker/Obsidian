@@ -364,6 +364,7 @@ install(
             games
             language
             modules
+            ports
             scripts
             theme
             tools
