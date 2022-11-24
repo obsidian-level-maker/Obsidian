@@ -23,3 +23,26 @@ PREFABS.Fence_park_bars_diag =
 
   where = "diagonal"
 }
+
+--
+
+PREFABS.Fence_park_bars_round =
+{
+  template = "Fence_park_bars",
+
+  group = "fence_park_bars_round",
+
+  tex_MIDWIND6 = "FENCE9"
+}
+
+PREFABS.Fence_park_bars_round_diag =
+{
+  template = "Fence_park_bars",
+  map = "MAP02",
+
+  group = "fence_park_bars_round",
+
+  where = "diagonal",
+
+  tex_MIDWIND6 = "FENCE9"
+}
