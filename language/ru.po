@@ -7425,8 +7425,8 @@ msgid "Custom Prefix"
 msgstr "Собственный префикс файла"
 
 #: source_files/obsidian_main/m_options.cc:472
-msgid "Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n%year or %Y: The current year.\n\n%month or %M: The current month.\n\n%day or %D: The current day.\n\n%hour or %h: The current hour.\n\n%minute or %m: The current minute.\n\n%second or %s: The current second.\n\n%version or %v: The current Obsidian version.\n\n%game or %g: Which game the WAD is for.\n\n%engine or %e: Which engine the WAD is for.\n\n%theme or %t: Which theme was selected from the game's choices.\n\n%count or %c: The number of levels in the generated WAD."
-msgstr "Большинство символов для собственного формата переносятся без изменений. Но также могут быть использованы следующие автозаменяющиеся значения:\n\n%year или %Y: текущий год.\n\n%month или %M: текущий месяц.\n\n%day или %D: текущий день.\n\n%hour или %h: текущий час.\n\n%minute или %m: текущая минута.\n\n%second или %s: текущая секунда.\n\n%version или %v: используемая версия OBSIDIAN.\n\n%game или %g: целевая игра (Doom, Heretic, ...).\n\n%engine или %e: целевой игровой движок.\n\n%theme или %t: выбранная тема.\n\n%count или %c: количество уровней в сгенерированном WAD."
+msgid "Custom prefixes can use any of the special format strings listed below. Anything else is used as-is.\n\n%year or %Y: The current year.\n\n%month or %M: The current month.\n\n%day or %D: The current day.\n\n%hour or %h: The current hour.\n\n%minute or %m: The current minute.\n\n%second or %s: The current second.\n\n%version or %v: The current Obsidian version.\n\n%game or %g: Which game the WAD is for.\n\n%port or %p: Which port the WAD is for.\n\n%theme or %t: Which theme was selected from the game's choices.\n\n%count or %c: The number of levels in the generated WAD."
+msgstr "Большинство символов для собственного формата переносятся без изменений. Но также могут быть использованы следующие автозаменяющиеся значения:\n\n%year или %Y: текущий год.\n\n%month или %M: текущий месяц.\n\n%day или %D: текущий день.\n\n%hour или %h: текущий час.\n\n%minute или %m: текущая минута.\n\n%second или %s: текущая секунда.\n\n%version или %v: используемая версия OBSIDIAN.\n\n%game или %g: целевая игра (Doom, Heretic, ...).\n\n%port или %p: целевой игровой порт.\n\n%theme или %t: выбранная тема.\n\n%count или %c: количество уровней в сгенерированном WAD."
 
 #: source_files/obsidian_main/m_options.cc:538
 msgid "Language: "
@@ -7445,8 +7445,8 @@ msgid "Filename Prefix: "
 msgstr "Префикс файла: "
 
 #: source_files/obsidian_main/m_options.cc:570
-msgid "Date and Time|Number of Levels|Game|Engine|Theme|Version|Custom|Nothing"
-msgstr "Дата и время|Количество уровней|Игра|Игровой движок|Тема|Версия OBSIDIAN|(Пользовательский)|(Отсутствует)"
+msgid "Date and Time|Number of Levels|Game|Port|Theme|Version|Custom|Nothing"
+msgstr "Дата и время|Количество уровней|Игра|Порт игры|Тема|Версия OBSIDIAN|(Пользовательский)|(Отсутствует)"
 
 #: source_files/obsidian_main/m_options.cc:580
 msgid "Set Custom Prefix..."
@@ -7508,9 +7508,17 @@ msgstr "Сообщения отладки"
 msgid " Ignore Slider Limits"
 msgstr "Игнорировать ограничения слайдеров"
 
+#: source_files/obsidian_main/m_options.cc:690
+msgid "Builds Per Run "
+msgstr "Сборок за запуск "
+
 #: source_files/obsidian_main/m_options.cc:673
 msgid " Preserve Failed Builds"
 msgstr "Оставлять прерванные сборки"
+
+#: source_files/obsidian_main/m_options.cc:718
+msgid "Max Log Size (MB) "
+msgstr "Размер логов (МБ) "
 
 #: source_files/obsidian_main/m_options.cc:683
 msgid " Zip Logs When Saving"
