@@ -33,6 +33,8 @@
 #include "m_lua.h"
 #include "main.h"
 
+extern std::filesystem::path BestDirectory();
+
 void Parse_Option(const std::string &name, const std::string &value) {
     if (StringCaseCmpPartial(name, "recent") == 0) {
         Recent_Parse(name, value);
@@ -484,6 +486,7 @@ class UI_OptionsWin : public Fl_Window {
 
         chooser.title(_("Select default save directory"));
         chooser.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
+        chooser.directory(BestDirectory().generic_string().c_str());
 
         int result = chooser.show();
 
