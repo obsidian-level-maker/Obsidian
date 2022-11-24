@@ -69,19 +69,19 @@ if(OBSIDIAN_TIDY)
   )
 endif()
 
-cpmaddpackage(
-  NAME
-  Format.cmake
-  VERSION
-  1.7.0
-  GITHUB_REPOSITORY
-  TheLartians/Format.cmake
-  OPTIONS
+#cpmaddpackage(
+#  NAME
+#  Format.cmake
+#  VERSION
+#  1.7.0
+#  GITHUB_REPOSITORY
+#  TheLartians/Format.cmake
+#  OPTIONS
   # set to "yes" to skip CMake formatting
-  "FORMAT_SKIP_CMAKE NO"
+#  "FORMAT_SKIP_CMAKE NO"
   # path to exclude from formatting (optional + regex)
-  "CMAKE_FORMAT_EXCLUDE cmake/CPM.cmake"
-)
+#  "CMAKE_FORMAT_EXCLUDE cmake/CPM.cmake"
+#)
 
 if (NOT CONSOLE_ONLY AND NOT HAIKU)
   add_executable(
