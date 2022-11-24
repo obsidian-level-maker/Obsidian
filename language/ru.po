@@ -7304,8 +7304,8 @@ msgstr "Невозможно сохранить файл:\n\n%s"
 msgid "OBSIDIAN Log Viewer"
 msgstr "Файл журналирования OBSIDIAN"
 
-#: source_files/obsidian_main/m_dialog.cc:730
-msgid "OBSIDIAN Glossary"
+#: source_files/obsidian_main/m_dialog.cc:802
+msgid "OBSIDIAN Glossary Viewer"
 msgstr "От переводчиков"
 
 #: source_files/obsidian_main/m_lua.cc:1419
