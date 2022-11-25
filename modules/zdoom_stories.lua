@@ -2734,6 +2734,7 @@ ZDOOM_STORIES.QUIT_MESSAGES =
   [[This is an actual line of code in Oblige:\n `if not is_big(mon) then has_small = true end`]],
 
   [[Some people want to watch the world segfault. -dashodanger, 2021]],
+  [[Another satisfied customer. -dashodanger, 2022]],
   [[Sometimes, you're invited to play fruit basket turnover and you're the rice ball.]],
 
   -- Game related
