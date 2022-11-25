@@ -219,6 +219,7 @@ class UI_OptionsWin : public Fl_Window {
     Fl_Button *opt_custom_prefix;
     UI_HelpLink *custom_prefix_help;
     Fl_Button *opt_default_output_path;
+    Fl_Box *opt_current_output_path;
 
     UI_CustomCheckBox *opt_random_string_seeds;
     UI_HelpLink *random_string_seeds_help;
@@ -517,6 +518,11 @@ class UI_OptionsWin : public Fl_Window {
 #ifdef WIN32
         dir_name = ucs4_path(dir_name.generic_string().c_str());
 #endif
+        UI_OptionsWin *that = (UI_OptionsWin *)data;
+        that->opt_current_output_path->copy_label("                                                                                ");
+        that->opt_current_output_path->redraw_label();
+        that->opt_current_output_path->copy_label(fmt::format("{}: {}", _("Current Path"), BestDirectory().generic_string()).c_str());
+        that->opt_current_output_path->redraw_label();
     }
 };
 
@@ -541,7 +547,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     Fl_Box *heading;
 
     opt_language =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+        new UI_CustomMenu(100 + KF * 40, cy, kf_w(166), kf_h(24), "");
     opt_language->copy_label(_("Language: "));
     opt_language->align(FL_ALIGN_LEFT);
     opt_language->callback(callback_Language, this);
@@ -555,7 +561,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_language->h() + y_step;
 
     opt_zip_output =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+        new UI_CustomMenu(100 + KF * 40, cy, kf_w(166), kf_h(24), "");
     opt_zip_output->copy_label(_("Compress Output: "));
     opt_zip_output->align(FL_ALIGN_LEFT);
     opt_zip_output->callback(callback_ZipOutput, this);
@@ -569,7 +575,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_zip_output->h() + y_step;
 
     opt_filename_prefix =
-        new UI_CustomMenu(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+        new UI_CustomMenu(100 + KF * 40, cy, kf_w(166), kf_h(24), "");
     opt_filename_prefix->copy_label(_("Filename Prefix: "));
     opt_filename_prefix->align(FL_ALIGN_LEFT);
     opt_filename_prefix->callback(callback_FilenamePrefix, this);
@@ -585,7 +591,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
 
     cy += opt_filename_prefix->h() + y_step;
 
-    opt_custom_prefix = new Fl_Button(136 + KF * 40, cy, kf_w(130), kf_h(24),
+    opt_custom_prefix = new Fl_Button(100 + KF * 40, cy, kf_w(166), kf_h(24),
                                       _("Set Custom Prefix..."));
     opt_custom_prefix->box(button_style);
     opt_custom_prefix->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
@@ -603,7 +609,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_custom_prefix->h() + y_step;
 
     opt_default_output_path = new Fl_Button(
-        136 + KF * 40, cy, kf_w(130), kf_h(24), _("Set Default Output Path"));
+        100 + KF * 40, cy, kf_w(166), kf_h(24), _("Set Default Output Path"));
     opt_default_output_path->box(button_style);
     opt_default_output_path->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
     opt_default_output_path->visible_focus(0);
@@ -612,7 +618,20 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     opt_default_output_path->labelfont(font_style);
     opt_default_output_path->labelcolor(FONT2_COLOR);
 
-    cy += opt_default_output_path->h() + y_step * 2;
+    cy += opt_default_output_path->h() + y_step * .5;
+
+    opt_current_output_path = new Fl_Box(
+        cx, cy, W - cx - pad, kf_h(24), "");
+    opt_current_output_path->align(FL_ALIGN_INSIDE | FL_ALIGN_CLIP);
+    opt_current_output_path->visible_focus(0);
+    opt_current_output_path->color(BUTTON_COLOR);
+    opt_current_output_path->labelfont(font_style);
+    opt_current_output_path->labelcolor(FONT2_COLOR);
+    // clang-format off
+    opt_current_output_path->copy_label(fmt::format("{}: {}", _("Current Path"), BestDirectory().generic_string()).c_str());
+    // clang-format on
+
+    cy += opt_current_output_path->h() + y_step * .5;
 
     opt_random_string_seeds =
         new UI_CustomCheckBox(cx, cy, W - cx - pad, kf_h(24), "");
@@ -690,7 +709,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_limit_break->h() + y_step * .5;
 
     opt_builds_per_run =
-        new Fl_Simple_Counter(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+        new Fl_Simple_Counter(100 + KF * 40, cy, kf_w(166), kf_h(24), "");
     opt_builds_per_run->copy_label(_("Builds Per Run "));
     opt_builds_per_run->align(FL_ALIGN_LEFT);
     opt_builds_per_run->step(1);
@@ -718,7 +737,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_preserve_failures->h() + y_step * .5;*/
 
     opt_log_size =
-        new Fl_Simple_Counter(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+        new Fl_Simple_Counter(100 + KF * 40, cy, kf_w(166), kf_h(24), "");
     opt_log_size->copy_label(_("Max Log Size (MB) "));
     opt_log_size->align(FL_ALIGN_LEFT);
     opt_log_size->step(1);
@@ -735,7 +754,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label)
     cy += opt_log_size->h() + y_step * .5;
 
     opt_log_limit =
-        new Fl_Simple_Counter(136 + KF * 40, cy, kf_w(130), kf_h(24), "");
+        new Fl_Simple_Counter(100 + KF * 40, cy, kf_w(166), kf_h(24), "");
     opt_log_limit->copy_label(_("# of Logs Preserved "));
     opt_log_limit->align(FL_ALIGN_LEFT);
     opt_log_limit->step(1);
