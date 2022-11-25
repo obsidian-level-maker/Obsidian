@@ -214,10 +214,12 @@ void Fl_Flex_Type::write_properties()
     if (f->set_size(f->child(i)))
       nSet++;
   if (nSet) {
-    write_string("size_set {%d", nSet);
-    for (int i=0; i<f->children(); i++)
-      if (f->set_size(f->child(i)))
-        write_string(" %d", i);
+    write_string("set_size_tuples {%d", nSet);
+    for (int i=0; i<f->children(); i++) {
+      Fl_Widget *ci = f->child(i);
+      if (f->set_size(ci))
+        write_string(" %d %d", i, f->horizontal() ? ci->w() : ci->h());
+    }
     write_string("}");
   }
 }
@@ -234,14 +236,16 @@ void Fl_Flex_Type::read_property(const char *c)
     int g;
     if (sscanf(read_word(),"%d",&g))
       f->gap(g);
-  } else if (!strcmp(c,"size_set")) {
+  } else if (!strcmp(c,"set_size_tuples")) {
     read_word(1); // must be '{'
     const char *nStr = read_word(1); // number of indices in table
-    fixedSizeTableSize = atoi(nStr);
-    fixedSizeTable = new int[fixedSizeTableSize];
-    for (int i=0; i<fixedSizeTableSize; i++) {
+    fixedSizeTupleSize = atoi(nStr);
+    fixedSizeTuple = new int[fixedSizeTupleSize*2];
+    for (int i=0; i<fixedSizeTupleSize; i++) {
       const char *ix = read_word(1); // child at that index is fixed in size
-      fixedSizeTable[i] = atoi(ix);
+      fixedSizeTuple[i*2] = atoi(ix);
+      const char *size = read_word(1); // fixed size of that child
+      fixedSizeTuple[i*2+1] = atoi(size);
     }
     read_word(1); // must be '}'
   } else {
@@ -251,18 +255,19 @@ void Fl_Flex_Type::read_property(const char *c)
 
 void Fl_Flex_Type::postprocess_read()
 {
-  if (fixedSizeTableSize==0) return;
+  if (fixedSizeTupleSize==0) return;
   Fl_Flex* f = (Fl_Flex*)o;
-  for (int i=0; i<fixedSizeTableSize; i++) {
-    int ix = fixedSizeTable[i];
+  for (int i=0; i<fixedSizeTupleSize; i++) {
+    int ix = fixedSizeTuple[2*i];
+    int size = fixedSizeTuple[2*i+1];
     if (ix>=0 && ix<f->children()) {
       Fl_Widget *ci = f->child(ix);
-      f->set_size(ci, f->horizontal()?ci->w():ci->h());
+      f->set_size(ci, size);
     }
   }
-  fixedSizeTableSize = 0;
-  delete[] fixedSizeTable;
-  fixedSizeTable = NULL;
+  fixedSizeTupleSize = 0;
+  delete[] fixedSizeTuple;
+  fixedSizeTuple = NULL;
   f->layout();
   suspend_auto_layout = 0;
 }
@@ -310,30 +315,32 @@ void Fl_Flex_Type::remove_child(Fl_Type* a) {
 // We need to relayout existing children.
 void Fl_Flex_Type::change_subtype_to(int n) {
   Fl_Flex* f = (Fl_Flex*)o;
+  if (f->type()==n) return;
+
   int nc = f->children();
-  if (f->type()==n || nc==0) return;
+  if (nc > 0) {
+    int dw = Fl::box_dw(f->box());
+    int dh = Fl::box_dh(f->box());
+    int lm, tm, rm, bm;
+    f->margins(&lm, &tm, &rm, &bm);
+    int gap = f->gap();
+    int fw = f->w()-dw-lm-rm-(nc*gap);
+    if (fw<=nc) fw = nc; // avoid division by zero
+    int fh = f->h()-dh-tm-bm-(nc*gap);
+    if (fh<=nc) fh = nc; // avoid division by zero
 
-  int dw = Fl::box_dw(f->box());
-  int dh = Fl::box_dh(f->box());
-  int lm, tm, rm, bm;
-  f->margins(&lm, &tm, &rm, &bm);
-  int gap = f->gap();
-  int fw = f->w()-dw-lm-rm-(nc*gap);
-  if (fw<=nc) fw = nc; // avoid division by zero
-  int fh = f->h()-dh-tm-bm-(nc*gap);
-  if (fh<=nc) fh = nc; // avoid division by zero
-
-  if (f->type()==Fl_Flex::HORIZONTAL && n==Fl_Flex::VERTICAL) {
-    float scl = (float)fh/(float)fw;
-    for (int i=0; i<nc; i++) {
-      Fl_Widget* c = f->child(i);
-      c->size(f->w(), (int)(c->w()*scl));
-    }
-  } else if (f->type()==Fl_Flex::VERTICAL && n==Fl_Flex::HORIZONTAL) {
-    float scl = (float)fw/(float)fh;
-    for (int i=0; i<nc; i++) {
-      Fl_Widget* c = f->child(i);
-      c->size((int)(c->h()*scl), f->h());
+    if (f->type()==Fl_Flex::HORIZONTAL && n==Fl_Flex::VERTICAL) {
+      float scl = (float)fh/(float)fw;
+      for (int i=0; i<nc; i++) {
+        Fl_Widget* c = f->child(i);
+        c->size(f->w(), (int)(c->w()*scl));
+      }
+    } else if (f->type()==Fl_Flex::VERTICAL && n==Fl_Flex::HORIZONTAL) {
+      float scl = (float)fw/(float)fh;
+      for (int i=0; i<nc; i++) {
+        Fl_Widget* c = f->child(i);
+        c->size((int)(c->h()*scl), f->h());
+      }
     }
   }
   f->type(n);

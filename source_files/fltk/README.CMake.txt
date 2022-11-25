@@ -119,6 +119,9 @@ OPTION_BUILD_SHARED_LIBS - default OFF
    Normally FLTK is built as static libraries which makes more portable
    binaries.  If you want to use shared libraries, this will build them too.
 
+FLTK_BUILD_FLUID - default ON
+    Builds the Fast Light User-Interface Designer ("FLUID").
+
 FLTK_BUILD_TEST - default ON
    Builds the test and demo programs in the 'test' directory.
 
@@ -165,12 +168,12 @@ OPTION_USE_CAIRO - default OFF
 
 OPTION_USE_PANGO - default OFF
    Enables use of the Pango library for drawing text. Pango supports all
-   unicode-defined scripts with limited support of right-to-left scripts.
-   This option makes sense only under X11, and also requires Xft.
+   unicode-defined scripts and gives FLTK limited support of right-to-left
+   scripts. This option makes sense only under X11, and also requires Xft.
 
-OPTION_USE_WAYLAND - default OFF
+OPTION_USE_WAYLAND - default ON
    Enables the use of Wayland for all window operations, of Cairo for all
-   graphics and of Pango for text drawing (Linux only). Resulting FLTK
+   graphics and of Pango for text drawing (Linux+FreeBSD only). Resulting FLTK
    apps use Wayland when a Wayland compositor is available at run-time,
    and use X11 for their window operations otherwise, but keep using
    Cairo and Pango - see README.Wayland.txt.

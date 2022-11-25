@@ -1,7 +1,7 @@
 //
 // Portable drawing function header file for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2021 by Bill Spitzak and others.
+// Copyright 1998-2022 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -250,15 +250,15 @@ inline void fl_line_style(int style, int width = 0, char *dashes = 0) {
   fl_graphics_driver->line_style(style, width, dashes);
 }
 enum {
-  FL_SOLID = 0,      ///< line style: <tt>___________</tt>
-  FL_DASH = 1,       ///< line style: <tt>_ _ _ _ _ _</tt>
-  FL_DOT = 2,        ///< line style: <tt>. . . . . .</tt>
-  FL_DASHDOT = 3,    ///< line style: <tt>_ . _ . _ .</tt>
-  FL_DASHDOTDOT = 4, ///< line style: <tt>_ . . _ . .</tt>
+  FL_SOLID      = 0,      ///< line style: <tt>___________</tt>
+  FL_DASH       = 1,      ///< line style: <tt>_ _ _ _ _ _</tt>
+  FL_DOT        = 2,      ///< line style: <tt>. . . . . .</tt>
+  FL_DASHDOT    = 3,      ///< line style: <tt>_ . _ . _ .</tt>
+  FL_DASHDOTDOT = 4,      ///< line style: <tt>_ . . _ . .</tt>
 
-  FL_CAP_FLAT = 0x100,   ///< cap style: end is flat
-  FL_CAP_ROUND = 0x200,  ///< cap style: end is round
-  FL_CAP_SQUARE = 0x300, ///< cap style: end wraps end point
+  FL_CAP_FLAT   = 0x100,  ///< cap style: end is flat
+  FL_CAP_ROUND  = 0x200,  ///< cap style: end is round
+  FL_CAP_SQUARE = 0x300,  ///< cap style: end wraps end point
 
   FL_JOIN_MITER = 0x1000, ///< join style: line join extends to a point
   FL_JOIN_ROUND = 0x2000, ///< join style: line join is rounded
@@ -291,6 +291,15 @@ inline void fl_rect(int x, int y, int w, int h) {
 }
 
 /**
+ Draw a 1-pixel rounded border \e inside the given bounding box.
+ The radius code is optimized for speed and works best for values between
+ 5 and 15 units.
+ */
+inline void fl_rounded_rect(int x, int y, int w, int h, int r) {
+  fl_graphics_driver->rounded_rect(x, y, w, h, r);
+}
+
+/**
   Draw a 1-pixel border \e inside the given bounding box.
   This is the same as fl_rect(int x, int y, int w, int h) but with
   Fl_Rect \p r as input argument.
@@ -318,6 +327,14 @@ inline void fl_rect(int x, int y, int w, int h, Fl_Color c) {
 /** Color with current color a rectangle that exactly fills the given bounding box. */
 inline void fl_rectf(int x, int y, int w, int h) {
   fl_graphics_driver->rectf(x, y, w, h);
+}
+
+/** Color with current color a rounded rectangle that exactly fills the given bounding box.
+ The radius code is optimized for speed and works best for values between
+ 5 and 15 units.
+*/
+inline void fl_rounded_rectf(int x, int y, int w, int h, int r) {
+  fl_graphics_driver->rounded_rectf(x, y, w, h, r);
 }
 
 /** Color with passed color a rectangle that exactly fills the given bounding box. */
@@ -938,6 +955,9 @@ FL_EXPORT void fl_draw_box(Fl_Boxtype, int x, int y, int w, int h, Fl_Color);
 
 // Draw a check mark in the given color inside the bounding box bb.
 void fl_draw_check(Fl_Rect bb, Fl_Color col);
+
+// Draw one or more "arrows" (triangles)
+FL_EXPORT void fl_draw_arrow(Fl_Rect bb, Fl_Arrow_Type t, Fl_Orientation o, Fl_Color color);
 
 // images:
 

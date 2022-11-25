@@ -1,7 +1,7 @@
 //
 // Label drawing code for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2020 by Bill Spitzak and others.
+// Copyright 1998-2022 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -28,6 +28,8 @@
 #include <FL/platform.H>        // fl_open_display()
 
 #include "flstring.h"
+#include "fl_oxy.h"
+
 #include <ctype.h>
 #include <math.h>
 #include <stdlib.h>
@@ -79,11 +81,12 @@ static const char* expand_text_(const char* from, char*& buf, int maxbuf, double
     if (o > e) {
       if (maxbuf) break; // don't overflow buffer
       l_local_buff += int(o - e) + 200; // enlarge buffer
-      buf = (char*)realloc(local_buf, l_local_buff);
-      e = buf + l_local_buff - 4; // update pointers to buffer content
-      o = buf + (o - local_buf);
-      word_end = buf + (word_end - local_buf);
-      local_buf = buf;
+      size_t delta_o = (o - local_buf);
+      size_t delta_end = (word_end - local_buf);
+      local_buf = (char*)realloc(local_buf, l_local_buff);
+      e = local_buf + l_local_buff - 4; // update pointers to buffer content
+      o = local_buf + delta_o;
+      word_end = local_buf + delta_end;
     }
 
     if (c == '\t') {
@@ -249,8 +252,9 @@ void fl_draw(
   if (str) {
     int desc = fl_descent();
     for (p=str; ; ypos += height) {
-      if (lines>1) e = expand_text_(p, linebuf, 0, w - symtotal - imgtotal, buflen,
-                                width, align&FL_ALIGN_WRAP, draw_symbols);
+      if (lines>1)
+        e = expand_text_(p, linebuf, 0, w - symtotal - imgtotal, buflen,
+                         width, align&FL_ALIGN_WRAP, draw_symbols);
       else e = "";
 
       if (width > symoffset) symoffset = (int)(width + 0.5);

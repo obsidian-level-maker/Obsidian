@@ -19,7 +19,7 @@
 #include "Fl_Wayland_Window_Driver.H"
 #include "Fl_Wayland_Screen_Driver.H"
 #include "Fl_Wayland_Graphics_Driver.H"
-#include "Fl_Wayland_System_Driver.H"
+#include "../Unix/Fl_Unix_System_Driver.H"
 #include <wayland-cursor.h>
 #include "../../../libdecor/src/libdecor.h"
 #include "xdg-shell-client-protocol.h"
@@ -50,7 +50,7 @@ extern "C" {
 #define fl_max(a,b) ((a) > (b) ? (a) : (b))
 #define fl_min(a,b) ((a) < (b) ? (a) : (b))
 
-#if !FLTK_USE_X11
+#if !defined(FLTK_USE_X11)
 Window fl_window = 0;
 #endif
 
@@ -953,25 +953,8 @@ static Fl_Window *calc_transient_parent(int &center_x, int &center_y) {
   Fl_Window *top = Fl::first_window()->top_window();
   while (top && top->user_data() == &Fl_Screen_Driver::transient_scale_display)
    top = Fl::next_window(top);
-  Fl_Window *target = top;
-  // search if top's center belongs to one of its subwindows
   center_x = top->w()/2; center_y = top->h()/2;
-  while (target) {
-    Fl_Window *child = Fl::first_window();
-    while (child) {
-      if (child->window() == target && child->user_data() != &Fl_Screen_Driver::transient_scale_display &&
-            child->x() <= center_x && child->x()+child->w() > center_x &&
-            child->y() <= center_y && child->y()+child->h() > center_y) {
-          break; // child contains the center of top
-      }
-      child = Fl::next_window(child);
-    }
-    if (!child) break; // no more subwindow contains the center of top
-    target = child;
-    center_x -= child->x(); // express center coordinates relatively to child
-    center_y -= child->y();
-  }
-  return target;
+  return top;
 }
 
 
@@ -997,6 +980,7 @@ Fl_X *Fl_Wayland_Window_Driver::makeWindow()
   Fl_Wayland_Screen_Driver::output *output;
   wait_for_expose_value = 1;
 
+  if (pWindow->parent() && !pWindow->window()) return NULL;
   if (pWindow->parent() && !pWindow->window()->shown()) return NULL;
 
   new_window = (struct wld_window *)calloc(1, sizeof *new_window);
@@ -1084,7 +1068,6 @@ Fl_X *Fl_Wayland_Window_Driver::makeWindow()
     float f = Fl::screen_scale(pWindow->top_window()->screen_num());
     wl_subsurface_set_position(new_window->subsurface, pWindow->x() * f, pWindow->y() * f);
     wl_subsurface_set_desync(new_window->subsurface); // important
-    wl_subsurface_place_above(new_window->subsurface, parent->wl_surface);
     // next 3 statements ensure the subsurface will be mapped because:
     // "A sub-surface becomes mapped, when a non-NULL wl_buffer is applied and the parent surface is mapped."
     new_window->configured_width = pWindow->w();

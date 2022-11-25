@@ -889,6 +889,9 @@ void Main::SetupFLTK() {
         case 3:
             Fl::scheme("plastic");
             break;
+        case 4:
+            Fl::scheme("oxy");
+            break;
         // Shouldn't be reached, but still
         default:
             Fl::scheme("gtk+");
@@ -908,10 +911,48 @@ void Main::SetupFLTK() {
             box_style = FL_ENGRAVED_BOX;
             break;
         case 4:
-            box_style = FL_DOWN_BOX;
+            switch (widget_theme) {
+                case 0:
+                    box_style = FL_GTK_DOWN_BOX;
+                    break;
+                case 1:
+                    box_style = FL_GLEAM_DOWN_BOX;
+                    break;
+                case 2:
+                    box_style = FL_DOWN_BOX;
+                    break;
+                case 3:
+                    box_style = FL_PLASTIC_DOWN_BOX;
+                    break;
+                case 4:
+                    box_style = FL_OXY_DOWN_BOX;
+                    break;
+                default:
+                    box_style = FL_GTK_DOWN_BOX;
+                    break;
+            }
             break;
         case 5:
-            box_style = FL_THIN_UP_BOX;
+            switch (widget_theme) {
+                case 0:
+                    box_style = FL_GTK_THIN_UP_BOX;
+                    break;
+                case 1:
+                    box_style = FL_GLEAM_THIN_UP_BOX;
+                    break;
+                case 2:
+                    box_style = FL_THIN_UP_BOX;
+                    break;
+                case 3:
+                    box_style = FL_PLASTIC_THIN_UP_BOX;
+                    break;
+                case 4:
+                    box_style = FL_OXY_THIN_UP_BOX;
+                    break;
+                default:
+                    box_style = FL_GTK_THIN_UP_BOX;
+                    break;
+            }
             break;
         // Shouldn't be reached, but still
         default:
@@ -920,10 +961,48 @@ void Main::SetupFLTK() {
     }
     switch (button_theme) {
         case 0:
-            button_style = FL_DOWN_BOX;
+            switch (widget_theme) {
+                case 0:
+                    button_style = FL_GTK_DOWN_BOX;
+                    break;
+                case 1:
+                    button_style = FL_GLEAM_DOWN_BOX;
+                    break;
+                case 2:
+                    button_style = FL_DOWN_BOX;
+                    break;
+                case 3:
+                    button_style = FL_PLASTIC_DOWN_BOX;
+                    break;
+                case 4:
+                    button_style = FL_OXY_DOWN_BOX;
+                    break;
+                default:
+                    button_style = FL_GTK_DOWN_BOX;
+                    break;
+            }
             break;
         case 1:
-            button_style = FL_UP_BOX;
+            switch (widget_theme) {
+                case 0:
+                    button_style = FL_GTK_UP_BOX;
+                    break;
+                case 1:
+                    button_style = FL_GLEAM_UP_BOX;
+                    break;
+                case 2:
+                    button_style = FL_UP_BOX;
+                    break;
+                case 3:
+                    button_style = FL_PLASTIC_UP_BOX;
+                    break;
+                case 4:
+                    button_style = FL_OXY_UP_BOX;
+                    break;
+                default:
+                    button_style = FL_GTK_UP_BOX;
+                    break;
+            }
             break;
         case 2:
             button_style = static_cast<Fl_Boxtype>(FL_FREE_BOXTYPE + 2);

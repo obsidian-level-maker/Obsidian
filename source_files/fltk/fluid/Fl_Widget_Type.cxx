@@ -26,6 +26,7 @@
 #include "Fluid_Image.h"
 #include "alignment_panel.h"
 #include "widget_panel.h"
+#include "undo.h"
 
 #include <FL/Fl.H>
 #include <FL/Fl_Group.H>
@@ -666,19 +667,26 @@ void x_cb(Fluid_Coord_Input *i, void *v) {
       x_input->activate();
     } else x_input->deactivate();
   } else {
+    undo_checkpoint();
     widget_i = 0;
     int mod = 0;
+    int v = 0;
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
       if (o->selected && o->is_widget()) {
         Fl_Widget *w = ((Fl_Widget_Type *)o)->o;
         i->variables(widget_vars, o);
-        w->resize((int)i->value(), w->y(), w->w(), w->h());
+        v = i->value();
+        w->resize(v, w->y(), w->w(), w->h());
         if (w->window()) w->window()->redraw();
         widget_i++;
         mod = 1;
       }
     }
-    if (mod) set_modflag(1);
+    if (mod) {
+      set_modflag(1);
+      i->value(v);    // change the displayed value to the result of the last
+                      // calculation. Keep the formula if it was not used.
+    }
   }
 }
 
@@ -690,19 +698,25 @@ void y_cb(Fluid_Coord_Input *i, void *v) {
       y_input->activate();
     } else y_input->deactivate();
   } else {
+    undo_checkpoint();
     widget_i = 0;
     int mod = 0;
+    int v = 0;
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
       if (o->selected && o->is_widget()) {
         Fl_Widget *w = ((Fl_Widget_Type *)o)->o;
         i->variables(widget_vars, o);
-        w->resize(w->x(), (int)i->value(), w->w(), w->h());
+        v = i->value();
+        w->resize(w->x(), v, w->w(), w->h());
         if (w->window()) w->window()->redraw();
         widget_i++;
         mod = 1;
       }
     }
-    if (mod) set_modflag(1);
+    if (mod) {
+      set_modflag(1);
+      i->value(v);
+    }
   }
 }
 
@@ -714,19 +728,25 @@ void w_cb(Fluid_Coord_Input *i, void *v) {
       w_input->activate();
     } else w_input->deactivate();
   } else {
+    undo_checkpoint();
     widget_i = 0;
     int mod = 0;
+    int v = 0;
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
       if (o->selected && o->is_widget()) {
         Fl_Widget *w = ((Fl_Widget_Type *)o)->o;
         i->variables(widget_vars, o);
-        w->resize(w->x(), w->y(), (int)i->value(), w->h());
+        v = i->value();
+        w->resize(w->x(), w->y(), v, w->h());
         if (w->window()) w->window()->redraw();
         widget_i++;
         mod = 1;
       }
     }
-    if (mod) set_modflag(1);
+    if (mod) {
+      set_modflag(1);
+      i->value(v);
+    }
   }
 }
 
@@ -738,23 +758,29 @@ void h_cb(Fluid_Coord_Input *i, void *v) {
       h_input->activate();
     } else h_input->deactivate();
   } else {
+    undo_checkpoint();
     widget_i = 0;
     int mod = 0;
+    int v = 0;
     for (Fl_Type *o = Fl_Type::first; o; o = o->next) {
       if (o->selected && o->is_widget()) {
         Fl_Widget *w = ((Fl_Widget_Type *)o)->o;
         i->variables(widget_vars, o);
-        w->resize(w->x(), w->y(), w->w(), (int)i->value());
+        v = i->value();
+        w->resize(w->x(), w->y(), w->w(), v);
         if (w->window()) w->window()->redraw();
         widget_i++;
         mod = 1;
       }
     }
-    if (mod) set_modflag(1);
+    if (mod) {
+      set_modflag(1);
+      i->value(v);
+    }
   }
 }
 
-void wc_relative_cb(Fl_Light_Button *i, void *v) {
+void wc_relative_cb(Fl_Choice *i, void *v) {
   if (v == LOAD) {
     if (!strcmp(current_widget->type_name(), "widget_class")) {
       i->show();
@@ -846,6 +872,14 @@ Fl_Menu_Item boxmenu[] = {
 {"GLEAM_THIN_DOWN_BOX",0,0,(void *)FL_GLEAM_THIN_DOWN_BOX},
 {"GLEAM_ROUND_UP_BOX",0,0,(void *)FL_GLEAM_ROUND_UP_BOX},
 {"GLEAM_ROUND_DOWN_BOX",0,0,(void *)FL_GLEAM_ROUND_DOWN_BOX},
+{"OXY_UP_BOX",0,0,(void *)FL_OXY_UP_BOX},
+{"OXY_DOWN_BOX",0,0,(void *)FL_OXY_DOWN_BOX},
+{"OXY_THIN_UP_BOX",0,0,(void *)FL_OXY_THIN_UP_BOX},
+{"OXY_THIN_DOWN_BOX",0,0,(void *)FL_OXY_THIN_DOWN_BOX},
+{"OXY_ROUND_UP_BOX",0,0,(void *)FL_OXY_ROUND_UP_BOX},
+{"OXY_ROUND_DOWN_BOX",0,0,(void *)FL_OXY_ROUND_DOWN_BOX},
+{"OXY_BUTTON_UP_BOX",0,0,(void *)FL_OXY_BUTTON_UP_BOX},
+{"OXY_BUTTON_DOWN_BOX",0,0,(void *)FL_OXY_BUTTON_DOWN_BOX},
 {0},
 {"frames",0,0,0,FL_SUBMENU},
 {"UP_FRAME",0,0,(void *)FL_UP_FRAME},
@@ -866,6 +900,10 @@ Fl_Menu_Item boxmenu[] = {
 {"GTK_THIN_DOWN_FRAME",0,0,(void *)FL_GTK_THIN_DOWN_FRAME},
 {"GLEAM_UP_FRAME",0,0,(void *)FL_GLEAM_UP_FRAME},
 {"GLEAM_DOWN_FRAME",0,0,(void *)FL_GLEAM_DOWN_FRAME},
+{"OXY_UP_FRAME",0,0,(void *)FL_OXY_UP_FRAME},
+{"OXY_DOWN_FRAME",0,0,(void *)FL_OXY_DOWN_FRAME},
+{"OXY_THIN_UP_FRAME",0,0,(void *)FL_OXY_THIN_UP_FRAME},
+{"OXY_THIN_DOWN_FRAME",0,0,(void *)FL_OXY_THIN_DOWN_FRAME},
 {0},
 {0}};
 
