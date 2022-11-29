@@ -2464,7 +2464,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
     unsink_importants(R)
 
-    pick_decorative_bling(R)
+    pick_decorative_bling(R, LEVEL)
     pick_ceiling_lights(R)
 
     fix_stair_lighting(R)
