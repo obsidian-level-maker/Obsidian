@@ -1,5 +1,5 @@
 # IF YOU JUST WANT THE PROGRAM
-https://github.com/dashodanger/Obsidian/releases
+https://github.com/obsidian-level-maker/Obsidian/releases
 
 # DISCORD SERVER FOR QUESTIONS, ADDONS, HELP, ETC
 https://discord.gg/dfqCt9v
