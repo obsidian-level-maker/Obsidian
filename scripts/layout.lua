@@ -2289,7 +2289,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   end
 
 
-  local function pick_decorative_bling(R)
+  local function pick_decorative_bling(R, LEVEL)
     local decor_prob = rand.pick({ 20, 55, 90 })
 
     local decor_prob_tab =
@@ -2309,7 +2309,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
     for _,chunk in pairs(R.floor_chunks) do
       if chunk.content == nil and not chunk.is_bossy and rand.odds(decor_prob) then
-        try_decoration_in_chunk(chunk)
+        try_decoration_in_chunk(chunk, nil, LEVEL)
       end
     end
   end
@@ -2320,7 +2320,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
     for _,chunk in pairs(R.floor_chunks) do
       if chunk.content == nil and not chunk.is_bossy and rand.odds(decor_prob) then
-        try_decoration_in_chunk(chunk, "is_cave")
+        try_decoration_in_chunk(chunk, "is_cave", LEVEL)
       end
     end
   end
@@ -2455,7 +2455,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   end
 
 
-  local function tizzy_up_normal_room(R)
+  local function tizzy_up_normal_room(R, LEVEL)
     pick_posts(R)
     pick_wall_detail(R)
 
@@ -2490,7 +2490,7 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   end
 
 
-  local function decor_early_pass(R)
+  local function decor_early_pass(R, LEVEL)
     switch_up_room(R)
 
     -- closets must be decided early for caves
@@ -2502,9 +2502,9 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
   end
 
 
-  local function decor_later_pass(R)
+  local function decor_later_pass(R, LEVEL)
     if not (R.is_cave or R.is_park) then
-      tizzy_up_normal_room(R)
+      tizzy_up_normal_room(R, LEVEL)
       tizzy_all_closets(R)
     end
   end
@@ -2514,9 +2514,9 @@ stderrf("Cages in %s [%s pressure] --> any_prob=%d  per_prob=%d\n",
 
   for _,R in pairs(LEVEL.rooms) do
     if pass == 1 then
-      decor_early_pass(R)
+      decor_early_pass(R, LEVEL)
     else
-      decor_later_pass(R)
+      decor_later_pass(R, LEVEL)
     end
   end
 end
