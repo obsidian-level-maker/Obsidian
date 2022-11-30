@@ -8,6 +8,9 @@ project(
   LANGUAGES C CXX
 )
 add_library(${PROJECT_NAME} ${SOURCES} ff_main.cpp lex.yy.c)
+if(WIN32)
+  target_compile_definitions(${PROJECT_NAME} PRIVATE _CRT_SECURE_NO_WARNINGS)
+endif()
 # Workaround for cross-compiling until I do something more elegant. Still need
 # flex installed - Dasho
 if(!MINGW)

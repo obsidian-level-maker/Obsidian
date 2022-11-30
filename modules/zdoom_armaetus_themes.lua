@@ -5375,6 +5375,8 @@ ARMAETUS_THEMES =
       fence_firestorm_blue = 25,
       fence_construction = 20,
       fence_highway_bars_warnstep = 20,
+      fence_park_bars = 20,
+      fence_park_bars_round = 20
     },
 
     wall_groups =
@@ -5827,6 +5829,8 @@ ARMAETUS_THEMES =
       fence_construction = 50,
       fence_highway_bars_warnstep = 25,
       dem_wall_graveyard = 25,
+      fence_park_bars = 20,
+      fence_park_bars_round = 20
     },
 
     wall_groups =
@@ -6291,6 +6295,8 @@ ARMAETUS_THEMES =
     fence_groups =
     {
       dem_wall_graveyard = 50,
+      fence_park_bars = 20,
+      fence_park_bars_round = 20
     },
 
     wall_groups =
