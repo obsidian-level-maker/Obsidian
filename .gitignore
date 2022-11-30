@@ -56,3 +56,9 @@ install/
 !source_files
 !source_files/fltk
 !source_files/fltk/libdecor/*
+
+# CMake local config
+CMakeUserPresets.json
+
+# clangd config
+.clangd
