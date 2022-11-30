@@ -1023,12 +1023,12 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
        BUILD="WAYLANDX11"
        graphics="Wayland or X11 with cairo"
        ])
-      CFLAGS="$CFLAGS -DUSE_SYSTEM_LIBDECOR=0"
-      CXXFLAGS="$CXXFLAGS -DUSE_SYSTEM_LIBDECOR=0"
+#     CFLAGS="$CFLAGS -DUSE_SYSTEM_LIBDECOR=0"
+#     CXXFLAGS="$CXXFLAGS -DUSE_SYSTEM_LIBDECOR=0"
       LIBS="$LIBS $($PKGCONFIG --libs wayland-cursor) $($PKGCONFIG --libs wayland-client) $($PKGCONFIG --libs xkbcommon) $($PKGCONFIG --libs pangocairo) "
       AS_IF([test x$enable_x11 != xno], [LIBS="$LIBS $($PKGCONFIG --libs x11)"] )
       LIBS="$LIBS $($PKGCONFIG --libs dbus-1) -ldl"
-      CXXFLAGS="$CXXFLAGS -I../libdecor/src"
+#     CXXFLAGS="$CXXFLAGS -I../libdecor/src"
       DSOFLAGS="$LIBS $DSOFLAGS"
       enable_pango=yes
       LIBDECORDIR="libdecor/build"
@@ -1036,8 +1036,7 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
       AC_SUBST([UNAME])
       UNAME="$(uname -s)"
       AS_CASE([$UNAME],
-         [Linux], [LDFLAGS="$LDFLAGS -no-pie"],
-         [*], [CXXFLAGS="$CXXFLAGS -I../libdecor/build"]
+         [Linux], [LDFLAGS="$LDFLAGS -no-pie"]
       )
 
       AC_SEARCH_LIBS([dlopen], [dl])
@@ -1089,6 +1088,41 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
       AS_IF([test x$pango_found != xyes], [
           AC_MSG_NOTICE([--enable-wayland: Pango libs and/or headers could not be found.])
           AC_MSG_ERROR([Aborting.])
+      ])
+      
+      dnl check for Xinerama, Xcursor, Xfixes, Xrender, Xregion.h
+      AS_IF([test x$enable_x11 != xno], [
+        xinerama_found=no
+        AS_IF([$PKGCONFIG --exists xinerama], [
+          AC_DEFINE(HAVE_XINERAMA)
+          LIBS="$LIBS $($PKGCONFIG --libs xinerama)"
+          xinerama_found=yes
+        ])
+
+        xcursor_found=no
+        AS_IF([$PKGCONFIG --exists xcursor], [
+          AC_DEFINE(HAVE_XCURSOR)
+          LIBS="$LIBS $($PKGCONFIG --libs xcursor)"
+          xcursor_found=yes
+        ])
+
+        xfixes_found=no
+        AS_IF([$PKGCONFIG --exists xfixes], [
+          AC_DEFINE(HAVE_XFIXES)
+          LIBS="$LIBS $($PKGCONFIG --libs xfixes)"
+          xfixes_found=yes
+        ])
+      
+        xrender_found=no
+        AS_IF([$PKGCONFIG --exists xrender], [
+          AC_DEFINE(HAVE_XRENDER)
+          LIBS="$LIBS $($PKGCONFIG --libs xrender)"
+          xrender_found=yes
+        ])
+
+        AC_CHECK_HEADER([X11/Xregion.h], [
+          AC_DEFINE([HAVE_X11_XREGION_H])
+        ], [], [#include <X11/Xlib.h>])
       ])
 
     ], [
