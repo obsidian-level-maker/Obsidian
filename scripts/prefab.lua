@@ -1467,8 +1467,6 @@ function Fab_load_wad(def)
       create_light_brush(S, coords)
     end
 
-    if S.special == WADFAB_SKIP_LIGHT_BRUSH then return end
-
     -- skip making a brush when the flat is '_NOTHING'
     if pass == 1 and S.floor_tex == "_NOTHING" then return end
     if pass == 2 and S.ceil_tex  == "_NOTHING" then return end
@@ -1506,7 +1504,7 @@ function Fab_load_wad(def)
       end
 
       -- give floor brush lighting ONLY when ceiling brush is absent
-      if S.ceil_tex == "_NOTHING" and S.floor_h < S.ceil_h then
+      if S.ceil_tex == "_NOTHING" and S.floor_h < S.ceil_h and S.special ~= WADFAB_SKIP_LIGHT_BRUSH then
         decode_lighting(S, C)
       end
 
@@ -1527,7 +1525,7 @@ function Fab_load_wad(def)
       end
 
       -- closed sectors never specify a light
-      if S.floor_h < S.ceil_h then
+      if S.floor_h < S.ceil_h and S.special ~= WADFAB_SKIP_LIGHT_BRUSH then
         decode_lighting(S, C)
       end
 
