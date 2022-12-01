@@ -133,6 +133,7 @@ WADFAB_MOVER       = 995
 WADFAB_DOOR        = 996
 WADFAB_DELTA_12    = 997
 WADFAB_LIGHT_BRUSH = 987
+WADFAB_SKIP_LIGHT_BRUSH = 988
 
 
 function load_from_subdir(top_level, sub, extension)
@@ -1465,6 +1466,8 @@ function Fab_load_wad(def)
     if pass == 1 and S.special == WADFAB_LIGHT_BRUSH then
       create_light_brush(S, coords)
     end
+
+    if S.special == WADFAB_SKIP_LIGHT_BRUSH then return end
 
     -- skip making a brush when the flat is '_NOTHING'
     if pass == 1 and S.floor_tex == "_NOTHING" then return end

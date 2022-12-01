@@ -2906,8 +2906,6 @@ function Layout_outdoor_shadows(LEVEL, SEEDS)
     local SA = S.area
     local NA = N.area
 
-    if (SA.chunk and SA.chunk.kind == "stair") or (NA.chunk and NA.chunk.kind == "stair") then return false end
-
     if not NA.is_outdoor or NA.mode == "void" or NA.is_porch then return false end
     if not SA.is_outdoor or SA.mode == "void" or SA.is_porch then return true end
 
