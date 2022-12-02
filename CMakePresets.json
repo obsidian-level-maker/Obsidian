@@ -16,6 +16,13 @@
       }
     },
     {
+      "name": "warnings",
+      "hidden": true,
+      "cacheVariables": {
+        "OBSIDIAN_WARNINGS": "ON"
+      }
+    },
+    {
       "name": "dev",
       "binaryDir": "build",
       "generator": "Ninja",
@@ -126,6 +133,15 @@
       "generator": "Visual Studio 17 2022",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "msvc-dev",
+      "description": "Compile natively on Windows for development",
+      "binaryDir": "build/msvc-dev",
+      "inherits": ["msvc", "warnings"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {

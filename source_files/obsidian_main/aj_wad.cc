@@ -352,6 +352,8 @@ bool LoadWAD(const char *wad_filename) {
         return false;  // error will be set
     }
 
+    the_wad->the_file = wad_filename;
+
     return true;  // OK
 }
 

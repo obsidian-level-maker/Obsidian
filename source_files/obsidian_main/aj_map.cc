@@ -1117,7 +1117,7 @@ bool OpenMap(const char *level_name) {
         if (level_name[0] == '*') {
             SetErrorMsg("No levels found in the wad");
         } else {
-            SetErrorMsg("Level '%s' not found in the wad", level_name);
+            SetErrorMsg("Level '%s' not found in %s", level_name, the_wad->the_file.c_str());
         }
 
         return false;

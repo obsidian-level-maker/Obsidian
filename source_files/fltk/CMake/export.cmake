@@ -20,30 +20,29 @@
 #######################################################################
 
 # Set the fluid executable path used to create .cxx/.h from .fl files
-if (FLTK_BUILD_FLUID)
-  if (CMAKE_CROSSCOMPILING)
-    # find a fluid executable on the host system
-    find_file(FLUID_PATH
-      NAMES fluid fluid.exe
-      PATHS ENV PATH
-      NO_CMAKE_FIND_ROOT_PATH
-    )
-    set (FLTK_FLUID_EXECUTABLE ${FLUID_PATH})
-    set (FLUID_EXPORT "")                     # don't export fluid
+
+if (FLTK_BUILD_FLUID AND NOT CMAKE_CROSSCOMPILING)
+  # use the fluid executable we build
+  if (WIN32)
+    set (FLTK_FLUID_EXECUTABLE fluid-cmd)
+    set (FLUID_EXPORT fluid fluid-cmd)      # export fluid and fluid-cmd
   else ()
-    # use the fluid executable we build
-    if (WIN32)
-      set (FLTK_FLUID_EXECUTABLE fluid-cmd)
-      set (FLUID_EXPORT fluid fluid-cmd)      # export fluid and fluid-cmd
-    else ()
-      set (FLTK_FLUID_EXECUTABLE fluid)
-      set (FLUID_EXPORT fluid)                # export fluid
-    endif ()
-  endif (CMAKE_CROSSCOMPILING)
-  export (TARGETS ${FLUID_EXPORT} ${FLTK_LIBRARIES} FILE ${CMAKE_CURRENT_BINARY_DIR}/FLTK-Targets.cmake)
-else()
-  export (TARGETS ${FLTK_LIBRARIES} FILE ${CMAKE_CURRENT_BINARY_DIR}/FLTK-Targets.cmake)
-endif()
+    set (FLTK_FLUID_EXECUTABLE fluid)
+    set (FLUID_EXPORT fluid)                # export fluid
+  endif ()
+else ()
+  # find a fluid executable on the host system
+  find_file(FLUID_PATH
+    NAMES fluid fluid.exe
+    PATHS ENV PATH
+    NO_CMAKE_FIND_ROOT_PATH
+  )
+  set (FLTK_FLUID_EXECUTABLE ${FLUID_PATH})
+  set (FLUID_EXPORT "")                     # don't export fluid
+endif (FLTK_BUILD_FLUID AND NOT CMAKE_CROSSCOMPILING)
+
+# generate FLTK-Targets.cmake for build directory use
+export (TARGETS ${FLUID_EXPORT} ${FLTK_LIBRARIES} FILE ${CMAKE_CURRENT_BINARY_DIR}/FLTK-Targets.cmake)
 
 # generate FLTK-Functions.cmake for build directory use
 configure_file (

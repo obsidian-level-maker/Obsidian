@@ -1,7 +1,7 @@
 //
 // Enumerations for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2020 by Bill Spitzak and others.
+// Copyright 1998-2022 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -653,6 +653,18 @@ enum Fl_Boxtype { // boxtypes (if you change these you must also change fl_boxty
   _FL_GLEAM_THIN_DOWN_BOX,      ///< gleam version of FL_THIN_DOWN_BOX, use FL_GLEAM_THIN_DOWN_BOX
   _FL_GLEAM_ROUND_UP_BOX,       ///< gleam version of FL_ROUND_UP_BOX, use FL_GLEAM_ROUND_UP_BOX
   _FL_GLEAM_ROUND_DOWN_BOX,     ///< gleam version of FL_ROUND_DOWN_BOX, use FL_GLEAM_ROUND_DOWN_BOX
+  _FL_OXY_UP_BOX,               ///< oxy version of FL_UP_BOX, use FL_OXY_UP_BOX
+  _FL_OXY_DOWN_BOX,             ///< oxy version of FL_DOWN_BOX, use FL_OXY_DOWN_BOX
+  _FL_OXY_UP_FRAME,             ///< oxy version of FL_UP_FRAME, use FL_OXY_UP_FRAME
+  _FL_OXY_DOWN_FRAME,           ///< oxy version of FL_DOWN_FRAME, use FL_OXY_DOWN_FRAME
+  _FL_OXY_THIN_UP_BOX,          ///< oxy version of FL_THIN_UP_BOX, use FL_OXY_THIN_UP_BOX
+  _FL_OXY_THIN_DOWN_BOX,        ///< oxy version of FL_THIN_DOWN_BOX, use FL_OXY_THIN_DOWN_BOX
+  _FL_OXY_THIN_UP_FRAME,        ///< oxy version of FL_THIN_UP_FRAME, use FL_OXY_THIN_UP_FRAME
+  _FL_OXY_THIN_DOWN_FRAME,      ///< oxy version of FL_THIN_DOWN_FRAME, use FL_OXY_THIN_DOWN_FRAME
+  _FL_OXY_ROUND_UP_BOX,         ///< oxy version of FL_ROUND_UP_BOX, use FL_OXY_ROUND_UP_BOX
+  _FL_OXY_ROUND_DOWN_BOX,       ///< oxy version of FL_ROUND_DOWN_BOX, use FL_OXY_ROUND_DOWN_BOX
+  _FL_OXY_BUTTON_UP_BOX,        ///< FL_OXY_BUTTON_UP_BOX (new boxtype ?), use FL_OXY_BUTTON_UP_BOX
+  _FL_OXY_BUTTON_DOWN_BOX,      ///< FL_OXY_BUTTON_DOWN_BOX (new boxtype ?), use FL_OXY_BUTTON_DOWN_BOX
   FL_FREE_BOXTYPE               ///< the first free box type for creation of new box types
 };
 extern FL_EXPORT Fl_Boxtype fl_define_FL_ROUND_UP_BOX();
@@ -708,6 +720,20 @@ extern FL_EXPORT Fl_Boxtype fl_define_FL_GLEAM_UP_BOX();
 #define FL_GLEAM_THIN_DOWN_BOX (Fl_Boxtype)(fl_define_FL_GLEAM_UP_BOX()+5)
 #define FL_GLEAM_ROUND_UP_BOX (Fl_Boxtype)(fl_define_FL_GLEAM_UP_BOX()+6)
 #define FL_GLEAM_ROUND_DOWN_BOX (Fl_Boxtype)(fl_define_FL_GLEAM_UP_BOX()+7)
+
+extern FL_EXPORT Fl_Boxtype fl_define_FL_OXY_UP_BOX();
+#define FL_OXY_UP_BOX fl_define_FL_OXY_UP_BOX()
+#define FL_OXY_DOWN_BOX (Fl_Boxtype)(fl_define_FL_OXY_UP_BOX()+1)
+#define FL_OXY_UP_FRAME (Fl_Boxtype)(fl_define_FL_OXY_UP_BOX()+2)
+#define FL_OXY_DOWN_FRAME (Fl_Boxtype)(fl_define_FL_OXY_UP_BOX()+3)
+#define FL_OXY_THIN_UP_BOX (Fl_Boxtype)(fl_define_FL_OXY_UP_BOX()+4)
+#define FL_OXY_THIN_DOWN_BOX (Fl_Boxtype)(fl_define_FL_OXY_UP_BOX()+5)
+#define FL_OXY_THIN_UP_FRAME (Fl_Boxtype)(fl_define_FL_OXY_UP_BOX()+6)
+#define FL_OXY_THIN_DOWN_FRAME (Fl_Boxtype)(fl_define_FL_OXY_UP_BOX()+7)
+#define FL_OXY_ROUND_UP_BOX (Fl_Boxtype)(fl_define_FL_OXY_UP_BOX()+8)
+#define FL_OXY_ROUND_DOWN_BOX (Fl_Boxtype)(fl_define_FL_OXY_UP_BOX()+9)
+#define FL_OXY_BUTTON_UP_BOX (Fl_Boxtype)(fl_define_FL_OXY_UP_BOX()+10)
+#define FL_OXY_BUTTON_DOWN_BOX (Fl_Boxtype)(fl_define_FL_OXY_UP_BOX()+11)
 
 // conversions of box types to other boxtypes:
 /**
@@ -1222,5 +1248,58 @@ enum Fl_Damage {
 };
 
 // FLTK 1.0.x compatibility definitions (FLTK_1_0_COMPAT) dropped in 1.4.0
+
+/** Arrow types define the type of arrow drawing function.
+
+  FLTK schemes can draw several graphical elements in their particular way.
+  One of these elements is an arrow type that can be in different GUI
+  elements like scrollbars, choice buttons, and FLTK's Fl_Return_Button.
+
+  \note This enum is not yet stable (as of FLTK 1.4.0) and may be changed
+    without notice as necessary.
+
+  \since 1.4.0
+*/
+
+enum Fl_Arrow_Type {
+  FL_ARROW_SINGLE = 0x01, ///< Single arrow, e.g. in Fl_Scrollbar
+  FL_ARROW_DOUBLE = 0x02, ///< Double arrow, e.g. in Fl_Counter
+  FL_ARROW_CHOICE = 0x03, ///< Dropdown box, e.g. in Fl_Choice
+  FL_ARROW_RETURN = 0x04  ///< Return arrow, e.g. in Fl_Return_Button
+};
+
+/** Fl_Orientation describes the orientation of a GUI element.
+
+  FLTK schemes can draw several graphical elements, for instance arrows,
+  pointing at different directions. This enum defines the direction
+  to use for drawing a particular GUI element.
+
+  The definition of this enum was chosen such that the enum value can
+  be multiplied by 45 to get a rotation angle in degrees starting
+  at the horizontal axis (0 = right, 1 = NE, 2 = up, ...) that can be
+  used with fl_rotate(). Note: angle is counter-clockwise in degrees.
+
+  The 'unspecified' value \b FL_ORIENT_NONE shall be used for elements
+  that would usually not be rotated, like the return arrow of the
+  Fl_Return_Button. It can still be used as an angle though since it is
+  the same value as \p FL_ORIENT_RIGHT (0 degrees).
+
+  \note This enum is not yet stable (as of FLTK 1.4.0) and may be changed
+    without notice as necessary.
+
+  \since 1.4.0
+*/
+
+enum Fl_Orientation {
+  FL_ORIENT_NONE  = 0x00, ///< GUI element direction is unspecified
+  FL_ORIENT_RIGHT = 0x00, ///< GUI element pointing right (  0°)
+  FL_ORIENT_NE    = 0x01, ///< GUI element pointing NE    ( 45°)
+  FL_ORIENT_UP    = 0x02, ///< GUI element pointing up    ( 90°)
+  FL_ORIENT_NW    = 0x03, ///< GUI element pointing NW    (135°)
+  FL_ORIENT_LEFT  = 0x04, ///< GUI element pointing left  (180°)
+  FL_ORIENT_SW    = 0x05, ///< GUI element pointing SW    (225°)
+  FL_ORIENT_DOWN  = 0x06, ///< GUI element pointing down  (270°)
+  FL_ORIENT_SE    = 0x07  ///< GUI element pointing SE    (315°)
+};
 
 #endif

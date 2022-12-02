@@ -133,6 +133,7 @@ WADFAB_MOVER       = 995
 WADFAB_DOOR        = 996
 WADFAB_DELTA_12    = 997
 WADFAB_LIGHT_BRUSH = 987
+WADFAB_SKIP_LIGHT_BRUSH = 988
 
 
 function load_from_subdir(top_level, sub, extension)
@@ -1503,7 +1504,7 @@ function Fab_load_wad(def)
       end
 
       -- give floor brush lighting ONLY when ceiling brush is absent
-      if S.ceil_tex == "_NOTHING" and S.floor_h < S.ceil_h then
+      if S.ceil_tex == "_NOTHING" and S.floor_h < S.ceil_h and S.special ~= WADFAB_SKIP_LIGHT_BRUSH then
         decode_lighting(S, C)
       end
 
@@ -1524,7 +1525,7 @@ function Fab_load_wad(def)
       end
 
       -- closed sectors never specify a light
-      if S.floor_h < S.ceil_h then
+      if S.floor_h < S.ceil_h and S.special ~= WADFAB_SKIP_LIGHT_BRUSH then
         decode_lighting(S, C)
       end
 

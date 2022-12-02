@@ -2,7 +2,7 @@
 // Code editor widget for the Fast Light Tool Kit (FLTK).
 // Syntax highlighting rewritten by erco@seriss.com 09/15/20.
 //
-// Copyright 1998-2021 by Bill Spitzak and others.
+// Copyright 1998-2022 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -267,7 +267,7 @@ void CodeEditor::textsize(Fl_Fontsize s) {
  A widget derived from CodeEditor with highlighting for code blocks.
 
  This widget is used by the SourceView system to show the design's
- source an header code. The secondary highlighting show the text
+ source and header code. The secondary highlighting show the text
  part that corresponds to the selected widget(s).
  */
 
@@ -293,4 +293,26 @@ void CodeViewer::draw()
   Fl::set_color(FL_SELECTION_COLOR, fl_color_average(FL_BACKGROUND_COLOR, FL_FOREGROUND_COLOR, 0.9f));
   CodeEditor::draw();
   Fl::set_color(FL_SELECTION_COLOR, c);
+}
+
+// ---- TextViewer implementation
+
+/**
+ Create a TextViewer widget.
+ \param[in] X, Y, W, H position and size of the widget
+ \param[in] L optional label
+ */
+TextViewer::TextViewer(int X, int Y, int W, int H, const char *L)
+: Fl_Text_Display(X, Y, W, H, L)
+{
+  buffer(new Fl_Text_Buffer);
+}
+
+/**
+ Avoid memory leaks.
+ */
+TextViewer::~TextViewer() {
+  Fl_Text_Buffer *buf = mBuffer;
+  buffer(0);
+  delete buf;
 }

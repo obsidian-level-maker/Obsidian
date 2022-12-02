@@ -44,7 +44,7 @@ void Shortcut_Button::draw() {
   if (value()) draw_box(FL_DOWN_BOX, (Fl_Color)9);
   else draw_box(FL_UP_BOX, FL_WHITE);
   fl_font(FL_HELVETICA,14); fl_color(FL_FOREGROUND_COLOR);
-  if (use_FL_COMMAND && (svalue & (FL_CTRL|FL_META))) {
+  if (P.use_FL_COMMAND && (svalue & (FL_CTRL|FL_META))) {
     char buf[1024];
     fl_snprintf(buf, 1023, "Command+%s", fl_shortcut_label(svalue&~(FL_CTRL|FL_META)));
     fl_draw(buf,x()+6,y(),w(),h(),FL_ALIGN_LEFT);
@@ -203,7 +203,8 @@ void Fluid_Coord_Input::callback_handler_cb(Fluid_Coord_Input *This, void *v) {
 void Fluid_Coord_Input::callback_handler(void *v) {
   if (user_callback_)
     (*user_callback_)(this, v);
-  value( value() );
+  // do *not* update the value to show the evaluated fomule here, because the
+  // values of the variables have already updated after the user callback.
 }
 
 /**
@@ -238,14 +239,20 @@ int Fluid_Coord_Input::eval_var(uchar *&s) const {
  \return the value so far
  */
 int Fluid_Coord_Input::eval(uchar *&s, int prio) const {
-  int v =0, sgn = 1;
+  int v = 0, sgn = 1;
   uchar c = *s++;
+
+  // check for end of text
+  if (c==0) { s--; return sgn*v; }
 
   // check for unary operator
   if (c=='-') { sgn = -1; c = *s++; }
   else if (c=='+') { sgn = 1; c = *s++; }
 
-  if (c>='0' && c<='9') {
+  // read value, variable, or bracketed term
+  if (c==0) {
+    s--; return sgn*v;
+  } else if (c>='0' && c<='9') {
     // numeric value
     while (c>='0' && c<='9') {
       v = v*10 + (c-'0');
@@ -265,6 +272,7 @@ int Fluid_Coord_Input::eval(uchar *&s, int prio) const {
   // Now evaluate all following binary operators
   for (;;) {
     if (c==0) {
+      s--;
       return v;
     } else if (c=='+' || c=='-') {
       if (prio<=4) { s--; return v; }
@@ -290,7 +298,7 @@ int Fluid_Coord_Input::eval(uchar *&s, int prio) const {
 
 /**
  Evaluate a formula into an integer.
- The interpreter understand unary plus and minus, basic integer math
+ The interpreter understands unary plus and minus, basic integer math
  (+, -, *, /), brackets, and can handle a user defined list of variables
  by name. There is no error checking. We assume that the formula is
  entered correctly.

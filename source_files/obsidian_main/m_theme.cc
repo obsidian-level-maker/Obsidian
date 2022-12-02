@@ -699,6 +699,9 @@ class UI_ThemeWin : public Fl_Window {
             case 3:
                 Fl::scheme("plastic");
                 break;
+            case 4:
+                Fl::scheme("oxy");
+                break;
             // Shouldn't be reached, but still
             default:
                 Fl::scheme("gtk+");
@@ -712,6 +715,216 @@ class UI_ThemeWin : public Fl_Window {
             main_action = MAIN_HARD_RESTART;
 
             that->want_quit = true;
+        } else {
+            Fl::reload_scheme();
+            switch (box_theme) {
+                case 0:
+                    box_style = FL_FLAT_BOX;
+                    break;
+                case 1:
+                    box_style = FL_SHADOW_BOX;
+                    break;
+                case 2:
+                    box_style = FL_EMBOSSED_BOX;
+                    break;
+                case 3:
+                    box_style = FL_ENGRAVED_BOX;
+                    break;
+                case 4:
+                    switch (widget_theme) {
+                        case 0:
+                            box_style = FL_GTK_DOWN_BOX;
+                            break;
+                        case 1:
+                            box_style = FL_GLEAM_DOWN_BOX;
+                            break;
+                        case 2:
+                            box_style = FL_DOWN_BOX;
+                            break;
+                        case 3:
+                            box_style = FL_PLASTIC_DOWN_BOX;
+                            break;
+                        case 4:
+                            box_style = FL_OXY_DOWN_BOX;
+                            break;
+                        default:
+                            box_style = FL_GTK_DOWN_BOX;
+                            break;
+                    }
+                    break;
+                case 5:
+                    switch (widget_theme) {
+                        case 0:
+                            box_style = FL_GTK_THIN_UP_BOX;
+                            break;
+                        case 1:
+                            box_style = FL_GLEAM_THIN_UP_BOX;
+                            break;
+                        case 2:
+                            box_style = FL_THIN_UP_BOX;
+                            break;
+                        case 3:
+                            box_style = FL_PLASTIC_THIN_UP_BOX;
+                            break;
+                        case 4:
+                            box_style = FL_OXY_THIN_UP_BOX;
+                            break;
+                        default:
+                            box_style = FL_GTK_THIN_UP_BOX;
+                            break;
+                    }
+                    break;
+                // Shouldn't be reached, but still
+                default:
+                    box_style = FL_FLAT_BOX;
+                    break;
+            }
+            switch (button_theme) {
+                case 0:
+                    switch (widget_theme) {
+                        case 0:
+                            button_style = FL_GTK_DOWN_BOX;
+                            break;
+                        case 1:
+                            button_style = FL_GLEAM_DOWN_BOX;
+                            break;
+                        case 2:
+                            button_style = FL_DOWN_BOX;
+                            break;
+                        case 3:
+                            button_style = FL_PLASTIC_DOWN_BOX;
+                            break;
+                        case 4:
+                            button_style = FL_OXY_DOWN_BOX;
+                            break;
+                        default:
+                            button_style = FL_GTK_DOWN_BOX;
+                            break;
+                    }
+                    break;
+                case 1:
+                    switch (widget_theme) {
+                        case 0:
+                            button_style = FL_GTK_UP_BOX;
+                            break;
+                        case 1:
+                            button_style = FL_GLEAM_UP_BOX;
+                            break;
+                        case 2:
+                            button_style = FL_UP_BOX;
+                            break;
+                        case 3:
+                            button_style = FL_PLASTIC_UP_BOX;
+                            break;
+                        case 4:
+                            button_style = FL_OXY_UP_BOX;
+                            break;
+                        default:
+                            button_style = FL_GTK_UP_BOX;
+                            break;
+                    }
+                    break;
+                case 2:
+                    button_style = static_cast<Fl_Boxtype>(FL_FREE_BOXTYPE + 2);
+                    break;
+                case 3:
+                    button_style = FL_EMBOSSED_BOX;
+                    break;
+                case 4:
+                    button_style = FL_FREE_BOXTYPE;
+                    break;
+                // Shouldn't be reached, but still
+                default:
+                    button_style = FL_DOWN_BOX;
+                    break;
+            }
+            main_win->menu_bar->box(box_style);
+            main_win->redraw();
+            main_win->game_box->box(box_style);
+            main_win->game_box->redraw();
+            main_win->build_box->box(box_style);
+            main_win->build_box->redraw();
+            for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+                UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
+                SYS_ASSERT(M);
+                M->box(box_style);
+                M->redraw();
+            }
+            if (!single_pane) {
+                for (int x = 0; x < main_win->right_mods->mod_pack->children();
+                    x++) {
+                    UI_Module *M =
+                        (UI_Module *)main_win->right_mods->mod_pack->child(x);
+                    SYS_ASSERT(M);
+                    M->box(box_style);
+                    M->redraw();
+                }
+            }
+            main_win->game_box->build->box(button_style);
+            main_win->game_box->quit->box(button_style);
+            for (int x = 0; x < main_win->game_box->children(); x++) {
+                main_win->game_box->child(x)->redraw();
+            }
+            main_win->left_mods->sbar->slider(button_style);
+            main_win->left_mods->redraw();
+            for (int x = 0; x < main_win->left_mods->mod_pack->children(); x++) {
+                UI_Module *M = (UI_Module *)main_win->left_mods->mod_pack->child(x);
+                SYS_ASSERT(M);
+                M->mod_button->down_box(button_style);
+                M->redraw();
+                std::map<std::string, UI_RSlide *>::const_iterator IT;
+                std::map<std::string, UI_RButton *>::const_iterator IT2;
+                for (IT = M->choice_map_slider.begin();
+                    IT != M->choice_map_slider.end(); IT++) {
+                    UI_RSlide *rsl = IT->second;
+                    rsl->prev_button->box(button_style);
+                    rsl->mod_slider->box(button_style);
+                    rsl->next_button->box(button_style);
+                    rsl->redraw();
+                }
+                for (IT2 = M->choice_map_button.begin();
+                    IT2 != M->choice_map_button.end(); IT2++) {
+                    UI_RButton *rbt = IT2->second;
+                    rbt->mod_check->down_box(button_style);
+                    rbt->redraw();
+                }
+            }
+            if (!single_pane) {
+                main_win->right_mods->sbar->slider(button_style);
+                main_win->right_mods->redraw();
+                for (int x = 0; x < main_win->right_mods->mod_pack->children();
+                    x++) {
+                    UI_Module *M =
+                        (UI_Module *)main_win->right_mods->mod_pack->child(x);
+                    SYS_ASSERT(M);
+                    M->mod_button->down_box(button_style);
+                    M->redraw();
+                    std::map<std::string, UI_RSlide *>::const_iterator IT;
+                    std::map<std::string, UI_RButton *>::const_iterator IT2;
+                    for (IT = M->choice_map_slider.begin();
+                        IT != M->choice_map_slider.end(); IT++) {
+                        UI_RSlide *rsl = IT->second;
+                        rsl->prev_button->box(button_style);
+                        rsl->mod_slider->box(button_style);
+                        rsl->next_button->box(button_style);
+                        rsl->redraw();
+                    }
+                    for (IT2 = M->choice_map_button.begin();
+                        IT2 != M->choice_map_button.end(); IT2++) {
+                        UI_RButton *rbt = IT2->second;
+                        rbt->mod_check->down_box(button_style);
+                        rbt->redraw();
+                    }
+                }
+            }
+            that->opt_system_fonts->down_box(button_style);
+            that->opt_single_pane->down_box(button_style);
+            that->load_defaults->box(button_style);
+            that->load_theme->box(button_style);
+            that->save_theme->box(button_style);
+            for (int x = 0; x < that->children(); x++) {
+                that->child(x)->redraw();
+            }
         }
     }
 
@@ -734,10 +947,48 @@ class UI_ThemeWin : public Fl_Window {
                 box_style = FL_ENGRAVED_BOX;
                 break;
             case 4:
-                box_style = FL_DOWN_BOX;
+                switch (widget_theme) {
+                    case 0:
+                        box_style = FL_GTK_DOWN_BOX;
+                        break;
+                    case 1:
+                        box_style = FL_GLEAM_DOWN_BOX;
+                        break;
+                    case 2:
+                        box_style = FL_DOWN_BOX;
+                        break;
+                    case 3:
+                        box_style = FL_PLASTIC_DOWN_BOX;
+                        break;
+                    case 4:
+                        box_style = FL_OXY_DOWN_BOX;
+                        break;
+                    default:
+                        box_style = FL_GTK_DOWN_BOX;
+                        break;
+                }
                 break;
             case 5:
-                box_style = FL_THIN_UP_BOX;
+                switch (widget_theme) {
+                    case 0:
+                        box_style = FL_GTK_THIN_UP_BOX;
+                        break;
+                    case 1:
+                        box_style = FL_GLEAM_THIN_UP_BOX;
+                        break;
+                    case 2:
+                        box_style = FL_THIN_UP_BOX;
+                        break;
+                    case 3:
+                        box_style = FL_PLASTIC_THIN_UP_BOX;
+                        break;
+                    case 4:
+                        box_style = FL_OXY_THIN_UP_BOX;
+                        break;
+                    default:
+                        box_style = FL_GTK_THIN_UP_BOX;
+                        break;
+                }
                 break;
             // Shouldn't be reached, but still
             default:
@@ -775,19 +1026,57 @@ class UI_ThemeWin : public Fl_Window {
 
         switch (button_theme) {
             case 0:
-                button_style = FL_DOWN_BOX;
+                switch (widget_theme) {
+                    case 0:
+                        button_style = FL_GTK_DOWN_BOX;
+                        break;
+                    case 1:
+                        button_style = FL_GLEAM_DOWN_BOX;
+                        break;
+                    case 2:
+                        button_style = FL_DOWN_BOX;
+                        break;
+                    case 3:
+                        button_style = FL_PLASTIC_DOWN_BOX;
+                        break;
+                    case 4:
+                        button_style = FL_OXY_DOWN_BOX;
+                        break;
+                    default:
+                        button_style = FL_GTK_DOWN_BOX;
+                        break;
+                }
                 break;
             case 1:
-                button_style = FL_UP_BOX;
+                switch (widget_theme) {
+                    case 0:
+                        button_style = FL_GTK_UP_BOX;
+                        break;
+                    case 1:
+                        button_style = FL_GLEAM_UP_BOX;
+                        break;
+                    case 2:
+                        button_style = FL_UP_BOX;
+                        break;
+                    case 3:
+                        button_style = FL_PLASTIC_UP_BOX;
+                        break;
+                    case 4:
+                        button_style = FL_OXY_UP_BOX;
+                        break;
+                    default:
+                        button_style = FL_GTK_UP_BOX;
+                        break;
+                }
                 break;
             case 2:
-                button_style = FL_ENGRAVED_BOX;
+                button_style = static_cast<Fl_Boxtype>(FL_FREE_BOXTYPE + 2);
                 break;
             case 3:
                 button_style = FL_EMBOSSED_BOX;
                 break;
             case 4:
-                button_style = FL_BORDER_BOX;
+                button_style = FL_FREE_BOXTYPE;
                 break;
             // Shouldn't be reached, but still
             default:
@@ -850,6 +1139,14 @@ class UI_ThemeWin : public Fl_Window {
                     rbt->redraw();
                 }
             }
+        }
+        that->opt_system_fonts->down_box(button_style);
+        that->opt_single_pane->down_box(button_style);
+        that->load_defaults->box(button_style);
+        that->load_theme->box(button_style);
+        that->save_theme->box(button_style);
+        for (int x = 0; x < that->children(); x++) {
+            that->child(x)->redraw();
         }
     }
 
@@ -1572,7 +1869,7 @@ UI_ThemeWin::UI_ThemeWin(int W, int H, const char *label)
         new UI_CustomMenu(cx + W * .38, cy, listwidth, kf_h(24), "");
     opt_widget_theme->copy_label(_("Widget Theme: "));
     opt_widget_theme->align(FL_ALIGN_LEFT);
-    opt_widget_theme->add(_("Default|Gleam|Win95|Plastic"));
+    opt_widget_theme->add(_("Default|Gleam|Win95|Plastic|Oxy"));
     opt_widget_theme->callback(callback_WidgetTheme, this);
     opt_widget_theme->value(widget_theme);
     opt_widget_theme->labelfont(font_style);

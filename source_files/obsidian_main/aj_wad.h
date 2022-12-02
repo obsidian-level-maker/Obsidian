@@ -74,6 +74,8 @@ class wad_c {
 
     virtual ~wad_c();
 
+    std::string the_file;
+
     // open the wad file for reading and load the directory.
     // returns NULL on error (and an error message will have been set).
     // just delete the wad to close it.

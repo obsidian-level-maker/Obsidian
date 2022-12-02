@@ -2875,6 +2875,9 @@ chunk.goal.action = "S1_OpenDoor"  -- FIXME IT SHOULD BE SET WHEN JOINER IS REND
   if goal and goal.kind == "LOCAL_SWITCH" then
     goal.action = assert(def.door_action)
   end
+
+  -- assign prefab name to chunk
+  chunk.prefab_def = def
 end
 
 

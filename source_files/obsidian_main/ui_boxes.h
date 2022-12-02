@@ -5,6 +5,9 @@
 
 #include <FL/Enumerations.H>
 
+void coxy_up_box(int x, int y, int w, int h, Fl_Color bg);
+void coxy_down_box(int x, int y, int w, int h, Fl_Color bg);
+
 void cgleam_gleam_color(Fl_Color c);
 void cgleam_shade_rect_top_bottom(int x, int y, int w, int h, Fl_Color fg1,
                                   Fl_Color fg2, float th);

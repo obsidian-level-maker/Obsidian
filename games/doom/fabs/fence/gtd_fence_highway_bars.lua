@@ -16,7 +16,6 @@ PREFABS.Fence_highway_bars =
   bound_z1 = 0,
 }
 
-
 PREFABS.Fence_highway_bars_diag =
 {
   file = "fence/gtd_fence_highway_bars.wad",
@@ -45,7 +44,6 @@ PREFABS.Fence_highway_bars_warnstep =
 
   tex_STEP4 = "WARNSTEP",
 }
-
 
 PREFABS.Fence_highway_bars_diag_warnstep =
 {

@@ -48,6 +48,7 @@ set (CPPFILES
   Fl_Input.cxx
   Fl_Input_.cxx
   Fl_Input_Choice.cxx
+  Fl_Int_Vector.cxx
   Fl_Light_Button.cxx
   Fl_Menu.cxx
   Fl_Menu_.cxx
@@ -135,6 +136,7 @@ set (CPPFILES
   fl_curve.cxx
   fl_diamond_box.cxx
   fl_draw.cxx
+  fl_draw_arrow.cxx
   fl_draw_pixmap.cxx
   fl_encoding_latin1.cxx
   fl_encoding_mac_roman.cxx
@@ -147,6 +149,7 @@ set (CPPFILES
   fl_open_uri.cxx
   fl_oval_box.cxx
   fl_overlay.cxx
+  fl_oxy.cxx
   fl_plastic.cxx
   fl_read_image.cxx
   fl_rect.cxx
@@ -201,7 +204,7 @@ if (FLTK_USE_X11 AND NOT OPTION_USE_WAYLAND)
     drivers/X11/Fl_X11_Window_Driver.cxx
     drivers/Posix/Fl_Posix_System_Driver.cxx
     drivers/Unix/Fl_Unix_System_Driver.cxx
-    drivers/X11/Fl_X11_System_Driver.cxx
+    drivers/Unix/Fl_Unix_Screen_Driver.cxx
     drivers/Xlib/Fl_Xlib_Copy_Surface_Driver.cxx
     drivers/Xlib/Fl_Xlib_Image_Surface_Driver.cxx
     drivers/X11/fl_X11_platform_init.cxx
@@ -211,10 +214,6 @@ if (FLTK_USE_X11 AND NOT OPTION_USE_WAYLAND)
     Fl_Native_File_Chooser_GTK.cxx
     Fl_get_key.cxx
   )
-
-  if (OPTION_USE_ZENITY)
-    set (DRIVER_FILES ${DRIVER_FILES} Fl_Native_File_Chooser_Zenity.cxx)
-  endif (OPTION_USE_ZENITY)
 
   if (OPTION_USE_KDIALOG)
     set (DRIVER_FILES ${DRIVER_FILES} Fl_Native_File_Chooser_Kdialog.cxx)
@@ -253,7 +252,6 @@ if (FLTK_USE_X11 AND NOT OPTION_USE_WAYLAND)
     drivers/Posix/Fl_Posix_System_Driver.H
     drivers/X11/Fl_X11_Screen_Driver.H
     drivers/X11/Fl_X11_Window_Driver.H
-    drivers/X11/Fl_X11_System_Driver.H
     drivers/Xlib/Fl_Xlib_Graphics_Driver.H
     drivers/Xlib/Fl_Font.H
     drivers/Xlib/Fl_Xlib_Copy_Surface_Driver.H
@@ -276,9 +274,9 @@ elseif (OPTION_USE_WAYLAND)
   set (DRIVER_FILES
     drivers/Posix/Fl_Posix_System_Driver.cxx
     drivers/Posix/Fl_Posix_Printer_Driver.cxx
+    drivers/Unix/Fl_Unix_Screen_Driver.cxx
     drivers/Wayland/Fl_Wayland_Screen_Driver.cxx
     drivers/Wayland/Fl_Wayland_Window_Driver.cxx
-    drivers/Wayland/Fl_Wayland_System_Driver.cxx
     drivers/Unix/Fl_Unix_System_Driver.cxx
     drivers/Wayland/Fl_Wayland_Graphics_Driver.cxx
     drivers/Wayland/Fl_Wayland_Copy_Surface_Driver.cxx
@@ -295,7 +293,6 @@ elseif (OPTION_USE_WAYLAND)
         drivers/Cairo/Fl_Display_Cairo_Graphics_Driver.cxx
         drivers/X11/Fl_X11_Screen_Driver.cxx
         drivers/X11/Fl_X11_Window_Driver.cxx
-        drivers/X11/Fl_X11_System_Driver.cxx
         drivers/Xlib/Fl_Xlib_Copy_Surface_Driver.cxx
         drivers/Xlib/Fl_Xlib_Image_Surface_Driver.cxx
         Fl_x.cxx
@@ -305,7 +302,6 @@ elseif (OPTION_USE_WAYLAND)
     endif (FLTK_USE_X11)
   set (DRIVER_HEADER_FILES
     drivers/Posix/Fl_Posix_System_Driver.H
-    drivers/Wayland/Fl_Wayland_System_Driver.H
     drivers/Wayland/Fl_Wayland_Screen_Driver.H
     drivers/Wayland/Fl_Wayland_Window_Driver.H
     drivers/Wayland/Fl_Wayland_Graphics_Driver.H
@@ -432,22 +428,20 @@ set (GL_DRIVER_FILES
   drivers/OpenGL/Fl_OpenGL_Graphics_Driver_vertex.cxx
 )
 if (OPTION_USE_WAYLAND)
-  set (GL_DRIVER_FILES ${GL_DRIVER_FILES}
-    drivers/Wayland/Fl_Wayland_Gl_Window_Driver.cxx
-    drivers/Wayland/fl_wayland_gl_platform_init.cxx)
+  set (GL_DRIVER_FILES ${GL_DRIVER_FILES} drivers/Wayland/Fl_Wayland_Gl_Window_Driver.cxx)
   set (GL_DRIVER_HEADER_FILES drivers/Wayland/Fl_Wayland_Gl_Window_Driver.H)
   if (FLTK_USE_X11)
     list (APPEND GL_DRIVER_FILES drivers/X11/Fl_X11_Gl_Window_Driver.cxx)
     list (APPEND GL_DRIVER_HEADER_FILES drivers/X11/Fl_X11_Gl_Window_Driver.H)
   endif (FLTK_USE_X11)
 elseif (FLTK_USE_X11)
-  set (GL_DRIVER_FILES ${GL_DRIVER_FILES} drivers/X11/Fl_X11_Gl_Window_Driver.cxx drivers/X11/fl_X11_gl_platform_init.cxx)
+  set (GL_DRIVER_FILES ${GL_DRIVER_FILES} drivers/X11/Fl_X11_Gl_Window_Driver.cxx)
   set (GL_DRIVER_HEADER_FILES drivers/X11/Fl_X11_Gl_Window_Driver.H)
 elseif (APPLE)
-  set (GL_DRIVER_FILES ${GL_DRIVER_FILES} drivers/Cocoa/Fl_Cocoa_Gl_Window_Driver.mm drivers/Cocoa/fl_macOS_gl_platform_init.cxx)
+  set (GL_DRIVER_FILES ${GL_DRIVER_FILES} drivers/Cocoa/Fl_Cocoa_Gl_Window_Driver.mm)
   set (GL_DRIVER_HEADER_FILES drivers/Cocoa/Fl_Cocoa_Gl_Window_Driver.H)
 elseif (WIN32)
-  set (GL_DRIVER_FILES ${GL_DRIVER_FILES} drivers/WinAPI/Fl_WinAPI_Gl_Window_Driver.cxx drivers/WinAPI/fl_WinAPI_gl_platform_init.cxx)
+  set (GL_DRIVER_FILES ${GL_DRIVER_FILES} drivers/WinAPI/Fl_WinAPI_Gl_Window_Driver.cxx)
   set (GL_DRIVER_HEADER_FILES drivers/WinAPI/Fl_WinAPI_Gl_Window_Driver.H)
 endif (OPTION_USE_WAYLAND)
 
@@ -515,11 +509,10 @@ if (OPTION_USE_WAYLAND)
   else()
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${CMAKE_CURRENT_SOURCE_DIR}/../libdecor/src  -I${CMAKE_CURRENT_SOURCE_DIR}/../libdecor/src/plugins  -DLIBDECOR_PLUGIN_API_VERSION=1 -DLIBDECOR_PLUGIN_DIR=\\\"\\\" ")
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DUSE_SYSTEM_LIBDECOR=0 -DHAVE_MEMFD_CREATE -DHAVE_MKOSTEMP -DHAVE_POSIX_FALLOCATE")
+    if (GTK_FOUND AND OPTION_ALLOW_GTK_PLUGIN)
+      set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DHAVE_GTK")
+    endif (GTK_FOUND AND OPTION_ALLOW_GTK_PLUGIN)
   endif (OPTION_USE_SYSTEM_LIBDECOR)
-
-  if (GTK_FOUND)
-    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DHAVE_GTK")
-  endif (GTK_FOUND)
 
   list (APPEND CFILES
     scandir_posix.c
@@ -630,11 +623,15 @@ if (USE_XFT)
 endif (USE_XFT)
 
 if (UNIX AND OPTION_USE_WAYLAND)
-  if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "FreeBSD")
-    set(PROTOCOLS /usr/local/share/wayland-protocols)
-  else ()
-    set(PROTOCOLS /usr/share/wayland-protocols)
-  endif (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "FreeBSD")
+  if (NOT (CMAKE_VERSION VERSION_LESS 3.4))
+    pkg_get_variable(PROTOCOLS wayland-protocols pkgdatadir) # requires cmake 3.4
+  else()
+    if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "FreeBSD")
+      set(PROTOCOLS /usr/local/share/wayland-protocols)
+    else ()
+      set(PROTOCOLS /usr/share/wayland-protocols)
+    endif (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "FreeBSD")
+  endif (NOT (CMAKE_VERSION VERSION_LESS 3.4))
   add_custom_command(
     OUTPUT xdg-shell-protocol.c xdg-shell-client-protocol.h
     COMMAND wayland-scanner private-code ${PROTOCOLS}/stable/xdg-shell/xdg-shell.xml xdg-shell-protocol.c
@@ -670,14 +667,13 @@ if (UNIX AND OPTION_USE_WAYLAND)
   endif (OPTION_USE_GL)
   if (OPTION_USE_SYSTEM_LIBDECOR)
     list (APPEND OPTIONAL_LIBS "-ldecor-0")
+  elseif (GTK_FOUND AND OPTION_ALLOW_GTK_PLUGIN)
+      list (APPEND OPTIONAL_LIBS ${GTK_LDFLAGS} )
   endif (OPTION_USE_SYSTEM_LIBDECOR)
   list (APPEND OPTIONAL_LIBS "-lwayland-cursor -lwayland-client -lxkbcommon -ldl -ldbus-1")
   if (NOT OPTION_WAYLAND_ONLY)
     list (APPEND OPTIONAL_LIBS "-lXcursor -lXrender -lXinerama -lXfixes -lXft -lXext -lX11")
   endif (NOT OPTION_WAYLAND_ONLY)
-  if (GTK_FOUND)
-    list (APPEND OPTIONAL_LIBS ${GTK_LDFLAGS} )
-  endif (GTK_FOUND)
   if (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux" AND NOT OPTION_BUILD_SHARED_LIBS)
     list (APPEND OPTIONAL_LIBS "-no-pie")
   endif (${CMAKE_HOST_SYSTEM_NAME} STREQUAL "Linux" AND NOT OPTION_BUILD_SHARED_LIBS)

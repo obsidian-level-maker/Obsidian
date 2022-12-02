@@ -280,30 +280,6 @@ OB_MODULES["ui_arch"] =
 
 UI_ARCH_WOLF_3D = { }
 
-UI_ARCH_WOLF_3D.ZDOOM_VISTA_CHOICES =
-{
-  "enable",        _("Enable"),
-  "sky_gen_smart", _("Sky-gen Smart"),
-  "disable",       _("Disable")
-}
-
-UI_ARCH_WOLF_3D.ZDOOM_SKYBOX_CHOICES =
-{
-  "themed",   _("Per Theme"),
-  "episodic", _("Episodic"),
-  "random",   _("Random"),
-  "generic",  _("Generic"),
-  "disable",  _("Disable")
-}
-
-UI_ARCH_WOLF_3D.MIXIN_CHOICES =
-{
-  "mostly", _("Mostly"),
-  "normal", _("Normal"),
-  "less",   _("Less"),
-}
-
-
 UI_ARCH_WOLF_3D.RAMP_FACTOR =
 {
   "0.5",  _("Very Fast Curve"),

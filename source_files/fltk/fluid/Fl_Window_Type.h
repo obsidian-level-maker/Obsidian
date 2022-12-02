@@ -25,11 +25,6 @@
 
 class Fl_Widget_Class_Type;
 
-extern int include_H_from_C;
-extern int use_FL_COMMAND;
-extern int utf8_in_src;
-extern int avoid_early_includes;
-
 extern Fl_Menu_Item window_type_menu[];
 extern Fl_Widget_Class_Type *current_widget_class;
 void toggle_overlays(Fl_Widget *,void *);
@@ -67,7 +62,18 @@ protected:
 
 public:
 
-  Fl_Window_Type() { drag = dx = dy = 0; sr_min_w = sr_min_h = sr_max_w = sr_max_h = 0; }
+  Fl_Window_Type() :
+    mx(0), my(0),
+    x1(0), y1(0),
+    bx(0), by(0), br(0), bt(0),
+    sx(0), sy(0), sr(0), st(0),
+    dx(0), dy(0),
+    drag(0),
+    numselected(0),
+    recalc(0),
+    modal(0), non_modal(0),
+    sr_min_w(0), sr_min_h(0), sr_max_w(0), sr_max_h(0)
+  { }
   uchar modal, non_modal;
 
   Fl_Type *make(Strategy strategy);
@@ -111,7 +117,7 @@ public:
   }
   // state variables for output:
   char write_public_state; // true when public: has been printed
-  char wc_relative; // if true, reposition all child widgets in an Fl_Group
+  char wc_relative; // if 1, reposition all children, if 2, reposition and resize
 
   virtual void write_properties();
   virtual void read_property(const char *);
