@@ -123,7 +123,6 @@ WADFAB_FX_DELTAS =
   [3]  =  48,  -- blink slow
   [13] =  48,  -- blink slow, sync
   [17] =  48,  -- flickers
-
   [8]  = 128  -- oscillates
 }
 
@@ -133,7 +132,6 @@ WADFAB_MOVER       = 995
 WADFAB_DOOR        = 996
 WADFAB_DELTA_12    = 997
 WADFAB_LIGHT_BRUSH = 987
-WADFAB_SKIP_LIGHT_BRUSH = 988
 
 
 function load_from_subdir(top_level, sub, extension)
@@ -1414,30 +1412,26 @@ function Fab_load_wad(def)
 
   local function decode_lighting(S, C)
 
-    if S.special == WADFAB_SKIP_LIGHT_BRUSH then
-      C.shadow = 0
-      C.light_add = 0
-    else
-      if S.light == 0 then 
-        C.shadow = 10000
-      elseif S.light < 80 then
-        C.shadow = 64
-      elseif S.light < 144 then
-        C.shadow = 144 - S.light
-      elseif S.light > 240 then
-        C.light_add = 96
-      elseif S.light > 144 then
-        C.light_add = S.light - 144
-      end
-      -- lighting specials need a 'fx_delta' field (for best results)
-      local delta = WADFAB_FX_DELTAS[S.special or 0]
-
-      if delta then
-        C.fx_delta = delta
-      end
+    if S.light == 0 then 
+      C.shadow = 10000
+    elseif S.light < 80 then
+      C.shadow = 64
+    elseif S.light < 144 then
+      C.shadow = 144 - S.light
+    elseif S.light > 240 then
+      C.light_add = 96
+    elseif S.light > 144 then
+      C.light_add = S.light - 144
     end
-  end
 
+    -- lighting specials need a 'fx_delta' field (for best results)
+    local delta = WADFAB_FX_DELTAS[S.special or 0]
+
+    if delta then
+      C.fx_delta = delta
+    end
+
+  end
 
   local function create_light_brush(S, coords)
     -- clear the special (but allow light effects)
