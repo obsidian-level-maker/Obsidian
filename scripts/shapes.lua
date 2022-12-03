@@ -4067,7 +4067,7 @@ GROW_DOOM2_ENTRY_CAGE_DOUBLE =
 
   structure =
   {
-    "x......x","xAAAAAAx",
+    "........","AAAAAAAA",
     "........","%AA/%AA/",
     "........","CAACCAAC",
     "........","C^^CC^^C",
