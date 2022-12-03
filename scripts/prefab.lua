@@ -1413,23 +1413,28 @@ function Fab_load_wad(def)
 
 
   local function decode_lighting(S, C)
-    if S.light == 0 then 
-      C.shadow = 10000
-    elseif S.light < 80 then
-      C.shadow = 64
-    elseif S.light < 144 then
-      C.shadow = 144 - S.light
-    elseif S.light > 240 then
-      C.light_add = 96
-    elseif S.light > 144 then
-      C.light_add = S.light - 144
-    end
 
-    -- lighting specials need a 'fx_delta' field (for best results)
-    local delta = WADFAB_FX_DELTAS[S.special or 0]
+    if S.special == WADFAB_SKIP_LIGHT_BRUSH then
+      C.shadow = 0
+      C.light_add = 0
+    else
+      if S.light == 0 then 
+        C.shadow = 10000
+      elseif S.light < 80 then
+        C.shadow = 64
+      elseif S.light < 144 then
+        C.shadow = 144 - S.light
+      elseif S.light > 240 then
+        C.light_add = 96
+      elseif S.light > 144 then
+        C.light_add = S.light - 144
+      end
+      -- lighting specials need a 'fx_delta' field (for best results)
+      local delta = WADFAB_FX_DELTAS[S.special or 0]
 
-    if delta then
-      C.fx_delta = delta
+      if delta then
+        C.fx_delta = delta
+      end
     end
   end
 
@@ -1504,7 +1509,7 @@ function Fab_load_wad(def)
       end
 
       -- give floor brush lighting ONLY when ceiling brush is absent
-      if S.ceil_tex == "_NOTHING" and S.floor_h < S.ceil_h and S.special ~= WADFAB_SKIP_LIGHT_BRUSH then
+      if S.ceil_tex == "_NOTHING" and S.floor_h < S.ceil_h then
         decode_lighting(S, C)
       end
 
@@ -1525,7 +1530,7 @@ function Fab_load_wad(def)
       end
 
       -- closed sectors never specify a light
-      if S.floor_h < S.ceil_h and S.special ~= WADFAB_SKIP_LIGHT_BRUSH then
+      if S.floor_h < S.ceil_h then
         decode_lighting(S, C)
       end
 
