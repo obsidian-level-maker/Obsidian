@@ -18,7 +18,7 @@ PREFABS.Pic_dem_windows_deco1 =
   seed_w = 2,
   seed_h = 1,
 
-  deep   = 48,
+  deep   = 32,
 
   height = 144,
 
@@ -155,7 +155,7 @@ PREFABS.Pic_dem_windows_decoc1 =
   seed_w = 2,
   seed_h = 1,
 
-  deep   = 48,
+  deep   = 32,
 
   height = 144,
 
@@ -289,7 +289,8 @@ PREFABS.Pic_dem_windows_deco7 =
   seed_w = 2,
   seed_h = 1,
 
-  deep   = 48,
+  deep   = 16,
+  over   = -16,
 
   height = 128,
 
@@ -317,6 +318,9 @@ PREFABS.Pic_dem_windows_deco8 =
 
   map = "MAP08",
 
+  deep   = 48,
+  over   = 0,
+
   height = 200,
 
   bound_z1 = 0,
@@ -328,6 +332,9 @@ PREFABS.Pic_dem_windows_deco9 =
   template = "Pic_dem_windows_deco7",
 
   map = "MAP09",
+
+  deep   = 48,
+  over   = 0,
 
   height = 248,
 
@@ -356,7 +363,8 @@ PREFABS.Pic_dem_windows_deco10 =
   seed_w = 2,
   seed_h = 1,
 
-  deep   = 48,
+  deep   = 16,
+  over   = -16,
 
   height = 128,
 
@@ -383,6 +391,9 @@ PREFABS.Pic_dem_windows_deco11 =
 
   map = "MAP11",
 
+  deep   = 48,
+  over   = 0,
+
   height = 200,
 
   bound_z1 = 0,
@@ -394,6 +405,9 @@ PREFABS.Pic_dem_windows_deco12 =
   template = "Pic_dem_windows_deco10",
 
   map = "MAP12",
+
+  deep   = 48,
+  over   = 0,
 
   height = 248,
 
@@ -618,7 +632,7 @@ PREFABS.Pic_dem_windows_deco22 =
   seed_w = 2,
   seed_h = 1,
 
-  deep   = 48,
+  deep   = 32,
 
   height = 144,
 
