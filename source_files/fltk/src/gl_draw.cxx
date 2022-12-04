@@ -40,7 +40,9 @@
 #include <FL/math.h> // for ceil()
 #include "Fl_Gl_Window_Driver.H"
 #include <FL/Fl_Image_Surface.H>
-#include <FL/glu.h>  // for gluUnProject()
+#if HAVE_GL_GLU_H
+#  include <FL/glu.h>  // for gluUnProject()
+#endif
 #include <FL/glut.H> // for glutStrokeString() and glutStrokeLength()
 #include <stdlib.h>
 
@@ -223,6 +225,14 @@ void gl_rect(int x, int y, int w, int h) {
   glEnd();
 }
 
+/**
+  Fills the given rectangle with the current color.
+  \see gl_rect(int x, int y, int w, int h)
+  */
+void gl_rectf(int x,int y,int w,int h) {
+  glRecti(x,y,x+w,y+h);
+}
+
 void gl_draw_image(const uchar* b, int x, int y, int w, int h, int d, int ld) {
   if (!ld) ld = w*d;
   GLint row_length;
@@ -378,7 +388,7 @@ void gl_texture_fifo::display_texture(int rank)
   glMatrixMode (GL_PROJECTION);
   glPopMatrix();
   glMatrixMode (matrixMode);
-
+#if HAVE_GL_GLU_H
   //set the raster position to end of string
   pos[0] += width;
   GLdouble modelmat[16];
@@ -395,6 +405,7 @@ void gl_texture_fifo::display_texture(int rank)
     objY *= gl_start_scale;
   }
   glRasterPos2d(objX, objY);
+#endif // HAVE_GL_GLU_H
 } // display_texture
 
 
@@ -626,6 +637,7 @@ void Fl_Gl_Window_Driver::draw_string_legacy_glut(const char* str, int n)
   glMatrixMode (GL_PROJECTION);
   glPopMatrix();
   glMatrixMode (matrixMode);
+#if HAVE_GL_GLU_H
   //set the raster position to end of string
   pos[0] += width;
   GLdouble modelmat[16];
@@ -641,6 +653,7 @@ void Fl_Gl_Window_Driver::draw_string_legacy_glut(const char* str, int n)
     objY *= gl_start_scale;
   }
   glRasterPos2d(objX, objY);
+#endif // HAVE_GL_GLU_H
 }
 
 /**

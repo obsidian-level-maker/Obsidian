@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.12..3.20)
 include(cmake/CPM.cmake)
 
 add_subdirectory(source_files/filename_formatter EXCLUDE_FROM_ALL)
-if (NOT CONSOLE_ONLY AND NOT HAIKU)
+if(NOT CONSOLE_ONLY AND NOT HAIKU)
   add_subdirectory(source_files/fltk EXCLUDE_FROM_ALL)
 endif()
 add_subdirectory(source_files/fmt EXCLUDE_FROM_ALL)
@@ -69,21 +69,12 @@ if(OBSIDIAN_TIDY)
   )
 endif()
 
-cpmaddpackage(
-  NAME
-  Format.cmake
-  VERSION
-  1.7.0
-  GITHUB_REPOSITORY
-  TheLartians/Format.cmake
-  OPTIONS
-  # set to "yes" to skip CMake formatting
-  "FORMAT_SKIP_CMAKE NO"
-  # path to exclude from formatting (optional + regex)
-  "CMAKE_FORMAT_EXCLUDE cmake/CPM.cmake"
-)
+# cpmaddpackage( NAME Format.cmake VERSION 1.7.0 GITHUB_REPOSITORY
+# TheLartians/Format.cmake OPTIONS set to "yes" to skip CMake formatting
+# "FORMAT_SKIP_CMAKE NO" path to exclude from formatting (optional + regex)
+# "CMAKE_FORMAT_EXCLUDE cmake/CPM.cmake" )
 
-if (NOT CONSOLE_ONLY AND NOT HAIKU)
+if(NOT CONSOLE_ONLY AND NOT HAIKU)
   add_executable(
     obsidian
     source_files/obsidian_main/aj_map.cc
@@ -149,7 +140,7 @@ if (NOT CONSOLE_ONLY AND NOT HAIKU)
     source_files/obsidian_main/vis_occlude.cc
   )
 else()
-add_executable(
+  add_executable(
     obsidian
     source_files/obsidian_main/aj_map.cc
     source_files/obsidian_main/aj_poly.cc
@@ -202,20 +193,24 @@ add_executable(
   )
 endif()
 
-target_include_directories(obsidian PRIVATE source_files/filename_formatter)
-if (NOT CONSOLE_ONLY AND NOT HAIKU)
-  target_include_directories(obsidian PRIVATE source_files/fltk)
+target_include_directories(
+  obsidian SYSTEM PRIVATE source_files/filename_formatter
+)
+if(NOT CONSOLE_ONLY AND NOT HAIKU)
+  target_include_directories(obsidian SYSTEM PRIVATE source_files/fltk)
   target_include_directories(
-    obsidian PRIVATE "${PROJECT_BINARY_DIR}/source_files/fltk"
+    obsidian SYSTEM PRIVATE "${PROJECT_BINARY_DIR}/source_files/fltk"
   ) # Hack for FLTK 1.4 (for now)
 endif()
-target_include_directories(obsidian PRIVATE source_files/gif-h)
-target_include_directories(obsidian PRIVATE source_files/lua/src)
-target_include_directories(obsidian PRIVATE source_files/miniz)
-target_include_directories(obsidian PRIVATE source_files/physfs/src)
-target_include_directories(obsidian PRIVATE source_files/slump)
-target_include_directories(obsidian PRIVATE source_files/spdlog/include/spdlog)
-target_include_directories(obsidian PRIVATE source_files/zdbsp)
+target_include_directories(obsidian SYSTEM PRIVATE source_files/gif-h)
+target_include_directories(obsidian SYSTEM PRIVATE source_files/lua/src)
+target_include_directories(obsidian SYSTEM PRIVATE source_files/miniz)
+target_include_directories(obsidian SYSTEM PRIVATE source_files/physfs/src)
+target_include_directories(obsidian SYSTEM PRIVATE source_files/slump)
+target_include_directories(
+  obsidian SYSTEM PRIVATE source_files/spdlog/include/spdlog
+)
+target_include_directories(obsidian SYSTEM PRIVATE source_files/zdbsp)
 
 if(MINGW
    OR WIN32
@@ -223,6 +218,7 @@ if(MINGW
 )
   target_compile_definitions(obsidian PRIVATE WIN32)
   target_compile_definitions(obsidian PRIVATE NOMINMAX)
+  target_compile_definitions(obsidian PRIVATE _CRT_SECURE_NO_WARNINGS)
 else()
   target_compile_definitions(obsidian PRIVATE UNIX)
 endif()
@@ -232,8 +228,19 @@ if(OBSIDIAN_SANITIZE)
   target_link_options(obsidian PRIVATE -fsanitize=address,undefined)
 endif()
 
+if(OBSIDIAN_WARNINGS)
+  if(MSVC)
+    target_compile_options(obsidian PRIVATE -W4 -WX)
+  else()
+    target_compile_options(obsidian PRIVATE -Wall -Wextra -Wpedantic -Werror)
+  endif()
+endif()
+
 if(UNIX)
-  if(NOT CONSOLE_ONLY AND NOT HAIKU AND NOT APPLE)
+  if(NOT CONSOLE_ONLY
+     AND NOT HAIKU
+     AND NOT APPLE
+  )
     find_package(Fontconfig REQUIRED)
   endif()
 endif()
@@ -254,7 +261,7 @@ add_dependencies(obsidian qsavetex)
 
 if(UNIX)
   if(APPLE OR ${CMAKE_SYSTEM} MATCHES "BSD")
-    if (NOT CONSOLE_ONLY)
+    if(NOT CONSOLE_ONLY)
       target_link_libraries(
         obsidian
         PRIVATE filename_formatter
@@ -324,7 +331,7 @@ if(UNIX)
     endif()
   endif()
 else()
-  if (NOT CONSOLE_ONLY)
+  if(NOT CONSOLE_ONLY)
     target_link_libraries(
       obsidian
       PRIVATE filename_formatter
@@ -364,6 +371,7 @@ install(
             games
             language
             modules
+            ports
             scripts
             theme
             tools

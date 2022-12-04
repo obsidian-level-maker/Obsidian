@@ -110,9 +110,10 @@ add_subdirectory(src)
 #######################################################################
 # build fluid
 #######################################################################
+
 if (FLTK_BUILD_FLUID)
-add_subdirectory(fluid)
-endif()
+  add_subdirectory (fluid)
+endif (FLTK_BUILD_FLUID)
 
 #######################################################################
 # variables shared by export and install
@@ -133,13 +134,6 @@ configure_file (
   @ONLY
 )
 
-if (MSYS)
-configure_file (
-  ${CMAKE_CURRENT_SOURCE_DIR}/fl_config.cmake.in
-  ${CMAKE_CURRENT_SOURCE_DIR}/FL/fl_config.h
-  @ONLY
-)
-endif()
 #######################################################################
 # options to build test/demo and example programs
 #######################################################################
@@ -218,6 +212,12 @@ else ()
   message (STATUS "Shared libraries will not be built (set OPTION_BUILD_SHARED_LIBS=ON to build)")
 endif ()
 
+if (FLTK_BUILD_FLUID)
+   message (STATUS "FLUID will be built in ${CMAKE_CURRENT_BINARY_DIR}/bin/fluid")
+ else ()
+   message (STATUS "FLUID will not be built (set FLTK_BUILD_FLUID=ON to build)")
+ endif ()
+
 if (FLTK_BUILD_TEST)
   message (STATUS "Test programs    will be built in ${CMAKE_CURRENT_BINARY_DIR}/bin/test")
 endif ()
@@ -246,7 +246,7 @@ else ()
   message (STATUS "                 ZLIB = System")
 endif ()
 
-if (UNIX)
+if (UNIX AND NOT (APPLE AND NOT OPTION_APPLE_X11))
 
   if (OPTION_USE_WAYLAND)
     message (STATUS "Use Wayland:             Yes (when available at run-time)")
@@ -271,7 +271,7 @@ if (UNIX)
     endif (USE_XFT)
   endif (USE_PANGO)
 
-endif (UNIX)
+endif (UNIX AND NOT (APPLE AND NOT OPTION_APPLE_X11))
 
 if (FLTK_HAVE_CAIROEXT)
   message (STATUS "Fl_Cairo_Window support: Yes (extended)")

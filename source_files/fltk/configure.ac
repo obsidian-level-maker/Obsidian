@@ -110,7 +110,7 @@ AC_ARG_ENABLE([localzlib], AS_HELP_STRING([--enable-localzlib], [use local ZLIB 
 
 AC_ARG_ENABLE([pango], AS_HELP_STRING([--enable-pango], [turn on Pango support]))
 
-AC_ARG_ENABLE([wayland], AS_HELP_STRING([--enable-wayland], [turn on hybrid Wayland/X11 support]))
+AC_ARG_ENABLE([wayland], AS_HELP_STRING([--disable-wayland], [turn off hybrid Wayland/X11 support]))
 
 AC_ARG_ENABLE([usecairo], AS_HELP_STRING([--enable-usecairo], [all drawing to X11 windows uses Cairo]))
 
@@ -978,15 +978,39 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
         THREADS="threads$EXEEXT"
     ])
 
-    AS_IF([test x$enable_wayland = xyes], [
-      dnl Prepare for Wayland...
-
+    AS_IF([test x$enable_wayland != xno], [
       AS_IF([test x$PKGCONFIG = x], [
-          dnl pkg-config is not available, issue warning and abort...
+        dnl pkg-config is not available, issue warning and possibly abort...
+        AS_IF([test x$enable_wayland = xyes], [
           AC_MSG_WARN([--enable-wayland: please install pkg-config.])
           AC_MSG_ERROR([Aborting.])
+        ],[
+          AC_MSG_WARN([pkg-config is not found. Continuing with --disable-wayland])
+          enable_wayland="no"
+        ])
+      ],[
+        missing="no"
+        AS_IF([$PKGCONFIG --exists wayland-client],[],[missing="yes"])
+        AS_IF([$PKGCONFIG --exists wayland-protocols],[],[missing="yes"])
+        AS_IF([$PKGCONFIG --exists wayland-cursor],[],[missing="yes"])
+        AS_IF([$PKGCONFIG --exists xkbcommon],[],[missing="yes"])
+        AS_IF([$PKGCONFIG --exists dbus-1],[],[missing="yes"])
+        AS_IF([$PKGCONFIG --exists pangocairo],[],[missing="yes"])
+        AS_IF([test x$missing = xyes], [
+            AC_MSG_WARN([These packages 'wayland-client wayland-protocols wayland-cursor xkbcommon dbus-1 pangocairo' are required to build FLTK for wayland.])
+            AC_MSG_WARN([At least one of them is missing.])
+          AS_IF([test x$enable_wayland = xyes], [
+            AC_MSG_ERROR([Building for Wayland is not possible. Aborting.])
+          ],[
+            AC_MSG_WARN([Continuing with --disable-wayland])
+            enable_wayland="no"
+          ])
+        ])
       ])
+    ])
 
+    AS_IF([test x$enable_wayland != xno], [
+      dnl Prepare for Wayland...
       dnl Turn option usecairo ON
       AC_DEFINE([FLTK_USE_CAIRO])
       AC_MSG_NOTICE([Turning on the usecairo option])
@@ -999,12 +1023,12 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
        BUILD="WAYLANDX11"
        graphics="Wayland or X11 with cairo"
        ])
-      CFLAGS="$CFLAGS -DUSE_SYSTEM_LIBDECOR=0"
-      CXXFLAGS="$CXXFLAGS -DUSE_SYSTEM_LIBDECOR=0"
-      LIBS="$LIBS $($PKGCONFIG --libs wayland-cursor) $($PKGCONFIG --libs wayland-client) $($PKGCONFIG --libs xkbcommon) $($PKGCONFIG --libs pangoxft) "
+#     CFLAGS="$CFLAGS -DUSE_SYSTEM_LIBDECOR=0"
+#     CXXFLAGS="$CXXFLAGS -DUSE_SYSTEM_LIBDECOR=0"
+      LIBS="$LIBS $($PKGCONFIG --libs wayland-cursor) $($PKGCONFIG --libs wayland-client) $($PKGCONFIG --libs xkbcommon) $($PKGCONFIG --libs pangocairo) "
       AS_IF([test x$enable_x11 != xno], [LIBS="$LIBS $($PKGCONFIG --libs x11)"] )
       LIBS="$LIBS $($PKGCONFIG --libs dbus-1) -ldl"
-      CXXFLAGS="$CXXFLAGS -I../libdecor/src"
+#     CXXFLAGS="$CXXFLAGS -I../libdecor/src"
       DSOFLAGS="$LIBS $DSOFLAGS"
       enable_pango=yes
       LIBDECORDIR="libdecor/build"
@@ -1012,22 +1036,25 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
       AC_SUBST([UNAME])
       UNAME="$(uname -s)"
       AS_CASE([$UNAME],
-         [Linux], [LDFLAGS="$LDFLAGS -no-pie"],
-         [*], [CXXFLAGS="$CXXFLAGS -I../libdecor/build"]
+         [Linux], [LDFLAGS="$LDFLAGS -no-pie"]
       )
 
       AC_SEARCH_LIBS([dlopen], [dl])
 
       AS_IF([test x$enable_gl != xno], [
           AS_IF([$PKGCONFIG --exists gl], [
-             AC_DEFINE([HAVE_GL])
-             GLLIBS="$($PKGCONFIG --libs wayland-egl) $($PKGCONFIG --libs egl) $($PKGCONFIG --libs gl) $GLLIBS"
-          ])
+            AS_IF([$PKGCONFIG --exists egl], [
+              AS_IF([$PKGCONFIG --exists wayland-egl], [
+                AC_DEFINE([HAVE_GL])
+                GLLIBS="$($PKGCONFIG --libs wayland-egl) $($PKGCONFIG --libs egl) $($PKGCONFIG --libs gl) $GLLIBS"
+          ])])])
           AS_IF([$PKGCONFIG --exists glu], [
              AC_DEFINE([HAVE_GL_GLU_H])
              GLLIBS="$($PKGCONFIG --libs glu) $GLLIBS"
           ])
-           GLWLDEMO="egl"
+          AC_CHECK_LIB([GL], [glXGetProcAddressARB], [AC_DEFINE([HAVE_GLXGETPROCADDRESSARB])
+             ],, [-lm])
+          GLWLDEMO="egl"
       ], [
           LINKFLTKGL=""
           GLLIBNAME=""
@@ -1061,6 +1088,41 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
       AS_IF([test x$pango_found != xyes], [
           AC_MSG_NOTICE([--enable-wayland: Pango libs and/or headers could not be found.])
           AC_MSG_ERROR([Aborting.])
+      ])
+      
+      dnl check for Xinerama, Xcursor, Xfixes, Xrender, Xregion.h
+      AS_IF([test x$enable_x11 != xno], [
+        xinerama_found=no
+        AS_IF([$PKGCONFIG --exists xinerama], [
+          AC_DEFINE(HAVE_XINERAMA)
+          LIBS="$LIBS $($PKGCONFIG --libs xinerama)"
+          xinerama_found=yes
+        ])
+
+        xcursor_found=no
+        AS_IF([$PKGCONFIG --exists xcursor], [
+          AC_DEFINE(HAVE_XCURSOR)
+          LIBS="$LIBS $($PKGCONFIG --libs xcursor)"
+          xcursor_found=yes
+        ])
+
+        xfixes_found=no
+        AS_IF([$PKGCONFIG --exists xfixes], [
+          AC_DEFINE(HAVE_XFIXES)
+          LIBS="$LIBS $($PKGCONFIG --libs xfixes)"
+          xfixes_found=yes
+        ])
+      
+        xrender_found=no
+        AS_IF([$PKGCONFIG --exists xrender], [
+          AC_DEFINE(HAVE_XRENDER)
+          LIBS="$LIBS $($PKGCONFIG --libs xrender)"
+          xrender_found=yes
+        ])
+
+        AC_CHECK_HEADER([X11/Xregion.h], [
+          AC_DEFINE([HAVE_X11_XREGION_H])
+        ], [], [#include <X11/Xlib.h>])
       ])
 
     ], [
@@ -1143,7 +1205,7 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
 
     dnl Check for the Xft library unless disabled...
     xft_found=no
-    AS_IF([test x$enable_xft != xno], [
+    AS_IF([test x$enable_xft != xno -a x$enable_wayland = xno], [
         # Try pkg-config first (freetype2 deprecated freetype-config from some version on)
         FT_FLAGS=""
         AS_IF([test "x$PKGCONFIG" != x], [
@@ -1643,7 +1705,7 @@ AS_CASE([$host_os_gui], [cygwin* | mingw*], [
 ], [darwin*], [
     graphics="Quartz"
 ], [*], [
-    AS_IF([test x$enable_wayland != xyes], [
+    AS_IF([test x$enable_wayland = xno], [
         graphics="X11"
     ])
     AS_IF([test x$xft_found = xyes], [

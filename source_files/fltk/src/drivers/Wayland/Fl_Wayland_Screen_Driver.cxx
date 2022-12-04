@@ -17,10 +17,7 @@
 #include <config.h>
 #include "Fl_Wayland_Screen_Driver.H"
 #include "Fl_Wayland_Window_Driver.H"
-#include "Fl_Wayland_System_Driver.H"
-#if FLTK_USE_X11
-#  include "../X11/Fl_X11_System_Driver.H"
-#endif
+#include "../Unix/Fl_Unix_System_Driver.H"
 #include "Fl_Wayland_Graphics_Driver.H"
 #include <wayland-cursor.h>
 #include "../../../libdecor/src/libdecor.h"
@@ -139,6 +136,7 @@ struct pointer_output {
  */
 
 Fl_Wayland_Screen_Driver::compositor_name Fl_Wayland_Screen_Driver::compositor = Fl_Wayland_Screen_Driver::unspecified;
+
 
 extern "C" {
   bool fl_libdecor_using_weston(void) {
@@ -346,11 +344,11 @@ static void pointer_button(void *data,
     return;
   }
   int b = 0;
-  Fl::e_state = 0;
+  Fl::e_state &= ~FL_BUTTONS;
   if (state == WL_POINTER_BUTTON_STATE_PRESSED) {
-    if (button == BTN_LEFT) {Fl::e_state = FL_BUTTON1; b = 1;}
-    else if (button == BTN_RIGHT) {Fl::e_state = FL_BUTTON3; b = 3;}
-    else if (button == BTN_MIDDLE) {Fl::e_state = FL_BUTTON2; b = 2;}
+    if (button == BTN_LEFT) {Fl::e_state |= FL_BUTTON1; b = 1;}
+    else if (button == BTN_RIGHT) {Fl::e_state |= FL_BUTTON3; b = 3;}
+    else if (button == BTN_MIDDLE) {Fl::e_state |= FL_BUTTON2; b = 2;}
     Fl::e_keysym = FL_Button + b;
   }
   Fl::e_dx = Fl::e_dy = 0;
@@ -739,7 +737,7 @@ static void wl_keyboard_modifiers(void *data, struct wl_keyboard *wl_keyboard,
 {
   struct seat *seat = (struct seat*)data;
   xkb_state_update_mask(seat->xkb_state, mods_depressed, mods_latched, mods_locked, 0, 0, group);
-  Fl::e_state = 0;
+  Fl::e_state &= ~(FL_SHIFT+FL_CTRL+FL_ALT+FL_CAPS_LOCK+FL_NUM_LOCK);
   if (xkb_state_mod_name_is_active(seat->xkb_state, XKB_MOD_NAME_SHIFT, XKB_STATE_MODS_DEPRESSED))
     Fl::e_state |= FL_SHIFT;
   if (xkb_state_mod_name_is_active(seat->xkb_state, XKB_MOD_NAME_CTRL, XKB_STATE_MODS_DEPRESSED))
@@ -748,6 +746,8 @@ static void wl_keyboard_modifiers(void *data, struct wl_keyboard *wl_keyboard,
     Fl::e_state |= FL_ALT;
   if (xkb_state_mod_name_is_active(seat->xkb_state, XKB_MOD_NAME_CAPS, XKB_STATE_MODS_LOCKED))
     Fl::e_state |= FL_CAPS_LOCK;
+  if (xkb_state_mod_name_is_active(seat->xkb_state, XKB_MOD_NAME_NUM, XKB_STATE_MODS_LOCKED))
+    Fl::e_state |= FL_NUM_LOCK;
 //fprintf(stderr, "mods_depressed=%u Fl::e_state=%X\n", mods_depressed, Fl::e_state);
 }
 
@@ -1085,27 +1085,12 @@ static void fd_callback(int fd, struct wl_display *display) {
 }
 
 
-Fl_Wayland_Screen_Driver::Fl_Wayland_Screen_Driver() : Fl_Screen_Driver() {
+Fl_Wayland_Screen_Driver::Fl_Wayland_Screen_Driver() : Fl_Unix_Screen_Driver() {
   libdecor_context = NULL;
   seat = NULL;
   text_input_base = NULL;
   reset_cursor();
 }
-
-
-#if FLTK_USE_X11
-bool Fl_Wayland_Screen_Driver::undo_wayland_backend_if_needed(const char *backend) {
-  if (!backend) backend = getenv("FLTK_BACKEND");
-  if (wl_display && backend && strcmp(backend, "x11") == 0) {
-    wl_display_disconnect(wl_display);
-    wl_display = NULL;
-    if (Fl_Screen_Driver::system_driver) delete Fl_Screen_Driver::system_driver;
-    Fl_Screen_Driver::system_driver = new Fl_X11_System_Driver();
-    return true;
-  }
-  return false;
-}
-#endif
 
 
 void Fl_Wayland_Screen_Driver::open_display_platform() {
@@ -1114,12 +1099,6 @@ void Fl_Wayland_Screen_Driver::open_display_platform() {
     return;
 
   beenHereDoneThat = true;
-#if FLTK_USE_X11
-  if (undo_wayland_backend_if_needed()) {
-    Fl::screen_driver()->open_display();
-    return;
-  }
-#endif
 
   if (!wl_display) {
     wl_display = wl_display_connect(NULL);
@@ -1127,7 +1106,7 @@ void Fl_Wayland_Screen_Driver::open_display_platform() {
       Fl::fatal("No Wayland connection\n");
     }
   }
-puts("Using Wayland backend");
+  //puts("Using Wayland backend");
   wl_list_init(&seats);
   wl_list_init(&outputs);
 
@@ -1143,7 +1122,6 @@ puts("Using Wayland backend");
   }*/
   Fl::add_fd(wl_display_get_fd(wl_display), FL_READ, (Fl_FD_Handler)fd_callback, wl_display);
   fl_create_print_window();
-  Fl_Wayland_System_Driver::too_late_to_disable = true;
 }
 
 void Fl_Wayland_Screen_Driver::close_display() {
@@ -1273,6 +1251,7 @@ void Fl_Wayland_Screen_Driver::screen_dpi(float &h, float &v, int n)
 }
 
 
+// Implements fl_beep(). See documentation in src/fl_ask.cxx.
 void Fl_Wayland_Screen_Driver::beep(int type)
 {
   fprintf(stderr, "\007");
@@ -1495,7 +1474,85 @@ void Fl_Wayland_Screen_Driver::reset_spot() {
 
 void Fl_Wayland_Screen_Driver::display(const char *d)
 {
-  if (d) ::setenv("WAYLAND_DISPLAY", d, 1);
+  if (d && !seat) { // if display was opened, it's too late
+    if (wl_display) {
+      // only the wl_display_connect() call was done, redo it because the target
+      // Wayland compositor may be different
+      wl_display_disconnect(wl_display);
+    }
+    wl_display = wl_display_connect(d);
+    if (!wl_display) {
+      fprintf(stderr, "Error: '%s' is not an active Wayland socket\n", d);
+      exit(1);
+    }
+  }
+}
+
+
+void *Fl_Wayland_Screen_Driver::control_maximize_button(void *data) {
+  // The code below aims at removing the calling window's fullscreen button
+  // while dialog runs. Unfortunately, it doesn't work with some X11 window managers
+  // (e.g., KDE, xfce) because the button goes away but doesn't come back,
+  // so we move this code to a virtual member function.
+  // Noticeably, this code works OK under Wayland.
+  struct win_dims {
+    Fl_Widget_Tracker *tracker;
+    int minw, minh, maxw, maxh;
+    struct win_dims *next;
+  };
+
+  if (!data) { // this call turns each decorated window's maximize button off
+    struct win_dims *first_dim = NULL;
+    // consider all bordered, top-level FLTK windows
+    Fl_Window *win = Fl::first_window();
+    while (win) {
+      if (!win->parent() && win->border() &&
+          !( ((struct wld_window*)Fl_X::i(win)->xid)->state & LIBDECOR_WINDOW_STATE_MAXIMIZED) ) {
+        win_dims *dim = new win_dims;
+        dim->tracker = new Fl_Widget_Tracker(win);
+        Fl_Window_Driver *dr = Fl_Window_Driver::driver(win);
+        dim->minw = dr->minw();
+        dim->minh = dr->minh();
+        dim->maxw = dr->maxw();
+        dim->maxh = dr->maxh();
+        //make win un-resizable
+        win->size_range(win->w(), win->h(), win->w(), win->h());
+        dim->next = first_dim;
+        first_dim = dim;
+      }
+      win = Fl::next_window(win);
+    }
+    return first_dim;
+  } else { // this call returns each decorated window's maximize button to its previous state
+    win_dims *first_dim = (win_dims *)data;
+    while (first_dim) {
+      win_dims *dim = first_dim;
+      //give back win its resizing parameters
+      if (dim->tracker->exists()) {
+        Fl_Window *win = (Fl_Window*)dim->tracker->widget();
+        win->size_range(dim->minw, dim->minh, dim->maxw, dim->maxh);
+      }
+      first_dim = dim->next;
+      delete dim->tracker;
+      delete dim;
+    }
+    return NULL;
+  }
+}
+
+
+int Fl_Wayland_Screen_Driver::event_key(int k) {
+  if (k > FL_Button && k <= FL_Button+8)
+    return Fl::event_state(8<<(k-FL_Button));
+  int sym = Fl::event_key();
+  if (sym >= 'a' && sym <= 'z' ) sym -= 32;
+  if (k >= 'a' && k <= 'z' )  k -= 32;
+  return (Fl::event() == FL_KEYDOWN || Fl::event() == FL_SHORTCUT) && sym == k;
+}
+
+
+int Fl_Wayland_Screen_Driver::get_key(int k) {
+  return event_key(k);
 }
 
 

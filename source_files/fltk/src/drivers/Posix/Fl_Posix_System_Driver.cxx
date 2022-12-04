@@ -1,7 +1,7 @@
 //
 // Definition of Posix system driver (used by the X11, Wayland and macOS platforms).
 //
-// Copyright 1998-2021 by Bill Spitzak and others.
+// Copyright 1998-2022 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -216,17 +216,21 @@ void *Fl_Posix_System_Driver::dlopen_or_dlsym(const char *lib_name, const char *
 #endif
     if (func_ptr) return func_ptr;
   }
-#ifdef __APPLE_CC__ // allows testing on Darwin + XQuartz + fink
+#ifdef __APPLE_CC__ // allows using on Darwin + XQuartz + (homebrew or fink)
   if (lib_name) {
     char path[FL_PATH_MAX];
     snprintf(path, FL_PATH_MAX, "/opt/X11/lib/%s.dylib", lib_name);
     lib_address = dlopen(path, RTLD_LAZY | RTLD_GLOBAL);
     if (!lib_address) {
-      snprintf(path, FL_PATH_MAX, "/opt/sw/lib/%s.dylib", lib_name);
+      snprintf(path, FL_PATH_MAX, "/opt/homebrew/lib/%s.dylib", lib_name);
       lib_address = dlopen(path, RTLD_LAZY | RTLD_GLOBAL);
       if (!lib_address) {
-        snprintf(path, FL_PATH_MAX, "/sw/lib/%s.dylib", lib_name);
+        snprintf(path, FL_PATH_MAX, "/opt/sw/lib/%s.dylib", lib_name);
         lib_address = dlopen(path, RTLD_LAZY | RTLD_GLOBAL);
+        if (!lib_address) {
+          snprintf(path, FL_PATH_MAX, "/sw/lib/%s.dylib", lib_name);
+          lib_address = dlopen(path, RTLD_LAZY | RTLD_GLOBAL);
+        }
       }
     }
   }
@@ -243,7 +247,7 @@ void *Fl_Posix_System_Driver::dlopen_or_dlsym(const char *lib_name, const char *
 void *Fl_Posix_System_Driver::ptr_gtk = NULL;
 
 bool Fl_Posix_System_Driver::probe_for_GTK(int major, int minor, void **p_ptr_gtk) {
-  typedef void (*init_t)(int*, void*);
+  typedef int (*init_t)(int*, char***);
   init_t init_f = NULL;
   // was GTK previously loaded?
   if (Fl_Posix_System_Driver::ptr_gtk) { // yes, it was.
@@ -283,7 +287,10 @@ bool Fl_Posix_System_Driver::probe_for_GTK(int major, int minor, void **p_ptr_gt
   char *p = setlocale(LC_ALL, NULL);
   if (p) before = fl_strdup(p);
   int ac = 0;
-  init_f(&ac, NULL); // may change the locale
+  if ( !init_f(&ac, NULL) ) { // may change the locale
+    free(before);
+    return false;
+  }
   if (before) {
     setlocale(LC_ALL, before); // restore calling program's current locale
     free(before);
@@ -300,6 +307,33 @@ bool Fl_Posix_System_Driver::probe_for_GTK(int major, int minor, void **p_ptr_gt
 
 #endif // HAVE_DLSYM && HAVE_DLFCN_H
 
+
+int Fl_Posix_System_Driver::close_fd(int fd) { return close(fd); }
+
+int Fl_Posix_System_Driver::write_nonblocking_fd(int fdwrite, const unsigned char *&bytes, size_t &rest_bytes) {
+    if (rest_bytes > 0) {
+      ssize_t nw = write(fdwrite, bytes, rest_bytes);
+      if (nw == -1) {
+        close(fdwrite);
+        return 1; // error
+      }
+      bytes += nw;
+      rest_bytes -= nw;
+      if (rest_bytes == 0) close(fdwrite);
+    }
+  return 0; // success
+}
+
+void Fl_Posix_System_Driver::pipe_support(int &fdread, int &fdwrite, const unsigned char *unused, size_t unused_s) {
+  int fds[2];
+  if (pipe(fds)) { // create anonymous pipe
+    Fl_System_Driver::pipe_support(fdread, fdwrite, NULL, 0); // indicates error
+  } else {
+    fdread = fds[0];
+    fdwrite = fds[1];
+    fcntl(fdwrite, F_SETFL, O_NONBLOCK); // make pipe's write end non-blocking
+  }
+}
 
 ////////////////////////////////////////////////////////////////
 // POSIX threading...

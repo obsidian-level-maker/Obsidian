@@ -828,8 +828,8 @@ function Grower_calc_rule_probs(LEVEL)
 
     -- check against current game, engine, theme (etc).
     -- [ I doubt these are useful, but do it for completeness ]
-    if not ob_match_game(rule)     then return 0 end
-    if not ob_match_engine(rule)   then return 0 end
+    --if not ob_match_game(rule)     then return 0 end
+    --if not ob_match_port(rule)   then return 0 end
 
     -- liquid check
     if not LEVEL.liquid and rule.styles and
@@ -879,6 +879,7 @@ function Grower_calc_rule_probs(LEVEL)
       and rule.new_room.env
       and rule.new_room.env == "hallway" then
         rule.use_prob = 0
+        PARAM.skipped_rules = PARAM.skipped_rules + 1
       end
     end
   end
@@ -1764,9 +1765,9 @@ function Grower_grammatical_pass(SEEDS, LEVEL, R, pass, apply_num, stop_prob,
     end
 
     -- don't exceed trunk quota
-    if rule.teleporter and #LEVEL.trunks >= LEVEL.max_trunks then
-      return 0
-    end
+    --if rule.teleporter and #LEVEL.trunks >= LEVEL.max_trunks then
+      --return 0
+    --end
 
     if rule.teleporter and R.is_exit then
       prob = prob / 4
@@ -3401,8 +3402,8 @@ end
         if rand.odds(rule.skip_prob) then return 0 end
       end
 
-      if not ob_match_game(rule)     then return 0 end
-      if not ob_match_engine(rule)   then return 0 end
+      --if not ob_match_game(rule)     then return 0 end
+      --if not ob_match_port(rule)   then return 0 end
 
       if not LEVEL.liquid and rule.styles and
          table.has_elem(rule.styles, "liquids")

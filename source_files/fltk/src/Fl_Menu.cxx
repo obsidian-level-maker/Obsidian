@@ -1,7 +1,7 @@
 //
 // Menu code for the Fast Light Tool Kit (FLTK).
 //
-// Copyright 1998-2015 by Bill Spitzak and others.
+// Copyright 1998-2022 by Bill Spitzak and others.
 //
 // This library is free software. Distribution and use rights are outlined in
 // the file "COPYING" which should have been included with this file.  If this
@@ -21,7 +21,7 @@
 // Fl_Menu_ widget.
 
 #include <FL/Fl.H>
-#include "Fl_System_Driver.H"
+#include "Fl_Screen_Driver.H"
 #include "Fl_Window_Driver.H"
 #include <FL/Fl_Menu_Window.H>
 #include <FL/Fl_Menu_.H>
@@ -493,10 +493,15 @@ void menuwindow::drawentry(const Fl_Menu_Item* m, int n, int eraseit) {
 
   // the shortcuts and arrows assume fl_color() was left set by draw():
   if (m->submenu()) {
-    int sz = (hh-7)&-2;
-    int y1 = yy+(hh-sz)/2;
-    int x1 = xx+ww-sz-3;
-    fl_polygon(x1+2, y1, x1+2, y1+sz, x1+sz/2+2, y1+sz/2);
+
+    // calculate the bounding box of the submenu pointer (arrow)
+    int sz = (hh-2) & -2;
+    int x1 = xx + ww - sz - 2;
+    int y1 = yy + (hh-sz)/2 + 1;
+
+    // draw an arrow whose style dependends on the active scheme
+    fl_draw_arrow(Fl_Rect(x1, y1, sz, sz), FL_ARROW_SINGLE, FL_ORIENT_RIGHT, fl_color());
+
   } else if (m->shortcut_) {
     Fl_Font f = m->labelsize_ || m->labelfont_ ? (Fl_Font)m->labelfont_ :
                     button ? button->textfont() : FL_HELVETICA;
@@ -696,11 +701,11 @@ int menuwindow::handle(int e) {
    then STR #2619 does not occur. need_menu_handle_part1_extra() activates this fix.
 
    FLTK 1.3.4 behavior:
-    Fl::system_driver()->need_menu_handle_part2() returns true on Mac + X11
-    Fl::system_driver()->need_menu_handle_part1_extra() returns true on X11
+    Fl::screen_driver()->need_menu_handle_part2() returns true on Mac + X11
+    Fl::screen_driver()->need_menu_handle_part1_extra() returns true on X11
 
    Alternative behavior that seems equally correct:
-    Fl::system_driver()->need_menu_handle_part2() returns true on Mac
+    Fl::screen_driver()->need_menu_handle_part2() returns true on Mac
     need_menu_handle_part1_extra() does not exist
 
    Other alternative:
@@ -710,7 +715,7 @@ int menuwindow::handle(int e) {
     the menu disappears after the end of the resize rather than at its beginning.
     Apple applications do close popups at the beginning of resizes.
    */
-  static int use_part2 = Fl::system_driver()->need_menu_handle_part2();
+  static int use_part2 = Fl::screen_driver()->need_menu_handle_part2();
   int ret = handle_part1(e);
   if (use_part2) ret = handle_part2(e, ret);
   return ret;
@@ -810,7 +815,7 @@ int menuwindow::handle_part1(int e) {
     }
     break;
   case FL_MOVE: {
-    static int use_part1_extra = Fl::system_driver()->need_menu_handle_part1_extra();
+    static int use_part1_extra = Fl::screen_driver()->need_menu_handle_part1_extra();
     if (use_part1_extra && pp.state == DONE_STATE) {
       return 1; // Fix for STR #2619
     }
@@ -841,9 +846,10 @@ int menuwindow::handle_part1(int e) {
             return 1;
           }
           if (pp.current_item && pp.menu_number==0 && !pp.current_item->submenu()) {
-            if (e==FL_PUSH)
+            if (e==FL_PUSH) {
               pp.state = DONE_STATE;
-            setitem(0, -1, 0);
+              setitem(0, -1, 0);
+            }
             return 1;
           }
           // all others can stay selected

@@ -64,7 +64,6 @@ public:
   virtual int rmdir(const char* f) {return ::rmdir(f);}
   virtual int rename(const char* f, const char *n) {return ::rename(f, n);}
   virtual const char *getpwnam(const char *login);
-  virtual int need_menu_handle_part2() {return 1;}
 #if HAVE_DLFCN_H
   virtual void *load(const char *filename);
 #if HAVE_DLSYM
@@ -83,6 +82,10 @@ public:
   virtual int dot_file_hidden() {return 1;}
   virtual void gettime(time_t *sec, int *usec);
   virtual char* strdup(const char *s) {return ::strdup(s);}
+  virtual int close_fd(int fd);
+  // next 2 for support of Fl_SVG_Image
+  virtual int write_nonblocking_fd(int , const unsigned char *&, size_t &);
+  virtual void pipe_support(int &, int &, const unsigned char *, size_t );
 #if defined(HAVE_PTHREAD)
   virtual void lock_ring();
   virtual void unlock_ring();

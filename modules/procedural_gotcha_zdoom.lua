@@ -1538,16 +1538,16 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.grab_random_trait(btype, etraits)
 
   if btype == "melee" and info.probmele > 0 then
     tprob = info.probmele
-    tprob = tprob * (((info.difffact-1.0) * PARAM.boss_gen_dmult)+1)
+    tprob = tprob * (((info.difffact-1.0) * PARAM.boss_gen_tmult)+1)
   elseif btype == "hitscan" and info.probscan > 0 then
     tprob = info.probscan
-    tprob = tprob * (((info.difffact-1.0) * PARAM.boss_gen_dmult)+1)
+    tprob = tprob * (((info.difffact-1.0) * PARAM.boss_gen_tmult)+1)
   elseif btype == "missile" and info.probmisl > 0 then
     tprob = info.probmisl
-    tprob = tprob * (((info.mislfact-1.0) * PARAM.boss_gen_dmult)+1)
+    tprob = tprob * (((info.mislfact-1.0) * PARAM.boss_gen_tmult)+1)
   end
 
-  if(info.mindiff>PARAM.boss_gen_dmult) then
+  if(info.mindiff>PARAM.boss_gen_tmult) then
       tprob = 0
   end
 
@@ -1555,9 +1555,9 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.grab_random_trait(btype, etraits)
     for etrait,einfo in pairs(etraits) do
         if einfo == info.name then
           stack = stack + 1
-        if PARAM.boss_gen_dmult < 0 then
+        if PARAM.boss_gen_tmult < 0 then
           tprob = int(tprob * 0.25)
-        elseif PARAM.boss_gen_dmult > 1 then
+        elseif PARAM.boss_gen_tmult > 1 then
           tprob = tprob * 2
         end
         end
@@ -1730,7 +1730,7 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.all_done()
     local traitstack = {}
     local ttrait
 
-    if(bhp<2000) then
+    if(boss_trait_diff == "harder" or (boss_trait_diff == "default" and rand.odds(50))) then
       ttrait = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.grab_random_trait(batk,traitstack)
       table.insert(traitstack, ttrait)
       btrait2 = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.syntaxize(btrait2,ttrait)
@@ -1738,7 +1738,7 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.all_done()
       btrait2 = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.syntaxize(btrait2,'"bossabilitygiver_nothing"')
     end
 
-    if(bhp<300) then
+    if(boss_trait_diff == "nightmare") then
       ttrait = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.grab_random_trait(batk,traitstack)
       table.insert(traitstack, ttrait)
       btrait3 = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.syntaxize(btrait3,ttrait)
@@ -1893,6 +1893,16 @@ function PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.setup(self)
       PARAM.boss_gen_dmult = 3.0
     end
 
+    if PARAM.boss_trait_diff == "easier" then
+      PARAM.boss_gen_tmult = -1.0
+    elseif PARAM.boss_trait_diff == "default" then
+      PARAM.boss_gen_tmult = 1.0
+    elseif PARAM.boss_trait_diff == "harder" then
+      PARAM.boss_gen_tmult = 2.0
+    elseif PARAM.boss_trait_diff == "nightmare" then
+      PARAM.boss_gen_tmult = 3.0
+    end
+
     if PARAM.boss_gen_reinforcerate == "weakester" then
       PARAM.boss_gen_rmult = 4.0
     elseif PARAM.boss_gen_reinforcerate == "weakest" then
@@ -2031,14 +2041,23 @@ OB_MODULES["procedural_gotcha_zdoom"] =
 
     {
       name = "boss_gen_diff",
-      label = _("Boss Difficulty"),
+      label = _("Boss Tier"),
       choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DIFF_CHOICES,
       default = "default",
-      tooltip = _("Increases or reduces chances of boss being based off more powerful monster and getting more powerful traits."),
+      tooltip = _("Increases or reduces chances of boss being based off of a more powerful monster."),
       priority = 98,
       randomize_group="monsters",
     },
 
+    {
+      name = "boss_trait_diff",
+      label = _("Boss Trait Strength"),
+      choices = PROCEDURAL_GOTCHA_FINE_TUNE_ZDOOM.BOSS_DIFF_CHOICES,
+      default = "default",
+      tooltip = _("Increases or reduces chances of boss getting more powerful traits."),
+      priority = 98,
+      randomize_group="monsters",
+    },
 
     {
       name = "boss_gen_health",

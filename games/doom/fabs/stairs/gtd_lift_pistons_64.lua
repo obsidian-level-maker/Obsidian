@@ -5,6 +5,8 @@ PREFABS.Lift_gtd_pistons_128 =
 
   theme = "!hell",
 
+  env = "building",
+
   prob = 10,
   style = "steepness",
 
@@ -28,4 +30,28 @@ PREFABS.Lift_gtd_pistons_128_hell =
   map = "MAP02",
 
   theme = "hell",
+}
+
+PREFABS.Lift_gtd_pistons_128_out =
+{
+  template = "Lift_gtd_pistons_128",
+  map = "MAP03",
+
+  env = "outdoor",
+
+  seed_w = 3,
+
+}
+
+PREFABS.Lift_gtd_pistons_128_outhell =
+{
+  template = "Lift_gtd_pistons_128",
+  map = "MAP04",
+
+  theme = "hell",
+
+  env = "outdoor",
+
+  seed_w = 3,
+
 }

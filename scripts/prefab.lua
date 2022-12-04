@@ -123,7 +123,6 @@ WADFAB_FX_DELTAS =
   [3]  =  48,  -- blink slow
   [13] =  48,  -- blink slow, sync
   [17] =  48,  -- flickers
-
   [8]  = 128  -- oscillates
 }
 
@@ -1412,6 +1411,7 @@ function Fab_load_wad(def)
 
 
   local function decode_lighting(S, C)
+
     if S.light == 0 then 
       C.shadow = 10000
     elseif S.light < 80 then
@@ -1430,8 +1430,8 @@ function Fab_load_wad(def)
     if delta then
       C.fx_delta = delta
     end
-  end
 
+  end
 
   local function create_light_brush(S, coords)
     -- clear the special (but allow light effects)

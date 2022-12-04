@@ -51,6 +51,7 @@ CPPFILES = \
 	Fl_Input.cxx \
 	Fl_Input_.cxx \
 	Fl_Input_Choice.cxx \
+	Fl_Int_Vector.cxx \
 	Fl_Light_Button.cxx \
 	Fl_Menu.cxx \
 	Fl_Menu_.cxx \
@@ -138,6 +139,7 @@ CPPFILES = \
 	fl_curve.cxx \
 	fl_diamond_box.cxx \
 	fl_draw.cxx \
+	fl_draw_arrow.cxx \
 	fl_draw_pixmap.cxx \
 	fl_encoding_latin1.cxx \
 	fl_encoding_mac_roman.cxx \
@@ -150,6 +152,7 @@ CPPFILES = \
 	fl_open_uri.cxx \
 	fl_oval_box.cxx \
 	fl_overlay.cxx \
+	fl_oxy.cxx \
 	fl_plastic.cxx \
 	fl_read_image.cxx \
 	fl_rect.cxx \
@@ -202,16 +205,12 @@ GLCPPFILES = \
 	drivers/OpenGL/Fl_OpenGL_Graphics_Driver_rect.cxx \
 	drivers/OpenGL/Fl_OpenGL_Graphics_Driver_vertex.cxx
 
-GLCPPFILES_OSX = drivers/Cocoa/fl_macOS_gl_platform_init.cxx
 GLOBJCPPFILES = drivers/Cocoa/Fl_Cocoa_Gl_Window_Driver.mm
-GLCPPFILES_X11 = drivers/X11/Fl_X11_Gl_Window_Driver.cxx \
-		 drivers/X11/fl_X11_gl_platform_init.cxx
+GLCPPFILES_X11 = drivers/X11/Fl_X11_Gl_Window_Driver.cxx
 GLCPPFILES_XFT = $(GLCPPFILES_X11)
 GLCPPFILES_CAIRO = $(GLCPPFILES_X11)
-GLCPPFILES_WIN = drivers/WinAPI/Fl_WinAPI_Gl_Window_Driver.cxx \
-		 drivers/WinAPI/fl_WinAPI_gl_platform_init.cxx
-GLCPPFILES_WAYLAND = drivers/Wayland/Fl_Wayland_Gl_Window_Driver.cxx \
-		     drivers/Wayland/fl_wayland_gl_platform_init.cxx
+GLCPPFILES_WIN = drivers/WinAPI/Fl_WinAPI_Gl_Window_Driver.cxx
+GLCPPFILES_WAYLAND = drivers/Wayland/Fl_Wayland_Gl_Window_Driver.cxx
 GLCPPFILES_WAYLANDX11 = $(GLCPPFILES_WAYLAND) \
 		        drivers/X11/Fl_X11_Gl_Window_Driver.cxx
 
@@ -269,7 +268,7 @@ XLIBCPPFILES = \
 	drivers/X11/Fl_X11_Screen_Driver.cxx \
 	drivers/Posix/Fl_Posix_System_Driver.cxx \
         drivers/Unix/Fl_Unix_System_Driver.cxx \
-        drivers/X11/Fl_X11_System_Driver.cxx \
+	drivers/Unix/Fl_Unix_Screen_Driver.cxx \
 	drivers/Posix/Fl_Posix_Printer_Driver.cxx \
 	drivers/X11/fl_X11_platform_init.cxx \
 	Fl_x.cxx \
@@ -301,7 +300,7 @@ WLCPPFILES = \
 	Fl_Native_File_Chooser_Kdialog.cxx \
 	drivers/Posix/Fl_Posix_System_Driver.cxx \
         drivers/Unix/Fl_Unix_System_Driver.cxx \
-        drivers/Wayland/Fl_Wayland_System_Driver.cxx \
+        drivers/Unix/Fl_Unix_Screen_Driver.cxx \
 	drivers/Wayland/Fl_Wayland_Screen_Driver.cxx \
         drivers/Wayland/Fl_Wayland_Window_Driver.cxx \
 	drivers/Wayland/Fl_Wayland_Image_Surface_Driver.cxx \
@@ -314,7 +313,6 @@ WLCPPFILES = \
 WLX11CPPFILES = \
 	drivers/X11/Fl_X11_Screen_Driver.cxx \
 	drivers/X11/Fl_X11_Window_Driver.cxx \
-	drivers/X11/Fl_X11_System_Driver.cxx \
 	drivers/Cairo/Fl_Display_Cairo_Graphics_Driver.cxx \
 	drivers/Xlib/Fl_Xlib_Copy_Surface_Driver.cxx \
 	drivers/Xlib/Fl_Xlib_Image_Surface_Driver.cxx \

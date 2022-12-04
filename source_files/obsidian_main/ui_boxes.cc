@@ -23,6 +23,33 @@ const uchar *c_fl_gray_ramp() {
     return (c_draw_it_active ? c_active_ramp : c_inactive_ramp) - 'A';
 }
 
+// CUSTOM OXY BOXES
+// ---------------------------------------------------------------------------------------
+
+void coxy_up_box(int x, int y, int w, int h, Fl_Color bg) {
+  float gradoffset = 0.45; // Formerly GROFF
+  float stepoffset = (1.0 / (float)h);
+  int xw = x + w - 1;
+  //    from bottom to top
+  for (int _y = y; _y < y + h; _y++) {
+    fl_color(fl_color_average(bg, GRADIENT_COLOR, (gradoffset < 1.0) ? gradoffset : 1.0));
+    fl_xyline(x, _y, xw);
+    gradoffset += stepoffset;
+  }
+}
+
+void coxy_down_box(int x, int y, int w, int h, Fl_Color bg) {
+  float gradoffset = 0.45; // Formerly GROFF
+  float stepoffset = (1.0 / (float)h);
+  int xw = x + w - 1;
+  //    from top to bottom
+  for (int _y = y + h - 1; _y >= y; _y--) {
+    fl_color(fl_color_average(bg, GRADIENT_COLOR, (gradoffset < 1.0) ? gradoffset : 1.0));
+    fl_xyline(x, _y, xw);
+    gradoffset += stepoffset;
+  }
+}
+
 // CUSTOM GLEAM BOXES
 // ---------------------------------------------------------------------------------------
 

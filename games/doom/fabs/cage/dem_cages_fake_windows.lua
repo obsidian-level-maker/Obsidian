@@ -17,7 +17,7 @@ PREFABS.Cage_dem_windows_ambush1 =
   seed_w = 2,
   seed_h = 1,
 
-  deep   = 48,
+  deep   = 32,
 
   height = 144,
 
@@ -154,10 +154,10 @@ PREFABS.Cage_dem_windows_ambushd1 =
   where  = "seeds",
   shape  = "U",
 
-  seed_w = 1,
+  seed_w = 2,
   seed_h = 1,
 
-  deep   = 48,
+  deep   = 32,
 
   height = 144,
 
@@ -296,10 +296,10 @@ PREFABS.Cage_dem_windows_ambusho1 =
   where  = "seeds",
   shape  = "U",
 
-  seed_w = 1,
+  seed_w = 2,
   seed_h = 1,
 
-  deep   = 48,
+  deep   = 32,
 
   height = 144,
 
@@ -438,10 +438,11 @@ PREFABS.Cage_dem_windows_ambush7 =
   where  = "seeds",
   shape  = "U",
 
-  seed_w = 1,
+  seed_w = 2,
   seed_h = 1,
 
-  deep   = 48,
+  deep   =  16,
+  over   = -16,
 
   height = 152,
 
@@ -469,6 +470,9 @@ PREFABS.Cage_dem_windows_ambush8 =
 
   map = "MAP29",
 
+  deep   = 48,
+  over   = 0,
+
   height = 200,
 
   bound_z1 = 0,
@@ -481,6 +485,9 @@ PREFABS.Cage_dem_windows_ambush9 =
   template = "Cage_dem_windows_ambush7",
 
   map = "MAP30",
+
+  deep   = 48,
+  over   = 0,
 
   height = 248,
 
@@ -507,10 +514,11 @@ PREFABS.Cage_dem_windows_ambusho7 =
   where  = "seeds",
   shape  = "U",
 
-  seed_w = 1,
+  seed_w = 2,
   seed_h = 1,
 
-  deep   = 48,
+  deep   =  16,
+  over   = -16,
 
   height = 144,
 
@@ -538,6 +546,9 @@ PREFABS.Cage_dem_windows_ambusho8 =
 
   map = "MAP32",
 
+  deep   = 48,
+  over   = 0,
+
   height = 200,
 
   bound_z1 = 0,
@@ -550,6 +561,9 @@ PREFABS.Cage_dem_windows_ambusho9 =
   template = "Cage_dem_windows_ambusho7",
 
   map = "MAP33",
+
+  deep   = 48,
+  over   = 0,
 
   height = 248,
 
@@ -576,7 +590,7 @@ PREFABS.Cage_dem_windows_ambush10 =
   where  = "seeds",
   shape  = "U",
 
-  seed_w = 1,
+  seed_w = 2,
   seed_h = 1,
 
   deep   = 48,
@@ -645,7 +659,7 @@ PREFABS.Cage_dem_windows_ambusho10 =
   where  = "seeds",
   shape  = "U",
 
-  seed_w = 1,
+  seed_w = 2,
   seed_h = 1,
 
   deep   = 48,
@@ -779,10 +793,10 @@ PREFABS.Cage_dem_windows_ambush16 =
   where  = "seeds",
   shape  = "U",
 
-  seed_w = 1,
+  seed_w = 2,
   seed_h = 1,
 
-  deep   = 48,
+  deep   = 32,
 
   height = 144,
 
@@ -846,10 +860,10 @@ PREFABS.Cage_dem_windows_ambushd7 =
   where  = "seeds",
   shape  = "U",
 
-  seed_w = 1,
+  seed_w = 2,
   seed_h = 1,
 
-  deep   = 48,
+  deep   = 32,
 
   height = 144,
 
