@@ -183,7 +183,9 @@ function ZStoryGen_init()
 
   -- attach game title and subtitle
   table.insert(PARAM.language_lump, "GAME_TITLE = " .. "\"" .. GAME.title .. "\";\n\n")
-  table.insert(PARAM.language_lump, "GAME_SUB_TITLE = " .. "\"" .. GAME.sub_title .. "\";\n\n")
+  if GAME.sub_title then
+    table.insert(PARAM.language_lump, "GAME_SUB_TITLE = " .. "\"" .. GAME.sub_title .. "\";\n\n")
+  end
 
   x = 1
   local y
