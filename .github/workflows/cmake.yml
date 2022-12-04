@@ -20,7 +20,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y libxft-dev libfontconfig1-dev
-        cp ${{github.workspace}}/cmake/Fl_PostScript.H ${{github.workspace}}/source_files/fltk/FL/Fl_PostScript.H
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
