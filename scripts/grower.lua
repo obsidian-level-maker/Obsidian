@@ -4240,8 +4240,9 @@ function Grower_begin_trunks(LEVEL, SEEDS)
   -- Last ditch to save the level
   if R.is_dead then
     LEVEL.max_trunks = 9
-    trunk = Grower_add_a_trunk(LEVEL)
-    R = Grower_create_and_grow_room(SEEDS, LEVEL, trunk, nil, info)
+    Grower_kill_a_trunk(LEVEL, trunk)
+    local new_trunk = Grower_add_a_trunk(LEVEL)
+    R = Grower_create_and_grow_room(SEEDS, LEVEL, new_trunk, nil, info)
   end
 
   assert(not R.is_dead)  
