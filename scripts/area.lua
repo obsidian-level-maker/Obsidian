@@ -2892,10 +2892,6 @@ function Area_create_rooms(LEVEL, SEEDS)
     table.add_unique(level_grammar, SHAPES.BOXES_OF_DEATH)
   end
 
-  if PARAM.float_grammar_oblige_v5 and rand.odds(PARAM.float_grammar_oblige_v5) then
-    table.add_unique(level_grammar, SHAPES.OBLIGE_V5)
-  end
-  
   if not table.empty(level_grammar) then
     if LEVEL.is_procedural_gotcha and PARAM.bool_gotcha_boss_fight == 1 then
       SHAPE_GRAMMAR = SHAPES.OBSIDIAN

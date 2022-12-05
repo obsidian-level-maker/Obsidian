@@ -720,7 +720,9 @@ function Layout_place_all_importants(LEVEL, SEEDS)
   Layout_place_hub_gates(LEVEL, SEEDS)
 
   for _,R in pairs(LEVEL.rooms) do
-    Layout_place_importants(LEVEL, R, 1, SEEDS)
+    if not R.is_sub_room then
+      Layout_place_importants(LEVEL, R, 1, SEEDS)
+    end
   end
 
   for _,R in pairs(LEVEL.rooms) do
@@ -1325,11 +1327,15 @@ gui.debugf("MonRelease in %s : kind --> %s\n",
   if STYLE.traps == "none" then return end
 
   for _,R in pairs(LEVEL.rooms) do
-    trap_up_goal(R)
+    if not R.is_sub_room then
+      trap_up_goal(R)
+    end
   end
 
   for _,R in pairs(LEVEL.rooms) do
-    trap_up_item(R)
+    if not R.is_sub_room then
+      trap_up_item(R)
+    end
   end
 end
 

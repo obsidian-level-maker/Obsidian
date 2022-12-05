@@ -267,7 +267,7 @@ OB_MODULES["misc"] =
       max = 100,
       increment = 1,
       default = 15,
-      tooltip = _("Allows Oblige to create large street-like outdoor rooms."),
+      tooltip = _("Allows Obsidian to create large street-like outdoor rooms."),
       randomize_group="architecture",
       priority = 96
     },
