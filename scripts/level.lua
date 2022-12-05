@@ -240,7 +240,7 @@ function Level_determine_map_size(LEV)
 
   -- Try to prevent grower failures with Micro levels
   if LEV.is_nature then
-    W = math.clamp(16, W, PARAM.float_level_upper_bound or 75)
+    W = math.max(W, 16)
   end
 
   gui.printf("Initial size for " .. LEV.name .. ": " .. W .. "\n")
