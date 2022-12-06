@@ -884,6 +884,17 @@ function Grower_calc_rule_probs(LEVEL)
     end
   end
 
+  -- outdoor openness pass
+  if LEVEL.outdoor_openness then
+    for _,rule in pairs(SHAPE_GRAMMAR) do
+      if string.match(rule.name, "COLONNADE") or
+      string.match(rule.name, "PILLAR") then
+        rule.env = "building"
+        rule.outdoor_openness = "low"
+      end
+    end
+  end
+
   gui.printf("Shape rules skipped for this level: " .. PARAM.skipped_rules ..
   " / " .. PARAM.shape_rule_count .. "\n")
   gui.printf("Rules can be disabled via skip probability or level styles.\n")
@@ -958,7 +969,7 @@ function Grower_calc_rule_probs(LEVEL)
 
       -- diversify environments
       local new_env
-      if rand.odds(50) and qty > 1 then
+      if rand.odds(50) and qty > 1 and not rule.outdoor_openness == "low" then
         if rand.odds(style_sel("outdoors", 0, 30, 60, 100)) then
           new_env = "outdoor"
         else
