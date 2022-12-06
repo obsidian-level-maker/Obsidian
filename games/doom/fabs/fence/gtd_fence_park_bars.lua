@@ -1,6 +1,6 @@
 PREFABS.Fence_park_bars =
 {
-  file = "fence/gtd_fence_highway_bars.wad",
+  file = "fence/gtd_fence_park_bars.wad",
   map = "MAP01",
 
   prob = 50,
