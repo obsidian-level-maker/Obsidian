@@ -1785,6 +1785,9 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
 
         if chunk.area.floor_group and chunk.area.floor_group.wall_group then
           info.name = info.name .. " (Wall Group: " .. chunk.area.floor_group.wall_group .. " )"
+          if chunk.area.room and chunk.area.is_outdoor then
+            info.name = info.name .. " (Outdoor Wall Group: " .. LEVEL.outdoor_wall_group .. " )"
+          end
         end
 
         if SCRIPTS.hn_id_table[info.name] then
@@ -1822,6 +1825,9 @@ function MODDED_GAME_EXTRAS.create_hn_info(self, LEVEL)
 
         if chunk.from_area.floor_group and chunk.from_area.floor_group.wall_group then
           info.name = info.name .. " (Wall Group: " .. chunk.from_area.floor_group.wall_group .. " )"
+          if chunk.area.room and chunk.area.is_outdoor then
+            info.name = info.name .. " (Outdoor Wall Group: " .. LEVEL.outdoor_wall_group .. " )"
+          end
         end
 
         local x = chunk.mx

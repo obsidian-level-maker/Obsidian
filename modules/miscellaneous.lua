@@ -94,6 +94,14 @@ MISC_STUFF.LINEAR_START_CHOICES =
   "default", _("DEFAULT"),
 }
 
+MISC_STUFF.OUTDOOR_OPENNESS =
+{
+  "urbtech", _("Tech and Urban"),
+  "urban", _("Urban"),
+  "always", _("Always"),
+  "none", _("DEFAULT"),
+}
+
 MISC_STUFF.ROOM_SIZE_MULTIPLIER_CHOICES =
 {
   "0.25", _("x0.25"),
@@ -164,7 +172,7 @@ function MISC_STUFF.setup(self)
   PARAM["wad_maximum_brightness"] = math.max(PARAM.float_minimum_brightness, PARAM.float_maximum_brightness)
 end
 
-function MISC_STUFF.begin_level(self)
+function MISC_STUFF.begin_level(self, LEVEL)
   for _,opt in pairs(self.options) do
     if opt.valuator then goto continue end
 
@@ -187,6 +195,19 @@ function MISC_STUFF.begin_level(self)
     end
 
     ::continue::
+  end
+
+  if PARAM.outdoor_openness then
+    if PARAM.outdoor_openness == "urbtech"
+    and LEVEL.theme_name == "urban" 
+    or LEVEL.theme_name == "tech" then
+      LEVEL.outdoor_openness = true
+    elseif PARAM.outdoor_openness == "urban"
+    and LEVEL.theme_name == "urban" then
+      LEVEL.outdoor_openness = true
+    elseif PARAM.outdoor_openness == "always" then
+      LEVEL.outdoor_openness = true
+    end
   end
 end
 
@@ -568,12 +589,20 @@ OB_MODULES["misc"] =
       priority = 61
     },
     {
+      name="outdoor_openness",
+      label=_("Open Outdoors"),
+      choices=MISC_STUFF.OUTDOOR_OPENNESS,
+      tooltip=_("Disables shape rules that involve obstructive geometry such as pillars for outdoors based on theme."),
+      default="none",
+      priority = 60,
+    },
+    {
       name="dead_ends",
       label=_("Dead Ends"),
       choices=STYLE_CHOICES,
       tooltip=_("Cleans up and removes areas with staircases that lead to nowhere.\nNONE means all dead ends are removed.\nHeaps means all dead ends are preserved (Oblige default)."),
       default = "heaps",
-      priority = 60,
+      priority = 59,
       gap = 1,
       randomize_group="architecture",
     },

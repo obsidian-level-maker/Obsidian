@@ -884,6 +884,17 @@ function Grower_calc_rule_probs(LEVEL)
     end
   end
 
+  -- outdoor openness pass
+  if LEVEL.outdoor_openness then
+    for _,rule in pairs(SHAPE_GRAMMAR) do
+      if string.match(rule.name, "COLONNADE") or
+      string.match(rule.name, "PILLAR") then
+        rule.env = "building"
+        rule.outdoor_openness = "low"
+      end
+    end
+  end
+
   gui.printf("Shape rules skipped for this level: " .. PARAM.skipped_rules ..
   " / " .. PARAM.shape_rule_count .. "\n")
   gui.printf("Rules can be disabled via skip probability or level styles.\n")
@@ -958,7 +969,7 @@ function Grower_calc_rule_probs(LEVEL)
 
       -- diversify environments
       local new_env
-      if rand.odds(50) and qty > 1 then
+      if rand.odds(50) and qty > 1 and not rule.outdoor_openness == "low" then
         if rand.odds(style_sel("outdoors", 0, 30, 60, 100)) then
           new_env = "outdoor"
         else
@@ -2720,6 +2731,25 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     local A = chunk.area
     local R = A.room
 
+    if not R.has_consistent_stairs_rolled then
+      -- should probably put this in a function for cleanliness
+      for _,P in pairs(PREFABS) do
+        if P.kind == "stairs" and P.original_rank and P.original_rank ~= 0 then
+          P.rank = P.original_rank
+          P.original_rank = nil
+        else
+          P.rank = nil
+        end
+      end
+    end
+
+    if rand.odds(R.trunk.consistent_stairs) 
+    and not R.has_consistent_stairs_rolled then
+      R.has_consistent_stairs = true
+    end
+
+    R.has_consistent_stairs_rolled = true
+
     local reqs = chunk:base_reqs(chunk.from_dir)
 
     reqs.kind  = "stairs"
@@ -2741,6 +2771,17 @@ stderrf("prelim_conn %s --> %s : S=%s dir=%d\n", c_out.R1.name, c_out.R2.name, S
     end
 
     local def = Fab_pick(LEVEL, reqs)
+    
+    if R.has_consistent_stairs then
+      if def then
+        if def.rank then
+          def.original_rank = def.rank
+        else
+          def.original_rank = 0
+        end
+      end
+      def.rank = 1
+    end
 
     return def
   end
@@ -4160,6 +4201,7 @@ function Grower_add_a_trunk(LEVEL)
 
   trunk.stair_z_dir = rand.sel(50, 1, -1)
   trunk.stair_z_dir_fudge_prob = rand.pick({0,13,25,33,50})
+  trunk.consistent_stairs = 100 - trunk.stair_z_dir_fudge_prob
 
   table.insert(LEVEL.trunks, trunk)
 

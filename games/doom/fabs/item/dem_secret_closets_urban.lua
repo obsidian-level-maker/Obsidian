@@ -181,7 +181,7 @@ PREFABS.Item_secret_store_closet_vanilla =
 }
 
 --a secret aera in a burning down building 
---Currently not working, 2 wide x3 long item closets are not allowed
+
 PREFABS.Item_secret_yard_closet1 =
 {
   file  = "item/dem_secret_closets_urban.wad",
@@ -193,6 +193,9 @@ PREFABS.Item_secret_yard_closet1 =
   theme = "urban",
   env   = "outdoor",
 
+  deep   = 16,
+  over   = -16,
+
 
   prob  = 1150,
 
@@ -200,13 +203,16 @@ PREFABS.Item_secret_yard_closet1 =
 
   where  = "seeds",
   seed_w = 2,
-  seed_h = 3,
+  seed_h = 2,
 
   jump_crouch = true,
 
+  deep = 16,
+  over = -16,
+
   x_fit = "frame",
-  y_fit  = "frame",
-  z_fit  = "top",
+  y_fit = "frame",
+  z_fit = "top",
 
   can_flip = true,
 
@@ -245,13 +251,11 @@ PREFABS.Item_secret_yard_closet1 =
     }
 }
 --double porch Appartment secret
---Currently not working, stairs actions are buggy
---[[
+
 PREFABS.Item_secret_yard_closet2 =
 {
   template = "Item_secret_yard_closet1",
   map      = "MAP04",
-
 
   prob  = 240,
 
@@ -259,7 +263,8 @@ PREFABS.Item_secret_yard_closet2 =
   seed_h = 2,
 
 }
-]]--
+
+--A secret on top of a big fancy mansion's porch 
 
 
 PREFABS.Item_secret_yard_closet3 =
@@ -274,16 +279,45 @@ PREFABS.Item_secret_yard_closet3 =
 
 }
 
+--A secret in a building filed with skulls
+
 PREFABS.Item_secret_yard_closet4 =
 {
   template = "Item_secret_yard_closet1",
   map      = "MAP06",
+
+  jump_crouch = false,
+
+  prob  = 50,
+
+}
+
+--A secret in a downward vent dotting the streets
+
+PREFABS.Item_secret_vent_closet =
+{
+  template = "Item_secret_yard_closet1",
+  map      = "MAP07",
+
+
+rank = 1,
 
 
   jump_crouch = false,
 
   prob  = 50,
 
-  seed_h = 2,
+  seed_w = 1,
+  seed_h = 1,
+
+  height = 128,
+  deep   = 80,
+
+  bound_z1 = 0,
+  bound_z2 = 128,
+
+  x_fit = "frame",
+  y_fit = "top",
+  z_fit = { 65,67 },
 
 }
