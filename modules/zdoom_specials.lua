@@ -867,8 +867,8 @@ function ZDOOM_SPECIALS.do_special_stuff()
 
 
       clusterdef =
-        'cluster 5\n', -- MAP01-05
-        '{\n',
+        'cluster 5\n' .. -- MAP01-05
+        '{\n' ..
         '' .. cluster_music_line .. '' ..
         '  pic = "' .. interpic .. '"\n' ..
         '  exittext =\n' ..
