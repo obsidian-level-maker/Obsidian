@@ -324,14 +324,7 @@ int fsky_write(lua_State *L) {
     qLump_c *lump =
         CreatePatch(sky_final_W, sky_H, 0, 0, sky_pixels, sky_W, sky_H);
 
-    std::string current_port = ob_get_param("port");
-
-    if (StringCaseCmp(current_port, "zdoom") == 0 ||
-        StringCaseCmp(current_port, "eternity") == 0) {
-        AddSectionLump('T', patch, lump);
-    } else {
-        AddSectionLump('P', patch, lump);
-    }
+    AddSectionLump('P', patch, lump);
 
     return 0;
 }
