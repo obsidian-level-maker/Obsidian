@@ -2215,12 +2215,6 @@ function Level_do_styles(LEVEL)
     end
   end
 
-  -- if level needs a secret exit, make lots of secrets
-  -- (this is not strictly necessary, more an aesthetic choice)
-  if LEVEL.secret_exit then
-    STYLE.secrets = "heaps"
-  end
-
   if LEVEL.psychedelic then
     Mat_prepare_trip(LEVEL)
   end
