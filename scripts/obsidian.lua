@@ -2246,12 +2246,10 @@ local function ob_get_module_refs()
   end
   module_refs["main_build_settings"] = {
     engine = {
-      tooltip = "Choose which engine to build maps for:\n" ..
-        "  id Tech 0: Wolfenstein 3D and similar games\n" ..
-        "  id Tech 1: Doom and similar games\n",
-      engine = {"ALL"},
-      game = {"ALL"},
-      port = {"ALL"},
+      tooltip = _("Choose which engine to build maps for:\n  id Tech 0: Wolfenstein 3D and similar games\n  id Tech 1: Doom and similar games\n"),
+      engine = {_("ALL")},
+      game = {_("ALL")},
+      port = {_("ALL")},
       choices = {
         "idtech_0",
         "idtech_1",
@@ -2259,10 +2257,10 @@ local function ob_get_module_refs()
       default = "idtech_1",
     },
     game = {
-      tooltip = "Choose which game to build maps for.",
-      engine = {"ALL"},
-      game = {"ALL"},
-      port = {"ALL"},
+      tooltip = _("Choose which game to build maps for."),
+      engine = {_("ALL")},
+      game = {_("ALL")},
+      port = {_("ALL")},
       choices = {
         "chex3",
         "doom1",
@@ -2282,11 +2280,10 @@ local function ob_get_module_refs()
       default = "doom2",
     },
     port = {
-      tooltip = "Choose which port to build maps for.\n" ..
-        "  Vanilla is the only option for id Tech 0; the remaining options are for id Tech 1.\n",
-      engine = {"ALL"},
-      game = {"ALL"},
-      port = {"ALL"},
+      tooltip = _("Choose which port to build maps for.\n  Vanilla is the only option for id Tech 0; the remaining options are for id Tech 1.\n"),
+      engine = {_("ALL")},
+      game = {_("ALL")},
+      port = {_("ALL")},
       choices = {
         "vanilla",
         "limit_enforcing",
@@ -2300,10 +2297,10 @@ local function ob_get_module_refs()
       default = "zdoom",
     },
     length = {
-      tooltip = "Choose how many levels to create.",
-      engine = {"ALL"},
-      game = {"ALL"},
-      port = {"ALL"},
+      tooltip = _("Choose how many levels to create."),
+      engine = {_("ALL")},
+      game = {_("ALL")},
+      port = {_("ALL")},
       choices = {
         "single",
         "few",
@@ -2313,20 +2310,10 @@ local function ob_get_module_refs()
       default = "game",
     },
     theme = {
-      tooltip = "The following values are game-specific:\n" ..
-        "  Chex Quest 3: bazoik,spaceport,villa\n" ..
-        "  Ultimate Doom/Doom 1: deimos,flesh\n" ..
-        "  Ultimate Doom/Doom 1/Doom 2/TNT/Plutonia: tech,urban,hell\n" ..
-        "  TNT: egypt\n" ..
-        "  HacX: hacx_urban\n" ..
-        "  Harmony: ndf_base\n" ..
-        "  Heretic: city,maw,dome,ossuary,demense\n" ..
-        "  Hexen: forest,ice_caves,fire_steel,swamp,dungeon,town\n" ..
-        "  Strife: town\n\n",
-        "  Note: This setting currently does nothing for id Tech 0 games!\n",
-      engine = {"ALL"},
-      game = {"ALL"},
-      port = {"ALL"},
+      tooltip = _("The following values are game-specific:\n  Chex Quest 3: bazoik,spaceport,villa\n  Ultimate Doom/Doom 1: deimos,flesh\n  Ultimate Doom/Doom 1/Doom 2/TNT/Plutonia: tech,urban,hell\n  TNT: egypt\n  HacX: hacx_urban\n  Harmony: ndf_base\n  Heretic: city,maw,dome,ossuary,demense\n  Hexen: forest,ice_caves,fire_steel,swamp,dungeon,town\n  Strife: town\n\n  Note: This setting currently does nothing for id Tech 0 games!\n"),
+      engine = {_("ALL")},
+      game = {_("ALL")},
+      port = {_("ALL")},
       choices = {
         "original",
         "epi",
@@ -2369,47 +2356,49 @@ function ob_print_reference()
     gui.console_print("\n[[ " .. module_entry .. " ]]\n")
     gui.ref_print("\n[[ " .. module_entry .. " ]]\n")
     for name,option in pairs(module_refs[module_entry]) do
-      gui.console_print("\noption: " .. name .. "\n")
-      gui.ref_print("\noption: " .. name .. "\n")
-      gui.console_print("comment: " .. option.tooltip .. "\n")
-      gui.ref_print("comment: " .. option.tooltip .. "\n")
-      gui.console_print("engine: ")
-      gui.ref_print("engine: ")
+      gui.console_print("\n" .. gui.gettext("option: ") .. name .. "\n")
+      gui.ref_print("\n" .. gui.gettext("option: ") .. name .. "\n")
+      gui.console_print(gui.gettext("comment: ") .. option.tooltip .. "\n")
+      gui.ref_print(gui.gettext("comment: ") .. option.tooltip .. "\n")
+      gui.console_print(gui.gettext("engine: "))
+      gui.ref_print(gui.gettext("engine: "))
       for _,engine in pairs(option.engine) do
         gui.console_print(engine .. " ")
         gui.ref_print(engine .. " ")
       end
       gui.console_print("\n")
       gui.ref_print("\n")
-      gui.console_print("game: ")
-      gui.ref_print("game: ")
+      gui.console_print(gui.gettext("game: "))
+      gui.ref_print(gui.gettext("game: "))
       for _,game in pairs(option.game) do
         gui.console_print(game .. " ")
         gui.ref_print(game .. " ")
       end
       gui.console_print("\n")
       gui.ref_print("\n")
-      gui.console_print("port: ")
-      gui.ref_print("port: ")
+      gui.console_print(gui.gettext("port: "))
+      gui.ref_print(gui.gettext("port: "))
       for _,port in pairs(option.port) do
         gui.console_print(port .. " ")
         gui.ref_print(port .. " ")
       end
       if (option.slider) then
-        gui.console_print("\nvalues: " .. option.slider.min .. "-" .. option.slider.max)
-        gui.ref_print("\nvalues: " .. option.slider.min .. "-" .. option.slider.max)
+        gui.console_print("\n" .. gui.gettext("values: ") .. option.slider.min .. "-" .. option.slider.max)
+        gui.ref_print("\n" .. gui.gettext("values: ") .. option.slider.min .. "-" .. option.slider.max)
         if option.slider.nan then
           gui.console_print("," .. option.slider.nan)
           gui.ref_print("," .. option.slider.nan)
         end
-        gui.console_print("\ndefault: " .. option.slider.default)
-        gui.ref_print("\ndefault: " .. option.slider.default)
+        gui.console_print("\n" .. gui.gettext("default: ") .. option.slider.default)
+        gui.ref_print("\n" .. gui.gettext("default: ") .. option.slider.default)
       elseif (option.button) then
-        gui.console_print("\nvalues: " .. "0/1\ndefault: " .. option.button.default)
-        gui.ref_print("\nvalues: " .. "0/1\ndefault: " .. option.button.default)
+        gui.console_print("\n" .. gui.gettext("values: ")
+         .. "0/1\n" .. gui.gettext("default: ") .. option.button.default)
+        gui.ref_print("\n" .. gui.gettext("values: ")
+        .. "0/1\n" .. gui.gettext("default: ") .. option.button.default)
       else
-        gui.console_print("\nvalues: " )
-        gui.ref_print("\nvalues: " )
+        gui.console_print("\n" .. gui.gettext("values: "))
+        gui.ref_print("\n" .. gui.gettext("values: "))
         for num,choice in ipairs(option.choices) do
           if num ~= #option.choices then
             gui.console_print(choice .. ",")
@@ -2421,8 +2410,8 @@ function ob_print_reference()
         end
       end
       if (option.random_group) then
-        gui.console_print("\nrandomize_group: " .. option.random_group)
-        gui.ref_print("\nrandomize_group: " .. option.random_group)
+        gui.console_print("\n" .. gui.gettext("randomize_group: ") .. option.random_group)
+        gui.ref_print("\n" .. gui.gettext("randomize_group: ") .. option.random_group)
       end
       gui.console_print("\n")
       gui.ref_print("\n")
@@ -2455,10 +2444,10 @@ function ob_print_reference_json()
       gui.console_print("    \"" .. name .. "\": {\n")
       local tooltip = option.tooltip
       tooltip = tooltip:gsub("\n", "\\n")
-      gui.console_print("      \"tooltip\": \"" .. tooltip .. "\",\n")
-      gui.console_print("      \"engine\": ")
+      gui.console_print("      \"" .. gui.gettext("tooltip") .. "\": \"" .. tooltip .. "\",\n")
+      gui.console_print("      \"" .. gui.gettext("engine") .. "\": ")
       if #option.engine == 1 and option.engine[1] == "ALL" then
-        gui.console_print("\"ALL\",\n")
+        gui.console_print("\"" .. gui.gettext("ALL") .. "\",\n")
       else
         gui.console_print("[")
         for j,engine in pairs(option.engine) do
@@ -2470,9 +2459,9 @@ function ob_print_reference_json()
         end
         gui.console_print("],\n")
       end
-      gui.console_print("    \"game\": ")
-      if #option.game == 1 and option.game[1] == "ALL" then
-        gui.console_print("\"ALL\",\n")
+      gui.console_print("    \"" .. gui.gettext("game") .. "\": ")
+      if #option.game == 1 and option.game[1] == gui.gettext("ALL") then
+        gui.console_print("\"" .. gui.gettext("ALL") .. "\",\n")
       else
         gui.console_print("[")
         for j,game in pairs(option.game) do
@@ -2484,9 +2473,9 @@ function ob_print_reference_json()
         end
         gui.console_print("],\n")
       end
-      gui.console_print("    \"port\": ")
-      if #option.port == 1 and option.port[1] == "ALL" then
-        gui.console_print("\"ALL\",\n")
+      gui.console_print("    \"" .. gui.gettext("port") .. "\": ")
+      if #option.port == 1 and option.port[1] == gui.gettext("ALL") then
+        gui.console_print("\"" .. gui.gettext("ALL") .. "\",\n")
       else
         gui.console_print("[")
         for j,port in pairs(option.port) do
@@ -2499,15 +2488,16 @@ function ob_print_reference_json()
         gui.console_print("],\n")
       end
       if (option.slider) then
-        gui.console_print("    \"type\": \"slider\",\n")
-        gui.console_print("    \"values\": {\n")
-        gui.console_print("      \"min\": " .. option.slider.min .. ",\n")
-        gui.console_print("      \"max\": " .. option.slider.max .. ",\n")
+        gui.console_print("    \"" .. gui.gettext("type") .. "\": \"" ..
+          gui.gettext("slider") .. "\",\n")
+        gui.console_print("    \"" .. gui.gettext("values") .. "\": {\n")
+        gui.console_print("      \"" .. gui.gettext("min") .. "\": " .. option.slider.min .. ",\n")
+        gui.console_print("      \"" .. gui.gettext("max") .. "\": " .. option.slider.max .. ",\n")
         local default = option.slider.default
         if tonumber(default) == nil then
           default = "\"" .. default .. "\""
         end
-        gui.console_print("      \"default\": " .. default)
+        gui.console_print("      \"" .. gui.gettext("default") .. "\": " .. default)
         if option.slider.nan then
           local nans = split_commas(option.slider.nan)
           gui.console_print(",\n      \"nan\": [\n")
@@ -2523,11 +2513,13 @@ function ob_print_reference_json()
         gui.console_print("\n")
         gui.console_print("    }")
       elseif (option.button) then
-        gui.console_print("    \"type\": \"boolean\",\n")
-        gui.console_print("    \"default\": " .. option.button.default .. "\n")
+        gui.console_print("    \"" .. gui.gettext("type") .. "\": \"" ..
+          gui.gettext("boolean") .. "\",\n")
+        gui.console_print("    \"" .. gui.gettext("default") .. "\": " .. option.button.default .. "\n")
       else
-        gui.console_print("    \"type\": \"choice\",\n")
-        gui.console_print("    \"values\": [\n")
+        gui.console_print("    \"" .. gui.gettext("type") .. "\": \"" ..
+          gui.gettext("choice") .. "\",\n")
+        gui.console_print("    \"" .. gui.gettext("values") .. "\": [\n")
         for num,choice in ipairs(option.choices) do
           gui.console_print("      \"" .. choice .. "\"")
           if num ~= #option.choices then
@@ -2538,7 +2530,7 @@ function ob_print_reference_json()
         gui.console_print("    ]")
       end
       if (option.random_group) then
-        gui.console_print(",\n    \"randomize_group\": \"" .. option.random_group .. "\"\n")
+        gui.console_print(",\n    \"" .. gui.gettext("randomize_group") .. "\": \"" .. option.random_group .. "\"\n")
       else
         gui.console_print("\n")
       end
@@ -2559,8 +2551,8 @@ function ob_build_cool_shit()
   assert(OB_CONFIG.game)
 
   gui.printf("\n\n")
-  gui.printf("~~~~~~~ Making Levels ~~~~~~~\n\n")
-  gui.printf("-- CONFIG FILE : OBSIDIAN Beta\n\n")
+  gui.printf(gui.gettext("~~~~~~~ Making Levels ~~~~~~~\n\n"))
+  gui.printf("-- CONFIG FILE : OBSIDIAN Beta\n\n") -- Do not translate; needed by config parser
     
   ob_read_all_config(false, "log_only")
 
@@ -2616,12 +2608,12 @@ function ob_build_cool_shit()
 
   if status == "abort" then
     gui.printf("\n")
-    gui.printf("~~~~~~~ Build Aborted! ~~~~~~~\n\n")
+    gui.printf(gui.gettext("~~~~~~~ Build Aborted! ~~~~~~~\n\n"))
     return "abort"
   end
 
   gui.printf("\n")
-  gui.printf("~~~~~~ Finished Making Levels ~~~~~~\n\n")
+  gui.printf(gui.gettext("~~~~~~ Finished Making Levels ~~~~~~\n\n"))
 
   return "ok"
 end

@@ -28,21 +28,6 @@ PREFABS.Exit_pillar2_chex3 =
 {
   template = "Exit_pillar2",
   game = "chex3",
-  port = "advanced",
-  forced_offsets = 
-  {
-    [26] = { x=47, y=11 },
-    [34] = { x=47, y=11 },
-    [44] = { x=47, y=11 },
-    [54] = { x=47, y=11 },
-  }
-}
-
-PREFABS.Exit_pillar2_chex3_nosign = 
-{
-  template = "Exit_pillar2",
-  game = "chex3",
-  port = "!advanced",
   map = "MAP02",
   forced_offsets = 
   {
@@ -187,22 +172,6 @@ PREFABS.Exit_pillar2_secret_chex3 =
 {
   template = "Exit_pillar2_secret",
   game = "chex3",
-  port = "advanced",
-  map = "MAP04",
-  forced_offsets = 
-  {
-    [26] = { x=47, y=11 },
-    [34] = { x=47, y=11 },
-    [44] = { x=47, y=11 },
-    [54] = { x=47, y=11 },
-  }
-}
-
-PREFABS.Exit_pillar2_secret_chex3_nosign = 
-{
-  template = "Exit_pillar2_secret",
-  game = "chex3",
-  port = "!advanced",
   forced_offsets = 
   {
     [26] = { x=47, y=11 },

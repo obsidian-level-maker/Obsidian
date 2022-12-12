@@ -137,7 +137,7 @@ UI_Tutorial_Window::UI_Tutorial_Window(int W, int H, const char *label)
         out->textfont(font_style);
         out->textsize(FL_NORMAL_SIZE + 2);
         // clang-format off
-        out->value(_("<center>Game Settings, in the upper left area of the program window, contains all you need to build your very first WAD. Select the Game you would like to build a WAD for, the Engine that it will be played on, the Length (number of maps) of the WAD, and the Theme that you would like it to have. Once you press 'Build', you will be prompted to choose a location and filename for your WAD. After that, your WAD will be generated and saved to the location that you specified.\n\nNOTE: If you select 'Vanilla Doom' for the engine, an alternate map generator will be used to create your WAD. Although this WAD will be compatible with all engines, it is much simpler in nature than the maps made by Obsidian's main generator.</center>"));
+        out->value(_("<center>Game Settings, in the upper left area of the program window, contains all you need to build your very first mapset. Select the Engine to filter available games, the Game you would like to build maps for, the Port that it will be played on, the Length (number of maps) of the mapset, and the Theme that you would like it to have. Once you press 'Build', you will be prompted to choose a location and filename for your mapset. After that, it will be generated and saved to the location that you specified.\n\nNOTE: If you select 'Vanilla Doom' for the port, an alternate map generator will be used to create your WAD. Although this WAD will be compatible with all ports, it is much simpler in nature than the maps made by Obsidian's main generator.</center>"));
         // clang-format on
         g->end();
     }
@@ -168,7 +168,7 @@ UI_Tutorial_Window::UI_Tutorial_Window(int W, int H, const char *label)
         out->textfont(font_style);
         out->textsize(FL_NORMAL_SIZE + 2);
         // clang-format off
-        out->value(_("<center>At some point, you will want to have more control over the contents of the WADs that you generate. This is where modules come into play. Modules are groups of options that can be changed to fine-tune your experience. Most modules are optional, and will need to be enabled or disabled accordingly.</center>"));
+        out->value(_("<center>At some point, you will want to have more control over the contents of the maps that you generate. This is where modules come into play. Modules are groups of options that can be changed to fine-tune your experience. Most modules are optional, and will need to be enabled or disabled accordingly.</center>"));
         // clang-format on
         g->end();
     }
@@ -410,7 +410,7 @@ UI_Tutorial_Window::UI_Tutorial_Window(int W, int H, const char *label)
         out->textfont(font_style);
         out->textsize(FL_NORMAL_SIZE + 2);
         // clang-format off
-        out->value(_("<center>If, for whatever reason, you receive an error while building, you can view Obsidian's logs by pressing F6 or selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, there is a LOGS.txt file with the same information that is stored in the same folder as obsidian.exe (or ~/.config/obsidian on *nix). This file is overwritten each time you start the program, so be sure to save this information elsewhere or use the log preservation options from the File->Options menu if you need to refer to it later! These logs are extremely important when seeking help or filing bug reports!</center>"));
+        out->value(_("<center>If, for whatever reason, you receive an error while building, you can view Obsidian's logs by pressing F6 or selecting Help->View Logs from the program menu. From here, you can view and save the log contents to a file of your choosing. In addition, there will be LOGS*.txt files with the same information that are stored in the same folder as obsidian.exe (or ~/.config/obsidian on *nix). These are rolling logs that will eventually be overwritten, so be sure to save this information elsewhere if you need to refer to it later! These logs are extremely important when seeking help or filing bug reports!</center>"));
         // clang-format on
         g->end();
     }
@@ -436,7 +436,7 @@ UI_Tutorial_Window::UI_Tutorial_Window(int W, int H, const char *label)
         out->textfont(font_style);
         out->textsize(FL_NORMAL_SIZE + 2);
         // clang-format off
-        out->value(_("<center>There are more options to explore within Obsidian, but this should be enough to get you started. The tutorial can be viewed again at any time by choosing Help->Tutorial from the program menu.\n\nIf you need more help, please ask in our Discord (invite link <A HREF='https://discord.gg/dfqCt9v'>https://discord.gg/dfqCt9v</A>) or check our wiki at <A HREF='https://github.com/dashodanger/Obsidian/wiki'>https://github.com/dashodanger/Obsidian/wiki</A>.\n\nGood luck in the infinite Hells!</center>"));
+        out->value(_("<center>There are more options to explore within Obsidian, but this should be enough to get you started. The tutorial can be viewed again at any time by choosing Help->Tutorial from the program menu.\n\nIf you need more help, please ask in our Discord (invite link <A HREF='https://discord.gg/dfqCt9v'>https://discord.gg/dfqCt9v</A>) or check our wiki at <A HREF='https://github.com/obsidian-level-maker/Obsidian/wiki'>https://github.com/obsidian-level-maker/Obsidian/wiki</A>.\n\nGood luck in the infinite Hells!</center>"));
         // clang-format on
         g->end();
     }
