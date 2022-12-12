@@ -12,7 +12,7 @@ PREFABS.Fence_park_bars =
   deep = 16,
   over = 16,
 
-  fence_h = 40,
+  fence_h = 48,
   bound_z1 = 0
 }
 
