@@ -245,7 +245,7 @@ if(UNIX)
   endif()
 endif()
 
-target_link_libraries(obsidian PRIVATE fmt::fmt-header-only hedley::hedley)
+target_link_libraries(obsidian PRIVATE fmt::fmt-header-only hedley::hedley spdlog::spdlog_header_only)
 
 # Copies executables to local install directory after build
 add_custom_command(
@@ -272,7 +272,6 @@ if(UNIX)
                 physfs-static
                 obsidian_zdbsp
                 obsidian_slump
-                spdlog
       )
     else()
       target_link_libraries(
@@ -283,7 +282,6 @@ if(UNIX)
                 physfs-static
                 obsidian_zdbsp
                 obsidian_slump
-                spdlog
       )
     endif()
   elseif(HAIKU)
@@ -296,7 +294,6 @@ if(UNIX)
               obsidian_zdbsp
               obsidian_slump
               pthread
-              spdlog
               be
               root
     )
@@ -314,7 +311,6 @@ if(UNIX)
                 obsidian_slump
                 fontconfig
                 pthread
-                spdlog
       )
     else()
       target_link_libraries(
@@ -326,7 +322,6 @@ if(UNIX)
                 obsidian_zdbsp
                 obsidian_slump
                 pthread
-                spdlog
       )
     endif()
   endif()
@@ -342,7 +337,6 @@ else()
               physfs-static
               obsidian_zdbsp
               obsidian_slump
-              spdlog
     )
   else()
     target_link_libraries(
@@ -353,7 +347,6 @@ else()
               physfs-static
               obsidian_zdbsp
               obsidian_slump
-              spdlog
     )
   endif()
 endif()

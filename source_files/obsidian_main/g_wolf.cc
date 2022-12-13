@@ -19,9 +19,11 @@
 //------------------------------------------------------------------------
 
 #include "fmt/format.h"
+#ifndef CONSOLE_ONLY
 #include "hdr_fltk.h"
-#include "hdr_lua.h"
 #include "hdr_ui.h"
+#endif
+#include "hdr_lua.h"
 #include "headers.h"
 #include "lib_file.h"
 #include "lib_util.h"
@@ -431,11 +433,11 @@ bool wolf_game_interface_c::Start(const char *ext) {
 
     solid_plane = new u16_t[64 * 64 + 8];  // extra space for compressor
     thing_plane = new u16_t[64 * 64 + 8];
-
+#ifndef CONSOLE_ONLY
     if (main_win) {
         main_win->build_box->Prog_Init(0, "");
     }
-
+#endif
     return true;
 }
 

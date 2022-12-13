@@ -569,7 +569,7 @@ bool Main::BackupFile(const std::filesystem::path &filename) {
 
     return true;
 }
-
+#ifndef CONSOLE_ONLY
 int Main::DetermineScaling() {
     /* computation of the Kromulent factor */
 
@@ -608,7 +608,7 @@ int Main::DetermineScaling() {
 
     return 0;
 }
-
+#endif
 #if !defined(CONSOLE_ONLY) && !defined(__APPLE__)
 bool Main::LoadInternalFont(const char *fontpath, const int fontnum,
                             const char *fontname) {
@@ -2023,8 +2023,9 @@ softrestart:;
                     old_seed.clear();
                     old_name.clear();
                 }
-
+#ifndef CONSOLE_ONLY
                 main_win->build_box->alt_disp->label("");
+#endif
                 // regardless of success or fail, compute a new seed
                 Main_CalcNewSeed();
 
